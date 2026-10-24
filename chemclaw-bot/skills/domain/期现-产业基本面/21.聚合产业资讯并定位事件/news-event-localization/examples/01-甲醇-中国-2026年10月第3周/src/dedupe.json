@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "note": "去重关系表：每条 = 一次“把某条资讯归入某事件”的判定，含判定依据、关系类型、可信度影响。这是本方法的核心可审计记录。",
+    "relation_types": {
+      "primary": "该事件的首发报道（主记录）",
+      "republish": "同一稿件的转载（内容一致，仅载体/时间不同）",
+      "followup": "同一事件的后续更新（同装置不同日期、或新增进展）",
+      "index_entry": "同一内容的索引/列表形态（非独立报道）",
+      "selfmedia": "自媒体/社区转述（可靠性降级，仅作旁证）",
+      "conflict": "同一事件的不同来源在关键事实上不一致（不合并、不取舍，并置保留）"
+    }
+  },
+  "links": [
+    {"event_id": "EVT-MEOH-20261018-001", "news_id": "N08", "relation": "primary", "basis": "金联创原稿，落款“来源：金联创化工”，作者常婷；为本事件唯一可读完整正文", "conf_weight": "确认依据"},
+    {"event_id": "EVT-MEOH-20261018-001", "news_id": "N09", "relation": "republish", "basis": "同一稿件：来源标注“金联创”，正文段落与 N08 逐段对应，标题仅多空格；发布时间晚 67 分钟", "conf_weight": "同源，不增加独立确认度"},
+    {"event_id": "EVT-MEOH-20261018-001", "news_id": "N13", "relation": "followup", "basis": "隆众同日 10-19 10:0x 发布南京诚志甲醇及MTO装置快讯；与金联创“10月18日至19日停车”时间吻合，属同一装置动作的第一手快讯", "conf_weight": "独立机构旁证（标题级）"},
+    {"event_id": "EVT-MEOH-20261018-001", "news_id": "N60", "relation": "selfmedia", "basis": "冠通期货 10-19 日报标题“MTO停车，需求负反馈”，为研究机构对该事件的当日解读", "conf_weight": "观点，不作事实"},
+    {"event_id": "EVT-MEOH-20261018-001", "news_id": "N25", "relation": "index_entry", "basis": "隆众江浙MTO产能利用率周数据，是事件规模的量化载体而非事件报道", "conf_weight": "数据支撑"},
+    {"event_id": "EVT-MEOH-20261018-001", "news_id": "N11", "relation": "selfmedia", "basis": "东方财富财富号自媒体，给出“10月18日诚志二期停车”的时间线，但与金联创“18日至19日”存在1天差异", "conf_weight": "旁证（并存在细微冲突）"},
+
+    {"event_id": "EVT-MEOH-20261010-001", "news_id": "N02", "relation": "primary", "basis": "隆众 10-10 11:01 首发该装置快讯，为目前可见最早记录", "conf_weight": "首发（标题级）"},
+    {"event_id": "EVT-MEOH-20261010-001", "news_id": "N03", "relation": "followup", "basis": "隆众 10-12 09:18 同题不同 URL，为同一装置的更新版本", "conf_weight": "同源更新"},
+    {"event_id": "EVT-MEOH-20261010-001", "news_id": "N01", "relation": "followup", "basis": "隆众 10-20 再发“天津渤化甲醇装置动态”，主体由 MTO 转为甲醇装置，属关联但不同对象，标记为设备更新", "conf_weight": "对象不同，需注意"},
+    {"event_id": "EVT-MEOH-20261010-001", "news_id": "N04", "relation": "followup", "basis": "化销网 10-12 独立快照：“天津渤化60万吨/年烯烃（MTO）装置停车中”，与隆众状态一致", "conf_weight": "独立来源旁证（平台自述未核实）"},
+    {"event_id": "EVT-MEOH-20261010-001", "news_id": "N06", "relation": "selfmedia", "basis": "甲醇时代行业播报提及“10月10日前后…渤化…停车”，为综述性提及", "conf_weight": "旁证"},
+    {"event_id": "EVT-MEOH-20261010-001", "news_id": "N07", "relation": "followup", "basis": "新华财经 10-12 表述“周末多家沿海MTO产线停车检修”，未点名渤化但时间一致", "conf_weight": "独立机构（不点名，弱旁证）"},
+
+    {"event_id": "EVT-MEOH-20261011-001", "news_id": "N05", "relation": "primary", "basis": "化销网 10-12 装置状态快照，明确两套装置的不同状态", "conf_weight": "唯一给出状态分歧的来源"},
+    {"event_id": "EVT-MEOH-20261011-001", "news_id": "N06", "relation": "selfmedia", "basis": "甲醇时代：“10月11日：联泓MTO装置停车”", "conf_weight": "旁证（未区分新科/格润）"},
+    {"event_id": "EVT-MEOH-20261011-001", "news_id": "N27", "relation": "conflict", "basis": "长安期货：“周末渤化、联泓格润停车”，明确指向格润；与 N05“格润运行暂稳”直接冲突", "conf_weight": "冲突，降级为 C4"},
+    {"event_id": "EVT-MEOH-20261011-001", "news_id": "N15", "relation": "followup", "basis": "隆众 10-19 11:xx“联泓MTO装置快讯”，为可裁决上述冲突的关键文件（正文不可读）", "conf_weight": "待读取"},
+
+    {"event_id": "EVT-MEOH-20261015-001", "news_id": "N28", "relation": "primary", "basis": "隆众数据的新浪号转载正文，标注“（隆众资讯）”，可读分项数据", "conf_weight": "确认依据（转载可读）"},
+    {"event_id": "EVT-MEOH-20261015-001", "news_id": "N22", "relation": "index_entry", "basis": "隆众原发统计表（正文受限），与 N28 同源", "conf_weight": "同源"},
+    {"event_id": "EVT-MEOH-20261015-001", "news_id": "N21", "relation": "index_entry", "basis": "隆众同批数据的分析版", "conf_weight": "同源"},
+    {"event_id": "EVT-MEOH-20261015-001", "news_id": "N23", "relation": "index_entry", "basis": "隆众同批数据的企业库存与订单版（不同指标）", "conf_weight": "同源（关联指标）"},
+
+    {"event_id": "EVT-MEOH-20261009-001", "news_id": "N27", "relation": "primary", "basis": "长安期货稿完整转引隆众周度开工与产量，并列出复产企业名单", "conf_weight": "确认依据（转引）"},
+    {"event_id": "EVT-MEOH-20261009-001", "news_id": "N24", "relation": "index_entry", "basis": "隆众原发产量/产能利用率统计（正文受限）", "conf_weight": "同源"},
+    {"event_id": "EVT-MEOH-20261009-001", "news_id": "N26", "relation": "index_entry", "basis": "隆众下游样本开工（同周，不同指标）", "conf_weight": "同源（关联指标）"},
+    {"event_id": "EVT-MEOH-20261009-001", "news_id": "N58", "relation": "selfmedia", "basis": "生意社摘要提及内蒙新奥一期运行、二期停车，属该集群内的单厂状态", "conf_weight": "摘要级旁证"},
+
+    {"event_id": "EVT-MEOH-20261015-002", "news_id": "N49", "relation": "primary", "basis": "生态环境部原文（含文号、索引号、截止日）", "conf_weight": "C1 官方原文"},
+    {"event_id": "EVT-MEOH-20261015-002", "news_id": "N50", "relation": "index_entry", "basis": "官网栏目列表项，为 N49 的索引记录，用于交叉验证文号与日期", "conf_weight": "同源索引"},
+
+    {"event_id": "EVT-MEOH-20261014-001", "news_id": "N53", "relation": "primary", "basis": "世纪新能源网报道，含撤销函日期、备案日期、投资额、建设期变更", "conf_weight": "唯一来源（C4）"},
+    {"event_id": "EVT-MEOH-20261014-001", "news_id": "N06", "relation": "selfmedia", "basis": "甲醇时代同稿亦提及“内蒙古100万吨…达拉特旗发改委撤销函”，对象一致", "conf_weight": "旁证（同属二手）"},
+
+    {"event_id": "EVT-MEOH-20261016-001", "news_id": "N30", "relation": "primary", "basis": "隆众西南装置汇总（10-16 版）经我的钢铁网转载，可读摘要表格", "conf_weight": "唯一可读装置台账"},
+    {"event_id": "EVT-MEOH-20261016-001", "news_id": "N31", "relation": "followup", "basis": "隆众 10-16 14:xx 泸天化装置动态快讯（正文受限）", "conf_weight": "待读取"},
+    {"event_id": "EVT-MEOH-20261016-001", "news_id": "N66", "relation": "followup", "basis": "同系列汇总 10-20 版（正文未取得），构成台账的后续版本", "conf_weight": "待读取"},
+
+    {"event_id": "EVT-MEOH-20261015-003", "news_id": "N27", "relation": "primary", "basis": "长安期货完整转引隆众进口、国际开工与伊朗装置状态", "conf_weight": "确认依据（转引）"},
+    {"event_id": "EVT-MEOH-20261015-003", "news_id": "N07", "relation": "conflict", "basis": "新华财经称 10 月进口预估 40—47 万吨，与隆众 34.54 万吨口径不同（不同测算方），并置保留", "conf_weight": "口径差异，需注明"},
+    {"event_id": "EVT-MEOH-20261015-003", "news_id": "N44", "relation": "index_entry", "basis": "隆众国际开工周数据（正文受限）", "conf_weight": "同源"},
+    {"event_id": "EVT-MEOH-20261015-003", "news_id": "N36", "relation": "followup", "basis": "隆众 9 月进口来源国统计（10-20 发布，超窗），是验证分国别数据的入口", "conf_weight": "待读取（Q11）"},
+
+    {"event_id": "EVT-MEOH-20261018-002", "news_id": "N56", "relation": "primary", "basis": "宝丰能源董秘 e互动答复的媒体转述，给出“10月下旬产出合格甲醇、12月下旬产出乙烯丙烯”", "conf_weight": "官方口径（二级转述）"},
+    {"event_id": "EVT-MEOH-20261018-002", "news_id": "N57", "relation": "followup", "basis": "生意社摘要补充 280 万吨/年规模与“初期部分外售”", "conf_weight": "摘要级"},
+    {"event_id": "EVT-MEOH-20261018-002", "news_id": "N55", "relation": "conflict", "basis": "中财网以“宁东四期50万吨项目”指烯烃规模，与 280 万吨/年甲醇装置不是同一量纲，需防混用", "conf_weight": "口径混用风险"},
+
+    {"event_id": "EVT-MEOH-20261008-001", "news_id": "N58", "relation": "primary", "basis": "生意社：二期 60 万吨/年自 7 月 1 日停车至今", "conf_weight": "摘要级（C4）"},
+    {"event_id": "EVT-MEOH-20261008-001", "news_id": "N27", "relation": "conflict", "basis": "长安期货将“内蒙古新奥”列入 9 月底至 10 月初复产名单，与“二期仍停车”存在张力", "conf_weight": "冲突，需 Q14"},
+
+    {"event_id": "EVT-MEOH-20261020-001", "news_id": "N29", "relation": "primary", "basis": "隆众山西装置汇总（10-08 版）经我的钢铁网转载，可读摘要", "conf_weight": "存量状态，单一来源"},
+    {"event_id": "EVT-MEOH-20261020-001", "news_id": "N33", "relation": "followup", "basis": "安庆曙光装置动态（10-20）", "conf_weight": "待读取"},
+    {"event_id": "EVT-MEOH-20261020-001", "news_id": "N34", "relation": "followup", "basis": "龙兴泰装置快讯（10-20）", "conf_weight": "待读取"},
+
+    {"event_id": "EVT-MEOH-20261012-001", "news_id": "N51", "relation": "primary", "basis": "财政部原文，产品清单可逐项核对", "conf_weight": "C1 官方原文（否定结论）"},
+    {"event_id": "EVT-MEOH-20261012-001", "news_id": "N52", "relation": "followup", "basis": "1 月旧政策（取消甲醇出口退税），为本窗口“无新政策”提供背景对照", "conf_weight": "历史背景"},
+
+    {"event_id": "EVT-MEOH-20261014-002", "news_id": "N37", "relation": "primary", "basis": "隆众国际装置动态 7 条中的首条（Marjan）", "conf_weight": "仅标题"},
+    {"event_id": "EVT-MEOH-20261014-002", "news_id": "N38", "relation": "followup", "basis": "伊朗 ZPC 装置快讯（同批发布）", "conf_weight": "仅标题"},
+    {"event_id": "EVT-MEOH-20261014-002", "news_id": "N39", "relation": "followup", "basis": "伊朗 Bushehr 装置动态（同批发布）", "conf_weight": "仅标题"},
+    {"event_id": "EVT-MEOH-20261014-002", "news_id": "N40", "relation": "followup", "basis": "马石油 Petronas（同批发布）", "conf_weight": "仅标题"},
+    {"event_id": "EVT-MEOH-20261014-002", "news_id": "N41", "relation": "followup", "basis": "南美 MHTL（同批发布）", "conf_weight": "仅标题"},
+    {"event_id": "EVT-MEOH-20261014-002", "news_id": "N42", "relation": "followup", "basis": "美国 Koch（同批发布）", "conf_weight": "仅标题"},
+    {"event_id": "EVT-MEOH-20261014-002", "news_id": "N43", "relation": "followup", "basis": "美国 Natgasoline（同批发布）", "conf_weight": "仅标题"}
+  ],
+  "unassigned": [
+    {"news_id": "N10", "reason": "盛达期货观点稿，无具体装置事实，仅记录其判断；归入 EVT-MEOH-20261015-003 的关联背景而非独立事件", "event_id": "EVT-MEOH-20261015-003"},
+    {"news_id": "N12", "reason": "隆众周度前瞻，正文不可读，无可用事实", "event_id": null},
+    {"news_id": "N14", "reason": "山东鲁西MTO快讯，正文不可读；鲁西是否为在建/停产状态在本窗口无其他证据，暂不立事件", "event_id": null},
+    {"news_id": "N16", "reason": "中煤榆林MTO快讯，正文不可读；西北一体化装置，暂不立事件", "event_id": null},
+    {"news_id": "N17", "reason": "中煤鄂能化MTO快讯，正文不可读；暂不立事件", "event_id": null},
+    {"news_id": "N18", "reason": "山东恒通MTO快讯，正文不可读；甲醇时代表述提及“停车或低负荷”，不足以定性", "event_id": null},
+    {"news_id": "N19", "reason": "隆众日度检修损失量，正文不可读，无可用数值", "event_id": null},
+    {"news_id": "N20", "reason": "隆众日评，正文不可读，标题含市场判断，不立事件", "event_id": null},
+    {"news_id": "N32", "reason": "七台河吉伟装置快讯，正文不可读，东北小装置，暂不立事件", "event_id": null},
+    {"news_id": "N35", "reason": "富德(常州)DMTO快讯，正文不可读；需先区分宁波与常州装置", "event_id": null},
+    {"news_id": "N45", "reason": "隆众产业链变化点梳理，仅有导语；内容为综述，不作事件", "event_id": null},
+    {"news_id": "N46", "reason": "隆众聚焦，正文受限；标题为价格判断类，不立事件", "event_id": null},
+    {"news_id": "N47", "reason": "同上", "event_id": null},
+    {"news_id": "N48", "reason": "同上（区域价格现象）", "event_id": null},
+    {"news_id": "N54", "reason": "海南富岛环评批复发生于 9 月（超窗），本窗口无新增进展，仅作绿色甲醇路线背景", "event_id": null},
+    {"news_id": "N59", "reason": "【拒用】七禾网稿件所述库存水平（127.30 万吨）与本窗口隆众口径（30.51—36.72 万吨）相差 4 倍，且“库存历史高位”与“历史新低”相反，判定超窗或对象错配", "event_id": null},
+    {"news_id": "N61", "reason": "西北装置汇总 10-20 版链接，正文未取得", "event_id": null},
+    {"news_id": "N62", "reason": "华东江苏上海装置汇总 10-20 版链接，正文未取得", "event_id": null},
+    {"news_id": "N63", "reason": "华东山东装置汇总 10-20 版链接，正文未取得", "event_id": null},
+    {"news_id": "N64", "reason": "东北装置汇总 10-20 版链接，正文未取得", "event_id": null},
+    {"news_id": "N65", "reason": "华东鲁南苏北装置汇总 10-20 版链接，正文未取得", "event_id": null}
+  ]
+}

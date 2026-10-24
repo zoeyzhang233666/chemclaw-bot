@@ -1,0 +1,84 @@
+﻿{
+ "generated_at": "2026-10-20 19:07:33",
+ "files": {
+  "inventory": {
+   "path": "data/port_inventory_weekly.csv",
+   "exists": true,
+   "rows": 228,
+   "sha256": "4ea946f060345e69"
+  },
+  "price": {
+   "path": "data/100ppi_sf.csv",
+   "exists": true,
+   "rows": 1119,
+   "sha256": "d95216a6210fca86"
+  },
+  "minute": {
+   "path": "data/futures/MA0_60min.csv",
+   "exists": true,
+   "rows": 1023,
+   "sha256": "84e0169895cf777b"
+  }
+ },
+ "series": {
+  "inventory": {
+   "name": "中国甲醇样本港口库存（周度）",
+   "rows": 228,
+   "first": "2022-04-06",
+   "last": "2026-10-14",
+   "by_year": {
+    "2022": 38,
+    "2023": 49,
+    "2024": 50,
+    "2025": 51,
+    "2026": 40
+   },
+   "gap_median_days": 7,
+   "gap_max_days": 15,
+   "gaps_over_10d": 11,
+   "pub_ts_missing": 0,
+   "sample_cov_values": [
+    "",
+    "98.0"
+   ]
+  },
+  "price": {
+   "name": "100ppi 甲醇基准价 + 期货（日度）",
+   "rows": 1119,
+   "first": "2022-03-01",
+   "last": "2026-10-20",
+   "by_year": {
+    "2022": 207,
+    "2023": 238,
+    "2024": 242,
+    "2025": 242,
+    "2026": 190
+   },
+   "missing_spot": 0
+  }
+ },
+ "requirements": [
+  {
+   "id": "R1",
+   "text": "库存周度样本 ≥ 104 周（2 年）",
+   "got": 228,
+   "pass": true
+  },
+  {
+   "id": "R2",
+   "text": "预估信号样本（粗估 N/3）≥ 20",
+   "got": 75,
+   "pass": true
+  },
+  {
+   "id": "R3",
+   "text": "价格序列与库存观测日重叠 ≥ 90%",
+   "got": 0.982,
+   "pass": true
+  }
+ ],
+ "verdict": "SUFFICIENT",
+ "notes": [
+  "audit 阶段不运行任何统计；缺失一律记为缺口，不插值、不推断。"
+ ]
+}

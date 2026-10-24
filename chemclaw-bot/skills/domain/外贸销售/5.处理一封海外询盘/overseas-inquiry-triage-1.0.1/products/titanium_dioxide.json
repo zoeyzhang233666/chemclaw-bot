@@ -1,0 +1,41 @@
+{
+  "id": "titanium_dioxide",
+  "name_cn": "钛白粉",
+  "name_en": "Titanium Dioxide",
+  "synonyms": ["TiO2", "titanium white", "rutile titanium dioxide", "钛白", "二氧化钛"],
+  "other_languages": {
+    "vi": ["titani dioxit", "bột màu trắng"],
+    "id": ["titanium dioksida"],
+    "es": ["dióxido de titanio"],
+    "pt": ["dióxido de titânio"],
+    "ar": ["ثاني أكسيد التيتانيوم"]
+  },
+  "cas": "13463-67-7",
+  "ec": "236-675-5",
+  "un": null,
+  "hs_candidates": ["32061100"],
+  "hs_note": "3206.11（含 TiO2 ≥80% 的颜料）为常见候选；按纯度/用途可能归入 2823.00，需报关行确认。",
+  "grades": [
+    {"code": "rutile_coating", "cn": "金红石型（涂料级）", "typical": {"TiO2": "≥93%", "oil_absorption": "18–22 g/100g"}},
+    {"code": "rutile_plastic", "cn": "金红石型（塑料级）", "typical": {"TiO2": "≥93%"}},
+    {"code": "anatase", "cn": "锐钛型", "typical": {"TiO2": "≥98%"}}
+  ],
+  "typical_specs": {
+    "TiO2": {"unit": "%", "value": "≥93 (surface treated)"},
+    "oil_absorption": {"unit": "g/100g", "value": "18–22"},
+    "residue_45um": {"unit": "%", "value": "≤0.02"},
+    "volatile_105": {"unit": "%", "value": "≤0.5"}
+  },
+  "applications": ["coating", "plastic", "ink", "paper", "masterbatch"],
+  "packing_options": ["25 kg paper-plastic composite bag", "500 kg jumbo bag"],
+  "sales_notes": [
+    "金红石型与锐钛型价格与用途差异大，客户只写 TiO2 时必须确认晶型。",
+    "涂料级/塑料级/油墨级的表面处理不同，不能互相替代。",
+    "牌号（如 R-996、A-100）是客户常给的信息，但牌号≠我们的牌号，要按参数对齐。"
+  ],
+  "do_not_assume": [
+    "不能默认金红石型",
+    "不能默认涂料级",
+    "不能把客户给的竞争对手牌号当作我们的牌号"
+  ]
+}

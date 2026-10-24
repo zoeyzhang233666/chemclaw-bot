@@ -1,0 +1,1740 @@
+{
+  "meta": {
+    "product": "纯碱（碳酸钠，轻质/重质，含食品级）",
+    "product_short": "纯碱",
+    "region": "广东 · 江门",
+    "province": "广东",
+    "city": "江门",
+    "target_lon": 113.08,
+    "target_lat": 22.58,
+    "anchor_customer": "信义环保特种玻璃（江门）有限公司",
+    "anchor_short": "信义玻璃 · 江门",
+    "asof": "2026-10-19",
+    "unit": "万吨/年",
+    "output_unit": "万吨",
+    "distance_label": "直线距离",
+    "brand_mark": "碱",
+    "brand_name": "碱图 · SODA MAP",
+    "brand_sub": "COMPETITIVE SUPPLY LAYOUT",
+    "download_name": "纯碱_广东江门_竞争供给地图",
+    "processes": [
+      {
+        "id": "natural",
+        "name": "天然碱",
+        "color": "#b4642d"
+      },
+      {
+        "id": "combined",
+        "name": "联碱",
+        "color": "#2f6f8f"
+      },
+      {
+        "id": "ammonia",
+        "name": "氨碱",
+        "color": "#6b7f4a"
+      }
+    ],
+    "distance_bands": [
+      {
+        "id": "local",
+        "label": "≤300km 本地",
+        "max": 300
+      },
+      {
+        "id": "near",
+        "label": "300–800km 近邻",
+        "max": 800
+      },
+      {
+        "id": "long",
+        "label": "800–1500km 长途",
+        "max": 1500
+      },
+      {
+        "id": "far",
+        "label": ">1500km 超长途",
+        "max": null
+      }
+    ],
+    "extra_provinces": [
+      "浙江",
+      "福建",
+      "广西",
+      "湖南",
+      "江西",
+      "海南"
+    ],
+    "coverage": {
+      "industry_low": 4305,
+      "industry_high": 4468,
+      "label": "全国纯碱产能公开口径"
+    },
+    "disclaimer": "本报告为销售线索与竞争布局研究，不构成投资建议、价格承诺或市场份额结论。",
+    "output_year": "2025",
+    "target_demand": 150,
+    "target_demand_label": "珠三角需求",
+    "target_note": "* 南方碱业公开表述“珠三角年纯碱需求量150万吨”；** 按3×900t/d、0.2吨碱/吨玻璃、330天推算。另有协会简介称其产能仅满足广东需求不到30%，与“150万吨/60万吨=40%”不一致；本页只并列，不反推份额。距离为直线距离，不是铁路/水运运距；正式版可替换目标区域与我方供货半径。",
+    "dose_label": "用碱量级",
+    "use_label": "用碱场景",
+    "label_province": "内蒙古",
+    "label_capacity_min": 330,
+    "project_labels": [
+      "pr_zhongyan_naiman",
+      "pr_xuetian_hengyang"
+    ],
+    "map_center": [
+      107.5,
+      35.2
+    ],
+    "map_zoom": 1.08
+  },
+  "target": {
+    "region": "广东 · 江门",
+    "province": "广东",
+    "city": "江门",
+    "lon": 113.08,
+    "lat": 22.58,
+    "customer": "信义环保特种玻璃（江门）有限公司",
+    "customer_short": "信义玻璃 · 江门",
+    "note": "以珠三角西岸的浮法玻璃集群为示例目标区域；正式版可替换为任意重点开发区域。"
+  },
+  "companies": [
+    {
+      "id": "boyuan",
+      "name": "博源化工",
+      "short": "博源",
+      "ticker": "000683",
+      "alias": "原远兴能源",
+      "process": "天然碱",
+      "hq": "内蒙古·阿拉善 / 河南·桐柏",
+      "products": "纯碱（轻/重）、小苏打、尿素",
+      "capacity": 680,
+      "output": 711.12,
+      "cap_year": "2025H1",
+      "grade": "A",
+      "coverage": "阿拉善/桐柏双基地，铁路+港口可全国覆盖；到江门直线约2,160km，成本优势可对冲运距",
+      "new": "阿拉善二期280万吨：2025-12首条100万吨线试车，2026逐步达产；设计总产能960万吨",
+      "source_ids": [
+        "S04",
+        "S05",
+        "S06"
+      ]
+    },
+    {
+      "id": "zhongyan",
+      "name": "中盐化工",
+      "short": "中盐",
+      "ticker": "600328",
+      "process": "氨碱/联碱/天然碱",
+      "hq": "内蒙古·阿拉善 / 青海·德令哈 / 江苏·昆山",
+      "products": "纯碱、PVC、烧碱、金属钠",
+      "capacity": 390,
+      "output": 444.62,
+      "cap_year": "2025A",
+      "grade": "A",
+      "coverage": "青海/内蒙/昆山三地布局，覆盖华北、西北、西南、华中、华东、东北；昆山可水运南下",
+      "new": "通辽奈曼旗500万吨天然碱：2025年取得采矿权并启动溶采试验，远期项目；现有基地无在建纯碱产能",
+      "source_ids": [
+        "S01",
+        "S07"
+      ]
+    },
+    {
+      "id": "sanyou",
+      "name": "三友化工",
+      "short": "三友",
+      "ticker": "600409",
+      "process": "氨碱",
+      "hq": "河北·唐山 / 青海·德令哈",
+      "products": "纯碱、粘胶短纤、PVC、有机硅",
+      "capacity": 340,
+      "output": 319.05,
+      "cap_year": "2025A",
+      "grade": "A",
+      "coverage": "唐山南堡+青海五彩；华北/东北为主，华南海运可覆盖；到江门直线约1,920km",
+      "new": "无公开新增纯碱产能；以节能降碳、装置提效为主",
+      "source_ids": [
+        "S24",
+        "S27"
+      ]
+    },
+    {
+      "id": "jinshan",
+      "name": "金山化工",
+      "short": "金山",
+      "ticker": "—",
+      "process": "联碱",
+      "hq": "河南·漯河舞阳",
+      "products": "纯碱、氯化铵、小苏打、三聚氰胺",
+      "capacity": 330,
+      "output": null,
+      "cap_year": "2025",
+      "grade": "B",
+      "coverage": "舞阳单一大型基地，华中/华南铁路+汽运；到江门约1,210km；潜江项目投产后南向运距缩短",
+      "new": "潜江150万吨纯碱（搬迁产能）：2025-04开工，预计2026-06投产；净增需看河南老产能是否退出",
+      "source_ids": [
+        "S12",
+        "S13",
+        "S21"
+      ]
+    },
+    {
+      "id": "haihua",
+      "name": "山东海化",
+      "short": "海化",
+      "ticker": "000822",
+      "process": "氨碱",
+      "hq": "山东·潍坊滨海",
+      "products": "纯碱、原盐、氯化钙、溴素",
+      "capacity": 280,
+      "output": 272.42,
+      "cap_year": "2025A",
+      "grade": "A",
+      "coverage": "潍坊滨海，海运至华南便利；到江门直线约1,720km；华东/华南沿海是主要外销方向",
+      "new": "2025年报披露在建纯碱产能为0；以提质增效改造为主",
+      "source_ids": [
+        "S03",
+        "S05"
+      ]
+    },
+    {
+      "id": "jinjing",
+      "name": "金晶科技",
+      "short": "金晶",
+      "ticker": "600586",
+      "process": "氨碱",
+      "hq": "山东·淄博",
+      "products": "纯碱、浮法玻璃、光伏玻璃（垂直一体化）",
+      "capacity": 150,
+      "output": 124.81,
+      "cap_year": "2025H1",
+      "grade": "B",
+      "coverage": "淄博海天生物，纯碱自用+外销；到江门直线约1,650km，海运/铁路均可",
+      "new": "无公开新增纯碱产能；纯碱主要保障自有玻璃板块",
+      "source_ids": [
+        "S23",
+        "S27"
+      ]
+    },
+    {
+      "id": "shuanghuan",
+      "name": "双环科技",
+      "short": "双环",
+      "ticker": "000707",
+      "process": "联碱",
+      "hq": "湖北·应城",
+      "products": "纯碱、氯化铵",
+      "capacity": 110,
+      "output": 119.21,
+      "cap_year": "2025A",
+      "grade": "A",
+      "coverage": "应城基地，华中/华南铁路+汽运；到江门约930km，是广东目前最近的外省规模化供给之一",
+      "new": "60万吨联碱节能技改（等量置换），2025年推进；无净增",
+      "source_ids": [
+        "S02",
+        "S09"
+      ]
+    },
+    {
+      "id": "hebang",
+      "name": "和邦生物",
+      "short": "和邦",
+      "ticker": "603077",
+      "process": "联碱",
+      "hq": "四川·乐山",
+      "products": "纯碱、氯化铵、双甘膦、玻璃",
+      "capacity": 110,
+      "output": null,
+      "cap_year": "2025",
+      "grade": "B",
+      "coverage": "乐山五通桥，西南为主，华南可铁路/公路；到江门直线约1,210km",
+      "new": "无公开新增纯碱产能；双甘膦/光伏玻璃为延伸方向",
+      "source_ids": [
+        "S27"
+      ]
+    },
+    {
+      "id": "xuetian",
+      "name": "雪天盐业",
+      "short": "雪天",
+      "ticker": "600929",
+      "process": "联碱",
+      "hq": "重庆·万州 / 湖南·衡阳（在建）",
+      "products": "纯碱、氯化铵、盐、小苏打",
+      "capacity": 100,
+      "output": 101.68,
+      "cap_year": "2025H1",
+      "grade": "A",
+      "coverage": "湘渝盐化（万州）覆盖西南/华中；衡阳项目投产后到江门直线约480km，首次进入广东近距圈",
+      "new": "衡阳绿色盐碱基地：纯碱80万吨，2024年公告，建设推进中；投产后将改变华南近距供给",
+      "source_ids": [
+        "S10",
+        "S11"
+      ]
+    },
+    {
+      "id": "huachang",
+      "name": "华昌化工",
+      "short": "华昌",
+      "ticker": "002274",
+      "process": "联碱",
+      "hq": "江苏·张家港",
+      "products": "纯碱、氯化铵、化肥、多元醇",
+      "capacity": 70,
+      "output": 67.87,
+      "cap_year": "2023",
+      "grade": "B",
+      "coverage": "张家港长江码头，江海联运至广东；到江门直线约1,270km；华东/华南水运优势明显",
+      "new": "无公开新增纯碱产能",
+      "source_ids": [
+        "S26",
+        "S05"
+      ]
+    },
+    {
+      "id": "suyan",
+      "name": "苏盐井神",
+      "short": "苏盐",
+      "ticker": "603299",
+      "process": "联碱",
+      "hq": "江苏·淮安",
+      "products": "纯碱、工业盐、元明粉、氯化钙",
+      "capacity": 70,
+      "output": null,
+      "cap_year": "2024IR",
+      "grade": "B",
+      "coverage": "淮安，京杭大运河+长江码头，可水运至华南；到江门直线约1,350km",
+      "new": "无公开新增纯碱产能；盐穴储能/储气为延伸方向",
+      "source_ids": [
+        "S25"
+      ]
+    },
+    {
+      "id": "nanfang",
+      "name": "南方碱业",
+      "short": "南方",
+      "ticker": "—",
+      "process": "氨碱",
+      "hq": "广东·广州黄埔",
+      "products": "纯碱（轻/重/食品级）、芒硝、小苏打",
+      "capacity": 60,
+      "output": null,
+      "cap_year": "2025",
+      "grade": "B",
+      "coverage": "广东唯一在产纯碱厂，珠三角本地65km；自有码头；本地供给“薄而不空”",
+      "new": "无公开新增纯碱产能；官网另有35万吨/年旧口径，需以最新环评/年报复核",
+      "source_ids": [
+        "S14",
+        "S15",
+        "S16",
+        "S32"
+      ]
+    },
+    {
+      "id": "lianyungang",
+      "name": "连云港碱业",
+      "short": "连碱",
+      "ticker": "—",
+      "process": "联碱",
+      "hq": "江苏·连云港燕尾港",
+      "products": "纯碱、氯化铵、氯化钙",
+      "capacity": 110,
+      "output": null,
+      "cap_year": "2025",
+      "grade": "A",
+      "coverage": "燕尾港临港，海运至广东；到江门直线约1,475km；2025年搬迁项目投产，华东沿海供给增强",
+      "new": "110万吨联碱搬迁项目已于2024年底中交、2025年试生产/投产；净增来自旧110万吨氨碱退出后的置换",
+      "source_ids": [
+        "S08",
+        "S09"
+      ]
+    },
+    {
+      "id": "yongli",
+      "name": "天津渤化永利",
+      "short": "永利",
+      "ticker": "—",
+      "process": "联碱",
+      "hq": "天津·滨海新区临港",
+      "products": "纯碱、氯化铵、丁辛醇、甲醇",
+      "capacity": 80,
+      "output": null,
+      "cap_year": "2022",
+      "grade": "B",
+      "coverage": "天津港临港，海运至华南；到江门直线约1,880km；北方碱南运的传统主力之一",
+      "new": "无公开新增纯碱产能",
+      "source_ids": [
+        "S27"
+      ]
+    },
+    {
+      "id": "hongshifang",
+      "name": "安徽红四方",
+      "short": "红四方",
+      "ticker": "—",
+      "process": "联碱",
+      "hq": "安徽·合肥",
+      "products": "纯碱、氯化铵、复合肥",
+      "capacity": 70,
+      "output": null,
+      "cap_year": "2024",
+      "grade": "B",
+      "coverage": "合肥，华东/华中；到江门直线约1,110km；以区域销售为主",
+      "new": "20万吨联碱扩产已于2023-2024年投产，计入现有产能",
+      "source_ids": [
+        "S27"
+      ]
+    },
+    {
+      "id": "xindu",
+      "name": "新都化工",
+      "short": "新都",
+      "ticker": "—",
+      "process": "联碱",
+      "hq": "湖北·应城",
+      "products": "纯碱、氯化铵、复合肥",
+      "capacity": 60,
+      "output": null,
+      "cap_year": "2025",
+      "grade": "B",
+      "coverage": "应城，华中/华南；到江门约930km；与双环同城，形成应城盐碱集群",
+      "new": "70万吨联碱项目：2025年底建成、2026年投产（公告/行业口径60-70万吨）",
+      "source_ids": [
+        "S22",
+        "S09",
+        "S28"
+      ]
+    },
+    {
+      "id": "debang",
+      "name": "江苏德邦",
+      "short": "德邦",
+      "ticker": "—",
+      "process": "联碱",
+      "hq": "江苏·连云港",
+      "products": "纯碱、氯化铵",
+      "capacity": 60,
+      "output": null,
+      "cap_year": "2025",
+      "grade": "B",
+      "coverage": "连云港，海运至广东；到江门直线约1,475km；2025年2月搬迁项目出货",
+      "new": "60万吨联碱搬迁项目2025年2月出货，已计入现有产能",
+      "source_ids": [
+        "S09"
+      ]
+    }
+  ],
+  "plants": [
+    {
+      "id": "pl_boyuan_alashan",
+      "company_id": "boyuan",
+      "name": "阿拉善塔木素基地",
+      "province": "内蒙古",
+      "city": "阿拉善盟",
+      "lon": 103.7,
+      "lat": 40.3,
+      "process": "天然碱",
+      "capacity": 500,
+      "cap_year": "2025",
+      "products": "重碱/轻碱",
+      "note": "银根矿业；一期500万吨2023年6月投料，已达产",
+      "grade": "A",
+      "source_ids": [
+        "S04"
+      ],
+      "label_position": "left"
+    },
+    {
+      "id": "pl_boyuan_tongbai",
+      "company_id": "boyuan",
+      "name": "桐柏中源化学基地",
+      "province": "河南",
+      "city": "南阳桐柏",
+      "lon": 113.42,
+      "lat": 32.37,
+      "process": "天然碱",
+      "capacity": 180,
+      "cap_year": "2025",
+      "products": "重碱/轻碱/小苏打",
+      "note": "安棚/吴城碱矿；天然碱法",
+      "grade": "A",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "id": "pl_zy_kunlun",
+      "company_id": "zhongyan",
+      "name": "昆仑碱业",
+      "province": "青海",
+      "city": "德令哈",
+      "lon": 97.2,
+      "lat": 37.2,
+      "process": "氨碱",
+      "capacity": 155,
+      "cap_year": "2025A",
+      "products": "重碱/轻碱",
+      "note": "产能利用率108.07%；青海石灰石/盐资源",
+      "grade": "A",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "pl_zy_fatou",
+      "company_id": "zhongyan",
+      "name": "发投碱业",
+      "province": "青海",
+      "city": "德令哈",
+      "lon": 97.55,
+      "lat": 37.55,
+      "process": "氨碱",
+      "capacity": 140,
+      "cap_year": "2025A",
+      "products": "重碱/轻碱",
+      "note": "产能利用率107.65%；与昆仑碱业同城",
+      "grade": "A",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "pl_zy_kunshan",
+      "company_id": "zhongyan",
+      "name": "中盐昆山",
+      "province": "江苏",
+      "city": "昆山",
+      "lon": 120.98,
+      "lat": 31.39,
+      "process": "联碱",
+      "capacity": 60,
+      "cap_year": "2025A",
+      "products": "纯碱/氯化铵",
+      "note": "产能利用率132.58%；氯化铵主要销往出口及江浙皖",
+      "grade": "A",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "pl_zy_jilantai",
+      "company_id": "zhongyan",
+      "name": "吉兰泰盐碱分公司",
+      "province": "内蒙古",
+      "city": "阿拉善左旗",
+      "lon": 105.75,
+      "lat": 39.78,
+      "process": "天然碱",
+      "capacity": 35,
+      "cap_year": "2025A",
+      "products": "纯碱",
+      "note": "产能利用率133.81%；天然碱/盐湖资源",
+      "grade": "A",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "pl_sy_tangshan",
+      "company_id": "sanyou",
+      "name": "唐山南堡本部",
+      "province": "河北",
+      "city": "唐山南堡",
+      "lon": 118.25,
+      "lat": 39.25,
+      "process": "氨碱",
+      "capacity": 230,
+      "cap_year": "2025",
+      "products": "重碱/轻碱",
+      "note": "“两碱一化”循环经济；自用+外销",
+      "grade": "A",
+      "source_ids": [
+        "S24",
+        "S27"
+      ]
+    },
+    {
+      "id": "pl_sy_wucai",
+      "company_id": "sanyou",
+      "name": "青海五彩碱业",
+      "province": "青海",
+      "city": "德令哈",
+      "lon": 97.55,
+      "lat": 37.35,
+      "process": "氨碱",
+      "capacity": 110,
+      "cap_year": "2025",
+      "products": "重碱/轻碱",
+      "note": "三友控股子公司；青海基地",
+      "grade": "A",
+      "source_ids": [
+        "S24",
+        "S27"
+      ]
+    },
+    {
+      "id": "pl_js_wuyang",
+      "company_id": "jinshan",
+      "name": "舞阳盐化工基地",
+      "province": "河南",
+      "city": "漯河舞阳",
+      "lon": 113.6,
+      "lat": 33.44,
+      "process": "联碱",
+      "capacity": 330,
+      "cap_year": "2025",
+      "products": "纯碱/氯化铵/小苏打",
+      "note": "金山集团主基地；采矿制盐—联碱—热电联产",
+      "grade": "B",
+      "source_ids": [
+        "S12"
+      ]
+    },
+    {
+      "id": "pl_hh_weifang",
+      "company_id": "haihua",
+      "name": "潍坊滨海纯碱厂",
+      "province": "山东",
+      "city": "潍坊滨海",
+      "lon": 119.1,
+      "lat": 37.13,
+      "process": "氨碱",
+      "capacity": 280,
+      "cap_year": "2025A",
+      "products": "重碱/轻碱",
+      "note": "老线120+新线160；单套装置规模大",
+      "grade": "A",
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "id": "pl_jj_zibo",
+      "company_id": "jinjing",
+      "name": "山东海天生物化工",
+      "province": "山东",
+      "city": "淄博",
+      "lon": 118.05,
+      "lat": 36.81,
+      "process": "氨碱",
+      "capacity": 150,
+      "cap_year": "2025",
+      "products": "纯碱",
+      "note": "金晶全资子公司；纯碱—玻璃一体化",
+      "grade": "B",
+      "source_ids": [
+        "S23",
+        "S27"
+      ]
+    },
+    {
+      "id": "pl_sh_yingcheng",
+      "company_id": "shuanghuan",
+      "name": "应城东马坊基地",
+      "province": "湖北",
+      "city": "应城",
+      "lon": 113.57,
+      "lat": 30.93,
+      "process": "联碱",
+      "capacity": 110,
+      "cap_year": "2025A",
+      "products": "纯碱/氯化铵",
+      "note": "设计产能110万吨；2025年产量119.21万吨",
+      "grade": "A",
+      "source_ids": [
+        "S02"
+      ]
+    },
+    {
+      "id": "pl_hb_leshan",
+      "company_id": "hebang",
+      "name": "乐山五通桥基地",
+      "province": "四川",
+      "city": "乐山",
+      "lon": 103.77,
+      "lat": 29.55,
+      "process": "联碱",
+      "capacity": 110,
+      "cap_year": "2025",
+      "products": "纯碱/氯化铵",
+      "note": "联碱法；与双甘膦/玻璃一体化",
+      "grade": "B",
+      "source_ids": [
+        "S27"
+      ]
+    },
+    {
+      "id": "pl_xt_wanzhou",
+      "company_id": "xuetian",
+      "name": "湘渝盐化（万州）",
+      "province": "重庆",
+      "city": "万州",
+      "lon": 108.41,
+      "lat": 30.81,
+      "process": "联碱",
+      "capacity": 100,
+      "cap_year": "2025H1",
+      "products": "纯碱/氯化铵",
+      "note": "雪天盐业全资子公司；纯碱100万吨、氯化铵100万吨",
+      "grade": "A",
+      "source_ids": [
+        "S10"
+      ]
+    },
+    {
+      "id": "pl_hc_zhangjiagang",
+      "company_id": "huachang",
+      "name": "张家港基地",
+      "province": "江苏",
+      "city": "张家港",
+      "lon": 120.55,
+      "lat": 31.87,
+      "process": "联碱",
+      "capacity": 70,
+      "cap_year": "2023",
+      "products": "纯碱/氯化铵",
+      "note": "长江码头，江海联运",
+      "grade": "B",
+      "source_ids": [
+        "S26"
+      ]
+    },
+    {
+      "id": "pl_sy_huaian",
+      "company_id": "suyan",
+      "name": "淮安基地",
+      "province": "江苏",
+      "city": "淮安",
+      "lon": 119.02,
+      "lat": 33.55,
+      "process": "联碱",
+      "capacity": 70,
+      "cap_year": "2024IR",
+      "products": "纯碱/工业盐",
+      "note": "井矿盐—纯碱一体化；京杭大运河/长江码头",
+      "grade": "B",
+      "source_ids": [
+        "S25"
+      ]
+    },
+    {
+      "id": "pl_nf_guangzhou",
+      "company_id": "nanfang",
+      "name": "广州黄埔南岗厂区",
+      "province": "广东",
+      "city": "广州黄埔",
+      "lon": 113.45,
+      "lat": 23.1,
+      "process": "氨碱",
+      "capacity": 60,
+      "cap_year": "2025",
+      "products": "重碱/轻碱/食品级",
+      "note": "广东唯一在产纯碱厂；自有码头；官网规模页仍写35万吨/年",
+      "grade": "B",
+      "source_ids": [
+        "S14",
+        "S15"
+      ]
+    },
+    {
+      "id": "pl_lyg_yanweigang",
+      "company_id": "lianyungang",
+      "name": "燕尾港临港基地",
+      "province": "江苏",
+      "city": "连云港",
+      "lon": 119.78,
+      "lat": 34.48,
+      "process": "联碱",
+      "capacity": 110,
+      "cap_year": "2025",
+      "products": "纯碱/氯化铵",
+      "note": "搬迁升级项目；联碱法替代原氨碱法",
+      "grade": "A",
+      "source_ids": [
+        "S08"
+      ]
+    },
+    {
+      "id": "pl_yl_tianjin",
+      "company_id": "yongli",
+      "name": "天津临港基地",
+      "province": "天津",
+      "city": "天津滨海",
+      "lon": 117.7,
+      "lat": 38.98,
+      "process": "联碱",
+      "capacity": 80,
+      "cap_year": "2022",
+      "products": "纯碱/氯化铵",
+      "note": "原天津碱厂搬迁；临港，靠近天津港",
+      "grade": "B",
+      "source_ids": [
+        "S27"
+      ]
+    },
+    {
+      "id": "pl_hsf_hefei",
+      "company_id": "hongshifang",
+      "name": "合肥基地",
+      "province": "安徽",
+      "city": "合肥",
+      "lon": 117.23,
+      "lat": 31.82,
+      "process": "联碱",
+      "capacity": 70,
+      "cap_year": "2024",
+      "products": "纯碱/氯化铵",
+      "note": "红四方联碱；20万吨扩产已投产",
+      "grade": "B",
+      "source_ids": [
+        "S27"
+      ]
+    },
+    {
+      "id": "pl_xd_yingcheng",
+      "company_id": "xindu",
+      "name": "应城基地",
+      "province": "湖北",
+      "city": "应城",
+      "lon": 113.48,
+      "lat": 30.88,
+      "process": "联碱",
+      "capacity": 60,
+      "cap_year": "2025",
+      "products": "纯碱/氯化铵",
+      "note": "云图控股旗下；现有60万吨，70万吨新项目2026投产",
+      "grade": "B",
+      "source_ids": [
+        "S22"
+      ]
+    },
+    {
+      "id": "pl_db_lianyungang",
+      "company_id": "debang",
+      "name": "连云港基地",
+      "province": "江苏",
+      "city": "连云港",
+      "lon": 119.25,
+      "lat": 34.68,
+      "process": "联碱",
+      "capacity": 60,
+      "cap_year": "2025",
+      "products": "纯碱/氯化铵",
+      "note": "60万吨搬迁项目2025年2月出货",
+      "grade": "B",
+      "source_ids": [
+        "S09"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "pr_boyuan2",
+      "company_id": "boyuan",
+      "name": "阿拉善二期",
+      "location": "内蒙古·阿拉善右旗",
+      "lon": 103.7,
+      "lat": 40.3,
+      "capacity": 280,
+      "process": "天然碱",
+      "kind": "新增",
+      "status": "试车/爬坡",
+      "year": 2026,
+      "timing": "2025-12首条100万吨线投料；2026年其余线逐步试车",
+      "net": "+280",
+      "impact": "低成本天然碱增量，全国价格中枢承压；华东/华南到货价差收窄，远距离高成本货源先被挤出",
+      "grade": "A",
+      "source_ids": [
+        "S04",
+        "S06"
+      ]
+    },
+    {
+      "id": "pr_zhongyan_naiman",
+      "company_id": "zhongyan",
+      "name": "奈曼旗天然碱",
+      "location": "内蒙古·通辽奈曼旗",
+      "lon": 120.66,
+      "lat": 42.85,
+      "capacity": 500,
+      "process": "天然碱",
+      "kind": "新增",
+      "status": "前期/溶采试验",
+      "year": 2029,
+      "timing": "2025-06取得采矿权；2025-08启动500万吨溶采试验；投产预计“十五五”中后期",
+      "net": "+500",
+      "impact": "远期最大变量；东北/华北/华东沿海供给格局重写，经港口南下将压低华南到货成本",
+      "grade": "A",
+      "source_ids": [
+        "S07",
+        "S29"
+      ]
+    },
+    {
+      "id": "pr_xuetian_hengyang",
+      "company_id": "xuetian",
+      "name": "衡阳绿色盐碱基地",
+      "location": "湖南·衡阳",
+      "lon": 112.57,
+      "lat": 26.89,
+      "capacity": 80,
+      "process": "联碱",
+      "kind": "新增",
+      "status": "在建",
+      "year": 2027,
+      "timing": "2024-02公告，投资87.87亿元；建设推进中，行业预计2026-2027",
+      "net": "+80",
+      "impact": "首次在江门480km内形成规模化供给，粤北/珠三角近距竞争启动；本地“空白”窗口收窄",
+      "grade": "A",
+      "source_ids": [
+        "S11"
+      ]
+    },
+    {
+      "id": "pr_jinshan_qianjiang",
+      "company_id": "jinshan",
+      "name": "潜江盐穴综合开发一期",
+      "location": "湖北·潜江",
+      "lon": 112.9,
+      "lat": 30.4,
+      "capacity": 150,
+      "process": "联碱",
+      "kind": "搬迁",
+      "status": "在建",
+      "year": 2026,
+      "timing": "2025-04开工，预计2026-06投产；一期150万吨纯碱（搬迁产能）",
+      "net": "0（若河南老产能退出）",
+      "impact": "金山南向运距缩短，华中/华南铁路竞争加剧；净增取决于河南老线是否关停",
+      "grade": "B",
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "pr_xindu",
+      "company_id": "xindu",
+      "name": "应城联碱扩产",
+      "location": "湖北·应城",
+      "lon": 113.48,
+      "lat": 30.88,
+      "capacity": 70,
+      "process": "联碱",
+      "kind": "新增",
+      "status": "建成/投产",
+      "year": 2026,
+      "timing": "2025年底建成，2026年投产（行业口径60-70万吨）",
+      "net": "+70",
+      "impact": "应城集群供给增加，华中/华南铁路货源更充裕；对广东到厂价形成压制",
+      "grade": "B",
+      "source_ids": [
+        "S09",
+        "S22",
+        "S28"
+      ]
+    },
+    {
+      "id": "pr_lyg",
+      "company_id": "lianyungang",
+      "name": "连云港碱业搬迁升级",
+      "location": "江苏·连云港燕尾港",
+      "lon": 119.78,
+      "lat": 34.48,
+      "capacity": 110,
+      "process": "联碱",
+      "kind": "搬迁",
+      "status": "已投产",
+      "year": 2025,
+      "timing": "2024年底中交，2025年试生产/投产；110万吨联碱替代旧氨碱",
+      "net": "0（置换）",
+      "impact": "华东沿海供给增强，海运至广东更便利；旧氨碱退出改善环保约束",
+      "grade": "A",
+      "source_ids": [
+        "S08"
+      ]
+    },
+    {
+      "id": "pr_debang",
+      "company_id": "debang",
+      "name": "连云港德邦搬迁",
+      "location": "江苏·连云港",
+      "lon": 119.25,
+      "lat": 34.68,
+      "capacity": 60,
+      "process": "联碱",
+      "kind": "搬迁",
+      "status": "已投产",
+      "year": 2025,
+      "timing": "2025年2月出货",
+      "net": "0（置换）",
+      "impact": "华东沿海联碱供给增加，与连碱形成连云港集群",
+      "grade": "B",
+      "source_ids": [
+        "S09"
+      ]
+    },
+    {
+      "id": "pr_shuanghuan",
+      "company_id": "shuanghuan",
+      "name": "60万吨联碱节能技改",
+      "location": "湖北·应城",
+      "lon": 113.57,
+      "lat": 30.93,
+      "capacity": 60,
+      "process": "联碱",
+      "kind": "技改",
+      "status": "推进中",
+      "year": 2025,
+      "timing": "2023年公告，等量置换；2025年推进",
+      "net": "0（等量）",
+      "impact": "不增加总产能，但降低能耗/成本，增强应城货源的价格竞争力",
+      "grade": "A",
+      "source_ids": [
+        "S02"
+      ]
+    }
+  ],
+  "prospects": [
+    {
+      "id": "cu_xinyi",
+      "name": "信义环保特种玻璃（江门）有限公司",
+      "short": "信义玻璃·江门",
+      "city": "江门",
+      "segment": "浮法玻璃",
+      "scale": "3条×900 t/d 浮法线（2011年一期）",
+      "ash": "约18万吨/年（推算）",
+      "scene": "重碱：浮法/超白浮法玻璃",
+      "priority": "S",
+      "grade": "A",
+      "why": "单客户用碱量约等于本地供给的30%；距南方碱业约65km，是本地锚点客户",
+      "next": "先做重碱粒度/水不溶物对标；用“本地提货+外省补充”双源方案切供应份额",
+      "source_ids": [
+        "S17",
+        "S14"
+      ],
+      "province": "广东"
+    },
+    {
+      "id": "cu_huaxing",
+      "name": "佛山华兴玻璃有限公司",
+      "short": "华兴玻璃·佛山",
+      "city": "佛山",
+      "segment": "日用玻璃",
+      "scale": "高明基地55万吨/年，5座窑炉、23条线",
+      "ash": "约11万吨/年（推算）",
+      "scene": "轻碱/重碱：瓶罐玻璃",
+      "priority": "S",
+      "grade": "A",
+      "why": "亚洲日用玻璃龙头，佛山高明基地用碱稳定；轻碱可小批量、多频次",
+      "next": "以轻碱吨袋/散装+JIT 库存切入；对比南方碱业出厂价与短驳成本",
+      "source_ids": [
+        "S18"
+      ],
+      "province": "广东"
+    },
+    {
+      "id": "cu_qibin",
+      "name": "河源旗滨玻璃有限公司",
+      "short": "旗滨·河源",
+      "city": "河源",
+      "segment": "浮法玻璃",
+      "scale": "旗滨集团浮法基地之一；集团24条浮法线",
+      "ash": "未披露",
+      "scene": "重碱：浮法玻璃",
+      "priority": "A",
+      "grade": "B",
+      "why": "粤北浮法集群；衡阳80万吨项目投产后，河源将成为近距竞争前沿",
+      "next": "跟踪其重碱供应商结构；以铁路到厂价+保供能力做第二供应商",
+      "source_ids": [
+        "S30"
+      ],
+      "province": "广东"
+    },
+    {
+      "id": "cu_nanbo",
+      "name": "东莞南玻玻璃有限公司",
+      "short": "南玻·东莞",
+      "city": "东莞",
+      "segment": "浮法玻璃",
+      "scale": "南玻集团东莞基地；集团10条浮法线",
+      "ash": "未披露",
+      "scene": "重碱：浮法/光伏玻璃",
+      "priority": "A",
+      "grade": "B",
+      "why": "华南高端玻璃基地，认证周期长、粘性高；一旦进入难被替换",
+      "next": "准备全套指标/体系资料；从光伏玻璃用重碱小试入手",
+      "source_ids": [
+        "S31"
+      ],
+      "province": "广东"
+    },
+    {
+      "id": "cu_liby",
+      "name": "广州立白企业集团有限公司",
+      "short": "立白·广州",
+      "city": "广州",
+      "segment": "洗涤日化",
+      "scale": "企业未披露纯碱用量",
+      "ash": "未披露",
+      "scene": "轻碱：洗衣粉/洗涤剂",
+      "priority": "B",
+      "grade": "C",
+      "why": "广州日化集群，轻碱小批量多频次；本地交割库可提货",
+      "next": "用食品级/轻碱小包装试单；先切区域工厂，再谈年度框架",
+      "source_ids": [
+        "S34"
+      ],
+      "province": "广东"
+    },
+    {
+      "id": "cu_bluemoon",
+      "name": "蓝月亮（中国）有限公司",
+      "short": "蓝月亮·广州",
+      "city": "广州",
+      "segment": "洗涤日化",
+      "scale": "企业未披露纯碱用量",
+      "ash": "未披露",
+      "scene": "轻碱：洗衣液/洗涤剂",
+      "priority": "B",
+      "grade": "C",
+      "why": "广州总部+多基地，轻碱需求稳定；对指标/批次一致性要求高",
+      "next": "先做小试与批次稳定性数据；以质量+服务而非单纯低价切入",
+      "source_ids": [
+        "S35"
+      ],
+      "province": "广东"
+    },
+    {
+      "id": "cu_esquel",
+      "name": "广东溢达纺织有限公司",
+      "short": "溢达纺织·佛山",
+      "city": "佛山",
+      "segment": "纺织印染",
+      "scale": "企业未披露纯碱用量",
+      "ash": "未披露",
+      "scene": "轻碱：印染助剂/中和",
+      "priority": "B",
+      "grade": "C",
+      "why": "佛山高明纺织集群，用碱分散但区域集中；价格敏感",
+      "next": "以区域仓+吨袋配送切入；关注其环保/COD 指标要求",
+      "source_ids": [
+        "S36"
+      ],
+      "province": "广东"
+    },
+    {
+      "id": "cu_dongpeng",
+      "name": "广东东鹏控股股份有限公司",
+      "short": "东鹏·佛山",
+      "city": "佛山",
+      "segment": "陶瓷",
+      "scale": "企业未披露纯碱用量",
+      "ash": "未披露",
+      "scene": "轻碱：釉料/硅酸钠",
+      "priority": "C",
+      "grade": "C",
+      "why": "佛山陶瓷集群，纯碱为辅助原料；单户量小但可做区域拼单",
+      "next": "通过贸易商/区域仓覆盖，暂不投入直销资源",
+      "source_ids": [
+        "S37"
+      ],
+      "province": "广东"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "org": "中盐化工",
+      "title": "2025年年度报告",
+      "date": "2026-04-30",
+      "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-4/2026-04-30/12285995.PDF",
+      "used": "中盐产能390万吨；昆仑155、发投140、昆山60、吉兰泰35；2025产量444.62万吨；全国产能4,468万吨",
+      "type": "A"
+    },
+    {
+      "id": "S02",
+      "org": "双环科技",
+      "title": "2025年年度报告",
+      "date": "2026-04-29",
+      "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESZ_STOCK/2026/2026-4/2026-04-29/12261120.PDF",
+      "used": "双环纯碱设计产能110万吨；产能利用率108.37%；2025产量119.21万吨",
+      "type": "A"
+    },
+    {
+      "id": "S03",
+      "org": "山东海化",
+      "title": "2025年年度报告",
+      "date": "2026-04",
+      "url": "https://vip.stock.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=000822&id=12008621",
+      "used": "纯碱设计产能280万吨；产能利用率97.29%；在建产能无",
+      "type": "A"
+    },
+    {
+      "id": "S04",
+      "org": "博源化工",
+      "title": "2025年半年度报告",
+      "date": "2025-08-08",
+      "url": "http://static.cninfo.com.cn/finalpage/2025-08-08/1224424873.PDF",
+      "used": "纯碱在产产能680万吨/年；阿拉善规划780万吨（一期500、二期280）；桐柏中源化学",
+      "type": "A"
+    },
+    {
+      "id": "S05",
+      "org": "智研咨询",
+      "title": "2026年中国纯碱行业重点上市企业对比分析",
+      "date": "2026-08-27",
+      "url": "https://www.chyxx.com/industry/1278161.html",
+      "used": "2025年纯碱产量：博源711.12、中盐444.62、三友319.05、海化272.42、金晶124.81、双环119.21、雪天101.68、华昌67.87；博源在产680/设计960",
+      "type": "B"
+    },
+    {
+      "id": "S06",
+      "org": "每日经济新闻",
+      "title": "博源化工阿拉善二期第一条100万吨纯碱线投料试车",
+      "date": "2025-12-10",
+      "url": "https://m.sohu.com/a/963779831_115362",
+      "used": "二期第一条100万吨/年纯碱线2025-12-09投料试车并出产品；其余线逐步试车",
+      "type": "A"
+    },
+    {
+      "id": "S07",
+      "org": "证券时报",
+      "title": "中盐化工总投资超250亿元打造全球最大天然碱生产基地",
+      "date": "2025-06-17",
+      "url": "https://www.stcn.com/article/detail/3910001.html",
+      "used": "中盐奈曼旗天然碱项目：采矿权68.09亿元，规划500万吨/年，矿物量14.47亿吨",
+      "type": "A"
+    },
+    {
+      "id": "S08",
+      "org": "连云港市人民政府",
+      "title": "连云港碱业公司搬迁升级改造项目建成投产",
+      "date": "2025",
+      "url": "https://www.lyg.gov.cn/zglygzfmhwz/gcyw/content/3ad7d8d1-8a2a-4683-82b5-4766ac84985e.html",
+      "used": "连云港碱业搬迁项目：110万吨/年联碱，2024年底中交",
+      "type": "A"
+    },
+    {
+      "id": "S09",
+      "org": "国联期货",
+      "title": "玻璃纯碱假期事件盘点和品种前瞻",
+      "date": "2025-05",
+      "url": "https://www.glqh.com/u/cms/www/202505/06091452kayw.pdf",
+      "used": "2025年新产能：江苏德邦60万吨2月出货、连云港碱业110万吨试生产、双环40万吨、博源二期280万吨、新都60万吨",
+      "type": "B"
+    },
+    {
+      "id": "S10",
+      "org": "雪天盐业",
+      "title": "2025年半年度报告",
+      "date": "2025-08-09",
+      "url": "https://static.cninfo.com.cn/finalpage/2025-08-09/1224441432.PDF",
+      "used": "湘渝盐化纯碱产能100万吨/年、氯化铵100万吨/年，位于重庆万州",
+      "type": "A"
+    },
+    {
+      "id": "S11",
+      "org": "证券时报",
+      "title": "雪天盐业拟投资建设百万吨级盐碱产业链",
+      "date": "2024-02-06",
+      "url": "https://www.stcn.com/article/detail/1117410.html",
+      "used": "衡阳绿色低碳盐碱产业园：纯碱80万吨/年、氯化铵80万吨/年，投资87.87亿元",
+      "type": "A"
+    },
+    {
+      "id": "S12",
+      "org": "河南金山化工集团",
+      "title": "走进金山（企业简介）",
+      "date": "访问于2026-10",
+      "url": "http://www.jshgjt.com/a/zoujinjinshan",
+      "used": "集团纯碱330万吨、氯化铵360万吨、合成氨95万吨、工业盐380万吨",
+      "type": "B"
+    },
+    {
+      "id": "S13",
+      "org": "海外网",
+      "title": "纯碱工业高质量发展综合述评",
+      "date": "2025-01-22",
+      "url": "https://news.haiwainet.cn/n/2025/0122/c3541089-32832061.html",
+      "used": "金山“现有联碱产能660万吨”表述；天然碱资源发现；行业总产能约3,970万吨",
+      "type": "B"
+    },
+    {
+      "id": "S14",
+      "org": "广东南方碱业",
+      "title": "公司简介",
+      "date": "访问于2026-10",
+      "url": "http://www.nfsoda.com/m/About/about.aspx?m=115001",
+      "used": "广东省唯一纯碱生产企业，华南最大纯碱厂，厂区广州黄埔南岗；实际生产能力60万吨/年",
+      "type": "B"
+    },
+    {
+      "id": "S15",
+      "org": "广东南方碱业",
+      "title": "企业规模",
+      "date": "访问于2026-10",
+      "url": "http://www.nfsoda.com/About/scale.aspx?m=115003",
+      "used": "现生产能力为纯碱35万吨/年、无水硫酸钠7.5万吨/年（与简介60万吨口径冲突）",
+      "type": "B"
+    },
+    {
+      "id": "S16",
+      "org": "广东南方碱业",
+      "title": "销售区域 / 产销状况",
+      "date": "访问于2026-10",
+      "url": "http://www.nfsoda.com/CX/salesArea.aspx?m=119001",
+      "used": "珠三角年纯碱需求量150万吨；我司年产纯碱35万吨；填补广东纯碱生产空白",
+      "type": "B"
+    },
+    {
+      "id": "S17",
+      "org": "信义玻璃",
+      "title": "信义玻璃江门工业园一期3条线全部投产",
+      "date": "2011-05-18",
+      "url": "https://www.xinyiglass.com/Spain/companynews/info.aspx?itemid=2947",
+      "used": "江门工业园一期3条优质浮法玻璃线，合计日熔量2,400吨→实际单线900吨/日，3条合计2,700吨/日",
+      "type": "A"
+    },
+    {
+      "id": "S18",
+      "org": "西门子 / 华兴玻璃",
+      "title": "亚洲玻璃大王的数智决心",
+      "date": "2022",
+      "url": "https://assets.new.siemens.com/siemens/assets/api/uuid/56937710-9dc9-47b4-8cfa-676b9a6d77f5/huaxing-glass-digital-project.pdf",
+      "used": "华兴玻璃年产能400万吨、年产值超70亿元；佛山高明基地5座窑炉、23条线、年产能55万吨",
+      "type": "B"
+    },
+    {
+      "id": "S19",
+      "org": "华南玻璃纯碱调研",
+      "title": "华南地区玻璃纯碱调研报告",
+      "date": "2019-11-04",
+      "url": "https://www.7hcn.com/article/359299-1.html",
+      "used": "广东15家玻璃厂、29条浮法线；年产量9,000万重量箱、需求约1.1亿重量箱；华南纯碱产能不足",
+      "type": "B"
+    },
+    {
+      "id": "S20",
+      "org": "新浪财经",
+      "title": "纯碱产业链市场研究：纯碱专题系列之二",
+      "date": "2019-11-22",
+      "url": "https://finance.sina.cn/futuremarket/qszx/2019-11-22/detail-iihnzhfz0921055.d.html",
+      "used": "广东纯碱年调入量268.7万吨，占主要调入省第一（2019年口径，仅作历史线索）",
+      "type": "B"
+    },
+    {
+      "id": "S21",
+      "org": "极目新闻",
+      "title": "潜江市23个重大项目集中开工",
+      "date": "2025-04",
+      "url": "https://www.ctdsb.net/c1676_202504/2412542.html",
+      "used": "金山化工潜江项目：一期150万吨/年纯碱（搬迁产能）、70万吨液氨，2025-04开工，预计2026-06投产",
+      "type": "B"
+    },
+    {
+      "id": "S22",
+      "org": "湖北日报",
+      "title": "新都化工冲刺百亿",
+      "date": "2025-02-19",
+      "url": "https://epaper.hubeidaily.net/pc/content/202502/19/content_305436.html",
+      "used": "应城新都化工现有纯碱60万吨/年；复合肥140万吨、盐100万吨",
+      "type": "B"
+    },
+    {
+      "id": "S23",
+      "org": "金晶科技",
+      "title": "2025年半年度报告",
+      "date": "2025-08-26",
+      "url": "http://static.cninfo.com.cn/finalpage/2025-08-26/1224566020.PDF",
+      "used": "纯碱业务运营主体山东海天生物化工，年产销量约135万吨；2025年产量124.81万吨",
+      "type": "A"
+    },
+    {
+      "id": "S24",
+      "org": "三友化工",
+      "title": "2025年年度报告",
+      "date": "2026-04",
+      "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=600409&id=12180724",
+      "used": "2025年纯碱产量319.05万吨；产能340万吨（唐山本部230+青海五彩110，券商拆分口径）",
+      "type": "A"
+    },
+    {
+      "id": "S25",
+      "org": "苏盐井神",
+      "title": "投资者关系活动 / 董秘答复",
+      "date": "2024-11-08",
+      "url": "https://i.ifeng.com/c/8eLZkh3bKkz",
+      "used": "公司纯碱年产能70万吨左右；淮安基地",
+      "type": "B"
+    },
+    {
+      "id": "S26",
+      "org": "民生证券",
+      "title": "华昌化工：老牌煤化工企业，新产能蓄势",
+      "date": "2023-10",
+      "url": "https://pdf.dfcfw.com/pdf/H3_AP202310071601015959_1.pdf",
+      "used": "华昌化工纯碱产能70万吨，张家港，联碱法",
+      "type": "B"
+    },
+    {
+      "id": "S27",
+      "org": "券商行业框架",
+      "title": "纯碱行业分析框架（产能拆分表）",
+      "date": "2022-05-10",
+      "url": "https://pdf.dfcfw.com/pdf/H3_AP202205101564746575_1.pdf",
+      "used": "中盐/三友/海化/和邦/双环/华昌/新都等产能拆分；金晶海天150万吨氨碱；天津永利80万吨联碱；红四方70万吨联碱",
+      "type": "B"
+    },
+    {
+      "id": "S28",
+      "org": "五矿期货",
+      "title": "纯碱：往期阿拉善产能投产对比",
+      "date": "2026-01-06",
+      "url": "https://www.wkqh.cn/ueditor/jsp/upload/file/20260106/1767660004954010828.pdf",
+      "used": "2025-2026年投产节奏：博源二期、应城新都70、雪天80等",
+      "type": "B"
+    },
+    {
+      "id": "S29",
+      "org": "财联社 / 卓创资讯",
+      "title": "纯碱反内卷另类样本：低成本天然碱持续扩张",
+      "date": "2025-08",
+      "url": "https://www.cls.cn/detail/2111137",
+      "used": "全国纯碱产能4,078万吨；未来新增：博源二期280、湖北潜江200、中盐奈曼500、湘衡80",
+      "type": "B"
+    },
+    {
+      "id": "S30",
+      "org": "旗滨集团",
+      "title": "2025年年度报告",
+      "date": "2026-04",
+      "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=601636&id=12154621",
+      "used": "全国浮法玻璃265条、在产212条、日熔量151,405吨；旗滨24条优质浮法线，广东河源基地",
+      "type": "A"
+    },
+    {
+      "id": "S31",
+      "org": "南玻集团 / MoneyDJ",
+      "title": "南玻集团业务与基地",
+      "date": "2026-10",
+      "url": "https://www.csgholding.com/about.aspx",
+      "used": "南玻在东莞、成都、廊坊、吴江、咸宁拥有10条浮法线；东莞为华南基地之一",
+      "type": "B"
+    },
+    {
+      "id": "S32",
+      "org": "广州市计量行业协会",
+      "title": "广东南方碱业股份有限公司简介",
+      "date": "访问于2026-10",
+      "url": "http://www.gzjlhyxh.org/pod.jsp?id=58",
+      "used": "南方碱业是广东、广西、海南三省唯一纯碱生产企业，产能仅能满足广东纯碱需求的不到30%",
+      "type": "B"
+    },
+    {
+      "id": "S33",
+      "org": "郑商所 / 期货日报",
+      "title": "纯碱期货上市与产业格局",
+      "date": "2019-2021",
+      "url": "https://www.czce.com.cn/cn/rootfiles/2021/09/03/1605597062097884-1605597062128743.pdf",
+      "used": "纯碱产能区域分布、氨碱/联碱企业数量；广东为净调入省",
+      "type": "B"
+    },
+    {
+      "id": "S34",
+      "org": "立白集团",
+      "title": "立白集团官网 · 集团简介",
+      "date": "2026-01-01",
+      "url": "https://www.liby.com.cn/",
+      "used": "日化客户业务线索",
+      "type": "C"
+    },
+    {
+      "id": "S35",
+      "org": "蓝月亮集团",
+      "title": "蓝月亮集团官网 · 公司简介",
+      "date": "2026-01-01",
+      "url": "https://www.bluemoon.com.cn/",
+      "used": "日化客户业务线索",
+      "type": "C"
+    },
+    {
+      "id": "S36",
+      "org": "溢达集团",
+      "title": "溢达集团官网 · 集团简介",
+      "date": "2026-01-01",
+      "url": "https://www.esquel.com/",
+      "used": "纺织客户业务线索",
+      "type": "C"
+    },
+    {
+      "id": "S37",
+      "org": "东鹏控股",
+      "title": "东鹏控股官网 · 公司简介",
+      "date": "2026-01-01",
+      "url": "https://www.dongpeng.com/",
+      "used": "陶瓷客户业务线索",
+      "type": "C"
+    }
+  ],
+  "conflicts": [
+    {
+      "item": "南方碱业纯碱产能",
+      "a": "企业简介：实际生产能力60万吨/年",
+      "b": "企业规模页：现生产能力35万吨/年",
+      "adopt": "60万吨/年（并在工厂备注保留35万吨旧口径）",
+      "why": "简介为较新对外口径；仍与官网规模页冲突，需用最新环评/年报复核",
+      "impact": "若实际为35万吨，广东本地供给更薄，“本地空白”结论更强"
+    },
+    {
+      "item": "金山化工纯碱产能",
+      "a": "企业官网：纯碱330万吨/年",
+      "b": "行业报道：“现有联碱产能660万吨”",
+      "adopt": "330万吨/年（纯碱）",
+      "why": "660万吨更像“纯碱+氯化铵”联碱装置合计；公司官网明确纯碱330、氯化铵360",
+      "impact": "若误用660，会把金山从第4位抬到第2位，扭曲竞争格局"
+    },
+    {
+      "item": "全国纯碱总产能（2025）",
+      "a": "双环年报引隆众：4,305万吨",
+      "b": "中盐年报：约4,468万吨",
+      "adopt": "4,305–4,468万吨区间",
+      "why": "统计口径/时点不同；不取单点，避免虚假精确",
+      "impact": "样本覆盖率约69%-71%，只作覆盖度，不作市场份额"
+    },
+    {
+      "item": "博源二期规模",
+      "a": "公司公告：二期280万吨",
+      "b": "部分行业报道：二期180万吨（剩余）",
+      "adopt": "280万吨（其中首条100万吨线2025-12试车）",
+      "why": "公司公告为二期总规模；180万吨是“剩余未投”部分",
+      "impact": "2026年增量按280万吨爬坡计，而非一次性满产"
+    },
+    {
+      "item": "雪天衡阳项目规模",
+      "a": "2024年公告：纯碱80万吨/年",
+      "b": "2026年行业报道：100万吨/年联碱",
+      "adopt": "80万吨/年（公告口径）",
+      "why": "以公司公告为准；100万吨可能含氯化铵或后续调整",
+      "impact": "华南近距供给增量按80万吨计，避免高估"
+    },
+    {
+      "item": "苏盐井神产能",
+      "a": "公司IR：70万吨/年左右",
+      "b": "部分“百万吨以上企业”名单将其列入",
+      "adopt": "70万吨/年",
+      "why": "公司IR为直接口径；名单可能含在建或口径差异",
+      "impact": "江苏样本产能按70万吨计"
+    },
+    {
+      "item": "产能 vs 产量",
+      "a": "设计/在产产能（万吨/年）",
+      "b": "2025年实际产量（万吨）",
+      "adopt": "分列两栏，不互相替代",
+      "why": "双环、中盐等产能利用率超100%，产量可高于设计产能",
+      "impact": "矩阵同时展示，避免把产量当产能"
+    },
+    {
+      "item": "样本覆盖率 vs 市场份额",
+      "a": "样本产能3,070万吨/全国4,305-4,468万吨",
+      "b": "企业市场份额",
+      "adopt": "只写“样本覆盖约七成”，不写市场份额",
+      "why": "样本未穷尽34家；且份额需销量/收入口径",
+      "impact": "所有竞争判断均为供给布局，不是份额排名"
+    },
+    {
+      "item": "南方 60 万吨 vs 需求覆盖率",
+      "a": "公司简介/企业规模：实际生产能力 60 万吨/年（另有 35 万吨口径）",
+      "b": "协会简介：南方产能仅能满足广东纯碱需求的不到 30%",
+      "adopt": "采用 60 万吨/年；不采用“不到30%”反推产能",
+      "why": "60 万吨为两次企业简介的明确产能口径；“不到30%”是需求覆盖率表述，反推需假设需求，且与“150万吨需求/60万吨产能=40%”不一致",
+      "impact": "若按不到30%反推，南方产能约≤45万吨；广东本地供给更薄、空白更强。该矛盾本身说明本地供给数据弱"
+    }
+  ],
+  "narrative": {
+    "hero_lede": "以 <b>广东 · 江门</b> 为目标区域、以 <b>信义玻璃江门</b> 为示例客户，把主要纯碱企业的 <b>工厂位置、工艺路线、公开产能、新增项目</b>叠到一张图上。先看竞争供给在哪里密集，再看哪些区域只有远距离供应，最后看未来哪些新增产能会改写格局。",
+    "map_sub": "气泡大小＝纯碱产能；颜色＝工艺路线。虚线＝到江门直线距离，只作物流线索，不替代运费测算。",
+    "density_sub": "省级产能为样本加总；距离带按工厂到江门直线距离归类。无样本≠无货，只表示无在产纯碱厂。",
+    "national_note": "全国供给高度集中在<b>内蒙古、河南、山东、青海、江苏</b>；广东本地仅60万吨，300–800km无在产样本。",
+    "how_to_read": "虚线越密，说明目标区域越依赖远距离调入；点省份看“本省工厂 + 最近外省供给”。",
+    "pipeline_intro": "8 个项目含 2025 已投产 3 个（230 万吨置换/技改）；2026+ 毛增量 1,080 万吨，金山 150 万吨为搬迁，净增约 930 万吨。",
+    "pipeline_foot": "广东本地的“供给空白”不是永久空白，而是<b>2026–2027 的窗口期</b>。博源二期先把全国价格中枢压低，金山潜江把华中到广东的运距缩短，衡阳80万吨再把“300–800km近邻供给”从0变成80万吨；到中盐奈曼500万吨投产后，华南到货成本还会再下一台阶。销售动作应从“有没有货”转向“到厂成本、库存前置、指标稳定性”。",
+    "prospect_intro": "先看示例客户信义江门的用碱量级与供应距离，再按赛道筛选广东潜客样本。",
+    "prospect_note": "潜客表只放可核实的规模/业务事实；用碱量为按行业吨耗的推算，已单独标注。正式版可接潜客库。",
+    "prospect_scope_note": "本演示只内置广东潜客样本；正式版可按省接入潜客库。",
+    "anchor_note": "* 按0.2吨纯碱/吨玻璃、330天推算；仅作用量级，不是企业披露。信义江门一期3条线2011年全部投产，后续扩产未计入。",
+    "anchor_facts": [
+      {
+        "label": "浮法线",
+        "value": "3 × 900 t/d"
+      },
+      {
+        "label": "年玻璃量*",
+        "value": "约 89 万吨"
+      },
+      {
+        "label": "用碱场景",
+        "value": "重碱 / 超白浮法"
+      },
+      {
+        "label": "本地供给",
+        "value": "南方碱业 69km"
+      },
+      {
+        "label": "单客户≈本地供给*",
+        "value": "30%"
+      }
+    ],
+    "anchor_use_value": 18,
+    "anchor_use_label": "用碱量级*",
+    "conclusions": [
+      {
+        "no": "1",
+        "tag": "竞争供给最密集区",
+        "title": "环渤海—中原—西北五省占样本 73%",
+        "body": "内蒙古 535、河南 510、山东 430、青海 405、江苏 370，合计 <b>2,250 万吨/年</b>；资源型天然碱 + 沿海联碱/氨碱并立，是价格战最可能先发生的地方。",
+        "foot": "判断：环渤海—中原—西北是主战场",
+        "big": "73%"
+      },
+      {
+        "no": "2",
+        "tag": "空白 / 远距供应",
+        "title": "广东本地仅 60 万吨，800km 内无第二家",
+        "body": "广东本地仅南方碱业 <b>60 万吨/年</b>；300–800km 在产样本为 0；800–1500km 有 <b>1,330 万吨</b>，1500km 以上还有 <b>1,680 万吨</b>。",
+        "foot": "判断：本地薄、外省远，近距市场有窗口",
+        "big": "60"
+      },
+      {
+        "no": "3",
+        "tag": "未来变量",
+        "title": "2026 压价，2027 近距，2029 改写",
+        "body": "博源二期 280 + 金山潜江 150（搬迁）+ 新都 70 在 2026 落地；雪天衡阳 80 在 2027 把近邻从 0 变 80；中盐奈曼 500 在 2029+ 投产后，华南到货成本还会再下一台阶。",
+        "foot": "判断：先锁框架，再谈价格",
+        "big": "1,080"
+      }
+    ],
+    "prospect_conclusions": [
+      {
+        "no": "1",
+        "tag": "锚点打法",
+        "title": "先把信义江门做成“双源”标杆",
+        "body": "本地南方碱业60万吨是唯一近距供给，信义单户用碱约18万吨/年。用“本地提货+外省补充”的双源方案切份额，先证明重碱粒度/水不溶物/批次稳定性。",
+        "foot": "目标：进入合格供应商",
+        "big": "S"
+      },
+      {
+        "no": "2",
+        "tag": "复制路径",
+        "title": "佛山日用玻璃 → 河源/东莞浮法",
+        "body": "华兴高明55万吨/年日用玻璃是轻碱稳定需求；河源旗滨、东莞南玻是浮法/光伏重碱。按“轻碱走量、重碱做认证”两条线并进。",
+        "foot": "目标：3个月新增2家试单",
+        "big": "A"
+      },
+      {
+        "no": "3",
+        "tag": "防守变量",
+        "title": "2027 衡阳投产后，近距竞争启动",
+        "body": "雪天衡阳80万吨投产后，江门480km内出现规模化供给，本地“空白”窗口收窄。现在锁年度框架/运费，比投产后再谈更有利。",
+        "foot": "目标：锁12个月框架",
+        "big": "!"
+      }
+    ],
+    "method_conclusions": [
+      {
+        "no": "✓",
+        "tag": "我们做什么",
+        "title": "只呈现可核实的产能与项目事实",
+        "body": "产能、产量、工艺、地点、项目状态分别标注；公开口径冲突并列；距离只作物流线索；所有“占比”限定为样本内占比。"
+      },
+      {
+        "no": "×",
+        "tag": "我们不做什么",
+        "title": "不推算市场份额，不把产量当产能",
+        "body": "样本覆盖17家、22厂、3,070万吨/年，不等于全行业；不把“联碱装置合计”当纯碱产能；不把企业公开业务信息当产能数据。"
+      },
+      {
+        "no": "→",
+        "tag": "下一步可补",
+        "title": "接入我方产能、运费与客户名单",
+        "body": "填入我方工厂位置、运输方式/半径、到厂运费与账期，即可把“竞争供给地图”升级为“可覆盖区域+可攻击客户”的销售作战图。"
+      }
+    ]
+  },
+  "gaps": [
+    {
+      "title": "样本不是全行业",
+      "body": "17 家 / 22 厂，未穷尽行业 34 家；覆盖约七成是覆盖度，不是市场份额。",
+      "kind": "gap"
+    },
+    {
+      "title": "负增量未系统收集",
+      "body": "冷修、停产、限产未纳入项目表；只加正向项目会高估净增，金山/连碱等已按“搬迁/置换”单列。",
+      "kind": "gap"
+    },
+    {
+      "title": "距离不是运费",
+      "body": "直线距离未接铁路/水运价、港杂、短驳；正式版应改为“到厂成本”测算。",
+      "kind": "gap"
+    },
+    {
+      "title": "非上市披露弱",
+      "body": "金山、南方、永利、红四方等以官网/行业口径为主，标 B；南方 35/60 万吨冲突已并列。",
+      "kind": "gap"
+    },
+    {
+      "title": "潜客仅广东",
+      "body": "8 家样本用于演示“区域→潜客”路径；浙江、福建、广西等未建潜客库。",
+      "kind": "gap"
+    },
+    {
+      "title": "价格未接入",
+      "body": "未接隆众/卓创日价与区域价差；无法判断“现在是不是切客户”的价格窗口。",
+      "kind": "gap"
+    }
+  ],
+  "boundaries": [
+    {
+      "title": "同行不列潜客",
+      "body": "纯碱生产企业只作竞争供给，不混进客户名单。",
+      "kind": "boundary"
+    },
+    {
+      "title": "误判下游",
+      "body": "玻璃深加工、光伏组件、氧化铝（用烧碱）等不消耗/极少消耗纯碱，已排除。",
+      "kind": "boundary"
+    },
+    {
+      "title": "贸易商不是终端",
+      "body": "贸易商只作渠道线索，最终需求仍要落到工厂。",
+      "kind": "boundary"
+    },
+    {
+      "title": "规格要分开",
+      "body": "轻碱/重碱、食品级/工业级用途与价格不同，不能合并成一个“纯碱需求”。",
+      "kind": "boundary"
+    },
+    {
+      "title": "产能≠产量",
+      "body": "产量受检修、负荷、原料影响，利用率仅作量级参考。",
+      "kind": "boundary"
+    }
+  ],
+  "demand_by_prov": {
+    "广东": "珠三角年纯碱需求约150万吨（南方碱业公开口径）；广东浮法玻璃29条线（2019调研）",
+    "浙江": "光伏/浮法玻璃集群（嘉兴、宁波）；本地无在产纯碱样本",
+    "福建": "浮法玻璃集群（漳州、福州）；本地无在产纯碱样本",
+    "广西": "浮法/日用玻璃；本地无在产样本",
+    "湖南": "衡阳80万吨联碱在建；本地无在产样本",
+    "江西": "陶瓷/玻璃；本地无在产样本",
+    "海南": "玻璃/食品；本地无在产样本",
+    "江苏": "光伏/浮法玻璃集群；本地370万吨，竞争密集",
+    "安徽": "光伏玻璃集群（滁州/凤阳）；本地70万吨",
+    "山东": "浮法/日用玻璃+化工；本地430万吨，密集",
+    "河北": "沙河浮法玻璃集群；本地230万吨",
+    "湖北": "玻璃/化工；本地170万吨，应城集群",
+    "河南": "玻璃/化工；本地510万吨，密集",
+    "内蒙古": "天然碱资源；本地535万吨，外运型",
+    "青海": "盐湖化工；本地405万吨，外运型",
+    "四川": "玻璃/化工；本地110万吨",
+    "重庆": "玻璃/化工；本地100万吨",
+    "天津": "港口+化工；本地80万吨"
+  }
+}

@@ -1,0 +1,10 @@
+{
+ "n_sessions": 2044,
+ "first": "2018-05-16",
+ "last": "2026-10-20",
+ "n_contracts": 103,
+ "n_rolls": 24,
+ "source": "Sina InnerFuturesNewService.getDailyKLine",
+ "roll_rule": "换月=另一合约成交量>当前合约130%且到期月更晚且已过当前月；否则不换",
+ "gap": "月产量件头公开正文只覆盖 2026-08/09；更早历史需付费数据源，未编造。"
+}

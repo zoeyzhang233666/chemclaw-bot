@@ -1,0 +1,87 @@
+{
+  "skill": "explain-futures-spot-question",
+  "skill_id": "18",
+  "title_template": "用通俗语言解释一个期现问题",
+  "version": "1.0.0",
+  "updated": "2026-10-20",
+  "principle": "先回答，再解释；先核对事实，再讲机制；数据缺口必须显式标注，不得用教科书假设冒充已发生事实。",
+  "modes": [
+    { "id": "beginner", "label": "入门模式", "goal": "用真实业务场景讲清'谁在买、谁在卖、库存在谁手里'", "rules": ["每个结论后面必须跟一个日期", "术语首次出现给出大白话解释", "不出现公式推导，只出现结果与口径", "必须写清楚'这不是投资建议'"] },
+    { "id": "pro", "label": "专业模式", "goal": "给出定义、公式、样本期、口径与解释路径", "rules": ["所有指标给公式与符号方向", "区分事实/推断/假设", "给数据缺口与补充路径", "给至少两条可被证伪的解释路径"] }
+  ],
+  "steps": [
+    {
+      "id": "S0",
+      "name": "解析问题",
+      "action": "识别问题类型、品种、现货地区、期货合约、时间窗口、解释深度；缺失项用默认值并在页面显式标注'用户未指定'。",
+      "output": "question_card{type, product, region, contract, window, depth, defaults_used}",
+      "gate": "若品种无对应期货合约 → 改为'现货/远期研究'，并按同样结构输出，不得虚构期货价格。"
+    },
+    {
+      "id": "S1",
+      "name": "概念拆解",
+      "action": "列出问题涉及的核心概念（基差/月差/库存/开工/进口窗口/成本…），每个概念给出：定义、符号方向、口径要素（合约/地区/品质/时间/税）。",
+      "output": "concepts[]",
+      "gate": "基差与月差必须写明'谁减谁'；否则视为未完成。"
+    },
+    {
+      "id": "S2",
+      "name": "数据取证",
+      "action": "按 references/data-sources.md 的检索顺序取证：库存→现货→期货→基差→月差→开工→进口→成本→事件。每条记录 date/spec/region/tax_unit/source_url。",
+      "output": "facts[] + gaps[]",
+      "gate": "任何进入'事实'区间的数值都必须有 URL 与日期；没有就进 gaps。"
+    },
+    {
+      "id": "S3",
+      "name": "事实核对（关键）",
+      "action": "把用户问题拆成可验证命题（如'库存下降'与'价格下跌'在同一周内是否同时出现），逐命题在同一时间尺度上核对，输出成立/部分成立/未找到。",
+      "output": "verdict{headline, scale_table[], coexistence_found, partially_valid, theory_only[]}",
+      "gate": "若未找到同时发生，必须写'未找到'，并把解释标记为理论假设（theory_only）。禁止用别的时间段拼成同一屏。"
+    },
+    {
+      "id": "S4",
+      "name": "指标计算",
+      "action": "用 formula-checks.md 中的公式计算基差（两种口径）、月差、库存变化、表观提货、进口扳平价、成本折点；结果必须可复算。",
+      "output": "metrics{formula, inputs, value, unit, sign_convention}",
+      "gate": "scripts/check_formulas.js 全部通过。"
+    },
+    {
+      "id": "S5",
+      "name": "产业逻辑",
+      "action": "结合品种产业特点，列出若干条'指标关系路径'，每条给触发条件、验证指标、反证条件。",
+      "output": "logic_paths[]",
+      "gate": "至少覆盖：库存-价格、基差-库存、月差-库存、开工-需求、进口窗口-供给。"
+    },
+    {
+      "id": "S6",
+      "name": "矛盾解释",
+      "action": "解释为什么表面矛盾可以同时成立：尺度不同、口径不同、预期 vs 现实、存量 vs 流量、结构与总量、被提前定价。",
+      "output": "paradox_reasons[]",
+      "gate": "每条原因必须能有数据或明确假设支撑。"
+    },
+    {
+      "id": "S7",
+      "name": "分层产出",
+      "action": "生成两档解释（入门/专业）+ HTML + Excel 工作簿。",
+      "output": "html, xlsx",
+      "gate": "HTML 零外部依赖、可通过 scripts/check_html.py；Excel 通过 office checker。"
+    },
+    {
+      "id": "S8",
+      "name": "QA 交付",
+      "action": "执行 references/checklist.md 的全部检查项，附'事实/推断/假设'三段声明。",
+      "output": "qa_report",
+      "gate": "任何一项 FAIL 不得交付。"
+    }
+  ],
+  "question_types": [
+    { "id": "QT1", "name": "库存-价格背离", "example": "库存下降为什么价格还跌", "core": ["港口样本库存", "周度变化", "价格序列", "开工率"], "trap": "把'库存水平低'当成'本周库存下降'" },
+    { "id": "QT2", "name": "基差解释", "example": "基差走强意味着什么", "core": ["基差定义", "现货口径", "期货合约", "交割成本"], "trap": "基差定义符号相反" },
+    { "id": "QT3", "name": "月差变化", "example": "月差为什么翻正/翻负", "core": ["远近月合约", "库存", "仓储成本", "换月"], "trap": "换月导致月差跳变" },
+    { "id": "QT4", "name": "成本支撑", "example": "跌到成本线了吗", "core": ["原料价格", "单耗", "加工费", "现金流成本 vs 完全成本", "边际产能"], "trap": "用完全成本当支撑线" },
+    { "id": "QT5", "name": "进口窗口", "example": "为什么进口打开了价格却跌", "core": ["CFR", "汇率", "关税增值税", "运保费"], "trap": "忽略增值税与港杂" },
+    { "id": "QT6", "name": "开工-需求", "example": "开工率上升为什么价格跌", "core": ["开工率", "产量", "下游开工", "成品库存"], "trap": "上游开工与下游开工混用" },
+    { "id": "QT7", "name": "事件驱动", "example": "地缘/装置事故后为什么回落", "core": ["事件性质", "影响路径", "溢价回吐", "库存"], "trap": "把资金行为说成基本面" },
+    { "id": "QT8", "name": "区域价差", "example": "太仓和内蒙差这么多正常吗", "core": ["运费", "地区供需", "交割地", "流向"], "trap": "区域口径不同" }
+  ]
+}

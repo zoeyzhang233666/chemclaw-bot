@@ -1,0 +1,29 @@
+{
+ "meta": {
+  "relation_types": {
+   "primary": "该事件的首发报道（主记录）",
+   "republish": "同一稿件的转载（内容一致，不增加确认度）",
+   "followup": "同一事件的后续更新（同装置不同日期快讯、新增进展）",
+   "index_entry": "同一内容的索引/列表/数据表形态，非独立报道",
+   "selfmedia": "自媒体/社区转述（降级为旁证）",
+   "conflict": "关键事实不一致（并置保留，不仲裁）"
+  }
+ },
+ "links": [
+  {
+   "event_id": "EVT-XXX-20261019-001",
+   "news_id": "N01",
+   "relation": "primary",
+   "basis": "【示例】政策原文首发；正文全文可读",
+   "conf_weight": "官方原文，支撑 C1"
+  },
+  {
+   "event_id": "EVT-XXX-20261019-001",
+   "news_id": "N02",
+   "relation": "primary",
+   "basis": "【必填】判定依据：具体证据，不是“应为”",
+   "conf_weight": "对确认度的作用"
+  }
+ ],
+ "unassigned": []
+}

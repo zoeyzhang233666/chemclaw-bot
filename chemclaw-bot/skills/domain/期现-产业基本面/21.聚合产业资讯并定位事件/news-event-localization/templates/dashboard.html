@@ -1,0 +1,794 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>聚合产业资讯并定位事件 · 甲醇产业链</title>
+<style>
+:root{
+  --navy:#1f3864; --blue:#2e5c8a; --ink:#1b2330; --sub:#5b6b80; --line:#dbe3ee;
+  --bg:#f4f7fb; --card:#ffffff; --c1:#1e7145; --c2:#8a6100; --c3:#a2531a; --c4:#a61b29;
+  --shadow:0 1px 2px rgba(20,35,60,.05),0 8px 24px rgba(20,35,60,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg); color:var(--ink); font-size:13.5px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:#1f4e79;text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1680px;margin:0 auto;padding:0 22px}
+
+/* ---------- header ---------- */
+header{background:linear-gradient(135deg,#16294a 0%,#1f3864 45%,#2b5480 100%);color:#fff;padding:20px 0 18px}
+.h-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 6px;font-weight:700;letter-spacing:.3px}
+.h-sub{font-size:12.5px;color:#c9d8ec;max-width:1020px}
+.h-sub b{color:#fff;font-weight:600}
+.h-meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:14px}
+.h-meta div{font-size:11.5px;color:#a9c0dc}
+.h-meta strong{display:block;font-size:19px;color:#fff;font-weight:700;line-height:1.25}
+.badge-window{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);
+  border-radius:8px;padding:10px 14px;font-size:12px;white-space:nowrap}
+.badge-window .k{color:#a9c0dc;font-size:11px}
+.badge-window .v{font-size:14px;font-weight:700}
+
+/* ---------- toolbar ---------- */
+.toolbar{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:60;
+  box-shadow:0 2px 10px rgba(20,35,60,.06)}
+.tb-row{display:flex;gap:12px;align-items:center;padding:10px 0;flex-wrap:wrap}
+.tb-lbl{font-size:11.5px;color:var(--sub);font-weight:600;letter-spacing:.4px}
+select,input[type=text]{font-family:inherit;font-size:12.5px;padding:6px 9px;border:1px solid var(--line);
+  border-radius:6px;background:#fff;color:var(--ink);outline:none}
+select:focus,input[type=text]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,92,138,.12)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:#fff;
+  cursor:pointer;color:var(--sub);user-select:none;transition:.12s;white-space:nowrap}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
+.chip .n{opacity:.62;font-size:11px;margin-left:3px}
+.sep{width:1px;height:22px;background:var(--line)}
+
+/* ---------- layout ---------- */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;padding:18px 0 40px}
+@media(max-width:1180px){.main{grid-template-columns:1fr}}
+.col-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;gap:10px}
+.col-hd h2{font-size:15px;margin:0;font-weight:700;color:var(--navy)}
+.col-hd .cnt{font-size:11.5px;color:var(--sub)}
+
+/* ---------- news feed ---------- */
+.feed{display:flex;flex-direction:column;gap:9px}
+.nitem{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 13px;
+  cursor:pointer;transition:.13s;position:relative;border-left:3px solid var(--line)}
+.nitem:hover{border-color:#b9c9dd;box-shadow:var(--shadow);transform:translateY(-1px)}
+.nitem.sel{border-color:var(--blue);border-left-color:var(--blue);box-shadow:0 0 0 3px rgba(46,92,138,.1)}
+.nitem .t{font-size:13px;font-weight:600;line-height:1.45;margin-bottom:5px;color:#14243c}
+.nitem .m{display:flex;gap:9px;align-items:center;font-size:11px;color:var(--sub);flex-wrap:wrap}
+.tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:4px;font-weight:600;
+  border:1px solid transparent;white-space:nowrap}
+.tag.lvl-full{background:#e6f4ea;color:#1e7145;border-color:#bfe0c9}
+.tag.lvl-partial{background:#fff5d9;color:#8a6100;border-color:#f0dfa8}
+.tag.lvl-title_only{background:#fdeaea;color:#a61b29;border-color:#f3c9c9}
+.tag.lvl-summary_only{background:#fdf0e3;color:#a2531a;border-color:#f2d5ba}
+.tag.rel{background:#eef3fa;color:#2e5c8a;border-color:#d3e0f0}
+.tag.tev{background:#1f3864;color:#fff;border:none;font-weight:700}
+.nitem .pt{font-size:11.5px;color:#41556f;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden}
+.nitem.out-win{opacity:.82;border-left-style:dashed}
+
+/* ---------- event board ---------- */
+.board{display:flex;flex-direction:column;gap:11px}
+.ev{background:var(--card);border:1px solid var(--line);border-radius:11px;overflow:hidden;
+  cursor:pointer;transition:.13s;box-shadow:0 1px 2px rgba(20,35,60,.04)}
+.ev:hover{box-shadow:var(--shadow);border-color:#b9c9dd}
+.ev.sel{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,92,138,.1)}
+.ev-hd{padding:12px 14px 10px;display:flex;gap:11px;align-items:flex-start}
+.conf-dot{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:0 0 auto}
+.ev-t{font-size:13.5px;font-weight:700;line-height:1.45;color:#14243c;margin-bottom:6px}
+.ev-meta{display:flex;gap:7px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--sub)}
+.ev-body{padding:0 14px 11px 34px}
+.ev-kv{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:11.5px;color:#41556f;margin-bottom:7px}
+.ev-kv dt{color:var(--sub);white-space:nowrap}
+.ev-kv dd{margin:0}
+.ev-src{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.pill{font-size:10.5px;padding:2px 8px;border-radius:999px;background:#eef3fa;color:#2e5c8a;
+  border:1px solid #d3e0f0;white-space:nowrap}
+.pill.sm{background:#f6f8fb;color:#5b6b80;border-color:#e2e8f2}
+.pill.cf{background:#fdeaea;color:#a61b29;border-color:#f3c9c9}
+.ev-ft{background:#fafcfe;border-top:1px solid #edf1f7;padding:8px 14px;display:flex;gap:14px;
+  font-size:11px;color:var(--sub);flex-wrap:wrap}
+
+/* ---------- drawer ---------- */
+.mask{position:fixed;inset:0;background:rgba(16,28,48,.42);opacity:0;pointer-events:none;
+  transition:.18s;z-index:90;backdrop-filter:blur(1.5px)}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(880px,95vw);background:var(--card);
+  box-shadow:-12px 0 40px rgba(16,28,48,.22);transform:translateX(102%);transition:transform .22s ease;
+  z-index:100;display:flex;flex-direction:column}
+.drawer.on{transform:translateX(0)}
+.dr-hd{padding:16px 20px 13px;border-bottom:1px solid var(--line);flex:0 0 auto;
+  background:linear-gradient(180deg,#f8fafd,#fff)}
+.dr-hd .row1{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.dr-id{font-family:Consolas,monospace;font-size:11px;color:var(--sub);letter-spacing:.3px}
+.dr-t{font-size:16px;font-weight:700;line-height:1.45;margin:4px 0 8px;color:#14243c}
+.close{background:#eef2f8;border:none;border-radius:7px;width:30px;height:30px;cursor:pointer;
+  font-size:17px;color:var(--sub);flex:0 0 auto;line-height:1}
+.close:hover{background:#dee6f1;color:var(--ink)}
+.dr-body{overflow-y:auto;padding:16px 20px 40px;flex:1 1 auto}
+.dr-body::-webkit-scrollbar{width:9px}
+.dr-body::-webkit-scrollbar-thumb{background:#cdd8e6;border-radius:5px}
+.sec{margin-bottom:19px}
+.sec>h3{font-size:12px;font-weight:700;color:var(--navy);margin:0 0 9px;padding-bottom:6px;
+  border-bottom:1px solid var(--line);letter-spacing:.5px;display:flex;align-items:center;gap:7px}
+.sec>h3 .sq{width:3px;height:12px;background:var(--blue);border-radius:2px}
+.kv{display:grid;grid-template-columns:104px 1fr;gap:6px 12px;font-size:12px}
+.kv dt{color:var(--sub);font-weight:600}
+.kv dd{margin:0;color:#22303f}
+
+/* three-layer fact boxes */
+.layers{display:flex;flex-direction:column;gap:9px}
+.ly{border-radius:8px;padding:10px 12px;font-size:12px;border:1px solid;line-height:1.62}
+.ly h4{margin:0 0 6px;font-size:11.5px;font-weight:700;display:flex;align-items:center;gap:6px}
+.ly ul{margin:0;padding-left:17px}
+.ly li{margin-bottom:4px}
+.ly-fact{background:#f0f8f2;border-color:#c3e2cd}.ly-fact h4{color:#1e7145}
+.ly-data{background:#fffbee;border-color:#f0e2b4}.ly-data h4{color:#8a6100}
+.ly-unconf{background:#fdf2f2;border-color:#f2cdcd}.ly-unconf h4{color:#a61b29}
+.ly-note{font-size:11px;color:var(--sub);margin-top:6px;font-style:normal}
+
+/* capacity table */
+table.ct{width:100%;border-collapse:collapse;font-size:11.5px}
+table.ct th{background:#f3f6fb;color:#3c4f68;font-weight:700;text-align:left;padding:6px 8px;
+  border:1px solid var(--line);font-size:11px}
+table.ct td{padding:6px 8px;border:1px solid var(--line);vertical-align:top}
+table.ct tr:nth-child(even) td{background:#fbfcfe}
+.st{font-size:10.5px;padding:1px 7px;border-radius:4px;font-weight:600;white-space:nowrap;display:inline-block}
+.st-stop{background:#fdeaea;color:#a61b29}
+.st-run{background:#e6f4ea;color:#1e7145}
+.st-part{background:#fff5d9;color:#8a6100}
+.st-unk{background:#eef1f5;color:#5b6b80}
+.st-plan{background:#eef3fa;color:#2e5c8a}
+
+/* chain diagram */
+.chainbox{background:#fbfcfe;border:1px solid var(--line);border-radius:9px;padding:12px;overflow-x:auto}
+.chain{display:flex;gap:8px;min-width:560px;align-items:stretch}
+.clayer{flex:1 1 0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.clayer .cl-hd{font-size:10.5px;color:#6b7b90;font-weight:700;text-align:center;padding-bottom:3px;
+  border-bottom:1px dashed #d7e0ec;letter-spacing:.4px}
+.cnode{border:1px solid #dbe3ee;background:#fff;border-radius:6px;padding:6px 7px;font-size:10.5px;
+  line-height:1.4;color:#3c4f68;position:relative;cursor:pointer;transition:.12s}
+.cnode:hover{border-color:var(--blue);background:#f6f9fd}
+.cnode.hot{border-color:#c0392b;background:#fdf3f2;color:#7d1c14;font-weight:700;
+  box-shadow:0 0 0 2px rgba(192,57,43,.13)}
+.cnode .nn{display:block;font-size:9.5px;color:#8798ac;font-family:Consolas,monospace;margin-top:2px}
+.cnode.hot .nn{color:#b4605a}
+.cnode .dot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:#c0392b}
+
+/* sources in drawer */
+.srcrow{display:flex;gap:9px;padding:8px 10px;border:1px solid var(--line);border-radius:7px;
+  margin-bottom:6px;align-items:flex-start;background:#fff;font-size:11.5px}
+.srcrow .rel{flex:0 0 74px}
+.srcrow .bd{flex:1 1 auto;min-width:0}
+.srcrow .ttl{font-weight:600;color:#22303f;margin-bottom:2px}
+.srcrow .bs{color:var(--sub);font-size:11px}
+.srcrow .lk{font-size:10.5px;font-family:Consolas,monospace;word-break:break-all}
+
+/* tracking */
+.trk-btn{font-family:inherit;font-size:11.5px;padding:5px 12px;border-radius:6px;cursor:pointer;
+  border:1px solid var(--blue);background:#fff;color:var(--blue);font-weight:600;transition:.12s}
+.trk-btn:hover{background:#eef4fb}
+.trk-btn.on{background:#8a6100;border-color:#8a6100;color:#fff}
+.trk-btn.on:hover{background:#6f4e00}
+.qrow{border:1px solid var(--line);border-radius:7px;padding:9px 11px;margin-bottom:7px;background:#fff}
+.qrow .qh{display:flex;gap:8px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
+.qrow .qi{font-family:Consolas,monospace;font-size:11px;color:#fff;background:var(--navy);
+  padding:1px 6px;border-radius:4px;font-weight:700}
+.qrow .qt{font-weight:600;font-size:12px;color:#22303f}
+.qrow .qb{font-size:11.5px;color:#41556f;margin-top:3px}
+.qrow .qb b{color:#5b6b80;font-weight:600}
+.pri{font-size:10px;padding:1px 7px;border-radius:4px;font-weight:700}
+.pri-高{background:#fdeaea;color:#a61b29}
+.pri-中{background:#fff5d9;color:#8a6100}
+.pri-低{background:#e6f4ea;color:#1e7145}
+
+/* scenarios */
+.scn{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:640px){.scn{grid-template-columns:1fr}}
+.scn button{font-family:inherit;text-align:left;border:1px solid var(--line);background:#fff;
+  border-radius:8px;padding:9px 10px;cursor:pointer;transition:.12s}
+.scn button:hover{border-color:var(--blue);background:#f6f9fd;transform:translateY(-1px)}
+.scn .s1{font-size:11.5px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.scn .s2{font-size:10.5px;color:var(--sub);line-height:1.45}
+
+.empty{text-align:center;padding:44px 20px;color:var(--sub);font-size:12.5px}
+.empty b{display:block;font-size:14px;color:#3c4f68;margin-bottom:6px}
+.foot{text-align:center;font-size:11px;color:#8798ac;padding:0 0 28px;line-height:1.8}
+hr.thin{border:none;border-top:1px solid var(--line);margin:14px 0}
+.note-inline{font-size:11px;color:var(--sub);background:#f7f9fc;border-left:2px solid #cdd8e6;
+  padding:6px 10px;border-radius:0 5px 5px 0;margin-top:7px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="h-top">
+      <div>
+        <h1>聚合产业资讯并定位事件 · 中国甲醇产业链</h1>
+        <div class="h-sub">
+          把最近一个窗口内的公开资讯<b>先在信息源层面去重</b>，再把“多条报道”收敛为<b>一个产业事件</b>，
+          并把事件挂到<b>产业链节点 · 企业 · 装置 · 产能</b>上。所有内容来自可回溯的公开页面，正文不可访问的条目<b>如实标注</b>，不做补写。
+        </div>
+      </div>
+      <div class="badge-window">
+        <div class="k">采集窗口</div>
+        <div class="v" id="hw"></div>
+        <div class="k" style="margin-top:5px">采集时点</div>
+        <div id="hc" style="font-size:12px"></div>
+      </div>
+    </div>
+    <div class="h-meta" id="hmeta"></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="tb-row">
+      <span class="tb-lbl">品种</span>
+      <select id="fProd"></select>
+      <span class="sep"></span>
+      <span class="tb-lbl">事件类型</span>
+      <div class="chips" id="fType"></div>
+    </div>
+    <div class="tb-row" style="padding-top:0">
+      <span class="tb-lbl">确认状态</span>
+      <div class="chips" id="fConf"></div>
+      <span class="sep"></span>
+      <span class="tb-lbl">区域</span>
+      <div class="chips" id="fRegion"></div>
+      <span class="sep"></span>
+      <input type="text" id="fText" placeholder="搜索企业 / 装置 / 关键词…" style="min-width:210px">
+      <div style="flex:1"></div>
+      <span class="tb-lbl" id="trkCount"></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="main">
+    <!-- LEFT: news feed -->
+    <section>
+      <div class="col-hd">
+        <h2>资讯流</h2>
+        <span class="cnt" id="feedCnt"></span>
+      </div>
+      <div class="feed" id="feed"></div>
+    </section>
+
+    <!-- RIGHT: event board -->
+    <section>
+      <div class="col-hd">
+        <h2>事件看板</h2>
+        <span class="cnt" id="boardCnt"></span>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+  </div>
+  <div class="foot">
+    本页仅提供资讯聚合与事件定位，<b>不构成价格涨跌判断</b>。价格数字仅作事件背景且标注来源与日期。<br>
+    正文不可访问的条目（付费墙 / 反爬 / 站点限制）在详情中以“仅标题”标注，其内容不推断、不补写。
+  </div>
+</div>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <div class="dr-hd">
+    <div class="row1">
+      <div style="min-width:0">
+        <div class="dr-id" id="drId"></div>
+        <div class="dr-t" id="drT"></div>
+        <div id="drBadges" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+      <button class="close" id="btnClose" title="关闭">×</button>
+    </div>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const byId = (arr, k) => arr.reduce((m, x) => (m[x[k]] = x, m), {});
+
+const EV = byId(DATA.events, 'event_id');
+const NEWS = byId(DATA.news, 'news_id');
+const SRC = byId(DATA.sources, 'src_id');
+const ENT = byId(DATA.companies, 'ent_id');
+const PLT = byId(DATA.plants, 'plant_id');
+const NODE = byId(DATA.nodes, 'node_id');
+
+const CONF = {
+  C1: {label:'官方原文确认', short:'C1', color:'#1e7145', desc:'政府/企业/交易所原文可读'},
+  C2: {label:'多来源确认',   short:'C2', color:'#8a6100', desc:'≥2 家独立机构口径一致，正文可读'},
+  C3: {label:'单一来源/标题级', short:'C3', color:'#a2531a', desc:'仅一家来源或正文不可读'},
+  C4: {label:'待核实/存在冲突', short:'C4', color:'#a61b29', desc:'来源冲突或仅二手转述'}
+};
+const LVL = {full:'全文', partial:'摘要', summary_only:'搜索摘要', title_only:'仅标题'};
+const REL = {primary:'首发', republish:'转载', followup:'后续更新', index_entry:'索引形态', selfmedia:'自媒体', conflict:'来源冲突'};
+
+const fmtT = t => t ? String(t).replace('T', ' ').slice(0, 16) : '—';
+const fmtD = t => t ? String(t).slice(0, 10) : '—';
+
+/* ---------- header ---------- */
+$('#hw').textContent = DATA.meta.window_label.replace('（7个自然日）','');
+$('#hc').textContent = fmtT(DATA.meta.collect_time);
+const nFull = DATA.news.filter(n => n.content_level === 'full').length;
+const nTitle = DATA.news.filter(n => n.content_level === 'title_only').length;
+const stat = [
+  ['信息源', DATA.sources.length],
+  ['资讯条目', DATA.news.length],
+  ['去重后事件', DATA.events.length],
+  ['关联企业', DATA.companies.length],
+  ['装置', DATA.plants.length],
+  ['产业链节点', DATA.nodes.length],
+  ['待验证事项', DATA.questions.length]
+];
+$('#hmeta').innerHTML = stat.map(([k, v]) => `<div><strong>${v}</strong>${k}</div>`).join('') +
+  `<div style="max-width:430px"><strong style="font-size:13px;font-weight:600;color:#dbe7f5">` +
+  `正文全文可读 ${nFull} 条 ｜ 仅标题 ${nTitle} 条</strong>` +
+  `付费墙与反爬导致的不可访问已逐条披露，不以“未发现”替代“未能访问”</div>`;
+
+/* ---------- filters ---------- */
+const F = {prod: 'all', types: new Set(), confs: new Set(), regions: new Set(), text: ''};
+
+const products = [...new Set(DATA.events.map(e => e.product.split('、')[0].trim()))];
+$('#fProd').innerHTML = `<option value="all">全部（甲醇产业链）</option>` +
+  products.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+
+const TYPES = ['停车复产','装置检修','项目投产','产能扩建','贸易政策','环保安全','下游需求','其他产业事件'];
+const REGIONS = ['华东','西北','华北','西南','华中','境外'];
+$('#fType').innerHTML = TYPES.map(t => {
+  const n = DATA.events.filter(e => e.type === t).length;
+  return `<span class="chip" data-t="${t}">${t}<span class="n">${n}</span></span>`;
+}).join('');
+$('#fConf').innerHTML = ['C1','C2','C3','C4'].map(c => {
+  const n = DATA.events.filter(e => e.verify_status === c).length;
+  return `<span class="chip" data-c="${c}" title="${CONF[c].desc}">${CONF[c].short} ${CONF[c].label}<span class="n">${n}</span></span>`;
+}).join('');
+$('#fRegion').innerHTML = REGIONS.map(r => {
+  const n = DATA.events.filter(e => (e.region || '').includes(r)).length;
+  return `<span class="chip" data-r="${r}">${r}<span class="n">${n}</span></span>`;
+}).join('');
+
+function bindChips(sel, set, attr, key) {
+  document.querySelectorAll(sel + ' .chip').forEach(c => {
+    c.onclick = () => {
+      const v = c.dataset[attr];
+      if (set.has(v)) { set.delete(v); c.classList.remove('on'); }
+      else { set.add(v); c.classList.add('on'); }
+      render();
+    };
+  });
+}
+bindChips('#fType', F.types, 't');
+bindChips('#fConf', F.confs, 'c');
+bindChips('#fRegion', F.regions, 'r');
+$('#fProd').onchange = e => { F.prod = e.target.value; render(); };
+$('#fText').oninput = e => { F.text = e.target.value.trim().toLowerCase(); render(); };
+
+/* ---------- matching ---------- */
+function evText(e) {
+  const ents = e.companies.map(c => ENT[c] ? ENT[c].name + ENT[c].short : '').join(' ');
+  const pls = e.plants.map(p => PLT[p] ? PLT[p].name : '').join(' ');
+  return [e.title, e.type, e.sub_type, e.region, e.province, e.capacity_desc, e.scale_desc, ents, pls]
+    .join(' ').toLowerCase();
+}
+function evMatch(e) {
+  if (F.types.size && !F.types.has(e.type)) return false;
+  if (F.confs.size && !F.confs.has(e.verify_status)) return false;
+  if (F.regions.size && !REGIONS.some(r => F.regions.has(r) && (e.region || '').includes(r))) return false;
+  if (F.prod !== 'all' && !e.product.includes(F.prod)) return false;
+  if (F.text && !evText(e).includes(F.text)) return false;
+  return true;
+}
+
+/* ---------- news → event map ---------- */
+const newsToLinks = {};
+DATA.links.forEach(l => (newsToLinks[l.news_id] = newsToLinks[l.news_id] || []).push(l));
+
+function newsMatch(n) {
+  if (F.text) {
+    const hay = (n.title + ' ' + (n.core_points || []).join(' ') + ' ' + n.publisher).toLowerCase();
+    if (!hay.includes(F.text)) return false;
+  }
+  const ev = n.event_hint ? EV[n.event_hint] : null;
+  if (!ev) {
+    // unassigned items only shown when no event-level filter is active
+    return !F.types.size && !F.confs.size && !F.regions.size && F.prod === 'all';
+  }
+  return evMatch(ev);
+}
+
+/* ---------- render ---------- */
+let selNews = null, selEvent = null;
+
+function render() {
+  renderFeed();
+  renderBoard();
+  const trk = getTracked();
+  $('#trkCount').innerHTML = trk.length ? `<span style="color:#8a6100;font-weight:700">跟踪清单 ${trk.length} 项</span>` : '';
+}
+
+function renderFeed() {
+  const list = DATA.news.filter(newsMatch);
+  list.sort((a, b) => String(b.list_ts || b.first_pub || '').localeCompare(String(a.list_ts || a.first_pub || '')));
+  $('#feedCnt').textContent = `${list.length} / ${DATA.news.length} 条`;
+  const box = $('#feed');
+  box.innerHTML = '';
+  if (!list.length) { box.appendChild(el('div', 'empty', '<b>没有符合条件的资讯</b>请放宽筛选条件')); return; }
+
+  list.forEach(n => {
+    const ev = n.event_hint ? EV[n.event_hint] : null;
+    const link = (newsToLinks[n.news_id] || [])[0];
+    const rel = link ? link.relation : null;
+    const item = el('div', 'nitem' + (n.news_id === selNews ? ' sel' : '') + (n.outside_window ? ' out-win' : ''));
+    const pts = (n.core_points || []).map(p => (p.length > 96 ? p.slice(0, 96) + '…' : p)).join(' ｜ ');
+    item.innerHTML =
+      `<div class="t">${esc(n.title)}</div>
+       <div class="m">
+         <span class="tag lvl-${n.content_level}">${LVL[n.content_level]}</span>
+         ${rel ? `<span class="tag rel">${REL[rel]}</span>` : ''}
+         ${ev ? `<span class="tag tev" title="点击查看事件">${CONF[ev.verify_status].short} · 事件</span>` : '<span class="tag rel">未立事件</span>'}
+         ${n.outside_window ? '<span class="tag rel">超窗</span>' : ''}
+         <span>${esc(n.publisher)}</span>
+         <span style="color:#98a8bc">·</span>
+         <span>${fmtT(n.first_pub || n.list_ts)}</span>
+       </div>
+       <div class="pt">${esc(pts)}</div>`;
+    item.onclick = () => { selNews = n.news_id; renderFeed(); openNews(n); };
+    item.dataset.news = n.news_id;
+    box.appendChild(item);
+  });
+}
+
+function renderBoard() {
+  const list = DATA.events.filter(evMatch);
+  list.sort((a, b) => {
+    const d = String(b.occur_date).localeCompare(String(a.occur_date));
+    return d !== 0 ? d : a.verify_status.localeCompare(b.verify_status);
+  });
+  $('#boardCnt').textContent = `${list.length} / ${DATA.events.length} 个事件`;
+  const box = $('#board');
+  box.innerHTML = '';
+  if (!list.length) { box.appendChild(el('div', 'empty', '<b>没有符合条件的事件</b>请放宽筛选条件')); return; }
+
+  list.forEach(e => {
+    const c = CONF[e.verify_status];
+    const card = el('div', 'ev' + (e.event_id === selEvent ? ' sel' : ''));
+    const node = e.chain_node && NODE[e.chain_node] ? NODE[e.chain_node] : null;
+    const ents = e.companies.map(x => ENT[x] ? ENT[x].short : '').filter(Boolean).slice(0, 5);
+    const pls = e.plants.map(p => PLT[p] ? PLT[p].name : '').filter(Boolean);
+    const conflicts = (DATA.links || []).filter(l => l.event_id === e.event_id && l.relation === 'conflict').length;
+    card.innerHTML =
+      `<div class="ev-hd">
+         <span class="conf-dot" style="background:${c.color}" title="${esc(c.label)}"></span>
+         <div style="min-width:0;flex:1">
+           <div class="ev-t">${esc(e.title)}</div>
+           <div class="ev-meta">
+             <span class="tag" style="background:${c.color}1a;color:${c.color};border-color:${c.color}4d">${c.short} ${c.label}</span>
+             <span class="tag rel">${esc(e.type)}</span>
+             <span>${fmtD(e.occur_date)}</span>
+             <span style="color:#98a8bc">·</span>
+             <span>${esc(e.region)}</span>
+           </div>
+         </div>
+       </div>
+       <div class="ev-body">
+         <dl class="ev-kv">
+           ${node ? `<dt>产业链位置</dt><dd>${esc(node.layer)} → ${esc(node.name)}</dd>` : ''}
+           ${ents.length ? `<dt>涉及企业</dt><dd>${esc(ents.join('、'))}${e.companies.length > 5 ? ' 等 ' + e.companies.length + ' 家' : ''}</dd>` : ''}
+           ${pls.length ? `<dt>装置</dt><dd>${esc(pls.slice(0, 3).join('、'))}${pls.length > 3 ? ' 等 ' + pls.length + ' 台' : ''}</dd>` : ''}
+           ${e.capacity_desc && e.capacity_desc !== '不适用（库存指标）' && e.capacity_desc !== '不适用' ? `<dt>产能/规模</dt><dd>${esc(e.capacity_desc.length > 88 ? e.capacity_desc.slice(0, 88) + '…' : e.capacity_desc)}</dd>` : ''}
+         </dl>
+         <div class="ev-src">
+           <span class="pill">${e.news_refs.length} 条来源</span>
+           ${conflicts ? `<span class="pill cf">${conflicts} 处来源冲突</span>` : ''}
+           ${(e.open_questions || []).length ? `<span class="pill sm">${e.open_questions.length} 项待验证</span>` : ''}
+           ${e.unconfirmed.length ? `<span class="pill sm">${e.unconfirmed.length} 项未确认</span>` : ''}
+         </div>
+       </div>
+       <div class="ev-ft">
+         <span>首发 ${fmtT(e.first_report)}</span>
+         <span>最后更新 ${fmtT(e.last_update)}</span>
+         <span style="margin-left:auto;color:#2e5c8a;font-weight:600">点击展开来源 · 企业 · 装置 · 产业链定位 →</span>
+       </div>`;
+    card.onclick = () => { selEvent = e.event_id; renderBoard(); openEvent(e.event_id); };
+    card.dataset.evt = e.event_id;
+    box.appendChild(card);
+  });
+}
+
+/* ---------- tracking list ---------- */
+const TRK_KEY = 'meoh_trk_v1';
+function getTracked() { try { return JSON.parse(localStorage.getItem(TRK_KEY) || '[]'); } catch (e) { return []; } }
+function toggleTrack(id) {
+  let t = getTracked();
+  t = t.includes(id) ? t.filter(x => x !== id) : t.concat(id);
+  try { localStorage.setItem(TRK_KEY, JSON.stringify(t)); } catch (e) {}
+  render();
+  if (selEvent) openEvent(selEvent);
+}
+
+/* ---------- drawer: event ---------- */
+function openEvent(id) {
+  const e = EV[id];
+  if (!e) return;
+  const c = CONF[e.verify_status];
+  $('#drId').textContent = e.event_id;
+  $('#drT').textContent = e.title;
+  const node = e.chain_node && NODE[e.chain_node] ? NODE[e.chain_node] : null;
+  const trk = getTracked().includes(id);
+  $('#drBadges').innerHTML =
+    `<span class="tag" style="background:${c.color}1a;color:${c.color};border-color:${c.color}4d">${c.short} ${c.label}</span>
+     <span class="tag rel">${esc(e.type)}</span>
+     <span class="tag rel">${esc(e.sub_type)}</span>
+     <span class="tag rel">${esc(e.region)}</span>`;
+
+  const body = $('#drBody');
+  body.innerHTML = '';
+
+  // 1. basic
+  const s1 = el('div', 'sec');
+  s1.innerHTML = `<h3><span class="sq"></span>事件基本信息</h3>
+    <dl class="kv">
+      <dt>事件编号</dt><dd style="font-family:Consolas,monospace">${esc(e.event_id)}</dd>
+      <dt>事件发生日</dt><dd>${fmtD(e.occur_date)}</dd>
+      <dt>日期判定依据</dt><dd>${esc(e.occur_date_note)}</dd>
+      <dt>事件类型</dt><dd>${esc(e.type)} / ${esc(e.sub_type)}</dd>
+      <dt>区域</dt><dd>${esc(e.region)}（${esc(e.province)}）</dd>
+      <dt>相关产品</dt><dd>${esc(e.product)}</dd>
+      ${node ? `<dt>产业链节点</dt><dd>${esc(node.layer)} → <b>${esc(node.name)}</b> <span style="color:#8798ac;font-family:Consolas,monospace;font-size:11px">${esc(node.node_id)}</span></dd>` : ''}
+      <dt>首发报道</dt><dd>${fmtT(e.first_report)}</dd>
+      <dt>首发说明</dt><dd>${esc(e.first_report_note)}</dd>
+      <dt>最后更新</dt><dd>${fmtT(e.last_update)}</dd>
+      <dt>确认状态</dt><dd><b style="color:${c.color}">${c.short} ${c.label}</b> — ${esc(c.desc)}<br><span style="color:#5b6b80">判定依据：${esc(e.verify_basis)}</span></dd>
+    </dl>`;
+  body.appendChild(s1);
+
+  // 2. three layers
+  const s2 = el('div', 'sec');
+  const li = a => a.map(x => `<li>${esc(x)}</li>`).join('');
+  s2.innerHTML = `<h3><span class="sq"></span>事实分级：三层信息严格分开</h3>
+    <div class="layers">
+      <div class="ly ly-fact"><h4>① 已确认事实（${e.confirmed_facts.length}）</h4>
+        ${e.confirmed_facts.length ? `<ul>${li(e.confirmed_facts)}</ul>` : '<div style="color:#8798ac">暂无达到“已确认”标准的表述</div>'}</div>
+      <div class="ly ly-data"><h4>② 有数据支持的客观描述（${e.data_supported.length}）</h4>
+        ${e.data_supported.length ? `<ul>${li(e.data_supported)}</ul>` : '<div style="color:#8798ac">暂无</div>'}</div>
+      <div class="ly ly-unconf"><h4>③ 尚未确认的信息（${e.unconfirmed.length}）</h4>
+        ${e.unconfirmed.length ? `<ul>${li(e.unconfirmed)}</ul>` : '<div style="color:#8798ac">暂无</div>'}
+        <div class="ly-note">以上内容不作为事实使用；对应的取证路径见“待验证事项”。</div></div>
+    </div>`;
+  body.appendChild(s2);
+
+  // 3. scale + capacity table
+  const s3 = el('div', 'sec');
+  let scaleHtml = `<dl class="kv">
+      <dt>产能描述</dt><dd>${esc(e.capacity_desc)}</dd>
+      <dt>客观规模</dt><dd>${esc(e.scale_desc)}</dd>
+    </dl>`;
+  if (e.scale_data && e.scale_data.length) {
+    scaleHtml += `<table class="ct" style="margin-top:9px">
+      <tr><th style="width:34%">指标</th><th style="width:13%">数值</th><th style="width:16%">单位</th><th style="width:15%">口径/期间</th><th>来源</th></tr>
+      ${e.scale_data.map(d => `<tr><td>${esc(d.metric)}</td><td style="font-weight:700;color:#14243c">${esc(d.value)}</td>
+        <td>${esc(d.unit)}</td><td>${esc(d.period)}</td><td style="color:#5b6b80">${esc(d.source)}</td></tr>`).join('')}
+    </table>`;
+  }
+  // plants involved
+  if (e.plants.length) {
+    scaleHtml += `<div style="margin-top:12px;font-size:11.5px;font-weight:700;color:#3c4f68">涉及装置台账</div>
+      <table class="ct" style="margin-top:5px">
+      <tr><th>装置</th><th style="width:9%">产能</th><th style="width:11%">单位</th><th style="width:12%">状态</th><th>状态来源</th></tr>
+      ${e.plants.map(pid => {
+        const p = PLT[pid]; if (!p) return '';
+        const stc = p.status.includes('停车') ? 'st-stop' : p.status.includes('稳定') ? 'st-run'
+          : p.status.includes('降负') || p.status.includes('偏低') ? 'st-part'
+          : p.status.includes('投产') ? 'st-plan' : 'st-unk';
+        return `<tr><td>${esc(p.name)}<br><span style="color:#8798ac;font-size:10px;font-family:Consolas,monospace">${esc(p.plant_id)}</span></td>
+          <td style="font-weight:700">${p.capacity == null ? '<span style="color:#a61b29">未取得</span>' : p.capacity}</td>
+          <td>${esc(p.unit || '')}</td><td><span class="st ${stc}">${esc(p.status)}</span></td>
+          <td style="color:#5b6b80">${esc(p.status_source)}</td></tr>`;
+      }).join('')}
+      </table>`;
+  }
+  s3.innerHTML = `<h3><span class="sq"></span>规模与装置</h3>${scaleHtml}`;
+  s3.dataset.sec = 'scale';
+  body.appendChild(s3);
+
+  // 4. chain positioning
+  const s4 = el('div', 'sec');
+  s4.innerHTML = `<h3><span class="sq"></span>产业链定位</h3>
+    <div class="chainbox"><div class="chain" id="chainBox"></div></div>
+    <div class="note-inline">红色高亮 = 本事件所在节点。节点说明：${esc(node ? node.desc : '本事件未挂载产业链节点（政策核查类）')}</div>`;
+  body.appendChild(s4);
+  drawChain(s4.querySelector('#chainBox'), e.chain_node);
+
+  // 5. tracking + scenarios (placed before the long source list so actions stay reachable)
+  const trk5 = el('div', 'sec');
+  trk5.innerHTML = `<h3><span class="sq"></span>加入跟踪清单</h3>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="trk-btn ${trk ? 'on' : ''}" id="btnTrk">${trk ? '✓ 已在跟踪清单中（点击移出）' : '+ 加入跟踪清单（未确认信息待持续核验）'}</button>
+      <span style="font-size:11px;color:#5b6b80">跟踪清单保存在本机浏览器</span>
+    </div>`;
+  body.appendChild(trk5);
+  trk5.querySelector('#btnTrk').onclick = () => toggleTrack(id);
+
+  const s8 = el('div', 'sec');
+  s8.innerHTML = `<h3><span class="sq"></span>继续下钻</h3>
+    <div class="scn">
+      <button data-go="impact"><div class="s1">判断这条产业新闻影响多大</div><div class="s2">从装置产能 × 产业链位置，评估影响量级</div></button>
+      <button data-go="price"><div class="s1">看该产品价格</div><div class="s2">转到价格与基差面板（本页不给涨跌结论）</div></button>
+      <button data-go="company"><div class="s1">深度研究一家产业企业</div><div class="s2">企业档案、装置组合、路线与关联事件</div></button>
+    </div>`;
+  body.appendChild(s8);
+  s8.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
+    const g = b.dataset.go;
+    if (g === 'impact') {
+      const target = body.querySelector('[data-sec="scale"]');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      alert('该入口在完整产品中通向对应场景：\n· 看该产品价格 → 期现行情看板\n· 深度研究一家产业企业 → 企业档案页\n\n本原型展示入口位置，不内置价格结论。');
+    }
+  });
+
+  // 6. sources with dedupe relations
+  const s5 = el('div', 'sec');
+  const links = (DATA.links || []).filter(l => l.event_id === id);
+  const order = {primary: 0, followup: 1, conflict: 2, republish: 3, selfmedia: 4, index_entry: 5};
+  links.sort((a, b) => (order[a.relation] - order[b.relation]));
+  s5.innerHTML = `<h3><span class="sq"></span>来源与版本（${links.length}）· 去重后仍全部保留</h3>
+    <div class="note-inline" style="margin-bottom:8px">
+      一个事件 = 多条报道。首发 / 转载 / 后续更新 / 冲突 分开标注：
+      <b>同源转载不增加确认度</b>；<b>来源冲突并置保留、不做取舍</b>。
+    </div>` +
+    links.map(l => {
+      const n = NEWS[l.news_id]; if (!n) return '';
+      return `<div class="srcrow">
+        <div class="rel"><span class="tag ${l.relation === 'conflict' ? 'lvl-title_only' : 'rel'}">${REL[l.relation]}</span></div>
+        <div class="bd">
+          <div class="ttl">${esc(n.title)}</div>
+          <div class="bs">
+            <span class="tag lvl-${n.content_level}">${LVL[n.content_level]}</span>
+            ${esc(n.publisher)} ｜ 发布 ${fmtT(n.first_pub || n.list_ts)}
+            ${n.repub_time && n.first_pub && n.repub_time !== n.first_pub ? ' ｜ 转载 ' + fmtT(n.repub_time) : ''}
+            ${n.outside_window ? ' ｜ <b style="color:#a2531a">超窗</b>' : ''}
+          </div>
+          <div class="bs" style="margin-top:3px">判定：${esc(l.basis)}</div>
+          <div class="bs" style="margin-top:2px;color:#6b7b90">作用：${esc(l.conf_weight)}</div>
+          <div class="lk"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.url)}</a></div>
+        </div>
+      </div>`;
+    }).join('');
+  body.appendChild(s5);
+
+  // 7. questions
+  const qs = DATA.questions.filter(q => q.event_id === id || q.event_id === '*');
+  const s6 = el('div', 'sec');
+  s6.innerHTML = `<h3><span class="sq"></span>待验证事项（${e.open_questions.length} 项关联 / 另含全局项）</h3>` +
+    (e.open_questions.map(qid => {
+      const q = DATA.questions.find(x => x.q_id === qid); if (!q) return '';
+      return `<div class="qrow">
+        <div class="qh"><span class="qi">${esc(q.q_id)}</span><span class="pri pri-${q.priority}">${q.priority}</span>
+          <span class="qt">${esc(q.question)}</span></div>
+        <div class="qb"><b>为什么重要：</b>${esc(q.why_matters)}</div>
+        <div class="qb"><b>需要证据：</b>${esc(q.evidence_needed)}</div>
+        <div class="qb"><b>去哪取：</b>${esc(q.where_to_get)}</div>
+        ${q.blocked_by ? `<div class="qb"><b>当前卡点：</b>${esc(q.blocked_by)}</div>` : ''}
+      </div>`;
+    }).join('') || '<div style="color:#8798ac;font-size:12px">本事件暂无挂载的待验证事项</div>');
+
+  const s9 = el('div', 'sec');
+  const about = DATA.questions.filter(q => q.event_id === '*');
+  s9.innerHTML = `<h3><span class="sq"></span>全局待验证（信息源覆盖度）</h3>` +
+    about.map(q => `<div class="qrow"><div class="qh"><span class="qi">${esc(q.q_id)}</span>
+      <span class="pri pri-${q.priority}">${q.priority}</span><span class="qt">${esc(q.question)}</span></div>
+      <div class="qb"><b>去哪取：</b>${esc(q.where_to_get)}</div></div>`).join('');
+  body.appendChild(s9);
+
+  $('#mask').classList.add('on');
+  $('#drawer').classList.add('on');
+  body.scrollTop = 0;
+}
+
+/* ---------- chain diagram ---------- */
+function drawChain(box, hotNode) {
+  const LAYERS = ['上游原料', '甲醇生产', '流通/进口', '下游需求', '衍生路线'];
+  box.innerHTML = '';
+  LAYERS.forEach(L => {
+    const col = el('div', 'clayer');
+    col.innerHTML = `<div class="cl-hd">${L}</div>`;
+    DATA.nodes.filter(n => n.layer === L).forEach(n => {
+      const cnt = DATA.events.filter(e => e.chain_node === n.node_id).length;
+      const d = el('div', 'cnode' + (n.node_id === hotNode ? ' hot' : ''));
+      d.innerHTML = `${esc(n.name)}${cnt ? `<span class="dot" title="${cnt} 个事件"></span>` : ''}<span class="nn">${esc(n.node_id)}${cnt ? ' · ' + cnt + '事件' : ''}</span>`;
+      d.title = n.desc + (n.capacity_note ? '\n规模：' + n.capacity_note : '');
+      d.onclick = () => {
+        const evs = DATA.events.filter(e => e.chain_node === n.node_id);
+        if (!evs.length) { alert(n.name + '\n\n' + n.desc); return; }
+        alert(n.name + '\n\n' + n.desc + '\n\n挂载事件：\n' + evs.map(e => '· ' + e.title + '（' + e.verify_status + '）').join('\n'));
+      };
+      col.appendChild(d);
+    });
+    box.appendChild(col);
+  });
+}
+
+/* ---------- drawer: single news ---------- */
+function openNews(n) {
+  const ev = n.event_hint ? EV[n.event_hint] : null;
+  $('#drId').textContent = n.news_id + ' ／ ' + n.src_id;
+  $('#drT').textContent = n.title;
+  $('#drBadges').innerHTML =
+    `<span class="tag lvl-${n.content_level}">${LVL[n.content_level]}</span>
+     ${ev ? `<span class="tag tev">${CONF[ev.verify_status].short} · ${esc(ev.title.slice(0, 22))}…</span>` : '<span class="tag rel">未归入事件</span>'}
+     ${n.outside_window ? '<span class="tag rel">超窗</span>' : ''}`;
+  const src = SRC[n.src_id] || {};
+  const body = $('#drBody');
+  body.innerHTML = `<div class="sec">
+      <h3><span class="sq"></span>来源信息</h3>
+      <dl class="kv">
+        <dt>发布方</dt><dd>${esc(n.publisher)}</dd>
+        <dt>信息源</dt><dd>${esc(src.name || '')} <span style="color:#8798ac">（${esc(src.tier || '')} · ${esc(src.reliability || '')}）</span></dd>
+        <dt>内容深度</dt><dd><span class="tag lvl-${n.content_level}">${LVL[n.content_level]}</span> ${
+          n.content_level === 'title_only' ? '正文不可访问：内容仅按标题解析，不推断、不补写' :
+          n.content_level === 'summary_only' ? '仅搜索引擎摘要，未取得正文' : ''}</dd>
+        <dt>首发/发布</dt><dd>${fmtT(n.first_pub || n.list_ts)}</dd>
+        <dt>时间说明</dt><dd>${esc(n.first_pub_note || '')}</dd>
+        ${n.repub_time ? `<dt>转载时点</dt><dd>${fmtT(n.repub_time)}</dd>` : ''}
+        <dt>链接</dt><dd style="word-break:break-all"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.url)}</a></dd>
+        ${n.url_date_evidence ? `<dt>日期佐证</dt><dd>${esc(n.url_date_evidence)}</dd>` : ''}
+        ${n.reliability_flag ? `<dt>可靠性提示</dt><dd style="color:#a61b29">${esc(n.reliability_flag)}</dd>` : ''}
+        ${n.note ? `<dt>备注</dt><dd>${esc(n.note)}</dd>` : ''}
+      </dl>
+    </div>
+    <div class="sec">
+      <h3><span class="sq"></span>正文要点</h3>
+      <div class="layers"><div class="ly ly-data"><ul>${(n.core_points || []).map(p => `<li>${esc(p)}</li>`).join('')}</ul></div></div>
+    </div>
+    ${ev ? `<div class="sec"><h3><span class="sq"></span>归属事件</h3>
+      <div class="srcrow" style="cursor:pointer" id="goEv">
+        <div class="rel"><span class="tag tev">事件</span></div>
+        <div class="bd"><div class="ttl">${esc(ev.title)}</div>
+        <div class="bs">${esc(ev.event_id)} ｜ ${CONF[ev.verify_status].short} ${CONF[ev.verify_status].label} ｜ ${esc(ev.region)} ｜ ${fmtD(ev.occur_date)}</div>
+        <div class="bs" style="color:#2e5c8a;font-weight:600;margin-top:3px">点击查看事件详情 →</div></div>
+      </div></div>` : ''}
+    ${(newsToLinks[n.news_id] || []).length ? `<div class="sec"><h3><span class="sq"></span>去重关系</h3>
+      ${(newsToLinks[n.news_id] || []).map(l => `<div class="srcrow">
+        <div class="rel"><span class="tag rel">${REL[l.relation]}</span></div>
+        <div class="bd"><div class="ttl">${esc(NEWS[l.news_id] ? NEWS[l.news_id].title : '')}</div>
+        <div class="bs">判定：${esc(l.basis)}</div></div></div>`).join('')}</div>` : ''}`;
+  if (ev) body.querySelector('#goEv').onclick = () => { selEvent = ev.event_id; renderBoard(); openEvent(ev.event_id); };
+
+  $('#mask').classList.add('on');
+  $('#drawer').classList.add('on');
+  body.scrollTop = 0;
+}
+
+/* ---------- close ---------- */
+function closeDr() {
+  $('#mask').classList.remove('on');
+  $('#drawer').classList.remove('on');
+}
+$('#mask').onclick = closeDr;
+$('#btnClose').onclick = closeDr;
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDr(); });
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+{
+  "meta": {
+    "skillVersion": "1.0.0",
+    "dataClass": "SIMULATED — DEMO DATA / 模拟演示数据",
+    "dataClassNote": "All names, contacts, prices and terms are SIMULATED for skill demonstration. Replace with user-confirmed commercial data before any real use. Bank details are placeholders only.",
+    "caseId": "EX-002-PVC-VNM",
+    "product": "PVC Suspension Resin SG-5",
+    "destination": "Vietnam",
+    "preparedAt": "2026-10-19",
+    "preparedBy": "export-quotation-pi skill example generator",
+    "scenario": "Chinese PVC producer quoting DAP Ho Chi Minh City to a Vietnamese pipe manufacturer; multi-line (SG-5 / SG-8) and a buyer-side demurrage clause."
+  },
+  "docType": "QUOTATION",
+  "state": {
+    "stage": "READY_FOR_REVIEW",
+    "reviewConfirmed": false
+  },
+  "reference": {
+    "text": "QT-SIM-2610-002",
+    "quoteNo": "QT-SIM-2610-002",
+    "quotationRef": "QT-SIM-2610-002 Rev.0",
+    "buyerInquiryRef": "INQ-SIM-VN-2201 (2026-10-15)",
+    "supplierQuoteRef": "",
+    "exporterReference": "TO BE ALLOCATED BEFORE SHIPMENT",
+    "buyerPoNo": ""
+  },
+  "issueDate": "2026-10-19",
+  "seller": {
+    "name": "Hua Bin Chemical Trading Co., Ltd. (SIMULATED DEMO)",
+    "shortName": "SIMULATED CO., LTD.",
+    "logoText": "SIMULATED",
+    "address": "Unit 2108, 21/F, Harbor Commerce Tower, Nanshan District, Shenzhen, Guangdong 518000, China",
+    "country": "China",
+    "contact": "[Simulated Contact Person]",
+    "phone": "+86 000 0000 0000 (Simulated)",
+    "email": "export@example-demo.invalid",
+    "taxId": "USCI SIMULATED-0000000000"
+  },
+  "buyer": {
+    "name": "Nam Viet Pipe Manufacturing JSC (SIMULATED DEMO)",
+    "address": "Lot B-12, Hiep Phuoc Industrial Park, Nha Be District, Ho Chi Minh City 700000, Vietnam",
+    "country": "Vietnam",
+    "contact": "[Simulated Buyer Contact]",
+    "position": "Purchasing Director",
+    "phone": "+84 00 0000 000 (Simulated)",
+    "email": "sourcing@example-demo.invalid",
+    "npwp": "Tax code SIMULATED-0000000000"
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "decimals": 2,
+    "exchangeRate": {
+      "base": "CNY",
+      "rate": 6.6862,
+      "asOf": "2026-10-16",
+      "source": "ECB reference rate",
+      "state": "reference",
+      "display": "footnote"
+    }
+  },
+  "tradeTerm": {
+    "code": "DAP",
+    "version": "2020",
+    "namedPlace": "Buyer's factory, Hiep Phuoc Industrial Park, Nha Be, Ho Chi Minh City",
+    "namedPlaceKind": "address",
+    "transportMode": "SEA",
+    "costAllocation": {
+      "exportPacking": "Seller",
+      "loadingCharges": "Seller",
+      "exportCustoms": "Seller",
+      "originCharges": "Seller",
+      "destinationCharges": "Buyer",
+      "importCustoms": "Buyer",
+      "unloading": "Buyer",
+      "mainFreight": "Seller",
+      "insurance": "Buyer"
+    }
+  },
+  "items": [
+    {
+      "id": "L1",
+      "name": "PVC Suspension Resin, Grade SG-5",
+      "cas": "9002-86-2",
+      "spec": "K-value 66-68; volatile matter 0.3% max.; apparent density 0.48-0.55 g/ml; sieve 250 um pass 2% min.",
+      "hsCode": "390410",
+      "origin": "China",
+      "unit": "MT",
+      "quantity": 200,
+      "unitPrice": 690,
+      "discountPct": 0,
+      "amountState": "confirmed",
+      "amountConfirmedValue": 138000.0,
+      "dangerousGoods": {
+        "status": "NOT_REGULATED",
+        "basis": "Supplier SDS: not classified as dangerous goods for transport (re-verify against current SDS)",
+        "ghsSummary": ""
+      },
+      "packageCount": 8000,
+      "packageWeight": {
+        "value": 25.2,
+        "unit": "KG",
+        "net": 25,
+        "basis": "simulated declaration"
+      }
+    },
+    {
+      "id": "L2",
+      "name": "PVC Suspension Resin, Grade SG-8",
+      "cas": "9002-86-2",
+      "spec": "K-value 58-60; volatile matter 0.3% max.; for pipe extrusion",
+      "hsCode": "390410",
+      "origin": "China",
+      "unit": "MT",
+      "quantity": 200,
+      "unitPrice": 710,
+      "discountPct": 0,
+      "amountState": "confirmed",
+      "amountConfirmedValue": 142000.0,
+      "dangerousGoods": {
+        "status": "NOT_REGULATED",
+        "basis": "Supplier SDS: not classified as dangerous goods for transport (re-verify against current SDS)",
+        "ghsSummary": ""
+      },
+      "packageCount": 8000,
+      "packageWeight": {
+        "value": 25.2,
+        "unit": "KG",
+        "net": 25,
+        "basis": "simulated declaration"
+      }
+    }
+  ],
+  "amountState": "confirmed",
+  "amountConfirmedValue": 280000.0,
+  "charges": [
+    {
+      "name": "Origin terminal handling (THC), Shenzhen",
+      "amount": "",
+      "addToTotal": false,
+      "note": "SIMULATED indicative - confirm with forwarder (DAP: seller bears origin + freight to named place)"
+    }
+  ],
+  "packing": {
+    "summary": "16,000 bags x 25 kg net in 25 kg paper sacks with PE liner, palletised; 8 x 40'HQ (approx.)",
+    "terms": "Standard export packing with shipping marks and 'Made in China' labelling",
+    "bagNetKg": 25,
+    "shippingUnits": "approx. 8 x 40'HQ"
+  },
+  "totalPackageCount": "16,000",
+  "totalGrossWeight": "403,200 kg (403.20 MT)",
+  "totalVolume": "",
+  "freight": {
+    "estimatedPol": "Shekou, Shenzhen",
+    "estimatedPod": "Cat Lai, Ho Chi Minh City"
+  },
+  "delivery": {
+    "leadTime": "25-35 calendar days after receipt of the confirmed purchase order; delivery to the named place per DAP",
+    "basis": "TIMING FROM RECEIPT OF CONFIRMED PURCHASE ORDER",
+    "readyDateMode": "relative",
+    "daysAfterReceipt": 25,
+    "partialShipment": "Not allowed",
+    "transhipment": "Allowed"
+  },
+  "payment": {
+    "code": "LC",
+    "lcType": "at sight",
+    "lcOpenedBy": "within 10 days after confirmation of this proforma invoice",
+    "bank": "Advising bank nominated by the Seller; issuing bank must be first-class and acceptable to the Seller",
+    "terms": "Irrevocable L/C at sight, at sight payment, opened through a first-class bank acceptable to the Seller, covering 100% of the total value; L/C must reach the Seller within 10 days after PI confirmation.",
+    "amountPct": 0,
+    "beneficiary": "[BANK DETAILS TO BE CONFIRMED BY THE SELLER]",
+    "beneficiaryNote": "[BANK DETAILS TO BE CONFIRMED - A/C No. / SWIFT INTENTIONALLY NOT GENERATED]"
+  },
+  "validity": {
+    "type": "date",
+    "validUntil": "2026-11-10"
+  },
+  "documents": [
+    {
+      "name": "Bill of Lading (3 originals + 3 copies)"
+    },
+    {
+      "name": "Commercial Invoice (1 original + 5 copies)"
+    },
+    {
+      "name": "Packing List (1 original + 3 copies)"
+    },
+    {
+      "name": "Certificate of Origin"
+    },
+    {
+      "name": "Certificate of Analysis (per shipment)"
+    },
+    {
+      "name": "Manufacturer's SDS (current revision)"
+    }
+  ],
+  "bank": {
+    "display": false,
+    "sanitized": true,
+    "detailsConfirmed": false,
+    "bankName": "",
+    "accountName": "",
+    "accountNumber": "",
+    "swift": "",
+    "note": "placeholders only"
+  },
+  "view": {
+    "logo": true,
+    "signature": true,
+    "watermark": true,
+    "accentColor": "#1B3A5B"
+  },
+  "preparation": {
+    "issuedBy": "export-quotation-pi skill v1.0.0",
+    "notice": "SIMULATED DEMO DATA — NOT FOR TRADE USE. DAP example: buyer still clears import and pays duties."
+  },
+  "review": {}
+}

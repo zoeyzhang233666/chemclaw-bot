@@ -1,0 +1,854 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} · 产业新闻影响分析</title>
+<style>
+:root{
+  --bg:#0b1220; --bg2:#0f1a2e; --panel:#111d33; --panel2:#16243d; --line:#22314d;
+  --ink:#e8eef9; --ink2:#a9b8d0; --ink3:#6f82a0;
+  --acc:#4f9cff; --acc2:#2fd7b5; --warn:#ffc857; --bad:#ff6b6b; --ok:#34d399; --vio:#b28dff;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:radial-gradient(1200px 600px at 15% -10%,#17305a 0%,transparent 55%),
+             radial-gradient(900px 500px at 90% 0%,#123c3a 0%,transparent 50%),var(--bg);
+  color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--acc);text-decoration:none;border-bottom:1px dotted rgba(79,156,255,.45)}
+a:hover{color:#8fc0ff}
+.wrap{max-width:1320px;margin:0 auto;padding:0 22px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);
+  background:rgba(11,18,32,.82);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--acc2);box-shadow:0 0 12px var(--acc2)}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-size:12.5px;color:var(--ink2);padding:6px 10px;border-radius:8px;border:0;white-space:nowrap}
+.nav a:hover{background:var(--panel2);color:var(--ink)}
+.pill{margin-left:auto;font-size:11.5px;color:var(--ink3);white-space:nowrap}
+
+/* ---------- hero / verification card ---------- */
+.hero{padding:34px 0 10px}
+.eyebrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:4px 10px;border-radius:999px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink2)}
+.tag.ok{border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.10);color:#7ff0c4}
+.tag.warn{border-color:rgba(255,200,87,.45);background:rgba(255,200,87,.10);color:#ffd98a}
+.tag.bad{border-color:rgba(255,107,107,.45);background:rgba(255,107,107,.10);color:#ffb0b0}
+.tag.acc{border-color:rgba(79,156,255,.45);background:rgba(79,156,255,.10);color:#a8ccff}
+h1{font-size:27px;line-height:1.35;margin:0 0 8px;letter-spacing:.2px}
+h1 .hl{background:linear-gradient(90deg,#7fd8ff,#2fd7b5);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--ink2);font-size:14px;margin:0 0 18px}
+
+.vcard{background:linear-gradient(160deg,rgba(22,36,61,.96),rgba(15,26,46,.96));
+  border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.vcard-head{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(79,156,255,.13),rgba(47,215,181,.06))}
+.vcard-head .t{font-weight:700;font-size:15px}
+.vcard-head .s{margin-left:auto;font-size:12px;color:var(--ink3)}
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+.vcell{background:var(--panel);padding:15px 18px}
+.vcell .k{font-size:11.5px;color:var(--ink3);letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
+.vcell .v{font-size:15px;font-weight:650;line-height:1.45}
+.vcell .m{font-size:11.5px;color:var(--ink3);margin-top:5px;line-height:1.5}
+.grade{display:inline-block;font-family:var(--mono);font-weight:700;font-size:12px;
+  padding:1px 8px;border-radius:6px;background:rgba(52,211,153,.16);color:#7ff0c4;border:1px solid rgba(52,211,153,.4)}
+.grade.b{background:rgba(255,200,87,.14);color:#ffd98a;border-color:rgba(255,200,87,.4)}
+.grade.c{background:rgba(255,107,107,.14);color:#ffb0b0;border-color:rgba(255,107,107,.4)}
+
+/* KPI strip */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 8px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--acc)}
+.kpi.g:before{background:var(--ok)} .kpi.w:before{background:var(--warn)} .kpi.v:before{background:var(--vio)}
+.kpi .n{font-size:22px;font-weight:750;font-family:var(--mono);letter-spacing:-.5px}
+.kpi .l{font-size:11.5px;color:var(--ink3);margin-top:2px}
+
+/* ---------- sections ---------- */
+section{padding:34px 0 6px;scroll-margin-top:70px}
+.shead{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.shead .idx{font-family:var(--mono);font-size:12px;color:var(--acc2);border:1px solid rgba(47,215,181,.35);
+  padding:2px 8px;border-radius:6px;background:rgba(47,215,181,.08)}
+.shead h2{font-size:19px;margin:0;letter-spacing:.3px}
+.shead .hint{margin-left:auto;font-size:12px;color:var(--ink3)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card+.card{margin-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.small{font-size:12px;color:var(--ink3)}
+.mono{font-family:var(--mono)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;color:var(--ink3);font-weight:600;letter-spacing:.4px;background:rgba(255,255,255,.02);
+  position:sticky;top:56px;z-index:5;backdrop-filter:blur(8px)}
+tbody tr:hover{background:rgba(79,156,255,.05)}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+.tblwrap{overflow:auto;max-height:none;border-radius:12px;border:1px solid var(--line)}
+.gap{color:var(--bad);font-style:italic}
+
+/* timeline */
+.tl{position:relative;padding-left:22px;margin-top:6px}
+.tl:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--acc),var(--acc2),var(--vio))}
+.tl-item{position:relative;padding:0 0 16px 6px}
+.tl-item:before{content:"";position:absolute;left:-21px;top:6px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg2);border:2px solid var(--acc)}
+.tl-item.hot:before{border-color:var(--bad);box-shadow:0 0 0 4px rgba(255,107,107,.15)}
+.tl-item.new:before{border-color:var(--ok)}
+.tl-time{font-family:var(--mono);font-size:12px;color:var(--acc2)}
+.tl-body{font-size:13px;color:var(--ink);margin-top:2px}
+.tl-src{font-size:11.5px;color:var(--ink3)}
+
+/* chain */
+.chaingrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px}
+.col{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.col .colh{display:block;margin:0 0 10px;font-size:12px;color:var(--ink3);letter-spacing:1px;font-weight:600}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;
+  cursor:pointer;transition:.16s;position:relative}
+.node:hover{transform:translateY(-2px);border-color:var(--acc);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.node .nm{font-size:13px;font-weight:600}
+.node .ds{font-size:11.5px;color:var(--ink3);margin-top:3px}
+.node.hit{border-color:rgba(255,107,107,.6);background:linear-gradient(180deg,rgba(255,107,107,.10),transparent)}
+.node.hit:after{content:"事件直接涉及";position:absolute;top:-8px;right:8px;font-size:10px;padding:1px 7px;
+  border-radius:999px;background:var(--bad);color:#231010;font-weight:700}
+.strength{font-size:10.5px;padding:1px 7px;border-radius:999px;margin-left:6px;display:inline-block}
+.s-s{background:rgba(255,107,107,.18);color:#ffb0b0}
+.s-m{background:rgba(255,200,87,.16);color:#ffd98a}
+.s-w{background:rgba(169,184,208,.15);color:var(--ink2)}
+
+/* ratios */
+.bars{margin-top:6px}
+.bar{margin:14px 0}
+.bar .top{display:flex;align-items:baseline;gap:10px;font-size:13px}
+.bar .top .v{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:15px}
+.bar .track{height:10px;border-radius:6px;background:rgba(255,255,255,.06);margin-top:7px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--acc),var(--acc2));
+  width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.bar.warn .fill{background:linear-gradient(90deg,#ffb347,#ff6b6b)}
+.bar .note{font-size:11.5px;color:var(--ink3);margin-top:6px}
+.bar .calc{font-family:var(--mono);font-size:11.5px;color:var(--ink3)}
+
+/* calc box */
+.calcbox{background:#0a1424;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--mono);
+  font-size:12.5px;color:#bfe0ff;overflow-x:auto;line-height:1.85;white-space:pre}
+.calcbox .cm{color:var(--ink3)}
+.calcbox .res{color:var(--acc2);font-weight:700}
+
+/* three-way */
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tw{border-radius:14px;padding:16px 18px;border:1px solid var(--line);background:var(--panel)}
+.tw h4{margin:0 0 4px;font-size:14px;display:flex;align-items:center;gap:8px}
+.tw .cnt{font-size:11px;padding:1px 8px;border-radius:999px;margin-left:auto;font-family:var(--mono)}
+.tw.ok{border-color:rgba(52,211,153,.35);background:linear-gradient(180deg,rgba(52,211,153,.08),transparent)}
+.tw.ok .cnt{background:rgba(52,211,153,.18);color:#7ff0c4}
+.tw.un{border-color:rgba(255,200,87,.35);background:linear-gradient(180deg,rgba(255,200,87,.07),transparent)}
+.tw.un .cnt{background:rgba(255,200,87,.18);color:#ffd98a}
+.tw.bad{border-color:rgba(255,107,107,.35);background:linear-gradient(180deg,rgba(255,107,107,.07),transparent)}
+.tw.bad .cnt{background:rgba(255,107,107,.18);color:#ffb0b0}
+.tw ul{margin:10px 0 0;padding-left:0;list-style:none}
+.tw li{padding:9px 0;border-top:1px dashed var(--line);font-size:12.8px}
+.tw li:first-child{border-top:0}
+.tw li b{display:block;font-size:12.8px;margin-bottom:2px}
+.tw li span{color:var(--ink3);font-size:12px}
+
+/* buttons */
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{appearance:none;cursor:pointer;border-radius:10px;padding:9px 15px;font-size:13px;
+  border:1px solid var(--line);background:var(--panel2);color:var(--ink);transition:.15s;font-weight:600}
+.btn:hover{border-color:var(--acc);background:#1b2c4a;transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--acc),#2a6fd6);border-color:transparent;color:#fff}
+.btn.primary:hover{filter:brightness(1.1)}
+
+/* drawer */
+.drawer-mask{position:fixed;inset:0;background:rgba(5,9,16,.62);backdrop-filter:blur(3px);opacity:0;
+  pointer-events:none;transition:.2s;z-index:90}
+.drawer-mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,94vw);background:var(--bg2);
+  border-left:1px solid var(--line);box-shadow:-24px 0 60px rgba(0,0,0,.5);transform:translateX(102%);
+  transition:transform .26s cubic-bezier(.2,.8,.2,1);z-index:100;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer-h{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.drawer-h h3{margin:0;font-size:15px}
+.drawer-h .x{margin-left:auto;cursor:pointer;border:0;background:var(--panel2);color:var(--ink2);
+  width:30px;height:30px;border-radius:8px;font-size:16px}
+.drawer-b{padding:16px 20px 40px;overflow:auto}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:8px 12px;font-size:13px}
+.kv .k{color:var(--ink3);font-size:12.5px}
+.kv .v{color:var(--ink)}
+.subh{font-size:12px;color:var(--acc2);letter-spacing:1px;margin:20px 0 8px;text-transform:uppercase}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:#16243d;
+  border:1px solid var(--acc);color:var(--ink);padding:10px 18px;border-radius:10px;font-size:13px;
+  opacity:0;pointer-events:none;transition:.22s;z-index:120;box-shadow:var(--shadow)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* controls */
+.ctrl{display:flex;gap:14px;flex-wrap:wrap;align-items:center;background:var(--panel2);
+  border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.ctrl label{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px}
+.ctrl input[type=range]{width:170px;accent-color:var(--acc)}
+.ctrl .val{font-family:var(--mono);color:var(--acc2);font-weight:700;min-width:56px;text-align:right}
+.ctrl select{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:12.5px}
+.ctrl .sep{width:1px;height:22px;background:var(--line)}
+
+.hintbox{border-left:3px solid var(--warn);background:rgba(255,200,87,.07);padding:11px 15px;border-radius:0 10px 10px 0;
+  font-size:12.8px;color:#ffe6b0;margin:12px 0}
+.hintbox.bad{border-left-color:var(--bad);background:rgba(255,107,107,.07);color:#ffc9c9}
+.hintbox.ok{border-left-color:var(--ok);background:rgba(52,211,153,.07);color:#bff5e0}
+
+/* source cards */
+.src{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.src:first-child{border-top:0}
+.src .tier{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--acc);
+  background:rgba(79,156,255,.1);border:1px solid rgba(79,156,255,.3);border-radius:8px;
+  height:34px;display:flex;align-items:center;justify-content:center}
+.src .ttl{font-weight:650;font-size:13.5px}
+.src .meta{font-size:11.8px;color:var(--ink3);margin-top:3px}
+.src .facts{margin:8px 0 0;padding-left:16px;font-size:12.5px;color:var(--ink2)}
+.src .facts li{margin:2px 0}
+
+/* footprint */
+.foot{margin-top:40px;padding:24px 0 60px;border-top:1px solid var(--line);color:var(--ink3);font-size:12px}
+.foot b{color:var(--ink2)}
+
+@media(max-width:1080px){
+  .vgrid{grid-template-columns:repeat(2,1fr)}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .chaingrid{grid-template-columns:repeat(2,1fr)}
+  .three,.grid2,.grid3{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .vgrid,.kpis,.chain{grid-template-columns:1fr}
+  h1{font-size:21px}
+  th{position:static}
+}
+@media print{
+  body{background:#fff;color:#111}
+  .topbar,.btnrow,.ctrl{display:none}
+  .card,.vcard,.tw{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> 产业新闻影响分析</div>
+    <nav class="nav">
+      <a href="#verify">核验卡</a>
+      <a href="#event">事件要素</a>
+      <a href="#timeline">时间线</a>
+      <a href="#chain">产业链</a>
+      <a href="#capacity">产能占比</a>
+      <a href="#calc">影响测算</a>
+      <a href="#three">三分法</a>
+      <a href="#sources">来源</a>
+      <a href="#observe">观察指标</a>
+      <a href="#gap">缺口</a>
+    </nav>
+    <div class="pill mono" id="casepill">{{CASE_ID}}</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ## HERO / VERIFICATION CARD ## -->
+  <div class="hero" id="verify">
+    <div class="eyebrow">
+      <span class="tag acc">🌐 期现 · 产业基本面</span>
+      <span class="tag">判断一条产业新闻影响多大</span>
+      <span class="tag ok" id="tag-status">事实确认：政府确认</span>
+      <span class="tag warn" id="tag-fresh">历史回溯</span>
+      <span class="tag">甲醇 · 西北 · 煤制</span>
+    </div>
+    <h1 id="h1title"></h1>
+    <p class="sub" id="h1sub"></p>
+
+    <div class="vcard">
+      <div class="vcard-head">
+        <span style="font-size:17px">🛡️</span>
+        <span class="t">消息核验卡 · Verification Card</span>
+        <span class="s" id="vcard-built"></span>
+      </div>
+      <div class="vgrid" id="vgrid"></div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+    <div class="hintbox" id="keycorr"></div>
+  </div>
+
+  <!-- ## EVENT ## -->
+  <section id="event">
+    <div class="shead"><span class="idx">S3</span><h2>事件要素 · 七要素抽取</h2>
+      <span class="hint">缺项标「未获取」，不得用推断值填写</span></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="kv" id="eventkv"></div>
+      </div>
+      <div class="card">
+        <div class="subh" style="margin-top:0">装置单元细节</div>
+        <div class="kv" id="unitkv"></div>
+        <div class="hintbox bad" id="unitwarn"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="subh" style="margin-top:0">已确认后果（政府/公告口径）</div>
+      <div class="tblwrap"><table id="consq"></table></div>
+    </div>
+    <div class="card">
+      <div class="subh" style="margin-top:0">未经确认 / 未披露事项</div>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:var(--ink2)" id="unconsq"></ul>
+    </div>
+  </section>
+
+  <!-- ## TIMELINE ## -->
+  <section id="timeline">
+    <div class="shead"><span class="idx">S1</span><h2>时间线与传播路径</h2>
+      <span class="hint">红色节点 = 事件本体；绿色节点 = 后续新进展</span></div>
+    <div class="grid2">
+      <div class="card"><div class="tl" id="tl"></div></div>
+      <div class="card">
+        <div class="subh" style="margin-top:0">旧闻判定证据链</div>
+        <ul style="margin:0;padding-left:18px;font-size:12.8px;color:var(--ink2)" id="oldnews"></ul>
+        <div class="hintbox" style="margin-top:16px" id="freshbox"></div>
+        <div class="subh">市场认知状态</div>
+        <div class="small" id="aware"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ## CHAIN ## -->
+  <section id="sec-chain">
+    <div class="shead"><span class="idx">S4</span><h2>产业链定位 · 影响路径</h2>
+      <span class="hint">点击节点查看上下游关系</span></div>
+    <div class="chaingrid" id="chain"></div>
+    <div class="card" style="margin-top:12px">
+      <div class="subh" style="margin-top:0">传导路径与可量化性</div>
+      <div class="tblwrap" id="pathswrap"></div>
+    </div>
+  </section>
+
+  <!-- ## CAPACITY ## -->
+  <section id="capacity">
+    <div class="shead"><span class="idx">S5</span><h2>装置档案与产能占比</h2>
+      <span class="hint">同一装置，三种分母，三种观感</span></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="subh" style="margin-top:0">产能占比（三口径同出）</div>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div class="card">
+        <div class="subh" style="margin-top:0">装置档案 · <span id="plantname"></span></div>
+        <div class="kv" id="plantkv"></div>
+        <div class="btnrow">
+          <button class="btn" onclick="openPlant()">📂 查看完整装置档案</button>
+          <button class="btn" onclick="openPeers()">🏭 看同区域企业</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="subh" style="margin-top:0">产能基准表（分子分母必须同源 · 口径差异已标注）</div>
+      <div class="tblwrap"><table id="capbasis"></table></div>
+    </div>
+  </section>
+
+  <!-- ## CALC ## -->
+  <section id="calc">
+    <div class="shead"><span class="idx">S6</span><h2>理论影响量测算</h2>
+      <span class="hint">公式、假设、区间全部显式；缺口不补</span></div>
+
+    <div class="card">
+      <div class="subh" style="margin-top:0">① 统一公式</div>
+      <div class="calcbox" id="formula"></div>
+    </div>
+
+    <div class="card">
+      <div class="subh" style="margin-top:0">② 交互式情景计算器（数值均为假设，可手动调整）</div>
+      <div class="ctrl">
+        <label>波及系数 k
+          <select id="selK">
+            <option value="0.125">0.125 — 仅受损单元（1/8 台炉）</option>
+            <option value="0.5">0.5 — B 系列整体停车（假设 50%）</option>
+            <option value="1" selected>1.0 — 全厂停车</option>
+          </select>
+        </label>
+        <div class="sep"></div>
+        <label>影响天数 d <input type="range" id="rngD" min="1" max="90" value="30"><span class="val" id="valD">30 天</span></label>
+        <div class="sep"></div>
+        <label>开工率 r <input type="range" id="rngR" min="40" max="100" value="88.95"><span class="val" id="valR">88.95%</span></label>
+      </div>
+      <div class="grid3">
+        <div class="kpi"><div class="n" id="oLoss">–</div><div class="l">理论产量影响 L（吨）</div></div>
+        <div class="kpi g"><div class="n" id="oCover">–</div><div class="l">相当于全国产量（天）</div></div>
+        <div class="kpi v"><div class="n" id="oPct">–</div><div class="l">占全国月均产量（%）</div></div>
+      </div>
+      <div class="calcbox" id="livecalc" style="margin-top:14px"></div>
+      <div class="hintbox">⚠️ 暂停：天数 d 无权威出处（公司未披露停产时长），上表全部为<strong>情景假设</strong>，用于理解量级，<strong>不是事实</strong>。正式结论中不得引用为"实际减产 X 万吨"。</div>
+    </div>
+
+    <div class="card">
+      <div class="subh" style="margin-top:0">③ 敏感矩阵：影响量 L（吨）= Q × (d/365) × r × k × 1.0 全厂口径</div>
+      <div class="tblwrap"><table id="matrix"></table></div>
+    </div>
+
+    <div class="card">
+      <div class="subh" style="margin-top:0">④ 实测口径：2023 年产量缺口分解（这一栏才是"已确认"）</div>
+      <div class="tblwrap"><table id="decomp"></table></div>
+      <div class="hintbox bad">公司年报将产量下滑归因于「完成 20 天年度检修，受蒸汽锅炉轮检影响」，<strong>未单列本次事故</strong>。因此「事故单独造成多少吨」是<strong>缺口</strong>，不拆分、不估算、不分配。</div>
+    </div>
+  </section>
+
+  <!-- ## THREE WAY ## -->
+  <section id="three">
+    <div class="shead"><span class="idx">S7</span><h2>三分法结论</h2>
+      <span class="hint">未经确认的事件单列，不计入确认汇总</span></div>
+    <div class="three">
+      <div class="tw ok"><h4>✅ 已确认的事实性影响 <span class="cnt" id="c-conf">0</span></h4><ul id="tw-conf"></ul></div>
+      <div class="tw un"><h4>🟡 仍存在不确定性的影响 <span class="cnt" id="c-unc">0</span></h4><ul id="tw-unc"></ul></div>
+      <div class="tw bad"><h4>⚠️ 未经确认 / 待核验 <span class="cnt" id="c-unf">0</span></h4><ul id="tw-unf"></ul></div>
+    </div>
+    <div class="card">
+      <div class="subh" style="margin-top:0">后续核验行动计划</div>
+      <div class="tblwrap"><table id="tv"></table></div>
+    </div>
+    <div class="btnrow">
+      <button class="btn primary" onclick="openPrice()">📈 看价格反应</button>
+      <button class="btn" onclick="openPeers()">🏭 看同区域企业</button>
+      <button class="btn" onclick="openHistory()">🕰 看历史同类事件</button>
+      <button class="btn" onclick="document.getElementById('observe').scrollIntoView()">🔍 看观察指标</button>
+    </div>
+  </section>
+
+  <!-- ## SOURCES ## -->
+  <section id="sources">
+    <div class="shead"><span class="idx">S1–S2</span><h2>来源台账</h2>
+      <span class="hint">T1 政府 / T2 交易所 / T4 数据商 / T5 媒体 / T6 自媒体</span></div>
+    <div class="card" id="srclist"></div>
+  </section>
+
+  <!-- ## OBSERVE ## -->
+  <section id="observe">
+    <div class="shead"><span class="idx">S8</span><h2>可观察指标清单</h2>
+      <span class="hint">看什么 / 在哪看 / 多久一期 / 什么算异常</span></div>
+    <div class="card">
+      <div class="tblwrap"><table id="obs"></table></div>
+    </div>
+    <div class="card">
+      <div class="subh" style="margin-top:0">事件发生时段的公开行情事实（仅描述状态，不推导方向）</div>
+      <div class="tblwrap"><table id="mkt"></table></div>
+      <div class="hintbox bad" id="mktgap"></div>
+    </div>
+  </section>
+
+  <!-- ## GAPS ## -->
+  <section id="gap">
+    <div class="shead"><span class="idx">S9</span><h2>数据缺口登记</h2>
+      <span class="hint">缺口就是缺口，不补、不猜、不平均</span></div>
+    <div class="card"><div class="tblwrap"><table id="gaps"></table></div></div>
+  </section>
+
+  <div class="foot">
+    <b>本报告说明</b><br>
+    生成时间：{{BUILT_AT}} ｜ 案例编号：<span class="mono">{{CASE_ID}}</span><br>
+    <span id="disclaimer"></span><br><br>
+    <b>口径提示</b>：所有"占比"均标注分母来源与年度；不同机构对甲醇产能/产量统计范围不同，
+    跨源引用必须同期、同口径。报告中任何"假设"参数（天数 d、开工率 r、波及系数 k）都可被使用者覆盖并重算。<br><br>
+    由 skill <span class="mono">industry-news-impact-judge</span> 生成 · 模板 news-impact-report.template.html
+  </div>
+</div>
+
+<!-- drawer -->
+<div class="drawer-mask" id="mask" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-h"><h3 id="dtitle"></h3><button class="x" onclick="closeDrawer()">✕</button></div>
+  <div class="drawer-b" id="dbody"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script id="case-data" type="application/json">{{PAYLOAD_B64}}</script>
+<script>
+/* NOTE: HTML is built with template strings. Literal closing tags are written
+   with a backslash before the slash so they cannot end this script block. */
+const _b64 = document.getElementById('case-data').textContent.trim();
+const _bin = atob(_b64);
+const _bytes = Uint8Array.from(_bin, c => c.charCodeAt(0));
+const DATA = JSON.parse(new TextDecoder('utf-8').decode(_bytes));
+/* 用 qp / qa 而非 $ / $$：DATA 中存在名为 paths 的数组，for-of 会遮蔽全局 $ */
+const qp = (s,r=document)=>r.querySelector(s);
+const qa = (s,r=document)=>[...r.querySelectorAll(s)];
+const fmt = (n,d=0)=> n==null? '<span class="gap">未获取</span>' : Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = (n,d=2)=> n==null? '<span class="gap">未获取</span>' : Number(n).toFixed(d)+'%';
+const gradeCls = g => /A/.test(g||'')?'':(/B/.test(g||'')?'b':'c');
+const gradeHtml = g => `<span class="grade ${gradeCls(g)}">${g||'—'}</span>`;
+
+/* ---------------- toast ---------------- */
+let toastTimer=null;
+function toast(msg){
+  const t=qp('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('on'),2400);
+}
+
+/* ---------------- drawer ---------------- */
+function openDrawer(title, html){
+  qp('#dtitle').textContent=title; qp('#dbody').innerHTML=html;
+  qp('#mask').classList.add('on'); qp('#drawer').classList.add('on');
+}
+function closeDrawer(){ qp('#mask').classList.remove('on'); qp('#drawer').classList.remove('on'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+
+/* --- HERO --- */
+(function(){
+  const m=DATA.meta, v=DATA.verification_card;
+  const t=m.title.replace('「5·8」','<span class="hl">「5·8」</span>');
+  qp('#h1title').innerHTML=t;
+  qp('#h1sub').textContent=m.subtitle;
+  qp('#vcard-built').textContent='核验基准日 '+m.analyst_baseline_date;
+  qp('#tag-status').textContent='事实确认：'+v.fact_status;
+  qp('#tag-fresh').textContent=v.freshness_label;
+  qp('#vcard-built').title=m.disclaimer;
+
+  const cells=[
+    {k:'首发来源（权威）', v:v.first_public_authority, m:'一手认定源：事故调查报告'},
+    {k:'首次公开发布', v:v.first_public_date, m:'事件本体发生于 '+v.event_date},
+    {k:'传播扩散起点', v:v.circulation_first_date, m:'媒体追报（晚于事件 4.5 个月）'},
+    {k:'重复转载', v:v.media_reprint_count+' 条可确认路径', m:'同源通报，非独立确认'},
+    {k:'旧闻判定', v:v.old_news_verdict, m:'时效评分 '+v.freshness_score+'/5'},
+    {k:'事实确认状态', v:v.fact_status, m:v.fact_status_detail.slice(0,42)+'…'},
+    {k:'证据等级', v:'<span class="grade">'+v.overall_grade+'</span> 政府确认', m:'事件=A1；天数/波及范围未确认'},
+    {k:'市场认知', v:v.market_awareness, m:'已计入 2023 年年报'}
+  ];
+  qp('#vgrid').innerHTML=cells.map(c=>`<div class="vcell"><div class="k">${c.k}<\/div><div class="v">${c.v}<\/div><div class="m">${c.m}<\/div><\/div>`).join('');
+
+  qp('#keycorr').innerHTML='<b>⚠️ 关键纠正：</b>'+v.key_correction;
+
+  const c=DATA.calculations, ev=DATA.event;
+  const kp=[
+    {n:fmt(DATA.event.plant.capacity_design_methanol_tpa)+' t/a', l:'涉事装置设计产能（甲醇）', cls:''},
+    {n:pct(c.ratios[0].value_pct), l:'占全国甲醇有效产能', cls:'g'},
+    {n:pct(c.ratios[1].value_pct), l:'占西北地区产能（折算）', cls:'w'},
+    {n:fmt(c.daily_capacity_t,0)+' 吨/日', l:'日均产能 D = Q/365', cls:'v'},
+    {n:'缺口', l:'停产天数 / 波及范围（未披露）', cls:'w'}
+  ];
+  qp('#kpis').innerHTML=kp.map(k=>`<div class="kpi ${k.cls}"><div class="n">${k.n}<\/div><div class="l">${k.l}<\/div><\/div>`).join('');
+})();
+
+/* --- EVENT --- */
+(function(){
+  const e=DATA.event, p=e.plant;
+  const rows=[
+    ['企业全称', e.company_full],
+    ['统一社会信用代码', '<span class="mono">'+e.company_credit_code+'</span>'],
+    ['所属上市公司', e.listed_entity+'<div class="small">'+e.listed_relationship+'<\/div>'],
+    ['装置', p.plant_name+'<div class="small">'+p.plant_full_name+'<\/div>'],
+    ['产品', p.product_main+'（联产 '+p.products_co.join('、')+'）'],
+    ['产能', fmt(p.capacity_design_methanol_tpa)+' 吨/年（甲醇设计）<div class="small">LNG 设计 7 亿方/年<\/div>'],
+    ['地区', e.location.province+' / '+e.location.city+' / '+e.location.county+' / '+e.location.town+'<div class="small">'+e.location.address+' · '+e.location.park+'<\/div>'],
+    ['事件时间', '<span class="mono">'+e.timeline[2].time+'</span>'],
+    ['事件类型', '<span class="tag bad">'+e.event_type_code+'</span> '+e.event_type_cn],
+    ['工艺路线', p.process_route+'<div class="small">原料：'+p.feedstock+'<\/div>']
+  ];
+  qp('#eventkv').innerHTML=rows.map(r=>`<div class="k">${r[0]}<\/div><div class="v">${r[1]}<\/div>`).join('');
+
+  const u=e.unit_detail;
+  const urows=[
+    ['涉事单元', u.unit],
+    ['所属系统', u.unit_system],
+    ['系列台数', u.unit_count_in_series+' 台（调查报告载明 B1–B8）'],
+    ['单元份额', (u.unit_share_of_plant*100).toFixed(1)+'%（= 1/'+u.unit_count_in_series+'）'],
+    ['开车背景', u.operating_context],
+    ['整厂停车？', '<span class="gap">未确认</span>']
+  ];
+  qp('#unitkv').innerHTML=urows.map(r=>`<div class="k">${r[0]}<\/div><div class="v">${r[1]}<\/div>`).join('');
+  qp('#unitwarn').innerHTML='<b>波及范围未确认：</b>'+u.whether_whole_plant_stopped+' 这直接决定测算中的 k 取 0.125 / 0.5 / 1.0。';
+
+  qp('#consq').innerHTML='<thead><tr><th>已确认后果</th><th style="width:90px">等级</th><th style="width:80px">来源</th><\/tr><\/thead><tbody>'+
+    e.consequences_confirmed.map(c=>`<tr><td>${c.desc}</td><td>${gradeHtml(c.grade)}</td><td class="mono small">${c.source}</td><\/tr>`).join('')+'<\/tbody>';
+
+  qp('#unconsq').innerHTML=e.consequences_unconfirmed.map(x=>`<li>${x}<\/li>`).join('');
+})();
+
+/* --- TIMELINE --- */
+(function(){
+  const tl=DATA.event.timeline;
+  qp('#tl').innerHTML=tl.map((t,i)=>{
+    const hot=/闪爆/.test(t.event)?'hot':(/2024|2025|2026/.test(t.time)?'new':'');
+    return `<div class="tl-item ${hot}">
+      <div class="tl-time">${t.time}<\/div>
+      <div class="tl-body">${t.event}<\/div>
+      <div class="tl-src">${gradeHtml(t.grade)} ${t.source}<\/div><\/div>`;
+  }).join('');
+
+  const v=DATA.verification_card;
+  qp('#oldnews').innerHTML=v.old_news_evidence.map(x=>`<li>${x}<\/li>`).join('');
+  qp('#freshbox').innerHTML='<b>时效评分 '+v.freshness_score+'/5 · '+v.freshness_label+'</b><br>'+v.freshness_note;
+  qp('#aware').innerHTML='<span class="tag acc">'+v.market_awareness+'</span><div style="margin-top:8px">'+v.market_awareness_evidence+'<\/div>';
+})();
+
+/* --- CHAIN --- */
+(function(){
+  const layers=['原料','生产','流通','下游','替代'];
+  const block=layers.map(function(L){
+    const nodes=DATA.chain.nodes.filter(function(n){ return n.layer===L; });
+    const inner=nodes.map(function(n){
+      const sc=n.strength==='强'?'s-s':(n.strength==='中'?'s-m':'s-w');
+      return '<div class="node '+(n.impacted?'hit':'')+'" data-nid="'+n.id+'" onclick="openNode(this.dataset.nid)">'+
+        '<div class="nm">'+n.name+'<span class="strength '+sc+'">'+n.strength+'<\/span><\/div>'+
+        '<div class="ds">'+n.relation+'<\/div><\/div>';
+    }).join('');
+    return '<div class="col"><span class="colh">'+L+'<\/span>'+inner+'<\/div>';
+  }).join('');
+  qp('#chain').innerHTML=block;
+
+  qp('#pathswrap').innerHTML='<table><thead><tr><th>传导路径</th><th style="width:80px">强度</th><th style="width:190px">证据</th><th style="width:150px">可量化性</th><\/tr><\/thead><tbody>'+
+    DATA.chain.impact_paths.map(function(p){
+      const sc=p.strength==='强'?'s-s':(p.strength==='中'?'s-m':'s-w');
+      return '<tr><td>'+p.path+'</td><td><span class="strength '+sc+'">'+p.strength+'<\/span><\/td>'+
+             '<td class="small">'+p.evidence+'<\/td><td class="small">'+p.quantifiable+'<\/td><\/tr>';
+    }).join('')+'<\/tbody><\/table>';
+})();
+
+function openNode(id){
+  const n=DATA.chain.nodes.find(x=>x.id===id);
+  if(!n) return;
+  const related=DATA.chain.nodes.filter(x=>x.id!==id);
+  openDrawer('产业链节点 · '+n.name, `
+    <div class="kv">
+      <div class="k">环节<\/div><div class="v">${n.layer}<\/div>
+      <div class="k">与主产品关系<\/div><div class="v">${n.relation}<\/div>
+      <div class="k">传导强度<\/div><div class="v">${n.strength}<\/div>
+      <div class="k">本事件是否直接涉及<\/div><div class="v">${n.impacted?'<span class="tag bad">是</span>':'<span class="tag">否 / 间接</span>'}<\/div>
+      <div class="k">说明<\/div><div class="v">${n.note}<\/div>
+    <\/div>
+    <div class="subh">同链条其他节点<\/div>
+    <div style="font-size:12.8px;color:var(--ink2)">${related.map(r=>
+      `<div style="padding:6px 0;border-top:1px dashed var(--line);cursor:pointer" onclick='openNode("${r.id}")'>
+        <b>${r.name}</b> <span class="small">· ${r.layer} · ${r.relation}</span><\/div>`).join('')}<\/div>
+    <div class="hintbox" style="margin-top:18px">点击其他节点继续沿产业链查看上下游关系。<\/div>`);
+}
+
+/* --- CAPACITY --- */
+(function(){
+  const c=DATA.calculations;
+  qp('#bars').innerHTML=c.ratios.map((r,i)=>{
+    const w=Math.min(100, r.value_pct*(r.value_pct>20?0.8:8));
+    return `<div class="bar ${r.value_pct>10?'warn':''}">
+      <div class="top"><span>${r.name}</span><span class="v">${r.value_pct.toFixed(2)}%</span><\/div>
+      <div class="track"><div class="fill" data-w="${w}"><\/div><\/div>
+      <div class="calc">${r.formula}<\/div>
+      <div class="note">${r.interpretation}<\/div><\/div>`;
+  }).join('');
+  setTimeout(()=>qa('#bars .fill').forEach(f=>f.style.width=f.dataset.w+'%'),120);
+
+  const p=DATA.event.plant;
+  qp('#plantname').textContent=p.plant_name;
+  const pk=[
+    ['装置编号','<span class="mono">'+p.plant_id+'</span>'],
+    ['产品','甲醇 '+fmt(p.capacity_design_methanol_tpa/10000)+' 万吨/年'],
+    ['联产','LNG 7 亿方/年'],
+    ['气化系统',p.gasifiers],
+    ['投运','2012-08 起（B2–B8）'],
+    ['2023 产量',fmt(p.production_actual_t['2023'])+' 吨（同比 -19.13%）'],
+    ['2024 产量',fmt(p.production_actual_t['2024'])+' 吨（同比 +18.43%）']
+  ];
+  qp('#plantkv').innerHTML=pk.map(r=>`<div class="k">${r[0]}<\/div><div class="v">${r[1]}<\/div>`).join('');
+
+  qp('#capbasis').innerHTML='<thead><tr><th style="width:60px">ID</th><th>指标</th><th class="num" style="width:130px">数值</th><th style="width:70px">单位</th><th style="width:60px">等级</th><th style="width:70px">来源</th><th>备注</th><\/tr><\/thead><tbody>'+
+    DATA.capacity_basis.map(b=>`<tr>
+      <td class="mono small">${b.id}</td><td>${b.metric}</td>
+      <td class="num">${ typeof b.value==='number' && b.value<2 ? b.value : fmt(b.value) }</td>
+      <td class="small">${b.unit}</td><td>${gradeHtml(b.grade)}</td>
+      <td class="mono small">${b.source}</td><td class="small">${b.note||''}</td><\/tr>`).join('')+'<\/tbody>';
+})();
+
+function openPlant(){
+  const p=DATA.event.plant,e=DATA.event;
+  const yrs=Object.keys(p.production_actual_t).sort().reverse();
+  const rows=yrs.map(y=>{
+    const v=p.production_actual_t[y];
+    const util=(v/p.capacity_design_methanol_tpa*100).toFixed(2);
+    return `<tr><td class="mono">${y}</td><td class="num">${fmt(v/10000,2)}</td><td class="num">${util}%</td><\/tr>`;
+  }).join('');
+  const inc=p.historical_incidents.map(i=>`<tr><td class="mono small">${i.date}</td><td class="small">${i.desc}</td><td>${gradeHtml(i.grade)}</td><\/tr>`).join('');
+  openDrawer('装置档案 · '+p.plant_name, `
+    <div class="kv">
+      <div class="k">企业<\/div><div class="v">${e.company_full}<\/div>
+      <div class="k">上市公司<\/div><div class="v">${e.listed_entity}<\/div>
+      <div class="k">地点<\/div><div class="v">${e.location.province} ${e.location.city} ${e.location.county} ${e.location.town}<\/div>
+      <div class="k">产品<\/div><div class="v">${p.product_main} / ${p.products_co.join(' / ')}<\/div>
+      <div class="k">设计产能<\/div><div class="v">甲醇 ${fmt(p.capacity_design_methanol_tpa/10000)} 万吨/年<\/div>
+      <div class="k">工艺<\/div><div class="v">${p.process_route}<\/div>
+      <div class="k">原料<\/div><div class="v">${p.feedstock}<\/div>
+      <div class="k">气化系统<\/div><div class="v">${p.gasifiers}<\/div>
+      <div class="k">投运<\/div><div class="v">${p.commissioned}<\/div>
+    <\/div>
+    <div class="subh">历年实际产量与产能利用率<\/div>
+    <table><thead><tr><th>年度</th><th class="num">甲醇产量（万吨）</th><th class="num">利用率（产量/设计产能）</th><\/tr><\/thead><tbody>${rows}<\/tbody><\/table>
+    <div class="small" style="margin-top:8px">来源：${p.production_source}<\/div>
+    <div class="hintbox">利用率口径：实际产量 ÷ 设计产能。该口径把"跑不满"直接吸收进来，用于替代测算中的假设开工率 r。<\/div>
+    <div class="subh">历史事件<\/div>
+    <table><thead><tr><th>日期</th><th>事件</th><th>等级</th><\/tr><\/thead><tbody>${inc}<\/tbody><\/table>`);
+}
+
+function openPeers(){
+  const rows=DATA.peers.map(p=>`<tr><td><b>${p.name}</b></td><td class="small">${p.location}</td>
+    <td class="small">${p.capacity_meoh}</td><td class="small">${p.downstream}</td><td>${gradeHtml(p.grade)}</td><\/tr>`).join('');
+  openDrawer('同区域（西北）主要甲醇装置', `
+    <div class="hintbox">用途：判断本次事件是否存在<strong>替代供给</strong>，以及同区域其他装置是否处于检修期（若同期大量检修，区域冲击会被放大）。<\/div>
+    <table><thead><tr><th>企业</th><th>地点</th><th>甲醇产能</th><th>下游</th><th>等级</th><\/tr><\/thead><tbody>${rows}<\/tbody><\/table>
+    <div class="hintbox bad" style="margin-top:16px">这些企业的产能数据来自公开报道（B2 级），用于<strong>量级参照</strong>，不可直接替换为官方产能基数。<\/div>`);
+}
+
+function openPrice(){
+  const m=DATA.market_snapshot;
+  const rows=m.facts.map(f=>`<tr><td class="mono small">${f.period}</td><td>${f.fact}</td><td>${gradeHtml(f.grade)}</td><td class="mono small">${f.source}</td><\/tr>`).join('');
+  openDrawer('看价格反应 · 事件时段行情状态', `
+    <div class="hintbox bad">本报告<strong>未取得</strong>事件日前后 T-5 ~ T+10 的逐日期货/现货价，因此<strong>不做</strong>"事件→价格"归因。以下仅为事件发生时段的公开行情事实，用于说明市场背景。<\/div>
+    <table><thead><tr><th>时段</th><th>公开事实</th><th>等级</th><th>来源</th><\/tr><\/thead><tbody>${rows}<\/tbody><\/table>
+    <div class="subh">缺口<\/div>
+    <ul style="padding-left:18px;font-size:12.8px;color:var(--ink2)">${m.gaps.map(g=>`<li>${g}<\/li>`).join('')}<\/ul>
+    <div class="hintbox">要补齐这一节，需要：郑商所 MA 主力逐日收盘、太仓现货逐日报价（隆众/卓创）、基差与月差序列。<\/div>`);
+}
+
+function openHistory(){
+  const inc=DATA.event.plant.historical_incidents;
+  openDrawer('历史同类事件 · 本厂', `
+    <table><thead><tr><th>日期</th><th>事件</th><th>等级</th><\/tr><\/thead><tbody>
+    ${inc.map(i=>`<tr><td class="mono small">${i.date}</td><td class="small">${i.desc}</td><td>${gradeHtml(i.grade)}</td><\/tr>`).join('')}
+    <\/tbody><\/table>
+    <div class="hintbox">历史对照的意义：同一企业的装置风险具有<strong>重复性</strong>（2013 火灾、2017 B6 炉拆除、2023 B5 炉闪爆、2026 气化炉更换），
+    说明"该厂装置稳定性"本身是一个可持续跟踪的变量，而不是一次性事件。<\/div>`);
+}
+
+/* --- CALC --- */
+(function(){
+  const c=DATA.calculations;
+  qp('#formula').innerHTML=
+`<span class="cm">// F1 日均产能</span>
+D = Q / 365                              <span class="res">= 1,200,000 / 365 = ${fmt(c.daily_capacity_t,2)} 吨/日</span>
+
+<span class="cm">// F2' 用实际产量率（比"设计产能×假设开工率"更稳，吸收"跑不满"）</span>
+r = 近三年实际产量均值 / 设计产能        <span class="res">= ${fmt(1067433)} / 1,200,000 = ${c.rate_assumption.r_actual_2021_2023}</span>
+
+<span class="cm">// F2 理论产量影响</span>
+L = Q × (d / 365) × r × k                <span class="cm">← d、k 为关键未知量</span>
+
+<span class="cm">// F3 产能占比（三口径同出）</span>
+p_nat  = 1,200,000 / 106,300,000         <span class="res">= ${pct(c.ratios[0].value_pct)}</span>
+p_reg  = 1,200,000 / 37,205,000          <span class="res">= ${pct(c.ratios[1].value_pct)}</span>
+
+<span class="cm">// F4 折算成"覆盖全国多少天产量"</span>
+T = L / (71,500,000 / 365)`;
+
+  const Q=DATA.event.plant.capacity_design_methanol_tpa, NOUT=71500000, NM=5958333;
+  function recalc(){
+    const k=parseFloat(qp('#selK').value), d=parseInt(qp('#rngD').value), r=parseInt(qp('#rngR').value)/100;
+    const L=Q*(d/365)*r*k;
+    const cover=L/(NOUT/365);
+    const pnum=Q/NM*100, pmeoh=(L/NM*100);
+    qp('#valD').textContent=d+' 天'; qp('#valR').textContent=(r*100).toFixed(2)+'%';
+    qp('#oLoss').textContent=fmt(L,0);
+    qp('#oCover').textContent=cover.toFixed(3)+' 天';
+    qp('#oPct').textContent=pmeoh.toFixed(4)+'%';
+    qp('#livecalc').innerHTML=
+`<span class="cm">// 当前情景</span>
+Q = ${fmt(Q)} t/a   d = ${d} 天   r = ${r.toFixed(4)}   k = ${k}
+
+L = ${fmt(Q)} × (${d}/365) × ${r.toFixed(4)} × ${k}
+  <span class="res">= ${fmt(L,0)} 吨  (${(L/10000).toFixed(2)} 万吨)</span>
+
+<span class="cm">// 折算</span>
+相当于全国产量的 ${cover.toFixed(3)} 天
+占全国月均产量 ${pmeoh.toFixed(4)}%   占该装置年产量的 ${(L/Q*100).toFixed(2)}%`;
+  }
+  ['selK','rngD','rngR'].forEach(id=>document.getElementById(id).addEventListener('input',recalc));
+  recalc();
+
+  /* matrix */
+  const m=c.scenario_matrix;
+  const head='<thead><tr><th>开工率 r \\ 天数 d</th>'+m.days.map(d=>`<th class="num">${d} 天</th>`).join('')+'<\/tr><\/thead>';
+  const body=m.ks.map(k=>{
+    const row=m.days.map(d=>m.base_output_3yavg_t*(d/365)*k);
+    return `<tr><td class="mono">k = ${k} ${k===1?'（全厂）':k===0.5?'（B 系列·假设）':'（单台炉）'}</td>`+
+      row.map(v=>`<td class="num">${fmt(v,0)}</td>`).join('')+'<\/tr>';
+  }).join('');
+  qp('#matrix').innerHTML=head+'<tbody>'+body+'<\/tbody>';
+
+  /* decomposition */
+  const a=c.annual_decomposition;
+  qp('#decomp').innerHTML='<thead><tr><th>项目</th><th class="num" style="width:130px">吨</th><th style="width:110px">性质</th><th style="width:60px">来源</th><\/tr><\/thead><tbody>'+
+    a.rows.map(r=>{
+      let cls=r.value_t<0?'style="color:#ffb0b0"':'';
+      let v = r.value_t==null? '<span class="gap">缺口（不拆分）</span>' : fmt(r.value_t);
+      return `<tr><td>${r.item}</td><td class="num" ${cls}>${v}</td><td class="small">${r.status}</td><td class="mono small">${r.source}</td><\/tr>`;
+    }).join('')+'<\/tbody>';
+})();
+
+/* ================= THREE-WAY ================= */
+(function(){
+  const t=DATA.three_way;
+  qp('#c-conf').textContent=t.confirmed.length;
+  qp('#c-unc').textContent=t.uncertain.length;
+  qp('#c-unf').textContent=t.unconfirmed.length+t.to_verify.length;
+
+  qp('#tw-conf').innerHTML=t.confirmed.map(x=>`<li><b>${gradeHtml(x.grade)} ${x.item}</b><span>${x.detail}</span>
+    <span class="mono">来源 ${x.source}</span><\/li>`).join('');
+  qp('#tw-unc').innerHTML=t.uncertain.map(x=>`<li><b>${x.item}</b><span>${x.detail}</span>
+    <span>为什么不能定：${x.why}</span><\/li>`).join('');
+  qp('#tw-unf').innerHTML=t.unconfirmed.map(x=>`<li><b>${gradeHtml(x.grade)} ${x.item}</b><span>${x.detail}</span>
+    <span>${x.note}</span><\/li>`).join('');
+
+  qp('#tv').innerHTML='<thead><tr><th style="width:70px">优先级</th><th>要核验什么</th><th style="width:200px">怎么查</th><\/tr><\/thead><tbody>'+
+    t.to_verify.map(x=>`<tr><td><span class="tag ${x.when==='立即'?'bad':(x.when==='一期'?'warn':'')}">${x.when}</span></td>
+      <td>${x.what}</td><td class="small">${x.how}</td><\/tr>`).join('')+'<\/tbody>';
+})();
+
+/* --- SOURCES --- */
+(function(){
+  qp('#srclist').innerHTML=DATA.sources.map(s=>`
+    <div class="src">
+      <div class="tier">${s.tier}<\/div>
+      <div>
+        <div class="ttl">${s.title} ${gradeHtml(s.grade)}<\/div>
+        <div class="meta">${s.publisher} ｜ 发布 ${s.published} ｜ 抓取 ${s.retrieved}<\/div>
+        <div class="meta">${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.url}<\/a>`:'<span class="gap">无链接</span>'}<\/div>
+        <div class="meta">角色：${s.role}${s.raw_access?' ｜ 获取情况：'+s.raw_access:''}<\/div>
+        ${s.key_facts&&s.key_facts.length?`<ul class="facts">${s.key_facts.map(f=>`<li>${f}<\/li>`).join('')}<\/ul>`:''}
+      <\/div>
+    <\/div>`).join('');
+})();
+
+/* --- OBSERVE --- */
+(function(){
+  const o=DATA.observables.slice().sort((a,b)=>a.priority-b.priority);
+  qp('#obs').innerHTML='<thead><tr><th style="width:56px">优先</th><th style="width:110px">类别</th><th>指标</th><th style="width:180px">在哪看</th><th style="width:60px">频率</th><th style="width:230px">什么算异常</th><\/tr><\/thead><tbody>'+
+    o.map(x=>`<tr><td>${'★'.repeat(4-x.priority)}</td><td class="small">${x.cat}</td><td><b>${x.metric}</b></td>
+      <td class="small">${x.where}</td><td class="small">${x.freq}</td><td class="small">${x.trigger}</td><\/tr>`).join('')+'<\/tbody>';
+
+  const m=DATA.market_snapshot;
+  qp('#mkt').innerHTML='<thead><tr><th style="width:120px">时段</th><th>公开事实</th><th style="width:60px">等级</th><th style="width:70px">来源</th><\/tr><\/thead><tbody>'+
+    m.facts.map(f=>`<tr><td class="mono small">${f.period}</td><td>${f.fact}</td><td>${gradeHtml(f.grade)}</td><td class="mono small">${f.source}</td><\/tr>`).join('')+'<\/tbody>';
+  qp('#mktgap').innerHTML='<b>本节为缺口：</b>'+m.gaps.join('；')+'。缺口保留，不估算。';
+})();
+
+/* --- GAPS --- */
+(function(){
+  qp('#gaps').innerHTML='<thead><tr><th style="width:56px">ID</th><th>缺失数据</th><th style="width:220px">影响什么</th><th>本报告的处理方式</th><\/tr><\/thead><tbody>'+
+    DATA.gaps.map(g=>`<tr><td class="mono small">${g.id}</td><td>${g.item}</td><td class="small">${g.impact}</td>
+      <td class="small">${g.placeholder}</td><\/tr>`).join('')+'<\/tbody>';
+  qp('#disclaimer').textContent=DATA.meta.disclaimer+' '+DATA.meta.scope_note;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "format": "xlsx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "sheets": [
+      {
+        "name": "01 \u8be2\u76d8\u6982\u8981",
+        "cells": 108,
+        "formulas": 0
+      },
+      {
+        "name": "02 \u5b57\u6bb5\u786e\u8ba4\u8868",
+        "cells": 171,
+        "formulas": 0
+      },
+      {
+        "name": "03 \u7f3a\u5931\u4e0e\u5047\u8bbe",
+        "cells": 90,
+        "formulas": 0
+      },
+      {
+        "name": "04 \u4ef7\u683c\u4e0e\u53e3\u5f84",
+        "cells": 86,
+        "formulas": 3
+      },
+      {
+        "name": "05 \u62a5\u4ef7\u8349\u7a3f",
+        "cells": 279,
+        "formulas": 7
+      },
+      {
+        "name": "06 \u53e3\u5f84\u4e0e\u8fb9\u754c",
+        "cells": 88,
+        "formulas": 0
+      },
+      {
+        "name": "07 \u7d20\u6750\u4e0e\u8bc1\u636e",
+        "cells": 80,
+        "formulas": 0
+      }
+    ],
+    "formulas_evaluated": false
+  }
+}

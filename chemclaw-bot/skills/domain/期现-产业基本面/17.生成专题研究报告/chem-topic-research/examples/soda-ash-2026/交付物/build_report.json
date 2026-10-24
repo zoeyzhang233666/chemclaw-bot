@@ -1,0 +1,121 @@
+{
+  "generator": "chem-topic-research/1.0",
+  "case_file": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\case.json",
+  "schema": null,
+  "title": "中国纯碱行业新增产能对未来供应格局的影响",
+  "report_date": "2026-10-20",
+  "data_cutoff": "2026-09-25",
+  "outdir": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物",
+  "builds": [
+    {
+      "audience": "industry-researcher",
+      "audience_label": "产业研究员",
+      "files": {
+        "html": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_产业研究员_soda-ash-2026-supply.html",
+        "xlsx": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_产业研究员_soda-ash-2026-supply_数据底稿.xlsx",
+        "outline": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_产业研究员_soda-ash-2026-supply_研究提纲_已确认.md",
+        "record": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_产业研究员_soda-ash-2026-supply_执行记录.md",
+        "report_md": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_产业研究员_soda-ash-2026-supply_报告全文.md"
+      },
+      "stats": {
+        "sections": 9,
+        "conclusions": 8,
+        "calculations": 10,
+        "sources": 22,
+        "gaps": 6,
+        "charts": 16
+      },
+      "checks_passed": 16,
+      "checks_failed": [],
+      "warnings": []
+    },
+    {
+      "audience": "management",
+      "audience_label": "管理层",
+      "files": {
+        "html": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_管理层_soda-ash-2026-supply.html",
+        "xlsx": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_管理层_soda-ash-2026-supply_数据底稿.xlsx",
+        "outline": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_管理层_soda-ash-2026-supply_研究提纲_已确认.md",
+        "record": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_管理层_soda-ash-2026-supply_执行记录.md",
+        "report_md": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_管理层_soda-ash-2026-supply_报告全文.md"
+      },
+      "stats": {
+        "sections": 6,
+        "conclusions": 8,
+        "calculations": 10,
+        "sources": 22,
+        "gaps": 6,
+        "charts": 10
+      },
+      "checks_passed": 16,
+      "checks_failed": [],
+      "warnings": []
+    },
+    {
+      "audience": "sales",
+      "audience_label": "销售",
+      "files": {
+        "html": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_销售_soda-ash-2026-supply.html",
+        "xlsx": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_销售_soda-ash-2026-supply_数据底稿.xlsx",
+        "outline": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_销售_soda-ash-2026-supply_研究提纲_已确认.md",
+        "record": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_销售_soda-ash-2026-supply_执行记录.md",
+        "report_md": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_销售_soda-ash-2026-supply_报告全文.md"
+      },
+      "stats": {
+        "sections": 6,
+        "conclusions": 8,
+        "calculations": 10,
+        "sources": 22,
+        "gaps": 6,
+        "charts": 11
+      },
+      "checks_passed": 16,
+      "checks_failed": [],
+      "warnings": []
+    },
+    {
+      "audience": "procurement",
+      "audience_label": "采购",
+      "files": {
+        "html": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_采购_soda-ash-2026-supply.html",
+        "xlsx": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_采购_soda-ash-2026-supply_数据底稿.xlsx",
+        "outline": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_采购_soda-ash-2026-supply_研究提纲_已确认.md",
+        "record": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_采购_soda-ash-2026-supply_执行记录.md",
+        "report_md": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_采购_soda-ash-2026-supply_报告全文.md"
+      },
+      "stats": {
+        "sections": 7,
+        "conclusions": 8,
+        "calculations": 10,
+        "sources": 22,
+        "gaps": 6,
+        "charts": 12
+      },
+      "checks_passed": 16,
+      "checks_failed": [],
+      "warnings": []
+    },
+    {
+      "audience": "rnd",
+      "audience_label": "研发",
+      "files": {
+        "html": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_研发_soda-ash-2026-supply.html",
+        "xlsx": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_研发_soda-ash-2026-supply_数据底稿.xlsx",
+        "outline": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_研发_soda-ash-2026-supply_研究提纲_已确认.md",
+        "record": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_研发_soda-ash-2026-supply_执行记录.md",
+        "report_md": "./报告-SKILL-专题研究\\chem-topic-research\\examples\\soda-ash-2026\\交付物\\纯碱_研发_soda-ash-2026-supply_报告全文.md"
+      },
+      "stats": {
+        "sections": 4,
+        "conclusions": 8,
+        "calculations": 10,
+        "sources": 22,
+        "gaps": 6,
+        "charts": 8
+      },
+      "checks_passed": 16,
+      "checks_failed": [],
+      "warnings": []
+    }
+  ]
+}

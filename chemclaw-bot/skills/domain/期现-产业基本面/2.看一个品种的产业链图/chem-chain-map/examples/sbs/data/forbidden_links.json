@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "purpose": "禁止关系清单：把『常见但错误』的画法显式登记，校验脚本据此报错，防止为了图形完整而虚构产业关系。",
+    "rule": "校验脚本对每一条 forbidden 关系检查：若 relations.json 中存在同 from/to 的边且 relation_type 属于 wrong_types 之一，则整体校验失败（FATAL）。"
+  },
+  "forbidden": [
+    {
+      "id": "F01",
+      "from": "N_PRIMARY",
+      "to": "N_APP_FOOTWEAR",
+      "wrong_types": [
+        "conversion",
+        "blend"
+      ],
+      "why": "SBS 不会直接变成『鞋』。正确链条是 SBS →(blend) TPR 鞋底料 →(processing) 鞋底 →(application) 鞋。把终端用途写成转化产品是最常见的错误。",
+      "worksheet": "终端用途只能通过 material→application 的 application 边呈现"
+    },
+    {
+      "id": "F02",
+      "from": "N_PRIMARY",
+      "to": "N_APP_ROAD",
+      "wrong_types": [
+        "conversion",
+        "blend",
+        "processing"
+      ],
+      "why": "SBS→公路不是直接关系；必须经改性沥青与路面材料两层材料节点。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F03",
+      "from": "N_SM",
+      "to": "N_PRIMARY",
+      "wrong_types": [
+        "substitution"
+      ],
+      "why": "苯乙烯是 SBS 的组成单体，不是替代品；替代关系只允许发生在用途层（如 SIS/SEBS/TPU 与 SBS 争夺同一应用）。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F04",
+      "from": "N_BD",
+      "to": "N_PRIMARY",
+      "wrong_types": [
+        "byproduct",
+        "coproduction"
+      ],
+      "why": "丁二烯进入 SBS 是主原料转化；把主原料写成副产会误导成本归因。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F05",
+      "from": "N_PYREXTRACT",
+      "to": "N_PRIMARY",
+      "wrong_types": [
+        "conversion"
+      ],
+      "why": "裂解汽油不能直接制 SBS；C8 抽提只能得到苯乙烯，仍需聚合。不得把不同工艺路线揉成一条链。",
+      "worksheet": "C8 抽提路线需经 N_SM 节点"
+    },
+    {
+      "id": "F06",
+      "from": "N_SEBS",
+      "to": "N_PRIMARY",
+      "wrong_types": [
+        "conversion"
+      ],
+      "why": "反向不成立：SBS 可以加氢制 SEBS，但 SEBS 不会脱氢回到 SBS（工业上无此路线）。方向必须 from=SBS to=SEBS。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F07",
+      "from": "N_TPR",
+      "to": "N_PRIMARY",
+      "wrong_types": [
+        "conversion",
+        "processing"
+      ],
+      "why": "TPR 料是 SBS 的配方复合物，不能反向被写成『TPR 转化制 SBS』。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F08",
+      "from": "N_MODIFIED_ASPH",
+      "to": "N_ASPHALT",
+      "wrong_types": [
+        "conversion"
+      ],
+      "why": "改性沥青拆解回基质沥青不是生产工艺；若研究『废料回收/沥青再生』应另立 route 节点。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F09",
+      "from": "N_BZ",
+      "to": "N_SM",
+      "wrong_types": [
+        "conversion"
+      ],
+      "why": "纯苯不能直接转化为苯乙烯；必须先经乙苯（烷基化+脱氢）。把两段合成一步是常见画法错误。",
+      "worksheet": "必须经 N_EB 节点，且分段单耗不得合并成分段环。"
+    },
+    {
+      "id": "F11",
+      "from": "N_HMPSA",
+      "to": "N_APP_PACKAGING",
+      "wrong_types": [
+        "conversion",
+        "blend"
+      ],
+      "why": "热熔胶→包装是终端应用，不是转化；且部分包装用胶先制胶带再应用，节点口径须区分。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F12",
+      "from": "N_TPR",
+      "to": "N_APP_FOOTWEAR",
+      "wrong_types": [
+        "conversion",
+        "blend",
+        "processing"
+      ],
+      "why": "TPR 料必须先成型为鞋底部件(starter)，再进入整鞋；跳到终端会把制品层抹掉。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F13",
+      "from": "N_ASPHALT",
+      "to": "N_APP_ROAD",
+      "wrong_types": [
+        "conversion",
+        "blend",
+        "processing"
+      ],
+      "why": "未改性基质沥青不构成 SBS 链路的终端应用路径；SBS 的价值必须经由改性沥青体现。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F14",
+      "from": "N_SEBS",
+      "to": "N_HMPSA",
+      "wrong_types": [
+        "substitution"
+      ],
+      "why": "SEBS 与 SBS 在热熔胶中主要为配方互补/替代同侪关系，且 SEBS 的市场替代点主要是鞋材/卫材与改性料；不能在热熔胶处无证据地建立替代边。",
+      "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"
+    },
+    {
+      "id": "F10",
+      "from": "N_C8A",
+      "to": "N_BZ",
+      "wrong_types": [
+        "copy"
+      ],
+      "why": "C8 芳烃（二甲苯）→ 纯苯 不是常规转化关系：TDA 单元进料为甲苯与 C9 芳烃，而不是 C8；苯的主链来源应是重整生成油/BTX 经抽提（N_BTX→N_BZ）。保留为疑点边并标 typical=false，禁止把它当作主链单耗使用。",
+      "worksheet": "若研究甲苯歧化路线，请单独建立 Toluene / C9 芳烃节点，不要复用 C8 芳烃节点。"
+    }
+  ]
+}

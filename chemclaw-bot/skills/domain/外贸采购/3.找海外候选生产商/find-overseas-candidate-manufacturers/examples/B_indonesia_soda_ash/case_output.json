@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "report_id": "OSM-SODA-ID-DEMO",
+    "title": "印度尼西亚 纯碱（Na₂CO₃）实际生产企业核验调查报告（方法演示骨架）",
+    "subtitle": "示例 B：换国家 + 换品类，验证方法可迁移；本案例故意保持“未取证”状态",
+    "product": {
+      "name_cn": "纯碱（碳酸钠）",
+      "name_en": "Soda ash (sodium carbonate)",
+      "abbr": "Na2CO3",
+      "cas": "497-19-8",
+      "hs_cn": "2836.20.00.00",
+      "hs_un": "2836.20",
+      "spec_summary": "重质纯碱 Na₂CO₃ ≥ 99.2%；轻质 ≥ 99.0%（演示值，需以采购规格书为准）",
+      "packaging": "50 kg 袋 / 1000 kg 吨袋 / 散装",
+      "process_route": "盐（或地下卤水）+ 氨/CO₂ → 氨碱法；或联碱法；或天然碱矿（trona）加工"
+    },
+    "buyer_context": {
+      "origin": "印度尼西亚",
+      "destination": "中国",
+      "intent": "寻找公开资料显示可能实际生产纯碱的印尼企业（本示例仅演示方法迁移）",
+      "quantity": "未提供 — 需采购方补充",
+      "only_actual_manufacturers": "是",
+      "certifications_needed": "未指定 — 建议至少 ISO 9001/14001/45001、SDS、COA",
+      "packaging_needed": "未指定"
+    },
+    "research_date": "2026-10-20",
+    "evidence_grade_legend": [
+      { "grade": "A", "label": "有直接公开制造证据", "def": "官网产品页/产能表、年报、EPC 合同、官方投产公告、装置级公开产能数据" },
+      { "grade": "B", "label": "有产品业务关联但制造身份待核验", "def": "有产品级公开记载但缺装置级证据，或证据链存在矛盾/缺口" },
+      { "grade": "C", "label": "仅存在行业相关性", "def": "属化工集团或附属，但无该产品制造证据，或明确生产的是近似品" },
+      { "grade": "D", "label": "贸易/代理/身份不明", "def": "贸易商、代理、经销、平台卖家或无法确认经营实体" }
+    ],
+    "funnel": { "step1": 6, "step2": 4 },
+    "funnel_note": {
+      "step1": "按盐化工/天然碱工艺链条 + 印尼化工产业带建立示意候选池",
+      "step2": "出现纯碱相关公开记载的候选（本示例均未完成取证）"
+    },
+    "market_interpretation": "本案例的用途是证明：换国家、换品类后，证据分级、主体分离与产能口径规则完全不变；而在未取证时，正确的结果是“全部待核验”，而不是凑出一份“已核验厂家”名单。",
+    "disclaimer": "本案例为方法演示，企业名称、产能、认证与联系方式均未核验，不得作为真实采购依据。"
+  },
+
+  "groups": [
+    { "id": "G-DEMO-1", "name": "某盐化工集团（示意）", "name_en": "Illustrative Salt Chemical Group", "type": "盐化工/氯碱集团", "note": "演示：集团下属可能有碱厂，需逐个附属核验" },
+    { "id": "G-DEMO-2", "name": "某矿业公司（示意）", "name_en": "Illustrative Mining Co.", "type": "矿产公司", "note": "演示：天然碱矿权与成品加工能力需分开核验" }
+  ],
+
+  "companies": [
+    {
+      "id": "D-1", "rank": 1,
+      "legal_name": "【示意】某盐化工集团附属碱厂",
+      "cn_name": "示意：盐化工附属碱厂",
+      "entity_type": "JV_MANUFACTURER",
+      "entity_type_label": "合资制造企业（待核验）",
+      "grade": "B",
+      "grade_reason": "行业资料提及该集团在东爪哇有氨碱装置，但本次未取得官网产品页、产能表或 EPC 项目记录，装置级证据缺失，故只能判 B。",
+      "group": "G-DEMO-1",
+      "ownership": "示意：集团 + 外资合资",
+      "established": "待核验",
+      "hq": "印尼（示意）",
+      "country": "Indonesia",
+      "site": "东爪哇（示意，待核验）",
+      "website": "待核验",
+      "official_channels": [{ "channel": "官网联系页", "value": "待核验", "status": "待核验" }],
+      "products_specs": [{ "product": "纯碱（重质/轻质）", "grade": "工业级", "spec": "待核验", "source": "待核验" }],
+      "capacity": { "expr": "待核验", "unit": "kt/a", "detail": "暂无可靠公开装置级数据", "caveat": "无法判断当前可供货能力" },
+      "process": "示意：氨碱法（待核验）",
+      "evidence": [{ "id": "E1", "type": "第三方转述（行业资料）", "grade": "间接", "src": "S-D1", "text": "行业资料提及氨碱装置（示意，未核验）", "conf": "低" }],
+      "certifications": [{ "cert": "ISO 9001", "status": "待核验" }],
+      "export_info": "待核验",
+      "risks": ["无装置级证据", "可能仅为集团层面表述"],
+      "open_questions": ["QS-D01", "QS-D02"]
+    },
+    {
+      "id": "D-2", "rank": 2,
+      "legal_name": "【示意】某矿业公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（待核验）",
+      "grade": "B",
+      "grade_reason": "天然碱矿权公开可查，但未见成品纯碱加工厂的公开资料，无法区分“只出矿”与“加工为成品碱”，故判 B。",
+      "group": "G-DEMO-2",
+      "ownership": "示意",
+      "established": "待核验",
+      "hq": "印尼（示意）",
+      "country": "Indonesia",
+      "site": "加里曼丹（示意，待核验）",
+      "website": "待核验",
+      "official_channels": [{ "channel": "官网", "value": "待核验", "status": "待核验" }],
+      "products_specs": [{ "product": "天然碱 / 纯碱", "grade": "待核验", "spec": "待核验", "source": "待核验" }],
+      "capacity": { "expr": "待核验", "unit": "kt/a", "detail": "矿权与选矿/加工能力需分别核验", "caveat": "无法判断当前可供货能力" },
+      "process": "示意：天然碱矿加工（待核验）",
+      "evidence": [{ "id": "E2", "type": "第三方转述（矿业资料）", "grade": "间接", "src": "S-D2", "text": "矿权信息（示意，未核验）", "conf": "低" }],
+      "certifications": [],
+      "export_info": "待核验",
+      "risks": ["是否加工为成品碱不明"],
+      "open_questions": ["QS-D03"]
+    },
+    {
+      "id": "D-3", "rank": 3,
+      "legal_name": "【示意】某烧碱企业",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（非目标产品）",
+      "grade": "C",
+      "grade_reason": "生产烧碱（NaOH），与纯碱（Na₂CO₃）是不同产品，仅因“碱”字关键词被检索命中。属易混淆的近似品。",
+      "group": "G-DEMO-1",
+      "ownership": "示意",
+      "established": "待核验",
+      "hq": "印尼（示意）",
+      "country": "Indonesia",
+      "site": "西爪哇（示意）",
+      "website": "待核验",
+      "official_channels": [{ "channel": "官网", "value": "待核验", "status": "待核验" }],
+      "products_specs": [{ "product": "烧碱 NaOH（非目标品）", "grade": "工业级", "spec": "—", "source": "待核验" }],
+      "capacity": { "expr": "0（非目标品）", "unit": "—", "detail": "—", "caveat": "—" },
+      "process": "离子膜电解（示意）",
+      "evidence": [{ "id": "E3", "type": "第三方转述（行业名录）", "grade": "间接", "src": "S-D3", "text": "生产烧碱（示意）", "conf": "低" }],
+      "certifications": [],
+      "export_info": "—",
+      "risks": ["关键词误判"],
+      "open_questions": ["QS-D04"]
+    },
+    {
+      "id": "D-4", "rank": 4,
+      "legal_name": "【示意】某贸易分销公司",
+      "entity_type": "TRADER",
+      "entity_type_label": "一般贸易商",
+      "grade": "D",
+      "grade_reason": "无生产装置，仅从事分销与代理。不能作为制造证据。",
+      "group": null,
+      "ownership": "示意",
+      "established": "待核验",
+      "hq": "雅加达（示意）",
+      "country": "Indonesia",
+      "site": "无自有工厂",
+      "website": "待核验",
+      "official_channels": [{ "channel": "官网", "value": "待核验", "status": "待核验" }],
+      "products_specs": [{ "product": "纯碱（转售）", "grade": "—", "spec": "—", "source": "待核验" }],
+      "capacity": { "expr": "0（自身无装置）", "unit": "—", "detail": "—", "caveat": "—" },
+      "process": "—",
+      "evidence": [{ "id": "E4", "type": "平台挂牌", "grade": "间接", "src": "S-D4", "text": "贸易公司挂牌（示意）", "conf": "低" }],
+      "certifications": [],
+      "export_info": "待核验",
+      "risks": ["中间商加价与货源真实性"],
+      "open_questions": ["QS-D05"]
+    }
+  ],
+
+  "trade_notes": [
+    { "type": "平台挂牌/贸易商", "desc": "B2B 平台与第三方名录只用于发现名字，不作制造证据。", "grade": "D" }
+  ],
+
+  "market_context": [
+    { "claim": "本案例不含真实市场数据：仅演示结构。", "source": "S-D1", "conf": "—" }
+  ],
+
+  "questions": [
+    { "id": "QS-00", "company": "通用", "q": "本次采购的产品、规格、数量、到岸港、结算方式与认证要求，请先确认，以便统一询盘口径。" },
+    { "id": "QS-D01", "company": "D-1", "q": "贵司是否拥有并运营纯碱（氨碱/联碱）装置？装置名称、许可号、地址？" },
+    { "id": "QS-D02", "company": "D-1", "q": "请提供工厂级 ISO 证书编号与近 12 个月 COA 样本。" },
+    { "id": "QS-D03", "company": "D-2", "q": "贵司是仅出矿还是具备成品纯碱加工能力？请提供加工厂产能与产品规格。" },
+    { "id": "QS-D04", "company": "D-3", "q": "请确认贵司是否同时生产碳酸钠（Na₂CO₃）？若无，本清单不再保留。" },
+    { "id": "QS-D05", "company": "D-4", "q": "若贵司为贸易商，请提供上游工厂名称及销售授权。" }
+  ],
+
+  "sources": [
+    { "id": "S-D1", "title": "【示意来源】行业资料（未核验）", "url": "https://example.com/illustrative-1", "date": "—", "access": "2026-10-20", "status": "待下载", "note": "示例占位，非真实来源" },
+    { "id": "S-D2", "title": "【示意来源】矿业资料（未核验）", "url": "https://example.com/illustrative-2", "date": "—", "access": "2026-10-20", "status": "待下载", "note": "示例占位，非真实来源" },
+    { "id": "S-D3", "title": "【示意来源】行业名录（未核验）", "url": "https://example.com/illustrative-3", "date": "—", "access": "2026-10-20", "status": "待下载", "note": "示例占位，非真实来源" },
+    { "id": "S-D4", "title": "【示意来源】平台挂牌（未核验）", "url": "https://example.com/illustrative-4", "date": "—", "access": "2026-10-20", "status": "待下载", "note": "示例占位，非真实来源" }
+  ]
+}

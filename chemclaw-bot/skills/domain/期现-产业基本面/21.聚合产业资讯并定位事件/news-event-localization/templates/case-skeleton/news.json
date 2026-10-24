@@ -1,0 +1,48 @@
+{
+ "items": [
+  {
+   "news_id": "N01",
+   "src_id": "S01",
+   "publisher": "生态环境部",
+   "title": "【示例】关于印发《温室气体自愿减排项目方法学 …》的通知（环办便函〔2026〕XXX号）",
+   "first_pub": "2026-10-16T00:00:00+08:00",
+   "first_pub_note": "原文落款日期，页面无时分",
+   "list_ts": null,
+   "repub_time": null,
+   "url": "https://www.mee.gov.cn/xxxxx.html",
+   "url_date_evidence": "",
+   "content_level": "full",
+   "core_points": [
+    "【示例】摘录原文关键句，可引用的部分加引号",
+    "截止日期、反馈邮箱等要件"
+   ],
+   "event_hint": "EVT-XXX-20261016-001",
+   "language": "zh",
+   "is_organic": true,
+   "outside_window": false,
+   "note": "C1 级证据：官方原文全文可读"
+  },
+  {
+   "news_id": "N02",
+   "src_id": "S02",
+   "publisher": "某资讯机构",
+   "title": "【示例】某装置停车快讯（仅标题可读）",
+   "first_pub": null,
+   "first_pub_note": "正文不可读；列表页时戳 2026-10-19 10:05，URL 内嵌 26-1019-10",
+   "list_ts": "2026-10-19T10:05:00+08:00",
+   "repub_time": null,
+   "url": "https://example.com/26-1019-10-hash.html",
+   "url_date_evidence": "URL 内嵌 26-1019-10（2026-10-19 10时）",
+   "content_level": "title_only",
+   "core_points": [
+    "【示例】仅标题：正文受会员墙限制，不做内容推断"
+   ],
+   "event_hint": "EVT-XXX-20261019-001",
+   "language": "zh",
+   "is_organic": true,
+   "outside_window": false,
+   "reliability_flag": "title_only：只能证明该标题在该时点发布，不能证明其内容",
+   "note": "如需内容，须通过转载通道或会员账号补齐"
+  }
+ ]
+}

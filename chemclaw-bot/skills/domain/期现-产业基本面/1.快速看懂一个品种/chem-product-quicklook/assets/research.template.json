@@ -1,0 +1,149 @@
+{
+ "_comment": "空白模板：复制后逐项填写。所有 {} 为占位说明，务必替换。字段规范见 references/data-contract.md。注意：表格列名 columns[].k 会直接显示为表头，必须写中文（来源列写 {\"k\": \"来源\"}，不要写 {\"k\": \"src\"}）",
+ "meta": {
+  "title": "{品种名} · 品种研究入口 | 期现与产业基本面",
+  "data_asof": "YYYY-MM-DD",
+  "generated": "YYYY-MM-DD",
+  "version": "chem-product-quicklook v1.0.0",
+  "output_name": "{品种名}-品种研究入口",
+  "labels": {"upstream": "上游原料/能源", "process": "工艺", "self": "本品种", "downstream": "下游产品", "enduse": "终端消费", "other": "关联"},
+  "footnote": "本页服务于品种入门：事实、工艺典型参数、公开统计、研究判断四类信息分开标注；未取得的数据标注为缺口，不以行业均值或估算填充。"
+ },
+ "product": {
+  "name_cn": "{中文名}",
+  "name_en": "{English Name}",
+  "aliases": ["{别名1}", "{别名2}"],
+  "synonyms_en": ["{synonym}"],
+  "cas": "{CAS，如 67-56-1}",
+  "hs": [{"code": "{HS 前6位}", "desc": "{描述}", "note": "{8-10位须查税则}", "src": ["S01"]}],
+  "un": "{UN 编号（去掉UN前缀，如 1230）}",
+  "formula": "{分子式}",
+  "mw": "{分子量}",
+  "appearance": "{外观}",
+  "boiling_point": "{沸点}",
+  "freezing_point": "{凝固点}",
+  "density": "{密度}",
+  "flash_point": "{闪点}",
+  "solubility": "{溶解性}",
+  "hazard_class": "{危险化学品属性}",
+  "identity_confidence": {"level": "高/中/低", "basis": "{凭什么确认身份}", "src": ["S01"]},
+  "scene": ["{场景1}", "{场景2}"],
+  "main_spec": "{主流规格}",
+  "grades": ["{牌号/等级1}", "{牌号/等级2}"],
+  "packages": "{包装形态}",
+  "uses_cn": ["{下游1}", "{下游2}"],
+  "has_futures": true,
+  "oneliner": "{一句话讲清这个品种是什么、规模多大、谁在用}",
+  "card": [
+   {"k": "中文通用名 / 英文名", "v": "{...}", "sub": "别名：{...}"},
+   {"k": "CAS / HS / UN", "v": "{...}", "sub": "{...}"},
+   {"k": "分子式 / 分子量", "v": "{...}", "sub": "{沸点/密度}"},
+   {"k": "主流规格", "v": "{...}", "sub": "{...}"},
+   {"k": "计价单位", "v": "{元/吨}", "sub": "{含税口径}"},
+   {"k": "中国总产能（{时点}）", "v": "{...}", "sub": "{机构}"},
+   {"k": "工艺结构", "v": "{路线占比}", "sub": "{...}"},
+   {"k": "最大下游", "v": "{占比}", "sub": "{...}"},
+   {"k": "表观消费", "v": "{...}", "sub": "{...}"},
+   {"k": "进口/出口", "v": "{...}", "sub": "{...}"},
+   {"k": "期货", "v": "{交易所+代码}", "sub": "{交易单位}"},
+   {"k": "最新价格", "v": "{从 build_anchors 生成}", "sub": "{分位}"}
+  ]
+ },
+ "frame": [
+  {"name": "供应", "value": "{...}", "value_note": "{...}", "items": [
+    {"name": "{指标}", "caliber": "{口径}", "gap": false},
+    {"name": "{指标}", "caliber": "{口径}", "gap": true}
+  ]},
+  {"name": "需求", "value": "{...}", "value_note": "{...}", "items": []},
+  {"name": "库存", "value": "{...}", "value_note": "{...}", "items": []},
+  {"name": "价格 / 成本", "value": "{...}", "value_note": "{...}", "items": []},
+  {"name": "期现", "value": "{...}", "value_note": "{...}", "items": []},
+  {"name": "政策 / 产能", "value": "{...}", "value_note": "{...}", "items": []}
+ ],
+ "chain": {
+  "cols": [
+   {"id": "upstream", "name": "上游原料/能源"},
+   {"id": "process", "name": "生产工艺"},
+   {"id": "self", "name": "本品种"},
+   {"id": "downstream", "name": "下游产品"},
+   {"id": "enduse", "name": "终端消费"}
+  ],
+  "nodes": [
+   {
+    "id": "self_main", "col": "self", "name": "{品种名}", "kind": "self", "is_self": true, "has_futures": true,
+    "meta": "{一句话 + 关键数}", "cap": "{产能}", "spot": "{价格}",
+    "children": [],
+    "research": {
+     "summary": "{这个品种为什么重要}",
+     "points": ["{要点1（带来源）}", "{要点2}"],
+     "spot": [],
+     "price_gap": "{为什么没有价格序列}",
+     "indicators": [{"name": "{指标}", "caliber": "{口径}", "why": "{为什么看}"}],
+     "companies": [],
+     "companies_gap": "{为什么没有企业数据}",
+     "actions": [{"id": "price_history", "name": "价格历史", "desc": "{...}"}],
+     "sources": ["S01"],
+     "gaps": ["{具体缺什么}"]
+    }
+   }
+  ]
+ },
+ "research": {},
+ "panels": [
+  {"id": "identity_specs", "name": "产品百科与规格", "note": "{注明口径纪律}", "body": [
+    {"type": "cards", "cols": 2, "items": []},
+    {"type": "text", "title": "{...}", "html": "<p>{...}</p>", "src": ["S01"]},
+    {"type": "table", "caption": "{...}", "columns": [{"k": "等级/牌号"}, {"k": "典型纯度"}, {"k": "主要买方"}, {"k": "来源"}], "rows": []},
+    {"type": "gapnote", "title": "本模块缺口", "text": "{...}"}
+  ]},
+  {"id": "routes", "name": "工艺与原料", "note": "{区分工艺典型值与公开统计}", "body": [
+    {"type": "text", "title": "{...}", "html": "<p>{...}</p>", "src": ["S01"]},
+    {"type": "routes", "items": []},
+    {"type": "table", "caption": "{工艺路线对比}", "columns": [{"k": "维度"}, {"k": "路线A"}, {"k": "路线B"}, {"k": "数据性质"}, {"k": "来源"}], "rows": []}
+  ]},
+  {"id": "demand", "name": "下游与应用", "note": "{占比必须带年份与机构}", "body": [
+    {"type": "text", "title": "{...}", "html": "<p>{...}</p>", "src": ["S01"]},
+    {"type": "table", "caption": "{下游消费结构}", "columns": [{"k": "下游"}, {"k": "占比"}, {"k": "年份/口径"}, {"k": "吨耗"}, {"k": "单耗性质"}, {"k": "来源"}], "rows": []},
+    {"type": "logic", "items": []}
+  ]},
+  {"id": "capacity", "name": "企业与产能", "note": "{三种口径分开读}", "body": [
+    {"type": "text", "title": "{产能总量与口径冲突}", "html": "<p>{...}</p>", "src": ["S01"]},
+    {"type": "companies", "caption": "{主要生产企业}", "total": 0, "unit": "万吨/年", "caliber": "{口径说明}", "items": []},
+    {"type": "regions", "caption": "{区域分布}", "src": ["S01"], "items": []},
+    {"type": "table", "caption": "{产能口径冲突对照}", "columns": [{"k": "项目"}, {"k": "数值A"}, {"k": "数值B"}, {"k": "差异原因"}, {"k": "建议"}, {"k": "来源"}], "rows": []},
+    {"type": "table", "caption": "{在建/拟建项目}", "columns": [{"k": "项目"}, {"k": "规模"}, {"k": "状态"}, {"k": "时间"}, {"k": "来源"}], "rows": []}
+  ]},
+  {"id": "trade_futures", "name": "贸易与期现", "note": "{期货条款以交易所原文为准}", "body": [
+    {"type": "futures", "items": []},
+    {"type": "table", "caption": "{交割标准品 vs 主流现货}", "columns": [{"k": "维度"}, {"k": "期货"}, {"k": "现货"}, {"k": "差异与注意"}, {"k": "来源"}], "rows": []},
+    {"type": "table", "caption": "{贸易数据}", "columns": [{"k": "指标"}, {"k": "数值"}, {"k": "时点"}, {"k": "口径/来源"}, {"k": "来源"}], "rows": []},
+    {"type": "table", "caption": "{区域市场结构}", "columns": [{"k": "区域"}, {"k": "集散地"}, {"k": "角色"}, {"k": "研究价值"}, {"k": "来源"}], "rows": []},
+    {"type": "text", "title": "{期现关系的产业逻辑}", "html": "<p>{...}</p>", "src": ["S01"]}
+  ]},
+  {"id": "indicators", "name": "指标与逻辑", "note": "{每条指标给出为什么看}", "body": [
+    {"type": "indicators", "groups": []},
+    {"type": "logic", "items": []}
+  ]}
+ ],
+ "sources": [
+  {"id": "S01", "org": "{机构}", "type": "{类型}", "title": "{标题}", "url": "{URL}", "date": "YYYY-MM-DD", "use": "{用于哪些字段}", "confidence": "高/中高/中/低"},
+  {"id": "S02", "org": "{机构}", "type": "{类型}", "title": "{标题}", "url": "{URL}", "date": "YYYY-MM-DD", "use": "{...}", "confidence": "中"}
+ ],
+ "gaps": [
+  {"area": "{缺什么}", "desc": "{具体缺到哪一步}", "how": "{可执行的补数路径}", "impact": "{影响什么分析}"}
+ ],
+ "caveats": ["{口径提醒1}", "{口径提醒2}"],
+ "purposes": [
+  {"id": "futures", "name": "期货研究", "panel": "trade_futures", "emphasize": ["self", "downstream"], "highlight_indicators": []},
+  {"id": "spot", "name": "现货贸易", "panel": "capacity", "emphasize": ["upstream", "self"], "highlight_indicators": []},
+  {"id": "research", "name": "通用研究", "panel": "indicators", "emphasize": [], "highlight_indicators": []}
+ ],
+ "scenes": {
+  "price_history": {"name": "价格历史与分位", "skill": "chem-market-brief", "template": "拉取 {product} 近 3 年逐日价格，计算分位与区间"},
+  "basis_scan": {"name": "基差与月差研判", "skill": "chem-market-brief", "template": "计算 {product} 基差（先统一含税口径）与月差"},
+  "capacity_survey": {"name": "产能调查", "skill": "期现-产业基本面/3.看主要生产企业和产能", "template": "按集团/单厂/单套三口径梳理 {product} 生产企业"},
+  "news_scan": {"name": "产业新闻", "skill": "期现-产业基本面/21.聚合产业资讯并定位事件", "template": "聚合近 7 天 {product} 相关装置与政策事件"},
+  "cost_curve": {"name": "成本曲线", "skill": "期现-产业基本面/13.看产业链利润变化", "template": "构建 {product} 分路线成本曲线，标出当前价格位置"}
+ },
+ "vcs": {"来源抓取": "{抓了哪些、什么时候}", "价格序列": "{序列区间与条数}", "未核实项": "{哪些没拿到}", "冲突处理": "{怎么处理的}"}
+}

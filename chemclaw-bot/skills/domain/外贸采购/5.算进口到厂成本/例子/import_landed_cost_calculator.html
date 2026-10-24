@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进口到厂成本测算 · MEG 沙特→宁波→苏州</title>
+<style>
+  :root{
+    --navy:#12263A; --teal:#0E7C86; --teal-l:#E8F1F2; --amber:#B45309;
+    --ink:#1F2937; --mute:#64748B; --line:#E2E8F0; --bg:#F6F8FA;
+    --ok:#15803D; --warn:#B91C1C; --warn-l:#FEE2E2; --ok-l:#DCFCE7;
+    --sim:#FEF3C7; --calc:#F1F5F9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:"Microsoft YaHei","PingFang SC",-apple-system,system-ui,sans-serif;
+       font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1240px;margin:0 auto;padding:22px 20px 80px}
+  h1{font-size:22px;margin:0 0 4px;color:var(--navy);letter-spacing:.2px}
+  .sub{color:var(--mute);font-size:13px;margin-bottom:18px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;
+        box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .card h2{font-size:15px;margin:0 0 14px;color:var(--navy);display:flex;align-items:center;gap:8px}
+  .card h2 .n{background:var(--teal);color:#fff;width:20px;height:20px;border-radius:6px;
+              font-size:12px;display:grid;place-items:center;flex:none}
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+  .kpi{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
+  .kpi.primary{background:linear-gradient(160deg,#0E7C86,#0B5F67);border-color:#0B5F67}
+  .kpi.primary .k,.kpi.primary .u{color:#BFE9EC}
+  .kpi.primary .v{color:#fff}
+  .kpi .k{font-size:12px;color:var(--mute);margin-bottom:6px}
+  .kpi .v{font-size:26px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+  .kpi .u{font-size:12px;color:var(--mute);margin-top:2px}
+  .kpi .d{font-size:11.5px;margin-top:6px;color:var(--mute)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600}
+  .pill.ok{background:var(--ok-l);color:var(--ok)}
+  .pill.warn{background:var(--warn-l);color:var(--warn)}
+  .pill.sim{background:var(--sim);color:var(--amber)}
+  .pill.gray{background:#EEF2F6;color:var(--mute)}
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;vertical-align:middle}
+  th{background:#F1F5F9;color:var(--mute);font-weight:600;font-size:12px;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  td:first-child{white-space:normal}
+  tbody tr:hover{background:#FAFBFC}
+  tr.lv2 td:first-child{padding-left:26px;color:var(--mute)}
+  tr.sum td{font-weight:700;background:#F8FAFC}
+  tr.key td{background:var(--teal-l);font-weight:700;color:var(--navy)}
+  th.grp,td.grp{text-align:center;border-left:1px solid var(--line)}
+  /* badges */
+  .src{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:4px;margin-left:6px;
+       vertical-align:1px;font-weight:600;white-space:nowrap}
+  .s-user{background:#DBEAFE;color:#1D4ED8}
+  .s-query{background:#DCFCE7;color:#15803D}
+  .s-calc{background:#E2E8F0;color:#475569}
+  .s-sim{background:var(--sim);color:var(--amber)}
+  .s-todo{background:var(--warn-l);color:var(--warn)}
+  /* inputs */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+  .fld label{display:block;font-size:12px;color:var(--mute);margin-bottom:4px}
+  .fld input,.fld select{width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:8px;
+        font-size:13.5px;font-family:inherit;color:var(--ink);background:#FFFBEB;font-variant-numeric:tabular-nums}
+  .fld input:focus,.fld select:focus{outline:2px solid #99D6DB;outline-offset:1px;background:#fff}
+  .fld input.blank{background:#FEF2F2;border-color:#FCA5A5}
+  .fld .hint{font-size:11px;color:var(--mute);margin-top:3px}
+  .btn{border:1px solid #CBD5E1;background:#fff;padding:8px 16px;border-radius:8px;font-size:13px;
+       font-family:inherit;cursor:pointer;color:var(--ink)}
+  .btn:hover{background:#F1F5F9}
+  .btn.pri{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
+  .btn.pri:hover{background:#0B5F67}
+  .seg{display:inline-flex;border:1px solid #CBD5E1;border-radius:9px;overflow:hidden;background:#fff}
+  .seg button{border:0;background:transparent;padding:8px 20px;font-size:13.5px;font-family:inherit;
+       cursor:pointer;color:var(--mute);font-weight:600}
+  .seg button.on{background:var(--navy);color:#fff}
+  /* waterfall */
+  .wf{width:100%;overflow-x:auto}
+  .wfbar{display:flex;height:26px;border-radius:6px;overflow:hidden;margin:4px 0 8px}
+  .wfbar div{height:100%}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--mute);margin-top:8px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  /* note */
+  .note{border-left:3px solid var(--amber);background:#FFFBEB;padding:10px 14px;border-radius:0 8px 8px 0;
+        font-size:12.5px;color:#78350F;margin:12px 0}
+  .note.bad{border-color:var(--warn);background:#FEF2F2;color:#7F1D1D}
+  .note.good{border-color:var(--ok);background:#F0FDF4;color:#14532D}
+  .mono{font-family:Consolas,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums}
+  .fml{font-family:Consolas,"SF Mono",Menlo,monospace;font-size:12px;background:#F8FAFC;
+       border:1px solid var(--line);border-radius:7px;padding:8px 11px;margin:6px 0;color:#334155;overflow-x:auto}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.two{grid-template-columns:1fr}}
+  .mini{font-size:11.5px;color:var(--mute)}
+  .tag{font-size:11px;color:var(--mute);background:#F1F5F9;border-radius:4px;padding:1px 6px}
+  .bar-row{display:grid;grid-template-columns:110px 1fr 84px;gap:8px;align-items:center;margin:5px 0;font-size:12.5px}
+  .bar-track{height:16px;background:#F1F5F9;border-radius:4px;position:relative;overflow:hidden}
+  .bar-track span{position:absolute;top:0;bottom:0;border-radius:4px}
+  footer{color:var(--mute);font-size:11.5px;text-align:center;margin-top:26px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>进口到厂成本测算 · 工业级乙二醇 MEG</h1>
+  <div class="sub">沙特朱拜勒 → 宁波港 → 江苏苏州工厂 ｜ FOB / CFR / CIF 三口径 ｜
+    单价与运费为<b>模拟情景</b>，不是实时市场报价；所有税率须按核验日期重新确认。</div>
+
+  <!-- ===== 状态条 ===== -->
+  <div id="statusBar"></div>
+
+  <!-- ===== KPI ===== -->
+  <div class="card">
+    <h2><span class="n">1</span>核心结论：三个口径、三种含义的钱</h2>
+    <div class="kpis" id="kpis"></div>
+    <div class="note" id="kpiNote"></div>
+  </div>
+
+  <!-- ===== 口径切换 ===== -->
+  <div class="card">
+    <h2><span class="n">2</span>报价口径（切换即重算，防止运费/保险重复计入）</h2>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <div class="seg" id="seg">
+        <button data-t="FOB" class="on">FOB 朱拜勒</button>
+        <button data-t="CFR">CFR 宁波</button>
+        <button data-t="CIF">CIF 宁波</button>
+      </div>
+      <span class="mini" id="segHint"></span>
+    </div>
+    <table style="margin-top:14px" id="termTable"></table>
+  </div>
+
+  <!-- ===== 瀑布 ===== -->
+  <div class="card">
+    <h2><span class="n">3</span>成本构成瀑布：从 FOB 到到厂</h2>
+    <div class="wf" id="waterfall"></div>
+    <div class="legend" id="wfLegend"></div>
+  </div>
+
+  <!-- ===== 成本明细 ===== -->
+  <div class="card">
+    <h2><span class="n">4</span>成本明细（每项标注来源与是否计入计税价格）</h2>
+    <table id="costTable"></table>
+    <div class="note">「计入计税价格」列 = 该项是否进入海关完税价格基数。境内费用（港口、报关、仓储、运输）
+      计入到厂成本但<b>不</b>进入计税价格；关税与进口增值税<b>不</b>进入计税价格（但关税进入增值税基数）。</div>
+  </div>
+
+  <!-- ===== 增值税拆分 ===== -->
+  <div class="card">
+    <h2><span class="n">5</span>进口环节增值税：现金支出 ≠ 最终经济成本</h2>
+    <div class="two">
+      <div>
+        <table id="vatTable"></table>
+      </div>
+      <div>
+        <div class="fml">应纳关税 = 完税价格 × 实征关税率<br>
+        增值税基数 = 完税价格 + 关税 + 反倾销税<br>
+        进口环节增值税 = 增值税基数 × 13%<br>
+        最终经济成本 = 现金支出 − 可抵扣进项税额</div>
+        <div class="note" id="vatNote"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 双汇率 ===== -->
+  <div class="card">
+    <h2><span class="n">6</span>两个汇率：市场参考汇率 vs 海关计征汇率</h2>
+    <table id="fxTable"></table>
+    <div class="note">海关计征汇率取自申报日所属月份<b>上一个月的第三个星期三</b>的央行中间价（遇节假日顺延），
+      与市场汇率不同，<b>不能互相替代</b>。本演示的 6.7200 是占位值，请替换为实际公布的汇率。</div>
+  </div>
+
+  <!-- ===== 敏感性 ===== -->
+  <div class="card">
+    <h2><span class="n">7</span>敏感性：汇率 ±3%、海运费 ±20%、数量 0.5–2×</h2>
+    <div class="two">
+      <div>
+        <div style="font-size:12.5px;color:var(--mute);margin-bottom:8px">市场汇率 ±3%（元/吨）</div>
+        <div id="sensFx"></div>
+      </div>
+      <div>
+        <div style="font-size:12.5px;color:var(--mute);margin-bottom:8px">海运费 ±20%（元/吨）</div>
+        <div id="sensFrt"></div>
+      </div>
+    </div>
+    <div style="margin-top:16px;font-size:12.5px;color:var(--mute);margin-bottom:8px">采购数量（元/吨）</div>
+    <div id="sensQty"></div>
+    <div style="margin-top:16px;font-size:12.5px;color:var(--mute);margin-bottom:8px">影响幅度排序（龙卷风图，元/吨）</div>
+    <div id="tornado"></div>
+    <div class="note" id="sensNote"></div>
+  </div>
+
+  <!-- ===== 可替换输入区 ===== -->
+  <div class="card">
+    <h2><span class="n">8</span>替换输入（改成你的数据，全表实时重算）</h2>
+    <div class="note">黄色 = 可改输入；红色 = 关键项未填，会导致「完整到厂成本」显示为待补全。
+      未填项<b>不会</b>被当作 0 参与合计。</div>
+    <div class="grid" id="inputs"></div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn pri" id="btnReset">重置为演示数据</button>
+      <button class="btn" id="btnClearFx">清空海关计征汇率（演示"待补全"）</button>
+      <button class="btn" id="btnNonDeduct">切换增值税不可抵扣</button>
+    </div>
+  </div>
+
+  <!-- ===== 数据来源 ===== -->
+  <div class="card">
+    <h2><span class="n">9</span>数据来源与核验记录</h2>
+    <table id="srcTable"></table>
+  </div>
+
+  <footer>
+    本页为演示测算工具：单价、海运费、保险费率、港杂/仓储为模拟情景，不是实时市场报价；<br>
+    税率与汇率须按实际申报日的官方口径复核。最终金额以海关核定与真实单据为准。
+  </footer>
+</div>
+
+<script>
+/* =====================================================================
+   引擎：与 scripts/landed_cost_engine.py 同一套口径（单位无关，币种可换）
+   规则：未填 = null，绝不当作 0；null 会传播并让状态变成「待补全」
+   ===================================================================== */
+const CUSTOMS_INS_RATE = 0.003;
+
+const INCOTERMS = {
+  EXW:{freight:false,insurance:false,origin:false},
+  FCA:{freight:false,insurance:false,origin:false},
+  FAS:{freight:false,insurance:false,origin:true},
+  FOB:{freight:false,insurance:false,origin:true},
+  CFR:{freight:true, insurance:false,origin:true},
+  CIF:{freight:true, insurance:true, origin:true},
+  CPT:{freight:true, insurance:false,origin:true},
+  CIP:{freight:true, insurance:true, origin:true},
+  DAP:{freight:true, insurance:false,origin:true},
+  DPU:{freight:true, insurance:false,origin:true},
+  DDP:{freight:true, insurance:true, origin:true},
+};
+
+const isNum = v => typeof v === 'number' && isFinite(v);
+const nz = (v, d = 0) => isNum(v) ? v : d;
+
+function compute(p){
+  const gaps = [];
+  const code = p.incoterm;
+  const rule = INCOTERMS[code] || {freight:false,insurance:false,origin:false};
+
+  const qty = p.qty;
+  if (!isNum(qty) || qty <= 0) gaps.push(['qty','数量']);
+  if (!isNum(p.unitPrice)) gaps.push(['unit_price','供应商单价']);
+
+  // ---- 货值（原币） ----
+  const goods = (isNum(p.unitPrice) && isNum(qty)) ? p.unitPrice * qty : null;
+
+  // ---- 包装 ----
+  let packing;
+  if (p.packingIncluded === true) packing = 0;
+  else if (isNum(p.packingExtra)) packing = p.packingExtra;
+  else { packing = null; gaps.push(['packing','包装费（未注明是否含于单价）']); }
+
+  // ---- 起运港 / 出口侧 ----
+  let originCh, exportCl;
+  if (rule.origin) { originCh = 0; exportCl = 0; }
+  else {
+    originCh = isNum(p.originCharges) ? p.originCharges : null;
+    exportCl = isNum(p.exportClearance) ? p.exportClearance : null;
+    if (originCh === null) gaps.push(['origin','起运港费用']);
+    if (exportCl === null) gaps.push(['export','出口侧费用']);
+  }
+
+  // ---- 海运费 ----
+  let freight;
+  if (rule.freight) freight = 0;
+  else if (isNum(p.freightTotal)) freight = p.freightTotal;
+  else if (isNum(p.freightPerMt) && isNum(qty)) freight = p.freightPerMt * qty;
+  else { freight = null; gaps.push(['ocean_freight','国际海运费']); }
+
+  // ---- 保险费 ----
+  let ins, insBasis;
+  const insIncl = (p.insuranceIncluded === null || p.insuranceIncluded === undefined)
+                  ? rule.insurance : p.insuranceIncluded;
+  if (insIncl) { ins = 0; insBasis = '报价已含（' + code + '），不重复计入'; }
+  else if (isNum(p.insuranceAmount)) { ins = p.insuranceAmount; insBasis = '按实际保费'; }
+  else if (isNum(p.insuranceRatePct) && isNum(goods) && isNum(freight)) {
+    ins = (goods + freight) * p.insuranceRatePct / 100 * 1.10;
+    insBasis = '费率 × 110% 投保额';
+  } else { ins = null; insBasis = '未投保/未知 → 海关按（货价+运费）×0.3‰'; }
+
+  // ---- 到岸成本（原币） ----
+  const baseParts = [goods, packing, originCh, exportCl, freight];
+  const baseReady = baseParts.every(isNum);
+  const base = baseReady ? baseParts.reduce((a,b)=>a+b,0) : null;
+
+  // ---- 保险费（计税口径）：有保费用保费；无保费用 0.3‰/(1-0.3‰) ----
+  let insForCustoms = null;
+  if (baseReady) {
+    if (isNum(ins)) insForCustoms = ins;
+    else insForCustoms = base * CUSTOMS_INS_RATE / (1 - CUSTOMS_INS_RATE);
+  }
+  if (insForCustoms === null) gaps.push(['insurance','保险费（含海关口径）']);
+
+  const cifFx = (baseReady && insForCustoms !== null) ? base + insForCustoms : null;
+
+  // ---- 汇率 ----
+  const fxM = p.fxMarket, fxC = p.fxCustoms;
+  if (!isNum(fxM)) gaps.push(['fx_market','市场参考汇率']);
+  if (!isNum(fxC)) gaps.push(['fx_customs','海关计征汇率']);
+
+  // ---- 计税价格与税 ----
+  const cvFx = cifFx;
+  const cvCny = (isNum(cvFx) && isNum(fxC)) ? cvFx * fxC : null;
+  if (cvCny === null && isNum(fxC) === false) { /* 已记录缺口 */ }
+
+  const tariff = p.tariffApplied;
+  if (!isNum(tariff)) gaps.push(['tariff','实征关税税率']);
+  const duty = (isNum(cvCny) && isNum(tariff)) ? cvCny * tariff : null;
+
+  const adRate = nz(p.antiDumpingRate, 0);
+  const ad = (isNum(cvCny) && isNum(tariff)) ? cvCny * tariff * adRate : null;
+
+  const vatRate = nz(p.vatRate, 0.13);
+  const vatBase = (isNum(cvCny) && isNum(duty)) ? cvCny + duty + ad : null;
+  const vatCash = isNum(vatBase) ? vatBase * vatRate : null;
+  const credit = (isNum(vatCash) && p.vatDeductible) ? vatCash : 0;
+  const nonCredit = isNum(vatCash) ? vatCash - credit : null;
+
+  // ---- 境内费用（人民币，不进计税价格） ----
+  const domItems = [
+    ['port','港杂费',p.portCharges],
+    ['broker','报关代理费',p.customsBroker],
+    ['inspect','检验检测费',p.inspection],
+    ['wh','仓储费',p.warehouse],
+    ['truck','国内运输费',p.inlandTruck],
+    ['fin','资金/信用证成本',p.financing],
+  ];
+  const dom = {};
+  let domSum = 0, domReady = true;
+  for (const [k,label,v] of domItems){
+    if (isNum(v)) { dom[k] = v; domSum += v; }
+    else { dom[k] = null; domReady = false; gaps.push([k,label]); }
+  }
+  if (!domReady) domSum = null;
+
+  // ---- 人民币口径各层（市场汇率） ----
+  const toCny = v => isNum(v) ? v * nz(fxM, 0) : null;
+  const cifCnyMarket = (isNum(cifFx) && isNum(fxM)) ? cifFx * fxM : null;
+
+  // ---- 汇总 ----
+  const s1 = cifCnyMarket;                       // 到岸成本
+  const s2 = (isNum(duty) && isNum(ad)) ? duty + ad : null;
+  const s3 = vatCash;
+  const s4 = domSum;
+  const all4 = [s1,s2,s3,s4].every(isNum);
+  const cashOut = all4 ? s1+s2+s3+s4 : null;
+  const finalTot = isNum(cashOut) && isNum(credit) ? cashOut - credit : null;
+  const perTon = (v) => (isNum(v) && isNum(qty) && qty>0) ? v/qty : null;
+
+  // 已知成本小计（下限）
+  const knownParts = [s1,s2,s3,s4].filter(isNum);
+  const known = knownParts.reduce((a,b)=>a+b,0);
+
+  const status = gaps.length === 0 ? '完整' : '待补全';
+
+  return {
+    code, rule, goods, packing, originCh, exportCl, freight, ins, insBasis, insForCustoms,
+    base, cifFx, cvCny, duty, ad, vatBase, vatCash, credit, nonCredit,
+    dom, domSum, toCny, cifCnyMarket,
+    s1, s2, s3, s4, cashOut, finalTot,
+    perTon: {cif: perTon(s1), cash: perTon(cashOut), final: perTon(finalTot)},
+    fxM, fxC, tariff, vatRate, adRate, qty,
+    quotePerTon: perTon(goods),
+    gaps, status, known
+  };
+}
+
+/* ===================== 演示数据 ===================== */
+const BASE = {
+  incoterm:'FOB',
+  unitPrice:640.00, qty:62.5, currency:'USD', priceUnit:'MT',
+  packingIncluded:true, packingExtra:0,
+  originCharges:null, exportClearance:null,
+  freightPerMt:45.00, freightTotal:null,
+  insuranceRatePct:0.55, insuranceAmount:null, insuranceIncluded:null,
+  fxMarket:6.6807, fxCustoms:6.7200,
+  tariffMfn:0.055, tariffApplied:0.055, antiDumpingRate:0,
+  vatRate:0.13, vatDeductible:true,
+  portCharges:600, customsBroker:500, inspection:0, warehouse:3000, inlandTruck:7812.5, financing:0,
+};
+const PRESETS = {
+  FOB:{...BASE, unitPrice:640.00, freightPerMt:45.00, insuranceIncluded:false},
+  CFR:{...BASE, unitPrice:685.00, freightPerMt:null,  insuranceIncluded:false},
+  CIF:{...BASE, unitPrice:685.05, freightPerMt:null,  insuranceIncluded:true},
+};
+const SCEN = {FOB:640.00, CFR:685.00, CIF:685.05};
+
+let state = JSON.parse(JSON.stringify(PRESETS.FOB));
+
+/* ===================== 格式化 ===================== */
+const fm = (v,d=2) => isNum(v) ? v.toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d}) : '待确认';
+const pct = v => isNum(v) ? (v*100).toFixed(2)+'%' : '—';
+const sign = v => (!isNum(v) ? '—' : (v>=0?'+':'') + fm(v));
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ===================== 渲染 ===================== */
+function render(){
+  const r = compute(state);
+  renderStatus(r);
+  renderKpi(r);
+  renderSeg(r);
+  renderTerm(r);
+  renderWaterfall(r);
+  renderCostTable(r);
+  renderVat(r);
+  renderFx(r);
+  renderSens();
+  renderInputs(r);
+  renderSources();
+}
+
+function renderStatus(r){
+  const gapTxt = r.gaps.length
+    ? `<b>待补全项（${r.gaps.length}）：</b>` + r.gaps.map(g=>esc(g[1])).join('、')
+    : '所有关键项均已填写';
+  const el = document.getElementById('statusBar');
+  el.innerHTML = `<div class="card" style="margin-bottom:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <span class="pill ${r.gaps.length?'warn':'ok'}">完整到厂成本：${r.gaps.length?'待补全':'完整'}</span>
+    <span class="mini" style="flex:1;min-width:260px">${gapTxt}</span>
+    <span class="mini">已知成本小计：<b class="mono">¥${fm(r.known)}</b>（下限参考，非完整到厂价）</span>
+  </div>`;
+}
+
+function renderKpi(r){
+  const kp = (k,u,v,d,extra='') => `<div class="kpi ${extra}"><div class="k">${k}</div>
+      <div class="v">${v}</div><div class="u">${u}</div><div class="d">${d}</div></div>`;
+  document.getElementById('kpis').innerHTML =
+    kp('★ 参考到厂成本','元/吨', fm(r.perTon.final), `整票 ¥${fm(r.finalTot)}（已剔除可抵扣增值税）`,'primary') +
+    kp('进口环节现金支出','元/吨', fm(r.perTon.cash), `整票 ¥${fm(r.cashOut)}（含增值税现金）`) +
+    kp('到岸成本（CIF 等值）','元/吨', fm(r.perTon.cif), `整票 ¥${fm(r.s1)}`) +
+    kp('比报价高','元/吨', sign(isNum(r.perTon.final)&&isNum(r.quotePerTon)? r.perTon.final-r.quotePerTon: null),
+       `报价 ${fm(r.quotePerTon)} ${state.currency}/吨 → 到厂含税落地`);
+
+  const note = document.getElementById('kpiNote');
+  const delta = (isNum(r.perTon.final)&&isNum(r.quotePerTon)) ? r.perTon.final-r.quotePerTon : null;
+  if (!isNum(delta)) { note.className='note bad'; note.innerHTML='关键项未填，无法得出完整到厂成本。'; return; }
+  note.className = 'note';
+  note.innerHTML = `报价 <b>${fm(r.quotePerTon)} ${state.currency}/吨</b> 只是货值；到厂实际每吨多付
+    <b>¥${fm(delta)}</b>（${pct(delta/r.quotePerTon/r.fxM)}）。其中最大两块是
+    <b>增值税现金 ¥${fm(r.vatCash/r.qty)}</b>（可抵扣、会回流）与
+    <b>关税 ¥${fm(r.duty/r.qty)}</b>（永久成本）。看真实成本要看左边的「参考到厂成本」，
+    看现金流要看「现金支出」。`;
+}
+
+function renderSeg(r){
+  document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on', b.dataset.t===state.incoterm));
+  const h = document.getElementById('segHint');
+  h.innerHTML = state.incoterm==='FOB'
+    ? 'FOB：运费与保险都<b>不在</b>报价内 → 本测算加海运费 + 保险费'
+    : state.incoterm==='CFR'
+    ? 'CFR：海运费<b>已含</b> → 只加保险费（运费项自动置 0，不重复计费）'
+    : 'CIF：海运费与保险费<b>都已含</b> → 两项都为 0（不重复计费）';
+}
+
+function renderTerm(r){
+  const items = [
+    ['报价术语', `${r.code} · ${state.incoterm==='FOB'?'朱拜勒':'宁波'} · Incoterms 2020`],
+    ['报价单价', `${fm(state.unitPrice)} ${state.currency}/${state.priceUnit}`],
+    ['数量', `${fm(state.qty)} 吨`],
+    ['报价是否含海运费', r.rule.freight ? '是（不再加）' : '否（本次补加）'],
+    ['报价是否含保险费', r.rule.insurance ? '是（不再加）' : '否（本次补加）'],
+    ['本次补加海运费', r.rule.freight ? `0（已含）` : `${fm(r.freight)} ${state.currency}`],
+    ['本次补加保险费', r.rule.insurance ? `0（已含）` : `${fm(r.ins)} ${state.currency}`],
+  ];
+  document.getElementById('termTable').innerHTML =
+    '<tbody>' + items.map(([k,v])=>`<tr><td>${k}</td><td colspan="3" style="text-align:right">${v}</td></tr>`).join('') + '</tbody>';
+}
+
+function renderWaterfall(r){
+  const parts = [
+    ['货值', r.toCny(r.goods), '#12263A'],
+    ['包装', r.toCny(r.packing), '#1E3A5F'],
+    ['起运港', r.toCny(r.originCh), '#334155'],
+    ['出口侧', r.toCny(r.exportCl), '#475569'],
+    ['海运费', r.toCny(r.freight), '#0E7C86'],
+    ['保险费', r.toCny(r.ins), '#0B5F67'],
+    ['关税', r.duty, '#B45309'],
+    ['增值税现金', r.vatCash, '#D97706'],
+    ['境内费用', r.domSum, '#7C3AED'],
+  ].filter(p=>isNum(p[1]) && p[1] > 0);
+  const total = parts.reduce((a,b)=>a+b[1],0);
+  const bar = document.getElementById('waterfall');
+  if (!parts.length || total<=0){ bar.innerHTML='<div class="mini">待补全，暂无构成图</div>'; return; }
+  bar.innerHTML = `<div class="wfbar">` +
+    parts.map(([n,v,c])=>`<div style="width:${(v/total*100).toFixed(2)}%;background:${c}" title="${n} ¥${fm(v)}"></div>`).join('') +
+    `</div>` +
+    `<table><thead><tr><th>成本项</th><th>金额（元，整票）</th><th>占比</th><th>元/吨</th><th>是否进计税价格</th></tr></thead><tbody>` +
+    parts.map(([n,v,c])=>{
+      const inCv = ['货值','包装','起运港','出口侧','海运费','保险费'].includes(n);
+      return `<tr><td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c};margin-right:7px"></span>${n}</td>
+        <td class="mono">${fm(v)}</td><td class="mono">${pct(v/total)}</td>
+        <td class="mono">${fm(v/r.qty)}</td>
+        <td>${inCv?'<span class="pill ok">进入</span>':'<span class="pill gray">不进入</span>'}</td></tr>`;
+    }).join('') +
+    `<tr class="sum"><td>现金支出合计</td><td class="mono">${fm(total)}</td><td class="mono">100%</td>
+       <td class="mono">${fm(total/r.qty)}</td><td></td></tr></tbody></table>`;
+  const deduct = isNum(r.credit) && r.credit>0;
+  document.getElementById('wfLegend').innerHTML =
+    `<span>合计为「现金支出」口径；${deduct?`其中增值税现金 <b>¥${fm(r.credit)}</b> 可抵扣，最终经济成本为 <b>¥${fm(r.finalTot)}</b>`:'增值税不可抵扣，全额进入成本'}</span>`;
+}
+
+function renderCostTable(r){
+  const cur = state.currency;
+  const row = (lvl,name,fxVal,cnyVal,inCv,src) => {
+    const badges = {user:'s-user',query:'s-query',calc:'s-calc',sim:'s-sim',todo:'s-todo'}[src[0]];
+    return `<tr class="${lvl}"><td>${name}<span class="src ${badges}">${src[1]}</span></td>
+      <td class="mono">${isNum(fxVal)?fm(fxVal):'待确认'}</td>
+      <td class="mono">${isNum(cnyVal)?fm(cnyVal):'待确认'}</td>
+      <td class="mono">${isNum(cnyVal)&&isNum(r.qty)?fm(cnyVal/r.qty):'—'}</td>
+      <td class="mono">${inCv}</td></tr>`;
+  };
+  const html = `
+  <thead><tr><th>成本项</th><th>${cur}</th><th>人民币</th><th>元/吨</th><th>进计税价格</th></tr></thead>
+  <tbody>
+    <tr><td colspan="5" style="background:#F1F5F9;font-weight:700;color:#0E7C86">第一层 · 货值 → 到岸</td></tr>
+    ${row('', '货值（单价×数量）', r.goods, r.toCny(r.goods), '是', 'calc')}
+    ${row('lv2', '包装费', r.packing, r.toCny(r.packing), '是', r.packing===0?'query':'user')}
+    ${row('lv2', '起运港费用', r.originCh, r.toCny(r.originCh), '是', 'query')}
+    ${row('lv2', '出口侧费用', r.exportCl, r.toCny(r.exportCl), '是', 'query')}
+    ${row('lv2', '国际海运费', r.freight, r.toCny(r.freight), '是', 'sim')}
+    ${row('lv2', '保险费（实际）', r.ins, r.toCny(r.ins), '是', 'sim')}
+    ${`<tr class="sum"><td>到岸成本（CIF 等值，市场汇率）</td><td class="mono">${fm(r.cifFx)}</td>
+        <td class="mono">${fm(r.s1)}</td><td class="mono">${fm(r.perTon.cif)}</td><td></td></tr>`}
+    <tr><td colspan="5" style="background:#F1F5F9;font-weight:700;color:#0E7C86">第二层 · 进口税费（海关口径）</td></tr>
+    ${`<tr><td>关税计税价格（完税价格）<span class="src s-calc">计算推导</span></td><td class="mono">${fm(r.cifFx)}</td>
+        <td class="mono">${fm(r.cvCny)}</td><td class="mono">${fm(isNum(r.cvCny)?r.cvCny/r.qty:null)}</td><td>基数</td></tr>`}
+    ${`<tr><td>应纳关税（${pct(r.tariff)}）<span class="src s-calc">计算推导</span>
+        <span class="src s-query">税率：2026税则 MFN 5.5%</span></td>
+        <td class="mono">${fm(isNum(r.duty)&&isNum(r.fxC)?r.duty/r.fxC:null)}</td><td class="mono">${fm(r.duty)}</td>
+        <td class="mono">${fm(isNum(r.duty)?r.duty/r.qty:null)}</td><td>否</td></tr>`}
+    ${`<tr class="lv2"><td>反倾销/反补贴税（${pct(r.adRate)}）</td><td class="mono">${fm(isNum(r.ad)&&isNum(r.fxC)?r.ad/r.fxC:null)}</td>
+        <td class="mono">${fm(r.ad)}</td><td class="mono">${fm(isNum(r.ad)?r.ad/r.qty:null)}</td><td>否</td></tr>`}
+    ${`<tr><td>组成计税价格（增值税基数）</td><td></td><td class="mono">${fm(r.vatBase)}</td>
+        <td class="mono">${fm(isNum(r.vatBase)?r.vatBase/r.qty:null)}</td><td>基数</td></tr>`}
+    ${`<tr class="key"><td>进口环节增值税（${pct(r.vatRate)}）<span class="src s-calc">计算推导</span></td><td></td>
+        <td class="mono">${fm(r.vatCash)}</td><td class="mono">${fm(isNum(r.vatCash)?r.vatCash/r.qty:null)}</td><td>否</td></tr>`}
+    <tr><td colspan="5" style="background:#F1F5F9;font-weight:700;color:#0E7C86">第三层 · 口岸与境内物流（人民币，不进计税价格）</td></tr>
+    ${row('lv2','港杂费',null,r.dom.port,'否','sim')}
+    ${row('lv2','报关代理费',null,r.dom.broker,'否','query')}
+    ${row('lv2','检验检测费',null,r.dom.inspect,'否','sim')}
+    ${row('lv2','仓储费',null,r.dom.wh,'否','sim')}
+    ${row('lv2','国内运输费（宁波→苏州）',null,r.dom.truck,'否','sim')}
+    ${row('lv2','资金/信用证成本',null,r.dom.fin,'否','user')}
+    ${`<tr class="sum"><td>境内费用合计</td><td></td><td class="mono">${fm(r.domSum)}</td>
+        <td class="mono">${fm(isNum(r.domSum)?r.domSum/r.qty:null)}</td><td></td></tr>`}
+    <tr class="key"><td>整票现金支出（含可抵扣增值税）</td><td></td><td class="mono">${fm(r.cashOut)}</td>
+        <td class="mono">${fm(r.perTon.cash)}</td><td></td></tr>
+    <tr class="key"><td>★ 最终经济成本（现金支出 − 可抵扣进项）</td><td></td><td class="mono">${fm(r.finalTot)}</td>
+        <td class="mono">${fm(r.perTon.final)}</td><td></td></tr>
+  </tbody>`;
+  document.getElementById('costTable').innerHTML = html;
+}
+
+function renderVat(r){
+  const rows = [
+    ['关税计税价格（完税价格）', fm(r.cvCny), '海关按 CIF 口径核定'],
+    ['＋ 应纳关税', fm(r.duty), '永久成本，不可抵扣'],
+    ['＋ 反倾销/反补贴税', fm(r.ad), '如有'],
+    ['＝ 组成计税价格', fm(r.vatBase), '增值税计征基数'],
+    ['× 增值税率', pct(r.vatRate), '一般货物 13%'],
+    ['＝ 进口环节增值税（现金支出）', fm(r.vatCash), '申报时须实际缴纳'],
+    ['其中：可抵扣进项税额', fm(r.credit), '取得海关缴款书后抵扣'],
+    ['其中：不可抵扣（进成本）', fm(r.nonCredit), '一般纳税人且应税用途 → 0'],
+  ];
+  document.getElementById('vatTable').innerHTML =
+    '<thead><tr><th>项目</th><th>金额（元）</th><th>说明</th></tr></thead><tbody>' +
+    rows.map(([a,b,c],i)=>`<tr class="${i===5?'key':''}"><td>${a}</td><td class="mono">${b}</td>
+      <td style="text-align:left;font-size:12px;color:#64748B">${c}</td></tr>`).join('') +
+    `<tr class="key"><td>最终经济成本（现金支出 − 可抵扣）</td><td class="mono">${fm(r.finalTot)}</td>
+      <td style="text-align:left;font-size:12px">这才是真实成本口径</td></tr></tbody>`;
+
+  const n = document.getElementById('vatNote');
+  if (r.vatDeductible){
+    n.className='note good';
+    n.innerHTML = `增值税 <b>¥${fm(r.vatCash)}</b> 是现金流出，但作为进项税额可全额抵扣 →
+      <b>不计入最终经济成本</b>。若把它算进成本，每吨会虚高 <b>¥${fm(r.vatCash/r.qty)}</b>。`;
+  } else {
+    n.className='note bad';
+    n.innerHTML = `当前设置为<b>不可抵扣</b>：增值税 <b>¥${fm(r.vatCash)}</b> 全额进入成本，
+      到厂成本升至 <b>¥${fm(r.perTon.final)}/吨</b>。`;
+  }
+}
+
+function renderFx(r){
+  const rows = [
+    ['市场参考汇率', 'USD/CNY', fm(r.fxM,4), 'ECB 参考汇率交叉（2026-10-19）', '货值、运费的折算与购汇'],
+    ['海关计征汇率', 'USD/CNY', fm(r.fxC,4), '申报日所属月份上一月第三个星期三的央行中间价', '完税价格、关税与增值税的折算'],
+  ];
+  document.getElementById('fxTable').innerHTML =
+    '<thead><tr><th>汇率类型</th><th>币种</th><th>取值</th><th>口径来源</th><th>影响哪些数</th></tr></thead><tbody>' +
+    rows.map(([a,b,c,d,e])=>`<tr><td>${a}</td><td class="mono">${b}</td><td class="mono"><b>${c}</b></td>
+      <td style="text-align:left;font-size:12px">${d}</td><td style="text-align:left;font-size:12px">${e}</td></tr>`).join('') +
+    '</tbody>';
+}
+
+/* ---- 敏感性：现场重算，不用近似 ---- */
+function withPatch(patch){ return Object.assign(JSON.parse(JSON.stringify(state)), patch); }
+
+function sensRow(label, value, base, note){
+  const d = isNum(value) && isNum(base) ? value-base : null;
+  const p = isNum(d) && isNum(base) && base!==0 ? d/base : null;
+  const cls = !isNum(d) ? '' : (d>0?'color:#B91C1C':'color:#15803D');
+  return `<tr><td>${label}</td><td class="mono">${fm(value)}</td>
+    <td class="mono" style="${cls}">${sign(d)}</td><td class="mono" style="${cls}">${p===null?'—':sign(p*100)+'%'}</td>
+    <td style="text-align:left;font-size:11.5px;color:#64748B">${note||''}</td></tr>`;
+}
+function sensTable(head, rows){
+  return `<table><thead><tr><th>情景</th><th>元/吨</th><th>Δ 元/吨</th><th>Δ%</th><th>说明</th></tr></thead>
+    <tbody>${rows.join('')}</tbody></table>`;
+}
+
+function renderSens(){
+  const base = compute(state).perTon.final;
+  // 汇率 ±3%：市场汇率与海关计征汇率同向
+  const fxRows = [-0.03,0,0.03].map(k=>{
+    const p = withPatch({fxMarket: isNum(state.fxMarket)? state.fxMarket*(1+k): null,
+                         fxCustoms: isNum(state.fxCustoms)? state.fxCustoms*(1+k): null});
+    return sensRow(`汇率 ${k>=0?'+':''}${(k*100).toFixed(0)}%`, compute(p).perTon.final, base,
+      k===0?'基准情景':'市场汇率与计征汇率同步变动');
+  });
+  document.getElementById('sensFx').innerHTML = sensTable('fx', fxRows);
+
+  // 海运费 ±20%
+  const frtRows = [-0.2,-0.1,0,0.1,0.2].map(k=>{
+    const p = withPatch({freightPerMt: isNum(state.freightPerMt)? state.freightPerMt*(1+k): null});
+    return sensRow(`海运费 ${k>=0?'+':''}${(k*100).toFixed(0)}%`, compute(p).perTon.final, base,
+      k===0?'基准情景':'运费被关税放大');
+  });
+  document.getElementById('sensFrt').innerHTML = sensTable('frt', frtRows);
+
+  // 数量
+  const qtyRows = [0.5,0.75,1,1.5,2].map(k=>{
+    const p = withPatch({qty: isNum(state.qty)? state.qty*k : null});
+    return sensRow(`数量 ×${k}`, compute(p).perTon.final, base, k===1?'基准情景':'固定费用按票摊薄');
+  });
+  document.getElementById('sensQty').innerHTML = sensTable('qty', qtyRows);
+
+  // 龙卷风：单因素 ±10%（汇率 ±3%）
+  const factors = [];
+  const pushF = (name, low, high) => {
+    const l = compute(low).perTon.final, h = compute(high).perTon.final;
+    if (isNum(l) && isNum(h) && isNum(base)) factors.push([name, l-base, h-base, Math.abs(h-l)]);
+  };
+  pushF('市场汇率 ±3%', withPatch({fxMarket: state.fxMarket*0.97}), withPatch({fxMarket: state.fxMarket*1.03}));
+  pushF('海关计征汇率 ±3%', withPatch({fxCustoms: state.fxCustoms*0.97}), withPatch({fxCustoms: state.fxCustoms*1.03}));
+  pushF('海运费 ±10%', withPatch({freightPerMt: state.freightPerMt? state.freightPerMt*0.9:null}),
+        withPatch({freightPerMt: state.freightPerMt? state.freightPerMt*1.1:null}));
+  pushF('数量 ±50%', withPatch({qty: state.qty*0.5}), withPatch({qty: state.qty*1.5}));
+  factors.sort((a,b)=>b[3]-a[3]);
+  const maxSpan = Math.max(...factors.map(f=>f[3]), 1);
+  document.getElementById('tornado').innerHTML = factors.map(([n,l,h,span])=>{
+    const w = v => Math.abs(v)/maxSpan*50;
+    const left = l<0 ? (50-w(l)) : 50;
+    return `<div class="bar-row"><span>${n}</span>
+      <span class="bar-track">
+        <span style="left:${Math.min(left,50)}%;width:${w(l)}%;background:#15803D"></span>
+        <span style="left:50%;width:${w(h)}%;background:#B91C1C"></span>
+      </span>
+      <span class="mono" style="font-size:11.5px;text-align:right">${sign(l)}/${sign(h)}</span></div>`;
+  }).join('') + `<div class="mini" style="margin-top:6px">绿色 = 有利方向，红色 = 不利方向；数字为 Δ 元/吨。</div>`;
+
+  const n = document.getElementById('sensNote');
+  const fxElast = (()=>{
+    const b = compute(state).perTon.final;
+    const up = compute(withPatch({fxMarket: state.fxMarket*1.01})).perTon.final;
+    return isNum(b)&&isNum(up) ? up-b : null;
+  })();
+  n.className='note';
+  n.innerHTML = `汇率每变动 1%，到厂成本约变动 <b>¥${fm(fxElast)}/吨</b>
+    （弹性 ${isNum(fxElast)&&isNum(base)?(fxElast/base*100).toFixed(2):'—'}）。
+    <b>注意</b>：在增值税<b>可抵扣</b>的情况下，汇率上涨对最终成本的影响小于 1%——
+    因为增值税现金会随汇率同比例上升、又同比例抵扣掉，真正留下来的只有被关税率放大的那部分。
+    若增值税不可抵扣，汇率弹性会明显大于 1。`;
+}
+
+/* ---- 输入区 ---- */
+const FIELDS = [
+  ['unitPrice','供应商单价（原币/计价单位）','number',2,'黄色输入；模拟情景'],
+  ['qty','数量（吨）','number',3,''],
+  ['freightPerMt','海运费（原币/吨）','number',2,'仅 FOB/EXW/FCA 需要；CFR/CIF 自动忽略'],
+  ['insuranceRatePct','保险费率（%）','number',4,'保费 =（货值+运费）× 费率 × 110%'],
+  ['fxMarket','市场参考汇率','number',4,'用于货值/运费折算'],
+  ['fxCustoms','海关计征汇率','number',4,'留空 → 整个到厂成本显示待补全'],
+  ['tariffApplied','实征关税税率','number',4,'如 0.055 = 5.5%'],
+  ['vatRate','进口环节增值税率','number',4,'一般 0.13'],
+  ['portCharges','港杂费（元）','number',2,''],
+  ['customsBroker','报关代理费（元）','number',2,''],
+  ['warehouse','仓储费（元）','number',2,''],
+  ['inlandTruck','国内运输费（元）','number',2,'0.5 元/吨·km × 250km × 62.5t'],
+];
+
+function renderInputs(r){
+  document.getElementById('inputs').innerHTML = FIELDS.map(([k,label,type,dec,hint])=>{
+    const v = state[k];
+    const blank = !isNum(v) || v === null;
+    return `<div class="fld"><label>${label}</label>
+      <input data-k="${k}" type="number" step="any" value="${isNum(v)?v:''}" class="${blank?'blank':''}">
+      <div class="hint">${hint||''}</div></div>`;
+  }).join('') + `
+    <div class="fld"><label>增值税是否可抵扣</label>
+      <select data-k="vatDeductible">
+        <option value="true" ${state.vatDeductible?'selected':''}>是（一般纳税人 · 应税用途）</option>
+        <option value="false" ${!state.vatDeductible?'selected':''}>否（进成本）</option>
+      </select><div class="hint">这决定增值税进不进成本</div></div>`;
+
+  document.querySelectorAll('#inputs input,#inputs select').forEach(el=>{
+    el.addEventListener('input', ()=>{
+      const k = el.dataset.k;
+      if (k === 'vatDeductible') state[k] = el.value === 'true';
+      else {
+        const raw = el.value.trim();
+        state[k] = raw === '' ? null : Number(raw);
+      }
+      render();
+    });
+  });
+}
+
+const SRC = [
+  ['HS 编码','29053100','公开查询','2026年进出口税则','2026-10-20'],
+  ['最惠国关税','5.5%','公开查询','2026年进出口税则 29053100','2026-07-15'],
+  ['普通税率','30%','公开查询','原产地不明时适用，不适用暂定税率','2026-07-15'],
+  ['协定税率（沙特）','不适用','公开查询','中—海合会自贸协定未生效','2026-10-20'],
+  ['进口增值税','13%','公开查询','一般货物','2026-10-20'],
+  ['保险费 0.3‰','（货价+运费）×0.3‰','公开查询','《确定计税价格办法》第36条','2026-10-20'],
+  ['市场参考汇率','6.6807','公开查询','ECB 交叉（frankfurter.app）','2026-10-19'],
+  ['海关计征汇率','6.7200（占位）','待确认','须替换为申报日对应上一月第三个星期三中间价','—'],
+  ['FOB 报价','640.00 USD/MT','模拟情景','演示建模假设，非实时市场报价','—'],
+  ['海运费','45.00 USD/MT','模拟情景','朱拜勒→宁波；非货代实盘','—'],
+  ['保险费率','0.55%','模拟情景','按 110% 投保额','—'],
+  ['港杂费','600 元/票','模拟情景','结构参照宁波港口岸收费公示','—'],
+  ['报关代理费','500 元/票','公开区间','宁波港公示 100–500 元/票','2026-10-20'],
+  ['仓储费','3000 元/票','模拟情景','免箱期内堆存','—'],
+  ['国内运输','7812.5 元/票','公开费率×假设','0.5 元/吨·km×250km×62.5t','2026-10-20'],
+];
+function renderSources(){
+  const color = t => t==='待确认' ? 'warn' : (t.includes('模拟')||t.includes('区间')||t.includes('假设') ? 'sim' : 'ok');
+  document.getElementById('srcTable').innerHTML =
+    '<thead><tr><th>项目</th><th>取值</th><th>类型</th><th>来源 / 依据</th><th>核验日</th></tr></thead><tbody>' +
+    SRC.map(([a,b,t,d,e])=>`<tr><td>${a}</td><td class="mono" style="text-align:right">${b}</td>
+      <td><span class="pill ${color(t)}">${t}</span></td>
+      <td style="text-align:left;font-size:12px">${d}</td>
+      <td class="mono" style="text-align:right;font-size:12px">${e}</td></tr>`).join('') + '</tbody>';
+}
+
+/* ---- 交互 ---- */
+document.querySelectorAll('#seg button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    state = JSON.parse(JSON.stringify(PRESETS[b.dataset.t]));
+    render();
+  });
+});
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  state = JSON.parse(JSON.stringify(PRESETS[state.incoterm] || PRESETS.FOB));
+  render();
+});
+document.getElementById('btnClearFx').addEventListener('click', ()=>{
+  state.fxCustoms = null; render();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+document.getElementById('btnNonDeduct').addEventListener('click', ()=>{
+  state.vatDeductible = !state.vatDeductible; render();
+});
+
+render();
+</script>
+</body>
+</html>

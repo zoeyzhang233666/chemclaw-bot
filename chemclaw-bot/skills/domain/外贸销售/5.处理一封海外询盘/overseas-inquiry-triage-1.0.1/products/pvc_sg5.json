@@ -1,0 +1,40 @@
+{
+  "id": "pvc_sg5",
+  "name_cn": "PVC 树脂（SG-5）",
+  "name_en": "PVC Resin SG-5",
+  "synonyms": ["polyvinyl chloride", "PVC SG5", "suspension PVC", "聚氯乙烯", "PVC粉"],
+  "other_languages": {
+    "vi": ["nhựa PVC", "bột PVC"],
+    "id": ["resin PVC"],
+    "es": ["resina de PVC"],
+    "pt": ["resina de PVC"],
+    "ar": ["راتنج PVC"]
+  },
+  "cas": "9002-86-2",
+  "ec": null,
+  "un": null,
+  "hs_candidates": ["39041000"],
+  "hs_note": "3904.10（未混合其他物质的聚氯乙烯）为常见候选，需报关行确认。",
+  "grades": [
+    {"code": "sg5", "cn": "SG-5（通用型）", "typical": {"K_value": "66–68", "polymerization": "1000±50"}},
+    {"code": "sg3", "cn": "SG-3", "typical": {"K_value": "71–73"}},
+    {"code": "sg8", "cn": "SG-8", "typical": {"K_value": "55–59"}}
+  ],
+  "typical_specs": {
+    "K_value": {"unit": "-", "value": "66–68"},
+    "viscosity_number": {"unit": "ml/g", "value": "113–118"},
+    "volatile": {"unit": "%", "value": "≤0.4"},
+    "apparent_density": {"unit": "g/ml", "value": "≥0.45"},
+    "residue_63um": {"unit": "%", "value": "≤2.0"}
+  },
+  "applications": ["pipe fitting", "profile", "cable", "film", "artificial leather"],
+  "packing_options": ["25 kg PP woven bag", "500 kg jumbo bag"],
+  "sales_notes": [
+    "K 值与聚合度是核心，客户常只写 SG-5，需确认下游工艺（管材/型材）。",
+    "PVC 属反倾销高发产品（印度、土耳其、巴西等），报价前要核实目的国反倾销状态。"
+  ],
+  "do_not_assume": [
+    "不能默认 SG-5 通用型",
+    "不能对反倾销税率作结论"
+  ]
+}

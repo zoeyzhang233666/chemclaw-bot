@@ -1,0 +1,95 @@
+{
+  "format": "xlsx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "sheets": [
+      {
+        "name": "00_\u5c01\u9762\u4e0e\u8bf4\u660e",
+        "cells": 66,
+        "formulas": 0
+      },
+      {
+        "name": "01_\u4ea7\u54c1\u8eab\u4efd",
+        "cells": 75,
+        "formulas": 0
+      },
+      {
+        "name": "02_HS\u5019\u9009",
+        "cells": 48,
+        "formulas": 0
+      },
+      {
+        "name": "03_\u4e2d\u56fd\u51fa\u53e3",
+        "cells": 92,
+        "formulas": 0
+      },
+      {
+        "name": "04_\u76ee\u7684\u56fd\u8fdb\u53e3",
+        "cells": 105,
+        "formulas": 0
+      },
+      {
+        "name": "05_\u8fd0\u8f93\u5371\u9669\u5c5e\u6027",
+        "cells": 116,
+        "formulas": 0
+      },
+      {
+        "name": "06_\u6807\u7b7e\u4e0e\u5305\u88c5",
+        "cells": 44,
+        "formulas": 0
+      },
+      {
+        "name": "07_\u5355\u8bc1\u6e05\u5355",
+        "cells": 122,
+        "formulas": 0
+      },
+      {
+        "name": "08_\u89d2\u8272\u5206\u5de5",
+        "cells": 110,
+        "formulas": 0
+      },
+      {
+        "name": "09_\u6cd5\u89c4\u7d22\u5f15",
+        "cells": 203,
+        "formulas": 0
+      },
+      {
+        "name": "10_\u65f6\u6548\u6027\u6838\u67e5",
+        "cells": 62,
+        "formulas": 0
+      },
+      {
+        "name": "11_\u6838\u9a8c\u72b6\u6001\u6c47\u603b",
+        "cells": 192,
+        "formulas": 0
+      },
+      {
+        "name": "12_\u98ce\u9669\u4e0e\u5e38\u89c1\u8bef\u533a",
+        "cells": 54,
+        "formulas": 0
+      },
+      {
+        "name": "13_\u5f85\u786e\u8ba4\u4e8b\u9879",
+        "cells": 94,
+        "formulas": 0
+      },
+      {
+        "name": "14_\u6838\u5bf9\u6e05\u5355",
+        "cells": 127,
+        "formulas": 0
+      },
+      {
+        "name": "15_\u586b\u5199\u6837\u4f8b",
+        "cells": 67,
+        "formulas": 0
+      }
+    ],
+    "formulas_evaluated": false
+  }
+}

@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#070b14; --panel:rgba(255,255,255,.038); --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+  --txt:#e9eefb; --txt2:#a5b4cf; --txt3:#71809c;
+  --up:#ff5f6d; --down:#19c37d; --flat:#8b9ab5;
+  --amber:#f6b73c; --amber2:#ffd166; --blue:#4da3ff; --violet:#9b8cff; --cyan:#38d6e0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--txt);
+  font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100%}
+body{padding:0 0 70px;
+  background:
+   radial-gradient(1300px 680px at 8% -10%, rgba(77,163,255,.14), transparent 60%),
+   radial-gradient(1100px 600px at 92% -6%, rgba(246,183,60,.10), transparent 62%),
+   radial-gradient(900px 700px at 50% 108%, rgba(25,195,125,.07), transparent 60%),
+   linear-gradient(180deg,#070b14,#080d18 55%,#060a12);}
+.wrap{max-width:1560px;margin:0 auto;padding:0 26px}
+a{color:var(--blue);text-decoration:none}
+.mono{font-family:"JetBrains Mono",Consolas,"SF Mono",monospace;font-variant-numeric:tabular-nums}
+header{padding:30px 0 18px}
+.topline{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--txt3);flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;
+  border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--txt2)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--down);box-shadow:0 0 0 4px rgba(25,195,125,.14)}
+h1{font-size:36px;letter-spacing:-.5px;margin:15px 0 10px;font-weight:800}
+h1 .thin{font-weight:300;color:var(--txt2)}
+.sub{color:var(--txt2);font-size:14.5px;line-height:1.75;max-width:1040px}
+.warnbar{margin-top:14px;display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-radius:12px;
+  border:1px solid rgba(246,183,60,.28);background:linear-gradient(90deg,rgba(246,183,60,.10),rgba(246,183,60,.03));
+  font-size:13px;color:#e9d6a8;line-height:1.6}
+.warnbar .ic{color:var(--amber);font-weight:800;flex:none}
+.summarybar{margin-top:12px;padding:12px 16px;border-radius:12px;border:1px solid rgba(77,163,255,.25);
+  background:linear-gradient(90deg,rgba(77,163,255,.10),rgba(77,163,255,.02));font-size:13.2px;line-height:1.7;color:#cfe0ff}
+.ctrl{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(7,11,20,.85);
+  border-bottom:1px solid var(--line);padding:11px 0;margin-top:16px}
+.ctrlrow{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.cgroup{display:flex;align-items:center;gap:8px}
+.clabel{font-size:12px;color:var(--txt3)}
+.pills{display:flex;gap:5px;background:var(--panel);padding:4px;border-radius:10px;border:1px solid var(--line);flex-wrap:wrap}
+.pbtn{border:0;background:transparent;color:var(--txt2);font-size:12.5px;padding:6px 11px;border-radius:7px;cursor:pointer;
+  font-family:inherit;transition:.18s;white-space:nowrap}
+.pbtn:hover{color:var(--txt);background:rgba(255,255,255,.05)}
+.pbtn.on{background:#243452;color:#fff}
+.ghost{border:1px solid var(--line2);background:transparent;color:var(--txt2);font-size:12.5px;padding:7px 13px;
+  border-radius:8px;cursor:pointer;font-family:inherit}
+.ghost:hover{color:#fff;border-color:#4a5f86}
+.kgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:20px 0 6px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.022));
+  border:1px solid var(--line);border-radius:15px;padding:16px 18px;position:relative;overflow:hidden}
+.card .lab{font-size:11.5px;color:var(--txt3);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.card .val{font-size:30px;font-weight:800;letter-spacing:-1px;margin:8px 0 4px;font-family:Consolas,monospace}
+.card .unit{font-size:12.5px;color:var(--txt3);font-weight:400;margin-left:4px;font-family:inherit}
+.card .meta{font-size:11.5px;color:#9fb0d0;line-height:1.6}
+.card .foot{font-size:10.8px;color:var(--txt3);margin-top:7px;border-top:1px dashed var(--line);padding-top:7px;line-height:1.55}
+.card.hero{border-color:rgba(255,209,102,.30);background:linear-gradient(180deg,rgba(255,209,102,.10),rgba(255,255,255,.02))}
+.card.gap{border-color:rgba(255,95,109,.30);background:linear-gradient(180deg,rgba(255,95,109,.08),rgba(255,255,255,.015))}
+.tagpill{font-size:10.5px;padding:2px 7px;border-radius:5px;border:1px solid;white-space:nowrap}
+.tp-hi{color:#7ef0bb;border-color:rgba(126,240,187,.4)}
+.tp-mid{color:#ffd166;border-color:rgba(255,209,102,.4)}
+.tp-gap{color:#ff9ea5;border-color:rgba(255,158,165,.4)}
+.tp-neu{color:#9fb0d0;border-color:rgba(159,176,208,.35)}
+.up2{color:var(--up)} .dn{color:var(--down)} .fl{color:var(--flat)}
+section{margin-top:26px}
+.shead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:11px;flex-wrap:wrap}
+.shead h2{font-size:18.5px;font-weight:700;display:flex;align-items:center;gap:10px}
+.shead h2 .n{font-size:11.5px;color:var(--txt3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px;font-weight:600}
+.shead .desc{font-size:12.2px;color:var(--txt3);line-height:1.65;max-width:900px}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  border:1px solid var(--line);border-radius:15px;padding:16px 18px}
+.chartcard{padding:14px 14px 10px}
+#chart{width:100%;height:430px}
+#spreadChart{width:100%;height:300px}
+#costChart{width:100%;height:300px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--txt3);margin-top:6px;padding-left:4px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.hint{font-size:11.5px;color:var(--txt3);margin-top:8px;line-height:1.6}
+.kbd{display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.08);margin-right:5px}
+.tblwrap{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;font-size:12.4px;min-width:760px}
+th{position:sticky;top:0;background:#0d1524;color:var(--txt3);font-weight:600;text-align:left;padding:9px 10px;
+  border-bottom:1px solid var(--line2);white-space:nowrap;font-size:11.8px}
+td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top}
+tbody tr:hover{background:rgba(255,255,255,.03)}
+td.num{font-family:Consolas,monospace;white-space:nowrap}
+.src{display:block;font-size:10.6px;color:var(--txt3);margin-top:3px;line-height:1.5}
+.big{font-size:15px;font-weight:700}
+.tag{font-size:10.8px;padding:1px 6px;border-radius:4px;border:1px solid}
+.t-green{color:#7ef0bb;border-color:rgba(126,240,187,.35)} .t-blue{color:#8ec5ff;border-color:rgba(142,197,255,.35)}
+.t-amber{color:#ffd166;border-color:rgba(255,209,102,.35)} .t-red{color:#ff9ea5;border-color:rgba(255,158,165,.35)}
+.spreadnote{font-size:11.8px;color:var(--txt3);line-height:1.7;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.mgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.mcard{border:1px solid var(--line);border-radius:12px;padding:14px 15px;background:rgba(255,255,255,.025)}
+.mcard h4{font-size:13px;margin-bottom:7px;color:#e8f0ff;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.mcard p{font-size:12px;color:var(--txt2);line-height:1.72}
+.chainrow{display:grid;grid-template-columns:150px 1fr 120px;gap:12px;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.06);
+  align-items:start;font-size:12.4px}
+.chainrow .nm{font-weight:650}
+.chainrow .rt{font-family:Consolas,monospace;color:#9fb0d0;text-align:right}
+.chainrow.bad{background:rgba(255,95,109,.06)}
+.dir{font-size:11px;padding:1px 7px;border-radius:5px;border:1px solid;margin-left:6px}
+.tli{position:relative;padding:0 0 20px 24px;border-left:1px solid var(--line2);margin-left:8px}
+.tli:last-child{border-left-color:transparent}
+.tli .pt{position:absolute;left:-5px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--amber)}
+.tli .d{font-size:11.5px;color:var(--txt3);font-family:Consolas,monospace}
+.tli .t{font-size:13.4px;font-weight:650;margin:4px 0 5px}
+.tli .x{font-size:12.2px;color:#b9c7df;line-height:1.75}
+.tli .s{font-size:11px;color:var(--txt3);margin-top:6px;line-height:1.55}
+.tli .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.chip{font-size:10.8px;padding:2px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--txt2)}
+.tlifilter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.fbtn{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);background:transparent;
+  color:var(--txt2);cursor:pointer;font-family:inherit}
+.fbtn.on{background:#243452;color:#fff;border-color:#3b527d}
+.qbox{border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:12px 14px;background:rgba(255,255,255,.022);margin-bottom:10px}
+.qbox .q{font-size:13px;font-weight:650;color:#ffd166;margin-bottom:6px}
+.qbox .a{font-size:12.5px;color:#c3cfe6;line-height:1.78}
+.srclist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.srclist a{display:block;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:12px;color:#cfdaf0;
+  background:rgba(255,255,255,.02);line-height:1.5}
+.srclist a span{display:block;font-size:10.6px;color:var(--txt3);margin-top:3px}
+.empty{padding:26px;text-align:center;color:var(--txt3);font-size:12.5px}
+.mask{position:fixed;inset:0;background:rgba(3,6,12,.66);opacity:0;pointer-events:none;transition:.2s;z-index:60}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(520px,94vw);background:#0a1120;border-left:1px solid var(--line2);
+  transform:translateX(102%);transition:.26s;z-index:70;overflow-y:auto;padding:22px 22px 60px}
+.drawer.on{transform:none}
+.drawer .k{font-size:11.5px;color:var(--amber);letter-spacing:.6px}
+.drawer h3{font-size:18px;margin:8px 0 6px;line-height:1.45}
+.drawer .m{font-size:12px;color:var(--txt3)}
+.pricetag{font-size:29px;font-weight:800;font-family:Consolas,monospace;margin:14px 0 6px}
+.kv{display:grid;grid-template-columns:100px 1fr;gap:7px 10px;font-size:12.4px;margin:12px 0 18px}
+.kv div:nth-child(odd){color:var(--txt3)}
+.dbody .blk{margin-bottom:15px}
+.dbody .blk h4{font-size:12px;color:var(--txt3);margin-bottom:6px;font-weight:600}
+.dbody .blk p{font-size:13px;line-height:1.8;color:#cfdaf0}
+.close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.06);border:1px solid var(--line2);
+  color:var(--txt2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;
+  font-size:11.5px;color:var(--txt3);line-height:1.8;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px}
+.two>*,.kgrid>*,.mgrid>*{min-width:0}
+.chgpill{display:inline-flex;gap:5px;align-items:center;font-family:Consolas,monospace;font-size:12px;
+  padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.05)}
+@media (max-width:1180px){.kgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}
+  .srclist{grid-template-columns:1fr}.mgrid{grid-template-columns:1fr}}
+@media (max-width:900px){#factGrid{grid-template-columns:1fr!important}}
+@media (max-width:680px){.wrap{padding:0 14px}h1{font-size:26px}#chart{height:340px}.card .val{font-size:24px}
+  .chainrow{grid-template-columns:1fr;gap:4px}.chainrow .rt{text-align:left}
+  #msgCust,#msgQuote,#msgTerm{width:100%!important;flex:1 1 100%!important}
+  table{min-width:0}.tblwrap{overflow-x:auto}
+  td,th{padding:8px 7px;word-break:break-word}
+  .kv{grid-template-columns:84px 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="topline" id="topLine"></div>
+  <h1>__PRODUCT__ <span class="thin">· __H1SUFFIX__</span></h1>
+  <p class="sub">__SUB__</p>
+  <div class="summarybar" id="summaryBar"></div>
+  <div class="warnbar"><span class="ic">!</span><div id="warnText"></div></div>
+</header>
+
+<div class="ctrl">
+  <div class="ctrlrow">
+    <div class="cgroup"><span class="clabel">采购点</span><div class="pills" id="ptSel"></div></div>
+    <div class="cgroup"><span class="clabel">时间</span><div class="pills" id="winSel">
+      <button class="pbtn" data-w="30">30天</button>
+      <button class="pbtn on" data-w="90">90天</button>
+      <button class="pbtn" data-w="180">6个月</button>
+      <button class="pbtn" data-w="365">1年</button>
+      <button class="pbtn" data-w="all">全部</button>
+    </div></div>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <button class="ghost" id="btnExport">导出当前视图数据</button>
+      <button class="ghost" id="btnMail">带入供应商沟通</button>
+    </div>
+  </div>
+</div>
+
+<section><div class="kgrid" id="kpiGrid"></div></section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">01</span>价格走势（现货口径，可点击事件点）</h2>
+    <p class="desc" id="chartDesc"></p>
+  </div>
+  <div class="panel chartcard">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
+      <div class="pills" id="chartTabs">
+        <button class="pbtn on" data-c="line">区间带 + 中值</button>
+        <button class="pbtn" data-c="candle">区间高低（蜡烛）</button>
+        <button class="pbtn" data-c="allpts">多采购点对比</button>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <label style="font-size:11.5px;color:var(--txt3);display:flex;gap:6px;align-items:center;cursor:pointer">
+          <input type="checkbox" id="ckCost" checked style="accent-color:#4da3ff">成本参考线</label>
+        <label style="font-size:11.5px;color:var(--txt3);display:flex;gap:6px;align-items:center;cursor:pointer">
+          <input type="checkbox" id="ckMark" checked style="accent-color:#f6b73c">事件标记</label>
+      </div>
+    </div>
+    <div id="chart"></div>
+    <div class="legend" id="chartLegend"></div>
+    <div class="hint" id="chartHint"></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">02</span>这个价处在什么位置（区间与分位）</h2>
+    <p class="desc">分位按“同期真实报价点”计，不做插值。样本数一并列出——样本少的区间只能说明范围，不能当连续行情引用。</p>
+  </div>
+  <div class="two">
+    <div class="panel">
+      <div class="tblwrap"><table id="chgTable">
+        <thead><tr><th>区间</th><th>基准日</th><th>基准价</th><th>当前价</th><th>变动</th><th>涨跌幅</th><th>期间报价点</th><th>实际天数</th></tr></thead>
+        <tbody></tbody></table></div>
+      <div class="spreadnote" id="chgNote"></div>
+    </div>
+    <div class="panel">
+      <div class="tblwrap"><table id="winTable">
+        <thead><tr><th>窗口</th><th>低点</th><th>高点</th><th>中位数</th><th>当前分位</th><th>区间位置</th></tr></thead>
+        <tbody></tbody></table></div>
+      <div class="spreadnote" id="winNote"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">03</span>各采购点报价（六项口径逐条列出）</h2>
+    <p class="desc">采购点 · 规格 · 报价区间 · 含税 · 提货方式 · 日期 · 来源。厂商挂牌、竞拍成交、指数口径分列，不混算。</p>
+  </div>
+  <div class="panel" style="padding:14px 14px 6px">
+    <div class="tblwrap"><table id="spotTable">
+      <thead><tr><th style="width:150px">采购点</th><th>规格 / 口径</th><th style="width:150px">价格</th>
+        <th style="width:92px">含税</th><th style="width:150px">提货方式</th><th style="width:96px">日期</th>
+        <th style="width:66px">可信度</th><th>来源与备注</th></tr></thead>
+      <tbody></tbody></table></div>
+    <div class="spreadnote" id="spotNote"></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">04</span>区域价差（同期口径，用于调货判断）</h2>
+    <p class="desc" id="spreadDesc"></p>
+  </div>
+  <div class="panel">
+    <div id="spreadChart"></div>
+    <div class="tblwrap" style="margin-top:12px"><table id="spreadTable">
+      <thead><tr><th>日期</th><th>采购点</th><th>基准点</th><th>该点中值</th><th>差（该点−基准）</th><th>提货方式</th><th>货源属性</th><th>来源</th></tr></thead>
+      <tbody></tbody></table></div>
+    <div class="spreadnote" id="spreadNote"></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">05</span>成本：上游价格折成“每吨原料成本”</h2>
+    <p class="desc">单耗 × 单价 = 原料成本。单耗必须来自公开工艺参数或企业披露；拿不到加工费就不合计，绝不补默认值。</p>
+  </div>
+  <div class="two">
+    <div class="panel"><div id="costChart"></div>
+      <div class="spreadnote" id="costNote"></div></div>
+    <div class="panel"><div class="tblwrap"><table id="routeTable">
+      <thead><tr><th>工艺路线 / 原料</th><th>单耗</th><th>单价</th><th>每吨成本</th><th>日期</th></tr></thead>
+      <tbody></tbody></table></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">06</span>产业链：上下游与断点自证</h2>
+    <p class="desc">只列按工艺路线成立的上下游；每一条都给出“凭什么算上下游”。未通过核对的环节标红，数字不可对外引用。</p>
+  </div>
+  <div class="two">
+    <div class="panel"><h3 style="font-size:13.5px;margin-bottom:10px;color:#cfe0ff">上游（成本项）</h3><div id="upList"></div></div>
+    <div class="panel"><h3 style="font-size:13.5px;margin-bottom:10px;color:#cfe0ff">下游（需求项）</h3><div id="downList"></div></div>
+  </div>
+  <div class="panel" style="margin-top:13px">
+    <h3 style="font-size:13.5px;margin-bottom:10px;color:#cfe0ff">断点自证表</h3>
+    <div class="tblwrap"><table id="proofTable">
+      <thead><tr><th>关系</th><th>从</th><th>到</th><th>单耗/占比</th><th>工艺依据</th><th>结论</th></tr></thead>
+      <tbody></tbody></table></div>
+    <div class="spreadnote" id="proofNote"></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">07</span>供给、库存与开工</h2>
+    <p class="desc">解释“为什么贵/为什么跌”的供给端事实。同一指标两个口径时分列两条，并注明不可相加。</p>
+  </div>
+  <div class="panel"><div class="tblwrap"><table id="balBody">
+    <thead><tr><th>指标</th><th>数值</th><th>日期</th><th>环比/前值</th><th>口径与样本</th><th>来源</th></tr></thead>
+    <tbody></tbody></table></div></div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">08</span>事件时间线（只看与采购相关的事件）</h2>
+    <p class="desc">检修 / 复产 / 投产 / 库存 / 物流 / 政策 / 需求，每条标注证据级别；传闻不进时间线。</p>
+  </div>
+  <div class="panel">
+    <div class="tlifilter" id="tlFilter"></div>
+    <div id="timeline"></div>
+    <div id="rejected"></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">09</span>采购可用事实 / 供应商沟通</h2>
+    <p class="desc">每条事实都能回溯到来源。点“生成”得到一段只含事实的话术，可直接发微信或邮件。</p>
+  </div>
+  <div class="kgrid" id="factGrid" style="grid-template-columns:repeat(3,minmax(0,1fr))"></div>
+  <div class="panel" style="margin-top:13px" id="msgSec">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+      <input id="msgCust" placeholder="对方单位（如：XX 化工 / 罐区贸易商）" style="flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--txt);padding:9px 12px;border-radius:9px;font-family:inherit;font-size:12.5px">
+      <input id="msgQuote" placeholder="本次询价/目标价" style="width:170px;background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--txt);padding:9px 12px;border-radius:9px;font-family:inherit;font-size:12.5px">
+      <input id="msgTerm" placeholder="商务条件" style="width:230px;background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--txt);padding:9px 12px;border-radius:9px;font-family:inherit;font-size:12.5px">
+      <button class="ghost" id="btnGen">生成</button>
+      <button class="ghost" id="btnCopy">复制</button>
+    </div>
+    <div class="pills" id="msgTabs" style="margin-bottom:12px">
+      <button class="pbtn on" data-m="wechat">微信短句</button>
+      <button class="pbtn" data-m="mail">邮件正文</button>
+      <button class="pbtn" data-m="price">价格问询</button>
+    </div>
+    <pre id="msgout" style="white-space:pre-wrap;font-family:inherit;font-size:12.8px;line-height:1.85;color:#cfdaf0;background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:11px;padding:15px"></pre>
+    <div class="spreadnote" id="talkList"></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2><span class="n">10</span>数据缺口、口径与方法</h2>
+    <p class="desc">缺口清单比结论更重要：它决定这份底稿能不能直接拿去做采购决策。</p>
+  </div>
+  <div class="panel">
+    <div class="mgrid" id="gapGrid"></div>
+    <div style="margin-top:16px;padding:14px 15px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)" id="caveatBox"></div>
+    <div style="margin-top:18px">
+      <h3 style="font-size:13px;color:var(--txt2);margin-bottom:10px">来源清单（全部可点开核对）</h3>
+      <div class="srclist" id="srcList"></div>
+    </div>
+  </div>
+</section>
+
+<footer><div id="footL"></div><div style="text-align:right" id="footR"></div></footer>
+</div>
+
+<div class="mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <div class="dhead" style="position:relative">
+    <button class="close" id="btnClose">✕</button>
+    <div class="k" id="dKind">事件</div>
+    <h3 id="dTitle"></h3>
+    <div class="m" id="dMeta"></div>
+  </div>
+  <div class="dbody" id="dBody"></div>
+</div>
+
+<script>__ECHARTS__</script>
+<script>
+const D = __DATA__;
+const $ = s => document.querySelector(s);
+const fmt = (n, d=0) => (n==null||isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = n => (n==null||isNaN(n)) ? '—' : (n>0?'+':'') + fmt(n,2) + '%';
+const cls = n => n>0 ? 'up2' : n<0 ? 'dn' : 'fl';
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const EMPTY = '<div class="empty">本模块尚未取得可靠数据。缺什么、怎么补见「10 数据缺口」。</div>';
+const M = D.meta, U = M.unit;
+const state = {pt: M.primary_point, win: 90, chart:'line', showCost:true, showMark:true, tl:'全部', msg:'wechat'};
+let chart, spreadChart, costChart;
+const POINTS = D.points.map(p=>p.point);
+const COLORS = ['#4da3ff','#ffd166','#9b8cff','#38d6e0','#ff9ea5','#7ef0bb','#f6b73c','#8ec5ff'];
+
+/* ================= 头部 ================= */
+function renderHeader(){
+  const t = [];
+  t.push('<span class="pill"><i class="dot"></i>数据截至 ' + esc(M.asof) + '</span>');
+  t.push('<span class="pill">品种：' + esc(M.product) + (M.spec?'（'+esc(M.spec)+'）':'') + '</span>');
+  t.push('<span class="pill">采购点：' + esc(M.region) + '</span>');
+  const pm = (D.primary && D.primary.meta) ? D.primary.meta : {};
+  t.push('<span class="pill">口径：现货 ' + esc(pm.tax||'含税见附表') + (pm.basis?' · '+esc(pm.basis):'') + '</span>');
+  t.push('<span class="pill">采购视角</span>');
+  t.push('<span class="pill" style="border-color:rgba(255,95,109,.3);color:#ffb3b9">不预测价格</span>');
+  $('#topLine').innerHTML = t.join('');
+  $('#summaryBar').innerHTML = '<b>一句话现状：</b>' + esc(D.summary);
+  $('#warnText').innerHTML = warnText();
+  $('#footL').innerHTML = esc(M.product) + ' · 原料行情底稿（采购） · 数据截至 ' + esc(M.asof) + '<br>' + esc(M.disclaimer);
+  $('#footR').innerHTML = '只陈述已发生事实，不预测涨跌、不给买卖时点建议。<br>'
+    + (D.anchor ? ('锚价 ' + fmt(D.anchor.value) + ' ' + U + ' 取 ' + esc(D.anchor.date) + '；下单前须用当日供应商报价校准。') : '尚未取得可用现货报价。');
+}
+function warnText(){
+  const g = D.gaps.filter(x=>x.status==='缺口');
+  if(!g.length) return '关键模块均有来源。仍建议下单前用当日供应商报价复核。';
+  return '<b>' + esc(g[0].item) + '</b>：' + esc(g[0].detail)
+    + ' 这是最需要先核实的一处；' + (D.gaps.length>1 ? '其余 ' + (D.gaps.length-1) + ' 条见第 10 节。' : '');
+}
+
+/* ================= 选择器 ================= */
+function renderPickers(){
+  $('#ptSel').innerHTML = POINTS.map(p=>'<button class="pbtn'+(p===state.pt?' on':'')+'" data-p="'+esc(p)+'">'+esc(p)+'</button>').join('');
+  document.querySelectorAll('#ptSel .pbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#ptSel .pbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); state.pt=b.dataset.p; renderAll();
+  });
+  document.querySelectorAll('#winSel .pbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#winSel .pbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); state.win = b.dataset.w==='all' ? 'all' : +b.dataset.w; renderChart();
+  });
+  document.querySelectorAll('#chartTabs .pbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#chartTabs .pbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); state.chart=b.dataset.c; renderChart();
+  });
+  $('#ckCost').onchange = e=>{state.showCost=e.target.checked; renderChart();};
+  $('#ckMark').onchange = e=>{state.showMark=e.target.checked; renderChart();};
+}
+
+/* ================= KPI ================= */
+function kpiCards(){
+  const a = D.anchor, p = D.series[state.pt], pr = D.procurement || {};
+  const cards = [];
+  if(a){
+    const d1 = (a.prev_mid!=null) ? (a.value - a.prev_mid) : null;
+    const rng = (a.range_lo!=null && a.range_hi!=null && a.range_lo!==a.range_hi)
+      ? '区间 ' + fmt(a.range_lo) + '–' + fmt(a.range_hi) : '单点报价';
+    cards.push({cls:'hero', lab:'当前价（锚）', val:fmt(a.value), unit:U, tag:a.tax||'',
+      meta:esc(a.label) + '<br>' + esc(a.date) + ' · ' + esc(a.basis),
+      foot:rng + (d1!=null ? (' ｜ 上期 ' + esc(a.prev_date||'') + ' ' + fmt(a.prev_mid) + '（' + pct(a.prev_mid?d1/a.prev_mid*100:null) + '）') : '') + '<br>来源：' + esc(a.src)});
+  } else cards.push({cls:'gap', lab:'当前价', val:'—', unit:'', tag:'缺口', meta:'未取得可用报价', foot:'见第 10 节'});
+  const w90 = p && p.win && p.win['90'];
+  if(w90) cards.push({lab:'近 90 天位置', val:fmt(w90.pct_rank,0)+'%', unit:'分位', tag:'样本 '+w90.n,
+    meta:'区间 ' + fmt(w90.low) + '–' + fmt(w90.high) + '<br>低点 ' + esc(w90.low_date) + ' · 高点 ' + esc(w90.high_date),
+    foot:'中位数 ' + fmt(w90.median,1) + '；分位=低于当前价的报价点占比'});
+  else cards.push({lab:'近 90 天位置', cls:'gap', val:'—', unit:'', tag:'缺口', meta:'该采购点报价点 < 3', foot:'见第 10 节'});
+  const c7 = D.chg && D.chg['7'], c30 = D.chg && D.chg['30'];
+  if(c7||c30){
+    const c = c7 || c30, w = c7 ? '7 天' : '30 天';
+    cards.push({lab:w + '变动（' + c.from_date + '→' + p.last.d + '）', val:pct(c.pct), unit:'', tag:'',
+      meta:fmt(c.from_mid) + ' → ' + fmt(p.last.mid) + ' ｜ ' + (c.abs>0?'+':'') + fmt(c.abs,1) + ' ' + U,
+      foot:'期间报价点 ' + c.n_between + ' 个（真实报价，未插值）'});
+  }
+  if(pr.inventory_days!=null) cards.push({lab:'库存可支撑', val:fmt(pr.inventory_days), unit:'天',
+    tag:pr.inventory_cover_to ? ('至 ' + pr.inventory_cover_to) : '',
+    meta:'月用量 ' + (pr.monthly_usage ? fmt(pr.monthly_usage)+' 吨' : '未填') + '<br>补单频率：' + esc(pr.purchase_frequency||'未填'),
+    foot:esc(pr.usage_note||'库存天数与月用量如为假设值，请替换为 ERP 实际数')});
+  const sp = (D.spreads||[]).filter(s=>s.is_source)[0];
+  if(sp) cards.push({lab:'价差：' + sp.point + ' vs ' + sp.base_point, val:(sp.diff_vs_base>0?'+':'')+fmt(sp.diff_vs_base), unit:U, tag:esc(sp.date),
+    meta:sp.point + ' ' + fmt(sp.mid) + ' ｜ ' + sp.base_point + ' ' + fmt(sp.base_mid),
+    foot:'含运费/提货方式差异，不等于纯地区溢价'});
+  const tc = D.cost_lines && D.cost_lines[0];
+  if(tc) cards.push({lab:'成本参考（' + esc(tc.route||'') + '）', val:fmt(tc.value), unit:U, tag:esc(tc.date),
+    meta:esc(tc.name), foot:(a ? ('现货−成本 = ' + fmt(a.value-tc.value) + ' ' + U + '（仅参考，口径不同）') : '') + '<br>' + esc(tc.src)});
+  return cards;
+}
+function renderKPI(){
+  $('#kpiGrid').innerHTML = kpiCards().map(c=>{
+    const v = String(c.val);
+    const vc = v.charAt(0)==='+' ? 'up2' : (v.charAt(0)==='-' && v!=='—' ? 'dn' : '');
+    return '<div class="card ' + (c.cls||'') + '">'
+      + '<div class="lab"><span>' + esc(c.lab) + '</span>'
+      + (c.tag ? '<span class="tagpill ' + (c.tag==='缺口'?'tp-gap':'tp-mid') + '">' + esc(c.tag) + '</span>' : '')
+      + '</div>'
+      + '<div class="val ' + vc + '">' + esc(c.val) + '<span class="unit">' + esc(c.unit||'') + '</span></div>'
+      + '<div class="meta">' + c.meta + '</div>'
+      + '<div class="foot">' + (c.foot||'') + '</div></div>';
+  }).join('');
+}
+
+/* ================= 图表 ================= */
+function cutRows(rows){
+  if(state.win==='all' || !rows.length) return rows;
+  const last = new Date(rows[rows.length-1].d);
+  const cut = new Date(last.getTime() - state.win*86400000);
+  return rows.filter(r=> new Date(r.d) >= cut);
+}
+function renderChart(){
+  if(!chart) chart = echarts.init($('#chart'));
+  const p = D.series[state.pt];
+  if(!p){ chart.clear(); $('#chartDesc').textContent='该采购点没有可用序列。'; return; }
+  const rows = cutRows(p.rows);
+  const cats = rows.map(r=>r.d);
+  const mk = D.marks.filter(m=>m.point===state.pt && cats.includes(m.d));
+  const baseAxis = {
+    xAxis:{type:'category', data:cats, boundaryGap:true, axisLine:{lineStyle:{color:'rgba(255,255,255,.14)'}},
+      axisTick:{show:false}, axisLabel:{color:'#71809c',fontSize:10.5,hideOverlap:true,
+        formatter:v=> v && v.length>=10 ? v.slice(5).replace('-','/') : v}},
+    yAxis:{type:'value', scale:true, splitNumber:5, axisLabel:{color:'#71809c',fontSize:10.5,formatter:v=>fmt(v)},
+      splitLine:{lineStyle:{color:'rgba(255,255,255,.055)'}}, axisLine:{show:false}},
+    grid:{left:58,right:26,top:38,bottom:46},
+    tooltip:{trigger:'axis', backgroundColor:'rgba(10,16,28,.95)', borderColor:'rgba(255,255,255,.16)',
+      textStyle:{color:'#e9eefb',fontSize:12}}
+  };
+  let opt;
+  if(state.chart==='allpts'){
+    const ss = POINTS.filter(pt=>D.series[pt]);
+    const all = [];
+    ss.forEach(pt=>D.series[pt].rows.forEach(r=>{ if(all.indexOf(r.d)<0) all.push(r.d); }));
+    all.sort();
+    const shown = state.win==='all' ? all : all.filter(d=> new Date(d) >= new Date(new Date(all[all.length-1]).getTime()-state.win*86400000));
+    opt = Object.assign({}, baseAxis, {
+      xAxis:Object.assign({}, baseAxis.xAxis, {data:shown}),
+      legend:{top:4,textStyle:{color:'#a5b4cf',fontSize:11}},
+      series:ss.map((pt,i)=>({name:pt, type:'line', symbol:'circle', symbolSize:5,
+        lineStyle:{width:2,color:COLORS[i%COLORS.length]}, itemStyle:{color:COLORS[i%COLORS.length]},
+        data:shown.map(d=>{const r=D.series[pt].rows.filter(x=>x.d===d)[0]; return r?r.mid:null;})}))
+    });
+    $('#chartDesc').textContent = '多采购点对比：' + ss.join(' / ') + '。只连各自有报价的日期；跨区对比前先确认提货方式是否一致（出厂/送到/库提）。';
+  } else if(state.chart==='candle'){
+    opt = Object.assign({}, baseAxis, {series:[{name:'报价区间', type:'candlestick',
+      data:rows.map(r=>[r.lo,r.hi,r.lo,r.hi]),
+      itemStyle:{color:'#ff5f6d', color0:'#19c37d', borderColor:'#ff5f6d', borderColor0:'#19c37d'}}]});
+    $('#chartDesc').textContent = state.pt + '：' + rows.length + ' 个真实报价点。柱子上下沿就是原文给出的低/高价，没有低高价时退化为一条线。';
+  } else {
+    const lo = rows.map(r=>r.lo), hi = rows.map(r=>r.hi);
+    opt = Object.assign({}, baseAxis, {series:[
+      {name:'区间上沿', type:'line', data:hi, symbol:'none', lineStyle:{width:0,opacity:0}, stack:'band', tooltip:{show:false}},
+      {name:'区间带', type:'line', data:lo.map((v,i)=>hi[i]-v), symbol:'none', lineStyle:{width:0,opacity:0},
+       areaStyle:{color:'rgba(77,163,255,.20)'}, tooltip:{show:false}},
+      {name:'中值', type:'line', data:rows.map(r=>r.mid), symbol:'circle', symbolSize:6,
+       lineStyle:{width:2.4,color:'#4da3ff'}, itemStyle:{color:'#4da3ff'}}
+    ]});
+    $('#chartDesc').textContent = state.pt + '：' + rows.length + ' 个真实报价点（' + cats[0] + '→' + cats[cats.length-1]
+      + '），浅蓝带是原文给出的低–高区间；无报价的日期不插值，折线只是连线。';
+  }
+  if(state.showMark && mk.length && state.chart!=='allpts'){
+    opt.series[opt.series.length-1].markLine = {
+      silent:true, symbol:'none', lineStyle:{color:'rgba(246,183,60,.35)', type:'dashed', width:1},
+      label:{color:'#ffd166', fontSize:10, position:'insideEndTop', formatter:p=>p.name},
+      data: mk.map(m=>({xAxis:m.d, name:m.title.slice(0,12)}))
+    };
+    opt.series[opt.series.length-1].markPoint = {
+      symbol:'circle', symbolSize:11, itemStyle:{color:'#f6b73c'},
+      label:{show:false}, data: mk.map(m=>({coord:[m.d, m.price], value:m.title, name:m.title}))
+    };
+  }
+  if(state.showCost && state.chart!=='allpts'){
+    (D.cost_lines||[]).forEach((c,i)=>{
+      opt.series.push({name:c.name, type:'line', data:cats.map(()=>c.value), symbol:'none',
+        lineStyle:{width:1.2, type:'dashed', color:i%2 ? 'rgba(246,183,60,.55)' : 'rgba(255,255,255,.45)'},
+        tooltip:{valueFormatter:v=>fmt(v)+' '+U}});
+    });
+  }
+  chart.setOption(opt, true);
+  chart.off('click');
+  chart.on('click', prm=>{
+    let d = null, title = null;
+    if(prm.componentType==='markPoint' || prm.componentType==='markLine'){
+      d = prm.data && (prm.data.coord ? prm.data.coord[0] : prm.data.xAxis);
+      title = prm.data && (prm.data.name || prm.data.value);
+    } else if(prm.componentType==='series'){
+      d = cats[prm.dataIndex];
+    }
+    if(!d) return;
+    const m = D.marks.filter(x=>x.point===state.pt && x.d===d)[0] || (title ? D.marks.filter(x=>x.title===title)[0] : null);
+    if(m){ const ev = D.events.filter(e=>e.title===m.title && e.date===m.date)[0]; if(ev) openEvent(ev); }
+  });
+  $('#chartLegend').innerHTML = [
+    POINTS.filter(pt=>D.series[pt]).map((pt,i)=>'<span><i style="background:'+COLORS[i%COLORS.length]+'"></i>'+esc(pt)+'</span>').join(''),
+    '<span><i style="background:rgba(77,163,255,.35)"></i>区间带（低–高）</span>',
+    '<span><i style="background:#f6b73c;border-radius:50%"></i>事件点（可点击）</span>',
+    (D.cost_lines||[]).length ? '<span><i style="background:rgba(255,255,255,.45)"></i>成本参考线</span>' : '',
+    '<span style="color:var(--txt3)">单位：' + esc(U) + '（含税现货口径）</span>'
+  ].filter(Boolean).join('');
+  const noMark = D.events.filter(e=>!D.marks.filter(m=>m.title===e.title).length).length;
+  $('#chartHint').innerHTML = '<span class="kbd">提示</span> 横轴只有真实报价日；橙色点是事件发生后第一个报价日的报价。'
+    + (noMark ? ('有 ' + noMark + ' 个事件早于该采购点首个报价日或落在报价缺口里，未在图上标点。') : '')
+    + ' 成本线是参考线，不是报价。';
+}
+
+/* ================= 涨跌与分位 ================= */
+function renderChg(){
+  const p = D.series[state.pt];
+  const tb = $('#chgTable tbody'), wt = $('#winTable tbody');
+  if(!p){ tb.innerHTML = '<tr><td colspan="8">' + EMPTY + '</td></tr>'; wt.innerHTML=''; return; }
+  const lbl = {'7':'7 天','30':'30 天','90':'90 天','365':'1 年','1095':'3 年'};
+  const ks = Object.keys(p.chg).sort((a,b)=>+a-+b);
+  tb.innerHTML = ks.map(k=>{
+    const c = p.chg[k];
+    return '<tr><td><b>' + (lbl[k]||k+' 天') + '</b></td><td class="num">' + esc(c.from_date) + '</td>'
+      + '<td class="num">' + fmt(c.from_mid) + '</td><td class="num">' + fmt(p.last.mid) + '</td>'
+      + '<td class="num ' + cls(c.abs) + '">' + (c.abs>0?'+':'') + fmt(c.abs,1) + '</td>'
+      + '<td><span class="chgpill ' + cls(c.pct) + '">' + pct(c.pct) + '</span></td>'
+      + '<td class="num">' + c.n_between + ' 个</td><td class="num">' + c.exact_days + ' 天</td></tr>';
+  }).join('') || '<tr><td colspan="8">报价点不足，无法形成区间涨跌。</td></tr>';
+  $('#chgNote').innerHTML = '基准日是该窗口内“最后一个不晚于截止日的真实报价日”，所以实际跨度可能与名义窗口相差几天——表内已列出实际天数与期间报价点。';
+  const wk = Object.keys(p.win).sort((a,b)=>+a-+b);
+  wt.innerHTML = wk.map(k=>{
+    const w = p.win[k];
+    return '<tr><td><b>' + (lbl[k]||k+' 天') + '</b><span class="src">' + w.n + ' 个报价点</span></td>'
+      + '<td class="num">' + fmt(w.low) + '<span class="src">' + esc(w.low_date) + '</span></td>'
+      + '<td class="num">' + fmt(w.high) + '<span class="src">' + esc(w.high_date) + '</span></td>'
+      + '<td class="num">' + fmt(w.median,1) + '</td>'
+      + '<td class="num">' + fmt(w.pct_rank,0) + '%</td>'
+      + '<td class="num">' + (w.pos_in_range==null?'—':fmt(w.pos_in_range,0)+'%') + '</td></tr>';
+  }).join('');
+  $('#winNote').innerHTML = '分位 = 窗口内低于当前价的报价点占比；区间位置 = (当前价−低点)/(高点−低点)。样本少时两者都只代表“这几次报价的范围”。';
+}
+
+/* ================= 报价表 ================= */
+function renderSpots(){
+  const tb = $('#spotTable tbody');
+  if(!D.quotes.length){ tb.innerHTML = '<tr><td colspan="8">' + EMPTY + '</td></tr>'; return; }
+  const rows = D.quotes.slice().sort((a,b)=> b.date.localeCompare(a.date) || a.point.localeCompare(b.point,'zh'));
+  const confTag = c => c==='高' ? '<span class="tagpill tp-hi">高</span>' : (c==='中' ? '<span class="tagpill tp-mid">中</span>' : '<span class="tagpill tp-gap">' + esc(c) + '</span>');
+  tb.innerHTML = rows.map(s=>{
+    const unit = (s.unit && s.unit!==U) ? ' <span class="src" style="display:inline">' + esc(s.unit) + '</span>' : '';
+    const range = s.lo!==s.hi ? fmt(s.lo) + ' – ' + fmt(s.hi) : fmt(s.lo);
+    const taxCls = /不含/.test(s.tax) ? 't-blue' : (/未标/.test(s.tax) ? 't-amber' : 't-green');
+    return '<tr>'
+      + '<td><b>' + esc(s.point) + '</b><span class="src">' + esc(s.region) + ' · ' + esc(s.tier) + '</span></td>'
+      + '<td>' + esc(s.spec) + '<span class="src">' + esc(s.quote_kind) + '</span></td>'
+      + '<td class="num"><span class="big">' + range + '</span>' + unit + (s.lo!==s.hi ? '<span class="src">中值 ' + fmt(s.mid,1) + '</span>' : '') + '</td>'
+      + '<td><span class="tag ' + taxCls + '">' + esc(s.tax) + '</span></td>'
+      + '<td style="font-size:11.8px">' + esc(s.basis) + '</td>'
+      + '<td class="num">' + esc(s.date) + '</td>'
+      + '<td>' + confTag(s.conf) + '</td>'
+      + '<td style="font-size:11.5px;color:#a9bad8">' + esc(s.note) + '<span class="src">' + esc(s.src) + '</span></td></tr>';
+  }).join('');
+  const single = D.quotes.filter(q=>q.single).length;
+  $('#spotNote').innerHTML = '共 ' + D.quotes.length + ' 条，其中 ' + single + ' 条为单点报价（原文未给区间）。'
+    + '厂商挂牌价（“报价”）不等于成交价；竞拍成交价才是可验证成交。指数口径（含生意社基准价）是结算参考价，与罐区谈价不同口径。'
+    + '外币报价（CFR 等）不能与人民币罐区价直接相减，需先折算汇率、税费与港杂。';
+}
+
+/* ================= 区域价差 ================= */
+function renderSpread(){
+  const tb = $('#spreadTable tbody');
+  const sp = D.spreads || [], sg = D.spread_groups || [];
+  if(!sp.length && !sg.length){
+    tb.innerHTML = '<tr><td colspan="8">' + EMPTY + '</td></tr>';
+    $('#spreadDesc').textContent = '没有同期多采购点报价。';
+    $('#spreadChart').innerHTML = '';
+    return;
+  }
+  const base = (sp[0] && sp[0].base_point) || (sg[0] && sg[0].base) || '主采购点';
+  $('#spreadDesc').textContent = '以 ' + base + ' 为基准，只在同日比。跨日期相减得到的是时间差，不是地区差。';
+  tb.innerHTML = sp.slice(0,20).map(s=>'<tr>'
+    + '<td class="num">' + esc(s.date) + '</td><td><b>' + esc(s.point) + '</b></td><td>' + esc(s.base_point) + '</td>'
+    + '<td class="num">' + fmt(s.mid) + '</td>'
+    + '<td class="num ' + cls(s.diff_vs_base) + '">' + (s.diff_vs_base>0?'+':'') + fmt(s.diff_vs_base) + '</td>'
+    + '<td style="font-size:11.5px">' + esc(s.basis) + '</td>'
+    + '<td>' + (s.is_source ? '<span class="tag t-green">当前货源</span>' : '<span class="tag t-blue">备选</span>') + '</td>'
+    + '<td style="font-size:11.5px;color:#a9bad8">' + esc(s.note||'') + '<span class="src">' + esc(s.src) + '</span></td></tr>').join('')
+    || '<tr><td colspan="8">只有价差走势、没有逐日价差表。</td></tr>';
+  if(spreadChart){ spreadChart.dispose(); spreadChart = null; }
+  const box = $('#spreadChart');
+  if(!sg.length){
+    box.innerHTML = '<div class="empty">没有“多区域同期跟踪”数据，故不画价差走势；上表仍给出同日价差。</div>';
+    $('#spreadNote').innerHTML = '要做价差走势，需要同一跟踪表里连续多期的多区域报价（research.json 的 spread_series）。';
+    return;
+  }
+  box.innerHTML = '';
+  spreadChart = echarts.init(box);
+  const g = sg[0];
+  const pts = Object.keys(g.series);
+  const cats = [];
+  pts.forEach(p=>g.series[p].forEach(r=>{ if(cats.indexOf(r.d)<0) cats.push(r.d); }));
+  cats.sort();
+  spreadChart.setOption({
+    tooltip:{trigger:'axis', backgroundColor:'rgba(10,16,28,.95)', borderColor:'rgba(255,255,255,.16)', textStyle:{color:'#e9eefb',fontSize:12}},
+    legend:{top:0,textStyle:{color:'#a5b4cf',fontSize:11}},
+    grid:{left:58,right:26,top:36,bottom:40},
+    xAxis:{type:'category', data:cats, axisLabel:{color:'#71809c',fontSize:10.5,formatter:v=>v.slice(5).replace('-','/')},
+      axisLine:{lineStyle:{color:'rgba(255,255,255,.14)'}}, axisTick:{show:false}},
+    yAxis:{type:'value', scale:true, axisLabel:{color:'#71809c',fontSize:10.5,formatter:v=>fmt(v)},
+      splitLine:{lineStyle:{color:'rgba(255,255,255,.055)'}}, axisLine:{show:false}},
+    series: pts.map((p,i)=>({name:p, type:'line', symbol:'circle', symbolSize:6,
+      lineStyle:{width:2.2,color:COLORS[i%COLORS.length]}, itemStyle:{color:COLORS[i%COLORS.length]},
+      data:cats.map(d=>{const r=g.series[p].filter(x=>x.d===d)[0]; return r?r.mid:null;})}))
+  }, true);
+  $('#spreadNote').innerHTML = esc(g.note || '') + ' 来源：' + esc(g.src || '见来源清单');
+}
+
+/* ================= 成本 ================= */
+function renderCost(){
+  if(costChart){ costChart.dispose(); costChart = null; }
+  const box = $('#costChart');
+  const lines = D.cost_lines || [];
+  if(!lines.length){ box.innerHTML = '<div class="empty">未取得成本数字，无法判断价格在成本之上还是之下。</div>'; }
+  else{
+    box.innerHTML = '';
+    costChart = echarts.init(box);
+    const p = D.series[state.pt];
+    const cur = p ? p.last.mid : (D.anchor ? D.anchor.value : null);
+    const items = lines.map(c=>({name:c.name, value:c.value}));
+    if(cur!=null) items.push({name:'当前价（' + state.pt + '）', value:cur, _cur:true});
+    costChart.setOption({
+      tooltip:{backgroundColor:'rgba(10,16,28,.95)', borderColor:'rgba(255,255,255,.16)', textStyle:{color:'#e9eefb',fontSize:12},
+        formatter:o=>esc(o.name) + '：' + fmt(o.value) + ' ' + U},
+      grid:{left:12,right:70,top:14,bottom:14,containLabel:true},
+      xAxis:{type:'value', axisLabel:{color:'#71809c',fontSize:10.5,formatter:v=>fmt(v)}, splitLine:{lineStyle:{color:'rgba(255,255,255,.055)'}}},
+      yAxis:{type:'category', data:items.map(i=>i.name), axisLabel:{color:'#a5b4cf',fontSize:11,width:200,overflow:'truncate'},
+        axisLine:{show:false}, axisTick:{show:false}},
+      series:[{type:'bar', barWidth:16, data:items.map((i,ix)=>({value:i.value,
+        itemStyle:{color: i._cur ? '#ffd166' : COLORS[ix%COLORS.length], borderRadius:[0,4,4,0]},
+        label:{show:true, position:'right', color:'#cfdaf0', fontSize:11, formatter:o=>fmt(o.value)}}))}]
+    }, true);
+  }
+  const tb = $('#routeTable tbody');
+  const rc = D.route_costs || [];
+  if(!rc.length) tb.innerHTML = '<tr><td colspan="5">未提供工艺路线单耗表（routes）。</td></tr>';
+  else tb.innerHTML = rc.map(r=>{
+    const head = '<tr><td colspan="5" style="background:rgba(255,255,255,.03)"><b>' + esc(r.name) + '</b>'
+      + '<span class="src">' + (r.complete ? ('原料成本合计 <b>' + fmt(r.total,0) + '</b> ' + U)
+        : '<span style="color:#ff9ea5">分项不全，未合计</span>') + '</span></td></tr>';
+    const body = r.lines.map(l=>'<tr><td style="padding-left:22px">' + esc(l.item) + '</td>'
+      + '<td class="num">' + (l.qty==null ? '—' : fmt(l.qty, l.qty<10?2:0) + ' ' + esc(l.unit||'')) + '</td>'
+      + '<td class="num">' + (l.price==null ? '<span class="tag t-amber">缺</span>' : fmt(l.price,2)) + '</td>'
+      + '<td class="num">' + (l.cost==null ? '—' : fmt(l.cost,0)) + '</td>'
+      + '<td class="num">' + esc(l.date||'') + '</td></tr>').join('');
+    const note = (r.note || r.src) ? '<tr><td colspan="5" style="font-size:11.5px;color:#9fb0d0">' + esc(r.note||'') + '<span class="src">' + esc(r.src||'') + '</span></td></tr>' : '';
+    return head + body + note;
+  }).join('');
+  $('#costNote').innerHTML = '成本线是“参考线”：完全成本、现金成本、原料成本三种口径不能混用；单耗来自公开工艺参数时不等同企业实际结算。';
+}
+
+/* ================= 产业链 ================= */
+function renderChain(){
+  const row = x => {
+    const dir = x.direction==='up' ? '<span class="dir t-red">上涨</span>'
+      : x.direction==='down' ? '<span class="dir t-green">下跌</span>'
+      : x.direction==='gap' ? '<span class="dir t-amber">缺口</span>' : '<span class="dir t-blue">持平/未知</span>';
+    const val = (x.range_lo!=null && x.range_hi!=null) ? (fmt(x.range_lo) + '–' + fmt(x.range_hi))
+      : (x.value!=null ? fmt(x.value) : '—');
+    return '<div class="chainrow">'
+      + '<div><div class="nm">' + esc(x.name) + '</div><div class="src">' + esc(x.role) + '</div></div>'
+      + '<div><div>' + val + ' <span class="src" style="display:inline">' + esc(x.unit||'') + '</span>' + dir + '</div>'
+      + '<div class="src" style="color:#9fb0d0">' + esc(x.chg||'') + '</div>'
+      + '<div class="src">' + esc(x.logic||'') + '</div>'
+      + '<div class="src">来源：' + esc(x.src||'未标注') + ' ｜ 单耗：' + esc(x.ratio||'—') + '</div></div>'
+      + '<div class="rt">' + esc(x.date||'') + '<span class="src">' + esc(x.link||'') + '</span></div></div>';
+  };
+  const up = D.chain.upstream || [], dn = D.chain.downstream || [];
+  $('#upList').innerHTML = up.length ? up.map(row).join('') : EMPTY;
+  $('#downList').innerHTML = dn.length ? dn.map(row).join('') : EMPTY;
+  const tb = $('#proofTable tbody');
+  const pf = D.chain_proof || [];
+  tb.innerHTML = pf.length ? pf.map(p=>'<tr class="' + (p.checked?'':'bad') + '">'
+    + '<td>' + esc(p.relation) + '</td><td><b>' + esc(p.from) + '</b></td><td>' + esc(p.to) + '</td>'
+    + '<td style="font-size:11.5px">' + esc(p.ratio||'—') + '<span class="src">' + esc(p.share||'') + '</span></td>'
+    + '<td style="font-size:11.5px;color:#b9c7df">' + esc(p.evidence) + '<span class="src">' + esc(p.src||'') + '</span></td>'
+    + '<td>' + (p.checked ? '<span class="tag t-green">通过</span>' : '<span class="tag t-red">未通过</span>') + '</td></tr>').join('')
+    : '<tr><td colspan="6">' + EMPTY + '</td></tr>';
+  const bad = (D.broken_links || []).length;
+  $('#proofNote').innerHTML = bad
+    ? ('有 ' + bad + ' 条链路未通过核对（标红）：这些环节的价格与传导不要对外引用，需补运价/税费/船期等中间证据后再用。')
+    : '全部链路已通过工艺与占比核对。注意：通过只代表“上下游关系成立”，不代表价格一定同向变动。';
+}
+
+/* ================= 库存开工 ================= */
+function renderBalance(){
+  const tb = $('#balBody tbody');
+  const b = D.balance || [];
+  tb.innerHTML = b.length ? b.map(x=>'<tr>'
+    + '<td><b>' + esc(x.k) + '</b>' + (x.level ? '<span class="src">' + esc(x.level) + '</span>' : '') + '</td>'
+    + '<td class="num">' + esc(x.v) + '</td><td class="num">' + esc(x.date) + '</td>'
+    + '<td style="font-size:11.8px">' + esc(x.prev) + '</td>'
+    + '<td style="font-size:11.3px;color:#9fb0d0">' + esc(x.scope) + '</td>'
+    + '<td style="font-size:11.3px;color:#9fb0d0">' + esc(x.src) + '</td></tr>').join('')
+    : '<tr><td colspan="6">' + EMPTY + '</td></tr>';
+}
+
+/* ================= 时间线 ================= */
+function renderTimeline(){
+  const evs0 = D.events || [];
+  const tags = ['全部'];
+  evs0.forEach(e=>{ if(tags.indexOf(e.tag)<0) tags.push(e.tag); });
+  $('#tlFilter').innerHTML = tags.map(t=>'<button class="fbtn' + (t===state.tl?' on':'') + '" data-t="' + esc(t) + '">' + esc(t) + '</button>').join('');
+  document.querySelectorAll('#tlFilter .fbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#tlFilter .fbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); state.tl=b.dataset.t; renderTimeline();
+  });
+  const evs = evs0.filter(e=> state.tl==='全部' || e.tag===state.tl).slice().reverse();
+  $('#timeline').innerHTML = evs.length ? evs.map(e=>{
+    const bad = /利空/.test(e.impact);
+    const good = /利多/.test(e.impact);
+    const icls = bad ? 't-green' : (good ? 't-red' : 't-blue');
+    const color = bad ? '#19c37d' : (good ? '#ff5f6d' : '#8b9ab5');
+    const idx = evs0.indexOf(e);
+    return '<div class="tli" data-i="' + idx + '" style="cursor:pointer">'
+      + '<div class="pt" style="background:' + color + '"></div>'
+      + '<div class="d">' + esc(e.date) + (e.mark_d && e.mark_d!==e.date ? (' · 报价响应于 ' + esc(e.mark_d) + '（' + fmt(e.mark_price) + ' ' + U + '）') : '') + '</div>'
+      + '<div class="t">' + esc(e.title) + '</div>'
+      + '<div class="x">' + esc(e.detail) + '</div>'
+      + (e.after ? '<div class="x" style="color:#9fb0d0;margin-top:5px">之后：' + esc(e.after) + '</div>' : '')
+      + '<div class="chips"><span class="chip">' + esc(e.tag) + '</span>'
+      + '<span class="tag ' + icls + '">对价格：' + esc(e.impact) + '</span>'
+      + '<span class="chip">证据：' + esc(e.evidence) + '</span></div>'
+      + '<div class="s">来源：' + esc(e.src) + '</div></div>';
+  }).join('') : EMPTY;
+  document.querySelectorAll('.tli[data-i]').forEach(el=>{
+    el.onclick = ()=>openEvent(evs0[+el.dataset.i]);
+  });
+  const rej = D.events_rejected || [];
+  $('#rejected').innerHTML = rej.length ? '<div style="margin-top:16px;padding:13px 15px;border:1px dashed rgba(255,158,165,.35);border-radius:11px;background:rgba(255,95,109,.05)">'
+    + '<div style="font-size:12.5px;color:#ff9ea5;font-weight:650;margin-bottom:8px">未采纳消息（' + rej.length + ' 条，仅传闻/待确认，不进时间线）</div>'
+    + rej.map(r=>'<div style="font-size:12px;color:#c3cfe6;line-height:1.75;margin-bottom:7px">· <b>' + esc(r.date) + '</b> ' + esc(r.title)
+      + '<span class="src">' + esc(r.detail) + ' ｜ ' + esc(r.src) + '</span></div>').join('') + '</div>' : '';
+}
+
+/* ================= 事实卡与话术 ================= */
+function renderFacts(){
+  const f = D.facts || [];
+  $('#factGrid').innerHTML = f.length ? f.map(x=>'<div class="card" style="padding:13px 15px">'
+    + '<div class="lab"><span>' + esc(x.k) + '</span><span class="tagpill tp-neu">' + esc(x.kind||'') + '</span></div>'
+    + '<div style="font-size:16px;font-weight:750;margin:7px 0 5px;line-height:1.45">' + esc(x.v) + '</div>'
+    + '<div style="font-size:11.5px;color:#9fb0d0;line-height:1.65">' + esc(x.note||'') + '</div>'
+    + '<div class="foot">来源：' + esc(x.src||'见来源清单') + '</div></div>').join('') : EMPTY;
+  $('#talkList').innerHTML = (D.talk||[]).length
+    ? '<h4 style="font-size:12.5px;color:var(--txt2);margin-bottom:9px">供应商可能会问 / 你可以这样答（均只含事实）</h4>'
+      + D.talk.map(x=>'<div class="qbox"><div class="q">“' + esc(x.q) + '”</div><div class="a">' + esc(x.a) + '</div></div>').join('')
+    : '';
+}
+function buildMsg(){
+  const a = D.anchor, p = D.series[state.pt], pr = D.procurement || {};
+  const party = ($('#msgCust').value || '').trim() || '贵司';
+  const quote = ($('#msgQuote').value || '').trim();
+  const term = ($('#msgTerm').value || '').trim() || '含税现汇·自提/送到以合同为准';
+  const w90 = p && p.win && p.win['90'], c7 = D.chg && D.chg['7'], c30 = D.chg && D.chg['30'];
+  const facts = [];
+  if(a) facts.push('当前参考价：' + state.pt + ' ' + fmt(a.value) + ' ' + U + '（' + a.date + '，' + (a.tax||'含税') + '，' + a.basis + '）');
+  if(w90) facts.push('近 90 天报价区间 ' + fmt(w90.low) + '–' + fmt(w90.high) + '，共 ' + w90.n + ' 个报价点，当前处 ' + fmt(w90.pct_rank,0) + '% 分位');
+  if(c7) facts.push('最近 7 天 ' + pct(c7.pct) + '（' + c7.from_date + ' ' + fmt(c7.from_mid) + ' → ' + p.last.d + ' ' + fmt(p.last.mid) + '）');
+  else if(c30) facts.push('近 30 天 ' + pct(c30.pct) + '（' + c30.from_date + ' ' + fmt(c30.from_mid) + ' → ' + p.last.d + ' ' + fmt(p.last.mid) + '）');
+  if(pr.inventory_cover_to) facts.push('我方现有库存可用至 ' + pr.inventory_cover_to + '（' + pr.inventory_days + ' 天）');
+  const sp = (D.spreads||[]).filter(s=>s.is_source)[0];
+  if(state.msg==='wechat'){
+    $('#msgout').textContent = '【行情同步 · ' + M.product + '】' + M.asof + '\n'
+      + facts.map(f=>'· ' + f).join('\n') + '\n'
+      + (quote ? ('· 我方本次目标价：' + quote + ' ' + U) : '· 请报当日可执行价与可供量') + '\n'
+      + '· 条件：' + term + '\n'
+      + '以上均为已发生的公开报价，不含对后市的判断；如需按批次报价，我这边随时对接。';
+  } else if(state.msg==='mail'){
+    $('#msgout').textContent = '主题：' + M.product + '（' + state.pt + '）原料行情同步与询价 · ' + M.asof + '\n\n'
+      + party + '：\n\n'
+      + '您好。为便于双方对价，附上我方整理的' + M.product + '行情要点（均来自公开可核验来源）：\n\n'
+      + facts.map((f,i)=>(i+1) + '. ' + f).join('\n')
+      + (sp ? ('\n' + (facts.length+1) + '. 同期 ' + sp.point + ' 较 ' + sp.base_point + ' ' + (sp.diff_vs_base>0?'高':'低') + ' ' + fmt(Math.abs(sp.diff_vs_base)) + ' ' + U + '（' + sp.date + '，含运费与提货方式差异）') : '')
+      + '\n\n请贵司就' + (quote ? ('「' + quote + ' ' + U + '」这一价格') : '近期可执行价') + '给出书面报价，并注明：\n'
+      + '  · 规格与执行标准、是否含税、提货方式（厂提/送到）、结算方式与账期\n'
+      + '  · 可供量与最迟发运/到货时间\n\n'
+      + '我方现有库存可用至 ' + (pr.inventory_cover_to || '（待填）') + '，需求为 ' + (pr.monthly_usage ? fmt(pr.monthly_usage) + ' 吨/月' : '（待填）') + '。\n\n'
+      + '说明：以上数据仅陈述已发生的公开报价与供给事实，不构成对价格走势的判断。\n\n顺颂商祺\n';
+  } else {
+    $('#msgout').textContent = party + '您好，' + M.product + ' ' + state.pt + '这边有几个口径想跟您确认（都按 ' + M.asof + ' 为准）：\n\n'
+      + '1）规格：' + (M.spec || '请注明执行标准与等级') + '\n'
+      + '2）价格：今日' + state.pt + '可执行价是多少？是单点价还是区间价？\n'
+      + '3）含税与提货：是否含税、厂提还是送到？罐区自提的罐租怎么算？\n'
+      + '4）量与期：' + (pr.monthly_usage ? fmt(pr.monthly_usage) + ' 吨/月，' : '量级：')
+      + (pr.purchase_frequency || '按周补单') + '的节奏下，最短发运/到货时间是？\n'
+      + '5）依据：请注明报价对应的数据日期与来源（如隆众/卓创/自有牌价），便于我方留档。\n\n'
+      + '我方参考：' + (a ? (state.pt + ' ' + a.date + ' 主流价 ' + fmt(a.value) + ' ' + U + '（' + a.basis + '）') : '暂无')
+      + (w90 ? ('；近 90 天报价区间 ' + fmt(w90.low) + '–' + fmt(w90.high) + '（' + w90.n + ' 个点）') : '') + '。\n'
+      + '以上口径仅供对价，不代表对后市的判断。';
+  }
+}
+
+/* ================= 缺口 / 口径 / 来源 ================= */
+function renderGaps(){
+  const g = D.gaps || [];
+  $('#gapGrid').innerHTML = g.length ? g.map(x=>{
+    const st = x.status==='缺口' ? 't-red' : (x.status==='口径冲突' ? 't-amber' : 't-blue');
+    return '<div class="mcard"><h4><span>' + esc(x.item) + '</span><span class="tag ' + st + '">' + esc(x.status) + '</span></h4>'
+      + '<p>' + esc(x.detail) + '</p>'
+      + (x.impact ? '<p style="margin-top:6px;color:#ffb3b9">影响：' + esc(x.impact) + '</p>' : '')
+      + (x.fix ? '<p style="margin-top:6px;color:#9fb0d0">补齐：' + esc(x.fix) + '</p>' : '') + '</div>';
+  }).join('') : '<div class="mcard"><h4>未登记缺口</h4><p>如果确实所有字段都有来源，请保留一条说明；否则逐条补进 gaps。</p></div>';
+  const cv = D.caveats || [];
+  $('#caveatBox').innerHTML = '<h4 style="font-size:13px;margin-bottom:9px">口径提醒（引用前务必读）</h4>'
+    + (cv.length ? cv.map(c=>'<p style="font-size:12px;color:#a5b4cf;line-height:1.75;margin-bottom:7px">· ' + esc(c) + '</p>').join('')
+      : '<p style="font-size:12px">无。</p>');
+  const s = D.sources || [];
+  $('#srcList').innerHTML = s.length ? s.map(x=>'<a href="' + esc(x.url||'#') + '" target="_blank" rel="noopener">'
+    + esc(x.name) + '<span>' + esc(x.date||'') + ' · ' + esc(x.type||'') + '</span></a>').join('') : EMPTY;
+}
+
+/* ================= 抽屉 ================= */
+function openEvent(e){
+  if(!e) return;
+  $('#dKind').textContent = '事件 · ' + (e.tag||'');
+  $('#dTitle').textContent = e.title;
+  $('#dMeta').textContent = e.date + ' · 证据级别：' + e.evidence + (e.mark_d ? (' · 首个报价响应 ' + e.mark_d) : '');
+  const p = D.series[state.pt];
+  const w = p && p.win && p.win['365'];
+  const blk = (h, t) => t ? ('<div class="blk"><h4>' + h + '</h4><p>' + esc(t) + '</p></div>') : '';
+  $('#dBody').innerHTML =
+    (e.mark_price!=null ? ('<div class="pricetag">' + fmt(e.mark_price) + ' <span style="font-size:13px;color:#71809c">' + esc(U) + '（' + esc(state.pt) + ' 当日中值）</span></div>') : '')
+    + '<div class="kv">'
+    + '<div>事件日期</div><div>' + esc(e.date) + '</div>'
+    + '<div>对价格影响</div><div>' + esc(e.impact) + '（事后描述）</div>'
+    + '<div>证据级别</div><div>' + esc(e.evidence) + '</div>'
+    + '<div>当时分位</div><div>' + (w ? (fmt(w.pct_rank,0) + '%（近 1 年，' + w.n + ' 个报价点）') : '样本不足') + '</div>'
+    + '</div>'
+    + blk('当时发生了什么', e.detail)
+    + blk('之后的价格/供需变化', e.after)
+    + blk('来源', e.src)
+    + blk('对采购的含义（只陈述事实）', '这条事件在时间上先于价格变化，但先后不等于因果，请不要把它称为“拐点”。可对外表述：' + e.title + '；同期' + state.pt + '报价为 ' + fmt(e.mark_price) + ' ' + U + '。');
+  $('#mask').classList.add('on'); $('#drawer').classList.add('on');
+}
+
+/* ================= 导出 ================= */
+function exportCSV(){
+  const p = D.series[state.pt];
+  const rows = [['日期','低','高','中值','规格','含税','提货方式','来源']];
+  (p ? cutRows(p.rows) : []).forEach(r=>rows.push([r.d, r.lo, r.hi, r.mid,
+    (p.meta && p.meta.spec) || '', (p.meta && p.meta.tax) || '', (p.meta && p.meta.basis) || '', r.src || '']));
+  const csv = '\ufeff' + rows.map(r=>r.map(x=>'"' + String(x==null?'':x).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const el = document.createElement('a');
+  el.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+  el.download = M.product + '_' + state.pt + '_报价序列.csv';
+  el.click(); URL.revokeObjectURL(el.href);
+}
+
+/* ================= 初始化 ================= */
+function renderAll(){ renderKPI(); renderChart(); renderChg(); renderCost(); buildMsg(); }
+$('#btnClose').onclick = ()=>{ $('#mask').classList.remove('on'); $('#drawer').classList.remove('on'); };
+$('#mask').onclick = ()=>$('#btnClose').click();
+$('#btnExport').onclick = exportCSV;
+$('#btnGen').onclick = buildMsg;
+$('#btnMail').onclick = ()=>{ document.getElementById('msgSec').scrollIntoView({behavior:'smooth'}); };
+$('#btnCopy').onclick = ()=>{
+  const t = document.getElementById('msgout').textContent;
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>{
+    const b = document.getElementById('btnCopy'); b.textContent='已复制';
+    setTimeout(()=>{ b.textContent='复制'; }, 1500);
+  });
+};
+document.querySelectorAll('#msgTabs .pbtn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#msgTabs .pbtn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); state.msg=b.dataset.m; buildMsg();
+});
+['msgCust','msgQuote','msgTerm'].forEach(id=>{ document.getElementById(id).oninput = buildMsg; });
+document.getElementById('msgQuote').value = M.suggest_quote || '';
+document.getElementById('msgTerm').value = ((D.procurement && D.procurement.contract_terms && D.procurement.contract_terms[0]) || '');
+renderHeader(); renderPickers(); renderKPI(); renderChart(); renderChg(); renderSpots();
+renderSpread(); renderCost(); renderChain(); renderBalance(); renderTimeline(); renderFacts();
+renderGaps(); buildMsg();
+window.addEventListener('resize', ()=>{[chart,spreadChart,costChart].forEach(c=>c&&c.resize());});
+</script>
+</body>
+</html>

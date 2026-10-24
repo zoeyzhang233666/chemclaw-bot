@@ -1,0 +1,185 @@
+{
+  "relations": [
+    {
+      "id": "R01",
+      "from": "N_UP2",
+      "to": "N_RA",
+      "relation_type": "conversion",
+      "process": "演示路线 A 的原料制备",
+      "family": "制备",
+      "typical": true,
+      "quant": {
+        "from_per_to": 1.2,
+        "from_unit": "t 上游A的原料 / t 原料A",
+        "yield": 0.9,
+        "basis": "演示：化学计量 1.08 按收率 90% 折算",
+        "basis_grade": "工业级"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S01"
+      ],
+      "notes": "演示：这是一个可连乘的化学计量边",
+      "route_ids": [
+        "RT_A"
+      ],
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R02",
+      "from": "N_RA",
+      "to": "N_PRIMARY",
+      "relation_type": "conversion",
+      "process": "工艺路线 A：催化转化",
+      "family": "转化",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.85,
+        "from_unit": "t 原料A / t 示例产品B",
+        "yield": 0.95,
+        "basis": "演示：化学计量 0.81 按收率 95% 折算",
+        "basis_grade": "工业级"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "route_ids": [
+        "RT_A"
+      ],
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R03",
+      "from": "N_RB",
+      "to": "N_PRIMARY",
+      "relation_type": "conversion",
+      "process": "工艺路线 B：另一原料路线",
+      "family": "转化",
+      "typical": false,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 原料C / t 示例产品B",
+        "yield": null,
+        "basis": "演示缺口：该路线单耗未取得公开口径，按缺口登记不估算",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": "演示：并列路线必须单独登记，不能合并进 R02",
+      "route_ids": [
+        "RT_B"
+      ],
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R04",
+      "from": "N_PRIMARY",
+      "to": "N_P1",
+      "relation_type": "blend",
+      "process": "配方共混",
+      "family": "共混",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.075,
+        "from_unit": "t 示例产品B / t P1",
+        "yield": 1.0,
+        "basis": "演示：配方掺量 5%~10%，取 7.5%（配方比，非化学计量）",
+        "basis_grade": "P1 通用牌号"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "low",
+      "evidence": [
+        "S01"
+      ],
+      "notes": "演示：配方比不可用于成本反推",
+      "route_ids": [],
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R05",
+      "from": "N_PRIMARY",
+      "to": "N_P2",
+      "relation_type": "conversion",
+      "process": "演示转化",
+      "family": "转化",
+      "typical": true,
+      "quant": {
+        "from_per_to": 1.1,
+        "from_unit": "t 示例产品B / t P2",
+        "yield": 0.92,
+        "basis": "演示：化学计量 1.01 按收率 92% 折算",
+        "basis_grade": "工业级"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "route_ids": [],
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R06",
+      "from": "N_P1",
+      "to": "N_APP",
+      "relation_type": "application",
+      "process": "用于终端场景 E",
+      "family": "应用",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": "演示：终端应用不设单耗",
+      "route_ids": [],
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R07",
+      "from": "N_SUB",
+      "to": "N_PRIMARY",
+      "relation_type": "substitution",
+      "process": "下游市场替代",
+      "family": "替代",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": "演示：替代不是物质流向，不参与路径计算",
+      "route_ids": [],
+      "flow": "none",
+      "edge_style": "dashed"
+    }
+  ]
+}

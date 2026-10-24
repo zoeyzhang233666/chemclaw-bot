@@ -1,0 +1,74 @@
+{
+  "_instructions": {
+    "what": "Analysis config for build_outputs.py. Copy this file, fill in for your product, pass with --config.",
+    "rule_tariff": "Set status='verified' ONLY if you fetched the line-specific rate from an official system in this session (US HTS, EU TARIC, national customs). Otherwise status='gap' and mfn=null. Never guess a rate.",
+    "rule_evidence": "Every entry in industry[] must name a real source. 'industry common knowledge' is NOT a source; either cite or drop the claim.",
+    "rule_judgment": "judgments[] are your preliminary reads. Write them as 'why this deserves investigation', never as 'this is a confirmed sales opportunity'."
+  },
+
+  "product": {
+    "name": "重质纯碱",
+    "name_en": "Sodium Carbonate (Dense)",
+    "spec": "Na2CO3 ≥99.2%, bulk density 0.9-1.1 g/cm3",
+    "hs6": "283620",
+    "cas": "497-19-8",
+    "origin_name": "China",
+    "origin_m49": "156",
+    "advantages": ["cost", "capacity"],
+    "certifications": []
+  },
+
+  "tariffs": [
+    {
+      "iso3": "DEU",
+      "country": "Germany",
+      "hs_local": "2836 20 00",
+      "mfn": 5.5,
+      "pref": null,
+      "basis": "CIF",
+      "source": "EU TARIC, SimDate=2025-01-01, Area=CN",
+      "restriction": "No anti-dumping/countervailing duty found for China origin.",
+      "status": "verified",
+      "note": ""
+    },
+    {
+      "iso3": "IND",
+      "country": "India",
+      "hs_local": "2836.20.00",
+      "mfn": null,
+      "pref": null,
+      "basis": "CIF + BCD + SWS + IGST",
+      "source": "CBIC Customs Tariff - not retrievable this session",
+      "restriction": "Verify trade remedies before quoting.",
+      "status": "gap",
+      "note": ""
+    }
+  ],
+
+  "industry": [
+    {
+      "item": "Downstream split",
+      "market": "Global",
+      "content": "Glass is the largest end-use. US 2024 estimate: glass 45%, chemicals 29%.",
+      "source": "USGS Mineral Commodity Summaries 2025 (soda ash)"
+    }
+  ],
+
+  "judgments": [
+    {
+      "tone": "crit",
+      "title": "Read the facts before the opportunity",
+      "body": "Name the single structural fact that reframes the whole market (e.g. which exporter dominates and why)."
+    },
+    {
+      "tone": "good",
+      "title": "Markets worth investigating first",
+      "body": "List them with the concrete data basis for each."
+    },
+    {
+      "tone": "warn",
+      "title": "Counter-evidence",
+      "body": "State the facts that argue against the obvious conclusion."
+    }
+  ]
+}

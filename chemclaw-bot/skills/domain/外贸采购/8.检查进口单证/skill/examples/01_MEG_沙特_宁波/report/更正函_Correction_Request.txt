@@ -1,0 +1,43 @@
+Subject: Request for Correction of Import Documents — Case SIM-MEG-2026-0518
+Our Ref.: SIM-MEG-2026-0518    Date: 2026-05-18
+
+Dear Sir or Madam,
+
+Reference is made to our purchase of ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE (CAS 107-21-1), HS Code 2905310000, quantity 200.000 MT at USD 612.00/MT CFR NINGBO, vessel MSC ISABELLA V. 2618W, ETD 2026-05-12, ETA 2026-06-20.
+
+Upon cross-checking the full set of shipping documents, we have identified the following
+points that require your correction or confirmation before we can proceed with payment,
+customs declaration and vessel arrival arrangements. Please treat this as urgent.
+
+1. [DISCREPANCY] Batch No. differs between documents
+     - 04_装箱单_Packing_List.xlsx, page 1: "MEG2605-B12"
+     - 06_分析证书_COA.docx, page 1: "MEG2605-B12"
+     - 05_提单_Bill_of_Lading.png, page 1: "MEG2605-B11"
+   Action requested: Please issue a corrected document (or a signed amendment) so that this item reads identically in all documents concerned.
+
+2. [MISSING] Document not received: 原产地证 Certificate of Origin
+   Basis of requirement: 合同第 5.2 条约定随附原产地证；沙特原产货物在中国申报享受协定/最惠国待遇及海关原产地核查时需要该证。
+   Action requested: Please send the missing document by courier (original) and by e-mail (scan) so that we can complete the customs declaration and document presentation.
+
+3. [ARITHMETIC] Invoice amount does not equal Unit Price x Quantity
+     - 03_商业发票_Commercial_Invoice.docx, page 1: "117,000.00"
+   Action requested: Please re-issue the Commercial Invoice so that Amount equals Unit Price x Quantity, and confirm the correct total payable.
+
+4. [TO BE CONFIRMED] Payment terms differ between the Contract, Proforma Invoice and Commercial Invoice
+     - 01_采购合同_Purchase_Contract.docx, page 1: "T/T 30% advance + 70% against B/L copy"
+     - 02_形式发票_Proforma_Invoice.docx, page 1: "L/C at sight (to be advised)"
+     - 03_商业发票_Commercial_Invoice.docx, page 1: "L/C NO. LC2605NB0088 AT SIGHT"
+   Action requested: Please confirm in writing which route applies to this shipment, so
+   that we may align our payment instruction and advise our bank accordingly.
+
+Please note that no items that are legitimately different by the nature of the documents
+(e.g. Proforma Invoice versus Commercial Invoice amounts, standard-shipment data in
+Section 14 of the SDS) have been raised in this letter.
+
+Please return the corrected documents within three (3) working days, quoting our
+reference number above. Kindly reply to this e-mail with the amended files attached.
+
+Yours faithfully,
+______________________
+NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.
+USCC: 91330212MA2HC8P47K

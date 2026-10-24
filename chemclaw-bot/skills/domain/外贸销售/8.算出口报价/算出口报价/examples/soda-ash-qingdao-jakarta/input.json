@@ -1,0 +1,52 @@
+{
+  "_title": "重质纯碱 青岛港→雅加达港 出口报价（SIMULATED 演示情景）",
+  "_case": "soda-ash-qingdao-jakarta",
+  "_disclaimer": "<b>本页面为模拟情景演示，不是实时运价系统。</b> 出厂价 1,450 元/吨、数量 500 吨、包装 60 元/吨为本案例设定值；内陆运费 110 元/吨、港口及报关 95 元/吨、海运费 1,250 USD/柜、装柜 25 吨/柜、保险费率 0.30% 均为 <b>SIMULATED 演示值</b>，仅用于展示完整计算流程，不得作为对外报价依据。系统不提供市场价、参考运费、建议毛利或税费默认值；送货代报价与保险公司费率后再改数重算。",
+
+  "product_cn": "重质纯碱（碳酸钠）",
+  "product_en": "Sodium Carbonate Heavy Ash (Soda Ash Dense)",
+  "spec": "Na2CO3 ≥ 99.2%，堆积密度 ~1.0 g/cm³，工业级，25kg 覆膜编织袋",
+  "hs_code": "2836200000",
+  "quantity_mt": 500,
+  "unit": "吨",
+
+  "factory_place": "山东·青岛周边工厂",
+  "pol": "青岛港 Qingdao (CNQDG)",
+  "pod": "雅加达港 Jakarta (IDJKT)",
+
+  "fx_to_cny": {"USD": 7.1000, "EUR": 7.7200, "IDR": 0.000437},
+  "quote_currency": "USD",
+
+  "exw_cny_per_t": 1450,
+  "packaging_cny_per_t": 60,
+  "inland_cny_per_t": 110,
+  "port_cny_per_t": 95,
+
+  "freight_usd_per_container": 1250,
+  "container_load_mt": 25,
+  "freight_cny_per_t": null,
+
+  "insurance_rate_of_cif": 0.3,
+  "insurance_floor_cny": 300,
+
+  "export_tax_cny_per_t": 0,
+  "other_cny_per_t": 25,
+
+  "dest_port_cny_per_t": null,
+  "import_duty_pct": null,
+  "import_vat_pct": null,
+
+  "gp_mode": "margin_on_price",
+  "gp_value": 0.08,
+  "manual_price_cny_per_t": null,
+  "gp_basis_term": "FOB",
+
+  "terms_of_interest": ["FOB", "CFR", "CIF"],
+
+  "refund_enabled": true,
+  "refund_rate_pct": 13,
+  "vat_rate_pct": 13,
+  "input_tax_included": false,
+
+  "price_decimals": 2
+}

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海外询盘审阅板 · __TITLE__</title>
+<style>
+:root{
+  --bg:#f4f6f9; --panel:#ffffff; --ink:#16202e; --ink-2:#455368; --ink-3:#7b8798;
+  --line:#e2e7ef; --line-2:#cfd7e3;
+  --brand:#0f5f9e; --brand-2:#1a7fd4; --brand-soft:#eaf3fc;
+  --amber:#b8791a; --amber-bg:#fff6e0; --amber-line:#f0d79b;
+  --red:#b3372f; --red-bg:#fdeeec; --red-line:#f1c9c3;
+  --green:#1f7a52; --green-bg:#e9f6ef; --green-line:#bfe3d0;
+  --violet:#5b4bb7; --violet-bg:#f0edfb;
+  --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","Consolas","Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC",sans-serif;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px rgba(16,24,40,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55}
+a{color:var(--brand-2);text-decoration:none}
+button{font-family:inherit;font-size:13px;cursor:pointer}
+textarea,input,select{font-family:inherit;font-size:13px;color:var(--ink)}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#0d2d4a,#0f3a5f 60%,#10456f);color:#eaf2fb;
+     box-shadow:0 2px 10px rgba(9,30,50,.25)}
+.top-in{max-width:1680px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#49a7ec,#1a7fd4);display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff;letter-spacing:.5px}
+.brand h1{font-size:15px;margin:0;font-weight:650;letter-spacing:.2px;white-space:nowrap}
+.brand .sub{font-size:11.5px;color:#a9c6e0;margin-left:2px}
+.top .spacer{flex:1}
+.chipbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 10px;font-size:11.5px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);color:#dce9f6;white-space:nowrap}
+.chip b{font-weight:700;color:#fff}
+.chip.sim{background:#6b3a12;border-color:#a8702f;color:#ffe4bf}
+.chip.ok{background:#14532d;border-color:#2f7d4f}
+.chip.warn{background:#5c3d0b;border-color:#a5742a}
+.chip.bad{background:#5d1d18;border-color:#9a3a31}
+
+/* ---------- tabs ---------- */
+.tabs{max-width:1680px;margin:0 auto;padding:0 20px;display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,.12)}
+.tab{background:none;border:none;color:#a9c6e0;padding:9px 14px;font-size:13px;border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:#fff}
+.tab.active{color:#fff;border-bottom-color:#49a7ec;font-weight:600}
+.tab .n{display:inline-block;min-width:16px;padding:0 5px;border-radius:8px;background:rgba(255,255,255,.16);font-size:10.5px;margin-left:5px;text-align:center}
+.tab .n.amber{background:#b8791a;color:#fff}
+.tab .n.bad{background:#b3372f;color:#fff}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1680px;margin:0 auto;padding:16px 20px 80px}
+.split{display:grid;grid-template-columns:minmax(320px,0.92fr) minmax(420px,1.35fr);gap:16px;align-items:start}
+/* 断点下调到 960px：笔记本小窗口（1024/1100 宽）仍保持左右双栏，字段区才不会被挤到下面 */
+@media (max-width:960px){.split{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.card-h{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:#fbfcfe}
+.card-h h2{font-size:13.5px;margin:0;font-weight:650;letter-spacing:.2px}
+.card-h .hint{font-size:11.5px;color:var(--ink-3)}
+.card-h .spacer{flex:1}
+.card-b{padding:12px 14px}
+.sticky-card{position:sticky;top:104px}
+/* 左栏"原始询盘"：整列在页面里粘住，只有正文框内部滚动。
+   旧写法是整张卡片 sticky + 正文 max-height，卡片总高（标题+页签+10行正文）可能超过视口，
+   底部行就被顶出可视区且滚不回来 → 现在把粘性高度钉死在视口内，正文 flex 撑满剩余空间 */
+.src-col{position:sticky;top:104px;max-height:calc(100vh - 120px);display:flex;flex-direction:column}
+/* 单栏（窄窗口）时左栏必须回到正常文档流并限制高度，否则它会占满整屏、把右侧字段区压到下面看不见 */
+@media (max-width:1180px){
+  .src-col{position:static;max-height:none}
+  .source{max-height:44vh;min-height:140px}
+}
+
+/* ---------- source pane ---------- */
+.snip-tabs{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);background:#f8fafc;flex-wrap:wrap}
+.snip-tab{border:1px solid var(--line-2);background:#fff;border-radius:8px;padding:4px 9px;font-size:11.5px;color:var(--ink-2)}
+.snip-tab.active{background:var(--brand-soft);border-color:#9ecbf0;color:var(--brand);font-weight:650}
+.source{flex:1 1 auto;min-height:180px;overflow:auto;padding:10px 6px 10px 12px;background:#fff;overscroll-behavior:contain}
+.ln{display:flex;gap:10px;font-family:var(--mono);font-size:12.2px;line-height:1.62;white-space:pre-wrap;word-break:break-word;border-radius:4px;padding:0 4px}
+.ln .no{flex:0 0 34px;text-align:right;color:#a8b3c2;user-select:none;font-size:11px}
+.ln .tx{flex:1;min-width:0}
+.ln.hl{background:linear-gradient(90deg,#fff3c4,#fffaf0);box-shadow:inset 3px 0 0 #e0a92b}
+.ln.hl.live{background:#ffe9a8;box-shadow:inset 3px 0 0 #b8791a}
+.ln.sep .tx{color:#9aa6b6}
+.trap{display:block;margin:2px 0 2px 44px;font-size:11px;background:var(--amber-bg);border:1px solid var(--amber-line);color:#7a520f;border-radius:6px;padding:2px 7px;font-family:var(--sans)}
+
+/* ---------- field list ---------- */
+.toolbar{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:#fbfcfe;flex-wrap:wrap}
+.toolbar input[type=search]{flex:1;min-width:160px;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;background:#fff}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:none;background:none;padding:5px 10px;color:var(--ink-2);font-size:12px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:none}
+.seg button.active{background:var(--brand);color:#fff}
+.cat{margin:0 0 14px}
+.cat-h{display:flex;align-items:center;gap:8px;margin:14px 2px 6px;font-size:12.5px;color:var(--ink-2);font-weight:650;letter-spacing:.3px}
+.cat-h .badge{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;background:#e8eef6;color:#33507a;font-size:11px;font-weight:800}
+.cat-h .cnt{font-weight:400;color:var(--ink-3);font-size:11.5px}
+.f{display:grid;grid-template-columns:118px 1fr;gap:10px;border:1px solid var(--line);border-radius:9px;padding:7px 9px;margin-bottom:6px;background:#fff;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.f:hover{border-color:#b9cde3;box-shadow:0 2px 8px rgba(16,24,40,.06)}
+.f.sel{border-color:var(--brand-2);box-shadow:0 0 0 2px rgba(26,127,212,.14)}
+.f .k{font-size:12px;color:var(--ink-2);padding-top:1px}
+.f .k .en{display:block;font-size:10.5px;color:#95a1b1;line-height:1.3;margin-top:1px}
+.f .v{min-width:0}
+.f .val{font-size:13px;color:var(--ink);word-break:break-word}
+.f.stated .val{color:#123a5c}
+.f.missing .val::before,.f.ambiguous .val::before,.f.assumed .val::before{content:""}
+.f.missing{background:var(--red-bg);border-color:var(--red-line)}
+.f.missing .val{color:var(--red);font-weight:600}
+.f.ambiguous{background:var(--amber-bg);border-color:var(--amber-line)}
+.f.ambiguous .val{color:#8a5d0d;font-weight:600}
+.f.assumed{background:#f5f3ff;border-color:#ddd6f5}
+.f.assumed .val{color:var(--violet);font-weight:600}
+.tagline{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:10.5px;border-radius:5px;padding:0 6px;line-height:17px;border:1px solid transparent;white-space:nowrap}
+.tag.bucket-A{background:#eef4fd;color:#1e5c96;border-color:#cfe1f5}
+.tag.bucket-B{background:#f3f1fb;color:#5b4bb7;border-color:#ddd6f5}
+.tag.bucket-C{background:#eef7f1;color:#1f7a52;border-color:#c9e6d6}
+.tag.st{background:#eef1f5;color:#4a5a6f}
+.tag.st-stated{background:var(--green-bg);color:var(--green);border-color:var(--green-line)}
+.tag.st-missing{background:var(--red-bg);color:var(--red);border-color:var(--red-line)}
+.tag.st-ambiguous{background:var(--amber-bg);color:#8a5d0d;border-color:var(--amber-line)}
+.tag.st-assumed{background:var(--violet-bg);color:var(--violet);border-color:#ddd6f5}
+.tag.q{background:#fff;color:#33507a;border:1px dashed #9db4cd}
+.srcq{font-size:11.5px;color:#6c7b8f;border-left:2px solid #dbe3ee;padding-left:7px;margin-top:4px;font-style:italic;word-break:break-word}
+.note{font-size:11.5px;color:#6c7b8f;margin-top:3px}
+.edit{margin-top:6px;display:none}
+.edit.on{display:block}
+.edit textarea{width:100%;min-height:52px;border:1px solid var(--line-2);border-radius:7px;padding:6px 8px;resize:vertical;background:#fff}
+.edit .row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.btn{border:1px solid var(--line-2);background:#fff;border-radius:7px;padding:4px 10px;color:var(--ink-2)}
+.btn:hover{border-color:#9db4cd;color:var(--brand)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.pri:hover{background:var(--brand-2);color:#fff}
+.btn.ghost{background:transparent}
+.btn.sm{padding:2px 8px;font-size:11.5px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------- gaps / questions ---------- */
+.gatebar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:900px){.gatebar{grid-template-columns:repeat(2,1fr)}}
+.gate{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 12px}
+.gate .l{font-size:11.5px;color:var(--ink-3)}
+.gate .v{font-size:19px;font-weight:750;letter-spacing:.3px}
+.gate.red .v{color:var(--red)} .gate.amber .v{color:var(--amber)} .gate.green .v{color:var(--green)} .gate.blue .v{color:var(--brand)}
+.q{display:grid;grid-template-columns:26px 1fr auto;gap:10px;border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;background:#fff}
+.q:hover{border-color:#b9cde3}
+.q .idx{width:24px;height:24px;border-radius:7px;background:#eef4fd;color:#1e5c96;font-weight:700;display:grid;place-items:center;font-size:12px}
+.q .p1{background:#fdeeea;color:#a93c22}
+.q .body{min-width:0}
+.q .en{font-size:13px;color:#12314f}
+.q .cn{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.q .anc{font-family:var(--mono);font-size:11px;color:#6c7b8f;margin-top:4px;background:#f7f9fc;border-radius:5px;padding:2px 6px;display:inline-block}
+.q .acts{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+.q.done{background:#f6fbf8;border-color:var(--green-line)}
+.q.done .en{text-decoration:line-through;color:#8aa394}
+.intl{display:flex;gap:8px;align-items:flex-start;border-bottom:1px dashed var(--line);padding:7px 2px;font-size:12.5px}
+.intl:last-child{border-bottom:none}
+.intl .d{color:var(--ink-3);font-size:11.5px}
+.empty{padding:18px;text-align:center;color:var(--ink-3);font-size:12.5px;border:1px dashed var(--line-2);border-radius:10px}
+.notice{border-radius:9px;padding:9px 12px;font-size:12.5px;margin-bottom:12px;border:1px solid}
+.notice.sim{background:#fff7ea;border-color:#f1cfa0;color:#7c4e0c}
+.notice.info{background:var(--brand-soft);border-color:#c9e2f7;color:#12507f}
+.notice.warn{background:var(--amber-bg);border-color:var(--amber-line);color:#7a520f}
+
+/* ---------- reply ---------- */
+.ph{display:inline-block;background:#fff1c9;border:1px dashed #d29a2b;color:#7a520f;border-radius:5px;padding:0 4px;font-size:12px;line-height:1.4;font-weight:600;cursor:pointer}
+.ph.filled{background:#e9f6ef;border-color:#7cc09b;color:#1f6b48;border-style:solid}
+.reply-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.reply-head label{font-size:11.5px;color:var(--ink-3);margin-right:4px}
+.sel{border:1px solid var(--line-2);border-radius:8px;padding:5px 8px;background:#fff}
+.subj{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.subj input{flex:1;border:1px solid var(--line-2);border-radius:8px;padding:7px 10px;background:#fff}
+#replyBody{width:100%;min-height:470px;border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;line-height:1.72;font-size:13.4px;background:#fff;resize:vertical;font-family:var(--sans)}
+.preview{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fcfdff;font-size:13.4px;line-height:1.72;white-space:pre-wrap;max-height:520px;overflow:auto}
+.dual{display:grid;grid-template-columns:1fr 290px;gap:12px}
+@media(max-width:980px){.dual{grid-template-columns:1fr}}
+.phlist{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.phlist .h{padding:7px 10px;background:#fbfcfe;border-bottom:1px solid var(--line);font-size:12px;font-weight:650}
+.phitem{padding:7px 10px;border-bottom:1px solid var(--line);font-size:12px}
+.phitem:last-child{border-bottom:none}
+.phitem .top-row{display:flex;align-items:center;gap:6px;justify-content:space-between}
+.phitem .k{font-family:var(--mono);font-size:11px;color:#7a520f;background:#fff6e0;border-radius:4px;padding:0 5px}
+.phitem .lab{color:var(--ink-2);font-size:11.5px}
+.phitem input{width:100%;margin-top:5px;border:1px solid var(--line-2);border-radius:6px;padding:4px 7px;font-size:12px}
+.phitem .own{font-size:10.5px;color:var(--ink-3)}
+.polish{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:980px){.polish{grid-template-columns:1fr}}
+.polish textarea{width:100%;min-height:320px;border:1px solid var(--line-2);border-radius:10px;padding:12px;font-size:13px;line-height:1.7;resize:vertical}
+.finding{border-left:3px solid var(--amber);background:#fffdf6;padding:6px 10px;margin-bottom:6px;font-size:12px;border-radius:0 6px 6px 0}
+.finding.ok{border-left-color:var(--green);background:#f6fbf8}
+.finding.bad{border-left-color:var(--red);background:var(--red-bg)}
+.diff-old{background:#fdeeec;color:#a9382d;text-decoration:line-through;padding:0 2px;border-radius:3px}
+.diff-new{background:#e9f6ef;color:#1f6b48;font-weight:600;padding:0 2px;border-radius:3px}
+
+/* ---------- next scenes ---------- */
+.scenes{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.scene{border:1px solid var(--line);border-radius:11px;padding:13px 14px;background:#fff;position:relative;overflow:hidden}
+.scene:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand-2)}
+.scene h4{margin:0 0 4px;font-size:13.5px}
+.scene p{margin:0 0 9px;font-size:11.8px;color:var(--ink-3);line-height:1.55}
+.scene .acts{display:flex;gap:6px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#12304d;color:#fff;padding:9px 18px;border-radius:999px;font-size:12.5px;opacity:0;pointer-events:none;transition:.22s;z-index:99;box-shadow:0 8px 28px rgba(9,30,50,.35)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{margin-top:22px;font-size:11.5px;color:var(--ink-3);line-height:1.7}
+.foot code{font-family:var(--mono);font-size:11px;background:#eef1f5;padding:0 4px;border-radius:4px}
+.hidden{display:none!important}
+@media print{.top,.tabs,.toolbar,.tabsbar{display:none!important}body{background:#fff}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="logo">OI</div>
+      <div>
+        <h1>海外询盘审阅板 <span class="sub">Overseas Inquiry Triage · v__VERSION__</span></h1>
+      </div>
+    </div>
+    <span class="chip sim">模拟案例 · 非真实交易</span>
+    <div class="spacer"></div>
+    <div class="chipbar" id="chips"></div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="review">① 双栏审阅</button>
+    <button class="tab" data-tab="gaps">② 缺失与歧义<span class="n amber" id="tabGapN">0</span></button>
+    <button class="tab" data-tab="questions">③ 待确认问题<span class="n" id="tabQN">0</span></button>
+    <button class="tab" data-tab="reply">④ 英文回复草稿</button>
+    <button class="tab" data-tab="polish">⑤ 已写稿润色</button>
+    <button class="tab" data-tab="next">⑥ 下一步场景</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ========== 1 review ========== -->
+  <section id="tab-review">
+    <div class="split">
+      <div class="card src-col">
+        <div class="card-h">
+          <h2>原始询盘（保留原语言）</h2>
+          <span class="hint" id="srcHint"></span>
+          <div class="spacer"></div>
+          <button class="btn sm" id="btnCopySrc">复制原文</button>
+        </div>
+        <div class="snip-tabs" id="snipTabs"></div>
+        <div class="source" id="source"></div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="toolbar">
+            <input type="search" id="q" placeholder="搜索字段 / 客户原话…">
+            <div class="seg" id="filterSeg">
+              <button class="active" data-f="all">全部</button>
+              <button data-f="attention">只看缺失+歧义</button>
+              <button data-f="assumed">我方假设</button>
+            </div>
+            <span class="hint" id="fieldStat" style="font-size:11.5px;color:var(--ink-3)"></span>
+          </div>
+          <div class="card-b" id="fields"></div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="card-h"><h2>歧义陷阱提醒</h2><span class="hint">客户"看起来给了其实没给"的原句</span></div>
+          <div class="card-b" id="traps"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 2 gaps ========== -->
+  <section id="tab-gaps" class="hidden">
+    <div class="notice info">缺口分三桶：<b>A 类</b> 缺了不能报价；<b>B 类</b> 可带我方假设先准备（必须标注）；<b>C 类</b> 由我方内部先定，不问客户。</div>
+    <div class="gatebar" id="gatebar"></div>
+    <div class="split">
+      <div class="card">
+        <div class="card-h"><h2>缺失</h2><span class="hint">客户没说 → 不能补</span></div>
+        <div class="card-b" id="gapsMissing"></div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-h"><h2>歧义 / 待客户确认</h2><span class="hint">说了但不唯一</span></div>
+          <div class="card-b" id="gapsAmbig"></div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="card-h"><h2>我方假设（渲染时自动加 our assumption 标注）</h2></div>
+          <div class="card-b" id="gapsAssumed"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 3 questions ========== -->
+  <section id="tab-questions" class="hidden">
+    <div class="split">
+      <div class="card">
+        <div class="card-h">
+          <h2>向客户确认的问题（≤6 条）</h2><span class="hint">标记后自动从邮件与待确认清单移除</span>
+          <div class="spacer"></div>
+          <button class="btn sm" id="btnCopyQ">复制全部问题</button>
+        </div>
+        <div class="card-b" id="questions"></div>
+        <div class="card-h" style="border-top:1px solid var(--line);border-bottom:none"><h2>我方内部先确认（不进客户邮件）</h2></div>
+        <div class="card-b" id="internalBox"></div>
+      </div>
+      <div class="card sticky-card">
+        <div class="card-h"><h2>待客户确认事项（邮件可附）</h2></div>
+        <div class="card-b" id="pendingPanel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 4 reply ========== -->
+  <section id="tab-reply" class="hidden">
+    <div class="card">
+      <div class="card-h">
+        <h2>英文回复草稿</h2>
+        <span class="hint">价格 / 交期 / 付款 / 单证一律占位符</span>
+        <div class="spacer"></div>
+        <span class="chip bad" id="scanChip" style="background:#5d1d18;border-color:#9a3a31">承诺 : 0</span>
+        <span class="chip ok" style="background:#14532d;border-color:#2f7d4f" id="priceChip">价格痕迹 : 0</span>
+      </div>
+      <div class="card-b">
+        <div class="reply-head">
+          <span><label>渠道</label>
+            <select class="sel" id="selChannel">
+              <option value="reply_A_confirm">A · 确认式（缺参数，先不报价）</option>
+              <option value="reply_B_quote_structure">B · 报价式中继</option>
+              <option value="reply_C_sample">C · 样品/技术资料</option>
+              <option value="reply_D_docs_only">D · 只答单证与规格</option>
+            </select>
+          </span>
+          <span><label>语气</label>
+            <select class="sel" id="selTone">
+              <option value="friendly-professional">friendly-professional（默认）</option>
+              <option value="formal">formal（招标/大终端）</option>
+              <option value="concise-direct">concise-direct（老客户）</option>
+            </select>
+          </span>
+          <span><label>公司模板</label>
+            <select class="sel" id="selTemplate">
+              <option value="std">默认模板</option>
+              <option value="company">公司模板（reply_A_confirm）</option>
+            </select>
+          </span>
+          <div style="flex:1"></div>
+          <button class="btn pri" id="btnRegen">按当前字段重新生成</button>
+          <button class="btn" id="btnCopyReply">复制回复</button>
+          <button class="btn" id="btnDownload">下载 .txt</button>
+        </div>
+        <div class="subj">
+          <label style="font-size:11.5px;color:var(--ink-3)">主题</label>
+          <input id="subject" value="">
+        </div>
+        <div class="dual">
+          <div>
+            <div class="seg" style="margin-bottom:8px">
+              <button class="active" data-rmode="edit">编辑</button>
+              <button data-rmode="preview">排版预览（占位符高亮）</button>
+            </div>
+            <textarea id="replyBody" spellcheck="false"></textarea>
+            <div class="preview hidden" id="preview"></div>
+          </div>
+          <div>
+            <div class="phlist">
+              <div class="h">占位符清单（填了即认为"我方已确认"）</div>
+              <div id="phlist"></div>
+            </div>
+            <div class="notice warn" style="margin-top:10px;font-size:11.5px">占位符全部确认后，"可发送版"才解锁（脚本层 <code>--pack</code> 闸门同理）。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 5 polish ========== -->
+  <section id="tab-polish" class="hidden">
+    <div class="notice info">润色只改语言：不重写结构、不改事实、<b>不新增任何商务承诺</b>。提交后会逐条列出改动，并做"新增承诺 / 新增数字"检查。</div>
+    <div class="polish">
+      <div class="card"><div class="card-h"><h2>你的英文稿</h2><div class="spacer"></div><button class="btn sm" id="btnLoadDraft">载入当前草稿</button></div>
+        <div class="card-b"><textarea id="polishIn" placeholder="粘贴你已写好的英文回复…"></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px"><button class="btn pri" id="btnPolish">润色并检查承诺</button></div></div></div>
+      <div class="card"><div class="card-h"><h2>润色结果</h2><div class="spacer"></div><button class="btn sm" id="btnCopyPolished">复制</button></div>
+        <div class="card-b"><div class="preview" id="polishOut" style="min-height:180px">—</div>
+        <div id="polishChecks" style="margin-top:10px"></div></div></div>
+    </div>
+  </section>
+
+  <!-- ========== 6 next ========== -->
+  <section id="tab-next" class="hidden">
+    <div class="notice info">本技能只到"确认式回复"为止。往下走需要别的场景接手——下面每个卡片都带好交接数据，复制后直接粘给对应技能。</div>
+    <div class="scenes" id="scenes"></div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-h"><h2>交接数据（JSON）</h2><div class="spacer"></div><button class="btn sm" id="btnCopyHandoff">复制 JSON</button></div>
+      <div class="card-b"><textarea id="handoff" style="width:100%;min-height:260px;border:1px solid var(--line-2);border-radius:9px;padding:10px;font-family:var(--mono);font-size:11.5px" spellcheck="false"></textarea></div>
+    </div>
+  </section>
+
+  <div class="foot">
+    生成本页：overseas-inquiry-triage v__VERSION__ · 纯前端单文件，上传内容不出本机。<br>
+    本页<b>不评估询盘真实性，也不评估成交可能性</b>；不产生价格、库存、船期、交期、付款或单证承诺。所有 <code>‹…›</code> 占位符须由对应责任人确认后替换。
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script id="payload" type="application/json">__DATA__</script>
+<script>
+(function(){
+"use strict";
+const DATA = JSON.parse(document.getElementById('payload').textContent);
+const S = window.__INQUIRY_STATE__ || (window.__INQUIRY_STATE__ = {});
+S.fields = S.fields || {};
+S.checked = S.checked || {};
+S.phValues = S.phValues || {};
+S.overrides = S.overrides || {};
+S.replyEdits = S.replyEdits || {};
+S.tone = S.tone || DATA.reply.tone || 'friendly-professional';
+S.channel = S.channel || DATA.reply.template || 'reply_A_confirm';
+S.subject = S.subject || DATA.reply.subject || '';
+S.body = S.body || DATA.reply.body || '';
+S.activeSnip = S.activeSnip || (DATA.snippets[0] || {}).id || 'S01';
+
+/* ---------------- helpers ---------------- */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('on'), 1800); }
+function copyText(txt, label){
+  const done = () => toast((label||'已复制') + ' ✓');
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt).then(done, ()=>fallback(txt,done)); }
+  else fallback(txt, done);
+}
+function fallback(txt, done){ const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');done();}catch(e){toast('复制失败，请手动选择');} document.body.removeChild(ta); }
+const STATUS_CN = {stated:'已明确', missing:'缺失', ambiguous:'歧义', assumed:'我方假设', internal:'我方待定'};
+const BUCKET_CN = {A:'A 必确认', B:'B 可假设', C:'C 我方定'};
+const CATS = DATA.categories;
+function catName(c){ const x = CATS.find(k=>k[0]===c); return x ? x[1] : c; }
+function catEn(c){ const x = CATS.find(k=>k[0]===c); return x ? x[2] : c; }
+function norm(s){ return String(s||'').replace(/\s+/g,' ').trim().toLowerCase(); }
+
+/* ---------------- config from payload ---------------- */
+const CFG = DATA.config || {};
+const FIELDS = DATA.fields;
+window.__INQUIRY_FIELDS__ = FIELDS;
+
+/* question list: base from payload, filtered by checked */
+function activeQuestions(){
+  const used = (DATA.questions || []).filter(q => !S.checked[q.key]);
+  return used.slice(0, CFG.maxQuestions || 6);
+}
+function blockingFields(){
+  const out = [];
+  Object.keys(FIELDS).forEach(k=>{
+    const f = FIELDS[k];
+    if (f.bucket === 'A' && f.affects_quote && f.status !== 'stated' && !S.checked[k]) out.push(k);
+  });
+  return out;
+}
+
+/* ---------------- source pane ---------------- */
+function renderSnips(){
+  const tabs = $('#snipTabs');
+  tabs.innerHTML = (DATA.snippets||[]).map(s =>
+    `<button class="snip-tab ${s.id===S.activeSnip?'active':''}" data-snip="${esc(s.id)}">${esc(s.id)} · ${esc(s.title||s.kind||'')}</button>`
+  ).join('');
+  $$('.snip-tab', tabs).forEach(b=> b.onclick = () => { S.activeSnip = b.dataset.snip; renderSnips(); });
+  renderSource();
+}
+function currentSnip(){ return (DATA.snippets||[]).find(s=>s.id===S.activeSnip) || (DATA.snippets||[])[0] || {lines:[],id:'S01'}; }
+function renderSource(highlightQuote){
+  const snip = currentSnip();
+  const lines = snip.lines || [];
+  const host = $('#source');
+  const q = highlightQuote != null ? norm(highlightQuote) : '';
+  let html = '';
+  lines.forEach((ln, i) => {
+    const isHl = q && q.length > 2 && norm(ln).indexOf(q.slice(0, Math.min(q.length, 60))) >= 0;
+    html += `<div class="ln ${isHl?'hl':''}" data-line="${i+1}"><span class="no">${i+1}</span><span class="tx">${esc(ln) || ' '}</span></div>`;
+  });
+  host.innerHTML = html || '<div class="empty">无原文</div>';
+  $('#srcHint').textContent = (snip.date || '') + (snip.chars ? ' · ' + snip.chars + ' 字符' : '');
+}
+function locate(quote, snipId){
+  if (!quote) { toast('该字段没有原文依据（客户未提及）'); return; }
+  const target = (DATA.snippets||[]).find(s=>s.id===snipId) || currentSnip();
+  if (target.id !== S.activeSnip) { S.activeSnip = target.id; renderSnips(); }
+  const q = norm(quote).slice(0, 60);
+  const found = (target.lines||[]).findIndex(ln => norm(ln).indexOf(q) >= 0);
+  renderSource(quote);
+  if (found >= 0) {
+    const el = $(`.ln[data-line="${found+1}"]`);
+    if (el) { el.classList.add('live'); el.scrollIntoView({block:'center', behavior:'smooth'}); setTimeout(()=>el.classList.remove('live'), 2200); }
+  } else { toast('未在该素材中定位到原句，请人工核对'); }
+}
+
+/* ---------------- field list ---------------- */
+let curFilter = 'all', curQuery = '', selected = null;
+function fieldValue(f){
+  if (f.status === 'assumed' && f.assume) return f.value ? f.value : (f.assume + '（我方假设 · 待确认）');
+  if (!f.value) return '';
+  return f.value;
+}
+function renderFields(){
+  const host = $('#fields');
+  const byCat = {};
+  Object.keys(FIELDS).forEach(k=>{ const f = FIELDS[k]; (byCat[f.cat] = byCat[f.cat] || []).push(f); });
+  let html = '', shown = 0;
+  CATS.forEach(([c, cn, en])=>{
+    const list = (byCat[c]||[]).filter(f=>{
+      if (curFilter==='attention' && !(f.status==='missing' || f.status==='ambiguous')) return false;
+      if (curFilter==='assumed' && f.status!=='assumed') return false;
+      if (curQuery){ const s = (f.label_cn+' '+f.label_en+' '+(f.value||'')+' '+(f.quote||'')).toLowerCase(); if (s.indexOf(curQuery)<0) return false; }
+      return true;
+    });
+    if (!list.length) return;
+    shown += list.length;
+    html += `<div class="cat"><div class="cat-h"><span class="badge">${c}</span>${esc(cn)} <span style="color:#9aa6b6;font-weight:400">${esc(en)}</span><span class="cnt">${list.length}</span></div>`;
+    list.forEach(f=>{
+      const v = fieldValue(f);
+      const st = S.checked[f.key] ? 'stated' : f.status;
+      const vs = S.fields[f.key] || '';
+      html += `<div class="f ${st} ${selected===f.key?'sel':''}" data-k="${esc(f.key)}">
+        <div class="k">${esc(f.label_cn)}<span class="en">${esc(f.label_en)}</span></div>
+        <div class="v">
+          <div class="val">${v ? esc(v) : (st==='missing'||st==='internal' ? '— 客户未提及 —' : '—')}</div>
+          ${vs ? `<div class="note">已修正为：<b>${esc(vs)}</b></div>` : ''}
+          <div class="tagline">
+            <span class="tag bucket-${f.bucket}">${BUCKET_CN[f.bucket]}</span>
+            <span class="tag st st-${st}">${S.checked[f.key] ? '已确认' : (STATUS_CN[f.status]||f.status)}</span>
+            ${f.confidence ? `<span class="tag" title="置信度只表示读得准不准">置信 ${f.confidence==='high'?'高':f.confidence==='medium'?'中':'低'}</span>` : ''}
+            ${f.affects_quote ? '<span class="tag q">影响报价</span>' : ''}
+            ${f.confirmed_by ? '<span class="tag q" style="border-style:solid;background:#e9f6ef;color:#1f6b48">客户已确认</span>' : ''}
+          </div>
+          ${f.quote ? `<div class="srcq">「${esc(f.quote)}」${f.source_id?` <span style="font-style:normal;color:#9aa6b6">${esc(f.source_id)}${f.locator?' · '+esc(f.locator):''}</span>`:''}</div>` : ''}
+          ${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}
+        </div>
+      </div>
+      <div class="edit ${selected===f.key?'on':''}" data-edit="${esc(f.key)}">
+        <textarea data-ta="${esc(f.key)}" placeholder="修正为（客户确认后填；不要凭常识补）">${esc(S.fields[f.key] || '')}</textarea>
+        <div class="row">
+          <button class="btn pri sm" data-save="${esc(f.key)}">保存修正</button>
+          ${f.quote ? `<button class="btn sm" data-loc="${esc(f.key)}">定位原文</button>` : ''}
+          <button class="btn sm" data-confirm="${esc(f.key)}">${f.confirmed_by?'取消"客户已确认"':'标记：客户已确认'}</button>
+          ${S.fields[f.key] ? `<button class="btn sm" data-reset="${esc(f.key)}">还原</button>` : ''}
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  host.innerHTML = html || '<div class="empty">没有匹配的字段</div>';
+  $$('.f', host).forEach(el=>{
+    el.onclick = ev => {
+      const k = el.dataset.k;
+      selected = (selected===k) ? null : k;
+      const f = FIELDS[k];
+      if (selected && f && f.quote && f.source_id) { locate(f.quote, f.source_id); }
+      else if (selected && (!f.quote)) { toast('该字段客户未提及，无原文可定位'); }
+      renderFields();
+    };
+  });
+  $$('[data-save]', host).forEach(b=> b.onclick = ev=>{ ev.stopPropagation();
+    const k=b.dataset.save; const v=$(`[data-ta="${k}"]`).value.trim();
+    if (v) { S.fields[k]=v; FIELDS[k].status='stated'; FIELDS[k].confirmed_by='sales'; FIELDS[k].value=v; toast('已保存修正（客户已确认）'); }
+    else { delete S.fields[k]; FIELDS[k].confirmed_by=''; toast('已清空'); }
+    markDirty(); renderAll();
+  });
+  $$('[data-loc]', host).forEach(b=> b.onclick = ev=>{ ev.stopPropagation(); const f=FIELDS[b.dataset.loc]; locate(f.quote, f.source_id); });
+  $$('[data-confirm]', host).forEach(b=> b.onclick = ev=>{ ev.stopPropagation();
+    const k=b.dataset.confirm; const f=FIELDS[k];
+    if (f.confirmed_by) { f.confirmed_by=''; S.checked[k]=true; }
+    else { f.confirmed_by='customer'; f.status='stated'; delete S.checked[k]; }
+    markDirty(); renderAll();
+  });
+  $$('[data-reset]', host).forEach(b=> b.onclick = ev=>{ ev.stopPropagation(); delete S.fields[b.dataset.reset]; markDirty(); renderAll(); });
+  $('#fieldStat').textContent = `显示 ${shown} / ${Object.keys(FIELDS).length} 字段`;
+}
+
+/* ---------------- traps ---------------- */
+function renderTraps(){
+  const text = (DATA.snippets||[]).map(s=>s.text||'').join('\n');
+  const hits = (DATA.traps||[]).map(t=>({...t, m: new RegExp(t.pattern,'i').exec(text)})).filter(t=>t.m);
+  const host = $('#traps');
+  if (!hits.length){ host.innerHTML = '<div class="empty">本询盘没有命中常见英文歧义句式——但请仍逐项核对下方"缺失与歧义"页；非英询盘的陷阱常在语言层面（如 FOB 后写买方港口）。</div>'; return; }
+  host.innerHTML = hits.map(t=>{
+    const line = t.m[0];
+    return `<div class="finding"><b>${esc(t.label_cn)}</b> · 原句「${esc(line)}」<br><span style="color:#7a520f">${esc(t.why)}</span></div>`;
+  }).join('');
+}
+
+/* ---------------- gaps ---------------- */
+function renderGaps(){
+  const all = Object.values(FIELDS);
+  const cnt = {stated:0, missing:0, ambiguous:0, assumed:0, internal:0};
+  all.forEach(f=>{ cnt[f.confirmed_by ? 'stated' : f.status] = (cnt[f.confirmed_by ? 'stated' : f.status]||0)+1; });
+  const blocking = blockingFields();
+  const ok = blocking.length === 0;
+  const lead = (DATA.questions||[]).length + all.filter(f=>f.status==='ambiguous').length;
+  $('#gatebar').innerHTML = `
+    <div class="gate green"><div class="l">字段总数（8 类）</div><div class="v">${all.length}</div><div class="l">已明确 ${cnt.stated} · 缺失 ${cnt.missing} · 歧义 ${cnt.ambiguous} · 假设 ${cnt.assumed}</div></div>
+    <div class="gate ${blocking.length?'red':'green'}"><div class="l">阻塞报价的 A 类字段</div><div class="v">${blocking.length}</div><div class="l">${ok?'已全部确认，可进入算价':'缺 ' + blocking.length + ' 项，不能报价'}</div></div>
+    <div class="gate blue"><div class="l">本轮要问客户</div><div class="v" id="qLeftN">${activeQuestions().length}</div><div class="l">上限 ${CFG.maxQuestions||6} 条 · 已剔除你标记确认的</div></div>
+    <div class="gate ${ok?'green':'amber'}"><div class="l">报价闸门</div><div class="v">${ok?'OPEN':'LOCKED'}</div><div class="l">${ok?'（价格仍需我方填，本页不产价）':'先补 A 类字段或标记客户已确认'}</div></div>`;
+  const misses = all.filter(f=>f.status==='missing');
+  const ambigs = all.filter(f=>f.status==='ambiguous');
+  const ass = all.filter(f=>f.status==='assumed');
+  const item = (f, cls) => `<div class="intl"><div style="flex:1">
+      <b>${esc(f.label_cn)}</b> <span style="color:#9aa6b6;font-size:11px">${esc(f.label_en)}</span>
+      <div class="d">${f.note ? esc(f.note) : (f.quote ? '客户原句：'+esc(f.quote) : '客户未提及')}</div></div>
+      <button class="btn sm gapgo" data-gok="${esc(f.key)}">定位/修正</button></div>`;
+  $('#gapsMissing').innerHTML = misses.length ? `<div style="margin-bottom:6px;font-size:11.5px;color:var(--ink-3)">共 ${misses.length} 项</div>` + misses.map(f=>item(f)).join('') : '<div class="empty">无</div>';
+  $('#gapsAmbig').innerHTML = ambigs.length ? ambigs.map(f=>item(f)).join('') : '<div class="empty">无</div>';
+  $('#gapsAssumed').innerHTML = ass.length ? ass.map(f=>`<div class="intl"><div style="flex:1"><b>${esc(f.label_cn)}</b> → <span style="color:var(--violet)">${esc(f.assume||'—')}</span><div class="d">渲染时会自动加（our assumption – to be confirmed）</div></div></div>`).join('') : '<div class="empty">本询盘没有需要替客户假设的 B 类字段（好现象）</div>';
+  $$('[data-gok]').forEach(b=> b.onclick = ()=>{ setTab('review'); selected=b.dataset.gok; renderFields(); const f=FIELDS[b.dataset.gok]; if(f.quote) locate(f.quote,f.source_id); });
+  document.getElementById('tabGapN').textContent = misses.length + ambigs.length;
+}
+
+/* ---------------- questions ---------------- */
+function renderQuestions(){
+  const qs = activeQuestions();
+  const qHost = document.getElementById('questions');
+  document.getElementById('tabQN').textContent = qs.length;
+  qHost.innerHTML = qs.length ? qs.map((q,i)=>`
+    <div class="q ${S.checked[q.key]?'done':''}" data-qbody="${i}" title="点击定位客户原句">
+      <div class="idx ${q.priority===1?'p1':''}">${i+1}</div>
+      <div class="body">
+        <div class="en">${esc(q.question_en)}</div>
+        <div class="cn">${esc(q.label_cn)} · ${esc(q.reason_cn||'')}</div>
+        ${q.anchor ? `<div class="anc">客户原句：${esc(q.anchor)}</div>` : '<div class="anc">客户未提及</div>'}
+      </div>
+      <div class="acts">
+        <button class="btn sm" data-qcopy="${i}">复制</button>
+        ${q.anchor ? `<button class="btn sm" data-qloc="${i}">看原文</button>` : ''}
+        <button class="btn sm" data-qdone="${esc(q.key)}">${S.checked[q.key]?'恢复':'客户已答'}</button>
+      </div>
+    </div>`).join('') : '<div class="empty">本轮的确认点已全部关闭 🎉（仍不能报价——价格与商务条款由我方决定）</div>';
+  $$('[data-qcopy]', qHost).forEach(b=> b.onclick = ()=> copyText(activeQuestions()[+b.dataset.qcopy].question_en, '问题已复制'));
+  $$('[data-qbody]', qHost).forEach(el=> el.onclick = (ev)=>{ if (ev.target.closest('button')) return; const q=activeQuestions()[+el.dataset.qbody]; const sn=(DATA.snippets||[]).find(s=>(s.text||'').toLowerCase().includes((q.anchor||'').toLowerCase().slice(0,30))); setTab('review'); locate(q.anchor, sn&&sn.id); });
+  $$('[data-qloc]', qHost).forEach(b=> b.onclick = ()=>{ const q=activeQuestions()[+b.dataset.qloc]; const sn=(DATA.snippets||[]).find(s=>(s.text||'').toLowerCase().includes((q.anchor||'').toLowerCase().slice(0,30))); setTab('review'); locate(q.anchor, sn&&sn.id); });
+  $$('[data-qdone]', qHost).forEach(b=> b.onclick = ()=>{ const k=b.dataset.qdone; S.checked[k]=!S.checked[k]; markDirty(); renderAll(); });
+  const internal = DATA.internalConfirm || [];
+  const internalHtml = internal.map(x=>`<div class="intl"><div style="flex:1"><b>${esc(x.label_cn)}</b> <span class="d">${esc(x.desc)}</span></div></div>`).join('');
+  const internalHost = document.getElementById('internalBox');
+  if (internalHost) internalHost.innerHTML = internalHtml || '<div class="empty">无</div>';
+  const pend = pendingItems();
+  const pendHost = document.getElementById('pendingPanel');
+  if (pendHost) pendHost.innerHTML = pend.length ? pend.map(p=>`<div class="intl"><div style="flex:1">· ${esc(p)}</div></div>`).join('') : '<div class="empty">无待确认事项</div>';
+}
+function pendingItems(){
+  const out = [];
+  Object.values(FIELDS).forEach(f=>{
+    if (S.checked[f.key]) return;
+    if (f.status === 'ambiguous' && (f.affects_quote || f.bucket==='A')) out.push(`${f.label_cn}：${f.note||f.value}`);
+    if (f.status === 'assumed' && f.assume) out.push(`${f.label_cn}：our assumption - ${f.assume}（待客户确认）`);
+  });
+  if (!FIELDS.pack_std || FIELDS.pack_std.status !== 'stated') out.push('包装：our suggestion - ‹PACKING_PROPOSAL›（待客户确认）');
+  out.push('报价有效期：‹QUOTE_VALIDITY› days（由我方确定）');
+  return out;
+}
+
+/* ---------------- reply ---------------- */
+function renderPlaceholders(){
+  const phs = DATA.reply.placeholders || [];
+  $('#phlist').innerHTML = phs.map(p=>{
+    const v = S.phValues[p.key] || '';
+    return `<div class="phitem">
+      <div class="top-row"><span class="k">‹${esc(p.key)}›</span><span class="own">${esc(p.owner||'')}</span></div>
+      <div class="lab">${esc(p.label_cn)}</div>
+      <input data-ph="${esc(p.key)}" value="${esc(v)}" placeholder="我方确认后填写">
+    </div>`;
+  }).join('');
+  $$('[data-ph]').forEach(inp=> inp.oninput = ()=>{ S.phValues[inp.dataset.ph] = inp.value; markDirty(); renderPreview(); updateChips(); });
+}
+function renderPreview(){
+  const body = $('#replyBody').value;
+  const html = body.split(/(‹[A-Z0-9_]+›)/g).map(tok=>{
+    const m = tok.match(/^‹([A-Z0-9_]+)›$/);
+    if (!m) return esc(tok);
+    const v = S.phValues[m[1]];
+    return v ? `<span class="ph filled" title="已由我方确认">${esc(v)}</span>` : `<span class="ph" title="待我方确认">${esc(tok)}</span>`;
+  }).join('');
+  $('#preview').innerHTML = html;
+}
+function updateChips(){
+  const body = $('#replyBody').value;
+  const scanRaw = scanCommitments(body);
+  const scan = scanRaw.filter(h=> !isQuotedFact(body, h));
+  const price = scanPrices(body);
+  const phs = findPlaceholders(body);
+  $('#scanChip').textContent = '承诺扫描 : ' + scan.length + (scanRaw.length>scan.length ? '（' + scan.length + ' + ' + (scanRaw.length-scan.length) + ' 处客户引用）' : '');
+  $('#scanChip').title = scanRaw.filter(h=>isQuotedFact(body,h)).map(h=>'客户引用，非承诺：' + h.match).join('\n') || '无客户引用命中';
+  $('#scanChip').style.background = scan.length ? '#5d1d18' : '#14532d';
+  $('#priceChip').textContent = '价格痕迹 : ' + price.length;
+  $('#priceChip').style.background = price.length ? '#5d1d18' : '#14532d';
+  const all = Object.keys(DATA.reply.placeholders||{}).length;
+  renderChips(scan.length, price.length, phs);
+}
+function renderChips(scanN, priceN, phs){
+  const blocking = blockingFields().length;
+  const phOpen = (phs||[]).filter(k=>!S.phValues[k]).length;
+  $('#chips').innerHTML = `
+    <span class="chip ${blocking?'bad':'ok'}">A 类未确认 <b>${blocking}</b></span>
+    <span class="chip ${phOpen?'warn':'ok'}">占位符待填 <b>${phOpen}</b></span>
+    <span class="chip ${scanN?'bad':'ok'}">承诺扫描 <b>${scanN}</b></span>
+    <span class="chip sim">不评估真实性与成交可能性</span>`;
+}
+function scanCommitments(text){
+  const pats = DATA.commitPatterns || [];
+  const out = [];
+  pats.forEach(p=>{ const re = new RegExp(p[0], 'gi'); let m; while ((m = re.exec(text)) !== null){ const ctx = text.slice(Math.max(0,m.index-30), m.index+m[0].length+30); out.push({flag:p[1], match:m[0], ctx}); if (!re.global) break; } });
+  return out;
+}
+function scanPrices(text){
+  const out = [];
+  text.split('\n').forEach(line=>{
+    if (line.indexOf('‹') >= 0 && line.indexOf('›') >= 0) return;
+    (DATA.pricePatterns||[]).forEach(p=>{ const re = new RegExp(p,'i'); if (re.test(line)) out.push({line}); });
+  });
+  return out;
+}
+function isQuotedFact(body, h){
+  // "dated 19 October 2026" 这类是复述客户询盘日期的既成事实，不是承诺
+  if (/具体日期/.test(h.flag) && /dated\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/i.test(body)) return true;
+  return false;
+}
+function findPlaceholders(text){ const re = /‹([A-Z0-9_]+)›/g; const out=[]; let m; while((m=re.exec(text))!==null) out.push(m[1]); return out; }
+
+function bindReply(){
+  const body = $('#replyBody');
+  body.oninput = ()=>{ S.body = body.value; markDirty(); renderPreview(); updateChips(); };
+  $('#subject').oninput = e=>{ S.subject = e.target.value; markDirty(); };
+  $('#selTone').value = S.tone; $('#selChannel').value = S.channel;
+  $('#selTone').onchange = e=>{ S.tone = e.target.value; toast('语气已切换，点「重新生成」生效'); };
+  $('#selChannel').onchange = e=>{ S.channel = e.target.value; toast('渠道已切换，点「重新生成」生效'); };
+  $$('[data-rmode]').forEach(b=> b.onclick = ()=>{
+    $$('[data-rmode]').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    const editing = b.dataset.rmode === 'edit';
+    body.classList.toggle('hidden', !editing); $('#preview').classList.toggle('hidden', editing);
+    if (!editing) renderPreview();
+  });
+  $('#btnRegen').onclick = ()=>{ rebuildReply(); toast('已按当前字段重新生成'); };
+  $('#btnCopyReply').onclick = ()=>{ const txt = 'Subject: ' + $('#subject').value + '\n\n' + $('#replyBody').value; copyText(txt, '回复已复制'); };
+  $('#btnDownload').onclick = ()=>{
+    const blob = new Blob(['Subject: ' + $('#subject').value + '\n\n' + $('#replyBody').value], {type:'text/plain;charset=utf-8'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '回复_' + (DATA.meta.customer||'customer') + '.txt'; a.click();
+  };
+}
+function rebuildReply(){
+  S.channel = $('#selChannel').value; S.tone = $('#selTone').value;
+  const r = buildReply(S.channel, S.tone);
+  S.body = r.body; S.subject = r.subject; S.replyLines = r;
+  $('#replyBody').value = S.body; $('#subject').value = S.subject;
+  const real = new Set(findPlaceholders(S.body));
+  DATA.reply.placeholders = (DATA.reply.placeholders||[]).filter(p=> p.used || real.has(p.key));
+  real.forEach(k=>{ if (!DATA.reply.placeholders.some(p=>p.key===k)) DATA.reply.placeholders.push({key:k,label_cn:'其它占位符',owner:'待定'}); });
+  renderPlaceholders(); renderPreview(); updateChips(); markDirty();
+}
+
+/* C 端版回复生成（与 extract.py build_reply 同逻辑的精简版） */
+function buildReply(template, tone){
+  const P = s=>s;
+  const g = k => { const f=FIELDS[k]; if(!f) return ''; if (S.fields[k]) return S.fields[k]; if (f.status==='stated'&&f.value) return f.value; return ''; };
+  const inc = g('incoterm'), place = g('incoterm_place');
+  const priceKey = inc ? `‹PRICE_PER_MT_${inc}_${(place||'').replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,8)}›` : '‹PRICE_PER_MT›';
+  const contact = g('contact_name') || '‹LAST_NAME›';
+  const last = contact.split(' ').pop();
+  const greet = tone==='formal' ? `Dear Mr./Ms. ${last},` : `Dear Mr. ${last},`;
+  const dateStr = DATA.reply.thanksDate || '';
+  const thanks = (tone==='formal'?'We thank you for':'Thank you for') + ` your inquiry dated ${dateStr} regarding ${DATA.meta.productShort||'your requirement'}.`;
+  const restate = DATA.reply.restatement || '';
+  const qs = activeQuestions();
+  const qblock = qs.length ? qs.map((q,i)=>`${i+1}. ${q.question_en}`).join('\n') : 'All the points we need for the offer are now clear from your email and our exchange.';
+  const confirmed = Object.keys(FIELDS).filter(k=>FIELDS[k].confirmed_by).map(k=>FIELDS[k].label_en);
+  const ack = confirmed.length ? `For clarity, the following points are treated as agreed based on your confirmation: ${confirmed.join('; ')}.` : '';
+  const lead = '‹LEAD_TIME_FOR_OFFER›';
+  const chunks = {
+    A: [thanks,
+        'We have reviewed your requirements and would like to confirm a few points before preparing our formal offer.\n\nAs we understand your inquiry:\n\n' + restate,
+        ack,
+        qs.length ? 'To prepare an accurate offer, could you please confirm the following:\n\n' + qblock : '',
+        'COA, SDS and TDS will accompany our offer. If you need any additional document (for example a Certificate of Origin, an ACFTA preferential certificate of origin, or third-party inspection at loading port), please advise - we will confirm what our documentation supports.',
+        `Once you confirm the above points, we will send our formal offer with the price on ${priceKey} and the related commercial terms within ${lead}.`],
+    B: [thanks + ' We are pleased to confirm the following structure of our offer:\n\n' +
+        `- Price basis : ${priceKey}\n- Quantity    : ${g('qty_trial')||'‹QUANTITY›'}\n- Packing     : ‹PACKING_PROPOSAL›\n` +
+        `- Shipment    : ‹SHIPMENT_TIME› after receipt of ‹PAYMENT_TERMS›\n- Validity    : ‹QUOTE_VALIDITY› days from issue date\n- Documents   : COA, SDS, TDS`,
+        'Detailed product specification is as per the TDS supplied; the indicative values below are those you specified and will be confirmed on the COA of the shipped lot:\n\n' + restate,
+        ack, 'COA, SDS and TDS will accompany our offer.'],
+    C: [thanks, 'As requested, please find below the points we understand, and our proposal for the sample:\n\n' + restate,
+        'Sample arrangement: we can prepare a sample of ‹SAMPLE_QUANTITY› for evaluation; delivery will follow ‹SAMPLING_POLICY›.',
+        'COA, SDS and TDS will accompany our offer.', ack],
+    D: [thanks, 'Please find below the documents and technical points we understand from your inquiry:\n\n' + restate,
+        'COA, SDS and TDS will accompany our offer. If you need any additional document, please advise - we will confirm what our documentation supports.',
+        `We will be glad to send the technical documents for your review within ${lead}.`, ack]
+  };
+  const key = template==='reply_B_quote_structure'?'B':template==='reply_C_sample'?'C':template==='reply_D_docs_only'?'D':'A';
+  const closing = tone==='formal' ? 'We look forward to your reply.\n\nYours faithfully,' : tone==='concise-direct' ? 'Looking forward to your confirmation.\n\nRegards,' : 'We look forward to your reply.\n\nBest regards,';
+  const sig = '‹SIGNER_NAME›\n‹SIGNER_TITLE› | ‹OURCOMPANY_NAME›\nTel: ‹OURCOMPANY_PHONE› | Web: ‹OURCOMPANY_WEBSITE›';
+  const body = [greet].concat(chunks[key].filter(Boolean)).concat([closing, sig]).join('\n\n') + '\n';
+  const subject = (DATA.reply.subject || 'Re: Inquiry') ;
+  return {body, subject};
+}
+
+/* ---------------- polish ---------------- */
+const LANG_FIXES = DATA.langFixes || [];
+function doPolish(){
+  const src = $('#polishIn').value;
+  let out = src; const changes = [];
+  LANG_FIXES.forEach(function(item){
+    const pat = item[0], rep = item[1], why = item[2];
+    const re = new RegExp(pat, 'gi');
+    out = out.replace(re, function(){
+      const argz = Array.prototype.slice.call(arguments);
+      const groups = argz.slice(1, argz.length - 2);
+      const g1 = groups[0], g2 = groups[1], g3 = groups[2];
+      const after = String(rep).replace(/\$(\d)/g, function(m, d){
+        return d === '1' ? String(g1) : d === '2' ? String(g2 == null ? m : g2) : d === '3' ? String(g3 == null ? m : g3) : m;
+      });
+      changes.push({before: argz[0], after: after, reason: why});
+      return after;
+    });
+  });
+  // 润色通道：原文里已经存在的承诺/占位符正文不算"新增"，但要提示
+  const scanBefore = scanCommitments(src);
+  const preExisting = scanBefore.filter(h => !/具体日期/.test(h.flag));
+  const outScan = scanCommitments(out).filter(h => !/具体日期/.test(h.flag));
+  const newPromises = outScan;
+  const numCount = s => { const m = {}; (s.match(/\d+(?:[.,]\d+)?/g)||[]).forEach(x=>{ m[x]=(m[x]||0)+1; }); return m; };
+  const nb = numCount(src), na = numCount(out);
+  const newNums = Object.keys(na).filter(x => (na[x] || 0) > (nb[x] || 0));
+  const problems = [];
+  newPromises.forEach(h=>problems.push(`<div class="finding bad">新增承诺：${esc(h.flag)} · 「${esc(h.match)}」→ 建议：${esc(h.fix)}</div>`));
+  newNums.forEach(x=>problems.push(`<div class="finding bad">新增数字：${esc(x)}（原文没有）</div>`));
+  if (preExisting.length) {
+    problems.unshift(...preExisting.map(h=>`<div class="finding bad">原文已含商务承诺（不是我加的新承诺，但也不能这么发）：${esc(h.flag)} · 「${esc(h.match)}」→ ${esc(h.fix)}</div>`));
+  }
+  if (problems.length) {
+    $('#polishOut').innerHTML = '<b style="color:#b3372f">检测到新增承诺/数字 → 已拒绝输出润色版（请先删掉这些承诺，再润色）</b>\n\n' + esc(src);
+    $('#polishChecks').innerHTML = problems.join('') + `<div class="finding" style="background:#f3f5f8;border-left-color:#9aa6b6">` + (changes.length ? `同时有 ${changes.length} 处语言改动，因上述问题本次不输出：<br>` + changes.map(c=>`「${esc(c.before)}」→「${esc(c.after)}」`).join('<br>') : '无可自动修改的句式') + '</div>';
+    S.polished = '';
+    return;
+  }
+  $('#polishOut').textContent = out;
+  $('#polishChecks').innerHTML =
+    `<div class="finding ok">新增承诺检查：无 ✓ · 新增数字：无 ✓ · 事实值（数量/规格/港口/币种）未改动</div>` +
+    (changes.length ? changes.map(c=>`<div class="finding">「<span class="diff-old">${esc(c.before)}</span>」→「<span class="diff-new">${esc(c.after)}</span>」<br><span style="color:#7b8798">${esc(c.reason)} · 承诺变多了吗？没有</span></div>`).join('')
+      : '<div class="finding">没有可自动修改的句式；润色只调语言，不会升级任何承诺。请人工复核语气是否契合客户层级。</div>');
+  S.polished = out;
+}
+
+/* ---------------- scenes ---------------- */
+function handoffJSON(){
+  const vals = {}; Object.keys(FIELDS).forEach(k=>{ const f=FIELDS[k]; vals[k]={value:S.fields[k]||f.value, status:f.status, bucket:f.bucket, quote:f.quote, source_id:f.source_id}; });
+  return JSON.stringify({
+    skill:'overseas-inquiry-triage', version: DATA.version, generated: new Date().toISOString(),
+    inquiry_no: DATA.meta.inquiry_no, customer: DATA.meta.customer, country: DATA.meta.country,
+    can_quote: blockingFields().length===0, blocking: blockingFields(),
+    product: vals.product_std, quantity: vals.qty_trial, incoterm: vals.incoterm, port: vals.port_dest,
+    open_questions: activeQuestions().map(q=>q.question_en),
+    placeholders_open: findPlaceholders($('#replyBody').value).filter(k=>!S.phValues[k]),
+    note: '不评估询盘真实性与成交可能性；不含任何价格'
+  }, null, 2);
+}
+function renderScenes(){
+  const ok = blockingFields().length === 0;
+  const scenes = [
+    {t:'核验海外询盘公司', d:'把客户全称、国家、邮箱、地址交给核验场景，确认工商登记与收货主体。', btns:[['复制公司核验包','company']], href:'4.核验海外询盘公司'},
+    {t:'算出口报价', d: ok ? 'A 类字段已齐，可把字段包交给报价场景（价格由那里填，本页不产价）。' : 'A 类字段还缺 ' + blockingFields().length + ' 项，先别算价。', btns:[['复制报价参数包','quote']], href:'8.算出口报价', disabled:!ok},
+    {t:'查产品出口要求', d:'纯碱出口的监管条件、HS 编码候选、目的国准入（SNI 等）交由出口要求场景核查。', btns:[['复制产品与HS参数','export']], href:'6.查产品出口要求'},
+    {t:'查海关商品编码候选', d:'HS 编码只给候选，最终由报关行确认；本页不写死编码。', btns:[['复制归类参数','hs']], href:'7.查海关商品编码候选'},
+    {t:'审阅外贸合同', d:'客户回签 PO/合同时，把本页的"已确认条款"一起带过去比对。', btns:[['复制已确认条款','contract']], href:'10.审阅外贸合同'},
+    {t:'生成出口报价单与形式发票', d:'正式报价/形式发票由该场景出，本页只提供参数与占位符。', btns:[['复制占位符清单','pi']], href:'12.生成出口报价单与形式发票'}
+  ];
+  $('#scenes').innerHTML = scenes.map(s=>`<div class="scene"><h4>${esc(s.t)} <span style="font-size:10.5px;color:#9aa6b6">→ ${esc(s.href)}</span></h4><p>${esc(s.d)}</p>
+    <div class="acts">${s.btns.map(b=>`<button class="btn sm ${s.disabled?'':''}" ${s.disabled?'disabled':''} data-scene="${b[1]}">${esc(b[0])}</button>`).join('')}</div></div>`).join('');
+  $$('[data-scene]').forEach(b=> b.onclick = ()=>{
+    const kind = b.dataset.scene;
+    let payload = handoffJSON();
+    if (kind==='company') payload = JSON.stringify({customer: DATA.meta.customer, country: DATA.meta.country, email: (FIELDS.contact_email||{}).value, site: (FIELDS.buyer_site||{}).value, note:'用于核验工商登记与收货主体'}, null, 2);
+    if (kind==='quote') payload = JSON.stringify({product:(FIELDS.product_std||{}).value, spec:[(FIELDS.spec_purity||{}).value,(FIELDS.spec_impurities||{}).value,(FIELDS.spec_particle||{}).value], qty:(FIELDS.qty_trial||{}).value, annual:(FIELDS.qty_annual||{}).value, incoterm:(FIELDS.incoterm||{}).value, port:(FIELDS.port_dest||{}).value, note:'单价由销售确定；本包不含任何价格'}, null, 2);
+    if (kind==='hs') payload = JSON.stringify({product:(FIELDS.product_std||{}).value, cas:(FIELDS.cas||{}).value, form:(FIELDS.appearance_form||{}).value, note:'只给候选编码，最终以报关行为准'}, null, 2);
+    if (kind==='pi') payload = JSON.stringify(DATA.reply.placeholders.map(p=>({key:p.key,label:p.label_cn,owner:p.owner})), null, 2);
+    if (kind==='contract') payload = JSON.stringify(Object.keys(FIELDS).filter(k=>FIELDS[k].status==='stated'||FIELDS[k].confirmed_by).map(k=>[k, FIELDS[k].value]), null, 2);
+    $('#handoff').value = payload; copyText(payload, '交接数据已复制');
+  });
+  $('#handoff').value = handoffJSON();
+}
+
+/* ---------------- tabs & init ---------------- */
+function setTab(name){
+  $$('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  // 外层 section 与内部 card 同名，只切 section（避免把卡片也隐藏）
+  ['review','gaps','questions','reply','polish','next'].forEach(n=> $('#tab-'+n).classList.toggle('hidden', n!==name));
+  if (name==='review') renderFields();
+  if (name==='gaps') renderGaps();
+  if (name==='questions') renderQuestions();
+  if (name==='reply'){ renderPlaceholders(); renderPreview(); updateChips(); }
+  if (name==='next') { $('#handoff').value = handoffJSON(); }
+}
+function markDirty(){ S.regenNeeded = true; }
+function renderAll(){
+  renderFields(); renderGaps(); renderQuestions(); updateChips();
+  if (!$('#tab-reply').classList.contains('hidden')) { renderPreview(); }
+  $('#handoff').value && ($('#handoff').value = handoffJSON());
+}
+function init(){
+  $$('.tab').forEach(t=> t.onclick = ()=> setTab(t.dataset.tab));
+  $('#q').oninput = e=>{ curQuery = e.target.value.trim().toLowerCase(); renderFields(); };
+  $$('#filterSeg button').forEach(b=> b.onclick = ()=>{ $$('#filterSeg button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); curFilter=b.dataset.f; renderFields(); });
+  $('#btnCopySrc').onclick = ()=> copyText(currentSnip().text, '原文已复制');
+  document.getElementById('tabGapN').textContent = Object.values(FIELDS).filter(f=>['missing','ambiguous'].includes(f.status)).length;
+  document.getElementById('tabQN').textContent = (DATA.questions||[]).length;
+  renderSnips(); renderFields(); renderTraps(); renderGaps(); renderQuestions();
+  $('#subject').value = S.subject;
+  $('#replyBody').value = S.body;
+  bindReply(); renderPlaceholders(); renderPreview(); updateChips(); renderScenes();
+  $('#btnLoadDraft').onclick = ()=>{ $('#polishIn').value = $('#replyBody').value; toast('已载入当前草稿'); };
+  $('#btnPolish').onclick = ()=>{ if (!$('#polishIn').value.trim()) { toast('先粘贴或载入英文稿'); return; } doPolish(); };
+  $('#btnCopyPolished').onclick = ()=>{ if (S.polished) copyText(S.polished, '润色稿已复制'); else toast('先点润色'); };
+  $('#btnCopyQ').onclick = ()=> copyText(activeQuestions().map((q,i)=>`${i+1}. ${q.question_en}`).join('\n'), '问题清单已复制');
+  $('#btnCopyHandoff').onclick = ()=> copyText($('#handoff').value, 'JSON 已复制');
+  window.__TRIAGE_READY__ = true;
+}
+try { init(); } catch (e) {
+  window.__ERR__ = (e && (e.stack || e.message)) || String(e);
+  const d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;background:#b3372f;color:#fff;font:12px monospace;padding:8px;z-index:999';
+  d.textContent = '初始化异常（这是自测信息，正式交付前会消失）: ' + window.__ERR__;
+  document.body.appendChild(d);
+  throw e;
+}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Company letterhead template",
+  "description": "Saved from the Studio editor (模板 tab) and reloaded for the next quotation. Contains presentation data only - never prices, never bank account numbers.",
+  "type": "object",
+  "required": ["templateVersion", "seller"],
+  "properties": {
+    "templateVersion": {"type": "string"},
+    "savedAt": {"type": "string"},
+    "savedBy": {"type": "string"},
+    "seller": {
+      "type": "object",
+      "required": ["name", "address"],
+      "properties": {
+        "name": {"type": "string"},
+        "shortName": {"type": "string"},
+        "logoText": {"type": "string"},
+        "logoDataUrl": {"type": "string", "description": "optional base64 image, stored locally only"},
+        "address": {"type": "string"},
+        "country": {"type": "string"},
+        "contact": {"type": "string"},
+        "position": {"type": "string"},
+        "phone": {"type": "string"},
+        "email": {"type": "string"},
+        "taxId": {"type": "string"}
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "currency": {"type": "string"},
+        "incotermVersion": {"type": "string"},
+        "accentColor": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "documents": {"type": "array", "items": {"type": "string"}},
+        "paymentTerms": {"type": "string"},
+        "validityDays": {"type": "number"},
+        "signatoryTitle": {"type": "string"},
+        "clauses": {"type": "array", "items": {"type": "string"}},
+        "footnote": {"type": "string"}
+      }
+    },
+    "bank": {
+      "type": "object",
+      "description": "Optional convenience: a template never auto-fills account numbers on a document. The editor only offers them if detailsConfirmed is true and it still requires a fresh confirmation per document.",
+      "properties": {
+        "bankName": {"type": "string"},
+        "accountName": {"type": "string"},
+        "swift": {"type": "string"},
+        "detailsConfirmed": {"type": "boolean"},
+        "confirmedBy": {"type": "string"},
+        "confirmedAt": {"type": "string"}
+      }
+    },
+    "numbering": {
+      "type": "object",
+      "properties": {
+        "quotationPrefix": {"type": "string"},
+        "piPrefix": {"type": "string"},
+        "nextSerial": {"type": "number"}
+      }
+    }
+  }
+}

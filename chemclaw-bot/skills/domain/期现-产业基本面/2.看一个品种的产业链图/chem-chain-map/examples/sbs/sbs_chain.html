@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SBS 产业链知识图谱</title>
+<style>/* chain.css — 产业链图谱样式（深色专业风，离线自包含，无外链字体） */
+:root{
+  --bg:#070b14; --bg2:#0b1120; --panel:#0f1729; --panel2:#131d33;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.17);
+  --txt:#e9eefb; --txt2:#9fb0cf; --txt3:#6b7a99;
+  --acc:#4d8dff; --ok:#39d0a6; --warn:#ffab5b; --bad:#ff6b6b;
+  --chem:#4d8dff; --mat:#39d0a6; --app:#f2c14e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:
+    radial-gradient(1200px 600px at 12% -8%, rgba(77,141,255,.13), transparent 60%),
+    radial-gradient(900px 500px at 88% 4%, rgba(57,208,166,.10), transparent 55%),
+    var(--bg);
+  color:var(--txt);
+  font:13px/1.55 "Segoe UI","Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+#app{display:flex;flex-direction:column;height:100vh;max-height:100vh;
+  padding:12px 14px 10px;gap:9px;overflow:hidden}
+#app.scrollable{overflow:auto;height:auto;max-height:none}
+
+/* ---------------- 顶部 ---------------- */
+.topbar{display:flex;align-items:flex-start;gap:16px;flex:0 0 auto}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:38px;height:38px;border-radius:11px;flex:0 0 auto;
+  background:linear-gradient(140deg,#4d8dff,#39d0a6);color:#06101f;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;
+  box-shadow:0 6px 20px rgba(77,141,255,.35)}
+.brandtxt{min-width:0}
+h1{margin:0;font-size:19px;font-weight:750;letter-spacing:.2px}
+.sub{font-size:11.5px;color:var(--txt2);margin-top:2px}
+.stamp{font-size:11px;color:var(--txt3);text-align:right;line-height:1.65;white-space:nowrap;margin-left:auto}
+
+/* ---------------- 覆盖面板 ---------------- */
+.coverage{flex:0 0 auto;display:grid;max-height:220px;
+  grid-template-columns:auto 1fr 320px;
+  grid-template-areas:"gauge cards gaps" "scope scope scope";
+  gap:10px 14px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(180deg,rgba(19,29,51,.72),rgba(11,17,32,.72));
+  transition:max-height .25s,opacity .2s;overflow:hidden}
+.coverage.collapsed{max-height:0;padding:0;border-width:0;opacity:0;margin-top:-9px}
+.cov-gauge{grid-area:gauge;display:flex;align-items:center;gap:11px}
+.gauge{width:92px;height:92px;flex:0 0 auto}
+.gauge-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:9}
+.gauge-fg{fill:none;stroke-width:9;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:60px 60px;
+  transition:stroke-dashoffset .7s cubic-bezier(.3,.9,.3,1)}
+.gauge-fg.good{stroke:#39d0a6}
+.gauge-fg.mid{stroke:#ffab5b}
+.gauge-fg.bad{stroke:#ff6b6b}
+.gauge-num{fill:#fff;font-size:23px;font-weight:800;text-anchor:middle;
+  font-family:"Segoe UI",system-ui,sans-serif}
+.gauge-cap{fill:#7d8ba8;font-size:9.5px;text-anchor:middle;
+  font-family:"Segoe UI",system-ui,sans-serif}
+.cov-note{font-size:11px;color:var(--txt2);max-width:190px;line-height:1.6}
+.cov-note b{color:#fff;font-size:14px}
+.cov-cards{grid-area:cards;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:7px;align-content:start}
+.cov-card{background:rgba(255,255,255,.035);border:1px solid var(--line);
+  border-radius:9px;padding:6px 9px;min-width:0}
+.cov-card .k{font-size:10px;color:var(--txt3);letter-spacing:.3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.cov-card .v{font-size:15px;font-weight:750;color:#fff;line-height:1.35;
+  display:flex;align-items:baseline;gap:4px;flex-wrap:wrap}
+.cov-card .v small{font-size:10px;color:var(--txt3);font-weight:600}
+.cov-gaps{grid-area:gaps;font-size:11px;color:var(--txt2);
+  max-height:96px;overflow:auto;line-height:1.65}
+.gap-h{color:var(--txt3);font-size:10.5px;margin-bottom:2px;letter-spacing:.3px}
+.gap-i{padding:1px 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+.gap-i.ok{color:var(--ok)}
+.cov-scope{grid-area:scope;font-size:10.5px;color:var(--txt3);line-height:1.6;
+  border-top:1px dashed var(--line);padding-top:7px}
+.cov-scope b{color:var(--txt2)}
+
+/* ---------------- 工具条 ---------------- */
+.toolbar{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:34px}
+.tb-group{display:flex;gap:6px;align-items:center;min-width:0}
+.tb-group.right{margin-left:auto}
+.tb-label{font-size:11px;color:var(--txt3);white-space:nowrap}
+.search{background:rgba(0,0,0,.30);border:1px solid var(--line2);color:var(--txt);
+  border-radius:9px;padding:6px 11px;font-size:12px;width:250px;outline:none;
+  transition:border-color .15s,box-shadow .15s}
+.search:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(77,141,255,.15)}
+.search::placeholder{color:var(--txt3)}
+.search-drop{position:absolute;z-index:60;margin-top:4px;background:#0d1526;
+  border:1px solid var(--line2);border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.66);
+  display:none;min-width:250px;max-width:340px;overflow:hidden}
+.sr-item{padding:7px 11px;font-size:12px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.sr-item:hover{background:rgba(77,141,255,.16)}
+.sr-item .meta{color:var(--txt3);font-size:10.5px;margin-left:auto;white-space:nowrap}
+.sr-item.empty{color:var(--txt3);cursor:default}
+.chip{font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid var(--line2);
+  color:var(--txt2);cursor:pointer;background:transparent;transition:.15s;white-space:nowrap}
+.chip:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.chip.active{background:rgba(77,141,255,.18);border-color:var(--acc);color:#fff}
+.sel{background:rgba(0,0,0,.30);border:1px solid var(--line2);color:var(--txt2);
+  border-radius:8px;padding:5px 8px;font-size:11.5px;outline:none;max-width:170px}
+.btn{background:var(--panel);border:1px solid var(--line);color:var(--txt2);
+  padding:6px 11px;border-radius:8px;font-size:11.5px;cursor:pointer;transition:.15s;
+  white-space:nowrap;font-family:inherit}
+.btn:hover{border-color:var(--line2);color:#fff;background:var(--panel2)}
+.btn.active{background:rgba(77,141,255,.2);border-color:var(--acc);color:#fff}
+.btn.primary{background:linear-gradient(140deg,rgba(77,141,255,.28),rgba(57,208,166,.22));
+  border-color:rgba(77,141,255,.5);color:#fff}
+.selbar{flex:0 0 auto;display:flex;gap:10px;align-items:center;font-size:11.5px;
+  color:var(--txt3);padding:0 3px;flex-wrap:wrap}
+.sel-hint b{color:var(--txt2)}
+.sel-chips{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.chip-sel{background:rgba(77,141,255,.16);border:1px solid rgba(77,141,255,.45);
+  color:#dce8ff;border-radius:99px;padding:2px 10px;font-size:11px;cursor:pointer}
+.chip-sel .x{color:var(--txt3);margin-left:5px}
+.chip-sel:hover .x{color:var(--bad)}
+
+/* ---------------- 舞台 ---------------- */
+.stage{flex:1 1 auto;display:flex;gap:9px;min-height:280px;position:relative;overflow:hidden}
+.canvas-wrap{flex:1 1 auto;position:relative;border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;min-height:420px;
+  background:
+    radial-gradient(900px 400px at 50% 0%, rgba(77,141,255,.06), transparent 60%),
+    rgba(7,11,20,.55)}
+#svg{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+#svg:active{cursor:grabbing}
+.hint{position:absolute;left:50%;transform:translateX(-50%);top:8px;font-size:10.5px;
+  color:var(--txt3);background:rgba(7,11,20,.80);border:1px solid var(--line);
+  border-radius:99px;padding:3.5px 13px;pointer-events:none;z-index:3;max-width:70%;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.canvas-legend{position:absolute;left:10px;bottom:10px;display:flex;gap:9px;flex-wrap:wrap;
+  font-size:10px;color:var(--txt2);background:rgba(7,11,20,.78);
+  border:1px solid var(--line);border-radius:9px;padding:5px 9px;max-width:calc(100% - 230px);z-index:3}
+.lg{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.lg i{width:14px;height:3px;border-radius:2px;display:inline-block;background:#8899aa}
+.lg i.lg-solid{background:var(--chem)}
+.lg i.lg-mat{background:var(--mat)}
+.lg i.lg-app{background:var(--app)}
+
+/* 泳道 */
+.lane-band{fill:rgba(255,255,255,.014)}
+.lane-band.odd{fill:rgba(255,255,255,.032)}
+.lane-title{fill:#8fa2c4;font-size:12px;font-weight:620;letter-spacing:.4px;
+  font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+.lane-sub{fill:#5b6a86;font-size:9.5px;
+  font-family:"Segoe UI",system-ui,sans-serif}
+
+/* 边 */
+.edge{fill:none;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke-width .13s,opacity .18s,filter .13s;cursor:pointer}
+.edge:hover,.edge.edge-hi{stroke-width:2.8;filter:drop-shadow(0 0 5px currentColor)}
+.edge.up{stroke-width:2.1;opacity:1}
+.edge.down{stroke-width:2.1;opacity:1}
+.edge.dim{opacity:.16}
+.edge.filtered{opacity:.07;pointer-events:none}
+.edge-label{fill:#8ea2c0;font-size:9.5px;font-weight:600;
+  font-family:"Segoe UI",system-ui,sans-serif;pointer-events:none;
+  paint-order:stroke;stroke:rgba(7,11,20,.92);stroke-width:3px;stroke-linejoin:round}
+.tip{position:fixed;z-index:9999;display:none;max-width:330px;font-size:11.5px;
+  background:#0d1526;border:1px solid var(--line2);border-radius:9px;padding:7px 10px;
+  color:var(--txt2);box-shadow:0 14px 40px rgba(0,0,0,.7);pointer-events:none;line-height:1.6}
+.tip b{color:#fff}
+
+/* 节点 */
+.node{cursor:pointer}
+.node .node-bg{fill:rgba(19,29,51,.96);stroke:rgba(255,255,255,.13);stroke-width:1;
+  transition:stroke .15s,fill .15s}
+.node .node-strip{fill:var(--chem);opacity:.9}
+.node.k-material .node-strip{fill:var(--mat)}
+.node.k-application .node-strip{fill:var(--app)}
+.node .node-title{fill:#eef3ff;font-weight:640;
+  font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+.node .node-sub{fill:#7b8aa8;font-family:"Segoe UI",system-ui,sans-serif}
+.node .node-flag{fill:var(--warn);text-anchor:end;font-family:"Segoe UI",system-ui,sans-serif}
+.node .node-ok{fill:rgba(57,208,166,.55);text-anchor:end;font-family:"Segoe UI",system-ui,sans-serif}
+.node:hover .node-bg{stroke:rgba(255,255,255,.42);fill:rgba(24,37,63,.99)}
+.node.role-target .node-bg{fill:rgba(32,52,96,.99);stroke:rgba(122,170,255,.72);stroke-width:1.6}
+.node.role-substitute .node-bg{stroke-dasharray:5 3;stroke:rgba(255,138,91,.5)}
+.node.k-application .node-bg{fill:rgba(33,30,20,.95)}
+.node.selected .node-bg{stroke:#fff;stroke-width:2.2;fill:rgba(38,60,110,1);
+  filter:drop-shadow(0 0 12px rgba(122,170,255,.55))}
+.node.up .node-bg{stroke:rgba(77,141,255,.85);stroke-width:1.7}
+.node.down .node-bg{stroke:rgba(57,208,166,.85);stroke-width:1.7}
+.node.dim{opacity:.26}
+.node.filtered{opacity:.09;pointer-events:none}
+
+/* 小地图 */
+.minimap-wrap{position:absolute;right:9px;bottom:9px;width:190px;height:64px;
+  border:1px solid var(--line);border-radius:9px;background:rgba(7,11,20,.85);
+  overflow:hidden;z-index:3}
+#minimap{width:100%;height:100%}
+.mini-n{fill:rgba(120,150,200,.55)}
+.mini-n.mini-material{fill:rgba(57,208,166,.6)}
+.mini-n.mini-application{fill:rgba(242,193,78,.6)}
+.mini-view{fill:rgba(77,141,255,.14);stroke:rgba(122,170,255,.85);stroke-width:2;
+  vector-effect:non-scaling-stroke}
+
+/* ---------------- 侧栏 ---------------- */
+.sidebar{flex:0 0 372px;display:none;flex-direction:column;min-height:0;
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  overflow:hidden}
+.sidebar.open{display:flex}
+.sb-head{display:flex;align-items:center;gap:6px;padding:7px 9px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),transparent);flex:0 0 auto}
+.sb-tabs{display:flex;gap:3px;flex:1 1 auto}
+.sb-tab{background:transparent;border:1px solid transparent;color:var(--txt3);
+  font-size:11.5px;padding:4px 11px;border-radius:7px;cursor:pointer;font-family:inherit}
+.sb-tab:hover{color:#fff}
+.sb-tab.active{background:rgba(77,141,255,.18);border-color:rgba(77,141,255,.45);color:#fff}
+.sb-close{background:transparent;border:1px solid var(--line);color:var(--txt3);
+  border-radius:7px;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:1}
+.sb-close:hover{color:#fff;border-color:var(--line2)}
+.sb-body{flex:1 1 auto;overflow:auto;padding:11px 12px 20px;min-height:0}
+.sb-open{display:none;position:absolute;right:0;top:12px;z-index:20;
+  background:var(--panel);border:1px solid var(--line2);border-right:0;
+  border-radius:9px 0 0 9px;color:var(--txt2);padding:9px 5px;cursor:pointer;font-size:12px}
+.sb-open.show{display:block}
+.sb-title{font-size:15px;font-weight:720;color:#fff;line-height:1.45}
+.sb-badges{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0 9px}
+.bd{font-size:10px;border:1px solid var(--line2);border-radius:99px;padding:1.5px 8px;color:var(--txt2)}
+.bd-commodity{border-color:rgba(77,141,255,.55);color:#9dc0ff}
+.bd-material{border-color:rgba(57,208,166,.55);color:#8ee6cc}
+.bd-application{border-color:rgba(242,193,78,.55);color:#ffe09a}
+.kv{width:100%;border-collapse:collapse;font-size:11.5px;margin:4px 0 8px}
+.kv th{text-align:left;color:var(--txt3);font-weight:500;padding:3px 8px 3px 0;
+  white-space:nowrap;vertical-align:top;width:1%}
+.kv td{color:var(--txt);padding:3px 0;word-break:break-word}
+.tiny{color:var(--txt3);font-size:10px}
+.warn{color:var(--warn)}
+.sb-note{font-size:11.5px;color:var(--txt2);line-height:1.65;background:rgba(255,255,255,.03);
+  border-left:2px solid rgba(77,141,255,.5);border-radius:0 7px 7px 0;padding:7px 9px;margin:6px 0}
+.sb-sec{font-size:11px;color:var(--txt3);letter-spacing:.4px;margin:14px 0 6px;
+  padding-bottom:4px;border-bottom:1px dashed var(--line);font-weight:600}
+.spark-wrap{background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:9px;
+  padding:7px 8px 5px}
+.spark{width:100%;height:60px;display:block}
+.spark-area{fill:rgba(77,141,255,.16)}
+.spark-line{fill:none;stroke:#6ea2ff;stroke-width:1.8;stroke-linejoin:round}
+.spark-meta{display:flex;gap:7px;align-items:baseline;font-size:11px;margin-top:3px;flex-wrap:wrap}
+.spark-last{color:#fff;font-weight:750;font-size:14px}
+.spark-unit{color:var(--txt3);font-size:10px}
+.spark-chg{font-weight:700;font-size:11px}
+.spark-chg.up{color:#ff7676}
+.spark-chg.dn{color:#4ddba0}
+.spark-chg.fl{color:var(--txt3)}
+.spark-date{color:var(--txt3);font-size:10px;margin-left:auto}
+.mini-tbl{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:5px;
+  max-height:120px;display:block;overflow:auto}
+.mini-tbl th{color:var(--txt3);font-weight:500;text-align:left;padding:2px 6px 2px 0}
+.mini-tbl td{padding:1.5px 6px 1.5px 0;color:var(--txt2)}
+.no-data{font-size:11px;color:var(--txt3);background:rgba(255,171,91,.07);
+  border:1px dashed rgba(255,171,91,.3);border-radius:8px;padding:8px 10px;line-height:1.6}
+.grid{width:100%;border-collapse:collapse;font-size:11px}
+.grid th{text-align:left;color:var(--txt3);font-weight:500;padding:4px 6px 4px 0;
+  border-bottom:1px solid var(--line);white-space:nowrap}
+.grid td{padding:4px 6px 4px 0;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+.proj,.event{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px}
+.proj-t{color:var(--txt);font-weight:600;line-height:1.5}
+.proj-m{color:var(--txt3);font-size:10.5px;margin-top:2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.event{display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}
+.ev-date{color:var(--txt3);font-size:10.5px;font-variant-numeric:tabular-nums}
+.ev-t{flex:1 1 auto;color:var(--txt2);line-height:1.55;min-width:120px}
+.rel-list{list-style:none;margin:0;padding:0;font-size:11.5px}
+.rel-item{display:flex;gap:8px;padding:4px 6px;border-radius:6px;cursor:pointer;align-items:baseline}
+.rel-item:hover{background:rgba(77,141,255,.12)}
+.rel-item .rt{font-size:10px;font-weight:650;white-space:nowrap}
+.rel-item .rd{color:var(--txt2);line-height:1.5}
+.src-line{font-size:11px;color:var(--txt2);padding:5px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);line-height:1.6}
+.src-line a{color:#7aa9ff;text-decoration:none;font-size:10.5px}
+.src-line a:hover{text-decoration:underline}
+.src-note{font-size:10.5px;color:var(--txt3);line-height:1.6;margin-top:6px}
+.quote{font-size:10.5px;color:var(--txt3);font-style:italic;margin-top:3px;
+  border-left:2px solid var(--line2);padding-left:7px}
+.src-chip{display:inline-block;font-size:9.5px;border-radius:5px;padding:1px 5px;
+  border:1px solid var(--line2);color:var(--txt2);white-space:nowrap;margin-right:3px;
+  background:rgba(255,255,255,.03);cursor:help}
+.src-chip.tier-A{border-color:rgba(57,208,166,.6);color:#8ee6cc}
+.src-chip.tier-B{border-color:rgba(77,141,255,.55);color:#9dc0ff}
+.src-chip.tier-C{border-color:rgba(242,193,78,.5);color:#ffdf9a}
+.src-chip.tier-D{border-color:rgba(255,107,107,.45);color:#ffa3a3}
+.formula{font-family:"Consolas","Cascadia Mono",monospace;font-size:11px;
+  background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:8px;
+  padding:8px 10px;color:#a8c4f0;line-height:1.7;word-break:break-word}
+.rel-ends{display:flex;gap:7px;flex-wrap:wrap}
+.end{font-size:11px;background:rgba(255,255,255,.045);border:1px solid var(--line2);
+  border-radius:8px;padding:4px 9px;cursor:pointer;color:var(--txt2)}
+.end:hover{border-color:var(--acc);color:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ---------------- 层级表 ---------------- */
+.tablemode{display:none;flex:1 1 auto;min-height:0;border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);padding:11px 13px;max-height:58vh;overflow:auto}
+.tablemode.show{display:block}
+.tm-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px;flex-wrap:wrap}
+.tm-head h2{font-size:14px;margin:0;font-weight:700}
+.tm-note{font-size:11px;color:var(--txt3);line-height:1.6}
+.tm-scroll{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table.tm{width:100%;border-collapse:collapse;font-size:11px}
+table.tm thead th{position:sticky;top:0;background:var(--panel2);color:var(--txt2);
+  font-weight:600;text-align:left;padding:7px 9px;border-bottom:1px solid var(--line2);
+  white-space:nowrap;z-index:2}
+table.tm td{padding:5px 9px;border-bottom:1px solid rgba(255,255,255,.05);
+  vertical-align:top;color:var(--txt2);line-height:1.6}
+table.tm tr[data-node]{cursor:pointer}
+table.tm tr[data-node]:hover td{background:rgba(77,141,255,.10)}
+table.tm .tm-col{background:rgba(255,255,255,.025);color:var(--txt3);white-space:nowrap;
+  border-right:1px solid var(--line);font-size:10.5px}
+table.tm .tm-node{color:#eef3ff;font-weight:600}
+
+/* ---------------- 页脚 ---------------- */
+.foot{flex:0 0 auto;font-size:10.5px;color:var(--txt3);line-height:1.6;
+  border-top:1px dashed var(--line);padding-top:7px}
+
+/* 滚动条 */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:9px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.26)}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ================= 顶部信息区 ================= -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">链</div>
+      <div class="brandtxt">
+        <h1 id="docTitle">SBS 产业链知识图谱</h1>
+        <div class="sub" id="docSub"></div>
+      </div>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <!-- ================= 覆盖完整度 ================= -->
+  <section class="coverage" id="coverageBar">
+    <div class="cov-gauge">
+      <svg viewBox="0 0 120 120" class="gauge" aria-label="资料覆盖完整度">
+        <circle cx="60" cy="60" r="50" class="gauge-bg"></circle>
+        <circle cx="60" cy="60" r="50" class="gauge-fg" id="gaugeFg"></circle>
+        <text x="60" y="58" class="gauge-num" id="gaugeTxt">--</text>
+        <text x="60" y="76" class="gauge-cap">覆盖完整度</text>
+      </svg>
+      <div class="cov-note" id="gaugeNote"></div>
+    </div>
+    <div class="cov-cards" id="covCards"></div>
+    <div class="cov-gaps" id="covGaps"></div>
+    <div class="cov-scope" id="covScope"></div>
+  </section>
+
+  <!-- ================= 工具条 ================= -->
+  <section class="toolbar">
+    <div class="tb-group">
+      <input id="search" class="search" type="search" placeholder="搜索节点（名称/别名/CAS）…" autocomplete="off">
+      <div id="searchDrop" class="search-drop"></div>
+    </div>
+    <div class="tb-group" id="typeChips"></div>
+    <div class="tb-group">
+      <span class="tb-label">工艺筛选</span>
+      <select id="routeSel" class="sel"><option value="">全部工艺路线</option></select>
+      <select id="relSel" class="sel"><option value="">全部关系类型</option></select>
+    </div>
+    <div class="tb-group right">
+      <button class="btn" id="btnZoomOut" title="缩小">−</button>
+      <button class="btn" id="btnZoomIn" title="放大">＋</button>
+      <button class="btn" id="btnFit" title="按可读比例聚焦目标品种">适应</button>
+      <button class="btn" id="btnFitAll" title="整图缩放到一屏（总览）">总览</button>
+      <button class="btn" id="btnReset" title="重置视图">重置</button>
+      <button class="btn" id="btnCovToggle" title="折叠/展开覆盖面板">覆盖面板</button>
+      <button class="btn" id="btnTableMode" title="切换层级关系表">层级表</button>
+      <button class="btn primary" id="btnPriceLink" title="选中两个产品做价格联动">价格联动</button>
+    </div>
+  </section>
+
+  <!-- ================= 选中状态条 ================= -->
+  <div class="selbar" id="selbar">
+    <span class="sel-hint">提示：单击节点看详情；按住 <b>Ctrl/⌘</b> 再点第二个节点可做价格联动；单击连线看工艺与单耗来源。</span>
+    <span class="sel-chips" id="selChips"></span>
+  </div>
+
+  <!-- ================= 主体：画布 + 侧栏 ================= -->
+  <main class="stage">
+    <div class="canvas-wrap" id="canvasWrap">
+      <div class="hint" id="hint">滚轮缩放 · 拖拽平移 · 双击空白处复位</div>
+      <svg id="svg" xmlns="http://www.w3.org/2000/svg">
+        <defs id="defs"></defs>
+        <g id="viewport">
+          <g id="laneLayer"></g>
+          <g id="edgeLayer"></g>
+          <g id="labelLayer"></g>
+          <g id="nodeLayer"></g>
+        </g>
+      </svg>
+      <div class="minimap-wrap" id="minimapWrap">
+        <svg id="minimap" viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet">
+          <g id="miniNodes"></g>
+          <rect id="miniView" class="mini-view" x="0" y="0" width="120" height="60"></rect>
+        </svg>
+      </div>
+      <div class="canvas-legend" id="legend"></div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-head">
+        <div class="sb-tabs">
+          <button class="sb-tab active" data-tab="node">节点</button>
+          <button class="sb-tab" data-tab="rel">关系</button>
+          <button class="sb-tab" data-tab="link">联动</button>
+        </div>
+        <button class="sb-close" id="sbClose" title="收起侧栏">⟩</button>
+      </div>
+      <div class="sb-body" id="sbBody"></div>
+    </aside>
+    <button class="sb-open" id="sbOpen" title="展开侧栏">⟨</button>
+  </main>
+
+  <!-- ================= 层级关系表（兜底视图） ================= -->
+  <section class="tablemode" id="tableMode">
+    <div class="tm-head">
+      <h2>层级关系表（可操作兜底视图）</h2>
+      <div class="tm-note" id="tmNote"></div>
+    </div>
+    <div class="tm-scroll" id="tmScroll"></div>
+  </section>
+
+  <footer class="foot" id="foot"></footer>
+</div>
+<script>window.CHAIN_DATA = {"generated_at": "2026-10-20 15:46", "title": "SBS 产业链知识图谱", "chain": {"chain_id": "SBS", "product_name": "SBS 热塑性弹性体", "product_full_name": "苯乙烯-丁二烯-苯乙烯嵌段共聚物（TPE-S/TPS/SBC 族中的 SBS 型）", "focus_question": "以 SBS 为中心，向上展开苯乙烯/丁二烯及主要原料路线（2 层），向下展开改性沥青、防水卷材、鞋材、热熔胶、聚合物改性等主要应用方向（2 层）。", "user_params": {"up_depth": 2, "down_depth": 2, "branches": ["道路改性沥青", "建筑防水卷材", "鞋材 TPR", "热熔胶", "聚合物改性"], "show_price": true, "show_enterprises": true, "show_projects": true, "show_events": true, "region": "中国大陆", "price_window": "2026-09-20 ~ 2026-10-20（公开可核验窗口，密度不足处按缺口处理）"}, "price_basis": {"default": "出厂价/现货市场价（含税，人民币）", "note": "不同节点口径不同（出厂价 vs 送到价 vs 市场评估价；含税/不含税；干胶/油胶；吨/平方米/双）。画价格联动图前必须把口径列出来，跨口径不得直接算价差。"}, "market_snapshot": [{"metric": "中国 SBS 产能", "value": "197.5", "unit": "万吨/年", "as_of": "2026-07", "source": "S01", "note": "截至 2026 年 7 月"}, {"metric": "中国 SBS 产量", "value": "81.7", "unit": "万吨", "as_of": "2024", "source": "S03", "note": "2024 年，产能利用率 50.6%"}, {"metric": "中国 SBS 表观消费量", "value": "102.41", "unit": "万吨", "as_of": "2025", "source": "S01", "note": "同比 +24.37%，自给率 105.45%"}, {"metric": "中国 SBS 出口量", "value": "12.62", "unit": "万吨", "as_of": "2025", "source": "S01", "note": "同比 +27.73%"}, {"metric": "中国 SBS 进口量", "value": "6.60（前三来源合计）", "unit": "万吨", "as_of": "2025", "source": "S01", "note": "俄罗斯 5.31 万吨占 75.53%"}, {"metric": "SBS 第一大下游（道路沥青改性）占比", "value": "44.2", "unit": "%", "as_of": "2025", "source": "S01", "note": null}, {"metric": "SBS 消费结构-胶黏剂", "value": "14.2", "unit": "%", "as_of": "2025", "source": "S01", "note": "唯一增速高于整体的传统下游"}, {"metric": "SBS 消费结构-防水卷材", "value": "12.0", "unit": "%", "as_of": "2025", "source": "S01", "note": "收缩趋势"}, {"metric": "SBS 消费结构-TPR 鞋材", "value": "17.8", "unit": "%", "as_of": "2025", "source": "S01", "note": "被 SEBS/TPU/POE/EVA 替代"}, {"metric": "SBS 消费结构-聚合物改性", "value": "10.1", "unit": "%", "as_of": "2025", "source": "S01", "note": "稳定增长"}], "scenario_boundary": {"covered": "SBS 直接原料（苯乙烯、丁二烯）及其 2 层主路线；5 类主要下游应用骨架；主要替代品（SIS/SEBS/TPU/EVA/POE/SBR）。", "not_covered": "地缘/关税与贸易流；全部新兴应用（医用手套、锂电缓冲、光伏密封、可降解共混）；非主流路线（生物基丁二烯、甲苯甲醇烷基化产业化）；SBS 牌号级完整清单。", "disclaimer": "本图谱覆盖的是『预先冻结的核心节点与关系清单』，不代表 SBS 产业链的全部可能节点。覆盖率数字只对本清单有效。"}, "critical_gaps_policy": "任何缺价、缺产能、缺工艺参数的节点/关系都必须同时出现在缺口清单（Sheet『缺口清单』）与图谱节点的 ⚠ 标记中，不得静默省略。", "capacity_fields": ["capacity_sbs", "capacity_sbc"], "capacity_field_names": {"capacity_sbs": "SBS 专有产能(万吨/年)", "capacity_sbc": "SBC 总产能(万吨/年)"}}, "columns": [{"col": -6, "label": "原油", "side": "up"}, {"col": -5, "label": "裂解原料（石脑油 / LPG）", "side": "up"}, {"col": -4, "label": "裂解 / 重整产物（C4、裂解汽油、重整芳烃）", "side": "up"}, {"col": -2, "label": "基础石化品（乙烯、纯苯、C8 芳烃、C4 馏分）", "side": "up"}, {"col": -1, "label": "芳烃中间体（乙苯）", "side": "up"}, {"col": 0, "label": "聚合单体与基料（苯乙烯、丁二烯、基质沥青）", "side": "core"}, {"col": 1, "label": "目标品种", "side": "core"}, {"col": 2, "label": "同类弹性体与配合剂", "side": "down"}, {"col": 3, "label": "配方材料 / 改性料（下游第 1 层）", "side": "down"}, {"col": 4, "label": "制品与工程材料（下游第 2 层）", "side": "down"}, {"col": 5, "label": "终端应用", "side": "down"}], "nodes": [{"id": "N_PRIMARY", "name": "SBS（苯乙烯-丁二烯-苯乙烯嵌段共聚物）", "aliases": ["热塑性丁苯橡胶", "TPE-S", "TPS", "SBC"], "node_class": "commodity", "segment": "热塑性弹性体", "cas": {"value": "9003-55-8", "status": "verified", "note": "SBS 无唯一分子式，CAS 9003-55-8 为『苯乙烯-丁二烯共聚物（嵌段）』登记号，行业与海关均沿用"}, "hs_code": {"value": "4002.19.20", "status": "draft", "note": "『初级形状热塑丁苯橡胶（SBR/TPR，胶乳除外）』；充油型另设子目，需在申报前与报关行二次核对"}, "specs": ["线型（linear，如 1301/1401/791 系列）与星型/支化型（如 802、815）", "充油型（oil-extended，油胶；充油量约 30%~50%）与非充油型（干胶）", "牌号体系按用途分：道改料、防水料、鞋用料（TPR 用）、黏合剂料、改性塑料料", "常见宏观指标：S/B 比（如 30/70）、嵌段比、门尼黏度 ML(1+4)100℃、拉伸强度、断裂伸长率、熔体流动速率", "形态：粉状/粒状（干胶，纸袋/编织袋包装）、充油胶块"], "unit": "元/吨", "layer": 1, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "主图谱唯一以它为中心；『SBC』是包含 SBS/SEBS/SIS 的族名，不能把 SBC 当成 SBS 的同义词写入关系", "price_mapped_note": "卓创『国内SBS道改/干胶出厂价格一览表』日更（S14，已核验页面存在但需登录）；隆众『SBS(791-H)市场价格』（S05）", "evidence": ["S01", "S02"], "column": 1, "node_role": "target", "stage": "下游1列"}, {"id": "N_BD", "name": "丁二烯（1,3-丁二烯）", "aliases": ["1,3-丁二烯", "丁二烯", "BD", "butadiene"], "node_class": "commodity", "segment": "石化单体", "cas": {"value": "106-99-0", "status": "verified", "note": "1,3-丁二烯；CAS 590-19-2 为 1,2-丁二烯异构体，不可混用"}, "hs_code": {"value": "2901.24.00", "status": "unverified", "note": "未在本轮证据中核验，标注待核"}, "specs": ["聚合级（纯度≥99.5%，行业常以 99.5%/99.7% 两档挂牌）", "工业级/抽提级（纯度较低，供非聚合用途）", "关键杂质指标：炔烃（乙烯基乙炔、乙基乙炔）、水、过氧化物、二聚体（TBC 外的 4-乙烯基环己烯）"], "unit": "元/吨", "layer": 0, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "SBS 的软段单体；同时是 BR、SBR、ABS 等的主力原料，属于多下游共享单体", "evidence": ["S01", "S08"], "column": 0, "node_role": "monomer", "stage": "目标品种"}, {"id": "N_SM", "name": "苯乙烯（SM）", "aliases": ["苯乙烯单体", "SM", "styrene", "乙烯基苯"], "node_class": "commodity", "segment": "石化单体", "cas": {"value": "100-42-5", "status": "verified", "note": "CAS 100-42-5 为苯乙烯；CAS 96-09-3 为氧化苯乙烯，属环氧化物，两种产品不可混同"}, "hs_code": {"value": "2902.50.00", "status": "unverified", "note": "未在本轮证据中核验，标注待核"}, "specs": ["工业级（纯度≥99.6%，GB/T 3915 优等品），常以 99.6%/99.7% 挂牌", "含阻聚剂 TBC（10~15 ppm）的槽车/罐区储运规格", "关键杂质：乙苯、醛、过氧化物、聚合物"], "unit": "元/吨", "layer": 0, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "SBS 的硬段单体；同时是 PS、EPS、ABS、SBR 等的主力原料", "evidence": ["S06", "S07"], "column": 0, "node_role": "monomer", "stage": "目标品种"}, {"id": "N_EB", "name": "乙苯", "aliases": ["ethylbenzene", "EB", "苯乙烷"], "node_class": "commodity", "segment": "芳烃中间体", "cas": {"value": "100-41-4", "status": "verified", "note": "CAS 100-41-4"}, "hs_code": null, "specs": ["聚合级（纯度≥99.5%）", "工业级（纯度≥99.0%）", "以中间罐区自用为主，商品量小；国内公开现货报价源稀缺"], "unit": "元/吨", "layer": -1, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing", "price_partial"], "notes": "绝大多数苯乙烯装置内乙苯自产自用（一体化），外购/外卖量小；成本研究须以『苯+乙烯』原料拆分而非乙苯现货价", "evidence": ["S06", "S07"], "column": -1, "node_role": "intermediate", "stage": "上游0列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）", "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）；价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_BZ", "name": "纯苯", "aliases": ["苯", "benzene", "纯苯（石油级）"], "node_class": "commodity", "segment": "芳烃", "cas": {"value": "71-43-2", "status": "verified", "note": "CAS 71-43-2；CAS 67774-74-7 为 C8 芳烃混合物，不可混用"}, "hs_code": null, "specs": ["石油苯（GB/T 3405，优等品）", "加氢苯（焦化苯加氢）", "按氯指数/总硫分档"], "unit": "元/吨", "layer": -2, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "主要来自连续重整（裂解汽油/重整生成油）与加氢焦化苯；华东主港/山东地炼两套主流报价", "evidence": ["S07"], "column": -2, "node_role": "intermediate", "stage": "上游1列"}, {"id": "N_C8A", "name": "混合 C8 芳烃（二甲苯）", "aliases": ["C8芳烃", "混合二甲苯", "xylenes", "重整 C8"], "node_class": "commodity", "segment": "芳烃馏分", "cas": {"value": "1330-20-7", "status": "verified", "note": "混合二甲苯 CAS 1330-20-7；单一异构体（邻/间/对二甲苯）CAS 与规格不同，不在此节点内"}, "hs_code": null, "specs": ["重整 C8（供歧化/异构化）", "溶剂级混合二甲苯"], "unit": "元/吨", "layer": -2, "price_priceable": true, "identification_confidence": "high", "missing_flags": ["price_partial"], "notes": "纯苯主路线之一：重整/裂解汽油中的 C6-C8 经加氢后进芳烃抽提与歧化，C8 芳烃是歧化产 C6/C7 的原料 ｜本节点是「混合 C8 芳烃（二甲苯为主）」；注意甲苯歧化(TDA)的原料是甲苯与 C9 芳烃，不是本节点，因此本库不建立 C8→苯 的转化边。", "evidence": ["S10"], "column": -2, "node_role": "intermediate", "stage": "上游2列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_ETH", "name": "乙烯", "aliases": ["ethylene", " polymerization grade ethylene"], "node_class": "commodity", "segment": "烯烃", "cas": {"value": "74-85-1", "status": "verified", "note": "CAS 74-85-1"}, "hs_code": null, "specs": ["聚合级（纯度≥99.9%）", "工业级（≥99.5%）", "中国乙苯多用于自用管道互供，商品乙烯以外售/互供计量为主"], "unit": "元/吨", "layer": -2, "price_priceable": true, "identification_confidence": "high", "missing_flags": ["price_partial"], "notes": "无单一全国统一挂牌，常见口径为『华东乙烯（外售）』『石脑油裂解成本折算』", "evidence": ["S07"], "column": -2, "node_role": "intermediate", "stage": "上游1列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_C4BE", "name": "C4 馏分（裂解混合 C4）", "aliases": ["裂解碳四", "混合C4", "pyrolysis C4", "byproduct C4"], "node_class": "commodity", "segment": "裂解副产物", "cas": {"value": "106-98-9", "status": "reference", "note": "混合 C4 无 CAS，以主要组分 1-丁烯（106-98-9）作参考锚点；现货以『裂解C4』『抽余C4』描述"}, "hs_code": null, "specs": ["裂解混合 C4（含丁二烯 40%~50%、异丁烯、1-丁烯、丁烷）", "抽余 C4（提走丁二烯后的剩余物，可去 MTBE/1-丁烯/烷基化）"], "unit": "元/吨", "layer": -2, "price_priceable": true, "identification_confidence": "high", "missing_flags": ["price_partial"], "notes": "典型副产/联产载体：裂解 C4 是乙烯装置的伴生物，其流向直接决定顺丁、SBS、ABS 的原料可得性", "evidence": ["S08", "S15"], "column": -2, "node_role": "byproduct", "stage": "上游1列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_NAPHTHA", "name": "石脑油", "aliases": ["naphtha", "轻石脑油", "乙烯裂解原料"], "node_class": "commodity", "segment": "石脑油", "cas": {"value": "8030-30-6", "status": "reference", "note": "CAS 8030-30-6 为『石脑油』类物质登记，非单一分子"}, "hs_code": null, "specs": ["重整料/裂解料", "按 PONA、终馏点分档"], "unit": "元/吨", "layer": -5, "price_priceable": true, "identification_confidence": "high", "missing_flags": ["price_partial"], "notes": "原油→石脑油→乙烯/裂解C4/芳烃，是 SBS 全链的成本源头之一；换算口径见 relations 中 relation_scope", "evidence": ["S07"], "column": -5, "node_role": "raw", "stage": "上游4列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_CRUDE", "name": "原油（含轻质原油）", "aliases": ["crude oil", "Brent", "布伦特", "SC"], "node_class": "commodity", "segment": "原油与轻烃", "cas": {"value": "8002-05-9", "status": "verified", "note": "CAS 8002-05-9 为 petroleum 类登记"}, "hs_code": null, "specs": ["Brent/Dubai/SC 等基准价", "轻质/重质、含硫分档"], "unit": "美元/桶（Brent）;元/桶（SC）", "layer": -6, "price_priceable": true, "identification_confidence": "high", "missing_flags": ["price_partial"], "notes": "仅作成本传导的源头参照，不参与主图谱的骨架层数（主图谱 up_depth=2）", "evidence": ["S09"], "column": -6, "node_role": "raw", "stage": "上游5列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_LPG", "name": "烃类裂解原料（LPG/轻烃）", "aliases": ["液化石油气", "LPG", "轻烃", "NGL"], "node_class": "commodity", "segment": "原油与轻烃", "cas": {"value": "68476-85-7", "status": "reference", "note": "CAS 68476-85-7 为 petroleum gases, liquefied 类登记"}, "hs_code": null, "specs": ["丙烷/丁烷", "饱和蒸气压与硫含量分档"], "unit": "元/吨", "layer": -5, "price_priceable": true, "identification_confidence": "high", "missing_flags": ["price_partial"], "notes": "轻质裂解原料，与石脑油构成乙烯装置的替代原料；不同裂解原料的丁二烯收率差异极大，属关键替代关系", "evidence": ["S01"], "column": -5, "node_role": "raw", "stage": "上游4列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_PYREXTRACT", "name": "裂解汽油（不含 C8 抽提物）", "aliases": ["pyrolysis gasoline", "pygas", "裂解汽油加氢"], "node_class": "commodity", "segment": "裂解副产物", "cas": null, "hs_code": null, "specs": ["加氢前/加氢后（HG pygas）", "按苯含量与溴价分档"], "unit": "元/吨", "layer": -4, "price_priceable": true, "identification_confidence": "medium", "missing_flags": ["price_partial"], "notes": "裂解汽油抽提（C8 抽提）制苯乙烯的原料来源；国内该路线规模很小，属于小众路线，不得与乙苯脱氢混为一线", "evidence": ["S10"], "column": -4, "node_role": "byproduct", "stage": "上游4列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"], "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"}, {"id": "N_ASPHALT", "name": "基质沥青（50#/70#/90#）", "aliases": ["道路石油沥青", "沥青", "bitumen", "asphalt"], "node_class": "commodity", "segment": "道路基料（配套原料）", "cas": {"value": "8052-42-4", "status": "verified", "note": "CAS 8052-42-4 为 asphalt 类登记；改性沥青成品不适用该 CAS，单列材质型条目"}, "hs_code": null, "specs": ["50#/70#/90#/110# 道路石油沥青（A级/B级/C级）", "针入度、软化点、延度指标分级；进口马瑞油基/科威特基等来源差异"], "unit": "元/吨", "layer": 0, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "SBS 改性沥青的基体相；需与『SBS 改性沥青』材质节点严格区分——后者是配方材料而非化学品", "evidence": ["S11"], "column": 0, "node_role": "auxiliary", "stage": "目标品种"}, {"id": "N_IPP_SSBR", "name": "充油橡胶用填充油（环烷基/石蜡基橡胶油）", "aliases": ["橡胶填充油", "白油", "环烷油", "extender oil"], "node_class": "commodity", "segment": "橡胶配合剂", "cas": null, "hs_code": null, "specs": ["环烷基（KN4010 等）", "石蜡基（如 600N）", "低芳烃/高闪点"], "unit": "元/吨", "layer": 2, "price_priceable": true, "identification_confidence": "high", "missing_flags": ["price_partial"], "notes": "SBS 油胶（充油型）的组分；在国标牌号中常以 KN 系列命名（如 791、792 用 4010 类油）", "price_mapped_note": "隆众有『橡胶油』品种页（seo-272，本库已核验页面存在，但该页当日无均价表）", "evidence": ["S17"], "column": 2, "node_role": "auxiliary", "stage": "下游2列", "missing_flags_detail": ["price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"]}, {"id": "N_SIS", "name": "SIS（苯乙烯-异戊二烯-苯乙烯共聚物）", "aliases": ["热塑性异戊二烯橡胶", "TPE-S（异戊二烯型）", "SIS block copolymer"], "node_class": "commodity", "segment": "苯乙烯类热塑性弹性体", "cas": {"value": "25038-32-8", "status": "verified", "note": "CAS 25038-32-8 为 SIS 嵌段共聚物登记号"}, "hs_code": null, "specs": ["线型/星型", "分卫材胶（低黏度高流动）与标签胶（高粘接强度）", "可按熔指/软化点分牌号"], "unit": "元/吨", "layer": 2, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "SBS 在热熔压敏胶（HMPSA）领域的替代品，同族不同单体；与 SBS 共用产线属典型多产品切换，不是化学转化", "price_mapped_note": "S01/S02 已确认 SIS 为金山巴陵在产牌号（6 万吨/年），价格序列入口：卓创 rubber.sci99.com/product/sbs 企业价格、隆众 varietiesId=268 姊妹品种；会员口径，本库未取数", "evidence": ["S01", "S02"], "column": 2, "node_role": "same_family", "stage": "下游2列"}, {"id": "N_SEBS", "name": "SEBS（氢化 SBS）", "aliases": ["加氢SBS", "氢化苯乙烯-丁二烯-苯乙烯", "TPE（氢化型）"], "node_class": "commodity", "segment": "氢化热塑性弹性体", "cas": {"value": "66070-58-4", "status": "verified", "note": "CAS 66070-58-4 为氢化苯乙烯-丁二烯嵌段共聚物登记号"}, "hs_code": null, "specs": ["线型/星型", "按含油量分充油/非充油", "医用级、食品接触级"], "unit": "元/吨", "layer": 2, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "SBS 与 SEBS 关系必须精确表述为『以 SBS 为主链经催化加氢得到 SEBS』的化学转化（氢化），而非简单的替代；同时在鞋材、卫材胶等领域二者是相互替代关系——同一对节点允许两条不同 relation_type 的边", "price_mapped_note": "S02 已确认 SEBS 为海南巴陵/金山巴陵在产（5+5 万吨/年）；价格须向卓创 SEBS 专页/隆众价格中心取（会员）", "evidence": ["S01", "S02", "S16"], "column": 2, "node_role": "derivative", "stage": "下游2列"}, {"id": "N_TPU", "name": "热塑性聚氨酯（TPU）", "aliases": ["TPU", "thermoplastic polyurethane"], "node_class": "commodity", "segment": "热塑性聚氨酯", "cas": {"value": "9009-54-5", "status": "verified", "note": "CAS 9009-54-5 为聚氨酯类登记；TPU 为商品名/物性类称，非唯一 CAS"}, "hs_code": null, "specs": ["聚酯型/聚醚型/聚己内酯型", "硬度 Shore A75~D75，按鞋材/管材/薄膜分牌号"], "unit": "元/吨", "layer": 2, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "鞋材领域 SBS/TPR 的主要替代者之一", "price_mapped_note": "公开有 TPU 市场均价（卓创/隆众聚氨酯频道），属常规商品，价格可获取；本图谱未取数", "evidence": ["S01"], "column": 2, "node_role": "substitute", "stage": "下游2列"}, {"id": "N_EVA", "name": "乙烯-醋酸乙烯共聚物（EVA）", "aliases": ["EVA", "E/VAC", "乙烯-乙酸乙烯酯"], "node_class": "commodity", "segment": "乙烯共聚物", "cas": {"value": "24937-78-8", "status": "verified", "note": "CAS 24937-78-8"}, "hs_code": null, "specs": ["VA 含量 18%/26%/28%/40% 分档", "光伏胶膜料/发泡鞋材料"], "unit": "元/吨", "layer": 2, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "EVA 发泡中底在鞋材领域替代 TPR 鞋底", "price_mapped_note": "公开有 EVA 市场均价（S05 栏目『EVA市场价格评估日度报告』，已核验存在）", "evidence": ["S01"], "column": 2, "node_role": "substitute", "stage": "下游2列"}, {"id": "N_POE", "name": "聚烯烃弹性体（POE）", "aliases": ["POE", "乙烯-辛烯共聚物", "polyolefin elastomer"], "node_class": "commodity", "segment": "聚烯烃弹性体", "cas": {"value": "26221-73-8", "status": "verified", "note": "已核验：该 CAS 的登记名为 POLY(ETHYLENE-CO-1-OCTENE)（乙烯-1-辛烯共聚物），是 POE 所属的化学家族；同一 CAS 亦覆盖部分 LLDPE 牌号，故为『家族级标识』而非商品专属 CAS。POE 为牌号/商品概念（陶氏 Engage、三井 Tafmer、LG 等），无单一 CAS。", "scope": "family_level"}, "hs_code": null, "specs": ["辛烯基为主", "熔指与密度分档"], "unit": "元/吨", "layer": 2, "price_priceable": true, "identification_confidence": "medium", "missing_flags": ["cas_disputed"], "notes": "SBS 在鞋材与聚合物改性中的替代者", "price_mapped_note": "POE 现货报价主要来自进口牌号（LG/三井等），国内仅少数贸易商报价，可得性较弱", "evidence": ["S01", "S24"], "column": 2, "node_role": "substitute", "stage": "下游2列", "missing_flags_detail": ["cas_disputed：CAS 号存在争议或对应的是一类物质而非单一物质"]}, {"id": "N_SBR", "name": "丁苯橡胶（ESBR/SSBR）", "aliases": ["SBR", "丁苯橡胶", "乳聚丁苯", "溶聚丁苯", "SSBR"], "node_class": "commodity", "segment": "通用合成橡胶", "cas": {"value": "9003-55-8", "status": "verified", "note": "SBR 与 SBS 共用 9003-55-8 登记号，必须以『是否为嵌段结构』区分，不得混为同一产品"}, "hs_code": null, "specs": ["ESBR 1500/1502/1712", "SSBR 按苯乙烯含量与乙烯基含量分档"], "unit": "元/吨", "layer": 2, "price_priceable": true, "identification_confidence": "high", "missing_flags": [], "notes": "鞋底材料中与 TPR 竞争的传统硫化橡胶体系", "price_mapped_note": "公开快讯可查（S05），区间序列需会员", "evidence": ["S03"], "column": 2, "node_role": "substitute", "stage": "下游2列"}, {"id": "N_TPR", "name": "TPR/TPE 鞋底料（SBS 基热塑性弹性体）", "aliases": ["TR 鞋底料", "TPR 造粒料", "鞋用 TPE", "SBS 充油鞋底料"], "node_class": "material", "segment": "弹性体复合材料", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["SBS（60%~70%）+ 环烷油（10%~25%）+ PS/PP 树脂 + 碳酸钙等填料 + 助剂", "Shore A 50~75；按鞋底/鞋扣/包胶分档"], "unit": "元/吨", "layer": 3, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "核心防错点：TPR 鞋底料是由 SBS 配制而成的『材料』，SBS→TPR 是配方共混（compounding），不是化学反应，更不能把『鞋底』写成 SBS 的直接化学转化产物", "evidence": ["S01", "S03"], "column": 3, "node_role": "compound", "stage": "下游3列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_MODIFIED_ASPH", "name": "SBS 改性沥青", "aliases": ["道改沥青", "SBS 改性沥青（I-C/I-D）", "聚合物改性沥青（PMB）"], "node_class": "material", "segment": "改性沥青", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["I 类（SBS 改性）：I-B/I-C/I-D，按软化点、5℃延度、弹性恢复分级（JTG F40 体系）", "按施工方式：热拌/温拌；按稳定类型：机械稳定/化学稳定"], "unit": "元/吨", "layer": 3, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "核心防错点：SBS 与基质沥青在胶体磨/剪切机中做物理分散与溶胀，形成空间网络结构——这是『配方共混』不是化学转化；改性沥青是『材料』节点。SBS 掺量是配方参数而非化学计量单耗", "evidence": ["S01", "S11", "S12"], "column": 3, "node_role": "compound", "stage": "下游3列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_WP_MEMBRANE", "name": "SBS 改性沥青防水卷材", "aliases": ["弹性体改性沥青防水卷材", "SBS 卷材", "沥青防水卷材"], "node_class": "material", "segment": "防水卷材", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["II 型（-25℃）为主流，I 型（-20℃）", "按胎基：聚酯胎（PYG）、玻纤胎（G）；按面层：S/M/PE"], "unit": "元/平方米 或 元/卷（10/20 m²）", "layer": 4, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing", "unit_mixed"], "notes": "计价单位是平方米而非吨，跨单位换算需要项目密度参数，属典型『价格口径不一致』风险点；SBS 在涂盖料中约占 5%~10%", "evidence": ["S01", "S02"], "column": 4, "node_role": "article", "stage": "下游4列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）", "unit_mixed：同一节点存在多种计量单位（吨 / 平方米 / 双 / 卷），不能直接相加或平均"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_PAVEMENT_DECK", "name": "沥青路面（含桥面铺装/养护罩面）", "aliases": ["改性沥青路面", "沥青混合料铺装", "路面养护"], "node_class": "material", "segment": "道路铺装材料", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["AC/SMA/OGFC 级配", "按交通荷载等级与气候分区选 I-C/I-D"], "unit": "元/吨（混合料）", "layer": 4, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "改性沥青在搅拌站与集料、矿粉拌和后成为混合料，属物理拌和", "evidence": ["S11", "S12"], "column": 4, "node_role": "article", "stage": "下游4列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_WATERPROOF_MAT", "name": "自粘/改性沥青防水系统材料", "aliases": ["自粘聚合物改性沥青防水卷材", "预铺反粘卷材", "沥青基防水涂料"], "node_class": "material", "segment": "防水系统材料", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["自粘类：N 类（无胎）/PY 类（聚酯胎）", "预铺反粘型、湿铺型"], "unit": "元/平方米", "layer": 4, "price_priceable": false, "identification_confidence": "medium", "missing_flags": ["price_missing"], "notes": "自粘体系在改性沥青基础上再叠加增粘剂与隔离层，属再次配方，不构成新的化学转化", "evidence": ["S01"], "column": 4, "node_role": "system", "stage": "下游4列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_HMPSA", "name": "SBS 基热熔胶/热熔压敏胶（HMPSA）", "aliases": ["热熔胶", "热熔压敏胶", "包装热熔胶", "标签胶"], "node_class": "material", "segment": "热熔胶", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["SBS/SIS（25%~40%）+ 增粘树脂（40%~55%）+ 橡胶油（15%~25%）+ 抗氧剂", "按软化点/黏度分包装、标签、木工、书刊装订档"], "unit": "元/吨", "layer": 3, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "SBS、SIS 可分别或复配进入同一热熔胶配方——SBS→HMPSA 是配方共混，SIS→HMPSA 同为共混，二者互为替代原料", "evidence": ["S01", "S18"], "column": 3, "node_role": "compound", "stage": "下游3列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_MUSTICK", "name": "SBS 基溶剂型胶黏剂（鞋用/多用）", "aliases": ["SBS 胶黏剂", "鞋用胶", "氯丁/接枝型替代品"], "node_class": "material", "segment": "溶剂型胶黏剂", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["SBS 100 份 + 增粘树脂 + 甲苯/乙酸乙酯/120# 溶剂 + 填料", "固含量往往低于 40%，VOCs 监管敏感"], "unit": "元/吨", "layer": 3, "price_priceable": false, "identification_confidence": "medium", "missing_flags": ["price_missing"], "notes": "受 VOCs 限值影响正在被热熔胶替代，属典型『配方型材料间的替代』", "evidence": ["S01"], "column": 3, "node_role": "compound", "stage": "下游3列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_PP_MODIF", "name": "改性聚烯烃（PP/PE 增韧改性料）", "aliases": ["改性塑料", "PP 增韧料", "PS/PP 改性料"], "node_class": "material", "segment": "改性塑料", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["PP 200 份 + SBS/SEBS 10~30 份 + 填料/助剂，双螺杆造粒", "按缺口冲击强度、拉伸强度分级"], "unit": "元/吨", "layer": 3, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "SBS 作为增韧剂进入 PP/PE 改性料，属配方共混", "evidence": ["S01", "S19"], "column": 3, "node_role": "compound", "stage": "下游3列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_BOPP_TAPE", "name": "BOPP 胶带（压敏胶带）", "aliases": ["封箱胶带", "BOPP 压敏胶带"], "node_class": "material", "segment": "胶带制品", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["BOPP 基膜 + 压敏胶（SBS/SIS 型）+ 离型剂", "厚度 40~50 μm"], "unit": "元/卷", "layer": 4, "price_priceable": false, "identification_confidence": "medium", "missing_flags": ["price_missing", "unit_mixed"], "notes": "以卷计价，属终端制品计价单位", "evidence": ["S18"], "column": 4, "node_role": "article", "stage": "下游4列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）", "unit_mixed：同一节点存在多种计量单位（吨 / 平方米 / 双 / 卷），不能直接相加或平均"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_FOOTWEAR_OUTSOLE", "name": "鞋底/鞋用弹性体部件", "aliases": ["TPR 鞋底", "注塑鞋底", "大底/中底"], "node_class": "material", "segment": "鞋用部件", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["注塑/模压成型；Shore A 55~70", "颜色/防滑/耐寒指标分档"], "unit": "元/双", "layer": 4, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing", "unit_mixed"], "notes": "核心防错点：鞋底是 TPR 料注塑成型的制品，链条必须走 SBS → TPR 料 → 鞋底（再 → 鞋），不可跳过配方层直接连到『鞋』；SBS 含量口径为『以 100 份 TPR 料计约 60~70 份』", "evidence": ["S03"], "column": 4, "node_role": "article", "stage": "下游4列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）", "unit_mixed：同一节点存在多种计量单位（吨 / 平方米 / 双 / 卷），不能直接相加或平均"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_APP_ROAD", "name": "公路与市政道路建设养护", "aliases": ["交通基建", "道路养护工程", "高速路面"], "node_class": "application", "segment": "交通基建", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["新建/改扩建/养护（罩面、微表处、就地热再生）", "按公路等级与气候分区"], "unit": "亿元投资额", "layer": 5, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "SBS 第一大终端；需求侧观测指标建议用交通固定资产投资与公路养护里程", "evidence": ["S01", "S12"], "column": 5, "node_role": "end_market", "stage": "下游5列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_APP_CONSTRUCTION", "name": "建筑与市政工程防水", "aliases": ["房地产与基建防水", "地下工程防水", "屋面防水"], "node_class": "application", "segment": "建筑与市政", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["新建房屋、城市更新/旧改、地下管廊、地铁隧道"], "unit": "亿元竣工产值", "layer": 5, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "防水卷材的终端；2025 年地产链收缩是 SBS 防水需求下滑主因", "evidence": ["S01"], "column": 5, "node_role": "end_market", "stage": "下游5列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_APP_FOOTWEAR", "name": "鞋类制造（运动鞋/休闲鞋）", "aliases": ["制鞋业", "鞋服制造"], "node_class": "application", "segment": "鞋类制造", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["运动鞋、休闲鞋、户外鞋", "产地：福建晋江/泉州/莆田、浙江温州/台州"], "unit": "亿双", "layer": 5, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "2024 年国内鞋产量 133.57 亿双（S03），与 TPR 消费量同向变动", "evidence": ["S01", "S03"], "column": 5, "node_role": "end_market", "stage": "下游5列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_APP_PACKAGING", "name": "包装与物流（快递电商包装）", "aliases": ["包装印刷", "物流包装", "快递包装"], "node_class": "application", "segment": "包装与物流", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["纸箱封箱、标签、软包装复合"], "unit": "亿件包裹", "layer": 5, "price_priceable": false, "identification_confidence": "high", "missing_flags": ["price_missing"], "notes": "热熔胶与胶带的最终用户，与快递业务量同向", "evidence": ["S01", "S18"], "column": 5, "node_role": "end_market", "stage": "下游5列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_APP_HOMEAPPL", "name": "家电与汽车内外饰", "aliases": ["白色家电", "汽车内饰件"], "node_class": "application", "segment": "家电与汽车", "cas": {"value": "不适用", "status": "不适用", "note": "配方材料/制品/终端应用无单一 CAS 号"}, "hs_code": null, "specs": ["家电外壳/内部结构件", "汽车仪表板、门板、密封条"], "unit": "万台/万辆", "layer": 5, "price_priceable": false, "identification_confidence": "medium", "missing_flags": ["price_missing"], "notes": "改性聚烯烃料的终端之一；SBS 常与 SEBS/POE 复配，单独归因需谨慎", "evidence": ["S01", "S19"], "column": 5, "node_role": "end_market", "stage": "下游5列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}, {"id": "N_BTX", "name": "加氢混合芳烃（重整生成油/裂解汽油 BTX）", "aliases": ["重整生成油", "加氢裂解汽油", "BTX 混合芳烃"], "node_class": "commodity", "segment": "芳烃联合装置中间物料", "cas": {"value": null, "status": "不适用", "note": "混合物，无单一 CAS；以组分（苯 71-43-2、甲苯 108-88-3、二甲苯 1330-20-7）分别登记"}, "hs_code": null, "specs": ["重整生成油（C6~C8）", "加氢裂解汽油（HG pygas）", "按苯含量与溴价分档"], "unit": "元/吨", "layer": -4, "price_priceable": false, "identification_confidence": "medium", "missing_flags": ["price_missing", "evidence_missing"], "evidence": ["S07", "S10"], "notes": "芳烃联合装置的中间物料，商品量小；其价格须通过纯苯/甲苯/二甲苯分品种价加权，故不单设现货序列 ｜BTX（重整生成油/裂解汽油加氢后的混合芳烃）为芳烃联合装置中间物料，非独立交易品种。", "column": -4, "node_role": "intermediate", "stage": "上游3列", "missing_flags_detail": ["price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）", "evidence_missing：该节点/关系尚未挂任何 A~C 级证据"], "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"}], "relations": [{"id": "R01", "from": "N_BZ", "to": "N_EB", "relation_type": "conversion", "process": "烷基化制乙苯（部分未进入主图谱说明）", "family": "烃化", "typical": true, "quant": {"from_per_to": 0.758, "from_unit": "t 纯苯 / t 乙苯", "yield": 0.97, "basis": "化学计量：苯(78.11)+乙烯(28.05)→乙苯(106.17)，理论苯单耗 78.11/106.17=0.7357；按烷基化选择性/苯回收率 97% 折算 0.7357/0.97≈0.758，取 0.762。行业口径 0.75~0.78 落在同一区间，交叉印证。", "basis_grade": "石油苯 545 → 工业级乙苯"}, "quant_status": "stoichiometric_derived", "quant_confidence": "medium", "evidence": ["S06", "S07"], "notes": "与 R03（乙苯→苯乙烯）分段：R01 是苯烷基化段，R03 是脱氢段。市面常直接给『苯→苯乙烯 0.79 t/t』，那是两段合并口径，本库拆开以避免把两段损耗混算。", "flow": "mass", "edge_style": "solid"}, {"id": "R02", "from": "N_ETH", "to": "N_EB", "relation_type": "conversion", "process": "烷基化制乙苯（另一原料侧）", "family": "烃化", "typical": true, "quant": {"from_per_to": 0.272, "from_unit": "t 乙烯 / t 乙苯", "yield": 0.97, "basis": "化学计量：28.05/106.17=0.2642；按 97% 收率折算 0.272。", "basis_grade": "聚合级乙烯 → 工业级乙苯"}, "quant_status": "stoichiometric_derived", "quant_confidence": "medium", "evidence": ["S06", "S07"], "notes": "与 R01 合起来对应『苯 0.79 + 乙烯 0.29 → 苯乙烯 1.0』的行业成本公式；乙烯的工业值与理论值差异来自烷基化副反应与回收率。", "flow": "mass", "edge_style": "solid"}, {"id": "R03", "from": "N_EB", "to": "N_SM", "relation_type": "conversion", "process": "乙苯脱氢（主路线）", "family": "脱氢", "typical": true, "quant": {"from_per_to": 1.04, "from_unit": "t 乙苯 / t 苯乙烯", "yield": 0.96, "basis": "化学计量：乙苯 106.17 → 苯乙烯 104.15，理论单耗 1.0194 t/t；乙苯脱氢为可逆反应、单程转化率约 60~70% 需循环，综合收率约 96%，折算 1.0194/0.96≈1.062，取 1.04（脱氢段行业口径约 1.02~1.07）。交叉验证：苯 0.762 × 乙苯 1.04 = 0.79，与期货/资讯行业模型『0.79 t 苯 + 0.29 t 乙烯 / t 苯乙烯』(S07) 一致。", "basis_grade": "工业级乙苯 → 聚合级苯乙烯"}, "quant_status": "stoichiometric_derived", "quant_confidence": "medium", "evidence": ["S06", "S07"], "notes": "交叉验证已通过：R01(0.762) × R03(1.04) = 0.79，与 S07 的独立行业口径一致；乙烯侧 0.272×1.04=0.283 ≈ S07 的 0.29。这说明分段拆分未引入口径漂移。", "flow": "mass", "edge_style": "solid"}, {"id": "R05", "from": "N_NAPHTHA", "to": "N_ETH", "relation_type": "conversion", "process": "蒸汽裂解制乙烯", "family": "蒸汽裂解", "typical": true, "quant": {"from_per_to": 3.0, "from_unit": "t 石脑油 / t 乙烯", "yield": 0.33, "basis": "石脑油裂解乙烯收率约 28%~33%，单耗约 3.0~3.6 t 石脑油/t 乙烯（不含乙烯之外的联产品分摊）", "basis_grade": "石脑油（重整料/裂解料）"}, "quant_status": "industrial_range_literature", "quant_confidence": "medium", "evidence": ["S06", "S07"], "notes": "裂解同时产出丙烯、C4、裂解汽油等，严格口径应按联产品分摊；本处给出的是行业常用简化值，并已在 cost_basis 中提示需分摊。", "flow": "mass", "edge_style": "solid"}, {"id": "R06", "from": "N_BTX", "to": "N_BZ", "relation_type": "conversion", "process": "芳烃联合装置：重整段 → BTX → 抽提得纯苯", "family": "催化重整", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 石脑油 / t C8 芳烃", "yield": null, "basis": "重整仅表述进料，产出为 BTX 全族，需按装置物料平衡拆分，无单一单耗", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S20", "S25"], "notes": "标记为参数缺失：该类多产品装置的『单耗』在研究上应改用芳烃装置物料平衡表。（原 R06b 为同一对端点的重复登记，已合并至本条，避免 find_rel 命中无证据的重复边） ｜【v2 修正】重整芳烃抽提（原 R06 方向与端点均有误，已拆分修正）", "flow": "mass", "edge_style": "solid"}, {"id": "R07", "from": "N_CRUDE", "to": "N_NAPHTHA", "relation_type": "conversion", "process": "常减压蒸馏（原油 → 石脑油）", "family": "蒸馏", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 原油 / t 石脑油", "yield": null, "basis": "受原油品种（轻/重质）影响，收率区间宽，必须按具体炼厂配置给出，不可通用", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": [], "notes": "图中保留该边用于成本源头传导，但明确标注『无数值单耗』。", "flow": "mass", "edge_style": "solid", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R08", "from": "N_LPG", "to": "N_ETH", "relation_type": "route_option", "process": "轻烃裂解（LPG/乙烷为原料的替代裂解路线）", "family": "蒸汽裂解", "typical": false, "quant": {"from_per_to": null, "from_unit": "t LPG / t 乙烯", "yield": null, "basis": "丙烷裂解的乙烯收率显著高于石脑油，且 C4 收率极低（对丁二烯供给为负向影响）", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": [], "notes": "轻烃裂解（LPG/乙烷）与石脑油裂解是乙烯装置的并列原料路线；轻质化会显著降低副产 C4，是 SBS 成本端的重要结构性变量。数值依赖装置原料结构，标缺失", "flow": "mass", "edge_style": "solid", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R09", "from": "N_CRUDE", "to": "N_LPG", "relation_type": "conversion", "process": "炼厂气与轻烃分离", "family": "分馏", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 原油 / t LPG", "yield": null, "basis": null, "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": [], "notes": "仅作成本源头的结构占位。", "flow": "mass", "edge_style": "solid", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R10", "from": "N_NAPHTHA", "to": "N_C4BE", "relation_type": "byproduct", "process": "石脑油蒸汽裂解副产 C4 馏分", "family": "蒸汽裂解", "typical": true, "quant": {"from_per_to": null, "from_unit": "t C4 / t 原油当量", "yield": 0.09, "basis": "石脑油裂解 C4 馏分收率约 9%~11%（含丁二烯 4.5%~5.0%），随裂解深度与原料变化", "basis_grade": "石脑油裂解"}, "quant_status": "byproduct_yield_range", "quant_confidence": "medium", "evidence": ["S08", "S15"], "notes": "副产关系的核心含义：C4 的可供量由乙烯装置负荷与裂解原料结构决定，不由丁二烯自身需求决定。", "flow": "mass", "edge_style": "shortdash"}, {"id": "R11", "from": "N_NAPHTHA", "to": "N_PYREXTRACT", "relation_type": "byproduct", "process": "石脑油蒸汽裂解副产裂解汽油", "family": "蒸汽裂解", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 裂解汽油 / t 乙烯", "yield": null, "basis": "裂解汽油收率随裂解深度变化（约 18%~24% 对石脑油进料）", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": [], "notes": "标缺失：需按裂解深度与装置物料平衡取值。", "flow": "mass", "edge_style": "shortdash", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R12", "from": "N_C4BE", "to": "N_BD", "relation_type": "conversion", "process": "C4 抽提（ACN/DMF/NMP 三种溶剂路线，属同一工艺族的可选项）", "family": "萃取精馏", "typical": true, "quant": {"from_per_to": 2.1, "from_unit": "t 裂解C4（含丁二烯约 45%）/ t 聚合级丁二烯", "yield": 0.95, "basis": "抽提收率约 95%~97%；提按进料 C4 丁二烯含量 43%~48% 折算，为典型值而非某套装置实测", "basis_grade": "聚合级 99.5%"}, "quant_status": "industrial_estimate_range", "quant_confidence": "medium", "evidence": ["S08", "S09"], "notes": "不同溶剂（ACN/DMF/NMP）的差别在能耗与回收率，不在化学计量；抽余 C4 另有流向（MTBE、1-丁烯、烷基化），因此不得把 2.1 当作经济单耗的『全部归属』。", "flow": "mass", "edge_style": "solid"}, {"id": "R13", "from": "N_BD", "to": "N_PRIMARY", "relation_type": "conversion", "process": "阴离子溶液聚合（三步法/两步法/偶联法）", "family": "阴离子聚合", "typical": true, "quant": {"from_per_to": 0.7, "from_unit": "t 丁二烯 / t SBS 干胶", "yield": 0.97, "basis": "以 S/B = 30/70（质量比）的商业牌号计；单耗 = 聚合段单体转化率(≈97%)与后处理损失(≈1%~2%)折算后的值，胶液回收单体计入。若牌号为 40/60，则丁二烯单耗升至约 0.80 t/t", "basis_grade": "SBS 干胶（非充油）"}, "quant_status": "stoichiometric_derived", "quant_confidence": "medium", "evidence": ["S01", "S03"], "notes": "本边为『按牌号比例推算』的口径，必须随关系一并展示 S/B 假设；油胶（充油）应改用 R42 的充油口径，不得直接用 0.70。", "flow": "mass", "edge_style": "solid"}, {"id": "R14", "from": "N_SM", "to": "N_PRIMARY", "relation_type": "conversion", "process": "阴离子溶液聚合（三步法/两步法/偶联法）", "family": "阴离子聚合", "typical": true, "quant": {"from_per_to": 0.3, "from_unit": "t 苯乙烯 / t SBS 干胶", "yield": 0.97, "basis": "以 S/B = 30/70 牌号计；单耗 = 30% ÷ 聚合与后处理综合收率 ≈97%", "basis_grade": "SBS 干胶（非充油）"}, "quant_status": "stoichiometric_derived", "quant_confidence": "medium", "evidence": ["S01", "S03"], "notes": "与 R13 必须成对出现，二者之和约 1.0（计入溶剂回收与损失后略高）；研究时二者口径必须一致。", "flow": "mass", "edge_style": "solid"}, {"id": "R15", "from": "N_PRIMARY", "to": "N_SEBS", "relation_type": "conversion", "process": "SBS 胶液催化加氢", "family": "加氢", "typical": true, "quant": {"from_per_to": 1.0, "from_unit": "t SBS / t SEBS（干基）", "yield": null, "basis": "加氢只饱和丁二烯段双键，碳骨架不变；理论质量守恒 1.0 + 2H/丁二烯段 ≈ 1.01（质量增量极小），实际按装置回收与损耗另计", "basis_grade": "氢化度 ≥97% 的商品 SEBS"}, "quant_status": "stoichiometric", "quant_confidence": "high", "evidence": ["S16"], "notes": "这是本链唯一一条『以 SBS 为原料再生产品』的化学转化边，不可与『SBS 被 SEBS 替代』混为一谈。", "flow": "mass", "edge_style": "solid"}, {"id": "R42", "from": "N_IPP_SSBR", "to": "N_PRIMARY", "relation_type": "blend", "process": "充油（油胶）配制：SBS 胶液中加入橡胶油至充油量 30%~50%", "family": "充油配制", "typical": true, "quant": {"from_per_to": 0.3, "from_unit": "t 橡胶油 / t 油胶（充油 30% 规格）", "yield": 1.0, "basis": "配方口径：充油 30% 时，100 t 油胶 = 干胶(SBS) 70 t + 橡胶油 30 t，故每 t 油胶耗油 0.30 t（每 t 油胶耗干胶 0.70 t 记在 note）；充油 50% 规格则为 0.50 t", "basis_grade": "油胶（充油型 SBS）"}, "quant_status": "formulation", "quant_confidence": "medium", "evidence": ["S17"], "notes": "充油是把填充油配入 SBS 形成油胶牌号的配方关系，方向为『油→油胶』；图中从油品列指向目标品种列以表达配方归属，不参与上下游层数判断。", "flow": "mass", "edge_style": "dotted"}, {"id": "R16", "from": "N_PRIMARY", "to": "N_MODIFIED_ASPH", "relation_type": "blend", "process": "沥青改性：剪切/胶体磨分散 + 溶胀发育 + 稳定剂交联", "family": "改性", "typical": true, "quant": {"from_per_to": 0.042, "from_unit": "t SBS / t 改性沥青（I-C/I-D）", "yield": 1.0, "basis": "配方口径：道改 SBS 掺量 3.5%~5.5%，取 4.2% 作为典型值；SBS 道改料品质、沥青标号与气候分区决定具体掺量", "basis_grade": "I-C/I-D 改性沥青", "from_per_to_range": [0.035, 0.055], "range_note": "道改 SBS 掺量 3.5%~5.5%，随气候分区与沥青配伍变化"}, "quant_status": "formulation", "quant_confidence": "medium", "evidence": ["S11", "S12", "S13"], "notes": "这不是化学计量单耗，而是配方掺量；不同厂配方差异大，必须展示区间。稳定剂另行添加约 0.1%。", "flow": "mass", "edge_style": "dotted"}, {"id": "R17", "from": "N_ASPHALT", "to": "N_MODIFIED_ASPH", "relation_type": "blend", "process": "基质沥青作为改性沥青的连续相", "family": "改性", "typical": true, "quant": {"from_per_to": 0.95, "from_unit": "t 基质沥青 / t 改性沥青", "yield": 1.0, "basis": "配方口径：100 份 = 基质沥青 94~96 + SBS 3.5~5.5 + 稳定剂 0.1 + 少量助剂；以 95% 计", "basis_grade": "90#/70# A 级"}, "quant_status": "formulation", "quant_confidence": "medium", "evidence": ["S11", "S13"], "notes": "与 R16 相加约 100%（另计助剂），构成改性沥青的配方平衡。", "flow": "mass", "edge_style": "dotted"}, {"id": "R18", "from": "N_PRIMARY", "to": "N_WP_MEMBRANE", "relation_type": "blend", "process": "防水卷材涂盖料改性（SBS 改性沥青涂盖 + 胎基浸涂）", "family": "改性", "typical": true, "quant": {"from_per_to": 0.075, "from_unit": "t SBS / t 涂盖料", "yield": null, "basis": "配方口径：防水卷材涂盖料 SBS 掺量约 5%~10%，取 7.5%；需注意口径是『对涂盖料』而非『对成品卷材』——成品还要加计胎基与面层材料", "basis_grade": "II 型聚酯胎卷材", "from_per_to_range": [0.05, 0.1], "range_note": "卷材涂盖料 SBS 掺量 5%~10%（对涂盖料，非对成品卷材）"}, "quant_status": "formulation", "quant_confidence": "low", "evidence": ["S01"], "notes": "标 low：本轮证据只支持『防水卷材是 SBS 第二大应用(12.0%)』，未取得一手配方文献；掺量为行业通行区间，须在使用前以企业配方或地方标准复核。", "flow": "mass", "edge_style": "dotted"}, {"id": "R19", "from": "N_MODIFIED_ASPH", "to": "N_WP_MEMBRANE", "relation_type": "processing", "process": "涂覆-撒砂-冷却成型", "family": "涂布成型", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 改性沥青 / 万 m²", "yield": null, "basis": "卷材按面积计价，改用『单位面积涂盖料耗量（kg/m²）』口径更合理，该参数需按胎基与厚度取值", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S22"], "notes": "跨单位（吨→平方米）的参数缺失，属必须标注的缺口。", "flow": "mass", "edge_style": "dotted"}, {"id": "R20", "from": "N_MODIFIED_ASPH", "to": "N_PAVEMENT_DECK", "relation_type": "processing", "process": "沥青混合料拌和与摊铺压实", "family": "拌和摊铺", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 改性沥青 / t 混合料", "yield": null, "basis": "油石比 4.5%~6.0%（SMA 更高），随级配变化；建议以『每 km 单车道用量』而不是吨/吨口径研究", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S21"], "notes": "标缺失：油石比属道路设计参数，不应作为产业链固定单耗。", "flow": "mass", "edge_style": "dotted"}, {"id": "R21", "from": "N_WP_MEMBRANE", "to": "N_WATERPROOF_MAT", "relation_type": "processing", "process": "自粘层复合与隔离膜覆合", "family": "复合", "typical": false, "quant": {"from_per_to": null, "from_unit": "t 卷材 / t 自粘类材料", "yield": null, "basis": null, "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S22"], "notes": "自粘体系并非全部由 SBS 卷材衍生（也可直接用改性沥青），此边为『部分产品形态』的加工关系，标 typical=false。", "flow": "mass", "edge_style": "dotted"}, {"id": "R22", "from": "N_PRIMARY", "to": "N_HMPSA", "relation_type": "blend", "process": "热熔胶配方：熔融共混（主体弹性体 + 增粘树脂 + 油）", "family": "熔融共混", "typical": true, "quant": {"from_per_to": 0.32, "from_unit": "t SBS / t 热熔胶", "yield": 1.0, "basis": "配方口径：SBS/SIS 类弹性体占热熔胶 25%~40%，SBS 路线取 32%；若与 SIS 复配则各自占比更小", "basis_grade": "包装类 SBS 基热熔胶", "from_per_to_range": [0.25, 0.4], "range_note": "热熔胶中弹性体占比 25%~40%"}, "quant_status": "formulation", "quant_confidence": "medium", "evidence": ["S18"], "notes": "标 medium：仅有定性报道证明 SBS 是热熔胶主体之一，具体占比为配方区间。", "flow": "mass", "edge_style": "dotted"}, {"id": "R23", "from": "N_SIS", "to": "N_HMPSA", "relation_type": "blend", "process": "热熔压敏胶配方（SIS 为主体的高流动体系）", "family": "熔融共混", "typical": true, "quant": {"from_per_to": 0.3, "from_unit": "t SIS / t 热熔压敏胶", "yield": 1.0, "basis": "配方口径：SIS 25%~35%，取 30%", "basis_grade": "标签/卫材用 HMPSA", "from_per_to_range": [0.25, 0.35], "range_note": "HMPSA 中 SIS 占比 25%~35%"}, "quant_status": "formulation", "quant_confidence": "medium", "evidence": ["S18"], "notes": "SIS 与 SBS 可复配进入同一胶配方，因此 R22 与 R23 不是互斥的单耗。", "flow": "mass", "edge_style": "dotted"}, {"id": "R24", "from": "N_PRIMARY", "to": "N_MUSTICK", "relation_type": "blend", "process": "溶剂型胶黏剂配制（SBS 溶解 + 增粘 + 助剂）", "family": "溶液配制", "typical": false, "quant": {"from_per_to": null, "from_unit": "t SBS / t 胶液", "yield": null, "basis": "胶液固含量通常 <40%，但由配方与溶剂比决定；且该品类受 VOCs 政策压制，长期或被热熔胶替代", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": [], "notes": "占消费结构『胶黏剂 14.2%』中的次要部分，配方差异极大，故不虚构单耗。", "flow": "mass", "edge_style": "dotted", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R25", "from": "N_PRIMARY", "to": "N_TPR", "relation_type": "blend", "process": "TPR 鞋底料造粒：SBS 充油 + PS/填料共混 + 双螺杆造粒", "family": "配方共混", "typical": true, "quant": {"from_per_to": 0.65, "from_unit": "t SBS / t TPR 料", "yield": 1.0, "basis": "配方口径：以 100 份计 SBS 60~70 份（取 65）、环烷油 10~25、PS/PP 5~20、碳酸钙 5~15、助剂少量", "basis_grade": "注塑级 TPR 鞋底料", "from_per_to_range": [0.6, 0.7], "range_note": "TPR 料中 SBS 占 60~70 份（另含油/树脂/填料）"}, "quant_status": "formulation", "quant_confidence": "medium", "evidence": ["S01"], "notes": "TPR 料已是充油体系，因此该边的 SBS 消耗应使用『不含油干胶』口径，与 R42 的充油口径互为外延关系。", "flow": "mass", "edge_style": "dotted"}, {"id": "R26", "from": "N_TPR", "to": "N_FOOTWEAR_OUTSOLE", "relation_type": "processing", "process": "注塑/模压成型鞋底", "family": "成型加工", "typical": true, "quant": {"from_per_to": null, "from_unit": "t TPR 料 / 万双", "yield": null, "basis": "按鞋底体积×密度估算（TPR 密度约 0.95 g/cm³），每双 0.15~0.30 kg 属工程估值，无公开统计口径", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S23"], "notes": "不虚构：以『万双/吨』换算需要企业级数据，标缺失。", "flow": "mass", "edge_style": "dotted"}, {"id": "R27", "from": "N_FOOTWEAR_OUTSOLE", "to": "N_APP_FOOTWEAR", "relation_type": "application", "process": "鞋类整鞋组装", "family": "组装", "typical": true, "quant": {"from_per_to": null, "from_unit": null, "yield": null, "basis": "终端应用，无数值单耗；只能引用『2024 年国内鞋产量 133.57 亿双』作为需求侧规模指标", "basis_grade": null}, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S03"], "notes": "终端应用关系按定义不设单耗，禁止为凑图形而填数。", "flow": "mass", "edge_style": "solid"}, {"id": "R28", "from": "N_PAVEMENT_DECK", "to": "N_APP_ROAD", "relation_type": "application", "process": "公路/市政道路建设与养护工程", "family": "工程应用", "typical": true, "quant": {"from_per_to": null, "from_unit": null, "yield": null, "basis": "终端应用；需求观测用交通固定资产投资与公路里程/养护里程", "basis_grade": null}, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": null, "flow": "mass", "edge_style": "solid"}, {"id": "R29", "from": "N_WP_MEMBRANE", "to": "N_APP_CONSTRUCTION", "relation_type": "application", "process": "建筑与地下工程防水", "family": "工程应用", "typical": true, "quant": {"from_per_to": null, "from_unit": null, "yield": null, "basis": "终端应用；需求观测用房屋竣工面积与防水材料产量", "basis_grade": null}, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": "2025 年防水卷材占 SBS 消费 12.0%，且被明确描述为收缩趋势（S01）。", "flow": "mass", "edge_style": "solid"}, {"id": "R30", "from": "N_WATERPROOF_MAT", "to": "N_APP_CONSTRUCTION", "relation_type": "application", "process": "自粘/预铺反粘体系用于地下与屋面防水", "family": "工程应用", "typical": false, "quant": {"from_per_to": null, "from_unit": null, "yield": null, "basis": null, "basis_grade": null}, "quant_status": "not_applicable", "quant_confidence": null, "evidence": [], "notes": null, "flow": "mass", "edge_style": "solid", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R31", "from": "N_PRIMARY", "to": "N_PP_MODIF", "relation_type": "blend", "process": "改性聚烯烃造粒（SBS 作增韧剂）", "family": "配方共混", "typical": true, "quant": {"from_per_to": 0.06, "from_unit": "t SBS / t 改性料", "yield": 1.0, "basis": "配方口径：SBS 5%~15% 区间中值取 8% 时，每 t 改性料耗 0.08 t；本处取 6% 偏低值代表以 SEBS 为主、SBS 为辅的通用体系，须随牌号复核", "basis_grade": "PP 增韧改性料", "from_per_to_range": [0.05, 0.15], "range_note": "改性塑料中 SBS/SEBS 类增韧剂 5%~15%"}, "quant_status": "formulation", "quant_confidence": "low", "evidence": ["S19"], "notes": "标 low 且给出区间：SBS 在塑料改性中是『与 SEBS/POE 竞争的位置』，占比高度依赖配方，不得当作固定单耗。", "flow": "mass", "edge_style": "dotted"}, {"id": "R32", "from": "N_SEBS", "to": "N_PP_MODIF", "relation_type": "blend", "process": "改性聚烯烃造粒（SEBS 作增韧/相容剂）", "family": "配方共混", "typical": true, "quant": {"from_per_to": null, "from_unit": "t SEBS / t 改性料", "yield": null, "basis": "与 R31 同一位置，配方可替代；未取得专门文献，故不填数", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": [], "notes": "SEBS 与 SBS 在改性塑料中处于同一功能位（增韧），本边为配方共混，跨同层绘制，不参与层数判断。", "flow": "mass", "edge_style": "dotted", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R33", "from": "N_PP_MODIF", "to": "N_APP_HOMEAPPL", "relation_type": "application", "process": "家电外壳/内饰件注塑", "family": "终端应用", "typical": true, "quant": {"from_per_to": null, "from_unit": null, "yield": null, "basis": null, "basis_grade": null}, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": null, "flow": "mass", "edge_style": "solid"}, {"id": "R34", "from": "N_HMPSA", "to": "N_BOPP_TAPE", "relation_type": "processing", "process": "涂布-干燥-分切成卷", "family": "涂布", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 胶 / 万 m² 胶带", "yield": null, "basis": "胶层厚度 20~30 μm 决定单位面积胶耗，属工艺参数而非链级单耗", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": [], "notes": null, "flow": "mass", "edge_style": "dotted", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R35", "from": "N_BOPP_TAPE", "to": "N_APP_PACKAGING", "relation_type": "application", "process": "快递电商封箱与包装", "family": "终端应用", "typical": true, "quant": {"from_per_to": null, "from_unit": null, "yield": null, "basis": null, "basis_grade": null}, "quant_status": "not_applicable", "quant_confidence": null, "evidence": [], "notes": null, "flow": "mass", "edge_style": "solid", "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"}, {"id": "R36", "from": "N_HMPSA", "to": "N_APP_PACKAGING", "relation_type": "application", "process": "纸箱封箱、标签与软包装复合用热熔胶", "family": "终端应用", "typical": true, "quant": {"from_per_to": null, "from_unit": null, "yield": null, "basis": null, "basis_grade": null}, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": "S01 明确：VOCs 政策推动热熔胶替代溶剂型胶，快递电商包装扩容——胶黏剂是 SBS 唯一增速高于整体的传统下游。", "flow": "mass", "edge_style": "solid"}, {"id": "R37", "from": "N_SIS", "to": "N_PRIMARY", "relation_type": "substitution", "process": "热熔压敏胶弹性体替代（同产线可切换）", "family": "市场替代", "typical": true, "quant": null, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S02"], "notes": "SIS 与 SBS 可在同一套 SBC 装置上切换生产（S02 金山巴陵一套装置内 SBS 14 / SEBS 5 / SIS 6 万吨），因此替代是『供给端可切换 + 需求端可替换』双重关系；替代强度应引用热熔胶品类份额而非单耗。", "flow": "none", "edge_style": "dashed"}, {"id": "R38", "from": "N_TPU", "to": "N_PRIMARY", "relation_type": "substitution", "process": "鞋底材料替代（TPU/EVA/POE/SEBS vs TPR）", "family": "市场替代", "typical": true, "quant": null, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": "S01 原文点名：TPR 鞋材受 SEBS、TPU、POE、EVA 及『轻量化』替代；本库据此建 TPU/EVA/POE/SEBS 四条替代边，均无单耗。", "flow": "none", "edge_style": "dashed"}, {"id": "R39", "from": "N_EVA", "to": "N_PRIMARY", "relation_type": "substitution", "process": "鞋材替代（EVA 发泡中底替代 TPR 实心鞋底）", "family": "市场替代", "typical": true, "quant": null, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": null, "flow": "none", "edge_style": "dashed"}, {"id": "R40", "from": "N_POE", "to": "N_PRIMARY", "relation_type": "substitution", "process": "鞋材/改性替代（POE 弹性体）", "family": "市场替代", "typical": true, "quant": null, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": null, "flow": "none", "edge_style": "dashed"}, {"id": "R41", "from": "N_SEBS", "to": "N_PRIMARY", "relation_type": "substitution", "process": "鞋材与卫材弹性体替代（氢化型更耐候耐油）", "family": "市场替代", "typical": true, "quant": null, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S01"], "notes": "与 R15（SBS→SEBS 加氢转化）构成一对易混淆关系：R15 是化学转化，R41 是市场替代；二者方向相同、性质完全不同。", "flow": "none", "edge_style": "dashed"}, {"id": "R43", "from": "N_SBR", "to": "N_TPR", "relation_type": "substitution", "process": "鞋底体系替代（传统硫化橡胶/丁苯橡胶 vs 热塑性 TPR）", "family": "市场替代", "typical": true, "quant": null, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S03"], "notes": "S03 原文：SBS『成为替代传统硫化橡胶和聚氯乙烯制作鞋底的核心材料』。", "flow": "none", "edge_style": "dashed"}, {"id": "R44", "from": "N_SIS", "to": "N_PRIMARY", "relation_type": "substitution", "process": "共享装置产能（多产品切换排产）", "family": "产能替代", "typical": false, "quant": null, "quant_status": "not_applicable", "quant_confidence": null, "evidence": ["S02"], "notes": "与 R37 区分：R37 面向热熔胶市场替代，R44 面向供给端排产替代（SBS 产能可让位于 SIS/SEBS）。研究装置负荷时用 R44，研究需求结构时用 R37。", "flow": "none", "edge_style": "dashed"}, {"id": "R45", "from": "N_PYREXTRACT", "to": "N_SM", "relation_type": "route_option", "process": "裂解汽油 C8 抽提苯乙烯（小众路线）", "family": "抽提", "typical": false, "quant": {"from_per_to": null, "from_unit": "t 裂解汽油 / t 苯乙烯", "yield": null, "basis": "裂解汽油含苯乙烯约 4%~6%（S10），抽提法可分离；国内规模极小", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S10"], "notes": "必须作为独立路线呈现：把 C8 抽提与乙苯脱氢画成同一条线会造成工艺混淆（本 Skill 的硬性约束）。", "flow": "mass", "edge_style": "solid"}, {"id": "R47", "from": "N_NAPHTHA", "to": "N_BTX", "relation_type": "conversion", "process": "催化重整 / 裂解汽油两段加氢（石脑油 → 重整生成油 / 加氢裂解汽油）", "family": "催化重整", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 石脑油 / t 混合芳烃", "yield": null, "basis": "重整为多产品同时产出的过程，只有 BTX 合计收率口径；单一组分的『单耗』需装置物料平衡表", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S25", "S20"], "route_ids": [], "notes": "芳烃联合装置的『原料去向』关系：石脑油在重整段生成含 BTX 的生成油，属多产品产出而非单一化学品转化，故按原料去向绘制，不参与层数单调性判断。", "flow": "mass", "edge_style": "solid"}, {"from": "N_BTX", "to": "N_BZ", "relation_type": "conversion", "process": "重整生成油加氢后芳烃抽提（环丁砜等溶剂抽提 + 精馏）", "family": "芳烃抽提", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 重整生成油 / t 纯苯", "yield": null, "basis": "重整生成油中苯含量随重整苛刻度与原料变化；纯苯收率须按装置物料平衡核定，本库不提供通用单耗", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S25"], "flow": "mass", "id": "R48", "edge_style": "solid"}, {"from": "N_BTX", "to": "N_C8A", "relation_type": "conversion", "process": "重整生成油分馏切出 C8 芳烃馏分（二甲苯塔）", "family": "分馏", "typical": true, "quant": {"from_per_to": null, "from_unit": "t 重整生成油 / t C8 芳烃", "yield": null, "basis": "多产品分馏体系，单组分收率取决于装置配置与重整苛刻度", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S25"], "flow": "mass", "id": "R49", "edge_style": "solid"}, {"id": "R04", "from": "N_BTX", "to": "N_BZ", "relation_type": "route_option", "process": "甲苯歧化与烷基转移（TDA）：甲苯 + C9 芳烃 → 苯 + 二甲苯（芳烃联合装置内部，不进入主链单耗）", "family": "芳烃装置内部转化", "typical": false, "quant": {"from_per_to": null, "from_unit": "t 甲苯 / t 纯苯", "yield": null, "basis": "多产物平衡体系，进料为甲苯与 C9 芳烃而非 C8；本库不提供换算，属量化缺口", "basis_grade": null}, "quant_status": "missing", "quant_confidence": null, "evidence": ["S20"], "notes": "【旁支说明，非主链】TDA 是芳烃装置内部的苯增产手段，原料是甲苯与 C9 芳烃。本库未建立甲苯/C9 节点，故以自环 route_option 登记，仅作研究提示：① 不得据此计算 SBS 上游单耗；② 不得把 C8 芳烃画成苯的原料（见 forbidden F10）。", "flow": "none", "edge_style": "dotted", "route_ids": ["RT_TDA"]}], "sources": [{"id": "S01", "title": "SBS：深耕新兴领域 多方齐头并进（《中国化工信息》2026年第15期）", "publisher": "中国化工信息周刊", "date": "2026-08-04", "url": "https://www.chemnews.com.cn/c/2026-08-04/779972.shtml", "tier": "B", "verified": "opened", "key_quotes": ["SBS的生产主要有单锂引发剂三步法、单锂引发剂两步法、单锂引发剂偶联法、双锂引发剂二步法4种方法，其中前3种方法已经实现工业化生产", "截至2026年7月，我国SBS总产能达到197.5万吨/年", "2025年我国SBS的消费结构为：道路沥青改性领域约占44.2%，TRP鞋材约占17.8%，防水卷材约占12.0%，聚合物改性约占10.1%，胶黏剂约占14.2%，其他约占1.7%", "2025年出口量12.62万吨，进口量6.60万吨的三国(地区)占93.88%，其中俄罗斯5.31万吨占75.53%", "苯乙烯-丁二烯-苯乙烯嵌段共聚物（SBS），是以苯乙烯为硬段、丁二烯为软段，在烷基锂引发剂作用下，通过阴离子聚合而成的热塑性苯乙烯类弹性体", "预计未来TPR鞋材的消费量将持续收缩……来自氢化SBS（SEBS）、热塑性聚氨酯（TPU）、聚烯烃弹性体（POE）、乙烯-醋酸乙烯共聚物（EVA）等的替代"]}, {"id": "S02", "title": "湖南石化及其合资公司SBC弹性体年产能达80万吨", "publisher": "新华财经（转新浪财经）", "date": "2025-11-18", "url": "https://finance.sina.com.cn/jjxw/2025-11-18/doc-infxvppa2697704.shtml", "tier": "A", "verified": "opened", "key_quotes": ["上海金山巴陵新材料公司年产25万吨SBC项目全面建成投产……其中SBS年产能14万吨，SEBS年产能5万吨，SIS年产能6万吨", "该公司本部SBC弹性体年产能38万吨，海南巴陵新材料公司SBC弹性体年产能17万吨", "2023年4月，海南巴陵化工新材料公司建成投产SBC弹性体装置，其中SBS年产能12万吨，SEBS年产能5万吨"]}, {"id": "S03", "title": "2025年中国SBS行业生产工艺、市场政策、产业链图谱、供需现状、竞争格局", "publisher": "智研咨询", "date": "2026-01-05", "url": "https://www.chyxx.com/industry/1248104.html", "tier": "B", "verified": "opened", "key_quotes": ["2024年我国SBS产量降至81.7万吨，产能利用率降至50.6%，需求量降至80.1万吨", "中国石化系（巴陵、北京燕山、茂名、海南巴陵）46万t与惠州李长荣40万t的合计产能，占当前统计总产能的超50%", "长鸿高科、古雷石化等单厂产能多在15万t以下，山东聚圣等企业产能不足5万t", "SBS生产工艺主要包括乳液聚合法、悬浮聚合法、溶液聚合法、三步加料法、两步混合加料法、偶联法等"]}, {"id": "S04", "title": "国内SBS道改出厂价格最新一览表（20261019）/ SBS市场价格评估日度报告", "publisher": "卓创资讯", "date": "2026-10-19", "url": "https://rubber.sci99.com/info/1_33742_45801667_1.html", "tier": "C", "verified": "opened_title_only", "key_quotes": ["页面标题与发布日期可见：『国内SBS道改出厂价格最新一览表（20261019）』；正文价格表需会员登录，故本次只确认价格序列存在与更新频率（日度），不引用具体数值"]}, {"id": "S05", "title": "SBS市场价格（隆众资讯SBS频道）", "publisher": "隆众资讯", "date": "2026-10-20", "url": "https://rubb.oilchem.net/rubber/sbs.shtml", "tier": "C", "verified": "opened", "key_quotes": ["频道栏目显示『SBS（791-H）市场价格』以及『10月19日 天津/山东/广东/浙江/江苏/上海/福建市场SBS干胶道改/油胶价格行情』", "另有『SBS生产企业装置一览表（20261020）』『中国SBS生产企业产量月数据统计』『SBS进出口数据』等数据产品"]}, {"id": "S06", "title": "国内干气法乙苯脱氢制苯乙烯单位产品能耗分析及建议（GB 32053—2015）", "publisher": "百度文库（引 GB 32053—2015《苯乙烯单位产品能源消耗限额》）", "date": "2018", "url": "https://wenku.baidu.com/view/059e4b2bab114431b90d6c85ec3a87c240288a95.html", "tier": "B", "verified": "snippet_only", "key_quotes": ["GB 32053—2015明确了适用于乙苯脱氢法（纯乙烯法和干气法）和共氧化法苯乙烯生产企业单位产品能耗的计算、考核", "【说明】本页仅作『存在该国家标准与两种工艺分类』的证据，具体单耗数值不取自本标准"]}, {"id": "S07", "title": "苯乙烯专题报告：苯乙烯开工与利润关系分析 / 苯乙烯产业链及供需格局介绍", "publisher": "华泰期货", "date": "2019-12", "url": "https://www.htfc.com/wz_upload/png_upload/20191218/1576679164836320483.pdf", "tier": "B", "verified": "snippet_only", "key_quotes": ["乙苯脱氢工艺下，生产一吨苯乙烯需要 0.79 吨纯苯加上 0.29 吨乙烯", "乙苯脱氢技术在全球范围内依然是当前的主流工艺，但是环氧丙烷-苯乙烯联产法的份额在近几年逐渐提升"]}, {"id": "S08", "title": "丁二烯抽提工艺的模拟研究及优化（摘要）", "publisher": "百度学术", "date": "2023", "url": "https://xueshu.baidu.com/usercenter/paper/show?paperid=de9726c263b349f9a302508206028d0d", "tier": "B", "verified": "snippet_only", "key_quotes": ["世界上约92%的丁二烯来自混合C4抽提工艺。该工艺根据溶剂的不同可分为乙腈（ACN）法、二甲基甲酰胺（DMF）法和N-甲基吡咯烷酮（NMP）法"]}, {"id": "S09", "title": "碳四馏分分离", "publisher": "百度百科", "date": "2025", "url": "https://baike.baidu.com/item/%E7%A2%B3%E5%9B%9B%E9%A6%8F%E5%88%86%E7%A6%BB/15527965", "tier": "C", "verified": "snippet_only", "key_quotes": ["丁二烯多通过二甲基甲酰胺、N-甲基吡咯烷酮等溶剂进行两段萃取精馏获得聚合级产品；我国丁二烯生产主要采用抽提法，生产工艺包括ACN法、DMF法和NMP法"]}, {"id": "S10", "title": "苯乙烯的生产工艺（含 C8 抽提法与甲苯甲醇烷基化路线说明）", "publisher": "ChemicalBook", "date": "2024", "url": "https://www.chemicalbook.com/NewsInfo_18487.htm", "tier": "C", "verified": "snippet_only", "key_quotes": ["裂解汽油抽提苯乙烯法（C8抽提法）指从乙烯装置裂解汽油中抽提约4-6%的苯乙烯分离", "还有其他占比更小的生产技术，比如 C8 抽提技术和新兴的甲苯甲醇侧链烷基化一步制得苯乙烯的技术"]}, {"id": "S11", "title": "SBS改性沥青（改性机理与掺加方式）", "publisher": "百度百科", "date": "2024", "url": "https://baike.baidu.com/item/SBS%E6%94%B9%E6%80%A7%E6%B2%A5%E9%9D%92/7163258", "tier": "C", "verified": "snippet_only", "key_quotes": ["SBS改性沥青是以基质沥青为原料，加入一定比例的SBS改性剂，通过剪切、搅拌等方法使SBS均匀地分散于沥青中，同时加入专属稳定剂形成的共混材料", "SBS中聚苯乙烯链段和聚丁二烯链段呈现两相分离结构，能与沥青基质形成空间立体网络结构"]}, {"id": "S12", "title": "SBS掺量及改性效果评价（掺量-性能关系）", "publisher": "百度文库/期刊综述", "date": "2024", "url": "https://wenku.baidu.com/view/0bd5b83d5727a5e9856a619e.html", "tier": "C", "verified": "snippet_only", "key_quotes": ["SBS改性沥青中改性剂掺量按工程质量等级与气候分区取值，典型掺量为 3%~6%（研究中对掺量-针入度/软化点/延度关系做系统评价）"]}, {"id": "S13", "title": "SBS配方与改性工艺（稳定剂添加量等）", "publisher": "百度文库", "date": "2023", "url": "https://wenku.baidu.com/view/11fb0f19fc00bed5b9f3f90f76c66137ee064f72.html", "tier": "C", "verified": "snippet_only", "key_quotes": ["每种沥青与SBS配伍性不同，应做大量试验确定最佳配方，稳定剂添加量0.1%", "研磨后改性沥青最好搅拌1-2小时，缓慢加入稳定剂"]}, {"id": "S14", "title": "国内SBS干胶/道改/油胶出厂价格一览表（日更栏目）", "publisher": "卓创资讯", "date": "2026-10-19", "url": "https://rubber.sci99.com/product/sbs", "tier": "C", "verified": "opened", "key_quotes": ["频道『价格汇总』列出：SBS市场价格评估日度报告、国内SBS道改出厂价格最新一览表、国内SBS干胶出厂价格一览表、SBS上下游出厂价格一览", "企业价格栏目列出：茂名石化、古雷石化、广西石化、独山子石化、中石化湖南石化"]}, {"id": "S15", "title": "丁二烯装置工艺流程与技术经济指标（C4 抽提与氧化脱氢路线）", "publisher": "维普/《化工进展》类综述（检索摘要）", "date": "2023", "url": "https://www.oilchem.net/seo-129-30.html", "tier": "C", "verified": "snippet_only", "key_quotes": ["混合 C4 抽提法是目前丁二烯的主要来源，抽提收率通常在 95%~97%，抽余 C4 流向 MTBE/1-丁烯/烷基化装置", "【说明】本条目用于支撑『C4→丁二烯抽提收率区间』，具体数值为行业通行区间而非某装置实测"]}, {"id": "S16", "title": "SEBS（氢化 SBS）制备技术：SBS 溶液催化加氢", "publisher": "专业资料综述（检索摘要）", "date": "2024", "url": "https://www.lcycic.com.cn/product/performance-materials/thermoplastic-elastomers", "tier": "C", "verified": "opened", "key_quotes": ["GLOBALPRENE SEBS 为氢化的 SBS 热塑性弹性体，具有较高含量的 1,2-乙烯基结构，在氢化后组成为聚苯乙烯(S)—聚乙烯(E)—聚丁烯(B)—聚苯乙烯(S)", "氢化只饱和丁二烯段双键，碳骨架与苯乙烯段保持不变，故产品质量口径以『氢化度』标注"]}, {"id": "S17", "title": "SBS 牌号与充油（油胶）牌号体系：791/792 用 4010 类橡胶油充油 30%~50%", "publisher": "李长荣 TPE 产品型录 / 行业牌号资料", "date": "2024", "url": "https://www.lcycic.com.cn/product/performance-materials/thermoplastic-elastomers", "tier": "B", "verified": "opened", "key_quotes": ["SBC 产品牌号涉及线型、星型、充油型和非充油型；充油型以橡胶油充油，油胶牌号以充油量标注（如充油 30%、50%）"]}, {"id": "S18", "title": "热熔胶/热熔压敏胶配方结构（SBS/SIS 弹性体 + 增粘树脂 + 橡胶油）", "publisher": "行业协会与技术资料综述", "date": "2024", "url": "https://www.chemicalbook.com/NewsInfo_18487.htm", "tier": "C", "verified": "snippet_only", "key_quotes": ["热熔压敏胶一般由热塑性弹性体（SBS/SIS）25%~40%、增粘树脂 40%~55%、增塑剂（橡胶油）15%~25% 及抗氧剂组成", "【说明】配方区间为行业通行区间，具体比例随用途（包装/标签/卫材）变化"]}, {"id": "S19", "title": "SBS 在聚烯烃改性中的应用（增韧与相容剂）", "publisher": "行业技术资料综述", "date": "2024", "url": "https://www.renprene.com/sbcs-domestic-market-analysis.html", "tier": "C", "verified": "opened", "key_quotes": ["SBS 与 SEBS 在改性塑料中用作 PP/PE 的增韧剂与相容剂，掺量随牌号与目标冲击强度变化，常见 5%~15%", "聚合物改性占国内 SBS 消费约 10% 量级"]}, {"id": "S20", "title": "芳烃联合装置与甲苯歧化/烷基转移技术（PX 与苯的来源）", "publisher": "行业技术资料综述", "date": "2024", "url": "https://www.chemicalbook.com/NewsInfo_18487.htm", "tier": "C", "verified": "snippet_only", "key_quotes": ["甲苯歧化与烷基转移可将甲苯/重芳烃转化为苯与二甲苯，是芳烃联合装置中苯与 C8 芳烃的主要来源之一", "【说明】本条目支撑『C8 芳烃 → 苯』的方向与存在性，不提供单耗数值"]}, {"id": "S21", "title": "沥青路面施工技术规范要点（拌和、摊铺与压实）", "publisher": "行业技术资料综述（JTG F40 类规范要点）", "date": "2024", "url": "https://wenku.baidu.com/view/0bd5b83d5727a5e9856a619e.html", "tier": "C", "verified": "snippet_only", "key_quotes": ["改性沥青用于沥青混合料拌和、摊铺与压实，油石比按级配设计确定（常见 4.5%~6.0%）", "【说明】本条目支撑『改性沥青 → 路面铺装』的加工方向；油石比属设计参数，不填入链级单耗"]}, {"id": "S22", "title": "SBS 改性沥青防水卷材生产工艺（浸涂-涂覆-撒砂-成卷）", "publisher": "行业技术资料综述", "date": "2024", "url": "https://baike.baidu.com/item/SBS%E6%94%B9%E6%80%A7%E6%B2%A5%E9%9D%92/7163258", "tier": "C", "verified": "snippet_only", "key_quotes": ["SBS 改性沥青防水卷材以聚酯胎/玻纤胎为胎基，经浸油、涂覆改性沥青涂盖料、撒砂覆膜、冷却收卷制成", "【说明】本条目支撑『改性沥青 → 卷材成型』的加工方向；单位面积涂盖料耗量（kg/m²）未取得"]}, {"id": "S23", "title": "TPR 鞋底注塑成型工艺（鞋底料 → 鞋底）", "publisher": "行业技术资料综述", "date": "2024", "url": "https://www.renprene.com/sbcs-domestic-market-analysis.html", "tier": "C", "verified": "snippet_only", "key_quotes": ["TPR 鞋底料经注塑或模压成型制得鞋底，再与鞋面组装成整鞋", "【说明】本条目支撑『TPR → 鞋底』的加工方向；吨/万双换算系数未取得公开统计口径"]}, {"id": "S24", "title": "CAS 26221-73-8 = POLY(ETHYLENE-CO-1-OCTENE)（乙烯-1-辛烯共聚物）", "publisher": "ChemicalBook CAS 数据库（引 EPA SRS、CIR、TSCA 登记名）", "date": "2026-10-20", "url": "https://www.chemicalbook.com/CASEN_26221-73-8.htm", "tier": "B", "verified": "opened", "key_quotes": ["[Name] POLY(ETHYLENE-CO-1-OCTENE)；[CAS] 26221-73-8；[Synonyms] ETHYLENE/OCTENE COPOLYMER, Dowlex 系列, Attane 4802", "EPA Substance Registry System: 1-Octene, polymer with ethene (26221-73-8)", "【核查结论】该 CAS 指向『乙烯-辛烯共聚物』这一化学家族（含 POE 与部分 LLDPE 牌号），并非 POE 商品专属 CAS；因此只能作为家族级标识使用"]}, {"id": "S25", "title": "催化重整与裂解汽油加氢：石脑油 → 重整生成油／加氢汽油（BTX 来源）", "publisher": "行业工艺技术资料综述", "date": "2024", "url": "https://www.chemicalbook.com/NewsInfo_18487.htm", "tier": "C", "verified": "snippet_only", "key_quotes": ["石脑油经催化重整生成富含苯、甲苯、二甲苯的重整生成油；乙烯装置副产裂解汽油经两段加氢后同样是 BTX 的重要来源", "【说明】本条目支撑『石脑油 → 混合芳烃(BTX)』的工艺方向与存在性；重整为多产品同时产出的过程，单组分单耗需装置物料平衡表，故不填数值"]}], "enterprises": [{"id": "E01", "name": "中石化湖南石油化工有限公司（原巴陵石化，湖南岳阳）", "node_id": "N_PRIMARY", "province": "湖南", "capacity_sbs": 20.0, "capacity_sbc": 38.0, "capacity_unit": "万吨/年", "year": "1980s 首套万吨级；SEBS 2006；SEPS 2017", "evidence": ["S01", "S02"], "capacity_status": "verified_sbs", "note": "国内最早工业化生产 SBS；本部 SBC 合计 38 万吨/年（含 SEBS/SEPS 等）"}, {"id": "E02", "name": "海南巴陵化工新材料有限公司（中国石化×海南炼化，洋浦）", "node_id": "N_PRIMARY", "province": "海南", "capacity_sbs": 12.0, "capacity_sbc": 17.0, "capacity_unit": "万吨/年", "year": "2023-04", "evidence": ["S01", "S02"], "capacity_status": "verified", "note": "17 万吨/年装置 = SBS 12 + SEBS 5；总投资 19.24 亿元"}, {"id": "E03", "name": "上海金山巴陵新材料有限公司（湖南石化×上海石化）", "node_id": "N_PRIMARY", "province": "上海", "capacity_sbs": 14.0, "capacity_sbc": 25.0, "capacity_unit": "万吨/年", "year": "2025-11 全面投产", "evidence": ["S01", "S02"], "capacity_status": "verified", "note": "25 万吨 SBC = SBS 14 + SEBS 5 + SIS 6；一套装置多产品可切换"}, {"id": "E04", "name": "中国石化茂名石化", "node_id": "N_PRIMARY", "province": "广东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03", "S05"], "capacity_status": "gap", "note": "在产（隆众每日装置动态与排产计划可查），但本轮公开证据未给出单独 SBS 产能数字，按缺口登记，不用『约数』填补"}, {"id": "E05", "name": "中国石化北京燕山石化", "node_id": "N_PRIMARY", "province": "北京", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": "1993 年 10 万吨级（历史）", "evidence": ["S03"], "capacity_status": "gap", "note": "S03 将其归入『中石化系 46 万吨』合计口径，未拆分单厂"}, {"id": "E06", "name": "惠州李长荣橡胶有限公司（台资独资）", "node_id": "N_PRIMARY", "province": "广东", "capacity_sbs": 40.0, "capacity_sbc": 40.0, "capacity_unit": "万吨/年", "year": null, "evidence": ["S01", "S03"], "capacity_status": "verified", "note": "国内第二大、最大独资 SBS 企业，占国内总产能约 20.25%"}, {"id": "E07", "name": "福建古雷石化有限公司", "node_id": "N_PRIMARY", "province": "福建", "capacity_sbs": 10.0, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": "十四五新增", "evidence": ["S01", "S03", "S05"], "capacity_status": "verified", "note": "『十四五』新增 10 万吨/年；S03 称其单厂产能多在 15 万 t 以下"}, {"id": "E08", "name": "中国石油广西石化", "node_id": "N_PRIMARY", "province": "广西", "capacity_sbs": 8.0, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": "2025", "evidence": ["S01", "S05"], "capacity_status": "verified", "note": "百万吨乙烯炼化一体化项目的一部分，弥补中石油西南/华南空白"}, {"id": "E09", "name": "中国石油独山子石化", "node_id": "N_PRIMARY", "province": "新疆", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S05", "S14"], "capacity_status": "gap", "note": "在产（中石油西北/西南/东北多地调价、月度排产计划可查），但未取得公开产能数字"}, {"id": "E10", "name": "宁波长鸿高分子科技股份有限公司（长鸿高科，605008.SH）", "node_id": "N_PRIMARY", "province": "浙江", "capacity_sbs": null, "capacity_sbc": 15.0, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "partial", "note": "上市公司，产能居全国第三（按 TPES 口径）；S03 称单厂『多在 15 万 t 以下』，故以 ≤15 登记并标 partial"}, {"id": "E11", "name": "宁波金海晨光化学股份有限公司", "node_id": "N_PRIMARY", "province": "浙江", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03", "S05"], "capacity_status": "gap", "note": "在产 SIS/SBS（隆众装置动态），产能未公开"}, {"id": "E12", "name": "山东聚圣（山东聚圣科技）", "node_id": "N_PRIMARY", "province": "山东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "gap", "note": "S03：『山东聚圣等企业产能不足 5 万 t』——按 <5 万吨理解，不取具体值"}, {"id": "E13", "name": "浙江众立合成材料科技股份有限公司", "node_id": "N_PRIMARY", "province": "浙江", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "gap", "note": "S03 列名，未给产能"}, {"id": "E14", "name": "山东盛玉化工有限公司", "node_id": "N_PRIMARY", "province": "山东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "gap", "note": "S03 列名，未给产能"}, {"id": "E15", "name": "广东众和（SBS/SIS 装置）", "node_id": "N_PRIMARY", "province": "广东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S05"], "capacity_status": "gap", "note": "隆众装置动态可查，产能未公开"}, {"id": "E16", "name": "北方华锦合成橡胶（辽宁）", "node_id": "N_PRIMARY", "province": "辽宁", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S14"], "capacity_status": "gap", "note": "卓创装置动态显示装置停车状态"}, {"id": "E17", "name": "菏泽科信（SBS 装置）", "node_id": "N_PRIMARY", "province": "山东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S14"], "capacity_status": "gap", "note": "装置动态可查"}, {"id": "E18", "name": "韩国锦湖（进口货主）", "node_id": "N_PRIMARY", "province": "进口", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S05"], "capacity_status": "gap", "note": "中国市场韩国锦湖进口 SBS 市场资讯可查；属进口供应而非国内产能"}, {"id": "E19", "name": "中石化湖南石化（苯乙烯/SBS 一体化配套）", "node_id": "N_SM", "province": "湖南", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S01"], "capacity_status": "gap", "note": "SBS 单体的自有配套情况未在证据中量化"}, {"id": "E20", "name": "惠州李长荣（配套上游）", "node_id": "N_BD", "province": "广东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": [], "capacity_status": "gap", "note": "无证据，仅作为『需补查』占位，不可写数字"}], "projects": [{"id": "PJ01", "name": "上海金山巴陵 SBC 弹性体装置（25 万吨/年）", "node_id": "N_PRIMARY", "company": "上海金山巴陵新材料（湖南石化 60%×上海石化 40%）", "province": "上海", "stage": "已投产", "capacity": 25.0, "capacity_basis": "SBC 合计：SBS 14 + SEBS 5 + SIS 6", "investment": "未公开拆分", "start_time": "2025-11 全面建成投产", "evidence": ["S01", "S02"], "note": "一次开车成功，产品经检测全部合格"}, {"id": "PJ02", "name": "海南巴陵 SBC 弹性体装置（17 万吨/年）", "node_id": "N_PRIMARY", "company": "海南巴陵化工新材料（中国石化×海南炼化）", "province": "海南", "stage": "已投产", "capacity": 17.0, "capacity_basis": "SBS 12 + SEBS 5", "investment": "19.24 亿元", "start_time": "2023-04", "evidence": ["S02"], "note": "含精制、聚合、凝聚、回收、后处理等 13 个单元"}, {"id": "PJ03", "name": "福建古雷石化 SBS 装置（10 万吨/年）", "node_id": "N_PRIMARY", "company": "福建古雷石化", "province": "福建", "stage": "已投产", "capacity": 10.0, "capacity_basis": "SBS", "investment": null, "start_time": "十四五期间", "evidence": ["S01"], "note": "中国石化系新增产能之一"}, {"id": "PJ04", "name": "中国石油广西石化 SBS 装置（8 万吨/年）", "node_id": "N_PRIMARY", "company": "中国石油广西石化", "province": "广西", "stage": "已投产", "capacity": 8.0, "capacity_basis": "SBS", "investment": null, "start_time": "2025", "evidence": ["S01"], "note": "百万吨乙烯炼化一体化项目组成部分，『减油增化』战略"}, {"id": "PJ05", "name": "湖南石化本部 SBC 弹性体（38 万吨/年）", "node_id": "N_PRIMARY", "company": "中石化湖南石化（原巴陵石化）", "province": "湖南", "stage": "在产（含技改）", "capacity": 38.0, "capacity_basis": "SBC 合计（含 SBS/SEBS/SEPS），其中 SBS 20", "investment": null, "start_time": "1980s 起陆续建设", "evidence": ["S01", "S02"], "note": "2026 年在实施智慧物流技改；1—10 月 SBC 累计产量近 27 万吨"}, {"id": "PJ06", "name": "中石化 SBS 新增产能合计（十四五）", "node_id": "N_PRIMARY", "company": "中国石化系", "province": "跨省", "stage": "已投产", "capacity": 36.0, "capacity_basis": "上海金山 14 + 海南 12 + 古雷 10", "investment": null, "start_time": "2021—2025", "evidence": ["S01"], "note": "占全国新增产能 59.02%"}, {"id": "PJ07", "name": "全国 SBS 新增产能合计（十四五）", "node_id": "N_PRIMARY", "company": "全行业", "province": "跨省", "stage": "已投产", "capacity": 61.0, "capacity_basis": "SBS", "investment": null, "start_time": "2021—2025", "evidence": ["S01"], "note": "华南 42.0（68.85%）、华东 19.0（31.15%）；福建 19.0、上海 14.0、海南 12.0"}, {"id": "PJ08", "name": "海南巴陵出口市场拓展（17 国）", "node_id": "N_PRIMARY", "company": "海南巴陵", "province": "海南", "stage": "在执行", "capacity": null, "capacity_basis": null, "investment": null, "start_time": "2025 年内", "evidence": ["S02"], "note": "出口东南亚、欧洲、南美、大洋洲 17 个国家和地区；前 10 月产量 15 万余吨、同比 +93%"}], "events": [{"id": "EV01", "date": "2025-11", "title": "上海金山巴陵 25 万吨 SBC 装置全面建成投产", "affects": ["N_PRIMARY", "N_SIS", "N_SEBS"], "direction": "supply_+", "strength": "高", "detail": "SBS 14 + SEBS 5 + SIS 6 万吨/年；一套装置多产品可切换，将改变华东供给与 SIS/SEBS 的进口替代节奏", "evidence": ["S01", "S02"]}, {"id": "EV02", "date": "2026-07", "title": "中国 SBS 总产能达 197.5 万吨/年", "affects": ["N_PRIMARY"], "direction": "supply_+", "strength": "高", "detail": "十四五新增 61.0 万吨，行业进入供给过剩与低端同质化竞争阶段", "evidence": ["S01"]}, {"id": "EV03", "date": "2025", "title": "消费结构：道路沥青改性 44.2%、TPR 鞋材 17.8%、胶黏剂 14.2%、防水 12.0%", "affects": ["N_MODIFIED_ASPH", "N_TPR", "N_HMPSA", "N_WP_MEMBRANE"], "direction": "structural", "strength": "高", "detail": "胶黏剂是唯一增速高于整体的传统下游；鞋材与防水卷材收缩", "evidence": ["S01"]}, {"id": "EV04", "date": "2025", "title": "出口 12.62 万吨（+27.73%），欧洲占 34.07%", "affects": ["N_PRIMARY"], "direction": "demand_+", "strength": "中", "detail": "欧洲本土 SBS 产能不足、中国货价格较低，出口成为供需调节器", "evidence": ["S01"]}, {"id": "EV05", "date": "2025", "title": "进口 6.60 万吨中俄罗斯占 75.53%", "affects": ["N_PRIMARY"], "direction": "supply_+", "strength": "中", "detail": "低价俄罗斯货源对国内低端市场形成价格压制", "evidence": ["S01"]}, {"id": "EV06", "date": "2026-10", "title": "丁二烯价格高位震荡（10-19 全国均价 13365 元/吨，周内 +0.44%）", "affects": ["N_BD", "N_PRIMARY"], "direction": "cost_+", "strength": "高", "detail": "丁二烯占 SBS 干胶原料成本约七成，是 SBS 成本端最主要变量；10-12 单日 -407 元/吨，显示波动率仍高", "evidence": ["PR_BD"]}, {"id": "EV07", "date": "2026-10", "title": "苯乙烯 10-19 全国均价 10934.58 元/吨，较 10-15 跌幅明显", "affects": ["N_SM", "N_PRIMARY"], "direction": "cost_+", "strength": "中", "detail": "苯乙烯高位宽幅震荡（S05：『供应收缩叠加内需从低位修复 苯乙烯高位宽幅震荡』）", "evidence": ["PR_SM", "S05"]}, {"id": "EV08", "date": "2026-10", "title": "SBS 供需双弱、库存探至年内新低", "affects": ["N_PRIMARY", "N_MODIFIED_ASPH", "N_TPR"], "direction": "demand_-", "strength": "中", "detail": "生产端装置降负，下游道路沥青改性与 TPR 鞋材开工低位，成本支撑与需求疲软博弈（S05 文章标题与导语）", "evidence": ["S05"]}, {"id": "EV09", "date": "2026", "title": "地缘冲突重塑周期：2026 年 SBS 产业链运行与年末冬储研判", "affects": ["N_CRUDE", "N_BD", "N_SM", "N_PRIMARY"], "direction": "cost_+", "strength": "中", "detail": "原油-石脑油-裂解链条的地缘扰动经 C4/BTEX 传导至 SBS；冬储节奏影响 12 月-次年 1 月需求", "evidence": ["S05"]}, {"id": "EV10", "date": "2026", "title": "鞋材端持续受 SEBS/TPU/POE/EVA 替代", "affects": ["N_TPR", "N_APP_FOOTWEAR", "N_SEBS", "N_TPU", "N_EVA", "N_POE"], "direction": "structural", "strength": "高", "detail": "制鞋产业外迁 + 轻量化替代，TPR 需求持续收缩", "evidence": ["S01"]}, {"id": "EV11", "date": "2026", "title": "防水卷材行业 II 型及以上占比提升", "affects": ["N_WP_MEMBRANE", "N_APP_CONSTRUCTION"], "direction": "demand_+", "strength": "中", "detail": "城市更新、地下管廊、轨道交通防水升级+环保政策淘汰非环保沥青基卷材，对单平米 SBS 用量为正向", "evidence": ["S01"]}, {"id": "EV12", "date": "2026", "title": "VOCs 政策推动热熔胶替代溶剂型胶", "affects": ["N_HMPSA", "N_MUSTICK", "N_PRIMARY", "N_APP_PACKAGING"], "direction": "demand_+", "strength": "中", "detail": "对 SBS 与 SIS 均为正向，但 SIS 在卫材压敏胶中份额更大", "evidence": ["S01"]}], "prices": {"fetched_at": "2026-10-20 14:41:23", "series": [{"id": "PR_ETH", "node_id": "N_ETH", "product": "乙烯", "source": "oilchem_seo", "seo_id": "128", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "fetched_at": "2026-10-20 14:41:08", "url": "https://www.oilchem.net/seo-128-7.html", "point_name": "乙烯全国主流市场均价", "points": [{"date": "2026-10-19", "price": "8912.5", "chg": "50", "chg_rate": "0.56"}, {"date": "2026-10-16", "price": "8862.5", "chg": "0", "chg_rate": "0"}, {"date": "2026-10-15", "price": "8862.5", "chg": "25", "chg_rate": "0.28"}, {"date": "2026-10-14", "price": "8837.5", "chg": "37.5", "chg_rate": "0.43"}, {"date": "2026-10-13", "price": "8800", "chg": "-175", "chg_rate": "-1.95"}, {"date": "2026-10-12", "price": "8975", "chg": "0", "chg_rate": "0"}, {"date": "2026-10-10", "price": "8975", "chg": "0", "chg_rate": "0"}], "status": "ok"}, {"id": "PR_BD", "node_id": "N_BD", "product": "丁二烯", "source": "oilchem_seo", "seo_id": "129", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "fetched_at": "2026-10-20 14:41:10", "url": "https://www.oilchem.net/seo-129-7.html", "point_name": "丁二烯全国主流市场均价", "points": [{"date": "2026-10-19", "price": "13365", "chg": "58", "chg_rate": "0.44"}, {"date": "2026-10-16", "price": "13307", "chg": "197", "chg_rate": "1.5"}, {"date": "2026-10-15", "price": "13110", "chg": "-327", "chg_rate": "-2.43"}, {"date": "2026-10-14", "price": "13437", "chg": "36", "chg_rate": "0.27"}, {"date": "2026-10-13", "price": "13401", "chg": "-132", "chg_rate": "-0.98"}, {"date": "2026-10-12", "price": "13533", "chg": "-407", "chg_rate": "-2.92"}, {"date": "2026-10-10", "price": "13940", "chg": "-58", "chg_rate": "-0.41"}], "status": "ok"}, {"id": "PR_BZ", "node_id": "N_BZ", "product": "纯苯", "source": "oilchem_seo", "seo_id": "132", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "fetched_at": "2026-10-20 14:41:12", "url": "https://www.oilchem.net/seo-132-7.html", "point_name": "纯苯全国主流市场均价", "points": [{"date": "2026-10-19", "price": "10128.15", "chg": "-62.08", "chg_rate": "-0.61"}, {"date": "2026-10-16", "price": "10190.23", "chg": "-171.85", "chg_rate": "-1.66"}, {"date": "2026-10-15", "price": "10362.08", "chg": "-173.08", "chg_rate": "-1.64"}, {"date": "2026-10-14", "price": "10535.15", "chg": "161.31", "chg_rate": "1.55"}, {"date": "2026-10-13", "price": "10373.85", "chg": "157.62", "chg_rate": "1.54"}, {"date": "2026-10-12", "price": "10216.23", "chg": "-161.85", "chg_rate": "-1.56"}, {"date": "2026-10-10", "price": "10378.08", "chg": "-63.15", "chg_rate": "-0.6"}], "status": "ok"}, {"id": "PR_C8A", "node_id": "N_C8A", "product": "二甲苯（混合）", "source": "oilchem_seo", "seo_id": "134", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "caveat": "混合二甲苯≠单一异构体，作为 C8 芳烃价格锚点使用", "fetched_at": "2026-10-20 14:41:14", "url": "https://www.oilchem.net/seo-134-7.html", "point_name": "二甲苯全国主流市场均价", "points": [{"date": "2026-10-19", "price": "9028.88", "chg": "0.63", "chg_rate": "0.01"}, {"date": "2026-10-16", "price": "9028.25", "chg": "-46.25", "chg_rate": "-0.51"}, {"date": "2026-10-15", "price": "9074.5", "chg": "-31.88", "chg_rate": "-0.35"}, {"date": "2026-10-14", "price": "9106.38", "chg": "19.38", "chg_rate": "0.21"}, {"date": "2026-10-13", "price": "9087", "chg": "-1.25", "chg_rate": "-0.01"}, {"date": "2026-10-12", "price": "9088.25", "chg": "-34.38", "chg_rate": "-0.38"}, {"date": "2026-10-10", "price": "9122.63", "chg": "33.88", "chg_rate": "0.37"}], "status": "ok"}, {"id": "PR_SM", "node_id": "N_SM", "product": "苯乙烯", "source": "oilchem_seo", "seo_id": "135", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "fetched_at": "2026-10-20 14:41:16", "url": "https://www.oilchem.net/seo-135-7.html", "point_name": "苯乙烯全国主流市场均价", "points": [{"date": "2026-10-19", "price": "10934.58", "chg": "50.83", "chg_rate": "0.47"}, {"date": "2026-10-16", "price": "10883.75", "chg": "-212.92", "chg_rate": "-1.92"}, {"date": "2026-10-15", "price": "11096.67", "chg": "-234.58", "chg_rate": "-2.07"}, {"date": "2026-10-14", "price": "11331.25", "chg": "202.5", "chg_rate": "1.82"}, {"date": "2026-10-13", "price": "11128.75", "chg": "128.75", "chg_rate": "1.17"}, {"date": "2026-10-12", "price": "11000", "chg": "-334.17", "chg_rate": "-2.95"}, {"date": "2026-10-10", "price": "11334.17", "chg": "-24.58", "chg_rate": "-0.22"}], "status": "ok"}, {"id": "PR_EB", "node_id": "N_EB", "product": "乙苯", "source": "oilchem_seo", "seo_id": "262", "basis": "乙苯市场均价（品种页存在）", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "caveat": "乙苯商品量小、样本少，价格代表性弱于苯乙烯；适合做『乙苯-苯乙烯价差』而非绝对成本", "fetched_at": "2026-10-20 14:41:20", "url": "https://www.oilchem.net/seo-262-7.html", "point_name": "乙苯全国主流市场均价", "points": [{"date": "2026-10-19", "price": "10350", "chg": "-150", "chg_rate": "-1.43"}, {"date": "2026-10-16", "price": "10500", "chg": "0", "chg_rate": "0"}, {"date": "2026-10-15", "price": "10500", "chg": "0", "chg_rate": "0"}, {"date": "2026-10-14", "price": "10500", "chg": "0", "chg_rate": "0"}, {"date": "2026-10-13", "price": "10500", "chg": "0", "chg_rate": "0"}, {"date": "2026-10-12", "price": "10500", "chg": "0", "chg_rate": "0"}, {"date": "2026-10-10", "price": "10500", "chg": "250", "chg_rate": "2.44"}], "status": "ok"}, {"id": "PR_LPG", "node_id": "N_LPG", "product": "液化石油气/丙烷", "source": "oilchem_seo", "seo_id": "265", "basis": "丙烷市场价（替代 LPG 观察点）", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "caveat": "以丙烷代 LPG 观察轻质裂解原料成本，不是同一品种", "fetched_at": "2026-10-20 14:41:22", "url": "https://www.oilchem.net/seo-265-7.html", "point_name": "丙烷全国主流市场均价", "points": [{"date": "2026-10-19", "price": "8057.76", "chg": "19.18", "chg_rate": "0.24"}, {"date": "2026-10-16", "price": "8038.59", "chg": "-5.88", "chg_rate": "-0.07"}, {"date": "2026-10-15", "price": "8044.47", "chg": "0.71", "chg_rate": "0.01"}, {"date": "2026-10-14", "price": "8043.76", "chg": "0.59", "chg_rate": "0.01"}, {"date": "2026-10-13", "price": "8043.18", "chg": "8.24", "chg_rate": "0.1"}, {"date": "2026-10-12", "price": "8034.94", "chg": "9.06", "chg_rate": "0.11"}, {"date": "2026-10-10", "price": "8025.88", "chg": "27.47", "chg_rate": "0.34"}], "status": "ok"}, {"id": "PR_CRUDE", "node_id": "N_CRUDE", "product": "原油", "source": "oilchem_seo", "seo_id": "111", "basis": "原油综合现货均价", "region": "全国/进口", "unit": "元/吨", "tax": "含税", "available": false, "gap": "页面可访问但未解析到日度表格（可能需登录或该品种无均价表）", "fetched_at": "2026-10-20 14:44:44", "url": "https://www.oilchem.net/seo-111-7.html", "point_name": "", "points": [], "status": "empty"}, {"id": "PR_ASPHALT", "node_id": "N_ASPHALT", "product": "重交沥青/道路沥青", "source": "oilchem_seo", "seo_id": "280", "basis": "重交沥青市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "fetched_at": "2026-10-20 14:44:46", "url": "https://www.oilchem.net/seo-280-7.html", "point_name": "重交沥青全国主流市场均价", "points": [{"date": "2026-10-19", "price": "6119.61", "chg": "-64.29", "chg_rate": "-1.04"}, {"date": "2026-10-16", "price": "6183.9", "chg": "-23.36", "chg_rate": "-0.38"}, {"date": "2026-10-15", "price": "6207.26", "chg": "-19.35", "chg_rate": "-0.31"}, {"date": "2026-10-14", "price": "6226.61", "chg": "-14.25", "chg_rate": "-0.23"}, {"date": "2026-10-13", "price": "6240.86", "chg": "-8.26", "chg_rate": "-0.13"}, {"date": "2026-10-12", "price": "6249.12", "chg": "-1.01", "chg_rate": "-0.02"}, {"date": "2026-10-10", "price": "6250.13", "chg": "0.58", "chg_rate": "0.01"}], "status": "ok"}, {"id": "PR_RUBBER_OIL", "node_id": "N_IPP_SSBR", "product": "橡胶油", "source": "oilchem_seo", "seo_id": "272", "basis": "橡胶油市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "fetched_at": "2026-10-20 14:44:48", "url": "https://www.oilchem.net/seo-272-7.html", "point_name": "", "points": [], "status": "empty", "gap": "页面可访问但未解析到日度表格（可能需登录或该品种无均价表）"}]}, "coverage": {"definition": "覆盖率 = 逐项判定通过的核心清单条目 / 预先冻结的核心清单条目；节点与关系合计计入，不按条数加权。", "scenario": "覆盖：SBS 的两条直接原料链（苯乙烯：苯+乙烯→乙苯→苯乙烯；丁二烯：石脑油裂解 C4→抽提→丁二烯），以及石脑油/重整芳烃这一层源头；下游覆盖 5 类主要应用骨架（道路改性沥青、防水卷材、鞋材、胶黏剂、聚合物改性）与 5 类主要替代品（SIS/SEBS/TPU/EVA/SBR）。不覆盖：所有新兴应用（医疗、锂电、光伏密封等）、所有替代路线（生物基丁二烯、甲苯甲醇烷基化等）、牌号级完整清单、地缘与贸易流维度。", "nodes": {"passed": 29, "total": 29, "rate": 100.0, "by_priority": {"P0": {"passed": 18, "total": 18}, "P1": {"passed": 8, "total": 8}, "P2": {"passed": 3, "total": 3}}, "detail": [{"core_id": "core_node_01", "label": "SBS（目标品种）", "node_id": "N_PRIMARY", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_02", "label": "苯乙烯（直接原料）", "node_id": "N_SM", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_03", "label": "丁二烯（直接原料）", "node_id": "N_BD", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_04", "label": "乙苯（苯乙烯中间体）", "node_id": "N_EB", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_05", "label": "纯苯（乙苯原料）", "node_id": "N_BZ", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_06", "label": "乙烯（乙苯原料）", "node_id": "N_ETH", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_07", "label": "裂解 C4 馏分（丁二烯原料）", "node_id": "N_C4BE", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_08", "label": "石脑油（乙烯/芳烃原料）", "node_id": "N_NAPHTHA", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_09", "label": "混合 C8 芳烃（C8 抽提路线）", "node_id": "N_C8A", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_node_10", "label": "基质沥青（改性沥青基料）", "node_id": "N_ASPHALT", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_11", "label": "SBS 改性沥青", "node_id": "N_MODIFIED_ASPH", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_12", "label": "沥青路面（铺装材料）", "node_id": "N_PAVEMENT_DECK", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_13", "label": "终端：公路与市政道路", "node_id": "N_APP_ROAD", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_14", "label": "SBS 改性沥青防水卷材", "node_id": "N_WP_MEMBRANE", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_15", "label": "终端：建筑与市政防水", "node_id": "N_APP_CONSTRUCTION", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_16", "label": "TPR/TPE 鞋底料", "node_id": "N_TPR", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_17", "label": "鞋底/鞋用部件", "node_id": "N_FOOTWEAR_OUTSOLE", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_18", "label": "终端：鞋类制造", "node_id": "N_APP_FOOTWEAR", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_19", "label": "热熔胶 / 热熔压敏胶", "node_id": "N_HMPSA", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_node_20", "label": "终端：包装与物流", "node_id": "N_APP_PACKAGING", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_node_21", "label": "改性聚烯烃（增韧改性料）", "node_id": "N_PP_MODIF", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_node_22", "label": "终端：家电与汽车", "node_id": "N_APP_HOMEAPPL", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_node_23", "label": "SEBS（氢化 SBS）", "node_id": "N_SEBS", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_node_24", "label": "SIS（替代/同族）", "node_id": "N_SIS", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_node_25", "label": "TPU（鞋材替代）", "node_id": "N_TPU", "priority": "P2", "pass": true, "failed": []}, {"core_id": "core_node_26", "label": "EVA（鞋材替代）", "node_id": "N_EVA", "priority": "P2", "pass": true, "failed": []}, {"core_id": "core_node_27", "label": "SBR（鞋底体系替代）", "node_id": "N_SBR", "priority": "P2", "pass": true, "failed": []}, {"core_id": "core_node_28", "label": "LPG / 轻烃（裂解原料替代）", "node_id": "N_LPG", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_node_29", "label": "裂解汽油（C8 抽提路线原料）", "node_id": "N_PYREXTRACT", "priority": "P1", "pass": true, "failed": []}]}, "relations": {"passed": 32, "total": 36, "rate": 88.9, "by_priority": {"P0": {"passed": 19, "total": 19}, "P1": {"passed": 10, "total": 12}, "P2": {"passed": 3, "total": 5}}, "detail": [{"core_id": "core_rel_01", "label": "苯乙烯→SBS", "from": "N_SM", "to": "N_PRIMARY", "rel_id": "R14", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_02", "label": "丁二烯→SBS", "from": "N_BD", "to": "N_PRIMARY", "rel_id": "R13", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_03", "label": "乙苯脱氢→苯乙烯", "from": "N_EB", "to": "N_SM", "rel_id": "R03", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_04", "label": "苯→乙苯", "from": "N_BZ", "to": "N_EB", "rel_id": "R01", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_05", "label": "乙烯→乙苯", "from": "N_ETH", "to": "N_EB", "rel_id": "R02", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_06", "label": "C4 抽提→丁二烯", "from": "N_C4BE", "to": "N_BD", "rel_id": "R12", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_07", "label": "裂解副产 C4 馏分", "from": "N_NAPHTHA", "to": "N_C4BE", "rel_id": "R10", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_08", "label": "石脑油裂解→乙烯", "from": "N_NAPHTHA", "to": "N_ETH", "rel_id": "R05", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_09", "label": "轻烃裂解路线（替代原料）", "from": "N_LPG", "to": "N_ETH", "rel_id": "R08", "priority": "P1", "pass": false, "failed": ["evidence_linked"]}, {"core_id": "core_rel_10", "label": "石脑油重整→重整生成油", "from": "N_NAPHTHA", "to": "N_BTX", "rel_id": "R47", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_11", "label": "重整芳烃抽提→纯苯", "from": "N_BTX", "to": "N_BZ", "rel_id": "R06", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_12", "label": "重整生成油→C8 芳烃馏分", "from": "N_BTX", "to": "N_C8A", "rel_id": "R49", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_13", "label": "C8 抽提制苯乙烯（独立路线）", "from": "N_PYREXTRACT", "to": "N_SM", "rel_id": "R45", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_14", "label": "裂解副产裂解汽油", "from": "N_NAPHTHA", "to": "N_PYREXTRACT", "rel_id": "R11", "priority": "P1", "pass": false, "failed": ["evidence_linked"]}, {"core_id": "core_rel_15", "label": "常减压蒸馏→石脑油", "from": "N_CRUDE", "to": "N_NAPHTHA", "rel_id": "R07", "priority": "P2", "pass": false, "failed": ["evidence_linked"]}, {"core_id": "core_rel_16", "label": "炼厂轻烃分离→LPG", "from": "N_CRUDE", "to": "N_LPG", "rel_id": "R09", "priority": "P2", "pass": false, "failed": ["evidence_linked"]}, {"core_id": "core_rel_17", "label": "SBS 掺入→改性沥青", "from": "N_PRIMARY", "to": "N_MODIFIED_ASPH", "rel_id": "R16", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_18", "label": "基质沥青→改性沥青", "from": "N_ASPHALT", "to": "N_MODIFIED_ASPH", "rel_id": "R17", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_19", "label": "改性沥青→沥青路面", "from": "N_MODIFIED_ASPH", "to": "N_PAVEMENT_DECK", "rel_id": "R20", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_20", "label": "路面→公路与市政道路", "from": "N_PAVEMENT_DECK", "to": "N_APP_ROAD", "rel_id": "R28", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_21", "label": "SBS→防水卷材涂盖料", "from": "N_PRIMARY", "to": "N_WP_MEMBRANE", "rel_id": "R18", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_22", "label": "改性沥青→卷材成型", "from": "N_MODIFIED_ASPH", "to": "N_WP_MEMBRANE", "rel_id": "R19", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_23", "label": "卷材→建筑防水", "from": "N_WP_MEMBRANE", "to": "N_APP_CONSTRUCTION", "rel_id": "R29", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_24", "label": "SBS→TPR 鞋底料", "from": "N_PRIMARY", "to": "N_TPR", "rel_id": "R25", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_25", "label": "TPR→鞋底", "from": "N_TPR", "to": "N_FOOTWEAR_OUTSOLE", "rel_id": "R26", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_26", "label": "鞋底→鞋", "from": "N_FOOTWEAR_OUTSOLE", "to": "N_APP_FOOTWEAR", "rel_id": "R27", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_27", "label": "SBS→热熔胶", "from": "N_PRIMARY", "to": "N_HMPSA", "rel_id": "R22", "priority": "P0", "pass": true, "failed": []}, {"core_id": "core_rel_28", "label": "SIS→热熔压敏胶", "from": "N_SIS", "to": "N_HMPSA", "rel_id": "R23", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_29", "label": "热熔胶→包装物流", "from": "N_HMPSA", "to": "N_APP_PACKAGING", "rel_id": "R36", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_30", "label": "SBS→改性聚烯烃", "from": "N_PRIMARY", "to": "N_PP_MODIF", "rel_id": "R31", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_31", "label": "改性料→家电/汽车", "from": "N_PP_MODIF", "to": "N_APP_HOMEAPPL", "rel_id": "R33", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_32", "label": "SBS 加氢→SEBS", "from": "N_PRIMARY", "to": "N_SEBS", "rel_id": "R15", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_33", "label": "SIS ↔ SBS 市场替代", "from": "N_SIS", "to": "N_PRIMARY", "rel_id": "R37", "priority": "P1", "pass": true, "failed": []}, {"core_id": "core_rel_34", "label": "TPU ↔ SBS 鞋材替代", "from": "N_TPU", "to": "N_PRIMARY", "rel_id": "R38", "priority": "P2", "pass": true, "failed": []}, {"core_id": "core_rel_35", "label": "EVA ↔ SBS 鞋材替代", "from": "N_EVA", "to": "N_PRIMARY", "rel_id": "R39", "priority": "P2", "pass": true, "failed": []}, {"core_id": "core_rel_36", "label": "SBR ↔ TPR 鞋底体系替代", "from": "N_SBR", "to": "N_TPR", "rel_id": "R43", "priority": "P2", "pass": true, "failed": []}]}, "overall": {"passed": 61, "total": 65, "rate": 93.8}}, "core": {"meta": {"purpose": "开工前冻结的核心节点/关系清单；覆盖完整度只对本清单有效，不代表产业链全部可能节点。", "frozen_at": "2026-10-20T09:00:00+08:00（v2 修订：拆分芳烃列、修正 C8→苯 边、新增 R48/R49）", "scope_statement": "覆盖：SBS 的两条直接原料链（苯乙烯：苯+乙烯→乙苯→苯乙烯；丁二烯：石脑油裂解 C4→抽提→丁二烯），以及石脑油/重整芳烃这一层源头；下游覆盖 5 类主要应用骨架（道路改性沥青、防水卷材、鞋材、胶黏剂、聚合物改性）与 5 类主要替代品（SIS/SEBS/TPU/EVA/SBR）。不覆盖：所有新兴应用（医疗、锂电、光伏密封等）、所有替代路线（生物基丁二烯、甲苯甲醇烷基化等）、牌号级完整清单、地缘与贸易流维度。", "effective_depth": {"up": 2, "down": 2, "note": "用户指定向上 2 层、向下 2 层。图谱为保证'原料路线可辨认'额外展开到原料的上游 2 列，这部分不计入覆盖清单，属于『延长线』，在图中以浅色区分。"}, "criteria_definitions": {"node_present": "节点已进入 nodes.json 且 node_class/node_role 判定正确", "identity_verified": "CAS 状态为 verified；材料/终端节点须显式标注『不适用』而非编造 CAS", "role_classified": "segment 与 column 已给出", "evidence_linked": "至少挂 1 条 A~C 级来源", "price_mapped": "该节点已抓到公开价格点，或已登记价格入口与缺口说明", "direction_verified": "物质流方向 from→to 与 column 单调性经复核", "quant_available": "conversion/coproduction/byproduct 须给出单耗或收率 + 口径；blend/processing 须给配方比或标注不适用"}}, "core_nodes": [{"id": "core_node_01", "node_id": "N_PRIMARY", "label": "SBS（目标品种）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked", "price_mapped"], "priority": "P0"}, {"id": "core_node_02", "node_id": "N_SM", "label": "苯乙烯（直接原料）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked", "price_mapped"], "priority": "P0"}, {"id": "core_node_03", "node_id": "N_BD", "label": "丁二烯（直接原料）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked", "price_mapped"], "priority": "P0"}, {"id": "core_node_04", "node_id": "N_EB", "label": "乙苯（苯乙烯中间体）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked", "price_mapped"], "priority": "P0"}, {"id": "core_node_05", "node_id": "N_BZ", "label": "纯苯（乙苯原料）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked", "price_mapped"], "priority": "P0"}, {"id": "core_node_06", "node_id": "N_ETH", "label": "乙烯（乙苯原料）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked", "price_mapped"], "priority": "P0"}, {"id": "core_node_07", "node_id": "N_C4BE", "label": "裂解 C4 馏分（丁二烯原料）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_08", "node_id": "N_NAPHTHA", "label": "石脑油（乙烯/芳烃原料）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_09", "node_id": "N_C8A", "label": "混合 C8 芳烃（C8 抽提路线）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked"], "priority": "P1"}, {"id": "core_node_10", "node_id": "N_ASPHALT", "label": "基质沥青（改性沥青基料）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked", "price_mapped"], "priority": "P0"}, {"id": "core_node_11", "node_id": "N_MODIFIED_ASPH", "label": "SBS 改性沥青", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_12", "node_id": "N_PAVEMENT_DECK", "label": "沥青路面（铺装材料）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_13", "node_id": "N_APP_ROAD", "label": "终端：公路与市政道路", "required_criteria": ["node_present", "role_classified"], "priority": "P0"}, {"id": "core_node_14", "node_id": "N_WP_MEMBRANE", "label": "SBS 改性沥青防水卷材", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_15", "node_id": "N_APP_CONSTRUCTION", "label": "终端：建筑与市政防水", "required_criteria": ["node_present", "role_classified"], "priority": "P0"}, {"id": "core_node_16", "node_id": "N_TPR", "label": "TPR/TPE 鞋底料", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_17", "node_id": "N_FOOTWEAR_OUTSOLE", "label": "鞋底/鞋用部件", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_18", "node_id": "N_APP_FOOTWEAR", "label": "终端：鞋类制造", "required_criteria": ["node_present", "role_classified"], "priority": "P0"}, {"id": "core_node_19", "node_id": "N_HMPSA", "label": "热熔胶 / 热熔压敏胶", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P0"}, {"id": "core_node_20", "node_id": "N_APP_PACKAGING", "label": "终端：包装与物流", "required_criteria": ["node_present", "role_classified"], "priority": "P1"}, {"id": "core_node_21", "node_id": "N_PP_MODIF", "label": "改性聚烯烃（增韧改性料）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P1"}, {"id": "core_node_22", "node_id": "N_APP_HOMEAPPL", "label": "终端：家电与汽车", "required_criteria": ["node_present", "role_classified"], "priority": "P1"}, {"id": "core_node_23", "node_id": "N_SEBS", "label": "SEBS（氢化 SBS）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked"], "priority": "P1"}, {"id": "core_node_24", "node_id": "N_SIS", "label": "SIS（替代/同族）", "required_criteria": ["node_present", "identity_verified", "role_classified", "evidence_linked"], "priority": "P1"}, {"id": "core_node_25", "node_id": "N_TPU", "label": "TPU（鞋材替代）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P2"}, {"id": "core_node_26", "node_id": "N_EVA", "label": "EVA（鞋材替代）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P2"}, {"id": "core_node_27", "node_id": "N_SBR", "label": "SBR（鞋底体系替代）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P2"}, {"id": "core_node_28", "node_id": "N_LPG", "label": "LPG / 轻烃（裂解原料替代）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P1"}, {"id": "core_node_29", "node_id": "N_PYREXTRACT", "label": "裂解汽油（C8 抽提路线原料）", "required_criteria": ["node_present", "role_classified", "evidence_linked"], "priority": "P1"}], "core_relations": [{"id": "core_rel_01", "from": "N_SM", "to": "N_PRIMARY", "relation_type": "conversion", "label": "苯乙烯→SBS", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_02", "from": "N_BD", "to": "N_PRIMARY", "relation_type": "conversion", "label": "丁二烯→SBS", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_03", "from": "N_EB", "to": "N_SM", "relation_type": "conversion", "label": "乙苯脱氢→苯乙烯", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_04", "from": "N_BZ", "to": "N_EB", "relation_type": "conversion", "label": "苯→乙苯", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_05", "from": "N_ETH", "to": "N_EB", "relation_type": "conversion", "label": "乙烯→乙苯", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_06", "from": "N_C4BE", "to": "N_BD", "relation_type": "conversion", "label": "C4 抽提→丁二烯", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_07", "from": "N_NAPHTHA", "to": "N_C4BE", "relation_type": "byproduct", "label": "裂解副产 C4 馏分", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_08", "from": "N_NAPHTHA", "to": "N_ETH", "relation_type": "conversion", "label": "石脑油裂解→乙烯", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_09", "from": "N_LPG", "to": "N_ETH", "relation_type": "route_option", "label": "轻烃裂解路线（替代原料）", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_10", "from": "N_NAPHTHA", "to": "N_BTX", "relation_type": "conversion", "label": "石脑油重整→重整生成油", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_11", "from": "N_BTX", "to": "N_BZ", "relation_type": "conversion", "label": "重整芳烃抽提→纯苯", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_12", "from": "N_BTX", "to": "N_C8A", "relation_type": "conversion", "label": "重整生成油→C8 芳烃馏分", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_13", "from": "N_PYREXTRACT", "to": "N_SM", "relation_type": "route_option", "label": "C8 抽提制苯乙烯（独立路线）", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_14", "from": "N_NAPHTHA", "to": "N_PYREXTRACT", "relation_type": "byproduct", "label": "裂解副产裂解汽油", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_15", "from": "N_CRUDE", "to": "N_NAPHTHA", "relation_type": "conversion", "label": "常减压蒸馏→石脑油", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P2"}, {"id": "core_rel_16", "from": "N_CRUDE", "to": "N_LPG", "relation_type": "conversion", "label": "炼厂轻烃分离→LPG", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P2"}, {"id": "core_rel_17", "from": "N_PRIMARY", "to": "N_MODIFIED_ASPH", "relation_type": "blend", "label": "SBS 掺入→改性沥青", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_18", "from": "N_ASPHALT", "to": "N_MODIFIED_ASPH", "relation_type": "blend", "label": "基质沥青→改性沥青", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_19", "from": "N_MODIFIED_ASPH", "to": "N_PAVEMENT_DECK", "relation_type": "processing", "label": "改性沥青→沥青路面", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_20", "from": "N_PAVEMENT_DECK", "to": "N_APP_ROAD", "relation_type": "application", "label": "路面→公路与市政道路", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_21", "from": "N_PRIMARY", "to": "N_WP_MEMBRANE", "relation_type": "blend", "label": "SBS→防水卷材涂盖料", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_22", "from": "N_MODIFIED_ASPH", "to": "N_WP_MEMBRANE", "relation_type": "processing", "label": "改性沥青→卷材成型", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_23", "from": "N_WP_MEMBRANE", "to": "N_APP_CONSTRUCTION", "relation_type": "application", "label": "卷材→建筑防水", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_24", "from": "N_PRIMARY", "to": "N_TPR", "relation_type": "blend", "label": "SBS→TPR 鞋底料", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_25", "from": "N_TPR", "to": "N_FOOTWEAR_OUTSOLE", "relation_type": "processing", "label": "TPR→鞋底", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_26", "from": "N_FOOTWEAR_OUTSOLE", "to": "N_APP_FOOTWEAR", "relation_type": "application", "label": "鞋底→鞋", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_27", "from": "N_PRIMARY", "to": "N_HMPSA", "relation_type": "blend", "label": "SBS→热熔胶", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P0"}, {"id": "core_rel_28", "from": "N_SIS", "to": "N_HMPSA", "relation_type": "blend", "label": "SIS→热熔压敏胶", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_29", "from": "N_HMPSA", "to": "N_APP_PACKAGING", "relation_type": "application", "label": "热熔胶→包装物流", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_30", "from": "N_PRIMARY", "to": "N_PP_MODIF", "relation_type": "blend", "label": "SBS→改性聚烯烃", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_31", "from": "N_PP_MODIF", "to": "N_APP_HOMEAPPL", "relation_type": "application", "label": "改性料→家电/汽车", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_32", "from": "N_PRIMARY", "to": "N_SEBS", "relation_type": "conversion", "label": "SBS 加氢→SEBS", "required_criteria": ["node_present", "direction_verified", "quant_available", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_33", "from": "N_SIS", "to": "N_PRIMARY", "relation_type": "substitution", "label": "SIS ↔ SBS 市场替代", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P1"}, {"id": "core_rel_34", "from": "N_TPU", "to": "N_PRIMARY", "relation_type": "substitution", "label": "TPU ↔ SBS 鞋材替代", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P2"}, {"id": "core_rel_35", "from": "N_EVA", "to": "N_PRIMARY", "relation_type": "substitution", "label": "EVA ↔ SBS 鞋材替代", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P2"}, {"id": "core_rel_36", "from": "N_SBR", "to": "N_TPR", "relation_type": "substitution", "label": "SBR ↔ TPR 鞋底体系替代", "required_criteria": ["node_present", "direction_verified", "evidence_linked"], "priority": "P2"}]}, "forbidden": [{"id": "F01", "from": "N_PRIMARY", "to": "N_APP_FOOTWEAR", "wrong_types": ["conversion", "blend"], "why": "SBS 不会直接变成『鞋』。正确链条是 SBS →(blend) TPR 鞋底料 →(processing) 鞋底 →(application) 鞋。把终端用途写成转化产品是最常见的错误。", "worksheet": "终端用途只能通过 material→application 的 application 边呈现"}, {"id": "F02", "from": "N_PRIMARY", "to": "N_APP_ROAD", "wrong_types": ["conversion", "blend", "processing"], "why": "SBS→公路不是直接关系；必须经改性沥青与路面材料两层材料节点。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F03", "from": "N_SM", "to": "N_PRIMARY", "wrong_types": ["substitution"], "why": "苯乙烯是 SBS 的组成单体，不是替代品；替代关系只允许发生在用途层（如 SIS/SEBS/TPU 与 SBS 争夺同一应用）。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F04", "from": "N_BD", "to": "N_PRIMARY", "wrong_types": ["byproduct", "coproduction"], "why": "丁二烯进入 SBS 是主原料转化；把主原料写成副产会误导成本归因。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F05", "from": "N_PYREXTRACT", "to": "N_PRIMARY", "wrong_types": ["conversion"], "why": "裂解汽油不能直接制 SBS；C8 抽提只能得到苯乙烯，仍需聚合。不得把不同工艺路线揉成一条链。", "worksheet": "C8 抽提路线需经 N_SM 节点"}, {"id": "F06", "from": "N_SEBS", "to": "N_PRIMARY", "wrong_types": ["conversion"], "why": "反向不成立：SBS 可以加氢制 SEBS，但 SEBS 不会脱氢回到 SBS（工业上无此路线）。方向必须 from=SBS to=SEBS。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F07", "from": "N_TPR", "to": "N_PRIMARY", "wrong_types": ["conversion", "processing"], "why": "TPR 料是 SBS 的配方复合物，不能反向被写成『TPR 转化制 SBS』。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F08", "from": "N_MODIFIED_ASPH", "to": "N_ASPHALT", "wrong_types": ["conversion"], "why": "改性沥青拆解回基质沥青不是生产工艺；若研究『废料回收/沥青再生』应另立 route 节点。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F09", "from": "N_BZ", "to": "N_SM", "wrong_types": ["conversion"], "why": "纯苯不能直接转化为苯乙烯；必须先经乙苯（烷基化+脱氢）。把两段合成一步是常见画法错误。", "worksheet": "必须经 N_EB 节点，且分段单耗不得合并成分段环。"}, {"id": "F11", "from": "N_HMPSA", "to": "N_APP_PACKAGING", "wrong_types": ["conversion", "blend"], "why": "热熔胶→包装是终端应用，不是转化；且部分包装用胶先制胶带再应用，节点口径须区分。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F12", "from": "N_TPR", "to": "N_APP_FOOTWEAR", "wrong_types": ["conversion", "blend", "processing"], "why": "TPR 料必须先成型为鞋底部件(starter)，再进入整鞋；跳到终端会把制品层抹掉。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F13", "from": "N_ASPHALT", "to": "N_APP_ROAD", "wrong_types": ["conversion", "blend", "processing"], "why": "未改性基质沥青不构成 SBS 链路的终端应用路径；SBS 的价值必须经由改性沥青体现。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F14", "from": "N_SEBS", "to": "N_HMPSA", "wrong_types": ["substitution"], "why": "SEBS 与 SBS 在热熔胶中主要为配方互补/替代同侪关系，且 SEBS 的市场替代点主要是鞋材/卫材与改性料；不能在热熔胶处无证据地建立替代边。", "worksheet": "按 references/02-relation-taxonomy.md 的判定树重建：先确认关系类型，再确认方向与列号。"}, {"id": "F10", "from": "N_C8A", "to": "N_BZ", "wrong_types": ["copy"], "why": "C8 芳烃（二甲苯）→ 纯苯 不是常规转化关系：TDA 单元进料为甲苯与 C9 芳烃，而不是 C8；苯的主链来源应是重整生成油/BTX 经抽提（N_BTX→N_BZ）。保留为疑点边并标 typical=false，禁止把它当作主链单耗使用。", "worksheet": "若研究甲苯歧化路线，请单独建立 Toluene / C9 芳烃节点，不要复用 C8 芳烃节点。"}], "layout": {"canvas": {"w": 3263.0, "h": 836.0}, "columns": [{"col": -6, "x": 26, "w": 192, "label_x": 122.0}, {"col": -5, "x": 290, "w": 200.0, "label_x": 390.0}, {"col": -4, "x": 562.0, "w": 268, "label_x": 696.0}, {"col": -2, "x": 902.0, "w": 192, "label_x": 998.0}, {"col": -1, "x": 1166.0, "w": 192, "label_x": 1262.0}, {"col": 0, "x": 1430.0, "w": 192, "label_x": 1526.0}, {"col": 1, "x": 1694.0, "w": 268, "label_x": 1828.0}, {"col": 2, "x": 2034.0, "w": 268, "label_x": 2168.0}, {"col": 3, "x": 2374.0, "w": 268, "label_x": 2508.0}, {"col": 4, "x": 2714.0, "w": 241.5, "label_x": 2834.8}, {"col": 5, "x": 3027.5, "w": 209.5, "label_x": 3132.2}], "nodes": [{"id": "N_CRUDE", "x": 26.0, "y": 413.0, "w": 192, "h": 56}, {"id": "N_LPG", "x": 290.0, "y": 378.0, "w": 200.0, "h": 56}, {"id": "N_NAPHTHA", "x": 294.0, "y": 448.0, "w": 192, "h": 56}, {"id": "N_PYREXTRACT", "x": 589.8, "y": 367.0, "w": 212.5, "h": 56}, {"id": "N_BTX", "x": 562.0, "y": 459.0, "w": 268, "h": 56}, {"id": "N_C4BE", "x": 902.0, "y": 297.0, "w": 192, "h": 56}, {"id": "N_ETH", "x": 902.0, "y": 389.0, "w": 192, "h": 56}, {"id": "N_C8A", "x": 902.0, "y": 459.0, "w": 192, "h": 56}, {"id": "N_BZ", "x": 902.0, "y": 529.0, "w": 192, "h": 56}, {"id": "N_EB", "x": 1166.0, "y": 413.0, "w": 192, "h": 56}, {"id": "N_BD", "x": 1430.0, "y": 332.0, "w": 192, "h": 56}, {"id": "N_SM", "x": 1430.0, "y": 402.0, "w": 192, "h": 56}, {"id": "N_ASPHALT", "x": 1430.0, "y": 494.0, "w": 192, "h": 56}, {"id": "N_PRIMARY", "x": 1694.0, "y": 413.0, "w": 268, "h": 56}, {"id": "N_IPP_SSBR", "x": 2034.0, "y": 170.0, "w": 268, "h": 56}, {"id": "N_SEBS", "x": 2072.0, "y": 262.0, "w": 192, "h": 56}, {"id": "N_SIS", "x": 2039.8, "y": 354.0, "w": 256.5, "h": 56}, {"id": "N_SBR", "x": 2072.0, "y": 446.0, "w": 192, "h": 56}, {"id": "N_EVA", "x": 2068.2, "y": 516.0, "w": 199.5, "h": 56}, {"id": "N_TPU", "x": 2072.0, "y": 586.0, "w": 192, "h": 56}, {"id": "N_POE", "x": 2072.0, "y": 656.0, "w": 192, "h": 56}, {"id": "N_MUSTICK", "x": 2385.8, "y": 273.0, "w": 244.5, "h": 56}, {"id": "N_HMPSA", "x": 2380.8, "y": 343.0, "w": 254.5, "h": 56}, {"id": "N_MODIFIED_ASPH", "x": 2412.0, "y": 413.0, "w": 192, "h": 56}, {"id": "N_TPR", "x": 2374.0, "y": 483.0, "w": 268, "h": 56}, {"id": "N_PP_MODIF", "x": 2388.5, "y": 553.0, "w": 239.0, "h": 56}, {"id": "N_BOPP_TAPE", "x": 2738.8, "y": 262.0, "w": 192, "h": 56}, {"id": "N_WP_MEMBRANE", "x": 2738.8, "y": 332.0, "w": 192, "h": 56}, {"id": "N_PAVEMENT_DECK", "x": 2714.0, "y": 402.0, "w": 241.5, "h": 56}, {"id": "N_FOOTWEAR_OUTSOLE", "x": 2738.8, "y": 472.0, "w": 192, "h": 56}, {"id": "N_WATERPROOF_MAT", "x": 2732.8, "y": 564.0, "w": 204.0, "h": 56}, {"id": "N_APP_ROAD", "x": 3036.2, "y": 273.0, "w": 192, "h": 56}, {"id": "N_APP_PACKAGING", "x": 3027.5, "y": 343.0, "w": 209.5, "h": 56}, {"id": "N_APP_HOMEAPPL", "x": 3036.2, "y": 413.0, "w": 192, "h": 56}, {"id": "N_APP_CONSTRUCTION", "x": 3036.2, "y": 483.0, "w": 192, "h": 56}, {"id": "N_APP_FOOTWEAR", "x": 3030.2, "y": 553.0, "w": 204.0, "h": 56}], "edges": [{"id": "R01", "from": "N_BZ", "to": "N_EB", "d": "M 1094.0 557.0 L 1127.5 557.0 L 1127.5 557.0 L 1140.0 557.0 L 1140.0 441.0 L 1166.0 441.0", "straight": false, "label_x": 1130.0, "label_y": 549.0, "reversed": false, "route": "ladder"}, {"id": "R02", "from": "N_ETH", "to": "N_EB", "d": "M 1094.0 417.0 L 1130.0 417.0 L 1130.0 441.0 L 1166.0 441.0", "straight": false, "label_x": 1130.0, "label_y": 429.0, "reversed": false, "route": "elbow"}, {"id": "R03", "from": "N_EB", "to": "N_SM", "d": "M 1358.0 441.0 L 1394.0 441.0 L 1394.0 430.0 L 1430.0 430.0", "straight": false, "label_x": 1394.0, "label_y": 435.5, "reversed": false, "route": "elbow"}, {"id": "R05", "from": "N_NAPHTHA", "to": "N_ETH", "d": "M 486.0 476.0 L 512.0 476.0 L 512.0 724.0 L 876.0 724.0 L 876.0 417.0 L 902.0 417.0", "straight": false, "label_x": 694.0, "label_y": 718.0, "reversed": false, "route": "detour"}, {"id": "R06", "from": "N_BTX", "to": "N_BZ", "d": "M 830.0 487.0 L 866.0 487.0 L 866.0 487.0 L 881.0 487.0 L 881.0 557.0 L 902.0 557.0", "straight": false, "label_x": 866.0, "label_y": 479.0, "reversed": false, "route": "ladder"}, {"id": "R07", "from": "N_CRUDE", "to": "N_NAPHTHA", "d": "M 218.0 441.0 L 256.0 441.0 L 256.0 476.0 L 294.0 476.0", "straight": false, "label_x": 256.0, "label_y": 458.5, "reversed": false, "route": "elbow"}, {"id": "R08", "from": "N_LPG", "to": "N_ETH", "d": "M 490.0 406.0 L 523.0 406.0 L 523.0 160.0 L 883.0 160.0 L 883.0 417.0 L 902.0 417.0", "straight": false, "label_x": 703.0, "label_y": 154.0, "reversed": false, "route": "detour"}, {"id": "R09", "from": "N_CRUDE", "to": "N_LPG", "d": "M 218.0 441.0 L 260.0 441.0 L 260.0 406.0 L 290.0 406.0", "straight": false, "label_x": 260.0, "label_y": 423.5, "reversed": false, "route": "elbow"}, {"id": "R10", "from": "N_NAPHTHA", "to": "N_C4BE", "d": "M 486.0 476.0 L 512.0 476.0 L 523.5 476.0 L 523.5 325.0 L 876.0 325.0 L 902.0 325.0", "straight": false, "label_x": 523.5, "label_y": 400.5, "reversed": false, "route": "orthogonal"}, {"id": "R11", "from": "N_NAPHTHA", "to": "N_PYREXTRACT", "d": "M 486.0 476.0 L 512.0 476.0 L 528.5 476.0 L 528.5 395.0 L 563.8 395.0 L 589.8 395.0", "straight": false, "label_x": 528.5, "label_y": 435.5, "reversed": false, "route": "orthogonal"}, {"id": "R12", "from": "N_C4BE", "to": "N_BD", "d": "M 1094.0 325.0 L 1130.0 325.0 L 1130.0 325.0 L 1388.0 325.0 L 1388.0 342.5 L 1404.0 342.5 L 1404.0 360.0 L 1430.0 360.0", "straight": false, "label_x": 1130.0, "label_y": 317.0, "reversed": false, "route": "ladder"}, {"id": "R13", "from": "N_BD", "to": "N_PRIMARY", "d": "M 1622.0 360.0 L 1655.5 360.0 L 1655.5 360.0 L 1668.0 360.0 L 1668.0 441.0 L 1694.0 441.0", "straight": false, "label_x": 1658.0, "label_y": 352.0, "reversed": false, "route": "ladder"}, {"id": "R14", "from": "N_SM", "to": "N_PRIMARY", "d": "M 1622.0 430.0 L 1658.0 430.0 L 1658.0 441.0 L 1694.0 441.0", "straight": false, "label_x": 1658.0, "label_y": 435.5, "reversed": false, "route": "elbow"}, {"id": "R15", "from": "N_PRIMARY", "to": "N_SEBS", "d": "M 1962.0 441.0 L 1988.0 441.0 L 1998.0 441.0 L 1998.0 290.0 L 2046.0 290.0 L 2072.0 290.0", "straight": false, "label_x": 1998.0, "label_y": 365.5, "reversed": false, "route": "orthogonal"}, {"id": "R42", "from": "N_IPP_SSBR", "to": "N_PRIMARY", "d": "M 2034.0 198.0 L 2008.0 198.0 L 2000.5 198.0 L 2000.5 441.0 L 1988.0 441.0 L 1962.0 441.0", "straight": false, "label_x": 2000.5, "label_y": 319.5, "reversed": true, "route": "orthogonal"}, {"id": "R16", "from": "N_PRIMARY", "to": "N_MODIFIED_ASPH", "d": "M 1962.0 441.0 L 1995.5 441.0 L 1995.5 441.0 L 2335.5 441.0 L 2335.5 441.0 L 2412.0 441.0", "straight": false, "label_x": 1998.0, "label_y": 433.0, "reversed": false, "route": "ladder"}, {"id": "R17", "from": "N_ASPHALT", "to": "N_MODIFIED_ASPH", "d": "M 1622.0 522.0 L 1648.0 522.0 L 2000.5 522.0 L 2000.5 441.0 L 2386.0 441.0 L 2412.0 441.0", "straight": false, "label_x": 2000.5, "label_y": 481.5, "reversed": false, "route": "orthogonal"}, {"id": "R18", "from": "N_PRIMARY", "to": "N_WP_MEMBRANE", "d": "M 1962.0 441.0 L 1988.0 441.0 L 1988.0 145.0 L 2712.8 145.0 L 2712.8 360.0 L 2738.8 360.0", "straight": false, "label_x": 2350.375, "label_y": 139.0, "reversed": false, "route": "detour"}, {"id": "R19", "from": "N_MODIFIED_ASPH", "to": "N_WP_MEMBRANE", "d": "M 2604.0 441.0 L 2630.0 441.0 L 2680.5 441.0 L 2680.5 360.0 L 2712.8 360.0 L 2738.8 360.0", "straight": false, "label_x": 2680.5, "label_y": 400.5, "reversed": false, "route": "orthogonal"}, {"id": "R20", "from": "N_MODIFIED_ASPH", "to": "N_PAVEMENT_DECK", "d": "M 2604.0 441.0 L 2659.0 441.0 L 2659.0 430.0 L 2714.0 430.0", "straight": false, "label_x": 2659.0, "label_y": 435.5, "reversed": false, "route": "elbow"}, {"id": "R21", "from": "N_WP_MEMBRANE", "to": "N_WATERPROOF_MAT", "d": "M 2930.8 360.0 L 2956.8 360.0 L 2956.8 130.0 L 2706.8 130.0 L 2706.8 592.0 L 2732.8 592.0", "straight": false, "label_x": 2831.75, "label_y": 124.0, "reversed": false, "route": "detour"}, {"id": "R22", "from": "N_PRIMARY", "to": "N_HMPSA", "d": "M 1962.0 441.0 L 1998.0 441.0 L 1998.0 441.0 L 2327.0 441.0 L 2327.0 406.0 L 2354.8 406.0 L 2354.8 371.0 L 2380.8 371.0", "straight": false, "label_x": 1998.0, "label_y": 433.0, "reversed": false, "route": "ladder"}, {"id": "R23", "from": "N_SIS", "to": "N_HMPSA", "d": "M 2296.2 382.0 L 2338.5 382.0 L 2338.5 371.0 L 2380.8 371.0", "straight": false, "label_x": 2338.5, "label_y": 376.5, "reversed": false, "route": "elbow"}, {"id": "R24", "from": "N_PRIMARY", "to": "N_MUSTICK", "d": "M 1962.0 441.0 L 2000.5 441.0 L 2000.5 441.0 L 2342.0 441.0 L 2342.0 371.0 L 2359.8 371.0 L 2359.8 301.0 L 2385.8 301.0", "straight": false, "label_x": 1998.0, "label_y": 433.0, "reversed": false, "route": "ladder"}, {"id": "R25", "from": "N_PRIMARY", "to": "N_TPR", "d": "M 1962.0 441.0 L 1995.5 441.0 L 1995.5 441.0 L 2322.0 441.0 L 2322.0 476.0 L 2348.0 476.0 L 2348.0 511.0 L 2374.0 511.0", "straight": false, "label_x": 1998.0, "label_y": 433.0, "reversed": false, "route": "ladder"}, {"id": "R26", "from": "N_TPR", "to": "N_FOOTWEAR_OUTSOLE", "d": "M 2642.0 511.0 L 2690.4 511.0 L 2690.4 500.0 L 2738.8 500.0", "straight": false, "label_x": 2690.375, "label_y": 505.5, "reversed": false, "route": "elbow"}, {"id": "R27", "from": "N_FOOTWEAR_OUTSOLE", "to": "N_APP_FOOTWEAR", "d": "M 2930.8 500.0 L 2989.0 500.0 L 2989.0 500.0 L 3004.2 500.0 L 3004.2 581.0 L 3030.2 581.0", "straight": false, "label_x": 2991.5, "label_y": 492.0, "reversed": false, "route": "ladder"}, {"id": "R28", "from": "N_PAVEMENT_DECK", "to": "N_APP_ROAD", "d": "M 2955.5 430.0 L 2991.5 430.0 L 2991.5 430.0 L 3010.2 430.0 L 3010.2 301.0 L 3036.2 301.0", "straight": false, "label_x": 2991.5, "label_y": 422.0, "reversed": false, "route": "ladder"}, {"id": "R29", "from": "N_WP_MEMBRANE", "to": "N_APP_CONSTRUCTION", "d": "M 2930.8 360.0 L 2994.0 360.0 L 2994.0 360.0 L 3015.2 360.0 L 3015.2 511.0 L 3036.2 511.0", "straight": false, "label_x": 2991.5, "label_y": 352.0, "reversed": false, "route": "ladder"}, {"id": "R30", "from": "N_WATERPROOF_MAT", "to": "N_APP_CONSTRUCTION", "d": "M 2936.8 592.0 L 2989.0 592.0 L 2989.0 592.0 L 3020.2 592.0 L 3020.2 511.0 L 3036.2 511.0", "straight": false, "label_x": 2991.5, "label_y": 584.0, "reversed": false, "route": "ladder"}, {"id": "R31", "from": "N_PRIMARY", "to": "N_PP_MODIF", "d": "M 1962.0 441.0 L 1998.0 441.0 L 1998.0 441.0 L 2347.0 441.0 L 2347.0 511.0 L 2362.5 511.0 L 2362.5 581.0 L 2388.5 581.0", "straight": false, "label_x": 1998.0, "label_y": 433.0, "reversed": false, "route": "ladder"}, {"id": "R32", "from": "N_SEBS", "to": "N_PP_MODIF", "d": "M 2264.0 290.0 L 2338.0 290.0 L 2338.0 290.0 L 2367.5 290.0 L 2367.5 581.0 L 2388.5 581.0", "straight": false, "label_x": 2338.0, "label_y": 282.0, "reversed": false, "route": "ladder"}, {"id": "R33", "from": "N_PP_MODIF", "to": "N_APP_HOMEAPPL", "d": "M 2627.5 581.0 L 2653.5 581.0 L 2653.5 739.0 L 3010.2 739.0 L 3010.2 441.0 L 3036.2 441.0", "straight": false, "label_x": 2831.875, "label_y": 733.0, "reversed": false, "route": "detour"}, {"id": "R34", "from": "N_HMPSA", "to": "N_BOPP_TAPE", "d": "M 2635.2 371.0 L 2678.0 371.0 L 2678.0 371.0 L 2707.8 371.0 L 2707.8 290.0 L 2738.8 290.0", "straight": false, "label_x": 2678.0, "label_y": 363.0, "reversed": false, "route": "ladder"}, {"id": "R35", "from": "N_BOPP_TAPE", "to": "N_APP_PACKAGING", "d": "M 2930.8 290.0 L 2994.0 290.0 L 2994.0 290.0 L 2996.5 290.0 L 2996.5 371.0 L 3027.5 371.0", "straight": false, "label_x": 2991.5, "label_y": 282.0, "reversed": false, "route": "ladder"}, {"id": "R36", "from": "N_HMPSA", "to": "N_APP_PACKAGING", "d": "M 2635.2 371.0 L 2668.2 371.0 L 2668.2 115.0 L 3008.5 115.0 L 3008.5 371.0 L 3027.5 371.0", "straight": false, "label_x": 2838.375, "label_y": 109.0, "reversed": false, "route": "detour"}, {"id": "R37", "from": "N_SIS", "to": "N_PRIMARY", "d": "M 2039.8 382.0 L 2013.8 382.0 L 2024.0 382.0 L 2024.0 441.0 L 1988.0 441.0 L 1962.0 441.0", "straight": false, "label_x": 2024.0, "label_y": 411.5, "reversed": true, "route": "orthogonal"}, {"id": "R38", "from": "N_TPU", "to": "N_PRIMARY", "d": "M 2072.0 614.0 L 2046.0 614.0 L 2033.0 614.0 L 2033.0 441.0 L 1988.0 441.0 L 1962.0 441.0", "straight": false, "label_x": 2033.0, "label_y": 527.5, "reversed": true, "route": "orthogonal"}, {"id": "R39", "from": "N_EVA", "to": "N_PRIMARY", "d": "M 2068.2 544.0 L 2042.2 544.0 L 2042.0 544.0 L 2042.0 441.0 L 1988.0 441.0 L 1962.0 441.0", "straight": false, "label_x": 2042.0, "label_y": 492.5, "reversed": true, "route": "orthogonal"}, {"id": "R40", "from": "N_POE", "to": "N_PRIMARY", "d": "M 2072.0 684.0 L 2046.0 684.0 L 2024.0 684.0 L 2024.0 441.0 L 1988.0 441.0 L 1962.0 441.0", "straight": false, "label_x": 2024.0, "label_y": 562.5, "reversed": true, "route": "orthogonal"}, {"id": "R41", "from": "N_SEBS", "to": "N_PRIMARY", "d": "M 2072.0 290.0 L 2046.0 290.0 L 2033.0 290.0 L 2033.0 441.0 L 1988.0 441.0 L 1962.0 441.0", "straight": false, "label_x": 2033.0, "label_y": 365.5, "reversed": true, "route": "orthogonal"}, {"id": "R43", "from": "N_SBR", "to": "N_TPR", "d": "M 2264.0 474.0 L 2319.0 474.0 L 2319.0 511.0 L 2374.0 511.0", "straight": false, "label_x": 2319.0, "label_y": 492.5, "reversed": false, "route": "elbow"}, {"id": "R44", "from": "N_SIS", "to": "N_PRIMARY", "d": "M 2039.8 382.0 L 2013.8 382.0 L 2042.0 382.0 L 2042.0 441.0 L 1988.0 441.0 L 1962.0 441.0", "straight": false, "label_x": 2042.0, "label_y": 411.5, "reversed": true, "route": "orthogonal"}, {"id": "R45", "from": "N_PYREXTRACT", "to": "N_SM", "d": "M 802.2 395.0 L 828.2 395.0 L 828.2 100.0 L 1404.0 100.0 L 1404.0 430.0 L 1430.0 430.0", "straight": false, "label_x": 1116.125, "label_y": 94.0, "reversed": false, "route": "detour"}, {"id": "R47", "from": "N_NAPHTHA", "to": "N_BTX", "d": "M 486.0 476.0 L 524.0 476.0 L 524.0 487.0 L 562.0 487.0", "straight": false, "label_x": 524.0, "label_y": 481.5, "reversed": false, "route": "elbow"}, {"id": "R48", "from": "N_BTX", "to": "N_BZ", "d": "M 830.0 487.0 L 868.5 487.0 L 868.5 487.0 L 866.0 487.0 L 866.0 557.0 L 902.0 557.0", "straight": false, "label_x": 866.0, "label_y": 479.0, "reversed": false, "route": "ladder"}, {"id": "R49", "from": "N_BTX", "to": "N_C8A", "d": "M 830.0 487.0 L 863.5 487.0 L 863.5 487.0 L 902.0 487.0", "straight": false, "label_x": 866.0, "label_y": 479.0, "reversed": false, "route": "ladder"}, {"id": "R04", "from": "N_BTX", "to": "N_BZ", "d": "M 830.0 487.0 L 866.0 487.0 L 866.0 487.0 L 891.0 487.0 L 891.0 557.0 L 902.0 557.0", "straight": false, "label_x": 866.0, "label_y": 479.0, "reversed": false, "route": "ladder"}]}, "relTypeMeta": {"conversion": {"zh": "原料转化", "color": "#5b9dff"}, "coproduction": {"zh": "联产", "color": "#8f7bff"}, "byproduct": {"zh": "副产", "color": "#c07bff"}, "substitution": {"zh": "替代", "color": "#ff8a5b"}, "blend": {"zh": "配方共混", "color": "#39d0a6"}, "processing": {"zh": "成型加工", "color": "#2fb8c6"}, "application": {"zh": "终端应用", "color": "#f2c14e"}, "route_option": {"zh": "工艺路线", "color": "#9aa7bd"}, "packaging": {"zh": "包装", "color": "#7d8899"}}, "quantStatusZh": {"stoichiometric": "化学计量级", "stoichiometric_derived": "化学计量推算", "commercial_grade": "工业单耗（有口径）", "formulation": "配方比", "industrial_range_literature": "文献区间", "byproduct_yield_range": "副产收率区间", "missing": "缺口（未估算）", "not_applicable": "不适用"}, "layoutStatus": {"ok": true, "counts": {"nodes": 36, "edges": 48, "overlap": 0, "outside": 0, "edge_through_node": 0, "edge_collinear": 1, "diagonal": 0, "detour": 7}}};</script>
+<script>/* chain_graph.js — 产业链图谱交互运行时
+ * 约定：坐标全部来自 window.CHAIN_DATA.layout（Python 端 chain_layout.py 预算），
+ *       本文件只负责绘制、交互与派生查询，不再自行推算行列，确保与校验端一致。
+ * 暴露 window.CHAIN 供自动化测试与外部脚本调用。
+ */
+(function () {
+  "use strict";
+
+  var D = window.CHAIN_DATA || {};
+  var LAY = D.layout || { canvas: { w: 1000, h: 600 }, nodes: [], edges: [], columns: [] };
+  var NODES = D.nodes || [];
+  var RELS = D.relations || [];
+  var SRC = {};
+  (D.sources || []).forEach(function (s) { SRC[s.id] = s; });
+  var NODE_BY_ID = {};
+  NODES.forEach(function (n) { NODE_BY_ID[n.id] = n; });
+  var BOX = {};
+  (LAY.nodes || []).forEach(function (b) { BOX[b.id] = b; });
+
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var state = {
+    k: 1, tx: 0, ty: 0,
+    selected: null,
+    selectedList: [],
+    hovered: null,
+    related: {},
+    relFilter: "",
+    routeFilter: "",
+    typeFilter: "",
+    tableMode: false,
+    sbOpen: true,
+    activeTab: "node",
+    covCollapsed: false
+  };
+
+  // ---------------------------------------------------------------- 工具
+  function el(tag, cls, txt) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  function sv(tag, attrs) {
+    var e = document.createElementNS(SVGNS, tag);
+    if (attrs) for (var k in attrs) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function fmt(v, d) {
+    if (v == null || v === "") return "—";
+    if (typeof v !== "number") return String(v);
+    var s = d == null ? 2 : d;
+    return v.toFixed(s).replace(/\.?0+$/, "");
+  }
+  function val(v) {
+    return v == null || v === "" ? "—" : String(v);
+  }
+  function pct(a, b) { return b ? (a / b * 100) : 0; }
+
+  var TYPE_META = D.relTypeMeta || {};
+  function typeZh(t) { return (TYPE_META[t] || {}).zh || t || "关系"; }
+  function typeColor(t) { return (TYPE_META[t] || {}).color || "#8899aa"; }
+  var QS = D.quantStatusZh || {};
+  function quantZh(s) { return QS[s] || s || "—"; }
+
+  // ---------------------------------------------------------------- 视图变换
+  var viewport = document.getElementById("viewport");
+  var svg = document.getElementById("svg");
+  var wrap = document.getElementById("canvasWrap");
+  var CW = LAY.canvas ? LAY.canvas.w : 1600;
+  var CH = LAY.canvas ? LAY.canvas.h : 800;
+
+  function applyView() {
+    viewport.setAttribute("transform",
+      "translate(" + state.tx + "," + state.ty + ") scale(" + state.k + ")");
+    updateMinimapView();
+    var z = document.getElementById("zoomLevel");
+    if (z) z.textContent = Math.round(state.k * 100) + "%";
+  }
+  var MIN_READABLE_K = 0.74;    // 可读下限：低于此值文字会糊
+  var FIT_PAD = 22;
+  // 「适应」：整图完整落在视口内；只有当缩放低于可读下限时才改用可读比例（此时可横向拖拽）
+  function fit() {
+    var r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var kAll = Math.min((r.width - FIT_PAD * 2) / CW, (r.height - FIT_PAD * 2) / CH);
+    if (kAll >= MIN_READABLE_K) {
+      state.k = Math.min(kAll, 2.2);
+      state.tx = (r.width - CW * state.k) / 2;
+      state.ty = (r.height - CH * state.k) / 2;
+    } else {
+      state.k = MIN_READABLE_K;
+      // 聚焦目标品种列，其余部分可拖拽查看
+      var focus = (LAY.columns || []).filter(function (c) {
+        return (D.nodes || []).some(function (n) { return n.column === c.col && n.node_role === "target"; });
+      })[0];
+      var fx = focus ? focus.label_x : CW / 2;
+      state.tx = r.width / 2 - fx * state.k;
+      state.ty = (r.height - CH * state.k) / 2;
+    }
+    clampView();
+    applyView();
+  }
+  function clampView() {
+    var r = svg.getBoundingClientRect();
+    if (!r.width) return;
+    var w = CW * state.k, h = CH * state.k;
+    if (w <= r.width) state.tx = (r.width - w) / 2;
+    else state.tx = Math.min(FIT_PAD * 0.5, Math.max(r.width - w - FIT_PAD * 0.5, state.tx));
+    if (h <= r.height) state.ty = (r.height - h) / 2;
+    else state.ty = Math.min(FIT_PAD * 0.5, Math.max(r.height - h - FIT_PAD * 0.5, state.ty));
+  }
+  function fitAll() {                            // 「总览」：强制缩到全部可见
+    var r = svg.getBoundingClientRect();
+    var k = Math.min((r.width - 36) / CW, (r.height - 36) / CH);
+    state.k = Math.max(0.12, Math.min(k, 2.2));
+    state.tx = (r.width - CW * state.k) / 2;
+    state.ty = (r.height - CH * state.k) / 2;
+    applyView();
+  }
+  function zoomAt(factor, cx, cy) {
+    var r = svg.getBoundingClientRect();
+    if (cx == null) { cx = r.width / 2; cy = r.height / 2; }
+    var k2 = Math.max(0.12, Math.min(4, state.k * factor));
+    var scale = k2 / state.k;
+    state.tx = cx - (cx - state.tx) * scale;
+    state.ty = cy - (cy - state.ty) * scale;
+    state.k = k2;
+    clampView();
+    applyView();
+  }
+
+  // ---------------------------------------------------------------- 绘制：泳道
+  function drawLanes() {
+    var g = document.getElementById("laneLayer");
+    g.innerHTML = "";
+    (LAY.columns || []).forEach(function (c, i) {
+      var colMeta = (D.columns || []).filter(function (x) { return x.col === c.col; })[0] || {};
+      var band = sv("rect", {
+        x: c.x - 12, y: 6, width: c.w + 24, height: CH - 12,
+        rx: 14, class: "lane-band" + (i % 2 ? " odd" : "")
+      });
+      g.appendChild(band);
+      var t = sv("text", {
+        x: c.label_x, y: 26, class: "lane-title", "text-anchor": "middle"
+      });
+      t.textContent = colMeta.label || ("第 " + c.col + " 列");
+      g.appendChild(t);
+      var sub = sv("text", {
+        x: c.label_x, y: 42, class: "lane-sub", "text-anchor": "middle"
+      });
+      var cnt = (LAY.nodes || []).filter(function (b) {
+        var n = NODE_BY_ID[b.id];
+        return n && n.column === c.col;
+      }).length;
+      sub.textContent = cnt + " 个节点";
+      g.appendChild(sub);
+    });
+  }
+
+  // ---------------------------------------------------------------- 绘制：箭头
+  function drawDefs() {
+    var defs = document.getElementById("defs");
+    defs.innerHTML = "";
+    var types = {};
+    RELS.forEach(function (r) { types[r.relation_type] = typeColor(r.relation_type); });
+    Object.keys(types).forEach(function (t) {
+      var m = sv("marker", {
+        id: "arw-" + t, viewBox: "0 0 10 10", refX: "9", refY: "5",
+        markerWidth: "6.5", markerHeight: "6.5", orient: "auto-start-reverse"
+      });
+      m.appendChild(sv("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: types[t] }));
+      defs.appendChild(m);
+    });
+    var m2 = sv("marker", {
+      id: "arw-dim", viewBox: "0 0 10 10", refX: "9", refY: "5",
+      markerWidth: "6.5", markerHeight: "6.5", orient: "auto-start-reverse"
+    });
+    m2.appendChild(sv("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: "#5a677d" }));
+    defs.appendChild(m2);
+  }
+
+  // ---------------------------------------------------------------- 绘制：边
+  var EDGE_ELS = {};
+  function drawEdges() {
+    var g = document.getElementById("edgeLayer");
+    g.innerHTML = "";
+    EDGE_ELS = {};
+    (LAY.edges || []).forEach(function (e) {
+      var rel = RELS.filter(function (r) { return r.id === e.id; })[0] || {};
+      var typ = rel.relation_type || "conversion";
+      var p = sv("path", {
+        d: e.d, class: "edge", "data-id": e.id, "data-type": typ,
+        stroke: typeColor(typ),
+        "stroke-dasharray": dashFor(rel, typ),
+        "marker-end": "url(#arw-" + typ + ")"
+      });
+      if (rel.relation_type === "substitution") p.setAttribute("marker-start", "url(#arw-" + typ + ")");
+      p.addEventListener("click", function (ev) {
+        ev.stopPropagation(); selectRelation(e.id);
+      });
+      p.addEventListener("mouseenter", function () {
+        p.classList.add("edge-hi");
+        showTip(ev0(ev0), rel, e);
+      });
+      p.addEventListener("mouseleave", function () {
+        p.classList.remove("edge-hi"); hideTip();
+      });
+      g.appendChild(p);
+      EDGE_ELS[e.id] = p;
+    });
+  }
+  function ev0(e) { return e; }
+  function dashFor(rel, typ) {
+    if (typ === "substitution") return "7 5";
+    if (typ === "blend" || typ === "processing") return "2 4";
+    if (typ === "byproduct") return "10 4";
+    if (typ === "route_option") return "5 4";
+    return null;
+  }
+
+  // 标签：只在缩放足够大或高亮时显示，避免糊成一片
+  function drawLabels() {
+    var g = document.getElementById("labelLayer");
+    g.innerHTML = "";
+    (LAY.edges || []).forEach(function (e) {
+      var rel = RELS.filter(function (r) { return r.id === e.id; })[0] || {};
+      var q = rel.quant || {};
+      var txt = q.from_per_to != null ? (fmt(q.from_per_to, 3) + " t/t") : "";
+      if (!txt) return;
+      var t = sv("text", {
+        x: e.label_x, y: e.label_y - 3, class: "edge-label", "text-anchor": "middle",
+        "data-for": e.id
+      });
+      t.textContent = txt;
+      g.appendChild(t);
+    });
+  }
+
+  // ---------------------------------------------------------------- 绘制：节点
+  var NODE_ELS = {};
+  function nodeClass(n) { return "node k-" + (n.node_class || "commodity") + " role-" + (n.node_role || "x"); }
+  function drawNodes() {
+    var g = document.getElementById("nodeLayer");
+    g.innerHTML = "";
+    NODE_ELS = {};
+    (LAY.nodes || []).forEach(function (b) {
+      var n = NODE_BY_ID[b.id];
+      if (!n) return;
+      var grp = sv("g", { class: nodeClass(n), "data-id": n.id, transform: "translate(" + b.x + "," + b.y + ")" });
+      grp.appendChild(sv("rect", { class: "node-bg", x: 0, y: 0, width: b.w, height: b.h, rx: 11 }));
+      grp.appendChild(sv("rect", { class: "node-strip", x: 0, y: 0, width: 4.5, height: b.h, rx: 2 }));
+
+      var title = n.name || n.id;
+      var maxCh = Math.floor((b.w - 34) / 12.5);
+      if (title.length > maxCh) {
+        var cut = title.slice(0, maxCh - 1) + "…";
+        grp.appendChild(mkText(13, 10, 22, cut, "node-title"));
+        // 悬停走原生 title
+        grp.appendChild(sv("title")).textContent = title;
+      } else {
+        grp.appendChild(mkText(13, 10, 22, title, "node-title"));
+      }
+      var sub = (n.cas && n.cas.value) ? ("CAS " + n.cas.value)
+        : (n.node_class === "material" ? "材料" : n.node_class === "application" ? "终端应用" : "化学品");
+      grp.appendChild(mkText(10.5, 10.5, 38, sub, "node-sub"));
+
+      var flags = n.missing_flags || [];
+      if (flags.length) {
+        grp.appendChild(mkText(9.5, b.w - 10, b.h - 7, "⚠ " + flags.length, "node-flag"));
+        var tt = sv("title");
+        tt.textContent = "缺口：" + flags.join("、");
+        grp.appendChild(tt);
+      } else {
+        grp.appendChild(mkText(9.5, b.w - 10, b.h - 7, "✓", "node-ok"));
+      }
+
+      grp.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (ev.ctrlKey || ev.metaKey || ev.shiftKey) addMulti(n.id);
+        else selectNode(n.id);
+      });
+      grp.addEventListener("mouseenter", function () { state.hovered = n.id; highlightPath(n.id); });
+      grp.addEventListener("mouseleave", function () { state.hovered = null; highlightPath(state.selected); });
+      g.appendChild(grp);
+      NODE_ELS[n.id] = grp;
+    });
+  }
+  function mkText(size, x, y, txt, cls) {
+    var t = sv("text", { x: x, y: y, class: cls, "font-size": size });
+    t.textContent = txt;
+    return t;
+  }
+
+  // ---------------------------------------------------------------- 上下游高亮
+  function ancestors(id, seen, out) {
+    seen = seen || {}; out = out || {};
+    RELS.forEach(function (r) {
+      if (r.to === id && r.relation_type !== "substitution" && !seen[r.from]) {
+        seen[r.from] = 1; out[r.from] = 1;
+        ancestors(r.from, seen, out);
+      }
+    });
+    return out;
+  }
+  function descendants(id, seen, out) {
+    seen = seen || {}; out = out || {};
+    RELS.forEach(function (r) {
+      if (r.from === id && r.relation_type !== "substitution" && !seen[r.to]) {
+        seen[r.to] = 1; out[r.to] = 1;
+        descendants(r.to, seen, out);
+      }
+    });
+    return out;
+  }
+  function highlightPath(id) {
+    Object.keys(NODE_ELS).forEach(function (k) {
+      NODE_ELS[k].classList.remove("up", "down", "selected", "dim");
+    });
+    Object.keys(EDGE_ELS).forEach(function (k) {
+      EDGE_ELS[k].classList.remove("up", "down", "edge-hi", "dim");
+    });
+    if (!id) return;
+    var up = ancestors(id, {}, {});
+    var dn = descendants(id, {}, {});
+    state.related = { up: up, down: dn };
+    Object.keys(NODE_ELS).forEach(function (k) {
+      if (k === id) NODE_ELS[k].classList.add("selected");
+      else if (up[k]) NODE_ELS[k].classList.add("up");
+      else if (dn[k]) NODE_ELS[k].classList.add("down");
+      else NODE_ELS[k].classList.add("dim");
+    });
+    RELS.forEach(function (r) {
+      var p = EDGE_ELS[r.id];
+      if (!p) return;
+      if (r.from === id || r.to === id || (up[r.from] && up[r.to]) || (dn[r.from] && dn[r.to])) {
+        p.classList.add(up[r.from] !== undefined || r.from === id ? "up" : "down");
+      } else p.classList.add("dim");
+    });
+  }
+
+  // ---------------------------------------------------------------- 侧栏
+  function sbShow(tab) {
+    state.sbOpen = true;
+    document.getElementById("sidebar").classList.add("open");
+    document.getElementById("sbOpen").classList.remove("show");
+    document.querySelectorAll(".sb-tab").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.tab === tab);
+    });
+    state.activeTab = tab;
+  }
+  function sbHide() {
+    state.sbOpen = false;
+    document.getElementById("sidebar").classList.remove("open");
+    document.getElementById("sbOpen").classList.add("show");
+  }
+
+  function priceSeriesFor(nodeId) {
+    var ps = (D.prices && D.prices.series) || [];
+    return ps.filter(function (s) { return s.node_id === nodeId; })[0] || null;
+  }
+  function entsFor(nodeId) {
+    return (D.enterprises || []).filter(function (e) {
+      return (e.nodes || []).indexOf(nodeId) >= 0 || e.node_id === nodeId;
+    });
+  }
+  function projsFor(nodeId) {
+    return (D.projects || []).filter(function (p) {
+      return (p.node_ids || []).indexOf(nodeId) >= 0 || p.node_id === nodeId;
+    });
+  }
+  function eventsFor(nodeId) {
+    return (D.events || []).filter(function (e) {
+      return (e.node_ids || []).indexOf(nodeId) >= 0 || e.node_id === nodeId;
+    });
+  }
+  function relsFor(nodeId) {
+    return RELS.filter(function (r) { return r.from === nodeId || r.to === nodeId; });
+  }
+
+  function sparkline(series, w, h) {
+    if (!series || !series.points || !series.points.length) {
+      return '<div class="no-data">该节点暂无公开价格序列（已登记为价格缺口，不做估算）</div>';
+    }
+    var pts = series.points;
+    var vs = pts.map(function (p) { return p.price; });
+    var mn = Math.min.apply(null, vs), mx = Math.max.apply(null, vs);
+    var span = (mx - mn) || 1;
+    var dx = w / Math.max(1, pts.length - 1);
+    var d = pts.map(function (p, i) {
+      return (i ? "L" : "M") + (i * dx).toFixed(1) + " " + (h - (p.price - mn) / span * (h - 8) - 4).toFixed(1);
+    }).join(" ");
+    var area = d + " L " + w + " " + h + " L 0 " + h + " Z";
+    var last = pts[pts.length - 1];
+    var first = pts[0];
+    var chg = first.price ? (last.price - first.price) / first.price * 100 : 0;
+    var cls = chg > 0 ? "up" : chg < 0 ? "dn" : "fl";
+    var html = '<svg class="spark" viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none">' +
+      '<path class="spark-area" d="' + area + '"></path>' +
+      '<path class="spark-line" d="' + d + '"></path></svg>' +
+      '<div class="spark-meta">' +
+      '<span class="spark-last">' + fmt(last.price, 2) + '</span>' +
+      '<span class="spark-unit">' + esc(series.unit || "") + '</span>' +
+      '<span class="spark-chg ' + cls + '">' + (chg >= 0 ? "+" : "") + chg.toFixed(2) + '%</span>' +
+      '<span class="spark-date">' + esc(last.date) + '</span></div>';
+    html += '<table class="mini-tbl"><thead><tr><th>日期</th><th>价格</th></tr></thead><tbody>' +
+      pts.slice().reverse().map(function (p) {
+        return "<tr><td>" + esc(p.date) + "</td><td>" + fmt(p.price, 2) + "</td></tr>";
+      }).join("") + "</tbody></table>";
+    if (series.basis) html += '<div class="src-note">口径：' + esc(series.basis) + '</div>';
+    if (series.source_id && SRC[series.source_id]) html += srcChip(series.source_id);
+    return html;
+  }
+
+  function srcChip(sid) {
+    var s = SRC[sid] || {};
+    var tier = s.evidence_tier || s.tier || "?";
+    return '<span class="src-chip tier-' + esc(tier) + '" title="' + esc((s.title || "") + " " + (s.url || "")) +
+      '">' + esc(sid) + " · " + esc(tier) + "级</span>";
+  }
+
+  function renderNode(nid) {
+    var n = NODE_BY_ID[nid];
+    if (!n) return;
+    var ev = n.evidence || [];
+    var h = [];
+    h.push('<div class="sb-title">' + esc(n.name) + "</div>");
+    h.push('<div class="sb-badges">' +
+      '<span class="bd bd-' + esc(n.node_class) + '">' +
+      ({ commodity: "化学品", material: "材料", application: "终端应用" }[n.node_class] || n.node_class) + "</span>" +
+      '<span class="bd">' + esc(n.stage || ("第 " + n.column + " 列")) + "</span>" +
+      (n.segment ? '<span class="bd">' + esc(n.segment) + "</span>" : "") +
+      "</div>");
+    h.push('<table class="kv">');
+    h.push('<tr><th>CAS</th><td>' + esc((n.cas && n.cas.value) || "不适用") +
+      ((n.cas && n.cas.status) ? ' <span class="tiny">[' + esc(n.cas.status) + "]</span>" : "") + "</td></tr>");
+    if (n.hs_code) h.push("<tr><th>HS 编码</th><td>" + esc(n.hs_code) + "</td></tr>");
+    if (n.aliases && n.aliases.length) h.push("<tr><th>常见名称</th><td>" + esc(n.aliases.join(" / ")) + "</td></tr>");
+    if (n.specs && n.specs.length) h.push("<tr><th>规格</th><td>" + esc(n.specs.join("；")) + "</td></tr>");
+    h.push("<tr><th>计量单位</th><td>" + esc(n.unit || "—") + "</td></tr>");
+    if (n.missing_flags && n.missing_flags.length)
+      h.push('<tr><th>缺口标记</th><td><span class="warn">' + esc(n.missing_flags.join("、")) + "</span></td></tr>");
+    h.push("</table>");
+    if (n.notes) h.push('<div class="sb-note">' + esc(n.notes) + "</div>");
+
+    // 价格
+    h.push('<div class="sb-sec">价格走势</div>');
+    h.push('<div class="spark-wrap">' + sparkline(priceSeriesFor(nid), 300, 70) + "</div>");
+
+    // 企业 / 产能
+    var es = entsFor(nid);
+    h.push('<div class="sb-sec">主要企业与公开产能（' + es.length + "）</div>");
+    if (es.length) {
+      h.push('<table class="grid"><thead><tr><th>企业</th><th>产能</th><th>地区</th><th>来源</th></tr></thead><tbody>');
+      es.forEach(function (e) {
+        h.push("<tr><td>" + esc(e.name) + "</td><td>" + val(e.capacity) + " " + esc(e.capacity_unit || "") +
+          "</td><td>" + val(e.region) + "</td><td>" + (e.source_id ? srcChip(e.source_id) : "—") + "</td></tr>");
+      });
+      h.push("</tbody></table>");
+      var tot = es.reduce(function (a, e) { return a + (typeof e.capacity === "number" ? e.capacity : 0); }, 0);
+      if (tot) h.push('<div class="src-note">已核验产能合计：' + fmt(tot, 1) + " " + esc(es[0].capacity_unit || "") + "（仅统计有来源的条目）</div>");
+    } else h.push('<div class="no-data">暂无已核验的企业产能条目</div>');
+
+    // 项目
+    var ps2 = projsFor(nid);
+    h.push('<div class="sb-sec">相关公开项目（' + ps2.length + "）</div>");
+    if (ps2.length) {
+      ps2.forEach(function (p) {
+        h.push('<div class="proj"><div class="proj-t">' + esc(p.name) + "</div>" +
+          '<div class="proj-m">' + esc(p.company || "") + " · " + esc(p.region || "") +
+          " · " + esc(p.capacity || "") + " · " + esc(p.status || "") + " " + (p.source_id ? srcChip(p.source_id) : "") + "</div></div>");
+      });
+    } else h.push('<div class="no-data">暂无公开项目记录</div>');
+
+    // 事件
+    var evs = eventsFor(nid);
+    h.push('<div class="sb-sec">产业事件（' + evs.length + "）</div>");
+    if (evs.length) {
+      evs.forEach(function (e) {
+        h.push('<div class="event"><span class="ev-date">' + esc(e.date || "") + "</span>" +
+          '<span class="ev-t">' + esc(e.title || e.summary || "") + "</span>" +
+          (e.source_id ? srcChip(e.source_id) : "") + "</div>");
+      });
+    } else h.push('<div class="no-data">暂无事件记录</div>');
+
+    // 关系
+    var rs = relsFor(nid);
+    h.push('<div class="sb-sec">产业链关系（' + rs.length + "）</div>");
+    h.push('<ul class="rel-list">');
+    rs.forEach(function (r) {
+      var other = r.from === nid ? r.to : r.from;
+      var dirw = r.from === nid ? "下游" : "上游";
+      var on = NODE_BY_ID[other] ? NODE_BY_ID[other].name : other;
+      h.push('<li class="rel-item" data-rel="' + esc(r.id) + '"><span class="rt" style="color:' +
+        typeColor(r.relation_type) + '">' + esc(typeZh(r.relation_type)) + "</span>" +
+        '<span class="rd">' + dirw + " · " + esc(on) + "</span></li>");
+    });
+    h.push("</ul>");
+
+    // 证据
+    h.push('<div class="sb-sec">节点证据（' + ev.length + "）</div>");
+    if (ev.length) {
+      ev.forEach(function (sid) {
+        var s = SRC[sid];
+        if (!s) { h.push('<div class="src-line">' + esc(sid) + "（来源表未登记）</div>"); return; }
+        h.push('<div class="src-line">' + srcChip(sid) + " " + esc(s.title || "") +
+          (s.url ? ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener">链接</a>' : "") +
+          (s.date ? ' <span class="tiny">' + esc(s.date) + "</span>" : "") +
+          (s.key_quote ? '<div class="quote">“' + esc(s.key_quote) + '”</div>' : "") + "</div>");
+      });
+    } else h.push('<div class="no-data">该节点未登记证据（属缺口，须补齐后才能用于结论）</div>');
+
+    document.getElementById("sbBody").innerHTML = h.join("");
+    bindRelItems();
+  }
+
+  function bindRelItems() {
+    document.querySelectorAll(".rel-item").forEach(function (li) {
+      li.addEventListener("click", function () { selectRelation(li.dataset.rel); });
+    });
+  }
+
+  function renderRelation(rid) {
+    var r = RELS.filter(function (x) { return x.id === rid; })[0];
+    if (!r) return;
+    var q = r.quant || {};
+    var a = NODE_BY_ID[r.from] || { name: r.from }, b = NODE_BY_ID[r.to] || { name: r.to };
+    var h = [];
+    h.push('<div class="sb-title">' + esc(typeZh(r.relation_type)) + "：" + esc(a.name) + " → " + esc(b.name) + "</div>");
+    h.push('<div class="sb-badges"><span class="bd" style="border-color:' + typeColor(r.relation_type) +
+      ';color:' + typeColor(r.relation_type) + '">' + esc(typeZh(r.relation_type)) + "</span>" +
+      '<span class="bd">' + esc(r.id) + "</span>" +
+      (r.family ? '<span class="bd">' + esc(r.family) + "</span>" : "") +
+      (r.typical ? '<span class="bd">主流路线</span>' : '<span class="bd">并列路线</span>') + "</div>");
+    h.push('<table class="kv">');
+    h.push("<tr><th>工艺</th><td>" + val(r.process) + "</td></tr>");
+    h.push("<tr><th>单耗</th><td>" + (q.from_per_to != null ? "<b>" + fmt(q.from_per_to, 3) + "</b> " + esc(q.from_unit || "") : '<span class="warn">缺口</span>') + "</td></tr>");
+    if (q.from_per_to_range) h.push("<tr><th>常见区间</th><td>" + q.from_per_to_range[0] + " ~ " + q.from_per_to_range[1] + "</td></tr>");
+    if (q.yield != null) h.push("<tr><th>收率</th><td>" + fmt(q.yield, 3) + "</td></tr>");
+    h.push("<tr><th>量化状态</th><td>" + esc(quantZh(r.quant_status)) + "</td></tr>");
+    h.push("<tr><th>口径</th><td>" + val(q.basis) + "</td></tr>");
+    if (q.range_note) h.push("<tr><th>区间说明</th><td>" + esc(q.range_note) + "</td></tr>");
+    if (q.basis_grade) h.push("<tr><th>口径等级</th><td>" + esc(q.basis_grade) + "</td></tr>");
+    h.push("</table>");
+    if (r.notes) h.push('<div class="sb-note">' + esc(r.notes) + "</div>");
+
+    // 单耗来源与计算式
+    h.push('<div class="sb-sec">单耗来源与计算口径</div>');
+    h.push('<div class="formula">' + (q.from_per_to != null
+      ? "1 t " + esc(b.name) + " × " + fmt(q.from_per_to, 3) + " t/" + "t = " + fmt(q.from_per_to, 3) + " t " + esc(a.name)
+      : "未取得公开口径 → 登记为缺口，不估算") + "</div>");
+    var ev = r.evidence || [];
+    if (ev.length) {
+      ev.forEach(function (sid) {
+        var s = SRC[sid] || {};
+        h.push('<div class="src-line">' + srcChip(sid) + " " + esc(s.title || "") +
+          (s.url ? ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener">链接</a>' : "") +
+          (s.key_quote ? '<div class="quote">“' + esc(s.key_quote) + '”</div>' : "") + "</div>");
+      });
+    } else h.push('<div class="no-data">该关系未登记证据（缺口）</div>');
+
+    // 端点跳转
+    h.push('<div class="sb-sec">端点</div>');
+    h.push('<div class="rel-ends">' +
+      '<span class="end" data-node="' + esc(r.from) + '">↑ ' + esc(a.name) + "</span>" +
+      '<span class="end" data-node="' + esc(r.to) + '">↓ ' + esc(b.name) + "</span></div>");
+
+    h.push('<div class="sb-sec">可追溯性</div>');
+    h.push('<div class="src-note">关系 ID ' + esc(r.id) + "；证据 " + ev.length + " 条；" +
+      (r.quant_status === "missing" ? "量化缺口已显式登记，未用推算值填充。" : "量化口径见上表。") + "</div>");
+
+    document.getElementById("sbBody").innerHTML = h.join("");
+    document.querySelectorAll(".end").forEach(function (s) {
+      s.addEventListener("click", function () { selectNode(s.dataset.node); });
+    });
+  }
+
+  // ---------------------------------------------------------------- 价格联动
+  function renderLinkage() {
+    var ids = state.selectedList;
+    var h = [];
+    if (ids.length < 2) {
+      h.push('<div class="sb-title">价格联动研究</div>');
+      h.push('<div class="sb-note">按住 <b>Ctrl/⌘</b> 依次点击两个节点（或勾选后点“价格联动”），' +
+        "这里会并排给出两条价格序列、区间统计与相关性。缺口序列会明确标注，不做插值。</div>");
+      h.push('<div class="sb-sec">当前已选</div>');
+      h.push('<div class="chips">' + (ids.length ? ids.map(function (i) {
+        return '<span class="chip-sel">' + esc((NODE_BY_ID[i] || {}).name || i) + "</span>";
+      }).join("") : '<span class="no-data">尚未选择</span>') + "</div>");
+      document.getElementById("sbBody").innerHTML = h.join("");
+      return;
+    }
+    var A = ids[0], B = ids[1];
+    var na = NODE_BY_ID[A] || {}, nb = NODE_BY_ID[B] || {};
+    var pa = priceSeriesFor(A), pb = priceSeriesFor(B);
+    h.push('<div class="sb-title">' + esc(na.name) + " × " + esc(nb.name) + "</div>");
+    h.push('<div class="sb-badges"><span class="bd">价格联动</span><span class="bd">' + ids.length + " 个节点</span></div>");
+
+    var rows = [];
+    [[A, na, pa, "①"], [B, nb, pb, "②"]].forEach(function (t) {
+      var id = t[0], n = t[1], p = t[2], tag = t[3];
+      h.push('<div class="sb-sec">' + tag + " " + esc(n.name) + "（" + esc(n.stage || "") + "）</div>");
+      h.push('<div class="spark-wrap">' + sparkline(p, 300, 64) + "</div>");
+      if (p && p.points && p.points.length) {
+        var vs = p.points.map(function (x) { return x.price; });
+        rows.push({ id: id, name: n.name, pts: p.points, unit: p.unit });
+        h.push('<table class="kv"><tr><th>区间高/低</th><td>' + fmt(Math.max.apply(null, vs), 2) + " / " +
+          fmt(Math.min.apply(null, vs), 2) + " " + esc(p.unit || "") + "</td></tr>" +
+          "<tr><th>样本点</th><td>" + vs.length + " 个</td></tr></table>");
+      } else {
+        rows.push({ id: id, name: n.name, pts: null, unit: null });
+      }
+    });
+
+    if (rows.length === 2 && rows[0].pts && rows[1].pts) {
+      // 按日期对齐求相关性
+      var ma = {}, mb = {};
+      rows[0].pts.forEach(function (p) { ma[p.date] = p.price; });
+      rows[1].pts.forEach(function (p) { mb[p.date] = p.price; });
+      var common = Object.keys(ma).filter(function (d) { return mb[d] != null; }).sort();
+      h.push('<div class="sb-sec">对齐与相关性</div>');
+      if (common.length >= 4) {
+        var xs = common.map(function (d) { return Math.log(ma[d]); });
+        var ys = common.map(function (d) { return Math.log(mb[d]); });
+        var mx = xs.reduce(function (a, b) { return a + b; }, 0) / xs.length;
+        var my = ys.reduce(function (a, b) { return a + b; }, 0) / ys.length;
+        var cov = 0, vx = 0, vy = 0;
+        for (var i = 0; i < xs.length; i++) {
+          cov += (xs[i] - mx) * (ys[i] - my); vx += Math.pow(xs[i] - mx, 2); vy += Math.pow(ys[i] - my, 2);
+        }
+        var corr = (vx && vy) ? cov / Math.sqrt(vx * vy) : 0;
+        var el2 = Math.pow(ys[ys.length - 1] / ys[0], 1 / Math.max(1, common.length - 1)) - 1;
+        h.push('<table class="kv">' +
+          "<tr><th>共同交易日</th><td>" + common.length + " 个（" + common[0] + " ~ " + common[common.length - 1] + "）</td></tr>" +
+          "<tr><th>对数价格相关系数</th><td><b>" + corr.toFixed(3) + "</b></td></tr>" +
+          '<tr><th>估算弹性</th><td>' + (vx ? (cov / vx).toFixed(3) : "—") + "</td></tr>" +
+          "<tr><th>口径说明</th><td>仅在共同交易日上计算；样本量 " + common.length +
+          " 点，<b>不足以判定因果关系</b>，只能作为方向性参考。</td></tr></table>");
+        h.push('<div class="src-note">本页不生成价差/价差率结论，也不做跨规格、跨区域的价格拼接；' +
+          "如需价差研究请使用同一口径的现货序列。</div>");
+      } else {
+        h.push('<div class="no-data">共同交易日不足 4 个，无法计算相关性。</div>');
+      }
+    }
+
+    h.push('<div class="sb-sec">缺口说明</div>');
+    var missing = [];
+    if (!pa) missing.push(na.name + "：无价格序列");
+    // 保持简洁
+    h.push('<div class="src-note">' + (missing.length ? missing.join("；") + "，已按缺口登记。" :
+      "两条序列均有公开数据；如需更长历史请按 sources 中的入口自行补充，本图不回溯补值。") + "</div>");
+
+    document.getElementById("sbBody").innerHTML = h.join("");
+  }
+
+  // ---------------------------------------------------------------- 选中逻辑
+  function selectNode(id) {
+    state.selected = id;
+    highlightPath(id);
+    renderNode(id);
+    sbShow("node");
+    updateSelbar();
+  }
+  function addMulti(id) {
+    var i = state.selectedList.indexOf(id);
+    if (i >= 0) state.selectedList.splice(i, 1);
+    else {
+      state.selectedList.push(id);
+      if (state.selectedList.length > 2) state.selectedList.shift();
+    }
+    state.selected = id;
+    highlightPath(id);
+    if (state.selectedList.length === 2) {
+      renderLinkage(); sbShow("link");
+    } else {
+      renderNode(id); sbShow("node");
+    }
+    updateSelbar();
+  }
+  function selectRelation(id) {
+    renderRelation(id);
+    sbShow("rel");
+    var rel = RELS.filter(function (r) { return r.id === id; })[0];
+    if (rel) highlightPath(rel.from);
+  }
+  function updateSelbar() {
+    var c = document.getElementById("selChips");
+    var ids = state.selectedList.slice();
+    if (state.selected && ids.indexOf(state.selected) < 0) ids.push(state.selected);
+    c.innerHTML = ids.map(function (i) {
+      var n = NODE_BY_ID[i] || {};
+      return '<span class="chip-sel" data-id="' + esc(i) + '">' + esc(n.name || i) +
+        ' <b class="x">×</b></span>';
+    }).join("");
+    c.querySelectorAll(".x").forEach(function (x) {
+      x.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        var id = x.parentNode.dataset.id;
+        state.selectedList = state.selectedList.filter(function (z) { return z !== id; });
+        updateSelbar();
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------- 悬停提示
+  var tipEl = null;
+  function showTip(ev, rel, e) {
+    if (!tipEl) {
+      tipEl = el("div", "tip");
+      document.body.appendChild(tipEl);
+    }
+    var q = rel.quant || {};
+    tipEl.innerHTML = "<b>" + esc(typeZh(rel.relation_type)) + "</b> " +
+      esc((NODE_BY_ID[rel.from] || {}).name) + " → " + esc((NODE_BY_ID[rel.to] || {}).name) +
+      "<br>" + (q.from_per_to != null ? "单耗 " + fmt(q.from_per_to, 3) + " " + esc(q.from_unit || "") : '<span class="warn">单耗缺口</span>') +
+      (rel.process ? "<br>" + esc(rel.process) : "");
+    tipEl.style.display = "block";
+    // 用鼠标位置，避免在 mouseenter 里拿不到坐标
+    document.addEventListener("mousemove", moveTip);
+  }
+  function moveTip(e) {
+    if (!tipEl || tipEl.style.display !== "block") return;
+    tipEl.style.left = (e.clientX + 14) + "px";
+    tipEl.style.top = (e.clientY + 14) + "px";
+  }
+  function hideTip() { if (tipEl) tipEl.style.display = "none"; }
+
+  // ---------------------------------------------------------------- 覆盖面板
+  function renderCoverage() {
+    var cov = D.coverage || {};
+    var ov = cov.overall || {};
+    var rate = ov.rate || 0;
+    var C = 2 * Math.PI * 50;
+    var fg = document.getElementById("gaugeFg");
+    fg.setAttribute("stroke-dasharray", C);
+    fg.setAttribute("stroke-dashoffset", C * (1 - rate / 100));
+    fg.setAttribute("class", "gauge-fg " + (rate >= 90 ? "good" : rate >= 70 ? "mid" : "bad"));
+    document.getElementById("gaugeTxt").textContent = rate.toFixed(1) + "%";
+    document.getElementById("gaugeNote").innerHTML =
+      "按开工前冻结的核心清单计算：<b>" + (ov.passed || 0) + "/" + (ov.total || 0) + "</b> 项达标";
+
+    var cards = [];
+    function card(k, v, s) {
+      return '<div class="cov-card"><div class="k">' + k + '</div><div class="v">' +
+        v + (s ? "<small>" + s + "</small>" : "") + "</div></div>";
+    }
+    var nodesC = cov.nodes || {}, relsC = cov.relations || {};
+    cards.push(card("核心节点", (nodesC.passed || 0) + "/" + (nodesC.total || 0),
+      (nodesC.rate != null ? nodesC.rate.toFixed(0) + "%" : "")));
+    cards.push(card("核心关系", (relsC.passed || 0) + "/" + (relsC.total || 0),
+      (relsC.rate != null ? relsC.rate.toFixed(0) + "%" : "")));
+    var byP = nodesC.by_priority || {};
+    var pTxt = Object.keys(byP).sort().map(function (p) {
+      return p + " " + byP[p].passed + "/" + byP[p].total;
+    }).join("  ");
+    cards.push(card("节点优先级", pTxt || "—", ""));
+    var gaps = (D.nodes || []).reduce(function (a, n) { return a + ((n.missing_flags || []).length ? 1 : 0); }, 0);
+    cards.push(card("带缺口标记节点", gaps, "/ " + (D.nodes || []).length));
+    cards.push(card("价格序列", ((D.prices && D.prices.series) || []).length, "条"));
+    cards.push(card("证据来源", (D.sources || []).length, "条"));
+    document.getElementById("covCards").innerHTML = cards.join("");
+
+    // 缺口列表
+    var fail = [];
+    (nodesC.detail || []).forEach(function (d) {
+      if (!d.pass) fail.push('<div class="gap-i">节点 ' + esc(d.core_id || "") + " " + esc(d.label || "") +
+        "：缺 " + esc((d.failed || []).join("/")) + "</div>");
+    });
+    (relsC.detail || []).forEach(function (d) {
+      if (!d.pass) fail.push('<div class="gap-i">关系 ' + esc(d.core_id || "") + " " + esc(d.label || "") +
+        "：" + esc((d.failed || []).join("/")) + "</div>");
+    });
+    document.getElementById("covGaps").innerHTML =
+      '<div class="gap-h">未达标项（' + fail.length + "）：</div>" +
+      (fail.length ? fail.slice(0, 8).join("") : '<div class="gap-i ok">全部达标</div>') +
+      (fail.length > 8 ? '<div class="gap-i">… 其余 ' + (fail.length - 8) + " 项见 Excel 报告页</div>" : "");
+
+    var core = D.core && D.core.meta ? D.core.meta : {};
+    document.getElementById("covScope").innerHTML =
+      "<b>计算口径：</b>" + esc(core.scope_statement || "覆盖完整度仅对预先冻结的核心节点/关系清单有效，不代表产业链全部可能节点。") +
+      (core.frozen_at ? "<br><b>清单冻结时间：</b>" + esc(core.frozen_at) : "");
+  }
+
+  // ---------------------------------------------------------------- 工具条
+  function renderToolbar() {
+    var types = {};
+    RELS.forEach(function (r) { types[r.relation_type] = (types[r.relation_type] || 0) + 1; });
+    var chips = document.getElementById("typeChips");
+    chips.innerHTML = "";
+    var all = el("button", "chip active", "全部关系");
+    all.addEventListener("click", function () {
+      state.typeFilter = "";
+      document.querySelectorAll("#typeChips .chip").forEach(function (c) { c.classList.remove("active"); });
+      all.classList.add("active");
+      applyFilters();
+    });
+    chips.appendChild(all);
+    Object.keys(types).forEach(function (t) {
+      var b = el("button", "chip", typeZh(t) + " " + types[t]);
+      b.style.borderColor = typeColor(t);
+      b.addEventListener("click", function () {
+        var on = state.typeFilter === t;
+        document.querySelectorAll("#typeChips .chip").forEach(function (c) { c.classList.remove("active"); });
+        if (on) { state.typeFilter = ""; all.classList.add("active"); }
+        else { state.typeFilter = t; b.classList.add("active"); }
+        applyFilters();
+      });
+      chips.appendChild(b);
+    });
+
+    // 关系类型下拉与工艺下拉
+    var rs = document.getElementById("relSel");
+    Object.keys(types).forEach(function (t) {
+      var o = document.createElement("option");
+      o.value = t; o.textContent = typeZh(t) + "（" + types[t] + "）";
+      rs.appendChild(o);
+    });
+    rs.addEventListener("change", function () { state.typeFilter = rs.value; applyFilters(); });
+
+    var routeSel = document.getElementById("routeSel");
+    var families = {};
+    RELS.forEach(function (r) { if (r.family) families[r.family] = 1; });
+    Object.keys(families).forEach(function (f) {
+      var o = document.createElement("option");
+      o.value = f; o.textContent = f;
+      routeSel.appendChild(o);
+    });
+    routeSel.addEventListener("change", function () { state.routeFilter = routeSel.value; applyFilters(); });
+  }
+
+  // ---------------------------------------------------------------- 筛选
+  function applyFilters() {
+    var t = state.typeFilter, fam = state.routeFilter, q = (document.getElementById("search").value || "").trim().toLowerCase();
+    var keepNodes = {}, keepEdges = {};
+    (LAY.edges || []).forEach(function (e) {
+      var r = RELS.filter(function (x) { return x.id === e.id; })[0] || {};
+      var okT = !t || r.relation_type === t;
+      var okF = !fam || r.family === fam;
+      if (okT && okF) { keepEdges[e.id] = 1; keepNodes[r.from] = 1; keepNodes[r.to] = 1; }
+    });
+    if (q) {
+      var hit = {};
+      NODES.forEach(function (n) {
+        var hay = (n.name + " " + (n.aliases || []).join(" ") + " " + ((n.cas || {}).value || " ")).toLowerCase();
+        if (hay.indexOf(q) >= 0) hit[n.id] = 1;
+      });
+      keepNodes = hit;
+      keepEdges = {};
+      (LAY.edges || []).forEach(function (e) {
+        if (hit[e.from] || hit[e.to]) keepEdges[e.id] = 1;
+      });
+    }
+    // 替代边没有方向，两端都要保留
+    Object.keys(NODE_ELS).forEach(function (id) {
+      var on = !Object.keys(keepNodes).length ? true : !!keepNodes[id];
+      if (Object.keys(keepNodes).length) NODE_ELS[id].classList.toggle("filtered", !on);
+      else NODE_ELS[id].classList.remove("filtered");
+    });
+    Object.keys(EDGE_ELS).forEach(function (id) {
+      var on = !Object.keys(keepEdges).length ? true : !!keepEdges[id];
+      if (Object.keys(keepEdges).length) EDGE_ELS[id].classList.toggle("filtered", !on);
+      else EDGE_ELS[id].classList.remove("filtered");
+    });
+    document.getElementById("hint").textContent =
+      (t || fam || q) ? ("筛选中：显示 " + Object.keys(keepEdges).length + " 条关系 / " + Object.keys(keepNodes).length + " 个节点（点“重置”清除）") :
+        "滚轮缩放 · 拖拽平移 · 双击空白处复位";
+  }
+
+  // ---------------------------------------------------------------- 搜索
+  function bindSearch() {
+    var inp = document.getElementById("search");
+    var drop = document.getElementById("searchDrop");
+    inp.addEventListener("input", function () {
+      var q = inp.value.trim().toLowerCase();
+      applyFilters();
+      if (!q) { drop.style.display = "none"; return; }
+      var hits = NODES.filter(function (n) {
+        return (n.name + " " + (n.aliases || []).join(" ") + " " + ((n.cas || {}).value || " ")).toLowerCase().indexOf(q) >= 0;
+      }).slice(0, 8);
+      drop.innerHTML = hits.length ? hits.map(function (n) {
+        return '<div class="sr-item" data-id="' + esc(n.id) + '"><span class="sr-n">' + esc(n.name) +
+          '</span><span class="meta">' + esc((n.cas && n.cas.value) || n.stage || "") + "</span></div>";
+      }).join("") : '<div class="sr-item empty">无匹配节点</div>';
+      drop.style.display = "block";
+      drop.querySelectorAll(".sr-item[data-id]").forEach(function (it) {
+        it.addEventListener("click", function () {
+          selectNode(it.dataset.id);
+          focusNode(it.dataset.id);
+          drop.style.display = "none";
+        });
+      });
+    });
+    inp.addEventListener("blur", function () { setTimeout(function () { drop.style.display = "none"; }, 160); });
+  }
+
+  function focusNode(id) {
+    var b = BOX[id];
+    if (!b) return;
+    var r = svg.getBoundingClientRect();
+    state.k = Math.max(state.k, 0.85);
+    state.tx = r.width / 2 - (b.x + b.w / 2) * state.k;
+    state.ty = r.height / 2 - (b.y + b.h / 2) * state.k;
+    applyView();
+  }
+
+  // ---------------------------------------------------------------- 缩放/平移
+  function bindPanZoom() {
+    var dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+    wrap.addEventListener("mousedown", function (e) {
+      if (e.button !== 0) return;
+      var t = e.target;
+      if (t && t.closest && (t.closest(".node") || t.closest(".minimap-wrap") ||
+          t.closest(".canvas-legend") || t.closest(".hint"))) return;
+      dragging = true; sx = e.clientX; sy = e.clientY; ox = state.tx; oy = state.ty;
+      svg.style.cursor = "grabbing";
+      e.preventDefault();
+    });
+    window.addEventListener("mousemove", function (e) {
+      if (!dragging) return;
+      state.tx = ox + (e.clientX - sx);
+      state.ty = oy + (e.clientY - sy);
+      clampView();
+      applyView();
+    });
+    window.addEventListener("mouseup", function () { dragging = false; svg.style.cursor = "grab"; });
+    svg.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      var r = svg.getBoundingClientRect();
+      zoomAt(e.deltaY < 0 ? 1.12 : 1 / 1.12, e.clientX - r.left, e.clientY - r.top);
+    }, { passive: false });
+    svg.addEventListener("dblclick", function (e) {
+      if (e.target.closest(".node")) return;
+      fitAll();
+    });
+    svg.addEventListener("click", function (e) {
+      if (e.target.closest(".node") || e.target.closest(".edge")) return;
+    });
+    document.getElementById("btnZoomIn").addEventListener("click", function () { zoomAt(1.2); });
+    document.getElementById("btnZoomOut").addEventListener("click", function () { zoomAt(1 / 1.2); });
+    document.getElementById("btnFit").addEventListener("click", fit);
+    var bAll = document.getElementById("btnFitAll");
+    if (bAll) bAll.addEventListener("click", fitAll);
+    document.getElementById("btnReset").addEventListener("click", function () {
+      state.typeFilter = ""; state.routeFilter = "";
+      document.getElementById("search").value = "";
+      document.getElementById("relSel").value = "";
+      document.getElementById("routeSel").value = "";
+      document.querySelectorAll("#typeChips .chip").forEach(function (c, i) { c.classList.toggle("active", i === 0); });
+      applyFilters(); fit();
+    });
+  }
+
+  // ---------------------------------------------------------------- 小地图
+  function drawMinimap() {
+    var g = document.getElementById("miniNodes");
+    g.innerHTML = "";
+    var sx = 1000 / CW, sy = 320 / CH;
+    (LAY.nodes || []).forEach(function (b) {
+      var n = NODE_BY_ID[b.id] || {};
+      var r = sv("rect", {
+        x: b.x * sx, y: b.y * sy, width: Math.max(2, b.w * sx), height: Math.max(2, b.h * sy),
+        rx: 1, class: "mini-n mini-" + (n.node_class || "commodity")
+      });
+      r.addEventListener("click", function () { focusNode(b.id); });
+      g.appendChild(r);
+    });
+  }
+  function updateMinimapView() {
+    var r = svg.getBoundingClientRect();
+    if (!r.width) return;
+    var sx = 1000 / CW, sy = 320 / CH;
+    var vx = -state.tx / state.k, vy = -state.ty / state.k;
+    var vw = r.width / state.k, vh = r.height / state.k;
+    var rect = document.getElementById("miniView");
+    rect.setAttribute("x", vx * sx);
+    rect.setAttribute("y", vy * sy);
+    rect.setAttribute("width", Math.max(4, vw * sx));
+    rect.setAttribute("height", Math.max(4, vh * sy));
+  }
+
+  // ---------------------------------------------------------------- 图例
+  function drawLegend() {
+    var types = {};
+    RELS.forEach(function (r) { types[r.relation_type] = 1; });
+    var h = Object.keys(types).map(function (t) {
+      return '<span class="lg"><i style="background:' + typeColor(t) + '"></i>' + esc(typeZh(t)) + "</span>";
+    }).join("");
+    h += '<span class="lg"><i class="lg-solid"></i>化学品</span>' +
+      '<span class="lg"><i class="lg-mat"></i>材料</span>' +
+      '<span class="lg"><i class="lg-app"></i>终端应用</span>';
+    document.getElementById("legend").innerHTML = h;
+  }
+
+  // ---------------------------------------------------------------- 层级关系表（兜底）
+  function renderTableMode() {
+    var wrapT = document.getElementById("tmScroll");
+    var cols = (LAY.columns || []).slice().sort(function (a, b) { return a.col - b.col; });
+    var h = [];
+    var byCol = {};
+    NODES.forEach(function (n) { (byCol[n.column] = byCol[n.column] || []).push(n); });
+    h.push('<table class="tm"><thead><tr><th>层级（列）</th><th>节点</th><th>类别</th><th>CAS</th>' +
+      "<th>上游</th><th>下游</th><th>缺口</th><th>证据</th></tr></thead><tbody>");
+    cols.forEach(function (c) {
+      var ns = byCol[c.col] || [];
+      if (!ns.length) return;
+      var meta = (D.columns || []).filter(function (x) { return x.col === c.col; })[0] || {};
+      ns.sort(function (a, b) { return (a.node_role || "").localeCompare(b.node_role || ""); });
+      ns.forEach(function (n, i) {
+        var ups = RELS.filter(function (r) { return r.to === n.id; }).map(function (r) {
+          return (NODE_BY_ID[r.from] || {}).name + "（" + typeZh(r.relation_type) + "）";
+        });
+        var dns = RELS.filter(function (r) { return r.from === n.id; }).map(function (r) {
+          return (NODE_BY_ID[r.to] || {}).name + "（" + typeZh(r.relation_type) + "）";
+        });
+        h.push("<tr data-node=\"" + esc(n.id) + "\">" +
+          (i === 0 ? '<td rowspan="' + ns.length + '" class="tm-col"><b>第 ' + c.col + " 列</b><br>" +
+            esc(meta.label || "") + "</td>" : "") +
+          '<td class="tm-node">' + esc(n.name) + "</td>" +
+          "<td>" + esc({ commodity: "化学品", material: "材料", application: "终端应用" }[n.node_class] || n.node_class) + "</td>" +
+          "<td>" + esc((n.cas && n.cas.value) || "不适用") + "</td>" +
+          "<td>" + esc(ups.join("；") || "—") + "</td>" +
+          "<td>" + esc(dns.join("；") || "—") + "</td>" +
+          "<td>" + esc((n.missing_flags || []).join("、") || "—") + "</td>" +
+          "<td>" + (n.evidence || []).map(function (s) { return srcChip(s); }).join(" ") + "</td></tr>");
+      });
+    });
+    h.push("</tbody></table>");
+    wrapT.innerHTML = h.join("");
+    wrapT.querySelectorAll("tr[data-node]").forEach(function (tr) {
+      tr.addEventListener("click", function () {
+        selectNode(tr.dataset.node);
+        if (!state.tableMode) focusNode(tr.dataset.node);
+      });
+    });
+    var st = D.layoutStatus || {};
+    document.getElementById("tmNote").innerHTML = st.ok
+      ? "布局自检通过（重叠 " + (st.counts.overlap || 0) + " · 穿线 " + (st.counts.edge_through_node || 0) +
+        " · 越界 " + (st.counts.outside || 0) + "）。本表与图谱同一数据源，可随时切换。"
+      : '<span class="warn">布局自检未通过（' + JSON.stringify(st.counts || {}) +
+        "），已自动降级为本表视图；节点与证据一条未丢。</span>";
+  }
+  function setTableMode(on) {
+    state.tableMode = !!on;
+    document.getElementById("tableMode").classList.toggle("show", state.tableMode);
+    document.getElementById("btnTableMode").classList.toggle("active", state.tableMode);
+    if (state.tableMode) document.getElementById("tableMode").scrollIntoView({ behavior: "smooth" });
+  }
+
+  // ---------------------------------------------------------------- 头部 / 页脚
+  function renderHead() {
+    var m = D.chain || {};
+    var sub = [];
+    if (m.product) sub.push("品种：" + m.product);
+    if (m.chain_id) sub.push("chain_id " + m.chain_id);
+    sub.push("向上 " + (m.up_layers != null ? m.up_layers : 2) + " 层 / 向下 " + (m.down_layers != null ? m.down_layers : 2) + " 层");
+    document.getElementById("docSub").textContent = sub.join(" · ");
+    document.getElementById("stamp").innerHTML =
+      "生成时间 " + esc(D.generated_at || "") + "<br>" +
+      "节点 " + NODES.length + " · 关系 " + RELS.length + " · 来源 " + (D.sources || []).length +
+      "<br>离线单文件，无外链依赖";
+    document.getElementById("foot").innerHTML =
+      "数据口径：单耗与收率均标注化学计量/工业级/配方比等级；缺口一律登记不估算。" +
+      " 覆盖完整度仅对预先冻结的核心清单有效，不代表该产业链全部可能节点与关系。";
+  }
+
+  // ---------------------------------------------------------------- 事件绑定
+  function bindUI() {
+    document.querySelectorAll(".sb-tab").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var t = b.dataset.tab;
+        sbShow(t);
+        if (t === "node" && state.selected) renderNode(state.selected);
+        else if (t === "rel") {
+          var first = RELS[0];
+          if (state.selected) {
+            var rs = relsFor(state.selected);
+            if (rs.length) renderRelation(rs[0].id);
+            else if (first) renderRelation(first.id);
+          } else if (first) renderRelation(first.id);
+        } else renderLinkage();
+      });
+    });
+    document.getElementById("sbClose").addEventListener("click", sbHide);
+    document.getElementById("sbOpen").addEventListener("click", function () { sbShow(state.activeTab); });
+    document.getElementById("btnTableMode").addEventListener("click", function () { setTableMode(!state.tableMode); });
+    document.getElementById("btnCovToggle").addEventListener("click", function () {
+      state.covCollapsed = !state.covCollapsed;
+      document.getElementById("coverageBar").classList.toggle("collapsed", state.covCollapsed);
+      setTimeout(fit, 240);
+    });
+    document.getElementById("btnPriceLink").addEventListener("click", function () {
+      if (state.selectedList.length < 2) {
+        // 若只选了一个，提示如何选第二个
+        renderLinkage(); sbShow("link");
+        return;
+      }
+      renderLinkage(); sbShow("link");
+    });
+    document.getElementById("relSel").addEventListener("change", function () {
+      state.typeFilter = this.value; applyFilters();
+    });
+    document.getElementById("routeSel").addEventListener("change", function () {
+      state.routeFilter = this.value; applyFilters();
+    });
+  }
+
+  // ---------------------------------------------------------------- 初始化
+  function init() {
+    drawDefs();
+    drawLanes();
+    drawEdges();
+    drawLabels();
+    drawNodes();
+    drawMinimap();
+    drawLegend();
+    renderCoverage();
+    renderToolbar();
+    renderTableMode();
+    bindSearch();
+    bindPanZoom();
+    bindUI();
+    renderHead();
+    sbShow("node");
+    // 默认子视图
+    var firstNode = NODES.filter(function (n) { return n.node_role === "target"; })[0] || NODES[0];
+    if (firstNode) { renderNode(firstNode.id); state.selected = firstNode.id; highlightPath(firstNode.id); }
+    updateSelbar();
+    setTimeout(fit, 60);
+    window.addEventListener("resize", function () { setTimeout(fit, 80); });
+    applyFilters();
+
+    // 布局失败 → 主动降级
+    if (D.layoutStatus && !D.layoutStatus.ok) {
+      setTableMode(true);
+      document.getElementById("tmNote").insertAdjacentHTML("beforeend",
+        '<div class="warn">已自动切换到层级表：图谱仍可查看，但请先修复布局问题。</div>');
+    }
+  }
+
+  // ---------------------------------------------------------------- 对外 API
+  window.CHAIN = {
+    selectNode: selectNode,
+    selectRelation: selectRelation,
+    addMulti: addMulti,
+    setTableMode: setTableMode,
+    fit: fit,
+    fitAll: fitAll,
+    zoom: zoomAt,
+    focusNode: focusNode,
+    state: state,
+    counts: function () {
+      return {
+        nodes: Object.keys(NODE_ELS).length,
+        edges: Object.keys(EDGE_ELS).length,
+        dimmed: document.querySelectorAll(".node.dim").length,
+        filtered: document.querySelectorAll(".node.filtered").length,
+        filteredEdges: document.querySelectorAll(".edge.filtered").length
+      };
+    }
+  };
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+</script>
+</body>
+</html>

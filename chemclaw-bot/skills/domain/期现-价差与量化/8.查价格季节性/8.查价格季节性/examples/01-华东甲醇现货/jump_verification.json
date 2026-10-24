@@ -1,0 +1,80 @@
+[
+ {
+  "prev_date": "2025-07-01",
+  "date": "2025-07-02",
+  "prev_price": 2805.0,
+  "price": 2530.0,
+  "chg": -0.098,
+  "title": "7月2日生意社甲醇基准价为2530.00元/吨",
+  "source_url": "https://www.100ppi.com/news/detail-20250702-4508871.html",
+  "body_found": true,
+  "body_price": 2530.0,
+  "body_excerpt": "7月2日生意社甲醇基准价为2530.00元/吨 - 商品动态 - 生意社 用户： 密码： 订阅 | 报价 | 移动版 UK DE JP KR RU ES FR PT SA TR VN 大宗商品涨跌榜-生意社 生 意 宝 风险评",
+  "verdict": "source-confirmed"
+ },
+ {
+  "prev_date": "2026-03-09",
+  "date": "2026-03-10",
+  "prev_price": 2595.0,
+  "price": 2925.0,
+  "chg": 0.1272,
+  "title": "3月10日生意社甲醇基准价为2925.00元/吨",
+  "source_url": "https://www.100ppi.com/news/detail-20260310-5377832.html",
+  "body_found": true,
+  "body_price": 2925.0,
+  "body_excerpt": "3月10日生意社甲醇基准价为2925.00元/吨 - 商品动态 - 生意社 用户： 密码： 订阅 | 报价 | 移动版 UK DE JP KR RU ES FR PT SA TR VN 大宗商品涨跌榜-生意社 生 意 宝 风险评",
+  "verdict": "source-confirmed"
+ },
+ {
+  "prev_date": "2026-03-10",
+  "date": "2026-03-11",
+  "prev_price": 2925.0,
+  "price": 2593.33,
+  "chg": -0.1134,
+  "title": "3月11日生意社甲醇基准价为2593.33元/吨",
+  "source_url": "https://www.100ppi.com/news/detail-20260311-5383405.html",
+  "body_found": true,
+  "body_price": 2593.33,
+  "body_excerpt": "3月11日生意社甲醇基准价为2593.33元/吨 - 商品动态 - 生意社 用户： 密码： 订阅 | 报价 | 移动版 UK DE JP KR RU ES FR PT SA TR VN 大宗商品涨跌榜-生意社 生 意 宝 风险评",
+  "verdict": "source-confirmed"
+ },
+ {
+  "prev_date": "2026-04-08",
+  "date": "2026-04-09",
+  "prev_price": 3700.0,
+  "price": 3313.33,
+  "chg": -0.1045,
+  "title": "4月9日生意社甲醇基准价为3313.33元/吨",
+  "source_url": "https://www.100ppi.com/news/detail-20260409-5508164.html",
+  "body_found": true,
+  "body_price": 3313.33,
+  "body_excerpt": "4月9日生意社甲醇基准价为3313.33元/吨 - 商品动态 - 生意社 用户： 密码： 订阅 | 报价 | 移动版 UK DE JP KR RU ES FR PT SA TR VN 大宗商品涨跌榜-生意社 生 意 宝 风险评",
+  "verdict": "source-confirmed"
+ },
+ {
+  "prev_date": "2026-09-25",
+  "date": "2026-09-28",
+  "prev_price": 4110.0,
+  "price": 4443.33,
+  "chg": 0.0811,
+  "title": "9月28日生意社甲醇基准价为4443.33元/吨",
+  "source_url": "https://www.100ppi.com/news/detail-20260928-6276569.html",
+  "body_found": true,
+  "body_price": 4443.33,
+  "body_excerpt": "9月28日生意社甲醇基准价为4443.33元/吨 - 商品动态 - 生意社 用户： 密码： 订阅 | 报价 | 移动版 UK DE JP KR RU ES FR PT SA TR VN 大宗商品涨跌榜-生意社 生 意 宝 风险评",
+  "verdict": "source-confirmed"
+ },
+ {
+  "prev_date": "2026-10-12",
+  "date": "2026-10-13",
+  "prev_price": 4643.33,
+  "price": 4050.0,
+  "chg": -0.1278,
+  "title": "10月13日生意社甲醇基准价为4050.00元/吨",
+  "source_url": "https://www.100ppi.com/news/detail-20261013-6333968.html",
+  "body_found": true,
+  "body_price": 4050.0,
+  "body_excerpt": "10月13日生意社甲醇基准价为4050.00元/吨 - 商品动态 - 生意社 用户： 密码： 订阅 | 报价 | 移动版 UK DE JP KR RU ES FR PT SA TR VN 大宗商品涨跌榜-生意社 生 意 宝 风险评",
+  "verdict": "source-confirmed"
+ }
+]

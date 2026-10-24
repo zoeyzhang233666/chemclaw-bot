@@ -1,0 +1,135 @@
+{
+  "_comment": "review.json 骨架。findings 每条都要能通过 validate_case（topic/kind/severity/clause_ids/law_refs）与 check_quotes（quotes 必须是原文子串）。",
+  "review_meta": {
+    "review_id": "IPCR-【年】-【标的】-001",
+    "contract_title": "【合同全称】",
+    "contract_no": "【合同编号】",
+    "product": "【产品名】— CAS 【号】",
+    "our_role": "中国买方（进口商）— Buyer / Importer",
+    "counterparty": "【卖方全称】",
+    "review_date": "YYYY-MM-DD",
+    "reviewer": "审阅外贸采购合同 Skill",
+    "pages": 0,
+    "signed": "候签（尚未签署）",
+    "review_scope": "审阅范围：合同正文 X 页（含附件…）。未取得：【材料清单】。",
+    "data_cutoff": "YYYY-MM-DD",
+    "law_check_date": "YYYY-MM-DD",
+    "disclaimer": "本结果仅作为商务审查提醒，不构成法律意见。"
+  },
+  "roles": {
+    "legal": "公司法务",
+    "procurement": "采购/进口部",
+    "supplier": "海外供应商",
+    "finance": "财务/信用证",
+    "ehs": "EHS/合规"
+  },
+  "topics": [
+    { "id": "parties", "name": "主体与标的" },
+    { "id": "quality", "name": "质量与规格" },
+    { "id": "quantity", "name": "数量与计量" },
+    { "id": "payment", "name": "付款与交单" },
+    { "id": "delivery", "name": "交货与装运" },
+    { "id": "docs", "name": "包装与单据" },
+    { "id": "claims", "name": "检验与索赔" },
+    { "id": "risk", "name": "风险与保险" },
+    { "id": "breach", "name": "违约与责任" },
+    { "id": "force_majeure", "name": "不可抗力" },
+    { "id": "dispute", "name": "法律适用与争议" },
+    { "id": "language", "name": "文本与语言" },
+    { "id": "compliance", "name": "合规与危化品" }
+  ],
+  "method": {
+    "steps": [
+      "第 0 步 定边界：确认我方身份、标的、贸易术语与合同语言版本，列出已收与未收文件。",
+      "第 1 步 识别结构：按「封面—主体—实质条款—签署—附件」建条款索引，页码来自原件。",
+      "第 2 步 提取原文：逐段拆条、原文逐字录入、中文对照，附件逐行拆。",
+      "第 3 步 走 12 项清单：逐项标注 已约定 / 缺失 / 表述不清 / 对我方不利。",
+      "第 4 步 追三条主线：付款-单据-交付闭环；风险-所有权-保险三时点；责任上限与救济。",
+      "第 5 步 核数字：违约金率与上限、责任上限、短量允差，换算成绝对金额与天数。",
+      "第 6 步 查法规：标准版本、目录、公约适用、进口许可（记录来源与核对日期）。",
+      "第 7 步 定严重度：1–5 分 + 发生可能性。",
+      "第 8 步 写后果：落到「中国买方 + 进口环节 + 量级」。",
+      "第 9 步 列确认：拆成 法务 / 采购 / 供应商 三张清单。",
+      "第 10 步 出白话：供应商问题翻译成可直接发送的英文；改条款方向写成「要求」。",
+      "第 11 步 标负结果：把未被引用的条款逐一交代。",
+      "第 12 步 自检：逐字引用、数字复算、三处声明、覆盖率。"
+    ],
+    "product_specific": [
+      "【本产品专属：CAS/EC 号、等级口径、关键指标与试验方法、运输储存特性、下游用途差异】"
+    ]
+  },
+  "findings": [
+    {
+      "id": "R01",
+      "topic": "payment",
+      "kind": "写了但对我方不利",
+      "severity": 5,
+      "likelihood": "高",
+      "title": "【风险标题：一句话说清后果】",
+      "title_en": "【English one-liner for the supplier letter】",
+      "clause_ids": ["C16"],
+      "quotes": [
+        { "clause_id": "C16", "text": "【必须是该条款 text 的连续子串】" }
+      ],
+      "what_written": "【中文解释：合同到底怎么写的】",
+      "what_missing": "【缺失/未写清的部分；kind=缺失 时必填】",
+      "business_impact": "【对中国买方的具体后果，尽量带金额或天数】",
+      "impact_basis": "【测算口径；无数字则留空】",
+      "consequences": ["【分条后果 1】", "【分条后果 2】"],
+      "to_confirm": ["【需确认事项 1】", "【需确认事项 2】"],
+      "owner": ["procurement", "legal"],
+      "law_refs": ["【必须与 legal_refs[].name 完全一致】"],
+      "status": "待处理",
+      "owner_internal": "",
+      "supplier_feedback": ""
+    }
+  ],
+  "legal_refs": [
+    {
+      "name": "【法规/标准全称（含通过/发布与施行日期）】",
+      "scope": "【用于对照什么】",
+      "status": "现行",
+      "status_basis": "【核验依据：文号/发布日期 + 来源；核对日期 YYYY-MM-DD】",
+      "relevance": "【对应合同哪一条】",
+      "url": "https://【权威来源】"
+    }
+  ],
+  "confirmations": {
+    "legal": [
+      { "finding_id": "R01", "priority": "高", "question": "【向法务确认的问题】" }
+    ],
+    "procurement": [
+      { "finding_id": "R01", "priority": "高", "question": "【向采购确认的问题】" }
+    ],
+    "supplier": [
+      {
+        "finding_id": "R01",
+        "priority": "高",
+        "question": "【向供应商确认的问题（中文）】",
+        "question_en": "【Same question in sendable English — facts/documents/undertakings only】"
+      }
+    ]
+  },
+  "summary": {
+    "headline": "【一段话讲清最要命的几条及其叠加效应】",
+    "missing_list": ["【未约定事项…】"],
+    "high_points": ["【高风险要点…】"],
+    "calc_basis": {
+      "quantity_mt": 0,
+      "unit_price_usd": 0,
+      "contract_value_usd": 0,
+      "advance_pct": 0,
+      "advance_usd": 0,
+      "balance_usd": 0,
+      "liability_cap_usd": 0,
+      "ld_per_day_usd": 0,
+      "ld_cap_pct": 0,
+      "ld_cap_usd": 0,
+      "note": "金额均由合同原文数字推算，仅用于说明风险量级，不构成损失预测。"
+    },
+    "stats": {}
+  },
+  "negative_results": [
+    { "clause_ids": ["C01"], "note": "【该条款已审，未发现风险的原因】" }
+  ]
+}

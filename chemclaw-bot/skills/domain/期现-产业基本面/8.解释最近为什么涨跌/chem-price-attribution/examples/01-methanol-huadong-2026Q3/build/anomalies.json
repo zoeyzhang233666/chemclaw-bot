@@ -1,0 +1,1536 @@
+{
+ "clusters": [
+  {
+   "start_date": "2016-03-07",
+   "end_date": "2016-03-09",
+   "start_close": 1824.0,
+   "end_close": 1961.0,
+   "chg_pct": 7.511,
+   "n_spike_days": 2,
+   "direction": "up",
+   "spike_dates": [
+    "2016-03-07",
+    "2016-03-09"
+   ]
+  },
+  {
+   "start_date": "2016-04-21",
+   "end_date": "2016-04-21",
+   "start_close": 1982.0,
+   "end_close": 2057.0,
+   "chg_pct": 3.7841,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2016-04-21"
+   ]
+  },
+  {
+   "start_date": "2017-05-04",
+   "end_date": "2017-05-05",
+   "start_close": 2380.0,
+   "end_close": 2231.0,
+   "chg_pct": -6.2605,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2017-05-04"
+   ]
+  },
+  {
+   "start_date": "2017-05-19",
+   "end_date": "2017-05-19",
+   "start_close": 2278.0,
+   "end_close": 2402.0,
+   "chg_pct": 5.4434,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2017-05-19"
+   ]
+  },
+  {
+   "start_date": "2017-07-26",
+   "end_date": "2017-07-26",
+   "start_close": 2482.0,
+   "end_close": 2379.0,
+   "chg_pct": -4.1499,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2017-07-26"
+   ]
+  },
+  {
+   "start_date": "2017-09-21",
+   "end_date": "2017-09-21",
+   "start_close": 2803.0,
+   "end_close": 2680.0,
+   "chg_pct": -4.3882,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2017-09-21"
+   ]
+  },
+  {
+   "start_date": "2018-03-23",
+   "end_date": "2018-03-27",
+   "start_close": 2818.0,
+   "end_close": 2684.0,
+   "chg_pct": -4.7551,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2018-03-23"
+   ]
+  },
+  {
+   "start_date": "2018-08-06",
+   "end_date": "2018-08-07",
+   "start_close": 3121.0,
+   "end_close": 3237.0,
+   "chg_pct": 3.7168,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2018-08-06"
+   ]
+  },
+  {
+   "start_date": "2018-08-14",
+   "end_date": "2018-08-14",
+   "start_close": 3256.0,
+   "end_close": 3361.0,
+   "chg_pct": 3.2248,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2018-08-14"
+   ]
+  },
+  {
+   "start_date": "2018-08-20",
+   "end_date": "2018-08-23",
+   "start_close": 3266.0,
+   "end_close": 3309.0,
+   "chg_pct": 1.3166,
+   "n_spike_days": 2,
+   "direction": "up",
+   "spike_dates": [
+    "2018-08-20",
+    "2018-08-23"
+   ]
+  },
+  {
+   "start_date": "2018-11-21",
+   "end_date": "2018-11-21",
+   "start_close": 2677.0,
+   "end_close": 2560.0,
+   "chg_pct": -4.3706,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2018-11-21"
+   ]
+  },
+  {
+   "start_date": "2018-12-04",
+   "end_date": "2018-12-05",
+   "start_close": 2308.0,
+   "end_close": 2487.0,
+   "chg_pct": 7.7556,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2018-12-04"
+   ]
+  },
+  {
+   "start_date": "2019-09-18",
+   "end_date": "2019-09-19",
+   "start_close": 2390.0,
+   "end_close": 2299.0,
+   "chg_pct": -3.8075,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2019-09-18"
+   ]
+  },
+  {
+   "start_date": "2019-11-25",
+   "end_date": "2019-11-25",
+   "start_close": 1945.0,
+   "end_close": 2007.0,
+   "chg_pct": 3.1877,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2019-11-25"
+   ]
+  },
+  {
+   "start_date": "2020-04-23",
+   "end_date": "2020-04-23",
+   "start_close": 1660.0,
+   "end_close": 1735.0,
+   "chg_pct": 4.5181,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2020-04-23"
+   ]
+  },
+  {
+   "start_date": "2021-09-17",
+   "end_date": "2021-09-17",
+   "start_close": 3125.0,
+   "end_close": 3025.0,
+   "chg_pct": -3.2,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2021-09-17"
+   ]
+  },
+  {
+   "start_date": "2021-09-27",
+   "end_date": "2021-10-13",
+   "start_close": 3218.0,
+   "end_close": 3857.0,
+   "chg_pct": 19.8571,
+   "n_spike_days": 4,
+   "direction": "up",
+   "spike_dates": [
+    "2021-09-27",
+    "2021-09-30",
+    "2021-10-11",
+    "2021-10-13"
+   ]
+  },
+  {
+   "start_date": "2021-10-27",
+   "end_date": "2021-10-28",
+   "start_close": 3177.0,
+   "end_close": 2773.0,
+   "chg_pct": -12.7164,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2021-10-27"
+   ]
+  },
+  {
+   "start_date": "2022-03-07",
+   "end_date": "2022-03-11",
+   "start_close": 3060.0,
+   "end_close": 3130.0,
+   "chg_pct": 2.2876,
+   "n_spike_days": 2,
+   "direction": "up",
+   "spike_dates": [
+    "2022-03-07",
+    "2022-03-10"
+   ]
+  },
+  {
+   "start_date": "2022-06-24",
+   "end_date": "2022-06-24",
+   "start_close": 2650.0,
+   "end_close": 2544.0,
+   "chg_pct": -4.0,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2022-06-24"
+   ]
+  },
+  {
+   "start_date": "2022-07-20",
+   "end_date": "2022-07-20",
+   "start_close": 2339.0,
+   "end_close": 2435.0,
+   "chg_pct": 4.1043,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2022-07-20"
+   ]
+  },
+  {
+   "start_date": "2022-11-11",
+   "end_date": "2022-11-16",
+   "start_close": 2472.0,
+   "end_close": 2610.0,
+   "chg_pct": 5.5825,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2022-11-11"
+   ]
+  },
+  {
+   "start_date": "2023-03-16",
+   "end_date": "2023-03-16",
+   "start_close": 2554.0,
+   "end_close": 2471.0,
+   "chg_pct": -3.2498,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2023-03-16"
+   ]
+  },
+  {
+   "start_date": "2023-05-22",
+   "end_date": "2023-05-23",
+   "start_close": 2167.0,
+   "end_close": 2057.0,
+   "chg_pct": -5.0761,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2023-05-22"
+   ]
+  },
+  {
+   "start_date": "2024-01-10",
+   "end_date": "2024-01-10",
+   "start_close": 2384.0,
+   "end_close": 2299.0,
+   "chg_pct": -3.5654,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2024-01-10"
+   ]
+  },
+  {
+   "start_date": "2024-09-24",
+   "end_date": "2024-10-08",
+   "start_close": 2339.0,
+   "end_close": 2567.0,
+   "chg_pct": 9.7478,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2024-09-24"
+   ]
+  },
+  {
+   "start_date": "2024-09-30",
+   "end_date": "2024-10-08",
+   "start_close": 2448.0,
+   "end_close": 2567.0,
+   "chg_pct": 4.8611,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2024-09-30"
+   ]
+  },
+  {
+   "start_date": "2025-01-03",
+   "end_date": "2025-01-06",
+   "start_close": 2707.0,
+   "end_close": 2591.0,
+   "chg_pct": -4.2852,
+   "n_spike_days": 2,
+   "direction": "down",
+   "spike_dates": [
+    "2025-01-03",
+    "2025-01-06"
+   ]
+  },
+  {
+   "start_date": "2025-03-12",
+   "end_date": "2025-03-12",
+   "start_close": 2589.0,
+   "end_close": 2526.0,
+   "chg_pct": -2.4334,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2025-03-12"
+   ]
+  },
+  {
+   "start_date": "2025-05-14",
+   "end_date": "2025-05-14",
+   "start_close": 2291.0,
+   "end_close": 2365.0,
+   "chg_pct": 3.23,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2025-05-14"
+   ]
+  },
+  {
+   "start_date": "2025-06-13",
+   "end_date": "2025-06-16",
+   "start_close": 2290.0,
+   "end_close": 2464.0,
+   "chg_pct": 7.5983,
+   "n_spike_days": 2,
+   "direction": "up",
+   "spike_dates": [
+    "2025-06-13",
+    "2025-06-16"
+   ]
+  },
+  {
+   "start_date": "2025-06-24",
+   "end_date": "2025-06-24",
+   "start_close": 2504.0,
+   "end_close": 2379.0,
+   "chg_pct": -4.992,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2025-06-24"
+   ]
+  },
+  {
+   "start_date": "2025-10-14",
+   "end_date": "2025-10-14",
+   "start_close": 2342.0,
+   "end_close": 2274.0,
+   "chg_pct": -2.9035,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2025-10-14"
+   ]
+  },
+  {
+   "start_date": "2025-11-14",
+   "end_date": "2025-11-17",
+   "start_close": 2103.0,
+   "end_close": 2029.0,
+   "chg_pct": -3.5188,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2025-11-14"
+   ]
+  },
+  {
+   "start_date": "2025-11-24",
+   "end_date": "2025-11-24",
+   "start_close": 2004.0,
+   "end_close": 2077.0,
+   "chg_pct": 3.6427,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2025-11-24"
+   ]
+  },
+  {
+   "start_date": "2026-01-06",
+   "end_date": "2026-01-06",
+   "start_close": 2215.0,
+   "end_close": 2293.0,
+   "chg_pct": 3.5214,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2026-01-06"
+   ]
+  },
+  {
+   "start_date": "2026-03-02",
+   "end_date": "2026-03-03",
+   "start_close": 2179.0,
+   "end_close": 2557.0,
+   "chg_pct": 17.3474,
+   "n_spike_days": 2,
+   "direction": "up",
+   "spike_dates": [
+    "2026-03-02",
+    "2026-03-03"
+   ]
+  },
+  {
+   "start_date": "2026-03-09",
+   "end_date": "2026-03-09",
+   "start_close": 2586.0,
+   "end_close": 2830.0,
+   "chg_pct": 9.4354,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2026-03-09"
+   ]
+  },
+  {
+   "start_date": "2026-03-19",
+   "end_date": "2026-03-19",
+   "start_close": 2912.0,
+   "end_close": 3182.0,
+   "chg_pct": 9.272,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2026-03-19"
+   ]
+  },
+  {
+   "start_date": "2026-07-14",
+   "end_date": "2026-07-15",
+   "start_close": 2516.0,
+   "end_close": 2648.0,
+   "chg_pct": 5.2464,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2026-07-14"
+   ]
+  },
+  {
+   "start_date": "2026-07-20",
+   "end_date": "2026-07-20",
+   "start_close": 2630.0,
+   "end_close": 2802.0,
+   "chg_pct": 6.5399,
+   "n_spike_days": 1,
+   "direction": "up",
+   "spike_dates": [
+    "2026-07-20"
+   ]
+  },
+  {
+   "start_date": "2026-07-27",
+   "end_date": "2026-07-28",
+   "start_close": 2755.0,
+   "end_close": 2601.0,
+   "chg_pct": -5.5898,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2026-07-27"
+   ]
+  },
+  {
+   "start_date": "2026-08-26",
+   "end_date": "2026-08-26",
+   "start_close": 2925.0,
+   "end_close": 2769.0,
+   "chg_pct": -5.3333,
+   "n_spike_days": 1,
+   "direction": "down",
+   "spike_dates": [
+    "2026-08-26"
+   ]
+  }
+ ],
+ "phases": [
+  {
+   "start_date": "2026-06-30",
+   "end_date": "2026-07-02",
+   "start_close": 2428.0,
+   "end_close": 2347.0,
+   "chg_pct": -3.3361,
+   "n_days": 3,
+   "max": 2428.0,
+   "min": 2347.0,
+   "vol_daily_pct": 1.5424,
+   "end_kind": "trough"
+  },
+  {
+   "start_date": "2026-07-02",
+   "end_date": "2026-07-20",
+   "start_close": 2347.0,
+   "end_close": 2802.0,
+   "chg_pct": 19.3865,
+   "n_days": 13,
+   "max": 2802.0,
+   "min": 2347.0,
+   "vol_daily_pct": 2.1749,
+   "end_kind": "peak"
+  },
+  {
+   "start_date": "2026-07-20",
+   "end_date": "2026-08-06",
+   "start_close": 2802.0,
+   "end_close": 2495.0,
+   "chg_pct": -10.9565,
+   "n_days": 14,
+   "max": 2802.0,
+   "min": 2495.0,
+   "vol_daily_pct": 1.8822,
+   "end_kind": "trough"
+  },
+  {
+   "start_date": "2026-08-06",
+   "end_date": "2026-08-25",
+   "start_close": 2495.0,
+   "end_close": 2925.0,
+   "chg_pct": 17.2345,
+   "n_days": 14,
+   "max": 2925.0,
+   "min": 2495.0,
+   "vol_daily_pct": 1.2834,
+   "end_kind": "peak"
+  },
+  {
+   "start_date": "2026-08-25",
+   "end_date": "2026-08-26",
+   "start_close": 2925.0,
+   "end_close": 2769.0,
+   "chg_pct": -5.3333,
+   "n_days": 2,
+   "max": 2925.0,
+   "min": 2769.0,
+   "vol_daily_pct": null,
+   "end_kind": "trough"
+  },
+  {
+   "start_date": "2026-08-26",
+   "end_date": "2026-09-10",
+   "start_close": 2769.0,
+   "end_close": 3430.0,
+   "chg_pct": 23.8714,
+   "n_days": 12,
+   "max": 3430.0,
+   "min": 2769.0,
+   "vol_daily_pct": 1.7915,
+   "end_kind": "peak"
+  },
+  {
+   "start_date": "2026-09-10",
+   "end_date": "2026-09-23",
+   "start_close": 3430.0,
+   "end_close": 2833.0,
+   "chg_pct": -17.4052,
+   "n_days": 10,
+   "max": 3430.0,
+   "min": 2833.0,
+   "vol_daily_pct": 3.8021,
+   "end_kind": "trough"
+  },
+  {
+   "start_date": "2026-09-23",
+   "end_date": "2026-10-09",
+   "start_close": 2833.0,
+   "end_close": 3338.0,
+   "chg_pct": 17.8256,
+   "n_days": 7,
+   "max": 3338.0,
+   "min": 2833.0,
+   "vol_daily_pct": 2.9175,
+   "end_kind": "peak"
+  },
+  {
+   "start_date": "2026-10-09",
+   "end_date": "2026-10-19",
+   "start_close": 3338.0,
+   "end_close": 3143.0,
+   "chg_pct": -5.8418,
+   "n_days": 7,
+   "max": 3338.0,
+   "min": 3143.0,
+   "vol_daily_pct": 1.6519,
+   "end_kind": "trough(未确认)"
+  }
+ ],
+ "params": {
+  "z_thr": 2.0,
+  "vol_z_thr": 1.5,
+  "cluster_gap": 3,
+  "phase_thr": 3.0,
+  "lookback": 60
+ },
+ "bars_in_window": [
+  {
+   "date": "2026-06-30",
+   "close": 2428.0,
+   "ret": -1.3008,
+   "z": -0.2601,
+   "volume": 1062345.0,
+   "vol_z": 0.0687,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-01",
+   "close": 2350.0,
+   "ret": -3.2125,
+   "z": -0.8486,
+   "volume": 1060905.0,
+   "vol_z": 0.1033,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-02",
+   "close": 2347.0,
+   "ret": -0.1277,
+   "z": 0.0725,
+   "volume": 1091180.0,
+   "vol_z": 0.2291,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-03",
+   "close": 2377.0,
+   "ret": 1.2782,
+   "z": 0.5826,
+   "volume": 1108844.0,
+   "vol_z": 0.3241,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-06",
+   "close": 2363.0,
+   "ret": -0.589,
+   "z": -0.0196,
+   "volume": 861298.0,
+   "vol_z": -0.2274,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-07",
+   "close": 2404.0,
+   "ret": 1.7351,
+   "z": 0.8198,
+   "volume": 908267.0,
+   "vol_z": -0.0784,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-08",
+   "close": 2488.0,
+   "ret": 3.4942,
+   "z": 1.5667,
+   "volume": 1717209.0,
+   "vol_z": 2.4483,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-09",
+   "close": 2488.0,
+   "ret": 0.0,
+   "z": 0.1551,
+   "volume": 1469852.0,
+   "vol_z": 1.737,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-10",
+   "close": 2480.0,
+   "ret": -0.3215,
+   "z": 0.008,
+   "volume": 997470.0,
+   "vol_z": 0.2999,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-13",
+   "close": 2516.0,
+   "ret": 1.4516,
+   "z": 0.7417,
+   "volume": 1238042.0,
+   "vol_z": 1.1482,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-14",
+   "close": 2632.0,
+   "ret": 4.6105,
+   "z": 2.3198,
+   "volume": 1970588.0,
+   "vol_z": 3.5641,
+   "price_only": false,
+   "vol_only": false,
+   "spike": true,
+   "extreme": true
+  },
+  {
+   "date": "2026-07-15",
+   "close": 2648.0,
+   "ret": 0.6079,
+   "z": 0.332,
+   "volume": 1255135.0,
+   "vol_z": 1.0025,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-16",
+   "close": 2633.0,
+   "ret": -0.5665,
+   "z": -0.2035,
+   "volume": 1155401.0,
+   "vol_z": 0.6656,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-17",
+   "close": 2630.0,
+   "ret": -0.1139,
+   "z": 0.0155,
+   "volume": 846093.0,
+   "vol_z": -0.28,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-20",
+   "close": 2802.0,
+   "ret": 6.5399,
+   "z": 3.1464,
+   "volume": 1792132.0,
+   "vol_z": 2.7113,
+   "price_only": false,
+   "vol_only": false,
+   "spike": true,
+   "extreme": true
+  },
+  {
+   "date": "2026-07-21",
+   "close": 2707.0,
+   "ret": -3.3904,
+   "z": -1.4957,
+   "volume": 1402896.0,
+   "vol_z": 1.3671,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-22",
+   "close": 2718.0,
+   "ret": 0.4064,
+   "z": 0.2005,
+   "volume": 1404678.0,
+   "vol_z": 1.3243,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-23",
+   "close": 2756.0,
+   "ret": 1.3981,
+   "z": 0.6351,
+   "volume": 1253549.0,
+   "vol_z": 0.8424,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-24",
+   "close": 2755.0,
+   "ret": -0.0363,
+   "z": 0.0081,
+   "volume": 1362580.0,
+   "vol_z": 1.1296,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-27",
+   "close": 2610.0,
+   "ret": -5.2632,
+   "z": -2.2461,
+   "volume": 1533522.0,
+   "vol_z": 1.585,
+   "price_only": false,
+   "vol_only": false,
+   "spike": true,
+   "extreme": true
+  },
+  {
+   "date": "2026-07-28",
+   "close": 2601.0,
+   "ret": -0.3448,
+   "z": -0.055,
+   "volume": 1015801.0,
+   "vol_z": 0.0521,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-29",
+   "close": 2649.0,
+   "ret": 1.8454,
+   "z": 0.8685,
+   "volume": 879655.0,
+   "vol_z": -0.3573,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-30",
+   "close": 2657.0,
+   "ret": 0.302,
+   "z": 0.2036,
+   "volume": 1086136.0,
+   "vol_z": 0.2238,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-07-31",
+   "close": 2618.0,
+   "ret": -1.4678,
+   "z": -0.5336,
+   "volume": 838475.0,
+   "vol_z": -0.5361,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-03",
+   "close": 2594.0,
+   "ret": -0.9167,
+   "z": -0.3474,
+   "volume": 1197855.0,
+   "vol_z": 0.5381,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-04",
+   "close": 2586.0,
+   "ret": -0.3084,
+   "z": -0.0768,
+   "volume": 967986.0,
+   "vol_z": -0.1687,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-05",
+   "close": 2517.0,
+   "ret": -2.6682,
+   "z": -1.107,
+   "volume": 1264881.0,
+   "vol_z": 0.7088,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-06",
+   "close": 2495.0,
+   "ret": -0.8741,
+   "z": -0.2869,
+   "volume": 1266180.0,
+   "vol_z": 0.6863,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-07",
+   "close": 2500.0,
+   "ret": 0.2004,
+   "z": 0.187,
+   "volume": 586330.0,
+   "vol_z": -1.4313,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-10",
+   "close": 2531.0,
+   "ret": 1.24,
+   "z": 0.6301,
+   "volume": 489909.0,
+   "vol_z": -1.7302,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-11",
+   "close": 2633.0,
+   "ret": 4.03,
+   "z": 1.8596,
+   "volume": 709718.0,
+   "vol_z": -1.0193,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-12",
+   "close": 2607.0,
+   "ret": -0.9875,
+   "z": -0.3492,
+   "volume": 594633.0,
+   "vol_z": -1.3642,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-13",
+   "close": 2645.0,
+   "ret": 1.4576,
+   "z": 0.7092,
+   "volume": 707907.0,
+   "vol_z": -1.018,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-14",
+   "close": 2687.0,
+   "ret": 1.5879,
+   "z": 0.7531,
+   "volume": 1016105.0,
+   "vol_z": -0.0973,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-17",
+   "close": 2735.0,
+   "ret": 1.7864,
+   "z": 0.8221,
+   "volume": 1092763.0,
+   "vol_z": 0.115,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-18",
+   "close": 2776.0,
+   "ret": 1.4991,
+   "z": 0.6753,
+   "volume": 1460630.0,
+   "vol_z": 1.2437,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-19",
+   "close": 2843.0,
+   "ret": 2.4135,
+   "z": 1.0428,
+   "volume": 1859342.0,
+   "vol_z": 2.4577,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-20",
+   "close": 2837.0,
+   "ret": -0.211,
+   "z": -0.1032,
+   "volume": 1557465.0,
+   "vol_z": 1.4191,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-21",
+   "close": 2909.0,
+   "ret": 2.5379,
+   "z": 1.0633,
+   "volume": 1957108.0,
+   "vol_z": 2.5617,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-24",
+   "close": 2914.0,
+   "ret": 0.1719,
+   "z": 0.0402,
+   "volume": 1962523.0,
+   "vol_z": 2.4157,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-25",
+   "close": 2925.0,
+   "ret": 0.3775,
+   "z": 0.1183,
+   "volume": 2317854.0,
+   "vol_z": 3.2557,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-26",
+   "close": 2769.0,
+   "ret": -5.3333,
+   "z": -2.3097,
+   "volume": 2389981.0,
+   "vol_z": 3.1537,
+   "price_only": false,
+   "vol_only": false,
+   "spike": true,
+   "extreme": true
+  },
+  {
+   "date": "2026-08-27",
+   "close": 2778.0,
+   "ret": 0.325,
+   "z": 0.1506,
+   "volume": 1964664.0,
+   "vol_z": 1.857,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-28",
+   "close": 2840.0,
+   "ret": 2.2318,
+   "z": 0.9426,
+   "volume": 1888117.0,
+   "vol_z": 1.604,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-08-31",
+   "close": 2983.0,
+   "ret": 5.0352,
+   "z": 2.0636,
+   "volume": 1540186.0,
+   "vol_z": 0.7271,
+   "price_only": true,
+   "vol_only": false,
+   "spike": false,
+   "extreme": true
+  },
+  {
+   "date": "2026-09-01",
+   "close": 3069.0,
+   "ret": 2.883,
+   "z": 1.1156,
+   "volume": 2370894.0,
+   "vol_z": 2.6969,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-02",
+   "close": 3183.0,
+   "ret": 3.7146,
+   "z": 1.4905,
+   "volume": 2753905.0,
+   "vol_z": 3.3756,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-03",
+   "close": 3158.0,
+   "ret": -0.7854,
+   "z": -0.3774,
+   "volume": 3189794.0,
+   "vol_z": 3.967,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-04",
+   "close": 3175.0,
+   "ret": 0.5383,
+   "z": 0.1636,
+   "volume": 2600450.0,
+   "vol_z": 2.3759,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-07",
+   "close": 3212.0,
+   "ret": 1.1654,
+   "z": 0.426,
+   "volume": 2486680.0,
+   "vol_z": 2.0274,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-08",
+   "close": 3359.0,
+   "ret": 4.5766,
+   "z": 1.792,
+   "volume": 2956932.0,
+   "vol_z": 2.7527,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-09",
+   "close": 3411.0,
+   "ret": 1.5481,
+   "z": 0.5202,
+   "volume": 3167525.0,
+   "vol_z": 2.9195,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-10",
+   "close": 3430.0,
+   "ret": 0.557,
+   "z": 0.0579,
+   "volume": 3804381.0,
+   "vol_z": 3.6798,
+   "price_only": false,
+   "vol_only": true,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-11",
+   "close": 3016.0,
+   "ret": -12.07,
+   "z": -5.6217,
+   "volume": 835215.0,
+   "vol_z": -0.9185,
+   "price_only": true,
+   "vol_only": false,
+   "spike": false,
+   "extreme": true
+  },
+  {
+   "date": "2026-09-14",
+   "close": 3016.0,
+   "ret": 0.0,
+   "z": -0.1126,
+   "volume": 648274.0,
+   "vol_z": -1.1715,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-15",
+   "close": 3016.0,
+   "ret": 0.0,
+   "z": -0.122,
+   "volume": 688297.0,
+   "vol_z": -1.1008,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-16",
+   "close": 3052.0,
+   "ret": 1.1936,
+   "z": 0.3082,
+   "volume": 807779.0,
+   "vol_z": -0.9197,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-17",
+   "close": 2995.0,
+   "ret": -1.8676,
+   "z": -0.8359,
+   "volume": 610236.0,
+   "vol_z": -1.1848,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-18",
+   "close": 2952.0,
+   "ret": -1.4357,
+   "z": -0.6707,
+   "volume": 713009.0,
+   "vol_z": -1.0119,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-21",
+   "close": 2942.0,
+   "ret": -0.3388,
+   "z": -0.2572,
+   "volume": 771528.0,
+   "vol_z": -0.9183,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-22",
+   "close": 2944.0,
+   "ret": 0.068,
+   "z": -0.0986,
+   "volume": 683656.0,
+   "vol_z": -1.0239,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-23",
+   "close": 2833.0,
+   "ret": -3.7704,
+   "z": -1.5188,
+   "volume": 865565.0,
+   "vol_z": -0.7647,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-24",
+   "close": 2960.0,
+   "ret": 4.4829,
+   "z": 1.5124,
+   "volume": 994519.0,
+   "vol_z": -0.5857,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-28",
+   "close": 2941.0,
+   "ret": -0.6419,
+   "z": -0.3842,
+   "volume": 604302.0,
+   "vol_z": -1.1045,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-29",
+   "close": 2953.0,
+   "ret": 0.408,
+   "z": 0.0046,
+   "volume": 824100.0,
+   "vol_z": -0.7927,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-09-30",
+   "close": 2972.0,
+   "ret": 0.6434,
+   "z": 0.0833,
+   "volume": 617789.0,
+   "vol_z": -1.0646,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-10-08",
+   "close": 3200.0,
+   "ret": 7.6716,
+   "z": 2.6225,
+   "volume": 633499.0,
+   "vol_z": -1.0317,
+   "price_only": true,
+   "vol_only": false,
+   "spike": false,
+   "extreme": true
+  },
+  {
+   "date": "2026-10-09",
+   "close": 3338.0,
+   "ret": 4.3125,
+   "z": 1.3266,
+   "volume": 1493099.0,
+   "vol_z": 0.1234,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-10-12",
+   "close": 3229.0,
+   "ret": -3.2654,
+   "z": -1.2916,
+   "volume": 1740113.0,
+   "vol_z": 0.4459,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-10-13",
+   "close": 3235.0,
+   "ret": 0.1858,
+   "z": -0.1007,
+   "volume": 1305280.0,
+   "vol_z": -0.139,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-10-14",
+   "close": 3262.0,
+   "ret": 0.8346,
+   "z": 0.1241,
+   "volume": 1378408.0,
+   "vol_z": -0.0447,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-10-15",
+   "close": 3170.0,
+   "ret": -2.8204,
+   "z": -1.1,
+   "volume": 1452554.0,
+   "vol_z": 0.0655,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-10-16",
+   "close": 3192.0,
+   "ret": 0.694,
+   "z": 0.118,
+   "volume": 1561960.0,
+   "vol_z": 0.2051,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  },
+  {
+   "date": "2026-10-19",
+   "close": 3143.0,
+   "ret": -1.5351,
+   "z": -0.6431,
+   "volume": 1963474.0,
+   "vol_z": 0.7247,
+   "price_only": false,
+   "vol_only": false,
+   "spike": false,
+   "extreme": false
+  }
+ ]
+}

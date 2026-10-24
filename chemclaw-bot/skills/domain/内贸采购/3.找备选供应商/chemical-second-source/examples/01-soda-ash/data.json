@@ -1,0 +1,1787 @@
+{
+  "meta": {
+    "title": "重质纯碱 · 第二供应源备选池",
+    "product": "重质纯碱（碳酸钠）",
+    "product_short": "重质纯碱",
+    "unit": "万吨/年",
+    "asof": "2026-10-19",
+    "buyer_site": "江苏苏州（工业园区）",
+    "buyer_short": "苏州",
+    "volume": "800 吨/月",
+    "volume_t": 800,
+    "volume_period": "月",
+    "spec": "GB/T 210.1-2004 II类优等品；Na2CO3 ≥99.2%；NaCl ≤0.6%；重质（堆密度 0.9–1.1 g/cm³）",
+    "use_case": "浮法 / 光伏玻璃",
+    "scenario": "示例场景：现有供应商为山东海化（氨碱，潍坊），收货地江苏苏州工业园区，月采购 800 吨重质纯碱，用于浮法/光伏玻璃；目标是建立可验证的第二供应源，不直接替换现有供应商。",
+    "qualification_label": "郑商所纯碱免检交割品牌",
+    "qualification_short": "免检",
+    "grade_label": "重质 / 品牌",
+    "near_km": 500,
+    "distance_bands": [
+      {
+        "label": "≤300 km",
+        "max": 300
+      },
+      {
+        "label": "300–800 km",
+        "max": 800
+      },
+      {
+        "label": "800–1,500 km",
+        "max": 1500
+      },
+      {
+        "label": ">1,500 km",
+        "max": 99999
+      }
+    ],
+    "processes": [
+      {
+        "name": "氨碱",
+        "color": "#b45309",
+        "cost_score": 52
+      },
+      {
+        "name": "联碱",
+        "color": "#1f5eff",
+        "cost_score": 72
+      },
+      {
+        "name": "天然碱",
+        "color": "#067647",
+        "cost_score": 100
+      }
+    ],
+    "risk_categories": [
+      "财务",
+      "装置",
+      "资质",
+      "同源",
+      "行业"
+    ],
+    "same_source_note": "山东海化与山东海天生物名称相近、同处山东，但不是同一集团：海化属潍坊市国资委，海天生物为金晶科技全资。另：远兴能源与中源化学是母子公司，同时入选只能算一个供应源；中盐昆山与昆仑碱业同属中国盐业集团，但不同法人/基地。",
+    "spec_note": "首样建议：每家 20–50 kg × 3 批；检测周期 7–10 个工作日；判定依据客户内控 + GB/T 210.1-2004。新装置（连云港碱业、江苏德邦）追加 3 批稳定性验证；天然碱（远兴/中源/昆仑）重点看粒度与白度。",
+    "process_insight": "氨碱成本最高但质量稳定；联碱副产氯化铵，成本随氯化铵价格波动；天然碱成本最低，但远兴/中源同源，且远兴牌非免检。工艺只决定成本倾向，不决定规格兼容。",
+    "disclaimer": "本页为采购研究辅助材料，不构成供应商选择、替换或授标建议。产能、财务、资质均为公开口径；标注“待核实”的事项必须以证照、COA、现场审核为准。排序 ≠ 建议，决策权在采购。",
+    "action_window": "90 天",
+    "price_assumption": 1150,
+    "method_note": "先锚定规格，再找“生产企业”而非贸易商；同源关系与试样结果优先于产能排名。",
+    "method_steps": [
+      {
+        "label": "规格锚定",
+        "text": "把现有供应商的牌号、COA、内控指标拆成 9 项可检测指标；先定义“兼容”，再找厂。"
+      },
+      {
+        "label": "厂家身份",
+        "text": "以统一社会信用代码/股票代码/集团股权穿透确认“生产企业”，排除贸易商与贴牌商。"
+      },
+      {
+        "label": "产能与区位",
+        "text": "公开产能、投产时间、重质比例、到苏州运距/运输方式；估算运费区间。"
+      },
+      {
+        "label": "资质与风险",
+        "text": "郑商所免检品牌、SC/质量体系、环保/安全/财务公开记录；区分“已公开”与“待核实”。"
+      },
+      {
+        "label": "试样与审厂",
+        "text": "新装置、新工艺、非免检品牌一律首样；首样 20–50 kg × 3 批，按 9 项指标逐项验证。"
+      }
+    ],
+    "key_judgements": [
+      {
+        "label": "池子结构",
+        "text": "12 家备选覆盖氨碱/联碱/天然碱；7 家为郑商所免检品牌，5 家非免检；5 家距苏州 ≤500 km。"
+      },
+      {
+        "label": "近场优先",
+        "text": "连云港碱业、江苏德邦、中盐昆山、华昌化工、苏盐井神运距 150–400 km，是替代山东海化的最近选项；但前两家为 2025 年新装置。"
+      },
+      {
+        "label": "成本分层",
+        "text": "天然碱成本最低（远兴/中源/昆仑），联碱次之，氨碱最高；低价期氨碱亏损面扩大，现有供应商 2025 年亏 13.88 亿元。"
+      },
+      {
+        "label": "同源陷阱",
+        "text": "远兴↔中源只能算一个源；中盐昆山↔昆仑同集团需核销售政策；海天↔金晶存在纵向竞争；海化与海天生物不是同集团。"
+      },
+      {
+        "label": "新装置",
+        "text": "连云港碱业、江苏德邦为 2025 年新装置，重质比例/粒度/白度必须 3–6 个月稳定性验证，不能只看“已贯通”。"
+      },
+      {
+        "label": "决策边界",
+        "text": "不替采购决定是否更换；建议先选 2–3 家试样，再谈 70/30 双源与最小起订、账期、质量赔付。"
+      }
+    ],
+    "dd_items": [
+      {
+        "label": "营业执照\n/股权",
+        "hint": "营业执照、股权穿透、统一社会信用代码"
+      },
+      {
+        "label": "生产许可\n/SC",
+        "hint": "纯碱生产许可、食品级 SC（如适用）"
+      },
+      {
+        "label": "质量体系",
+        "hint": "ISO9001/14001/45001"
+      },
+      {
+        "label": "免检/交割\n资质",
+        "hint": "郑商所免检品牌、交割库/质检报告"
+      },
+      {
+        "label": "近12月\nCOA",
+        "hint": "至少 3 批 COA/出厂检验报告"
+      },
+      {
+        "label": "产能/产量\n证明",
+        "hint": "环评/公告/统计/审计报告"
+      },
+      {
+        "label": "环保/排污",
+        "hint": "排污许可、环保处罚、园区合规"
+      },
+      {
+        "label": "安全/事故",
+        "hint": "安全生产许可、事故/处罚记录"
+      },
+      {
+        "label": "财务/涉诉",
+        "hint": "审计报告、征信、重大诉讼"
+      },
+      {
+        "label": "玻璃客户\n案例",
+        "hint": "浮法/光伏玻璃客户与联系人"
+      },
+      {
+        "label": "物流/码头",
+        "hint": "到苏州的汽运/内河/铁路条件"
+      },
+      {
+        "label": "合同/条款",
+        "hint": "最小起订、账期、赔付、包装、巡检"
+      },
+      {
+        "label": "样品/封样",
+        "hint": "首样、封样、留样与复检规则"
+      }
+    ],
+    "stamp_note": "公开信息研究 · 非报价 · 非决策建议",
+    "fin_year": "2025",
+    "output_year": "2024"
+  },
+  "params": {
+    "product": "重质纯碱（碳酸钠）",
+    "spec": "GB/T 210.1-2004 II类优等品；Na2CO3 ≥99.2%；NaCl ≤0.6%；重质（堆密度 0.9–1.1 g/cm³）",
+    "monthly": 800,
+    "receiver": "江苏省苏州市（工业园区）",
+    "baseline": "山东海化股份有限公司",
+    "freight_rate": 0.45,
+    "water_rate": 0.12,
+    "truck_load_t": 30,
+    "price_assumption": 1150
+  },
+  "baseline": {
+    "id": "S00",
+    "name": "山东海化股份有限公司",
+    "short": "山东海化",
+    "role": "现有供应商",
+    "province": "山东",
+    "city": "潍坊",
+    "site": "潍坊滨海经济技术开发区（纯碱厂）",
+    "distance": 760,
+    "transport": "汽运 / 铁路",
+    "freight_low": 200,
+    "freight_high": 360,
+    "process": "氨碱",
+    "capacity": 280,
+    "capacity_note": "老线120 + 新线160，单套装置规模国内前列",
+    "brand": "鸢都牌",
+    "listed": "深交所",
+    "code": "000822",
+    "group": "山东海化集团",
+    "controller": "潍坊市国资委",
+    "ownership": "地方国企",
+    "employees": "纯碱厂 1,886 人",
+    "revenue": "47.45",
+    "profit": "-13.88",
+    "output": "—",
+    "products": "纯碱、原盐、烧碱、溴素、氯化钙、小苏打",
+    "spec_fit": "基准",
+    "sample": "—",
+    "risk_score": 4,
+    "risk_level": "中高",
+    "same_source": "无",
+    "same_note": "海化集团体系内无第二纯碱上市平台；与山东海天生物（金晶集团）不是同一集团，名称易混淆。",
+    "diff": "基准：氨碱 280 万吨、免检“鸢都牌”、距苏州约 760 km；2025 年归母净利 -13.88 亿元。",
+    "risk_summary": "2025 年营收 47.45 亿元、归母净利 -13.88 亿元；纯碱营收同比 -26.31%；氨碱工艺成本高于天然碱/联碱；单一基地。",
+    "verify": [
+      "2026 年长协/月度报价政策",
+      "纯碱装置检修计划",
+      "食品级 SC 证与光伏客户审核报告"
+    ],
+    "evidence": [
+      "SRC09",
+      "SRC10",
+      "SRC26"
+    ],
+    "grade": "重质为主",
+    "qualified": true,
+    "new_plant": false,
+    "tags": [
+      "现有供应商",
+      "氨碱",
+      "免检品牌",
+      "2025 大额亏损"
+    ],
+    "warn": "2025 年营收 47.45 亿元、归母净利 -13.88 亿元；纯碱营收同比 -26.31%；氨碱工艺成本高于天然碱/联碱；单一基地。"
+  },
+  "candidates": [
+    {
+      "id": "S01",
+      "name": "连云港碱业有限公司",
+      "short": "连云港碱业",
+      "role": "备选",
+      "province": "江苏",
+      "city": "连云港",
+      "site": "灌云县临港产业区（搬迁升级项目）",
+      "distance": 400,
+      "transport": "汽运 / 内河",
+      "freight_low": 80,
+      "freight_high": 190,
+      "process": "联碱",
+      "capacity": 110,
+      "capacity_note": "110 万吨/年联碱（重质约 80 万吨）；2025-05-18 全流程贯通",
+      "brand": "长江三角牌",
+      "listed": "未上市",
+      "code": "—",
+      "group": "连云港碱业有限公司",
+      "controller": "连云港市国资委（国有独资）",
+      "ownership": "地方国企",
+      "employees": "约 2,000（待核）",
+      "revenue": "未披露",
+      "profit": "未披露",
+      "output": "—",
+      "products": "重质纯碱、轻质纯碱、氯化铵、合成氨",
+      "spec_fit": "中高",
+      "sample": "必须",
+      "risk_score": 3,
+      "risk_level": "中",
+      "same_source": "无",
+      "same_note": "连云港市国资独资；与江苏德邦同处灌云临港，但股权不同源。",
+      "diff": "工艺由氨碱转为联碱；运距缩短约 360 km；产能为海化的 39%；保留免检品牌“长江三角”；2025 年新装置，重质比例与粒度必须首样验证。",
+      "risk_summary": "新装置 2025 年 5 月贯通、负荷爬坡；单一基地；财务未公开；搬迁后老厂人员/债务安排待核。",
+      "verify": [
+        "新线重质比例、粒度分布、白度",
+        "食品生产许可（SC）",
+        "2026 年长协政策与最小起订量",
+        "铁路专用线/内河码头条件"
+      ],
+      "evidence": [
+        "SRC11",
+        "SRC27",
+        "SRC28"
+      ],
+      "grade": "重质约 80 万吨",
+      "qualified": true,
+      "new_plant": true,
+      "tags": [
+        "近场",
+        "新装置",
+        "免检品牌",
+        "市国资"
+      ],
+      "tag_tones": {
+        "近场": "green",
+        "新装置": "amber",
+        "免检品牌": "green",
+        "市国资": "green"
+      }
+    },
+    {
+      "id": "S02",
+      "name": "江苏德邦化学工业集团有限公司",
+      "short": "江苏德邦",
+      "role": "备选",
+      "province": "江苏",
+      "city": "连云港",
+      "site": "灌云县临港产业区（搬迁项目）",
+      "distance": 400,
+      "transport": "汽运 / 内河",
+      "freight_low": 80,
+      "freight_high": 190,
+      "process": "联碱",
+      "capacity": 60,
+      "capacity_note": "60 万吨/年联碱；2025 年 2 月纯碱出货",
+      "brand": "德邦（待核）",
+      "listed": "未上市",
+      "code": "—",
+      "group": "江苏德邦化学工业集团",
+      "controller": "外商投资企业（实控人待核）",
+      "ownership": "外资/民营",
+      "employees": "约 2,000（待核）",
+      "revenue": "未披露",
+      "profit": "未披露",
+      "output": "—",
+      "products": "纯碱、氯化铵、合成氨、精细化工",
+      "spec_fit": "中",
+      "sample": "必须",
+      "risk_score": 4,
+      "risk_level": "中高",
+      "same_source": "待核（与安徽德邦可能同集团）",
+      "same_note": "江苏德邦与安徽德邦化工是否同属一个集团、是否共用销售主体，需以股权穿透核实。",
+      "diff": "运距缩短约 360 km；产能 60 万吨（海化的 21%）；联碱新装置 2025 年 2 月出货；非免检品牌，需全项检验。",
+      "risk_summary": "新装置达产时间短；非免检品牌；外资股权结构与实控人待穿透；与安徽德邦同源关系待核。",
+      "verify": [
+        "股权穿透/实际控制人",
+        "新线达产与重质比例",
+        "免检品牌申请进度",
+        "食品生产许可"
+      ],
+      "evidence": [
+        "SRC29",
+        "SRC12",
+        "SRC30"
+      ],
+      "grade": "重质比例待核",
+      "qualified": false,
+      "new_plant": true,
+      "tags": [
+        "近场",
+        "新装置",
+        "非免检",
+        "外资"
+      ],
+      "tag_tones": {
+        "近场": "green",
+        "新装置": "amber",
+        "非免检": "amber",
+        "外资": "amber"
+      }
+    },
+    {
+      "id": "S03",
+      "name": "中盐昆山有限公司",
+      "short": "中盐昆山",
+      "role": "备选",
+      "province": "江苏",
+      "city": "苏州（昆山）",
+      "site": "昆山市张浦镇振新东路 8 号",
+      "distance": 45,
+      "transport": "汽运",
+      "freight_low": 18,
+      "freight_high": 30,
+      "process": "联碱",
+      "capacity": 55,
+      "capacity_note": "55 万吨/年纯碱 + 60 万吨/年氯化铵",
+      "brand": "佳穗牌",
+      "listed": "未上市",
+      "code": "—",
+      "group": "中国盐业集团",
+      "controller": "中国盐业集团有限公司（全资）",
+      "ownership": "央企",
+      "employees": "730",
+      "revenue": "约 10（历史口径）",
+      "profit": "未披露",
+      "output": "—",
+      "products": "纯碱、氯化铵、蒸汽",
+      "spec_fit": "中高",
+      "sample": "建议",
+      "risk_score": 3,
+      "risk_level": "中",
+      "same_source": "中盐集团（与昆仑碱业同集团）",
+      "same_note": "中盐昆山为中盐集团全资；昆仑碱业由中盐化工（600328）持股 51%。同集团、不同法人/基地，独立性有限。",
+      "diff": "运距缩短约 715 km，同城配送；产能 55 万吨（海化的 20%）；中盐全资；非免检，粒度/铁含量需验证。",
+      "risk_summary": "规模 55 万吨；非免检品牌；昆山城区周边环保/搬迁约束；中盐集团统一销售与价格授权待核。",
+      "verify": [
+        "食品生产许可与光伏客户审核",
+        "55 万吨实际年产量/重质比例",
+        "中盐统一销售政策",
+        "环保搬迁/限产计划"
+      ],
+      "evidence": [
+        "SRC13",
+        "SRC31"
+      ],
+      "grade": "轻质/重质/定制",
+      "qualified": false,
+      "new_plant": false,
+      "tags": [
+        "近场",
+        "央企",
+        "非免检",
+        "规模偏小"
+      ],
+      "tag_tones": {
+        "近场": "green",
+        "央企": "green",
+        "非免检": "amber",
+        "规模偏小": "amber"
+      }
+    },
+    {
+      "id": "S04",
+      "name": "江苏华昌化工股份有限公司",
+      "short": "华昌化工",
+      "role": "备选",
+      "province": "江苏",
+      "city": "苏州（张家港）",
+      "site": "张家港市扬子江国际化学工业园南海路 1 号",
+      "distance": 90,
+      "transport": "汽运 / 水运",
+      "freight_low": 20,
+      "freight_high": 45,
+      "process": "联碱",
+      "capacity": 70,
+      "capacity_note": "70 万吨/年纯碱（联碱，配套氯化铵）",
+      "brand": "华昌（待核）",
+      "listed": "深交所",
+      "code": "002274",
+      "group": "江苏华昌（集团）有限公司",
+      "controller": "江苏华昌集团（实控人待核）",
+      "ownership": "民营/集体",
+      "employees": "约 3,000（待核）",
+      "revenue": "待核",
+      "profit": "待核",
+      "output": "—",
+      "products": "纯碱、氯化铵、尿素、复合肥、多元醇",
+      "spec_fit": "中高",
+      "sample": "建议",
+      "risk_score": 2,
+      "risk_level": "低",
+      "same_source": "无",
+      "same_note": "华昌集团体系内仅华昌化工一个纯碱平台。",
+      "diff": "运距缩短约 670 km；产能 70 万吨（海化的 25%）；联碱；非免检；张家港水运便利。",
+      "risk_summary": "纯碱为联碱板块之一；非免检；2025 年财务待核；长江沿线环保管控。",
+      "verify": [
+        "2025 年纯碱板块毛利",
+        "重质比例",
+        "ISO/食品生产许可",
+        "码头/水运条件"
+      ],
+      "evidence": [
+        "SRC32",
+        "SRC14",
+        "SRC33"
+      ],
+      "grade": "重质比例待核",
+      "qualified": false,
+      "new_plant": false,
+      "tags": [
+        "近场",
+        "上市",
+        "非免检",
+        "水运"
+      ],
+      "tag_tones": {
+        "近场": "green",
+        "上市": "green",
+        "非免检": "amber",
+        "水运": "green"
+      }
+    },
+    {
+      "id": "S05",
+      "name": "江苏苏盐井神股份有限公司",
+      "short": "苏盐井神",
+      "role": "备选",
+      "province": "江苏",
+      "city": "淮安",
+      "site": "淮安市（井神盐矿基地）",
+      "distance": 330,
+      "transport": "汽运 / 运河",
+      "freight_low": 70,
+      "freight_high": 160,
+      "process": "联碱",
+      "capacity": 60,
+      "capacity_note": "60 万吨/年纯碱（2022 年产量 73 万吨，超产）",
+      "brand": "井神牌",
+      "listed": "上交所",
+      "code": "603299",
+      "group": "江苏省盐业集团",
+      "controller": "江苏省盐业集团（省属国企）",
+      "ownership": "省属国企",
+      "employees": "约 5,000（待核）",
+      "revenue": "待核",
+      "profit": "待核",
+      "output": "73（2022 年纯碱产量）",
+      "products": "食盐、工业盐、纯碱、元明粉、氯化钙",
+      "spec_fit": "中高",
+      "sample": "建议",
+      "risk_score": 2,
+      "risk_level": "低",
+      "same_source": "无",
+      "same_note": "江苏省盐业集团体系内无第二纯碱平台。",
+      "diff": "运距缩短约 430 km；产能 60 万吨（海化的 21%）；免检“井神牌”；纯碱为盐化工副线。",
+      "risk_summary": "纯碱为盐化工副线、产能 60 万吨；2025 年纯碱价格下行；运河运输受水位/季节影响。",
+      "verify": [
+        "2025 年纯碱产量/重质比例",
+        "运河运输与到货周期",
+        "食品生产许可"
+      ],
+      "evidence": [
+        "SRC34",
+        "SRC15",
+        "SRC35"
+      ],
+      "grade": "重质比例待核",
+      "qualified": true,
+      "new_plant": false,
+      "tags": [
+        "区域",
+        "免检品牌",
+        "上市",
+        "盐化工"
+      ],
+      "tag_tones": {
+        "区域": "green",
+        "免检品牌": "green",
+        "上市": "green",
+        "盐化工": "green"
+      }
+    },
+    {
+      "id": "S06",
+      "name": "唐山三友化工股份有限公司",
+      "short": "三友化工",
+      "role": "备选",
+      "province": "河北",
+      "city": "唐山",
+      "site": "唐山市南堡开发区",
+      "distance": 1150,
+      "transport": "汽运 / 铁路 / 水运",
+      "freight_low": 200,
+      "freight_high": 540,
+      "process": "氨碱",
+      "capacity": 340,
+      "capacity_note": "340 万吨/年纯碱（氨碱），粘胶短纤 78 万吨",
+      "brand": "三友牌",
+      "listed": "上交所",
+      "code": "600409",
+      "group": "唐山三友碱业（集团）",
+      "controller": "唐山市国资委",
+      "ownership": "地方国企",
+      "employees": "约 1.2 万（集团，待核）",
+      "revenue": "待核",
+      "profit": "约 0.90（按分红比例推算）",
+      "output": "—",
+      "products": "纯碱、粘胶短纤、烧碱、PVC、有机硅",
+      "spec_fit": "高",
+      "sample": "建议",
+      "risk_score": 3,
+      "risk_level": "中",
+      "same_source": "无",
+      "same_note": "三友集团体系内仅三友化工一个纯碱上市平台。",
+      "diff": "同为氨碱工艺，规格最接近；产能 340 万吨（海化的 121%）；运距增加约 390 km；免检“三友牌”；2025 年微利。",
+      "risk_summary": "2025 年净利约 0.90 亿元（按分红比例推算），微利；唐山环保限产；氨碱成本高；运距 1,150 km。",
+      "verify": [
+        "2025 年纯碱产量/库存",
+        "唐山限产影响",
+        "食品生产许可",
+        "铁路发运计划"
+      ],
+      "evidence": [
+        "SRC16",
+        "SRC36",
+        "SRC37"
+      ],
+      "grade": "重质为主",
+      "qualified": true,
+      "new_plant": false,
+      "tags": [
+        "同工艺",
+        "免检品牌",
+        "上市",
+        "规模大"
+      ],
+      "tag_tones": {
+        "同工艺": "green",
+        "免检品牌": "green",
+        "上市": "green",
+        "规模大": "green"
+      }
+    },
+    {
+      "id": "S07",
+      "name": "河南金山化工集团（金大地化工）",
+      "short": "河南金山",
+      "role": "备选",
+      "province": "河南",
+      "city": "漯河",
+      "site": "舞阳县盐化工园区",
+      "distance": 780,
+      "transport": "汽运 / 铁路",
+      "freight_low": 230,
+      "freight_high": 360,
+      "process": "联碱",
+      "capacity": 330,
+      "capacity_note": "330 万吨/年纯碱 + 360 万吨/年氯化铵 + 95 万吨合成氨",
+      "brand": "金山牌",
+      "listed": "未上市",
+      "code": "—",
+      "group": "河南金山化工集团",
+      "controller": "民营（实控人待核）",
+      "ownership": "民营",
+      "employees": "约 5,000（待核）",
+      "revenue": "未披露（固定资产 101 亿元）",
+      "profit": "未披露",
+      "output": "—",
+      "products": "纯碱、氯化铵、工业盐、合成氨、三聚氰胺、小苏打",
+      "spec_fit": "中高",
+      "sample": "建议",
+      "risk_score": 3,
+      "risk_level": "中",
+      "same_source": "金山集团内多厂区",
+      "same_note": "金山集团曾有孟州、获嘉、舞阳厂区；2024 年退出获嘉 40 万吨、孟州 30 万吨。池内仅舞阳，报价须锁定厂区。",
+      "diff": "联碱龙头，产能 330 万吨（海化的 118%）；运距相当；免检“金山牌”；需锁定舞阳厂区货源。",
+      "risk_summary": "2024 年退出获嘉 40/孟州 30 万吨；河南环保/能耗管控；需锁定舞阳厂区与供货主体。",
+      "verify": [
+        "舞阳厂区实际在产产能",
+        "重质比例",
+        "食品生产许可",
+        "环保绩效等级"
+      ],
+      "evidence": [
+        "SRC38",
+        "SRC01"
+      ],
+      "grade": "重质比例待核",
+      "qualified": true,
+      "new_plant": false,
+      "tags": [
+        "规模大",
+        "免检品牌",
+        "联碱",
+        "民营"
+      ],
+      "tag_tones": {
+        "规模大": "green",
+        "免检品牌": "green"
+      }
+    },
+    {
+      "id": "S08",
+      "name": "内蒙古远兴能源股份有限公司（博源化工）",
+      "short": "远兴能源",
+      "role": "备选",
+      "province": "内蒙古",
+      "city": "阿拉善",
+      "site": "阿拉善右旗塔木素（银根矿业）",
+      "distance": 1900,
+      "transport": "铁路 / 汽运",
+      "freight_low": 400,
+      "freight_high": 880,
+      "process": "天然碱",
+      "capacity": 680,
+      "capacity_note": "在产 680 万吨/年（阿拉善 500 + 中源 180）；二期 280 万吨 2026 年投产，达产 960 万吨",
+      "brand": "远兴牌",
+      "listed": "深交所",
+      "code": "000683",
+      "group": "内蒙古博源控股集团",
+      "controller": "戴连荣（博源集团）",
+      "ownership": "民营",
+      "employees": "约 6,000（待核）",
+      "revenue": "86.56（2025 前三季）",
+      "profit": "10.62（归母，前三季）",
+      "output": "577.79（2024 年纯碱）",
+      "products": "纯碱、小苏打、尿素",
+      "spec_fit": "中",
+      "sample": "必须",
+      "risk_score": 4,
+      "risk_level": "中高",
+      "same_source": "与中源化学同源（母子公司）",
+      "same_note": "远兴能源 2014 年收购中源化学 81.71%，中源为并表子公司；两者只能算一个供应源。",
+      "diff": "天然碱，成本最低；产能 680 万吨（海化的 243%）；运距增加约 1,140 km；“远兴牌”非免检；与中源同源。",
+      "risk_summary": "非免检品牌；阿拉善装置曾因设备故障降负荷；运距 1,900 km；与中源化学同源，不能构成独立第二源。",
+      "verify": [
+        "到货粒度/白度/水不溶物",
+        "非免检交割/检验流程",
+        "二期达产进度",
+        "铁路计划与到货周期"
+      ],
+      "evidence": [
+        "SRC17",
+        "SRC39",
+        "SRC18"
+      ],
+      "grade": "重质可产",
+      "qualified": false,
+      "new_plant": false,
+      "tags": [
+        "低成本",
+        "规模最大",
+        "非免检",
+        "同源"
+      ],
+      "tag_tones": {
+        "低成本": "green",
+        "规模最大": "green",
+        "非免检": "amber",
+        "同源": "red"
+      }
+    },
+    {
+      "id": "S09",
+      "name": "河南中源化学股份有限公司",
+      "short": "中源化学",
+      "role": "备选",
+      "province": "河南",
+      "city": "南阳",
+      "site": "桐柏县（安棚/吴城天然碱矿）",
+      "distance": 800,
+      "transport": "铁路 / 汽运",
+      "freight_low": 240,
+      "freight_high": 380,
+      "process": "天然碱",
+      "capacity": 180,
+      "capacity_note": "180 万吨/年纯碱 + 120 万吨/年小苏打",
+      "brand": "中天牌",
+      "listed": "未上市（远兴并表）",
+      "code": "—",
+      "group": "远兴能源（000683）",
+      "controller": "戴连荣（博源集团）",
+      "ownership": "民营（上市公司子公司）",
+      "employees": "约 3,000（待核）",
+      "revenue": "未单独披露",
+      "profit": "未单独披露",
+      "output": "—",
+      "products": "纯碱、小苏打",
+      "spec_fit": "中",
+      "sample": "必须",
+      "risk_score": 4,
+      "risk_level": "中高",
+      "same_source": "与远兴能源同源（母子公司）",
+      "same_note": "远兴能源持股 81.71%（2014 年收购），中源化学为并表子公司；与远兴同时入选不构成两个独立供应源。",
+      "diff": "天然碱；产能 180 万吨（海化的 64%）；免检“中天牌”；与远兴同源，不能作为独立第二源。",
+      "risk_summary": "与远兴同源（远兴持股 81.71%），不构成独立第二源；天然碱粒度/白度需验证。",
+      "verify": [
+        "与远兴的销售主体/价格政策",
+        "粒度分布/白度",
+        "食品生产许可"
+      ],
+      "evidence": [
+        "SRC19",
+        "SRC40",
+        "SRC41"
+      ],
+      "grade": "重质可产",
+      "qualified": true,
+      "new_plant": false,
+      "tags": [
+        "天然碱",
+        "免检品牌",
+        "同源",
+        "不独立"
+      ],
+      "tag_tones": {
+        "免检品牌": "green",
+        "同源": "red",
+        "不独立": "red"
+      }
+    },
+    {
+      "id": "S10",
+      "name": "中盐青海昆仑碱业有限公司",
+      "short": "昆仑碱业",
+      "role": "备选",
+      "province": "青海",
+      "city": "海西（德令哈）",
+      "site": "德令哈市（柴达木循环经济试验区）",
+      "distance": 2400,
+      "transport": "铁路 / 汽运",
+      "freight_low": 500,
+      "freight_high": 1100,
+      "process": "氨碱",
+      "capacity": 150,
+      "capacity_note": "150 万吨/年氨碱（2011 年 100 万吨投产，2017 年技改至 150 万吨）",
+      "brand": "昆仑雪牌",
+      "listed": "未上市（中盐化工并表）",
+      "code": "—",
+      "group": "中国盐业集团 / 中盐化工（600328）",
+      "controller": "中盐内蒙古化工 51% + 青海海西蒙西联 49%",
+      "ownership": "央企控股",
+      "employees": "1,400",
+      "revenue": "未单独披露",
+      "profit": "未单独披露",
+      "output": "—",
+      "products": "纯碱、氯化钙",
+      "spec_fit": "中高",
+      "sample": "必须",
+      "risk_score": 4,
+      "risk_level": "中高",
+      "same_source": "中盐集团（与中盐昆山同集团）",
+      "same_note": "昆仑碱业由中盐化工（600328）持股 51%；中盐昆山为中盐集团全资。同集团、不同法人/基地，独立性有限。",
+      "diff": "氨碱；产能 150 万吨（海化的 54%）；免检“昆仑雪牌”；运距增加约 1,640 km；铁路为主。",
+      "risk_summary": "运距 2,400 km，铁路车皮与季节性运输风险；中盐化工 2025 年净利低位；高海拔装置。",
+      "verify": [
+        "铁路发运周期",
+        "到货结块/粒度",
+        "食品生产许可",
+        "中盐销售政策"
+      ],
+      "evidence": [
+        "SRC20",
+        "SRC21",
+        "SRC42"
+      ],
+      "grade": "重质为主",
+      "qualified": true,
+      "new_plant": false,
+      "tags": [
+        "同工艺",
+        "免检品牌",
+        "远距",
+        "央企"
+      ],
+      "tag_tones": {
+        "同工艺": "green",
+        "免检品牌": "green",
+        "远距": "amber",
+        "央企": "green"
+      }
+    },
+    {
+      "id": "S11",
+      "name": "湖北双环科技股份有限公司",
+      "short": "双环科技",
+      "role": "备选",
+      "province": "湖北",
+      "city": "孝感（应城）",
+      "site": "应城市东马坊团结大道 26 号",
+      "distance": 720,
+      "transport": "汽运 / 铁路",
+      "freight_low": 220,
+      "freight_high": 340,
+      "process": "联碱",
+      "capacity": 110,
+      "capacity_note": "约 110 万吨/年联碱（2025 年报道口径 100 万吨；2026 年拟再增 40 万吨，需核实）",
+      "brand": "双环（待核）",
+      "listed": "深交所",
+      "code": "000707",
+      "group": "湖北双环化工集团",
+      "controller": "应城市国资（待核）",
+      "ownership": "地方国企",
+      "employees": "约 3,000（待核）",
+      "revenue": "待核",
+      "profit": "-0.015（2025 年归母净利 -153 万元）",
+      "output": "—",
+      "products": "纯碱、氯化铵、复合肥",
+      "spec_fit": "中",
+      "sample": "必须",
+      "risk_score": 5,
+      "risk_level": "高",
+      "same_source": "无",
+      "same_note": "双环集团体系内无第二纯碱平台。",
+      "diff": "联碱；产能约 110 万吨（海化的 39%）；运距缩短约 40 km；连续亏损，供应稳定性需重点核实。",
+      "risk_summary": "2025 年归母净利 -153 万元，2026H1 预亏 0.55–0.85 亿元；装置老化；非免检。",
+      "verify": [
+        "2026 年现金流/检修计划",
+        "重质比例",
+        "食品生产许可",
+        "40 万吨扩建进度"
+      ],
+      "evidence": [
+        "SRC22",
+        "SRC23",
+        "SRC43"
+      ],
+      "grade": "重质比例待核",
+      "qualified": false,
+      "new_plant": true,
+      "tags": [
+        "联碱",
+        "亏损",
+        "非免检",
+        "装置老化"
+      ],
+      "tag_tones": {
+        "亏损": "red",
+        "非免检": "amber",
+        "装置老化": "red"
+      }
+    },
+    {
+      "id": "S12",
+      "name": "山东海天生物化工有限公司（金晶集团）",
+      "short": "海天生物",
+      "role": "备选",
+      "province": "山东",
+      "city": "潍坊",
+      "site": "昌邑市滨海（下营）经济开发区金晶大道 1 号",
+      "distance": 800,
+      "transport": "汽运 / 铁路",
+      "freight_low": 210,
+      "freight_high": 380,
+      "process": "氨碱",
+      "capacity": 120,
+      "capacity_note": "一期 120 万吨/年纯碱，年产量约 110 万吨",
+      "brand": "金晶牌",
+      "listed": "未上市（金晶科技全资）",
+      "code": "—",
+      "group": "金晶集团 / 金晶科技（600586）",
+      "controller": "金晶集团（王刚）",
+      "ownership": "民营",
+      "employees": "约 1,000（待核）",
+      "revenue": "未披露",
+      "profit": "未披露",
+      "output": "约 110",
+      "products": "纯碱、小苏打、小苏打日化用品",
+      "spec_fit": "高",
+      "sample": "建议",
+      "risk_score": 3,
+      "risk_level": "中",
+      "same_source": "金晶集团（与金晶科技同源）",
+      "same_note": "海天生物为金晶科技（600586）全资子公司；金晶科技本身是浮法/超白玻璃生产商，与玻璃客户存在纵向竞争。",
+      "diff": "氨碱；产能 120 万吨（海化的 43%）；运距增加约 40 km；免检“金晶牌”；与金晶科技（玻璃）同集团，存在纵向竞争。",
+      "risk_summary": "与金晶科技（玻璃）同集团，向下游玻璃客户供货存在竞争/优先内部供应；运距 800 km。",
+      "verify": [
+        "对玻璃客户供货政策",
+        "重质比例",
+        "食品生产许可",
+        "金晶内部采购占比"
+      ],
+      "evidence": [
+        "SRC24",
+        "SRC25",
+        "SRC44"
+      ],
+      "grade": "重质为主",
+      "qualified": true,
+      "new_plant": false,
+      "tags": [
+        "同工艺",
+        "免检品牌",
+        "玻璃集团",
+        "纵向竞争"
+      ],
+      "tag_tones": {
+        "同工艺": "green",
+        "免检品牌": "green",
+        "纵向竞争": "amber"
+      }
+    }
+  ],
+  "spec_items": [
+    {
+      "id": "na2co3",
+      "label": "Na₂CO₃ 含量",
+      "target": "≥99.2%"
+    },
+    {
+      "id": "nacl",
+      "label": "NaCl（氯化物）",
+      "target": "≤0.6%（交割基准）"
+    },
+    {
+      "id": "fe",
+      "label": "Fe₂O₃（铁）",
+      "target": "按客户内控/光伏玻璃要求"
+    },
+    {
+      "id": "insol",
+      "label": "水不溶物",
+      "target": "≤0.03%（优等品）"
+    },
+    {
+      "id": "bulk",
+      "label": "堆密度",
+      "target": "0.9–1.1 g/cm³"
+    },
+    {
+      "id": "particle",
+      "label": "粒度分布",
+      "target": "≥0.18 mm 筛余按客户要求"
+    },
+    {
+      "id": "whiteness",
+      "label": "白度",
+      "target": "按客户封样"
+    },
+    {
+      "id": "caking",
+      "label": "结块/运输稳定性",
+      "target": "到货 30 天内不结块"
+    },
+    {
+      "id": "pack",
+      "label": "包装",
+      "target": "1,000 kg 吨袋 / 50 kg 袋"
+    }
+  ],
+  "spec_status": {
+    "S01": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "COA",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "试样",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S02": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "COA",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "试样",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S03": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "COA",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "COA",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S04": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "COA",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "试样",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S05": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "COA",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "COA",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S06": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "COA",
+      "insol": "COA",
+      "bulk": "COA",
+      "particle": "试样",
+      "whiteness": "COA",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S07": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "COA",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "试样",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S08": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "试样",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "试样",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S09": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "试样",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "试样",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S10": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "COA",
+      "insol": "COA",
+      "bulk": "COA",
+      "particle": "试样",
+      "whiteness": "COA",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S11": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "试样",
+      "insol": "COA",
+      "bulk": "试样",
+      "particle": "试样",
+      "whiteness": "试样",
+      "caking": "试样",
+      "pack": "审核"
+    },
+    "S12": {
+      "na2co3": "COA",
+      "nacl": "COA",
+      "fe": "COA",
+      "insol": "COA",
+      "bulk": "COA",
+      "particle": "试样",
+      "whiteness": "COA",
+      "caking": "试样",
+      "pack": "审核"
+    }
+  },
+  "same_source": [
+    {
+      "group": "博源集团 / 远兴能源",
+      "parent": "内蒙古博源控股集团（戴连荣）",
+      "entities": [
+        "远兴能源（000683）",
+        "中源化学（远兴持股 81.71%）"
+      ],
+      "relation": "母子公司（2014 年收购并表）",
+      "implication": "二者只能算一个供应源；同时入选会高估“第二供应源”的独立性。",
+      "verify": "中源化学销售主体、与远兴的关联交易定价",
+      "flag": "同源"
+    },
+    {
+      "group": "中国盐业集团",
+      "parent": "中国盐业集团有限公司",
+      "entities": [
+        "中盐昆山（全资）",
+        "昆仑碱业（中盐化工 600328 持股 51%）"
+      ],
+      "relation": "同集团、不同法人/基地",
+      "implication": "生产基地相互独立，但集团统一销售/价格政策可能削弱议价独立性。",
+      "verify": "两家的销售授权、客户重叠、集团集采政策",
+      "flag": "同集团"
+    },
+    {
+      "group": "金晶集团",
+      "parent": "金晶集团 / 金晶科技（600586）",
+      "entities": [
+        "海天生物（金晶科技全资）",
+        "金晶科技（浮法/超白玻璃）"
+      ],
+      "relation": "母子公司；下游是玻璃",
+      "implication": "纯碱供应商与玻璃客户存在纵向竞争，供货优先级/价格可能受集团策略影响。",
+      "verify": "对第三方玻璃客户的供货政策、内部采购占比",
+      "flag": "纵向竞争"
+    },
+    {
+      "group": "连云港灌云临港",
+      "parent": "连云港市国资委 / 江苏德邦（外资）",
+      "entities": [
+        "连云港碱业（市国资）",
+        "江苏德邦（外资）"
+      ],
+      "relation": "同园区、不同股东",
+      "implication": "物流可共享，但股权不同源，可视为两个独立供应源。",
+      "verify": "德邦股权穿透、与安徽德邦关系",
+      "flag": "非同源"
+    },
+    {
+      "group": "唐山三友",
+      "parent": "唐山三友碱业（集团）",
+      "entities": [
+        "三友化工（600409）"
+      ],
+      "relation": "单一纯碱上市平台",
+      "implication": "集团内无第二纯碱平台，不存在池内同源。",
+      "verify": "—",
+      "flag": "单一"
+    },
+    {
+      "group": "河南金山",
+      "parent": "河南金山化工集团",
+      "entities": [
+        "金大地化工（舞阳）",
+        "孟州/获嘉厂区（2024 年退出）"
+      ],
+      "relation": "同集团多厂区",
+      "implication": "报价须锁定舞阳厂区与供货主体，避免“集团产能”与“可售货源”混淆。",
+      "verify": "舞阳实际在产、销售主体",
+      "flag": "多厂区"
+    }
+  ],
+  "risks": [
+    {
+      "company": "山东海化",
+      "type": "财务",
+      "category": "财务",
+      "fact": "2025 年归母净利 -13.88 亿元，纯碱营收同比 -26.31%",
+      "impact": "现有供应商盈利能力弱，长协/保供能力需跟踪",
+      "source_id": "SRC10",
+      "source": "证券时报 2026-03-20",
+      "url": "https://stcn.com/article/detail/3689241.html",
+      "status": "已公开"
+    },
+    {
+      "company": "山东海化",
+      "type": "成本",
+      "category": "财务",
+      "fact": "氨碱工艺成本高于天然碱、联碱",
+      "impact": "价格下行期亏损面扩大",
+      "source_id": "SRC03",
+      "source": "证券时报 2024-11",
+      "url": "https://www.stcn.com/article/detail/1424449.html",
+      "status": "已公开"
+    },
+    {
+      "company": "连云港碱业",
+      "type": "装置",
+      "category": "装置",
+      "fact": "2025-05-18 全流程贯通，联碱负荷 80%",
+      "impact": "新线达产/质量稳定性需 3–6 个月观察",
+      "source_id": "SRC11",
+      "source": "连云港市政府 2025-05-22",
+      "url": "https://www.lyg.gov.cn/zglygzfmhwz/gcyw/content/3ad7d8d1-8a2a-4683-82b5-4766ac84985e.html",
+      "status": "已公开"
+    },
+    {
+      "company": "江苏德邦",
+      "type": "装置",
+      "category": "装置",
+      "fact": "60 万吨联碱 2025 年 2 月纯碱出货",
+      "impact": "新装置爬坡；非免检品牌",
+      "source_id": "SRC30",
+      "source": "新浪 2025-02-20",
+      "url": "https://finance.sina.com.cn/money/bond/2025-02-20/doc-inemarzm4048650.shtml",
+      "status": "已公开"
+    },
+    {
+      "company": "江苏德邦",
+      "type": "股权",
+      "category": "同源",
+      "fact": "外商投资企业，与安徽德邦是否同集团待核",
+      "impact": "可能影响独立性与销售主体认定",
+      "source_id": "SRC29",
+      "source": "百度百科 / 企业官网",
+      "url": "http://www.jsdebang.com/",
+      "status": "待核实"
+    },
+    {
+      "company": "中盐昆山",
+      "type": "规模",
+      "category": "资质",
+      "fact": "纯碱 55 万吨/年，单一基地",
+      "impact": "旺季保供/议价能力有限",
+      "source_id": "SRC13",
+      "source": "中盐昆山官网",
+      "url": "https://www.csks.cn/helps/gyzyks.html",
+      "status": "已公开"
+    },
+    {
+      "company": "华昌化工",
+      "type": "财务",
+      "category": "财务",
+      "fact": "2025 年纯碱板块盈利待核",
+      "impact": "联碱双吨成本受氯化铵价格影响",
+      "source_id": "SRC14",
+      "source": "华昌 2025 年报",
+      "url": "http://static.cninfo.com.cn/finalpage/2026-04-18/1225115189.PDF",
+      "status": "待核实"
+    },
+    {
+      "company": "三友化工",
+      "type": "财务",
+      "category": "财务",
+      "fact": "2025 年净利约 0.90 亿元（按分红比例推算）",
+      "impact": "微利，纯碱价格继续下行则承压",
+      "source_id": "SRC16",
+      "source": "三友 2025 年报",
+      "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=600409&id=12180724",
+      "status": "已公开"
+    },
+    {
+      "company": "三友化工",
+      "type": "环保",
+      "category": "装置",
+      "fact": "唐山地区环保限产/重污染天气应急",
+      "impact": "阶段性降负荷、发运受限",
+      "source_id": "SRC03",
+      "source": "行业公开信息",
+      "url": "https://www.stcn.com/article/detail/1424449.html",
+      "status": "待核实"
+    },
+    {
+      "company": "河南金山",
+      "type": "产能",
+      "category": "装置",
+      "fact": "2024 年退出获嘉 40 万吨、孟州 30 万吨",
+      "impact": "集团总产能口径变化，需锁定舞阳厂区",
+      "source_id": "SRC01",
+      "source": "观研报告 2024",
+      "url": "https://m.chinabaogao.com/detail/741959.html",
+      "status": "已公开"
+    },
+    {
+      "company": "远兴能源",
+      "type": "资质",
+      "category": "资质",
+      "fact": "“远兴牌”不是郑商所纯碱免检品牌",
+      "impact": "到货需按批检验，交割/质押便利性弱",
+      "source_id": "SRC18",
+      "source": "每日经济新闻 2023-11-29",
+      "url": "https://www.nbd.com.cn/articles/2023-11-29/3138455.html",
+      "status": "已公开"
+    },
+    {
+      "company": "远兴能源",
+      "type": "装置",
+      "category": "装置",
+      "fact": "阿拉善装置曾因设备故障降负荷运行",
+      "impact": "单点装置波动影响交付",
+      "source_id": "SRC45",
+      "source": "凤凰财经",
+      "url": "https://finance.ifeng.com/c/8cdOst6NQDg",
+      "status": "已公开"
+    },
+    {
+      "company": "远兴能源",
+      "type": "同源",
+      "category": "同源",
+      "fact": "2014 年收购中源化学 81.71%，二者母子公司",
+      "impact": "远兴+中源不构成两个独立供应源",
+      "source_id": "SRC40",
+      "source": "远兴 2020 年报",
+      "url": "http://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=000683&id=7139660",
+      "status": "已公开"
+    },
+    {
+      "company": "中盐化工/昆仑",
+      "type": "财务",
+      "category": "财务",
+      "fact": "中盐化工 2025 年净利约 1.48 亿元（机构预测）",
+      "impact": "集团盈利低位，纯碱板块资本开支受限",
+      "source_id": "SRC42",
+      "source": "券商 2025-08",
+      "url": "https://pdf.dfcfw.com/pdf/H3_AP202508281736014851_1.pdf",
+      "status": "待核实"
+    },
+    {
+      "company": "双环科技",
+      "type": "财务",
+      "category": "财务",
+      "fact": "2025 年归母净利 -153 万元；2026H1 预亏 0.55–0.85 亿元",
+      "impact": "连续亏损，供应稳定性/账期需重点评估",
+      "source_id": "SRC23",
+      "source": "东方财富 2026-07-14",
+      "url": "https://finance.eastmoney.com/a/202607143805775564.html",
+      "status": "已公开"
+    },
+    {
+      "company": "海天生物",
+      "type": "独立性",
+      "category": "同源",
+      "fact": "金晶科技（600586）全资，金晶本身做玻璃",
+      "impact": "向下游玻璃客户供货存在纵向竞争",
+      "source_id": "SRC25",
+      "source": "金晶担保公告 2018",
+      "url": "http://static.cninfo.com.cn/finalpage/2018-06-06/1205038312.PDF",
+      "status": "已公开"
+    },
+    {
+      "company": "全行业",
+      "type": "价格",
+      "category": "财务",
+      "fact": "2026-09 华东重碱约 1,130–1,230 元/吨，行业普遍亏损",
+      "impact": "低价期供应商履约/质量投入下降",
+      "source_id": "SRC04",
+      "source": "新浪/隆众 2026-09-22",
+      "url": "https://www.sohu.com/a/1079343192_122014422",
+      "status": "已公开"
+    },
+    {
+      "company": "全行业",
+      "type": "供给",
+      "category": "装置",
+      "fact": "2026H1 国内纯碱产能超 4,400 万吨，占全球 53.3%",
+      "impact": "供给宽松，价格中枢下移",
+      "source_id": "SRC05",
+      "source": "东方财富 2026-10-05",
+      "url": "https://caifuhao.eastmoney.com/news/20261005182510160125460",
+      "status": "已公开"
+    }
+  ],
+  "actions": [
+    {
+      "phase": "第 0–30 天",
+      "action": "锁定 3 家进入首轮",
+      "detail": "按“近场联碱 + 同工艺氨碱 + 低成本天然碱”各取 1 家；优先华昌/中盐昆山（近场）、三友（同工艺）、金山（规模+免检）。",
+      "owner": "采购经理",
+      "output": "首轮询价单、产能与排产证明、COA 样本",
+      "deadline": "T+30"
+    },
+    {
+      "phase": "第 0–30 天",
+      "action": "同源排查",
+      "detail": "远兴与中源二选一；中盐昆山与昆仑确认集团销售政策；海天确认对玻璃客户供货政策。",
+      "owner": "采购 + 法务",
+      "output": "股权穿透图、关联交易说明",
+      "deadline": "T+30"
+    },
+    {
+      "phase": "第 31–60 天",
+      "action": "首样与小试",
+      "detail": "每家 20–50 kg 首样，按 9 项指标检测；新装置（碱业、德邦）追加 3 批稳定性验证。",
+      "owner": "质量部",
+      "output": "检测报告、封样、小试结论",
+      "deadline": "T+60"
+    },
+    {
+      "phase": "第 31–60 天",
+      "action": "到厂试运",
+      "detail": "每家 1 车（30–35 吨）到厂，验证运输结块、卸货、包装破损与计量。",
+      "owner": "物流 + 仓库",
+      "output": "到货验收记录",
+      "deadline": "T+60"
+    },
+    {
+      "phase": "第 61–90 天",
+      "action": "商务与双源",
+      "detail": "确定 1 家主供 + 1 家备供（不替代现供应商），约定最小起订、账期、质量赔付与月度滚动锁量。",
+      "owner": "采购总监",
+      "output": "框架协议、双源比例（如 70/30）",
+      "deadline": "T+90"
+    },
+    {
+      "phase": "第 61–90 天",
+      "action": "风险复核",
+      "detail": "复核供应商 2026 年现金流/检修计划/环保限产；更新风险台账。",
+      "owner": "采购 + 财务",
+      "output": "季度风险复盘",
+      "deadline": "T+90"
+    }
+  ],
+  "sources": [
+    {
+      "id": "SRC01",
+      "name": "观研报告网：2024 年纯碱产能变动（金山退出/远兴新增）",
+      "url": "https://m.chinabaogao.com/detail/741959.html",
+      "grade": "B",
+      "date": "2025"
+    },
+    {
+      "id": "SRC02",
+      "name": "海外网：纯碱工业高质量发展综合述评（在产 3,970 万吨）",
+      "url": "https://news.haiwainet.cn/n/2025/0122/c3541089-32832061.html",
+      "grade": "B",
+      "date": "2025-01-22"
+    },
+    {
+      "id": "SRC03",
+      "name": "证券时报：纯碱产业供需与成本分层",
+      "url": "https://www.stcn.com/article/detail/1424449.html",
+      "grade": "B",
+      "date": "2024-11"
+    },
+    {
+      "id": "SRC04",
+      "name": "新浪财经：2026-09 华东重碱 1,130–1,230 元/吨",
+      "url": "https://www.sohu.com/a/1079343192_122014422",
+      "grade": "B",
+      "date": "2026-09-22"
+    },
+    {
+      "id": "SRC05",
+      "name": "东方财富：2026H1 纯碱产能超 4,400 万吨、占全球 53.3%",
+      "url": "https://caifuhao.eastmoney.com/news/20261005182510160125460",
+      "grade": "B",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "SRC06",
+      "name": "郑商所纯碱交割手册（免检品牌/质量标准）",
+      "url": "https://www.glqh.com/u/cms/www/202409/131008303uib.pdf",
+      "grade": "A",
+      "date": "2024-09"
+    },
+    {
+      "id": "SRC07",
+      "name": "期货日报：郑商所优化纯碱交割体系",
+      "url": "https://www.cfachina.org/industrydynamics/mediaviewoffuturesmarket/202601/t20260120_86178.html",
+      "grade": "B",
+      "date": "2026-01-20"
+    },
+    {
+      "id": "SRC08",
+      "name": "中证报：纯碱新增重庆/成都交割区域",
+      "url": "https://finance.eastmoney.com/a/202607093800400551.html",
+      "grade": "B",
+      "date": "2026-07-09"
+    },
+    {
+      "id": "SRC09",
+      "name": "山东海化 2025 年年度报告",
+      "url": "https://disc.static.szse.cn/disc/disk03/finalpage/2026-03-21/6a3e3b5a-afd9-42d8-8220-f838c724ab84.PDF",
+      "grade": "A",
+      "date": "2026-03-21"
+    },
+    {
+      "id": "SRC10",
+      "name": "证券时报：山东海化 2025 年亏损 13.88 亿元",
+      "url": "https://stcn.com/article/detail/3689241.html",
+      "grade": "B",
+      "date": "2026-03-20"
+    },
+    {
+      "id": "SRC11",
+      "name": "连云港市政府：碱业搬迁项目 110 万吨联碱全流程贯通",
+      "url": "https://www.lyg.gov.cn/zglygzfmhwz/gcyw/content/3ad7d8d1-8a2a-4683-82b5-4766ac84985e.html",
+      "grade": "A",
+      "date": "2025-05-22"
+    },
+    {
+      "id": "SRC12",
+      "name": "人民网：灌云临港产业区项目进展",
+      "url": "http://js.people.com.cn/n2/2025/0811/c360301-41318945.html",
+      "grade": "B",
+      "date": "2025-08-11"
+    },
+    {
+      "id": "SRC13",
+      "name": "中盐昆山官网：55 万吨纯碱/60 万吨氯化铵",
+      "url": "https://www.csks.cn/helps/gyzyks.html",
+      "grade": "C",
+      "date": "2026"
+    },
+    {
+      "id": "SRC14",
+      "name": "华昌化工 2025 年年度报告摘要",
+      "url": "http://static.cninfo.com.cn/finalpage/2026-04-18/1225115189.PDF",
+      "grade": "A",
+      "date": "2026-04-18"
+    },
+    {
+      "id": "SRC15",
+      "name": "苏盐井神 2025 年年度报告",
+      "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-4/2026-04-23/12149430.PDF",
+      "grade": "A",
+      "date": "2026-04-23"
+    },
+    {
+      "id": "SRC16",
+      "name": "三友化工 2025 年年度报告",
+      "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=600409&id=12180724",
+      "grade": "A",
+      "date": "2026"
+    },
+    {
+      "id": "SRC17",
+      "name": "远兴能源 2024 年年度报告摘要：纯碱 577.79 万吨",
+      "url": "https://paper.cnstock.com/html/2025-04/25/content_2056260.htm",
+      "grade": "A",
+      "date": "2025-04-25"
+    },
+    {
+      "id": "SRC18",
+      "name": "每日经济新闻：远兴牌不是郑商所免检品牌",
+      "url": "https://www.nbd.com.cn/articles/2023-11-29/3138455.html",
+      "grade": "B",
+      "date": "2023-11-29"
+    },
+    {
+      "id": "SRC19",
+      "name": "大河网：中源化学 180 万吨纯碱、120 万吨小苏打",
+      "url": "https://app.dahecube.com/nweb/news/20230510/162062nd161ddea3b3.htm",
+      "grade": "B",
+      "date": "2023-05-10"
+    },
+    {
+      "id": "SRC20",
+      "name": "青海省政府：昆仑碱业 150 万吨氨碱与股权结构",
+      "url": "http://cdmxhjj.haixi.gov.cn/system/2021/06/30/010387079.shtml",
+      "grade": "A",
+      "date": "2021-06-30"
+    },
+    {
+      "id": "SRC21",
+      "name": "中盐化工 2025 年年度报告",
+      "url": "http://dataclouds.cninfo.com.cn/shgonggao/hsomarket/2026/20260429/f0f0b3057b0c40d9941d00be40097953.PDF",
+      "grade": "A",
+      "date": "2026-04-29"
+    },
+    {
+      "id": "SRC22",
+      "name": "双环科技 2025 年年度报告",
+      "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESZ_STOCK/2026/2026-4/2026-04-29/12261120.PDF",
+      "grade": "A",
+      "date": "2026-04-29"
+    },
+    {
+      "id": "SRC23",
+      "name": "东方财富：双环科技 2026H1 预亏 0.55–0.85 亿元",
+      "url": "https://finance.eastmoney.com/a/202607143805775564.html",
+      "grade": "B",
+      "date": "2026-07-14"
+    },
+    {
+      "id": "SRC24",
+      "name": "百度百科：山东海天生物 120 万吨、金晶集团全资",
+      "url": "https://baike.baidu.com/item/山东海天生物化工有限公司/10619153",
+      "grade": "C",
+      "date": "2026"
+    },
+    {
+      "id": "SRC25",
+      "name": "金晶科技为海天生物提供担保的公告",
+      "url": "http://static.cninfo.com.cn/finalpage/2018-06-06/1205038312.PDF",
+      "grade": "A",
+      "date": "2018-06-06"
+    },
+    {
+      "id": "SRC26",
+      "name": "山东海化纯碱厂产能 280 万吨（集团官网）",
+      "url": "https://www.haihua.com.cn/About_11/1664471386467147776.html",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC27",
+      "name": "连云港市国资委：项目全流程贯通",
+      "url": "http://gzw.lyg.gov.cn/lygsrmzfgyzcjdglwyh/gzdt/content/f9ce6041-d283-45be-8802-85955bccacef.html",
+      "grade": "A",
+      "date": ""
+    },
+    {
+      "id": "SRC28",
+      "name": "百度百科：连云港碱业（长江三角牌、110 万吨）",
+      "url": "https://baike.baidu.com/item/连云港碱业有限公司/20021302",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC29",
+      "name": "江苏德邦官网",
+      "url": "http://www.jsdebang.com/",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC30",
+      "name": "新浪：连云港德邦 60 万吨联碱开始投产（2025-02-20）",
+      "url": "https://finance.sina.com.cn/money/bond/2025-02-20/doc-inemarzm4048650.shtml",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC31",
+      "name": "百度百科：统一社会信用代码 91320583726539232K",
+      "url": "https://baike.baidu.com/item/中盐昆山有限公司/2110720",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC32",
+      "name": "华昌化工官网：企业简介",
+      "url": "https://www.huachangchem.cn/wap_about_zh.html",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC33",
+      "name": "券商：华昌纯碱产能 70 万吨（2023-10）",
+      "url": "https://pdf.dfcfw.com/pdf/H3_AP202310071601015959_1.pdf",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC34",
+      "name": "苏盐井神官网",
+      "url": "http://www.jssyjsgf.com/about/about.html",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC35",
+      "name": "民生证券：纯碱产能 60 万吨（2023-05）",
+      "url": "https://pdf.dfcfw.com/pdf/H3_AP202305281587323251_1.pdf",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC36",
+      "name": "联合资信：三友化工主体长期信用评级（2026-07）",
+      "url": "https://www.lhratings.com/uploads/file/20261016/g39fff68a7e.pdf",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC37",
+      "name": "三友化工 2026 年半年度报告",
+      "url": "https://stockmc.xueqiu.com/202608/600409_20260826_M4J9.pdf",
+      "grade": "A",
+      "date": ""
+    },
+    {
+      "id": "SRC38",
+      "name": "金山化工官网：330 万吨纯碱/360 万吨氯化铵",
+      "url": "http://www.jshgjt.com/a/zoujinjinshan/",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC39",
+      "name": "远兴能源 2025 年三季报调研纪要",
+      "url": "https://www.fxbaogao.com/detail/5119625",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC40",
+      "name": "远兴能源 2020 年年报：中源化学为关联方",
+      "url": "http://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=000683&id=7139660",
+      "grade": "A",
+      "date": ""
+    },
+    {
+      "id": "SRC41",
+      "name": "新华网：桐柏天然碱产业（2023-08）",
+      "url": "http://www.xinhuanet.com/enterprise/20230816/8eb1a23d74544aa3b12f039e107d6e50/c.html",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC42",
+      "name": "券商：中盐化工 390 万吨纯碱、2025 年净利预测 1.48 亿元",
+      "url": "https://pdf.dfcfw.com/pdf/H3_AP202508281736014851_1.pdf",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC43",
+      "name": "新华网：应城盐化产业与双环 100 万吨（2025-08-04）",
+      "url": "https://www.news.cn/politics/20250804/10050573c0924c01ade524fbd8a3d2ac/c.html",
+      "grade": "B",
+      "date": ""
+    },
+    {
+      "id": "SRC44",
+      "name": "金晶集团官网：海天生物地址/纯碱销售",
+      "url": "https://www.cnggg.cn/fuzhiyingyezhizhao.html",
+      "grade": "C",
+      "date": ""
+    },
+    {
+      "id": "SRC45",
+      "name": "凤凰财经",
+      "url": "https://finance.ifeng.com/c/8cdOst6NQDg",
+      "grade": "B",
+      "date": ""
+    }
+  ]
+}

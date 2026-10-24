@@ -1,0 +1,67 @@
+﻿{
+ "meta": {
+  "generated_at": "2026-10-20 19:10:10",
+  "design_version": "2.2",
+  "design_approved_at": "2026-10-20 19:08:14",
+  "data_status": "REAL",
+  "demo_note": "",
+  "inventory_rows": 228,
+  "evaluable_states": 54,
+  "skipped": {
+   "parse_fail": 0,
+   "gap": 24,
+   "no_price": 0,
+   "dup_state": 106,
+   "incomplete": 1,
+   "roll_in_window": 41,
+   "pre15_bar_missing": 82
+  },
+  "price_days": 1119,
+  "inventory_range": [
+   "2022-04-06",
+   "2026-10-14"
+  ],
+  "price_range": [
+   "2022-03-01",
+   "2026-10-20"
+  ],
+  "registry_cap": 18
+ },
+ "sample": {
+  "n_signal": 10,
+  "n_control": 44,
+  "signal_dates": [
+   "2022-04-20",
+   "2022-08-31",
+   "2022-11-23",
+   "2023-04-26",
+   "2023-11-29",
+   "2024-03-27",
+   "2024-09-18",
+   "2024-12-18",
+   "2025-11-26",
+   "2026-05-20"
+  ],
+  "min_n_rule_violated": true
+ },
+ "tests": [
+  {
+   "id": "RULE_1",
+   "family": "diagnostic",
+   "label": "最小样本规则检查（先于数据设定）",
+   "estimate": 10.0,
+   "ci95": null,
+   "p": null,
+   "n": 54,
+   "extra": {
+    "required_signal": 12
+   },
+   "data_status": "REAL",
+   "q_bh": null
+  }
+ ],
+ "stability": {},
+ "diagnostics": {},
+ "verdict": "INSUFFICIENT_SAMPLE",
+ "message": "信号周 10 个、对照周 44 个，低于预登记最小样本规则（信号≥12、对照≥10）。按设计约定：结论只能写『样本不足，无法判断』，不报告任何显著性。"
+}

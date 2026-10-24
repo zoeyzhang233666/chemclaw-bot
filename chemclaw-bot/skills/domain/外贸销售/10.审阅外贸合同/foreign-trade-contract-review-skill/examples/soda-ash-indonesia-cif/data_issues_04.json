@@ -1,0 +1,364 @@
+{
+  "issues": [
+    {
+      "id": "R-31",
+      "seq": 31,
+      "category": "missing",
+      "severity": "high",
+      "issue_type": "missing",
+      "title": "【条款缺失】全文未约定货物所有权与风险的具体衔接方式（保留所有权与CIF风险转移的冲突）",
+      "title_en": "[MISSING] No mechanism reconciles retention of title with the CIF risk transfer point",
+      "anchors": [
+        {
+          "block": "p-article-8-risk-title-and-insurance-078",
+          "clause": "8.2",
+          "quote": "Title to the Goods passes to the Buyer only upon receipt of payment in full. Until full payment, the Seller retains title to the Goods and may repossess them."
+        },
+        {
+          "block": "p-article-8-risk-title-and-insurance-079",
+          "clause": "8.2",
+          "quote": "The retention of title in this Article 8.2 shall be effective against all third parties, shall survive export from China and import into Indonesia, and shall give the Seller priority over all other creditors of the Buyer."
+        },
+        {
+          "block": "p-article-8-risk-title-and-insurance-077",
+          "clause": "8.1",
+          "quote": "Risk passes to the Buyer as provided in Article 4.2(C). The Seller bears no risk of loss of or damage to the Goods after the Goods are on board the vessel at the Port of Loading."
+        }
+      ],
+      "clause_title": "8.1 / 8.2 Risk and title",
+      "finding": "合同将风险在装船时转移（4.2(C)、8.1），同时保留所有权至付款完成（8.2）。即：货物海上灭失的风险由买方承担，但所有权仍在卖方。这一分离本身在国际贸易中常见，但本合同 8.2 第二段进一步声称保留所有权“对一切第三人有效”“在印尼境内仍然有效”“优先于买方其他债权人” —— 这些效果涉及印尼物权法与破产法，不可能由合同双方自行宣示取得。缺少的关键条款是：所有权保留在印尼法下如何登记、如何对抗善意受让与破产管理人，以及货物在保留所有权状态下到达买方场所时的仓储与标识义务。",
+      "finding_en": "Risk passes on loading while title is retained until payment. That split is common, but clause 8.2 additionally asserts that the retention is effective against all third parties, survives import into Indonesia, and ranks ahead of the buyer's other creditors — effects that depend on Indonesian property and insolvency law and cannot be created by contract declaration. What is missing is any mechanism for registration, publicity, or tracking of goods held under retained title.",
+      "consequence": "若买方在付款前破产，卖方援引 8.2 主张取回货物，可能因缺少印尼法下的公示与登记而被破产管理人拒绝，最终只能作为普通债权人申报，回收率显著下降。反过来说，卖方持有所有权但不承担风险，若货物在海上灭失，卖方的“所有权”也无实际意义，却可能被买方用于主张卖方应退款的依据。",
+      "consequence_en": "If the buyer becomes insolvent before payment, the seller's repossession claim may fail for want of publicity or registration under Indonesian law, demoting it to an unsecured creditor. Conversely, holding title without holding risk offers little practical benefit while creating a possible basis for the buyer to argue for a refund.",
+      "confirm": [
+        "由印尼律师确认所有权保留（retention of title / eigendomsvoorbehoud）在印尼的可执行性与登记要求",
+        "确认贸易术语（CIF）项下是否需在合同中明确“风险与所有权分离”",
+        "确认买方履约保证安排（如信用证已覆盖绝大部分货款，则所有权保留意义有限）",
+        "核实印尼破产程序中动产取回（reclamation）规则与时限"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 641 条、第 642 条（所有权保留）",
+          "note": "当事人可约定所有权保留；未经登记不得对抗善意第三人。该规则为中国法规则，在印尼境内的效力另需按印尼法判断。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 604 条（风险转移）",
+          "note": "标的物毁损灭失的风险在交付前由出卖人承担、交付后由买受人承担，但法律另有规定或当事人另有约定的除外。"
+        },
+        {
+          "label": "印尼民法典（KUHPerdata）买卖合同相关规定",
+          "note": "印尼法下货物所有权转移与风险转移的规则与中国法不同，且实践中对所有权保留的可执行性存在争议。须由印尼律师出具意见。"
+        }
+      ],
+      "suggested_wording": "Title to the Goods shall pass to the Buyer upon payment in full, provided that until such payment the Seller shall be entitled only to the rights expressly set out in this Article. The Seller's retention of title shall take effect in accordance with the law of the place where the Goods are located. The Buyer shall, until payment in full, hold the Goods separately identified and marked as the Seller's property, and shall notify the Seller immediately of any insolvency event.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-32",
+      "seq": 32,
+      "category": "missing",
+      "severity": "high",
+      "issue_type": "missing",
+      "title": "【条款缺失】无产品责任与保险覆盖约定：保险仅保货物损失，未覆盖产品责任",
+      "title_en": "[MISSING] No product liability or product recall clause; insurance covers cargo loss only",
+      "anchors": [
+        {
+          "block": "p-article-8-risk-title-and-insurance-080",
+          "clause": "8.3(A)",
+          "quote": "The Seller shall insure the Goods for the account of the Buyer with an insurer of the Seller's choice."
+        },
+        {
+          "block": "p-article-8-risk-title-and-insurance-081",
+          "clause": "8.3(B)",
+          "quote": "The insured value shall be 100% of the invoice value of the Goods."
+        },
+        {
+          "block": "p-article-14-representations-warranties-and-compliance-107",
+          "clause": "14.2",
+          "quote": "The Seller gives no other warranty, express or implied, including any implied warranty of merchantability or of fitness for a particular purpose, all of which are excluded to the fullest extent permitted by law."
+        }
+      ],
+      "clause_title": "8.3 Insurance / 14.2 Warranties",
+      "finding": "合同八次提及保险，但全部指向“运输货物保险”（货损险），全文没有任何关于产品责任险（product liability）、召回责任、下游使用伤害赔偿的条款。同时 14.2 排除了适合特定用途的默示保证，却没有约定买方使用货物造成第三方损害时的责任划分。对纯碱这类会被下游玻璃、洗涤剂工厂进一步加工的化工原料而言，这是显著缺口。",
+      "finding_en": "Insurance is referenced eight times but exclusively as cargo insurance. There is no product liability, recall or downstream-injury provision, and while fitness for purpose is disclaimed, nothing allocates liability where the buyer's processing of the Goods causes third-party harm.",
+      "consequence": "纯碱本身用途广泛，若因杂质超标（如铁含量超标导致玻璃出现色差、批量产品报废），买方下游客户索赔可能远超合同金额。在缺少产品责任条款与产品责任险的情况下，卖方需在本合同 12.1 的 5% 上限外另寻抗辩依据，而该上限是否可对抗第三方侵权索赔本身存在不确定性。",
+      "consequence_en": "Soda ash feeds glass and detergent plants; an iron-content excursion can discolour a production batch whose value dwarfs this contract. Without a product liability clause or product liability cover, the seller has no allocated position outside the 5% cap, and whether a contractual cap reaches third-party tort claims is itself uncertain.",
+      "confirm": [
+        "核实本公司是否投保产品责任险（Product Liability Insurance）及其责任限额",
+        "确认产品责任险是否覆盖出口至印尼的货物",
+        "确认印尼对进口工业化学品的生产者责任规则（需印尼律师意见）",
+        "考虑加入“买方负责其下游产品的质量与安全，卖方仅就 Annex A 规格负责”的划分条款"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 1202 条、第 1203 条（产品责任）",
+          "note": "因产品缺陷造成他人损害的，被侵权人可向生产者或销售者请求赔偿。合同双方之间对第三人的责任划分约定，通常不能对抗第三人。"
+        },
+        {
+          "label": "印尼消费者保护与产品责任规则",
+          "note": "印尼对进入本国市场的产品有生产者责任要求，具体适用范围与举证规则须由印尼律师核实。"
+        }
+      ],
+      "suggested_wording": "The Sellershall maintain product liability insurance covering the Goods for a limit of not less than [USD 1,000,000] per occurrence for the duration of this Contract and for 24 months thereafter. The Buyer shall be responsible for the conformity, quality and safety of any product it manufactures using the Goods, and shall procure its own product liability cover for its downstream products. Liability under this Article shall not be subject to the cap in Article 12.1.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-33",
+      "seq": 33,
+      "category": "missing",
+      "severity": "medium",
+      "issue_type": "missing",
+      "title": "【条款缺失】无出口管制、经济制裁与反倾销合规条款",
+      "title_en": "[MISSING] No export control, sanctions or anti-dumping compliance clause",
+      "anchors": [
+        {
+          "block": "p-article-14-representations-warranties-and-compliance-105",
+          "clause": "14.1",
+          "quote": "Each Party represents that it is in compliance with all applicable anti-bribery and anti-money-laundering laws, including the anti-commercial-bribery provisions of the Criminal Law of the People's Republic of China and the anti-corruption laws of the Republic of Indonesia, and that neither Party has offered or received any improper payment in connection with this Contract."
+        }
+      ],
+      "clause_title": "14.1 Mutual representations",
+      "finding": "14.1 覆盖了反腐败与反洗钱，但没有涉及：(1) 出口管制（中国《出口管制法》项下管制清单、最终用户与最终用途声明）；(2) 经济制裁与禁运（联合国、中国、印尼及可能的第三国制裁）；(3) 反倾销与反补贴措施（若目的国对同类产品征收反倾销税，进口成本可能剧增）。合同也未包含“若制裁或管制措施导致无法履约”的不可抗力/终止机制。",
+      "finding_en": "Anti-bribery and anti-money-laundering are covered, but there is no representation or termination mechanism for export controls (including end-user and end-use statements), sanctions or embargoes, or anti-dumping and countervailing duties at destination.",
+      "consequence": "纯碱一般不属两用物项或出口管制清单范围，但出口经营者对最终用户与最终用途仍负有合理审慎义务；且若目的国对相关产品采取反倾销措施，买方的进口成本与卖方的价格竞争力都会受影响。缺少条款意味着这类事件发生后，卖方既无明示的免责依据，也无单方终止权。",
+      "consequence_en": "Soda ash is not generally a dual-use item, but exporters still owe a duty of reasonable diligence on end user and end use. If anti-dumping measures apply at destination, both the buyer's landed cost and the seller's competitiveness are affected, and the contract provides neither relief nor a termination route.",
+      "confirm": [
+        "核实纯碱是否列于中国出口管制清单（需以现行管制清单与目录为准）",
+        "核实印尼是否对中国产纯碱实施反倾销、保障措施或特别关税",
+        "取得买方最终用户与最终用途声明（end-user statement）",
+        "在合同中加入制裁与管制变化时的暂停履约与终止权"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国出口管制法》",
+          "note": "出口经营者对管制物项的最终用户和最终用途负有核验义务；对非管制物项在特定情形下亦可能适用临时管制。"
+        },
+        {
+          "label": "WTO 反倾销协定 / 印尼贸易救济规定",
+          "note": "印尼可通过反倾销、反补贴或保障措施对进口产品加征关税。是否对中国产纯碱适用须以印尼贸易部官方公告为准。"
+        }
+      ],
+      "suggested_wording": "Each Party shall comply with all applicable export control, sanctions and trade embargo laws. The Buyer represents that the Goods will not be resold, transferred or used in a manner contrary to applicable export control or sanctions law, and shall provide an end-user and end-use statement on request. If any export control, sanctions or trade remedy measure applicable to the Goods materially increases the cost of performance or makes performance unlawful, the affected Party may suspend performance and, if the measure continues for more than 60 days, terminate this Contract without liability.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-34",
+      "seq": 34,
+      "category": "missing",
+      "severity": "medium",
+      "issue_type": "missing",
+      "title": "【条款缺失】无争议期间的付款与货物保全安排",
+      "title_en": "[MISSING] No arrangement for payment obligations or preservation of goods during a dispute",
+      "anchors": [
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-110",
+          "clause": "15.2",
+          "quote": "The Parties shall first attempt to resolve any dispute by friendly negotiation for 60 (sixty) days from the date the dispute arises. Neither Party may commence arbitration during that period."
+        }
+      ],
+      "clause_title": "15.2 Friendly negotiation",
+      "finding": "合同没有约定：争议期间货款是否仍应按期支付、货物是否应予以保全（如共同检验、封存样品、保留仓储）、拒付信用证项下款项后的处理方式、以及争议期间是否暂停利息计息。这与 6.4(B)（放弃中止履行与扣单）叠加，形成“争议期间卖方既不能停、又不能扣、还不一定能收”的局面。",
+      "finding_en": "Nothing addresses whether payment continues during a dispute, how the goods are preserved, how a refused L/C drawing is handled, or whether interest runs during the dispute — a gap that compounds the 6.4(B) waiver of suspension and document retention.",
+      "consequence": "质量争议通常不会立即终止付款义务，但双方对“争议期间先付后议”缺乏共识时，买方可能以争议为由拖延付款，而卖方又无中止履约与扣单的权利，形成实质上的无担保赊销。",
+      "consequence_en": "Quality disputes rarely stop payment, but without an agreed rule the buyer can use a dispute as a reason to delay, and with suspension and document retention waived, the sale becomes effectively unsecured credit.",
+      "confirm": [
+        "约定争议不影响买方按期付款义务",
+        "约定争议货物的共同检验、封存样品与仓储安排",
+        "约定拒付情形下的单据处理与担保措施（如备用信用证）"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 509 条、第 527 条",
+          "note": "诚信履行与合作义务；先履行一方的中止履行权（不安抗辩）在本合同中被 6.4(B) 排除，需评估该排除对法定抗辩权的影响。"
+        }
+      ],
+      "suggested_wording": "During any dispute, the Buyer shall continue to perform all payment obligations when due, and interest shall continue to accrue. Neither Party shall deal with or dispose of the disputed Goods, and upon either Party's request the Parties shall jointly arrange an inspection by an independent surveyor and the sealing of retained samples. Payment of amounts not in dispute shall not be withheld.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-35",
+      "seq": 35,
+      "category": "missing",
+      "severity": "medium",
+      "issue_type": "missing",
+      "title": "【条款缺失】无迟延交付违约金，买方无对价保护",
+      "title_en": "[MISSING] No liquidated damages for late delivery",
+      "anchors": [
+        {
+          "block": "p-article-5-delivery-and-shipment-048",
+          "clause": "5.1(A)",
+          "quote": "A. The Seller shall ship the Goods during the period from 1 May 2026 to 30 June 2026, both dates inclusive."
+        },
+        {
+          "block": "p-article-5-delivery-and-shipment-051",
+          "clause": "5.1(D)",
+          "quote": "If shipment is delayed for any reason, the Seller shall notify the Buyer and the Buyer shall accept shipment within such extended period as the Seller may nominate, provided that the extension does not exceed 30 days."
+        }
+      ],
+      "clause_title": "5.1 Delivery period",
+      "finding": "合同规定了装运期（5.1(A)），却没有任何迟延交付的违约责任条款（违约金、解除权、买方救济）。双方唯一的约定是 5.1(D) 的卖方单方延期权。全文没有约定迟延的后果，也没有约定装运期届满后买方的救济。",
+      "finding_en": "A shipment window is stated, but no consequence attaches to missing it. The only mechanism is the seller's own extension right, and the contract is silent on any buyer remedy.",
+      "consequence": "交付条款存在明显单边性：卖方无迟延责任，而买方受 12.2 无限责任约束。此类失衡在谈判中容易被整体接受作为交换筹码，但一旦卖方实际迟延，买方可能主张 5.1(D) 因失衡而不适用，反而回到一般违约赔偿（含间接损失）的考量上。",
+      "consequence_en": "Delivery is one-sided: no seller delay liability against unlimited buyer liability. The buyer may argue that 5.1(D) is not effective, which would revert to ordinary damages and reopen consequential loss.",
+      "confirm": [
+        "确认迟延交付违约金的商业可接受区间（行业常见为每日 0.1%–0.5%，上限 5%–10%）",
+        "确认违约金与 12.1 责任上限的关系",
+        "核实纯碱在本方产能中的排产安排，确认 6 周装运期的可行性"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 577 条、第 585 条",
+          "note": "当事人一方不履行合同义务或履行不符合约定的应承担违约责任；违约金过高或过低可请求调整。"
+        }
+      ],
+      "suggested_wording": "If the Seller fails to ship the Goods within the period in Article 5.1 for reasons within its control, the Seller shall pay liquidated damages of 0.3% of the value of the delayed Goods for each day of delay, up to 5% of the Contract Value. If shipment is delayed by more than 30 days, the Buyer may terminate this Contract for the unshipped quantity and the Seller shall refund any advance payment for that quantity.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-36",
+      "seq": 36,
+      "category": "missing",
+      "severity": "medium",
+      "issue_type": "missing",
+      "title": "【条款缺失】无知识产权、保密与数据保护条款",
+      "title_en": "[MISSING] No intellectual property, confidentiality or data protection clause",
+      "anchors": [
+        {
+          "block": "p-article-16-general-provisions-121",
+          "clause": "16.6",
+          "quote": "The Parties are independent contractors. Nothing in this Contract creates a partnership, joint venture or agency relationship between them."
+        }
+      ],
+      "clause_title": "16.6 Relationship of the Parties (and Article 16 generally)",
+      "finding": "ARTICLE 16 为通用条款，包含转让、完整协议、修改、可分性、通知、关系与签署副本，但没有知识产权、保密与个人信息保护条款。合同涉及买方的品牌与标识（Annex B.2）、买方的联系人与电子邮箱（II.4），但未约定数据使用与保密范围。",
+      "finding_en": "Article 16 covers assignment, entire agreement, amendment, severability, notices, relationship and counterparts, but nothing on IP, confidentiality or personal data, despite the buyer's branding and contact data being used and exchanged.",
+      "consequence": "商业秘密风险主要在于交易价格与规格信息外泄（例如买方向其他供应商询价），以及买方在包装上使用卖方的品牌标识（Annex B.2 标注买方名称与合同号，但未约定品牌使用许可）。多国数据保护规则（含印尼个人信息保护法）对跨境传输个人数据有要求，本合同未作处理。",
+      "consequence_en": "The exposure is mainly leakage of pricing and specification terms, plus unlicensed use of branding, with no data-protection allocation for cross-border transfer of contact data.",
+      "confirm": [
+        "确认是否需要在包装上使用卖方品牌标识，并补签品牌使用许可",
+        "核实印尼个人信息保护法对跨境传输买方联系人信息的要求",
+        "加入保密条款（保密范围、期限、例外）"
+      ],
+      "legal_refs": [
+        {
+          "label": "印尼《个人信息保护法》（UU No. 27/2022）",
+          "note": "该法对跨境个人数据传输设有条件要求。具体适用须以印尼官方文本与实施细则为准，本报告未作确定性认定。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 501 条、第 1035 条",
+          "note": "商业秘密保护；处理个人信息应遵循合法、正当、必要原则。"
+        }
+      ],
+      "suggested_wording": "Each Party shall keep confidential the commercial terms of this Contract, including prices, specifications, volumes and the identity of the other Party's customers, and shall not disclose them to any third party except as required by law, by a stock exchange rule, or to professional advisers under a duty of confidentiality. This obligation shall survive for 3 years after termination. Each Party shall process personal data received from the other solely for the performance of this Contract.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-37",
+      "seq": 37,
+      "category": "missing",
+      "severity": "low",
+      "issue_type": "missing",
+      "title": "【条款缺失】无样品封存与留样、无包装性能要求（Annex B 明确缺失）",
+      "title_en": "[MISSING] No retained sample and no packaging performance specification",
+      "anchors": [
+        {
+          "block": "p-annex-b-packing-and-marking-130",
+          "clause": "Annex B.3",
+          "quote": "No requirement is set out in this Annex as to bag material specifications, tear strength, moisture barrier grade, palletisation, container stuffing, UN packaging, segregation from other cargo, or carrier packing requirements."
+        },
+        {
+          "block": "p-annex-a-product-specification-and-certificate-of-analysis-126",
+          "clause": "Annex A.2",
+          "quote": "The Certificate of Analysis for each shipment shall be signed by the Seller's quality control department and shall state the values obtained for the parameters listed in A.1."
+        }
+      ],
+      "clause_title": "Annex B.3 / Annex A.2",
+      "finding": "Annex B.3 明文承认包装条款缺失：无袋材规格、抗拉/抗撕强度、防潮等级、托拍化、集装箱装箱方式、杂货混装隔离与承运人包装要求。Annex A.2 只要求出具 COA，未约定留样（retained sample）的数量、保管期限与保管方。",
+      "finding_en": "Annex B.3 expressly records what is absent: bag material specification, tear strength, moisture barrier grade, palletisation, stuffing, UN packaging, segregation and carrier packing requirements. Annex A.2 requires a COA but no retained sample.",
+      "consequence": "纯碱吸湿性较强，防潮等级与内衬质量直接决定到达雅加达后是否结块、是否影响下游投料。缺少袋材与防潮要求时，一旦出现受潮结块，责任难以在“包装缺陷”与“运输途中受潮（属买方风险）”之间划分。缺留样则使质量争议缺少客观比对物。",
+      "consequence_en": "Soda ash absorbs moisture, so liner grade and barrier determine whether the cargo arrives caked. Without a packaging specification, responsibility for caking cannot be divided between packaging defect and transit moisture — the latter being the buyer's risk. Without a retained sample, quality disputes lack an objective reference.",
+      "confirm": [
+        "确认现有袋材规格（内衬 PE 厚度、克重、抗拉强度）与出口常规定型",
+        "核实印尼雨季到港的防潮实际需求与买方仓储条件",
+        "约定留样数量（建议每批 2 份，各 1 kg）、保存期限与保管方"
+      ],
+      "legal_refs": [
+        {
+          "label": "IMSBC Code（国际海运固体散装货物规则）",
+          "note": "适用于散装固体货物；本合同为袋装，主要参照一般包装与货物申报要求。"
+        },
+        {
+          "label": "Incoterms 2020 — 包装义务",
+          "note": "卖方须按合同约定包装；合同未约定的，按行业惯例可识别的适宜方式包装。"
+        }
+      ],
+      "suggested_wording": "Each jumbo bag shall have an inner liner of low-density polyethylene of not less than [0.08] mm thickness, a tensile strength of not less than [X] kN/m, and shall be marked as moisture-protected. The Seller shall retain a sealed sample of not less than 1 kg for each lot for 6 months. The Buyer may request a sample at its own cost within the retention period.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-38",
+      "seq": 38,
+      "category": "dispute",
+      "severity": "medium",
+      "issue_type": "commercial",
+      "title": "签署页买方日期留空、印章辨认不清，且无双方授权代表履职证明",
+      "title_en": "Buyer's signature date left blank, seal partly illegible, no evidence of authority",
+      "anchors": [
+        {
+          "block": "xl-011",
+          "clause": "Execution",
+          "quote": "Date: ____________ (left blank)"
+        },
+        {
+          "block": "xl-012",
+          "clause": "Execution",
+          "quote": "Company seal: affixed (partially illegible in scanned copy)"
+        },
+        {
+          "block": "p-parties-006",
+          "clause": "II.1",
+          "quote": "Name: PT Nusantara Soda Prima (a limited liability company organised under the laws of the Republic of Indonesia)"
+        }
+      ],
+      "clause_title": "Execution / Parties",
+      "finding": "买方一侧签署日的空白与“印章在扫描件中部分不可辨认”，加上 14.1 仅作“已经取得内部授权”的概括陈述，而没有要求提供授权证明 —— 这意味着卖方无法确认 R. Wijaya 是否有权代表买方签署并承担金额约 USD 268,000 的约束性义务。",
+      "finding_en": "A blank buyer date and a partly illegible seal, with only the general authority representation in 14.1, leave the seller unable to confirm that the identified individual is authorised to bind the buyer to a USD 268,000 obligation.",
+      "consequence": "若买方日后主张签署人无权代表公司（ultra vires / 无权代理），合同的效力将被质疑。印尼的 PT 通常以董事会的决议（board resolution）授权代表签署，缺少该文件时，卖方在仲裁中的举证负担会显著上升。另外，签署日期空白会影响到 6.1 的交期计算（见 R-01）。",
+      "consequence_en": "If the buyer later alleges the signatory lacked authority, the contract's validity is contested. Indonesian PT entities usually evidence authority through a board resolution; without it, the seller carries the burden. A blank date also feeds directly into the L/C timing problem in R-01.",
+      "confirm": [
+        "取得买方公司董事会决议或其细则（Anggaran Dasar）关于代表权的证明",
+        "核对签署人身份与其授权范围（如单独代表或需联署）",
+        "补签日期，并对签署页进行高清扫描或双签留存",
+        "核实买方 NIB 与 NPWP 在印尼官方系统（OSS）中的真实性"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 171 条、第 172 条（无权代理）",
+          "note": "行为人没有代理权订立的合同，未经被代理人追认，对被代理人不发生效力；相对人有理由相信行为人有代理权的除外。"
+        },
+        {
+          "label": "印尼公司法（PT Limited Liability Company Law）",
+          "note": "印尼 PT 的董事会代表权限受公司组织章程约束，具体规则须以印尼公司法和公司章程为准。"
+        }
+      ],
+      "suggested_wording": "Each Party shall, upon the other's request, provide evidence of the authority of its signatory, including where applicable a board resolution authorising the execution of this Contract and the identity documents of the signatory. Each Party shall date and seal this Contract in the corresponding signature block.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    }
+  ]
+}

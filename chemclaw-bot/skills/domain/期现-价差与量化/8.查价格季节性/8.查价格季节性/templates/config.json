@@ -1,0 +1,58 @@
+{
+  "scenario": "查价格季节性",
+  "generated_by": "查价格季节性 skill v1.0.0 (seasonality_core)",
+  "benchmark_asof": "2026-10-20",
+  "cases": [
+    {
+      "id": "methanol-eastchina-spot",
+      "title": "华东甲醇现货价格季节性",
+      "product": "甲醇 (Methanol, CAS 67-56-1)",
+      "caliber_requested": "华东地区 甲醇现货价格",
+      "caliber_obtained": "生意社甲醇基准价 —— 全国口径·含税·交易指导价（元/吨）",
+      "caliber_downgraded": true,
+      "downgrade_note": "华东/太仓区域现货 10 年历史在免费公开渠道不可得（隆众、卓创接口需付费订阅）；本次取得的是生意社基准价的全国口径。该口径适用于全国价格水平的季节性判断，但不能用于区域价差、交割地贴水等区域特征推断。",
+      "unit": "元/吨",
+      "tax": "含税",
+      "frequency_input": "工作日日度",
+      "current_year": 2026,
+      "sample_years": 10,
+      "window_start_iso_week": 1,
+      "quarter_end_iso_week": 52,
+      "min_years_for_stats": 3,
+      "exclude_years": [],
+      "known_outlier_years": [],
+      "price_csv": "cases/methanol-eastchina-spot/price_daily.csv",
+      "audit": {
+        "source": "生意社资讯频道 https://me.100ppi.com/news/list--1217-{page}.html (page 1..37)",
+        "per_row_source": true,
+        "cross_check": "与上一次独立抓取(2026-10-20 12:56)逐日比对：1083/1083 日期与数值完全一致",
+        "payload_jumps_verified": "6 个 |Δ|>8% 的单日变动已回原文核实，全部为源数据本身（source-confirmed），非解析错误"
+      }
+    },
+    {
+      "id": "methanol-ma-futures",
+      "title": "郑商所甲醇主力连续(MA) 价格季节性",
+      "product": "甲醇期货",
+      "caliber_requested": "郑商所 MA 主力连续 收盘价",
+      "caliber_obtained": "自建主力连续(每日持仓量最大合约, 含流动性门槛) 收盘价",
+      "caliber_downgraded": false,
+      "unit": "元/吨",
+      "tax": "期货含税价",
+      "frequency_input": "工作日日度",
+      "current_year": 2026,
+      "sample_years": 10,
+      "window_start_iso_week": 1,
+      "quarter_end_iso_week": 52,
+      "min_years_for_stats": 3,
+      "exclude_years": [],
+      "known_outlier_years": [],
+      "price_csv": "cases/methanol-ma-futures/price_daily.csv",
+      "audit": {
+        "source": "新浪财经逐合约 K 线 (InnerFuturesNewService.getDailyKLine)",
+        "per_row_source": false,
+        "cross_check": "主力连续由脚本自建，换月日志随附；换月日另做同日价差记录",
+        "payload_jumps_verified": "换月伪跳空以 is_roll_day 标记，统计时单独说明"
+      }
+    }
+  ]
+}

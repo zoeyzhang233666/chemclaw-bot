@@ -1,0 +1,1622 @@
+{
+ "config": {
+  "product": {
+   "key": "MA",
+   "name": "甲醇",
+   "exchange": "郑州商品交易所",
+   "contract_prefix": "MA",
+   "spec": "MA 主力合约（100ppI 基差表中的主力合约）",
+   "spot_spec": "生意社甲醇基准价（国产/进口综合，元/吨，含税）",
+   "unit": "元/吨",
+   "note": "现货=生意社(生意社)甲醇基准价；期货=当日主力合约收盘/结算；基差=现货-期货，与生意社主力基差表口径一致。"
+  },
+  "indicators": [
+   {
+    "key": "basis_pct",
+    "name": "基差率",
+    "short": "基差率",
+    "family": "structure",
+    "unit": "%",
+    "form": "level",
+    "source": "100ppi 主力基差表（现货-主力）/现货",
+    "std_method": "rolling_z",
+    "role": "core",
+    "default_weight": 1.5,
+    "rationale": "现货相对期货的贴水/升水程度，是现期结构最直接的度量；无趋势漂移，适合水平值+滚动标准化。"
+   },
+   {
+    "key": "basis_pct_pctile",
+    "name": "基差率历史分位(3年滚动)",
+    "short": "基差分位",
+    "family": "structure",
+    "unit": "%",
+    "form": "level",
+    "source": "由基差率在 expanding/rolling 3年窗口内计算",
+    "std_method": "rank",
+    "role": "optional",
+    "default_weight": 0.0,
+    "rationale": "把基差放到自身历史分布中看，避免绝对水平随宏观通胀漂移。"
+   },
+   {
+    "key": "ret_4w",
+    "name": "近4周价格涨跌",
+    "short": "4周涨跌",
+    "family": "price",
+    "unit": "%",
+    "form": "change",
+    "source": "主力收盘价 4 周变化",
+    "std_method": "rolling_z",
+    "role": "core",
+    "default_weight": 1.2,
+    "rationale": "捕捉短期动量；用变化率而非价格水平，避免长期中枢漂移。"
+   },
+   {
+    "key": "ret_13w",
+    "name": "近13周价格涨跌",
+    "short": "13周涨跌",
+    "family": "price",
+    "unit": "%",
+    "form": "change",
+    "source": "主力收盘价 13 周变化",
+    "std_method": "rolling_z",
+    "role": "core",
+    "default_weight": 1.0,
+    "rationale": "季度级别趋势位置，与基差一起刻画「价格在什么位置、结构怎么样」。"
+   },
+   {
+    "key": "spot_rank_52w",
+    "name": "现货价52周分位",
+    "short": "价格分位",
+    "family": "price",
+    "unit": "%",
+    "form": "level",
+    "source": "现货价在过去52周的百分位",
+    "std_method": "rank",
+    "role": "optional",
+    "default_weight": 0.8,
+    "rationale": "价格绝对水平无量纲化后入模：同样「高位」的比较不依赖通胀与合约换月。"
+   },
+   {
+    "key": "port_inv",
+    "name": "港口样本库存",
+    "short": "港口库存",
+    "family": "inventory",
+    "unit": "万吨",
+    "form": "level",
+    "source": "隆众资讯 中国甲醇港口样本库存（周度，周三调查日）",
+    "std_method": "rolling_z",
+    "role": "core",
+    "default_weight": 1.2,
+    "rationale": "有季节性与样本口径变化，用滚动均值/标准差去中心和缩放。"
+   },
+   {
+    "key": "port_inv_rank_3y",
+    "name": "港口库存3年分位",
+    "short": "库存分位",
+    "family": "inventory",
+    "unit": "%",
+    "form": "level",
+    "source": "港口库存在过去156周的百分位",
+    "std_method": "rank",
+    "role": "optional",
+    "default_weight": 0.0,
+    "rationale": "库存绝对量中枢年际漂移明显（样本扩容），分位更可比。"
+   },
+   {
+    "key": "port_inv_wow",
+    "name": "港口库存周变化",
+    "short": "库存环比",
+    "family": "inventory",
+    "unit": "万吨",
+    "form": "change",
+    "source": "两期港口库存之差",
+    "std_method": "rolling_z",
+    "role": "optional",
+    "default_weight": 0.6,
+    "rationale": "库存方向（累库/去库）比水平更能区分阶段。"
+   },
+   {
+    "key": "producer_inv",
+    "name": "生产企业库存",
+    "short": "厂库",
+    "family": "inventory",
+    "unit": "万吨",
+    "form": "level",
+    "source": "隆众资讯 中国甲醇样本生产企业库存",
+    "std_method": "rolling_z",
+    "role": "optional",
+    "default_weight": 0.6,
+    "rationale": "内地工厂库存反映上游压力，与港口库存互补。"
+   },
+   {
+    "key": "operating_rate",
+    "name": "装置产能利用率",
+    "short": "开工率",
+    "family": "supply",
+    "unit": "%",
+    "form": "level",
+    "source": "隆众资讯 中国甲醇产量及产能利用率周数据",
+    "std_method": "rolling_z",
+    "role": "core",
+    "default_weight": 1.0,
+    "rationale": "供给端的直接度量；0-100 有界，滚动标准化后再做截尾。"
+   },
+   {
+    "key": "output_wt",
+    "name": "周产量",
+    "short": "产量",
+    "family": "supply",
+    "unit": "万吨",
+    "form": "level",
+    "source": "隆众资讯 中国甲醇产量周数据（吨→万吨）",
+    "std_method": "rolling_z",
+    "role": "optional",
+    "default_weight": 0.0,
+    "rationale": "与开工率高度共线，默认权重 0，仅备选。"
+   },
+   {
+    "key": "arrivals",
+    "name": "周度到港量",
+    "short": "到港量",
+    "family": "supply",
+    "unit": "万吨",
+    "form": "level",
+    "source": "隆众资讯 中国甲醇样本到港量周数据",
+    "std_method": "pctile_rank",
+    "role": "optional",
+    "default_weight": 0.8,
+    "rationale": "到港量波动极大且分布右偏，用全历史分位数比 z 分数稳健。"
+   },
+   {
+    "key": "spread_1_5",
+    "name": "月差 近月-次月(%/月)",
+    "short": "月差1-5",
+    "family": "structure",
+    "unit": "%",
+    "form": "level",
+    "source": "由各交割月合约日线构造：近月-次近月，按月份差归一",
+    "std_method": "rolling_z",
+    "role": "optional",
+    "default_weight": 0.7,
+    "rationale": "月差刻画近端紧张程度；日度可得，历史最长。"
+   },
+   {
+    "key": "spread_1_3",
+    "name": "月差 近月-第三月(%/月)",
+    "short": "月差1-3",
+    "family": "structure",
+    "unit": "%",
+    "form": "level",
+    "source": "近月与第三个交割月的价差，按月份差归一",
+    "std_method": "rolling_z",
+    "role": "optional",
+    "default_weight": 0.0,
+    "rationale": "更远端的期限结构斜率，用于对照。"
+   },
+   {
+    "key": "vol_20d",
+    "name": "20日实现波动率",
+    "short": "波动率",
+    "family": "price",
+    "unit": "%",
+    "form": "level",
+    "source": "主力连续日对数收益 20 日年化标准差",
+    "std_method": "rolling_z",
+    "role": "optional",
+    "default_weight": 0.4,
+    "rationale": "区分「同样方向、不同情绪烈度」的阶段。"
+   }
+  ],
+  "default_weights": {
+   "basis_pct": 1.5,
+   "ret_4w": 1.2,
+   "ret_13w": 1.0,
+   "spot_rank_52w": 0.8,
+   "port_inv": 1.2,
+   "operating_rate": 1.0,
+   "arrivals": 0.8,
+   "spread_1_5": 0.7,
+   "vol_20d": 0.4,
+   "basis_pct_pctile": 0,
+   "port_inv_rank_3y": 0,
+   "port_inv_wow": 0.6,
+   "producer_inv": 0.6,
+   "output_wt": 0,
+   "spread_1_3": 0
+  },
+  "defaults": {
+   "history_days": 1825,
+   "window_weeks": 4,
+   "top_n": 5,
+   "min_gap_weeks": 8,
+   "forward_months": [
+    1,
+    3
+   ],
+   "std_rule": "point_in_time",
+   "z_lookback_days": 730,
+   "z_min_obs": 78,
+   "similarity": "mae"
+  },
+  "similarity_methods": [
+   {
+    "key": "mae",
+    "name": "加权平均绝对差(MAE)",
+    "formula": "sim = 1 - Σ w_i·|z_hist - z_now| / Σ w_i / c",
+    "c": 3.0,
+    "note": "默认方法。以「平均偏离几个标准差」计，直观且对小样本稳健。"
+   },
+   {
+    "key": "rmse",
+    "name": "加权均方根差(RMSE)",
+    "formula": "sim = 1 - sqrt(Σ w_i·(z_hist-z_now)^2/Σw_i) / c",
+    "note": "对单个指标的大偏离更敏感，适合只想排除「某一维完全不像」的情况。"
+   },
+   {
+    "key": "cosine",
+    "name": "加权余弦相似度",
+    "formula": "sim = Σ w_i z_i^h z_i^c / sqrt(Σw z^2)·sqrt(Σw z^2)",
+    "note": "只看方向和相对形态，不看水平；对全正/全负的组合不敏感。"
+   },
+   {
+    "key": "mahalanobis",
+    "name": "协方差加权距离",
+    "formula": "d = sqrt((z_h-z_c)^T S^-1 (z_h-z_c))",
+    "note": "考虑指标间相关性，避免重复计数；对样本量敏感，S 用收缩估计。"
+   }
+  ]
+ },
+ "asof": "2026-10-14",
+ "history_start": "2021-10-15",
+ "history_days": 1825,
+ "method": "mae",
+ "window_weeks": 4,
+ "top_n": 5,
+ "min_gap_weeks": 8,
+ "weights": {
+  "basis_pct": 1.5,
+  "ret_4w": 1.2,
+  "ret_13w": 1.0,
+  "spot_rank_52w": 0.8,
+  "port_inv": 1.2,
+  "operating_rate": 1.0,
+  "arrivals": 0.8,
+  "spread_1_5": 0.7,
+  "vol_20d": 0.4,
+  "basis_pct_pctile": 0,
+  "port_inv_rank_3y": 0,
+  "port_inv_wow": 0.6,
+  "producer_inv": 0.6,
+  "output_wt": 0,
+  "spread_1_3": 0
+ },
+ "keys": [
+  "basis_pct",
+  "ret_4w",
+  "ret_13w",
+  "spot_rank_52w",
+  "port_inv",
+  "operating_rate",
+  "arrivals",
+  "spread_1_5",
+  "vol_20d",
+  "port_inv_wow",
+  "producer_inv"
+ ],
+ "dropped_for_now": [],
+ "rules": {
+  "hist_z_required": true,
+  "min_hist_z_cover": 0.9,
+  "min_sign_match": 0.75,
+  "lag_days": 21,
+  "min_eff": 0.9
+ },
+ "cover": {
+  "basis_pct": 1.0,
+  "ret_4w": 1.0,
+  "ret_13w": 1.0,
+  "spot_rank_52w": 1.0,
+  "port_inv": 0.6956521739130435,
+  "operating_rate": 0.039525691699604744,
+  "arrivals": 0.7114624505928854,
+  "spread_1_5": 1.0,
+  "vol_20d": 1.0,
+  "port_inv_wow": 0.691699604743083,
+  "producer_inv": 0.7035573122529645
+ },
+ "tiers": {
+  "A": {
+   "label": "全部可得指标（含覆盖不足的开工率）",
+   "n_candidates": 3,
+   "keys": [
+    "basis_pct",
+    "ret_4w",
+    "ret_13w",
+    "spot_rank_52w",
+    "port_inv",
+    "operating_rate",
+    "arrivals",
+    "spread_1_5",
+    "vol_20d",
+    "port_inv_wow",
+    "producer_inv"
+   ]
+  },
+  "B": {
+   "weights": {
+    "basis_pct": 1.5,
+    "ret_4w": 1.2,
+    "ret_13w": 1.0,
+    "spot_rank_52w": 0.8,
+    "spread_1_5": 0.7,
+    "vol_20d": 0.4,
+    "basis_pct_pctile": 0,
+    "port_inv_rank_3y": 0,
+    "output_wt": 0,
+    "spread_1_3": 0
+   },
+   "keys": [
+    "basis_pct",
+    "ret_4w",
+    "ret_13w",
+    "spot_rank_52w",
+    "spread_1_5",
+    "vol_20d"
+   ],
+   "n_candidates": 40,
+   "dropped": [
+    "port_inv",
+    "operating_rate",
+    "arrivals",
+    "port_inv_wow",
+    "producer_inv"
+   ],
+   "selected": [
+    {
+     "rank": 1,
+     "date": "2026-09-23",
+     "similarity": 0.8055153787901925,
+     "path_similarity": 0.7313139869456977,
+     "score": 0.783254961236844,
+     "regime_id": 4,
+     "hist_z_cover": 1.0
+    },
+    {
+     "rank": 2,
+     "date": "2026-05-27",
+     "similarity": 0.8923655900656842,
+     "path_similarity": 0.46341506922404885,
+     "score": 0.7636804338131935,
+     "regime_id": 4,
+     "hist_z_cover": 1.0
+    },
+    {
+     "rank": 3,
+     "date": "2022-10-19",
+     "similarity": 0.7002000143364353,
+     "path_similarity": 0.6454030218162699,
+     "score": 0.6837609165803856,
+     "regime_id": 2,
+     "hist_z_cover": 1.0
+    },
+    {
+     "rank": 4,
+     "date": "2022-03-30",
+     "similarity": 0.6541909231004488,
+     "path_similarity": 0.6443684042381153,
+     "score": 0.6512441674417487,
+     "regime_id": 1,
+     "hist_z_cover": 1.0
+    },
+    {
+     "rank": 5,
+     "date": "2024-03-27",
+     "similarity": 0.6508798387473584,
+     "path_similarity": 0.6467351606874281,
+     "score": 0.6496364353293793,
+     "regime_id": 3,
+     "hist_z_cover": 1.0
+    }
+   ],
+   "forward": [
+    {
+     "date": "2026-09-23",
+     "rank": 1,
+     "forward": {
+      "1m": {
+       "start": "2026-09-23",
+       "end": "2026-10-14",
+       "actual_months": 0.69,
+       "fut_close": 3262.0,
+       "fut_close_chg": 476.1500000000001,
+       "fut_close_pct": 17.09173142846887,
+       "spot": 4000.0,
+       "spot_chg": 946.6240000000007,
+       "spot_pct": 31.002536209101027,
+       "basis": 738.0,
+       "basis_chg": 470.474,
+       "basis_pct": 18.45,
+       "basis_pct_chg": 10.539963690970422,
+       "basis_pct_pct": 133.2479811620927,
+       "port_inv": 30.51,
+       "port_inv_chg": -31.12800000000001,
+       "port_inv_pct": -50.501314124403784,
+       "producer_inv": 32.23,
+       "producer_inv_chg": -2.2575000000000003,
+       "producer_inv_pct": -6.545849945632476,
+       "operating_rate": 88.94,
+       "operating_rate_chg": 1.9399999999999977,
+       "operating_rate_pct": 2.229885057471259,
+       "arrivals": 15.9,
+       "arrivals_chg": -1.0215000000000014,
+       "arrivals_pct": -6.036698874213286,
+       "spread_1_5": 2.655923604894061,
+       "spread_1_5_chg": 1.052428362927963,
+       "spread_1_5_pct": 65.63339481054811
+      },
+      "3m": null
+     }
+    },
+    {
+     "date": "2026-05-27",
+     "rank": 2,
+     "forward": {
+      "1m": {
+       "start": "2026-05-27",
+       "end": "2026-06-24",
+       "actual_months": 0.92,
+       "fut_close": 2459.0,
+       "fut_close_chg": -219.5,
+       "fut_close_pct": -8.194885196938584,
+       "spot": 2697.5,
+       "spot_chg": -109.83349999999973,
+       "spot_pct": -3.9123780626704963,
+       "basis": 238.5,
+       "basis_chg": 109.66649999999998,
+       "basis_pct": 8.841519925857275,
+       "basis_pct_chg": 4.956113638306341,
+       "basis_pct_pct": 127.55715288220992,
+       "port_inv": 63.24,
+       "port_inv_chg": -57.438499999999955,
+       "port_inv_pct": -47.596299257945674,
+       "producer_inv": 33.68,
+       "producer_inv_chg": -8.1385,
+       "producer_inv_pct": -19.461482358286407,
+       "operating_rate": 90.72,
+       "operating_rate_chg": -0.583500000000015,
+       "operating_rate_pct": -0.6390773628612401,
+       "arrivals": 9.93,
+       "arrivals_chg": -9.679000000000002,
+       "arrivals_pct": -49.35998776072212,
+       "spread_1_5": 1.7085624509033777,
+       "spread_1_5_chg": 0.87298380598786,
+       "spread_1_5_pct": 104.47655780816709
+      },
+      "3m": {
+       "start": "2026-05-27",
+       "end": "2026-08-26",
+       "actual_months": 2.99,
+       "fut_close": 2769.0,
+       "fut_close_chg": 90.5,
+       "fut_close_pct": 3.378756766847113,
+       "spot": 2846.67,
+       "spot_chg": 39.33650000000034,
+       "spot_pct": 1.4012050937304066,
+       "basis": 77.67000000000007,
+       "basis_chg": -51.16349999999994,
+       "basis_pct": 2.7284511376450404,
+       "basis_pct_chg": -1.156955149905893,
+       "basis_pct_pct": -29.776941310175054,
+       "port_inv": 66.7,
+       "port_inv_chg": -53.978499999999954,
+       "port_inv_pct": -44.72917711108438,
+       "producer_inv": 32.6,
+       "producer_inv_chg": -9.218499999999999,
+       "producer_inv_pct": -22.044071403804534,
+       "operating_rate": 81.9,
+       "operating_rate_chg": -9.403500000000008,
+       "operating_rate_pct": -10.29916706369417,
+       "arrivals": 22.64,
+       "arrivals_chg": 3.030999999999999,
+       "arrivals_pct": 15.457188025906454,
+       "spread_1_5": 1.3788098693759072,
+       "spread_1_5_chg": 0.5432312244603895,
+       "spread_1_5_pct": 65.01257874000761
+      }
+     }
+    },
+    {
+     "date": "2022-10-19",
+     "rank": 3,
+     "forward": {
+      "1m": {
+       "start": "2022-10-19",
+       "end": "2022-11-16",
+       "actual_months": 0.92,
+       "fut_close": 2610.0,
+       "fut_close_chg": -6.75,
+       "fut_close_pct": -0.2579535683576939,
+       "spot": 2827.5,
+       "spot_chg": 190.5709999999999,
+       "spot_pct": 7.227005353576077,
+       "basis": 217.5,
+       "basis_chg": 197.321,
+       "basis_pct": 7.6923076923076925,
+       "basis_pct_chg": 7.031678395242414,
+       "basis_pct_pct": 1064.3909415581966,
+       "port_inv": 55.95,
+       "port_inv_chg": -34.66849999999998,
+       "port_inv_pct": -38.25764054801171,
+       "producer_inv": 51.27,
+       "producer_inv_chg": 10.565500000000007,
+       "producer_inv_pct": 25.95658956626419,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 17.47,
+       "arrivals_chg": -10.546500000000002,
+       "arrivals_pct": -37.64388842289365,
+       "spread_1_5": 2.7570789865871834,
+       "spread_1_5_chg": 3.149253358152207,
+       "spread_1_5_pct": -803.0237533331658
+      },
+      "3m": {
+       "start": "2022-10-19",
+       "end": "2023-01-18",
+       "actual_months": 2.99,
+       "fut_close": 2693.0,
+       "fut_close_chg": 76.25,
+       "fut_close_pct": 2.913919938855458,
+       "spot": 2690.0,
+       "spot_chg": 53.07099999999991,
+       "spot_pct": 2.0126063310767828,
+       "basis": -3.0,
+       "basis_chg": -23.178999999999995,
+       "basis_pct": -0.1115241635687732,
+       "basis_pct_chg": -0.7721534606340517,
+       "basis_pct_pct": -116.88150435716345,
+       "port_inv": 79.74,
+       "port_inv_chg": -10.878499999999988,
+       "port_inv_pct": -12.004723097380765,
+       "producer_inv": 49.47,
+       "producer_inv_chg": 8.765500000000003,
+       "producer_inv_pct": 21.534474075347944,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 10.86,
+       "arrivals_chg": -17.1565,
+       "arrivals_pct": -61.237128120928745,
+       "spread_1_5": 0.2034023668639053,
+       "spread_1_5_chg": 0.5955767384289288,
+       "spread_1_5_pct": -151.8652878953312
+      }
+     }
+    },
+    {
+     "date": "2022-03-30",
+     "rank": 4,
+     "forward": {
+      "1m": {
+       "start": "2022-03-30",
+       "end": "2022-04-29",
+       "actual_months": 0.99,
+       "fut_close": 2709.0,
+       "fut_close_chg": -72.05000000000018,
+       "fut_close_pct": -2.5907480987396925,
+       "spot": 2745.0,
+       "spot_chg": 59.258000000000266,
+       "spot_pct": 2.206392125528067,
+       "basis": 36.0,
+       "basis_chg": 131.308,
+       "basis_pct": 1.3114754098360657,
+       "basis_pct_chg": 5.0371904143017705,
+       "basis_pct_pct": -135.20063687813237,
+       "port_inv": null,
+       "port_inv_chg": null,
+       "producer_inv": null,
+       "producer_inv_chg": null,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 26.59,
+       "arrivals_chg": -0.6099999999999994,
+       "arrivals_pct": -2.2426470588235325,
+       "spread_1_5": -0.5263157894736842,
+       "spread_1_5_chg": -0.10827328071343656,
+       "spread_1_5_pct": 25.900064812674973
+      },
+      "3m": {
+       "start": "2022-03-30",
+       "end": "2022-06-29",
+       "actual_months": 2.99,
+       "fut_close": 2635.0,
+       "fut_close_chg": -146.05000000000018,
+       "fut_close_pct": -5.251613599180171,
+       "spot": 2605.0,
+       "spot_chg": -80.74199999999973,
+       "spot_pct": -3.006320041165522,
+       "basis": -30.0,
+       "basis_chg": 65.30799999999999,
+       "basis_pct": -1.151631477927063,
+       "basis_pct_chg": 2.574083526538641,
+       "basis_pct_pct": -69.08965187764768,
+       "port_inv": null,
+       "port_inv_chg": null,
+       "producer_inv": null,
+       "producer_inv_chg": null,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 28.14,
+       "arrivals_chg": 0.9400000000000013,
+       "arrivals_pct": 3.4558823529411864,
+       "spread_1_5": -1.1650485436893203,
+       "spread_1_5_chg": -0.7470060349290727,
+       "spread_1_5_pct": 178.69140560475626
+      }
+     }
+    },
+    {
+     "date": "2024-03-27",
+     "rank": 5,
+     "forward": {
+      "1m": {
+       "start": "2024-03-27",
+       "end": "2024-04-24",
+       "actual_months": 0.92,
+       "fut_close": 2511.0,
+       "fut_close_chg": 59.65000000000009,
+       "fut_close_pct": 2.43335305036001,
+       "spot": 2650.0,
+       "spot_chg": 104.25049999999965,
+       "spot_pct": 4.095080839650556,
+       "basis": 139.0,
+       "basis_chg": 43.60050000000001,
+       "basis_pct": 5.245283018867925,
+       "basis_pct_chg": 1.6021153594606874,
+       "basis_pct_pct": 43.97588882092129,
+       "port_inv": 67.79,
+       "port_inv_chg": -15.56649999999999,
+       "port_inv_pct": -18.67460845884843,
+       "producer_inv": 40.1,
+       "producer_inv_chg": -2.9839999999999876,
+       "producer_inv_pct": -6.926005013462044,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 19.46,
+       "arrivals_chg": -6.900000000000002,
+       "arrivals_pct": -26.176024279210928,
+       "spread_1_5": 0.6473126716359356,
+       "spread_1_5_chg": 0.06558502025346113,
+       "spread_1_5_pct": 11.274179609237844
+      },
+      "3m": {
+       "start": "2024-03-27",
+       "end": "2024-06-26",
+       "actual_months": 2.99,
+       "fut_close": 2506.0,
+       "fut_close_chg": 54.65000000000009,
+       "fut_close_pct": 2.2293838089216145,
+       "spot": 2520.0,
+       "spot_chg": -25.749500000000353,
+       "spot_pct": -1.0114702958794797,
+       "basis": 14.0,
+       "basis_chg": -81.39949999999999,
+       "basis_pct": 0.5555555555555556,
+       "basis_pct_chg": -3.087612103851682,
+       "basis_pct_pct": -84.75075518083767,
+       "port_inv": 68.96,
+       "port_inv_chg": -14.396500000000003,
+       "port_inv_pct": -17.270998662371863,
+       "producer_inv": 42.72,
+       "producer_inv_chg": -0.3639999999999901,
+       "producer_inv_pct": -0.8448612013740364,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 35.0,
+       "arrivals_chg": 8.639999999999997,
+       "arrivals_pct": 32.77693474962062,
+       "spread_1_5": 0.1194267515923566,
+       "spread_1_5_chg": -0.4623008997901179,
+       "spread_1_5_pct": -79.47033267053077
+      }
+     }
+    }
+   ]
+  },
+  "C": {
+   "weights": {
+    "basis_pct": 1.5,
+    "ret_4w": 1.2,
+    "ret_13w": 1.0,
+    "spot_rank_52w": 0.8,
+    "spread_1_5": 0.7,
+    "vol_20d": 0.4
+   },
+   "keys": [
+    "basis_pct",
+    "ret_4w",
+    "ret_13w",
+    "spot_rank_52w",
+    "spread_1_5",
+    "vol_20d"
+   ],
+   "history_start": "2016-10-16",
+   "n_candidates": 75,
+   "selected": [
+    {
+     "rank": 1,
+     "date": "2026-09-23",
+     "similarity": 0.8055153787901925,
+     "path_similarity": 0.7313139869456977,
+     "score": 0.783254961236844,
+     "regime_id": 4,
+     "forward": {
+      "1m": {
+       "start": "2026-09-23",
+       "end": "2026-10-14",
+       "actual_months": 0.69,
+       "fut_close": 3262.0,
+       "fut_close_chg": 476.1500000000001,
+       "fut_close_pct": 17.09173142846887,
+       "spot": 4000.0,
+       "spot_chg": 946.6240000000007,
+       "spot_pct": 31.002536209101027,
+       "basis": 738.0,
+       "basis_chg": 470.474,
+       "basis_pct": 18.45,
+       "basis_pct_chg": 10.539963690970422,
+       "basis_pct_pct": 133.2479811620927,
+       "port_inv": 30.51,
+       "port_inv_chg": -31.12800000000001,
+       "port_inv_pct": -50.501314124403784,
+       "operating_rate": 88.94,
+       "operating_rate_chg": 1.9399999999999977,
+       "operating_rate_pct": 2.229885057471259,
+       "arrivals": 15.9,
+       "arrivals_chg": -1.0215000000000014,
+       "arrivals_pct": -6.036698874213286,
+       "spread_1_5": 2.655923604894061,
+       "spread_1_5_chg": 1.052428362927963,
+       "spread_1_5_pct": 65.63339481054811
+      },
+      "3m": null
+     }
+    },
+    {
+     "rank": 2,
+     "date": "2026-05-27",
+     "similarity": 0.8923655900656842,
+     "path_similarity": 0.46341506922404885,
+     "score": 0.7636804338131935,
+     "regime_id": 4,
+     "forward": {
+      "1m": {
+       "start": "2026-05-27",
+       "end": "2026-06-24",
+       "actual_months": 0.92,
+       "fut_close": 2459.0,
+       "fut_close_chg": -219.5,
+       "fut_close_pct": -8.194885196938584,
+       "spot": 2697.5,
+       "spot_chg": -109.83349999999973,
+       "spot_pct": -3.9123780626704963,
+       "basis": 238.5,
+       "basis_chg": 109.66649999999998,
+       "basis_pct": 8.841519925857275,
+       "basis_pct_chg": 4.956113638306341,
+       "basis_pct_pct": 127.55715288220992,
+       "port_inv": 63.24,
+       "port_inv_chg": -57.438499999999955,
+       "port_inv_pct": -47.596299257945674,
+       "operating_rate": 90.72,
+       "operating_rate_chg": -0.583500000000015,
+       "operating_rate_pct": -0.6390773628612401,
+       "arrivals": 9.93,
+       "arrivals_chg": -9.679000000000002,
+       "arrivals_pct": -49.35998776072212,
+       "spread_1_5": 1.7085624509033777,
+       "spread_1_5_chg": 0.87298380598786,
+       "spread_1_5_pct": 104.47655780816709
+      },
+      "3m": {
+       "start": "2026-05-27",
+       "end": "2026-08-26",
+       "actual_months": 2.99,
+       "fut_close": 2769.0,
+       "fut_close_chg": 90.5,
+       "fut_close_pct": 3.378756766847113,
+       "spot": 2846.67,
+       "spot_chg": 39.33650000000034,
+       "spot_pct": 1.4012050937304066,
+       "basis": 77.67000000000007,
+       "basis_chg": -51.16349999999994,
+       "basis_pct": 2.7284511376450404,
+       "basis_pct_chg": -1.156955149905893,
+       "basis_pct_pct": -29.776941310175054,
+       "port_inv": 66.7,
+       "port_inv_chg": -53.978499999999954,
+       "port_inv_pct": -44.72917711108438,
+       "operating_rate": 81.9,
+       "operating_rate_chg": -9.403500000000008,
+       "operating_rate_pct": -10.29916706369417,
+       "arrivals": 22.64,
+       "arrivals_chg": 3.030999999999999,
+       "arrivals_pct": 15.457188025906454,
+       "spread_1_5": 1.3788098693759072,
+       "spread_1_5_chg": 0.5432312244603895,
+       "spread_1_5_pct": 65.01257874000761
+      }
+     }
+    },
+    {
+     "rank": 3,
+     "date": "2021-10-20",
+     "similarity": 0.7665156352583348,
+     "path_similarity": 0.6194057298606979,
+     "score": 0.7223826636390436,
+     "regime_id": 2,
+     "forward": {
+      "1m": {
+       "start": "2021-10-20",
+       "end": "2021-11-17",
+       "actual_months": 0.92,
+       "fut_close": 2557.0,
+       "fut_close_chg": -365.4499999999998,
+       "fut_close_pct": -12.50491881811493,
+       "spot": 2806.67,
+       "spot_chg": -92.20499999999993,
+       "spot_pct": -3.1807166573239565,
+       "basis": 249.67000000000007,
+       "basis_chg": 273.24500000000006,
+       "basis_pct": 8.895595135872762,
+       "basis_pct_chg": 10.643057954159493,
+       "basis_pct_pct": -609.0577632200659,
+       "port_inv": null,
+       "port_inv_chg": null,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": null,
+       "arrivals_chg": null,
+       "spread_1_5": 0.8914728682170543,
+       "spread_1_5_chg": 1.5655330117256985,
+       "spread_1_5_pct": -232.25420265567473
+      },
+      "3m": {
+       "start": "2021-10-20",
+       "end": "2022-01-19",
+       "actual_months": 2.99,
+       "fut_close": 2811.0,
+       "fut_close_chg": -111.44999999999982,
+       "fut_close_pct": -3.813581070676997,
+       "spot": 2515.0,
+       "spot_chg": -383.875,
+       "spot_pct": -13.242206028200599,
+       "basis": -296.0,
+       "basis_chg": -272.425,
+       "basis_pct": -11.76938369781312,
+       "basis_pct_chg": -10.02192087952639,
+       "basis_pct_pct": 573.5126821955615,
+       "port_inv": null,
+       "port_inv_chg": null,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": null,
+       "arrivals_chg": null,
+       "spread_1_5": -0.6121714079942384,
+       "spread_1_5_chg": 0.06188873551440577,
+       "spread_1_5_pct": -9.181485674595757
+      }
+     }
+    },
+    {
+     "rank": 4,
+     "date": "2021-01-27",
+     "similarity": 0.7399180700080928,
+     "path_similarity": 0.561067312817993,
+     "score": 0.6862628428510629,
+     "regime_id": 1,
+     "forward": {
+      "1m": {
+       "start": "2021-01-27",
+       "end": "2021-02-24",
+       "actual_months": 0.92,
+       "fut_close": 2461.0,
+       "fut_close_chg": 255.1500000000001,
+       "fut_close_pct": 11.566969648888193,
+       "spot": 2277.5,
+       "spot_chg": 195.375,
+       "spot_pct": 9.383442396590013,
+       "basis": -183.5,
+       "basis_chg": -59.775000000000006,
+       "basis_pct": -8.05708013172338,
+       "basis_pct_chg": -1.7707202892947764,
+       "basis_pct_pct": 28.167657176473316,
+       "port_inv": null,
+       "port_inv_chg": null,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": null,
+       "arrivals_chg": null,
+       "spread_1_5": -0.1017915309446254,
+       "spread_1_5_chg": 0.9473373875802276,
+       "spread_1_5_pct": -90.29751928983606
+      },
+      "3m": {
+       "start": "2021-01-27",
+       "end": "2021-04-21",
+       "actual_months": 2.76,
+       "fut_close": 2409.0,
+       "fut_close_chg": 203.1500000000001,
+       "fut_close_pct": 9.209601740825546,
+       "spot": 2510.0,
+       "spot_chg": 427.875,
+       "spot_pct": 20.54991895299274,
+       "basis": 101.0,
+       "basis_chg": 224.725,
+       "basis_pct": 4.02390438247012,
+       "basis_pct_chg": 10.310264224898724,
+       "basis_pct_pct": -164.01008665319372,
+       "port_inv": null,
+       "port_inv_chg": null,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": null,
+       "arrivals_chg": null,
+       "spread_1_5": 0.900163666121113,
+       "spread_1_5_chg": 1.9492925846459659,
+       "spread_1_5_pct": -185.80105363855614
+      }
+     }
+    },
+    {
+     "rank": 5,
+     "date": "2022-10-19",
+     "similarity": 0.7002000143364353,
+     "path_similarity": 0.6454030218162699,
+     "score": 0.6837609165803856,
+     "regime_id": 3,
+     "forward": {
+      "1m": {
+       "start": "2022-10-19",
+       "end": "2022-11-16",
+       "actual_months": 0.92,
+       "fut_close": 2610.0,
+       "fut_close_chg": -6.75,
+       "fut_close_pct": -0.2579535683576939,
+       "spot": 2827.5,
+       "spot_chg": 190.5709999999999,
+       "spot_pct": 7.227005353576077,
+       "basis": 217.5,
+       "basis_chg": 197.321,
+       "basis_pct": 7.6923076923076925,
+       "basis_pct_chg": 7.031678395242414,
+       "basis_pct_pct": 1064.3909415581966,
+       "port_inv": 55.95,
+       "port_inv_chg": -34.66849999999998,
+       "port_inv_pct": -38.25764054801171,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 17.47,
+       "arrivals_chg": -10.546500000000002,
+       "arrivals_pct": -37.64388842289365,
+       "spread_1_5": 2.7570789865871834,
+       "spread_1_5_chg": 3.149253358152207,
+       "spread_1_5_pct": -803.0237533331658
+      },
+      "3m": {
+       "start": "2022-10-19",
+       "end": "2023-01-18",
+       "actual_months": 2.99,
+       "fut_close": 2693.0,
+       "fut_close_chg": 76.25,
+       "fut_close_pct": 2.913919938855458,
+       "spot": 2690.0,
+       "spot_chg": 53.07099999999991,
+       "spot_pct": 2.0126063310767828,
+       "basis": -3.0,
+       "basis_chg": -23.178999999999995,
+       "basis_pct": -0.1115241635687732,
+       "basis_pct_chg": -0.7721534606340517,
+       "basis_pct_pct": -116.88150435716345,
+       "port_inv": 79.74,
+       "port_inv_chg": -10.878499999999988,
+       "port_inv_pct": -12.004723097380765,
+       "operating_rate": null,
+       "operating_rate_chg": null,
+       "arrivals": 10.86,
+       "arrivals_chg": -17.1565,
+       "arrivals_pct": -61.237128120928745,
+       "spread_1_5": 0.2034023668639053,
+       "spread_1_5_chg": 0.5955767384289288,
+       "spread_1_5_pct": -151.8652878953312
+      }
+     }
+    }
+   ]
+  }
+ },
+ "n_candidates": 3,
+ "now": {
+  "date": "2026-10-14",
+  "raw": {
+   "basis_pct": 18.45,
+   "ret_4w": -2.887764215540345,
+   "ret_13w": 35.690515806988344,
+   "spot_rank_52w": 95.06172839506172,
+   "port_inv": 30.51,
+   "operating_rate": 88.94,
+   "arrivals": 15.9,
+   "spread_1_5": 2.655923604894061,
+   "vol_20d": 61.45290276145722,
+   "port_inv_wow": -10.69,
+   "producer_inv": 32.23
+  },
+  "z": {
+   "basis_pct": 2.4071146328668718,
+   "ret_4w": -0.4351652302601056,
+   "ret_13w": 2.1254527330752113,
+   "spot_rank_52w": 0.7475728155339805,
+   "port_inv": -1.884198454660872,
+   "operating_rate": 0.21783987956315837,
+   "arrivals": -0.8715110502482095,
+   "spread_1_5": 1.5538514709459856,
+   "vol_20d": 1.725045110311184,
+   "port_inv_wow": -1.2591903320031674,
+   "producer_inv": -0.8546242172750343
+  }
+ },
+ "selected": [
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "similarity": 0.8250220046907655,
+   "path_similarity": 0.7492306471690613,
+   "score": 0.8022845974342542,
+   "regime_id": 1,
+   "eff_weight_frac": 1.0,
+   "hist_z_cover": 1.0,
+   "sign_match": 0.7755102040816327
+  }
+ ],
+ "raw_top_before_dedup": [
+  {
+   "date": "2026-09-23",
+   "similarity": 0.8250220046907655,
+   "score": 0.8022845974342542
+  },
+  {
+   "date": "2026-09-16",
+   "similarity": 0.7415559631929349,
+   "score": 0.7299287997204369
+  },
+  {
+   "date": "2026-09-09",
+   "similarity": 0.6004184956206648,
+   "score": 0.619595514698231
+  }
+ ],
+ "detail": [
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "basis_pct",
+   "name": "基差率",
+   "unit": "%",
+   "weight": 1.5,
+   "now_raw": 18.45,
+   "hist_raw": 29.468938200051287,
+   "now_z": 2.4071146328668718,
+   "hist_z": 3.0,
+   "diff_z": 0.5928853671331282
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "ret_4w",
+   "name": "近4周涨跌",
+   "unit": "%",
+   "weight": 1.2,
+   "now_raw": -2.887764215540345,
+   "hist_raw": 2.311303719754432,
+   "now_z": -0.4351652302601056,
+   "hist_z": 0.14020540253239272,
+   "diff_z": 0.5753706327924983
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "ret_13w",
+   "name": "近13周涨跌",
+   "unit": "%",
+   "weight": 1.0,
+   "now_raw": 35.690515806988344,
+   "hist_raw": 15.209434729564864,
+   "now_z": 2.1254527330752113,
+   "hist_z": 0.8592593514531298,
+   "diff_z": -1.2661933816220814
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "spot_rank_52w",
+   "name": "现货52周分位",
+   "unit": "分位%",
+   "weight": 0.8,
+   "now_raw": 95.06172839506172,
+   "hist_raw": 98.76543209876544,
+   "now_z": 0.7475728155339805,
+   "hist_z": 0.941747572815534,
+   "diff_z": 0.19417475728155353
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "port_inv",
+   "name": "港口库存",
+   "unit": "万吨",
+   "weight": 1.2,
+   "now_raw": 30.51,
+   "hist_raw": 42.39,
+   "now_z": -1.884198454660872,
+   "hist_z": -1.6380823308690389,
+   "diff_z": 0.24611612379183323
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "operating_rate",
+   "name": "装置产能利用率",
+   "unit": "%",
+   "weight": 1.0,
+   "now_raw": 88.94,
+   "hist_raw": 86.44,
+   "now_z": 0.21783987956315837,
+   "hist_z": -0.47332344708547214,
+   "diff_z": -0.6911633266486306
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "arrivals",
+   "name": "周度到港量",
+   "unit": "万吨",
+   "weight": 0.8,
+   "now_raw": 15.9,
+   "hist_raw": 19.44,
+   "now_z": -0.8715110502482095,
+   "hist_z": -0.5993444619851472,
+   "diff_z": 0.2721665882630623
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "spread_1_5",
+   "name": "近月-次月月差",
+   "unit": "%/月",
+   "weight": 0.7,
+   "now_raw": 2.655923604894061,
+   "hist_raw": 2.00622621930128,
+   "now_z": 1.5538514709459856,
+   "hist_z": 1.2329574690068066,
+   "diff_z": -0.32089400193917905
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "vol_20d",
+   "name": "20日波动率",
+   "unit": "%",
+   "weight": 0.4,
+   "now_raw": 61.45290276145722,
+   "hist_raw": 58.068960057771456,
+   "now_z": 1.725045110311184,
+   "hist_z": 1.6215205166378674,
+   "diff_z": -0.10352459367331646
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "port_inv_wow",
+   "name": "港口库存周变化",
+   "unit": "万吨",
+   "weight": 0.6,
+   "now_raw": -10.69,
+   "hist_raw": -12.759999999999998,
+   "now_z": -1.2591903320031674,
+   "hist_z": -1.5520154088565747,
+   "diff_z": -0.2928250768534073
+  },
+  {
+   "rank": 1,
+   "date": "2026-09-23",
+   "indicator": "producer_inv",
+   "name": "生产企业库存",
+   "unit": "万吨",
+   "weight": 0.6,
+   "now_raw": 32.23,
+   "hist_raw": 27.97,
+   "now_z": -0.8546242172750343,
+   "hist_z": -1.6830916070173705,
+   "diff_z": -0.8284673897423361
+  }
+ ],
+ "summary": [
+  {
+   "indicator": "basis_pct",
+   "name": "基差率",
+   "unit": "%",
+   "weight": 1.5,
+   "now_raw": 18.45,
+   "now_z": 2.4071146328668718,
+   "same_direction_share": 1.0,
+   "hist_z_mean": 3.0,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "ret_4w",
+   "name": "近4周涨跌",
+   "unit": "%",
+   "weight": 1.2,
+   "now_raw": -2.887764215540345,
+   "now_z": -0.4351652302601056,
+   "same_direction_share": 0.0,
+   "hist_z_mean": 0.14020540253239272,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "ret_13w",
+   "name": "近13周涨跌",
+   "unit": "%",
+   "weight": 1.0,
+   "now_raw": 35.690515806988344,
+   "now_z": 2.1254527330752113,
+   "same_direction_share": 1.0,
+   "hist_z_mean": 0.8592593514531298,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "spot_rank_52w",
+   "name": "现货52周分位",
+   "unit": "分位%",
+   "weight": 0.8,
+   "now_raw": 95.06172839506172,
+   "now_z": 0.7475728155339805,
+   "same_direction_share": 1.0,
+   "hist_z_mean": 0.941747572815534,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "port_inv",
+   "name": "港口库存",
+   "unit": "万吨",
+   "weight": 1.2,
+   "now_raw": 30.51,
+   "now_z": -1.884198454660872,
+   "same_direction_share": 1.0,
+   "hist_z_mean": -1.6380823308690389,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "operating_rate",
+   "name": "装置产能利用率",
+   "unit": "%",
+   "weight": 1.0,
+   "now_raw": 88.94,
+   "now_z": 0.21783987956315837,
+   "same_direction_share": 0.0,
+   "hist_z_mean": -0.47332344708547214,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "arrivals",
+   "name": "周度到港量",
+   "unit": "万吨",
+   "weight": 0.8,
+   "now_raw": 15.9,
+   "now_z": -0.8715110502482095,
+   "same_direction_share": 1.0,
+   "hist_z_mean": -0.5993444619851472,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "spread_1_5",
+   "name": "近月-次月月差",
+   "unit": "%/月",
+   "weight": 0.7,
+   "now_raw": 2.655923604894061,
+   "now_z": 1.5538514709459856,
+   "same_direction_share": 1.0,
+   "hist_z_mean": 1.2329574690068066,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "vol_20d",
+   "name": "20日波动率",
+   "unit": "%",
+   "weight": 0.4,
+   "now_raw": 61.45290276145722,
+   "now_z": 1.725045110311184,
+   "same_direction_share": 1.0,
+   "hist_z_mean": 1.6215205166378674,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "port_inv_wow",
+   "name": "港口库存周变化",
+   "unit": "万吨",
+   "weight": 0.6,
+   "now_raw": -10.69,
+   "now_z": -1.2591903320031674,
+   "same_direction_share": 1.0,
+   "hist_z_mean": -1.5520154088565747,
+   "coverage_n": 1
+  },
+  {
+   "indicator": "producer_inv",
+   "name": "生产企业库存",
+   "unit": "万吨",
+   "weight": 0.6,
+   "now_raw": 32.23,
+   "now_z": -0.8546242172750343,
+   "same_direction_share": 1.0,
+   "hist_z_mean": -1.6830916070173705,
+   "coverage_n": 1
+  }
+ ],
+ "candidates": [
+  {
+   "date": "2026-09-23",
+   "distance": 0.5249339859277035,
+   "similarity": 0.8250220046907655,
+   "path_similarity": 0.7492306471690613,
+   "score": 0.8022845974342542,
+   "eff_weight_frac": 1.0
+  },
+  {
+   "date": "2026-09-16",
+   "distance": 0.7753321104211952,
+   "similarity": 0.7415559631929349,
+   "path_similarity": 0.7027987516179417,
+   "score": 0.7299287997204369,
+   "eff_weight_frac": 1.0
+  },
+  {
+   "date": "2026-09-09",
+   "distance": 1.1987445131380055,
+   "similarity": 0.6004184956206648,
+   "path_similarity": 0.6643418925458855,
+   "score": 0.619595514698231,
+   "eff_weight_frac": 1.0
+  }
+ ],
+ "forward": [
+  {
+   "date": "2026-09-23",
+   "rank": 1,
+   "forward": {
+    "1m": {
+     "start": "2026-09-23",
+     "end": "2026-10-14",
+     "actual_months": 0.69,
+     "fut_close": 3262.0,
+     "fut_close_chg": 476.1500000000001,
+     "fut_close_pct": 17.09173142846887,
+     "spot": 4000.0,
+     "spot_chg": 946.6240000000007,
+     "spot_pct": 31.002536209101027,
+     "basis": 738.0,
+     "basis_chg": 470.474,
+     "basis_pct": 18.45,
+     "basis_pct_chg": 10.539963690970422,
+     "basis_pct_pct": 133.2479811620927,
+     "port_inv": 30.51,
+     "port_inv_chg": -31.12800000000001,
+     "port_inv_pct": -50.501314124403784,
+     "producer_inv": 32.23,
+     "producer_inv_chg": -2.2575000000000003,
+     "producer_inv_pct": -6.545849945632476,
+     "operating_rate": 88.94,
+     "operating_rate_chg": 1.9399999999999977,
+     "operating_rate_pct": 2.229885057471259,
+     "arrivals": 15.9,
+     "arrivals_chg": -1.0215000000000014,
+     "arrivals_pct": -6.036698874213286,
+     "spread_1_5": 2.655923604894061,
+     "spread_1_5_chg": 1.052428362927963,
+     "spread_1_5_pct": 65.63339481054811
+    },
+    "3m": null
+   }
+  }
+ ],
+ "overlap": [],
+ "indicator_meta": {
+  "basis_pct": {
+   "name": "基差率",
+   "unit": "%",
+   "std": "rolling_z(2年)",
+   "weight": 1.5
+  },
+  "ret_4w": {
+   "name": "近4周涨跌",
+   "unit": "%",
+   "std": "rolling_z(2年)",
+   "weight": 1.2
+  },
+  "ret_13w": {
+   "name": "近13周涨跌",
+   "unit": "%",
+   "std": "rolling_z(2年)",
+   "weight": 1.0
+  },
+  "spot_rank_52w": {
+   "name": "现货52周分位",
+   "unit": "分位%",
+   "std": "rank(52周)",
+   "weight": 0.8
+  },
+  "port_inv": {
+   "name": "港口库存",
+   "unit": "万吨",
+   "std": "rolling_z(2年)",
+   "weight": 1.2
+  },
+  "operating_rate": {
+   "name": "装置产能利用率",
+   "unit": "%",
+   "std": "rolling_z(2年)",
+   "weight": 1.0
+  },
+  "arrivals": {
+   "name": "周度到港量",
+   "unit": "万吨",
+   "std": "rolling_z(2年)",
+   "weight": 0.8
+  },
+  "spread_1_5": {
+   "name": "近月-次月月差",
+   "unit": "%/月",
+   "std": "rolling_z(2年)",
+   "weight": 0.7
+  },
+  "vol_20d": {
+   "name": "20日波动率",
+   "unit": "%",
+   "std": "rolling_z(2年)",
+   "weight": 0.4
+  },
+  "port_inv_wow": {
+   "name": "港口库存周变化",
+   "unit": "万吨",
+   "std": "rolling_z(2年)",
+   "weight": 0.6
+  },
+  "producer_inv": {
+   "name": "生产企业库存",
+   "unit": "万吨",
+   "std": "rolling_z(2年)",
+   "weight": 0.6
+  }
+ },
+ "sensitivity": {
+  "mae_156": [
+   "2026-09-30"
+  ],
+  "mae_260": [
+   "2026-09-30"
+  ],
+  "mae_365": [
+   "2026-09-30"
+  ],
+  "rmse_156": [
+   "2026-09-30"
+  ],
+  "rmse_260": [
+   "2026-09-30"
+  ],
+  "rmse_365": [
+   "2026-09-30"
+  ],
+  "cosine_156": [
+   "2026-09-30"
+  ],
+  "cosine_260": [
+   "2026-09-30"
+  ],
+  "cosine_365": [
+   "2026-09-30"
+  ]
+ },
+ "drop_one": {
+  "basis_pct": {
+   "removed": "basis_pct",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "ret_4w": {
+   "removed": "ret_4w",
+   "top": [
+    "2026-09-23"
+   ],
+   "overlap_with_base": 0,
+   "overlap_pct": 0.0
+  },
+  "ret_13w": {
+   "removed": "ret_13w",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "spot_rank_52w": {
+   "removed": "spot_rank_52w",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "port_inv": {
+   "removed": "port_inv",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "operating_rate": {
+   "removed": "operating_rate",
+   "top": [
+    "2024-02-28",
+    "2024-05-22",
+    "2025-04-16",
+    "2026-06-03",
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "arrivals": {
+   "removed": "arrivals",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "spread_1_5": {
+   "removed": "spread_1_5",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "vol_20d": {
+   "removed": "vol_20d",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "port_inv_wow": {
+   "removed": "port_inv_wow",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  },
+  "producer_inv": {
+   "removed": "producer_inv",
+   "top": [
+    "2026-09-30"
+   ],
+   "overlap_with_base": 1,
+   "overlap_pct": 100.0
+  }
+ }
+}

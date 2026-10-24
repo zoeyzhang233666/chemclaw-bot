@@ -1,0 +1,254 @@
+{
+  "_说明": "复制本文件为 data.json，逐项替换 _TODO_。字段定义见 references/data-contract.md。删掉 _说明 与 _hint 字段不影响渲染。",
+  "meta": {
+    "doc_no": "DD-2026-XX-001",
+    "title": "供应商准入尽调底稿",
+    "target": "某化工股份有限公司",
+    "product": "某产品（规格：_TODO_）",
+    "as_of": "2026-10-19",
+    "author": "采购尽调岗",
+    "reviewer": "风控合规岗（待复核）",
+    "version": "v1.0",
+    "page_title": "供应商准入尽调底稿 · 某化工 · 某产品 · 2026-10-19",
+    "export_base": "供应商准入尽调底稿_某化工_某产品"
+  },
+  "hero": {
+    "eyebrow": "Supplier Due Diligence · 内贸采购准入",
+    "h1": "供应商准入尽调底稿",
+    "h1_sub": "SUPPLIER ADMISSION DUE DILIGENCE WORKPAPER",
+    "target": "某化工股份有限公司",
+    "target_sub": "_TODO_ 股票代码 / 所在地",
+    "scene": "采购品类：<b>_TODO_ 规格</b>　·　预计规模：<b>_TODO_ 吨/年，约 _TODO_ 万元</b><br>用途：_TODO_　·　采购方：_TODO_（内贸）",
+    "chips": [
+      {"k": "底稿编号", "v": "DD-2026-XX-001"},
+      {"k": "数据截止", "v": "2026-10-19"},
+      {"k": "版本", "v": "v1.0"},
+      {"k": "密级", "v": "内部 · 限采购/风控"}
+    ]
+  },
+  "seal": {"kicker": "ADMISSION", "value": "_TODO_ 结论", "line1": "_TODO_ 等级", "line2": "2026-10-19"},
+  "kpis": [
+    {"label": "成立年限", "value": "_TODO_ 年", "note": "_TODO_ 成立日", "tone": ""},
+    {"label": "注册资本", "value": "_TODO_ 亿", "note": "实缴情况", "tone": "gold"},
+    {"label": "核心产能", "value": "_TODO_ 万吨", "note": "利用率", "tone": ""},
+    {"label": "最新年度净利", "value": "_TODO_ 亿", "note": "营收与同比", "tone": "warn"},
+    {"label": "已识别风险", "value": "_TODO_ 项", "note": "高/中/低分布", "tone": "warn"}
+  ],
+  "nav": [
+    {"id": "s00", "title": "结论与准入建议"},
+    {"id": "s01", "title": "主体真实性"},
+    {"id": "s02", "title": "股权与实际控制人"},
+    {"id": "s03", "title": "生产与供应能力"},
+    {"id": "s04", "title": "资质证照"},
+    {"id": "s05", "title": "经营与合规风险"},
+    {"id": "s06", "title": "司法与信用"},
+    {"id": "s07", "title": "安全与环保"},
+    {"id": "s08", "title": "近 12 个月重大事件"},
+    {"id": "s09", "title": "材料与实地核实"},
+    {"id": "s10", "title": "方法与证据"}
+  ],
+  "donut": {"value": 60, "label": "证据完备度", "sub": "_TODO_ 份一手文件 / _TODO_ 项待补"},
+  "verdict": {
+    "scores": [
+      {"name": "主体真实性", "value": 90, "note": "_TODO_ 依据", "state": "ok"},
+      {"name": "股权与治理", "value": 80, "note": "_TODO_", "state": "ok"},
+      {"name": "生产与供应能力", "value": 80, "note": "_TODO_", "state": "ok"},
+      {"name": "资质与合规", "value": 70, "note": "_TODO_", "state": "amber"},
+      {"name": "财务稳健性", "value": 60, "note": "_TODO_", "state": "amber"},
+      {"name": "司法与信用", "value": 60, "note": "_TODO_", "state": "gray"},
+      {"name": "安全与环保", "value": 70, "note": "_TODO_", "state": "ok"}
+    ]
+  },
+  "certificates": [
+    {"no": 1, "name": "排污许可证", "start": "2023.01.01", "end": "2028.01.01", "scope": "_TODO_ 主要产品与产能", "holder": "_TODO_ 厂", "relevance": "core"},
+    {"no": 2, "name": "质量管理体系认证", "start": "2024.01.01", "end": "2027.01.01", "scope": "_TODO_ 范围", "holder": "公司", "relevance": "core"}
+  ],
+  "evidence": [
+    {"id": "E01", "name": "2025 年年度报告", "source": "巨潮资讯网", "date": "2026-03-21", "url": "https://static.cninfo.com.cn/…", "note": "主体、产能、资质、股权、财务、诉讼披露口径"}
+  ],
+  "sections": [
+    {
+      "id": "s00", "no": "00", "title": "结论与准入建议",
+      "sub": "结论只回答“能不能进、以什么条件进”，不预测交付表现或履约概率",
+      "blocks": [
+        {"type": "verdict", "kicker": "ADMISSION DECISION", "headline": "_TODO_ 结论",
+         "text": "_TODO_ 三到五句话说清：主体是否真实、产能是否可验证、主要不确定性是什么、因此给什么条件。",
+         "rows": [{"k": "准入等级", "v": "_TODO_"}, {"k": "建议首单", "v": "_TODO_"},
+                  {"k": "付款条件", "v": "_TODO_"}, {"k": "价格机制", "v": "_TODO_"},
+                  {"k": "单一供应商占比", "v": "≤ 30%"}, {"k": "复核周期", "v": "每季度"}]},
+        {"type": "gates", "title": "四道准入闸门（未全部关闭前不得放量）", "items": [
+          {"code": "GATE 01", "name": "证照闸门", "text": "_TODO_ 需要哪几张证、哪些必须换新"},
+          {"code": "GATE 02", "name": "保供闸门", "text": "_TODO_ 检修计划、最低可供量、断供违约金"},
+          {"code": "GATE 03", "name": "交易结构闸门", "text": "_TODO_ 预付、账期、单笔上限、锁价期限"},
+          {"code": "GATE 04", "name": "质量闸门", "text": "_TODO_ 首批封样与复检项目"}
+        ]},
+        {"type": "grid2", "cards": [
+          {"h": "维度评分（证据评分，不是履约概率）",
+           "scores": [
+             {"name": "主体真实性", "value": 90, "note": "_TODO_", "state": "ok"},
+             {"name": "股权与治理", "value": 80, "note": "_TODO_", "state": "ok"},
+             {"name": "生产与供应能力", "value": 80, "note": "_TODO_", "state": "ok"},
+             {"name": "资质与合规", "value": 70, "note": "_TODO_", "state": "amber"},
+             {"name": "财务稳健性", "value": 60, "note": "_TODO_", "state": "amber"},
+             {"name": "司法与信用", "value": 60, "note": "_TODO_", "state": "gray"},
+             {"name": "安全与环保", "value": 70, "note": "_TODO_", "state": "ok"}
+           ],
+           "muted": "加权均值 _TODO_ / 100。评分只反映公开证据的支撑程度，低分不等于高风险，高分也不代表未来不会违约。"},
+          {"h": "三条明确的“不建议”", "notes": [
+            "<b>不建议 _TODO_。</b>理由与数字。",
+            "<b>不建议 _TODO_。</b>理由与数字。",
+            "<b>不建议 _TODO_。</b>理由与数字。"
+          ]}
+        ]}
+      ]
+    },
+    {
+      "id": "s01", "no": "01", "title": "主体真实性", "sub": "是谁、在哪、还在不在、有没有换过壳",
+      "blocks": [
+        {"type": "lead", "text": "<b>判断：_TODO_。</b>说明信用代码、注册地址与生产地址是否一致、经营范围是否需要分支机构经营。"},
+        {"type": "rows", "name": "subject", "items": [
+          {"k": "企业名称", "v": "某化工股份有限公司", "state": "ok", "evid": "E01", "note": "与营业执照一致"},
+          {"k": "统一社会信用代码", "v": "_TODO_", "state": "pub", "evid": "E01", "note": "两源交叉"},
+          {"k": "成立日期", "v": "_TODO_", "state": "ok", "evid": "E01", "note": "至今 _TODO_ 年"}
+        ]},
+        {"type": "note", "mt": true, "text": "<b>工商核验动作（首单前完成并归档截图）：</b>① …② …③ …"}
+      ]
+    },
+    {
+      "id": "s02", "no": "02", "title": "股权结构、实际控制人与关联企业",
+      "sub": "控制链是否清晰、有无质押冻结、关联交易是否影响供应",
+      "blocks": [
+        {"type": "grid2", "cards": [
+          {"h": "控制链（自上而下）", "chain": [
+            {"name": "_TODO_ 实控人", "role": "实际控制人", "code": ""},
+            {"name": "_TODO_ 控股股东", "role": "持股 _TODO_%", "code": ""},
+            {"name": "某化工股份有限公司", "role": "被调查主体", "code": "_TODO_ 代码", "self": true}
+          ]},
+          {"h": "关键结论", "text": "_TODO_ 控制链层级、有无代持、质押冻结情况。", "muted": "_TODO_ 集团层面财务与资金链情况。"}
+        ]},
+        {"type": "table", "name": "shareholders", "title": "前十大股东",
+         "columns": [{"h": "股东名称"}, {"h": "性质"}, {"h": "持股比例", "align": "r"}, {"h": "持股数量（股）", "align": "r"}, {"h": "备注"}],
+         "rows": [["_TODO_", "国有法人", "_TODO_%", "_TODO_", "控股股东"]],
+         "foot": "数据来源：_TODO_。"},
+        {"type": "table", "name": "related", "title": "主要关联企业及其与本次采购的相关性",
+         "columns": [{"h": "关联方"}, {"h": "关系"}, {"h": "业务"}, {"h": "交易 / 经营"}, {"h": "相关性", "align": "c"}],
+         "rows": [["_TODO_", "_TODO_", "_TODO_", "_TODO_", "高"]],
+         "tag_cols": {"4": {"高": "exp", "中": "soon", "低": "ok"}}}
+      ]
+    },
+    {
+      "id": "s03", "no": "03", "title": "实际生产与供应能力",
+      "sub": "产能是不是真的、产得出来多少、改造期会不会断供",
+      "blocks": [
+        {"type": "lead", "text": "<b>判断：_TODO_。</b>写清产能×利用率=产量是否自洽，以及与行业总量的关系。"},
+        {"type": "rows", "name": "capacity", "items": [
+          {"k": "设计产能", "v": "_TODO_ 万吨/年", "state": "ok", "evid": "E01", "note": "年报口径"},
+          {"k": "产能利用率", "v": "_TODO_%", "state": "ok", "evid": "E01", "note": "产量 ÷ 产能"},
+          {"k": "实际产量", "v": "_TODO_ 万吨", "state": "ok", "evid": "E01", "note": ""},
+          {"k": "工艺路线", "v": "_TODO_", "state": "ok", "evid": "E01", "note": "决定成本与副产品"},
+          {"k": "在建 / 技改", "v": "_TODO_", "state": "todo", "evid": "todo", "note": "须索取停产窗口"}
+        ]},
+        {"type": "note", "mt": true, "text": "<b>必须向供应商确认的三件事：</b>① 可供我方的月度上限；② 未来两年检修计划；③ 技改期保供安排。"}
+      ]
+    },
+    {
+      "id": "s04", "no": "04", "title": "公开可查的资质证照与许可范围",
+      "sub": "只列“能查到的”；查不到的明确标注，不填充",
+      "blocks": [
+        {"type": "lead", "text": "_TODO_ 说明资质披露来源与与本品类直接相关的关键证照。"},
+        {"type": "certs", "items": [
+          {"no": 1, "name": "排污许可证", "start": "2023.01.01", "end": "2028.01.01", "scope": "_TODO_", "holder": "_TODO_ 厂"},
+          {"no": 2, "name": "质量管理体系认证", "start": "2024.01.01", "end": "2027.01.01", "scope": "_TODO_", "holder": "公司"}
+        ]},
+        {"type": "note", "mt": true, "text": "<b>到期预警：</b>_TODO_。"}
+      ]
+    },
+    {
+      "id": "s05", "no": "05", "title": "经营与合规风险",
+      "sub": "每一项风险都对应具体证据；证据不足的，标注“证据弱”而非“无风险”",
+      "blocks": [
+        {"type": "matrix", "title": "风险矩阵（横轴：证据强度｜纵轴：对本次采购的影响程度）",
+         "foot": "矩阵只表达已知证据的充分程度 × 对采购的影响，不表达发生概率。"},
+        {"type": "risks", "items": [
+          {"id": "R01", "dim": "经营", "level": "high", "strength": "strong", "impact_level": "high",
+           "title": "_TODO_ 一句话风险标题",
+           "fact": "_TODO_ 具体数字与文件出处。",
+           "impact": "_TODO_ 对我方的具体后果。",
+           "action": "_TODO_ 可执行动作（条款 / 限额 / 复核频率）。",
+           "evid": ["E01"]}
+        ]}
+      ]
+    },
+    {
+      "id": "s06", "no": "06", "title": "司法、信用与权利负担",
+      "sub": "区分“披露口径无”与“我方已查证无”",
+      "blocks": [
+        {"type": "lead", "text": "<b>判断：_TODO_。</b>说明哪些是披露口径、哪些尚未取得原始查询。"},
+        {"type": "table", "name": "judicial",
+         "columns": [{"h": "核查项", "width": "150px"}, {"h": "公开信息结论"},
+                     {"h": "状态", "align": "c", "width": "96px"}, {"h": "证据", "align": "c", "width": "70px"},
+                     {"h": "备注 / 核验方式", "width": "190px"}],
+         "rows": [["被执行 / 限高", "未取得原始查询", "none", "E01", "执行信息公开网，留截图与时间"]],
+         "pill_cols": {"2": true}, "evid_cols": [3]},
+        {"type": "note", "mt": true, "text": "<b>建议补齐的原始查询：</b>执行信息、信用中国、裁判文书、公示系统。每项留截图+时间。"}
+      ]
+    },
+    {
+      "id": "s07", "no": "07", "title": "安全与环保",
+      "sub": "有没有事故、排放是否合规、园区连带停产的可能性",
+      "blocks": [
+        {"type": "kpis", "grid": "grid3", "items": [
+          {"label": "重大事故", "value": "_TODO_", "note": "_TODO_"},
+          {"label": "检查与整改", "value": "_TODO_ 次", "note": "_TODO_"},
+          {"label": "环保投入", "value": "_TODO_ 万", "note": "_TODO_"}
+        ]},
+        {"type": "lead", "text": "<b>判断：_TODO_。</b>装置本身风险与园区连带风险分开写。", "muted": "_TODO_ 绿色工厂 / 能效水效等加分项。"},
+        {"type": "note", "mt": true, "text": "<b>需要供应商书面提供：</b>重大危险源备案、近三年事故与处罚台账、技改环评批复。"}
+      ]
+    },
+    {
+      "id": "s08", "no": "08", "title": "近 12 个月重大事件",
+      "sub": "按公告 / 公示梳理，写出事件之间的逻辑",
+      "blocks": [
+        {"type": "timeline", "items": [
+          {"date": "2025-11-01", "text": "_TODO_ 事件描述", "tag": "经营"},
+          {"date": "2026-03-21", "text": "_TODO_ 年报/业绩事件", "tag": "业绩"}
+        ], "foot": "事件来源：_TODO_。"},
+        {"type": "note", "mt": true, "text": "<b>事件之间的逻辑：</b>_TODO_ 用一条因果链说明其战略与资金节奏。"}
+      ]
+    },
+    {
+      "id": "s09", "no": "09", "title": "材料索取与实地核实",
+      "sub": "把“查不到”变成“问得到”，把“问得到”变成“看得见”",
+      "blocks": [
+        {"type": "checklist", "kind": "mat", "title": "A. 合作前建议索取的材料清单",
+         "items": [
+           {"code": "M01", "category": "主体", "name": "营业执照副本（加盖公章）", "note": "核对信用代码与经营范围", "priority": "高"},
+           {"code": "M02", "category": "资质", "name": "关键许可证与体系证书", "note": "核对有效期与许可范围", "priority": "高"},
+           {"code": "M03", "category": "产能", "name": "月度可供量与检修计划", "note": "覆盖未来 24 个月", "priority": "高"}
+         ]},
+        {"type": "checklist", "kind": "site", "title": "B. 建议实地核实的事项",
+         "items": [
+           {"code": "S01", "area": "门牌与铭牌", "name": "核对地址与装置铭牌", "note": "拍摄带时间水印照片", "priority": "高"},
+           {"code": "S02", "area": "成品库", "name": "查看库存与包装", "note": "核对批次与标识", "priority": "中"}
+         ]},
+        {"type": "table", "name": "crosscheck", "title": "C. 供应商上传材料 × 平台公开数据的交叉核对表",
+         "columns": [{"h": "待上传材料", "width": "120px"}, {"h": "将核对的字段"}, {"h": "平台侧公开参考值"}, {"h": "当前状态", "align": "c", "width": "110px"}],
+         "rows": [["营业执照", "名称 / 信用代码 / 住所", "_TODO_ 平台值", "待比对"]],
+         "foot": "不一致项进入差异清单，须书面澄清后方可放行。"}
+      ]
+    },
+    {
+      "id": "s10", "no": "10", "title": "方法、数据边界与证据索引",
+      "sub": "哪些是我们查过的，哪些是我们没查的",
+      "blocks": [
+        {"type": "grid2", "cards": [
+          {"h": "本底稿覆盖了什么", "text": "_TODO_ 列出证据文件类型与覆盖字段。"},
+          {"h": "本底稿没有覆盖什么", "text": "未取得：_TODO_。上述项目均为“无公开信息”或“待核验”，<b>不得解释为“无风险”</b>。"}
+        ]},
+        {"type": "evidence", "title": "证据索引（点击跳转原始文件）"},
+        {"type": "note", "mt": true, "text": "<b>使用边界：</b>本底稿用于供应商准入决策，不构成法律、审计或投资意见；不预测该供应商未来的交付表现、价格走势或履约概率。"}
+      ]
+    }
+  ]
+}

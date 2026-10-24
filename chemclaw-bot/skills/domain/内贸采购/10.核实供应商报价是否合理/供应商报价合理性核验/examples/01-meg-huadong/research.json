@@ -1,0 +1,182 @@
+{
+  "meta": {
+    "report_id": "SQV-MEG-HD-20261019",
+    "title": "华东地区工业级乙二醇供应商报价合理性核验",
+    "product_family": "乙二醇",
+    "spec_file": "specs/meg.json",
+    "asof": "2026-10-19",
+    "asof_note": "行情数据截至 2026-10-19（工作日）；期货为当日收盘价。",
+    "prepared_for": "内贸采购（演示用）",
+    "data_nature": "本报告为技能演示：供应商报价为明确标注的测试输入；市场价格全部为可追溯的公开数据，逐条附日期与来源。",
+    "disclaimer": "本报告只陈述已发生的市场价格事实与口径差异，不预测未来价格，也不给出应还价金额建议。"
+  },
+  "quote": {
+    "is_test_input": true,
+    "test_badge": "测试输入（非真实供应商报价）",
+    "supplier_label": "测试供应商A（虚构，仅用于演示解析流程）",
+    "supplier_type": "生产厂（自述）",
+    "product_name": "乙二醇",
+    "product_aliases": ["MEG", "EG"],
+    "spec_text": "工业级",
+    "grade_claimed": "工业级（含量未在报价单中写明）",
+    "purity": null,
+    "process": null,
+    "value": 5900,
+    "unit": "元/吨",
+    "tax": {"included": true, "vat_rate": 0.13, "text": "含13%增值税"},
+    "delivery": {"basis": "ex_works", "text": "工厂车板交付（出厂）", "origin": "江苏·连云港（苏北）"},
+    "destination": "江苏·苏州工业园区（买方工厂）",
+    "region_supplier": "华东（苏北）",
+    "quantity": {"value": 60, "unit": "吨/次", "basis": "整批"},
+    "payment": {"terms": "电汇 30% 预付，余款月结（30 天）", "cash_discounted": false},
+    "packing": "散水（槽车）",
+    "validity": "报价有效期未注明",
+    "pricing_formula": "固定价",
+    "quote_date": "2026-10-19",
+    "unknowns": ["含量（≥99.9% 还是其它）", "UV 透过率/醛含量/水分等关键指标", "工艺路线（乙烯法/煤制）", "品牌/产地", "报价有效期", "承兑是否可接受及加价", "最低起订量与阶梯价"],
+    "raw_text": "测试供应商A报价：乙二醇 工业级 5900元/吨，含税，出厂（江苏连云港车板），交货至苏州工业园区，数量60吨，电汇30%预付余款月结。"
+  },
+  "market": {
+    "spot_anchors": [
+      {
+        "id": "LZ-2026-10-19-0930",
+        "date": "2026-10-19", "time": "09:30", "region": "华东",
+        "spec": "聚酯级 含量≥99.9%", "price_type": "华东自提价（主流价）",
+        "value": 5635, "unit": "元/吨", "tax_included": true,
+        "delivery": "自提（张家港/华东库区）",
+        "change": -102,
+        "bid": 5630, "ask": 5640,
+        "source_name": "隆众资讯（经我的钢铁网发布）",
+        "source_title": "[乙二醇]：10月19日（09：30）张家港市场乙二醇价格行情",
+        "url": "https://nenghua.mysteel.com/a/26101909/5ED38A25A88EBF5D.html",
+        "role": "primary", "tier": "产业资讯日更报价",
+        "note": "原文：乙二醇市场震荡偏强，本周买盘5630，卖盘5640，现货基差11+400至410；价格条件：华东自提价，主流价5635，涨跌值-102"
+      },
+      {
+        "id": "LA-2026-10-19-1019",
+        "date": "2026-10-19", "time": "15:19", "region": "山西·寿阳",
+        "spec": "聚酯级（合成气制）", "price_type": "竞拍起拍价（含税出厂）",
+        "value": 5580, "unit": "元/吨", "tax_included": true,
+        "delivery": "出厂（寿阳化工交货）",
+        "quantity": 204,
+        "source_name": "生意社采编",
+        "source_title": "2026年10月19日山西潞安化工聚酯级乙二醇起拍价5580元/吨",
+        "url": "https://www.100ppi.com/news/detail-20261019-6367811.html",
+        "role": "cross_check", "tier": "企业竞拍/公开成交参考",
+        "note": "现汇起拍 5580，承兑加 50 元/吨；竞拍量 204 吨。用于说明「出厂价与华东自提价差 ~55 元/吨」以及承兑与现汇的价差"
+      },
+      {
+        "id": "100PPI-BENCH-2026-10-19",
+        "date": "2026-10-19", "time": "08:30", "region": "全国",
+        "spec": "乙二醇（生意社价格基准，聚酯级综合）", "price_type": "生意社基准价（交易指导价）",
+        "value": 5808.33, "unit": "元/吨", "tax_included": true,
+        "delivery": "基准价口径（不含物流，按升贴水调整）",
+        "source_name": "生意社（100ppi）",
+        "source_title": "10月19日生意社乙二醇基准价（图表序列，当日值）",
+        "url": "https://www.100ppi.com/vane/detail-222.html",
+        "role": "index", "tier": "公开商品指数",
+        "note": "当日同日新闻口径为 5966.67 元/吨（8:30 发布），图表序列当日值 5808.33 为收盘更新值；两者同为生意社基准价，口径一致、时点不同"
+      },
+      {
+        "id": "NP-2026-10-19-XH",
+        "date": "2026-10-19", "time": "晚间", "region": "华东",
+        "spec": "聚酯级（主流价）", "price_type": "华东地区主流价（同花顺 iFinD 汇总）",
+        "value": 5960, "unit": "元/吨", "tax_included": true,
+        "delivery": "华东市场价",
+        "source_name": "同花顺 iFinD（经同花顺7x24快讯转载）",
+        "source_title": "张家港乙二醇市场震荡偏强",
+        "url": "https://goodsfu.10jqka.com.cn/20261019/c680817512.shtml",
+        "role": "cross_check", "tier": "数据终端汇总",
+        "note": "快讯正文与隆众 09:30 行情完全一致（买盘5630/卖盘5640，基差11+400~410），因此该条不构成独立第二报价，仅证明隆众数据被广泛引用"
+      }
+    ],
+    "enterprise_prices": [
+      {"id": "SINOPEC-2026-10", "party": "中石化华东", "month": "2026-10", "list_price": 6300, "note": "10月挂牌执行 6300（10月13日下调200）", "source": "隆众资讯（经我的钢铁网 2026-10-13~16 报道）"},
+      {"id": "SINOPEC-2026-09", "party": "中石化华东", "month": "2026-09", "settlement": 6776, "list_price": 6850, "note": "9月挂牌 6850，9月结算 6776", "source": "隆众资讯（我的钢铁网）"},
+      {"id": "SINOPEC-2025-11", "party": "中石化华东", "month": "2025-11", "list_price": 4400, "note": "11月挂牌 4400；10月结算 4335", "source": "隆众资讯（我的钢铁网 2025-11-14）"},
+      {"id": "WX-2026-10-15", "party": "卫星化学", "month": "2026-10-15", "list_price": 5750, "note": "企业报价 5750 元/吨", "source": "生意社（2026-10-15）"}
+    ],
+    "spot_series_3m": [
+      {"date": "2026-10-12", "region": "华东", "spec": "聚酯级 含量≥99.9%", "value": 5780, "tax_included": true, "delivery": "自提", "source": "隆众资讯 10-12 09:30 张家港行情", "url": "https://nenghua.mysteel.com/a/26101209/988FD5A1495555DB.html", "change": -100},
+      {"date": "2026-10-13", "region": "华东", "spec": "聚酯级 含量≥99.9%", "value": 5568, "tax_included": true, "delivery": "自提", "source": "隆众资讯 10-13 09:30 张家港行情", "url": "https://nenghua.mysteel.com/a/26101309/7DC6DBB43798E10C.html", "change": -152},
+      {"date": "2026-10-14", "region": "华东", "spec": "聚酯级 含量≥99.9%", "value": 5710, "tax_included": true, "delivery": "自提", "source": "隆众资讯 10-14 09:30 张家港行情（买5705/卖5715）", "url": "https://nenghua.mysteel.com/a/26101409/AB52ED7D876B727D.html", "change": 0},
+      {"date": "2026-10-15", "region": "华东", "spec": "聚酯级 含量≥99.9%", "value": 5710, "tax_included": true, "delivery": "自提", "source": "隆众资讯 10-15 09:30 张家港行情（买5700/卖5720）", "url": "https://nenghua.mysteel.com/a/26101509/40A4F1F610C43459.html", "change": -12},
+      {"date": "2026-10-16", "region": "华东", "spec": "聚酯级 含量≥99.9%", "value": 5725, "tax_included": true, "delivery": "自提", "source": "隆众资讯 10-16 09:30 张家港行情", "url": "https://nenghua.mysteel.com/a/26101609/F14483FED0BF2C4B.html", "change": 0},
+      {"date": "2026-10-19", "region": "华东", "spec": "聚酯级 含量≥99.9%", "value": 5635, "tax_included": true, "delivery": "自提", "source": "隆众资讯 10-19 09:30 张家港行情", "url": "https://nenghua.mysteel.com/a/26101909/5ED38A25A88EBF5D.html", "change": -102}
+    ],
+    "series_files": {
+      "ppi_daily_1y": "series/ppi_benchmark_1y.json",
+      "futures_daily_3y": "series/eg0_daily.json"
+    },
+    "series_meta": {
+      "ppi_daily_1y": {"name": "生意社乙二醇基准价", "unit": "元/吨", "freq": "日", "tax": "含税", "region": "全国综合", "spec": "乙二醇基准（聚酯级综合）", "source": "生意社 乙二醇价格页（100ppi vane/222，type=1 价格曲线）", "url": "https://www.100ppi.com/vane/detail-222.html", "validate": "2026-10-16 同日新闻 6266.67 元/吨 = 图表 6266.67（一致）；10-19 新闻 5966.67 为 08:30 发布、图表当日 5808.33 为日内更新值"},
+      "futures_daily_3y": {"name": "乙二醇连续合约 EG0", "unit": "元/吨", "freq": "交易日", "tax": "不含税", "region": "交割库（盘面）", "spec": "DCE 交割标准品", "source": "新浪财经 期货 InnerFuturesNewService.getDailyKLine（EG0）", "url": "https://finance.sina.com.cn/futures/quotes/EG0.shtml", "validate": "2026-10-19 收盘 4976 与东方财富 egm 主连一致"}
+    },
+    "futures_reference": {
+      "date": "2026-10-19", "close": 4976, "prev_close": 5345, "change": -369, "pct": -6.90,
+      "basis_note": "现货 5635 − 期货 4976 = 659 元/吨，其中含增值税（5635 ÷ 1.13 = 4987）与基差/运输/品级差异，不能直接当作价差使用",
+      "source": "新浪财经 EG0 日线；隆众 09:30 现货"
+    },
+    "transport": {
+      "freight_supplier_to_dest": null,
+      "gap": "供应商至苏州工业园区运价未提供；公开市场报价为库区自提，不含该段运价",
+      "reference_note": "生意社公式定价原理：结算价 = 基准价 × K + C，C 含物流成本、品牌价差、区域价差（仅作方法论引用，不作为运价数值）"
+    }
+  },
+  "benchmark": {
+    "primary_anchor_id": "LZ-2026-10-19-0930",
+    "secondary_anchor_ids": ["LA-2026-10-19-1019"],
+    "interval_by_target": {
+      "included|ex_works": {"low": 5580, "high": 5665, "center": 5635,
+        "basis": "同口径出厂含税参考：隆众华东自提价 5635 − 库提前运费 ~55（由潞安寿阳出厂 5580 与隆众华东自提 5635 的差推断，2026-10-19 同日）… 下沿 5580（潞安竞拍起拍价，同为含税出厂）；上沿 5665 = 5635 + 30（自提→出厂的小额出库/罐费差额，未取得明示数据）",
+        "confidence": "medium",
+        "caveat": "区间由「自提价 ± 推断差额」构成，差额依据为同日跨地区价的相对位置，非逐笔成交，属估算口径，已在报告中标注；若采购方另有工厂出厂报价证据，应替换该区间。"},
+      "included|delivered": {"low": null, "high": null, "center": null, "basis": "未取得运价，留缺口", "confidence": "none"}
+    },
+    "interval_method": "同口径参考中枢取同日华东自提主流价 5635（含税、聚酯级、自提）；报价为工业级出厂含税，二者不同规格不同交付，故先做口径转换再比较，转换差额逐一列明。",
+    "excluded_note": "不含税靶心由含税价 ÷ 1.13 得到，用于与期货对照；不得与期货直接相减作为价差结论。"
+  },
+  "comparability": [
+    {"item": "产品含量/等级", "quote": "工业级（含量未写明）", "market": "聚酯级 含量≥99.9%", "status": "unknown", "direction": "工业级通常低于聚酯级（压低报价）", "quantifiable": false,
+     "label": "待确认", "evidence": "公开市场当日对「工业级」报价仅湖南/山东几家贸易商（5300~6600 元/吨），同一日同一规格报价离散度超过 20%，且交货地不同，不能构成有效参考区间"},
+    {"item": "规格术语与用途", "quote": "未说明用途", "market": "聚酯级（PET 原料）", "status": "unknown", "direction": "若用于防冻液/溶剂，工业级可用；若进聚酯，须聚酯级", "quantifiable": false, "label": "待确认", "evidence": "规格用途不明确，直接影响可比层级"},
+    {"item": "地区", "quote": "苏北连云港→苏州", "market": "华东主港（张家港）", "status": "known", "direction": "内陆到厂高于港口自提（抬高报价）", "quantifiable": false, "label": "待确认", "evidence": "苏北至苏州运费未提供，无法量化"},
+    {"item": "税费", "quote": "含 13% 增值税", "market": "含税", "status": "known", "direction": "一致", "quantifiable": true, "label": "已对齐", "evidence": "隆众/生意社/中石化挂牌均为含税价；换算系数 1.13"},
+    {"item": "交付方式", "quote": "出厂（工厂车板）", "market": "自提/库提", "status": "known", "direction": "出厂低于自提（压低报价）", "quantifiable": false, "label": "已有依据（方向）", "evidence": "同日潞安出厂 5580 与隆众华东自提 5635 相差 55 元/吨，说明出厂与华东自提存在小额差额（约 1%）"},
+    {"item": "运输", "quote": "买方自行或另计（未明示）", "market": "库区自提（不含运至终端）", "status": "unknown", "direction": "到厂需加运费（抬高到厂成本）", "quantifiable": false, "label": "待确认", "evidence": "无运价，到厂靶心记为缺口"},
+    {"item": "采购数量", "quote": "60 吨/次", "market": "散水 30 吨罐车起，港口主流 500 吨起", "status": "known", "direction": "小批量通常无返利（抬高报价）", "quantifiable": false, "label": "待确认", "evidence": "数量级差异未取得阶梯价证据"},
+    {"item": "账期/付款", "quote": "30% 预付 + 余款月结", "market": "现汇/现款", "status": "known", "direction": "账期抬高卖方报价", "quantifiable": false, "label": "待确认", "evidence": "账期资金成本未提供；同日潞安承兑较现汇加 50 元/吨可作参照（约 0.9%/期）"},
+    {"item": "包装", "quote": "散水槽车", "market": "散水", "status": "known", "direction": "一致", "quantifiable": true, "label": "已对齐", "evidence": "双方均为散水"},
+    {"item": "品牌/工艺", "quote": "未说明", "market": "进口/国内装置混合", "status": "unknown", "direction": "煤制与乙烯法存在价差（方向不定）", "quantifiable": false, "label": "待确认", "evidence": "当日潞安煤制备货起拍 5580，卫星化学乙烯法报价 5750，同日相差 170 元/吨"},
+    {"item": "价格性质", "quote": "固定价、有效期未注明", "market": "当日主流成交价", "status": "known", "direction": "过期报价不具可比性", "quantifiable": false, "label": "待确认", "evidence": "市场 6 个交易日内在 5568~5780 区间波动（极差 212 元/吨），有效期缺失会显著影响可比性"}
+  ],
+  "percentile_plan": [
+    {"window": "3m", "series": "spot_snapshots", "note": "6 个逐日快照（2026-10-12~10-19，隆众华东自提），样本不足 8 个，只给区间不给分位"},
+    {"window": "1y", "series": "ppi_daily_1y", "note": "生意社基准价日频序列 366 点，代理口径（全国综合、含税），用于报价在没有同日聚酯级现货口径下的历史位置"},
+    {"window": "1y_futures", "series": "futures_daily_3y", "note": "EG0 近 365 天交易日序列，口径为不含税期货，仅作交叉参照"},
+    {"window": "3y", "series": "futures_daily_3y", "note": "现货 3 年日频序列未取得；3 年窗口以期货 EG0 日频序列给出，并在报告中标注为期货口径"},
+    {"window": "3y_spot", "series": null, "gap": "未取得 2023-10 ~ 2026-10 的逐日现货序列（公开渠道仅有年度锚点与零散日报）"}
+  ],
+  "gaps": [
+    {"id": "G1", "item": "华东聚酯级逐日现货序列（3 个月）", "impact": "3 个月分位无法计算，只能用区间与逐日快照", "tried": "隆众/我的钢铁网列表页翻页（仅 9 月中以后）；隆众正文页需登录；生意社列表页反爬；奇货可查超时", "why": "日更现货数据为付费/登录内容", "next": "采购方可订阅隆众或卓创数据终端，或向 3 家供应商索取近 3 个月的成交单"},
+    {"id": "G2", "item": "1 年 / 3 年逐日现货价格序列", "impact": "1 年分位改用价格指数代理；3 年现货分位无法计算", "tried": "上列渠道 + 公开年度回顾检索", "why": "同上；公开渠道只提供指数与年度锚点", "next": "订阅数据终端；或用历史合同成交价自建序列"},
+    {"id": "G3", "item": "工业级（非聚酯级）当日华东有效参考价", "impact": "规格不可比，不能直接减", "tried": "生意社报价动态（当日有工业级报价 3 条，均为山东/湖南，5300~6600 离散）", "why": "公开报价离散度过大且地区不同", "next": "向供应商确认含量并在报价单上载明执行标准"},
+    {"id": "G4", "item": "供应商至苏州的运价", "impact": "到厂靶心留空", "tried": "报价单未载明；建议查询整车/槽车运价平台", "why": "未提供", "next": "要求供应商报「到厂价（含运）」或提供物流报价"},
+    {"id": "G5", "item": "账期资金成本/承兑贴现率", "impact": "账期差异无法折现成金额", "tried": "参照同日潞安承兑价差 +50 元/吨", "why": "无公开统一口径", "next": "按采购方内部资金成本率折算"},
+    {"id": "G6", "item": "期货历史日线（交易所口径）", "impact": "采用新浪财经 EG0 连续合约替代", "tried": "东方财富 kline 接口（持续拒连）", "why": "接口限流", "next": "可改用交易所历史行情下载"}
+  ],
+  "evidence_summary": {
+    "explainable": [
+      {"difference": "出厂 vs 华东自提", "amount": "约 +55 元/吨（若按潞安口径）", "direction": "报价偏低方向", "basis": "同日潞安出厂 5580 vs 隆众华东自提 5635"},
+      {"difference": "承兑 vs 现汇", "amount": "+50 元/吨（每期）", "direction": "账期口径", "basis": "潞安 2026-10-19 竞拍公告"},
+      {"difference": "煤制 vs 乙烯法", "amount": "约 170 元/吨（当日）", "direction": "规格/工艺", "basis": "潞安 5580 vs 卫星化学 5750，均为 2026-10-19/10-15"}
+    ],
+    "pending": [
+      "含量是否 ≥99.9%、执行标准与关键指标（UV/醛/水分）",
+      "工艺路线与品牌产地（决定是否可进聚酯）",
+      "报价有效期与是否随行就市",
+      "昆山/苏州段运价与是否含出库费",
+      "最小起订量与阶梯价、承兑加价"
+    ]
+  }
+}

@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "title": "纯碱客户多维判断卡",
+    "product": "重质纯碱 99%（散装罐车/吨袋）",
+    "seller": "山东潍坊 · 碱厂/一级贸易商 · 月可供 5,000 吨",
+    "as_of": "2026-10",
+    "thresholds": {"high": 75, "mid": 55},
+    "method_line": "事实优先，评级只做锚点",
+    "lede": "不给你一个「85 分」的黑盒——每个维度给出事实、评级和高/中/低的依据；权重自己调、排序自己定，事实永远原样摆在卡上。",
+    "estimate_note": "年纯碱需求 ≈ 日熔量 × 0.2 吨碱/吨玻璃 × 330 天（单耗区间 0.18–0.22 取中值）；年采购额按 1,000 元/吨估算；公路运费按 0.35–0.5 元/吨·公里；距离为地图公路里程近似值。以上均为估算，成交前以客户确认数为准。",
+    "estimate_bullets": [
+      "年纯碱需求 ≈ 日熔量 × 0.2 吨碱/吨玻璃 × 年运行 330 天（玻璃行业单耗 0.18–0.22 取中值）；",
+      "年采购额按 1,000 元/吨估算（2026-10 重碱现货 970–1,050 元/吨）；",
+      "公路运费按 0.35–0.5 元/吨·公里估算，距离取地图公路里程近似值；",
+      "客户产线/开工数据以最近一期年报、半年报及行业产线动态为准，改造/冷修期间的量需单独扣减。"
+    ],
+    "footer": "<b>估算口径：</b>年需求 ≈ 日熔量 × 0.18–0.22 吨碱/吨玻璃 × 330 天；年采购额按 1,000 元/吨；运费按 0.35–0.5 元/吨·公里；距离为公路里程近似值。均为估算，成交前以客户确认数为准。<br><b>数据来源：</b>上市公司定期报告与公告（巨潮/信披网站）、政府公开函件、行业资讯（隆众/生意社/钢联）、公开招标信息；所有链接见各卡「依据」与详情页来源表。<br><b>免责：</b>本卡用于销售团队客户准入与资源排序辅助，不构成投资或授信建议；评分随权重和事实更新而变化。"
+  },
+  "dimensions": [
+    {"key": "match", "name": "产品匹配", "hint": "产品规格/用途是否对口、采购体系是否开放、能否投标进入", "rubric": "高：窑炉/产线用户且采购公开；中：用途对口但准入门槛不明；低：规格不对口或仅用替代品"},
+    {"key": "demand", "name": "需求规模", "hint": "年采购量与采购额（按产能×单耗估算）", "rubric": "高：年需求≥20 万吨；中：5–20 万吨；低：<5 万吨"},
+    {"key": "capacity", "name": "真实产能", "hint": "窑炉是否在产、开工率、改造/冷修影响", "rubric": "高：产线满开且盈利；中：部分冷修/改造降量；低：大面积停产"},
+    {"key": "scale", "name": "企业规模", "hint": "营收/资产规模与信用", "rubric": "高：龙头、盈利、评级好；中：中型上市但亏损；低：小微/信息不透明"},
+    {"key": "region", "name": "距离/区域", "hint": "运距与运费占比、是否在竞争半径内", "rubric": "高：≤600km 且运费<25%货值；中：600–1200km；低：>1200km 或海外"},
+    {"key": "chance", "name": "近期机会", "hint": "改造/点火/扩建/招标等时间窗口与需求增量", "rubric": "高：6 个月内有投产或招标；中：12 个月内有；低：无明确节点"},
+    {"key": "risk", "name": "不确定性", "hint": "越低越好：资信、账期、锁价与需求波动风险", "rubric": "高：连亏+长账期；中：信息不透明；低：盈利稳定+付款好（分数越低风险越大）"}
+  ],
+  "market": [
+    {"metric": "重质纯碱现货（河南市场价）", "value": "≈1,050 元/吨", "when": "2026-10-15", "source": "化工网", "url": "https://www.chemall.com.cn/news/show-264315.html"},
+    {"metric": "重质纯碱成交价区间", "value": "970–1,050 元/吨", "when": "2026-10", "source": "生意社", "url": "https://www.100ppi.com/news/detail-20261014-6341735.html"},
+    {"metric": "纯碱厂家库存", "value": "≈178 万吨", "when": "2026-10-09", "source": "新浪期货日评", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-09/doc-iniurfei2992600.shtml"},
+    {"metric": "纯碱装置开工率", "value": "≈65%", "when": "2026-10", "source": "新浪期货日评", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-09/doc-iniurfei2992600.shtml"},
+    {"metric": "浮法玻璃在产日熔量", "value": "14.1–14.3 万吨/日", "when": "2026-10", "source": "钢联/紫金天风", "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html"},
+    {"metric": "光伏玻璃在产日熔量", "value": "6.68 万吨/日", "when": "2026-10", "source": "钢联/紫金天风", "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html"},
+    {"metric": "浮法玻璃产能利用率", "value": "≈71%", "when": "2026-10", "source": "新浪期货日评", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-09/doc-iniurfei2992600.shtml"},
+    {"metric": "浮法玻璃现货均价", "value": "≈1,075 元/吨", "when": "2026-10", "source": "隆众资讯", "url": "https://www.163.com/dy/article/L97ED8GK05568W0A.html"},
+    {"metric": "浮法玻璃产量同比", "value": "-11.53%", "when": "2026-10", "source": "新浪期货日评", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-09/doc-iniurfei2992600.shtml"}
+  ],
+  "presets": [
+    {"key": "even", "name": "均衡", "weights": {"match": 1, "demand": 1, "capacity": 1, "scale": 1, "region": 1, "chance": 1, "risk": 1}},
+    {"key": "scale", "name": "规模更重要", "weights": {"match": 0.5, "demand": 1, "capacity": 0.5, "scale": 2.5, "region": 0.5, "chance": 1, "risk": 0.5}},
+    {"key": "chance", "name": "近期机会更重要", "weights": {"match": 1, "demand": 1, "capacity": 1, "scale": 0.5, "region": 0.5, "chance": 2.5, "risk": 0.5}},
+    {"key": "region", "name": "距离更重要", "weights": {"match": 0.5, "demand": 0.5, "capacity": 0.5, "scale": 0.5, "region": 2.5, "chance": 0.5, "risk": 0.5}}
+  ],
+  "customers": [
+    {
+      "id": "anc",
+      "name": "河南安彩高科",
+      "code": "600207.SH",
+      "location": "河南安阳（光伏新材料、光热基地在龙安区）",
+      "distance": "潍坊→安阳 ≈480 km（公路，估）",
+      "demand": "≈10±3 万吨/年（估）",
+      "spend": "≈1.0 亿元/年",
+      "tags": "光伏玻璃 · 超白浮法/光热玻璃 · 中硼硅药玻 · 河南投资集团控股",
+      "priority": "P1",
+      "priority_note": "本周优先",
+      "action": "先投标入围，卡 900t/d 改造投产节点；报价锚定河南天然碱到厂价，账期争取「现汇+部分承兑」、锁量不锁价。",
+      "best": "900t/d 光伏线 4.98 亿元升级改造带来的「投产换供应商」窗口，叠加公开招标/询比的合规进入通道——不靠关系也能投进去。",
+      "doubts": [
+        "主供可能已被低成本天然碱大厂长协锁定，纯碱现货仅 970–1,050 元/吨、买方市场，贸易商价差被压得很薄。",
+        "连亏 + 定增背景下，账期可能拉长、承兑比例偏高，占用你的资金。",
+        "别把投产后的量当当前量：改造期间采购量可能阶段性下降。"
+      ],
+      "asks": [
+        {"q": "在产窑炉清单与日熔量？900t/d 改造线预计何时点火/达产？", "dim": "产品匹配/真实产能", "why": "直接决定真实月采购量，避免把投产后的量当当下量", "who": "采购部 + 生产计划"},
+        {"q": "纯碱月均采购量与现供结构（碱厂直销/贸易商占比）、到厂结算价？", "dim": "需求规模/产品匹配", "why": "判断可拿到的量级与价差空间，对标天然碱", "who": "采购部"},
+        {"q": "供应商准入走哪个平台？需要什么资质、业绩门槛和保证金？", "dim": "近期机会", "why": "公开招标是唯一可控的进场通道，先确认流程再投入", "who": "招标平台/采购部"},
+        {"q": "质量指标（松密度、NaCl、铁等）？散装罐车还是吨袋？厂内卸货条件？", "dim": "产品匹配", "why": "浮法/光伏对碱品质敏感，卸货条件影响运费与损耗", "who": "质检/采购"},
+        {"q": "结算方式与账期（现汇/承兑比例）？有无提前付款折扣？", "dim": "不确定性", "why": "资金链紧张客户，账期为最大隐性成本", "who": "财务/采购"}
+      ],
+      "dims": {
+        "match": {"level": "高", "score": 90, "basis": "核实", "fact": "玻璃熔窑是纯碱第一大下游，浮法/光伏玻璃以重质碱为主；公司确认纯碱采购采用「期现结合」控成本，原料有公开询比/招标记录，采购体系开放、可投标进入。", "evidence": [{"label": "每经：纯碱采购期现结合", "url": "https://www.nbd.com.cn/articles/2023-02-20/2675428.html", "date": "2023-02-20"}, {"label": "2021年供应商准入公开招标", "url": "http://www.china-zbycg.com/guest/info/3/600/398.html", "date": "2021-03-05"}]},
+        "demand": {"level": "中高", "score": 75, "basis": "估算", "fact": "可核熔量约1,500–1,800吨/日（900t/d光伏线+600t/d超白浮法线等），按单耗0.2、330天估算：年需求约10±3万吨、采购额约1亿元（1,000元/吨）。", "evidence": [{"label": "900t/d 产线改造公告", "url": "https://www.acht.com.cn/d/file/p/2025/12-05/2273fe6adf0201e3f658c16a3ed79553.pdf", "date": "2025-12-05"}, {"label": "安彩光热600t/d超白浮法线", "url": "http://www.cnste.org/news/detail/12498.html", "date": "2025-10-09"}]},
+        "capacity": {"level": "中", "score": 60, "basis": "核实+预估", "fact": "2026H1营收10.77亿（-38.2%），光伏玻璃价历史低位、行业冷修压力大；900t/d线2025年12月公告投4.98亿元改造——改造期熔量有变数，投产后是提产窗口。", "evidence": [{"label": "2026半年度业绩说明会", "url": "https://app.dahecube.com/nweb/news/20260916/287137n2e2a5905202.htm?artid=287137", "date": "2026-09-16"}, {"label": "900t/d 改造公告", "url": "https://www.acht.com.cn/d/file/p/2025/12-05/2273fe6adf0201e3f658c16a3ed79553.pdf", "date": "2025-12-05"}]},
+        "scale": {"level": "中", "score": 60, "basis": "核实", "fact": "2025年营收29.19亿（-32.7%）、归母净亏7.27亿；2024年营收43.39亿、亏3.54亿。A股上市、河南投资集团控股——中型平台但连亏削弱付款能力。", "evidence": [{"label": "2025年年度报告", "url": "https://static.cninfo.com.cn/finalpage/2026-04-18/1225120486.PDF", "date": "2026-04-18"}, {"label": "2024年年报摘要", "url": "http://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?id=10824467&stockid=600207", "date": "2025-03-29"}]},
+        "region": {"level": "高", "score": 80, "basis": "估算", "fact": "安阳距潍坊≈480km，公路运费估170–240元/吨（约占碱价20%），在可竞争半径内；河南本地天然碱（桐柏）货源竞争需对标（待核实）。", "evidence": [{"label": "河南重质碱市场价1,050元/吨", "url": "https://www.chemall.com.cn/news/show-264315.html", "date": "2026-10-15"}]},
+        "chance": {"level": "中高", "score": 75, "basis": "核实", "fact": "三个切入点：①900t/d线改造投产前供应商重选；②公开招标/询比惯例（2021供应商准入、2023药玻原料）；③光热玻璃在手1,380MW、药玻项目多需求。", "evidence": [{"label": "900t/d 改造公告", "url": "https://www.acht.com.cn/d/file/p/2025/12-05/2273fe6adf0201e3f658c16a3ed79553.pdf", "date": "2025-12-05"}, {"label": "供应商准入招标记录", "url": "http://www.china-zbycg.com/guest/info/3/600/398.html", "date": "2021-03-05"}]},
+        "risk": {"level": "高", "score": 40, "basis": "核实", "fact": "2023–2025连亏扩大（-0.19亿→-7.27亿），2026H1再亏3.28亿；2026年9月申请委托贷款、拟简易定增——资金偏紧，防极致压价与长账期。", "evidence": [{"label": "2026半年度业绩说明会", "url": "https://app.dahecube.com/nweb/news/20260916/287137n2e2a5905202.htm?artid=287137", "date": "2026-09-16"}, {"label": "公告列表（委贷/定增）", "url": "https://www.acht.com.cn/tzzgx/gsgg/", "date": "2026-09-03"}]}
+      },
+      "sources": [
+        {"type": "年报", "label": "2025 年年度报告（巨潮）", "url": "https://static.cninfo.com.cn/finalpage/2026-04-18/1225120486.PDF", "date": "2026-04-18"},
+        {"type": "年报", "label": "2024 年年度报告摘要（新浪）", "url": "http://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?id=10824467&stockid=600207", "date": "2025-03-29"},
+        {"type": "公告", "label": "生产线改造提升公告（900t/d 光伏线）", "url": "https://www.acht.com.cn/d/file/p/2025/12-05/2273fe6adf0201e3f658c16a3ed79553.pdf", "date": "2025-12-05"},
+        {"type": "行业资讯", "label": "安彩光热 600t/d 超白浮法线（1,380MW 业绩）", "url": "http://www.cnste.org/news/detail/12498.html", "date": "2025-10-09"},
+        {"type": "媒体", "label": "2026 年半年度业绩说明会（大河财立方）", "url": "https://app.dahecube.com/nweb/news/20260916/287137n2e2a5905202.htm?artid=287137", "date": "2026-09-16"},
+        {"type": "互动问答", "label": "投资者互动：纯碱采购采用期现结合", "url": "https://www.nbd.com.cn/articles/2023-02-20/2675428.html", "date": "2023-02-20"},
+        {"type": "招标", "label": "2021 年度原料供应商资格准入公开招标", "url": "http://www.china-zbycg.com/guest/info/3/600/398.html", "date": "2021-03-05"},
+        {"type": "报价", "label": "河南重质纯碱市场价 1,050 元/吨", "url": "https://www.chemall.com.cn/news/show-264315.html", "date": "2026-10-15"},
+        {"type": "公告", "label": "公司公告列表（委托贷款/简易定增）", "url": "https://www.acht.com.cn/tzzgx/gsgg/", "date": "2026-09-03"}
+      ]
+    },
+    {
+      "id": "qib",
+      "name": "株洲旗滨集团",
+      "code": "601636.SH",
+      "location": "总部湖南株洲；产线在醴陵/河源/漳州/昭通/马来西亚沙巴",
+      "distance": "距潍坊 1,300–2,200 km（不经济）",
+      "demand": "≈80–110 万吨/年（产能口径，估）",
+      "spend": "≈8–11 亿元/年",
+      "tags": "浮法玻璃龙头 · 光伏玻璃 11 条+ · 自有硅砂 · A 股上市",
+      "priority": "P4",
+      "priority_note": "观察名单",
+      "action": "不作当前主攻；作为行业价格标杆收集情报，若你厂有华中/华南仓或水运能力再启动接触。",
+      "best": "规模最大的潜在客户：若进其总部集采长协名单，一张合同顶几十家小厂。",
+      "doubts": [
+        "集采长协大概率已被头部碱厂锁定，新进入窗口少。",
+        "产线布局与你的运距不匹配，除非你在其基地附近有仓或有水运方案。"
+      ],
+      "asks": [
+        {"q": "浮法/光伏板块纯碱是否总部集采？年度招标时间节点？", "dim": "近期机会", "why": "确认是否存在公开可投标窗口", "who": "集采中心"},
+        {"q": "新供应商准入条件（产能规模、运距、账期要求）？", "dim": "产品匹配/距离", "why": "判断资质与供货半径是否够格", "who": "集采中心"}
+      ],
+      "dims": {
+        "match": {"level": "高", "score": 90, "basis": "核实", "fact": "浮法+光伏玻璃集团，纯碱超级买家，规格以重质碱散装为主，与标准碱厂产品完全对口。", "evidence": [{"label": "2025年半年度报告", "url": "http://static.cninfo.com.cn/finalpage/2025-08-28/1224597273.PDF", "date": "2025-08-28"}]},
+        "demand": {"level": "高", "score": 95, "basis": "估算", "fact": "2024年在产浮法产能约1.1亿重箱（≈550万吨/年玻璃口径），另有11条以上光伏玻璃线；按0.2单耗估算年需求约80–110万吨、采购额8–11亿元。", "evidence": [{"label": "研报：在产浮法1.1亿重箱", "url": "https://pdf.dfcfw.com/pdf/H3_AP202411181640930905_1.pdf", "date": "2024-11-18"}, {"label": "2025年半年报", "url": "http://static.cninfo.com.cn/finalpage/2025-08-28/1224597273.PDF", "date": "2025-08-28"}]},
+        "capacity": {"level": "高", "score": 85, "basis": "核实", "fact": "2025年营收157.4亿（+0.6%）、利润总额6.2亿（+138%），行业磨底中率先修复、产线维持开工；昭通1,200t/d超白光伏线推进。", "evidence": [{"label": "2025年年度报告数据（新浪）", "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=601636&id=12154621", "date": "2026-04"}, {"label": "2025年半年报（昭通线）", "url": "http://static.cninfo.com.cn/finalpage/2025-08-28/1224597273.PDF", "date": "2025-08-28"}]},
+        "scale": {"level": "高", "score": 95, "basis": "核实", "fact": "2025年营收157.37亿元、总市值约150亿元（2025-04）；浮法行业龙头，资产与现金流第一梯队。", "evidence": [{"label": "2025年年度报告数据", "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=601636&id=12154621", "date": "2026-04"}, {"label": "券商点评（市值数据）", "url": "https://pdf.dfcfw.com/pdf/H3_AP202504281663775615_1.pdf", "date": "2025-04-28"}]},
+        "region": {"level": "低", "score": 35, "basis": "估算", "fact": "主力产线在湖南/广东/云南/马来西亚，距潍坊1,300km以上，公路运费>600元/吨，跨区配送不经济。", "evidence": [{"label": "2025年半年报（基地分布）", "url": "http://static.cninfo.com.cn/finalpage/2025-08-28/1224597273.PDF", "date": "2025-08-28"}]},
+        "chance": {"level": "中", "score": 50, "basis": "核实", "fact": "采购高度集中（总部集采+长协），新增产能项目（昭通、沙巴）都不在你的运距内——机会存在但不在你身边。", "evidence": [{"label": "2025年半年报", "url": "http://static.cninfo.com.cn/finalpage/2025-08-28/1224597273.PDF", "date": "2025-08-28"}]},
+        "risk": {"level": "中低", "score": 65, "basis": "核实", "fact": "上市公司、盈利修复、付款规范，信用风险低；主要不确定性是「进不进得去」——门槛高、头部碱厂长协绑定。", "evidence": [{"label": "2025年年度报告数据", "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=601636&id=12154621", "date": "2026-04"}]}
+      },
+      "sources": [
+        {"type": "半年报", "label": "2025 年半年度报告（巨潮）", "url": "http://static.cninfo.com.cn/finalpage/2025-08-28/1224597273.PDF", "date": "2025-08-28"},
+        {"type": "研报", "label": "2024 年三季报点评：在产浮法 1.1 亿重箱", "url": "https://pdf.dfcfw.com/pdf/H3_AP202411181640930905_1.pdf", "date": "2024-11-18"},
+        {"type": "年报", "label": "2025 年年度报告主要数据（新浪）", "url": "https://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=601636&id=12154621", "date": "2026-04"},
+        {"type": "研报", "label": "2024 年报、2025 一季报点评", "url": "https://pdf.dfcfw.com/pdf/H3_AP202504281663775615_1.pdf", "date": "2025-04-28"},
+        {"type": "年报", "label": "2024 年年度报告（巨潮）", "url": "http://static.cninfo.com.cn/finalpage/2025-04-25/1223283955.PDF", "date": "2025-04-25"}
+      ]
+    },
+    {
+      "id": "xye",
+      "name": "信义玻璃",
+      "code": "00868.HK",
+      "location": "主要营业地安徽芜湖；另有东莞/江门/北海/马来西亚基地",
+      "distance": "潍坊→芜湖 ≈700 km（主基地更远）",
+      "demand": "≈40–100 万吨/年（浮法口径，估）",
+      "spend": "≈5–9 亿元/年",
+      "tags": "浮法民企龙头 · 汽玻/建玻深加工 · 港股上市",
+      "priority": "P3",
+      "priority_note": "季度级经营",
+      "action": "以「旺季保供/区域副供」切入，不打价格战，重点展示稳定性与交付能力。",
+      "best": "现金牛客户：量与付款都稳定，一旦进长协就是多年饭票。",
+      "doubts": [
+        "大概率已有 2–3 家头部碱厂直供长协，且比你会用价差工具（期货/进口碱）。"
+      ],
+      "asks": [
+        {"q": "芜湖基地纯碱月采购量与主供结构？", "dim": "需求规模/产品匹配", "why": "确认能否以副供身份切入", "who": "供应链采购中心"},
+        {"q": "是否接受区域副供/旺季补充供应商？", "dim": "近期机会", "why": "找到非价格竞争的位置", "who": "供应链采购中心"}
+      ],
+      "dims": {
+        "match": {"level": "高", "score": 90, "basis": "核实", "fact": "浮法原片+深加工一体化，窑炉纯碱需求以重质碱散装为主，产品完全对口。", "evidence": [{"label": "2024年全年业绩公告", "url": "https://www.xinyiglass.com/companynews/info.aspx?itemid=2558", "date": "2025-03-03"}]},
+        "demand": {"level": "高", "score": 98, "basis": "估算", "fact": "2024年浮法玻璃收入129亿元（总营收223亿元）；公开简介口径浮法日熔量约7,100t/d（偏旧）。按0.2单耗估算仅浮法年需求约40–100万吨量级。", "evidence": [{"label": "2024年业绩公告（浮法收入129亿）", "url": "https://www.xinyiglass.com/companynews/info.aspx?itemid=2558", "date": "2025-03-03"}, {"label": "公司简介（日熔量口径，偏旧）", "url": "http://www.glass.com.cn/zhouwenbin/profile.html", "date": "口径偏旧"}]},
+        "capacity": {"level": "高", "score": 85, "basis": "核实", "fact": "2024年归母净利34亿元、毛利率32.4%——行业普遍亏损下仍盈利、现金流充裕，产线开工稳定。", "evidence": [{"label": "2024年全年业绩公告", "url": "https://www.xinyiglass.com/companynews/info.aspx?itemid=2558", "date": "2025-03-03"}, {"label": "新浪：浮法承压但仍盈利", "url": "https://finance.sina.com.cn/stock/relnews/hk/2025-03-06/doc-inenswir0950439.shtml", "date": "2025-03-06"}]},
+        "scale": {"level": "高", "score": 100, "basis": "核实", "fact": "2024年营收223.2亿元人民币，浮法/汽车/建筑玻璃一体化全球龙头。", "evidence": [{"label": "2024年全年业绩公告", "url": "https://www.xinyiglass.com/companynews/info.aspx?itemid=2558", "date": "2025-03-03"}]},
+        "region": {"level": "低", "score": 45, "basis": "估算", "fact": "芜湖基地距潍坊≈700km尚在可谈范围；但两广/海外基地远，采购重心未必落在华北半径内。", "evidence": [{"label": "年度报告（营业地：芜湖）", "url": "https://www.xinyiglass.com/uploadfiles/2025/05/%E4%BF%A1%E4%B9%89%E7%8E%BB%E7%92%832024%E5%B9%B4%E5%B9%B4%E6%8A%A5-%E7%B9%81%E4%BD%93%E4%B8%AD%E6%96%87.pdf", "date": "2025-05"}]},
+        "chance": {"level": "低", "score": 45, "basis": "核实", "fact": "采购体系成熟，碱厂长协+多元配置（含进口/天然碱）为主，无公开招标惯例，新贸易商切入空间小。", "evidence": [{"label": "2024年业绩公告（成本管理表述）", "url": "https://www.xinyiglass.com/companynews/info.aspx?itemid=2558", "date": "2025-03-03"}]},
+        "risk": {"level": "中低", "score": 65, "basis": "核实", "fact": "财务稳健、付款好；不确定性主要在准入难度，而非信用风险。", "evidence": [{"label": "2024年全年业绩公告", "url": "https://www.xinyiglass.com/companynews/info.aspx?itemid=2558", "date": "2025-03-03"}]}
+      },
+      "sources": [
+        {"type": "业绩公告", "label": "2024 年全年业绩公告", "url": "https://www.xinyiglass.com/companynews/info.aspx?itemid=2558", "date": "2025-03-03"},
+        {"type": "年报", "label": "2024 年年度报告（营业地：芜湖）", "url": "https://www.xinyiglass.com/uploadfiles/2025/05/%E4%BF%A1%E4%B9%89%E7%8E%BB%E7%92%832024%E5%B9%B4%E5%B9%B4%E6%8A%A5-%E7%B9%81%E4%BD%93%E4%B8%AD%E6%96%87.pdf", "date": "2025-05"},
+        {"type": "行业网站", "label": "信义玻璃公司简介（日熔量口径，偏旧）", "url": "http://www.glass.com.cn/zhouwenbin/profile.html", "date": "口径偏旧"},
+        {"type": "媒体", "label": "新浪财经：浮法承压但仍盈利", "url": "https://finance.sina.com.cn/stock/relnews/hk/2025-03-06/doc-inenswir0950439.shtml", "date": "2025-03-06"}
+      ]
+    },
+    {
+      "id": "lih",
+      "name": "山西利虎玻璃集团",
+      "code": "非上市 · 吕梁交城",
+      "location": "山西吕梁交城县经济开发区（+青耀等子公司）",
+      "distance": "潍坊→交城 ≈620 km",
+      "demand": "≈8–12 万吨/年（口径较旧，待核）",
+      "spend": "≈0.8–1.2 亿元/年",
+      "tags": "浮法原片 + 汽车玻璃 · 轨道交通玻璃配套 · 民企集团",
+      "priority": "P2",
+      "priority_note": "本周联系、两周内拜访",
+      "action": "直连采购负责人，先带样品与小批量方案试单 1–2 车，同时谈死账期与付款习惯。",
+      "best": "决策链短、没有公开招标的资格门槛——一通电话就能见到采购负责人，适合新销售建关系、练打法。",
+      "doubts": [
+        "实际在产熔量与采购量未知（公司简介口径老旧）。",
+        "民企账期与承兑习惯必须当场谈死并写进合同。"
+      ],
+      "asks": [
+        {"q": "现在几条线在产？日熔量多少？", "dim": "真实产能/需求规模", "why": "摸清真实可用量，避免按旧产能估算", "who": "采购部"},
+        {"q": "纯碱月采购量、谁在供、什么价、什么账期？", "dim": "需求规模/不确定性", "why": "定价与账期是两个核心谈判点", "who": "采购部/财务"},
+        {"q": "是否接受小批量试单（1–2 车）？", "dim": "近期机会", "why": "低门槛切入、先建信任", "who": "采购部"}
+      ],
+      "dims": {
+        "match": {"level": "高", "score": 85, "basis": "核实", "fact": "浮法白玻+汽车/轨道玻璃原片窑炉，重质碱持续需求；2025年内多次产线改产报道证明窑炉在产运转。", "evidence": [{"label": "隆众：交城二线改产（2025-07）", "url": "https://nenghua.m.mysteel.com/a/25070710/FE0D972F9BC1C970_abc.html", "date": "2025-07-07"}]},
+        "demand": {"level": "中", "score": 65, "basis": "估算", "fact": "政府函件口径2021年销售26亿元、员工4,000余人；简介口径年产约1,200万重箱（≈60万吨玻璃）→纯碱需求估8–12万吨/年（口径较旧，需核）。", "evidence": [{"label": "吕梁市政府推荐函（2021数据）", "url": "http://www.lvliang.gov.cn/llxxgk/zfxxgk/xxgkml/hflwj/lzh/202208/t20220819_1682832.html", "date": "2022-08-19"}, {"label": "中国玻璃网公司页（产能口径）", "url": "https://www.glass.com.cn/company/shxlhbljtyxgs/", "date": "口径较旧"}]},
+        "capacity": {"level": "中", "score": 70, "basis": "核实+预估", "fact": "隆众/生意社2025年多条动态：交城二线600t/d在产并在汽玻/白玻间改产——窑炉活跃；其余产线开工率无公开数据。", "evidence": [{"label": "隆众：改产动态（2025-06）", "url": "https://nenghua.m.mysteel.com/a/25062310/EE207340EA9A2004_abc.html", "date": "2025-06-23"}, {"label": "隆众：改产动态（2025-05）", "url": "https://nenghua.m.mysteel.com/a/25050614/A6B76C45E76AC117_abc.html", "date": "2025-05-06"}]},
+        "scale": {"level": "中低", "score": 55, "basis": "核实", "fact": "民企集团：2021年销售26亿元、总资产36亿元（政府函）；近两年无公开财报，当前规模需尽调确认。", "evidence": [{"label": "吕梁市政府推荐函", "url": "http://www.lvliang.gov.cn/llxxgk/zfxxgk/xxgkml/hflwj/lzh/202208/t20220819_1682832.html", "date": "2022-08-19"}]},
+        "region": {"level": "中", "score": 60, "basis": "估算", "fact": "山西本地纯碱产能稀缺、原料多靠外省调入，对外来供应商相对开放；距潍坊≈620km，运费估220–310元/吨。", "evidence": [{"label": "吕梁市政府推荐函（区位）", "url": "http://www.lvliang.gov.cn/llxxgk/zfxxgk/xxgkml/hflwj/lzh/202208/t20220819_1682832.html", "date": "2022-08-19"}]},
+        "chance": {"level": "中", "score": 65, "basis": "核实", "fact": "无公开招标→直接对接采购部、决策链短；2025年频繁改产说明采购活跃，谁先建立联系谁占位。", "evidence": [{"label": "隆众：改产动态（2025-07）", "url": "https://nenghua.m.mysteel.com/a/25070710/FE0D972F9BC1C970_abc.html", "date": "2025-07-07"}]},
+        "risk": {"level": "中", "score": 50, "basis": "研判", "fact": "信息不透明：产能利用率、账期、付款方式全靠尽调与同行口碑；民企账期风险需当面谈死。", "evidence": [{"label": "中国玻璃网公司页", "url": "https://www.glass.com.cn/company/shxlhbljtyxgs/", "date": "口径较旧"}]}
+      },
+      "sources": [
+        {"type": "行业资讯", "label": "隆众：交城二线 600t/d 改产（2025-07）", "url": "https://nenghua.m.mysteel.com/a/25070710/FE0D972F9BC1C970_abc.html", "date": "2025-07-07"},
+        {"type": "政府函件", "label": "吕梁市政府推荐函（2021 年销售 26 亿元）", "url": "http://www.lvliang.gov.cn/llxxgk/zfxxgk/xxgkml/hflwj/lzh/202208/t20220819_1682832.html", "date": "2022-08-19"},
+        {"type": "行业网站", "label": "中国玻璃网公司页（产能口径，较旧）", "url": "https://www.glass.com.cn/company/shxlhbljtyxgs/", "date": "口径较旧"},
+        {"type": "行业资讯", "label": "隆众：交城二线改产（2025-06）", "url": "https://nenghua.m.mysteel.com/a/25062310/EE207340EA9A2004_abc.html", "date": "2025-06-23"},
+        {"type": "行业资讯", "label": "隆众：交城二线改产（2025-05）", "url": "https://nenghua.m.mysteel.com/a/25050614/A6B76C45E76AC117_abc.html", "date": "2025-05-06"},
+        {"type": "行业资讯", "label": "生意社：山西利虎产线动态（2025-01）", "url": "https://www.100ppi.com/news/detail-20250108-3992937.html", "date": "2025-01-08"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+{
+ "products": {
+  "soda": {
+   "name": "纯碱",
+   "unit": "元/吨",
+   "spec_tiers": {
+    "heavy": "重质纯碱 工业级",
+    "light": "轻质纯碱 工业级"
+   },
+   "pricing_center": "EC_SHANDONG",
+   "orientation": {
+    "base_role": "基准地区：EC_SHANDONG（同档报价覆盖度达标且中位价最低的产区，固定为基准端，窗口内方向不翻转）",
+    "roles": {}
+   },
+   "price_basis": "厂家/贸易商公开挂牌报价中位数，含税出厂/送到混合口径（见 delivery 字段）",
+   "primary_tier": "heavy",
+   "tier_counts": {
+    "heavy": 20873,
+    "light": 2525,
+    "unspecified": 13859
+   },
+   "tier_medians": {
+    "EC_ANHUI": 1500.0,
+    "EC_JIANGSU": 2400.0,
+    "EC_JIANGXI": 1400.0,
+    "EC_SHANDONG": 1450.0,
+    "EC_SHANGHAI": 1980.0,
+    "EC_ZHEJIANG": 2850.0,
+    "H_HENAN": 1700.0,
+    "H_HUBEI": 1550.0,
+    "H_HUNAN": 2650.0,
+    "NE_HEILONGJIANG": 2200.0,
+    "NE_JILIN": 2200.0,
+    "NE_LIAONING": 2000.0,
+    "N_BEIJING": 2755.0,
+    "N_HEBEI": 2200.0,
+    "N_INNERMONGOLIA": 2650.0,
+    "N_QINGHAI": 2000.0,
+    "N_TIANJIN": 2200.0,
+    "S_FUJIAN": 1800.0,
+    "S_GUANGDONG": 2600.0
+   },
+   "tier_regions": [
+    "EC_ANHUI",
+    "EC_JIANGSU",
+    "EC_JIANGXI",
+    "EC_SHANDONG",
+    "EC_SHANGHAI",
+    "EC_ZHEJIANG",
+    "H_HENAN",
+    "H_HUBEI",
+    "H_HUNAN",
+    "NE_HEILONGJIANG",
+    "NE_JILIN",
+    "NE_LIAONING",
+    "N_BEIJING",
+    "N_HEBEI",
+    "N_INNERMONGOLIA",
+    "N_QINGHAI",
+    "N_TIANJIN",
+    "S_FUJIAN",
+    "S_GUANGDONG"
+   ]
+  },
+  "methanol": {
+   "name": "甲醇",
+   "unit": "元/吨",
+   "spec_tiers": {
+    "domestic": "国产甲醇 优等品/国标",
+    "import": "进口甲醇 合格品"
+   },
+   "pricing_center": "EC_TAICANG",
+   "orientation": {
+    "base_role": "基准地区：EC_TAICANG（同档报价覆盖度达标且中位价最低的产区，固定为基准端，窗口内方向不翻转）",
+    "roles": {}
+   },
+   "price_basis": "厂家/贸易商公开挂牌报价中位数，含税",
+   "primary_tier": "domestic",
+   "tier_counts": {
+    "domestic": 13903,
+    "import": 980,
+    "unspecified": 778
+   },
+   "tier_medians": {
+    "EC_ANHUI": 2650.0,
+    "EC_JIANGXI": 2690.0,
+    "EC_SHANDONG": 2700.0,
+    "EC_SHANGHAI": 3000.0,
+    "EC_TAICANG": 2800.0,
+    "EC_ZHEJIANG": 3200.0,
+    "H_HENAN": 3000.0,
+    "H_HUBEI": 2900.0,
+    "H_HUNAN": 3000.0,
+    "NE_HEILONGJIANG": 2685.0,
+    "NE_LIAONING": 2745.0,
+    "N_BEIJING": 2650.0,
+    "N_GANSU": 2260.0,
+    "N_HEBEI": 3000.0,
+    "N_INNERMONGOLIA": 3020.0,
+    "N_NINGXIA": 2600.0,
+    "N_QINGHAI": 2325.0,
+    "N_SHAANXI": 2810.0,
+    "N_SHANXI": 2700.0,
+    "N_TIANJIN": 2650.0,
+    "N_XINJIANG": 1760.0,
+    "S_FUJIAN": 3000.0,
+    "S_GUANGDONG": 3600.0,
+    "W_CHONGQING": 2614.0,
+    "W_SICHUAN": 2875.0
+   },
+   "tier_regions": [
+    "EC_ANHUI",
+    "EC_JIANGXI",
+    "EC_SHANDONG",
+    "EC_SHANGHAI",
+    "EC_TAICANG",
+    "EC_ZHEJIANG",
+    "H_HENAN",
+    "H_HUBEI",
+    "H_HUNAN",
+    "NE_HEILONGJIANG",
+    "NE_LIAONING",
+    "N_BEIJING",
+    "N_GANSU",
+    "N_HEBEI",
+    "N_INNERMONGOLIA",
+    "N_NINGXIA",
+    "N_QINGHAI",
+    "N_SHAANXI",
+    "N_SHANXI",
+    "N_TIANJIN",
+    "N_XINJIANG",
+    "S_FUJIAN",
+    "S_GUANGDONG",
+    "W_CHONGQING",
+    "W_SICHUAN"
+   ]
+  }
+ },
+ "region_nodes": {
+  "N_BEIJING": "北京",
+  "N_TIANJIN": "天津",
+  "N_HEBEI": "河北沙河",
+  "N_SHANXI": "山西",
+  "N_INNERMONGOLIA": "内蒙古",
+  "NE_LIAONING": "辽宁",
+  "NE_JILIN": "吉林",
+  "NE_HEILONGJIANG": "黑龙江",
+  "EC_SHANGHAI": "上海",
+  "EC_JIANGSU": "江苏",
+  "EC_ZHEJIANG": "浙江",
+  "EC_ANHUI": "安徽",
+  "S_FUJIAN": "福建",
+  "EC_JIANGXI": "江西",
+  "EC_SHANDONG": "山东",
+  "H_HENAN": "河南",
+  "H_HUBEI": "湖北",
+  "H_HUNAN": "湖南",
+  "S_GUANGDONG": "广东",
+  "S_GUANGXI": "广西",
+  "S_HAINAN": "海南",
+  "W_CHONGQING": "重庆",
+  "W_SICHUAN": "四川",
+  "W_GUIZHOU": "贵州",
+  "W_YUNNAN": "云南",
+  "N_XIZANG": "西藏",
+  "N_SHAANXI": "陕西",
+  "N_GANSU": "甘肃",
+  "N_QINGHAI": "青海",
+  "N_NINGXIA": "宁夏",
+  "N_XINJIANG": "新疆",
+  "S_HONGKONG": "香港",
+  "EC_TAICANG": "江苏太仓"
+ },
+ "region_role": {
+  "N_SHAHE": "北方消费集散/交割地",
+  "N_HEBEI": "生产+集散",
+  "N_TIANJIN": "港口下水",
+  "H_HENAN": "中部产区",
+  "H_HUBEI": "华中联碱产区",
+  "H_HUNAN": "华中消费地",
+  "EC_SHANDONG": "华东产区",
+  "EC_JIANGSU": "华东净调入",
+  "EC_ZHEJIANG": "华东消费地",
+  "EC_SHANGHAI": "华东贸易节点",
+  "EC_ANHUI": "华东产区",
+  "EC_JIANGXI": "华东内陆消费地",
+  "EC_TAICANG": "港口集散/定价锚",
+  "N_INNERMONGOLIA": "西北主产区",
+  "N_NINGXIA": "西北产区",
+  "N_SHAANXI": "西北过渡区",
+  "N_QINGHAI": "西北远端产区",
+  "N_GANSU": "西北产区",
+  "N_XINJIANG": "西北远端产区",
+  "N_SHANXI": "华北产区",
+  "N_BEIJING": "华北消费/贸易",
+  "W_SICHUAN": "西南产区",
+  "W_CHONGQING": "西南消费/长江节点",
+  "W_GUIZHOU": "西南产区",
+  "W_YUNNAN": "西南消费地",
+  "S_GUANGDONG": "华南净调入",
+  "S_FUJIAN": "华南消费地",
+  "S_GUANGXI": "华南消费地",
+  "S_HAINAN": "华南远端",
+  "S_HONGKONG": "华南贸易节点",
+  "NE_LIAONING": "东北消费/港口",
+  "NE_JILIN": "东北消费地",
+  "NE_HEILONGJIANG": "东北产区",
+  "N_XIZANG": "西南远端"
+ },
+ "cross_check": {
+  "note": "生意社100ppi 为单市场/全国口径序列，仅用于量级交叉校验与历史走势参照，不含区域维度，不参与区域价差计算",
+  "spot": {
+   "重质纯碱": {
+    "ppid": "737",
+    "headline": "1062.86 元/吨 0.00%",
+    "scope": "国内 混合价 99.20% min;优等品",
+    "n_days": 93,
+    "first_date": "2026-07-20",
+    "last_date": "2026-10-20",
+    "markets": [
+     "河南省"
+    ],
+    "source_url": "https://www.100ppi.com/rawmex/detail-737.html"
+   },
+   "轻质纯碱": {
+    "ppid": "226",
+    "headline": "1050.00 元/吨 0.00%",
+    "scope": "国内 出厂价 99.20% min;优等品",
+    "n_days": 93,
+    "first_date": "2026-07-20",
+    "last_date": "2026-10-20",
+    "markets": [
+     "河南省"
+    ],
+    "source_url": "https://www.100ppi.com/rawmex/detail-226.html"
+   },
+   "甲醇": {
+    "ppid": "817",
+    "headline": "3926.67 元/吨 -1.01%",
+    "scope": "江苏省 市场价 合格品",
+    "n_days": 93,
+    "first_date": "2026-07-20",
+    "last_date": "2026-10-20",
+    "markets": [
+     "山东省",
+     "江苏省"
+    ],
+    "source_url": "https://www.100ppi.com/rawmex/detail-817.html"
+   },
+   "PVC树脂SG5": {
+    "ppid": "107",
+    "headline": "4955.00 元/吨 1.85%",
+    "scope": "华东 综合价 SG-5 优等品",
+    "n_days": 93,
+    "first_date": "2026-07-20",
+    "last_date": "2026-10-20",
+    "markets": [
+     "华东"
+    ],
+    "source_url": "https://www.100ppi.com/rawmex/detail-107.html"
+   }
+  },
+  "futures": {
+   "SA0": {
+    "last_close": 938.0,
+    "last_date": "2026-10-20",
+    "first_date": "2019-12-06",
+    "n": 1663
+   },
+   "MA0": {
+    "last_close": 3157.0,
+    "last_date": "2026-10-20",
+    "first_date": "2014-12-24",
+    "n": 2863
+   },
+   "V0": {
+    "last_close": 4994.0,
+    "last_date": "2026-10-20",
+    "first_date": "2009-05-25",
+    "n": 4220
+   }
+  }
+ }
+}

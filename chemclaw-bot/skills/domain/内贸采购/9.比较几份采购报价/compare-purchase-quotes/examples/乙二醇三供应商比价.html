@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>工业级乙二醇 · 三家供应商采购报价比较报告（模拟业务样例）</title>
+<style>/* ===== 采购报价比较报告 · 样式 ===== */
+:root{
+  --navy:#0d2b45; --navy2:#123c5e; --ink:#1c2b33; --sub:#5b6b78; --line:#e3e9ef;
+  --bg:#f4f6f9; --card:#fff; --red:#c8102e; --amber:#b7791f; --green:#127a5a;
+  --blue:#1f6feb; --a:#3b7dd8; --b:#0f8f6b; --c:#c2772b; --muted:#8c9aa6;
+  --shadow:0 1px 2px rgba(16,37,58,.06),0 8px 24px rgba(16,37,58,.06);
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:14px/1.62 "Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",system-ui,sans-serif}
+a{color:var(--blue);text-decoration:none} a:hover{text-decoration:underline}
+.wrap{max-width:1320px;margin:0 auto;padding:0 22px}
+
+/* 顶栏 */
+header.top{position:sticky;top:0;z-index:60;background:rgba(13,43,69,.97);color:#fff;
+  backdrop-filter:blur(8px);box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.top .wrap{display:flex;align-items:center;gap:18px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
+.brand .dot{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#56c1ff,#1f6feb);display:inline-block}
+nav.tabs{display:flex;gap:2px;overflow:auto;flex:1}
+nav.tabs a{color:#c8d6e2;padding:8px 11px;border-radius:6px;font-size:13px;white-space:nowrap}
+nav.tabs a:hover{background:rgba(255,255,255,.1);color:#fff;text-decoration:none}
+nav.tabs a.on{background:rgba(255,255,255,.16);color:#fff;font-weight:700}
+.top .actions{display:flex;gap:8px}
+.btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;
+  padding:7px 12px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.18)}
+.btn.solid{background:#fff;color:var(--navy);border-color:#fff;font-weight:700}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+.btn.sm{padding:4px 9px;font-size:12px;border-radius:5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* 横幅 */
+.banner{margin:18px 0 0;background:linear-gradient(100deg,#fff6e9,#fff 60%);border:1px solid #f3d7a7;
+  border-left:5px solid #e2a33b;border-radius:10px;padding:12px 16px;color:#7a4b12;font-size:13px;line-height:1.6}
+.banner b{color:#b45309}
+.hero{background:linear-gradient(120deg,#0d2b45 0%,#123c5e 55%,#155a7a 100%);color:#fff;
+  border-radius:16px;padding:26px 28px;margin:16px 0 0;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(86,193,255,.35),transparent 65%)}
+.hero h1{margin:0 0 6px;font-size:25px;letter-spacing:.5px}
+.hero .sub{color:#bcd2e2;font-size:13.5px}
+.hero .facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.fact{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:9px 14px;min-width:150px}
+.fact .k{font-size:11.5px;color:#a9c3d6;letter-spacing:.5px}
+.fact .v{font-size:15px;font-weight:700;margin-top:2px}
+
+/* 卡片 / 分区 */
+section.sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+  margin:18px 0;box-shadow:var(--shadow)}
+section.sec>h2{margin:0 0 4px;font-size:19px;color:var(--navy);display:flex;align-items:center;gap:10px}
+section.sec>h2 .no{display:inline-flex;width:28px;height:28px;border-radius:8px;background:var(--navy);color:#fff;
+  align-items:center;justify-content:center;font-size:14px}
+section.sec>.lead{color:var(--sub);font-size:13px;margin:0 0 16px}
+h3.t{font-size:15px;margin:20px 0 10px;color:var(--navy2)}
+
+/* 网格 */
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:980px){.g3,.g2{grid-template-columns:1fr}}
+
+/* 供应商卡 */
+.sup{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff;position:relative}
+.sup.best{border-color:#9fd4c2;background:linear-gradient(180deg,#f3fbf8,#fff)}
+.sup h4{margin:0 0 2px;font-size:15.5px;display:flex;align-items:center;gap:8px}
+.badge{font-size:11px;padding:1px 7px;border-radius:20px;font-weight:700}
+.badge.gold{background:#fff4d6;color:#8a6100;border:1px solid #f0d68a}
+.badge.gray{background:#eef1f4;color:#667;border:1px solid #dae1e8}
+.badge.red{background:#fff0f0;color:#b42318;border:1px solid #f2c2bf}
+.badge.green{background:#eefaf4;color:#127a5a;border:1px solid #b7e3d2}
+.sup .role{font-size:12px;color:var(--sub);margin-bottom:10px}
+.kv{display:grid;grid-template-columns:86px 1fr;gap:5px 10px;font-size:12.8px}
+.kv .k{color:var(--muted)}
+.quote-line{font-family:var(--mono);background:#f7f9fb;border:1px dashed #d7dee6;border-radius:7px;
+  padding:7px 9px;font-size:12.2px;color:#33475b;margin:10px 0}
+.lc{display:flex;align-items:baseline;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.lc .v{font-size:23px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.lc .u{font-size:12px;color:var(--sub)}
+
+/* 表格 */
+.tblwrap{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table.t{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+table.t th,table.t td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t thead th{background:#eef3f7;color:#22384a;font-weight:700;position:sticky;top:0;z-index:2;
+  border-bottom:1px solid #d4dde6}
+table.t tbody tr:hover{background:#fafcfe}
+table.t td.num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12.4px}
+table.t tr.total td{background:#f3f7fb;font-weight:800;border-top:2px solid var(--navy)}
+table.t tr.grp td{background:#e9f0f6;font-weight:700;color:var(--navy2);font-size:12.5px}
+table.t td.k{color:var(--muted);white-space:nowrap}
+table.t tr.warnrow td{background:#fffaf0}
+.hl{background:#fff3cd;border-radius:3px;padding:0 3px;color:#7a4b00;font-weight:700}
+.win{color:var(--green);font-weight:800}
+.lose{color:var(--red);font-weight:700}
+tr.bestrow td{background:#f2fbf7!important}
+.pill{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:20px;background:#eef3f7;color:#3a5266;white-space:nowrap}
+.pill.a{background:#eaf2fd;color:#2b5fa8}.pill.b{background:#e8f7f1;color:#0e6f53}.pill.c{background:#fdf1e5;color:#97551a}
+.pill.hi{background:#fff0f0;color:#b42318;font-weight:700}.pill.mid{background:#fff7e6;color:#8a6100}.pill.lo{background:#eef1f4;color:#667}
+
+/* 三层色标 */
+.layer{display:inline-block;font-size:11px;padding:1px 7px;border-radius:4px;font-weight:700;letter-spacing:.5px}
+.layer.raw{border:1px solid #c7b6e6;background:#efe9fb;color:#5b3fa8;border-style:dashed}
+.layer.der{background:#e3f0ff;color:#1a5fb4;border:1px solid #b9d4f6}
+.layer.asm{background:#fff3d6;color:#8a5a00;border:1px solid #f2d490}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.3px;color:var(--sub);margin:0 0 12px}
+
+/* 控制面板 */
+.panel{background:#f7f9fb;border:1px solid var(--line);border-radius:12px;padding:16px}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 22px}
+.ctl label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:4px}
+.ctl .inp{display:flex;align-items:center;gap:8px}
+.ctl input[type=range]{flex:1;accent-color:var(--blue)}
+.ctl input[type=number],.ctl select{border:1px solid #cfd8e1;border-radius:6px;padding:5px 8px;font-size:13px;
+  font-family:var(--mono);width:96px;background:#fff}
+.ctl select{width:auto;font-family:inherit}
+.ctl .unit{font-size:12px;color:var(--muted);white-space:nowrap}
+.ctl .hint{font-size:11.5px;color:var(--muted);margin-top:2px}
+.seg{display:inline-flex;border:1px solid #cfd8e1;border-radius:7px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:5px 12px;font-size:12.5px;cursor:pointer;color:#456}
+.seg button.on{background:var(--navy);color:#fff;font-weight:700}
+
+/* KPI */
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0}
+.kpi .c{background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+.kpi .c .k{font-size:12px;color:var(--sub)}
+.kpi .c .v{font-size:24px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .c .n{font-size:11.8px;color:var(--muted)}
+.kpi .c.win .v{color:var(--green)}
+.kpi .c.warn .v{color:var(--red)}
+
+/* 柱图 */
+.hbar{display:grid;grid-template-columns:120px 1fr 130px;gap:10px;align-items:center;margin:7px 0;font-size:12.8px}
+.hbar .lbl{font-weight:700;color:#33475b}
+.hbar .bar{height:22px;background:#eef2f6;border-radius:5px;overflow:hidden;position:relative}
+.hbar .fill{height:100%;border-radius:5px;transition:width .35s ease}
+.hbar .val{font-family:var(--mono);font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
+.hbar .fill.a{background:linear-gradient(90deg,#7fb0ea,#3b7dd8)}
+.hbar .fill.b{background:linear-gradient(90deg,#5fcfae,#0f8f6b)}
+.hbar .fill.c{background:linear-gradient(90deg,#e8b072,#c2772b)}
+.hbar .fill.x{background:linear-gradient(90deg,#e88a8a,#c8102e)}
+
+/* 瀑布条 */
+.stack{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#f5f7fa}
+.stack span{height:100%;position:relative;transition:width .35s ease}
+.stack .s-goods{background:#345b7f}.stack .s-freight{background:#4b9bd6}
+.stack .s-fees{background:#e0b04a}.stack .s-cap{background:#b06ad0}.stack .s-dep{background:#e07a7a}
+.stack .s-pack{background:#7a8fa6}
+
+/* 脚注 / 公式块 */
+.formula{font-family:var(--mono);font-size:12.4px;background:#0f2233;color:#d7e6f2;border-radius:9px;
+  padding:12px 14px;overflow:auto;line-height:1.8}
+.formula .c{color:#7fa8c9}.formula .v{color:#ffd479}
+.note{font-size:12px;color:var(--sub);margin-top:8px;line-height:1.7}
+.callout{border-left:4px solid var(--blue);background:#f0f6ff;border-radius:8px;padding:11px 14px;font-size:13px;margin:12px 0}
+.callout.warn{border-color:#e2a33b;background:#fff8ea}
+.callout.bad{border-color:var(--red);background:#fff5f5}
+.callout.ok{border-color:var(--green);background:#f1fbf6}
+.tag{font-size:11px;border-radius:4px;padding:0 6px;font-weight:700;margin-left:6px}
+.tag.raw{background:#efe9fb;color:#5b3fa8}.tag.der{background:#e3f0ff;color:#1a5fb4}.tag.asm{background:#fff3d6;color:#8a5a00}
+
+/* 抽屉 */
+.drawer{position:fixed;inset:0;z-index:100;display:none}
+.drawer.on{display:block}
+.drawer .mask{position:absolute;inset:0;background:rgba(8,20,32,.45)}
+.drawer .body{position:absolute;right:0;top:0;bottom:0;width:min(560px,94vw);background:#fff;
+  box-shadow:-10px 0 40px rgba(0,0,0,.2);overflow:auto;padding:22px 24px}
+.drawer .body h3{margin:0 0 4px;font-size:17px;color:var(--navy)}
+.drawer .close{position:absolute;right:16px;top:12px;border:0;background:#f0f3f6;border-radius:50%;
+  width:30px;height:30px;cursor:pointer;font-size:16px;color:#456}
+.step{border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin:9px 0;font-size:12.8px}
+.step .h{font-weight:800;color:var(--navy2);margin-bottom:4px}
+.step .f{font-family:var(--mono);font-size:12px;background:#f7f9fb;border-radius:6px;padding:6px 8px;margin:5px 0;color:#2c3e50;white-space:pre-wrap}
+.step .r{font-weight:800;color:var(--green)}
+.srcbox{font-size:12px;color:var(--sub);background:#fbfcfd;border:1px dashed #d7dee6;border-radius:8px;
+  padding:9px 11px;line-height:1.7;margin-top:8px}
+
+/* 文件上传 */
+.drop{border:2px dashed #b9c8d6;border-radius:12px;padding:18px;text-align:center;color:var(--sub);
+  background:#fbfcfe;cursor:pointer;transition:.2s}
+.drop.hot{border-color:var(--blue);background:#f0f7ff}
+.drop b{color:var(--navy)}
+.filelist{margin-top:10px;font-size:12.5px}
+.filelist .fi{display:flex;justify-content:space-between;gap:10px;padding:6px 9px;border:1px solid var(--line);
+  border-radius:7px;margin-top:6px;background:#fff}
+.filelist .fi .f{word-break:break-all;color:#33475b}
+.progress{height:6px;background:#e8eef4;border-radius:4px;overflow:hidden;margin-top:8px}
+.progress i{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+
+/* 详情折叠 */
+details{border:1px solid var(--line);border-radius:9px;margin:8px 0;background:#fcfdfe}
+details>summary{cursor:pointer;padding:9px 12px;font-weight:700;color:var(--navy2);font-size:13px;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary:before{content:"▸";display:inline-block;margin-right:8px;transition:.2s;color:var(--blue)}
+details[open]>summary:before{transform:rotate(90deg)}
+details .dc{padding:2px 12px 12px}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0d2b45;color:#fff;
+  padding:10px 18px;border-radius:9px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:200;
+  box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{color:var(--muted);font-size:12px;text-align:center;padding:26px 0 40px}
+.print-only{display:none}
+@media print{
+  header.top,.drawer,.drop,#toast{display:none!important}
+  body{background:#fff}
+  section.sec{break-inside:avoid;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>采购报价比较 · 内贸</div>
+    <nav class="tabs" id="tabs">
+      <a href="#s0" class="on">摘要</a>
+      <a href="#s4">原始报价</a>
+      <a href="#s5">标准化</a>
+      <a href="#s7">成本明细</a>
+      <a href="#s8">敏感性</a>
+      <a href="#s9">陷阱与待确认</a>
+      <a href="#s2">文件识别</a>
+      <a href="#s11">公式与参数</a>
+    </nav>
+    <div class="actions">
+      <button class="btn" id="btnPrint" title="打印 / 另存为 PDF">打印</button>
+      <button class="btn solid" id="btnExportXlsx">导出 Excel</button>
+      <button class="btn" id="btnExportCsv">导出 CSV</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="banner">
+    <b>⚠ 模拟业务样例</b>　本报告基于三份由采购方自行制作的<b>模拟报价文件</b>（供应商 A PDF / B Excel / C 图片），
+    用于验证「多格式报价提取 → 口径统一 → 到厂成本折算 → 多供应商比价」的完整流程。
+    供应商名称、统一社会信用代码、联系方式、价格与商务条款均为虚构，<b>不得作为任何真实采购决策依据</b>。
+  </div>
+
+  <div class="hero">
+    <h1>工业级乙二醇 · 三家供应商采购报价比较</h1>
+    <div class="sub">采购标的：工业级乙二醇（聚酯级，含量 ≥99.9%，水分 ≤0.10%）　|　收货地：江苏省苏州市（苏州工业园区工厂）　|　报价期间：2026-10-19</div>
+    <div class="facts">
+      <div class="fact"><div class="k">采购数量（可调）</div><div class="v"><span id="fQty">200</span> 吨</div></div>
+      <div class="fact"><div class="k">年化资金成本（可调）</div><div class="v"><span id="fRate">4.5</span>%</div></div>
+      <div class="fact"><div class="k">穿透口径</div><div class="v">不含税 · 折纯 · 到厂</div></div>
+      <div class="fact"><div class="k">参与同口径排名</div><div class="v" id="fElig">2 家（C 规格不符，单列）</div></div>
+    </div>
+  </div>
+
+  <!-- ============ 0 摘要 ============ -->
+  <section class="sec" id="s0">
+    <h2><span class="no">✓</span>一页结论</h2>
+    <p class="lead">同一份「到厂成本」口径下，三家供应商的实际差距远大于表面数字给人的印象。</p>
+
+    <div class="kpi" id="kpi"></div>
+
+    <div class="callout ok" id="verdict"></div>
+
+    <h3 class="t">到厂成本对比（元/吨，不含税 · 折纯 · 含买方运费与资金占用）</h3>
+    <div id="bars"></div>
+    <div class="note">条形长度按最高者归一。C 因计价单位为「元/桶」且每桶仅 220 kg，折算后达 2.8 万元/吨量级，属于典型的<b>「单位陷阱」</b>，详见第 9 节。</div>
+
+    <h3 class="t">构成拆解：谁的成本高在哪里</h3>
+    <div class="grid g3" id="stackCards"></div>
+
+    <h3 class="t">差异归因（B 为最优，与 A、C 逐项对比）</h3>
+    <div class="tblwrap"><table class="t" id="attribution"></table></div>
+  </section>
+
+  <!-- ============ 2 文件识别 ============ -->
+  <section class="sec" id="s2">
+    <h2><span class="no">2</span>报价文件识别与抽取</h2>
+    <p class="lead">三份文件分别采用 PDF 盖章报价函、Excel 明细表、手机截图式图片三种格式，字段命名与单位都不统一。
+      系统先抽取 L1 原始字段，再提示歧义项，最后转换为 L2 标准化字段。</p>
+
+    <div class="grid g3">
+      <div class="sup">
+        <h4>供应商 A <span class="pill a">PDF</span></h4>
+        <div class="role">盖章报价函 · 扫描版式</div>
+        <div class="quote-line">供应商A_华东石化工业品_报价函_20261019.pdf</div>
+        <div class="kv"><div class="k">抽取状态</div><div><span class="badge green">已完成 15/15 字段</span></div>
+          <div class="k">歧义项</div><div>2 项（运费承担方、检验费金额）</div>
+          <div class="k">原报价定位</div><div>p.1 一、产品与报价；三、付款条件</div></div>
+        <button class="btn ghost sm" style="margin-top:10px" onclick="openSrc('A')">查看原报价位置</button>
+      </div>
+      <div class="sup">
+        <h4>供应商 B <span class="pill b">Excel</span></h4>
+        <div class="role">报价明细表 · 3 个工作表</div>
+        <div class="quote-line">供应商B_恒源新材料报价明细表_20261019.xlsx</div>
+        <div class="kv"><div class="k">抽取状态</div><div><span class="badge green">已完成 15/15 字段</span></div>
+          <div class="k">歧义项</div><div>3 项（有效期极短、联动机制、保证金退还）</div>
+          <div class="k">原报价定位</div><div>sheet『报价明细』明细行 / 『说明』</div></div>
+        <button class="btn ghost sm" style="margin-top:10px" onclick="openSrc('B')">查看原报价位置</button>
+      </div>
+      <div class="sup">
+        <h4>供应商 C <span class="pill c">图片</span></h4>
+        <div class="role">手机截图 · 聊天记录中的报价单</div>
+        <div class="quote-line">供应商C_苏南化工贸易报价单_20261019.png</div>
+        <div class="kv"><div class="k">抽取状态</div><div><span class="badge red">字段缺失 4 项</span></div>
+          <div class="k">歧义项</div><div>6 项（税率、含量、桶重、有效期…）</div>
+          <div class="k">原报价定位</div><div>报价单卡片『单价』行 / 押金提示框</div></div>
+        <button class="btn ghost sm" style="margin-top:10px" onclick="openSrc('C')">查看原报价位置</button>
+      </div>
+    </div>
+
+    <h3 class="t">一次上传多份报价（PDF / Excel / Word / 图片）</h3>
+    <div class="drop" id="drop">
+      <div style="font-size:26px;margin-bottom:6px">⬆</div>
+      <div><b>点击选择</b> 或拖拽多份文件到此处</div>
+      <div style="font-size:12px;margin-top:4px">支持 PDF · XLSX · DOCX · CSV · JPG · PNG，可多选（本机运行，文件不上传任何服务器）</div>
+      <input type="file" id="fileInput" multiple accept=".pdf,.xlsx,.xls,.docx,.csv,.txt,.png,.jpg,.jpeg" hidden>
+    </div>
+    <div class="progress"><i id="prog"></i></div>
+    <div class="filelist" id="fileList"><div style="color:#8c9aa6;font-size:12.5px">尚未选择文件。</div></div>
+    <div id="liveExtract"></div>
+    <div class="callout warn" style="margin-top:12px">
+      <b>本机抽取规则</b>：浏览器内对可读文件按 <code>字段关键词正则</code> 抽取（不依赖网络）。图片报价需由 Agent 侧多模态识别；
+      扫描版 PDF 需 OCR。抽取结果一律进入「待确认」队列，<b>任一字段未确认前不得参与排名</b>；无法识别的金额不得按 0 处理。
+      在通用 Skill 中，该环节由 <code>scripts/extract_quotes.py</code> + <code>references/field-mapping.md</code> 完成，并输出同样的 L1 结构。
+    </div>
+  </section>
+
+  <!-- ============ 4 原始报价 ============ -->
+  <section class="sec" id="s4">
+    <h2><span class="no">4</span>原始报价（L1 · 逐字，不做任何换算）</h2>
+    <p class="lead">下面每一格都是报价文件原文，未经任何单位换算或税费调整。所有「口径转换」都发生在下一节。</p>
+    <div class="legend">
+      <span><span class="layer raw">原始值</span> 报价文件原文</span>
+      <span><span class="layer der">转换值</span> 由公式计算，可追溯公式与参数</span>
+      <span><span class="layer asm">假设</span> 买方输入或缺失字段的处理，需确认</span>
+    </div>
+    <div class="tblwrap"><table class="t" id="rawTable"></table></div>
+    <div class="note">「—」表示报价文件中<b>没有</b>该字段，不等于 0，已列入第 9 节待确认清单。</div>
+  </section>
+
+  <!-- ============ 5 标准化 ============ -->
+  <section class="sec" id="s5">
+    <h2><span class="no">5</span>标准化统一报价表（L2 · 口径转换）</h2>
+    <p class="lead">把「元/公斤」「元/吨」「元/桶」统一为「元/吨」；把「含税」「不含税」统一为「不含税可抵扣」；
+      把不同含量折纯到 100%。</p>
+
+    <h3 class="t">5.1 折纯判断（规格差异是否允许折纯比较）</h3>
+    <div class="tblwrap"><table class="t" id="purityTable"></table></div>
+    <div class="callout warn">
+      <b>折纯规则（三条同时满足才允许）</b>：① 产品为同一化学物质；② 杂质项不构成下游工艺/检测障碍；③ 允许按纯物计量或价格可线性折算。
+      <br>本例：询价规格为 ≥99.9%，A（99.92%）、B（99.90%）满足，可折纯；<b>C（99.5%）不满足</b> —— 不仅含量低，
+      且未注明执行标准与水分/DEG，因此 <b>C 默认不参与同口径排名</b>，仅提供折纯参考价。折纯不改变「1 吨实物按 1 吨计价」的结算方式，只改变成本比较口径。
+    </div>
+
+    <h3 class="t">5.2 统一报价表</h3>
+    <div class="tblwrap"><table class="t" id="stdTable"></table></div>
+    <div class="note">原始单价一栏保留各家原文，用于追溯；「换算含税价（元/吨）」仅用于横向粗看，<b>不可</b>作为排序依据（税费口径不同）。</div>
+  </section>
+
+  <!-- ============ 7 成本明细 ============ -->
+  <section class="sec" id="s7">
+    <h2><span class="no">7</span>参考到厂成本与计算明细</h2>
+    <p class="lead">拖动或修改下面的参数，全部结果、图表、排名会实时重算。每一项都可展开看公式。</p>
+
+    <div class="panel">
+      <div class="ctl">
+        <div>
+          <label>采购数量</label>
+          <div class="inp"><input type="range" id="rQty" min="20" max="600" step="10" value="200">
+            <input type="number" id="nQty" value="200" min="1" step="1"><span class="unit">吨</span></div>
+          <div class="hint">影响数量阶梯：（A ≥110 吨 6.17；B ≥120 吨 4,800）</div>
+        </div>
+        <div>
+          <label>年化资金成本</label>
+          <div class="inp"><input type="range" id="rRate" min="0" max="15" step="0.5" value="4.5">
+            <input type="number" id="nRate" value="4.5" min="0" max="30" step="0.1"><span class="unit">%</span></div>
+          <div class="hint">用于账期资金占用：余额 × r × 天数 / 360</div>
+        </div>
+        <div>
+          <label>买方自提运费（张家港 → 苏州园区）</label>
+          <div class="inp"><input type="number" id="nFreight" value="42" min="0" step="1"><span class="unit">元/吨 含税9%</span></div>
+          <div class="hint" id="freightHint"></div>
+        </div>
+        <div>
+          <label>到厂卸车费</label>
+          <div class="inp"><input type="number" id="nUnload" value="25" min="0" step="1"><span class="unit">元/吨</span></div>
+          <div class="hint">假设值，三家均未明确</div>
+        </div>
+        <div>
+          <label>第三方检验费</label>
+          <div class="inp"><input type="number" id="nInsp" value="1800" min="0" step="100"><span class="unit">元/批</span></div>
+          <div class="hint">按年送检 6 批 ÷ 年采购量 2,400 吨摊销</div>
+        </div>
+        <div>
+          <label>槽车清洗 / 蒸汽置换</label>
+          <div class="inp"><input type="number" id="nVeh" value="600" min="0" step="50"><span class="unit">元/车次</span></div>
+          <div class="hint">仅散装（B）发生；年 8 车次摊销</div>
+        </div>
+        <div>
+          <label>交付条件（买方自提时）</label>
+          <div class="seg" id="segFreight">
+            <button data-v="42" class="on">含运 42 元/吨</button>
+            <button data-v="0">供应商送货（0）</button>
+          </div>
+          <div class="hint">一键切换：买方自提 ↔ 供应商送达</div>
+        </div>
+        <div>
+          <label>供应商 C 处理方式</label>
+          <div class="seg" id="segC">
+            <button data-v="0" class="on">规格不符，单列</button>
+            <button data-v="1">接受 99.5%，参与排名</button>
+          </div>
+          <div class="hint">若接受低于规格，C 参与比较但不改变其规格事实</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ghost sm" id="btnReset">恢复基准参数</button>
+        <span style="font-size:12px;color:#8c9aa6">基准：200 吨 · 4.5% · 运费 42 元/吨 · 卸车 25 元/吨</span>
+      </div>
+    </div>
+
+    <h3 class="t">7.1 到厂成本汇总（实时）</h3>
+    <div class="tblwrap"><table class="t" id="costTable"></table></div>
+
+    <h3 class="t">7.2 分项明细（点击行展开公式）</h3>
+    <div id="breakdowns"></div>
+
+    <h3 class="t">7.3 账期 → 资金占用成本（按当前资金成本与货款金额）</h3>
+    <div class="tblwrap"><table class="t" id="capTable"></table></div>
+    <div class="note">资金占用成本 = 货款金额 × 年化资金成本 × 加权付款天数 ÷ 360。加权付款天数按实际付款节奏换算，不是合同上写的「账期」。</div>
+  </section>
+
+  <!-- ============ 8 敏感性 ============ -->
+  <section class="sec" id="s8">
+    <h2><span class="no">8</span>敏感性分析</h2>
+    <p class="lead">哪些参数真正决定了「谁最便宜」？下表逐个参数扰动，观察到厂成本的变化。</p>
+    <div class="tblwrap"><table class="t" id="sensTable"></table></div>
+
+    <h3 class="t">8.1 市场情景压力测试：折纯裸价 ± 波动时的到厂成本</h3>
+    <p class="lead">生意社现货在 2026-07-21 至 09-13 之间从 4,835 涨至 6,625 元/吨（+37%）。在 4,800~6,800 元/吨区间扫描，观察排名是否稳定。</p>
+    <div id="sweepChart"></div>
+    <div class="tblwrap" style="margin-top:10px"><table class="t" id="sweepTable"></table></div>
+
+    <h3 class="t">8.2 情景对比</h3>
+    <div class="tblwrap"><table class="t" id="scenTable"></table></div>
+
+    <h3 class="t">8.3 报价在当前市场中的位置</h3>
+    <div class="tblwrap"><table class="t" id="marketTable"></table></div>
+    <div class="callout warn">
+      <b>市场参照口径说明</b>：生意社现货价为<b>华东主港含税现货</b>；各家报价经还原为「含税、折纯出厂价」后对比，运费、包装等未被剥离的部分会一定程度抬高口径。
+      本例中，A、B 的折纯含税出厂价与市场现货基本处于同一区间，C 的价格则是市场价的 <b>数倍</b>，属于明显偏离。
+      生意社「报价动态」页面中贸易商散货报价从 3,100 到 7,000 元/吨不等，<b>离散度极大，不能作为市场区间</b>，本报告未采用。
+    </div>
+  </section>
+
+  <!-- ============ 9 陷阱与待确认 ============ -->
+  <section class="sec" id="s9">
+    <h2><span class="no">9</span>容易被忽略的费用与条款 · 待确认事项</h2>
+
+    <h3 class="t">9.1 比价陷阱（本案例刻意设置的 5 个）</h3>
+    <div class="grid g2" id="traps"></div>
+
+    <h3 class="t">9.2 被忽略条款清单（L1 原文 → 是否已计入成本 → 待确认）</h3>
+    <div class="tblwrap"><table class="t" id="ignoredTable"></table></div>
+    <div class="note">「未提及」一律记为「待确认」，<b>不按 0 计入</b>。<span class="pill hi">高</span> 优先级项会显著改变结论。</div>
+
+    <h3 class="t">9.3 待确认事项（缺失字段清单）</h3>
+    <div class="tblwrap"><table class="t" id="openTable"></table></div>
+
+    <h3 class="t">9.4 交叉检查</h3>
+    <div class="tblwrap"><table class="t" id="ccTable"></table></div>
+  </section>
+
+  <!-- ============ 11 公式与参数 ============ -->
+  <section class="sec" id="s11">
+    <h2><span class="no">11</span>计算公式、参数与来源</h2>
+    <p class="lead">所有数字都能回到下面这些公式与参数。源数据 → 公式 → 结果 三步可复核。</p>
+
+    <h3 class="t">11.1 成本计算主公式</h3>
+    <div class="formula"><span class="c">// 到厂成本（元/吨，不含税、折纯口径，n = 净商品量 1 吨）</span>
+L = C_goods + C_pack + C_freight + C_unload + C_inspect + C_vehicle + C_capital + C_deposit
+
+<span class="c">// ① 裸价：含税→不含税；不含税→原值；普通发票→全额入成本（进项不可抵扣）</span>
+C_goods = 含税单价 ÷ (1 + 13%)          <span class="c">// 专票</span>
+C_goods = 不含税单价                     <span class="c">// 专票、原文不含税</span>
+C_goods = 含税单价                       <span class="c">// 普票 / 税率未注明</span>
+
+<span class="c">// ② 计价单位统一：公斤→吨 ×1000；桶→吨 ÷ (桶净重 kg / 1000)</span>
+单价(元/吨) = 单价(元/桶) ÷ (220 kg ÷ 1000)
+
+<span class="c">// ③ 折纯：到厂成本 ÷ 含量；不折纯时 = 到厂成本</span>
+L_purity = L ÷ 含量%
+
+<span class="c">// ④ 运费：卖方含运 → 0（已内含）；买方自提 → 含税运费 ÷ (1+9%)</span>
+C_freight = 0 或 运费(含税9%) ÷ 1.09
+
+<span class="c">// ⑤ 检验费摊销：年检验总额 ÷ 年采购量</span>
+C_inspect = 每批检验费 × 年送检批数 ÷ 年采购量 ÷ (1+6%)
+
+<span class="c">// ⑥ 资金占用：迭代求解（成本依赖资金成本，存在循环）</span>
+C_capital = (C_goods + C_pack + C_freight + C_unload + C_inspect + C_vehicle + C_capital) × r × d ÷ 360
+收敛：|C_capital,k − C_capital,k−1| &lt; 1e-9，最多 40 次
+
+<span class="c">// ⑦ 加权付款天数（现金流加权，不是合同账期）</span>
+d = Σ(t_i × w_i)     <span class="c">// t_i 为第 i 笔付款距下单天数，w_i 为占货值比例</span>
+A：d = 0×50% + 21×50% ≈ 10.5 → 以迭代法精确处理
+B：d = 46 天（月结30 + 月中下单 → 次月25日平均约 46 天）
+C：d = 0 天（款到发货）
+
+<span class="c">// ⑧ 保证金 / 押金占用</span>
+C_deposit = 保证金 × r × 占用天数 ÷ 360 ÷ 采购数量</div>
+
+    <h3 class="t">11.2 参数表（含来源与性质）</h3>
+    <div class="tblwrap"><table class="t" id="paramTable"></table></div>
+
+    <h3 class="t">11.3 数据来源</h3>
+    <div class="tblwrap"><table class="t" id="sourceTable"></table></div>
+
+    <h3 class="t">11.4 方法说明与边界</h3>
+    <div class="grid g2">
+      <div class="callout"><b>三层分离</b><br>
+        <span class="layer raw">原始值</span> 只照抄报价单，不做任何算术；<br>
+        <span class="layer der">转换值</span> 每一条都由公式生成，并记录「公式 / 输入 / 输出」；<br>
+        <span class="layer asm">假设</span> 是买方或用户提供的，缺失字段在此披露，绝不默认为 0。</div>
+      <div class="callout warn"><b>比较禁忌</b><br>
+        ✗ 不直接比较不同税费口径的单价；<br>✗ 不直接比较不同计价单位的单价；<br>
+        ✗ 不把不同规格（含量）当作同品质可比；<br>✗ 不把"未提及"的费用当作 0。</div>
+    </div>
+  </section>
+
+  <footer>
+    采购报价比较报告 · 模拟业务样例 · 生成日期 2026-10-19　|　数据口径：不含税、折纯、到厂　|　
+    本报告由「内贸采购 · 比较几份采购报价」Skill 生成，同名 Excel 工作簿包含全部原始数据与公式。
+  </footer>
+</div>
+
+<!-- 抽屉 -->
+<div class="drawer" id="drawer">
+  <div class="mask" onclick="closeDrawer()"></div>
+  <div class="body">
+    <button class="close" onclick="closeDrawer()">✕</button>
+    <div id="drawerBody"></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>window.PAYLOAD = {"meta":{"title":"工业级乙二醇 · 三家供应商采购报价比较","buyer":"苏州××化工有限公司（样例采购方）","product":"工业级乙二醇（聚酯级，含量≥99.9%，水分≤0.10%）","qty":200.0,"dest":"江苏省苏州市（苏州工业园区工厂）","quote_date":"2026-10-19","generated":"2026-10-19","sample_banner":"本报告基于三份【模拟业务样例】报价文件，非真实企业报价；所有供应商名称、联系方式、价格与条款均为虚构，仅用于验证报价提取、口径统一与到厂成本比价的完整流程。","basis":"穿透口径：净商品量 1 吨、不含税可抵扣、折纯至 100%；资金成本年化/360"},"assumptions":{"demand_qty_ton":200.0,"annual_fund_rate":0.045,"year_days":360.0,"accept_below_spec":false,"freight":{"hz_zhangjiagang":{"value":42.0,"unit":"元/吨","tax":"含税9%","source":"买方物流询价（假设）"},"wj_suzhou":{"value":35.0,"unit":"元/吨","tax":"含税9%","source":"买方物流询价（假设）"},"freight_tax_rate":0.09},"unload_fee_per_ton":25.0,"service_tax_rate":0.06,"inspection_fee_per_batch":1800.0,"inspection_batches_per_year":6.0,"annual_volume_ton":2400.0,"vehicle_prep_cost_per_trip":600.0,"vehicle_prep_trips_per_year":8.0,"deposit_occupy_days":180.0,"pack_deposit_refund_days":10.0,"pack_deposit_unreturned_ratio":0.1,"assume_c_special_invoice":false},"assumption_notes":{"demand_qty_ton":["采购数量","用户输入"],"annual_fund_rate":["年化资金成本","用户输入/可选"],"unload_fee_per_ton":["到厂卸车理货费","假设｜三家均未明确"],"inspection_fee_per_batch":["第三方检测费/批","假设"],"vehicle_prep_cost_per_trip":["槽车清洗+蒸汽置换/车次","假设"],"deposit_occupy_days":["保证金占用天数","假设｜待确认"],"pack_deposit_refund_days":["包装押金退回天数","假设｜待确认"],"freight.hz_zhangjiagang":["张家港→苏州园区运费","假设｜待物流确认"]},"market":{"spot_20261016":{"value":5808.0,"unit":"元/吨","basis":"含税、华东现货","source":"生意社乙二醇现期图（2026-07-21~10-19）现货价格","url":"https://eg.100ppi.com/futures/"},"benchmark_20261019":{"value":5966.67,"unit":"元/吨","basis":"生意社基准价（含税）","source":"生意社『10月19日乙二醇基准价为5966.67元/吨』","url":"https://www.100ppi.com/news/detail-20261019-6361981.html"},"recent_high":{"date":"2026-09-13","value":6625.0,"source":"生意社现货"},"recent_low":{"date":"2026-07-21","value":4835.0,"source":"生意社现货"}},"raw":{"A":{"file":"供应商A_华东石化工业品_报价函_20261019.pdf","fmt":"PDF","loc":"p.1 一、产品与报价 / 三、付款条件","product":"乙二醇（聚酯级（纤维级））","spec":"含量≥99.92%；水分≤0.08%；色度（Pt-Co）≤5；二甘醇（DEG）≤0.05%","price":"6.20 元/公斤","price_val":6.2,"unit":"元/公斤","tax":"含税价，可开具税率 13% 的增值税专用发票","invoice":"增值税专用发票","vat":0.13,"tax_basis":"含税","tiers":"≥22 吨 6.20 元/公斤；≥110 吨 6.17 元/公斤","pack":"吨桶（IBC，1000L，净重约1100kg/桶）","pack_fee":"包装费已含（IBC 吨桶，免回收）","freight":"自提，运费买方自行安排承担（不报价、不计入）","delivery":"张家港库区自提；款到后 2 个工作日内出库；单笔≥22 吨免仓储费","payment":"预付 50%，余款见增值税发票后 7 日内电汇","moq":"≥22 吨（整车起订）","validity":"2026-10-19 至 2026-10-23（5 个自然日）","quality":"执行 GB/T 4649-2018 聚酯级（优等品）指标；随货提供批次 COA，可提供第三方（SGS）检测，费用买方另议","origin":"扬子石化","other":"单笔订单不足 22 吨按零单加收 60 元/吨库区作业费；结算以磅单为准，磅差超过±0.2%双方协商"},"B":{"file":"供应商B_恒源新材料报价明细表_20261019.xlsx","fmt":"Excel","loc":"sheet『报价明细』明细行 / 『说明』","product":"乙二醇（ME 级）","spec":"纯度≥99.90%；水分≤0.10%；DEG≤0.03%；铁（Fe）≤0.5 mg/kg","price":"4850 元/吨（不含税）","price_val":4850.0,"unit":"元/吨","tax":"价格不含税，另开增值税专用发票 13%","invoice":"增值税专用发票","vat":0.13,"tax_basis":"不含税","tiers":"30~119 吨 4,850；单月累计≥120 吨 4,800（元/吨，不含税）","pack":"散装（槽车）","pack_fee":"包装费 0（散装，无包装物）","freight":"不含运费，由买方承担（建议买方自行委托槽车提货）","delivery":"工厂门交付，买方或买方指定承运人自提；放货需提前 2 个工作日预约","payment":"月结 30 天（次月 25 日前结清上月货款）；首次合作需保证金 30 万元（可抵扣）","moq":"30 吨/车，单月累计≥60 吨","validity":"报价当日有效（2026-10-19 17:00 前确认）","quality":"执行 GB/T 4649-2018 聚酯级优等品；COA 随车；异议须于收货后 3 个工作日内提出","origin":"中海壳牌","other":"价格联动：生意社基准价月均价较 5,966.67 元/吨上下浮动超3%部分100%联动；数量误差±0.3%以内不调整"},"C":{"file":"供应商C_苏南化工贸易报价单_20261019.png","fmt":"图片(PNG)","loc":"报价单卡片『单价』行 / 黄色押金框","product":"乙二醇（工业级）","spec":"含量 ≥ 99.5%（未注明水分与 DEG 指标）","price":"6300 元/桶（含税到货价）","price_val":6300.0,"unit":"元/桶","tax":"含税到货价（未注明税种与税率；未注明发票类型）","invoice":"未注明（默认普通发票）","vat":null,"tax_basis":"含税","tiers":"≥5 吨单一价","pack":"镀锌铁桶 200L / 220kg / 桶","pack_fee":"包装费已含；铁桶押金 30 元/桶（可退）","freight":"已含（卖方承担），5 吨以上免运费","delivery":"送货上门（限 5 吨以上、苏州大市范围、8:00-17:00）","payment":"款到发货","moq":"5 吨","validity":"10 天内有效（未注明起始日期）","quality":"未注明执行标准；可提供企业自检报告","origin":"国产","other":"若遇原料价格大幅波动，保留调价权利（未约定幅度与机制）"}},"std":{"A":{"short":"华东石化工业品","name":"华东石化工业品（苏州）有限公司","addr":"江苏省苏州市张家港市","unit_conv":"千克 → 吨：6.20 元/公斤 × 1000","price_incl":6200.0,"price_excl":5486.73,"purity":1.0,"cost_basis":"excl","pack_fee_single":0.0,"pack_returnable":false,"freight_by":"buyer","seller_freight_borne":false,"freight_key":"hz_zhangjiagang","credit_days":7.0,"prepay":0.5,"moq":22.0,"validity_days":5.0,"spec_ok":true,"tier_lo":110,"money_days_note":"预付50%于下单当日，余款于到厂后7天收票、10天付款 → 加权 21 天"},"B":{"short":"恒源新材料供应链","name":"恒源新材料供应链（江苏）有限公司","addr":"江苏省苏州市工业园区","unit_conv":"元/吨，无需换算","price_incl":5480.5,"price_excl":4850.0,"purity":1.0,"cost_basis":"excl","pack_fee_single":0.0,"pack_returnable":false,"freight_by":"buyer","seller_freight_borne":false,"freight_key":"hz_zhangjiagang","credit_days":46.0,"prepay":0.0,"moq":30.0,"validity_days":0.0,"spec_ok":true,"tier_lo":120,"money_days_note":"月结30天，次月25日结清 → 平均付款天数 46 天（30+半月）"},"C":{"short":"苏南化工贸易","name":"苏南化工贸易有限公司","addr":"江苏省苏州市吴江区","unit_conv":"桶 → 吨：6,300 元/桶 ÷ 0.220 吨/桶","price_incl":28636.36,"price_excl":null,"purity":0.99,"cost_basis":"full","pack_fee_single":0.0,"pack_returnable":true,"freight_by":"seller","seller_freight_borne":true,"freight_key":"wj_suzhou","credit_days":0.0,"prepay":1.0,"moq":5.0,"validity_days":null,"spec_ok":false,"tier_lo":0,"barrel_kg":220.0,"money_days_note":"款到发货 → 0 天账期"}},"ignored":{"A":{"卸车费":{"text":"未提及；张家港库区装车费已含出厂价内，收货端卸车由买方自理","amount":null,"in_price":null},"检验费":{"text":"第三方（SGS）检测费用由买方承担，金额未提供","amount":null,"in_price":false},"罐车清洗费":{"text":"不适用（吨桶交付）","amount":0.0,"in_price":true},"包装回收费":{"text":"IBC 吨桶免回收，卖方回收，不收费","amount":0.0,"in_price":true},"涨价/有效期":{"text":"有效期至 2026-10-23，逾期重新报价","amount":null,"in_price":null},"零单加价":{"text":"单笔不足 22 吨加收 60 元/吨库区作业费","amount":60.0,"in_price":false}},"B":{"卸车费":{"text":"厂内装车费已含；到厂卸车费不承担、未报价","amount":null,"in_price":false},"检验费":{"text":"不包含；本表未列检测费项","amount":null,"in_price":false},"罐车清洗费":{"text":"买方自提槽车清洗费由买方自理（未报价）","amount":null,"in_price":false},"包装回收费":{"text":"不适用（散装）","amount":0.0,"in_price":true},"保证金":{"text":"首次合作保证金 30 万元，可抵扣最后一期货款","amount":300000.0,"in_price":false},"价格联动":{"text":"生意社基准价月均价较 5,966.67 元/吨 ±3% 部分 100% 联动","amount":null,"in_price":null},"报价有效期":{"text":"报价当日有效（17:00 失效）——极短，可能需重询","amount":null,"in_price":null}},"C":{"卸车费":{"text":"送货到厂，卸车由买方安排（未报价）","amount":null,"in_price":false},"检验费":{"text":"可提供企业自检报告；第三方检测买方自理","amount":null,"in_price":false},"罐车清洗费":{"text":"不适用（铁桶）","amount":0.0,"in_price":true},"包装回收费":{"text":"铁桶押金 30 元/桶，可退；长期未退视为包装回收费","amount":30.0,"in_price":false},"税费口径":{"text":"未注明税率与发票类型（影响可抵扣性）","amount":null,"in_price":null},"调价权利":{"text":"「遇原料价格大幅波动保留调价权利」，未约定幅度","amount":null,"in_price":null},"报价有效期":{"text":"10 天内有效（未注明起始日期）","amount":null,"in_price":null}}},"open_items":[["C","价格口径·税","截图未注明含税/不含税、税种税率与发票类型","若为普票，13% 进项不可抵扣，C 的真实成本显著偏高","要求书面补充发票类型、税率","高"],["C","规格·含量","含量 ≥99.5%，低于询价 ≥99.9%，未注明水分/DEG","规格不一致，不能与 A/B 直接比较","确认能否按 ≥99.9% 供货并重新报价","高"],["C","计价单位·桶重","按元/桶计价，净重仅见于包装页 220kg","单位换算误差被放大（1 桶≈0.22 吨）","要求注明净重/皮重或改按吨报价","高"],["C","报价有效期","10 天内有效，未注明起始日期","时效不确定","确认起止日期","中"],["C","调价条款","保留调价权利，未约定幅度与触发条件","签约后存在单方调价风险","约定浮动上限与触发机制","中"],["C","运费边界","5 吨以上免运费，园区是否在免费配送范围未明确","可能增加运费","书面确认配送范围","中"],["C","质量标准","未注明执行标准（GB/T 4649）","到厂检测争议","确认标准与 COA 项目","中"],["B","报价有效期","报价当日有效（17:00 失效）","几乎无法执行，需重询","要求至少 3 个工作日有效期","高"],["B","价格联动","生意社基准价月均价 ±3% 部分 100% 联动","上行风险主要落在买方","明确基准价取值口径与月均价算法","中"],["B","保证金","首次合作保证金 30 万元","资金占用约 0.9 万元/次","确认退还条件与时间","中"],["B","运费","不含运费，由买方承担","到厂成本关键变量","索取含运报价","高"],["A","运费","库区自提，买方承担且未报价","到厂成本关键变量","索取送货价","高"],["A","检验费","SGS 检测费买方承担，未给金额","成本增量","索取检测报价","中"],["A","数量阶梯","≥110 吨 6.17 元/公斤","年化 2,400 吨可谈批量价","确认单笔/累计口径","低"],["ALL","卸车费","三家均未明确到厂卸车费承担方","已按假设 25 元/吨计入","与仓库确认实际价格","中"],["ALL","磅差/损耗","A ±0.2% 协商；B ±0.3% 不调整；C 未约定","影响实收量","统一约定计量与磅差","低"]],"cross_checks":[["分项加总 vs 报价总额","A：6.20 元/公斤 × 1000 = 6,200 元/吨，与报价函括注一致","通过"],["分项加总 vs 报价总额","B：不含税 4,850 × 1.13 = 5,480.50 元/吨，与阶梯表公式一致","通过"],["分项加总 vs 报价总额","C：6,300 元/桶 ÷ 0.220 = 28,636.36 元/吨（桶重取自包装页）","通过（桶重待确认）"],["计价单位一致性","A 元/公斤、B 元/吨、C 元/桶 —— 三种单位，直接比价会平均偏高 4.5 倍","需统一口径"],["税费口径一致性","A/B 为 13% 专票；C 税率与发票类型未注明（默认普票）","需关注"],["规格一致性","A 99.92% / B 99.90% / C 99.5%，C 低于询价规格","需剔除或单列"],["数量阶梯命中","需求量 200 吨 → A 命中 ≥110 吨档(6.17)；B 命中 ≥120 吨档(4,800 不含税)","需注意"],["报价有效期","A 5 天 / B 数小时 / C 10 天（未注明起始）","需关注"],["运费承担","A 买方自提 / B 买方自提 / C 卖方含运","需统一"],["付款条件","A 预付50%+票到7天 / B 月结30天+保证金 / C 款到发货","需折算资金成本"]],"result":{"A":{"code":"A","tier_price":6.17,"goods_incl":6170.0,"goods_excl":5460.18,"goods":5460.18,"purity":1.0,"goods_purity":5464.55,"pack":0.0,"freight_base":38.53,"freight_paid":42.0,"freight_note":"买方自提，运费 42 元/吨（含税9%），不含税 38.53","unload":23.58,"inspect":4.25,"vehicle":0.0,"cap":14.55,"days":21.0,"base":5526.54,"landed_before_deposit":5541.08,"deposit_cost":0.0,"landed":5541.08,"landed_purity":5545.52,"qty":200.0,"rank":2,"gap_best":610.93},"B":{"code":"B","tier_price":4800.0,"goods_incl":5424.0,"goods_excl":4800.0,"goods":4800.0,"purity":1.0,"goods_purity":4804.8,"pack":0.0,"freight_base":38.53,"freight_paid":42.0,"freight_note":"买方自提，运费 42 元/吨（含税9%），不含税 38.53","unload":23.58,"inspect":4.25,"vehicle":1.89,"cap":28.15,"days":46.0,"base":4868.25,"landed_before_deposit":4896.4,"deposit_cost":33.75,"landed":4930.15,"landed_purity":4935.09,"qty":200.0,"rank":1,"gap_best":0.0},"C":{"code":"C","tier_price":6300.0,"goods_incl":28636.36,"goods_excl":28636.36,"goods":28636.36,"purity":0.99,"goods_purity":28780.26,"pack":0.0,"freight_base":0.0,"freight_paid":0.0,"freight_note":"卖方含运，运费 35 元/吨已内含于价格，不另计（隐含成本，不可拆分）","unload":23.58,"inspect":4.25,"vehicle":0.0,"cap":0.0,"days":0.0,"base":28664.19,"landed_before_deposit":28664.19,"deposit_cost":13.79,"landed":28677.98,"landed_purity":28822.09,"qty":200.0,"rank":null,"gap_best":null}},"waterfall":{"A":[{"k":"goods","label":"裸价（不含税）","v":5460.18},{"k":"pack","label":"包装费","v":0.0},{"k":"freight","label":"运费（到厂）","v":38.53},{"k":"unload","label":"卸车费","v":23.58},{"k":"inspect","label":"检验费","v":4.25},{"k":"vehicle","label":"槽车清洗","v":0.0},{"k":"cap","label":"账期资金成本","v":14.55},{"k":"deposit","label":"保证金/押金占用","v":0.0}],"B":[{"k":"goods","label":"裸价（不含税）","v":4800.0},{"k":"pack","label":"包装费","v":0.0},{"k":"freight","label":"运费（到厂）","v":38.53},{"k":"unload","label":"卸车费","v":23.58},{"k":"inspect","label":"检验费","v":4.25},{"k":"vehicle","label":"槽车清洗","v":1.89},{"k":"cap","label":"账期资金成本","v":28.15},{"k":"deposit","label":"保证金/押金占用","v":33.75}],"C":[{"k":"goods","label":"裸价（不含税）","v":28636.36},{"k":"pack","label":"包装费","v":0.0},{"k":"freight","label":"运费（到厂）","v":0.0},{"k":"unload","label":"卸车费","v":23.58},{"k":"inspect","label":"检验费","v":4.25},{"k":"vehicle","label":"槽车清洗","v":0.0},{"k":"cap","label":"账期资金成本","v":0.0},{"k":"deposit","label":"保证金/押金占用","v":13.79}]},"scenarios":[{"name":"基准情景","note":"三家均已含/已计买方运费、卸车 25 元/吨、年化资金成本 4.5%","rows":{"A":{"landed":5541.08,"landed_purity":5545.52,"rank":2},"B":{"landed":4930.15,"landed_purity":4935.09,"rank":1},"C":{"landed":28677.98,"landed_purity":28822.09,"rank":null}}},{"name":"情景1：不含买方运费（仅比供应商报价）","note":"剔除买方假设的运费与卸车费，仅看供应商报价本身","rows":{"A":{"landed":5478.8,"landed_purity":5483.19,"rank":2},"B":{"landed":4867.68,"landed_purity":4872.55,"rank":1},"C":{"landed":28654.4,"landed_purity":28798.39,"rank":null}}},{"name":"情景2：资金成本 10%","note":"企业融资成本高或占用银行额度时","rows":{"A":{"landed":5558.97,"landed_purity":5563.42,"rank":2},"B":{"landed":5006.26,"landed_purity":5011.27,"rank":1},"C":{"landed":28678.17,"landed_purity":28822.28,"rank":null}}},{"name":"情景3：数量降至 60 吨（阶梯价失效）","note":"A 落入基础档 6.20 元/公斤；B 落入 30~119 吨档","rows":{"A":{"landed":5567.7,"landed_purity":5572.16,"rank":2},"B":{"landed":5059.19,"landed_purity":5064.26,"rank":1},"C":{"landed":28677.98,"landed_purity":28822.09,"rank":null}}},{"name":"情景4：C 折纯后纳入比较（接受 99.5%）","note":"仅改变可比性假设，不改变 C 的规格事实","rows":{"A":{"landed":5541.08,"landed_purity":5545.52,"rank":2},"B":{"landed":4930.15,"landed_purity":4935.09,"rank":1},"C":{"landed":28677.98,"landed_purity":28822.09,"rank":3}}},{"name":"情景5：C 若能出具 13% 专票","note":"假设 C 开具增值税专用发票，进项可抵扣（待确认）","rows":{"A":{"landed":5541.08,"landed_purity":5545.52,"rank":2},"B":{"landed":4930.15,"landed_purity":4935.09,"rank":1},"C":{"landed":25383.53,"landed_purity":25511.09,"rank":null}}}],"sensitivity":[{"label":"买方运费（张家港线）","key":"freight","unit":"元/吨（含税9%）","rows":[{"v":0,"A":5502.45,"B":4891.4,"C":28677.98,"dA":-38.63,"dB":-38.75,"dC":0.0},{"v":20,"A":5520.85,"B":4909.85,"C":28677.98,"dA":-20.24,"dB":-20.3,"dC":0.0},{"v":42,"A":5541.08,"B":4930.15,"C":28677.98,"dA":0.0,"dB":0.0,"dC":0.0},{"v":60,"A":5557.64,"B":4946.76,"C":28677.98,"dA":16.56,"dB":16.61,"dC":0.0},{"v":80,"A":5576.04,"B":4965.22,"C":28677.98,"dA":34.95,"dB":35.06,"dC":0.0}]},{"label":"年化资金成本","key":"rate","unit":"%","rows":[{"v":0.0,"A":5526.54,"B":4868.25,"C":28677.83,"dA":-14.55,"dB":-61.9,"dC":-0.15},{"v":0.03,"A":5536.23,"B":4909.48,"C":28677.93,"dA":-4.86,"dB":-20.67,"dC":-0.05},{"v":0.045,"A":5541.08,"B":4930.15,"C":28677.98,"dA":0.0,"dB":0.0,"dC":0.0},{"v":0.06,"A":5545.95,"B":4950.86,"C":28678.03,"dA":4.87,"dB":20.71,"dC":0.05},{"v":0.08,"A":5552.45,"B":4978.53,"C":28678.1,"dA":11.37,"dB":48.37,"dC":0.12},{"v":0.1,"A":5558.97,"B":5006.26,"C":28678.17,"dA":17.88,"dB":76.11,"dC":0.19},{"v":0.12,"A":5565.5,"B":5034.06,"C":28678.24,"dA":24.41,"dB":103.9,"dC":0.26}]},{"label":"卸车费","key":"unload","unit":"元/吨","rows":[{"v":0,"A":5517.44,"B":4906.43,"C":28654.4,"dA":-23.65,"dB":-23.72,"dC":-23.58},{"v":15,"A":5531.63,"B":4920.66,"C":28668.55,"dA":-9.46,"dB":-9.49,"dC":-9.43},{"v":25,"A":5541.08,"B":4930.15,"C":28677.98,"dA":0.0,"dB":0.0,"dC":0.0},{"v":40,"A":5555.27,"B":4944.39,"C":28692.13,"dA":14.19,"dB":14.23,"dC":14.15},{"v":60,"A":5574.19,"B":4963.36,"C":28711.0,"dA":33.11,"dB":33.21,"dC":33.02}]},{"label":"采购数量","key":"qty","unit":"吨","rows":[{"v":30,"A":5567.7,"B":5171.69,"C":28677.98,"dA":26.62,"dB":241.54,"dC":0.0},{"v":60,"A":5567.7,"B":5059.19,"C":28677.98,"dA":26.62,"dB":129.04,"dC":0.0},{"v":110,"A":5541.08,"B":5008.06,"C":28677.98,"dA":0.0,"dB":77.9,"dC":0.0},{"v":120,"A":5541.08,"B":4952.65,"C":28677.98,"dA":0.0,"dB":22.5,"dC":0.0},{"v":200,"A":5541.08,"B":4930.15,"C":28677.98,"dA":0.0,"dB":0.0,"dC":0.0},{"v":500,"A":5541.08,"B":4909.9,"C":28677.98,"dA":0.0,"dB":-20.25,"dC":0.0}]},{"label":"槽车清洗/年车次","key":"veh","unit":"次/年","rows":[{"v":0,"A":5541.08,"B":4928.26,"C":28677.98,"dA":0.0,"dB":-1.9,"dC":0.0},{"v":4,"A":5541.08,"B":4929.2,"C":28677.98,"dA":0.0,"dB":-0.95,"dC":0.0},{"v":8,"A":5541.08,"B":4930.15,"C":28677.98,"dA":0.0,"dB":0.0,"dC":0.0},{"v":20,"A":5541.08,"B":4933.0,"C":28677.98,"dA":0.0,"dB":2.85,"dC":0.0}]}],"price_sweep":[{"price":4800.0,"A":4328.7,"B":4930.15,"C":4289.41},{"price":4900.0,"A":4417.19,"B":5030.15,"C":4377.9},{"price":5000.0,"A":4505.69,"B":5130.15,"C":4466.4},{"price":5100.0,"A":4594.18,"B":5230.15,"C":4554.89},{"price":5200.0,"A":4682.68,"B":5330.15,"C":4643.39},{"price":5300.0,"A":4771.17,"B":5430.15,"C":4731.89},{"price":5400.0,"A":4859.67,"B":5530.15,"C":4820.38},{"price":5500.0,"A":4948.16,"B":5630.15,"C":4908.88},{"price":5600.0,"A":5036.66,"B":5730.15,"C":4997.37},{"price":5700.0,"A":5125.16,"B":5830.15,"C":5085.87},{"price":5800.0,"A":5213.65,"B":5930.15,"C":5174.36},{"price":5900.0,"A":5302.15,"B":6030.15,"C":5262.86},{"price":6000.0,"A":5390.64,"B":6130.15,"C":5351.35},{"price":6100.0,"A":5479.14,"B":6230.15,"C":5439.85},{"price":6200.0,"A":5567.63,"B":6330.15,"C":5528.35},{"price":6300.0,"A":5656.13,"B":6430.15,"C":5616.84},{"price":6400.0,"A":5744.62,"B":6530.15,"C":5705.34},{"price":6500.0,"A":5833.12,"B":6630.15,"C":5793.83},{"price":6600.0,"A":5921.62,"B":6730.15,"C":5882.33},{"price":6700.0,"A":6010.11,"B":6830.15,"C":5970.82},{"price":6800.0,"A":6098.61,"B":6930.15,"C":6059.32}],"comparison":{"raw_price_display":{"A":{"text":"6.20 元/公斤","to_ton_incl":6200.0,"looks_low":true},"B":{"text":"4,850 元/吨（不含税）","to_ton_incl":5480.5,"looks_low":true},"C":{"text":"6,300 元/桶","to_ton_incl":636.36,"looks_low":true}},"traps":[["计价单位","A 用「元/公斤」、C 用「元/桶」，两者表面数字都在 6,000~6,300 附近，若按数字直接排序，C(6,300/桶) 会被误读为最贵、A(6.20/公斤) 最便宜。正确换算：A×1000=6,200 元/吨；C÷0.22=28,636 元/吨 —— C 实为 A 的 4.6 倍。"],["税费口径","B 的不含税 4,850 元/吨看似最低，但消费者比价常常忘记它「另有 13% 税额」；换算含税为 5,480.50 元/吨，仍低于 A 的 6,200 元/吨。"],["运费与交付","A、B 均为「买方自提」，其到厂成本必须加上买方运费；C 为到货价，报价中已含运费。"],["账期","B 的月结 30 天构成 46 天资金占用，在 4.5% 年化下相当于给买方约 28 元/吨的「价格优惠」；A 的预付 50% 为负向优惠；C 款到发货无优惠。"],["规格","C 只有 99.5%，低于询价规格，且未注明执行标准，属于不同规格，原则上不参与同口径排名。"]]},"market_position":{"spot":5808.0,"bench":5966.67,"pos":{"A":{"incl_equiv":6165.06,"vs_spot":357.06,"vs_spot_pct":6.15,"vs_bench":198.39,"vs_bench_pct":3.33},"B":{"incl_equiv":5418.58,"vs_spot":-389.42,"vs_spot_pct":-6.7,"vs_bench":-548.09,"vs_bench_pct":-9.19},"C":{"incl_equiv":28493.18,"vs_spot":22685.18,"vs_spot_pct":390.59,"vs_bench":22526.51,"vs_bench_pct":377.54}}}};</script>
+<script>/* ================= 采购报价比较 · 交互逻辑 ================= */
+(function () {
+"use strict";
+const P = window.PAYLOAD;
+const SUP = ["A", "B", "C"];
+const COLOR = { A: "#3b7dd8", B: "#0f8f6b", C: "#c2772b" };
+const NAME = { A: "华东石化工业品", B: "恒源新材料供应链", C: "苏南化工贸易" };
+const FULL = { A: P.std.A.name, B: P.std.B.name, C: P.std.C.name };
+
+/* ---------- 工具 ---------- */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const n2 = (x) => (x === null || x === undefined || isNaN(x)) ? "—" : Number(x).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const n0 = (x) => (x === null || x === undefined || isNaN(x)) ? "—" : Math.round(Number(x)).toLocaleString("zh-CN");
+const pct = (x, d = 2) => (x === null || isNaN(x)) ? "—" : (100 * x).toFixed(d) + "%";
+const esc = (s) => String(s === null || s === undefined ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2200); }
+
+/* ---------- 状态（L3 用户输入） ---------- */
+const BASE = {
+  qty: 200, rate: 0.045, freight: 42, unload: 25, insp: 1800, veh: 600,
+  acceptC: false, sellerDelivers: false,
+  annualVol: 2400, inspBatches: 6, vehTrips: 8, yearDays: 360,
+  depositDays: 180, packRefundDays: 10, packUnret: 0.10,
+  freightTax: 0.09, svcTax: 0.06, vat: 0.13
+};
+let S = Object.assign({}, BASE);
+
+/* ---------- 计算引擎（与 Python engine.py 公式一一对应） ---------- */
+const STD = {
+  A: { purity: 0.9992, costBasis: "excl", freightBy: "buyer", tierLo: 110, price: 6.20, priceHi: 6.17, unitKg: 1000, days: 21.0 },
+  B: { purity: 0.9990, costBasis: "excl", freightBy: "buyer", tierLo: 120, price: 4850, priceHi: 4800, days: 46.0 },
+  C: { purity: 0.9950, costBasis: "full", freightBy: "seller", tierLo: 0, price: 6300, barrelKg: 220, days: 0.0 }
+};
+function goodsOf(code, s) {
+  const d = STD[code];
+  if (code === "A") {
+    const p = s.qty >= d.tierLo ? d.priceHi : d.price;
+    const incl = p * d.unitKg;
+    return { tier: p, incl, basis: incl / (1 + s.vat) };
+  }
+  if (code === "B") {
+    const p = s.qty >= d.tierLo ? d.priceHi : d.price;
+    return { tier: p, incl: p * (1 + s.vat), basis: p };
+  }
+  const incl = d.price / (d.barrelKg / 1000);
+  return { tier: d.price, incl, basis: incl / (1 + s.vat) }; // 若确认专票
+}
+function compute(code, s) {
+  s = s || S;
+  const d = STD[code];
+  const r = s.rate / s.yearDays;
+  const g = goodsOf(code, s);
+  const goods = d.costBasis === "excl" ? g.basis : (code === "C" ? g.incl : g.basis);
+  const pack = 0;
+  let freightBase = 0, freightPaid = 0;
+  if (d.freightBy === "buyer" && !s.sellerDelivers) {
+    freightPaid = s.freight;
+    freightBase = s.freight / (1 + s.freightTax);
+  }
+  const unload = s.unload / (1 + s.svcTax);
+  const inspect = (s.insp * s.inspBatches) / s.annualVol / (1 + s.svcTax);
+  const vehicle = code === "B" ? (s.veh * s.vehTrips) / s.annualVol / (1 + s.svcTax) : 0;
+  const base = goods + pack + freightBase + unload + inspect + vehicle;
+  let cap = 0;
+  for (let i = 0; i < 40; i++) {
+    const nx = (base + cap) * r * d.days;
+    if (Math.abs(nx - cap) < 1e-9) { cap = nx; break; }
+    cap = nx;
+  }
+  let deposit = 0;
+  if (code === "B") deposit += 300000 * s.rate * (s.depositDays / 360) / s.qty;
+  if (code === "C") {
+    const barrels = s.qty / 0.22;
+    const dep = barrels * 30;
+    deposit += dep * (s.packUnret * 1.0 + (1 - s.packUnret) * s.rate * s.packRefundDays / 360) / s.qty;
+  }
+  const landed = base + cap + deposit;
+  return {
+    code, tier: g.tier, goodsIncl: g.incl, goods, purity: d.purity,
+    goodsPurity: goods / d.purity, pack, freightBase, freightPaid, unload, inspect, vehicle,
+    cap, days: d.days, base, deposit, landed, landedPurity: landed / d.purity
+  };
+}
+function computeAll(s) {
+  const out = {};
+  SUP.forEach(c => out[c] = compute(c, s));
+  const elig = SUP.filter(c => c !== "C" || s.acceptC || P.meta.sample_banner === "").map(c => [c, out[c]]);
+  const ranked = SUP.filter(c => c !== "C" || s.acceptC).map(c => [c, out[c]]).sort((x, y) => x[1].landed - y[1].landed);
+  ranked.forEach(([c], i) => { out[c].rank = i + 1; out[c].gap = out[c].landed - ranked[0][1].landed; });
+  SUP.forEach(c => { if (out[c].rank === undefined) { out[c].rank = null; out[c].gap = null; } });
+  out._best = ranked[0][0];
+  return out;
+}
+
+/* ---------- 表格渲染 ---------- */
+function th(arr, numIdx) {
+  return "<thead><tr>" + arr.map((h, i) => `<th${(numIdx || []).includes(i) ? ' class="num"' : ""}>${h}</th>`).join("") + "</tr></thead>";
+}
+function cell(v, cls) { return `<td${cls ? ` class="${cls}"` : ""}>${v}</td>`; }
+
+function renderKPIs(R) {
+  const A = R.A, B = R.B, C = R.C;
+  const best = R._best;
+  const spread = A.landed - B.landed;
+  const cMult = C.landed / B.landed;
+  $("#kpi").innerHTML = `
+    <div class="c win"><div class="k">最优（同口径 · 第一名）</div><div class="v">${NAME[best]}</div>
+      <div class="n">到厂 <b>${n2(R[best].landed)}</b> 元/吨${R[best].rank ? "" : ""}</div></div>
+    <div class="c"><div class="k">A − B 差额（到厂）</div><div class="v">${n0(spread)}</div>
+      <div class="n">元/吨 · 200 吨合计约 ${n0(spread * S.qty)} 元</div></div>
+    <div class="c warn"><div class="k">C / B 倍数</div><div class="v">${cMult.toFixed(1)}×</div>
+      <div class="n">C 按 220 kg/桶折吨后为 ${n0(C.landed)} 元/吨</div></div>
+    <div class="c"><div class="k">账期资金成本占比</div><div class="v">${(100 * B.cap / B.landed).toFixed(1)}%</div>
+      <div class="n">B 月结 30 天（46 天占用）≈ ${n0(B.cap)} 元/吨</div></div>`;
+  $("#verdict").innerHTML = `
+    <b>结论</b>：在「净商品量 1 吨、不含税可抵扣、折纯到 100%、含买方运费与卸车费」的同一口径下，
+    <b>${NAME[best]}</b> 的参考到厂成本最低，为 <b>${n2(R[best].landed)} 元/吨</b>。
+    A 比它高 <b>${n0(spread)} 元/吨</b>（+${(100 * spread / B.landed).toFixed(1)}%），主因是含税出厂价 6,200 元/吨本身更高（含税差 ${n0(A.goodsIncl - B.goodsIncl)} 元/吨）。
+    C 因「元/桶」计价且含量仅 99.5%，折吨后 <b>${n0(C.landed)} 元/吨</b>，且若为普通发票还有 13% 进项不可抵扣，<b>不具备可比性</b>，不参与排名。
+    <br><b>但请注意</b>：B 的报价当日有效、含 ±3% 价格联动、另需 30 万保证金；A 的报价有效期 5 天、含运交付更省事。因此建议：<b>以 B 为价格锚定，要求 A 降价至同口径水平或提供送货到厂价</b>，再综合供货稳定性决定。`;
+  // 顶栏事实
+  $("#fQty").textContent = S.qty;
+  $("#fRate").textContent = (S.rate * 100).toFixed(1);
+  $("#fElig").textContent = S.acceptC ? "3 家（已接受 C 的 99.5%）" : "2 家（C 规格不符，单列）";
+  $("#freightHint").textContent = S.sellerDelivers ? "当前为「供应商送货」模式，运费按 0 计" : "假设值，影响 A、B（买方自提）";
+}
+
+function renderBars(R) {
+  const max = Math.max(...SUP.map(c => R[c].landed));
+  $("#bars").innerHTML = SUP.map(c => {
+    const w = Math.max(2, 100 * R[c].landed / max);
+    const cls = c === "C" ? "x" : c.toLowerCase();
+    return `<div class="hbar"><div class="lbl">${NAME[c]} <span class="pill ${c.toLowerCase()}">${c}</span></div>
+      <div class="bar"><div class="fill ${cls}" style="width:${w}%"></div></div>
+      <div class="val">${n2(R[c].landed)} ${c === "C" ? '<span class="pill hi" style="font-size:10px">不可比</span>' : ""}</div></div>`;
+  }).join("");
+}
+
+function renderStacks(R) {
+  const segs = [
+    ["s-goods", "裸价"], ["s-freight", "运费"], ["s-fees", "卸/检/洗"], ["s-cap", "资金"], ["s-dep", "保证金"]
+  ];
+  $("#stackCards").innerHTML = SUP.map(c => {
+    const r = R[c];
+    const fees = r.unload + r.inspect + r.vehicle + r.pack;
+    const parts = [["s-goods", r.goods], ["s-freight", r.freightBase], ["s-fees", fees], ["s-cap", r.cap], ["s-dep", r.deposit]];
+    const tot = parts.reduce((a, b) => a + b[1], 0);
+    const bars = parts.filter(p => p[1] > 0.005).map(p => `<span class="${p[0]}" style="width:${100 * p[1] / tot}%" title="${p[0]}"></span>`).join("");
+    const legend = parts.map(p => `<div style="display:flex;justify-content:space-between;font-size:12.3px;padding:2px 0;border-bottom:1px dashed #eef2f6">
+        <span><i style="display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px" class="${p[0]}"></i>${segs.find(s => s[0] === p[0])[1]}</span>
+        <span class="num" style="font-family:var(--mono)">${n2(p[1])}</span></div>`).join("");
+    return `<div class="sup ${c === R._best ? "best" : ""}">
+      <h4>${NAME[c]} <span class="pill ${c.toLowerCase()}">${c}</span>${c === R._best ? '<span class="badge gold">最优</span>' : ""}${c === "C" ? '<span class="badge red">规格不符</span>' : ""}</h4>
+      <div class="role">${P.std[c].name}</div>
+      <div class="quote-line">原始报价：${esc(P.raw[c].price)}<br>计价单位：${esc(P.raw[c].unit)} → 统一为元/吨</div>
+      <div class="stack" style="margin:8px 0 10px">${bars}</div>${legend}
+      <div class="lc"><span class="v">${n2(r.landed)}</span><span class="u">元/吨 · 到厂（折纯 ${n2(r.landedPurity)}）</span></div>
+    </div>`;
+  }).join("");
+}
+
+function renderAttribution(R) {
+  const rows = [
+    ["裸价（不含税）", r => r.goods, "含税单价 ÷ 1.13 或原不含税价；已含数量阶梯"],
+    ["数量阶梯命中", r => r.tier, "A≥110 吨 6.17 元/kg；B≥120 吨 4,800 元/吨"],
+    ["运费（到厂，不含税）", r => r.freightBase, "买方自提 42 元/吨含税 ÷ 1.09；C 含运计 0"],
+    ["卸车费", r => r.unload, "25 元/吨含税 ÷ 1.06（假设）"],
+    ["检验费摊销", r => r.inspect, "1,800 × 6 ÷ 2,400 ÷ 1.06"],
+    ["槽车清洗", r => r.vehicle, "600 × 8 ÷ 2,400 ÷ 1.06（仅 B 散装）"],
+    ["账期资金成本", r => r.cap, "余额 × 4.5% × 占用天数 ÷ 360"],
+    ["保证金/押金占用", r => r.deposit, "B：30 万 × 4.5% × 180/360 ÷ 200；C：铁桶押金"],
+    ["到厂成本合计", r => r.landed, "以上各项之和"]
+  ];
+  let h = th(["成本项", "A 元/吨", "B 元/吨", "C 元/吨", "B − A", "说明"], [1, 2, 3, 4]);
+  h += "<tbody>";
+  rows.forEach(([lab, fn, note]) => {
+    const a = fn(R.A), b = fn(R.B), c = fn(R.C);
+    const isTier = lab === "数量阶梯命中";
+    h += `<tr${lab === "到厂成本合计" ? ' class="total"' : ""}>
+      <td>${lab}</td>
+      <td class="num">${isTier ? a.toFixed(2) + " 元/kg" : n2(a)}</td>
+      <td class="num">${isTier ? b.toFixed(0) + " 元/吨" : n2(b)}</td>
+      <td class="num">${isTier ? "—" : n2(c)}</td>
+      <td class="num ${(b - a) > 0 ? "lose" : "win"}">${isTier ? "—" : n2(b - a)}</td>
+      <td style="font-size:12px;color:#5b6b78">${note}</td></tr>`;
+  });
+  h += "</tbody>";
+  $("#attribution").innerHTML = h;
+}
+
+function renderRaw() {
+  const fields = [
+    ["产品名称", "product"], ["规格 / 含量", "spec"], ["计价单位", "unit"], ["单价（原文）", "price"],
+    ["是否含税 / 税率", "tax"], ["发票类型", "invoice"], ["数量阶梯", "tiers"],
+    ["包装形式", "pack"], ["包装费用", "pack_fee"], ["运费承担方与金额", "freight"],
+    ["交货方式", "delivery"], ["付款条件", "payment"], ["最小起订量", "moq"],
+    ["报价有效期", "validity"], ["质量标准", "quality"], ["产地 / 生产企业", "origin"], ["其他条款", "other"]
+  ];
+  let h = th(["字段", "供应商 A · PDF", "供应商 B · Excel", "供应商 C · 图片"]);
+  h += "<tbody>";
+  fields.forEach(([lab, k]) => {
+    h += `<tr><td class="k">${lab}</td>` + SUP.map(c => {
+      const v = P.raw[c][k];
+      const miss = !v;
+      return `<td class="${miss ? "warnrow" : ""}" style="${miss ? "background:#fff8e6" : ""}">${miss ? '<span class="pill hi">未注明</span>' : esc(v)}</td>`;
+    }).join("") + "</tr>";
+  });
+  h += `<tr class="grp"><td colspan="4">文件定位</td></tr>`;
+  h += `<tr><td class="k">文件名 / 格式</td>` + SUP.map(c => `<td>${esc(P.raw[c].file)}<br><span class="pill">${esc(P.raw[c].fmt)}</span></td>`).join("") + "</tr>";
+  h += `<tr><td class="k">原报价位置</td>` + SUP.map(c => `<td>${esc(P.raw[c].loc)}</td>`).join("") + "</tr>";
+  h += "</tbody>";
+  $("#rawTable").innerHTML = h;
+}
+
+function renderPurity() {
+  const rows = [
+    ["A", "99.92%", "GB/T 4649-2018 聚酯级优等品", "✓ 满足", "✓", "✓", "✓", "允许折纯", ""],
+    ["B", "99.90%", "GB/T 4649-2018 聚酯级优等品", "✓ 满足（等于下限）", "✓", "✓", "✓", "允许折纯", ""],
+    ["C", "99.50%", "未注明执行标准", "✗ 低于询价规格", "✓", "?", "?", "不允许（单列）", "def"]
+  ];
+  let h = th(["供应商", "含量", "执行标准", "对询价规格", "①同物质", "②杂质可接受", "③可线性折算", "折纯判断", "折纯后到厂成本"], [8]);
+  h += "<tbody>";
+  const R = computeAll(S);
+  rows.forEach(r => {
+    h += `<tr><td><span class="pill ${r[0].toLowerCase()}">${r[0]}</span> ${NAME[r[0]]}</td><td>${r[1]}</td><td>${r[2]}</td>
+      <td>${r[7].startsWith("不允许") ? '<span class="pill hi">' + r[3] + "</span>" : '<span class="pill b">' + r[3] + "</span>"}</td>
+      <td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7].startsWith("不允许") ? '<b style="color:#c8102e">' + r[7] + "</b>" : '<b style="color:#127a5a">' + r[7] + "</b>"}</td>
+      <td class="num">${n2(R[r[0]].landedPurity)}</td></tr>`;
+  });
+  h += `<tr class="grp"><td colspan="9">折纯公式：折纯成本 = 到厂成本 ÷ 含量。不折纯 = 结算按实物吨，成本按实物吨；折纯 = 把「每吨实际有效成分」的成本摆到同一标尺。</td></tr>`;
+  h += "</tbody>";
+  $("#purityTable").innerHTML = h;
+}
+
+function renderStd(R) {
+  const rows = [
+    ["原始报价（L1）", c => `<span class="layer raw">原始值</span> ${esc(P.raw[c].price)}`],
+    ["原始计价单位", c => esc(P.raw[c].unit)],
+    ["计价单位 → 元/吨", c => c === "A" ? "【转换】6.20 × 1000 = 6,200" : c === "B" ? "【转换】已是元/吨" : "【转换】6,300 ÷ 0.220 = 28,636.36"],
+    ["税率口径", c => c === "A" ? "含税 · 13% 专票" : c === "B" ? "不含税 · 另开 13% 专票" : '<span class="pill hi">含税 · 税率/票种未注明</span>'],
+    ["换算含税单价（元/吨）", c => n2(R[c].goodsIncl)],
+    ["不含税裸价（元/吨）", c => `<b>${n2(R[c].goods)}</b>`],
+    ["含量（折纯用）", c => pct(R[c].purity)],
+    ["折纯后裸价", c => n2(R[c].goodsPurity)],
+    ["数量阶梯（当前）", c => c === "A" ? `${R[c].tier.toFixed(2)} 元/kg` : c === "B" ? `${n0(R[c].tier)} 元/吨（不含税）` : "单一价"],
+    ["包装形式", c => esc(P.raw[c].pack)],
+    ["包装费（单收）", c => "0（已含价内）"],
+    ["运费承担", c => c === "C" ? "卖方含运（隐含于价格）" : "买方自提 + 买方运费"],
+    ["交货方式", c => esc(P.raw[c].delivery)],
+    ["付款条件", c => esc(P.raw[c].payment)],
+    ["加权资金占用天数", c => R[c].days + " 天"],
+    ["最小起订量", c => `${P.std[c].moq} 吨`],
+    ["报价有效期", c => c === "A" ? "5 天" : c === "B" ? '<span class="pill hi">当日有效</span>' : '<span class="pill mid">10 天（缺起始日）</span>'],
+    ["质量标准", c => esc(P.raw[c].quality)]
+  ];
+  let h = th(["统一字段", "供应商 A", "供应商 B", "供应商 C", "口径说明"]);
+  h += "<tbody>";
+  rows.forEach(([lab, fn], idx) => {
+    const note = ["", "", "桶重 220 kg 取自包装规格，需确认", "普票 → 进项不可抵扣", "", "", "", "", "", "", "", "", "", "", "", "", "", ""][idx];
+    h += `<tr><td class="k">${lab}</td>` + SUP.map(c => `<td>${fn(c)}</td>`).join("") +
+      `<td style="font-size:12px;color:#5b6b78">${note}</td></tr>`;
+  });
+  h += "</tbody>";
+  $("#stdTable").innerHTML = h;
+}
+
+function renderCostTable(R) {
+  let h = th(["项目（元/吨）", "A 华东石化", "B 恒源", "C 苏南", "口径说明"], [1, 2, 3]);
+  const line = (lab, fn, note, cls) => `<tr class="${cls || ""}"><td>${lab}</td>` + SUP.map(c => `<td class="num">${fn(R[c], c)}</td>`).join("") + `<td style="font-size:12px;color:#5b6b78">${note}</td></tr>`;
+  h += "<tbody>";
+  h += line("① 裸价（不含税）", r => n2(r.goods), "含税 ÷1.13 / 不含税原值 / 普票全额");
+  h += line("② 包装费（单收）", r => n2(r.pack), "三家均已含价内");
+  h += line("③ 运费（到厂）", (r, c) => c === "C" ? "0（含运）" : n2(r.freightBase), "买方自提 ÷1.09；C 已含运");
+  h += line("④ 卸车费", r => n2(r.unload), "假设 25 元/吨 ÷1.06");
+  h += line("⑤ 检验费摊销", r => n2(r.inspect), "年 6 批 × 1,800 ÷ 2,400 吨");
+  h += line("⑥ 槽车清洗", r => n2(r.vehicle), "仅散装 B：600×8÷2,400");
+  h += line("⑦ 账期资金成本", r => `<span style="color:#7b3fb0">${n2(r.cap)}</span>`, "迭代求解，见明细");
+  h += line("⑧ 保证金/押金占用", r => n2(r.deposit), "B 保证金；C 铁桶押金");
+  h += `<tr class="total"><td>参考到厂成本</td>` + SUP.map(c => `<td class="num">${n2(R[c].landed)}</td>`).join("") + `<td style="font-size:12px">①~⑧ 之和</td></tr>`;
+  h += `<tr><td>折纯后到厂成本</td>` + SUP.map(c => `<td class="num">${n2(R[c].landedPurity)}</td>`).join("") + `<td style="font-size:12px">÷ 含量</td></tr>`;
+  h += `<tr><td>排名（同口径）</td>` + SUP.map(c => `<td class="num">${R[c].rank ? "#" + R[c].rank : '<span class="pill hi">不参与</span>'}</td>`).join("") + `<td style="font-size:12px">C 规格不符，默认剔除</td></tr>`;
+  h += `<tr><td>较最优差额</td>` + SUP.map(c => `<td class="num ${R[c].gap > 0 ? "lose" : "win"}">${R[c].gap === null ? "—" : (R[c].gap > 0 ? "+" : "") + n2(R[c].gap)}</td>`).join("") + `<td style="font-size:12px">元/吨</td></tr>`;
+  h += `<tr><td>本次采购金额（${S.qty} 吨）</td>` + SUP.map(c => `<td class="num">${n0(R[c].landed * S.qty)}</td>`).join("") + `<td style="font-size:12px">元（参考）</td></tr>`;
+  h += "</tbody>";
+  $("#costTable").innerHTML = h;
+}
+
+/* ---------- 明细抽屉 ---------- */
+function explain(code) {
+  const r = compute(code);
+  const a = S.qty;
+  const rows = [];
+  const add = (h, f, res) => `<div class="step"><div class="h">${h}</div><div class="f">${f}</div><div class="r">→ ${res}</div></div>`;
+  if (code === "A") {
+    rows.push(add("① 数量阶梯判断", `采购量 ${a} 吨 ${a >= 110 ? "≥ 110 吨" : "< 110 吨"} → 单价 ${r.tier.toFixed(2)} 元/公斤`, `单价 ${r.tier.toFixed(2)} 元/kg`));
+    rows.push(add("② 计价单位：公斤 → 吨", `${r.tier.toFixed(2)} 元/kg × 1000 kg/t`, `${n2(r.goodsIncl)} 元/吨（含税）`));
+    rows.push(add("③ 税费：含税 → 不含税（13% 专票）", `${n2(r.goodsIncl)} ÷ (1 + 13%)`, `${n2(r.goods)} 元/吨（裸价）`));
+  } else if (code === "B") {
+    rows.push(add("① 数量阶梯判断", `采购量 ${a} 吨 ${a >= 120 ? "≥ 120 吨" : "< 120 吨"} → 不含税单价 ${n0(r.tier)} 元/吨`, `${n0(r.tier)} 元/吨`));
+    rows.push(add("② 计价单位", "原文已为元/吨，无需换算", `${n0(r.tier)} 元/吨`));
+    rows.push(add("③ 税费：不含税沿用", "原文明确「不含税，另开 13% 专票」→ 裸价 = 原文", `${n2(r.goods)} 元/吨（裸价）`));
+    rows.push(add("（参考）含税价", `${n0(r.tier)} × 1.13`, `${n2(r.goodsIncl)} 元/吨（含税）`));
+  } else {
+    rows.push(add("① 计价单位：桶 → 吨", `6,300 元/桶 ÷ (220 kg ÷ 1000)`, `${n2(r.goodsIncl)} 元/吨（含税到货）`));
+    rows.push(add("② 税费：票种未注明（默认普票）", "普票进项不可抵扣 → 全额计入成本", `${n2(r.goods)} 元/吨（成本口径）`));
+    rows.push(add("（若确认为专票）", `${n2(r.goodsIncl)} ÷ 1.13`, `${n2(r.goodsIncl / 1.13)} 元/吨（情景 5）`));
+  }
+  rows.push(add("④ 运费", code === "C" ? "卖方含运，报价已含运输，不另计" : `${n2(r.freightPaid)} 元/吨（含税9%）÷ 1.09`, `${n2(r.freightBase)} 元/吨`));
+  rows.push(add("⑤ 卸车费", `25 元/吨（假设，含税6%）÷ 1.06`, `${n2(r.unload)} 元/吨`));
+  rows.push(add("⑥ 检验费摊销", `1,800 元/批 × 6 批/年 ÷ 2,400 吨/年 ÷ 1.06`, `${n2(r.inspect)} 元/吨`));
+  rows.push(add("⑦ 槽车清洗", code === "B" ? `600 元/车次 × 8 车次/年 ÷ 2,400 吨 ÷ 1.06` : "不适用（吨桶/铁桶交付）", `${n2(r.vehicle)} 元/吨`));
+  const base = r.base;
+  rows.push(add("⑧ 资金占用（迭代不动点）", `r = ${(S.rate * 100).toFixed(2)}% ÷ 360 = ${(S.rate / S.yearDays).toExponential(4)}\n付款节奏 → 占用 ${r.days} 天\nC_k = (${n2(base)} + C_{k-1}) × r × ${r.days}`, `${n2(r.cap)} 元/吨`));
+  if (r.deposit > 0) rows.push(add("⑨ 保证金/押金占用", code === "B" ? `300,000 × ${(S.rate * 100).toFixed(2)}% × 180/360 ÷ ${S.qty}` : `铁桶押金 30 元/桶 × ${(S.qty / 0.22).toFixed(0)} 桶，沉淀比例 ${pct(S.packUnret)}`, `${n2(r.deposit)} 元/吨`));
+  rows.push(`<div class="callout ok"><b>参考到厂成本 = ${n2(base)} + ${n2(r.cap)} + ${n2(r.deposit)} = ${n2(r.landed)} 元/吨</b><br>
+    折纯后 = ${n2(r.landed)} ÷ ${pct(r.purity)} = <b>${n2(r.landedPurity)} 元/吨</b></div>`);
+  return rows.join("");
+}
+
+function renderBreakdowns(R) {
+  $("#breakdowns").innerHTML = SUP.map(c => `
+    <details${c === R._best ? " open" : ""}>
+      <summary>${NAME[c]}（${c}）　到厂 ${n2(R[c].landed)} 元/吨　<span class="pill ${c.toLowerCase()}">${P.raw[c].fmt}</span>
+        <button class="btn ghost sm" style="float:right" onclick="event.preventDefault();openSrc('${c}')">原报价位置</button></summary>
+      <div class="dc">
+        <div class="legend"><span><span class="layer raw">原始值</span> 来自报价单</span><span><span class="layer der">转换值</span> 公式计算</span><span><span class="layer asm">假设</span> 买方参数</span></div>
+        ${explain(c)}
+      </div>
+    </details>`).join("");
+}
+
+function renderCapTable(R) {
+  let h = th(["付款方式（原报价）", "加权资金占用天数", "实际账期", "B 的货款金额（元/吨·含税）", "B 资金成本（元/吨）", "年化 4.5% 下的成本率"], [1, 2, 3, 4, 5]);
+  const rate = S.rate;
+  const amounts = { "款到发货": 0, "预付 50% + 票到 7 天": 10.5, "月结 30 天（次月 25 日）": 46, "账期 60 天": 60, "账期 90 天": 90, "账期 120 天": 120 };
+  h += "<tbody>";
+  Object.entries(amounts).forEach(([lab, d]) => {
+    const goodsB = 5480.5;
+    const cost = goodsB * rate * d / 360;
+    h += `<tr${d === 46 ? ' class="bestrow"' : ""}><td>${lab}</td><td class="num">${d}</td><td class="num">${d === 10.5 ? "预付50%+7天" : d === 46 ? "月结30天" : "—"}</td>
+      <td class="num">${n2(goodsB)}</td><td class="num">${n2(cost)}</td><td class="num">${(100 * cost / goodsB).toFixed(2)}%</td></tr>`;
+  });
+  h += "</tbody>";
+  $("#capTable").innerHTML = h;
+}
+
+/* ---------- 敏感性 ---------- */
+function renderSens(R) {
+  let h = th(["参数", "取值", "A 到厂", "ΔA", "B 到厂", "ΔB", "C 到厂", "ΔC", "最优"], [2, 3, 4, 5, 6, 7]);
+  h += "<tbody>";
+  P.sensitivity.forEach(g => {
+    g.rows.forEach((row, i) => {
+      const best = ["A", "B", "C"].filter(c => (c !== "C" || S.acceptC)).sort((x, y) => row[x] - row[y])[0];
+      const fmt = (v, k) => g.key === "rate" ? (100 * v).toFixed(1) + "%" : n0(v);
+      const cells = ["A", "B", "C"].map(c => {
+        const dv = row["d" + c];
+        const cls = Math.abs(dv) < 0.01 ? "" : dv > 0 ? "lose" : "win";
+        return `<td class="num">${n2(row[c])}</td><td class="num ${cls}">${Math.abs(dv) < 0.01 ? "—" : (dv > 0 ? "+" : "") + n2(dv)}</td>`;
+      }).join("");
+      h += `<tr>${i === 0 ? `<td rowspan="${g.rows.length}" style="font-weight:700">${g.label}<br><span style="color:#8c9aa6;font-weight:400;font-size:11.5px">${g.unit}</span></td>` : ""}
+        <td class="num">${fmt(row.v, g.key)}</td>${cells}<td>${best ? `<span class="pill ${best.toLowerCase()}">${best}</span>` : "—"}</td></tr>`;
+    });
+  });
+  h += "</tbody>";
+  $("#sensTable").innerHTML = h;
+}
+
+function renderSweep() {
+  const points = P.price_sweep;
+  const W = 1000, H = 300, pad = { l: 66, r: 20, t: 16, b: 34 };
+  const ys = points.flatMap(p => [p.A, p.B, p.C]);
+  const ymin = Math.min(...ys), ymax = Math.max(...ys);
+  const xs = points.map(p => p.price);
+  const x0 = xs[0], x1 = xs[xs.length - 1];
+  const X = v => pad.l + (W - pad.l - pad.r) * (v - x0) / (x1 - x0);
+  const Y = v => pad.t + (H - pad.t - pad.b) * (1 - (v - ymin) / (ymax - ymin));
+  const path = key => points.map((p, i) => (i ? "L" : "M") + X(p.price).toFixed(1) + "," + Y(p[key]).toFixed(1)).join(" ");
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;background:#fff;border:1px solid #e3e9ef;border-radius:10px">`;
+  for (let i = 0; i <= 5; i++) {
+    const v = ymin + (ymax - ymin) * i / 5;
+    svg += `<line x1="${pad.l}" y1="${Y(v)}" x2="${W - pad.r}" y2="${Y(v)}" stroke="#eef2f6"/>
+      <text x="${pad.l - 8}" y="${Y(v) + 4}" font-size="11" fill="#8c9aa6" text-anchor="end">${n0(v)}</text>`;
+  }
+  xs.forEach((v, i) => { if (i % 2 === 0) svg += `<text x="${X(v)}" y="${H - 12}" font-size="11" fill="#8c9aa6" text-anchor="middle">${n0(v)}</text>`; });
+  [["A", "#3b7dd8"], ["B", "#0f8f6b"], ["C", "#c2772b"]].forEach(([k, col]) => {
+    svg += `<path d="${path(k)}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  });
+  // 市场现货位置
+  const spot = P.market.spot_20261016.value;
+  svg += `<line x1="${X(spot)}" y1="${pad.t}" x2="${X(spot)}" y2="${H - pad.b}" stroke="#c8102e" stroke-dasharray="5 4"/>
+    <text x="${X(spot) + 6}" y="${pad.t + 14}" font-size="11.5" fill="#c8102e">生意社现货 ${n0(spot)} 元/吨（2026-10-16，含税）</text>`;
+  const bench = P.market.benchmark_20261019.value;
+  svg += `<line x1="${X(bench)}" y1="${pad.t}" x2="${X(bench)}" y2="${H - pad.b}" stroke="#b7791f" stroke-dasharray="3 3"/>
+    <text x="${X(bench) + 6}" y="${pad.t + 30}" font-size="11.5" fill="#b7791f">生意社基准价 ${n0(bench)}（10-19）</text>`;
+  svg += `<text x="${pad.l}" y="${H - 12}" font-size="11" fill="#8c9aa6">折纯裸价（元/吨，不含税）→</text></svg>`;
+  $("#sweepChart").innerHTML = svg;
+  let h = th(["折纯裸价（元/吨）", "A 到厂", "B 到厂", "C 到厂", "A−B"], [0, 1, 2, 3, 4]);
+  h += "<tbody>";
+  points.filter((_, i) => i % 2 === 0).forEach(p => {
+    h += `<tr><td class="num">${n0(p.price)}</td><td class="num">${n2(p.A)}</td><td class="num">${n2(p.B)}</td><td class="num">${n2(p.C)}</td><td class="num ${p.A - p.B > 0 ? "lose" : "win"}">${n2(p.A - p.B)}</td></tr>`;
+  });
+  h += "</tbody>";
+  $("#sweepTable").innerHTML = h;
+}
+
+function renderScen() {
+  const SC = P.scenarios;
+  let h = "<thead><tr>" + SC.map(s => `<th>${esc(s.name.replace(/^情景(\d)：/, "S$1 "))}</th>`).join("") + "<th>说明</th></tr></thead>";
+  h += "<tbody>";
+  ["A", "B", "C"].forEach(c => {
+    h += `<tr><td><span class="pill ${c.toLowerCase()}">${c}</span> ${NAME[c]}</td>` +
+      SC.map(s => `<td class="num">${n2(s.rows[c].landed)}${s.rows[c].rank ? ` <span class="pill ${s.rows[c].rank === 1 ? "b" : "lo"}">#${s.rows[c].rank}</span>` : ' <span class="pill hi">不参与</span>'}</td>`).join("") +
+      `<td style="font-size:12px;color:#5b6b78">${c === "C" ? "C 规格不符，仅情景 4/5 参与" : ""}</td></tr>`;
+  });
+  h += "</tbody><tbody>";
+  SC.forEach(s => { h += `<tr><td colspan="5" style="font-size:12.3px;color:#5b6b78"><b>${esc(s.name)}</b>：${esc(s.note)}</td></tr>`; });
+  h += "</tbody>";
+  $("#scenTable").innerHTML = h;
+}
+
+function renderMarket() {
+  const M = P.market_position, pos = M.pos;
+  let h = th(["供应商", "折纯含税出厂价（元/吨）", "生意社现货（10-16，含税）", "相对现货", "相对现货 %", "相对基准价（5,966.67）", "判断"], [1, 2, 3, 4, 5]);
+  h += "<tbody>";
+  SUP.forEach(c => {
+    const p = pos[c];
+    const pv = p.vs_spot_pct;
+    const verdict = pv < -10 ? '<span class="pill hi">显著低于市场，需核实货源/规格</span>'
+      : pv < 5 ? '<span class="pill b">处于市场区间内</span>'
+        : pv < 15 ? '<span class="pill mid">略高于现货上限（含包装/服务溢价）</span>'
+          : '<span class="pill hi">严重偏离市场</span>';
+    h += `<tr><td><span class="pill ${c.toLowerCase()}">${c}</span> ${NAME[c]}</td><td class="num">${n2(p.incl_equiv)}</td><td class="num">${n2(M.spot)}</td>
+      <td class="num ${p.vs_spot > 0 ? "lose" : "win"}">${p.vs_spot > 0 ? "+" : ""}${n2(p.vs_spot)}</td>
+      <td class="num ${p.vs_spot > 0 ? "lose" : "win"}">${p.vs_spot > 0 ? "+" : ""}${p.vs_spot_pct.toFixed(1)}%</td>
+      <td class="num">${p.vs_bench > 0 ? "+" : ""}${n2(p.vs_bench)}</td><td>${verdict}</td></tr>`;
+  });
+  h += `<tr class="grp"><td colspan="7">近 3 个月现货区间：${n0(P.market.recent_low.value)}（${P.market.recent_low.date}）~ ${n0(P.market.recent_high.value)}（${P.market.recent_high.date}），振幅 ${((P.market.recent_high.value / P.market.recent_low.value - 1) * 100).toFixed(0)}%。当前处于冲高回落阶段（09-13 高点 6,625 → 10-16 5,808）。</td></tr>`;
+  h += "</tbody>";
+  $("#marketTable").innerHTML = h;
+}
+
+function renderTraps() {
+  const icons = ["🎭", "💸", "🚚", "⏳", "🧪"];
+  $("#traps").innerHTML = P.comparison.traps.map((t, i) => `
+    <div class="callout ${i === 0 || i === 4 ? "bad" : "warn"}"><b>${icons[i]} 陷阱 ${i + 1}：${t[0]}</b><br>${esc(t[1])}</div>`).join("");
+}
+
+function renderIgnored() {
+  let h = th(["供应商", "条款项", "原报价原文", "原报价金额", "是否已计入价内", "处理 / 待确认"], [3]);
+  h += "<tbody>";
+  SUP.forEach(c => {
+    const items = Object.entries(P.ignored[c]);
+    items.forEach(([k, v], i) => {
+      const inPrice = v.in_price === true ? '<span class="pill b">已含</span>' : v.in_price === false ? '<span class="pill mid">另计/不承担</span>' : '<span class="pill">不适用</span>';
+      const amt = v.amount === null ? '<span class="pill hi">未提供</span>' : (v.amount === 0 ? "0（明示不收费）" : n2(v.amount));
+      const act = v.amount === null ? '<b style="color:#b42318">→ 列入待确认，不按 0 计</b>' : "→ 金额已知";
+      h += `<tr>${i === 0 ? `<td rowspan="${items.length}"><span class="pill ${c.toLowerCase()}">${c}</span> ${NAME[c]}</td>` : ""}
+        <td>${k}</td><td style="font-size:12.3px">${esc(v.text)}</td><td class="num">${amt}</td><td>${inPrice}</td><td style="font-size:12px">${act}</td></tr>`;
+    });
+  });
+  h += "</tbody>";
+  $("#ignoredTable").innerHTML = h;
+}
+
+function renderOpen() {
+  let h = th(["#", "供应商", "缺失/歧义字段", "问题描述", "对成本或决策的影响", "需要索取的材料", "优先级"]);
+  h += "<tbody>";
+  P.open_items.sort((a, b) => ({ "高": 0, "中": 1, "低": 2 }[a[5]] - { "高": 0, "中": 1, "低": 2 }[b[5]])).forEach((o, i) => {
+    const pr = o[5] === "高" ? "hi" : o[5] === "中" ? "mid" : "lo";
+    h += `<tr><td>${i + 1}</td><td><span class="pill ${o[0] === "ALL" ? "" : o[0].toLowerCase()}">${o[0]}</span></td><td><b>${esc(o[1])}</b></td>
+      <td>${esc(o[2])}</td><td style="font-size:12.3px">${esc(o[3])}</td><td style="font-size:12.3px">${esc(o[4])}</td>
+      <td><span class="pill ${pr}">${o[5]}</span></td></tr>`;
+  });
+  h += "</tbody>";
+  $("#openTable").innerHTML = h;
+}
+
+function renderCC() {
+  let h = th(["检查项", "检查内容", "结论"]);
+  h += "<tbody>";
+  P.cross_checks.forEach(c => {
+    const good = c[2] === "通过" || c[2].startsWith("通过");
+    h += `<tr><td>${c[0]}</td><td>${esc(c[1])}</td><td>${good ? '<span class="pill b">' + c[2] + "</span>" : '<span class="pill mid">' + c[2] + "</span>"}</td></tr>`;
+  });
+  h += "</tbody>";
+  $("#ccTable").innerHTML = h;
+}
+
+const PARAMS = [
+  ["采购数量", "200 吨", "用户输入", "影响数量阶梯命中；同时决定保证金/押金摊薄", "用户"],
+  ["年化资金成本", "4.5%", "用户输入（可选）", "账期资金占用、保证金占用", "用户"],
+  ["买方自提运费", "42 元/吨（含税9%）", "假设（物流询价待确认）", "A、B 到厂成本 +38.53 元/吨", "假设"],
+  ["到厂卸车费", "25 元/吨（含税6%）", "假设（三家均未明确）", "三家各 +23.58 元/吨", "假设"],
+  ["第三方检验费", "1,800 元/批 × 6 批/年", "假设", "摊销 +4.25 元/吨", "假设"],
+  ["年采购量", "2,400 吨", "假设（示例采购计划）", "检验费与车辆准备的摊销分母", "假设"],
+  ["槽车清洗+置换", "600 元/车次 × 8 车次/年", "假设", "B 散装 +1.89 元/吨", "假设"],
+  ["保证金占用天数", "180 天", "假设（待确认）", "B 保证金资金成本", "假设"],
+  ["包装押金退回天数", "10 天；不退还比例 10%", "假设（待确认）", "C 押金沉淀成本", "假设"],
+  ["年化天数口径", "360 天", "惯例（生意社与银行承兑均常用）", "资金成本折算", "惯例"],
+  ["增值税率", "13%", "法定", "价税分离", "法定"],
+  ["运输服务税率", "9%", "法定", "运费不含税化", "法定"],
+  ["现代服务税率", "6%", "法定", "卸车、检验、清洗不含税化", "法定"],
+  ["生意社现货价", "5,808 元/吨（10-16）", "市场数据", "报价市场定位", "市场"],
+  ["生意社基准价", "5,966.67 元/吨（10-19）", "市场数据", "报价市场定位、B 联动基准", "市场"]
+];
+function renderParams() {
+  let h = th(["参数", "取值", "性质", "影响的成本项", "来源类别"]);
+  h += "<tbody>";
+  PARAMS.forEach(p => {
+    const cls = p[4] === "假设" ? "asm" : p[4] === "用户" ? "der" : "raw";
+    const tag = p[4] === "假设" ? "assumption" : p[4] === "用户" ? "user" : "market";
+    h += `<tr><td><b>${p[0]}</b></td><td class="num">${p[1]}</td><td><span class="layer ${cls}">${p[2]}</span></td><td style="font-size:12.3px">${p[3]}</td><td>${p[4]}</td></tr>`;
+  });
+  h += "</tbody>";
+  $("#paramTable").innerHTML = h;
+}
+function renderSources() {
+  const src = [
+    ["报价文件 A", "供应商A_华东石化工业品_报价函_20261019.pdf", "PDF · 1 页", "模拟业务样例（采购方制作）"],
+    ["报价文件 B", "供应商B_恒源新材料报价明细表_20261019.xlsx", "Excel · 3 工作表", "模拟业务样例（采购方制作）"],
+    ["报价文件 C", "供应商C_苏南化工贸易报价单_20261019.png", "PNG · 1080×1760", "模拟业务样例（采购方制作）"],
+    ["EG 现货价", P.market.spot_20261016.source + "（10-16：5,808 元/吨；09-13 高点 6,625；07-21 低点 4,835）", "生意社", `<a href="${P.market.spot_20261016.url}" target="_blank" rel="noopener">eg.100ppi.com/futures</a>`],
+    ["EG 基准价", P.market.benchmark_20261019.source, "生意社", `<a href="${P.market.benchmark_20261019.url}" target="_blank" rel="noopener">100ppi.com</a>`],
+    ["EG 现货报价", "乙二醇商品报价动态（2026-10-19）：聚酯级含量≥99.9% 厂家/贸易商报价 3,595~7,000 元/吨，离散度大，仅作趋势参考", "生意社", `<a href="https://www.100ppi.com/news/detail-20261019-6362576.html" target="_blank" rel="noopener">100ppi.com/news</a>`],
+    ["规格标准", "GB/T 4649-2018 工业用乙二醇（聚酯级）", "国家标准", "—"],
+    ["采购需求", `${P.meta.product}；数量 200 吨；收货地 ${P.meta.dest}`, "用户需求", "—"]
+  ];
+  let h = th(["项目", "内容", "类型", "链接/出处"]);
+  h += "<tbody>";
+  src.forEach(s => { h += `<tr><td>${s[0]}</td><td style="font-size:12.5px">${esc(s[1])}</td><td>${s[2]}</td><td>${s[3]}</td></tr>`; });
+  h += "</tbody>";
+  $("#sourceTable").innerHTML = h;
+}
+
+/* ---------- 抽屉：原报价位置 / 供应商尽调 ---------- */
+function openSrc(code) {
+  const q = P.raw[code];
+  $("#drawerBody").innerHTML = `
+    <h3>原报价位置 · ${NAME[code]}</h3>
+    <div class="role" style="color:#5b6b78;font-size:12.5px">${esc(q.file)}</div>
+    <div class="srcbox"><b>文件：</b>${esc(q.file)}<br><b>格式：</b>${esc(q.fmt)}<br><b>定位：</b>${esc(q.loc)}</div>
+    <h3 style="margin-top:18px;font-size:15px">该位置的原文</h3>
+    <table class="t" style="border:1px solid #e3e9ef"><tbody>
+      ${[["产品名称", "product"], ["规格/含量", "spec"], ["单价（原文）", "price"], ["计价单位", "unit"], ["税率/发票", "tax"], ["数量阶梯", "tiers"], ["包装", "pack"]].map(([l, k]) => `<tr><td class="k">${l}</td><td>${esc(q[k])}</td></tr>`).join("")}
+    </tbody></table>
+    <div class="callout" style="margin-top:14px"><b>如何回到原文件</b><br>打开 ${esc(q.file)}，按「${esc(q.loc)}」定位到对应段落 / 工作表 / 卡片区域即可核对。</div>
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn primary" onclick="openDd('${code}')">进入企业尽调 →</button>
+      <button class="btn ghost" onclick="copyText('${esc(FULL[code])}')">复制企业名称</button>
+    </div>
+    <div class="note">企业尽调为下游场景：核查该供应商的工商存续、股东与实控人、经营范围与危化品资质、司法与失信记录、涉诉风险。本样例中点击后展示「尽调核查清单模板」，不含真实企业数据。</div>`;
+  $("#drawer").classList.add("on");
+}
+
+/* ---------- 企业尽调清单（内嵌模板，无外部依赖） ---------- */
+const DD_ITEMS = [
+  ["工商存续", "营业执照状态是否存续、经营范围是否含该品类、注册资本与实缴", "国家企业信用信息公示系统"],
+  ["危化品资质", "危险化学品经营许可证 / 安全生产许可证（若为生产商）是否在有效期内", "应急管理部许可证查询"],
+  ["生产与货源", "自产还是经销；若经销，一手货源与授权、是否可提供原厂证明", "供应商书面说明 + 授权书"],
+  ["股东与实控人", "股权结构是否清晰、是否存在关联交易或空壳特征", "工商股权穿透"],
+  ["涉诉与执行", "被执行人、失信、限高、重大买卖合同纠纷", "中国执行信息公开网 / 裁判文书网"],
+  ["税务与开票", "是否可开 13% 专票、纳税人资格、历史开票记录", "供应商提供开票信息 + 试单验证"],
+  ["质控能力", "是否有 COA、批次可追溯、第三方检测报告；异议处理时效", "索取近 3 批 COA 与检测报告"],
+  ["交付与履约", "库区/产能、交付准时率、过往供货记录、是否需保证金", "历史合作记录 + 同行口碑"],
+  ["价格合理性", "报价相对市场价（生意社等）的偏离、是否含隐性费用", "本报告的「市场定位」段"],
+];
+function openDd(code) {
+  $("#drawerBody").innerHTML = `
+    <h3>企业尽调核查清单 · ${NAME[code]}</h3>
+    <div class="role" style="color:#5b6b78;font-size:12.5px">${esc(FULL[code])}（模拟业务样例 · 虚构主体）</div>
+    <div class="callout" style="margin-top:12px;background:#fff8e6;border-color:#f0d08a">
+      <b>样例声明</b><br>该主体为虚构，下列各项均无真实核查结果，仅展示尽调应覆盖的维度与取证渠道。
+    </div>
+    <table class="t" style="border:1px solid #e3e9ef;margin-top:12px">
+      <thead><tr><th style="width:26%">核查维度</th><th>核查内容</th><th style="width:28%">取证渠道</th></tr></thead>
+      <tbody>${DD_ITEMS.map(([a, b, c]) => `<tr><td class="k">${a}</td><td>${b}</td><td style="color:#5b6b78">${c}</td></tr>`).join("")}</tbody>
+    </table>
+    <div class="note" style="margin-top:12px">与本次比价相关的优先项：${code === "C"
+      ? "C 的规格（99.5%）与票种未明 → 优先核实「危化品资质」「质控能力」「税务与开票」三项。"
+      : code === "B" ? "B 价格低于市场 6.7% → 优先核实「生产与货源」「交付与履约」「是否含隐性费用」。"
+      : "A 价格高于市场 6.2% → 优先核实「价格合理性」中的包装与服务溢价是否成立。"}</div>
+    <div style="margin-top:14px"><button class="btn ghost" onclick="openSrc('${code}')">← 返回原报价</button></div>`;
+  $("#drawer").classList.add("on");
+}
+function closeDrawer() { $("#drawer").classList.remove("on"); }
+
+/* ---------- 文件上传与本地抽取 ---------- */
+const FIELD_PATTERNS = [
+  ["产品名称", /(产品名称|品名|物料名称|商品名称)[：:\s]*([^\n，,；;|]{2,40})/],
+  ["规格含量", /(规格|含量|纯度|执行标准)[^：:\n]{0,6}[：:\s]*([^\n，,；;|]{2,60})/],
+  ["计价单位", /(计价单位|单位|计量单位)[：:\s]*([^\n，,；;|]{1,20})/],
+  ["单价", /(单价|报价|价格)[^：:\n]{0,8}[：:\s]*([0-9,.]+\s*元(?:\s*\/\s*[\u4e00-\u9fa5a-zA-Z]+)?)/],
+  ["是否含税", /(含税|不含税|税率\s*1[0-9]%|增值税[专普]用?发票)/],
+  ["包装", /(包装(?:形式|方式|规格)?|包装物)[：:\s]*([^\n，,；;|]{2,40})/],
+  ["运费", /(运费|运输费用|送货)[：:\s]*([^\n，,；;|]{0,50})/],
+  ["付款", /(付款|结算|账期|款到)[^\n]{0,6}[：:\s]*([^\n，,；;|]{2,60})/],
+  ["起订量", /(起订量|最小(?:起订|订量)|MOQ)[：:\s]*([^\n，,；;|]{1,30})/],
+  ["有效期", /(有效期|有效日期|报价有效)[：:\s]*([^\n，,；;|]{2,40})/],
+  ["质量标准", /(质量标准|执行标准|GB\/?T\s*\d+)[^\n]{0,60}/],
+  ["交货", /(交货(?:方式|地点|期)?|交付)[：:\s]*([^\n，,；;|]{2,50})/]
+];
+function extractText(text) {
+  const out = [];
+  FIELD_PATTERNS.forEach(([name, re]) => {
+    const m = text.match(re);
+    if (m) out.push({ field: name, value: (m[2] || m[1] || "").trim().slice(0, 60), conf: /含量|纯度/.test(name) ? "需确认" : "高" });
+  });
+  return out;
+}
+async function handleFiles(files) {
+  const fl = $("#fileList");
+  if (!files.length) return;
+  fl.innerHTML = "";
+  let i = 0;
+  for (const f of files) {
+    i++;
+    $("#prog").style.width = (100 * i / files.length) + "%";
+    const row = document.createElement("div"); row.className = "fi";
+    const ext = (f.name.split(".").pop() || "").toLowerCase();
+    row.innerHTML = `<div class="f"><b>${esc(f.name)}</b> <span class="pill">${esc(ext.toUpperCase())}</span> <span style="color:#8c9aa6">${(f.size / 1024).toFixed(0)} KB</span></div><div class="st">解析中…</div>`;
+    fl.appendChild(row);
+    let res = { ok: false, text: "", note: "" };
+    try {
+      if (["txt", "csv"].includes(ext)) {
+        res = { ok: true, text: await f.text() };
+      } else if (ext === "pdf") {
+        const buf = new Uint8Array(await f.arrayBuffer());
+        res = { ok: true, text: pdfText(buf), note: "PDF 文本层抽取" };
+      } else if (["docx", "xlsx"].includes(ext)) {
+        res = { ok: true, text: await officeText(f, ext), note: ext.toUpperCase() + " 文档文本抽取" };
+      } else if (["png", "jpg", "jpeg", "webp"].includes(ext)) {
+        res = { ok: false, note: "图片报价：浏览器内不做 OCR，需多模态识别或人工录入" };
+      } else {
+        res = { ok: false, note: "不支持的格式" };
+      }
+    } catch (e) {
+      res = { ok: false, note: "解析失败：" + e.message };
+    }
+    const fields = res.ok ? extractText(res.text) : [];
+    row.querySelector(".st").innerHTML = res.ok
+      ? `<span class="badge green">已抽取 ${fields.length} 个字段</span>`
+      : `<span class="badge red">${esc(res.note)}</span>`;
+    if (res.ok && fields.length) {
+      const box = document.createElement("div");
+      box.className = "callout warn";
+      box.innerHTML = `<b>待确认字段（${esc(f.name)}）</b>：抽取结果必须人工确认后才能进入比较表。` +
+        `<table class="t" style="margin-top:6px"><thead><tr><th>字段</th><th>抽取值</th><th>置信度</th><th>确认</th></tr></thead><tbody>` +
+        fields.map((x, k) => `<tr><td>${x.field}</td><td>${esc(x.value)}</td><td>${x.conf === "高" ? '<span class="pill b">高</span>' : '<span class="pill mid">需核对</span>'}</td>
+          <td><input type="checkbox" class="ck" data-f="${esc(f.name)}" data-i="${k}" ${x.conf === "高" ? "" : ""}></td></tr>`).join("") +
+        `</tbody></table><button class="btn ghost sm" style="margin-top:6px" onclick="confirmAll(this)">全部确认并生成统一比价表</button>`;
+      $("#liveExtract").appendChild(box);
+    } else if (!res.ok) {
+      const box = document.createElement("div");
+      box.className = "callout bad";
+      box.innerHTML = `<b>${esc(f.name)}</b>：${esc(res.note)}。按规则该文件<b>不产生任何默认值</b>，字段全部进入待确认队列；请补录后再参与比价。`;
+      $("#liveExtract").appendChild(box);
+    }
+  }
+  $("#prog").style.width = "100%";
+  setTimeout(() => $("#prog").style.width = "0", 800);
+  toast("已解析 " + files.length + " 份文件，请确认待确认字段");
+}
+/* 极简 PDF 文本层抽取：解压 FlateDecode 流后抓取 Tj/TJ 字符串 */
+function pdfText(bytes) {
+  const s = new TextDecoder("latin1").decode(bytes);
+  if (!/\/Font/.test(s)) return "";
+  const chunks = [];
+  const re = /stream\r?\n([\s\S]*?)\r?\nendstream/g;
+  let m;
+  while ((m = re.exec(s))) {
+    const raw = m[1];
+    try {
+      const bin = Uint8Array.from(raw, c => c.charCodeAt(0) & 0xff);
+      const inf = window.pakoInflate ? window.pakoInflate(bin) : null;
+      if (inf) chunks.push(inf);
+    } catch (e) { }
+  }
+  let txt = chunks.join("\n");
+  // 提取 (…) 与 <…> 字符串
+  const out = [];
+  const tr = /\(((?:\\.|[^\\)])*)\)\s*Tj|<([0-9A-Fa-f]+)>\s*TJ/g;
+  let t;
+  while ((t = tr.exec(txt))) out.push(t[1] ? t[1].replace(/\\([()\\])/g, "$1") : "");
+  return out.join(" ") || s.replace(/[^\x20-\x7e]/g, " ").slice(0, 4000);
+}
+async function officeText(f, ext) {
+  const buf = await f.arrayBuffer();
+  // DOCX/XLSX 均为 zip；用内置 DecompressionStream 解压 zip 里第一段文本
+  return extractZipText(buf);
+}
+async function extractZipText(buf) {
+  const dv = new DataView(buf);
+  let eocd = -1;
+  for (let i = buf.byteLength - 22; i >= 0 && i > buf.byteLength - 66000; i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) return "";
+  const n = dv.getUint16(eocd + 10, true);
+  let p = dv.getUint32(eocd + 16, true);
+  const texts = [];
+  for (let k = 0; k < n; k++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const method = dv.getUint16(p + 10, true);
+    const csize = dv.getUint32(p + 20, true);
+    const nl = dv.getUint16(p + 28, true), el = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+    const lho = dv.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(new Uint8Array(buf, p + 46, nl));
+    p += 46 + nl + el + cl;
+    if (!/\.(xml|rels)$/.test(name) || !/(document|sharedStrings|sheet\d+|word)/.test(name)) continue;
+    const lh_nl = dv.getUint16(lho + 26, true), lh_el = dv.getUint16(lho + 28, true);
+    const start = lho + 30 + lh_nl + lh_el;
+    const data = new Uint8Array(buf, start, csize);
+    try {
+      if (method === 0) texts.push(new TextDecoder().decode(data));
+      else if (method === 8) texts.push(await inflateRaw(data));
+    } catch (e) { }
+  }
+  return texts.join("\n").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+}
+async function inflateRaw(data) {
+  if (!("DecompressionStream" in window)) return "";
+  const ds = new DecompressionStream("deflate-raw");
+  const stream = new Blob([data]).stream().pipeThrough(ds);
+  return await new Response(stream).text();
+}
+window.confirmAll = function (btn) {
+  const t = btn.closest(".callout").querySelectorAll(".ck");
+  t.forEach(c => c.checked = true);
+  toast("已确认 " + t.length + " 个字段（待确认项置为『已确认』，未提供字段仍保持待确认）");
+  btn.textContent = "✔ 已确认，可进入统一比价表";
+  btn.disabled = true;
+};
+window.copyText = function (t) { navigator.clipboard && navigator.clipboard.writeText(t).then(() => toast("已复制：" + t)); };
+window.openSrc = openSrc; window.openDd = openDd; window.closeDrawer = closeDrawer;
+
+/* ---------- 导出 ---------- */
+function exportRows() {
+  const R = computeAll(S);
+  const rows = [["供应商", "原始报价", "原始单位", "含税单价(元/吨)", "不含税裸价(元/吨)", "含量", "运费(不含税)", "卸车费", "检验费", "槽车清洗", "资金成本", "保证金/押金", "到厂成本(元/吨)", "折纯到厂(元/吨)", "排名"]];
+  SUP.forEach(c => {
+    const r = R[c];
+    rows.push([NAME[c], P.raw[c].price, P.raw[c].unit, r.goodsIncl.toFixed(2), r.goods.toFixed(2), (r.purity * 100).toFixed(2) + "%",
+      r.freightBase.toFixed(2), r.unload.toFixed(2), r.inspect.toFixed(2), r.vehicle.toFixed(2), r.cap.toFixed(2), r.deposit.toFixed(2),
+      r.landed.toFixed(2), r.landedPurity.toFixed(2), r.rank || "不参与"]);
+  });
+  return rows;
+}
+function download(name, content, type) {
+  const blob = new Blob([content], { type });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+}
+$("#btnExportCsv").onclick = () => {
+  const csv = "\ufeff" + exportRows().map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(",")).join("\n");
+  download("乙二醇报价比较_当前参数.csv", csv, "text/csv;charset=utf-8");
+  toast("已导出 CSV");
+};
+$("#btnPrint").onclick = () => window.print();
+
+/* 导出 Excel（无外部依赖：构造 Excel 2003 XML Spreadsheet） */
+$("#btnExportXlsx").onclick = () => {
+  const R = computeAll(S);
+  const rowXml = (cells, style) => "<Row>" + cells.map(c => `<Cell${style ? ` ss:StyleID="${style}"` : ""}><Data ss:Type="${typeof c === "number" ? "Number" : "String"}">${String(c).replace(/&/g, "&amp;").replace(/</g, "&lt;")}</Data></Cell>`).join("") + "</Row>";
+  let body = "";
+  body += rowXml(["乙二醇采购报价比较（当前参数快照）", "", "", "", ""], "h");
+  body += rowXml(["采购数量(吨)", S.qty, "年化资金成本", (S.rate * 100).toFixed(2) + "%", "生成时间 " + new Date().toLocaleString("zh-CN")]);
+  body += rowXml([], "");
+  exportRows().forEach((r, i) => { body += rowXml(r.map((v, j) => j > 1 && j !== 14 && isNaN(v) === false && v !== "" ? (isNaN(parseFloat(v)) ? v : parseFloat(v)) : v), i === 0 ? "h" : ""); });
+  body += rowXml([], "");
+  body += rowXml(["明细：裸价 / 运费 / 卸车 / 检验 / 清洗 / 资金 / 保证金 / 到厂 / 折纯"], "h");
+  SUP.forEach(c => {
+    const r = R[c];
+    body += rowXml([NAME[c], "裸价", r.goods.toFixed(2), "运费", r.freightBase.toFixed(2), "卸车", r.unload.toFixed(2), "检验", r.inspect.toFixed(2), "清洗", r.vehicle.toFixed(2), "资金", r.cap.toFixed(2), "保证金", r.deposit.toFixed(2), "到厂", r.landed.toFixed(2)]);
+  });
+  const xml = `<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Styles><Style ss:ID="h"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#0D2B45" ss:Pattern="Solid"/></Style></Styles>
+  <Worksheet ss:Name="比较结果"><Table>${body}</Table></Worksheet></Workbook>`;
+  download("乙二醇报价比较_当前参数.xls", xml, "application/vnd.ms-excel");
+  toast("已导出 Excel（当前参数快照）");
+};
+
+/* ---------- 交互绑定 ---------- */
+function bindRange(rId, nId, key, scale) {
+  const r = $("#" + rId), n = $("#" + nId);
+  const upd = (v) => {
+    v = Number(v);
+    if (isNaN(v) || v < 0) return;
+    S[key] = scale ? v / scale : v;
+    r.value = scale ? v * scale : v; n.value = v;
+    render();
+  };
+  r.addEventListener("input", () => upd(r.value));
+  n.addEventListener("input", () => upd(n.value));
+}
+bindRange("rQty", "nQty", "qty", 0);
+bindRange("rRate", "nRate", "rate", 100);
+$("#nFreight").addEventListener("input", e => { S.freight = Math.max(0, Number(e.target.value) || 0); render(); });
+$("#nUnload").addEventListener("input", e => { S.unload = Math.max(0, Number(e.target.value) || 0); render(); });
+$("#nInsp").addEventListener("input", e => { S.insp = Math.max(0, Number(e.target.value) || 0); render(); });
+$("#nVeh").addEventListener("input", e => { S.veh = Math.max(0, Number(e.target.value) || 0); render(); });
+$$("#segFreight button").forEach(b => b.onclick = () => {
+  $$("#segFreight button").forEach(x => x.classList.remove("on")); b.classList.add("on");
+  if (b.dataset.v === "0") { S.sellerDelivers = true; } else { S.sellerDelivers = false; S.freight = Number(b.dataset.v); $("#nFreight").value = S.freight; }
+  render();
+});
+$$("#segC button").forEach(b => b.onclick = () => {
+  $$("#segC button").forEach(x => x.classList.remove("on")); b.classList.add("on");
+  S.acceptC = b.dataset.v === "1"; render();
+});
+$("#btnReset").onclick = () => {
+  S = Object.assign({}, BASE);
+  $("#rQty").value = 200; $("#nQty").value = 200; $("#rRate").value = 4.5; $("#nRate").value = 4.5;
+  $("#nFreight").value = 42; $("#nUnload").value = 25; $("#nInsp").value = 1800; $("#nVeh").value = 600;
+  $$("#segFreight button").forEach((b, i) => b.classList.toggle("on", i === 0));
+  $$("#segC button").forEach((b, i) => b.classList.toggle("on", i === 0));
+  render(); toast("已恢复基准参数");
+};
+const drop = $("#drop"), fi = $("#fileInput");
+drop.onclick = () => fi.click();
+fi.onchange = () => handleFiles(fi.files);
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("hot"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("hot"); }));
+drop.addEventListener("drop", e => handleFiles(e.dataTransfer.files));
+$$("#tabs a").forEach(a => a.addEventListener("click", () => {
+  $$("#tabs a").forEach(x => x.classList.remove("on")); a.classList.add("on");
+}));
+
+/* ---------- 渲染入口 ---------- */
+function safe(fn, name) {
+  try { fn(); } catch (e) { console.warn("[render:" + name + "] " + e.message); }
+}
+function render() {
+  const R = computeAll(S);
+  safe(() => renderKPIs(R), "kpi"); safe(() => renderBars(R), "bars"); safe(() => renderStacks(R), "stacks");
+  safe(() => renderAttribution(R), "attr"); safe(renderPurity, "purity"); safe(() => renderStd(R), "std");
+  safe(() => renderCostTable(R), "cost"); safe(() => renderBreakdowns(R), "bd"); safe(() => renderCapTable(R), "cap");
+  safe(() => renderSens(R), "sens"); safe(renderSweep, "sweep"); safe(renderScen, "scen"); safe(renderMarket, "market");
+}
+
+/* 静态区块 */
+renderRaw(); renderTraps(); renderIgnored(); renderOpen(); renderCC(); renderParams(); renderSources();
+render();
+// 校验：浏览器引擎与 Python 引擎结果对比（同一参数下应完全一致）
+(function verify() {
+  const py = P.result;
+  const Rv = computeAll(Object.assign({}, BASE, { acceptC: false }));
+  const chk = ["A", "B", "C"].map(c => ({ c, py: +py[c].landed.toFixed(4), js: +Rv[c].landed.toFixed(4), d: +Math.abs(py[c].landed - Rv[c].landed).toFixed(6) }));
+  window.__verify = { check: chk, maxDiff: Math.max(...chk.map(x => x.d)), pass: Math.max(...chk.map(x => x.d)) < 0.01 };
+  console.log("[verify] python vs js landed:", chk);
+})();
+})();
+</script>
+</body>
+</html>

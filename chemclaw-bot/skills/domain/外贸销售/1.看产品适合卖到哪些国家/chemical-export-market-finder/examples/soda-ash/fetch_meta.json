@@ -1,0 +1,42 @@
+{
+ "hs6": "283620",
+ "flow": "M",
+ "origin_m49": "156",
+ "origin_name": "China",
+ "years_requested": [
+  "2019",
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025"
+ ],
+ "coverage": {
+  "2019": {
+   "reporters_with_data": 169
+  },
+  "2020": {
+   "reporters_with_data": 164
+  },
+  "2021": {
+   "reporters_with_data": 163
+  },
+  "2022": {
+   "reporters_with_data": 163
+  },
+  "2023": {
+   "reporters_with_data": 162
+  },
+  "2024": {
+   "reporters_with_data": 144
+  },
+  "2025": {
+   "reporters_with_data": 119
+  }
+ },
+ "fetched_at": "2026-10-19",
+ "source": "UN Comtrade public preview API (annual, HS, CIF, as-reported)",
+ "currency": "USD",
+ "quantity_unit": "kg (netWgt)"
+}

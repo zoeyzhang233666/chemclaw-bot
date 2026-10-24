@@ -1,0 +1,2131 @@
+{
+  "schema_version": "1.0",
+  "title": "韩国 · 工业级 30% 过氧化氢溶液（UN2014）→ 中国上海 · 进口资料准备与合规核验底稿",
+  "as_of": "2026-10-20",
+  "meta": {
+    "record_id": "ID-H2O2-KR-20261020",
+    "prepared_by": "外贸采购 / 关务合规（演示）",
+    "prepared_at": "2026-10-20",
+    "generated_at": "2026-10-20",
+    "scene": "外贸采购 / 查进口资料要求",
+    "data_classification": "内部（含模拟件）",
+    "product_scope_note": "本底稿每一条结论都绑定产品身份（30% 水溶液 / 稳定剂型 / 工业级 / PCB微蚀用途 / 30kg桶装 / 海运整柜 / 韩国）。任一要素改变须重跑 P1–P3。",
+    "methodology_version": "1.0",
+    "demo_notice": "演示案例：供应商名称、批号、金额与上传文件均为模拟；法规条文、税则编码与运输分类为可回溯的公开资料。"
+  },
+  "inputs": {
+    "origin_country": "韩国（大韩民国）",
+    "origin_note": "韩国为 WTO 成员、RCEP 与中韩 FTA 缔约方；不属受制裁国别。自 2026-01-01 起适用《进出口税则（2026）》。",
+    "supplier": "HANWOO CHEMICAL CO., LTD.（示例名称，非真实供应商）",
+    "importer": "华东某精细化工有限公司（脱敏示例）",
+    "product_name_cn": "过氧化氢溶液（双氧水）",
+    "product_name_en": "HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%",
+    "cas": "7722-84-1",
+    "un_no": "2014",
+    "concentration": "30.0%（质量分数，H₂O₂）",
+    "composition": [
+      {
+        "name": "过氧化氢",
+        "ename": "Hydrogen peroxide",
+        "cas": "7722-84-1",
+        "pct_min": 30.0,
+        "pct_max": 31.0,
+        "role": "主成分（氧化剂）"
+      },
+      {
+        "name": "稳定剂（磷酸盐类）",
+        "ename": "Stabiliser (phosphate based)",
+        "cas": "—",
+        "pct_min": 0.02,
+        "pct_max": 0.08,
+        "role": "稳定剂（运输安全所必需）"
+      },
+      {
+        "name": "硝酸盐稳定剂",
+        "ename": "Nitrate stabiliser",
+        "cas": "13377-33-8",
+        "pct_min": 0.01,
+        "pct_max": 0.05,
+        "role": "稳定剂"
+      },
+      {
+        "name": "锡酸盐稳定剂",
+        "ename": "Sodium stannate",
+        "cas": "12058-66-1",
+        "pct_min": 0.005,
+        "pct_max": 0.02,
+        "role": "稳定剂"
+      },
+      {
+        "name": "水",
+        "ename": "Water",
+        "cas": "7732-18-5",
+        "pct_min": 68.85,
+        "pct_max": 69.965,
+        "role": "溶剂"
+      }
+    ],
+    "physical_form": "液体（均相水溶液）",
+    "grade": "工业级",
+    "exec_standard": "供应商企标 + 参照 GB/T 1616《工业过氧化氢》（国内对标口径）",
+    "usage": "用于电子行业 PCB 蚀刻后微蚀工序的单槽漂洗，浓度按工艺稀释至 3%~5% 使用",
+    "usage_sensitivity": "民用工业用途；非食品添加剂、非药品、非消毒剂产品（不作为消毒产品销售）、非涉军用途",
+    "packing": "30 kg UN 认证高密度聚乙烯（HDPE）桶装，每托 20 桶（含托盘与缠绕膜），共约 34 托",
+    "package_type": "HDPE 开顶桶（中型包装物/桶类，带排气盖）",
+    "gross_weight": "30 kg 净重 / 31.2 kg 毛重（单桶）",
+    "hs_packing_spec": "30 公斤/桶（HDPE 桶），每托 20 桶",
+    "qty": "20 000 kg（20 吨）",
+    "transport_mode": "海运（整柜，非散装）",
+    "incoterm": "FOB Busan",
+    "pol_pod": "Busan（韩国釜山）→ Shanghai（中国上海洋山港）",
+    "eta": "2026-11-25",
+    "price_terms": "USD 1.18/kg FOB Busan"
+  },
+  "product_identity": {
+    "identity_verdict": "partial",
+    "one_liner": "产品身份已基本锁定为『H₂O₂ 约 30% 的水溶液 + 少量磷/锡酸盐类稳定剂』，但稳定剂具体品种与限量、以及是否构成『过氧化氢的水溶液』这一监管前提，仍缺供应商书面确认，因此危化品与易制爆的适用性只能做到『高度可能适用』而非『已证实适用』。",
+    "confirmed": [
+      "CAS 7722-84-1（过氧化氢）——SDS（模拟件 U01）第1、3节与 PI（U03）一致",
+      "主成分浓度 30%~31%（质量分数）——SDS 第3节、COA（U02）实测 30.4%、PI（U03）三处一致",
+      "物态：均相水溶液，不含有机溶剂",
+      "原产国：韩国；出口港：Busan",
+      "包装：30 kg HDPE 桶，非散装",
+      "运输方式：海运整柜 FCL"
+    ],
+    "unconfirmed": [
+      "稳定剂的确切化学名称与加入量（SDS 第3节仅写『磷酸盐类稳定剂』，未给 CAS 与精确百分比）",
+      "是否含《危险化学品目录》实施指南所称『稳定剂、惰性化学品以外』的其他功能性添加剂",
+      "是否同一批次对应同一 SDS 版本号（SDS 未印版本号与修订日期）",
+      "工业级是否满足国内下游对铁/总有机碳（TOC）的限值（TDS 未提供）",
+      "生产厂是否即 PI 抬头主体（需生产商声明或工厂地址一致）"
+    ],
+    "risk_points": [
+      {
+        "item": "稳定剂未披露到品种与用量",
+        "why": "《危险化学品目录》第903项只覆盖『过氧化氢的水溶液』；应急管理部答复（S03）明确『添加其他化学品（稳定剂、惰性化学品除外）』即不再自动落入该条。稳定剂本身在豁免范围内，但若含功能性添加剂（如缓蚀剂、润湿剂）则可能需重新鉴定危化品属性。",
+        "action": "要求供应商出具稳定剂清单（名称+CAS+精确%) 与『仅含稳定剂、无其他功能性添加剂』的书面声明（见 R-D03 / G03）"
+      },
+      {
+        "item": "浓度口径只写在 SDS 正文，未写入标签",
+        "why": "浓度跨越 8%/20%/60% 三个阈值时会同时改变危化品目录适用、易制爆分类（氧化性液体类别1/2/3）与 UN 编号（2984/2014/2015）。若实际交货为 27.5% 或 50%，监管口径完全不同。",
+        "action": "合同、PI、COA、标签四处浓度必须锁死为『30.0%（质量分数）』并附加允许偏差（±0.5 个百分点以内且不得跨阈值）"
+      },
+      {
+        "item": "SDS 无版本号与修订日期",
+        "why": "GB/T 16483（S10）要求 SDS 载明修订日期；海关 129 号公告（S05）要对中文 SDS 样本做内容审核，无版本号无法证明其为当前版本。",
+        "action": "索取带版本号与修订日期的 SDS（中英对照），并要求供应商承诺变更时主动更新"
+      },
+      {
+        "item": "用途如切换为食品添加剂或消毒产品，监管路径完全不同",
+        "why": "海关 129 号公告第八条（S05）：用作食品、食品添加剂的进出口危险化学品还须符合食品安全相关规定；消毒产品另有卫生许可与备案路径。",
+        "action": "用途变更前必须重跑 P1–P3；本底稿仅对『PCB 微蚀用工业级』成立"
+      }
+    ]
+  },
+  "hs_candidates": [
+    {
+      "code": "2847.00.0000",
+      "desc": "过氧化氢（不论是否用尿素固化）",
+      "rank": 1,
+      "confidence": "高",
+      "source": "S06,S18",
+      "basis": "第28章章注一（二）：本章税目适用于『上述（一）款产品的水溶液』；章注一（四）：为保存或运输需要加入稳定剂的仍归本章；品目 28.47 条文『过氧化氢，无论是否用尿素固化』。本产品为 H₂O₂ 水溶液 + 运输所必需的稳定剂，未改变一般用途。",
+      "tests": "成立条件：①主成分为过氧化氢；②溶剂仅为水；③添加剂限于稳定剂/防尘剂/着色剂且不改变一般用途；④未与其他有效成分构成具有专门功能的制剂。",
+      "alternatives": "若加入改变用途的功能性添加剂（如作为杀菌制剂配方出售、含表面活性剂的复配消毒液），可能落入 3808；若按重量计浓度极低且用于特定行业配方，需按具体商品判别。"
+    },
+    {
+      "code": "2850.00.0090 / 2853",
+      "desc": "其他无机化合物（兜底品目）",
+      "rank": 2,
+      "confidence": "低",
+      "source": "S06",
+      "basis": "仅在无法满足 28 章章注一时作为兜底讨论；本产品明显满足章注一，兜底品目不应优先。",
+      "tests": "不成立：本章有明确列名品目 28.47 时不使用兜底品目。",
+      "alternatives": "—"
+    },
+    {
+      "code": "3808.94 / 3808.99",
+      "desc": "消毒剂、杀虫剂等零售或制剂形态产品",
+      "rank": 3,
+      "confidence": "低",
+      "source": "S06",
+      "basis": "仅当产品以『消毒剂成药』形态申报、具备专门配方与标签宣称时讨论。本单为工业级原料，标签不宣称消毒，故不适用。",
+      "tests": "不成立：工业级 30% 过氧化氢为基本化工原料，非零售消毒制剂。",
+      "alternatives": "若用途改为医疗消毒并取得相应注册，则需重判。"
+    }
+  ],
+  "hs_verdict": {
+    "recommended": "2847.00.0000",
+    "uncertainty": "本单归类置信度高（唯一列名品目 + 章注明确涵盖水溶液与稳定剂），但仍有两处不确定：①若供应商稳定剂清单中出现改变用途的功能性添加剂，需复核是否仍在 28 章；②同名商品在实务中存在按『含量』申报差异（海关 CIQ 扩展码对 ≥60%、20%~60%、8%~20% 分列），申报时应与 HS 一并准确填报含量水平。",
+    "need_classification_ruling": "否（高置信，建议报关行复核后申报）",
+    "declaration_elements": [
+      "品牌类型",
+      "出口享惠情况",
+      "成分含量",
+      "包装规格",
+      "GTIN（非必填）",
+      "CAS"
+    ],
+    "declaration_example": "0|2|过氧化氢30%，水约69.9%，稳定剂<0.1%|30公斤/桶(HDPE桶)，每托20桶||7722-84-1",
+    "ciq_codes": [
+      "2847000000.101 过氧化氢（含量＞60%，特许的）",
+      "2847000000.102 过氧化氢（20%≤含量≤60%）← 本单应落在此段",
+      "2847000000.103 过氧化氢（8%≤含量＜20%）",
+      "2847000000.104 过氧化氢尿素",
+      "2847000000.105 非工业用无检疫要求食品添加剂"
+    ],
+    "ciq_note": "CIQ 扩展码由报关代理按海关现行参数选取；本单含量 30% 对应 20%~60% 段，与 UN2014 分级一致，可互相印证。"
+  },
+  "tax_rates": {
+    "tariff_year": "2026",
+    "hs": "2847000000",
+    "mfn": {
+      "rate": "5.5%",
+      "note": "原产于最惠国待遇地区货物适用；韩国为 WTO 成员，适用最惠国税率。来源 S06/S18，以海关现场核定为准。"
+    },
+    "provisional": {
+      "rate": "无（未见暂定税率）",
+      "note": "暂定税率如设置则优先于最惠国税率适用；需在报关前以单一窗口/税则原文复核。"
+    },
+    "general": {
+      "rate": "30%",
+      "note": "仅适用于原产地不适用最惠国待遇或原产地不明的货物。"
+    },
+    "vat": {
+      "rate": "13%",
+      "note": "进口环节增值税由海关代征，计税价格=关税完税价格+关税+消费税。"
+    },
+    "consumption_tax": {
+      "rate": "0",
+      "note": "过氧化氢不属消费税应税消费品。"
+    },
+    "fta": [
+      {
+        "scheme": "中国—韩国自由贸易协定（中韩 FTA）",
+        "rate_hint": "页面显示 1.1%，但年度与降税阶段未标注",
+        "status": "disputed",
+        "condition": "需①产品在韩方生产并符合原产地规则；②符合直接运输（Busan→Shanghai 直航或满足转运规则）；③取得中韩 FTA 原产地证书（CO）。",
+        "source": "S19"
+      },
+      {
+        "scheme": "RCEP（区域全面经济伙伴关系协定，韩国为成员）",
+        "rate_hint": "页面显示 RCEP·韩国 2.8%",
+        "status": "disputed",
+        "condition": "需①满足 RCEP 原产地规则；②取得 RCEP 原产地证书或经核准出口商的原产地声明；③注意 RCEP 与中韩 FTA 择低适用。",
+        "source": "S19"
+      },
+      {
+        "scheme": "最惠国税率（不申请优惠）",
+        "rate_hint": "5.5%",
+        "status": "verified",
+        "condition": "无条件适用，但税负最高；可作为原产地证书办理延迟时的兜底方案。",
+        "source": "S18"
+      }
+    ],
+    "fta_note": "同一页面另提示『部分化工产品 2016 年起零关税（含过氧化氢）』，与 1.1%/2.8% 的栏位相互矛盾，且均未给出协定年度与降税阶段编号，因此**两个第三方税率都不能直接用于成本测算**。必须由报关行在『中国国际贸易单一窗口—关税优惠税率查询』按 2847000000 + 韩国 + 2026 年度实查，或由供应商/货代书面确认出证能力后再锁定。",
+    "calc_note": "关税 = CIF × 适用税率；进口环节增值税 = (CIF + 关税 + 消费税) × 13%。优惠税率须以原产地证书与直接运输为条件，否则按最惠国税率补税并可能加收滞纳金。"
+  },
+  "regulation_checklist": [
+    {
+      "id": "R01",
+      "layer": "危险化学品管理",
+      "item": "是否列入《危险化学品目录》",
+      "verdict": "conditional",
+      "conclusion": "高度可能适用第 903 项『过氧化氢溶液[含量＞8%]』；因稳定剂品种未完全披露，结论定级为『视条件适用』。",
+      "basis": "《危险化学品目录（2015版）》第903项（S02）；目录说明第四条（无含量说明条目指工业产品或纯度高于工业产品的化学品）；应急管理部答复（S03）。",
+      "condition": "①含量 > 8%（本单 30% 满足）；②为过氧化氢水溶液；③除稳定剂、惰性化学品外不得含其他功能性添加剂。",
+      "impact": "决定是否触发海关检验（129号公告）、中文SDS与标签、危化品登记、境内储存与经营许可等一整条链路。",
+      "owner": "进口商 / 报关代理",
+      "source": "S02,S03",
+      "confidence": "medium"
+    },
+    {
+      "id": "R02",
+      "layer": "危险化学品管理",
+      "item": "进口企业危险化学品登记",
+      "verdict": "applies",
+      "conclusion": "适用。进口企业须向应急管理部门危化品登记机构办理登记（同一品种不重复登记，信息变更须及时变更）。",
+      "basis": "《危险化学品安全法》第85–86条（S01）；原《危险化学品安全管理条例》第67条（S16）。",
+      "condition": "企业实际进口该危化品即触发；登记内容包括分类标签、理化性质、用途、危险特性、储运安全要求与应急处置。",
+      "impact": "首次进口前完成登记；后续信息变更（如换供、改标）须变更登记。",
+      "owner": "进口商",
+      "source": "S01,S16",
+      "confidence": "high"
+    },
+    {
+      "id": "R03",
+      "layer": "危险化学品管理",
+      "item": "中文化学品安全技术说明书（SDS）",
+      "verdict": "applies",
+      "conclusion": "适用。生产企业、进口企业应提供与其进口危险化学品相符的中文化学品安全技术说明书。",
+      "basis": "《危险化学品安全法》第31条（S01）；海关总署2020年第129号公告第二条第（三）项（S05）；GB/T 16483（S10）。",
+      "condition": "进口危险化学品必须随附中文SDS；内容须符合国家标准要求；与货物不符或不符合国标属违法行为（第31条、法律责任章）。",
+      "impact": "上传件 U01 为韩文/英文 SDS，需整册翻译并核对第14节运输信息与 UN2014 一致。",
+      "owner": "进口商（可委托翻译/合规机构）",
+      "source": "S01,S05,S10",
+      "confidence": "high"
+    },
+    {
+      "id": "R04",
+      "layer": "危险化学品管理",
+      "item": "中文危险公示标签",
+      "verdict": "applies",
+      "conclusion": "适用。进口化学品包装上须粘贴、印刷或拴挂与包装内化学品相符的中文化学品安全标签。",
+      "basis": "《危险化学品安全法》第31条（S01）；海关129号公告第二条第（三）项、第五条（S05）；GB 15258（S12）。",
+      "condition": "散装产品除外；本单为桶装，不免除。标签须含中文品名、成分及含量、象形图、信号词、危险性说明、防范说明、供应商与应急电话。",
+      "impact": "上传件 U04 标签仅为英文（且缺少中文应急电话），不能直接使用。",
+      "owner": "进口商 / 海外供应商",
+      "source": "S01,S05,S12",
+      "confidence": "high"
+    },
+    {
+      "id": "R05",
+      "layer": "危险化学品管理",
+      "item": "危险化学品经营许可",
+      "verdict": "not_applies",
+      "conclusion": "本单不适用：进口企业为自用（自有工厂 PCB 工序使用），非对外销售危化品。",
+      "basis": "《危险化学品安全法》第53条：国家对危险化学品经营实行许可制度；未取得许可任何单位和个人不得经营（S01）。",
+      "condition": "以转售为目的的进口（贸易商进口后销售）必须持危化品经营许可证；生产企业厂区内销售自产产品、港口经营人在港区内仓储经营属例外。",
+      "impact": "如本批货物最终转售给第三方，进口主体必须先取得经营许可，否则属无证经营。",
+      "owner": "进口商",
+      "source": "S01",
+      "confidence": "high"
+    },
+    {
+      "id": "R06",
+      "layer": "易制爆管理",
+      "item": "是否列入《易制爆危险化学品名录》",
+      "verdict": "applies",
+      "conclusion": "适用。第6.1项『过氧化氢溶液（含量＞8%）』；30% 对应『20%≤含量＜60%：氧化性液体，类别2』。",
+      "basis": "《易制爆危险化学品名录（2017年版）》第6.1项（S04）；《危险化学品安全法》第58条、第60–62条（S01）。",
+      "condition": "门槛同样是含量 > 8%。注意名录对含量的三档划分与运输 UN 编号的分档并不完全一致（见危险属性对照）。",
+      "impact": "购买、销售、储存须纳入治安管理：销售方须查验购买方凭证、如实记录、三日内报送流向信息。",
+      "owner": "进口商 / 境内销售方",
+      "source": "S04,S01",
+      "confidence": "high"
+    },
+    {
+      "id": "R07",
+      "layer": "易制爆管理",
+      "item": "易制爆购买凭证与流向报备",
+      "verdict": "conditional",
+      "conclusion": "进口环节本身不直接对应『购买』行为；但货物入境后若由境内单位购入并转储/使用，则按境内规则办理。",
+      "basis": "《危险化学品安全法》第58条（凭危化品安全生产/使用/经营许可证购买易制爆；其他单位购买须持单位出具的合法用途说明）、第60–62条（查验、记录、3日内报公安机关）。",
+      "condition": "取决于进口后的处置路径：直接投料生产（自有危化品使用/生产许可）、还是进入仓储再销售。",
+      "impact": "实务中多数属地要求进口易制爆品在入境后 3 个工作日内完成流向报备，须在首批到港前落实属地口径。",
+      "owner": "进口商 / 属地公安机关",
+      "source": "S01",
+      "confidence": "medium"
+    },
+    {
+      "id": "R08",
+      "layer": "运输",
+      "item": "是否属危险货物（运输分类）",
+      "verdict": "applies",
+      "conclusion": "适用。UN 2014，第 5.1 类（氧化性物质），次要危险 8（腐蚀性），包装类别 II。",
+      "basis": "UN Model Regulations / IMDG Code（S14）；GB 6944-2025（S08）；GB 12268-2025（S09）；GB 6944/12268 自 2025-10-01 起为现行版本。",
+      "condition": "按 H₂O₂ 含量分档：8%–<20% → UN2984/PG III；20%–60% → UN2014/PG II；>60% → UN2015/PG I；<8% 通常不作为危险货物。",
+      "impact": "决定包装规格、标志、申报、积载隔离与运费附加。",
+      "owner": "承运人 / 报关代理 / 进口商",
+      "source": "S08,S09,S14",
+      "confidence": "high"
+    },
+    {
+      "id": "R09",
+      "layer": "检验检疫",
+      "item": "海关进出口危险化学品检验",
+      "verdict": "applies",
+      "conclusion": "适用。海关对列入《危险化学品目录》的进出口危险化学品及其包装实施检验；报关须填报危险类别、包装类别、UN编号、包装UN标记。",
+      "basis": "《危险化学品安全法》第7条(九)（S01）；海关总署公告2020年第129号第一条、第二条、第六条（S05）。",
+      "condition": "以『是否列入目录』为门槛；本单因属目录第903项而纳入检验范围。不属于危险化学品的危险货物不在此公告检验范围内（但仍受运输规则约束）。",
+      "impact": "报关时须提交《进口危险化学品企业符合性声明》、稳定剂说明、中文危险公示标签与中文SDS样本；包装须检验型式、标记、类别、规格、单件重量与使用状况。",
+      "owner": "进口商 / 报关代理",
+      "source": "S01,S05",
+      "confidence": "high"
+    },
+    {
+      "id": "R10",
+      "layer": "检验检疫",
+      "item": "海关监管条件代码适用",
+      "verdict": "applies",
+      "conclusion": "2847000000 监管条件为 A（入境货物通关单）、B（出境货物通关单）、G（两用物项和技术出口许可证·定向）。进口环节相关的是 A 与 G 的判定。",
+      "basis": "中国国际贸易单一窗口 2026 申报参数（S07）；365外贸网整理（S18）。",
+      "condition": "A：进口属法检商品，须取得入境货物通关单；B：出口方向；G：出口管制许可（定向），不针对进口。",
+      "impact": "报关代理须按参数填选；若产品同时被列入当年《两用物项和技术进出口许可证管理目录》，则按目录要求另行办证（见 R11）。",
+      "owner": "报关代理",
+      "source": "S07,S18",
+      "confidence": "medium"
+    },
+    {
+      "id": "R11",
+      "layer": "两用物项",
+      "item": "是否需两用物项和技术进口许可证",
+      "verdict": "pending",
+      "conclusion": "未见进口方向办证证据；但必须以 2026 年度目录逐条核对，不能仅凭监管条件 G（定向出口许可）推断。",
+      "basis": "《两用物项出口管制条例》（S20）；商务部、海关总署 2026 年度《两用物项和技术进出口许可证管理目录》（S21）。",
+      "condition": "需核对：产品浓度/形态是否落入目录中『过氧化氢』条目的限定条件（例如浓度区间）；目录条目可能对进口方向另有要求。",
+      "impact": "如落入目录，未办证将导致无法通关；此项须由报关代理书面查询结论或合规顾问出具意见。",
+      "owner": "报关代理 / 合规顾问",
+      "source": "S20,S21",
+      "confidence": "low"
+    },
+    {
+      "id": "R12",
+      "layer": "用途专项",
+      "item": "食品添加剂 / 消毒产品 / 药品路径",
+      "verdict": "not_applies",
+      "conclusion": "本单为 PCB 微蚀工业用途，不涉及食品安全、消毒产品卫生许可或药品注册路径。",
+      "basis": "海关129号公告第八条（S05）：用作食品、食品添加剂的进出口危险化学品还应符合食品安全相关规定。",
+      "condition": "若用途改成食品加工助剂、消毒剂成品或药品原料，须另加食品生产/消毒产品/药品相应资质与检验。",
+      "impact": "用途变更必须重跑产品定性；不得用本底稿结论覆盖新用途。",
+      "owner": "进口商",
+      "source": "S05",
+      "confidence": "high"
+    },
+    {
+      "id": "R13",
+      "layer": "包装容器",
+      "item": "危险货物包装性能与使用要求",
+      "verdict": "applies",
+      "conclusion": "适用。海运须使用经 UN 认证的包装（本单 HDPE 桶类包装），并按包装指令使用；报关填报包装UN标记。",
+      "basis": "《危险化学品安全法》第32–33条（S01）；海关129号公告第六条（S05）；IMDG Code 包装指令（S14）。",
+      "condition": "包装须与货物性质相适应（耐腐蚀、带排气），单件净重与包装规格符合包装指令；重复使用的容器使用前须检查并留记录（不少于3年）。",
+      "impact": "须取得供应商的 UN 包装性能检验证书（或等效证明）与包装标记照片，否则无法完成报关填报。",
+      "owner": "海外供应商 / 进口商",
+      "source": "S01,S05,S14",
+      "confidence": "high"
+    },
+    {
+      "id": "R14",
+      "layer": "新化学物质",
+      "item": "新化学物质环境管理登记",
+      "verdict": "not_applies",
+      "conclusion": "不适用：过氧化氢（7722-84-1）为现有化学物质，稳定剂亦属常见现有物质（待稳定剂清单确认后复核）。",
+      "basis": "《危险化学品安全法》第89条：新化学物质环境管理登记依照生态环境保护法律法规执行（S01）。",
+      "condition": "若成品中加入目录外新化学物质（非现有物质名录内），须办理新化学物质环境管理登记。",
+      "impact": "收到稳定剂完整清单后须复核一次，避免遗漏。",
+      "owner": "进口商",
+      "source": "S01",
+      "confidence": "medium"
+    },
+    {
+      "id": "R15",
+      "layer": "储存安全",
+      "item": "重大危险源辨识（GB 18218）",
+      "verdict": "conditional",
+      "conclusion": "视进口后的储存方式：20 吨单批次通常未达过氧化氢临界量，但须与现有库存合并计算单元总量。",
+      "basis": "《危险化学品安全法》第13条（重大危险源登记建档、备案）（S01）；GB 18218-2018。",
+      "condition": "按『单元』合并计算，不能只看单批次。",
+      "impact": "若构成重大危险源，须登记建档、定期检测评估、制定应急预案并报县级应急管理部门备案。",
+      "owner": "进口商 EHS",
+      "source": "S01",
+      "confidence": "medium"
+    }
+  ],
+  "danger_distinction": {
+    "lead": "危险化学品（中国安全生产监管，依《危险化学品目录（2015版）》）与危险货物（运输环节，依 UN Model Regulations / GB 6944-2025 / GB 12268-2025）是两套独立的分类体系：一套成立不必然推出另一套成立，阈值与分档也不相同。",
+    "chemical": {
+      "regime": "危险化学品（生产/经营/储存/使用/登记监管）",
+      "applicable": "conditional",
+      "entry": "《危险化学品目录（2015版）》第 903 项『过氧化氢溶液[含量＞8%]』",
+      "threshold": "含量 > 8%（质量分数）；本单 30%，远超阈值。且须为『过氧化氢的水溶液』，添加剂仅限稳定剂/惰性化学品。",
+      "consequence": "进口企业须办理危险化学品登记（法律第86条）、提供中文 SDS 与中文危险公示标签（第31条）、包装符合要求（第32条）；境内储存/使用/经营另受相应许可与安全条件约束。"
+    },
+    "goods": {
+      "regime": "危险货物（运输）",
+      "applicable": "applies",
+      "cls": "5.1（氧化性物质）",
+      "subsidiary": "8（腐蚀性）",
+      "un": "UN 2014",
+      "pg": "II（包装类别 II）",
+      "proper_shipping_name": "HYDROGEN PEROXIDE, AQUEOUS SOLUTION, with not less than 20% but not more than 60% hydrogen peroxide (stabilized as necessary)",
+      "threshold": "H₂O₂ 含量 20%~60% 对应 UN2014 / 5.1 / PG II；本单 30% 正落在该区间。",
+      "consequence": "须按 IMDG Code 使用 UN 规格包装、张贴 5.1 与 8 类危险标志、提交危险货物申报、按积载与隔离要求装船；报关需填报危险类别、包装类别、UN 编号、包装UN标记（S05 第二条）。"
+    },
+    "matrix": [
+      {
+        "case": "H₂O₂ < 8%（如 3%~5% 医用稀释液）",
+        "chem": "通常不落入第903项（含量阈值）",
+        "goods": "通常不作为危险货物（<8% 一般非危险货物）",
+        "note": "两套体系同时『不适用』，但仍属化学品，需提供一般 SDS。"
+      },
+      {
+        "case": "8% < H₂O₂ < 20%",
+        "chem": "适用第903项；易制爆列为『8%＜含量＜20%：氧化性液体类别3』",
+        "goods": "UN 2984 / 5.1 / 包装类别 III",
+        "note": "危化品与危险货物同时成立，但运输分档与 GHS 类别不同，容易把『类别3』误写成 UN2014。"
+      },
+      {
+        "case": "20% ≤ H₂O₂ ≤ 60%（本单 30%）",
+        "chem": "适用第903项；易制爆列为『20%≤含量＜60%：氧化性液体类别2』",
+        "goods": "UN 2014 / 5.1（次要 8）/ 包装类别 II",
+        "note": "本单所处区间。注意易制爆名录写『＜60%』而 IMDG 写『≤60%』，60% 边界处两套文件口径不同，需以原文核对。"
+      },
+      {
+        "case": "H₂O₂ > 60%",
+        "chem": "适用第903项；易制爆列为『含量≥60%：氧化性液体类别1』",
+        "goods": "UN 2015 / 5.1（次要 8）/ 包装类别 I",
+        "note": "高浓度受更多运输与储存限制。"
+      },
+      {
+        "case": "含功能性添加剂的过氧化氢复配液（如清洗剂、消毒液）",
+        "chem": "不再自动落入第903项，须按危险特性鉴定后判定（S03）",
+        "goods": "仍按实际危险特性判定 UN 编号，可能改变类别与包装类别",
+        "note": "这是最容易出错的一类：『溶液』二字不等于豁免。"
+      }
+    ],
+    "common_errors": [
+      "把 GHS 的『氧化性液体类别2』直接当作运输的『包装类别 II』——两者分档依据不同，只是本单恰好都是 2 级。",
+      "认为『八类危险货物』等俗语能替代分类编号——运输必须落到 UN 编号、类项、包装类别、正确运输名称四项。",
+      "只凭商品名『双氧水』判断——必须看浓度与组成；同一商品名在不同浓度下监管结论完全不同。",
+      "把『危化品目录未列入』理解为『不危险』——目录以分类为基础筛选，未列入不等于无危险特性。"
+    ]
+  },
+  "transport": {
+    "mode": "海运（整柜 FCL，非散装）",
+    "regime_standard": "IMDG Code（国际海运危险货物规则）",
+    "domestic_standard": "GB 6944-2025 + GB 12268-2025（自 2025-10-01 实施）",
+    "un": "UN 2014",
+    "proper_shipping_name_en": "HYDROGEN PEROXIDE, AQUEOUS SOLUTION, with not less than 20% but not more than 60% hydrogen peroxide (stabilized as necessary)",
+    "class": "5.1（氧化性物质）",
+    "subsidiary_risk": "8（腐蚀性）",
+    "packing_group": "II",
+    "labels": [
+      "5.1 氧化性物质（橙底黑火焰圆）",
+      "8 腐蚀性（黑白双斜线）"
+    ],
+    "packing_instruction": "按 IMDG 对应包装指令执行；本单采用 HDPE 桶（包装类别 II 适用的中型/桶类包装）",
+    "segregation": [
+      "与易燃液体、易燃固体、还原剂、有机过氧化物、酸类、粉末金属、食品等严禁同柜混装",
+      "不得与爆炸品、气体同舱积载",
+      "与腐蚀性物质分立积载，避免泄漏叠加"
+    ],
+    "stowage": [
+      "远离热源与阳光直射；保持通风，避免高温导致分解产气（桶体须可排气）",
+      "舱内积载优先，避免舱面高温段",
+      "夏季高温航线要求船舶告知并控制舱温；超温时按应急程序处置"
+    ],
+    "emS": "F-H（火灾：使用大量水雾冷却/稀释，避免直接射流冲击液面）、S-Q（泄漏：穿戴防护，使用惰性吸收材料收集，用水大量稀释）",
+    "notes": [
+      "本单为 30 kg 桶装，需确认是否满足 IMDG 的限量/例外数量豁免——即便可豁免运输包装，仍不能豁免危险货物申报与标志。",
+      "空运（IATA DGR）对应 UN2014 有额外的客/货机限制；若改空运须重新核对，不得沿用海运结论。",
+      "国内段（上海港→工厂）按道路危险货物运输规则，须具备资质的危货运输车辆与押运人员。"
+    ]
+  },
+  "labels_packaging": {
+    "ghs_label": {
+      "required": "是（强制，且须为简体中文）",
+      "lang": "简体中文（可中英双语并列）",
+      "std": "GB 15258-2009 + GB 30000.1-2024 及分项标准（S12、S13）",
+      "pictograms": [
+        "GHS03 氧化剂（圆上火焰）",
+        "GHS05 腐蚀性（皮肤腐蚀示意）"
+      ],
+      "signal_word": "危险",
+      "h_statements": [
+        "H272 可能加剧燃烧；氧化剂",
+        "H302 吞咽有害",
+        "H315 造成皮肤刺激",
+        "H318 造成严重眼损伤",
+        "H335 可能引起呼吸道刺激"
+      ],
+      "p_statements": [
+        "P210 远离热源、热表面、火花、明火及其他点火源。禁止吸烟",
+        "P220 远离可燃物",
+        "P280 戴防护手套、防护眼镜、防护面罩",
+        "P305+P351+P338 如进入眼睛：用水小心冲洗几分钟；如戴隐形眼镜并可方便地取出，取出隐形眼镜，继续冲洗",
+        "P310 立即呼叫解毒中心或就医"
+      ],
+      "elements": [
+        "化学品中文名称 + 英文名称",
+        "成分及含量（过氧化氢 30.0%，稳定剂类）",
+        "象形图（GHS03、GHS05）",
+        "信号词（危险）",
+        "危险性说明（H 码）与防范说明（P 码）",
+        "供应商名称、地址、联系电话",
+        "24 小时中文应急咨询电话",
+        "进口商/境内联系人信息（进口产品适用）"
+      ],
+      "note": "上述 H/P 码为按本单浓度与用途的**建议口径**，须由供应商按 GB 30000 分项标准完成分类后确认；不得直接照抄他国标签。"
+    },
+    "transport_marks": [
+      "UN 2014 与正确运输名称（HYDROGEN PEROXIDE, AQUEOUS SOLUTION, 20%–60%）",
+      "5.1 类与 8 类危险货物标签各一",
+      "包装上的 UN 包装标记（含 UN 符号、包装代码如 1H1/31H1、包装类别 X/Y/Z、生产年份、制造厂代号）",
+      "方向箭头/唛头（含批号、净重、生产日期）"
+    ],
+    "package": {
+      "type": "HDPE 桶（30 kg 净重），带排气盖",
+      "cert": "需提供 UN 包装性能检验合格证明（或制造商 UN 认证证书）与桶体标记照片",
+      "domestic_note": "容器如属工业产品生产许可目录内的危险化学品包装物、容器，国内生产/使用方须符合相应许可与检验要求（法律第33条）",
+      "compat": "HDPE 与 30% 过氧化氢相容；必须有排气设计以防分解产气鼓桶；不得使用金属桶（催化分解风险）"
+    },
+    "issues": [
+      {
+        "item": "上传标签仅为英文，无中文品名、中文危险性说明与中文应急电话",
+        "level": "高",
+        "fix": "按 GB 15258 重制中文标签，与中文 SDS 一一对应；标签稿在发货前提交进口商与报关行预审"
+      },
+      {
+        "item": "标签未标注浓度（仅写 30% 字样于商品名，未见成分及含量栏）",
+        "level": "高",
+        "fix": "标签须明示『过氧化氢 30.0%』；浓度是危化品/易制爆/UN 分级的核心判断项"
+      },
+      {
+        "item": "未见 UN 包装标记照片与包装性能证明",
+        "level": "高",
+        "fix": "向供应商索取桶体 UN 标记照片（生产年份、包装类别标识）与包装性能检验证书"
+      },
+      {
+        "item": "标签未见象形图分辨率要求（GB 15258 要求清晰可辨、不小于规定尺寸）",
+        "level": "中",
+        "fix": "按 GB 15258 规定的尺寸与对比度制作，避免缩印后不可辨"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "D01",
+      "group": "海外供应商资料",
+      "name_cn": "英文安全技术说明书（SDS）",
+      "name_en": "Safety Data Sheet (English, 16 sections per GHS)",
+      "required": "必须",
+      "basis": "GB/T 16483（S10）；海关129号公告（S05）",
+      "content_check": "16 节齐全；第14节载 UN编号/类项/包装类别/海洋污染物",
+      "uploaded_id": "U01",
+      "status": "partial",
+      "issue": "已提供但无版本号与修订日期，第3节稳定剂未给 CAS 与精确百分比，第14节信息需与 UN2014 复核",
+      "owner": "海外供应商",
+      "source": "S10,S05"
+    },
+    {
+      "id": "D02",
+      "group": "中文合规文件",
+      "name_cn": "中文化学品安全技术说明书（中文SDS）",
+      "name_en": "Safety Data Sheet (Chinese)",
+      "required": "必须",
+      "basis": "《危险化学品安全法》第31条（S01）；129号公告第二条（S05）",
+      "content_check": "整册中文；与英文 SDS 逐节对应；符合 GB/T 16483",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "尚未制作。进口危化品未随附中文 SDS 属违法，且无法通过海关检验",
+      "owner": "进口商（可委托翻译）",
+      "source": "S01,S05"
+    },
+    {
+      "id": "D03",
+      "group": "中文合规文件",
+      "name_cn": "稳定剂/抑制剂添加情况说明",
+      "name_en": "Statement of stabilisers/inhibitors added (name, quantity)",
+      "required": "必须",
+      "basis": "129号公告第二条第（二）项（S05）",
+      "content_check": "稳定剂名称、CAS、精确添加量；声明仅为稳定剂/惰性化学品",
+      "uploaded_id": "U01",
+      "status": "partial",
+      "issue": "SDS 仅写『磷酸盐类稳定剂』；PI 与 COA 无稳定剂明细",
+      "owner": "海外供应商",
+      "source": "S05"
+    },
+    {
+      "id": "D04",
+      "group": "中文合规文件",
+      "name_cn": "进口危险化学品企业符合性声明",
+      "name_en": "Importer's Declaration of Conformity (Attachment 1 of GACC Announcement 129)",
+      "required": "必须",
+      "basis": "129号公告第二条第（一）项及附件1（S05）",
+      "content_check": "按附件1格式；企业盖章；声明符合我国强制性技术规范",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "进口商尚未签署",
+      "owner": "进口商",
+      "source": "S05"
+    },
+    {
+      "id": "D05",
+      "group": "中文合规文件",
+      "name_cn": "中文危险公示标签（样张）",
+      "name_en": "Chinese GHS Hazard Label (artwork)",
+      "required": "必须",
+      "basis": "《危险化学品安全法》第31条（S01）；GB 15258（S12）；129号公告第五条（S05）",
+      "content_check": "品名、成分含量、象形图、信号词、H/P 说明、供应商信息、24h 中文应急电话",
+      "uploaded_id": "U04",
+      "status": "partial",
+      "issue": "上传件为英文标签，缺中文要素与应急电话；须重制",
+      "owner": "进口商 / 海外供应商",
+      "source": "S01,S12"
+    },
+    {
+      "id": "D06",
+      "group": "海外供应商资料",
+      "name_cn": "质量分析证书（COA）",
+      "name_en": "Certificate of Analysis (COA)",
+      "required": "必须",
+      "basis": "合同约定 + 报关查验；GB/T 1616 对标",
+      "content_check": "批号、检测项目（浓度、稳定剂、色度、铁等）、方法、结论、签发人、日期",
+      "uploaded_id": "U02",
+      "status": "ok",
+      "issue": "已提供，实测 30.4%；建议补充铁/TOC 等下游关键项",
+      "owner": "海外供应商",
+      "source": "S10"
+    },
+    {
+      "id": "D07",
+      "group": "海外供应商资料",
+      "name_cn": "产品技术数据表（TDS/规格书）",
+      "name_en": "Technical Data Sheet (TDS/Specification)",
+      "required": "建议",
+      "basis": "采购合同约定",
+      "content_check": "规格指标表、储存建议、安全操作、包装说明",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "未提供；下游需据此确认工业级指标是否满足 PCB 微蚀要求",
+      "owner": "海外供应商",
+      "source": ""
+    },
+    {
+      "id": "D08",
+      "group": "海外供应商资料",
+      "name_cn": "形式发票（PI）",
+      "name_en": "Proforma Invoice (PI)",
+      "required": "必须",
+      "basis": "贸易与结算",
+      "content_check": "品名、规格、数量、单价、总价、贸易术语、装运港、付款方式、HS 编码",
+      "uploaded_id": "U03",
+      "status": "partial",
+      "issue": "已提供；未列 HS 编码与目的地；FOB 条件需明确装运港附加费承担",
+      "owner": "海外供应商",
+      "source": ""
+    },
+    {
+      "id": "D09",
+      "group": "海外供应商资料",
+      "name_cn": "原产地证书（中韩FTA CO / RCEP CO）",
+      "name_en": "Certificate of Origin (China-Korea FTA / RCEP)",
+      "required": "视情形",
+      "basis": "中韩 FTA 原产地规则；海关总署公告（S19）",
+      "content_check": "与发票一致；HS 6 位一致；直接运输证明",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "若要享受协定税率必须取得；且须与报关时的 HS、发票一致",
+      "owner": "海外供应商 / 出口商",
+      "source": "S19"
+    },
+    {
+      "id": "D10",
+      "group": "海外供应商资料",
+      "name_cn": "非危声明/包装声明（如适用）",
+      "name_en": "Non-regulated / packaging statement (if applicable)",
+      "required": "建议",
+      "basis": "运输规则",
+      "content_check": "若可适用限量豁免，需载明豁免依据与单件限量",
+      "uploaded_id": "",
+      "status": "na",
+      "issue": "本单 30 kg 桶装，按 IMDG 常规申报，不依赖豁免声明",
+      "owner": "海外供应商",
+      "source": "S14"
+    },
+    {
+      "id": "D11",
+      "group": "海外供应商资料",
+      "name_cn": "UN 包装性能检验证书与包装标记照片",
+      "name_en": "UN packaging performance certificate & UN mark photo",
+      "required": "必须",
+      "basis": "《危险化学品安全法》第32–33条；129号公告第六条（S05）",
+      "content_check": "包装代号、包装类别、生产年份、制造厂、性能试验报告",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "报关需填报包装UN标记；无证书无法核实包装是否经认证",
+      "owner": "海外供应商",
+      "source": "S01,S05"
+    },
+    {
+      "id": "D12",
+      "group": "海外供应商资料",
+      "name_cn": "生产商声明（制造商与供货主体关系）",
+      "name_en": "Manufacturer's letter / producer attestation",
+      "required": "视情形",
+      "basis": "主体一致性核验",
+      "content_check": "声明确认生产厂名称地址与 PI 抬头关系",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "PI 抬头为贸易公司，需确认生产厂与批次来源",
+      "owner": "海外供应商",
+      "source": ""
+    },
+    {
+      "id": "D13",
+      "group": "海外供应商资料",
+      "name_cn": "危险货物运输申报单（DGD 或海运申报资料）",
+      "name_en": "Dangerous Goods Declaration (IMDG) / shipping documents",
+      "required": "必须",
+      "basis": "IMDG Code（S14）；《危险化学品安全法》第82条（S01）",
+      "content_check": "UN、类项、包装组、件数、毛净重、应急联系",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "订舱时提交；须与 SDS 第14节一致",
+      "owner": "承运人 / 海外供应商",
+      "source": "S14,S01"
+    },
+    {
+      "id": "D14",
+      "group": "进口报关资料",
+      "name_cn": "商业发票（Commercial Invoice）",
+      "name_en": "Commercial Invoice",
+      "required": "必须",
+      "basis": "海关申报基本单证",
+      "content_check": "品名、规格、数量、单价、总价、贸易术语、收发货人、原产国",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "需与 PI 一致并补充 HS 编码、原产国、用途",
+      "owner": "海外供应商",
+      "source": ""
+    },
+    {
+      "id": "D15",
+      "group": "进口报关资料",
+      "name_cn": "装箱单（Packing List）",
+      "name_en": "Packing List",
+      "required": "必须",
+      "basis": "海关申报基本单证",
+      "content_check": "件数、毛净重、体积、包装规格、唛头",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "需与 600 桶 / 20 吨口径一致",
+      "owner": "海外供应商",
+      "source": ""
+    },
+    {
+      "id": "D16",
+      "group": "进口报关资料",
+      "name_cn": "采购合同（Sales Contract）",
+      "name_en": "Sales Contract",
+      "required": "必须",
+      "basis": "贸易与合规",
+      "content_check": "品名规格、浓度公差（不得跨阈值）、包装、SDS 版本、标签责任、检验条款、责任划分",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "建议把『浓度不得跨 20%/60% 阈值』『中文标签与SDS由供应商配合』写入合同",
+      "owner": "进口商",
+      "source": ""
+    },
+    {
+      "id": "D17",
+      "group": "进口报关资料",
+      "name_cn": "提单/海运单（B/L）",
+      "name_en": "Bill of Lading (B/L)",
+      "required": "必须",
+      "basis": "海关申报基本单证",
+      "content_check": "发货人、收货人、通知方、品名（须含危险货物信息）、唛头、件数、毛重",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "危险货物提单须载明 UN 编号与正确运输名称",
+      "owner": "承运人",
+      "source": "S14"
+    },
+    {
+      "id": "D18",
+      "group": "进口报关资料",
+      "name_cn": "报关委托书与报关单",
+      "name_en": "Customs Declaration & Power of Attorney",
+      "required": "必须",
+      "basis": "海关申报",
+      "content_check": "委托关系、申报要素（品牌类型|出口享惠情况|成分含量|包装规格|GTIN|CAS）、危险类别/包装类别/UN编号/包装标记",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "由报关代理制作；要素须按 S07 顺序填报",
+      "owner": "报关代理",
+      "source": "S07"
+    },
+    {
+      "id": "D19",
+      "group": "进口报关资料",
+      "name_cn": "入境货物通关单（监管条件 A）",
+      "name_en": "Inspection Certificate for Import Goods",
+      "required": "必须",
+      "basis": "监管条件 A（S07,S18）",
+      "content_check": "由海关出具；对应法检商品",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "进口法检商品须先报检，与报关联动",
+      "owner": "报关代理 / 进口商",
+      "source": "S07"
+    },
+    {
+      "id": "D20",
+      "group": "进口报关资料",
+      "name_cn": "危险特性分类鉴别报告（如需）",
+      "name_en": "Hazard classification report (if required)",
+      "required": "视情形",
+      "basis": "海关检验要求；进口通常以 SDS 分类为准",
+      "content_check": "CNAS 资质机构出具；用于混合物或分类存疑时",
+      "uploaded_id": "",
+      "status": "partial",
+      "issue": "本单为单一水溶液，通常可依据 SDS；若稳定剂含功能性添加剂则可能需要",
+      "owner": "第三方检测机构",
+      "source": "S05"
+    },
+    {
+      "id": "D21",
+      "group": "进口报关资料",
+      "name_cn": "进口许可证/两用物项许可（如适用）",
+      "name_en": "Import licence (dual-use, if applicable)",
+      "required": "视情形",
+      "basis": "《两用物项和技术进出口许可证管理目录》（S21）",
+      "content_check": "2026 年度目录逐条核对结论；如落入需办证",
+      "uploaded_id": "",
+      "status": "pending",
+      "issue": "须由报关代理/合规顾问书面查询确认（见 Q02）",
+      "owner": "报关代理",
+      "source": "S21"
+    },
+    {
+      "id": "D22",
+      "group": "海关/税费",
+      "name_cn": "原产地证明与享惠声明",
+      "name_en": "Origin certificate & preference claim",
+      "required": "视情形",
+      "basis": "中韩 FTA / RCEP（S19）",
+      "content_check": "原产地证书、直接运输证明、报关时享惠申报（出口享惠情况栏）",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "决定能否按协定税率征税",
+      "owner": "进口商 / 海外供应商",
+      "source": "S19"
+    },
+    {
+      "id": "D23",
+      "group": "海关/税费",
+      "name_cn": "税则归类意见（可选）",
+      "name_en": "Tariff classification opinion (optional)",
+      "required": "建议",
+      "basis": "海关预裁定（海关总署令第236号）",
+      "content_check": "如归类存疑可申请预裁定",
+      "uploaded_id": "",
+      "status": "na",
+      "issue": "本单置信度高，可不申请；如报关行提出不同意见则建议申请",
+      "owner": "进口商 / 报关代理",
+      "source": ""
+    },
+    {
+      "id": "D24",
+      "group": "运输资料",
+      "name_cn": "订舱单与危险货物订舱确认",
+      "name_en": "Booking & DG booking confirmation",
+      "required": "必须",
+      "basis": "IMDG Code",
+      "content_check": "船公司 DG 订舱；注明 UN/类项/PG/包装",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "",
+      "owner": "承运人 / 进口商",
+      "source": "S14"
+    },
+    {
+      "id": "D25",
+      "group": "运输资料",
+      "name_cn": "危险货物申报（船代/海事）",
+      "name_en": "DG manifest / to carrier declaration",
+      "required": "必须",
+      "basis": "IMDG Code；海事管理机构要求",
+      "content_check": "装船前申报；危险货物舱单",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "",
+      "owner": "海外供应商 / 承运人",
+      "source": "S14"
+    },
+    {
+      "id": "D26",
+      "group": "运输资料",
+      "name_cn": "国内段危货运输资质与运输单据",
+      "name_en": "Domestic DG road transport permits & documents",
+      "required": "必须",
+      "basis": "《危险化学品安全法》第65–66条；道路危货运输规则",
+      "content_check": "承运企业许可、车辆营运证、驾驶员/押运员资格",
+      "uploaded_id": "",
+      "status": "missing",
+      "issue": "到港后由仓库/工厂联系有资质危货车队",
+      "owner": "进口商 / 承运人",
+      "source": "S01"
+    }
+  ],
+  "uploaded": [
+    {
+      "id": "U01",
+      "file": "SDS_HANWOO_H2O2_30_EN.pdf（模拟）",
+      "type": "SDS",
+      "lang": "en",
+      "is_mock": true,
+      "mock_note": "本文件为演示用模拟件，供应商名称、电话、批号均为虚构，不构成任何真实供应商的资料。",
+      "received": "2026-10-12",
+      "extracted": [
+        {
+          "field": "产品名称（英）",
+          "value": "HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%",
+          "page_ref": "第1节"
+        },
+        {
+          "field": "CAS",
+          "value": "7722-84-1",
+          "page_ref": "第1、3节"
+        },
+        {
+          "field": "浓度/含量",
+          "value": "30.0 % (w/w)",
+          "page_ref": "第3节"
+        },
+        {
+          "field": "稳定剂",
+          "value": "phosphate based stabiliser（未给 CAS 与精确%）",
+          "page_ref": "第3节"
+        },
+        {
+          "field": "物理形态",
+          "value": "Liquid, colourless, clear",
+          "page_ref": "第9节"
+        },
+        {
+          "field": "GHS 分类",
+          "value": "Oxid. Liq. 2; Acute Tox. 4; Skin Irrit. 2; Eye Dam. 1; STOT SE 3",
+          "page_ref": "第2节"
+        },
+        {
+          "field": "UN 编号",
+          "value": "UN 2014",
+          "page_ref": "第14节"
+        },
+        {
+          "field": "运输类别/包装组",
+          "value": "Class 5.1 (subsidiary 8), PG II",
+          "page_ref": "第14节"
+        },
+        {
+          "field": "海洋污染物",
+          "value": "No",
+          "page_ref": "第14节"
+        },
+        {
+          "field": "版本号/修订日期",
+          "value": "（未标注）",
+          "page_ref": "全册"
+        },
+        {
+          "field": "语言",
+          "value": "English only",
+          "page_ref": "全册"
+        }
+      ],
+      "checks": [
+        {
+          "id": "C-U01-1",
+          "item": "是否 16 节齐全",
+          "result": "pass",
+          "note": "第1–16节齐全"
+        },
+        {
+          "id": "C-U01-2",
+          "item": "是否载有版本号与修订日期",
+          "result": "fail",
+          "note": "全册未见版本号/修订日期，无法证明为现行版本（GB/T 16483 要求）"
+        },
+        {
+          "id": "C-U01-3",
+          "item": "第3节是否给出各组分 CAS 与精确浓度",
+          "result": "warn",
+          "note": "主成分完整；稳定剂仅有类别表述，未给 CAS 与精确%"
+        },
+        {
+          "id": "C-U01-4",
+          "item": "第14节是否载 UN 编号、类项、包装类别、海洋污染物",
+          "result": "pass",
+          "note": "UN2014 / 5.1(8) / PG II / 海洋污染物 No，齐全"
+        },
+        {
+          "id": "C-U01-5",
+          "item": "第14节与产品浓度是否匹配",
+          "result": "pass",
+          "note": "30% 落在 20%–60% 区间，对应 UN2014，逻辑一致"
+        },
+        {
+          "id": "C-U01-6",
+          "item": "是否为中文版本",
+          "result": "fail",
+          "note": "仅英文，不满足中文SDS要求"
+        },
+        {
+          "id": "C-U01-7",
+          "item": "是否与上传标签、COA 一致",
+          "result": "warn",
+          "note": "与 COA 浓度一致；与标签（英文、无含量）不一致"
+        },
+        {
+          "id": "C-U01-8",
+          "item": "是否声明仅为稳定剂（无功能性添加剂）",
+          "result": "fail",
+          "note": "未见声明，无法据此锁定危化品目录第903项适用性"
+        }
+      ],
+      "verdict": "usable_with_fix",
+      "verdict_note": "作为技术底稿可用，但必须补齐版本号、稳定剂明细，并制作中文版后方可随货使用。"
+    },
+    {
+      "id": "U02",
+      "file": "COA_HANWOO_H2O2_30_L2609A.pdf（模拟）",
+      "type": "COA",
+      "lang": "en",
+      "is_mock": true,
+      "mock_note": "演示用模拟件：批号 L2609A 与检测数据为虚构。",
+      "received": "2026-10-12",
+      "extracted": [
+        {
+          "field": "批号",
+          "value": "L2609A",
+          "page_ref": "表头"
+        },
+        {
+          "field": "检测项目：H₂O₂ 含量",
+          "value": "30.4 % (m/m)，规格 30.0–31.0",
+          "page_ref": "检测表"
+        },
+        {
+          "field": "检测项目：稳定度",
+          "value": "99.2 %（≥97）",
+          "page_ref": "检测表"
+        },
+        {
+          "field": "检测项目：色度",
+          "value": "≤10 Pt-Co",
+          "page_ref": "检测表"
+        },
+        {
+          "field": "检测项目：铁",
+          "value": "（未检测）",
+          "page_ref": "—"
+        },
+        {
+          "field": "执行标准",
+          "value": "Company Standard（企标）",
+          "page_ref": "表头"
+        },
+        {
+          "field": "签发人/日期",
+          "value": "QA Manager / 2026-10-10",
+          "page_ref": "签章"
+        }
+      ],
+      "checks": [
+        {
+          "id": "C-U02-1",
+          "item": "批号可追溯",
+          "result": "pass",
+          "note": "批号 L2609A，可与装箱单核对"
+        },
+        {
+          "id": "C-U02-2",
+          "item": "浓度是否在规格范围内",
+          "result": "pass",
+          "note": "30.4% 在 30.0–31.0 内，且不跨阈值"
+        },
+        {
+          "id": "C-U02-3",
+          "item": "是否载明检测方法与依据标准",
+          "result": "warn",
+          "note": "未列检测方法编号；企标对国内下游参考价值有限"
+        },
+        {
+          "id": "C-U02-4",
+          "item": "是否覆盖下游关键项（铁、TOC、氯化物）",
+          "result": "warn",
+          "note": "电子行业用途常用铁与 TOC 控制项，未检测"
+        },
+        {
+          "id": "C-U02-5",
+          "item": "签发人、日期、签章是否完整",
+          "result": "pass",
+          "note": "齐全"
+        },
+        {
+          "id": "C-U02-6",
+          "item": "是否与 SDS 浓度一致",
+          "result": "pass",
+          "note": "一致（30.4% vs 30%）"
+        }
+      ],
+      "verdict": "usable",
+      "verdict_note": "可作为批次质量证明使用；建议补充铁与 TOC 检测项以匹配下游要求。"
+    },
+    {
+      "id": "U03",
+      "file": "PI_HANWOO_2026-0918.pdf（模拟）",
+      "type": "PI",
+      "lang": "en",
+      "is_mock": true,
+      "mock_note": "演示用模拟件：发票号、金额为虚构。",
+      "received": "2026-10-12",
+      "extracted": [
+        {
+          "field": "PI 号",
+          "value": "HW-PI-2609-118",
+          "page_ref": "表头"
+        },
+        {
+          "field": "卖方抬头",
+          "value": "HANWOO CHEMICAL CO., LTD.（贸易/生产不明）",
+          "page_ref": "表头"
+        },
+        {
+          "field": "品名",
+          "value": "HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%",
+          "page_ref": "货物栏"
+        },
+        {
+          "field": "数量/单价",
+          "value": "20000 kg @ USD 1.18 CIF Busan",
+          "page_ref": "货物栏"
+        },
+        {
+          "field": "贸易术语",
+          "value": "FOB Busan",
+          "page_ref": "条款"
+        },
+        {
+          "field": "包装",
+          "value": "In 30 kg HDPE drums",
+          "page_ref": "货物栏"
+        },
+        {
+          "field": "装运/目的",
+          "value": "（未列）",
+          "page_ref": "—"
+        },
+        {
+          "field": "HS 编码",
+          "value": "（未列）",
+          "page_ref": "—"
+        },
+        {
+          "field": "付款方式",
+          "value": "T/T 30% deposit, 70% via CIF Busan",
+          "page_ref": "条款"
+        }
+      ],
+      "checks": [
+        {
+          "id": "C-U03-1",
+          "item": "品名规格完整",
+          "result": "pass",
+          "note": "含浓度 30%"
+        },
+        {
+          "id": "C-U03-2",
+          "item": "贸易术语是否统一",
+          "result": "fail",
+          "note": "货物栏写 CIF Busan，条款写 FOB Busan，付款条款又出现 CIF——三处不一致，直接影响完税价格与风险划分"
+        },
+        {
+          "id": "C-U03-3",
+          "item": "是否列 HS 编码",
+          "result": "fail",
+          "note": "未列；报关时须由进口方确认"
+        },
+        {
+          "id": "C-U03-4",
+          "item": "是否列装运港与目的港",
+          "result": "fail",
+          "note": "未列"
+        },
+        {
+          "id": "C-U03-5",
+          "item": "是否列原产国",
+          "result": "warn",
+          "note": "隐含韩国，但未明写原产国"
+        },
+        {
+          "id": "C-U03-6",
+          "item": "卖方是否为制造商",
+          "result": "warn",
+          "note": "抬头与 SDS 一致，但未声明生产厂"
+        }
+      ],
+      "verdict": "usable_with_fix",
+      "verdict_note": "金额与规格可用；贸易术语冲突必须更正后重出 PI。"
+    },
+    {
+      "id": "U04",
+      "file": "Label_HANWOO_H2O2_30_EN.jpg（模拟）",
+      "type": "标签",
+      "lang": "en",
+      "is_mock": true,
+      "mock_note": "演示用模拟标签：按常见英文出口标签样式构造，非任何真实供应商标签。",
+      "received": "2026-10-12",
+      "extracted": [
+        {
+          "field": "品名",
+          "value": "HYDROGEN PEROXIDE 30%",
+          "page_ref": "标签正文"
+        },
+        {
+          "field": "象形图",
+          "value": "GHS03、GHS05（图示）",
+          "page_ref": "标签图形"
+        },
+        {
+          "field": "信号词",
+          "value": "DANGER",
+          "page_ref": "标签正文"
+        },
+        {
+          "field": "危险性说明",
+          "value": "H272, H302, H315, H318, H335（英文）",
+          "page_ref": "标签正文"
+        },
+        {
+          "field": "供应商信息",
+          "value": "HANWOO CHEMICAL CO., LTD. +82-51-XXX-XXXX（韩国）",
+          "page_ref": "标签底部"
+        },
+        {
+          "field": "中文应急电话",
+          "value": "（无）",
+          "page_ref": "—"
+        },
+        {
+          "field": "成分及含量",
+          "value": "（无单独含量栏）",
+          "page_ref": "—"
+        },
+        {
+          "field": "语言",
+          "value": "English only",
+          "page_ref": "全册"
+        }
+      ],
+      "checks": [
+        {
+          "id": "C-U04-1",
+          "item": "是否有中文品名",
+          "result": "fail",
+          "note": "仅英文"
+        },
+        {
+          "id": "C-U04-2",
+          "item": "是否有中文危险性说明与防范说明",
+          "result": "fail",
+          "note": "H/P 码为英文"
+        },
+        {
+          "id": "C-U04-3",
+          "item": "是否有中文 24 小时应急咨询电话",
+          "result": "fail",
+          "note": "仅韩国电话"
+        },
+        {
+          "id": "C-U04-4",
+          "item": "是否标出成分及含量",
+          "result": "fail",
+          "note": "未单列含量栏，浓度仅在品名中出现"
+        },
+        {
+          "id": "C-U04-5",
+          "item": "象形图是否齐备",
+          "result": "pass",
+          "note": "GHS03、GHS05 均在"
+        },
+        {
+          "id": "C-U04-6",
+          "item": "是否含进口商/境内联系人",
+          "result": "fail",
+          "note": "进口产品标签通常需可追溯的境内联系人"
+        }
+      ],
+      "verdict": "not_usable",
+      "verdict_note": "不可直接用于中国进口；须按 GB 15258 重制中文标签。"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G01",
+      "priority": "P0",
+      "missing": "中文化学品安全技术说明书（中文SDS）",
+      "why": "《危险化学品安全法》第31条与海关129号公告第二条要求进口危化品随附中文SDS；无中文版无法通过海关检验，且不能合法交付使用。",
+      "ask": "进口商按英文SDS整册翻译，逐节与GB/T 16483对照；第14节须与UN2014一致；完成后请报关行预审。",
+      "related_doc": "D02",
+      "owner": "进口商",
+      "blocking": "是"
+    },
+    {
+      "id": "G02",
+      "priority": "P0",
+      "missing": "中文危险公示标签（含24小时中文应急电话）",
+      "why": "现行标签仅英文，缺中文品名、成分含量、中文H/P说明与中文应急电话，不符合GB 15258。",
+      "ask": "按GB 15258重制样张；确认应急电话为国内可接通号码；标签稿经供应商与进口商双签确认后印刷。",
+      "related_doc": "D05",
+      "owner": "进口商/海外供应商",
+      "blocking": "是"
+    },
+    {
+      "id": "G03",
+      "priority": "P0",
+      "missing": "稳定剂的名称、CAS 与精确添加量，及『无其他功能性添加剂』声明",
+      "why": "这是判定是否落入《危险化学品目录》第903项『过氧化氢的水溶液』的关键前提；缺此声明只能给出『视条件适用』。",
+      "ask": "要求供应商出具组分清单与书面声明；如含功能性添加剂，需委托第三方做危险特性鉴定后再申报。",
+      "related_doc": "D03",
+      "owner": "海外供应商",
+      "blocking": "是"
+    },
+    {
+      "id": "G04",
+      "priority": "P0",
+      "missing": "《进口危险化学品企业符合性声明》",
+      "why": "129号公告第二条第（一）项的强制材料，缺失无法报关。",
+      "ask": "进口商用海关附件1格式签署盖章。",
+      "related_doc": "D04",
+      "owner": "进口商",
+      "blocking": "是"
+    },
+    {
+      "id": "G05",
+      "priority": "P0",
+      "missing": "UN 包装性能检验证书与包装标记照片",
+      "why": "报关需填报包装UN标记；且须核实包装是否经认证并适配PG II。",
+      "ask": "索取桶体UN标记清晰照片（含包装代码、类别字母、生产年份）与性能检验证书。",
+      "related_doc": "D11",
+      "owner": "海外供应商",
+      "blocking": "是"
+    },
+    {
+      "id": "G06",
+      "priority": "P0",
+      "missing": "PI 贸易术语更正（CIF/FOB 冲突）",
+      "why": "同一份PI出现三种术语表述，将直接影响完税价格、运费承担与保险责任。",
+      "ask": "要求重出PI，统一为 FOB Busan（或改为 CIF Shanghai 并给出运保费拆分）。",
+      "related_doc": "D08",
+      "owner": "海外供应商",
+      "blocking": "是"
+    },
+    {
+      "id": "G07",
+      "priority": "P1",
+      "missing": "SDS 版本号与修订日期",
+      "why": "无版本号无法证明为现行版本，海关审核中文SDS时可能要求补正。",
+      "ask": "要求供应商补印版本号/修订日期并签字确认，承诺变更时主动更新。",
+      "related_doc": "D01",
+      "owner": "海外供应商",
+      "blocking": "否"
+    },
+    {
+      "id": "G08",
+      "priority": "P1",
+      "missing": "TDS / 产品规格书",
+      "why": "下游PCB工序需确认工业级的铁、氯化物、TOC 限值是否满足微蚀工艺。",
+      "ask": "索取TDS；若供方无TDS，要求提供关键指标清单并写入合同附件。",
+      "related_doc": "D07",
+      "owner": "海外供应商",
+      "blocking": "否"
+    },
+    {
+      "id": "G09",
+      "priority": "P1",
+      "missing": "商业发票、装箱单、采购合同",
+      "why": "尚无发票与装箱单，报关单证链未闭环；合同尚未签订，责任划分未落纸。",
+      "ask": "签约时同步确认浓度公差（不得跨阈值）、SDS版本、中文标签责任、检验与索赔条款。",
+      "related_doc": "D14,D15,D16",
+      "owner": "进口商/海外供应商",
+      "blocking": "否"
+    },
+    {
+      "id": "G10",
+      "priority": "P1",
+      "missing": "原产地证书（中韩FTA / RCEP）与直接运输证明",
+      "why": "若不能用协定税率，税负相差数个百分点；若无法出证则只能按最惠国税率。",
+      "ask": "确认供应商能否出中韩FTA原产地证书（或RCEP），并核对是否直航/满足转运规则。",
+      "related_doc": "D09",
+      "owner": "海外供应商",
+      "blocking": "否"
+    },
+    {
+      "id": "G11",
+      "priority": "P1",
+      "missing": "危险货物订舱确认与海运申报",
+      "why": "危险货物须提前向船公司申请DG舱位，时限通常早于普通货物；未申报将导致拒载。",
+      "ask": "由货代/供应商提交DGD并取得DG booking confirmation；核对UN2014与积载要求。",
+      "related_doc": "D24,D25",
+      "owner": "承运人",
+      "blocking": "否"
+    },
+    {
+      "id": "G12",
+      "priority": "P1",
+      "missing": "进口危险化学品登记（首进口/信息变更）",
+      "why": "法律第86条要求进口企业办理危化品登记；首进口未登记属合规缺口。",
+      "ask": "确认企业是否已有该品种登记；无则提前办理（登记信息须含分类标签与应急措施）。",
+      "related_doc": "D04",
+      "owner": "进口商",
+      "blocking": "否"
+    },
+    {
+      "id": "G13",
+      "priority": "P1",
+      "missing": "2026年度《两用物项和技术进出口许可证管理目录》比对结论",
+      "why": "监管条件含G（定向出口许可），但进口方向是否需证必须看当年目录，不能想当然。",
+      "ask": "请报关代理书面出具查询结论；如落入目录，提前办证并预留时间。",
+      "related_doc": "D21",
+      "owner": "报关代理",
+      "blocking": "否"
+    },
+    {
+      "id": "G14",
+      "priority": "P2",
+      "missing": "生产商声明（制造厂与PI抬头关系）",
+      "why": "影响原产地判定与SDS责任主体认定。",
+      "ask": "索取生产厂抬头声明与工厂地址。",
+      "related_doc": "D12",
+      "owner": "海外供应商",
+      "blocking": "否"
+    },
+    {
+      "id": "G15",
+      "priority": "P2",
+      "missing": "国内段危货运输资质与车辆",
+      "why": "到港后须使用有资质的危货车辆与押运人员。",
+      "ask": "与危货运输公司签约，留存许可与人员资格复印件。",
+      "related_doc": "D26",
+      "owner": "进口商",
+      "blocking": "否"
+    }
+  ],
+  "responsibilities": [
+    {
+      "actor": "海外供应商",
+      "items": [
+        "提供现行版英文 SDS（含版本号、稳定剂明细）与 TDS",
+        "提供 COA（按批）、PI、商业发票、装箱单",
+        "出具稳定剂/抑制剂添加情况说明与『无功能性添加剂』声明",
+        "提供 UN 包装性能检验证书与包装标记照片",
+        "按 GB 15258 配合提供中文标签所需信息（成分含量、H/P 码、应急电话）",
+        "办理危险货物订舱与海运申报，提供 DGD",
+        "如可出证，办理中韩FTA / RCEP 原产地证书并保证直接运输"
+      ],
+      "notes": "供应商的核心义务是『把危险货物的技术事实说清楚』；中文合规文件的翻译与制作可由进口商完成，但技术信息必须由供应商确认。"
+    },
+    {
+      "actor": "进口商（收货人）",
+      "items": [
+        "审核并采用中文 SDS，确保与货物一致（法律第31条）",
+        "在包装上粘贴/印刷中文危险公示标签（法律第31条）",
+        "签署《进口危险化学品企业符合性声明》",
+        "办理危险化学品登记（法律第86条）",
+        "确认是否有权储存/使用该危化品（储存条件、安全使用许可适用性）",
+        "如转售，须持危险化学品经营许可证（法律第53条）",
+        "落实易制爆流入后的流向报备与购买凭证管理",
+        "核算重大危险源单元总量（GB 18218）",
+        "支付进口关税与进口环节增值税，申报时选择享惠并保存原产地证书"
+      ],
+      "notes": "进口企业是危险化学品合规的第一责任人；海关检验的对象是『货物 + 包装 + 中文SDS + 中文标签』。"
+    },
+    {
+      "actor": "承运人 / 船公司",
+      "items": [
+        "审核 DG 订舱与危险货物申报单（UN2014 / 5.1 / PG II）",
+        "按 IMDG 积载与隔离要求安排舱位",
+        "出具危险货物提单（载明UN编号与正确运输名称）",
+        "国内段安排有资质的危货道路运输企业与车辆"
+      ],
+      "notes": "海运与陆运均属危险货物运输，承运人负有审核与拒载权。"
+    },
+    {
+      "actor": "报关代理",
+      "items": [
+        "按 2847000000 规范申报要素填报（品牌类型|出口享惠情况|成分含量|包装规格|GTIN|CAS）",
+        "填报危险类别、包装类别、UN编号、包装UN标记",
+        "校核监管条件 A（法检）与 G（定向出口）适用性",
+        "书面确认 2026 年度两用物项目录比对结论",
+        "核查原产地证书与享惠资格，选用正确税率",
+        "如归类存在分歧，建议申请预裁定"
+      ],
+      "notes": "报关代理不替代进口商的实体责任；建议以书面形式确认关键口径（归类、监管、税率）并留档。"
+    },
+    {
+      "actor": "第三方检测机构 / 合规顾问",
+      "items": [
+        "如需，开展危险特性分类鉴别（混合物或添加剂存疑时）",
+        "如海关对 SDS 分类提出异议，出具鉴定报告",
+        "协助核对两用物项目录与用途管控"
+      ],
+      "notes": "仅在前述场景触发；本单在稳定剂声明闭环前不必然需要。"
+    },
+    {
+      "actor": "监管机构",
+      "items": [
+        "海关：对进出口危险化学品及包装实施检验；出具入境货物通关单；征收关税与增值税",
+        "应急管理部门：危化品登记、经营许可、使用许可、重大危险源备案",
+        "公安机关：易制爆流向报备",
+        "海事管理机构：危险货物船舶运输安全条件"
+      ],
+      "notes": "各部门职责见《危险化学品安全法》第7条。"
+    }
+  ],
+  "to_confirm": [
+    {
+      "id": "Q01",
+      "topic": "第903项『过氧化氢的水溶液』是否成立（稳定剂是否仅为稳定剂）",
+      "why": "应急管理部答复（S03）明确：添加稳定剂/惰性化学品之外的其他化学品即不属该水溶液。供应商未披露稳定剂明细。",
+      "who": "合规顾问 / 第三方检测机构",
+      "how": "取得稳定剂清单与声明；如含功能性添加剂，委托做危险特性鉴定并出具结论。",
+      "impact_if_wrong": "若最终不落入第903项，则海关129号公告检验、中文SDS/标签、危化品登记等义务的判定基础会改变，需重新评估。",
+      "severity": "高"
+    },
+    {
+      "id": "Q02",
+      "topic": "2026 年度《两用物项和技术进出口许可证管理目录》中是否含本产品（进口方向）",
+      "why": "监管条件含 G（两用物项和技术出口许可证·定向），但该代码为出口管制；进口方向是否需证必须查当年目录。",
+      "who": "报关行 / 合规顾问",
+      "how": "请报关行以单一窗口或商务部公告原文核对并书面答复；必要时请省商务厅确认。",
+      "impact_if_wrong": "如应办证未办，货物无法清关，可能被退运并处罚。",
+      "severity": "高"
+    },
+    {
+      "id": "Q03",
+      "topic": "中韩 FTA 与 RCEP 项下 2847000000 的 2026 年度协定税率",
+      "why": "两处第三方数据分别给出 1.1% 与 2.8%，且另一处称该类产品已零关税，口径冲突且缺年度。",
+      "who": "报关行",
+      "how": "在单一窗口『关税优惠税率查询』按 2847000000 + 韩国 + 2026 年度实查；或请货代出具书面截图。",
+      "impact_if_wrong": "税率用错会导致少缴/多缴税款，少缴将被追征并加收滞纳金。",
+      "severity": "高"
+    },
+    {
+      "id": "Q04",
+      "topic": "能否取得原产地证书及是否满足直接运输",
+      "why": "协定税率以原产地证书 + 原产地规则 + 直接运输为条件。Busan→Shanghai 通常直航，但需确认。",
+      "who": "海外供应商 / 货代",
+      "how": "要求供应商确认出证能力；核对提单是否直航。",
+      "impact_if_wrong": "无法享惠则按 5.5% 最惠国税率计税，到厂成本上升。",
+      "severity": "中"
+    },
+    {
+      "id": "Q05",
+      "topic": "易制爆流入后的属地报备口径（时限、系统、购买凭证）",
+      "why": "法律第58–62条规定查验与三日内报备，但地方执行口径与系统（如易制爆流向管理系统）不同。",
+      "who": "进口商 EHS + 属地公安机关",
+      "how": "首批到港前与属地派出所/县级公安机关书面确认报送方式与时限。",
+      "impact_if_wrong": "逾期未报可能被处罚，并影响后续购买。",
+      "severity": "中"
+    },
+    {
+      "id": "Q06",
+      "topic": "进口企业是否已有该品种危险化学品登记",
+      "why": "法律第86条要求进口企业办理登记，同一品种不重复登记；企业实际登记状态只有企业自己掌握。",
+      "who": "进口商 EHS",
+      "how": "查企业危化品登记证书/系统记录；无则办理新增登记。",
+      "impact_if_wrong": "未登记属合规缺口，检查中会被要求整改。",
+      "severity": "中"
+    },
+    {
+      "id": "Q07",
+      "topic": "本批到货的储存与使用条件是否满足危化品要求",
+      "why": "20 吨过氧化氢需阴凉通风、避光、与还原剂/酸碱隔离；是否与现有库存合并构成重大危险源需计算。",
+      "who": "进口商 EHS",
+      "how": "按 GB 18218 计算单元总量；核查仓库通风、温控、泄漏收集设施。",
+      "impact_if_wrong": "若构成重大危险源而未备案，属重大合规风险。",
+      "severity": "中"
+    },
+    {
+      "id": "Q08",
+      "topic": "30 kg 桶装是否可适用 IMDG 限量/例外或其他豁免",
+      "why": "若适用豁免可简化部分运输要求，但不得免除危险货物申报与标志；豁免条件须按 IMDG 具体条款核对。",
+      "who": "货代 / 船公司 DG 部门",
+      "how": "由船公司 DG 部门按 IMDG 现行版本确认并书面答复。",
+      "impact_if_wrong": "误用豁免会导致拒载或事故责任。",
+      "severity": "低"
+    },
+    {
+      "id": "Q09",
+      "topic": "是否需要向海关申请归类预裁定",
+      "why": "本单归类置信度高，但若报关行对包装规格/成分含量表述有异议，预裁定可锁定口径。",
+      "who": "进口商 / 报关代理",
+      "how": "评估是否存在争议点；存在则按海关总署令第236号申请预裁定。",
+      "impact_if_wrong": "不申请则存在被质疑后改归并补税的风险。",
+      "severity": "低"
+    },
+    {
+      "id": "Q10",
+      "topic": "SDS 第2节的 GHS 分类是否与 GB 30000 分项标准一致",
+      "why": "SDS 给出 Oxid. Liq. 2 / Eye Dam. 1 等，需与 GB 30000.14（氧化性液体）等分项对应并确认中国大陆口径。",
+      "who": "合规顾问 / SDS 编制机构",
+      "how": "按 GB 30000.1-2024 与分项标准复核分类，必要时修订 H 码。",
+      "impact_if_wrong": "标签与 SDS 分类不一致会被海关退单。",
+      "severity": "中"
+    }
+  ],
+  "timeline": [
+    {
+      "t": "T-45",
+      "action": "签订合同前：锁定浓度公差、SDS版本、中文标签责任、检验与索赔条款",
+      "owner": "进口商"
+    },
+    {
+      "t": "T-40",
+      "action": "取得供应商稳定剂声明与完整SDS（含版本号）；发起中文SDS翻译",
+      "owner": "进口商 / 海外供应商"
+    },
+    {
+      "t": "T-35",
+      "action": "报关行书面确认：归类、监管条件、两用物项目录比对、协定税率",
+      "owner": "报关代理"
+    },
+    {
+      "t": "T-30",
+      "action": "确认/办理危险化学品登记；确认易制爆属地报备口径",
+      "owner": "进口商 EHS"
+    },
+    {
+      "t": "T-25",
+      "action": "供应商提交 DG 订舱与 DGD；取得包装UN标记与性能证书",
+      "owner": "海外供应商"
+    },
+    {
+      "t": "T-20",
+      "action": "中文标签样张定稿并印刷备货；符合性声明签署",
+      "owner": "进口商"
+    },
+    {
+      "t": "T-15",
+      "action": "原产地证书申请（如享惠）；发票、装箱单、合同定稿",
+      "owner": "海外供应商 / 进口商"
+    },
+    {
+      "t": "T-0",
+      "action": "装船（Busan）；取得提单与危险货物舱单",
+      "owner": "承运人"
+    },
+    {
+      "t": "T+到港",
+      "action": "报检+报关（含危险类别/包装类别/UN/包装标记填报）",
+      "owner": "报关代理"
+    },
+    {
+      "t": "T+到港+3",
+      "action": "海关查验与放行；缴纳关税与增值税",
+      "owner": "进口商 / 报关代理"
+    },
+    {
+      "t": "T+到港+5",
+      "action": "国内危货运输至工厂；入库核查中文标签与SDS随货",
+      "owner": "进口商"
+    },
+    {
+      "t": "T+到港+7",
+      "action": "易制爆流向报备（按属地要求）；档案归档",
+      "owner": "进口商 EHS"
+    }
+  ],
+  "supplier_request_en": {
+    "title": "Documentation Request — Hydrogen Peroxide 30% (UN 2014) Import into P.R. China — Ref. HW-PO-2026-1018",
+    "intro": "Dear Sir or Madam,\n\nWe are preparing the customs clearance and regulatory filing for our import of HYDROGEN PEROXIDE AQUEOUS SOLUTION 30% (CAS 7722-84-1) from Busan to Shanghai. Under Chinese law (《危险化学品安全法》, in force 1 May 2026) and GACC Announcement No. 129 of 2020, the importer must provide a Chinese Safety Data Sheet and a Chinese hazard label, and customs must be given the hazard class, packing group, UN number and UN packaging mark. The following documents are therefore required from you. Items marked URGENT are on the critical path for booking and clearance.",
+    "items": [
+      {
+        "no": "1",
+        "doc": "Safety Data Sheet (English), 16 sections, WITH version number and revision date",
+        "detail": "Sections 1–16 per GHS; Section 3 must give the exact name, CAS number and percentage of every stabiliser; Section 14 must state UN number, class, subsidiary risk, packing group and marine pollutant.",
+        "due": "URGENT — within 3 working days"
+      },
+      {
+        "no": "2",
+        "doc": "Statement on Stabilisers / Inhibitors Added",
+        "detail": "Legal name, CAS and precise addition rate of each stabiliser; a signed statement that the product contains no functional additives other than stabilisers/inert substances (this determines whether the product falls under the Chinese Hazardous Chemicals Catalogue).",
+        "due": "URGENT — within 3 working days"
+      },
+      {
+        "no": "3",
+        "doc": "UN Packaging Certificate and UN Mark Photograph",
+        "detail": "Performance Test Certificate for the 30 kg HDPE drum and a clear photograph of the embossed UN mark on the drum (UN symbol, packaging code, packing group letter, year of manufacture, manufacturer code).",
+        "due": "URGENT — within 5 working days"
+      },
+      {
+        "no": "4",
+        "doc": "Technical Data Sheet (TDS) / Product Specification",
+        "detail": "Full specification table including Fe, chloride, TOC and colour, storage conditions and shelf life.",
+        "due": "within 5 working days"
+      },
+      {
+        "no": "5",
+        "doc": "Corrected Proforma Invoice",
+        "detail": "Please reconcile the trade term (the current PI shows CIF Busan, FOB Busan and CIF Busan again). State trade term, port of loading, port of discharge, HS code and country of origin explicitly.",
+        "due": "URGENT — within 3 working days"
+      },
+      {
+        "no": "6",
+        "doc": "Commercial Invoice and Packing List",
+        "detail": "Consistent product name, concentration, quantity, unit price, gross/net weight, package count and shipping marks; packing list shall show 30 kg per drum and drums per pallet.",
+        "due": "prior to shipment"
+      },
+      {
+        "no": "7",
+        "doc": "Certificate of Analysis (COA) for the actual production batch",
+        "detail": "Batch number, test items (H2O2 %, stability, Fe, TOC, colour), test methods, specification limits, result and QA signature.",
+        "due": "with shipment"
+      },
+      {
+        "no": "8",
+        "doc": "Certificate of Origin (China–Korea FTA and/or RCEP) and direct-transport evidence",
+        "detail": "Only needed if the goods qualify; please confirm whether you can issue an FTA certificate of origin and whether the cargo is shipped direct from Busan.",
+        "due": "10 working days before shipment"
+      },
+      {
+        "no": "9",
+        "doc": "Dangerous Goods Declaration (IMDG) and DG booking confirmation",
+        "detail": "UN 2014, Class 5.1 (subsidiary 8), PG II, correct shipping name, number of packages, gross and net weight, 24-hour emergency contact.",
+        "due": "at booking"
+      },
+      {
+        "no": "10",
+        "doc": "Information required for the Chinese GHS label",
+        "detail": "Confirmed Chinese-style hazard statements (H codes), precautionary statements (P codes), signal word, and a 24-hour emergency contact number reachable within China; or your ready-to-print bilingual label artwork for our review.",
+        "due": "10 working days before shipment"
+      },
+      {
+        "no": "11",
+        "doc": "Manufacturer attestation",
+        "detail": "Letter on company letterhead confirming the manufacturing site and its relationship with the invoicing entity.",
+        "due": "with shipment"
+      }
+    ],
+    "closing": "Please send all items to [purchasing@example.com] referencing the PO number above. We will arrange translation of the SDS into Chinese; however, the technical content, stabiliser disclosure and transport information must be confirmed by you, as the party responsible for the original classification.\n\nThank you for your cooperation."
+  },
+  "calculation": {
+    "cif_usd": 24200.0,
+    "fx": 7.118,
+    "cif_cny": 172255.6,
+    "duty_rate": "5.5%",
+    "duty_cny": 9474.06,
+    "vat_base_cny": 181729.66,
+    "vat_rate": "13%",
+    "vat_cny": 23624.86,
+    "total_tax_cny": 33098.92,
+    "fta_scenario": [
+      {
+        "rate": "1.1%（待核实）",
+        "duty": 1894.81,
+        "note": "若中韩FTA适用，关税显著下降；增值税为抵减项但影响现金流"
+      },
+      {
+        "rate": "0%（若已零关税）",
+        "duty": 0.0,
+        "note": "若第三方所称零关税成立，关税为 0；须以证书与单一窗口查询为准"
+      }
+    ],
+    "note": "按 20 吨 × USD 1.18/kg + 运保费 USD 600 估算 CIF；汇率取示例值 7.1180，实际以海关计征日汇率为准。增值税进项可抵扣，此处仅计现金流。"
+  },
+  "sources": [
+    {
+      "id": "S01",
+      "kind": "法律",
+      "tier": "A",
+      "title": "中华人民共和国危险化学品安全法（主席令第六十四号）",
+      "publisher": "全国人民代表大会常务委员会",
+      "date": "2025-12-27 通过 / 2026-05-01 施行",
+      "effective": "现行有效",
+      "url": "http://paper.people.com.cn/rmrb/pc/content/202602/25/content_30141885.html",
+      "supports": "第7条(九)海关检验；第31条中文SDS与标签；第32条包装；第53条经营许可；第58条易制爆购买凭证；第82条托运；第86条进口企业危化品登记；第122条进出口管理",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S02",
+      "kind": "公告",
+      "tier": "A",
+      "title": "危险化学品目录（2015版）——十部门公告 2015年第5号（含应急管理部 2022年第8号柴油调整、2026年第3号新增5种）",
+      "publisher": "应急管理部等十部门",
+      "date": "2015-05-01 施行 / 2022、2026 两次调整",
+      "effective": "现行有效",
+      "url": "https://www.ehscity.com/law/201505/ehslaw671.html",
+      "supports": "说明第四条：无含量说明条目指工业产品或纯度高于工业产品；序号2828为类属条目；第903项过氧化氢溶液（含量＞8%）",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S03",
+      "kind": "官方答复",
+      "tier": "A",
+      "title": "应急管理部互动留言答复：关于《危险化学品名录》中溶液的定义（第903项）",
+      "publisher": "应急管理部 危险化学品安全监督管理二司",
+      "date": "2021-07-26",
+      "effective": "现行有效",
+      "url": "https://www.mem.gov.cn/hd/gzly/lyhf/202108/t20210812_395783.shtml",
+      "supports": "目录中如无特殊说明，溶液指水溶液；>8% 过氧化氢水溶液适用第903项；添加化学品（稳定剂、惰性化学品除外）即不再属于该水溶液条目，需另行鉴定",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S04",
+      "kind": "部门公告",
+      "tier": "A",
+      "title": "易制爆危险化学品名录（2017年版）（公安部，2017年5月11日）",
+      "publisher": "公安部",
+      "date": "2017-05-11",
+      "effective": "现行有效",
+      "url": "https://csrcare.com/master%20law/",
+      "supports": "第6.1项 过氧化氢溶液（含量＞8%）：含量≥60% 氧化性液体类别1；20%≤含量＜60% 氧化性液体类别2；8%＜含量＜20% 氧化性液体类别3",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S05",
+      "kind": "部门公告",
+      "tier": "A",
+      "title": "海关总署公告2020年第129号《关于进出口危险化学品及其包装检验监管有关问题的公告》",
+      "publisher": "海关总署",
+      "date": "2020-12-18 发布 / 2021-01-10 实施",
+      "effective": "现行有效",
+      "url": "https://www.anywayshipping.com/zh/shuangqingDetail/1c53f202-187f-4618-cfe8-a160a888f8b1",
+      "supports": "第一条检验范围；第二条报关填报（危险类别、包装类别、UN编号、包装UN标记）与三项材料（符合性声明、抑制剂/稳定剂说明、中文危险公示标签与中文SDS样本）；第六条包装检验内容",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S06",
+      "kind": "公告",
+      "tier": "A",
+      "title": "国务院关税税则委员会公告2025年第12号《中华人民共和国进出口税则（2026）》",
+      "publisher": "国务院关税税则委员会",
+      "date": "2025-12-31 发布 / 2026-01-01 施行",
+      "effective": "现行有效",
+      "url": "https://gss.mof.gov.cn/gzdt/zhengcefabu/202512/t20251231_3981044.htm",
+      "supports": "税目 28.47『过氧化氢，不论是否用尿素固化』及税率、备注列口径",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S07",
+      "kind": "政务数据库",
+      "tier": "B",
+      "title": "中国国际贸易单一窗口·商品编号 2847000000 申报参数（监管条件 ABG、法定第一单位 千克、规范申报要素、CIQ扩展码）",
+      "publisher": "中国电子口岸数据中心 / 海关总署业务参数",
+      "date": "2026 税则参数",
+      "effective": "现行有效",
+      "url": "https://www.singlewindow.cn/access/ui/1654414908097/Param002",
+      "supports": "监管条件 A（入境货物通关单）、B（出境货物通关单）、G（两用物项和技术出口许可证·定向）；申报要素 品牌类型|出口享惠情况|成分含量|包装规格|GTIN|CAS",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S08",
+      "kind": "国家标准",
+      "tier": "A",
+      "title": "GB 6944-2025《危险货物分类和品名编号》",
+      "publisher": "国家市场监督管理总局、国家标准化管理委员会",
+      "date": "2025-03-28 发布 / 2025-10-01 实施",
+      "effective": "现行有效",
+      "url": "https://chinesestandard.net/PDF-EN/GB6944-2025EN-P13P-H10896H-658331.pdf",
+      "supports": "危险货物九类分类与类项划分（第5类氧化性物质含5.1项）",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S09",
+      "kind": "国家标准",
+      "tier": "A",
+      "title": "GB 12268-2025《危险货物品名表》",
+      "publisher": "国家市场监督管理总局、国家标准化管理委员会",
+      "date": "2025-03-28 发布 / 2025-10-01 实施",
+      "effective": "现行有效",
+      "url": "https://codeofchina.com/standard/GB12268-2025.html",
+      "supports": "UN编号对应的类项、包装类别、正确运输名称",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S10",
+      "kind": "国家标准",
+      "tier": "A",
+      "title": "GB/T 16483—2008《化学品安全技术说明书 内容和项目顺序》（现行有效，2009-02-01 实施）",
+      "publisher": "国家质量监督检验检疫总局、国家标准委",
+      "date": "2008-06-18 发布 / 2009-02-01 实施",
+      "effective": "现行有效",
+      "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=67992CA972A4CF9222095CA06064724A",
+      "supports": "SDS 16 节的顺序与必备要素；第14节应载运输分类、UN编号、包装类别、海洋污染物",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S11",
+      "kind": "国家标准",
+      "tier": "A",
+      "title": "GB/T 17519—2013《化学品安全技术说明书编写指南》",
+      "publisher": "国家质量监督检验检疫总局、国家标准委",
+      "date": "2013-09-06 发布 / 2014-01-31 实施",
+      "effective": "现行有效",
+      "url": "https://codeofchina.com/standard/GBT17519-2013.html",
+      "supports": "SDS 各节的编写方法、数据来源与标注要求",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S12",
+      "kind": "国家标准",
+      "tier": "A",
+      "title": "GB 15258—2009《化学品安全标签编写规定》",
+      "publisher": "国家质量监督检验检疫总局、国家标准委",
+      "date": "2009",
+      "effective": "现行有效",
+      "url": "https://openstd.samr.gov.cn/",
+      "supports": "中文化学品安全标签必备内容：品名、成分与含量、象形图、信号词、危险性说明、防范说明、供应商标识、应急咨询电话",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S13",
+      "kind": "国家标准",
+      "tier": "A",
+      "title": "GB 30000.1—2024《化学品分类和标签规范 第1部分：通则》（替代 GB 13690—2009，技术上与 UN GHS 第八修订版一致）",
+      "publisher": "国家市场监督管理总局、国家标准委",
+      "date": "2024-07-24 发布",
+      "effective": "现行有效",
+      "url": "https://chemradar.com/en/news/detail/dw9w0iew5edc",
+      "supports": "GHS 分类与标签通则；GB 30000.2–29 分项仍沿用 GHS 第四修订版框架",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S14",
+      "kind": "国际规则",
+      "tier": "A",
+      "title": "UN Model Regulations / IMDG Code：HYDROGEN PEROXIDE, AQUEOUS SOLUTION, UN 2014（20%–60%），类别 5.1，次要危险 8，包装类别 II",
+      "publisher": "联合国危险货物运输专家委员会",
+      "date": "现行版本",
+      "effective": "现行有效",
+      "url": "https://adr-calculator.com/un/2014",
+      "supports": "20%~60% 水溶液按 UN2014 运输；8%~<20% 为 UN2984 包装类别III；>60% 为 UN2015 包装类别I",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S15",
+      "kind": "国际规则",
+      "tier": "C",
+      "title": "Hydrogen Peroxide Europe / Evonik 运输法规对照表（浓度—UN 编号对照）",
+      "publisher": "Hydrogen Peroxide Europe（A.I.S.E.）",
+      "date": "2024 年更新",
+      "effective": "行业参考",
+      "url": "https://active-oxygens.evonik.com/en/products-and-services/hydrogen-peroxide/general-information/transport",
+      "supports": "交叉核对浓度与 UN 编号对应关系（与 S14 一致）",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S16",
+      "kind": "行政法规",
+      "tier": "A",
+      "title": "《危险化学品安全管理条例》（国务院令第591号）",
+      "publisher": "国务院",
+      "date": "2011-12-01 施行（部分条款已被《危险化学品安全法》覆盖）",
+      "effective": "部分替代",
+      "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_7f7163c7940b4c4f8639c6f6c3312ede.html",
+      "supports": "危化品经营许可、登记、包装、购买易制爆凭证等制度的来源；2026-05-01 起以《危险化学品安全法》为准",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S17",
+      "kind": "政务数据库",
+      "tier": "B",
+      "title": "中国危险化学品目录（2026版）名录库：现收录 2833 种，最近更新 2026-04-16",
+      "publisher": "化规通/瑞旭集团（收录应急管理部发布文本）",
+      "date": "2026-04-16",
+      "effective": "现行有效",
+      "url": "https://hgt.cirs-group.com/tools/cis/inv/62aaaae4bc9325535f815f2e",
+      "supports": "确认 2026 年第3号公告已并入目录；第903项未被删除",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S18",
+      "kind": "政务数据库",
+      "tier": "B",
+      "title": "海关商品编码 2847000000 税率表（2026 税则）：最惠国 5.5%、普通 30%、增值税 13%、监管条件 ABG、CIQ 扩展码",
+      "publisher": "365外贸网（整理 2026 年海关税则与参数）",
+      "date": "2026",
+      "effective": "供交叉核对",
+      "url": "https://www.365area.com/hscode/detail/2847000000",
+      "supports": "最惠国税率 5.5%、普通税率 30%、增值税 13%、监管条件 ABG、CIQ 码段 2847000000.101–.105",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S19",
+      "kind": "政务数据库",
+      "tier": "C",
+      "title": "中国-韩国自贸协定等项目协定税率查询（页面显示韩国协定税率 1.1%，但未给出年度与降税阶段）",
+      "publisher": "关津 guanjin.app（整理单一窗口数据）",
+      "date": "2026",
+      "effective": "未核实",
+      "url": "https://guanjin.app/hs-code/28470000/",
+      "supports": "提示中韩 FTA / RCEP 项下可能适用低于最惠国的协定税率，但栏位口径与年度不明确，不能直接采用",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S20",
+      "kind": "法律",
+      "tier": "A",
+      "title": "《中华人民共和国出口管制法》与《两用物项出口管制条例》",
+      "publisher": "全国人大常委会 / 国务院",
+      "date": "2020-12-01 / 2024-12-01 施行",
+      "effective": "现行有效",
+      "url": "https://www.gov.cn/zhengce/zhengceku/202410/content_6981400.htm",
+      "supports": "管制物项出口需许可证；海关监管条件 G 为两用物项和技术出口许可证（定向），适用于出口环节",
+      "accessed": "2026-10-20"
+    },
+    {
+      "id": "S21",
+      "kind": "部门规章",
+      "tier": "A",
+      "title": "商务部、海关总署公布 2026 年度《两用物项和技术进出口许可证管理目录》",
+      "publisher": "商务部、海关总署",
+      "date": "2025-12-31",
+      "effective": "现行有效",
+      "url": "https://www.mofcom.gov.cn/zfxxgk/gkml/art/2025/art_14af6ed6ec0f43c8800f391a97b3f324.html",
+      "supports": "需按当年目录逐条核对产品是否列入；列入则进出口均需许可证",
+      "accessed": "2026-10-20"
+    }
+  ],
+  "assessment": {
+    "grade": "auto",
+    "grade_text": "由闸门自动推导",
+    "one_liner": "产品身份、HS 归类与危险货物运输分类三条主线已可锁定（2847.00.0000 / UN2014 / 危化品目录第903项高度可能适用）；阻断点集中在**中文合规文件（SDS、标签）、稳定剂披露、符合性声明与包装UN标记**四项，补齐后可进入报关准备。",
+    "verdict": {
+      "产品身份": "30% 过氧化氢水溶液 + 少量稳定剂；定级『部分确认』，差稳定剂明细与『无功能性添加剂』声明",
+      "HS归类": "2847.00.0000（高置信）；CIQ 落 20%≤含量≤60% 段",
+      "监管属性": "危化品目录第903项（视条件适用）、易制爆名录6.1（适用）、监管条件 A/G 待逐项确认",
+      "税费": "最惠国 5.5% + 增值税 13%；协定税率存在数据冲突，须以单一窗口核实",
+      "运输与包装": "UN2014 / 5.1 + 8 / PG II；须取得 UN 包装证书与标记照片",
+      "单证完备度": "关键缺失 6 项（中文SDS、中文标签、稳定剂声明、符合性声明、包装证书、PI术语更正）"
+    },
+    "gates": [],
+    "statements": [
+      [
+        "可以写：产品高度可能适用《危险化学品目录（2015版）》第903项，需按危险化学品办理中文SDS、中文标签与登记",
+        "不能写：产品一定属于危险化学品（未取得稳定剂声明前）"
+      ],
+      [
+        "可以写：2847.00.0000 归类置信度高，依据第28章章注一（二）（四）",
+        "不能写：归类已获海关认可"
+      ],
+      [
+        "可以写：危险货物按 UN2014 / 5.1 / PG II 运输",
+        "不能写：包装类别 II 等同于 GHS 氧化性液体类别2"
+      ],
+      [
+        "可以写：最惠国税率 5.5%，增值税 13%",
+        "不能写：协定税率已确定为 1.1%"
+      ],
+      [
+        "可以写：如需转售，进口主体须持危化品经营许可证",
+        "不能写：进口自用无需任何危化品资质"
+      ]
+    ],
+    "next_steps": [
+      [
+        "T+0（今天）",
+        "发出英文索取清单（见第9节），锁定 P0 六项"
+      ],
+      [
+        "T+3 工作日",
+        "取得稳定剂声明与更正后的 PI；同步启动中文 SDS 翻译"
+      ],
+      [
+        "T+5 工作日",
+        "报关行书面答复两用物项目录比对与 2026 协定税率"
+      ],
+      [
+        "T+10 工作日",
+        "中文标签定稿；符合性声明签署；确认危化品登记状态"
+      ],
+      [
+        "T+15 工作日",
+        "原产地证书与 DG 订舱完成，进入发货准备"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_comment": "companies.json 单条模板：capacity_base/forward 不填时用 plants 自动加总。没有公开画像的集团可以不写。",
+  "companies": [
+    {
+      "id": "集团ID",
+      "name": "集团全称（常用名）",
+      "code": "股票代码或空",
+      "hq": "总部省份",
+      "nature": "民营 / 地方国企 / 央企 / 外资",
+      "route": "主要工艺",
+      "capacity_base": null,
+      "capacity_forward": null,
+      "output_base": "产量或「未披露」",
+      "utilization": "开工率或「数据缺口」",
+      "strengths": ["优势 1"],
+      "risks": ["风险 1"],
+      "procurement": "一句话采购判断：适合做主力/备供/不建议，原因与条件",
+      "sources": ["S1"],
+      "dd": ["该企业特有的尽调问题 1", "问题 2"]
+    }
+  ]
+}

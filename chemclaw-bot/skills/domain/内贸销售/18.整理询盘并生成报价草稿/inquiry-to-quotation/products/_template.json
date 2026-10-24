@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "product_id": "replace-me",
+  "product_name": "产品中文名（含等级/形态）",
+  "aliases": ["别名1", "别名2", "English name", "CAS 或分子式"],
+  "cas": "",
+  "standard": "产品标准（国标/行标/企标）；没有就写客户验收标准",
+  "grades": [
+    {
+      "name": "牌号/等级",
+      "use": "下游用途",
+      "typical_specs": {
+        "关键指标1": "指标值与单位",
+        "关键指标2": "指标值与单位",
+        "关键指标3": "指标值与单位"
+      }
+    }
+  ],
+  "packaging": ["包装形态1", "包装形态2", "运输形态"],
+  "documents": ["COA", "MSDS", "资质文件"],
+  "storage": "储存条件、防潮/防冻/避光/远离禁配物",
+  "transport": "运输方式与特殊要求",
+  "tax": "适用税率与发票类型（需财务复核）",
+  "hs_code": "",
+  "downstream": ["下游行业1", "下游行业2"],
+  "commercial_defaults": {
+    "quote_validity_days": 7,
+    "price_unit": "元/吨",
+    "quantity_unit": "吨",
+    "tax_mode": "含税（13% 增值税专用发票）",
+    "freight_mode": "到厂价（含运费）",
+    "payment": "款到发货（电汇）"
+  },
+  "price_policy": "本文件不包含任何价格。单价只能由销售在报价时确认后填入。",
+  "sources": []
+}

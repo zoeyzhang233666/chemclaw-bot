@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "product": "纯碱（碳酸钠）",
+    "region": "华东（鲁/苏/浙/皖/沪/闽/赣）",
+    "preference": "真实工厂优先",
+    "generated": "2026-02-11",
+    "input_files": ["input_客户名单_纯碱华东_演示.csv", "input_现有客户池_演示.csv"],
+    "scoring": {
+      "weights": {"产品匹配": 40, "工厂真实性": 25, "规模": 20, "地区": 15},
+      "tiers": {"P0": 80, "P1": 60, "P2": 40}
+    },
+    "demand_logic": [
+      {"行业": "浮法/日用/药用玻璃", "工序": "熔窑配合料", "作用": "主要助熔原料", "强度": "5星", "要点": "吨玻璃耗纯碱约110-150kg；深加工厂外购原片不算用户"},
+      {"行业": "玻璃纤维", "工序": "池窑配合料", "作用": "助熔+铝氧调节", "强度": "5星", "要点": "按池窑产线数推碱耗"},
+      {"行业": "洗涤剂（洗衣粉）", "工序": "配粉", "作用": "主要无机助剂", "强度": "4星", "要点": "浓缩化/液体化降低单耗但仍刚性"},
+      {"行业": "氧化铝", "工序": "拜耳法溶出", "作用": "调控/辅助", "强度": "2-3星", "要点": "碱耗以烧碱为主，纯碱需求有限，常见误判"},
+      {"行业": "氯碱/氟硅", "工序": "—", "作用": "不用纯碱", "强度": "0", "要点": "氯碱自产烧碱；一票否决高发区"}
+    ],
+    "notes": "全部信息来自公开检索（生成当日），非官方登记系统直查；『未核实』或单一来源字段，签约前以国家企业信用信息公示系统或营业执照终核；需求强度为工艺逻辑推断，未核实各家实际采购量与在用供应商。"
+  },
+  "pool": [
+    {"priority": "P0", "score": 95, "raw_name": "山东药玻", "std_name": "山东省药用玻璃股份有限公司", "uscc": "91370000168611868Q（财经F10单一来源，建议终核）", "status": "存续", "province": "山东", "region_full": "山东淄博(沂源)", "entity_type": "生产企业", "products": "药用玻璃模制瓶/管制瓶（中硼硅、低硼硅、钠钙）+丁基胶塞、铝塑盖", "demand_relation": "强", "demand_logic": "药玻窑炉配合料以纯碱为主原料；模制瓶年产能70多亿支、中硼硅市占90%+，碱耗持续量大", "s_match": 38, "s_factory": 24, "s_scale": 18, "s_region": 15, "evidence": ["http://static.cninfo.com.cn/finalpage/2026-04-11/1225094071.PDF", "https://q.stock.sohu.com/cn/600529/gsjj.shtml"], "confidence": "高", "dedup": "无", "next_action": "首选开发：对接供应处+技术中心，携精制纯碱指标送样"},
+    {"priority": "P0", "score": 93, "raw_name": "泰山玻纤", "std_name": "泰山玻璃纤维有限公司", "uscc": "91370000863056413H（上交所债券受托管理报告，双源）", "status": "存续", "province": "山东", "region_full": "山东泰安", "entity_type": "生产企业", "products": "无碱玻璃纤维及制品（粗纱、短切毡、风电纱、电子纱/电子布）", "demand_relation": "强", "demand_logic": "玻纤池窑配合料纯碱占比高；17条产线、产能127万吨/年，中材科技002080全资", "s_match": 38, "s_factory": 24, "s_scale": 16, "s_region": 15, "evidence": ["http://static.sse.com.cn/disclosure/bond/announcement/company/c/2961404975299666.pdf"], "confidence": "高", "dedup": "无", "next_action": "按泰安/邹城/淄博三基地分线开发，关注新线点火窗口"},
+    {"priority": "P0", "score": 91, "raw_name": "纳爱斯集团", "std_name": "纳爱斯集团有限公司", "uscc": "913311007272035890（天眼查+生意宝双源一致）", "status": "存续", "province": "浙江", "region_full": "浙江丽水", "entity_type": "生产企业", "products": "洗衣粉、皂/液（雕牌、超能、纳爱斯、100年润发）", "demand_relation": "强", "demand_logic": "纯碱为洗衣粉主要无机助剂；五省基地、总部集中采购", "s_match": 36, "s_factory": 24, "s_scale": 16, "s_region": 15, "evidence": ["https://www.tianyancha.com/company/23070383"], "confidence": "高", "dedup": "无", "next_action": "总部供应链集中谈判；关注浓缩化对单耗的下行影响"},
+    {"priority": "P0", "score": 91, "raw_name": "长海股份", "std_name": "江苏长海复合材料股份有限公司", "uscc": "91320400743721247W（财经F10单一来源，建议终核）", "status": "存续", "province": "江苏", "region_full": "江苏常州(武进)", "entity_type": "生产企业", "products": "玻纤纱/毡/布制品+不饱和聚酯树脂（子公司天马集团）", "demand_relation": "强", "demand_logic": "3座玻纤池窑（纱约13万吨/年+制品10万余吨/年），300196，扩产期", "s_match": 38, "s_factory": 24, "s_scale": 14, "s_region": 15, "evidence": ["http://static.cninfo.com.cn/finalpage/2026-04-03/1225075262.PDF"], "confidence": "高", "dedup": "无", "next_action": "本部+天马集团一并覆盖；盯扩产采购增量"},
+    {"priority": "P0", "score": 89, "raw_name": "上海皮尔金顿玻璃", "std_name": "上海耀华皮尔金顿玻璃有限公司", "uscc": "未核实（母体耀皮玻璃600819口径91310000607210186Q）", "status": "存续（母体口径）", "province": "上海", "region_full": "上海", "entity_type": "生产企业", "products": "优质浮法玻璃原片（1987年引进皮尔金顿浮法工艺）", "demand_relation": "强", "demand_logic": "浮法熔窑吨玻璃耗纯碱约110-150kg；隶属耀皮玻璃600819体系", "s_match": 38, "s_factory": 22, "s_scale": 14, "s_region": 15, "evidence": ["https://q.stock.sohu.com/cn/600819/gsjj.shtml"], "confidence": "中", "dedup": "无", "next_action": "先确认签约主体（生产主体vs600819）并终核信用代码"},
+    {"priority": "P0", "score": 81, "raw_name": "上海和黄白猫", "std_name": "上海和黄白猫有限公司", "uscc": "91310000607253098Y（维基+报告大厅双源一致）", "status": "存续", "province": "上海", "region_full": "上海", "entity_type": "生产企业", "products": "洗洁精、洗衣粉/液、凝珠、家居清洁消毒（白猫品牌）", "demand_relation": "强", "demand_logic": "洗涤剂配方以纯碱为主要助剂；龙吴路自有工厂+重庆基地，长江和记旗下", "s_match": 36, "s_factory": 20, "s_scale": 10, "s_region": 15, "evidence": ["https://www.whitecat.com/about.html"], "confidence": "高", "dedup": "无", "next_action": "就近供料上海工厂；和黄系采购集中需谈集团层面"},
+    {"priority": "P1", "score": 72, "raw_name": "魏桥铝电", "std_name": "山东魏桥铝电有限公司", "uscc": "9137160074568737XQ（企查查+启信宝双源一致）", "status": "存续", "province": "山东", "region_full": "山东滨州(邹平)", "entity_type": "生产企业", "products": "电解铝/氧化铝、自备电力热力、铝板带精深加工（中国宏桥1378.HK体系）", "demand_relation": "弱", "demand_logic": "氧化铝拜耳法碱耗以烧碱为主，纯碱需求有限；体量极大（注册资本130亿）", "s_match": 12, "s_factory": 25, "s_scale": 20, "s_region": 15, "evidence": ["https://m.qcc.com/firm/917c29099904e2529fe51214f4c8c973.html"], "confidence": "高", "dedup": "无", "next_action": "若兼营烧碱则升级P0；单卖纯碱保持年度拜访"},
+    {"priority": "P1", "score": 65, "raw_name": "秀强股份", "std_name": "江苏秀强玻璃工艺股份有限公司", "uscc": "91321300732499521G（财经F10单一来源，建议终核）", "status": "存续", "province": "江苏", "region_full": "江苏宿迁", "entity_type": "生产企业（深加工）", "products": "家电玻璃面板/层架（海尔、美的、博西华等）、厨电/BIPV玻璃", "demand_relation": "弱（间接）", "demand_logic": "外购浮法原片深加工、自身无熔窑，不直接采购纯碱", "s_match": 14, "s_factory": 22, "s_scale": 14, "s_region": 15, "evidence": ["https://www.jsxq.com/about/index.html"], "confidence": "高", "dedup": "无", "next_action": "不做直接客户；借其供应链摸排浮法原片供应商"},
+    {"priority": "P2", "score": 57, "raw_name": "华光集团", "std_name": "中建材凯盛矿产资源集团有限公司（原安徽华光集团）", "uscc": "未核实（沿革据凯盛科技600552定期报告）", "status": "存续（年报口径）", "province": "安徽", "region_full": "安徽蚌埠", "entity_type": "生产企业（集团型）", "products": "硅质矿产/石英资源开发、光电材料（凯盛/中建材体系）", "demand_relation": "弱", "demand_logic": "本体现为矿产/新材料定位、非玻璃熔窑运营法人；凯盛系旗下玻璃法人才是纯碱用户", "s_match": 10, "s_factory": 18, "s_scale": 14, "s_region": 15, "evidence": ["http://stockmc.xueqiu.com/202603/600552_20260331_CZTT.pdf"], "confidence": "中", "dedup": "无", "next_action": "作入口线索穿透开发凯盛系玻璃生产法人；签约前补核信用代码"},
+    {"priority": "P2", "score": 46, "raw_name": "浙江省化工进出口", "std_name": "浙江省化工进出口有限公司", "uscc": "未核实（公开渠道未见可靠展示）", "status": "存续", "province": "浙江", "region_full": "浙江杭州(上城)", "entity_type": "贸易商", "products": "医药中间体、原料药、基础/精细化工品等进出口（2025营收69.55亿元）", "demand_relation": "弱（渠道）", "demand_logic": "非终端工厂；官网未列纯碱为核心品类；仅具区域分销渠道价值", "s_match": 15, "s_factory": 6, "s_scale": 10, "s_region": 15, "evidence": ["https://www.zhechem.com/about.html"], "confidence": "高", "dedup": "无", "next_action": "仅在直供产能富余时谈区域分销，严控账期授信"}
+  ],
+  "ambiguity": [
+    {"raw_name": "华光集团", "candidates": "①中建材凯盛矿产资源集团有限公司（蚌埠，原安徽华光玻璃集团，凯盛体系）②凯盛科技（600552，华光系发起的上市平台）③蚌埠玻璃工业设计研究院", "user_decision": "中建材凯盛矿产资源集团（原安徽华光）", "outcome": "进入客户池P2（入口线索，建议穿透凯盛系玻璃生产法人）"},
+    {"raw_name": "东岳集团", "candidates": "①东岳氟硅科技集团有限公司（淄博桓台，境内母公司）②东岳集团（0189.HK）③山东东岳化工④东岳硅材（300821）", "user_decision": "东岳氟硅科技集团（境内母公司）", "outcome": "需求判定不相关（氯碱自产烧碱、氟硅路线不用纯碱）→ 排除清单"},
+    {"raw_name": "青岛碱业", "candidates": "①历史主体青岛碱业股份有限公司（600229，2015年被城市传媒借壳更名）②青岛碱业发展有限公司（海湾系，不产纯碱）③青岛碱业新材料（实为苯乙烯项目）", "user_decision": "核销", "outcome": "排除清单（目标实体消亡：80万吨/年纯碱产能2015年整体退出，无主体承接）"}
+  ],
+  "not_found": [
+    {"raw_name": "上海太平洋化工集团", "hints": "上海·历史客户资料", "conclusion": "现行工商登记无此主体（置信度中）。沿革：上海市化工局→1992年前后组建上海太平洋化工(集团)公司→1996年前后并入上海华谊体系", "next_suggestion": "如需重建线索可改挂上海华谊控股集团；但其主业与纯碱采购关联弱，建议先回核原始客户档案"},
+    {"raw_name": "苏州新生玻璃有限公司", "hints": "江苏苏州·网络搜集", "conclusion": "多渠道检索无存续主体（置信度低）", "next_suggestion": "疑似录入口误对象：苏州新乐玻璃（1985，高新区）、苏州新日玻璃（1997，吴中）；回核原名片/发票抬头，禁止默认替换"}
+  ],
+  "excluded": [
+    {"raw_name": "金晶集团", "std_name": "金晶（集团）有限公司", "category": "同行自产", "reason": "旗下山东金晶科技（600586）主业即『玻璃、纯碱』，熔窑纯碱自供为主并有外售；同行不是客户", "evidence": "金晶官网 https://www.cnggg.cn；巨潮600586公告"},
+    {"raw_name": "东岳集团", "std_name": "东岳氟硅科技集团有限公司（用户确认主体）", "category": "需求不相关", "reason": "氯碱环节自产烧碱，氟化工（萤石+硫酸）与有机硅路线不以纯碱为配料", "evidence": "官网 dongyuechem.com；桓台县政府页"},
+    {"raw_name": "山东鲁花集团", "std_name": "山东鲁花集团股份有限公司（2025-07更名）", "category": "需求不相关", "reason": "食用油/调味品制造（花生油年产能90万吨），纯碱非其生产原料", "evidence": "启信宝 91370682758273029N；鲁网财经更名报道"},
+    {"raw_name": "青岛碱业", "std_name": "（目标实体消亡）", "category": "主体消亡", "reason": "原600229于2015年被城市传媒借壳更名；80万吨/年氨碱产能2015年底整体关停退出，无主体承接", "evidence": "海湾集团董事长专访半岛网；巨潮2015-09公告"},
+    {"raw_name": "巨石集团有限公司", "std_name": "巨石集团有限公司", "category": "排重命中", "reason": "与现有客户池A级已成交客户精确命中（年度框架采购中）", "evidence": "现有客户池；主体核验三源一致 9133048373030919X7"},
+    {"raw_name": "山东华鹏", "std_name": "山东华鹏玻璃股份有限公司", "category": "排重命中", "reason": "现有客户池A级已成交（2023年起供货）；附加提示：603021现为*ST华鹏，净资产为负，建议现款/短账期", "evidence": "现有客户池；上交所公告"}
+  ],
+  "existing_pool": [
+    {"name": "巨石集团有限公司", "grade": "A级", "status": "已成交", "note": "年度框架采购中"},
+    {"name": "山东华鹏玻璃股份有限公司", "grade": "A级", "status": "已成交", "note": "2023年起供货"},
+    {"name": "安徽皖维高新材料股份有限公司", "grade": "B级", "status": "在谈", "note": "送样测试阶段"},
+    {"name": "浙江新安化工集团股份有限公司", "grade": "C级", "status": "历史询价", "note": "一年前询价未成交"}
+  ]
+}

@@ -1,0 +1,300 @@
+@@DOC
+@@BANNER SIMULATED CONTRACT 鈥?FOR SKILL TESTING AND TRAINING ONLY. Not a real commercial document. All company names, addresses, bank details and figures are fictitious. 妯℃嫙鍚堝悓 鈥?浠呯敤浜?Skill 娴嬭瘯涓庡煿璁紝涓嶆瀯鎴愮湡瀹炲晢涓氭枃浠讹紝涓嶅緱鐢ㄤ簬瀹為檯绛剧害銆?@@TITLE INTERNATIONAL SALES CONTRACT
+@@SUBTITLE Heavy Soda Ash (Dense Sodium Carbonate) 鈥?Export from the People's Republic of China to the Republic of Indonesia
+@@META|Contract No.|ZJSA-2026-0417-SIM
+@@META|Date of Contract|17 April 2026
+@@META|Place of Signing|Zhangjiagang, Jiangsu, People's Republic of China
+@@META|Language of the Contract|English
+@@META|Document Status|SIMULATED 鈥?NOT FOR EXECUTION
+@@END
+
+@@PARTIES
+@@H1 PARTIES
+@@H2 1. The Seller
+@@P I.1 Name: Jiangsu Haiyan Chemical Import & Export Co., Ltd. (a company incorporated in Jiangsu Province, People's Republic of China)
+@@P I.2 Registered address: 88 Linjiang Avenue, Zhangjiagang Bonded Zone, Zhangjiagang, Jiangsu 215634, P.R. China
+@@P I.3 Unified Social Credit Code: 91320582MA1SIMULATED7X (fictitious)
+@@P I.4 Contact: Ms. L. Chen, Export Sales Manager 鈥?Tel: +86 512 5888 0000 鈥?E-mail: export@haiyan-sim.example
+@@P I.5 Payment details: Beneficiary JIANGSU HAIYAN CHEMICAL IMPORT & EXPORT CO., LTD.; Bank of Simulation, Zhangjiagang Branch; SWIFT SIMLCNBGSHXX; Account 5120 0000 0000 0417 (fictitious).
+@@H2 2. The Buyer
+@@P II.1 Name: PT Nusantara Soda Prima (a limited liability company organised under the laws of the Republic of Indonesia)
+@@P II.2 Registered address: Gedung Menara Prima, Jl. Jenderal Sudirman Kav. 00, Jakarta Selatan 12190, Indonesia (fictitious)
+@@P II.3 NIB 0123456789012 and NPWP 01.234.567.8-000.000 (both fictitious)
+@@P II.4 Contact: Bapak R. Wijaya, Director of Procurement 鈥?E-mail: purchase@nusantara-soda-sim.example
+@@P II.5 Each of the Seller and the Buyer is a "Party" and together they are the "Parties". The Seller manufactures and sells soda ash and is the seller under this Contract; the Buyer purchases soda ash for its own industrial use and is the buyer under this Contract.
+@@END
+
+@@ARTICLES
+@@H1 ARTICLE 1 鈥?DEFINITIONS AND INTERPRETATION
+@@H2 1.1 Defined terms
+@@P "Contract" means this International Sales Contract together with all Annexes attached hereto.
+@@P "Goods" means the Heavy Soda Ash described in Article 2 and Annex A.
+@@P "Annex" means Annex A (Product Specification), Annex B (Packing and Marking) or Annex C (Documentary Requirements).
+@@P "Port of Loading" means the port named in Article 4.3.
+@@P "Incoterms" means the Incoterms rules issued by the International Chamber of Commerce.
+@@P "Business Day" means a day on which banks are open for general business in the People's Republic of China and in the Republic of Indonesia.
+@@H2 1.2 Language and precedence
+@@P This Contract is executed in the English language only. In the event of any discrepancy between this English text and any translation made for any purpose, the English text shall prevail.
+@@P The Annexes form an integral part of this Contract. In the event of conflict between these Articles and any Annex, these Articles shall prevail except where the Annex expressly states that it prevails.
+@@END
+
+@@H1 ARTICLE 2 鈥?GOODS, QUANTITY AND QUALITY
+@@H2 2.1 Product description
+@@P A. Product: Heavy Soda Ash (Dense Sodium Carbonate), synthetic, produced by the ammonia-soda (Solvay) process; white, free-flowing, granular powder.
+@@P B. Harmonised System classification as declared by the Seller: H.S. Code 2836.20.00.
+@@P C. Brand: HAIYAN DENSE.
+@@P D. Country of origin: the People's Republic of China.
+@@H2 2.2 Quantity and measurement
+@@P A. Contract Quantity: 1,000 metric tonnes (1,000 MT), being 40 jumbo bags of 25 MT each.
+@@P B. The Contract Quantity is an estimate. The Seller may ship within a tolerance of plus or minus 10% (that is, between 900 MT and 1,100 MT) and shall invoice the quantity actually shipped at the Unit Price stated in Article 3.1.
+@@P C. All quantities are Net Dry Weight as determined by the Seller's weighbridge certificate at the Port of Loading, which shall be conclusive.
+@@P D. One metric tonne equals 1,000 kg. No other unit of measurement shall be used for settlement.
+@@H2 2.3 Quality specification
+@@P A. The Goods shall conform to the specification set out in Annex A, and to any other requirement of the Buyer notified to the Seller before shipment.
+@@P B. The Buyer acknowledges having reviewed a specimen Certificate of Analysis for an earlier production lot before signing this Contract.
+@@P C. The specification in Annex A reflects the Seller's routine production range and may be amended by the Seller at any time after shipment without prior notice where production conditions so require.
+@@H2 2.4 Packing and marking
+@@P A. Packing: 25 MT per jumbo bag with inner polyethylene liner, as further described in Annex B.
+@@P B. Each bag shall be marked with the Buyer's name, the Contract number, gross and net weight and "MADE IN CHINA".
+@@P C. The Seller may substitute packing material or bag size at its discretion to suit vessel stowage and shall not be liable for any loss arising from such substitution.
+@@END
+
+@@H1 ARTICLE 3 鈥?PRICE AND CURRENCY
+@@H2 3.1 Unit price and total value
+@@P A. Unit Price: USD 268.00 (United States Dollars Two Hundred and Sixty-Eight only) per metric tonne.
+@@P B. Total Contract Value: USD 268,000.00 (United States Dollars Two Hundred and Sixty-Eight Thousand only), calculated on 1,000 MT.
+@@P C. The Unit Price is firm and shall not be renegotiated for any reason, including any change in raw material, freight, energy, insurance or exchange rates.
+@@H2 3.2 Currency and currency risk
+@@P A. This Contract is denominated in United States Dollars and all payments shall be made in USD.
+@@P B. If the Buyer is restricted by Indonesian regulation from remitting USD, or if USD is not available to the Buyer, the Buyer may pay in Indonesian Rupiah at the spot rate published by the paying bank on the date of remittance, and such payment shall fully discharge the Buyer's obligation.
+@@H2 3.3 What the price includes
+@@P A. The Unit Price includes the cost of the Goods, packing, inland transport to the Port of Loading, export documentation and any export duties or licence fees payable in China.
+@@P B. All Indonesian duties, taxes, levies, destination port charges, agency fees, survey fees at destination and clearance costs are for the Buyer's account.
+@@END
+
+@@H1 ARTICLE 4 鈥?TRADE TERM
+@@H2 4.1 The trade term
+@@P The Goods are sold CIF Jakarta, Indonesia (Incoterms 2020).
+@@P The trade term shall be stated as "CIF Jakarta" in all commercial documents. Where any other version of Incoterms is referred to in any document issued in connection with this Contract (including any proforma invoice, purchase order or letter of credit), the version so referred to shall govern that document.
+@@H2 4.2 Allocation of cost, risk and freight
+@@P A. The Seller shall contract for and pay ocean freight from the Port of Loading to Jakarta, Indonesia, and shall obtain the insurance required by Article 8.
+@@P B. The Seller may select the vessel, carrier, transhipment port and freight booking at its sole discretion, and may book space on a vessel owned or operated by any carrier.
+@@P C. Risk of loss of or damage to the Goods passes to the Buyer when the Goods are placed on board the vessel at the Port of Loading, being Tianjin Xingang, China.
+@@P D. The Seller shall have no responsibility for the Goods after loading on board. All costs arising after loading, including demurrage, detention, port storage and vessel delay, shall be for the Buyer's account.
+@@H2 4.3 Port of Loading
+@@P Notwithstanding Article 4.1, the Port of Loading is Tianjin Xingang, People's Republic of China. The Seller may nominate an alternative Chinese port of loading without the Buyer's consent.
+@@P For the avoidance of doubt, the Seller is not obliged to deliver the Goods to any place other than the Port of Loading stated in this Article 4.3.
+@@END
+
+@@H1 ARTICLE 5 鈥?DELIVERY AND SHIPMENT
+@@H2 5.1 Delivery period
+@@P A. The Seller shall ship the Goods during the period from 1 May 2026 to 30 June 2026, both dates inclusive.
+@@P B. "Shipment" means the on board date shown on the Bill of Lading.
+@@P C. The delivery period is conditional upon the Seller having received the Letter of Credit in a form acceptable to the Seller and upon vessel space being available. Time of shipment shall run from the date the Seller receives the Letter of Credit.
+@@P D. If shipment is delayed for any reason, the Seller shall notify the Buyer and the Buyer shall accept shipment within such extended period as the Seller may nominate, provided that the extension does not exceed 30 days.
+@@H2 5.2 Partial shipment, transhipment and consolidation
+@@P A. Partial shipment is allowed at the Seller's option, and each partial shipment shall be invoiced and paid separately.
+@@P B. Transhipment is allowed at the Seller's option.
+@@P C. The Seller may ship the Goods under this Contract together with goods for other buyers in one Bill of Lading.
+@@H2 5.3 Loading, stowage and securing
+@@P Loading, stowage, lashing, dunnage and securing of the Goods shall be carried out at the Seller's cost and shall be the Seller's responsibility until the Goods are on board the vessel.
+@@P After the Goods are on board, the Buyer shall bear the risk of, and shall indemnify the Seller against any claim arising from, improper stowage, lashing or securing, including any claim by the vessel or terminal.
+@@H2 5.4 Shipping advice
+@@P The Seller shall e-mail a copy of the Bill of Lading to the Buyer's e-mail address in Article II.4 within 10 (ten) days after the on board date. No other shipping advice, pre-shipment notice or ETA notification shall be required.
+@@END
+
+@@H1 ARTICLE 6 鈥?PAYMENT
+@@H2 6.1 Payment method
+@@P A. Payment shall be made by irrevocable documentary Letter of Credit at sight, issued by a bank acceptable to the Seller and confirmed by a first-class bank in China, available with any bank by negotiation.
+@@P B. The Letter of Credit shall be opened and advised to the Seller not later than 15 April 2026 and shall remain valid for presentation of documents until 21 July 2026.
+@@P C. The form of the Letter of Credit shall be agreed in writing between the Parties before the date referred to in Article 6.1(B).
+@@H2 6.2 Documents for presentation
+@@P A. The Seller shall present a commercial invoice, a full set of clean on board ocean bills of lading, a packing list, a certificate of analysis, a certificate of origin and an insurance policy or certificate.
+@@P B. The Bill of Lading shall be made out "to order" and blank endorsed by the Seller; the Buyer shall be named as notify party.
+@@P C. Where the terms of the Letter of Credit differ from this Contract, the Seller may present documents in accordance with the Letter of Credit, and such presentation shall not waive any of the Seller's rights under this Contract.
+@@H2 6.3 Release of documents
+@@P The negotiating bank shall release the original documents directly to the Buyer upon receipt of payment.
+@@P The Seller shall not be responsible for any delay in the release of documents by any negotiating bank, advising bank, issuing bank, courier or port authority.
+@@H2 6.4 Late payment
+@@P A. If the Buyer fails to pay any sum when due, interest shall accrue on the overdue sum at the rate of 5% per annum, calculated on the basis of a 360-day year.
+@@P B. Interest is the Seller's sole remedy for late payment. The Seller waives all rights to claim damages, to suspend performance, to withhold documents or to avoid this Contract on the ground of late payment.
+@@H2 6.5 Invoice objections and bank charges
+@@P An invoice shall be deemed accepted and payable in full unless the Buyer objects in writing within 3 (three) calendar days after receipt.
+@@P All bank charges outside China are for the Buyer's account; bank charges in China are for the Seller's account.
+@@END
+
+@@H1 ARTICLE 7 鈥?QUALITY, INSPECTION AND CERTIFICATION
+@@H2 7.1 Pre-shipment inspection
+@@P A. The Seller shall issue a Certificate of Analysis for each lot. The Certificate of Analysis issued by the Seller's own laboratory shall be final and binding on both Parties.
+@@P B. The Buyer shall have no right to appoint an independent surveyor, to inspect the Goods before loading, or to inspect the loaded cargo at the Port of Loading.
+@@H2 7.2 Quality and quantity claims
+@@P A. Any claim by the Buyer in respect of quality, specification, packing or quantity shall be notified to the Seller in writing within 7 (seven) days after the Bill of Lading date. Any claim not notified within that period shall be irrevocably waived and the Buyer shall be deemed to have accepted the Goods in full.
+@@P B. The Buyer's sole remedy for non-conforming Goods shall be a price reduction or replacement of the non-conforming Goods, at the Seller's option. The Buyer shall not be entitled to reject the Goods, to return the Goods, to refuse payment or to claim consequential loss.
+@@P C. The Buyer bears the burden of proving that any non-conformity existed at the time the Goods were on board, and the cost of any independent inspection, sampling or analysis shall be borne by the Buyer in every case.
+@@H2 7.3 Standards and end use
+@@P Reference is made to the Indonesian National Standard (Standar Nasional Indonesia) applicable to soda ash. The Buyer shall procure and pay for all standards, testing, certification, registration and approvals required by Indonesian authorities.
+@@P The Seller gives no warranty that the Goods are fit for the Buyer's intended end use or for any particular process of the Buyer.
+@@END
+
+@@H1 ARTICLE 8 鈥?RISK, TITLE AND INSURANCE
+@@H2 8.1 Risk of loss and damage
+@@P Risk passes to the Buyer as provided in Article 4.2(C). The Seller bears no risk of loss of or damage to the Goods after the Goods are on board the vessel at the Port of Loading.
+@@H2 8.2 Title and retention of title
+@@P Title to the Goods passes to the Buyer only upon receipt of payment in full. Until full payment, the Seller retains title to the Goods and may repossess them.
+@@P The retention of title in this Article 8.2 shall be effective against all third parties, shall survive export from China and import into Indonesia, and shall give the Seller priority over all other creditors of the Buyer.
+@@H2 8.3 Insurance
+@@P A. The Seller shall insure the Goods for the account of the Buyer with an insurer of the Seller's choice.
+@@P B. The insured value shall be 100% of the invoice value of the Goods.
+@@P C. The insurance may be effected under a policy covering the Seller's total shipments for the current accounting period; the Seller shall issue a certificate of insurance under that policy, and the certificate shall state the terms of the cover by reference to the policy.
+@@P D. The Buyer shall claim directly against the insurer for any loss or damage, and shall not look to the Seller for any loss covered by the insurance.
+@@H2 8.4 Goods sold as inspected
+@@P The Goods are sold on an "as inspected" and "as is" basis. The Buyer has inspected the specimen Certificate of Analysis referred to in Article 2.3(B) and accepts the Goods on that basis.
+@@END
+
+@@H1 ARTICLE 9 鈥?DOCUMENTS AND IMPORT FORMALITIES
+@@H2 9.1 Export documents
+@@P The Seller shall provide a commercial invoice, a packing list, a full set of clean on board bills of lading, a certificate of analysis, a certificate of origin and an insurance certificate. The Seller shall not be obliged to provide a Form E certificate of origin or any preferential certificate unless separately agreed in writing.
+@@H2 9.2 Import clearance by the Buyer
+@@P A. The Buyer is responsible for the import declaration, for all import licensing, for payment of all Indonesian import duties, value added tax and income tax, and for clearance of the Goods at Jakarta.
+@@P B. The Buyer warrants that it holds, or will obtain before shipment, every licence, approval and registration required for the importation of the Goods into Indonesia, and that it is duly registered to import industrial chemicals.
+@@H2 9.3 No Seller liability for Indonesian formalities
+@@P The Seller shall not be liable for any failure, delay, cost, fine or seizure arising from any permit, licence, approval, registration, standard, labelling or certification requirement of any Indonesian authority, and the Buyer shall have no claim, price reduction, rejection right or set-off by reason of any such matter.
+@@END
+
+@@H1 ARTICLE 10 鈥?PRODUCT INFORMATION, SAFETY AND REGULATORY DATA
+@@H2 10.1 Safety data sheet
+@@P The Seller shall provide a Material Safety Data Sheet (MSDS) in English for the Goods within 5 (five) days after the date of this Contract, or at such later date as the Seller may reasonably require.
+@@H2 10.2 Hazard classification
+@@P The Parties acknowledge that Heavy Soda Ash is a general industrial chemical and is not a dangerous good for the purposes of maritime transport. No dangerous goods declaration, IMDG documentation or marine pollutant declaration is required.
+@@P The Seller shall not be responsible for the accuracy of any statement of hazard, classification or handling precaution in any MSDS provided by it, except to the extent required by the law of the People's Republic of China.
+@@H2 10.3 Regulatory compliance
+@@P The Goods shall comply with the laws and regulations applicable at the place of manufacture in the People's Republic of China. The Seller makes no representation as to compliance with any law or regulation of any other jurisdiction, including any Indonesian standard, registration, notification or marking requirement.
+@@H2 10.4 Language of documents and labels
+@@P The MSDS and all labels applied to the Goods shall be in English only. The Buyer shall translate any such document into Indonesian and shall be solely responsible for the accuracy of the translation and for any consequence of an inaccurate translation.
+@@END
+
+@@H1 ARTICLE 11 鈥?FORCE MAJEURE AND HARDSHIP
+@@H2 11.1 Force majeure
+@@P Neither Party shall be liable for any failure or delay in performance caused by force majeure, being any event beyond the reasonable control of the affected Party. Without limiting the generality of the foregoing, force majeure includes acts of God, fire, flood, earthquake, epidemic or pandemic, war, terrorism, riot, civil commotion, embargo, government action, strike or lock-out, transport congestion, shortage or late delivery of raw materials or spare parts, interruption of electricity, breakdown of plant, delay in the allocation of quota or shipping space, and any other cause beyond the control of the Party relying on it.
+@@H2 11.2 Notice and effects
+@@P The affected Party shall notify the other Party as soon as reasonably practicable and shall provide a certificate of the relevant chamber of commerce or governmental authority.
+@@P If a force majeure event continues for more than 30 (thirty) consecutive days, either Party may terminate this Contract by written notice without liability other than for amounts already accrued. On such termination the Seller shall retain all freight and insurance costs already paid, whether or not the Goods have been shipped.
+@@H2 11.3 Hardship
+@@P If, as a result of unforeseen changes in market or cost conditions, the Seller's cost of performing this Contract increases by more than 15%, the Seller may require the Parties to renegotiate the Unit Price in good faith. If the Parties do not agree within 10 days, the Seller may terminate this Contract without liability and without any claim by the Buyer.
+@@END
+
+@@H1 ARTICLE 12 鈥?LIABILITY AND INDEMNITY
+@@H2 12.1 Seller's liability
+@@P The Seller's aggregate liability under or in connection with this Contract, whether in contract, tort, breach of statutory duty or otherwise, shall not exceed 5% of the invoice value of the Goods concerned.
+@@P The Seller shall not be liable for loss of profit, loss of goodwill, loss of business, loss of market, liquidated damages payable by the Buyer to its own customer, or any indirect or consequential loss or damage whatsoever.
+@@H2 12.2 Buyer's liability
+@@P The Buyer's liability to the Seller is unlimited. The Buyer shall indemnify the Seller in full against all losses, costs and expenses arising from the Buyer's breach, including any loss arising from the Buyer's failure to open the Letter of Credit, refusal or failure to take delivery, and any demurrage or detention arising at Jakarta.
+@@H2 12.3 Buyer's obligations on arrival
+@@P The Buyer shall take delivery of the Goods and discharge them from the vessel within 10 (ten) days after the vessel's arrival at Jakarta. The Buyer shall not refuse delivery of the Goods for any reason.
+@@END
+
+@@H1 ARTICLE 13 鈥?TERMINATION AND SUSPENSION
+@@H2 13.1 Termination by the Seller
+@@P The Seller may terminate this Contract immediately by written notice if the Buyer fails to open the Letter of Credit by the date in Article 6.1(B), fails to pay any sum when due, or breaches any other provision of this Contract.
+@@H2 13.2 Termination by the Buyer
+@@P The Buyer may terminate this Contract only where a final arbitral award has so determined. In particular, the Buyer shall not be entitled to cancel the Contract, reject the Goods or suspend performance by reason of a change in market conditions, exchange rates, Indonesian import regulations, or the Buyer's own business circumstances.
+@@END
+
+@@H1 ARTICLE 14 鈥?REPRESENTATIONS, WARRANTIES AND COMPLIANCE
+@@H2 14.1 Mutual representations
+@@P Each Party represents that it is duly organised and validly existing, that it has full power to enter into and perform this Contract, and that it has obtained all internal authorisations required for the execution and performance of this Contract.
+@@P Each Party represents that it is in compliance with all applicable anti-bribery and anti-money-laundering laws, including the anti-commercial-bribery provisions of the Criminal Law of the People's Republic of China and the anti-corruption laws of the Republic of Indonesia, and that neither Party has offered or received any improper payment in connection with this Contract.
+@@H2 14.2 Seller's warranties
+@@P The Seller warrants that it has good title to the Goods and that the Goods are free of any lien, charge or encumbrance.
+@@P The Seller gives no other warranty, express or implied, including any implied warranty of merchantability or of fitness for a particular purpose, all of which are excluded to the fullest extent permitted by law.
+@@END
+
+@@H1 ARTICLE 15 鈥?GOVERNING LAW AND DISPUTE RESOLUTION
+@@H2 15.1 Governing law
+@@P This Contract shall be governed by and construed in accordance with the laws of the People's Republic of China, without regard to its conflict of laws rules.
+@@P The Parties agree that the United Nations Convention on Contracts for the International Sale of Goods (CISG) shall not apply to this Contract.
+@@H2 15.2 Friendly negotiation
+@@P The Parties shall first attempt to resolve any dispute by friendly negotiation for 60 (sixty) days from the date the dispute arises. Neither Party may commence arbitration during that period.
+@@H2 15.3 Arbitration
+@@P Any dispute not so resolved shall be submitted to the China International Economic and Trade Arbitration Commission (CIETAC) for arbitration in accordance with its rules in force at the time of arbitration. The seat of arbitration shall be Beijing, China, and the language of the arbitration shall be Chinese.
+@@P The tribunal shall consist of one arbitrator appointed by the Secretary-General of CIETAC. The award shall be final and binding on the Parties.
+@@H2 15.4 Language of the Contract
+@@P The Parties acknowledge that this Contract is executed in English and intend that no Indonesian-language version is required. If an Indonesian-language version is required by any authority, the Parties shall prepare a sworn translation for administrative purposes only, and that translation shall not vary or affect the terms of this Contract.
+@@H2 15.5 Waiver of foreign jurisdiction
+@@P The Parties waive any right to submit any dispute to the courts of the Republic of Indonesia, and submit to the exclusive jurisdiction of the courts of the People's Republic of China for all matters not subject to arbitration under this Contract.
+@@END
+
+@@H1 ARTICLE 16 鈥?GENERAL PROVISIONS
+@@H2 16.1 Assignment
+@@P Neither Party may assign this Contract without the other Party's prior written consent. The Seller may, without consent, assign any of its rights to an affiliate, to any bank or to any financial institution for the purpose of securing financing.
+@@H2 16.2 Entire agreement
+@@P This Contract constitutes the entire agreement between the Parties and supersedes all prior quotations, offers, negotiations and correspondence, including the Seller's Proforma Invoice No. ZH-PI-2026-0311 and the Buyer's Letter of Intent dated 20 February 2026.
+@@H2 16.3 Amendment
+@@P No amendment or variation of this Contract shall be effective unless made in a written document signed by authorised representatives of both Parties.
+@@P An amendment or variation may be agreed by exchange of e-mail, and an e-mail sent from an officer of a Party shall be deemed to be signed by that Party for this purpose.
+@@H2 16.4 Severability
+@@P If any provision of this Contract is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.
+@@H2 16.5 Notices
+@@P Notices shall be in writing and delivered by courier or e-mail to the addresses stated in Article I or Article II. A notice sent by e-mail is effective on the next Business Day after transmission.
+@@H2 16.6 Relationship of the Parties
+@@P The Parties are independent contractors. Nothing in this Contract creates a partnership, joint venture or agency relationship between them.
+@@H2 16.7 Counterparts and electronic signature
+@@P This Contract may be executed in counterparts, including by scanned signature or electronic signature, each of which shall be deemed an original.
+@@END
+
+@@EXECUTION
+@@H1 EXECUTION
+@@P IN WITNESS WHEREOF, the Parties have executed this Contract in two (2) originals in the English language by their duly authorised representatives as of the date first written above.
+@@EXC
+@@EXCLEFT
+@@EXCLINE For and on behalf of the SELLER
+@@EXCLINE Jiangsu Haiyan Chemical Import & Export Co., Ltd.
+@@EXCLINE Signature: ______________________________
+@@EXCLINE Name: Mr. H. Wang, General Manager
+@@EXCLINE Date: 17 April 2026
+@@EXCLINE Company seal: affixed
+@@EXCRIGHT
+@@EXCLINE For and on behalf of the BUYER
+@@EXCLINE PT Nusantara Soda Prima
+@@EXCLINE Signature: ______________________________
+@@EXCLINE Name: Bapak R. Wijaya, Director
+@@EXCLINE Date: ____________ (left blank)
+@@EXCLINE Company seal: affixed (partially illegible in scanned copy)
+@@END
+@@END
+
+@@ANNEXES
+@@ANNTITLE ANNEX A 鈥?PRODUCT SPECIFICATION AND CERTIFICATE OF ANALYSIS
+@@H2 A.1 Specification of the Goods
+@@TABLE
+@@TR Component or parameter | Value | Test method
+@@TR Sodium carbonate (Na2CO3), dry basis | min. 99.2% | Timed titration
+@@TR Bulk density (tapped) | 0.90 to 1.10 g/cm3 | ISO 697 (method number partly illegible in the source document)
+@@TR Loss on ignition at 250 掳C | max. 0.5% | Not stated
+@@TR Chloride (as NaCl) | max. 0.30% | Not stated
+@@TR Iron (as Fe2O3) | max. 0.003% | Not stated
+@@TR Water-insoluble matter | max. 0.03% | Not stated
+@@TR Particle size, retained on 1.18 mm sieve | max. 2.0% | ISO 2925
+@@TR Particle size, passing 0.180 mm sieve | max. 5.0% | Sieve, aperture not stated
+@@END
+@@H2 A.2 Certificate of Analysis
+@@P The Certificate of Analysis for each shipment shall be signed by the Seller's quality control department and shall state the values obtained for the parameters listed in A.1.
+@@H2 A.3 Not specified
+@@P No other parameter, limit, tolerance or test method is specified, and no end use or downstream process specification is set out in this Annex.
+@@END
+
+@@ANNTITLE ANNEX B 鈥?PACKING AND MARKING
+@@H2 B.1 Packing
+@@P The Goods shall be supplied in jumbo bags of approximately 25 MT net weight, each with an inner polyethylene liner, suitable for sea transport and for mechanical handling by forklift and crane.
+@@H2 B.2 Marking
+@@P Each bag shall show: the Buyer's name; the Contract number; gross weight and net weight; the lot number; and "MADE IN CHINA". Marking language: English.
+@@H2 B.3 Not specified
+@@P No requirement is set out in this Annex as to bag material specifications, tear strength, moisture barrier grade, palletisation, container stuffing, UN packaging, segregation from other cargo, or carrier packing requirements.
+@@END
+
+@@ANNTITLE ANNEX C 鈥?DOCUMENTARY REQUIREMENTS
+@@H2 C.1 Documents required under the Letter of Credit
+@@P The following documents shall be presented under the Letter of Credit: (i) signed commercial invoice in triplicate; (ii) full set of clean on board ocean bills of lading; (iii) packing list; (iv) certificate of analysis; (v) certificate of origin; (vi) insurance policy or certificate.
+@@H2 C.2 Not specified
+@@P This Annex does not allocate responsibility for, or the cost of, any of the following: certificate of origin under a preferential trade agreement; phytosanitary, fumigation or other quarantine certificate; independent pre-shipment inspection certificate; certification or registration required by Indonesian authorities; import licences or approvals; payment of Indonesian import duties and taxes.
+@@END

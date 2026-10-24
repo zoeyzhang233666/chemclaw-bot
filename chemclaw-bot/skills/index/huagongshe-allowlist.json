@@ -1,0 +1,32 @@
+{
+  "note": "化工社合集以生物/临床为主。阶段1默认不整包展开；仅下列名称可后续 vendor 到 huagongshe/ 增强既有 Bot。",
+  "include": [
+    "rdkit",
+    "datamol",
+    "medchem",
+    "market-research-reports",
+    "literature-review",
+    "paper-lookup",
+    "citation-management",
+    "matplotlib",
+    "seaborn",
+    "markdown-mermaid-writing",
+    "networkx",
+    "polars",
+    "exploratory-data-analysis",
+    "markitdown",
+    "liteparse",
+    "docx",
+    "pptx",
+    "xlsx",
+    "pdf",
+    "statistical-analysis",
+    "statsmodels"
+  ],
+  "excludeCategories": [
+    "生物信息学",
+    "临床与医学",
+    "平台集成",
+    "地球与物理科学"
+  ]
+}

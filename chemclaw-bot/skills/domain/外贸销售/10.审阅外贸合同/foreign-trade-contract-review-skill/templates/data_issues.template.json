@@ -1,0 +1,64 @@
+{
+  "_comment": "问题数据模板。可复制多份（data_issues_01.json、_02.json…）。anchors[].quote 必须是合同原文的逐字片段，会被 qa_report.py 校验。",
+  "issues": [
+    {
+      "id": "R-01",
+      "seq": 1,
+      "category": "payment",
+      "severity": "high",
+      "issue_type": "commercial",
+      "title": "一句话说清问题（中文）",
+      "title_en": "One-line problem statement",
+      "clause_title": "6.1 Payment method",
+      "anchors": [
+        {
+          "block": "p-article-6-payment-067",
+          "clause": "6.1(B)",
+          "quote": "逐字复制合同原文，不得概括、不得加省略号、不得改标点"
+        }
+      ],
+      "finding": "条款写了什么 + 为什么构成问题。不要写「不合理」，要说清机理。",
+      "finding_en": "What the clause says and why it is a problem.",
+      "consequence": "具体场景 + 可估的量级（金额/天数/比例） + 我方失去什么。",
+      "consequence_en": "Concrete scenario, estimable magnitude, and what we lose.",
+      "confirm": [
+        "一条一个可执行动作",
+        "需要谁、确认什么、以什么形式留痕"
+      ],
+      "legal_refs": [
+        {
+          "label": "规则名称与条目（仅在能给出处时填写）",
+          "note": "该规则在此处的意义；无出处则写「需律师复核」"
+        }
+      ],
+      "suggested_wording": "English drafting proposal, ready to drop into a redline.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-02",
+      "seq": 2,
+      "category": "missing",
+      "severity": "medium",
+      "issue_type": "missing",
+      "title": "【条款缺失】未约定迟延交付的违约金",
+      "title_en": "Missing: liquidated damages for late delivery",
+      "clause_title": "ARTICLE 5 — DELIVERY",
+      "anchors": [],
+      "finding": "合同只约定装运期，未约定迟延交付的违约金或解除权。这是缺失，不是违法。",
+      "finding_en": "Delivery period is fixed but no remedy is agreed for delay.",
+      "consequence": "迟延责任回到一般违约规则，赔偿范围可能包含对方间接损失，且无上限。",
+      "consequence_en": "Exposure falls back to general damages, potentially including indirect loss, uncapped.",
+      "confirm": [
+        "确认是否接受迟延交付无违约金上限的状态",
+        "确认我方生产与船期能否覆盖约定装运期"
+      ],
+      "legal_refs": [],
+      "suggested_wording": "Liquidated damages of 0.3% of the value of the delayed Goods per day, capped at 5% of the Contract Value.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    }
+  ]
+}

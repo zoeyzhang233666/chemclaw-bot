@@ -1,0 +1,1473 @@
+{
+  "meta": {
+    "chain_id": "SBS",
+    "node_count_note": "node_class 区分 commodity（大宗化工品）/ material（配方型材料/制品）/ application（终端应用）/ route（工艺路线节点，不出现在主图谱）/ utility（能源与公用工程）。只有 commodity 与 material 节点在主图谱呈现。",
+    "layer_note": "layer 以目标品种为 0，向上为负、向下为正。up_depth 与 down_depth 决定哪些节点落在主图谱骨架内。",
+    "confidence_rule": "identification_confidence 表示『节点识别』的确定性；工艺参数确定性单独记录在 processes.json 的 confidence 字段，两者不得混用。",
+    "column_note": "column 是图谱列号（从左到右递增）。column 0/1 是核心区（聚合单体 + 目标品种），column 2~5 是下游（同类弹性体 → 配方材料 → 制品 → 终端），column -1~-6 是上游（乙苯 → 基础石化品 → 裂解/重整产物 → 裂解原料 → 原油）。缺列号不连续是正常的：没有节点落在该层。",
+    "class_note": "node_class：commodity 化学品 / material 材料 / application 终端应用；node_role：target/monomer/intermediate/raw/byproduct/compound/article/substitute…"
+  },
+  "columns": [
+    {
+      "col": -6,
+      "label": "原油",
+      "side": "up"
+    },
+    {
+      "col": -5,
+      "label": "裂解原料（石脑油 / LPG）",
+      "side": "up"
+    },
+    {
+      "col": -4,
+      "label": "裂解 / 重整产物（C4、裂解汽油、重整芳烃）",
+      "side": "up"
+    },
+    {
+      "col": -2,
+      "label": "基础石化品（乙烯、纯苯、C8 芳烃、C4 馏分）",
+      "side": "up"
+    },
+    {
+      "col": -1,
+      "label": "芳烃中间体（乙苯）",
+      "side": "up"
+    },
+    {
+      "col": 0,
+      "label": "聚合单体与基料（苯乙烯、丁二烯、基质沥青）",
+      "side": "core"
+    },
+    {
+      "col": 1,
+      "label": "目标品种",
+      "side": "core"
+    },
+    {
+      "col": 2,
+      "label": "同类弹性体与配合剂",
+      "side": "down"
+    },
+    {
+      "col": 3,
+      "label": "配方材料 / 改性料（下游第 1 层）",
+      "side": "down"
+    },
+    {
+      "col": 4,
+      "label": "制品与工程材料（下游第 2 层）",
+      "side": "down"
+    },
+    {
+      "col": 5,
+      "label": "终端应用",
+      "side": "down"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "N_PRIMARY",
+      "name": "SBS（苯乙烯-丁二烯-苯乙烯嵌段共聚物）",
+      "aliases": [
+        "热塑性丁苯橡胶",
+        "TPE-S",
+        "TPS",
+        "SBC"
+      ],
+      "node_class": "commodity",
+      "segment": "热塑性弹性体",
+      "cas": {
+        "value": "9003-55-8",
+        "status": "verified",
+        "note": "SBS 无唯一分子式，CAS 9003-55-8 为『苯乙烯-丁二烯共聚物（嵌段）』登记号，行业与海关均沿用"
+      },
+      "hs_code": {
+        "value": "4002.19.20",
+        "status": "draft",
+        "note": "『初级形状热塑丁苯橡胶（SBR/TPR，胶乳除外）』；充油型另设子目，需在申报前与报关行二次核对"
+      },
+      "specs": [
+        "线型（linear，如 1301/1401/791 系列）与星型/支化型（如 802、815）",
+        "充油型（oil-extended，油胶；充油量约 30%~50%）与非充油型（干胶）",
+        "牌号体系按用途分：道改料、防水料、鞋用料（TPR 用）、黏合剂料、改性塑料料",
+        "常见宏观指标：S/B 比（如 30/70）、嵌段比、门尼黏度 ML(1+4)100℃、拉伸强度、断裂伸长率、熔体流动速率",
+        "形态：粉状/粒状（干胶，纸袋/编织袋包装）、充油胶块"
+      ],
+      "unit": "元/吨",
+      "layer": 1,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "主图谱唯一以它为中心；『SBC』是包含 SBS/SEBS/SIS 的族名，不能把 SBC 当成 SBS 的同义词写入关系",
+      "price_mapped_note": "卓创『国内SBS道改/干胶出厂价格一览表』日更（S14，已核验页面存在但需登录）；隆众『SBS(791-H)市场价格』（S05）",
+      "evidence": [
+        "S01",
+        "S02"
+      ],
+      "column": 1,
+      "node_role": "target",
+      "stage": "下游1列"
+    },
+    {
+      "id": "N_BD",
+      "name": "丁二烯（1,3-丁二烯）",
+      "aliases": [
+        "1,3-丁二烯",
+        "丁二烯",
+        "BD",
+        "butadiene"
+      ],
+      "node_class": "commodity",
+      "segment": "石化单体",
+      "cas": {
+        "value": "106-99-0",
+        "status": "verified",
+        "note": "1,3-丁二烯；CAS 590-19-2 为 1,2-丁二烯异构体，不可混用"
+      },
+      "hs_code": {
+        "value": "2901.24.00",
+        "status": "unverified",
+        "note": "未在本轮证据中核验，标注待核"
+      },
+      "specs": [
+        "聚合级（纯度≥99.5%，行业常以 99.5%/99.7% 两档挂牌）",
+        "工业级/抽提级（纯度较低，供非聚合用途）",
+        "关键杂质指标：炔烃（乙烯基乙炔、乙基乙炔）、水、过氧化物、二聚体（TBC 外的 4-乙烯基环己烯）"
+      ],
+      "unit": "元/吨",
+      "layer": 0,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "SBS 的软段单体；同时是 BR、SBR、ABS 等的主力原料，属于多下游共享单体",
+      "evidence": [
+        "S01",
+        "S08"
+      ],
+      "column": 0,
+      "node_role": "monomer",
+      "stage": "目标品种"
+    },
+    {
+      "id": "N_SM",
+      "name": "苯乙烯（SM）",
+      "aliases": [
+        "苯乙烯单体",
+        "SM",
+        "styrene",
+        "乙烯基苯"
+      ],
+      "node_class": "commodity",
+      "segment": "石化单体",
+      "cas": {
+        "value": "100-42-5",
+        "status": "verified",
+        "note": "CAS 100-42-5 为苯乙烯；CAS 96-09-3 为氧化苯乙烯，属环氧化物，两种产品不可混同"
+      },
+      "hs_code": {
+        "value": "2902.50.00",
+        "status": "unverified",
+        "note": "未在本轮证据中核验，标注待核"
+      },
+      "specs": [
+        "工业级（纯度≥99.6%，GB/T 3915 优等品），常以 99.6%/99.7% 挂牌",
+        "含阻聚剂 TBC（10~15 ppm）的槽车/罐区储运规格",
+        "关键杂质：乙苯、醛、过氧化物、聚合物"
+      ],
+      "unit": "元/吨",
+      "layer": 0,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "SBS 的硬段单体；同时是 PS、EPS、ABS、SBR 等的主力原料",
+      "evidence": [
+        "S06",
+        "S07"
+      ],
+      "column": 0,
+      "node_role": "monomer",
+      "stage": "目标品种"
+    },
+    {
+      "id": "N_EB",
+      "name": "乙苯",
+      "aliases": [
+        "ethylbenzene",
+        "EB",
+        "苯乙烷"
+      ],
+      "node_class": "commodity",
+      "segment": "芳烃中间体",
+      "cas": {
+        "value": "100-41-4",
+        "status": "verified",
+        "note": "CAS 100-41-4"
+      },
+      "hs_code": null,
+      "specs": [
+        "聚合级（纯度≥99.5%）",
+        "工业级（纯度≥99.0%）",
+        "以中间罐区自用为主，商品量小；国内公开现货报价源稀缺"
+      ],
+      "unit": "元/吨",
+      "layer": -1,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing",
+        "price_partial"
+      ],
+      "notes": "绝大多数苯乙烯装置内乙苯自产自用（一体化），外购/外卖量小；成本研究须以『苯+乙烯』原料拆分而非乙苯现货价",
+      "evidence": [
+        "S06",
+        "S07"
+      ],
+      "column": -1,
+      "node_role": "intermediate",
+      "stage": "上游0列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）",
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）；价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_BZ",
+      "name": "纯苯",
+      "aliases": [
+        "苯",
+        "benzene",
+        "纯苯（石油级）"
+      ],
+      "node_class": "commodity",
+      "segment": "芳烃",
+      "cas": {
+        "value": "71-43-2",
+        "status": "verified",
+        "note": "CAS 71-43-2；CAS 67774-74-7 为 C8 芳烃混合物，不可混用"
+      },
+      "hs_code": null,
+      "specs": [
+        "石油苯（GB/T 3405，优等品）",
+        "加氢苯（焦化苯加氢）",
+        "按氯指数/总硫分档"
+      ],
+      "unit": "元/吨",
+      "layer": -2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "主要来自连续重整（裂解汽油/重整生成油）与加氢焦化苯；华东主港/山东地炼两套主流报价",
+      "evidence": [
+        "S07"
+      ],
+      "column": -2,
+      "node_role": "intermediate",
+      "stage": "上游1列"
+    },
+    {
+      "id": "N_C8A",
+      "name": "混合 C8 芳烃（二甲苯）",
+      "aliases": [
+        "C8芳烃",
+        "混合二甲苯",
+        "xylenes",
+        "重整 C8"
+      ],
+      "node_class": "commodity",
+      "segment": "芳烃馏分",
+      "cas": {
+        "value": "1330-20-7",
+        "status": "verified",
+        "note": "混合二甲苯 CAS 1330-20-7；单一异构体（邻/间/对二甲苯）CAS 与规格不同，不在此节点内"
+      },
+      "hs_code": null,
+      "specs": [
+        "重整 C8（供歧化/异构化）",
+        "溶剂级混合二甲苯"
+      ],
+      "unit": "元/吨",
+      "layer": -2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "纯苯主路线之一：重整/裂解汽油中的 C6-C8 经加氢后进芳烃抽提与歧化，C8 芳烃是歧化产 C6/C7 的原料 ｜本节点是「混合 C8 芳烃（二甲苯为主）」；注意甲苯歧化(TDA)的原料是甲苯与 C9 芳烃，不是本节点，因此本库不建立 C8→苯 的转化边。",
+      "evidence": [
+        "S10"
+      ],
+      "column": -2,
+      "node_role": "intermediate",
+      "stage": "上游2列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_ETH",
+      "name": "乙烯",
+      "aliases": [
+        "ethylene",
+        " polymerization grade ethylene"
+      ],
+      "node_class": "commodity",
+      "segment": "烯烃",
+      "cas": {
+        "value": "74-85-1",
+        "status": "verified",
+        "note": "CAS 74-85-1"
+      },
+      "hs_code": null,
+      "specs": [
+        "聚合级（纯度≥99.9%）",
+        "工业级（≥99.5%）",
+        "中国乙苯多用于自用管道互供，商品乙烯以外售/互供计量为主"
+      ],
+      "unit": "元/吨",
+      "layer": -2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "无单一全国统一挂牌，常见口径为『华东乙烯（外售）』『石脑油裂解成本折算』",
+      "evidence": [
+        "S07"
+      ],
+      "column": -2,
+      "node_role": "intermediate",
+      "stage": "上游1列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_C4BE",
+      "name": "C4 馏分（裂解混合 C4）",
+      "aliases": [
+        "裂解碳四",
+        "混合C4",
+        "pyrolysis C4",
+        "byproduct C4"
+      ],
+      "node_class": "commodity",
+      "segment": "裂解副产物",
+      "cas": {
+        "value": "106-98-9",
+        "status": "reference",
+        "note": "混合 C4 无 CAS，以主要组分 1-丁烯（106-98-9）作参考锚点；现货以『裂解C4』『抽余C4』描述"
+      },
+      "hs_code": null,
+      "specs": [
+        "裂解混合 C4（含丁二烯 40%~50%、异丁烯、1-丁烯、丁烷）",
+        "抽余 C4（提走丁二烯后的剩余物，可去 MTBE/1-丁烯/烷基化）"
+      ],
+      "unit": "元/吨",
+      "layer": -2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "典型副产/联产载体：裂解 C4 是乙烯装置的伴生物，其流向直接决定顺丁、SBS、ABS 的原料可得性",
+      "evidence": [
+        "S08",
+        "S15"
+      ],
+      "column": -2,
+      "node_role": "byproduct",
+      "stage": "上游1列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_NAPHTHA",
+      "name": "石脑油",
+      "aliases": [
+        "naphtha",
+        "轻石脑油",
+        "乙烯裂解原料"
+      ],
+      "node_class": "commodity",
+      "segment": "石脑油",
+      "cas": {
+        "value": "8030-30-6",
+        "status": "reference",
+        "note": "CAS 8030-30-6 为『石脑油』类物质登记，非单一分子"
+      },
+      "hs_code": null,
+      "specs": [
+        "重整料/裂解料",
+        "按 PONA、终馏点分档"
+      ],
+      "unit": "元/吨",
+      "layer": -5,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "原油→石脑油→乙烯/裂解C4/芳烃，是 SBS 全链的成本源头之一；换算口径见 relations 中 relation_scope",
+      "evidence": [
+        "S07"
+      ],
+      "column": -5,
+      "node_role": "raw",
+      "stage": "上游4列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_CRUDE",
+      "name": "原油（含轻质原油）",
+      "aliases": [
+        "crude oil",
+        "Brent",
+        "布伦特",
+        "SC"
+      ],
+      "node_class": "commodity",
+      "segment": "原油与轻烃",
+      "cas": {
+        "value": "8002-05-9",
+        "status": "verified",
+        "note": "CAS 8002-05-9 为 petroleum 类登记"
+      },
+      "hs_code": null,
+      "specs": [
+        "Brent/Dubai/SC 等基准价",
+        "轻质/重质、含硫分档"
+      ],
+      "unit": "美元/桶（Brent）;元/桶（SC）",
+      "layer": -6,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "仅作成本传导的源头参照，不参与主图谱的骨架层数（主图谱 up_depth=2）",
+      "evidence": [
+        "S09"
+      ],
+      "column": -6,
+      "node_role": "raw",
+      "stage": "上游5列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_LPG",
+      "name": "烃类裂解原料（LPG/轻烃）",
+      "aliases": [
+        "液化石油气",
+        "LPG",
+        "轻烃",
+        "NGL"
+      ],
+      "node_class": "commodity",
+      "segment": "原油与轻烃",
+      "cas": {
+        "value": "68476-85-7",
+        "status": "reference",
+        "note": "CAS 68476-85-7 为 petroleum gases, liquefied 类登记"
+      },
+      "hs_code": null,
+      "specs": [
+        "丙烷/丁烷",
+        "饱和蒸气压与硫含量分档"
+      ],
+      "unit": "元/吨",
+      "layer": -5,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "轻质裂解原料，与石脑油构成乙烯装置的替代原料；不同裂解原料的丁二烯收率差异极大，属关键替代关系",
+      "evidence": [
+        "S01"
+      ],
+      "column": -5,
+      "node_role": "raw",
+      "stage": "上游4列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_PYREXTRACT",
+      "name": "裂解汽油（不含 C8 抽提物）",
+      "aliases": [
+        "pyrolysis gasoline",
+        "pygas",
+        "裂解汽油加氢"
+      ],
+      "node_class": "commodity",
+      "segment": "裂解副产物",
+      "cas": null,
+      "hs_code": null,
+      "specs": [
+        "加氢前/加氢后（HG pygas）",
+        "按苯含量与溴价分档"
+      ],
+      "unit": "元/吨",
+      "layer": -4,
+      "price_priceable": true,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "裂解汽油抽提（C8 抽提）制苯乙烯的原料来源；国内该路线规模很小，属于小众路线，不得与乙苯脱氢混为一线",
+      "evidence": [
+        "S10"
+      ],
+      "column": -4,
+      "node_role": "byproduct",
+      "stage": "上游4列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ],
+      "price_mapped_note": "价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+    },
+    {
+      "id": "N_ASPHALT",
+      "name": "基质沥青（50#/70#/90#）",
+      "aliases": [
+        "道路石油沥青",
+        "沥青",
+        "bitumen",
+        "asphalt"
+      ],
+      "node_class": "commodity",
+      "segment": "道路基料（配套原料）",
+      "cas": {
+        "value": "8052-42-4",
+        "status": "verified",
+        "note": "CAS 8052-42-4 为 asphalt 类登记；改性沥青成品不适用该 CAS，单列材质型条目"
+      },
+      "hs_code": null,
+      "specs": [
+        "50#/70#/90#/110# 道路石油沥青（A级/B级/C级）",
+        "针入度、软化点、延度指标分级；进口马瑞油基/科威特基等来源差异"
+      ],
+      "unit": "元/吨",
+      "layer": 0,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "SBS 改性沥青的基体相；需与『SBS 改性沥青』材质节点严格区分——后者是配方材料而非化学品",
+      "evidence": [
+        "S11"
+      ],
+      "column": 0,
+      "node_role": "auxiliary",
+      "stage": "目标品种"
+    },
+    {
+      "id": "N_IPP_SSBR",
+      "name": "充油橡胶用填充油（环烷基/石蜡基橡胶油）",
+      "aliases": [
+        "橡胶填充油",
+        "白油",
+        "环烷油",
+        "extender oil"
+      ],
+      "node_class": "commodity",
+      "segment": "橡胶配合剂",
+      "cas": null,
+      "hs_code": null,
+      "specs": [
+        "环烷基（KN4010 等）",
+        "石蜡基（如 600N）",
+        "低芳烃/高闪点"
+      ],
+      "unit": "元/吨",
+      "layer": 2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_partial"
+      ],
+      "notes": "SBS 油胶（充油型）的组分；在国标牌号中常以 KN 系列命名（如 791、792 用 4010 类油）",
+      "price_mapped_note": "隆众有『橡胶油』品种页（seo-272，本库已核验页面存在，但该页当日无均价表）",
+      "evidence": [
+        "S17"
+      ],
+      "column": 2,
+      "node_role": "auxiliary",
+      "stage": "下游2列",
+      "missing_flags_detail": [
+        "price_partial：价格序列样本密度不足（公开窗口内少于完整交易日），不能直接用于趋势判断"
+      ]
+    },
+    {
+      "id": "N_SIS",
+      "name": "SIS（苯乙烯-异戊二烯-苯乙烯共聚物）",
+      "aliases": [
+        "热塑性异戊二烯橡胶",
+        "TPE-S（异戊二烯型）",
+        "SIS block copolymer"
+      ],
+      "node_class": "commodity",
+      "segment": "苯乙烯类热塑性弹性体",
+      "cas": {
+        "value": "25038-32-8",
+        "status": "verified",
+        "note": "CAS 25038-32-8 为 SIS 嵌段共聚物登记号"
+      },
+      "hs_code": null,
+      "specs": [
+        "线型/星型",
+        "分卫材胶（低黏度高流动）与标签胶（高粘接强度）",
+        "可按熔指/软化点分牌号"
+      ],
+      "unit": "元/吨",
+      "layer": 2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "SBS 在热熔压敏胶（HMPSA）领域的替代品，同族不同单体；与 SBS 共用产线属典型多产品切换，不是化学转化",
+      "price_mapped_note": "S01/S02 已确认 SIS 为金山巴陵在产牌号（6 万吨/年），价格序列入口：卓创 rubber.sci99.com/product/sbs 企业价格、隆众 varietiesId=268 姊妹品种；会员口径，本库未取数",
+      "evidence": [
+        "S01",
+        "S02"
+      ],
+      "column": 2,
+      "node_role": "same_family",
+      "stage": "下游2列"
+    },
+    {
+      "id": "N_SEBS",
+      "name": "SEBS（氢化 SBS）",
+      "aliases": [
+        "加氢SBS",
+        "氢化苯乙烯-丁二烯-苯乙烯",
+        "TPE（氢化型）"
+      ],
+      "node_class": "commodity",
+      "segment": "氢化热塑性弹性体",
+      "cas": {
+        "value": "66070-58-4",
+        "status": "verified",
+        "note": "CAS 66070-58-4 为氢化苯乙烯-丁二烯嵌段共聚物登记号"
+      },
+      "hs_code": null,
+      "specs": [
+        "线型/星型",
+        "按含油量分充油/非充油",
+        "医用级、食品接触级"
+      ],
+      "unit": "元/吨",
+      "layer": 2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "SBS 与 SEBS 关系必须精确表述为『以 SBS 为主链经催化加氢得到 SEBS』的化学转化（氢化），而非简单的替代；同时在鞋材、卫材胶等领域二者是相互替代关系——同一对节点允许两条不同 relation_type 的边",
+      "price_mapped_note": "S02 已确认 SEBS 为海南巴陵/金山巴陵在产（5+5 万吨/年）；价格须向卓创 SEBS 专页/隆众价格中心取（会员）",
+      "evidence": [
+        "S01",
+        "S02",
+        "S16"
+      ],
+      "column": 2,
+      "node_role": "derivative",
+      "stage": "下游2列"
+    },
+    {
+      "id": "N_TPU",
+      "name": "热塑性聚氨酯（TPU）",
+      "aliases": [
+        "TPU",
+        "thermoplastic polyurethane"
+      ],
+      "node_class": "commodity",
+      "segment": "热塑性聚氨酯",
+      "cas": {
+        "value": "9009-54-5",
+        "status": "verified",
+        "note": "CAS 9009-54-5 为聚氨酯类登记；TPU 为商品名/物性类称，非唯一 CAS"
+      },
+      "hs_code": null,
+      "specs": [
+        "聚酯型/聚醚型/聚己内酯型",
+        "硬度 Shore A75~D75，按鞋材/管材/薄膜分牌号"
+      ],
+      "unit": "元/吨",
+      "layer": 2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "鞋材领域 SBS/TPR 的主要替代者之一",
+      "price_mapped_note": "公开有 TPU 市场均价（卓创/隆众聚氨酯频道），属常规商品，价格可获取；本图谱未取数",
+      "evidence": [
+        "S01"
+      ],
+      "column": 2,
+      "node_role": "substitute",
+      "stage": "下游2列"
+    },
+    {
+      "id": "N_EVA",
+      "name": "乙烯-醋酸乙烯共聚物（EVA）",
+      "aliases": [
+        "EVA",
+        "E/VAC",
+        "乙烯-乙酸乙烯酯"
+      ],
+      "node_class": "commodity",
+      "segment": "乙烯共聚物",
+      "cas": {
+        "value": "24937-78-8",
+        "status": "verified",
+        "note": "CAS 24937-78-8"
+      },
+      "hs_code": null,
+      "specs": [
+        "VA 含量 18%/26%/28%/40% 分档",
+        "光伏胶膜料/发泡鞋材料"
+      ],
+      "unit": "元/吨",
+      "layer": 2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "EVA 发泡中底在鞋材领域替代 TPR 鞋底",
+      "price_mapped_note": "公开有 EVA 市场均价（S05 栏目『EVA市场价格评估日度报告』，已核验存在）",
+      "evidence": [
+        "S01"
+      ],
+      "column": 2,
+      "node_role": "substitute",
+      "stage": "下游2列"
+    },
+    {
+      "id": "N_POE",
+      "name": "聚烯烃弹性体（POE）",
+      "aliases": [
+        "POE",
+        "乙烯-辛烯共聚物",
+        "polyolefin elastomer"
+      ],
+      "node_class": "commodity",
+      "segment": "聚烯烃弹性体",
+      "cas": {
+        "value": "26221-73-8",
+        "status": "verified",
+        "note": "已核验：该 CAS 的登记名为 POLY(ETHYLENE-CO-1-OCTENE)（乙烯-1-辛烯共聚物），是 POE 所属的化学家族；同一 CAS 亦覆盖部分 LLDPE 牌号，故为『家族级标识』而非商品专属 CAS。POE 为牌号/商品概念（陶氏 Engage、三井 Tafmer、LG 等），无单一 CAS。",
+        "scope": "family_level"
+      },
+      "hs_code": null,
+      "specs": [
+        "辛烯基为主",
+        "熔指与密度分档"
+      ],
+      "unit": "元/吨",
+      "layer": 2,
+      "price_priceable": true,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "cas_disputed"
+      ],
+      "notes": "SBS 在鞋材与聚合物改性中的替代者",
+      "price_mapped_note": "POE 现货报价主要来自进口牌号（LG/三井等），国内仅少数贸易商报价，可得性较弱",
+      "evidence": [
+        "S01",
+        "S24"
+      ],
+      "column": 2,
+      "node_role": "substitute",
+      "stage": "下游2列",
+      "missing_flags_detail": [
+        "cas_disputed：CAS 号存在争议或对应的是一类物质而非单一物质"
+      ]
+    },
+    {
+      "id": "N_SBR",
+      "name": "丁苯橡胶（ESBR/SSBR）",
+      "aliases": [
+        "SBR",
+        "丁苯橡胶",
+        "乳聚丁苯",
+        "溶聚丁苯",
+        "SSBR"
+      ],
+      "node_class": "commodity",
+      "segment": "通用合成橡胶",
+      "cas": {
+        "value": "9003-55-8",
+        "status": "verified",
+        "note": "SBR 与 SBS 共用 9003-55-8 登记号，必须以『是否为嵌段结构』区分，不得混为同一产品"
+      },
+      "hs_code": null,
+      "specs": [
+        "ESBR 1500/1502/1712",
+        "SSBR 按苯乙烯含量与乙烯基含量分档"
+      ],
+      "unit": "元/吨",
+      "layer": 2,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "notes": "鞋底材料中与 TPR 竞争的传统硫化橡胶体系",
+      "price_mapped_note": "公开快讯可查（S05），区间序列需会员",
+      "evidence": [
+        "S03"
+      ],
+      "column": 2,
+      "node_role": "substitute",
+      "stage": "下游2列"
+    },
+    {
+      "id": "N_TPR",
+      "name": "TPR/TPE 鞋底料（SBS 基热塑性弹性体）",
+      "aliases": [
+        "TR 鞋底料",
+        "TPR 造粒料",
+        "鞋用 TPE",
+        "SBS 充油鞋底料"
+      ],
+      "node_class": "material",
+      "segment": "弹性体复合材料",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "SBS（60%~70%）+ 环烷油（10%~25%）+ PS/PP 树脂 + 碳酸钙等填料 + 助剂",
+        "Shore A 50~75；按鞋底/鞋扣/包胶分档"
+      ],
+      "unit": "元/吨",
+      "layer": 3,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "核心防错点：TPR 鞋底料是由 SBS 配制而成的『材料』，SBS→TPR 是配方共混（compounding），不是化学反应，更不能把『鞋底』写成 SBS 的直接化学转化产物",
+      "evidence": [
+        "S01",
+        "S03"
+      ],
+      "column": 3,
+      "node_role": "compound",
+      "stage": "下游3列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_MODIFIED_ASPH",
+      "name": "SBS 改性沥青",
+      "aliases": [
+        "道改沥青",
+        "SBS 改性沥青（I-C/I-D）",
+        "聚合物改性沥青（PMB）"
+      ],
+      "node_class": "material",
+      "segment": "改性沥青",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "I 类（SBS 改性）：I-B/I-C/I-D，按软化点、5℃延度、弹性恢复分级（JTG F40 体系）",
+        "按施工方式：热拌/温拌；按稳定类型：机械稳定/化学稳定"
+      ],
+      "unit": "元/吨",
+      "layer": 3,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "核心防错点：SBS 与基质沥青在胶体磨/剪切机中做物理分散与溶胀，形成空间网络结构——这是『配方共混』不是化学转化；改性沥青是『材料』节点。SBS 掺量是配方参数而非化学计量单耗",
+      "evidence": [
+        "S01",
+        "S11",
+        "S12"
+      ],
+      "column": 3,
+      "node_role": "compound",
+      "stage": "下游3列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_WP_MEMBRANE",
+      "name": "SBS 改性沥青防水卷材",
+      "aliases": [
+        "弹性体改性沥青防水卷材",
+        "SBS 卷材",
+        "沥青防水卷材"
+      ],
+      "node_class": "material",
+      "segment": "防水卷材",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "II 型（-25℃）为主流，I 型（-20℃）",
+        "按胎基：聚酯胎（PYG）、玻纤胎（G）；按面层：S/M/PE"
+      ],
+      "unit": "元/平方米 或 元/卷（10/20 m²）",
+      "layer": 4,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing",
+        "unit_mixed"
+      ],
+      "notes": "计价单位是平方米而非吨，跨单位换算需要项目密度参数，属典型『价格口径不一致』风险点；SBS 在涂盖料中约占 5%~10%",
+      "evidence": [
+        "S01",
+        "S02"
+      ],
+      "column": 4,
+      "node_role": "article",
+      "stage": "下游4列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）",
+        "unit_mixed：同一节点存在多种计量单位（吨 / 平方米 / 双 / 卷），不能直接相加或平均"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_PAVEMENT_DECK",
+      "name": "沥青路面（含桥面铺装/养护罩面）",
+      "aliases": [
+        "改性沥青路面",
+        "沥青混合料铺装",
+        "路面养护"
+      ],
+      "node_class": "material",
+      "segment": "道路铺装材料",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "AC/SMA/OGFC 级配",
+        "按交通荷载等级与气候分区选 I-C/I-D"
+      ],
+      "unit": "元/吨（混合料）",
+      "layer": 4,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "改性沥青在搅拌站与集料、矿粉拌和后成为混合料，属物理拌和",
+      "evidence": [
+        "S11",
+        "S12"
+      ],
+      "column": 4,
+      "node_role": "article",
+      "stage": "下游4列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_WATERPROOF_MAT",
+      "name": "自粘/改性沥青防水系统材料",
+      "aliases": [
+        "自粘聚合物改性沥青防水卷材",
+        "预铺反粘卷材",
+        "沥青基防水涂料"
+      ],
+      "node_class": "material",
+      "segment": "防水系统材料",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "自粘类：N 类（无胎）/PY 类（聚酯胎）",
+        "预铺反粘型、湿铺型"
+      ],
+      "unit": "元/平方米",
+      "layer": 4,
+      "price_priceable": false,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "自粘体系在改性沥青基础上再叠加增粘剂与隔离层，属再次配方，不构成新的化学转化",
+      "evidence": [
+        "S01"
+      ],
+      "column": 4,
+      "node_role": "system",
+      "stage": "下游4列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_HMPSA",
+      "name": "SBS 基热熔胶/热熔压敏胶（HMPSA）",
+      "aliases": [
+        "热熔胶",
+        "热熔压敏胶",
+        "包装热熔胶",
+        "标签胶"
+      ],
+      "node_class": "material",
+      "segment": "热熔胶",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "SBS/SIS（25%~40%）+ 增粘树脂（40%~55%）+ 橡胶油（15%~25%）+ 抗氧剂",
+        "按软化点/黏度分包装、标签、木工、书刊装订档"
+      ],
+      "unit": "元/吨",
+      "layer": 3,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "SBS、SIS 可分别或复配进入同一热熔胶配方——SBS→HMPSA 是配方共混，SIS→HMPSA 同为共混，二者互为替代原料",
+      "evidence": [
+        "S01",
+        "S18"
+      ],
+      "column": 3,
+      "node_role": "compound",
+      "stage": "下游3列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_MUSTICK",
+      "name": "SBS 基溶剂型胶黏剂（鞋用/多用）",
+      "aliases": [
+        "SBS 胶黏剂",
+        "鞋用胶",
+        "氯丁/接枝型替代品"
+      ],
+      "node_class": "material",
+      "segment": "溶剂型胶黏剂",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "SBS 100 份 + 增粘树脂 + 甲苯/乙酸乙酯/120# 溶剂 + 填料",
+        "固含量往往低于 40%，VOCs 监管敏感"
+      ],
+      "unit": "元/吨",
+      "layer": 3,
+      "price_priceable": false,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "受 VOCs 限值影响正在被热熔胶替代，属典型『配方型材料间的替代』",
+      "evidence": [
+        "S01"
+      ],
+      "column": 3,
+      "node_role": "compound",
+      "stage": "下游3列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_PP_MODIF",
+      "name": "改性聚烯烃（PP/PE 增韧改性料）",
+      "aliases": [
+        "改性塑料",
+        "PP 增韧料",
+        "PS/PP 改性料"
+      ],
+      "node_class": "material",
+      "segment": "改性塑料",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "PP 200 份 + SBS/SEBS 10~30 份 + 填料/助剂，双螺杆造粒",
+        "按缺口冲击强度、拉伸强度分级"
+      ],
+      "unit": "元/吨",
+      "layer": 3,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "SBS 作为增韧剂进入 PP/PE 改性料，属配方共混",
+      "evidence": [
+        "S01",
+        "S19"
+      ],
+      "column": 3,
+      "node_role": "compound",
+      "stage": "下游3列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_BOPP_TAPE",
+      "name": "BOPP 胶带（压敏胶带）",
+      "aliases": [
+        "封箱胶带",
+        "BOPP 压敏胶带"
+      ],
+      "node_class": "material",
+      "segment": "胶带制品",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "BOPP 基膜 + 压敏胶（SBS/SIS 型）+ 离型剂",
+        "厚度 40~50 μm"
+      ],
+      "unit": "元/卷",
+      "layer": 4,
+      "price_priceable": false,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing",
+        "unit_mixed"
+      ],
+      "notes": "以卷计价，属终端制品计价单位",
+      "evidence": [
+        "S18"
+      ],
+      "column": 4,
+      "node_role": "article",
+      "stage": "下游4列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）",
+        "unit_mixed：同一节点存在多种计量单位（吨 / 平方米 / 双 / 卷），不能直接相加或平均"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_FOOTWEAR_OUTSOLE",
+      "name": "鞋底/鞋用弹性体部件",
+      "aliases": [
+        "TPR 鞋底",
+        "注塑鞋底",
+        "大底/中底"
+      ],
+      "node_class": "material",
+      "segment": "鞋用部件",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "注塑/模压成型；Shore A 55~70",
+        "颜色/防滑/耐寒指标分档"
+      ],
+      "unit": "元/双",
+      "layer": 4,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing",
+        "unit_mixed"
+      ],
+      "notes": "核心防错点：鞋底是 TPR 料注塑成型的制品，链条必须走 SBS → TPR 料 → 鞋底（再 → 鞋），不可跳过配方层直接连到『鞋』；SBS 含量口径为『以 100 份 TPR 料计约 60~70 份』",
+      "evidence": [
+        "S03"
+      ],
+      "column": 4,
+      "node_role": "article",
+      "stage": "下游4列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）",
+        "unit_mixed：同一节点存在多种计量单位（吨 / 平方米 / 双 / 卷），不能直接相加或平均"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_APP_ROAD",
+      "name": "公路与市政道路建设养护",
+      "aliases": [
+        "交通基建",
+        "道路养护工程",
+        "高速路面"
+      ],
+      "node_class": "application",
+      "segment": "交通基建",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "新建/改扩建/养护（罩面、微表处、就地热再生）",
+        "按公路等级与气候分区"
+      ],
+      "unit": "亿元投资额",
+      "layer": 5,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "SBS 第一大终端；需求侧观测指标建议用交通固定资产投资与公路养护里程",
+      "evidence": [
+        "S01",
+        "S12"
+      ],
+      "column": 5,
+      "node_role": "end_market",
+      "stage": "下游5列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_APP_CONSTRUCTION",
+      "name": "建筑与市政工程防水",
+      "aliases": [
+        "房地产与基建防水",
+        "地下工程防水",
+        "屋面防水"
+      ],
+      "node_class": "application",
+      "segment": "建筑与市政",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "新建房屋、城市更新/旧改、地下管廊、地铁隧道"
+      ],
+      "unit": "亿元竣工产值",
+      "layer": 5,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "防水卷材的终端；2025 年地产链收缩是 SBS 防水需求下滑主因",
+      "evidence": [
+        "S01"
+      ],
+      "column": 5,
+      "node_role": "end_market",
+      "stage": "下游5列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_APP_FOOTWEAR",
+      "name": "鞋类制造（运动鞋/休闲鞋）",
+      "aliases": [
+        "制鞋业",
+        "鞋服制造"
+      ],
+      "node_class": "application",
+      "segment": "鞋类制造",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "运动鞋、休闲鞋、户外鞋",
+        "产地：福建晋江/泉州/莆田、浙江温州/台州"
+      ],
+      "unit": "亿双",
+      "layer": 5,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "2024 年国内鞋产量 133.57 亿双（S03），与 TPR 消费量同向变动",
+      "evidence": [
+        "S01",
+        "S03"
+      ],
+      "column": 5,
+      "node_role": "end_market",
+      "stage": "下游5列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_APP_PACKAGING",
+      "name": "包装与物流（快递电商包装）",
+      "aliases": [
+        "包装印刷",
+        "物流包装",
+        "快递包装"
+      ],
+      "node_class": "application",
+      "segment": "包装与物流",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "纸箱封箱、标签、软包装复合"
+      ],
+      "unit": "亿件包裹",
+      "layer": 5,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "热熔胶与胶带的最终用户，与快递业务量同向",
+      "evidence": [
+        "S01",
+        "S18"
+      ],
+      "column": 5,
+      "node_role": "end_market",
+      "stage": "下游5列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_APP_HOMEAPPL",
+      "name": "家电与汽车内外饰",
+      "aliases": [
+        "白色家电",
+        "汽车内饰件"
+      ],
+      "node_class": "application",
+      "segment": "家电与汽车",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "配方材料/制品/终端应用无单一 CAS 号"
+      },
+      "hs_code": null,
+      "specs": [
+        "家电外壳/内部结构件",
+        "汽车仪表板、门板、密封条"
+      ],
+      "unit": "万台/万辆",
+      "layer": 5,
+      "price_priceable": false,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "notes": "改性聚烯烃料的终端之一；SBS 常与 SEBS/POE 复配，单独归因需谨慎",
+      "evidence": [
+        "S01",
+        "S19"
+      ],
+      "column": 5,
+      "node_role": "end_market",
+      "stage": "下游5列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    },
+    {
+      "id": "N_BTX",
+      "name": "加氢混合芳烃（重整生成油/裂解汽油 BTX）",
+      "aliases": [
+        "重整生成油",
+        "加氢裂解汽油",
+        "BTX 混合芳烃"
+      ],
+      "node_class": "commodity",
+      "segment": "芳烃联合装置中间物料",
+      "cas": {
+        "value": null,
+        "status": "不适用",
+        "note": "混合物，无单一 CAS；以组分（苯 71-43-2、甲苯 108-88-3、二甲苯 1330-20-7）分别登记"
+      },
+      "hs_code": null,
+      "specs": [
+        "重整生成油（C6~C8）",
+        "加氢裂解汽油（HG pygas）",
+        "按苯含量与溴价分档"
+      ],
+      "unit": "元/吨",
+      "layer": -4,
+      "price_priceable": false,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing",
+        "evidence_missing"
+      ],
+      "evidence": [
+        "S07",
+        "S10"
+      ],
+      "notes": "芳烃联合装置的中间物料，商品量小；其价格须通过纯苯/甲苯/二甲苯分品种价加权，故不单设现货序列 ｜BTX（重整生成油/裂解汽油加氢后的混合芳烃）为芳烃联合装置中间物料，非独立交易品种。",
+      "column": -4,
+      "node_role": "intermediate",
+      "stage": "上游3列",
+      "missing_flags_detail": [
+        "price_missing：该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）",
+        "evidence_missing：该节点/关系尚未挂任何 A~C 级证据"
+      ],
+      "price_mapped_note": "该类商品/材料没有公开可核验的现货报价序列（多为一单一议、牌号分散或仅付费库有）"
+    }
+  ]
+}

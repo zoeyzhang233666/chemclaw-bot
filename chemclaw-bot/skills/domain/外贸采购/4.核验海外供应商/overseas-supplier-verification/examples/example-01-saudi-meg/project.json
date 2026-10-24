@@ -1,0 +1,537 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "overseas-supplier-verification v1.0.0",
+  "meta": {
+    "doc_no": "OSV-SA-MEG-2026-001",
+    "title": "海外供应商核验报告（公开信息版）",
+    "title_en": "Overseas Supplier Verification Dossier (Published-Source Edition)",
+    "subject_short": "沙特乙二醇（MEG）生产企业",
+    "subject_full": "Arabian Petrochemical Company (PETROKEMYA) — SABIC 全资子公司",
+    "chain_owner": "Saudi Basic Industries Corporation (SABIC)",
+    "country": "沙特阿拉伯 / Kingdom of Saudi Arabia",
+    "product": "单乙二醇（MEG / Monoethylene Glycol）",
+    "product_spec": "纤维级 MEG，要求 ≥99.9 wt%，二甘醇（DEG）含量 ≤0.08 wt%，色度（APHA）≤10",
+    "incoterm": "CFR 中国主港（示例）",
+    "as_of": "2026-10-20",
+    "author": "海外采购核验（OSV Skill 演示）",
+    "reviewer": "待人工复核",
+    "version": "v1.0.0",
+    "page_title": "海外供应商核验报告 · 沙特乙二醇生产企业（PETROKEMYA / SABIC）",
+    "export_prefix": "海外供应商核验报告_沙特MEG_PETROKEMYA_SABIC_20261020",
+    "disclaimer": "本报告仅基于公开可查信息与用户提交（或模拟）的资料，用于内部采购决策参考，不构成法律、审计或信用评级意见。报告中不含任何风险评分：凡无法由可追溯证据支持的事项，一律标注「未知 / 未核实」。"
+  },
+  "ids": {
+    "report": "OSV-SA-MEG-2026-001",
+    "dossier": "SUP-2026-SA-0001"
+  },
+  "summary": {
+    "verdict": "identify_only",
+    "headline": "企业身份可确认，但「实际供货主体」「收款账户」「授权链」三处尚未闭环",
+    "text": "公开信息可确认存在一家名为 Arabian Petrochemical Company（PETROKEMYA）的沙特石化企业，其为 SABIC 全资子公司，生产装置位于朱拜勒（Al Jubail），SABIC 官方产品目录列有 MEG 产品。但本次拟采购的合同主体、实际生产主体与收款主体尚未由供应商以正式文件对齐，且沙特官方商工部（Ministry of Commerce）登记系统在本次核验环境下无法直连查询。因此本报告不给出「风险分数」，也不认定其资金实力或履约能力，仅列出已确认事实、疑点与待索取文件。",
+    "key_findings": [
+      "PETROKEMYA 的名称、归属（SABIC 全资）与朱拜勒装置在 3 个相互独立的公开来源中一致（E01、E04、E05）。",
+      "SABIC 官方产品页列有 SABIC® Monoethylene Glycol，并说明 MEG 主要用于 PET 与防冻液，产品能力与该采购品匹配（E02）。",
+      "SABIC 于 2026 年 3 月底曾就 EG 等产品发布不可抗力声明，中国方向沙特 MEG 到港量 2026 年 10 月约 12 万吨，供应处于恢复期（E08、E09、E10）——这是「当前供货能力」的关键时点事实。",
+      "本次演示中的报价单（PI）与银行收款信息均为**模拟件**，不代表任何真实企业曾向我方报价或提供文件（见 F01、F02、F03）。",
+      "商工部商业登记（CR）号码核查、清关许可、银行账户名核对三项未能完成，标注为「未知 / 未核实」。"
+    ],
+    "not_concluded": [
+      "不认定真实产能、可用于本批次的可用量或发货计划；",
+      "不认定资金实力、信用状况或履约能力；",
+      "不认定任何风险等级或分数；",
+      "不认定收款账户真实存在或与我方交易相关。"
+    ]
+  },
+  "sections": [
+    {
+      "id": "s00",
+      "no": "00",
+      "title": "交易概览与核验边界",
+      "sub": "查什么、按什么口径查、什么不能下结论",
+      "blocks": [
+        {
+          "type": "verdict",
+          "kicker": "总体结论",
+          "headline": "identity 可确认 · capacity 限于公开量级 · 主体一致性未闭环",
+          "text": "本报告回答四个问题：这家企业是否真实存在并合法注册；它的产品是否与拟采购品匹配；它的生产/供货关系如何界定；交易文件中的主体与收款信息是否自洽。凡是超出这四个问题的事项（如实际产能、资金实力、履约能力），本报告不作认定。",
+          "rows": [
+            { "k": "核验结论", "v": "仅识别身份（IDENTIFY ONLY）——不足以支持直接签约或付款" },
+            { "k": "证据总数", "v": "见「证据索引」页签，逐条含来源、发布时间、原文摘录" },
+            { "k": "可确认事实", "v": "以「已核实」计数（三源可交叉验证或官方/监管来源）" },
+            { "k": "疑点与未知", "v": "以「存在疑点 / 未核实」计数，均给出补件动作" },
+            { "k": "风险评分", "v": "本报告不提供。缺少可比基准时任何分数都是伪精确。" }
+          ]
+        },
+        {
+          "type": "lead",
+          "text": "适用范围：本方法为企业层面的<b>公开资料核验</b>，不替代中国海关 AEO 验证、第三方审计（如 SGS/BV 工厂审核）、银行资信调查或律师事务所的法律意见。凡涉及付款的，均应在完成「交易主体一致性」闭环后再执行。"
+        },
+        {
+          "type": "boundary",
+          "items": [
+            { "t": "已核实", "d": "有官方或监管来源（上市公司公告、监管机构、政府备案）或 ≥2 个相互独立来源可交叉印证，且原文可回溯。" },
+            { "t": "未核实", "d": "仅有单一来源、二手转述，或仅凭企业自述；需要补证。" },
+            { "t": "存在疑点", "d": "不同来源之间互相矛盾、口径不一致，或仅凭单一差异无法下结论但值得追问。" },
+            { "t": "未知", "d": "检索后未找到任何可引用来源，或来源因地域/权限无法访问。" },
+            { "t": "不适用", "d": "该国家对本次问题不存在对应制度（如无外资准入限制口径时）。" }
+          ],
+          "foot": "说明：本报告不使用「低/中/高风险」标签。差异本身不是欺诈证据；只有证据链缺口才是付款前的硬约束。"
+        },
+        {
+          "type": "table",
+          "name": "assumptions",
+          "title": "本次核验的输入与假设",
+          "columns": [
+            { "h": "项目", "width": "150px" },
+            { "h": "内容" },
+            { "h": "状态", "align": "c", "width": "96px" },
+            { "h": "证据", "align": "c", "width": "82px" }
+          ],
+          "rows": [
+            ["拟采购品", "单乙二醇 MEG，纤维级，约 5,000 吨/批，CFR 中国主港（示例）——属本次采购需求，非对供应商的核验项", "—", "—"],
+            ["供应商自报名称", "Petrokemya（Arabian Petrochemical Company），SABIC 集团", "已核实", "E02,E04"],
+            ["供应商提交文件", "PI、公司介绍、产品目录、邮箱名片、银行收款信息——本演示中全部为模拟件", "存在疑点", "F01,F02"],
+            ["合同/收款主体", "PI 抬头 PETROKEMYA，收款户名第三方贸易公司（详见交易主体一致性）", "存在疑点", "F01,F02"],
+            ["核验基准日", "2026-10-20（全文时间基准，任何更晚的事实需重查）", "—", "—"]
+          ],
+          "pill_cols": { "2": true }
+        }
+      ]
+    },
+    {
+      "id": "s01",
+      "no": "01",
+      "title": "企业身份",
+      "sub": "注册主体、注册国、注册地址与公开经营信息",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "identity",
+          "title": "身份要素逐项核验",
+          "columns": [
+            { "h": "要素", "width": "130px" },
+            { "h": "核验结果" },
+            { "h": "状态", "align": "c", "width": "96px" },
+            { "h": "证据", "align": "c", "width": "90px" }
+          ],
+          "rows": [
+            ["法定名称", "Arabian Petrochemical Company（商业名称 PETROKEMYA）", "已核实", "E04,E05"],
+            ["注册国", "沙特阿拉伯王国（Kingdom of Saudi Arabia）", "已核实", "E04,E05"],
+            ["注册城市", "朱拜勒（Al Jubail），东部省（Eastern Province）", "已核实", "E04,E05,E06"],
+            ["商业登记号 CR", "公开来源未检索到 PETROKEMYA 自身的 CR 编号；商工部查询页在本次网络环境下无法直连", "未知", "E11"],
+            ["法人形式", "SABIC 全资子公司（wholly-owned affiliate）", "已核实", "E04,E05"],
+            ["成立/投产时间", "据第三方工业资料：1981 年 5 月成立，1985 年 5 月投料（Olefins I）", "未核实", "E04"],
+            ["注册地址（街道级）", "未获取可引用的具体街道地址；官网 domain 在本次环境下不可直连", "未知", "E11"],
+            ["母公司主体", "Saudi Basic Industries Corporation (SABIC)，CR 1010010813，利雅得注册", "已核实", "E03,E07"],
+            ["上市与股东", "SABIC 为沙特交易所上市公司；沙特阿美持股约 70%（Wikipedia，二手）", "未核实", "E07"],
+            ["官网域名", "petrokemya.com.sa（第三方工业名录给出）；sabic.com 为集团官网", "未核实", "E12"]
+          ],
+          "pill_cols": { "2": true },
+          "evid_cols": [3],
+          "foot": "「未知」不等于「不存在」：CR 编号、街道级地址需通过 Wathq（沙特商业数据平台）或供应商盖章的 CR 证书补证。"
+        },
+        {
+          "type": "lead",
+          "muted": true,
+          "text": "同类对照（用于理解「注册号长什么样」，避免被伪造文件误导）：Yansab 在官网披露其 CR 号为 <b>4700009432</b>（2006-02-11 登记），工业许可证号 <b>S/1367</b>（E01）；SABIC 母公司 CR 号为 <b>1010010813</b>（E03）。沙特 CR 为 10 位数字，前两位对应注册地（如 10xx 为利雅得、2055 为朱拜勒一带）。收到 CR 号码时，先看位数与地区前缀是否合理，再到官方渠道核验。"
+        },
+        {
+          "type": "note",
+          "tone": "warn",
+          "text": "核验环境限制：mc.gov.sa（沙特商工部）、petrokemya.com.sa、saudiexchange.sa 在本机网络下均返回连接中断或 403。这是本次未能取得官方一手登记数据的客观原因，不是企业问题；但必须如实标注为「未知」，不能以第三方转述顶替。"
+        }
+      ]
+    },
+    {
+      "id": "s02",
+      "no": "02",
+      "title": "产品能力与匹配度",
+      "sub": "主营业务与产品目录是否覆盖拟采购的 MEG 及规格",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "product_match",
+          "title": "产品能力逐项比对",
+          "columns": [
+            { "h": "核验项", "width": "150px" },
+            { "h": "公开信息" },
+            { "h": "状态", "align": "c", "width": "96px" },
+            { "h": "证据", "align": "c", "width": "80px" }
+          ],
+          "rows": [
+            ["主营是否含石化品", "SABIC Chemicals 业务线列有 glycols（乙二醇类）等产品", "已核实", "E02"],
+            ["是否明确列出 MEG", "SABIC 官网设有 SABIC® Monoethylene Glycol 专属产品页，标注 2 个等级、覆盖 Asia/MEA/Europe/Americas", "已核实", "E02"],
+            ["应用是否匹配", "官网：MEG 主要用于 PET（纤维与包装级）与防冻液，兼作脱水剂与吸湿剂——与我方聚酯/PET 用途一致", "已核实", "E02"],
+            ["规格是否覆盖", "纤维级 ≥99.9%、DEG ≤0.08%、色度 ≤10 属于商业级 MEG 常见口径；但官网未公开逐级指标", "未核实", "E02"],
+            ["PETROKEMYA 单体是否被点名生产 MEG", "SABIC 集团层面确认有 MEG；PETROKEMYA 单体与 MEG 的对应关系未见官方逐条列示", "未核实", "E04,E05"],
+            ["包装与物流", "SABIC 提供 bulk 与 non-bulk（drum/ISO tank/flexibag）形态（TDS 文件标题可见）", "未核实", "E13"],
+            ["中国方向到货能力（时点）", "2026 年 10 月沙特方向 MEG 到中国约 12 万吨（LANIKAI、TONDA、NCC NAJEM、CAROLINE 等船），为恢复期数据；另有 CCFGroup 口径称 10 月总进口 26–27 万吨，两源口径不同", "未核实", "E10,E17"]
+          ],
+          "pill_cols": { "2": true },
+          "evid_cols": [3]
+        },
+        {
+          "type": "note",
+          "text": "判断口径：产品页证明「集团卖 MEG」，不等于「PETROKEMYA 这条产线卖给我方这个规格」。产品匹配的最后一公里必须由 COA（批号级）+ TDS（等级）+ 装箱单三件对齐。"
+        }
+      ]
+    },
+    {
+      "id": "s03",
+      "no": "03",
+      "title": "工厂与生产证据",
+      "sub": "是否真有工厂、在哪、产能口径、制造关系能否证明",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "plant",
+          "title": "生产设施与制造关系",
+          "columns": [
+            { "h": "核查项", "width": "150px" },
+            { "h": "公开信息" },
+            { "h": "状态", "align": "c", "width": "96px" },
+            { "h": "证据", "align": "c", "width": "80px" }
+          ],
+          "rows": [
+            ["工厂位置", "Petrokemya Al-Jubail Complex，沙特东部省朱拜勒工业城", "已核实", "E04,E05"],
+            ["综合体产能", "GlobalData 口径：Petrokemya Al-Jubail 综合体石化产能约 10.46 mtpa，1985 年起商业化运行，位列中东活跃石化综合体第一", "未核实", "E05"],
+            ["是否生产 MEG", "第三方贸易新闻将 Petrokemya 列为沙特 MEG 生产企业之一（欧盟反倾销背景）", "未核实", "E06"],
+            ["投产与扩建史", "1981 年成立、1985 年投料；乙烯产能曾规划扩至 2.3 mt/y（MEED，2000 年前后）", "未核实", "E04"],
+            ["集团其他 MEG 装置（对照）", "Jubail United Petrochemicals 2022-10 投产 700,000 t/y MEG（其第 3 套 EG 装置）；Yansab 有 MEG 装置并于 2026-01 进行 25 天检修；Petro Rabigh 600 KTA", "已核实", "E14,E15,E16"],
+            ["本批次可用量/发货计划", "无公开信息，需 PI + 生产计划 + 装运窗口确认", "未知", "—"]
+          ],
+          "pill_cols": { "2": true },
+          "evid_cols": [3],
+          "foot": "注意：10.46 mtpa 是「综合体全部石化产品」口径，不是 MEG 单产品产能，不能直接当作 MEG 可供量。"
+        },
+        {
+          "type": "hierarchy",
+          "title": "集团内制造/销售关系图（示意）",
+          "layers": [
+            { "layer": "股东层", "nodes": ["Saudi Aramco（约 70%，二手来源）", "SABIC 公众股东（Tadawul 上市）"] },
+            { "layer": "集团层", "nodes": ["SABIC（CR 1010010813，利雅得）— 全球销售与产品目录"] },
+            { "layer": "生产层", "nodes": ["PETROKEMYA（朱拜勒，全资）", "Jubail United（朱拜勒，全资）", "SHARQ（朱拜勒，SABIC 50% + SPDC 50%）", "Yansab（延布，SABIC 51%）", "Petro Rabigh（拉比格，JV）"] },
+            { "layer": "交易层", "nodes": ["本次拟签约主体：PETROKEMYA（PI 抬头）", "出口/收款方：待确认（模拟件中为第三方贸易公司）"] }
+          ],
+          "note": "同一集团内「生产公司 / 销售公司 / 收款方」分离是跨国化工的常态，但必须在合同与付款指令中逐层对应，不能因为名字都叫 SABIC 就默认一体。"
+        }
+      ]
+    },
+    {
+      "id": "s04",
+      "no": "04",
+      "title": "官网与联系信息",
+      "sub": "域名、邮箱、电话、地址是否自洽且指向同一主体",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "web",
+          "title": "联系要素核验",
+          "columns": [
+            { "h": "要素", "width": "130px" },
+            { "h": "内容" },
+            { "h": "状态", "align": "c", "width": "96px" },
+            { "h": "证据", "align": "c", "width": "80px" }
+          ],
+          "rows": [
+            ["集团官网", "sabic.com（含 /en/products/chemicals/glycols 产品路径）", "已核实", "E02"],
+            ["子公司官网", "petrokemya.com.sa —— 域名来自第三方工业名录；本次直连失败，未能验证 TLS/备案/页面主体", "未核实", "E12,E11"],
+            ["公开邮箱", "petrokemya@petrokemya.sabic.com（第三方名录）；sabic.com 是其父域", "未核实", "E12"],
+            ["电话区号", "+966 13 358 7000（+966 为沙特，013 为东部省/达曼—朱拜勒区号）", "未核实", "E12"],
+            ["邮件域名一致性", "供应商名片邮箱（模拟）为 petrokemya-sabic.com —— 与上述两个官方域名均不同，属高风险信号", "存在疑点", "F03"],
+            ["在售地址与注册地址", "未取得街道级地址；PI（模拟）所载地址无法与官方登记交叉验证", "未知", "—"]
+          ],
+          "pill_cols": { "2": true },
+          "evid_cols": [3]
+        },
+        {
+          "type": "note",
+          "tone": "warn",
+          "text": "域名比对规则（可直接复用）：把官网主域（petrokemya.sabic.com 的子域 sabic.com）与邮件域名并排看。凡出现连字符拼接近似域（petrokemya-sabic.com）、不同 TLD（.sa 换成 .com/.net）、或与官网不共域的情况，一律视为「待验证」，要求供应商用官网公开邮箱回函确认，而不是继续用该邮箱沟通。"
+        }
+      ]
+    },
+    {
+      "id": "s05",
+      "no": "05",
+      "title": "交易主体一致性",
+      "sub": "合同主体 / 实际供货主体 / 收款主体 三者是否对齐",
+      "blocks": [
+        {
+          "type": "matrix_map",
+          "title": "一致性核对矩阵（模拟件，仅演示核验方法）",
+          "rows": [
+            { "item": "合同/卖方主体（PI 抬头）", "a": "PETROKEMYA（模拟）", "b": "PETROKEMYA", "c": "SABIC 全资子公司", "state": "未核实", "evid": "F01,E04,E05", "note": "名称与归属可对上（E04/E05）；但 PI 未载 CR 号，签署人身份未证实" },
+            { "item": "实际供货/发货主体", "a": "未载明（模拟 PI 只有卖方章）", "b": "生产装置：朱拜勒", "c": "需 B/L 发货人 + 原产地证", "state": "未核实", "evid": "F01,E05", "note": "需装运单据确认发货人即卖方或其授权方" },
+            { "item": "收款主体（收款户名）", "a": "GULF MERIDIAN TRADING FZE（模拟）", "b": "与 PI 抬头不同", "c": "不与 PETROKEMYA/SABIC 同名", "state": "存在疑点", "evid": "F01,F02", "note": "差异本身不是欺诈证据；但未取得授权书前不得付款" },
+            { "item": "收款账户开户地", "a": "阿联酋（模拟）", "b": "沙特卖方", "c": "跨境第三方收款", "state": "存在疑点", "evid": "F02", "note": "需解释集团资金归集或代理收款安排" },
+            { "item": "联系邮箱域名", "a": "petrokemya-sabic.com（模拟）", "b": "sabic.com / petrokemya.com.sa", "c": "近似域", "state": "存在疑点", "evid": "F03,E02,E12", "note": "落入「近似域」规则，需官网回函判定" },
+            { "item": "INCOTERM 与交货地", "a": "CFR 中国主港（模拟）", "b": "MEG 散装/ISO tank 常规", "c": "口径一致", "state": "未核实", "evid": "F01", "note": "条款本身不产生主体问题；但本批次装运港与舱位未确认（G07）" },
+            { "item": "盖章/签字", "a": "仅有电子章 PNG（模拟）", "b": "无签字人姓名职务", "c": "无法验签", "state": "存在疑点", "evid": "F01", "note": "要求签署页手签 + 职务 + 公司抬头纸" }
+          ],
+          "foot": "处置原则：收款主体 ≠ 合同主体时，先要三份文件再谈付款——①卖方签署的付款指令/授权书（含银行确认函回执）②收款方与卖方之间的关系声明 ③通过官网公开邮箱或电话回呼确认。三份任一缺失即不放款。"
+        },
+        {
+          "type": "chain",
+          "title": "单据链条应该怎样闭合",
+          "items": [
+            { "code": "①", "name": "PI/合同", "role": "锁定卖方主体、品名规格、数量价格、付款条件", "self": true },
+            { "code": "②", "name": "付款指令", "role": "由卖方公司抬头纸出具，列户名/账号/SWIFT，附银行确认函", "self": false },
+            { "code": "③", "name": "商业发票", "role": "发票抬头须与合同、B/L 发货人一致", "self": false },
+            { "code": "④", "name": "提单 B/L", "role": "发货人=卖方或其授权出口方；收货人=我方", "self": false },
+            { "code": "⑤", "name": "原产地证 CO", "role": "证明货物实际生产国，与工厂地址呼应", "self": false },
+            { "code": "⑥", "name": "COA/SDS", "role": "批号级质量证据；SDS 版本号与生产商名称对应", "self": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s06",
+      "no": "06",
+      "title": "公开风险与合规",
+      "sub": "制裁、司法、供应中断、贸易救济等值得关注的事项",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "risk_scan",
+          "title": "公开风险扫描（只列查得到的事实，不评级）",
+          "columns": [
+            { "h": "议题", "width": "160px" },
+            { "h": "查得的事实" },
+            { "h": "状态", "align": "c", "width": "96px" },
+            { "h": "证据", "align": "c", "width": "80px" }
+          ],
+          "rows": [
+            ["供应中断（时点）", "2026-03-26，SABIC 就 SM、EG、乙醇胺等产品宣布不可抗力，原因是霍尔木兹海峡实际关闭近一个月，影响亚洲与欧洲供应", "未核实", "E08,E09"],
+            ["供应恢复（时点）", "2026-10，中国自沙特 MEG 到港回升至约 12 万吨（8、9 月基数低），11 月预计持平或略高；同时 Saudi 货源海运通行改善", "未核实", "E10,E17"],
+            ["贸易救济", "2021 年欧盟对沙特 MEG 征收 11.1% 反倾销税，沙特向 WTO 提出磋商；涉及 Yansab、Kayan、SHARQ、YANPET、Petrokemya 等——说明被点名企业确实是出口生产商", "未核实", "E06,E18"],
+            ["产能扩张", "SABIC Fujian 1 mt/y MEG 装置预计 2026 年 10 月底启动，11 月起有增量产出（面向华南）", "未核实", "E10"],
+            ["环境/气候承诺", "SABIC 公开 Net-Zero 2050 承诺（集团层面）", "未核实", "E07"],
+            ["制裁名单", "本次未进行 OFAC/EU/UN 名单逐项比对（缺供应商英文全称+CR号的精确匹配输入）", "未核实", "—"],
+            ["司法诉讼/破产", "本次未检索到与 PETROKEMYA 相关的诉讼、仲裁或破产信息；沙特商事司法公开度有限", "未知", "—"],
+            ["负面报道", "未检索到针对 PETROKEMYA 的欺诈、伪造单据类公开报道", "未核实", "—"]
+          ],
+          "pill_cols": { "2": true },
+          "evid_cols": [3],
+          "foot": "「未检索到」≠「不存在」。制裁筛查必须用英文全称 + 注册号 + 地址三要素匹配，且留存截图与查询时间戳。"
+        },
+        {
+          "type": "note",
+          "text": "本批次采购的时点含义：MEG 供应正在从 2026 年上半年的中断中恢复，现货与到港量回升意味着<b>卖方履约压力下降</b>，但也意味着此时议价窗口与舱位安排比「谁真有工厂」更关键。公开信息只能说明产能存在，不能说明分配给我方的吨位存在。"
+        }
+      ]
+    },
+    {
+      "id": "s07",
+      "no": "07",
+      "title": "文件交叉核验",
+      "sub": "PI / 注册证书 / 产品目录 / SDS / COA / 银行信息 的一致性与缺陷",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "docs",
+          "title": "已提交（含模拟）文件逐件核验",
+          "columns": [
+            { "h": "编号", "width": "56px" },
+            { "h": "文件", "width": "150px" },
+            { "h": "核验要点" },
+            { "h": "状态", "align": "c", "width": "92px" },
+            { "h": "证据", "align": "c", "width": "70px" }
+          ],
+          "rows": [
+            ["F01", "形式发票 PI（模拟）", "抬头 PETROKEMYA；未载 CR；收款户名为第三方 FZE；电子章无签字人——三项不一致", "存在疑点", "F01"],
+            ["F02", "银行收款信息（模拟）", "户名 GULF MERIDIAN TRADING FZE（阿联酋），与卖方主体不同；无银行确认函", "存在疑点", "F02"],
+            ["F03", "名片/邮箱（模拟）", "域名 petrokemya-sabic.com，与 sabic.com / petrokemya.com.sa 均不同", "存在疑点", "F03"],
+            ["F04", "公司介绍（模拟）", "图文为通用模板式内容，未出现装置编号、许可证号，无法核验", "未核实", "F04"],
+            ["F05", "产品目录（模拟）", "MEG 条目未标等级名称与批号规则，与官网「2 个等级」不对应", "未核实", "F05"],
+            ["F06", "SDS（未提供）", "需与生产商名称、版本号、CAS 107-21-1 对应；本次无文件", "未知", "—"],
+            ["F07", "COA（未提供）", "需批号级、检测方法与结果，且与装运批对应；本次无文件", "未知", "—"],
+            ["F08", "注册证书（未提供）", "需 CR 证书原件扫描 + 商业注册号可核验；本次无文件", "未知", "—"]
+          ],
+          "pill_cols": { "3": true },
+          "evid_cols": [4]
+        },
+        {
+          "type": "note",
+          "tone": "warn",
+          "text": "模拟件声明：F01–F05 为本方法演示而制作的<b>虚构样本</b>，用于验证一致性检查逻辑，不代表任何真实企业曾向我方报价或出具文件。真实采购中应使用供应商实际提交的原件扫描件替换。"
+        },
+        {
+          "type": "risknotes",
+          "items": [
+            { "t": "PI 抬头与收款户名不一致", "d": "不能直接判定为欺诈，但属于付款前的硬性阻断项；须补齐授权书、关系声明与回呼核实。" },
+            { "t": "电子章无签字人", "d": "要求签署页体现签字人姓名、职务、日期，并使用公司抬头纸。" },
+            { "t": "缺 CR 号与批号级 COA", "d": "无法把「这家公司」与「这批货」绑定，也无法做制裁名单精确匹配。" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s08",
+      "no": "08",
+      "title": "待索取材料与下一步",
+      "sub": "把「未知」变成「已知」的最小文件集",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "todo",
+          "title": "补件清单（按优先级）",
+          "columns": [
+            { "h": "编号", "width": "60px" },
+            { "h": "材料", "width": "210px" },
+            { "h": "用途" },
+            { "h": "优先级", "align": "c", "width": "80px" }
+          ],
+          "rows": [
+            ["M01", "商业登记证书 CR 扫描件（含 QR 码）", "确认法定名称、CR 号、注册地址、法人形式、存续状态", "高"],
+            ["M02", "工业许可证（Industrial License）与环保许可", "确认朱拜勒装置合法运营与产品范围", "高"],
+            ["M03", "卖方签署的正式 PI（公司抬头纸 + 手签 + 职务）", "锁定合同主体与交易条款", "高"],
+            ["M04", "卖方出具的付款指令 + 银行确认函（Bank Confirmation Letter）", "解决收款主体与合同主体不一致问题", "高"],
+            ["M05", "集团内授权/代理关系声明（如收款方为关联贸易公司）", "解释第三方收款的商业合理性", "高"],
+            ["M06", "MEG 批号级 COA（含批次、检测方法、生产商抬头）", "把货物与生产主体绑定", "高"],
+            ["M07", "MEG SDS（最新版本，生产商名称与版本号）", "合规与运输申报基础", "中"],
+            ["M08", "TDS（等级、规格、包装形式）", "确认纤维级指标与包装", "中"],
+            ["M09", "近 6 个月同类产品出口提单样本（脱敏）", "证明真实出口记录与发货人身份", "中"],
+            ["M10", "ISO 9001/14001/45001 证书（在有效期内，编号可查）", "体系与质量稳定性旁证", "中"],
+            ["M11", "交货计划与装运窗口确认（含舱位/罐箱安排）", "评估时点上的可交付性", "中"],
+            ["M12", "最终受益人（UBO）声明", "制裁与反洗钱合规", "中"]
+          ],
+          "pill_cols": { "3": true }
+        },
+        {
+          "type": "steps",
+          "items": [
+            { "n": "1", "t": "用官网公开邮箱回呼", "d": "不回复从可疑域名发来的邮件；改由 sabic.com 官网表单或官方电话确认联系人身份。" },
+            { "n": "2", "t": "补齐 CR 与工业许可", "d": "待网络条件允许时，用 Wathq / 商工部查询服务核验 CR 号；留存查询截图与时间。" },
+            { "n": "3", "t": "闭环收款主体", "d": "拿到 M04+M05 后，由财务以银行资信路径复核账户有效性（不做不可靠的在线断言）。" },
+            { "n": "4", "t": "条款层面控风险", "d": "优先使用 L/C 或预付比例受控的付款结构；散装 MEG 可考虑装港检验（SGS/Intertek）。" },
+            { "n": "5", "t": "装运单据核对", "d": "B/L、CO、发票、装箱单、COA 四方主体与批号对齐后才安排尾款。" }
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "E01", "claim": "Yansab 官网披露其 CR 号 4700009432 与工业许可证号 S/1367", "publisher": "Yanbu National Petrochemical Company（SABIC 旗下）", "type": "official", "grade": "primary", "stance": "support", "url": "https://www.yansab.com.sa/en/our-company", "published": "官网当前版本", "accessed": "2026-10-20", "quote": "Yanbu National Petrochemical Company (Yansab) is a Saudi Joint Stock Company registered in the Kingdom of Saudi Arabia under Commercial Registration number 4700009432 ... Industrial License number S/1367", "used_for": "同类对照：理解沙特 CR 编号与许可证格式", "note": "上市公司官网一手披露" },
+    { "id": "E02", "claim": "SABIC 官网列有 SABIC® Monoethylene Glycol 产品，2 个等级，覆盖亚洲/MEA/欧洲/美洲；用途为 PET 与防冻液", "publisher": "SABIC", "type": "official", "grade": "primary", "stance": "support", "url": "https://www.sabic.com/en/products/chemicals/glycols/sabic-monoethylene-glycol", "published": "官网当前版本", "accessed": "2026-10-20", "quote": "SABIC® Monoethylene Glycol - Grades Available: 2 - Available in: Europe, Asia, MEA, Americas, Global ... MEG is mainly used in the production of polyester, commonly known as \"PET\" ... and antifreeze solution.", "used_for": "产品线是否存在 MEG、应用是否匹配", "note": "" },
+    { "id": "E03", "claim": "SABIC 母公司为沙特股份公司，1976 年设立，在利雅得注册，CR 号 1010010813", "publisher": "SABIC 季度财报（Q2 2023 / Q3 2025 财报原文）", "type": "regulatory", "grade": "primary", "stance": "support", "url": "https://www.sabic.com/en/Images/Quarterly%20report%202025%20Q3_tcm1010-49150.pdf", "published": "2025-10-30", "accessed": "2026-10-20", "quote": "Saudi Basic Industries Corporation (\"SABIC\") is a Saudi Joint Stock Company established pursuant to Royal Decree Number M/66 ... registered in Riyadh under commercial registration No. 1010010813 dated 14 Muharram 1397H", "used_for": "母公司主体身份与注册号", "note": "PDF 本次未能下载全文，摘录来自搜索引擎索引的财报原文片段；正式引用前应下载原件复核" },
+    { "id": "E04", "claim": "Arabian Petrochemical Company (PETROKEMYA) 完全由 SABIC 拥有，1981 年 5 月成立，1985 年 5 月投料", "publisher": "saudiindustri.com（沙特工业名录，转述企业简介）", "type": "directory", "grade": "secondary", "stance": "support", "url": "https://www.saudiindustri.com/industry/arabian-petrochemical-company-petrokemya/", "published": "未知", "accessed": "2026-10-20", "quote": "PETROKEMYA, which is entirely owned by SABIC, was established in May 1981 and started its operation in May 1985", "used_for": "归属关系与成立时间", "note": "二手转述，需以 SABIC 年报或 CR 佐证" },
+    { "id": "E05", "claim": "Petrokemya Al-Jubail 综合体位于沙特东部省，1985 年起商业化运行，石化产能约 10.46 mtpa", "publisher": "Offshore Technology（援引 GlobalData 石化数据库）", "type": "industry_db", "grade": "secondary", "stance": "support", "url": "https://www.offshore-technology.com/data-insights/top-ten-active-petrochemical-complexes-in-middle-east/", "published": "2023-05-04", "accessed": "2026-10-20", "quote": "Petrokemya Al-Jubail Complex is located in Eastern Province, Saudi Arabia. The plants at this complex are operated by Petrokemya. The complex started commercial operations in 1985 and has petrochemical capacity of 10.46mtpa.", "used_for": "工厂位置与综合体产能量级", "note": "综合体口径 ≠ MEG 单产品产能" },
+    { "id": "E06", "claim": "欧盟 2021 年对沙特 MEG 征收 11.1% 反倾销税；点名 Yansab、Kayan、SHARQ、YANPET、Petrokemya 等企业，沙特向 WTO 提出磋商", "publisher": "Argaam（援引 WTO 声明与欧盟公告）", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.argaam.com/en/article/articledetail/id/1490717", "published": "2021-08-20", "accessed": "2026-10-20", "quote": "The anti-dumping duties reached 11.1% on monoethylene glycol imports from all Saudi companies, including Yanbu National Petrochemical Co. (Yansab), Saudi Kayan Petrochemical Co., Al Sharqiyah Petrochemicals Co. (Sharq), Saudi Yanbu Petrochemical Co. (YANPET), Arabian Petrochemical Co. (Petrokemya) and Jubail United Petrochemical Co.", "used_for": "第三方将 PETROKEMYA 列为沙特 MEG 出口生产商", "note": "年份较早，仅作背景" },
+    { "id": "E07", "claim": "SABIC 为沙特交易所上市石化公司，沙特阿美持股约 70%", "publisher": "Wikipedia", "type": "encyclopedia", "grade": "tertiary", "stance": "context", "url": "https://en.wikipedia.org/wiki/SABIC", "published": "持续更新", "accessed": "2026-10-20", "quote": "70% of SABIC's shares are owned by Saudi Aramco.", "used_for": "股东结构背景", "note": "仅作线索，不作认定；应以 Tadawul 公告为准" },
+    { "id": "E08", "claim": "SABIC 于 2026-03-26 就多个产品（含 EG）宣布不可抗力，原因是霍尔木兹海峡关闭导致出口受阻", "publisher": "ICIS（Insight 报道）", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.icis.com/explore/resources/news/2026/03/30/11193220/insight-saudi-sabic-force-majeure-aggravates-global-chemicals-shortage/", "published": "2026-03-30", "accessed": "2026-10-20", "quote": "Saudi petrochemical giant SABIC declared on 26 March a force majeure on several products as exports are impeded by the effective closure of the Strait of Hormuz for nearly a month ... SM, EG, ethanolamines supply to Asia affected", "used_for": "供应能力时点风险", "note": "" },
+    { "id": "E09", "claim": "SABIC 于 2026 年 3 月底就 MEG 等产品宣布不可抗力，中国 CFR MEG 价格升至约 635 美元/吨", "publisher": "ChinaTexnet（转引 Fibre2Fashion）", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.chinatexnet.com/textile-news/2026-04-09/1071472.html", "published": "2026-04-09", "accessed": "2026-10-20", "quote": "Saudi Basic Industries Corporation (SABIC) declared force majeure on MEG ... CFR China MEG prices have recently climbed to around $635/ton ... Middle Eastern MEG supplies account for nearly 60% of China's total imports.", "used_for": "中断期间的价格与依赖度背景", "note": "" },
+    { "id": "E10", "claim": "2026 年 10 月中国自沙特 MEG 到港回升至约 12 万吨，11 月预计持平或略高；SABIC Fujian 1 mt/y 装置预计 10 月底启动", "publisher": "ChinaTexnet（转引 CCFGroup）", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.chinatexnet.com/textile-news/2026-10-19/1086796.html", "published": "2026-10-19", "accessed": "2026-10-20", "quote": "Based on vessels scheduled to arrive in October, Saudi cargoes should rise month on month to around 120 kt, carried on the LANIKAI, TONDA, NCC NAJEM and CAROLINE ... Sabic Fujian Petrochemical's 1 million mt/year unit is also scheduled to start around end-October", "used_for": "当前供应恢复情况", "note": "行业资讯口径，非官方统计" },
+    { "id": "E11", "claim": "沙特商工部商业登记查询服务存在，但本次网络环境直连失败（连接中断）", "publisher": "Ministry of Commerce（mc.gov.sa）查询服务页；本机网络", "type": "official", "grade": "primary", "stance": "note", "url": "https://my.gov.sa/en/services/18443", "published": "—", "accessed": "2026-10-20", "quote": "An electronic service provided by the Ministry of Commerce, allowing beneficiaries to view commercial registry data electronically without having to visit the Ministry's branches.", "used_for": "说明「为何 CR 未能直连核验」", "note": "属核验环境限制，需在可访问网络下补做" },
+    { "id": "E12", "claim": "PETROKEMYA 官方域名为 petrokemya.com.sa，电话 +966 13 358 7000，邮箱 petrokemya@petrokemya.sabic.com", "publisher": "saudiindustri.com 名录", "type": "directory", "grade": "secondary", "stance": "context", "url": "https://www.saudiindustri.com/industry/arabian-petrochemical-company-petrokemya/", "published": "未知", "accessed": "2026-10-20", "quote": "www.petrokemya.com.sa +966133587000 petrokemya@petrokemya.sabic.com", "used_for": "官网/联系方式基线", "note": "需以官网页面本身复核" },
+    { "id": "E13", "claim": "SABIC 提供 MEG 的散装与桶装/ISO 罐箱/吨袋形态 TDS", "publisher": "SABIC TDS（经第三方经销网站转载）", "type": "official", "grade": "secondary", "stance": "support", "url": "https://metasan.co/core/wp-content/uploads/products/DataSheets/tds-meg-sabic-1789806339.pdf", "published": "2023-09-25", "accessed": "2026-10-20", "quote": "SABIC® MONOETHYLENE GLYCOL - NON-BULK ... FOR TRANSPORTATION IN DRUMS/TRUCKS/ISO TANKS/FLEXI BAGS REGION MEA", "used_for": "包装形态匹配", "note": "转载件，需索取官方原件" },
+    { "id": "E14", "claim": "SABIC 子公司 Jubail United Petrochemicals 于 2022-10-17 投产 700,000 t/y MEG 装置（其第 3 套 EG 装置）", "publisher": "MEES", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.mees.com/2022/10/21/refining-petrochemicals/sabic-jubail-meg-start-up/9026f600-5130-11ed-9c64-736c27d572dc", "published": "2022-10-21", "accessed": "2026-10-20", "quote": "operations have started at a new 700,000 t/y monoethylene glycol (MEG) plant ... The plant is the third Ethylene Glycols plant to be operated by its Jubail United Petrochemicals (United) subsidiary.", "used_for": "集团内 MEG 装置对照", "note": "原文将 Jubail 描述为 Red Sea hub，属地理误标（朱拜勒在阿拉伯湾一侧），引用时勿沿用" },
+    { "id": "E15", "claim": "Yansab 计划自 2026-01-25 起对 EG 装置进行 25 天计划检修", "publisher": "Argaam", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.argaam.com/en/article/articledetail/id/1874631", "published": "2026-01-22", "accessed": "2026-10-20", "quote": "Yanbu National Petrochemical Co. (Yansab) plans to shut its ethylene glycol plant for 25 days starting Jan. 25 to carry out preventive maintenance", "used_for": "证明 Yansab 确有 EG 装置", "note": "" },
+    { "id": "E16", "claim": "Petro Rabigh 通过其工艺生产 600 KTA 单乙二醇（MEG）", "publisher": "Petro Rabigh 官网产品页", "type": "official", "grade": "primary", "stance": "context", "url": "https://www.petrorabigh.com/en/OurProducts/Monomer/Pages/MonoEthyleneGlycolMEG.aspx", "published": "官网当前版本", "accessed": "2026-10-20", "quote": "Petro Rabigh produces 600 KTA of Mono Ethylene Glycol (MEG)", "used_for": "沙特 MEG 生产商对照", "note": "" },
+    { "id": "E17", "claim": "中国 9 月 MEG 进口约 14 万吨，10 月预计 26–27 万吨，主要由沙特发货增加带动；霍尔木兹通行改善", "publisher": "CCFGroup", "type": "media", "grade": "secondary", "stance": "context", "url": "https://cnc.ccfgroup.com/newscenter/newsview.php?Class_ID=D00000&Info_ID=2026101330094", "published": "2026-10-13", "accessed": "2026-10-20", "quote": "China's MEG imports are expected to nearly double from around 140kt in September to 260-270kt in October, driven mainly by increased Saudi shipments.", "used_for": "供应链恢复的交叉印证", "note": "" },
+    { "id": "E18", "claim": "欧盟拟对沙特与美国 MEG 征收反倾销税（沙特 11.1%，美国 38.3%）", "publisher": "Argaam", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.argaam.com/en/article/articledetail/id/1467913", "published": "2021-05-17", "accessed": "2026-10-20", "quote": "The anti-dumping duties on MEG imports from Saudi Arabia are estimated at 11.1%.", "used_for": "贸易救济背景", "note": "" },
+    { "id": "F01", "claim": "【模拟】形式发票抬头 PETROKEMYA，卖方地址朱拜勒工业城，收款户名为第三方 FZE，未载 CR 号", "publisher": "本报告制作的模拟样本（非真实文件）", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-01-saudi-meg/mock-docs/01_PI_PETROKEMYA_SIMULATED.md", "published": "2026-10-12（模拟签发日）", "accessed": "2026-10-20", "quote": "SELLER: ARABIAN PETROCHEMICAL COMPANY (PETROKEMYA) ... BENEFICIARY NAME: GULF MERIDIAN TRADING FZE", "used_for": "演示一致性检查", "note": "虚构样本，不代表真实企业行为" },
+    { "id": "F02", "claim": "【模拟】银行收款信息：户名 GULF MERIDIAN TRADING FZE，阿联酋开户，无银行确认函", "publisher": "本报告制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-01-saudi-meg/mock-docs/02_BANK_INSTRUCTIONS_SIMULATED.md", "published": "2026-10-12（模拟）", "accessed": "2026-10-20", "quote": "BENEFICIARY: GULF MERIDIAN TRADING FZE ... IBAN: AE00 0000 0000 0000 0000 000", "used_for": "演示收款主体比对", "note": "虚构样本" },
+    { "id": "F03", "claim": "【模拟】供应商联系人名片邮箱为 sales@petrokemya-sabic.com，与官方域名不同", "publisher": "本报告制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-01-saudi-meg/mock-docs/03_CONTACT_CARD_SIMULATED.md", "published": "2026-10-12（模拟）", "accessed": "2026-10-20", "quote": "Email: sales@petrokemya-sabic.com", "used_for": "演示域名一致性检查", "note": "虚构样本" },
+    { "id": "F04", "claim": "【模拟】供应商公司介绍为通用模板式，未载装置编号与许可证号", "publisher": "本报告制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-01-saudi-meg/mock-docs/04_COMPANY_PROFILE_SIMULATED.md", "published": "2026-10-12（模拟）", "accessed": "2026-10-20", "quote": "PETROKEMYA is one of the world's leading petrochemical producers, with world-class facilities.", "used_for": "演示「宣传语不可作为产能证据」", "note": "虚构样本" },
+    { "id": "F05", "claim": "【模拟】产品目录中 MEG 未标等级名称，与官网「2 个等级」不对应", "publisher": "本报告制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-01-saudi-meg/mock-docs/05_PRODUCT_CATALOGUE_SIMULATED.md", "published": "2026-10-12（模拟）", "accessed": "2026-10-20", "quote": "MEG (Mono Ethylene Glycol) — Fiber Grade — Purity 99.9% min", "used_for": "演示产品匹配的等级缺口", "note": "虚构样本" }
+  ],
+  "documents": [
+    { "id": "F01", "name": "形式发票 PI（模拟）", "type": "PI", "holder": "PETROKEMYA", "issuer": "PETROKEMYA（模拟）", "pages": "1 页（模拟）", "provided": true, "mock": true, "checks": [ { "k": "卖方名称与页眉", "ok": true, "v": "ARABIAN PETROCHEMICAL COMPANY (PETROKEMYA)" }, { "k": "CR 号载明", "ok": false, "v": "未载 CR 号" }, { "k": "签字人姓名/职务", "ok": false, "v": "仅有电子章图片" }, { "k": "收款户名与卖方一致", "ok": false, "v": "GULF MERIDIAN TRADING FZE" }, { "k": "品名/规格/数量/INCOTERM", "ok": true, "v": "MEG Fiber Grade 5,000 MT CFR 中国主港" }, { "k": "有效期与装运期", "ok": true, "v": "有效期 15 天；装运 2026-11" } ], "note": "模拟件，用于演示一致性检查" },
+    { "id": "F02", "name": "银行收款信息（模拟）", "type": "BANK", "holder": "GULF MERIDIAN TRADING FZE", "issuer": "供应商邮件附件（模拟）", "pages": "1 页（模拟）", "provided": true, "mock": true, "checks": [ { "k": "户名与合同主体一致", "ok": false, "v": "与 PETROKEMYA 不一致" }, { "k": "开户国与卖方注册国", "ok": false, "v": "阿联酋 vs 沙特" }, { "k": "附银行确认函", "ok": false, "v": "无" }, { "k": "发票地址与 SWIFT", "ok": false, "v": "地址栏空白" } ], "note": "模拟件" },
+    { "id": "F03", "name": "名片/邮箱（模拟）", "type": "CONTACT", "holder": "sales@petrokemya-sabic.com", "issuer": "供应商联系人（模拟）", "pages": "—", "provided": true, "mock": true, "checks": [ { "k": "域名与官网同域", "ok": false, "v": "petrokemya-sabic.com 非 sabic.com 子域" }, { "k": "号码与官方电话一致", "ok": false, "v": "名片为手机号" } ], "note": "模拟件" },
+    { "id": "F04", "name": "公司介绍（模拟）", "type": "PROFILE", "holder": "PETROKEMYA", "issuer": "供应商（模拟）", "pages": "2 页（模拟）", "provided": true, "mock": true, "checks": [ { "k": "含装置编号", "ok": false, "v": "无" }, { "k": "含许可证号", "ok": false, "v": "无" }, { "k": "含 MEG 单产品产能", "ok": false, "v": "仅有「world-class」表述" } ], "note": "模拟件" },
+    { "id": "F05", "name": "产品目录（模拟）", "type": "CATALOGUE", "holder": "PETROKEMYA", "issuer": "供应商（模拟）", "pages": "4 页（模拟）", "provided": true, "mock": true, "checks": [ { "k": "等级名称与官网对应", "ok": false, "v": "官网 2 个等级，目录未标等级名" }, { "k": "批号规则", "ok": false, "v": "无" } ], "note": "模拟件" },
+    { "id": "F06", "name": "SDS", "type": "SDS", "holder": "—", "issuer": "—", "pages": "—", "provided": false, "mock": false, "checks": [], "note": "待索取" },
+    { "id": "F07", "name": "COA", "type": "COA", "holder": "—", "issuer": "—", "pages": "—", "provided": false, "mock": false, "checks": [], "note": "待索取（批号级）" },
+    { "id": "F08", "name": "商业登记证书 CR", "type": "CR", "holder": "—", "issuer": "—", "pages": "—", "provided": false, "mock": false, "checks": [], "note": "待索取" }
+  ],
+  "entity_map": [
+    { "layer": "股东层", "entity": "Saudi Aramco", "kind": "ultimate_shareholder", "jurisdiction": "沙特阿拉伯", "evidence": "E07", "state": "未核实", "note": "持股约 70%（百科口径），需 Tadawul 公告确认" },
+    { "layer": "集团层", "entity": "Saudi Basic Industries Corporation (SABIC)", "kind": "group_parent", "jurisdiction": "沙特 / 利雅得", "evidence": "E03,E02", "state": "已核实", "note": "CR 1010010813；集团产品目录含 MEG" },
+    { "layer": "生产层", "entity": "Arabian Petrochemical Company (PETROKEMYA)", "kind": "manufacturer", "jurisdiction": "沙特 / 朱拜勒", "evidence": "E04,E05,E06", "state": "已核实", "note": "SABIC 全资；综合体在朱拜勒" },
+    { "layer": "生产层", "entity": "Jubail United Petrochemical Company", "kind": "manufacturer", "jurisdiction": "沙特 / 朱拜勒", "evidence": "E02,E14", "state": "未核实", "note": "2022 年投产 700 kt/y MEG（MEES 单一来源；其原文将朱拜勒误标为红海枢纽）" },
+    { "layer": "生产层", "entity": "Eastern Petrochemical Company (SHARQ)", "kind": "manufacturer_jv", "jurisdiction": "沙特 / 朱拜勒", "evidence": "E06", "state": "未核实", "note": "SABIC 50% + SPDC 50% JV" },
+    { "layer": "生产层", "entity": "Yanbu National Petrochemical Company (Yansab)", "kind": "manufacturer_jv", "jurisdiction": "沙特 / 延布", "evidence": "E01,E15", "state": "已核实", "note": "SABIC 51%；上市公司" },
+    { "layer": "生产层", "entity": "Rabigh Refining and Petrochemical Company (Petro Rabigh)", "kind": "manufacturer_jv", "jurisdiction": "沙特 / 拉比格", "evidence": "E16", "state": "已核实", "note": "600 KTA MEG" },
+    { "layer": "交易层", "entity": "PETROKEMYA（拟签约卖方）", "kind": "contract_party", "jurisdiction": "沙特", "evidence": "F01", "state": "存在疑点", "note": "仅出现在模拟 PI 抬头，缺 CR 号" },
+    { "layer": "交易层", "entity": "GULF MERIDIAN TRADING FZE（收款方，模拟）", "kind": "beneficiary", "jurisdiction": "阿联酋", "evidence": "F01,F02", "state": "存在疑点", "note": "与卖方主体不同，未取得授权" }
+  ],
+  "subject_master": {
+    "legal_name": "Arabian Petrochemical Company",
+    "short_name": "PETROKEMYA",
+    "country": "Saudi Arabia",
+    "address": "Al Jubail Industrial City, Eastern Province, Saudi Arabia（街道级地址未取得）",
+    "cr_no": "未知",
+    "parent": "Saudi Basic Industries Corporation (SABIC), CR 1010010813",
+    "ownership": "SABIC 全资子公司",
+    "website": "petrokemya.com.sa（第三方名录；直连失败）",
+    "products_claimed": "MEG / 石化品（集团目录口径）",
+    "contact": "+966 13 358 7000（第三方名录，未核实）",
+    "email_official": "petrokemya@petrokemya.sabic.com（第三方名录，未核实）",
+    "contract_party": "Arabian Petrochemical Company (PETROKEMYA)",
+    "beneficiary": "GULF MERIDIAN TRADING FZE（模拟）",
+    "incoterm": "CFR 中国主港（示例）",
+    "payment_terms": "待确认"
+  },
+  "gaps": [
+    { "id": "G01", "area": "企业身份", "gap": "PETROKEMYA 的商业登记号 CR 与街道级注册地址未取得", "impact": "无法做唯一主体验证与制裁名单精确匹配", "action": "索取 CR 证书扫描件；在可访问网络用 Wathq / 商工部查询核验", "owner": "采购 + 合规", "priority": "高" },
+    { "id": "G02", "area": "收款主体", "gap": "收款户名 GULF MERIDIAN TRADING FZE（模拟）与合同主体不同，无授权文件", "impact": "付款存在实质性误导风险", "action": "索取授权书 + 银行确认函 + 关系声明；官网邮箱回呼", "owner": "财务 + 采购", "priority": "高" },
+    { "id": "G03", "area": "联系信息", "gap": "名片邮箱域名 petrokemya-sabic.com 与官方域名不符", "impact": "可能在与非授权方沟通", "action": "改用官网渠道回函确认联系人", "owner": "采购", "priority": "高" },
+    { "id": "G04", "area": "产品能力", "gap": "纤维级规格指标未由 TDS/COA 证实", "impact": "可能存在等级不符", "action": "索取 TDS 与批号级 COA", "owner": "质检", "priority": "中" },
+    { "id": "G05", "area": "工厂证据", "gap": "MEG 单产品产能与 PETROKEMYA 产线的对应关系未有官方逐条列示", "impact": "只能确认集团有 MEG，不能确认本批次来源", "action": "索取生产装置编号、产能表与装运发货人信息", "owner": "采购", "priority": "中" },
+    { "id": "G06", "area": "合规筛查", "gap": "未完成 OFAC/EU/UN 制裁名单逐项比对", "impact": "合规敞口未知", "action": "以英文全称+CR号+地址三要素筛查并留痕", "owner": "合规", "priority": "高" },
+    { "id": "G07", "area": "供应能力", "gap": "本批次可用吨位、装运窗口与舱位未确认", "impact": "交付时间不确定", "action": "索取装运计划与舱位/罐箱确认", "owner": "采购", "priority": "中" }
+  ],
+  "timeline": [
+    { "date": "1981-05", "event": "PETROKEMYA 成立（SABIC 全资）", "evid": "E04", "tag": "entity" },
+    { "date": "1985-05", "event": "朱拜勒 Olefins I 投料，综合体进入商业化运行", "evid": "E04,E05", "tag": "plant" },
+    { "date": "2021-05", "event": "欧盟拟对沙特 MEG 征收 11.1% 反倾销税", "evid": "E18", "tag": "trade" },
+    { "date": "2021-08", "event": "沙特就 MEG 反倾销措施向 WTO 提出磋商，点名多家沙特 MEG 生产商", "evid": "E06", "tag": "trade" },
+    { "date": "2022-10-17", "event": "SABIC 旗下 Jubail United 投产 700 kt/y MEG 装置", "evid": "E14", "tag": "plant" },
+    { "date": "2026-01-25", "event": "Yansab EG 装置开始 25 天计划检修", "evid": "E15", "tag": "supply" },
+    { "date": "2026-03-26", "event": "SABIC 就 SM / EG / 乙醇胺等宣布不可抗力（霍尔木兹受阻）", "evid": "E08,E09", "tag": "supply" },
+    { "date": "2026-04-09", "event": "CFR 中国 MEG 涨至约 635 美元/吨", "evid": "E09", "tag": "price" },
+    { "date": "2026-10-13", "event": "10 月中国 MEG 进口预计 26–27 万吨，主要受沙特发货增加驱动", "evid": "E17", "tag": "supply" },
+    { "date": "2026-10-19", "event": "沙特方向 10 月到港约 12 万吨；SABIC Fujian 1 mt/y 装置预计 10 月底启动", "evid": "E10", "tag": "supply" },
+    { "date": "2026-10-20", "event": "本报告核验基准日", "evid": "—", "tag": "meta" }
+  ],
+  "rfi": {
+    "title": "Supplier Due-Diligence Enquiry — Monoethylene Glycol (MEG)",
+    "to": "The Authorised Representative of Arabian Petrochemical Company (PETROKEMYA) / SABIC",
+    "from": "[Your Company / Procurement Department]",
+    "date": "2026-10-20",
+    "ref": "ChineseBuyer-DDQ-MEG-2026-001",
+    "intro": "We are conducting pre-qualification checks ahead of a prospective purchase of fibre-grade monoethylene glycol. Please reply in writing on company letterhead, signed by an officer with authority to bind the company, attaching the documents listed. Replies from e-mail domains other than your official corporate domain will not be accepted as binding.",
+    "clauses": [
+      { "id": "A1", "text": "Confirm the full legal name, commercial registration (CR) number, address of the registered office, and legal form of the contracting entity, and attach a scan of the CR certificate." },
+      { "id": "A2", "text": "Identify the exact entity that will issue the commercial invoice and the bill of lading as shipper, and state its relationship to the contracting entity." },
+      { "id": "A3", "text": "If payment is to be made to an entity other than the contracting party, provide a signed payment instruction on company letterhead, a bank confirmation letter from the receiving bank, and a declaration of the relationship between the two entities." },
+      { "id": "A4", "text": "Identify the production site(s) (plant name, city, country) from which the goods supplied under this contract will originate, and attach the industrial licence covering those products." },
+      { "id": "A5", "text": "State the annual and monthly nameplate capacity for fibre-grade MEG at the producing site, and the volume earmarked for this enquiry with indicative loading windows." },
+      { "id": "A6", "text": "Provide the TDS for the grade offered, including purity, diethylene glycol content, colour (APHA) and water content specified limits." },
+      { "id": "A7", "text": "Provide a batch-level COA for a recent production batch of the same grade, on the producer's letterhead, showing test methods and results." },
+      { "id": "A8", "text": "Provide the current SDS (revision number and date) for MEG issued by the producer named on the COA." },
+      { "id": "A9", "text": "Confirm packaging and transport mode (bulk vessel, ISO tank, drum or flexitank) and, for bulk, the nominated load port and vessel/space arrangements." },
+      { "id": "A10", "text": "Provide copies of valid management-system certificates (e.g. ISO 9001, ISO 14001, ISO 45001) with certificate numbers and issuing bodies." },
+      { "id": "A11", "text": "Provide two recent bills of lading (redacted) for MEG shipments to confirm actual export performance and shipper identity." },
+      { "id": "A12", "text": "Confirm whether any sanctions, export restrictions or force majeure currently affect your ability to perform, and describe any such measure with dates." },
+      { "id": "A13", "text": "Provide an ultimate beneficial owner (UBO) declaration and any group structure chart showing the chain from the contracting entity to its ultimate parent." },
+      { "id": "A14", "text": "Confirm the proposal's validity period, delivery terms, governing law and dispute-resolution venue to be used in the contract." }
+    ]
+  },
+  "lessons": {
+    "dos": [
+      "先识别主体，再查产品：把「集团有 MEG」「这家公司有 MEG」「这批货来自这家公司」拆成三件事分别取证。",
+      "用官方或监管来源锚定身份；二手来源只作线索，不直接升级为「已核实」。",
+      "收款主体不一致时停下来要文件，而不是继续往下走。",
+      "所有「未知」都给出补件动作，让核验结果可被下一位同事接手。"
+    ],
+    "donts": [
+      "不要根据官网宣传认定真实产能、资金实力或履约能力。",
+      "不要在证据不足时给出风险分数或「低风险」标签。",
+      "不要把「未检索到负面信息」写成「无风险」。",
+      "不要因为名字相似就把不同法人当成同一主体（如 PETROKEMYA 与 Jubail United）。"
+    ]
+  }
+}

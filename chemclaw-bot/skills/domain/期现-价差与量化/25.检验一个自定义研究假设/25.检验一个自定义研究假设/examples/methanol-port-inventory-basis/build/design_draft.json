@@ -1,0 +1,132 @@
+{
+ "raw_text": "甲醇港口库存连续两周下降时，随后两周基差更容易走强",
+ "template": "methanol_port_inventory-basis",
+ "product": {
+  "key": "甲醇",
+  "futures_code": "MA",
+  "desc": "甲醇（郑商所 MA，华东/太仓现货）",
+  "symbol": "MA"
+ },
+ "variables_detected": [
+  {
+   "key": "inventory_port",
+   "desc": "中国甲醇样本港口库存（隆众口径，华东+华南样本库区）",
+   "unit": "万吨，周度",
+   "evidence": "港口库存",
+   "pos": 2,
+   "need_confirm": false
+  },
+  {
+   "key": "inventory",
+   "desc": "库存（未指明口径，需确认港口/厂库/社会库存）",
+   "unit": "万吨，周度",
+   "evidence": "库存",
+   "pos": 4,
+   "need_confirm": true
+  },
+  {
+   "key": "basis",
+   "desc": "基差 = 现货 − 期货（默认主力/活跃合约）",
+   "unit": "元/吨 或 %",
+   "evidence": "基差",
+   "pos": 18,
+   "need_confirm": false
+  }
+ ],
+ "directions": {
+  "up": [
+   "走强"
+  ],
+  "down": [
+   "下降"
+  ]
+ },
+ "run_length": 2,
+ "horizons": [
+  {
+   "evidence": "随后两周",
+   "sessions": 10,
+   "weeks": 2.0
+  }
+ ],
+ "target": {
+  "key": "basis_level",
+  "label": "基差水平（现货−期货，元/吨）",
+  "evidence": "基差",
+  "chosen_reason": "基差绝对值变动"
+ },
+ "module": "basis_conditioned",
+ "open_questions": [
+  {
+   "id": "Q4",
+   "topic": "“走强”的定义",
+   "question": "“基差走强”在统计上对应哪一个口径？不同口径结论可能不同，请勾选主口径（其余作为敏感性分析）。",
+   "options": [
+    "基差绝对变化 Δ(现货−期货) > 0（元/吨）",
+    "基差率上升（%）/ 基差历史分位上升",
+    "全部口径都检验，主口径以你勾选为准"
+   ],
+   "blocking": true
+  },
+  {
+   "id": "Q5",
+   "topic": "观察对象合约",
+   "question": "基差用哪个期货合约计价？",
+   "options": [
+    "主力/活跃合约（接近可交易）",
+    "近月合约（随交割日切换）",
+    "固定合约（如 01/05/09）"
+   ],
+   "blocking": false
+  },
+  {
+   "id": "Q6",
+   "topic": "价格时点",
+   "question": "库存报告通常在观察日 14:00 前后发布。入场价用报告日当日 15:00 收盘，还是次日收盘？",
+   "options": [
+    "当日收盘（需确认发布早于收盘，否则构成前视）",
+    "次日收盘（更保守）"
+   ],
+   "blocking": false
+  },
+  {
+   "id": "Q7",
+   "topic": "样本范围",
+   "question": "样本起止时间与是否剔除 2021–2022 极端行情阶段？",
+   "options": [
+    "全部可得样本自动确定",
+    "指定起止日期",
+    "剔除极端阶段并单列"
+   ],
+   "blocking": false
+  },
+  {
+   "id": "Q8",
+   "topic": "多口径与多重检验",
+   "question": "预期会同时检验几个口径/窗口/子样本？需登记全部检验数用于 BH 校正。",
+   "options": [
+    "自动登记（推荐）",
+    "只做主口径不做敏感性"
+   ],
+   "blocking": false
+  }
+ ],
+ "assumptions": [
+  {
+   "id": "A1",
+   "text": "“连续2周”= 相邻两周的库存差均为严格的负值（ΔI_t<0 且 ΔI_{t−1}<0），周间隔要求 5–10 天，停发/延发周的配对样本标记为缺口而不是插值。",
+   "need_confirm": false
+  }
+ ],
+ "approved": false,
+ "template_spec": {
+  "name": "甲醇港口库存连续下行 × 基差走强",
+  "product": "甲醇",
+  "x_series": "中国甲醇样本港口库存（万吨，周度，隆众口径，样本=华东+华南港口库区）",
+  "target": "basis_change",
+  "signal": "连续两周去库（ΔI_t<0 且 ΔI_{t−1}<0）",
+  "control": "非连续去库的全部其余周",
+  "horizon_sessions": 10,
+  "entry": "报告发布日14:00前已公布 → 当日收盘价（前视偏差审计项）"
+ }
+}

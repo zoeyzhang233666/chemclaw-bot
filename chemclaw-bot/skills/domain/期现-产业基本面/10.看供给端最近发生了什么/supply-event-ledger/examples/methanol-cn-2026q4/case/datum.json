@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "product": "甲醇",
+    "window_start": "2026-07-20",
+    "window_end": "2026-10-20",
+    "as_of": "2026-10-20",
+    "national_capacity_wt": 10000,
+    "national_capacity_note": "全国甲醇总产能公开口径约1.0亿吨/年（隆众/卓创区间中值），仅作分母用于量级参照，不作为精确基准。",
+    "weekly_output_t": 2024235,
+    "weekly_output_note": "隆众2026-09-25至10-01周：产量2,024,235吨，产能利用率89.60%（环比+3.69%）。",
+    "weekly_output_low_t": 1870000,
+    "weekly_output_low_note": "期货日报2026-09-16：检修高峰周产量约187万吨。",
+    "util_rate_latest": 0.8960,
+    "util_rate_low_2026": 0.7965,
+    "util_rate_low_note": "8月开工率低点79.65%（金联创）。",
+    "calculation_conventions": {
+      "days_per_year": 365,
+      "day_count": "含首尾（left-closed, right-closed）",
+      "clip": "跨窗口事件只计窗口内天数",
+      "stop_load": 0.0,
+      "ramp_default": 0.85,
+      "ramp_range": [0.80, 0.90],
+      "low_load_default": 0.5,
+      "unit": "吨；汇总展示为万吨"
+    },
+    "disclaimer": "本台账只回答“供给端发生了什么、影响多少产量、哪些还不确定”，不输出供应预警、价格方向或交易建议。"
+  }
+}

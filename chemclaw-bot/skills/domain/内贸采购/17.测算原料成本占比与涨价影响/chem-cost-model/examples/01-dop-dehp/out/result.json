@@ -1,0 +1,3023 @@
+{
+ "meta": {
+  "product": "DOP（邻苯二甲酸二辛酯 / DEHP，CAS 117-81-7）",
+  "product_cas": "117-81-7",
+  "product_formula": "C24H38O4",
+  "buyer": "（示例）增塑剂生产企业 · 内贸采购部",
+  "region": "以华东为主（原料口径见各原料）",
+  "as_of": "2026-10-20",
+  "target_tax_basis": "tax_included",
+  "target_unit": "CNY/t 产品",
+  "vat_rate_note": "默认增值税一般税率 13%（企业当期税率请自行核定）",
+  "process_id": "PA2EH-NET",
+  "process_name": "苯酐 + 异辛醇 酯化（净单耗口径）",
+  "process_desc": "邻苯二甲酸酐与 2-乙基己醇（异辛醇）在催化剂（钛酸酯或硫酸）作用下酯化脱水生成 DOP。本模型采用\"净单耗\"口径：已扣除过量醇回收、计入转化率/收率与副反应损失。",
+  "reaction": "C8H4O3 + 2 C8H18O -> C24H38O4 + H2O",
+  "scope_mix_note": "两种原料的单耗来自同一环评的同一张吨耗表（安徽力天 DOP 线，半连续/间歇酯化 + 连续后段），价源区域不同（苯酐华东、异辛醇山东），区域差异未消除。",
+  "caveats": [
+   "本页的\"理论原料成本\"只包含有价格的原料，不含能源、人工、折旧、设备维护、运输、包装、辅助材料、税费以外的期间费用。",
+   "理论原料成本 ≠ 完全生产成本 ≠ 利润。不得据此判断盈利或对外报价。",
+   "本页不预测原料未来价格；敏感性矩阵只是\"假设涨/跌 X% 时成本会怎样\"的机械演算。",
+   "单耗为行业典型值（环评吨耗表），不是贵公司实测单耗；替换成企业 ERP 数据后所有结果立即重算。"
+  ],
+  "product_short": "DOP"
+ },
+ "params": {
+  "basis": "net",
+  "basis_label": "净单耗（已扣回收、含转化/收率/副反应损失）",
+  "yield_basis": "以苯酐计或以辛醇计的成品收率（教材口径）",
+  "yield_pct": 99.3,
+  "conversion_pct": 99.5,
+  "recycle_pct": 96.6,
+  "notes": "转化率 >99.5%（专利 CN102295564B 摘要、安徽力天环评）；成品收率 99.3%（教材，单源 B 级）；过量醇回收率约 96.6%（由环评 0.678 t/t 反推，属推算值）。本模型直接使用环评吨耗表数值，不把上述系数再连乘一次，避免双重扣减。"
+ },
+ "materials": [
+  {
+   "id": "pa",
+   "name": "苯酐（邻苯二甲酸酐，PA）",
+   "cas": "85-44-9",
+   "role": "main",
+   "spec": "≥99.0%（基准规格，非 99.5% 片状）",
+   "region": "华东",
+   "delivery": "市场价（自提为主）",
+   "tax_included": true,
+   "errors": [],
+   "warns": [],
+   "price_steps": [
+    {
+     "label": "原始价格",
+     "calc": "",
+     "value": 10616.67,
+     "unit": "CNY/t"
+    },
+    {
+     "label": "换算到每千克",
+     "calc": "10616.7 ÷ 1000",
+     "value": 10.616670000000001,
+     "unit": "元/kg"
+    },
+    {
+     "label": "换算到每吨",
+     "calc": "10.6167 × 1000",
+     "value": 10616.67,
+     "unit": "CNY/t"
+    }
+   ],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "0.383 t/t → t/t",
+     "value": 0.383
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "eia",
+   "dosage_source_label": "环评/公参文件",
+   "dosage_ref": "安徽力天环保《增塑剂装置循环产业链建设项目环境影响报告书》表 3.2-1 产品吨耗（38250 t/a ÷ 10 万 t/a）",
+   "dosage_scope": "半连续/间歇酯化 + 连续脱醇（安徽力天 10 万吨/年 DOP 线）",
+   "dosage_unit_in": "t/t",
+   "dosage_raw": 0.383,
+   "dosage": 0.383,
+   "price": 10616.67,
+   "price_spec": "≥99.0%",
+   "price_region": "华东",
+   "price_delivery": "市场价",
+   "price_unit_in": "CNY/t",
+   "price_date": "2026-10-20",
+   "price_source": "生意社（100ppi.com）苯酐基准价/生意社价格",
+   "price_raw": 10616.67,
+   "price_tax_in": "含税",
+   "price_orig_tax": "含税",
+   "cost": 4066.1846100000002,
+   "share": 38.2060218166907
+  },
+  {
+   "id": "eh",
+   "name": "异辛醇（2-乙基己醇，2-EH）",
+   "cas": "104-76-7",
+   "role": "main",
+   "spec": "≥99.5%",
+   "region": "山东省（综合价）",
+   "delivery": "市场价（自提为主）",
+   "tax_included": true,
+   "errors": [],
+   "warns": [],
+   "price_steps": [
+    {
+     "label": "原始价格",
+     "calc": "",
+     "value": 9700.0,
+     "unit": "CNY/t"
+    },
+    {
+     "label": "换算到每千克",
+     "calc": "9700 ÷ 1000",
+     "value": 9.7,
+     "unit": "元/kg"
+    },
+    {
+     "label": "换算到每吨",
+     "calc": "9.7 × 1000",
+     "value": 9700.0,
+     "unit": "CNY/t"
+    }
+   ],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "0.678 t/t → t/t",
+     "value": 0.678
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "eia",
+   "dosage_source_label": "环评/公参文件",
+   "dosage_ref": "安徽力天环保环评表 3.2-1 产品吨耗（67762.8 t/a ÷ 10 万 t/a），与 10 万吨产能自洽",
+   "dosage_scope": "半连续/间歇酯化 + 连续脱醇（安徽力天 10 万吨/年 DOP 线）",
+   "dosage_unit_in": "t/t",
+   "dosage_raw": 0.678,
+   "dosage": 0.678,
+   "price": 9700.0,
+   "price_spec": "≥99.5%",
+   "price_region": "山东省",
+   "price_delivery": "综合价",
+   "price_unit_in": "CNY/t",
+   "price_date": "2026-10-20",
+   "price_source": "生意社（100ppi.com）异辛醇基准价/生意社价格",
+   "price_raw": 9700.0,
+   "price_tax_in": "含税",
+   "price_orig_tax": "含税",
+   "cost": 6576.6,
+   "share": 61.79397818330931
+  },
+  {
+   "id": "ti_cat",
+   "name": "钛酸酯催化剂（钛酸异丙酯等）",
+   "cas": "546-68-9",
+   "role": "aux",
+   "spec": "工业级",
+   "region": "—",
+   "delivery": "—",
+   "tax_included": true,
+   "errors": [],
+   "warns": [
+    "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）"
+   ],
+   "price_steps": [],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "0.375 kg/t → t/t",
+     "value": 0.000375
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "patent",
+   "dosage_source_label": "专利实施例",
+   "dosage_ref": "专利 CN102295564B 实施例 7.5 kg/h ÷ 18.99 t/h DOP ≈ 0.375 kg/t（0.038 wt%）",
+   "dosage_scope": "连续法 6 釜串联（钛酸酯催化）",
+   "dosage_unit_in": "kg/t",
+   "dosage_raw": 0.375,
+   "dosage": 0.000375,
+   "price": null,
+   "price_blocked": true,
+   "cost": null
+  },
+  {
+   "id": "naoh",
+   "name": "氢氧化钠（片碱 ≥97%）",
+   "cas": "1310-73-2",
+   "role": "aux",
+   "spec": "≥97%（固体）",
+   "region": "—",
+   "delivery": "—",
+   "tax_included": true,
+   "errors": [],
+   "warns": [
+    "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）"
+   ],
+   "price_steps": [],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "1.02 kg/t → t/t",
+     "value": 0.00102
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "eia",
+   "dosage_source_label": "环评/公参文件",
+   "dosage_ref": "安徽力天环评表 3.2-1：NaOH 102 t/a ÷ 10 万 t/a = 1.02 kg/t",
+   "dosage_scope": "半连续/间歇酯化 + 连续后段（安徽力天 DOP 线）",
+   "dosage_unit_in": "kg/t",
+   "dosage_raw": 1.02,
+   "dosage": 0.00102,
+   "price": null,
+   "price_blocked": true,
+   "cost": null
+  },
+  {
+   "id": "ac",
+   "name": "活性炭（脱色）",
+   "cas": null,
+   "role": "aux",
+   "spec": "SF1",
+   "region": null,
+   "delivery": null,
+   "tax_included": true,
+   "errors": [],
+   "warns": [
+    "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）"
+   ],
+   "price_steps": [],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "0.2 kg/t → t/t",
+     "value": 0.0002
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "eia",
+   "dosage_source_label": "环评/公参文件",
+   "dosage_ref": "安徽力天环评表 3.2-1：活性炭 18 t/a ÷ 10 万 t/a = 0.2 kg/t",
+   "dosage_scope": "半连续/间歇酯化 + 连续后段（安徽力天 DOP 线）",
+   "dosage_unit_in": "kg/t",
+   "dosage_raw": 0.2,
+   "dosage": 0.0002,
+   "price": null,
+   "price_blocked": true,
+   "cost": null
+  }
+ ],
+ "main_count": 2,
+ "aux_count": 3,
+ "total_main": 10642.78461,
+ "total_aux": 0,
+ "total": 10642.78461,
+ "coverage": {
+  "n_all": 5,
+  "n_computable": 2,
+  "n_blocked": 3,
+  "complete": false
+ },
+ "sensitivity": [
+  {
+   "material_id": "pa",
+   "name": "苯酐（邻苯二甲酸酐，PA）",
+   "q": 0.383,
+   "p": 10616.67,
+   "cost": 4066.1846100000002,
+   "share": 38.2060218166907,
+   "cells": [
+    {
+     "label": "-10%",
+     "ratio": -0.1,
+     "price_delta": -1061.6670000000001,
+     "cost_delta": -406.6184610000001,
+     "new_cost": 3659.566149,
+     "new_total": 10236.166149,
+     "new_total_pct": -3.82060218166907
+    },
+    {
+     "label": "-5%",
+     "ratio": -0.05,
+     "price_delta": -530.8335000000001,
+     "cost_delta": -203.30923050000004,
+     "new_cost": 3862.8753795000002,
+     "new_total": 10439.4753795,
+     "new_total_pct": -1.910301090834535
+    },
+    {
+     "label": "0%",
+     "ratio": 0.0,
+     "price_delta": 0.0,
+     "cost_delta": 0.0,
+     "new_cost": 4066.1846100000002,
+     "new_total": 10642.78461,
+     "new_total_pct": 0.0
+    },
+    {
+     "label": "+5%",
+     "ratio": 0.05,
+     "price_delta": 530.8335000000001,
+     "cost_delta": 203.30923050000004,
+     "new_cost": 4269.4938405,
+     "new_total": 10846.093840500002,
+     "new_total_pct": 1.910301090834535
+    },
+    {
+     "label": "+10%",
+     "ratio": 0.1,
+     "price_delta": 1061.6670000000001,
+     "cost_delta": 406.6184610000001,
+     "new_cost": 4472.803071,
+     "new_total": 11049.403071,
+     "new_total_pct": 3.82060218166907
+    }
+   ]
+  },
+  {
+   "material_id": "eh",
+   "name": "异辛醇（2-乙基己醇，2-EH）",
+   "q": 0.678,
+   "p": 9700.0,
+   "cost": 6576.6,
+   "share": 61.79397818330931,
+   "cells": [
+    {
+     "label": "-10%",
+     "ratio": -0.1,
+     "price_delta": -970.0,
+     "cost_delta": -657.6600000000001,
+     "new_cost": 5918.9400000000005,
+     "new_total": 9985.12461,
+     "new_total_pct": -6.179397818330931
+    },
+    {
+     "label": "-5%",
+     "ratio": -0.05,
+     "price_delta": -485.0,
+     "cost_delta": -328.83000000000004,
+     "new_cost": 6247.77,
+     "new_total": 10313.95461,
+     "new_total_pct": -3.0896989091654654
+    },
+    {
+     "label": "0%",
+     "ratio": 0.0,
+     "price_delta": 0.0,
+     "cost_delta": 0.0,
+     "new_cost": 6576.6,
+     "new_total": 10642.78461,
+     "new_total_pct": 0.0
+    },
+    {
+     "label": "+5%",
+     "ratio": 0.05,
+     "price_delta": 485.0,
+     "cost_delta": 328.83000000000004,
+     "new_cost": 6905.43,
+     "new_total": 10971.61461,
+     "new_total_pct": 3.0896989091654654
+    },
+    {
+     "label": "+10%",
+     "ratio": 0.1,
+     "price_delta": 970.0,
+     "cost_delta": 657.6600000000001,
+     "new_cost": 7234.26,
+     "new_total": 11300.44461,
+     "new_total_pct": 6.179397818330931
+    }
+   ]
+  }
+ ],
+ "rates": [
+  {
+   "label": "-10%",
+   "ratio": -0.1
+  },
+  {
+   "label": "-5%",
+   "ratio": -0.05
+  },
+  {
+   "label": "0%",
+   "ratio": 0.0
+  },
+  {
+   "label": "+5%",
+   "ratio": 0.05
+  },
+  {
+   "label": "+10%",
+   "ratio": 0.1
+  }
+ ],
+ "combos": [
+  {
+   "id": "both_up_10",
+   "name": "两种主料同时 +10%",
+   "changes": {
+    "pa": 10,
+    "eh": 10
+   },
+   "old_total": 10642.78461,
+   "new_total": 11707.063071,
+   "delta": 1064.2784609999999,
+   "delta_pct": 9.999999999999998,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "ratio_pct": 10.0,
+     "old": 4066.1846100000002,
+     "new": 4472.803071,
+     "delta": 406.618461
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "ratio_pct": 10.0,
+     "old": 6576.6,
+     "new": 7234.260000000001,
+     "delta": 657.6600000000001
+    }
+   ]
+  },
+  {
+   "id": "both_down_10",
+   "name": "两种主料同时 -10%",
+   "changes": {
+    "pa": -10,
+    "eh": -10
+   },
+   "old_total": 10642.78461,
+   "new_total": 9578.506149,
+   "delta": -1064.2784609999999,
+   "delta_pct": -9.999999999999998,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "ratio_pct": -10.0,
+     "old": 4066.1846100000002,
+     "new": 3659.566149,
+     "delta": -406.618461
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "ratio_pct": -10.0,
+     "old": 6576.6,
+     "new": 5918.9400000000005,
+     "delta": -657.6600000000001
+    }
+   ]
+  },
+  {
+   "id": "eh_up_pa_down",
+   "name": "异辛醇 +10% / 苯酐 -10%（价差扩大）",
+   "changes": {
+    "pa": -10,
+    "eh": 10
+   },
+   "old_total": 10642.78461,
+   "new_total": 10893.826149,
+   "delta": 251.04153899999983,
+   "delta_pct": 2.3587956366618585,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "ratio_pct": -10.0,
+     "old": 4066.1846100000002,
+     "new": 3659.566149,
+     "delta": -406.618461
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "ratio_pct": 10.0,
+     "old": 6576.6,
+     "new": 7234.260000000001,
+     "delta": 657.6600000000001
+    }
+   ]
+  },
+  {
+   "id": "pa_up_eh_down",
+   "name": "苯酐 +10% / 异辛醇 -10%（价差收敛）",
+   "changes": {
+    "pa": 10,
+    "eh": -10
+   },
+   "old_total": 10642.78461,
+   "new_total": 10391.743071,
+   "delta": -251.04153899999983,
+   "delta_pct": -2.3587956366618585,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "ratio_pct": 10.0,
+     "old": 4066.1846100000002,
+     "new": 4472.803071,
+     "delta": 406.618461
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "ratio_pct": -10.0,
+     "old": 6576.6,
+     "new": 5918.9400000000005,
+     "delta": -657.6600000000001
+    }
+   ]
+  },
+  {
+   "id": "eh_lead",
+   "name": "仅异辛醇 +5%",
+   "changes": {
+    "eh": 5
+   },
+   "old_total": 10642.78461,
+   "new_total": 10971.61461,
+   "delta": 328.8299999999999,
+   "delta_pct": 3.089698909165464,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "ratio_pct": 0.0,
+     "old": 4066.1846100000002,
+     "new": 4066.1846100000002,
+     "delta": 0.0
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "ratio_pct": 5.0,
+     "old": 6576.6,
+     "new": 6905.43,
+     "delta": 328.83000000000004
+    }
+   ]
+  },
+  {
+   "id": "pa_lead",
+   "name": "仅苯酐 +5%",
+   "changes": {
+    "pa": 5
+   },
+   "old_total": 10642.78461,
+   "new_total": 10846.093840500002,
+   "delta": 203.30923050000092,
+   "delta_pct": 1.9103010908345435,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "ratio_pct": 5.0,
+     "old": 4066.1846100000002,
+     "new": 4269.4938405,
+     "delta": 203.3092305
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "ratio_pct": 0.0,
+     "old": 6576.6,
+     "new": 6576.6,
+     "delta": 0.0
+    }
+   ]
+  }
+ ],
+ "auto_combos": [
+  {
+   "label": "全部原料同步 -10%",
+   "ratio": -0.1,
+   "delta": -1064.2784609999999,
+   "new_total": 9578.506149,
+   "delta_pct": -9.999999999999998,
+   "desc": "苯酐（邻苯二甲酸酐，PA）、异辛醇（2-乙基己醇，2-EH） 同步变动"
+  },
+  {
+   "label": "全部原料同步 -5%",
+   "ratio": -0.05,
+   "delta": -532.139230499999,
+   "new_total": 10110.645379500002,
+   "delta_pct": -4.99999999999999,
+   "desc": "苯酐（邻苯二甲酸酐，PA）、异辛醇（2-乙基己醇，2-EH） 同步变动"
+  },
+  {
+   "label": "全部原料同步 0%",
+   "ratio": 0.0,
+   "delta": 0.0,
+   "new_total": 10642.78461,
+   "delta_pct": 0.0,
+   "desc": "苯酐（邻苯二甲酸酐，PA）、异辛醇（2-乙基己醇，2-EH） 同步变动"
+  },
+  {
+   "label": "全部原料同步 +5%",
+   "ratio": 0.05,
+   "delta": 532.139230499999,
+   "new_total": 11174.9238405,
+   "delta_pct": 4.99999999999999,
+   "desc": "苯酐（邻苯二甲酸酐，PA）、异辛醇（2-乙基己醇，2-EH） 同步变动"
+  },
+  {
+   "label": "全部原料同步 +10%",
+   "ratio": 0.1,
+   "delta": 1064.2784609999999,
+   "new_total": 11707.063071,
+   "delta_pct": 9.999999999999998,
+   "desc": "苯酐（邻苯二甲酸酐，PA）、异辛醇（2-乙基己醇，2-EH） 同步变动"
+  }
+ ],
+ "dosage_sens": [
+  {
+   "material_id": "pa",
+   "name": "苯酐（邻苯二甲酸酐，PA）",
+   "delta_1pct": 40.6618461,
+   "delta_pct_of_total": 0.38206021816690694
+  },
+  {
+   "material_id": "eh",
+   "name": "异辛醇（2-乙基己醇，2-EH）",
+   "delta_1pct": 65.766,
+   "delta_pct_of_total": 0.6179397818330931
+  }
+ ],
+ "history": {
+  "rows": [
+   {
+    "date": "2026-07-20",
+    "cost": 8494.73235,
+    "items": {
+     "pa": 3319.33461,
+     "eh": 5175.39774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-21",
+    "cost": 8600.83235,
+    "items": {
+     "pa": 3357.63461,
+     "eh": 5243.1977400000005
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-22",
+    "cost": 8668.11765,
+    "items": {
+     "pa": 3402.31539,
+     "eh": 5265.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-23",
+    "cost": 8744.71765,
+    "items": {
+     "pa": 3478.91539,
+     "eh": 5265.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-24",
+    "cost": 8908.78235,
+    "items": {
+     "pa": 3529.98461,
+     "eh": 5378.79774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-25",
+    "cost": 8908.78235,
+    "items": {
+     "pa": 3529.98461,
+     "eh": 5378.79774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-26",
+    "cost": 8908.78235,
+    "items": {
+     "pa": 3529.98461,
+     "eh": 5378.79774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-27",
+    "cost": 8999.18687,
+    "items": {
+     "pa": 3529.98461,
+     "eh": 5469.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-28",
+    "cost": 9024.71765,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 5469.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-29",
+    "cost": 9024.71765,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 5469.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-30",
+    "cost": 9024.71765,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 5469.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-31",
+    "cost": 8911.715390000001,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 5356.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-01",
+    "cost": 8911.715390000001,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 5356.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-02",
+    "cost": 8911.715390000001,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 5356.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-03",
+    "cost": 8818.384610000001,
+    "items": {
+     "pa": 3529.98461,
+     "eh": 5288.400000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-04",
+    "cost": 8795.78687,
+    "items": {
+     "pa": 3529.98461,
+     "eh": 5265.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-05",
+    "cost": 8783.01765,
+    "items": {
+     "pa": 3517.21539,
+     "eh": 5265.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-06",
+    "cost": 8860.650000000001,
+    "items": {
+     "pa": 3504.4500000000003,
+     "eh": 5356.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-07",
+    "cost": 8960.88687,
+    "items": {
+     "pa": 3491.6846100000002,
+     "eh": 5469.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-08",
+    "cost": 8960.88687,
+    "items": {
+     "pa": 3491.6846100000002,
+     "eh": 5469.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-09",
+    "cost": 8960.88687,
+    "items": {
+     "pa": 3491.6846100000002,
+     "eh": 5469.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-10",
+    "cost": 9003.15226,
+    "items": {
+     "pa": 3466.15,
+     "eh": 5537.00226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-11",
+    "cost": 8993.83461,
+    "items": {
+     "pa": 3434.23461,
+     "eh": 5559.6
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-12",
+    "cost": 9058.186870000001,
+    "items": {
+     "pa": 3453.38461,
+     "eh": 5604.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-13",
+    "cost": 9112.7,
+    "items": {
+     "pa": 3485.3,
+     "eh": 5627.400000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-14",
+    "cost": 9154.447740000001,
+    "items": {
+     "pa": 3504.4500000000003,
+     "eh": 5649.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-15",
+    "cost": 9154.447740000001,
+    "items": {
+     "pa": 3504.4500000000003,
+     "eh": 5649.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-16",
+    "cost": 9154.447740000001,
+    "items": {
+     "pa": 3504.4500000000003,
+     "eh": 5649.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-17",
+    "cost": 9154.447740000001,
+    "items": {
+     "pa": 3504.4500000000003,
+     "eh": 5649.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-18",
+    "cost": 9173.597740000001,
+    "items": {
+     "pa": 3523.6,
+     "eh": 5649.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-19",
+    "cost": 9241.39774,
+    "items": {
+     "pa": 3523.6,
+     "eh": 5717.79774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-20",
+    "cost": 9441.35,
+    "items": {
+     "pa": 3542.75,
+     "eh": 5898.6
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-21",
+    "cost": 9589.715390000001,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 6034.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-22",
+    "cost": 9589.715390000001,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 6034.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-23",
+    "cost": 9589.715390000001,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 6034.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-24",
+    "cost": 9589.715390000001,
+    "items": {
+     "pa": 3555.51539,
+     "eh": 6034.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-25",
+    "cost": 9634.400000000001,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 6034.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-26",
+    "cost": 9589.197740000001,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 5988.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-27",
+    "cost": 9589.197740000001,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 5988.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-28",
+    "cost": 9566.6,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 5966.400000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-29",
+    "cost": 9566.6,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 5966.400000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-30",
+    "cost": 9566.6,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 5966.400000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-31",
+    "cost": 9521.39774,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 5921.1977400000005
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-01",
+    "cost": 9589.197740000001,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 5988.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-02",
+    "cost": 9702.2,
+    "items": {
+     "pa": 3600.2000000000003,
+     "eh": 6102.0
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-03",
+    "cost": 9824.51313,
+    "items": {
+     "pa": 3632.11539,
+     "eh": 6192.39774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-04",
+    "cost": 9847.11765,
+    "items": {
+     "pa": 3632.11539,
+     "eh": 6215.00226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-05",
+    "cost": 9847.11765,
+    "items": {
+     "pa": 3632.11539,
+     "eh": 6215.00226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-06",
+    "cost": 9847.11765,
+    "items": {
+     "pa": 3632.11539,
+     "eh": 6215.00226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-07",
+    "cost": 9847.11765,
+    "items": {
+     "pa": 3632.11539,
+     "eh": 6215.00226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-08",
+    "cost": 9847.11765,
+    "items": {
+     "pa": 3632.11539,
+     "eh": 6215.00226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-09",
+    "cost": 9994.44774,
+    "items": {
+     "pa": 3734.25,
+     "eh": 6260.1977400000005
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-10",
+    "cost": 10219.93461,
+    "items": {
+     "pa": 3778.9346100000002,
+     "eh": 6441.0
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-11",
+    "cost": 10483.71765,
+    "items": {
+     "pa": 3861.91539,
+     "eh": 6621.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-12",
+    "cost": 10483.71765,
+    "items": {
+     "pa": 3861.91539,
+     "eh": 6621.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-13",
+    "cost": 10483.71765,
+    "items": {
+     "pa": 3861.91539,
+     "eh": 6621.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-14",
+    "cost": 10606.03461,
+    "items": {
+     "pa": 3893.83461,
+     "eh": 6712.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-15",
+    "cost": 10606.03461,
+    "items": {
+     "pa": 3893.83461,
+     "eh": 6712.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-16",
+    "cost": 10631.56539,
+    "items": {
+     "pa": 3919.36539,
+     "eh": 6712.200000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-17",
+    "cost": 10541.16765,
+    "items": {
+     "pa": 3919.36539,
+     "eh": 6621.80226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-18",
+    "cost": 10518.56313,
+    "items": {
+     "pa": 3919.36539,
+     "eh": 6599.1977400000005
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-19",
+    "cost": 10518.56313,
+    "items": {
+     "pa": 3919.36539,
+     "eh": 6599.1977400000005
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-20",
+    "cost": 10382.96313,
+    "items": {
+     "pa": 3919.36539,
+     "eh": 6463.59774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-21",
+    "cost": 10276.86313,
+    "items": {
+     "pa": 3881.06539,
+     "eh": 6395.79774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-22",
+    "cost": 10212.517650000002,
+    "items": {
+     "pa": 3861.91539,
+     "eh": 6350.602260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-23",
+    "cost": 10095.115389999999,
+    "items": {
+     "pa": 3823.61539,
+     "eh": 6271.5
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-24",
+    "cost": 10075.96539,
+    "items": {
+     "pa": 3804.46539,
+     "eh": 6271.5
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-25",
+    "cost": 10075.96539,
+    "items": {
+     "pa": 3804.46539,
+     "eh": 6271.5
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-26",
+    "cost": 10075.96539,
+    "items": {
+     "pa": 3804.46539,
+     "eh": 6271.5
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-27",
+    "cost": 10075.96539,
+    "items": {
+     "pa": 3804.46539,
+     "eh": 6271.5
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-28",
+    "cost": 9974.26539,
+    "items": {
+     "pa": 3804.46539,
+     "eh": 6169.8
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-29",
+    "cost": 9985.56765,
+    "items": {
+     "pa": 3804.46539,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-30",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-01",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-02",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-03",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-04",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-05",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-06",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-07",
+    "cost": 10017.48687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6181.102260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-08",
+    "cost": 9983.58687,
+    "items": {
+     "pa": 3836.38461,
+     "eh": 6147.20226
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-09",
+    "cost": 10144.2,
+    "items": {
+     "pa": 3906.6,
+     "eh": 6237.6
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-10",
+    "cost": 10260.13235,
+    "items": {
+     "pa": 3932.13461,
+     "eh": 6327.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-11",
+    "cost": 10260.13235,
+    "items": {
+     "pa": 3932.13461,
+     "eh": 6327.997740000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-12",
+    "cost": 10327.93235,
+    "items": {
+     "pa": 3932.13461,
+     "eh": 6395.79774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-13",
+    "cost": 10431.102260000001,
+    "items": {
+     "pa": 3944.9,
+     "eh": 6486.202260000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-14",
+    "cost": 10603.96313,
+    "items": {
+     "pa": 4072.56539,
+     "eh": 6531.39774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-15",
+    "cost": 10603.96313,
+    "items": {
+     "pa": 4072.56539,
+     "eh": 6531.39774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-16",
+    "cost": 10642.26313,
+    "items": {
+     "pa": 4110.86539,
+     "eh": 6531.39774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-17",
+    "cost": 10642.26313,
+    "items": {
+     "pa": 4110.86539,
+     "eh": 6531.39774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-18",
+    "cost": 10642.26313,
+    "items": {
+     "pa": 4110.86539,
+     "eh": 6531.39774
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-19",
+    "cost": 10649.16539,
+    "items": {
+     "pa": 4072.56539,
+     "eh": 6576.6
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-20",
+    "cost": 10642.78461,
+    "items": {
+     "pa": 4066.1846100000002,
+     "eh": 6576.6
+    },
+    "incomplete": false,
+    "carried": []
+   }
+  ],
+  "gaps": [],
+  "materials": [
+   {
+    "material_id": "pa",
+    "name": "苯酐",
+    "source": "生意社（100ppi.com）基准价 · 苯酐",
+    "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=541",
+    "spec": "≥99.0%",
+    "region": "华东",
+    "tax_included": true,
+    "freq": "日",
+    "unit": "CNY/t",
+    "rows": [
+     {
+      "date": "2026-07-20",
+      "value": 8666.67
+     },
+     {
+      "date": "2026-07-21",
+      "value": 8766.67
+     },
+     {
+      "date": "2026-07-22",
+      "value": 8883.33
+     },
+     {
+      "date": "2026-07-23",
+      "value": 9083.33
+     },
+     {
+      "date": "2026-07-24",
+      "value": 9216.67
+     },
+     {
+      "date": "2026-07-25",
+      "value": 9216.67
+     },
+     {
+      "date": "2026-07-26",
+      "value": 9216.67
+     },
+     {
+      "date": "2026-07-27",
+      "value": 9216.67
+     },
+     {
+      "date": "2026-07-28",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-07-29",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-07-30",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-07-31",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-08-01",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-08-02",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-08-03",
+      "value": 9216.67
+     },
+     {
+      "date": "2026-08-04",
+      "value": 9216.67
+     },
+     {
+      "date": "2026-08-05",
+      "value": 9183.33
+     },
+     {
+      "date": "2026-08-06",
+      "value": 9150.0
+     },
+     {
+      "date": "2026-08-07",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-08-08",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-08-09",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-08-10",
+      "value": 9050.0
+     },
+     {
+      "date": "2026-08-11",
+      "value": 8966.67
+     },
+     {
+      "date": "2026-08-12",
+      "value": 9016.67
+     },
+     {
+      "date": "2026-08-13",
+      "value": 9100.0
+     },
+     {
+      "date": "2026-08-14",
+      "value": 9150.0
+     },
+     {
+      "date": "2026-08-15",
+      "value": 9150.0
+     },
+     {
+      "date": "2026-08-16",
+      "value": 9150.0
+     },
+     {
+      "date": "2026-08-17",
+      "value": 9150.0
+     },
+     {
+      "date": "2026-08-18",
+      "value": 9200.0
+     },
+     {
+      "date": "2026-08-19",
+      "value": 9200.0
+     },
+     {
+      "date": "2026-08-20",
+      "value": 9250.0
+     },
+     {
+      "date": "2026-08-21",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-08-22",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-08-23",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-08-24",
+      "value": 9283.33
+     },
+     {
+      "date": "2026-08-25",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-08-26",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-08-27",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-08-28",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-08-29",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-08-30",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-08-31",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-09-01",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-09-02",
+      "value": 9400.0
+     },
+     {
+      "date": "2026-09-03",
+      "value": 9483.33
+     },
+     {
+      "date": "2026-09-04",
+      "value": 9483.33
+     },
+     {
+      "date": "2026-09-05",
+      "value": 9483.33
+     },
+     {
+      "date": "2026-09-06",
+      "value": 9483.33
+     },
+     {
+      "date": "2026-09-07",
+      "value": 9483.33
+     },
+     {
+      "date": "2026-09-08",
+      "value": 9483.33
+     },
+     {
+      "date": "2026-09-09",
+      "value": 9750.0
+     },
+     {
+      "date": "2026-09-10",
+      "value": 9866.67
+     },
+     {
+      "date": "2026-09-11",
+      "value": 10083.33
+     },
+     {
+      "date": "2026-09-12",
+      "value": 10083.33
+     },
+     {
+      "date": "2026-09-13",
+      "value": 10083.33
+     },
+     {
+      "date": "2026-09-14",
+      "value": 10166.67
+     },
+     {
+      "date": "2026-09-15",
+      "value": 10166.67
+     },
+     {
+      "date": "2026-09-16",
+      "value": 10233.33
+     },
+     {
+      "date": "2026-09-17",
+      "value": 10233.33
+     },
+     {
+      "date": "2026-09-18",
+      "value": 10233.33
+     },
+     {
+      "date": "2026-09-19",
+      "value": 10233.33
+     },
+     {
+      "date": "2026-09-20",
+      "value": 10233.33
+     },
+     {
+      "date": "2026-09-21",
+      "value": 10133.33
+     },
+     {
+      "date": "2026-09-22",
+      "value": 10083.33
+     },
+     {
+      "date": "2026-09-23",
+      "value": 9983.33
+     },
+     {
+      "date": "2026-09-24",
+      "value": 9933.33
+     },
+     {
+      "date": "2026-09-25",
+      "value": 9933.33
+     },
+     {
+      "date": "2026-09-26",
+      "value": 9933.33
+     },
+     {
+      "date": "2026-09-27",
+      "value": 9933.33
+     },
+     {
+      "date": "2026-09-28",
+      "value": 9933.33
+     },
+     {
+      "date": "2026-09-29",
+      "value": 9933.33
+     },
+     {
+      "date": "2026-09-30",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-01",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-02",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-03",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-04",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-05",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-06",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-07",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-08",
+      "value": 10016.67
+     },
+     {
+      "date": "2026-10-09",
+      "value": 10200.0
+     },
+     {
+      "date": "2026-10-10",
+      "value": 10266.67
+     },
+     {
+      "date": "2026-10-11",
+      "value": 10266.67
+     },
+     {
+      "date": "2026-10-12",
+      "value": 10266.67
+     },
+     {
+      "date": "2026-10-13",
+      "value": 10300.0
+     },
+     {
+      "date": "2026-10-14",
+      "value": 10633.33
+     },
+     {
+      "date": "2026-10-15",
+      "value": 10633.33
+     },
+     {
+      "date": "2026-10-16",
+      "value": 10733.33
+     },
+     {
+      "date": "2026-10-17",
+      "value": 10733.33
+     },
+     {
+      "date": "2026-10-18",
+      "value": 10733.33
+     },
+     {
+      "date": "2026-10-19",
+      "value": 10633.33
+     },
+     {
+      "date": "2026-10-20",
+      "value": 10616.67
+     }
+    ]
+   },
+   {
+    "material_id": "eh",
+    "name": "异辛醇（2-EH）",
+    "source": "生意社（100ppi.com）基准价 · 异辛醇",
+    "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=489",
+    "spec": "≥99.5%",
+    "region": "山东省（综合价）",
+    "tax_included": true,
+    "freq": "日",
+    "unit": "CNY/t",
+    "rows": [
+     {
+      "date": "2026-07-20",
+      "value": 7633.33
+     },
+     {
+      "date": "2026-07-21",
+      "value": 7733.33
+     },
+     {
+      "date": "2026-07-22",
+      "value": 7766.67
+     },
+     {
+      "date": "2026-07-23",
+      "value": 7766.67
+     },
+     {
+      "date": "2026-07-24",
+      "value": 7933.33
+     },
+     {
+      "date": "2026-07-25",
+      "value": 7933.33
+     },
+     {
+      "date": "2026-07-26",
+      "value": 7933.33
+     },
+     {
+      "date": "2026-07-27",
+      "value": 8066.67
+     },
+     {
+      "date": "2026-07-28",
+      "value": 8066.67
+     },
+     {
+      "date": "2026-07-29",
+      "value": 8066.67
+     },
+     {
+      "date": "2026-07-30",
+      "value": 8066.67
+     },
+     {
+      "date": "2026-07-31",
+      "value": 7900.0
+     },
+     {
+      "date": "2026-08-01",
+      "value": 7900.0
+     },
+     {
+      "date": "2026-08-02",
+      "value": 7900.0
+     },
+     {
+      "date": "2026-08-03",
+      "value": 7800.0
+     },
+     {
+      "date": "2026-08-04",
+      "value": 7766.67
+     },
+     {
+      "date": "2026-08-05",
+      "value": 7766.67
+     },
+     {
+      "date": "2026-08-06",
+      "value": 7900.0
+     },
+     {
+      "date": "2026-08-07",
+      "value": 8066.67
+     },
+     {
+      "date": "2026-08-08",
+      "value": 8066.67
+     },
+     {
+      "date": "2026-08-09",
+      "value": 8066.67
+     },
+     {
+      "date": "2026-08-10",
+      "value": 8166.67
+     },
+     {
+      "date": "2026-08-11",
+      "value": 8200.0
+     },
+     {
+      "date": "2026-08-12",
+      "value": 8266.67
+     },
+     {
+      "date": "2026-08-13",
+      "value": 8300.0
+     },
+     {
+      "date": "2026-08-14",
+      "value": 8333.33
+     },
+     {
+      "date": "2026-08-15",
+      "value": 8333.33
+     },
+     {
+      "date": "2026-08-16",
+      "value": 8333.33
+     },
+     {
+      "date": "2026-08-17",
+      "value": 8333.33
+     },
+     {
+      "date": "2026-08-18",
+      "value": 8333.33
+     },
+     {
+      "date": "2026-08-19",
+      "value": 8433.33
+     },
+     {
+      "date": "2026-08-20",
+      "value": 8700.0
+     },
+     {
+      "date": "2026-08-21",
+      "value": 8900.0
+     },
+     {
+      "date": "2026-08-22",
+      "value": 8900.0
+     },
+     {
+      "date": "2026-08-23",
+      "value": 8900.0
+     },
+     {
+      "date": "2026-08-24",
+      "value": 8900.0
+     },
+     {
+      "date": "2026-08-25",
+      "value": 8900.0
+     },
+     {
+      "date": "2026-08-26",
+      "value": 8833.33
+     },
+     {
+      "date": "2026-08-27",
+      "value": 8833.33
+     },
+     {
+      "date": "2026-08-28",
+      "value": 8800.0
+     },
+     {
+      "date": "2026-08-29",
+      "value": 8800.0
+     },
+     {
+      "date": "2026-08-30",
+      "value": 8800.0
+     },
+     {
+      "date": "2026-08-31",
+      "value": 8733.33
+     },
+     {
+      "date": "2026-09-01",
+      "value": 8833.33
+     },
+     {
+      "date": "2026-09-02",
+      "value": 9000.0
+     },
+     {
+      "date": "2026-09-03",
+      "value": 9133.33
+     },
+     {
+      "date": "2026-09-04",
+      "value": 9166.67
+     },
+     {
+      "date": "2026-09-05",
+      "value": 9166.67
+     },
+     {
+      "date": "2026-09-06",
+      "value": 9166.67
+     },
+     {
+      "date": "2026-09-07",
+      "value": 9166.67
+     },
+     {
+      "date": "2026-09-08",
+      "value": 9166.67
+     },
+     {
+      "date": "2026-09-09",
+      "value": 9233.33
+     },
+     {
+      "date": "2026-09-10",
+      "value": 9500.0
+     },
+     {
+      "date": "2026-09-11",
+      "value": 9766.67
+     },
+     {
+      "date": "2026-09-12",
+      "value": 9766.67
+     },
+     {
+      "date": "2026-09-13",
+      "value": 9766.67
+     },
+     {
+      "date": "2026-09-14",
+      "value": 9900.0
+     },
+     {
+      "date": "2026-09-15",
+      "value": 9900.0
+     },
+     {
+      "date": "2026-09-16",
+      "value": 9900.0
+     },
+     {
+      "date": "2026-09-17",
+      "value": 9766.67
+     },
+     {
+      "date": "2026-09-18",
+      "value": 9733.33
+     },
+     {
+      "date": "2026-09-19",
+      "value": 9733.33
+     },
+     {
+      "date": "2026-09-20",
+      "value": 9533.33
+     },
+     {
+      "date": "2026-09-21",
+      "value": 9433.33
+     },
+     {
+      "date": "2026-09-22",
+      "value": 9366.67
+     },
+     {
+      "date": "2026-09-23",
+      "value": 9250.0
+     },
+     {
+      "date": "2026-09-24",
+      "value": 9250.0
+     },
+     {
+      "date": "2026-09-25",
+      "value": 9250.0
+     },
+     {
+      "date": "2026-09-26",
+      "value": 9250.0
+     },
+     {
+      "date": "2026-09-27",
+      "value": 9250.0
+     },
+     {
+      "date": "2026-09-28",
+      "value": 9100.0
+     },
+     {
+      "date": "2026-09-29",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-09-30",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-01",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-02",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-03",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-04",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-05",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-06",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-07",
+      "value": 9116.67
+     },
+     {
+      "date": "2026-10-08",
+      "value": 9066.67
+     },
+     {
+      "date": "2026-10-09",
+      "value": 9200.0
+     },
+     {
+      "date": "2026-10-10",
+      "value": 9333.33
+     },
+     {
+      "date": "2026-10-11",
+      "value": 9333.33
+     },
+     {
+      "date": "2026-10-12",
+      "value": 9433.33
+     },
+     {
+      "date": "2026-10-13",
+      "value": 9566.67
+     },
+     {
+      "date": "2026-10-14",
+      "value": 9633.33
+     },
+     {
+      "date": "2026-10-15",
+      "value": 9633.33
+     },
+     {
+      "date": "2026-10-16",
+      "value": 9633.33
+     },
+     {
+      "date": "2026-10-17",
+      "value": 9633.33
+     },
+     {
+      "date": "2026-10-18",
+      "value": 9633.33
+     },
+     {
+      "date": "2026-10-19",
+      "value": 9700.0
+     },
+     {
+      "date": "2026-10-20",
+      "value": 9700.0
+     }
+    ]
+   }
+  ],
+  "reference_series": [
+   {
+    "name": "DOP（产品，参照）",
+    "source": "生意社（100ppi.com）基准价 · DOP",
+    "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=538",
+    "spec": "一级品",
+    "region": "国内综合价",
+    "tax_included": true,
+    "unit": "CNY/t",
+    "note": "仅用于与理论原料成本并列展示\"加工价差\"，不是成本的一部分",
+    "rows": [
+     {
+      "date": "2026-07-20",
+      "value": 8717.5
+     },
+     {
+      "date": "2026-07-21",
+      "value": 8700.83
+     },
+     {
+      "date": "2026-07-22",
+      "value": 8734.17
+     },
+     {
+      "date": "2026-07-23",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-07-24",
+      "value": 8817.5
+     },
+     {
+      "date": "2026-07-25",
+      "value": 8825.83
+     },
+     {
+      "date": "2026-07-26",
+      "value": 8825.83
+     },
+     {
+      "date": "2026-07-27",
+      "value": 8842.5
+     },
+     {
+      "date": "2026-07-28",
+      "value": 8867.5
+     },
+     {
+      "date": "2026-07-29",
+      "value": 8867.5
+     },
+     {
+      "date": "2026-07-30",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-07-31",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-08-01",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-08-02",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-08-03",
+      "value": 8742.5
+     },
+     {
+      "date": "2026-08-04",
+      "value": 8767.5
+     },
+     {
+      "date": "2026-08-05",
+      "value": 8792.5
+     },
+     {
+      "date": "2026-08-06",
+      "value": 8725.83
+     },
+     {
+      "date": "2026-08-07",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-08-08",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-08-09",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-08-10",
+      "value": 8725.83
+     },
+     {
+      "date": "2026-08-11",
+      "value": 8800.83
+     },
+     {
+      "date": "2026-08-12",
+      "value": 8850.83
+     },
+     {
+      "date": "2026-08-13",
+      "value": 8900.83
+     },
+     {
+      "date": "2026-08-14",
+      "value": 8900.83
+     },
+     {
+      "date": "2026-08-15",
+      "value": 8900.83
+     },
+     {
+      "date": "2026-08-16",
+      "value": 8900.83
+     },
+     {
+      "date": "2026-08-17",
+      "value": 9000.83
+     },
+     {
+      "date": "2026-08-18",
+      "value": 9050.83
+     },
+     {
+      "date": "2026-08-19",
+      "value": 9134.17
+     },
+     {
+      "date": "2026-08-20",
+      "value": 9267.5
+     },
+     {
+      "date": "2026-08-21",
+      "value": 9350.83
+     },
+     {
+      "date": "2026-08-22",
+      "value": 9350.83
+     },
+     {
+      "date": "2026-08-23",
+      "value": 9350.83
+     },
+     {
+      "date": "2026-08-24",
+      "value": 9442.5
+     },
+     {
+      "date": "2026-08-25",
+      "value": 9484.17
+     },
+     {
+      "date": "2026-08-26",
+      "value": 9442.5
+     },
+     {
+      "date": "2026-08-27",
+      "value": 9500.83
+     },
+     {
+      "date": "2026-08-28",
+      "value": 9475.83
+     },
+     {
+      "date": "2026-08-29",
+      "value": 9475.83
+     },
+     {
+      "date": "2026-08-30",
+      "value": 9475.83
+     },
+     {
+      "date": "2026-08-31",
+      "value": 9559.17
+     },
+     {
+      "date": "2026-09-01",
+      "value": 9584.17
+     },
+     {
+      "date": "2026-09-02",
+      "value": 9692.5
+     },
+     {
+      "date": "2026-09-03",
+      "value": 9792.5
+     },
+     {
+      "date": "2026-09-04",
+      "value": 9792.5
+     },
+     {
+      "date": "2026-09-05",
+      "value": 9792.5
+     },
+     {
+      "date": "2026-09-06",
+      "value": 9792.5
+     },
+     {
+      "date": "2026-09-07",
+      "value": 9817.5
+     },
+     {
+      "date": "2026-09-08",
+      "value": 9950.83
+     },
+     {
+      "date": "2026-09-09",
+      "value": 10067.5
+     },
+     {
+      "date": "2026-09-10",
+      "value": 10242.5
+     },
+     {
+      "date": "2026-09-11",
+      "value": 10300.83
+     },
+     {
+      "date": "2026-09-12",
+      "value": 10300.83
+     },
+     {
+      "date": "2026-09-13",
+      "value": 10300.83
+     },
+     {
+      "date": "2026-09-14",
+      "value": 10384.17
+     },
+     {
+      "date": "2026-09-15",
+      "value": 10509.17
+     },
+     {
+      "date": "2026-09-16",
+      "value": 10509.17
+     },
+     {
+      "date": "2026-09-17",
+      "value": 10592.5
+     },
+     {
+      "date": "2026-09-18",
+      "value": 10559.17
+     },
+     {
+      "date": "2026-09-19",
+      "value": 10559.17
+     },
+     {
+      "date": "2026-09-20",
+      "value": 10550.83
+     },
+     {
+      "date": "2026-09-21",
+      "value": 10484.17
+     },
+     {
+      "date": "2026-09-22",
+      "value": 10334.17
+     },
+     {
+      "date": "2026-09-23",
+      "value": 10266.67
+     },
+     {
+      "date": "2026-09-24",
+      "value": 10300.0
+     },
+     {
+      "date": "2026-09-25",
+      "value": 10300.0
+     },
+     {
+      "date": "2026-09-26",
+      "value": 10300.0
+     },
+     {
+      "date": "2026-09-27",
+      "value": 10300.0
+     },
+     {
+      "date": "2026-09-28",
+      "value": 10359.17
+     },
+     {
+      "date": "2026-09-29",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-09-30",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-01",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-02",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-03",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-04",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-05",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-06",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-07",
+      "value": 10417.5
+     },
+     {
+      "date": "2026-10-08",
+      "value": 10584.17
+     },
+     {
+      "date": "2026-10-09",
+      "value": 10634.17
+     },
+     {
+      "date": "2026-10-10",
+      "value": 10742.5
+     },
+     {
+      "date": "2026-10-11",
+      "value": 10742.5
+     },
+     {
+      "date": "2026-10-12",
+      "value": 10809.17
+     },
+     {
+      "date": "2026-10-13",
+      "value": 10809.17
+     },
+     {
+      "date": "2026-10-14",
+      "value": 10759.17
+     },
+     {
+      "date": "2026-10-15",
+      "value": 10759.17
+     },
+     {
+      "date": "2026-10-16",
+      "value": 10759.17
+     },
+     {
+      "date": "2026-10-17",
+      "value": 10759.17
+     },
+     {
+      "date": "2026-10-18",
+      "value": 10759.17
+     },
+     {
+      "date": "2026-10-19",
+      "value": 10775.83
+     },
+     {
+      "date": "2026-10-20",
+      "value": 10808.33
+     }
+    ]
+   }
+  ],
+  "offsets_pct": {
+   "pa": 0,
+   "eh": 0
+  },
+  "coverage": {
+   "series": [
+    {
+     "material_id": "pa",
+     "name": "苯酐",
+     "source": "生意社（100ppi.com）基准价 · 苯酐",
+     "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=541",
+     "spec": "≥99.0%",
+     "region": "华东",
+     "tax_included": true,
+     "freq": "日",
+     "unit": "CNY/t",
+     "covered_from": "2026-07-20",
+     "covered_to": "2026-10-20",
+     "n_points": 93,
+     "n_gap": 0
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-EH）",
+     "source": "生意社（100ppi.com）基准价 · 异辛醇",
+     "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=489",
+     "spec": "≥99.5%",
+     "region": "山东省（综合价）",
+     "tax_included": true,
+     "freq": "日",
+     "unit": "CNY/t",
+     "covered_from": "2026-07-20",
+     "covered_to": "2026-10-20",
+     "n_points": 93,
+     "n_gap": 0
+    }
+   ],
+   "from": "2026-07-20",
+   "to": "2026-10-20",
+   "n_days": 93
+  }
+ },
+ "periods": [
+  {
+   "label": "30天",
+   "days": 30,
+   "status": "ok",
+   "start_date": "2026-09-20",
+   "start": 10382.96313,
+   "end_date": "2026-10-20",
+   "end": 10642.78461,
+   "delta": 259.8214800000005,
+   "pct": 2.5023827663346476
+  },
+  {
+   "label": "3个月",
+   "days": 91,
+   "status": "ok",
+   "start_date": "2026-07-21",
+   "start": 8600.83235,
+   "end_date": "2026-10-20",
+   "end": 10642.78461,
+   "delta": 2041.95226,
+   "pct": 23.741333128066376
+  },
+  {
+   "label": "1年",
+   "days": 365,
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-20 起），无法计算，未做插值/补数",
+   "start_date": null,
+   "start": null,
+   "end_date": "2026-10-20",
+   "end": 10642.78461,
+   "delta": null,
+   "pct": null
+  },
+  {
+   "label": "3年",
+   "days": 1095,
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-20 起），无法计算，未做插值/补数",
+   "start_date": null,
+   "start": null,
+   "end_date": "2026-10-20",
+   "end": 10642.78461,
+   "delta": null,
+   "pct": null
+  }
+ ],
+ "contribution": [
+  {
+   "period": "30天",
+   "status": "ok",
+   "start_date": "2026-09-20",
+   "end_date": "2026-10-20",
+   "total_delta": 259.8214800000005,
+   "items": [
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "start": 3919.36539,
+     "end": 4066.1846100000002,
+     "delta": 146.8192200000003,
+     "share_of_change": 56.507729845892655
+    },
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "start": 6463.59774,
+     "end": 6576.6,
+     "delta": 113.0022600000002,
+     "share_of_change": 43.492270154107345
+    }
+   ]
+  },
+  {
+   "period": "3个月",
+   "status": "ok",
+   "start_date": "2026-07-21",
+   "end_date": "2026-10-20",
+   "total_delta": 2041.95226,
+   "items": [
+    {
+     "material_id": "eh",
+     "name": "异辛醇（2-乙基己醇，2-EH）",
+     "start": 5243.1977400000005,
+     "end": 6576.6,
+     "delta": 1333.4022599999998,
+     "share_of_change": 65.30036407413363
+    },
+    {
+     "material_id": "pa",
+     "name": "苯酐（邻苯二甲酸酐，PA）",
+     "start": 3357.63461,
+     "end": 4066.1846100000002,
+     "delta": 708.5500000000002,
+     "share_of_change": 34.69963592586637
+    }
+   ]
+  },
+  {
+   "period": "1年",
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-20 起），无法计算，未做插值/补数",
+   "items": []
+  },
+  {
+   "period": "3年",
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-20 起），无法计算，未做插值/补数",
+   "items": []
+  }
+ ],
+ "averages": [
+  {
+   "label": "近30天",
+   "status": "ok",
+   "n": 31,
+   "avg": 10232.412925483872,
+   "min": 9974.26539,
+   "max": 10649.16539,
+   "from": "2026-09-20",
+   "to": "2026-10-20"
+  },
+  {
+   "label": "近3个月",
+   "status": "ok",
+   "n": 92,
+   "avg": 9721.387271956522,
+   "min": 8600.83235,
+   "max": 10649.16539,
+   "from": "2026-07-21",
+   "to": "2026-10-20"
+  }
+ ],
+ "gaps": [
+  {
+   "type": "price",
+   "item": "钛酸酯催化剂（钛酸异丙酯等）",
+   "detail": "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）",
+   "impact": "该原料未计入理论原料成本；总成本仅覆盖已计价原料，口径为\"部分覆盖\"",
+   "fix": "补充同规格/同区域/同税口径的现货价（含数据日期与来源）"
+  },
+  {
+   "type": "price",
+   "item": "氢氧化钠（片碱 ≥97%）",
+   "detail": "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）",
+   "impact": "该原料未计入理论原料成本；总成本仅覆盖已计价原料，口径为\"部分覆盖\"",
+   "fix": "补充同规格/同区域/同税口径的现货价（含数据日期与来源）"
+  },
+  {
+   "type": "price",
+   "item": "活性炭（脱色）",
+   "detail": "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）",
+   "impact": "该原料未计入理论原料成本；总成本仅覆盖已计价原料，口径为\"部分覆盖\"",
+   "fix": "补充同规格/同区域/同税口径的现货价（含数据日期与来源）"
+  },
+  {
+   "type": "history",
+   "item": "2025-10-20 → 2026-07-19（约 9 个月）",
+   "detail": "免费公开源（生意社曲线端点）只返回近 93 天；卓创历史序列需会员（prices.sci99.com 匿名返回 data:null）",
+   "impact": "1 年 / 3 年窗口的历史理论成本无法计算，页面显式标注为缺口，未插值、未生成",
+   "fix": "① 接入卓创/隆众会员终端（苯酐 diid 3883、辛醇 diid 22488、DOP 94716）；② 从本日起每日滚动采集累积"
+  },
+  {
+   "type": "history_window",
+   "item": "1年",
+   "detail": "该窗口起点早于可得数据（2026-07-20 起），无法计算，未做插值/补数",
+   "impact": "该时间窗的理论成本变化不展示为数字",
+   "fix": "接入更长历史价格源（付费终端/自采积累）"
+  },
+  {
+   "type": "history_window",
+   "item": "3年",
+   "detail": "该窗口起点早于可得数据（2026-07-20 起），无法计算，未做插值/补数",
+   "impact": "该时间窗的理论成本变化不展示为数字",
+   "fix": "接入更长历史价格源（付费终端/自采积累）"
+  }
+ ],
+ "not_included": [
+  {
+   "item": "能源（电、蒸汽/导热油、循环水、氮气）",
+   "reason": "需企业能耗台账；DOP 酯化耗蒸汽量大，是仅次于原料的成本项"
+  },
+  {
+   "item": "人工与制造费用",
+   "reason": "随产能利用率变化，不属\"原料\""
+  },
+  {
+   "item": "折旧、设备维护",
+   "reason": "资本性支出分摊"
+  },
+  {
+   "item": "辅助材料（钛酸酯催化剂、NaOH、活性炭、硅藻土）",
+   "reason": "本例单耗已知但价格未采集，按缺口列出，不计入主料合计"
+  },
+  {
+   "item": "收率损失/废品",
+   "reason": "以净单耗口径部分涵盖，但未单列为独立成本项"
+  },
+  {
+   "item": "运输、包装、仓储、资金占用",
+   "reason": "与提货方式、账期相关，需采购合同数据"
+  },
+  {
+   "item": "税费（增值税以外的附加税、环保税）",
+   "reason": "不进入产品原料成本"
+  },
+  {
+   "item": "联产/副产抵扣",
+   "reason": "本例副产水无商业价值；若生产 DOTP 等其他酯类需另行分摊"
+  }
+ ],
+ "unquantified": [
+  {
+   "item": "辛醇随废水/尾气的损失 kg/t",
+   "why": "文献只有定性描述，无量值",
+   "impact": "可能使异辛醇实际单耗高于 0.678"
+  },
+  {
+   "item": "苯酐过滤/废渣夹带的损失",
+   "why": "环评吨耗表未拆分",
+   "impact": "0.383 可能低估 0.5~1%"
+  },
+  {
+   "item": "DOP 吨产品废水产生量",
+   "why": "未找到可靠公开数据",
+   "impact": "影响环保成本，不影响原料成本"
+  }
+ ],
+ "byproducts": [
+  {
+   "id": "water",
+   "name": "酯化副产水",
+   "per_tonne": 0.0461,
+   "price_cny_per_t": null,
+   "note": "理论副产 46.1 kg/t DOP；无商业价值，未做副产抵扣"
+  }
+ ],
+ "price_basis": {
+  "target": "tax_included",
+  "label": "含税",
+  "fx_usd_cny": null
+ }
+}

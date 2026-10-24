@@ -1,0 +1,15 @@
+{
+  "forbidden": [
+    {
+      "id": "F01",
+      "from": "N_SUB",
+      "to": "N_PRIMARY",
+      "wrong_types": [
+        "conversion",
+        "blend"
+      ],
+      "why": "演示：替代品与目标品种之间只有替代（substitution）关系，不存在化学转化，也不存在配方共混。",
+      "worksheet": "用 substitution 边（双向），并标注在哪个应用场景下替代。"
+    }
+  ]
+}

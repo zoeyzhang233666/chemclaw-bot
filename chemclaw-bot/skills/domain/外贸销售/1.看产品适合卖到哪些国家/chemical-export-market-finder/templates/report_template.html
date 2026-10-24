@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<!--__ASSETS__-->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;background:#f4f6fa;color:#1a2332;line-height:1.6}
+.wrap{max-width:1560px;margin:0 auto;padding:0 20px 70px}
+header{background:linear-gradient(130deg,#0f2b52 0%,#1f3f7a 45%,#2a6bb8 100%);color:#fff;padding:36px 0 28px;margin-bottom:24px;box-shadow:0 4px 24px rgba(15,43,82,.28)}
+h1{font-size:29px;font-weight:700}
+.sub{opacity:.9;font-size:14px;margin-top:8px}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:5px 13px;border-radius:20px;font-size:12.5px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 14px rgba(20,40,80,.08);padding:22px 24px;margin-bottom:22px}
+h2{font-size:19px;color:#0f2b52;margin-bottom:6px;padding-left:11px;border-left:5px solid #2a6bb8}
+h3{font-size:15px;color:#1f3f7a;margin:16px 0 8px}
+.note{font-size:12.5px;color:#6b7684;margin:6px 0 14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:16px 0}
+.kpi{background:linear-gradient(160deg,#fff,#f0f5fc);border:1px solid #dce6f5;border-radius:10px;padding:15px 16px}
+.kpi .l{font-size:12px;color:#5b6a7d}.kpi .v{font-size:23px;font-weight:700;color:#0f2b52;margin-top:3px}
+.kpi .s{font-size:11.5px;color:#8794a5;margin-top:2px}
+.chart{width:100%;height:520px}.chart-sm{width:100%;height:380px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:12.7px;margin-top:10px}
+th{background:#1f3864;color:#fff;padding:9px 8px;text-align:left;font-weight:600;font-size:12px;white-space:nowrap}
+td{padding:8px;border-bottom:1px solid #e8edf5;vertical-align:top}
+tbody tr:hover{background:#eef4fd;cursor:pointer}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.ok{background:#e2efda;color:#2e6b30}.gap{background:#fff2cc;color:#7f6000}.hi{background:#fde2e0;color:#a1302a}
+.bar{height:7px;border-radius:4px;background:#e8edf5;overflow:hidden;margin-top:3px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#2a6bb8,#5aa9e6)}
+details{border:1px solid #dde5f0;border-radius:9px;padding:12px 16px;margin:10px 0;background:#fbfcfe}
+summary{cursor:pointer;font-weight:600;color:#1f3f7a;font-size:14px}
+.warn{background:#fef7e6;border-left:4px solid #e0a800;padding:12px 16px;border-radius:6px;font-size:13px;margin:12px 0}
+.crit{background:#fdecec;border-left:4px solid #c0392b;padding:12px 16px;border-radius:6px;font-size:13px;margin:12px 0}
+.good{background:#eaf6ec;border-left:4px solid #2e7d32;padding:12px 16px;border-radius:6px;font-size:13px;margin:12px 0}
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:12px 0 4px;padding:14px;background:#f7f9fd;border-radius:9px;border:1px solid #e4ebf6}
+.filters label{font-size:12px;color:#5b6a7d;display:block;margin-bottom:4px;font-weight:600}
+select{padding:7px 10px;border:1px solid #cdd8e8;border-radius:6px;font-size:13px;background:#fff;min-width:150px}
+.btn{background:#2a6bb8;color:#fff;border:0;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}
+.btn:hover{background:#1f5496}.btn.alt{background:#e8eef8;color:#1f3f7a}
+.foot{font-size:12px;color:#8794a5;margin-top:26px;text-align:center;line-height:1.8}
+</style></head><body>
+<header><div class="wrap">
+<h1>__TITLE__</h1>
+<div class="sub">__PRODUCT_LINE__</div>
+<div class="pills"><span class="pill">数据：UN Comtrade</span><span class="pill">口径：HS 6 位</span>
+<span class="pill">生成：__GENERATED__</span><span class="pill">原产国：__ORIGIN__</span></div>
+</div></header>
+<div class="wrap">
+<div class="card" id="summary"><h2>一、结论摘要</h2>
+<div class="note">区分 <b>【贸易统计事实】</b>（可溯源数字）、<b>【产业公开信息】</b>（权威机构出版物）、<b>【初步判断】</b>（分析推论，需业务验证）。进口规模大或增长快 ≠ 存在可成交的销售机会。</div>
+<div class="kpis" id="kpis"></div>
+<div id="judgments"></div></div>
+
+<div class="card"><h2>二、全球进口市场地图</h2>
+<div class="note">颜色 = 所选指标；点击国家查看历年结构、竞争来源国与关税。</div>
+<div class="filters">
+<div><label>地图指标</label><select id="mapMetric"><option value="usd">进口额 (USD)</option><option value="origin_share">原产国份额 (%)</option><option value="cagr">CAGR (%)</option></select></div>
+<div><label>最低进口额</label><select id="minSize"><option value="0">全部</option><option value="50000000">≥5,000万</option><option value="100000000" selected>≥1亿</option><option value="200000000">≥2亿</option></select></div>
+<div><label>原产国份额</label><select id="cnFilter"><option value="all">不限</option><option value="high">≥15%</option><option value="low">＜5%</option></select></div>
+<div><label>关税核验</label><select id="tarFilter"><option value="all">不限</option><option value="verified">已核验</option></select></div>
+<button class="btn alt" id="resetBtn">重置</button></div>
+<div id="mapChart" class="chart"></div></div>
+
+<div class="card"><h2>三、主要进口国排名与比较</h2>
+<div class="note">点击行展开详情。最新年度须与基年对照阅读。</div>
+<table id="tbl"><thead><tr><th>#</th><th>国家</th><th>最新年</th><th class="num">进口额</th><th class="num">净重(t)</th>
+<th class="num">均价$/t</th><th class="num">基年</th><th class="num">CAGR</th><th class="num">原产国</th><th class="num">份额</th><th>最大来源</th><th>关税</th></tr></thead>
+<tbody id="tbody"></tbody></table></div>
+
+<div class="card"><h2>四、全球趋势与份额变化</h2>
+<div class="note">注意报告国数量逐年变化，合计值跨年不可直接比较。</div>
+<div class="grid2"><div id="trendChart" class="chart-sm"></div><div id="shareChart" class="chart-sm"></div></div></div>
+
+<div class="card"><h2>五、竞争来源国结构</h2><div class="note">来源国份额按最新年度。</div>
+<div class="grid2"><div id="compChart" class="chart-sm" style="height:430px"></div><div id="stackChart" class="chart-sm" style="height:430px"></div></div></div>
+
+<div class="card"><h2>六、关税与贸易限制</h2><div class="note">绿色=已核验，黄色=缺口。</div>
+<table><thead><tr><th>国家</th><th>本地编码</th><th class="num">MFN</th><th>计征基础</th><th>来源</th><th>贸易限制</th><th>状态</th></tr></thead>
+<tbody id="tarBody"></tbody></table></div>
+
+<div class="card"><h2>七、下游产业与需求背景</h2><div class="note">属【产业公开信息】，用于解释贸易结构，不构成需求预测。</div>
+<table><thead><tr><th>项目</th><th>市场</th><th>内容</th><th>来源</th></tr></thead><tbody id="indBody"></tbody></table></div>
+
+<div class="card"><h2>八、目标市场清单</h2>
+<div class="note">把候选国家加入清单，再进入下一步（研究单个目标国家 / 找海外候选买家）。</div>
+<div id="reco"></div></div>
+
+<div class="card"><h2>九、口径与来源</h2>
+<table><thead><tr><th>项目</th><th>口径</th></tr></thead><tbody>
+<tr><td>HS 编码</td><td>HS 6 位全球可比层。各国 8/10 位细分不同，跨国比较只在 6 位层进行，未将不兼容的本地编码直接相加。</td></tr>
+<tr><td>报告国 vs 镜像</td><td>使用报告国自报进口（CIF）；原产国自报出口未交叉核对。</td></tr>
+<tr><td>金额/数量</td><td>USD 当期名义值，未作通胀与汇率调整；数量为净重 kg，缺失显示 n/a，不估算。</td></tr>
+<tr><td>份额与增长</td><td>份额=原产国进口额÷全球进口额；CAGR=(末年/基年)^(1/年数)−1，基期缺失记 n/a，不插值。</td></tr>
+<tr><td>数据来源</td><td>UN Comtrade preview API（annual, HS, CIF, as-reported）。关税见"六"节，并标注核验状态。</td></tr>
+</tbody></table></div>
+<div class="foot">本报告由程序基于公开贸易数据生成，数字可溯源。进口规模不等于采购需求。<br>生成 __GENERATED__</div>
+</div>
+<script>
+const DATA=__PAYLOAD__, IND=__INDUSTRY__, JUD=__JUDGMENTS__;
+const M=DATA.markets,T=DATA.tariffs,G=DATA.globe,YEARS=DATA.years,P=DATA.product;
+const tmap={};T.forEach(t=>tmap[t.iso3]=t);
+const fmt=(v,d=0)=>v==null?'n/a':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const usdM=v=>v==null?'n/a':(v/1e6).toLocaleString('en-US',{maximumFractionDigits:1})+' M';
+const pct=v=>v==null?'n/a':v.toFixed(1)+'%';
+const FEAT2ISO={Mexico:'MEX',Brazil:'BRA',Chile:'CHL',India:'IND',Indonesia:'IDN',Netherlands:'NLD',Malaysia:'MYS',
+Thailand:'THA',Germany:'DEU',Italy:'ITA','United Kingdom':'GBR',Argentina:'ARG',Egypt:'EGY',Spain:'ESP',
+Kazakhstan:'KAZ','South Africa':'ZAF',Korea:'KOR',Poland:'POL','Saudi Arabia':'SAU',France:'FRA',Turkey:'TUR',
+Belgium:'BEL',Nigeria:'NGA',Ukraine:'UKR',Japan:'JPN',Canada:'CAN','United States':'USA',Australia:'AUS',
+Russia:'RUS','Vietnam':'VNM','Viet Nam':'VNM','United Arab Emirates':'ARE','Saudi Arabia':'SAU',Pakistan:'PAK',
+Bangladesh:'BGD',Philippines:'PHL',Singapore:'SGP','Sri Lanka':'LKA',Kenya:'KEN',Tanzania:'TZA',Morocco:'MAR',
+Algeria:'DZA',Peru:'PER',Colombia:'COL',Ecuador:'ECU',Greece:'GRC',Portugal:'PRT',Romania:'ROU',Bulgaria:'BGR',
+Sweden:'SWE',Norway:'NOR',Finland:'FIN',Denmark:'DNK',Austria:'AUT',Switzerland:'CHE',Ireland:'IRL',
+Czechia:'CZE','Czech Rep.':'CZE',Hungary:'HUN',Slovakia:'SVK',Slovenia:'SVN',Croatia:'HRV',Serbia:'SRB',
+Belarus:'BLR',Uzbekistan:'UZB',Azerbaijan:'AZE',Georgia:'GEO',Armenia:'ARM',Israel:'ISR','Iran':'IRN',
+Iraq:'IRQ',Qatar:'QAT',Kuwait:'KWT',Oman:'OMN',Bahrain:'BHR',Jordan:'JOR',Lebanon:'LBN',Tunisia:'TUN',
+Libya:'LBY',Ethiopia:'ETH',Ghana:'GHA',Senegal:'SEN',"Côte d'Ivoire":'CIV',Cameroon:'CMR',Angola:'AGO',
+Zimbabwe:'ZWE',Zambia:'ZMB',Mozambique:'MOZ',Madagascar:'MDG',Mauritius:'MUS','New Zealand':'NZL',Panama:'PAN',
+'Costa Rica':'CRI',Guatemala:'GTM','Dominican Rep.':'DOM',Bolivia:'BOL',Paraguay:'PRY',Uruguay:'URY',
+Taiwan:'TWN','Other Asia, nes':'TWN',Mongolia:'MNG','Dem. Rep. Congo':'COD',Sudan:'SDN',Nepal:'NPL',
+Myanmar:'MMR',Cambodia:'KHM',Laos:'LAO','Lao PDR':'LAO'};
+const iso2feat={};Object.keys(FEAT2ISO).forEach(k=>iso2feat[FEAT2ISO[k]]=k);
+
+function filtered(){const min=+document.getElementById('minSize').value,cn=document.getElementById('cnFilter').value,tf=document.getElementById('tarFilter').value;
+ return M.filter(m=>{if((m.usd||0)<min)return false;
+  if(cn==='high'&&!(m.origin_share>=15))return false;
+  if(cn==='low'&&!(m.origin_share<5))return false;
+  if(tf==='verified'&&!(tmap[m.iso3]&&tmap[m.iso3].status==='verified'))return false;return true;});}
+let mapChart;
+function drawMap(){const metric=document.getElementById('mapMetric').value,list=filtered(),byIso={};list.forEach(m=>byIso[m.iso3]=m);
+ const vals=list.map(m=>metric==='usd'?m.usd:metric==='cagr'?(m.cagr!=null?m.cagr*100:null):m.origin_share).filter(v=>v!=null&&v>0);
+ const max=Math.max(...vals,1);
+ const data=Object.keys(byIso).filter(i=>iso2feat[i]).map(i=>{const m=byIso[i];
+  const v=metric==='usd'?m.usd:metric==='cagr'?(m.cagr!=null?m.cagr*100:null):m.origin_share;
+  return {name:iso2feat[i],value:v};});
+ mapChart.setOption({tooltip:{trigger:'item',formatter:p=>{const m=byIso[FEAT2ISO[p.name]];if(!m)return p.name+'（未纳入/数据缺失）';
+   return '<b>'+m.name+'</b><br>最新年 '+m.latest_year+'｜进口 '+usdM(m.usd)+'<br>原产国份额 '+pct(m.origin_share)+'｜CAGR '+(m.cagr!=null?pct(m.cagr*100):'n/a')+'<br><span style="color:#888">点击查看详情</span>';}},
+  visualMap:{min:0,max:metric==='usd'?Math.log10(max):max,left:20,bottom:20,text:['高','低'],calculable:true,
+   inRange:{color:['#dce9f7','#8fbde6','#4a90cf','#2166ac','#0d3d75']},
+   formatter:v=>metric==='usd'?'$'+(Math.pow(10,v)/1e6).toFixed(0)+'M':v.toFixed(0)+'%'},
+  series:[{type:'map',map:'world',roam:true,emphasis:{label:{show:true,fontSize:11},itemStyle:{areaColor:'#f7b731'}},
+   itemStyle:{areaColor:'#eef1f6',borderColor:'#fff',borderWidth:.6},label:{show:false},
+   data:data.map(d=>({name:d.name,value:metric==='usd'&&d.value>0?Math.log10(d.value):d.value}))}]},true);}
+
+function openCountry(iso){const m=M.find(x=>x.iso3===iso);if(!m)return;const t=tmap[iso]||{};
+ let h='<div class="card" style="border-left:5px solid #2a6bb8"><h2>'+m.name+'（'+m.iso3+'）· 最新年度 '+m.latest_year+'</h2>';
+ h+='<div class="kpis"><div class="kpi"><div class="l">进口额</div><div class="v">'+usdM(m.usd)+'</div><div class="s">'+m.base_year+': '+usdM(m.usd_base)+'</div></div>'+
+  '<div class="kpi"><div class="l">CAGR</div><div class="v">'+(m.cagr!=null?pct(m.cagr*100):'n/a')+'</div><div class="s">名义美元</div></div>'+
+  '<div class="kpi"><div class="l">原产国供应</div><div class="v">'+usdM(m.origin_usd)+'</div><div class="s">份额 '+pct(m.origin_share)+'</div></div>'+
+  '<div class="kpi"><div class="l">关税</div><div class="v">'+(t.mfn!=null?t.mfn.toFixed(2)+'%':'待核验')+'</div><div class="s">'+(t.status==='verified'?'已核验':'待核验')+'</div></div></div>';
+ h+='<h3>历年结构</h3><table><thead><tr><th>年份</th><th class="num">进口额</th><th class="num">原产国</th><th class="num">份额</th><th class="num">净重(t)</th></tr></thead><tbody>';
+ YEARS.forEach(y=>{const v=m.series_usd[y],c=m.series_origin[y],w=m.series_kg[y];
+  h+='<tr><td>'+y+'</td><td class="num">'+(v!=null?fmt(v):'—')+'</td><td class="num">'+(c!=null?fmt(c):'—')+'</td><td class="num">'+(v&&c!=null?pct(c/v*100):'—')+'</td><td class="num">'+(w?fmt(w/1000):'缺口')+'</td></tr>';});
+ h+='</tbody></table><h3>竞争来源国（'+m.latest_year+'）</h3>';
+ if(m.top_partners&&m.top_partners.length){h+='<table><thead><tr><th>来源国</th><th class="num">金额</th><th class="num">份额</th></tr></thead><tbody>';
+  m.top_partners.forEach(p=>{h+='<tr><td>'+p[0]+'</td><td class="num">'+fmt(p[1]/100*m.partner_total/1e6,1)+'M</td><td class="num">'+p[1].toFixed(1)+'%</td></tr>';});
+  h+='</tbody></table>';}else h+='<div class="warn">来源国明细未取得（数据缺口）。</div>';
+ h+='<h3>关税与限制</h3><div class="note">本地编码 '+(t.hs_local||'—')+'｜计征 '+(t.basis||'—')+'<br>来源：'+(t.source||'—')+'</div><div class="'+(t.status==='verified'?'good':'warn')+'">'+(t.restriction||'未取得')+'</div>';
+ h+='<div style="margin-top:14px"><button class="btn" onclick="addTarget(\''+iso+'\')">加入目标市场清单</button> <span id="added_'+iso+'" style="margin-left:10px;font-size:13px;color:#2e7d32"></span></div></div>';
+ const old=document.getElementById('detail');if(old)old.remove();
+ const d=document.createElement('div');d.id='detail';d.innerHTML=h;document.getElementById('summary').after(d);
+ d.scrollIntoView({behavior:'smooth',block:'start'});}
+let targets=[];
+function addTarget(iso){if(!targets.includes(iso))targets.push(iso);const el=document.getElementById('added_'+iso);
+ if(el)el.textContent='✓ 已加入（共 '+targets.length+'）';renderReco();}
+function renderReco(){const el=document.getElementById('reco');
+ if(!targets.length){el.innerHTML='<div class="warn">尚未选择目标市场。点击上方国家详情中的"加入目标市场清单"。</div>';return;}
+ let h='<div class="good"><b>目标市场清单（'+targets.length+'）：</b>';
+ targets.forEach(i=>{const m=M.find(x=>x.iso3===i);h+='<span class="tag hi" style="margin:0 4px">'+(m?m.name:i)+'</span>';});
+ h+='<br><span class="note">下一步：对每个国家核验本地产能、下游产能、买方结构、到岸成本，再进入"找海外候选买家"。</span></div>';
+ el.innerHTML=h;}
+function renderTable(){const list=filtered(),tb=document.getElementById('tbody');tb.innerHTML='';
+ list.forEach((m,i)=>{const t=tmap[m.iso3]||{};const tr=document.createElement('tr');
+  tr.innerHTML='<td>'+(i+1)+'</td><td><b>'+m.name+'</b> <span style="color:#8794a5">'+m.iso3+'</span></td><td>'+m.latest_year+'</td>'+
+   '<td class="num">'+fmt(m.usd)+'</td><td class="num">'+(m.kg?fmt(m.kg/1000):'缺口')+'</td><td class="num">'+(m.unit_value?fmt(m.unit_value):'n/a')+'</td>'+
+   '<td class="num">'+(m.usd_base?fmt(m.usd_base):'n/a')+'</td><td class="num" style="color:'+((m.cagr||0)>0?'#2e7d32':'#c0392b')+'">'+(m.cagr!=null?pct(m.cagr*100):'n/a')+'</td>'+
+   '<td class="num">'+fmt(m.origin_usd)+'</td><td class="num">'+pct(m.origin_share)+'<div class="bar"><i style="width:'+Math.min(100,m.origin_share||0)+'%"></i></div></td>'+
+   '<td>'+(m.top_partners.length?m.top_partners[0][0]+' '+m.top_partners[0][1].toFixed(0)+'%':'<span class="tag gap">明细缺失</span>')+'</td>'+
+   '<td>'+(t.mfn!=null?'<span class="tag ok">'+t.mfn.toFixed(2)+'%</span>':'<span class="tag gap">待核验</span>')+'</td>';
+  tr.onclick=()=>openCountry(m.iso3);tb.appendChild(tr);});}
+function renderTar(){const tb=document.getElementById('tarBody');tb.innerHTML='';
+ T.forEach(t=>{const tr=document.createElement('tr');
+  tr.innerHTML='<td><b>'+t.country+'</b> <span style="color:#8794a5">'+t.iso3+'</span></td><td>'+t.hs_local+'</td><td class="num">'+(t.mfn!=null?t.mfn.toFixed(2)+'%':'待核验')+'</td>'+
+   '<td>'+t.basis+'</td><td style="font-size:11.5px">'+t.source+'</td><td style="font-size:12px">'+t.restriction+'</td>'+
+   '<td>'+(t.status==='verified'?'<span class="tag ok">已核验</span>':'<span class="tag gap">待核验</span>')+'</td>';
+  tr.onclick=()=>openCountry(t.iso3);tb.appendChild(tr);});}
+function renderInd(){const tb=document.getElementById('indBody');
+ IND.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML='<td>'+r.item+'</td><td>'+r.market+'</td><td>'+r.content+'</td><td>'+r.source+'</td>';tb.appendChild(tr);});}
+function renderKpi(){const big=M[0]||{};let tw=0,to=0;
+ const ly=YEARS[YEARS.length-1];const g=G.find(x=>x.year===ly)||{};tw=g.usd||0;to=g.cn||0;
+ const maxShare=M.filter(m=>m.origin_share!=null).sort((a,b)=>b.origin_share-a.origin_share)[0]||{};
+ const topSrc={};M.forEach(m=>{if(m.top_partners.length)topSrc[m.top_partners[0][0]]=(topSrc[m.top_partners[0][0]]||0)+1;});
+ const lead=Object.entries(topSrc).sort((a,b)=>b[1]-a[1])[0]||['—',0];
+ document.getElementById('kpis').innerHTML=
+  '<div class="kpi"><div class="l">'+ly+' 已报送进口合计</div><div class="v">'+(tw/1e8).toFixed(2)+' 亿美元</div><div class="s">'+G.length+' 个年份</div></div>'+
+  '<div class="kpi"><div class="l">'+P.origin+' 整体供应份额</div><div class="v">'+(tw?pct(to/tw*100):'n/a')+'</div><div class="s">'+ly+' 金额口径</div></div>'+
+  '<div class="kpi"><div class="l">最大进口市场</div><div class="v">'+usdM(big.usd)+'</div><div class="s">'+(big.name||'')+'（'+P.origin+' '+pct(big.origin_share)+'）</div></div>'+
+  '<div class="kpi"><div class="l">'+P.origin+' 份额最高市场</div><div class="v">'+(maxShare.origin_share!=null?pct(maxShare.origin_share):'n/a')+'</div><div class="s">'+(maxShare.name||'')+'</div></div>'+
+  '<div class="kpi"><div class="l">主导来源国</div><div class="v">'+lead[0]+'</div><div class="s">在 '+lead[1]+' 个市场居首</div></div>';}
+function renderJudgments(){const el=document.getElementById('judgments');
+ if(!JUD||!JUD.length){el.innerHTML='';return;}
+ let h='';JUD.forEach(j=>{h+='<div class="'+(j.tone||'good')+'"><b>'+(j.title||'')+'</b><br>'+(j.body||'')+'</div>';});
+ el.innerHTML=h;}
+window.addEventListener('load',()=>{
+ mapChart=echarts.init(document.getElementById('mapChart'));
+ const geo=window.__WORLD_GEO__;if(geo){echarts.registerMap('world',geo);}
+ else{document.getElementById('mapChart').innerHTML='<div class="warn">world.json 未加载；请用 HTTP 打开或使用下方表格。</div>';}
+ drawMap();renderTable();renderTar();renderInd();renderKpi();renderJudgments();renderReco();
+ ['minSize','cnFilter','tarFilter'].forEach(id=>document.getElementById(id).onchange=()=>{drawMap();renderTable();});
+ document.getElementById('mapMetric').onchange=()=>drawMap();
+ document.getElementById('resetBtn').onclick=()=>{['minSize','cnFilter','tarFilter'].forEach(i=>document.getElementById(i).selectedIndex=0);drawMap();renderTable();};
+ mapChart.on('click',p=>{const iso=FEAT2ISO[p.name];if(iso)openCountry(iso);});
+ const tc=echarts.init(document.getElementById('trendChart'));
+ tc.setOption({title:{text:'已报送进口 vs 原产国供应（USD）',left:'center',textStyle:{fontSize:13}},
+  tooltip:{trigger:'axis',valueFormatter:v=>(v/1e8).toFixed(2)+' 亿'},
+  legend:{bottom:0,data:['进口合计','原产国合计']},grid:{left:70,right:20,top:50,bottom:50},
+  xAxis:{type:'category',data:G.map(g=>g.year)},yAxis:{type:'value',axisLabel:{formatter:v=>(v/1e8).toFixed(0)+'亿'}},
+  series:[{name:'进口合计',type:'bar',data:G.map(g=>g.usd),itemStyle:{color:'#5aa9e6'}},
+          {name:'原产国合计',type:'bar',data:G.map(g=>g.cn),itemStyle:{color:'#e27d60'}}]});
+ const sc=echarts.init(document.getElementById('shareChart'));
+ sc.setOption({title:{text:P.origin+' 占进口比重（%）',left:'center',textStyle:{fontSize:13}},
+  tooltip:{trigger:'axis',valueFormatter:v=>v.toFixed(2)+'%'},grid:{left:60,right:30,top:50,bottom:40},
+  xAxis:{type:'category',data:G.map(g=>g.year)},yAxis:{type:'value',axisLabel:{formatter:'{value}%'}},
+  series:[{type:'line',smooth:true,symbolSize:8,data:G.map(g=>g.usd?+(100*g.cn/g.usd).toFixed(2):0),
+   lineStyle:{width:3,color:'#0d3d75'},itemStyle:{color:'#0d3d75'},areaStyle:{color:'rgba(42,107,184,.18)'},
+   markLine:{data:[{type:'average',label:{formatter:'均值 {c}%'}}]}}]});
+ const comp=echarts.init(document.getElementById('compChart'));
+ const top=M.slice(0,12);
+ comp.setOption({title:{text:'主要进口国：原产国份额',left:'center',textStyle:{fontSize:13}},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},grid:{left:80,right:60,top:50,bottom:40},
+  xAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:100},yAxis:{type:'category',data:top.map(m=>m.iso3).reverse()},
+  series:[{type:'bar',data:top.map(m=>+(m.origin_share||0).toFixed(1)).reverse(),
+   itemStyle:{color:p=>p.value>15?'#c0392b':p.value>5?'#e67e22':'#95a5a6'},
+   label:{show:true,position:'right',formatter:'{c}%',fontSize:10}}]});
+ const st=echarts.init(document.getElementById('stackChart'));
+ const pms=top.filter(m=>m.top_partners.length);
+ const srcSet=[...new Set(pms.flatMap(m=>m.top_partners.map(p=>p[0])))];
+ const colors=['#1f4e79','#c0392b','#e67e22','#27ae60','#8e44ad','#16a085','#7f8c8d','#d4ac0d','#2c3e50'];
+ st.setOption({title:{text:'来源国份额结构（%）',left:'center',textStyle:{fontSize:13}},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:v=>v+'%'},
+  legend:{bottom:0,type:'scroll',textStyle:{fontSize:10}},grid:{left:80,right:20,top:50,bottom:70},
+  xAxis:{type:'value',max:100,axisLabel:{formatter:'{value}%'}},yAxis:{type:'category',data:pms.map(m=>m.iso3).reverse()},
+  series:srcSet.map((s,i)=>({name:s,type:'bar',stack:'t',itemStyle:{color:colors[i%colors.length]},
+   data:pms.map(m=>{const p=m.top_partners.find(x=>x[0]===s);return p?+p[1].toFixed(1):0;}).reverse()}))});
+ window.addEventListener('resize',()=>{[mapChart,tc,sc,comp,st].forEach(c=>c&&c.resize());});});
+</script></body></html>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PP 聚丙烯 · 上涨有没有基本面支撑 | 期现&产业基本面核验</title>
+<style>
+:root{
+ --bg:#0d1117; --bg2:#161b22; --bg3:#1c2333; --line:#2d3748; --line2:#3a4560;
+ --tx:#e6edf3; --tx2:#9aa7b8; --tx3:#6b7a90;
+ --up:#ff4d4f; --dn:#22c55e; --warn:#f0a020; --info:#3b82f6; --purple:#a855f7;
+ --sup:#ff4d4f; --div:#22c55e; --mis:#6b7a90; --neu:#8899aa;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 22px 80px}
+a{color:#6ea8fe;text-decoration:none}
+a:hover{text-decoration:underline}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,"Courier New",monospace}
+
+/* ---------- header ---------- */
+header{padding:34px 0 22px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--tx3);text-transform:uppercase;margin-bottom:10px}
+h1{font-size:30px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+h1 .hl{background:linear-gradient(90deg,#ff4d4f,#f0a020);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--tx2);margin-top:10px;font-size:14px;max-width:900px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.badge{font-size:12px;padding:4px 11px;border-radius:20px;background:var(--bg3);border:1px solid var(--line2);color:var(--tx2)}
+.badge b{color:var(--tx);font-weight:600}
+
+/* ---------- verdict banner ---------- */
+.verdict{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;margin:24px 0}
+.vmain{background:linear-gradient(135deg,rgba(240,160,32,.10),rgba(255,77,79,.06));border:1px solid rgba(240,160,32,.35);border-radius:12px;padding:22px 24px}
+.vmain .vt{font-size:12px;letter-spacing:.12em;color:var(--warn);font-weight:600;margin-bottom:10px}
+.vmain .vv{font-size:21px;font-weight:700;line-height:1.45;margin-bottom:12px}
+.vmain .vd{font-size:13.5px;color:var(--tx2);line-height:1.7}
+.vside{display:grid;grid-template-rows:1fr 1fr;gap:16px}
+.vbox{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.vbox .k{font-size:11.5px;letter-spacing:.1em;color:var(--tx3);margin-bottom:6px}
+.vbox .val{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.vbox .note{font-size:12px;color:var(--tx2);margin-top:4px}
+
+/* ---------- controls ---------- */
+.controls{position:sticky;top:0;z-index:50;background:rgba(13,17,23,.94);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:22px}
+.ctl-label{font-size:12px;color:var(--tx3);letter-spacing:.06em}
+select,.seg{background:var(--bg3);border:1px solid var(--line2);color:var(--tx);border-radius:7px;padding:6px 10px;font-size:13px;cursor:pointer;font-family:inherit}
+.seg{display:inline-flex;padding:0;overflow:hidden}
+.seg button{background:transparent;border:0;color:var(--tx2);padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;border-right:1px solid var(--line2);transition:.15s}
+.seg button:last-child{border-right:0}
+.seg button:hover{background:var(--bg2);color:var(--tx)}
+.seg button.on{background:#2a3a5c;color:#fff;font-weight:600}
+.seg button .n{opacity:.65;font-size:11px;margin-left:3px}
+
+/* ---------- sections ---------- */
+.sec{margin:30px 0 18px;display:flex;align-items:baseline;gap:12px;border-left:3px solid var(--info);padding-left:13px}
+.sec h2{font-size:19px;font-weight:700}
+.sec .desc{font-size:12.5px;color:var(--tx3)}
+.block{margin-bottom:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+
+/* ---------- cards ---------- */
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:15px 16px 14px;cursor:pointer;transition:.15s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--neu)}
+.card.sup::before{background:var(--sup)}
+.card.div::before{background:var(--div)}
+.card.mis::before{background:var(--mis)}
+.card.neu::before{background:var(--warn)}
+.ch{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cn{font-size:13.5px;font-weight:600;line-height:1.4}
+.tag{font-size:10.5px;padding:2px 8px;border-radius:4px;white-space:nowrap;font-weight:600;flex-shrink:0}
+.tag.sup{background:rgba(255,77,79,.16);color:#ff7875}
+.tag.div{background:rgba(34,197,94,.16);color:#4ade80}
+.tag.mis{background:rgba(107,122,144,.22);color:#94a3b8}
+.tag.neu{background:rgba(240,160,32,.16);color:#fbbf24}
+.cm{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin-bottom:8px;line-height:1.45}
+.chist{font-size:12px;color:var(--tx2);margin-bottom:9px;line-height:1.55}
+.cf{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--tx3);border-top:1px dashed var(--line);padding-top:8px;margin-top:2px}
+.tierA{color:#4ade80}.tierB{color:#60a5fa}.tierC{color:#fbbf24}.tierD{color:#94a3b8}
+.empty{grid-column:1/-1;text-align:center;color:var(--tx3);padding:40px;border:1px dashed var(--line);border-radius:10px}
+
+/* ---------- stat strip ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:22px}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat .l{font-size:11.5px;color:var(--tx3);margin-bottom:5px}
+.stat .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.stat .s{font-size:11.5px;color:var(--tx2);margin-top:2px}
+.up{color:var(--up)}.dn{color:var(--dn)}.flat{color:var(--tx2)}
+
+/* ---------- chart ---------- */
+.chartbox{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.cht{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.cht h3{font-size:14px;font-weight:600}
+.cht .lg{font-size:11.5px;color:var(--tx3);display:flex;gap:14px;flex-wrap:wrap}
+.dotc{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+svg{display:block;width:100%;overflow:visible}
+.svg-tip{position:fixed;pointer-events:none;background:#0b0f16;border:1px solid var(--line2);border-radius:7px;padding:8px 11px;font-size:12px;color:var(--tx);z-index:999;box-shadow:0 8px 22px rgba(0,0,0,.5);display:none;white-space:nowrap}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;color:var(--tx3);font-weight:600;padding:9px 10px;border-bottom:1px solid var(--line2);font-size:11.5px;letter-spacing:.04em;white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.022)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wrapx{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--bg2)}
+.na{color:var(--tx3);font-style:italic}
+
+/* ---------- matrix ---------- */
+.matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.mcell{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 15px}
+.mcell .h{font-size:12.5px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between}
+.mcell .cnt{font-size:11px;color:var(--tx3);font-weight:400}
+.mitem{font-size:12px;padding:4px 0;border-bottom:1px dashed rgba(255,255,255,.05);display:flex;gap:7px;line-height:1.5}
+.mitem:last-child{border-bottom:0}
+.mdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+
+/* ---------- drawer ---------- */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;opacity:0;pointer-events:none;transition:.2s}
+.overlay.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(720px,94vw);background:var(--bg2);border-left:1px solid var(--line2);z-index:201;transform:translateX(101%);transition:transform .26s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:26px 28px 60px}
+.drawer.on{transform:none}
+.dclose{position:absolute;top:16px;right:20px;background:var(--bg3);border:1px solid var(--line2);color:var(--tx2);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:17px;line-height:1}
+.dclose:hover{color:#fff;border-color:var(--tx3)}
+.dhead .tag{margin-bottom:10px;display:inline-block}
+.dhead h3{font-size:20px;margin-bottom:6px;line-height:1.4;padding-right:40px}
+.dmeta{font-size:12px;color:var(--tx3);margin-bottom:18px}
+.dbig{background:var(--bg3);border:1px solid var(--line2);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:15px;font-weight:600;line-height:1.5}
+.dsec{font-size:11.5px;letter-spacing:.1em;color:var(--tx3);margin:20px 0 8px}
+.dtext{font-size:13.5px;color:#cfd8e3;line-height:1.75}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:13px}
+.kv .k{color:var(--tx3)}
+.srcitem{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-bottom:8px}
+.srcitem .t{font-size:12.5px;color:var(--tx);line-height:1.5;margin-bottom:4px}
+.srcitem .m{font-size:11px;color:var(--tx3)}
+.srcitem .q{font-size:12px;color:var(--tx2);margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+
+/* ---------- footer ---------- */
+.warnbox{border:1px solid rgba(240,160,32,.35);background:rgba(240,160,32,.07);border-radius:10px;padding:16px 18px;font-size:12.5px;color:#fcd34d;line-height:1.7;margin:30px 0 0}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:11.5px;color:var(--tx3);line-height:1.8}
+@media(max-width:820px){.verdict{grid-template-columns:1fr}.matrix{grid-template-columns:1fr 1fr}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="eyebrow">CONTRACT × PHYSICAL × FUNDAMENTAL · EVIDENCE VERIFICATION</div>
+ <h1>聚丙烯（PP）上涨有没有基本面支撑<br><span class="hl">现实供需 vs 成本推动 vs 预期定价</span></h1>
+ <p class="sub">核验窗口 <b>2026-10-01 → 2026-10-19</b>。先测量价格与期现结构的真实变化，再用库存、开工、贸易、下游需求等可验证指标检查现实市场是否同步改变，并把证据拆分为「现实供应变化 / 现实需求变化 / 成本变化 / 预期指标」。</p>
+ <div class="badges">
+  <span class="badge">品种 <b>PP 聚丙烯（拉丝/纤维）</b></span>
+  <span class="badge">期货 <b>DCE PP · PP2701</b></span>
+  <span class="badge">现货 <b>生意社PP拉丝全国参考价</b></span>
+  <span class="badge">证据 <b id="b-evi">0</b> 条</span>
+  <span class="badge">来源 <b id="b-src">0</b> 个</span>
+  <span class="badge">生成 <b>2026-10-20</b></span>
+ </div>
+</header>
+
+<div class="verdict">
+ <div class="vmain">
+  <div class="vt">核验结论（不含方向建议）</div>
+  <div class="vv" id="vverdict">—</div>
+  <div class="vd" id="vdriver">—</div>
+ </div>
+ <div class="vside">
+  <div class="vbox"><div class="k">现货真实涨幅（已核验）</div><div class="val up" id="vsp">—</div><div class="note" id="vspn"></div></div>
+  <div class="vbox"><div class="k">支持 : 背离 : 数据不足</div><div class="val" id="vratio">—</div><div class="note">证据条数比（见下方证据矩阵）</div></div>
+ </div>
+</div>
+
+<div class="controls">
+ <span class="ctl-label">证据状态</span>
+ <div class="seg" id="fStatus">
+  <button data-v="all" class="on">全部 <span class="n" id="n-all"></span></button>
+  <button data-v="sup">支撑上涨 <span class="n" id="n-sup"></span></button>
+  <button data-v="div">背离 <span class="n" id="n-div"></span></button>
+  <button data-v="mis">数据不足 <span class="n" id="n-mis"></span></button>
+  <button data-v="neu">中性/预期 <span class="n" id="n-neu"></span></button>
+ </div>
+ <span class="ctl-label">指标类型</span>
+ <select id="fCls">
+  <option value="all">全部指标</option>
+  <option value="价格">价格与期现结构</option>
+  <option value="供给">现实供给</option>
+  <option value="需求">现实需求</option>
+  <option value="库存">库存与贸易</option>
+  <option value="成本">成本与利润</option>
+  <option value="预期">预期指标</option>
+ </select>
+ <span class="ctl-label">价格口径</span>
+ <select id="fPrice">
+  <option value="pp">PP拉丝现货（生意社参考价）</option>
+  <option value="ppf">PP纤维现货</option>
+  <option value="national">PP全国日均价（隆众，仅2日）</option>
+  <option value="propylene">上游丙烯现货</option>
+  <option value="wti">上游原油 WTI</option>
+  <option value="fut">期货PP（离散点位）</option>
+ </select>
+</div>
+
+<!-- ============ 1 价格表现 ============ -->
+<div class="sec"><h2>一 · 价格表现与期现结构</h2><span class="desc">先确认「涨了多少、怎么涨的」，再谈基本面</span></div>
+<div class="stats" id="pxStats"></div>
+
+<div class="chartbox">
+ <div class="cht"><h3 id="trendTitle">现货与上游原料走势（2026-07-01 ~ 2026-10-20）</h3>
+  <div class="lg"><span><i class="dotc" style="background:#ff4d4f"></i>PP拉丝</span><span><i class="dotc" style="background:#f0a020"></i>PP纤维</span><span><i class="dotc" style="background:#60a5fa"></i>丙烯</span><span><i class="dotc" style="background:#a855f7"></i>WTI(右轴)</span></div></div>
+ <div class="sub" style="font-size:11.5px;color:var(--tx3);margin:-2px 0 8px">左轴：PP/丙烯（元/吨，含税，全国参考价）· 右轴：WTI（美元/桶）· 橙色底为核验窗口。数据仅覆盖已公开披露日期，未披露区间不做插值连线。</div>
+ <div id="chartMain"></div>
+</div>
+
+<div class="chartbox">
+ <div class="cht"><h3>期货与现货：同日涨幅对比（2026-10-08）</h3><div class="lg"><span>期货 7.08% vs 现货 2.84% → 期货领先且放大</span></div></div>
+ <div id="chartDelta"></div>
+</div>
+
+<div class="chartbox">
+ <div class="cht"><h3>基差与月差结构（2026-10-19 合约曲线）</h3><div class="lg"><span>近月高、远月低 = 深度 Back</span></div></div>
+ <div id="chartCurve"></div>
+</div>
+
+<div class="wrapx" style="margin-bottom:16px">
+<table id="tblBasis"><thead><tr>
+ <th>日期</th><th>现货（口径）</th><th class="num">现货元/吨</th><th class="num">期货元/吨</th><th class="num">基差</th><th>状态</th><th>说明</th>
+</tr></thead><tbody></tbody></table>
+</div>
+
+<div class="wrapx" style="margin-bottom:16px">
+<table><thead><tr><th>价差</th><th class="num">近月</th><th class="num">远月</th><th class="num">价差(元/吨)</th><th class="num">幅度</th><th>结构含义</th></tr></thead>
+<tbody id="tblSpread"></tbody></table>
+</div>
+
+<!-- ============ 2..6 ============ -->
+<div class="sec"><h2>二 · 现实供给</h2><span class="desc">产量 / 产能利用率 / 检修重启 / 产能投放 / 进口</span></div>
+<div class="grid" id="blk-供给"></div>
+
+<div class="sec"><h2>三 · 现实需求</h2><span class="desc">下游开工 / 订单 / 成交 / 出口</span></div>
+<div class="grid" id="blk-需求"></div>
+
+<div class="sec"><h2>四 · 库存与贸易</h2><span class="desc">库存水平、变化速度、历史位置、进出口</span></div>
+<div class="wrapx" style="margin-bottom:14px">
+<table><thead><tr><th>项目</th><th class="num">数值</th><th class="num">上期</th><th class="num">变化</th><th class="num">变化%</th><th>日期</th><th>历史位置</th><th>方向</th></tr></thead>
+<tbody id="tblInv"></tbody></table>
+</div>
+<div class="grid" id="blk-库存"></div>
+
+<div class="sec"><h2>五 · 成本与利润</h2><span class="desc">原油 / 丙烷 / 丙烯 / 各工艺路线成本 / 加工价差</span></div>
+<div class="wrapx" style="margin-bottom:14px">
+<table><thead><tr><th>成本/价差项</th><th class="num">现值</th><th class="num">基期</th><th class="num">变化%</th><th>口径/来源</th><th>日期</th></tr></thead>
+<tbody id="tblCost"></tbody></table>
+</div>
+<div class="grid" id="blk-成本"></div>
+
+<div class="sec"><h2>六 · 预期指标</h2><span class="desc">这些数字反映的是「市场认为将要发生什么」，不能当作「已经发生」</span></div>
+<div class="grid" id="blk-预期"></div>
+
+<!-- ============ matrix ============ -->
+<div class="sec"><h2>七 · 证据分类矩阵</h2><span class="desc">四条主轴的证据分布；点选条目查看完整历史与原始来源</span></div>
+<div class="matrix" id="matrix"></div>
+
+<!-- ============ summary lists ============ -->
+<div class="sec"><h2>八 · 一致 / 背离 / 无法核实</h2><span class="desc">明确的证据归类，不做多空结论</span></div>
+<div class="grid" id="triage"></div>
+
+<div class="sec"><h2>九 · 口径与统计滞后</h2><span class="desc">不同指标观测窗口不同，不能互相「证伪」</span></div>
+<div class="wrapx"><table><thead><tr><th style="width:130px">议题</th><th>说明</th></tr></thead><tbody id="tblCal"></tbody></table></div>
+
+<div class="warnbox">
+ <b>阅读须知</b><br>
+ 1. 期货上涨本身不是基本面改善的证据；本报告所有结论均以「独立于价格的其他指标」为基础。<br>
+ 2. 单一库存下降不等于整个产业供给紧张；此处库存大幅累积，且仍需节后 2–3 周去化速率确认。<br>
+ 3. 缺失数据已用灰色「数据不足」显式标注，未做估算填充；机构预测值仅归入「预期」类。<br>
+ 4. 本报告不构成投资建议，不给出多空方向与交易策略。
+</div>
+
+<footer id="foot"></footer>
+</div>
+
+<div class="overlay" id="ov"></div>
+<div class="drawer" id="dw"></div>
+<div class="svg-tip" id="tip"></div>
+
+<script>
+const DATA = {"meta":{"product":"聚丙烯 PP","window":"2026-10-01 ~ 2026-10-19"},"sources":[{"id":"S01","name":"隆众资讯（新浪财经转载）：聚丙烯 | 节后飙涨驱动解构及拐点推演","publisher":"隆众资讯 / 新浪财经","url":"https://k.sina.cn/article_5953189932_162d6782c067050n76.html","date":"2026-10-12","tier":"B","note":"披露10/8期货收盘9242、单日+611(+7.08%)、增仓逾6万手；华东拉丝10085→10371；华南进口丙烷932→1018美元/吨；商业库存68.78万吨；产能利用率66.28%；下游开工率；下周展望10400(+2.38%)","retrieved":"2026-10-20"},{"id":"S02","name":"金联创（搜狐）：地缘局势推升成本 聚丙烯价格节后迎来持续上涨行情","publisher":"金联创塑料 / 搜狐","url":"https://www.sohu.com/a/1088047801_798573","date":"2026-10-15","tier":"B","note":"报价端：期货连续冲高、现货跟随、石化/中油上调出厂价；需求端：下游对高价抵触、随用随采、大规模投机补货少","retrieved":"2026-10-20"},{"id":"S03","name":"金联创（东方财富财富号）：PP产能扩张收官季 供应支撑步入尾声","publisher":"金联创 / 东方财富","url":"https://caifuhao.eastmoney.com/news/20261015095115343215760","date":"2026-10-15","tier":"B","note":"PP总产能4969.5万吨；年内后续新增205万吨；2026年1-9月PP粒产量2703.99万吨，同比-7.63%(去年2927.46)","retrieved":"2026-10-20"},{"id":"S04","name":"华联期货（搜狐）：聚丙烯：供应近紧远松，产能集中投放叠加旺季需求修复有限","publisher":"华联期货","url":"https://www.sohu.com/a/1088388385_121123911","date":"2026-10-16","tier":"B","note":"四季度新增产能集中；2026年计划投产570万吨(+11.5%)；下游开工率显著低于近年同期；进口到港有限","retrieved":"2026-10-20"},{"id":"S05","name":"兴园化工园区研究院（新浪财经）：2026四季度PP、PE装置拟投产汇总","publisher":"兴园化工园区研究院 / 新浪财经","url":"https://finance.sina.com.cn/roll/2026-10-10/doc-iniutcvr7469911.shtml","date":"2026-10-10","tier":"C","note":"Q4 PP+PE拟投近800万吨（正文表格为图片，单体项目明细未能提取）","retrieved":"2026-10-20"},{"id":"S06","name":"网易财经转载：丙烯 | 价格走高 产业链利润分化加剧","publisher":"网易 / 原文媒体","url":"https://www.163.com/dy/article/L94S1HSD05568W0A.html","date":"2026-10","tier":"C","note":"10/8山东丙烯10075(+335,+3.44%)、华东10025(+225)；石脑油制丙烯成本8857(-103)、PDH成本8595(+101)、MTO制丙烯成本13146(+1135,+9.45%)","retrieved":"2026-10-20"},{"id":"S07","name":"生意社：PP价格快讯（PP拉丝/纤维逐日参考价）","publisher":"生意社 100ppi","url":"https://www.100ppi.com/kx/detail-message-414--1.html","date":"2026-10-19","tier":"A","note":"每日参考价+与月初对比；拉丝7/1=7940、8/1=8973.33、9/1=9543.33、9/30=9933.33、10/19=10756.67(+8.29% vs 10/1)","retrieved":"2026-10-20"},{"id":"S08","name":"生意社：丙烯价格快讯","publisher":"生意社 100ppi","url":"https://www.100ppi.com/kx/detail-message-362--1.html","date":"2026-10-19","tier":"A","note":"逐日：10/1 9707.67、10/8 9977.67、10/9 10291、10/12 10751(高点)、10/16 10684.33、10/19 10534.33(+8.52%)；9/1=9227.67","retrieved":"2026-10-20"},{"id":"S09","name":"生意社：原油价格快讯（WTI/Brent逐日）","publisher":"生意社 100ppi","url":"https://www.100ppi.com/kx/detail-message-45--1.html","date":"2026-10-19","tier":"A","note":"10/1 WTI 89.38、10/8 88.28(-4.94%)、10/19 101.41(+9.2%)；Brent 96.16→109.86(+7.38%)","retrieved":"2026-10-20"},{"id":"S10","name":"生意社：PP期货收盘价（2026-10-19，全部合约）","publisher":"生意社 / 大连商品交易所","url":"https://pp.100ppi.com/","date":"2026-10-19","tier":"A","note":"2611-2709共12个合约的开高低收、涨跌、成交量、持仓量","retrieved":"2026-10-20"},{"id":"S11","name":"生意社：PP(拉丝)10月19日均差为335.17元/吨 由正向扩大转为缩小","publisher":"生意社 100ppi","url":"https://www.100ppi.com/news/detail-20261019-6368155.html","date":"2026-10-19","tier":"A","note":"均差=M10-M20=10673.00-10337.83=335.17；由扩大转为缩小（涨势减速信号）","retrieved":"2026-10-20"},{"id":"S12","name":"隆众资讯：节后聚丙烯市场成本驱动冲高 中长期供需趋于宽松（标题与摘要）","publisher":"隆众资讯","url":"https://www.oilchem.net/26-1019-15-e5edf5d67950d471.html","date":"2026-10-19","tier":"B","note":"正文受限，仅标题可核验：定性为“成本驱动冲高/中长期供需趋于宽松”","retrieved":"2026-10-20"},{"id":"S13","name":"隆众资讯：供应收缩产业链库存低位 聚丙烯价格偏强整理（标题）","publisher":"隆众资讯","url":"https://www.oilchem.net/26-1016-15-d865eb25136d18ce.html","date":"2026-10-16","tier":"B","note":"正文受限，仅标题可核验：定性“供应收缩、库存低位、价格偏强整理”","retrieved":"2026-10-20"},{"id":"S14","name":"隆众资讯：PP全国主流市场均价（7日价格数据）","publisher":"隆众资讯","url":"https://www.oilchem.net/seo-329-7.html","date":"2026-10-19","tier":"A","note":"全国PP日均价：10/16 10828.76(-33.56,-0.31%)、10/15 10862.32(-20.78,-0.19%)；30日历史需登录","retrieved":"2026-10-20"},{"id":"S15","name":"金联创（东方财富财富号）：地缘冲突放大行情振幅 9月聚丙烯价格冲高破万","publisher":"金联创 / 东方财富","url":"https://caifuhao.eastmoney.com/news/20260920104650465010490","date":"2026-09-20","tier":"B","note":"年初价格指数6300；2月底-3月初地缘+原油推动冲高至9000以上(+40%)；9月中旬现货破万；9-10月基差或持续高位","retrieved":"2026-10-20"},{"id":"S16","name":"百度爱采购指数：聚丙烯行情点评","publisher":"百度爱采购","url":"https://www.baiinfo.com/tongyongsuliao/jubingxililiao","date":"2026-10-19","tier":"C","note":"10/19聚丙烯粒料市场均价10677元/吨(+35,+0.33%)；拉丝主流成交10400-10750","retrieved":"2026-10-20"},{"id":"S17","name":"证券时报/期货日报：“吨亏破千”？PDH行业停工潮将至？","publisher":"证券时报 / 期货日报","url":"https://www.stcn.com/article/detail/3568173.html","date":"2026-01-02","tier":"C","note":"2026年初PDH利润-1400元/吨（近6年同期最低）；2025年PP产能增速12%，2026年约10%，需求增速4%-5%；PDH停车传闻未证实","retrieved":"2026-10-20"},{"id":"S18","name":"Trading Economics：聚丙烯 CFD 基准价","publisher":"Trading Economics","url":"https://zh.tradingeconomics.com/commodity/polypropylene","date":"2026-10-16","tier":"C","note":"2026-10-16 9397元/吨(-0.77%)；过去一个月+5.88%；同比+44.39%（口径与国际基准相关，与国内拉丝现货不同标的）","retrieved":"2026-10-20"},{"id":"S19","name":"生意社：2026年10月20日PP(拉丝)基准价10756.67元/吨","publisher":"生意社 100ppi","url":"https://www.100ppi.com/news/detail-20261020-6368698.html","date":"2026-10-20","tier":"A","note":"引自快讯列表标题（10-20 08:30），数值与10/19持平","retrieved":"2026-10-20"},{"id":"S20","name":"生意社：PP(拉丝)10月19日 均差与基准价对照（原始快讯）","publisher":"生意社 100ppi","url":"https://www.100ppi.com/kx/","date":"2026-10-19","tier":"A","note":"价格快讯列表：10月19日PP(拉丝)参考价10756.67，与10月1日(9933.33)相比上涨8.29%","retrieved":"2026-10-20"}],"series":{"pp":[["2026-07-01",7940.0],["2026-07-23",9300.0],["2026-07-24",9250.0],["2026-07-27",9183.33],["2026-07-28",9033.33],["2026-07-29",9016.67],["2026-07-30",9000.0],["2026-07-31",8973.33],["2026-08-01",8973.33],["2026-08-03",9006.67],["2026-08-04",9000.0],["2026-08-05",8993.33],["2026-08-06",8903.33],["2026-08-07",8810.0],["2026-08-10",8866.67],["2026-08-11",8983.33],["2026-08-12",9010.0],["2026-08-13",8993.33],["2026-08-14",9016.67],["2026-08-17",9133.33],["2026-08-18",9183.33],["2026-08-19",9200.0],["2026-08-20",9233.33],["2026-08-21",9216.67],["2026-08-24",9216.67],["2026-08-25",9216.67],["2026-08-26",9246.67],["2026-09-01",9543.33],["2026-09-15",10100.0],["2026-09-16",10116.67],["2026-09-17",10116.67],["2026-09-18",10116.67],["2026-09-21",10083.33],["2026-09-22",9933.33],["2026-09-23",9883.33],["2026-09-24",9883.33],["2026-09-25",9883.33],["2026-09-28",9950.0],["2026-09-29",9950.0],["2026-09-30",9933.33],["2026-10-01",9933.33],["2026-10-12",10566.67],["2026-10-13",10583.33],["2026-10-14",10656.67],["2026-10-15",10750.0],["2026-10-16",10750.0],["2026-10-19",10756.67],["2026-10-20",10756.67]],"ppf":[["2026-07-01",8312.5],["2026-07-24",8900.0],["2026-07-27",8912.5],["2026-07-28",8975.0],["2026-07-29",8912.5],["2026-07-30",8912.5],["2026-07-31",8912.5],["2026-08-01",8912.5],["2026-08-03",8950.0],["2026-08-04",9162.5],["2026-08-05",9162.5],["2026-08-06",9162.5],["2026-08-07",9162.5],["2026-08-10",9125.0],["2026-08-12",9150.0],["2026-08-13",9175.0],["2026-08-14",9175.0],["2026-08-17",9187.5],["2026-08-18",9237.5],["2026-08-19",9237.5],["2026-08-20",9250.0],["2026-08-21",9250.0],["2026-08-24",9225.0],["2026-08-25",9225.0],["2026-08-26",9237.5],["2026-08-27",9237.5],["2026-09-01",9350.0],["2026-09-15",10087.5],["2026-09-16",10075.0],["2026-09-17",10112.5],["2026-09-18",10125.0],["2026-09-21",10125.0],["2026-09-22",10112.5],["2026-09-23",10112.5],["2026-09-24",10100.0],["2026-09-25",10100.0],["2026-09-28",10100.0],["2026-09-29",10100.0],["2026-09-30",10162.5],["2026-10-01",10162.5],["2026-10-12",10725.0],["2026-10-13",10850.0],["2026-10-14",10862.5],["2026-10-15",10912.5],["2026-10-16",10912.5],["2026-10-19",10912.5]],"national":[["2026-10-15",10862.32],["2026-10-16",10828.76]],"propylene":[["2026-09-01",9227.67],["2026-10-01",9707.67],["2026-10-05",9707.67],["2026-10-06",9707.67],["2026-10-07",9707.67],["2026-10-08",9977.67],["2026-10-09",10291.0],["2026-10-12",10751.0],["2026-10-13",10701.0],["2026-10-14",10701.0],["2026-10-15",10701.0],["2026-10-16",10684.33],["2026-10-19",10534.33]],"wti":[["2026-09-01",85.76],["2026-10-01",89.38],["2026-10-02",89.38],["2026-10-05",89.38],["2026-10-06",89.38],["2026-10-07",89.38],["2026-10-08",88.28],["2026-10-09",91.49],["2026-10-12",91.85],["2026-10-13",93.74],["2026-10-14",94.14],["2026-10-15",95.09],["2026-10-16",97.97],["2026-10-19",101.41]],"brent":[["2026-09-01",null],["2026-10-01",102.31],["2026-10-07",96.16],["2026-10-08",100.2],["2026-10-09",104.28],["2026-10-12",104.72],["2026-10-13",106.65],["2026-10-14",105.69],["2026-10-15",106.06],["2026-10-16",105.92],["2026-10-19",109.86]]},"fut":[{"date":"2026-10-08","contract":"PP主力合约","price":9242,"chg":611,"chg_pct":7.08,"oi_chg":"增仓逾6万手","role":"主力","source":"S01","note":"国庆后首个交易日收盘"},{"date":"2026-10-19","contract":"PP2701","price":9088,"role":"主力(持仓56083手)","source":"S10","note":"收盘/结算价列"}],"fut_raw":[["PP2701",9079,9002,9088,null,9,6059,56083,"S10"],["PP2703",8887,8799,8880,null,-7,2237,15204,"S10"],["PP2704",8856,8794,8854,null,-2,159,656,"S10"],["PP2705",8741,8698,8769,null,28,36984,86479,"S10"],["PP2706",8547,8535,8619,null,72,15,250,"S10"],["PP2707",8517,8491,8550,null,33,16,658,"S10"],["PP2708",8438,8425,8478,null,40,53,398,"S10"],["PP2709",8405,8393,8421,null,16,312,820,"S10"]],"spread":[["PP2701 - PP2705",9088,8769],["PP2705 - PP2709",8769,8421],["PP2701 - PP2709",9088,8421]],"basis":[{"date":"2026-09-30","spot":10085,"spot_caliber":"华东拉丝主流报价","fut":null,"basis":null,"source":"S01","status":"部分"},{"date":"2026-10-08","spot":10371,"spot_caliber":"华东拉丝主流报价","fut":9242,"basis":1129,"source":"S01","status":"已核验","note":"期货单日+7.08%，现货+286(+2.84%)；基差月内走弱"},{"date":"2026-10-09","spot":10550,"spot_caliber":"华东拉丝10/9午盘区间10450-10650中值","fut":null,"basis":null,"source":"S01","status":"区间中值(推算)"},{"date":"2026-10-19","spot":10756.67,"spot_caliber":"生意社PP(拉丝)参考价(全国)","fut":9088,"basis":1668.67,"source":"S07+S10","status":"已核验(口径混合)","note":"现货为全国参考价、期货为PP2701结算价，跨口径，方向可用、精度受限"}],"inventory":[{"item":"中国PP商业库存总量","value":68.78,"unit":"万吨","date":"2026-10-08","prev":47.19,"change":21.59,"change_pct":45.77,"period":"较上期(9/30-10/7节点)","source":"S01","hist_pctile":null,"status":"现实","dir":"累库","note":"节日期间上游停开单、交投停滞导致大幅累积；贸易商样本涨幅低于往年"},{"item":"期现结合库存/两油库存","value":null,"unit":"万吨","date":null,"prev":null,"change":null,"change_pct":null,"period":null,"source":null,"hist_pctile":null,"status":"缺失","dir":"NA","note":"石化(两油)库存绝对量与同比、港口库存、贸易商库存分项未在可用来源披露"},{"item":"库存历史分位","value":null,"unit":"%","date":null,"prev":null,"change":null,"change_pct":null,"period":null,"source":null,"hist_pctile":null,"status":"缺失","dir":"NA","note":"缺少可比历史序列(2021-2026周度)，无法计算分位；定性表述存在“库存低位/同比低于去年”与“商业库存大幅累积”并存"}],"supply":[{"item":"PP平均产能利用率","value":66.28,"unit":"%","date":"2026-10-10周","prev":null,"change":0.0,"change_axis":"环比持平","source":"S01","hist_pctile":null,"status":"现实","dir":"持平偏低","note":"中石化产能利用率环比+2.17pct至60.33%；绝对值显著低于常态(70%+)，但本周不再下降"},{"item":"扬子石化2PP(20万吨/年)重启","value":20,"unit":"万吨/年","date":"2026-10-10周","prev":null,"change":null,"source":"S01","status":"现实","dir":"供给增加","note":"周内重启，推动中石化负荷上升"},{"item":"中景石化二期二线重启","value":60,"unit":"万吨/年","date":"2026-10-10周","prev":null,"change":null,"source":"S01","status":"现实","dir":"供给增加"},{"item":"宁夏宝丰三线停车","value":null,"unit":"万吨/年","date":"2026-10-10周","prev":null,"change":null,"source":"S01","status":"现实","dir":"供给减少","note":"产能规模未披露"},{"item":"青海盐湖装置停车","value":null,"unit":"万吨/年","date":"2026-10-10周","prev":null,"change":null,"source":"S01","status":"现实","dir":"供给减少","note":"产能规模未披露"},{"item":"计划检修(金能化学2PP、兰州石化老线)","value":null,"unit":"万吨/年","date":"2026-10-11周计划","prev":null,"change":null,"source":"S01","status":"预期","dir":"供给减少","note":"下周计划，尚未落地"},{"item":"检修损失量","value":null,"unit":"万吨","date":"2026-10-10周","prev":null,"change":null,"source":"S01","status":"缺失","dir":"NA","note":"仅称“互相抵消”，无量值"},{"item":"2026年1-9月PP粒总产量","value":2703.99,"unit":"万吨","date":"2026年1-9月","prev":2927.46,"change":-223.47,"change_pct":-7.63,"source":"S03","status":"现实","dir":"同比收缩","note":"同比-7.63%，因前期装置集中停车；这是“现实供给收缩”的最强证据"},{"item":"PP总产能(已投产)","value":4969.5,"unit":"万吨/年","date":"2026-10","prev":null,"change":null,"source":"S03","status":"现实","dir":"偏高"},{"item":"年内后续计划新增产能","value":205,"unit":"万吨/年","date":"2026Q4","prev":null,"change":null,"source":"S03","status":"预期","dir":"供给增加"},{"item":"2026全年计划新增产能","value":570,"unit":"万吨/年","date":"2026","prev":null,"change_pct":11.5,"source":"S04","status":"预期","dir":"供给增加","note":"+11.5%，多数集中于下半年"},{"item":"Q4 PP+PE拟投产合计","value":800,"unit":"万吨/年","date":"2026Q4","prev":null,"change":null,"source":"S05","status":"预期","dir":"供给增加","note":"PP+PE合计，PP单列未取得"},{"item":"进口到港量","value":null,"unit":"万吨","date":"2026-10","prev":null,"change":null,"source":"S04","status":"缺失","dir":"NA","note":"仅定性“进口货源到港量有限/进口供应偏低”，无月度数"},{"item":"标品(拉丝)排产比例","value":null,"unit":"%","date":"2026-10","prev":null,"change":null,"source":null,"status":"缺失","dir":"NA"}],"demand":[{"item":"塑编开工率","value":40.18,"unit":"%","date":"2026-10-08周","prev":null,"change":null,"change_axis":null,"source":"S01(引信达期货)","status":"现实","dir":"低位","hist_pctile":null,"note":"节前(约9/18)为40.56%，9/19当周环比-0.22pct；节后降至40.18%"},{"item":"BOPP开工率","value":24.37,"unit":"%","date":"2026-10-08周","prev":null,"change":null,"change_axis":null,"source":"S01(引信达期货)","status":"现实","dir":"极低","hist_pctile":null},{"item":"注塑开工率","value":30.66,"unit":"%","date":"2026-10-08周","prev":null,"change":null,"change_axis":null,"source":"S01(引信达期货)","status":"现实","dir":"低位","hist_pctile":null},{"item":"PP综合下游开工率","value":45.18,"unit":"%","date":"2026-09-18当周","prev":null,"change":-0.71,"change_axis":"环比(pct)","source":"S04转引+华联","status":"现实","dir":"回落","note":"9/19当周环比-0.71pct，同比偏低；节后未披露综合开工"},{"item":"下游平均开工(预测)","value":45.0,"unit":"%","date":"2026-10-17当周(预测)","prev":null,"change":null,"source":"S01","status":"预期","dir":"小幅回升"},{"item":"终端订单/成品库存","value":null,"unit":null,"date":"2026-10","prev":null,"change":null,"source":"S01/S02/S04","status":"缺失","dir":"NA","note":"仅定性：终端订单不足、加工厂成品库存偏高、高价抵触、随用随采、投机补货少；无量值"},{"item":"下游单吨利润","value":null,"unit":"元/吨","date":"2026-10","prev":null,"change":null,"source":"S02","status":"缺失","dir":"NA","note":"仅定性“工厂利润明显压缩”"},{"item":"PP出口量","value":null,"unit":"万吨","date":"2026-09","prev":null,"change":null,"source":null,"status":"缺失","dir":"NA","note":"未取得月度出口数据"},{"item":"表观消费量","value":null,"unit":"万吨","date":"2026-09","prev":null,"change":null,"source":null,"status":"缺失","dir":"NA"}],"cost":[{"item":"WTI原油","value":101.41,"unit":"美元/桶","date":"2026-10-19","prev":89.38,"prev_date":"2026-10-01","change":12.03,"change_pct":13.46,"src_pct":9.2,"source":"S09","status":"现实","dir":"上涨","note":"源文以10/1为基(+9.2%)；10/19 vs 10/1 实算+13.46%（源文9.2%可能为口径/四舍五入差异）"},{"item":"Brent原油","value":109.86,"unit":"美元/桶","date":"2026-10-19","prev":102.31,"prev_date":"2026-10-01","change":7.55,"change_pct":7.38,"src_pct":7.38,"source":"S09","status":"现实","dir":"上涨"},{"item":"WTI(节后首日)","value":88.28,"unit":"美元/桶","date":"2026-10-08","prev":89.38,"prev_date":"2026-10-01","change":-1.1,"change_pct":-1.23,"src_pct":-4.94,"source":"S09","status":"现实","dir":"下跌","note":"★关键背离：PP期货+7.08%当天，WTI当日-1.23%（源文口径-4.94%，疑用盘中/不同基期）"},{"item":"丙烯(山东/华东现货)","value":10075.0,"unit":"元/吨","date":"2026-10-08","prev":9740.0,"prev_date":"2026-09-30","change":null,"change_pct":3.44,"src_pct":3.44,"source":"S06","status":"现实","dir":"上涨","note":"山东10/8 10075(+335,+3.44%)，华东10025(+225)；基期数值由涨幅反推，标注为推算"},{"item":"丙烯参考价(生意社)","value":10534.33,"unit":"元/吨","date":"2026-10-19","prev":9707.67,"prev_date":"2026-10-01","change":826.66,"change_pct":8.52,"src_pct":8.52,"source":"S08","status":"现实","dir":"上涨","note":"10/12见高点10751后回落-2.02%"},{"item":"进口丙烷CFR华南","value":1018,"unit":"美元/吨","date":"2026-10-10","prev":932,"prev_date":"2026-10-01","change":86,"change_pct":9.23,"src_pct":9.23,"source":"S01","status":"现实","dir":"上涨","note":"节后两天连涨，PDH成本支撑关键变量"},{"item":"PDH制丙烯成本","value":8595,"unit":"元/吨","date":"2026-10-08","prev":8494,"prev_date":"2026-09-30","change":101,"change_pct":1.19,"src_pct":1.19,"source":"S06","status":"现实","dir":"上涨","note":"基期由涨幅反推(+101,+1.19%)"},{"item":"石脑油制丙烯成本","value":8857,"unit":"元/吨","date":"2026-10-08","prev":8960,"prev_date":"2026-09-30","change":-103,"change_pct":-1.15,"src_pct":-1.15,"source":"S06","status":"现实","dir":"下跌","note":"★背离：石脑油路线成本反而下降；基期由涨幅反推"},{"item":"MTO制丙烯成本","value":13146,"unit":"元/吨","date":"2026-10-08","prev":12011,"prev_date":"2026-09-30","change":1135,"change_pct":9.45,"src_pct":9.45,"source":"S06","status":"现实","dir":"上涨","note":"成本远高于丙烯现货(10075)，MTO工艺为负利润；基期由涨幅反推"},{"item":"PP-PDH丙烯加工价差","value":1971.67,"unit":"元/吨","date":"2026-10-12","prev":1439.33,"prev_date":"2026-09-30","change":null,"change_pct":null,"src_pct":null,"source":"模型计算(S07+S06)","status":"测算","dir":"扩张","note":"=PP拉丝参考价-PDH丙烯成本 ≈1971.7(10/12) vs ≈1439.3(9/30)，走阔约532元/吨"},{"item":"PP-丙烯加工价差(直接原料口径)","value":222.34,"unit":"元/吨","date":"2026-10-19","prev":225.66,"prev_date":"2026-10-01","change":-3.32,"change_pct":-1.47,"src_pct":null,"source":"模型计算(S07+S08)","status":"测算","dir":"基本持平","note":"=10756.67-10534.33 vs 9933.33-9707.67；价差几乎不动，说明10月上涨完全是原料丙烯驱动的对等传导，PP自身加工利润未扩张"},{"item":"PP石脑油路线一体化估算毛利","value":null,"unit":"元/吨","date":"2026-10","prev":null,"change":null,"source":null,"status":"缺失","dir":"NA","note":"缺石脑油CFR价格、加工费与收率口径，未做测算（不估算填充）"},{"item":"PDH行业利润(绝对亏损)","value":-1400,"unit":"元/吨","date":"2026年初","prev":null,"change":null,"source":"S17","status":"现实(时效滞后)","dir":"深度亏损","note":"2026年1月口径，非10月数值"},{"item":"PP粉料利润","value":-270,"unit":"元/吨","date":"2026-10-05~12周","prev":null,"change":null,"source":"S01/S17综合（如引用需核）","status":"缺失","dir":"NA","note":"检索到“PP粉利润亏损加深至-270元/吨”，来源为第三方周度分析，未能完整核验原文，标注为待核"}],"expect":[{"item":"期货主力单日涨幅","value":7.08,"unit":"%","date":"2026-10-08","source":"S01","status":"预期/情绪","note":"同日甲醇、PX、纯苯、苯乙烯主力封涨停；PP与丙烯涨超7%、塑料涨超6%——板块共振"},{"item":"主力增仓","value":6.0,"unit":"万手(逾)","date":"2026-10-08","source":"S01","status":"预期/情绪","note":"增仓放量，资金流入而非现货套保卖盘压制"},{"item":"PP远端合约价格(2027)","value":8421,"unit":"元/吨","date":"2026-10-19","source":"S10","status":"预期","note":"PP2709 8421，较PP2701贴水667元/吨(-7.3%)——市场定价“远月更宽松”"},{"item":"Q4新增产能投放计划","value":800,"unit":"万吨/年(PP+PE)","date":"2026Q4","source":"S05","status":"预期","note":"尚未落地；宁波富德40万吨、宁波金发40万吨开车推迟"},{"item":"装置重启计划","value":null,"unit":null,"date":"2026-10-11周","source":"S01","status":"预期","note":"惠州立拓、宁夏宝丰三线计划重启；金能化学2PP、兰州石化老线计划检修"},{"item":"地缘政治风险溢价","value":null,"unit":null,"date":"2026-10","source":"S01/S12","status":"预期","note":"中东地缘(霍尔木兹)为最大变量；隆众定性为“成本驱动型脉冲行情”"},{"item":"估值/基差水平","value":1668.67,"unit":"元/吨","date":"2026-10-19","source":"S07+S10","status":"预期","note":"现货对PP2701升水，历史上高基差常以现货回落修复；生意社均差由扩大转缩小，涨势减速"}],"evidence":[{"id":"P1","cls":"价格","name":"PP拉丝现货(生意社参考价)","period":"10/1→10/19","metric":"+8.29% (9933.33→10756.67)","hist":"月内+8.29%；较9/1+12.7%；较7/1+35.4%","verdict":"锚定","status":"基准","tier":"A","src":["S07","S20"],"comment":"现货同步上涨且幅度可观，非单纯期货事件；已核验为原始参考价。"},{"id":"P2","cls":"价格","name":"PP纤维现货","period":"10/1→10/19","metric":"+7.38% (10162.50→10912.50)","hist":"较9/1+16.7%","verdict":"支撑","status":"支撑上涨","tier":"A","src":["S07"],"comment":"纤维料同步跟涨，说明并非单一牌号的结构性缺货。"},{"id":"P3","cls":"价格","name":"全国PP日均价(隆众)","period":"10/15→10/16","metric":"-0.31% (10862.32→10828.76)","hist":"高点区域小幅回落","verdict":"背离(幅度小)","status":"背离","tier":"A","src":["S14"],"comment":"全国口径连续两日小幅回落，价格已进入高位横盘/回落区间，涨势斜率放缓。"},{"id":"P4","cls":"价格","name":"PP期货主力","period":"9/30→10/8","metric":"+7.08% (+611, 9242元/吨)","hist":"单日涨幅为板块级异动","verdict":"过冲","status":"背离","tier":"B","src":["S01"],"comment":"期货单日涨幅显著大于现货同期(+2.84%)，期货领先且放大。"},{"id":"P5","cls":"价格","name":"月差(近远月)","period":"2026-10-19","metric":"PP2701-PP2705=+319；2705-2709=+348；2701-2709=+667","hist":"深度Back结构(近强远弱)","verdict":"预期","status":"背离","tier":"A","src":["S10"],"comment":"近远月深度贴水+远月低至8421，市场用远月定价“未来供给宽松/产能投放”，并非全面看多。"},{"id":"P6","cls":"价格","name":"基差(现货-期货)","period":"2026-10-8 / 10-19","metric":"+1129 / +1668.67 元/吨","hist":"现货升水，基差月内走强","verdict":"偏紧但含推测","status":"部分支撑","tier":"B","src":["S01","S07","S10"],"comment":"正基差说明现货不弱于盘面；但现货为全国参考价、期货为PP2701，口径混合，精度受限。"},{"id":"P7","cls":"价格","name":"生意社均差(M10-M20)","period":"2026-10-19","metric":"+335.17，由正向扩大转为缩小","hist":"均差拐头","verdict":"减速","status":"背离","tier":"A","src":["S11"],"comment":"趋势指标显示上涨动能边际衰减，是“这轮涨势可能已是尾部”的量化线索。"},{"id":"S1","cls":"供给","name":"1-9月PP粒产量同比","period":"2026-01~09","metric":"2703.99万吨，同比-7.63%","hist":"大幅低于去年同期2927.46万吨","verdict":"支撑","status":"支撑上涨","tier":"B","src":["S03"],"comment":"★最强现实供给证据：产量绝对下降约223万吨。注意成因是装置停车与亏损，而非常态性收缩。"},{"id":"S2","cls":"供给","name":"产能利用率","period":"2026-10-10周","metric":"66.28%，环比持平(上周同为66.28%)","hist":"低于常态70%+","verdict":"中性","status":"无信息","tier":"B","src":["S01"],"comment":"绝对水平低是利多，但本周已不再下降(环比0.0)，供给端“继续收紧”的边际证据消失。"},{"id":"S3","cls":"供给","name":"装置重启/停车对冲","period":"2026-10-10周","metric":"重启：扬子2PP 20万吨、中景二期二线60万吨；停车：宝丰三线、青海盐湖(产能未披露)","hist":"—","verdict":"中性","status":"无信息","tier":"B","src":["S01"],"comment":"多空装置同周对冲，净供给变化方向未明；产能缺失导致无法加总。"},{"id":"S4","cls":"供给","name":"检修损失量","period":"2026-10","metric":"无量值","hist":"—","verdict":"无法判定","status":"数据不足","tier":"—","src":["S01"],"comment":"仅定性“互相抵消”，缺少“万吨/周”口径数据——这是典型的数据不足项。"},{"id":"S5","cls":"供给","name":"产能基数与新增","period":"2026","metric":"已投产4969.5万吨；年内再增205万吨；全年计划570万吨(+11.5%)","hist":"2025年+10.2%(4916.5万吨)","verdict":"背离(中长期)","status":"背离","tier":"B","src":["S03","S04"],"comment":"产能增速远超需求增速(4%-5%)，本轮的“供给收紧”是阶段性而非趋势性。"},{"id":"S6","cls":"供给","name":"Q4集中投产","period":"2026Q4","metric":"PP+PE拟投产近800万吨","hist":"—","verdict":"背离(预期层)","status":"背离","tier":"C","src":["S05"],"comment":"尚未落地、部分推迟(宁波富德、宁波金发)，因此当前未体现在现货紧张上，但压制远月。"},{"id":"S7","cls":"供给","name":"进口到港","period":"2026-10","metric":"无月度数","hist":"—","verdict":"无法判定","status":"数据不足","tier":"—","src":["S04"],"comment":"仅“进口货源有限”的定性描述。"},{"id":"D1","cls":"需求","name":"塑编开工率","period":"10/8周","metric":"40.18%","hist":"9/19当周40.56%(-0.22pct)","verdict":"背离","status":"背离","tier":"B","src":["S01"],"comment":"★核心背离：拉丝主下游开工在价格上涨期间反而小幅下降。"},{"id":"D2","cls":"需求","name":"BOPP开工率","period":"10/8周","metric":"24.37%","hist":"历史低位","verdict":"背离","status":"背离","tier":"B","src":["S01"],"comment":"BOPP开工不足四分之一产能，包装需求无爆发迹象。"},{"id":"D3","cls":"需求","name":"注塑开工率","period":"10/8周","metric":"30.66%","hist":"地产链拖累，长期低位","verdict":"背离","status":"背离","tier":"B","src":["S01","S04"],"comment":"注塑/改性料与地产链相关，旺季不旺。"},{"id":"D4","cls":"需求","name":"综合下游开工","period":"9/18当周","metric":"45.18%，环比-0.71pct","hist":"同比偏低","verdict":"背离","status":"背离","tier":"B","src":["S04"],"comment":"旺季前再度回落，“金九银十”兑现不足。"},{"id":"D5","cls":"需求","name":"终端订单与成交","period":"2026-10","metric":"定性：订单不足、成品库存偏高、随用随采","hist":"—","verdict":"背离","status":"背离","tier":"B","src":["S01","S02","S04"],"comment":"三家机构口径一致：下游对高价抵触、大规模投机补货少 → 高价格缺乏量的验证。"},{"id":"D6","cls":"需求","name":"下游开工预测","period":"10/17当周","metric":"约45%","hist":"—","verdict":"预期","status":"无信息","tier":"B","src":["S01"],"comment":"机构对下周开工小幅回升的预测，属预期项，未发生。"},{"id":"I1","cls":"库存","name":"商业库存总量","period":"2026-10-08","metric":"68.78万吨(+21.59万吨，+45.77%)","hist":"节后大幅累积","verdict":"背离","status":"背离","tier":"B","src":["S01"],"comment":"★库存在涨价窗口同期激增45.77%，价格与库存变化方向相反（虽含假期物流扰动）。"},{"id":"I2","cls":"库存","name":"库存历史分位","period":"—","metric":"缺失","hist":"—","verdict":"无法判定","status":"数据不足","tier":"—","src":[],"comment":"无周度历史序列，无法计算分位；定性与定量冲突（“低位”vs“大幅累积”）。"},{"id":"I3","cls":"库存","name":"石化/港口/贸易商分项","period":"—","metric":"缺失","hist":"—","verdict":"无法判定","status":"数据不足","tier":"—","src":[],"comment":"仅有“贸易商涨幅低于往年”“港口宽幅累库”的定性。"},{"id":"I4","cls":"库存","name":"进出口月度","period":"2026-09","metric":"缺失","hist":"—","verdict":"无法判定","status":"数据不足","tier":"—","src":[],"comment":"进口/出口数量未取得，供需平衡无法闭合。"},{"id":"C1","cls":"成本","name":"WTI原油","period":"10/1→10/19","metric":"89.38→101.41 (+13.46%)","hist":"10/19高位","verdict":"支撑(滞后)","status":"支撑上涨","tier":"A","src":["S09"],"comment":"10/1→10/19确实大涨，为成本推动提供依据；但涨幅主要发生在10/13之后。"},{"id":"C2","cls":"成本","name":"WTI在期货大涨当日","period":"10/7→10/8","metric":"89.38→88.28 (-1.23%)","hist":"—","verdict":"背离","status":"背离","tier":"A","src":["S09"],"comment":"★时序背离：PP期货+7.08%的同一交易日，原油不涨反跌。成本推动无法解释当日跳涨，当日更可能是地缘事件定价与情绪。"},{"id":"C3","cls":"成本","name":"进口丙烷CFR华南(PDH原料)","period":"10/1→10/10","metric":"932→1018美元/吨 (+9.23%)","hist":"—","verdict":"支撑","status":"支撑上涨","tier":"B","src":["S01"],"comment":"PDH路线(占总产能约1/4)成本刚性抬升，是最贴近PP的成本变量。"},{"id":"C4","cls":"成本","name":"丙烯现货","period":"10/1→10/19","metric":"9707.67→10534.33 (+8.52%)","hist":"10/12高点10751，回落-2.02%","verdict":"支撑","status":"支撑上涨","tier":"A","src":["S08"],"comment":"上游丙烯同步上行，PP并非独家上涨，符合产业链成本传导特征。"},{"id":"C5","cls":"成本","name":"石脑油制丙烯成本","period":"9/30→10/8","metric":"8857元/吨 (-1.15%)","hist":"—","verdict":"背离","status":"背离","tier":"C","src":["S06"],"comment":"石脑油裂解路线成本反而下降，说明成本上行集中于PDH/MTO路线，而非全产业成本。"},{"id":"C6","cls":"成本","name":"MTO制丙烯成本","period":"9/30→10/8","metric":"13146元/吨 (+9.45%)","hist":"高于丙烯现货","verdict":"支撑(但压制开工)","status":"支撑上涨","tier":"C","src":["S06"],"comment":"MTO成本高于丙烯现货，理论上挤压MTO开工、利多PP，但同时也意味着下游承接能力弱。"},{"id":"C7","cls":"成本","name":"PDH加工价差(PP-丙烯)","period":"9/30→10/12","metric":"约1439→1972元/吨(+532)","hist":"—","verdict":"支撑","status":"支撑上涨","tier":"测算","src":["S06","S07"],"comment":"成本涨幅小于PP涨幅，PDH一体化利润被动改善——这正是“成本推动型”而非“紧缺型”的特征。"},{"id":"C8","cls":"成本","name":"PP-丙烯加工价差(10月)","period":"10/1→10/19","metric":"225.66→222.34元/吨(-3.32，-1.47%)","hist":"几乎持平","verdict":"纯成本传导","status":"无信息","tier":"测算","src":["S07","S08"],"comment":"★关键判读：PP涨8.29%、丙烯涨8.52%，价差不动——本轮上涨是对原料的对等传导，PP自身供需并未创造额外溢价（若为紧缺型上涨，价差应扩张）。"},{"id":"C9","cls":"成本","name":"PP-PDH丙烯价差(9/30→10/12)","period":"9/30→10/12","metric":"1439.33→1971.67元/吨(+532，+37%)","hist":"—","verdict":"与上条口径冲突","status":"数据不足","tier":"测算","src":["S06","S07"],"comment":"该口径显示价差走阔，与C8结论相左；原因是S06的PDH成本为单家机构推算口径且F版基期由涨幅反推。两口径并列呈现，不做合并——这本身就是“不同口径结论可能相反”的示例。"},{"id":"C10","cls":"成本","name":"石脑油一体化毛利","period":"—","metric":"缺失(未测算)","hist":"—","verdict":"无法判定","status":"数据不足","tier":"—","src":[],"comment":"缺石脑油CFR与收率口径，按要求不以估值填充。"},{"id":"E1","cls":"预期","name":"能源化工板块共振","period":"2026-10-08","metric":"甲醇/PX/纯苯/苯乙烯主力封涨停；PP、丙烯涨超7%","hist":"—","verdict":"情绪定价","status":"背离","tier":"B","src":["S01"],"comment":"★同日全板块涨停说明驱动是宏观/地缘与情绪，而非PP自身供需。"},{"id":"E2","cls":"预期","name":"期货增仓放量","period":"2026-10-08","metric":"增仓逾6万手","hist":"—","verdict":"资金行为","status":"背离","tier":"B","src":["S01"],"comment":"增仓代表新资金入场，是对未来事件的押注，不能作为现货紧张证据。"},{"id":"E3","cls":"预期","name":"远月合约定价","period":"2026-10-19","metric":"PP2709=8421，贴水PP2701 667元/吨","hist":"—","verdict":"预期","status":"背离","tier":"A","src":["S10"],"comment":"曲线本身就已定价“未来宽松”，远月并未跟随现货紧张。"},{"id":"E4","cls":"预期","name":"下周期货/现货预测","period":"10/17当周","metric":"拉丝均值10400元/吨(+2.38%)","hist":"—","verdict":"预期","status":"无信息","tier":"B","src":["S01"],"comment":"机构预测值，未经现实检验，不计入供需证据。"},{"id":"E5","cls":"预期","name":"地缘(霍尔木兹)风险","period":"2026-10-07起","metric":"定性：伊朗称霍尔木兹海峡关闭","hist":"—","verdict":"预期(尾部风险)","status":"背离","tier":"C","src":["S01","S12"],"comment":"最大变量；若缓和则风险溢价快速回吐，属“可能发生”而非“已经发生”的供给冲击。"}],"caliber":[{"topic":"现货口径","text":"生意社PP(拉丝)为全国参考价（含税、主流市场均值）；隆众为华东拉丝主流报价/全国日均价；两者不可直接相等。本报告在基差计算中标注口径，未做跨口径调整。"},{"topic":"期货口径","text":"10/8为“主力合约收盘价”，10/19为PP2701收盘/结算价（S10表格列序为开/低/高/收）。主力合约在月中可能移仓，故两日序列不可视为同一合约。"},{"topic":"统计滞后","text":"产量、进出口为月度且月中发布（9月数据约10月中下旬）；产能利用率、库存、开工率为周度（通常滞后3-5天）；价格与期货为日度。判断“现实是否变化”时必须对齐观测窗口，不能拿滞后数据否定日度价格异动。"},{"topic":"库存口径","text":"“商业库存68.78万吨”为总口径（生产企业+贸易商+港口），假期停开单会制造机械性累库，单周跳升不足以判定供需方向；应看节后2-3周去化速率。"},{"topic":"利润口径","text":"PDH/MTO/石脑油“成本”为机构按工艺参数推算的口径，不同机构收率与加工费假设不同，跨机构不可直接比较。"},{"topic":"基差口径","text":"基差=现货-期货。正基差=现货升水。10/19的+1668元/吨为“全国现货参考价-PP2701”，含跨区域与跨口径偏差，仅作方向参考。"}],"summary":{"window_label":"2026-10-01 → 2026-10-19（主窗口）；10-08 为期货跳涨日；10-12/10-16 为现货高点区","price_verdict":"现货真实上涨 +8.29%（已核验），并非虚构；但同期现实供需并未同步改善","driver":"成本推动（丙烷/丙烯/原油）+ 地缘事件情绪定价，而非现实供需缺口","support":["1-9月PP产量同比-7.63%（现实供给收缩，最强证据）","进口丙烷CFR +9.23%（PDH成本刚性抬升）","丙烯现货+8.52%（上游同步）","下游原料库存偏低、存在节后补库的定量线索（定性）"],"diverge":["商业库存同期+45.77%（68.78万吨）","塑编/BOPP/注塑开工40.18%/24.37%/30.66%，旺季不旺","期货跳涨当日WTI下跌1.23%","石脑油制成本反而-1.15%","产能利用率环比持平（不再收紧）","1-9月产量收缩具偶发性：全年计划新增570万吨","远月PP2709仅8421，深度Back"],"missing":["检修损失量(万吨/周)","石化(两油)库存与同比","港口/贸易商库存分项","库存历史分位","PP月度进出口与表观消费","下游订单/成品库存/利润量值","石脑油一体化毛利","PP粉料利润(待核)","Q4 PP单体投产明细"],"no_conclusion":"本报告不给出多空方向与交易建议；仅回答“涨势是否有可验证的现实基本面支撑”。"}};
+const SRC = Object.fromEntries(DATA.sources.map(s=>[s.id,s]));
+const STATUS = {
+ sup:{l:'支撑上涨',c:'sup'}, div:{l:'背离',c:'div'},
+ mis:{l:'数据不足',c:'mis'}, neu:{l:'中性/预期',c:'neu'}
+};
+function statusKey(s){
+ if(s==='支撑上涨') return 'sup';
+ if(s==='背离') return 'div';
+ if(s==='数据不足') return 'mis';
+ return 'neu';
+}
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function fmt(v,n){ if(v==null) return 'NA'; return Number(v).toLocaleString('zh-CN',{minimumFractionDigits:n==null?2:n,maximumFractionDigits:n==null?2:n}); }
+
+/* ---------- populate header ---------- */
+document.getElementById('b-evi').textContent = DATA.evidence.length;
+document.getElementById('b-src').textContent = DATA.sources.length;
+document.getElementById('vverdict').textContent = DATA.summary.price_verdict;
+document.getElementById('vdriver').textContent = '驱动结构：' + DATA.summary.driver + '。';
+document.getElementById('vsp').textContent = '+8.29%';
+document.getElementById('vspn').textContent = '10/01 9,933.33 → 10/19 10,756.67 元/吨（生意社PP拉丝参考价，原始口径）';
+const cnt = {sup:0,div:0,mis:0,neu:0};
+DATA.evidence.forEach(e=>cnt[statusKey(e.status)]++);
+document.getElementById('vratio').innerHTML = `<span class="up">${cnt.sup}</span> : <span class="dn">${cnt.div}</span> : <span style="color:var(--tx3)">${cnt.mis}</span>`;
+['all','sup','div','mis','neu'].forEach(k=>{
+ const el=document.getElementById('n-'+k); if(el) el.textContent = k==='all'?DATA.evidence.length:cnt[k];
+});
+
+/* ---------- block cards ---------- */
+const CLS = [
+ {key:'供给', css:'sup'}, {key:'需求', css:'sup'}, {key:'库存', css:'sup'},
+ {key:'成本', css:'sup'}, {key:'预期', css:'sup'}
+];
+function cardHTML(e){
+ const c = statusKey(e.status);
+ return `<div class="card ${c}" data-id="${e.id}">
+  <div class="ch"><div class="cn">${esc(e.name)}</div><span class="tag ${c}">${STATUS[c].l}</span></div>
+  <div class="cm">${esc(e.metric)}</div>
+  <div class="chist">历史位置：${esc(e.hist)}</div>
+  <div class="cf"><span>${esc(e.period)}</span><span class="tier${e.tier}">来源等级 ${esc(e.tier)}</span></div>
+ </div>`;
+}
+['供给','需求','库存','成本','预期'].forEach(k=>{
+ const box = document.getElementById('blk-'+k);
+ if(!box) return;
+ const arr = DATA.evidence.filter(e=>e.cls===k);
+ box.innerHTML = arr.length? arr.map(cardHTML).join('') : '<div class="empty">无符合筛选条件的证据</div>';
+});
+
+/* ---------- price stats ---------- */
+const pp = DATA.series.pp, ppf = DATA.series.ppf, prop = DATA.series.propylene, wti = DATA.series.wti;
+function get(ser,d){ const it = ser.find(x=>x[0]===d); return it? it[1] : null; }
+function chg(a,b){ return b? (a-b)/b*100 : null; }
+const stats = [
+ {l:'PP拉丝 10/01→10/19', v:'+8.29%', s:'9,933.33 → 10,756.67', c:'up'},
+ {l:'PP纤维 10/01→10/19', v:'+7.38%', s:'10,162.50 → 10,912.50', c:'up'},
+ {l:'丙烯现货 10/01→10/19', v:'+8.52%', s:'9,707.67 → 10,534.33', c:'up'},
+ {l:'WTI 10/01→10/19', v:'+13.46%', s:'89.38 → 101.41 美元', c:'up'},
+ {l:'期货 10/08 单日', v:'+7.08%', s:'8,631 → 9,242（+611）', c:'up'},
+ {l:'期货 vs 现货 同日涨幅差', v:'4.24 pct', s:'期货 7.08% / 现货 2.84%', c:'flat'},
+ {l:'基差 10/19', v:'+1,668.67', s:'现货升水（口径混合）', c:'flat'},
+ {l:'月差 2701–2709', v:'+667', s:'+7.92% 深度Back', c:'flat'},
+ {l:'商业库存 10/08', v:'+45.77%', s:'68.78万吨（+21.59）', c:'dn'},
+ {l:'塑编开工率', v:'40.18%', s:'9/19当周 40.56%', c:'dn'}
+];
+document.getElementById('pxStats').innerHTML = stats.map(s=>
+ `<div class="stat"><div class="l">${s.l}</div><div class="v ${s.c}">${s.v}</div><div class="s">${s.s}</div></div>`).join('');
+
+/* ---------- SVG line chart ---------- */
+const NS='http://www.w3.org/2000/svg';
+function mk(n,a){const el=document.createElementNS(NS,n);for(const k in a)el.setAttribute(k,a[k]);return el;}
+function d2t(d){return new Date(d+'T00:00:00');}
+
+function lineChart(el, cfg){
+ el.innerHTML='';
+ const W = el.clientWidth || 1000, H = 300, P = {t:16,r:56,b:34,l:58};
+ const iw = W-P.l-P.r, ih = H-P.t-P.b;
+ const allDates = [...new Set(cfg.series.flatMap(s=>s.data.filter(p=>p[1]!=null).map(p=>p[0])))].sort();
+ if(!allDates.length){el.innerHTML='<div class="empty">无数据</div>';return;}
+ const t0=d2t(allDates[0]).getTime(), t1=d2t(allDates[allDates.length-1]).getTime();
+ const x = t => P.l + (t1===t0? iw/2 : (t-t0)/(t1-t0)*iw);
+ const svg = mk('svg',{viewBox:`0 0 ${W} ${H}`,height:H});
+ // grid + left y
+ const main = cfg.series.filter(s=>!s.axis2);
+ const vals = main.flatMap(s=>s.data.filter(p=>p[1]!=null).map(p=>p[1]));
+ let lo=Math.min(...vals), hi=Math.max(...vals); const pad=(hi-lo)*0.12||50; lo-=pad; hi+=pad;
+ const yv = v => P.t + ih - (v-lo)/(hi-lo)*ih;
+ for(let i=0;i<=4;i++){
+  const y = P.t + ih*i/4, v = hi - (hi-lo)*i/4;
+  svg.appendChild(mk('line',{x1:P.l,x2:P.l+iw,y1:y,y2:y,stroke:'#2d3748','stroke-width':1,'stroke-dasharray':i==4?'0':'3 4'}));
+  const tx=mk('text',{x:P.l-9,y:y+4,'text-anchor':'end',fill:'#6b7a90','font-size':10.5});
+  tx.textContent = Math.round(v).toLocaleString(); svg.appendChild(tx);
+ }
+ // right y for axis2
+ let y2=null;
+ const sec = cfg.series.find(s=>s.axis2);
+ if(sec){
+  const v2 = sec.data.filter(p=>p[1]!=null).map(p=>p[1]);
+  let l2=Math.min(...v2), h2=Math.max(...v2); const p2=(h2-l2)*0.15||1; l2-=p2; h2+=p2;
+  y2 = v => P.t + ih - (v-l2)/(h2-l2)*ih;
+  for(let i=0;i<=4;i++){
+   const y=P.t+ih*i/4, v=h2-(h2-l2)*i/4;
+   const tx=mk('text',{x:P.l+iw+9,y:y+4,'text-anchor':'start',fill:'#6b7a90','font-size':10.5});
+   tx.textContent=Math.round(v); svg.appendChild(tx);
+  }
+ }
+ // x ticks
+ const xticks = cfg.ticks || allDates.filter((d,i)=>i%Math.ceil(allDates.length/8)===0).concat([allDates[allDates.length-1]]);
+ [...new Set(xticks)].forEach(d=>{
+  const tx=mk('text',{x:x(d2t(d).getTime()),y:H-12,'text-anchor':'middle',fill:'#6b7a90','font-size':10.5});
+  tx.textContent=d.slice(5); svg.appendChild(tx);
+ });
+ // highlight window
+ if(cfg.win){
+  const a=x(d2t(cfg.win[0]).getTime()), b=x(d2t(cfg.win[1]).getTime());
+  svg.appendChild(mk('rect',{x:a,y:P.t,width:Math.max(b-a,2),height:ih,fill:'rgba(240,160,32,.09)'}));
+  const la=mk('text',{x:a+4,y:P.t+13,fill:'#f0a020','font-size':10.5}); la.textContent='核验窗口'; svg.appendChild(la);
+ }
+ // series
+ cfg.series.forEach(s=>{
+  const pts = s.data.filter(p=>p[1]!=null);
+  if(!pts.length) return;
+  const yy = s.axis2? y2 : yv;
+  const dd = pts.map((p,i)=> (i?'L':'M') + x(d2t(p[0]).getTime()).toFixed(1)+' '+yy(p[1]).toFixed(1)).join(' ');
+  const pat = mk('path',{d:dd,fill:'none',stroke:s.color,'stroke-width':s.w||2.2,'stroke-linejoin':'round','stroke-linecap':'round',opacity:s.op||1});
+  if(s.dash) pat.setAttribute('stroke-dasharray', s.dash);
+  svg.appendChild(pat);
+  pts.forEach(p=>{
+   const c=mk('circle',{cx:x(d2t(p[0]).getTime()),cy:yy(p[1]),r:s.dots===false?0:2.6,fill:s.color});
+   c.setAttribute('data-t', `${s.name}  ${p[0]}  <b>${fmt(p[1])}</b>`);
+   c.style.cursor='crosshair'; svg.appendChild(c);
+  });
+ });
+ el.appendChild(svg);
+ svg.addEventListener('mousemove',ev=>{
+  const t=ev.target; const tip=document.getElementById('tip');
+  if(t.getAttribute && t.getAttribute('data-t')){ tip.style.display='block'; tip.innerHTML=t.getAttribute('data-t');
+   tip.style.left=(ev.clientX+14)+'px'; tip.style.top=(ev.clientY-38)+'px'; }
+  else tip.style.display='none';
+ });
+ svg.addEventListener('mouseleave',()=>document.getElementById('tip').style.display='none');
+}
+
+function drawMain(){
+ const ppS=DATA.series.pp, ppfS=DATA.series.ppf, prS=DATA.series.propylene, wS=DATA.series.wti;
+ const ser=[
+  {name:'PP拉丝',data:ppS,color:'#ff4d4f',w:2.6},
+  {name:'PP纤维',data:ppfS.filter((p,i)=>i%2===0),color:'#f0a020',w:1.6,op:.85,dots:false},
+  {name:'丙烯',data:prS,color:'#60a5fa',w:1.8},
+  {name:'WTI',data:wS,color:'#a855f7',w:1.4,op:.75,dots:false,axis2:true}
+ ];
+ lineChart(document.getElementById('chartMain'), {series:ser, win:['2026-10-01','2026-10-19']});
+}
+function drawDelta(){
+ const el=document.getElementById('chartDelta'); if(!el) return; el.innerHTML='';
+ const W=el.clientWidth||1000, H=250, P={t:26,r:20,b:58,l:56};
+ const iw=W-P.l-P.r, ih=H-P.t-P.b;
+ const bars=[
+  {n:'PP拉丝现货',v:8.29,c:'#ff4d4f',sub:'10/01→10/19'},
+  {n:'PP纤维现货',v:7.38,c:'#ff8a80',sub:'10/01→10/19'},
+  {n:'上游丙烯',v:8.52,c:'#60a5fa',sub:'10/01→10/19'},
+  {n:'WTI原油',v:13.46,c:'#a855f7',sub:'10/01→10/19'},
+  {n:'期货主力(单日)',v:7.08,c:'#f0a020',sub:'10/08 单日'},
+  {n:'现货华东拉丝(单日)',v:2.84,c:'#facc15',sub:'10/08 单日'},
+  {n:'PP−丙烯加工价差',v:-1.47,c:'#22c55e',sub:'变化率，几乎持平'}
+ ];
+ const mx=14, mn=-3;
+ const y=v=>P.t+ih-(v-mn)/(mx-mn)*ih;
+ const svg=mk('svg',{viewBox:`0 0 ${W} ${H}`,height:H});
+ for(let i=0;i<=4;i++){
+  const v=mx-(mx-mn)*i/4, yy=y(v);
+  svg.appendChild(mk('line',{x1:P.l,x2:P.l+iw,y1:yy,y2:yy,stroke:v===0?'#4a5568':'#2d3748','stroke-width':1,'stroke-dasharray':v===0?'0':'3 4'}));
+  const tx=mk('text',{x:P.l-9,y:yy+4,'text-anchor':'end',fill:'#6b7a90','font-size':10.5}); tx.textContent=v.toFixed(0)+'%'; svg.appendChild(tx);
+ }
+ const bw=iw/bars.length*0.52, step=iw/bars.length;
+ bars.forEach((b,i)=>{
+  const cx=P.l+step*(i+0.5);
+  const y0=y(0), y1=y(b.v);
+  svg.appendChild(mk('rect',{x:cx-bw/2,y:Math.min(y0,y1),width:bw,height:Math.abs(y0-y1),fill:b.c,opacity:.85,rx:3}));
+  const tv=mk('text',{x:cx,y:(b.v>=0? Math.min(y0,y1)-7 : Math.max(y0,y1)+15),'text-anchor':'middle',fill:b.c,'font-size':11.5,'font-weight':700});
+  tv.textContent=(b.v>0?'+':'')+b.v.toFixed(2)+'%'; svg.appendChild(tv);
+  const nx=mk('text',{x:cx,y:H-34,'text-anchor':'middle',fill:'#cfd8e3','font-size':11}); nx.textContent=b.n; svg.appendChild(nx);
+  const sx=mk('text',{x:cx,y:H-18,'text-anchor':'middle',fill:'#6b7a90','font-size':9.5}); sx.textContent=b.sub; svg.appendChild(sx);
+ });
+ el.appendChild(svg);
+}
+
+function drawCurve(){
+ const el=document.getElementById('chartCurve'); el.innerHTML='';
+ const W=el.clientWidth||1000,H=230,P={t:20,r:20,b:34,l:64};
+ const iw=W-P.l-P.r, ih=H-P.t-P.b;
+ const pts=[...DATA.fut_raw].sort((a,b)=>a[0].localeCompare(b[0]));
+ const lo=Math.min(...pts.map(p=>p[4])), hi=Math.max(...pts.map(p=>p[4]));
+ const svg=mk('svg',{viewBox:`0 0 ${W} ${H}`,height:H});
+ const y=v=>P.t+ih-(v-lo)/(hi-lo+60)*ih;
+ for(let i=0;i<=4;i++){const yy=P.t+ih*i/4; svg.appendChild(mk('line',{x1:P.l,x2:P.l+iw,y1:yy,y2:yy,stroke:'#2d3748','stroke-dasharray':'3 4'}));
+  const tv=hi-(hi-lo+60)*i/4; const tx=mk('text',{x:P.l-9,y:yy+4,'text-anchor':'end',fill:'#6b7a90','font-size':10.5}); tx.textContent=Math.round(tv).toLocaleString(); svg.appendChild(tx);}
+ const step=iw/(pts.length-1);
+ const path=pts.map((p,i)=>(i?'L':'M')+(P.l+i*step).toFixed(1)+' '+y(p[4]).toFixed(1)).join(' ');
+ svg.appendChild(mk('path',{d:path,fill:'none',stroke:'#ff4d4f','stroke-width':2.6}));
+ pts.forEach((p,i)=>{
+  const cx=P.l+i*step;
+  svg.appendChild(mk('circle',{cx,cy:y(p[4]),r:4,fill:'#ff4d4f'}));
+  const tx=mk('text',{x:cx,y:y(p[4])-11,'text-anchor':'middle',fill:'#e6edf3','font-size':10.5,'font-weight':600});
+  tx.textContent=p[4]; svg.appendChild(tx);
+  const lx=mk('text',{x:cx,y:H-12,'text-anchor':'middle',fill:'#9aa7b8','font-size':10.5}); lx.textContent=p[0]; svg.appendChild(lx);
+  const oi=mk('text',{x:cx,y:P.t+ih+16,'text-anchor':'middle',fill:'#6b7a90','font-size':9.5}); oi.textContent='持仓'+(p[7]>=1000?(p[7]/1000).toFixed(1)+'k':p[7]); svg.appendChild(oi);
+ });
+ // spot reference
+ const spot=10756.67;
+ if(spot<hi+60){ svg.appendChild(mk('line',{x1:P.l,x2:P.l+iw,y1:y(spot),y2:y(spot),stroke:'#f0a020','stroke-width':1.4,'stroke-dasharray':'6 4'}));
+  const t2=mk('text',{x:P.l+iw-4,y:y(spot)-6,'text-anchor':'end',fill:'#f0a020','font-size':10.5}); t2.textContent='现货参考价 10,756.67'; svg.appendChild(t2);}
+ el.appendChild(svg);
+}
+
+/* ---------- tables ---------- */
+function nd(v,n){ return v==null? '<span class="na">缺失</span>' : fmt(v,n); }
+document.querySelector('#tblBasis tbody').innerHTML = DATA.basis.map(b=>{
+ const st = b.status||'';
+ const c = st.startsWith('已核验')?'sup':(st.startsWith('部分')?'neu':'mis');
+ return `<tr><td>${b.date}</td><td>${esc(b.spot_caliber)}</td><td class="num">${nd(b.spot)}</td>
+ <td class="num">${nd(b.fut,0)}</td><td class="num">${nd(b.basis)}</td>
+ <td><span class="tag ${c}">${esc(st)}</span></td><td style="color:var(--tx2)">${esc(b.note||'')}</td></tr>`;
+}).join('');
+
+document.getElementById('tblSpread').innerHTML = DATA.spread.map(([n,a,b])=>{
+ const v=a-b; const p=(v/b*100).toFixed(2);
+ return `<tr><td class="mono">${n}</td><td class="num">${fmt(a,0)}</td><td class="num">${fmt(b,0)}</td>
+ <td class="num up">+${v}</td><td class="num up">+${p}%</td>
+ <td style="color:var(--tx2)">近月升水，远月折价——市场用远期曲线定价「未来供给宽松 / 新增产能投放」</td></tr>`;
+}).join('');
+
+document.getElementById('tblInv').innerHTML = DATA.inventory.map(i=>{
+ const v = i.value==null?'<span class="na">缺失</span>':fmt(i.value);
+ const pv= i.prev==null?'<span class="na">缺失</span>':fmt(i.prev);
+ const ch= i.change==null?'<span class="na">缺失</span>':((i.change>0?'+':'')+fmt(i.change));
+ const cp= i.change_pct==null?'<span class="na">缺失</span>':((i.change_pct>0?'+':'')+fmt(i.change_pct)+'%');
+ const cls = i.change_pct!=null? (i.change_pct>0?'up':'dn') : '';
+ return `<tr><td>${esc(i.item)}</td><td class="num ${cls}">${v}</td><td class="num">${pv}</td><td class="num ${cls}">${ch}</td>
+ <td class="num ${cls}">${cp}</td><td>${esc(i.date||'—')}</td>
+ <td>${i.hist_pctile==null?'<span class="na">无历史序列</span>':fmt(i.hist_pctile)+'%'}</td>
+ <td>${esc(i.dir||'')}</td></tr>`;
+}).join('');
+
+document.getElementById('tblCost').innerHTML = DATA.cost.map(c=>{
+ const cp = c.src_pct!=null? c.src_pct : c.change_pct;
+ const cls = cp==null?'' : (cp>0?'up':'dn');
+ const v = c.value==null?'<span class="na">缺失</span>':fmt(c.value);
+ const pv= c.prev==null?'<span class="na">缺失</span>':fmt(c.prev);
+ return `<tr><td>${esc(c.item)}</td><td class="num">${v} <span style="color:var(--tx3);font-size:11px">${esc(c.unit||'')}</span></td>
+ <td class="num">${pv}</td><td class="num ${cls}">${cp==null?'<span class="na">缺失</span>':((cp>0?'+':'')+fmt(cp)+'%')}</td>
+ <td style="color:var(--tx2);font-size:11.5px">${esc(c.source)}</td><td>${esc(c.date)}</td></tr>`;
+}).join('');
+
+document.getElementById('tblCal').innerHTML = DATA.caliber.map(c=>
+ `<tr><td style="color:var(--tx3);font-weight:600">${esc(c.topic)}</td><td style="color:#cfd8e3">${esc(c.text)}</td></tr>`).join('');
+
+/* ---------- matrix ---------- */
+const AXES=[
+ {k:'供给',t:'现实供应变化'},{k:'需求',t:'现实需求变化'},
+ {k:'成本',t:'成本变化'},{k:'预期',t:'主要体现预期'}
+];
+document.getElementById('matrix').innerHTML = AXES.map(ax=>{
+ const arr=DATA.evidence.filter(e=>e.cls===ax.k);
+ const cc={sup:0,div:0,mis:0,neu:0}; arr.forEach(e=>cc[statusKey(e.status)]++);
+ const body=arr.map(e=>{
+  const c=statusKey(e.status);
+  return `<div class="mitem"><span class="mdot" style="background:${c==='sup'?'#ff4d4f':c==='div'?'#22c55e':c==='mis'?'#6b7a90':'#f0a020'}"></span>
+   <span style="flex:1"><a href="#" data-id="${e.id}" style="color:var(--tx)">${esc(e.name)}</a></span></div>`;
+ }).join('');
+ return `<div class="mcell"><div class="h"><span>${ax.t}</span><span class="cnt"><span class="up">${cc.sup}</span>/<span class="dn">${cc.div}</span>/<span>${cc.mis}</span></span></div>${body||'<div class="mitem" style="color:var(--tx3)">—</div>'}</div>`;
+}).join('');
+
+/* ---------- triage ---------- */
+const S=DATA.summary;
+document.getElementById('triage').innerHTML = `
+ <div class="card sup" style="cursor:default"><div class="ch"><div class="cn">✅ 与涨势相一致的证据</div></div>
+  ${S.support.map(x=>`<div class="chist" style="margin-bottom:7px">• ${esc(x)}</div>`).join('')}</div>
+ <div class="card div" style="cursor:default"><div class="ch"><div class="cn">⚠️ 存在背离的证据</div></div>
+  ${S.diverge.map(x=>`<div class="chist" style="margin-bottom:7px">• ${esc(x)}</div>`).join('')}</div>
+ <div class="card mis" style="cursor:default"><div class="ch"><div class="cn">❔ 尚无法核实的部分</div></div>
+  ${S.missing.map(x=>`<div class="chist" style="margin-bottom:7px">• ${esc(x)}</div>`).join('')}</div>`;
+
+/* ---------- drawer ---------- */
+const ov=document.getElementById('ov'), dw=document.getElementById('dw');
+function openEv(id){
+ const e=DATA.evidence.find(x=>x.id===id); if(!e) return;
+ const c=statusKey(e.status);
+ const srcs=(e.src||[]).map(sid=>{
+  const s=SRC[sid]; if(!s) return '';
+  return `<div class="srcitem"><div class="t">${esc(s.name)}</div>
+   <div class="m">${esc(s.publisher)} · ${esc(s.date)} · 证据等级 ${esc(s.tier)} / 抓取 ${esc(s.retrieved)}</div>
+   <div class="q">${esc(s.note)}</div>
+   <div class="m" style="margin-top:6px"><a href="${esc(s.url)}" target="_blank" rel="noopener">↗ 打开原始来源</a></div></div>`;
+ }).join('') || '<div class="srcitem"><div class="t">未取得原始来源（数据不足项）</div><div class="q">该指标在公开检索中未找到可核验的原始数据，按要求标注为缺失，未做估算。</div></div>';
+ const hist=HISTORY[id] ? HISTORY[id] : '';
+ dw.innerHTML = `<button class="dclose" onclick="closeDw()">×</button>
+  <div class="dhead"><span class="tag ${c}">${STATUS[c].l}</span>
+   <h3>${esc(e.name)}</h3>
+   <div class="dmeta">证据编号 ${e.id} · 分类：${esc(e.cls)} · 观测期：${esc(e.period)} · 证据等级 ${esc(e.tier)}</div></div>
+  <div class="dbig">${esc(e.metric)}</div>
+  <div class="dsec">与价格的关系</div>
+  <div class="kv"><div class="k">判定</div><div>${esc(e.verdict)}</div>
+   <div class="k">历史位置</div><div>${esc(e.hist)}</div></div>
+  <div class="dsec">解读</div><div class="dtext">${esc(e.comment)}</div>
+  ${hist? '<div class="dsec">完整历史序列 / 数值明细</div>'+hist : ''}
+  <div class="dsec">原始来源（${(e.src||[]).length}）</div>${srcs}
+  <div class="dsec">复核提示</div>
+  <div class="dtext" style="font-size:12.5px;color:var(--tx2)">
+   若需把这条件证据升级为「已确认」，请用同类口径补充：① 同一日期、同一区域的现货与期货报价；② 对应的周度/月度库存与开工序列；
+   ③ 官方或交易所原始发布（如生意社/隆众/统计局/大商所）而非媒体转述。</div>`;
+ ov.classList.add('on'); dw.classList.add('on'); dw.scrollTop=0;
+ if(HISTORY[e.id] && HISTORY[e.id].indexOf('dchart')>=0) setTimeout(()=>drawDetail(e.id),30);
+}
+function closeDw(){ ov.classList.remove('on'); dw.classList.remove('on'); }
+ov.onclick=closeDw;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDw();});
+
+/* 为关键证据附完整历史序列区块 */
+const HISTORY = {
+ P1:'<div id="dchart"></div>', P2:'<div id="dchart"></div>', P3:'<div id="dchart"></div>',
+ P4:'<div id="dchart"></div>', P7:'<div id="dchart"></div>',
+ P5:`<div class="dtext mono" style="font-size:12.5px">PP2701 ${fmt(9088,0)} ｜ PP2705 ${fmt(8769,0)} ｜ PP2709 ${fmt(8421,0)}<br>
+      2701–2705 = +319（+3.64%）｜ 2705–2709 = +348（+4.13%）｜ 2701–2709 = +667（+7.92%）<br>
+      持仓：2701 ${fmt(56083,0)} 手、2705 ${fmt(86479,0)} 手、2709 ${fmt(820,0)} 手（来源 S10）</div>`,
+ P6:`<div class="dtext mono" style="font-size:12.5px">10/08：现货 10,371 − 期货 9,242 = <b>+1,129</b><br>
+      10/19：现货 10,756.67 − PP2701 9,088 = <b>+1,668.67</b><br>
+      Δ = +539.67：现货升水并未收敛，说明现货端比盘面更「硬」；但两日口径不同（华东主流报价 vs 全国参考价），精度受限。</div>`,
+ C8: `<div class="dtext mono" style="font-size:12.5px">10/01：PP 9,933.33 − 丙烯 9,707.67 = <b>225.66</b><br>
+      10/19：PP 10,756.67 − 丙烯 10,534.33 = <b>222.34</b><br>Δ = −3.32（−1.47%）：PP 涨 8.29%、丙烯涨 8.52%，价差几乎不动。</div>`,
+ C1: '<div id="dchart"></div>', C2: '<div id="dchart"></div>', C4: '<div id="dchart"></div>',
+};
+function drawDetail(id){
+ const host=document.getElementById('dchart'); if(!host) return;
+ const M = {
+  P1:{t:'PP拉丝参考价 · 2026-07-01~2026-10-20（生意社原始逐日）', s:[{name:'PP拉丝',data:DATA.series.pp,color:'#ff4d4f',w:2.6}]},
+  P2:{t:'PP纤维参考价 · 2026-07-01~2026-10-19', s:[{name:'PP纤维',data:DATA.series.ppf,color:'#f0a020',w:2.4}]},
+  P3:{t:'PP全国日均价（隆众，仅10/15与10/16已披露）', s:[{name:'全国日均价',data:DATA.series.national,color:'#60a5fa',w:2.4}]},
+  P4:{t:'PP期货离散点位（10/8主力、10/19 PP2701）', s:[{name:'期货',data:DATA.fut.map(f=>[f.date,f.price]),color:'#a855f7',w:2.4}]},
+  P7:{t:'PP拉丝参考价（9/15起，观察涨势减速）', s:[{name:'PP拉丝',data:DATA.series.pp.filter(p=>p[0]>='2026-09-15'),color:'#ff4d4f',w:2.6}]},
+  C1:{t:'上游成本：WTI 与 Brent（2026-09-01~2026-10-19）', s:[{name:'WTI',data:DATA.series.wti,color:'#a855f7',w:2.4},{name:'Brent',data:DATA.series.brent.filter(p=>p[1]!=null),color:'#f0a020',w:2.2}]},
+  C2:{t:'10/8 前夜：WTI 在 PP 期货跳涨当日反而下跌', s:[{name:'WTI',data:DATA.series.wti.filter(p=>p[0]>='2026-10-01'),color:'#a855f7',w:2.6}]},
+  C4:{t:'上游丙烯现货（2026-10-01~2026-10-19，10/12见高后回落）', s:[{name:'丙烯',data:DATA.series.propylene,color:'#60a5fa',w:2.6}]},
+ };
+ const cfg=M[id]; if(!cfg){ host.remove(); return; }
+ const holder=document.createElement('div');
+ host.innerHTML = `<div style="font-size:12px;color:var(--tx3);margin-bottom:6px">${cfg.t}</div>`;
+ host.appendChild(holder);
+ lineChart(holder, {series:cfg.s, win:['2026-10-01','2026-10-19']});
+}
+
+/* ---------- filters ---------- */
+let fStatus='all', fCls='all';
+function applyFilter(){
+ const cards=[0,1,2,3,4].map(()=>null);
+ document.querySelectorAll('#blk-供给 .card,#blk-需求 .card,#blk-库存 .card,#blk-成本 .card,#blk-预期 .card').forEach(el=>{
+  const e=DATA.evidence.find(x=>x.id===el.dataset.id); if(!e) return;
+  const c=statusKey(e.status); let show=true;
+  if(fStatus==='sup'&&c!=='sup') show=false;
+  if(fStatus==='div'&&c!=='div') show=false;
+  if(fStatus==='mis'&&c!=='mis') show=false;
+  if(fStatus==='neu'&&c!=='neu') show=false;
+  if(fStatus!=='all'&&fCls!=='all'&&e.cls!==fCls) show=false;
+  el.style.display=show?'':'none';
+ });
+}
+document.getElementById('fStatus').onclick=ev=>{
+ const b=ev.target.closest('button'); if(!b) return;
+ document.querySelectorAll('#fStatus button').forEach(x=>x.classList.remove('on'));
+ b.classList.add('on'); fStatus=b.dataset.v; applyFilter();
+};
+document.getElementById('fCls').onchange=e=>{ fCls=e.target.value;
+ if(fCls!=='all'){ document.querySelectorAll('#fStatus button').forEach(x=>x.classList.remove('on'));
+  document.querySelector('#fStatus button[data-v="all"]').classList.add('on'); fStatus='all'; }
+ applyFilter();
+};
+
+/* card & matrix click */
+document.addEventListener('click',ev=>{
+ const card=ev.target.closest('.card[data-id]');
+ if(card){ openEv(card.dataset.id); return; }
+ const link=ev.target.closest('a[data-id]');
+ if(link){ ev.preventDefault(); openEv(link.dataset.id); }
+});
+
+/* ---------- footer ---------- */
+document.getElementById('foot').innerHTML =
+ DATA.sources.map(s=>`<div>[${s.id}] ${esc(s.name)} — ${esc(s.publisher)} ${esc(s.date)} · <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url)}</a></div>`).join('') +
+ `<div style="margin-top:14px">数据抓取时间：2026-10-20 · 指标计算规则见配套 Excel「指标定义与计算规则」工作表 · 缺失数据显示为「缺失」，未做估算。</div>`;
+
+/* ---------- init ---------- */
+function boot(){
+ drawMain(); drawCurve(); drawDelta();
+ window.addEventListener('resize',()=>{ drawMain(); drawCurve(); drawDelta(); });
+}
+if(document.readyState==='complete'||document.readyState==='interactive') setTimeout(boot,0);
+else document.addEventListener('DOMContentLoaded',boot);
+</script>
+</body>
+</html>

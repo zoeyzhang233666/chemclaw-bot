@@ -1,0 +1,67 @@
+{
+  "orch-lead-visit-pack": {
+    "when": "找客户并准备拜访",
+    "steps": [
+      "@潜客猎手 scene=lead-by-product",
+      "@准入尽调 scene=dd-scan",
+      "@拜访顾问 scene=visit-prep",
+      "@表格专家",
+      "optional @质询官",
+      "optional @文档撰稿"
+    ]
+  },
+  "orch-supplier-dd": {
+    "when": "找厂家并尽调比价",
+    "steps": [
+      "@供应商寻源 scene=source-verify",
+      "@准入尽调 scene=dd-scan",
+      "@行情报价 scene=price-region",
+      "@表格专家",
+      "optional @质询官"
+    ]
+  },
+  "orch-basis-brief": {
+    "when": "涨跌归因并汇报",
+    "steps": [
+      "@产业基本面 scene=fund-attribution",
+      "@价差量化",
+      "@行情报价 scene=price-spot",
+      "optional @质询官",
+      "@PPT设计师 scene=ppt-editable-pptx"
+    ]
+  },
+  "orch-export-inquiry": {
+    "when": "海外询盘回复",
+    "steps": [
+      "@外贸销售",
+      "@中英译审",
+      "@文档撰稿"
+    ]
+  },
+  "orch-market-entry": {
+    "when": "某品进某区域",
+    "steps": [
+      "@市场研报",
+      "@潜客猎手 or @产业基本面",
+      "@PPT设计师"
+    ]
+  },
+  "orch-challenge-then-deliver": {
+    "when": "结论要经得起问再出稿",
+    "steps": [
+      "业务初稿",
+      "@质询官",
+      "缺口回填业务岗",
+      "@表格专家 or @PPT设计师"
+    ]
+  },
+  "orch-clarify-big-ask": {
+    "when": "大而无当的需求",
+    "steps": [
+      "@流程参谋 scene=plan-brainstorm",
+      "选定 orch-*",
+      "执行编排",
+      "@流程参谋 scene=plan-verify"
+    ]
+  }
+}

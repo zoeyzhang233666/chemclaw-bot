@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "skillVersion": "1.0.0",
+    "dataClass": "SIMULATED — DEMO DATA / 模拟演示数据",
+    "dataClassNote": "All names, contacts, prices and terms are SIMULATED for skill demonstration. Replace with user-confirmed commercial data before any real use. Bank details are placeholders only.",
+    "caseId": "EX-005-CITRIC-DEU-CIP",
+    "product": "Citric Acid Monohydrate",
+    "destination": "Germany",
+    "preparedAt": "2026-10-19",
+    "preparedBy": "export-quotation-pi skill example generator",
+    "scenario": "CIP Duisburg by multimodal route (sea + rail) for a German food-ingredient distributor; EUR quote; premium insurance (ICC A) per CIP."
+  },
+  "docType": "QUOTATION",
+  "state": {
+    "stage": "READY_FOR_REVIEW",
+    "reviewConfirmed": false
+  },
+  "reference": {
+    "text": "QT-SIM-2610-005",
+    "quoteNo": "QT-SIM-2610-005",
+    "quotationRef": "QT-SIM-2610-005 Rev.0",
+    "buyerInquiryRef": "INQ-SIM-DE-1199",
+    "supplierQuoteRef": "",
+    "exporterReference": "TO BE ALLOCATED BEFORE SHIPMENT",
+    "buyerPoNo": ""
+  },
+  "issueDate": "2026-10-19",
+  "seller": {
+    "name": "Hua Bin Chemical Trading Co., Ltd. (SIMULATED DEMO)",
+    "shortName": "SIMULATED CO., LTD.",
+    "logoText": "SIMULATED",
+    "address": "Unit 2108, 21/F, Harbor Commerce Tower, Nanshan District, Shenzhen, Guangdong 518000, China",
+    "country": "China",
+    "contact": "[Simulated Contact Person]",
+    "phone": "+86 000 0000 0000 (Simulated)",
+    "email": "export@example-demo.invalid",
+    "taxId": "USCI SIMULATED-0000000000"
+  },
+  "buyer": {
+    "name": "Rheinland Food Ingredients GmbH (SIMULATED DEMO)",
+    "address": "Industriestrasse 12, 47059 Duisburg, Germany",
+    "country": "Germany",
+    "contact": "[Simulated Buyer Contact]",
+    "position": "Einkauf / Purchasing",
+    "phone": "+49 000 000000 (Simulated)",
+    "email": "einkauf@example-demo.invalid",
+    "npwp": "USt-IdNr. SIMULATEDDE000000000"
+  },
+  "currency": {
+    "code": "EUR",
+    "name": "Euro",
+    "decimals": 2,
+    "exchangeRate": {
+      "base": "",
+      "rate": "",
+      "asOf": "",
+      "state": "reference",
+      "display": "none"
+    }
+  },
+  "tradeTerm": {
+    "code": "CIP",
+    "version": "2020",
+    "namedPlace": "Duesseldorf / Duisburg logistics hub, Germany",
+    "namedPlaceKind": "place",
+    "transportMode": "MULTIMODAL",
+    "insuranceBasis": "Institute Cargo Clauses (A), 110% of the insured value, in EUR (CIP 2020 requires wider cover; confirm the policy)",
+    "costAllocation": {
+      "exportPacking": "Seller",
+      "loadingCharges": "Seller",
+      "exportCustoms": "Seller",
+      "originCharges": "Seller",
+      "destinationCharges": "Seller",
+      "importCustoms": "Buyer",
+      "unloading": "Buyer",
+      "mainFreight": "Seller",
+      "insurance": "Seller"
+    }
+  },
+  "items": [
+    {
+      "id": "L1",
+      "name": "Citric Acid Monohydrate, food grade",
+      "cas": "5949-29-1",
+      "spec": "Assay (dry basis) 99.5-100.5%; water 7.5-9.0%; heavy metals 5 ppm max.; meets E330 / FCC grade; GMO-free",
+      "hsCode": "291814",
+      "origin": "China",
+      "unit": "MT",
+      "quantity": 20,
+      "unitPrice": 1180,
+      "discountPct": 0,
+      "amountState": "confirmed",
+      "amountConfirmedValue": 23600.0,
+      "dangerousGoods": {
+        "status": "NOT_REGULATED",
+        "basis": "Supplier SDS: not classified as dangerous goods for transport (re-verify against current SDS)",
+        "ghsSummary": ""
+      },
+      "packageCount": 800,
+      "packageWeight": {
+        "value": 25.15,
+        "unit": "KG",
+        "net": 25,
+        "basis": "simulated declaration"
+      }
+    }
+  ],
+  "amountState": "confirmed",
+  "amountConfirmedValue": 23600.0,
+  "charges": [
+    {
+      "name": "Marine/transit insurance (ICC A) borne by Seller — already included in the CIP unit price",
+      "amount": "",
+      "addToTotal": false,
+      "note": "Do not double-charge insurance: write 'insurance included in unit price' on the face of the document."
+    }
+  ],
+  "packing": {
+    "summary": "800 bags x 25 kg net in food-grade PE-lined paper bags, palletised on EUR pallets, shrink-wrapped",
+    "terms": "Food-grade hygiene certificate, pallet markings per EU requirements",
+    "bagNetKg": 25,
+    "shippingUnits": "1 x 40'HQ"
+  },
+  "totalPackageCount": "800",
+  "totalGrossWeight": "20,120 kg (20.12 MT)",
+  "totalVolume": "",
+  "freight": {
+    "estimatedPol": "Shekou, Shenzhen",
+    "estimatedPod": "Hamburg; rail to Duisburg",
+    "volumeCheck": null,
+    "quotedVolume": null
+  },
+  "delivery": {
+    "leadTime": "35-45 calendar days after receipt of the confirmed purchase order",
+    "basis": "TIMING FROM PO",
+    "readyDateMode": "relative",
+    "daysAfterReceipt": 35,
+    "partialShipment": "Allowed",
+    "transhipment": "Allowed"
+  },
+  "payment": {
+    "code": "PREPAY",
+    "terms": "50% T/T as advance and 50% before shipment against packing list and pre-shipment inspection report",
+    "amountPct": 50,
+    "beneficiary": "[TO BE CONFIRMED]",
+    "beneficiaryNote": "[BANK DETAILS INTENTIONALLY OMITTED IN THIS EXAMPLE]"
+  },
+  "validity": {
+    "type": "days",
+    "days": 21,
+    "validUntil": ""
+  },
+  "documents": [
+    {
+      "name": "Bill of Lading (3 originals + 3 copies)"
+    },
+    {
+      "name": "Commercial Invoice (1 original + 5 copies)"
+    },
+    {
+      "name": "Packing List (1 original + 3 copies)"
+    },
+    {
+      "name": "Certificate of Origin"
+    },
+    {
+      "name": "Certificate of Analysis (per shipment)"
+    },
+    {
+      "name": "Manufacturer's SDS (current revision)"
+    }
+  ],
+  "bank": {
+    "display": false,
+    "sanitized": true,
+    "detailsConfirmed": false,
+    "bankName": "",
+    "accountName": "",
+    "accountNumber": "",
+    "swift": "",
+    "note": "placeholders only"
+  },
+  "view": {
+    "logo": true,
+    "signature": true,
+    "watermark": true,
+    "accentColor": "#1B3A5B"
+  },
+  "preparation": {
+    "issuedBy": "export-quotation-pi skill v1.0.0",
+    "notice": "SIMULATED DEMO DATA — NOT FOR TRADE USE. CIP example: seller bears freight and ICC(A) insurance to the named place; buyer clears import."
+  },
+  "review": {}
+}

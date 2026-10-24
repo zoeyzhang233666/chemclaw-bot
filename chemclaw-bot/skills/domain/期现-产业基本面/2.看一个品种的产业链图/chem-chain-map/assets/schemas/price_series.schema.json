@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-atlas/schemas/price_series.schema.json",
+  "title": "price_series.json",
+  "type": "object",
+  "required": [
+    "series"
+  ],
+  "properties": {
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "node_id",
+          "product",
+          "source",
+          "basis",
+          "region",
+          "unit",
+          "tax",
+          "available"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "node_id": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "seo_id": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "tax": {
+            "type": "string"
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "gap": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "caveat": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dc_link": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "repair_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "date",
+                "price"
+              ],
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "description": "YYYY-MM-DD"
+                },
+                "price": {
+                  "type": [
+                    "number",
+                    "string"
+                  ],
+                  "description": "价格；建议用字符串避免浮点误差"
+                },
+                "chg": {
+                  "type": [
+                    "string",
+                    "number",
+                    "null"
+                  ]
+                },
+                "chg_rate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "repaired": {
+                  "type": "boolean"
+                },
+                "raw": {
+                  "type": "string",
+                  "description": "修复前的原始脏值，用于追溯"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "description": "价格六要素缺一不可：品种 / 基准 / 地区 / 税率 / 时点 / 来源。缺任何一项都不得用于画曲线或算价差。相近品种不得顶替（可用 caveat 标注为『观察点』）。源站脏值修复必须保留 raw 字段并在 repair_note 说明方法。"
+}

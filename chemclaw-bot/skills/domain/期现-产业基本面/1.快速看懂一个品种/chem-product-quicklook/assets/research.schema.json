@@ -1,0 +1,278 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "chem-product-quicklook research.json",
+  "type": "object",
+  "required": ["meta", "product", "frame", "chain", "panels", "sources", "gaps"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["title", "data_asof", "generated", "version", "output_name"],
+      "properties": {
+        "title": {"type": "string"},
+        "data_asof": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "generated": {"type": "string"},
+        "version": {"type": "string"},
+        "output_name": {"type": "string"},
+        "labels": {"type": "object", "additionalProperties": {"type": "string"}},
+        "footnote": {"type": "string"}
+      }
+    },
+    "product": {
+      "type": "object",
+      "required": ["name_cn", "name_en", "cas", "has_futures", "card"],
+      "properties": {
+        "name_cn": {"type": "string"},
+        "name_en": {"type": "string"},
+        "aliases": {"type": "array", "items": {"type": "string"}},
+        "synonyms_en": {"type": "array", "items": {"type": "string"}},
+        "cas": {"type": "string", "pattern": "^\\d{2,7}-\\d{2}-\\d$"},
+        "hs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {"type": "string"},
+              "desc": {"type": "string"},
+              "note": {"type": "string"},
+              "src": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "un": {"type": "string"},
+        "formula": {"type": "string"},
+        "mw": {"type": "string"},
+        "appearance": {"type": "string"},
+        "boiling_point": {"type": "string"},
+        "freezing_point": {"type": "string"},
+        "density": {"type": "string"},
+        "flash_point": {"type": "string"},
+        "solubility": {"type": "string"},
+        "hazard_class": {"type": "string"},
+        "main_spec": {"type": "string"},
+        "grades": {"type": "array", "items": {"type": "string"}},
+        "packages": {"type": "string"},
+        "uses_cn": {"type": "array", "items": {"type": "string"}},
+        "scene": {"type": "array", "items": {"type": "string"}},
+        "oneliner": {"type": "string"},
+        "has_futures": {"type": "boolean"},
+        "identity_confidence": {
+          "type": "object",
+          "properties": {
+            "level": {"type": "string"},
+            "basis": {"type": "string"},
+            "src": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "card": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["k", "v"],
+            "properties": {
+              "k": {"type": "string"},
+              "v": {},
+              "sub": {"type": "string"},
+              "wide": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "frame": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {"type": "string"},
+          "value": {"type": "string"},
+          "value_note": {"type": "string"},
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {"type": "string"},
+                "caliber": {"type": "string"},
+                "gap": {"type": "boolean"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "chain": {
+      "type": "object",
+      "required": ["cols", "nodes"],
+      "properties": {
+        "cols": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {"id": {"type": "string"}, "name": {"type": "string"}}
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 5,
+          "items": {"$ref": "#/definitions/node"}
+        }
+      }
+    },
+    "research": {"type": "object"},
+    "panels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "body"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "note": {"type": "string"},
+          "body": {"type": "array", "items": {"$ref": "#/definitions/block"}}
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "org", "title"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^S\\d{2}$"},
+          "org": {"type": "string"},
+          "type": {"type": "string"},
+          "title": {"type": "string"},
+          "url": {"type": "string"},
+          "date": {"type": "string"},
+          "use": {"type": "string"},
+          "confidence": {"type": "string"}
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["area", "desc"],
+        "properties": {
+          "area": {"type": "string"},
+          "desc": {"type": "string"},
+          "how": {"type": "string"},
+          "impact": {"type": "string"}
+        }
+      }
+    },
+    "caveats": {"type": "array", "items": {"type": "string"}},
+    "purposes": {"type": "array", "items": {"type": "object"}},
+    "scenes": {"type": "object"},
+    "vcs": {"type": "object"},
+    "chart_note": {"type": "string"}
+  },
+  "definitions": {
+    "spot": {
+      "type": "object",
+      "required": ["name", "value", "date"],
+      "properties": {
+        "name": {"type": "string"},
+        "value": {"type": "string"},
+        "unit": {"type": "string"},
+        "spec": {"type": "string"},
+        "region": {"type": "string"},
+        "tax": {"type": "string"},
+        "date": {"type": "string"},
+        "pctile": {"type": ["string", "null"]},
+        "range": {"type": ["string", "null"]},
+        "src": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "col", "name"],
+      "properties": {
+        "id": {"type": "string"},
+        "col": {"type": "string"},
+        "name": {"type": "string"},
+        "kind": {"type": "string"},
+        "is_self": {"type": "boolean"},
+        "has_futures": {"type": "boolean"},
+        "level": {"type": "integer"},
+        "meta": {"type": "string"},
+        "cap": {},
+        "spot": {},
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "cap": {}
+            }
+          }
+        },
+        "research": {
+          "type": "object",
+          "properties": {
+            "summary": {"type": "string"},
+            "points": {"type": "array", "items": {"type": "string"}},
+            "share": {"type": "string"},
+            "single_use": {"type": "string"},
+            "spot": {"type": "array", "items": {"$ref": "#/definitions/spot"}},
+            "price_gap": {"type": ["string", "null"]},
+            "indicators": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "caliber": {"type": "string"},
+                  "why": {"type": "string"}
+                }
+              }
+            },
+            "companies": {"type": "array"},
+            "companies_gap": {"type": ["string", "null"]},
+            "actions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": {"type": "string"},
+                  "name": {"type": "string"},
+                  "desc": {"type": "string"}
+                }
+              }
+            },
+            "sources": {"type": "array", "items": {"type": "string"}},
+            "gaps": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "enum": ["text", "cards", "table", "routes", "companies", "regions", "indicators", "logic", "futures", "gapnote"]
+        },
+        "title": {"type": "string"},
+        "caption": {"type": "string"},
+        "html": {"type": "string"},
+        "columns": {"type": "array"},
+        "rows": {"type": "array"},
+        "items": {"type": "array"},
+        "groups": {"type": "array"},
+        "src": {"type": "array", "items": {"type": "string"}},
+        "text": {"type": "string"}
+      }
+    }
+  }
+}

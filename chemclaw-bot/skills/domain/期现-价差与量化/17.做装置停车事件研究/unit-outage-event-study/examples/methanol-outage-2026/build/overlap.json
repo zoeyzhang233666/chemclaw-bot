@@ -1,0 +1,105 @@
+{
+ "overlap_pairs": [
+  {
+   "a": "EV-01",
+   "b": "EV-02",
+   "kept": "EV-01",
+   "excluded": "EV-02"
+  },
+  {
+   "a": "EV-03",
+   "b": "EV-REJ-01",
+   "kept": "EV-03",
+   "excluded": "EV-REJ-01"
+  },
+  {
+   "a": "EV-03",
+   "b": "EV-REJ-02",
+   "kept": "EV-03",
+   "excluded": "EV-REJ-02"
+  },
+  {
+   "a": "EV-04",
+   "b": "EV-05",
+   "kept": "EV-04",
+   "excluded": "EV-05"
+  },
+  {
+   "a": "EV-04",
+   "b": "EV-06",
+   "kept": "EV-04",
+   "excluded": "EV-06"
+  }
+ ],
+ "excluded_in_dedup_subsample": [
+  {
+   "event_id": "EV-02",
+   "overlaps_with": "EV-01",
+   "cur_window": [
+    1941,
+    1966
+   ],
+   "kept_window": [
+    1940,
+    1965
+   ]
+  },
+  {
+   "event_id": "EV-REJ-01",
+   "overlaps_with": "EV-03",
+   "cur_window": [
+    1992,
+    2017
+   ],
+   "kept_window": [
+    1970,
+    1995
+   ]
+  },
+  {
+   "event_id": "EV-REJ-02",
+   "overlaps_with": "EV-03",
+   "cur_window": [
+    1995,
+    2020
+   ],
+   "kept_window": [
+    1970,
+    1995
+   ]
+  },
+  {
+   "event_id": "EV-05",
+   "overlaps_with": "EV-04",
+   "cur_window": [
+    2019,
+    2044
+   ],
+   "kept_window": [
+    2016,
+    2041
+   ]
+  },
+  {
+   "event_id": "EV-06",
+   "overlaps_with": "EV-04",
+   "cur_window": [
+    2022,
+    2047
+   ],
+   "kept_window": [
+    2016,
+    2041
+   ]
+  }
+ ],
+ "kept_in_dedup_subsample": [
+  "EV-01",
+  "EV-03",
+  "EV-04"
+ ],
+ "window": [
+  -5,
+  20
+ ]
+}

@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "doc_no": "SUP-CMP-YYYY-MMDD-CODE",
+    "title": "供应商横向比较报告",
+    "issue": "采购<产品> · 候选供应商横向比较",
+    "product": "<产品全称 + 牌号/等级 + 适用标准，例如：工业级片碱 NaOH 99%（GB/T 209-2018 IL-Ⅰ）>",
+    "prepared_by": "采购情报 / 供应商调查",
+    "version": "v1.0",
+    "as_of": "YYYY-MM-DD",
+    "export_base": "供应商横向比较_<产品>_<企业简称1>_<企业简称2>_<企业简称3>",
+    "use_note": "本报告只做事实核验与差异呈现，评分与选择权归采购方；风险等级指对本次采购的潜在影响，不是企业整体评级。"
+  },
+
+  "procurement": {
+    "product": "<采购标的，含等级>",
+    "spec": "<执行标准 + 关键指标：主含量、杂质上限、物性（粒度/密度/粘度等），注明以我方质量协议为准>",
+    "qty": "<年需求量，例如 12,000 吨/年（月度均衡）>",
+    "qty_alt": "<备选口径，例如 一次性 500 吨试单>",
+    "destination": "<收货地：省市区 + 具体园区/仓库>",
+    "delivery_pref": "<散装/包装、汽运/铁运/水运、发货节奏>",
+    "payment_pref": "<账期与票据：月结30天、承兑可议、13% 专票>",
+    "tax_pref": "13% 增值税专用发票",
+    "as_of": "YYYY-MM-DD"
+  },
+
+  "suppliers": [
+    {
+      "id": "A",
+      "short": "<简称，2-4 字，用于表头>",
+      "name": "<工商全称>",
+      "group": "<控股股东 / 实际控制人 / 集团归属>",
+      "code": "<证券代码，非上市写 非上市>",
+      "track": "<上市板块 / 民营集团 / 央企子公司…>",
+      "producer": "producer",
+      "producer_note": "<为什么判定为生产厂家：许可持有人=生产主体=发货工厂>",
+      "site": "<生产基地：省市区 + 园区>",
+      "plant_to_dest_km": "<≈N km>",
+      "distance_note": "<估算方式：公路里程量级 / 直线距离；注明非精确路线>",
+      "evidence_note": "<本企业的证据基础：年报、环评、法院文书、官网自述…>",
+      "summary": "<3-5 句：规模 + 优势 + 不确定项，必须点名>",
+      "tiers": [
+        ["T1", "主体与厂家身份", "<结论>", "<依据+证据号>"],
+        ["T2", "产品与生产能力", "<结论>", "<设计产能×利用率=产量能否自洽>"],
+        ["T3", "资质与合规", "<结论>", "<关键证照状态>"],
+        ["T4", "经营与商业条款", "<结论>", "<财务/司法/报价状态>"]
+      ],
+      "dims": {
+        "producer": {"v": "<是否真实生产厂家 + 判定依据>", "ev": "V:E01"},
+        "location": {"v": "<基地 + 距离 + 物流条件>", "ev": "V:E01"},
+        "capacity": {"v": "<设计产能 / 利用率 / 产量 / 规模指标>", "ev": "V:E01"},
+        "match": {"v": "<主营结构 + 目标产品占比 + 工艺路线>", "ev": "V:E01"},
+        "licence": {"v": "<关键证照及有效期；未取得的写“未取得”>", "ev": "V:E01"},
+        "risk": {"v": "<司法 / 处罚 / 经营异常 / 财务要点，注明口径>", "lvl": "low", "note": "<口径提醒>", "ev": "V:E01"},
+        "event": {"v": "<近 12 个月负面事件；未检索到就写“未检索到”>", "lvl": "none", "ev": "U"},
+        "custom_1": {"v": "<自定义维度结论>", "ev": "V:E01,U"},
+        "custom_2": {"v": "<自定义维度结论>", "ev": "S:E02"}
+      },
+      "certs": [
+        {"name": "<证照名称>", "start": "YYYY.MM.DD", "end": "YYYY.MM.DD", "scope": "<许可范围>", "holder": "<持有人>", "relevance": "core"}
+      ],
+      "quote": {
+        "price": {"status": "pending", "v": "待确认"},
+        "tax": {"status": "pending", "v": "待确认"},
+        "freight": {"status": "pending", "v": "待确认"},
+        "package": {"status": "pending", "v": "待确认"},
+        "payment": {"status": "pending", "v": "待确认"},
+        "delivery": {"status": "pending", "v": "待确认"},
+        "moq": {"status": "pending", "v": "待确认"},
+        "validity": {"status": "pending", "v": "待确认"}
+      }
+    },
+    {
+      "id": "B",
+      "short": "<简称>",
+      "name": "<工商全称>",
+      "group": "<集团>",
+      "code": "<代码>",
+      "track": "<板块>",
+      "producer": "doubt",
+      "producer_note": "<若签约主体可能不是生产主体，写明">",
+      "site": "<基地>",
+      "plant_to_dest_km": "<≈N km>",
+      "distance_note": "<估算方式>",
+      "evidence_note": "<证据基础>",
+      "summary": "<summary>",
+      "tiers": [["T1", "主体与厂家身份", "", ""], ["T2", "产品与生产能力", "", ""], ["T3", "资质与合规", "", ""], ["T4", "经营与商业条款", "", ""]],
+      "dims": {
+        "producer": {"v": "", "ev": "M:E10"},
+        "location": {"v": "", "ev": "M:E10"},
+        "capacity": {"v": "", "ev": "S:E11"},
+        "match": {"v": "", "ev": "S:E11"},
+        "licence": {"v": "", "ev": "U"},
+        "risk": {"v": "", "lvl": "mid", "ev": "M:E12"},
+        "event": {"v": "", "lvl": "none", "ev": "U"},
+        "custom_1": {"v": "", "ev": "U"},
+        "custom_2": {"v": "", "ev": "U"}
+      },
+      "certs": [],
+      "quote": {
+        "price": {"status": "pending"}, "tax": {"status": "pending"}, "freight": {"status": "pending"},
+        "package": {"status": "pending"}, "payment": {"status": "pending"}, "delivery": {"status": "pending"},
+        "moq": {"status": "pending"}, "validity": {"status": "pending"}
+      }
+    },
+    {
+      "id": "C",
+      "short": "<简称>",
+      "name": "<工商全称>",
+      "group": "<集团/自然人>",
+      "code": "非上市",
+      "track": "非上市民营企业",
+      "producer": "unknown",
+      "producer_note": "<身份待核的原因>",
+      "site": "<基地>",
+      "plant_to_dest_km": "<≈N km>",
+      "distance_note": "<估算方式>",
+      "evidence_note": "<证据基础>",
+      "summary": "<summary>",
+      "tiers": [["T1", "主体与厂家身份", "", ""], ["T2", "产品与生产能力", "", ""], ["T3", "资质与合规", "", ""], ["T4", "经营与商业条款", "", ""]],
+      "dims": {
+        "producer": {"v": "", "ev": "M:E10"},
+        "location": {"v": "", "ev": "M:E10"},
+        "capacity": {"v": "", "ev": "S:E11"},
+        "match": {"v": "", "ev": "S:E11"},
+        "licence": {"v": "", "ev": "U"},
+        "risk": {"v": "", "lvl": "mid", "ev": "M:E12"},
+        "event": {"v": "", "lvl": "none", "ev": "U"},
+        "custom_1": {"v": "", "ev": "U"},
+        "custom_2": {"v": "", "ev": "U"}
+      },
+      "certs": [],
+      "quote": {
+        "price": {"status": "pending"}, "tax": {"status": "pending"}, "freight": {"status": "pending"},
+        "package": {"status": "pending"}, "payment": {"status": "pending"}, "delivery": {"status": "pending"},
+        "moq": {"status": "pending"}, "validity": {"status": "pending"}
+      }
+    }
+  ],
+
+  "dimensions": [
+    {"key": "producer", "type": "producer", "label": "是否真实生产厂家及核验证据", "hint": "生产主体、合同主体、许可持有人是否同一法人"},
+    {"key": "location", "type": "location", "label": "生产基地所在地及与收货地距离", "hint": "距离只是起点，运费与损耗口径才决定到厂价"},
+    {"key": "capacity", "type": "capacity", "label": "公开产能、企业规模及生产能力", "hint": "设计产能 × 利用率 = 产量，三个数能否自洽"},
+    {"key": "match", "type": "match", "label": "主营产品与目标产品匹配度", "hint": "目标产品在对方营收中的占比与工艺路线匹配度"},
+    {"key": "licence", "type": "licence", "label": "经营资质与许可证照", "hint": "排污许可 + 行业专项许可 + 体系认证的有效期"},
+    {"key": "risk", "type": "risk", "label": "经营与司法风险、经营异常", "hint": "“无重大诉讼”是披露口径，“查不到”是检索口径", "lvl_defs": ["高", "中", "低", "未取得"]},
+    {"key": "event", "type": "event", "label": "近期负面事件（近 12 个月）", "hint": "上市与非上市企业的可查性差异必须在结论里体现", "lvl_defs": ["高", "中", "低", "未发现"]},
+    {"key": "custom_1", "type": "custom", "label": "【自定义】<维度名>", "hint": "<为什么比较这个维度>"},
+    {"key": "custom_2", "type": "custom", "label": "【自定义】<维度名>", "hint": "<为什么比较这个维度>"},
+    {"key": "terms", "type": "terms", "label": "商业条款（价格、含税口径、运费、包装、账期、交期、MOQ、有效期）", "hint": "未取得报价的字段留空并转成问询，不做估算"}
+  ],
+
+  "terms": [
+    {"key": "price", "label": "含税单价", "unit": "元/吨"},
+    {"key": "tax", "label": "含税口径"},
+    {"key": "freight", "label": "运费承担"},
+    {"key": "package", "label": "包装方式"},
+    {"key": "payment", "label": "账期 / 结算"},
+    {"key": "delivery", "label": "交期与发货节奏"},
+    {"key": "moq", "label": "最小起订量"},
+    {"key": "validity", "label": "报价有效期"}
+  ],
+
+  "evidence": [
+    {"id": "E01", "name": "<文件名>", "source": "<来源站点>", "date": "YYYY-MM-DD", "type": "上市公司年报",
+     "url": "https://", "note": "<这条证据支撑了哪些事实，越具体越好>"},
+    {"id": "E02", "name": "<企业官网页面>", "source": "<企业域名>", "date": "YYYY-MM-DD", "type": "企业官网（自述）",
+     "url": "https://", "note": "<自述内容>"},
+    {"id": "E03", "name": "<政府公示>", "source": "<发文机关>", "date": "YYYY-MM-DD", "type": "环评公示",
+     "url": "https://", "note": "<公示内容>"},
+    {"id": "U", "name": "【未取得】公开渠道未检索到的信息", "source": "本轮检索范围", "date": "YYYY-MM-DD",
+     "type": "缺口登记", "url": "#", "note": "凡标 U 处表示截止数据日在公开渠道未取得一手材料，不代表不存在，已转入问询清单。"}
+  ],
+
+  "quotes": {
+    "status": "none",
+    "received": [],
+    "status_note": "本次未取得任何报价",
+    "note": "若后续上传报价单，按 references/quote-normalization.md 统一口径后再填入各供应商的 quote 字段。"
+  },
+
+  "intel": [
+    {"date": "YYYY-MM", "tag": "行业/经营/股权/法律/产能", "supplier": "A", "text": "<事件>", "evid": "V:E01"}
+  ],
+
+  "intel_reach": {
+    "ids": ["E01"],
+    "unselected": ["<本轮没查成的渠道，说明原因>"],
+    "note": "<检索边界说明>"
+  },
+
+  "findings": [
+    {"id": "F1", "dim": "capacity", "title": "<一句话结论>", "level": "high", "evid": "V:E01",
+     "text": "<为什么不同 + 对采购意味着什么 + 下一步核什么>"}
+  ],
+
+  "next_actions": [
+    {"no": 1, "action": "<动作>", "owner": "<责任部门>", "due": "T+3", "target": "全部"}
+  ],
+
+  "questions": {
+    "A": [
+      {"dim": "producer", "priority": "高", "q": "<问题>", "why": "<为什么要问，引用证据号>"}
+    ],
+    "B": [],
+    "C": []
+  }
+}

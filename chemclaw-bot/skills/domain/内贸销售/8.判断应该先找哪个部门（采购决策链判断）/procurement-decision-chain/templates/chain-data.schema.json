@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "采购决策链 chain.json",
+  "description": "procurement-decision-chain skill 的结构化分析结果；build_deliverables.py 消费此文件生成 Excel + HTML",
+  "type": "object",
+  "required": ["meta", "roles"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["product", "company"],
+      "properties": {
+        "product": { "type": "string", "description": "产品（含规格/包装/价格条款）" },
+        "company": { "type": "string", "description": "目标企业全称（含股票代码如有）" },
+        "short_name": { "type": "string", "description": "简称，用于文件名与页面标题" },
+        "company_type": { "type": "string", "description": "民营/国企/外资/集团子公司/上市与否" },
+        "industry": { "type": "string" },
+        "use": { "type": "string", "description": "用途/工序" },
+        "scenario": { "type": "string", "description": "新导入/替换现有供应商/常规补充采购" },
+        "date": { "type": "string" },
+        "note": { "type": "string" },
+        "file_stem": { "type": "string", "description": "可选：输出文件名主干，默认自动生成" }
+      }
+    },
+    "company_profile": {
+      "type": "array",
+      "description": "企业画像：每条=维度+事实+来源+置信",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "fact"],
+        "properties": {
+          "dimension": { "type": "string" },
+          "fact": { "type": "string" },
+          "source": { "type": "string", "description": "URL" },
+          "source_title": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["证据", "估算", "经验推断", "未核实"] }
+        }
+      }
+    },
+    "logic_chain": {
+      "type": "array",
+      "description": "六步判断逻辑：每步=从什么证据推到什么结论",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step": { "type": "integer" },
+          "from": { "type": "string", "description": "证据/前提" },
+          "to": { "type": "string", "description": "结论" },
+          "basis": { "type": "string", "description": "证据/估算/经验推断/未核实" }
+        }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "description": "部门卡：角色链上的每个角色",
+      "items": {
+        "type": "object",
+        "required": ["dept"],
+        "properties": {
+          "id": { "type": "string", "description": "编号如 A/B/C" },
+          "dept": { "type": "string", "description": "部门" },
+          "title": { "type": "string", "description": "典型岗位" },
+          "duties": { "type": "array", "items": { "type": "string", "enum": ["发起", "评估", "否决", "拍板", "执行"] } },
+          "is_entry": { "type": "boolean", "description": "是否第一入口" },
+          "concerns": { "type": "array", "items": { "type": "string" }, "description": "最关心的三个问题" },
+          "opener": { "type": "string", "description": "先聊什么" },
+          "questions": { "type": "array", "items": { "type": "string" }, "description": "最值得确认的问题" },
+          "basis": { "type": "string", "description": "哪些是证据、哪些是推断" },
+          "public_contacts": {
+            "type": "array",
+            "description": "仅企业公开渠道；禁止私人联系方式",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": { "type": "string", "description": "官网/投资者热线/总机/公开招聘邮箱/地址" },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "description": "第一入口结论",
+      "properties": {
+        "first": { "type": "string" },
+        "why": { "type": "string" },
+        "second_path": { "type": "string" }
+      }
+    },
+    "blocking_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "point": { "type": "string" },
+          "owner": { "type": "string", "description": "卡在谁" },
+          "nature": { "type": "string", "description": "证据/估算/经验推断/未核实" },
+          "workaround": { "type": "string", "description": "破解/窗口" }
+        }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "description": "客户类型变化时决策链怎么变",
+      "items": {
+        "type": "object",
+        "properties": {
+          "customer_type": { "type": "string" },
+          "change": { "type": "string" },
+          "first_entry": { "type": "string" }
+        }
+      }
+    },
+    "evidence_list": { "type": "array", "items": { "type": "string" } },
+    "inference_list": { "type": "array", "items": { "type": "string" } },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+ "product_chain": "上游产品 → 下游产品（请替换）",
+ "window": {
+  "start": "YYYYMMDD",
+  "end": "YYYYMMDD"
+ },
+ "upstream": {
+  "name": "上游产品名",
+  "series_key": "UP",
+  "spec": "规格（如：国产现货 / CFR中国 / 华东出罐）",
+  "region": "地区",
+  "unit": "元/吨",
+  "tax": "含税",
+  "granularity": "日度评估价（与下游必须同频率）",
+  "source": "来源机构 + 页面",
+  "source_url": "",
+  "series": {
+   "YYYYMMDD": 0.0
+  }
+ },
+ "downstream": {
+  "name": "下游产品名",
+  "series_key": "DN",
+  "spec": "规格",
+  "region": "地区",
+  "unit": "元/吨",
+  "tax": "含税",
+  "granularity": "日度评估价",
+  "source": "来源机构 + 页面",
+  "source_url": "",
+  "series": {
+   "YYYYMMDD": 0.0
+  }
+ },
+ "process": {
+  "route": "工艺路线（如：PX 经空气氧化制 PTA）",
+  "equation": "反应式（如：C8H10 + O2 → C8H6O4）",
+  "verified": false,
+  "note": "核实状态与来源说明；未核实请置 verified=false，报告会自动标红"
+ },
+ "materials": [
+  {
+   "name": "上游产品名（须与 material_series 的键一致）",
+   "unit": 0.0,
+   "low": 0.0,
+   "high": 0.0,
+   "unit_basis": "吨/吨",
+   "source": "单耗来源：工艺说明 / 行业报告 / 企业披露"
+  }
+ ],
+ "material_series": {
+  "上游产品名（矩阵键）": "UP"
+ },
+ "optional_materials": [
+  {
+   "name": "未纳入模型但要披露的辅料",
+   "unit": 0.0,
+   "low": 0.0,
+   "high": 0.0,
+   "status": "缺同期间价格序列，未计入；影响约 X 元/吨"
+  }
+ ],
+ "price_series": {},
+ "params": {
+  "unit_default": 0.0,
+  "spread_definition": "加工价差 = 下游价格 − 单耗 × 上游价格（价差口径，不是利润）",
+  "spread_excludes": [
+   "能源与公用工程",
+   "辅料与催化剂",
+   "人工",
+   "折旧",
+   "财务费用",
+   "检维修",
+   "包装与运费",
+   "库存损益",
+   "副产品收益"
+  ],
+  "not_profit_statement": "PTA 加工费是销售收入除去原料成本，并不是 PTA 的生产利润",
+  "breakpoints": [
+   "YYYYMMDD",
+   "YYYYMMDD"
+  ]
+ },
+ "calibration_anchors": [
+  {
+   "date": "YYYY-MM 或 YYYY-MM-DD 或 A~B",
+   "kind": "monthly_avg | weekly_avg | daily",
+   "reported": 0.0,
+   "source": "公开来源：机构名 + 页面标题"
+  }
+ ]
+}

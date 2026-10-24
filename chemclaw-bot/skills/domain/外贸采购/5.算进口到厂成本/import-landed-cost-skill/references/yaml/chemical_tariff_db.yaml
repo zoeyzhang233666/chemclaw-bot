@@ -1,0 +1,48 @@
+# 常用化工品 2026 税则参考库（机器可读，仅作"候选起点"，不作为最终税率）
+# 使用纪律：
+#   1) 这是"查询起点"库，不是"税率结果"库；每次计算必须按 finance_review 流程重新核验，并在结果中记录核对日期与来源。
+#   2) 未收录的税号一律返回 not_found，调用方必须走"待确认"分支，禁止推断。
+#   3) 增值税率按税目注释判断（一般货物 13%，低税率 9%），不从 8 位税则推。
+# verified_on: 2026-10-20（核对 2026 年进出口税则基线：税委会公告 2025 年第 12 号）
+baseline:
+  year: 2026
+  effective_from: 2026-01-01
+  source_name: 2026年进出口税则（国务院关税税则委员会公告2025年第12号）
+  source_url: https://gss.mof.gov.cn/gzdt/zhengcefabu/202512/t20251231_3981044.htm
+  secondary_url: https://www.zhengdao.ai/tariff/2026/
+  checked_on: 2026-07-15
+products:
+  - hs: "29053100"
+    name: 1,2-乙二醇（MEG）
+    english: Ethylene glycol
+    mfn: 0.055
+    interim: null
+    general: 0.30
+    vat: 0.13
+    export_tax: null
+    agreement_partners: [CL, NZ, CR, IS, AU, MU, RS]
+    note: "协定税率适用国别不含沙特阿拉伯（中国—海合会FTA未生效）。"
+  - hs: "29053200"
+    name: 1,2-丙二醇（PG）
+    english: Propylene glycol
+    mfn: 0.055
+    interim: null
+    general: 0.30
+    vat: 0.13
+    export_tax: null
+    agreement_partners: ["待核验"]
+    note: "参考同章邻位税目结构性税率，使用前必须单独核验。"
+  - hs: "29051100"
+    name: 甲醇
+    english: Methanol
+    mfn: 0.055
+    interim: null
+    general: 0.30
+    vat: 0.13
+    export_tax: null
+    agreement_partners: ["待核验"]
+    note: "候选起点；甲醇存在反倾销/贸易措施历史，使用前须查商务部公告。"
+low_vat_hs:
+  note: "适用 9% 低税率的进口货物（部分农产品/生产资料）需按增值税税目注释判断；清单不在此维护。"
+anti_dumping:
+  note: "反倾销/反补贴/保障措施不在本库维护；必须查商务部公告。默认 0 仅表示'本次未发现'，不等于'不存在'。"

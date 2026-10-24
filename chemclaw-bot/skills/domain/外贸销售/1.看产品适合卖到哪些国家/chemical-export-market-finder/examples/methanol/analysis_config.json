@@ -1,0 +1,42 @@
+{
+  "_instructions": {
+    "case": "Case B - Methanol (HS 290511). Demonstrates the workflow transfers to a different product with only --hs and config changed.",
+    "status": "INPUT SAMPLE ONLY - trade data was NOT fetched for this example, tariffs are all gaps.",
+    "rule_tariff": "status='verified' only for rates fetched live from an official system in this session.",
+    "rule_evidence": "Every industry[] entry must name a real source.",
+    "rule_judgment": "judgments[] are preliminary reads: 'why investigate', never 'confirmed opportunity'."
+  },
+  "product": {
+    "name": "甲醇",
+    "name_en": "Methanol (Methyl Alcohol)",
+    "spec": "优等品, purity >=99.9%",
+    "hs6": "290511",
+    "cas": "67-56-1",
+    "origin_name": "China",
+    "origin_m49": "156",
+    "advantages": ["capacity", "cost"],
+    "certifications": []
+  },
+  "tariffs": [],
+  "industry": [
+    {
+      "item": "下游结构（调查方向，需逐国验证）",
+      "market": "全球",
+      "content": "甲醇主要下游：甲醛与树脂、醋酸、MTO/MTP 烯烃、燃料与二甲醚。各国结构差异极大，必须用该国实际装置核实，不可套用平均值。",
+      "source": "需以具体国家装置与行业报告核实（本样例未取得，故不填具体占比）"
+    },
+    {
+      "item": "非关税壁垒（本产品关键）",
+      "market": "主要进口国",
+      "content": "甲醇属危险化学品，常需危化品登记、GHS 标签、包装与船舶运输资质；非关税壁垒往往比关税更具决定性与时滞。",
+      "source": "需逐国核对海关与危化品监管机构规定"
+    }
+  ],
+  "judgments": [
+    {
+      "tone": "warn",
+      "title": "本样例仅演示 HS 匹配与流程复用",
+      "body": "未取贸易数据、未核验关税，故不提供市场结论。请按 SKILL.md 第 2–5 步执行：fetch_trade.py --hs 290511 → 关税核验 → build_outputs.py → validate_outputs.py。"
+    }
+  ]
+}

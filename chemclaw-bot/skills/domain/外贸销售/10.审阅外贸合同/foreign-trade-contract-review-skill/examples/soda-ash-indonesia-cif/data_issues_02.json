@@ -1,0 +1,401 @@
+{
+  "issues": [
+    {
+      "id": "R-13",
+      "seq": 13,
+      "category": "quality",
+      "severity": "high",
+      "issue_type": "unilateral",
+      "title": "卖方自有实验室出具的检验报告为最终依据，买方无权复检",
+      "title_en": "The seller's own laboratory report is final and binding; the buyer has no inspection right",
+      "anchors": [
+        {
+          "block": "p-article-7-quality-inspection-and-certification-070",
+          "clause": "7.1(A)",
+          "quote": "The Seller shall issue a Certificate of Analysis for each lot. The Certificate of Analysis issued by the Seller's own laboratory shall be final and binding on both Parties."
+        },
+        {
+          "block": "p-article-7-quality-inspection-and-certification-071",
+          "clause": "7.1(B)",
+          "quote": "The Buyer shall have no right to appoint an independent surveyor, to inspect the Goods before loading, or to inspect the loaded cargo at the Port of Loading."
+        }
+      ],
+      "clause_title": "7.1 Pre-shipment inspection",
+      "finding": "自身实验室报告“最终且对双方有约束力”，同时完全剥夺买方委派独立检验人、装船前检验和装船地检验的权利。合同也未指定任何第三方检验机构，未约定取样方法与留存样（retained sample）。",
+      "finding_en": "The seller's own analysis is made final and binding, every independent inspection route is closed, no third-party surveyor is named, and no sampling method or retained sample is established.",
+      "consequence": "本条在商业谈判中极难被买方接受，通常会成为首要争议点；即便约定成立，一旦到港检验结果与卖方报告不符，由于没有第三方留样与取样记录，双方都缺乏可采信的比对基础，卖方也难以自证清白。对卖方而言，缺少独立留样反而在买方发起索赔时处于举证不利地位。",
+      "consequence_en": "The clause is a predictable opening objection and may stall negotiation. More importantly, without a named surveyor, an agreed sampling method or a retained sample, neither side can prove its position if results diverge at destination — including the seller.",
+      "confirm": [
+        "确认本公司是否有既有客户接受的第三方检验安排（如 SGS / BV / Intertek 装船港检验）",
+        "确认检验费用承担方案（装船港检验通常由卖方承担，目的港复检由买方承担）",
+        "约定代表性取样方法、留样数量与留存期限（建议双方各留样 6 个月）",
+        "核实 7.1 与 7.2(A) 的异议期（7 天）在时间上是否足以完成目的港复检"
+      ],
+      "legal_refs": [
+        {
+          "label": "CISG 第 38 条、第 39 条（参照）",
+          "note": "CISG 要求买方在发现或理应发现不符后“合理时间内”通知。本合同排除 CISG，但该“合理时间”标准常被用于评估异议期是否过短。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 621 条（检验期间）",
+          "note": "约定检验期间的，买受人应在期间内通知；但当事人约定的期间过短、不足以完成合理检验的，可能不能产生失权效果。具体须由法律顾问判断。"
+        }
+      ],
+      "suggested_wording": "The Seller shall issue a Certificate of Analysis for each lot, which shall be the basis for payment. The Buyer may, at its own cost, appoint an independent internationally recognised surveyor to inspect and sample the Goods at the Port of Loading before loading, attended by the Seller. A sealed retained sample of each lot shall be taken by the surveyor, split between the Parties and kept for 6 months. Where the independent analysis deviates from the Certificate of Analysis beyond [agreed tolerance], the independent analysis shall prevail.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-14",
+      "seq": 14,
+      "category": "quality",
+      "severity": "high",
+      "issue_type": "unbalanced",
+      "title": "质量异议期仅提单后7个自然日，远短于目的港检验周期",
+      "title_en": "A seven-day claim window from B/L date, shorter than the destination inspection cycle",
+      "anchors": [
+        {
+          "block": "p-article-7-quality-inspection-and-certification-072",
+          "clause": "7.2(A)",
+          "quote": "Any claim by the Buyer in respect of quality, specification, packing or quantity shall be notified to the Seller in writing within 7 (seven) days after the Bill of Lading date. Any claim not notified within that period shall be irrevocably waived and the Buyer shall be deemed to have accepted the Goods in full."
+        }
+      ],
+      "clause_title": "7.2(A) Quality and quantity claims",
+      "finding": "异议期为“提单日后 7 个自然日”，且用“irrevocably waived”设定了完全失权效果。但从天津新港到雅加达的海运航程通常即需 1–3 周（含可能的转运），货物在 7 天内往往尚未抵港，买方客观上不可能完成卸货、取样、送检。",
+      "finding_en": "The seven calendar days run from the B/L date and carry an absolute waiver. Voyage time from Tianjin Xingang to Jakarta normally exceeds seven days, so the goods will typically still be at sea when the window closes.",
+      "consequence": "该条款以时间条件事实上消灭了买方的质量索赔权。对卖方的直接风险不是“条款有利”，而是该条被视为不合理限缩买方权利而在争议中被排除或作扩展解释，届时卖方仍将面对超期索赔，却丧失了以期限抗辩的确定预期。此外，若买方拒收并主张根本违约，7 天期限也无法阻止争议发生。",
+      "consequence_en": "The window effectively extinguishes the quality remedy before the goods arrive. The seller's real exposure is not the clause itself but its likely treatment as an unreasonable limitation, which strips away the seller's only predictable time defence while leaving the underlying dispute intact.",
+      "confirm": [
+        "测算实际航程（天津—雅加达，含转运）天数",
+        "确认买方在印尼侧的取样、送检周期（建议向买方索取其内部质控流程）",
+        "约定合理异议期（通常 15–30 天自到港日或卸货日起算）",
+        "约定隐蔽瑕疵的例外处理（如内在品质缺陷不受异议期限制）"
+      ],
+      "legal_refs": [
+        {
+          "label": "CISG 第 39 条第 1 款（参照）",
+          "note": "CISG 规定买方应在发现或理应发现不符后“合理时间内”通知，最迟不超过实际交货后 2 年。本合同已排除 CISG，且印尼非缔约国，故该条不直接适用，仅作合理性参照。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 621 条、第 622 条",
+          "note": "约定检验期间过短不足以完成检验的，可能被认定为对该期间仅适用于表面瑕疵；隐蔽瑕疵仍可主张。"
+        }
+      ],
+      "suggested_wording": "Any claim in respect of quality, specification or packing shall be notified in writing within 15 days after discharge of the Goods at Jakarta, or within 30 days after the Bill of Lading date, whichever is later, supported by a report of an independent surveyor. Claims in respect of latent defects may be notified within 6 months after the Bill of Lading date. A notice given in this form shall preserve the Buyer's rights without the need for further action.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-15",
+      "seq": 15,
+      "category": "quality",
+      "severity": "high",
+      "issue_type": "ambiguous",
+      "title": "规格可在装运后单方变更，且并入买方“装运前通知的任何其他要求”",
+      "title_en": "The specification may be changed after shipment, and any buyer requirement notified before shipment is incorporated",
+      "anchors": [
+        {
+          "block": "p-article-2-goods-quantity-and-quality-027",
+          "clause": "2.3(A)",
+          "quote": "The Goods shall conform to the specification set out in Annex A, and to any other requirement of the Buyer notified to the Seller before shipment."
+        },
+        {
+          "block": "p-article-2-goods-quantity-and-quality-029",
+          "clause": "2.3(C)",
+          "quote": "The specification in Annex A reflects the Seller's routine production range and may be amended by the Seller at any time after shipment without prior notice where production conditions so require."
+        }
+      ],
+      "clause_title": "2.3 Quality specification",
+      "finding": "两句形成直接冲突：2.3(A) 把“买方在装运前通知的任何其他要求”并入质量标准 —— 这是一个无边界、无形式的开口；2.3(C) 又允许卖方在装运后、无需通知地变更 Annex A 规格。同一份合同内，买方可以事后附加任意要求，卖方也可以事后单方改规格，质量标准因此处于完全不确定状态。",
+      "finding_en": "Clause 2.3(A) imports any buyer requirement notified before shipment — an open, undefined standard — while 2.3(C) lets the seller change Annex A after shipment without notice. Both edges of the quality standard are open at once.",
+      "consequence": "标准不确定意味着“是否合格”无法客观判定。若发生质量争议，买方可以援引其装运前发出的任意一封邮件作为“其他要求”；卖方也可以援引 2.3(C) 主张已变更规格。这种双向不确定性对双方都不利，但卖方作为出口方通常先被索赔，且 12.1 的责任上限仅 5%，一旦仲裁裁决不认可该上限，敞口显著。",
+      "consequence_en": "With the standard open at both ends, conformity becomes indeterminate. Either party can reshape the test after the fact — the buyer through pre-shipment emails, the seller through 2.3(C) — and it is normally the exporter that is sued first.",
+      "confirm": [
+        "取得买方在合同签署后发出的所有书面要求，逐一归档",
+        "确认买方实际使用纯碱的工艺（玻璃、洗涤剂或化工中间体），以核验规格是否匹配",
+        "删除“any other requirement”开口，改为“Annex A 及经双方书面签署确认的技术协议”",
+        "删除 2.3(C) 装运后单方变更权"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 470 条、第 510 条、第 511 条",
+          "note": "质量要求不明确的，按国家标准、行业标准履行；无此类标准的按通常标准或符合合同目的的特定标准履行。存在被推定为一般标准而非买方要求的风险。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 498 条（不利解释）",
+          "note": "对格式条款有两种以上解释的，作不利于提供格式条款一方的解释。若本合同由卖方起草，冲突条款可能被作不利于卖方的解释。"
+        }
+      ],
+      "suggested_wording": "The Goods shall conform to the specification in Annex A only. No other standard, specification or requirement shall form part of this Contract unless set out in a written 'Technical Specification Annex' signed by both Parties before shipment. The specification shall not be amended after shipment.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-16",
+      "seq": 16,
+      "category": "quality",
+      "severity": "medium",
+      "issue_type": "ambiguous",
+      "title": "Annex A 规格表存在方法缺失、标准号不清与限值之间缺少容差",
+      "title_en": "Annex A lacks test methods, has an unreadable method reference and no tolerance between limits",
+      "anchors": [
+        {
+          "block": "tbl-annex-a-product-specification-and-certificate-of-analysis-01",
+          "clause": "Annex A.1",
+          "quote": "Bulk density (tapped)  0.90 to 1.10 g/cm3  ISO 697 (method number partly illegible in the source document)"
+        },
+        {
+          "block": "p-annex-a-product-specification-and-certificate-of-analysis-127",
+          "clause": "Annex A.3",
+          "quote": "No other parameter, limit, tolerance or test method is specified, and no end use or downstream process specification is set out in this Annex."
+        }
+      ],
+      "clause_title": "Annex A.1 / A.3 Specification table",
+      "finding": "规格表中 6 项参数标注“Not stated”测试方法；堆积密度的 ISO 697 方法引用“部分无法辨认”；粒径条款只给了两个筛层限值，未约定筛网精度与震荡时间。Annex A.3 明确承认“未规定其他参数、限值、容差或测试方法”。",
+      "finding_en": "Six parameters carry 'Not stated' methods, the bulk density method reference is partly illegible, the particle-size rows omit sieve precision and sieving duration, and A.3 concedes that no further parameter, limit, tolerance or method is set.",
+      "consequence": "测试方法不同可实现的结果差异显著。例如堆积密度按不同振实条件测定可相差数个百分点；粒径若未约定筛网精度，同一批货可得出不同结果。买方到港复检时，卖方无法以“方法不同”有效抗辩，因为合同本身没有锁定方法。对玻璃、洗涤剂等下游应用，堆积密度与粒径分布直接影响窑炉投料与溶解速度。",
+      "consequence_en": "Different test methods can move results by several percentage points, particularly for tapped bulk density, and unqualified sieving produces different particle-size results on the same lot. The seller cannot answer a destination re-test by pointing to a divergence in method, because the contract never fixes one.",
+      "confirm": [
+        "取得本公司现行 COA 模板，核对其实际使用的测试方法",
+        "确认堆积密度测定条件（振实次数、设备型号、是否按 ISO 697 手振法）",
+        "确认粒径筛网孔径精度与筛分时间（建议引用 ISO 2591-1 / ASTM E11 筛网）",
+        "向买方确认其下游工艺对粒径与堆积密度的实际要求"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 511 条第（一）项",
+          "note": "质量要求不明确时按国家标准、行业标准或通常标准履行。纯碱有 GB/T 210 等标准，但适用性需结合产品等级判断。"
+        },
+        {
+          "label": "印尼 SNI（参照 7.3）",
+          "note": "合同 7.3 仅“提到”SNI 而未纳入具体标准号与版本，不构成有效的质量标准引用。"
+        }
+      ],
+      "suggested_wording": "Annex A shall state, for each parameter, the test method with its full designation and version: Na2CO3 by ISO 740; bulk density by ISO 697; loss on ignition by ISO 746; chloride by ISO 3120; iron by ISO 6353; particle size by sieving under ISO 2591-1 with ASTM E11 sieves, aperture 1.18 mm and 0.180 mm, sieving time 10 minutes. Results shall be determined on a dry basis.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-17",
+      "seq": 17,
+      "category": "claim",
+      "severity": "high",
+      "issue_type": "unbalanced",
+      "title": "买方唯一救济限于降价或换货，且明确排除拒收与间接损失，未与国际货物销售通行规则衔接",
+      "title_en": "The buyer's remedy is limited to price reduction or replacement, excluding rejection and consequential loss",
+      "anchors": [
+        {
+          "block": "p-article-7-quality-inspection-and-certification-073",
+          "clause": "7.2(B)",
+          "quote": "The Buyer's sole remedy for non-conforming Goods shall be a price reduction or replacement of the non-conforming Goods, at the Seller's option. The Buyer shall not be entitled to reject the Goods, to return the Goods, to refuse payment or to claim consequential loss."
+        }
+      ],
+      "clause_title": "7.2(B) Quality and quantity claims",
+      "finding": "将非相符货物的救济限定为降价或换货，且选择权在卖方，同时排除拒收、退货、拒付与间接损失。本条与 5.1(D)（卖方单方延长交期）、12.1（卖方责任上限 5%）、13.2（买方不得解除）叠加后，构成对买方的整体救济缺失。",
+      "finding_en": "Replacement or price reduction at the seller's option is the only remedy, with rejection, return, refusal to pay and consequential loss all excluded. Together with 5.1(D), 12.1 and 13.2, the buyer has no effective exit.",
+      "consequence": "对卖方而言，这种条款组合的现实风险是：买方可能主张构成“根本违约”排除，或主张整个责任限制条款链不可执行，从而一次性推翻 7.2(B)、12.1 与 13.2。换言之，条款越激进，被整体否定后卖方面临的敞口越大。此外，纯碱若存在严重批次缺陷（如 Na2CO3 含量低于限值导致玻璃制品批量报废），买方损失远超 5% 责任上限，此类案件通常不会止于降价。",
+      "consequence_en": "The risk is not that the buyer accepts this, but that a tribunal treats the whole remedial chain as ineffective at once, reopening exposure far beyond the 5% cap. Where a defective lot has caused batch scrapping downstream, the buyer's loss is a multiple of the contract value and will not be settled by a price reduction.",
+      "confirm": [
+        "确认买方在 LOI 或谈判中是否已要求退货权与间接损失赔偿",
+        "评估 5% 上限与潜在下游损失的量级差距（玻璃厂单窑批次产值可能远大于 USD 268,000）",
+        "考虑分层方案：质量不符可降价/换货；根本不符才允许拒收",
+        "确认是否可将间接损失排除，但保留直接损失与售价差额补偿"
+      ],
+      "legal_refs": [
+        {
+          "label": "CISG 第 25 条、第 49 条、第 74 条（参照）",
+          "note": "CISG 体系下买方在卖方根本违约时可宣告合同无效并主张包括利润损失在内的损害赔偿。本合同排除 CISG（且印尼非缔约国），该框架不适用，仅作为判断救济是否显失公平的参照。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 582 条、第 584 条、第 617 条",
+          "note": "标的物不符合质量要求的，买受人可依约定或法定主张违约责任，包括修理、重作、减少价款、赔偿损失等。合同能否以约定排除全部法定救济，需由法律顾问判断。"
+        }
+      ],
+      "suggested_wording": "If the Goods do not conform to Annex A, the Buyer may, at its election and subject to notice under Article 7.2(A): (a) require the Seller to supply replacement Goods at the Seller's cost; or (b) require a price reduction calculated by reference to the degree of non-conformity; or (c) if the non-conformity is fundamental and materially deprives the Buyer of the use of the Goods, reject the affected lot and obtain a refund of the price paid for that lot. Neither Party shall be liable for indirect or consequential loss.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-18",
+      "seq": 18,
+      "category": "claim",
+      "severity": "high",
+      "issue_type": "unbalanced",
+      "title": "卖方责任总上限为发票金额的5%，但隐含保证被全面排除",
+      "title_en": "Seller liability capped at 5% of invoice value while all implied warranties are excluded",
+      "anchors": [
+        {
+          "block": "p-article-12-liability-and-indemnity-098",
+          "clause": "12.1",
+          "quote": "The Seller's aggregate liability under or in connection with this Contract, whether in contract, tort, breach of statutory duty or otherwise, shall not exceed 5% of the invoice value of the Goods concerned."
+        },
+        {
+          "block": "p-article-14-representations-warranties-and-compliance-107",
+          "clause": "14.2",
+          "quote": "The Seller gives no other warranty, express or implied, including any implied warranty of merchantability or of fitness for a particular purpose, all of which are excluded to the fullest extent permitted by law."
+        }
+      ],
+      "clause_title": "12.1 / 14.2 Liability and warranties",
+      "finding": "责任上限为“相关货物发票金额的 5%”，按本合同总额计约 USD 13,400；同时 14.2 排除一切默示保证，仅保留“所有权无瑕疵”一项明示保证 —— 这意味着合同中竟然没有一条明确的产品质量保证条款（warranty of quality），质量标准只体现在 7.3 与 Annex A，而这两处又存在缺失（见 R-16、R-15）。",
+      "finding_en": "Aggregate liability is capped at 5% of invoice value — about USD 13,400 here — and every implied warranty is excluded, leaving good title as the only express warranty. Strikingly, the contract contains no express warranty of quality at all.",
+      "consequence": "责任上限过低的直接后果：单批次严重质量事故（例如 1,000 MT 全部不合格）按合同只能索赔约 USD 13,400，远不足以覆盖买方的实际损失，此类上限极可能被主张为不合理免责。更关键的是，由于缺少明示质量保证条款，卖方在诉讼中反而难以主张“已按约定标准履约”的抗辩 —— 双方都缺少清晰的合同依据。",
+      "consequence_en": "A capped liability of about USD 13,400 against a fully defective 1,000 MT lot is unlikely to be sustained, and the absence of any express quality warranty removes the seller's own clearest defence that it delivered to the agreed standard.",
+      "confirm": [
+        "核算法务可接受的责任上限区间（常见为合同金额 100%，或货值加运费）",
+        "确认是否需要设置上限的例外（如故意、重大过失、人身伤亡、知识产权）",
+        "补充明示质量保证条款，明确保证范围与期限",
+        "确认保险是否可覆盖产品责任（见 R-20）"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 506 条（免责条款无效情形）",
+          "note": "造成对方人身损害的、因故意或重大过失造成对方财产损失的免责条款无效。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 496 条、第 497 条",
+          "note": "不合理免除或减轻提供格式条款一方责任的条款可能无效。5% 上限是否落入该范围需结合谈判情况判断。"
+        }
+      ],
+      "suggested_wording": "The Seller's aggregate liability shall not exceed 100% of the invoice value of the Goods giving rise to the claim, provided that this cap shall not apply to liability for death or personal injury, wilful misconduct or gross negligence, or breach of the warranties of title and compliance with applicable law. The Seller warrants that the Goods shall conform to Annex A at the time of loading.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-19",
+      "seq": 19,
+      "category": "claim",
+      "severity": "medium",
+      "issue_type": "unbalanced",
+      "title": "买方举证责任过重且检验费用一律由买方承担，即使货物确属不合格",
+      "title_en": "The buyer bears a heavy burden of proof and all inspection costs even where the goods are non-conforming",
+      "anchors": [
+        {
+          "block": "p-article-7-quality-inspection-and-certification-074",
+          "clause": "7.2(C)",
+          "quote": "The Buyer bears the burden of proving that any non-conformity existed at the time the Goods were on board, and the cost of any independent inspection, sampling or analysis shall be borne by the Buyer in every case."
+        }
+      ],
+      "clause_title": "7.2(C) Quality and quantity claims",
+      "finding": "要求买方证明不符“在装船时即已存在”，但 7.1(B) 同时禁止买方在装船前或装船地检验。即在举证责任分配给买方的前提下，又排除了买方获取装船时状态证据的唯一途径 —— 逻辑上构成不可能完成的举证。检验费用“in every case”由买方承担，即使结论支持买方。",
+      "finding_en": "The buyer must prove the condition existed on board, while 7.1(B) forbids inspection before loading or at the loading port. The one evidentiary route is closed by the neighbouring clause, and inspection costs fall on the buyer in every case regardless of outcome.",
+      "consequence": "这一组合在争议中几乎必然被挑战。对卖方而言，其风险在于：条款被否定后，举证责任可能回到“货物在装船时符合 Annex A”的一般分配逻辑，而卖方手中除了自己的 COA 之外没有独立证据（无留样、无第三方检验）。因此 R-13 与 R-19 应作为一组一起处理。",
+      "consequence_en": "The pairing is almost certain to be challenged. If it falls, the burden reverts to the ordinary position and the seller is left with its own COA as the only evidence of condition at loading.",
+      "confirm": [
+        "确认可否在装船港安排第三方取样作为共同证据",
+        "约定检验费用由不利方承担（loser pays）或按结论分担",
+        "核实目的港仓储条件（印尼雨季湿度高，纯碱易结块）对货况的影响"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 620 条、第 621 条",
+          "note": "检验期间与通知规则；买受人在合理期间内提出异议即应视为已履行通知义务。"
+        },
+        {
+          "label": "民事诉讼举证责任一般原则",
+          "note": "主张者举证，但合同可通过明确约定调整举证责任；该约定能否对抗“持有证据一方”的举证妨碍规则，需个案判断。"
+        }
+      ],
+      "suggested_wording": "The Buyer bears the burden of proving that any non-conformity existed at the time the Goods were on board. To enable that proof, the Buyer shall be entitled to attend loading and to appoint an independent surveyor at the Port of Loading, and a sealed retained sample shall be kept by both Parties for 6 months. The cost of an independent inspection shall be borne by the Party whose position is not supported by the inspection result.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-20",
+      "seq": 20,
+      "category": "claim",
+      "severity": "high",
+      "issue_type": "unbalanced",
+      "title": "卖方与买方责任不对等：卖方封顶5%，买方无上限且无任何保证",
+      "title_en": "Liability is asymmetric: the seller is capped at 5% while the buyer's liability is unlimited and unsecured",
+      "anchors": [
+        {
+          "block": "p-article-12-liability-and-indemnity-098",
+          "clause": "12.1",
+          "quote": "The Seller's aggregate liability under or in connection with this Contract, whether in contract, tort, breach of statutory duty or otherwise, shall not exceed 5% of the invoice value of the Goods concerned."
+        },
+        {
+          "block": "p-article-12-liability-and-indemnity-100",
+          "clause": "12.2",
+          "quote": "The Buyer's liability to the Seller is unlimited. The Buyer shall indemnify the Seller in full against all losses, costs and expenses arising from the Buyer's breach, including any loss arising from the Buyer's failure to open the Letter of Credit, refusal or failure to take delivery, and any demurrage or detention arising at Jakarta."
+        }
+      ],
+      "clause_title": "12.1 / 12.2 Liability and indemnity",
+      "finding": "12.2 明确“买方责任无限”，与 12.1 的卖方 5% 上限形成极端不对称。买方不提供任何履约保证（无预付定金、无母公司担保、无银行保函），仅有一份信用证 —— 而信用证本身在本合同中尚无生效起点（见 R-01、R-03）。",
+      "finding_en": "The buyer's liability is expressly unlimited while the seller is capped at 5%, and the buyer provides no security at all — no advance payment, no parent guarantee, no bank guarantee — with an L/C that as yet has no effective starting point.",
+      "consequence": "对卖方而言，“买方无限责任”只是纸面权利：印尼买方若未开证或拒收货物，卖方在国内仲裁胜诉后仍需在印尼承认与执行裁决（见 R-30）。缺乏履约担保意味着即使卖方胜诉，可执行财产也可能不存在。条款的不对称还会强化买方在谈判中对其他条款（质量、异议期）的反制要求。",
+      "consequence_en": "Unlimited liability of the buyer is a paper right unless it can be enforced in Indonesia. With no advance payment, guarantee or security, a favourable award may simply be uncollectable — and the asymmetry invites the buyer to push back hard on quality and notice terms.",
+      "confirm": [
+        "确认可否要求 10–30% 预付款作为履约与开证保证",
+        "确认可否要求买方母公司担保或印尼银行保函（Bank Garansi）",
+        "核实买方资信（NIB、NPWP 真实性，是否存在关联交易或涉诉记录）",
+        "评估将责任上限调整为双向对等（如双方均以合同金额为限）"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民法典》第 509 条（诚信与合作义务）",
+          "note": "当事人应遵循诚信原则履行通知、协助等义务；权义严重失衡的合同可能被要求重新平衡。"
+        },
+        {
+          "label": "纽约公约（外国仲裁裁决承认与执行）",
+          "note": "中国企业持 CIETAC 裁决赴印尼执行，需经印尼法院承认程序（见 R-30），时间与结果均具不确定性。"
+        }
+      ],
+      "suggested_wording": "Each Party's liability under this Contract shall be limited to the Contract Value, save for liability arising from wilful misconduct, gross negligence, or breach of the representations in Articles 9.2 and 14.1. The Buyer shall pay to the Seller an advance payment equal to 10% of the Contract Value within 10 Business Days after the Effective Date, which shall be set off against the first invoice under the Letter of Credit, and which shall be forfeited as liquidated damages if the Buyer fails to open the Letter of Credit.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-21",
+      "seq": 21,
+      "category": "claim",
+      "severity": "medium",
+      "issue_type": "unilateral",
+      "title": "买方几乎无权解除合同，且须经仲裁裁决确认",
+      "title_en": "The buyer may terminate only where a final arbitral award says so",
+      "anchors": [
+        {
+          "block": "p-article-13-termination-and-suspension-103",
+          "clause": "13.2",
+          "quote": "The Buyer may terminate this Contract only where a final arbitral award has so determined."
+        },
+        {
+          "block": "p-article-13-termination-and-suspension-102",
+          "clause": "13.1",
+          "quote": "The Seller may terminate this Contract immediately by written notice if the Buyer fails to open the Letter of Credit by the date in Article 6.1(B), fails to pay any sum when due, or breaches any other provision of this Contract."
+        }
+      ],
+      "clause_title": "13.1 / 13.2 Termination",
+      "finding": "13.2 规定买方只有在取得终局裁决后才能解除合同 —— 这意味着买方必须先打完整个仲裁程序才能退出，而仲裁前的 60 天协商期（15.2）又会延长该状态。13.1 则赋予卖方即时解除权，包括“任何其他条款的违反”这一宽泛事由。",
+      "finding_en": "The buyer must secure a final award before it can exit, while the seller may terminate immediately for any breach whatsoever. The negotiation period in 15.2 makes the buyer's path even longer.",
+      "consequence": "买方在货物严重不合格或卖方长期不交货时无法及时止损，可能被迫接受后续争议，并由此主张该限制不合理。对卖方而言，这种“买方不能解除、卖方可以即时解除”的极端不对称，正是促使买方要求配平其他条款的主要动因，反而增加谈判难度。",
+      "consequence_en": "A buyer facing seriously non-conforming goods cannot mitigate promptly and will assert the restriction is unreasonable. The asymmetry is itself a negotiation liability for the seller rather than a protection.",
+      "confirm": [
+        "确认买方是否接受“仲裁后方可解除”的安排（多数买方不会接受）",
+        "将 13.2 改为按重大违约（material breach）标准解除，并给补救期（cure period）",
+        "将 13.1 的“任何其他条款违反”限缩为重大违约"
+      ],
+      "legal_refs": [
+        {
+          "label": "CISG 第 49 条、第 64 条、第 72 条（参照）",
+          "note": "CISG 下解除权以根本违约或宽限期届满为前提。本合同排除 CISG，该框架不直接适用。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 563 条（法定解除）",
+          "note": "当事人一方迟延履行主要债务或有其他违约行为致使不能实现合同目的，对方可解除合同。以约定排除法定解除权的效力需由法律顾问判断。"
+        }
+      ],
+      "suggested_wording": "Either Party may terminate this Contract by written notice if the other Party commits a material breach which is not remedied within 30 days after written notice. The Seller may terminate immediately if the Buyer fails to open the Letter of Credit within 15 days after the due date or fails to pay any sum when due.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    }
+  ]
+}

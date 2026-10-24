@@ -1,0 +1,850 @@
+{
+  "engine_version": "1.0.0",
+  "generated_at": "2026-10-20T10:16:46",
+  "inputs_echo": {
+    "_meta": {
+      "case": "中国某聚酯企业从沙特阿拉伯进口工业级乙二醇(MEG)，合同金额 100 万美元，90 天付汇",
+      "prepared_at": "2026-10-20",
+      "simulated_fields": [
+        "quantity",
+        "costs",
+        "sales",
+        "payment.tranches 中的付款天数为演示假设"
+      ],
+      "real_fields": [
+        "rates.*",
+        "history",
+        "hs_code",
+        "tax_rates"
+      ]
+    },
+    "case_name": "MEG_沙特_100万美元_90天付汇",
+    "direction": "IMPORT_PAYMENT",
+    "foreign_currency": "USD",
+    "local_currency": "CNY",
+    "pair": "USD/CNY",
+    "quote_direction": "FC_CNY",
+    "amount_fc": 1000000,
+    "product": "工业级乙二醇（MEG, Monoethylene Glycol），聚酯级 ≥99.9%",
+    "hs_code": "2905310000",
+    "origin": "沙特阿拉伯（Jubail / Al Jubail）",
+    "incoterm": "CFR 中国华东主港",
+    "quantity": 1136.4,
+    "quantity_note": "按 100 万美元 ÷ 880 美元/吨（MEGlobal 2026年11月 ACP，CFR 亚洲主港）= 1136.4 吨推算，用于单位成本换算；实际提单数量以合同为准。",
+    "rates": {
+      "market": 6.6807,
+      "market_date": "2026-10-19",
+      "pboc": 6.72,
+      "pboc_date": "2026-10-20 09:15",
+      "bank": 6.7435,
+      "bank_date": "2026-10-20",
+      "customs": 6.72,
+      "customs_date": "2026-09-16",
+      "source": {
+        "market": "ECB 欧元参考汇率经 EUR/USD 交叉折算（Frankfurter API），2026-10-19",
+        "pboc": "中国外汇交易中心 CFETS 人民币汇率中间价 ccpr.json（人民银行授权），2026-10-20 09:15",
+        "bank": "DEMO：以 CFETS 中间价 6.7200 为基准 +35bp 模拟的银行现汇卖出价（银行实盘须由用户提供）",
+        "customs": "DEMO：按海关总署令第272号第十三条，取 2026 年 9 月第三个星期三（9/16）CFETS 中间价；实际值须查海关每月公布数据"
+      }
+    },
+    "budget_rate": 6.8,
+    "costs": {
+      "freight_fc": 0,
+      "insurance_fc": 0,
+      "other_fc": 0,
+      "cny_freight": 0,
+      "cny_port": 38000,
+      "cny_customs_agent": 12000,
+      "cny_inland": 26000,
+      "cny_storage": 9000,
+      "cny_bank_fee": 6800,
+      "cny_other": 0,
+      "duty_rate": 5.5,
+      "cdc_rate": 0,
+      "vat_rate": 13,
+      "vat_mode": "deductible"
+    },
+    "sales": {
+      "price_cny": 7600,
+      "price_note": "【模拟教学值】设定为 7,600 元/吨（含税）。同期华东主流现货为 5,722 元/吨（同花顺 iFinD，2026-10-14），本值显著高于市场价，仅用于演示“毛利随汇率变动 + 零毛利/5%毛利盈亏平衡汇率落在历史区间内”的机理；真实测算须替换为企业实际销售合同价。",
+      "other_cost_cny_unit": 260,
+      "other_cost_note": "【模拟值】仓储、销售费用、资金占用等非汇率相关单位成本，须按企业实际替换。",
+      "revenue_basis": "tax_included",
+      "target_margins_pct": [
+        0,
+        5,
+        10
+      ]
+    },
+    "payment": {
+      "payment_date": "2027-01-18",
+      "cash_days": 0,
+      "scenario_pct": [
+        0,
+        1,
+        3,
+        5,
+        -1,
+        -3,
+        -5
+      ],
+      "tranches": [
+        {
+          "name": "预付款/T-T 30%（签约后 30 天）",
+          "pct": 0.3,
+          "days": -60
+        },
+        {
+          "name": "装运前尾款 70%（装船后 90 天）",
+          "pct": 0.7,
+          "days": 0
+        }
+      ]
+    },
+    "sensitivity": {
+      "points": [
+        -5,
+        -3,
+        -1,
+        0,
+        1,
+        3,
+        5
+      ]
+    },
+    "history_windows": [
+      1,
+      3,
+      5
+    ]
+  },
+  "missing": [],
+  "warnings": [],
+  "quote_direction": {
+    "direction": "FC_CNY",
+    "label": "1 单位外币 = x 人民币（CNY per FC）",
+    "pair": "USD/CNY",
+    "notes": []
+  },
+  "rates": {
+    "market": 6.6807,
+    "pboc": 6.72,
+    "bank": 6.7435,
+    "customs": 6.72,
+    "market_date": "2026-10-19",
+    "pboc_date": "2026-10-20 09:15",
+    "bank_date": "2026-10-20",
+    "customs_date": "2026-09-16",
+    "source": {
+      "market": "ECB 欧元参考汇率经 EUR/USD 交叉折算（Frankfurter API），2026-10-19",
+      "pboc": "中国外汇交易中心 CFETS 人民币汇率中间价 ccpr.json（人民银行授权），2026-10-20 09:15",
+      "bank": "DEMO：以 CFETS 中间价 6.7200 为基准 +35bp 模拟的银行现汇卖出价（银行实盘须由用户提供）",
+      "customs": "DEMO：按海关总署令第272号第十三条，取 2026 年 9 月第三个星期三（9/16）CFETS 中间价；实际值须查海关每月公布数据"
+    },
+    "bank_premium_bp_vs_pboc": 34.97,
+    "bank_premium_bp_vs_market": 94.0
+  },
+  "basis": {
+    "name": "bank",
+    "rate": 6.7435,
+    "note": "基准情景优先使用银行实际购汇价（进口付汇真实成交价）；未提供则退用中间价，再退用市场汇率。"
+  },
+  "payment": {
+    "amount_fc": 1000000.0,
+    "currency": "USD",
+    "base_rate": 6.7435,
+    "base_cny": 6743500.0,
+    "by_quote_basis": {
+      "all": {
+        "market": 6680700.0,
+        "pboc": 6720000.0,
+        "bank": 6743500.0
+      }
+    }
+  },
+  "sensitivity_payment": [
+    {
+      "pct": -5.0,
+      "rate": 6.406325,
+      "cny": 6406325.0,
+      "delta_cny": -337175.0,
+      "delta_pct": -5.0
+    },
+    {
+      "pct": -3.0,
+      "rate": 6.541195,
+      "cny": 6541195.0,
+      "delta_cny": -202305.0,
+      "delta_pct": -3.0
+    },
+    {
+      "pct": -1.0,
+      "rate": 6.676065,
+      "cny": 6676065.0,
+      "delta_cny": -67435.0,
+      "delta_pct": -1.0
+    },
+    {
+      "pct": 0.0,
+      "rate": 6.7435,
+      "cny": 6743500.0,
+      "delta_cny": 0.0,
+      "delta_pct": 0.0
+    },
+    {
+      "pct": 1.0,
+      "rate": 6.810935,
+      "cny": 6810935.0,
+      "delta_cny": 67435.0,
+      "delta_pct": 1.0
+    },
+    {
+      "pct": 3.0,
+      "rate": 6.945805,
+      "cny": 6945805.0,
+      "delta_cny": 202305.0,
+      "delta_pct": 3.0
+    },
+    {
+      "pct": 5.0,
+      "rate": 7.080675,
+      "cny": 7080675.0,
+      "delta_cny": 337175.0,
+      "delta_pct": 5.0
+    }
+  ],
+  "rate_basis_comparison": [
+    {
+      "basis": "market",
+      "label": "市场汇率",
+      "rate": 6.6807,
+      "date": "2026-10-19",
+      "cny": 6680700.0,
+      "delta_vs_basis_cny": -62800.0
+    },
+    {
+      "basis": "pboc",
+      "label": "人民币汇率中间价",
+      "rate": 6.72,
+      "date": "2026-10-20 09:15",
+      "cny": 6720000.0,
+      "delta_vs_basis_cny": -23500.0
+    },
+    {
+      "basis": "bank",
+      "label": "银行实际购汇价",
+      "rate": 6.7435,
+      "date": "2026-10-20",
+      "cny": 6743500.0,
+      "delta_vs_basis_cny": 0.0
+    },
+    {
+      "basis": "customs",
+      "label": "海关计征汇率",
+      "rate": 6.72,
+      "date": "2026-09-16",
+      "cny": 6720000.0,
+      "delta_vs_basis_cny": -23500.0
+    }
+  ],
+  "landed_cost": {
+    "rate_used": 6.7435,
+    "customs_rate_used": 6.72,
+    "customs_rate_fallback": false,
+    "fob_cny": 6743500.0,
+    "international_freight_cny": 0.0,
+    "insurance_cny": 0.0,
+    "other_fx_fees_cny": 0.0,
+    "dutiable_value_cny": 6720000.0,
+    "duty_cny": 369600.0,
+    "consumption_tax_cny": 0.0,
+    "vat_base_cny": 7089600.0,
+    "vat_cny": 921648.0,
+    "vat_in_cost": 0.0,
+    "vat_mode": "deductible",
+    "non_fx_cny": 91800.0,
+    "landed_cost_cny": 7204900.0,
+    "landed_unit_cny": 6340.11,
+    "fob_unit_cny": 5934.09,
+    "fx_linked_cny": 7113100.0,
+    "fx_share": 98.7259
+  },
+  "sensitivity_landed": [
+    {
+      "pct": -5.0,
+      "rate": 6.406325,
+      "fob_cny": 6406325.0,
+      "duty_cny": 351120.0,
+      "vat_cny": 875565.6,
+      "landed_cost_cny": 6849245.0,
+      "delta_cny": -355655.0,
+      "delta_pct": -4.9363,
+      "landed_unit_cny": 6027.14
+    },
+    {
+      "pct": -3.0,
+      "rate": 6.541195,
+      "fob_cny": 6541195.0,
+      "duty_cny": 358512.0,
+      "vat_cny": 893998.56,
+      "landed_cost_cny": 6991507.0,
+      "delta_cny": -213393.0,
+      "delta_pct": -2.9618,
+      "landed_unit_cny": 6152.33
+    },
+    {
+      "pct": -1.0,
+      "rate": 6.676065,
+      "fob_cny": 6676065.0,
+      "duty_cny": 365904.0,
+      "vat_cny": 912431.52,
+      "landed_cost_cny": 7133769.0,
+      "delta_cny": -71131.0,
+      "delta_pct": -0.9873,
+      "landed_unit_cny": 6277.52
+    },
+    {
+      "pct": 0.0,
+      "rate": 6.7435,
+      "fob_cny": 6743500.0,
+      "duty_cny": 369600.0,
+      "vat_cny": 921648.0,
+      "landed_cost_cny": 7204900.0,
+      "delta_cny": 0.0,
+      "delta_pct": 0.0,
+      "landed_unit_cny": 6340.11
+    },
+    {
+      "pct": 1.0,
+      "rate": 6.810935,
+      "fob_cny": 6810935.0,
+      "duty_cny": 373296.0,
+      "vat_cny": 930864.48,
+      "landed_cost_cny": 7276031.0,
+      "delta_cny": 71131.0,
+      "delta_pct": 0.9873,
+      "landed_unit_cny": 6402.7
+    },
+    {
+      "pct": 3.0,
+      "rate": 6.945805,
+      "fob_cny": 6945805.0,
+      "duty_cny": 380688.0,
+      "vat_cny": 949297.44,
+      "landed_cost_cny": 7418293.0,
+      "delta_cny": 213393.0,
+      "delta_pct": 2.9618,
+      "landed_unit_cny": 6527.89
+    },
+    {
+      "pct": 5.0,
+      "rate": 7.080675,
+      "fob_cny": 7080675.0,
+      "duty_cny": 388080.0,
+      "vat_cny": 967730.4,
+      "landed_cost_cny": 7560555.0,
+      "delta_cny": 355655.0,
+      "delta_pct": 4.9363,
+      "landed_unit_cny": 6653.08
+    }
+  ],
+  "tax_detail": {
+    "duty_rate_pct": 5.5,
+    "vat_rate_pct": 13.0,
+    "vat_mode": "deductible",
+    "vat_note": "增值税进项税额可抵扣/留抵，不计入人民币到厂成本"
+  },
+  "gross_margin": {
+    "revenue_cny": 7643044.25,
+    "revenue_unit_cny": 6725.6637,
+    "total_cost_cny": 7500364.0,
+    "gross_profit_cny": 142680.25,
+    "gross_margin_pct": 1.8668,
+    "cost_per_unit_cny": 6600.11
+  },
+  "gross_margin_sensitivity": [
+    {
+      "pct": -5.0,
+      "rate": 6.406325,
+      "landed_cost_cny": 6849245.0,
+      "gross_profit_cny": 498335.25,
+      "gross_margin_pct": 6.5201
+    },
+    {
+      "pct": -3.0,
+      "rate": 6.541195,
+      "landed_cost_cny": 6991507.0,
+      "gross_profit_cny": 356073.25,
+      "gross_margin_pct": 4.6588
+    },
+    {
+      "pct": -1.0,
+      "rate": 6.676065,
+      "landed_cost_cny": 7133769.0,
+      "gross_profit_cny": 213811.25,
+      "gross_margin_pct": 2.7975
+    },
+    {
+      "pct": 0.0,
+      "rate": 6.7435,
+      "landed_cost_cny": 7204900.0,
+      "gross_profit_cny": 142680.25,
+      "gross_margin_pct": 1.8668
+    },
+    {
+      "pct": 1.0,
+      "rate": 6.810935,
+      "landed_cost_cny": 7276031.0,
+      "gross_profit_cny": 71549.25,
+      "gross_margin_pct": 0.9361
+    },
+    {
+      "pct": 3.0,
+      "rate": 6.945805,
+      "landed_cost_cny": 7418293.0,
+      "gross_profit_cny": -70712.75,
+      "gross_margin_pct": -0.9252
+    },
+    {
+      "pct": 5.0,
+      "rate": 7.080675,
+      "landed_cost_cny": 7560555.0,
+      "gross_profit_cny": -212974.75,
+      "gross_margin_pct": -2.7865
+    }
+  ],
+  "breakeven": [
+    {
+      "feasible": true,
+      "applicable": true,
+      "target_margin_pct": 0.0,
+      "base_margin_pct": 5.7326,
+      "lambda": 1.061597,
+      "breakeven_rate": 7.158878,
+      "rate_move_pct": 6.1597,
+      "headroom_cny": 438144.25,
+      "formula": "λ* = [R0·(1−m) − NF] / FX0 ; 汇率* = 基准汇率 × λ*",
+      "base_landed_cny": 7204900.0,
+      "fx_linked_cny": 7113100.0,
+      "non_fx_cost_cny": 91800.0,
+      "base_revenue_cny": 7643044.25
+    },
+    {
+      "feasible": true,
+      "applicable": true,
+      "target_margin_pct": 5.0,
+      "base_margin_pct": 5.7326,
+      "lambda": 1.007872,
+      "breakeven_rate": 6.796583,
+      "rate_move_pct": 0.7872,
+      "headroom_cny": 55992.04,
+      "formula": "λ* = [R0·(1−m) − NF] / FX0 ; 汇率* = 基准汇率 × λ*",
+      "base_landed_cny": 7204900.0,
+      "fx_linked_cny": 7113100.0,
+      "non_fx_cost_cny": 91800.0,
+      "base_revenue_cny": 7643044.25
+    },
+    {
+      "feasible": false,
+      "applicable": false,
+      "reason": "基准情景毛利率 5.73% 已低于目标 10%，汇率即使走弱也无法达到该目标毛利；盈亏平衡汇率不适用。",
+      "target_margin_pct": 10.0,
+      "base_margin_pct": 5.7326,
+      "reference_rate": 6.434287,
+      "reference_move_pct": -4.5853
+    }
+  ],
+  "budget_rate_scenario": {
+    "budget_rate": 6.8,
+    "move_vs_basis_pct": 0.8378,
+    "landed_cost_cny": 7264496.67,
+    "gross_profit_cny": 83083.58,
+    "gross_margin_pct": 1.087,
+    "delta_profit_cny": -59596.67
+  },
+  "tranches": {
+    "contract_fc": 1000000.0,
+    "payment_date": "2027-01-18",
+    "scenarios": [
+      {
+        "pct": 0.0,
+        "rate": 6.7435,
+        "tranches": [
+          {
+            "name": "预付款/T-T 30%（签约后 30 天）",
+            "pct": 0.3,
+            "days": -60,
+            "amount_fc": 300000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.7435,
+            "base_rate": 6.7435,
+            "payment_date": "2026-11-19",
+            "settlement_date": "2026-11-19",
+            "scenario_cny": 2023050.0,
+            "base_cny": 2023050.0,
+            "delta_cny": 0.0
+          },
+          {
+            "name": "装运前尾款 70%（装船后 90 天）",
+            "pct": 0.7,
+            "days": 0,
+            "amount_fc": 700000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.7435,
+            "base_rate": 6.7435,
+            "payment_date": "2027-01-18",
+            "settlement_date": "2027-01-18",
+            "scenario_cny": 4720450.0,
+            "base_cny": 4720450.0,
+            "delta_cny": 0.0
+          }
+        ],
+        "total": {
+          "total_pct": 1.0,
+          "pct_ok": true,
+          "base_total_cny": 6743500.0,
+          "scenario_total_cny": 6743500.0,
+          "delta_cny": 0.0
+        }
+      },
+      {
+        "pct": 1.0,
+        "rate": 6.810935,
+        "tranches": [
+          {
+            "name": "预付款/T-T 30%（签约后 30 天）",
+            "pct": 0.3,
+            "days": -60,
+            "amount_fc": 300000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.810935,
+            "base_rate": 6.7435,
+            "payment_date": "2026-11-19",
+            "settlement_date": "2026-11-19",
+            "scenario_cny": 2043280.5,
+            "base_cny": 2023050.0,
+            "delta_cny": 20230.5
+          },
+          {
+            "name": "装运前尾款 70%（装船后 90 天）",
+            "pct": 0.7,
+            "days": 0,
+            "amount_fc": 700000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.810935,
+            "base_rate": 6.7435,
+            "payment_date": "2027-01-18",
+            "settlement_date": "2027-01-18",
+            "scenario_cny": 4767654.5,
+            "base_cny": 4720450.0,
+            "delta_cny": 47204.5
+          }
+        ],
+        "total": {
+          "total_pct": 1.0,
+          "pct_ok": true,
+          "base_total_cny": 6743500.0,
+          "scenario_total_cny": 6810935.0,
+          "delta_cny": 67435.0
+        }
+      },
+      {
+        "pct": 3.0,
+        "rate": 6.945805,
+        "tranches": [
+          {
+            "name": "预付款/T-T 30%（签约后 30 天）",
+            "pct": 0.3,
+            "days": -60,
+            "amount_fc": 300000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.945805,
+            "base_rate": 6.7435,
+            "payment_date": "2026-11-19",
+            "settlement_date": "2026-11-19",
+            "scenario_cny": 2083741.5,
+            "base_cny": 2023050.0,
+            "delta_cny": 60691.5
+          },
+          {
+            "name": "装运前尾款 70%（装船后 90 天）",
+            "pct": 0.7,
+            "days": 0,
+            "amount_fc": 700000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.945805,
+            "base_rate": 6.7435,
+            "payment_date": "2027-01-18",
+            "settlement_date": "2027-01-18",
+            "scenario_cny": 4862063.5,
+            "base_cny": 4720450.0,
+            "delta_cny": 141613.5
+          }
+        ],
+        "total": {
+          "total_pct": 1.0,
+          "pct_ok": true,
+          "base_total_cny": 6743500.0,
+          "scenario_total_cny": 6945805.0,
+          "delta_cny": 202305.0
+        }
+      },
+      {
+        "pct": 5.0,
+        "rate": 7.080675,
+        "tranches": [
+          {
+            "name": "预付款/T-T 30%（签约后 30 天）",
+            "pct": 0.3,
+            "days": -60,
+            "amount_fc": 300000.0,
+            "rate_locked": null,
+            "scenario_rate": 7.080675,
+            "base_rate": 6.7435,
+            "payment_date": "2026-11-19",
+            "settlement_date": "2026-11-19",
+            "scenario_cny": 2124202.5,
+            "base_cny": 2023050.0,
+            "delta_cny": 101152.5
+          },
+          {
+            "name": "装运前尾款 70%（装船后 90 天）",
+            "pct": 0.7,
+            "days": 0,
+            "amount_fc": 700000.0,
+            "rate_locked": null,
+            "scenario_rate": 7.080675,
+            "base_rate": 6.7435,
+            "payment_date": "2027-01-18",
+            "settlement_date": "2027-01-18",
+            "scenario_cny": 4956472.5,
+            "base_cny": 4720450.0,
+            "delta_cny": 236022.5
+          }
+        ],
+        "total": {
+          "total_pct": 1.0,
+          "pct_ok": true,
+          "base_total_cny": 6743500.0,
+          "scenario_total_cny": 7080675.0,
+          "delta_cny": 337175.0
+        }
+      },
+      {
+        "pct": -1.0,
+        "rate": 6.676065,
+        "tranches": [
+          {
+            "name": "预付款/T-T 30%（签约后 30 天）",
+            "pct": 0.3,
+            "days": -60,
+            "amount_fc": 300000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.676065,
+            "base_rate": 6.7435,
+            "payment_date": "2026-11-19",
+            "settlement_date": "2026-11-19",
+            "scenario_cny": 2002819.5,
+            "base_cny": 2023050.0,
+            "delta_cny": -20230.5
+          },
+          {
+            "name": "装运前尾款 70%（装船后 90 天）",
+            "pct": 0.7,
+            "days": 0,
+            "amount_fc": 700000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.676065,
+            "base_rate": 6.7435,
+            "payment_date": "2027-01-18",
+            "settlement_date": "2027-01-18",
+            "scenario_cny": 4673245.5,
+            "base_cny": 4720450.0,
+            "delta_cny": -47204.5
+          }
+        ],
+        "total": {
+          "total_pct": 1.0,
+          "pct_ok": true,
+          "base_total_cny": 6743500.0,
+          "scenario_total_cny": 6676065.0,
+          "delta_cny": -67435.0
+        }
+      },
+      {
+        "pct": -3.0,
+        "rate": 6.541195,
+        "tranches": [
+          {
+            "name": "预付款/T-T 30%（签约后 30 天）",
+            "pct": 0.3,
+            "days": -60,
+            "amount_fc": 300000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.541195,
+            "base_rate": 6.7435,
+            "payment_date": "2026-11-19",
+            "settlement_date": "2026-11-19",
+            "scenario_cny": 1962358.5,
+            "base_cny": 2023050.0,
+            "delta_cny": -60691.5
+          },
+          {
+            "name": "装运前尾款 70%（装船后 90 天）",
+            "pct": 0.7,
+            "days": 0,
+            "amount_fc": 700000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.541195,
+            "base_rate": 6.7435,
+            "payment_date": "2027-01-18",
+            "settlement_date": "2027-01-18",
+            "scenario_cny": 4578836.5,
+            "base_cny": 4720450.0,
+            "delta_cny": -141613.5
+          }
+        ],
+        "total": {
+          "total_pct": 1.0,
+          "pct_ok": true,
+          "base_total_cny": 6743500.0,
+          "scenario_total_cny": 6541195.0,
+          "delta_cny": -202305.0
+        }
+      },
+      {
+        "pct": -5.0,
+        "rate": 6.406325,
+        "tranches": [
+          {
+            "name": "预付款/T-T 30%（签约后 30 天）",
+            "pct": 0.3,
+            "days": -60,
+            "amount_fc": 300000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.406325,
+            "base_rate": 6.7435,
+            "payment_date": "2026-11-19",
+            "settlement_date": "2026-11-19",
+            "scenario_cny": 1921897.5,
+            "base_cny": 2023050.0,
+            "delta_cny": -101152.5
+          },
+          {
+            "name": "装运前尾款 70%（装船后 90 天）",
+            "pct": 0.7,
+            "days": 0,
+            "amount_fc": 700000.0,
+            "rate_locked": null,
+            "scenario_rate": 6.406325,
+            "base_rate": 6.7435,
+            "payment_date": "2027-01-18",
+            "settlement_date": "2027-01-18",
+            "scenario_cny": 4484427.5,
+            "base_cny": 4720450.0,
+            "delta_cny": -236022.5
+          }
+        ],
+        "total": {
+          "total_pct": 1.0,
+          "pct_ok": true,
+          "base_total_cny": 6743500.0,
+          "scenario_total_cny": 6406325.0,
+          "delta_cny": -337175.0
+        }
+      }
+    ],
+    "pct_ok": true
+  },
+  "history": {
+    "series": "USDCNY",
+    "windows": {
+      "1y": {
+        "n": 255,
+        "start": "2025-10-20",
+        "end": "2026-10-19",
+        "last": 6.6807,
+        "first": 7.1235,
+        "min": 6.6807,
+        "min_date": "2026-10-19",
+        "max": 7.1271,
+        "max_date": "2025-11-05",
+        "mean": 6.867207,
+        "median": 6.8284,
+        "p10": 6.7105,
+        "p25": 6.76535,
+        "p75": 6.96425,
+        "p90": 7.08748,
+        "stdev": 0.133474,
+        "change_pct": -6.216,
+        "percentile_market": 0.3922,
+        "percentile_pboc": 13.7255,
+        "window_years": 1
+      },
+      "3y": {
+        "n": 763,
+        "start": "2023-10-23",
+        "end": "2026-10-19",
+        "last": 6.6807,
+        "first": 7.3161,
+        "min": 6.6807,
+        "min_date": "2026-10-19",
+        "max": 7.3498,
+        "max_date": "2025-04-09",
+        "mean": 7.091259,
+        "median": 7.1574,
+        "p10": 6.77172,
+        "p25": 6.96425,
+        "p75": 7.2385,
+        "p90": 7.27264,
+        "stdev": 0.185056,
+        "change_pct": -8.685,
+        "percentile_market": 0.1311,
+        "percentile_pboc": 4.5872,
+        "window_years": 3
+      },
+      "5y": {
+        "n": 1280,
+        "start": "2021-10-20",
+        "end": "2026-10-19",
+        "last": 6.6807,
+        "first": 6.3927,
+        "min": 6.3104,
+        "min_date": "2022-02-28",
+        "max": 7.3498,
+        "max_date": "2025-04-09",
+        "mean": 6.984648,
+        "median": 7.1077,
+        "p10": 6.41164,
+        "p25": 6.78245,
+        "p75": 7.206075,
+        "p90": 7.27208,
+        "stdev": 0.283445,
+        "change_pct": 4.5051,
+        "percentile_market": 11.875,
+        "percentile_pboc": 16.5625,
+        "window_years": 5
+      }
+    },
+    "source": {
+      "generated_at": "2026-10-20T09:59:02",
+      "primary_source": "ECB Euro reference rates (via Frankfurter API)",
+      "official_parity_source": "CFETS 人民币汇率中间价 ccpr.json",
+      "official_parity_time": "2026-10-20 9:15",
+      "official_parity": {
+        "USD/CNY": 6.72,
+        "CNY/SAR": 0.5601,
+        "SAR_CNY_implied": 1.785395,
+        "EUR/CNY": 7.5159,
+        "100JPY/CNY": 4.2327,
+        "GBP/CNY": 8.9187
+      },
+      "sar_peg": {
+        "SAR_per_USD": 3.75,
+        "system": "SAMA currency board peg"
+      },
+      "note": "ECB 不发布 SAR 参考汇率，SAR/CNY 由 USD/CNY × 3.75(官方挂钩) 推导；已与 CFETS CNY/SAR 交叉核对。"
+    }
+  },
+  "ok": true
+}

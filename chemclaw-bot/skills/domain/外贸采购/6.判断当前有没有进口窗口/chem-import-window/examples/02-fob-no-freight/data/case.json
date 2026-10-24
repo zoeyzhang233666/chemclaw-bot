@@ -1,0 +1,318 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "case_id": "02-fob-no-freight",
+    "title": "进口甲醇（FOB 中东）· 华南现货：运费缺口下的降级示例",
+    "subtitle": "用于验证 Skill 的「敢说算不出来「能力：术语为 FOB、运价未取得时，页面必须拒绝给出价差，而不是按 0 运费算出一个虚假窗口。",
+    "generated_at": "2026-10-20",
+    "currency_quote": "USD",
+    "currency_local": "CNY",
+    "unit": "元/吨",
+    "unit_usd": "美元/吨",
+    "analyst": "chem-import-window · degradation test",
+    "disclaimer": "本案例为**降级路径演示**，部分输入为占位值，只用于验证「缺口不被填平「的行为，不构成任何实际判断。",
+    "demo_note": "DEGRADATION TEST — 验证三件事：(1) FOB 缺运费 → 拒绝折算；(2) 无历史序列 → 不出曲线；(3) 综合时两个独立缺口同时呈现。"
+  },
+  "asof": {
+    "date": "2026-10-16",
+    "today": "2026-10-20",
+    "label": "基准日（演示用，价格为占位值）",
+    "note": "本案例刻意保留「运费未取得「与「无历史序列「两个缺口，用于验证 Skill 不填坑。"
+  },
+  "product": {
+    "name_cn": "甲醇",
+    "alias": "Methanol / 工业甲醇",
+    "name_en": "Methanol",
+    "cas": "67-56-1",
+    "hs_code_cn": "29051100",
+    "spec": "工业级（含量 ≥99.9%，散装）",
+    "spec_note": "燃料级、精甲醇、副产回收甲醇与本规格不可直接比价。",
+    "unit_note": "元/吨 与 美元/吨。"
+  },
+  "request": {
+    "origin": "中东（FOB 波斯湾）",
+    "origin_detail": "中东是全球甲醇主要出口地，沙特、阿曼、伊朗装置规模大，对华东/华南到岸价影响显著。",
+    "destination": "中国华南 · 广东（东莞/广州罐区）",
+    "volume_ton": 5000,
+    "volume_note": "5,000 吨/船级；华南罐区零单通常 100–500 吨。",
+    "incoterm": "FOB 波斯湾",
+    "delivery_compare": "海外：FOB 波斯湾（未含海运）｜国内：华南罐区自提（ex-tank）",
+    "transit_days": 18
+  },
+  "quote": {
+    "id": "Q-FOB-20261016",
+    "date": "2026-10-16",
+    "price_usd": 268,
+    "premium_usd": 0,
+    "term": "FOB",
+    "port": "FOB 波斯湾（Jubail / Ruwais 等）",
+    "spec": "工业级（含量 ≥99.9%，散装）",
+    "quantity": "5,000 t/船批",
+    "freight_usd": null,
+    "source_id": "S-DEMO-FOB",
+    "source_note": "**占位值**：为演示 FOB 路径而设定的示例报价，非真实采价结果。",
+    "quote_type": "占位示例（非真实报盘）"
+  },
+  "domestic": {
+    "id": "D-CN-SOUTH-20261016",
+    "date": "2026-10-16",
+    "price_cny": 2380,
+    "region": "华南（广东东莞/广州罐区）",
+    "market": "**占位示例**：华南罐区库提价",
+    "delivery": "罐区自提（ex-tank）",
+    "tax_included": true,
+    "spec": "工业级（含量 ≥99.9%，散装）",
+    "quantity": "罐内零单",
+    "source_id": "S-DEMO-DOM",
+    "source_note": "**占位值**：为演示降级路径而设定的示例价格，非真实采价结果。",
+    "tax_basis_note": "含 13% 增值税。"
+  },
+  "fx": {
+    "date": "2026-10-16",
+    "rate": 6.6862,
+    "source_id": "S-FX-ECB",
+    "series_note": "仅 1 天，故本案例无法构建任何时长超过 1 天的历史。",
+    "rows": [
+      { "date": "2026-10-16", "rate": 6.6862, "source_id": "S-FX-ECB" }
+    ]
+  },
+  "freight": {
+    "source": "none",
+    "usd_per_ton": null,
+    "date": null,
+    "basis": "未取得",
+    "quality": "missing",
+    "route": "波斯湾 → 华南（化学品船 / 散装液货）",
+    "why_missing": "中东→华南化学品船实盘运价需向船东/货代询价，公开渠道无逐日披露；本案例刻意不估算，用于验证引擎的拒绝行为。",
+    "reference_values": [
+      {
+        "id": "REF-A",
+        "label": "同区域化学品船运价（欧洲航线）",
+        "value_usd_per_ton": 95,
+        "date": "2026-09-09",
+        "quality": "reference",
+        "note": "航线不同，不能直接代入本案例。",
+        "source_id": "S-FREIGHT-REF"
+      }
+    ]
+  },
+  "insurance": {
+    "rate": null,
+    "basis": "CIF × 110%",
+    "note": "FOB 口径下保险费进入完税价；费率未取得，与运费一并登记缺口。"
+  },
+  "tax": {
+    "hs_code": "29051100",
+    "note": "甲醇税率与是否适用暂定税率需按当年税则逐条核验；本案例为演示用占位值。",
+    "profiles": [
+      {
+        "id": "T-DEMO",
+        "effective_from": "2026-01-01",
+        "duty_rate": 5.5,
+        "duty_basis": "关税 = 关税完税价格 × 关税税率",
+        "duty_hs": "29051100",
+        "vat_rate": 13,
+        "vat_basis": "进口环节增值税 =（关税完税价格 + 关税）× 13%",
+        "provisional": true,
+        "exact": false,
+        "source_id": "S-TARIFF-GENERIC",
+        "source_note": "演示占位税率，未经逐条核验。"
+      }
+    ]
+  },
+  "params": {
+    "vat_recoverable": true,
+    "vat_rec_note": "一般纳税人可抵扣。",
+    "inland_cost_cny": null,
+    "inland_note": "未取得实票，按缺口处理。",
+    "other_cost_cny": 0,
+    "dutiable_adjust_rate": 0,
+    "import_finance_rate": null
+  },
+  "compatibility_manual": [
+    {
+      "id": "M1",
+      "title": "贸易术语：FOB 未含海运",
+      "status": "fail",
+      "detail": "FOB 报价只到装运港，必须补运费与保险才能与国内罐区自提价比价；运价未取得，因此本案例的价差不可计算。"
+    },
+    {
+      "id": "M2",
+      "title": "历史序列：仅 1 天",
+      "status": "fail",
+      "detail": "外汇、海外报价、国内价均只有 1 个点，无法构建任何时长>1 天的价差序列。页面必须显示「数据不足「而不是画一条假曲线。"
+    },
+    {
+      "id": "M3",
+      "title": "规格与日期一致",
+      "status": "pass",
+      "detail": "两端均为工业级 ≥99.9%，同为 2026-10-16。"
+    }
+  ],
+  "quotes_hist": [
+    {
+      "date": "2026-10-16",
+      "price_usd": 268,
+      "term": "FOB",
+      "spec": "工业级（含量 ≥99.9%，散装）",
+      "port": "FOB 波斯湾",
+      "source_id": "S-DEMO-FOB"
+    }
+  ],
+  "domestic_hist": {
+    "series_id": "DOM-CN-SOUTH-DEMO",
+    "region": "华南（广东）",
+    "unit": "元/吨",
+    "tax_included": true,
+    "delivery": "罐区自提（ex-tank）",
+    "spec": "工业级（含量 ≥99.9%，散装）",
+    "rows": [
+      { "date": "2026-10-16", "price_cny": 2380 }
+    ]
+  },
+  "history_gaps": [
+    {
+      "id": "H1",
+      "date": "近 30 天",
+      "kind": "序列缺失",
+      "text": "海外 FOB 报价与华南现货均只有 1 个锚点，且汇率只有基准日 1 天 —— 无法生成 30 天价差序列。"
+    },
+    {
+      "id": "H2",
+      "date": "近 3 个月 / 近 1 年",
+      "kind": "序列缺失",
+      "text": "无历史序列，页面只显示「数据不足「，不插值、不画线。"
+    },
+    {
+      "id": "H3",
+      "date": "全部历史",
+      "kind": "运费缺失",
+      "text": "FOB 口径下每一天都需要当日运价；运价未取得，即使补齐价格序列，历史价差仍然算不出来。"
+    }
+  ],
+  "events": [
+    {
+      "id": "E1",
+      "date": "2026-10-16",
+      "title": "运价缺口：本案例的结论性障碍",
+      "type": "数据缺口",
+      "text": "FOB 报价缺少海运运价，进口到岸成本无法形成，因此价差不可计算。这是「缺口必须显性化「的典型场景。",
+      "source_id": "S-DEMO-FOB"
+    }
+  ],
+  "sim_scenarios": [
+    {
+      "id": "S-SIM-FRT",
+      "label": "模拟情景（仅验证交互：假设运费 45 美元/吨）",
+      "is_simulated": true,
+      "note": "45 美元/吨为**人为设定的模拟值**，用于验证「补上运费后计算器能否正确折算「，不代表任何真实运价。",
+      "overrides": {
+        "freight_usd": 45,
+        "freight_basis": "模拟：波斯湾→华南 45 美元/吨（非真实）",
+        "freight_term": "FOB",
+        "fob_price_usd": 268,
+        "inland_cost_cny": 70,
+        "insurance_rate": 0.2,
+        "duty_rate": 5.5
+      },
+      "why": "验证计算器在补齐运费后能否把 FOB 正确折算到到岸成本，并立刻得到价差。"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G1",
+      "severity": "high",
+      "item": "国际运费（FOB 波斯湾 → 华南）",
+      "impact": "缺运费则 FOB 报价无法折算到到岸成本，价差完全不可计算。这是本案例的**结论性缺口**。",
+      "fix": "向货代/船东询同航线、同船型（化学品船）、同批量（5,000 吨）的实际运价（美元/吨），记录询价日与有效期。",
+      "affects": ["进口成本", "价差", "历史序列"]
+    },
+    {
+      "id": "G2",
+      "severity": "high",
+      "item": "海外报价与国内现货历史序列",
+      "impact": "仅有 1 个锚点，30 天/3 个月/1 年序列均无法生成。",
+      "fix": "接入海外报价日/周序列与华南罐区日度价格序列，至少 22 个交易日才能形成可读的 30 天视图。",
+      "affects": ["历史序列", "异常阶段"]
+    },
+    {
+      "id": "G3",
+      "severity": "medium",
+      "item": "保险费率",
+      "impact": "FOB/CFR 口径下保险费需并入完税价，费率 0.05%–0.3%。",
+      "fix": "取实际投保单费率；无保单则明确写「按 0 计「。",
+      "affects": ["进口成本"]
+    },
+    {
+      "id": "G4",
+      "severity": "medium",
+      "item": "甲醇关税税率未逐条核验",
+      "impact": "税率每差 1 个百分点，进口成本相差约 20–30 元/吨。",
+      "fix": "查当年暂定税率表 2905 章，确认 29051100 是否在列；查反倾销名单。",
+      "affects": ["进口成本"]
+    },
+    {
+      "id": "G5",
+      "severity": "low",
+      "item": "境内费用",
+      "impact": "华南港杂/报关/仓储/短驳通常 50–120 元/吨。",
+      "fix": "取最近一次报关结算单按吨折算。",
+      "affects": ["进口成本"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "S-DEMO-FOB",
+      "publisher": "（占位）案例构造",
+      "title": "降级路径演示：FOB 报价占位值",
+      "date": "2026-10-16",
+      "url": "https://example.com/methanol-fob-demo",
+      "excerpt": "占位：FOB 波斯湾 268 美元/吨（示例值，非真实采价），用于验证缺运费时的拒绝行为。",
+      "tier": "C"
+    },
+    {
+      "id": "S-DEMO-DOM",
+      "publisher": "（占位）案例构造",
+      "title": "降级路径演示：华南现货占位值",
+      "date": "2026-10-16",
+      "url": "https://example.com/methanol-dom-demo",
+      "excerpt": "占位：华南罐区库提 2,380 元/吨含税（示例值，非真实采价）。",
+      "tier": "C"
+    },
+    {
+      "id": "S-FX-ECB",
+      "publisher": "欧洲中央银行（ECB）参照汇率 / 经 Frankfurter 接口",
+      "title": "EUR 参照汇率中的 USD/CNY 折算日值",
+      "date": "2026-10-16",
+      "url": "https://api.frankfurter.app/2026-10-16?from=USD&to=CNY",
+      "excerpt": "2026-10-16 参照汇率 USD/CNY = 6.6862（与 CFETS 中间价存在小幅差异）。",
+      "tier": "A"
+    },
+    {
+      "id": "S-TARIFF-GENERIC",
+      "publisher": "财政部 / 国务院关税税则委员会",
+      "title": "2026 年关税调整方案（口径参考，税率未逐条核验）",
+      "date": "2025-12-01",
+      "url": "https://gss.mof.gov.cn/",
+      "excerpt": "示例引用：2905 章部分税号在暂定税率表内；29051100 是否在列需逐条核对，本案例按 5.5% 占位。",
+      "tier": "A"
+    },
+    {
+      "id": "S-FREIGHT-REF",
+      "publisher": "（占位）行业运价转述",
+      "title": "化学品船运价水平参照（非本航线）",
+      "date": "2026-09-09",
+      "url": "https://example.com/freight-reference",
+      "excerpt": "参照：中东→欧洲化学品船运价约 95 美元/吨（航线不同，不可直接代入）。",
+      "tier": "C"
+    }
+  ],
+  "data_integrity": {
+    "history_anchors_offshore": 1,
+    "history_anchors_domestic": 1,
+    "history_anchors_paired": 0,
+    "one_year_series_available": false,
+    "freight_source_quality": "missing",
+    "statement": "本案例刻意保留「FOB 无运价「与「无历史序列「两个缺口，用于验证 Skill 在无法计算时明确说明原因，而不是给出一个看似合理的数字。"
+  }
+}

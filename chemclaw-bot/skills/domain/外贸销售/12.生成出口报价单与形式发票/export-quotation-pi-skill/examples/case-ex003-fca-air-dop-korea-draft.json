@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "skillVersion": "1.0.0",
+    "dataClass": "SIMULATED — DEMO DATA / 模拟演示数据",
+    "dataClassNote": "All names, contacts, prices and terms are SIMULATED for skill demonstration. Replace with user-confirmed commercial data before any real use. Bank details are placeholders only.",
+    "caseId": "EX-003-DOP-AIR-FCA",
+    "product": "Dioctyl Phthalate (DOP)",
+    "destination": "South Korea",
+    "preparedAt": "2026-10-19",
+    "preparedBy": "export-quotation-pi skill example generator",
+    "scenario": "Air shipment ex-works/airport style quote: FCA Shanghai Pudong airport, DOP packed in 200 L drums; documents for air waybill; sample of 'no unit price confirmed' path (DRAFT with placeholders)."
+  },
+  "docType": "QUOTATION",
+  "state": {
+    "stage": "READY_FOR_REVIEW",
+    "reviewConfirmed": false
+  },
+  "reference": {
+    "text": "QT-SIM-2610-003",
+    "quoteNo": "QT-SIM-2610-003",
+    "quotationRef": "QT-SIM-2610-003 Rev.0",
+    "buyerInquiryRef": "INQ-SIM-KR-8812",
+    "supplierQuoteRef": "",
+    "exporterReference": "TO BE ALLOCATED BEFORE SHIPMENT",
+    "buyerPoNo": ""
+  },
+  "issueDate": "2026-10-19",
+  "seller": {
+    "name": "Hua Bin Chemical Trading Co., Ltd. (SIMULATED DEMO)",
+    "shortName": "SIMULATED CO., LTD.",
+    "logoText": "SIMULATED",
+    "address": "Unit 2108, 21/F, Harbor Commerce Tower, Nanshan District, Shenzhen, Guangdong 518000, China",
+    "country": "China",
+    "contact": "[Simulated Contact Person]",
+    "phone": "+86 000 0000 0000 (Simulated)",
+    "email": "export@example-demo.invalid",
+    "taxId": "USCI SIMULATED-0000000000"
+  },
+  "buyer": {
+    "name": "Hanbit Polymer Air Transport Co. (SIMULATED DEMO)",
+    "address": "12F, Simulated Tower, 100 Demo-daero, Gangnam-gu, Seoul 06236, Republic of Korea",
+    "country": "South Korea",
+    "contact": "[Simulated Buyer Contact]",
+    "email": "buy@example-demo.invalid",
+    "phone": "+82 00 0000 0000 (Simulated)"
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "decimals": 2,
+    "exchangeRate": {
+      "base": "",
+      "rate": "",
+      "asOf": "",
+      "state": "reference",
+      "display": "none"
+    }
+  },
+  "tradeTerm": {
+    "code": "FCA",
+    "version": "2020",
+    "namedPlace": "Shanghai Pudong International Airport, Cargo Terminal 2 (Seller premises: Nanshan, Shenzhen)",
+    "namedPlaceKind": "airport",
+    "transportMode": "AIR",
+    "costAllocation": {
+      "exportPacking": "Seller",
+      "loadingCharges": "Seller",
+      "exportCustoms": "Seller",
+      "originCharges": "Buyer",
+      "mainFreight": "Buyer",
+      "insurance": "Buyer",
+      "destinationCharges": "Buyer",
+      "importCustoms": "Buyer",
+      "unloading": "Buyer"
+    }
+  },
+  "items": [
+    {
+      "id": "L1",
+      "name": "Dioctyl Phthalate (DOP), technical grade",
+      "cas": "117-81-7",
+      "spec": "Ester content 99.5% min.; acidity (as KOH) 0.07 mg/g max.; colour (APHA) 30 max.; water 0.1% max.",
+      "hsCode": "291732",
+      "origin": "China",
+      "unit": "DRUM",
+      "quantity": 40,
+      "unitPrice": 0,
+      "discountPct": 0,
+      "amountState": "confirmed",
+      "amountConfirmedValue": 0.0,
+      "dangerousGoods": {
+        "status": "UNKNOWN",
+        "basis": "DRAFT EXAMPLE - dangerous-goods status NOT verified for this example",
+        "ghsSummary": "[DG status to be verified]"
+      },
+      "packageCount": 200,
+      "packageWeight": {
+        "value": 230,
+        "unit": "KG",
+        "net": 200,
+        "basis": "simulated declaration"
+      }
+    }
+  ],
+  "amountState": "confirmed",
+  "amountConfirmedValue": 0,
+  "charges": [],
+  "packing": {
+    "summary": "200 x 200 L steel drums on pallets (approx. 230 kg gross each), air cargo ready",
+    "terms": "UN-approved packaging requirement to be checked by the shipper",
+    "bagNetKg": null,
+    "shippingUnits": "air cargo"
+  },
+  "totalPackageCount": "200",
+  "totalGrossWeight": "46,000 kg (46.00 MT)",
+  "totalVolume": "",
+  "freight": {
+    "estimatedPol": "PVG - Shanghai Pudong",
+    "estimatedPod": "ICN - Incheon"
+  },
+  "delivery": {
+    "leadTime": "15-20 calendar days after receipt of the confirmed purchase order",
+    "basis": "TIMING FROM PO",
+    "readyDateMode": "relative",
+    "daysAfterReceipt": 15,
+    "partialShipment": "Not allowed",
+    "transhipment": "Direct flight only"
+  },
+  "payment": {
+    "code": "PREPAY",
+    "terms": "30% T/T in advance, 70% against copy of air waybill (simulated terms for demo)",
+    "amountPct": 30,
+    "beneficiary": "[TO BE CONFIRMED]",
+    "beneficiaryNote": "[TO BE CONFIRMED BY SELLER]"
+  },
+  "validity": {
+    "type": "days",
+    "days": 14,
+    "validUntil": ""
+  },
+  "documents": [
+    {
+      "name": "Bill of Lading (3 originals + 3 copies)"
+    },
+    {
+      "name": "Commercial Invoice (1 original + 5 copies)"
+    },
+    {
+      "name": "Packing List (1 original + 3 copies)"
+    },
+    {
+      "name": "Certificate of Origin"
+    },
+    {
+      "name": "Certificate of Analysis (per shipment)"
+    },
+    {
+      "name": "Manufacturer's SDS (current revision)"
+    }
+  ],
+  "bank": {
+    "display": false,
+    "sanitized": true,
+    "detailsConfirmed": false,
+    "bankName": "",
+    "accountName": "",
+    "accountNumber": "",
+    "swift": "",
+    "note": "placeholders only"
+  },
+  "view": {
+    "logo": true,
+    "signature": true,
+    "watermark": true,
+    "accentColor": "#1B3A5B"
+  },
+  "preparation": {
+    "issuedBy": "export-quotation-pi skill v1.0.0",
+    "notice": "SIMULATED DEMO DATA — NOT FOR TRADE USE. DRAFT example — unit price intentionally missing (placeholder path). DG status UNKNOWN blocks formal issue."
+  },
+  "review": {},
+  "fatal": [
+    {
+      "code": "DG_UNVERIFIED_EXAMPLE",
+      "where": "items[0].dangerousGoods",
+      "msg": "Draft example: DOP DG status must be verified against the SDS before any shipping document is issued."
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "slug": "XX客户_XX产品_跟进卡",
+    "title": "客户跟进卡 · 【客户全称】（【产品】）",
+    "doc_title": "客户跟进卡 · 【客户简称】（【产品】）· 【YYYY-MM-DD】",
+    "eyebrow": "内贸销售 · 客户跟进记录整理",
+    "customer_name": "【客户全称】",
+    "customer_suffix": "【产品】·【厂区】",
+    "cover": "【产品牌号】｜【下游行业 / 产线】｜月用约 <b>【N】</b> 吨｜对接：<b>【姓名】</b>（【职务】）",
+    "product": "【产品牌号】",
+    "product_family": "【品类】",
+    "industry": "【下游行业】",
+    "region": "【省市】",
+    "owner": "【我方负责人】",
+    "as_of_date": "2026-10-19",
+    "generated_at": "2026-10-19 10:00",
+    "quote_expiry": "2026-10-31",
+    "source_count": 0,
+    "timeline_note": "来源：【素材清单】　｜　只依据上传素材，客户未提过的需求不补充；无法辨认内容不入表，另见「无法辨认」一节",
+    "subject": "内贸销售客户跟进记录整理",
+    "description": "基于上传素材生成的客户跟进卡。",
+    "keywords": "客户跟进, 时间线, 【产品】",
+    "disclaimer": "本卡仅依据上传素材整理；标注为「待确认」的字段需人工核对后再对外使用。"
+  },
+
+  "headline": "【一句话说清卡在哪 + 今天该做的第一件事，可含 <b>粗体</b>】",
+
+  "profile": [
+    { "label": "客户全称", "value": "【客户全称】", "note": "【简称 / 厂区】" },
+    { "label": "产品品类", "value": "【品类 + 牌号】" },
+    { "label": "规格口径", "value": "【关键指标，含客户内控】" },
+    { "label": "用量", "value": "月均约【N】吨" },
+    { "label": "包装 / 交地", "value": "【包装】【交地方式】" },
+    { "label": "现有供应", "value": "【几家 / 什么价】" },
+    { "label": "采购流程", "value": "【流程要点】" },
+    { "label": "我方最新报价", "value": "【价格 / 有效期】" },
+    { "label": "数据来源", "value": "【素材清单概述】" }
+  ],
+
+  "kpis": [
+    { "label": "Current Stage", "value": "【阶段】", "note": "【依据】", "tone": "info" },
+    { "label": "Stalled", "value": "5 天", "note": "最后一次客户回复：10-14 10:05（示例值，请替换）", "tone": "warn" },
+    { "label": "Core Gap", "value": "【核心缺口】", "note": "【说明】", "tone": "risk" },
+    { "label": "Overdue", "value": "【N】项", "note": "【逾期承诺说明】", "tone": "risk" }
+  ],
+
+  "stage": {
+    "current": "报价谈判",
+    "judgement": "<b>【阶段（子状态）】</b>——【判断依据 1–2 条】；下一步【关键动作】。",
+    "assets": "【我方可复用的筹码】",
+    "risk_note": "<b>停滞口径：</b>以 as_of 【日期】减最后一次客户实质回复（【日期】），计 <b>【N】天</b>。【其他提醒】",
+    "stages": [
+      { "name": "初次接触", "label": "✔ 已完成", "state": "done", "date": "【月日】", "basis": "【依据】", "note": "【点评】" },
+      { "name": "需求确认", "label": "✔ 已完成", "state": "done", "date": "【月日】", "basis": "【依据】", "note": "【点评】" },
+      { "name": "送样", "label": "✔ 已完成", "state": "done", "date": "【月日】", "basis": "【依据】", "note": "【点评】" },
+      { "name": "报价谈判", "label": "● 当前阶段", "state": "current", "date": "【月日】", "basis": "【依据】", "note": "【点评】" },
+      { "name": "合同", "label": "○ 未开始", "state": "todo", "date": "—", "basis": "【前置条件】", "note": "" },
+      { "name": "停滞", "label": "⚠ 风险中", "state": "risk", "date": "【月日】起", "basis": "【依据】", "note": "" }
+    ],
+    "stall": {
+      "days": 5,
+      "reasons": [
+        { "title": "【分型：流程型/价格型/资质型/结构型/我方型】", "detail": "【具体表现，带证据】" }
+      ],
+      "risks": [
+        { "title": "【风险】", "detail": "【说明】" }
+      ]
+    }
+  },
+
+  "blockers": [
+    {
+      "title": "① 【卡点名称】",
+      "status": "【状态】",
+      "status_tone": "risk",
+      "detail": "【客户要求 vs 我方底线 vs 分歧】",
+      "impact": "【影响】",
+      "facts": [
+        { "k": "【维度】", "v": "【数值】" },
+        { "k": "【维度】", "v": "【数值】", "tone": "risk" }
+      ]
+    }
+  ],
+
+  "timeline": [
+    { "no": 1, "date": "2026-09-18", "time": "10:32", "source": "截图1", "actor": "客户", "category": "客户需求",
+      "text": "客户：<q>【原话】</q>", "flag": "【可选角标】" },
+    { "no": 2, "date": "2026-10-12", "time": "09:30", "source": "邮件1", "actor": "我方", "category": "我方承诺",
+      "text": "承诺【具体交付物 + 期限】。" },
+    { "no": 3, "date": "2026-10-14", "time": "10:05", "source": "截图9", "actor": "客户", "category": "客户异议",
+      "text": "客户：<q>【最后一条客户实质回复，原话】</q>", "flag": "最后一条" },
+    { "no": 4, "date": "2026-10-19", "time": "10:00", "source": "系统", "actor": "系统", "category": "系统提醒",
+      "text": "距客户最后回复 <b>【N】天</b>；报价剩 <b>【N】天</b>；待确认项 <b>【N】</b> 条。", "flag": "系统统计" }
+  ],
+
+  "requirements": [
+    { "dimension": "品类 / 用途", "content": "【客户原话或纪要内容】", "source": "截图1", "confidence": "高", "note": "【备注】" }
+  ],
+
+  "requirements_note": "<b>整理纪律：</b>本表只收客户明确说过的条件。客户<b>未提</b>【列出常见但本次没提的项】，故不列入。",
+
+  "objections": [
+    { "no": 1, "content": "【客户异议】", "source": "邮件1", "status": "未解决", "tone": "risk", "given": "【我方已给出】", "advice": "【应对建议】" }
+  ],
+
+  "promises": [
+    { "no": 1, "content": "【我方承诺】", "promised_on": "2026-10-10", "due": "2026-10-14", "source": "邮件1", "status": "逾期", "detail": "【备注】" }
+  ],
+
+  "promises_note": "【逾期提醒 / 履约说明】",
+
+  "pending": [
+    { "no": 1, "content": "【待确认事项】", "type": "交易条款", "owner": "【卡在谁】", "impact": "【影响】", "target": "【建议闭环时间】" }
+  ],
+
+  "pending_note": "<b>注意：</b>【哪条是我方策略空间，不得表述为客户要求】",
+
+  "ai_summary": {
+    "badge": "AI 推断 · 非客户原话",
+    "title": "这笔单子现在到底卡在哪",
+    "paragraphs": [
+      "【第一段：客户是谁、需求是什么、谈到哪一步、卡在哪。要有数字。】",
+      "【第二段：最该警惕的是什么，为什么。】"
+    ],
+    "points": [
+      { "h": "判断", "p": "【成交概率 / 风险判断】" },
+      { "h": "建议顺序", "p": "【先做什么，再做什么】" },
+      { "h": "不要做", "p": "【明确禁止的动作】" }
+    ]
+  },
+
+  "unknowns": [
+    { "no": 1, "source": "【哪份素材】", "issue": "【什么问题】", "need": "【需要用户做什么】", "status": "待补" }
+  ],
+
+  "field_confirm": [
+    { "field": "产品", "value": "【提取值】", "source": "截图1", "confidence": "高", "flag": "—" }
+  ],
+
+  "next_actions": [
+    { "prio": "P0", "when": "今天", "action": "<b>【动作】</b>：【具体说明】", "closure": "【闭环标准】", "link": "wx", "link_label": "润色客户微信", "owner": "【负责人】" },
+    { "prio": "P1", "when": "【日期】", "action": "【动作】", "closure": "【闭环标准】", "link": "call", "link_label": "通话提纲", "owner": "【负责人】" }
+  ],
+
+  "payload": {
+    "wx": { "title": "联动产出 · 微信话术草稿", "draft": "【整段可直接复制的话术】", "note": "润色原则：先兑现承诺、不逼单、不代客户让步。" },
+    "call": { "title": "联动产出 · 通话提纲", "items": ["【开场】", "【探询】", "【收口】"] },
+    "upload": { "title": "联动产出 · 补传清单", "items": ["【缺什么】"], "note": "补传后重新生成，系统自动重算。" }
+  },
+
+  "sources": [
+    { "no": "SOURCE 01", "name": "微信截图 OCR", "detail": "【N】张 · 【起】→【止】", "count": "【N】" }
+  ],
+
+  "rules": [
+    { "title": "只依据上传素材", "desc": "客户没说过的需求一律不补。" },
+    { "title": "每条标注出处", "desc": "事实标注到截图编号 / 邮件序号 / 纪要条目。" },
+    { "title": "无法辨认单独列", "desc": "模糊截图、未转写语音、遮挡、缺失附件单独成节。" },
+    { "title": "AI 摘要单独成节", "desc": "模型推断与四类事实物理分隔。" },
+    { "title": "停滞天数统一口径", "desc": "as_of 减最后一次客户实质回复日期。" },
+    { "title": "策略与事实分离", "desc": "我方内部可让空间不得表述为客户要求。" }
+  ]
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<meta name="description" content="__DESC__">
+<style>/*__CSS__*/</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><span class="dot"></span>品种研究入口 <small>quick product look</small></div>
+    <nav class="navlinks" id="navlinks"></nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero" id="sec-hero">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 class="title" id="htitle"></h1>
+    <p class="subtitle" id="hsub"></p>
+    <div class="purposebar" id="purposebar"></div>
+
+    <div class="infocard">
+      <div class="infocard-head">
+        <h2>① 品种核心信息卡</h2>
+        <span class="pill" id="idconf"></span>
+        <span class="pill" id="specpill"></span>
+        <span style="margin-left:auto" class="src" id="dateline"></span>
+      </div>
+      <div class="infocard-body">
+        <div class="propgrid" id="propgrid"></div>
+        <div class="alias" id="aliasrow"></div>
+        <div class="tagrow" id="tagrow"></div>
+      </div>
+    </div>
+
+    <div class="framebar" id="framebar"></div>
+  </header>
+
+  <section id="sec-chain">
+    <div class="sechead">
+      <span class="num">02</span><h2>产业链骨架 · 可交互图谱</h2>
+      <div class="desc">自上而下：原料 → 工艺 → 本品种 → 下游 → 终端消费。展开/收起查看子节点，点击任意节点打开详情、价格、企业与公开产能。</div>
+    </div>
+    <div class="chaintoolbar">
+      <button class="btn primary" id="btn-expand-all">全部展开</button>
+      <button class="btn" id="btn-collapse-all">全部收起</button>
+      <button class="btn" id="btn-expand-chain">展开到全部层级</button>
+      <button class="btn ghost" id="btn-reset-chain">重置拓扑</button>
+      <span class="spacer"></span>
+      <label class="pill"><input type="checkbox" id="chk-hide-gap" style="margin-right:6px;vertical-align:middle">隐藏无数据节点</label>
+      <label class="pill"><input type="checkbox" id="chk-focus-self" style="margin-right:6px;vertical-align:middle">只看本品种 2 层邻域</label>
+      <button class="btn" id="btn-uncollapse-link">展开链接</button>
+    </div>
+    <div class="legend" id="chainlegend"></div>
+    <div class="chain" id="chain"></div>
+    <div class="crumb" id="chaincrumb"><span>节点面包屑：</span><em style="color:var(--txt-3)">未选择</em></div>
+  </section>
+
+  <section id="sec-bottom">
+    <div class="sechead"><span class="num">03</span><h2>展开研究</h2>
+      <div class="desc">按研究目标切换；点击各卡片的“来源”看原文与日期，标 <em style="color:var(--warn);font-style:normal">典型值/模型值</em> 的为工艺资料或研究判断，非公开统计。</div>
+    </div>
+    <div class="mtab" id="mtab"></div>
+    <div class="mwall" id="mwall"></div>
+  </section>
+
+  <section id="sec-sources">
+    <div class="sechead"><span class="num">04</span><h2>来源清单 · 数据口径 · 缺口声明</h2>
+      <span class="desc">每一条事实都可回溯到机构与日期；未取得的数据标为缺口，不以估算填充</span></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>来源清单</h3>
+        <p class="lead">每条关键事实均挂来源与获取日期；无链接的条目为纸质报告、交易所公告或行业综述。</p>
+        <ol class="srclist" id="srclist"></ol>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>数据缺口声明</h3>
+          <p class="lead">以下内容本知识库未覆盖或公开渠道未取得，按规矩留空，不以推测值填充。</p>
+          <div class="gapgrid" id="gaps"></div>
+        </div>
+        <div class="card">
+          <h3>口径与使用提醒</h3>
+          <div id="caveats"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="fnote" id="footnote"></div>
+    <div id="builtby" class="src"></div>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="dr-head">
+    <div class="dr-kind" id="dr-kind"></div>
+    <h3 id="dr-title"></h3>
+    <div class="dr-sub" id="dr-sub"></div>
+    <button class="dr-close" id="dr-close" title="关闭 (Esc)">✕</button>
+  </div>
+  <div class="dr-tabs" id="dr-tabs"></div>
+  <div class="dr-body" id="dr-body"></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>window.__DATA__ = /*__DATA__*/null;</script>
+<script>/*__ENGINE__*/</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "case_id": "EC-YYYY-NNN",
+    "title": "<产品> 出口 <目的国>（<运输方式>）合规准备",
+    "query": "客户的原始提问原文（保留原话，便于回溯口径）",
+    "prepared_on": "YYYY-MM-DD",
+    "prepared_by": "export-compliance-check skill",
+    "assumption_notice": "下列信息为用户未明确、按常见情形所作的假设，请在确认后修改：浓度=__，包装=__，用途=__，Incoterms=__。",
+    "scope_limits": [
+      "本页为合规准备清单，不构成法律意见，不替代报关行、货运代理、DG 安全顾问、进口方或专业律师的正式判定。",
+      "危险化学品管理属性与危险货物运输分类是两套体系，本页分开判定、分开留痕，不互相推导。",
+      "凡无官方原文支撑或需专业判断的结论，均以「待确认」标注，未作猜测。"
+    ]
+  },
+
+  "inputs": {
+    "product": {
+      "name_cn": "",
+      "name_en": "",
+      "cas": "",
+      "ec": "",
+      "un_cas_index": "",
+      "formula": "",
+      "grade": "",
+      "concentration": "",
+      "composition": "",
+      "stabilizer_note": "",
+      "use": "",
+      "packaging": "",
+      "quantity": "",
+      "origin": "中国",
+      "destination": "",
+      "transport_mode": "",
+      "incoterm": ""
+    },
+    "provided_documents": [],
+    "missing_documents": []
+  },
+
+  "identity": {
+    "verdict": "",
+    "checks": [
+      { "item": "CAS 号", "value": "", "source": "", "status": "待确认" }
+    ]
+  },
+
+  "hs_candidates": [
+    {
+      "rank": 1,
+      "code_cn": "",
+      "code_vn": "",
+      "name_cn": "",
+      "basis": "（必须写章注/品目依据，不能只写编码）",
+      "confidence": "",
+      "status": "候选（需报关行/归类专业确认后采用）",
+      "notes": ""
+    }
+  ],
+
+  "cn_export": [
+    {
+      "id": "CN-01",
+      "topic": "中国出口",
+      "item": "",
+      "finding": "",
+      "condition": "",
+      "reg": "",
+      "effective": "",
+      "status": "待确认",
+      "evidence": "",
+      "reg_ids": [],
+      "action": ""
+    }
+  ],
+
+  "import_vn": [
+    {
+      "id": "VN-01",
+      "topic": "目的国进口",
+      "item": "",
+      "finding": "",
+      "condition": "",
+      "reg": "",
+      "effective": "",
+      "status": "待确认",
+      "evidence": "",
+      "reg_ids": [],
+      "action": ""
+    }
+  ],
+
+  "transport": [
+    {
+      "id": "TR-01",
+      "topic": "运输",
+      "item": "",
+      "finding": "",
+      "condition": "",
+      "reg": "",
+      "effective": "",
+      "status": "待确认",
+      "evidence": "",
+      "reg_ids": [],
+      "action": ""
+    }
+  ],
+
+  "label_pkg": [
+    {
+      "id": "LB-01",
+      "topic": "标签与包装",
+      "item": "",
+      "finding": "",
+      "condition": "",
+      "reg": "",
+      "effective": "",
+      "status": "待确认",
+      "evidence": "",
+      "reg_ids": [],
+      "action": ""
+    }
+  ],
+
+  "documents": [
+    { "id": "DOC-01", "category": "出口合同", "name": "销售合同", "owner": "出口方/进口方", "timing": "签约阶段", "status": "待准备", "note": "" }
+  ],
+
+  "roles": [
+    { "role": "出口方（我方）", "items": [""] },
+    { "role": "进口方", "items": [""] },
+    { "role": "承运方/货代", "items": [""] }
+  ],
+
+  "regs": [
+    {
+      "id": "R01",
+      "jurisdiction": "中国",
+      "name": "",
+      "issuer": "",
+      "ref": "",
+      "effective": "",
+      "status": "现行",
+      "relevance": "",
+      "url": "https://",
+      "verified_on": "YYYY-MM-DD"
+    }
+  ],
+
+  "timeliness": [
+    { "item": "", "what_changed": "", "impact": "", "checked": "是", "date": "YYYY-MM-DD" }
+  ],
+
+  "open_questions": [
+    { "id": "Q01", "question": "", "why": "", "owner": "", "blocks": [] }
+  ],
+
+  "stats": { "note": "由脚本重算" }
+}

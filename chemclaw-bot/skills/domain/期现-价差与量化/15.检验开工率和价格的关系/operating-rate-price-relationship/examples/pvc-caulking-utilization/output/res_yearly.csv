@@ -1,0 +1,4 @@
+﻿year,horizon,n_obs,n_hi,n_lo,mean_hi_pct,mean_lo_pct,spread_hi_minus_lo_pct,ic_level,ic_change,verdict
+2026,1w,5,0,0,,,,,,insufficient
+2026,2w,3,0,0,,,,,,insufficient
+2026,4w,1,0,0,,,,,,insufficient

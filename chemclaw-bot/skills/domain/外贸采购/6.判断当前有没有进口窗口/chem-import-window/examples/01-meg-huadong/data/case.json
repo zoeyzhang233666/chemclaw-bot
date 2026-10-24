@@ -1,0 +1,782 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "case_id": "01-meg-huadong",
+    "title": "进口乙二醇（MEG）· 海外报价 vs 华东现货",
+    "subtitle": "中国华东地区自海外市场进口聚酯级乙二醇，与华东（张家港）罐区现货价比较",
+    "generated_at": "2026-10-20",
+    "currency_quote": "USD",
+    "currency_local": "CNY",
+    "unit": "元/吨",
+    "unit_usd": "美元/吨",
+    "analyst": "DeepSeek Harness · chem-import-window",
+    "disclaimer": "本页只做同一口径下的折算与比较，不构成进口交易指令，不预测价格走势。理论价差不等于可执行贸易利润。",
+    "demo_note": "情景参数（加价情景）为标注为 S-SIM 的模拟值，仅用于验证计算器交互，不代表真实市场参数。"
+  },
+  "asof": {
+    "date": "2026-10-16",
+    "label": "基准日（海外与国内价格唯一同日可得、同源的一天）",
+    "today": "2026-10-20",
+    "note": "10-20 当日美元船货价与张家港成交价均未取得（资讯平台正文需登录），因此以 10-16 为基准日；汇率取 2026-10-20 最新可得中间价，日期不同已在下文标注。"
+  },
+  "product": {
+    "name_cn": "乙二醇",
+    "alias": "MEG / 单乙二醇 / 甘醇",
+    "name_en": "Monoethylene Glycol (MEG)",
+    "cas": "107-21-1",
+    "hs_code_cn": "29053100",
+    "spec": "聚酯级（Polyester grade，含量 ≥99.9%，散水/散装）",
+    "spec_note": "国内现货与本案例采用的海外指数价均为聚酯级。涤纶级、工业级、防冻液级与本规格不可直接比价。",
+    "unit_note": "国内报价为元/吨（人民币/吨），海外报价为美元/吨（USD/mt）；1 mt = 1,000 kg，不做桶/吨混用。"
+  },
+  "request": {
+    "origin": "海外市场（中东 / 东北亚，按 CFR 中国口径）",
+    "origin_detail": "2025 年中国乙二醇进口中，沙特、科威特、阿曼、伊朗、阿联酋合计占 66.3%（约 512 万吨），其中沙特约 55%。本案例以「中东 → 中国主港 CFR「作为海外基准口径。",
+    "destination": "中国华东 · 江苏张家港（长江口罐区）",
+    "destination_alt": "太仓 / 江阴 / 常州罐区",
+    "volume_ton": 5000,
+    "volume_note": "5,000 吨/船级（化学品船 5,000–10,000 DWT 常见批量）；罐区零单通常 100–500 吨。",
+    "incoterm": "CFR 中国主港（海外指数口径）",
+    "delivery_compare": "海外：CFR 中国主港（到岸）｜国内：张家港罐区自提（ex-tank）",
+    "transit_days": 12,
+    "transit_note": "波湾—华东散装液货船常规航程约 12 天（含装卸），未计入等候泊位与卸货泵速限制。"
+  },
+  "quote": {
+    "id": "Q-CFR-CN-20261016",
+    "date": "2026-10-16",
+    "price_usd": 685.0,
+    "price_low_usd": 680.0,
+    "price_high_usd": 690.0,
+    "premium_usd": 0,
+    "term": "CFR",
+    "port": "CFR China Main Port（华东主港）",
+    "spec": "聚酯级（Polyester grade，≥99.9%）",
+    "quantity": "5,000 t/船批",
+    "origin_country": "中东（CFR 中国口径，未指定具体供应商）",
+    "freight_usd": null,
+    "source_id": "S-CPH-1015",
+    "source_secondary_ids": [
+      "S-THX-1015",
+      "S-MY-1009"
+    ],
+    "source_note": "10-16 为最新可得 CFR 中国收盘（10-15 收盘 685，10-16 早报未更新美元价）；区间 680–690 为本报告据此估计的交易所常见议价幅度，非报价单原文。",
+    "quote_type": "指数/到岸评估价（不是某一供应商对某一票货的报盘）",
+    "buyer_reality": "真实采购需向供应商单独询 FOB 起运港报价单（含装运期、付款条件、质量证书），指数价只作议价基准。"
+  },
+  "domestic": {
+    "id": "D-JS-20261016",
+    "date": "2026-10-16",
+    "price_cny": 5865.33,
+    "price_low_cny": 5800,
+    "price_high_cny": 5930,
+    "region": "华东（江苏张家港/太仓罐区）",
+    "market": "隆众 MEG 全国主流市场均价（10-16）",
+    "delivery": "罐区自提（ex-tank）",
+    "tax_included": true,
+    "spec": "聚酯级（Polyester grade，≥99.9%）",
+    "quantity": "罐内零单/整车提货",
+    "source_id": "S-OILCHEM-SERIES",
+    "source_secondary_ids": [
+      "S-CPH-EGFIX"
+    ],
+    "source_note": "5,865.33 元/吨为隆众全国主流市场均价（10-16）；同日同源的具体华东出厂价为 ChemPriceHub 记录的 10-15 5,685 元/吨。两者相差约 180 元/吨，反映「全国均价 vs 华东出厂「的口径差，本案例以全国主流均价作比较基准并在口径表中披露。",
+    "tax_basis_note": "国内现货为含增值税价（增值税一般纳税人交易，进项可抵扣），已含 13% 增值税。"
+  },
+  "fx": {
+    "id": "FX-USDCNY",
+    "pair": "USD/CNY",
+    "quote": "1 USD = X CNY（直接标价）",
+    "note": "当前与历史折算一律取\"该价格日当日\"的 USD/CNY，绝不使用最新汇率倒推历史。基准日 10-16 使用 ECB 参照汇率（6.6862，来源 S-ECB-REF）；CFETS 官方中间价仅覆盖 10-19（6.7208）与 10-20（6.7200）。两套口径差异约 0.2%–0.5%，折合每吨 8–20 元，已在口径差异说明中披露。",
+    "date": "2026-10-16",
+    "rate": 6.6862,
+    "source_id": "S-ECB-REF",
+    "rows": [
+      {
+        "date": "2026-10-01",
+        "rate": 6.7045,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-02",
+        "rate": 6.7046,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-05",
+        "rate": 6.7046,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-06",
+        "rate": 6.7046,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-07",
+        "rate": 6.7046,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-08",
+        "rate": 6.7023,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-09",
+        "rate": 6.6921,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-12",
+        "rate": 6.6928,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-13",
+        "rate": 6.6938,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-14",
+        "rate": 6.6927,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-15",
+        "rate": 6.691,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-16",
+        "rate": 6.6862,
+        "source_id": "S-ECB-REF"
+      },
+      {
+        "date": "2026-10-19",
+        "rate": 6.7208,
+        "source_id": "S-CFETS"
+      },
+      {
+        "date": "2026-10-20",
+        "rate": 6.72,
+        "source_id": "S-CFETS"
+      }
+    ],
+    "source_note": "历史每日中间价连续序列本次未取得，因此历史回算点若缺当日汇率一律标记 gap，不倒推、不插值。",
+    "series_note": "来源：Frankfurter API（ECB reference rates）2026-10-01~2026-10-19 + CFETS 官方中间价（10-19、10-20）。"
+  },
+  "freight": {
+    "source": "none",
+    "usd_per_ton": null,
+    "date": null,
+    "basis": "未取得",
+    "quality": "missing",
+    "route": "中东（波斯湾）→ 中国华东主港（化学品船 / 散装液货）",
+    "why_missing": "中东→华东化学品船实盘运费（美元/吨）为船东/货代报价，公开渠道未见逐日披露；本案例不估算。",
+    "reference_values": [
+      {
+        "id": "REF-1",
+        "label": "中东 → 欧洲化学品船运价",
+        "value_usd_per_ton": 95,
+        "date": "2026-09-09",
+        "quality": "reference",
+        "note": "航线不同（欧洲而非中国）、不是本案例货物；仅说明「该区域化学品船运价水平「。2026-01 同航线为 70 美元/吨。",
+        "source_id": "S-CHEMBLOG-FREIGHT"
+      },
+      {
+        "id": "REF-2",
+        "label": "SCFI 综合指数",
+        "value": 3679.58,
+        "date": "2026-10-16",
+        "quality": "index",
+        "note": "集装箱出口运价指数，与散装液货运输不属同一市场，不能换算为吨运费。",
+        "source_id": "S-SSE-SCFI"
+      },
+      {
+        "id": "REF-3",
+        "label": "VLCC 中东→中国（原油船）",
+        "value": "WS 776",
+        "date": "2026-10-16 当周",
+        "quality": "reference",
+        "note": "原油船运价，仅作该航线整体运费水平背景，不能用于乙二醇吨运费。",
+        "source_id": "S-MARITIMENEWS-VLCC"
+      }
+    ]
+  },
+  "insurance": {
+    "rate": null,
+    "basis": "CIF × 110%",
+    "note": "保险通常在 CFR 基础上按 CIF×110% 投保，费率约 0.1%–0.3%（视货物与承运人）；本案例未取得保单费率，按 0 计并登记缺口，可改为模拟值查看影响。"
+  },
+  "tax": {
+    "hs_code": "29053100",
+    "note": "2026 年《进口商品暂定税率表》中 29053990（1,3-丙二醇，暂定 3%）、29054500（甘油，暂定 3%）在列，29053100 未列入 → 乙二醇按最惠国税率执行，不享 2026 年暂定税率。具体税率以报关日税则与税号为准。",
+    "profiles": [
+      {
+        "id": "T-MFN-2026",
+        "effective_from": "2026-01-01",
+        "duty_rate": 5.5,
+        "duty_basis": "关税 = 关税完税价格 × 关税税率（最惠国，未享暂定税率）",
+        "duty_hs": "29053100",
+        "vat_rate": 13,
+        "vat_basis": "进口环节增值税 =（关税完税价格 + 关税）× 13%",
+        "provisional": true,
+        "exact": false,
+        "source_id": "S-MOF-TARIFF2026",
+        "source_note": "税率 5.5% 见于本报告核验逻辑与同章同类商品口径；另有 5% 说法。以实际报关税号与报关日税率覆盖。"
+      }
+    ],
+    "preferential": {
+      "checked": false,
+      "note": "中国—沙特等自贸协定项下乙二醇是否降税未核验；若可享协定税率必须提供原产地证书并按协定税率申报。"
+    }
+  },
+  "params": {
+    "vat_recoverable": true,
+    "vat_rec_note": "增值税一般纳税人取得海关进口增值税专用缴款书可用于抵扣 → 比较口径为「含税净成本「（不含可抵扣增值税）。若不可抵扣，勾选后价差会整体下移一个 VAT 的幅度。",
+    "inland_cost_cny": null,
+    "inland_note": "港杂费、报关代理、商检、仓储、短驳等。未取得实票，按 0 计并登记缺口；模拟情景用 80 元/吨。",
+    "other_cost_cny": 0,
+    "dutiable_adjust_rate": 0,
+    "import_finance_rate": null,
+    "import_finance_note": "信用证开证保证金、融资利息等资金成本未取得，不计入理论价差。",
+    "fx_for_tax": 6.72,
+    "fx_for_tax_note": "海关计征税费适用汇率低于中间价（直接用 6.72 进入完税价）——此处按中间价近似，实际以报关日汇率为准。"
+  },
+  "compatibility_manual": [
+    {
+      "id": "M1",
+      "title": "规格：聚酯级 vs 涤纶级 / 工业级",
+      "status": "pass",
+      "detail": "海外与国内均取聚酯级（≥99.9%）。注意市面上 3,700–4,100 元/吨的低价多为工业级或化工品中间商挂牌，不可与聚酯级比价。"
+    },
+    {
+      "id": "M2",
+      "title": "价格日期：海外 10-16 vs 国内 10-16",
+      "status": "pass",
+      "detail": "唯一同日可得的配对。10-19 国内价 5,735（隆众均价）无同日海外价，未使用。"
+    },
+    {
+      "id": "M3",
+      "title": "交货地点与方式：CFR 到岸 vs 罐区自提",
+      "status": "warn",
+      "detail": "海外价为「到中国主港「，国内价为「张家港罐区自提「。两者都不含内陆配送，这一点对齐；但「自提「对应的提货成本（槽车、计量损耗）双方都未计。"
+    },
+    {
+      "id": "M4",
+      "title": "含税口径：国内含税 13% vs 进口含税净成本",
+      "status": "pass",
+      "detail": "国内现货价含 13% 增值税；进口按（完税价+关税）×13% 形成进项，可抵扣时不计入成本。两边同为「可抵扣增值税之外「的口径。"
+    },
+    {
+      "id": "M5",
+      "title": "货物状态：船货 vs 罐内现货",
+      "status": "warn",
+      "detail": "海外为「船货/远期现货「（装运期通常 T+15~30 天），国内为「已知的罐内现货「。时间价值与质量索赔责任不同。"
+    },
+    {
+      "id": "M6",
+      "title": "报价性质：指数评估价 vs 实际成交",
+      "status": "warn",
+      "detail": "685 美元/吨是亚洲 CFR 中国的**指数收盘价**，不是某一供应商报盘；实际议价通常在指数上下 5–15 美元/吨，且取决于装期与付款方式。"
+    }
+  ],
+  "quotes_hist": [
+    {
+      "id": "QH-1009",
+      "date": "2026-10-09",
+      "price_usd": 705.0,
+      "term": "CFR",
+      "spec": "聚酯级（Polyester grade，≥99.9%）",
+      "port": "CFR China",
+      "source_id": "S-MY-1009"
+    },
+    {
+      "id": "QH-1013",
+      "date": "2026-10-13",
+      "price_usd": 670.0,
+      "term": "CFR",
+      "spec": "聚酯级（Polyester grade，≥99.9%）",
+      "port": "CFR China",
+      "source_id": "S-THX-1013"
+    },
+    {
+      "id": "QH-1014",
+      "date": "2026-10-14",
+      "price_usd": 700.0,
+      "term": "CFR",
+      "spec": "聚酯级（Polyester grade，≥99.9%）",
+      "port": "CFR China",
+      "source_id": "S-CPH-1015"
+    },
+    {
+      "id": "QH-1015",
+      "date": "2026-10-15",
+      "price_usd": 685.0,
+      "term": "CFR",
+      "spec": "聚酯级（Polyester grade，≥99.9%）",
+      "port": "CFR China",
+      "source_id": "S-CPH-1015"
+    },
+    {
+      "id": "QH-1016",
+      "date": "2026-10-16",
+      "price_usd": 685.0,
+      "term": "CFR",
+      "spec": "聚酯级（Polyester grade，≥99.9%）",
+      "port": "CFR China",
+      "source_id": "S-CPH-1015",
+      "source_note": "10-16 无更新美元价，沿用 10-15 收盘。"
+    }
+  ],
+  "domestic_hist": {
+    "series_id": "S-OILCHEM-SERIES",
+    "region": "华东（隆众全国主流市场均价）",
+    "unit": "元/吨",
+    "tax_included": true,
+    "delivery": "罐区自提（ex-tank）",
+    "spec": "聚酯级（Polyester grade，≥99.9%）",
+    "rows": [
+      {
+        "date": "2026-10-10",
+        "price_cny": 6300.83
+      },
+      {
+        "date": "2026-10-12",
+        "price_cny": 6111.67
+      },
+      {
+        "date": "2026-10-13",
+        "price_cny": 5870.83
+      },
+      {
+        "date": "2026-10-14",
+        "price_cny": 5942.83
+      },
+      {
+        "date": "2026-10-15",
+        "price_cny": 5898.33
+      },
+      {
+        "date": "2026-10-16",
+        "price_cny": 5865.33
+      },
+      {
+        "date": "2026-10-19",
+        "price_cny": 5735.0
+      }
+    ]
+  },
+  "history_gaps": [
+    {
+      "id": "HG-1",
+      "date": "2026-10-08",
+      "kind": "海外价",
+      "text": "10-08 有中国到岸价文章但本次未取得正文数值 → 该日不生成价差点。"
+    },
+    {
+      "id": "HG-2",
+      "date": "2026-10-10 / 10-12",
+      "kind": "海外价",
+      "text": "10-10 为国庆后周末、10-12 为周一，无 CFR 中国收盘披露（亚洲市场按工作日评估）→ 不生成价差点。"
+    },
+    {
+      "id": "HG-3",
+      "date": "2026-10-13 / 10-14",
+      "kind": "国内价",
+      "text": "10-13、10-14 国内价可得（5,870.83 / 5,942.83），但这两个交易日的价差档已计入；10-14 海外 700 与国内同日 5,942.83 已配对。"
+    },
+    {
+      "id": "HG-4",
+      "date": "2026-10-17 / 10-18",
+      "kind": "双方",
+      "text": "周末无报价 → 不生成价差点，也不做线性补点。"
+    },
+    {
+      "id": "HG-5",
+      "date": "2026-10-19 / 10-20",
+      "kind": "海外价",
+      "text": "10-19 国内价 5,735 可得，但当日 CFR 中国美元价未取得 → 不生成价差点（不能用 10-15 的 685 顶替 10-19）。"
+    },
+    {
+      "id": "HG-6",
+      "date": "近 1 年",
+      "kind": "双方",
+      "text": "1 年窗口内双方**可配对的连续历史序列**（同口径海外 CFR、同口径国内现货、同日汇率、当期税率、当期运费）本次均未取得 → 1 年曲线留空，原始数据接入后可直接回填，无需改结构。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S-CPH-1015",
+      "title": "Lack of bullish confidence leads to a sluggish market rebound",
+      "publisher": "ChemPriceHub",
+      "date": "2026-10-15",
+      "url": "https://www.chempricehub.com/news/detail-lack-of-bullish-confidence-leads-to-a-sluggish-market-rebound-aiu8ty1q.html",
+      "excerpt": "Table 1: Asia / CFR China / Oct 14 = 700 / Oct 15 = 685 (−15, −2.1%)；East China Ex-works 5685；Zhangjiagang closing 5,685 CNY/ton；Jiangsu basis Nov+482；华东主港库存 11.5 万吨",
+      "tier": "B",
+      "tier_note": "专业资讯商日评（可点击核对表格数字）"
+    },
+    {
+      "id": "S-CPH-EGFIX",
+      "title": "Morning Market Update: Monoethylene Glycol (MEG)",
+      "publisher": "ChemPriceHub",
+      "date": "2026-10-16",
+      "url": "https://www.chempricehub.com/news/detail-morning-market-update-monoethylene-glycol-meg-8rp9uqzx.html",
+      "excerpt": "Price table: MEG USD 700→685 (USD/ton)；MEG RMB 5722→5685 (CNY/ton)；capacity util 63.50%",
+      "tier": "B",
+      "tier_note": "同日早报，美元与人民币价并列"
+    },
+    {
+      "id": "S-THX-1015",
+      "title": "【现货】10月15日国际市场乙二醇到岸价汇总",
+      "publisher": "同花顺 iNews（iFinD 数据）",
+      "date": "2026-10-16",
+      "url": "https://news.10jqka.com.cn/20261016/c680767331.shtml",
+      "excerpt": "10月15日国际市场乙二醇到岸价：中国 685（−15），东南亚 800（0），单位 美元/吨",
+      "tier": "B",
+      "tier_note": "与 ChemPriceHub 的 CFR China 685 完全一致，构成交叉验证"
+    },
+    {
+      "id": "S-THX-1013",
+      "title": "【现货】10月13日国际市场乙二醇到岸价汇总",
+      "publisher": "同花顺 iNews（iFinD 数据）",
+      "date": "2026-10-14",
+      "url": "https://news.10jqka.com.cn/20261014/c680673157.shtml",
+      "excerpt": "10月13日：乙二醇 中国 670（−10）；东南亚 800（0）",
+      "tier": "B",
+      "tier_note": "日更到岸价序列"
+    },
+    {
+      "id": "S-MY-1009",
+      "title": "[乙二醇]：亚洲乙二醇市场周度综述（20261005-1009）",
+      "publisher": "隆众资讯（我的钢铁网转载）",
+      "date": "2026-10-12",
+      "url": "https://nenghua.m.mysteel.com/a/26101214/5569B90ECA7A6D66_abc.html",
+      "excerpt": "10月9日中国到岸价MEG为705美元/吨，较10月5日下跌45美元/吨，较10月8日下跌70美元/吨。中国国内评估价环比下跌590元/吨，至5,680元/吨（出厂价）。",
+      "tier": "B",
+      "tier_note": "原创资讯商（隆众），转载方标注「来源：隆众资讯「；同时给出海外与国内口径"
+    },
+    {
+      "id": "S-OILCHEM-SERIES",
+      "title": "MEG 全国主流市场均价（7 日/30 日价格数据）",
+      "publisher": "隆众资讯 · 价格中心",
+      "date": "2026-10-19",
+      "url": "https://www.oilchem.net/seo-468-7.html",
+      "excerpt": "2026-10-19 5735（−130.33，−2.22%）；10-16 5865.33（−33）；10-15 5898.33；10-14 5942.83；10-13 5870.83；10-12 6111.67；10-10 6300.83",
+      "tier": "B",
+      "tier_note": "资讯商公开价格序列；为「全国主流市场均价「，非华东单点"
+    },
+    {
+      "id": "S-MY-ZJG-1019",
+      "title": "[乙二醇]：10月19日（14:00）张家港市场乙二醇价格行情",
+      "publisher": "隆众资讯（我的钢铁网转载）",
+      "date": "2026-10-19",
+      "url": "https://nenghua.mysteel.com/a/26101913/162A9873F33DEBAA.html",
+      "excerpt": "午后张家港乙二醇现货下跌，买盘 5394，卖盘 5404，现货基差 11+360 至 11+370；下周买盘 5344、卖盘 5364（元/吨）",
+      "tier": "B",
+      "tier_note": "主港实盘商谈价（10-19 未与海外价配对，用于口径说明）"
+    },
+    {
+      "id": "S-MEGLOBAL-ACP",
+      "title": "MEGlobal announces ACP for November 2026",
+      "publisher": "MEGlobal（EQUATE 集团）",
+      "date": "2026-10-15",
+      "url": "https://www.meglobal.biz/news-and-media/",
+      "excerpt": "ACP for MEG will be US$880/MT CFR Asian main ports for arrival November 2026（10 月 ACP 同为 880，9 月 780，8 月 770）",
+      "tier": "A",
+      "tier_note": "生产商官方公告（合约价，非现货）"
+    },
+    {
+      "id": "S-CFETS",
+      "title": "人民币汇率中间价（USD/CNY）",
+      "publisher": "中国外汇交易中心 CFETS",
+      "date": "2026-10-20",
+      "url": "https://www.chinamoney.com.cn/chinese/bkccpr/",
+      "excerpt": "2026-10-20 USD/CNY 中间价 6.72000，每交易日 9:15 公布",
+      "tier": "A",
+      "tier_note": "官方发布"
+    },
+    {
+      "id": "S-MOF-TARIFF2026",
+      "title": "2026 年关税调整方案 · 附件1 进口商品暂定税率表",
+      "publisher": "国务院关税税则委员会（财政部）",
+      "date": "2025-12-26",
+      "url": "https://gss.mof.gov.cn/gzdt/zhengcefabu/202512/P020251229510521217364.pdf",
+      "excerpt": "第 233–240 行：29011010 乙烷 2/1、29031500 1,2-二氯乙烷 5.5/1、29053990 1,3-丙二醇 5.5/3、29054500 丙三醇 8/3……29053100 未列入暂定税率表",
+      "tier": "A",
+      "tier_note": "官方税则附件，已逐行核验"
+    },
+    {
+      "id": "S-SSE-SCFI",
+      "title": "上海出口集装箱运价指数（SCFI）",
+      "publisher": "上海航运交易所",
+      "date": "2026-10-16",
+      "url": "https://www.sse.net.cn/index/singleIndex?indexType=scfi",
+      "excerpt": "综合指数 上期(10-09) 3664.11 → 本期(10-16) 3679.58（+15.47）；波斯湾 20ft（迪拜）权重 5.0%",
+      "tier": "A",
+      "tier_note": "官方指数；集装箱口径，不能换算为散装液货吨运费"
+    },
+    {
+      "id": "S-CHEMBLOG-FREIGHT",
+      "title": "Cape Route Economics: Permanent Shift or Temporary Diversion for Chemical Shipping?",
+      "publisher": "Chemicals Blog",
+      "date": "2026-09-09",
+      "url": "https://chemicalsblog.com/en/blog/cape-route-economics-permanent-shift-or-temporary-diversion-for-chemical-shipping",
+      "excerpt": "The Strait reopened on July 14, 2026. However, Middle East to Europe chemical tanker rates remain stuck at $95 per ton — a 35% premium over the $70 per ton rates seen in January 2026. Cape diversion added 14–21 days and €58,000–€145,000 per voyage.",
+      "tier": "C",
+      "tier_note": "行业博客转述，仅作运费水平的**参照**，不是本航线报价"
+    },
+    {
+      "id": "S-MARITIMENEWS-VLCC",
+      "title": "Tanker Rates Ease After Record Highs",
+      "publisher": "Maritime News（引 Baltic Exchange）",
+      "date": "2026-10-18",
+      "url": "https://maritimenews.com/tanker/tanker-rates-ease-middle-east-disruptions",
+      "excerpt": "Gulf of Oman to China VLCC rates fell to about Worldscale 776 from 841 the previous week",
+      "tier": "C",
+      "tier_note": "原油船运价，仅作背景"
+    },
+    {
+      "id": "S-HTFC-JUL",
+      "title": "乙二醇低库存下还要去库多久（聚酯产业链专题）",
+      "publisher": "华泰期货研究院",
+      "date": "2026-07-30",
+      "url": "https://htfc.com/wz_upload/png_upload/20260803/17857445397862ad7b7.pdf",
+      "excerpt": "2025 年自沙特、科威特、阿曼、伊朗、阿联酋进口占比 66.3%（约 512 万吨），沙特占 55%；霍尔木兹周边 EG 产能占海外 27%；中东负荷降至 20% 以下；延布、拉比格装置在运行",
+      "tier": "B",
+      "tier_note": "券商研报（引 CCF 数据）"
+    },
+    {
+      "id": "S-GJ-1017",
+      "title": "石油化工行业周报（20261017）",
+      "publisher": "国金证券",
+      "date": "2026-10-17",
+      "url": "https://pdf.dfcfw.com/pdf/H3_AP202610181830661080_1.pdf",
+      "excerpt": "乙二醇市场价格跌后回弹；行业开工率约 63.16%、乙烯制 62.64%；天津渤化 30 万吨、联泓格润 17 万吨 10-10 停车；美金市场船货资源有限、价格坚挺",
+      "tier": "B",
+      "tier_note": "券商周报（供需与事件背景）"
+    },
+    {
+      "id": "S-THX-INV",
+      "title": "华东主港地区MEG库存总量16.3万吨，较上周同期增加4.8万吨",
+      "publisher": "同花顺 7×24（引隆众资讯）",
+      "date": "2026-10-19",
+      "url": "https://goodsfu.10jqka.com.cn/20261019/c680821670.shtml",
+      "excerpt": "截至10月19日华东主港MEG库存16.3万吨，较上一期增加4.8万吨；张家港5万吨、太仓8万吨、江阴及常州2万吨、上海及常熟1.3万吨",
+      "tier": "B",
+      "tier_note": "供需背景"
+    },
+    {
+      "id": "S-ECB-REF",
+      "title": "USD/CNY reference rates（European Central Bank reference rates）",
+      "publisher": "Frankfurter API（基于 ECB）",
+      "date": "2026-10-19",
+      "url": "https://api.frankfurter.dev/v1/2026-10-01..2026-10-20?base=USD&symbols=CNY",
+      "excerpt": "2026-10-01 6.7045；10-08 6.7023；10-09 6.6921；10-12 6.6928；10-13 6.6938；10-14 6.6927；10-15 6.6910；10-16 6.6862；10-19 6.6807",
+      "tier": "B",
+      "tier_note": "央行参照汇率，非 CFETS 中间价；历史回算用它，已逐点标注"
+    }
+  ],
+  "events": [
+    {
+      "id": "E1",
+      "date": "2026-07-14",
+      "title": "霍尔木兹海峡重开，但化学品船运价仍在高位",
+      "type": "物流",
+      "text": "海峡 7 月 14 日重开，中东→欧洲化学品船运价仍为 95 美元/吨，较 1 月（70）高 35%；此前绕行好望角每航次多 14–21 天、成本增加 5.8–14.5 万欧元。",
+      "source_id": "S-CHEMBLOG-FREIGHT"
+    },
+    {
+      "id": "E2",
+      "date": "2026-07-30",
+      "title": "中东供应仍未恢复：负荷 20% 以下，沙特装置转向红海沿岸",
+      "type": "供给",
+      "text": "霍尔木兹周边 EG 产能占海外 27%；2025 年中国自中东五国进口占 66.3%。7 月 23 日中东 19 套装置仅 5 套在运行，沙特 3 套（共 213 万吨）位于红海沿岸延布/拉比格。",
+      "source_id": "S-HTFC-JUL"
+    },
+    {
+      "id": "E3",
+      "date": "2026-10-09",
+      "title": "国庆后中国到岸价单周回落，国内评估价同步下移",
+      "type": "价格",
+      "text": "10-09 中国到岸价 705 美元/吨，较 10-08 跌 70 美元；国内评估价（出厂）跌 590 元/吨至 5,680。",
+      "source_id": "S-MY-1009"
+    },
+    {
+      "id": "E4",
+      "date": "2026-10-15",
+      "title": "大船集中到港，华东主港库存跳增",
+      "type": "库存",
+      "text": "10-15 华东主港 MEG 库存 11.5 万吨（+2.9 万吨），太仓单库由 2.7 万吨增至 5.0 万吨；张家港日均发货降至 1,300 吨。",
+      "source_id": "S-CPH-1015"
+    },
+    {
+      "id": "E5",
+      "date": "2026-10-15",
+      "title": "MEGlobal 公布 11 月 ACP 880 美元/吨",
+      "type": "合约价",
+      "text": "11 月到货亚洲主要港口合约价 880 美元/吨 CFR，与 10 月持平；现货收盘同期为 685 美元/吨，合约较现货高约 195 美元/吨。",
+      "source_id": "S-MEGLOBAL-ACP"
+    },
+    {
+      "id": "E6",
+      "date": "2026-10-16",
+      "title": "现货基差走强至 Nov+510，期货下跌快于现货",
+      "type": "基差",
+      "text": "张家港现货基差 10-14 为 Nov+429、10-15 为 Nov+510、江苏口径 10-15 为 482（+53）。期货 10-19 收 4,976（−4.44%），现货 5,735。",
+      "source_id": "S-CPH-1015"
+    },
+    {
+      "id": "E7",
+      "date": "2026-10-19",
+      "title": "港口库存继续累积至 16.3 万吨",
+      "type": "库存",
+      "text": "截至 10-19 华东主港库存 16.3 万吨，较上周同期 +4.8 万吨；张家港 5 万吨、太仓 8 万吨。",
+      "source_id": "S-THX-INV"
+    },
+    {
+      "id": "E8",
+      "date": "2026-10-20",
+      "title": "本报告数据截点：当日美元船货价与张家港成交价均未公开",
+      "type": "数据",
+      "text": "10-20 华东张家港/福建行情、美金商谈正文均需资讯平台会员权限；本报告因此以 10-16 为基准日，10-20 仅更新汇率。",
+      "source_id": null
+    }
+  ],
+  "sim_scenarios": [
+    {
+      "id": "S-SIM",
+      "label": "模拟情景（仅验证交互，不代表市场）",
+      "is_simulated": true,
+      "note": "以下参数均为**人为设定的模拟值**，用于演示「若运费/关税/境内费用为某值，价差会怎样移动「。它们不是报价、不是税则、不是海关口径，不得用于对外汇报或合同定价。",
+      "overrides": {
+        "freight_usd": 75,
+        "freight_basis": "模拟：中东→华东化学品船 75 美元/吨",
+        "freight_term": "FOB",
+        "fob_price_usd": 610,
+        "duty_rate": 5.5,
+        "inland_cost_cny": 80,
+        "insurance_rate": 0.2,
+        "fx_rate": 6.72
+      },
+      "why": "把「CFR 指数价「改写成「FOB 供应商报价 + 运费 + 保险 + 港杂「的完整体结构，检验计算器能否正确处理不同贸易术语与更细的费用项。"
+    },
+    {
+      "id": "S-DUTY5",
+      "label": "模拟情景 · 税率情景（关税按 5% 试算）",
+      "is_simulated": true,
+      "note": "5% 是存在争议的另一口径税率，用来看「税率差 0.5 个百分点「对价差的边际影响。",
+      "overrides": {
+        "duty_rate": 5.0
+      },
+      "why": "测算税率口径不确定性对结论稳健性的影响。"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G1",
+      "severity": "high",
+      "item": "中东→华东化学品船 / 散装液货船实盘运费（美元/吨）",
+      "impact": "CFR 与 CIF 口径的进口成本中，运费是最大的单一费用项（典型 40–90 美元/吨，约合 270–600 元/吨）。缺它，任何「FOB 报价「都无法折算到岸。",
+      "fix": "向 2–3 家货代/船东询同航线 5,000–10,000 吨批次的实盘报价，记录询价日、航线、船型、批量和附加费。",
+      "affects": [
+        "完全折算",
+        "FOB 报价"
+      ]
+    },
+    {
+      "id": "G2",
+      "severity": "high",
+      "item": "乙二醇（29053100）2026 年最惠国关税税率权威原值与适用税号",
+      "impact": "关税在 5.0% 与 5.5% 两种口径下，1,000 元量级的价差会移动约 30–40 元/吨；若可享协定税率，影响更大。",
+      "fix": "以报关行/海关税则查询平台按「报关日税则、实际税号、原产地「确认；如可享中国—沙特等协定税率，补充原产地证书要求。",
+      "affects": [
+        "关税",
+        "含税净成本"
+      ]
+    },
+    {
+      "id": "G3",
+      "severity": "high",
+      "item": "国内现货「张家港罐区自提「的当期日价格序列（非全国均价）",
+      "impact": "现用隆众「全国主流市场均价「作比较基准，与华东张家港实际成交存在 100–200 元/吨的口径差。",
+      "fix": "接入隆众/卓创「华东张家港「单点价格序列，或直接取企业实际采购成交价（含票、含税）。",
+      "affects": [
+        "国内现价",
+        "价差"
+      ]
+    },
+    {
+      "id": "G4",
+      "severity": "medium",
+      "item": "2026-10-17 以来（含 10-20 当日）的 CFR 中国美元价与张家港成交价",
+      "impact": "基准日只能退到 10-16；若近期价格快速变化，当前窗口判断可能偏离。",
+      "fix": "使用资讯平台会员账号获取日更正文，或将本报告基准日滚动手工更新。",
+      "affects": [
+        "当前窗口"
+      ]
+    },
+    {
+      "id": "G5",
+      "severity": "medium",
+      "item": "1 年窗口的同口径连续历史序列（海外 CFR 日/周、国内华东现货日、当日汇率、当期关税与运价）",
+      "impact": "当前只有 5 个海外价锚点、7 个国内价锚点，能配对的仅 4 个交易日；无法画出 30 天以上、更无法画 1 年价差曲线。",
+      "fix": "导出资讯商历史数据（隆众/CCF/ICIS 或 iFinD 终端）+ CFETS 历史中间价 + 税率版本表；按 schema 的 fx / quotes_hist / domestic_hist 三条序列灌入即可自动出曲线。",
+      "affects": [
+        "历史价差",
+        "趋势分析"
+      ]
+    },
+    {
+      "id": "G6",
+      "severity": "medium",
+      "item": "港杂费、报关代理、仓储、短驳等境内费用实票",
+      "impact": "境内费用通常 50–120 元/吨，直接等额削减理论价差。",
+      "fix": "取上一票进口的港杂/报关/仓储实付凭证，按吨折。",
+      "affects": [
+        "境内费用",
+        "价差"
+      ]
+    },
+    {
+      "id": "G7",
+      "severity": "medium",
+      "item": "保险费率与投保方式",
+      "impact": "CIF×110% 投保、费率 0.1%–0.3%，折合 5–15 元/吨。",
+      "fix": "取现有保单费率；若走供应商 CIF 免自投，则无需此项。",
+      "affects": [
+        "到岸价"
+      ]
+    },
+    {
+      "id": "G8",
+      "severity": "low",
+      "item": "开证保证金、授信占用、外汇锁汇成本",
+      "impact": "6,000 元/吨货值、90 天账期的资金成本约 30–60 元/吨，属「理论价差「与「真实利润「之间的主要差距之一。",
+      "fix": "取财务授信成本率与付款条件（T/T 预付比例、L/C 期限）。",
+      "affects": [
+        "真实利润"
+      ]
+    },
+    {
+      "id": "G9",
+      "severity": "low",
+      "item": "中国—沙特等自贸协定项下乙二醇的协定税率适用性",
+      "impact": "如可享零/低关税，进口成本整体下移 5% 完税价。",
+      "fix": "查询自贸协定税率表 + 向供应商确认能否出具原产地证书。",
+      "affects": [
+        "关税"
+      ]
+    }
+  ],
+  "data_integrity": {
+    "history_anchors_offshore": 5,
+    "history_anchors_domestic": 7,
+    "history_anchors_paired": 4,
+    "history_window_days": 7,
+    "one_year_series_available": false,
+    "freight_source_quality": "missing",
+    "fx_series_days": 1,
+    "statement": "历史价差仅覆盖 2026-10-09 至 2026-10-16 的 4 个可配对交易日；不生成任何插值点、不生成 1 年曲线、不使用当前运费/税率倒推历史。"
+  }
+}

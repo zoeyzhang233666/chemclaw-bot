@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>甲醇（MA，郑商所） · 产业变量观察看板</title>
+<style>
+:root{
+  --bg:#0f1420; --bg2:#151c2b; --card:#1a2233; --card2:#1f2940;
+  --line:#2a3650; --line2:#37456a;
+  --txt:#e8edf7; --txt2:#9fb0cc; --txt3:#6d7f9e;
+  --accent:#4f9cf9; --accent2:#7c5cd6;
+  --up:#e0693a; --down:#1a9b8a; --warn:#c99427;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:radial-gradient(1200px 700px at 12% -10%, #1b2540 0%, transparent 55%),
+             radial-gradient(900px 600px at 92% 0%, #201a35 0%, transparent 50%),
+             var(--bg);
+  color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  font-size:14px; line-height:1.62; padding:0 0 60px; min-height:100vh;
+}
+.wrap{max-width:1360px;margin:0 auto;padding:0 24px}
+
+/* ---------- 顶部 ---------- */
+header{padding:34px 0 20px;border-bottom:1px solid var(--line)}
+.kicker{font-size:12px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;font-weight:600}
+h1{font-size:30px;line-height:1.25;margin:10px 0 6px;font-weight:700;letter-spacing:.01em}
+h1 .thin{font-weight:400;color:var(--txt2);font-size:20px}
+.sub{color:var(--txt2);font-size:13.5px}
+.metaline{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.chip{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12.5px;color:var(--txt2)}
+.chip b{color:var(--txt);font-weight:600}
+.chip.accent{border-color:rgba(79,156,249,.45);color:#a9cdfc}
+
+/* ---------- 切换与工具条 ---------- */
+.toolbar{position:sticky;top:0;z-index:30;background:rgba(15,20,32,.93);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);padding:14px 0;margin-bottom:26px}
+.tbrow{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:6px;background:var(--bg2);padding:4px;border-radius:11px;border:1px solid var(--line)}
+.tab{border:0;background:transparent;color:var(--txt2);padding:8px 18px;border-radius:8px;cursor:pointer;
+  font-size:13.5px;font-weight:500;transition:.18s;font-family:inherit}
+.tab:hover{color:var(--txt)}
+.tab.active{background:linear-gradient(135deg,#2f6fd0,#5a49b8);color:#fff;box-shadow:0 4px 14px rgba(79,156,249,.25)}
+.filters{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fbtn{border:1px solid var(--line);background:var(--bg2);color:var(--txt2);padding:6px 13px;border-radius:8px;
+  cursor:pointer;font-size:12.5px;font-family:inherit;transition:.15s;display:flex;align-items:center;gap:6px}
+.fbtn:hover{border-color:var(--line2);color:var(--txt)}
+.fbtn.active{background:var(--card2);border-color:var(--accent);color:#fff}
+.fbtn .dot{width:7px;height:7px;border-radius:50%;background:var(--c,#888)}
+.search{background:var(--bg2);border:1px solid var(--line);border-radius:9px;color:var(--txt);
+  padding:8px 14px;font-size:13px;font-family:inherit;width:220px;outline:none}
+.search:focus{border-color:var(--accent)}
+.count{font-size:12px;color:var(--txt3)}
+
+/* ---------- 概览条 ---------- */
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:30px}
+.ov{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden}
+.ov::after{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c,var(--accent))}
+.ov .k{font-size:12px;color:var(--txt3);letter-spacing:.04em}
+.ov .v{font-size:22px;font-weight:700;margin:6px 0 2px;letter-spacing:-.01em}
+.ov .n{font-size:11.5px;color:var(--txt2)}
+.flag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;margin-left:6px;
+  vertical-align:middle;font-weight:600}
+.flag.low{background:rgba(26,155,138,.18);color:#5fd8c6;border:1px solid rgba(26,155,138,.4)}
+.flag.high{background:rgba(224,105,58,.18);color:#f0956f;border:1px solid rgba(224,105,58,.4)}
+
+/* ---------- 变量卡片 ---------- */
+.cards{display:grid;grid-template-columns:1fr;gap:20px}
+.card{background:linear-gradient(170deg,var(--card) 0%,#182030 100%);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;transition:.2s;position:relative}
+.card:hover{border-color:var(--line2)}
+.card.hidden{display:none}
+.card-head{padding:20px 24px 16px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:flex-start;
+  background:linear-gradient(90deg,rgba(255,255,255,.022),transparent)}
+.rank{flex:0 0 auto;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+  font-size:19px;font-weight:800;color:#fff;background:linear-gradient(140deg,var(--c),#2a3350);
+  box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.card-title{flex:1;min-width:0}
+.card-title h3{font-size:17.5px;font-weight:650;line-height:1.4;margin-bottom:8px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.tag{font-size:11px;padding:2px 9px;border-radius:6px;background:var(--bg2);color:var(--txt2);border:1px solid var(--line)}
+.tag.cat{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c);border-color:color-mix(in srgb,var(--c) 45%,transparent);font-weight:600}
+.tag.next{background:rgba(79,156,249,.13);color:#8fc2fb;border-color:rgba(79,156,249,.4)}
+.starbtn{border:1px solid var(--line);background:var(--bg2);color:var(--txt3);width:34px;height:34px;
+  border-radius:9px;cursor:pointer;font-size:16px;line-height:1;transition:.15s}
+.starbtn.on{color:#f5c451;border-color:rgba(245,196,81,.5);background:rgba(245,196,81,.12)}
+.card-body{padding:20px 24px}
+
+.block{margin-bottom:18px}
+.block:last-child{margin-bottom:0}
+.block h4{font-size:11.5px;letter-spacing:.1em;color:var(--txt3);font-weight:700;text-transform:uppercase;
+  margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.block h4::before{content:"";width:3px;height:12px;border-radius:2px;background:var(--c,var(--accent))}
+.block p, .block li{color:#cfd9ea;font-size:13.5px}
+.block ul{list-style:none;display:grid;gap:5px}
+.block ul li{padding-left:14px;position:relative}
+.block ul li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;
+  background:var(--c,var(--accent));opacity:.75}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:820px){.trio{grid-template-columns:1fr}}
+.tri{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--tc);
+  border-radius:10px;padding:12px 14px}
+.tri .lbl{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--tc);margin-bottom:5px}
+.tri .txt{font-size:12.8px;color:#cbd6e8}
+.tri.yes{--tc:#2fbf8f} .tri.no{--tc:#e0693a} .tri.inv{--tc:#c99427}
+
+.src{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+  font-size:12.3px;color:var(--txt2)}
+.src b{color:var(--txt);font-weight:600}
+.src .row{display:flex;gap:8px;margin-bottom:4px}
+.src .row:last-child{margin-bottom:0}
+.src .kk{flex:0 0 96px;color:var(--txt3)}
+
+.gapbox{margin-top:12px;border:1px dashed rgba(201,148,39,.45);background:rgba(201,148,39,.07);
+  border-radius:10px;padding:10px 13px;font-size:12.3px;color:#dcbf7e}
+.gapbox b{color:var(--warn)}
+
+/* 迷你折线 */
+.mini{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:8px}
+.mini .mt{font-size:11.5px;color:var(--txt3);margin-bottom:6px}
+.mini svg{display:block;width:100%;height:auto}
+.mini .mnote{font-size:11px;color:var(--txt3);margin-top:5px;line-height:1.5}
+
+/* ---------- 时间线 ---------- */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2),transparent)}
+.ev{position:relative;margin-bottom:16px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:15px 18px;transition:.18s}
+.ev:hover{border-color:var(--line2);transform:translateX(2px)}
+.ev::before{content:"";position:absolute;left:-27px;top:20px;width:11px;height:11px;border-radius:50%;
+  background:var(--c,var(--accent));border:2px solid var(--bg);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 25%,transparent)}
+.ev.past{opacity:.62}
+.ev-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
+.ev-date{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;font-weight:700;color:var(--c)}
+.ev-title{font-size:14.5px;font-weight:600;color:var(--txt);margin-bottom:5px}
+.ev-meta{font-size:12.3px;color:var(--txt2)}
+.ev-meta b{color:var(--txt);font-weight:600}
+.kind{font-size:10.5px;padding:1px 8px;border-radius:5px;border:1px solid var(--line2);color:var(--txt2);background:var(--bg2)}
+.kind.fixed{border-color:rgba(47,191,143,.5);color:#5fd8b0;background:rgba(47,191,143,.1)}
+.kind.cond{border-color:rgba(201,148,39,.5);color:#dcbf7e;background:rgba(201,148,39,.1)}
+.kind.periodic{border-color:rgba(79,156,249,.5);color:#8fc2fb;background:rgba(79,156,249,.1)}
+
+/* ---------- 快照 ---------- */
+.snaptable{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.snaptable th{text-align:left;padding:11px 14px;background:var(--bg2);color:var(--txt3);
+  font-size:11.5px;font-weight:700;letter-spacing:.05em;border-bottom:1px solid var(--line);white-space:nowrap}
+.snaptable td{padding:12px 14px;border-bottom:1px solid rgba(42,54,80,.6);vertical-align:top;color:#cfd9ea}
+.snaptable tr:last-child td{border-bottom:0}
+.snaptable tr:hover td{background:rgba(255,255,255,.018)}
+.snaptable td.ind{font-weight:600;color:var(--txt);min-width:150px}
+.snaptable td.val{font-family:ui-monospace,Consolas,monospace;color:#a9cdfc;font-weight:600;white-space:nowrap}
+.scope{font-size:11.5px;color:var(--txt3)}
+
+/* 其它区块 */
+.section{margin-top:38px}
+.section > h2{font-size:19px;font-weight:650;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section > h2 .num{font-size:12px;color:var(--accent);font-family:ui-monospace,Consolas,monospace}
+.section > .desc{color:var(--txt2);font-size:13px;margin-bottom:16px;max-width:980px}
+.cand{display:grid;gap:10px}
+.candrow{display:grid;grid-template-columns:26px 1fr auto;gap:12px;background:var(--card);
+  border:1px solid var(--line);border-radius:11px;padding:13px 16px;align-items:start}
+.candrow.sel{border-color:rgba(47,191,143,.35);background:linear-gradient(90deg,rgba(47,191,143,.07),var(--card))}
+.candrow .mk{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700}
+.candrow.sel .mk{background:rgba(47,191,143,.2);color:#4fd6a9}
+.candrow:not(.sel) .mk{background:rgba(109,127,158,.15);color:var(--txt3)}
+.candrow .nm{font-weight:600;font-size:13.5px}
+.candrow .rs{font-size:12.5px;color:var(--txt2);margin-top:3px}
+.candrow .vf{font-size:11px;color:var(--txt3);white-space:nowrap}
+
+.secondary{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.seccard{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+.seccard .nm{font-weight:600;font-size:13.5px;margin-bottom:6px}
+.seccard .rs{font-size:12.5px;color:var(--txt2)}
+
+.gaptable{width:100%;border-collapse:separate;border-spacing:0;font-size:12.6px;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.gaptable th{text-align:left;padding:10px 14px;background:var(--bg2);color:var(--txt3);font-size:11.5px;
+  border-bottom:1px solid var(--line)}
+.gaptable td{padding:11px 14px;border-bottom:1px solid rgba(42,54,80,.6);color:#cfd9ea;vertical-align:top}
+.gaptable tr:last-child td{border-bottom:0}
+.gaptable td.item{font-weight:600;color:var(--txt);white-space:nowrap}
+
+.weekcal{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.wk{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:13px 15px;
+  border-top:2px solid var(--accent)}
+.wk .w{font-size:12px;color:var(--accent);font-weight:700;margin-bottom:4px}
+.wk .t{font-size:12.8px;color:#cfd9ea}
+.wk .s{font-size:11px;color:var(--txt3);margin-top:5px}
+
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:var(--txt3);font-size:11.8px;line-height:1.85}
+footer b{color:var(--txt2)}
+
+.view{display:none} .view.active{display:block}
+.empty{color:var(--txt3);text-align:center;padding:40px;font-size:13px}
+
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#2c3852;border-radius:6px}
+::-webkit-scrollbar-track{background:transparent}
+@media print{
+  .toolbar{position:static} .card{break-inside:avoid} .view{display:block!important}
+  body{background:#fff;color:#111}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="kicker">期现 · 产业基本面 · 变量观察</div>
+  <h1>甲醇（MA，郑商所） 未来最该盯什么<span class="thin"> · 产业变量观察看板</span></h1>
+  <div class="sub">关注周期：未来1个月（2026-10-20 ~ 2026-11-20）　|　数据截止：2026-10-19</div>
+  <div class="metaline">
+    <span class="chip accent">合约锚点　<b>换月进行中：MA2611 于 10-16 仍为主力（收 3366 元/吨），10-20 起盘面主力已切换至 MA2701（开 3146 元/吨）；近月基差以 2611 及 11 月上旬现货为锚，结构观察转看 2701</b></span>
+    <span class="chip">重点区域　<b>华东（江苏太仓/南通、浙江宁波）+ 华南（广东）；成本端内蒙古鄂尔多斯；供应端西北/西南</b></span>
+    <span class="chip">口径　<b>现货为现汇含税出罐自提价；期货为主力合约收盘价；基差=太仓现货-当主力合约</b></span>
+    <span class="chip">研究定位　<b>期货 + 现货（期现兼顾），偏产业基本面跟踪，不做单边方向预测</b></span>
+  </div>
+</div>
+</header><div class="toolbar"><div class="wrap"><div class="tbrow">
+  <div class="tabs">
+    <button class="tab active" data-view="cards">变量卡片</button>
+    <button class="tab" data-view="timeline">事件时间线</button>
+    <button class="tab" data-view="snapshot">产业状态快照</button>
+  </div>
+  <div class="filters"><button class="fbtn active" data-cat="all">全部</button><button class="fbtn" data-cat="fav" title="仅显示已收藏">★ 自选</button><button class="fbtn" data-cat="库存"><span class="dot" style="--c:#7c5cd6"></span>库存</button><button class="fbtn" data-cat="供给"><span class="dot" style="--c:#e0693a"></span>供给</button><button class="fbtn" data-cat="需求"><span class="dot" style="--c:#2f7fd1"></span>需求</button><button class="fbtn" data-cat="价差"><span class="dot" style="--c:#1a9b8a"></span>价差</button></div>
+  <input class="search" id="q" type="search" placeholder="搜索变量 / 事件 / 指标…">
+  <span class="count" id="count"></span>
+</div></div></div><div class="wrap"><div class="overview"><div class="ov" style="--c:#4f9cf9"><div class="k">入选变量</div><div class="v">4</div><div class="n">覆盖 4 类：价差 / 供给 / 库存 / 需求</div></div><div class="ov" style="--c:#7c5cd6"><div class="k">候选筛选</div><div class="v">4/10</div><div class="n">入选 / 全部候选，其余降为二级观察</div></div><div class="ov" style="--c:#1a9b8a"><div class="k">未来已知节点</div><div class="v">10</div><div class="n">10-20 至 11-20 区间内的公开事件与数据发布</div></div><div class="ov" style="--c:#c99427"><div class="k">数据缺口</div><div class="v">5</div><div class="n">明确限制与替代口径，均已标注</div></div></div><div class="view active" id="view-cards"><div class="cards" id="cards"><article class="card" data-cat="库存" data-vid="V1" data-search="港口库存去库终结？—— 隆众 vs 卓创双口径的拐点确认 隆众 10-14 口径 36.72 万吨（+6.21），卓创 10-15 口径 41.33 万吨（+3.92，同比 -73.07%） 甲醇港口库存是华东/华南定价的实物锚。库存极低 → 现货升水/基差走强；库存见底回升 → 基差收敛、近月强驱动消失。10-08 至 10-14 的 +6.21 万吨是本轮行情第一个&quot;现实转弱&quot;证据，必须确认是单周波动还是趋势起点">
+  <div class="card-head" style="--c:#7c5cd6">
+    <div class="rank" style="--c:#7c5cd6">#1</div>
+    <div class="card-title">
+      <h3>港口库存去库终结？—— 隆众 vs 卓创双口径的拐点确认</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#7c5cd6">库存</span>
+        <span class="tag">重要性 <span class="stars" title="5/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="5/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="5/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i></span></span>
+        <span class="tag next">下次观测：2026-10-22（下周库存），之后 10-29、11-05、11-12</span>
+        <span class="tag">周度（每周三/四）</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V1" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#7c5cd6">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>隆众 10-14 口径 36.72 万吨（+6.21），卓创 10-15 口径 41.33 万吨（+3.92，同比 -73.07%）</p></div>
+        <div class="block"><h4>近期变化</h4><p>10-08 的 30.51 万吨为历史低点 → 10-14 首次回升；华南 +9.37 万吨（广东进口+内贸双补充），华东 -3.16 万吨</p></div>
+        <div class="block"><h4>历史位置</h4><p>绝对水平近五年同期最低；较 2025-11 峰值 167.4 万吨 -78%；但已出现 3 月以来首次方向反转</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>甲醇港口库存是华东/华南定价的实物锚。库存极低 → 现货升水/基差走强；库存见底回升 → 基差收敛、近月强驱动消失。10-08 至 10-14 的 +6.21 万吨是本轮行情第一个&quot;现实转弱&quot;证据，必须确认是单周波动还是趋势起点</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>港口库存 = 到港量 + 内贸补充 - 提货量（含 MTO 刚需、传统下游、出口）。当前到港极低（10 月进口约 40-47 万吨 vs 正常 80-100 万吨），但 MTO 停车使提货同步塌陷，两者赛跑决定库存方向</p></div>
+        <div class="mini"><div class="mt">甲醇港口库存（万吨，隆众口径）</div><svg viewBox="0 0 460 120" preserveAspectRatio="none" role="img"><defs><linearGradient id="g46758" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7c5cd6" stop-opacity=".28"/><stop offset="100%" stop-color="#7c5cd6" stop-opacity="0"/></linearGradient></defs><path d="M12.0,108 L12.0,12.0 L157.3,28.6 L302.7,108.0 L448.0,52.2 L448.0,108 Z" fill="url(#g46758)"/><polyline points="12.0,12.0 157.3,28.6 302.7,108.0 448.0,52.2" fill="none" stroke="#7c5cd6" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="12.0" cy="12.0" r="3.2" fill="#7c5cd6" stroke="#151c2b" stroke-width="1.5"/><text x="12.0" y="3.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">41.2</text><circle cx="157.3" cy="28.6" r="3.2" fill="#7c5cd6" stroke="#151c2b" stroke-width="1.5"/><text x="157.3" y="19.6" font-size="9.5" fill="#9fb0cc" text-anchor="middle">39.35</text><circle cx="302.7" cy="108.0" r="3.2" fill="#7c5cd6" stroke="#151c2b" stroke-width="1.5"/><text x="302.7" y="99.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">30.51</text><circle cx="448.0" cy="52.2" r="3.2" fill="#7c5cd6" stroke="#151c2b" stroke-width="1.5"/><text x="448.0" y="43.2" font-size="9.5" fill="#9fb0cc" text-anchor="middle">36.72</text></svg><div class="mnote">卓创 10-15 口径为 41.33 万吨，样本不同不可混用</div></div>
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①隆众周度港口总库存（华东/华南分列）</li><li>②卓创沿海库存</li><li>③华东/华南周度提货量</li><li>④江苏/浙江/广东分库库存</li><li>⑤内地-港口价差（太仓-内蒙-550 约 318 元/吨，套利窗口）</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">隆众口径连续 2 周环比增加 ≥3 万吨且华南/华东同时累库，同时太仓基差跌破 400 元/吨 → 确认库存拐点，原&quot;低库存支撑近月&quot;判断需下调</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">隆众口径再度回落至 32 万吨以下、且卓创同比降幅仍在 -70% 以上 → 低库存叙事延续，需把关注点移回进口与 MTO 成本</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">到港恢复但库存仍去化（说明提货极强）或库存累库但基差逆势走强（说明可流通货源结构性紧张，库存数字失真）</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>隆众资讯（chem.oilchem.net 化工-甲醇-库存）、卓创资讯、华泰期货日评、金投网周度盘点</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>周度（周三/四发布，节假日后可能顺延）</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>2026-10-22（下周库存），之后 10-29、11-05、11-12</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>高（双口径可交叉验证）</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>两口径样本不同、绝对差约 4.6 万吨，不可混用；分库数据部分需付费终端</div>
+    </div>
+  </div>
+</article><article class="card" data-cat="供给" data-vid="V2" data-search="霍尔木兹海峡通行与伊朗装置 —— 进口断档的真伪 10 月进口预估 40-47 万吨（大地：45-50 万吨）；9 月伊朗装船仅约 21.3-24 万吨；伊朗开工约 37%、日产约 1.3 万吨；约 660 万吨伊朗产能仍停车 中国甲醇进口依赖中东，伊朗占进口约 55-60%。海峡通行是进口的&quot;闸门&quot;，而 10 月剩余两周到港量已被确认为低位——这意味着 11 月上旬前的港口偏紧是&quot;已锁定&quot;的，真正有分歧的是 11 月下旬及以后">
+  <div class="card-head" style="--c:#e0693a">
+    <div class="rank" style="--c:#e0693a">#2</div>
+    <div class="card-title">
+      <h3>霍尔木兹海峡通行与伊朗装置 —— 进口断档的真伪</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#e0693a">供给</span>
+        <span class="tag">重要性 <span class="stars" title="5/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="3/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i></i><i></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="5/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i></span></span>
+        <span class="tag next">下次观测：10-23 起伊朗 11 月装船观察窗；11-10 海关 10 月数据；每周一/二国际甲醇周报</span>
+        <span class="tag">日频/周频（船期+装置），月度（海关）</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V2" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#e0693a">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>10 月进口预估 40-47 万吨（大地：45-50 万吨）；9 月伊朗装船仅约 21.3-24 万吨；伊朗开工约 37%、日产约 1.3 万吨；约 660 万吨伊朗产能仍停车</p></div>
+        <div class="block"><h4>近期变化</h4><p>伊朗多套装置曾重启（Marjan、Busher、Apadana、Kaveh 等），但 ZPC 开一停一，装船量受海峡通行直接约束；美伊谈判暂无实质进展</p></div>
+        <div class="block"><h4>历史位置</h4><p>进口量为近五年同期最低（同比 -54%）；海外甲醇月度产量 337 万吨、同比 -23.29%，海外开工 53.35%</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>中国甲醇进口依赖中东，伊朗占进口约 55-60%。海峡通行是进口的&quot;闸门&quot;，而 10 月剩余两周到港量已被确认为低位——这意味着 11 月上旬前的港口偏紧是&quot;已锁定&quot;的，真正有分歧的是 11 月下旬及以后</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>海峡通行量 → 伊朗装船 → 航程约 20-25 天 → 中国到港 → 港口库存。同时海峡紧张会抬高保费/运费，推升 CFR 到岸成本，从而抬升甲醇的进口成本锚</p></div>
+        <div class="mini"><div class="mt">甲醇期货主力合约收盘价（元/吨）</div><svg viewBox="0 0 460 120" preserveAspectRatio="none" role="img"><defs><linearGradient id="g27834" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e0693a" stop-opacity=".28"/><stop offset="100%" stop-color="#e0693a" stop-opacity="0"/></linearGradient></defs><path d="M12.0,108 L12.0,73.8 L84.7,39.7 L157.3,12.0 L230.0,41.6 L302.7,64.0 L375.3,76.4 L448.0,108.0 L448.0,108 Z" fill="url(#g27834)"/><polyline points="12.0,73.8 84.7,39.7 157.3,12.0 230.0,41.6 302.7,64.0 375.3,76.4 448.0,108.0" fill="none" stroke="#e0693a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="12.0" cy="73.8" r="3.2" fill="#e0693a" stroke="#151c2b" stroke-width="1.5"/><text x="12.0" y="64.8" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3384</text><circle cx="84.7" cy="39.7" r="3.2" fill="#e0693a" stroke="#151c2b" stroke-width="1.5"/><text x="84.7" y="30.7" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3625</text><circle cx="157.3" cy="12.0" r="3.2" fill="#e0693a" stroke="#151c2b" stroke-width="1.5"/><text x="157.3" y="3.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3820</text><circle cx="230.0" cy="41.6" r="3.2" fill="#e0693a" stroke="#151c2b" stroke-width="1.5"/><text x="230.0" y="32.6" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3611</text><circle cx="302.7" cy="64.0" r="3.2" fill="#e0693a" stroke="#151c2b" stroke-width="1.5"/><text x="302.7" y="55.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3453</text><circle cx="375.3" cy="76.4" r="3.2" fill="#e0693a" stroke="#151c2b" stroke-width="1.5"/><text x="375.3" y="67.4" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3366</text><circle cx="448.0" cy="108.0" r="3.2" fill="#e0693a" stroke="#151c2b" stroke-width="1.5"/><text x="448.0" y="99.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3143</text></svg><div class="mnote">10-09 无可靠收盘价，取盘中 3820 附近并标注；10-19 起主力切换至 2701，跨合约不严格可比</div></div>
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①霍尔木兹海峡日通行船数（Kpler/Lloyd&#x27;s List 类船舶追踪）</li><li>②伊朗甲醇周度产量与开工</li><li>③伊朗月度装船量</li><li>④中国周频到港量（华东/华南）</li><li>⑤CFR 中国报价与华东进口价差</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">海峡通行明显恢复（日通行回到常态一半以上）+ 伊朗装船单月回升至 30 万吨以上 → 进口断档结束，浮仓释放将成为最大下行变量，原&quot;供给硬缺口&quot;判断需立即修正</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">海峡持续受阻且 11 月装船仍低于 25 万吨 → 12 月到港继续偏低，进口逻辑延续，需把库存变量的权重下调</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">海峡恢复但因冬季限气伊朗无法出货（通行≠有货），或伊朗货源改道其他国家而非中国，导致&quot;通行改善&quot;未能传导到中国到港</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>Kpler（商业船舶追踪）、隆众/金联创国际甲醇周报、CCFGroup、海关总署月度进出口、银河/大地期货研报</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>船舶/装置：日频至周频；海关：月度（次月 10 日前后）</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>10-23 起伊朗 11 月装船观察窗；11-10 海关 10 月数据；每周一/二国际甲醇周报</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>中（装置与装船可由研报交叉验证，海峡通行细节不透明）</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>海峡实际通行量为商业数据，公开渠道仅有二手转述；伊朗装置开停属企业/政治信息，无官方披露，只能依赖三家以上机构交叉</div>
+    </div>
+  </div>
+</article><article class="card" data-cat="需求" data-vid="V3" data-search="沿海外采 mto 停车潮的深度与复产时点 外采 mto 开工 60.91%（10-08）；mto 全口径 76.69%（10-14，-3.01pct）；外采 mto 理论利润 -4000 元/吨级（另一机构测 -1800~-2000） 需求负反馈是 10-12 日大跌的直接触发。关键分歧在于：这是&quot;高价逼出来的短停&quot;，还是&quot;持续到 2027 年的结构性退出&quot;。它决定港口提货塌陷的速度，也决定基差修复是靠期货上涨还是现货下跌">
+  <div class="card-head" style="--c:#2f7fd1">
+    <div class="rank" style="--c:#2f7fd1">#3</div>
+    <div class="card-title">
+      <h3>沿海外采 MTO 停车潮的深度与复产时点</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#2f7fd1">需求</span>
+        <span class="tag">重要性 <span class="stars" title="5/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="4/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="4/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i></i></span></span>
+        <span class="tag next">下次观测：每周四前后开工；10-20 诚志一期计划停车兑现；每周装置动态清单</span>
+        <span class="tag">周度（开工）+ 事件驱动（停车/复产）</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V3" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#2f7fd1">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>外采 MTO 开工 60.91%（10-08）；MTO 全口径 76.69%（10-14，-3.01pct）；外采 MTO 理论利润 -4000 元/吨级（另一机构测 -1800~-2000）</p></div>
+        <div class="block"><h4>近期变化</h4><p>10-10 渤化停车、10-11 联泓停车、10-15 诚志一期降负、10-18 诚志二期停车、10-20 诚志一期计划停车；宁波富德 9-19、恒通 9-18 已停；鲁西、兴兴、斯尔邦持续停车</p></div>
+        <div class="block"><h4>历史位置</h4><p>江浙外采 MTO 开工处历史极低位；MTO 利润为历年最差区间（2018 年同类亏损驱动的停车持续约 3 个月，至次年春节前后才复产）</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>需求负反馈是 10-12 日大跌的直接触发。关键分歧在于：这是&quot;高价逼出来的短停&quot;，还是&quot;持续到 2027 年的结构性退出&quot;。它决定港口提货塌陷的速度，也决定基差修复是靠期货上涨还是现货下跌</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>甲醇价格 → 外采 MTO 现金流 → 停车/降负 → 港口外采需求下降 → 港口提货与库存 → 甲醇现货。反向：MTO 利润修复（甲醇跌或烯烃涨）→ 复产 → 外采需求回归</p></div>
+        <div class="mini"><div class="mt">甲醇期货主力合约收盘价（元/吨）</div><svg viewBox="0 0 460 120" preserveAspectRatio="none" role="img"><defs><linearGradient id="g27834" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2f7fd1" stop-opacity=".28"/><stop offset="100%" stop-color="#2f7fd1" stop-opacity="0"/></linearGradient></defs><path d="M12.0,108 L12.0,73.8 L84.7,39.7 L157.3,12.0 L230.0,41.6 L302.7,64.0 L375.3,76.4 L448.0,108.0 L448.0,108 Z" fill="url(#g27834)"/><polyline points="12.0,73.8 84.7,39.7 157.3,12.0 230.0,41.6 302.7,64.0 375.3,76.4 448.0,108.0" fill="none" stroke="#2f7fd1" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="12.0" cy="73.8" r="3.2" fill="#2f7fd1" stroke="#151c2b" stroke-width="1.5"/><text x="12.0" y="64.8" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3384</text><circle cx="84.7" cy="39.7" r="3.2" fill="#2f7fd1" stroke="#151c2b" stroke-width="1.5"/><text x="84.7" y="30.7" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3625</text><circle cx="157.3" cy="12.0" r="3.2" fill="#2f7fd1" stroke="#151c2b" stroke-width="1.5"/><text x="157.3" y="3.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3820</text><circle cx="230.0" cy="41.6" r="3.2" fill="#2f7fd1" stroke="#151c2b" stroke-width="1.5"/><text x="230.0" y="32.6" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3611</text><circle cx="302.7" cy="64.0" r="3.2" fill="#2f7fd1" stroke="#151c2b" stroke-width="1.5"/><text x="302.7" y="55.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3453</text><circle cx="375.3" cy="76.4" r="3.2" fill="#2f7fd1" stroke="#151c2b" stroke-width="1.5"/><text x="375.3" y="67.4" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3366</text><circle cx="448.0" cy="108.0" r="3.2" fill="#2f7fd1" stroke="#151c2b" stroke-width="1.5"/><text x="448.0" y="99.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">3143</text></svg><div class="mnote">10-09 无可靠收盘价，取盘中 3820 附近并标注；10-19 起主力切换至 2701，跨合约不严格可比</div></div>
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①隆众/卓创 MTO 产能利用率（外采与一体化分列）</li><li>②华东 MTO 单体利润</li><li>③各外采装置（诚志一期/二期、渤化、联泓、兴兴、斯尔邦、鲁西、宁波富德、恒通、天津）开停台账</li><li>④PP/PE 价格与 PP-3MA 价差</li><li>⑤港口周度提货量</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">外采 MTO 开工跌破 50%，或出现第 2 家&quot;原计划复产&quot;装置再度延期，且 PP-3MA 价差未扩大 → 负反馈加深，原&quot;需求弹性有限、下行空间受限&quot;需下修</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">甲醇大幅回落后 MTO 单体利润回升至 -500 元/吨以内且有装置提前复产（如诚志二期/渤化）→ 负反馈见底，应按&quot;需求修复&quot;路径重估</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">装置停车实际原因是原料短缺（买不到货）而非亏损，或一体化 MTO 外卖甲醇扩大（如 CTO 外放），导致开工下降但港口供给增加</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>隆众资讯（甲醇-MTO 开工）、卓创、华泰/兴业/一德期货日评、东方财富财富号装置台账、企业公告</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>开工：周度；装置事件：不定期（以周报装置动态为准）</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>每周四前后开工；10-20 诚志一期计划停车兑现；每周装置动态清单</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>高（周度开工与多家机构转述可交叉）</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>&quot;外采 MTO&quot;与&quot;MTO 总开工&quot;口径混淆是最大陷阱（两者相差 15pct 以上）；个别装置的停车原因（亏损 vs 缺料 vs 检修）公开披露不充分</div>
+    </div>
+  </div>
+</article><article class="card" data-cat="价差" data-vid="V4" data-search="主力换月与基差结构 —— 现货紧张如何兑现 ma2611 10-16 收 3366 元/吨（当时主力）；ma2701 10-19 收 3143 元/吨，10-20 开 3146 元/吨（新主力）；太仓 3983 元/吨（10-16）；太仓基差 629 元/吨（10-16，+77） 基差是甲醇期现研究的核心价格。极值基差意味着两种可能：①现货真缺、期货将向现货修复（上涨）；②现货将被压制、期货向现货靠拢（下跌）。11 月合约交割与换月是这两种路径的裁决点，直接影响套保效率与采购时点">
+  <div class="card-head" style="--c:#1a9b8a">
+    <div class="rank" style="--c:#1a9b8a">#4</div>
+    <div class="card-title">
+      <h3>主力换月与基差结构 —— 现货紧张如何兑现</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#1a9b8a">价差</span>
+        <span class="tag">重要性 <span class="stars" title="4/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="5/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="4/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i></i></span></span>
+        <span class="tag next">下次观测：每日收盘；关键节点 11-13（MA2611 最后交易日）、11-20 前后主力完整切换至 2701</span>
+        <span class="tag">日频，11 月中交割为终点</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V4" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#1a9b8a">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>MA2611 10-16 收 3366 元/吨（当时主力）；MA2701 10-19 收 3143 元/吨，10-20 开 3146 元/吨（新主力）；太仓 3983 元/吨（10-16）；太仓基差 629 元/吨（10-16，+77）</p></div>
+        <div class="block"><h4>近期变化</h4><p>10-09 主力盘中 3925（阶段高）→ 10-12 早盘跌至 3521(-7.65%) → 10-13 收 3453(-6.73%) → 10-16 MA2611 收 3366 → 10-19 MA2701 收 3143；基差自 975 回落至 629，但仍在历史极端区间；MA2611 持仓 10-16 已降至 22.92 万手，日减仓 3.32 万手，移仓加速</p></div>
+        <div class="block"><h4>历史位置</h4><p>正常年份基差约 100 元/吨，旺季高点通常不超 500 元/吨；当前 629 元/吨处于历史分位 99% 以上；主力换月将把&quot;近月价格&quot;从 11 合约平滑过渡到 01 合约</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>基差是甲醇期现研究的核心价格。极值基差意味着两种可能：①现货真缺、期货将向现货修复（上涨）；②现货将被压制、期货向现货靠拢（下跌）。11 月合约交割与换月是这两种路径的裁决点，直接影响套保效率与采购时点</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>基差 = 现货 - 期货。港口库存低位 + 可流通货源紧 → 现货强势 → 基差走阔；换月/交割时仓储、资金成本被定价 → 月差结构反映市场对 11-12 月库存的预期；基差收敛路径（现货跌 vs 期货涨）决定产业客户套保与点价策略</p></div>
+        <div class="mini"><div class="mt">太仓基差（现货-主力，元/吨）</div><svg viewBox="0 0 460 120" preserveAspectRatio="none" role="img"><defs><linearGradient id="g85293" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a9b8a" stop-opacity=".28"/><stop offset="100%" stop-color="#1a9b8a" stop-opacity="0"/></linearGradient></defs><path d="M12.0,108 L12.0,12.0 L230.0,108.0 L448.0,106.1 L448.0,108 Z" fill="url(#g85293)"/><polyline points="12.0,12.0 230.0,108.0 448.0,106.1" fill="none" stroke="#1a9b8a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="12.0" cy="12.0" r="3.2" fill="#1a9b8a" stroke="#151c2b" stroke-width="1.5"/><text x="12.0" y="3.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">975</text><circle cx="230.0" cy="108.0" r="3.2" fill="#1a9b8a" stroke="#151c2b" stroke-width="1.5"/><text x="230.0" y="99.0" font-size="9.5" fill="#9fb0cc" text-anchor="middle">622</text><circle cx="448.0" cy="106.1" r="3.2" fill="#1a9b8a" stroke="#151c2b" stroke-width="1.5"/><text x="448.0" y="97.1" font-size="9.5" fill="#9fb0cc" text-anchor="middle">629</text></svg><div class="mnote">三组基差来源口径不一致，仅看方向与量级；正常年份约 100 元/吨，旺季高点一般不超 500</div></div>
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①MA2611/MA2701 收盘、成交、持仓</li><li>②太仓现货与基差（分月基差：现货/月中/月下/11下）</li><li>③MA01-05 月差</li><li>④郑商所仓单数量与交割预报</li><li>⑤河南/内地仓单货源价格（当前期货锚定转为河南仓单货）</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">基差收敛方式为&quot;现货跟随下跌&quot;（太仓跌破 3800 且基差收窄至 300 以内），同时仓单大幅增加 → 现货紧张被证伪，原&quot;近强远弱&quot;判断下修</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">期货快速向现货修复（近月重返 3600 以上）而现货坚挺，基差收敛但现货不跌 → 现货真缺确认，需重新评估下游补库与套保对冲规模</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">基差走弱是因为交割库/仓单结构变化（如新增交割库、仓单货源切换至河南）而非供需，或期现口径错配（用不同区域/税基现货直接相减）</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>郑商所（行情、仓单、交割）、太仓/江苏现货报价（隆众/钢联）、期货公司日评基差表</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>日频（收盘后），基差与月差每日更新</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>每日收盘；关键节点 11-13（MA2611 最后交易日）、11-20 前后主力完整切换至 2701</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>高（交易所公开数据，口径明确）</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>现货报价存在&quot;牌价 vs 成交价&quot;差异；期货与太仓现货的区域/税基不完全可比，需用同一机构的期现基差表；仓单变动解释需结合交割库公告</div>
+    </div>
+  </div>
+</article></div><div class="empty" id="empty" style="display:none">没有匹配的变量，试试切换筛选或清空搜索。</div></div><div class="view" id="view-timeline">
+<p class="desc" style="color:var(--txt2);font-size:13px;margin-bottom:16px">
+  仅收录「已公开披露」或「有确定发布节奏」的节点。<span class="kind fixed">绿</span> = 有明确日期或正在进行的确定事件；
+  <span class="kind periodic">蓝</span> = 按固定节奏发布的数据；<span class="kind cond">黄</span> = 条件触发或时点模糊，只作为观察窗口，
+  <b>不代表必然发生</b>。灰化条目为已经过去的节点。</p>
+<div class="timeline"><div class="ev" style="--c:#2f7fd1" data-search="南京诚志一期 mto 计划停车（此前一度计划降负） 华东外采 mto 开工进一步下探，港口刚需提货再降">
+  <div class="ev-top">
+    <span class="ev-date">10-20</span>
+    <span class="kind cond">已披露·待兑现</span>
+    <span class="tag cat" style="--c:#2f7fd1">需求</span>
+    <span class="tag">2026-10-20</span>
+  </div>
+  <div class="ev-title">南京诚志一期 MTO 计划停车（此前一度计划降负）</div>
+  <div class="ev-meta"><b>确定性：</b>机构转述计划，最终以企业执行公告/隆众周度开工为准<br><b>影响路径：</b>华东外采 MTO 开工进一步下探，港口刚需提货再降<br><b>来源：</b>一德期货(2026-10-13)、东方财富财富号(2026-10-13)</div>
+</div><div class="ev" style="--c:#7c5cd6" data-search="港口库存周报（隆众周度，通常周三四发布） 验证 10-14 的 +6.21 万吨是拐点还是单周波动">
+  <div class="ev-top">
+    <span class="ev-date">10-22</span>
+    <span class="kind periodic">定期数据</span>
+    <span class="tag cat" style="--c:#7c5cd6">库存</span>
+    <span class="tag">2026-10-22</span>
+  </div>
+  <div class="ev-title">港口库存周报（隆众周度，通常周三四发布）</div>
+  <div class="ev-meta"><b>确定性：</b>固定周度节奏<br><b>影响路径：</b>验证 10-14 的 +6.21 万吨是拐点还是单周波动<br><b>来源：</b>隆众资讯周度库存</div>
+</div><div class="ev" style="--c:#e0693a" data-search="11 月伊朗装船窗口期观察（月度装船集中于月末前后） 决定 12 月中国到港，是当前定价最核心的远端变量">
+  <div class="ev-top">
+    <span class="ev-date">10-23</span>
+    <span class="kind cond">条件触发·观察窗</span>
+    <span class="tag cat" style="--c:#e0693a">供给</span>
+    <span class="tag">2026-10-23</span>
+  </div>
+  <div class="ev-title">11 月伊朗装船窗口期观察（月度装船集中于月末前后）</div>
+  <div class="ev-meta"><b>确定性：</b>装船量取决于海峡通行，时点不确定<br><b>影响路径：</b>决定 12 月中国到港，是当前定价最核心的远端变量<br><b>来源：</b>大地期货(2026-10-08)、银河期货(2026-10-14)</div>
+</div><div class="ev" style="--c:#e0693a" data-search="宝丰内蒙 280 万吨/年甲醇新装置计划 10 月底投产 若外售，将改变西北平衡与内地-港口套利流向；若全部自用，边际影响小">
+  <div class="ev-top">
+    <span class="ev-date">10-25</span>
+    <span class="kind cond">已披露·时点模糊</span>
+    <span class="tag cat" style="--c:#e0693a">供给</span>
+    <span class="tag">2026-10-25</span>
+  </div>
+  <div class="ev-title">宝丰内蒙 280 万吨/年甲醇新装置计划 10 月底投产</div>
+  <div class="ev-meta"><b>确定性：</b>计划投产（10 月底为研报口径，非确定日期），配套烯烃年底投产；是否外售甲醇未公开，以隆众/卓创周度装置动态为准<br><b>影响路径：</b>若外售，将改变西北平衡与内地-港口套利流向；若全部自用，边际影响小<br><b>来源：</b>大地期货(2026-10-08)、盛达期货(2026-10-09)</div>
+</div><div class="ev" style="--c:#e0693a" data-search="国能榆林 180 万吨/年甲醇+60 万吨/年烯烃检修中（10-10 起，约 45 天） 减少西北外采需求与外售甲醇，是内地累库幅度的重要压制项">
+  <div class="ev-top">
+    <span class="ev-date">10-31</span>
+    <span class="kind fixed">已披露·进行中</span>
+    <span class="tag cat" style="--c:#e0693a">供给</span>
+    <span class="tag">2026-10-31</span>
+  </div>
+  <div class="ev-title">国能榆林 180 万吨/年甲醇+60 万吨/年烯烃检修中（10-10 起，约 45 天）</div>
+  <div class="ev-meta"><b>确定性：</b>明确检修，结束时间约 11 月下旬<br><b>影响路径：</b>减少西北外采需求与外售甲醇，是内地累库幅度的重要压制项<br><b>来源：</b>金投网(2026-10-19)</div>
+</div><div class="ev" style="--c:#2f7fd1" data-search="传统下游检修/重启兑现：塞拉尼斯冰醋酸停车、浏阳京港与安徽庆洋甲醛重启、山东金岭大王氯化物停车 传统下游（占需求约 1/3）的小幅增量，能否对冲 mto 损失">
+  <div class="ev-top">
+    <span class="ev-date">11-05</span>
+    <span class="kind cond">已披露·时点近似</span>
+    <span class="tag cat" style="--c:#2f7fd1">需求</span>
+    <span class="tag">2026-11-05</span>
+  </div>
+  <div class="ev-title">传统下游检修/重启兑现：塞拉尼斯冰醋酸停车、浏阳京港与安徽庆洋甲醛重启、山东金岭大王氯化物停车</div>
+  <div class="ev-meta"><b>确定性：</b>隆众预告装置动态，具体日期以周报为准<br><b>影响路径：</b>传统下游（占需求约 1/3）的小幅增量，能否对冲 MTO 损失<br><b>来源：</b>隆众周报(2026-10-17)</div>
+</div><div class="ev" style="--c:#e0693a" data-search="海关 10 月甲醇进出口数据（通常次月 10 日前后）+ 隆众 10 月进出口统计 用实际值校验 40-47 万吨的 10 月进口预估，并推算 11 月到港">
+  <div class="ev-top">
+    <span class="ev-date">11-10</span>
+    <span class="kind periodic">定期数据</span>
+    <span class="tag cat" style="--c:#e0693a">供给</span>
+    <span class="tag">2026-11-10</span>
+  </div>
+  <div class="ev-title">海关 10 月甲醇进出口数据（通常次月 10 日前后）+ 隆众 10 月进出口统计</div>
+  <div class="ev-meta"><b>确定性：</b>海关固定发布节奏<br><b>影响路径：</b>用实际值校验 40-47 万吨的 10 月进口预估，并推算 11 月到港<br><b>来源：</b>海关总署、隆众/金联创月报</div>
+</div><div class="ev" style="--c:#1a9b8a" data-search="ma2611 最后交易日（郑商所规则：合约交割月份第 10 个交易日） 近月持仓与仓单清算，决定 11 月下旬现货流动与基差收敛方式">
+  <div class="ev-top">
+    <span class="ev-date">11-13</span>
+    <span class="kind periodic">定期数据</span>
+    <span class="tag cat" style="--c:#1a9b8a">价差</span>
+    <span class="tag">2026-11-13</span><span class="tag">按郑商所甲醇合约：最后交易日为交割月份第 10 个交易日（遇节假日顺延），11-13 为按此推算的日期</span>
+  </div>
+  <div class="ev-title">MA2611 最后交易日（郑商所规则：合约交割月份第 10 个交易日）</div>
+  <div class="ev-meta"><b>确定性：</b>交易所合约规则确定，具体交易日以交易所公告为准<br><b>影响路径：</b>近月持仓与仓单清算，决定 11 月下旬现货流动与基差收敛方式<br><b>来源：</b>郑州商品交易所甲醇期货合约规则</div>
+</div><div class="ev" style="--c:#b8446b" data-search="伊朗冬季限气窗口（历史在 11 月后逐步推进） 若限气提前/加重，伊朗装置将再度降负，压低 12-1 月到港">
+  <div class="ev-top">
+    <span class="ev-date">11-15</span>
+    <span class="kind cond">季节性·条件触发</span>
+    <span class="tag cat" style="--c:#b8446b">政策</span>
+    <span class="tag">2026-11-15</span>
+  </div>
+  <div class="ev-title">伊朗冬季限气窗口（历史在 11 月后逐步推进）</div>
+  <div class="ev-meta"><b>确定性：</b>历史上每年 11 月后进入限气，但具体时点与力度逐年浮动<br><b>影响路径：</b>若限气提前/加重，伊朗装置将再度降负，压低 12-1 月到港<br><b>来源：</b>盛达期货(2026-10-09) 五年季节性规律</div>
+</div><div class="ev" style="--c:#b8446b" data-search="ma2701 移仓完成，交易重心转向 01 合约供需真空期 01 合约覆盖不到 2027 春节后 mto 复产窗口，期现结构易分化">
+  <div class="ev-top">
+    <span class="ev-date">11-20</span>
+    <span class="kind periodic">定期数据</span>
+    <span class="tag cat" style="--c:#b8446b">政策</span>
+    <span class="tag">2026-11-20</span>
+  </div>
+  <div class="ev-title">MA2701 移仓完成，交易重心转向 01 合约供需真空期</div>
+  <div class="ev-meta"><b>确定性：</b>合约节奏确定<br><b>影响路径：</b>01 合约覆盖不到 2027 春节后 MTO 复产窗口，期现结构易分化<br><b>来源：</b>东方财富财富号(2026-10-13)、永安/国元周报</div>
+</div></div></div><div class="view" id="view-snapshot">
+<p class="desc" style="color:var(--txt2);font-size:13px;margin-bottom:16px">
+  产业状态核对表：价格、库存、开工、产量、需求、成本六类核心指标。<b>同一指标有多个口径时分行列出且标注口径</b>，
+  不同口径的数值不可直接比较或相减。</p>
+<table class="snaptable">
+  <thead><tr><th>指标 / 口径</th><th>当前值</th><th>近期变化</th><th>历史位置</th><th>来源</th></tr></thead>
+  <tbody><tr data-search="港口库存（隆众口径，华东+华南）">
+  <td class="ind">港口库存（隆众口径，华东+华南）<div class="scope">隆众：华东+华南合计，含在卸/在途部分</div></td>
+  <td class="val">36.72 万吨（10-14）</td>
+  <td>30.51 万吨(10-08) → 36.72 万吨(10-14)，+6.21 万吨，首次环比回升；9-23 曾 41.20 万吨、10-09 一度为 30.51 万吨历史低点</td>
+  <td>绝对水平处于近五年同期最低区间；较 2025-11 峰值 167.4 万吨下降约 78%</td>
+  <td class="scope">隆众周度库存、新浪财经(2026-10-14)、华泰期货日评(2026-10-16)</td>
+</tr><tr data-search="港口库存（卓创口径，沿海）">
+  <td class="ind">港口库存（卓创口径，沿海）<div class="scope">卓创：沿海合计（与隆众样本不同，见口径页）</div></td>
+  <td class="val">41.33 万吨（10-15）</td>
+  <td>较 10-08 增 3.92 万吨(+10.48%)，较 09-30 减 3.75 万吨(-8.32%)，同比 -73.07%</td>
+  <td>历史低位；两口径绝对差约 4.6 万吨，不可混用</td>
+  <td class="scope">金投网(2026-10-19) 引卓创数据</td>
+</tr><tr data-search="太仓甲醇现货 / 期货主力 / 基差">
+  <td class="ind">太仓甲醇现货 / 期货主力 / 基差<div class="scope">现货现汇含税出罐；基差=太仓现货-当主力合约</div></td>
+  <td class="val">太仓 3983 元/吨（10-16）；MA2611 收 3366 元/吨（10-16）；MA2701 收 3143 元/吨（10-19）</td>
+  <td>华东港口报价 10-09 约 4846 → 10-16 约 3966（生意社口径，-18.16%）；MA2611 10-16 收 3366（-1.49%，持仓 22.92 万手、日减仓 3.32 万手）；10-20 盘面主力已切至 MA2701（开 3146）</td>
+  <td>现货处于历史高位（生意社一年区间 1995-4733，一年位置&quot;高位&quot;）；基差 10-08 达 975 元/吨、10-16 太仓基差 629 元/吨，均远高于正常 100 元/吨与旺季 500 元/吨上沿</td>
+  <td class="scope">盛达期货(2026-10-09)、华泰期货(2026-10-16)、生意社(2026-10-16/10-20)、金投网(2026-10-20)</td>
+</tr><tr data-search="国内甲醇产能利用率 / 产量">
+  <td class="ind">国内甲醇产能利用率 / 产量<div class="scope">隆众全样本（含煤/气/焦炉气）</div></td>
+  <td class="val">92.15%（10-09，环比 +2.97pct，同比 +2.61pct）</td>
+  <td>9 月末 86.44% → 10-09 92.15%，检修装置集中重启；10-17 隆众称本周产能利用率大幅下降（对应国能榆林等停车）</td>
+  <td>历史高位区（近五年 85-93% 区间上沿）</td>
+  <td class="scope">盛达期货(2026-10-09)、隆众周报(2026-09-28, 2026-10-17)</td>
+</tr><tr data-search="mto 开工（两套口径，务必分开看）">
+  <td class="ind">MTO 开工（两套口径，务必分开看）<div class="scope">口径见 sources；60.91% 为外采 MTO，76.69% 含一体化</div></td>
+  <td class="val">外采MTO 60.91%（10-08）；MTO 全口径 76.69%（10-14，-3.01pct）；另有机构估算江浙外采仅约 20%</td>
+  <td>10-08 60.91% → 10-14 76.69%（口径不同，不作同比比较）；10-10 渤化停车、10-11 联泓停车、10-15 诚志一期降负、10-18 诚志二期停车</td>
+  <td>外采MTO 处于深度亏损区间（理论利润 -4000 元/吨级），开工处历史低位</td>
+  <td class="scope">光大期货(2026-10-10)、华泰期货(2026-10-16)、东方财富财富号(2026-10-13)</td>
+</tr><tr data-search="传统下游开工">
+  <td class="ind">传统下游开工<div class="scope">隆众口径</div></td>
+  <td class="val">加权约 50.63%（10-08）；甲醛 28.7%、冰醋酸 86.9%、MTBE 63.9%</td>
+  <td>甲醛 -1.24pct、冰醋酸 -2.58pct；隆众 10-17 称传统下游开工继续回落</td>
+  <td>甲醛处季节性低位；醋酸高位但开始下行</td>
+  <td class="scope">盛达期货(2026-10-09)、光大期货(2026-10-10)、隆众周报(2026-10-17)</td>
+</tr><tr data-search="进口（月度/周频到港）">
+  <td class="ind">进口（月度/周频到港）<div class="scope">海关口径未出，机构预估；周频到港为船期跟踪口径</div></td>
+  <td class="val">9 月进口约 40 万吨；10 月预估 40-47 万吨（另有一说 45-50 万吨）</td>
+  <td>正常月份 80-100 万吨；9 月伊朗装船约 21.3-24 万吨；周频到港 10.56 万吨(-8.88)</td>
+  <td>近五年同期最低水平，同比降幅约 54%</td>
+  <td class="scope">盛达期货(2026-10-09)、大地期货(2026-10-08)、华泰期货(2026-10-07)、银河期货(2026-10-14)</td>
+</tr><tr data-search="成本端：鄂尔多斯 q5500 动力煤">
+  <td class="ind">成本端：鄂尔多斯 Q5500 动力煤<div class="scope">坑口含税/港口平仓两种口径分列</div></td>
+  <td class="val">785 元/吨（10-16，周环比持平）；秦港 Q5500 已重返 1000 元上方（10-19 约 1018 元/吨）</td>
+  <td>节后坑口小幅回调后企稳回升；10-16 发改委召开煤矿复产增产保供推进会</td>
+  <td>煤价处 2023 年以来高位；甲醇生产利润仍为正（内蒙煤制约 +1070 元/吨）</td>
+  <td class="scope">华泰期货(2026-10-16)、开源证券(2026-10-10)、南方财经(2026-10-19)、国泰海通(2026-10-18)</td>
+</tr><tr data-search="上游厂库 / 待发订单">
+  <td class="ind">上游厂库 / 待发订单<div class="scope">隆众样本厂库</div></td>
+  <td class="val">内地工厂库存 35.69 万吨（+3.46 万吨）；西北 22.37 万吨（+1.95 万吨）；待发订单 19.23 万吨（+0.56 万吨）</td>
+  <td>国庆后汽运受阻+高价抑制出货，厂库连续累积</td>
+  <td>厂库处中性偏高水平（与港口极端低位形成反向）</td>
+  <td class="scope">华泰期货(2026-10-16)</td>
+</tr><tr data-search="外盘 / 区域价差">
+  <td class="ind">外盘 / 区域价差<div class="scope">CFR 为到岸价；进口价差=华东现货-进口成本</div></td>
+  <td class="val">CFR 中国 459 美元/吨（10-16 持平）；CFR 东南亚 649.5-650.5 美元/吨；华东进口价差 298 元/吨(+173)</td>
+  <td>CFR 中国与东南亚价差约 190 美元/吨，出口/转口窗口打开</td>
+  <td>东南亚-中国价差处历史高位，支撑转口与出口提货</td>
+  <td class="scope">华泰期货(2026-10-16)、生意社(2026-10-15)</td>
+</tr></tbody>
+</table></div><div class="section">
+  <h2><span class="num">01</span>候选池与筛选依据</h2>
+  <p class="desc">先列出所有可想到的候选指标，再用「产业逻辑强度 × 可验证性 × 观察周期匹配度」筛选，只保留 3–6 个。
+  未被选中的项不是不重要，而是<b>不能在同一周期内被独立验证</b>，或与入选变量高度相关，转为二级观察。</p>
+  <div class="cand"><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">港口库存（隆众/卓创双口径） <span class="tag cat" style="--c:#7c5cd6">库存</span></div>
+  <div class="rs">10 月 14 日首次环比回升是 2026 年 3 月以来第一次反向拐点，直接决定基差能否收敛</div></div>
+  <div class="vf">可验证性<br>高（周度、公开、双口径交叉）</div>
+</div><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">伊朗/中东供应与霍尔木兹海峡通行 <span class="tag cat" style="--c:#e0693a">供给</span></div>
+  <div class="rs">决定 10-47 万吨级进口断档能否延续，是当前价格最高权重变量</div></div>
+  <div class="vf">可验证性<br>中（装船/通行船数可跟踪，通行细节不透明）</div>
+</div><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">沿海外采 MTO 开工与复产节奏 <span class="tag cat" style="--c:#2f7fd1">需求</span></div>
+  <div class="rs">需求占甲醇近一半，10 月集中停车是负反馈落地的主战场，且 11 月仍有兑现/反悔空间</div></div>
+  <div class="vf">可验证性<br>高（周度开工可查，企业停车有公开转述）</div>
+</div><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">期货主力移仓与基差结构（MA2611→MA2701） <span class="tag cat" style="--c:#1a9b8a">价差</span></div>
+  <div class="rs">基差 629-975 元/吨的极端值 + 11 月合约交割，是判断现货紧张真伪与套保效率的核心</div></div>
+  <div class="vf">可验证性<br>高（交易所日频数据）</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">煤炭成本与发改委保供节奏 <span class="tag cat" style="--c:#c99427">成本</span></div>
+  <div class="rs">真正下行风险：若煤价二次上行将压缩内地利润并支撑甲醇；但煤制利润仍 +1070 元/吨，短期内更多是估值锚而非供需驱动，列入二级观察</div></div>
+  <div class="vf">可验证性<br>高（周度煤价+政策会议公开）</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">内地厂库/待发订单与西北套利 <span class="tag cat" style="--c:#7c5cd6">库存</span></div>
+  <div class="rs">厂库 35.69 万吨累积是关键二阶信号，但与港口库存高度相关，作为港口变量的验证项而非独立变量</div></div>
+  <div class="vf">可验证性<br>高（周度）</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">传统下游（甲醛/醋酸/MTBE）开工 <span class="tag cat" style="--c:#2f7fd1">需求</span></div>
+  <div class="rs">体量约 1/3 且季节性主导，短期弹性有限，作为 MTO 变量的补充验证</div></div>
+  <div class="vf">可验证性<br>高（周度）</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">出口/转口价差（东南亚-中国价差） <span class="tag cat" style="--c:#2f7fd1">需求</span></div>
+  <div class="rs">当前价差约 190 美元/吨确实打开出口窗口，但出口体量对总平衡影响有限，观察价值低于前五项</div></div>
+  <div class="vf">可验证性<br>中（周度外盘报价公开，实际出口量月度滞后）</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">宝丰 280 万吨新装置是否外售 <span class="tag cat" style="--c:#e0693a">供给</span></div>
+  <div class="rs">时点模糊（10 月底）且自用/外售未定，短期难以验证；纳入事件时间线而非独立变量</div></div>
+  <div class="vf">可验证性<br>低-中（计划公开、外售策略不公开）</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">MA 仓单与限仓政策 <span class="tag cat" style="--c:#b8446b">政策</span></div>
+  <div class="rs">在 11 月交割前有关注价值，但更多是交易层面，不构成产业逻辑变量</div></div>
+  <div class="vf">可验证性<br>高</div>
+</div></div>
+</div>
+
+<div class="section">
+  <h2><span class="num">02</span>二级观察（不进卡片，但跌破阈值要提级）</h2>
+  <p class="desc">这些变量的信息价值真实存在，但在这个 1 个月周期内要么弹性小、要么与主变量共线。</p>
+  <div class="secondary"><div class="seccard"><div class="nm">煤炭成本（鄂尔多斯 Q5500）</div><div class="rs">煤价重返千元上方是估值锚抬升，但煤制甲醇利润仍 +1070 元/吨，短期不构成减产驱动。观察它是因为：若煤价二次上行至 850+ 元/吨而甲醇回落，内地利润被压缩，会触发内地装置降负（供给端新增收缩），这是当前&quot;库存拐点&quot;叙事之外的对冲力量。触发条件：坑口价单周涨幅 &gt;3% 且煤制利润低于 300 元/吨。</div></div><div class="seccard"><div class="nm">内地厂库与待发订单</div><div class="rs">厂库 35.69 万吨（+3.46）连续累积，与港口极端低位形成背离，是判断&quot;内地-港口套利流向&quot;的关键。但它与港口库存高度相关，更适合作为 V1 的验证子项，不单独占卡片位。</div></div><div class="seccard"><div class="nm">传统下游开工</div><div class="rs">甲醛/醋酸/MTBE 合计约占需求三分之一，但季节性明显、单周波动大，短期不改变边际定价。作为 V3 的补充验证。</div></div><div class="seccard"><div class="nm">出口/转口价差与出口量</div><div class="rs">东南亚-中国 CFR 价差约 190 美元/吨确实打开出口窗口，且出口对港口提货有支撑；但实际出口量月度才见，且体量小于 MTO 缺口，暂列二级。</div></div><div class="seccard"><div class="nm">宝丰 280 万吨新装置外售决策</div><div class="rs">10 月底投产但配套烯烃年底才投产，是否外售甲醇未定；即使外售，量级也需与国能榆林检修（45 天）对冲，短线影响有限。已列入事件时间线跟踪。</div></div><div class="seccard"><div class="nm">MA 仓单与限仓政策</div><div class="rs">11 月交割前有交易层面意义，但更偏规则变量而非产业变量，本周期不单列。</div></div></div>
+</div>
+
+<div class="section">
+  <h2><span class="num">03</span>数据缺口登记</h2>
+  <p class="desc">凡是无法稳定获得的指标，一律在这里写明「为什么拿不到 / 用什么替代 / 局限在哪」，
+  而不是用估算值冒充实测值。</p>
+  <table class="gaptable">
+    <thead><tr><th>指标</th><th>为什么不可得</th><th>替代口径</th><th>局限</th></tr></thead>
+    <tbody><tr>
+  <td class="item">霍尔木兹海峡逐日通行量</td>
+  <td>属商业船舶追踪（Kpler、Lloyd&#x27;s List Intelligence）付费数据，公开渠道仅有二手转述（如&quot;通行仍处极低水平&quot;，无具体船数）</td>
+  <td>用&quot;伊朗装船量+中国周频到港量&quot;间接代理；跟踪 3 家以上研报的口径一致性</td>
+  <td class="scope">无法做到日内更新，结论存在 1-2 周时滞</td></tr><tr>
+  <td class="item">伊朗单套装置开停状态</td>
+  <td>伊朗甲醇装置（Kaveh、Kimiya、Sabalan、Marjan、ZPC、Busher、Apadana 等）无官方披露，仅有研报转述</td>
+  <td>以&quot;伊朗日均产量/开工率&quot;的机构估算替代单套装置台账</td>
+  <td class="scope">来源为估算，不同机构差异可达 10pct，不可当作实测</td></tr><tr>
+  <td class="item">外采 MTO 逐家装置停车原因</td>
+  <td>企业普遍不公告，公开信息多为行业转述</td>
+  <td>以装置规模和停车日期建立台账，标注&quot;亏损/缺料/检修&quot;为机构判断而非事实</td>
+  <td class="scope">原因无法独立核实，影响对复产概率的判断</td></tr><tr>
+  <td class="item">10 月进口实际值</td>
+  <td>海关数据次月 10 日前后才发布</td>
+  <td>先用机构预估（40-47 万吨 / 45-50 万吨）与周频到港量代理</td>
+  <td class="scope">预估之间相差最多 10 万吨，11 月 10 日前无法定论</td></tr><tr>
+  <td class="item">港口分库（江苏/浙江/广东）库存</td>
+  <td>部分需付费终端，公开摘要仅给总库或分区域</td>
+  <td>以隆众/卓创总库为主，分区域只作方向判断</td>
+  <td class="scope">无法精细拆解华南累库与华东去库的结构</td></tr></tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2><span class="num">04</span>固定观察节奏</h2>
+  <p class="desc">把「什么时候查什么」固化下来，避免只盯价格不看数据。</p>
+  <div class="weekcal"><div class="wk"><div class="w">每周三/四</div><div class="t">隆众港口库存 + 周度开工（产能利用率、MTO、传统下游）</div><div class="s">来源：隆众资讯</div></div><div class="wk"><div class="w">每周四/五</div><div class="t">卓创周度库存与产业链利润</div><div class="s">来源：卓创资讯</div></div><div class="wk"><div class="w">每周一</div><div class="t">美国/中东甲醇价格、CFR 中国与东南亚报价</div><div class="s">来源：生意社、隆众外盘</div></div><div class="wk"><div class="w">每日</div><div class="t">MA 主力/近月行情、基差、月差、仓单与持仓</div><div class="s">来源：郑商所、期货公司日评</div></div><div class="wk"><div class="w">次月 10 日前后</div><div class="t">海关甲醇进出口月度数据</div><div class="s">来源：海关总署</div></div></div>
+</div></div><div class="wrap"><footer>
+<b>使用说明</b><br>
+本看板由「产业变量观察」模板生成，数据截止 2026-10-19，
+来源均为公开发布的行业数据与机构研报（已在各项注明）。<br>
+<b>重要声明</b>：本看板是<b>研究观察工具</b>，只回答「接下来该盯什么、什么情况需要修正判断」，
+不构成对价格方向的预测，也不构成任何投资建议。标注为「预估 / 估算 / 机构口径」的数值不等同于实测。
+条件触发类事件（如海峡通行、限气时点）只表示存在观察窗口，不代表已发生或必然发生。<br>
+生成时间：2026-10-20　·　模板版本：v1.0
+</footer></div>
+<script>
+(function(){
+  var viewBtns = document.querySelectorAll('.tab');
+  var fbtns = document.querySelectorAll('.fbtn');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#cards .card'));
+  var events = Array.prototype.slice.call(document.querySelectorAll('.ev'));
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.snaptable tbody tr'));
+  var q = document.getElementById('q');
+  var countEl = document.getElementById('count');
+  var emptyEl = document.getElementById('empty');
+  var favKey = 'chemvar-fav-' + (document.title||'').slice(0,20);
+  var favs = {};
+  try { favs = JSON.parse(localStorage.getItem(favKey) || '{}') || {}; } catch(e) { favs = {}; }
+
+  function saveFavs(){ try { localStorage.setItem(favKey, JSON.stringify(favs)); } catch(e){} }
+
+  document.querySelectorAll('.starbtn').forEach(function(b){
+    var vid = b.getAttribute('data-fav');
+    if (favs[vid]) { b.classList.add('on'); b.textContent = '★'; }
+    b.addEventListener('click', function(){
+      favs[vid] = !favs[vid];
+      b.classList.toggle('on', !!favs[vid]);
+      b.textContent = favs[vid] ? '★' : '☆';
+      saveFavs();
+      apply();
+    });
+  });
+
+  var curCat = 'all', curView = 'cards';
+
+  function apply(){
+    var term = (q.value || '').trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function(c){
+      var cat = c.getAttribute('data-cat');
+      var vid = c.getAttribute('data-vid');
+      var okCat = (curCat === 'all') || (curCat === 'fav' ? !!favs[vid] : cat === curCat);
+      var okTerm = !term || (c.getAttribute('data-search')||'').indexOf(term) >= 0;
+      var show = okCat && okTerm;
+      c.classList.toggle('hidden', !show);
+      if (show) shown++;
+    });
+    if (emptyEl) emptyEl.style.display = shown ? 'none' : 'block';
+
+    [events, rows].forEach(function(list){
+      list.forEach(function(el){
+        var okTerm = !term || (el.getAttribute('data-search')||'').indexOf(term) >= 0;
+        el.style.display = okTerm ? '' : 'none';
+      });
+    });
+
+    var total = curView === 'cards' ? cards.length : (curView === 'timeline' ? events.length : rows.length);
+    if (countEl) {
+      countEl.textContent = curView === 'cards'
+        ? (shown + ' / ' + total + ' 个变量')
+        : (total + ' 条记录');
+    }
+  }
+
+  viewBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      curView = b.getAttribute('data-view');
+      viewBtns.forEach(function(x){ x.classList.toggle('active', x === b); });
+      document.querySelectorAll('.view').forEach(function(v){
+        v.classList.toggle('active', v.id === 'view-' + curView);
+      });
+      apply();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  fbtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      curCat = b.getAttribute('data-cat');
+      fbtns.forEach(function(x){ x.classList.toggle('active', x === b); });
+      apply();
+    });
+  });
+
+  if (q) q.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body></html>

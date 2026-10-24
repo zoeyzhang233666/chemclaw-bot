@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "overseas-inquiry-triage · reply.json",
+  "description": "英文回复草稿。body 中任何价格/交期/有效期/付款条件必须为 ‹KEY› 占位符（U+2039/U+203A）。",
+  "type": "object",
+  "required": ["channel", "tone", "template", "subject", "body", "placeholders"],
+  "properties": {
+    "channel": {
+      "enum": ["A_confirm", "reply_A_confirm", "reply_B_quote_structure", "reply_C_sample", "reply_D_docs_only"]
+    },
+    "tone": { "enum": ["formal", "friendly-professional", "concise-direct"] },
+    "template": { "enum": ["reply_A_confirm", "reply_B_quote_structure", "reply_C_sample", "reply_D_docs_only"] },
+    "subject": { "type": "string", "minLength": 4 },
+    "body": {
+      "type": "string",
+      "minLength": 200,
+      "description": "可直接粘贴的英文正文；不得包含金额、交期、有效期、账期等未确认承诺"
+    },
+    "placeholders": {
+      "type": "array",
+      "description": "只登记 body 中真正出现的占位符",
+      "items": {
+        "type": "object",
+        "required": ["key", "label_cn", "owner", "status"],
+        "properties": {
+          "key": { "type": "string", "pattern": "^[A-Z0-9_]+$" },
+          "label_cn": { "type": "string" },
+          "owner": { "type": "string", "description": "由谁填：销售 / 财务 / 单证员 / 排产" },
+          "status": { "enum": ["open", "confirmed_by_us"], "description": "open 时 build_md.py --pack 拒绝生成可发送版" },
+          "used": { "type": "boolean" },
+          "value": { "type": "string", "description": "填入值（可为空）" }
+        }
+      }
+    },
+    "questions_used": { "type": "array", "items": { "type": "string" } },
+    "commitment_scan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": { "type": "string" },
+          "match": { "type": "string" },
+          "fix": { "type": "string" },
+          "index": { "type": "integer" }
+        }
+      }
+    },
+    "price_scan": { "type": "array", "items": { "type": "string" } },
+    "generator": { "type": "string" },
+    "generated_at": { "type": "string" }
+  }
+}

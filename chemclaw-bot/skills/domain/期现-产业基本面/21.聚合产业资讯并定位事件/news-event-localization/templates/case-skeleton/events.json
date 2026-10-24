@@ -1,0 +1,85 @@
+{
+ "meta": {
+  "event_id_rule": "EVT-<品种代码>-<YYYYMMDD>-<序号>",
+  "types": [
+   "项目投产",
+   "装置检修",
+   "停车复产",
+   "产能扩建",
+   "贸易政策",
+   "环保安全",
+   "下游需求",
+   "其他产业事件"
+  ],
+  "confirm_levels": {
+   "C1": "官方原文可读（政府/交易所/企业公告）",
+   "C2": "≥2 家独立机构口径一致且正文可读（同源转载不计数）",
+   "C3": "单一来源，或仅标题级证据",
+   "C4": "待核实，或来源之间存在冲突"
+  }
+ },
+ "events": [
+  {
+   "event_id": "EVT-XXX-20261019-001",
+   "title": "【示例】某企业某装置停车",
+   "type": "停车复产",
+   "sub_type": "【示例】下游装置停产",
+   "occur_date": "2026-10-19",
+   "occur_date_note": "【必填】日期判定依据：哪家机构在什么时点怎么表述的",
+   "first_report": "2026-10-19T10:05:00+08:00",
+   "first_report_note": "【示例】标题级首发 + 可读正文转载的时点",
+   "last_update": "2026-10-19T15:00:00+08:00",
+   "region": "华东-某省-某市",
+   "province": "某省",
+   "nation": "中国",
+   "product": "【示例】甲醇、聚烯烃",
+   "chain_node": "CHAIN-X01",
+   "companies": [
+    "ENT-C001"
+   ],
+   "plants": [
+    "PLT-C001-A"
+   ],
+   "capacity_desc": "【示例】装置产能未取得 → 写“未取得”，不填估计值",
+   "scale_desc": "【示例】客观规模说明，只做量级参照，注明口径与期间",
+   "scale_data": [
+    {
+     "metric": "【示例】某指标",
+     "value": "0.00",
+     "unit": "%",
+     "period": "2026-10-09~10-15",
+     "source": "某机构（经某转载）"
+    }
+   ],
+   "confirmed_facts": [
+    "【示例】只放原文明确写了、且来源达到 C1/C2 的表述。原文带“或/预计/可能/拟”的句子不放在这里。"
+   ],
+   "data_supported": [
+    "【示例】由列出数据支撑的推断性描述"
+   ],
+   "unconfirmed": [
+    "【示例】报道里出现但无确认的内容"
+   ],
+   "verify_status": "C2",
+   "verify_basis": "【必填】具体到：哪两家独立机构、什么时点、为什么只能到这一级",
+   "news_refs": [
+    "N01",
+    "N02"
+   ],
+   "dedupe": {
+    "primary_news": [
+     "N02"
+    ],
+    "republish": [],
+    "followups": [],
+    "index_entries": [],
+    "selfmedia": [],
+    "why_merged": "【必填】为什么这些条目是同一件事"
+   },
+   "open_questions": [
+    "Q01"
+   ],
+   "impact_hint": "【示例】影响权重说明（禁止涨跌结论）"
+  }
+ ]
+}

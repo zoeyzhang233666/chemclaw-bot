@@ -1,0 +1,67 @@
+[
+  {
+    "project_id": "PP-2099-EXAMPLE",
+    "name": "XX石化 XX万吨/年 聚丙烯装置",
+    "owner": "XX石化有限公司（股票代码）",
+    "location": "XX省 XX市 XX石化基地",
+    "region": "华东",
+    "process": "油制 → 气相法 / Spheripol / Unipol / PDH-MTO / 煤制MTO",
+    "design_capacity": 60,
+    "upstream": "配套 XXX万吨/年 乙烯",
+    "stages": {
+      "construction": {
+        "date": "2099-01-15",
+        "grade": "B",
+        "single_source": false,
+        "quote": "原文：聚丙烯装置建安工程正式开工",
+        "date_precision": "day"
+      },
+      "mechanical": {
+        "date": "2099-06-20",
+        "grade": "A",
+        "single_source": false,
+        "quote": "原文：装置于6月20日顺利中交",
+        "date_precision": "day"
+      },
+      "commissioning": {
+        "date": "2099-09-10",
+        "grade": "A",
+        "single_source": false,
+        "quote": "原文：挤压造粒机组投料试车成功",
+        "date_precision": "day"
+      },
+      "startup": {
+        "date": "2099-11-05",
+        "grade": "B",
+        "single_source": true,
+        "quote": "原文：装置一次开车成功并产出合格聚丙烯产品",
+        "date_precision": "day"
+      },
+      "first_product": {
+        "date": "2099-11-06",
+        "grade": "B",
+        "single_source": true,
+        "quote": "原文：打通全流程，产品合格外运",
+        "date_precision": "day"
+      },
+      "commercial": {
+        "date": "2100-02-01",
+        "grade": "A",
+        "single_source": false,
+        "quote": "原文：宣布全面投入商业运营",
+        "date_precision": "day"
+      },
+      "rampup": {
+        "date": "2100-09-20",
+        "grade": "B",
+        "single_source": false,
+        "quote": "原文：完成首次高负荷标定，各项指标优于设计值",
+        "date_precision": "day"
+      }
+    },
+    "first_estimate": "2099年三季度",
+    "actual": "2099-11-05",
+    "delay_months": 2,
+    "note": "填写：产能口径冲突、异常情况（如停工待料、只有粉料）、与其他项目的关系"
+  }
+]

@@ -1,0 +1,88 @@
+{
+  "results": [
+    {
+      "check": "初始：30 条目 / 4 区块全部可见",
+      "pass": true,
+      "detail": {
+        "items": 30,
+        "open": 0,
+        "visibleBlocks": 4,
+        "visibleItems": 30
+      }
+    },
+    {
+      "check": "交互1 点击展开：open=1 且 item-b 可见",
+      "pass": true,
+      "detail": {
+        "open": 1,
+        "bodyVisible": "block",
+        "ariaExpanded": "true"
+      }
+    },
+    {
+      "check": "交互2 再次点击收起",
+      "pass": true,
+      "detail": {
+        "open": 0
+      }
+    },
+    {
+      "check": "交互3 筛选运输：仅运输区块可见且 7 条",
+      "pass": true,
+      "detail": {
+        "active": "运输",
+        "visibleBlocks": [
+          "运输"
+        ],
+        "visibleItems": 7
+      }
+    },
+    {
+      "check": "交互4 仅看待确认：8 条",
+      "pass": true,
+      "detail": {
+        "visible": 8
+      }
+    },
+    {
+      "check": "交互5 搜索 '2014'：命中数>0 且少于全部",
+      "pass": true,
+      "detail": {
+        "visible": 7,
+        "hits": [
+          "VN-06",
+          "TR-01",
+          "TR-02",
+          "TR-03",
+          "TR-04",
+          "LB-01",
+          "LB-05"
+        ]
+      }
+    },
+    {
+      "check": "交互6 切回全部并清空搜索：恢复 30 条",
+      "pass": true,
+      "detail": {
+        "visible": 30
+      }
+    },
+    {
+      "check": "交互7 键盘 Enter 可展开",
+      "pass": true,
+      "detail": {
+        "open": 1
+      }
+    },
+    {
+      "check": "布局：无横向溢出",
+      "pass": true,
+      "detail": {
+        "docW": 1409,
+        "winW": 1424,
+        "over": false
+      }
+    }
+  ],
+  "allPass": true
+}

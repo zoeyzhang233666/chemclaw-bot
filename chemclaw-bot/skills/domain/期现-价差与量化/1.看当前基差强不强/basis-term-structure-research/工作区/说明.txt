@@ -1,0 +1,59 @@
+说明
+=================
+
+本文件夹是「看当前基差强不强」研究的输入/输出工作区。
+
+目录结构
+-----------------
+  csv/          原始数据（现货、期货、仓单、库存各一个 CSV）
+  out/          calc_basis.py / build_report.py / build_workbook.py 的输出
+  events/       产业事件与口径变更记录（用于解释基差变化）
+
+输入数据要求
+-----------------
+  csv/spot.csv（现货）
+    date,spot_low,spot_high[,spot]
+    · date 必填
+    · 有区间就给 low/high，脚本取中点；也可直接给 spot 列
+    · 没有报价的日子**留空**，不要填近似值
+
+  csv/futures.csv（期货）
+    date,contract,close[,open,high,low,settle,volume,oi]
+    · **每行一个具体合约**（MA2701），不要把主连和各合约混在一起
+    · oi（持仓量）用于判定主力；缺 oi 时退化为按收盘价最高
+    · 不要放入"拼接好"的连续序列
+
+  csv/warehouse_receipts.csv（仓单）
+    date,receipt_total,receipt_chg,warehouse,factory
+    · warehouse = 实体仓库口径，factory = 厂库口径，两者分开记
+
+  csv/inventory.csv（库存）
+    date,item,value_wan_ton,chg_wan_ton,note
+    · 不同机构口径并存时，用 item 名称区分，不要合并成一行
+
+  一律 UTF-8 带 BOM，Excel 直接打开不乱码。
+
+三条命令
+-----------------
+  1) 算基差
+     python scripts/calc_basis.py --spot csv/spot.csv --futures csv/futures.csv \
+         --asof 2026-10-20 --dates 2026-09-21,2026-10-09 --windows 1y,3y,5y \
+         --out out/basis.json
+
+     输出会明确告诉你：当前基差、各合约口径、30 天变化、换月跳空、
+     以及**每个窗口的分位是否可用及原因**。
+
+  2) 出报告 / 工作簿
+     python scripts/build_report.py --out out/report.html
+     python scripts/build_workbook.py --out out/workbook.xlsx
+
+  3) 自检
+     python scripts/selftest.py      # 47 项已知答案断言
+
+注意事项
+-----------------
+  - 先读 references/01-口径核查清单.md，确认六项口径与四项可比性，
+    再动数据。口径没对齐之前算出来的基差没有意义。
+  - 每次分析都保留 out/ 下的 JSON：结论里的每个数字都应能追溯到某次运行。
+  - 事件记录只写可公开核对的产业事件与口径变更，不写因果判断、不写交易建议。
+  - 报告里"历史分位"必须带 N；N < 20 或覆盖率 < 50% 时按"不可计算"处理。

@@ -1,0 +1,68 @@
+{
+ "origin": {
+  "label": "江苏省常州市新北区春江镇 · 滨江经济开发区（化工园区）",
+  "short": "常州 · 滨江化工园",
+  "lat": 31.947,
+  "lon": 119.932,
+  "note": "示例收货点（园区中心近似，±3 km）。真实下单请替换为具体门牌/罐区，距离会随之变化。",
+  "is_example": true
+ },
+ "items": [
+  {
+   "id": "C01",
+   "short": "新浦化学",
+   "straight_km": 24.6,
+   "road_km": 34.0,
+   "ratio": 1.38,
+   "source": "osrm"
+  },
+  {
+   "id": "C02",
+   "short": "中盐常州·金坛",
+   "straight_km": 40.5,
+   "road_km": 57.2,
+   "ratio": 1.41,
+   "source": "osrm"
+  },
+  {
+   "id": "C04",
+   "short": "上海氯碱",
+   "straight_km": 191.5,
+   "road_km": 229.8,
+   "ratio": 1.2,
+   "source": "osrm"
+  },
+  {
+   "id": "C03",
+   "short": "中盐常州·滨江",
+   "straight_km": 1.7,
+   "road_km": 5.2,
+   "ratio": 3.06,
+   "source": "osrm"
+  },
+  {
+   "id": "C05",
+   "short": "嘉化能源",
+   "straight_km": 185.5,
+   "road_km": 218.9,
+   "ratio": 1.18,
+   "source": "osrm"
+  },
+  {
+   "id": "C06",
+   "short": "江苏索普",
+   "straight_km": 49.7,
+   "road_km": 59.8,
+   "ratio": 1.2,
+   "source": "osrm"
+  },
+  {
+   "id": "C07",
+   "short": "滨化股份",
+   "straight_km": 628.1,
+   "road_km": 701.6,
+   "ratio": 1.12,
+   "source": "osrm"
+  }
+ ]
+}

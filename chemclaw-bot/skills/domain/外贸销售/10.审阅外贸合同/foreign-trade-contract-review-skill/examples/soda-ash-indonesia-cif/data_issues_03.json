@@ -1,0 +1,427 @@
+{
+  "issues": [
+    {
+      "id": "R-22",
+      "seq": 22,
+      "category": "compliance",
+      "severity": "high",
+      "issue_type": "unbalanced",
+      "title": "卖方对印尼一切许可、标准与认证要求全面免责，买方承担全部合规风险",
+      "title_en": "The seller disclaims all Indonesian licensing, standard and certification responsibility",
+      "anchors": [
+        {
+          "block": "p-article-9-documents-and-import-formalities-088",
+          "clause": "9.3",
+          "quote": "The Seller shall not be liable for any failure, delay, cost, fine or seizure arising from any permit, licence, approval, registration, standard, labelling or certification requirement of any Indonesian authority, and the Buyer shall have no claim, price reduction, rejection right or set-off by reason of any such matter."
+        },
+        {
+          "block": "p-article-9-documents-and-import-formalities-087",
+          "clause": "9.2(B)",
+          "quote": "The Buyer warrants that it holds, or will obtain before shipment, every licence, approval and registration required for the importation of the Goods into Indonesia, and that it is duly registered to import industrial chemicals."
+        },
+        {
+          "block": "p-article-10-product-information-safety-and-regulatory-data-092",
+          "clause": "10.3",
+          "quote": "The Goods shall comply with the laws and regulations applicable at the place of manufacture in the People's Republic of China. The Seller makes no representation as to compliance with any law or regulation of any other jurisdiction, including any Indonesian standard, registration, notification or marking requirement."
+        }
+      ],
+      "clause_title": "9.3 / 9.2(B) / 10.3",
+      "finding": "合同以三个条款把印尼侧的合规责任整体转移给买方：9.2(B) 要求买方向卖方“保证”其已取得或将在装运前取得一切许可；9.3 让卖方对印尼一切许可、标准、注册、标签与认证要求的失败、延误、罚款与查扣全面免责；10.3 声明卖方仅就中国法合规作保证。",
+      "finding_en": "Three clauses together move all Indonesian-side compliance onto the buyer: a warranty from the buyer, a comprehensive disclaimer in favour of the seller, and a limitation of the seller's compliance warranty to PRC law at the place of manufacture.",
+      "consequence": "卖方免责不等于风险消失。若货物因不符印尼进口要求被扣、被销毁或被要求退运，实务中损失通常由身处货源地、掌握产品信息的卖方先行承担（例如出口退运、无法收款、买方索赔）。这类“买方负责”条款在货物被扣的紧急情形下往往无法阻止责任回溯。更现实的商业风险是：买方若不知道具体需要哪些批文，9.2(B) 的保证形同虚设，事故发生后双方均无法履约。",
+      "consequence_en": "A disclaimer allocates responsibility between the parties; it does not remove the underlying regulatory risk. When cargo is detained, the loss usually lands first on the party holding the goods and the product data. And if the buyer does not actually know which approvals apply, its warranty is theoretical.",
+      "confirm": [
+        "确认纯碱（HS 2836.20）是否在印尼现行 lartas 限制清单中 —— 初步核对 Permendag 22/2025 与 20/2025 的封闭清单均未列入，但仍须由印尼当地报关行以最新条例（含 32/2025 修正）确认",
+        "确认是否适用印尼强制性国家标准（SNI）—— 本报告未查得针对 2836.20 的强制 SNI，但未能取得官方强制 SNI 名录，不能据此认定“不存在”",
+        "确认标签与包装是否有印尼语要求（见 R-23）",
+        "向买方索取其进口资质文件（NIB、API-U、NPWP）并核验",
+        "在装运前设置买方书面确认环节，作为免责条款的生效条件"
+      ],
+      "legal_refs": [
+        {
+          "label": "印尼贸易部条例 Permendag No. 22/2025（特定工业品进口）",
+          "note": "该条例以封闭式清单列出 9 类受限工业品（钢铁及其合金制品、轮胎、半成品手工工具、陶瓷、平板玻璃与安全玻璃、糖精/甜蜜素/含酒精香料制剂、酒精饮料原料、下游塑料制品、阀门）。经核对，该清单未包含 HS 2836（纯碱）。来源：peraturan.bpk.go.id。"
+        },
+        {
+          "label": "印尼贸易部条例 Permendag No. 20/2025（化学品、危险品与矿产品进口）",
+          "note": "该条例同样采用封闭式清单（润滑油基础油、熟料与水泥、毛坯钻石、非药用前体、油气、硝化棉、工业炸药、消耗臭氧层物质、B2 类危险物质、HFC 等），未列入 HS 2836。需注意该条例已有 Permendag No. 32/2025 修正，其修正清单本报告未逐条核对。"
+        },
+        {
+          "label": "产品本身的责任不因合同约定而转移",
+          "note": "将合规责任在合同上分配给买方，并不当然免除出口方在产品安全与出口环节的责任。具体适用需法律顾问判断。"
+        }
+      ],
+      "suggested_wording": "Each Party shall be responsible for the approvals within its own jurisdiction: the Seller for PRC export licensing, customs declaration and export documentation; the Buyer for Indonesian import licensing, import declaration and duty payment. Without limiting Article 9.2, the Seller shall, within 10 Business Days after signing, provide the Buyer with a compliance pack comprising the SDS, COA, product composition, UN/IMDG classification statement and packaging declaration, and shall reasonably cooperate with the Buyer's registration or notification applications.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-23",
+      "seq": 23,
+      "category": "compliance",
+      "severity": "medium",
+      "issue_type": "unbalanced",
+      "title": "SDS/标签仅提供英文，且卖方对SDS内容准确性不承担责任",
+      "title_en": "SDS and labels are English-only, and the seller disclaims responsibility for SDS accuracy",
+      "anchors": [
+        {
+          "block": "p-article-10-product-information-safety-and-regulatory-data-093",
+          "clause": "10.4",
+          "quote": "The MSDS and all labels applied to the Goods shall be in English only. The Buyer shall translate any such document into Indonesian and shall be solely responsible for the accuracy of the translation and for any consequence of an inaccurate translation."
+        },
+        {
+          "block": "p-article-10-product-information-safety-and-regulatory-data-091",
+          "clause": "10.2",
+          "quote": "The Seller shall not be responsible for the accuracy of any statement of hazard, classification or handling precaution in any MSDS provided by it, except to the extent required by the law of the People's Republic of China."
+        }
+      ],
+      "clause_title": "10.4 / 10.2",
+      "finding": "10.4 规定 SDS 与标签“仅英文”，由买方翻译并“独自承担翻译准确性及翻译错误后果”的全部责任。10.2 第二段又规定卖方对 SDS 中危险分类与处理注意事项的准确性不负责（除中国法要求外）。两条叠加后，卖方提供的 SDS 既不被担保准确，也不被要求使用目的国语言。",
+      "finding_en": "SDS and labels are English-only with the buyer taking sole responsibility for translation and its consequences, while the seller disclaims accuracy of the hazard classification and handling precautions in its own SDS.",
+      "consequence": "SDS 是化学品运输、清关与下游使用的核心合规文件，也是事故后责任划分的重要证据。卖方声明“对 SDS 准确性不负责”在实务中很难成立，反而可能被视为明知风险而不作为。目的国语言要求是多数国家化学品标签的通行要求，纯英文标签可能导致目的港查验时的额外成本。",
+      "consequence_en": "The SDS is the central compliance document for carriage, clearance and downstream handling, and a key piece of evidence after an incident. A disclaimer of accuracy over the seller's own SDS is unlikely to hold materially and may be read as knowingly proceeding.",
+      "confirm": [
+        "核实印尼对工业化学品 SDS 与标签的语言要求（印尼有化学品安全相关法规，需以官方文本为准）",
+        "取得本公司现行 SDS（建议 16 部分，符合 GHS 第 7/8 修订版）",
+        "确认纯碱的 GHS 分类（通常为眼刺激类别 2 等，需以实际 SDS 为准，不可推定）",
+        "确认是否需提供印尼语版本标签以满足进口商或下游客户要求"
+      ],
+      "legal_refs": [
+        {
+          "label": "GHS（联合国化学品分类和标签全球协调制度）",
+          "note": "SDS 的 16 部分格式与分类要求源自 GHS，各国通过本国法规落地。具体强制性须查询印尼相应部委条例。"
+        },
+        {
+          "label": "《危险化学品安全管理条例》（中国）",
+          "note": "中国境内生产、经营危险化学品有安全管理要求；纯碱通常不作为危险化学品管理，但应以 SDS 与官方目录核实，不可推定。"
+        }
+      ],
+      "suggested_wording": "The Seller shall provide a Safety Data Sheet in accordance with GHS (16 sections) in English and, upon the Buyer's written request and at the Buyer's cost, in Indonesian. The Seller warrants that the SDS accurately describes the hazard classification of the Goods as at the date of shipment. The Buyer shall ensure that any translation into Indonesian accurately reflects the English version and shall notify the Seller of any suspected inaccuracy.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-24",
+      "seq": 24,
+      "category": "compliance",
+      "severity": "medium",
+      "issue_type": "conflict",
+      "title": "危险货物分类由双方“确认”为非危险品，但缺乏依据文件与责任分配",
+      "title_en": "The parties 'acknowledge' the cargo is not dangerous goods without any supporting basis",
+      "anchors": [
+        {
+          "block": "p-article-10-product-information-safety-and-regulatory-data-090",
+          "clause": "10.2",
+          "quote": "The Parties acknowledge that Heavy Soda Ash is a general industrial chemical and is not a dangerous good for the purposes of maritime transport. No dangerous goods declaration, IMDG documentation or marine pollutant declaration is required."
+        }
+      ],
+      "clause_title": "10.2 Hazard classification",
+      "finding": "合同以“双方确认”的方式将重质纯碱定性为非危险货物，并据此免除一切 IMDG 危险货物申报义务。但条款未引用任何分类依据（如 SDS 第 14 部分、IMDG 危险货物一览表条目、船公司确认），也未约定若该定性有误时的责任与补救。",
+      "finding_en": "The cargo is characterised as non-dangerous by mutual acknowledgement, with all IMDG documentation excluded, but no basis is cited — no SDS section 14, no IMDG entry, no carrier confirmation — and no allocation is made if the characterisation proves wrong.",
+      "consequence": "纯碱通常不属于 IMDG 危险货物，但在特定条件下（如混装、海运途中受潮放热、与酸性物质隔离不当）仍可能引发风险，且部分船公司对散装碱类货物有额外的货物申报要求。若报关或订舱时申报内容与实际不符，可能面临船公司索赔、港口处罚甚至拒载。本合同 10.2 的免责表述无法覆盖报关与订舱环节的申报责任。",
+      "consequence_en": "Soda ash is generally not IMDG-classified, but mishandling, wetting or stowage adjacent to acids still creates risk, and some carriers impose additional declarations for alkaline bulk cargo. A mismatch in the declaration can trigger carrier claims, port penalties or refusal to load.",
+      "confirm": [
+        "取得 SDS 第 14 部分（运输信息）原文，作为分类依据附件",
+        "确认拟订舱船公司对纯碱的货物申报要求",
+        "核实包装类别与运输标记是否满足船公司要求",
+        "在合同中加入“以 SDS 第 14 部分为准”的分类依据引用"
+      ],
+      "legal_refs": [
+        {
+          "label": "IMDG Code（国际海运危险货物规则）",
+          "note": "危险货物分类与申报以 IMDG 危险货物一览表为准；未列入者按普通货物处理，但仍需满足货物申报与积载要求。"
+        },
+        {
+          "label": "《关于危险货物运输的建议书·规章范本》（联合国 TDG）",
+          "note": "GHS 与 TDG 分类体系相互引用，SDS 第 14 部分通常引用 TDG/IMDG 条目。"
+        }
+      ],
+      "suggested_wording": "The Parties acknowledge that the Goods are not classified as dangerous goods under the IMDG Code, as confirmed by Section 14 of the Safety Data Sheet for the Goods dated [date], which is annexed as Annex D. Each Party shall make all declarations to carriers, ports and authorities consistently with that classification, and shall be responsible for loss arising from its own inaccurate declaration.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-25",
+      "seq": 25,
+      "category": "compliance",
+      "severity": "high",
+      "issue_type": "commercial",
+      "title": "卖方明确不提供Form E原产地证，可能使买方丧失东盟—中国自贸协定关税优惠",
+      "title_en": "The seller expressly refuses Form E, potentially forfeiting ACFTA preferential tariff for the buyer",
+      "anchors": [
+        {
+          "block": "p-article-9-documents-and-import-formalities-085",
+          "clause": "9.1",
+          "quote": "The Seller shall not be obliged to provide a Form E certificate of origin or any preferential certificate unless separately agreed in writing."
+        },
+        {
+          "block": "p-annex-c-documentary-requirements-132",
+          "clause": "Annex C.2",
+          "quote": "This Annex does not allocate responsibility for, or the cost of, any of the following: certificate of origin under a preferential trade agreement; phytosanitary, fumigation or other quarantine certificate"
+        }
+      ],
+      "clause_title": "9.1 / Annex C.2",
+      "finding": "9.1 末句明确排除 Form E 及任何优惠原产地证的提供义务；Annex C.2 又声明不分配优惠原产地证的责任与费用。中国—东盟自贸区（ACFTA）项下，凭 Form E 进口可适用协定税率，与最惠国税率可能存在差额。",
+      "finding_en": "Form E and any preferential certificate are expressly excluded, and Annex C.2 declines to allocate responsibility or cost for them. Under ACFTA, Form E supports the agreed preferential rate at import, which may differ from the MFN rate.",
+      "consequence": "对买方的直接影响是进口关税成本上升。按 1,000 MT、USD 268/MT 计，货值约 USD 268,000；若协定税率与 MFN 税率存在若干百分点的差额，关税差额可达数千至上万美元。买方在核算比较后通常会据此要求降价，或直接以此作为谈判筹码 —— 卖方省下的 Form E 申领工时，可能换来更大的价格让步。具体税率差额须由报关行或印尼海关税则核实，本报告不作数字推定。",
+      "consequence_en": "The buyer faces a higher duty bill, and duty differences of a few percentage points on a USD 268,000 consignment run to thousands of dollars. The buyer will typically convert that into a price demand, so the administrative saving may cost more in price than it saves.",
+      "confirm": [
+        "核实 HS 2836.20 项下中国—东盟协定税率与印尼 MFN 税率的实际差额",
+        "确认卖方是否具备申请 Form E 的资质（需在中国贸促会或海关办理一般原产地证企业备案）",
+        "确认 RCEP 项下是否有更优税率路径",
+        "评估将该成本内化进单价（提高 USD X/MT）与提供 Form E 之间的商业取舍"
+      ],
+      "legal_refs": [
+        {
+          "label": "中国—东盟自由贸易区（ACFTA）原产地规则",
+          "note": "Form E 为 ACFTA 项下优惠原产地证书格式，需由出口方在授权机构申领。具体规则版本以现行议定书为准。"
+        },
+        {
+          "label": "RCEP 原产地规则",
+          "note": "RCEP 项下亦有优惠安排，两种路径的适用条件与税率比较需按具体税目核算。"
+        }
+      ],
+      "suggested_wording": "The Seller shall apply for and provide a Certificate of Origin (Form E) under the ASEAN-China Free Trade Area agreement, or an equivalent RCEP certificate where that route offers a lower rate, and shall bear the cost. If the Seller fails to provide such a certificate for reasons within its control and the Buyer thereby pays duty at a higher rate, the Seller shall reimburse the difference in duty actually paid.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-26",
+      "seq": 26,
+      "category": "dispute",
+      "severity": "high",
+      "issue_type": "unenforceable",
+      "title": "仲裁机构为CIETAC、仲裁地为北京、仲裁语言为中文，印尼买方接受与执行难度高",
+      "title_en": "CIETAC in Beijing with Chinese-language proceedings against an Indonesian buyer",
+      "anchors": [
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-111",
+          "clause": "15.3",
+          "quote": "Any dispute not so resolved shall be submitted to the China International Economic and Trade Arbitration Commission (CIETAC) for arbitration in accordance with its rules in force at the time of arbitration. The seat of arbitration shall be Beijing, China, and the language of the arbitration shall be Chinese."
+        },
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-112",
+          "clause": "15.3",
+          "quote": "The tribunal shall consist of one arbitrator appointed by the Secretary-General of CIETAC. The award shall be final and binding on the Parties."
+        }
+      ],
+      "clause_title": "15.3 Arbitration",
+      "finding": "约定 CIETAC、仲裁地北京、仲裁语言中文、由秘书长指定一名独任仲裁员。该安排对卖方有利，但对印尼买方而言，程序语言、地点与仲裁员指定方式均单方指向一方。同时缺少仲裁费用承担、保全措施与裁决作出期限的约定。",
+      "finding_en": "CIETAC seated in Beijing, conducted in Chinese, with a sole arbitrator appointed by the Secretary-General. Every procedural parameter points to one side, and the clause says nothing about costs, interim measures or time limits.",
+      "consequence": "卖方在国内仲裁胜诉后，仍需赴印尼申请承认与执行（见 R-30）。若仲裁条款被买方主张为“显失公平”或其抗辩成功，裁决可能被拒绝承认，卖方的救济将落空。此外，独任仲裁员由机构指定，在标的额较大的争议中可能引发公正性异议。",
+      "consequence_en": "A domestic award still needs recognition and enforcement in Indonesia. If the clause is successfully attacked, the seller's \"win\" carries no recovery. A sole institution-appointed arbitrator is also open to challenge on larger disputes.",
+      "confirm": [
+        "确认买方是否接受中国仲裁；若抗拒，评估 SIAC（新加坡）作为中立选项",
+        "确认仲裁语言可否改为英文（便于印尼方参与与印尼法院执行承认）",
+        "确认三人仲裁庭的可接受性（通常更适合 USD 25 万以上争议）",
+        "确认是否需要增加临时保全措施条款（如扣押货物、冻结账户）"
+      ],
+      "legal_refs": [
+        {
+          "label": "纽约公约（承认及执行外国仲裁裁决公约）",
+          "note": "中国（1987-01-22 加入）与印尼（1981-10-07 加入）均为缔约国，且两国均作出“互惠”与“商事”两项保留：仅承认在另一缔约国领土内作出的裁决，且仅限商事法律关系。货物买卖争议正处于两国保留覆盖的范围之内，因此互惠保留不构成执行障碍。"
+        },
+        {
+          "label": "印尼 UU No. 30/1999（仲裁与替代性争议解决）",
+          "note": "外国仲裁裁决在印尼的承认与执行须经雅加达中区地方法院程序。"
+        },
+        {
+          "label": "印尼最高法院 PERMA No. 3/2023",
+          "note": "2023-10-12 制定、2023-10-17 生效，规定仲裁员指定、回避、裁决执行与撤销申请的程序。该条例常被误写为“2022 年第 3 号”，实为 2023 年第 3 号。"
+        },
+        {
+          "label": "CIETAC 仲裁规则",
+          "note": "现行规则就仲裁地、语言、仲裁员指定与简易程序有具体规定，须以提交仲裁时有效版本为准。"
+        }
+      ],
+      "suggested_wording": "Any dispute arising out of or in connection with this Contract shall be submitted to arbitration administered by the Singapore International Arbitration Centre (SIAC) under the SIAC Rules in force at the time of filing. The seat of arbitration shall be Singapore. The language of the arbitration shall be English. The tribunal shall consist of three arbitrators. The award shall be final and binding on the Parties, and judgment on the award may be entered in any court of competent jurisdiction.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-27",
+      "seq": 27,
+      "category": "dispute",
+      "severity": "medium",
+      "issue_type": "ambiguous",
+      "title": "60天友好协商作为仲裁前置条件，起算点不明且可能被用于拖延",
+      "title_en": "A 60-day negotiation precondition with an undefined start date",
+      "anchors": [
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-110",
+          "clause": "15.2",
+          "quote": "The Parties shall first attempt to resolve any dispute by friendly negotiation for 60 (sixty) days from the date the dispute arises. Neither Party may commence arbitration during that period."
+        }
+      ],
+      "clause_title": "15.2 Friendly negotiation",
+      "finding": "“from the date the dispute arises”没有任何客观认定标准；且未规定协商程序的启动方式（书面通知、会议安排）。在此期间“neither Party may commence arbitration”，意味着买方收到不合格货物后也须等待 60 天。",
+      "finding_en": "The start date is undefined, the negotiation procedure is unspecified, and arbitration is barred in the interim — including where goods are already non-conforming.",
+      "consequence": "对卖方：若买方恶意拖延，卖方无法在 60 天内启动仲裁，追偿时间被拉长。对买方：货物不符时同样被冻结救济。此外，“协商前置未满足”常被作为挑战仲裁受理的异议理由，可能造成程序延误。",
+      "consequence_en": "Both sides are frozen for the period. Failure to satisfy the precondition is a common basis for challenging the commencement of arbitration, adding procedural delay to whichever party is the claimant.",
+      "confirm": [
+        "约定协商启动以书面“协商通知（Notice of Dispute）”发出之日为起算点",
+        "明确协商期间不排斥申请临时措施或财产保全",
+        "将协商期缩短为 30 天"
+      ],
+      "legal_refs": [
+        {
+          "label": "CIETAC 仲裁规则（前置程序）",
+          "note": "仲裁庭通常尊重当事人的协商前置约定，但对是否实际履行会作实质审查，条款不明易引发管辖权异议。"
+        }
+      ],
+      "suggested_wording": "If a dispute arises, either Party may give the other a written Notice of Dispute specifying the dispute and the relief sought. The Parties shall attempt in good faith to resolve the dispute by negotiation for 30 days from the date of the Notice of Dispute. Expiry of that period without resolution shall entitle either Party to commence arbitration. Nothing in this Article prevents either Party from applying for interim or conservatory measures at any time.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-28",
+      "seq": 28,
+      "category": "dispute",
+      "severity": "medium",
+      "issue_type": "conflict",
+      "title": "同时约定CIETAC仲裁与“中国法院专属管辖”，管辖条款内部冲突",
+      "title_en": "CIETAC arbitration coexists with exclusive jurisdiction of PRC courts",
+      "anchors": [
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-111",
+          "clause": "15.3",
+          "quote": "Any dispute not so resolved shall be submitted to the China International Economic and Trade Arbitration Commission (CIETAC) for arbitration in accordance with its rules in force at the time of arbitration. The seat of arbitration shall be Beijing, China, and the language of the arbitration shall be Chinese."
+        },
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-114",
+          "clause": "15.5",
+          "quote": "The Parties waive any right to submit any dispute to the courts of the Republic of Indonesia, and submit to the exclusive jurisdiction of the courts of the People's Republic of China for all matters not subject to arbitration under this Contract."
+        }
+      ],
+      "clause_title": "15.3 / 15.5 Arbitration and courts",
+      "finding": "15.5 以“for all matters not subject to arbitration”作了限定，从文本上看试图避免直接冲突；但由于 15.3 将“not so resolved”与 15.2 的协商前置相连，哪些事项“subject to arbitration”本身存在解释空间（例如保全、单据争议、欺诈）。",
+      "finding_en": "Clause 15.5 is qualified by 'matters not subject to arbitration', which appears designed to avoid conflict, but the boundary of what is subject to arbitration is itself unclear given the 15.2 precondition.",
+      "consequence": "在印尼一方拒付或提出抗辩时，可能出现一方在印尼法院起诉、另一方在中国申请仲裁的并行程序，导致双重程序和冲突裁决。对执行而言，任何一方的程序瑕疵都可能被用于对抗承认与执行。",
+      "consequence_en": "Parallel proceedings in two jurisdictions can produce conflicting outcomes, and any procedural misstep is available ammunition at the recognition stage.",
+      "confirm": [
+        "确认仲裁与诉讼的边界事项（建议明示排除保全与临时措施）",
+        "核实印尼法院对含中国仲裁条款合同的管辖态度（需印尼律师意见）",
+        "考虑加入“仲裁为唯一争议解决方式，双方放弃法院管辖”的完全排除条款"
+      ],
+      "legal_refs": [
+        {
+          "label": "《中华人民共和国民事诉讼法》涉外编",
+          "note": "涉外合同中有效仲裁条款通常排除法院管辖；条款效力须依中国法审查。"
+        }
+      ],
+      "suggested_wording": "All disputes arising out of or in connection with this Contract shall be finally resolved by arbitration under Article 15.3, to the exclusion of the jurisdiction of any court or tribunal. Each Party irrevocably waives any right to bring proceedings in any court except for the purpose of enforcing an award or obtaining interim or conservatory measures.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-29",
+      "seq": 29,
+      "category": "dispute",
+      "severity": "high",
+      "issue_type": "unenforceable",
+      "title": "排除CISG适用，且未处理中印尼法与仲裁地法律之间的衔接",
+      "title_en": "CISG is excluded and the interface with Indonesian law is left unaddressed",
+      "anchors": [
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-108",
+          "clause": "15.1",
+          "quote": "This Contract shall be governed by and construed in accordance with the laws of the People's Republic of China, without regard to its conflict of laws rules."
+        },
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-109",
+          "clause": "15.1",
+          "quote": "The Parties agree that the United Nations Convention on Contracts for the International Sale of Goods (CISG) shall not apply to this Contract."
+        }
+      ],
+      "clause_title": "15.1 Governing law",
+      "finding": "选择中国法并明确排除 CISG。这一安排对中国卖方有利，但合同未处理：(1) 印尼法中的强制性规定是否会在印尼侧适用（如进口管制、外汇、语言要求）；(2) 若合同在印尼一侧被援引，中国法与印尼法定性公共政策之间的冲突如何协调。",
+      "finding_en": "PRC law is chosen and CISG excluded, but nothing addresses the effect of Indonesian mandatory rules on import, foreign exchange or contract language, nor how a conflict between them would be handled.",
+      "consequence": "选择中国法并不当然排除印尼强制性规范的适用。若合同在印尼侧涉及商品准入、外汇结算或合同语言要求，印尼一方可能据其本国强制性规定提出抗辩，而仲裁庭需在裁决中处理这一冲突 —— 这种冲突通常对该项目更有利的一方受益，但不具确定性。",
+      "consequence_en": "A choice of law does not displace mandatory rules of the forum or of the place of performance. Indonesian mandatory provisions can still be raised, leaving the tribunal to navigate the interface — with results that are not predictable in advance.",
+      "confirm": [
+        "由印尼律师出具意见：本合同项下哪些印尼规定属于强制性规范（合同语言、进口管制、外汇）",
+        "确认印尼是否为 CISG 缔约国（若印尼已加入，CISG 的适用与排除需重新评估）",
+        "确认“排除 CISG”是否需以明示条款写明（建议保留并核实表述规范）"
+      ],
+      "legal_refs": [
+        {
+          "label": "CISG 缔约国状态",
+          "note": "据 UNCITRAL 官方缔约国表：中国为缔约国（1986-12-11 批准，1988-01-01 生效），并依公约保留声明不受第 1(1)(b) 条约束；印度尼西亚未列入该表（共 97 个缔约方）。因印尼非缔约国，CISG 第 1(1)(a) 条的适用条件本不满足，本合同排除 CISG 的表述属于巩固性条款。"
+        },
+        {
+          "label": "《中华人民共和国涉外民事关系法律适用法》",
+          "note": "当事人可协议选择合同适用的法律；涉及中国强制性规定的，须直接适用该强制性规定。"
+        }
+      ],
+      "suggested_wording": "This Contract shall be governed by the laws of the People's Republic of China, excluding the United Nations Convention on Contracts for the International Sale of Goods. Nothing in this Article limits the application of any mandatory rule of the Republic of Indonesia which, by its nature and under Indonesian law, applies to the sale of the Goods into Indonesia.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-30",
+      "seq": 30,
+      "category": "dispute",
+      "severity": "high",
+      "issue_type": "conflict",
+      "title": "合同仅以英文签署，未安排印尼语版本，与印尼合同语言要求存在张力",
+      "title_en": "The contract is English-only with no Indonesian version, creating tension with Indonesian language rules",
+      "anchors": [
+        {
+          "block": "p-article-15-governing-law-and-dispute-resolution-113",
+          "clause": "15.4",
+          "quote": "The Parties acknowledge that this Contract is executed in English and intend that no Indonesian-language version is required. If an Indonesian-language version is required by any authority, the Parties shall prepare a sworn translation for administrative purposes only, and that translation shall not vary or affect the terms of this Contract."
+        },
+        {
+          "block": "p-article-1-definitions-and-interpretation-017",
+          "clause": "1.2",
+          "quote": "This Contract is executed in the English language only. In the event of any discrepancy between this English text and any translation made for any purpose, the English text shall prevail."
+        }
+      ],
+      "clause_title": "15.4 / 1.2 Language and precedence",
+      "finding": "合同在 1.2 与 15.4 两处规定仅以英文签署、英文为准，并声明“intend that no Indonesian-language version is required”。印尼法（UU No. 24/2009 第 31 条）要求涉及印尼主体的协议使用印尼语；2015 年最高法院在 Nine AM Ltd v PT Bangun Karya Pratama Lestari 一案中认定纯英文合同因违反该条而自始无效。2023 年最高法院第 3 号通函（SEMA 3/2023）已缓和此立场：缺少印尼语译本本身不得作为撤销合同的理由，但当事人恶意（iktikad tidak baik）情形除外。",
+      "finding_en": "Two clauses insist on English-only execution and English precedence. Indonesian Law No. 24/2009 Art. 31 requires the Indonesian language for agreements involving an Indonesian party; in Nine AM Ltd v PT Bangun Karya Pratama Lestari the Supreme Court voided an English-only agreement. Supreme Court Circular Letter No. 3 of 2023 has since softened this: absence of an Indonesian translation is no longer itself a ground for annulment, except where bad faith is proven.",
+      "consequence": "风险已从“合同当然无效”下降为“存在可争议窗口”。SEMA 3/2023 属软法（司法内部指引），未废止第 31 条，也未推翻 Nine AM 系列判例，且“恶意”未作定义 —— 印尼买方仍可主张卖方坚持纯英文是为了使其处于不利地位，从而把语言问题变成一个事实争点。此外，裁决在中国作出后若需在印尼执行，执行法院可能重新审视合同形式。成本最低的做法是准备中英（或英印尼）双语签署本并约定优先版本。",
+      "consequence_en": "The risk has dropped from automatic invalidity to a litigable window. A SEMA is internal judicial guidance: it neither repeals Art. 31 nor overrules Nine AM, and 'bad faith' is undefined. A buyer may still argue the seller insisted on English-only to disadvantage it. The cheapest fix remains a signed bilingual set with a prevailing-language clause.",
+      "confirm": [
+        "由印尼律师确认 SEMA 3/2023 在合同执行与执行地法院中的实际适用情况",
+        "确认是否准备英文+印尼语双语签署本，并约定英文为准（Perpres 63/2019 第 26(4) 条允许约定优先语言）",
+        "确认印尼语版本的制作时点 —— Perpres 63/2019 未规定，建议同步签署或约定明确期限",
+        "评估双语本对印尼侧银行、海关、清关的实际必要性"
+      ],
+      "legal_refs": [
+        {
+          "label": "印尼 UU No. 24/2009 第 31 条（国家语言法）",
+          "note": "第 31(1) 条要求涉及国家机构、政府机构、印尼私营主体或印尼公民的协议使用印尼语；第 31(2) 条规定涉外的还须使用外方语言和/或英语。"
+        },
+        {
+          "label": "印尼最高法院 SEMA No. 3/2023",
+          "note": "2023 年 11 月发布。缺少印尼语译本本身不得作为撤销协议的理由，除非能证明缺译本系一方恶意所致。"
+        },
+        {
+          "label": "Putusan MA No. 601 K/Pdt/2015（Nine AM Ltd 案）",
+          "note": "2015-08-31。最高法院维持下级法院判决，认定违反语言要求的纯英文贷款协议缺乏“合法原因”，自始无效。SEMA 3/2023 后该判例的适用已被限缩，但未被正式推翻。"
+        },
+        {
+          "label": "Perpres No. 63/2019 第 26 条",
+          "note": "涉外协议以印尼语与外方语言并用；双方可约定出现歧义时以某一语言为准。"
+        },
+        {
+          "label": "《中华人民共和国民法典》第 142 条、第 466 条",
+          "note": "合同解释以文本、相关条款、目的、习惯与诚信原则为准；不同语言文本间的冲突需按首要文本原则处理。"
+        }
+      ],
+      "suggested_wording": "This Contract is executed in two versions: an English version and an Indonesian version. Both versions shall be signed and shall be equally authentic. In the event of any discrepancy, the English version shall prevail. The Parties acknowledge that the Indonesian version is prepared to satisfy Indonesian requirements and shall not be construed as limiting the English version.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    }
+  ]
+}

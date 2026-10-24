@@ -1,0 +1,130 @@
+{
+ "title": "品种周报数据契约 window.__DATA__",
+ "type": "object",
+ "required": [
+  "meta",
+  "fut",
+  "events",
+  "gaps"
+ ],
+ "properties": {
+  "meta": {
+   "type": "object",
+   "properties": {
+    "product": {
+     "type": "string"
+    },
+    "code": {
+     "type": "string"
+    },
+    "window": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "note": "报告周首末交易日"
+    },
+    "prev": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "note": "上一周（基期）"
+    },
+    "lastyear": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "note": "去年同周"
+    },
+    "title": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    }
+   }
+  },
+  "series": {
+   "type": "object",
+   "note": "{合约: [[date, close], ...]}"
+  },
+  "spot": {
+   "type": "array",
+   "note": "[[date, 基准价], ...]"
+  },
+  "basis11": {
+   "type": "array",
+   "note": "[[date, 基差], ...]"
+  },
+  "basis01": {
+   "type": "array"
+  },
+  "spread": {
+   "type": "object",
+   "note": "{'A-B': [[date, value], ...]}"
+  },
+  "foreign": {
+   "type": "array",
+   "note": "[[date, cfr, rdam], ...]"
+  },
+  "md": {
+   "type": "array",
+   "note": "[[date, 均差, M10, M20], ...]"
+  },
+  "fut": {
+   "type": "object",
+   "note": "{合约: {prev_close, week_avg, week_high, week_low, week_close, chg, chg_pct, oi_start, oi_end, oi_chg, vol_total, daily, daily_oi}}"
+  },
+  "events": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "date",
+     "what",
+     "src",
+     "url"
+    ],
+    "properties": {
+     "date": {},
+     "time": {},
+     "what": {},
+     "entity": {},
+     "impact": {},
+     "src": {},
+     "url": {},
+     "bg": {
+      "type": "boolean"
+     }
+    }
+   }
+  },
+  "anchors": {
+   "type": "array",
+   "note": "{date,name,value,unit,basis,note,src,url}"
+  },
+  "fund": {
+   "type": "array",
+   "note": "{date,metric,value,unit,chg,period,src,url,in_week}"
+  },
+  "upstream": {
+   "type": "array",
+   "note": "{date,item,value,unit,basis,chg,src,url}"
+  },
+  "gaps": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "lastyear": {
+   "type": "object",
+   "note": "{合约: {ly_contract, week_avg, week_close, this_mon_close, yoy_pct}}"
+  },
+  "spreads_prev": {
+   "type": "object"
+  }
+ }
+}

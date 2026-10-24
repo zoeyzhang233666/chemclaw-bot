@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#f4f6f8; --card:#fff; --ink:#101828; --ink2:#344054; --mut:#667085; --line:#e4e8ee;
+  --teal:#0b6b5b; --teal-l:#e7f3f0; --amber:#b45309; --amber-l:#fdf3e3; --blue:#1d4ed8;
+  --s:#c2410c; --a:#0f766e; --b:#1d4ed8; --c:#8492a6;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px -12px rgba(16,24,40,.18);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-weight:650;letter-spacing:-.01em}
+.wrap{max-width:1460px;margin:0 auto;padding:0 28px 80px}
+.top{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--line)}
+.top .in{max-width:1460px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--teal-l)}
+.qbar{display:flex;align-items:center;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#fff}
+.qbar .q{padding:7px 13px;font-size:13.5px;display:flex;align-items:center;gap:7px;border-right:1px solid var(--line)}
+.qbar .q:last-child{border-right:0}
+.qbar .k{color:var(--mut);font-size:12px}
+.qbar .v{font-weight:650}
+.top .meta{margin-left:auto;display:flex;align-items:center;gap:14px;color:var(--mut);font-size:12.5px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink2);padding:7px 13px;border-radius:9px;font-size:13px;
+  cursor:pointer;font-family:inherit;transition:.15s}
+.btn:hover{border-color:#c7d0dc;background:#fbfcfe}
+.btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.hero{padding:38px 0 8px}
+.hero h1{font-size:33px;line-height:1.25}
+.hero .sub{margin-top:10px;color:var(--mut);font-size:14.5px;max-width:900px}
+.hero .tags{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--ink2)}
+.tag.t{background:var(--teal-l);border-color:#cfe6e1;color:#0a5a4d}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:24px}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow)}
+.kpi .l{font-size:12px;color:var(--mut)}
+.kpi .n{font-size:27px;font-weight:700;letter-spacing:-.03em;margin-top:5px;line-height:1.15}
+.kpi .n small{font-size:13px;font-weight:600;color:var(--mut);margin-left:3px}
+.kpi .x{font-size:11.5px;color:var(--mut);margin-top:3px}
+section{margin-top:46px;scroll-margin-top:76px}
+.sh{display:flex;align-items:flex-end;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.sh .no{font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-l);border-radius:7px;padding:3px 8px}
+.sh h2{font-size:21px}
+.sh .d{color:var(--mut);font-size:13px;margin-left:auto;text-align:right}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.mapgrid{display:grid;grid-template-columns:1.62fr 1fr;gap:16px}
+@media(max-width:1080px){.mapgrid{grid-template-columns:1fr}}
+#map{width:100%;height:628px}
+.mapcard{padding:8px 8px 4px;position:relative;overflow:hidden}
+.maptools{position:absolute;left:20px;top:18px;z-index:5;display:flex;gap:6px;flex-wrap:wrap;max-width:70%}
+.maptools .btn{background:rgba(255,255,255,.94);font-size:12.5px;padding:6px 11px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.maptools .btn.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(11,107,91,.35)}
+.maptools .btn.on:hover{background:#0a5c4e;color:#fff}
+.maptools .btn:hover{color:var(--ink)}
+.legend{position:absolute;right:18px;bottom:16px;z-index:5;background:rgba(255,255,255,.94);border:1px solid var(--line);
+  border-radius:10px;padding:9px 11px;font-size:11.5px;color:var(--ink2);box-shadow:var(--shadow)}
+.legend .row{display:flex;align-items:center;gap:7px;margin:3px 0}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend .grad{width:96px;height:7px;border-radius:4px;background:linear-gradient(90deg,#eef2f7,#cfe3de,#8fc7ba,#3f9b87,#0b6b5b)}
+.side{padding:16px 18px;max-height:628px;overflow:auto}
+.side h3{font-size:15px;display:flex;align-items:center;gap:8px}
+.side .hint{font-size:12px;color:var(--mut);margin-top:4px}
+.side .close{margin-left:auto;font-size:12px;color:var(--mut);cursor:pointer;border:0;background:none}
+.mini{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:14px 0}
+.mini div{background:#f8fafc;border:1px solid #eef2f6;border-radius:10px;padding:9px 11px}
+.mini .k{font-size:11px;color:var(--mut)}
+.mini .v{font-size:17px;font-weight:700;letter-spacing:-.02em}
+.mini .v small{font-size:11px;color:var(--mut);font-weight:600}
+.bars{margin:10px 0 4px}
+.bar{display:grid;grid-template-columns:78px 1fr 54px;gap:8px;align-items:center;font-size:12px;margin:6px 0}
+.bar .track{display:block;width:100%;height:8px;background:#e9eef4;border-radius:4px;overflow:hidden}
+.bar .fill{display:block;height:100%;min-width:2px;border-radius:4px;background:var(--teal)}
+.bar .num{text-align:right;color:var(--ink2);font-weight:650}
+.park{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:12.5px;cursor:pointer}
+.park:hover{color:var(--teal)}
+.park .n{font-weight:600}
+.park .c{color:var(--mut);white-space:nowrap}
+.note{background:var(--amber-l);border:1px solid #f2dfc0;border-radius:10px;padding:10px 12px;font-size:12.5px;color:#7c4a08;margin-top:12px}
+.tblwrap{overflow:auto;border-radius:16px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;background:#fff}
+th{position:sticky;top:0;background:#fbfcfd;text-align:left;font-weight:650;color:var(--ink2);font-size:12px;
+  padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none;z-index:2}
+th.no-sort{cursor:default}
+th.on{color:var(--teal)}
+td{padding:9px 12px;border-bottom:1px solid #f0f3f7;vertical-align:middle}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#f8fbfa}
+tbody tr.sel{background:var(--teal-l)}
+.num{text-align:right;font-weight:650}
+.muted{color:var(--mut)}
+.tiny{font-size:11.5px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:1.5px 7px;border-radius:6px}
+.bS{background:#fdece1;color:var(--s)}.bA{background:#e2f2ef;color:var(--a)}
+.bB{background:#e7edfd;color:var(--b)}.bC{background:#eef1f5;color:var(--c)}
+.c高{background:#e2f2ef;color:#0a5a4d}.c中{background:#fdf3e3;color:#8a5a08}.c低{background:#f4f5f7;color:#68738a}
+.t生产{background:#e8f1ff;color:#1a4d9e}.t贸易{background:#f0ecfb;color:#5b3fa8}
+.t同行{background:#fdeaea;color:#a02c2c}.t误判{background:#f4f5f7;color:#5f6b7a}
+.dash{color:#c3cbd6}
+.filters{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.sel{padding:7px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:13px;font-family:inherit;color:var(--ink2)}
+input.search{padding:7px 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;font-family:inherit;min-width:220px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer;color:var(--ink2)}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.count{font-size:12.5px;color:var(--mut);margin-left:auto}
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+@media(max-width:1080px){.lanes{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.lanes{grid-template-columns:1fr}}
+.lane{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:var(--shadow);transition:.16s}
+.lane:hover{border-color:#cfd8e4;transform:translateY(-1px)}
+.lane h4{font-size:14.5px;display:flex;align-items:center;gap:8px}
+.lane .st{color:#e8a33d;font-size:11px;letter-spacing:1px}
+.lane .sh2{font-size:11.5px;color:var(--mut);margin-top:2px}
+.lane p{font-size:12.5px;color:var(--ink2);margin:9px 0 0}
+.lane .kv{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mut);margin-top:9px;padding-top:8px;border-top:1px dashed var(--line)}
+.lane .kv b{color:var(--ink);font-weight:650}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:980px){.two{grid-template-columns:1fr}}
+.chart{padding:14px 16px 6px}
+.chart h3{font-size:14.5px;margin-bottom:2px}
+.chart .cd{font-size:12px;color:var(--mut)}
+.prow{display:grid;grid-template-columns:120px 1fr 130px 1fr;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.5px;align-items:center}
+.pricebig{font-size:44px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.stops{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+@media(max-width:1000px){.stops{grid-template-columns:1fr}}
+.stop{border:1px solid var(--line);border-radius:14px;padding:14px 15px;background:#fff;position:relative;overflow:hidden}
+.stop:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--s)}
+.stop.A:before{background:var(--a)}.stop.B:before{background:var(--b)}
+.stop h4{font-size:15px;display:flex;gap:8px;align-items:center}
+.stop .why{font-size:12.5px;color:var(--ink2);margin-top:8px}
+.stop .facts{display:flex;gap:12px;margin-top:10px;font-size:11.5px;color:var(--mut);flex-wrap:wrap}
+.stop .facts b{color:var(--ink);font-size:13px}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:900px){.mgrid{grid-template-columns:1fr}}
+.mbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.mbox h4{font-size:14px;margin-bottom:8px}
+.mbox p,.mbox li{font-size:12.5px;color:var(--ink2)}
+.mbox p{margin:5px 0}
+code{background:#f4f6f9;border:1px solid #e8ecf1;border-radius:5px;padding:1px 5px;font-size:11.5px}
+.mask{position:fixed;inset:0;background:rgba(16,24,40,.42);backdrop-filter:blur(2px);z-index:80;display:none}
+.mask.on{display:block}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,94vw);background:#fff;z-index:81;
+  transform:translateX(102%);transition:transform .26s cubic-bezier(.4,0,.2,1);box-shadow:-20px 0 50px -20px rgba(16,24,40,.3);
+  display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer .hd{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px}
+.drawer .hd h3{font-size:17px;line-height:1.4}
+.drawer .bd{padding:18px 22px 40px;overflow:auto}
+.drawer .x{border:0;background:#f4f6f9;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;color:var(--ink2);margin-left:auto;flex:none}
+.kvrow{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.kvrow .k{color:var(--mut);font-size:12.5px}
+.act{background:var(--teal-l);border:1px solid #cfe6e1;border-radius:11px;padding:12px 14px;font-size:13px;color:#0a5a4d;margin-top:14px}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;display:flex;gap:18px;flex-wrap:wrap}
+@media print{
+  .top,.maptools,.btn,input,.sel,.chip{display:none!important}
+  body{background:#fff}.card,.kpi,.lane,.stop,.mbox{box-shadow:none}
+  section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="in">
+  <div class="brand"><span class="dot"></span>区域市场地图 <span style="color:#98a2b3;font-weight:500">/ 内贸销售</span></div>
+  <div class="qbar" id="qbar"></div>
+  <div class="meta"><span id="top-date"></span><button class="btn" onclick="window.print()">打印 / 存 PDF</button></div>
+</div></div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1 id="h1"></h1>
+    <div class="sub" id="sub"></div>
+    <div class="tags" id="tags"></div>
+    <div class="kpis" id="kpis"></div>
+  </div>
+
+  <section id="s-map">
+    <div class="sh"><span class="no">01</span><h2>区域市场地图</h2>
+      <div class="d">点击城市气泡 → 过滤城市详情与企业清单；气泡大小随所选度量变化<br>省份底色 = 该省需求量</div></div>
+    <div class="mapgrid">
+      <div class="card mapcard">
+        <div class="maptools" id="maptools"></div>
+        <div id="map"></div>
+        <div class="legend">
+          <div class="row"><i style="background:var(--s)"></i>S 级候选<i style="background:var(--a);margin-left:8px"></i>A 级</div>
+          <div class="row"><i style="background:var(--b)"></i>B 级<i style="background:#98a2b3;margin-left:8px"></i>C 级</div>
+          <div class="row" style="margin-top:6px">省需求量 低<span class="grad" style="margin:0 6px"></span>高</div>
+        </div>
+      </div>
+      <div class="card side" id="side"></div>
+    </div>
+  </section>
+
+  <section id="s-city">
+    <div class="sh"><span class="no">02</span><h2>城市 / 园区清单</h2>
+      <div class="d">按任意列排序；点击行在地图上定位并过滤下方企业与项目<br>「建议天数」按每日拜访数测算，可在 07 节调整</div></div>
+    <div class="filters"><div class="chips" id="provchips"></div><span class="count" id="citycount"></span></div>
+    <div class="card tblwrap" style="max-height:520px">
+      <table id="tcity">
+        <thead><tr>
+          <th data-k="rank" style="width:52px">#</th>
+          <th data-k="city">城市</th>
+          <th data-k="prov">省份</th>
+          <th data-k="tier" style="width:58px">等级</th>
+          <th data-k="firms" class="num">生产企业</th>
+          <th data-k="traders" class="num">贸易商</th>
+          <th data-k="demand" class="num"><span class="dl">需求量</span><br><span class="tiny muted du"></span></th>
+          <th data-k="avg" class="num">单客户均值<br><span class="tiny muted du"></span></th>
+          <th data-k="top_ind">主导下游</th>
+          <th data-k="parks" class="num">园区</th>
+          <th data-k="proj_kt" class="num">项目增量<br><span class="tiny muted du"></span></th>
+          <th data-k="score" class="num">机会指数</th>
+          <th data-k="days" class="num">建议天数</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="s-lane">
+    <div class="sh"><span class="no">03</span><h2>下游行业结构：谁在真正消耗这个产品</h2>
+      <div class="d">每条下游方向一名一卡；星级 = 单客户用量强度（5★ 千吨级以上/家）<br>右侧图 = 区域需求量结构</div></div>
+    <div class="two" style="margin-bottom:16px">
+      <div class="card chart"><h3>区域需求量结构（估算）</h3><div class="cd">按下游方向汇总；单位见页首口径</div><div id="ch-ind" style="height:300px"></div></div>
+      <div class="card chart"><h3>需求量 Top 12 城市</h3><div class="cd">单城体量决定「值不值得专程跑」</div><div id="ch-city" style="height:300px"></div></div>
+    </div>
+    <div class="lanes" id="lanes"></div>
+  </section>
+
+  <section id="s-co">
+    <div class="sh"><span class="no">04</span><h2>客户线索库</h2>
+      <div class="d">具名样本（含同行与误判对照）；园区中小集群以数量口径统计<br>点击行查看需求点、证据来源与首访动作</div></div>
+    <div class="filters">
+      <select class="sel" id="f-type">
+        <option value="all">全部类型</option><option value="生产">生产型企业（客户）</option>
+        <option value="贸易">贸易商（渠道）</option><option value="同行">同行（自产该产品）</option><option value="误判">误判对照（非客户）</option>
+      </select>
+      <select class="sel" id="f-ind"><option value="all">全部下游</option></select>
+      <select class="sel" id="f-conf"><option value="all">全部置信度</option><option value="高">高</option><option value="中">中</option><option value="低">低</option></select>
+      <input class="search" id="f-q" placeholder="搜索企业名 / 城市 / 园区">
+      <span class="count" id="cocount"></span>
+    </div>
+    <div class="card tblwrap" style="max-height:620px">
+      <table id="tco">
+        <thead><tr>
+          <th data-k="name">企业</th><th data-k="type" style="width:66px">类型</th><th data-k="city">城市</th>
+          <th data-k="lane">下游</th><th data-k="scale">规模/定位</th>
+          <th data-k="kt" class="num">年需求量<br><span class="tiny muted du"></span></th>
+          <th data-k="conf" style="width:64px">置信度</th><th class="no-sort">首访动作</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="s-proj">
+    <div class="sh"><span class="no">05</span><h2>新建 / 扩产项目：未来 12 个月的增量</h2>
+      <div class="d">正增量 = 新增需求；负增量 = 冷修/减产；点击行查看接触时点与切入逻辑</div></div>
+    <div class="card tblwrap">
+      <table id="tproj">
+        <thead><tr>
+          <th data-k="co">企业</th><th data-k="name">项目</th><th data-k="city">地点</th><th data-k="type">类型</th>
+          <th data-k="prod">产品</th><th data-k="cap">规模</th><th data-k="status">状态</th>
+          <th data-k="kt" class="num">需求增量<br><span class="tiny muted du"></span></th>
+          <th data-k="ramp">投产/达产</th><th data-k="conf" style="width:64px">置信度</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="s-price">
+    <div class="sh"><span class="no">06</span><h2>价格水平：能卖到多少，区外差在哪</h2>
+      <div class="d" id="price-head"></div></div>
+    <div class="two">
+      <div class="card chart"><h3 id="ch-price-title">主流价对比</h3>
+        <div class="cd" id="ch-price-desc"></div><div id="ch-price" style="height:280px"></div></div>
+      <div class="card" style="padding:18px 20px">
+        <div style="display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap">
+          <div><div class="tiny muted" id="anchor-label"></div>
+            <div class="pricebig"><span id="anchor-val">—</span><span style="font-size:16px;font-weight:600;color:var(--mut)"> <span id="anchor-unit"></span></span></div></div>
+        </div>
+        <div style="margin-top:16px" id="pnotes"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;padding:16px 20px">
+      <h3 style="font-size:14.5px">区域内部到厂价差异</h3>
+      <div class="cd tiny muted" style="margin-bottom:6px">以价格锚点为基准，按运距、货源、议价力调整</div>
+      <div id="pinternal" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <section id="s-route">
+    <div class="sh"><span class="no">07</span><h2>走访优先级与路线</h2>
+      <div class="d">S 级先打，A 级做密度，B/C 级并线顺访<br>
+      每日拜访 <input class="search" id="perday" type="number" value="4" min="1" max="12" style="width:64px;min-width:0;padding:3px 8px"> 家 → 天数自动重算</div></div>
+    <div class="stops" id="stops"></div>
+    <div class="card tblwrap" style="margin-top:16px">
+      <table id="troute">
+        <thead><tr><th style="width:76px">周次</th><th style="width:130px">驻点</th><th>路线（按地理串联）</th><th>重点客群</th><th>为什么这样排</th></tr></thead>
+        <tbody id="routebody"></tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:16px;padding:16px 20px" id="budget"></div>
+  </section>
+
+  <section id="s-method">
+    <div class="sh"><span class="no">08</span><h2>口径、证据与已知缺口</h2>
+      <div class="d">这一节决定这张图能不能被信任：哪些是核实的、哪些是估算的、哪些根本不适用</div></div>
+    <div class="mgrid" id="method"></div>
+  </section>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<div class="mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <div class="hd"><h3 id="d-title">—</h3><button class="x" onclick="closeDrawer()">×</button></div>
+  <div class="bd" id="d-body"></div>
+</div>
+
+<script>__ECHARTS__</script>
+<script>window.__GEO__=%%GEO%%;</script>
+<script>window.__DATA__=%%DATA%%;</script>
+<script>
+(function(){
+'use strict';
+const D = window.__DATA__, M = D.meta, N = D.narrative || {};
+const C = {S:'#c2410c', A:'#0f766e', B:'#1d4ed8', C:'#8492a6'};
+const PALETTE = ['#c2410c','#0f766e','#1d4ed8','#a16207','#7c3aed','#0891b2','#db2777','#059669','#9333ea','#475569','#b45309','#0e7490'];
+const LANE = {}; D.lanes.forEach((l,i)=>{ l.color = PALETTE[i % PALETTE.length]; LANE[l.id] = l; });
+const CITY = {}; D.cities.forEach(c=>{ CITY[c.city] = c; });
+const UNIT = M.demand_unit || '万吨/年';
+const DL = M.demand_label || '需求量';
+const fmt = n => (n==null? '<span class="dash">—</span>' : Number(n).toLocaleString('zh-CN'));
+
+/* ---------- 静态文案注入 ---------- */
+document.title = M.title || (M.product + ' · ' + M.region + ' 区域市场地图');
+document.getElementById('h1').textContent = M.title || (M.product + ' · ' + M.region + ' 客户分布');
+document.getElementById('sub').textContent = M.subtitle || '';
+document.getElementById('top-date').textContent = '数据截至 ' + M.asof;
+document.getElementById('qbar').innerHTML =
+  '<div class="q"><span class="k">产品</span><span class="v">' + M.product + '</span></div>' +
+  '<div class="q"><span class="k">区域</span><span class="v">' + M.region + '</span></div>' +
+  '<div class="q"><span class="k">口径</span><span class="v" style="font-size:12.5px;font-weight:600">' + (M.scope_note || '潜在下游企业（估算）') + '</span></div>';
+document.getElementById('tags').innerHTML = (M.tags||[]).map((t,i)=>
+  '<span class="tag ' + (i===0?'t':'') + '">' + t + '</span>').join('');
+document.querySelectorAll('.dl').forEach(e=>e.textContent = DL);
+document.querySelectorAll('.du').forEach(e=>e.textContent = UNIT);
+document.getElementById('foot').innerHTML =
+  '<span>' + M.product + ' · ' + M.region + ' 区域市场地图</span><span>生成于 ' + M.asof + '</span>' +
+  '<span>' + (M.sources || '') + '</span><span>本页为销售决策辅助，非投资建议</span>';
+
+/* ---------- KPI ---------- */
+(function(){
+  const t = D.summary || {}, A = M.anchor || {};
+  const S = D.cities.filter(c=>c.tier==='S');
+  const cards = [
+    ['潜在生产型企业', t.firms, '家', (t.cities||D.cities.length) + ' 个城市 · ' + (t.parks||0) + ' 个园区'],
+    ['贸易 / 分销商', t.traders, '家', '含二级分销与市场商户'],
+    [DL + '（估算）', t.demand, UNIT, M.demand_share_note || ''],
+    ['S 级候选城市', S.length, '个', '合计占需求 ' + (t.demand ? Math.round(S.reduce((a,b)=>a+b.demand,0)/t.demand*100) : 0) + '%'],
+    ['新建 / 扩产项目', D.projects.length, '个', '正向增量 ' + D.projects.filter(p=>p.kt>0).reduce((a,b)=>a+b.kt,0).toFixed(1) + ' ' + UNIT],
+    [A.label || '价格锚点', A.value, A.unit || '元/吨', A.date || '']
+  ];
+  document.getElementById('kpis').innerHTML = cards.map(function(c){
+    const v = typeof c[1] === 'number' ? c[1].toLocaleString('zh-CN') : (c[1]==null?'—':c[1]);
+    return '<div class="kpi"><div class="l">' + c[0] + '</div><div class="n">' + v + '<small>' + c[2] + '</small></div><div class="x">' + (c[3]||'') + '</div></div>';
+  }).join('');
+})();
+
+/* ---------- 地图 ---------- */
+const map = echarts.init(document.getElementById('map'));
+echarts.registerMap('china', window.__GEO__);
+const METRICS = [
+  ['firms','企业数量','气泡 = 生产型企业数'],
+  ['demand',DL,'气泡 = 需求量'],
+  ['scale','企业规模','气泡 = 单客户平均用量'],
+  ['ind','下游行业','颜色 = 主导下游']
+];
+const state = {metric:'firms', city:null, prov:null, park:null, sortCity:'score', cityDir:-1,
+  sortCo:'kt', coDir:-1, type:'all', ind:'all', conf:'all', q:'', perday:4};
+
+function sizeOf(c,m){
+  if(m==='demand') return Math.max(5, Math.sqrt(Math.max(c.demand,0.2))*1.85);
+  if(m==='scale') return Math.max(5, Math.sqrt(Math.max(c.avg||0.1))*9);
+  return Math.max(5, Math.sqrt(Math.max(c.firms,1))*2.6);
+}
+function renderMap(){
+  document.getElementById('maptools').innerHTML = METRICS.map(m=>
+    '<button class="btn ' + (state.metric===m[0]?'on':'') + '" onclick="__setMetric(\'' + m[0] + '\')" title="' +
+    m[2] + '">' + m[1] + '</button>').join('');
+  const provData = (D.provinces||[]).map(p=>({name:p.prov.replace(/省|市$/,''), value:p.demand}));
+  const pts = D.cities.filter(c=>!state.prov || c.prov===state.prov).map(c=>{
+    const sel = state.city === c.city;
+    const col = state.metric==='ind' ? (LANE[c.inds[0].id]||{}).color || C[c.tier] : C[c.tier];
+    return {
+      name: c.city,
+      value: [c.lon, c.lat, c[state.metric==='scale'?'avg':state.metric==='demand'?'demand':'firms']],
+      symbolSize: sizeOf(c, state.metric),
+      itemStyle: {color: col, opacity: sel?1:.9, borderColor: sel?'#101828':'#fff', borderWidth: sel?2.6:1.4,
+        shadowBlur: sel?14:0, shadowColor:'rgba(16,24,40,.3)'},
+      label: {show: state.metric==='ind' || c.tier==='S' || sel, position:'right', formatter:c.city,
+        fontSize:11, color:'#344054', fontWeight: sel?700:500, distance:4},
+      emphasis: {scale:1.14}
+    };
+  });
+  map.setOption({
+    backgroundColor:'transparent',
+    geo:{map:'china', roam:true, center:[118.55,31.15], zoom:3.05, left:0, right:0, top:0, bottom:0,
+      itemStyle:{areaColor:'#f1f4f8', borderColor:'#fff', borderWidth:1},
+      emphasis:{itemStyle:{areaColor:'#e3eaf3'}, label:{show:false}},
+      scaleLimit:{min:1.2,max:12}},
+    visualMap:{min:0, max:Math.max.apply(null,(D.provinces||[{demand:1}]).map(p=>p.demand))||1, show:false,
+      inRange:{color:['#eef2f7','#d6e7e2','#9ecdc1','#4fa08d','#0b6b5b']}, seriesIndex:0},
+    series:[
+      {type:'map', map:'china', geoIndex:0, selectedMode:false, data:provData},
+      {type:'scatter', coordinateSystem:'geo', data:pts, zlevel:3, cursor:'pointer',
+        tooltip:{formatter:function(o){
+          const c = CITY[o.name]; if(!c) return o.name;
+          return '<b>' + c.city + '</b> <span style="color:#8492a6">' + c.tier + ' 级 · 第 ' + c.rank + ' 位</span><br>' +
+            '生产企业 <b>' + c.firms + '</b> 家 ｜ 贸易商 <b>' + c.traders + '</b> 家<br>' +
+            DL + ' <b>' + c.demand + '</b> ' + UNIT + ' ｜ 单客户均值 ' + c.avg + '<br>' +
+            '主导下游：' + c.inds.slice(0,3).map(i=>i.name + ' ' + i.n + '家').join('、') + '<br>' +
+            '<span style="color:#0b6b5b">点击查看城市详情 →</span>';
+        }}}
+    ]
+  });
+  map.off('click');
+  map.on('click', function(p){ if(p && p.name && CITY[p.name]) selectCity(p.name); });
+}
+window.__setMetric = function(m){ state.metric = m; renderMap(); };
+
+/* ---------- 侧栏 ---------- */
+function selectCity(name){
+  state.city = (state.city===name) ? null : name;
+  state.park = null;
+  renderSide(); renderCities(); renderCompanies(); renderProjects(); renderMap();
+  if(state.city) document.getElementById('s-co').scrollIntoView({behavior:'smooth',block:'start'});
+}
+window.__selectCity = selectCity;
+
+function renderSide(){
+  const el = document.getElementById('side');
+  if(!state.city){
+    const maxD = Math.max.apply(null, (D.provinces||[{demand:1}]).map(p=>p.demand).concat([1]));
+    el.innerHTML = '<h3>区域概览</h3>' +
+      '<div class="hint">点击地图气泡或下表行，查看单个城市/园区的客户结构</div>' +
+      '<div class="mini"><div><div class="k">生产型企业</div><div class="v">' + fmt(D.summary.firms) + '</div></div>' +
+      '<div><div class="k">贸易商</div><div class="v">' + fmt(D.summary.traders) + '</div></div>' +
+      '<div><div class="k">' + DL + '</div><div class="v">' + fmt(D.summary.demand) + '<small> ' + UNIT + '</small></div></div>' +
+      '<div><div class="k">园区</div><div class="v">' + (D.summary.parks||'—') + '</div></div></div>' +
+      '<div class="bars">' + (D.provinces||[]).slice().sort((a,b)=>b.demand-a.demand).map(p=>
+        '<div class="bar"><span>' + p.prov + '</span><span class="track"><span class="fill" style="width:' +
+        (p.demand/maxD*100) + '%;cursor:pointer" onclick="__filterProv(\'' + p.prov + '\')"></span></span>' +
+        '<span class="num">' + p.demand + '</span></div>').join('') + '</div>' +
+      (N.side_note ? '<div class="note">' + N.side_note + '</div>' : '') +
+      '<div style="margin-top:14px;font-size:12.5px" class="muted">S 级城市：' +
+      D.cities.filter(c=>c.tier==='S').map(c=>c.city).join(' · ') + '</div>';
+    return;
+  }
+  const c = CITY[state.city];
+  el.innerHTML = '<h3>' + c.city + '<span class="badge b' + c.tier + '" style="margin-left:6px">' + c.tier + ' 级</span>' +
+    '<button class="close" onclick="__selectCity(\'' + c.city + '\')">收起 ×</button></h3>' +
+    '<div class="hint">' + c.prov + ' · 机会指数 ' + c.score + ' · 区域第 ' + c.rank + ' 位</div>' +
+    '<div class="mini"><div><div class="k">生产企业</div><div class="v">' + c.firms + '</div></div>' +
+    '<div><div class="k">贸易商</div><div class="v">' + c.traders + '</div></div>' +
+    '<div><div class="k">' + DL + '</div><div class="v">' + c.demand + '<small> ' + UNIT + '</small></div></div>' +
+    '<div><div class="k">单客户均值</div><div class="v">' + c.avg + '</div></div></div>' +
+    '<div style="font-size:12px;color:#667085;margin-top:2px">需求结构</div><div class="bars">' +
+    c.inds.slice(0,5).map(i=>'<div class="bar"><span>' + i.name + '</span><span class="track">' +
+      '<span class="fill" style="width:' + (i.share*100) + '%;background:' + ((LANE[i.id]||{}).color||'#0b6b5b') +
+      '"></span></span><span class="num">' + i.kt + '</span></div>').join('') + '</div>' +
+    '<div style="font-size:12px;color:#667085;margin-top:12px">园区（点击过滤企业）</div>' +
+    c.parks.map(p=>'<div class="park" onclick="__filterPark(\'' + p.name.replace(/'/g,"\\'") + '\')">' +
+      '<span><span class="n">' + p.name + '</span><br><span class="tiny muted">' + p.ind + '</span></span>' +
+      '<span class="c">' + p.n + ' 家</span></div>').join('') +
+    '<div style="font-size:12px;color:#667085;margin-top:12px">代表企业</div>' +
+    '<div class="tiny" style="margin-top:4px">' + (c.head && c.head.length ? c.head.join(' ｜ ')
+      : '<span class="muted">以中小企业集群为主，见下表</span>') + '</div>' +
+    '<div class="tiny" style="margin-top:10px">' + c.smb + '</div>' +
+    '<div class="note">' + c.note + '</div>';
+}
+window.__filterProv = function(p){ state.prov = (state.prov===p)?null:p; renderProvChips(); renderMap(); renderCities(); renderCompanies(); };
+window.__filterPark = function(p){ state.park = (state.park===p)?null:p; renderCompanies(); document.getElementById('s-co').scrollIntoView({behavior:'smooth'}); };
+
+/* ---------- 城市表 ---------- */
+function renderProvChips(){
+  const counts = {};
+  D.cities.forEach(c=>counts[c.prov]=(counts[c.prov]||0)+1);
+  document.getElementById('provchips').innerHTML =
+    '<span class="chip ' + (!state.prov?'on':'') + '" onclick="__filterProv(null)">全部 ' + D.cities.length + '</span>' +
+    (D.provinces||[]).map(p=>'<span class="chip ' + (state.prov===p.prov?'on':'') + '" onclick="__filterProv(\'' +
+      p.prov + '\')">' + p.prov + ' ' + (counts[p.prov]||0) + '</span>').join('');
+}
+function renderCities(){
+  const k = state.sortCity, dir = state.cityDir || -1;
+  const rows = D.cities.filter(c=>!state.prov || c.prov===state.prov);
+  const val = c => (k==='parks' ? c.parks.length : c[k]);
+  rows.sort((a,b)=>{ const x=val(a), y=val(b);
+    if(typeof x==='string') return String(x).localeCompare(String(y),'zh')*dir;
+    return (x-y)*dir; });
+  document.querySelector('#tcity tbody').innerHTML = rows.map(c=>
+    '<tr class="' + (state.city===c.city?'sel':'') + '" onclick="__selectCity(\'' + c.city + '\')">' +
+    '<td class="muted">' + c.rank + '</td><td><b>' + c.city + '</b></td><td class="muted">' + c.prov + '</td>' +
+    '<td><span class="badge b' + c.tier + '">' + c.tier + '</span></td>' +
+    '<td class="num">' + c.firms + '</td><td class="num">' + c.traders + '</td>' +
+    '<td class="num">' + c.demand + '</td><td class="num">' + c.avg + '</td>' +
+    '<td>' + c.inds[0].name + ' <span class="tiny muted">' + Math.round(c.inds[0].share*100) + '%</span></td>' +
+    '<td class="num">' + c.parks.length + '</td>' +
+    '<td class="num">' + (c.proj_kt ? c.proj_kt : '<span class="dash">—</span>') + '</td>' +
+    '<td class="num"><b>' + c.score + '</b></td>' +
+    '<td class="num">' + c.days + '</td></tr>').join('');
+  document.getElementById('citycount').textContent = rows.length + ' 个城市 · 生产 ' +
+    rows.reduce((a,b)=>a+b.firms,0) + ' 家 · ' + DL + ' ' + rows.reduce((a,b)=>a+b.demand,0) + ' ' + UNIT;
+  document.querySelectorAll('#tcity th').forEach(th=>{
+    th.onclick = function(){ const k2 = th.dataset.k; if(!k2) return;
+      state.cityDir = (state.sortCity===k2) ? -(state.cityDir||-1) : -1; state.sortCity = k2; renderCities(); };
+    th.classList.toggle('on', th.dataset.k === state.sortCity);
+  });
+}
+
+/* ---------- 企业 ---------- */
+const CONFORD = {'高':0,'中':1,'低':2};
+function renderCompanyFilters(){
+  document.getElementById('f-ind').innerHTML = '<option value="all">全部下游</option>' +
+    D.lanes.map(l=>'<option value="' + l.id + '">' + l.name + '</option>').join('');
+}
+function renderCompanies(){
+  const k = state.sortCo, dir = state.coDir || -1;
+  const key = x => k==='conf' ? CONFORD[x.conf] : (k==='lane' ? (LANE[x.lane]||{}).name || '' : (k==='kt' ? (x.kt||0) : x[k]));
+  const rows = D.companies.filter(x=>{
+    if(state.type!=='all' && x.type!==state.type) return false;
+    if(state.ind!=='all' && x.lane!==state.ind) return false;
+    if(state.conf!=='all' && x.conf!==state.conf) return false;
+    if(state.city && x.city!==state.city) return false;
+    if(state.park && x.park!==state.park) return false;
+    if(state.prov && x.prov!==state.prov) return false;
+    if(state.q){ const q=state.q.toLowerCase();
+      if(!((x.name+x.city+x.park+x.scale+x.need).toLowerCase().includes(q))) return false; }
+    return true;
+  }).sort((a,b)=>{ const x=key(a), y=key(b);
+    if(typeof x==='string') return String(x).localeCompare(String(y),'zh')*dir;
+    return (x-y)*dir; });
+  document.getElementById('cocount').textContent = rows.length + ' 家' +
+    (state.park?' · 园区：'+state.park:'') + (state.city?' · 城市：'+state.city:'');
+  document.querySelector('#tco tbody').innerHTML = rows.map(x=>
+    '<tr onclick="__openCompany(' + D.companies.indexOf(x) + ')">' +
+    '<td><b>' + x.name + '</b></td><td><span class="badge t' + x.type + '">' + x.type + '</span></td>' +
+    '<td class="muted">' + x.city + '</td><td>' + ((LANE[x.lane]||{}).name || '—') + '</td>' +
+    '<td class="tiny">' + x.scale + '</td>' +
+    '<td class="num">' + (x.kt!=null ? x.kt : '<span class="dash">—</span>') + '</td>' +
+    '<td><span class="badge c' + x.conf + '">' + x.conf + '</span></td>' +
+    '<td class="tiny muted">' + x.action + '</td></tr>').join('') ||
+    '<tr><td colspan="8" style="padding:26px;text-align:center" class="muted">当前筛选无具名样本；该区域客户以中小集群形式存在，见 02 节与企业数量口径</td></tr>';
+  document.querySelectorAll('#tco th').forEach(th=>{
+    if(!th.dataset.k) return;
+    th.onclick = function(){ const k2 = th.dataset.k;
+      state.coDir = (state.sortCo===k2) ? -(state.coDir||-1) : -1; state.sortCo = k2; renderCompanies(); };
+    th.classList.toggle('on', th.dataset.k === state.sortCo);
+  });
+}
+window.__openCompany = function(i){
+  const x = D.companies[i], l = LANE[x.lane] || {};
+  document.getElementById('d-title').innerHTML = x.name + ' <span class="badge t' + x.type + '" style="margin-left:6px">' + x.type + '</span>';
+  document.getElementById('d-body').innerHTML =
+    '<div class="kvrow"><div class="k">所在城市</div><div>' + x.prov + ' · ' + x.city + '</div></div>' +
+    '<div class="kvrow"><div class="k">园区</div><div>' + x.park + '</div></div>' +
+    '<div class="kvrow"><div class="k">下游方向</div><div>' + (l.name||'—') + '　<span class="tiny muted">单耗 ' + (l.unit_txt||'—') + '</span></div></div>' +
+    '<div class="kvrow"><div class="k">规模 / 定位</div><div>' + x.scale + '</div></div>' +
+    '<div class="kvrow"><div class="k">年' + DL + '（估算）</div><div>' + (x.kt!=null ? x.kt + ' ' + UNIT : '<span class="muted">未定量（渠道/对照类）</span>') + '</div></div>' +
+    '<div class="kvrow"><div class="k">需求点</div><div>' + x.need + '</div></div>' +
+    '<div class="kvrow"><div class="k">证据来源</div><div>' + x.src + '</div></div>' +
+    '<div class="kvrow"><div class="k">置信度</div><div><span class="badge c' + x.conf + '">' + x.conf + '</span> ' +
+      (x.conf==='高'?'主体与用量均有公开证据支撑':(x.conf==='中'?'主体可查，用量为行业推算':'主体未核实，需电话确认')) + '</div></div>' +
+    '<div class="kvrow"><div class="k">对接人</div><div>' + (x.who || l.who || '—') + '</div></div>' +
+    '<div class="act"><b>首访动作：</b>' + x.action + (l.hook ? '<br><span style="opacity:.8">话术钩子：' + l.hook + '</span>' : '') + '</div>' +
+    '<div style="margin-top:14px" class="tiny muted">提示：用量为按产能与单耗的估算值，实际以客户月采购量为准；同行/误判类企业不产生销量。</div>';
+  openDrawer();
+};
+
+/* ---------- 项目 ---------- */
+function renderProjects(){
+  const rows = D.projects.filter(p=>!state.city || p.city===state.city).sort((a,b)=>(b.kt||0)-(a.kt||0));
+  document.querySelector('#tproj tbody').innerHTML = rows.map(p=>
+    '<tr onclick="__openProject(\'' + p.id + '\')">' +
+    '<td><b>' + p.co + '</b></td><td class="tiny">' + p.name + '</td><td class="muted">' + p.city + '</td>' +
+    '<td><span class="badge ' + (p.kt>=0?'c高':'t同行') + '">' + p.type + '</span></td>' +
+    '<td class="tiny">' + p.prod + '</td><td class="tiny muted">' + p.cap + '</td>' +
+    '<td class="tiny">' + p.status + '</td>' +
+    '<td class="num" style="color:' + (p.kt>0?'#0f766e':(p.kt<0?'#a02c2c':'#8492a6')) + '">' +
+      (p.kt>0?'+'+p.kt:(p.kt<0?p.kt:'—')) + '</td>' +
+    '<td class="tiny muted">' + p.ramp + '</td>' +
+    '<td><span class="badge c' + p.conf + '">' + p.conf + '</span></td></tr>').join('') ||
+    '<tr><td colspan="10" style="padding:22px;text-align:center" class="muted">该城市暂无已录入项目</td></tr>';
+}
+window.__openProject = function(id){
+  const p = D.projects.find(x=>x.id===id);
+  document.getElementById('d-title').innerHTML = p.co + '<br><span style="font-size:13px;font-weight:500;color:#667085">' + p.name + '</span>';
+  document.getElementById('d-body').innerHTML =
+    '<div class="kvrow"><div class="k">地点</div><div>' + p.prov + ' · ' + p.city + '</div></div>' +
+    '<div class="kvrow"><div class="k">项目类型</div><div>' + p.type + '</div></div>' +
+    '<div class="kvrow"><div class="k">产品 / 规模</div><div>' + p.prod + '　' + p.cap + '</div></div>' +
+    '<div class="kvrow"><div class="k">投资</div><div>' + p.invest + '</div></div>' +
+    '<div class="kvrow"><div class="k">状态</div><div>' + p.status + '</div></div>' +
+    '<div class="kvrow"><div class="k">开工 / 达产</div><div>' + p.start + ' → ' + p.ramp + '</div></div>' +
+    '<div class="kvrow"><div class="k">' + DL + '增量</div><div style="font-weight:700;color:' + (p.kt>0?'#0f766e':'#a02c2c') + '">' +
+      (p.kt>0?'+':'') + p.kt + ' ' + UNIT + '</div></div>' +
+    '<div class="kvrow"><div class="k">商用含义</div><div>' + p.impact + '</div></div>' +
+    '<div class="kvrow"><div class="k">证据</div><div>' + p.src + ' <span class="badge c' + p.conf + '">' + p.conf + '</span></div></div>' +
+    '<div class="act"><b>接触时点：</b>' + (p.kt>0
+      ? '投料试生产前 1–2 个月完成送样与商务谈判；点火/投料后 2 周内必须到场'
+      : '作为供需与价格信号跟踪，不直接拜访') + '</div>';
+  openDrawer();
+};
+
+/* ---------- 抽屉 ---------- */
+function openDrawer(){ document.getElementById('mask').classList.add('on'); document.getElementById('drawer').classList.add('on'); }
+window.closeDrawer = function(){ document.getElementById('mask').classList.remove('on'); document.getElementById('drawer').classList.remove('on'); };
+document.getElementById('mask').onclick = window.closeDrawer;
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') window.closeDrawer(); });
+
+/* ---------- 下游卡片 ---------- */
+document.getElementById('lanes').innerHTML = D.lanes.map(l=>{
+  const cs = D.cities.filter(c=>c.inds.some(i=>i.id===l.id));
+  const tot = D.cities.reduce((a,c)=>{ const m=c.inds.find(i=>i.id===l.id); return a + (m?m.kt:0); }, 0);
+  return '<div class="lane"><h4>' + l.name + '<span class="st">' + '★'.repeat(l.intensity) + '☆'.repeat(5-l.intensity) + '</span></h4>' +
+    '<div class="sh2">单耗 ' + l.unit_txt + ' · 全国占比约 ' + l.share + '%</div>' +
+    '<p>' + l.logic + '</p>' +
+    '<div class="kv"><span>区域内覆盖城市</span><b>' + cs.length + ' 个</b></div>' +
+    '<div class="kv"><span>' + DL + '</span><b>' + tot.toFixed(1) + ' ' + UNIT + '</b></div>' +
+    '<div class="kv"><span>对接</span><b style="font-weight:600">' + l.who + '</b></div>' +
+    '<div class="kv" style="border:0;padding-top:0"><span>常见误判</span></div>' +
+    '<div class="tiny" style="color:#a02c2c">' + (l.misread||'无') + '</div>' +
+    '<div class="kv" style="border:0;padding-top:4px"><span>切入话术</span></div>' +
+    '<div class="tiny" style="color:#475467">' + l.hook + '</div></div>';
+}).join('');
+
+/* ---------- 图表 ---------- */
+const indAgg = D.lanes.map(l=>{
+  let s = 0; D.cities.forEach(c=>{ const m=c.inds.find(i=>i.id===l.id); if(m) s += m.kt; });
+  return {name:l.name, value:+s.toFixed(1), color:l.color, id:l.id};
+}).filter(x=>x.value>0).sort((a,b)=>b.value-a.value);
+echarts.init(document.getElementById('ch-ind')).setOption({
+  tooltip:{trigger:'item', formatter:'{b}<br/>{c} ' + UNIT + '（{d}%）'},
+  series:[{type:'pie', radius:['46%','74%'], center:['50%','52%'], itemStyle:{borderColor:'#fff',borderWidth:2},
+    label:{fontSize:11,color:'#475467',formatter:'{b}\n{d}%'}, labelLine:{length:8,length2:8},
+    data:indAgg.map(d=>({name:d.name,value:d.value,itemStyle:{color:d.color}}))}]
+});
+const top12 = D.cities.slice().sort((a,b)=>b.demand-a.demand).slice(0,12);
+echarts.init(document.getElementById('ch-city')).setOption({
+  grid:{left:84,right:48,top:12,bottom:16},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'},
+    formatter:function(p){ const c=CITY[p[0].name]; return p[0].name + '<br/>' + DL + ' ' + p[0].value + ' ' + UNIT +
+      (c ? ' · 生产 ' + c.firms + ' 家' : ''); }},
+  xAxis:{type:'value',splitLine:{lineStyle:{color:'#f0f3f7'}},axisLabel:{fontSize:10,color:'#98a2b3'}},
+  yAxis:{type:'category',inverse:true,data:top12.map(c=>c.city),axisLine:{show:false},axisTick:{show:false},
+    axisLabel:{fontSize:11,color:'#475467'}},
+  series:[{type:'bar',barWidth:'58%',
+    data:top12.map(c=>({value:c.demand,itemStyle:{color:C[c.tier],borderRadius:[0,4,4,0]}})),
+    label:{show:true,position:'right',fontSize:11,color:'#475467',formatter:'{c}'}}]
+});
+/* 价格 */
+const P = D.prices || {regions:[], internal:[], notes:[]};
+const anchor = M.anchor || {};
+document.getElementById('anchor-label').textContent = anchor.label || '';
+document.getElementById('anchor-val').textContent = anchor.value!=null ? Number(anchor.value).toLocaleString('zh-CN') : '—';
+document.getElementById('anchor-unit').textContent = anchor.unit || '';
+document.getElementById('price-head').innerHTML = (P.headline || (anchor.label + ' ' + anchor.value + ' ' + (anchor.unit||'') + '（' + (anchor.date||'') + '）'));
+document.getElementById('ch-price-title').textContent = P.chart_title || '主流价对比（元/吨）';
+document.getElementById('ch-price-desc').textContent = P.chart_desc || '';
+const pv = P.regions.map(r=>r.v);
+echarts.init(document.getElementById('ch-price')).setOption({
+  grid:{left:56,right:30,top:18,bottom:26},
+  tooltip:{trigger:'axis',formatter:function(p){ return p[0].name + '：' + p[0].value + ' 元/吨'; }},
+  xAxis:{type:'category',data:P.regions.map(r=>r.name),axisLine:{lineStyle:{color:'#e4e8ee'}},
+    axisTick:{show:false},axisLabel:{fontSize:11,color:'#475467'}},
+  yAxis:{type:'value',min:Math.floor(Math.min.apply(null,pv.length?pv:[0])*0.92),max:Math.ceil(Math.max.apply(null,pv.length?pv:[1])*1.06),
+    splitLine:{lineStyle:{color:'#f0f3f7'}},axisLabel:{fontSize:10,color:'#98a2b3'}},
+  series:[{type:'bar',barWidth:'46%',
+    data:P.regions.map((r,i)=>({value:r.v,itemStyle:{color:i===0?'#0b6b5b':'#c8d6d2',borderRadius:[4,4,0,0]}})),
+    label:{show:true,position:'top',fontSize:11.5,color:'#344054',formatter:'{c}'}}]
+});
+document.getElementById('pnotes').innerHTML = (P.notes||[]).map(n=>
+  '<div class="tiny" style="color:#475467;margin:6px 0;padding-left:12px;border-left:2px solid #e4e8ee">' + n + '</div>').join('');
+document.getElementById('pinternal').innerHTML = (P.internal||[]).map(r=>
+  '<div class="prow"><b>' + r.name + '</b><span class="tiny">' + r.range + ' 元/吨</span>' +
+  '<span class="tiny" style="color:' + (r.room==='高'?'#a02c2c':(r.room==='低'?'#0f766e':'#667085')) + '">议价空间：' + r.room + '</span>' +
+  '<span class="tiny muted">' + (r.why||'') + (r.advice?'　→ ' + r.advice:'') + '</span></div>').join('');
+
+/* ---------- 走访 ---------- */
+function renderStops(){
+  const S = D.cities.filter(c=>c.tier==='S');
+  document.getElementById('stops').innerHTML = S.map(c=>
+    '<div class="stop ' + c.tier + '"><h4><span class="badge b' + c.tier + '">S' + c.rank + '</span>' + c.city +
+    '<span class="tiny muted" style="margin-left:auto">' + c.prov + '</span></h4>' +
+    '<div class="why">' + c.note + '</div>' +
+    '<div class="facts"><span>' + DL + ' <b>' + c.demand + '</b></span><span>生产 <b>' + c.firms + '</b> 家</span>' +
+    '<span>均值 <b>' + c.avg + '</b></span><span>建议 <b>' + c.days + '</b> 天</span></div></div>').join('');
+  document.getElementById('routebody').innerHTML = (D.route||[]).map(r=>
+    '<tr><td><b>' + r.week + '</b></td><td>' + r.base + '</td><td>' + r.seq + '</td>' +
+    '<td class="tiny">' + r.focus + '</td><td class="tiny muted">' + r.why + '</td></tr>').join('');
+  const days = S.reduce((a,c)=>a+c.days,0);
+  const A = D.cities.filter(c=>c.tier==='A').slice(0,8);
+  const daysA = A.reduce((a,c)=>a+c.days,0);
+  const cov = Math.round(S.reduce((a,c)=>a+c.firms,0)*0.35);
+  document.getElementById('budget').innerHTML =
+    '<h3 style="font-size:14.5px">执行预算与产能测算</h3>' +
+    '<div class="kpis" style="margin-top:12px">' +
+    '<div class="kpi" style="box-shadow:none"><div class="l">S 级 ' + S.length + ' 城</div><div class="n">' + days +
+      '<small> 天</small></div><div class="x">按每日 ' + state.perday + ' 家全覆盖</div></div>' +
+    '<div class="kpi" style="box-shadow:none"><div class="l">A 级前 ' + A.length + ' 城</div><div class="n">' + daysA +
+      '<small> 天</small></div><div class="x">' + A.map(c=>c.city).join('、') + '</div></div>' +
+    '<div class="kpi" style="box-shadow:none"><div class="l">首轮目标覆盖</div><div class="n">' + cov +
+      '<small> 家</small></div><div class="x">S 级共 ' + S.reduce((a,c)=>a+c.firms,0) + ' 家 · 按 35% 有效拜访率</div></div>' +
+    '<div class="kpi" style="box-shadow:none"><div class="l">S 级需求池</div><div class="n">' +
+      S.reduce((a,c)=>a+c.demand,0) + '<small> ' + UNIT + '</small></div><div class="x">占区域 ' +
+      (D.summary.demand ? Math.round(S.reduce((a,c)=>a+c.demand,0)/D.summary.demand*100) : 0) + '%</div></div></div>' +
+    '<div class="tiny muted" style="margin-top:10px">说明：天数按「每日有效拜访 ' + state.perday + ' 家」测算，含园区内步行转场；跨城转场另计 0.5 天/次。' +
+    '路线只能覆盖 S/A 级重点园区内的目标客户，其余按季度循环或交由本地经销商覆盖。' +
+    '实际拜访前应按「是否已有供应商、账期、议价空间」二次筛选。</div>';
+}
+
+/* ---------- 方法与缺口 ---------- */
+(function(){
+  const peers = D.companies.filter(c=>c.type==='同行');
+  const wrong = D.companies.filter(c=>c.type==='误判');
+  const low = D.companies.filter(c=>c.conf==='低');
+  const blocks = (N.method||[]).map((b,i)=>
+    '<div class="mbox"><h4>' + String.fromCharCode(9312+i) + ' ' + b.k + '</h4><p>' + b.v + '</p></div>');
+  if(peers.length) blocks.push('<div class="mbox"><h4>同行名单（自产该产品，不是客户）</h4><p>' +
+    peers.map(p=>p.name + '（' + p.city + '）').join('；') + '</p>' +
+    (N.peer_notes||[]).map(x=>'<p style="margin-top:6px">' + x + '</p>').join('') + '</div>');
+  if(wrong.length) blocks.push('<div class="mbox"><h4>误判清单（下游但不消耗）</h4><p>' +
+    wrong.map(p=>p.name).join('；') + '</p>' +
+    (N.misread_notes ? '<p style="margin-top:6px">' + N.misread_notes + '</p>' : '') + '</div>');
+  if((N.gaps||[]).length) blocks.push('<div class="mbox"><h4>已知缺口与负结果</h4>' +
+    N.gaps.map(g=>'<p>· ' + g + '</p>').join('') +
+    (low.length ? '<p style="margin-top:6px">低置信条目：' + low.map(x=>x.name).join('、') + '</p>' : '') + '</div>');
+  document.getElementById('method').innerHTML = blocks.join('');
+})();
+
+/* ---------- 交互绑定 ---------- */
+renderProvChips(); renderSide(); renderCities(); renderCompanies(); renderCompanyFilters();
+renderProjects(); renderStops(); renderMap();
+document.getElementById('f-type').onchange = function(e){ state.type=e.target.value; renderCompanies(); };
+document.getElementById('f-ind').onchange = function(e){ state.ind=e.target.value; renderCompanies(); };
+document.getElementById('f-conf').onchange = function(e){ state.conf=e.target.value; renderCompanies(); };
+document.getElementById('f-q').oninput = function(e){ state.q=e.target.value; renderCompanies(); };
+document.getElementById('perday').oninput = function(e){
+  const v = Math.max(1, Math.min(12, +e.target.value||4)); state.perday = v;
+  D.cities.forEach(c=>{ c.days = Math.max(1, Math.round(c.firms/v + 0.4)); });
+  renderCities(); renderStops();
+};
+window.addEventListener('resize', function(){ map.resize(); });
+})();
+</script>
+</body>
+</html>

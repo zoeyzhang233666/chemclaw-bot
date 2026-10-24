@@ -1,0 +1,456 @@
+﻿{
+ "meta": {
+  "generated_at": "2026-10-20 19:11:22",
+  "design_version": "2.2",
+  "design_approved_at": "2026-10-20 19:08:14",
+  "data_status": "SIMULATED",
+  "demo_note": "随机数生成的模拟数据，仅用于验证流程",
+  "inventory_rows": 208,
+  "evaluable_states": 117,
+  "skipped": {
+   "parse_fail": 0,
+   "gap": 0,
+   "no_price": 0,
+   "dup_state": 85,
+   "incomplete": 4,
+   "roll_in_window": 0,
+   "pre15_bar_missing": 121
+  },
+  "price_days": 208,
+  "inventory_range": [
+   "2022-01-05",
+   "2025-12-24"
+  ],
+  "price_range": [
+   "2022-01-05",
+   "2025-12-24"
+  ],
+  "registry_cap": 18
+ },
+ "sample": {
+  "n_signal": 28,
+  "n_control": 89,
+  "signal_dates": [
+   "2022-03-16",
+   "2022-06-01",
+   "2022-07-06",
+   "2022-08-10",
+   "2022-09-14",
+   "2022-10-05",
+   "2022-12-21",
+   "2023-03-22",
+   "2023-04-19",
+   "2023-06-14",
+   "2023-07-19",
+   "2023-09-13",
+   "2023-11-01",
+   "2023-11-29",
+   "2023-12-20",
+   "2024-01-10",
+   "2024-02-14",
+   "2024-05-08",
+   "2024-05-29",
+   "2024-07-03",
+   "2024-08-28",
+   "2024-10-02",
+   "2025-01-08",
+   "2025-02-26",
+   "2025-04-30",
+   "2025-06-18",
+   "2025-07-16",
+   "2025-10-08"
+  ],
+  "min_n_rule_violated": false
+ },
+ "tests": [
+  {
+   "id": "P1_mean",
+   "family": "primary",
+   "label": "主口径 Δbasis_10 均值差（信号−对照）",
+   "estimate": -2.7528932584269654,
+   "ci95": [
+    -17.80847178086986,
+    12.302685264015928
+   ],
+   "p": 0.7140609050212503,
+   "n": 28,
+   "extra": {
+    "p_normal_approx": 0.7122806086808793,
+    "control_mean": -1.284606741573034,
+    "control_n": 89,
+    "se": 7.464564400747118,
+    "t": -0.36879489687990796,
+    "df": 43.71
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "P1_mw",
+   "family": "primary",
+   "label": "主口径 Δbasis_10 Mann-Whitney U（Cliff's δ）",
+   "estimate": -0.025682182985553803,
+   "ci95": null,
+   "p": 0.8380244952013232,
+   "n": 117,
+   "extra": {
+    "auc": 0.4871589085072231
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "P2_dir",
+   "family": "primary",
+   "label": "主口径 Δbasis_10 方向一致率 P(Δ>0 | 信号) vs 对照",
+   "estimate": -0.043338683788122,
+   "ci95": [
+    0.2650854701640365,
+    0.6092921450416022
+   ],
+   "p": 0.6882629592400646,
+   "n": 28,
+   "extra": {
+    "signal_rate": 0.4286,
+    "control_rate": 0.4719,
+    "n_control": 89
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "P3",
+   "family": "primary",
+   "label": "信号组均值 移动块自助 95%CI（全序列顺序）",
+   "estimate": -4.0375,
+   "ci95": [
+    -13.68240811965812,
+    10.1514358974359
+   ],
+   "p": null,
+   "n": 28,
+   "extra": {},
+   "data_status": "SIMULATED",
+   "q_bh": null
+  },
+  {
+   "id": "P4_mean",
+   "family": "primary",
+   "label": "期货 ΔP_10 均值差（信号−对照）",
+   "estimate": -2.0553772070626004,
+   "ci95": [
+    -18.06437353278863,
+    13.953619118663427
+   ],
+   "p": 0.7967344323160637,
+   "n": 28,
+   "extra": {
+    "p_normal_approx": 0.7954657097119211,
+    "control_mean": 2.269662921348315,
+    "control_n": 89,
+    "se": 7.929092493252184,
+    "t": -0.25921972896794526,
+    "df": 41.92
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "P4_mw",
+   "family": "primary",
+   "label": "期货 ΔP_10 Mann-Whitney U（Cliff's δ）",
+   "estimate": -0.0393258426966292,
+   "ci95": null,
+   "p": 0.7542438584963715,
+   "n": 117,
+   "extra": {
+    "auc": 0.4803370786516854
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "S1_mean",
+   "family": "sensitivity",
+   "label": "敏感性 S1：窗口缩短为 5 日 均值差（信号−对照）",
+   "estimate": -3.5419181380417335,
+   "ci95": [
+    -13.00540382991922,
+    5.921567553835754
+   ],
+   "p": 0.4544567744993868,
+   "n": 28,
+   "extra": {
+    "p_normal_approx": 0.45055203786150333,
+    "control_mean": -0.44022471910112365,
+    "control_n": 89,
+    "se": 4.694422189531964,
+    "t": -0.7544950145174021,
+    "df": 45.3
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "S1_mw",
+   "family": "sensitivity",
+   "label": "敏感性 S1：窗口缩短为 5 日 Mann-Whitney U（Cliff's δ）",
+   "estimate": -0.1123595505617978,
+   "ci95": null,
+   "p": 0.37113802804936613,
+   "n": 117,
+   "extra": {
+    "auc": 0.4438202247191011
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "S2_mean",
+   "family": "sensitivity",
+   "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 均值差（信号−对照）",
+   "estimate": 18.516987012987013,
+   "ci95": [
+    -5.841389210266605,
+    42.87536323624063
+   ],
+   "p": 0.1131877266476744,
+   "n": 7,
+   "extra": {
+    "p_normal_approx": 0.07224920531987156,
+    "control_mean": -3.051272727272728,
+    "control_n": 110,
+    "se": 10.301267116321416,
+    "t": 1.7975445936790184,
+    "df": 7.36
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.8221157035243962
+  },
+  {
+   "id": "S2_mw",
+   "family": "sensitivity",
+   "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 Mann-Whitney U（Cliff's δ）",
+   "estimate": 0.3220779220779222,
+   "ci95": null,
+   "p": 0.1541466944108243,
+   "n": 117,
+   "extra": {
+    "auc": 0.6610389610389611
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.8221157035243962
+  },
+  {
+   "id": "R1",
+   "family": "robustness",
+   "label": "OLS + Newey-West HAC：Δ 基差 ~ 信号 + Δ库存 + 库存分位",
+   "estimate": -0.5488843098314068,
+   "ci95": null,
+   "p": 0.92150648216557,
+   "n": 117,
+   "extra": {
+    "betas": {
+     "b0": -33.0092,
+     "b1": -0.5489,
+     "b2": -1.4687,
+     "b3": 60.3749
+    },
+    "se_hac": [
+     9.3913,
+     5.5579,
+     1.3421,
+     13.7531
+    ],
+    "r2": 0.2883,
+    "hac_lags": 4,
+    "hac_inflation": 1.183
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "R2",
+   "family": "robustness",
+   "label": "移动块置换检验（保持块内自相关）",
+   "estimate": -2.7528932584269654,
+   "ci95": null,
+   "p": 1.0,
+   "n": 117,
+   "extra": {
+    "blocks": 57,
+    "n_perm": 3000
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 1.0
+  },
+  {
+   "id": "R3_mean",
+   "family": "robustness",
+   "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） 均值差（信号−对照）",
+   "estimate": -4.281025641025641,
+   "ci95": [
+    -41.716313705945595,
+    33.15426242389431
+   ],
+   "p": 0.7983891789314681,
+   "n": 6,
+   "extra": {
+    "p_normal_approx": 0.7920036916904174,
+    "control_mean": 1.2276923076923074,
+    "control_n": 13,
+    "se": 16.23386299432782,
+    "t": -0.26370960765909196,
+    "df": 8.36
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "R3_mw",
+   "family": "robustness",
+   "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） Mann-Whitney U（Cliff's δ）",
+   "estimate": -0.02564102564102566,
+   "ci95": null,
+   "p": 0.9301105081236054,
+   "n": 19,
+   "extra": {
+    "auc": 0.48717948717948717
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "R4_mean",
+   "family": "robustness",
+   "label": "鲁棒性 R4：月度样本（每月至多 1 个） 均值差（信号−对照）",
+   "estimate": 12.413558441558441,
+   "ci95": [
+    -9.849631923862189,
+    34.67674880697907
+   ],
+   "p": 0.25494777442253147,
+   "n": 11,
+   "extra": {
+    "p_normal_approx": 0.23867504024788877,
+    "control_mean": -0.27628571428571436,
+    "control_n": 35,
+    "se": 10.53509793748965,
+    "t": 1.1783049873114324,
+    "df": 16.96
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  },
+  {
+   "id": "R4_mw",
+   "family": "robustness",
+   "label": "鲁棒性 R4：月度样本（每月至多 1 个） Mann-Whitney U（Cliff's δ）",
+   "estimate": 0.2935064935064935,
+   "ci95": null,
+   "p": 0.14567224452792216,
+   "n": 46,
+   "extra": {
+    "auc": 0.6467532467532467
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.8221157035243962
+  },
+  {
+   "id": "PLAC_1",
+   "family": "placebo",
+   "label": "标签洗牌安慰剂（信号随机化后 |差|≥观测差异 的比例）",
+   "estimate": -2.753,
+   "ci95": null,
+   "p": 0.75,
+   "n": 117,
+   "extra": {
+    "n_shuffle": 3
+   },
+   "data_status": "SIMULATED",
+   "q_bh": 0.9921178753318458
+  }
+ ],
+ "stability": {
+  "by_year": [
+   {
+    "group": "2022",
+    "n_signal": 7,
+    "n_control": 20,
+    "diff": 3.3828571428571443,
+    "p": 0.8166429710218859
+   },
+   {
+    "group": "2023",
+    "n_signal": 8,
+    "n_control": 24,
+    "diff": -5.069166666666666,
+    "p": 0.7311254641407106
+   },
+   {
+    "group": "2024",
+    "n_signal": 7,
+    "n_control": 24,
+    "diff": -2.774761904761905,
+    "p": 0.8697547029410662
+   },
+   {
+    "group": "2025",
+    "n_signal": 6,
+    "n_control": 21,
+    "diff": -7.373809523809523,
+    "p": 0.6852961422655
+   }
+  ],
+  "by_band": [
+   {
+    "group": "LOW",
+    "n_signal": 10,
+    "n_control": 24,
+    "diff": -4.2719166666666695,
+    "p": 0.6853628570443897
+   },
+   {
+    "group": "MID",
+    "n_signal": 11,
+    "n_control": 30,
+    "diff": 2.460090909090909,
+    "p": 0.851759923563066
+   },
+   {
+    "group": "HIGH",
+    "n_signal": 7,
+    "n_control": 30,
+    "diff": -0.6164285714285711,
+    "p": 0.9513737150415191
+   }
+  ],
+  "by_baseline_sign": [
+   {
+    "group": "basis>=0",
+    "n_signal": 28,
+    "n_control": 80,
+    "diff": 2.4848749999999997,
+    "p": 0.7386876625654089
+   },
+   {
+    "group": "basis<0",
+    "n_signal": 0,
+    "n_control": 9,
+    "diff": null,
+    "p": null
+   }
+  ]
+ },
+ "diagnostics": {
+  "autocorr_y": 0.8262132427241138,
+  "effective_n": 117.0,
+  "overlap_ratio": 2.0,
+  "nonoverlap_n": 19,
+  "monthly_n": 46,
+  "look_ahead": "entry = 报告发布后可得价格；库存使用 T0 前已公布两期（通过）",
+  "mult_testing_registered": 17
+ },
+ "verdict": "NOT_SIGNIFICANT",
+ "message": "主检验 p=0.7141，均值差=-2.753，N=28"
+}

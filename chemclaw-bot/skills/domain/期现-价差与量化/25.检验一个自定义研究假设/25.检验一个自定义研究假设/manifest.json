@@ -1,0 +1,244 @@
+﻿{
+ "package": "25.检验一个自定义研究假设",
+ "generated_at": "2026-10-20 19:21:28",
+ "file_count": 59,
+ "total_bytes": 904402,
+ "files": [
+  {
+   "path": "README.md",
+   "bytes": 3602
+  },
+  {
+   "path": "SKILL.md",
+   "bytes": 8145
+  },
+  {
+   "path": "assets/templates/excel_workbook_template.py",
+   "bytes": 6343
+  },
+  {
+   "path": "assets/templates/html_report_template.py",
+   "bytes": 6495
+  },
+  {
+   "path": "assets/templates/smoke_test_templates.py",
+   "bytes": 2140
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/README.md",
+   "bytes": 3584
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/amendment.json",
+   "bytes": 32148
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/data_audit.json",
+   "bytes": 1696
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/design_draft.json",
+   "bytes": 3885
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/event_study.json",
+   "bytes": 6739
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/research_design.formal.json",
+   "bytes": 13474
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/research_design.formal.v2.0.prev.json",
+   "bytes": 12642
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/results_demo.json",
+   "bytes": 10485
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/results_real.json",
+   "bytes": 1476
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/samples_demo.csv",
+   "bytes": 21479
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/samples_real.csv",
+   "bytes": 10102
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/build/verification_full.json",
+   "bytes": 45278
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/data/100ppi_sf.csv",
+   "bytes": 129473
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/data/MA0_60min.csv",
+   "bytes": 67665
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/data/demo_weekly.csv",
+   "bytes": 25487
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/data/demo_weekly.meta.json",
+   "bytes": 835
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/data/port_inventory_live.csv",
+   "bytes": 849
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/data/port_inventory_weekly.csv",
+   "bytes": 37274
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/out/研究假设检验_甲醇库存与基差.html",
+   "bytes": 88767
+  },
+  {
+   "path": "examples/methanol-port-inventory-basis/out/研究假设检验_甲醇库存与基差.xlsx",
+   "bytes": 105210
+  },
+  {
+   "path": "examples/run_examples.py",
+   "bytes": 5626
+  },
+  {
+   "path": "examples/soda-ash-producer-inventory/README.md",
+   "bytes": 2444
+  },
+  {
+   "path": "examples/urea-export-basis/README.md",
+   "bytes": 1986
+  },
+  {
+   "path": "references/01-方法论与检验清单.md",
+   "bytes": 4705
+  },
+  {
+   "path": "references/02-统计方法公式.md",
+   "bytes": 3179
+  },
+  {
+   "path": "references/03-前视函数与偏差清单.md",
+   "bytes": 4503
+  },
+  {
+   "path": "references/04-数据源与口径.md",
+   "bytes": 4166
+  },
+  {
+   "path": "references/05-报告写作模板.md",
+   "bytes": 4220
+  },
+  {
+   "path": "references/06-自然语言假设解析规则.md",
+   "bytes": 4787
+  },
+  {
+   "path": "references/07-字段识别与用户数据映射.md",
+   "bytes": 4004
+  },
+  {
+   "path": "scripts/amendment_sensitivity.py",
+   "bytes": 3045
+  },
+  {
+   "path": "scripts/approve_design.py",
+   "bytes": 2203
+  },
+  {
+   "path": "scripts/build_excel.py",
+   "bytes": 32975
+  },
+  {
+   "path": "scripts/build_html.py",
+   "bytes": 36802
+  },
+  {
+   "path": "scripts/build_panel.py",
+   "bytes": 7528
+  },
+  {
+   "path": "scripts/check_html.py",
+   "bytes": 2694
+  },
+  {
+   "path": "scripts/event_study.py",
+   "bytes": 3843
+  },
+  {
+   "path": "scripts/fetch_100ppi_sf.py",
+   "bytes": 5048
+  },
+  {
+   "path": "scripts/fetch_futures.py",
+   "bytes": 3058
+  },
+  {
+   "path": "scripts/fetch_inventory_backfill.py",
+   "bytes": 3943
+  },
+  {
+   "path": "scripts/fetch_minute.py",
+   "bytes": 2327
+  },
+  {
+   "path": "scripts/fetch_port_inventory.py",
+   "bytes": 7552
+  },
+  {
+   "path": "scripts/find_article_urls.py",
+   "bytes": 2509
+  },
+  {
+   "path": "scripts/hypothesis_parser.py",
+   "bytes": 14994
+  },
+  {
+   "path": "scripts/hypothesis_stats.py",
+   "bytes": 16532
+  },
+  {
+   "path": "scripts/make_demo_simulation.py",
+   "bytes": 5487
+  },
+  {
+   "path": "scripts/map_user_data.py",
+   "bytes": 8890
+  },
+  {
+   "path": "scripts/merge_verified_inventory.py",
+   "bytes": 3461
+  },
+  {
+   "path": "scripts/netlib.py",
+   "bytes": 2594
+  },
+  {
+   "path": "scripts/run_hypothesis_test.py",
+   "bytes": 17957
+  },
+  {
+   "path": "scripts/selftest_stats.py",
+   "bytes": 3379
+  },
+  {
+   "path": "scripts/study_engine.py",
+   "bytes": 24707
+  },
+  {
+   "path": "scripts/verify_inventory_provenance.py",
+   "bytes": 3880
+  },
+  {
+   "path": "sources/数据来源清单.md",
+   "bytes": 4101
+  }
+ ]
+}

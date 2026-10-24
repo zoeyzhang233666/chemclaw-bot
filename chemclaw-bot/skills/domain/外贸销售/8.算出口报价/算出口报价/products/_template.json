@@ -1,0 +1,45 @@
+{
+  "_note": "产品画像模板：复制本文件改名为 <product_key>.json 后填写。只写『查得到、可核』的事实；运价/保费/市价一律不写。",
+  "product_key": "",
+  "name_cn": "",
+  "name_en": "",
+  "formula": "",
+  "hs_code_cn": "",
+  "hs_source": "来源 + 取用日期（必须能复核）",
+  "export_duty": {
+    "rate": "",
+    "basis": "来源与取用日期；不确定则留空并注明『须报关行确认』"
+  },
+  "export_vat_refund_rate": {
+    "rate": "",
+    "basis": "以出口当月退税文库为准"
+  },
+  "vat_rate": "",
+  "preferential_rates": [
+    {"destination": "", "agreement": "", "rate": "", "document": ""}
+  ],
+  "preferential_note": "协定税率须满足原产地规则并提交原产地证明；不得笼统承诺零关税。",
+  "grades": {
+    "主规格": {
+      "指标": "",
+      "典型用途": "",
+      "包装惯例": ""
+    }
+  },
+  "packing_notes": [],
+  "loading_notes": [],
+  "insurance_notes": [
+    "是否为危险品？是否触发危险品附加费？",
+    "客户要求的险别（ICC A/B/C）与保额",
+    "是否有除外责任需特别说明"
+  ],
+  "regulatory_flags": [
+    "出口监管条件（是否需许可证）",
+    "检验检疫要求",
+    "目的国是否有关税壁垒/反倾销"
+  ],
+  "common_pitfalls": [],
+  "data_we_never_invent": [
+    "海运费", "保险费率", "内陆运费", "港口及报关费", "装柜吨数", "市场销售价", "建议毛利"
+  ]
+}

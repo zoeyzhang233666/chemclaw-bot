@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="化工品第二供应源 / 备选供应商对比工作台">
+<title>__TITLE__</title>
+<style>__STYLE__</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">PROCUREMENT INTELLIGENCE · <b>第二供应源工作台</b></div>
+        <h1 id="heroTitle"></h1>
+      </div>
+      <div class="stamp"><b id="stampDate"></b><span id="stampNote"></span></div>
+    </div>
+    <div class="hero-sub" id="heroSub"></div>
+    <div class="scenario" id="heroScenario"></div>
+    <div class="hero-badges" id="heroBadges"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="topgrid">
+    <div class="baseline" id="baselineCard"></div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2><em>01</em>采购参数与物流假设</h2>
+      <p id="paramsSub">参数只影响车次/运费估算；规格与商务条款以询价单为准</p>
+    </div>
+    <div class="panel">
+      <div class="params">
+        <div class="field"><label>产品 / 规格</label><div class="ro" id="pSpec"></div></div>
+        <div class="field"><label>收货地</label><div class="ro" id="pRecv"></div></div>
+        <div class="field"><label>月采购量（吨）</label><input id="qty" type="number" min="1" step="10" value="800"></div>
+        <div class="field"><label>汽运费率（元/吨·km）</label><input id="rate" type="number" min="0.05" max="1.5" step="0.01" value="0.45"></div>
+        <div class="field"><label>物流口径</label><div class="ro" id="pMode"></div></div>
+      </div>
+      <div class="calc" id="calcLine"></div>
+      <div class="note" id="paramNote" style="margin-top:9px"></div>
+    </div>
+  </section>
+
+  <section class="section" id="poolSection">
+    <div class="section-head">
+      <h2><em>02</em>备选供应商池</h2>
+      <p id="poolSub">勾选 2–5 家进入横向比较；展开卡片可看证据与核实项</p>
+    </div>
+    <div class="filters">
+      <div class="filterrow">
+        <div class="search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#33475c" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="搜索企业、集团、城市、产品…">
+        </div>
+        <div id="chips" style="display:flex;gap:7px;flex-wrap:wrap"></div>
+        <div class="sort">
+          <select id="sort">
+            <option value="distance">按运距最近</option>
+            <option value="capacity">按产能最大</option>
+            <option value="risk">按风险最低</option>
+            <option value="name">按名称</option>
+          </select>
+          <div class="viewtoggle">
+            <button id="viewCard" class="on">卡片</button>
+            <button id="viewTable">表格</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="pool" class="pool"></div>
+    <div id="poolTableWrap" class="hide"></div>
+  </section>
+
+  <section class="section charts">
+    <div class="section-head">
+      <h2><em>03</em>组合视角：规模 × 区位</h2>
+      <p id="chartsSub">气泡越靠左上＝越近、越大；颜色＝工艺路线</p>
+    </div>
+    <div class="chartgrid">
+      <div class="chart-card">
+        <h3 id="scatterTitle"></h3>
+        <p id="scatterNote"></p>
+        <svg id="scatter" viewBox="0 0 760 400" width="100%" role="img" aria-label="产能与运距散点图"></svg>
+        <div class="legend" id="scatterLegend"></div>
+      </div>
+      <div class="chart-card">
+        <h3>工艺阵营</h3>
+        <p id="stackNoteTop"></p>
+        <div class="stack" id="stack"></div>
+        <div class="stacknote" id="stacknote"></div>
+        <div class="note" id="stackInsight" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section same-source">
+    <div class="section-head">
+      <h2><em>04</em>同源与股权关系</h2>
+      <p>同源不等于不能买，但“同时入选”会高估第二供应源的独立性</p>
+    </div>
+    <div class="sourcegrid" id="sourcegrid"></div>
+    <div class="note" id="sameNote" style="margin-top:12px"></div>
+  </section>
+
+  <section class="section spec">
+    <div class="section-head">
+      <h2><em>05</em>规格兼容性与试样矩阵</h2>
+      <p id="specSub">“COA 可追溯”不等于“规格兼容”；新装置、新工艺、非资质品牌一律先试样</p>
+    </div>
+    <div class="specwrap"><table class="spectable" id="spectable"></table></div>
+    <div class="spec-legend" id="specLegend"></div>
+  </section>
+
+  <section class="section risk">
+    <div class="section-head">
+      <h2><em>06</em>公开风险与证据台账</h2>
+      <p>只列可追溯的公开事实；“待核实”不作为结论使用</p>
+    </div>
+    <div class="riskhead" id="riskhead"></div>
+    <div style="overflow:auto"><table class="risktable" id="risktable"></table></div>
+  </section>
+
+  <section class="section actions-sec">
+    <div class="section-head">
+      <h2><em>07</em><span id="actionTitle">90 天推进清单</span></h2>
+      <p>动作是“验证与建源”，不是“替换现有供应商”</p>
+    </div>
+    <div class="actions" id="actions"></div>
+  </section>
+
+  <section class="section method-sec" id="methodSec">
+    <div class="section-head">
+      <h2><em>08</em>研究口径与关键判断</h2>
+      <p id="methodSub"></p>
+    </div>
+    <div class="methodgrid">
+      <div class="methodcard"><h3>研究步骤</h3><div id="methodSteps"></div></div>
+      <div class="methodcard"><h3>这版池子的关键判断</h3><div id="judgements"></div></div>
+    </div>
+  </section>
+
+  <section class="section sources-sec">
+    <div class="section-head">
+      <h2><em>09</em>数据来源与证据等级</h2>
+      <p>A=公告/政府；B=协会/券商/主流媒体；C=企业官网/百科</p>
+    </div>
+    <div class="sources" id="sources"></div>
+    <div class="foot" id="footerText"></div>
+  </section>
+
+</main>
+
+<div class="tray" id="tray">
+  <div class="wrap">
+    <div class="count">已选 <b id="selCount">0</b> 家</div>
+    <div class="names" id="selNames"></div>
+    <button class="btn ghost" id="clearBtn">清空</button>
+    <button class="btn primary" id="compareBtn" disabled>横向比较（至少 2 家）</button>
+  </div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="dialog">
+    <div class="dialog-head">
+      <div>
+        <h2 id="modalTitle">横向比较</h2>
+        <p id="modalSub"></p>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn light" id="printCompare">打印比较</button>
+        <button class="close" id="closeModal" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="dialog-body">
+      <div class="cmpwrap"><table class="cmptable" id="cmptable"></table></div>
+      <div class="radargrid">
+        <div class="radar-card">
+          <svg id="radar" viewBox="0 0 400 400" width="100%" role="img" aria-label="供应商雷达图"></svg>
+          <div class="legend" id="radarLegend"></div>
+          <div class="footnote">雷达为 0–100 的相对刻度：产能对数归一、区位按运距、成本按工艺、资质按准入、风险按等级、独立性按同源。仅用于讨论，不是评分模型。</div>
+        </div>
+        <div class="diffcard">
+          <h3>与现有供应商的关键差异</h3>
+          <ul id="diffList"></ul>
+          <div class="footnote">绿色/红色仅标记可量化项的相对位置（运距、运费、产能、风险分），不代表商务结论。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>window.__DSH_DATA__=__DATA__;</script>
+<script>__APP__</script>
+</body>
+</html>

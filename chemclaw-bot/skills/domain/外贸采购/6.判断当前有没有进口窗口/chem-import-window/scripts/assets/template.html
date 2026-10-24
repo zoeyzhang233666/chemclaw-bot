@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ · 进口窗口判断</title>
+<style>
+/* ============================================================ 基础 */
+:root{
+  --bg:#070b14; --bg2:#0b1220; --panel:#0f172a; --panel2:#131e33;
+  --line:#1e2b45; --line2:#2a3b5c;
+  --tx:#e8eefc; --tx2:#9fb0cc; --tx3:#6b7fa3;
+  --up:#ff5c5c; --down:#22c55e; --flat:#94a3b8;
+  --accent:#3b82f6; --accent2:#22d3ee;
+  --warn:#f59e0b; --ok:#10b981; --bad:#ef4444; --gap:#8b5cf6;
+  --amber:#fbbf24;
+  --r:14px; --shadow:0 10px 30px rgba(0,0,0,.45);
+  --f:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(1200px 600px at 15% -10%,#132039 0%,transparent 60%),radial-gradient(900px 500px at 95% 0%,#0e2436 0%,transparent 55%),var(--bg);
+  color:var(--tx);font-family:var(--f);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent2);text-decoration:none;border-bottom:1px dashed rgba(34,211,238,.35)}
+a:hover{border-bottom-style:solid}
+.wrap{max-width:1480px;margin:0 auto;padding:0 22px 80px}
+
+/* ============================================================ 顶栏 */
+.topbar{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(7,11,20,.96),rgba(7,11,20,.86));border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1480px;margin:0 auto;padding:11px 22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.3px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2)}
+.brand small{font-weight:500;color:var(--tx3);letter-spacing:0}
+.ctrl{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-left:auto}
+.ctrl label{font-size:11.5px;color:var(--tx3);margin-right:2px;white-space:nowrap}
+select,input[type=text],input[type=number]{
+  background:#0c1526;color:var(--tx);border:1px solid var(--line2);border-radius:9px;
+  padding:6px 9px;font-size:12.5px;font-family:var(--f);outline:none;transition:.15s}
+select:hover,input:hover{border-color:#3d5480}
+select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.16)}
+.btn{background:#13203a;border:1px solid var(--line2);color:var(--tx2);border-radius:9px;padding:6px 12px;
+  font-size:12.5px;cursor:pointer;transition:.15s;font-family:var(--f)}
+.btn:hover{background:#1a2b4a;color:var(--tx)}
+.btn.on{background:linear-gradient(180deg,#1d4ed8,#1e40af);border-color:#2d5be3;color:#fff}
+.btn.sim{background:linear-gradient(180deg,#7c3aed,#5b21b6);border-color:#8b5cf6;color:#fff}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.2px}
+.b-ok{background:rgba(16,185,129,.14);color:#34d399;border:1px solid rgba(16,185,129,.35)}
+.b-warn{background:rgba(245,158,11,.14);color:#fbbf24;border:1px solid rgba(245,158,11,.35)}
+.b-bad{background:rgba(239,68,68,.14);color:#f87171;border:1px solid rgba(239,68,68,.35)}
+.b-gap{background:rgba(139,92,246,.14);color:#a78bfa;border:1px solid rgba(139,92,246,.35)}
+.b-info{background:rgba(59,130,246,.14);color:#60a5fa;border:1px solid rgba(59,130,246,.35)}
+.b-sim{background:rgba(139,92,246,.18);color:#c4b5fd;border:1px dashed rgba(167,139,250,.6)}
+
+/* ============================================================ 结论条 */
+.verdict-bar{margin:18px 0 16px;border-radius:var(--r);padding:15px 18px;display:flex;gap:16px;align-items:center;
+  background:linear-gradient(90deg,rgba(59,130,246,.10),rgba(34,211,238,.05));border:1px solid var(--line2)}
+.verdict-bar.is-gap{background:linear-gradient(90deg,rgba(139,92,246,.12),rgba(239,68,68,.06));border-color:#4c3a7a}
+.verdict-bar .k{font-size:12px;color:var(--tx3);letter-spacing:.5px}
+.verdict-bar .v{font-size:15px;font-weight:700}
+.verdict-bar .sep{width:1px;height:36px;background:var(--line2)}
+.verdict-bar .grow{flex:1}
+
+/* ============================================================ 卡片网格 */
+.grid{display:grid;gap:14px}
+.hero{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1180px){.hero{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:660px){.hero{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(59,130,246,.55),transparent)}
+.card.hl::before{background:linear-gradient(90deg,transparent,rgba(34,211,238,.9),transparent)}
+.card .label{font-size:11.5px;color:var(--tx3);letter-spacing:.4px;display:flex;align-items:center;gap:6px}
+.card .big{font-size:30px;font-weight:750;letter-spacing:-.5px;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.card .big small{font-size:13px;font-weight:500;color:var(--tx3);margin-left:4px}
+.card .sub{font-size:11.5px;color:var(--tx2)}
+.card .meta{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:11px;color:var(--tx3);display:flex;justify-content:space-between;gap:8px}
+.unit{font-size:11px;color:var(--tx3);font-weight:500}
+.pos{color:var(--up)} .neg{color:var(--down)} .muted{color:var(--tx3)}
+
+/* ============================================================ 区块 */
+section{margin-top:26px}
+.shead{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.shead h2{font-size:16px;margin:0;letter-spacing:.2px}
+.shead .num{font-family:var(--mono);font-size:12px;color:var(--accent2);background:rgba(34,211,238,.10);
+  border:1px solid rgba(34,211,238,.28);border-radius:6px;padding:1px 7px}
+.shead .hint{font-size:12px;color:var(--tx3);margin-left:auto}
+.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+  border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.two{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}
+@media(max-width:1080px){.two{grid-template-columns:1fr}}
+.chart{width:100%;height:330px}
+.chart.tall{height:400px}
+.chart.short{height:250px}
+
+/* ============================================================ 表格 */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--tx3);font-weight:600;font-size:11.5px;letter-spacing:.3px;background:rgba(15,23,42,.7);position:sticky;top:0}
+th:first-child,td:first-child{text-align:left}
+tbody tr:hover{background:rgba(59,130,246,.06)}
+td.num{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px}
+.tbl-wrap{max-height:430px;overflow:auto;border-radius:10px;border:1px solid var(--line)}
+.tag{display:inline-block;padding:1px 7px;border-radius:5px;font-size:10.5px;font-weight:600;letter-spacing:.2px}
+.t-a{background:rgba(16,185,129,.16);color:#34d399}
+.t-b{background:rgba(59,130,246,.16);color:#60a5fa}
+.t-c{background:rgba(245,158,11,.16);color:#fbbf24}
+.t-d{background:rgba(107,127,163,.16);color:#9fb0cc}
+.t-gap{background:rgba(139,92,246,.18);color:#c4b5fd}
+.t-ref{background:rgba(245,158,11,.16);color:#fbbf24}
+.t-sim{background:rgba(139,92,246,.2);color:#ddd6fe}
+
+/* ============================================================ 公式展示 */
+.formula{font-family:var(--mono);font-size:12px;background:#0a1220;border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px;color:#b9c8e4;overflow-x:auto;line-height:1.9;margin:10px 0}
+.formula b{color:#7dd3fc;font-weight:600}
+.formula .cm{color:var(--tx3)}
+.formula .hl{color:var(--amber)}
+
+/* ============================================================ 参数编辑器 */
+.editor{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px}
+.field{background:#0b1424;border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+.field label{display:block;font-size:11px;color:var(--tx3);margin-bottom:4px}
+.field input,.field select{width:100%;background:#0c1526;border:1px solid var(--line2)}
+.field .u{font-size:10.5px;color:var(--tx3);margin-left:4px}
+.field.changed{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.13)}
+.field.changed label::after{content:" · 已改";color:var(--accent)}
+
+/* ============================================================ 缺口 */
+.gap-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.gap-item:last-child{border-bottom:none}
+.gap-sev{flex:0 0 auto;width:52px;text-align:center;font-size:10px;font-weight:700;border-radius:6px;padding:2px 0;height:20px}
+.sv-high{background:rgba(239,68,68,.18);color:#f87171}
+.sv-medium{background:rgba(245,158,11,.18);color:#fbbf24}
+.sv-low{background:rgba(107,127,163,.2);color:#9fb0cc}
+.gap-body .t{font-weight:600;font-size:12.5px;margin-bottom:2px}
+.gap-body .d{font-size:11.5px;color:var(--tx2)}
+.gap-body .f{font-size:11px;color:var(--tx3);margin-top:3px}
+
+/* ============================================================ 事件时间线 */
+.tl{position:relative;padding-left:20px;max-height:420px;overflow:auto}
+.tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg,var(--accent),transparent)}
+.tl-item{position:relative;padding:8px 0 12px}
+.tl-item::before{content:"";position:absolute;left:-19px;top:13px;width:9px;height:9px;border-radius:50%;
+  background:var(--accent2);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+.tl-item .d{font-family:var(--mono);font-size:11px;color:var(--accent2)}
+.tl-item .t{font-weight:650;font-size:12.5px;margin:1px 0 2px}
+.tl-item .x{font-size:11.5px;color:var(--tx2)}
+
+/* ============================================================ 说明块 */
+.note{font-size:11.5px;color:var(--tx2);background:rgba(59,130,246,.06);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:9px 12px;margin:10px 0}
+.note.warn{background:rgba(245,158,11,.07);border-left-color:var(--warn)}
+.note.bad{background:rgba(239,68,68,.07);border-left-color:var(--bad)}
+.note.sim{background:rgba(139,92,246,.09);border-left-color:#8b5cf6}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12px}
+.kv dt{color:var(--tx3)} .kv dd{margin:0;color:var(--tx)}
+.small{font-size:11px;color:var(--tx3)}
+.mono{font-family:var(--mono)}
+
+/* ============================================================ 可点击卡片 */
+.clickable{cursor:pointer;transition:.15s}
+.clickable:hover{border-color:var(--accent);transform:translateY(-1px)}
+.modal{position:fixed;inset:0;background:rgba(4,7,14,.82);backdrop-filter:blur(6px);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:24px}
+.modal.show{display:flex}
+.modal-in{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line2);
+  border-radius:16px;max-width:820px;width:100%;max-height:86vh;overflow:auto;padding:22px 24px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal-in h3{margin:0 0 4px}
+.modal-close{float:right;background:none;border:none;color:var(--tx3);font-size:22px;cursor:pointer;line-height:1}
+.footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--tx3)}
+.warnlist{font-size:12px;color:var(--amber)}
+
+/* ============================================================ 窄屏适配 */
+@media(max-width:900px){
+  .wrap{padding:0 12px 60px;max-width:100%;overflow-x:hidden}
+  .topbar-in{padding:9px 12px;gap:10px}
+  .ctrl{margin-left:0;width:100%}
+  .ctrl label{font-size:11px}
+  .ctrl select,.ctrl .btn{font-size:12px;padding:5px 7px}
+  .verdict-bar{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .verdict-bar .sep{display:none}
+  .card .big{font-size:25px}
+  .panel{padding:13px 13px;min-width:0;overflow-x:auto}
+  .chart{height:280px}
+  .chart.tall{height:320px}
+  .tbl-wrap{max-height:340px;overflow:auto;min-width:0}
+  .tbl-wrap table{min-width:520px}
+  table{font-size:11.5px}
+  th,td{padding:6px 6px}
+  .editor{grid-template-columns:1fr 1fr}
+  .modal-in{padding:16px 14px}
+  .two{min-width:0}
+  .formula{max-width:100%}
+}
+@media(max-width:560px){
+  .editor{grid-template-columns:1fr}
+  .shead .hint{margin-left:0;width:100%}
+  .card .big{font-size:23px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ 顶栏 -->
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><span class="dot"></span>__PRODUCT__ 进口窗口<span class="small">｜海外报价 → 中国 <span id="tbDst">__DEST__</span></span></div>
+    <div class="ctrl" id="ctrl">
+      <label>商品</label>
+      <select id="selProduct"></select>
+      <label>海外市场</label>
+      <select id="selOrigin"></select>
+      <label>国内区域</label>
+      <select id="selDest"></select>
+      <label>历史区间</label>
+      <select id="selRange">
+        <option value="all">全部可得</option>
+        <option value="30d">近 30 天</option>
+        <option value="3m">近 3 个月</option>
+        <option value="1y">近 1 年</option>
+      </select>
+      <button class="btn" id="btnReset">重置参数</button>
+      <button class="btn sim" id="btnSim">模拟情景</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============================================================ 结论条 -->
+  <div class="verdict-bar" id="verdictBar">
+    <div>
+      <div class="k">口径状态</div>
+      <div class="v" id="vVerdict">—</div>
+    </div>
+    <div class="sep"></div>
+    <div>
+      <div class="k">可比性</div>
+      <div class="v" id="vCompat">—</div>
+    </div>
+    <div class="sep"></div>
+    <div class="grow">
+      <div class="k">一句话说明</div>
+      <div class="v" id="vOne_line" style="font-weight:500;font-size:13px">—</div>
+    </div>
+    <div id="vBadges"></div>
+  </div>
+
+  <!-- ============================================================ 首屏四卡 -->
+  <section style="margin-top:0">
+    <div class="grid hero">
+      <div class="card">
+        <div class="label">① 海外报价 <span class="unit">美元/吨</span></div>
+        <div class="big" id="kQuote">—</div>
+        <div class="sub" id="kQuoteSub">—</div>
+        <div class="meta"><span id="kQuoteSrc">—</span><span id="kQuoteDate">—</span></div>
+      </div>
+      <div class="card hl">
+        <div class="label">② 折算进口成本 <span class="unit">元/吨</span></div>
+        <div class="big" id="kCost">—</div>
+        <div class="sub" id="kCostSub">—</div>
+        <div class="meta"><span id="kCostBasis">含税净成本</span><span id="kCostTier">—</span></div>
+      </div>
+      <div class="card">
+        <div class="label">③ 国内现货 <span class="unit">元/吨</span></div>
+        <div class="big" id="kDom">—</div>
+        <div class="sub" id="kDomSub">—</div>
+        <div class="meta"><span id="kDomSrc">—</span><span id="kDomDate">—</span></div>
+      </div>
+      <div class="card">
+        <div class="label">④ 理论进口价差 <span class="unit">元/吨</span></div>
+        <div class="big" id="kSpread">—</div>
+        <div class="sub" id="kSpreadSub">—</div>
+        <div class="meta"><span id="kSpreadDef">国内含税价 − 进口含税净成本</span><span id="kSpreadFlag">—</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 不可计算提示 -->
+  <div id="blockedBox" style="display:none;margin-top:14px">
+    <div class="note bad" id="blockedText"></div>
+  </div>
+
+  <!-- ============================================================ 01 口径核对 -->
+  <section>
+    <div class="shead"><span class="num">01</span><h2>口径核对：这两个价格真的可比吗？</h2>
+      <span class="hint">先验口径，再谈价差 —— 口径不对，价差无意义</span></div>
+    <div class="two">
+      <div class="panel">
+        <div class="tbl-wrap" style="max-height:none">
+          <table id="tblCompat"><thead><tr><th>检查项</th><th>结论</th><th>说明</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="small" style="margin-bottom:8px">人工复核要点（报告撰写人必须逐条确认）</div>
+        <div id="manualChecks"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 02 折算明细 -->
+  <section>
+    <div class="shead"><span class="num">02</span><h2>进口成本折算明细</h2>
+      <span class="hint">每一步都可追溯到税则、汇率与报价</span></div>
+    <div class="two">
+      <div class="panel">
+        <div class="tbl-wrap" style="max-height:none">
+          <table id="tblSteps"><thead><tr><th>步骤</th><th>公式</th><th>金额（元/吨）</th><th>来源/口径</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="formula" id="formulaBox"></div>
+      </div>
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">成本构成（元/吨）</div>
+        <div id="chartContrib" class="chart short"></div>
+        <div class="small" style="margin-top:6px">可抵扣的进口增值税单列，不计入可比成本；若不可抵扣，勾选后整块沉入成本。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 03 参数可编辑 -->
+  <section>
+    <div class="shead"><span class="num">03</span><h2>参数调整（实时重算）</h2>
+      <span class="hint">改任一项，上方 ①–④ 与所有图表立即重算；缺口项会被标记</span></div>
+    <div class="panel">
+      <div class="editor" id="editor"></div>
+      <div class="note warn" id="paramNote" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 04 敏感性 -->
+  <section>
+    <div class="shead"><span class="num">04</span><h2>敏感性分析</h2>
+      <span class="hint">汇率 ±3%、海外报价 ±3%、运费变动对价差的影响</span></div>
+    <div class="two">
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">单因素敏感性（价差，元/吨）</div>
+        <div id="chartSens" class="chart"></div>
+      </div>
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">龙卷风图：哪个因素最"咬"价差</div>
+        <div id="chartTornado" class="chart"></div>
+        <div id="breakevenBox" class="note" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <div class="tbl-wrap" style="max-height:none">
+        <table id="tblSens"><thead><tr><th>情景</th><th>进口含税净成本</th><th>理论价差</th><th>相对基准变化</th></tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 05 历史 -->
+  <section>
+    <div class="shead"><span class="num">05</span><h2>历史走势与价差序列</h2>
+      <span class="hint" id="histHint">—</span></div>
+    <div class="panel">
+      <div id="chartHistory" class="chart tall"></div>
+      <div id="histNote" class="note"></div>
+    </div>
+    <div class="two" style="margin-top:14px">
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">逐日数据（缺口日不插值，直接留空并说明原因）</div>
+        <div class="tbl-wrap">
+          <table id="tblHist"><thead><tr><th>日期</th><th>海外(USD)</th><th>汇率</th><th>国内(CNY)</th><th>进口成本</th><th>价差</th><th>价差%</th><th>状态</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">历史缺口登记（为什么这条线不完整）</div>
+        <div class="tbl-wrap">
+          <table id="tblGapHist"><thead><tr><th>日期/区间</th><th>缺什么</th><th>说明</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 06 事件 -->
+  <section>
+    <div class="shead"><span class="num">06</span><h2>同期事件与异常阶段</h2>
+      <span class="hint">点击任意一条，查看当期价格、汇率与事件</span></div>
+    <div class="two">
+      <div class="panel">
+        <div class="tl" id="timeline"></div>
+      </div>
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">异常阶段识别（描述性：相对滚动中位数偏离）</div>
+        <div id="anomalyBox"></div>
+        <div class="small" style="margin-top:10px;margin-bottom:6px">价差变化归因（当期 vs 上一可得期）</div>
+        <div id="attrBox"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 07 理论 vs 真实 -->
+  <section>
+    <div class="shead"><span class="num">07</span><h2>理论价差 ≠ 可执行贸易利润</h2>
+      <span class="hint">这部分才是决策者真正需要看的</span></div>
+    <div class="panel">
+      <div class="tbl-wrap" style="max-height:none">
+        <table id="tblReal"><thead><tr><th>项目</th><th>金额（元/吨）</th><th>是否已计入理论价差</th><th>说明</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div id="realNote" class="note warn"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 08 缺口与来源 -->
+  <section>
+    <div class="shead"><span class="num">08</span><h2>数据缺口与来源清单</h2>
+      <span class="hint">缺什么、影响什么、怎么补 —— 全部写明白</span></div>
+    <div class="two">
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">数据缺口（<span id="gapCount">0</span> 项）</div>
+        <div id="gapList"></div>
+      </div>
+      <div class="panel">
+        <div class="small" style="margin-bottom:6px">来源清单（A=官方 / B=专业资讯或研报 / C=转述或参照）</div>
+        <div class="tbl-wrap">
+          <table id="tblSrc"><thead><tr><th>等级</th><th>来源</th><th>日期</th><th>原文摘录</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div>生成时间：<span id="fGen">__GENERATED__</span> ｜ 引擎版本 v<span id="fVer">__VERSION__</span> ｜ 单文件离线，无任何外部请求</div>
+    <div id="fDisc">__DISCLAIMER__</div>
+  </div>
+</div>
+
+<!-- ============================================================ 弹窗 -->
+<div class="modal" id="modal">
+  <div class="modal-in">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>__ECHARTS__</script>
+<script>__ENGINE__</script>
+<script>
+/* ============================================================ 数据 */
+var CASE = __DATA__;
+
+var ENGINE = window.ImportWindowEngine;
+var S = { product:'__PRODUCT_NAME__', origin:'__ORIGIN__', dest:'__DEST__', range:'all', sim:false, overrides:{} };
+var BASE_CASE = CASE;          // 原始快照（用于重置/恢复）
+var CUR_CASE = null;           // 当前生效（含模拟覆盖）
+var RES = null;                // 最近一次分析结果
+var charts = {};
+
+/* ============================================================ 工具 */
+function fmt(v, d){ if(v===null||v===undefined||!isFinite(v)) return '—';
+  return Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d===undefined?0:d,maximumFractionDigits:d===undefined?2:d}); }
+function fmtUsd(v,d){ return v===null||v===undefined?'—':fmt(v,d===undefined?1:d); }
+function cls(v){ return v>0?'pos':(v<0?'neg':'muted'); }
+function el(id){ return document.getElementById(id); }
+function esc(s){ return String(s===null||s===undefined?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function srcName(id){ var s=(CUR_CASE.sources||[]).filter(function(x){return x.id===id;})[0]; return s? s.publisher+'（'+s.date+'）': (id||'—'); }
+function srcOf(id){ return (CUR_CASE.sources||[]).filter(function(x){return x.id===id;})[0]||null; }
+
+var TIER_TXT = { full:'口径完整', indicative:'口径基本对齐（有保留项）', fragile:'口径脆弱（关键项靠假设/待确认）', none:'不可计算' };
+var TIER_CLS = { full:'b-ok', indicative:'b-info', fragile:'b-warn', none:'b-bad' };
+var VERDICT_TXT = {
+  calculable:'可以计算理论价差', fragile:'仅能给出脆弱口径的理论价差',
+  incomparable:'价格口径不可比，不给出价差', not_calculable:'关键数据缺失，无法计算价差'
+};
+
+/* ============================================================ 初始化 */
+function init(){
+  applyState();          // 先算出 CUR_CASE（下拉框文案依赖它）
+  buildSelectors();
+  bindEvents();
+  render();
+}
+function buildSelectors(){
+  var sp = el('selProduct'), so = el('selOrigin'), sd = el('selDest');
+  sp.innerHTML = '<option>'+esc(CUR_CASE.product.name_cn+'（'+CUR_CASE.product.spec+'）')+'</option>';
+  so.innerHTML = '<option>'+esc(CUR_CASE.request.origin)+'</option>';
+  sd.innerHTML = '<option>'+esc(CUR_CASE.request.destination)+'</option>';
+}
+
+/* ============================================================ 状态应用 */
+function applyState(){
+  CUR_CASE = JSON.parse(JSON.stringify(BASE_CASE));
+  // 模拟情景覆盖
+  if(S.sim && CUR_CASE.sim_scenarios && CUR_CASE.sim_scenarios.length){
+    var sc = CUR_CASE.sim_scenarios[0];
+    var ov = sc.overrides || {};
+    if(ov.freight_usd !== undefined){
+      CUR_CASE.freight = CUR_CASE.freight || {};
+      CUR_CASE.freight.source = 'simulated';
+      CUR_CASE.freight.usd_per_ton = ov.freight_usd;
+      CUR_CASE.freight.date = CUR_CASE.asof.date;
+      CUR_CASE.freight.basis = ov.freight_basis || '模拟值';
+      CUR_CASE.freight.quality = 'simulated';
+      CUR_CASE.quote.term = ov.freight_term || 'FOB';
+      if(ov.fob_price_usd) CUR_CASE.quote.price_usd = ov.fob_price_usd;
+      CUR_CASE.quote.freight_usd = null;
+    }
+    if(ov.duty_rate !== undefined) CUR_CASE.tax.profiles[0].duty_rate = ov.duty_rate;
+    if(ov.inland_cost_cny !== undefined) CUR_CASE.params.inland_cost_cny = ov.inland_cost_cny;
+    if(ov.insurance_rate !== undefined) CUR_CASE.insurance = CUR_CASE.insurance||{};
+    if(ov.insurance_rate !== undefined) CUR_CASE.insurance.rate = ov.insurance_rate;
+  }
+  // 用户手动覆盖（编辑器）
+  Object.keys(S.overrides||{}).forEach(function(k){
+    var v = S.overrides[k];
+    if(k==='quote.price_usd') CUR_CASE.quote.price_usd = v;
+    else if(k==='quote.term') CUR_CASE.quote.term = v;
+    else if(k==='quote.premium_usd') CUR_CASE.quote.premium_usd = v;
+    else if(k==='fx') CUR_CASE.fx.rate = v;
+    else if(k==='duty_rate') CUR_CASE.tax.profiles[0].duty_rate = v;
+    else if(k==='vat_rate') CUR_CASE.tax.profiles[0].vat_rate = v;
+    else if(k==='inland') CUR_CASE.params.inland_cost_cny = v;
+    else if(k==='insurance_rate'){ CUR_CASE.insurance = CUR_CASE.insurance||{}; CUR_CASE.insurance.rate = v; }
+    else if(k==='domestic') CUR_CASE.domestic.price_cny = v;
+    else if(k==='freight_usd'){ CUR_CASE.freight = CUR_CASE.freight||{}; CUR_CASE.freight.usd_per_ton = v; CUR_CASE.freight.source='manual'; CUR_CASE.freight.date=CUR_CASE.asof.date; CUR_CASE.freight.quality = v===null?'missing':'user'; }
+    else if(k==='vat_recoverable') CUR_CASE.params.vat_recoverable = v;
+  });
+  // 汇率覆盖要同步 fx 序列当日值，否则历史点会用旧值
+  if(S.overrides && S.overrides.fx!==undefined && S.overrides.fx!==null){
+    var d = CUR_CASE.asof.date;
+    CUR_CASE.fx.rows.forEach(function(r){ if(r.date===d) r.rate = S.overrides.fx; });
+  }
+  RES = ENGINE.analyze(CUR_CASE);
+}
+
+/* ============================================================ 渲染主流程 */
+function render(){
+  renderVerdict();
+  renderHero();
+  renderCompat();
+  renderSteps();
+  renderContrib();
+  renderEditor();
+  renderSens();
+  renderHistory();
+  renderEvents();
+  renderReal();
+  renderGaps();
+  renderSources();
+  renderCharts();
+}
+
+function renderVerdict(){
+  var cur = RES.current, cp = RES.compatibility;
+  var bar = el('verdictBar');
+  var vTxt = VERDICT_TXT[RES.verdict] || '—';
+  var cTxt = {comparable:'代码：可比', comparable_with_caveats:'可比（有保留项）', needs_info:'信息不足', blocked:'存在不可比项'}[cp.verdict]||'—';
+  bar.classList.toggle('is-gap', RES.verdict==='not_calculable'||RES.verdict==='incomparable');
+  el('vVerdict').textContent = vTxt;
+  el('vCompat').textContent = cTxt;
+  var one;
+  if(RES.verdict==='not_calculable'){ one = (cur.blockers[0]||{}).text || '缺少关键数据'; }
+  else if(RES.verdict==='incomparable'){ one = '存在硬性不可比项：' + (cp.checks.filter(function(c){return c.status==='fail';})[0]||{}).detail; }
+  else {
+    var sp = cur.spread.abs_cny;
+    one = '当前口径下国内含税现货' + (sp>0?'高':'低') + '于进口含税净成本 ' + fmt(Math.abs(sp),0) + ' 元/吨（' + fmt(Math.abs(cur.spread.pct_of_domestic),1) + '%），但运费/境内费用仍有缺口，不能等同于可执行利润。';
+  }
+  el('vOne_line').textContent = one;
+  var bs = [];
+  bs.push('<span class="badge '+TIER_CLS[cur.tier]+'">口径：'+TIER_TXT[cur.tier]+'</span>');
+  if(S.sim) bs.push('<span class="badge b-sim">模拟情景（非真实数据）</span>');
+  var ng = (CUR_CASE.gaps||[]).length;
+  bs.push('<span class="badge b-gap">数据缺口 '+ng+' 项</span>');
+  el('vBadges').innerHTML = bs.join(' ');
+
+  // 不可计算提示
+  var box = el('blockedBox');
+  if(!cur.calculable){
+    box.style.display='block';
+    el('blockedText').innerHTML = '<b>不输出价差：</b>' + cur.blockers.map(function(b){return esc(b.text);}).join('；');
+  } else box.style.display='none';
+}
+
+function renderHero(){
+  var cur = RES.current, q = CUR_CASE.quote;
+  var quoteVal = S.overrides['quote.price_usd']!==undefined? S.overrides['quote.price_usd'] : q.price_usd;
+  el('kQuote').innerHTML = fmtUsd(quoteVal, 1) + '<small>美元/吨 · '+esc(q.term)+'</small>';
+  el('kQuoteSub').textContent = q.port + ' · ' + q.spec;
+  el('kQuoteSrc').textContent = (srcOf(q.source_id)||{}).publisher || '—';
+  el('kQuoteDate').textContent = q.date + ' · ' + (q.quote_type||'');
+
+  if(cur.calculable){
+    el('kCost').innerHTML = fmt(cur.totals.net_cost, 0) + '<small>元/吨</small>';
+    var vatTxt = cur.totals.vat_recoverable? '（增值税可抵扣，已剔除 '+fmt(cur.totals.vat,0)+'）' : '（增值税不可抵扣，已计入 '+fmt(cur.totals.vat,0)+'）';
+    el('kCostSub').textContent = 'CIF '+fmt(cur.totals.cif_cny,0) + ' + 关税 ' + fmt(cur.totals.duty,0) + vatTxt;
+  } else {
+    el('kCost').innerHTML = '—<small>不可折算</small>';
+    el('kCostSub').textContent = (cur.blockers[0]||{}).text||'';
+  }
+  el('kCostBasis').textContent = cur.totals.vat_recoverable===false? '含税总成本' : '含税净成本';
+  el('kCostTier').innerHTML = '<span class="badge '+TIER_CLS[cur.tier]+'">'+TIER_TXT[cur.tier]+'</span>';
+
+  var dom = CUR_CASE.domestic;
+  var dval = S.overrides['domestic']!==undefined? S.overrides['domestic'] : dom.price_cny;
+  el('kDom').innerHTML = fmt(dval, 2) + '<small>元/吨</small>';
+  el('kDomSub').textContent = dom.market + ' · ' + dom.delivery;
+  el('kDomSrc').textContent = (srcOf(dom.source_id)||{}).publisher || '—';
+  el('kDomDate').textContent = dom.date + ' · 含增值税';
+
+  if(cur.spread.abs_cny!==null && cur.spread.abs_cny!==undefined){
+    var sp = cur.spread.abs_cny;
+    el('kSpread').innerHTML = '<span class="'+cls(sp)+'">'+(sp>0?'+':'')+fmt(sp,0)+'</span><small>元/吨</small>';
+    el('kSpreadSub').innerHTML = '占国内价 <span class="'+cls(sp)+'">'+(sp>0?'+':'')+fmt(cur.spread.pct_of_domestic,1)+'%</span>' +
+      ' · 占进口成本 <span class="'+cls(sp)+'">'+(sp>0?'+':'')+fmt(cur.spread.pct_of_cost,1)+'%</span>';
+    el('kSpreadFlag').innerHTML = sp>0? '<span class="badge b-warn">理论上有空间</span>' : '<span class="badge b-ok">理论无空间</span>';
+  } else {
+    el('kSpread').innerHTML = '—<small>不可计算</small>';
+    el('kSpreadSub').textContent = '缺少可比数据，不给出价差';
+    el('kSpreadFlag').innerHTML = '<span class="badge b-bad">不给结论</span>';
+  }
+}
+
+function renderCompat(){
+  var tb = el('tblCompat').tBodies[0];
+  var map = {pass:['t-a','通过'], warn:['t-c','保留'], fail:['t-d','不可比'], unknown:['t-d','待确认']};
+  tb.innerHTML = RES.compatibility.checks.map(function(c){
+    var m = map[c.status]||map.unknown;
+    return '<tr><td>'+esc(c.label)+'</td><td><span class="tag '+m[0]+'">'+m[1]+'</span></td>'+
+      '<td style="text-align:left;white-space:normal;color:var(--tx2)">'+esc(c.detail)+'</td></tr>';
+  }).join('');
+  el('manualChecks').innerHTML = (CUR_CASE.compatibility_manual||[]).map(function(m){
+    var cls = m.status==='pass'?'t-a':(m.status==='warn'?'t-c':'t-d');
+    var lab = m.status==='pass'?'通过':(m.status==='warn'?'注意':'不可比');
+    return '<div class="gap-item"><span class="tag '+cls+'" style="height:18px;line-height:16px">'+lab+'</span>'+
+      '<div class="gap-body"><div class="t">'+esc(m.title)+'</div><div class="d">'+esc(m.detail)+'</div></div></div>';
+  }).join('');
+}
+
+function renderSteps(){
+  var cur = RES.current, r = CUR_CASE;
+  var tb = el('tblSteps').tBodies[0];
+  var rows = [];
+  var q = cur.quote || {};
+  var term = (q.term||'').toUpperCase();
+  rows.push(['① 海外报价（'+esc(term)+'）', fmtUsd(q.price_usd,1)+' USD/吨', null, srcName(r.quote.source_id)]);
+  if(cur.totals.cfr_usd!==null) rows.push(['② 折算 CFR', fmtUsd(cur.totals.cfr_usd,1)+' USD/吨', null, cur.freight&&cur.freight.usd? ('CFR = 报价 + 运费 '+fmtUsd(cur.freight.usd,1)):'CFR 报价已含运费']);
+  if(cur.totals.cif_usd!==null) rows.push(['③ 折算 CIF', fmtUsd(cur.totals.cif_usd,1)+' USD/吨', null, term==='CIF'?'CIF 报价已含保险':'CFR + 保险费']);
+  rows.push(['④ 完税价格（人民币）', 'CIF × 汇率', cur.totals.cif_cny, '汇率 '+fmt(cur.fx&&cur.fx.rate,4)+'（'+esc(cur.fx?cur.fx.basis:'—')+'）']);
+  rows.push(['⑤ 关税', '完税价 × '+fmt((cur.tax||{}).duty_rate,2)+'%', cur.totals.duty, (cur.tax||{}).provisional? '最惠国税率，待报关确认（'+((cur.tax||{}).duty_hs||'')+'）':'税则 '+((cur.tax||{}).duty_hs||'')]);
+  rows.push(['⑥ 进口环节增值税', '（完税价+关税）× '+fmt((cur.tax||{}).vat_rate,2)+'%', cur.totals.vat, cur.totals.vat_recoverable?'可抵扣 → 不计入成本':'不可抵扣 → 计入成本']);
+  rows.push(['⑦ 境内费用', '港杂/报关/仓储/短驳', cur.totals.inland, cur.totals.inland? '按参数':'未取得实票，按 0 计（缺口 G6）']);
+  rows.push(['⑧ <b>进口含税净成本</b>', '④+⑤+⑦（+不可抵扣增值税）', cur.totals.net_cost, '与国内含税现货价相减的口径']);
+  rows.push(['⑨ 国内现货（含税）', r.domestic.market, cur.domestic? cur.domestic.price_cny : null, srcName(r.domestic.source_id)]);
+  rows.push(['⑩ <b>理论进口价差</b>', '⑨ − ⑧', cur.spread.abs_cny, '>0 表示国内价更高（理论进口有空间）']);
+  tb.innerHTML = rows.map(function(x){
+    var v = x[2]===null||x[2]===undefined? '—' : ((x[0].indexOf('⑩')===0) ? (x[2]>0?'+':'')+fmt(x[2],0) : fmt(x[2], (x[0].indexOf('④')===0||x[0].indexOf('⑥')===0)?2:0));
+    var c = x[0].indexOf('⑩')===0? cls(x[2]) : '';
+    return '<tr><td>'+x[0]+'</td><td style="text-align:left;color:var(--tx2)">'+x[1]+'</td>'+
+      '<td class="num '+c+'">'+v+'</td><td style="text-align:left;white-space:normal;color:var(--tx3);font-size:11px">'+esc(x[3])+'</td></tr>';
+  }).join('');
+
+  var f = [];
+  f.push('<div class="cm">// 逐步公式（与 Excel 与校验脚本完全一致）</div>');
+  f.push('CIF(USD)   = <b>'+(term==='CIF'?'报价':(term==='CFR'?'报价':'FOB + 运费'))+'</b>' + (term==='CIF'?'':' + 保险费'));
+  f.push('完税价格(CNY) = CIF(USD) × 汇率 <span class="cm">= '+fmtUsd(cur.totals.cif_usd,2)+' × '+fmt(cur.fx&&cur.fx.rate,4)+'</span>');
+  f.push('关税        = 完税价格 × 关税税率 <span class="cm">= '+fmt(cur.totals.cif_cny,2)+' × '+fmt((cur.tax||{}).duty_rate,2)+'%</span>');
+  f.push('进口增值税   = (完税价格 + 关税) × 增值税率 <span class="cm">= ('+fmt(cur.totals.cif_cny,2)+' + '+fmt(cur.totals.duty,2)+') × '+fmt((cur.tax||{}).vat_rate,2)+'%</span>');
+  f.push('进口含税净成本 = 完税价格 + 关税 + 境内费用 <span class="cm">= '+fmt(cur.totals.net_cost,2)+'</span>');
+  f.push('<span class="hl">理论价差 = 国内含税现货 − 进口含税净成本 = '+fmt(cur.domestic&&cur.domestic.price_cny,2)+' − '+fmt(cur.totals.net_cost,2)+' = '+fmt(cur.spread.abs_cny,2)+'</span>');
+  el('formulaBox').innerHTML = f.join('<br>');
+}
+
+function renderContrib(){
+  var c = RES.contribution;
+  if(!c){ el('chartContrib').innerHTML='<div class="small">不可计算</div>'; return; }
+  var cats = c.items.map(function(i){return i.label;});
+  var vals = c.items.map(function(i){return +(i.value||0).toFixed(2);});
+  setChart('chartContrib', {
+    tooltip:{trigger:'axis',valueFormatter:function(v){return fmt(v,0)+' 元/吨';}},
+    grid:{left:70,right:16,top:12,bottom:24},
+    xAxis:{type:'value',axisLabel:{color:'#6b7fa3'},splitLine:{lineStyle:{color:'#16233a'}}},
+    yAxis:{type:'category',data:cats,axisLabel:{color:'#9fb0cc'}},
+    series:[{type:'bar',data:vals,itemStyle:{borderRadius:[0,4,4,0],
+      color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:'#1d4ed8'},{offset:1,color:'#22d3ee'}])},
+      label:{show:true,position:'right',color:'#9fb0cc',formatter:function(p){return fmt(p.value,0);}}}]
+  });
+}
+
+/* ============================================================ 参数编辑器 */
+var FIELDS = [
+  {key:'quote.price_usd', label:'海外报价', unit:'USD/吨', step:1},
+  {key:'quote.term', label:'贸易术语', type:'select', opts:['CFR','CIF','FOB']},
+  {key:'quote.premium_usd', label:'升贴水', unit:'USD/吨', step:1},
+  {key:'freight_usd', label:'国际运费', unit:'USD/吨', step:1, allowNull:true},
+  {key:'insurance_rate', label:'保险费率', unit:'%', step:0.05},
+  {key:'fx', label:'汇率', unit:'CNY/USD', step:0.001},
+  {key:'duty_rate', label:'关税税率', unit:'%', step:0.5},
+  {key:'vat_rate', label:'进口增值税率', unit:'%', step:0.5},
+  {key:'inland', label:'境内费用', unit:'元/吨', step:10, allowNull:true},
+  {key:'domestic', label:'国内现货价', unit:'元/吨', step:10},
+  {key:'vat_recoverable', label:'增值税可抵扣', type:'select', opts:[['true','可抵扣（不计成本）'],['false','不可抵扣（计入成本）']]}
+];
+function readField(key){
+  var r = CUR_CASE;
+  switch(key){
+    case 'quote.price_usd': return r.quote.price_usd;
+    case 'quote.term': return r.quote.term;
+    case 'quote.premium_usd': return r.quote.premium_usd||0;
+    case 'freight_usd': return (r.freight&&r.freight.usd_per_ton!==null&&r.freight.usd_per_ton!==undefined)? r.freight.usd_per_ton : null;
+    case 'insurance_rate': return r.insurance? r.insurance.rate : null;
+    case 'fx': return r.fx.rate;
+    case 'duty_rate': return r.tax.profiles[0].duty_rate;
+    case 'vat_rate': return r.tax.profiles[0].vat_rate;
+    case 'inland': return r.params.inland_cost_cny===null? null : r.params.inland_cost_cny;
+    case 'domestic': return r.domestic.price_cny;
+    case 'vat_recoverable': return r.params.vat_recoverable;
+    default: return null;
+  }
+}
+function renderEditor(){
+  var html = FIELDS.map(function(f){
+    var cur = readField(f.key);
+    var changed = S.overrides[f.key]!==undefined ? ' changed' : '';
+    var inner;
+    if(f.type==='select'){
+      inner = '<select data-k="'+f.key+'">'+ f.opts.map(function(o){
+        var val = Array.isArray(o)? o[0]:o, lab = Array.isArray(o)? o[1]:o;
+        return '<option value="'+val+'"'+(String(readField(f.key))===String(val)?' selected':'')+'>'+lab+'</option>';
+      }).join('') + '</select>';
+    } else {
+      inner = '<input type="number" step="'+(f.step||1)+'" data-k="'+f.key+'" value="'+(cur===null||cur===undefined?'':cur)+'" placeholder="'+(f.allowNull?'缺（留空）':'')+(f.allowNull?'':'')+'">';
+    }
+    var valTxt = (cur===null||cur===undefined)? '<span class="tag t-gap">缺</span>' : '';
+    return '<div class="field'+changed+'"><label>'+f.label+' <span class="u">'+f.unit+'</span></label>'+inner+
+      (valTxt? '<div class="small" style="margin-top:4px">'+valTxt+' 该项为缺口，计算时按 0 或跳过</div>':'')+'</div>';
+  }).join('');
+  el('editor').innerHTML = html;
+
+  el('editor').querySelectorAll('input,select').forEach(function(inp){
+    inp.addEventListener('input', function(){
+      var k = inp.dataset.k;
+      var v = inp.value;
+      if(k==='quote.term'||k==='vat_recoverable'){ v = (k==='vat_recoverable')? (v==='true') : v; S.overrides[k]=v; }
+      else {
+        if(v===''){ v = null; } else { v = Number(v); if(!isFinite(v)) return; }
+        S.overrides[k]=v;
+      }
+      applyState(); render();
+    });
+  });
+
+  el('paramNote').innerHTML = '缺口项：' + (CUR_CASE.freight&&CUR_CASE.freight.source==='none'? '<b>国际运费</b>（未取得实盘）；' : '') +
+    (CUR_CASE.params.inland_cost_cny===null? '<b>境内费用</b>（未取得实票）；' : '') +
+    (CUR_CASE.insurance&&CUR_CASE.insurance.rate===null? '<b>保险费率</b>（未取得保单）；' : '') +
+    '<b>税率</b>（待报关确认）。留空即视为"缺"，不会被当成 0 悄悄算进去 —— 但为了让价差能算出来，境内费用与保险按 0 处理并在下方明示。';
+}
+
+/* ============================================================ 敏感性 */
+function renderSens(){
+  var s = RES.sensitivity;
+  var base = s.base.spread.abs_cny;
+  var rowsHtml = [];
+  s.fx.forEach(function(x){
+    rowsHtml.push(['汇率 '+(x.delta>0?'+':'')+fmt(x.delta*100,1)+'% → '+fmt(x.fx_rate,4), x.net_cost, x.spread, base]);
+  });
+  s.offshore.forEach(function(x){
+    rowsHtml.push(['海外报价 '+(x.delta>0?'+':'')+fmt(x.delta*100,1)+'% → '+fmtUsd(x.price_usd,1), x.net_cost, x.spread, base]);
+  });
+  var frtFlat = s.freight.length && s.freight.every(function(x){ return x.spread===s.freight[0].spread; });
+  if(s.freight.length && frtFlat){
+    // 术语已含运费（CFR/CIF）时，运费不是变量 —— 如实说明，而不是列出几行"看起来能动其实不动"的数字
+    rowsHtml.push(['运费 — <span style="color:var(--amber)">本次报价术语为 '+(CUR_CASE.quote.term||'')+
+      '，运费已含在报价中，不是可调变量；仅当改为 FOB 报价时才需单列运费</span>',
+      s.freight[0].net_cost, s.freight[0].spread, base, true]);
+  } else {
+    s.freight.forEach(function(x){
+      rowsHtml.push(['运费 '+(x.delta_usd>0?'+':'')+fmt(x.delta_usd,0)+' → '+fmtUsd(x.freight_usd,1), x.net_cost, x.spread, base]);
+    });
+  }
+  el('tblSens').tBodies[0].innerHTML = rowsHtml.map(function(r){
+    var delta = (r[2]!==null&&base!==null)? (r[2]-base) : null;
+    // 数组长度 5 表示该行是"含内联标记的说明行"（文本全部由本页程序生成，不含外部输入）
+    var first = (r.length >= 5 && r[4] === true) ? String(r[0]) : esc(r[0]);
+    return '<tr><td>'+first+'</td><td class="num">'+(r[1]===null?'—':fmt(r[1],0))+'</td>'+
+      '<td class="num '+cls(r[2])+'">'+(r[2]===null?'—':(r[2]>0?'+':'')+fmt(r[2],0))+'</td>'+
+      '<td class="num '+cls(delta)+'">'+(delta===null?'—':(delta>0?'+':'')+fmt(delta,0))+'</td></tr>';
+  }).join('');
+
+  var be = s.breakeven;
+  var beTxt = [];
+  if(be.fx_rate!==null){
+    var fxTxt = '汇率需达 <b>'+fmt(be.fx_rate,4)+'</b> 时价差归零（当前 '+fmt(CUR_CASE.fx.rate,4);
+    if(be.fx_move_pct!=null) fxTxt += '，需变动 '+fmt(be.fx_move_pct,1)+'%';
+    fxTxt += '）';
+    if(be.fx_out_of_range) fxTxt += ' <span style="color:var(--amber)">— 变动幅度远超常见区间，仅作数学说明</span>';
+    beTxt.push(fxTxt);
+  }
+  if(be.offshore_pct!==null) beTxt.push('海外报价需变动 <b>'+fmt(be.offshore_pct,1)+'%</b>（约 '+fmtUsd(be.offshore_price_usd,1)+' 美元/吨）价差归零');
+  if(be.freight_usd!==null) beTxt.push('运费需达 <b>'+fmt(be.freight_usd,1)+'</b> 美元/吨价差归零');
+  if(!beTxt.length) beTxt.push('当前参数下无经济上可达的盈亏平衡点');
+  var beExtra = [];
+  if(be.fx_note) beExtra.push(be.fx_note);
+  if(be.offshore_note) beExtra.push(be.offshore_note);
+  el('breakevenBox').innerHTML = '<b>盈亏平衡（数学零点，不是价格预测）：</b><br>' + beTxt.join('；') + '。'
+    + (beExtra.length ? '<br><span style="color:var(--amber)">' + beExtra.join('<br>') + '</span>' : '');
+}
+
+/* ============================================================ 历史 */
+function renderHistory(){
+  var h = RES.history, rng = S.range;
+  var cutoff = null;
+  if(rng==='30d') cutoff = 30; else if(rng==='3m') cutoff = 90; else if(rng==='1y') cutoff = 365;
+  var asofD = new Date(CUR_CASE.asof.date);
+  var rows = h.filter(function(x){
+    if(!cutoff) return true;
+    var d = new Date(x.date);
+    return (asofD - d)/86400000 <= cutoff;
+  });
+  el('histHint').textContent = '可配对交易日 '+h.filter(function(x){return x.status==='ok';}).length+' 个 / 共 '+h.length+' 个价格锚点';
+  var tb = el('tblHist').tBodies[0];
+  tb.innerHTML = rows.map(function(x){
+    var ok = x.status==='ok';
+    var st = ok? (x.reference_only? '<span class="tag t-ref">参照口径</span>':'<span class="tag t-a">可配对</span>') : '<span class="tag t-gap">缺口</span>';
+    return '<tr><td>'+x.date+'</td><td class="num">'+fmtUsd(x.quote_usd,1)+'</td><td class="num">'+(x.fx===null?'—':fmt(x.fx,4))+'</td>'+
+      '<td class="num">'+(x.domestic===null?'—':fmt(x.domestic,2))+'</td>'+
+      '<td class="num">'+(ok?fmt(x.net_cost,0):'—')+'</td>'+
+      '<td class="num '+cls(x.spread)+'">'+(x.spread===null?'—':(x.spread>0?'+':'')+fmt(x.spread,0))+'</td>'+
+      '<td class="num">'+(x.spread_pct===null?'—':fmt(x.spread_pct,1)+'%')+'</td>'+
+      '<td>'+st+(x.gap_reason?'<div class="small">'+esc(x.gap_reason)+'</div>':'')+'</td></tr>';
+  }).join('');
+
+  var g = (CUR_CASE.history_gaps||[]);
+  el('tblGapHist').tBodies[0].innerHTML = g.map(function(x){
+    return '<tr><td>'+esc(x.date)+'</td><td><span class="tag t-gap">'+esc(x.kind)+'</span></td>'+
+      '<td style="text-align:left;white-space:normal;color:var(--tx2)">'+esc(x.text)+'</td></tr>';
+  }).join('');
+
+  var di = CUR_CASE.data_integrity || {};
+  el('histNote').innerHTML = '<b>为什么不画 30 天 / 3 个月 / 1 年完整曲线：</b>' + esc(di.statement||'') +
+    ' 上方每个点都必须同时具备"当日海外报价 + 当日国内现货 + 当日汇率 + 当期税率"，缺任一者即留空（不插值、不用最新参数倒推）。' +
+    '原始数据接入后按 schema 灌入即可自动延长，无需改页面。';
+}
+
+/* ============================================================ 事件 */
+function renderEvents(){
+  var evs = (CUR_CASE.events||[]).slice().sort(function(a,b){return a.date<b.date?1:-1;});
+  el('timeline').innerHTML = evs.map(function(e,i){
+    return '<div class="tl-item clickable" data-ev="'+i+'"><div class="d">'+esc(e.date)+' · '+esc(e.type||'')+'</div>'+
+      '<div class="t">'+esc(e.title)+'</div><div class="x">'+esc(e.text)+'</div></div>';
+  }).join('');
+  el('timeline').querySelectorAll('[data-ev]').forEach(function(n){
+    n.addEventListener('click', function(){ showEventModal(evs[+n.dataset.ev]); });
+  });
+
+  var an = RES.anomalies || [];
+  el('anomalyBox').innerHTML = an.length? an.map(function(a){
+    return '<div class="gap-item"><span class="gap-sev '+(a.direction==='higher'?'sv-high':'sv-low')+'">'+(a.direction==='higher'?'偏高':'偏低')+'</span>'+
+      '<div class="gap-body"><div class="t">'+a.date+'：价差 '+fmt(a.spread,0)+' 元/吨</div>'+
+      '<div class="d">相对邻近 '+fmt(a.median,0)+' 偏离 '+fmt(a.deviation_pct,1)+'%</div></div></div>';
+  }).join('') : '<div class="small">当前可用点位太少，未触发异常判定（至少需要 5 个可配对点位）。</div>';
+
+  // 归因：最后一个 vs 前一个可得
+  var ok = RES.history.filter(function(x){return x.status==='ok';});
+  if(ok.length>=2){
+    var a = ok[ok.length-2], b = ok[ok.length-1];
+    var dq = b.quote_usd - a.quote_usd;
+    var dfx = b.fx - a.fx;
+    var dd = b.domestic - a.domestic;
+    var ds = b.spread - a.spread;
+    var fxEff = dq * a.fx * 1.055;
+    el('attrBox').innerHTML =
+      '<div class="kv"><dt>'+a.date+' → '+b.date+'</dt><dd>价差 '+fmt(a.spread,0)+' → '+fmt(b.spread,0)+'（'+(ds>0?'+':'')+fmt(ds,0)+'）</dd>'+
+      '<dt>海外报价</dt><dd>'+fmtUsd(a.quote_usd,1)+' → '+fmtUsd(b.quote_usd,1)+'（'+(dq>0?'+':'')+fmtUsd(dq,1)+' 美元）</dd>'+
+      '<dt>汇率</dt><dd>'+fmt(a.fx,4)+' → '+fmt(b.fx,4)+'（'+(dfx>0?'+':'')+fmt(dfx,4)+'）</dd>'+
+      '<dt>国内现货</dt><dd>'+fmt(a.domestic,2)+' → '+fmt(b.domestic,2)+'（'+(dd>0?'+':'')+fmt(dd,0)+'）</dd>'+
+      '<dt>粗算影响</dt><dd>海外价贡献约 '+fmt(-dq*a.fx,0)+' 元/吨；国内价贡献约 '+fmt(dd,0)+' 元/吨；汇率贡献约 '+fmt(-dfx*b.quote_usd,0)+' 元/吨</dd></div>'+
+      '<div class="small" style="margin-top:6px">注：学费项按"美元价变动 × 当期汇率"单向估算，未做精确归因分解；关税与 VAT 放大效应另计。</div>';
+  } else {
+    el('attrBox').innerHTML = '<div class="small">可配对点位不足 2 个，无法做变化归因。</div>';
+  }
+}
+
+function showEventModal(e){
+  if(!e) return;
+  // 找当日或最近可得的历史点
+  var pts = RES.history.filter(function(x){return x.status==='ok';});
+  var near = pts.filter(function(x){return x.date<=e.date;}).slice(-1)[0] || pts[0] || null;
+  var s = e.source_id? srcOf(e.source_id) : null;
+  var h = '<h3>'+esc(e.title)+'</h3><div class="small" style="margin-bottom:12px">'+esc(e.date)+' · '+esc(e.type||'')+'</div>';
+  h += '<div class="note">'+esc(e.text)+'</div>';
+  if(near){
+    h += '<div class="small" style="margin:12px 0 6px">当期价格（最近可得配对点）</div>'+
+      '<div class="kv"><dt>日期</dt><dd>'+near.date+'</dd>'+
+      '<dt>海外 CFR</dt><dd>'+fmtUsd(near.quote_usd,1)+' 美元/吨</dd>'+
+      '<dt>汇率</dt><dd>'+fmt(near.fx,4)+'</dd>'+
+      '<dt>国内现货</dt><dd>'+fmt(near.domestic,2)+' 元/吨</dd>'+
+      '<dt>进口含税净成本</dt><dd>'+fmt(near.net_cost,0)+' 元/吨</dd>'+
+      '<dt>理论价差</dt><dd class="'+cls(near.spread)+'">'+fmt(near.spread,0)+' 元/吨</dd></div>';
+  } else {
+    h += '<div class="small">该事件当日无可配对的价差点。</div>';
+  }
+  if(s) h += '<div class="small" style="margin:12px 0 6px">来源</div><div style="font-size:12px">'+esc(s.publisher)+' · '+esc(s.title)+'（'+esc(s.date)+'）<br><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.url)+'</a></div>';
+  else h += '<div class="note warn" style="margin-top:12px">本条为本报告的数据截点说明，无外部来源。</div>';
+  el('modalBody').innerHTML = h;
+  el('modal').classList.add('show');
+}
+
+/* ============================================================ 理论 vs 真实 */
+function renderReal(){
+  var cur = RES.current;
+  var rows = [
+    ['理论进口价差（本页口径）', cur.spread.abs_cny, '是', '国内含税现货 − 进口含税净成本，两端都只算到"口岸/罐区"'],
+    ['国际运费', cur.freight&&cur.freight.usd!==null? -(cur.freight.usd*cur.fx.rate*1.055):null, cur.freight&&cur.freight.usd===null?'否 · 缺口':'CFR 口径已含', 'FOB 报价时这是最大的未定项（40–90 美元/吨 ≈ 270–600 元/吨）'],
+    ['保险费', -( (cur.totals.cif_usd||0)*((CUR_CASE.insurance&&CUR_CASE.insurance.rate)||0)/100*1.1*cur.fx.rate ), '部分', 'CIF×110% 投保，费率 0.1%–0.3%'],
+    ['港杂、报关、商检、仓储、短驳', cur.totals.inland? -cur.totals.inland : null, cur.totals.inland? '是':'否 · 缺口', '境内费用通常 50–120 元/吨'],
+    ['可抵扣进口增值税', cur.totals.vat, cur.totals.vat_recoverable? '否 · 可抵扣':'是', cur.totals.vat_recoverable? '现金流占用 90–120 天，不构成成本' : '已计入成本'],
+    ['资金成本（信用证/授信/锁汇）', null, '否 · 缺口', '6,000 元/吨货值、90 天账期约 30–60 元/吨'],
+    ['数量/质量索赔与损耗', null, '否 · 缺口', '卸货计量损耗、纯度偏差索赔（0.1%–0.5% 货值）'],
+    ['罐区容量与排期', null, '否 · 缺口', '到港集中时可能无法及时接卸，产生滞期费'],
+    ['对手方与结算风险', null, '否', '预付/信用证结构、汇率锁定的机会成本']
+  ];
+  el('tblReal').tBodies[0].innerHTML = rows.map(function(r){
+    var v = (r[1]===null||r[1]===undefined)? '<span class="tag t-gap">未计</span>' : ((r[1]>0?'+':'')+fmt(r[1],0));
+    return '<tr><td>'+esc(r[0])+'</td><td class="num '+(r[1]>0?'pos':(r[1]<0?'neg':''))+'">'+v+'</td>'+
+      '<td>'+esc(r[2])+'</td><td style="text-align:left;white-space:normal;color:var(--tx3);font-size:11px">'+esc(r[3])+'</td></tr>';
+  }).join('');
+  el('realNote').innerHTML = '<b>结论口径：</b>理论价差只回答"同一时点、同一口径下，进口货到岸后比国内现货便宜/贵多少"。' +
+    '它没有回答"能不能做"—— 那还需要运费实盘、境内费用、资金成本、罐容、质量与对手方风险。' +
+    '本页刻意不给"建议进口/建议观望"之类的交易指令，也不预测未来价格。';
+}
+
+/* ============================================================ 缺口与来源 */
+function renderGaps(){
+  var g = CUR_CASE.gaps||[];
+  el('gapCount').textContent = g.length;
+  el('gapList').innerHTML = g.map(function(x){
+    var sev = x.severity==='high'?'sv-high':(x.severity==='medium'?'sv-medium':'sv-low');
+    var sevTxt = {high:'高',medium:'中',low:'低'}[x.severity]||'低';
+    return '<div class="gap-item"><span class="gap-sev '+sev+'">'+sevTxt+'</span><div class="gap-body">'+
+      '<div class="t">'+esc(x.item)+'</div><div class="d">'+esc(x.impact)+'</div>'+
+      '<div class="f">补法：'+esc(x.fix)+' ｜ 影响：'+esc((x.affects||[]).join('、'))+'</div></div></div>';
+  }).join('');
+}
+function renderSources(){
+  var s = (CUR_CASE.sources||[]);
+  var order = {A:0,B:1,C:2};
+  s = s.slice().sort(function(a,b){ return (order[a.tier]||9)-(order[b.tier]||9); });
+  el('tblSrc').tBodies[0].innerHTML = s.map(function(x){
+    var cls = x.tier==='A'?'t-a':(x.tier==='B'?'t-b':'t-c');
+    return '<tr><td><span class="tag '+cls+'">'+esc(x.tier)+'</span></td>'+
+      '<td style="text-align:left;white-space:normal"><div style="font-weight:600">'+esc(x.publisher)+'</div>'+
+      '<div class="small">'+esc(x.title)+'</div>'+
+      '<div class="small"><a href="'+esc(x.url)+'" target="_blank" rel="noopener">查看原文</a></div></td>'+
+      '<td class="num small">'+esc(x.date)+'</td>'+
+      '<td style="text-align:left;white-space:normal;color:var(--tx3);font-size:11px">'+esc((x.excerpt||'').slice(0,150))+'</td></tr>';
+  }).join('');
+}
+
+/* ============================================================ 图表 */
+function setChart(id, opt){
+  var dom = el(id); if(!dom) return;
+  if(!charts[id]) charts[id] = echarts.init(dom, null, {renderer:'canvas'});
+  charts[id].setOption(opt, true);
+}
+var AXIS = {
+  x:{type:'category',axisLine:{lineStyle:{color:'#1e2b45'}},axisLabel:{color:'#6b7fa3',fontSize:10.5}},
+  y:{type:'value',axisLine:{show:false},splitLine:{lineStyle:{color:'#16233a'}},axisLabel:{color:'#6b7fa3',fontSize:10.5}}
+};
+function baseOpt(){ return {backgroundColor:'transparent',textStyle:{fontFamily:'-apple-system,"PingFang SC","Microsoft YaHei",sans-serif'},animationDuration:400}; }
+
+function renderCharts(){
+  renderSensChart();
+  renderTornado();
+  renderHistoryChart();
+}
+
+function renderSensChart(){
+  var s = RES.sensitivity;
+  var cats = s.fx.map(function(x){return (x.delta*100>0?'+':'')+fmt(x.delta*100,0)+'%';});
+  var series = [
+    {name:'汇率',  data:s.fx.map(function(x){return x.spread===null?null:+x.spread.toFixed(1);})},
+    {name:'海外报价', data:s.offshore.map(function(x){return x.spread===null?null:+x.spread.toFixed(1);})}
+  ];
+  var o = baseOpt();
+  o.tooltip = {trigger:'axis',valueFormatter:function(v){return v===null?'缺':fmt(v,0)+' 元/吨';}};
+  o.legend = {data:['汇率','海外报价'],textStyle:{color:'#9fb0cc',fontSize:11},top:0};
+  o.grid = {left:62,right:18,top:34,bottom:30};
+  o.xAxis = Object.assign({}, AXIS.x, {data:cats,name:'变动幅度',nameTextStyle:{color:'#6b7fa3'}});
+  o.yAxis = Object.assign({}, AXIS.y, {name:'价差 元/吨',nameTextStyle:{color:'#6b7fa3'}});
+  o.series = [
+    {name:'汇率',type:'line',smooth:false,symbolSize:7,data:series[0].data,
+      lineStyle:{width:2,color:'#22d3ee'},itemStyle:{color:'#22d3ee'}},
+    {name:'海外报价',type:'line',smooth:false,symbolSize:7,data:series[1].data,
+      lineStyle:{width:2,color:'#f59e0b',type:'dashed'},itemStyle:{color:'#f59e0b'}},
+    {name:'零轴',type:'line',data:cats.map(function(){return 0;}),symbol:'none',
+      lineStyle:{color:'#ef4444',width:1,type:'dotted'},tooltip:{show:false},silent:true}
+  ];
+  setChart('chartSens', o);
+}
+
+function renderTornado(){
+  var t = RES.sensitivity.tornado;
+  if(!t.length){ el('chartTornado').innerHTML='<div class="small">当前参数下无可用敏感性结果</div>'; return; }
+  var cats = t.map(function(x){return x.label;});
+  var lo = t.map(function(x){return x.low;});
+  var hi = t.map(function(x){return x.high;});
+  var base = RES.sensitivity.base.spread.abs_cny;
+  var o = baseOpt();
+  o.tooltip = {trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:function(v){return fmt(v,0)+' 元/吨';}};
+  o.grid = {left:120,right:24,top:16,bottom:28};
+  o.xAxis = Object.assign({}, AXIS.y, {name:'价差 元/吨'});
+  o.yAxis = Object.assign({}, AXIS.x, {type:'category',data:cats});
+  o.series = [
+    {name:'低',type:'bar',data:lo,itemStyle:{color:'#1d4ed8',borderRadius:3},barGap:'-100%'},
+    {name:'高',type:'bar',data:hi,itemStyle:{color:'#22d3ee',borderRadius:3}},
+    {type:'line',data:cats.map(function(){return base;}),symbol:'none',lineStyle:{color:'#fbbf24',width:1.5,type:'dashed'},silent:true}
+  ];
+  setChart('chartTornado', o);
+}
+
+function renderHistoryChart(){
+  var h = RES.history;
+  var okPts = h.filter(function(x){return x.status==='ok';});
+  var o = baseOpt();
+  if(okPts.length===0){
+    el('chartHistory').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#6b7fa3;font-size:13px">'+
+      '没有可配对的历史点位 — 缺当日汇率/国内价/海外价，按纪律不生成曲线</div>';
+    charts['chartHistory'] = null;
+    return;
+  }
+  var dates = h.map(function(x){return x.date;});
+  o.tooltip = {trigger:'axis',valueFormatter:function(v){return v===null?'缺':fmt(v,2);}};
+  o.legend = {data:['进口含税净成本','国内现货（含税）','理论价差'],textStyle:{color:'#9fb0cc',fontSize:11},top:0};
+  o.grid = {left:64,right:58,top:38,bottom:46};
+  o.xAxis = Object.assign({}, AXIS.x, {data:dates,axisLabel:{color:'#6b7fa3',fontSize:10,rotate:0}});
+  o.yAxis = [
+    Object.assign({}, AXIS.y, {name:'元/吨',nameTextStyle:{color:'#6b7fa3'},scale:true}),
+    Object.assign({}, AXIS.y, {name:'价差',nameTextStyle:{color:'#6b7fa3'},splitLine:{show:false}})
+  ];
+  o.dataZoom = [{type:'inside'},{type:'slider',height:16,bottom:4,backgroundColor:'#0c1526',
+    fillerColor:'rgba(59,130,246,.18)',borderColor:'#1e2b45',handleStyle:{color:'#3b82f6'},
+    textStyle:{color:'#6b7fa3',fontSize:9},dataBackground:{lineStyle:{color:'#1e2b45'},areaStyle:{color:'#131e33'}}}];
+  o.series = [
+    {name:'进口含税净成本',type:'line',data:h.map(function(x){return x.status==='ok'? +x.net_cost.toFixed(1):null;}),
+      connectNulls:false,symbol:'circle',symbolSize:6,lineStyle:{width:2.2,color:'#22d3ee'},itemStyle:{color:'#22d3ee'}},
+    {name:'国内现货（含税）',type:'line',data:h.map(function(x){return x.domestic===null?null:+x.domestic.toFixed(1);}),
+      connectNulls:false,symbol:'circle',symbolSize:6,lineStyle:{width:2.2,color:'#f59e0b'},itemStyle:{color:'#f59e0b'}},
+    {name:'理论价差',type:'bar',yAxisIndex:1,data:h.map(function(x){return x.status==='ok'? +x.spread.toFixed(1):null;}),
+      itemStyle:{color:function(p){return p.value>0? 'rgba(255,92,92,.55)':'rgba(34,197,94,.55)';},borderRadius:3}}
+  ];
+  o.markLineSet = true;
+  setChart('chartHistory', o);
+}
+
+/* ============================================================ 事件绑定 */
+function bindEvents(){
+  el('selRange').addEventListener('change', function(e){ S.range = e.target.value; renderHistory(); renderCharts(); });
+  el('btnReset').addEventListener('click', function(){ S.overrides={}; S.sim=false; el('btnSim').classList.remove('on'); applyState(); render(); });
+  el('btnSim').addEventListener('click', function(){
+    S.sim = !S.sim; el('btnSim').classList.toggle('on', S.sim);
+    applyState(); render();
+    if(S.sim) el('vBadges').insertAdjacentHTML('afterbegin','<span class="badge b-sim">已启用 S-SIM 模拟参数</span>');
+  });
+  window.addEventListener('resize', function(){ Object.keys(charts).forEach(function(k){ if(charts[k]) charts[k].resize(); }); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') el('modal').classList.remove('show'); });
+  el('modal').addEventListener('click', function(e){ if(e.target===el('modal')) el('modal').classList.remove('show'); });
+}
+function layoutAll(){ applyState(); render(); }
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+{
+  "meta": {
+    "report_id": "SQV-<品种代码>-<地区>-<日期>",
+    "title": "<地区><规格><品种>供应商报价合理性核验",
+    "product_family": "<品种名>",
+    "spec_file": "examples/02-template-blank/specs/template.json",
+    "asof": "2026-01-01",
+    "asof_note": "行情数据截至 YYYY-MM-DD；期货为当日收盘价。",
+    "prepared_for": "内贸采购",
+    "data_nature": "空白模板：所有数值均为占位示例，仅用于演示报告结构，不可作为任何采购依据。",
+    "disclaimer": "本报告只陈述已发生的市场价格事实与口径差异，不预测未来价格，也不给出应还价金额建议。"
+  },
+  "quote": {
+    "is_test_input": false,
+    "test_badge": "占位示例（空白模板）",
+    "supplier_label": "<供应商名称或编号>（示例占位）",
+    "supplier_type": "生产厂 | 贸易商 | 代理商",
+    "product_name": "<品种>",
+    "product_aliases": [],
+    "spec_text": "<含量/等级，照抄报价单>",
+    "grade_claimed": "<供应商自称的等级>",
+    "purity": null,
+    "process": null,
+    "value": 1000,
+    "unit": "元/吨",
+    "tax": {
+      "included": true,
+      "vat_rate": 0.13,
+      "text": "<照抄，如：含13%增值税>"
+    },
+    "delivery": {
+      "basis": "ex_works",
+      "text": "<照抄>",
+      "origin": "<发运地>"
+    },
+    "destination": "<到货地>",
+    "region_supplier": "<区域>",
+    "quantity": {
+      "value": 0,
+      "unit": "吨/次",
+      "basis": ""
+    },
+    "payment": {
+      "terms": "<照抄：现款/预付比例/账期/承兑>",
+      "cash_discounted": false
+    },
+    "packing": "<散水/吨桶/编织袋…>",
+    "validity": "<报价有效期，无则写未注明>",
+    "pricing_formula": "固定价 | 随行就市 | 指数联动+升贴水",
+    "quote_date": "2026-01-01",
+    "unknowns": [
+      "<报价单没写清的每一项>"
+    ],
+    "raw_text": "<把报价单原话粘贴到这里，逐字保留>"
+  },
+  "market": {
+    "spot_anchors": [
+      {
+        "id": "<来源-日期-时间>",
+        "date": "2026-01-01",
+        "time": "09:00",
+        "region": "<地区>",
+        "spec": "<市场参考规格>",
+        "price_type": "<主流价/区间/成交价>",
+        "value": 980,
+        "unit": "元/吨",
+        "tax_included": true,
+        "delivery": "<出厂/自提/库提/到厂>",
+        "change": null,
+        "source_name": "<发布方>",
+        "source_title": "<原文标题>",
+        "url": "https://example.invalid/请在填表时替换为真实链接",
+        "role": "primary",
+        "tier": "<渠道层级>",
+        "note": "<原文要点；这是空白模板的占位数值，不是任何真实市场价格>"
+      }
+    ],
+    "enterprise_prices": [],
+    "spot_series_3m": [],
+    "series_files": {},
+    "series_meta": {},
+    "futures_reference": null,
+    "transport": {
+      "freight_supplier_to_dest": null,
+      "gap": "<缺什么>",
+      "reference_note": ""
+    }
+  },
+  "benchmark": {
+    "primary_anchor_id": "<来源-日期-时间>",
+    "secondary_anchor_ids": [],
+    "interval_by_target": {
+      "included|ex_works": {
+        "low": 970,
+        "high": 990,
+        "center": 980,
+        "basis": "<区间怎么构成；占位示例，填表时替换>",
+        "confidence": "none",
+        "caveat": "这是空白模板的占位区间，仅用于演示报告结构，绝不可作为真实核验依据。"
+      },
+      "included|delivered": {
+        "low": null,
+        "high": null,
+        "center": null,
+        "basis": "缺运价",
+        "confidence": "none"
+      }
+    },
+    "interval_method": "<口径转换说明>"
+  },
+  "comparability": [
+    {
+      "item": "产品含量/等级",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "地区",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "税费",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": true,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "交付方式",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "运输",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "采购数量",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "账期/付款",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "包装",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "品牌/工艺",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    },
+    {
+      "item": "价格性质",
+      "quote": "",
+      "market": "",
+      "status": "unknown",
+      "direction": "",
+      "quantifiable": false,
+      "label": "待确认",
+      "evidence": ""
+    }
+  ],
+  "percentile_plan": [],
+  "gaps": [
+    {
+      "id": "G1",
+      "item": "<缺什么>",
+      "impact": "<影响哪一段结论>",
+      "tried": "<试过哪些渠道>",
+      "why": "<为什么补不上>",
+      "next": "<补数路径>"
+    }
+  ],
+  "evidence_summary": {
+    "explainable": [],
+    "pending": [
+      "<要问供应商的问题>"
+    ]
+  }
+}

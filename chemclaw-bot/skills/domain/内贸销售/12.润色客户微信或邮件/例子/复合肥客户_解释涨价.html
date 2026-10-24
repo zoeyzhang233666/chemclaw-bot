@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>颗粒尿素 · 解释涨价｜客户沟通润色</title>
+<style>
+:root{
+  --ink:#0f172a;--ink2:#334155;--muted:#64748b;--line:#e2e8f0;--line2:#eef2f6;
+  --bg:#f6f7f9;--card:#fff;
+  --accent:#0f766e;--accent-d:#134e4a;--accent-s:#ccfbf1;--accent-l:#f0fdfa;
+  --amber:#b45309;--amber-s:#fef3c7;--red:#b91c1c;--red-s:#fee2e2;
+  --green:#15803d;--green-s:#dcfce7;
+  --mono:"SFMono-Regular",ui-monospace,"JetBrains Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:0 26px}
+a{color:inherit;text-decoration:none}
+code{font-family:var(--mono);font-size:.9em;background:#f1f5f9;padding:1px 5px;border-radius:5px;color:var(--accent-d)}
+.topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.84);
+  backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.topbar .in{display:flex;align-items:center;gap:18px;height:58px;max-width:1140px;margin:0 auto;padding:0 26px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;white-space:nowrap;letter-spacing:-.01em}
+.brand i{width:22px;height:22px;border-radius:7px;background:linear-gradient(140deg,var(--accent),#0b5f59);
+  display:inline-block;position:relative;box-shadow:0 2px 6px rgba(15,118,110,.32)}
+.brand i::after{content:"";position:absolute;inset:6px;border:1.5px solid #fff;border-radius:3px;opacity:.85}
+.nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-size:12.5px;color:var(--muted);padding:6px 10px;border-radius:8px;white-space:nowrap;transition:.16s}
+.nav a:hover{background:var(--accent-l);color:var(--accent-d)}
+.hero{position:relative;overflow:hidden;padding:62px 0 46px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#fff 0%,#fbfdfd 55%,var(--bg) 100%)}
+.hero::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(var(--line2) 1px,transparent 1px),linear-gradient(90deg,var(--line2) 1px,transparent 1px);
+  background-size:34px 34px;mask-image:radial-gradient(ellipse 70% 60% at 78% 8%,#000 0%,transparent 72%);opacity:.9}
+.hero::after{content:"";position:absolute;width:520px;height:520px;right:-140px;top:-260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(15,118,110,.13),transparent 66%)}
+.hero .wrap{position:relative}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+  display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--accent-s),transparent);max-width:180px}
+h1{font-size:clamp(27px,3.6vw,41px);line-height:1.28;letter-spacing:-.025em;margin:0 0 18px;font-weight:750;max-width:26ch}
+h1 em{font-style:normal;color:var(--accent);border-bottom:2px solid var(--accent-s)}
+.lead{font-size:16px;color:var(--ink2);max-width:66ch;margin:0 0 26px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px;margin-top:6px}
+.meta div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.meta span{display:block;font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:3px}
+.meta b{font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.hero-note{margin-top:16px;font-size:12.5px;color:var(--muted)}
+.hero-note em{font-style:normal;color:var(--amber);font-weight:600}
+.block{padding:54px 0;border-top:1px solid var(--line);scroll-margin-top:72px}
+.block:first-of-type{border-top:0}
+.sh{display:flex;align-items:baseline;gap:13px;margin-bottom:8px;flex-wrap:wrap}
+.sh .idx{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-s);
+  padding:3px 8px;border-radius:6px;font-weight:600;letter-spacing:.04em}
+.sh h2{font-size:21px;margin:0;letter-spacing:-.02em;font-weight:700}
+.sh .tag{font-size:11.5px;color:var(--muted);border:1px solid var(--line);background:#fff;
+  padding:2px 8px;border-radius:999px;margin-left:auto}
+.sub{color:var(--muted);font-size:13.5px;margin:0 0 24px;max-width:76ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+  box-shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px -18px rgba(15,23,42,.18)}
+.card h3{margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--accent-d);
+  display:flex;align-items:center;gap:8px}
+.card h3::before{content:"";width:3px;height:13px;background:var(--accent);border-radius:2px}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kv{display:grid;grid-template-columns:84px 1fr;gap:6px 10px;font-size:13px;margin:0}
+.kv dt{color:var(--muted);font-size:12.5px}
+.kv dd{margin:0;color:var(--ink2)}
+.tl{list-style:none;margin:0;padding:0 0 0 4px}
+.tl li{position:relative;padding:0 0 15px 20px;font-size:13.5px;color:var(--ink2);line-height:1.7}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--accent)}
+.tl li::after{content:"";position:absolute;left:3.5px;top:18px;bottom:0;width:1px;background:var(--line)}
+.tl li:last-child::after{display:none}
+.tl b{display:block;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.02em;margin-bottom:2px}
+.tl li.now::before{background:var(--amber);border-color:var(--amber)}
+.tl li.now{color:var(--amber);font-weight:600}
+.draft{font-size:14px;line-height:2;color:var(--ink2);background:#fffdf8;border:1px solid #f3e9d6;border-radius:12px;padding:16px 18px}
+.draft mark{background:transparent;padding:0 1px}
+.draft mark.q{color:var(--muted);text-decoration:underline dotted var(--muted);text-underline-offset:4px}
+.draft mark.w{background:var(--amber-s);color:#7c4a03;border-radius:3px}
+.draft mark.b{background:var(--red-s);color:#8f1414;border-radius:3px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:10px}
+.fact{background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px 14px;transition:.16s}
+.fact:hover{border-color:#cbd5e1;box-shadow:0 6px 18px -12px rgba(15,23,42,.35)}
+.fact .hd{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.fact .id{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-l);
+  border:1px solid var(--accent-s);padding:1px 6px;border-radius:5px}
+.fact .tp{font-size:10.5px;padding:1px 6px;border-radius:5px}
+.tp.t1{background:var(--green-s);color:var(--green)}
+.tp.t2{background:var(--accent-s);color:var(--accent-d)}
+.tp.t3{background:var(--amber-s);color:var(--amber)}
+.tp.t4{background:var(--red-s);color:var(--red)}
+.fact p{margin:0;font-size:12.8px;line-height:1.65;color:var(--ink2)}
+.fact .hint{margin-top:6px;font-size:11.5px;color:var(--muted);line-height:1.55}
+.main-grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:26px;align-items:start}
+.phone{width:100%;max-width:360px;border-radius:32px;padding:10px;background:linear-gradient(160deg,#1e293b,#0b1220);
+  box-shadow:0 26px 60px -30px rgba(15,23,42,.7),0 2px 0 #fff inset}
+.phone .scr{border-radius:24px;overflow:hidden;background:#ededed}
+.ph-hd{background:#f7f7f7;border-bottom:1px solid #e3e3e3;padding:11px 14px;text-align:center}
+.ph-hd b{display:block;font-size:13.5px;color:#111;font-weight:600}
+.ph-hd span{font-size:10.5px;color:#94a3b8}
+.phone-body{padding:14px 12px 18px;display:flex;flex-direction:column;gap:8px;min-height:200px}
+.stamp{text-align:center;font-size:10px;color:#a1a1a1;margin:2px 0 4px}
+.bubble{max-width:88%;align-self:flex-end;background:#95ec69;color:#0d1b0d;padding:9px 11px;border-radius:8px;
+  font-size:13.2px;line-height:1.68;position:relative;box-shadow:0 1px 1px rgba(0,0,0,.05)}
+.bubble::after{content:"";position:absolute;right:-4px;top:11px;width:8px;height:8px;background:#95ec69;transform:rotate(45deg)}
+.ph-ft{display:flex;gap:7px;padding:8px 10px;background:#f7f7f7;border-top:1px solid #e3e3e3}
+.ph-ft .f{flex:1;background:#fff;border-radius:14px;height:26px;border:1px solid #e3e3e3}
+.ph-ft .s{width:26px;height:26px;border-radius:50%;background:#07c160}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.btn{font:inherit;font-size:12.5px;font-weight:600;border:1px solid transparent;border-radius:9px;padding:8px 14px;
+  background:var(--ink);color:#fff;cursor:pointer;transition:.16s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#1e293b;transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--ink2);border-color:var(--line)}
+.btn.ghost:hover{background:var(--accent-l);border-color:var(--accent-s);color:var(--accent-d)}
+.spec{list-style:none;margin:0;padding:0;font-size:13px}
+.spec li{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line2)}
+.spec li:last-child{border-bottom:0}
+.spec .k{color:var(--muted);flex:0 0 74px;font-size:12.5px}
+.spec.wide .k{flex:0 0 94px}
+.spec .v{color:var(--ink2);flex:1}
+.tabs{display:inline-flex;gap:3px;background:#eef2f4;border:1px solid var(--line);padding:4px;border-radius:12px;flex-wrap:wrap}
+.tab{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:transparent;border:0;padding:8px 14px;
+  border-radius:9px;cursor:pointer;transition:.16s;white-space:nowrap}
+.tab:hover{color:var(--ink2)}
+.tab[aria-selected="true"]{background:#fff;color:var(--accent-d);box-shadow:0 1px 3px rgba(15,23,42,.12)}
+.panel{display:none}
+.panel.on{display:block;animation:fade .26s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.msg{font-size:14px;line-height:1.95;color:var(--ink2);word-break:break-word}
+.msg p{margin:0 0 10px}
+.msg p:last-child{margin-bottom:0}
+.subject{display:flex;gap:10px;align-items:baseline;background:var(--accent-l);border:1px solid var(--accent-s);
+  border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:13px}
+.subject b{font-size:11px;color:var(--accent-d);letter-spacing:.06em;flex:0 0 auto}
+.bars{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line2);font-size:12px;color:var(--muted)}
+.bars b{color:var(--ink2);font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink2);background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:7px 14px;cursor:pointer;transition:.16s}
+.chip:hover{border-color:var(--accent-s);background:var(--accent-l);color:var(--accent-d)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.adj-out{background:#fffdf8;border:1px solid #f3e9d6;border-radius:12px;padding:16px 18px;min-height:120px;
+  font-size:13.8px;line-height:1.9;color:var(--ink2);white-space:pre-wrap;word-break:break-word}
+.adj-note{font-size:12.3px;color:var(--muted);margin-top:12px;line-height:1.7}
+.adj-note b{color:var(--accent-d)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat b{display:block;font-size:26px;line-height:1.1;font-weight:750;letter-spacing:-.03em}
+.stat span{font-size:11.5px;color:var(--muted)}
+.stat.zero b{color:var(--green)}
+.stat.wait b{color:var(--amber)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.8px;background:#fff;
+  border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{background:#f8fafc;text-align:left;padding:10px 11px;font-size:11px;letter-spacing:.06em;color:var(--muted);
+  text-transform:uppercase;border-bottom:1px solid var(--line);font-weight:700;white-space:nowrap}
+td{padding:10px 11px;border-bottom:1px solid var(--line2);vertical-align:top;color:var(--ink2);line-height:1.6}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#fcfdfd}
+td.c{text-align:center}
+.pill{display:inline-block;min-width:22px;padding:1px 6px;border-radius:6px;font-size:11.5px;font-weight:700;text-align:center}
+.p-ok{background:var(--green-s);color:var(--green)}
+.p-mid{background:var(--amber-s);color:var(--amber)}
+.p-del{background:var(--red-s);color:var(--red)}
+.p-none{background:#f1f5f9;color:#94a3b8}
+.mono{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.ph-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.ph{background:#fff;border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:12px 14px}
+.ph .hd{display:flex;gap:8px;align-items:baseline;margin-bottom:4px}
+.ph .id{font-family:var(--mono);font-size:10.5px;color:var(--amber);font-weight:700}
+.ph .nm{font-size:12.8px;font-weight:600;color:var(--ink)}
+.ph .mt{font-size:11.5px;color:var(--muted);line-height:1.6}
+.ph .mt b{color:var(--ink2);font-weight:600}
+.scn{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.scn-hd{display:flex;align-items:center;gap:10px;padding:13px 18px;background:linear-gradient(90deg,var(--accent-l),#fff);
+  border-bottom:1px solid var(--line)}
+.scn-hd b{font-size:14px}
+.scn-hd .n{font-family:var(--mono);font-size:10.5px;color:var(--accent);background:#fff;border:1px solid var(--accent-s);
+  padding:1px 7px;border-radius:5px}
+.scn-hd .btn{margin-left:auto;padding:5px 11px;font-size:11.5px}
+.scn-bd{padding:16px 18px}
+.q{font-size:12.8px;color:var(--muted);background:#fafafa;border-radius:9px;padding:10px 13px;margin:0 0 12px;
+  border:1px dashed var(--line)}
+.q b{display:block;font-size:10.5px;letter-spacing:.08em;color:#94a3b8;margin-bottom:3px;font-weight:700}
+.rec{font-size:13.5px;line-height:1.9;color:var(--ink2);margin:0}
+.short{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line2);font-size:12.5px;color:var(--muted)}
+.short b{color:var(--ink2);font-size:11px;letter-spacing:.05em;margin-right:6px}
+.red{margin-top:10px;font-size:12.3px;color:var(--amber);background:#fffbf2;border:1px solid #f6e6c9;
+  border-radius:9px;padding:9px 12px;line-height:1.65}
+.red b{color:#8a4b06}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;overflow:hidden}
+details[open]{box-shadow:0 8px 24px -20px rgba(15,23,42,.5)}
+summary{cursor:pointer;padding:13px 18px;font-size:13.5px;font-weight:600;color:var(--ink);display:flex;
+  align-items:center;gap:10px;list-style:none;transition:.15s}
+summary::-webkit-details-marker{display:none}
+summary:hover{background:var(--accent-l)}
+summary::before{content:"+";font-family:var(--mono);font-size:14px;color:var(--accent);width:14px;text-align:center}
+details[open] summary::before{content:"−"}
+details[open] summary{background:#fcfdfd;border-bottom:1px solid var(--line2)}
+.d-bd{padding:15px 18px 17px}
+.d-bd .say{font-size:13.3px;line-height:1.9;color:var(--ink2);margin:0 0 12px}
+.ban{font-size:12.3px;color:var(--red);background:var(--red-s);border-radius:8px;padding:8px 12px;margin-bottom:10px}
+.ban b{font-size:10.5px;letter-spacing:.08em;display:block;margin-bottom:2px;opacity:.85}
+.why{font-size:12.3px;color:var(--muted);line-height:1.7}
+.why b{color:var(--accent-d);font-size:10.5px;letter-spacing:.08em;display:block;margin-bottom:2px}
+.prog{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.bar{flex:1;height:7px;background:#e6ebef;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#22b3a5);border-radius:99px;
+  transition:width .35s cubic-bezier(.3,.8,.4,1)}
+.prog span{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ck{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;cursor:pointer;transition:.15s;font-size:12.8px;line-height:1.6;color:var(--ink2)}
+.ck:hover{border-color:#cbd5e1}
+.ck input{appearance:none;width:16px;height:16px;border:1.5px solid #cbd5e1;border-radius:5px;flex:0 0 auto;
+  margin-top:2px;cursor:pointer;transition:.15s;position:relative;background:#fff}
+.ck input:checked{background:var(--accent);border-color:var(--accent)}
+.ck input:checked::after{content:"";position:absolute;left:4.5px;top:1.5px;width:4px;height:8px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(43deg)}
+.ck input:checked ~ .t{color:var(--muted);text-decoration:line-through}
+.ck .t b{display:block;font-size:11px;color:var(--accent);letter-spacing:.05em;font-weight:700;margin-bottom:1px}
+footer{border-top:1px solid var(--line);background:#fff;padding:44px 0 54px;margin-top:10px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:26px}
+.rule{border:1px solid var(--line);border-radius:12px;padding:15px 17px;background:linear-gradient(180deg,#fff,#fcfdfd)}
+.rule b{display:block;font-size:12.5px;color:var(--accent-d);margin-bottom:5px}
+.rule p{margin:0;font-size:12.3px;color:var(--muted);line-height:1.7}
+.rule .n{font-family:var(--mono);font-size:10.5px;color:var(--accent);letter-spacing:.1em;display:block;margin-bottom:6px}
+.disclaim{font-size:11.8px;color:#94a3b8;line-height:1.8;max-width:90ch}
+#toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,18px);background:var(--ink);color:#fff;
+  font-size:12.8px;font-weight:600;padding:10px 20px;border-radius:99px;opacity:0;pointer-events:none;
+  transition:.28s;z-index:99;box-shadow:0 10px 30px -10px rgba(15,23,42,.6)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:900px){
+  .grid4,.main-grid,.checks{grid-template-columns:1fr}
+  .nav{display:none}
+  .phone{margin:0 auto}
+  .block{padding:40px 0}
+}
+@media print{
+  .topbar,.nav,#toast,.btn{display:none!important}
+  body{background:#fff}
+  .block{padding:22px 0;break-inside:avoid}
+  .card,.scn,table,.phone{box-shadow:none}
+  .panel{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+  <div class="brand"><i></i><span id="brand">客户沟通润色</span></div>
+  <nav class="nav">
+    <a href="#material">原始材料</a><a href="#facts">事实台账</a><a href="#main">主版本</a>
+    <a href="#versions">四个开关</a><a href="#adjust">快速调整</a><a href="#audit">边界审计</a>
+    <a href="#ph">待填清单</a><a href="#scn">场景</a><a href="#reply">追问应对</a><a href="#check">发送清单</a>
+  </nav>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow" id="eyebrow"></div>
+  <h1 id="heroTitle"></h1>
+  <p class="lead" id="heroLead"></p>
+  <div class="meta" id="heroMeta"></div>
+  <p class="hero-note" id="heroNote"></p>
+</div></header>
+
+<main>
+<section class="block" id="material"><div class="wrap">
+  <div class="sh"><span class="idx">01</span><h2>先看清楚原材料</h2><span class="tag">收料 · 不美化</span></div>
+  <p class="sub">润色的信息量全部来自这几块。原话越口语越好——粗糙的地方，往往就是问题的位置。</p>
+  <div class="grid4">
+    <div class="card"><h3>产品档案</h3><dl class="kv" id="prof"></dl></div>
+    <div class="card"><h3>客户背景</h3><dl class="kv" id="cust"></dl></div>
+    <div class="card"><h3>上一轮沟通</h3><ul class="tl" id="timeline"></ul></div>
+    <div class="card"><h3>我的原话（草稿）</h3>
+      <div class="draft" id="draft"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="block" id="facts"><div class="wrap">
+  <div class="sh"><span class="idx">02</span><h2 id="factsTitle">把原话拆成事实</h2><span class="tag">可核验 · 可审计</span></div>
+  <p class="sub">先给每条信息定性。没有这一步，“润色”就变成了凭感觉改写；有了这一步，每个版本都能被逐格核对。</p>
+  <div class="facts" id="factsList"></div>
+</div></section>
+
+<section class="block" id="main"><div class="wrap">
+  <div class="sh"><span class="idx">03</span><h2 id="mainTitle">主版本</h2><span class="tag">默认推荐 · 可直接发</span></div>
+  <p class="sub" id="mainSub"></p>
+  <div class="main-grid">
+    <div id="mainLeft"></div>
+    <div id="mainRight"></div>
+  </div>
+</div></section>
+
+<section class="block" id="versions"><div class="wrap">
+  <div class="sh"><span class="idx">04</span><h2>四个开关：短 / 正式 / 缓和</h2><span class="tag">同一件事的四种说法</span></div>
+  <p class="sub">不是四套话术，是同一份事实的四种排布。切换下面标签，文案与复制按钮会同步。</p>
+  <div class="tabs" role="tablist" id="tabs" style="margin-bottom:16px"></div>
+  <div id="panels"></div>
+</div></section>
+
+<section class="block" id="adjust"><div class="wrap">
+  <div class="sh"><span class="idx">05</span><h2>“再短一点”“更正式”——点一下看结果</h2><span class="tag">指令 → 确定的改法</span></div>
+  <p class="sub">每条指令背后是一套固定的删改规则，不是随机发挥。任选一条，右侧立刻给出结果，可直接复制。</p>
+  <div class="chips" id="chips"></div>
+  <div class="grid4" style="grid-template-columns:1.35fr .9fr;align-items:start">
+    <div>
+      <div class="toolbar"><button class="btn" data-copy="#adjOut">复制这个版本</button><span class="mono" id="adjTag"></span></div>
+      <div class="adj-out copyable" id="adjOut"></div>
+      <div class="adj-note" id="adjNote"></div>
+    </div>
+    <div class="card"><h3>四条规则，永远不变</h3><ul class="spec wide" id="ruleSpec"></ul></div>
+  </div>
+</div></section>
+
+<section class="block" id="audit"><div class="wrap">
+  <div class="sh"><span class="idx">06</span><h2 id="auditTitle">边界审计</h2><span class="tag">逐格可核</span></div>
+  <p class="sub">✔ 保留　◐ 弱化或改写　— 刻意未提　▲ 已删除。任何一格判定，都必须能在文本里找到依据。</p>
+  <div class="stats" id="stats"></div>
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th style="width:52px">编号</th><th style="min-width:190px">事项</th>
+    <th style="width:60px">A</th><th style="width:60px">B</th><th style="width:60px">C</th><th style="width:60px">D</th>
+    <th style="min-width:260px">审计说明</th></tr></thead>
+    <tbody id="auditBody"></tbody>
+  </table></div>
+</div></section>
+
+<section class="block" id="ph"><div class="wrap">
+  <div class="sh"><span class="idx">07</span><h2 id="phTitle">待填的归属</h2><span class="tag">发出前必须清零</span></div>
+  <p class="sub">留一个没填，客户看到的就是“这个人不专业”。占位符不是省略号，是责任人。</p>
+  <div class="ph-list" id="phList"></div>
+</div></section>
+
+<section class="block" id="scn"><div class="wrap">
+  <div class="sh"><span class="idx">08</span><h2>同一套边界规则，各个高频场景</h2><span class="tag">可直接发</span></div>
+  <p class="sub">左边是业务真正会打出来的原话，中间是可直接发出去、右边是对方已读不回时的极简版。最后一行是红线。</p>
+  <div id="scnList"></div>
+</div></section>
+
+<section class="block" id="reply"><div class="wrap">
+  <div class="sh"><span class="idx">09</span><h2>发出去之后，客户会怎么接</h2><span class="tag">不越界的接法</span></div>
+  <p class="sub">润色的另一半在收到回复之后——对方每一句回话，都可能把你逼回“新增承诺”。</p>
+  <div id="replyList"></div>
+</div></section>
+
+<section class="block" id="check"><div class="wrap">
+  <div class="sh"><span class="idx">10</span><h2>发送前检查清单</h2><span class="tag">勾满再发</span></div>
+  <p class="sub">只要有一项过不去，就先别发。发错一条越界承诺的成本，远高于晚半小时发出去。</p>
+  <div class="prog"><div class="bar"><i id="barFill"></i></div><span id="progTxt"></span></div>
+  <div class="checks" id="checks"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div class="rules" id="footerRules"></div>
+  <p class="disclaim" id="disclaim"></p>
+</div></footer>
+<div id="toast">已复制</div>
+<noscript><div style="padding:20px;background:#fee2e2;color:#b91c1c">本页需要启用 JavaScript 才能渲染内容。</div></noscript>
+
+<script id="case-data" type="application/json">{"schema_version": "1.0", "_readme": "示例 03：大宗·农化·颗粒尿素。已收到上游调价通知、正式函未出，客户上月提过锁价。看点：涨价不编涨幅、不假借原料暴涨、不设假期限；锁量与锁价只能写【待填】并报审批。可复制本文件改字段复用。", "meta": {"product": "颗粒尿素", "spec": "N 46% · 农用/工业用", "scenario": "解释涨价", "channel": "邮件（主）+ 微信（跟进）", "goal": "提前报备调价 → 争取锁定提货节奏", "stage": "已收上游调价通知、正式调价函未出（客户上月提过锁价）", "seller": {"name": "王磊", "company": "某肥业有限公司", "region": "华东区", "contact": "【待填】"}, "customer": {"name": "山东临沂 B复合肥有限公司", "role": "采购部 孙经理（采购经理，直接对接价格与提货计划）", "contact": "【待填】"}, "fictional": true, "file_stem": "复合肥客户_解释涨价", "hero": {"title": "涨价这件事，客户怕的不是涨，是“什么时候涨、涨多少”说不清", "lead": "复合肥厂采购经理接到涨价消息，第一个问题永远是两个：哪天生效、涨多少。这一例要处理的不是“把涨价说得含蓄一点”，而是把它拆成三段可核验的话：已接上游通知（有函件编号）、生效日期与幅度（有出处，出处未到就留【待填】）、现价执行到哪天（缓冲窗口）。原话里“原料涨得没边了”“这两天先定下来”“亏了算我的”三处，一处都不能留。"}}, "product_profile": {"name": "颗粒尿素", "alias": ["尿素", "脲", "碳酰胺", "urea"], "cas": "57-13-6", "standard": "GB/T 2440-2017《尿素》", "form": "固体 · 颗粒（造粒尿素，粒径区间随牌号不同）", "hazard": "非危险化学品（一般化学品）；农用级涉肥料生产许可与执行标准标识，工业级按合同与质检单执行（资质与标准以现行规定为准）", "packaging": ["吨包", "编织袋（小袋）", "散装（散装车 / 集装箱）"], "transport": "普通货运；散装需防潮苫盖与配套卸料设备；雨季与高湿地区吸潮、结块风险上升", "key_specs": ["N 含量", "缩二脲", "水分", "粒度", "颗粒强度", "结块与粉化倾向"], "price_basis": "出厂价 / 到厂价（含税否、运费与装车费谁承担须逐次写清）；随行就市为主，锁价与保底属商务政策", "payment_norm": "现款为主；大客户月结或承兑（承兑是否加价按当期政策）", "downstream": ["复合肥（掺混 / 挤压 / 高塔造粒）", "农业直接施用", "工业（三聚氰胺、脲醛树脂、车用尿素、脱硝）"], "pain_points": ["结块与粉化影响掺混计量与投料", "颗粒强度不足、运输途中破碎", "缩二脲偏高影响复配安全性", "季节性备货与跌价风险", "农用级与工业级混谈导致验收争议"], "seasonality": "春耕与秋播前集中备货，淡储与出口窗口影响区域价差；雨季高湿地区吸潮与结块投诉集中", "ban_phrases": ["绝不结块", "保证增产", "随时有货", "价格锁死", "亏了算我的", "保证每批一样", "要多少有多少", "后面全按老价"]}, "customer_profile": [["客户名称", "山东临沂 B复合肥有限公司（虚构示例）", "临沂及周边是复合肥产能集聚区，尿素采购比价充分，对到货节奏与资金占用都敏感。"], ["主营与产线", "掺混肥 / 挤压造粒复合肥", "尿素是主要氮源之一；掺混与造粒对颗粒强度、粉化与结块最敏感，对含量差异反而不容易当场看出来。"], ["用氮品种", "颗粒尿素（以 N 含量为主指标）", "颗粒尿素便于掺混与计量；粉状、小颗粒或工业级走的是别的工艺，别混着谈。"], ["用量口径", "【待填：月需求量 / 年需求量】", "复合肥里氮素占比随配方变化，本工作簿不引用行业经验值，也不替客户估算用量。"], ["采购现状", "现有 2 家尿素供应商（客户自述）", "定位应是“备份货源 + 议价筹码”，不是“替换现有两家”；涨价期尤其不能去踩现任供应商。"], ["已知痛点", "① 结块与粉化影响计量　② 到货节奏与生产排程对不上　③ 淡季备货与跌价风险", "三条均来自客户自述，只能作议题；不替客户判断用肥季节与备货量。"], ["验收关注点", "N 含量、缩二脲、水分、粒度、颗粒强度", "具体数值【待填：以客户质检单 / 合同为准】；农用级与工业级口径必须先对齐再报价。"], ["结算方式", "现款为主，部分走承兑（以合同为准）", "【待填】具体账期与承兑是否加价；涨价沟通里主动提结算，等于把“用账期换涨幅”摆上桌。"], ["决策链", "孙经理（第一联系人）→ 采购总监 → 总经理", "孙经理能谈价格窗口与提货节奏，但调价与锁价最终要总经理签。"], ["沟通偏好", "关键结论要落到邮件；微信用于催确认与提醒", "推断项，需在沟通中验证；未验证前不写进任何对外文本。"], ["本次关系阶段", "已合作在供，本月接到上游调价通知", "属“在供 + 调价”双敏感期：既不能显得说涨就涨，也不能让客户从别处听说。"], ["禁语清单", "不编涨幅／不假借“原料暴涨”／不设假期限／不承诺锁价与保底／不替客户算成本／不承诺绝不结块", "违反任一条，短期可能签单，长期必被压价；预告口径一旦与正式函对不上，就是事故。"]], "decision_chain": "采购部 孙经理（第一联系人，谈价格窗口与提货节奏）　→　采购总监（批锁量与结算口径）　→　总经理（签调价与锁价）", "timeline": [{"when": "上月 · 客户提诉求", "what": "孙经理提出“能不能锁一段时间的价”", "detail": "锁多少、锁多久、什么条件，客户没给数字。"}, {"when": "上周 · 上游通知", "what": "收到上游调价通知", "detail": "函件编号【待填】，幅度与生效日期以正式函为准。"}, {"when": "本周 · 正式函未出", "what": "我方调价函在内部审批与出具流程中", "detail": "正式函出来之前，不对客户报任何幅度。"}, {"when": "本周 · 客户已察觉", "what": "孙经理微信里问“是不是要涨”", "detail": "客户已经听到风声，先报备反而占主动。"}, {"when": "今天 · 要发一封邮件", "what": "先报备，再给缓冲，最后给一个可选动作", "detail": "邮件为主渠道，微信只做确认与提醒。"}], "draft": {"raw": "孙经理您好，跟您说个事，尿素最近涨得厉害，原料涨得没边了，我们下个月要涨价。具体涨多少我还在等通知。您那边要是能定的话这两天先定下来，晚了排不上。价格上我尽量给您保持，锁价的事我也在跟公司说，您放心，亏了算我的。我们这边货源也紧张，您尽快。", "segments": [{"t": "孙经理您好，跟您说个事，", "m": ""}, {"t": "尿素最近涨得厉害，原料涨得没边了", "m": "b"}, {"t": "，我们下个月要涨价。", "m": ""}, {"t": "具体涨多少我还在等通知。", "m": "w"}, {"t": "您那边要是能定的话这两天先定下来，", "m": "b"}, {"t": "晚了排不上。", "m": "b"}, {"t": "价格上我尽量给您保持，", "m": "b"}, {"t": "锁价的事我也在跟公司说，您放心，亏了算我的。", "m": "b"}, {"t": "我们这边货源也紧张，您尽快。", "m": "b"}], "legend": [{"m": "q", "label": "追问感，建议软化"}, {"m": "w", "label": "口径含糊，需补出处"}, {"m": "b", "label": "越界，必须处理"}]}, "facts": [{"id": "F1", "text": "我司已收到上游调价通知，正式调价函尚未出具（函件编号、幅度、生效日期均以正式函为准）", "type": "事实（部分）", "source": "内部", "disposal": "可用", "note": "报备的合法依据：只说“接到通知”，不替上游解释原因，也不提前报幅度。"}, {"id": "F2", "text": "我方成本与库存压力：上游采购成本上行，当前库存与到货计划【待填】", "type": "事实（内部，数据待填）", "source": "内部", "disposal": "谨慎", "note": "成本与库存数据未经核实，不进正文；要用必须换成可核依据（调价函 / 库存表）。"}, {"id": "F3", "text": "客户上月提出锁价诉求（锁量吨数、锁价期限、是否含运费均未给出口径）", "type": "事实", "source": "上一轮", "disposal": "可用（作议题）", "note": "客户要的是“有个说法”，不是具体条款；正文只认领“已记录”，不给结论。"}, {"id": "F4", "text": "客户结算方式：现款为主，部分承兑（以合同为准）", "type": "事实", "source": "客户档案", "disposal": "谨慎", "note": "涨价沟通里主动提结算，等于给对方一个“用账期换涨幅”的抓手；本轮不提。"}, {"id": "F5", "text": "我方希望提前报备，并在生效前留出按现价执行的窗口", "type": "意图", "source": "原话", "disposal": "可用", "note": "本次唯一真实目标：不让客户从别处听说；报备越早，缓冲越好谈。"}, {"id": "F6", "text": "客户为复合肥生产企业，尿素是其主要氮源之一", "type": "事实", "source": "上一轮", "disposal": "可用（作话题）", "note": "只用于判断议题，不在正文里替客户判断配方、季节或用肥量。"}, {"id": "F7", "text": "客户提货节奏偏月底集中（客户自述）", "type": "事实", "source": "上一轮", "disposal": "可用（作话题）", "note": "可选动作（调整提货节奏）落在这条上；只问“要不要调整”，不说“必须提前”。"}, {"id": "F8", "text": "客户采购的是农用级颗粒尿素（等级与验收指标待书面确认）", "type": "事实（待确认）", "source": "客户档案", "disposal": "谨慎", "note": "农用级与工业级验收口径不同；未确认前，正文只写“以本批质检单为准”。"}, {"id": "F9", "text": "原话：“尿素最近涨得厉害，原料涨得没边了”", "type": "推测（未经核实的涨价理由）", "source": "原话", "disposal": "需改写", "note": "涨价理由只能引用可核依据（上游通知 / 正式函）；“原料涨得没边了”是替上游编故事。"}, {"id": "F10", "text": "原话：“这两天先定下来，晚了排不上”", "type": "无据施压", "source": "原话", "disposal": "建议删除", "note": "假期限。没有排产 / 运力依据的“晚了排不上”，被拆穿后所有后续沟通都不作数。"}, {"id": "F11", "text": "原话：“价格上我尽量给您保持”", "type": "越权让价", "source": "原话", "disposal": "禁止直发", "note": "口头让价＝把谈判起点交出去。合法替代是现价执行窗口，截止日由正式函确认。"}, {"id": "F12", "text": "原话：“锁价的事我也在跟公司说，您放心，亏了算我的”", "type": "承诺（越权 + 无限）", "source": "原话", "disposal": "需改写", "note": "锁价是商务政策，不是销售能给；改写为“已记录、须审批、核实后书面回复”。"}], "links": ["① 开场与身份承接", "② 调价事实报备（依据）", "③ 生效日期与幅度", "④ 现价执行窗口（缓冲）", "⑤ 锁量 / 锁价诉求的回应", "⑥ 可选动作与越界项处理"], "version_order": ["P0", "A", "B", "C", "D"], "versions": {"P0": {"label": "原文（我的草稿）", "media": "微信", "cells": ["孙经理您好，跟您说个事，", "尿素最近涨得厉害，原料涨得没边了，我们下个月要涨价。", "具体涨多少我还在等通知。", "（没有缓冲：没说现价执行到哪天，客户只能理解为“说涨就涨”）", "价格上我尽量给您保持，锁价的事我也在跟公司说，您放心，亏了算我的。", "我们这边货源也紧张，您尽快。"], "score": {"tone": 1, "push": 4}, "para": ["孙经理您好，跟您说个事，", "尿素最近涨得厉害，原料涨得没边了，我们下个月要涨价。", "具体涨多少我还在等通知。", "（没有缓冲：没说现价执行到哪天，客户只能理解为“说涨就涨”）", "价格上我尽量给您保持，锁价的事我也在跟公司说，您放心，亏了算我的。", "我们这边货源也紧张，您尽快。"], "why": [], "tone": "", "push": "", "risk": "", "fit": ""}, "A": {"label": "A 自然版（默认推荐·邮件）", "media": "邮件", "cells": ["孙经理，您好。", "先跟您报备：我们接到上游调价通知，颗粒尿素价格需调整。", "自【待填】起执行新价，幅度【待填】，以正式调价函为准。", "在此之前仍按现价执行，执行到【待填】为止。", "您上月提的锁价我已记下并报上去，能不能做、按什么条件做，我核实后书面回您，口头先不给准话。", "正式函拿到第一时间发您。若想在这段窗口里调整提货节奏，比如把月底集中提货往前挪，我们可以现在把方案对一遍——能不能做，我核实后回您。您看这样安排行不行？"], "para": ["孙经理，您好。", "先跟您报备：我们接到上游调价通知，颗粒尿素价格需调整。自【待填】起执行新价，幅度【待填】，以正式调价函为准；在此之前仍按现价执行，执行到【待填】为止。", "您上月提的锁价我已记下并报上去，能不能做、按什么条件做，我核实后书面回您，口头先不给准话。", "正式函拿到第一时间发您。若想在这段窗口里调整提货节奏，比如把月底集中提货往前挪，我们可以现在把方案对一遍——能不能做，我核实后回您。", "您看这样安排行不行？"], "tone": "自然、口语、有分寸（邮件体）", "push": "中高（一个明确请求 + 一个可选动作）", "risk": "低（三处【待填】必须在发件前补齐）", "fit": "邮件首推；客户已在供、需要留痕时", "score": {"tone": 3, "push": 4}, "why": [["开场", "一句“报备”，把“通知你涨价”换成“提前告诉你”。同一件事，前者的对话空间大得多。"], ["依据", "只说“接到上游调价通知”，不解释上游为什么涨。理由由上游函件说，销售一讲就成了编。"], ["日期与幅度", "两个最关键的数都留成【待填】，但位置、顺序、口径全留着。敢写位置，比含糊其辞可信。"], ["缓冲", "“在此之前仍按现价执行，执行到【待填】为止”是这一版最值钱的一句：它把“涨价”变成“有期限的窗口”。"], ["锁价", "客户上月提的锁价必须被认领，但不能给结论：已记录、已上报、核实后书面回复，三句话守住边界。"]]}, "B": {"label": "B 更短版（微信）", "media": "微信", "cells": ["孙经理，尿素要调价，先跟您报备：", "接到上游调价通知了。", "自【待填】起执行新价，幅度以正式函为准。", "现价按函里写的截止日执行。", "锁价的事按审批结果回您。", "正式函拿到就发您。"], "para": ["孙经理，尿素要调价，先跟您报备：自【待填】起执行新价，幅度以正式函为准。正式函拿到就发您，现价按函里写的截止日执行。"], "tone": "极简、结论先行", "push": "高（但细节要邮件补）", "risk": "低", "fit": "微信跟进、用于提醒客户查收邮件", "score": {"tone": 2, "push": 5}, "why": [["删法", "去掉依据解释与锁价段，只留“报备—日期—幅度—缓冲”四个信息点；幅度让位给正式函，不在微信里报数。"]]}, "C": {"label": "C 正式版（邮件·调价函预告）", "media": "邮件", "cells": ["孙经理：\n您好。就颗粒尿素价格调整事宜，先向贵司作书面预告。", "一、调价依据\n我司已收到上游调价通知（函件编号【待填】），相关调价正在内部审批与正式函出具流程中；本函为预告，不替代正式函件。", "二、执行口径\n自【待填】起，颗粒尿素执行价格调整为幅度【待填】，最终以正式调价函为准。", "生效日之前，现行价格执行至【待填】。质量指标以本批随货质检单为准，不在本函中另行承诺。", "三、锁量与锁价\n贵司此前提出的锁量诉求，我司已记录：拟锁量【待填】吨、锁价期限【待填】。该项属商务政策，须经审批；能否执行及执行条件，我核实后书面回复，本函不作承诺。", "四、可选动作\n如贵司希望在现价窗口内调整提货节奏，请告知意向提货时间与大致量级，我司按排产与运力核算后回复。\n请贵司确认上述口径；如有异议，请书面告知。\n顺祝\n商祺\n王磊　某肥业有限公司 华东区"], "para": ["孙经理：\n您好。就颗粒尿素价格调整事宜，先向贵司作书面预告；正式调价函出具后另行发送，本函不替代正式函件。", "一、调价依据\n我司已收到上游调价通知（函件编号【待填】），相关调价正在内部审批与正式函出具流程中。", "二、执行口径\n自【待填】起，颗粒尿素执行价格调整为幅度【待填】，最终以正式调价函为准。生效日之前，现行价格执行至【待填】。质量指标以本批随货质检单为准，不在本函中另行承诺。", "三、锁量与锁价\n贵司此前提出的锁量诉求，我司已记录：拟锁量【待填】吨、锁价期限【待填】。该项属商务政策，须经我司审批；能否执行及执行条件，我核实后书面回复，本函不作承诺。", "四、可选动作\n如贵司希望在现价窗口内调整提货节奏，请告知意向提货时间与大致量级，我司按排产与运力核算后回复。\n请贵司确认上述口径；如有异议，请书面告知，我按贵司意见补充说明。\n顺祝\n商祺\n王磊　某肥业有限公司 华东区"], "tone": "正式、结构化、可留痕可转发", "push": "中（给对方留足决策空间）", "risk": "低（六处【待填】须由商务与价格委员会确认）", "fit": "需抄送采购总监 / 总经理，或客户要求书面调价通知时", "score": {"tone": 5, "push": 3}, "why": [["结构", "四段：依据—口径—锁价—可选动作。客户内部转发时不用改一个字，也不会被截出一句去当筹码。"], ["留痕", "函件编号、幅度、生效日、现价截止日全部留位。从此口头价与书面价不会打架，也省了后面“当时不是说……”的口水。"], ["锁价", "把客户诉求写成“已记录 + 须审批 + 书面回复”：既认领了诉求，又没许诺任何条件。"], ["技术口径", "只写“以本批随货质检单为准”，不写任何绝对化指标——尿素批次差异客观存在，写死了就是给自己埋雷。"]]}, "D": {"label": "D 缓和版（更友好）", "media": "微信", "cells": ["孙经理，打扰您一下。", "尿素调价这事，我不想让您从别处听说，先跟您说一声。", "具体哪天生效、调多少，我拿到正式函就原样发您，不加一句我自己的话。", "现价执行到哪天，函里也会写清。", "锁价的事我记着，有结果第一时间告诉您。", "您那边有什么想法随时说，我先记下来，该问的我替您问。"], "para": ["孙经理，打扰您一下。尿素调价这事，我不想让您从别处听说，所以先跟您说一声。", "具体哪天生效、调多少，我拿到正式函就原样发您，不加一句我自己的话。现价执行到哪天，函里也会写清。", "您那边有什么想法随时说，我先记下来，该问的我替您问，能有准话的我第一时间回您。"], "tone": "客气、低压力、把选择权交给对方", "push": "低（推进力换好感）", "risk": "低，但容易被无限期搁置", "fit": "客户明显反感“通知式涨价”、或关系刚经历摩擦时", "score": {"tone": 2, "push": 2}, "why": [["代价", "没有生效日、没有幅度、没有动作要求，只保住“不让您从别处听说”这一点体面；适合先把情绪按住，再补邮件。"]]}}, "email": {"subject": "【B复合肥｜颗粒尿素】调价预告与现价执行窗口 — 某肥业 王磊", "signature": "王磊　某肥业有限公司 华东区　电话/微信【待填】"}, "audit": [{"id": "F1", "item": "已接上游调价通知（正式函未出）", "type": "事实（部分）", "source": "内部", "v": {"A": "✔", "B": "✔", "C": "✔", "D": "✔"}, "why": "四版都只说“接到 / 已收到通知”，未替上游解释原因，也未提前报幅度。"}, {"id": "F2", "item": "我方成本与库存压力（数据待填）", "type": "事实（内部）", "source": "内部", "v": {"A": "—", "B": "—", "C": "—", "D": "—"}, "why": "刻意不提：成本与库存数据未经核实，写进对外文本就是自证；要用须换成调价函或库存表。"}, {"id": "F3", "item": "客户上月提的锁价诉求", "type": "事实", "source": "上一轮", "v": {"A": "◐", "B": "◐", "C": "✔", "D": "◐"}, "why": "A/B/D 只认领“记下了、按审批结果回您”，C 展开为“已记录 + 须审批 + 书面回复”；四版都不给结论、不报条件。"}, {"id": "F4", "item": "客户结算方式（现款 / 部分承兑）", "type": "事实", "source": "客户档案", "v": {"A": "—", "B": "—", "C": "—", "D": "—"}, "why": "刻意不提：涨价函里提结算口径，等于把“用账期换涨幅”摆上桌。"}, {"id": "F5", "item": "我方希望提前报备、留出缓冲窗口", "type": "意图", "source": "原话", "v": {"A": "✔", "B": "✔", "C": "✔", "D": "✔"}, "why": "四版立场一致：都以“提前告知”起手，与原文目标未变形。"}, {"id": "F6", "item": "客户为复合肥企业，尿素是主要氮源", "type": "事实", "source": "上一轮", "v": {"A": "—", "B": "—", "C": "—", "D": "—"}, "why": "刻意不提：不替客户判断配方、季节与备货量，这是农化沟通的第一条红线。"}, {"id": "F7", "item": "客户提货节奏偏月底集中", "type": "事实", "source": "上一轮", "v": {"A": "◐", "B": "—", "C": "◐", "D": "—"}, "why": "A/C 只以“若想调整、可把方案对一遍”的假设句带出，未断言客户必须提前或必须备货。"}, {"id": "F8", "item": "客户采购为农用级（等级待确认）", "type": "事实（待确认）", "source": "客户档案", "v": {"A": "—", "B": "—", "C": "◐", "D": "—"}, "why": "C 仅以“质量指标以本批随货质检单为准”带出，未替客户认定等级；等级与验收口径未确认前不进正文。"}, {"id": "F9", "item": "原话：“原料涨得没边了”", "type": "推测", "source": "原话", "v": {"A": "▲", "B": "▲", "C": "▲", "D": "▲"}, "why": "全部删除。涨价理由只引用上游通知与正式函这两项可核依据。"}, {"id": "F10", "item": "原话：“这两天先定，晚了排不上”", "type": "无据施压", "source": "原话", "v": {"A": "▲", "B": "▲", "C": "▲", "D": "▲"}, "why": "全部删除。没有排产 / 运力依据的期限就是编的；改用“现价执行到【待填】”这种可核表述。"}, {"id": "F11", "item": "原话：“价格上尽量给您保持”", "type": "越权让价", "source": "原话", "v": {"A": "▲", "B": "▲", "C": "▲", "D": "▲"}, "why": "全部删除。改后的“现价执行至【待填】”是调价函的生效缓冲，属政策事实，不是对个案的让价，且截止日由正式函确认。"}, {"id": "F12", "item": "原话：“锁价我在跟公司说，亏了算我的”", "type": "承诺（越权）", "source": "原话", "v": {"A": "—", "B": "◐", "C": "◐", "D": "◐"}, "why": "改为“已记录、须审批、核实后书面回复”；A 只做报备、不主动对锁价表态，客户再提时用 C 的口径接。"}], "audit_summary": [{"k": "新增价格/数字", "v": "0", "zero": true, "note": "四版未出现任何单价、涨幅、折扣或金额；日期与幅度两个位置全部留【待填】。"}, {"k": "新增折扣/让价", "v": "0", "zero": true, "note": "原话“价格上尽量给您保持”已删除，未转化为任何让价暗示；现价窗口的截止日是【待填】，不是对个案的让价。"}, {"k": "新增交期/账期", "v": "0", "zero": true, "note": "生效日、现价执行截止日、锁价期限均为【待填】；结算方式与账期本轮一律不提。"}, {"k": "新增库存表述", "v": "0", "zero": true, "note": "原话“货源也紧张”已删除，未替换为任何稀缺话术；我方库存与成本数据不进正文。"}, {"k": "新增客户需求", "v": "0", "zero": true, "note": "未替客户判断用肥季节、配方或备货量；锁量诉求来自客户上月自述，只认领、不推论。"}, {"k": "待填占位符", "v": "10", "zero": false, "note": "见《06_占位符清单》，逐条由对应责任人确认后方可发送；函件编号与幅度未确认前，任何版本都不得发出。"}], "placeholders": [{"id": "P1", "item": "调整幅度（涨幅）", "where": "A / B / C", "owner": "我方价格委员会（以正式调价函为准）", "how": "照正式调价函原文填，不改写、不四舍五入、不口头取整", "risk": "口头报的幅度与函件不一致，客户按低的那版执行，差额只能自己承担"}, {"id": "P2", "item": "生效日期", "where": "A / B / C", "owner": "我方商务（正式函出具时间确定后）", "how": "以正式函载明日期为准，不用“下个月”这类模糊说法", "risk": "日期空着就发出去，客户按“随时要涨”理解，反而加速压货与议价"}, {"id": "P3", "item": "现价执行截止日", "where": "A / C", "owner": "我方商务 + 财务", "how": "与正式函生效日前一日对齐，并写清是否含当日", "risk": "写晚了按旧价成交，写早了等于自己提前涨价"}, {"id": "P4", "item": "上游调价函件编号", "where": "C", "owner": "我方采购 / 商务内勤", "how": "照上游通知原编号填写，不改写、不简写", "risk": "编号对不上，客户把函转给上游后一问即穿"}, {"id": "P5", "item": "锁量吨数", "where": "C", "owner": "客户（孙经理）+ 我方销售主管", "how": "先由客户给意向吨数，我方按排产核算后报批，不在正文里先报数", "risk": "先报吨数再报批，批不下来等于失信"}, {"id": "P6", "item": "锁价期限", "where": "C", "owner": "我方价格委员会", "how": "按审批结论填写起止日与适用量，不得口头延长", "risk": "销售顺口许诺的期限公司不认，跌价损失落回自己头上"}, {"id": "P7", "item": "客户验收指标（N 含量、缩二脲、水分、粒度、颗粒强度）", "where": "C / 场景·送样安排", "owner": "客户质检单 / 合同", "how": "索取书面口径后再落字，不凭印象对标", "risk": "指标口径差一档，整批验收就是争议"}, {"id": "P8", "item": "客户结算方式与承兑是否加价", "where": "追问应对 / 01_客户档案", "owner": "我方财务", "how": "以合同条款为准，涨价沟通里不提", "risk": "答错账期或承兑贴息，利润当场被吃掉"}, {"id": "P9", "item": "邮件落款联系方式", "where": "邮件落款", "owner": "我方销售（王磊）", "how": "填本人直线与微信，别填公司总机", "risk": "客户回不了电话，报备等于没做"}, {"id": "P10", "item": "调价函适用范围（农用 / 工业用是否同步、含税与运费口径）", "where": "C / 待发正式函", "owner": "我方商务 + 价格委员会", "how": "在正式函里逐项写清，不在预告里先定", "risk": "预告与正式函口径不一致，等于给客户一个反悔的把柄"}], "adjusts": [{"t": "再短一点", "tag": "→ B 版", "note": "改法：删掉依据解释与锁价段，只留“报备—日期—幅度—缓冲”四个信息点，压到一句半。", "x": "孙经理，尿素要调价，先跟您报备：自【待填】起执行新价，幅度以正式函为准。正式函拿到就发您，现价按函里写的截止日执行。"}, {"t": "更正式", "tag": "→ 书面版 · 微信也能用", "note": "改法：加“关于 / 烦请 / 另行”类书面连接词，去掉语气词；正式度上去了，推进力会掉一档。", "x": "孙经理您好。关于颗粒尿素价格调整一事，先向您作书面预告：我司已收到上游调价通知，自【待填】起执行新价，幅度以正式调价函为准；生效日之前仍按现行价格执行，执行至【待填】。正式函出具后另行发送，烦请查收。"}, {"t": "更适合微信", "tag": "→ 分行版", "note": "改法：一句一行、每行一个信息点；删掉“在此之前 / 如贵司”这类书面过渡词，把日期与幅度提到句首。", "x": "孙经理，尿素调价先报备一下。\n①接到上游调价通知，颗粒尿素要动价。\n②自【待填】起执行新价。\n③幅度【待填】，以正式函为准。\n④现价执行到【待填】。\n正式函拿到我马上发您。"}, {"t": "更缓和", "tag": "→ D 版", "note": "改法：删掉生效日与幅度的位置，把“我核实后回您”换成“拿到正式函就原样发您”，不设任何动作要求。", "x": "孙经理，打扰您一下。尿素调价这事，我不想让您从别处听说，先跟您说一声。具体哪天生效、调多少，我拿到正式函就原样发您，不加一句我自己的话。您那边有什么想法随时说。"}, {"t": "加一个明确下一步", "tag": "→ A 版 + 时间锚", "note": "改法：结尾补一个“我方动作 + 时间锚点”，不要求对方承诺；即便对方不回，也留下下次联系的理由。", "x": "孙经理，您好。\n先跟您报备：我们接到上游调价通知，颗粒尿素价格需调整。自【待填】起执行新价，幅度【待填】，以正式调价函为准；在此之前仍按现价执行，执行到【待填】为止。\n正式函拿到我第一时间发您。这周内我先把现价窗口对一遍，若贵司想调整提货节奏，那会儿把方案摆出来谈。"}, {"t": "换成邮件", "tag": "→ 主题行 + 首段", "note": "改法：补主题行（客户名＋品名＋事项）、编号与落款；把“我报备一下”改成可留痕的“书面预告”。", "x": "主题：【B复合肥｜颗粒尿素】调价预告与现价执行窗口 — 某肥业 王磊\n\n孙经理：\n您好。就颗粒尿素价格调整事宜，先向贵司作书面预告：我司已收到上游调价通知（函件编号【待填】），自【待填】起执行新价，幅度以正式调价函为准；生效日之前仍按现行价格执行，执行至【待填】。\n正式函出具后另行发送，烦请查收。"}, {"t": "去掉“涨价理由”", "tag": "→ 只留依据，不讲故事", "note": "改法：把“原料涨得没边了”整段删掉，只保留“已收到上游调价通知”这一句可核事实。理由由上游函件说，不由销售说。", "x": "孙经理，您好。\n先跟您报备：我们已收到上游调价通知，颗粒尿素价格将作调整，具体幅度与生效日期以正式调价函为准；在此之前仍按现价执行，执行到【待填】为止。正式函出具后第一时间发您。"}], "scenarios": [{"n": "解释涨价（主场景）", "q": "孙经理，尿素最近涨得厉害，下个月要涨价，具体涨多少我还在等通知，您先有个准备。", "rec": "孙经理，先跟您报备：我们已收到上游调价通知，颗粒尿素价格要调整。自【待填】起执行新价，幅度【待填】，以正式调价函为准；在此之前仍按现价执行，执行到【待填】为止。正式函我拿到第一时间发您；您若想在这段窗口里调整提货节奏，我们现在就可以把方案对一遍。", "short": "孙经理，尿素要调价，自【待填】起执行新价，幅度以正式函为准，现价执行到【待填】。", "red": "不编涨幅、不假借“原料暴涨”、不设“今天不定就没了”的假期限。涨价的可信度全在“日期 + 幅度”敢不敢写清楚——哪怕两处都是【待填】。"}, {"n": "锁量锁价回应", "q": "孙经理，能不能给我们锁一下价？锁到什么时候、锁多少，你给个话。", "rec": "孙经理，您提的锁量我记下了，也报到公司去了。能不能锁、锁到什么时候、按什么条件锁，要商务和价格那边批，我不能替他们先答应您。您把意向吨数和期限告我，我按这个去提；批下来我书面发您，条件一条不落地写清楚。批不下来我也第一时间告您，不让您干等。", "short": "孙经理，锁量我报上去了，批下来我书面发您。您先给个意向吨数和期限。", "red": "锁价是商务政策，不是销售口头能给。只能承诺“去问”，不能承诺“能批”；更不能替客户算“锁了能省多少”——那等于替公司认了一个数。"}, {"n": "报价/函件跟进", "q": "孙经理，函我收到了，我们内部还在研究，先看看。", "rec": "孙经理，收到就好，您先研究，我不催您。两点先说明白：函上的生效日和幅度是最终口径，我不另报数；现价执行到函上写明的截止日，过了这个日期系统就按新价开单。贵司内部要走流程的话，需要我补什么材料，您说一声，我当天办。", "short": "孙经理，函收到了吧？生效日和幅度以函为准，现价执行到函上写的那天。", "red": "不在函之外另报一个数，也不暗示“还可以商量”；函一旦发出，口径只能往回收紧，不能往松改。"}, {"n": "送样安排", "q": "孙经理，新批次的颗粒尿素能不能先寄点样，我们掺混试试。", "rec": "孙经理，样我今天安排寄出，单号【待填】，随样附本批质检单一份。试的时候麻烦帮我看三处：颗粒强度与粉化情况、跟贵司现用货掺混后的均匀度、开袋后短期存放有没有结块。试出差异您跟我说，我按批次给您找原因，该换批就换批。", "short": "孙经理，样今天寄出，单号【待填】，随样附质检单，掺混后有什么差异跟我说。", "red": "不承诺免费、不承诺包运费、不说“要多少寄多少”；寄样必带本批质检单，否则试出问题无法归因，白试一轮。"}, {"n": "约见（到厂谈窗口）", "q": "孙经理，什么时候方便我过去一趟，跟您聊聊后面的合作。", "rec": "孙经理，我是某肥业华东区的王磊。这轮调价的事，邮件里说不透，想约您半小时，把现价窗口、提货节奏和锁量的申请流程当面过一遍。您看这周三下午或者周四上午，哪个方便？", "short": "孙经理，我是某肥业王磊，想约半小时把调价窗口和提货节奏当面过一遍，您哪天方便？", "red": "不说“顺便拜访”，不说“给您介绍一下我们公司”；半小时内要说清的三件事先想好，别到现场才组织语言。"}], "replies": [{"q": "“涨得有点多，能不能少涨点？”", "say": "孙经理，幅度是函上定的，我这边没有往下调的权限，也不跟您绕。我能做的是两件事：一是把现价窗口给您说清，截止日之前按现价提的货就按现价；二是您提的锁量我按流程往上报，批到什么程度我如实告您，批不下来我也直说。", "ban": "“我去给您申请一下”“给您留个特价”“先按老价走，后面再说”", "why": "当场松口，等于告诉对方幅度可以谈；后面每一次涨价都会被先砍一刀。"}, {"q": "“别家还没涨，怎么就你们先动？”", "say": "孙经理，别家的价我不替他们说话，也不评价。我这边能给的是事实：上游调价通知、函件编号、生效日期，以及现价执行的截止日。您拿去比，我不怕比；如果贵司更看重到货稳和批次稳，这块我们单独谈。", "ban": "“别家早涨了，就您不知道”“他们涨得比我们多”", "why": "拿别家当垫背，客户一去核实，先失信的是你；涨价期最不缺的就是“别人家更便宜”的消息。"}, {"q": "“能不能先给我们锁一段时间的价？”", "say": "孙经理，锁价这个口子得公司批，我个人给不了。想请您帮我把两件事定下来：意向锁多少吨、希望锁到什么时候。有了这两个数，我才能拿去提；批下来我书面发您，批不下来我也第一时间告您，不让您等着。", "ban": "“没问题，先按老价给您”“锁到明年都行”“亏了算我的”", "why": "锁价是公司承担跌价风险，销售无权；先要客户的口径，是把决定权交回给有权限的人。"}, {"q": "“那我们这段时间少提点，等降了再说。”", "say": "孙经理，节奏您定，我不劝。两点提前说清：现价执行到函上写明的截止日，之后系统按新价开单；提货计划变了，排产和运力也得跟着调，您那边有变化提前跟我说一声，我好去排。", "ban": "“不涨价您别少提”“现在不拿就亏了”", "why": "用恐慌留客，短期有量、长期失信；把规则讲清，客户自己会算这笔账。"}, {"q": "“幅度什么时候能定？给个准时间。”", "say": "孙经理，正式函一出我第一时间发您，这个不用您催。函没出来之前我不报任何数——报错了，对您对我都是麻烦。您要的话，函发出前我先打个电话，把口径逐条跟您对一遍，您再拿去内部沟通。", "ban": "“大概就这几天”“估计涨不了多少”“先按某个数做预算”", "why": "正式函之前报数，等于自己制造一个随时可能被推翻的承诺。"}, {"q": "“你们是不是货源紧才涨的？”", "say": "孙经理，不是。涨价依据是上游调价通知，编号和日期都在函里；我们这边的货源与排产情况不在这个函的范围内，我也不拿它说事。您要是关心到货，我可以把这段时间的排产与发运计划单独发您一份。", "ban": "“货源紧张，先到先得”“再不订就排不上了”", "why": "用稀缺去解释涨价，等于承认涨价没有依据；依据该由函件说话，不该由销售的话术说话。"}], "checklist": [{"dim": "价格", "item": "正文出现的每一处幅度与价格，都能对应到正式调价函；函未出即改【待填】，不发"}, {"dim": "依据", "item": "涨价理由只写“接到上游调价通知”，没有“原料暴涨 / 成本翻倍”这类没有函件支撑的说法"}, {"dim": "期限", "item": "没有“这两天 / 马上 / 最后几天”式假期限；缓冲窗口写的是现价执行的截止日"}, {"dim": "幅度", "item": "没有替上游四舍五入或估一个幅度；两处数字位置全部为【待填】"}, {"dim": "锁价", "item": "锁量与锁价只写“已记录 + 须审批 + 书面回复”，没有任何条件性承诺"}, {"dim": "客户需求", "item": "没有替客户判断用肥季节、配方，或“该备多少货”"}, {"dim": "成本口径", "item": "没有替客户算“涨了之后每吨多花多少”这类账——那是客户自己的生意判断"}, {"dim": "账期", "item": "本轮不提结算与账期，避免把“用账期换涨幅”摆上桌"}, {"dim": "技术承诺", "item": "没有“绝不结块 / 缩二脲零检出 / 批批一样”，质量口径统一为“以本批质检单为准”"}, {"dim": "称呼与身份", "item": "首句含正确称呼；邮件含主题行、姓名、公司、区域与联系方式"}, {"dim": "单一请求", "item": "一封邮件只提一个请求；可选动作写成“能不能做、我核实后回您”，不写成要求"}, {"dim": "可转发性", "item": "假设这封函被转发给采购总监或总经理，是否仍然得体、不越权"}], "rules": [{"k": "事实只减不增", "v": "涨幅、生效日、现价截止日、锁量、账期、客户需求，凡我没提供的，一个字都不许编。调价函没出来，位置留着，数字不许填。"}, {"k": "涨价的依据只引用上游", "v": "“接到上游调价通知”是可核事实；“原料暴涨、成本翻倍”是替上游讲故事。故事讲得越狠，函一到就越像借口。"}, {"k": "缓冲要给，让价不给", "v": "“现价执行到某日”是政策窗口，可以写；“给你把价格保持住”是个案让价，不能写。差一句话，差的是公司利润。"}, {"k": "锁价与保底只能报审批", "v": "锁量、锁价、保底都是商务政策。销售能承诺的只有“去问、记下、核实后书面回复”，不是“能批”。"}], "notes": ["本案例中的客户、产线与人员均为虚构示例（B复合肥有限公司 / 孙经理 / 王磊），用于演示涨价沟通的润色流程，不对应任何真实企业或个人信息。", "唯一引用的真实背景：GB/T 2440-2017《尿素》为现行国家标准；颗粒尿素的常规验收指标（N 含量、缩二脲、水分、粒度、颗粒强度）出自该标准与行业通行口径，具体数值以本批质检单和客户合同为准，非该客户实测数据。", "复合肥配方中的氮素占比随配方变化，本工作簿不引用任何用量经验值；客户月需求量、锁量吨数、结算方式一律留空为【待填】——这不是遗漏，是规则本身。", "上游调价函件编号、幅度、生效日期、现价执行截止日，在正式函出具前一律不得填写；预告口径与正式函不一致，是涨价沟通里最常见、也最难挽回的事故。"], "disclaim": "客户与沟通记录为虚构示例；国标号与验收指标仅作背景引用，不构成对该客户实际情况的陈述。所有商业条款以双方正式合同与正式调价函为准；本工作簿不构成任何价格承诺或锁价承诺。", "allowed_numbers": []}</script>
+<script>
+(function(){
+"use strict";
+var CASE = JSON.parse(document.getElementById('case-data').textContent);
+var VK = ["A","B","C","D"];
+
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function $(id){return document.getElementById(id);}
+function h(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;
+  if(html!=null)e.innerHTML=html;return e;}
+function setText(id,v){var e=$(id);if(e)e.textContent=v||"";}
+function setHTML(id,v){var e=$(id);if(e)e.innerHTML=v||"";}
+
+/* ---------- hero ---------- */
+(function(){
+  var m = CASE.meta||{}, hero = m.hero||{};
+  setText("brand", (m.product||"") + " · 沟通润色");
+  setText("eyebrow",(m.product||"化工品")+" · 内贸销售 · "+(m.scenario||"客户沟通"));
+  var t = hero.title || ((m.product||"")+" · "+(m.scenario||"客户沟通")+" 润色样板");
+  $("heroTitle").innerHTML = esc(t).replace(/“([^”]+)”/g,'“<em>$1</em>”');
+  setText("heroLead", hero.lead || "");
+  var cust=(m.customer||{}), sel=(m.seller||{});
+  var cells=[["客户 / 角色",(cust.name||"")+" · "+(cust.role||"")],
+             ["渠道",m.channel||""],["本次目标",m.goal||""],["关系阶段",m.stage||""],
+             ["我方",[sel.company,sel.region,sel.name].filter(Boolean).join(" ")]];
+  var box=$("heroMeta"); box.innerHTML="";
+  cells.forEach(function(c){ if(!c[1])return;
+    var d=document.createElement("div");
+    d.innerHTML='<span>'+esc(c[0])+'</span><b>'+esc(c[1])+'</b>'; box.appendChild(d);});
+  $("heroNote").innerHTML='本页可直接操作：<em>一键复制</em>任意版本 · 点开“四个开关”切换语气 · 清单可勾选计数。'
+    + (m.fictional? '示例客户为虚构，仅用于演示流程。':'');
+})();
+
+/* ---------- 01 原始材料 ---------- */
+(function(){
+  var pp = CASE.product_profile||{};
+  var rows=[["品名",pp.name],["别名",(pp.alias||[]).join("、")],["CAS",pp.cas],
+            ["标准",pp.standard],["形态",pp.form],["危险性",pp.hazard],
+            ["包装",(pp.packaging||[]).join("、")],["运输",pp.transport],
+            ["验收指标",(pp.key_specs||[]).join("、")],["价格口径",pp.price_basis],
+            ["结算惯例",pp.payment_norm],["下游",(pp.downstream||[]).join("、")],
+            ["本品类禁语",(pp.ban_phrases||[]).join("；")]];
+  setHTML("prof", rows.filter(function(r){return r[1];})
+    .map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>';}).join(""));
+  setHTML("cust", (CASE.customer_profile||[]).map(function(r){
+    return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>';}).join(""));
+
+  var tl=$("timeline");
+  (CASE.timeline||[]).forEach(function(t,i){
+    var li=document.createElement("li");
+    if(i===(CASE.timeline||[]).length-1) li.className="now";
+    li.innerHTML='<b>'+esc(t.when||"")+'</b>'+esc(t.what||"")+(t.detail?'（'+esc(t.detail)+'）':'');
+    tl.appendChild(li);});
+
+  var d=CASE.draft||{};
+  setHTML("draft", (d.segments||[{t:d.raw||"",m:""}]).map(function(s){
+    return s.m? '<mark class="'+s.m+'">'+esc(s.t)+'</mark>' : esc(s.t);}).join(""));
+  var cols={q:"#94a3b8",w:"#fde68a",b:"#fecaca"};
+  setHTML("legend",(d.legend||[]).map(function(l){
+    return '<span><i style="background:'+(cols[l.m]||"#e2e8f0")+'"></i>'+esc(l.label)+'</span>';}).join(""));
+})();
+
+/* ---------- 02 事实台账 ---------- */
+(function(){
+  var list=$("factsList"), n=(CASE.facts||[]).length;
+  setText("factsTitle","把原话拆成 "+n+" 条事实");
+  (CASE.facts||[]).forEach(function(f){
+    var t=f.type||"", cls="t1";
+    if(/无据|越权|施压/.test(t)) cls="t4"; else if(/承诺/.test(t)) cls="t3";
+    else if(/意图|敏感/.test(t)) cls="t2";
+    var d=document.createElement("div"); d.className="fact";
+    d.innerHTML='<div class="hd"><span class="id">'+esc(f.id)+'</span>'+
+      '<span class="tp '+cls+'">'+esc(t)+'</span></div>'+
+      '<p>'+esc(f.text)+'</p>'+(f.note?'<div class="hint">'+esc(f.note)+'</div>':'');
+    list.appendChild(d);});
+})();
+
+/* ---------- 03 主版本 ---------- */
+(function(){
+  var v=(CASE.versions||{}).A||{}, m=CASE.meta||{}, isMail=/邮件/.test(v.media||"");
+  setText("mainTitle","主版本："+(v.label||"A 自然版"));
+  setText("mainSub", isMail ? "邮件体：分条、留痕、可转发。" :
+    "把请求放到最后，只提一件事——给对方一个低成本的回复理由。");
+
+  var left=$("mainLeft"), right=$("mainRight");
+  var targetId = isMail ? "verMail" : "verPhone";
+  if(isMail){
+    var sub=(CASE.email||{}).subject||"";
+    left.innerHTML='<div class="card"><div class="copyable" id="verMail">'+
+      (sub?'<div class="subject"><b class="no-copy">主题</b><span>'+esc(sub)+'</span></div>':'')+
+      '<div class="msg">'+(v.para||[]).map(function(p){return '<p>'+esc(p).replace(/\n/g,"<br>")+'</p>';}).join("")+
+      '</div></div></div>';
+  }else{
+    left.innerHTML='<div class="phone"><div class="scr">'+
+      '<div class="ph-hd"><b>'+esc(((m.customer||{}).role||(m.customer||{}).name||"客户").replace(/（.*$/,""))+'</b><span>微信</span></div>'+
+      '<div class="phone-body copyable" id="verPhone"><div class="stamp no-copy">今天</div>'+
+      (v.para||[]).map(function(p){return '<div class="bubble">'+esc(p)+'</div>';}).join("")+
+      '</div><div class="ph-ft"><div class="f"></div><div class="s"></div></div></div></div>';
+  }
+
+  var why=(v.why||[]).map(function(w){
+    return '<li><span class="k">'+esc(w[0])+'</span><span class="v">'+esc(w[1])+'</span></li>';}).join("");
+  right.innerHTML=
+    '<div class="toolbar"><button class="btn" data-copy="#'+targetId+'">复制这一版</button>'+
+    '<button class="btn ghost" data-jump="#versions">看另外三版</button></div>'+
+    (why?'<div class="card" style="margin-bottom:14px"><h3>为什么这么改</h3><ul class="spec">'+why+'</ul></div>':'')+
+    '<div class="card" style="background:var(--accent-l);border-color:var(--accent-s)">'+
+    '<h3>这一版没有任何新增</h3><p style="margin:0;font-size:13px;color:var(--ink2);line-height:1.8">'+
+    '没有报新价格、没有让价、没有交期、没有库存、没有替客户编需求。'+
+    '所有拿不准的地方都留成【待填】，并在第 07 节列了确认人。</p></div>';
+})();
+
+/* ---------- 04 版本切换 ---------- */
+(function(){
+  var tabs=$("tabs"), panels=$("panels"), vers=CASE.versions||{};
+  var keys=VK.filter(function(k){return vers[k];});
+  keys.forEach(function(k,i){
+    var v=vers[k];
+    var b=document.createElement("button");
+    b.className="tab"; b.type="button"; b.setAttribute("role","tab");
+    b.setAttribute("aria-selected", i===0?"true":"false");
+    b.textContent=v.label||k;
+    b.addEventListener("click",function(){
+      tabs.querySelectorAll(".tab").forEach(function(x){x.setAttribute("aria-selected","false");});
+      b.setAttribute("aria-selected","true");
+      panels.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+      var t=$("p-"+k); if(t)t.classList.add("on");});
+    tabs.appendChild(b);
+
+    var div=document.createElement("div");
+    div.className="panel"+(i===0?" on":""); div.id="p-"+k;
+    var isMail=/邮件/.test(v.media||"");
+    var body=(v.para||[]).map(function(p){
+      return isMail? '<p>'+esc(p).replace(/\n/g,"<br>")+'</p>' : esc(p);}).join(isMail?"":"<br>");
+    var sub=(isMail&&(CASE.email||{}).subject)?
+      '<div class="subject"><b class="no-copy">主题</b><span>'+esc(CASE.email.subject)+'</span></div>':"";
+    var wc=(v.para||[]).join("").replace(/\s/g,"").length;
+    div.innerHTML='<div class="card"><div class="toolbar">'+
+      '<button class="btn" data-copy="#pv'+k+'">复制</button>'+
+      '<span class="mono">'+(v.media||"")+' · '+wc+' 字'+(v.push?' · 推进力 '+esc(v.push):"")+'</span></div>'+
+      '<div class="copyable" id="pv'+k+'">'+sub+'<div class="msg">'+body+'</div></div>'+
+      '<div class="bars"><span><b>语气</b> '+esc(v.tone||"—")+'</span>'+
+      '<span><b>风险</b> '+esc(v.risk||"—")+'</span>'+
+      '<span><b>适合</b> '+esc(v.fit||"—")+'</span></div></div>';
+    panels.appendChild(div);});
+})();
+
+/* ---------- 05 快速调整 ---------- */
+(function(){
+  var chips=$("chips"), out=$("adjOut"), tagEl=$("adjTag"), noteEl=$("adjNote");
+  var ADJ=CASE.adjusts||[];
+  function show(a){ out.textContent=a.x||""; tagEl.textContent=a.tag||""; noteEl.textContent=a.note||""; }
+  ADJ.forEach(function(a,i){
+    var b=document.createElement("button");
+    b.className="chip"; b.type="button"; b.textContent=a.t||("调整"+(i+1));
+    b.setAttribute("aria-pressed", i===0?"true":"false");
+    b.addEventListener("click",function(){
+      chips.querySelectorAll(".chip").forEach(function(x){x.setAttribute("aria-pressed","false");});
+      b.setAttribute("aria-pressed","true"); show(a);});
+    chips.appendChild(b);
+  });
+  if(ADJ.length) show(ADJ[0]);
+  setHTML("ruleSpec",(CASE.rules||[]).map(function(r){
+    return '<li><span class="k">'+esc(r.k)+'</span><span class="v">'+esc(r.v)+'</span></li>';}).join(""));
+})();
+
+/* ---------- 06 边界审计 ---------- */
+(function(){
+  var MARK={"✔":"✔","◐":"◐","▲":"▲","—":"—"};
+  var CLS={"✔":"p-ok","◐":"p-mid","▲":"p-del","—":"p-none"};
+  var rows=CASE.audit||[];
+  setText("auditTitle","边界审计："+rows.length+" 条 × 4 个版本");
+  var st=$("stats"); st.innerHTML="";
+  (CASE.audit_summary||[]).forEach(function(s){
+    var zero=String(s.v).trim()==="0";
+    var d=document.createElement("div");
+    d.className="stat "+(zero?"zero":"wait");
+    d.innerHTML='<b>'+esc(s.v)+'</b><span>'+esc(s.k)+'</span>';
+    st.appendChild(d);});
+  var tb=$("auditBody");
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var html='<td class="c"><span class="mono" style="color:#0f766e;font-weight:700">'+esc(r.id)+'</span></td>'+
+             '<td>'+esc(r.item)+'</td>';
+    VK.forEach(function(k){
+      var v=(r.v||{})[k]||"—";
+      html+='<td class="c"><span class="pill '+(CLS[v]||"p-none")+'">'+(MARK[v]||"")+'</span></td>';});
+    html+='<td style="color:#64748b">'+esc(r.why)+'</td>';
+    tr.innerHTML=html; tb.appendChild(tr);});
+})();
+
+/* ---------- 07 待填 ---------- */
+(function(){
+  var list=$("phList"), phs=CASE.placeholders||[];
+  setText("phTitle", phs.length+" 个【待填】的归属");
+  phs.forEach(function(p){
+    var d=document.createElement("div"); d.className="ph";
+    d.innerHTML='<div class="hd"><span class="id">'+esc(p.id)+'</span>'+
+      '<span class="nm">【待填】'+esc(p.item)+'</span></div>'+
+      '<div class="mt"><b>确认人：'+esc(p.owner||"—")+'</b>　位置：'+esc(p.where||"—")+
+      '<br>建议口径：'+esc(p.how||"—")+'<br>风险：'+esc(p.risk||"—")+'</div>';
+    list.appendChild(d);});
+})();
+
+/* ---------- 08 场景 ---------- */
+(function(){
+  var box=$("scnList");
+  (CASE.scenarios||[]).forEach(function(s,i){
+    var d=document.createElement("div"); d.className="scn";
+    d.innerHTML='<div class="scn-hd"><span class="n">0'+(i+1)+'</span><b>场景 · '+esc(s.n)+'</b>'+
+      '<button class="btn ghost" data-copy="#scnRec'+i+'">复制推荐版</button></div>'+
+      '<div class="scn-bd">'+
+      '<div class="q"><b>我的原话</b>'+esc(s.q)+'</div>'+
+      '<p class="rec copyable" id="scnRec'+i+'">'+esc(s.rec)+'</p>'+
+      (s.short?'<div class="short"><b>已读不回时</b>'+esc(s.short)+'</div>':'')+
+      '<div class="red"><b>红线：</b>'+esc(s.red)+'</div></div>';
+    box.appendChild(d);});
+})();
+
+/* ---------- 09 追问 ---------- */
+(function(){
+  var box=$("replyList");
+  (CASE.replies||[]).forEach(function(r,i){
+    var d=document.createElement("details");
+    if(i===0) d.open=true;
+    d.innerHTML='<summary>'+esc(r.q)+'</summary><div class="d-bd">'+
+      '<p class="say">'+esc(r.say)+'</p>'+
+      '<div class="ban"><b>禁止说法</b>'+esc(r.ban)+'</div>'+
+      '<div class="why"><b>为什么</b>'+esc(r.why)+'</div></div>';
+    box.appendChild(d);});
+})();
+
+/* ---------- 10 清单 ---------- */
+(function(){
+  var box=$("checks"), bar=$("barFill"), ptxt=$("progTxt");
+  (CASE.checklist||[]).forEach(function(c){
+    var lab=document.createElement("label"); lab.className="ck";
+    lab.innerHTML='<input type="checkbox"><span class="t"><b>'+esc(c.dim)+'</b>'+esc(c.item)+'</span>';
+    box.appendChild(lab);});
+  function refresh(){
+    var all=box.querySelectorAll("input"), n=box.querySelectorAll("input:checked").length;
+    var pct=all.length? Math.round(n/all.length*100):0;
+    bar.style.width=pct+"%";
+    ptxt.textContent=n+" / "+all.length+(pct===100?"　可以发了":"");
+  }
+  box.addEventListener("change",refresh); refresh();
+})();
+
+/* ---------- footer ---------- */
+(function(){
+  setHTML("footerRules",(CASE.rules||[]).map(function(r,i){
+    return '<div class="rule"><span class="n">RULE 0'+(i+1)+'</span><b>'+esc(r.k)+'</b><p>'+esc(r.v)+'</p></div>';}).join(""));
+  var parts=[];
+  if(CASE.disclaim) parts.push(esc(CASE.disclaim));
+  (CASE.notes||[]).forEach(function(n){parts.push(esc(n));});
+  setHTML("disclaim",parts.join("<br>"));
+})();
+
+/* ---------- 复制 / 跳转 / toast ---------- */
+var toastEl=$("toast"), timer;
+function toast(msg){toastEl.textContent=msg||"已复制，可直接粘贴";toastEl.classList.add("on");
+  clearTimeout(timer);timer=setTimeout(function(){toastEl.classList.remove("on");},1700);}
+function textOf(el){
+  var c=el.cloneNode(true);
+  c.querySelectorAll(".no-copy").forEach(function(n){n.remove();});
+  return c.innerText.replace(/\u00a0/g," ").replace(/\n{3,}/g,"\n\n").trim();
+}
+function fallback(txt){
+  var ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand("copy");toast();}catch(e){toast("复制失败，请手动选择");}
+  document.body.removeChild(ta);
+}
+document.addEventListener("click",function(e){
+  var c=e.target.closest("[data-copy]");
+  if(c){e.preventDefault();
+    var el=document.querySelector(c.getAttribute("data-copy"));
+    if(!el)return;
+    var txt=textOf(el);
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){toast();},function(){fallback(txt);});
+    }else{fallback(txt);}
+    return;}
+  var j=e.target.closest("[data-jump]");
+  if(j){e.preventDefault();var t=document.querySelector(j.getAttribute("data-jump"));
+    if(t)t.scrollIntoView({behavior:"smooth"});}
+});
+})();
+</script>
+</body>
+</html>

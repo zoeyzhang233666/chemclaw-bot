@@ -1,0 +1,88 @@
+{
+  "_说明": "空模板：把 【】 替换为实际内容。字段定义见 references/output-spec.md。kind 只能取 缺失 / 表述不清 / 写了但对我方不利；缺失类必须写 what_missing。",
+  "review_meta": {
+    "review_id": "CR-【年】-【编号】",
+    "contract_title": "【合同名称】",
+    "contract_no": "【合同编号】",
+    "product": "【标的】",
+    "our_role": "买方（甲方）",
+    "supplier": "【供应商】",
+    "review_date": "【YYYY-MM-DD】",
+    "reviewer": "【审查人】",
+    "pages": 0,
+    "signed": "【已签/未签】",
+    "review_scope": "【本次审查范围，如：正文 N 页 + 附件一二；未含资质文件】",
+    "data_cutoff": "【YYYY-MM-DD】",
+    "law_check_date": "【YYYY-MM-DD】",
+    "disclaimer": "本结果属于业务审查提示，不是法律意见，也不替代律师或法务的专业审查。涉及条款效力、是否可执行、法律责任分配等问题，必须以公司法务/外部律师意见为准。"
+  },
+  "roles": {
+    "legal": "法务",
+    "procurement": "采购",
+    "supplier": "供应商"
+  },
+  "method": {
+    "steps": [
+      "① 识别文件与缺件",
+      "② 条款编号与索引",
+      "③ 按主题逐条比对",
+      "④ 区分写了什么 / 没写什么 / 写得不清楚",
+      "⑤ 推导业务后果",
+      "⑥ 分配到三张清单"
+    ]
+  },
+  "topics": [
+    {"id": "quality", "name": "质量", "short": "质量"},
+    {"id": "quantity", "name": "数量", "short": "数量"},
+    {"id": "delivery", "name": "交货", "short": "交货"},
+    {"id": "packaging", "name": "包装容器", "short": "包装"},
+    {"id": "measure", "name": "计量", "short": "计量"},
+    {"id": "price", "name": "价格税费", "short": "价格"},
+    {"id": "payment", "name": "付款", "short": "付款"},
+    {"id": "safety", "name": "安全合规", "short": "安全"},
+    {"id": "breach", "name": "违约责任", "short": "违约"},
+    {"id": "forcemajeure", "name": "不可抗力", "short": "不可抗力"},
+    {"id": "dispute", "name": "争议解决", "short": "争议"},
+    {"id": "general", "name": "通用", "short": "通用"}
+  ],
+  "findings": [
+    {
+      "id": "R01",
+      "topic": "quality",
+      "kind": "缺失",
+      "title": "【哪里 + 什么问题，≤40 字】",
+      "clause_ids": ["C02"],
+      "what_written": "【合同写了什么】",
+      "what_missing": "【没写什么；缺失类必填，不得写建议】",
+      "business_impact": "【落到环节 + 量级】",
+      "consequences": ["【后果1】", "【后果2】"],
+      "to_confirm": ["【向谁确认什么】"],
+      "owner": ["procurement", "legal", "supplier"],
+      "law_refs": ["【标准名称，须与 legal_refs 匹配】"],
+      "severity": 3,
+      "likelihood": 3
+    }
+  ],
+  "legal_refs": [
+    {
+      "name": "【法规/标准名称含编号与年份】",
+      "scope": "【适用点】",
+      "status": "现行",
+      "status_basis": "【来源 + 核对日期；写「现行」必须有依据】",
+      "relevance": "【与本合同的关联】",
+      "url": "【官方链接】"
+    }
+  ],
+  "confirmations": {
+    "legal": [{"finding_id": "R01", "question": "【法律问题】", "priority": "高"}],
+    "procurement": [{"finding_id": "R01", "question": "【商务问题】", "priority": "高"}],
+    "supplier": [{"finding_id": "R01", "question": "【只需事实/文件/承诺】", "priority": "中"}]
+  },
+  "summary": {
+    "headline": "【一句话结论】",
+    "stats": {"total": 1, "by_kind": {"缺失": 1}, "by_severity": {"3": 1}},
+    "calc_basis": {"note": "【测算口径说明】"},
+    "high_points": ["【最需先处理的】"],
+    "missing_list": ["【缺失事项】"]
+  }
+}

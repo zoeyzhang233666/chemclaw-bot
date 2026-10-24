@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "note": "产业链节点图：节点=可被事件挂载的最小产业环节。事件通过 chain_node 字段挂到节点上，前端据此绘制定位图。",
+    "layers": ["上游原料", "甲醇生产", "流通/进口", "下游需求", "衍生路线"]
+  },
+  "nodes": [
+    {"node_id": "CHAIN-U01", "name": "原料煤（动力煤/无烟煤）", "layer": "上游原料", "product": "原料煤", "region": "西北/华北", "desc": "煤制甲醇主原料；Q5500 鄂尔多斯动力煤 715—730 元/吨（长安期货引隆众，10-12 记录）。", "data_ref": "煤价", "related_nodes": ["CHAIN-S03"]},
+    {"node_id": "CHAIN-U02", "name": "天然气（原料/燃料）", "layer": "上游原料", "product": "天然气", "region": "西南/青海/中东", "desc": "天然气制甲醇原料；西南与青海天然气制装置在本窗口多条处于停车状态。", "data_ref": "—", "related_nodes": ["CHAIN-S02", "CHAIN-I01"]},
+    {"node_id": "CHAIN-U03", "name": "工业烟气CO₂ / 绿氢", "layer": "上游原料", "product": "CO₂、绿氢", "region": "全国", "desc": "绿色甲醇路线的两个原料端；CCER 方法学（EVT-…-002）直接作用于该路线的核算基础。", "data_ref": "—", "related_nodes": ["CHAIN-S05"]},
+    {"node_id": "CHAIN-S02", "name": "天然气制甲醇（西南/青海）", "layer": "甲醇生产", "product": "甲醇", "region": "四川/重庆/青海", "capacity_note": "本窗口可读范围内停车 119 万吨/年（含青海中浩 60 已部分拆除）", "desc": "西南大区以天然气制为主，装置规模小、单套 7—77 万吨/年。", "data_ref": "产量/产能利用率", "related_nodes": ["CHAIN-U02", "CHAIN-T01"]},
+    {"node_id": "CHAIN-S03", "name": "煤制甲醇（西北/华北/华中）", "layer": "甲醇生产", "product": "甲醇", "region": "内蒙古/陕西/山西/河南/宁夏", "capacity_note": "全国装置产能利用率 92.28%（10-09 当周）", "desc": "国产甲醇主力，产能集中于陕蒙、晋、豫；本窗口有多装置复产（>300 万吨/年）与新增产能（宝丰四期 280 万吨/年）在途。", "data_ref": "产量/产能利用率、装置检修损失量", "related_nodes": ["CHAIN-U01", "CHAIN-S04", "CHAIN-T02"]},
+    {"node_id": "CHAIN-S04", "name": "焦炉气制甲醇（山西/四川）", "layer": "甲醇生产", "product": "甲醇", "region": "山西/四川", "capacity_note": "—", "desc": "焦化副产气制甲醇，规模较小但停产更易长期化。", "data_ref": "—", "related_nodes": ["CHAIN-S03"]},
+    {"node_id": "CHAIN-S05", "name": "绿色/生物质/低碳甲醇", "layer": "衍生路线", "product": "绿色甲醇", "region": "全国/内蒙古/海南", "capacity_note": "在建/备案阶段约 220 万吨/年（达拉特旗 100 + 富岛 120）", "desc": "受 CCER 方法学与船用燃料需求驱动；本窗口有方法学征求意见（C1 级）与项目备案变更（C4 级）。", "data_ref": "—", "related_nodes": ["CHAIN-U03", "CHAIN-T03"]},
+    {"node_id": "CHAIN-I01", "name": "进口甲醇（中东/东南亚/南美/北美）", "layer": "流通/进口", "product": "甲醇（进口）", "region": "伊朗/文莱/马来西亚/特立尼达/美国", "capacity_note": "9 月进口卸货 42.64 万吨、10 月预估 34.54 万吨", "desc": "中国甲醇进口依存度约 12%—15%，其中伊朗占比高；霍尔木兹海峡通行与冬季限气是两条前置变量。", "data_ref": "进口数据（月度）、国际开工率（周度）", "related_nodes": ["CHAIN-T01", "CHAIN-U02"]},
+    {"node_id": "CHAIN-T01", "name": "沿海港口库存/可流通货源", "layer": "流通/进口", "product": "甲醇（港口现货）", "region": "华东（江苏/浙江）、华南（广东/福建）", "capacity_note": "港口样本库存 36.72 万吨（10-14）；上期 30.51 万吨（10-08，历史新低）；可流通约 10.50 万吨（10-08）", "desc": "沿海外采 MTO 的原料入口与华东纸货/期货交割基础；库存低位意味着边际变动对供需平衡的权重放大。", "data_ref": "港口库存（周度）", "related_nodes": ["CHAIN-I01", "CHAIN-T02", "CHAIN-D03"]},
+    {"node_id": "CHAIN-T02", "name": "内地产销/汽运物流", "layer": "流通/进口", "product": "甲醇（内地现货）", "region": "陕蒙/晋/豫/鲁", "capacity_note": "样本生产企业库存 32.12 万吨（10-08，+3.87 万吨）", "desc": "内地货源向港口流转受危化品专用罐车、运费与品质标准约束，短时间难以大规模调运。", "data_ref": "生产企业库存及订单待发", "related_nodes": ["CHAIN-S03", "CHAIN-T01"]},
+    {"node_id": "CHAIN-D03", "name": "甲醇制烯烃 MTO/CTO（沿海外采 + 西北一体化）", "layer": "下游需求", "product": "乙烯/丙烯/聚烯烃", "region": "江苏/浙江/山东/天津 + 西北", "capacity_note": "CTO/MTO 产能利用率 79.69%；江浙 MTO 20.06%（10-09 当周）；10 月下旬港口 MTO 归零", "desc": "甲醇最大下游（占需求约一半）。沿海外采装置利润受甲醇价格与聚烯烃价格两头挤压；西北一体化装置成本优势明显、开工稳定。", "data_ref": "MTO 产能利用率（周度）", "related_nodes": ["CHAIN-T01", "CHAIN-D04"]},
+    {"node_id": "CHAIN-D04", "name": "聚烯烃（PE/PP）", "layer": "下游需求", "product": "聚乙烯、聚丙烯", "region": "全国", "capacity_note": "—", "desc": "MTO/CTO 的终端产品，其价格决定 MTO 利润空间。本案例不引用其价格走势。", "data_ref": "—", "related_nodes": []},
+    {"node_id": "CHAIN-D05", "name": "传统下游（甲醛/醋酸/MTBE/二甲醚）", "layer": "下游需求", "product": "甲醛、醋酸、MTBE、二甲醚", "region": "华东/山东", "capacity_note": "醋酸 83.63%、MTBE 61.27%、甲醛 30.37%、二甲醚 7.20%（10-09 当周，隆众口径）", "desc": "季节性明显，价格高位时以刚需采购为主。", "data_ref": "下游样本产能利用率（周度）", "related_nodes": ["CHAIN-T01", "CHAIN-T02"]},
+    {"node_id": "CHAIN-D06", "name": "甲醇燃料/船舶加注", "layer": "下游需求", "product": "甲醇燃料", "region": "沿海/上海港", "capacity_note": "—", "desc": "与绿色甲醇政策联动（ISO 22120 甲醇燃料加注国际标准 10 月发布，见 N06 同稿），本窗口内无新增事件。", "data_ref": "—", "related_nodes": ["CHAIN-S05"]}
+  ],
+  "edges": [
+    {"from": "CHAIN-U01", "to": "CHAIN-S03", "label": "煤→合成气"},
+    {"from": "CHAIN-U02", "to": "CHAIN-S02", "label": "天然气→重整"},
+    {"from": "CHAIN-U02", "to": "CHAIN-I01", "label": "天然气→合成（境外）"},
+    {"from": "CHAIN-U03", "to": "CHAIN-S05", "label": "CO₂+绿氢→合成"},
+    {"from": "CHAIN-S03", "to": "CHAIN-S04", "label": "并列工艺"},
+    {"from": "CHAIN-S03", "to": "CHAIN-T02", "label": "内地产销"},
+    {"from": "CHAIN-S02", "to": "CHAIN-T01", "label": "西南→沿江"},
+    {"from": "CHAIN-S03", "to": "CHAIN-D03", "label": "西北配套（一体化）"},
+    {"from": "CHAIN-S05", "to": "CHAIN-D06", "label": "绿色甲醇→燃料"},
+    {"from": "CHAIN-I01", "to": "CHAIN-T01", "label": "进口到港"},
+    {"from": "CHAIN-T02", "to": "CHAIN-T01", "label": "内地→港口套利"},
+    {"from": "CHAIN-T01", "to": "CHAIN-D03", "label": "外采原料"},
+    {"from": "CHAIN-T01", "to": "CHAIN-D05", "label": "传统下游采购"},
+    {"from": "CHAIN-D03", "to": "CHAIN-D04", "label": "烯烃→聚烯烃"}
+  ],
+  "indicators": [
+    {"node_id": "CHAIN-T01", "name": "中国甲醇港口样本库存", "freq": "周", "latest": "36.72 万吨（2026-10-14）", "prev": "30.51 万吨（2026-10-08）", "source": "隆众资讯", "link": "https://www.oilchem.net/26-1014-13-5e8b30119a70336d.html"},
+    {"node_id": "CHAIN-S03", "name": "全国甲醇装置产能利用率", "freq": "周", "latest": "92.28%（2026-10-09 当周）", "prev": "89.51%（推算自周环比 +2.77pct）", "source": "隆众资讯（经长安期货转引）", "link": "https://www.oilchem.net/26-1015-11-1849621e7f1e8300.html"},
+    {"node_id": "CHAIN-S03", "name": "全国甲醇周度产量", "freq": "周", "latest": "208.49 万吨（2026-10-09 当周）", "prev": "203.36 万吨（推算自环比 +5.13 万吨）", "source": "隆众资讯（经长安期货转引）", "link": "https://www.oilchem.net/26-1015-11-1849621e7f1e8300.html"},
+    {"node_id": "CHAIN-D03", "name": "江浙地区MTO装置产能利用率", "freq": "周", "latest": "20.06%（2026-10-09~10-15）", "prev": "—", "source": "隆众资讯", "link": "https://www.oilchem.net/26-1015-13-a122db4b62c6350d.html"},
+    {"node_id": "CHAIN-D03", "name": "CTO/MTO 综合产能利用率", "freq": "周", "latest": "79.69%（2026-10-09 当周）", "prev": "—", "source": "隆众资讯（经长安期货转引）", "link": "https://www.oilchem.net/26-1015-13-a122db4b62c6350d.html"},
+    {"node_id": "CHAIN-I01", "name": "甲醇进口量（实际卸货）", "freq": "月", "latest": "42.64 万吨（2026-09）", "prev": "80.53 万吨（2026-08）", "source": "隆众资讯（经长安期货转引）", "link": "https://www.oilchem.net/26-1020-09-670797e99b78f995.html"},
+    {"node_id": "CHAIN-I01", "name": "国际甲醇装置开工率", "freq": "周", "latest": "49.03%（2026-10-09 当周）", "prev": "51.81%（推算自周环比 -2.78pct）", "source": "隆众资讯（经长安期货转引）", "link": "https://www.oilchem.net/26-1016-17-5693c716deae177b.html"},
+    {"node_id": "CHAIN-S03", "name": "中国甲醇装置检修日损失量", "freq": "日", "latest": "正文不可读", "prev": "—", "source": "隆众资讯（付费墙）", "link": "https://www.oilchem.net/26-1019-15-550ccdf7a1e030e0.html"},
+    {"node_id": "CHAIN-T01", "name": "华东太仓现货价（参考，不作结论）", "freq": "日", "latest": "10-12 报道 4,600 元/吨（10-10）→4,100 元/吨（10-12）", "prev": "—", "source": "长安期货引隆众（N27）", "link": "https://finance.sina.cn/futuremarket/qsyw/2026-10-12/detail-iniuyari7225751.d.html"},
+    {"node_id": "CHAIN-S03", "name": "Q5500 鄂尔多斯动力煤", "freq": "周", "latest": "715—730 元/吨（10-12 记录）", "prev": "—", "source": "长安期货引隆众（N27）", "link": "https://finance.sina.cn/futuremarket/qsyw/2026-10-12/detail-iniuyari7225751.d.html"}
+  ]
+}

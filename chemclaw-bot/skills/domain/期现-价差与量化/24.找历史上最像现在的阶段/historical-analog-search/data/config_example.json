@@ -1,0 +1,149 @@
+{
+  "_说明": "指标配置模板。复制后按品种改 key/name/unit/weight/source/rationale。weight=0 表示纳入展示但不影响相似度。",
+  "product": { "key": "XX", "name": "某品种", "exchange": "某交易所" },
+  "indicators": [
+    {
+      "key": "basis_pct",
+      "name": "基差率",
+      "family": "basis",
+      "unit": "%",
+      "weight": 1.5,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "现货基准价 - 主力合约 / 现货",
+      "rationale": "期限结构最直接的度量，权重最高。用滚动 z 因为它可正可负且量级随行情变化。"
+    },
+    {
+      "key": "ret_4w",
+      "name": "近4周涨跌",
+      "family": "price",
+      "unit": "%",
+      "weight": 1.2,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "主力合约收盘价 pct_change",
+      "rationale": "刻画短期动量；直接比原始涨跌幅会受不同年份波动率影响，故 z 化。"
+    },
+    {
+      "key": "ret_13w",
+      "name": "近13周涨跌",
+      "family": "price",
+      "unit": "%",
+      "weight": 1.0,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "同上，13 周窗口",
+      "rationale": "中期趋势，用来区分『刚刚启动』与『已经走了很久』。"
+    },
+    {
+      "key": "spot_rank_52w",
+      "name": "现货52周分位",
+      "family": "price",
+      "unit": "%",
+      "weight": 0.8,
+      "std_method": "rank",
+      "lookback": 52,
+      "min_obs": 26,
+      "source": "现货价在滚动 52 周内的分位",
+      "rationale": "回答『贵不贵』，天然无量纲，不受通胀与换月污染，故用分位而非 z。"
+    },
+    {
+      "key": "port_inv",
+      "name": "港口库存",
+      "family": "inventory",
+      "unit": "万吨",
+      "weight": 1.2,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "周度样本库存（注意统计日与发布时间）",
+      "rationale": "供需松紧的实物证据；水平用 z，因为它有趋势与季节性。"
+    },
+    {
+      "key": "port_inv_wow",
+      "name": "港口库存周变化",
+      "family": "inventory",
+      "unit": "万吨",
+      "weight": 0.6,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "库存一阶差分",
+      "rationale": "『低库存』与『正在快速去库』是两个不同状态，需分开刻画。"
+    },
+    {
+      "key": "producer_inv",
+      "name": "生产企业库存",
+      "family": "inventory",
+      "unit": "万吨",
+      "weight": 0.6,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "周度厂库",
+      "rationale": "与港口口径不可相加，单独作为一维。"
+    },
+    {
+      "key": "operating_rate",
+      "name": "装置产能利用率",
+      "family": "supply",
+      "unit": "%",
+      "weight": 1.0,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "周度开工率",
+      "rationale": "供给端最直接的一维。注意历史覆盖往往很短，覆盖不足时会被分层机制剔除。"
+    },
+    {
+      "key": "arrivals",
+      "name": "周度到港量",
+      "family": "supply",
+      "unit": "万吨",
+      "weight": 0.8,
+      "std_method": "pctile_rank",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "周度到港",
+      "rationale": "波动极大且右偏，用分位比 z 更稳健，避免单周极端值主导距离。"
+    },
+    {
+      "key": "spread_1_5",
+      "name": "近月-次月月差",
+      "family": "structure",
+      "unit": "%/月",
+      "weight": 0.7,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "(近月-次月)/近月/相隔月数*100，仅用当日有成交合约",
+      "rationale": "比基差更早反映现货紧张；正值 = backwardation。"
+    },
+    {
+      "key": "vol_20d",
+      "name": "20日波动率",
+      "family": "price",
+      "unit": "%",
+      "weight": 0.4,
+      "std_method": "rolling_z",
+      "lookback": 104,
+      "min_obs": 52,
+      "source": "日对数收益 20 日年化标准差",
+      "rationale": "区别『平稳的高价』与『剧烈波动的高价』，后者风险不同。"
+    }
+  ],
+  "defaults": {
+    "history_days": 1825,
+    "window_weeks": 4,
+    "top_n": 5,
+    "min_gap_weeks": 8,
+    "lag_days": 21,
+    "coverage_min": 0.9,
+    "min_sign_match": 0.75,
+    "method": "mae",
+    "forward_months": [1, 3]
+  }
+}

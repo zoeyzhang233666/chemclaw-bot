@@ -1,0 +1,7 @@
+{
+  "freight_usd_per_container": 1250,
+  "container_load_mt": 25,
+  "insurance_rate_of_cif": 0.3,
+  "port_cny_per_t": 95,
+  "inland_cny_per_t": 110
+}

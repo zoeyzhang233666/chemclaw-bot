@@ -1,0 +1,4300 @@
+{
+  "meta": {
+    "title": "纯碱生产厂家核验池",
+    "brand": "碱链核验",
+    "product": "重质纯碱（碳酸钠，Na₂CO₃）",
+    "product_short": "纯碱",
+    "cas": "497-19-8",
+    "hs": "2836.20",
+    "standard": "GB/T 210-2022",
+    "application": "光伏玻璃 / 浮法玻璃",
+    "destination": "江苏·苏州（苏州工业园区）",
+    "destination_short": "苏州",
+    "as_of": "2026-10-19",
+    "capacity_unit": "万吨/年",
+    "quantity_unit": "吨",
+    "currency": "CNY",
+    "sample_note": "17 家、22 个基地、3,030 万吨样本产能，约占全国 4,468 万吨的 68%；样本覆盖不等于市场份额。",
+    "lede": "以“光伏玻璃用重质纯碱 2,000 吨/月、收货地江苏苏州”为示例，把 17 家生产厂家、22 个基地、3,030 万吨样本产能放进同一张核验表：先证明“真的在生产”，再比规格、规模和距离。",
+    "disclaimer": "本报告仅用于采购初筛，不构成报价、质量保证或供应商准入结论；产能、规格、价格、合规信息以企业最新文件和现场审核为准。",
+    "output_basename": "纯碱生产厂家核验池_苏州_202610",
+    "theme": {
+      "accent": "#0f766e",
+      "accent_2": "#14b8a6",
+      "accent_soft": "#e6f4f1",
+      "ink": "#0b1726"
+    }
+  },
+  "rfq": {
+    "title": "光伏玻璃用重质纯碱 · 月度集采",
+    "product": "重质纯碱（碳酸钠，Na₂CO₃）",
+    "spec_ref": "参照 GB/T 210-2022 Ⅰ类/光伏玻璃用重质纯碱，采购规格高于常规Ⅱ类",
+    "qty_month": 2000,
+    "qty_year": 24000,
+    "destination": "江苏·苏州（苏州工业园区）",
+    "region_pref": "华东优先；华北、华中可接受；西北作为成本备选；华南仅作区域备选",
+    "application": "光伏玻璃 / 浮法玻璃",
+    "packaging": "1,000 kg 吨袋为主，部分散装罐车",
+    "delivery": "月度均衡到货，允许2–3车/日；需提供批次COA",
+    "note": "示例需求，用于演示“按产品找生产厂家”的核验方法；正式使用时替换为真实规格书与收货地址。"
+  },
+  "specs": [
+    {
+      "id": "na2co3",
+      "label": "总碱量 Na₂CO₃（干基）",
+      "requirement": "≥ 99.4%",
+      "unit": "%",
+      "method": "GB/T 210-2022",
+      "why": "影响玻璃配方碱度与澄清效果",
+      "critical": false
+    },
+    {
+      "id": "moisture",
+      "label": "水分",
+      "requirement": "≤ 0.20%",
+      "unit": "%",
+      "method": "105℃恒重 / 卡尔费休",
+      "why": "影响称量、结块与窑炉波动",
+      "critical": false
+    },
+    {
+      "id": "chloride",
+      "label": "氯化物（以 NaCl 计）",
+      "requirement": "≤ 0.50%",
+      "unit": "%",
+      "method": "电位滴定 / 离子色谱",
+      "why": "过高会腐蚀窑炉耐火材料、影响玻璃质量",
+      "critical": false
+    },
+    {
+      "id": "fe",
+      "label": "Fe₂O₃",
+      "requirement": "≤ 0.0030%",
+      "unit": "%",
+      "method": "ICP-OES / 分光光度法",
+      "why": "光伏玻璃对铁含量极敏感，直接影响透光率",
+      "critical": false
+    },
+    {
+      "id": "water",
+      "label": "水不溶物",
+      "requirement": "≤ 0.020%",
+      "unit": "%",
+      "method": "GB/T 210-2022",
+      "why": "影响玻璃液洁净度与色度",
+      "critical": false
+    },
+    {
+      "id": "bulk",
+      "label": "堆积密度",
+      "requirement": "0.95–1.15 g/cm³",
+      "unit": "g/cm³",
+      "method": "自由堆积法",
+      "why": "影响配料仓容积、输送与扬尘",
+      "critical": false
+    },
+    {
+      "id": "particle",
+      "label": "粒度分布",
+      "requirement": "0.2–1.5 mm ≥ 90%",
+      "unit": "mm/%",
+      "method": "筛分 / 激光粒度",
+      "why": "影响熔化速度、飞料与窑炉工况",
+      "critical": false
+    },
+    {
+      "id": "ignition",
+      "label": "灼烧失量",
+      "requirement": "≤ 0.50%",
+      "unit": "%",
+      "method": "GB/T 210-2022",
+      "why": "综合反映水分、碳酸氢钠与挥发分",
+      "critical": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "org": "中盐化工",
+      "title": "2025年年度报告",
+      "date": "2026-04-30",
+      "grade": "A",
+      "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-4/2026-04-30/12285995.PDF",
+      "used": "纯碱产能390万吨；发投140、昆仑155、昆山60、吉兰泰35；2025产量444.62万吨；员工8748人；关联交易纯碱采购方",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S02",
+      "org": "双环科技",
+      "title": "2025年年度报告",
+      "date": "2026-04-29",
+      "grade": "A",
+      "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESZ_STOCK/2026/2026-4/2026-04-29/12261120.PDF",
+      "used": "纯碱设计产能110万吨；产能利用率108.37%；2025产量119.21万吨；员工1337人；营收20.78亿元",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S03",
+      "org": "山东海化",
+      "title": "2025年年度报告",
+      "date": "2026-04-25",
+      "grade": "A",
+      "url": "https://vip.stock.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=000822&id=12008621",
+      "used": "纯碱设计产能280万吨；产能利用率97.29%；2025产量272.42万吨；员工4451人",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S04",
+      "org": "博源化工",
+      "title": "2025年半年度报告",
+      "date": "2025-08-08",
+      "grade": "A",
+      "url": "http://static.cninfo.com.cn/finalpage/2025-08-08/1224424873.PDF",
+      "used": "纯碱在产产能680万吨/年；阿拉善一期500、桐柏中源180；阿拉善规划780（一期500、二期280）",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S05",
+      "org": "智研咨询",
+      "title": "2026年中国纯碱行业重点上市企业对比分析",
+      "date": "2026-08-27",
+      "grade": "B",
+      "url": "https://www.chyxx.com/industry/1278161.html",
+      "used": "2025年全国纯碱产能约4,468万吨；2025年纯碱产量：博源711.12、中盐444.62、三友319.05、海化272.42、金晶124.81、双环119.21、雪天101.68、华昌67.87；博源在产680/设计960",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S06",
+      "org": "每日经济新闻",
+      "title": "博源化工阿拉善二期第一条100万吨纯碱线投料试车",
+      "date": "2025-12-10",
+      "grade": "A",
+      "url": "https://m.sohu.com/a/963779831_115362",
+      "used": "二期第一条100万吨/年纯碱线2025-12-09投料试车并出产品；其余线逐步试车",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S07",
+      "org": "证券时报",
+      "title": "中盐化工总投资超250亿元打造全球最大天然碱生产基地",
+      "date": "2026-05-15",
+      "grade": "A",
+      "url": "https://www.stcn.com/article/detail/3910001.html",
+      "used": "中盐奈曼旗天然碱项目：采矿权68.09亿元，规划500万吨/年，总投资252.83亿元，2026-06开工；现有纯碱390万吨/年",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S08",
+      "org": "连云港市人民政府",
+      "title": "连云港碱业公司搬迁升级改造项目建成投产",
+      "date": "2025",
+      "grade": "A",
+      "url": "https://www.lyg.gov.cn/zglygzfmhwz/gcyw/content/3ad7d8d1-8a2a-4683-82b5-4766ac84985e.html",
+      "used": "搬迁项目总投资58.3亿元、占地1200余亩、年产110万吨联碱，2024年底中交、2025年投产",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S09",
+      "org": "国联期货",
+      "title": "玻璃纯碱假期事件盘点和品种前瞻",
+      "date": "2025-05",
+      "grade": "B",
+      "url": "https://www.glqh.com/u/cms/www/202505/06091452kayw.pdf",
+      "used": "2025年新产能：江苏德邦60万吨2月出货、连云港碱业110万吨试生产、双环40万吨、博源二期280万吨、新都60万吨",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S10",
+      "org": "雪天盐业",
+      "title": "2025年半年度报告",
+      "date": "2025-08-09",
+      "grade": "A",
+      "url": "https://static.cninfo.com.cn/finalpage/2025-08-09/1224441432.PDF",
+      "used": "湘渝盐化纯碱产能100万吨/年、氯化铵100万吨/年，位于重庆万州；员工5630人",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S11",
+      "org": "证券时报",
+      "title": "雪天盐业拟投资建设百万吨级盐碱产业链",
+      "date": "2024-02-06",
+      "grade": "A",
+      "url": "https://www.stcn.com/article/detail/1117410.html",
+      "used": "衡阳绿色低碳盐碱产业园：纯碱80万吨/年、氯化铵80万吨/年，投资87.87亿元，建设推进中",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S12",
+      "org": "河南金山化工集团",
+      "title": "走进金山（企业简介）",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.jshgjt.com/a/zoujinjinshan",
+      "used": "集团纯碱330万吨、氯化铵360万吨、合成氨95万吨、工业盐380万吨；舞阳盐化工园区",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S13",
+      "org": "大河财立方 / 搜狐",
+      "title": "总投资108亿元，漯河舞阳县一创新型盐化工基地项目环评公示",
+      "date": "2022-09-28",
+      "grade": "A",
+      "url": "https://www.sohu.com/a/588643635_120109837",
+      "used": "70万吨/年纯碱为金天化工40万吨+金山化工30万吨异地迁建（拆二建一），集团总纯碱产能不增加；联碱装置70万吨纯碱、180万吨氯化铵",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S14",
+      "org": "广东南方碱业",
+      "title": "公司简介",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.nfsoda.com/m/About/about.aspx?m=115001",
+      "used": "厂区广州黄埔南岗，占地17.22万平方米；实际生产能力纯碱60万吨/年、芒硝8.5万吨/年；广东省唯一纯碱生产企业",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S15",
+      "org": "广东南方碱业",
+      "title": "企业规模",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.nfsoda.com/About/scale.aspx?m=115003",
+      "used": "现生产能力为纯碱35万吨/年、无水硫酸钠7.5万吨/年（与简介60万吨口径冲突）",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S16",
+      "org": "广东南方碱业",
+      "title": "销售区域 / 产销状况",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.nfsoda.com/CX/salesArea.aspx?m=119001",
+      "used": "珠三角年纯碱需求量150万吨；我司年产纯碱35万吨；填补广东纯碱生产空白",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S17",
+      "org": "天津渤化永利化工",
+      "title": "企业简介",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.tjsoda.com/About",
+      "used": "前身天津碱厂1914/1917年；2013年整体改制；具备80万吨联碱、30万吨合成氨、50万吨甲醇等产能；地址天津滨海新区临港经济区渤海10路3369号",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S18",
+      "org": "中盐昆山",
+      "title": "公司宣传片 / 企业简介",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://kunshan.chinasalt.com.cn/ksxwzx/ksxcp/",
+      "used": "位于昆山市张浦镇振新东路8号化工集中区，占地698亩；年产纯碱60万吨、氯化铵65万吨；2016年迁建项目投产",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S19",
+      "org": "东方财富 / 苏盐井神",
+      "title": "苏盐井神：公司纯碱年产能为70万吨左右",
+      "date": "2024-11-08",
+      "grade": "B",
+      "url": "https://wap.eastmoney.com/a/202411083234147536.html",
+      "used": "公司在投资者互动平台表示纯碱年产能70万吨左右；淮安基地",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S20",
+      "org": "苏盐井神",
+      "title": "2025年年度报告",
+      "date": "2026-04",
+      "grade": "A",
+      "url": "https://data.eastmoney.com/notices/stock/603299.html",
+      "used": "2024年纯碱产量89.46万吨；2025营收45.06亿元；员工3738人；成立日期1987-06-01",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S21",
+      "org": "化工网",
+      "title": "总投75亿元！应城新都化工合成氨项目试产成功",
+      "date": "2025",
+      "grade": "B",
+      "url": "https://news.chemnet.com/toutiao/detail-53452.html",
+      "used": "现有合成氨25万吨、纯碱及氯化铵60万吨、硝酸钠及亚硝酸钠10万吨、复合肥60万吨；合成氨项目试产成功",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S22",
+      "org": "连云港金融网",
+      "title": "连瑞租赁与德邦化工开展融资租赁合作",
+      "date": "2022-07",
+      "grade": "B",
+      "url": "https://www.lygfhg.com/html/202207/LJDN2022070516084924937.html",
+      "used": "德邦化工工厂占地约1206亩，建成后年产合成氨35万吨、纯碱60万吨、氯化铵60万吨",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S23",
+      "org": "中盐安徽红四方",
+      "title": "公司概况",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://hongsifang.chinasalt.com.cn/hsfxxgkzl/hsfgkmu/hsfqyjbxx/hsfgsgk",
+      "used": "总部合肥循环经济示范园（肥东县撮镇），占地5000多亩，员工5000余人；主要产品30万吨纯碱、33万吨氯化铵",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S24",
+      "org": "三友化工",
+      "title": "2025年年度报告",
+      "date": "2026-04-25",
+      "grade": "A",
+      "url": "https://stockmc.xueqiu.com/202604/600409_20260425_99DS.pdf",
+      "used": "纯碱产能340万吨；2025产量319.05万吨；产能利用率93.84%；员工17293人；营收188.31亿元",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S25",
+      "org": "金晶科技",
+      "title": "2025年半年度报告",
+      "date": "2025-08",
+      "grade": "A",
+      "url": "http://static.cninfo.com.cn/finalpage/2025-08-26/1224566020.PDF",
+      "used": "山东海天生物纯碱产能150万吨；2025年产量124.81万吨；纯碱业务主体",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S26",
+      "org": "华昌化工",
+      "title": "2025年年度报告摘要",
+      "date": "2026-04-18",
+      "grade": "A",
+      "url": "http://static.cninfo.com.cn/finalpage/2026-04-18/1225115189.PDF",
+      "used": "纯碱产能70万吨；2025年产量67.87万吨；联碱法",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S27",
+      "org": "每日经济新闻",
+      "title": "华昌化工：本公司纯碱产能70万吨，可用于光伏玻璃生产",
+      "date": "2021-07-29",
+      "grade": "B",
+      "url": "http://www.nbd.com.cn/rss/toutiao/articles/1857390.html",
+      "used": "公司互动平台：纯碱产能70万吨，可用于光伏玻璃生产，客户包含该类企业",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S28",
+      "org": "和邦生物",
+      "title": "2025年半年度报告",
+      "date": "2025-08",
+      "grade": "A",
+      "url": "http://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=603077&id=11314060",
+      "used": "联碱法纯碱/氯化铵业务；2025上半年行业与经营情况",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S29",
+      "org": "和邦生物",
+      "title": "发展历程 / 公司简介",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.hebang.cn/introduce-growth.html",
+      "used": "位于乐山市五通桥区，2002年成立，2012年上市；联碱基地",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S30",
+      "org": "山东理工大学化工学院",
+      "title": "山东海天生物化工有限公司",
+      "date": "2024-11-11",
+      "grade": "B",
+      "url": "https://hgxy.sdut.edu.cn/_t1871/2024/1111/c8120a530432/page.htm",
+      "used": "海天生物隶属金晶集团，位于潍坊昌邑市下营经济开发区金晶大道1号，员工1300余人，以纯碱/小苏打为主",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S31",
+      "org": "东方财富百科",
+      "title": "山东金晶科技股份有限公司",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://baike.eastmoney.com/item/%E5%B1%B1%E4%B8%9C%E9%87%91%E6%99%B6%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8",
+      "used": "成立于1999-12-31，2002-08-15上市；纯碱业务运营主体海天生物，年产能150万吨；低盐重质玻璃纯碱",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S32",
+      "org": "中盐昆山",
+      "title": "公司简介 / 招聘主页",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.iguopin.com/company?id=10685308865921789",
+      "used": "2010年决定投资30亿元搬迁，已搬迁至张浦化工园区，占地700亩，年产纯碱60万吨、氯化铵65万吨",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S33",
+      "org": "连云港碱业",
+      "title": "关于我们",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.lygsoda.com/about.html",
+      "used": "老厂1986年开工、1989年10月建成投产；我国第一家自行设计/安装/施工的纯碱企业；2016年划归连云港市",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S34",
+      "org": "国聘",
+      "title": "连云港碱业有限公司招聘主页",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.iguopin.com/company?id=94084037949261388",
+      "used": "2021年底起搬迁升级，采用联碱法替代原氨碱法，主要建设110万吨/年联碱装置",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S35",
+      "org": "天津渤海化工集团",
+      "title": "产品与服务",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.bcig.cn/cpfw/",
+      "used": "天津渤化永利（原天津碱厂）始建于1914年，亚洲第一家索尔维法纯碱厂；红三角品牌",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S36",
+      "org": "ChemicalBook",
+      "title": "中盐安徽红四方股份有限公司",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.chemicalbook.com/supplier/15437231/",
+      "used": "主要产品包括30万吨纯碱、33万吨氯化铵、30万吨合成氨、40万吨烧碱等",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S37",
+      "org": "江苏苏盐井神",
+      "title": "公司简介",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.jssalt.com/ssdanwei_view.aspx?id=608&nid=34&typeid=89",
+      "used": "在岗员工3700人，总资产近70亿元；盐碱一体化，纯碱/工业盐/元明粉/氯化钙",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S38",
+      "org": "云图控股",
+      "title": "关于对全资子公司应城化工增资的公告",
+      "date": "2023-04-08",
+      "grade": "A",
+      "url": "https://static.cninfo.com.cn/finalpage/2023-04-08/1216356597.PDF",
+      "used": "应城化工现有合成氨25万吨、纯碱及氯化铵60万双吨、硝酸钠及亚硝酸钠10万吨、复合肥60万吨",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S39",
+      "org": "新华网",
+      "title": "湖北应城：“膏都盐海”绿色转型再升级",
+      "date": "2025-08-04",
+      "grade": "B",
+      "url": "https://www.news.cn/politics/20250804/10050573c0924c01ade524fbd8a3d2ac/c.html",
+      "used": "云图控股应城项目涵盖100万吨复合肥、150万吨精制盐、20万吨小苏打、30万吨轻碱改重碱",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S40",
+      "org": "江苏省台办",
+      "title": "台企德邦兴华化工项目35万吨合成氨项目建成投产",
+      "date": "2024-07-30",
+      "grade": "B",
+      "url": "http://www.jsstb.gov.cn/lianyungang/202407/t20240730_12639108.htm",
+      "used": "德邦兴华化工项目35万吨合成氨建成投产；纯碱60万吨项目同园区",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S41",
+      "org": "东方财富",
+      "title": "博源化工股票数据 / 公司要点",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://data.eastmoney.com/stockdata/000683.html",
+      "used": "纯碱在产产能680万吨/年，小苏打150万吨/年，尿素154万吨/年；280万吨纯碱装置2025年逐步试车",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S42",
+      "org": "国聘",
+      "title": "广东南方碱业股份有限公司招聘主页",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.iguopin.com/company?id=10685389367872317",
+      "used": "厂区广州东部黄埔区南岗，占地17.22万平方米；广东省唯一纯碱生产企业，华南最大纯碱厂",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S43",
+      "org": "极目新闻",
+      "title": "潜江市23个重大项目集中开工",
+      "date": "2025-04",
+      "grade": "B",
+      "url": "https://www.ctdsb.net/c1676_202504/2412542.html",
+      "used": "金山潜江项目一期70万吨/年液氨、150万吨/年纯碱（搬迁产能）、210万吨/年氯化铵",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S44",
+      "org": "山东海化",
+      "title": "公司官网",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.chinahaihua.com",
+      "used": "纯碱、原盐、氯化钙、溴素等产品；潍坊滨海基地",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S45",
+      "org": "三友化工",
+      "title": "公司官网 / 纯碱分公司",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.sanyou-chem.com.cn",
+      "used": "纯碱分公司；纯碱、粘胶短纤、烧碱、PVC、有机硅等产品",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S46",
+      "org": "唐山三友集团",
+      "title": "股份公司简介",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.sanyou-group.com.cn/",
+      "used": "股份公司成立于1999年12月28日，坐落唐山市曹妃甸区；纯碱分公司",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S47",
+      "org": "雪天盐业",
+      "title": "公司官网",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "https://www.snowskysalt.com.cn/",
+      "used": "成立于2011年12月16日；全国盐行业第一家产销一体、跨省联合的现代股份制公司；员工5630人",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S48",
+      "org": "金山化工集团",
+      "title": "集团首页",
+      "date": "访问于2026-10",
+      "grade": "B",
+      "url": "http://www.jshgjt.com/",
+      "used": "位于漯河市舞阳县，成立于2005年3月25日，注册资金4亿元；以矿盐开发为基础",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S49",
+      "org": "东方财富财富号",
+      "title": "和邦生物：西南地区最大的联碱生产基地之一",
+      "date": "2026-04-01",
+      "grade": "C",
+      "url": "https://caifuhao.eastmoney.com/news/20260401101835173949460",
+      "used": "纯碱、氯化铵年产能各110万吨；行业自媒体口径，需以公司公告/官网复核",
+      "accessed": "2026-10-19"
+    }
+  ],
+  "companies": [
+    {
+      "id": "zhongyan",
+      "name": "中盐化工",
+      "full_name": "中盐内蒙古化工股份有限公司",
+      "ticker": "600328",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1998",
+      "founded_note": "1998-12-31 成立",
+      "employees": 8748,
+      "employees_note": "2025年报",
+      "reg_cap": "14.66亿元",
+      "hq": "内蒙古·阿拉善 / 青海·德令哈 / 江苏·昆山",
+      "regions": [
+        "华东",
+        "西北"
+      ],
+      "process": "氨碱 + 联碱 + 天然碱",
+      "products": "纯碱、PVC、烧碱、金属钠、氯化铵",
+      "capacity": 390,
+      "capacity_year": "2025A",
+      "output": 444.62,
+      "output_year": "2025",
+      "scale_note": "上市公司；2025营收113.43亿元，员工8,748人；纯碱产能390万吨，全国前三；四基地布局",
+      "certainty": 98,
+      "spec_score": 82,
+      "availability": 90,
+      "plants": [
+        {
+          "name": "中盐昆山",
+          "province": "江苏",
+          "city": "昆山",
+          "address": "江苏省昆山市张浦镇振新东路8号化工集中区",
+          "lon": 120.98,
+          "lat": 31.39,
+          "capacity": 60,
+          "capacity_year": "2025A",
+          "process": "联碱",
+          "products": "纯碱、PVC、烧碱、金属钠、氯化铵",
+          "note": "2025产能利用率132.58%；距苏州约40km；氯化铵主要销往出口及江浙皖",
+          "source_ids": [
+            "S01",
+            "S18"
+          ],
+          "distance_km": 39,
+          "distance_band": "≤100km 近距"
+        },
+        {
+          "name": "昆仑碱业",
+          "province": "青海",
+          "city": "德令哈",
+          "address": "青海省海西州德令哈市工业园区",
+          "lon": 97.2,
+          "lat": 37.2,
+          "capacity": 155,
+          "capacity_year": "2025A",
+          "process": "氨碱",
+          "products": "纯碱、PVC、烧碱、金属钠、氯化铵",
+          "note": "2025产能利用率108.07%；重碱/轻碱",
+          "source_ids": [
+            "S01"
+          ],
+          "distance_km": 2241,
+          "distance_band": ">1600km 远距"
+        },
+        {
+          "name": "发投碱业",
+          "province": "青海",
+          "city": "德令哈",
+          "address": "青海省海西州德令哈市",
+          "lon": 97.55,
+          "lat": 37.55,
+          "capacity": 140,
+          "capacity_year": "2025A",
+          "process": "氨碱",
+          "products": "纯碱、PVC、烧碱、金属钠、氯化铵",
+          "note": "2025产能利用率107.65%；与昆仑同城",
+          "source_ids": [
+            "S01"
+          ],
+          "distance_km": 2217,
+          "distance_band": ">1600km 远距"
+        },
+        {
+          "name": "吉兰泰盐碱分公司",
+          "province": "内蒙古",
+          "city": "阿拉善左旗",
+          "address": "内蒙古自治区阿拉善盟阿拉善左旗吉兰泰镇",
+          "lon": 105.75,
+          "lat": 39.78,
+          "capacity": 35,
+          "capacity_year": "2025A",
+          "process": "天然碱",
+          "products": "纯碱、PVC、烧碱、金属钠、氯化铵",
+          "note": "2025产能利用率133.81%；天然碱/盐湖资源",
+          "source_ids": [
+            "S01"
+          ],
+          "distance_km": 1637,
+          "distance_band": ">1600km 远距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-ZY-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年年度报告",
+          "date": "2026-04-30",
+          "org": "中盐化工",
+          "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-4/2026-04-30/12285995.PDF",
+          "quote": "公司纯碱产能390万吨，全国占比约8.73%，产能位列第三；2025年纯碱产量444.62万吨。",
+          "proves": "集团产能与产量",
+          "source_id": "S01"
+        },
+        {
+          "id": "E-ZY-02",
+          "level": "直接-A",
+          "type": "定期报告（分厂产能表）",
+          "title": "2025年主要厂区设计产能与利用率",
+          "date": "2026-04-30",
+          "org": "中盐化工",
+          "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-4/2026-04-30/12285995.PDF",
+          "quote": "发投140万吨/107.65%、昆仑155万吨/108.07%、中盐昆山60万吨/132.58%、盐碱分公司35万吨/133.81%；在建产能无。",
+          "proves": "四个生产基地真实产能",
+          "source_id": "S01"
+        },
+        {
+          "id": "E-ZY-03",
+          "level": "直接-A",
+          "type": "项目公告/新闻",
+          "title": "中盐奈曼500万吨天然碱项目",
+          "date": "2026-05-15",
+          "org": "证券时报",
+          "url": "https://www.stcn.com/article/detail/3910001.html",
+          "quote": "拟投资252.83亿元建设500万吨/年天然碱项目，2026-06开工；现有纯碱产能390万吨/年。",
+          "proves": "远期产能与资源",
+          "source_id": "S07"
+        },
+        {
+          "id": "E-ZY-04",
+          "level": "间接-C",
+          "type": "招聘/企业简介",
+          "title": "中盐昆山年产纯碱60万吨",
+          "date": "访问于2026-10",
+          "org": "中盐昆山",
+          "url": "https://www.iguopin.com/company?id=10685308865921789",
+          "quote": "位于昆山市张浦镇振新东路8号，占地700亩，年产纯碱60万吨、氯化铵65万吨。",
+          "proves": "昆山基地地址与产能交叉",
+          "source_id": "S32"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "中盐昆山距苏州约40km，是最近的大型纯碱基地",
+        "集团390万吨、四基地，供应保障强",
+        "2025年报披露分厂产能与产量，生产证据最强"
+      ],
+      "gaps": [
+        "昆山基地月度外销量、是否需集团统一销售未披露",
+        "青海/内蒙货到苏州运距长，成本优势需重算",
+        "批次COA、粒度、水分未公开"
+      ],
+      "action": "优先谈中盐昆山月度可供量与销售主体；要求提供连续3批COA与粒度；同步锁青海/吉兰泰作为价格备选。",
+      "tier": "优先谈判",
+      "rank": 1,
+      "composite": 92.3,
+      "scale_score": 92,
+      "distance_score": 100,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "中盐昆山",
+      "nearest_city": "江苏·昆山",
+      "distance_km": 39,
+      "distance_band": "≤100km 近距"
+    },
+    {
+      "id": "boyuan",
+      "name": "博源化工",
+      "full_name": "内蒙古博源化工股份有限公司",
+      "ticker": "000683",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1997",
+      "founded_note": "1997-01-23 成立，1997-01-31 上市",
+      "employees": null,
+      "employees_note": "未在本次核验中取得可靠员工数",
+      "reg_cap": "—",
+      "hq": "内蒙古·鄂尔多斯 / 阿拉善",
+      "regions": [
+        "西北",
+        "华中"
+      ],
+      "process": "天然碱",
+      "products": "纯碱（重/轻）、小苏打、尿素",
+      "capacity": 680,
+      "capacity_year": "2025H1",
+      "output": 711.12,
+      "output_year": "2025",
+      "scale_note": "上市公司；2025年纯碱产量711.12万吨，在产产能680万吨，国内第一；阿拉善二期280万吨爬坡",
+      "certainty": 98,
+      "spec_score": 90,
+      "availability": 95,
+      "plants": [
+        {
+          "name": "阿拉善塔木素基地",
+          "province": "内蒙古",
+          "city": "阿拉善右旗",
+          "address": "内蒙古自治区阿拉善盟阿拉善右旗塔木素布拉格苏木（银根矿业）",
+          "lon": 103.7,
+          "lat": 40.3,
+          "capacity": 500,
+          "capacity_year": "2025H1",
+          "process": "天然碱",
+          "products": "纯碱（重/轻）、小苏打、尿素",
+          "note": "一期500万吨/年已投产；二期280万吨/年，2025-12首条100万吨线试车",
+          "source_ids": [
+            "S04",
+            "S06"
+          ],
+          "distance_km": 1817,
+          "distance_band": ">1600km 远距"
+        },
+        {
+          "name": "桐柏中源化学基地",
+          "province": "河南",
+          "city": "南阳桐柏",
+          "address": "河南省南阳市桐柏县安棚镇/吴城镇（中源化学）",
+          "lon": 113.42,
+          "lat": 32.37,
+          "capacity": 180,
+          "capacity_year": "2025H1",
+          "process": "天然碱",
+          "products": "纯碱（重/轻）、小苏打、尿素",
+          "note": "安棚/吴城碱矿；天然碱法；到苏州约750km，是博源距华东最近基地",
+          "source_ids": [
+            "S04"
+          ],
+          "distance_km": 687,
+          "distance_band": "500–800km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-BOY-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年半年度报告",
+          "date": "2025-08-08",
+          "org": "博源化工",
+          "url": "http://static.cninfo.com.cn/finalpage/2025-08-08/1224424873.PDF",
+          "quote": "纯碱在产产能680万吨/年；阿拉善一期500万吨、桐柏中源180万吨。",
+          "proves": "在产产能与基地",
+          "source_id": "S04"
+        },
+        {
+          "id": "E-BOY-02",
+          "level": "直接-A",
+          "type": "定期报告/行业统计",
+          "title": "2025年纯碱产量711.12万吨",
+          "date": "2026-08-27",
+          "org": "智研咨询（引公司年报）",
+          "url": "https://www.chyxx.com/industry/1278161.html",
+          "quote": "2025年博源化工纯碱产量711.12万吨；在产680万吨、设计960万吨。",
+          "proves": "产量与设计产能",
+          "source_id": "S05"
+        },
+        {
+          "id": "E-BOY-03",
+          "level": "直接-A",
+          "type": "项目试车新闻",
+          "title": "阿拉善二期首条100万吨纯碱线投料试车",
+          "date": "2025-12-10",
+          "org": "每日经济新闻",
+          "url": "https://m.sohu.com/a/963779831_115362",
+          "quote": "二期第一条100万吨/年纯碱线2025-12-09投料试车并出产品，其余线逐步试车。",
+          "proves": "新增产能真实性",
+          "source_id": "S06"
+        },
+        {
+          "id": "E-BOY-04",
+          "level": "直接-B",
+          "type": "公司公开资料",
+          "title": "纯碱在产产能680万吨/年",
+          "date": "访问于2026-10",
+          "org": "东方财富",
+          "url": "https://data.eastmoney.com/stockdata/000683.html",
+          "quote": "纯碱在产产能680万吨/年，小苏打150万吨/年，尿素154万吨/年。",
+          "proves": "产能口径交叉",
+          "source_id": "S41"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅰ类/Ⅱ类（天然碱）",
+        "heavy": true,
+        "glass": true,
+        "low_iron": true,
+        "low_chloride": true,
+        "food": false,
+        "na2co3": "99.4",
+        "chloride": "≤0.3%（天然碱典型，待COA）",
+        "fe": "≤0.003%（待COA）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅰ类/Ⅱ类（天然碱）；公开总碱量≥99.4%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开宣称低盐；≤0.3%（天然碱典型，待COA）",
+          "gap": "无具体批次氯化物实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "部分公开",
+          "public_info": "公开宣称低铁；标准Fe₂O₃≤0.003%（待COA）",
+          "gap": "无具体批次Fe₂O₃实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "国内纯碱在产产能第一，680万吨/年",
+        "天然碱法成本低、氯化物/铁潜在优势",
+        "桐柏基地距苏州约750km，铁路/水运可组合"
+      ],
+      "gaps": [
+        "阿拉善/桐柏到苏州的运费、铁路计划未核",
+        "二期280万吨仍在爬坡，2026年实际外销增量待观察",
+        "水分、Fe₂O₃、粒度无公开批次数据"
+      ],
+      "action": "先索取桐柏基地连续3批COA（重点Fe₂O₃、氯化物、粒度），同时让物流商报铁路/水运到厂价；用博源成本锚定海化/中盐价格。",
+      "tier": "优先谈判",
+      "rank": 2,
+      "composite": 91.8,
+      "scale_score": 100,
+      "distance_score": 70,
+      "spec_open": 6,
+      "spec_conclusion": "8项中6项有公开标准或宣称可对标，2项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "桐柏中源化学基地",
+      "nearest_city": "河南·南阳桐柏",
+      "distance_km": 687,
+      "distance_band": "500–800km"
+    },
+    {
+      "id": "haihua",
+      "name": "山东海化",
+      "full_name": "山东海化股份有限公司",
+      "ticker": "000822",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1997",
+      "founded_note": "1997-03 改制，1998-07 上市",
+      "employees": 4451,
+      "employees_note": "2025年报",
+      "reg_cap": "8.95亿元",
+      "hq": "山东·潍坊滨海",
+      "regions": [
+        "华东"
+      ],
+      "process": "氨碱",
+      "products": "纯碱、原盐、氯化钙、溴素、小苏打",
+      "capacity": 280,
+      "capacity_year": "2025A",
+      "output": 272.42,
+      "output_year": "2025",
+      "scale_note": "上市公司；员工4,451人；纯碱产能280万吨，氨碱法单套规模大；潍坊滨海临港",
+      "certainty": 96,
+      "spec_score": 88,
+      "availability": 90,
+      "plants": [
+        {
+          "name": "潍坊滨海纯碱厂",
+          "province": "山东",
+          "city": "潍坊",
+          "address": "山东省潍坊市滨海经济开发区",
+          "lon": 119.1,
+          "lat": 37.13,
+          "capacity": 280,
+          "capacity_year": "2025A",
+          "process": "氨碱",
+          "products": "纯碱、原盐、氯化钙、溴素、小苏打",
+          "note": "老线120+新线160；单套装置规模大；海运/铁路至华东便利",
+          "source_ids": [
+            "S03",
+            "S44"
+          ],
+          "distance_km": 663,
+          "distance_band": "500–800km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-HH-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年年度报告",
+          "date": "2026-04-25",
+          "org": "山东海化",
+          "url": "https://vip.stock.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=000822&id=12008621",
+          "quote": "纯碱设计产能280万吨；产能利用率97.29%；2025年产量272.42万吨；员工4,451人。",
+          "proves": "产能/产量/规模",
+          "source_id": "S03"
+        },
+        {
+          "id": "E-HH-02",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "纯碱、原盐、氯化钙、溴素",
+          "date": "访问于2026-10",
+          "org": "山东海化",
+          "url": "https://www.chinahaihua.com",
+          "quote": "公司主营纯碱、原盐、氯化钙、溴素、小苏打等产品；潍坊滨海基地。",
+          "proves": "产品与基地",
+          "source_id": "S44"
+        },
+        {
+          "id": "E-HH-03",
+          "level": "间接-C",
+          "type": "行业统计",
+          "title": "2025年纯碱产量272.42万吨",
+          "date": "2026-08-27",
+          "org": "智研咨询",
+          "url": "https://www.chyxx.com/industry/1278161.html",
+          "quote": "山东海化2025年纯碱产量272.42万吨。",
+          "proves": "产量交叉",
+          "source_id": "S05"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅰ类/Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.4",
+        "chloride": "≤0.5%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅰ类/Ⅱ类；公开总碱量≥99.4%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.5%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "280万吨氨碱大厂，华东最近的大型海盐/纯碱基地之一",
+        "潍坊滨海临港，海运/铁路到苏州约700km",
+        "玻璃行业长期供应，品牌认知高"
+      ],
+      "gaps": [
+        "光伏级低铁/低氯批次数据未公开",
+        "水分、粒度无公开值",
+        "到厂价与海运费需实盘"
+      ],
+      "action": "作为主供首选之一；先拿3批COA+粒度，要求报价含海运费/短驳；对比中盐昆山出厂价+短驳。",
+      "tier": "优先谈判",
+      "rank": 3,
+      "composite": 86.9,
+      "scale_score": 82,
+      "distance_score": 70,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "潍坊滨海纯碱厂",
+      "nearest_city": "山东·潍坊",
+      "distance_km": 663,
+      "distance_band": "500–800km"
+    },
+    {
+      "id": "sanyou",
+      "name": "三友化工",
+      "full_name": "唐山三友化工股份有限公司",
+      "ticker": "600409",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1999",
+      "founded_note": "1999-12-28 成立，2003-07 上市",
+      "employees": 17293,
+      "employees_note": "2025年报",
+      "reg_cap": "20.64亿元",
+      "hq": "河北·唐山 / 青海·德令哈",
+      "regions": [
+        "华北",
+        "西北"
+      ],
+      "process": "氨碱",
+      "products": "纯碱、粘胶短纤、烧碱、PVC、有机硅",
+      "capacity": 340,
+      "capacity_year": "2025A",
+      "output": 319.05,
+      "output_year": "2025",
+      "scale_note": "上市公司；2025营收188.31亿元，员工17,293人；纯碱产能340万吨，氨碱龙头",
+      "certainty": 96,
+      "spec_score": 88,
+      "availability": 90,
+      "plants": [
+        {
+          "name": "唐山南堡本部",
+          "province": "河北",
+          "city": "唐山",
+          "address": "河北省唐山市曹妃甸区南堡开发区",
+          "lon": 118.25,
+          "lat": 39.25,
+          "capacity": 230,
+          "capacity_year": "2025A",
+          "process": "氨碱",
+          "products": "纯碱、粘胶短纤、烧碱、PVC、有机硅",
+          "note": "“两碱一化”循环经济；重碱/轻碱；自用+外销",
+          "source_ids": [
+            "S24",
+            "S46"
+          ],
+          "distance_km": 909,
+          "distance_band": "800–1200km"
+        },
+        {
+          "name": "青海五彩碱业",
+          "province": "青海",
+          "city": "德令哈",
+          "address": "青海省海西州德令哈市",
+          "lon": 97.55,
+          "lat": 37.35,
+          "capacity": 110,
+          "capacity_year": "2025A",
+          "process": "氨碱",
+          "products": "纯碱、粘胶短纤、烧碱、PVC、有机硅",
+          "note": "三友控股子公司；青海基地",
+          "source_ids": [
+            "S24"
+          ],
+          "distance_km": 2213,
+          "distance_band": ">1600km 远距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-SY-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年年度报告",
+          "date": "2026-04-25",
+          "org": "三友化工",
+          "url": "https://stockmc.xueqiu.com/202604/600409_20260425_99DS.pdf",
+          "quote": "纯碱产能340万吨；2025年产量319.05万吨；产能利用率93.84%；员工17,293人。",
+          "proves": "产能/产量/规模",
+          "source_id": "S24"
+        },
+        {
+          "id": "E-SY-02",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "纯碱分公司",
+          "date": "访问于2026-10",
+          "org": "三友化工",
+          "url": "http://www.sanyou-chem.com.cn",
+          "quote": "纯碱分公司；产品覆盖重质纯碱、轻质纯碱，应用于玻璃、日化、冶金等。",
+          "proves": "产品与装置",
+          "source_id": "S45"
+        },
+        {
+          "id": "E-SY-03",
+          "level": "间接-C",
+          "type": "行业统计",
+          "title": "2025年纯碱产量319.05万吨",
+          "date": "2026-08-27",
+          "org": "智研咨询",
+          "url": "https://www.chyxx.com/industry/1278161.html",
+          "quote": "三友化工2025年纯碱产量319.05万吨，位列行业第三。",
+          "proves": "产量交叉",
+          "source_id": "S05"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅰ类/Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.4",
+        "chloride": "≤0.5%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅰ类/Ⅱ类；公开总碱量≥99.4%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.5%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "340万吨氨碱龙头，玻璃行业长期供应商",
+        "唐山港/铁路到华东通道成熟",
+        "年报披露完整，生产确定性高"
+      ],
+      "gaps": [
+        "到苏州约1,000km，运费敏感",
+        "低铁/低氯光伏级批次数据未公开",
+        "粒度、水分无公开值"
+      ],
+      "action": "要求提供光伏玻璃客户案例与3批COA；用唐山港海运/铁路到苏州比价，若到厂价与海化差距≤80元/吨可进入主供。",
+      "tier": "优先谈判",
+      "rank": 4,
+      "composite": 86.6,
+      "scale_score": 92,
+      "distance_score": 55,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "唐山南堡本部",
+      "nearest_city": "河北·唐山",
+      "distance_km": 909,
+      "distance_band": "800–1200km"
+    },
+    {
+      "id": "huachang",
+      "name": "华昌化工",
+      "full_name": "江苏华昌化工股份有限公司",
+      "ticker": "002274",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1970",
+      "founded_note": "始建于1970年，1999年改制，2004年股份公司",
+      "employees": null,
+      "employees_note": "未披露/未核验",
+      "reg_cap": "—",
+      "hq": "江苏·张家港",
+      "regions": [
+        "华东"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、化肥、多元醇",
+      "capacity": 70,
+      "capacity_year": "2025A",
+      "output": 67.87,
+      "output_year": "2025",
+      "scale_note": "上市公司；纯碱产能70万吨，2025产量67.87万吨；张家港长江码头，江海联运",
+      "certainty": 93,
+      "spec_score": 88,
+      "availability": 90,
+      "plants": [
+        {
+          "name": "张家港基地",
+          "province": "江苏",
+          "city": "张家港",
+          "address": "江苏省张家港市扬子江化工园（厂区）",
+          "lon": 120.55,
+          "lat": 31.87,
+          "capacity": 70,
+          "capacity_year": "2025A",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、化肥、多元醇",
+          "note": "长江码头，江海联运；距苏州约80km；纯碱可用于光伏玻璃",
+          "source_ids": [
+            "S26",
+            "S27"
+          ],
+          "distance_km": 64,
+          "distance_band": "≤100km 近距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-HC-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年年度报告摘要",
+          "date": "2026-04-18",
+          "org": "华昌化工",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-04-18/1225115189.PDF",
+          "quote": "纯碱产能70万吨；2025年产量67.87万吨；联碱法。",
+          "proves": "产能/产量",
+          "source_id": "S26"
+        },
+        {
+          "id": "E-HC-02",
+          "level": "直接-B",
+          "type": "投资者互动",
+          "title": "纯碱产能70万吨，可用于光伏玻璃",
+          "date": "2021-07-29",
+          "org": "每日经济新闻",
+          "url": "http://www.nbd.com.cn/rss/toutiao/articles/1857390.html",
+          "quote": "本公司纯碱产能70万吨，可用于光伏玻璃生产，客户包含该类企业。",
+          "proves": "光伏玻璃适用性",
+          "source_id": "S27"
+        },
+        {
+          "id": "E-HC-03",
+          "level": "间接-C",
+          "type": "公司官网",
+          "title": "始建于1970年，2004年股份公司",
+          "date": "访问于2026-10",
+          "org": "华昌化工",
+          "url": "https://www.huachangchem.cn/",
+          "quote": "公司是江苏华昌集团核心企业，始建于1970年，1999年改制，2004年整体变更为股份有限公司。",
+          "proves": "成立年限",
+          "source_id": "S26"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "距苏州约80km，华东最近之一",
+        "IR明确可用于光伏玻璃，规格匹配度高",
+        "长江码头/江海联运，物流灵活"
+      ],
+      "gaps": [
+        "70万吨规模较小，月度2,000吨可供量需确认",
+        "低铁/低氯批次数据未公开",
+        "粒度、水分无公开值"
+      ],
+      "action": "作为主供/双源首选；先锁月度2,000吨可供量与3批COA，价格对标中盐昆山。",
+      "tier": "优先谈判",
+      "rank": 5,
+      "composite": 86.3,
+      "scale_score": 62,
+      "distance_score": 100,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "张家港基地",
+      "nearest_city": "江苏·张家港",
+      "distance_km": 64,
+      "distance_band": "≤100km 近距"
+    },
+    {
+      "id": "jinjing",
+      "name": "金晶科技",
+      "full_name": "山东金晶科技股份有限公司",
+      "ticker": "600586",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1999",
+      "founded_note": "1999-12-31 成立，2002-08-15 上市",
+      "employees": 1300,
+      "employees_note": "海天生物员工1,300余人（2024）",
+      "reg_cap": "—",
+      "hq": "山东·淄博 / 潍坊昌邑",
+      "regions": [
+        "华东"
+      ],
+      "process": "氨碱",
+      "products": "纯碱、小苏打、浮法玻璃、光伏玻璃",
+      "capacity": 150,
+      "capacity_year": "2025H1",
+      "output": 124.81,
+      "output_year": "2025",
+      "scale_note": "上市公司；纯碱业务主体海天生物，产能150万吨，员工1,300余人；纯碱—玻璃一体化，自用比例高",
+      "certainty": 92,
+      "spec_score": 85,
+      "availability": 40,
+      "plants": [
+        {
+          "name": "山东海天生物化工",
+          "province": "山东",
+          "city": "潍坊昌邑",
+          "address": "山东省潍坊市昌邑市下营经济开发区金晶大道1号",
+          "lon": 119.4,
+          "lat": 37.05,
+          "capacity": 150,
+          "capacity_year": "2025H1",
+          "process": "氨碱",
+          "products": "纯碱、小苏打、浮法玻璃、光伏玻璃",
+          "note": "金晶控股子公司；低盐重质玻璃纯碱；产品优先配套自有玻璃产线，其余市场化销售",
+          "source_ids": [
+            "S25",
+            "S30",
+            "S31"
+          ],
+          "distance_km": 649,
+          "distance_band": "500–800km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-JJ-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年半年度报告",
+          "date": "2025-08",
+          "org": "金晶科技",
+          "url": "http://static.cninfo.com.cn/finalpage/2025-08-26/1224566020.PDF",
+          "quote": "山东海天生物纯碱产能150万吨；2025年产量124.81万吨。",
+          "proves": "产能/产量",
+          "source_id": "S25"
+        },
+        {
+          "id": "E-JJ-02",
+          "level": "直接-B",
+          "type": "高校/企业公开资料",
+          "title": "山东海天生物化工有限公司",
+          "date": "2024-11-11",
+          "org": "山东理工大学化工学院",
+          "url": "https://hgxy.sdut.edu.cn/_t1871/2024/1111/c8120a530432/page.htm",
+          "quote": "海天生物隶属金晶集团，位于昌邑市下营经济开发区金晶大道1号，员工1300余人，以纯碱/小苏打为主。",
+          "proves": "基地地址/规模",
+          "source_id": "S30"
+        },
+        {
+          "id": "E-JJ-03",
+          "level": "直接-B",
+          "type": "公司公开资料",
+          "title": "纯碱业务与低盐重质玻璃纯碱",
+          "date": "访问于2026-10",
+          "org": "东方财富百科",
+          "url": "https://baike.eastmoney.com/item/%E5%B1%B1%E4%B8%9C%E9%87%91%E6%99%B6%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8",
+          "quote": "纯碱业务运营主体海天生物，年产能150万吨；产品包括低盐重质玻璃纯碱、轻质纯碱。",
+          "proves": "产品规格定位",
+          "source_id": "S31"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅰ类（低盐重质玻璃纯碱）",
+        "heavy": true,
+        "glass": true,
+        "low_iron": true,
+        "low_chloride": true,
+        "food": false,
+        "na2co3": "99.4",
+        "chloride": "≤0.3%（低盐宣称，待COA）",
+        "fe": "≤0.003%（低铁宣称，待COA）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅰ类（低盐重质玻璃纯碱）；公开总碱量≥99.4%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开宣称低盐；≤0.3%（低盐宣称，待COA）",
+          "gap": "无具体批次氯化物实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "部分公开",
+          "public_info": "公开宣称低铁；标准Fe₂O₃≤0.003%（低铁宣称，待COA）",
+          "gap": "无具体批次Fe₂O₃实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "公开宣称低盐重质玻璃纯碱，最贴近光伏玻璃规格",
+        "150万吨产能，2025产量124.81万吨",
+        "纯碱—玻璃一体化，质量理解深"
+      ],
+      "gaps": [
+        "自用比例高，外销量/最小起订量未披露",
+        "公开的低铁/低盐缺少具体数值与批次COA",
+        "外销价格可能高于市场"
+      ],
+      "action": "作为备用/小批量首选；先确认月度外销量、最低起订量与是否接受年度框架；不要作为唯一主供。",
+      "tier": "重点备选",
+      "rank": 6,
+      "composite": 82.6,
+      "scale_score": 72,
+      "distance_score": 70,
+      "spec_open": 6,
+      "spec_conclusion": "8项中6项有公开标准或宣称可对标，2项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "山东海天生物化工",
+      "nearest_city": "山东·潍坊昌邑",
+      "distance_km": 649,
+      "distance_band": "500–800km"
+    },
+    {
+      "id": "suyan",
+      "name": "苏盐井神",
+      "full_name": "江苏苏盐井神股份有限公司",
+      "ticker": "603299",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1987",
+      "founded_note": "1987-06-01 成立（前身），2014 上市",
+      "employees": 3738,
+      "employees_note": "2025年报",
+      "reg_cap": "—",
+      "hq": "江苏·淮安",
+      "regions": [
+        "华东"
+      ],
+      "process": "联碱 / 井下循环",
+      "products": "纯碱、工业盐、元明粉、氯化钙、小苏打",
+      "capacity": 70,
+      "capacity_year": "2024IR",
+      "output": 89.46,
+      "output_year": "2024",
+      "scale_note": "上市公司；2025营收45.06亿元，员工3,738人；纯碱产能70万吨左右，2024年产量89.46万吨",
+      "certainty": 90,
+      "spec_score": 82,
+      "availability": 85,
+      "plants": [
+        {
+          "name": "淮安井神盐化基地",
+          "province": "江苏",
+          "city": "淮安",
+          "address": "江苏省淮安市淮安区（井神盐化基地）",
+          "lon": 119.02,
+          "lat": 33.55,
+          "capacity": 70,
+          "capacity_year": "2024IR",
+          "process": "联碱",
+          "products": "纯碱、工业盐、元明粉、氯化钙、小苏打",
+          "note": "井矿盐—纯碱一体化，井下循环制碱；京杭大运河/长江码头；距苏州约330km",
+          "source_ids": [
+            "S19",
+            "S20",
+            "S37"
+          ],
+          "distance_km": 290,
+          "distance_band": "100–300km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-SYJ-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年年度报告",
+          "date": "2026-04",
+          "org": "苏盐井神",
+          "url": "https://data.eastmoney.com/notices/stock/603299.html",
+          "quote": "2024年纯碱产量89.46万吨；2025营收45.06亿元；员工3,738人；成立日期1987-06-01。",
+          "proves": "产量/规模/成立",
+          "source_id": "S20"
+        },
+        {
+          "id": "E-SYJ-02",
+          "level": "直接-B",
+          "type": "投资者互动",
+          "title": "纯碱年产能70万吨左右",
+          "date": "2024-11-08",
+          "org": "东方财富",
+          "url": "https://wap.eastmoney.com/a/202411083234147536.html",
+          "quote": "公司纯碱年产能为70万吨左右；淮安基地。",
+          "proves": "产能",
+          "source_id": "S19"
+        },
+        {
+          "id": "E-SYJ-03",
+          "level": "直接-B",
+          "type": "公司简介",
+          "title": "盐碱一体化",
+          "date": "访问于2026-10",
+          "org": "苏盐井神",
+          "url": "http://www.jssalt.com/ssdanwei_view.aspx?id=608&nid=34&typeid=89",
+          "quote": "在岗员工3700人，总资产近70亿元；盐碱一体化，纯碱/工业盐/元明粉/氯化钙。",
+          "proves": "规模/产品",
+          "source_id": "S37"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": true,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "距苏州约330km，华东近距",
+        "2024年纯碱产量89.46万吨，超产能运行",
+        "盐碱一体化，食品级经验"
+      ],
+      "gaps": [
+        "产能70万吨但产量89.46万吨，口径需解释",
+        "光伏级低铁/低氯数据未公开",
+        "批次COA/粒度未公开"
+      ],
+      "action": "作为华东第二/第三源；先解释产能与产量口径，再要3批COA与运河/长江运输报价。",
+      "tier": "重点备选",
+      "rank": 7,
+      "composite": 82.3,
+      "scale_score": 62,
+      "distance_score": 92,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "淮安井神盐化基地",
+      "nearest_city": "江苏·淮安",
+      "distance_km": 290,
+      "distance_band": "100–300km"
+    },
+    {
+      "id": "jinshan",
+      "name": "金山化工",
+      "full_name": "河南金山化工集团",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "非上市/其他",
+      "founded": "2005",
+      "founded_note": "2005-03-25 成立，注册资金4亿元；依托原舞阳化肥厂",
+      "employees": null,
+      "employees_note": "未披露",
+      "reg_cap": "4亿元",
+      "hq": "河南·漯河舞阳",
+      "regions": [
+        "华中"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、小苏打、三聚氰胺、工业盐",
+      "capacity": 330,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "非上市；集团纯碱330万吨、氯化铵360万吨、合成氨95万吨、工业盐380万吨；舞阳单一大型基地",
+      "certainty": 84,
+      "spec_score": 78,
+      "availability": 85,
+      "plants": [
+        {
+          "name": "舞阳盐化工基地",
+          "province": "河南",
+          "city": "漯河舞阳",
+          "address": "河南省漯河市舞阳县盐化工园区",
+          "lon": 113.6,
+          "lat": 33.44,
+          "capacity": 330,
+          "capacity_year": "2025",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、小苏打、三聚氰胺、工业盐",
+          "note": "采矿制盐—联碱—热电联产；集团主基地；2022年70万吨联碱搬迁项目环评",
+          "source_ids": [
+            "S12",
+            "S13"
+          ],
+          "distance_km": 698,
+          "distance_band": "500–800km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-JS-01",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "走进金山",
+          "date": "访问于2026-10",
+          "org": "金山化工集团",
+          "url": "http://www.jshgjt.com/a/zoujinjinshan",
+          "quote": "集团拥有纯碱330万吨、氯化铵360万吨、合成氨95万吨、工业盐380万吨；位于漯河市舞阳县盐化工园区。",
+          "proves": "集团产能与基地",
+          "source_id": "S12"
+        },
+        {
+          "id": "E-JS-02",
+          "level": "直接-A",
+          "type": "环评公示",
+          "title": "联碱绿色转型产业园项目环评公示",
+          "date": "2022-09-28",
+          "org": "大河财立方/搜狐",
+          "url": "https://www.sohu.com/a/588643635_120109837",
+          "quote": "70万吨/年纯碱为金天化工40万吨+金山化工30万吨异地迁建（拆二建一），集团总纯碱产能不增加；新建联碱装置70万吨纯碱、180万吨氯化铵。",
+          "proves": "项目真实性/产能置换",
+          "source_id": "S13"
+        },
+        {
+          "id": "E-JS-03",
+          "level": "间接-C",
+          "type": "项目开工新闻",
+          "title": "金山潜江150万吨纯碱搬迁项目开工",
+          "date": "2025-04",
+          "org": "极目新闻",
+          "url": "https://www.ctdsb.net/c1676_202504/2412542.html",
+          "quote": "一期70万吨/年液氨、150万吨/年纯碱（搬迁产能）、210万吨/年氯化铵。",
+          "proves": "搬迁/新增项目",
+          "source_id": "S43"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "330万吨联碱大厂，规模仅次于博源/中盐/三友/海化",
+        "舞阳到苏州约700km，铁路/汽运可达",
+        "集团盐—碱—热电一体化，成本有竞争力"
+      ],
+      "gaps": [
+        "非上市，2025产量/外销量未披露",
+        "官网产能口径需与环评/年报交叉",
+        "联碱氯化物控制、批次COA待验证"
+      ],
+      "action": "要求提供2025年实际产量、3批COA与铁路发运能力；把金山作为压价/成本备选，不作为唯一主供。",
+      "tier": "重点备选",
+      "rank": 8,
+      "composite": 81.7,
+      "scale_score": 92,
+      "distance_score": 70,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "舞阳盐化工基地",
+      "nearest_city": "河南·漯河舞阳",
+      "distance_km": 698,
+      "distance_band": "500–800km"
+    },
+    {
+      "id": "shuanghuan",
+      "name": "双环科技",
+      "full_name": "湖北双环科技股份有限公司",
+      "ticker": "000707",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "1993",
+      "founded_note": "1993-12-27 成立，1997 上市",
+      "employees": 1337,
+      "employees_note": "2025年报",
+      "reg_cap": "—",
+      "hq": "湖北·应城",
+      "regions": [
+        "华中"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵",
+      "capacity": 110,
+      "capacity_year": "2025A",
+      "output": 119.21,
+      "output_year": "2025",
+      "scale_note": "上市公司；2025营收20.78亿元、归母净利-0.89亿元；员工1,337人；纯碱产能110万吨",
+      "certainty": 95,
+      "spec_score": 76,
+      "availability": 80,
+      "plants": [
+        {
+          "name": "应城东马坊基地",
+          "province": "湖北",
+          "city": "应城",
+          "address": "湖北省应城市东马坊团结大道26号",
+          "lon": 113.57,
+          "lat": 30.93,
+          "capacity": 110,
+          "capacity_year": "2025A",
+          "process": "联碱",
+          "products": "纯碱、氯化铵",
+          "note": "设计产能110万吨；2025产量119.21万吨；纯碱+氯化铵",
+          "source_ids": [
+            "S02"
+          ],
+          "distance_km": 669,
+          "distance_band": "500–800km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-SH-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年年度报告",
+          "date": "2026-04-29",
+          "org": "双环科技",
+          "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESZ_STOCK/2026/2026-4/2026-04-29/12261120.PDF",
+          "quote": "纯碱设计产能110万吨；产能利用率108.37%；2025年产量119.21万吨；员工1,337人。",
+          "proves": "产能/产量/规模",
+          "source_id": "S02"
+        },
+        {
+          "id": "E-SH-02",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年经营情况",
+          "date": "2026-04-29",
+          "org": "双环科技",
+          "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESZ_STOCK/2026/2026-4/2026-04-29/12261120.PDF",
+          "quote": "2025年营收20.78亿元，归母净利-0.89亿元；纯碱产量119.21万吨，氯化铵125.97万吨。",
+          "proves": "经营规模",
+          "source_id": "S02"
+        },
+        {
+          "id": "E-SH-03",
+          "level": "间接-C",
+          "type": "行业统计",
+          "title": "2025年纯碱产量119.21万吨",
+          "date": "2026-08-27",
+          "org": "智研咨询",
+          "url": "https://www.chyxx.com/industry/1278161.html",
+          "quote": "双环科技2025年纯碱产量119.21万吨。",
+          "proves": "产量交叉",
+          "source_id": "S05"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "110万吨联碱，2025产量119.21万吨，超产",
+        "应城盐碱集群，成本有优势",
+        "到苏州约700km，铁路/水运可达"
+      ],
+      "gaps": [
+        "联碱氯化物控制对光伏级是否稳定，无公开数据",
+        "批次COA/粒度未公开",
+        "2025年亏损，供应稳定性需关注"
+      ],
+      "action": "作为华中备选；先验证氯化物与粒度，要求3批COA；价格谈判用金山/新都交叉。",
+      "tier": "重点备选",
+      "rank": 9,
+      "composite": 81.0,
+      "scale_score": 72,
+      "distance_score": 70,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "应城东马坊基地",
+      "nearest_city": "湖北·应城",
+      "distance_km": 669,
+      "distance_band": "500–800km"
+    },
+    {
+      "id": "lianjian",
+      "name": "连云港碱业",
+      "full_name": "连云港碱业有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "非上市/其他",
+      "founded": "1989",
+      "founded_note": "1986年开工，1989-10建成投产；2016年划归连云港市",
+      "employees": null,
+      "employees_note": "未披露",
+      "reg_cap": "—",
+      "hq": "江苏·连云港灌云",
+      "regions": [
+        "华东"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、氯化钙",
+      "capacity": 110,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "非上市；搬迁项目总投资58.3亿元、占地1,200余亩；110万吨联碱；2025年投产",
+      "certainty": 88,
+      "spec_score": 78,
+      "availability": 85,
+      "plants": [
+        {
+          "name": "燕尾港临港基地",
+          "province": "江苏",
+          "city": "连云港灌云",
+          "address": "江苏省连云港市灌云县燕尾港镇临港产业区",
+          "lon": 119.78,
+          "lat": 34.48,
+          "capacity": 110,
+          "capacity_year": "2025",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、氯化钙",
+          "note": "搬迁升级项目；联碱法替代原氨碱法；2024年底中交、2025年投产",
+          "source_ids": [
+            "S08",
+            "S34"
+          ],
+          "distance_km": 362,
+          "distance_band": "300–500km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-LJ-01",
+          "level": "直接-A",
+          "type": "政府发布",
+          "title": "连云港碱业公司搬迁升级改造项目建成投产",
+          "date": "2025",
+          "org": "连云港市人民政府",
+          "url": "https://www.lyg.gov.cn/zglygzfmhwz/gcyw/content/3ad7d8d1-8a2a-4683-82b5-4766ac84985e.html",
+          "quote": "项目总投资约58.3亿元、占地1200余亩，建设年产110万吨联碱装置；2024年底中交、2025年投产。",
+          "proves": "项目/产能真实性",
+          "source_id": "S08"
+        },
+        {
+          "id": "E-LJ-02",
+          "level": "直接-B",
+          "type": "招聘主页",
+          "title": "110万吨/年联碱装置",
+          "date": "访问于2026-10",
+          "org": "国聘",
+          "url": "https://www.iguopin.com/company?id=94084037949261388",
+          "quote": "2021年底起搬迁升级，采用联碱法替代原氨碱法，主要建设110万吨/年联碱装置。",
+          "proves": "产能/工艺",
+          "source_id": "S34"
+        },
+        {
+          "id": "E-LJ-03",
+          "level": "间接-C",
+          "type": "行业报告",
+          "title": "2025年110万吨试生产",
+          "date": "2025-05",
+          "org": "国联期货",
+          "url": "https://www.glqh.com/u/cms/www/202505/06091452kayw.pdf",
+          "quote": "连云港碱业110万吨搬迁项目2025年试生产。",
+          "proves": "投产进度",
+          "source_id": "S09"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "110万吨新联碱装置，2025年投产",
+        "燕尾港临港，海运/内河到苏州约430km",
+        "华东第二源，距离优于山东/河北"
+      ],
+      "gaps": [
+        "新装置质量稳定性/达产爬坡待验证",
+        "2025年产量/外销量未披露",
+        "批次COA/粒度未公开"
+      ],
+      "action": "现场审核新装置+连续3批COA；可作为华东第二源，先小批量试单。",
+      "tier": "重点备选",
+      "rank": 10,
+      "composite": 80.9,
+      "scale_score": 72,
+      "distance_score": 82,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "燕尾港临港基地",
+      "nearest_city": "江苏·连云港灌云",
+      "distance_km": 362,
+      "distance_band": "300–500km"
+    },
+    {
+      "id": "xuetian",
+      "name": "雪天盐业",
+      "full_name": "雪天盐业集团股份有限公司",
+      "ticker": "600929",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "2011",
+      "founded_note": "2011-12-16 成立，2018-03 上市",
+      "employees": 5630,
+      "employees_note": "2025年报/官网",
+      "reg_cap": "—",
+      "hq": "湖南·长沙 / 重庆·万州",
+      "regions": [
+        "西南",
+        "华中"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、盐、小苏打",
+      "capacity": 100,
+      "capacity_year": "2025H1",
+      "output": 101.68,
+      "output_year": "2025",
+      "scale_note": "上市公司；员工5,630人；湘渝盐化纯碱100万吨、氯化铵100万吨；衡阳80万吨项目在建",
+      "certainty": 93,
+      "spec_score": 76,
+      "availability": 80,
+      "plants": [
+        {
+          "name": "湘渝盐化（万州）",
+          "province": "重庆",
+          "city": "万州",
+          "address": "重庆市万州区",
+          "lon": 108.41,
+          "lat": 30.81,
+          "capacity": 100,
+          "capacity_year": "2025H1",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、盐、小苏打",
+          "note": "雪天盐业全资子公司；纯碱100万吨、氯化铵100万吨",
+          "source_ids": [
+            "S10"
+          ],
+          "distance_km": 1160,
+          "distance_band": "800–1200km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-XT-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年半年度报告",
+          "date": "2025-08-09",
+          "org": "雪天盐业",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-08-09/1224441432.PDF",
+          "quote": "湘渝盐化纯碱产能100万吨/年、氯化铵100万吨/年，位于重庆万州。",
+          "proves": "产能/基地",
+          "source_id": "S10"
+        },
+        {
+          "id": "E-XT-02",
+          "level": "直接-A",
+          "type": "行业统计",
+          "title": "2025年纯碱产量101.68万吨",
+          "date": "2026-08-27",
+          "org": "智研咨询",
+          "url": "https://www.chyxx.com/industry/1278161.html",
+          "quote": "雪天盐业2025年纯碱产量101.68万吨。",
+          "proves": "产量",
+          "source_id": "S05"
+        },
+        {
+          "id": "E-XT-03",
+          "level": "间接-C",
+          "type": "项目公告",
+          "title": "衡阳绿色盐碱基地80万吨纯碱",
+          "date": "2024-02-06",
+          "org": "证券时报",
+          "url": "https://www.stcn.com/article/detail/1117410.html",
+          "quote": "衡阳绿色低碳盐碱产业园：纯碱80万吨/年、氯化铵80万吨/年，投资87.87亿元。",
+          "proves": "远期产能",
+          "source_id": "S11"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": true,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "100万吨联碱，2025产量101.68万吨",
+        "雪天盐业盐碱一体化，食品级经验",
+        "衡阳项目投产后华东距离缩短"
+      ],
+      "gaps": [
+        "万州到苏州约1,250km，运距远",
+        "衡阳项目尚未投产，时间表待核",
+        "批次COA/粒度未公开"
+      ],
+      "action": "作为西南/华中备选；关注衡阳项目投产后再评估华东供应。",
+      "tier": "重点备选",
+      "rank": 11,
+      "composite": 78.0,
+      "scale_score": 72,
+      "distance_score": 55,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "湘渝盐化（万州）",
+      "nearest_city": "重庆·万州",
+      "distance_km": 1160,
+      "distance_band": "800–1200km"
+    },
+    {
+      "id": "xindu",
+      "name": "云图控股（新都化工）",
+      "full_name": "应城市新都化工有限责任公司（云图控股全资）",
+      "ticker": "002539",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "2003",
+      "founded_note": "2003年成立；云图控股全资子公司",
+      "employees": null,
+      "employees_note": "未披露",
+      "reg_cap": "—",
+      "hq": "湖北·应城",
+      "regions": [
+        "华中"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、复合肥、硝酸钠/亚硝酸钠",
+      "capacity": 60,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "上市公司云图控股全资；纯碱及氯化铵60万双吨；30万吨轻碱改重碱项目推进；合成氨25万吨",
+      "certainty": 88,
+      "spec_score": 78,
+      "availability": 80,
+      "plants": [
+        {
+          "name": "应城盐化基地",
+          "province": "湖北",
+          "city": "应城",
+          "address": "湖北省应城市盐化大道26号",
+          "lon": 113.48,
+          "lat": 30.88,
+          "capacity": 60,
+          "capacity_year": "2025",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、复合肥、硝酸钠/亚硝酸钠",
+          "note": "纯碱及氯化铵60万双吨；30万吨轻碱改重碱；距苏州约700km",
+          "source_ids": [
+            "S38",
+            "S21",
+            "S39"
+          ],
+          "distance_km": 678,
+          "distance_band": "500–800km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-XD-01",
+          "level": "直接-A",
+          "type": "上市公司公告",
+          "title": "关于对全资子公司应城化工增资的公告",
+          "date": "2023-04-08",
+          "org": "云图控股",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-04-08/1216356597.PDF",
+          "quote": "应城化工现有合成氨25万吨、纯碱及氯化铵60万双吨、硝酸钠及亚硝酸钠10万吨、复合肥60万吨。",
+          "proves": "产能/基地",
+          "source_id": "S38"
+        },
+        {
+          "id": "E-XD-02",
+          "level": "直接-B",
+          "type": "行业媒体",
+          "title": "应城新都化工合成氨项目试产成功",
+          "date": "2025",
+          "org": "化工网",
+          "url": "https://news.chemnet.com/toutiao/detail-53452.html",
+          "quote": "公司现有合成氨25万吨、纯碱及氯化铵60万吨；合成氨项目试产成功。",
+          "proves": "产能/项目",
+          "source_id": "S21"
+        },
+        {
+          "id": "E-XD-03",
+          "level": "间接-C",
+          "type": "新华网",
+          "title": "30万吨轻碱改重碱",
+          "date": "2025-08-04",
+          "org": "新华网",
+          "url": "https://www.news.cn/politics/20250804/10050573c0924c01ade524fbd8a3d2ac/c.html",
+          "quote": "云图控股应城项目涵盖100万吨复合肥、150万吨精制盐、20万吨小苏打、30万吨轻碱改重碱。",
+          "proves": "重碱转换进度",
+          "source_id": "S39"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "60万双吨联碱，应城盐碱集群",
+        "30万吨轻碱改重碱，重碱比例提升",
+        "距苏州约700km，华中铁路/水运"
+      ],
+      "gaps": [
+        "重碱转换项目投产时间/实际重碱比例未披露",
+        "2025年产量/外销量未披露",
+        "批次COA/粒度未公开"
+      ],
+      "action": "确认重碱转换进度与月度重碱可供量；作为华中备选，与双环/金山比价。",
+      "tier": "观察/成本备选",
+      "rank": 12,
+      "composite": 75.1,
+      "scale_score": 52,
+      "distance_score": 70,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "应城盐化基地",
+      "nearest_city": "湖北·应城",
+      "distance_km": 678,
+      "distance_band": "500–800km"
+    },
+    {
+      "id": "debang",
+      "name": "江苏德邦",
+      "full_name": "江苏德邦化学工业集团有限公司 / 德邦兴华化工",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "非上市/其他",
+      "founded": "1989",
+      "founded_note": "1989年成立（前身连云港化肥厂）",
+      "employees": null,
+      "employees_note": "未披露",
+      "reg_cap": "—",
+      "hq": "江苏·连云港灌云",
+      "regions": [
+        "华东"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、合成氨",
+      "capacity": 60,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "非上市；工厂占地约1,206亩；合成氨35万吨、纯碱60万吨、氯化铵60万吨；2025年2月搬迁项目出货",
+      "certainty": 80,
+      "spec_score": 76,
+      "availability": 85,
+      "plants": [
+        {
+          "name": "连云港灌云基地",
+          "province": "江苏",
+          "city": "连云港灌云",
+          "address": "江苏省连云港市灌云县临港产业区（德邦兴华化工）",
+          "lon": 119.25,
+          "lat": 34.68,
+          "capacity": 60,
+          "capacity_year": "2025",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、合成氨",
+          "note": "搬迁项目；60万吨纯碱、60万吨氯化铵；2025年2月出货；距苏州约430km",
+          "source_ids": [
+            "S22",
+            "S09",
+            "S40"
+          ],
+          "distance_km": 396,
+          "distance_band": "300–500km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-DB-01",
+          "level": "直接-B",
+          "type": "融资租赁合作报道",
+          "title": "德邦化工项目规模",
+          "date": "2022-07",
+          "org": "连云港金融网",
+          "url": "https://www.lygfhg.com/html/202207/LJDN2022070516084924937.html",
+          "quote": "工厂占地约1206亩，建成后年产合成氨35万吨、纯碱60万吨、氯化铵60万吨。",
+          "proves": "产能/基地",
+          "source_id": "S22"
+        },
+        {
+          "id": "E-DB-02",
+          "level": "直接-B",
+          "type": "行业报告",
+          "title": "60万吨纯碱搬迁项目2025年2月出货",
+          "date": "2025-05",
+          "org": "国联期货",
+          "url": "https://www.glqh.com/u/cms/www/202505/06091452kayw.pdf",
+          "quote": "江苏德邦60万吨纯碱搬迁项目2025年2月出货。",
+          "proves": "投产进度",
+          "source_id": "S09"
+        },
+        {
+          "id": "E-DB-03",
+          "level": "间接-C",
+          "type": "政府网站",
+          "title": "35万吨合成氨项目建成投产",
+          "date": "2024-07-30",
+          "org": "江苏省台办",
+          "url": "http://www.jsstb.gov.cn/lianyungang/202407/t20240730_12639108.htm",
+          "quote": "德邦兴华化工项目35万吨合成氨建成投产；纯碱60万吨项目同园区。",
+          "proves": "项目真实性",
+          "source_id": "S40"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "60万吨新联碱装置，2025年出货",
+        "距苏州约430km，华东近距",
+        "合成氨配套，成本可控"
+      ],
+      "gaps": [
+        "新装置质量稳定性/达产爬坡待验证",
+        "2025年产量/外销量未披露",
+        "批次COA/粒度未公开"
+      ],
+      "action": "作为华东第三源；现场审核+3批COA，先小批量试单。",
+      "tier": "观察/成本备选",
+      "rank": 13,
+      "composite": 73.5,
+      "scale_score": 52,
+      "distance_score": 82,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "连云港灌云基地",
+      "nearest_city": "江苏·连云港灌云",
+      "distance_km": 396,
+      "distance_band": "300–500km"
+    },
+    {
+      "id": "yongli",
+      "name": "天津渤化永利",
+      "full_name": "天津渤化永利化工股份有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "非上市/其他",
+      "founded": "1914",
+      "founded_note": "前身天津碱厂1914/1917年；2013年整体改制",
+      "employees": null,
+      "employees_note": "未披露",
+      "reg_cap": "—",
+      "hq": "天津·滨海新区",
+      "regions": [
+        "华北"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、丁辛醇、甲醇、醋酸",
+      "capacity": 80,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "非上市国有大型化工企业；80万吨联碱、30万吨合成氨、50万吨甲醇、50万吨丁辛醇；百年“红三角”品牌",
+      "certainty": 80,
+      "spec_score": 80,
+      "availability": 70,
+      "plants": [
+        {
+          "name": "天津临港基地",
+          "province": "天津",
+          "city": "天津滨海",
+          "address": "天津市滨海新区临港经济区渤海10路3369号",
+          "lon": 117.7,
+          "lat": 38.98,
+          "capacity": 80,
+          "capacity_year": "2025",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、丁辛醇、甲醇、醋酸",
+          "note": "原天津碱厂搬迁；临港，靠近天津港；红三角纯碱",
+          "source_ids": [
+            "S17",
+            "S35"
+          ],
+          "distance_km": 893,
+          "distance_band": "800–1200km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-YL-01",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "企业简介",
+          "date": "访问于2026-10",
+          "org": "天津渤化永利",
+          "url": "https://www.tjsoda.com/About",
+          "quote": "现已具备年产30万吨合成氨、50万吨甲醇、50万吨丁辛醇、35万吨醋酸、80万吨联碱、15万吨食品级液体二氧化碳等生产能力。",
+          "proves": "产能/基地",
+          "source_id": "S17"
+        },
+        {
+          "id": "E-YL-02",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "发展历程",
+          "date": "访问于2026-10",
+          "org": "天津渤化永利",
+          "url": "https://www.tjsoda.com/About",
+          "quote": "前身天津碱厂1914/1917年；2013年整体改制；地址天津滨海新区临港经济区渤海10路3369号。",
+          "proves": "成立年限/地址",
+          "source_id": "S17"
+        },
+        {
+          "id": "E-YL-03",
+          "level": "间接-C",
+          "type": "集团官网",
+          "title": "红三角纯碱",
+          "date": "访问于2026-10",
+          "org": "天津渤海化工集团",
+          "url": "https://www.bcig.cn/cpfw/",
+          "quote": "天津渤化永利（原天津碱厂）始建于1914年，亚洲第一家索尔维法纯碱厂；红三角品牌。",
+          "proves": "品牌/历史",
+          "source_id": "S35"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅰ类/Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": true,
+        "na2co3": "99.4",
+        "chloride": "≤0.5%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅰ类/Ⅱ类；公开总碱量≥99.4%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.5%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "百年纯碱品牌，联碱/食品级经验",
+        "天津港海运到华东便利",
+        "80万吨产能，质量体系成熟"
+      ],
+      "gaps": [
+        "到苏州约1,000km，海运+短驳",
+        "2025年产量/外销量未披露",
+        "光伏级低铁数据未公开"
+      ],
+      "action": "作为北方海运备选；要求提供3批COA与海运到厂价。",
+      "tier": "观察/成本备选",
+      "rank": 14,
+      "composite": 72.7,
+      "scale_score": 62,
+      "distance_score": 55,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "天津临港基地",
+      "nearest_city": "天津·天津滨海",
+      "distance_km": 893,
+      "distance_band": "800–1200km"
+    },
+    {
+      "id": "hebang",
+      "name": "和邦生物",
+      "full_name": "四川和邦生物科技股份有限公司",
+      "ticker": "603077",
+      "listed": true,
+      "identity": "producer",
+      "ownership": "上市公司",
+      "founded": "2002",
+      "founded_note": "2002-08-01 成立，2012-07-31 上市",
+      "employees": null,
+      "employees_note": "未披露/未核验",
+      "reg_cap": "—",
+      "hq": "四川·乐山",
+      "regions": [
+        "西南"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、双甘膦、玻璃",
+      "capacity": 110,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "上市公司；纯碱/氯化铵各110万吨，西南最大联碱基地之一",
+      "certainty": 86,
+      "spec_score": 75,
+      "availability": 80,
+      "plants": [
+        {
+          "name": "乐山五通桥基地",
+          "province": "四川",
+          "city": "乐山",
+          "address": "四川省乐山市五通桥区牛华镇",
+          "lon": 103.77,
+          "lat": 29.55,
+          "capacity": 110,
+          "capacity_year": "2025",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、双甘膦、玻璃",
+          "note": "联碱法；与双甘膦/玻璃一体化；自有盐矿",
+          "source_ids": [
+            "S28",
+            "S29"
+          ],
+          "distance_km": 1622,
+          "distance_band": ">1600km 远距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-HB-01",
+          "level": "直接-A",
+          "type": "定期报告",
+          "title": "2025年半年度报告",
+          "date": "2025-08",
+          "org": "和邦生物",
+          "url": "http://money.finance.sina.com.cn/corp/view/vCB_AllBulletinDetail.php?stockid=603077&id=11314060",
+          "quote": "公司联碱法生产纯碱/氯化铵；2025上半年纯碱行业新增产能持续释放。",
+          "proves": "纯碱业务真实性",
+          "source_id": "S28"
+        },
+        {
+          "id": "E-HB-02",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "发展历程/公司简介",
+          "date": "访问于2026-10",
+          "org": "和邦生物",
+          "url": "https://www.hebang.cn/introduce-growth.html",
+          "quote": "位于乐山市五通桥区，2002年成立，2012年上市；联碱基地。",
+          "proves": "基地/成立时间",
+          "source_id": "S29"
+        },
+        {
+          "id": "E-HB-03",
+          "level": "间接-C",
+          "type": "财经报道",
+          "title": "纯碱、氯化铵年产能各110万吨",
+          "date": "2026-04",
+          "org": "东方财富财富号",
+          "url": "https://caifuhao.eastmoney.com/news/20260401101835173949460",
+          "quote": "和邦生物是西南地区最大的联碱生产基地，纯碱、氯化铵年产能各110万吨。",
+          "proves": "产能交叉",
+          "source_id": "S49"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "110万吨联碱，自有盐矿/一体化",
+        "西南最大联碱基地之一",
+        "产品质量在西南玻璃市场有认知"
+      ],
+      "gaps": [
+        "到苏州约1,600km，铁路/水运成本高",
+        "2025年产量/外销量未披露",
+        "批次COA/粒度未公开"
+      ],
+      "action": "仅作为西南价格/成本参照；若铁路集装箱到苏州到厂价有优势，再进入备选。",
+      "tier": "观察/成本备选",
+      "rank": 15,
+      "composite": 70.8,
+      "scale_score": 72,
+      "distance_score": 25,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "乐山五通桥基地",
+      "nearest_city": "四川·乐山",
+      "distance_km": 1622,
+      "distance_band": ">1600km 远距"
+    },
+    {
+      "id": "hongsifang",
+      "name": "中盐红四方",
+      "full_name": "中盐安徽红四方股份有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "非上市/其他",
+      "founded": "1958",
+      "founded_note": "前身合肥化肥厂1958年；2009-08-18股份公司挂牌",
+      "employees": 5000,
+      "employees_note": "公司官网：5,000余人",
+      "reg_cap": "—",
+      "hq": "安徽·合肥",
+      "regions": [
+        "华东"
+      ],
+      "process": "联碱",
+      "products": "纯碱、氯化铵、复合肥、烧碱",
+      "capacity": 30,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "非上市；员工5,000余人，占地5,000多亩；纯碱30万吨、氯化铵33万吨；销售权由中盐化工托管",
+      "certainty": 82,
+      "spec_score": 70,
+      "availability": 60,
+      "plants": [
+        {
+          "name": "合肥循环经济示范园基地",
+          "province": "安徽",
+          "city": "合肥",
+          "address": "安徽省合肥市肥东县合肥循环经济示范园经六路东、纬五路北侧",
+          "lon": 117.47,
+          "lat": 31.85,
+          "capacity": 30,
+          "capacity_year": "2025",
+          "process": "联碱",
+          "products": "纯碱、氯化铵、复合肥、烧碱",
+          "note": "中盐集团全资；纯碱30万吨、氯化铵33万吨；距苏州约300km",
+          "source_ids": [
+            "S01",
+            "S23",
+            "S36"
+          ],
+          "distance_km": 301,
+          "distance_band": "300–500km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-HSF-01",
+          "level": "直接-A",
+          "type": "定期报告（关联方/同业竞争）",
+          "title": "中盐化工2025年年度报告",
+          "date": "2026-04-30",
+          "org": "中盐化工",
+          "url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-4/2026-04-30/12285995.PDF",
+          "quote": "中盐红四方在纯碱、氯化铵、合成氨、烧碱业务；其纯碱销售权托管给中盐化工。",
+          "proves": "生产身份/销售路径",
+          "source_id": "S01"
+        },
+        {
+          "id": "E-HSF-02",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "公司概况",
+          "date": "访问于2026-10",
+          "org": "中盐红四方",
+          "url": "http://hongsifang.chinasalt.com.cn/hsfxxgkzl/hsfgkmu/hsfqyjbxx/hsfgsgk",
+          "quote": "总部合肥循环经济示范园（肥东县撮镇），占地5000多亩，员工5000余人；主要产品30万吨纯碱、33万吨氯化铵。",
+          "proves": "产能/地址/规模",
+          "source_id": "S23"
+        },
+        {
+          "id": "E-HSF-03",
+          "level": "间接-C",
+          "type": "企业名录",
+          "title": "30万吨纯碱",
+          "date": "访问于2026-10",
+          "org": "ChemicalBook",
+          "url": "https://www.chemicalbook.com/supplier/15437231/",
+          "quote": "主要产品包括30万吨纯碱、33万吨氯化铵、30万吨合成氨、40万吨烧碱等。",
+          "proves": "产能交叉",
+          "source_id": "S36"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅱ类",
+        "heavy": true,
+        "glass": false,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": false,
+        "na2co3": "99.2",
+        "chloride": "≤0.7%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅱ类；公开总碱量≥99.2%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.7%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "距苏州约300km，华东近距",
+        "中盐集团体系，生产身份明确",
+        "复合肥/氯碱一体化"
+      ],
+      "gaps": [
+        "纯碱仅30万吨，规模小",
+        "销售权由中盐化工托管，商务路径特殊",
+        "光伏级规格/批次数据少"
+      ],
+      "action": "若走中盐体系可一并谈；单独作为区域补充，不作为主供。",
+      "tier": "观察/成本备选",
+      "rank": 16,
+      "composite": 70.0,
+      "scale_score": 40,
+      "distance_score": 82,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "合肥循环经济示范园基地",
+      "nearest_city": "安徽·合肥",
+      "distance_km": 301,
+      "distance_band": "300–500km"
+    },
+    {
+      "id": "nanfang",
+      "name": "南方碱业",
+      "full_name": "广东南方碱业股份有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "非上市/其他",
+      "founded": "1994",
+      "founded_note": "1994-02 建成投产",
+      "employees": null,
+      "employees_note": "未披露",
+      "reg_cap": "—",
+      "hq": "广东·广州黄埔",
+      "regions": [
+        "华南"
+      ],
+      "process": "氨碱",
+      "products": "纯碱（轻/重/食品级）、芒硝、小苏打",
+      "capacity": 60,
+      "capacity_year": "2025",
+      "output": null,
+      "output_year": "未披露",
+      "scale_note": "非上市；厂区17.22万m²；官网简介称纯碱60万吨/年，规模页仍写35万吨/年，口径冲突",
+      "certainty": 74,
+      "spec_score": 84,
+      "availability": 80,
+      "plants": [
+        {
+          "name": "广州黄埔南岗厂区",
+          "province": "广东",
+          "city": "广州黄埔",
+          "address": "广东省广州市黄埔区南岗西路（厂区）",
+          "lon": 113.45,
+          "lat": 23.1,
+          "capacity": 60,
+          "capacity_year": "2025",
+          "process": "氨碱",
+          "products": "纯碱（轻/重/食品级）、芒硝、小苏打",
+          "note": "广东省唯一纯碱生产企业；自有码头；官网产能口径60/35冲突",
+          "source_ids": [
+            "S14",
+            "S15",
+            "S16"
+          ],
+          "distance_km": 1152,
+          "distance_band": "800–1200km"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-NF-01",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "公司简介",
+          "date": "访问于2026-10",
+          "org": "南方碱业",
+          "url": "http://www.nfsoda.com/m/About/about.aspx?m=115001",
+          "quote": "厂区位于广州黄埔南岗，占地17.22万平方米；实际生产能力纯碱60万吨/年、芒硝8.5万吨/年；广东省唯一纯碱生产企业。",
+          "proves": "产能/基地",
+          "source_id": "S14"
+        },
+        {
+          "id": "E-NF-02",
+          "level": "直接-B",
+          "type": "公司官网",
+          "title": "企业规模（冲突口径）",
+          "date": "访问于2026-10",
+          "org": "南方碱业",
+          "url": "http://www.nfsoda.com/About/scale.aspx?m=115003",
+          "quote": "现生产能力为纯碱35万吨/年、无水硫酸钠7.5万吨/年（与简介60万吨冲突）。",
+          "proves": "产能冲突",
+          "source_id": "S15"
+        },
+        {
+          "id": "E-NF-03",
+          "level": "间接-C",
+          "type": "行业协会/招聘",
+          "title": "广东唯一纯碱生产企业",
+          "date": "访问于2026-10",
+          "org": "国聘",
+          "url": "https://www.iguopin.com/company?id=10685389367872317",
+          "quote": "厂区广州东部黄埔区南岗，占地17.22万平方米；广东省唯一纯碱生产企业，华南最大纯碱厂。",
+          "proves": "区域地位",
+          "source_id": "S42"
+        }
+      ],
+      "spec_profile": {
+        "standard": "GB/T 210-2022 Ⅰ类/Ⅱ类",
+        "heavy": true,
+        "glass": true,
+        "low_iron": false,
+        "low_chloride": false,
+        "food": true,
+        "na2co3": "99.4",
+        "chloride": "≤0.5%（标准）",
+        "fe": "≤0.0035%（标准）"
+      },
+      "spec_rows": [
+        {
+          "id": "na2co3",
+          "label": "总碱量 Na₂CO₃（干基）",
+          "requirement": "≥ 99.4%",
+          "status": "部分公开",
+          "public_info": "GB/T 210-2022 Ⅰ类/Ⅱ类；公开总碱量≥99.4%",
+          "gap": "无本公司批次COA；无法确认≥99.4%",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "moisture",
+          "label": "水分",
+          "requirement": "≤ 0.20%",
+          "status": "未公开",
+          "public_info": "公开标准以灼烧失量≤0.5%表征，未单列水分",
+          "gap": "无水分实测值；需105℃恒重/卡尔费休",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "chloride",
+          "label": "氯化物（以 NaCl 计）",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准氯化物≤0.5%（标准）",
+          "gap": "目标≤0.50%，标准值偏宽；需批次COA",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "fe",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0030%",
+          "status": "未公开",
+          "public_info": "公开标准Fe₂O₃≤0.0035%（标准）",
+          "gap": "光伏级目标≤0.0030%，无本公司实测值",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "water",
+          "label": "水不溶物",
+          "requirement": "≤ 0.020%",
+          "status": "部分公开",
+          "public_info": "公开标准水不溶物≤0.03%",
+          "gap": "目标≤0.020%，无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "bulk",
+          "label": "堆积密度",
+          "requirement": "0.95–1.15 g/cm³",
+          "status": "部分公开",
+          "public_info": "重质纯碱，公开标准堆积密度≥0.90 g/cm³",
+          "gap": "目标0.95–1.15，无实测值",
+          "next_action": "核对COA批次与检测方法"
+        },
+        {
+          "id": "particle",
+          "label": "粒度分布",
+          "requirement": "0.2–1.5 mm ≥ 90%",
+          "status": "未公开",
+          "public_info": "产品页未列粒度分布",
+          "gap": "需筛分/激光粒度数据（0.2–1.5mm≥90%）",
+          "next_action": "索取连续3批COA并确认检测方法"
+        },
+        {
+          "id": "ignition",
+          "label": "灼烧失量",
+          "requirement": "≤ 0.50%",
+          "status": "部分公开",
+          "public_info": "公开标准灼烧失量≤0.50%",
+          "gap": "无本公司实测值",
+          "next_action": "核对COA批次与检测方法"
+        }
+      ],
+      "strengths": [
+        "广东省唯一纯碱厂，华南本地供应",
+        "氨碱法，重质/轻质/食品级",
+        "自有码头"
+      ],
+      "gaps": [
+        "产能60/35万吨口径冲突未解决",
+        "到苏州约1,250km，华东无运距优势",
+        "2025年产量/外销量未披露",
+        "批次COA/粒度未公开"
+      ],
+      "action": "先解决产能口径冲突；作为华南本地备选，华东采购优先级低。",
+      "tier": "观察/成本备选",
+      "rank": 17,
+      "composite": 69.8,
+      "scale_score": 52,
+      "distance_score": 55,
+      "spec_open": 5,
+      "spec_conclusion": "8项中5项有公开标准或宣称可对标，3项无公开数据；0项有本公司批次COA。",
+      "nearest_plant": "广州黄埔南岗厂区",
+      "nearest_city": "广东·广州黄埔",
+      "distance_km": 1152,
+      "distance_band": "800–1200km"
+    }
+  ],
+  "traders": [
+    {
+      "name": "中盐金坛盐化有限责任公司",
+      "type": "流通/采购方",
+      "region": "江苏·常州",
+      "level": "间接-C",
+      "evidence": "中盐化工2025年报关联交易：纯碱采购额2,520万元；盐产品采购6,000万元。",
+      "why": "自身为盐化企业，未发现纯碱生产装置、产能或环评；在关联交易中是纯碱采购方，不是生产方。",
+      "action": "不纳入厂家池；如合作，要求提供中盐化工授权与货源证明。"
+    },
+    {
+      "name": "中盐宁夏盐业有限公司",
+      "type": "盐业流通",
+      "region": "宁夏·银川",
+      "level": "间接-C",
+      "evidence": "中盐化工2025年报关联交易：纯碱、盐采购额350万元。",
+      "why": "盐业流通企业，采购纯碱/盐用于区域销售；无纯碱生产证据。",
+      "action": "不纳入厂家池；可作为区域配送商评估。"
+    },
+    {
+      "name": "中盐甘肃盐业有限公司",
+      "type": "盐业流通",
+      "region": "甘肃·兰州",
+      "level": "间接-C",
+      "evidence": "中盐化工2025年报关联交易：纯碱、盐采购额270万元。",
+      "why": "盐业流通企业，采购纯碱/盐；无纯碱生产装置/产能证据。",
+      "action": "不纳入厂家池；可作为区域配送商评估。"
+    },
+    {
+      "name": "平台店铺A（脱敏）",
+      "type": "贸易商/店铺",
+      "region": "山东·淄博",
+      "level": "仅工商-D",
+      "evidence": "1688/爱采购店铺，SKU含“纯碱”，经营范围含化工产品销售；无生产地址、产能、环评。",
+      "why": "仅有店铺SKU与经营范围；不能证明实际生产，按规则标记为不可信。",
+      "action": "不纳入；如坚持合作，先要生产厂授权书、COA、发货地址与环评。"
+    },
+    {
+      "name": "平台店铺B（脱敏）",
+      "type": "代理商/店铺",
+      "region": "江苏·常州",
+      "level": "仅工商-D",
+      "evidence": "店铺声称代理“海化/三友”纯碱；未展示授权链、自有装置或产能。",
+      "why": "代理宣称不等于生产；授权链与货源未验证。",
+      "action": "不纳入；要求上游授权、出厂COA、发货工厂与对公账户一致性。"
+    }
+  ],
+  "conflicts": [
+    {
+      "topic": "南方碱业产能",
+      "a": "公司简介：60万吨/年",
+      "b": "企业规模页：35万吨/年",
+      "resolution": "并列保留，采用60万吨作为上限、35万吨作为下限；需最新环评/排污许可复核。",
+      "impact": "影响华南本地可供量判断"
+    },
+    {
+      "topic": "金山化工产能",
+      "a": "官网：纯碱330万吨",
+      "b": "行业口径：联碱660万吨（纯碱+氯化铵合计）",
+      "resolution": "采用330万吨纯碱；660万吨为纯碱+氯化铵合计，不可直接比较。",
+      "impact": "避免把联碱双吨当纯碱"
+    },
+    {
+      "topic": "红四方产能",
+      "a": "公司官网：30万吨纯碱",
+      "b": "部分行业名单：70万吨",
+      "resolution": "采用30万吨（公司官网/2025口径）；70万吨可能含规划/旧口径。",
+      "impact": "规模排序下调"
+    },
+    {
+      "topic": "博源产能",
+      "a": "在产680万吨",
+      "b": "设计960万吨（含二期280万吨）",
+      "resolution": "评分用在产680万吨；二期作为增量，不提前计入。",
+      "impact": "避免把在建产能当现有供给"
+    },
+    {
+      "topic": "金晶产能",
+      "a": "海天生物产能150万吨",
+      "b": "2025年产量124.81万吨",
+      "resolution": "产能与产量分列；产量低于产能，符合外销/自用结构。",
+      "impact": "外销量需单独确认"
+    },
+    {
+      "topic": "苏盐井神产能",
+      "a": "IR：70万吨/年",
+      "b": "2024年产量89.46万吨",
+      "resolution": "产能70万吨、产量89.46万吨并列；可能为超产/口径差异。",
+      "impact": "实际可供量可能高于名义产能"
+    },
+    {
+      "topic": "雪天产能",
+      "a": "湘渝盐化100万吨/年",
+      "b": "2025年产量101.68万吨",
+      "resolution": "产能与产量基本匹配；衡阳80万吨为在建，不计入现有。",
+      "impact": "华东新增供给要等衡阳投产"
+    },
+    {
+      "topic": "样本覆盖",
+      "a": "17家企业、3,030万吨",
+      "b": "全国产能约4,468万吨（2025）",
+      "resolution": "样本覆盖约68%，不等于市场份额；未覆盖企业需补充。",
+      "impact": "候选池不是全市场"
+    }
+  ],
+  "gaps": [
+    {
+      "gap": "批次COA缺失",
+      "affected": "全部17家",
+      "impact": "无法确认水分、Fe₂O₃、氯化物、粒度是否满足光伏级",
+      "verify": "索取连续3批COA+第三方检测；到货抽检",
+      "priority": "P0"
+    },
+    {
+      "gap": "非上市企业产能口径",
+      "affected": "金山、连碱、永利、红四方、南方、新都、德邦",
+      "impact": "产能可能为设计/旧口径，影响规模排序",
+      "verify": "环评/排污许可/政府项目公告/现场审核",
+      "priority": "P0"
+    },
+    {
+      "gap": "外销量与长协比例",
+      "affected": "金晶、中盐昆山、博源、海化、三友",
+      "impact": "有产能不等于有可售量",
+      "verify": "问月度可供量、长协客户结构、最小起订量",
+      "priority": "P0"
+    },
+    {
+      "gap": "到厂运费/物流",
+      "affected": "全部",
+      "impact": "直线距离不等于到厂价",
+      "verify": "让3家物流商报门到门价；对比海运/铁路/汽运",
+      "priority": "P0"
+    },
+    {
+      "gap": "新装置质量稳定性",
+      "affected": "连碱、德邦、博源二期、新都重碱",
+      "impact": "新线爬坡期批次波动",
+      "verify": "现场审核+连续5批COA+小批量试单",
+      "priority": "P1"
+    },
+    {
+      "gap": "企业成立/员工数据",
+      "affected": "博源、金山、和邦、连碱、永利、华昌、南方、新都、德邦",
+      "impact": "企业规模判断不完整",
+      "verify": "工商登记/年报/官网/招聘",
+      "priority": "P2"
+    },
+    {
+      "gap": "食品级/光伏级认证",
+      "affected": "全部",
+      "impact": "行业标准不等于客户认证",
+      "verify": "查ISO/FSSC/客户审核报告/光伏客户名单",
+      "priority": "P1"
+    },
+    {
+      "gap": "收货地卸货条件",
+      "affected": "苏州工业园区",
+      "impact": "吨袋/散装、卸货时间、限行未核",
+      "verify": "现场踏勘+园区通行证要求",
+      "priority": "P2"
+    },
+    {
+      "gap": "2026年最新产能变化",
+      "affected": "博源二期、中盐奈曼、金山潜江、雪天衡阳",
+      "impact": "2026-2027供给格局变化",
+      "verify": "跟踪季度公告/试车新闻",
+      "priority": "P1"
+    },
+    {
+      "gap": "价格/账期",
+      "affected": "全部",
+      "impact": "本报告不含报价，无法做TCO",
+      "verify": "RFQ统一报价表（出厂/到厂/账期/罚则）",
+      "priority": "P0"
+    }
+  ],
+  "actions": [
+    {
+      "phase": "第1周",
+      "action": "发统一RFQ",
+      "detail": "向中盐昆山、海化、华昌、三友、博源、苏盐、金山、连碱发同一规格/数量/收货地RFQ，要求出厂价、到厂价、账期、月度可供量。"
+    },
+    {
+      "phase": "第1周",
+      "action": "收3批COA",
+      "detail": "重点看Fe₂O₃、氯化物、水分、粒度、堆积密度；要求COA批次号与发货批一致。"
+    },
+    {
+      "phase": "第2周",
+      "action": "小试/中试",
+      "detail": "每家取200kg样品，按光伏玻璃配方做熔化/澄清试验；记录飞料、澄清时间、色差。"
+    },
+    {
+      "phase": "第3周",
+      "action": "现场审核",
+      "detail": "优先中盐昆山、海化、华昌、连碱、德邦；看装置、成品仓、化验室、发运能力。"
+    },
+    {
+      "phase": "第3周",
+      "action": "物流比价",
+      "detail": "让3家物流商报门到门；对比海运/铁路/汽运，计算到厂TCO。"
+    },
+    {
+      "phase": "第4周",
+      "action": "定主供/备供",
+      "detail": "主供1家+备供2家；签年度框架+月度滚动，设置质量罚则与断供预案。"
+    }
+  ],
+  "rfq_questions": [
+    "请确认生产工厂全称、详细地址、是否自有装置（不是贸易商/代工厂）。",
+    "请提供纯碱产能、2025年实际产量、当前开工率与检修计划。",
+    "请确认月度可供量、长协占比、最小起订量、是否接受新客户。",
+    "请提供连续3批COA，批次号需与发货批一致；重点看Fe₂O₃、氯化物、水分、粒度、堆积密度。",
+    "请说明关键指标检测方法、内控标准与留样周期。",
+    "请报出厂价/到厂价、包装（吨袋/散装）、账期、运输方式与到货周期。",
+    "请提供安全生产许可证、排污许可证/环评批复、危化品相关资质。",
+    "请提供光伏玻璃/浮法玻璃客户案例、第三方检测报告或客户审厂报告。",
+    "请说明新装置/二期项目的投产时间、达产进度与质量稳定性。",
+    "是否接受200kg样品小试与现场审核？审核需看哪些区域？"
+  ],
+  "recommendations": [
+    {
+      "tier": "主供候选",
+      "company": "中盐化工",
+      "note": "最近（昆山39km）+ 集团390万吨 + 年报分厂数据；先谈昆山月度可供量。"
+    },
+    {
+      "tier": "主供候选",
+      "company": "山东海化",
+      "note": "280万吨氨碱大厂，海运/铁路到华东成熟；作为第二主供。"
+    },
+    {
+      "tier": "主供候选",
+      "company": "华昌化工",
+      "note": "张家港64km，IR明确可用于光伏玻璃；规模70万吨，适合作为近距补充。"
+    },
+    {
+      "tier": "战略/成本备选",
+      "company": "博源化工",
+      "note": "680万吨在产、天然碱成本优势；先核桐柏到苏州运费与铁路计划。"
+    },
+    {
+      "tier": "规格备选",
+      "company": "金晶科技",
+      "note": "海天生物低盐重质玻璃纯碱，规格最贴近；但自用比例高，外销可得性仅40。"
+    }
+  ],
+  "scoring": {
+    "weights": {
+      "certainty": 0.35,
+      "spec": 0.3,
+      "scale": 0.2,
+      "distance": 0.15
+    },
+    "tiers": [
+      {
+        "min": 84,
+        "label": "优先谈判"
+      },
+      {
+        "min": 78,
+        "label": "重点备选"
+      },
+      {
+        "min": 0,
+        "label": "观察/成本备选"
+      }
+    ]
+  }
+}

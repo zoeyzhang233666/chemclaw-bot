@@ -1,0 +1,20 @@
+ChemClaw plugin install (DSH Desktop)
+=====================================
+
+Package: chemclaw-bot-0.2.0.tgz (same folder) or local path:
+  D:\cursor-chembot\chemclaw-bot
+
+Steps:
+1. Open DeepSeek Harness Desktop
+2. Plugins → Add → choose the .tgz or the local chemclaw-bot folder
+3. Enable chemclaw-bot; restart if asked
+4. Open ChemClaw team (data under $DSH_HOME/chemclaw/)
+5. Secrets: CHEM_DATA_HUB, CHEM_BIZ_SCOPE, QCC
+
+Coexists with ds-bot (different Cordis id "chemclaw").
+
+Smoke (this machine): chemclaw-bot is already linked into
+  %USERPROFILE%\.dsh\profiles\desktop
+as dependency + bundle. Restart DSH Desktop to load it.
+
+Structural smoke: node chemclaw-bot/dev/smoke-plugin.mjs

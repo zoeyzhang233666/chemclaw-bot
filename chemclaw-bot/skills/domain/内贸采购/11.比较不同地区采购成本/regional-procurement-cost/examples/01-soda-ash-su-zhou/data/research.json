@@ -1,0 +1,969 @@
+{
+  "meta": {
+    "template_version": "1.0.0",
+    "generated_at": "2026-10-19",
+    "title": "重质纯碱 · 山东/河北/河南 → 江苏苏州 区域采购成本比较",
+    "scenario": "comparison",
+    "prepared_for": "内贸采购（重碱，下游浮法/轻工）",
+    "report_type": "区域采购成本比较"
+  },
+  "request": {
+    "product": "重质纯碱（Na₂CO₃，工业级）",
+    "spec": "工业级 Na₂CO₃ ≥98%，执行 GB/T 210-2022（Ⅱ类合格品/优等品），重碱堆密度 0.9~1.1 g/cm³，25kg 编织袋或吨包",
+    "receipt_address": "江苏省苏州市（收货地按苏州市区处理；若为下辖县级市如张家港/昆山/太仓，里程需相应增加）",
+    "qty": 100,
+    "qty_unit": "t",
+    "regions_in_scope": [
+      "山东",
+      "河北",
+      "河南",
+      "江苏（本地对照）"
+    ],
+    "time_range": "近 12 个月（2025-10 ~ 2026-10），可比数据实际覆盖 2026-07-21 ~ 2026-10-19",
+    "price_basis_requested": "含税、含运费到厂（DDP 口径）"
+  },
+  "product": {
+    "name": "重质纯碱",
+    "form": "heavy",
+    "commodity_unit": "元/吨",
+    "commodity_unit_note": "按净重计，吨/千千克；重碱以 25kg 袋或吨包交付。",
+    "density": "0.9~1.1 g/cm³",
+    "tax": {
+      "goods_vat": 0.13,
+      "freight_vat": 0.09,
+      "note": "纯碱销售适用 13% 增值税；公路/内河/铁路运输服务适用 9% 增值税（一般纳税人可抵扣）。"
+    },
+    "standard": "GB/T 210-2022 工业碳酸钠",
+    "common_grades": [
+      "工业级 ≥98%（Ⅰ/Ⅱ类）",
+      "食品添加剂级",
+      "光伏玻璃专用低铁级"
+    ]
+  },
+  "basis": {
+    "default_price_basis": "含税",
+    "price_unit": "元/吨",
+    "level_note": "基准口径：全国同一套“分区市场价”。重碱自 2026 年起全国统一按‘送到价’统计，其中沙河为‘自提’、西北为‘出厂价’（依据郑商所纯碱期货合约标准化说明与隆众分区报价）。",
+    "items": [
+      {
+        "key": "spec",
+        "label": "规格",
+        "value": "工业级 Na₂CO₃ ≥98%，重碱（堆密度 0.9~1.1 g/cm³），GB/T 210-2022"
+      },
+      {
+        "key": "unit",
+        "label": "计价单位",
+        "value": "元/吨（净重，含税）"
+      },
+      {
+        "key": "tax",
+        "label": "税费口径",
+        "value": "含 13% 增值税；对比时同时给出不含税金额"
+      },
+      {
+        "key": "delivery",
+        "label": "交货口径",
+        "value": "送到（到岸）为主；沙河为自提；西北为出厂"
+      },
+      {
+        "key": "date_window",
+        "label": "数据日期窗口",
+        "value": "基准日 2026-10-16；允许 ±1 个交易日；跨日不得混用"
+      },
+      {
+        "key": "packaging",
+        "label": "包装",
+        "value": "25kg 编织袋 / 吨包，袋装与散装价差未在本表体现"
+      }
+    ]
+  },
+  "normalization": {
+    "status": "partial",
+    "rules": [
+      {
+        "id": "R1",
+        "from": "元/吨",
+        "to": "元/吨",
+        "factor": 1,
+        "formula": "1 元/吨 = 1 元/吨",
+        "note": "全表统一"
+      },
+      {
+        "id": "R2",
+        "from": "含税",
+        "to": "不含税",
+        "factor": 0.884955752,
+        "formula": "不含税 = 含税 ÷ (1 + 13%)",
+        "note": "用于同业/非一般纳税人比价"
+      },
+      {
+        "id": "R3",
+        "from": "区间价",
+        "to": "单点价",
+        "factor": 1,
+        "formula": "取区间中值 =（下限 + 上限）÷ 2",
+        "note": "区间宽度超过 100 元/吨时标注为“宽区间”，并单列上下限敏感性"
+      },
+      {
+        "id": "R4",
+        "from": "期货基差报价",
+        "to": "现货价",
+        "factor": 1,
+        "formula": "折现货 ≈ SA2701 收盘价 + 基差",
+        "note": "仅作交叉验证，不作为基准价（基差为贸易商报盘，含期现结构）"
+      }
+    ],
+    "excluded": [
+      "轻碱价格（未按重碱做水合/挤压加工的同规格化处理，价格不可比）",
+      "贸易商挂牌价（规格/含税/产地混杂，如 ChemicalBook 江苏国标 1800 元/吨、河南 70% 750 元/吨）",
+      "青海/西北出厂价（不含运至江苏的运输，交割口径不同）"
+    ]
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "name": "化盟网《纯碱日评》分区价格表（2026-10-16）",
+      "type": "市场资讯",
+      "level": "送到/自提",
+      "url": "https://zx.hm-w.com/viewpoint/detail/17862",
+      "retrieved_at": "2026-10-19",
+      "note": "该表按‘沙河/华北/华东/华中/华南’分区列重碱与轻碱区间价，日频更新，并给出与上一交易日的涨跌。"
+    },
+    {
+      "id": "S2",
+      "name": "隆众资讯《纯碱日评》分区价格表（2026-10-14）",
+      "type": "市场资讯",
+      "level": "送到/自提",
+      "url": "https://zx.hm-w.com/viewpoint/detail/17828",
+      "retrieved_at": "2026-10-19",
+      "note": "作为 S1 的回测对照：各分区重碱价格与 10-16 一致，说明近三个交易日现货平稳。"
+    },
+    {
+      "id": "S3",
+      "name": "海证期货·隆众口径分区重碱价（2026-09-18）",
+      "type": "期货公司日报（引隆众）",
+      "level": "送到",
+      "url": "https://www.sohu.com/a/1077654435_122014422",
+      "retrieved_at": "2026-10-19",
+      "note": "华北 1120-1220、华东 1130-1230、华中 1090-1180。"
+    },
+    {
+      "id": "S4",
+      "name": "海证期货·隆众口径分区重碱价（2026-09-11）",
+      "type": "期货公司日报（引隆众）",
+      "level": "送到",
+      "url": "https://www.sohu.com/a/1074629703_122014422",
+      "retrieved_at": "2026-10-19",
+      "note": "华北 1120-1220、华东 1130-1230、华中 1090-1180（与 S3 一致）。"
+    },
+    {
+      "id": "S5",
+      "name": "化盟网《纯碱日评》（2026-09-24 / 2026-09-29）",
+      "type": "市场资讯",
+      "level": "送到/自提",
+      "url": "https://zx.hm-w.com/viewpoint/detail/17688",
+      "retrieved_at": "2026-10-19",
+      "note": "沙河重碱 09-24 为 970-980（前一日 975-985）；09-29 表中华北/华东重碱 1100-1200、华中 1050-1150。"
+    },
+    {
+      "id": "S6",
+      "name": "新华财经·玻多多华北/华东重碱价（2026-07-29）",
+      "type": "新闻通讯社",
+      "level": "主流报价（含税，口径同城）",
+      "url": "https://finance.eastmoney.com/a/202607303826720998.html",
+      "retrieved_at": "2026-10-19",
+      "note": "华北重碱 1250-1320、华东重碱 1210-1280；华北轻碱 1150-1210、华东轻碱 1010-1570。"
+    },
+    {
+      "id": "S7",
+      "name": "生意社·重质纯碱基准价与现期图（2026-07-21 ~ 2026-10-19）",
+      "type": "价格指数（全国）",
+      "level": "全国加权参考价",
+      "url": "https://www.100ppi.com/sf/737.html",
+      "retrieved_at": "2026-10-19",
+      "note": "10-19 重碱基准价 1062.86 元/吨；同页给出主力合约与基差，可复核全国价格中枢走向。"
+    },
+    {
+      "id": "S8",
+      "name": "隆众资讯：纯碱期货合约标准化说明（转引郑商所）",
+      "type": "交易所规则",
+      "level": "规则",
+      "url": "https://www.czce.com.cn/cn/rootfiles/2021/09/03/1605597062097884-1605597062128743.pdf",
+      "retrieved_at": "2026-10-19",
+      "note": "“轻碱统一采用出厂价；重碱除西北以外的地区采用送到价，西北地区采用出厂价”——这是本报告区分‘出厂/送到’依据。"
+    }
+  ],
+  "quotes": [
+    {
+      "id": "Q-SH",
+      "source_id": "S1",
+      "date": "2026-10-16",
+      "market": "山东（华北），主报点：淄博/潍坊",
+      "region_key": "山东",
+      "grade": "重碱",
+      "spec": "工业级 Na₂CO₃ ≥98%",
+      "price_low": 1100,
+      "price_high": 1200,
+      "price": 1150,
+      "price_type": "区间中值",
+      "unit": "元/吨",
+      "tax_included": true,
+      "delivery_basis": "送到",
+      "evidence": "化盟网 2026-10-16 分区价格表：华北 重碱 1100-1200（上期 1100-1200，0/0）。山东属华北市场，主报点为淄博、潍坊两地厂家；本值代表‘山东重碱出厂/送到价’市场区间中值。",
+      "verify": "基差口径：海化厂提 01+20 至 +30、01-10（10-13、10-15 隆众期现报盘），若按 SA2701 940 折算约 930~970 元/吨，为广口口径，未纳入本表。",
+      "common_quote_unit": "元/吨",
+      "converted": 1150,
+      "conversion": "无单位换算（元/吨 → 元/吨）",
+      "comparable": true,
+      "comparable_note": ""
+    },
+    {
+      "id": "Q-HE",
+      "source_id": "S1",
+      "date": "2026-10-16",
+      "market": "河北（沙河/华北），主报点：邢台沙河",
+      "region_key": "河北",
+      "grade": "重碱",
+      "spec": "工业级 Na₂CO₃ ≥98%",
+      "price_low": 940,
+      "price_high": 950,
+      "price": 945,
+      "price_type": "区间中值",
+      "unit": "元/吨",
+      "tax_included": true,
+      "delivery_basis": "自提",
+      "evidence": "化盟网 2026-10-16：沙河 重碱 940-950（上期 935-945，-5/-5）。沙河是全国重碱贸易集散与风向标市场，自提价；同期华北重碱 1100-1200 为区域送到/出厂价，二者不可混用。",
+      "verify": "隆众 10-15 / 10-13 期现报盘：河北库提 01-40 至 -70、沙河 01 平水；折算后与 945 同向。",
+      "common_quote_unit": "元/吨",
+      "converted": 945,
+      "conversion": "无单位换算（元/吨 → 元/吨）",
+      "comparable": true,
+      "comparable_note": "自提口径：运费须由买方承担，故本区域不含运费价最低，但到厂成本需加上全程运费。"
+    },
+    {
+      "id": "Q-HA",
+      "source_id": "S1",
+      "date": "2026-10-16",
+      "market": "河南（华中），主报点：郑州/平顶山/南阳桐柏",
+      "region_key": "河南",
+      "grade": "重碱",
+      "spec": "工业级 Na₂CO₃ ≥98%",
+      "price_low": 1050,
+      "price_high": 1150,
+      "price": 1100,
+      "price_type": "区间中值",
+      "unit": "元/吨",
+      "tax_included": true,
+      "delivery_basis": "送到",
+      "evidence": "化盟网 2026-10-16：华中 重碱 1050-1150（上期 1050-1150，0/0）。河南为华中纯碱主产区（金山、中源、骏化、桐柏海晶），主产销区在平顶山、南阳桐柏、舞阳。",
+      "verify": "海证期货 9-11 / 9-18 转述隆众：华中重碱 1090-1180，与本次 1050-1150 相比中枢下移约 25 元/吨，方向与全国走势一致。",
+      "common_quote_unit": "元/吨",
+      "converted": 1100,
+      "conversion": "无单位换算（元/吨 → 元/吨）",
+      "comparable": true,
+      "comparable_note": ""
+    },
+    {
+      "id": "Q-JS",
+      "source_id": "S1",
+      "date": "2026-10-16",
+      "market": "江苏（华东），主报点：连云港/淮安/苏州",
+      "region_key": "江苏",
+      "grade": "重碱",
+      "spec": "工业级 Na₂CO₃ ≥98%",
+      "price_low": 1100,
+      "price_high": 1200,
+      "price": 1150,
+      "price_type": "区间中值",
+      "unit": "元/吨",
+      "tax_included": true,
+      "delivery_basis": "送到",
+      "evidence": "化盟网 2026-10-16：华东 重碱 1100-1200（上期 1100-1200，0/0）。江苏为华东纯碱主产区（连云港德邦、淮安井神、碱业），华东区间即本地区主流可成交价。",
+      "verify": "海证期货 9-11 / 9-18：华东重碱 1130-1230，本次 1100-1200，同向小幅下移。",
+      "common_quote_unit": "元/吨",
+      "converted": 1150,
+      "conversion": "无单位换算（元/吨 → 元/吨）",
+      "comparable": true,
+      "comparable_note": "本地对照：该价格已是华东送到价，若买方可自提（本地短驳），实际到厂价可能低于此值。"
+    }
+  ],
+  "destination": {
+    "name": "收货地：江苏省苏州市",
+    "city": "苏州",
+    "detail": "江苏省苏州市（市区）。如为下辖张家港/昆山/太仓/常熟，请以实测里程替换；本报告未做区县细分。",
+    "coord": [
+      120.5853,
+      31.2989
+    ],
+    "note": "苏州为消费型市场，本地产能小，主流货源来自江苏连云港/淮安、山东、河北沙河、河南、青海等地。"
+  },
+  "routes": [
+    {
+      "id": "R-SH",
+      "region_id": "SH",
+      "label": "山东 → 苏州",
+      "origin_name": "山东济宁（主报点）/ 潍坊、淄博（备选点）",
+      "origin_city": "济宁",
+      "dest_city": "苏州",
+      "mode": "公路（13m 半挂，31~32 吨）",
+      "transport_mode": "公路整车",
+      "alternatives": [
+        {
+          "mode": "内河/海运联运",
+          "note": "潍坊港/莱州港装船 → 长江口/苏州港，适合 1000 吨以上；需另询船代运价"
+        },
+        {
+          "mode": "铁路",
+          "note": "潍坊/淄博 → 苏州西，30 车起（约 1800 吨），需另询国铁 95306 运价"
+        }
+      ],
+      "basis": "measured_legs",
+      "distance_source": "途经 G18 荣乌→G25 长深→G2 京沪 方案；取莱州（山东海化所在）为起点，比淄博起点更偏，属保守估计，实际用户须按供应商实际发货地重新实测。",
+      "freight_unit": null,
+      "freight_total": null,
+      "freight_unit_note": "待填：元/吨（公路整车包干运价，含 9% 增值税，一般纳税人可抵扣）",
+      "loading_total": null,
+      "unloading_total": null,
+      "inspection_total": null,
+      "other_total": 0,
+      "notes": "山东海化（潍坊滨海）为主要货源地，本地自提价 930~970 元/吨区间（基差口径），为三家中的最低裸价。",
+      "distance_reference_km": 744,
+      "legs": [
+        {
+          "from": "潍坊",
+          "to": "苏州",
+          "km": 760,
+          "hours": 8.1,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/159_133.html",
+          "road": "G20 青银→G15 沈海→G25 长深→G2 京沪→沪陕"
+        },
+        {
+          "from": "淄博",
+          "to": "苏州",
+          "km": 744,
+          "hours": 8.5,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/155_133.html",
+          "road": "G20 青银→G15 沈海→G25 长深→G2 京沪"
+        },
+        {
+          "from": "济宁",
+          "to": "苏州",
+          "km": 707,
+          "hours": 7.8,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/160_133.html",
+          "road": "G3 京台→G2 京沪"
+        }
+      ],
+      "distance_ref_note": "主报点济宁 707 km；淄博 744 km；潍坊 760 km。东端（烟台/威海）另加约 150~250 km，需用户补测。"
+    },
+    {
+      "id": "R-HE",
+      "region_id": "HE",
+      "label": "河北 → 苏州",
+      "origin_name": "河北邢台沙河（主报点，沙河市场所在地）/ 唐山三友（备选点）",
+      "origin_city": "邢台",
+      "dest_city": "苏州",
+      "mode": "公路（13m 半挂，31~32 吨）",
+      "transport_mode": "公路整车",
+      "alternatives": [
+        {
+          "mode": "海铁联运",
+          "note": "京唐港/天津港 → 连云港/太仓港，再短驳；适合 1000 吨以上"
+        }
+      ],
+      "basis": "measured_legs",
+      "distance_source": "途经 G4 京港澳→G22 青兰→G3 京台→G2 京沪 方案。若从唐山（三友所在）发货，需另加约 200~260 km。",
+      "freight_unit": null,
+      "freight_total": null,
+      "freight_unit_note": "待填：元/吨（公路整车包干运价，含 9% 增值税，一般纳税人可抵扣）",
+      "loading_total": null,
+      "unloading_total": null,
+      "inspection_total": null,
+      "other_total": 0,
+      "notes": "沙河为自提价，945 元/吨是三家最低裸价；但沙河→苏州约 1000+ km，运费可能吃掉全部价差。",
+      "distance_reference_km": 999,
+      "legs": [
+        {
+          "from": "邢台",
+          "to": "苏州",
+          "km": 999,
+          "hours": 10.7,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/192_133.html",
+          "road": "G4 京港澳→G22→G3→G2"
+        },
+        {
+          "from": "邯郸",
+          "to": "苏州",
+          "km": 992,
+          "hours": 11.4,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/191_133.html",
+          "road": "G4 京港澳→G22 青兰→G3 京台→G2 京沪"
+        },
+        {
+          "from": "唐山",
+          "to": "苏州",
+          "km": 1126,
+          "hours": 12.5,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/189_133.html",
+          "road": "G25 长深→G2 京沪"
+        }
+      ],
+      "distance_ref_note": "沙河 999 km；邯郸 992 km；唐山（真正的省内产能集中地）1126 km，比沙河多 127 km。"
+    },
+    {
+      "id": "R-HA",
+      "region_id": "HA",
+      "label": "河南 → 苏州",
+      "origin_name": "河南商丘（主报点）/ 南阳桐柏、平顶山（备选点）",
+      "origin_city": "商丘",
+      "dest_city": "苏州",
+      "mode": "公路（13m 半挂，31~32 吨）",
+      "transport_mode": "公路整车",
+      "alternatives": [
+        {
+          "mode": "铁路",
+          "note": "平顶山东/桐柏 → 苏州西，需批量与配车日"
+        }
+      ],
+      "basis": "measured_legs",
+      "distance_source": "途经 G40 沪陕→G3 京台→G4211 宁芜→G42 沪蓉 方案。河南厂区分散，若从平顶山发货需另加约 130 km。",
+      "freight_unit": null,
+      "freight_total": null,
+      "freight_unit_note": "待填：元/吨（公路整车包干运价，含 9% 增值税，一般纳税人可抵扣）",
+      "loading_total": null,
+      "unloading_total": null,
+      "inspection_total": null,
+      "other_total": 0,
+      "notes": "河南重碱 1100 元/吨，比河北沙河贵 155 元/吨，但比山东贵 50 元/吨；到厂后的排序取决于运费。",
+      "distance_reference_km": 665,
+      "legs": [
+        {
+          "from": "商丘",
+          "to": "苏州",
+          "km": 665,
+          "hours": 7.1,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/183_133.html",
+          "road": "G30 连霍→G3 京台→G2"
+        },
+        {
+          "from": "南阳",
+          "to": "苏州",
+          "km": 881,
+          "hours": 9.2,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/182_133.html",
+          "road": "G55 二广→G40 沪陕→G2"
+        }
+      ],
+      "distance_ref_note": "商丘 665 km；南阳 881 km；平顶山介于二者之间（约 780~820 km，未单独核实）。"
+    },
+    {
+      "id": "R-JS",
+      "region_id": "JS",
+      "label": "江苏本地（淮安/连云港）→ 苏州",
+      "origin_name": "江苏淮安（井神盐化）/ 连云港（德邦、碱业）",
+      "origin_city": "淮安",
+      "dest_city": "苏州",
+      "mode": "公路（13m 半挂，31~32 吨）",
+      "transport_mode": "公路整车",
+      "alternatives": [
+        {
+          "mode": "内河驳船",
+          "note": "连云港 → 灌河/盐河 → 京杭运河 → 苏州"
+        }
+      ],
+      "basis": "measured_legs",
+      "distance_source": "途经 G25/沈海→G2 京沪 方案。本地对照项：区内运距最短，运价对总成本最不敏感。",
+      "freight_unit": null,
+      "freight_total": null,
+      "freight_unit_note": "待填：元/吨（公路整车包干运价，含 9% 增值税，一般纳税人可抵扣）",
+      "loading_total": null,
+      "unloading_total": null,
+      "inspection_total": null,
+      "other_total": 0,
+      "notes": "本地采购虽然裸价不是最低，但运距最短、可实现 JIT，适合作为紧急补货/安全库存来源。",
+      "distance_reference_km": 336,
+      "legs": [
+        {
+          "from": "淮安",
+          "to": "苏州",
+          "km": 336,
+          "hours": 3.8,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/136_133.html",
+          "road": "G2 京沪"
+        },
+        {
+          "from": "连云港",
+          "to": "苏州",
+          "km": 436,
+          "hours": 4.9,
+          "source": "车主手册 icauto.com.cn「城际路线大全」单程高速方案",
+          "url": "https://www.icauto.com.cn/route/135_133.html",
+          "road": "G25 长深→G2 京沪"
+        }
+      ],
+      "distance_ref_note": "淮安 336 km；连云港 436 km。"
+    }
+  ],
+  "regions": [
+    {
+      "id": "SH",
+      "name": "山东",
+      "label": "山东（潍坊/淄博）",
+      "market": "华北",
+      "quote_id": "Q-SH",
+      "route_id": "R-SH",
+      "producers": [
+        "山东海化",
+        "海天生物",
+        "山东海天",
+        "丰元化学"
+      ],
+      "include": true
+    },
+    {
+      "id": "HE",
+      "name": "河北",
+      "label": "河北（沙河）",
+      "market": "华北（沙河）",
+      "quote_id": "Q-HE",
+      "route_id": "R-HE",
+      "producers": [
+        "唐山三友",
+        "沙河贸易商"
+      ],
+      "include": true
+    },
+    {
+      "id": "HA",
+      "name": "河南",
+      "label": "河南（桐柏/平顶山）",
+      "market": "华中",
+      "quote_id": "Q-HA",
+      "route_id": "R-HA",
+      "producers": [
+        "桐柏海晶",
+        "河南金山",
+        "中源化学",
+        "骏化集团"
+      ],
+      "include": true
+    },
+    {
+      "id": "JS",
+      "name": "江苏本地",
+      "label": "江苏（连云港/淮安）",
+      "market": "华东",
+      "quote_id": "Q-JS",
+      "route_id": "R-JS",
+      "producers": [
+        "连云港德邦",
+        "井神盐化",
+        "江苏华昌",
+        "昆山锦港"
+      ],
+      "include": true
+    }
+  ],
+  "benchmark_region_id": "SH",
+  "cost_params": {
+    "qty": 100,
+    "unit": "t",
+    "loadingUnit": null,
+    "unloadingUnit": null,
+    "inspectionUnit": null,
+    "loadingTotal": null,
+    "unloadingTotal": null,
+    "inspectionTotal": null,
+    "taxRate": 9,
+    "priceBasis": "incl_tax",
+    "note": "装卸、检测费用均未取得任何可核实报价，一律留空。填 0 与留空的区别：留空=未知，0=已确认为零，报告只在全部填值后才给出到厂排序。"
+  },
+  "freight_quotes": [],
+  "history": {
+    "available": false,
+    "span": "2026-07-21 ~ 2026-10-19（全国链）+ 2026-07-29 ~ 2026-10-16（分区重碱快照）",
+    "price_change_window": {
+      "from": "2026-07-29",
+      "to": "2026-10-16",
+      "pct": -7.7,
+      "note": "分区重碱价格中枢由 07-29 的华北 1285/华东 1245 下移至 10-16 的华北 1150/华东 1150，约 -7%~-11%"
+    },
+    "series": [
+      {
+        "key": "national_heavy_100ppi",
+        "name": "全国重碱基准价（生意社）",
+        "unit": "元/吨",
+        "kind": "全国均价",
+        "tax_included": true,
+        "delivery_basis": "全国加权参考",
+        "source_id": "S7",
+        "points": [
+          {
+            "date": "2026-07-21",
+            "value": 1152.86
+          },
+          {
+            "date": "2026-07-30",
+            "value": 1140
+          },
+          {
+            "date": "2026-08-08",
+            "value": 1090
+          },
+          {
+            "date": "2026-08-17",
+            "value": 1090
+          },
+          {
+            "date": "2026-08-26",
+            "value": 1087.14
+          },
+          {
+            "date": "2026-09-04",
+            "value": 1087.14
+          },
+          {
+            "date": "2026-09-13",
+            "value": 1090
+          },
+          {
+            "date": "2026-09-22",
+            "value": 1077.14
+          },
+          {
+            "date": "2026-10-01",
+            "value": 1075.71
+          },
+          {
+            "date": "2026-10-10",
+            "value": 1074.29
+          },
+          {
+            "date": "2026-10-19",
+            "value": 1062.86
+          }
+        ]
+      },
+      {
+        "key": "futures_sa2701",
+        "name": "纯碱主力合约 SA2701 收盘价",
+        "unit": "元/吨",
+        "kind": "期货（含交割成本，不含税口径需换算）",
+        "tax_included": false,
+        "delivery_basis": "交易所仓单",
+        "source_id": "S7",
+        "points": [
+          {
+            "date": "2026-07-21",
+            "value": 1009
+          },
+          {
+            "date": "2026-07-30",
+            "value": 944
+          },
+          {
+            "date": "2026-08-17",
+            "value": 1031
+          },
+          {
+            "date": "2026-08-26",
+            "value": 1035
+          },
+          {
+            "date": "2026-09-04",
+            "value": 1093
+          },
+          {
+            "date": "2026-09-22",
+            "value": 1017
+          },
+          {
+            "date": "2026-10-14",
+            "value": 944
+          },
+          {
+            "date": "2026-10-16",
+            "value": 939
+          }
+        ]
+      }
+    ],
+    "series_note": "全国基准价是‘全国加权参考’，不直接代表山东/河北/河南/江苏任一分区的成交价；本报告用它描述价格趋势，不作为分区价差的计算依据。期货序列仅作参照，不作现货价格。",
+    "regional_spread": [
+      {
+        "date": "2026-10-16",
+        "region_key": "河北",
+        "region_note": "沙河自提",
+        "heavy_low": 940,
+        "heavy_high": 950,
+        "source_id": "S1"
+      },
+      {
+        "date": "2026-10-16",
+        "region_key": "山东",
+        "region_note": "华北送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S1"
+      },
+      {
+        "date": "2026-10-16",
+        "region_key": "河南",
+        "region_note": "华中送到",
+        "heavy_low": 1050,
+        "heavy_high": 1150,
+        "source_id": "S1"
+      },
+      {
+        "date": "2026-10-16",
+        "region_key": "江苏本地",
+        "region_note": "华东送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S1"
+      },
+      {
+        "date": "2026-10-14",
+        "region_key": "河北",
+        "region_note": "沙河自提",
+        "heavy_low": 940,
+        "heavy_high": 950,
+        "source_id": "S2"
+      },
+      {
+        "date": "2026-10-14",
+        "region_key": "山东",
+        "region_note": "华北送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S2"
+      },
+      {
+        "date": "2026-10-14",
+        "region_key": "河南",
+        "region_note": "华中送到",
+        "heavy_low": 1050,
+        "heavy_high": 1150,
+        "source_id": "S2"
+      },
+      {
+        "date": "2026-10-14",
+        "region_key": "江苏本地",
+        "region_note": "华东送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S2"
+      },
+      {
+        "date": "2026-09-29",
+        "region_key": "山东",
+        "region_note": "华北送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S5"
+      },
+      {
+        "date": "2026-09-29",
+        "region_key": "河南",
+        "region_note": "华中送到",
+        "heavy_low": 1050,
+        "heavy_high": 1150,
+        "source_id": "S5"
+      },
+      {
+        "date": "2026-09-29",
+        "region_key": "江苏本地",
+        "region_note": "华东送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S5"
+      },
+      {
+        "date": "2026-09-24",
+        "region_key": "河北",
+        "region_note": "沙河自提",
+        "heavy_low": 970,
+        "heavy_high": 980,
+        "source_id": "S5"
+      },
+      {
+        "date": "2026-09-24",
+        "region_key": "山东",
+        "region_note": "华北送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S5"
+      },
+      {
+        "date": "2026-09-24",
+        "region_key": "河南",
+        "region_note": "华中送到",
+        "heavy_low": 1050,
+        "heavy_high": 1150,
+        "source_id": "S5"
+      },
+      {
+        "date": "2026-09-24",
+        "region_key": "江苏本地",
+        "region_note": "华东送到",
+        "heavy_low": 1100,
+        "heavy_high": 1200,
+        "source_id": "S5"
+      },
+      {
+        "date": "2026-09-18",
+        "region_key": "山东",
+        "region_note": "华北送到",
+        "heavy_low": 1120,
+        "heavy_high": 1220,
+        "source_id": "S3"
+      },
+      {
+        "date": "2026-09-18",
+        "region_key": "河南",
+        "region_note": "华中送到",
+        "heavy_low": 1090,
+        "heavy_high": 1180,
+        "source_id": "S3"
+      },
+      {
+        "date": "2026-09-18",
+        "region_key": "江苏本地",
+        "region_note": "华东送到",
+        "heavy_low": 1130,
+        "heavy_high": 1230,
+        "source_id": "S3"
+      },
+      {
+        "date": "2026-09-11",
+        "region_key": "山东",
+        "region_note": "华北送到",
+        "heavy_low": 1120,
+        "heavy_high": 1220,
+        "source_id": "S4"
+      },
+      {
+        "date": "2026-09-11",
+        "region_key": "河南",
+        "region_note": "华中送到",
+        "heavy_low": 1090,
+        "heavy_high": 1180,
+        "source_id": "S4"
+      },
+      {
+        "date": "2026-09-11",
+        "region_key": "江苏本地",
+        "region_note": "华东送到",
+        "heavy_low": 1130,
+        "heavy_high": 1230,
+        "source_id": "S4"
+      },
+      {
+        "date": "2026-07-29",
+        "region_key": "山东",
+        "region_note": "华北主流报价",
+        "heavy_low": 1250,
+        "heavy_high": 1320,
+        "source_id": "S6"
+      },
+      {
+        "date": "2026-07-29",
+        "region_key": "江苏本地",
+        "region_note": "华东主流报价",
+        "heavy_low": 1210,
+        "heavy_high": 1280,
+        "source_id": "S6"
+      }
+    ]
+  },
+  "gap_rules": [
+    "同一区域若只有单一来源且未注明交货口径，不得进入基准列表",
+    "价格日期与基准日不一致且无中间价格说明，不得做价差",
+    "运费、装卸费、检测费缺失时，到厂成本不得给出具体数字或排序",
+    "不得使用行业均值、经验值填补运价"
+  ],
+  "gaps": [
+    {
+      "key": "freight_all_routes",
+      "title": "全部线路运费（元/吨）",
+      "severity": "blocker",
+      "what": "山东/河北/河南/江苏→苏州 的公路整车运价",
+      "why": "没有任何 30 吨左右袋装普货的公路运价可以直接引用：运价随油价、回程车、淡旺季波动，且属于承运方报价，不公开。",
+      "how_to_fix": "向 2 家以上承运方询价（注明车型、起终点、是否回程、装货等待、税费），把每吨运价填进表格即可解锁到厂成本。",
+      "impact": "到厂成本与排名无法计算，但价格差、距离与因素方向可以给出"
+    },
+    {
+      "key": "loading_unloading",
+      "title": "装车费、卸车费",
+      "severity": "blocker",
+      "what": "袋装纯碱的装车、卸车（含卸货到指定库位）单价",
+      "why": "通常由发货厂/收货方/承运方分别承担，不同厂家差异大，且多数厂家含在车板价里。",
+      "how_to_fix": "确认‘是否含装卸’：含则填 0 并注明，不含则按实际报价填入。",
+      "impact": "影响约 5~30 元/吨量级，对接近的排名可能造成翻转"
+    },
+    {
+      "key": "spec_grade",
+      "title": "袋装/散装与堆密度细分规格",
+      "severity": "warn",
+      "what": "25kg 袋与吨包的价差、袋装与散装价差",
+      "why": "分区报价表未按包装细分，袋装通常较散装溢价。",
+      "how_to_fix": "询价时注明包装并取得同规格报价",
+      "impact": "约 10~40 元/吨"
+    },
+    {
+      "key": "delivery_basis",
+      "title": "山东/河南‘送到’的具体送达范围",
+      "severity": "warn",
+      "what": "分区表标注‘送到’但未定义送到半径，实际可能是本省/本大区内送到，而非送到苏州",
+      "why": "若‘送到’仅覆盖区域内，则到苏州仍需追加运费",
+      "how_to_fix": "向供应商确认‘出厂价’与‘送到苏州价’分别报价",
+      "impact": "可能高估分区价的含运程度（对山东/河南更不利）"
+    }
+  ],
+  "assumptions": [
+    {
+      "key": "A1",
+      "text": "价格口径：全部为含 13% 增值税的人民币价格，计价单位元/吨（净重）。",
+      "source": "S1"
+    },
+    {
+      "key": "A2",
+      "text": "交货口径：沙河列为自提；华北/华中/华东列为送到或出厂（未细分）。三大来源地若为出厂价，则到厂还需加全程运费；若为送到本区域，则到苏州仍需追加长途运费。两种情况下方向一致：非江苏来源都要另付长途运费。",
+      "source": "S8"
+    },
+    {
+      "key": "A3",
+      "text": "取区间中值作为点估计，并在报告中同时给出区间上下限（敏感性）。",
+      "source": "方法论"
+    },
+    {
+      "key": "A4",
+      "text": "运距采用可核验的高德/车主手册类公路路线里程（高速主推方案），不含厂区到高速口的短驳，实际±5%。",
+      "source": "ROUTE_VERIFICATION.md"
+    },
+    {
+      "key": "A5",
+      "text": "装卸、检测等费用无法核实，一律留空；用户填 0 表示“确认含在车板价内”。",
+      "source": "方法论"
+    },
+    {
+      "key": "A6",
+      "text": "100 吨约需 3.2 车（13m 半挂按 31 吨/车），整车包干运价通常以单程车为单位议价。",
+      "source": "方法论"
+    },
+    {
+      "key": "A7",
+      "text": "不预测未来价格。报告中所有关于涨跌的描述均为已发生事实。",
+      "source": "方法论"
+    }
+  ]
+}

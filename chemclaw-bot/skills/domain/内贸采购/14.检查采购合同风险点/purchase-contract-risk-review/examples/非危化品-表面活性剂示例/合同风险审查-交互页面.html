@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>异构十三醇聚氧乙烯醚（非离子表面活性剂）框架采购合同 · 合同风险审查</title>
+<style>
+:root{{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f6f8fb;--card:#ffffff;--brand:#0f3d5c;--accent:#c2410c;--left:46%;}}
+*{{box-sizing:border-box}}
+html,body{{margin:0;padding:0}}
+body{{font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.65}}
+a{{color:#0b5cad}}
+.demo-banner{{background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 12px,#fde68a 12px,#fde68a 24px);color:#78350f;padding:10px 26px;font-size:13px;border-bottom:1px solid #f59e0b}}
+.hero{{background:linear-gradient(135deg,#0b2e45 0%,#0f3d5c 45%,#155e75 100%);color:#e6f2f7;padding:26px 30px 22px}}
+.hero .kicker{{font-size:12px;letter-spacing:.2em;color:#7dd3fc;text-transform:uppercase}}
+.hero h1{{margin:6px 0 4px;font-size:26px;font-weight:700;letter-spacing:.02em}}
+.hero .meta{{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12.5px;color:#bae6fd;margin-top:10px}}
+.hero .meta b{{color:#fff;font-weight:600}}
+.pills{{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}}
+.pill{{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:3px 10px;border-radius:999px;font-size:12px}}
+.tabs{{display:flex;gap:2px;background:#0b2e45;padding:0 18px;position:sticky;top:0;z-index:50}}
+.tabs button{{background:transparent;border:0;color:#9ec5d8;padding:12px 18px;font-size:14px;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}}
+.tabs button.active{{color:#fff;border-bottom-color:#f59e0b;font-weight:600}}
+.tabs button:hover{{color:#fff}}
+.panel{{display:none;padding:20px 24px 40px}}
+.panel.active{{display:block}}
+.stats{{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:6px 0 18px}}
+.stat{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}}
+.stat .num{{font-size:30px;font-weight:700;color:var(--brand);line-height:1.1}}
+.stat .lbl{{font-size:12px;color:var(--muted)}}
+.grid2{{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}}
+.card{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 2px rgba(15,23,42,.04)}}
+.card h3{{margin:0 0 10px;font-size:15px;color:var(--brand)}}
+.toprow,.qrow,.irow,.cla{{list-style:none}}
+ol.top{{padding-left:0;margin:0}}
+.toprow{{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);cursor:pointer;font-size:13.5px}}
+.toprow:hover{{color:var(--accent)}}
+.toprow:last-child{{border-bottom:0}}
+.sev{{display:inline-block;padding:0 7px;border-radius:5px;font-size:11.5px;font-weight:600;white-space:nowrap}}
+.topicbar{{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}}
+.topicbar-item{{display:flex;flex-direction:column;align-items:center;background:#eef4f8;border-radius:8px;padding:4px 10px;font-size:12px;color:#155e75;min-width:56px}}
+.topicbar-item i{{font-style:normal;font-weight:700;font-size:16px;color:#0f3d5c}}
+.miss{{color:#9a3412}}
+.uinote{{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#7c2d12;margin-top:10px}}
+.disclaimer{{background:#fff1f2;border:1px solid #fecdd3;color:#881337;border-radius:10px;padding:12px 14px;font-size:12.5px;margin-top:16px}}
+/* ---------- review workspace ---------- */
+.ws{{display:grid;grid-template-columns:var(--left) 1fr;gap:0;border-top:1px solid var(--line);}
+.ws-left,.ws-right{{height:calc(100vh - 118px);overflow:auto;scroll-behavior:smooth}}
+.ws-left{{background:#fdfdfb;border-right:1px solid var(--line);padding:16px 18px 80px}}
+.ws-right{{padding:14px 18px 90px;background:#f3f6f9}}
+.toolbar{{position:sticky;top:0;background:var(--bg);z-index:40;padding:10px 24px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}}
+.toolbar .row{{display:flex;flex-wrap:wrap;gap:6px;align-items:center}}
+.toolbar .lbl{{font-size:12px;color:var(--muted);margin-right:4px}}
+.fbtn,.kbtn,.sbtn,.tb{{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 11px;font-size:12.5px;cursor:pointer;font-family:inherit;color:#334155}}
+.fbtn b,.kbtn b{{font-weight:700;color:var(--brand)}}
+.fbtn.active{{background:var(--tc,#0f3d5c);border-color:transparent;color:#fff}}
+.fbtn.active b{{color:#fff}}
+.kbtn.active{{background:var(--brand);color:#fff;border-color:transparent}}
+.kbtn.active b{{color:#fff}}
+.btn{{border:1px solid #0f3d5c;background:#0f3d5c;color:#fff;border-radius:8px;padding:5px 12px;font-size:12.5px;cursor:pointer;font-family:inherit}}
+.btn.ghost{{background:#fff;color:#0f3d5c}}
+#search{{flex:1;min-width:180px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-family:inherit;font-size:13px}}
+.csec{{margin-bottom:18px}}
+.csec h3{{font-size:15px;margin:16px 0 8px;color:#0f3d5c;border-left:4px solid #f59e0b;padding-left:10px;display:flex;align-items:center;gap:8px}}
+.sec-no{{background:#0f3d5c;color:#fff;border-radius:4px;font-size:12px;padding:1px 7px}}
+.pg{{margin-left:auto;font-size:11px;color:#94a3b8;font-weight:400;background:#f1f5f9;border-radius:4px;padding:0 6px}}
+.clause{{padding:8px 10px;border-radius:8px;margin:4px 0;cursor:default;transition:background .15s}}
+.clause:hover{{background:#f4f7fa}}
+.clause.flagged{{background:#fffdf5}}
+.clause.flash{{background:#fef3c7;box-shadow:inset 0 0 0 2px #f59e0b}}
+.clause-no{{font-size:11.5px;color:#64748b;display:flex;align-items:center;gap:6px;margin-bottom:2px}}
+.clause-text{{font-size:13.5px;color:#1e293b;text-align:justify}}
+.clause-chips{{display:flex;gap:3px;margin-left:auto}}
+.hit-chip{{border:0;border-radius:4px;font-size:10.5px;padding:0 5px;cursor:pointer;font-weight:700;color:#fff;background:#64748b}}
+.hit-chip.s5{{background:#b91c1c}}.hit-chip.s4{{background:#ea580c}}.hit-chip.s3{{background:#d97706}}.hit-chip.s2{{background:#16a34a}}
+.attachment{{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0}}
+.att-head{{font-weight:700;color:#0f3d5c;display:flex;gap:8px;align-items:center;margin-bottom:8px}}
+.c-table{{width:100%;border-collapse:collapse;font-size:12.5px}}
+.c-table caption{{caption-side:top;text-align:left;color:#64748b;font-size:12px;padding-bottom:6px}}
+.c-table th{{background:#eef4f8;text-align:left;padding:6px 8px;border:1px solid #dbe5ec;font-weight:600}}
+.c-table td{{padding:6px 8px;border:1px solid #e2e8f0}}
+.c-table tr td:nth-child(2){{color:#7c2d12}}
+.att-note{{font-size:12.5px;color:#475569;background:#f8fafc;border-left:3px solid #cbd5e1;padding:8px 10px}}
+.att-list{{font-size:13px;color:#1e293b;padding-left:20px}}
+/* ---------- cards ---------- */
+.fcard{{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.05);transition:box-shadow .2s,transform .2s}}
+.fcard.flash{{box-shadow:0 0 0 3px #f59e0b,0 6px 18px rgba(245,158,11,.25)}}
+.fc-head{{display:flex;align-items:center;gap:7px;padding:9px 13px;background:#f8fafc;border-bottom:1px solid var(--line);cursor:pointer;flex-wrap:wrap}}
+.rid{{font-family:Consolas,monospace;font-weight:700;color:#0f3d5c}}
+.topic,.kind{{font-size:11.5px;padding:1px 7px;border-radius:5px}}
+.kind{{background:#eef2ff;color:#3730a3}}
+.kind.k-缺失{{background:#fde68a;color:#78350f}}
+.kind.k-表述不清{{background:#dbeafe;color:#1e3a8a}}
+.status-pill{{margin-left:auto;font-size:11.5px;color:#64748b;border:1px dashed #cbd5e1;border-radius:999px;padding:0 8px}}
+.status-pill.set{{color:#065f46;border-color:#6ee7b7;background:#ecfdf5}}
+.caret{{color:#94a3b8;transition:transform .2s}}
+.fcard.open .caret{{transform:rotate(90deg)}}
+.fc-title{{margin:10px 14px 0;font-size:14.5px;line-height:1.5;color:#111827}}
+.fc-body{{display:none;padding:8px 14px 14px}}
+.fcard.open .fc-body{{display:block}}
+.sec{{margin-top:10px}}
+.sec h5{{margin:0 0 4px;font-size:12px;color:#0f3d5c;letter-spacing:.05em}}
+.sec p{{margin:0 0 4px;font-size:13.2px;color:#334155;text-align:justify}}
+.quote{{margin:6px 0;padding:7px 10px;background:#f8fafc;border-left:3px solid #94a3b8;border-radius:0 6px 6px 0;display:flex;flex-direction:column;gap:2px}}
+.q-src{{font-size:11px;color:#64748b}}
+.q-text{{font-size:12.8px;color:#111827}}
+.anchors{{display:flex;flex-wrap:wrap;gap:6px}}
+.anchor-btn{{border:1px solid #cbd5e1;background:#f8fafc;border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;color:#0f3d5c;font-family:inherit}}
+.anchor-btn:hover{{background:#e0f2fe;border-color:#7dd3fc}}
+.missing{{color:#9a3412;font-weight:600;font-size:12.5px}}
+.cons,.todo{{margin:2px 0 0;padding-left:18px;font-size:12.8px;color:#334155}}
+.cons li::marker{{color:#dc2626}}
+.todo li::marker{{color:#0f766e}}
+.law-chips span{{display:inline-block;font-size:11.5px;background:#eef2f7;border-radius:5px;padding:1px 7px;margin:2px 4px 0 0;color:#334155}}
+.note-sec{{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:8px 10px}}
+.note-controls{{display:flex;gap:8px}}
+.note-controls select,.note-controls input{{border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-family:inherit;font-size:12.5px}}
+.note-controls input{{flex:1}}
+/* ---------- index table ---------- */
+table.qtable,table.idx{{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;font-size:12.8px}}
+.qtable th,table.idx th{{background:#0f3d5c;color:#fff;text-align:left;padding:8px 10px;font-weight:600;position:sticky;top:0}}
+.qtable td,table.idx td{{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}}
+.qtable tr:hover,table.idx tr:hover{{background:#f0f9ff;cursor:pointer}}
+.mono{{font-family:Consolas,monospace;color:#0f3d5c;font-weight:600;white-space:nowrap}}
+.t{{max-width:420px}}
+.pr{{font-size:11.5px;padding:0 7px;border-radius:5px;font-weight:700;color:#fff}}
+.pr-高{{background:#b91c1c}}.pr-中{{background:#d97706}}.pr-低{{background:#64748b}}
+.qtabs{{display:flex;gap:6px;margin:4px 0 12px;flex-wrap:wrap}}
+.qtab-btn{{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:13px}}
+.qtab-btn.active{{background:#0f3d5c;color:#fff;border-color:transparent}}
+.qtab{{display:none}}.qtab.active{{display:block}}
+.qtab-desc{{color:#64748b;font-size:12.5px;margin:0 0 8px}}
+.mini{{display:inline-block;font-size:10.5px;color:#fff;background:#64748b;border-radius:4px;padding:0 4px;margin-right:2px;font-family:Consolas,monospace}}
+.mini.s5{{background:#b91c1c}}.mini.s4{{background:#ea580c}}.mini.s3{{background:#d97706}}.mini.s2{{background:#16a34a}}
+.legend{{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#475569;margin:8px 0 12px}}
+.legend i{{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}}
+.st{{font-size:12px;padding:0 7px;border-radius:5px}}
+.st.ok{{background:#dcfce7;color:#166534}}.st.warn{{background:#fef3c7;color:#92400e}}
+.foot{{padding:18px 24px;color:#64748b;font-size:12px;border-top:1px solid var(--line);margin-top:20px}}
+@media (max-width:1100px){{.ws{{grid-template-columns:1fr}} .ws-left,.ws-right{{height:auto}} .stats{{grid-template-columns:repeat(2,1fr)}} .grid2{{grid-template-columns:1fr}}}}
+@media print{{.tabs,.toolbar,.note-sec{{display:none}} .ws{{display:block}} .ws-left,.ws-right{{height:auto;overflow:visible}} .fc-body{{display:block}}}}
+</style>
+</head>
+<body>
+<div class="demo-banner">⚠ 本页面演示所用合同为 <b>虚构演示合同</b>：双方名称、金额、条款均为演示编写，不对应任何真实交易或公司。审查结论仅用于演示业务审查方法，不构成法律意见。</div>
+<header class="hero">
+  <div class="kicker">内贸采购 · 合同风险审查 / Contract Risk Review</div>
+  <h1>异构十三醇聚氧乙烯醚（非离子表面活性剂）框架采购合同</h1>
+  <div class="meta">
+    <span>合同编号 <b>JK-2026-QC-0416</b></span><span>我方身份 <b>买方（甲方）</b></span><span>供应商 <b>杭湾精细化学品贸易有限公司（乙方，虚构）</b></span>
+    <span>签订日期 <b>2026年10月8日</b></span><span>审查日期 <b>2026-10-19</b></span><span>审查人 <b>采购业务审查（Agent 演示）</b></span>
+  </div>
+  <div class="pills"><span class="pill">标的：异构十三醇聚氧乙烯醚 HT-1007（非离子表面活性剂）</span><span class="pill">状态：已签署（2026年10月8日）</span><span class="pill">审查范围：合同正文 3 页 + 附件一；未含乙方资质、报价单、承运方资料</span></div>
+</header>
+<nav class="tabs">
+  <button class="active" data-panel="overview">总览</button>
+  <button data-panel="workspace">原文 × 风险双栏</button>
+  <button data-panel="index">条款索引</button>
+  <button data-panel="tasks">问题清单（采购/法务/供应商）</button>
+  <button data-panel="laws">法规标准核对</button>
+  <button data-panel="method">方法与边界</button>
+</nav>
+
+<section class="panel active" id="panel-overview">
+  <div class="stats"><div class="stat"><div class="num">8</div><div class="lbl">风险条目合计</div></div><div class="stat"><div class="num">3</div><div class="lbl">缺失条款</div></div><div class="stat"><div class="num">5</div><div class="lbl">表述不清/冲突</div></div><div class="stat"><div class="num">17</div><div class="lbl">被引用的原文条款</div></div><div class="stat"><div class="num">12</div><div class="lbl">待确认问题</div></div></div>
+  <div class="grid2">
+    <div class="card"><h3>一句话结论</h3><p style="margin:0 0 12px;font-size:14px">该非危化品框架合同整体好于常规模板（检验期为 15 日、含隐蔽瑕疵条款、管辖对我方有利），主要缺口在「核心指标未定值」「价格锚未指定」「账期从开票起算」。</p>
+      <h3>最需要先处理的 8 条</h3><ol class="top"><li data-goto-finding="E01" class="toprow"><span class="sev" style="color:#ffffff;background:#ea580c">高</span><b>E01</b> 附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定</li><li data-goto-finding="E02" class="toprow"><span class="sev" style="color:#7c2d12;background:#fcd34d">中</span><b>E02</b> 甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配</li><li data-goto-finding="E03" class="toprow"><span class="sev" style="color:#7c2d12;background:#fcd34d">中</span><b>E03</b> 「市场均价」无指数来源与确认规则，实际按上月执行价滚动，价格可能固化</li><li data-goto-finding="E04" class="toprow"><span class="sev" style="color:#7c2d12;background:#fcd34d">中</span><b>E04</b> 月结 60 天从「收到发票」起算，开票时点在后，实际账期被卖方掌控</li><li data-goto-finding="E05" class="toprow"><span class="sev" style="color:#7c2d12;background:#fcd34d">中</span><b>E05</b> 责任上限为上年度结算额 10%，但未排除人身与故意情形，也未覆盖停产损失</li><li data-goto-finding="E06" class="toprow"><span class="sev" style="color:#14532d;background:#bbf7d0">低</span><b>E06</b> 「预计 600 吨」未说明是否构成最低采购承诺，也未约定未达量后果</li><li data-goto-finding="E07" class="toprow"><span class="sev" style="color:#14532d;background:#bbf7d0">低</span><b>E07</b> 隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定</li><li data-goto-finding="E08" class="toprow"><span class="sev" style="color:#14532d;background:#bbf7d0">低</span><b>E08</b> 管辖条写「甲方所在地人民法院」，但未写明具体法院与送达地址</li></ol>
+      <div class="uinote">内部备注：—</div>
+    </div>
+    <div class="card"><h3>合同未约定 / 需补齐的事项（缺失，不作推测）</h3><ul><li>浊点、羟值、pH、水分限值</li><li>企业标准文本</li><li>价格指数来源</li><li>违约金比例</li><li>送达地址</li></ul>
+      <h3 style="margin-top:14px">本次收到的文件</h3><ul><li>✅ 《异构十三醇聚氧乙烯醚框架采购合同》正文 3 页（PDF）</li><li>✅ 附件一《产品技术指标（非离子表面活性剂）》1 页</li><li class='miss'>❌ 乙方营业执照、危化品目录判定/SDS（用于确认是否属危化品，未提供）</li><li class='miss'>❌ 报价单原件（价格按上月均价，但未约定指数来源）</li><li class='miss'>❌ 承运方资质（合同写明甲方自提，需自查车辆）</li><li class='miss'>❌ 历史质量争议台账（未提供）</li></ul>
+      <h3 style="margin-top:14px">风险主题分布</h3><div class="topicbar"><div class="topicbar-item" style="--w:2"><span>质量</span><i>2</i></div><div class="topicbar-item" style="--w:1"><span>数量</span><i>1</i></div><div class="topicbar-item" style="--w:1"><span>交货</span><i>1</i></div><div class="topicbar-item" style="--w:1"><span>价格税费</span><i>1</i></div><div class="topicbar-item" style="--w:1"><span>付款</span><i>1</i></div><div class="topicbar-item" style="--w:1"><span>违约责任</span><i>1</i></div><div class="topicbar-item" style="--w:1"><span>争议解决</span><i>1</i></div></div>
+      <p style="font-size:12px;color:#64748b;margin:10px 0 0">单价为演示假设值（12,000 元/吨），仅用于说明赔偿上限量级，合同原文未写单价。</p>
+    </div>
+  </div>
+  <div class="disclaimer">本结果属于业务审查提示，不是法律意见，也不替代律师或法务的专业审查。涉及条款效力、是否可执行、法律责任分配等问题，必须以公司法务/外部律师意见为准。</div>
+</section>
+
+<section class="panel" id="panel-workspace">
+  <div class="toolbar">
+    <div class="row"><span class="lbl">主题</span><button class="fbtn active" data-topic="all">全部主题</button><button class="fbtn" data-topic="quality" style="--tc:#0e7490">质量 <b>2</b></button><button class="fbtn" data-topic="quantity" style="--tc:#7c3aed">数量 <b>1</b></button><button class="fbtn" data-topic="delivery" style="--tc:#1d4ed8">交货 <b>1</b></button><button class="fbtn" data-topic="price" style="--tc:#0f766e">价格税费 <b>1</b></button><button class="fbtn" data-topic="payment" style="--tc:#be185d">付款 <b>1</b></button><button class="fbtn" data-topic="breach" style="--tc:#9333ea">违约责任 <b>1</b></button><button class="fbtn" data-topic="dispute" style="--tc:#334155">争议解决 <b>1</b></button></div>
+    <div class="row"><span class="lbl">类型</span><button class="kbtn active" data-kind="all">全部类型</button><button class="kbtn" data-kind="缺失">缺失 <b>3</b></button><button class="kbtn" data-kind="表述不清">表述不清 <b>5</b></button><span class="lbl" style="margin-left:12px">严重度</span><button class="sbtn" data-sev="4" style="color:#ffffff;background:#ea580c">高 4</button><button class="sbtn" data-sev="3" style="color:#7c2d12;background:#fcd34d">中 3</button><button class="sbtn" data-sev="2" style="color:#14532d;background:#bbf7d0">低 2</button></div>
+    <div class="row">
+      <input id="search" placeholder="搜索风险、原文、待确认问题…（支持「溴」「押金」「仲裁」等词）">
+      <button class="btn ghost" id="btn-all-open">展开全部</button>
+      <button class="btn ghost" id="btn-all-close">收起全部</button>
+      <button class="btn ghost" id="btn-export">导出处理状态 JSON</button>
+      <span id="count-hint" style="font-size:12px;color:#64748b"></span>
+    </div>
+  </div>
+  <div class="ws" id="ws">
+    <div class="ws-left" id="left"><section class="csec" id="sec-preamble"><h3><span class="sec-no">—</span>合同首部<span class="pg">P1</span></h3><div class="clause flagged" id="clause-C01" data-clause="C01"><div class="clause-no">合同首部<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s2" data-goto-finding="E06" title="「预计 600 吨」未说明是否构成最低采购承诺，也未约定未达量后果">E06</button></div></div><div class="clause-text">合同编号：JK-2026-QC-0416。甲方（买方）：江海新材料科技有限公司。乙方（卖方）：杭湾精细化学品贸易有限公司。签订日期：2026年10月8日。双方就甲方向乙方采购异构十三醇聚氧乙烯醚（非离子表面活性剂）订立本框架合同。</div></div></section><section class="csec" id="sec-s1"><h3><span class="sec-no">第一条</span>产品与质量<span class="pg">P1</span></h3><div class="clause flagged" id="clause-C02" data-clause="C02"><div class="clause-no">第一条 1.1<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s2" data-goto-finding="E07" title="隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定">E07</button></div></div><div class="clause-text">1.1 产品名称：异构十三醇聚氧乙烯醚（非离子表面活性剂），牌号 HT-1007，浊点与环氧乙烷加成数按附件一执行。</div></div><div class="clause flagged" id="clause-C03" data-clause="C03"><div class="clause-no">第一条 1.2<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="E01" title="附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定">E01</button></div></div><div class="clause-text">1.2 质量标准：执行乙方现行企业标准，指标见附件一。乙方保证产品适用于甲方的助剂复配工艺。</div></div><div class="clause flagged" id="clause-C04" data-clause="C04"><div class="clause-no">第一条 1.3<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s2" data-goto-finding="E07" title="隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定">E07</button></div></div><div class="clause-text">1.3 甲方应在到货后 15 日内完成质量检验；对隐蔽瑕疵（如长期储存后析出、分层），甲方可在发现后 10 日内提出。乙方在收到通知后应到场共同取样并送检。</div></div></section><section class="csec" id="sec-s2"><h3><span class="sec-no">第二条</span>数量与价格<span class="pg">P1</span></h3><div class="clause flagged" id="clause-C05" data-clause="C05"><div class="clause-no">第二条 2.1<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s2" data-goto-finding="E06" title="「预计 600 吨」未说明是否构成最低采购承诺，也未约定未达量后果">E06</button></div></div><div class="clause-text">2.1 数量：框架期内预计采购 600 吨，单批订单不少于 5 吨，允许每批 ±2% 的交付允差；超出允差部分按实际数量结算。</div></div><div class="clause flagged" id="clause-C06" data-clause="C06"><div class="clause-no">第二条 2.2<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E03" title="「市场均价」无指数来源与确认规则，实际按上月执行价滚动，价格可能固化">E03</button></div></div><div class="clause-text">2.2 价格：按订单确认当月的市场均价结算，单价含 13% 增值税，为出厂交货价。市场均价指双方每月 5 日共同确认的参考价；未能确认时，以上月执行单价执行。</div></div><div class="clause flagged" id="clause-C07" data-clause="C07"><div class="clause-no">第二条 2.3<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E03" title="「市场均价」无指数来源与确认规则，实际按上月执行价滚动，价格可能固化">E03</button></div></div><div class="clause-text">2.3 价格联动：当主要原料（脂肪醇、环氧乙烷）价格波动超过 10% 时，任一方可提出价格重议，双方在 10 个工作日内协商一致。</div></div></section><section class="csec" id="sec-s3"><h3><span class="sec-no">第三条</span>交付与验收<span class="pg">P2</span></h3><div class="clause flagged" id="clause-C08" data-clause="C08"><div class="clause-no">第三条 3.1<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E02" title="甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配">E02</button></div></div><div class="clause-text">3.1 交货方式：甲方自提。交货地为乙方工厂仓库；甲方车辆具备装卸条件的，乙方协助装车。装车费用由乙方承担，运输费用及风险由甲方承担。</div></div><div class="clause flagged" id="clause-C09" data-clause="C09"><div class="clause-no">第三条 3.2<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E02" title="甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配">E02</button><button class="hit-chip s2" data-goto-finding="E07" title="隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定">E07</button></div></div><div class="clause-text">3.2 风险转移：货物装上甲方车辆并办妥出库手续后，风险转移给甲方。乙方应提供合格证明与批次检验报告。</div></div><div class="clause flagged" id="clause-C10" data-clause="C10"><div class="clause-no">第三条 3.3<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E02" title="甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配">E02</button></div></div><div class="clause-text">3.3 计量：以乙方装车过磅重量为准，甲方到场可复核；单价按净重计算，包装为 200L 铁桶或 1,000L IBC。</div></div></section><section class="csec" id="sec-s4"><h3><span class="sec-no">第四条</span>付款与结算<span class="pg">P2</span></h3><div class="clause flagged" id="clause-C11" data-clause="C11"><div class="clause-no">第四条 4.1<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E04" title="月结 60 天从「收到发票」起算，开票时点在后，实际账期被卖方掌控">E04</button></div></div><div class="clause-text">4.1 结算方式：月结 60 天。乙方每月 5 日前开具上月货款增值税专用发票，甲方在收到发票后 60 日内付款。</div></div><div class="clause flagged" id="clause-C12" data-clause="C12"><div class="clause-no">第四条 4.2<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E04" title="月结 60 天从「收到发票」起算，开票时点在后，实际账期被卖方掌控">E04</button></div></div><div class="clause-text">4.2 甲方可在质量异议成立的情况下，从未付货款中直接扣减相应金额，但扣减前应提供双方共同签认的检验记录。</div></div></section><section class="csec" id="sec-s5"><h3><span class="sec-no">第五条</span>违约与争议<span class="pg">P3</span></h3><div class="clause flagged" id="clause-C13" data-clause="C13"><div class="clause-no">第五条 5.1<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E05" title="责任上限为上年度结算额 10%，但未排除人身与故意情形，也未覆盖停产损失">E05</button></div></div><div class="clause-text">5.1 任何一方违反本合同约定给对方造成损失的，应赔偿对方直接损失，但赔偿责任以违约行为发生前 12 个月结算总额的 10% 为限。</div></div><div class="clause flagged" id="clause-C14" data-clause="C14"><div class="clause-no">第五条 5.2<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="E05" title="责任上限为上年度结算额 10%，但未排除人身与故意情形，也未覆盖停产损失">E05</button><button class="hit-chip s2" data-goto-finding="E08" title="管辖条写「甲方所在地人民法院」，但未写明具体法院与送达地址">E08</button></div></div><div class="clause-text">5.2 因本合同发生的争议，由甲方所在地人民法院管辖。本合同适用中华人民共和国法律。</div></div></section><section class="csec" id="sec-a1"><h3><span class="sec-no">附件一</span>产品技术指标（非离子表面活性剂）<span class="pg">P3</span></h3><div class="clause flagged" id="clause-A1-T1" data-clause="A1-T1" style="padding-left:34px"><div class="clause-no">附件一 表1 第1行<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s2" data-goto-finding="E07" title="隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定">E07</button></div></div><div class="clause-text">项目：外观；指标：无色至微黄色透明液体，允许轻微浑浊。</div></div><div class="clause flagged" id="clause-A1-T2" data-clause="A1-T2" style="padding-left:34px"><div class="clause-no">附件一 表1 第2行<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="E01" title="附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定">E01</button></div></div><div class="clause-text">项目：浊点（1% 水溶液）；指标：待双方商量确定；检验方法：GB/T 5559。</div></div><div class="clause flagged" id="clause-A1-T3" data-clause="A1-T3" style="padding-left:34px"><div class="clause-no">附件一 表1 第3行<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="E01" title="附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定">E01</button></div></div><div class="clause-text">项目：羟值 / pH（1% 水溶液）/ 水分；指标：由乙方按内控标准执行；检验方法：未列明。</div></div></section><section class='attachment' id='att-附件一'><div class="att-head">附件一　产品技术指标（非离子表面活性剂）<span class="pg">P3</span></div><table class="c-table"><caption>表1 产品技术指标（原文照录）</caption><thead><tr><th>项目</th><th>指标（原文）</th><th>检验方法（原文）</th></tr></thead><tbody><tr><td>外观</td><td>无色至微黄色透明液体，允许轻微浑浊</td><td>目测</td></tr><tr><td>浊点（1% 水溶液）</td><td>待双方商量确定</td><td>GB/T 5559</td></tr><tr><td>羟值 / pH（1% 水溶液）/ 水分</td><td>由乙方按内控标准执行</td><td>未列明</td></tr></tbody></table><p class="att-note">注：本附件作为合同附件一，与合同同时签署。</p></section></div>
+    <div class="ws-right" id="right">
+<article class="fcard" id="finding-E01" data-id="E01" data-topic="quality"
+         data-kind="缺失" data-sev="4" data-clauses="A1-T2,A1-T3,C03"
+         data-search="附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定附件一表1把「浊点（1% 水溶液）」指标写为「待双方商量确定」，「羟值 / ph / 水分」写为「由乙方按内控标准执行」，检验方法未列明；1.2 条同时约定执行「乙方现行企业标准」。浊点是该类非离子表面活性剂最关键的应用指标之一，直接决定复配体系的稳定性与下游使用效果。「商量确定」在发生争议时无法作为判定依据，而「由乙方按内控标准执行」把判定权完全交给卖方。浊点的目标区间与允差 羟值、ph、水分的限值与检验方法 乙方现行企业标准的文本与版本号，以及变更通知机制">
+  <header class="fc-head" data-jump>
+    <span class="rid">E01</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#0e7490">质量</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>附件一表1把「浊点（1% 水溶液）」指标写为「待双方商量确定」，「羟值 / pH / 水分」写为「由乙方按内控标准执行」，检验方法未列明；1.2 条同时约定执行「乙方现行企业标准」。</p><blockquote class="quote"><span class="q-src">附件一 表1 第2行 · 第3页</span><span class="q-text">“项目：浊点（1% 水溶液）；指标：待双方商量确定；检验方法：GB/T 5559。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 表1 第3行 · 第3页</span><span class="q-text">“项目：羟值 / pH（1% 水溶液）/ 水分；指标：由乙方按内控标准执行；检验方法：未列明。”</span></blockquote><blockquote class="quote"><span class="q-src">第一条 1.2 · 第1页</span><span class="q-text">“1.2 质量标准：执行乙方现行企业标准，指标见附件一。乙方保证产品适用于甲方的助剂复配工艺。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="A1-T2">📍 附件一 表1 第2行 · P3</button><button class="anchor-btn" data-goto-clause="A1-T3">📍 附件一 表1 第3行 · P3</button><button class="anchor-btn" data-goto-clause="C03">📍 第一条 1.2 · P1</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>浊点没有数值区间；羟值、pH、水分没有限值与方法；「乙方现行企业标准」的文本、编号、版本未附；没有约定企业标准变更时是否需通知。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>浊点是该类非离子表面活性剂最关键的应用指标之一，直接决定复配体系的稳定性与下游使用效果。「商量确定」在发生争议时无法作为判定依据，而「由乙方按内控标准执行」把判定权完全交给卖方。</p><ul class="cons"><li>来料浊点偏离时无法主张不合格</li><li>乙方企业标准变更后甲方无从比对</li><li>助剂复配批次间稳定性波动无法归因到原料</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>浊点的目标区间与允差</li><li>羟值、pH、水分的限值与检验方法</li><li>乙方现行企业标准的文本与版本号，以及变更通知机制</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-E02" data-id="E02" data-topic="delivery"
+         data-kind="表述不清" data-sev="3" data-clauses="C08,C09,C10"
+         data-search="甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配3.1 条：「交货方式：甲方自提。交货地为乙方工厂仓库；甲方车辆具备装卸条件的，乙方协助装车」；3.2 条：货物装上甲方车辆并办妥出库手续后风险转移。甲方自提意味着运输资质、押运、保险都由甲方组织，若装车时乙方未按规范装车（如未核对桶盖、超装），责任边界不清。2026 年该品类单批 5 吨起，每车约 5~10 吨，装车环节事故的后果由甲方承担的可能性较大。装车作业规范与装车录像/照片留存 超时提货的等待费与提货预约规则 出库单据载明内容（批号、数量、桶号）与复核方式">
+  <header class="fc-head" data-jump>
+    <span class="rid">E02</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#1d4ed8">交货</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>3.1 条：「交货方式：甲方自提。交货地为乙方工厂仓库；甲方车辆具备装卸条件的，乙方协助装车」；3.2 条：货物装上甲方车辆并办妥出库手续后风险转移。</p><blockquote class="quote"><span class="q-src">第三条 3.1 · 第2页</span><span class="q-text">“3.1 交货方式：甲方自提。交货地为乙方工厂仓库；甲方车辆具备装卸条件的，乙方协助装车。装车费用由乙方承担，运输费用及风险由甲方承担。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.2 · 第2页</span><span class="q-text">“3.2 风险转移：货物装上甲方车辆并办妥出库手续后，风险转移给甲方。乙方应提供合格证明与批次检验报告。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.3 · 第2页</span><span class="q-text">“3.3 计量：以乙方装车过磅重量为准，甲方到场可复核；单价按净重计算，包装为 200L 铁桶或 1,000L IBC。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C08">📍 第三条 3.1 · P2</button><button class="anchor-btn" data-goto-clause="C09">📍 第三条 3.2 · P2</button><button class="anchor-btn" data-goto-clause="C10">📍 第三条 3.3 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有约定装车作业规范、超时提货的等待费与罚则、乙方发运前的包装完好确认、甲方车辆的槽罐/吨桶适配确认；也没有约定装车过程中发生的溢洒责任。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>甲方自提意味着运输资质、押运、保险都由甲方组织，若装车时乙方未按规范装车（如未核对桶盖、超装），责任边界不清。2026 年该品类单批 5 吨起，每车约 5~10 吨，装车环节事故的后果由甲方承担的可能性较大。</p><ul class="cons"><li>装车瑕疵导致的泄漏责任分配不清</li><li>甲方车辆在乙方厂区等待时无时间约束</li><li>出库单据与实物不符时以谁为准不清</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>装车作业规范与装车录像/照片留存</li><li>超时提货的等待费与提货预约规则</li><li>出库单据载明内容（批号、数量、桶号）与复核方式</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-E03" data-id="E03" data-topic="price"
+         data-kind="缺失" data-sev="3" data-clauses="C06,C07"
+         data-search="「市场均价」无指数来源与确认规则，实际按上月执行价滚动，价格可能固化2.2 条：按订单确认当月市场均价结算，「市场均价指双方每月 5 日共同确认的参考价；未能确认时，以上月执行单价执行」；2.3 条：原料波动超 10% 时「任一方可提出价格重议……协商一致」。价格联动的核心是锚。没有锚，价格既不透明也无法验证；而「协商一致」在涨跌情形下都可能陷入僵局，实际由强势一方决定是否供货。指定价格指数名称、口径、区域与发布频率 协商不成的处理（如维持原价并限期供货） 原料波动计量的具体口径（数量还是价格）">
+  <header class="fc-head" data-jump>
+    <span class="rid">E03</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#0f766e">价格税费</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">「市场均价」无指数来源与确认规则，实际按上月执行价滚动，价格可能固化</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>2.2 条：按订单确认当月市场均价结算，「市场均价指双方每月 5 日共同确认的参考价；未能确认时，以上月执行单价执行」；2.3 条：原料波动超 10% 时「任一方可提出价格重议……协商一致」。</p><blockquote class="quote"><span class="q-src">第二条 2.2 · 第1页</span><span class="q-text">“2.2 价格：按订单确认当月的市场均价结算，单价含 13% 增值税，为出厂交货价。市场均价指双方每月 5 日共同确认的参考价；未能确认时，以上月执行单价执行。”</span></blockquote><blockquote class="quote"><span class="q-src">第二条 2.3 · 第1页</span><span class="q-text">“2.3 价格联动：当主要原料（脂肪醇、环氧乙烷）价格波动超过 10% 时，任一方可提出价格重议，双方在 10 个工作日内协商一致。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C06">📍 第二条 2.2 · P1</button><button class="anchor-btn" data-goto-clause="C07">📍 第二条 2.3 · P1</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有指定价格指数的名称与版本（如哪家资讯机构、什么口径、哪个区域）；「共同确认」的失败后果是沿用上月价，在原料上涨时卖方可能据此拒绝供货；2.3 条没有约定协商不成的后果。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>价格联动的核心是锚。没有锚，价格既不透明也无法验证；而「协商一致」在涨跌情形下都可能陷入僵局，实际由强势一方决定是否供货。</p><ul class="cons"><li>采购价与市场脱钩，无法对外说明定价依据</li><li>原料大涨时乙方可能以协商不成停供</li><li>内审对采购价格的合理性缺乏可验证依据</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>指定价格指数名称、口径、区域与发布频率</li><li>协商不成的处理（如维持原价并限期供货）</li><li>原料波动计量的具体口径（数量还是价格）</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-E04" data-id="E04" data-topic="payment"
+         data-kind="表述不清" data-sev="3" data-clauses="C11,C12"
+         data-search="月结 60 天从「收到发票」起算，开票时点在后，实际账期被卖方掌控4.1 条：乙方每月 5 日前开具上月货款发票，甲方在收到发票后 60 日内付款；4.2 条：质量异议成立时可从未付货款扣减，但须提供双方共同签认的检验记录。账期起点在卖方手里：发票晚开一天，付款起点就顺延一天，但甲方的资金计划仍按合同约定的 60 天排布。质量扣减又需要卖方共同签认，等于把扣款主动权交还给对方。逾期开票时甲方是否可暂缓付款及补偿方式 发票不合规的处理（换开、拒付、违约金） 质量检验记录的签认方式（可否单方加第三方检验替代）">
+  <header class="fc-head" data-jump>
+    <span class="rid">E04</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#be185d">付款</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">月结 60 天从「收到发票」起算，开票时点在后，实际账期被卖方掌控</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>4.1 条：乙方每月 5 日前开具上月货款发票，甲方在收到发票后 60 日内付款；4.2 条：质量异议成立时可从未付货款扣减，但须提供双方共同签认的检验记录。</p><blockquote class="quote"><span class="q-src">第四条 4.1 · 第2页</span><span class="q-text">“4.1 结算方式：月结 60 天。乙方每月 5 日前开具上月货款增值税专用发票，甲方在收到发票后 60 日内付款。”</span></blockquote><blockquote class="quote"><span class="q-src">第四条 4.2 · 第2页</span><span class="q-text">“4.2 甲方可在质量异议成立的情况下，从未付货款中直接扣减相应金额，但扣减前应提供双方共同签认的检验记录。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C11">📍 第四条 4.1 · P2</button><button class="anchor-btn" data-goto-clause="C12">📍 第四条 4.2 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有约定乙方逾期开票的处理（顺延付款 vs 视为未到结算期）；没有约定发票不合规时的换开与扣付；4.2 条要求「双方共同签认的检验记录」，在乙方拒不到场时扣减权难以行使。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>账期起点在卖方手里：发票晚开一天，付款起点就顺延一天，但甲方的资金计划仍按合同约定的 60 天排布。质量扣减又需要卖方共同签认，等于把扣款主动权交还给对方。</p><ul class="cons"><li>实际账期长于约定，需重新测算资金占用</li><li>发票不合规时缺乏处理路径</li><li>质量扣减条款在卖方不配合时形同虚设</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>逾期开票时甲方是否可暂缓付款及补偿方式</li><li>发票不合规的处理（换开、拒付、违约金）</li><li>质量检验记录的签认方式（可否单方加第三方检验替代）</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-E05" data-id="E05" data-topic="breach"
+         data-kind="表述不清" data-sev="3" data-clauses="C13,C14"
+         data-search="责任上限为上年度结算额 10%，但未排除人身与故意情形，也未覆盖停产损失5.1 条：任何一方违约赔偿对方直接损失，但以违约行为发生前 12 个月结算总额的 10% 为限；5.2 条约定甲方所在地法院管辖。按 600 吨、单吨约 1.2 万元估算，年结算约 720 万元，10% 上限约 72 万元；若因原料不合格导致助剂复配批次返工或客户索赔，损失可能超过该上限。违约责任的具体形态（是否有违约金）也未约定。是否补充违约金条款（逾期交付/逾期付款比例与上限） 责任上限是否排除故意、重大过失、人身伤害与安全事故 停产与返工损失是否纳入赔偿范围">
+  <header class="fc-head" data-jump>
+    <span class="rid">E05</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#9333ea">违约责任</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">责任上限为上年度结算额 10%，但未排除人身与故意情形，也未覆盖停产损失</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>5.1 条：任何一方违约赔偿对方直接损失，但以违约行为发生前 12 个月结算总额的 10% 为限；5.2 条约定甲方所在地法院管辖。</p><blockquote class="quote"><span class="q-src">第五条 5.1 · 第3页</span><span class="q-text">“5.1 任何一方违反本合同约定给对方造成损失的，应赔偿对方直接损失，但赔偿责任以违约行为发生前 12 个月结算总额的 10% 为限。”</span></blockquote><blockquote class="quote"><span class="q-src">第五条 5.2 · 第3页</span><span class="q-text">“5.2 因本合同发生的争议，由甲方所在地人民法院管辖。本合同适用中华人民共和国法律。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C13">📍 第五条 5.1 · P3</button><button class="anchor-btn" data-goto-clause="C14">📍 第五条 5.2 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>合同没有约定违约金的具体比例（仅为损失赔偿上限），也没有排除故意、重大过失以及人身伤害、安全事故的责任限制；没有约定停产损失的赔偿。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>按 600 吨、单吨约 1.2 万元估算，年结算约 720 万元，10% 上限约 72 万元；若因原料不合格导致助剂复配批次返工或客户索赔，损失可能超过该上限。违约责任的具体形态（是否有违约金）也未约定。</p><ul class="cons"><li>质量事故损失可能超过赔偿上限，差额由甲方承担</li><li>违约金条款缺失，逾期交付等情形只能主张实际损失举证困难</li><li>未排除人身与安全事故责任，条款是否有效需法务判断</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>是否补充违约金条款（逾期交付/逾期付款比例与上限）</li><li>责任上限是否排除故意、重大过失、人身伤害与安全事故</li><li>停产与返工损失是否纳入赔偿范围</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-E06" data-id="E06" data-topic="quantity"
+         data-kind="缺失" data-sev="2" data-clauses="C05,C01"
+         data-search="「预计 600 吨」未说明是否构成最低采购承诺，也未约定未达量后果2.1 条：框架期内「预计采购 600 吨」，单批不少于 5 吨，允许 ±2% 交付允差；合同首部未写总量性质。对甲方而言「预计」较灵活，但若供应商主张其为承诺购买量并要求补偿，合同缺少防御性表述；反之乙方也可能以甲方未达量为由取消优惠价。「预计 600 吨」是否构成最低采购量承诺 乙方接单义务与优先供货安排 未达量对价格的影响">
+  <header class="fc-head" data-jump>
+    <span class="rid">E06</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#7c3aed">数量</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">「预计 600 吨」未说明是否构成最低采购承诺，也未约定未达量后果</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>2.1 条：框架期内「预计采购 600 吨」，单批不少于 5 吨，允许 ±2% 交付允差；合同首部未写总量性质。</p><blockquote class="quote"><span class="q-src">第二条 2.1 · 第1页</span><span class="q-text">“2.1 数量：框架期内预计采购 600 吨，单批订单不少于 5 吨，允许每批 ±2% 的交付允差；超出允差部分按实际数量结算。”</span></blockquote><blockquote class="quote"><span class="q-src">合同首部 · 第1页</span><span class="q-text">“合同编号：JK-2026-QC-0416。甲方（买方）：江海新材料科技有限公司。乙方（卖方）：杭湾精细化学品贸易有限公司。签订日期：2026年10月8日。双方就甲方向乙方采购异构十三醇聚氧乙烯醚（非离子表面活性剂）订立本框架合同。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C05">📍 第二条 2.1 · P1</button><button class="anchor-btn" data-goto-clause="C01">📍 合同首部 · P1</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定「预计」是否约束双方、未达量的处理、乙方是否有最低供货义务、年度未达量是否影响价格。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>对甲方而言「预计」较灵活，但若供应商主张其为承诺购买量并要求补偿，合同缺少防御性表述；反之乙方也可能以甲方未达量为由取消优惠价。</p><ul class="cons"><li>框架量性质存在解释空间</li><li>乙方接单义务与供货优先级不清</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>「预计 600 吨」是否构成最低采购量承诺</li><li>乙方接单义务与优先供货安排</li><li>未达量对价格的影响</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-E07" data-id="E07" data-topic="quality"
+         data-kind="表述不清" data-sev="2" data-clauses="C02,C04,A1-T1,C09"
+         data-search="隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定1.3 条约定 15 日检验期，隐蔽瑕疵可在发现后 10 日内提出，乙方应到场共同取样并送检。这条对甲方总体有利（比常见的 3 日异议期宽松），但「乙方到场」是前置条件，乙方拖延即可拖过处置窗口；联合送检的机构与费用也没有约定。指定或共选检测机构 乙方逾期不到场时的替代方案 检测费用的分担规则">
+  <header class="fc-head" data-jump>
+    <span class="rid">E07</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#0e7490">质量</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>1.3 条约定 15 日检验期，隐蔽瑕疵可在发现后 10 日内提出，乙方应到场共同取样并送检。</p><blockquote class="quote"><span class="q-src">第一条 1.1 · 第1页</span><span class="q-text">“1.1 产品名称：异构十三醇聚氧乙烯醚（非离子表面活性剂），牌号 HT-1007，浊点与环氧乙烷加成数按附件一执行。”</span></blockquote><blockquote class="quote"><span class="q-src">第一条 1.3 · 第1页</span><span class="q-text">“1.3 甲方应在到货后 15 日内完成质量检验；对隐蔽瑕疵（如长期储存后析出、分层），甲方可在发现后 10 日内提出。乙方在收到通知后应到场共同取样并送检。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 表1 第1行 · 第3页</span><span class="q-text">“项目：外观；指标：无色至微黄色透明液体，允许轻微浑浊。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.2 · 第2页</span><span class="q-text">“3.2 风险转移：货物装上甲方车辆并办妥出库手续后，风险转移给甲方。乙方应提供合格证明与批次检验报告。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C02">📍 第一条 1.1 · P1</button><button class="anchor-btn" data-goto-clause="C04">📍 第一条 1.3 · P1</button><button class="anchor-btn" data-goto-clause="A1-T1">📍 附件一 表1 第1行 · P3</button><button class="anchor-btn" data-goto-clause="C09">📍 第三条 3.2 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有约定送检机构、费用分担、乙方不到场时的替代方案（如甲方单方送检+封样）、检测时限。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>这条对甲方总体有利（比常见的 3 日异议期宽松），但「乙方到场」是前置条件，乙方拖延即可拖过处置窗口；联合送检的机构与费用也没有约定。</p><ul class="cons"><li>乙方拖延到场导致处置延误</li><li>检测费用与结果采信规则不清</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>指定或共选检测机构</li><li>乙方逾期不到场时的替代方案</li><li>检测费用的分担规则</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-E08" data-id="E08" data-topic="dispute"
+         data-kind="表述不清" data-sev="2" data-clauses="C14"
+         data-search="管辖条写「甲方所在地人民法院」，但未写明具体法院与送达地址5.2 条：因本合同发生的争议，由甲方所在地人民法院管辖；适用中国法律。管辖对甲方有利，但「甲方所在地」在甲方地址变更时可能产生争议；缺少送达地址会增加诉讼中的送达不确定性与时间成本。是否写明具体法院名称 是否补充送达地址与电子送达条款 争议期间是否继续履行无争议部分">
+  <header class="fc-head" data-jump>
+    <span class="rid">E08</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#334155">争议解决</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">管辖条写「甲方所在地人民法院」，但未写明具体法院与送达地址</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>5.2 条：因本合同发生的争议，由甲方所在地人民法院管辖；适用中国法律。</p><blockquote class="quote"><span class="q-src">第五条 5.2 · 第3页</span><span class="q-text">“5.2 因本合同发生的争议，由甲方所在地人民法院管辖。本合同适用中华人民共和国法律。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C14">📍 第五条 5.2 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有明确具体法院（如某区人民法院）；没有约定送达地址与电子送达；没有约定争议期间继续履约义务。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>管辖对甲方有利，但「甲方所在地」在甲方地址变更时可能产生争议；缺少送达地址会增加诉讼中的送达不确定性与时间成本。</p><ul class="cons"><li>管辖法院的具体指向可能产生争议</li><li>诉讼送达可能拖延</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>是否写明具体法院名称</li><li>是否补充送达地址与电子送达条款</li><li>争议期间是否继续履行无争议部分</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article></div>
+  </div>
+</section>
+
+<section class="panel" id="panel-index">
+  <p style="color:#64748b;font-size:12.8px;margin-top:0">条款索引是全文锚点：每行可点击，跳转到「原文 × 风险」并对该条款高亮。<b>风险编号</b>列显示引用了该条款的所有风险条目。</p>
+  <table class="idx"><thead><tr><th>条款ID</th><th>条款编号</th><th>页码</th><th>原文摘要（逐字摘录）</th><th>关联风险</th></tr></thead><tbody><tr data-goto-clause="C01" class="irow"><td class="mono">C01</td><td>合同首部</td><td>P1</td><td class="t">合同编号：JK-2026-QC-0416。甲方（买方）：江海新材料科技有限公司。……</td><td><span class='mini s2'>E06</span></td></tr><tr data-goto-clause="C02" class="irow"><td class="mono">C02</td><td>第一条 1.1</td><td>P1</td><td class="t">1.1 产品名称：异构十三醇聚氧乙烯醚（非离子表面活性剂），牌号 HT-1007，……</td><td><span class='mini s2'>E07</span></td></tr><tr data-goto-clause="C03" class="irow"><td class="mono">C03</td><td>第一条 1.2</td><td>P1</td><td class="t">1.2 质量标准：执行乙方现行企业标准，指标见附件一。……</td><td><span class='mini s4'>E01</span></td></tr><tr data-goto-clause="C04" class="irow"><td class="mono">C04</td><td>第一条 1.3</td><td>P1</td><td class="t">1.3 甲方应在到货后 15 日内完成质量检验；……</td><td><span class='mini s2'>E07</span></td></tr><tr data-goto-clause="C05" class="irow"><td class="mono">C05</td><td>第二条 2.1</td><td>P1</td><td class="t">2.1 数量：框架期内预计采购 600 吨，单批订单不少于 5 吨，……</td><td><span class='mini s2'>E06</span></td></tr><tr data-goto-clause="C06" class="irow"><td class="mono">C06</td><td>第二条 2.2</td><td>P1</td><td class="t">2.2 价格：按订单确认当月的市场均价结算，单价含 13% 增值税，为出厂交货价。……</td><td><span class='mini s3'>E03</span></td></tr><tr data-goto-clause="C07" class="irow"><td class="mono">C07</td><td>第二条 2.3</td><td>P1</td><td class="t">2.3 价格联动：当主要原料（脂肪醇、环氧乙烷）价格波动超过 10% 时，……</td><td><span class='mini s3'>E03</span></td></tr><tr data-goto-clause="C08" class="irow"><td class="mono">C08</td><td>第三条 3.1</td><td>P2</td><td class="t">3.1 交货方式：甲方自提。交货地为乙方工厂仓库；……</td><td><span class='mini s3'>E02</span></td></tr><tr data-goto-clause="C09" class="irow"><td class="mono">C09</td><td>第三条 3.2</td><td>P2</td><td class="t">3.2 风险转移：货物装上甲方车辆并办妥出库手续后，风险转移给甲方。……</td><td><span class='mini s3'>E02</span><span class='mini s2'>E07</span></td></tr><tr data-goto-clause="C10" class="irow"><td class="mono">C10</td><td>第三条 3.3</td><td>P2</td><td class="t">3.3 计量：以乙方装车过磅重量为准，甲方到场可复核；……</td><td><span class='mini s3'>E02</span></td></tr><tr data-goto-clause="C11" class="irow"><td class="mono">C11</td><td>第四条 4.1</td><td>P2</td><td class="t">4.1 结算方式：月结 60 天。乙方每月 5 日前开具上月货款增值税专用发票，……</td><td><span class='mini s3'>E04</span></td></tr><tr data-goto-clause="C12" class="irow"><td class="mono">C12</td><td>第四条 4.2</td><td>P2</td><td class="t">4.2 甲方可在质量异议成立的情况下，从未付货款中直接扣减相应金额，……</td><td><span class='mini s3'>E04</span></td></tr><tr data-goto-clause="C13" class="irow"><td class="mono">C13</td><td>第五条 5.1</td><td>P3</td><td class="t">5.1 任何一方违反本合同约定给对方造成损失的，应赔偿对方直接损失，……</td><td><span class='mini s3'>E05</span></td></tr><tr data-goto-clause="C14" class="irow"><td class="mono">C14</td><td>第五条 5.2</td><td>P3</td><td class="t">5.2 因本合同发生的争议，由甲方所在地人民法院管辖。本合同适用中华人民共和国法律。</td><td><span class='mini s3'>E05</span><span class='mini s2'>E08</span></td></tr><tr data-goto-clause="A1-T1" class="irow"><td class="mono">A1-T1</td><td>附件一 表1 第1行</td><td>P3</td><td class="t">项目：外观；指标：无色至微黄色透明液体，允许轻微浑浊。</td><td><span class='mini s2'>E07</span></td></tr><tr data-goto-clause="A1-T2" class="irow"><td class="mono">A1-T2</td><td>附件一 表1 第2行</td><td>P3</td><td class="t">项目：浊点（1% 水溶液）；指标：待双方商量确定；检验方法：GB/T 5559。</td><td><span class='mini s4'>E01</span></td></tr><tr data-goto-clause="A1-T3" class="irow"><td class="mono">A1-T3</td><td>附件一 表1 第3行</td><td>P3</td><td class="t">项目：羟值 / pH（1% 水溶液）/ 水分；指标：由乙方按内控标准执行；……</td><td><span class='mini s4'>E01</span></td></tr></tbody></table>
+</section>
+
+<section class="panel" id="panel-tasks">
+  <p style="color:#64748b;font-size:12.8px;margin-top:0">同一份风险条目按「谁去办」拆成三张清单：内部采购（商务与供应保障）、法务（条款效力与责任分配）、供应商（向乙方索要的事实、文件与承诺）。点击任意行定位到原文与风险卡片；勾选框状态同样保存在本浏览器。</p>
+  <div class="qtabs"><button class="qtab-btn active" data-owner="legal">内部法务 · 4 项</button><button class="qtab-btn" data-owner="procurement">内部采购 · 4 项</button><button class="qtab-btn" data-owner="supplier">内部供应商 · 4 项</button></div><div class="qpanes"><div class="qtab active" data-owner="legal"><p class="qtab-desc">条款效力、责任分配、争议解决、需要律师判断的问题</p><table class="qtable"><thead><tr><th>关联风险</th><th>优先级</th><th>风险标题</th><th>需要确认的问题</th><th>条款</th><th>已处理</th></tr></thead><tbody><tr data-goto-finding="E05" class="qrow"><td class="mono">E05</td><td><span class="pr pr-高">高</span></td><td class="t">责任上限为上年度结算额 10%，但未排除人身与故意情形，也未覆盖停产损失</td><td>责任上限条款是否排除故意、重大过失、人身伤害与安全事故，条款有效性如何</td><td class="mono">C13, C14</td><td><label class="chk"><input type="checkbox" data-qbox="legal-E05"></label></td></tr><tr data-goto-finding="E04" class="qrow"><td class="mono">E04</td><td><span class="pr pr-中">中</span></td><td class="t">月结 60 天从「收到发票」起算，开票时点在后，实际账期被卖方掌控</td><td>「双方共同签认」作为扣减前提，在乙方不配合时甲方的扣减权如何保障</td><td class="mono">C11, C12</td><td><label class="chk"><input type="checkbox" data-qbox="legal-E04"></label></td></tr><tr data-goto-finding="E08" class="qrow"><td class="mono">E08</td><td><span class="pr pr-低">低</span></td><td class="t">管辖条写「甲方所在地人民法院」，但未写明具体法院与送达地址</td><td>管辖法院表述是否需具体化，送达地址是否补充</td><td class="mono">C14</td><td><label class="chk"><input type="checkbox" data-qbox="legal-E08"></label></td></tr><tr data-goto-finding="E07" class="qrow"><td class="mono">E07</td><td><span class="pr pr-中">中</span></td><td class="t">隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定</td><td>乙方逾期不到场是否可单方送检，证据效力如何</td><td class="mono">C02, C04, A1-T1, C09</td><td><label class="chk"><input type="checkbox" data-qbox="legal-E07"></label></td></tr></tbody></table></div><div class="qtab" data-owner="procurement"><p class="qtab-desc">商务谈判、计划与供应保障、供应商管理</p><table class="qtable"><thead><tr><th>关联风险</th><th>优先级</th><th>风险标题</th><th>需要确认的问题</th><th>条款</th><th>已处理</th></tr></thead><tbody><tr data-goto-finding="E03" class="qrow"><td class="mono">E03</td><td><span class="pr pr-高">高</span></td><td class="t">「市场均价」无指数来源与确认规则，实际按上月执行价滚动，价格可能固化</td><td>价格指数选择与内部预算口径对齐</td><td class="mono">C06, C07</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-E03"></label></td></tr><tr data-goto-finding="E06" class="qrow"><td class="mono">E06</td><td><span class="pr pr-中">中</span></td><td class="t">「预计 600 吨」未说明是否构成最低采购承诺，也未约定未达量后果</td><td>预计 600 吨与年度计划是否一致，是否需要补充最低量条款</td><td class="mono">C05, C01</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-E06"></label></td></tr><tr data-goto-finding="E02" class="qrow"><td class="mono">E02</td><td><span class="pr pr-中">中</span></td><td class="t">甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配</td><td>自提物流方案（车辆、资质、保险）是否落实</td><td class="mono">C08, C09, C10</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-E02"></label></td></tr><tr data-goto-finding="E01" class="qrow"><td class="mono">E01</td><td><span class="pr pr-高">高</span></td><td class="t">附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定</td><td>浊点等指标是否与复配工艺要求一致</td><td class="mono">A1-T2, A1-T3, C03</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-E01"></label></td></tr></tbody></table></div><div class="qtab" data-owner="supplier"><p class="qtab-desc">直接向乙方索要的事实、文件与承诺</p><table class="qtable"><thead><tr><th>关联风险</th><th>优先级</th><th>风险标题</th><th>需要确认的问题</th><th>条款</th><th>已处理</th></tr></thead><tbody><tr data-goto-finding="E01" class="qrow"><td class="mono">E01</td><td><span class="pr pr-高">高</span></td><td class="t">附件一核心指标「浊点」写「待双方商量确定」，关键指标实际未约定</td><td>请提供浊点、羟值、pH、水分的具体限值与检验方法，以及现行企业标准文本与版本号</td><td class="mono">A1-T2, A1-T3, C03</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-E01"></label></td></tr><tr data-goto-finding="E02" class="qrow"><td class="mono">E02</td><td><span class="pr pr-中">中</span></td><td class="t">甲方自提，运输风险归甲方，但未约定装车作业条件与车辆适配</td><td>请确认装车作业规范、提货预约规则与出库单据内容</td><td class="mono">C08, C09, C10</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-E02"></label></td></tr><tr data-goto-finding="E03" class="qrow"><td class="mono">E03</td><td><span class="pr pr-高">高</span></td><td class="t">「市场均价」无指数来源与确认规则，实际按上月执行价滚动，价格可能固化</td><td>请确认可接受的价格指数来源与调价确认方式</td><td class="mono">C06, C07</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-E03"></label></td></tr><tr data-goto-finding="E07" class="qrow"><td class="mono">E07</td><td><span class="pr pr-中">中</span></td><td class="t">隐蔽瑕疵条款有利，但「共同取样送检」的机构与费用未约定</td><td>请确认指定检测机构与费用分担</td><td class="mono">C02, C04, A1-T1, C09</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-E07"></label></td></tr></tbody></table></div></div>
+</section>
+
+<section class="panel" id="panel-laws">
+  <p style="color:#64748b;font-size:12.8px;margin-top:0">适用性核对日期：<b>2026-10-19</b>。下表只说明「这条法规/标准是否存在、是否现行、与本合同的关联点」，<b>不</b>据此对合同效力下结论；正式签约或索赔前，请通过国家法律法规数据库与全国标准信息公共服务平台再次核对。</p>
+  <table class="qtable"><thead><tr><th>法规 / 标准</th><th>适用点</th><th>核验状态</th><th>核验依据（来源与日期）</th><th>与本合同的关联</th></tr></thead><tbody><tr><td class="t"><a href="https://www.npc.gov.cn/" target="_blank" rel="noopener">中华人民共和国民法典（2020年5月28日通过，2021年1月1日施行）</a></td><td>买卖合同、质量与检验期间、违约责任、争议解决</td><td><span class="st ok">现行</span></td><td>2020年5月28日十三届全国人大三次会议通过，2021年1月1日起施行（核对日期 2026-10-19）</td><td>合同基本法律依据；具体条文适用交法务</td></tr><tr><td class="t"><a href="https://www.court.gov.cn/" target="_blank" rel="noopener">中华人民共和国民事诉讼法</a></td><td>协议管辖、送达</td><td><span class="st ok">现行</span></td><td>法典现行；本次未逐条核对最新修正（核对日期 2026-10-19）</td><td>管辖与送达条款提示</td></tr><tr><td class="t"><a href="https://www.chinatax.gov.cn/" target="_blank" rel="noopener">中华人民共和国增值税暂行条例</a></td><td>发票与税率</td><td><span class="st ok">现行（以现行版本为准）</span></td><td>法规现行；具体税率与开票要求以现行规定为准（核对日期 2026-10-19）</td><td>开票与账期</td></tr></tbody></table>
+  <div class="disclaimer">本结果属于业务审查提示，不是法律意见，也不替代律师或法务的专业审查。涉及条款效力、是否可执行、法律责任分配等问题，必须以公司法务/外部律师意见为准。</div>
+</section>
+
+<section class="panel" id="panel-method">
+  <div class="grid2">
+    <div class="card"><h3>本次审查步骤</h3><ol><li>识别文件与缺件</li><li>条款编号与索引</li><li>按主题逐条比对</li><li>区分写了什么/没写什么/不清楚</li><li>推导业务后果</li><li>分配三张清单</li></ol></div>
+    <div class="card"><h3>业务提醒与法律意见的边界</h3>
+      <p style="font-size:13.2px">本页面输出的是<b>业务审查提示</b>：说明合同写了什么、哪些没写清楚、可能产生哪些采购业务后果、建议向谁确认。</p>
+      <p style="font-size:13.2px">它<b>不是法律意见</b>：不对条款效力、是否可执行、法律责任如何分配作出结论；涉及解释争议与诉讼仲裁的事项，由法务或外部律师判断。</p>
+      <p style="font-size:13.2px">数据来源限定为：用户提供的合同文本 + 公开可核验的法规标准。合同以外的信息（供应商资质、履约能力）一律标为「未提供/需核实」，不作推测。</p>
+      <h3 style="margin-top:14px">处理状态说明</h3>
+      <p style="font-size:12.8px;color:#475569">状态与备注仅保存在当前浏览器的 localStorage 中，便于业务同事各自消化；需要共享时点击「导出处理状态 JSON」，把文件回传给采购负责人汇总。</p>
+    </div>
+  </div>
+  <div class="disclaimer">本结果属于业务审查提示，不是法律意见，也不替代律师或法务的专业审查。涉及条款效力、是否可执行、法律责任分配等问题，必须以公司法务/外部律师意见为准。</div>
+</section>
+
+<div class="foot">共 8 条风险 · 页面由 skill「检查采购合同风险点」生成 · 单文件离线可用 · 打印时自动展开全部卡片</div>
+
+<script>
+  
+(function(){
+  var SEED = {};
+  var KEY = 'cr-status-' + (document.title||'').slice(0,40);
+  var store = {};
+  try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+  Object.keys(SEED).forEach(function(k){ if(!store[k]) store[k]=SEED[k]; });
+
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} }
+
+  // tabs
+  var tabs = document.querySelectorAll('.tabs button');
+  tabs.forEach(function(b){ b.addEventListener('click', function(){
+    tabs.forEach(function(x){x.classList.remove('active')}); b.classList.add('active');
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+    var target = document.getElementById('panel-' + b.dataset.panel);
+    target.classList.add('active');
+    if(b.dataset.panel === 'workspace'){ setTimeout(layoutHeights, 30); }
+  });});
+
+  // right heights based on toolbar
+  function layoutHeights(){
+    var tb = document.querySelector('#panel-workspace .toolbar');
+    if(!tb) return;
+    var h = tb.offsetHeight + 118;
+    document.querySelectorAll('.ws-left,.ws-right').forEach(function(el){ el.style.height = 'calc(100vh - ' + h + 'px)'; });
+  }
+  window.addEventListener('resize', layoutHeights);
+
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.fcard'));
+  cards.forEach(function(c){
+    var id = c.dataset.id;
+    if(store[id]) {
+      var sel = c.querySelector('[data-status]'); var inp = c.querySelector('[data-note]');
+      if(store[id].status){ sel.value = store[id].status; }
+      if(store[id].note){ inp.value = store[id].note; }
+      paintStatus(c, store[id].status);
+    }
+    c.querySelector('[data-jump]').addEventListener('click', function(){ c.classList.toggle('open'); });
+    c.querySelector('[data-status]').addEventListener('change', function(e){
+      store[id] = store[id] || {}; store[id].status = e.target.value; save(); paintStatus(c, e.target.value);
+    });
+    c.querySelector('[data-note]').addEventListener('input', function(e){
+      store[id] = store[id] || {}; store[id].note = e.target.value; save();
+    });
+    c.querySelectorAll('.anchor-btn').forEach(function(b){
+      b.addEventListener('click', function(){ gotoClause(b.dataset.gotoClause); });
+    });
+  });
+  function paintStatus(card, s){
+    var pill = card.querySelector('[data-status-pill]');
+    if(!pill) return;
+    pill.textContent = s || '待处理';
+    pill.classList.toggle('set', !!s && s !== '待处理');
+  }
+  document.querySelectorAll('[data-goto-finding]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var id = el.dataset.gotoFinding;
+      switchTab('workspace');
+      var card = document.getElementById('finding-' + id);
+      if(!card) return;
+      // clear filters so card is visible
+      resetFilters();
+      card.classList.add('open');
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+      card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash')}, 1800);
+      var cid = card.dataset.clauses.split(',')[0];
+      setTimeout(function(){ gotoClause(cid, false); }, 500);
+    });
+  });
+  document.querySelectorAll('[data-goto-clause]').forEach(function(el){
+    el.addEventListener('click', function(){ gotoClause(el.dataset.gotoClause); });
+  });
+  function switchTab(name){
+    var b = document.querySelector('.tabs button[data-panel="' + name + '"]'); if(b) b.click();
+  }
+  function gotoClause(cid, alsoCard){
+    switchTab('workspace');
+    var el = document.getElementById('clause-' + cid); if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('flash'); setTimeout(function(){el.classList.remove('flash')}, 1800);
+    if(alsoCard !== false){
+      var chip = el.querySelector('.hit-chip'); if(chip) chip.click();
+    }
+  }
+
+  // filters
+  var curTopic = 'all', curKind = 'all', curSev = new Set(), q = '';
+  var sevBtns = document.querySelectorAll('.sbtn');
+  sevBtns.forEach(function(b){ b.addEventListener('click', function(){
+    var v = b.dataset.sev;
+    if(curSev.has(v)) { curSev.delete(v); b.classList.remove('on'); } else { curSev.add(v); b.classList.add('on'); }
+    apply();
+  });});
+  document.querySelectorAll('.fbtn').forEach(function(b){ b.addEventListener('click', function(){
+    curTopic = b.dataset.topic;
+    document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); apply();
+  });});
+  document.querySelectorAll('.kbtn').forEach(function(b){ b.addEventListener('click', function(){
+    curKind = b.dataset.kind;
+    document.querySelectorAll('.kbtn').forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); apply();
+  });});
+  document.getElementById('search').addEventListener('input', function(e){ q = e.target.value.trim().toLowerCase(); apply(); });
+  function resetFilters(){
+    curTopic='all'; curKind='all'; curSev.clear(); q='';
+    document.getElementById('search').value='';
+    document.querySelectorAll('.fbtn').forEach(function(x){x.classList.toggle('active', x.dataset.topic==='all')});
+    document.querySelectorAll('.kbtn').forEach(function(x){x.classList.toggle('active', x.dataset.kind==='all')});
+    sevBtns.forEach(function(x){x.classList.remove('on')});
+    apply();
+  }
+  function visible(c){
+    if(curTopic !== 'all' && c.dataset.topic !== curTopic) return false;
+    if(curKind !== 'all' && c.dataset.kind !== curKind) return false;
+    if(curSev.size && !curSev.has(c.dataset.sev)) return false;
+    if(q && (c.dataset.search + ' ' + c.textContent.toLowerCase()).indexOf(q) === -1) return false;
+    return true;
+  }
+  function apply(){
+    var n = 0;
+    cards.forEach(function(c){ var v = visible(c); c.style.display = v ? '' : 'none'; if(v) n++; });
+    document.getElementById('count-hint').textContent = '显示 ' + n + ' / ' + cards.length + ' 条';
+    // dim clauses without visible findings
+    var shownIds = new Set();
+    cards.forEach(function(c){ if(visible(c)) shownIds.add(c.dataset.id); });
+    var anyFilter = curTopic!=='all' || curKind!=='all' || curSev.size || q;
+    document.querySelectorAll('.clause').forEach(function(cl){
+      if(!anyFilter) { cl.style.opacity=''; return; }
+      var chips = cl.querySelectorAll('.hit-chip'); var on = false;
+      chips.forEach(function(ch){ if(shownIds.has(ch.dataset.gotoFinding)) on = true; });
+      cl.style.opacity = on ? '' : '.35';
+    });
+  }
+  apply();
+  document.getElementById('btn-all-open').onclick = function(){ cards.forEach(function(c){ if(c.style.display!=='none') c.classList.add('open'); }); };
+  document.getElementById('btn-all-close').onclick = function(){ cards.forEach(function(c){ c.classList.remove('open'); }); };
+  document.getElementById('btn-export').onclick = function(){
+    var blob = new Blob([JSON.stringify(store, null, 2)], {type:'application/json'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'contract-review-status.json'; a.click();
+  };
+
+  // question tabs
+  document.querySelectorAll('.qtab-btn').forEach(function(b){ b.addEventListener('click', function(){
+    document.querySelectorAll('.qtab-btn').forEach(function(x){x.classList.remove('active')}); b.classList.add('active');
+    document.querySelectorAll('.qtab').forEach(function(p){p.classList.toggle('active', p.dataset.owner === b.dataset.owner)});
+  });});
+  document.querySelectorAll('.qrow').forEach(function(r){
+    r.addEventListener('click', function(e){
+      if(e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+      var id = r.dataset.gotoFinding; switchTab('workspace');
+      var card = document.getElementById('finding-' + id); if(!card) return;
+      resetFilters(); card.classList.add('open');
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+      card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash')}, 1800);
+    });
+  });
+  document.querySelectorAll('.toprow').forEach(function(r){
+    r.addEventListener('click', function(){
+      var id = r.dataset.gotoFinding; switchTab('workspace');
+      var card = document.getElementById('finding-' + id); if(!card) return;
+      resetFilters(); card.classList.add('open');
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+      card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash')}, 1800);
+    });
+  });
+  window.addEventListener('load', layoutHeights);
+})();
+
+</script>
+</body>
+</html>

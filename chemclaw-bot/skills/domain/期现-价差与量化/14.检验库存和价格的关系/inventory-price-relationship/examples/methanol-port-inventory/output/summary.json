@@ -1,0 +1,10 @@
+{
+ "n_weeks": 228,
+ "start": "2022-04-06",
+ "end": "2026-10-14",
+ "n_tests": 54,
+ "n_sig_raw": 7,
+ "n_sig_bh": 0,
+ "n_placebo_p01": 1,
+ "n_placebo_tests": 18
+}

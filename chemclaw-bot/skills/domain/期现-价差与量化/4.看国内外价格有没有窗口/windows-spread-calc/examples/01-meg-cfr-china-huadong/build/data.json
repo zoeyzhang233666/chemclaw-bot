@@ -1,0 +1,2137 @@
+{
+ "meta": {
+  "product": "乙二醇",
+  "product_code": "MEG",
+  "spec": "聚酯级（纤维级）乙二醇，纯度≥99.9%，散装船货",
+  "quote_basis": "CFR/CIF 中国主港（卖方口径为中国到岸价，含海运与保险）",
+  "quote_region": "中国主港（货源以中东/东北亚为主，具体产地未在报价中披露）",
+  "quote_term": "CIF",
+  "quote_term_label": "CIF 成本加保险费加运费（至中国主港）",
+  "term_includes": {
+   "goods": 1,
+   "inland_origin": 1,
+   "export_clear": 1,
+   "freight": 1,
+   "insurance": 1,
+   "discharge": 0,
+   "inland_dest": 0
+  },
+  "term_includes_cn": {
+   "goods": "报价已含",
+   "inland_origin": "报价已含",
+   "export_clear": "报价已含",
+   "freight": "报价已含",
+   "insurance": "报价已含",
+   "discharge": "报价不含",
+   "inland_dest": "报价不含"
+  },
+  "currency": "USD",
+  "dom_region": "华东（张家港/太仓/江阴）",
+  "dom_basis": "送到主港、含税、现汇；聚酯级散水",
+  "hs_code": "2905310000",
+  "hs_desc": "1,2-乙二醇（HS 2905.31）",
+  "base_date": "2026-08-18",
+  "window": "2025-09-04 ~ 2026-08-18（27 个可对齐观测点）",
+  "window_start": "2025-09-04",
+  "compare_date": "2025-12-09",
+  "unit": "元/吨",
+  "generated_at": "2026-10-20",
+  "author": "windows-spread-calc v1.0.0",
+  "title": "乙二醇 CFR 中国到岸价 vs 华东（张家港）现货：内外价差四层口径测算",
+  "must_read": [
+   "本报告只做三件事：把海外报价折成四层可比成本、把国内价折算到同一口径、把两者的差及其变动说清楚。它不判断该不该买，不给出任何下单、建仓、点价或套利操作，也不把价差称作可实现的利润。",
+   "基准时点取 2026-08-18：该日是海外 CFR 到岸价、同日国内基准价、同日汇率三项同时齐全的最后一个时点。更近的时点缺海外公开报价，故不作为基准，只在第 3 节与缺口清单中说明。"
+  ],
+  "focus": [
+   "四层成本必须分开：CIF 折人民币 / 含税到岸（landed_cash）/ 可抵扣进口增值税 / 可比经济成本（net_cash）。把 CIF 折人民币直接与国内含税价相减，会把 13% 增值税误算成价差。",
+   "贸易术语是 CFR/CIF（中国到岸价），海运费与保险已在报价内。任何再填一次运费、再加一次保险的算法都是重复计费，本模型由代码强制置零。",
+   "历史曲线上的运费列全部按 0 计，是因为术语已含运费，不是因为历史运费取不到却拿今天的运费顶替。真正取不到的是逐周运价指数，已在缺口清单第 3 条写明。"
+  ]
+ },
+ "params": {
+  "fx_usdcny": 6.7423,
+  "purity": 1.0,
+  "gross_weight_factor": 1.0,
+  "inland_origin": 0.0,
+  "export_clear": 0.0,
+  "ocean_freight": 0.0,
+  "insurance_rate": 1.1,
+  "insurance_rate_pct": 0.0,
+  "discharge_fee": 0.0,
+  "inland_dest": 0.0,
+  "unload_fee": 0.0,
+  "duty_rate": 0.0,
+  "other_tax_rate": 0.0,
+  "vat_rate": 0.13,
+  "vat_credit_ratio": 1.0,
+  "_src": {
+   "ocean_freight": "术语已含，按 0 计（口径结果，非缺失）"
+  },
+  "price_quote": 685.0,
+  "currency": "USD",
+  "term": "CIF"
+ },
+ "cost": {
+  "term": "CIF",
+  "term_label": "CIF 成本加保险费加运费（至中国主港）",
+  "currency": "USD",
+  "fx": 6.7423,
+  "quote": 685.0,
+  "purity": 1.0,
+  "goods_cny": 4618.4755,
+  "inland_origin": 0.0,
+  "export_clear": 0.0,
+  "freight": 0.0,
+  "insurance": 0.0,
+  "cif": 4618.4755,
+  "discharge": 0.0,
+  "duty": 0.0,
+  "other_tax": 0.0,
+  "vat": 600.401815,
+  "vat_credit": 600.401815,
+  "inland_dest": 0.0,
+  "unload": 0.0,
+  "landed_cash": 5218.877315,
+  "cash_out": 0.0,
+  "net_cash": 4618.4755,
+  "unit_net": 4618.4755,
+  "taxable": 4618.4755,
+  "vat_rate": 0.13,
+  "includes": {
+   "goods": 1,
+   "inland_origin": 1,
+   "export_clear": 1,
+   "freight": 1,
+   "insurance": 1,
+   "discharge": 0,
+   "inland_dest": 0
+  }
+ },
+ "domestic": {
+  "dom_quote": 5116.67,
+  "dom_freight_added": 0.0,
+  "dom_adj": 0.0,
+  "dom_price": 5116.67,
+  "dom_net_price": 4528.026549,
+  "dom_vat_in": 588.643451,
+  "tax": "含税",
+  "vat_rate": 0.13,
+  "cif": 4618.4755,
+  "cif_incl_vat": 5218.877315,
+  "gap_vs_landed_cash": -102.207315,
+  "gap_vs_net_cash": 498.1945,
+  "gap_vs_cif": -90.448951
+ },
+ "gaps_table": [
+  {
+   "code": "G1_cif_vs_domnet",
+   "name": "CIF 折人民币 vs 国内未税",
+   "formula": "国内未税送到 − 进口 CIF 折人民币",
+   "meaning": "纯价格口径：两边都不含增值税，反映国际与国内价格本身的高低",
+   "value": -90.448951
+  },
+  {
+   "code": "G2_landedcash_vs_domallin",
+   "name": "含税到岸 vs 国内含税送到",
+   "formula": "国内含税送到 − 进口含税到岸 landed_cash",
+   "meaning": "现金口径：两边都含税，反映全部现金付出之差",
+   "value": -102.207315
+  },
+  {
+   "code": "G3_netcash_vs_domallin",
+   "name": "经济成本 vs 国内含税送到",
+   "formula": "国内含税送到 − 进口经济成本 net_cash",
+   "meaning": "经济口径：进口增值税按可抵扣处理后的真实可比成本",
+   "value": 498.1945
+  },
+  {
+   "code": "G4_vatadj",
+   "name": "进项税抵扣调整后",
+   "formula": "国内未税送到 − 进口经济成本",
+   "meaning": "税制口径：看价格差里有多少来自增值税抵扣权的估值差异",
+   "value": -90.448951
+  }
+ ],
+ "gap_map": {
+  "G1_cif_vs_domnet": -90.448951,
+  "G2_landedcash_vs_domallin": -102.207315,
+  "G3_netcash_vs_domallin": 498.1945,
+  "G4_vatadj": -90.448951
+ },
+ "waterfall": [
+  {
+   "key": "goods_cny",
+   "label": "海外报价折人民币",
+   "value": 4618.4755,
+   "kind": "base",
+   "formula": "报价 × 汇率"
+  },
+  {
+   "key": "inland_origin",
+   "label": "出口国内陆运费",
+   "value": 0.0,
+   "kind": "cost",
+   "formula": "参数"
+  },
+  {
+   "key": "export_clear",
+   "label": "出口报关杂费",
+   "value": 0.0,
+   "kind": "cost",
+   "formula": "参数"
+  },
+  {
+   "key": "freight",
+   "label": "国际海运费",
+   "value": 0.0,
+   "kind": "cost",
+   "formula": "运费 × 汇率"
+  },
+  {
+   "key": "insurance",
+   "label": "保险费（CIF 口径补足）",
+   "value": 0.0,
+   "kind": "cost",
+   "formula": "(货值+出口费+运费) × 加成率 × 费率"
+  },
+  {
+   "key": "_cif",
+   "label": "= CIF 折人民币",
+   "value": 4618.4755,
+   "kind": "subtotal",
+   "formula": "Σ 以上各项"
+  },
+  {
+   "key": "discharge",
+   "label": "目的港卸货/港杂",
+   "value": 0.0,
+   "kind": "cost",
+   "formula": "参数"
+  },
+  {
+   "key": "duty",
+   "label": "进口关税",
+   "value": 0.0,
+   "kind": "cost",
+   "formula": "(CIF+卸货) × 关税率"
+  },
+  {
+   "key": "vat",
+   "label": "进口增值税",
+   "value": 600.401815,
+   "kind": "cost",
+   "formula": "(CIF+卸货+关税) × VAT率"
+  },
+  {
+   "key": "_landed",
+   "label": "= 含税到岸 landed_cash",
+   "value": 5218.877315,
+   "kind": "subtotal",
+   "formula": "Σ 以上各项（现金口径）"
+  },
+  {
+   "key": "vat_credit",
+   "label": "可抵扣进口增值税",
+   "value": -600.401815,
+   "kind": "credit",
+   "formula": "VAT × 可抵扣比例"
+  },
+  {
+   "key": "_net",
+   "label": "= 可比经济成本 net_cash",
+   "value": 4618.4755,
+   "kind": "total",
+   "formula": "landed_cash − 可抵扣 VAT"
+  },
+  {
+   "key": "_dom",
+   "label": "国内可比送到价（含税）",
+   "value": 5116.67,
+   "kind": "dom",
+   "formula": "国内报价（折算到送到基准地+含税）"
+  },
+  {
+   "key": "_gap",
+   "label": "= 经济口径价差 G3",
+   "value": 498.1945,
+   "kind": "gap",
+   "formula": "国内可比价 − net_cash"
+  }
+ ],
+ "attribution": {
+  "available": true,
+  "compare_date": "2025-12-09",
+  "inputs": {
+   "fx": "2025-12-09",
+   "freight": null,
+   "freight_source": "assumed_base",
+   "ov_price_date": "2025-12-09",
+   "dom_price_date": "2025-12-09",
+   "ov_price": 436.0,
+   "dom_price": 3970.0,
+   "fx_value": 7.0643,
+   "freight_value": 0.0
+  },
+  "gaps_compare": {
+   "G1_cif_vs_domnet": 433.239536,
+   "G2_landedcash_vs_domallin": 489.560676,
+   "G3_netcash_vs_domallin": 889.9652,
+   "G4_vatadj": 433.239536
+  },
+  "gaps_now": {
+   "G1_cif_vs_domnet": -90.448951,
+   "G2_landedcash_vs_domallin": -1248.877315,
+   "G3_netcash_vs_domallin": -648.4755,
+   "G4_vatadj": -90.448951
+  },
+  "start_gap": 889.9652,
+  "end_gap": 498.1945,
+  "total_change": -391.7707,
+  "sum_of_factors": -391.7707,
+  "residual": 0.0,
+  "items": [
+   {
+    "key": "ov_price",
+    "label": "海外报价（美元）",
+    "value": -1759.0107,
+    "detail": "436.0 → 685.0 USD/t"
+   },
+   {
+    "key": "fx",
+    "label": "汇率 USD/CNY",
+    "value": 220.57,
+    "detail": "7.0643 → 6.7423"
+   },
+   {
+    "key": "freight",
+    "label": "海运费 USD/t",
+    "value": 0.0,
+    "detail": "0.0 → 0.0（assumed_base）"
+   },
+   {
+    "key": "duty",
+    "label": "关税/其他税率",
+    "value": 0.0,
+    "detail": "0.0 → 0.0"
+   },
+   {
+    "key": "vat_credit",
+    "label": "增值税可抵扣比例",
+    "value": 0.0,
+    "detail": "1.0 → 1.0"
+   },
+   {
+    "key": "insurance",
+    "label": "保险费率",
+    "value": 0.0,
+    "detail": "0.0 → 0.0"
+   },
+   {
+    "key": "dom_price",
+    "label": "国内现货价",
+    "value": 1146.67,
+    "detail": "3970.0 → 5116.67 CNY/t"
+   }
+  ],
+  "cost_cmp": {
+   "cif": 3080.0348,
+   "landed_cash": 3480.439324,
+   "net_cash": 3080.0348,
+   "quote": 436.0,
+   "freight": 0.0,
+   "insurance": 0.0,
+   "duty": 0.0,
+   "vat": 400.404524,
+   "vat_credit": 400.404524
+  },
+  "cost_now": {
+   "cif": 4618.4755,
+   "landed_cash": 5218.877315,
+   "net_cash": 4618.4755,
+   "quote": 685.0,
+   "freight": 0.0,
+   "insurance": 0.0,
+   "duty": 0.0,
+   "vat": 600.401815,
+   "vat_credit": 600.401815
+  }
+ },
+ "sensitivity": {
+  "items": {
+   "price": {
+    "label": "海外报价（USD/t）",
+    "rows": [
+     {
+      "key": "price",
+      "label": "500",
+      "value": 500,
+      "cif": 3371.15,
+      "landed_cash": 3809.3995,
+      "net_cash": 3371.15,
+      "delta_vs_base": -1247.3255
+     },
+     {
+      "key": "price",
+      "label": "600",
+      "value": 600,
+      "cif": 4045.38,
+      "landed_cash": 4571.2794,
+      "net_cash": 4045.38,
+      "delta_vs_base": -573.0955
+     },
+     {
+      "key": "price",
+      "label": "650",
+      "value": 650,
+      "cif": 4382.495,
+      "landed_cash": 4952.21935,
+      "net_cash": 4382.495,
+      "delta_vs_base": -235.9805
+     },
+     {
+      "key": "price",
+      "label": "685",
+      "value": 685,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "price",
+      "label": "720",
+      "value": 720,
+      "cif": 4854.456,
+      "landed_cash": 5485.53528,
+      "net_cash": 4854.456,
+      "delta_vs_base": 235.9805
+     },
+     {
+      "key": "price",
+      "label": "800",
+      "value": 800,
+      "cif": 5393.84,
+      "landed_cash": 6095.0392,
+      "net_cash": 5393.84,
+      "delta_vs_base": 775.3645
+     },
+     {
+      "key": "price",
+      "label": "900",
+      "value": 900,
+      "cif": 6068.07,
+      "landed_cash": 6856.9191,
+      "net_cash": 6068.07,
+      "delta_vs_base": 1449.5945
+     }
+    ]
+   },
+   "freight": {
+    "label": "海运费（USD/t）",
+    "rows": [
+     {
+      "key": "freight",
+      "label": "0",
+      "value": 0,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "freight",
+      "label": "10",
+      "value": 10,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "freight",
+      "label": "20",
+      "value": 20,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "freight",
+      "label": "40",
+      "value": 40,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "freight",
+      "label": "60",
+      "value": 60,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "freight",
+      "label": "80",
+      "value": 80,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "freight",
+      "label": "120",
+      "value": 120,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     }
+    ]
+   },
+   "fx": {
+    "label": "USD/CNY",
+    "rows": [
+     {
+      "key": "fx",
+      "label": "6.3",
+      "value": 6.3,
+      "cif": 4315.5,
+      "landed_cash": 4876.515,
+      "net_cash": 4315.5,
+      "delta_vs_base": -302.9755
+     },
+     {
+      "key": "fx",
+      "label": "6.5",
+      "value": 6.5,
+      "cif": 4452.5,
+      "landed_cash": 5031.325,
+      "net_cash": 4452.5,
+      "delta_vs_base": -165.9755
+     },
+     {
+      "key": "fx",
+      "label": "6.7423",
+      "value": 6.7423,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "fx",
+      "label": "6.9",
+      "value": 6.9,
+      "cif": 4726.5,
+      "landed_cash": 5340.945,
+      "net_cash": 4726.5,
+      "delta_vs_base": 108.0245
+     },
+     {
+      "key": "fx",
+      "label": "7.1",
+      "value": 7.1,
+      "cif": 4863.5,
+      "landed_cash": 5495.755,
+      "net_cash": 4863.5,
+      "delta_vs_base": 245.0245
+     },
+     {
+      "key": "fx",
+      "label": "7.3",
+      "value": 7.3,
+      "cif": 5000.5,
+      "landed_cash": 5650.565,
+      "net_cash": 5000.5,
+      "delta_vs_base": 382.0245
+     },
+     {
+      "key": "fx",
+      "label": "7.5",
+      "value": 7.5,
+      "cif": 5137.5,
+      "landed_cash": 5805.375,
+      "net_cash": 5137.5,
+      "delta_vs_base": 519.0245
+     }
+    ]
+   },
+   "duty": {
+    "label": "关税率",
+    "rows": [
+     {
+      "key": "duty",
+      "label": "0",
+      "value": 0,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "duty",
+      "label": "0.02",
+      "value": 0.02,
+      "cif": 4618.4755,
+      "landed_cash": 5323.254861,
+      "net_cash": 4710.84501,
+      "delta_vs_base": 92.36951
+     },
+     {
+      "key": "duty",
+      "label": "0.055",
+      "value": 0.055,
+      "cif": 4618.4755,
+      "landed_cash": 5505.915567,
+      "net_cash": 4872.491653,
+      "delta_vs_base": 254.016153
+     },
+     {
+      "key": "duty",
+      "label": "0.1",
+      "value": 0.1,
+      "cif": 4618.4755,
+      "landed_cash": 5740.765047,
+      "net_cash": 5080.32305,
+      "delta_vs_base": 461.84755
+     },
+     {
+      "key": "duty",
+      "label": "0.2",
+      "value": 0.2,
+      "cif": 4618.4755,
+      "landed_cash": 6262.652778,
+      "net_cash": 5542.1706,
+      "delta_vs_base": 923.6951
+     }
+    ]
+   },
+   "vat": {
+    "label": "进口增值税率",
+    "rows": [
+     {
+      "key": "vat",
+      "label": "0.09",
+      "value": 0.09,
+      "cif": 4618.4755,
+      "landed_cash": 5034.138295,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "vat",
+      "label": "0.1",
+      "value": 0.1,
+      "cif": 4618.4755,
+      "landed_cash": 5080.32305,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "vat",
+      "label": "0.13",
+      "value": 0.13,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     }
+    ]
+   },
+   "insurance_pct": {
+    "label": "保险费率",
+    "rows": [
+     {
+      "key": "insurance_pct",
+      "label": "0.0",
+      "value": 0.0,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "insurance_pct",
+      "label": "0.001",
+      "value": 0.001,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "insurance_pct",
+      "label": "0.0015",
+      "value": 0.0015,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "insurance_pct",
+      "label": "0.003",
+      "value": 0.003,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "insurance_pct",
+      "label": "0.005",
+      "value": 0.005,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     }
+    ]
+   },
+   "credit": {
+    "label": "可抵扣比例",
+    "rows": [
+     {
+      "key": "credit",
+      "label": "0.0",
+      "value": 0.0,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 5218.877315,
+      "delta_vs_base": 600.401815
+     },
+     {
+      "key": "credit",
+      "label": "0.5",
+      "value": 0.5,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4918.676408,
+      "delta_vs_base": 300.200908
+     },
+     {
+      "key": "credit",
+      "label": "0.8",
+      "value": 0.8,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4738.555863,
+      "delta_vs_base": 120.080363
+     },
+     {
+      "key": "credit",
+      "label": "1.0",
+      "value": 1.0,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     }
+    ]
+   },
+   "discharge": {
+    "label": "目的港卸货费（USD/t）",
+    "rows": [
+     {
+      "key": "discharge",
+      "label": "0",
+      "value": 0,
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "discharge",
+      "label": "10",
+      "value": 10,
+      "cif": 4618.4755,
+      "landed_cash": 5295.065305,
+      "net_cash": 4685.8985,
+      "delta_vs_base": 67.423
+     },
+     {
+      "key": "discharge",
+      "label": "20",
+      "value": 20,
+      "cif": 4618.4755,
+      "landed_cash": 5371.253295,
+      "net_cash": 4753.3215,
+      "delta_vs_base": 134.846
+     },
+     {
+      "key": "discharge",
+      "label": "30",
+      "value": 30,
+      "cif": 4618.4755,
+      "landed_cash": 5447.441285,
+      "net_cash": 4820.7445,
+      "delta_vs_base": 202.269
+     }
+    ]
+   },
+   "term": {
+    "label": "贸易术语",
+    "rows": [
+     {
+      "key": "term",
+      "label": "EXW",
+      "value": "EXW",
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "term",
+      "label": "FOB",
+      "value": "FOB",
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "term",
+      "label": "CFR",
+      "value": "CFR",
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "term",
+      "label": "CIF",
+      "value": "CIF",
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     },
+     {
+      "key": "term",
+      "label": "DAP",
+      "value": "DAP",
+      "cif": 4618.4755,
+      "landed_cash": 5218.877315,
+      "net_cash": 4618.4755,
+      "delta_vs_base": 0.0
+     }
+    ]
+   }
+  },
+  "matrix": {
+   "fx": [
+    6.4,
+    6.55,
+    6.7423,
+    6.9,
+    7.05
+   ],
+   "freight": [
+    0.0,
+    20.0,
+    40.0,
+    60.0,
+    80.0
+   ],
+   "cells": [
+    [
+     {
+      "fx": 6.4,
+      "freight": 0.0,
+      "net_cash": 4384.0,
+      "gap": 732.67,
+      "status": "ok"
+     },
+     {
+      "fx": 6.55,
+      "freight": 0.0,
+      "net_cash": 4486.75,
+      "gap": 629.92,
+      "status": "ok"
+     },
+     {
+      "fx": 6.7423,
+      "freight": 0.0,
+      "net_cash": 4618.4755,
+      "gap": 498.1945,
+      "status": "ok"
+     },
+     {
+      "fx": 6.9,
+      "freight": 0.0,
+      "net_cash": 4726.5,
+      "gap": 390.17,
+      "status": "ok"
+     },
+     {
+      "fx": 7.05,
+      "freight": 0.0,
+      "net_cash": 4829.25,
+      "gap": 287.42,
+      "status": "ok"
+     }
+    ],
+    [
+     {
+      "fx": 6.4,
+      "freight": 20.0,
+      "net_cash": 4384.0,
+      "gap": 732.67,
+      "status": "ok"
+     },
+     {
+      "fx": 6.55,
+      "freight": 20.0,
+      "net_cash": 4486.75,
+      "gap": 629.92,
+      "status": "ok"
+     },
+     {
+      "fx": 6.7423,
+      "freight": 20.0,
+      "net_cash": 4618.4755,
+      "gap": 498.1945,
+      "status": "ok"
+     },
+     {
+      "fx": 6.9,
+      "freight": 20.0,
+      "net_cash": 4726.5,
+      "gap": 390.17,
+      "status": "ok"
+     },
+     {
+      "fx": 7.05,
+      "freight": 20.0,
+      "net_cash": 4829.25,
+      "gap": 287.42,
+      "status": "ok"
+     }
+    ],
+    [
+     {
+      "fx": 6.4,
+      "freight": 40.0,
+      "net_cash": 4384.0,
+      "gap": 732.67,
+      "status": "ok"
+     },
+     {
+      "fx": 6.55,
+      "freight": 40.0,
+      "net_cash": 4486.75,
+      "gap": 629.92,
+      "status": "ok"
+     },
+     {
+      "fx": 6.7423,
+      "freight": 40.0,
+      "net_cash": 4618.4755,
+      "gap": 498.1945,
+      "status": "ok"
+     },
+     {
+      "fx": 6.9,
+      "freight": 40.0,
+      "net_cash": 4726.5,
+      "gap": 390.17,
+      "status": "ok"
+     },
+     {
+      "fx": 7.05,
+      "freight": 40.0,
+      "net_cash": 4829.25,
+      "gap": 287.42,
+      "status": "ok"
+     }
+    ],
+    [
+     {
+      "fx": 6.4,
+      "freight": 60.0,
+      "net_cash": 4384.0,
+      "gap": 732.67,
+      "status": "ok"
+     },
+     {
+      "fx": 6.55,
+      "freight": 60.0,
+      "net_cash": 4486.75,
+      "gap": 629.92,
+      "status": "ok"
+     },
+     {
+      "fx": 6.7423,
+      "freight": 60.0,
+      "net_cash": 4618.4755,
+      "gap": 498.1945,
+      "status": "ok"
+     },
+     {
+      "fx": 6.9,
+      "freight": 60.0,
+      "net_cash": 4726.5,
+      "gap": 390.17,
+      "status": "ok"
+     },
+     {
+      "fx": 7.05,
+      "freight": 60.0,
+      "net_cash": 4829.25,
+      "gap": 287.42,
+      "status": "ok"
+     }
+    ],
+    [
+     {
+      "fx": 6.4,
+      "freight": 80.0,
+      "net_cash": 4384.0,
+      "gap": 732.67,
+      "status": "ok"
+     },
+     {
+      "fx": 6.55,
+      "freight": 80.0,
+      "net_cash": 4486.75,
+      "gap": 629.92,
+      "status": "ok"
+     },
+     {
+      "fx": 6.7423,
+      "freight": 80.0,
+      "net_cash": 4618.4755,
+      "gap": 498.1945,
+      "status": "ok"
+     },
+     {
+      "fx": 6.9,
+      "freight": 80.0,
+      "net_cash": 4726.5,
+      "gap": 390.17,
+      "status": "ok"
+     },
+     {
+      "fx": 7.05,
+      "freight": 80.0,
+      "net_cash": 4829.25,
+      "gap": 287.42,
+      "status": "ok"
+     }
+    ]
+   ],
+   "rows_are": "freight",
+   "cols_are": "fx"
+  },
+  "dom_price": 5116.67,
+  "base_net_cash": 4618.4755
+ },
+ "scenarios": {
+  "rounds": [
+   {
+    "name": "口径 A：报价原样（CIF 中国）",
+    "desc": "完全按卖方口径，不追加任何费用；只计关税与增值税",
+    "override": {},
+    "term": "CIF",
+    "cif": 4618.4755,
+    "landed_cash": 5218.877315,
+    "net_cash": 4618.4755,
+    "gap": 498.1945,
+    "delta_net": 0.0
+   },
+   {
+    "name": "口径 B：CIF 补卸货/港杂 20 USD/t",
+    "desc": "CIF 通常不含目的港卸货费，按假设值补入以观察影响",
+    "override": {
+     "term": "CIF",
+     "discharge_fee": 20.0
+    },
+    "term": "CIF",
+    "cif": 4618.4755,
+    "landed_cash": 5371.253295,
+    "net_cash": 4753.3215,
+    "gap": 363.3485,
+    "delta_net": 134.846
+   },
+   {
+    "name": "口径 C：视作 FOB，自付海运 40 USD/t",
+    "desc": "对照组：若拿到的是 FOB 价而非到岸价，成本抬高多少",
+    "override": {
+     "term": "FOB",
+     "ocean_freight": 40.0,
+     "insurance_rate_pct": 0.0015
+    },
+    "term": "FOB",
+    "cif": 4896.232976,
+    "landed_cash": 5532.743263,
+    "net_cash": 4896.232976,
+    "gap": 220.437024,
+    "delta_net": 277.757476
+   },
+   {
+    "name": "口径 D：可抵扣比例降为 80%",
+    "desc": "部分进项税无法及时抵扣的折价情形",
+    "override": {
+     "vat_credit_ratio": 0.8
+    },
+    "term": "CIF",
+    "cif": 4618.4755,
+    "landed_cash": 5218.877315,
+    "net_cash": 4738.555863,
+    "gap": 378.114137,
+    "delta_net": 120.080363
+   },
+   {
+    "name": "口径 E：按最惠国税率 5.5% 计关税",
+    "desc": "对照组：若适用税率不是 0，成本抬升多少",
+    "override": {
+     "duty_rate": 0.055
+    },
+    "term": "CIF",
+    "cif": 4618.4755,
+    "landed_cash": 5505.915567,
+    "net_cash": 4872.491653,
+    "gap": 244.178347,
+    "delta_net": 254.016153
+   }
+  ],
+  "implied": [],
+  "implied_meta": {}
+ },
+ "series": {
+  "rows": [
+   {
+    "date": "2025-09-04",
+    "status": "ok",
+    "ov_usd": 523.0,
+    "dom_cny": 4478.33,
+    "fx": 7.1407,
+    "frt_usd": 0.0,
+    "fx_date": "2025-09-04",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20250905-4735672.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20250904-4731336.html",
+    "cif": 3734.5861,
+    "insurance": 0.0,
+    "landed_cash": 4220.082293,
+    "vat": 485.496193,
+    "vat_credit": 485.496193,
+    "net_cash": 3734.5861,
+    "dom_price": 4478.33,
+    "dom_net": 3963.123894,
+    "gap_net_cash": 743.7439,
+    "gap_landed_cash": 258.247707,
+    "gap_cif": 228.537794,
+    "implied_other": 743.7439
+   },
+   {
+    "date": "2025-09-09",
+    "status": "ok",
+    "ov_usd": 521.0,
+    "dom_cny": 4486.67,
+    "fx": 7.1215,
+    "frt_usd": 0.0,
+    "fx_date": "2025-09-09",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20250910-4754833.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20250909-4746332.html",
+    "cif": 3710.3015,
+    "insurance": 0.0,
+    "landed_cash": 4192.640695,
+    "vat": 482.339195,
+    "vat_credit": 482.339195,
+    "net_cash": 3710.3015,
+    "dom_price": 4486.67,
+    "dom_net": 3970.504425,
+    "gap_net_cash": 776.3685,
+    "gap_landed_cash": 294.029305,
+    "gap_cif": 260.202925,
+    "implied_other": 776.3685
+   },
+   {
+    "date": "2025-09-17",
+    "status": "ok",
+    "ov_usd": 517.0,
+    "dom_cny": 4458.33,
+    "fx": 7.1042,
+    "frt_usd": 0.0,
+    "fx_date": "2025-09-17",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20250918-4782147.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20250917-4773983.html",
+    "cif": 3672.8714,
+    "insurance": 0.0,
+    "landed_cash": 4150.344682,
+    "vat": 477.473282,
+    "vat_credit": 477.473282,
+    "net_cash": 3672.8714,
+    "dom_price": 4458.33,
+    "dom_net": 3945.424779,
+    "gap_net_cash": 785.4586,
+    "gap_landed_cash": 307.985318,
+    "gap_cif": 272.553379,
+    "implied_other": 785.4586
+   },
+   {
+    "date": "2025-09-18",
+    "status": "ok",
+    "ov_usd": 516.0,
+    "dom_cny": 4458.33,
+    "fx": 7.1055,
+    "frt_usd": 0.0,
+    "fx_date": "2025-09-18",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20250919-4782782.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20250918-4778121.html",
+    "cif": 3666.438,
+    "insurance": 0.0,
+    "landed_cash": 4143.07494,
+    "vat": 476.63694,
+    "vat_credit": 476.63694,
+    "net_cash": 3666.438,
+    "dom_price": 4458.33,
+    "dom_net": 3945.424779,
+    "gap_net_cash": 791.892,
+    "gap_landed_cash": 315.25506,
+    "gap_cif": 278.986779,
+    "implied_other": 791.892
+   },
+   {
+    "date": "2025-10-08",
+    "status": "ok",
+    "ov_usd": 503.0,
+    "dom_cny": 4385.0,
+    "fx": 7.1195,
+    "frt_usd": 0.0,
+    "fx_date": "2025-10-08",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251009-4836040.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251008-4833357.html",
+    "cif": 3581.1085,
+    "insurance": 0.0,
+    "landed_cash": 4046.652605,
+    "vat": 465.544105,
+    "vat_credit": 465.544105,
+    "net_cash": 3581.1085,
+    "dom_price": 4385.0,
+    "dom_net": 3880.530973,
+    "gap_net_cash": 803.8915,
+    "gap_landed_cash": 338.347395,
+    "gap_cif": 299.422473,
+    "implied_other": 803.8915
+   },
+   {
+    "date": "2025-10-10",
+    "status": "ok",
+    "ov_usd": 492.0,
+    "dom_cny": 4346.67,
+    "fx": 7.1228,
+    "frt_usd": 0.0,
+    "fx_date": "2025-10-10",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251011-4844274.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251010-4839959.html",
+    "cif": 3504.4176,
+    "insurance": 0.0,
+    "landed_cash": 3959.991888,
+    "vat": 455.574288,
+    "vat_credit": 455.574288,
+    "net_cash": 3504.4176,
+    "dom_price": 4346.67,
+    "dom_net": 3846.610619,
+    "gap_net_cash": 842.2524,
+    "gap_landed_cash": 386.678112,
+    "gap_cif": 342.193019,
+    "implied_other": 842.2524
+   },
+   {
+    "date": "2025-10-14",
+    "status": "ok",
+    "ov_usd": 485.0,
+    "dom_cny": 4346.67,
+    "fx": 7.14,
+    "frt_usd": 0.0,
+    "fx_date": "2025-10-14",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251015-4862578.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251014-4854341.html",
+    "cif": 3462.9,
+    "insurance": 0.0,
+    "landed_cash": 3913.077,
+    "vat": 450.177,
+    "vat_credit": 450.177,
+    "net_cash": 3462.9,
+    "dom_price": 4346.67,
+    "dom_net": 3846.610619,
+    "gap_net_cash": 883.77,
+    "gap_landed_cash": 433.593,
+    "gap_cif": 383.710619,
+    "implied_other": 883.77
+   },
+   {
+    "date": "2025-10-16",
+    "status": "ok",
+    "ov_usd": 488.0,
+    "dom_cny": 4305.0,
+    "fx": 7.1258,
+    "frt_usd": 0.0,
+    "fx_date": "2025-10-16",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251020-4878158.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251016-4863012.html",
+    "cif": 3477.3904,
+    "insurance": 0.0,
+    "landed_cash": 3929.451152,
+    "vat": 452.060752,
+    "vat_credit": 452.060752,
+    "net_cash": 3477.3904,
+    "dom_price": 4305.0,
+    "dom_net": 3809.734513,
+    "gap_net_cash": 827.6096,
+    "gap_landed_cash": 375.548848,
+    "gap_cif": 332.344113,
+    "implied_other": 827.6096
+   },
+   {
+    "date": "2025-10-23",
+    "status": "ok",
+    "ov_usd": 489.0,
+    "dom_cny": 4260.0,
+    "fx": 7.1244,
+    "frt_usd": 0.0,
+    "fx_date": "2025-10-23",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251024-4895542.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251023-4887441.html",
+    "cif": 3483.8316,
+    "insurance": 0.0,
+    "landed_cash": 3936.729708,
+    "vat": 452.898108,
+    "vat_credit": 452.898108,
+    "net_cash": 3483.8316,
+    "dom_price": 4260.0,
+    "dom_net": 3769.911504,
+    "gap_net_cash": 776.1684,
+    "gap_landed_cash": 323.270292,
+    "gap_cif": 286.079904,
+    "implied_other": 776.1684
+   },
+   {
+    "date": "2025-10-27",
+    "status": "ok",
+    "ov_usd": 490.0,
+    "dom_cny": 4276.67,
+    "fx": 7.1075,
+    "frt_usd": 0.0,
+    "fx_date": "2025-10-27",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251028-4906560.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251027-4898170.html",
+    "cif": 3482.675,
+    "insurance": 0.0,
+    "landed_cash": 3935.42275,
+    "vat": 452.74775,
+    "vat_credit": 452.74775,
+    "net_cash": 3482.675,
+    "dom_price": 4276.67,
+    "dom_net": 3784.663717,
+    "gap_net_cash": 793.995,
+    "gap_landed_cash": 341.24725,
+    "gap_cif": 301.988717,
+    "implied_other": 793.995
+   },
+   {
+    "date": "2025-11-17",
+    "status": "ok",
+    "ov_usd": 468.0,
+    "dom_cny": 4133.33,
+    "fx": 7.1076,
+    "frt_usd": 0.0,
+    "fx_date": "2025-11-17",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251118-4979572.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251117-4970455.html",
+    "cif": 3326.3568,
+    "insurance": 0.0,
+    "landed_cash": 3758.783184,
+    "vat": 432.426384,
+    "vat_credit": 432.426384,
+    "net_cash": 3326.3568,
+    "dom_price": 4133.33,
+    "dom_net": 3657.814159,
+    "gap_net_cash": 806.9732,
+    "gap_landed_cash": 374.546816,
+    "gap_cif": 331.457359,
+    "implied_other": 806.9732
+   },
+   {
+    "date": "2025-11-18",
+    "status": "ok",
+    "ov_usd": 463.0,
+    "dom_cny": 4133.33,
+    "fx": 7.1104,
+    "frt_usd": 0.0,
+    "fx_date": "2025-11-18",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251119-4983767.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251118-4975528.html",
+    "cif": 3292.1152,
+    "insurance": 0.0,
+    "landed_cash": 3720.090176,
+    "vat": 427.974976,
+    "vat_credit": 427.974976,
+    "net_cash": 3292.1152,
+    "dom_price": 4133.33,
+    "dom_net": 3657.814159,
+    "gap_net_cash": 841.2148,
+    "gap_landed_cash": 413.239824,
+    "gap_cif": 365.698959,
+    "implied_other": 841.2148
+   },
+   {
+    "date": "2025-11-26",
+    "status": "ok",
+    "ov_usd": 462.0,
+    "dom_cny": 4056.67,
+    "fx": 7.0795,
+    "frt_usd": 0.0,
+    "fx_date": "2025-11-26",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251127-5011629.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251126-5003330.html",
+    "cif": 3270.729,
+    "insurance": 0.0,
+    "landed_cash": 3695.92377,
+    "vat": 425.19477,
+    "vat_credit": 425.19477,
+    "net_cash": 3270.729,
+    "dom_price": 4056.67,
+    "dom_net": 3589.973451,
+    "gap_net_cash": 785.941,
+    "gap_landed_cash": 360.74623,
+    "gap_cif": 319.244451,
+    "implied_other": 785.941
+   },
+   {
+    "date": "2025-11-27",
+    "status": "ok",
+    "ov_usd": 461.0,
+    "dom_cny": 4056.67,
+    "fx": 7.0834,
+    "frt_usd": 0.0,
+    "fx_date": "2025-11-27",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251128-5012451.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251127-5007756.html",
+    "cif": 3265.4474,
+    "insurance": 0.0,
+    "landed_cash": 3689.955562,
+    "vat": 424.508162,
+    "vat_credit": 424.508162,
+    "net_cash": 3265.4474,
+    "dom_price": 4056.67,
+    "dom_net": 3589.973451,
+    "gap_net_cash": 791.2226,
+    "gap_landed_cash": 366.714438,
+    "gap_cif": 324.526051,
+    "implied_other": 791.2226
+   },
+   {
+    "date": "2025-12-08",
+    "status": "ok",
+    "ov_usd": 440.0,
+    "dom_cny": 3970.0,
+    "fx": 7.068,
+    "frt_usd": 0.0,
+    "fx_date": "2025-12-08",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251209-5052345.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251208-5043554.html",
+    "cif": 3109.92,
+    "insurance": 0.0,
+    "landed_cash": 3514.2096,
+    "vat": 404.2896,
+    "vat_credit": 404.2896,
+    "net_cash": 3109.92,
+    "dom_price": 3970.0,
+    "dom_net": 3513.274336,
+    "gap_net_cash": 860.08,
+    "gap_landed_cash": 455.7904,
+    "gap_cif": 403.354336,
+    "implied_other": 860.08
+   },
+   {
+    "date": "2025-12-09",
+    "status": "ok",
+    "ov_usd": 436.0,
+    "dom_cny": 3970.0,
+    "fx": 7.0643,
+    "frt_usd": 0.0,
+    "fx_date": "2025-12-09",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251210-5053164.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251209-5047954.html",
+    "cif": 3080.0348,
+    "insurance": 0.0,
+    "landed_cash": 3480.439324,
+    "vat": 400.404524,
+    "vat_credit": 400.404524,
+    "net_cash": 3080.0348,
+    "dom_price": 3970.0,
+    "dom_net": 3513.274336,
+    "gap_net_cash": 889.9652,
+    "gap_landed_cash": 489.560676,
+    "gap_cif": 433.239536,
+    "implied_other": 889.9652
+   },
+   {
+    "date": "2025-12-10",
+    "status": "ok",
+    "ov_usd": 436.0,
+    "dom_cny": 3970.0,
+    "fx": 7.0625,
+    "frt_usd": 0.0,
+    "fx_date": "2025-12-10",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251211-5061468.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251210-5052663.html",
+    "cif": 3079.25,
+    "insurance": 0.0,
+    "landed_cash": 3479.5525,
+    "vat": 400.3025,
+    "vat_credit": 400.3025,
+    "net_cash": 3079.25,
+    "dom_price": 3970.0,
+    "dom_net": 3513.274336,
+    "gap_net_cash": 890.75,
+    "gap_landed_cash": 490.4475,
+    "gap_cif": 434.024336,
+    "implied_other": 890.75
+   },
+   {
+    "date": "2025-12-11",
+    "status": "ok",
+    "ov_usd": 433.0,
+    "dom_cny": 3886.67,
+    "fx": 7.0581,
+    "frt_usd": 0.0,
+    "fx_date": "2025-12-11",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251212-5062362.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251211-5057239.html",
+    "cif": 3056.1573,
+    "insurance": 0.0,
+    "landed_cash": 3453.457749,
+    "vat": 397.300449,
+    "vat_credit": 397.300449,
+    "net_cash": 3056.1573,
+    "dom_price": 3886.67,
+    "dom_net": 3439.530973,
+    "gap_net_cash": 830.5127,
+    "gap_landed_cash": 433.212251,
+    "gap_cif": 383.373673,
+    "implied_other": 830.5127
+   },
+   {
+    "date": "2025-12-15",
+    "status": "ok",
+    "ov_usd": 435.0,
+    "dom_cny": 3890.0,
+    "fx": 7.0471,
+    "frt_usd": 0.0,
+    "fx_date": "2025-12-15",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251216-5073905.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251215-5069015.html",
+    "cif": 3065.4885,
+    "insurance": 0.0,
+    "landed_cash": 3464.002005,
+    "vat": 398.513505,
+    "vat_credit": 398.513505,
+    "net_cash": 3065.4885,
+    "dom_price": 3890.0,
+    "dom_net": 3442.477876,
+    "gap_net_cash": 824.5115,
+    "gap_landed_cash": 425.997995,
+    "gap_cif": 376.989376,
+    "implied_other": 824.5115
+   },
+   {
+    "date": "2025-12-18",
+    "status": "ok",
+    "ov_usd": 438.0,
+    "dom_cny": 3891.67,
+    "fx": 7.0413,
+    "frt_usd": 0.0,
+    "fx_date": "2025-12-18",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20251219-5090125.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20251218-5082217.html",
+    "cif": 3084.0894,
+    "insurance": 0.0,
+    "landed_cash": 3485.021022,
+    "vat": 400.931622,
+    "vat_credit": 400.931622,
+    "net_cash": 3084.0894,
+    "dom_price": 3891.67,
+    "dom_net": 3443.955752,
+    "gap_net_cash": 807.5806,
+    "gap_landed_cash": 406.648978,
+    "gap_cif": 359.866352,
+    "implied_other": 807.5806
+   },
+   {
+    "date": "2026-01-05",
+    "status": "ok",
+    "ov_usd": 435.5,
+    "dom_cny": 3864.17,
+    "fx": 6.9854,
+    "frt_usd": 0.0,
+    "fx_date": "2026-01-05",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20260106-5151428.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20260105-5145395.html",
+    "cif": 3042.1417,
+    "insurance": 0.0,
+    "landed_cash": 3437.620121,
+    "vat": 395.478421,
+    "vat_credit": 395.478421,
+    "net_cash": 3042.1417,
+    "dom_price": 3864.17,
+    "dom_net": 3419.619469,
+    "gap_net_cash": 822.0283,
+    "gap_landed_cash": 426.549879,
+    "gap_cif": 377.477769,
+    "implied_other": 822.0283
+   },
+   {
+    "date": "2026-01-12",
+    "status": "ok",
+    "ov_usd": 449.0,
+    "dom_cny": 3818.33,
+    "fx": 6.9731,
+    "frt_usd": 0.0,
+    "fx_date": "2026-01-12",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20260113-5181231.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20260112-5175312.html",
+    "cif": 3130.9219,
+    "insurance": 0.0,
+    "landed_cash": 3537.941747,
+    "vat": 407.019847,
+    "vat_credit": 407.019847,
+    "net_cash": 3130.9219,
+    "dom_price": 3818.33,
+    "dom_net": 3379.053097,
+    "gap_net_cash": 687.4081,
+    "gap_landed_cash": 280.388253,
+    "gap_cif": 248.131197,
+    "implied_other": 687.4081
+   },
+   {
+    "date": "2026-01-14",
+    "status": "ok",
+    "ov_usd": 448.5,
+    "dom_cny": 3815.0,
+    "fx": 6.9734,
+    "frt_usd": 0.0,
+    "fx_date": "2026-01-14",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20260115-5191450.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20260114-5185610.html",
+    "cif": 3127.5699,
+    "insurance": 0.0,
+    "landed_cash": 3534.153987,
+    "vat": 406.584087,
+    "vat_credit": 406.584087,
+    "net_cash": 3127.5699,
+    "dom_price": 3815.0,
+    "dom_net": 3376.106195,
+    "gap_net_cash": 687.4301,
+    "gap_landed_cash": 280.846013,
+    "gap_cif": 248.536295,
+    "implied_other": 687.4301
+   },
+   {
+    "date": "2026-03-03",
+    "status": "ok",
+    "ov_usd": 488.0,
+    "dom_cny": 3828.33,
+    "fx": 6.9076,
+    "frt_usd": 0.0,
+    "fx_date": "2026-03-03",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20260304-5351783.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20260303-5346023.html",
+    "cif": 3370.9088,
+    "insurance": 0.0,
+    "landed_cash": 3809.126944,
+    "vat": 438.218144,
+    "vat_credit": 438.218144,
+    "net_cash": 3370.9088,
+    "dom_price": 3828.33,
+    "dom_net": 3387.902655,
+    "gap_net_cash": 457.4212,
+    "gap_landed_cash": 19.203056,
+    "gap_cif": 16.993855,
+    "implied_other": 457.4212
+   },
+   {
+    "date": "2026-05-27",
+    "status": "ok",
+    "ov_usd": 572.5,
+    "dom_cny": 4783.33,
+    "fx": 6.7821,
+    "frt_usd": 0.0,
+    "fx_date": "2026-05-27",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20260528-5714050.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20260527-5707829.html",
+    "cif": 3882.75225,
+    "insurance": 0.0,
+    "landed_cash": 4387.510043,
+    "vat": 504.757792,
+    "vat_credit": 504.757792,
+    "net_cash": 3882.75225,
+    "dom_price": 4783.33,
+    "dom_net": 4233.035398,
+    "gap_net_cash": 900.57775,
+    "gap_landed_cash": 395.819957,
+    "gap_cif": 350.283148,
+    "implied_other": 900.57775
+   },
+   {
+    "date": "2026-06-23",
+    "status": "ok",
+    "ov_usd": 553.0,
+    "dom_cny": 4495.0,
+    "fx": 6.7857,
+    "frt_usd": 0.0,
+    "fx_date": "2026-06-23",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20260624-5828469.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20260623-5822112.html",
+    "cif": 3752.4921,
+    "insurance": 0.0,
+    "landed_cash": 4240.316073,
+    "vat": 487.823973,
+    "vat_credit": 487.823973,
+    "net_cash": 3752.4921,
+    "dom_price": 4495.0,
+    "dom_net": 3977.876106,
+    "gap_net_cash": 742.5079,
+    "gap_landed_cash": 254.683927,
+    "gap_cif": 225.384006,
+    "implied_other": 742.5079
+   },
+   {
+    "date": "2026-08-18",
+    "status": "ok",
+    "ov_usd": 685.0,
+    "dom_cny": 5116.67,
+    "fx": 6.7423,
+    "frt_usd": 0.0,
+    "fx_date": "2026-08-18",
+    "frt_source": "assumed_base",
+    "note": "报价为中国到岸价（CIF 口径），运费已含；本行 frt 置 0 是口径结果而非缺失。历史逐周海运费未获取，但因术语已含运费，不影响本行成本。",
+    "ov_source": "https://www.100ppi.com/news/detail-20260819-6095157.html",
+    "dom_source": "https://www.100ppi.com/news/detail-20260818-6083083.html",
+    "cif": 4618.4755,
+    "insurance": 0.0,
+    "landed_cash": 5218.877315,
+    "vat": 600.401815,
+    "vat_credit": 600.401815,
+    "net_cash": 4618.4755,
+    "dom_price": 5116.67,
+    "dom_net": 4528.026549,
+    "gap_net_cash": 498.1945,
+    "gap_landed_cash": -102.207315,
+    "gap_cif": -90.448951,
+    "implied_other": 498.1945
+   }
+  ],
+  "n_ok": 27,
+  "stats": {
+   "gap_net_cash": {
+    "n": 27,
+    "start_date": "2025-09-04",
+    "start": 743.7439,
+    "end_date": "2026-08-18",
+    "end": 498.1945,
+    "change": -245.5494,
+    "max": 900.57775,
+    "max_date": "2026-05-27",
+    "min": 457.4212,
+    "min_date": "2026-03-03",
+    "avg": 783.31368
+   },
+   "gap_cif": {
+    "n": 27,
+    "start_date": "2025-09-04",
+    "start": 228.537794,
+    "end_date": "2026-08-18",
+    "end": -90.448951,
+    "change": -318.986745,
+    "max": 434.024336,
+    "max_date": "2025-12-10",
+    "min": -90.448951,
+    "min_date": "2026-08-18",
+    "avg": 299.783388
+   },
+   "gap_landed_cash": {
+    "n": 27,
+    "start_date": "2025-09-04",
+    "start": 258.247707,
+    "end_date": "2026-08-18",
+    "end": -102.207315,
+    "change": -360.455022,
+    "max": 490.4475,
+    "max_date": "2025-12-10",
+    "min": -102.207315,
+    "min_date": "2026-08-18",
+    "avg": 338.755228
+   },
+   "implied_other": {
+    "n": 27,
+    "start_date": "2025-09-04",
+    "start": 743.7439,
+    "end_date": "2026-08-18",
+    "end": 498.1945,
+    "change": -245.5494,
+    "max": 900.57775,
+    "max_date": "2026-05-27",
+    "min": 457.4212,
+    "min_date": "2026-03-03",
+    "avg": 783.31368
+   }
+  },
+  "per_ton_per_usd": null
+ },
+ "notes": {
+  "fx": {
+   "value": 6.7423,
+   "source": "Frankfurter / ECB USD-CNY 每日参考汇率",
+   "note": "ECB 每日参考汇率 2026-08-18 = 6.7423；CFETS 中间价同期在 6.72~6.75，差异 <0.5%，对本例价差影响 <25 元/吨。"
+  },
+  "freight": {
+   "value": 0.0,
+   "source": "术语已含，按 0 计（口径结果，非缺失）",
+   "note": "本品种报价为到岸价，运费已含，故历史运费不参与计算"
+  }
+ },
+ "compare_quote": {
+  "price": 436.0,
+  "spec": "聚酯级船货",
+  "region": "中国主港（到岸）",
+  "currency": "USD",
+  "tax": "不含中国进口税",
+  "term": "CIF",
+  "date": "2025-12-09",
+  "conf": "中",
+  "source": "生意社《2025年12月9日外盘乙二醇价格一览》（中国到岸价 436 美元/吨）",
+  "source_url": "https://www.100ppi.com/news/detail-20251210-5053164.html"
+ },
+ "compare_dom": {
+  "price": 3970.0,
+  "spec": "聚酯级乙二醇",
+  "region": "华东",
+  "tax": "含税",
+  "term": "送到主港",
+  "date": "2025-12-09",
+  "conf": "中",
+  "source": "生意社乙二醇基准价 2025-12-09",
+  "source_url": "https://www.100ppi.com/news/detail-20251209-5047954.html"
+ },
+ "sources": [
+  {
+   "role": "overseas",
+   "name": "生意社《外盘乙二醇价格一览》系列（二手引用，转述外盘报价）",
+   "conf": "中",
+   "date": "2025-09-04 ~ 2026-08-18",
+   "urls": [
+    "https://www.100ppi.com/news/detail-20260819-6095157.html",
+    "https://www.100ppi.com/news/detail-20250905-4735672.html",
+    "https://www.100ppi.com/news/detail-20250910-4754833.html",
+    "https://www.100ppi.com/news/detail-20250918-4782147.html",
+    "https://www.100ppi.com/news/detail-20250919-4782782.html",
+    "https://www.100ppi.com/news/detail-20251009-4836040.html"
+   ],
+   "note": "原文表述为中国到岸价为 N 美元/吨，本报告按 CIF 口径处理；未披露产地、船期与供货商。"
+  },
+  {
+   "role": "domestic",
+   "name": "生意社乙二醇基准价（每日 08:30 发布，经销商/厂采样）",
+   "conf": "中",
+   "date": "2025-04-28 ~ 2026-10-20（本次采集 388 个日值）",
+   "urls": [
+    "https://www.100ppi.com/news/detail-20260818-6083083.html",
+    "https://www.100ppi.com/news/detail-20261020-6368369.html"
+   ],
+   "note": "基准价为采样加权含税参考价，不是交易所结算价，也不是某一家贸易商的成交价。"
+  },
+  {
+   "role": "fx",
+   "name": "Frankfurter API / 欧洲央行 ECB 每日参考汇率",
+   "conf": "高",
+   "date": "2025-09-01 ~ 2026-10-19（290 个工作日）",
+   "urls": [
+    "https://api.frankfurter.app/2024-10-01..2026-10-20?from=USD&to=CNY"
+   ],
+   "note": "ECB 参考汇率非银行间即期成交价，通常存在 <0.5% 偏差。"
+  },
+  {
+   "role": "tax",
+   "name": "海关 HS 编码查询（2905310000 1,2-乙二醇）",
+   "conf": "中",
+   "date": "2026-10-20 查询",
+   "urls": [
+    "https://www.i5a6.com/hscode/detail/2905310000"
+   ],
+   "note": "页面载明最惠国进口税率 5.5%、普通税率 30%、消费税 0%、增值税 13%、出口退税 13%。本模型采用 0% 关税（见缺口第 1 条）、13% 增值税。"
+  },
+  {
+   "role": "cross",
+   "name": "期货日线 EG0 主连（新浪财经）",
+   "conf": "高",
+   "date": "2025-09-01 ~ 2026-10-20",
+   "urls": [
+    "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20_x=/InnerFuturesNewService.getDailyKLine?symbol=EG0"
+   ],
+   "note": "仅作交叉验证：2026-10-19 EG0 收盘 4976，同期生意社国内价 5966.67、隆众张家港买盘 5630/卖盘 5640，三者关系可用于校验国内价口径的合理性。"
+  },
+  {
+   "role": "cross",
+   "name": "隆众资讯张家港乙二醇市场行情（经同花顺/我的钢铁网转述）",
+   "conf": "中",
+   "date": "2026-10-19 09:28",
+   "urls": [
+    "http://news.10jqka.com.cn/20261019/c680817512.shtml"
+   ],
+   "note": "原文：本周买盘 5630、卖盘 5640，现货基差 11+400 至 410（元/吨）。作为国内价的独立交叉验证。"
+  },
+  {
+   "role": "cross",
+   "name": "生意社：山西潞安化工聚酯级乙二醇起拍价（含税出厂、现汇）",
+   "conf": "高",
+   "date": "2026-10-19 / 2026-10-20",
+   "urls": [
+    "https://www.100ppi.com/news/detail-20261019-6367811.html",
+    "https://www.100ppi.com/news/detail-20261020-6368784.html"
+   ],
+   "note": "10-19 起拍价 5580 元/吨（现汇，承兑加 50），10-20 起拍价 5550 元/吨；用于判断内地出厂价与港口价的关系。"
+  }
+ ],
+ "gaps": [
+  {
+   "item": "乙二醇最惠国进口税率 5.5%，但实际执行是否为暂定税率 0%，未取得现行税则原文",
+   "impact": "若按 5.5% 计征，到岸成本上升约 (CIF+卸货)×5.5% ≈ 250 元/吨（按 CIF 4618 估），足以改变 G2/G3 的符号。本报告默认 0%，因此所有国内更强的结论都建立在该前提上。",
+   "fix": "查海关总署《进出口税则》当年版 2905.31 条目与年度暂定税率表，或向报关行索取实际执行税率留档。",
+   "severity": "高",
+   "scope": "tax"
+  },
+  {
+   "item": "海外报价只有中国到岸价一个数，未拆分 CFR 与保险，也未披露产地、船期、装运港与供货商",
+   "impact": "无法核对报价是否真含保险（若实为 CFR，本模型少计约 7 元/吨保险费，可忽略）；也无法判断该报价对应哪条产线、是否含地缘因素下的绕行附加。",
+   "fix": "取得隆众/CCF/Platts 的 MEG 中国 CFR 日报或船货报盘，逐笔记录产地、装运期、付款方式。",
+   "severity": "中",
+   "scope": "overseas"
+  },
+  {
+   "item": "逐周或逐月散化船运价指数、中东至华东实际运价未取得",
+   "impact": "本品种报价为到岸价、运费已含，故对当前四层成本无直接影响；但若改用 FOB 口径（口径 C 情景），运费 40 USD/t 只是假设值，误差 ±20 USD/t 会让成本变动约 ±135 元/吨。",
+   "fix": "接入上海航交所或波罗的海交易所相关航线运价，或按船司季度报盘留档；模型中运费须标注为假设而非实测。",
+   "severity": "中",
+   "scope": "freight"
+  },
+  {
+   "item": "目的港卸货费（THC、港建费、罐租与短驳）没有公开报价",
+   "impact": "按 0 计入，成本可能低估约 10~30 USD/t（约 70~200 元/吨），足以吞掉当前价差的一半。",
+   "fix": "向张家港/太仓码头或货代索取 MEG 散水接卸、罐租、短驳报价单。",
+   "severity": "高",
+   "scope": "cost"
+  },
+  {
+   "item": "增值税抵扣的实际实现程度未核实（模型默认 100% 可抵扣）",
+   "impact": "若实际只能抵扣 80%，经济成本上升约 120 元/吨（口径 D 已量化）。",
+   "fix": "按报关主体（一般纳税人/小规模）与实际留抵情况确认；有留抵挂账时应改用现金口径 G2。",
+   "severity": "中",
+   "scope": "tax"
+  },
+  {
+   "item": "基准时点为 2026-08-18，距生成日 2026-10-20 已两个月，期间国内价由 5116.67 涨至 5808.33",
+   "impact": "基准时点的结论不能直接当作今天的窗口；当期国内价上行约 691 元/吨，若海外报价未同步上行，价差会明显扩大。",
+   "fix": "补齐 2026-09-01 之后的海外 CFR 公开报价（本报告检索范围内最后一条为 2026-08-18），即可把曲线延伸到当日。",
+   "severity": "高",
+   "scope": "series"
+  },
+  {
+   "item": "海外报价为离散发布（27 个点，平均间隔约 13 天），不是连续日行情",
+   "impact": "曲线只能读作观测到的价差水平，不能读作逐日路径；极值与转折日可能落在两次发布之间。",
+   "fix": "改用日频 CFR 中间价序列（付费源），或按周固定日期采样。",
+   "severity": "中",
+   "scope": "series"
+  },
+  {
+   "item": "国内价采用生意社基准价（采样加权参考价），与隆众张家港买卖盘、期货结算价存在系统性差异",
+   "impact": "2026-10-19：生意社 5966.67、隆众张家港买盘 5630/卖盘 5640、EG0 收盘 4976，最大相差约 990 元/吨。基准价偏高会高估价差。",
+   "fix": "固定使用单一权威口径并在首页声明；建议以隆众张家港 15:00 收盘买卖中值为准，生意社基准价作参照。",
+   "severity": "高",
+   "scope": "domestic"
+  },
+  {
+   "item": "规格与品质升贴水未量化（进口聚酯级 vs 国内煤制聚酯级，纯度与水含量差异）",
+   "impact": "同为聚酯级，煤制与乙烯法在 UV 透过率、色度上有差异，下游结算价可差 50~150 元/吨。",
+   "fix": "取得两家以上下游聚酯厂的到货验收标准与结算价，量化升贴水。",
+   "severity": "低",
+   "scope": "spec"
+  },
+  {
+   "item": "历史运费没有逐时点的实际值，全部按月度均价或基准日假设处理",
+   "impact": "价差曲线中的成本部分含假设误差，方向可由运费假设解释",
+   "fix": "接入逐周运价指数（SCFI 相关航线 / 波罗的海指数 / 船司报价）",
+   "severity": "高",
+   "scope": "freight"
+  }
+ ],
+ "formulas": [
+  {
+   "no": 1,
+   "name": "货值折人民币",
+   "formula": "货值_CNY = 报价 × 汇率（USD 报价）或 报价（CNY 报价）",
+   "param": "price_quote × fx_usdcny",
+   "value": 4618.4755,
+   "unit": "元/吨"
+  },
+  {
+   "no": 2,
+   "name": "保险费",
+   "formula": "保险 = (货值 + 出口端费用 + 运费) × 加成率 × 费率",
+   "param": "insurance_rate(加成) × insurance_rate_pct(费率)",
+   "value": 0.0,
+   "unit": "元/吨"
+  },
+  {
+   "no": 3,
+   "name": "CIF 到岸价",
+   "formula": "CIF = 货值 + 出口内陆 + 出口报关 + 运费 + 保险",
+   "param": "Σ(1..2 及贸易术语项)",
+   "value": 4618.4755,
+   "unit": "元/吨"
+  },
+  {
+   "no": 4,
+   "name": "进口关税",
+   "formula": "关税 = (CIF + 卸货费) × 关税率",
+   "param": "duty_rate",
+   "value": 0.0,
+   "unit": "元/吨"
+  },
+  {
+   "no": 5,
+   "name": "进口增值税",
+   "formula": "VAT = (CIF + 卸货费 + 关税) × 增值税率",
+   "param": "vat_rate",
+   "value": 600.401815,
+   "unit": "元/吨"
+  },
+  {
+   "no": 6,
+   "name": "可抵扣增值税",
+   "formula": "可抵扣 VAT = VAT × 可抵扣比例",
+   "param": "vat_credit_ratio",
+   "value": 600.401815,
+   "unit": "元/吨"
+  },
+  {
+   "no": 7,
+   "name": "含税到岸成本（现金口径）",
+   "formula": "landed_cash = CIF + 卸货 + 关税 + 其他税 + VAT + 进口内陆 + 损耗",
+   "param": "—",
+   "value": 5218.877315,
+   "unit": "元/吨"
+  },
+  {
+   "no": 8,
+   "name": "可比经济成本",
+   "formula": "net_cash = landed_cash − 可抵扣 VAT",
+   "param": "—",
+   "value": 4618.4755,
+   "unit": "元/吨"
+  },
+  {
+   "no": 9,
+   "name": "折纯/毛净口径",
+   "formula": "unit_net = net_cash ÷ 纯度 × 毛净比",
+   "param": "purity × gross_weight_factor",
+   "value": 4618.4755,
+   "unit": "元/纯吨"
+  },
+  {
+   "no": 10,
+   "name": "四口径价差",
+   "formula": "G1 = 国内未税 − CIF；G2 = 国内含税 − landed_cash；G3 = 国内含税 − net_cash；G4 = 国内未税 − net_cash",
+   "param": "—",
+   "value": null,
+   "unit": "元/吨"
+  },
+  {
+   "no": 11,
+   "name": "市场隐含其余成本",
+   "formula": "残差 = 国内价 − CIF − 运费 − 保险 − 卸货（不含税口径）",
+   "param": "—",
+   "value": null,
+   "unit": "元/吨"
+  },
+  {
+   "no": 12,
+   "name": "归因分解",
+   "formula": "Δ价差 = Σ(−Δ成本项) + Δ国内价；闭合残差须 < 1e-6",
+   "param": "—",
+   "value": null,
+   "unit": "元/吨"
+  }
+ ],
+ "disclaimers": [
+  "本报告是成本与价差的对照测算，不是交易建议。文中 G1~G4 只是两个口径的价格之差，不等于可实现的利润，也不构成任何采购、销售、点价、套保或进口交易的指令与时机判断。",
+  "所有海外报价均为二手引用（生意社转述的外盘报价），未取得原始报盘单、船期确认与供货商名称；商业决策前应索取原始报价单。",
+  "历史曲线上每一行都标注了报价、汇率、运费的取得方式；凡标注假设的行，其成本侧数字只能作为条件性结果，不能当作历史实际发生成本。",
+  "本报告不含任何价格预测。所有外生参数（汇率、运费、税率、国内价）均在交互面板显式给出，读者可自行替换并观察结论如何变化。",
+  "所有数据缺口均在第 8 节逐条列出并标明对结论的影响方向；未列出的缺口不代表不存在。"
+ ],
+ "version": "1.0.0"
+}

@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "batch-supplier-sourcing project",
+  "type": "object",
+  "required": ["meta", "list", "items", "suppliers", "evidence", "links"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["title", "as_of"],
+      "properties": {
+        "title": {"type": "string"},
+        "subtitle": {"type": "string"},
+        "buyer": {"type": "string"},
+        "buyer_region": {"type": "string"},
+        "delivery_point": {"type": "string"},
+        "as_of": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "accept_trader": {"type": "boolean", "default": false},
+        "version": {"type": "string"},
+        "sources_scope": {"type": "array", "items": {"type": "string"}},
+        "exclusions": {"type": "array", "items": {"type": "string"}},
+        "headline": {"type": "array", "items": {"type": "string"}},
+        "code_remap": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "list": {
+      "type": "object",
+      "properties": {
+        "source_file": {"type": "string"},
+        "sheet": {"type": "string"},
+        "header_row": {"type": "integer"},
+        "simulated": {"type": "boolean"},
+        "note": {"type": "string"}
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["code", "name", "status"],
+        "properties": {
+          "code": {"type": "string", "description": "物料码，全局唯一，如 P01"},
+          "raw_name": {"type": "string", "description": "清单原文品名"},
+          "name": {"type": "string", "description": "标准化名称"},
+          "en": {"type": "string"},
+          "aliases": {"type": "array", "items": {"type": "string"}},
+          "cas": {"type": "string", "pattern": "^\\d{2,7}-\\d{2}-\\d$"},
+          "form": {"type": "string", "description": "形态/浓度，如 32%液碱、二水片状"},
+          "spec": {"type": "string", "description": "清单技术要求原文"},
+          "purity": {"type": ["number", "null"]},
+          "qty": {"type": ["number", "null"]},
+          "unit": {"type": "string"},
+          "unit_raw": {"type": "string"},
+          "qty_annual": {"type": ["number", "null"]},
+          "packing": {"type": "string"},
+          "delivery": {"type": "string"},
+          "application": {"type": "string"},
+          "supplier": {"type": "string", "description": "清单里的现有供应商"},
+          "hazard": {"type": "string", "description": "危险属性（字典口径）"},
+          "hazard_raw": {"type": "string", "description": "清单原文的危险属性写法"},
+          "status": {"enum": ["ok", "ambiguous", "conflict", "unrecognized", "blocked"]},
+          "issues": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "string"},
+          "source_row": {"type": "integer"},
+          "dup_of": {"type": ["integer", "null"], "description": "与哪一行重复（源行号）"}
+        }
+      }
+    },
+    "suppliers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "short", "identity"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string", "description": "企业全称"},
+          "short": {"type": "string", "description": "矩阵表头用简称"},
+          "identity": {"enum": ["S", "P", "G", "T", "I", "U"]},
+          "province": {"type": "string"},
+          "identity_note": {"type": "string", "description": "身份判定依据（必写）"},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "roles": {"type": "array", "items": {"type": "string"}},
+          "route": {"type": "string", "description": "物流/运距提示"},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "grade", "org", "topic", "quote"],
+        "properties": {
+          "id": {"type": "string"},
+          "grade": {"enum": ["A", "a", "B", "C", "D", "E"]},
+          "org": {"type": "string", "description": "来源机构"},
+          "topic": {"type": "string"},
+          "quote": {"type": "string", "description": "原文摘录，不改写"},
+          "detail": {"type": "string", "description": "对结论的作用"},
+          "url": {"type": "string"},
+          "date": {"type": "string"},
+          "items": {"type": "array", "items": {"type": "string"}, "description": "关联物料码"},
+          "caveat": {"type": "string"},
+          "conflict_with": {"type": "string"},
+          "family": {"type": "string"}
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item_code", "supplier_id", "identity", "coverage", "degree", "rationale"],
+        "properties": {
+          "item_code": {"type": "string"},
+          "supplier_id": {"type": "string"},
+          "identity": {"enum": ["S", "P", "G", "T", "I", "U"], "description": "该物料上的身份（可与主身份不同）"},
+          "coverage": {"enum": ["direct", "partial_spec", "disclose", "dist_only", "not_listed", "none"]},
+          "confidence": {"type": "string", "description": "已证实 / 待确认 / 否"},
+          "degree": {"enum": ["independent", "confirmable", "conditional", "co_list_only", "not_covered", "not_recommended"]},
+          "current_relation": {"type": "boolean"},
+          "potential_relation": {"type": "boolean"},
+          "rationale": {"type": "string", "description": "判定理由，一句话说清“凭什么是这个覆盖度”"},
+          "link_id": {"type": "string"}
+        }
+      }
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "question"],
+        "properties": {
+          "id": {"type": "string"},
+          "level": {"enum": ["P0", "P1", "P2"]},
+          "code": {"type": "string"},
+          "row": {"type": "string"},
+          "type": {"type": "string"},
+          "question": {"type": "string"},
+          "extra": {"type": "array", "items": {"type": "string"}},
+          "detail": {"type": "string"},
+          "owner": {"type": "string"},
+          "status": {"type": "string"},
+          "source_row": {"type": "integer"}
+        }
+      }
+    },
+    "actions": {"type": "array", "items": {"type": "object"}},
+    "gaps": {"type": "array", "items": {"type": "object"}},
+    "references": {"type": "array", "items": {"type": "object"}}
+  }
+}

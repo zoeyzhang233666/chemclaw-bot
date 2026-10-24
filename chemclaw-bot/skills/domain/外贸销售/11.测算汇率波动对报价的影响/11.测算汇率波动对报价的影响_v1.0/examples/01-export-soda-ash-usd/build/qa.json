@@ -1,0 +1,192 @@
+{
+  "file": "./_build\\fx-risk\\examples\\01-export-soda-ash-usd\\build\\汇率风险测算_重质纯碱_10万美元出口_20261019.html",
+  "checks": [
+    {
+      "name": "页面渲染完成（__READY__）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "scenario 数据已注入",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ECharts 已内联",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "首屏 KPI 卡 >= 6",
+      "ok": true,
+      "detail": "count=6"
+    },
+    {
+      "name": "KPI 无 undefined / NaN / 占位符",
+      "ok": true,
+      "detail": "基准汇率 | 中间价×点差带(示例) | 6.7040 | 中间价 6.7208 · 2026-10-19 | 历史分位（近3年） | P0 | 0.1% | 区间 6.7208–7.2133 · 距高点 -6.83% | 人民币收入 | 结汇后 | 670,400 | 100,000 USD × 6.7040 | 汇率每变动 1% | 敞口 | 6,704 | ≈ 人民币 6,704 元；±5% ≈ ±33,520 元 | 毛利额 /"
+    },
+    {
+      "name": "图表真画出像素 >= 3 张",
+      "ok": true,
+      "detail": "painted=5"
+    },
+    {
+      "name": "趋势图有峰值标注（最高/最低）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "历史位置区块含分位百分比",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "敏感性表行数 = 9 档",
+      "ok": true,
+      "detail": "rows=9"
+    },
+    {
+      "name": "分批表 >= 3 批",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "分批情景表有数据",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "缺口清单覆盖 手续费/点差/远期/节假",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "公式区含盈亏平衡公式",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "来源区含 SAFE 官方链接",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "页面含「不预测」声明",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "改金额后 KPI 实时重算",
+      "ok": true,
+      "detail": "基准汇率 | 中间价×点差带(示例) | 6.7040 | 中间价 6.7208 · 2026-10-19 | 历史分位（近3年） | P0 | 0.1% | 区间 6.7208–7.2133 · 距高点 -6.83% | 人民币收入 | "
+    },
+    {
+      "name": "改档位后敏感性表 5 行",
+      "ok": true,
+      "detail": "rows=5"
+    },
+    {
+      "name": "重置成本后平衡汇率出现",
+      "ok": true,
+      "detail": "毛利额 = 0 的平衡汇率 汇率跌破 6.0000（较基准 -10.50%）即由盈转亏 R* = 人民币成本 ÷ [外币金额 × (1 − 费用率)] = 1,500,000 ÷ 250,000.00"
+    },
+    {
+      "name": "目标毛利率 12% 平衡汇率出现",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "切进口后公式切换为付汇",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "切进口后出现人民币销售收入字段",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "进口表头为人民币支出",
+      "ok": true,
+      "detail": "汇率变动\t情景汇率\t人民币支出\t较基准变化\t变化率\t其他人民币成本\t总成本\t毛利额\t毛利率 | "
+    },
+    {
+      "name": "进口毛利可计算",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "改用银行实际价后 KPI 显示 6.6700",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "恢复示例参数后金额回到 100000",
+      "ok": true,
+      "detail": "100000"
+    },
+    {
+      "name": "切换到 tab hist",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "切换到 tab quote",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "切换到 tab method",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "切换到 tab board",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "历史原始表 > 100 行",
+      "ok": true,
+      "detail": "rows=735"
+    },
+    {
+      "name": "历史页直方图渲染",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "报价 JSON 可解析且含汇率/分位",
+      "ok": true,
+      "detail": "rate=6.703998 pct=0.0007"
+    },
+    {
+      "name": "无横向溢出 @1600px",
+      "ok": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "无横向溢出 @1280px",
+      "ok": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "无横向溢出 @768px",
+      "ok": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "无横向溢出 @420px",
+      "ok": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "无 JS 运行时异常",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "errors": [],
+  "failed": 0
+}

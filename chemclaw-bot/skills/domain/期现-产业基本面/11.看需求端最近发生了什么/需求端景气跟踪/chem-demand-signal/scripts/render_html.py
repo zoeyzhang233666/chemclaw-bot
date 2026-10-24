@@ -1,0 +1,624 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""render_html.py — 把 research.json 渲染成单文件、离线可用的交互式需求研究报告。
+
+用法:
+    python render_html.py research.json -o report.html
+
+JSON 契约（缺项会用通用 fallback，不会报错）：
+  meta / headline{one_line,facts,signals} / segments[{key,name,share,share_year,share_src,role,tone}]
+  sections[{id,no,title,lead,points,caveats}] / derived{...} / evidence[] / sources{}
+  proxy[] / transmission[] / policy[] / seasonal[] / gaps[]
+  futures{...}（可选）  series{SA:[[d,c]],FG:[[d,c]]}（可选）
+输出：零外链、零 CDN、SVG 手绘图表，可直接离线打开或邮件发送。
+"""
+import argparse, json, os, re
+
+CSS = """
+:root{--bg:#071018;--panel:#0f1d2b;--panel2:#122436;--line:rgba(120,170,210,.16);--tx:#dfe9f2;
+--tx2:#8ea6bb;--tx3:#5f7890;--up:#f0553f;--dn:#26b57e;--flat:#8fa3b8;--gold:#e6b45a;--cyan:#4cc3e8;
+--violet:#9d8bf0;--blue:#4f8ff7;--shadow:0 18px 40px -24px rgba(0,0,0,.9)}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:radial-gradient(1200px 700px at 12% -10%,rgba(76,195,232,.10),transparent 60%),
+radial-gradient(900px 600px at 110% 0%,rgba(157,139,240,.10),transparent 55%),var(--bg);color:var(--tx);
+font-family:"Microsoft YaHei UI","Microsoft YaHei","PingFang SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1520px;margin:0 auto;padding:0 26px 90px}a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+header.top{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);
+background:linear-gradient(180deg,rgba(7,16,24,.96),rgba(7,16,24,.80));border-bottom:1px solid var(--line)}
+.top-in{max-width:1520px;margin:0 auto;padding:12px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 210deg,#4cc3e8,#4f8ff7,#9d8bf0,#4cc3e8);
+box-shadow:0 0 22px rgba(76,195,232,.35);position:relative;display:grid;place-items:center;color:#cfe9f7;font-weight:800;font-size:13px}
+.brand h1{font-size:16.5px;margin:0;font-weight:700}.brand small{display:block;color:var(--tx3);font-size:11.5px;letter-spacing:1.6px}
+.controls{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+nav.controls a{color:var(--tx2);font-size:12.5px}
+.ctl{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:7px 10px}
+.ctl label{color:var(--tx3);font-size:11.5px}
+select{background:transparent;color:var(--tx);border:0;outline:0;font-size:13px;font-weight:600;cursor:pointer}
+select option{background:#0f1d2b}
+.segbtns{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:3px}
+.segbtns button{background:transparent;border:0;color:var(--tx2);padding:6px 13px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.segbtns button.on{background:linear-gradient(180deg,#1b3f5c,#16324a);color:#fff;box-shadow:inset 0 0 0 1px rgba(76,195,232,.35)}
+.btn{background:linear-gradient(180deg,#1c4767,#153551);border:1px solid rgba(76,195,232,.30);color:#dff3ff;
+padding:8px 14px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600}
+.hero{padding:34px 0 8px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--gold);letter-spacing:2px;
+border:1px solid rgba(230,180,90,.3);background:rgba(230,180,90,.07);padding:5px 12px;border-radius:20px}
+.hero h2{font-size:34px;line-height:1.25;margin:16px 0 10px;font-weight:800;letter-spacing:-.5px}
+.hero h2 em{font-style:normal;background:linear-gradient(90deg,#7fd8f5,#9d8bf0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{color:var(--tx2);font-size:15px;max-width:1080px;margin:0}
+.metaRow{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+.chip{font-size:12px;color:var(--tx2);background:var(--panel);border:1px solid var(--line);padding:5px 11px;border-radius:20px}
+.chip b{color:var(--tx)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px;margin:22px 0 6px}
+.kpi{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:15px;
+padding:15px 16px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--cyan))}
+.kpi .k{font-size:12px;color:var(--tx3)}.kpi .v{font-size:26px;font-weight:800;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:12.5px;font-weight:600;color:var(--tx2);margin-left:4px}
+.kpi .s{font-size:12px;color:var(--tx2)}
+.up{color:var(--up)!important}.dn{color:var(--dn)!important}.fl{color:var(--flat)!important}
+.card{background:linear-gradient(170deg,rgba(18,36,54,.92),rgba(15,29,43,.92));border:1px solid var(--line);
+border-radius:17px;box-shadow:var(--shadow)}
+.sec{margin:38px 0 0}
+.sec-h{display:flex;align-items:flex-end;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.sec-h .no{font-size:13px;font-weight:800;color:var(--gold);letter-spacing:2px}
+.sec-h h3{margin:0;font-size:22px;font-weight:800}
+.sec-h .lead{color:var(--tx2);font-size:13.5px;flex:1 1 520px;min-width:280px}
+.struct{display:grid;grid-template-columns:330px 1fr;gap:22px;padding:22px}
+.donut{position:relative;display:grid;place-items:center}
+.donut svg{transform:rotate(-90deg)}
+.donut .ctr{position:absolute;text-align:center}
+.donut .ctr b{display:block;font-size:24px;font-weight:800}
+.donut .ctr span{font-size:11.5px;color:var(--tx3)}
+.struct-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.struct-tabs button{background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:16px;font-size:12px;cursor:pointer}
+.struct-tabs button.on{background:rgba(76,195,232,.14);border-color:rgba(76,195,232,.45);color:#cdeefd}
+.note{font-size:12px;color:var(--tx3);margin-top:10px;line-height:1.6}
+.warn{border-left:3px solid var(--gold);background:rgba(230,180,90,.06);padding:10px 14px;border-radius:0 10px 10px 0;
+color:#e8d3a8;font-size:12.5px}
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:14px 16px;margin:16px 0 18px}
+.fgroup{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.fgroup>span{font-size:11.5px;color:var(--tx3)}
+.pill{background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--tx2);padding:5px 11px;
+border-radius:16px;font-size:12.5px;cursor:pointer;user-select:none}
+.pill.on{background:rgba(76,195,232,.16);border-color:rgba(76,195,232,.5);color:#d9f2ff;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:16px}
+.dcard{padding:0;overflow:hidden;cursor:pointer;transition:.2s;position:relative;min-width:0}
+.dcard:hover{transform:translateY(-2px);border-color:rgba(76,195,232,.42)}
+.dcard .hd{display:flex;align-items:center;gap:12px;padding:16px 18px 12px;border-bottom:1px dashed var(--line)}
+.dcard .ring{width:52px;height:52px;flex:0 0 auto;position:relative}
+.dcard .ring .pc{position:absolute;inset:0;display:grid;place-items:center;font-size:12.5px;font-weight:800}
+.dcard h4{margin:0;font-size:16.5px;font-weight:800}
+.dcard .role{font-size:11.8px;color:var(--tx3)}
+.tag{font-size:10.5px;padding:2px 8px;border-radius:6px;font-weight:700;white-space:nowrap}
+.t-weak{background:rgba(240,85,63,.13);color:#ff9a86;border:1px solid rgba(240,85,63,.3)}
+.t-fall{background:rgba(240,85,63,.19);color:#ff8a76;border:1px solid rgba(240,85,63,.4)}
+.t-stable{background:rgba(76,195,232,.13);color:#8fdcf5;border:1px solid rgba(76,195,232,.3)}
+.t-src{background:rgba(157,139,240,.13);color:#b9abff;border:1px solid rgba(157,139,240,.3)}
+.mrow{display:grid;grid-template-columns:112px 1fr 128px;gap:10px;align-items:center;padding:8px 18px;font-size:13px}
+.mrow+.mrow{border-top:1px solid rgba(120,170,210,.07)}
+.mrow .mn{color:var(--tx2);font-size:12.3px;display:flex;align-items:center;gap:6px}
+.gbadge{font-size:9.5px;font-weight:800;width:17px;height:17px;display:inline-grid;place-items:center;border-radius:5px;flex:0 0 auto}
+.gA{background:rgba(38,181,126,.18);color:#5fe0ae}.gB{background:rgba(76,195,232,.16);color:#8fdcf5}
+.gC{background:rgba(143,163,184,.16);color:#b3c4d4}.gD{background:rgba(157,139,240,.16);color:#b9abff}
+.spark{height:26px;width:100%}
+.mval{text-align:right;font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;white-space:nowrap}
+.dlt{font-size:11.5px;font-weight:700;margin-left:6px}
+.dcard .ft{padding:10px 18px 14px;font-size:11.8px;color:var(--tx3);display:flex;justify-content:space-between;gap:10px}
+.tblwrap{overflow:auto;border-radius:14px;border:1px solid var(--line);max-width:100%}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.8px}
+th{position:sticky;top:0;background:#122436;color:var(--tx2);font-weight:700;text-align:left;padding:10px 12px;
+border-bottom:1px solid var(--line);white-space:nowrap;z-index:2}
+td{padding:9px 12px;border-bottom:1px solid rgba(120,170,210,.07);vertical-align:top}
+tbody tr:hover{background:rgba(76,195,232,.05)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mini{font-size:11.5px;color:var(--tx3)}
+.flow{display:grid;gap:10px}
+.flowrow{display:grid;grid-template-columns:190px 30px 200px 1fr;gap:10px;align-items:center;padding:12px 16px;
+background:rgba(255,255,255,.022);border:1px solid var(--line);border-radius:12px}
+.flowrow .lb{font-weight:700;font-size:13px}.flowrow .ar{color:var(--cyan);text-align:center;font-size:16px}
+.flowrow .ch{font-size:12px;color:var(--tx2)}
+.tl{position:relative;padding:8px 0 4px 26px}
+.tl:before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;
+background:linear-gradient(180deg,var(--gold),rgba(230,180,90,.05))}
+.tli{position:relative;padding:0 0 16px}
+.tli:before{content:"";position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;
+background:#0b1622;border:2px solid var(--gold)}
+.tli .dt{font-size:11.5px;color:var(--gold);font-weight:700}
+.tli h5{margin:3px 0 5px;font-size:14.5px}.tli p{margin:0;font-size:12.6px;color:var(--tx2)}
+.mask{position:fixed;inset:0;background:rgba(3,8,13,.72);z-index:90;opacity:0;pointer-events:none;transition:.2s}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(760px,100%);background:linear-gradient(180deg,#0d1a27,#0a141e);
+border-left:1px solid var(--line);z-index:91;transform:translateX(102%);transition:transform .26s cubic-bezier(.2,.8,.2,1);
+display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drw-h{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.drw-b{overflow:auto;padding:18px 22px 60px}
+.close{margin-left:auto;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--tx);
+width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:16px}
+.ev{border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin:9px 0;background:rgba(255,255,255,.02)}
+.ev .eh{display:flex;gap:9px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--tx3)}
+.ev .et{font-weight:700;font-size:13.5px;margin:4px 0}
+.ev q{font-size:12.4px;color:var(--tx2);quotes:"「" "」"}
+.ev .eu{font-size:11.5px;word-break:break-all}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.pad{padding:20px 22px}
+.hd-sm{font-size:15px;font-weight:800;margin:0 0 10px;display:flex;align-items:center;gap:9px}
+.hd-sm:before{content:"";width:3px;height:16px;border-radius:2px;background:var(--cyan)}
+ul.clean{margin:6px 0 0;padding-left:18px;color:var(--tx2);font-size:13px}
+ul.clean li{margin:6px 0}
+.lgi{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:12px;
+background:rgba(255,255,255,.025);border:1px solid var(--line);cursor:pointer}
+.lgi:hover{background:rgba(76,195,232,.07);border-color:rgba(76,195,232,.35)}
+.lgi .dot{width:10px;height:10px;border-radius:3px;margin-top:6px;flex:0 0 auto}
+.lgi .nm{font-weight:700}.lgi .sub{font-size:11.5px;color:var(--tx3)}
+.legend{display:grid;gap:11px}
+footer{margin-top:46px;padding:24px 0;border-top:1px solid var(--line);color:var(--tx3);font-size:12px;
+display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between}
+#toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);max-width:min(680px,92vw);
+background:linear-gradient(180deg,#17364f,#102538);border:1px solid rgba(76,195,232,.45);color:#dcf0fb;
+padding:13px 18px;border-radius:13px;box-shadow:0 22px 50px -18px rgba(0,0,0,.9);font-size:13px;
+opacity:0;pointer-events:none;transition:.22s;z-index:95}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:1040px){.struct{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}
+.cards{grid-template-columns:1fr}.flowrow{grid-template-columns:1fr}.flowrow .ar{display:none}}
+@media (max-width:720px){.wrap{padding:0 14px 70px}.hero h2{font-size:24px}
+.mrow{grid-template-columns:84px 1fr 88px;padding:8px 12px}.top-in{padding:10px 14px}
+.grid2,.grid3,.struct,.cards,.flow,.card{min-width:0}
+.struct{display:block!important;padding:0!important}
+.struct *{min-width:0}
+.struct>div{max-width:100%}
+.donut{display:none}
+.tblwrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tblwrap table{min-width:100%;width:100%}
+th,td{padding:7px 8px;font-size:12px}
+th{white-space:normal}
+td{word-break:break-word}
+.tblwrap table{table-layout:auto}
+.kpis{grid-template-columns:repeat(2,1fr)}}
+@media print{body{background:#fff;color:#111}header.top{position:static}.drawer,.mask,.controls{display:none}
+.card,.kpi{background:#fff;border-color:#ddd;box-shadow:none}th{background:#f2f2f2;color:#333}}
+"""
+
+JS = r"""
+const D = PAGE_DATA;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const fmt = (v,d=2) => v===null||v===undefined||v===''?'—':(typeof v==='number'?(Math.abs(v)>=1000?v.toFixed(0):v.toFixed(d)):v);
+const sign = v => (v===null||v===undefined)?'':(v>0?'+':'');
+const cls = v => (v===null||v===undefined)?'fl':(v>0?'up':(v<0?'dn':'fl'));
+const escq = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const TONETXT = {weak:'走弱',fall:'明显走弱',improve:'改善',stable:'企稳偏韧'};
+const PALETTE = ['#f0553f','#9d8bf0','#4cc3e8','#e6b45a','#26b57e','#4f8ff7','#d98bf0','#8fa3b8'];
+const COLOR = {};
+(D.segments||[]).forEach((s,i)=>{COLOR[s.key]=s.color||PALETTE[i%PALETTE.length];});
+
+function spark(points,color,w=200,h=26){
+  const vals=points.map(p=>p.value).filter(v=>typeof v==='number');
+  if(!points.length||!vals.length) return '';
+  const mn=Math.min(...vals),mx=Math.max(...vals),rng=(mx-mn)||1,step=w/Math.max(points.length-1,1);
+  const xy=points.map((p,i)=>[i*step,h-2-(((p.value??mn)-mn)/rng)*(h-4)]);
+  const d=xy.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const last=xy[xy.length-1];
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+   <path d="${d} L${w} ${h} L0 ${h} Z" fill="${color}" opacity=".10"/>
+   <path d="${d}" fill="none" stroke="${color}" stroke-width="1.7"/>
+   <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3" fill="${color}"/></svg>`;
+}
+function donut(items,size=260){
+  const R=size/2-6,r=R*.6,cx=size/2,cy=size/2,tot=items.reduce((a,b)=>a+(b.share||0),0)||1;
+  let acc=0,paths='';
+  items.forEach(it=>{
+    const a0=acc/tot*Math.PI*2,a1=(acc+(it.share||0))/tot*Math.PI*2;acc+=(it.share||0);
+    const large=(a1-a0)>Math.PI?1:0,pt=(a,rad)=>[cx+Math.cos(a)*rad,cy+Math.sin(a)*rad];
+    const[x0,y0]=pt(a0,R),[x1,y1]=pt(a1,R),[x2,y2]=pt(a1,r),[x3,y3]=pt(a0,r);
+    paths+=`<path d="M${x0} ${y0} A${R} ${R} 0 ${large} 1 ${x1} ${y1} L${x2} ${y2} A${r} ${r} 0 ${large} 0 ${x3} ${y3} Z"
+     fill="${COLOR[it.key]||'#4cc3e8'}" opacity=".88"><title>${escq(it.name)} ${it.share}%</title></path>`;
+  });
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${paths}</svg>`;
+}
+function ring(deg,size,color){
+  const r=(size-6)/2,c=2*Math.PI*r,on=c*Math.min(deg/360,1);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
+  <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="5"/>
+  <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="5"
+   stroke-dasharray="${on} ${c}" stroke-linecap="round"/></svg>`;
+}
+function areaChart(series,color,w=1080,h=250,marks=[]){
+  if(!series||series.length<2) return '<div class="note">无序列数据</div>';
+  const vals=series.map(p=>p.c??p.value);let mn=Math.min(...vals),mx=Math.max(...vals);
+  const pad=(mx-mn)*.12||10;mn-=pad;mx+=pad;
+  const L=54,R=12,T=14,B=26,iw=w-L-R,ih=h-T-B;
+  const X=i=>L+i/(series.length-1)*iw,Y=v=>T+(1-(v-mn)/(mx-mn))*ih;
+  const line=series.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(p.c??p.value).toFixed(1)}`).join(' ');
+  let grid='',ylab='';
+  for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);
+    grid+=`<line x1="${L}" y1="${y}" x2="${w-R}" y2="${y}" stroke="rgba(120,170,210,.10)"/>`;
+    ylab+=`<text x="${L-8}" y="${y+4}" text-anchor="end" fill="#5f7890" font-size="10.5">${v.toFixed(0)}</text>`;}
+  let xlab='',last=null;
+  series.forEach((p,i)=>{const m=(p.d||'').slice(0,7);
+    if(m!==last&&i%22===0){xlab+=`<text x="${X(i)}" y="${h-8}" fill="#5f7890" font-size="10.5" text-anchor="middle">${m}</text>`;last=m;}});
+  let mk='';
+  (marks||[]).forEach(t=>{const i=series.findIndex(p=>(p.d||'')>=t);
+    if(i>=0) mk+=`<line x1="${X(i)}" y1="${T}" x2="${X(i)}" y2="${T+ih}" stroke="#e6b45a" stroke-dasharray="3 4" opacity=".65"/>
+     <text x="${X(i)+4}" y="${T+12}" fill="#e6b45a" font-size="10">${t}</text>`;});
+  const li=series.length-1,gid='g'+Math.random().toString(36).slice(2,8);
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px">
+  <defs><linearGradient id="${gid}" x1="0" x2="0" y1="0" y2="1">
+  <stop offset="0" stop-color="${color}" stop-opacity=".30"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+  ${grid}${ylab}${xlab}${mk}
+  <path d="${line} L${X(series.length-1)} ${T+ih} L${L} ${T+ih} Z" fill="url(#${gid})"/>
+  <path d="${line}" fill="none" stroke="${color}" stroke-width="1.9"/>
+  <circle cx="${X(li)}" cy="${Y(vals[li])}" r="3.6" fill="${color}"/></svg>`;
+}
+function barChart(items,w=760,h=210){
+  const L=48,R=10,T=16,B=54,iw=w-L-R,ih=h-T-B;
+  const mx=Math.max(...items.map(x=>Math.abs(x.v)))||1,zero=T+ih*.5,bw=iw/items.length*.52;
+  let bars='';
+  items.forEach((it,i)=>{const cx=L+(i+.5)*iw/items.length,hh=Math.abs(it.v)/mx*(ih*.46);
+    const col=it.v>0?'#f0553f':(it.v<0?'#26b57e':'#8fa3b8');
+    bars+=`<rect x="${cx-bw/2}" y="${it.v>=0?zero-hh:zero}" width="${bw}" height="${hh||1}" rx="4" fill="${col}" opacity=".85"/>
+    <text x="${cx}" y="${it.v>=0?zero-hh-7:zero+hh+15}" text-anchor="middle" fill="${col}" font-size="11.5" font-weight="700">${it.v>0?'+':''}${it.v.toFixed(2)}</text>
+    <text x="${cx}" y="${h-30}" text-anchor="middle" fill="#8ea6bb" font-size="10.5">${escq(it.l1)}</text>
+    <text x="${cx}" y="${h-15}" text-anchor="middle" fill="#5f7890" font-size="9.5">${escq(it.l2||'')}</text>`;});
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px">
+  <line x1="${L}" y1="${zero}" x2="${w-R}" y2="${zero}" stroke="rgba(120,170,210,.30)"/>${bars}</svg>`;
+}
+function toast(msg){let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add('on');clearTimeout(window.__tt);
+  window.__tt=setTimeout(()=>t.classList.remove('on'),5200);}
+
+const state={segs:new Set((D.segments||[]).filter(s=>s.share).map(s=>s.key)),
+             grades:new Set(['A','B','C','D'])};
+function evCard(e){
+  const src=(D.sources&&D.sources[e.src]&&D.sources[e.src][0])||e.src;
+  return `<div class="ev" id="ev-${e.id}">
+   <div class="eh"><span class="gbadge g${(e.grade||'A')[0]}">${e.grade||'A'}</span><b>${e.id}</b>
+   <span>${escq(e.metric)}</span><span>·</span><span>${e.date}</span><span class="tag t-src">${escq(src)}</span></div>
+   <div class="et">${fmt(e.value)} ${e.unit||''}</div><q>${escq(e.quote||'')}</q>
+   <div class="eu" style="margin-top:5px"><a href="${e.url}" target="_blank" rel="noopener">${e.url}</a></div></div>`;
+}
+function renderKPI(){
+  const d=D.derived||{},F=d.futures||{};
+  const cards=(D.kpis&&D.kpis.length)?D.kpis.slice():[];
+  if(!cards.length){
+    // 兜底1：从各下游序列里挑变化幅度最大的指标
+    (D.segments||[]).forEach(sg=>{
+      const dd=segSeries(sg.key);
+      Object.entries(dd).forEach(([k,st])=>{
+        if(st&&st.span&&cards.length<6) cards.push({k:sg.name+' · '+k,v:st.span.v1,u:'',
+          s:`${st.span.from} → ${st.span.to}`,d:st.span.chg_pct});
+      });
+    });
+  }
+  if(!cards.length){
+    // 兜底2：用结构占比生成概览卡
+    const st=(D.structure||[])[0];
+    (D.segments||[]).filter(x=>x.share).slice(0,6).forEach(sg=>cards.push({
+      k:sg.name,v:sg.share,u:'% 占比',s:`${sg.share_year||''} 年 · ${sg.role||''}`,d:null}));
+    if(!cards.length&&st) st.items.slice(0,6).forEach(it=>cards.push({k:it[0],v:it[1],u:'%',s:st.org,d:null}));
+  }
+  $('#kpis').innerHTML=cards.map((c,i)=>`<div class="kpi" style="--accent:${PALETTE[i%PALETTE.length]}">
+   <div class="k"><span>${escq(c.k)}</span></div><div class="v">${fmt(c.v)}<small>${escq(c.u||'')}</small></div>
+   <div class="s">${escq(c.s||'')} ${c.d==null?'':`<b class="${cls(c.d)}">${sign(c.d)}${c.d}%</b>`}</div></div>`).join('');
+}
+function segSeries(key){
+  const d=D.derived||{};
+  const cand=[d.series&&d.series[key],d[key],d.bytick&&d.bytick[key]];
+  for(const c of cand) if(c&&typeof c==='object'&&!Array.isArray(c)) return c;
+  return {};
+}
+function renderCards(){
+  const host=$('#cards'); if(!host) return; host.innerHTML='';
+  (D.segments||[]).filter(s=>s.share).forEach(seg=>{
+    if(!state.segs.has(seg.key)) return;
+    const dd=segSeries(seg.key);
+    let rows='';
+    Object.entries(dd).forEach(([name,st])=>{
+      if(!st||!st.span) return;
+      const g=(st.grade||(D.grade_of&&D.grade_of[name])||'B')[0];
+      if(!state.grades.has(g)) return;
+      rows+=`<div class="mrow"><div class="mn"><span class="gbadge g${g}">${g}</span>${escq(name)}</div>
+       <div>${spark(st.points||[],COLOR[seg.key]||'#4cc3e8')}</div>
+       <div class="mval">${fmt(st.span.v1)}<span class="dlt ${cls(st.span.chg)}">${sign(st.span.chg)}${fmt(st.span.chg_pct,2)}%</span></div></div>`;
+    });
+    const idx=((D.derived||{}).transmission||{}).seg_index||{};
+    const el=document.createElement('div');
+    el.className='card dcard'; el.onclick=()=>openDrawer(seg.key);
+    el.innerHTML=`<div class="hd">
+      <div class="ring">${ring((seg.share||0)*3.6,52,COLOR[seg.key]||'#4cc3e8')}<div class="pc">${seg.share}%</div></div>
+      <div><h4>${escq(seg.name)}</h4><div class="role">${escq(seg.role||'')} · 占比 ${seg.share_year||''} 年 ${escq(String(seg.share_src||'').split('（')[0])}</div></div>
+      <div style="margin-left:auto;text-align:right">
+        <div class="tag ${seg.tone==='stable'?'t-stable':(seg.tone==='fall'?'t-fall':'t-weak')}">${TONETXT[seg.tone]||'待判'}</div>
+        <div class="role" style="margin-top:6px">景气指数 <b class="${cls(idx[seg.key])}">${idx[seg.key]==null?'—':sign(idx[seg.key])+idx[seg.key].toFixed(2)}</b></div>
+      </div></div>
+      ${rows||'<div class="mrow"><div class="mn">当前筛选下无可用指标</div></div>'}
+      <div class="ft"><span>点击展开明细与证据 ›</span></div>`;
+    host.appendChild(el);
+  });
+  if(!host.children.length) host.innerHTML='<div class="card pad">当前筛选条件下没有可展示的下游，请放宽筛选。</div>';
+}
+function openDrawer(key){
+  const seg=(D.segments||[]).find(s=>s.key===key)||{};
+  let html=`<div class="metaRow" style="margin-top:0">
+   <span class="chip">占比 <b>${seg.share??'—'}%</b>（${seg.share_year||'—'}）</span>
+   <span class="chip">${escq(seg.share_src||'')}</span></div>`;
+  const sec=(D.sections||[]).find(s=>s.id===key);
+  if(sec){html+=`<h3 class="hd-sm" style="margin-top:20px">${escq(sec.title||'研判要点')}</h3>
+   <p style="color:var(--tx2);font-size:13px">${escq(sec.lead||'')}</p>
+   <ul class="clean">${(sec.points||[]).map(p=>`<li>${escq(p)}</li>`).join('')}</ul>
+   ${sec.caveat?`<div class="warn" style="margin-top:12px">${escq(sec.caveat)}</div>`:''}`;}
+  const _seqs=segSeries(key);
+  if(!Object.keys(_seqs).length){
+    html+=`<h3 class="hd-sm" style="margin-top:20px">指标概览</h3>
+     <div class="note">该下游暂无连续序列（本次未提供 series），以下为直接证据。</div>`;
+  }
+  Object.entries(_seqs).forEach(([name,st])=>{
+    if(!st||!st.span) return;
+    html+=`<h3 class="hd-sm" style="margin-top:22px">${escq(name)}</h3>
+     <div class="tblwrap"><table><thead><tr><th>日期</th><th class="num">数值</th><th class="num">环比</th><th>证据</th></tr></thead><tbody>
+     ${(st.points||[]).map(p=>`<tr><td>${p.date}</td><td class="num">${fmt(p.value)}</td>
+      <td class="num ${cls(p.mom)}">${p.mom==null?'—':sign(p.mom)+fmt(p.mom,3)}</td>
+      <td><a href="javascript:void(0)" onclick="jumpEv('${p.ev}')">${p.ev}</a></td></tr>`).join('')}
+     </tbody></table></div>`;
+  });
+  const evs=(D.evidence||[]).filter(e=>e.seg===key);
+  html+=`<h3 class="hd-sm" style="margin-top:24px">原始证据（${evs.length} 条）</h3>`
+    +(evs.length?evs.map(evCard).join(''):'<div class="note">该下游本次未挂证据记录（可能是演示/框架数据）。</div>');
+  $('#drwBody').innerHTML=html;
+  $('#drawer').classList.add('on');$('#mask').classList.add('on');
+}
+function closeDrawer(){$('#drawer').classList.remove('on');$('#mask').classList.remove('on');}
+function jumpEv(id){
+  const e=(D.evidence||[]).find(x=>x.id===id);if(!e) return;
+  $('#evTarget').innerHTML=`<div class="pad">${evCard(e)}<div class="note">口径：${escq(e.caliber||'—')}</div></div>`;
+  $('#evTarget').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function renderStructure(i=0){
+  const s=(D.structure||[])[i];if(!s) return;
+  const mapped=(D.segments||[]).filter(x=>x.share);
+  const tot=s.items.reduce((a,b)=>a+(b[1]||0),0);
+  $('#structBody').innerHTML=`
+   <div class="donut">${donut(mapped)}<div class="ctr"><b>${tot}%</b><span>已列示下游合计</span></div></div>
+   <div><div class="hd-sm">${escq(s.org)} · ${s.year} 年</div>
+   <div class="note" style="margin-top:-4px;margin-bottom:10px">口径：${escq(s.basis)}</div>
+   <div class="tblwrap"><table><thead><tr><th>下游</th><th class="num">占比</th><th class="num">对应量</th></tr></thead><tbody>
+   ${s.items.map(it=>`<tr><td>${escq(it[0])}</td><td class="num">${it[1]??'—'}%</td><td class="num">${it[2]??'—'}</td></tr>`).join('')}
+   </tbody></table></div><div class="note">${escq(s.note||'')}</div></div>`;
+}
+function renderAll(){
+  renderKPI();
+  $('#segFlags').innerHTML=(D.headline&&D.headline.signals||[]).map(([n,t,k])=>`
+   <div class="lgi" onclick="openDrawer('${k}')"><span class="dot" style="background:${COLOR[k]||'#8fa3b8'}"></span>
+   <div><div class="nm">${escq(n)}</div><div class="sub">${escq(t)}</div></div></div>`).join('');
+  $('#sumFacts').innerHTML=((D.headline&&D.headline.facts)||[]).map(f=>`<li>${escq(f)}</li>`).join('');
+  $('#flow').innerHTML=(D.transmission||[]).map(x=>`<div class="flowrow"><div class="lb">${escq(x.from)}</div>
+   <div class="ar">→</div><div class="ch">${escq(x.to)} <span class="tag t-stable">${escq(x.strength||'')}</span></div>
+   <div class="mini">${escq(x.chan||'')} ｜ 滞后 ${escq(x.lag||'—')}<br><span style="color:#9fdcff">证据：${escq(x.evidence||'')}</span></div></div>`).join('');
+  $('#policy').innerHTML=(D.policy||[]).map(p=>`<div class="tli"><div class="dt">${p.date} · ${escq(p.seg||'')}</div>
+   <h5>${escq(p.title)}</h5><p>${escq(p.what||'')}</p>
+   <p style="margin-top:5px;color:#e8d3a8">→ 对需求：${escq(p.impact||'')}</p>
+   <p class="mini" style="margin-top:4px">可核验性：${escq(p.verify||'—')} ｜ <a href="${p.url}" target="_blank" rel="noopener">来源</a></p></div>`).join('');
+  $('#seasonal').innerHTML=(D.seasonal||[]).map(s=>`<div class="ev"><div class="et">${escq(s.seg)}</div><q>${escq(s.text)}</q></div>`).join('');
+  $('#proxyBody').innerHTML=(D.proxy||[]).map(p=>`<tr><td><b>${escq(p.ind)}</b></td>
+   <td><span class="gbadge g${p.grade[0]}">${p.grade}</span></td><td class="mini">${escq(p.type)}</td>
+   <td class="mini">${escq(p.why)}</td><td class="mini" style="color:#e8d3a8">${escq(p.limit)}</td>
+   <td class="mini">${escq(p.freq||'')}<br>${escq(p.src||'')}</td></tr>`).join('');
+  $('#gapsBody').innerHTML=(D.gaps||[]).map((g,i)=>`<tr><td>${i+1}</td><td><b>${escq(g.item)}</b></td>
+   <td class="mini">${escq(g.why)}</td><td class="mini">${escq(g.plan)}</td>
+   <td class="mini" style="color:#e8d3a8">${escq(g.impact)}</td></tr>`).join('');
+  const sent=D.derived&&D.derived.sentiment||D.sentiment||[];
+  $('#sentList').innerHTML=sent.map(x=>`<tr><td>${escq(((D.segments||[]).find(s=>s.key===x.seg)||{}).name||x.seg)}</td>
+   <td>${escq(x.indicator)}</td><td class="num"><b class="${cls(x.score)}">${x.score>0?'+':''}${x.score}</b></td>
+   <td class="mini">${escq(x.basis)}</td><td class="mini">${(x.ev||[]).join(' / ')}</td></tr>`).join('');
+  $('#sentChart').innerHTML=barChart(sent.map(x=>({v:x.score,l1:(((D.segments||[]).find(s=>s.key===x.seg)||{}).name||x.seg).slice(0,5),
+    l2:x.indicator.replace(/（.*?）/g,'').slice(0,8)})),980,230);
+  const T=(D.derived||{}).transmission||{};
+  const segIdx=(T.seg_index&&Object.keys(T.seg_index).length)?T.seg_index:null;
+  if(segIdx) $('#contrib').innerHTML=barChart(Object.entries(segIdx).map(([k,v])=>({v,
+    l1:(((D.segments||[]).find(s=>s.key===k)||{}).name||k),l2:'权重'+((T.weights_domestic||{})[k]||'')+'%'})),620,200)
+    +`<div class="note">${escq(T.explain||'')} 加权值 = <b>${T.weighted_total}</b></div>`;
+  else if((D.segments||[]).some(s=>s.share))
+    $('#contrib').innerHTML=barChart((D.segments||[]).filter(s=>s.share).map(s=>({v:s.share,
+      l1:s.name,l2:(s.share_year||'')+'年占比'})),620,200)
+      +'<div class="note">本次未提供分项景气打分（weights/sentiment），上方仅展示消费结构权重；'
+      +'加入打分后可自动计算加权传导指数。</div>';
+  else $('#contrib').innerHTML='<div class="note">暂无打分与权重数据。</div>';
+  // 证据库
+  const segs=[['all','全部']].concat((D.segments||[]).map(s=>[s.key,s.name]));
+  $('#evFilter').innerHTML=segs.map(([k,n],i)=>`<span class="pill ${i?'':'on'}" data-ev="${k}">${escq(n)}</span>`).join('');
+  const drawEv=k=>{$('#evBody').innerHTML=(D.evidence||[]).filter(e=>k==='all'||e.seg===k)
+    .sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(e=>`<tr>
+    <td><span class="gbadge g${(e.grade||'A')[0]}">${e.grade||'A'}</span> ${e.id}</td><td>${e.date}</td>
+    <td>${escq(e.metric)}</td><td class="num">${fmt(e.value)} <span class="mini">${escq(e.unit||'')}</span></td>
+    <td class="mini">${escq(e.caliber||'—')}</td>
+    <td class="mini">${escq(((D.sources||{})[e.src]||[e.src])[0])}</td>
+    <td><a href="${e.url}" target="_blank" rel="noopener" class="mini">原文</a></td></tr>`).join('');};
+  drawEv('all');
+  $$('#evFilter .pill').forEach(p=>p.onclick=()=>{$$('#evFilter .pill').forEach(x=>x.classList.remove('on'));
+    p.classList.add('on');drawEv(p.dataset.ev);});
+  // 筛选
+  $('#segs').innerHTML=(D.segments||[]).map(s=>`<span class="pill ${s.share&&state.segs.has(s.key)?'on':''}"
+    data-s="${s.key}" ${s.share?'':'style="opacity:.55"'}>${escq(s.name)}${s.share?' '+s.share+'%':''}</span>`).join('');
+  $$('#segs .pill').forEach(p=>p.onclick=()=>{const k=p.dataset.s;
+    const seg=(D.segments||[]).find(x=>x.key===k);
+    if(!seg.share){toast(seg.name+'：终端驱动指标，已纳入相关下游的传导分析。');return;}
+    if(state.segs.has(k)&&state.segs.size>1){state.segs.delete(k);p.classList.remove('on');}
+    else{state.segs.add(k);p.classList.add('on');}renderCards();});
+  $$('#grades .pill').forEach(p=>p.onclick=()=>{const g=p.dataset.g;
+    if(state.grades.has(g)&&state.grades.size>1){state.grades.delete(g);p.classList.remove('on');}
+    else{state.grades.add(g);p.classList.add('on');}renderCards();});
+  $$('#structTabs button').forEach(b=>b.onclick=()=>{$$('#structTabs button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');renderStructure(+b.dataset.i);});
+  renderStructure(0); renderCards();
+  const btn=document.getElementById('btnPrint'); if(btn) btn.onclick=()=>window.print();
+  $('#mask').onclick=closeDrawer;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+  document.querySelectorAll('nav a').forEach(a=>a.onclick=e=>{e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t) window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-70,behavior:'smooth'});});
+  // 期货区（可选）
+  const fa=document.getElementById('futArea');
+  if(fa&&D.series&&D.series.SA) fa.innerHTML=areaChart(D.series.SA,'#e6b45a',1080,250,D.marks||[]);
+  const fb=document.getElementById('futArea2');
+  if(fb&&D.series&&D.series.FG) fb.innerHTML=areaChart(D.series.FG,'#4f8ff7',1080,250,D.marks||[]);
+}
+document.addEventListener('DOMContentLoaded',()=>{try{renderAll();}catch(e){
+  document.body.insertAdjacentHTML('afterbegin','<pre style="color:#f88;padding:20px">渲染错误: '+e.message+'</pre>');}});
+"""
+
+
+def build(doc, out):
+    meta = doc.get('meta', {})
+    hl = doc.get('headline', {})
+    segs = doc.get('segments', [])
+    sections = doc.get('sections', [])
+    n_ev = len(doc.get('evidence', []))
+    tabs = ''.join('<button data-i="%d"%s>%s · %s</button>' % (
+        i, ' class="on"' if i == 0 else '', s.get('org', ''), s.get('year', ''))
+        for i, s in enumerate(doc.get('structure', [])))
+    sec_html = ''
+    for s in sections:
+        sec_html += """  <section class="sec" id="s-%s">
+    <div class="sec-h"><span class="no">%s</span><h3>%s</h3><div class="lead">%s</div></div>
+    <div class="card pad"><p style="color:var(--tx2);font-size:13.4px;margin:0">%s</p>
+      <ul class="clean">%s</ul>
+      %s</div>
+  </section>
+""" % (s.get('id'), s.get('no', ''), s.get('title', ''), s.get('lead', ''), s.get('lead', ''),
+            ''.join('<li>%s</li>' % p for p in s.get('points', [])),
+            '<div class="warn" style="margin-top:12px">%s</div>' % s.get('caveat', '') if s.get('caveat') else '')
+
+    html = """<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{product} · 下游需求研究报告（{window}）</title>
+<style>{css}</style></head><body>
+<header class="top"><div class="top-in">
+  <div class="brand"><div class="logo">{glyph}</div>
+    <div><h1>{product} · 下游需求研究报告</h1><small>看需求端最近发生了什么</small></div></div>
+  <nav class="controls"><a href="#structure">结构</a><a href="#overview">概览</a>
+    <a href="#downstream">下游卡片</a><a href="#transmit">传导</a><a href="#policySec">政策</a>
+    <a href="#proxy">口径</a><a href="#evidence">证据</a></nav>
+  <div class="controls">
+    <div class="ctl"><label>品种</label><select><option>{product}</option></select></div>
+    <div class="segbtns"><button>30天</button><button class="on">3个月</button><button>1年</button></div>
+    <button class="btn" id="btnPrint">打印 / PDF</button></div>
+</div></header>
+<div class="wrap">
+  <section class="hero"><span class="kicker">期现 · 产业基本面 ｜ 需求端专题</span>
+    <h2>{headline}</h2><p class="lead">{one_line}</p>
+    <div class="metaRow">
+      <span class="chip">规格 <b>{spec}</b></span><span class="chip">研究区间 <b>{window}</b></span>
+      <span class="chip">数据截止 <b>{asof}</b></span><span class="chip">区域 <b>{region}</b></span></div>
+  </section>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec" id="structure"><div class="sec-h"><span class="no">01</span>
+    <h3>下游需求结构（多口径并列）</h3><div class="lead">不同机构占比不同源于分母（内需/表观/全部应用）。并列展示，禁止跨口径相加。</div></div>
+    <div class="card pad"><div class="struct-tabs" id="structTabs">{tabs}</div>
+      <div class="struct" id="structBody" style="padding:0"></div></div></section>
+
+  <section class="sec" id="overview"><div class="sec-h"><span class="no">02</span>
+    <h3>下游景气快览：谁在改善，谁在走弱</h3><div class="lead">不对全部下游取平均，逐个下游判读。</div></div>
+    <div class="grid2"><div class="card pad"><div class="hd-sm">下游方向判读</div>
+      <div class="legend" id="segFlags"></div></div>
+      <div class="card pad"><div class="hd-sm">可引用的关键事实</div><ul class="clean" id="sumFacts"></ul></div></div></section>
+
+  <section class="sec" id="downstream"><div class="sec-h"><span class="no">03</span>
+    <h3>主要下游行业卡片</h3><div class="lead">点击卡片展开该行业的价格趋势、指标序列与企业/产业事件。</div></div>
+    <div class="card filters">
+      <div class="fgroup"><span>下游</span><div id="segs" style="display:flex;gap:6px;flex-wrap:wrap"></div></div>
+      <div class="fgroup"><span>指标等级</span><div id="grades" style="display:flex;gap:6px">
+        <span class="pill on" data-g="A">A 真实需求</span><span class="pill on" data-g="B">B 表观/间接</span>
+        <span class="pill on" data-g="C">C 景气代理</span><span class="pill on" data-g="D">D 定性</span></div></div>
+    </div><div class="cards" id="cards"></div></section>
+
+  <section class="sec" id="detail"><div class="sec-h"><span class="no">04</span>
+    <h3>证据定位</h3><div class="lead">从卡片或证据库跳转过来的单条证据会显示在这里。</div></div>
+    <div class="card pad" id="evTarget"><div class="note">尚未选择证据。</div></div></section>
+
+  <section class="sec"><div class="sec-h"><span class="no">05</span>
+    <h3>下游景气指数：分项打分与加权传导</h3>
+    <div class="lead">每项指标独立打分（-2…+2），再按消费占比加权；不做跨下游简单平均。</div></div>
+    <div class="card pad"><div class="hd-sm">逐项景气打分</div><div id="sentChart"></div>
+      <div class="tblwrap" style="margin-top:12px"><table><thead><tr><th>下游</th><th>指标</th>
+      <th class="num">打分</th><th>依据</th><th>证据</th></tr></thead><tbody id="sentList"></tbody></table></div></div>
+    <div class="card pad" style="margin-top:16px"><div class="hd-sm">按消费占比加权的传导指数</div>
+      <div id="contrib"></div></div></section>
+
+  <section class="sec" id="transmit"><div class="sec-h"><span class="no">06</span>
+    <h3>需求传导链条</h3><div class="lead">每一跳标注滞后与可用证据；“价格 → 需求”被标为弱相关。</div></div>
+    <div class="card pad"><div class="flow" id="flow"></div></div></section>
+
+  <section class="sec" id="policySec"><div class="sec-h"><span class="no">07</span>
+    <h3>产业政策与可验证事件</h3><div class="lead">只收录能核到原始公告或权威报道的事件。</div></div>
+    <div class="grid2"><div class="card pad"><div class="hd-sm">政策 / 事件时间线</div><div class="tl" id="policy"></div></div>
+      <div class="card pad"><div class="hd-sm">季节性</div><div id="seasonal"></div>
+        <div class="hd-sm" style="margin-top:18px">纯碱 / 玻璃 主连走势（对照）</div>
+        <div id="futArea"></div><div style="margin-top:14px" id="futArea2"></div></div></div></section>
+
+  <section class="sec" id="proxy"><div class="sec-h"><span class="no">08</span>
+    <h3>需求指标口径规范：真实需求 vs 景气代理</h3>
+    <div class="lead">A 可直接代表消耗量或其产量级代理；B 只能间接看；C 只反映价格/预期；D 仅是调研定性。</div></div>
+    <div class="card"><div class="tblwrap"><table><thead><tr><th>指标</th><th>等级</th><th>类型</th>
+      <th>为什么可用</th><th>局限 / 误用风险</th><th>频率 / 来源</th></tr></thead>
+      <tbody id="proxyBody"></tbody></table></div></div></section>
+
+  <section class="sec" id="evidence"><div class="sec-h"><span class="no">09</span>
+    <h3>证据库（{n_ev} 条原始记录）</h3>
+    <div class="lead">每条含数值、数据日期、口径、来源机构、原文摘录与链接。</div></div>
+    <div class="card filters" style="margin:0 0 12px"><div class="fgroup" id="evFilter"></div></div>
+    <div class="card"><div class="tblwrap" style="max-height:620px"><table><thead><tr><th>ID</th><th>数据日期</th>
+      <th>指标</th><th class="num">数值</th><th>口径</th><th>来源</th><th>链接</th></tr></thead>
+      <tbody id="evBody"></tbody></table></div></div></section>
+
+  <section class="sec"><div class="sec-h"><span class="no">10</span>
+    <h3>数据缺口与使用边界</h3><div class="lead">拿不到就写缺口，不用估计值顶替。</div></div>
+    <div class="card"><div class="tblwrap"><table><thead><tr><th>#</th><th>缺口</th><th>原因</th>
+      <th>补数路径</th><th>对结论的影响</th></tr></thead><tbody id="gapsBody"></tbody></table></div></div>
+    <div class="warn" style="margin-top:14px">使用边界：① 只陈述已发生的下游变化，不预测价格；
+      ② <b>下游产品价格上涨不等于原料实际消费增长</b>，价格可能来自减产或情绪；
+      ③ 分项指数与加权传导指数是景气度工具，不等于消费量变化；
+      ④ 禁止对所有下游简单平均，须按消费占比加权并做口径敏感性；
+      ⑤ 不同机构口径数值不可直接相减，已在相应位置标注。</div></section>
+
+  {sections}
+  <footer><span>{builder} · {version} · 数据截止 {asof}</span>
+    <span>来源见证据库；本报告不构成投资建议</span></footer>
+</div>
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer"><div class="drw-h"><h4>下游明细</h4>
+  <button class="close" onclick="closeDrawer()">×</button></div><div class="drw-b" id="drwBody"></div></aside>
+<script>const PAGE_DATA = {data};</script>
+<script>{js}</script>
+</body></html>""".format(
+        css=CSS, js=JS, data=json.dumps(doc, ensure_ascii=False),
+        product=meta.get('product', '品种'), window=meta.get('window', ''),
+        asof=meta.get('asof', ''), spec=meta.get('spec', '—'), region=meta.get('region', '—'),
+        glyph=meta.get('glyph', '需'), headline=hl.get('headline', '下游需求研究'),
+        one_line=hl.get('one_line', ''), tabs=tabs, n_ev=n_ev, sections=sec_html,
+        builder=meta.get('builder', 'chem-demand-signal'), version=meta.get('version', 'v1.0'))
+
+    os.makedirs(os.path.dirname(os.path.abspath(out)) or '.', exist_ok=True)
+    open(out, 'w', encoding='utf-8').write(html)
+    print('HTML ->', out, '(%.1f KB)' % (os.path.getsize(out) / 1024))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('src')
+    ap.add_argument('-o', '--out', default='report.html')
+    a = ap.parse_args()
+    doc = json.load(open(a.src, encoding='utf-8'))
+    build(doc, a.out)
+
+
+if __name__ == '__main__':
+    main()

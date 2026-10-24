@@ -1,0 +1,17 @@
+{
+ "kind": "warrant",
+ "product": "SA",
+ "source": "东方财富数据中心 RPT_FUTU_STOCKDATA（转载交易所仓单/期货库存日报）| https://data.eastmoney.com/ifdata/kcsj.html?va=SA",
+ "fetched_at": "2026-10-20 18:06:05",
+ "unit": "张",
+ "n": 66,
+ "first": "2026-07-13",
+ "last": "2026-10-20",
+ "current": 3214.0,
+ "granularity": "品种级（交易所口径），不是单合约仓单，不可拆分为近月/远月",
+ "caveats": [
+  "历史深度有限（仅覆盖接口返回区间）",
+  "纯碱以厂库交割为主，仓单量小，不代表社会库存",
+  "交易所仓单与产业口径“厂库+社会库存”不可比，必须分列"
+ ]
+}

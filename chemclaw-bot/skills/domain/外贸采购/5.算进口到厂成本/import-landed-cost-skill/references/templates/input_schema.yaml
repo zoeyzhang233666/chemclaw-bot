@@ -1,0 +1,71 @@
+# 计算输入 Schema（统一接口，HTML / Excel / Python 三端共用）
+# 设计原则：
+#   - 未填 = null（待确认），不等于 0；"确实没有"必须显式填 0 并在 note 中说明。
+#   - 金额币种统一为 quote.currency；境内费用统一为 CNY。
+#   - 每个费用字段都带 *_note / *_source 用于标注来源。
+currency: USD            # 报价币种
+quote:
+  incoterm: CIF          # EXW/FCA/FAS/FOB/CFR/CIF/CPT/CIP/DAP/DPU/DDP
+  incoterm_version: "2020"   # 必须指定版本（2010 与 2020 在 CIP 保险等级、DAP/DPU 上不同）
+  incoterm_place: 宁波    # 指定地点/港口
+  unit_price: 640.00     # 按计价单位
+  price_unit: MT         # MT(离岸吨价) 或 CONTAINER(柜价)
+  quantity: 1000         # 数量（吨；若 price_unit=CONTAINER 则为柜数）
+  quantity_unit: MT
+  packing_included: true # 单价是否含包装
+goods:
+  name: 工业级乙二醇
+  spec: "≥99.9%"
+  hs_code: "29053100"
+  origin_country: SA
+  destination_port: 宁波港
+  final_address: 江苏省苏州市
+  containers_20: 0
+  containers_40: 0
+fx:
+  market:
+    rate: 6.6807
+    type: "市场参考汇率（ECB 参考汇率交叉）"
+    date: "2026-10-19"
+    source: "frankfurter.app / exchangerate-api"
+  customs:
+    rate: null           # 海关计征汇率——无法核实必须留空（不得用市场汇率替代）
+    date: "2026-09-16"   # 计征汇率取数日（上月第三个星期三）
+    source: "中国人民银行人民币汇率中间价"
+# 以下费用：null=未知(计入待补)；0=确认无；数值=填入
+costs:
+  origin_charges: null            # 起运港费用（仅当报价不含时填）
+  export_clearance: null          # 出口侧费用（仅当报价不含时填）
+  ocean_freight_per_mt: null      # USD/MT（仅当报价不含时填）
+  ocean_freight_total: null       # USD（若货代按整票/整柜报，可填此项）
+  freight_includes_dest_thc: false
+  insurance: 
+    included: true                # 报价是否已含保险（CIF/CIP/DDP 默认 true）
+    rate_pct: null                # 保费率%（若按费率计保）
+    amount_usd: null              # 实际保费（USD）
+  port_charges_cny: null          # 港杂（元/票，含 THC/换单/港建/堆存等）
+  customs_broker_cny: null        # 报关代理费（元/票）
+  inspection_cny: 0               # 检验检测（元/票）
+  warehouse_cny: null             # 仓储（元/票）
+  inland_truck_cny: null          # 国内运输（元/票）
+  financing_cny: 0                # 融资/信用证等（元/票），不计计税价格
+tax:
+  tariff:
+    mfn_rate: 0.055
+    interim_rate: null            # 暂定税率
+    agreement_rate: null          # 协定税率（仅通过4道闸门后填写）
+    general_rate: 0.30
+    applied_rule: MFN             # 用户声明用哪种口径（计算器会按法条复核）
+    preferential    :
+      fta_name: null
+      origin_certificate: null    # 证书类型+编号，或 null
+      eligible: null              # true/false，未核验一律 null
+  anti_dumping_rate: 0            # 反倾销/反补贴（核验后填，默认0需人工确认）
+  vat_rate: 0.13                  # 进口环节增值税率
+  vat_deductible: true            # 一般纳税人+应税用途，是否可抵扣
+  consumption_tax_rate: 0         # 消费税（一般工业品为0）
+  duty_paid_by: buyer             # buyer/seller(DDP)
+assumptions:
+  freight_includes_thc: false
+  insurance_customs_rule: "3‰ of (goods+freight) when not determined"
+  valuation_rounding: "round to 0.01 CNY"

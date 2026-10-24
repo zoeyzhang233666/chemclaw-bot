@@ -1,0 +1,90 @@
+{
+  "name": "chemclaw-bot",
+  "version": "0.2.0",
+  "description": "ChemClaw: a chemical-industry Bot team for DeepSeek Harness, with Main Bots, Bot-to-Bot messages and group chats",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "dsh",
+    "deepseek",
+    "chemclaw",
+    "chemical",
+    "bot",
+    "multi-agent",
+    "agents"
+  ],
+  "homepage": "https://github.com/zoeyzhang233666/chemclaw-bot#readme",
+  "bugs": {
+    "url": "https://github.com/zoeyzhang233666/chemclaw-bot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoeyzhang233666/chemclaw-bot.git",
+    "directory": "chemclaw-bot"
+  },
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./web-search": "./web-search.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "src/host/",
+    "src/shared/",
+    "client.js",
+    "web-search.js",
+    "cordis.patch.yml",
+    "skills/",
+    "runtime/",
+    "README.md",
+    "README.zh.md",
+    "LICENSE",
+    "NOTICE",
+    "seed/catalog.json",
+    "seed/domain-skills.json",
+    "seed/supplemental-skills.json",
+    "seed/supplemental-sources.json",
+    "seed/third-party-sources.json",
+    "!src/host/chemclaw-seed.js",
+    "!skills/index/**"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "test": "node --import ./test/harness-resolve.mjs --test \"test/*.test.js\"",
+    "lint": "node scripts/lint.mjs",
+    "harness": "npm install --prefix dev/harness --legacy-peer-deps=false --no-package-lock --no-fund --no-audit",
+    "check": "sh dev/check.sh",
+    "pack:dist": "npm pack"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-llm": "*",
+    "@deepseek-ai/dsh-tools": "*",
+    "@deepseek-ai/dsh-web": "*"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  },
+  "dependencies": {
+    "@pdf-lib/fontkit": "1.1.1",
+    "docx": "9.5.1",
+    "dsh-free-search": "0.9.12",
+    "echarts": "6.0.0",
+    "exceljs": "4.4.0",
+    "lightweight-charts": "5.0.9",
+    "pdf-lib": "1.17.1",
+    "pptxgenjs": "4.0.1"
+  }
+}

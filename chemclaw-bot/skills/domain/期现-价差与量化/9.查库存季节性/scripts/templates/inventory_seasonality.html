@@ -1,0 +1,766 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#091120;--panel:#111c2e;--panel2:#16243a;--line:#22344f;--line2:#2e4568;
+  --ink:#e9eff8;--ink2:#a8b8ce;--ink3:#71869f;
+  --acc:#4da3ff;--good:#38d9a9;--warn:#ffb454;--bad:#ff6b6b;--pur:#a78bfa;--cyan:#38bdf8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#070e1a,#091120 380px);color:var(--ink);
+  font:14px/1.65 "Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+header.hero{padding:40px 0 24px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:12px;letter-spacing:.2em;color:var(--acc);font-weight:700;text-transform:uppercase}
+h1{font-size:30px;line-height:1.3;margin:12px 0 10px;font-weight:800;letter-spacing:-.02em}
+.lede{color:var(--ink2);font-size:14.5px;max-width:900px}
+.meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12px;color:var(--ink2)}
+.chip b{color:var(--ink)}
+.chip.warn{background:rgba(255,180,84,.1);border-color:rgba(255,180,84,.35)}
+nav.toc{position:sticky;top:0;z-index:40;background:rgba(9,17,32,.95);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);margin:0 -24px;padding:0 24px}
+nav.toc ol{display:flex;gap:2px;overflow-x:auto;list-style:none;margin:0;padding:8px 0;scrollbar-width:none}
+nav.toc a{color:var(--ink3);text-decoration:none;font-size:12.5px;padding:6px 10px;border-radius:7px;white-space:nowrap}
+nav.toc a:hover,nav.toc a.on{color:var(--ink);background:var(--panel2)}
+section{padding:34px 0 6px;border-bottom:1px solid var(--line)}
+h2{font-size:21px;margin:0 0 4px;font-weight:800;display:flex;align-items:baseline;gap:11px}
+h2 .no{color:var(--acc);font-size:12.5px;letter-spacing:.1em;font-weight:700}
+h3{font-size:15px;margin:22px 0 8px;font-weight:700}
+p{color:var(--ink2);margin:9px 0}
+.sub{color:var(--ink3);font-size:12.5px;margin:2px 0 14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:920px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 17px}
+.card h4{margin:0 0 3px;font-size:12.5px;color:var(--ink2);font-weight:600}
+.kpi{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:6px 0 1px;font-variant-numeric:tabular-nums}
+.kpi small{font-size:14px;color:var(--ink3);font-weight:600;margin-left:4px}
+.kpi.down{color:var(--good)}.kpi.up{color:var(--bad)}.kpi.neu{color:var(--acc)}
+.cap{font-size:11.5px;color:var(--ink3);margin-top:5px;line-height:1.5}
+.ctl{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--panel2);border:1px solid var(--line);
+  border-radius:12px;padding:11px 14px;margin:14px 0}
+.ctl label{font-size:12px;color:var(--ink2);font-weight:600;display:flex;align-items:center;gap:6px}
+select{background:#0c1524;color:var(--ink);border:1px solid var(--line2);border-radius:7px;padding:5px 8px;font-size:12.5px;font-family:inherit}
+.seg{display:inline-flex;background:#0c1524;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.seg button{background:none;border:0;color:var(--ink3);padding:6px 12px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:600}
+.seg button.on{background:var(--acc);color:#06101f}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.chart{width:100%;height:360px}
+.chart.tall{height:420px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0}
+th{background:var(--panel2);color:var(--ink2);font-weight:700;text-align:right;padding:8px 9px;border-bottom:1px solid var(--line2);white-space:nowrap;font-size:11.5px}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 9px;border-bottom:1px solid var(--line);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+tr:hover td{background:rgba(77,163,255,.06)}
+.tag{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.tag.p{background:rgba(56,217,169,.16);color:var(--good)}.tag.n{background:rgba(255,107,107,.16);color:var(--bad)}
+.tag.w{background:rgba(255,180,84,.16);color:var(--warn)}.tag.i{background:rgba(77,163,255,.16);color:var(--acc)}
+.note{border-left:3px solid var(--acc);background:rgba(77,163,255,.07);padding:11px 15px;border-radius:0 9px 9px 0;margin:13px 0}
+.note.warn{border-color:var(--warn);background:rgba(255,180,84,.08)}
+.note.bad{border-color:var(--bad);background:rgba(255,107,107,.08)}
+.note b{color:var(--ink)}
+.note ul{margin:6px 0 0;padding-left:18px;color:var(--ink2)}
+.note li{margin:4px 0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin:6px 0 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.badge{display:inline-block;padding:2px 9px;border-radius:6px;font-size:11px;font-weight:700;margin-left:6px;vertical-align:middle}
+.badge.ok{background:rgba(56,217,169,.16);color:var(--good)}
+.badge.no{background:rgba(255,107,107,.16);color:var(--bad)}
+.badge.mid{background:rgba(255,180,84,.16);color:var(--warn)}
+.mono{font-family:Consolas,"SF Mono",monospace}
+footer{padding:30px 0;color:var(--ink3);font-size:12px;text-align:center}
+.hint{font-size:11.5px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Inventory Seasonality · 期现价差与量化研究</div>
+  <h1 id="h1title">库存季节性报告</h1>
+  <p class="lede" id="lede"></p>
+  <div class="meta" id="metachips"></div>
+</header>
+
+<nav class="toc"><ol>
+  <li><a href="#s0" class="on">结论速览</a></li>
+  <li><a href="#s1">1 口径与覆盖</a></li>
+  <li><a href="#s2">2 季节性分位带</a></li>
+  <li><a href="#s3">3 逐年曲线对齐</a></li>
+  <li><a href="#s4">4 累/去库速度</a></li>
+  <li><a href="#s5">5 样本变化与断点</a></li>
+  <li><a href="#s6">6 异常年份</a></li>
+  <li><a href="#s7">7 方法、公式与来源</a></li>
+</ol></nav>
+
+<!-- ============ 首屏 ============ -->
+<section id="s0">
+  <h2><span class="no">00</span> 结论速览：当前库存相对季节性水平的位置</h2>
+  <p class="sub">三张主卡分别回答“现在是多少 / 历史上排第几 / 最近在累还是在去”。切换口径或样本年数会同步重算。</p>
+
+  <div class="ctl">
+    <label>库存指标 <select id="selMetric"></select></label>
+    <label>区域 / 口径 <select id="selRegion"></select></label>
+    <label>样本年数
+      <span class="seg" id="segYears">
+        <button data-v="3">3 年</button><button data-v="5" class="on">5 年</button><button data-v="10">10 年</button>
+      </span>
+    </label>
+    <label>频率
+      <span class="seg" id="segFreq">
+        <button data-v="w" class="on">周度</button><button data-v="m">月度</button>
+      </span>
+    </label>
+    <span class="hint" id="ctlHint"></span>
+  </div>
+
+  <div class="grid g3">
+    <div class="card">
+      <h4>当前库存（可核验水平）</h4>
+      <div class="kpi neu" id="kpiValue">—</div>
+      <div class="cap" id="kpiValueCap"></div>
+    </div>
+    <div class="card">
+      <h4>同期历史分位（同周次 ±1 周）</h4>
+      <div class="kpi" id="kpiPct">—</div>
+      <div class="cap" id="kpiPctCap"></div>
+    </div>
+    <div class="card">
+      <h4>近 4 周变化</h4>
+      <div class="kpi" id="kpiChg">—</div>
+      <div class="cap" id="kpiChgCap"></div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card">
+      <h4>近 12 周变化（水平口径）</h4>
+      <div class="kpi" id="kpiChg12" style="font-size:26px">—</div>
+      <div class="cap" id="kpiChg12Cap"></div>
+    </div>
+    <div class="card">
+      <h4>距离同期均值的偏离</h4>
+      <div class="kpi" id="kpiVs" style="font-size:26px">—</div>
+      <div class="cap" id="kpiVsCap"></div>
+    </div>
+    <div class="card">
+      <h4>最新一期状态（含水平缺失期）</h4>
+      <div class="kpi" id="kpiRun" style="font-size:26px">—</div>
+      <div class="cap" id="kpiRunCap"></div>
+    </div>
+  </div>
+
+  <div class="note warn" id="guard"></div>
+
+  <h3>结论句（由数字与规则生成，可逐条复核）</h3>
+  <div class="note" id="statements"></div>
+</section>
+
+<!-- ============ 1 口径 ============ -->
+<section id="s1">
+  <h2><span class="no">01</span> 口径核验：这条库存到底统计了什么</h2>
+  <p class="sub">先锁定“统计对象 + 覆盖范围 + 单位 + 频率 + 机构 + 发布时点”，再谈季节性。口径不清的分位没有意义。</p>
+  <div class="grid g4" id="calibCards"></div>
+  <h3>证据链检查</h3>
+  <table id="tblChecks"><thead><tr><th>编号</th><th>检查项</th><th>结论</th><th>证据</th><th>状态</th></tr></thead><tbody></tbody></table>
+  <h3>为什么不把港库、厂库、仓单混在一起</h3>
+  <div class="note">
+    <b>三类库存回答的是三个不同的问题：</b>
+    <ul>
+      <li><b>港口库存（本报告口径）</b>：样本港口（江苏、浙江为主）的显性罐存，反映可交割、可流通的区域现货松紧，是华东甲醇现货与基差最直接的实物锚。</li>
+      <li><b>生产企业库存</b>：上游工厂的厂库与订单待发，反映厂家出货压力，与港口库存常呈此消彼长（套利与发运节奏），规模与频次口径完全不同。</li>
+      <li><b>交易所仓单</b>：注册仓单对应可交割品质与交割库，它约束的是近月合约的交割压力，不等同于地区现货供应。</li>
+    </ul>
+    三者若混算，等于把“不同池子的水倒进一个量杯”，季节性会被样本切换伪造成信号。
+  </div>
+</section>
+
+<!-- ============ 2 分位带 ============ -->
+<section id="s2">
+  <h2><span class="no">02</span> 历史季节性分位带与今年轨迹</h2>
+  <p class="sub">阴影为过去 N 年同周次的 p10–p90 / p25–p75 区间，实线为历史中位数；粗线为今年实际值（灰色虚线段为缺失期的替代估计，不参与分位）。</p>
+  <div class="card"><div id="chartBand" class="chart tall"></div>
+    <div class="legend"><span><i style="background:rgba(77,163,255,.28)"></i>p10–p90</span>
+      <span><i style="background:rgba(77,163,255,.55)"></i>p25–p75</span>
+      <span><i style="background:#a78bfa"></i>历史中位数</span>
+      <span><i style="background:#38d9a9"></i>今年实际</span></div>
+  </div>
+  <h3 id="wkTblTitle">同周次分布明细</h3>
+  <div style="max-height:320px;overflow:auto"><table id="tblWeeks"><thead><tr><th>周次</th><th>样本年</th><th>均值</th><th>中位数</th><th>p10</th><th>p25</th><th>p75</th><th>p90</th><th>今年</th><th>今年分位</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<!-- ============ 3 逐年曲线 ============ -->
+<section id="s3">
+  <h2><span class="no">03</span> 逐年曲线：不同年份如何对齐</h2>
+  <p class="sub">全部按 ISO 周年 + ISO 周次对齐（跨年周归入其 ISO 年）；当年曲线只画到最新一期，不补全未来。</p>
+  <div class="card"><div id="chartYears" class="chart tall"></div></div>
+  <h3>周次 × 年份矩阵（单元格为该周库存，空=未披露）</h3>
+  <div style="max-height:420px;overflow:auto"><table id="tblMatrix"><thead></thead><tbody></tbody></table></div>
+</section>
+
+<!-- ============ 4 速度 ============ -->
+<section id="s4">
+  <h2><span class="no">04</span> 库存变化速度：累库/去库的实际幅度</h2>
+  <p class="sub">周度增减额全部来自原文披露的“较上一期增加/减少 X 万吨”（官方增减额），而不是两期表格值相减——后者在局部采样补报时会产生虚假跳变。</p>
+  <div class="grid g2">
+    <div class="card"><h4>周度增减额（最近 52 周）</h4><div id="chartChg" class="chart"></div></div>
+    <div class="card"><h4>4 周 / 12 周累计滚动变化</h4><div id="chartCum" class="chart"></div></div>
+  </div>
+  <h3>4 周累计变化 vs 历史同周次分布</h3>
+  <div class="note" id="speedNote"></div>
+  <table id="tblSpeed"><thead><tr><th>口径</th><th>累去库</th><th>万吨</th><th>历史同周次均值</th><th>p10</th><th>p25</th><th>p75</th><th>p90</th><th>历史分位</th></tr></thead><tbody></tbody></table>
+</section>
+
+<!-- ============ 5 样本变化 ============ -->
+<section id="s5">
+  <h2><span class="no">05</span> 统计样本变化与结构性断点</h2>
+  <p class="sub">披露口径变了，历史就不能直接拼接。这里把每一个断点、每一次披露降级、每一次局部采样都摊开。</p>
+  <h3>断点清单</h3>
+  <table id="tblBreaks"><thead><tr><th>日期</th><th>类型</th><th>对统计的影响</th></tr></thead><tbody></tbody></table>
+  <h3>逐月披露状态</h3>
+  <div class="card"><div id="chartDisc" class="chart"></div></div>
+  <h3>局部采样造成的虚假跳变</h3>
+  <div class="note warn" id="jumpNote"></div>
+  <table id="tblJump"><thead><tr><th>截止日</th><th>官方增减额</th><th>表格差分</th><th>差额</th></tr></thead><tbody></tbody></table>
+  <h3>覆盖偏差：华南占全国港口比例（按年）</h3>
+  <div class="card"><div id="chartBias" class="chart"></div></div>
+  <h3>样本口径敏感性（同一指标不同样本的分布）</h3>
+  <table id="tblScen"><thead><tr><th>场景</th><th>样本数</th><th>均值</th><th>中位数</th><th>最小值</th><th>最大值</th></tr></thead><tbody></tbody></table>
+</section>
+
+<!-- ============ 6 异常年份 ============ -->
+<section id="s6">
+  <h2><span class="no">06</span> 异常年份检查</h2>
+  <p class="sub">去季节残差（ln 实际 − ln 季节基准）按年汇总；|z|>2 视为异常周。异常年不剔除出样本，但必须在结论中标注。</p>
+  <table id="tblAnom"><thead><tr><th>年份</th><th>样本周</th><th>平均偏离</th><th>偏离标准差</th><th>|z|>2 周占比</th><th>最大偏离周</th><th>最大偏离</th><th>年内最低</th><th>年内最高</th></tr></thead><tbody></tbody></table>
+  <div class="note" id="anomNote"></div>
+</section>
+
+<!-- ============ 7 方法 ============ -->
+<section id="s7">
+  <h2><span class="no">07</span> 方法、公式与来源</h2>
+  <h3>计算口径</h3>
+  <div class="grid g2">
+    <div class="card"><h4>季节分解</h4><p class="hint mono">ln I_t = trend_t + f(week_t) + e_t</p>
+      <p class="cap">trend 为 52 周中心化移动平均；f 为周次傅里叶 K=2 调和项；e 为去季节残差（对数偏离）。</p></div>
+    <div class="card"><h4>历史分位</h4><p class="hint mono">rank = (小于当期数 + 0.5×等于当期数) / 样本数 × 100</p>
+      <p class="cap">样本为过去 N 年同周次 ±1 周（跨年周按 ISO 周次），不足则标记 insufficient。</p></div>
+    <div class="card"><h4>4 / 12 周累计变化</h4><p class="hint mono">Σ east_dchg(t-3 … t) / Σ east_dchg(t-11 … t)</p>
+      <p class="cap">east_dchg 优先取原文披露的华东增减额，缺失时才回退为表格差分。</p></div>
+    <div class="card"><h4>去季节分位</h4><p class="hint mono">resid = ln(I / 季节基准)，历史分位同法</p>
+      <p class="cap">用于区分“绝对值偏低是因为季节位置”还是“扣掉季节性后仍偏低”。</p></div>
+  </div>
+  <h3>来源与可核验性</h3>
+  <table id="tblSrc"><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody></tbody></table>
+  <div class="note bad"><b>使用边界：</b>本报告只回答“库存处在历史季节性水平的什么位置、最近累去库多少”。库存偏高/偏低<u>不</u>直接推导价格方向；价格还取决于进口到港节奏、下游开工、MTO 利润、合约结构与基差，需要单独检验。</div>
+</section>
+
+<footer>本报告由「查库存季节性」Skill 生成 · 数据截至 <span id="ftDate"></span> · 全部数值可由 examples 内脚本重算复核</footer>
+</div>
+
+<script>
+/*__ECHARTS__*/
+</script>
+<script>
+/*__DATA__*/
+</script>
+<script>
+(function(){
+"use strict";
+const S = window.__DATA__.seasonal, ST = window.__DATA__.story, CFG = window.__DATA__.config;
+const $ = s => document.querySelector(s);
+const F = (v, nd=1, sfx="") => (v===null||v===undefined||Number.isNaN(v)) ? "—" : (Number(v).toFixed(nd) + sfx);
+const SG = v => (v===null||v===undefined) ? "neu" : (v>0 ? "up" : "down");
+const COL = {hist:"#a78bfa", cur:"#38d9a9", band1:"rgba(77,163,255,.26)", band2:"rgba(77,163,255,.52)",
+  acc:"#4da3ff", warn:"#ffb454", bad:"#ff6b6b", good:"#38d9a9", ink3:"#71869f", line:"#22344f", est:"#71869f"};
+const state = {metric:"east", region:"east", years:S.meta.sample_years, freq:"w"};
+const ECHARTS = [];
+function mk(el){ const c = echarts.init(el, null, {renderer:"canvas"}); ECHARTS.push(c); return c; }
+window.addEventListener("resize", ()=>ECHARTS.forEach(c=>c.resize()));
+
+/* ---------------- 头部 ---------------- */
+function head(){
+  $("#h1title").textContent = S.meta.product + " · " + CFG.metric_name + "：过去 "
+    + S.meta.hist_years.length + " 年真实季节性，当前库存处在什么位置";
+  $("#lede").innerHTML = "以 <b>"+S.calibration.issuer+"</b> 周度"+S.calibration.metric_label
+    +"为口径（单位 "+S.meta.unit+"，发布方转载于 "+S.meta.carrier+"），"
+    +"按 ISO 周次对齐 "+S.meta.hist_years.join(" / ")+" 年同期分布，逐周核验原文增减额。"
+    +"<b style='color:#ffb454'>库存分位只描述位置，不预测价格方向。</b>";
+  const chips = [
+    ["数据截至", S.meta.asof], ["样本期", S.integrity.start+" → "+S.integrity.end],
+    ["周度期数", S.integrity.n_weeks+" 期"], ["间隔中位数", S.integrity.gap_median_days+" 天"],
+    ["季节振幅", (S.season_fit.season_amp_pct||"—")+"%"], ["去季节 R²", S.season_fit.r2]
+  ];
+  $("#metachips").innerHTML = chips.map(([k,v])=>`<span class="chip">${k} <b>${v}</b></span>`).join("")
+    + `<span class="chip warn">水平值缺失 ≥ ${S.level_missing.weeks} 周 · 已标注</span>`;
+  $("#ftDate").textContent = S.meta.asof;
+}
+
+/* ---------------- 控件 ---------------- */
+function ctl(){
+  $("#selMetric").innerHTML = Object.entries(CFG.metrics).map(([k,v])=>
+    `<option value="${k}">${v.label}</option>`).join("");
+  $("#selRegion").innerHTML = `<option value="east">华东总计（江苏+浙江）· 主口径</option>`
+    + `<option value="jiangsu">江苏（华东分省）</option>`
+    + `<option value="zhejiang">浙江（华东分省）</option>`
+    + `<option value="port_total">全国港口总计（华东+华南）· 对照</option>`
+    + `<option value="east_from_port">华东（由全国港口折算）· 替代值</option>`;
+  $("#selMetric").addEventListener("change", e=>{
+    state.metric=e.target.value; state.region=e.target.value;
+    $("#selRegion").value = e.target.value; render();
+  });
+  $("#selRegion").addEventListener("change", e=>{
+    state.region=e.target.value;
+    // 指标下拉与区域联动：全国港口/分省各自对应；替代值仍归属华东指标
+    if (["east","port_total"].includes(e.target.value)) {
+      state.metric = e.target.value; $("#selMetric").value = e.target.value;
+    }
+    render();
+  });
+  $("#segYears").addEventListener("click", e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    [...$("#segYears").children].forEach(x=>x.classList.toggle("on", x===b));
+    state.years=+b.dataset.v; render();
+  });
+  $("#segFreq").addEventListener("click", e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    [...$("#segFreq").children].forEach(x=>x.classList.toggle("on", x===b));
+    state.freq=b.dataset.v; render();
+  });
+}
+
+/* ---------------- 数据选择 ---------------- */
+function currentBlock(){ // 供潜在扩展使用
+  const m = state.metric;
+  return (S.current[m] || S.current[S.meta.primary_metric]);
+}
+function regionLabel(){
+  const v = $("#selRegion").value;
+  return $("#selRegion").selectedOptions[0].textContent;
+}
+
+/* ---------------- 首屏 KPI ---------------- */
+const REGION_KEY = () => $("#selRegion").value;          // east / jiangsu / zhejiang / port_total / east_from_port
+function kpis(){
+  const reg = REGION_KEY();
+  const blk = S.current[reg] || {};
+  const isEast = (reg === "east");
+  const hasChg  = (reg === "east" || reg === "port_total" || reg === "east_from_port");
+  const sp = S.speed;
+  // 1 当前库存
+  $("#kpiValue").textContent = (blk.value==null?"—":F(blk.value,2)) + (blk.value==null?"":" 万吨");
+  $("#kpiValueCap").innerHTML = blk.value==null
+    ? "该口径在最新一期无可公开的水平值；见下方状态卡。"
+    : `截止 <b>${blk.asof}</b>（W${blk.iso_week}）· ${blk.note||""}`
+      + (blk.deseason_base?`<br>季节基准 ${F(blk.deseason_base,2)} 万吨，去季节偏离 <b style="color:${(blk.deseason_resid_pct||0)<0?COL.good:COL.bad}">${F(blk.deseason_resid_pct,1,"%")}</b>`:"");
+  // 2 分位：0 / 100 是闭区间端点，实为“低于/高于全部历史样本”，单独措辞避免伪精度
+  const pr = blk.pct_rank;
+  const pctTxt = pr==null ? "—" : (pr<=0 ? "低于全部" : (pr>=100 ? "高于全部" : F(pr,1," 分位")));
+  $("#kpiPct").textContent = pctTxt;
+  $("#kpiPct").className = "kpi " + (pr==null?"neu":(pr<25?"down":(pr>75?"up":"neu")));
+  $("#kpiPct").style.fontSize = (pr!=null && (pr<=0||pr>=100)) ? "26px" : "";
+  const vs = blk.vs_mean_pct;
+  const pctExpr = pr==null ? "" : (pr<=0 ? `0 分位＝低于同期全部 ${blk.n_hist} 个样本（历史同期最小值 ${F(blk.hist_min,2)}）`
+    : (pr>=100 ? `100 分位＝高于同期全部 ${blk.n_hist} 个样本（历史同期最大值 ${F(blk.hist_max,2)}）`
+    : `${F(pr,1,"分位")}＝同期 ${blk.n_hist} 个样本中的相对位置`));
+  $("#kpiPctCap").innerHTML = pr==null ? "样本不足或水平缺失，不做分位结论。"
+    : `${pctExpr}<br>`
+      + `同期均值 ${F(blk.hist_mean,2)} 万吨，当期${vs<0?"低":"高"} ${F(Math.abs(vs),1,"%")}`
+      + (blk.pct_rank_deseason!=null?`<br>去季节分位 <b>${blk.pct_rank_deseason<=0?"低于全部历史同期":F(blk.pct_rank_deseason,1,"分位")}</b>`:"");
+  // 3 近 4 周变化
+  const c4 = isEast ? sp.cum4w : blk.chg4w;
+  $("#kpiChg").textContent = c4==null?"—":(c4>0?"+":"") + F(c4,2) + " 万吨";
+  $("#kpiChg").className = "kpi " + SG(c4);
+  $("#kpiChgCap").innerHTML = isEast
+    ? `最近 4 期官方增减额累计（截至 ${sp.last_week_date}）<br>历史同周次 4 周变化中位数 ${F(sp.cum4w_hist_mean,2)} 万吨，当前分位 ${F(sp.cum4w_pct_rank,1)}`
+    : (hasChg ? `按可得周次水平计算 4 周变化（截至 ${blk.asof}）`
+      : "该分省口径在最新一期水平缺失，4 周变化不可得；见状态卡");
+  // 4 12 周
+  const c12 = isEast ? sp.cum12w : blk.chg12w;
+  $("#kpiChg12").textContent = c12==null?"—":(c12>0?"+":"") + F(c12,2) + " 万吨";
+  $("#kpiChg12").className = "kpi " + SG(c12);
+  $("#kpiChg12Cap").innerHTML = isEast
+    ? `历史同周次 12 周变化中位数 ${F(sp.cum12w_hist_mean,2)}，当前分位 ${F(sp.cum12w_pct_rank,1)}<br>4 周均值绝对变化 ${F(sp.avg_abs_4w,2)} 万吨/期（历史中位 ${F(sp.hist_chg_vol,2)}）`
+    : (c12==null ? "水平缺失期无法计算" : `对应水平 ${F(blk.chg12w_pct,1,"%")} 变化`);
+  // 5 偏离
+  $("#kpiVs").textContent = blk.vs_mean==null?"—":(blk.vs_mean>0?"+":"") + F(blk.vs_mean,2) + " 万吨";
+  $("#kpiVs").className = "kpi " + SG(blk.vs_mean);
+  $("#kpiVsCap").innerHTML = `同期五分位带 p10 ${F((blk.band||{}).p10,2)} / p50 ${F((blk.band||{}).p50,2)} / p90 ${F((blk.band||{}).p90,2)}`
+    + (blk.hist_min!=null?`<br>历史同期极值 ${F(blk.hist_min,2)} ~ ${F(blk.hist_max,2)}`:"")
+    + `<br>同比（去年同周次）${blk.yoy_pct==null?"不可得":F(blk.yoy_pct,1,"%")}`;
+  // 6 状态（华东专属：连续累去库与水平缺失期）
+  const lm = S.level_missing;
+  const port = S.current.port_total || {};
+  if (isEast) {
+    $("#kpiRun").textContent = sp.run_label + " " + Math.abs(sp.run_len) + " 周";
+    $("#kpiRun").className = "kpi " + (sp.run_len>0?"up":"down");
+    $("#kpiRunCap").innerHTML = `最新一期 ${port.asof}：全国港口 ${F(port.value,2)} 万吨`
+      + (port.pct_rank!=null?`（历史同期分位 ${F(port.pct_rank,1)}，<b>对照口径</b>）`:"")
+      + `<br>华东水平自 ${lm.from} 起不可得，共 ${lm.weeks} 周，仅能用增减额描述`;
+  } else {
+    const lab = (blk.run_label || "—");
+    $("#kpiRun").textContent = lab + (blk.run_len ? " " + Math.abs(blk.run_len) + " 周" : "");
+    $("#kpiRun").className = "kpi " + ((blk.run_len||0)>0?"up":"down");
+    $("#kpiRunCap").innerHTML = blk.asof
+      ? `该口径可按水平序列计算连续状态（截至 ${blk.asof}）<br>当前口径：${$("#selRegion").selectedOptions[0].textContent}`
+      : "最新一期无水平值，连续状态不可得";
+  }
+  // 护栏
+  const v = ST.verdict;
+  const fl = v.flags || [];
+  const flMap = {level_missing:"水平值缺失期", freq_gap:"存在 >10 天的双周报间隔", missing_weeks:"存在缺报周",
+    local_sampling_jump:"局部采样造成虚假跳变（已改用官方增减额）", season_weak:"季节解释力偏低（样本内 R²<0.6）",
+    sample_insufficient:"部分周次样本年数不足 4"};
+  $("#guard").innerHTML = `<b>读图须知：</b>`
+    + `<ul>${fl.length ? fl.map(f=>`<li>${flMap[f]||f}</li>`).join("") : "<li>无</li>"}</ul>`
+    + `<div style="margin-top:6px">判断规则：库存高于/低于历史均值<b>不</b>直接推导价格涨跌；分位只表示“在往年同期分布中的位置”。`
+    + `全国港口口径含华南，规模天然大于华东，两者<u>不可</u>直接比较分位。</div>`;
+  $("#statements").innerHTML = `<b>主口径（华东 · 周度 · 历史 ${S.meta.hist_years.length} 年：${S.meta.hist_years.slice().sort().join("/")}）</b><ul>`
+    + ST.statements.map(s=>`<li>${s}</li>`).join("") + `</ul>`;
+  $("#ctlHint").textContent = "当前：" + $("#selRegion").selectedOptions[0].textContent
+    + (state.freq === "m" ? " · 月度视图" : " · 周度视图");
+}
+
+/* ---------------- 分位带 ---------------- */
+// 周次分布：优先用当前区域自己的分布（weeks_by_metric），并只保留所选样本年数
+function weeksSrc(reg){
+  const wm = (S.weeks_by_metric || {})[reg] || S.weeks;
+  // 一致性核验：分项分布保留 = 与主口径相同的周次结构
+  const minY = S.meta.cur_year - state.years;
+  const out = {};
+  Object.keys(wm).forEach(w=>{
+    const src = wm[w]; if(!src) return;
+    const vals = Object.entries(src.values||{})
+      .filter(([y,v])=> v!=null && +y>=minY && +y<S.meta.cur_year).map(([y,v])=>v);
+    if(!vals.length) return;
+    vals.sort((a,b)=>a-b);
+    const q = p => { const i=(vals.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return vals[lo]+(vals[hi]-vals[lo])*(i-lo); };
+    out[w] = {n:vals.length, p10:q(0.1), p25:q(0.25), p50:q(0.5), p75:q(0.75), p90:q(0.9),
+      mean: vals.reduce((a,b)=>a+b,0)/vals.length};
+  });
+  return out;
+}
+function yearCurve(year, reg){
+  const c = (S.curves||[]).find(x=>x.year===year);
+  if(!c) return {weeks:[], vals:[]};
+  const vals = (c[reg] && c[reg].length) ? c[reg] : c.east;
+  return {weeks:c.weeks, vals:vals};
+}
+let chartBand, chartYears, chartChg, chartCum, chartDisc, chartBias;
+function drawBand(){
+  if (state.freq === "m") return drawBandMonth();
+  const reg = REGION_KEY();
+  const wm = weeksSrc(reg);
+  const weeks = Object.keys(wm).map(Number).sort((a,b)=>a-b);
+  const b = {weeks, p10:weeks.map(w=>wm[w].p10), p25:weeks.map(w=>wm[w].p25),
+    p50:weeks.map(w=>wm[w].p50), p75:weeks.map(w=>wm[w].p75), p90:weeks.map(w=>wm[w].p90)};
+  const cy = yearCurve(S.meta.cur_year, reg);
+  const prevY = yearCurve(S.meta.cur_year-1, reg);
+  const pts = cy.weeks.map((w,i)=>[w, cy.vals[i]]).filter(p=>p[1]!=null);
+  const prevPts = prevY.weeks.map((w,i)=>[w, prevY.vals[i]]).filter(p=>p[1]!=null);
+  const c = chartBand || mk($("#chartBand"));
+  c.setOption({
+    backgroundColor:"transparent",
+    tooltip:{trigger:"axis", backgroundColor:"#0b1424", borderColor:COL.line, textStyle:{color:"#e9eff8",fontSize:12}},
+    legend:{show:false},
+    grid:{left:52,right:24,top:26,bottom:34},
+    xAxis:{type:"value",min:1,max:52,interval:4,name:"ISO 周次",nameTextStyle:{color:COL.ink3},
+      axisLabel:{color:COL.ink3},splitLine:{lineStyle:{color:COL.line}},axisLine:{lineStyle:{color:COL.line}}},
+    yAxis:{type:"value",name:S.meta.unit,nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},
+      splitLine:{lineStyle:{color:COL.line}}},
+    series:[
+      {name:"p10",type:"line",data:b.weeks.map((w,i)=>[w,b.p10[i]]),lineStyle:{opacity:0},stack:"band",symbol:"none",
+        areaStyle:{color:"transparent",opacity:0},silent:true,showSymbol:false},
+      {name:"p10–p90",type:"line",data:b.weeks.map((w,i)=>[w,b.p90[i]-b.p10[i]]),lineStyle:{opacity:0},stack:"band",
+        symbol:"none",areaStyle:{color:COL.band1},silent:true},
+      {name:"p10 基准",type:"line",data:b.weeks.map((w,i)=>[w,b.p10[i]]),lineStyle:{opacity:0},stack:"band2",symbol:"none",silent:true},
+      {name:"p25–p75",type:"line",data:b.weeks.map((w,i)=>[w,b.p75[i]-b.p25[i]]),lineStyle:{opacity:0},stack:"band2",
+        symbol:"none",areaStyle:{color:COL.band2},silent:true},
+      {name:"p25 基准",type:"line",data:b.weeks.map((w,i)=>[w,b.p25[i]]),lineStyle:{opacity:0},stack:"band3",symbol:"none",silent:true},
+      {name:"历史中位数",type:"line",data:b.weeks.map((w,i)=>[w,b.p50[i]]),symbol:"none",
+        lineStyle:{color:COL.hist,width:2.4}},
+      {name:"去年同期",type:"line",data:prevPts,symbol:"none",
+        lineStyle:{color:COL.ink3,width:1.4,type:"dashed"}},
+      {name:"今年",type:"line",data:pts,symbol:"circle",symbolSize:5,
+        lineStyle:{color:COL.cur,width:3},itemStyle:{color:COL.cur}}
+    ]
+  }, true);
+  // 分位带表
+  const idxOf = w => cy.weeks.indexOf(w);
+  let html = "";
+  b.weeks.forEach((w,i)=>{
+    const src = wm[w]; if(!src) return;
+    const idx = idxOf(w);
+    const curV = idx>=0 ? cy.vals[idx] : null;
+    let rt = "";
+    if(curV!=null){ rt = curV<b.p10[i] ? "<span class='tag n'>低于 p10</span>"
+      : (curV<b.p25[i] ? "<span class='tag i'>p10–p25</span>" : (curV>b.p90[i] ? "<span class='tag p'>高于 p90</span>"
+      : (curV>b.p75[i] ? "<span class='tag w'>p75–p90</span>" : "<span class='tag i'>p25–p75</span>"))); }
+    html += `<tr><td>W${w}</td><td>${src.n}</td><td>${F(src.mean,2)}</td><td>${F(src.p50,2)}</td>`
+      + `<td>${F(src.p10,2)}</td><td>${F(src.p25,2)}</td><td>${F(src.p75,2)}</td><td>${F(src.p90,2)}</td>`
+      + `<td>${F(curV,2)}</td><td>${rt}</td></tr>`;
+  });
+  $("#tblWeeks tbody").innerHTML = html;
+  $("#wkTblTitle").textContent = `同周次分布明细（${regionLabel()}，历史 ${state.years} 年）`;
+}
+
+// 月度视图：各年 × 自然月均值 + 月度分位带
+function drawBandMonth(){
+  const reg = REGION_KEY();
+  const minY = S.meta.cur_year - state.years;
+  const hist = (S.curves_month||[]).filter(x=>x.year>=minY && x.year<S.meta.cur_year);
+  const byMo = {};
+  for (let mo=1; mo<=12; mo++){
+    const vals = hist.map(x=>(x[reg]||[])[mo-1]).filter(v=>v!=null).sort((a,b)=>a-b);
+    if(!vals.length) continue;
+    const q = p => { const i=(vals.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return vals[lo]+(vals[hi]-vals[lo])*(i-lo); };
+    byMo[mo] = {n:vals.length, p10:q(0.1), p25:q(0.25), p50:q(0.5), p75:q(0.75), p90:q(0.9),
+      mean: vals.reduce((a,b)=>a+b,0)/vals.length};
+  }
+  const mos = Object.keys(byMo).map(Number).sort((a,b)=>a-b);
+  const curC = (S.curves_month||[]).find(x=>x.year===S.meta.cur_year) || {};
+  const curVals = curC[reg] || [];
+  const c = chartBand || mk($("#chartBand"));
+  c.setOption({
+    backgroundColor:"transparent",
+    tooltip:{trigger:"axis",backgroundColor:"#0b1424",borderColor:COL.line,textStyle:{color:"#e9eff8"}},
+    grid:{left:52,right:24,top:26,bottom:34},
+    xAxis:{type:"category",data:mos.map(m=>m+"月"),axisLabel:{color:COL.ink3},axisLine:{lineStyle:{color:COL.line}}},
+    yAxis:{type:"value",name:S.meta.unit,nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},splitLine:{lineStyle:{color:COL.line}}},
+    series:[
+      {name:"p10",type:"line",data:mos.map(m=>byMo[m].p10),lineStyle:{opacity:0},stack:"b1",symbol:"none",silent:true},
+      {name:"p10–p90",type:"line",data:mos.map(m=>byMo[m].p90-byMo[m].p10),lineStyle:{opacity:0},stack:"b1",symbol:"none",
+        areaStyle:{color:COL.band1},silent:true},
+      {name:"p10 基准",type:"line",data:mos.map(m=>byMo[m].p10),lineStyle:{opacity:0},stack:"b2",symbol:"none",silent:true},
+      {name:"p25–p75",type:"line",data:mos.map(m=>byMo[m].p75-byMo[m].p25),lineStyle:{opacity:0},stack:"b2",symbol:"none",
+        areaStyle:{color:COL.band2},silent:true},
+      {name:"历史中位数",type:"line",data:mos.map(m=>byMo[m].p50),symbol:"circle",symbolSize:6,
+        lineStyle:{color:COL.hist,width:2.2},itemStyle:{color:COL.hist}},
+      {name:"今年",type:"line",data:mos.map(m=>curVals[m-1]==null?null:curVals[m-1]),symbol:"circle",symbolSize:7,
+        lineStyle:{color:COL.cur,width:3},itemStyle:{color:COL.cur}}
+    ]
+  }, true);
+  let html = "";
+  mos.forEach(m=>{
+    const s = byMo[m]; const v = curVals[m-1];
+    let rt = "";
+    if(v!=null){ rt = v<s.p10 ? "<span class='tag n'>低于 p10</span>" : (v<s.p25 ? "<span class='tag i'>p10–p25</span>"
+      : (v>s.p90 ? "<span class='tag p'>高于 p90</span>" : (v>s.p75 ? "<span class='tag w'>p75–p90</span>" : "<span class='tag i'>p25–p75</span>"))); }
+    html += `<tr><td>${m} 月</td><td>${s.n}</td><td>${F(s.mean,2)}</td><td>${F(s.p50,2)}</td><td>${F(s.p10,2)}</td>`
+      + `<td>${F(s.p25,2)}</td><td>${F(s.p75,2)}</td><td>${F(s.p90,2)}</td><td>${F(v,2)}</td><td>${rt}</td></tr>`;
+  });
+  $("#tblWeeks tbody").innerHTML = html;
+  $("#wkTblTitle").textContent = `月度分布明细（${regionLabel()}，历史 ${state.years} 年，按自然月）`;
+}
+
+/* ---------------- 逐年曲线 ---------------- */
+function drawYears(){
+  const reg = REGION_KEY();
+  const monthly = (state.freq === "m");
+  const c = chartYears || mk($("#chartYears"));
+  const cols = ["#38d9a9","#4da3ff","#a78bfa","#ffb454","#ff6b6b","#38bdf8","#e879f9"];
+  const src = monthly ? (S.curves_month||[]) : (S.curves||[]);
+  const xv = monthly ? (i => i+1) : (w => w);
+  const xs = monthly ? (c=>c.months) : (c=>c.weeks);
+  const series = src.map((cu,i)=>{
+    const vals = (cu[reg] && cu[reg].length) ? cu[reg] : cu.east;
+    return {name:String(cu.year), type:"line",
+      data: xs(cu).map((w,j)=>[xv(w), vals[j]]).filter(p=>p[1]!=null),
+      symbol: monthly ? "circle" : "none", symbolSize: 4,
+      lineStyle:{width: cu.year===S.meta.cur_year?3.2:1.8, color: cu.year===S.meta.cur_year? COL.cur : cols[i%cols.length]},
+      emphasis:{focus:"series"}};
+  });
+  c.setOption({
+    tooltip:{trigger:"axis",backgroundColor:"#0b1424",borderColor:COL.line,textStyle:{color:"#e9eff8",fontSize:12}},
+    legend:{textStyle:{color:"#a8b8ce"},top:0},
+    grid:{left:52,right:24,top:44,bottom:34},
+    xAxis: monthly
+      ? {type:"value",min:1,max:12,interval:1,name:"自然月",nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3,formatter:v=>v+"月"},
+         splitLine:{lineStyle:{color:COL.line}}}
+      : {type:"value",min:1,max:52,interval:4,name:"ISO 周次",nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},
+         splitLine:{lineStyle:{color:COL.line}}},
+    yAxis:{type:"value",name:S.meta.unit,nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},splitLine:{lineStyle:{color:COL.line}}},
+    series
+  }, true);
+  if (monthly){ $("#tblMatrix").closest("div").style.display = "none"; return; }
+  $("#tblMatrix").closest("div").style.display = "block";
+  // 矩阵表
+  const wm = S.weekly_matrix, thead = $("#tblMatrix thead"), tbody = $("#tblMatrix tbody");
+  thead.innerHTML = "<tr><th>周次</th>" + wm.years.map(y=>`<th>${y}</th>`).join("") + "</tr>";
+  tbody.innerHTML = wm.weeks.map((w,i)=>`<tr><td>W${w}</td>`
+    + wm.years.map((y,j)=>`<td style="color:${y===S.meta.cur_year?'#38d9a9':'inherit'}">${wm.values[i][j]==null?"":F(wm.values[i][j],2)}</td>`).join("")
+    + "</tr>").join("");
+}
+
+/* ---------------- 速度 ---------------- */
+function drawSpeed(){
+  const recent = (S.speed.recent||[]);
+  const c1 = chartChg || mk($("#chartChg"));
+  c1.setOption({
+    tooltip:{trigger:"axis",backgroundColor:"#0b1424",borderColor:COL.line,textStyle:{color:"#e9eff8"}},
+    grid:{left:48,right:16,top:18,bottom:56},
+    xAxis:{type:"category",data:recent.map(r=>r.asof.slice(5)),axisLabel:{color:COL.ink3,rotate:45,fontSize:10},
+      axisLine:{lineStyle:{color:COL.line}}},
+    yAxis:{type:"value",name:"万吨",nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},splitLine:{lineStyle:{color:COL.line}}},
+    series:[{type:"bar",data:recent.map(r=>({value:r.chg,
+      itemStyle:{color: r.chg>0? "rgba(255,107,107,.85)":"rgba(56,217,169,.85)"}})),barWidth:"62%"}]
+  }, true);
+  // 4/12 周滚动：从曲线数据累计
+  const cur = S.curves.find(x=>x.year===S.meta.cur_year);
+  const all = (S.curves||[]).slice().sort((a,b)=>a.year-b.year);
+  const flat = [];
+  all.forEach(c=>{ c.weeks.forEach((w,i)=>{ if(c.chg[i]!=null) flat.push({y:c.year,w:w,v:c.chg[i]}); }); });
+  const roll = (n)=>{ const out=[]; for(let i=n-1;i<flat.length;i++){ let s=0; let ok=true;
+      for(let k=0;k<n;k++){ if(flat[i-k]==null){ok=false;break;} s+=flat[i-k].v; }
+      if(ok) out.push([flat[i].y*100+flat[i].w, s]); } return out; };
+  const r4 = roll(4), r12 = roll(12);
+  const c2 = chartCum || mk($("#chartCum"));
+  c2.setOption({
+    tooltip:{trigger:"axis",backgroundColor:"#0b1424",borderColor:COL.line,textStyle:{color:"#e9eff8"},
+      formatter: ps=> ps.map(p=>`${p.seriesName}: ${F(p.value[1],2)} 万吨`).join("<br>")},
+    legend:{textStyle:{color:"#a8b8ce"},top:0},
+    grid:{left:48,right:16,top:32,bottom:40},
+    xAxis:{type:"value",axisLabel:{color:COL.ink3,formatter:v=>String(Math.round(v))},axisLine:{lineStyle:{color:COL.line}},
+      splitLine:{lineStyle:{color:COL.line}}},
+    yAxis:{type:"value",name:"万吨",nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},splitLine:{lineStyle:{color:COL.line}}},
+    series:[{name:"4 周累计",type:"line",data:r4,symbol:"none",lineStyle:{color:COL.acc,width:2.4}},
+      {name:"12 周累计",type:"line",data:r12,symbol:"none",lineStyle:{color:COL.warn,width:1.8,type:"dashed"}}]
+  }, true);
+  // 速度注记 + 表
+  const sp = S.speed;
+  const b4 = sp.cum4w_hist_band||{}, b12 = sp.cum12w_hist_band||{};
+  $("#speedNote").innerHTML = `<b>最近 4 周 ${F(sp.cum4w,2)} 万吨</b>（历史同周次中位数 ${F(sp.cum4w_hist_mean,2)}，p10 ${F(b4.p10,2)}，p90 ${F(b4.p90,2)}，当前分位 ${F(sp.cum4w_pct_rank,1)}）；`
+    + `<b>最近 12 周 ${F(sp.cum12w,2)} 万吨</b>（历史中位数 ${F(sp.cum12w_hist_mean,2)}，当前分位 ${F(sp.cum12w_pct_rank,1)}）。`
+    + `状态：<b>${sp.run_label}</b>，连续 ${Math.abs(sp.run_len)} 周；近期单期平均绝对变化 ${F(sp.avg_abs_4w,2)} 万吨，历史中位 ${F(sp.hist_chg_vol,2)}。`;
+  const rows = [
+    ["4 周累计", sp.cum4w, sp.cum4w_hist_mean, b4, sp.cum4w_pct_rank],
+    ["12 周累计", sp.cum12w, sp.cum12w_hist_mean, b12, sp.cum12w_pct_rank],
+    ["26 周累计", sp.cum26w, null, {}, null],
+    ["52 周累计", sp.cum52w, null, {}, null]
+  ];
+  $("#tblSpeed tbody").innerHTML = rows.map(([n,v,m,b,r])=>
+    `<tr><td>${n}</td><td>${v==null?"—":(v>0?"累库":"去库")}</td><td style="color:${v>0?COL.bad:COL.good}">${v>0?"+":""}${F(v,2)}</td>`
+    + `<td>${F(m,2)}</td><td>${F(b.p10,2)}</td><td>${F(b.p25,2)}</td><td>${F(b.p75,2)}</td><td>${F(b.p90,2)}</td><td>${r==null?"—":F(r,0)+"%"}<span class="cap">（0=最去库 100=最累库）</span></td></tr>`).join("");
+}
+
+/* ---------------- 断点 / 披露 ---------------- */
+function drawBreaks(){
+  $("#tblBreaks tbody").innerHTML = (S.breakpoints||[]).map(b=>
+    `<tr><td>${b.date}</td><td><span class="tag ${/披露|样本/.test(b.kind)?"w":"i"}">${b.kind}</span></td><td style="text-align:left">${b.effect}</td></tr>`).join("");
+  const cal = S.calibration;
+  $("#jumpNote").innerHTML = `共发现 <b>${cal.chg_discrepancy_weeks}</b> 期官方增减额与“两期表格值相减”不一致。`
+    + `原因是周报表格为<b>局部口径</b>（当期只采到部分港口），下一期补齐时表格值跳变；`
+    + `因此本报告周变化一律取原文披露的增减额，表格差分仅作核对。`;
+  $("#tblJump tbody").innerHTML = (cal.chg_discrepancy_detail||[]).map(r=>
+    `<tr><td>${r.asof}</td><td>${r.chg_official>0?"+":""}${F(r.chg_official,2)}</td>`
+    + `<td>${r.chg_table>0?"+":""}${F(r.chg_table,2)}</td><td>${r.diff>0?"+":""}${F(r.diff,2)}</td></tr>`).join("")
+    || `<tr><td colspan="4">未发现不一致</td></tr>`;
+  // 披露状态
+  const mon = S.disclosure.monthly || [];
+  const c = chartDisc || mk($("#chartDisc"));
+  c.setOption({
+    tooltip:{trigger:"axis",backgroundColor:"#0b1424",borderColor:COL.line,textStyle:{color:"#e9eff8"}},
+    legend:{textStyle:{color:"#a8b8ce"},top:0},
+    grid:{left:48,right:20,top:34,bottom:46},
+    xAxis:{type:"category",data:mon.map(m=>m.month),axisLabel:{color:COL.ink3,rotate:60,fontSize:10},
+      axisLine:{lineStyle:{color:COL.line}}},
+    yAxis:[{type:"value",name:"期数",nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},splitLine:{lineStyle:{color:COL.line}}},
+      {type:"value",name:"齐全比例 %",max:100,nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3},splitLine:{show:false}}],
+    series:[
+      {name:"期数",type:"bar",data:mon.map(m=>m.n),itemStyle:{color:"rgba(77,163,255,.55)"},barWidth:"55%"},
+      {name:"逐地区齐全比例",type:"line",yAxisIndex:1,data:mon.map(m=>m.n? +(100*m.prov_full/m.n).toFixed(1):null),
+        symbol:"circle",symbolSize:6,lineStyle:{color:COL.warn,width:2},itemStyle:{color:COL.warn}},
+      {name:"文本分区披露比例",type:"line",yAxisIndex:1,data:mon.map(m=>m.n? +(100*m.region_split/m.n).toFixed(1):null),
+        symbol:"none",lineStyle:{color:COL.good,width:2,type:"dashed"}}
+    ]
+  }, true);
+  // 覆盖偏差
+  const by = S.coverage_bias.by_year||[];
+  const c2 = chartBias || mk($("#chartBias"));
+  c2.setOption({
+    tooltip:{trigger:"axis",backgroundColor:"#0b1424",borderColor:COL.line,textStyle:{color:"#e9eff8"}},
+    grid:{left:52,right:20,top:24,bottom:30},
+    xAxis:{type:"category",data:by.map(x=>x.year),axisLabel:{color:COL.ink3},axisLine:{lineStyle:{color:COL.line}}},
+    yAxis:{type:"value",name:"华南/全国端口",nameTextStyle:{color:COL.ink3},axisLabel:{color:COL.ink3,formatter:v=>Math.round(v*100)+"%"},
+      splitLine:{lineStyle:{color:COL.line}}},
+    series:[
+      {name:"年内最小值-最大值",type:"bar",stack:"r",data:by.map(x=>x.min),itemStyle:{color:"transparent"},tooltip:{show:false}},
+      {name:"区间",type:"bar",stack:"r",data:by.map(x=>x.max-x.min),itemStyle:{color:"rgba(167,139,250,.28)"},barWidth:"55%"},
+      {name:"中位数",type:"line",data:by.map(x=>x.median),symbol:"circle",symbolSize:7,
+        lineStyle:{color:COL.pur,width:2},itemStyle:{color:COL.pur}}
+    ]
+  }, true);
+  // 场景表
+  $("#tblScen tbody").innerHTML = (S.scenarios||[]).map(s=>
+    `<tr><td>${s.scenario}</td><td>${s.n}</td><td>${F(s.mean,2)}</td><td>${F(s.median,2)}</td><td>${F(s.min,2)}</td><td>${F(s.max,2)}</td></tr>`).join("");
+}
+
+/* ---------------- 异常年 ---------------- */
+function drawAnom(){
+  $("#tblAnom tbody").innerHTML = (S.anomaly_years||[]).map(a=>
+    `<tr><td>${a.year}${a.year===S.meta.cur_year?" <span class='tag i'>当年</span>":""}</td><td>${a.n}</td>`
+    + `<td style="color:${a.mean_dev_pct>0?COL.bad:COL.good}">${a.mean_dev_pct>0?"+":""}${F(a.mean_dev_pct,1,"%")}</td>`
+    + `<td>${F(a.sd_dev_pct,1,"%")}</td><td>${F(a.share_z2,1,"%")}</td><td>W${a.max_dev_week}</td>`
+    + `<td style="color:${a.max_dev_pct>0?COL.bad:COL.good}">${a.max_dev_pct>0?"+":""}${F(a.max_dev_pct,1,"%")}</td>`
+    + `<td>${F(a.min,2)}</td><td>${F(a.max,2)}</td></tr>`).join("");
+  const ex = (S.exception_windows||[])[0];
+  const cur = (S.anomaly_years||[]).find(a=>a.year===S.meta.cur_year);
+  $("#anomNote").innerHTML = `<b>本案例的异常年份：</b>`
+    + (ex ? `${ex.name}（${ex.start} ~ ${ex.end}）：${ex.note}` : "无预登记异常窗口。")
+    + (cur ? `<br>当年（${cur.year}）截至 ${S.meta.asof} 的平均去季节偏离 ${cur.mean_dev_pct}%，最大单周偏离 ${cur.max_dev_pct}%（W${cur.max_dev_week}）；`
+      + `当年|z|>2 的周占比 ${cur.share_z2}%。` : "")
+    + `<br>历史各年平均偏离均接近 0（±5% 内），说明季节模型没有系统性高估或低估；&gt;10% 的年度偏离应视为格局变化而非季节性。`;
+}
+
+/* ---------------- 口径 / 来源 ---------------- */
+function drawCalib(){
+  const cal = S.calibration, integ = S.integrity;
+  const cards = [
+    ["统计对象", cal.metric_label, `覆盖 ${Object.values(cal.coverage_regions).filter(x=>["江苏","浙江"].includes(x)).join(" + ")}`],
+    ["库存类型", "港口库存（显性罐存）", "与厂库、交易所仓单分列，不混算"],
+    ["单位 / 频率", cal.unit + " / 周度", `间隔中位 ${integ.gap_median_days} 天，最大 ${integ.gap_max_days} 天`],
+    ["统计机构 / 载体", cal.issuer, cal.carrier],
+    ["样本期", integ.start + " ~ " + integ.end, `${integ.n_weeks} 期，跨度 ${integ.span_years} 年`],
+    ["取值方式", `直接披露 ${cal.value_methods.east_table||0} 期`, `由增减额递推 ${cal.value_methods.east_estimated||0} 期（已标注）`],
+    ["披露完整性", `逐地区齐全 ${cal.prov_full_weeks} 期`, `文本分区披露 ${cal.region_split_weeks} 期`],
+    ["B 样本（不并入）", cal.b_sample.n + " 期", `${cal.b_sample.start} ~ ${cal.b_sample.end}，仅作敏感性对照`]
+  ];
+  $("#calibCards").innerHTML = cards.map(([k,v,c])=>
+    `<div class="card"><h4>${k}</h4><div style="font-size:15px;font-weight:700;margin:5px 0">${v}</div><div class="cap">${c}</div></div>`).join("");
+  $("#tblChecks tbody").innerHTML = (ST.checks||[]).map(c=>
+    `<tr><td>${c.id}</td><td style="text-align:left">${c.name}</td><td style="text-align:left">${c.claim}</td>`
+    + `<td style="text-align:left" class="cap">${c.evidence}</td>`
+    + `<td><span class="badge ${c.status==="pass"?"ok":"mid"}">${c.status==="pass"?"通过":"注意"}</span></td></tr>`).join("");
+  const src = [
+    ["数据来源", `${cal.issuer}《中国甲醇样本港口库存周数据统计》，经${cal.carrier}转载`],
+    ["原文形态", "每周三 14:00 前后发布；正文给出港口总量、较上期增减额，并分列华东、华南增减额"],
+    ["样本期", `${integ.start} ~ ${integ.end}（${integ.n_weeks} 期）`],
+    ["单位", "万吨（万吨 = 10,000 吨）"],
+    ["研报日期", S.meta.run_date || S.meta.asof],
+    ["可复核性", "每一期截止日、增减额、表格值均可在原文核对；断点与替代值在报告中逐项标注"]
+  ];
+  $("#tblSrc tbody").innerHTML = src.map(([k,v])=>`<tr><td>${k}</td><td style="text-align:left">${v}</td></tr>`).join("");
+}
+
+/* ---------------- 渲染 ---------------- */
+function render(){ kpis(); drawBand(); drawYears(); drawSpeed(); }
+function init(){
+  head(); ctl(); drawCalib(); drawBreaks(); drawAnom(); render();
+  // 目录高亮
+  const links = [...document.querySelectorAll("nav.toc a")];
+  const obs = new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){
+    links.forEach(a=>a.classList.toggle("on", a.getAttribute("href")==="#"+e.target.id)); } }); },
+    {rootMargin:"-40% 0px -55% 0px"});
+  document.querySelectorAll("section").forEach(s=>obs.observe(s));
+}
+document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
+
+

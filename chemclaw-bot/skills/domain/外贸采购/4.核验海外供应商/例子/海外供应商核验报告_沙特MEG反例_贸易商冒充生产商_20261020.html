@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>海外供应商核验报告 · 贸易商冒充生产商反例（虚构示例）</title>
+<style>
+:root{
+  --ink:#0e1726; --ink2:#33415c; --mute:#6b7a90; --line:#e3e8ef; --line2:#eef2f7;
+  --bg:#f5f7fa; --card:#ffffff; --brand:#0f4c81; --brand2:#1b6ca8; --brandsoft:#eaf2f9;
+  --ok:#0f7b53; --okbg:#e6f5ee; --warn:#a15c00; --warnbg:#fdf1dd;
+  --mid:#5b6472; --midbg:#eef1f5; --mutebg:#f3f5f8;
+  --red:#b3261e; --redbg:#fdecea;
+  --r:14px; --sh:0 1px 2px rgba(16,24,40,.04),0 8px 24px -12px rgba(16,24,40,.18);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.65 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--brand2);text-decoration:none}
+a:hover{text-decoration:underline}
+code,.mono{font-family:var(--mono);font-size:12.5px}
+.wrap{display:grid;grid-template-columns:266px minmax(0,1fr);gap:28px;max-width:1480px;margin:0 auto;padding:0 28px}
+
+/* ---------------- hero ---------------- */
+.hero{position:relative;overflow:hidden;color:#fff;background:
+  radial-gradient(1100px 420px at 12% -10%,rgba(103,196,255,.34),transparent 60%),
+  radial-gradient(900px 380px at 92% 0%,rgba(120,220,190,.20),transparent 55%),
+  linear-gradient(135deg,#08243c 0%,#0f4c81 52%,#12587f 100%)}
+.hero-in{max-width:1480px;margin:0 auto;padding:40px 28px 34px}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#bfe0f5;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:#5eead4;box-shadow:0 0 0 4px rgba(94,234,212,.18)}
+.hero h1{margin:12px 0 8px;font-size:31px;line-height:1.28;font-weight:700;letter-spacing:-.01em}
+.hero .sub{color:#cfe2f2;max-width:940px;font-size:14.5px}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.chip{display:inline-flex;gap:8px;align-items:center;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);font-size:12.5px;color:#eaf4fc;backdrop-filter:blur(4px)}
+.chip b{color:#fff;font-weight:600}
+.hero-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
+.kpi{flex:1 1 190px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:13px 15px}
+.kpi .n{font-size:23px;font-weight:700;letter-spacing:-.01em}
+.kpi .l{font-size:12px;color:#c7dcf0;margin-top:2px}
+.kpi.warn .n{color:#ffd79a}.kpi.bad .n{color:#ffb3ab}.kpi.good .n{color:#9ff0cd}
+
+/* ---------------- sidebar ---------------- */
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:22px 0 40px}
+.side h4{margin:0 0 10px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.side nav{display:flex;flex-direction:column;gap:2px}
+.side nav a{display:flex;gap:10px;align-items:baseline;padding:7px 11px;border-radius:9px;color:var(--ink2);font-size:13.2px;line-height:1.4}
+.side nav a:hover{background:#fff;text-decoration:none}
+.side nav a.on{background:#fff;color:var(--brand);font-weight:600;box-shadow:var(--sh)}
+.side nav a i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--mute);min-width:18px}
+.sidebox{margin-top:20px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;box-shadow:var(--sh)}
+.sidebox .t{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:8px}
+.tally{display:flex;flex-direction:column;gap:6px}
+.tally button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 8px;border-radius:8px;font-size:12.5px}
+.tally button:hover{background:var(--line2)}
+.tally button .num{font-family:var(--mono);font-weight:700}
+.flt{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--sh)}
+.flt .t{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:8px;display:flex;justify-content:space-between}
+.flt .t a{font-size:11.5px;font-weight:500}
+.fbtns{display:flex;flex-wrap:wrap;gap:6px}
+.fbtn{all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--ink2);background:#fff;transition:.15s}
+.fbtn:hover{border-color:var(--brand2);color:var(--brand2)}
+.fbtn.on{background:var(--brand);border-color:var(--brand);color:#fff}
+
+/* ---------------- sections ---------------- */
+main{padding:26px 0 90px;min-width:0}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:26px 28px;margin-bottom:22px;scroll-margin-top:16px}
+.sec-h{display:flex;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line2);padding-bottom:14px;margin-bottom:20px}
+.sec-no{flex:none;width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;color:#fff;background:linear-gradient(135deg,#0f4c81,#2a7fb8);font-size:15px}
+.sec-h h2{margin:0;font-size:20px;letter-spacing:-.01em}
+.sec-h .s{color:var(--mute);font-size:13px;margin-top:2px}
+.sec-h .st{margin-left:auto;flex:none}
+
+/* ---------------- blocks ---------------- */
+.verdict{border:1px solid #cfe3f2;background:linear-gradient(180deg,#f6fbff,#fff);border-radius:12px;padding:19px 20px;margin-bottom:18px}
+.verdict .k{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand2);font-weight:700}
+.verdict h3{margin:7px 0 9px;font-size:19px;line-height:1.4}
+.verdict p{margin:0;color:var(--ink2)}
+.vrows{margin-top:14px;display:grid;gap:6px}
+.vrows .r{display:flex;gap:12px;font-size:13px;padding:7px 10px;background:#fff;border:1px solid var(--line2);border-radius:8px}
+.vrows .r .kk{color:var(--mute);min-width:110px;flex:none}
+.vrows .r .vv{color:var(--ink)}
+
+.lead{display:flex;gap:12px;background:var(--brandsoft);border:1px solid #cfe3f2;border-left:4px solid var(--brand2);border-radius:10px;padding:14px 16px;margin:14px 0;color:#173a56}
+.lead::before{content:"i";flex:none;width:20px;height:20px;border-radius:50%;background:var(--brand2);color:#fff;font-weight:700;font-size:12px;display:grid;place-items:center;margin-top:3px}
+.lead.muted{background:var(--mutebg);border-color:var(--line);border-left-color:#94a3b8;color:var(--ink2)}
+.lead.muted::before{background:#94a3b8}
+
+.note{display:flex;gap:11px;border-radius:10px;padding:12px 15px;margin:14px 0;background:var(--mutebg);border:1px solid var(--line);color:var(--ink2);font-size:13.3px}
+.note::before{content:"※";color:var(--mute);font-weight:700}
+.note.warn{background:var(--warnbg);border-color:#f3dcb4;color:#6b3d00}
+.note.warn::before{content:"!";width:18px;height:18px;border-radius:50%;background:var(--warn);color:#fff;display:grid;place-items:center;font-size:12px;flex:none}
+
+h3.bt{font-size:14.5px;margin:20px 0 10px;display:flex;align-items:center;gap:9px}
+h3.bt::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--brand2)}
+
+/* table */
+.tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px;margin:10px 0 6px}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;background:#fff}
+thead th{position:sticky;top:0;background:#f8fafc;color:var(--ink2);font-weight:700;font-size:12.2px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:1}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fbfdff}
+tbody td:first-child{color:var(--ink2);font-weight:600}
+.tbl-foot{font-size:12.3px;color:var(--mute);margin:6px 0 16px}
+td.c{text-align:center}td.r{text-align:right}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;border:1px solid transparent;cursor:default}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.85}
+.p-ok{background:var(--okbg);color:var(--ok);border-color:#c9ead9}
+.p-warn{background:var(--warnbg);color:var(--warn);border-color:#f2dcb6}
+.p-mid{background:var(--midbg);color:var(--mid);border-color:#dde2e9}
+.p-mute{background:var(--mutebg);color:var(--mute);border-color:#e2e6ec}
+.pill.lg{padding:5px 12px;font-size:12.5px}
+
+/* evidence chips */
+.ev{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:11.5px;font-weight:700;color:#0b5f8a;background:#e8f4fb;border:1px solid #c6e2f2;border-radius:6px;padding:1px 7px;cursor:pointer;margin:1px 2px 1px 0;transition:.15s}
+.ev:hover{background:#d3ebfa}
+.ev.mock{color:#8a3bb5;background:#f4ebfa;border-color:#e3cdf3}
+.ev.sel{outline:2px solid #0b5f8a;outline-offset:1px}
+.trunc{display:inline-block;max-width:430px;vertical-align:bottom;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* cards */
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{border:1px solid var(--line);border-radius:12px;padding:15px 16px;background:#fff}
+.card h4{margin:0 0 7px;font-size:13.6px}
+.card p{margin:0;color:var(--ink2);font-size:13px}
+.bound{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:14px 0}
+.bound .b{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;position:relative;overflow:hidden}
+.bound .b::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.bound .b:nth-child(1)::after{background:var(--ok)}
+.bound .b:nth-child(2)::after{background:var(--mid)}
+.bound .b:nth-child(3)::after{background:var(--warn)}
+.bound .b:nth-child(4)::after{background:var(--mute)}
+.bound .b:nth-child(5)::after{background:#cfd6df}
+.bound .t{font-weight:700;font-size:13.4px;margin-bottom:5px}
+.bound .d{font-size:12.5px;color:var(--ink2);line-height:1.6}
+
+/* hierarchy */
+.hier{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
+.hlayer{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:stretch}
+.hlayer .lab{display:grid;place-items:center;font-size:12.3px;font-weight:700;color:var(--brand);background:var(--brandsoft);border:1px solid #cfe3f2;border-radius:10px}
+.hnodes{display:flex;flex-wrap:wrap;gap:8px}
+.hnode{flex:1 1 200px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:12.8px;background:#fff}
+.hnode.contract{border-color:#f0c9a0;background:#fffaf3}
+.arrowdown{height:14px;display:flex;justify-content:center}
+.arrowdown span{width:2px;background:linear-gradient(#cfd8e3,transparent)}
+
+/* chain */
+.chain{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.chain .n{flex:1 1 168px;border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff;position:relative}
+.chain .n .code{font-family:var(--mono);font-weight:700;color:var(--brand2);font-size:12px}
+.chain .n .nm{font-weight:700;margin:3px 0 4px;font-size:13.4px}
+.chain .n .rl{font-size:12.3px;color:var(--ink2)}
+.chain .n.self{border-color:#9fc9e6;background:#f7fbff}
+.chain .arrow{align-self:center;color:#b9c4d2;font-size:16px}
+
+/* matrix_map */
+.mmap{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:12px 0}
+.mmap .hd,.mmap .rw{display:grid;grid-template-columns:1.05fr 1.05fr 1.35fr 1.15fr 104px 1.5fr;gap:0}
+.mmap .hd>div{background:#f8fafc;font-size:12px;font-weight:700;color:var(--ink2);padding:10px 12px;border-bottom:1px solid var(--line)}
+.mmap .rw>div{padding:11px 12px;border-bottom:1px solid var(--line2);font-size:12.7px;background:#fff;display:flex;align-items:center}
+.mmap .rw:last-child>div{border-bottom:none}
+.mmap .rw>div:first-child{font-weight:600;color:var(--ink2);background:#fcfdfe}
+.mmap .rw.conflict>div:not(:first-child):not(.st){background:#fff8f6}
+.mmap .k{color:var(--ink2)}
+.mmap .hi{color:var(--red);font-weight:700}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.step{display:grid;grid-template-columns:34px 1fr;gap:12px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:#fff}
+.step .n{width:26px;height:26px;border-radius:8px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.step .t{font-weight:700;font-size:13.4px}
+.step .d{font-size:12.6px;color:var(--ink2)}
+
+/* risks */
+.rk{border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:10px;padding:12px 15px;margin:9px 0;background:#fff}
+.rk .t{font-weight:700;font-size:13.4px;margin-bottom:3px}
+.rk .d{font-size:12.7px;color:var(--ink2)}
+
+/* timeline */
+.tl{position:relative;margin:16px 0 6px;padding-left:8px}
+.tl::before{content:"";position:absolute;left:74px;top:4px;bottom:4px;width:2px;background:linear-gradient(#cfe3f2,#eef2f7)}
+.tl .it{display:grid;grid-template-columns:66px 22px 1fr;gap:10px;margin-bottom:12px;align-items:start}
+.tl .dt{font-family:var(--mono);font-size:11.8px;color:var(--mute);text-align:right;padding-top:2px}
+.tl .pt{width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--brand2);margin-left:4px;margin-top:6px;z-index:1}
+.tl .tx{font-size:13px;color:var(--ink2)}
+.tl .it.supply .pt{border-color:var(--warn)}
+.tl .it.trade .pt{border-color:#7a4bc4}
+.tl .it.meta .pt{border-color:#94a3b8}
+
+/* tags */
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:5px;background:var(--mutebg);color:var(--mute);margin-left:6px;font-weight:600}
+.tag.hi{background:var(--redbg);color:var(--red)}
+
+/* evidence index */
+.evidx{display:flex;flex-direction:column;gap:9px}
+.evi{border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:#fff;scroll-margin-top:20px}
+.evi.sel{border-color:#0b5f8a;box-shadow:0 0 0 3px rgba(11,95,138,.12)}
+.evi .top{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:5px}
+.evi .id{font-family:var(--mono);font-weight:800;color:#0b5f8a;background:#e8f4fb;border:1px solid #c6e2f2;border-radius:6px;padding:1px 7px;font-size:11.5px}
+.evi .pub{font-size:12px;color:var(--mute)}
+.evi .cl{font-size:13px;color:var(--ink);margin:3px 0 6px}
+.evi blockquote{margin:6px 0 8px;padding:8px 12px;border-left:3px solid #cfe3f2;background:#f8fbfe;color:var(--ink2);font-size:12.4px;line-height:1.6}
+.evi .meta{font-size:11.8px;color:var(--mute);display:flex;gap:14px;flex-wrap:wrap}
+.mockband{display:inline-flex;align-items:center;gap:6px;background:#f4ebfa;color:#8a3bb5;border:1px dashed #d8bdee;border-radius:6px;padding:1px 8px;font-size:11.5px;font-weight:700}
+
+/* RFI */
+.rfi{background:#fbfcfe;border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:13px}
+.rfi .rh{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}
+.rfi .rh .t{font-weight:700;font-size:14px}
+.rfi ol{padding-left:20px;margin:0}
+.rfi li{margin:7px 0;color:var(--ink2);line-height:1.6}
+.rfi .ref{font-family:var(--mono);font-size:12px;color:var(--brand2)}
+
+/* toolbar */
+.toolbar{position:fixed;right:26px;bottom:26px;display:flex;flex-direction:column;gap:9px;z-index:40}
+.toolbar button{all:unset;cursor:pointer;width:44px;height:44px;border-radius:12px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh);display:grid;place-items:center;font-size:15px;color:var(--ink2)}
+.toolbar button:hover{color:var(--brand2);border-color:#bfd8ea}
+
+/* drawer */
+.drawer{position:fixed;inset:0;background:rgba(14,23,38,.34);opacity:0;pointer-events:none;transition:.2s;z-index:60}
+.drawer.open{opacity:1;pointer-events:auto}
+.drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(560px,92vw);background:#fff;box-shadow:-20px 0 60px rgba(16,24,40,.18);transform:translateX(24px);transition:.22s;display:flex;flex-direction:column}
+.drawer.open .panel{transform:none}
+.drawer .dph{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.drawer .dph .id{font-family:var(--mono);font-weight:800;color:#0b5f8a;background:#e8f4fb;border-radius:7px;padding:3px 9px}
+.drawer .dph button{all:unset;cursor:pointer;margin-left:auto;font-size:20px;color:var(--mute);line-height:1}
+.drawer .dpb{padding:18px;overflow:auto}
+.drawer .dpb h5{margin:14px 0 5px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.drawer .dpb p{margin:0 0 10px;font-size:13.2px;color:var(--ink2)}
+.drawer .dpb blockquote{margin:0;padding:10px 13px;border-left:3px solid #cfe3f2;background:#f8fbfe;font-size:12.8px;color:var(--ink2)}
+.drawer .dpb a.brk{word-break:break-all}
+
+/* misc */
+.foot{border-top:1px solid var(--line);margin-top:26px;padding-top:16px;color:var(--mute);font-size:12.3px}
+.foot p{margin:5px 0}
+.hidden{display:none !important}
+.empty{padding:22px;text-align:center;color:var(--mute);border:1px dashed var(--line);border-radius:11px;margin:12px 0}
+@media print{
+  .side,.toolbar,.drawer,.flt{display:none !important}
+  .wrap{display:block;max-width:none;padding:0}
+  .sec{break-inside:avoid;box-shadow:none}
+  .hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media (max-width:1180px){
+  .wrap{grid-template-columns:minmax(0,1fr);padding:0 16px}
+  .side{position:static;height:auto;padding:16px 0 0}
+  .side nav{flex-direction:row;flex-wrap:wrap}
+  .bound{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mmap .hd,.mmap .rw{grid-template-columns:1fr 1fr}
+}
+</style></head>
+<body>
+<header class="hero"><div class="hero-in">
+  <span class="eyebrow"><span class="dot"></span>Overseas Supplier Verification · 公开信息核验</span>
+  <h1>海外供应商核验报告（公开信息版 · 反例示范）<br><span style="font-size:17px;font-weight:500;color:#bfe0f5">Gulf Horizon Petrochemical Trading LLC（虚构示例实体）</span></h1>
+  <div class="sub">本报告使用一个虚构示例实体，演示「贸易商自称生产商」时核验方法如何识别。示例实体不对应任何真实企业；所引公开证据（SABIC / Yansab / Petrokemya 等）均来自真实来源，用于对照说明「真生产商的证据长什么样」。报告中不含任何风险评分。</div>
+  <div class="chips"><span class="chip"><span>核验基准日</span><b>2026-10-20</b></span><span class="chip"><span>采购品</span><b>单乙二醇（MEG / Monoethylene Glycol）</b></span><span class="chip"><span>国家/地区</span><b>沙特阿拉伯 / Kingdom of Saudi Arabia</b></span><span class="chip"><span>结论</span><b>暂停推进</b></span><span class="chip"><span>报告编号</span><b>OSV-SA-PG-2026-002</b></span></div>
+  <div class="hero-grid"><div class="kpi good"><div class="n">1</div><div class="l">已核实项</div></div><div class="kpi warn"><div class="n">13</div><div class="l">存在疑点</div></div><div class="kpi bad"><div class="n">21</div><div class="l">未知/未核实</div></div><div class="kpi "><div class="n">14</div><div class="l">证据条目</div></div><div class="kpi "><div class="n">5</div><div class="l">待确认缺口</div></div></div>
+</div></header>
+<div class="wrap">
+  <aside class="side">
+    <h4>报告导航</h4>
+    <nav><a href="#s00"><i>00</i><span>交易概览与核验边界</span></a><a href="#s01"><i>01</i><span>企业身份</span></a><a href="#s02"><i>02</i><span>产品能力与匹配度</span></a><a href="#s03"><i>03</i><span>工厂与生产证据</span></a><a href="#s04"><i>04</i><span>官网与联系信息</span></a><a href="#s05"><i>05</i><span>交易主体一致性</span></a><a href="#s06"><i>06</i><span>公开风险与合规</span></a><a href="#s07"><i>07</i><span>文件交叉核验</span></a><a href="#s08"><i>08</i><span>待索取材料与下一步</span></a><a href="#entity_map"><i>•</i><span>主体映射表</span></a><a href="#docs"><i>•</i><span>文件核验明细</span></a><a href="#gaps"><i>•</i><span>待确认事项</span></a><a href="#timeline"><i>•</i><span>公开事件时间轴</span></a><a href="#evidence"><i>•</i><span>证据索引</span></a><a href="#rfi"><i>•</i><span>英文询证清单</span></a></nav>
+    <div class="sidebox"><div class="t">状态分布（点击筛选）</div><div class="tally"><button type="button" onclick=""><span class="pill p-ok">已核实</span><span class="num">1</span></button><button type="button" onclick=""><span class="pill p-warn">存在疑点</span><span class="num">13</span></button><button type="button" onclick=""><span class="pill p-mid">未核实</span><span class="num">11</span></button><button type="button" onclick=""><span class="pill p-mute">未知</span><span class="num">10</span></button><button type="button" onclick=""><span class="pill p-mute">不适用</span><span class="num">1</span></button></div></div>
+    <div class="flt">
+      <div class="t"><span>筛选结论</span><a href="#" id="clear-filter">清空</a></div>
+      <div class="fbtns">
+        <button class="fbtn" data-state="verified">已核实</button>
+        <button class="fbtn" data-state="doubt">存在疑点</button>
+        <button class="fbtn" data-state="unverified">未核实</button>
+        <button class="fbtn" data-state="unknown">未知</button>
+      </div>
+      <div style="margin-top:10px"><input id="q" placeholder="在本页内搜索…" style="width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:12.6px;outline:none"></div>
+    </div>
+  </aside>
+  <main>
+    <section class="sec" id="summary"><div class="sec-h"><div class="sec-no">★</div><div><h2>核验结论摘要</h2><div class="s">先看这一段，再决定要不要读后面的证据</div></div></div><div class="verdict"><div class="k">结论口径 · 暂停推进</div><h3>自称「自有装置」的供应商，公开资料中查不到任何装置；建议暂停并索证</h3><p>该示例供应商宣称在朱拜勒拥有自有 MEG 装置，并以「厂价直供」报价。核验发现：①没有任何官方或第三方来源显示其拥有生产设施；②其宣称的产能数字与沙特已公开装置均无法对应；③其提供的「工厂照片」为通用图库风格，无法定位到具体装置。对照真实沙特 MEG 生产商（Petrokemya / Yansab / Petro Rabigh / Jubail United），可核验生产商至少能提供装置所在工业区、集团归属与可查的产能披露。因此本例判定为「暂停推进」，并要求其以文件证明制造关系或明确改为经销商身份。</p><div class="tbl-foot" style="margin:9px 0 0">该结论的含义：存在必须先澄清的主体或收款问题</div></div><h3 class="bt">已确认的关键事实</h3><div class="rk" style="border-left-color:#0f7b53"><div class="d">示例实体无可查的生产设施证据，其「自有工厂」主张仅存在于自述材料中（F04）。</div></div><div class="rk" style="border-left-color:#0f7b53"><div class="d">真实沙特 MEG 生产商的证据形态：上市公司官网逐条披露 CR 号与工业许可证（E01）、集团产品页列明等级（E02）、官网披露具体产能数字（E16）。</div></div><div class="rk" style="border-left-color:#0f7b53"><div class="d">「厂价直供」不等于制造能力：贸易商同样可以按厂价转售，区别在于是否有制造关系文件。</div></div><h3 class="bt">本报告明确不下的结论</h3><div class="note warn"><div><ul style="margin:0;padding-left:18px"><li>不认定该示例主体从事欺诈；无法核实的部分一律标「未知」。</li><li>不认定其真实产能、库存或履约能力。</li><li>不给出任何风险分数。</li></ul></div></div></section>
+    <section class="sec" id="s00"><div class="sec-h"><div class="sec-no">00</div><div><h2>交易概览与核验边界</h2><div class="s">反例示范：如何识别「自称生产商」</div></div></div><div class="verdict"><div class="k">总体结论</div><h3>制造关系无法证实 · 交易层面不具备推进条件</h3><p>本例用于演示：当供应商自述与公开记录不符时，核验应当如何表述结论——只陈述「查到了什么」与「查不到什么」，不推断动机。</p><div class="vrows"><div class="r"><span class="kk">核验结论</span><span class="vv">暂停推进（HOLD）——需先证明制造关系</span></div><div class="r"><span class="kk">证据状态</span><span class="vv">无任何生产设施证据；仅有自述与通用图片</span></div><div class="r"><span class="kk">风险评分</span><span class="vv">本报告不提供。</span></div></div></div><div class="bound"><div class="b"><div class="t">已核实</div><div class="d">官方或监管来源，或 ≥2 独立来源交叉印证</div></div><div class="b"><div class="t">未核实</div><div class="d">仅单一来源或企业自述</div></div><div class="b"><div class="t">存在疑点</div><div class="d">来源互相矛盾</div></div><div class="b"><div class="t">未知</div><div class="d">检索后无任何可引用来源</div></div><div class="b"><div class="t">不适用</div><div class="d">不存在对应制度</div></div></div><div class="tbl-foot">「查不到」与「不存在」不是一回事：前者是状态，后者是判断。本报告只记录状态。</div></section><section class="sec" id="s01"><div class="sec-h"><div class="sec-no">01</div><div><h2>企业身份</h2><div class="s">注册主体是否存在、是否可核</div></div></div><h3 class="bt">身份要素逐项核验</h3><div class="tbl-wrap"><table><thead><tr><th style="width:130px;">要素</th><th style="">核验结果</th><th style="width:96px;text-align:center;">状态</th><th style="width:90px;text-align:center;">证据</th></tr></thead><tbody><tr data-state="unverified"><td style="">法定名称</td><td style="">Gulf Horizon Petrochemical Trading LLC（虚构示例）</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F01" title="查看证据 F01">F01</button></td></tr><tr data-state="unverified"><td style="">名称中的 LLC</td><td style="">沙特有限责任公司（LLC）为常见形式；但名称含 Trading 一词，与「生产商」定位存在语义张力</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td></tr><tr data-state="unverified"><td style="">注册国家 / 城市</td><td style="">自述为沙特阿拉伯朱拜勒</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td></tr><tr data-state="unknown"><td style="">商业登记号 CR</td><td style="">未提供；公开检索亦无对应记录</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="unknown"><td style="">可查的经营地址</td><td style="">仅有邮箱与手机号，无街道级地址</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="doubt"><td style="">母公司 / 集团归属</td><td style="">自述「无集团，独立运营」——与沙特大型 MEG 产能集中于少数集团的公开格局不符</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="E04" title="查看证据 E04">E04</button><button type="button" class="ev" data-ev="E16" title="查看证据 E16">E16</button></td></tr></tbody></table><div class="empty empty-row hidden">当前筛选条件下没有记录</div></div><div class="tbl-foot">对照真实格局：沙特 MEG 装置集中于 SABIC 体系（Petrokemya、Jubail United、Yansab、SHARQ）与 Petro Rabigh 等少数几家企业（E04/E06/E15/E16）。</div></section><section class="sec" id="s02"><div class="sec-h"><div class="sec-no">02</div><div><h2>产品能力与匹配度</h2><div class="s">产品清单是否可核、规格是否闭合</div></div></div><h3 class="bt">产品能力逐项比对</h3><div class="tbl-wrap"><table><thead><tr><th style="width:150px;">核验项</th><th style="">公开信息</th><th style="width:96px;text-align:center;">状态</th><th style="width:80px;text-align:center;">证据</th></tr></thead><tbody><tr data-state="unverified"><td style="">是否列有 MEG</td><td style="">自述目录列有 MEG Fiber Grade 99.9%</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F05" title="查看证据 F05">F05</button></td></tr><tr data-state="unknown"><td style="">等级名称与批号规则</td><td style="">未提供；无法与任何生产商等级对应</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="unknown"><td style="">规格指标来源</td><td style="">无 TDS，无生产商名称</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="unknown"><td style="">可对应的生产商</td><td style="">未指明货源来自哪家装置</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr></tbody></table><div class="empty empty-row hidden">当前筛选条件下没有记录</div></div></section><section class="sec" id="s03"><div class="sec-h"><div class="sec-no">03</div><div><h2>工厂与生产证据</h2><div class="s">「自有装置」这句话的证据够不够</div></div></div><h3 class="bt">生产设施与制造关系</h3><div class="tbl-wrap"><table><thead><tr><th style="width:150px;">核查项</th><th style="">公开信息</th><th style="width:96px;text-align:center;">状态</th><th style="width:80px;text-align:center;">证据</th></tr></thead><tbody><tr data-state="unverified"><td style="">工厂位置</td><td style="">自述「朱拜勒工业城 3 号地块」，无许可证号</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td></tr><tr data-state="unknown"><td style="">装置名称 / 编号</td><td style="">未提供</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="doubt"><td style="">产能数字</td><td style="">自述「1.2 million MT/year」——在沙特公开装置清单中找不到对应装置</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="E04" title="查看证据 E04">E04</button><button type="button" class="ev" data-ev="E14" title="查看证据 E14">E14</button></td></tr><tr data-state="unknown"><td style="">工业许可证</td><td style="">未提供</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="doubt"><td style="">工厂照片</td><td style="">通用图库风格，无时间水印、无门牌、无可识别装置标识</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td></tr><tr data-state="unknown"><td style="">制造关系文件</td><td style="">无供货证明、无授权书、无生产商 COA</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr></tbody></table><div class="empty empty-row hidden">当前筛选条件下没有记录</div></div><div class="tbl-foot">判断要点：产能数字若无法对应到任一公开装置，只能记为「存在疑点」并要求补证，不能直接认定为虚假；同样地，也不能接受为事实。</div><div class="note warn"><div>对照示例（真实可核生产商的做法）：SABIC 官网产品页可查到具体产品与等级（E02）；Yansab 在官网披露 CR 号与工业许可证号（E01）；Petro Rabigh 在官网写明 600 KTA 产能（E16）；Jubail United 的 700 kt/y 装置被行业媒体记录投料时间（E14）。一个真实生产商通常至少有其中一项。</div></div></section><section class="sec" id="s04"><div class="sec-h"><div class="sec-no">04</div><div><h2>官网与联系信息</h2><div class="s">域名与联系方式是否指向同一主体</div></div></div><h3 class="bt">联系要素核验</h3><div class="tbl-wrap"><table><thead><tr><th style="width:130px;">要素</th><th style="">内容</th><th style="width:96px;text-align:center;">状态</th><th style="width:80px;text-align:center;">证据</th></tr></thead><tbody><tr data-state="doubt"><td style="">官网</td><td style="">提供网站地址，但页面无公司注册信息、无实体地址、无团队信息</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td></tr><tr data-state="doubt"><td style="">邮件域名</td><td style="">使用免费邮箱域，而非企业自有域名</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F03" title="查看证据 F03">F03</button></td></tr><tr data-state="doubt"><td style="">电话</td><td style="">仅手机号，无固定电话或区号</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F03" title="查看证据 F03">F03</button></td></tr><tr data-state="doubt"><td style="">地址一致性</td><td style="">网页地址与自述地址表述不一</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td></tr></tbody></table><div class="empty empty-row hidden">当前筛选条件下没有记录</div></div></section><section class="sec" id="s05"><div class="sec-h"><div class="sec-no">05</div><div><h2>交易主体一致性</h2><div class="s">厂价直供的说法能否在单据上成立</div></div></div><h3 class="bt">一致性核对矩阵（模拟件）</h3><div class="mmap"><div class="hd"><div>核对项</div><div>交易文件所载</div><div>官方/公开基线</div><div>比对判断</div><div>状态</div><div>说明与证据</div></div><div class="rw" data-state="unknown"><div>合同/卖方主体</div><div>Gulf Horizon Petrochemical Trading LLC（模拟）</div><div class="k">无公开登记信息可对照</div><div>无法比对</div><div class="st"><span class="pill p-mute ">未知</span></div><div class="k">缺 CR 号，无法唯一识别<div style="margin-top:4px"><button type="button" class="ev mock" data-ev="F01" title="查看证据 F01">F01</button></div></div></div><div class="rw conflict" data-state="doubt"><div>货物来源主体</div><div>自述「自有工厂」</div><div class="k">公开装置清单无对应</div><div>矛盾</div><div class="st"><span class="pill p-warn ">存在疑点</span></div><div class="k">需生产商 COA / 授权 / 原产地证证明来源<div style="margin-top:4px"><button type="button" class="ev mock" data-ev="F04" title="查看证据 F04">F04</button><button type="button" class="ev" data-ev="E04" title="查看证据 E04">E04</button></div></div></div><div class="rw conflict" data-state="unverified"><div>收款主体</div><div>与卖方同名（模拟）</div><div class="k">无银行确认函</div><div>名义一致、无法验证</div><div class="st"><span class="pill p-mid ">未核实</span></div><div class="k">同名不代表账户真实<div style="margin-top:4px"><button type="button" class="ev mock" data-ev="F02" title="查看证据 F02">F02</button></div></div></div><div class="rw conflict" data-state="doubt"><div>联系邮箱</div><div>免费邮箱域（模拟）</div><div class="k">无官方域名可对照</div><div>无法验证</div><div class="st"><span class="pill p-warn ">存在疑点</span></div><div class="k">要求企业域名邮箱回函<div style="margin-top:4px"><button type="button" class="ev mock" data-ev="F03" title="查看证据 F03">F03</button></div></div></div></div><div class="tbl-foot">本例的阻断点不是「收款不一致」，而是「制造关系无法证明」。前者可补授权解决，后者需要换供应商或改签为经销身份并披露真实货源。</div><h3 class="bt">单据链条应当在哪些环节暴露货源</h3><div class="chain"><div class="n self"><div class="code">①</div><div class="nm">PI/合同</div><div class="rl">标明卖方与货物来源</div></div><div class="arrow">→</div><div class="n"><div class="code">②</div><div class="nm">生产商 COA</div><div class="rl">揭示真实生产商名称</div></div><div class="arrow">→</div><div class="n"><div class="code">③</div><div class="nm">原产地证 CO</div><div class="rl">证明生产国</div></div><div class="arrow">→</div><div class="n"><div class="code">④</div><div class="nm">提单 B/L</div><div class="rl">发货人是否即卖方</div></div><div class="arrow">→</div><div class="n"><div class="code">⑤</div><div class="nm">生产商授权/供货函</div><div class="rl">把贸易商与生产商连起来</div></div></div></section><section class="sec" id="s06"><div class="sec-h"><div class="sec-no">06</div><div><h2>公开风险与合规</h2><div class="s">可查到的公开记录</div></div></div><h3 class="bt">公开风险扫描（不评级）</h3><div class="tbl-wrap"><table><thead><tr><th style="width:160px;">议题</th><th style="">查得的事实</th><th style="width:96px;text-align:center;">状态</th><th style="width:80px;text-align:center;">证据</th></tr></thead><tbody><tr data-state="na"><td style="">负面报道</td><td style="">未检索到该示例实体的公开报道（示例实体本不存在，属预期结果）</td><td class="c"><span class="pill p-mute ">不适用</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="unknown"><td style="">制裁名单</td><td style="">无可匹配的英文全称 + 注册号，无法筛查</td><td class="c"><span class="pill p-mute ">未知</span></td><td class="c" style="color:var(--mute)">—</td></tr><tr data-state="unverified"><td style="">行业背景（真实）</td><td style="">沙特 MEG 出口在 2026 年 3 月因霍尔木兹受阻出现不可抗力，10 月已开始恢复（E08/E10）</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="E08" title="查看证据 E08">E08</button><button type="button" class="ev" data-ev="E10" title="查看证据 E10">E10</button></td></tr></tbody></table><div class="empty empty-row hidden">当前筛选条件下没有记录</div></div></section><section class="sec" id="s07"><div class="sec-h"><div class="sec-no">07</div><div><h2>文件交叉核验</h2><div class="s">自述材料能支撑到哪一步</div></div></div><h3 class="bt">已提交（模拟）文件逐件核验</h3><div class="tbl-wrap"><table><thead><tr><th style="width:56px;">编号</th><th style="width:150px;">文件</th><th style="">核验要点</th><th style="width:92px;text-align:center;">状态</th><th style="width:70px;text-align:center;">证据</th></tr></thead><tbody><tr data-state="doubt"><td style="">F01</td><td style="">形式发票 PI（模拟）</td><td style="">无 CR 号、无签字人；卖方名称为贸易公司</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F01" title="查看证据 F01">F01</button></td></tr><tr data-state="unverified"><td style="">F02</td><td style="">银行信息（模拟）</td><td style="">有户名但无银行确认函</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F02" title="查看证据 F02">F02</button></td></tr><tr data-state="doubt"><td style="">F03</td><td style="">联系方式（模拟）</td><td style="">免费邮箱域 + 手机号</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F03" title="查看证据 F03">F03</button></td></tr><tr data-state="doubt"><td style="">F04</td><td style="">企业与工厂介绍（模拟）</td><td style="">「自有装置 120 万吨」无任何可核要素</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td></tr><tr data-state="unverified"><td style="">F05</td><td style="">产品目录（模拟）</td><td style="">无等级名、无生产商名称</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F05" title="查看证据 F05">F05</button></td></tr></tbody></table><div class="empty empty-row hidden">当前筛选条件下没有记录</div></div><div class="note warn"><div>本页全部为虚构样本，用于演示「自述材料」在核验中的定位：它们只能触发索证，不能作为结论依据。</div></div></section><section class="sec" id="s08"><div class="sec-h"><div class="sec-no">08</div><div><h2>待索取材料与下一步</h2><div class="s">要么补制造关系，要么改签经销身份</div></div></div><h3 class="bt">补件清单</h3><div class="tbl-wrap"><table><thead><tr><th style="width:60px;">编号</th><th style="width:210px;">材料</th><th style="">用途</th><th style="width:80px;text-align:center;">优先级</th></tr></thead><tbody><tr data-state=""><td style="">M01</td><td style="">商业登记证书 CR（含 QR）</td><td style="">确认主体是否真实存在</td><td style="text-align:center;">高</td></tr><tr data-state=""><td style="">M02</td><td style="">工业许可证 与 环保许可</td><td style="">证明其是否具备生产资格</td><td style="text-align:center;">高</td></tr><tr data-state=""><td style="">M03</td><td style="">生产商 COA（批号级，生产商抬头）</td><td style="">揭示真实货源</td><td style="text-align:center;">高</td></tr><tr data-state=""><td style="">M04</td><td style="">生产商出具的经销授权书</td><td style="">如为经销商，需合法授权链</td><td style="text-align:center;">高</td></tr><tr data-state=""><td style="">M05</td><td style="">近 12 个月出口提单（脱敏）</td><td style="">验证真实出口记录</td><td style="text-align:center;">中</td></tr><tr data-state=""><td style="">M06</td><td style="">工厂实地影像（含门牌/装置铭牌/时间水印）</td><td style="">验证装置存在</td><td style="text-align:center;">中</td></tr></tbody></table><div class="empty empty-row hidden">当前筛选条件下没有记录</div></div><div class="steps"><div class="step"><div class="n">1</div><div><div class="t">先定性身份</div><div class="d">请对方书面确认：是生产商还是经销商。若是经销商，改签经销条款并披露生产商。</div></div></div><div class="step"><div class="n">2</div><div><div class="t">换真实货源路径</div><div class="d">若确需该产品，优先对接可核的生产商或其授权渠道。</div></div></div><div class="step"><div class="n">3</div><div><div class="t">不出预付款</div><div class="d">在制造关系与主体一致性未闭环前，不安排任何预付款。</div></div></div></div></section><section class="sec" id="entity_map"><div class="sec-h"><div class="sec-no">EM</div><div><h2>主体映射表</h2><div class="s">先分清「集团 / 生产 / 交易 / 收款」四层主体，再谈核验</div></div></div><div class="note"><div>同一集团内不同法人不能混用：产能在 A 公司、合同签在 B 公司、钱付给 C 公司，三件事必须都能用文件对上。下表是本次核验涉及的全部主体，状态可随证据更新。</div></div><div class="tbl-wrap"><table><thead><tr><th>层级</th><th>角色</th><th>主体名称</th><th>注册地</th><th class="c">状态</th><th class="c">证据</th><th>说明</th></tr></thead><tbody><tr data-state="unverified"><td>交易层</td><td>交易层</td><td>GULF HORIZON PETROCHEMICAL TRADING LLC（虚构示例）</td><td>沙特（自述）</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F01" title="查看证据 F01">F01</button><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td><td>无公开登记信息可对照</td></tr><tr data-state="doubt"><td>生产层</td><td>生产层</td><td>（自述）Gulf Horizon 自有 MEG 装置</td><td>沙特 / 朱拜勒（自述）</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td class="c"><button type="button" class="ev" data-ev="F04" title="查看证据 F04">F04</button></td><td>公开装置清单无对应</td></tr><tr data-state="verified"><td>生产层</td><td>生产层</td><td>（真实对照）Petrokemya / Yansab / Petro Rabigh / Jubail United</td><td>沙特</td><td class="c"><span class="pill p-ok ">已核实</span></td><td class="c"><button type="button" class="ev" data-ev="E04" title="查看证据 E04">E04</button><button type="button" class="ev" data-ev="E16" title="查看证据 E16">E16</button><button type="button" class="ev" data-ev="E14" title="查看证据 E14">E14</button><button type="button" class="ev" data-ev="E15" title="查看证据 E15">E15</button></td><td>可核的沙特 MEG 生产商</td></tr><tr data-state="unverified"><td>交易层</td><td>交易层（收款）</td><td>收款方（与卖方同名，模拟）</td><td>沙特（自述）</td><td class="c"><span class="pill p-mid ">未核实</span></td><td class="c"><button type="button" class="ev" data-ev="F02" title="查看证据 F02">F02</button></td><td>无银行确认函</td></tr></tbody></table></div></section><section class="sec" id="docs"><div class="sec-h"><div class="sec-no">DC</div><div><h2>文件核验明细</h2><div class="s">逐件核到要素级：谁出的、能不能对主体、缺哪一项</div></div></div><div class="tbl-wrap"><table><thead><tr><th style="width:52px">编号</th><th style="width:170px">文件</th><th style="width:150px">名义持有人</th><th class="c" style="width:88px">检查通过</th><th class="c" style="width:92px">状态</th><th>逐项检查</th></tr></thead><tbody><tr data-state="doubt"><td>F01</td><td>形式发票 PI（模拟） <span class="mockband">模拟</span></td><td>GULF HORIZON PETROCHEMICAL TRADING LLC</td><td class="c">0/3</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> CR 号载明：未载</div><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 签字人姓名/职务：无</div><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 货物来源声明：仅称 factory supply</div></td></tr><tr data-state="doubt"><td>F02</td><td>银行信息（模拟） <span class="mockband">模拟</span></td><td>与卖方同名</td><td class="c">0/2</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 附银行确认函：无</div><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 开户行地址：缺失</div></td></tr><tr data-state="doubt"><td>F03</td><td>联系方式（模拟） <span class="mockband">模拟</span></td><td>示例联系人</td><td class="c">0/2</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 企业域名邮箱：免费邮箱域</div><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 固定电话：仅手机</div></td></tr><tr data-state="doubt"><td>F04</td><td>企业与工厂介绍（模拟） <span class="mockband">模拟</span></td><td>示例供应商</td><td class="c">0/3</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 装置编号：无</div><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 工业许可证：无</div><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 可定位影像：通用图库风格</div></td></tr><tr data-state="doubt"><td>F05</td><td>产品目录（模拟） <span class="mockband">模拟</span></td><td>示例供应商</td><td class="c">0/2</td><td class="c"><span class="pill p-warn ">存在疑点</span></td><td><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 等级名称：无</div><div style="font-size:12.3px;margin:2px 0"><span style="color:var(--red)">✕</span> 生产商名称：无</div></td></tr><tr data-state="unknown"><td>F06</td><td>SDS </td><td>—</td><td class="c">0/—</td><td class="c"><span class="pill p-mute ">未知</span></td><td><span style='color:var(--mute)'>未提供 / 待索取</span></td></tr><tr data-state="unknown"><td>F07</td><td>COA </td><td>—</td><td class="c">0/—</td><td class="c"><span class="pill p-mute ">未知</span></td><td><span style='color:var(--mute)'>未提供 / 待索取</span></td></tr><tr data-state="unknown"><td>F08</td><td>商业登记证书 CR </td><td>—</td><td class="c">0/—</td><td class="c"><span class="pill p-mute ">未知</span></td><td><span style='color:var(--mute)'>未提供 / 待索取</span></td></tr></tbody></table></div><div class="note warn"><div>凡标有「模拟」的文件均为演示用虚构样本，不代表任何真实企业曾向我方报价、出具或签署任何文件。</div></div></section><section class="sec" id="gaps"><div class="sec-h"><div class="sec-no">G</div><div><h2>待确认事项（Gap Register）</h2><div class="s">每一个「未知」都要落到一个人、一个动作、一个期限</div></div></div><div class="tbl-wrap"><table><thead><tr><th>编号</th><th>领域</th><th>缺口</th><th>影响</th><th>补证动作</th><th class="c">状态</th><th>责任人</th><th class="c">优先级</th></tr></thead><tbody><tr data-state="unknown"><td>G01</td><td>企业身份</td><td>无 CR 号，无公开登记信息</td><td>主体是否存在无法确认</td><td>索取 CR 证书并在官方渠道核验</td><td class="c"><span class="pill p-mute ">未知</span></td><td>采购</td><td class="c">高</td></tr><tr data-state="unknown"><td>G02</td><td>制造关系</td><td>「自有装置」无任何可核证据</td><td>可能误买经销货却按厂价付款</td><td>索取工业许可证、装置编号、生产商 COA 或经销授权</td><td class="c"><span class="pill p-mute ">未知</span></td><td>采购</td><td class="c">高</td></tr><tr data-state="unknown"><td>G03</td><td>产品能力</td><td>无 TDS、无等级名、无生产商</td><td>规格无法闭合</td><td>索取 TDS + 生产商 COA</td><td class="c"><span class="pill p-mute ">未知</span></td><td>质检</td><td class="c">高</td></tr><tr data-state="unverified"><td>G04</td><td>联系信息</td><td>免费邮箱 + 仅手机</td><td>沟通对手方身份不明</td><td>要求企业域名邮箱回函</td><td class="c"><span class="pill p-mute ">未知</span></td><td>采购</td><td class="c">中</td></tr><tr data-state="unknown"><td>G05</td><td>合规筛查</td><td>无可匹配标识，无法做制裁筛查</td><td>合规敞口未知</td><td>补齐英文全称 + CR 号后筛查</td><td class="c"><span class="pill p-mute ">未知</span></td><td>合规</td><td class="c">高</td></tr></tbody></table></div></section><section class="sec" id="timeline"><div class="sec-h"><div class="sec-no">TL</div><div><h2>公开事件时间轴</h2><div class="s">只看与「主体 / 生产 / 供应 / 贸易救济」相关的事件</div></div></div><div class="tl"><div class="it supply"><div class="dt">2026-03-26</div><div class="pt"></div><div class="tx">沙特 MEG 出口受阻，SABIC 宣布不可抗力（本例供应商借此以「缺货抢单」话术推销） <button type="button" class="ev" data-ev="E08" title="查看证据 E08">E08</button></div></div><div class="it entity"><div class="dt">2026-10-15</div><div class="pt"></div><div class="tx">示例供应商发出模拟 PI（本例样本） <button type="button" class="ev" data-ev="F01" title="查看证据 F01">F01</button></div></div><div class="it supply"><div class="dt">2026-10-19</div><div class="pt"></div><div class="tx">沙特方向到港恢复至约 12 万吨——「缺货」话术的时间窗口已过 <button type="button" class="ev" data-ev="E10" title="查看证据 E10">E10</button></div></div><div class="it meta"><div class="dt">2026-10-20</div><div class="pt"></div><div class="tx">本报告核验基准日</div></div></div></section><section class="sec" id="evidence"><div class="sec-h"><div class="sec-no">EV</div><div><h2>证据索引</h2><div class="s">每条结论都可回溯：来源、发布时间、访问时间、原文摘录、用途与局限</div></div></div><div class="note"><div>证据分级：<b>一手/官方</b>（政府登记、监管披露、官网原件）＞ <b>二手/媒体</b>（行业协会、数据库、财经媒体）＞ <b>三手/百科</b>。只有一手来源可直接支撑「已核实」，二手来源需两个以上独立来源交叉印证。标紫色的为模拟件。</div></div><div class="evidx"><div class="evi" id="ev-E01"><div class="inner"><div class="top"><span class="id">E01</span><span class="pill p-ok">一手/官方</span><span class="pill p-mute">背景</span><span class="pub">Yanbu National Petrochemical Company（SABIC 旗下）</span></div><div class="cl">Yansab 官网披露 CR 号 4700009432 与工业许可证号 S/1367（对照：真实生产商的做法）</div><blockquote>registered in the Kingdom of Saudi Arabia under Commercial Registration number 4700009432 ... Industrial License number S/1367</blockquote><div class="meta"><span>发布：官网当前版本</span><span>访问：2026-10-20</span><span>用途：对照示例</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.yansab.com.sa/en/our-company" target="_blank" rel="noopener">https://www.yansab.com.sa/en/our-company</a></p></div><div style="margin-top:8px"><a href="#E01" class="ev" data-ev="E01">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E01</span></div></div><div class="evi" id="ev-E02"><div class="inner"><div class="top"><span class="id">E02</span><span class="pill p-ok">一手/官方</span><span class="pill p-mute">背景</span><span class="pub">SABIC</span></div><div class="cl">SABIC 官网列有 SABIC® Monoethylene Glycol，2 个等级（对照）</div><blockquote>SABIC® Monoethylene Glycol - Grades Available: 2</blockquote><div class="meta"><span>发布：官网当前版本</span><span>访问：2026-10-20</span><span>用途：对照示例</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.sabic.com/en/products/chemicals/glycols/sabic-monoethylene-glycol" target="_blank" rel="noopener">https://www.sabic.com/en/products/chemicals/glycols/sabic-monoethylene-glycol</a></p></div><div style="margin-top:8px"><a href="#E02" class="ev" data-ev="E02">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E02</span></div></div><div class="evi" id="ev-E04"><div class="inner"><div class="top"><span class="id">E04</span><span class="pill p-mute">二手/媒体</span><span class="pill p-mute">背景</span><span class="pub">saudiindustri.com 工业名录</span></div><div class="cl">PETROKEMYA 为 SABIC 全资子公司，朱拜勒综合体（对照：沙特 MEG 产能集中格局）</div><blockquote>PETROKEMYA, which is entirely owned by SABIC, was established in May 1981</blockquote><div class="meta"><span>发布：未知</span><span>访问：2026-10-20</span><span>用途：行业格局对照</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.saudiindustri.com/industry/arabian-petrochemical-company-petrokemya/" target="_blank" rel="noopener">https://www.saudiindustri.com/industry/arabian-petrochemical-company-petrokemya/</a></p><p style="margin:6px 0 0;color:#8a3bb5">注：二手</p></div><div style="margin-top:8px"><a href="#E04" class="ev" data-ev="E04">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E04</span></div></div><div class="evi" id="ev-E06"><div class="inner"><div class="top"><span class="id">E06</span><span class="pill p-mute">二手/媒体</span><span class="pill p-mute">背景</span><span class="pub">Argaam</span></div><div class="cl">欧盟反倾销调查点名沙特 MEG 生产商清单（对照：可核生产商是可穷举的）</div><blockquote>including Yanbu National Petrochemical Co. (Yansab), Saudi Kayan Petrochemical Co., Al Sharqiyah Petrochemicals Co. (Sharq), Saudi Yanbu Petrochemical Co. (YANPET), Arabian Petrochemical Co. (Petrokemya) and Jubail United Petrochemical Co.</blockquote><div class="meta"><span>发布：2021-08-20</span><span>访问：2026-10-20</span><span>用途：行业格局对照</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.argaam.com/en/article/articledetail/id/1490717" target="_blank" rel="noopener">https://www.argaam.com/en/article/articledetail/id/1490717</a></p></div><div style="margin-top:8px"><a href="#E06" class="ev" data-ev="E06">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E06</span></div></div><div class="evi" id="ev-E08"><div class="inner"><div class="top"><span class="id">E08</span><span class="pill p-mute">二手/媒体</span><span class="pill p-mute">背景</span><span class="pub">ICIS</span></div><div class="cl">SABIC 2026-03-26 就 EG 等宣布不可抗力（行业背景）</div><blockquote>SABIC declared on 26 March a force majeure on several products ... SM, EG, ethanolamines supply to Asia affected</blockquote><div class="meta"><span>发布：2026-03-30</span><span>访问：2026-10-20</span><span>用途：行业背景</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.icis.com/explore/resources/news/2026/03/30/11193220/insight-saudi-sabic-force-majeure-aggravates-global-chemicals-shortage/" target="_blank" rel="noopener">https://www.icis.com/explore/resources/news/2026/03/30/11193220/insight-saudi-sabic-force-majeure-aggravates-global-chemicals-shortage/</a></p></div><div style="margin-top:8px"><a href="#E08" class="ev" data-ev="E08">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E08</span></div></div><div class="evi" id="ev-E10"><div class="inner"><div class="top"><span class="id">E10</span><span class="pill p-mute">二手/媒体</span><span class="pill p-mute">背景</span><span class="pub">ChinaTexnet（转引 CCFGroup）</span></div><div class="cl">2026 年 10 月沙特方向 MEG 到港回升至约 12 万吨（行业背景）</div><blockquote>Saudi cargoes should rise month on month to around 120 kt</blockquote><div class="meta"><span>发布：2026-10-19</span><span>访问：2026-10-20</span><span>用途：行业背景</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.chinatexnet.com/textile-news/2026-10-19/1086796.html" target="_blank" rel="noopener">https://www.chinatexnet.com/textile-news/2026-10-19/1086796.html</a></p></div><div style="margin-top:8px"><a href="#E10" class="ev" data-ev="E10">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E10</span></div></div><div class="evi" id="ev-E14"><div class="inner"><div class="top"><span class="id">E14</span><span class="pill p-mute">二手/媒体</span><span class="pill p-mute">背景</span><span class="pub">MEES</span></div><div class="cl">Jubail United 700 kt/y MEG 装置 2022-10 投料（对照：真实装置可被第三方记录）</div><blockquote>operations have started at a new 700,000 t/y monoethylene glycol (MEG) plant</blockquote><div class="meta"><span>发布：2022-10-21</span><span>访问：2026-10-20</span><span>用途：对照示例</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.mees.com/2022/10/21/refining-petrochemicals/sabic-jubail-meg-start-up/9026f600-5130-11ed-9c64-736c27d572dc" target="_blank" rel="noopener">https://www.mees.com/2022/10/21/refining-petrochemicals/sabic-jubail-meg-start-up/9026f600-5130-11ed-9c64-736c27d572dc</a></p></div><div style="margin-top:8px"><a href="#E14" class="ev" data-ev="E14">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E14</span></div></div><div class="evi" id="ev-E15"><div class="inner"><div class="top"><span class="id">E15</span><span class="pill p-mute">二手/媒体</span><span class="pill p-mute">背景</span><span class="pub">Argaam</span></div><div class="cl">Yansab 有 EG 装置并于 2026-01 检修（对照）</div><blockquote>plans to shut its ethylene glycol plant for 25 days starting Jan. 25</blockquote><div class="meta"><span>发布：2026-01-22</span><span>访问：2026-10-20</span><span>用途：对照示例</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.argaam.com/en/article/articledetail/id/1874631" target="_blank" rel="noopener">https://www.argaam.com/en/article/articledetail/id/1874631</a></p></div><div style="margin-top:8px"><a href="#E15" class="ev" data-ev="E15">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E15</span></div></div><div class="evi" id="ev-E16"><div class="inner"><div class="top"><span class="id">E16</span><span class="pill p-ok">一手/官方</span><span class="pill p-mute">背景</span><span class="pub">Petro Rabigh 官网</span></div><div class="cl">Petro Rabigh 官网写明生产 600 KTA MEG（对照：真实生产商公布数字）</div><blockquote>Petro Rabigh produces 600 KTA of Mono Ethylene Glycol (MEG)</blockquote><div class="meta"><span>发布：官网当前版本</span><span>访问：2026-10-20</span><span>用途：对照示例</span></div><p style="margin:6px 0 0"><a class="brk" href="https://www.petrorabigh.com/en/OurProducts/Monomer/Pages/MonoEthyleneGlycolMEG.aspx" target="_blank" rel="noopener">https://www.petrorabigh.com/en/OurProducts/Monomer/Pages/MonoEthyleneGlycolMEG.aspx</a></p></div><div style="margin-top:8px"><a href="#E16" class="ev" data-ev="E16">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #E16</span></div></div><div class="evi" id="ev-F01"><div class="inner"><div class="top"><span class="id">F01</span><span class="pill p-mute">模拟件</span><span class="pill p-mute">说明</span><span class="mockband">模拟件 · 非真实文件</span><span class="pub">本案例制作的模拟样本</span></div><div class="cl">【模拟】示例贸易商 PI：无 CR 号、无签字人</div><blockquote>SELLER: GULF HORIZON PETROCHEMICAL TRADING LLC</blockquote><div class="meta"><span>发布：2026-10-15（模拟）</span><span>访问：2026-10-20</span><span>用途：演示</span></div><p style="margin:6px 0 0"><a class="brk" href="examples/example-02-saudi-tradeco-mock/mock-docs/01_PI_SIMULATED.md" target="_blank" rel="noopener">examples/example-02-saudi-tradeco-mock/mock-docs/01_PI_SIMULATED.md</a></p><p style="margin:6px 0 0;color:#8a3bb5">注：虚构样本</p></div><div style="margin-top:8px"><a href="#F01" class="ev" data-ev="F01">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #F01</span></div></div><div class="evi" id="ev-F02"><div class="inner"><div class="top"><span class="id">F02</span><span class="pill p-mute">模拟件</span><span class="pill p-mute">说明</span><span class="mockband">模拟件 · 非真实文件</span><span class="pub">本案例制作的模拟样本</span></div><div class="cl">【模拟】银行信息：有户名，无银行确认函</div><blockquote>Beneficiary: GULF HORIZON PETROCHEMICAL TRADING LLC</blockquote><div class="meta"><span>发布：2026-10-15（模拟）</span><span>访问：2026-10-20</span><span>用途：演示</span></div><p style="margin:6px 0 0"><a class="brk" href="examples/example-02-saudi-tradeco-mock/mock-docs/02_BANK_SIMULATED.md" target="_blank" rel="noopener">examples/example-02-saudi-tradeco-mock/mock-docs/02_BANK_SIMULATED.md</a></p><p style="margin:6px 0 0;color:#8a3bb5">注：虚构样本</p></div><div style="margin-top:8px"><a href="#F02" class="ev" data-ev="F02">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #F02</span></div></div><div class="evi" id="ev-F03"><div class="inner"><div class="top"><span class="id">F03</span><span class="pill p-mute">模拟件</span><span class="pill p-mute">说明</span><span class="mockband">模拟件 · 非真实文件</span><span class="pub">本案例制作的模拟样本</span></div><div class="cl">【模拟】联系方式：免费邮箱域 + 手机号</div><blockquote>E: gulfhorizon.meg@mailprovider.example</blockquote><div class="meta"><span>发布：2026-10-15（模拟）</span><span>访问：2026-10-20</span><span>用途：演示</span></div><p style="margin:6px 0 0"><a class="brk" href="examples/example-02-saudi-tradeco-mock/mock-docs/03_CONTACT_SIMULATED.md" target="_blank" rel="noopener">examples/example-02-saudi-tradeco-mock/mock-docs/03_CONTACT_SIMULATED.md</a></p><p style="margin:6px 0 0;color:#8a3bb5">注：虚构样本</p></div><div style="margin-top:8px"><a href="#F03" class="ev" data-ev="F03">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #F03</span></div></div><div class="evi" id="ev-F04"><div class="inner"><div class="top"><span class="id">F04</span><span class="pill p-mute">模拟件</span><span class="pill p-mute">说明</span><span class="mockband">模拟件 · 非真实文件</span><span class="pub">本案例制作的模拟样本</span></div><div class="cl">【模拟】介绍材料：「自有装置 120 万吨」，无可核要素</div><blockquote>our own MEG plant in Jubail with a capacity of 1.2 million MT per year</blockquote><div class="meta"><span>发布：2026-10-15（模拟）</span><span>访问：2026-10-20</span><span>用途：演示</span></div><p style="margin:6px 0 0"><a class="brk" href="examples/example-02-saudi-tradeco-mock/mock-docs/04_PROFILE_SIMULATED.md" target="_blank" rel="noopener">examples/example-02-saudi-tradeco-mock/mock-docs/04_PROFILE_SIMULATED.md</a></p><p style="margin:6px 0 0;color:#8a3bb5">注：虚构样本</p></div><div style="margin-top:8px"><a href="#F04" class="ev" data-ev="F04">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #F04</span></div></div><div class="evi" id="ev-F05"><div class="inner"><div class="top"><span class="id">F05</span><span class="pill p-mute">模拟件</span><span class="pill p-mute">说明</span><span class="mockband">模拟件 · 非真实文件</span><span class="pub">本案例制作的模拟样本</span></div><div class="cl">【模拟】产品目录：无等级名、无生产商名称</div><blockquote>MEG 99.9% - factory price - prompt shipment</blockquote><div class="meta"><span>发布：2026-10-15（模拟）</span><span>访问：2026-10-20</span><span>用途：演示</span></div><p style="margin:6px 0 0"><a class="brk" href="examples/example-02-saudi-tradeco-mock/mock-docs/05_CATALOGUE_SIMULATED.md" target="_blank" rel="noopener">examples/example-02-saudi-tradeco-mock/mock-docs/05_CATALOGUE_SIMULATED.md</a></p><p style="margin:6px 0 0;color:#8a3bb5">注：虚构样本</p></div><div style="margin-top:8px"><a href="#F05" class="ev" data-ev="F05">在抽屉中打开</a><span style="font-size:11.5px;color:var(--mute);margin-left:8px">锚点 #F05</span></div></div></div></section><section class="sec" id="rfi"><div class="sec-h"><div class="sec-no">RFI</div><div><h2>英文供应商询证清单</h2><div class="s">可直接复制发送；要求对方以公司抬头纸、有权签署人回函</div></div></div><div class="rfi"><div class="rh"><div><div class="t">Supplier Due-Diligence Enquiry — Monoethylene Glycol (MEG)</div><div class="ref">Ref: ChineseBuyer-DDQ-MEG-2026-002</div></div><div style="font-size:12.5px;color:var(--ink2);text-align:right">To: The Authorised Representative of Gulf Horizon Petrochemical Trading LLC<br>From: [Your Company / Procurement Department]<br>Date: 2026-10-20</div></div><p style="color:var(--ink2)">We are conducting pre-qualification checks ahead of a prospective purchase of fibre-grade monoethylene glycol. Please answer each item in writing on company letterhead, signed by an officer with authority to bind the company. Please state clearly whether you are the producer of the goods or a reseller, and if a reseller, name the producing entity.</p><ol><li><b class="ref">A1</b> — State whether you are the manufacturer of the goods offered or a reseller/trader, and support your answer with documents.</li><li><b class="ref">A2</b> — Confirm the full legal name, commercial registration (CR) number, registered address and legal form of the contracting entity, and attach the CR certificate.</li><li><b class="ref">A3</b> — If you operate a production plant, provide the plant name, city, licence number, product slate and nameplate capacity of the MEG line, together with the industrial licence.</li><li><b class="ref">A4</b> — Name the entity that will appear as producer on the COA and SDS for the goods supplied, and the entity that will appear as shipper on the bill of lading.</li><li><b class="ref">A5</b> — If you are a reseller, provide the producer&#x27;s written authorisation for you to sell the goods in our market, or the producer&#x27;s supply confirmation for this order.</li><li><b class="ref">A6</b> — Provide the TDS for the exact grade offered, including purity, diethylene glycol, colour and water content limits.</li><li><b class="ref">A7</b> — Provide a batch-level COA on the producer&#x27;s letterhead for the offered grade, together with the batch number that will appear on the shipping documents.</li><li><b class="ref">A8</b> — Provide an official corporate e-mail address on your registered domain; replies from free webmail accounts cannot be treated as binding.</li><li><b class="ref">A9</b> — Provide a signed payment instruction on letterhead plus a bank confirmation letter from the receiving bank for the account to be credited.</li><li><b class="ref">A10</b> — Provide two recent bills of lading (redacted) for the same product evidencing your export performance and the shipper identity.</li><li><b class="ref">A11</b> — Provide the annual report or audited financial summary for the last financial year.</li><li><b class="ref">A12</b> — Provide an ultimate beneficial owner declaration and a group structure chart.</li><li><b class="ref">A13</b> — Confirm whether any sanctions, export controls or force majeure events currently affect your ability to supply, with dates.</li><li><b class="ref">A14</b> — Confirm the validity period of your offer, the delivery terms, and the governing law and dispute resolution venue proposed for the contract.</li></ol></div></section>
+    <div class="foot">
+      <p>OSV-SA-PG-2026-002 · 海外供应商核验报告（公开信息版 · 反例示范） · 基准日 2026-10-20 · v1.0.0</p>
+      <p>编制：海外采购核验（OSV Skill 演示） ｜ 复核：待人工复核</p>
+      <p>本文件由 overseas-supplier-verification Skill 生成；不提供风险评分，不替代法律、审计或信用调查意见。所有「未知」均可补齐，补齐前不得据此签约或付款。</p>
+    </div>
+  </main>
+</div>
+<div class="toolbar">
+  <button type="button" id="print-btn" title="打印/导出 PDF">⎙</button>
+  <button type="button" id="top-btn" title="回到顶部">↑</button>
+</div>
+<div class="drawer" id="drawer"><div class="panel"><div class="dph"><span class="id">EV</span><span>证据详情</span><button type="button" data-close="1" aria-label="关闭">×</button></div><div class="dpb"></div></div></div>
+<script>
+(function(){
+  var state=null, q='';
+  function pillClass(s){
+    return {verified:'p-ok',doubt:'p-warn',unverified:'p-mid',unknown:'p-mute',na:'p-mute'}[s]||'p-mute';
+  }
+  function norm(s){
+    var m={'已核实':'verified','存在疑点':'doubt','未核实':'unverified','未知':'unknown','不适用':'na',
+           'verified':'verified','doubt':'doubt','unverified':'unverified','unknown':'unknown','na':'na'};
+    return m[s]||m[(s||'').trim()]||'unknown';
+  }
+  function apply(){
+    document.querySelectorAll('[data-state]').forEach(function(el){
+      var s=norm(el.getAttribute('data-state'));
+      var ok=(!state||state===s);
+      el.classList.toggle('hidden',!ok);
+    });
+    document.querySelectorAll('tr[data-state]').forEach(function(tr){
+      var tbl=tr.closest('table'); if(!tbl) return;
+      var rows=tbl.querySelectorAll('tbody tr[data-state]');
+      var any=false; rows.forEach(function(r){ if(!r.classList.contains('hidden')) any=true; });
+      var empty=tbl.parentElement.querySelector('.empty-row');
+      if(empty) empty.classList.toggle('hidden',any);
+    });
+    document.querySelectorAll('[data-sec]').forEach(function(sec){
+      var n=sec.querySelectorAll('tbody tr[data-state]:not(.hidden)').length;
+      var secState=sec.getAttribute('data-state');
+      if(!state){ sec.classList.remove('hidden'); return; }
+      var hasState = secState && norm(secState)===state;
+      var hasAny = sec.querySelectorAll('[data-state]:not(.hidden)').length>0;
+      sec.classList.toggle('hidden', !(hasState||hasAny||state==='all'));
+    });
+    document.querySelectorAll('.fbtn').forEach(function(b){
+      b.classList.toggle('on',(b.getAttribute('data-state')||'')===(state||''));
+    });
+  }
+  function search(){
+    var ql=q.trim().toLowerCase();
+    document.querySelectorAll('[data-state]').forEach(function(el){
+      if(!ql){ el.classList.remove('q-hide'); return; }
+      var hit=el.textContent.toLowerCase().indexOf(ql)>=0;
+      el.classList.toggle('q-hide',!hit);
+    });
+    document.querySelectorAll('[data-state]').forEach(function(el){
+      el.classList.toggle('hidden', el.classList.contains('q-hide')||(state && norm(el.getAttribute('data-state'))!==state));
+    });
+  }
+  document.querySelectorAll('.fbtn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var s=b.getAttribute('data-state')||null;
+      state=(state===s)?null:s;
+      if(state) document.querySelectorAll('[data-state]').forEach(function(el){el.classList.remove('q-hide');});
+      apply();
+      if(q) search();
+    });
+  });
+  var si=document.getElementById('q');
+  if(si) si.addEventListener('input',function(){ q=si.value; if(!q){document.querySelectorAll('[data-state]').forEach(function(el){el.classList.remove('q-hide')});} apply(); if(q) search(); });
+  var clr=document.getElementById('clear-filter');
+  if(clr) clr.addEventListener('click',function(){ state=null; q=''; if(si) si.value=''; document.querySelectorAll('[data-state]').forEach(function(el){el.classList.remove('q-hide')}); apply(); });
+
+  // evidence drawer
+  var drawer=document.getElementById('drawer');
+  function openEv(id){
+    var card=document.getElementById('ev-'+id);
+    if(!card){ return; }
+    var ph=drawer.querySelector('.dph .id'); ph.textContent=id;
+    var body=drawer.querySelector('.dpb'); body.innerHTML=card.querySelector('.inner').innerHTML;
+    drawer.classList.add('open');
+    document.querySelectorAll('.ev').forEach(function(x){ x.classList.toggle('sel', x.getAttribute('data-ev')===id); });
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-ev]');
+    if(t){ e.preventDefault(); openEv(t.getAttribute('data-ev')); return; }
+    if(e.target.closest('[data-close]')||e.target===drawer){ drawer.classList.remove('open'); }
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ drawer.classList.remove('open'); } });
+
+  // scroll spy
+  var links=[].slice.call(document.querySelectorAll('.side nav a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  function spy(){
+    var y=window.scrollY+90, cur=secs[0];
+    secs.forEach(function(s){ if(s.offsetTop<=y) cur=s; });
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+cur.id); });
+  }
+  window.addEventListener('scroll',spy,{passive:true}); spy();
+
+  var pa=document.getElementById('print-btn'); if(pa) pa.addEventListener('click',function(){window.print();});
+  var to=document.getElementById('top-btn'); if(to) to.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+  var cl=document.getElementById('collapse-btn');
+  if(cl) cl.addEventListener('click',function(){
+    document.body.classList.toggle('compact');
+    document.querySelectorAll('.sec').forEach(function(s,i){ if(i>1) s.classList.toggle('hidden',document.body.classList.contains('compact')); });
+  });
+  apply();
+})();
+</script>
+</body></html>

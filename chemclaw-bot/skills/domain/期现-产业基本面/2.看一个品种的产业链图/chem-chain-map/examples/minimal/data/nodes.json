@@ -1,0 +1,275 @@
+{
+  "nodes": [
+    {
+      "id": "N_PRIMARY",
+      "name": "示例产品 B",
+      "aliases": [
+        "Demo B"
+      ],
+      "node_class": "commodity",
+      "segment": "演示中间体",
+      "cas": {
+        "value": "50-00-0",
+        "status": "verified",
+        "note": "演示用 CAS（甲醛）"
+      },
+      "hs_code": null,
+      "specs": [
+        "工业级 99%"
+      ],
+      "unit": "元/吨",
+      "layer": 0,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "evidence": [
+        "S01"
+      ],
+      "notes": "目标品种",
+      "sort_key": "0",
+      "column": 0,
+      "node_role": "target"
+    },
+    {
+      "id": "N_RA",
+      "name": "原料 A",
+      "aliases": [
+        "RA"
+      ],
+      "node_class": "commodity",
+      "segment": "演示原料",
+      "cas": {
+        "value": "67-56-1",
+        "status": "verified",
+        "note": "演示用 CAS（甲醇）"
+      },
+      "hs_code": null,
+      "specs": [
+        "工业级"
+      ],
+      "unit": "元/吨",
+      "layer": -1,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "sort_key": "1",
+      "column": -1,
+      "node_role": "raw"
+    },
+    {
+      "id": "N_RB",
+      "name": "原料 C",
+      "aliases": [
+        "RC"
+      ],
+      "node_class": "commodity",
+      "segment": "演示原料",
+      "cas": {
+        "value": "64-17-5",
+        "status": "verified",
+        "note": "演示用 CAS（乙醇）"
+      },
+      "hs_code": null,
+      "specs": [
+        "无水"
+      ],
+      "unit": "元/吨",
+      "layer": -1,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "evidence": [
+        "S01"
+      ],
+      "notes": "演示：并列路线使用的另一原料",
+      "sort_key": "2",
+      "column": -1,
+      "node_role": "raw"
+    },
+    {
+      "id": "N_UP2",
+      "name": "上游 A 的原料",
+      "aliases": [
+        "UA2"
+      ],
+      "node_class": "commodity",
+      "segment": "演示上游",
+      "cas": {
+        "value": "124-38-9",
+        "status": "verified",
+        "note": "演示用 CAS（二氧化碳）"
+      },
+      "hs_code": null,
+      "specs": [],
+      "unit": "元/吨",
+      "layer": -2,
+      "price_priceable": true,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "sort_key": "3",
+      "column": -2,
+      "node_role": "raw"
+    },
+    {
+      "id": "N_P1",
+      "name": "下游产品 P1",
+      "aliases": [
+        "P1"
+      ],
+      "node_class": "material",
+      "segment": "演示配方材料",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "模板演示：材料/终端无单一 CAS"
+      },
+      "hs_code": null,
+      "specs": [
+        "掺量 5%~10%"
+      ],
+      "unit": "元/吨",
+      "layer": 1,
+      "price_priceable": true,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "sort_key": "4",
+      "column": 1,
+      "node_role": "compound"
+    },
+    {
+      "id": "N_P2",
+      "name": "下游产品 P2",
+      "aliases": [
+        "P2"
+      ],
+      "node_class": "commodity",
+      "segment": "演示下游化学品",
+      "cas": {
+        "value": "108-95-2",
+        "status": "verified",
+        "note": "演示用 CAS（苯酚）"
+      },
+      "hs_code": null,
+      "specs": [],
+      "unit": "元/吨",
+      "layer": 1,
+      "price_priceable": true,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "sort_key": "5",
+      "column": 1,
+      "node_role": "derivative"
+    },
+    {
+      "id": "N_APP",
+      "name": "终端应用 E",
+      "aliases": [
+        "应用 E"
+      ],
+      "node_class": "application",
+      "segment": "演示终端",
+      "cas": {
+        "value": "不适用",
+        "status": "不适用",
+        "note": "模板演示：材料/终端无单一 CAS"
+      },
+      "hs_code": null,
+      "specs": [],
+      "unit": "不适用",
+      "layer": 2,
+      "price_priceable": false,
+      "identification_confidence": "high",
+      "missing_flags": [],
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "sort_key": "6",
+      "column": 2,
+      "node_role": "end_market"
+    },
+    {
+      "id": "N_SUB",
+      "name": "替代品 S",
+      "aliases": [
+        "S"
+      ],
+      "node_class": "commodity",
+      "segment": "演示替代品",
+      "cas": {
+        "value": "75-07-0",
+        "status": "verified",
+        "note": "演示用 CAS（乙醛）"
+      },
+      "hs_code": null,
+      "specs": [],
+      "unit": "元/吨",
+      "layer": 1,
+      "price_priceable": true,
+      "identification_confidence": "medium",
+      "missing_flags": [
+        "price_missing"
+      ],
+      "evidence": [
+        "S01"
+      ],
+      "notes": "与示例产品 B 在下游存在替代关系",
+      "sort_key": "7",
+      "column": 1,
+      "node_role": "substitute"
+    }
+  ],
+  "meta": {
+    "column_note": "column 即图谱列号：物质流关系中上游 column 必须严格小于下游 column（替代边除外）。",
+    "template_note": "这是与品种无关的模板样例：全部数值/来源均为演示占位，不可当作真实数据引用。"
+  },
+  "columns": [
+    {
+      "col": -2,
+      "label": "上游2列",
+      "side": "up"
+    },
+    {
+      "col": -1,
+      "label": "直接原料",
+      "side": "up"
+    },
+    {
+      "col": 0,
+      "label": "目标品种",
+      "side": "core"
+    },
+    {
+      "col": 1,
+      "label": "下游1列",
+      "side": "down"
+    },
+    {
+      "col": 2,
+      "label": "终端应用",
+      "side": "down"
+    }
+  ]
+}

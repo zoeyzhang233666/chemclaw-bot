@@ -1,0 +1,466 @@
+{
+  "meta": {
+    "title": "示例化工品 X · 第二供应源备选池",
+    "product": "示例化工品 X（虚构，仅用于演示 schema）",
+    "product_short": "示例品 X",
+    "unit": "万吨/年",
+    "asof": "2026-10-19",
+    "buyer_site": "示例市（示例园区）",
+    "buyer_short": "示例市",
+    "volume": "500 吨/月",
+    "volume_t": 500,
+    "volume_period": "月",
+    "spec": "示例规格：主含量 ≥99.0%；水分 ≤0.5%；粒度按客户封样",
+    "use_case": "示例下游（虚构）",
+    "scenario": "这是合成数据模板，只演示 data.json 的字段与研究结构，不是真实企业、不是真实价格，也不构成任何采购结论。复制本目录后替换为你的产品数据。",
+    "qualification_label": "示例行业准入",
+    "qualification_short": "准入",
+    "grade_label": "等级 / 牌号",
+    "near_km": 500,
+    "processes": [
+      {
+        "name": "路线甲",
+        "color": "#b45309",
+        "cost_score": 55
+      },
+      {
+        "name": "路线乙",
+        "color": "#1f5eff",
+        "cost_score": 78
+      }
+    ],
+    "risk_categories": [
+      "财务",
+      "装置",
+      "资质",
+      "同源",
+      "行业"
+    ],
+    "same_source_note": "示例：A 与 B 同属“示例集团”，同时入选只能算一个独立源；C 为独立企业。",
+    "spec_note": "示例：首样 20 kg × 2 批；检测周期 7 个工作日；判定按客户内控。",
+    "process_insight": "示例：路线乙成本潜力更高，但新装置稳定性需验证；路线甲质量更稳。",
+    "disclaimer": "合成数据，仅用于演示 skill 的输入/输出结构，不构成任何商业建议。",
+    "action_window": "60 天",
+    "price_assumption": 5000,
+    "method_note": "示例方法：先定规格，再核身份与同源，最后试样。",
+    "method_steps": [
+      {
+        "label": "锚定规格",
+        "text": "把现有供应商 COA 拆成可检测指标。"
+      },
+      {
+        "label": "核身份",
+        "text": "确认是生产企业，不是贸易商。"
+      },
+      {
+        "label": "查同源",
+        "text": "股权穿透，避免假第二源。"
+      },
+      {
+        "label": "试样",
+        "text": "新装置/新工艺先首样。"
+      }
+    ],
+    "key_judgements": [
+      {
+        "label": "示例判断",
+        "text": "B 运距最近但为新装置；A 规模最大但财务偏弱；C 风险最低但运距远。"
+      },
+      {
+        "label": "决策边界",
+        "text": "本页只缩小验证范围，不替采购决定替换。"
+      }
+    ],
+    "stamp_note": "合成数据 · 仅演示结构 · 非真实研究",
+    "dd_items": [
+      {
+        "label": "营业执照",
+        "hint": "示例：营业执照与股权穿透"
+      },
+      {
+        "label": "生产许可",
+        "hint": "示例：行业生产许可"
+      },
+      {
+        "label": "质量体系",
+        "hint": "示例：ISO9001"
+      },
+      {
+        "label": "近12月COA",
+        "hint": "示例：至少 3 批"
+      },
+      {
+        "label": "产能证明",
+        "hint": "示例：环评/公告"
+      },
+      {
+        "label": "环保/安全",
+        "hint": "示例：许可与处罚记录"
+      },
+      {
+        "label": "财务/涉诉",
+        "hint": "示例：审计与征信"
+      },
+      {
+        "label": "样品/封样",
+        "hint": "示例：首样与留样"
+      }
+    ],
+    "fin_year": "2025",
+    "output_year": "2024"
+  },
+  "params": {
+    "product": "示例化工品 X",
+    "spec": "主含量 ≥99.0%；水分 ≤0.5%",
+    "monthly": 500,
+    "receiver": "示例市（示例园区）",
+    "baseline": "现有供应商（示例）",
+    "freight_rate": 0.4,
+    "water_rate": 0.1,
+    "truck_load_t": 30,
+    "price_assumption": 5000
+  },
+  "baseline": {
+    "id": "B00",
+    "name": "现有供应商（示例）",
+    "short": "现有供应商",
+    "role": "现有供应商",
+    "province": "示例省",
+    "city": "示例市",
+    "site": "示例园区 A 区",
+    "distance": 600,
+    "transport": "汽运",
+    "freight_low": 180,
+    "freight_high": 300,
+    "process": "路线甲",
+    "capacity": 100,
+    "capacity_note": "示例：单基地 100 万吨/年",
+    "grade": "标准级",
+    "brand": "示例牌",
+    "qualified": true,
+    "listed": "未上市",
+    "code": "—",
+    "group": "示例集团",
+    "controller": "示例实控人",
+    "ownership": "民营",
+    "employees": "约 800 人",
+    "revenue": "20.0",
+    "profit": "0.8",
+    "output": "—",
+    "products": "示例化工品 X、副产品 Y",
+    "spec_fit": "基准",
+    "sample": "—",
+    "risk_score": 3,
+    "risk_level": "中",
+    "same_source": "无",
+    "same_note": "示例：集团内无第二平台。",
+    "diff": "基准：路线甲 100 万吨、600 km。",
+    "risk_summary": "示例：盈利偏薄，装置老旧。",
+    "warn": "示例：2025 年净利 0.8 亿元，装置运行 15 年；这是“建第二源”的背景，不是立即更换的理由。",
+    "verify": [
+      "2026 年长协政策",
+      "检修计划"
+    ],
+    "evidence": [
+      "SRC01"
+    ],
+    "tags": [
+      "现有供应商",
+      "路线甲",
+      "标准级"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "C01",
+      "name": "示例工厂 A（虚构）",
+      "short": "示例 A",
+      "role": "备选",
+      "province": "示例省",
+      "city": "示例市",
+      "site": "示例园区 B 区",
+      "distance": 80,
+      "transport": "汽运",
+      "freight_low": 30,
+      "freight_high": 50,
+      "process": "路线甲",
+      "capacity": 150,
+      "capacity_note": "示例：150 万吨/年，2018 年投产",
+      "grade": "标准级 / 高纯级",
+      "brand": "示例 A 牌",
+      "qualified": true,
+      "listed": "未上市",
+      "code": "—",
+      "group": "示例集团",
+      "controller": "示例实控人",
+      "ownership": "民营",
+      "employees": "约 1,200 人",
+      "revenue": "30.0",
+      "profit": "1.2",
+      "output": "—",
+      "products": "示例化工品 X、副产品 Y",
+      "spec_fit": "高",
+      "sample": "建议",
+      "risk_score": 2,
+      "risk_level": "低",
+      "same_source": "与示例 B 同集团",
+      "same_note": "示例 A 与 B 同属示例集团，同时入选只能算一个独立源。",
+      "diff": "运距缩短 520 km；产能为现有的 150%；同工艺。",
+      "risk_summary": "示例：同集团关联交易；财务稳健。",
+      "verify": [
+        "与 B 的销售主体",
+        "高纯级批次稳定性"
+      ],
+      "evidence": [
+        "SRC01",
+        "SRC02"
+      ],
+      "tags": [
+        "近场",
+        "同工艺",
+        "规模大"
+      ],
+      "new_plant": false
+    },
+    {
+      "id": "C02",
+      "name": "示例工厂 B（虚构）",
+      "short": "示例 B",
+      "role": "备选",
+      "province": "示例省",
+      "city": "示例市",
+      "site": "示例园区 C 区",
+      "distance": 120,
+      "transport": "汽运 / 水运",
+      "freight_low": 35,
+      "freight_high": 60,
+      "process": "路线乙",
+      "capacity": 80,
+      "capacity_note": "示例：80 万吨/年，2025 年新装置",
+      "grade": "标准级",
+      "brand": "示例 B 牌",
+      "qualified": false,
+      "listed": "未上市",
+      "code": "—",
+      "group": "示例集团",
+      "controller": "示例实控人",
+      "ownership": "民营",
+      "employees": "约 500 人",
+      "revenue": "未披露",
+      "profit": "未披露",
+      "output": "—",
+      "products": "示例化工品 X",
+      "spec_fit": "中",
+      "sample": "必须",
+      "risk_score": 3,
+      "risk_level": "中",
+      "same_source": "与示例 A 同集团",
+      "same_note": "示例 B 与 A 同属示例集团。",
+      "diff": "运距缩短 480 km；新装置 2025 年投产；非准入。",
+      "risk_summary": "示例：新装置爬坡；非准入；财务未披露。",
+      "verify": [
+        "新线达产",
+        "准入申请进度",
+        "重质比例"
+      ],
+      "evidence": [
+        "SRC02"
+      ],
+      "tags": [
+        "近场",
+        "新装置",
+        "非准入"
+      ],
+      "new_plant": true
+    },
+    {
+      "id": "C03",
+      "name": "示例工厂 C（虚构）",
+      "short": "示例 C",
+      "role": "备选",
+      "province": "示例省 2",
+      "city": "示例市 2",
+      "site": "示例园区 D 区",
+      "distance": 900,
+      "transport": "铁路 / 汽运",
+      "freight_low": 250,
+      "freight_high": 420,
+      "process": "路线甲",
+      "capacity": 60,
+      "capacity_note": "示例：60 万吨/年，2010 年投产",
+      "grade": "高纯级",
+      "brand": "示例 C 牌",
+      "qualified": true,
+      "listed": "示例交易所",
+      "code": "000000",
+      "group": "示例 C 集团",
+      "controller": "示例 C 实控人",
+      "ownership": "国企",
+      "employees": "约 900 人",
+      "revenue": "18.0",
+      "profit": "1.5",
+      "output": "—",
+      "products": "示例化工品 X",
+      "spec_fit": "高",
+      "sample": "建议",
+      "risk_score": 1,
+      "risk_level": "低",
+      "same_source": "无",
+      "same_note": "示例：独立企业。",
+      "diff": "运距增加 300 km；产能为现有的 60%；财务最稳。",
+      "risk_summary": "示例：规模偏小；运距远；财务稳健。",
+      "verify": [
+        "铁路发运周期",
+        "高纯级 COA"
+      ],
+      "evidence": [
+        "SRC03"
+      ],
+      "tags": [
+        "同工艺",
+        "上市",
+        "远距"
+      ],
+      "new_plant": false
+    }
+  ],
+  "spec_items": [
+    {
+      "id": "assay",
+      "label": "主含量",
+      "target": "≥99.0%"
+    },
+    {
+      "id": "water",
+      "label": "水分",
+      "target": "≤0.5%"
+    },
+    {
+      "id": "particle",
+      "label": "粒度",
+      "target": "按客户封样"
+    },
+    {
+      "id": "impurity",
+      "label": "关键杂质",
+      "target": "按客户内控"
+    },
+    {
+      "id": "pack",
+      "label": "包装",
+      "target": "25 kg 袋 / 吨袋"
+    }
+  ],
+  "spec_status": {
+    "C01": {
+      "assay": "COA",
+      "water": "COA",
+      "particle": "试样",
+      "impurity": "COA",
+      "pack": "审核"
+    },
+    "C02": {
+      "assay": "试样",
+      "water": "试样",
+      "particle": "试样",
+      "impurity": "试样",
+      "pack": "审核"
+    },
+    "C03": {
+      "assay": "COA",
+      "water": "COA",
+      "particle": "试样",
+      "impurity": "COA",
+      "pack": "审核"
+    }
+  },
+  "same_source": [
+    {
+      "group": "示例集团",
+      "parent": "示例集团（虚构）",
+      "entities": [
+        "示例工厂 A（虚构）",
+        "示例工厂 B（虚构）"
+      ],
+      "relation": "同集团、不同法人",
+      "implication": "示例：同时入选只能算一个独立源。",
+      "verify": "两家销售主体与关联交易",
+      "flag": "同集团"
+    }
+  ],
+  "risks": [
+    {
+      "company": "示例工厂 A（虚构）",
+      "type": "同源",
+      "category": "同源",
+      "fact": "示例：与 B 同属示例集团。",
+      "impact": "不能作为两个独立源。",
+      "source_id": "SRC01",
+      "status": "已公开"
+    },
+    {
+      "company": "示例工厂 B（虚构）",
+      "type": "装置",
+      "category": "装置",
+      "fact": "示例：2025 年新装置，负荷爬坡。",
+      "impact": "稳定性需 3–6 个月观察。",
+      "source_id": "SRC02",
+      "status": "已公开"
+    },
+    {
+      "company": "示例工厂 C（虚构）",
+      "type": "规模",
+      "category": "资质",
+      "fact": "示例：60 万吨/年，单一基地。",
+      "impact": "旺季保供能力有限。",
+      "source_id": "SRC03",
+      "status": "待核实"
+    }
+  ],
+  "actions": [
+    {
+      "phase": "第 0–30 天",
+      "action": "锁定 2 家",
+      "detail": "示例：A 与 C 进入首轮；B 作为同源备选不重复计入。",
+      "owner": "采购",
+      "output": "询价单"
+    },
+    {
+      "phase": "第 31–60 天",
+      "action": "首样",
+      "detail": "示例：每家 20 kg × 2 批。",
+      "owner": "质量",
+      "output": "检测报告"
+    },
+    {
+      "phase": "第 31–60 天",
+      "action": "同源核实",
+      "detail": "示例：核 A/B 销售主体。",
+      "owner": "法务",
+      "output": "股权穿透图"
+    }
+  ],
+  "sources": [
+    {
+      "id": "SRC01",
+      "name": "示例来源 1（虚构）",
+      "url": "https://example.com/source-1",
+      "grade": "A",
+      "date": "2026-01-01"
+    },
+    {
+      "id": "SRC02",
+      "name": "示例来源 2（虚构）",
+      "url": "https://example.com/source-2",
+      "grade": "B",
+      "date": "2026-02-01"
+    },
+    {
+      "id": "SRC03",
+      "name": "示例来源 3（虚构）",
+      "url": "https://example.com/source-3",
+      "grade": "C",
+      "date": "2026-03-01"
+    }
+  ]
+}

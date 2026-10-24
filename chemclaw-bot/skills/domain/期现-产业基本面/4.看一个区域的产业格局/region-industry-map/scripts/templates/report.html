@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>区域产业地图</title>
+<style>
+:root{
+  --ink:#0f1720; --ink2:#3b4655; --ink3:#616c7d; --ink4:#616c7d;
+  --bg:#eef1f5; --card:#ffffff; --line:#dfe4ea; --line2:#eceff3;
+  --deep:#0b3b4a; --deep2:#0f4f61; --teal:#0e7c6b; --teal2:#12a08a;
+  --amber:#b45309; --red:#a1323a; --blue:#1d4ed8; --violet:#6d28d9;
+  --gold:#a9812b;
+  --shadow:0 1px 2px rgba(15,23,32,.05), 0 10px 28px -18px rgba(15,23,32,.35);
+  --tab:var(--font-num);
+  --font:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+  --font-num:"SF Mono",ui-monospace,Menlo,Consolas,"Roboto Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;-webkit-font-smoothing:antialiased}
+a{color:var(--deep2);text-decoration:none;border-bottom:1px dotted var(--ink4)}
+a:hover{color:var(--teal)}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.dash{color:var(--ink4)}
+.muted{color:var(--ink3)}
+.tiny{font-size:11.5px}
+.small{font-size:12.5px}
+b,strong{font-weight:650}
+
+/* ============ 顶栏 ============ */
+.top{background:linear-gradient(135deg,#082b36 0%,#0b3b4a 46%,#12586a 100%);color:#eaf2f4;position:relative;overflow:hidden}
+.top:after{content:"";position:absolute;right:-120px;top:-160px;width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(18,160,138,.35),rgba(18,160,138,0) 62%);pointer-events:none}
+.top .in{max-width:1560px;margin:0 auto;padding:18px 26px 16px;position:relative;z-index:1}
+.crumb{font-size:12px;color:#a9c9d2;letter-spacing:.06em;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.crumb .sep{opacity:.45}
+.top h1{margin:8px 0 4px;font-size:25px;letter-spacing:.01em;font-weight:700}
+.top h1 small{font-weight:500;font-size:13.5px;color:#9fc2cb;margin-left:10px;letter-spacing:0}
+.top .sub{margin:0;color:#d3e6eb;font-size:13px;max-width:1180px;line-height:1.62}
+.tags{margin-top:11px;display:flex;gap:7px;flex-wrap:wrap}
+.tag{font-size:11.5px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.34);color:#f2fbfd}
+.tag.t{background:rgba(18,160,138,.26);border-color:rgba(18,160,138,.85);color:#ffffff}
+.qbar{display:flex;gap:0;flex-wrap:wrap;margin-top:14px;border:1px solid rgba(255,255,255,.16);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05)}
+.qbar .q{padding:8px 14px;border-right:1px solid rgba(255,255,255,.12);min-width:150px}
+.qbar .q:last-child{border-right:0}
+.qbar .k{display:block;font-size:10.5px;letter-spacing:.1em;color:#a9c9d2}
+.qbar .v{display:block;font-size:13px;color:#f2fafc;margin-top:2px;font-weight:600}
+.top .stamp{position:absolute;right:26px;top:20px;text-align:right;font-size:11.5px;color:#a9c9d2;line-height:1.7}
+.top .stamp b{display:block;font-size:13px;color:#dff3f6}
+
+/* ============ 导航 ============ */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
+.nav .in{max-width:1560px;margin:0 auto;padding:0 26px;display:flex;gap:2px;overflow-x:auto}
+.nav a{display:block;padding:11px 13px;font-size:12.8px;color:var(--ink2);border-bottom:2px solid transparent;border-top:0;white-space:nowrap;border-left:0;border-right:0}
+.nav a b{font-family:var(--font-num);font-size:10.5px;color:var(--ink4);margin-right:5px;font-weight:600}
+.nav a:hover{color:var(--deep);background:#f5f8fa}
+.nav a.on{color:var(--deep);border-bottom-color:var(--teal);font-weight:650}
+.nav .sp{flex:1}
+.nav .act{display:flex;align-items:center;gap:6px;padding:6px 0}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font-size:12px;color:var(--ink2);cursor:pointer;font-family:var(--font)}
+.btn:hover{border-color:var(--teal);color:var(--teal)}
+.btn.on{background:var(--deep);border-color:var(--deep);color:#fff}
+.btn.ghost{background:transparent}
+
+/* ============ 布局 ============ */
+main{max-width:1560px;margin:0 auto;padding:18px 26px 40px}
+section{margin-bottom:26px;scroll-margin-top:56px}
+.sh{display:flex;align-items:flex-end;gap:12px;margin:2px 0 12px;flex-wrap:wrap}
+.sh .no{font-family:var(--font-num);font-size:11px;color:#fff;background:var(--deep);border-radius:6px;padding:2px 7px;letter-spacing:.08em}
+.sh h2{font-size:17.5px;margin:0;letter-spacing:.01em}
+.sh .d{color:var(--ink3);font-size:12.3px;line-height:1.6;flex:1;min-width:240px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.card.pad{padding:16px 18px}
+
+/* ---- KPI ---- */
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal)}
+.kpi.warn:before{background:var(--amber)}
+.kpi .l{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+.kpi .n{font-family:var(--font-num);font-size:23px;font-weight:650;margin:5px 0 2px;letter-spacing:-.02em;color:var(--deep)}
+.kpi .n small{font-size:11.5px;color:var(--ink3);font-weight:500;margin-left:3px;font-family:var(--font)}
+.kpi .x{font-size:11.3px;color:var(--ink3);line-height:1.45}
+
+/* ---- 地图 ---- */
+.mapwrap{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:14px;align-items:stretch}
+@media (max-width:1240px){.mapwrap{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}}
+.mapcard{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.maptoolbar{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line2);flex-wrap:wrap;background:#fbfcfd}
+.layerchips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 11px;font-size:12px;color:var(--ink2);cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ink4)}
+.chip.on{border-color:var(--deep);background:var(--deep);color:#fff}
+.chip.on .dot{background:#fff}
+.chip .cnt{font-family:var(--font-num);font-size:10.5px;opacity:.75}
+.mapbody{display:grid;grid-template-columns:minmax(0,1fr) 196px;min-height:600px}
+#map{min-height:600px;background:linear-gradient(180deg,#f7fafc,#eef4f6)}
+.legend{border-left:1px solid var(--line2);padding:12px;background:#fbfcfd;font-size:11.5px;color:var(--ink2);overflow-y:auto;max-height:660px}
+.legend h4{margin:0 0 6px;font-size:11.5px;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.legend .row{display:flex;align-items:center;gap:8px;margin:5px 0;line-height:1.35}
+.legend .sw{width:14px;height:14px;border-radius:4px;flex:none}
+.legend .cir{border-radius:50%;flex:none}
+.legend .hr{height:1px;background:var(--line2);margin:10px 0}
+.mapfoot{display:flex;justify-content:space-between;gap:10px;padding:7px 12px;border-top:1px solid var(--line2);font-size:11.3px;color:var(--ink3);background:#fbfcfd;flex-wrap:wrap}
+.mapfoot .warn{color:var(--amber)}
+#mapMsg{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--ink2);display:none;z-index:9;max-width:70%}
+
+/* ---- 右栏详情 ---- */
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:600px;max-height:728px}
+.panel .ph{padding:12px 16px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel .ph h3{margin:0;font-size:13.5px}
+.panel .pb{padding:14px 16px;overflow-y:auto;flex:1}
+.panel .pf{padding:9px 16px;border-top:1px solid var(--line2);font-size:11.3px;color:var(--ink3)}
+.empty{color:var(--ink3);font-size:12.5px;line-height:1.75}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 12px}
+.mini{border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:#fbfcfd}
+.mini .l{font-size:11px;color:var(--ink3)}
+.mini .v{font-family:var(--font-num);font-size:16px;font-weight:650;color:var(--deep);margin-top:2px}
+.mini .v small{font-size:10.5px;color:var(--ink3);font-weight:500;font-family:var(--font)}
+.mini.warn .v{color:var(--amber)}
+.kv{display:grid;grid-template-columns:82px 1fr;gap:5px 8px;font-size:12.2px;line-height:1.6;margin-bottom:10px}
+.kv .k{color:var(--ink3)}
+.kv .v{color:var(--ink)}
+.list{margin:0;padding:0;list-style:none}
+.list li{padding:7px 0;border-bottom:1px dashed var(--line2);font-size:12.3px;line-height:1.6}
+.list li:last-child{border-bottom:0}
+.list li .t{font-weight:650;color:var(--ink)}
+.list li .m{color:var(--ink3);font-size:11.6px}
+.subhd{font-size:11.5px;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;margin:14px 0 6px;font-weight:650}
+.bar{margin:6px 0}
+.bar .lb{display:flex;justify-content:space-between;font-size:11.8px;color:var(--ink2);margin-bottom:3px}
+.bar .track{display:block;width:100%;height:7px;background:#eef1f5;border-radius:5px;overflow:hidden}
+.bar .fill{display:block;height:100%;min-width:2px;border-radius:5px;background:var(--teal)}
+.badge{display:inline-block;font-size:10.8px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);background:#fff;margin:0 4px 4px 0}
+.badge.gA{background:#e6f5f1;border-color:#9fdccb;color:#0b5b4c}
+.badge.gB{background:#eef3fb;border-color:#bdd0ee;color:#1d3f8f}
+.badge.gC{background:#fdf4e6;border-color:#eed7ae;color:#8a5a12}
+.badge.gD{background:#f4f5f7;border-color:#dcdfe4;color:#5c6672}
+.badge.exact{background:#e8f6ef;border-color:#a8ddc2;color:#12613f}
+.badge.park{background:#eef0fb;border-color:#c2c8ea;color:#3b3fa0}
+.badge.reg{background:#f4f5f7;border-color:#dcdfe4;color:#5c6672}
+
+/* ---- 表格 ---- */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.input,.sel{border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:var(--font);background:#fff;color:var(--ink);min-width:0}
+.input{min-width:220px}
+.input:focus,.sel:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,107,.1)}
+.tools .lbl{font-size:11.5px;color:var(--ink3)}
+.tblwrap{overflow-x:auto;overflow-y:visible;border-radius:12px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:12.4px}
+thead th{position:sticky;top:0;background:#f2f6f8;z-index:2;text-align:left;padding:9px 10px;font-weight:650;color:var(--ink2);border-bottom:1px solid var(--line);white-space:nowrap;font-size:11.8px}@media print{thead th{position:static}.tblwrap{overflow:visible}}
+thead th.sortable{cursor:pointer;user-select:none}
+thead th.sortable:hover{color:var(--teal)}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top;line-height:1.55}
+tbody tr:nth-child(even){background:#fafbfc}
+tbody tr:hover{background:#f1f8f6}
+tbody tr.clickable{cursor:pointer}
+td.r,th.r{text-align:right;font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:10.6px;padding:1px 7px;border-radius:999px;border:1px solid transparent;white-space:nowrap}
+.p-amb{background:#e8eef8;color:#1d4f8f;border-color:#c3d5ef}
+.p-lian{background:#eaf5ee;color:#1f6b40;border-color:#bcdcc8}
+.p-tian{background:#fdf1e2;color:#8a5a12;border-color:#eed7ae}
+.p-other{background:#f2eefb;color:#5b3d9a;border-color:#d6cbec}
+.p-unknown{background:#f2f3f5;color:#4a5563;border-color:#e2e5e9}
+.p-ok{background:#e6f5f1;color:#0b5b4c;border-color:#9fdccb}
+.p-build{background:#e8eef8;color:#1d4f8f;border-color:#c3d5ef}
+.p-plan{background:#fdf6e7;color:#8a6100;border-color:#efdfb6}
+.p-stop{background:#f9eaea;color:#8d2a31;border-color:#e8c2c5}
+.yes{color:#0b6b4f}
+.no{color:#a1323a}
+.warnbox{background:#fdf6e7;border:1px solid #efdfb6;border-radius:10px;padding:10px 12px;font-size:12.2px;color:#6b4a05;line-height:1.7}
+.infobox{background:#eef5f8;border:1px solid #d3e2e9;border-radius:10px;padding:10px 12px;font-size:12.2px;color:#224a58;line-height:1.7}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:1100px){.grid2,.grid3{grid-template-columns:1fr}}
+.bignum{font-family:var(--font-num);font-size:19px;font-weight:650;color:var(--deep)}
+.foot{max-width:1560px;margin:0 auto;padding:18px 26px 40px;color:var(--ink3);font-size:11.6px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line)}
+.src-list li{word-break:break-all}
+.dl{font-size:11.5px;color:var(--ink3)}
+.srcbtn{font-size:11px;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:var(--ink2);cursor:pointer;background:#fff;margin-left:4px;font-family:var(--font-num)}
+.srcbtn:hover{border-color:var(--teal);color:var(--teal)}
+.placeholder{color:var(--ink4)}
+
+/* ---- 抽屉 ---- */
+.mask{position:fixed;inset:0;background:rgba(9,20,26,.36);opacity:0;pointer-events:none;transition:opacity .18s;z-index:80}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,94vw);background:#fff;z-index:81;box-shadow:-20px 0 50px -24px rgba(0,0,0,.4);
+  transform:translateX(102%);transition:transform .22s cubic-bezier(.2,.7,.3,1);display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer .hd{padding:14px 18px;border-bottom:1px solid var(--line2);display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.drawer .hd h3{margin:0;font-size:15.5px;line-height:1.4}
+.drawer .hd .x{border:0;background:#f2f4f6;border-radius:8px;width:28px;height:28px;font-size:17px;line-height:1;cursor:pointer;color:var(--ink2)}
+.drawer .bd{padding:16px 18px;overflow-y:auto;flex:1}
+.rowlink{cursor:pointer;color:var(--deep2);border-bottom:1px dotted var(--ink4)}
+
+/* ---- 打印 ---- */
+@media print{
+  .nav,.mask,.drawer,.maptoolbar .layerchips,.btn{display:none!important}
+  body{background:#fff}
+  .card,.panel,.mapcard,.tblwrap{box-shadow:none}
+  html,body{font-size:12px} .top h1{font-size:22px} .sub{max-width:none}  .tblwrap{overflow:visible} table{font-size:10.5px} thead th,tbody td{padding:4px 5px} thead th{position:static}
+  section{page-break-inside:avoid}
+  .top{background:#0b3b4a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  a{color:#111;border:0}
+}
+@media (max-width:900px){
+  .mapbody{grid-template-columns:1fr}
+  .legend{display:none}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  main{padding:14px}
+  .top .in{padding:14px}
+  .top .stamp{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="in">
+    <div class="crumb"><span id="crumb-cat">期现 · 产业基本面</span><span class="sep">/</span><span id="crumb-scn">看一个区域的产业格局</span><span class="sep">/</span><span id="crumb-prov"></span></div>
+    <h1 id="h1">—</h1>
+    <p class="sub" id="sub"></p>
+    <div class="tags" id="tags"></div>
+    <div class="qbar" id="qbar"></div>
+    <div class="stamp"><b id="stamp-asof"></b><span id="stamp-src"></span></div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="in" id="navin">
+    <a href="#s-overview" class="on"><b>01</b>总览</a>
+    <a href="#s-map"><b>02</b>地图</a>
+    <a href="#s-sites"><b>03</b>工厂与企业</a>
+    <a href="#s-region"><b>04</b>区域产能</a>
+    <a href="#s-parks"><b>05</b>园区</a>
+    <a href="#s-chain"><b>06</b>上中下游</a>
+    <a href="#s-proj"><b>07</b>新增项目</a>
+    <a href="#s-price"><b>08</b>价格变动</a>
+    <a href="#s-conc"><b>09</b>集中度</a>
+    <a href="#s-method"><b>10</b>口径与来源</a>
+    <span class="sp"></span>
+    <div class="act"><button class="btn" onclick="window.print()">打印 / 存 PDF</button></div>
+  </div>
+</nav>
+
+<main>
+  <!-- ================= 01 总览 ================= -->
+  <section id="s-overview">
+    <div class="sh"><span class="no">01</span><h2>区域产业基底：先看"哪里真的有厂、有多少、什么口径"</h2>
+      <div class="d">左：结论卡（每条带数字与口径）；右：覆盖度自查。灰字是口径，不是免责声明——口径不清的数字不进图。</div></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="card pad">
+        <div class="subhd">核心结论（每条都能在下方章节点回去）</div>
+        <ul class="list" id="conclusions"></ul>
+      </div>
+      <div class="card pad">
+        <div class="subhd">数据覆盖自查：哪些是核实的、哪些只是地区级记录</div>
+        <div id="coverbox"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 02 地图 ================= -->
+  <section id="s-map">
+    <div class="sh"><span class="no">02</span><h2>产业分布地图：图层切换 + 点击省份 / 城市 / 园区联动</h2>
+      <div class="d">只有"已公开精确坐标"的站点才画成装置点位；其余按园区级 / 县级 / 市级落点，形状不同、说明不同。<b>注册地址永远不当作装置位置。</b></div></div>
+    <div class="mapwrap">
+      <div class="mapcard">
+        <div class="maptoolbar">
+          <div class="layerchips" id="layerchips"></div>
+          <span style="flex:1"></span>
+          <select class="sel" id="metricSel" title="地图配色与气泡大小依据">
+            <option value="capacity">按公开产能</option>
+            <option value="plants">按生产工厂数</option>
+            <option value="registered">按注册企业数（估算）</option>
+            <option value="downstream">按下游据点索引</option>
+          </select>
+          <button class="btn" id="btnReset" title="回到区域视角">重置视角</button>
+        </div>
+        <div class="mapbody">
+          <div style="position:relative"><div id="map"></div><div id="mapMsg"></div></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="mapfoot">
+          <span id="mapfoot-l"></span>
+          <span class="warn" id="mapfoot-r"></span>
+        </div>
+      </div>
+      <aside class="panel">
+        <div class="ph"><h3 id="side-title">区域总览</h3><span class="badge" id="side-badge">—</span></div>
+        <div class="pb" id="side-body"></div>
+        <div class="pf" id="side-foot">点击地图上的省份 / 城市 / 园区 / 点位切换详情</div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= 03 工厂与企业 ================= -->
+  <section id="s-sites">
+    <div class="sh"><span class="no">03</span><h2>生产工厂清单：注册地址 vs 实际生产地址，逐条分开</h2>
+      <div class="d">每一行是一个"厂区"而不是一个"注册主体"。同一企业多厂区分行列示；各厂区相加不得超过企业公开产能口径。</div></div>
+    <div class="tools">
+      <input class="input" id="qSite" placeholder="搜索企业 / 厂区 / 城市 / 产品…">
+      <select class="sel" id="fRoute"><option value="">全部工艺</option></select>
+      <select class="sel" id="fStatus"><option value="">全部状态</option></select>
+      <select class="sel" id="fRole"><option value="">全部角色（生产 / 贸易 / 下游）</option></select>
+      <select class="sel" id="fScale"><option value="">全部规模</option></select>
+      <select class="sel" id="fGrade"><option value="">全部证据等级</option></select>
+      <span class="muted tiny" id="siteCount"></span>
+    </div>
+    <div class="tblwrap"><table id="tSites">
+      <thead><tr>
+        <th style="width:150px">企业（集团）</th><th style="min-width:190px">厂区 / 基地</th><th>省市</th><th>园区</th>
+        <th>工艺</th><th class="r">公开产能</th><th>状态</th><th style="width:150px">注册地址</th>
+        <th style="width:170px">实际生产地址</th><th>点位精度</th><th>证据</th><th>来源</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="infobox" id="addrRule"></div>
+      <div class="warnbox" id="dedupeNote"></div>
+    </div>
+  </section>
+
+  <!-- ================= 04 区域产能 ================= -->
+  <section id="s-region">
+    <div class="sh"><span class="no">04</span><h2>区域产能：样本合计与公开口径并列，不取平均、不插补</h2>
+      <div class="d">柱子 = 已核实厂区的产能合计；虚线 = 城市/省份公开口径。差额就是"尚未落到厂区"的部分，明确标缺，不猜。</div></div>
+    <div class="grid2">
+      <div class="card pad"><div class="subhd">按城市（样本产能 vs 公开口径）</div><div id="cityChart" style="height:330px"></div></div>
+      <div class="card pad"><div class="subhd">按省份（区域覆盖全景）</div><div id="provChart" style="height:330px"></div></div>
+    </div>
+    <div class="card pad" style="margin-top:14px">
+      <div class="subhd">工艺路线结构：氨碱 / 联碱 / 天然碱各占多少</div>
+      <div class="grid2"><div id="routeChart" style="height:290px"></div><div id="routeNote"></div></div>
+    </div>
+    <div class="tblwrap" style="margin-top:14px"><table id="tRegion">
+      <thead><tr><th>城市</th><th>省份</th><th class="r">注册企业（估算）</th><th class="r">已定位生产厂区</th>
+        <th class="r">样本产能</th><th class="r">公开口径</th><th class="r">覆盖度</th><th class="r">待落位差额</th>
+        <th class="r">贸易据点</th><th class="r">下游据点</th><th class="r">园区</th><th class="r">在建净增</th><th>数据等级</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <!-- ================= 05 园区 ================= -->
+  <section id="s-parks">
+    <div class="sh"><span class="no">05</span><h2>化工园区与产业配套：园区是企业落位的容器，不是企业本身</h2>
+      <div class="d">园区行数 ≠ 企业家数。园区内企业数只统计已核实落位的厂区，没有名单的写"未核实"，不给估算。</div></div>
+    <div class="grid2" id="parkCards"></div>
+  </section>
+
+  <!-- ================= 06 上中下游 ================= -->
+  <section id="s-chain">
+    <div class="sh"><span class="no">06</span><h2>上中下游：原料从哪来、产品去哪、在哪里中转</h2>
+      <div class="d">上游原料供应地 = 有公开证据的产地/供应商；下游 = 真正消耗本品的企业；贸易与物流 = 港口、专用线、交割库、交易市场。连线只在有公开来源时画出。</div></div>
+    <div class="card pad" style="margin-bottom:14px">
+      <div class="subhd">产业流向（桑基）：两侧为已核实的原料来源与消费去向，中间为本区域装置</div>
+      <div id="sankey" style="height:340px"></div>
+      <div class="tiny muted" id="sankeyNote" style="margin-top:6px"></div>
+    </div>
+    <div class="grid3">
+      <div class="card pad"><div class="subhd">上游原料供应地</div><ul class="list" id="upList"></ul></div>
+      <div class="card pad"><div class="subhd">下游消费产业 / 下游用户</div><ul class="list" id="downList"></ul></div>
+      <div class="card pad"><div class="subhd">区域贸易与物流节点</div><ul class="list" id="nodeList"></ul></div>
+    </div>
+  </section>
+
+  <!-- ================= 07 新增项目 ================= -->
+  <section id="s-proj">
+    <div class="sh"><span class="no">07</span><h2>新增 / 在建 / 拟建项目：毛新增与净增量分开记</h2>
+      <div class="d">置换、搬迁类项目同时登记"新增"与"退出"，净增量 = 新增 − 退出；退出无法确认的，净增量写"待确认"，不计入合计。</div></div>
+    <div class="grid2" id="projKpi" style="margin-bottom:14px"></div>
+    <div class="tblwrap"><table id="tProj">
+      <thead><tr><th>项目</th><th>企业</th><th>位置</th><th>类型</th><th class="r">新增</th><th class="r">退出</th>
+        <th class="r">净增量</th><th>状态（截至）</th><th>预计投产</th><th>对区域的影响</th><th>证据</th><th>来源</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="tiny muted" id="projNote" style="margin-top:8px"></div>
+  </section>
+
+  <!-- ================= 08 价格 ================= -->
+  <section id="s-price">
+    <div class="sh"><span class="no">08</span><h2>价格与供需特征：只写查得到的，查不到的写缺口</h2>
+      <div class="d">价格必须带日期、规格、口径（含税/出厂/送到）。没有价格的城市，用供需与物流特征描述，不用估算价格替代。</div></div>
+    <div class="grid2">
+      <div class="card pad"><div class="subhd" id="priceChartTitle">区域价格观察</div><div id="priceChart" style="height:330px"></div></div>
+      <div class="card pad"><div class="subhd">供需与物流特征</div><div id="priceNotes"></div></div>
+    </div>
+    <div class="tblwrap" style="margin-top:14px"><table id="tPrice">
+      <thead><tr><th style="width:104px">日期</th><th>规格</th><th>区域</th><th class="r">价格</th><th>口径</th><th>说明（原文）</th><th>来源</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <!-- ================= 09 集中度 ================= -->
+  <section id="s-conc">
+    <div class="sh"><span class="no">09</span><h2>区域集中度：算得出来的是样本口径，算不出来的是缺口</h2>
+      <div class="d">CR3 / CR5 / HHI 全部基于"已核实厂区"样本；样本覆盖率不足时，集中度会系统性低估，此处显式提示。</div></div>
+    <div class="grid2">
+      <div class="card pad"><div class="subhd">厂区产能份额（Top 8）</div><div id="shareChart" style="height:320px"></div></div>
+      <div class="card pad"><div class="subhd">集中度与可能的价差因素</div><div id="concBox"></div></div>
+    </div>
+  </section>
+
+  <!-- ================= 10 口径 ================= -->
+  <section id="s-method">
+    <div class="sh"><span class="no">10</span><h2>口径、证据分级与已知缺口</h2>
+      <div class="d">这一节决定文档能不能被信任：哪些是核实的、哪些是估算、哪些根本查不到以及怎么补。</div></div>
+    <div class="grid2" id="methodGrid"></div>
+    <div class="card pad" style="margin-top:14px">
+      <div class="subhd">来源清单（点击编号可在抽屉查看标题、发布方、日期、等级）</div>
+      <ol class="list src-list" id="srcList" style="padding-left:18px"></ol>
+    </div>
+  </section>
+</main>
+
+<div class="foot" id="foot"></div>
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <div class="hd"><h3 id="d-title">—</h3><button class="x" onclick="closeDrawer()">×</button></div>
+  <div class="bd" id="d-body"></div>
+</aside>
+
+<script id="echarts-lib">%%ECHARTS%%</script>
+<script>window.__GEOZ__="%%GEO%%";</script>
+<script>window.__DATA__=%%DATA%%;</script>
+<script>
+(function(){
+'use strict';
+var D = window.__DATA__, M = D.meta || {}, N = D.narrative || {}, A = D.agg || {};
+var SRC = {}; (D.sources||[]).forEach(function(s){ SRC[s.id]=s; });
+var ROUTE_CLASS = {'氨碱':'p-amb','联碱':'p-lian','天然碱':'p-tian','其他':'p-other','未知':'p-unknown'};
+var ROLE_NAME = {production:'生产', trader:'贸易/仓储', downstream:'下游用户'};
+var UNIT = M.capacity_unit || '万吨/年';
+var fmt = function(n){ return (n==null||n===''||isNaN(n)) ? '<span class="dash">—</span>' : Number(n).toLocaleString('zh-CN'); };
+var esc = function(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
+function el(id){ return document.getElementById(id); }
+function srcLinks(ids){
+  return (ids||[]).map(function(id){
+    var s = SRC[id]; if(!s) return '<span class="dash">'+esc(id)+'</span>';
+    return '<button class="srcbtn" onclick="event.stopPropagation();window.__openSrc(\''+id+'\')">S'+esc((s.n!=null?s.n:id))+'</button>';
+  }).join('');
+}
+window.__openSrc = function(id){
+  var s = SRC[id]; if(!s) return;
+  drawDrawer('来源 S'+(s.n!=null?s.n:id)+' · '+esc(s.publisher||''),
+    '<div class="kv"><div class="k">标题</div><div class="v">'+esc(s.title)+(s.url?'<br><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.url)+'</a>':'')+'</div>'+
+    '<div class="k">发布方</div><div class="v">'+esc(s.publisher||'—')+'</div>'+
+    '<div class="k">类型</div><div class="v">'+esc(s.doc_type||'—')+'</div>'+
+    '<div class="k">日期</div><div class="v">'+esc(s.date||'—')+'</div>'+
+    '<div class="k">证据等级</div><div class="v"><span class="badge g'+esc(s.grade||'C')+'">'+({A:'A 政府/公告/年报',B:'B 行业协会/主流媒体',C:'C 企业官网/行业资讯',D:'D 未核实'}[s.grade]||esc(s.grade||'—'))+'</span></div>'+
+    '<div class="k">备注</div><div class="v">'+esc(s.note||'—')+'</div></div>');
+};
+
+/* ================= 头部 ================= */
+document.title = M.title || (M.product + ' · ' + M.region + ' 产业格局');
+el('h1').textContent = M.title || (M.product + ' · ' + M.region + ' 产业格局');
+el('h1').innerHTML += '<small>品种：'+esc(M.product)+'　区域：'+esc(M.region)+'</small>';
+el('sub').textContent = M.subtitle || '';
+el('crumb-prov').textContent = M.region || '';
+el('tags').innerHTML = (M.tags||[]).map(function(t,i){ return '<span class="tag '+(i===0?'t':'')+'">'+esc(t)+'</span>'; }).join('');
+el('qbar').innerHTML =
+  '<div class="q"><span class="k">品种</span><span class="v">'+esc(M.product)+'</span></div>'+
+  '<div class="q"><span class="k">研究区域</span><span class="v">'+esc(M.region)+'</span></div>'+
+  '<div class="q"><span class="k">产能口径</span><span class="v" style="font-size:12.5px">'+esc(M.capacity_basis||'名义/设计产能')+'</span></div>'+
+  '<div class="q"><span class="k">统计口径</span><span class="v" style="font-size:12.5px">'+esc(M.scope_note||'已核实厂区 + 地区级记录')+'</span></div>'+
+  '<div class="q"><span class="k">点位规则</span><span class="v" style="font-size:12.5px">仅精确坐标作装置点位</span></div>';
+el('stamp-asof').textContent = '数据截至 ' + (M.asof||'—');
+el('stamp-src').textContent = (D.sources||[]).length + ' 条来源 · ' + (D.sites||[]).length + ' 个站点记录';
+el('foot').innerHTML = '<span><b>'+esc(M.product)+'</b> · '+esc(M.region)+' 区域产业地图</span>'+
+  '<span>生成于 '+esc(M.asof)+'　来源 '+(D.sources||[]).length+' 条</span>'+
+  '<span>本页用于产业研究，不构成投资建议；所有数字均须回到来源核对</span>';
+
+/* ================= KPI ================= */
+(function(){
+  var cards = [
+    ['已核实生产厂区', A.plants_total, '个', '按厂区计数，非注册主体'],
+    ['样本产能合计', A.capacity_sample_total, UNIT, '仅"生产"角色厂区相加'],
+    ['注册相关企业', A.registered_total, '家', '数据库口径估算，≠ 生产企业'],
+    ['化工园区 / 集聚区', A.park_total, '个', (A.cr3!=null?'园区内企业数只计已落位厂区':'')],
+    ['在建/拟建项目', (D.projects||[]).length, '个', '净增量 '+(A.net_capacity||A.proj_net||'—')+' '+UNIT],
+    ['CR3（样本口径）', A.cr3==null?'—':A.cr3, '%', 'HHI '+(A.hhi==null?'—':A.hhi)]
+  ];
+  el('kpis').innerHTML = cards.map(function(c){
+    var v = (typeof c[1]==='number') ? c[1].toLocaleString('zh-CN') : (c[1]==null?'—':c[1]);
+    var warn = (c[0].indexOf('注册')>=0 || c[0].indexOf('CR3')>=0);
+    return '<div class="kpi'+(warn?' warn':'')+'"><div class="l">'+c[0]+'</div><div class="n">'+v+'<small>'+c[2]+'</small></div><div class="x">'+(c[3]||'')+'</div></div>';
+  }).join('');
+})();
+
+/* ================= 01 结论与覆盖 ================= */
+(function(){
+  var list = D.conclusions || [];
+  el('conclusions').innerHTML = list.length ? list.map(function(c){
+    var t = typeof c==='string' ? c : c.text, m = (c&&c.method)||'', s = (c&&c.sources)||[];
+    return '<li><div>'+t+'</div>'+(m?'<div class="m">口径：'+esc(m)+' '+srcLinks(s)+'</div>':'')+'</li>';
+  }).join('') : '<li class="muted">未填写结论</li>';
+
+  var total = (D.sites||[]).length, exact = (D.sites||[]).filter(function(s){return s.precision==='精确';}).length;
+  var parkLv = (D.sites||[]).filter(function(s){return s.precision==='园区级';}).length;
+  var county = (D.sites||[]).filter(function(s){return s.precision==='县级';}).length;
+  var cityLv = (D.sites||[]).filter(function(s){return s.precision==='市级';}).length;
+  function bar(label, v, tot, color){
+    var p = tot ? Math.round(v/tot*100) : 0;
+    return '<div class="bar"><div class="lb"><span>'+label+'</span><span class="num">'+v+' / '+tot+'（'+p+'%）</span></div>'+
+      '<span class="track"><span class="fill" style="width:'+p+'%;background:'+color+'"></span></span></div>';
+  }
+  el('coverbox').innerHTML =
+    bar('已公开精确坐标（可作装置点位）', exact, total, '#0e7c6b')+
+    bar('园区级定位', parkLv, total, '#6d28d9')+
+    bar('县级定位', county, total, '#a9812b')+
+    bar('市级定位', cityLv, total, '#98a2b0')+
+    '<div class="tiny muted" style="margin-top:10px;line-height:1.75">'+
+    '· 站点记录 '+(total)+' 条中，'+(total-exact)+' 条<b>只作地区级记录</b>，不作为装置位置；<br>'+
+    '· 注册企业数 '+(A.registered_total||0)+' 家是工商/名录口径估算，<b>不能</b>直接当作生产企业数；<br>'+
+    '· 样本产能覆盖：'+(N.coverage_note||'见 10 口径节')+'</div>';
+})();
+
+/* ================= 地图 ================= */
+var CAP_BUCKETS = [[0,20,'<20'],[20,50,'20–50'],[50,100,'50–100'],[100,200,'100–200'],[200,1e9,'≥200']];
+function capColor(c){ if(c==null) return '#c9d1d9'; for(var i=0;i<CAP_BUCKETS.length;i++){ if(c>=CAP_BUCKETS[i][0] && c<CAP_BUCKETS[i][1]) return ['#dcefe8','#a8dcc8','#4fb795','#1d8a6e','#0b5b4c'][i]; } return '#c9d1d9'; }
+var LAYER_DEF = [
+  {id:'producer', name:'生产企业', color:'#0e7c6b'},
+  {id:'trader',   name:'贸易商',   color:'#a9812b'},
+  {id:'downstream',name:'下游用户',color:'#1d4ed8'},
+  {id:'park',     name:'化工园区', color:'#6d28d9'},
+  {id:'project',  name:'新增项目', color:'#a1323a'},
+  {id:'logistics',name:'物流节点', color:'#5b6472'},
+  {id:'lab',      name:'城市合计', color:'#0b3b4a'}
+];
+var ON = {producer:true, trader:true, downstream:true, park:true, project:true, logistics:true, lab:true};
+var GEO = null, chart = null, curSel = null, curMetric = 'capacity';
+
+function siteLayerOf(s){
+  if(s.role==='production') return 'producer';
+  if(s.role==='trader') return 'trader';
+  if(s.role==='downstream') return 'downstream';
+  return 'producer';
+}
+function visibleSite(s){
+  var L = siteLayerOf(s);
+  if(L==='producer'){
+    var ex = s.precision==='精确';
+    return ex ? ON.producer : ON.lab;   // 非精确的产能落点归入"城市合计"图层，避免被误读为装置
+  }
+  return !!ON[L];
+}
+function metricValue(o){
+  if(curMetric==='capacity') return o.capacity_sample;
+  if(curMetric==='plants') return o.plants;
+  if(curMetric==='registered') return o.registered;
+  if(curMetric==='downstream') return o.downstream_sites;
+  return null;
+}
+function metricLabel(){
+  return {capacity:'样本产能（'+UNIT+'）', plants:'生产厂区数（个）', registered:'注册企业（家，估算）', downstream:'下游据点（个）'}[curMetric];
+}
+
+function provinceMapData(){
+  var out = [];
+  var focus = (M.focus_provinces||[]);
+  (D.provinces||[]).forEach(function(p){
+    var v = metricValue(p);
+    if(v==null) v = 0;
+    out.push({name: p.province+'省', value: v, prov: p.province, itemStyle: focus.length && focus.indexOf(p.province)<0 ? {opacity:.45} : null});
+    if(p.province==='内蒙古'||p.province==='广西'||p.province==='宁夏'||p.province==='新疆'||p.province==='西藏'){
+      out[out.length-1].name = p.province+'自治区';
+    }
+  });
+  // 没有数据的省份也着色为 0（避免出现"数据省份以外全空"的错觉）
+  var have = {}; out.forEach(function(o){have[o.prov]=1;});
+  Object.keys(PROV_NAMES).forEach(function(k){
+    if(!have[k]) out.push({name:PROV_NAMES[k], value:0, prov:k});
+  });
+  return out;
+}
+var PROV_NAMES = {'山东':'山东省','江苏':'江苏省','浙江':'浙江省','安徽':'安徽省','福建':'福建省','江西':'江西省',
+'河北':'河北省','河南':'河南省','湖北':'湖北省','湖南':'湖南省','广东':'广东省','辽宁':'辽宁省','吉林':'吉林省',
+'黑龙江':'黑龙江省','山西':'山西省','陕西':'陕西省','甘肃':'甘肃省','青海':'青海省','四川':'四川省','贵州':'贵州省',
+'云南':'云南省','海南':'海南省','北京':'北京市','天津':'天津市','上海':'上海市','重庆':'重庆市','内蒙古':'内蒙古自治区',
+'广西':'广西壮族自治区','西藏':'西藏自治区','宁夏':'宁夏回族自治区','新疆':'新疆维吾尔自治区','台湾':'台湾省','香港':'香港特别行政区','澳门':'澳门特别行政区'};
+
+function maxMetric(){
+  var m = 0;
+  (D.provinces||[]).forEach(function(p){ var v=metricValue(p)||0; if(v>m) m=v; });
+  (D.cities||[]).forEach(function(p){ var v=metricValue(p)||0; if(v>m) m=v; });
+  return m || 1;
+}
+
+function siteSymbol(s){
+  var sz = s.capacity!=null ? Math.max(8, Math.min(26, 6 + Math.sqrt(Math.abs(s.capacity)) * 1.25)) : 6;
+  if(s.precision==='精确'){
+    return {value:[s.lon,s.lat], symbol:'circle', symbolSize:sz,
+      itemStyle:{color:capColor(s.capacity), borderColor:'#0b3b4a', borderWidth:1.2, opacity:.95}};
+  }
+  if(s.precision==='园区级'){
+    return {value:[s.lon,s.lat], symbol:'diamond', symbolSize:sz*.9,
+      itemStyle:{color:capColor(s.capacity), borderColor:'#6d28d9', borderWidth:1.4, borderType:'dashed', opacity:.9}};
+  }
+  return {value:[s.lon,s.lat], symbol:'rect', symbolSize:Math.max(7,sz*.75), itemStyle:{color:'#b9c2cc', borderColor:'#fff', borderWidth:1, opacity:.85}};
+}
+
+function buildOption(){
+  var maxV = maxMetric();
+  var provData = provinceMapData();
+  var series = [];
+
+  // ------------------------------------------------------------------
+  // 地图一律用「geo 组件 + 全部 scatter」的单一坐标系。
+  // 不能用 series:{type:'map'} 打底：那样底图属于该 series，而 geo 组件是另一个
+  // 独立实例，两者各自漫游 —— 用户滚轮缩放时底图变了、散点不跟，点位就会"漂"。
+  // 现在底图色块也挂在 geo 上，滚轮/拖拽由 geo 统一驱动。
+  // ------------------------------------------------------------------
+  var GEO_CFG = {
+    map:'china', roam:true, zoom:3.15, center:[118.6,35.2],
+    scaleLimit:{min:1.1, max:14}, selectedMode:'single',
+    itemStyle:{areaColor:'#e3eaef', borderColor:'#93a2b0', borderWidth:.7},
+    label:{show:false},
+    emphasis:{label:{show:true,fontSize:11,color:'#0b3b4a'}, itemStyle:{areaColor:'#d8efe8'}},
+    select:{label:{show:true,fontSize:11,color:'#fff'}, itemStyle:{areaColor:'#0b3b4a', borderColor:'#0b3b4a'}}};
+
+  function geoSeries(o){ o.coordinateSystem='geo'; o.geoIndex=0; return o; }
+
+  // 城市气泡（按指标）
+  var cityPts = (D.cities||[]).map(function(c){
+    var v = metricValue(c)||0;
+    return {name:c.city, value:[c.lon,c.lat,v], rec:c,
+      symbolSize: 6 + Math.sqrt(Math.max(v,0)/maxV)*30,
+      itemStyle:{color:'rgba(11,59,74,.16)', borderColor:'rgba(11,59,74,.42)', borderWidth:1}};
+  });
+  if(ON.lab) series.push(geoSeries({name:'城市合计', type:'scatter', z:2,
+    data:cityPts, label:{show:true,position:'right',
+    // label formatter 的参数 p 在部分渲染路径上不带 rec，必须从 dataIndex 回查，否则整个地图渲染中断
+    formatter:function(p){
+      var rec=(p&&p.rec)||cityPts[p&&p.dataIndex]&&cityPts[p.dataIndex].rec;
+      if(!rec) return '';
+      return rec.city+'('+fmt(p.value&&p.value[2])+')';
+    },
+    fontSize:10.5,color:'#3b4655',distance:3}, emphasis:{scale:1.1},
+    tooltip:{formatter:function(p){ var c=(p&&p.rec)||(p&&cityPts[p.dataIndex]&&cityPts[p.dataIndex].rec); return c?cityTip(c):''; }}}));
+
+  // 公园 / 项目 / 物流 / 站点
+  if(ON.park){
+    var pk = (D.parks||[]).filter(function(p){return p.lon!=null;}).map(function(p){
+      return {name:p.name, value:[p.lon,p.lat], rec:p,
+        symbol:'roundRect', symbolSize:14, itemStyle:{color:'rgba(109,40,217,.14)', borderColor:'#6d28d9', borderWidth:1.4},
+        label:{show:true, formatter:p.short||'', position:'top', fontSize:9.5, color:'#5b3d9a'}};
+    });
+    series.push(geoSeries({name:'化工园区', type:'scatter', z:3, data:pk,
+    tooltip:{formatter:function(p){ var r=(p&&p.rec)||(p&&pk[p.dataIndex]&&pk[p.dataIndex].rec)||{}; return '<b>'+esc(r.name||'')+'</b><br>'+esc(r.city||'')+' · '+esc(r.level||'')+'<br>园区内已落位厂区 '+(r.site_count!=null?r.site_count:'—')+' 个<br><span class="muted">点击查看园区详情</span>'; }}}));
+  }
+  if(ON.project){
+    var pj = (D.projects||[]).filter(function(p){return p.lon!=null;}).map(function(p){
+      return {name:p.name, value:[p.lon,p.lat], rec:p, symbol:'triangle', symbolSize:13,
+        itemStyle:{color:'#a1323a', borderColor:'#fff', borderWidth:1},
+        label:{show:true, formatter: (p.net>0?('+'+p.net):(''+p.net)), position:'right', fontSize:9.5, color:'#a1323a'}};
+    });
+    series.push(geoSeries({name:'新增项目', type:'scatter', z:5, data:pj,
+      tooltip:{formatter:function(p){ var x=p.rec; return '<b>'+esc(x.name)+'</b><br>'+esc(x.status||'')+'（'+esc(x.status_asof||'')+'）<br>新增 '+fmt(x.capacity)+' / 退出 '+fmt(x.capacity_retired)+' → 净 '+fmt(x.net)+' '+UNIT; }}}));
+  }
+  if(ON.logistics){
+    var nd = (D.nodes||[]).filter(function(n){return n.lon!=null;}).map(function(n){
+      return {name:n.name, value:[n.lon,n.lat], rec:n, symbol:'rect', symbolSize:11,
+        itemStyle:{color:'#5b6472', borderColor:'#fff', borderWidth:1},
+        label:{show:true, formatter:n.name.replace(/港$|码头$/,''), position:'bottom', fontSize:9, color:'#4a5462'}};
+    });
+    series.push(geoSeries({name:'物流节点', type:'scatter', z:4, data:nd,
+      tooltip:{formatter:function(p){ var n=p.rec; return '<b>'+esc(n.name)+'</b><br>'+esc(({port:'港口',rail:'铁路专用线',depot:'交割/仓储',market:'交易市场',road:'陆路通道',logistics_park:'物流园'}[n.role]||n.role||''))+'<br>'+esc(n.evidence||''); }}}));
+  }
+  // 站点（精确/地区）
+  var byRole = {};
+  (D.sites||[]).forEach(function(s){
+    if(!visibleSite(s)) return;
+    if(s.lon==null) return;
+    var key = siteLayerOf(s);
+    (byRole[key] = byRole[key]||[]).push(s);
+  });
+  Object.keys(byRole).forEach(function(role, idx){
+    var pts = byRole[role].map(function(s){
+      var o = siteSymbol(s); o.rec = s; o.name = s.name; return o;
+    });
+    series.push(geoSeries({name: ROLE_NAME[role]||role, type:'scatter', z: 6+idx, data:pts,
+      tooltip:{formatter:function(p){ return siteTip(p.rec); }},
+      blur:{itemStyle:{opacity:.3}}}));
+  });
+
+  var focus = (M.focus_provinces||[]);
+  // 底图色块由 geo 承载（省份数据挂在 geo.regions，visualMap 指向 geoIndex 0），
+  // 与所有散点共用同一个可漫游坐标系 —— 缩放/拖拽时底图与点位严格同步。
+  var geoCfg = {};
+  for(var k in GEO_CFG) geoCfg[k] = GEO_CFG[k];
+  geoCfg.regions = provData;
+  return {
+    backgroundColor:'transparent',
+    animationDuration:260,
+    geo: geoCfg,
+    tooltip:{trigger:'item', backgroundColor:'rgba(12,30,38,.95)', borderWidth:0, textStyle:{color:'#eaf2f4',fontSize:12}, extraCssText:'border-radius:8px;padding:8px 10px;max-width:320px;white-space:normal;line-height:1.6'},
+    visualMap:{show:true, min:0, max:maxV, left:14, bottom:16, itemWidth:8, itemHeight:110, calculable:false,
+      text:['高','低', ], textStyle:{fontSize:10.5,color:'#616c7d'}, inRange:{color:['#e3eaef','#d0e7df','#9dd6c4','#57b597','#1d8a6e','#0b5b4c']},
+      /* geographic 模式：按省份名匹配 geo.regions 里的指标值着色 */
+      geoIndex:0, textGap:6, formatter:function(v){return Math.round(v);}},
+    series:series
+  };
+}
+
+function cityTip(c){
+  return '<b>'+esc(c.province+' · '+c.city)+'</b><br>'+
+    '生产厂区 '+c.plants+' 个 · 样本产能 <b>'+fmt(c.capacity_sample)+'</b> '+esc(UNIT)+'<br>'+
+    '注册企业 '+fmt(c.registered)+' 家（估算）· 贸易据点 '+c.trader_sites+' · 下游据点 '+c.downstream_sites+'<br>'+
+    (c.coverage!=null?'公开口径覆盖 '+c.coverage+'%<br>':'')+
+    '<span class="muted">点击查看该城市详情</span>';
+}
+function siteTip(s){
+  return '<b>'+esc(s.name||s.company)+'</b><br>'+esc(s.company)+'<br>'+
+    esc(s.province)+' · '+esc(s.city)+(s.district?' · '+esc(s.district):'')+'<br>'+
+    (s.capacity!=null?('产能 <b>'+fmt(s.capacity)+'</b> '+esc(s.capacity_unit||UNIT)+'（'+esc(s.capacity_basis||'口径未注明')+'）<br>'):'产能 <span class="dash">未公开</span><br>')+
+    '点位：'+esc(s.precision)+' · 证据 '+esc(s.grade||'—')+'<br>'+
+    '<span class="muted">点击查看厂区档案（注册地址 vs 生产地址）</span>';
+}
+
+function renderMap(){
+  if(!window.echarts || !GEO) return;
+  if(!chart) chart = echarts.init(el('map'), null, {renderer:'canvas'});
+  chart.setOption(buildOption(), true);
+  bindMapEvents();
+}
+function bindMapEvents(){
+  chart.off('click');
+  chart.on('click', function(p){
+    // 底图现在是 geo 组件，点击省份返回 componentType='geo'（不再有 type:'map' 的 series）
+    if(p.componentType==='geo' || p.seriesType==='map'){
+      var name = p.name||'';
+      if(name){
+        var prov = name.replace(/(省|市|自治区|特别行政区|回族|壮族|维吾尔)/g,'');
+        selectProvince(prov);
+        return;
+      }
+    }
+    if(p.seriesName==='城市合计' && p.data){
+      selectCity(p.data.rec);
+    } else if(p.seriesName==='化工园区'){
+      selectPark(p.data.rec);
+    } else if(p.seriesName==='新增项目'){
+      openProject(p.data.rec);
+    } else if(p.data && p.data.rec && p.data.rec.sid){
+      openSite(p.data.rec);
+    }
+  });
+  chart.getZr().on('click', function(e){
+    if(!e.target){ selectOverview(); }
+  });
+}
+
+/* ---- 侧栏详情 ---- */
+function selectOverview(){
+  curSel = {type:'overview'};
+  el('side-title').textContent = '区域总览';
+  el('side-badge').textContent = M.region||'';
+  var html = '';
+  var top = (D.cities||[]).slice(0,6);
+  html += '<div class="metric-row">'+
+    mini('企业总数口径','注册 '+fmt(A.registered_total||0)+' / 厂区 '+A.plants_total+' 个','')+
+    mini('样本产能', fmt(A.capacity_sample_total)+' '+UNIT,'')+
+    mini('贸易据点', (A.trader_sites_total||0)+' 个','')+
+    mini('下游据点', (A.downstream_sites_total||0)+' 个','')+'</div>';
+  html += '<div class="subhd">产能最集中的城市</div><div>';
+  var mx = (top[0]&&top[0].capacity_sample)||1;
+  top.forEach(function(c){
+    var p = Math.round((c.capacity_sample||0)/mx*100);
+    html += '<div class="bar"><div class="lb"><span>'+esc(c.city)+'（'+esc(c.province)+'）</span><span class="num">'+fmt(c.capacity_sample)+' '+esc(UNIT)+'</span></div>'+
+      '<span class="track"><span class="fill" style="width:'+p+'%"></span></span></div>';
+  });
+  html += '</div>';
+  html += '<div class="subhd">图层与点位规则</div><div class="tiny muted" style="line-height:1.8">'+
+    '· 圆形 = 已公开精确坐标的站点（可作装置位置）<br>· 菱形 = 仅园区级定位<br>· 方形灰点 = 县级/市级定位（只作地区记录）<br>'+
+    '· 圆角方框 = 化工园区；三角形 = 新增项目；深灰方块 = 港口/专用线/交割库<br>'+
+    '· 气泡 = 城市合计（大小随所选指标）</div>';
+  el('side-body').innerHTML = html;
+  el('side-foot').textContent = '点击省份 / 城市 / 园区 / 点位切换详情';
+}
+function mini(l,v,x,warn){
+  return '<div class="mini'+(warn?' warn':'')+'"><div class="l">'+l+'</div><div class="v">'+v+'</div>'+(x?'<div class="tiny muted">'+esc(x)+'</div>':'')+'</div>';
+}
+function selectProvince(prov){
+  var p = (D.provinces||[]).filter(function(x){return x.province===prov||x.province===prov.replace(/省$/,'');})[0];
+  curSel = {type:'province', id:prov};
+  el('side-title').textContent = prov + ' · 省级汇总';
+  el('side-badge').textContent = p? (p.data_grade||'') : '无数据';
+  if(!p){
+    el('side-body').innerHTML = '<div class="empty">该省份未纳入本次研究范围（或未收录可核实企业）。<br>数据缺失地区明确列为缺口，不以假设填补。</div>';
+    return;
+  }
+  var h = '<div class="metric-row">'+
+    mini('已定位厂区', p.plants+' 个','')+
+    mini('样本产能', fmt(p.capacity_sample)+' '+UNIT,'')+
+    mini('注册企业', fmt(p.registered)+' 家','估算口径', true)+
+    mini('覆盖度', p.coverage==null?'—':p.coverage+'%','厂区合计/公开口径')+'</div>';
+  var cities = (D.cities||[]).filter(function(c){return c.province===p.province;});
+  if(cities.length){
+    h += '<div class="subhd">城市分布</div><ul class="list">';
+    cities.sort(function(a,b){return (b.capacity_sample||0)-(a.capacity_sample||0);}).forEach(function(c){
+      h += '<li><span class="t rowlink" onclick="window.__selCity(\''+esc(c.city)+'\',\''+esc(c.province)+'\')">'+esc(c.city)+'</span>'+
+        ' <span class="m">厂区 '+c.plants+' · '+fmt(c.capacity_sample)+' '+esc(UNIT)+' · 注册 '+fmt(c.registered)+' 家</span></li>';
+    });
+    h += '</ul>';
+  }
+  var parks = (D.provinces||[]).filter(function(x){return x.province===p.province;})[0].parks||[];
+  if(parks.length){ h += '<div class="subhd">园区</div><div>'+parks.map(function(q){return '<span class="badge">'+esc(q.name)+'</span>';}).join('')+'</div>'; }
+  var ps = (D.projects||[]).filter(function(x){return x.prov===p.province;});
+  if(ps.length){ h += '<div class="subhd">在建/拟建项目</div><ul class="list">'+ps.map(function(x){
+    return '<li><span class="t">'+esc(x.name)+'</span> <span class="m">净 '+fmt(x.net)+' '+esc(UNIT)+' · '+esc(x.status)+'</span></li>';}).join('')+'</ul>'; }
+  el('side-body').innerHTML = h;
+  el('side-foot').textContent = '省级合计 = 其下属城市之和';
+}
+function selectCity(c){
+  curSel = {type:'city', id:c.id||c.city};
+  el('side-title').textContent = (c.province||'')+' · '+c.city;
+  el('side-badge').textContent = '数据等级 '+(c.data_grade||'—');
+  var h = '<div class="metric-row">'+
+    mini('生产厂区', c.plants+' 个','')+
+    mini('样本产能', fmt(c.capacity_sample)+' '+UNIT,'')+
+    mini('公开口径', (c.capacity_declared||c.capacity_covered)? fmt(c.capacity_declared||c.capacity_covered)+' '+UNIT : '未公开','', !(c.capacity_declared||c.capacity_covered))+
+    mini('覆盖度', c.coverage==null?'—':c.coverage+'%','', c.coverage!=null && c.coverage<80)+
+    mini('注册企业', fmt(c.registered)+' 家','数据库口径估算', true)+
+    mini('贸易 / 下游据点', c.trader_sites+' / '+c.downstream_sites+' 个','')+'</div>';
+  var ss = (D.sites||[]).filter(function(s){return s.city===c.city && s.province===c.province;});
+  if(ss.length){
+    h += '<div class="subhd">本城市站点</div><ul class="list">'+ss.map(function(s){
+      return '<li><span class="t rowlink" onclick="window.__openSite(\''+esc(s.sid)+'\')">'+esc(s.name||s.company)+'</span>'+
+        '<span class="badge '+(s.precision==='精确'?'exact':'reg')+'" style="margin-left:6px">'+esc(s.precision)+'</span><br>'+
+        '<span class="m">'+esc(s.company)+' · '+esc(s.route||'')+' · '+(s.capacity!=null?fmt(s.capacity)+' '+esc(UNIT):'产能未公开')+'</span></li>';
+    }).join('')+'</ul>';
+  }
+  var pk = (c.parks||[]).filter(function(q){return q && q.id;});
+  if(pk.length){ h += '<div class="subhd">园区</div><div>'+pk.map(function(q){return '<span class="badge">'+esc(q.name)+'</span>';}).join('')+'</div>'; }
+  if(c.note){ h += '<div class="subhd">说明</div><div class="tiny muted" style="line-height:1.75">'+c.note+'</div>'; }
+  if(c.coord_fallback){ h += '<div class="tiny muted" style="margin-top:8px">坐标说明：'+esc(c.coord_fallback)+'</div>'; }
+  el('side-body').innerHTML = h;
+  el('side-foot').textContent = '数字口径：样本产能 = 已核实厂区之和；注册企业为估算';
+}
+function selectPark(p){
+  curSel = {type:'park', id:p.id};
+  el('side-title').textContent = p.name;
+  el('side-badge').textContent = p.level||'园区';
+  var ss = (D.sites||[]).filter(function(s){return s.park_id===p.id;});
+  var h = '<div class="kv">'+
+    '<div class="k">位置</div><div class="v">'+esc(p.prov)+' · '+esc(p.city)+(p.district?' · '+esc(p.district):'')+(p.addr?'<br><span class="tiny muted">'+esc(p.addr)+'</span>':'')+'</div>'+
+    '<div class="k">主导产业</div><div class="v">'+(p.main_industries||[]).map(function(x){return '<span class="badge">'+esc(x)+'</span>';}).join('')+'</div>'+
+    '<div class="k">与品种关系</div><div class="v">'+esc(p.soda_relevance||'—')+'</div>'+
+    '<div class="k">落位厂区</div><div class="v">已核实 '+ss.length+' 个</div>'+
+    '<div class="k">坐标依据</div><div class="v small">'+esc(p.coord_basis||'未核实')+'</div></div>';
+  if(ss.length){
+    h += '<div class="subhd">园区内企业（已核实）</div><ul class="list">'+ss.map(function(s){
+      return '<li><span class="t rowlink" onclick="window.__openSite(\''+esc(s.sid)+'\')">'+esc(s.name||s.company)+'</span><br><span class="m">'+esc(s.company)+' · '+esc(s.route||'')+' · '+(s.capacity!=null?fmt(s.capacity)+' '+esc(UNIT):'产能未公开')+'</span></li>';
+    }).join('')+'</ul>';
+  } else {
+    h += '<div class="warnbox" style="margin-top:10px">园区内未收录可核实的本品企业/厂区。园区存在不等于园区内有该品种装置。</div>';
+  }
+  if((p.supporting||[]).length){
+    h += '<div class="subhd">可查到的产业配套</div><ul class="list">'+p.supporting.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';
+  }
+  if(p.note){ h += '<div class="subhd">备注</div><div class="tiny muted">'+esc(p.note)+'</div>'; }
+  h += '<div class="tiny muted" style="margin-top:10px">来源 '+srcLinks(p.sources)+'</div>';
+  el('side-body').innerHTML = h;
+  el('side-foot').textContent = '园区内企业数只统计已核实落位的厂区，不含估算';
+}
+function openSite(s){
+  drawDrawer(esc(s.name||s.company)+' <span class="badge '+(s.precision==='精确'?'exact':'reg')+'">'+esc(s.precision)+'</span>',
+    '<div class="kv">'+
+    '<div class="k">企业/集团</div><div class="v">'+esc(s.company)+(s.group && s.group!==s.company?'（集团：'+esc(s.group)+'）':'')+'</div>'+
+    '<div class="k">角色</div><div class="v">'+esc(ROLE_NAME[s.role]||s.role)+' / '+esc(s.type||'')+'</div>'+
+    '<div class="k">工艺路线</div><div class="v"><span class="pill '+(ROUTE_CLASS[s.route]||'p-unknown')+'">'+esc(s.route||'未知')+'</span></div>'+
+    '<div class="k">公开产能</div><div class="v">'+(s.capacity!=null?'<b>'+fmt(s.capacity)+'</b> '+esc(s.capacity_unit||UNIT)+'<br><span class="tiny muted">原文：'+esc(s.raw_capacity||'—')+'<br>口径：'+esc(s.capacity_basis||'未注明')+'</span>':'<span class="dash">未公开</span>')+'</div>'+
+    '<div class="k">状态</div><div class="v">'+esc(s.status||'—')+'</div>'+
+    '<div class="k">产品</div><div class="v">'+((s.products||[]).map(function(x){return '<span class="badge">'+esc(x)+'</span>';}).join('')||'—')+'</div>'+
+    '<div class="k">园区</div><div class="v">'+esc(s.park||'未核实')+'</div>'+
+    '</div>'+
+    '<div class="subhd">地址口径：必须分开看</div>'+
+    '<table style="width:100%;font-size:12px"><tbody>'+
+    '<tr><td style="width:88px;color:#6b7684;padding:6px 8px;border:1px solid #eceff3">注册地址</td><td style="padding:6px 8px;border:1px solid #eceff3">'+(esc(s.reg_address)||'<span class="dash">未核实</span>')+'<br><span class="tiny muted">类型：'+esc(s.reg_address_type||'—')+'　<span style="color:#a1323a">注册地址不作装置位置</span></span></td></tr>'+
+    '<tr><td style="color:#6b7684;padding:6px 8px;border:1px solid #eceff3">实际生产地址</td><td style="padding:6px 8px;border:1px solid #eceff3">'+(esc(s.plant_address)||'<span class="dash">未核实</span>')+'<br><span class="tiny muted">类型：'+esc(s.address_type||'—')+'</span></td></tr>'+
+    '<tr><td style="color:#6b7684;padding:6px 8px;border:1px solid #eceff3">地图点位</td><td style="padding:6px 8px;border:1px solid #eceff3">'+(s.precision==='精确'?'可作装置位置（'+esc(s.coord_source)+'）':'<b style="color:#a1323a">'+esc(s.precision)+'</b>：仅示意，不代表装置位置')+'</td></tr>'+
+    '</tbody></table>'+
+    '<div class="subhd">上下游关系（已核实）</div>'+
+    '<div class="kv"><div class="k">上游原料</div><div class="v">'+((s.upstream||[]).map(esc).join(' / ')||'未核实')+'</div>'+
+    '<div class="k">下游去向</div><div class="v">'+((s.downstream||[]).map(esc).join(' / ')||'未核实')+'</div></div>'+
+    ((s.note)?'<div class="subhd">备注</div><div class="tiny" style="line-height:1.75">'+esc(s.note)+'</div>':'')+
+    ((s.verify||[]).length?'<div class="subhd">还需核实</div><ul class="list">'+s.verify.map(function(x){return '<li class="small">'+esc(x)+'</li>';}).join('')+'</ul>':'')+
+    '<div class="subhd">证据</div><div>证据等级 <span class="badge g'+esc(s.grade||'C')+'">'+esc(s.grade||'—')+'</span> 来源 '+srcLinks(s.sources)+'</div>');
+}
+function openProject(p){
+  drawDrawer(esc(p.name), '<div class="kv">'+
+    '<div class="k">企业</div><div class="v">'+esc(p.company_name||p.company||'—')+'</div>'+
+    '<div class="k">位置</div><div class="v">'+esc(p.prov||'')+' · '+esc(p.city||'')+(p.district?' · '+esc(p.district):'')+(p.park?'<br><span class="tiny muted">'+esc(p.park)+'</span>':'')+'</div>'+
+    '<div class="k">类型</div><div class="v">'+esc(p.type||'—')+'</div>'+
+    '<div class="k">新增产能</div><div class="v">'+fmt(p.capacity)+' '+esc(UNIT)+'</div>'+
+    '<div class="k">退出产能</div><div class="v">'+fmt(p.capacity_retired)+' '+esc(UNIT)+'</div>'+
+    '<div class="k">净增量</div><div class="v"><b>'+(p.net>0?'+':'')+fmt(p.net)+'</b> '+esc(UNIT)+'</div>'+
+    '<div class="k">状态</div><div class="v">'+esc(p.status||'—')+'（截至 '+esc(p.status_asof||'—')+'）'+(p.online?'<br>预计投产：'+esc(p.online):'')+'</div>'+
+    '<div class="k">产品</div><div class="v">'+((p.products||[]).map(function(x){return '<span class="badge">'+esc(x)+'</span>';}).join('')||'—')+'</div>'+
+    '</div>'+
+    ((p.impact)?'<div class="subhd">对区域供需的影响（判断，非预测）</div><div class="small" style="line-height:1.75">'+esc(p.impact)+'</div>':'')+
+    ((p.verify||[]).length?'<div class="subhd">还需核实</div><ul class="list">'+p.verify.map(function(x){return '<li class="small">'+esc(x)+'</li>';}).join('')+'</ul>':'')+
+    '<div class="subhd">证据</div><div>证据等级 <span class="badge g'+esc(p.grade||'C')+'">'+esc(p.grade||'—')+'</span> 来源 '+srcLinks(p.sources)+'</div>');
+}
+window.__openSite = function(sid){ var s=(D.sites||[]).filter(function(x){return x.sid===sid;})[0]; if(s) openSite(s); };
+window.__selCity = function(city,prov){ var c=(D.cities||[]).filter(function(x){return x.city===city && x.province===prov;})[0]; if(c) selectCity(c); };
+
+function drawDrawer(title, body){
+  el('d-title').innerHTML = title;
+  el('d-body').innerHTML = body;
+  el('drawer').classList.add('on'); el('mask').classList.add('on');
+}
+function closeDrawer(){ el('drawer').classList.remove('on'); el('mask').classList.remove('on'); }
+window.closeDrawer = closeDrawer;
+el('mask').addEventListener('click', closeDrawer);
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeDrawer(); });
+
+/* ---- 图层与工具栏 ---- */
+(function(){
+  function counts(){
+    var c = {producer:0, trader:0, downstream:0, park:(D.parks||[]).length, project:(D.projects||[]).length, logistics:(D.nodes||[]).length, lab:(D.cities||[]).length};
+    (D.sites||[]).forEach(function(s){
+      if(s.role==='production'){ if(s.precision==='精确') c.producer++; } else if(s.role==='trader') c.trader++; else if(s.role==='downstream') c.downstream++;
+    });
+    void c.lab;
+    return c;
+  }
+  function renderChips(){
+    var c = counts();
+    el('layerchips').innerHTML = LAYER_DEF.map(function(l){
+      var n = c[l.id];
+      return '<div class="chip '+(ON[l.id]?'on':'')+'" data-l="'+l.id+'"><span class="dot" style="background:'+(ON[l.id]?'#fff':l.color)+'"></span>'+l.name+'<span class="cnt">'+(n==null?'':n)+'</span></div>';
+    }).join('');
+    var chips = el('layerchips').querySelectorAll('.chip');
+    for(var i=0;i<chips.length;i++){
+      chips[i].addEventListener('click', function(){
+        var k = this.getAttribute('data-l'); ON[k] = !ON[k]; renderChips(); renderMap();
+      });
+    }
+  }
+  renderChips();
+  var sel = el('metricSel');
+  sel.addEventListener('change', function(){ curMetric = this.value; renderMap(); renderLegend(); });
+  el('btnReset').addEventListener('click', function(){ if(chart){ chart.setOption({series:[{zoom:3.15, center:[118.6,35.2]}], geo:{zoom:3.15,center:[118.6,35.2]}}); chart.setOption(buildOption(), true); bindMapEvents(); } selectOverview(); });
+  function renderLegend(){
+    var h = '<h4>生产产能（'+esc(UNIT)+'）</h4>';
+    CAP_BUCKETS.forEach(function(b,i){
+      h += '<div class="row"><span class="sw" style="background:'+['#dcefe8','#a8dcc8','#4fb795','#1d8a6e','#0b5b4c'][i]+'"></span>'+b[2]+'</div>';
+    });
+    h += '<div class="row"><span class="sw" style="background:#c9d1d9"></span>产能未公开</div><div class="hr"></div><h4>点位精度</h4>'+
+      '<div class="row"><span class="cir sw" style="background:#1d8a6e"></span>精确坐标</div>'+
+      '<div class="row"><span class="sw" style="background:#6d28d9;transform:rotate(45deg);width:11px;height:11px;border-radius:2px"></span>园区级</div>'+
+      '<div class="row"><span class="sw" style="background:#b9c2cc;width:11px;height:11px"></span>县级 / 市级</div>'+
+      '<div class="row"><span class="sw" style="background:transparent;border:1.5px solid #6d28d9;border-radius:4px"></span>化工园区</div>'+
+      '<div class="row"><span class="sw" style="background:#a1323a;clip-path:polygon(50% 0,100% 100%,0 100%)"></span>新增项目</div>'+
+      '<div class="row"><span class="sw" style="background:#5b6472;width:11px;height:11px"></span>物流节点</div>'+
+      '<div class="hr"></div><h4>当前配色：'+esc(metricLabel())+'</h4>'+
+      '<div class="tiny muted" style="margin-top:6px;line-height:1.7">气泡大小 = 城市该指标；省份底色 = 省级该指标。两套口径不混用。</div>';
+    el('legend').innerHTML = h;
+    el('mapfoot-l').innerHTML = '配色：'+esc(metricLabel());
+    var noCoord = (D.sites||[]).filter(function(s){return s.lon==null;}).length;
+    el('mapfoot-r').textContent = noCoord ? (noCoord+' 个站点无坐标 → 仅进表格，不上图') : '';
+  }
+  renderLegend();
+  window.__renderLegend = renderLegend;
+  selectOverview();
+})();
+
+/* ================= 03 工厂与企业 ================= */
+(function(){
+  var rows = (D.sites||[]).slice();
+  var routes = {}; rows.forEach(function(s){ if(s.route) routes[s.route]=1; });
+  el('fRoute').innerHTML = '<option value="">全部工艺</option>' + Object.keys(routes).map(function(r){ return '<option>'+esc(r)+'</option>'; }).join('');
+  var st = {}; rows.forEach(function(s){ if(s.status) st[s.status]=1; });
+  el('fStatus').innerHTML = '<option value="">全部状态</option>' + Object.keys(st).map(function(r){ return '<option>'+esc(r)+'</option>'; }).join('');
+  el('fGrade').innerHTML = '<option value="">全部证据等级</option>' + ['A','B','C','D'].map(function(g){ return '<option value="'+g+'">'+g+'</option>'; }).join('');
+  var scales = [['','全部规模'],['ge200','≥200 ' + UNIT],['100-200','100–200'],['50-100','50–100'],['20-50','20–50'],['lt20','<20'],['na','产能未公开']];
+  el('fScale').innerHTML = scales.map(function(s){ return '<option value="'+s[0]+'">'+s[1]+'</option>'; }).join('');
+  el('fRole').innerHTML = '<option value="">全部角色（生产 / 贸易 / 下游）</option><option value="production">生产企业</option><option value="trader">贸易 / 仓储</option><option value="downstream">下游用户</option>';
+
+  var sortKey = null, sortDir = 1;
+  function pass(s){
+    var q = el('qSite').value.trim();
+    if(q){
+      var hay = [s.company,s.name,s.city,s.province,s.park,s.products.join(' '),s.route,s.plant_address||'',s.reg_address||''].join(' ');
+      if(hay.indexOf(q)<0) return false;
+    }
+    if(el('fRoute').value && s.route!==el('fRoute').value) return false;
+    if(el('fStatus').value && s.status!==el('fStatus').value) return false;
+    if(el('fRole').value && s.role!==el('fRole').value) return false;
+    if(el('fGrade').value && s.grade!==el('fGrade').value) return false;
+    var sc = el('fScale').value;
+    if(sc){
+      var c = s.capacity;
+      if(sc==='na'){ if(c!=null) return false; }
+      else if(c==null) return false;
+      else if(sc==='ge200' && c<200) return false;
+      else if(sc==='100-200' && !(c>=100&&c<200)) return false;
+      else if(sc==='50-100' && !(c>=50&&c<100)) return false;
+      else if(sc==='20-50' && !(c>=20&&c<50)) return false;
+      else if(sc==='lt20' && c>=20) return false;
+    }
+    return true;
+  }
+  function render(){
+    var list = rows.filter(pass);
+    if(sortKey){
+      list.sort(function(a,b){
+        var x=a[sortKey], y=b[sortKey];
+        if(typeof x==='number'||typeof y==='number'){ return ((x==null?-1:x)-(y==null?-1:y))*sortDir; }
+        return String(x||'').localeCompare(String(y||''),'zh')*sortDir;
+      });
+    } else {
+      list.sort(function(a,b){ return (b.capacity||-1)-(a.capacity||-1); });
+    }
+    var tb = el('tSites').querySelector('tbody');
+    tb.innerHTML = list.map(function(s){
+      var precCls = s.precision==='精确'?'exact':(s.precision==='园区级'?'park':'reg');
+      return '<tr class="clickable" onclick="window.__openSite(\''+esc(s.sid)+'\')">'+
+        '<td>'+esc(s.company)+'</td>'+
+        '<td><b>'+esc(s.name||'—')+'</b>'+(s.products.length?'<div class="tiny muted">'+esc(s.products.join(' / '))+'</div>':'')+'</td>'+
+        '<td class="small">'+esc(s.province||'')+'<br><span class="muted">'+esc(s.city||'')+(s.district?' · '+esc(s.district):'')+'</span></td>'+
+        '<td class="small">'+(s.park?esc(s.park):'<span class="dash">未核实</span>')+'</td>'+
+        '<td><span class="pill '+(ROUTE_CLASS[s.route]||'p-unknown')+'">'+esc(s.route||'未知')+'</span></td>'+
+        '<td class="r">'+(s.capacity!=null?fmt(s.capacity):'<span class="dash">—</span>')+'</td>'+
+        '<td class="small">'+esc(s.status||'')+'</td>'+
+        '<td class="tiny muted">'+(esc(s.reg_address)||'<span class="dash">未核实</span>')+'</td>'+
+        '<td class="tiny">'+(esc(s.plant_address)||'<span class="dash">未核实</span>')+'</td>'+
+        '<td><span class="badge '+precCls+'">'+esc(s.precision)+'</span></td>'+
+        '<td><span class="badge g'+esc(s.grade||'C')+'">'+esc(s.grade||'—')+'</span></td>'+
+        '<td>'+srcLinks(s.sources)+'</td></tr>';
+    }).join('') || '<tr><td colspan="12" class="muted" style="padding:18px">没有符合筛选条件的记录</td></tr>';
+    el('siteCount').textContent = '显示 '+list.length+' / '+rows.length+' 条站点记录（一行 = 一个厂区/据点）';
+  }
+  ['qSite','fRoute','fStatus','fRole','fScale','fGrade'].forEach(function(id){ el(id).addEventListener('input', render); el(id).addEventListener('change', render); });
+  var ths = el('tSites').querySelectorAll('thead th');
+  for(var i=0;i<ths.length;i++){
+    (function(th,i){
+      th.classList.add('sortable');
+      th.addEventListener('click', function(){
+        var keys = [null,null,'province','park','route',null,'status',null,null,null,null,null];
+        var k = keys[i];
+        if(!k){ if(i===5){ k='capacity'; } else return; }
+        sortDir = (sortKey===k) ? -sortDir : 1; sortKey = k; render();
+      });
+    })(ths[i], i);
+  }
+  el('addrRule').innerHTML = '<b>地址规则（本页的铁律）</b><br>'+
+    '· <b>注册地址</b>只说明法人主体登记在哪里，<b>不能</b>作为装置位置；集团总部、写字楼、商务区地址一律不作点位。<br>'+
+    '· <b>实际生产地址</b>来自环评批复、排污许可证、公司公告中的厂区地址；只有能定位到厂区/园区的，才可能进入"精确点位"。<br>'+
+    '· 一行 = 一个厂区。同一企业多厂区分行列示，城市/省份合计时按厂区相加，并按"公开口径"复核上限。';
+  el('dedupeNote').innerHTML = '<b>防重复计数</b><br>'+
+    '· 同名多厂区已分行；同一主体重复出现会在校验时报警。<br>'+
+    '· 城市样本产能 > 公开口径时，说明存在重复计数或口径不一致，须回到来源重新核对（构建时会报 error）。<br>'+
+    '· 贸易商与下游用户<b>不计入</b>产能合计。';
+  render();
+})();
+
+/* ================= 04 区域产能 ================= */
+(function(){
+  var cities = (D.cities||[]).slice(0,14);
+  if(chart_guard()){
+    var c1 = echarts.init(el('cityChart'));
+    c1.setOption({
+      grid:{left:8,right:64,top:26,bottom:8,containLabel:true},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+      legend:{top:0,right:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:11}},
+      xAxis:{type:'value',splitLine:{lineStyle:{color:'#eef1f5'}},axisLabel:{fontSize:10.5}},
+      yAxis:{type:'category',data:cities.map(function(c){return c.city;}).reverse(),axisLabel:{fontSize:11},axisTick:{show:false}},
+      series:[
+        {name:'样本产能（已核实厂区）',type:'bar',data:cities.map(function(c){return c.capacity_sample||0;}).reverse(),
+          itemStyle:{color:'#0e7c6b',borderRadius:[0,3,3,0]},barMaxWidth:16,
+          label:{show:true,position:'right',fontSize:10.5,formatter:function(p){return p.value?p.value.toFixed(0):'';}}},
+        {name:'城市公开口径',type:'scatter',symbol:'diamond',symbolSize:9,data:cities.map(function(c){return c.capacity_declared||c.capacity_covered||null;}).reverse(),
+          itemStyle:{color:'#a9812b'},label:{show:true,position:'right',fontSize:10,color:'#8a5a12',formatter:function(p){return p.value?p.value:'未公开';}}}
+      ]
+    });
+    var c2 = echarts.init(el('provChart'));
+    var provs = (D.provinces||[]).slice(0,12);
+    c2.setOption({
+      grid:{left:8,right:66,top:26,bottom:8,containLabel:true},
+      tooltip:{trigger:'axis'},
+      legend:{top:0,right:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:11}},
+      xAxis:{type:'value',splitLine:{lineStyle:{color:'#eef1f5'}},axisLabel:{fontSize:10.5}},
+      yAxis:{type:'category',data:provs.map(function(p){return p.province;}).reverse(),axisLabel:{fontSize:11},axisTick:{show:false}},
+      series:[
+        {name:'省份样本产能',type:'bar',data:provs.map(function(p){return p.capacity_sample||0;}).reverse(),itemStyle:{color:'#0b3b4a',borderRadius:[0,3,3,0]},barMaxWidth:16,
+          label:{show:true,position:'right',fontSize:10.5}},
+        {name:'公开口径',type:'scatter',symbol:'diamond',symbolSize:9,data:provs.map(function(p){return p.capacity_declared||p.capacity_covered||null;}).reverse(),itemStyle:{color:'#b45309'}}
+      ]
+    });
+    var rmap = {};
+    (D.sites||[]).forEach(function(s){ if(s.role!=='production'||s.capacity==null) return; rmap[s.route]=(rmap[s.route]||0)+s.capacity; });
+    var rdata = Object.keys(rmap).map(function(k){return {name:k,value:rmap[k]};}).sort(function(a,b){return b.value-a.value;});
+    var c3 = echarts.init(el('routeChart'));
+    var RC = {'氨碱':'#1d4f8f','联碱':'#1f6b40','天然碱':'#8a5a12','其他':'#5b3d9a','未知':'#98a2b0'};
+    c3.setOption({
+      tooltip:{trigger:'item',formatter:'{b}<br>{c} '+UNIT+'（{d}%）'},
+      series:[{type:'pie',radius:['42%','70%'],avoidLabelOverlap:true,
+        itemStyle:{borderColor:'#fff',borderWidth:2},
+        label:{formatter:'{b}\n{d}%',fontSize:11.5,color:'#3b4655'},
+        data:rdata.map(function(d){ d.itemStyle={color:RC[d.name]||'#98a2b0'}; return d; })}]
+    });
+    el('routeNote').innerHTML = '<div class="subhd">工艺路线与区域特征</div>'+
+      ((N.route_note)? '<div class="small" style="line-height:1.8">'+N.route_note+'</div>' :
+        '<ul class="list">'+rdata.map(function(d){ return '<li><b>'+esc(d.name)+'</b> · 样本 '+fmt(d.value)+' '+esc(UNIT)+'</li>'; }).join('')+'</ul>')+
+      '<div class="subhd">口径</div><div class="tiny muted">环形图只统计"生产"角色且有公开产能数值的厂区；贸易商与下游不进入。原料单耗差异见 10 口径节。</div>';
+  } else {
+    el('cityChart').innerHTML = fallbackTable(cities, 'city');
+    el('provChart').innerHTML = fallbackTable((D.provinces||[]).slice(0,12), 'prov');
+  }
+  function fallbackTable(arr, k){
+    return '<div class="tiny muted" style="padding:20px">图表库未加载，以下为数据表：<br>'+arr.map(function(x){return esc(x[k==='city'?'city':'province'])+'：'+fmt(x.capacity_sample)+' '+UNIT;}).join('<br>')+'</div>';
+  }
+  var tb = el('tRegion').querySelector('tbody');
+  tb.innerHTML = (D.cities||[]).map(function(c){
+    return '<tr class="clickable" onclick="window.__selCity(\''+esc(c.city)+'\',\''+esc(c.province)+'\')">'+
+      '<td><b>'+esc(c.city)+'</b></td><td class="small">'+esc(c.province)+'</td>'+
+      '<td class="r">'+fmt(c.registered)+'</td><td class="r">'+c.plants+'</td>'+
+      '<td class="r"><b>'+fmt(c.capacity_sample)+'</b></td>'+
+      '<td class="r">'+((c.capacity_declared||c.capacity_covered)?fmt(c.capacity_declared||c.capacity_covered):'<span class="dash">未公开</span>')+'</td>'+
+      '<td class="r">'+(c.coverage==null?'<span class="dash">—</span>':c.coverage+'%')+'</td>'+
+      '<td class="r">'+(c.gap==null?'<span class="dash">—</span>':(c.gap>0?fmt(c.gap):'0'))+'</td>'+
+      '<td class="r">'+c.trader_sites+'</td><td class="r">'+c.downstream_sites+'</td>'+
+      '<td class="r">'+(c.parks||[]).length+'</td><td class="r">'+(c.net_capacity?((c.net_capacity>0?'+':'')+c.net_capacity):'0')+'</td>'+
+      '<td><span class="badge g'+esc(c.data_grade||'D')+'">'+esc(c.data_grade||'—')+'</span></td></tr>';
+  }).join('');
+})();
+
+/* ================= 05 园区 ================= */
+(function(){
+  var ps = D.parks||[];
+  el('parkCards').innerHTML = ps.map(function(p){
+    var ss = (D.sites||[]).filter(function(s){return s.park_id===p.id;});
+    return '<div class="card pad">'+
+      '<div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">'+
+      '<h3 style="margin:0;font-size:14.5px">'+esc(p.name)+'</h3><span class="badge">'+esc(p.level||'')+'</span></div>'+
+      '<div class="tiny muted" style="margin:4px 0 10px">'+esc(p.prov||'')+' · '+esc(p.city||'')+(p.district?' · '+esc(p.district):'')+'　|　坐标依据：'+esc(p.coord_basis||'未核实')+'</div>'+
+      '<div style="margin-bottom:8px">'+(p.main_industries||[]).map(function(x){return '<span class="badge">'+esc(x)+'</span>';}).join('')+'</div>'+
+      '<div class="small" style="line-height:1.75;margin-bottom:10px">'+esc(p.soda_relevance||'—')+'</div>'+
+      (ss.length? '<ul class="list">'+ss.map(function(s){
+        return '<li><span class="t rowlink" onclick="window.__openSite(\''+esc(s.sid)+'\')">'+esc(s.name||s.company)+'</span>'+
+          '<span class="m"> · '+esc(s.route||'')+' · '+(s.capacity!=null?fmt(s.capacity)+' '+esc(UNIT):'产能未公开')+'</span></li>';}).join('')+'</ul>'
+        : '<div class="warnbox" style="margin:6px 0">未收录该园区内可核实的本品企业。</div>')+
+      ((p.supporting||[]).length? '<div class="subhd">产业配套</div><ul class="list">'+p.supporting.map(function(x){return '<li class="small">'+esc(x)+'</li>';}).join('')+'</ul>':'')+
+      '<div class="tiny muted" style="margin-top:10px">证据 '+esc(p.grade||'—')+'　'+srcLinks(p.sources)+'</div>'+
+      '</div>';
+  }).join('') || '<div class="card pad muted">未填写园区信息</div>';
+})();
+
+/* ================= 06 上中下游 ================= */
+(function(){
+  var dn = D.downstream||[], up = D.upstream||[], nodes = D.nodes||[];
+  el('upList').innerHTML = up.length ? up.map(function(u){
+    return '<li><b>'+esc(u.material||'')+'</b>'+(u.spec?'<span class="tiny muted">（'+esc(u.spec)+'）</span>':'')+
+      '<br><span class="m">'+esc(u.name||'')+' · '+esc(u.province||'')+esc(u.city||'')+(u.quant?' · '+esc(u.quant):'')+'</span>'+
+      (u.note?'<br><span class="tiny muted">'+esc(u.note)+'</span>':'')+'</li>';
+  }).join('') : '<li class="muted">未收录</li>';
+  el('downList').innerHTML = dn.length ? dn.map(function(u){
+    return '<li><b>'+esc(u.segment||'')+'</b>'+(u.company?' · '+esc(u.company):'')+
+      '<br><span class="m">'+esc(u.province||'')+esc(u.city||'')+(u.scale?' · '+esc(u.scale):'')+(u.use?' · '+esc(u.use):'')+'</span>'+
+      (u.note?'<br><span class="tiny muted">'+esc(u.note)+'</span>':'')+'</li>';
+  }).join('') : '<li class="muted">未收录</li>';
+  el('nodeList').innerHTML = nodes.length ? nodes.map(function(n){
+    return '<li><b>'+esc(n.name)+'</b><br><span class="m">'+esc(n.province||'')+esc(n.city||'')+' · '+esc(n.role||'')+(n.cap_note?' · '+esc(n.cap_note):'')+'</span>'+
+      (n.evidence?'<br><span class="tiny muted">'+esc(n.evidence)+'</span>':'')+'</li>';
+  }).join('') : '<li class="muted">未收录</li>';
+
+  if(!chart_guard()){ el('sankey').innerHTML = '<div class="tiny muted" style="padding:30px">图表库未加载：产业流向见 06 三栏清单与 Excel「07 上下游关联」表。</div>'; return; }
+  var links = [], nodesS = [], idx = {};
+  function addNode(n){
+    if(idx[n.name]==null){ idx[n.name]=nodesS.length; nodesS.push(n); }
+    return idx[n.name];
+  }
+  var hubName = (M.hub_label || (M.region+' ' + M.product + '装置'));
+  var hubIdx = addNode({name:hubName, itemStyle:{color:'#0b3b4a'}, label:{fontWeight:'bold'}});
+  var flowLinks = (D.flows||[]);
+  var used = {up:{}, down:{}};
+  flowLinks.forEach(function(f){
+    if(f.kind==='upstream'){
+      var s = (D.sources||[]).length; void s;
+      var label = f.material || '原料';
+      var i = addNode({name:label, itemStyle:{color:'#a9812b'}});
+      used.up[label]=1;
+      links.push({source:i, target:hubIdx, value: (f.volume_numeric||1), label:{show:false,formatter:f.volume||''}});
+    } else if(f.kind==='downstream'){
+      var lab = f.material || '去向';
+      var j = addNode({name:lab, itemStyle:{color:'#1d4ed8'}});
+      used.down[lab]=1;
+      links.push({source:hubIdx, target:j, value:(f.volume_numeric||1)});
+    }
+  });
+  // 没有 flows 时用 upstream/downstream 清单定性连线
+  if(!flowLinks.length){
+    var upM = {}; up.forEach(function(u){ if(!upM[u.material]){ upM[u.material]=1; var i=addNode({name:u.material,itemStyle:{color:'#a9812b'}}); links.push({source:i,target:hubIdx,value:1}); } });
+    var dnM = {};
+    dn.forEach(function(u){ var k = u.segment; if(!k) return; if(!dnM[k]){ dnM[k]=1; var j=addNode({name:k,itemStyle:{color:'#1d4ed8'}}); links.push({source:hubIdx,target:j,value:1}); } });
+  }
+  var c = echarts.init(el('sankey'));
+  c.setOption({
+    tooltip:{trigger:'item',triggerOn:'mousemove'},
+    series:[{type:'sankey',left:10,right:130,top:10,bottom:14,nodeWidth:14,nodeGap:12,
+      emphasis:{focus:'adjacency'},
+      label:{fontSize:11.5,color:'#1f2933'},
+      lineStyle:{color:'gradient',curveness:.5,opacity:.36},
+      data:nodesS, links:links}]
+  });
+  el('sankeyNote').innerHTML = (N.sankey_note || '<b>说明：</b>连线为定性流向（不表示吨位分配）。流量宽度不代表吨位；只有当来源同时给出供应数量时，才在 Excel「07 上下游关联」表里写数量与口径。')+
+    ' 当前收录上游 '+up.length+' 条、下游 '+dn.length+' 条、流向 '+flowLinks.length+' 条。';
+})();
+
+/* ================= 07 项目 ================= */
+(function(){
+  var ps = D.projects||[];
+  var gross = ps.reduce(function(a,b){ return a + (b.capacity||0); },0);
+  var retired = ps.reduce(function(a,b){ return a + (b.capacity_retired||0); },0);
+  var net = ps.reduce(function(a,b){ return a + (b.net||0); },0);
+  var tbd = ps.filter(function(p){ return p.net==null; }).length;
+  el('projKpi').innerHTML = '<div class="card pad"><div class="subhd">毛新增 vs 净增</div>'+
+    '<div class="grid3">'+
+    '<div><div class="tiny muted">毛新增</div><div class="bignum">'+fmt(gross)+'</div></div>'+
+    '<div><div class="tiny muted">退出 / 置换</div><div class="bignum">'+fmt(retired)+'</div></div>'+
+    '<div><div class="tiny muted">净增量</div><div class="bignum" style="color:'+(net>=0?'#0b6b4f':'#a1323a')+'">'+(net>0?'+':'')+fmt(net)+'</div></div></div>'+
+    '<div class="tiny muted" style="margin-top:8px">单位 '+esc(UNIT)+'；净增量不含"退出待确认"的项目（'+tbd+' 个）</div></div>'+
+    '<div class="card pad"><div class="subhd">时间与状态</div>'+
+    ps.map(function(p){ return '<div class="bar"><div class="lb"><span>'+esc(p.name)+'</span><span class="num">'+esc(p.status)+'（'+esc(p.status_asof)+'）</span></div></div>'; }).join('')+'</div>';
+  var tb = el('tProj').querySelector('tbody');
+  tb.innerHTML = ps.map(function(p){
+    var netCls = p.net>0?'yes':(p.net<0?'no':'');
+    return '<tr class="clickable" onclick="window.__openProject(\''+esc(p.id)+'\')">'+
+      '<td><b>'+esc(p.name)+'</b></td><td class="small">'+esc(p.company_name||p.company||'')+'</td>'+
+      '<td class="small">'+esc(p.prov||'')+esc(p.city||'')+(p.district?'<br><span class="muted">'+esc(p.district)+'</span>':'')+'</td>'+
+      '<td><span class="badge">'+esc(p.type||'')+'</span></td>'+
+      '<td class="r">'+fmt(p.capacity)+'</td><td class="r">'+fmt(p.capacity_retired)+'</td>'+
+      '<td class="r '+netCls+'"><b>'+(p.net==null?'待确认':((p.net>0?'+':'')+fmt(p.net)))+'</b></td>'+
+      '<td class="small">'+esc(p.status||'')+'<br><span class="tiny muted">'+esc(p.status_asof||'')+'</span></td>'+
+      '<td class="small">'+esc(p.online||'—')+'</td>'+
+      '<td class="small">'+esc(p.impact||'—')+'</td>'+
+      '<td><span class="badge g'+esc(p.grade||'C')+'">'+esc(p.grade||'—')+'</span></td>'+
+      '<td>'+srcLinks(p.sources)+'</td></tr>';
+  }).join('') || '<tr><td colspan="12" class="muted" style="padding:18px">未收录项目</td></tr>';
+  el('projNote').innerHTML = (N.project_note||'') + ' 毛新增与净增量的差就是置换/退出；只把净增量交给供需平衡模型。';
+  window.__openProject = function(id){ var p=ps.filter(function(x){return x.id===id;})[0]; if(p) openProject(p); };
+})();
+
+/* ================= 08 价格 ================= */
+(function(){
+  var P = D.prices||{};
+  var obs = P.observations||[];
+  if(obs.length && chart_guard()){
+    var bySpec = {};
+    obs.forEach(function(o){ (bySpec[o.spec]=bySpec[o.spec]||[]).push(o); });
+    var cats = Array.from(new Set(obs.map(function(o){return o.asof;}))).sort();
+    var ser = Object.keys(bySpec).map(function(k,i){
+      var COL = ['#0b3b4a','#0e7c6b','#b45309','#1d4ed8','#6d28d9'];
+      var m = {}; bySpec[k].forEach(function(o){ m[o.asof]=o.value; });
+      return {name:k+'（'+ (bySpec[k][0].region||'') +'）',type:'line',smooth:true,symbolSize:5,
+        data:cats.map(function(d){return m[d]==null?null:m[d];}),connectNulls:true,
+        lineStyle:{width:2,color:COL[i%COL.length]},itemStyle:{color:COL[i%COL.length]}};
+    });
+    var c = echarts.init(el('priceChart'));
+    c.setOption({grid:{left:8,right:16,top:34,bottom:8,containLabel:true},
+      tooltip:{trigger:'axis'},
+      legend:{top:0,left:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11}},
+      xAxis:{type:'category',data:cats,axisLabel:{fontSize:10.5,rotate:cats.length>8?30:0}},
+      yAxis:{type:'value',scale:true,axisLabel:{fontSize:10.5},splitLine:{lineStyle:{color:'#eef1f5'}},
+        name:(obs[0].unit||'元/吨'),nameTextStyle:{fontSize:10.5,color:'#98a2b0'}},
+      series:ser});
+    el('priceChartTitle').textContent = '价格观察（'+ (obs[0].unit||'元/吨') +'，按日期）';
+  } else {
+    el('priceChart').innerHTML = '<div class="tiny muted" style="padding:26px;line-height:1.8">未收录带日期与口径的价格序列——这是本次研究的数据缺口，不用估算价格替代。<br>可补：期货日报/生意社/隆众/卓创的区域日价、企业挂牌价、成交访谈。</div>';
+    el('priceChartTitle').textContent = '价格观察（缺口）';
+  }
+  var feats = P.regional_features||[];
+  el('priceNotes').innerHTML = (feats.length? '<ul class="list">'+feats.map(function(f){
+    return '<li><b>'+esc(f.region||'')+'</b><br><span class="m">'+esc(f.feature||'')+'</span>'+(f.source?'<br>'+srcLinks(f.source):'')+'</li>';
+  }).join('')+'</ul>' : '<div class="muted small">未填写地区供需与物流特征</div>')+
+  ((N.price_note)?'<div class="subhd">口径提醒</div><div class="tiny muted" style="line-height:1.75">'+N.price_note+'</div>':'');
+  var tb = el('tPrice').querySelector('tbody');
+  tb.innerHTML = obs.map(function(o){
+    return '<tr><td class="num">'+esc(o.asof||'')+'</td><td>'+esc(o.spec||'')+'</td><td>'+esc(o.region||'')+'</td>'+
+      '<td class="r"><b>'+fmt(o.value)+'</b></td><td class="small">'+esc(o.basis||'')+'</td>'+
+      '<td class="small">'+esc(o.note||'')+'</td><td>'+srcLinks(o.sources)+'</td></tr>';
+  }).join('') || '<tr><td colspan="7" class="muted" style="padding:18px">未收录可核实的价格记录</td></tr>';
+})();
+
+/* ================= 09 集中度 ================= */
+(function(){
+  var top = A.top_share||[];
+  if(chart_guard() && top.length){
+    var c = echarts.init(el('shareChart'));
+    c.setOption({grid:{left:8,right:56,top:20,bottom:8,containLabel:true},
+      tooltip:{trigger:'item',formatter:function(p){return p.name+'<br>'+fmt(p.value)+' '+UNIT+'（'+top[p.dataIndex].share+'%）';}},
+      xAxis:{type:'value',axisLabel:{formatter:'{value}%'},splitLine:{lineStyle:{color:'#eef1f5'}}},
+      yAxis:{type:'category',data:top.map(function(t){return t.company+' '+(t.name||'');}).reverse(),axisLabel:{fontSize:10.5},axisTick:{show:false}},
+      series:[{type:'bar',data:top.map(function(t){return t.share;}).reverse(),barMaxWidth:15,
+        itemStyle:{color:'#0b3b4a',borderRadius:[0,3,3,0]},
+        label:{show:true,position:'right',fontSize:10.5,formatter:'{c}%'}}]});
+  } else {
+    el('shareChart').innerHTML = '<div class="tiny muted" style="padding:26px">无产能数据，无法计算份额</div>';
+  }
+  var cov = A.coverage_total;
+  el('concBox').innerHTML = '<div class="metric-row">'+
+    mini('CR3', A.cr3==null?'—':A.cr3+'%','样本口径')+
+    mini('CR5', A.cr5==null?'—':A.cr5+'%','样本口径')+
+    mini('HHI', A.hhi==null?'—':A.hhi,'样本口径（0–10000）')+
+    mini('样本产能', fmt(A.capacity_sample_total)+' '+UNIT,'已核实厂区')+'</div>'+
+    '<div class="warnbox">集中度只反映<b>已核实厂区</b>的份额。若样本覆盖率不足 100%，真实 CR/HHI 可能更高（遗漏的产能若集中在单一企业）或更低（若分散）——方向不确定，不作推断。</div>'+
+    ((N.concentration_note)?'<div class="subhd">集中度与区域价差</div><div class="small" style="line-height:1.8">'+N.concentration_note+'</div>':'')+
+    ((N.price_diff_factors||[]).length? '<div class="subhd">价格差异可关联的客观因素</div><ul class="list">'+
+      N.price_diff_factors.map(function(x){ return '<li>'+esc(typeof x==='string'?x:x.text)+(x.source?' '+srcLinks(x.source):'')+'</li>'; }).join('')+'</ul>':'');
+})();
+
+/* ================= 10 口径 ================= */
+(function(){
+  var blocks = [];
+  if(N.method) N.method.forEach(function(m){ blocks.push([m.k, '<div class="small" style="line-height:1.8">'+esc(m.v)+'</div>']); });
+  if(N.gaps) blocks.push(['已知缺口（不得用假设填补）','<div class="warnbox small" style="line-height:1.8">'+N.gaps.map(function(g){
+      return '<b>'+esc(g.item||g)+'</b>'+(g.why?'<br><span class="muted">原因：'+esc(g.why)+'</span>':'')+(g.how?'<br><span class="muted">补法：'+esc(g.how)+'</span>':''); }).join('<hr style="border:0;border-top:1px dashed #dcdfe4;margin:8px 0">')+'</div>']);
+  if(N.coverage_note) blocks.push(['产能覆盖口径', '<div class="small" style="line-height:1.8">'+esc(N.coverage_note)+'</div>']);
+  if(N.usage) blocks.push(['使用边界', '<ul class="list">'+N.usage.map(function(u){ return '<li class="small">'+esc(typeof u==='string'?u:u.text)+'</li>'; }).join('')+'</ul>']);
+  if(N.address_rule) blocks.push(['地址与点位规则', '<div class="small" style="line-height:1.8">'+esc(N.address_rule)+'</div>']);
+  el('methodGrid').innerHTML = blocks.map(function(b){
+    return '<div class="card pad"><div class="subhd" style="margin-top:0">'+esc(b[0])+'</div>'+b[1]+'</div>';
+  }).join('');
+  var list = (D.sources||[]).slice().sort(function(a,b){ return (a.n||0)-(b.n||0); });
+  el('srcList').innerHTML = list.map(function(s){
+    return '<li class="small"><b>S'+esc(s.n!=null?s.n:s.id)+'</b> '+esc(s.publisher||'')+ ' · '+esc(s.title||'')+
+      (s.date?' <span class="muted">('+esc(s.date)+')</span>':'')+
+      ' <span class="badge g'+esc(s.grade||'C')+'">'+esc(s.grade||'—')+'</span>'+
+      (s.url?'<br><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.url)+'</a>':'<br><span class="muted">无公开链接：'+esc(s.note||'内部记录')+'</span>')+'</li>';
+  }).join('') || '<li class="muted">无来源清单</li>';
+})();
+
+/* ================= 导航高亮 ================= */
+(function(){
+  var links = el('navin').querySelectorAll('a');
+  var secs = Array.prototype.map.call(links, function(a){ return document.querySelector(a.getAttribute('href')); });
+  function onScroll(){
+    var y = window.scrollY + 90, k = 0;
+    secs.forEach(function(s,i){ if(s && s.offsetTop <= y) k = i; });
+    for(var i=0;i<links.length;i++){ links[i].classList.toggle('on', i===k); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+
+/* ================= 启动：解压省界并初始化地图 ================= */
+function chart_guard(){ return !!window.echarts; }
+function b64ToBytes(b64){
+  var bin = atob(b64), len = bin.length, bytes = new Uint8Array(len);
+  for(var i=0;i<len;i++) bytes[i]=bin.charCodeAt(i);
+  return bytes;
+}
+function gunzipBytes(bytes){
+  if(typeof DecompressionStream==='undefined') return Promise.reject(new Error('no DecompressionStream'));
+  var ds = new DecompressionStream('gzip');
+  var stream = new Blob([bytes]).stream().pipeThrough(ds);
+  return new Response(stream).arrayBuffer();
+}
+function bootMap(){
+  if(!window.echarts){ el('mapMsg').style.display='block'; el('mapMsg').textContent='图表库未加载：地图不可用，但下方表格与图表仍可阅读。'; return; }
+  if(!window.__GEOZ__){ el('mapMsg').style.display='block'; el('mapMsg').textContent='省界数据缺失：请用 build_html.py 重新生成。'; return; }
+  gunzipBytes(b64ToBytes(window.__GEOZ__)).then(function(buf){
+    var txt = new TextDecoder('utf-8').decode(buf);
+    GEO = JSON.parse(txt);
+    echarts.registerMap('china', GEO);
+    renderMap();
+    window.addEventListener('resize', function(){ if(chart) chart.resize(); });
+  }).catch(function(e){
+    el('mapMsg').style.display='block';
+    el('mapMsg').innerHTML='当前浏览器不支持解压省界数据（需 DecompressionStream）。表格与图表不受影响。<br><span class="tiny">'+esc(e&&e.message||'')+'</span>';
+  });
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', bootMap); } else { bootMap(); }
+})();
+</script>
+</body>
+</html>

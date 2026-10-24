@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "frozen_at": "2026-10-20",
+    "scope_statement": "演示清单：演示覆盖率机制，范围故意设得很小。",
+    "effective_depth": {
+      "up": 2,
+      "down": 2
+    }
+  },
+  "core_nodes": [
+    {
+      "id": "core_node_01",
+      "node_id": "N_PRIMARY",
+      "label": "目标品种",
+      "required_criteria": [
+        "node_present",
+        "identity_verified",
+        "role_classified",
+        "evidence_linked"
+      ],
+      "priority": "P0"
+    },
+    {
+      "id": "core_node_02",
+      "node_id": "N_RA",
+      "label": "原料 A",
+      "required_criteria": [
+        "node_present",
+        "identity_verified",
+        "role_classified",
+        "evidence_linked"
+      ],
+      "priority": "P0"
+    },
+    {
+      "id": "core_node_03",
+      "node_id": "N_P2",
+      "label": "下游 P2",
+      "required_criteria": [
+        "node_present",
+        "identity_verified",
+        "role_classified",
+        "evidence_linked"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "core_node_04",
+      "node_id": "N_APP",
+      "label": "终端 E",
+      "required_criteria": [
+        "node_present",
+        "role_classified",
+        "evidence_linked"
+      ],
+      "priority": "P2"
+    }
+  ],
+  "core_relations": [
+    {
+      "id": "core_rel_01",
+      "from": "N_RA",
+      "to": "N_PRIMARY",
+      "label": "原料A→B",
+      "required_criteria": [
+        "node_present",
+        "direction_verified",
+        "quant_available",
+        "evidence_linked"
+      ],
+      "priority": "P0"
+    },
+    {
+      "id": "core_rel_02",
+      "from": "N_PRIMARY",
+      "to": "N_P2",
+      "label": "B→P2",
+      "required_criteria": [
+        "node_present",
+        "direction_verified",
+        "quant_available",
+        "evidence_linked"
+      ],
+      "priority": "P0"
+    },
+    {
+      "id": "core_rel_03",
+      "from": "N_PRIMARY",
+      "to": "N_P1",
+      "label": "B→P1(配方)",
+      "required_criteria": [
+        "node_present",
+        "direction_verified",
+        "evidence_linked"
+      ],
+      "priority": "P1"
+    }
+  ]
+}

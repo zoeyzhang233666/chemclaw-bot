@@ -1,0 +1,68 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Length 2504 >>
+stream
+BT /F3 8 Tf 1 0 0 1 48 800 Tm (*** [MOCK DOCUMENT] Simulated record for workflow demonstration only. NOT a real supplier document. Company names, batch numbers, prices and test data are entirely fictional.  \(Chinese note: ????????????????\) ***) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 787 Tm (================================================================================================) Tj ET
+BT /F2 20 Tf 1 0 0 1 48 768 Tm (PROFORMA INVOICE) Tj ET
+BT /F2 10 Tf 1 0 0 1 48 737 Tm (PI No.          : HW-PI-2609-118) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 722 Tm (Date            : 2026-09-18) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 707 Tm (Seller          : HANWOO CHEMICAL CO., LTD. \(FICTIONAL\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 692 Tm (                  12, Namhang-ro, Yeongdo-gu, Busan, Republic of Korea \(fictional address\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 677 Tm (Buyer           : [BUYER NAME WITHHELD]  \(demo\)) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 654 Tm (Item  Description                              Qty      Unit price    Amount) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 640 Tm (------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 626 Tm (1     HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%    20,000   USD 1.18      USD 23,600.00) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 612 Tm (      Packing: in 30 kg HDPE drums               kg       CIF Busan) Tj ET
+BT /F2 10 Tf 1 0 0 1 48 594 Tm (Total amount    : USD 23,600.00) Tj ET
+BT /F2 11 Tf 1 0 0 1 48 573 Tm (TERMS) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 557 Tm (Trade term      : FOB Busan) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 542 Tm (Payment         : T/T 30% deposit, balance 70% via CIF Busan) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 527 Tm (Port of loading : \(not stated\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 512 Tm (Port of discharge: \(not stated\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 497 Tm (Country of origin: \(not stated\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 482 Tm (HS code         : \(not stated\)) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 467 Tm (Country of origin and HS code are to be completed by the buyer.) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 448 Tm (NOTE \(for demonstration\): the trade term appears three times in this mock) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 435 Tm (document and does not agree \(CIF Busan / FOB Busan / CIF Busan\). This) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 422 Tm (inconsistency is intentional and is one of the findings of the dossier.) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 399 Tm (*** END OF MOCK PROFORMA INVOICE ***  Fictional, for demonstration only. ***) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 6 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> >>
+endobj
+6 0 obj
+<< /Type /Pages /Count 1 /Kids [5 0 R] >>
+endobj
+7 0 obj
+<< /Type /Catalog /Pages 6 0 R >>
+endobj
+8 0 obj
+<< /Title (MOCK PI HW-PI-2609-118 \(fictional\)) /Producer (chem-import-dossier mock generator) >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000009 00000 n 
+0000000106 00000 n 
+0000000208 00000 n 
+0000000303 00000 n 
+0000002859 00000 n 
+0000003005 00000 n 
+0000003062 00000 n 
+0000003111 00000 n 
+trailer
+<< /Size 9 /Root 7 0 R /Info 8 0 R >>
+startxref
+3225
+%%EOF

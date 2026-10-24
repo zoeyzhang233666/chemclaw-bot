@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "doc_no": "OSV-XXX-YYYY-NNN",
+    "title": "海外供应商核验报告（公开信息版）",
+    "subject_short": "供应商简称",
+    "subject_full": "供应商法定全称（本地语言 + 拉丁转写）",
+    "chain_owner": "所属集团（如适用）",
+    "country": "注册国家",
+    "product": "拟采购品",
+    "product_spec": "规格与等级要求",
+    "incoterm": "CFR 中国主港",
+    "as_of": "YYYY-MM-DD",
+    "author": "编制人",
+    "reviewer": "复核人",
+    "version": "v1.0.0",
+    "page_title": "海外供应商核验报告 · 供应商简称",
+    "export_prefix": "海外供应商核验报告_产品_供应商_YYYYMMDD",
+    "disclaimer": "本报告仅基于公开可查信息与用户提交（或模拟）的资料，用于内部采购决策参考，不构成法律、审计或信用评级意见。报告中不含任何风险评分：凡无法由可追溯证据支持的事项，一律标注「未知 / 未核实」。"
+  },
+  "summary": {
+    "verdict": "identify_only",
+    "headline": "一句话结论（一句话说清：什么能确认、什么不能）",
+    "text": "2–4 句展开：依据什么、哪些环节没闭环、为什么不给分数。",
+    "key_findings": [
+      "已确认事实 1（附证据编号）",
+      "已确认事实 2（附证据编号）",
+      "关键时点事实（供应中断 / 恢复 / 制裁 / 诉讼）"
+    ],
+    "not_concluded": [
+      "不认定真实产能或可用吨位；",
+      "不认定资金实力、信用状况或履约能力；",
+      "不认定任何风险等级或分数。"
+    ]
+  },
+  "sections": [
+    {
+      "id": "s00", "no": "00", "title": "交易概览与核验边界", "sub": "查什么、按什么口径查、什么不能下结论",
+      "blocks": [
+        { "type": "verdict", "kicker": "总体结论", "headline": "……", "text": "……",
+          "rows": [{ "k": "核验结论", "v": "仅识别身份" }, { "k": "风险评分", "v": "本报告不提供。" }] },
+        { "type": "lead", "text": "适用范围说明……" },
+        { "type": "boundary", "items": [
+          { "t": "已核实", "d": "有官方/监管来源，或 ≥2 个独立来源交叉印证" },
+          { "t": "未核实", "d": "仅单一来源或企业自述" },
+          { "t": "存在疑点", "d": "来源互相矛盾或口径不一致" },
+          { "t": "未知", "d": "检索后未找到可引用来源" },
+          { "t": "不适用", "d": "该国不存在对应制度" }
+        ], "foot": "不使用低/中/高风险标签。" }
+      ]
+    },
+    { "id": "s01", "no": "01", "title": "企业身份", "sub": "注册主体、国家、地址与公开经营信息", "blocks": [
+      { "type": "table", "name": "identity", "title": "身份要素逐项核验",
+        "columns": [{ "h": "要素", "width": "130px" }, { "h": "核验结果" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "90px" }],
+        "rows": [["法定名称", "填写官网/CR 显示的全称", "未核实", "E01"], ["商业登记号 CR", "填写并向官方登记系统核验", "未知", "—"]],
+        "pill_cols": { "2": true }, "evid_cols": [3] }
+    ]},
+    { "id": "s02", "no": "02", "title": "产品能力与匹配度", "sub": "产品目录是否覆盖拟采购品", "blocks": [
+      { "type": "table", "name": "product", "title": "产品能力逐项比对",
+        "columns": [{ "h": "核验项", "width": "150px" }, { "h": "公开信息" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+        "rows": [["是否明确列出该产品", "填写官网产品页原文要点", "未核实", "E02"]] }
+    ]},
+    { "id": "s03", "no": "03", "title": "工厂与生产证据", "sub": "是否真有工厂、在哪、产能口径", "blocks": [
+      { "type": "table", "name": "plant", "title": "生产设施与制造关系",
+        "columns": [{ "h": "核查项", "width": "150px" }, { "h": "公开信息" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+        "rows": [["工厂位置", "填写装置所在地与所在工业区", "未核实", "E03,E04"]] },
+      { "type": "hierarchy", "title": "集团内制造/销售关系图", "layers": [
+        { "layer": "股东层", "nodes": ["最终控制人 / 国有股东（如适用）"] }, { "layer": "集团层", "nodes": ["集团母公司"] },
+        { "layer": "生产层", "nodes": ["实际生产公司 A", "实际生产公司 B"] }, { "layer": "交易层", "nodes": ["合同卖方", "收款方"] }],
+        "note": "生产公司/销售公司/收款方分离是常态，但必须在文件中逐层对应。" }
+    ]},
+    { "id": "s04", "no": "04", "title": "官网与联系信息", "sub": "域名、邮箱、电话是否自洽", "blocks": [
+      { "type": "table", "name": "web", "title": "联系要素核验",
+        "columns": [{ "h": "要素", "width": "130px" }, { "h": "内容" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+        "rows": [["邮件域名一致性", "填写官网域名 vs 邮件域名", "存在疑点", "F03"]] }
+    ]},
+    { "id": "s05", "no": "05", "title": "交易主体一致性", "sub": "合同/供货/收款三方是否对齐", "blocks": [
+      { "type": "matrix_map", "title": "一致性核对矩阵",
+        "rows": [
+          { "item": "合同/卖方主体", "a": "PI 抬头", "b": "官方登记名称", "c": "是否同一法人", "state": "未核实", "evid": "F01,E01", "note": "需 CR 号比对" },
+          { "item": "收款主体（收款户名）", "a": "银行信息户名", "b": "卖方名称", "c": "是否一致", "state": "存在疑点", "evid": "F01,F02", "note": "差异不构成欺诈认定，但须补授权" },
+          { "item": "联系邮箱域名", "a": "邮件域名", "b": "官网域名", "c": "是否同域", "state": "存在疑点", "evid": "F03,E01", "note": "近似域一律待验证" }
+        ],
+        "foot": "收款主体≠合同主体时，三件套缺一不放款。" },
+      { "type": "chain", "title": "单据链条", "items": [
+        { "code": "①", "name": "PI/合同", "role": "锁定卖方主体", "self": true },
+        { "code": "②", "name": "付款指令", "role": "由卖方出具 + 银行确认函", "self": false },
+        { "code": "③", "name": "商业发票", "role": "抬头与合同一致", "self": false },
+        { "code": "④", "name": "提单 B/L", "role": "发货人=卖方或授权方", "self": false },
+        { "code": "⑤", "name": "原产地证 CO", "role": "与工厂地址呼应", "self": false },
+        { "code": "⑥", "name": "COA/SDS", "role": "批号级质量证据", "self": false }
+      ]}
+    ]},
+    { "id": "s06", "no": "06", "title": "公开风险与合规", "sub": "制裁、司法、供应中断、贸易救济", "blocks": [
+      { "type": "table", "name": "risk_scan", "title": "公开风险扫描（不评级）",
+        "columns": [{ "h": "议题", "width": "160px" }, { "h": "查得的事实" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+        "rows": [["制裁名单", "以英文全称 + 注册号 + 地址三要素筛查并留痕", "未核实", "—"]] },
+      { "type": "note", "text": "「未检索到」≠「不存在」。" }
+    ]},
+    { "id": "s07", "no": "07", "title": "文件交叉核验", "sub": "PI/注册证书/SDS/COA/银行信息", "blocks": [
+      { "type": "table", "name": "docs", "title": "已提交文件逐件核验",
+        "columns": [{ "h": "编号", "width": "56px" }, { "h": "文件", "width": "150px" }, { "h": "核验要点" }, { "h": "状态", "align": "c", "width": "92px" }, { "h": "证据", "align": "c", "width": "70px" }],
+        "rows": [["F01", "形式发票 PI（模拟）", "抬头/CR号/签字人/收款户名逐项比对", "存在疑点", "F01"],
+                 ["F06", "SDS（未提供）", "生产商名称、版本号、CAS 号", "未知", "—"]] }
+    ]},
+    { "id": "s08", "no": "08", "title": "待索取材料与下一步", "sub": "把未知变成已知的最小文件集", "blocks": [
+      { "type": "table", "name": "todo", "title": "补件清单",
+        "columns": [{ "h": "编号", "width": "60px" }, { "h": "材料", "width": "210px" }, { "h": "用途" }, { "h": "优先级", "align": "c", "width": "80px" }],
+        "rows": [["M01", "商业登记证书 CR", "确认法定主体与存续状态", "高"],
+                 ["M04", "付款指令 + 银行确认函", "解决收款主体不一致", "高"]] },
+      { "type": "steps", "items": [{ "n": "1", "t": "官网回呼", "d": "不用可疑邮箱线程，改由官网公布渠道确认联系人身份。" },
+                                   { "n": "2", "t": "闭环主体", "d": "CR + 工业许可 + 收款授权三件齐备后再谈付款。" }] }
+    ]}
+  ],
+  "evidence": [
+    { "id": "E01", "claim": "【示例】企业官网披露其法定名称与注册信息", "publisher": "企业官网", "type": "official",
+      "grade": "primary", "stance": "support", "url": "https://example.com/about", "published": "YYYY-MM-DD",
+      "accessed": "YYYY-MM-DD", "quote": "逐字摘录官网原文（不得转述）", "used_for": "企业身份核验", "note": "示例条目，使用时替换为真实来源" },
+    { "id": "E02", "claim": "【示例】官网产品页列出拟采购品及等级", "publisher": "企业官网", "type": "official",
+      "grade": "primary", "stance": "support", "url": "https://example.com/products", "published": "YYYY-MM-DD",
+      "accessed": "YYYY-MM-DD", "quote": "逐字摘录产品页原文", "used_for": "产品能力匹配", "note": "示例条目" },
+    { "id": "E03", "claim": "【示例】企业官网披露生产基地位置", "publisher": "企业官网", "type": "official",
+      "grade": "primary", "stance": "support", "url": "https://example.com/plants", "published": "YYYY-MM-DD",
+      "accessed": "YYYY-MM-DD", "quote": "逐字摘录生产基地说明", "used_for": "工厂证据", "note": "示例条目" },
+    { "id": "E04", "claim": "【示例】第三方行业数据库列示该企业装置与产能", "publisher": "行业数据库/媒体", "type": "industry_db",
+      "grade": "secondary", "stance": "context", "url": "https://example.com/db", "published": "YYYY-MM-DD",
+      "accessed": "YYYY-MM-DD", "quote": "逐字摘录", "used_for": "工厂与产能量级（需第二来源）", "note": "示例条目，单一二手来源不足以判定「已核实」" },
+    { "id": "F01", "claim": "【模拟】供应商提交的形式发票", "publisher": "本项目制作的模拟样本", "type": "mock",
+      "grade": "mock", "stance": "note", "url": "mock-docs/01_PI_SIMULATED.md", "published": "YYYY-MM-DD",
+      "accessed": "YYYY-MM-DD", "quote": "抬头 / 收款户名 / 盖章等要素原样摘录", "used_for": "交易主体一致性检查", "note": "虚构样本，不代表真实企业行为" },
+    { "id": "F02", "claim": "【模拟】供应商提供的银行收款信息", "publisher": "本项目制作的模拟样本", "type": "mock",
+      "grade": "mock", "stance": "note", "url": "mock-docs/02_BANK_SIMULATED.md", "published": "YYYY-MM-DD",
+      "accessed": "YYYY-MM-DD", "quote": "户名 / 开户地 / 是否有银行确认函", "used_for": "收款主体核验", "note": "虚构样本" },
+    { "id": "F03", "claim": "【模拟】供应商联系人名片与邮箱域名", "publisher": "本项目制作的模拟样本", "type": "mock",
+      "grade": "mock", "stance": "note", "url": "mock-docs/03_CONTACT_SIMULATED.md", "published": "YYYY-MM-DD",
+      "accessed": "YYYY-MM-DD", "quote": "邮箱地址原样摘录", "used_for": "域名一致性检查", "note": "虚构样本" }
+  ],
+  "documents": [
+    { "id": "F01", "name": "形式发票 PI（模拟）", "type": "PI", "holder": "合同卖方", "issuer": "供应商（模拟）",
+      "pages": "1 页", "provided": true, "mock": true,
+      "checks": [{ "k": "卖方名称与页眉", "ok": true, "v": "与官网一致" },
+                 { "k": "CR 号载明", "ok": false, "v": "未载" },
+                 { "k": "签字人姓名/职务", "ok": false, "v": "仅电子章" },
+                 { "k": "收款户名与卖方一致", "ok": false, "v": "第三方" }], "note": "模拟件" },
+    { "id": "F02", "name": "银行收款信息（模拟）", "type": "BANK", "holder": "收款方", "issuer": "供应商邮件（模拟）",
+      "pages": "1 页", "provided": true, "mock": true,
+      "checks": [{ "k": "户名与合同主体一致", "ok": false, "v": "不一致" },
+                 { "k": "附银行确认函", "ok": false, "v": "无" }], "note": "模拟件" },
+    { "id": "F03", "name": "联系人名片（模拟）", "type": "CONTACT", "holder": "联系人", "issuer": "供应商（模拟）",
+      "pages": "—", "provided": true, "mock": true,
+      "checks": [{ "k": "域名与官网同域", "ok": false, "v": "近似域" }], "note": "模拟件" },
+    { "id": "F06", "name": "SDS", "type": "SDS", "holder": "—", "issuer": "—", "pages": "—",
+      "provided": false, "mock": false, "checks": [], "note": "待索取" },
+    { "id": "F07", "name": "COA", "type": "COA", "holder": "—", "issuer": "—", "pages": "—",
+      "provided": false, "mock": false, "checks": [], "note": "待索取（批号级）" },
+    { "id": "F08", "name": "商业登记证书 CR", "type": "CR", "holder": "—", "issuer": "—", "pages": "—",
+      "provided": false, "mock": false, "checks": [], "note": "待索取" }
+  ],
+  "entity_map": [
+    { "layer": "集团层", "entity": "集团全称", "kind": "group_parent", "jurisdiction": "国家", "evidence": "E01", "state": "未核实", "note": "" },
+    { "layer": "生产层", "entity": "生产公司全称", "kind": "manufacturer", "jurisdiction": "国家", "evidence": "E03,E04", "state": "未核实", "note": "" },
+    { "layer": "交易层", "entity": "合同卖方", "kind": "contract_party", "jurisdiction": "国家", "evidence": "F01", "state": "未核实", "note": "" },
+    { "layer": "交易层", "entity": "收款人", "kind": "beneficiary", "jurisdiction": "国家", "evidence": "F01,F02", "state": "存在疑点", "note": "" }
+  ],
+  "subject_master": {
+    "legal_name": "法定全称", "legal_name_en": "English legal name", "short_name": "简称", "country": "国家",
+    "address": "地址", "cr_no": "注册号", "parent": "母公司", "ownership": "股权关系",
+    "website": "官网", "products_claimed": "主张产品", "contact": "电话", "email_official": "官方邮箱",
+    "contract_party": "合同主体", "beneficiary": "收款户名", "incoterm": "CFR", "payment_terms": "待确认"
+  },
+  "gaps": [
+    { "id": "G01", "area": "企业身份", "gap": "缺 CR 号", "impact": "无法唯一识别主体", "action": "索取 CR 证书", "owner": "采购", "priority": "高" }
+  ],
+  "timeline": [
+    { "date": "YYYY-MM", "event": "事件", "evid": "E01", "tag": "entity" }
+  ],
+  "rfi": {
+    "title": "Supplier Due-Diligence Enquiry — [Product]",
+    "to": "The Authorised Representative of [Supplier]",
+    "from": "[Your Company]",
+    "date": "YYYY-MM-DD",
+    "ref": "Buyer-DDQ-XXX",
+    "intro": "We are conducting pre-qualification checks ahead of a prospective purchase. Please reply in writing on company letterhead.",
+    "clauses": [
+      { "id": "A1", "text": "Confirm the full legal name, commercial registration (CR) number, address of the registered office, and legal form of the contracting entity, and attach a scan of the CR certificate." },
+      { "id": "A2", "text": "Identify the exact entity that will issue the commercial invoice and the bill of lading as shipper, and state its relationship to the contracting entity." },
+      { "id": "A3", "text": "If payment is to be made to an entity other than the contracting party, provide a signed payment instruction on company letterhead, a bank confirmation letter from the receiving bank, and a declaration of the relationship between the two entities." },
+      { "id": "A4", "text": "Identify the production site(s) (plant name, city, country) from which the goods will originate, and attach the industrial licence covering those products." },
+      { "id": "A5", "text": "State the annual and monthly nameplate capacity for the offered grade at the producing site, and the volume earmarked for this enquiry with indicative loading windows." },
+      { "id": "A6", "text": "Provide the TDS for the grade offered, including all specified limits and test methods." },
+      { "id": "A7", "text": "Provide a batch-level COA for a recent production batch of the same grade, on the producer's letterhead, showing test methods and results." },
+      { "id": "A8", "text": "Provide the current SDS (revision number and date) issued by the producer named on the COA." },
+      { "id": "A9", "text": "Confirm packaging and transport mode and, for bulk, the nominated load port and vessel/space arrangements." },
+      { "id": "A10", "text": "Provide copies of valid management-system certificates with certificate numbers, issuing bodies and validity dates." },
+      { "id": "A11", "text": "Provide two recent bills of lading (redacted) for the same product to confirm actual export performance and shipper identity." },
+      { "id": "A12", "text": "Confirm whether any sanctions, export restrictions or force majeure currently affect your ability to perform, and describe any such measure with dates." },
+      { "id": "A13", "text": "Provide an ultimate beneficial owner (UBO) declaration and a group structure chart from the contracting entity to its ultimate parent." },
+      { "id": "A14", "text": "Confirm the offer's validity period, delivery terms, governing law and dispute-resolution venue to be used in the contract." }
+    ]
+  }
+}

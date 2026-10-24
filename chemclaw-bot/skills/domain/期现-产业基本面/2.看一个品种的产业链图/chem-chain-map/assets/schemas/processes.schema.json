@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-atlas/schemas/processes.schema.json",
+  "title": "processes.json",
+  "type": "object",
+  "required": ["routes"],
+  "properties": {
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "target_node", "route_name", "family", "commercialized"],
+        "properties": {
+          "id": { "type": "string" },
+          "target_node": { "type": "string" },
+          "route_name": { "type": "string" },
+          "family": { "type": "string" },
+          "commercialized": { "type": "boolean" },
+          "share_note": { "type": "string" },
+          "key_steps": { "type": "array", "items": { "type": "string" } },
+          "solvent": { "type": ["string", "null"] },
+          "temperature": { "type": ["string", "null"] },
+          "pressure": { "type": ["string", "null"] },
+          "initiator": { "type": ["string", "null"] },
+          "unit_consumption": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "value": { "type": ["number", "null"] },
+                "unit": { "type": ["string", "null"] },
+                "basis": { "type": ["string", "null"] },
+                "status": { "enum": ["derived", "literature", "formulation", "missing"] }
+              }
+            }
+          },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "type": "string" },
+          "missing": { "type": "array", "items": { "type": "string" } },
+          "differentiator": { "type": "string" }
+        }
+      }
+    }
+  },
+  "description": "一条路线一行。不同溶剂/催化剂/原料必须拆成不同路线，绝不合并。commercialized=false 表示未工业化/中试，不应计入当期供给平衡。缺失的工艺参数填 null 并登记进 missing，不要猜。"
+}

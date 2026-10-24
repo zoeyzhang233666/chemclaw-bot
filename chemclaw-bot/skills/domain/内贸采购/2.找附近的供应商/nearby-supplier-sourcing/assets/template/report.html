@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>供应商寻源雷达</title>
+<style>
+:root{
+  --ink:#0b1a2b; --ink2:#1f2f42; --muted:#66768a; --muted2:#8b98a8;
+  --line:#e4e9ef; --line2:#eef1f5; --paper:#f3f5f8; --card:#ffffff;
+  --navy:#0d2438; --navy2:#15334c; --teal:#0d7a6b; --teal-soft:#e7f3f0;
+  --amber:#a85a08; --amber-soft:#fbf1e2; --slate:#5c6b7d; --slate-soft:#eef1f5;
+  --blue:#1a5f9e; --violet:#6d4aa8; --red:#b3261e;
+  --shadow:0 1px 2px rgba(13,36,56,.04),0 8px 24px -12px rgba(13,36,56,.18);
+  --shadow-lg:0 24px 60px -20px rgba(13,36,56,.35);
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;font-weight:650;letter-spacing:-.01em}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+.topbar{
+  background:linear-gradient(160deg,#0d2438 0%,#123049 55%,#0d2438 100%);
+  color:#eaf1f7; padding:18px 28px; position:relative; overflow:hidden;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.topbar::after{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(600px 200px at 78% 40%,#000 0%,transparent 78%);
+}
+.tb-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .mark{
+  width:38px;height:38px;border-radius:11px;flex:0 0 auto;
+  background:linear-gradient(145deg,#1c8f7d,#0d5f56); display:grid;place-items:center;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),0 6px 18px -8px rgba(0,0,0,.6);
+}
+.brand .mark svg{width:20px;height:20px}
+.brand h1{font-size:16.5px;letter-spacing:.02em}
+.brand .sub{font-size:11.5px;color:#9fb4c6;letter-spacing:.14em;text-transform:uppercase;margin-top:1px}
+.tb-spacer{flex:1}
+.tb-chip{
+  display:flex;align-items:center;gap:8px;font-size:12.5px;color:#c9d8e5;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  padding:7px 12px;border-radius:999px;backdrop-filter:blur(4px);
+}
+.tb-chip b{color:#fff;font-weight:600}
+.dot{width:6px;height:6px;border-radius:50%;background:#3ecfae;box-shadow:0 0 0 3px rgba(62,207,174,.18)}
+
+.wrap{max-width:1520px;margin:0 auto;padding:22px 24px 60px}
+.scene{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 22px;box-shadow:var(--shadow); display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:22px; margin-bottom:16px;
+}
+.scene-label{font-size:11px;letter-spacing:.16em;color:var(--muted2);text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.scene-prod{font-size:20px;font-weight:660;letter-spacing:-.015em;line-height:1.35}
+.scene-prod small{font-size:13px;color:var(--muted);font-weight:500;margin-left:8px;letter-spacing:0}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.meta{
+  display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);
+  background:#f7f9fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px;
+}
+.meta span.k{color:var(--muted);font-size:11.5px}
+.meta.warn{background:var(--amber-soft);border-color:#f0dcbd;color:#6d3c05}
+.scene-side{border-left:1px dashed var(--line);padding-left:22px}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpi{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi .v{font-size:22px;font-weight:680;letter-spacing:-.02em;line-height:1.15}
+.kpi .v small{font-size:11.5px;font-weight:600;color:var(--muted);margin-left:3px;letter-spacing:0}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:2px}
+.kpi.t .v{color:var(--teal)} .kpi.a .v{color:var(--amber)} .kpi.b .v{color:var(--blue)}
+
+.workspace{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(360px,1fr);gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.card-head{
+  display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line2);
+  background:linear-gradient(180deg,#fff,#fcfdfe);
+}
+.card-head h2{font-size:13.5px;letter-spacing:.01em}
+.card-head .h2sub{font-size:11.5px;color:var(--muted2)}
+.spacer{flex:1}
+
+.map-card{position:relative}
+.map-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.seg{display:inline-flex;background:#f1f4f8;border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px}
+.seg button{
+  border:0;background:transparent;color:var(--ink2);font-size:12px;padding:5px 11px;border-radius:7px;
+  font-weight:560;transition:.16s;white-space:nowrap;
+}
+.seg button:hover{background:rgba(13,122,107,.08)}
+.seg button.on{background:#fff;color:var(--teal);box-shadow:0 1px 2px rgba(13,36,56,.14);font-weight:650}
+#mapwrap{position:relative;background:
+  radial-gradient(900px 420px at 50% 20%,#fbfcfe 0%,#f4f7fa 60%,#eef2f6 100%)}
+#map{display:block;width:100%;height:clamp(420px,52vh,620px)}
+.map-foot{
+  display:flex;gap:14px;flex-wrap:wrap;align-items:center;padding:9px 16px;border-top:1px solid var(--line2);
+  font-size:11.5px;color:var(--muted2);background:#fcfdfe;
+}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.lg{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2)}
+.lg i{display:inline-block;width:10px;height:10px;flex:0 0 auto}
+.lg i.circle{border-radius:50%}
+.lg i.diamond{transform:rotate(45deg);border-radius:2px}
+.lg i.ring{border-radius:50%;border:1.5px dashed var(--muted2);background:transparent;width:11px;height:11px}
+
+#tip{
+  position:absolute;pointer-events:none;z-index:40;opacity:0;transition:opacity .1s;
+  background:rgba(11,26,43,.95);color:#fff;border-radius:9px;padding:9px 11px;font-size:12px;
+  box-shadow:0 12px 30px -8px rgba(0,0,0,.5);max-width:260px;line-height:1.5;
+}
+#tip b{display:block;font-size:12.5px;margin-bottom:3px}
+#tip .t2{color:#9fb4c6;font-size:11.5px}
+
+.list-card{display:flex;flex-direction:column;max-height:calc(52vh + 130px);min-height:420px}
+.list-tools{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line2);flex-wrap:wrap;align-items:center;background:#fcfdfe}
+.list-scroll{overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin}
+.list-scroll::-webkit-scrollbar{width:8px}
+.list-scroll::-webkit-scrollbar-thumb{background:#d6dde6;border-radius:8px}
+
+.sitem{border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;
+  cursor:pointer;transition:.16s;position:relative;overflow:hidden}
+.sitem:hover{border-color:#c9d6e2;box-shadow:0 6px 18px -10px rgba(13,36,56,.35);transform:translateY(-1px)}
+.sitem.sel{border-color:var(--teal);box-shadow:0 0 0 2px rgba(13,122,107,.14)}
+.sitem::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tierc,var(--slate))}
+.sitem .top{display:flex;align-items:flex-start;gap:9px}
+.rk{flex:0 0 auto;width:22px;height:22px;border-radius:6px;background:#f1f4f8;color:var(--muted);
+  font-size:11.5px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.sitem .nm{font-size:13.5px;font-weight:650;letter-spacing:-.01em;line-height:1.35}
+.sitem .loc{font-size:11.5px;color:var(--muted);margin-top:2px}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.chip{font-size:10.5px;font-weight:600;padding:2.5px 7px;border-radius:999px;letter-spacing:.01em;
+  border:1px solid transparent;white-space:nowrap}
+.chip.A{background:var(--teal-soft);color:#0a5c50;border-color:#cbe6df}
+.chip.B{background:var(--amber-soft);color:#7a4206;border-color:#f1dcbb}
+.chip.C{background:var(--slate-soft);color:#475569;border-color:#dde3ea}
+.chip.g{background:#f4f6f9;color:var(--muted);border-color:var(--line)}
+.chip.d{background:#fdf1f0;color:#8c2b23;border-color:#f6d6d2}
+.bars{display:grid;grid-template-columns:34px 1fr 40px;gap:7px;align-items:center;margin-top:9px;font-size:11px;color:var(--muted)}
+.bar{height:5px;border-radius:4px;background:#eef1f5;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px}
+.bar.m i{background:linear-gradient(90deg,#0d7a6b,#149c88)}
+.bar.l i{background:linear-gradient(90deg,#1a5f9e,#3d8cc9)}
+.bars b{font-weight:650;color:var(--ink2);text-align:right;font-size:11.5px}
+.dist-row{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:8px;border-top:1px dashed var(--line2);font-size:11.5px;color:var(--muted)}
+.dist-row .big{font-size:15px;font-weight:680;color:var(--ink);letter-spacing:-.02em}
+.dist-row .big small{font-size:10.5px;font-weight:600;color:var(--muted);margin-left:2px}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(360px,1fr);gap:16px;margin-top:16px;align-items:start}
+.matrix{width:100%;height:auto;display:block}
+.mx-note{font-size:11.5px;color:var(--muted2);padding:0 16px 12px;line-height:1.6}
+
+.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.info{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.info .hd{padding:13px 16px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:9px}
+.info .hd .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#eef4f8;color:var(--blue)}
+.info .hd h3{font-size:13.5px}
+.info .bd{padding:14px 16px;font-size:12.8px;color:var(--ink2);line-height:1.75}
+.info .bd p{margin:0 0 9px}
+.info .bd p:last-child{margin-bottom:0}
+.pill{display:inline-block;font-size:11px;font-weight:650;padding:2px 8px;border-radius:999px;margin-right:6px;vertical-align:1px}
+.pill.ok{background:var(--teal-soft);color:#0a5c50}
+.pill.no{background:#fdf1f0;color:#8c2b23}
+.pill.mid{background:var(--amber-soft);color:#7a4206}
+ul.tight{margin:0;padding-left:18px}
+ul.tight li{margin-bottom:5px}
+.tbl{width:100%;border-collapse:collapse;font-size:12.3px}
+.tbl th,.tbl td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line2);vertical-align:top}
+.tbl th{font-size:11px;color:var(--muted2);letter-spacing:.06em;text-transform:uppercase;font-weight:650;background:#fbfcfd}
+.tbl tr:last-child td{border-bottom:0}
+.num-r{text-align:right}
+
+#scrim{position:fixed;inset:0;background:rgba(11,26,43,.42);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.22s;z-index:60}
+#scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(620px,94vw);background:#fff;z-index:70;
+  box-shadow:var(--shadow-lg);transform:translateX(102%);transition:transform .26s cubic-bezier(.32,.72,.24,1);
+  display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.dw-hd{padding:18px 22px 14px;border-bottom:1px solid var(--line2);background:linear-gradient(180deg,#fbfcfd,#fff)}
+.dw-hd .row1{display:flex;align-items:flex-start;gap:12px}
+.dw-hd h3{font-size:17px;line-height:1.35;letter-spacing:-.015em}
+.dw-hd .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.x{border:1px solid var(--line);background:#fff;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--muted);flex:0 0 auto}
+.x:hover{background:#f5f7fa;color:var(--ink)}
+.tabs{display:flex;gap:2px;padding:10px 22px 0;border-bottom:1px solid var(--line);background:#fff;overflow:auto}
+.tabs button{border:0;background:transparent;padding:8px 12px;font-size:12.5px;color:var(--muted);border-bottom:2px solid transparent;font-weight:560;white-space:nowrap}
+.tabs button.on{color:var(--teal);border-bottom-color:var(--teal);font-weight:670}
+.dw-bd{padding:16px 22px 28px;overflow:auto;flex:1}
+.dw-sec{margin-bottom:20px}
+.dw-sec h4{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:9px;font-weight:650}
+.kv{display:grid;grid-template-columns:88px 1fr;gap:6px 12px;font-size:12.8px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;color:var(--ink2)}
+.mbar{display:grid;grid-template-columns:76px 1fr 34px;gap:9px;align-items:center;margin-bottom:7px;font-size:12px}
+.mbar .b{height:6px;background:#eef1f5;border-radius:4px;overflow:hidden}
+.mbar .b i{display:block;height:100%;background:linear-gradient(90deg,#0d7a6b,#22a892);border-radius:4px}
+.ev{border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:9px;background:#fff;position:relative}
+.ev .k{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:5px}
+.ev .k .lv{font-size:10px;font-weight:750;padding:1.5px 6px;border-radius:5px;letter-spacing:.02em}
+.lv.A{background:#e6f4ef;color:#0a5c50} .lv.B{background:#e8f0f9;color:#1a5f9e}
+.lv.C{background:#fbf1e2;color:#7a4206} .lv.D{background:#fdf1f0;color:#8c2b23}
+.ev .k .kind{font-size:10.5px;color:var(--muted2)}
+.ev .cl{font-size:12.8px;color:var(--ink2);line-height:1.65}
+.ev .src{font-size:11.3px;color:var(--muted);margin-top:6px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.ev .sup{font-size:11.3px;color:#0a5c50;background:#f2faf7;border-radius:6px;padding:4px 8px;margin-top:7px}
+.gap{border-left:3px solid #e3b04b;background:#fffdf7;padding:8px 11px;border-radius:0 8px 8px 0;margin-bottom:7px;font-size:12.6px;color:#5b4109;line-height:1.6}
+.ask{background:#f6f9fc;border:1px solid #e3ebf3;border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--ink2);line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;color:var(--ink2);
+  padding:7px 12px;border-radius:9px;font-size:12.3px;font-weight:560;transition:.15s}
+.btn:hover{border-color:#c6d3e0;background:#fafcfe}
+.btn.pri{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.pri:hover{background:#123049}
+.route-note{font-size:11.5px;color:var(--muted2);margin-top:6px;line-height:1.6}
+.bigdist{display:flex;gap:10px;margin-bottom:14px}
+.bd{flex:1;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.bd .v{font-size:19px;font-weight:680;letter-spacing:-.02em}
+.bd .v small{font-size:11px;color:var(--muted);font-weight:600;margin-left:2px}
+.bd .l{font-size:11px;color:var(--muted);margin-top:1px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);background:var(--navy);color:#fff;
+  padding:10px 16px;border-radius:10px;font-size:12.5px;opacity:0;transition:.24s;z-index:90;pointer-events:none;
+  box-shadow:0 16px 40px -12px rgba(0,0,0,.5)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+footer.foot{margin-top:22px;padding:16px 2px 0;border-top:1px solid var(--line);font-size:11.3px;color:var(--muted2);line-height:1.8}
+footer.foot b{color:var(--muted)}
+@media(max-width:1180px){
+  .workspace,.grid2,.scene,.info-grid{grid-template-columns:1fr}
+  .scene-side{border-left:0;border-top:1px dashed var(--line);padding-left:0;padding-top:14px}
+  .list-card{max-height:none}
+  #map{height:400px}
+}
+@media print{
+  .topbar,.map-tools,.list-tools,#scrim,.drawer{display:none!important}
+  body{background:#fff}
+  .card,.info,.scene{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="tb-inner">
+    <div class="brand">
+      <div class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>
+        </svg>
+      </div>
+      <div>
+        <h1 id="tbTitle">供应商寻源雷达</h1>
+        <div class="sub" id="tbSub">SOURCING RADAR · INBOUND</div>
+      </div>
+    </div>
+    <div class="tb-spacer"></div>
+    <div class="tb-chip"><span class="dot"></span>场景：<b id="tbScene">内贸采购 · 找附近供应商</b></div>
+    <div class="tb-chip">数据基准日 <b id="tbDate">—</b></div>
+    <div class="tb-chip">样本 <b id="tbCount">—</b> 家</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="scene">
+    <div>
+      <div class="scene-label">采购标的 / Requirement</div>
+      <div class="scene-prod" id="prodTitle">—</div>
+      <div class="meta-row" id="specRow"></div>
+      <div class="meta-row" id="warnRow" style="margin-top:10px"></div>
+    </div>
+    <div class="scene-side">
+      <div class="scene-label">关键结论 / Snapshot</div>
+      <div class="kpis" id="kpiBox"></div>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <div class="card map-card">
+      <div class="card-head">
+        <h2>供应商分布与参考运距</h2>
+        <span class="h2sub" id="mapSub">—</span>
+        <div class="spacer"></div>
+        <div class="map-tools">
+          <div class="seg" id="ringSeg"></div>
+        </div>
+      </div>
+      <div id="mapwrap">
+        <svg id="map" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div id="tip"></div>
+      </div>
+      <div class="map-foot">
+        <div class="legend" id="legend"></div>
+        <div class="spacer"></div>
+        <span id="mapNote"></span>
+      </div>
+    </div>
+
+    <aside class="card list-card">
+      <div class="card-head">
+        <h2>候选供应商</h2>
+        <span class="h2sub" id="listCount"></span>
+      </div>
+      <div class="list-tools">
+        <div class="seg" id="sortSeg">
+          <button data-sort="auto" class="on">综合</button>
+          <button data-sort="match">按匹配</button>
+          <button data-sort="dist">按距离</button>
+        </div>
+        <div class="seg" id="roleSeg">
+          <button data-role="all" class="on">全部</button>
+          <button data-role="factory">工厂</button>
+          <button data-role="warehouse">仓储</button>
+        </div>
+      </div>
+      <div class="list-scroll" id="list"></div>
+    </aside>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <div class="card-head">
+        <h2>距离 × 匹配 矩阵</h2>
+        <span class="h2sub">两轴独立评价，不以距离覆盖产品匹配</span>
+      </div>
+      <div style="padding:8px 8px 0"><svg class="matrix" id="matrix" viewBox="0 0 980 480"></svg></div>
+      <div class="mx-note">
+        纵轴 = 产品匹配度（是否真能供应该规格）；横轴 = 公路参考里程。左上为「高匹配 × 近场」黄金区；
+        左下近但不匹配的，仅作现货/仓储通道；右上高匹配但远，需铁路或整车议价。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>评分口径</h2><span class="h2sub">可复核、可推翻</span></div>
+      <div style="padding:12px 16px 16px">
+        <table class="tbl">
+          <thead><tr><th>维度</th><th class="num-r">权重</th><th>说明</th></tr></thead>
+          <tbody id="dimTable"></tbody>
+        </table>
+        <div style="margin-top:12px;font-size:12.2px;color:var(--muted);line-height:1.7" id="ruleNote"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-grid">
+    <div class="info">
+      <div class="hd">
+        <div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg></div>
+        <h3>建议采购路线（本周可执行）</h3>
+      </div>
+      <div class="bd" id="playbook"></div>
+    </div>
+    <div class="info">
+      <div class="hd">
+        <div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8h14M5 16h14"/></svg></div>
+        <h3>危险化学品判定与运输合规</h3>
+      </div>
+      <div class="bd" id="hazmat"></div>
+    </div>
+  </section>
+
+  <section class="info-grid" style="grid-template-columns:1fr">
+    <div class="info">
+      <div class="hd">
+        <div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>数据缺口清单（未核实即标注，不做推测填充）</h3>
+      </div>
+      <div class="bd" id="gapBox"></div>
+    </div>
+  </section>
+
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<div id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"></aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = __DATA__;
+const GEO  = __GEO__;
+</script>
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const TIER = {A:"#0d7a6b", B:"#a85a08", C:"#5c6b7d"};
+  const BAND = {"近场":"#0d7a6b","区域":"#1a5f9e","中距":"#a85a08","远距":"#6d4aa8","跨区":"#5c6b7d"};
+  const M = DATA.meta, L = DATA.logistics;
+  const RINGS = (L.rings||[100,300,500]).slice();
+  const MAXR = Math.max.apply(null, RINGS);
+  const state = {ring: 0, sort:"auto", role:"all", sel:null};
+
+  const R = 6371.0088, D2R = Math.PI/180;
+  const LON0 = M.origin.lon;
+  const merc = lat => Math.log(Math.tan(Math.PI/4 + lat*D2R/2));
+  const M0 = merc(M.origin.lat);
+  const proj = (lon,lat) => [ R*(lon-LON0)*D2R, R*(M0-merc(lat)) ];
+  const O = proj(M.origin.lon, M.origin.lat);
+
+  function el(tag, attrs, parent){
+    const n = document.createElementNS(NS, tag);
+    for(const k in (attrs||{})) n.setAttribute(k, attrs[k]);
+    if(parent) parent.appendChild(n);
+    return n;
+  }
+  const fmt = (n,d) => n==null ? "—" : Number(n).toFixed(d==null?1:d);
+  const eCount = (i,lv) => i.evidence.filter(e=>e.level===lv).length;
+  function toast(msg){
+    const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+    clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove("on"), 1900);
+  }
+
+  function visible(){
+    let arr = DATA.items.filter(i => (state.ring===0 || i.road_km<=state.ring));
+    if(state.role!=="all") arr = arr.filter(i=>i.typeCode===state.role);
+    if(state.sort==="match") arr = arr.slice().sort((a,b)=> b.matchTotal-a.matchTotal || a.road_km-b.road_km);
+    else if(state.sort==="dist") arr = arr.slice().sort((a,b)=> a.road_km-b.road_km);
+    else arr = arr.slice().sort((a,b)=> a.rank-b.rank);
+    return arr;
+  }
+
+  /* ---------- header ---------- */
+  function renderScene(){
+    const p = M.product || {};
+    document.title = M.title || "供应商寻源雷达";
+    $("#tbTitle").textContent = M.title || "供应商寻源雷达";
+    $("#tbSub").textContent = M.subtitle || "SOURCING RADAR · INBOUND";
+    $("#tbDate").textContent = M.generated || "—";
+    $("#tbCount").textContent = DATA.items.length;
+    $("#prodTitle").innerHTML = (p.name||"") + '<small>收货地：' + (M.origin.short||"") + '</small>';
+
+    const rows = [
+      ["收货地", M.origin.label, true],
+      ["单次批量", p.qty, false],
+      ["规格", p.grade, false],
+      ["包装", p.pack, false],
+      ["运输", p.mode, false],
+      ["自提", p.self_pickup, false]
+    ].filter(r=>r[1]);
+    $("#specRow").innerHTML = rows.map(([k,v])=>
+      `<div class="meta"><span class="k">${k}</span>${v}</div>`).join("");
+
+    $("#warnRow").innerHTML = M.origin.is_example
+      ? `<div class="meta warn">示例收货点：${M.origin.note||"真实地址替换后距离会重算"}</div>`
+      : `<div class="meta">${M.origin.note||""}</div>`;
+
+    const c1 = DATA.items.filter(i=>i.road_km<=RINGS[RINGS.length-1]).length;
+    const c2 = DATA.items.filter(i=>i.road_km<=RINGS[0]).length;
+    const wh = DATA.items.filter(i=>i.road_km<=RINGS[0] && i.typeCode==="warehouse").length;
+    const gaps = DATA.items.reduce((s,i)=>s+i.gaps.length,0);
+    $("#kpiBox").innerHTML = `
+      <div class="kpi b"><div class="v">${DATA.items.length}<small>家</small></div><div class="l">候选企业总数</div></div>
+      <div class="kpi t"><div class="v">${c1}<small>家</small></div><div class="l">${MAXR} 公里内（公路）</div></div>
+      <div class="kpi a"><div class="v">${c2}<small>家</small></div><div class="l">${RINGS[0]} 公里内${wh?`（含仓储 ${wh}）`:""}</div></div>
+      <div class="kpi"><div class="v">${gaps}<small>项</small></div><div class="l">显式标注的数据缺口</div></div>`;
+
+    $("#dimTable").innerHTML = DATA.match.dims.map(d=>
+      `<tr><td><b>${d.name}</b></td><td class="num-r">${d.max}</td><td style="color:var(--muted)">${d.desc}</td></tr>`).join("");
+    const tr = DATA.match.tiers.map(t=>`${t.code} ≥ ${t.min}`).join(" / ");
+    $("#ruleNote").innerHTML =
+      `匹配档位：${tr}。物流分按公路里程分段线性折算（` +
+      L.anchors.map(a=>a[0]+"→"+a[1]).join("、") + `）。两者<b>不做加权合并</b>，排序先档位后距离。`;
+
+    $("#mapSub").textContent = `半径环 ${RINGS.join(" / ")} km · 公路路径`;
+    $("#mapNote").textContent = M.map_note || "底图：OpenStreetMap 省界（简化）· 路径：OSRM · 坐标为厂区/园区近似点";
+    $("#legend").innerHTML =
+      `<span class="lg"><i class="circle" style="background:#0d7a6b"></i>生产厂家</span>` +
+      `<span class="lg"><i class="diamond" style="background:#b45309"></i>仓库 / 交割库</span>` +
+      `<span class="lg"><i class="ring"></i>参考半径</span>` +
+      `<span class="lg"><i class="circle" style="background:#1a5f9e"></i>收货地</span>`;
+
+    $("#ringSeg").innerHTML = RINGS.map(r=>`<button data-ring="${r}"${r===state.ring?' class="on"':''}>${r} km</button>`).join("")
+      + `<button data-ring="0"${state.ring===0?' class="on"':''}>全部</button>`;
+    $("#ringSeg").onclick = e=>{
+      const b = e.target.closest("button"); if(!b) return;
+      state.ring = Number(b.dataset.ring);
+      $("#ringSeg").querySelectorAll("button").forEach(x=>x.classList.toggle("on", x===b));
+      renderMap(); renderList(); renderMatrix();
+    };
+  }
+
+  /* ---------- map ---------- */
+  const map = $("#map"), tip = $("#tip"), mapwrap = $("#mapwrap");
+  let VB = {x:0,y:0,w:1000,h:640};
+  let U = 1;
+
+  function boundsOf(points, padKm, minHalf){
+    let xs = points.map(p=>p[0]), ys = points.map(p=>p[1]);
+    xs.push(O[0]); ys.push(O[1]);
+    let minx = Math.min.apply(null,xs), maxx = Math.max.apply(null,xs);
+    let miny = Math.min.apply(null,ys), maxy = Math.max.apply(null,ys);
+    const pad = padKm==null?60:padKm;
+    minx-=pad; maxx+=pad; miny-=pad; maxy+=pad;
+    const mh = (minHalf==null?110:minHalf);
+    if(maxx-minx < mh*2){ const c=(minx+maxx)/2; minx=c-mh; maxx=c+mh; }
+    if(maxy-miny < mh*2){ const c=(miny+maxy)/2; miny=c-mh; maxy=c+mh; }
+    return {x:minx,y:miny,w:maxx-minx,h:maxy-miny};
+  }
+  function setVB(b){
+    VB = b;
+    map.setAttribute("viewBox", `${b.x} ${b.y} ${b.w} ${b.h}`);
+    map.setAttribute("preserveAspectRatio","xMidYMid meet");
+  }
+  function kpp(){
+    const rect = map.getBoundingClientRect();
+    const cw = Math.max(rect.width,1), ch = Math.max(rect.height,1);
+    return Math.max(VB.w/cw, VB.h/ch);
+  }
+
+  function drawBase(g){
+    GEO.forEach(f=>{
+      const d = f.rings.map(ring=>ring.map((p,i)=>{
+        const q = proj(p[0],p[1]);
+        return (i?"L":"M") + q[0].toFixed(1) + " " + q[1].toFixed(1);
+      }).join(" ") + "Z").join(" ");
+      el("path",{d:d, fill:"#e9eef4", stroke:"#cfd9e3","stroke-width":1.1,
+        "stroke-linejoin":"round","vector-effect":"non-scaling-stroke"}, g);
+    });
+  }
+
+  const CITIES = [
+    ["北京",116.407,39.904],["天津",117.20,39.13],["石家庄",114.51,38.04],["太原",112.55,37.87],
+    ["济南",117.00,36.65],["郑州",113.63,34.75],["唐山",118.18,39.63],["潍坊",119.16,36.71],
+    ["连云港",119.22,34.60],["武汉",114.30,30.60],["呼和浩特",111.75,40.84],["银川",106.23,38.49],
+    ["西安",108.94,34.34],["南阳",112.53,33.00],["漯河",114.02,33.58],["昆山",120.98,31.39],
+    ["阿拉善左旗",105.67,38.83],["应城",113.57,30.93],["合肥",117.28,31.86],["南京",118.80,32.06],
+    ["上海",121.47,31.23],["杭州",120.15,30.27],["苏州",120.62,31.30],["常州",119.97,31.81],
+    ["镇江",119.45,32.20],["泰州",119.92,32.46],["嘉兴",120.75,30.75],["宁波",121.55,29.87],
+    ["滨州",118.02,37.38],["淄博",118.05,36.81],["青岛",120.38,36.07],["徐州",117.19,34.26],
+    ["西安",108.94,34.34],["兰州",103.83,36.06],["格尔木",94.90,36.40],["广州",113.26,23.13]
+  ];
+
+  function drawCities(g, items){
+    CITIES.forEach(([n,lon,lat])=>{
+      const p = proj(lon,lat);
+      if(items.some(i=>Math.hypot(proj(i.lon,i.lat)[0]-p[0], proj(i.lon,i.lat)[1]-p[1]) < 28*U)) return;
+      const t = el("text",{x:p[0],y:p[1],fill:"#9aa8b6","font-size":11*U,"text-anchor":"middle",
+        "paint-order":"stroke",stroke:"#f4f7fa","stroke-width":4*U,"stroke-linejoin":"round","font-weight":500}, g);
+      t.textContent = n;
+    });
+  }
+
+  function drawRings(g){
+    RINGS.forEach(km=>{
+      el("circle",{cx:O[0],cy:O[1],r:km,fill:"none",
+        stroke: km===state.ring ? "#0d7a6b" : "#a9b8c8",
+        "stroke-width": km===state.ring?1.7:1,
+        "stroke-dasharray": km===state.ring? "9 6":"3 7",
+        "vector-effect":"non-scaling-stroke",
+        opacity: km===state.ring? .95 : .6}, g);
+      const lab = el("text",{x:O[0]+km*0.7071, y:O[1]-km*0.7071, "font-size":10.5*U,
+        fill: km===state.ring?"#0d7a6b":"#93a2b2", "text-anchor":"middle","font-weight":km===state.ring?700:500,
+        "paint-order":"stroke", stroke:"#f4f7fa","stroke-width":4*U}, g);
+      lab.textContent = km + " km";
+    });
+  }
+
+  function drawRoutes(g, items){
+    items.forEach(i=>{
+      if(!i.geometry || !i.geometry.length) return;
+      const d = i.geometry.map((p,k)=>{
+        const q = proj(p[0],p[1]);
+        return (k?"L":"M")+q[0].toFixed(1)+" "+q[1].toFixed(1);
+      }).join(" ");
+      el("path",{d:d, fill:"none", stroke: i.id===state.sel ? "#0d7a6b" : "#7d94ad",
+        "stroke-width": i.id===state.sel?2.6:1.3, opacity: i.id===state.sel?1:.42,
+        "stroke-linecap":"round","stroke-linejoin":"round","vector-effect":"non-scaling-stroke"}, g);
+    });
+  }
+
+  function drawOrigin(g){
+    el("circle",{cx:O[0],cy:O[1],r:5.2*U,fill:"#fff",stroke:"#1a5f9e","stroke-width":3,"vector-effect":"non-scaling-stroke"}, g);
+    el("circle",{cx:O[0],cy:O[1],r:5.2*U,fill:"none",stroke:"#1a5f9e","stroke-width":1.4,opacity:.6,"vector-effect":"non-scaling-stroke"}, g)
+      .appendChild(el("animate",{attributeName:"r",values:`${5.2*U};${17*U};${5.2*U}`,dur:"2.8s",repeatCount:"indefinite"}));
+    const t = el("text",{x:O[0]+8*U,y:O[1]+4*U,"font-size":11.5*U,fill:"#1a5f9e","font-weight":700,
+      "paint-order":"stroke",stroke:"#fff","stroke-width":4*U}, g);
+    t.textContent = "收货地";
+  }
+
+  function drawPoints(g, items){
+    const fs = 10.5*U;
+    const placed = [];
+    const hits = (b, arr) => arr.some(o => !(b[2] < o[0]-U || b[0] > o[2]+U || b[3] < o[1]-U || b[1] > o[3]+U));
+    const estW = t => { let w=0; for(const ch of t) w += (/[\u4e00-\u9fa5]/.test(ch)?1:0.55)*fs; return w; };
+    { const t="收货地", w=estW(t), x=O[0]+8*U, y=O[1]+4*U; placed.push([x,y-fs,x+w,y+fs*0.45]); }
+
+    items.forEach(i=>{
+      const p = proj(i.lon,i.lat), c = TIER[i.tier];
+      const r = 7.5*U + (i.tier==="A"?1.6*U:0);
+      const gg = el("g",{class:"pt", style:"cursor:pointer"}, g);
+
+      if(i.typeCode==="warehouse"){
+        const s = r*1.3;
+        el("rect",{x:p[0]-s/2,y:p[1]-s/2,width:s,height:s,rx:1.5,transform:`rotate(45 ${p[0]} ${p[1]})`,
+          fill:c, stroke:"#fff","stroke-width":2.2,"vector-effect":"non-scaling-stroke"}, gg);
+      }else{
+        el("circle",{cx:p[0],cy:p[1],r:r,fill:c,stroke:"#fff","stroke-width":2.2,"vector-effect":"non-scaling-stroke"}, gg);
+        el("circle",{cx:p[0],cy:p[1],r:r*0.3,fill:"#fff",opacity:.92}, gg);
+      }
+      if(i.id===state.sel){
+        el("circle",{cx:p[0],cy:p[1],r:r+7*U,fill:"none",stroke:"#0d7a6b","stroke-width":2,
+          "stroke-dasharray":"5 4","vector-effect":"non-scaling-stroke"}, gg);
+      }
+      gg.addEventListener("mouseenter", ev=>{
+        const rect = mapwrap.getBoundingClientRect();
+        tip.innerHTML = `<b>${i.name}</b>
+          <span class="t2">${i.role} · ${i.region}</span><br>
+          <span class="t2">匹配 ${i.matchTotal}（${i.tier}）· 公路 ${fmt(i.road_km,0)} km · 直线 ${fmt(i.straight_km,0)} km</span>`;
+        tip.style.opacity = 1;
+        tip.style.left = Math.min(ev.clientX-rect.left+14, rect.width-270)+"px";
+        tip.style.top  = (ev.clientY-rect.top+14)+"px";
+      });
+      gg.addEventListener("mousemove", ev=>{
+        const rect = mapwrap.getBoundingClientRect();
+        tip.style.left = Math.min(ev.clientX-rect.left+14, rect.width-270)+"px";
+        tip.style.top  = Math.max(8,(ev.clientY-rect.top+14))+"px";
+      });
+      gg.addEventListener("mouseleave", ()=> tip.style.opacity = 0);
+      gg.addEventListener("click", ()=> openDrawer(i.id));
+
+      const t = i.short, w = estW(t), h = fs*1.15;
+      const cands = [
+        {x:p[0], y:p[1]-r-4*U, anchor:"middle", box:[p[0]-w/2, p[1]-r-4*U-h, p[0]+w/2, p[1]-r-4*U+2*U]},
+        {x:p[0], y:p[1]+r+4*U+h*0.8, anchor:"middle", box:[p[0]-w/2, p[1]+r+4*U, p[0]+w/2, p[1]+r+4*U+h]},
+        {x:p[0]+r+5*U, y:p[1]+fs*0.35, anchor:"start", box:[p[0]+r+5*U, p[1]-fs*0.7, p[0]+r+5*U+w, p[1]+fs*0.6]},
+        {x:p[0]-r-5*U, y:p[1]+fs*0.35, anchor:"end", box:[p[0]-r-5*U-w, p[1]-fs*0.7, p[0]-r-5*U, p[1]+fs*0.6]}
+      ];
+      let pick = cands.find(c2=>!hits(c2.box, placed));
+      if(!pick){
+        let k = 0;
+        while(!pick && k < 6){
+          const y = p[1] + r + 4*U + h*0.8 + h*1.25*k;
+          const c2 = {x:p[0], y, anchor:"middle", box:[p[0]-w/2, y-h, p[0]+w/2, y+2*U]};
+          if(!hits(c2.box, placed)) pick = c2;
+          k++;
+        }
+      }
+      pick = pick || cands[0];
+      placed.push(pick.box);
+
+      const lab = el("text",{x:pick.x, y:pick.y, "font-size":fs, fill:"#20303f",
+        "text-anchor":pick.anchor,"font-weight":600,"paint-order":"stroke",
+        stroke:"#fff","stroke-width":3.6*U,"stroke-linejoin":"round"}, g);
+      lab.textContent = t;
+    });
+  }
+
+  function renderMap(){
+    const items = visible();
+    map.innerHTML = "";
+    const pts = items.map(i=>proj(i.lon,i.lat));
+    const padKm = state.ring===0 ? 80 : Math.max(45, state.ring*0.14);
+    const b0 = boundsOf(pts, padKm, state.ring===0?220:110);
+    let bx0=b0.x, by0=b0.y, bx1=b0.x+b0.w, by1=b0.y+b0.h;
+    if(state.ring>0){
+      const R2 = state.ring*1.06;
+      bx0=Math.min(bx0,O[0]-R2); bx1=Math.max(bx1,O[0]+R2);
+      by0=Math.min(by0,O[1]-R2); by1=Math.max(by1,O[1]+R2);
+    }
+    const cw = map.clientWidth || 900, ch = map.clientHeight || 560;
+    const target = Math.max(1.05, Math.min(2.4, cw/ch));
+    let w = bx1-bx0, h = by1-by0;
+    if(w/h < target){ const nw = h*target, cx=(bx0+bx1)/2; bx0=cx-nw/2; bx1=cx+nw/2; }
+    else { const nh = w/target, cy=(by0+by1)/2; by0=cy-nh/2; by1=cy+nh/2; }
+    setVB({x:bx0,y:by0,w:bx1-bx0,h:by1-by0});
+    U = kpp();
+
+    const gBase = el("g",{},map), gC = el("g",{},map), gR = el("g",{},map),
+          gRt = el("g",{},map), gP = el("g",{},map);
+    drawBase(gBase);
+    drawCities(gC, items);
+    drawRings(gR);
+    drawRoutes(gRt, items);
+    drawOrigin(gP);
+    drawPoints(gP, items);
+  }
+
+  /* ---------- list ---------- */
+  function renderList(){
+    const items = visible();
+    $("#listCount").textContent = items.length + " / " + DATA.items.length + " 家";
+    $("#list").innerHTML = items.map(i=>{
+      const ev = i.evidence, lv = ["A","B","C","D"].map(x=>ev.filter(e=>e.level===x).length).join("/");
+      return `<article class="sitem" data-id="${i.id}" style="--tierc:${TIER[i.tier]}">
+        <div class="top">
+          <div class="rk">${i.rank}</div>
+          <div style="flex:1;min-width:0">
+            <div class="nm">${i.name}</div>
+            <div class="loc">${i.region} · ${i.typeCode==="factory"?"工厂":(i.typeCode==="warehouse"?"仓库":"注册/贸易")} · 证据 ${ev.length} 条（A${lv.split("/")[0]}）</div>
+            <div class="chips">
+              <span class="chip ${i.tier}">${i.tier} 档 · ${(i.tierLabel||"").split("·")[0]||"匹配"}</span>
+              <span class="chip g">${i.role}</span>
+              <span class="chip g" style="color:${BAND[i.band]};border-color:${BAND[i.band]}33">${i.band}</span>
+              ${i.gaps.length>=3?`<span class="chip d">缺口 ${i.gaps.length}</span>`:""}
+            </div>
+          </div>
+        </div>
+        <div class="bars">
+          <span>匹配</span><span class="bar m"><i style="width:${i.matchTotal}%"></i></span><b>${i.matchTotal}</b>
+          <span>物流</span><span class="bar l"><i style="width:${i.lScore}%"></i></span><b>${fmt(i.lScore,0)}</b>
+        </div>
+        <div class="dist-row">
+          <span class="big">${fmt(i.road_km,0)}<small>km 公路</small></span>
+          <span>直线 ${fmt(i.straight_km,0)} km · 约 ${fmt(i.hours,1)} h 在途</span>
+          <span style="flex:1"></span>
+          <span>${i.capacity||""}</span>
+        </div>
+      </article>`;
+    }).join("") || `<div style="padding:26px;text-align:center;color:var(--muted);font-size:13px">
+       该条件下的候选为空。尝试放宽半径或切换到「全部」。</div>`;
+    $("#list").querySelectorAll(".sitem").forEach(n=>{
+      n.addEventListener("click", ()=> openDrawer(n.dataset.id));
+    });
+  }
+
+  /* ---------- matrix ---------- */
+  function renderMatrix(){
+    const svg = $("#matrix"); svg.innerHTML = "";
+    const W=980,H=480, Lp=78,Rp=26,T=26,B=58;
+    const x0=Lp, x1=W-Rp, y0=T, y1=H-B;
+    const dmin=1, dmax=Math.max(1200, Math.ceil(MAXR*1.6));
+    const X = km => x0 + (Math.log10(Math.max(km,dmin)) - Math.log10(dmin)) / (Math.log10(dmax)-Math.log10(dmin)) * (x1-x0);
+    const Y = m => y1 - (Math.max(55,m)-55)/(100-55) * (y1-y0);
+
+    const qx = X(Math.min(300,MAXR*0.6)), qy = Y(85);
+    el("rect",{x:x0,y:y0,width:qx-x0,height:qy-y0,fill:"#0d7a6b",opacity:.05},svg);
+    el("rect",{x:qx,y:y0,width:x1-qx,height:qy-y0,fill:"#1a5f9e",opacity:.05},svg);
+    el("rect",{x:x0,y:qy,width:qx-x0,height:y1-qy,fill:"#a85a08",opacity:.045},svg);
+    el("rect",{x:qx,y:qy,width:x1-qx,height:y1-qy,fill:"#5c6b7d",opacity:.04},svg);
+
+    [1,10,30,100,300,500,800,1200].forEach(k=>{
+      if(k>dmax) return;
+      const x=X(k);
+      el("line",{x1:x,y1:y0,x2:x,y2:y1,stroke:"#e9eef4","stroke-width":1},svg);
+      const t=el("text",{x:x,y:y1+22,"font-size":11.5,fill:"#8b98a8","text-anchor":"middle"},svg);
+      t.textContent=k;
+    });
+    [60,70,80,85,90,95,100].forEach(m=>{
+      const y=Y(m);
+      el("line",{x1:x0,y1:y,x2:x1,y2:y,stroke:m===85?"#c9d6e2":"#eef2f6","stroke-width":m===85?1.4:1,
+        "stroke-dasharray":m===85?"5 4":""},svg);
+      const t=el("text",{x:x0-10,y:y+4,"font-size":11.5,fill:m===85?"#0d7a6b":"#8b98a8","text-anchor":"end"},svg);
+      t.textContent=m;
+    });
+    el("line",{x1:qx,y1:y0,x2:qx,y2:y1,stroke:"#c9d6e2","stroke-width":1.4,"stroke-dasharray":"5 4"},svg);
+
+    const ax=el("text",{x:(x0+x1)/2,y:H-14,"font-size":12,fill:"#66768a","text-anchor":"middle"},svg);
+    ax.textContent="公路参考里程（km，对数刻度）→ 越右越远";
+    const ay=el("text",{x:0,y:0,"font-size":12,fill:"#66768a","text-anchor":"middle",
+      transform:`translate(20 ${(y0+y1)/2}) rotate(-90)`},svg);
+    ay.textContent="产品匹配度 →";
+
+    [["黄金区：高匹配 × 近场",x0+14,y0+20,"#0a5c50"],
+     ["高匹配 × 远距：需铁路/整车",qx+14,y0+20,"#1a4f80"],
+     ["近但不匹配：仅作现货通道",x0+14,y1-12,"#7a4206"],
+     ["双低：不进入货源池",qx+14,y1-12,"#5c6b7d"]].forEach(([t,x,y,c])=>{
+      const n=el("text",{x:x,y:y,"font-size":11,fill:c,"font-weight":600,opacity:.9},svg);
+      n.textContent=t;
+    });
+
+    DATA.items.filter(i=> state.ring===0 || i.road_km<=state.ring).forEach(i=>{
+      const cx=X(Math.max(i.road_km,1)), cy=Y(i.matchTotal), c=TIER[i.tier];
+      const g=el("g",{style:"cursor:pointer"},svg);
+      el("circle",{cx:cx,cy:cy,r:13,fill:"transparent"},g);
+      if(i.typeCode==="warehouse"){
+        el("rect",{x:cx-4.6,y:cy-4.6,width:9.2,height:9.2,rx:1.5,fill:c,transform:`rotate(45 ${cx} ${cy})`},g);
+      }else{
+        el("circle",{cx:cx,cy:cy,r:5.6,fill:c,stroke:"#fff","stroke-width":1.6},g);
+      }
+      const t=el("text",{x:cx,y:cy-11,"font-size":10.5,fill:"#33475c","text-anchor":"middle"},g);
+      t.textContent=i.short;
+      g.addEventListener("click",()=>openDrawer(i.id));
+      g.addEventListener("mouseenter",()=>{ tip.innerHTML=`<b>${i.name}</b><span class="t2">匹配 ${i.matchTotal} · 公路 ${fmt(i.road_km,0)} km</span>`; tip.style.opacity=1; });
+      g.addEventListener("mouseleave",()=> tip.style.opacity=0);
+    });
+  }
+
+  /* ---------- drawer ---------- */
+  function openDrawer(id){
+    const i = DATA.items.find(x=>x.id===id); if(!i) return;
+    state.sel = id;
+    const d = $("#drawer");
+    d.innerHTML = `
+      <div class="dw-hd">
+        <div class="row1">
+          <div style="flex:1">
+            <h3>${i.name}</h3>
+            <div class="sub">${i.region} · ${i.address}</div>
+            <div class="chips" style="margin-top:8px">
+              <span class="chip ${i.tier}">${i.tier} 档 · ${i.tierLabel||i.tier}</span>
+              <span class="chip g">${i.role}</span>
+              <span class="chip g" style="color:${BAND[i.band]}">${i.band} · 公路 ${fmt(i.road_km,0)} km</span>
+            </div>
+          </div>
+          <button class="x" id="dwClose" aria-label="关闭">✕</button>
+        </div>
+      </div>
+      <div class="tabs" id="dwTabs">
+        <button class="on" data-t="overview">概览</button>
+        <button data-t="evidence">证据 ${i.evidence.length}</button>
+        <button data-t="distance">距离与路线</button>
+        <button data-t="gaps">缺口与询价</button>
+      </div>
+      <div class="dw-bd" id="dwBody"></div>`;
+    d.classList.add("on"); d.setAttribute("aria-hidden","false");
+    $("#scrim").classList.add("on");
+    $("#dwClose").onclick = closeDrawer;
+    $("#scrim").onclick = closeDrawer;
+    renderTab(i,"overview");
+    $("#dwTabs").querySelectorAll("button").forEach(b=>{
+      b.onclick = ()=>{
+        $("#dwTabs").querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+        b.classList.add("on"); renderTab(i,b.dataset.t);
+      };
+    });
+    renderMap(); renderList();
+  }
+  function closeDrawer(){
+    $("#drawer").classList.remove("on");
+    $("#drawer").setAttribute("aria-hidden","true");
+    $("#scrim").classList.remove("on");
+    state.sel=null; renderMap(); renderList();
+  }
+
+  function renderTab(i, tab){
+    const body = $("#dwBody");
+    const KIND = i.typeCode==="factory" ? "生产工厂（实际生产）"
+      : (i.typeCode==="warehouse" ? "仓库 / 交割库（不生产，提供提货）" : "注册地址或贸易主体（需核实货源）");
+    if(tab==="overview"){
+      body.innerHTML = `
+        <div class="bigdist">
+          <div class="bd"><div class="v num">${fmt(i.road_km,0)}<small>km</small></div><div class="l">公路参考里程</div></div>
+          <div class="bd"><div class="v num">${fmt(i.straight_km,0)}<small>km</small></div><div class="l">直线距离</div></div>
+          <div class="bd"><div class="v num">${i.matchTotal}<small>/100</small></div><div class="l">产品匹配度</div></div>
+        </div>
+        <div class="dw-sec">
+          <h4>匹配度分解</h4>
+          ${DATA.match.dims.map(dim=>{
+            const v = i.match[dim.name]||0;
+            return `<div class="mbar"><span style="color:var(--muted)">${dim.name}</span>
+              <span class="b"><i style="width:${Math.round(v/dim.max*100)}%"></i></span>
+              <b class="num" style="text-align:right">${v}/${dim.max}</b></div>`;
+          }).join("")}
+        </div>
+        <div class="dw-sec">
+          <h4>关键事实</h4>
+          <dl class="kv">
+            <dt>企业类型</dt><dd><b>${KIND}</b></dd>
+            <dt>工艺 / 性质</dt><dd>${i.process||"—"}</dd>
+            <dt>产能 / 规模</dt><dd>${i.capacity||"—"}</dd>
+            <dt>牌号 / 品牌</dt><dd>${i.brand||"—"}</dd>
+            <dt>运输建议</dt><dd>${i.mode||"—"}</dd>
+            <dt>坐标精度</dt><dd>${i.coord_note||"—"}</dd>
+          </dl>
+        </div>
+        <div class="dw-sec"><h4>采购建议</h4><div class="ask">${i.action||"—"}</div></div>
+        <div class="dw-sec">
+          <h4>快速操作</h4>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn pri" data-copy="${i.id}">复制询价要点</button>
+            <button class="btn" data-tabjump="evidence">查看证据链</button>
+            <button class="btn" data-tabjump="distance">查看距离明细</button>
+          </div>
+        </div>`;
+      body.querySelector("[data-copy]").onclick = ()=>copyRFQ(i);
+      body.querySelectorAll("[data-tabjump]").forEach(b=>{
+        b.onclick = ()=>{
+          const t=b.dataset.tabjump;
+          $("#dwTabs").querySelectorAll("button").forEach(x=>x.classList.toggle("on", x.dataset.t===t));
+          renderTab(i,t);
+        };
+      });
+    }
+    else if(tab==="evidence"){
+      body.innerHTML = `<div class="dw-sec">
+        <h4>证据链（A 交易所/政府 &gt; B 官网/上市公司 &gt; C 媒体百科 &gt; D 名录）</h4>
+        ${i.evidence.map(e=>`
+          <div class="ev">
+            <div class="k"><span class="lv ${e.level}">${e.level} 级</span>
+              <span class="kind">${e.kind}</span><span class="kind">· ${e.date}</span></div>
+            <div class="cl">${e.claim}</div>
+            <div class="src">来源：<a href="${e.url}" target="_blank" rel="noopener">${e.source}</a></div>
+            <div class="sup">→ ${e.supports}</div>
+          </div>`).join("")}
+      </div>
+      <div class="dw-sec"><h4>证据强度判读</h4>
+        <div class="ask">
+          本条记录共有 A 级 ${eCount(i,"A")} 条、B 级 ${eCount(i,"B")} 条、C 级 ${eCount(i,"C")} 条、D 级 ${eCount(i,"D")} 条。
+          ${i.typeCode==="warehouse"
+            ? "仓库类主体的 A 级证据通常是交易所/监管公告，能证明“该地址存在合规库”，但<b>不能证明“此刻有货可卖”</b>，下单前须索取库存与货权证明。"
+            : "厂家类主体的关键证据是“在产证明”（产量、投产公告），仅有产能描述不足以证明当前可供。"}
+        </div>
+      </div>`;
+    }
+    else if(tab==="distance"){
+      const trucks = i.road_km ? Math.ceil((M.product.qty_tons||30)/33) : 1;
+      body.innerHTML = `
+        <div class="dw-sec">
+          <h4>起终点</h4>
+          <dl class="kv">
+            <dt>起点</dt><dd>${M.origin.label}<br><span class="mono" style="font-size:11.5px;color:var(--muted)">${M.origin.lat.toFixed(4)}, ${M.origin.lon.toFixed(4)}</span></dd>
+            <dt>终点</dt><dd>${i.address}<br><span class="mono" style="font-size:11.5px;color:var(--muted)">${i.lat.toFixed(4)}, ${i.lon.toFixed(4)}</span></dd>
+          </dl>
+        </div>
+        <div class="dw-sec">
+          <h4>里程与时间</h4>
+          <table class="tbl">
+            <tr><th>口径</th><th class="num-r">数值</th><th>说明</th></tr>
+            <tr><td>直线距离</td><td class="num-r num">${fmt(i.straight_km,1)} km</td><td>haversine 球面距离</td></tr>
+            <tr><td>公路参考里程</td><td class="num-r num"><b>${fmt(i.road_km,1)} km</b></td><td>${i.distance_source==="estimated"?"<b>估算</b>（无路网数据，直线×系数）":"OSRM 路径规划（OpenStreetMap 路网）"}${i.distance_note?"<br><span style='color:#7a4206'>"+i.distance_note+"</span>":""}</td></tr>
+            <tr><td>绕行系数</td><td class="num-r num">${fmt(i.ratio,2)}</td><td>公路 ÷ 直线，反映地形与路网绕行</td></tr>
+            <tr><td>纯行驶时间</td><td class="num-r num">${fmt(i.hours,1)} h</td><td>按路径规划平均车速，未含装卸与等待</td></tr>
+            <tr><td>装载批次</td><td class="num-r num">${trucks} 车</td><td>按 33 吨/车估算（车型不同请重算）</td></tr>
+          </table>
+          <div class="route-note">坐标为${i.coord_note||"近似点"}；起点为${M.origin.short||"收货地"}。实际发运前请以承运商导航里程复核。</div>
+        </div>
+        <div class="dw-sec"><h4>运输方式建议</h4><div class="ask">${i.mode||"—"}</div></div>
+        <div class="dw-sec"><h4>运费口径（本报告不含金额）</h4>
+          <ul class="tight">
+            <li>计费口径：吨公里 / 整车包干 / 回程车，三者不可混比；</li>
+            <li>必须约定：装卸费、过磅费、压车费、雨布苫盖、超期滞留；</li>
+            <li>受潮/腐蚀/危化品等特性按 ${DATA.hazmat && DATA.hazmat.is_hazardous ? "危险货物要求" : "普通货物要求"} 约定车厢条件；</li>
+            <li>拿到书面报价后，可按“到厂价 = 出厂价 + 运费”核算。</li>
+          </ul>
+        </div>`;
+    }
+    else if(tab==="gaps"){
+      body.innerHTML = `
+        <div class="dw-sec">
+          <h4>未核实事项（不做推测性填充）</h4>
+          ${i.gaps.map(g=>`<div class="gap">${g}</div>`).join("") || `<div class="gap">无显式缺口。</div>`}
+        </div>
+        <div class="dw-sec"><h4>首次接触问询清单</h4><div class="ask">${i.ask||"—"}</div></div>
+        <div class="dw-sec">
+          <div class="ask" style="background:#fdf1f0;border-color:#f6d6d2;color:#7d241d">
+            提醒：以上缺口在未书面确认前，相关评分只代表“公开信息下的可能性”。签约前应取得营业执照、相关许可、近三个月质检报告与发货能力书面确认。
+          </div>
+        </div>`;
+    }
+  }
+
+  function copyRFQ(i){
+    const p = M.product || {};
+    const txt = [
+      `【询价】${p.name||""} ${p.qty||""}`,
+      `需求方收货地：${M.origin.label}`,
+      p.grade ? `规格：${p.grade}` : "",
+      p.pack ? `包装：${p.pack}；运输：${p.mode||""}` : "",
+      `拟定供应商：${i.name}（${i.address}）`,
+      `参考公路里程：${fmt(i.road_km,0)} km（直线 ${fmt(i.straight_km,0)} km）`,
+      `请回复：`,
+      `1) 可供牌号/质检单与本月可供量；`,
+      `2) 出厂价与到厂价（含运）报价口径；`,
+      `3) 最短发运周期、装车能力与提货时间窗；`,
+      `4) 是否可开票、结算方式与账期。`,
+      ``,
+      `待确认事项：${i.ask||""}`
+    ].filter(Boolean).join("\n");
+    navigator.clipboard?.writeText(txt).then(()=>toast("询价要点已复制到剪贴板"), ()=>{
+      const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
+      document.execCommand("copy"); ta.remove(); toast("询价要点已复制");
+    });
+  }
+
+  /* ---------- static ---------- */
+  function esc(s){ return String(s==null?"":s).replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+  function renderStatic(){
+    const h = DATA.hazmat || {};
+    const cls = h.is_hazardous ? "no" : "ok";
+    $("#hazmat").innerHTML = `
+      <p><span class="pill ${cls}">${h.is_hazardous?"属于危险化学品":"不属于危险化学品"}</span>　${esc(h.verdict||"")}</p>
+      ${(h.regulatory||[]).length?`<ul class="tight">${h.regulatory.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+      ${(h.risks||[]).length?`<p><span class="pill mid">作业风险</span>${h.risks.map(esc).join("；")}。</p>`:""}
+      ${(h.transport||[]).length?`<p><b>运输与资质</b></p><ul class="tight">${h.transport.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+      ${h.if_spec_changes?`<p style="color:var(--muted2);font-size:11.8px">${esc(h.if_spec_changes)}</p>`:""}
+      ${(h.sources||[]).length?`<p style="color:var(--muted2);font-size:11.5px">依据：${h.sources.map(esc).join("；")}</p>`:""}`;
+
+    $("#playbook").innerHTML = (DATA.playbook||[]).map((s,k)=>`
+      <p><span class="pill ${k===0?"mid":(k===1?"ok":"")}">${esc(s.step)}</span>${esc(s.text)}</p>`).join("")
+      + (M.playbook_note?`<p style="color:var(--muted2);font-size:11.8px;margin-bottom:0">${esc(M.playbook_note)}</p>`:"");
+
+    const sorted = DATA.items.slice().sort((a,b)=>b.gaps.length-a.gaps.length).slice(0,6);
+    const total = DATA.items.reduce((s,i)=>s+i.gaps.length,0);
+    $("#gapBox").innerHTML = `
+      <p>共 <b>${total}</b> 项缺口分布在 <b>${DATA.items.filter(i=>i.gaps.length).length}</b> 家企业。缺口不是“黑箱”，而是明确的待办：</p>
+      <table class="tbl">
+        <thead><tr><th>企业</th><th>缺口要点</th><th class="num-r">条数</th></tr></thead>
+        <tbody>${sorted.map(i=>`<tr>
+          <td><a href="#" data-open="${i.id}">${esc(i.short)}</a></td>
+          <td style="color:var(--muted)">${esc(i.gaps[0]||"")}</td>
+          <td class="num-r num">${i.gaps.length}</td></tr>`).join("")}</tbody>
+      </table>
+      <p style="margin-top:10px;font-size:11.8px;color:var(--muted2)">${esc(M.gap_note||"共同缺口：本月可供量、到厂价（含运）口径、装卸与压车费用归属——这三项公开渠道拿不到，必须询价。")}</p>`;
+    $("#gapBox").querySelectorAll("[data-open]").forEach(a=>{
+      a.onclick = e=>{ e.preventDefault(); openDrawer(a.dataset.open); };
+    });
+
+    $("#foot").innerHTML = (DATA.disclaimer||[]).map(d=>"· "+esc(d)).join("<br>") +
+      `<br><br><b>使用方式</b>：点击地图标记或右侧卡片查看企业证据；顶部切换 ${RINGS.join("/")} km 筛选；矩阵图用于识别“近但不匹配”的干扰项。`;
+  }
+
+  $("#sortSeg").onclick = e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    state.sort = b.dataset.sort;
+    $("#sortSeg").querySelectorAll("button").forEach(x=>x.classList.toggle("on", x===b));
+    renderList(); renderMap();
+  };
+  $("#roleSeg").onclick = e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    state.role = b.dataset.role;
+    $("#roleSeg").querySelectorAll("button").forEach(x=>x.classList.toggle("on", x===b));
+    renderList(); renderMap(); renderMatrix();
+  };
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeDrawer(); });
+
+  renderScene(); renderStatic(); renderMap(); renderList(); renderMatrix();
+  let rz;
+  window.addEventListener("resize", ()=>{ clearTimeout(rz); rz = setTimeout(()=>renderMap(), 160); });
+})();
+</script>
+</body>
+</html>

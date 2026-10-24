@@ -1,0 +1,20 @@
+[
+  {
+    "name": "grilling",
+    "revision": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+    "license": "MIT",
+    "referenceOnly": true
+  },
+  {
+    "name": "superpowers",
+    "revision": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+    "license": "MIT",
+    "referenceOnly": true
+  },
+  {
+    "name": "chemvision",
+    "revision": "7a9369f418de9fad96db3c9273c4fabf40daaa57",
+    "license": "MIT",
+    "referenceOnly": true
+  }
+]

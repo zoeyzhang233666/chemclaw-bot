@@ -1,0 +1,124 @@
+{
+ "origin": {
+  "label": "河北省邢台市沙河市经济开发区纬三路 · 玻璃深加工园区",
+  "short": "沙河 · 玻璃深加工园",
+  "lat": 36.879,
+  "lon": 114.501,
+  "note": "示例收货点（玻璃企业原料库场景）。真实下单请替换为具体门牌/库位，距离会随之变化。",
+  "is_example": true
+ },
+ "items": [
+  {
+   "id": "S03",
+   "short": "河南金大地",
+   "straight_km": 387.6,
+   "road_km": 423.4,
+   "ratio": 1.09,
+   "source": "osrm"
+  },
+  {
+   "id": "S02",
+   "short": "山东海化",
+   "straight_km": 409.3,
+   "road_km": 461.3,
+   "ratio": 1.13,
+   "source": "osrm"
+  },
+  {
+   "id": "S04",
+   "short": "山东海天",
+   "straight_km": 445.4,
+   "road_km": 505.6,
+   "ratio": 1.14,
+   "source": "osrm"
+  },
+  {
+   "id": "S01",
+   "short": "唐山三友",
+   "straight_km": 421.7,
+   "road_km": 531.4,
+   "ratio": 1.26,
+   "source": "osrm"
+  },
+  {
+   "id": "S06",
+   "short": "河南中源",
+   "straight_km": 501.3,
+   "road_km": 580.5,
+   "ratio": 1.16,
+   "source": "osrm"
+  },
+  {
+   "id": "S05",
+   "short": "连云港碱业",
+   "straight_km": 516.3,
+   "road_km": 603.3,
+   "ratio": 1.17,
+   "source": "osrm"
+  },
+  {
+   "id": "S09",
+   "short": "沙玻物流（沙河）",
+   "straight_km": 1.6,
+   "road_km": 2.6,
+   "ratio": 1.62,
+   "source": "osrm"
+  },
+  {
+   "id": "S11",
+   "short": "国储河北局一三三处",
+   "straight_km": 133.0,
+   "road_km": 151.5,
+   "ratio": 1.14,
+   "source": "osrm"
+  },
+  {
+   "id": "S10",
+   "short": "河北中储",
+   "straight_km": 134.9,
+   "road_km": 154.7,
+   "ratio": 1.15,
+   "source": "osrm"
+  },
+  {
+   "id": "S08",
+   "short": "天津渤化永利",
+   "straight_km": 352.2,
+   "road_km": 428.3,
+   "ratio": 1.22,
+   "source": "osrm"
+  },
+  {
+   "id": "S12",
+   "short": "湖北双环",
+   "straight_km": 664.5,
+   "road_km": 736.4,
+   "ratio": 1.11,
+   "source": "osrm"
+  },
+  {
+   "id": "S14",
+   "short": "武汉众恒创景",
+   "straight_km": 698.4,
+   "road_km": 760.4,
+   "ratio": 1.09,
+   "source": "osrm"
+  },
+  {
+   "id": "S13",
+   "short": "中盐昆山",
+   "straight_km": 854.2,
+   "road_km": 1001.7,
+   "ratio": 1.17,
+   "source": "osrm"
+  },
+  {
+   "id": "S07",
+   "short": "远兴·银根",
+   "straight_km": 960.2,
+   "road_km": 1205.0,
+   "ratio": 1.25,
+   "source": "osrm"
+  }
+ ]
+}

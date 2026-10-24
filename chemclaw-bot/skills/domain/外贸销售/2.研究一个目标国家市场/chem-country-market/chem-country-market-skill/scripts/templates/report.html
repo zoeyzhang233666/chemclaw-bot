@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#070b14;--bg2:#0b1120;--panel:rgba(255,255,255,.040);--panel2:rgba(255,255,255,.066);
+  --line:rgba(255,255,255,.088);--line2:rgba(255,255,255,.17);
+  --txt:#e9eefb;--txt2:#a8b6d1;--txt3:#73829e;
+  --blue:#4da3ff;--cyan:#38d6e0;--violet:#9b8cff;--amber:#f6b73c;--red:#ff6b7a;--green:#22c98a;--pink:#f472b6;
+  --k-official:#4da3ff;--k-company:#22c98a;--k-media:#9b8cff;--k-mr:#f6b73c;--k-gap:#ff6b7a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--txt);font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100%}
+body{padding:0 0 80px;background:
+ radial-gradient(1200px 620px at 6% -8%,rgba(77,163,255,.16),transparent 60%),
+ radial-gradient(1000px 560px at 94% -6%,rgba(155,140,255,.12),transparent 62%),
+ radial-gradient(900px 700px at 50% 110%,rgba(34,201,138,.06),transparent 60%),
+ linear-gradient(180deg,#070b14,#080d18 55%,#060a12)}
+.wrap{max-width:1560px;margin:0 auto;padding:0 26px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-family:"JetBrains Mono",Consolas,"SF Mono",monospace;font-variant-numeric:tabular-nums}
+header{padding:28px 0 14px}
+.topline{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--txt3);flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--txt2)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,201,138,.14)}
+h1{font-size:34px;letter-spacing:-.4px;margin:14px 0 8px;font-weight:800;line-height:1.28}
+h1 .thin{font-weight:300;color:var(--txt2)}
+.sub{color:var(--txt2);font-size:14.5px;line-height:1.75;max-width:1100px}
+.sub b{color:var(--txt)}
+.warnbar{margin-top:14px;display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-radius:12px;border:1px solid rgba(246,183,60,.26);background:linear-gradient(90deg,rgba(246,183,60,.10),rgba(246,183,60,.02));font-size:13px;color:#ecd9ab;line-height:1.65}
+.warnbar .ic{color:var(--amber);font-weight:800;flex:none}
+/* selector */
+.sel{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.selbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.selbox label{display:block;font-size:11.5px;color:var(--txt3);letter-spacing:.4px;margin-bottom:8px}
+.selbox .val{font-size:16px;font-weight:700}
+.selbox .val small{color:var(--txt3);font-weight:400;font-size:12px}
+.pills{display:flex;gap:4px;flex-wrap:wrap;background:rgba(0,0,0,.22);padding:4px;border-radius:10px;border:1px solid var(--line)}
+.pbtn{border:0;background:transparent;color:var(--txt2);font-size:12.5px;padding:6px 11px;border-radius:7px;cursor:pointer;font-family:inherit;transition:.16s;white-space:nowrap}
+.pbtn:hover{color:var(--txt);background:rgba(255,255,255,.06)}
+.pbtn.on{background:#243452;color:#fff}
+.pbtn .g{color:var(--k-gap);font-size:10px;margin-left:3px}
+.ctrl{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(7,11,20,.86);border-bottom:1px solid var(--line);padding:10px 0;margin-top:16px}
+.ctrlrow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.ctrlrow .sp{flex:1}
+.ghost{border:1px solid var(--line2);background:transparent;color:var(--txt2);font-size:12.5px;padding:7px 12px;border-radius:8px;cursor:pointer;font-family:inherit;transition:.16s}
+.ghost:hover{color:#fff;border-color:#4a5f86;background:rgba(255,255,255,.05)}
+/* KPI */
+.kgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:11px;margin:20px 0 6px}
+.kpi{background:linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.020));border:1px solid var(--line);border-radius:14px;padding:14px 15px;position:relative;overflow:hidden;cursor:default}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--k)}
+.kpi .lab{font-size:11.5px;color:var(--txt3);letter-spacing:.3px}
+.kpi .big{font-size:24px;font-weight:800;margin:7px 0 4px;letter-spacing:-.4px}
+.kpi .small{font-size:11.5px;color:var(--txt2);line-height:1.5}
+.kpi .tag{position:absolute;right:10px;top:10px}
+.kpi.tone-blue{--k:var(--blue)}.kpi.tone-red{--k:var(--red)}.kpi.tone-green{--k:var(--green)}
+.kpi.tone-violet{--k:var(--violet)}.kpi.tone-cyan{--k:var(--cyan)}.kpi.tone-amber{--k:var(--amber)}
+.kpi:hover{border-color:var(--line2)}
+/* evidence tags */
+.ev{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;padding:2px 7px;border-radius:999px;border:1px solid;white-space:nowrap;cursor:pointer;font-family:inherit;background:transparent;line-height:1.5}
+.ev:hover{filter:brightness(1.25)}
+.ev-official{color:var(--k-official);border-color:rgba(77,163,255,.4);background:rgba(77,163,255,.10)}
+.ev-company{color:var(--k-company);border-color:rgba(34,201,138,.4);background:rgba(34,201,138,.10)}
+.ev-media{color:var(--k-media);border-color:rgba(155,140,255,.4);background:rgba(155,140,255,.10)}
+.ev-market_research,.ev-estimate{color:var(--k-mr);border-color:rgba(246,183,60,.42);background:rgba(246,183,60,.10)}
+.ev-reglation,.ev-regulation{color:#8ee6c0;border-color:rgba(142,230,192,.4);background:rgba(142,230,192,.09)}
+.ev-gap{color:var(--k-gap);border-color:rgba(255,107,122,.42);background:rgba(255,107,122,.10)}
+.ev-named,.ev-unnamed{color:var(--txt3);border-color:var(--line2);background:rgba(255,255,255,.03)}
+/* sections */
+section{margin-top:30px}
+.shead{display:flex;align-items:flex-end;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.shead h2{font-size:19px;font-weight:750;display:flex;align-items:center;gap:10px;letter-spacing:-.2px}
+.shead h2 .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:rgba(77,163,255,.14);color:var(--blue);font-size:12.5px;font-weight:700}
+.shead .desc{font-size:12.5px;color:var(--txt3);line-height:1.6;flex:1;min-width:260px}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.016));border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+h3.sub{font-size:13px;color:var(--txt2);letter-spacing:.4px;margin:18px 0 10px}
+.chart{width:100%;height:300px}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+th{text-align:left;font-weight:600;color:var(--txt3);font-size:11.5px;letter-spacing:.3px;padding:9px 10px;border-bottom:1px solid var(--line2);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.022)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:var(--txt2);white-space:nowrap}
+.tag.g{background:rgba(255,107,122,.13);color:#ffa3ad}
+.tag.y{background:rgba(246,183,60,.14);color:#ffd28a}
+.tag.b{background:rgba(77,163,255,.14);color:#9ccaff}
+.tag.v{background:rgba(34,201,138,.14);color:#7fe3b6}
+.linkbtn{background:none;border:0;color:var(--blue);cursor:pointer;font-family:inherit;font-size:12.6px;text-align:left;padding:0}
+.linkbtn:hover{text-decoration:underline}
+/* cards for companies / policy */
+.card{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:15px 16px}
+.card:hover{border-color:var(--line2)}
+.card .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card .nm{font-size:14.5px;font-weight:700;line-height:1.4}
+.card .meta{font-size:11.5px;color:var(--txt3);margin-top:5px;line-height:1.6}
+.card ul{margin:10px 0 0 16px;font-size:12.5px;color:var(--txt2);line-height:1.72}
+.card ul li{margin-bottom:4px}
+.kv{display:flex;gap:8px;font-size:12.5px;margin-top:6px}
+.kv .k{color:var(--txt3);min-width:64px;flex:none}
+.kv .v{color:var(--txt);flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:9px;padding:9px 15px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:linear-gradient(180deg,#3d7fe0,#2f66c4);color:#fff;transition:.16s}
+.btn:hover{filter:brightness(1.08)}
+.btn.alt{background:transparent;border:1px solid var(--line2);color:var(--txt2)}
+.btn.alt:hover{color:#fff;background:rgba(255,255,255,.05)}
+.btnrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.banner{display:flex;gap:12px;align-items:center;padding:13px 16px;border-radius:13px;border:1px solid rgba(246,183,60,.3);background:linear-gradient(90deg,rgba(246,183,60,.10),rgba(246,183,60,.02));font-size:13px;line-height:1.65;color:#ecd9ab;margin-bottom:14px}
+.banner .ic{font-size:18px}
+.muted{color:var(--txt3)}
+.empty{padding:22px;text-align:center;color:var(--txt3);font-size:13px;border:1px dashed var(--line2);border-radius:12px}
+/* timeline */
+.tl{position:relative;padding-left:22px}
+.tl:before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:1px;background:var(--line2)}
+.tlitem{position:relative;margin-bottom:16px}
+.tlitem:before{content:"";position:absolute;left:-20px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 3px rgba(77,163,255,.16)}
+.tlitem .d{font-size:11.5px;color:var(--txt3);letter-spacing:.3px}
+.tlitem .t{font-size:13.6px;font-weight:650;margin:3px 0 4px}
+.tlitem .b{font-size:12.6px;color:var(--txt2);line-height:1.7}
+/* gaps */
+.gapcard{border:1px solid rgba(255,107,122,.24);background:linear-gradient(180deg,rgba(255,107,122,.075),rgba(255,107,122,.018));border-radius:13px;padding:13px 15px}
+.gapcard .h{display:flex;justify-content:space-between;gap:8px;font-size:13.4px;font-weight:700;margin-bottom:6px}
+.gapcard .l{font-size:12.4px;color:var(--txt2);line-height:1.68}
+.gapcard .l b{color:var(--txt)}
+.srcrow{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.6px;line-height:1.6}
+.srcrow .tier{flex:none;width:34px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:11px;font-weight:700;background:rgba(255,255,255,.07);color:var(--txt2)}
+.srcrow .tier.t1{background:rgba(77,163,255,.16);color:#9ccaff}.srcrow .tier.t2{background:rgba(34,201,138,.15);color:#7fe3b6}
+.srcrow .tier.t3{background:rgba(246,183,60,.15);color:#ffd28a}.srcrow .tier.t4{background:rgba(255,107,122,.14);color:#ffa3ad}
+.srcrow .u{color:var(--txt3);font-size:11.5px;word-break:break-all}
+/* handoff */
+.step{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}
+.step .idx{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(155,140,255,.16);color:var(--violet);font-size:12px;font-weight:700}
+.step .nm{font-size:13.4px;font-weight:650}
+.step .hint{font-size:12.2px;color:var(--txt2);line-height:1.62;margin-top:3px}
+code.inline{background:rgba(255,255,255,.07);border-radius:5px;padding:1px 5px;font-family:Consolas,monospace;font-size:11.5px;color:#cfe0ff}
+/* drawer */
+.mask{position:fixed;inset:0;background:rgba(3,6,12,.62);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.2s;z-index:60}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,94vw);background:linear-gradient(180deg,#0d1424,#090e19);border-left:1px solid var(--line2);transform:translateX(102%);transition:.26s cubic-bezier(.3,.8,.3,1);z-index:70;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.dhead{padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+.dhead .k{font-size:11px;color:var(--txt3);letter-spacing:.6px;text-transform:uppercase}
+.dhead h3{font-size:17px;margin:6px 0 4px;line-height:1.4}
+.dhead .m{font-size:12px;color:var(--txt3);line-height:1.6}
+.close{position:absolute;right:14px;top:12px;border:0;background:rgba(255,255,255,.06);color:var(--txt2);width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:14px}
+.close:hover{background:rgba(255,255,255,.12);color:#fff}
+.dbody{padding:16px 20px 40px;overflow:auto;font-size:13px;line-height:1.75;color:var(--txt2)}
+.dbody .blk{border:1px solid var(--line);border-radius:11px;padding:12px 14px;margin-bottom:11px;background:rgba(255,255,255,.025)}
+.dbody .blk .h{font-size:11.5px;color:var(--txt3);letter-spacing:.4px;margin-bottom:6px}
+.dbody a{word-break:break-all}
+.dbody .v{color:var(--txt);font-weight:650}
+/* dialog */
+.dlg{position:fixed;inset:0;display:none;place-items:center;z-index:80;background:rgba(3,6,12,.66)}
+.dlg.on{display:grid}
+.dlgbox{width:min(720px,94vw);max-height:86vh;overflow:auto;background:#0c1322;border:1px solid var(--line2);border-radius:16px;padding:22px}
+.dlgbox h3{font-size:17px;margin-bottom:10px}
+.dlgbox textarea{width:100%;height:230px;background:rgba(0,0,0,.34);border:1px solid var(--line2);border-radius:10px;color:#cfe0ff;font-family:Consolas,monospace;font-size:12px;padding:12px;resize:vertical;line-height:1.6}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;font-size:11.8px;color:var(--txt3);flex-wrap:wrap;line-height:1.7}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--txt3);margin-top:10px;align-items:center}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
+@media (max-width:1280px){.kgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}
+@media (max-width:760px){.kgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:0 14px}h1{font-size:24px}.chart{height:260px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="topline" id="topline"></div>
+  <h1 id="title"></h1>
+  <div class="sub" id="subtitle"></div>
+  <div id="warnbar"></div>
+
+  <div class="sel">
+    <div class="selbox"><label>产品 / 规格</label><div class="val" id="selProduct"></div></div>
+    <div class="selbox"><label>目标国家</label><div class="val" id="selCountry"></div></div>
+    <div class="selbox"><label>研究年份（切换历史年份）</label><div class="pills" id="yearPills"></div></div>
+    <div class="selbox"><label>研究窗口</label><div class="val" id="selWindow"></div></div>
+  </div>
+</header>
+
+<div class="ctrl"><div class="wrap" style="padding:0">
+  <div class="ctrlrow">
+    <span class="pills" id="tabPills"></span>
+    <span class="sp"></span>
+    <button class="ghost" id="btnPrint">打印 / 存 PDF</button>
+    <button class="ghost" id="btnExport">导出结构化数据</button>
+  </div>
+</div></div>
+
+<section id="sec-overview">
+  <div class="kgrid" id="kpiGrid"></div>
+  <div class="legend" id="kpiLegend"></div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+        <h3 class="sub" style="margin:0">近 <span id="winTxt"></span> 年进口金额与数量（海关口径）</h3>
+        <span class="muted" style="font-size:11.5px">金额 CIF · 数量按 netWgt · 未报送年份留空</span>
+      </div>
+      <div class="chart" id="chartTrade"></div>
+      <div class="legend">
+        <span><i style="background:var(--blue)"></i>进口金额（亿美元）</span>
+        <span><i style="background:rgba(246,183,60,.85)"></i>进口数量（万吨，右轴）</span>
+        <span><i style="background:rgba(255,255,255,.22)"></i>未报送 = 断点，不插值</span>
+      </div>
+    </div>
+    <div class="panel">
+      <h3 class="sub" style="margin:0 0 2px">进口来源结构 <span id="structYearTxt"></span></h3>
+      <div class="muted" style="font-size:11.8px;margin-bottom:2px">环形图 = 当年金额份额；其余为未列名的小额来源</div>
+      <div class="chart" id="chartPie" style="height:290px"></div>
+      <div id="pieNote" style="font-size:11.8px;color:var(--txt3);line-height:1.6"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px">
+    <h3 class="sub" style="margin-top:0">市场概览（只写能指向来源的判断）</h3>
+    <div class="grid3" id="overviewCards"></div>
+  </div>
+</section>
+
+<section id="sec-trade">
+  <div class="shead"><h2><span class="n">01</span>贸易结构</h2>
+    <p class="desc">进口金额、数量、单位价值、伙伴份额全部来自海关报送口径；数量未报送的年份显示“未报送”，不做反推。</p></div>
+  <div class="panel">
+    <table id="tradeTable"><thead></thead><tbody></tbody></table>
+    <div id="tradeNotes" style="margin-top:12px;font-size:12.2px;color:var(--txt3);line-height:1.7"></div>
+  </div>
+
+  <div class="panel" style="margin-top:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <h3 class="sub" style="margin:0">主要进口来源国 · <span id="partnerYearTxt"></span>（点击国家查看证据）</h3>
+      <span class="muted" style="font-size:11.8px">单位价值 = 金额 ÷ 数量，仅对同年有数量报送的国家计算</span>
+    </div>
+    <div class="chart" id="chartPartners" style="height:320px"></div>
+    <table id="partnerTable" style="margin-top:8px"><thead></thead><tbody></tbody></table>
+  </div>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel">
+      <h3 class="sub" style="margin-top:0">中国出口该国的规模与份额（中国海关口径）</h3>
+      <table id="chinaTable"><thead></thead><tbody></tbody></table>
+      <div id="chinaNote" style="margin-top:10px;font-size:12.2px;color:var(--txt3);line-height:1.7"></div>
+    </div>
+    <div class="panel">
+      <h3 class="sub" style="margin-top:0">同一产品：目标国自身出口（判断再出口 / 转口）</h3>
+      <table id="exportTable"><thead></thead><tbody></tbody></table>
+      <div id="exportNote" style="margin-top:10px;font-size:12.2px;color:var(--txt3);line-height:1.7"></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-supply">
+  <div class="shead"><h2><span class="n">02</span>本地产能与企业</h2>
+    <p class="desc">只收录企业公告、官网或权威媒体报道中出现的产能与状态；产能 ≠ 产量，在建 ≠ 在运。</p></div>
+  <div id="localSupply" class="grid3"></div>
+  <div class="panel" style="margin-top:14px">
+    <h3 class="sub" style="margin-top:0">“没有本地规模化产能”这一判断的证据链</h3>
+    <div id="absenceList"></div>
+  </div>
+</section>
+
+<section id="sec-downstream">
+  <div class="shead"><h2><span class="n">03</span>下游产业</h2>
+    <p class="desc">产业需求用“谁在用、有什么证据”表达；产量、吨耗、按应用拆分的需求一律不填数，写入缺口。</p></div>
+  <div class="panel"><div id="downstreamGrid" class="grid3"></div></div>
+  <div class="panel" style="margin-top:14px">
+    <h3 class="sub" style="margin-top:0">已识别的下游与分销企业（点击查看公开信息）</h3>
+    <div id="consumerGrid" class="grid3"></div>
+    <div id="hsScope" style="font-size:12.2px;color:var(--txt3);line-height:1.75;margin-top:10px"></div>
+    <h3 class="sub">未落到具体企业的下游集群</h3>
+    <div id="unnamedList"></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h3 class="sub" style="margin-top:0">竞争来源国</h3>
+    <div id="competitionList"></div>
+    <div id="distributorList" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<section id="sec-policy">
+  <div class="shead"><h2><span class="n">04</span>关税与政策</h2>
+    <p class="desc">税号与税率必须能指回官方来源；只有第三方汇总站佐证的一律标“待核实”，不作为报价前提。</p></div>
+  <div class="panel">
+    <div class="banner"><span class="ic">⚠</span><span id="policyBanner"></span></div>
+    <div id="hsLine" style="font-size:13px;line-height:1.7;margin-bottom:8px"></div>
+    <table id="tariffTable"><thead></thead><tbody></tbody></table>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h3 class="sub" style="margin-top:0">非关税措施与进口管理制度</h3>
+    <div id="ntmList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel"><h3 class="sub" style="margin-top:0">与中国贸易关系 / 近期政策变化（时间线）</h3><div class="tl" id="relTimeline"></div></div>
+    <div class="panel"><h3 class="sub" style="margin-top:0">值得引用的公开研究报告与协会资料</h3><div id="reportList"></div></div>
+  </div>
+</section>
+
+<section id="sec-gaps">
+  <div class="shead"><h2><span class="n">05</span>市场进入待核实事项</h2>
+    <p class="desc">这些缺口决定“能不能报价、报多少”。没有缺口说明的国别研究，通常意味着没查到东西。</p></div>
+  <div class="grid3" id="gapGrid"></div>
+  <div class="panel" style="margin-top:14px">
+    <h3 class="sub" style="margin-top:0">待核实行动清单</h3>
+    <table id="verifyTable"><thead></thead><tbody></tbody></table>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h3 class="sub" style="margin-top:0">数据缺口 → 下一步</h3>
+    <div class="grid3" id="handoffGrid"></div>
+    <div class="btnrow">
+      <button class="btn" id="btnGoLead">带入「3. 找海外候选买家」</button>
+      <button class="btn alt" id="btnGoReq">带入「6. 查产品出口要求」</button>
+      <button class="btn alt" id="btnCopyJSON">复制交接数据（JSON）</button>
+    </div>
+  </div>
+</section>
+
+<section id="sec-sources">
+  <div class="shead"><h2><span class="n">06</span>口径、来源与方法</h2>
+    <p class="desc">所有数字的来源都在这里；tier 1 = 官方/国际组织，2 = 政府指南与主流媒体，3 = 机构估算与商业媒体，4 = 第三方汇总，仅作线索。</p></div>
+  <div class="panel">
+    <div id="caveatBox" style="font-size:12.8px;line-height:1.8;color:var(--txt2)"></div>
+    <h3 class="sub">研究口径对照：九个必答问题在本页的位置</h3>
+    <table id="mapTable"><thead></thead><tbody></tbody></table>
+    <h3 class="sub">来源清单（可点击核对）</h3>
+    <div id="srcList"></div>
+    <h3 class="sub">字段与口径</h3>
+    <table id="metaTable"><thead></thead><tbody></tbody></table>
+  </div>
+</section>
+
+<footer>
+  <div id="footL"></div>
+  <div style="text-align:right" id="footR"></div>
+</footer>
+</div>
+
+<div class="mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <div class="dhead"><button class="close" id="btnClose">✕</button><div class="k" id="dKind"></div><h3 id="dTitle"></h3><div class="m" id="dMeta"></div></div>
+  <div class="dbody" id="dBody"></div>
+</div>
+<div class="dlg" id="dlg"><div class="dlgbox"><h3 id="dlgTitle"></h3><textarea id="dlgText" spellcheck="false"></textarea>
+  <div class="btnrow"><button class="btn" id="dlgCopy">复制</button><button class="btn alt" id="dlgCopy2">复制 JSON</button><button class="btn alt" id="dlgClose">关闭</button></div></div></div>
+
+<script>__ECHARTS__</script>
+<script>
+const D = __DATA__;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const fmt = (n,d=0) => (n==null||isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = (n,d=1) => (n==null||isNaN(n)) ? '—' : (n>0?'+':'')+fmt(n,d)+'%';
+const usdY = v => v==null ? '—' : fmt(v/1e8,2);
+const usdW = v => v==null ? '—' : fmt(v/1e4,0);
+const tons = t => t==null ? '未报送' : fmt(t/1e4,1);
+const updown = n => n==null ? 'muted' : (n>0?'#ff6b7a':'#22c98a');
+const kindText = {official:'官方统计',regulation:'官方政策',company:'企业公开资料',media:'媒体报道',trade_assoc:'协会机构',market_research:'机构估算',estimate:'推算',gap:'缺口',unnamed:'未核实描述'};
+const srcById = {}; (D.case.sources||[]).forEach(s=>srcById[s.id]=s);
+function evTag(kind, srcId, label){ if(kind==='gap'||(!kind&&!srcId)) return '<span class="ev ev-gap">缺口</span>';
+  const k = kind || 'official'; const l = label || kindText[k] || k;
+  return `<button class="ev ev-${k}" data-src="${esc(srcId||'')}">${esc(l)}</button>`; }
+function srcTag(ids){ return (ids||[]).map(id=>evTag(srcById[id]?srcById[id].kind:'official',id)).join(' '); }
+
+const M = D.case.meta, I = D.index;
+const YEARS = (I.imports_history||[]).map(r=>r.year);
+let YEAR = I.research_year;
+const chartRefs = {};
+function chart(id, opt){ const el=document.getElementById(id); if(!el||!window.echarts) return;
+  if(chartRefs[id]) { chartRefs[id].dispose(); }
+  const c = echarts.init(el, null, {renderer:'canvas'}); chartRefs[id]=c; c.setOption(opt); return c; }
+const AX = {axisLine:{lineStyle:{color:'rgba(255,255,255,.14)'}},axisLabel:{color:'#73829e',fontSize:11},splitLine:{lineStyle:{color:'rgba(255,255,255,.055)'}}};
+const TIP = {backgroundColor:'rgba(12,19,34,.96)',borderColor:'rgba(255,255,255,.16)',textStyle:{color:'#e9eefb',fontSize:12}};
+
+/* ---------------- header ---------------- */
+function renderHeader(){
+  const ts = M.trade_source||{};
+  $('#topline').innerHTML = [
+    `<span class="pill"><i class="dot"></i>数据截至 ${esc(M.data_asof)}</span>`,
+    `<span class="pill">HS ${esc(M.subject.hs_code)}</span>`,
+    `<span class="pill">${esc(M.country.name_cn)} / ${esc(M.country.name_en||'')}</span>`,
+    `<span class="pill">来源 ${D.stats.sources} 个 · 缺口 ${D.stats.gaps} 项</span>`,
+    `<span class="pill">贸易数据：${esc(ts.name||'UN Comtrade')}</span>`
+  ].join('');
+  $('#title').innerHTML = esc(M.title);
+  $('#subtitle').innerHTML = `<b>${esc(M.subject.product_cn)}</b>（${esc(M.subject.grade||'')} · HS ${esc(M.subject.hs_code)}）出口 <b>${esc(M.country.name_cn)}</b>：
+    本页整合海关贸易统计、本地产能、下游产业、关税与政策的公开资料，并明确标出仍无法核实的事项。
+    研究窗口 <b>${esc(String(M.window||5))} 年</b>，研究年份 <b>${esc(String(M.research_year))}</b>。`;
+  $('#warnbar').innerHTML = `<div class="warnbar"><span class="ic">!</span><span>
+    本报告区分四类信息：<b>官方统计</b>（海关/国际组织）、<b>官方政策</b>（法规与政府公告）、<b>企业公开资料</b>、<b>机构估算</b>。
+    贸易数据不能直接等于真实消费量与企业采购需求；凡是海关口径之外的市场规模、下游吨耗、客户需求量，本报告一律不给数值，写入“待核实事项”。</span></div>`;
+  $('#selProduct').innerHTML = `${esc(M.subject.product_cn)}<br><small>${esc(M.subject.grade||'')} · HS ${esc(M.subject.hs_code)}</small>`;
+  $('#selCountry').innerHTML = `${esc(M.country.name_cn)}<br><small>${esc(M.country.name_en||'')} · UN M49 ${esc(String(M.country.un_m49||''))}</small>`;
+  $('#selWindow').innerHTML = `${esc(String(M.window||5))} 年<small> · ${esc((I.years_span||[]).join('–'))}</small>`;
+  $('#yearPills').innerHTML = YEARS.map(y=>`<button class="pbtn ${y===YEAR?'on':''}" data-year="${y}">${y}${(I.partner_structure[String(y)]&&I.partner_structure[String(y)].rows.length)?'':'<span class="g">·</span>'}</button>`).join('');
+  $$('#yearPills .pbtn').forEach(b=>b.onclick=()=>{ YEAR=+b.dataset.year; renderAll(); });
+  $('#winTxt').textContent = String(M.window||5);
+  const tabs = [['#sec-overview','概览','0'],['#sec-trade','贸易结构','01'],['#sec-supply','本地产能与企业','02'],['#sec-downstream','下游产业','03'],['#sec-policy','关税与政策','04'],['#sec-gaps','待核实','05'],['#sec-sources','来源','06']];
+  $('#tabPills').innerHTML = tabs.map(([h,l,n])=>`<button class="pbtn" data-go="${h}">${n} ${l}</button>`).join('');
+  $$('#tabPills .pbtn').forEach(b=>b.onclick=()=>document.querySelector(b.dataset.go).scrollIntoView({behavior:'smooth'}));
+  $('#footL').innerHTML = `${esc(M.title)} · 生成器 chem-country-market v1.0 · 数据截至 ${esc(M.data_asof)}`;
+  $('#footR').innerHTML = `贸易数据 ${esc(ts.name||'')}<br>${esc(ts.value_basis||'')}`;
+}
+
+/* ---------------- KPI ---------------- */
+function renderKPI(){
+  $('#kpiGrid').innerHTML = I.kpi.map(k=>{
+    const tag = k.kind==='gap' ? evTag('gap') : evTag('official', k.source||'comtrade');
+    return `<div class="kpi tone-${k.tone||'blue'}">
+      <div class="tag">${tag}</div>
+      <div class="lab">${esc(k.label)}</div>
+      <div class="big">${esc(k.value)}</div>
+      <div class="small">${esc(k.sub)}</div></div>`;
+  }).join('');
+  $('#kpiLegend').innerHTML = `<span>卡片右上角标签 = 该数字的证据类型，点击可看来源</span>`;
+  bindEv();
+}
+
+/* ---------------- trade chart + table ---------------- */
+function renderTrade(){
+  const rows = I.imports;
+  const years = rows.map(r=>String(r.year));
+  const val = rows.map(r=>r.value_usd==null?null:+(r.value_usd/1e8).toFixed(3));
+  const qty = rows.map(r=>r.qty_t==null?null:+(r.qty_t/1e4).toFixed(1));
+  chart('chartTrade',{
+    tooltip:{trigger:'axis',...TIP},
+    legend:{show:false},
+    grid:{left:52,right:56,top:24,bottom:30},
+    xAxis:{type:'category',data:years,...AX},
+    yAxis:[{type:'value',name:'亿美元',nameTextStyle:{color:'#73829e',fontSize:11},...AX},
+           {type:'value',name:'万吨',nameTextStyle:{color:'#73829e',fontSize:11},...AX,splitLine:{show:false}}],
+    series:[
+      {name:'进口金额（亿美元）',type:'line',data:val,smooth:false,symbolSize:8,connectNulls:false,
+       lineStyle:{width:2.6,color:'#4da3ff'},itemStyle:{color:'#4da3ff'},
+       areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(77,163,255,.35)'},{offset:1,color:'rgba(77,163,255,0)'}])},
+       label:{show:true,position:'top',color:'#9ccaff',fontSize:11,formatter:p=>p.value==null?'未报送':p.value}},
+      {name:'进口数量（万吨）',type:'bar',yAxisIndex:1,data:qty,barWidth:18,
+       itemStyle:{color:'rgba(246,183,60,.72)',borderRadius:[4,4,0,0]},
+       label:{show:true,position:'top',color:'#ffd28a',fontSize:10.5,formatter:p=>p.value==null?'':p.value}}
+    ]
+  });
+
+  const th = ['年份','进口金额（亿美元）','同比','进口数量（万吨）','同比','单位价值（USD/t）','数量口径','证据'];
+  $('#tradeTable thead').innerHTML = '<tr>'+th.map((h,i)=>`<th class="${i>0&&i<6?'num':''}">${h}</th>`).join('')+'</tr>';
+  $('#tradeTable tbody').innerHTML = rows.map(r=>`<tr>
+    <td><b>${r.year}</b>${r.year===M.research_year?' <span class="tag b">研究年</span>':''}</td>
+    <td class="num">${usdY(r.value_usd)}</td>
+    <td class="num" style="color:${updown(r.yoy_value)}">${pct(r.yoy_value)}</td>
+    <td class="num">${tons(r.qty_t)}</td>
+    <td class="num" style="color:${updown(r.yoy_qty)}">${pct(r.yoy_qty)}</td>
+    <td class="num">${r.unit_usd_t==null?'—':fmt(r.unit_usd_t,0)}</td>
+    <td><span class="tag ${r.qty_status==='已报送'?'v':'g'}">${r.qty_status}</span></td>
+    <td>${evTag('official','comtrade')}</td></tr>`).join('')+
+    `<tr style="background:rgba(77,163,255,.05)"><td><b>${I.years_span[0]}–${I.years_span[1]} CAGR</b></td>
+     <td class="num" style="color:${updown(I.cagr_value)}">${pct(I.cagr_value)}</td><td class="num">—</td>
+     <td class="num" style="color:${updown(I.cagr_qty)}">${I.cagr_qty==null?'数量缺口无法计算':pct(I.cagr_qty)}</td><td class="num">—</td><td class="num">—</td>
+     <td colspan="2" class="muted">按有数量报送的首末年份计算；缺失年份不插值</td></tr>`;
+  const notes = [];
+  if ((I.qty_missing_years||[]).length) notes.push(`<b>数量未报送年份：</b>${I.qty_missing_years.join('、')}。这些年份只保留金额，数量与单位价值显示为缺口。`);
+  if (I.unit_usd_t_latest!=null) notes.push(`<b>${I.imports[I.imports.length-1].year} 年平均单位价值</b> USD ${fmt(I.unit_usd_t_latest,0)}/t（CIF，海关申报口径，含运费保险，不等于成交价）。`);
+  if ((D.case.trade.imports_history_note)) notes.push(`<b>长周期对照：</b>${esc(D.case.trade.imports_history_note)}`);
+  $('#tradeNotes').innerHTML = notes.join('<br>');
+  bindEv();
+}
+
+/* ---------------- partners ---------------- */
+function partnerStruct(){ return I.partner_structure[String(YEAR)] || {rows:[]}; }
+function renderPie(){
+  const ps = partnerStruct();
+  const rows = (ps.rows||[]).filter(r=>r.share_value!=null);
+  $('#structYearTxt').textContent = ps.rows&&ps.rows.length ? '· '+YEAR : '';
+  if(!rows.length){
+    chart('chartPie',{title:{text:'该年无伙伴明细',left:'center',top:'middle',textStyle:{color:'#73829e',fontSize:13}}});
+    $('#pieNote').textContent=''; return;
+  }
+  const named = rows.map(r=>({name:r.name.split(' ')[0], value:+(r.value_usd/1e8).toFixed(3), share:r.share_value}));
+  const covered = named.reduce((s,x)=>s+x.share,0);
+  const rest = Math.max(0, 100 - covered);
+  const data = named.map((x,i)=>({name:x.name, value:x.value, share:x.share,
+    itemStyle:{color:['#4da3ff','#38d6e0','#9b8cff','#f6b73c','#22c98a','#f472b6'][i%6]}}));
+  if(rest>0.05) data.push({name:'其他', value:null, share:+rest.toFixed(1), itemStyle:{color:'rgba(255,255,255,.17)'}});
+  const total = ps.total_value_usd;
+  const seriesData = data.map(d=>d.value==null
+    ? {name:d.name, value:+(total*rest/100/1e8).toFixed(3), itemStyle:d.itemStyle, share:d.share}
+    : d);
+  chart('chartPie',{
+    tooltip:{...TIP, formatter:p=>`${p.name}<br>金额 ${fmt(p.value,3)} 亿美元 · 份额 ${fmt(p.data.share,1)}%`},
+    series:[{type:'pie',radius:['52%','74%'],center:['50%','50%'],avoidLabelOverlap:true,
+      itemStyle:{borderColor:'#0b1120',borderWidth:2},
+      label:{color:'#a8b6d1',fontSize:11,formatter:p=>`${p.name} ${fmt(p.data.share,1)}%`},
+      labelLine:{lineStyle:{color:'rgba(255,255,255,.22)'},length:8,length2:10},
+      data:seriesData}],
+    graphic:{type:'text',left:'center',top:'46%',style:{text:YEAR+'\n总额 '+usdY(total)+' 亿',fill:'#e9eefb',fontSize:12,lineHeight:18,textAlign:'center',fontWeight:600}}
+  });
+  const china = named.find(n=>n.name.includes('中国'));
+  $('#pieNote').innerHTML = (china? `中国份额 <b style="color:#9ccaff">${fmt(china.share,1)}%</b>（金额 ${fmt(china.value,2)} 亿美元）· `:'')
+    + `HHI ${I.hhi_top==null?'—':fmt(I.hhi_top,0)} · 前 ${named.length} 位覆盖率 ${fmt(covered,1)}%`;
+}
+function renderPartners(){
+  const ps = partnerStruct();
+  $('#partnerYearTxt').textContent = YEAR + (YEAR===M.research_year?'（研究年）':'');
+  const rows = ps.rows||[];
+  if(!rows.length){ $('#chartPartners').innerHTML=''; chart('chartPartners',{title:{text:'该年无伙伴明细',left:'center',top:'middle',textStyle:{color:'#73829e',fontSize:13}}}); $('#partnerTable tbody').innerHTML='<tr><td class="muted">该年份缺少伙伴明细，切换其他年份查看。</td></tr>'; return; }
+  const names = rows.map(r=>r.name.split(' ')[0]);
+  const shares = rows.map(r=>r.share_value==null?null:+r.share_value.toFixed(1));
+  const units = rows.map(r=>r.unit_usd_t==null?null:+r.unit_usd_t.toFixed(0));
+  chart('chartPartners',{
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},...TIP},
+    grid:{left:56,right:60,top:18,bottom:28},
+    xAxis:{type:'category',data:names,...AX},
+    yAxis:[{type:'value',name:'份额 %',...AX},{type:'value',name:'USD/t',...AX,splitLine:{show:false}}],
+    series:[
+      {name:'金额份额 %',type:'bar',data:shares,barWidth:34,itemStyle:{color:(p)=>p.dataIndex===0?'rgba(56,214,224,.85)':'rgba(77,163,255,.72)',borderRadius:[5,5,0,0]},
+       label:{show:true,position:'top',color:'#cfe0ff',fontSize:11,formatter:p=>p.value==null?'':p.value+'%'}},
+      {name:'单位价值 USD/t',type:'line',yAxisIndex:1,data:units,symbolSize:7,lineStyle:{width:2,color:'#f6b73c'},itemStyle:{color:'#f6b73c'},
+       label:{show:true,position:'bottom',color:'#ffd28a',fontSize:10.5,formatter:p=>p.value==null?'—':p.value}}
+    ]
+  });
+  const th=['#','来源国','金额（万美元）','金额份额','数量（吨）','数量份额','单位价值 USD/t','证据'];
+  $('#partnerTable thead').innerHTML='<tr>'+th.map((h,i)=>`<th class="${i>=2&&i<=6?'num':''}">${h}</th>`).join('')+'</tr>';
+  $('#partnerTable tbody').innerHTML = rows.map(r=>`<tr>
+    <td class="muted">${r.rank}</td>
+    <td><button class="linkbtn" data-country="${esc(r.name)}">${esc(r.name)}</button></td>
+    <td class="num">${usdW(r.value_usd)}</td>
+    <td class="num">${r.share_value==null?'—':fmt(r.share_value,1)+'%'}</td>
+    <td class="num">${r.qty_t==null?'未报送':fmt(r.qty_t,0)}</td>
+    <td class="num">${r.share_qty==null?'—':fmt(r.share_qty,1)+'%'}</td>
+    <td class="num">${r.unit_usd_t==null?'—':fmt(r.unit_usd_t,0)}</td>
+    <td>${evTag('official','comtrade')}</td></tr>`).join('');
+  $$('#partnerTable .linkbtn').forEach(b=>b.onclick=()=>openCountry(b.dataset.country));
+  $('#pieNote').innerHTML = `HHI（金额份额，前 ${rows.length} 位）= <b>${I.hhi_top==null?'—':fmt(I.hhi_top,0)}</b>；`+
+    (I.top_supplier?`第一大来源国 <b>${esc(I.top_supplier.name)}</b> 占 ${fmt(I.top_supplier_share,1)}%`:'')+
+    `。集中度高意味着议价权在少数供应国一侧，同时也意味着只要有一家转单，份额结构就会明显变动。`;
+  bindEv();
+}
+
+/* ---------------- china / exports ---------------- */
+function renderChina(){
+  const rows = I.china_exports||[];
+  const th=['年份','中国对印尼出口（万美元）','同比','数量（吨）','单位价值 USD/t','占印尼进口金额','占中国该产品全球出口'];
+  $('#chinaTable thead').innerHTML='<tr>'+th.map((h,i)=>`<th class="${i>0?'num':''}">${h}</th>`).join('')+'</tr>';
+  $('#chinaTable tbody').innerHTML = rows.map(r=>`<tr>
+    <td>${r.year}</td><td class="num">${usdW(r.to_idn_usd)}</td>
+    <td class="num" style="color:${updown(r.yoy_value)}">${pct(r.yoy_value)}</td>
+    <td class="num">${r.to_idn_t==null?'未报送':fmt(r.to_idn_t,0)}</td>
+    <td class="num">${r.unit_usd_t==null?'—':fmt(r.unit_usd_t,0)}</td>
+    <td class="num">${r.share_of_idn_imports==null?'—':fmt(r.share_of_idn_imports,1)+'%'}</td>
+    <td class="num">${r.share_of_china_world==null?'—':fmt(r.share_of_china_world,1)+'%'}</td></tr>`).join('');
+  const note = D.case.trade.china_exports_note ? esc(D.case.trade.china_exports_note)+'<br>' : '';
+  $('#chinaNote').innerHTML = note + `CAGR ${pct(I.china_cagr)}（${rows.length?rows[0].year+'–'+rows[rows.length-1].year:''}）。FOB 口径，与印尼 CIF 进口金额不可直接相除。`;
+  const ex = I.exports||[];
+  $('#exportTable thead').innerHTML='<tr>'+['年份','出口金额（万美元）','数量（吨）','主要目的地','占本国进口金额'].map((h,i)=>`<th class="${i>0&&i<4?'num':''}">${h}</th>`).join('')+'</tr>';
+  $('#exportTable tbody').innerHTML = ex.length? ex.map(r=>`<tr><td>${r.year}</td><td class="num">${usdW(r.value_usd)}</td><td class="num">${r.qty_t==null?'未报送':fmt(r.qty_t,0)}</td>
+    <td>${esc(r.top_dest||'—')}</td><td class="num">${r.pct_of_imports_value==null?'—':fmt(r.pct_of_imports_value,1)+'%'}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="muted">未取得出口数据</td></tr>';
+  $('#exportNote').innerHTML = (I.reexport_ratio_latest==null?'出口数据缺失，无法判断是否为再出口国。':
+    `最新年度出口额约为进口额的 <b>${fmt(I.reexport_ratio_latest,1)}%</b>，出口目的地与进口来源国不同，按公开数据看不出大规模的成品转口，但海关数据无法排除加工或调换包装后的再出口。`);
+}
+
+/* ---------------- overview cards ---------------- */function renderOverview(){
+  const parts = I.structure_rows||[];
+  const china = parts.find(p=>p.name.includes('China'));
+  const ps = partnerStruct();
+  const cards = [];
+  cards.push({t:'进口规模与趋势', b:`${I.years_span[0]}–${I.years_span[1]} 年金额 CAGR <b style="color:${updown(I.cagr_value)}">${pct(I.cagr_value)}</b>，
+    峰值出现在 <b>${I.peak_value_year||'—'}</b> 年（${usdY(I.peak_value)} 亿美元）。${I.qty_missing_years.length?'数量口径存在未报送年份（'+I.qty_missing_years.join('、')+'），数量趋势只能部分观察。':''}`, k:'official', s:'comtrade'});
+  cards.push({t:'供应格局', b: parts.length? `前 ${parts.length} 位来源国中，${esc(parts[0].name)} 占 <b>${fmt(parts[0].share_value,1)}%</b>，
+    中国排第 <b>${china?china.rank:'—'}</b> 位、占 <b>${china?fmt(china.share_value,1)+'%':'—'}</b>。` : '缺伙伴明细', k:'official', s:'comtrade'});
+  cards.push({t:'本地生产', b: localSupplyText(), k:'company', s:((D.case.industries.local_production||[])[0]||{}).sources?.[0]});
+  cards.push({t:'下游需求证据', b: downstreamLead(), k:'media', s:(D.case.downstream.items||[]).find(x=>x.sources&&x.sources.length)?.sources[0]});
+  cards.push({t:'进口政策', b: policyLead(), k:'regulation', s:(D.case.policy.ntm||[])[0]?.sources?.[0]});
+  cards.push({t:'下一步', b: `共 <b>${D.stats.gaps}</b> 项待核实、<b>${D.stats.verify}</b> 条行动。先解决 P0（税率 / 许可证 / 本地产能投产）再谈报价。`, k:'gap', s:null});
+  $('#overviewCards').innerHTML = cards.map(c=>`<div class="card">
+    <div class="top"><div class="nm" style="font-size:13.6px">${esc(c.t)}</div><div>${c.k==='gap'?evTag('gap'):evTag(c.k,c.s)}</div></div>
+    <div style="font-size:12.8px;color:var(--txt2);line-height:1.75;margin-top:8px">${c.b}</div></div>`).join('');
+  bindEv();
+}
+function localSupplyText(){
+  const lps = D.case.industries.local_production||[];
+  if(!lps.length) return '未发现公开的本地产能信息。';
+  return lps.map(p=>`<b>${esc(p.name.split('（')[0])}</b>：${p.capacity_t?fmt(p.capacity_t/1e4,1)+' 万吨/年（'+esc(p.capacity_basis||'企业口径')+'）':'产能未公开'}，状态 <b>${esc(p.status)}</b>`).join('；')+'。';
+}
+function downstreamLead(){
+  const it=(D.case.downstream.items||[])[0];
+  return it? `${esc(it.segment)}：${esc(it.demand_signal)}` : '未取得下游需求证据。';
+}
+function policyLead(){
+  const t=(D.case.policy.tariffs||[])[0];
+  return t? `税率核查状态：<b>${(D.case.policy.tariffs||[]).every(x=>x.rate_pct==null)?'未从官方源取得，全部列为待核实':'部分已核实'}</b>；进口制度 ${(D.case.policy.ntm||[]).length} 项待确认。` : '未取得政策信息。';
+}
+
+/* ---------------- supply ---------------- */
+function renderSupply(){
+  const lps = D.case.industries.local_production||[];
+  $('#localSupply').innerHTML = lps.length? lps.map(p=>`<div class="card" data-firm="${esc(p.id)}" style="cursor:pointer">
+      <div class="top"><div class="nm">${esc(p.name)}</div><span class="tag ${p.status.includes('在运')?'v':p.status.includes('在建')?'y':'b'}">${esc(p.status)}</span></div>
+      <div class="meta">${esc(p.role)} · ${esc(p.location)}</div>
+      <div class="kv"><span class="k">产能</span><span class="v">${p.capacity_t?fmt(p.capacity_t/1e4,1)+' 万吨/年':'未公开'}${p.capacity_basis?'<br><small class="muted">'+esc(p.capacity_basis)+'</small>':''}</span></div>
+      <div class="kv"><span class="k">产品</span><span class="v">${(p.products||[]).map(esc).join('、')||'—'}</span></div>
+      <div class="kv"><span class="k">时间</span><span class="v">${esc(p.status_asof||'')}</span></div>
+      <div style="margin-top:9px">${srcTag(p.sources)}</div></div>`).join('') : '<div class="empty">未取得本地产能信息（这本身就是一个需要核实的事实）。</div>';
+  $$('#localSupply .card').forEach(c=>c.onclick=()=>openFirm(c.dataset.firm));
+  $('#absenceList').innerHTML = (D.case.industries.local_absence_evidence||[]).map(x=>`<div class="srcrow">
+    <span class="tier t${(srcById[x.source]||{}).tier||3}">T${(srcById[x.source]||{}).tier||3}</span>
+    <div><div>${esc(x.claim)}</div><div class="u">${esc((srcById[x.source]||{}).title||'')} · ${esc((srcById[x.source]||{}).publisher||'')}</div></div>
+    <div>${evTag(x.kind||((srcById[x.source]||{}).kind),x.source)}</div></div>`).join('') || '<div class="muted">—</div>';
+  bindEv();
+}
+
+/* ---------------- downstream ---------------- */
+function renderDownstream(){
+  const items = D.case.downstream.items||[];
+  $('#downstreamGrid').innerHTML = items.map(it=>`<div class="card">
+    <div class="top"><div class="nm" style="font-size:13.8px">${esc(it.segment)}</div><div>${srcTag(it.sources).slice(0,120)}</div></div>
+    <div style="font-size:12.7px;color:var(--txt2);line-height:1.72;margin-top:8px">${esc(it.demand_signal)}</div>
+    ${it.scale_note?`<div class="kv"><span class="k">规模线索</span><span class="v">${esc(it.scale_note)}</span></div>`:''}
+    <div class="kv"><span class="k">缺口</span><span class="v" style="color:#ffa3ad">${esc(it.gap||'—')}</span></div></div>`).join('') || '<div class="empty">未取得下游资料</div>';
+  const cons = D.case.industries.consumers||[];
+  $('#consumerGrid').innerHTML = cons.map(c=>`<div class="card" data-firm="${esc(c.id)}" style="cursor:pointer">
+    <div class="top"><div class="nm">${esc(c.name)}</div><span class="tag b">${esc(c.type)}</span></div>
+    <div class="meta">${esc(c.location||'')}</div>
+    <div style="font-size:12.6px;color:var(--txt2);line-height:1.7;margin-top:7px">${esc((c.facts||[])[0]||'')}</div>
+    <div style="margin-top:9px">${srcTag(c.sources)}</div>
+    <div class="muted" style="font-size:11.4px;margin-top:7px">点击查看公开信息与待核实项</div></div>`).join('');
+  $$('#consumerGrid .card').forEach(c=>c.onclick=()=>openFirm(c.dataset.firm));
+  const scope = D.case.structure.hs_scope_note;
+  const cmpHs = (D.case.competition||{}).china_hs_code_note;
+  $('#hsScope').innerHTML = (scope? '<b>税号口径：</b>'+esc(scope)+' '+srcTag(D.case.structure.hs_scope_sources):'') + (cmpHs? '<br><b>中国侧口径：</b>'+esc(cmpHs):'');
+  $('#unnamedList').innerHTML = (D.case.industries.consumers_unnamed||[]).map(u=>`<div class="srcrow">
+    <span class="tier">—</span><div><div>${esc(u.segment)}</div><div class="u">${esc(u.why_unnamed)} · 建议检索：${esc(u.search_hint||'')}</div></div>
+    <div>${evTag('unnamed')}</div></div>`).join('') || '<div class="muted">—</div>';
+  $('#competitionList').innerHTML = (D.case.competition.source_countries||[]).map(c=>{
+    const ids = (c.evidence||'').match(/s-[a-z0-9-]+/g) || [];
+    return `<div class="srcrow">
+    <span class="tier">竞</span><div><div><b>${esc(c.name)}</b> — ${esc(c.basis)}</div><div class="u">${esc(c.evidence||'')}</div></div>
+    <div>${evTag('official','comtrade')} ${srcTag(ids)}</div></div>`;}).join('');
+  const dz = D.case.competition.distributors||[];
+  $('#distributorList').innerHTML = dz.length? `<h3 class="sub">当地分销与贸易渠道</h3>`+dz.map(d=>`<div class="srcrow">
+    <span class="tier">商</span><div><div><b>${esc(d.name)}</b> — ${esc(d.role)}（${esc(d.products||'')}）</div></div><div>${srcTag([d.source])}</div></div>`).join(''):'';
+  if((D.case.competition.price_observation||[]).length){
+    $('#distributorList').innerHTML += (D.case.competition.price_observation||[]).map(p=>`<div class="srcrow">
+      <span class="tier t3">估</span><div><div>${esc(p.claim)}</div><div class="u">${esc(p.note||'')}</div></div><div>${evTag(p.kind,p.source)}</div></div>`).join('');
+  }
+  bindEv();
+}
+
+/* ---------------- policy ---------------- */
+function renderPolicy(){
+  const P = D.case.policy;
+  $('#policyBanner').innerHTML = `以下税率与许可要求凡未从官方来源直接核验的，均标“待核实”。在取得 INSW 或 DJBC 的截图/回函之前，<b>不得</b>把 0% 或其他税率写进报价单。`;
+  $('#hsLine').innerHTML = `<b>税号：</b>${esc(P.hs_line.code)} — ${esc(P.hs_line.description)}<br><span class="muted">${esc(P.hs_line.verify_note||'')}</span>`;
+  $('#tariffTable thead').innerHTML = '<tr>'+['项目','税率','状态','说明','来源'].map((h,i)=>`<th class="${i===1?'num':''}">${h}</th>`).join('')+'</tr>';
+  $('#tariffTable tbody').innerHTML = (P.tariffs||[]).map(t=>`<tr>
+    <td><b>${esc(t.item)}</b></td>
+    <td class="num">${t.rate_pct==null?'<span class="tag g">待核实</span>':fmt(t.rate_pct,2)+'%'}</td>
+    <td><span class="tag ${t.status==='fact'||t.status==='official'?'v':'y'}">${t.status==='fact'||t.status==='official'?'已核实':'待核实'}</span></td>
+    <td>${esc(t.detail)}</td><td>${srcTag(t.sources)}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">未取得</td></tr>';
+  $('#ntmList').innerHTML = (P.ntm||[]).map(x=>`<div class="card">
+    <div class="top"><div class="nm" style="font-size:13.6px">${esc(x.item)}</div><div><span class="tag ${x.status==='fact'?'v':'y'}">${x.status==='fact'?'已核实':'待确认'}</span></div></div>
+    <div style="font-size:12.7px;color:var(--txt2);line-height:1.72;margin-top:7px">${esc(x.detail)}</div>
+    <div style="margin-top:8px">${srcTag(x.sources)}</div></div>`).join('');
+  $('#relTimeline').innerHTML = (P.trade_relations||[]).map(r=>`<div class="tlitem">
+    <div class="d">${esc(relDate(r.id))}</div><div class="t">${esc(r.item)}</div>
+    <div class="b">${esc(r.detail)}</div><div style="margin-top:6px">${srcTag(r.sources)}</div></div>`).join('');
+  $('#reportList').innerHTML = (D.case.reports||[]).map(r=>`<div class="srcrow">
+    <span class="tier t${(srcById[r.source]||{}).tier||3}">T${(srcById[r.source]||{}).tier||3}</span>
+    <div><div><b>${esc(r.title)}</b> <span class="tag ${r.type.includes('估算')?'y':'b'}">${esc(r.type)}</span></div>
+      <ul style="margin:6px 0 0 16px;font-size:12.3px;line-height:1.7">${(r.key_points||[]).map(k=>`<li>${esc(k)}</li>`).join('')}</ul>
+      <div class="u" style="color:#ffa3ad">注意：${esc(r.caveat||'')}</div></div>
+    <div>${evTag((srcById[r.source]||{}).kind,r.source)}</div></div>`).join('');
+  bindEv();
+}
+function relDate(id){
+  const map = {'r-acfta3':'2025-10','r-acfta':'2025-10','r-rcep':'2023-01','r-import':'2025-06','r-localization':'2025-10 起'};
+  return map[id] || '';
+}
+
+/* ---------------- gaps ---------------- */
+function renderGaps(){
+  $('#gapGrid').innerHTML = (D.case.gaps||[]).map(g=>`<div class="gapcard">
+    <div class="h"><span>${esc(g.item)}</span><span class="tag ${g.level==='企业级'?'b':g.level==='政策级'?'y':'g'}">${esc(g.level)}</span></div>
+    <div class="l"><b>为什么缺：</b>${esc(g.why)}<br><b>影响：</b>${esc(g.impact)}<br><b>怎么补：</b>${esc(g.how_to_close)}</div></div>`).join('');
+  $('#verifyTable thead').innerHTML='<tr>'+['优先级','行动','责任人','时点'].map(h=>`<th>${h}</th>`).join('')+'</tr>';
+  $('#verifyTable tbody').innerHTML = (D.case.verify_actions||[]).map(v=>`<tr>
+    <td><span class="tag ${v.priority==='P0'?'g':v.priority==='P1'?'y':'b'}">${esc(v.priority)}</span></td>
+    <td>${esc(v.action)}</td><td>${esc(v.owner||'')}</td><td>${esc(v.when||'')}</td></tr>`).join('');
+  $('#handoffGrid').innerHTML = (D.handoff||[]).map(h=>`<div class="step"><div class="idx">→</div><div><div class="nm">${esc(h.name)}</div><div class="hint">${esc(h.hint)}</div></div></div>`).join('');
+}
+
+/* ---------------- sources ---------------- */
+function renderSources(){
+  const ts = M.trade_source||{};
+  $('#caveatBox').innerHTML = `
+    <b>贸易口径：</b>${esc(ts.value_basis||'')}；数量口径 ${esc(ts.weight_basis||'')}。${esc(ts.pull_record||'')}<br>
+    ${(ts.notes||[]).map(n=>'· '+esc(n)).join('<br>')}<br>
+    <b>本报告不做什么：</b>不由进口金额反推消费量，不把机构估算当成事实，不把在建产能当成在产产能，不把第三方汇总的税率当作官方税率。`;
+  $('#srcList').innerHTML = (D.case.sources||[]).map(s=>`<div class="srcrow">
+    <span class="tier t${s.tier||3}">T${s.tier||3}</span>
+    <div><div><b>${esc(s.title)}</b> <span class="tag">${esc(s.kind||'')}</span></div>
+      <div class="u">${esc(s.publisher||'')} · ${esc(s.date||'')} · <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url)}</a></div></div>
+    <div>${evTag(s.kind,s.id)}</div></div>`).join('');
+  const rows = [
+    ['产品', `${M.subject.product_cn} / ${M.subject.grade||''} / HS ${M.subject.hs_code}`],
+    ['目标国家', `${M.country.name_cn} (${M.country.name_en||''}) · UN M49 ${M.country.un_m49||''}`],
+    ['研究年份 / 窗口', `${M.research_year} / ${M.window} 年`],
+    ['贸易数据来源', `${ts.name||''} — ${ts.dataset||''}`],
+    ['金额口径', ts.value_basis||''],
+    ['数量口径', ts.weight_basis||''],
+    ['数据截止', M.data_asof||''],
+    ['生成器', 'chem-country-market v1.0（data.json 由 case.json 派生，勿手改）']
+  ];
+  $('#metaTable').innerHTML = rows.map(([k,v])=>`<tr><td style="width:180px;color:var(--txt3)">${esc(k)}</td><td>${esc(v)}</td></tr>`).join('');
+  renderMap();
+  bindEv();
+}
+
+/* ---------------- nine-question map ---------------- */
+function renderMap(){
+  const n = (D.case.sources||[]).length, g = (D.case.gaps||[]).length;
+  const rows = [
+    ['1','目标国家主要相关产业 / 下游应用','有：分段列出产业、需求信号与来源','#sec-downstream','缺口：产量、吨耗、按应用拆分的需求'],
+    ['2','最近 3/5 年产品进口金额、数量及增长','有：金额完整；数量存在未报送年份','#sec-trade','缺口：'+((I.qty_missing_years||[]).join('、')||'无')+' 年净重'],
+    ['3','中国出口该国的规模、份额与变化','有：印尼口径份额 + 中国口径出口','#sec-trade','两套海关口径并列，不做调和'],
+    ['4','主要竞争来源国与当地生产企业','有：来源国前 8 位 + 单位价值；本地企业卡片','#sec-supply','缺口：各家来源国的成本与到岸价'],
+    ['5','当地市场规模、产能与进口依赖','部分：本地产能（在建/中试）+ 进口规模','#sec-supply','缺口：真实消费量与应用结构，不给数值'],
+    ['6','关税、贸易协定、非关税措施与进口政策','部分：政策与协定已核实；税率待核实','#sec-policy','缺口：MFN/ACFTA/RCEP 税率、LARTAS、TKDN 适用'],
+    ['7','与中国的贸易关系及近期政策变化','有：时间线（ACFTA 3.0、RCEP、2025 进口新规、进口替代）','#sec-policy','—'],
+    ['8','公开研报 / 协会 / 商务部国别指南 / 官方统计要点','有：'+n+' 个来源，标注 tier 与口径','#sec-sources','缺口：中国商务部国别指南、印尼行业协会原始数据'],
+    ['9','仍缺少的企业级与市场级数据','有：'+g+' 项缺口 + 待核实行动清单','#sec-gaps','这是本报告最该先看的一节'],
+  ];
+  $('#mapTable').innerHTML = '<tr><th style="width:38px">#</th><th style="width:270px">研究问题</th><th>本页覆盖情况</th><th style="width:210px">定位</th><th>明确标出的缺口</th></tr>'
+   + rows.map(r=>`<tr><td class="muted">${r[0]}</td><td><b>${esc(r[1])}</b></td><td>${esc(r[2])}</td>
+      <td><button class="linkbtn" data-go="${r[3]}">${esc(r[3].replace('#sec-',''))}</button></td>
+      <td style="color:#ffa3ad">${esc(r[4])}</td></tr>`).join('');
+  $$('#mapTable .linkbtn').forEach(b=>b.onclick=()=>document.querySelector(b.dataset.go).scrollIntoView({behavior:'smooth'}));
+}
+
+/* ---------------- drawer ---------------- */
+function openDrawer(kind,title,meta,body){ $('#dKind').textContent=kind; $('#dTitle').textContent=title; $('#dMeta').innerHTML=meta||''; $('#dBody').innerHTML=body||'';
+  $('#drawer').classList.add('on'); $('#mask').classList.add('on'); }
+function closeDrawer(){ $('#drawer').classList.remove('on'); $('#mask').classList.remove('on'); }
+$('#btnClose').onclick=closeDrawer; $('#mask').onclick=closeDrawer;
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeDrawer(); $('#dlg').classList.remove('on');} });
+
+function openSource(id){
+  const s = srcById[id]; if(!s) return;
+  openDrawer('来源 · '+ (s.kind||''), s.title, `${esc(s.publisher||'')} · ${esc(s.date||'')} · tier ${s.tier||'—'}`,
+    `<div class="blk"><div class="h">链接</div><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url)}</a></div>
+     <div class="blk"><div class="h">可信等级</div>T${s.tier||3} — ${s.tier==1?'官方 / 国际组织直接公布':s.tier==2?'政府指南、主流媒体':s.tier==3?'商业机构估算、行业媒体、第三方资料':'第三方汇总，仅作线索，不能单独作为事实依据'}</div>
+     <div class="blk"><div class="h">用法</div>点击标签即可核对原文；若正文与报告表述不一致，以原文为准并在下次生成前修订 case.json。</div>`);
+}
+function openCountry(name){
+  const ps = partnerStruct();
+  const r = (ps.rows||[]).find(x=>x.name===name); if(!r) return;
+  openDrawer('进口来源国 · '+YEAR, name, `金额份额 ${fmt(r.share_value,1)}% · 数量份额 ${r.share_qty==null?'未报送':fmt(r.share_qty,1)+'%'}`,
+    `<div class="blk"><div class="h">本年数据（海关口径）</div>
+      <div>金额 <span class="v">${usdW(r.value_usd)} 万美元</span>（${usdY(r.value_usd)} 亿美元）</div>
+      <div>数量 <span class="v">${r.qty_t==null?'未报送':fmt(r.qty_t,0)+' 吨'}</span></div>
+      <div>单位价值 <span class="v">${r.unit_usd_t==null?'—':'USD '+fmt(r.unit_usd_t,0)+'/t'}</span></div>
+      <div>伙伴代码 ${esc(String(r.code))}</div></div>
+     ${(D.case.competition.source_countries||[]).filter(c=>name.includes(c.name.split(' ')[0])||c.name.includes(name.split(' ')[0])).map(c=>
+       `<div class="blk"><div class="h">竞争背景</div>${esc(c.basis)}<div class="muted" style="margin-top:6px;font-size:11.6px">${esc(c.evidence||'')}</div></div>`).join('')}
+     <div class="blk"><div class="h">提醒</div>单位价值是海关申报的平均到岸价，受品级（重质/轻质）、包装与合同条款影响，不能直接当作报价基准。</div>`);
+}
+function openFirm(id){
+  const C = D.case.industries.consumers||[];
+  const L = D.case.industries.local_production||[];
+  const x = C.find(c=>c.id===id) || L.find(c=>c.id===id); if(!x) return;
+  const isLocal = !!x.capacity_t || !!x.status;
+  openDrawer(isLocal?'本地生产/项目':'下游企业', x.name, `${esc(x.role||x.type||'')} · ${esc(x.location||'')}${x.status?' · '+esc(x.status):''}`,
+    `${(x.facts||[]).length?`<div class="blk"><div class="h">公开信息</div><ul style="margin-left:16px;line-height:1.8">${x.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
+     ${x.capacity_t?`<div class="blk"><div class="h">产能</div><span class="v">${fmt(x.capacity_t/1e4,1)} 万吨/年</span><div class="muted" style="margin-top:4px">${esc(x.capacity_basis||'')}</div></div>`:''}
+     ${x.tech?`<div class="blk"><div class="h">工艺</div>${esc(x.tech)}</div>`:''}
+     ${x.buying_role?`<div class="blk"><div class="h">采购角色</div>${esc(x.buying_role)}</div>`:''}
+     <div class="blk"><div class="h">待核实</div><ul style="margin-left:16px;line-height:1.8">${(x.verify||[]).map(v=>`<li>${esc(v)}</li>`).join('')||'<li>—</li>'}</ul></div>
+     <div class="blk"><div class="h">来源</div>${(x.sources||[]).map(id=>`<div style="margin-bottom:6px"><a href="${esc((srcById[id]||{}).url||'#')}" target="_blank" rel="noopener">${esc((srcById[id]||{}).title||id)}</a><div class="muted" style="font-size:11.5px">${esc((srcById[id]||{}).publisher||'')}</div></div>`).join('')||'—'}</div>`);
+}
+function bindEv(){ $$('.ev[data-src]').forEach(b=>{ if(b.dataset.src) b.onclick=()=>openSource(b.dataset.src); }); }
+
+/* ---------------- export / handoff ---------------- */
+function handoffJSON(name){
+  const h = (D.handoff||[]).find(x=>x.name.includes(name));
+  return h? {target:h.name, ...h.payload, context:{case_id:M.slug||'', research_year:M.research_year, data_asof:M.data_asof}} : {};
+}
+function showDlg(title, text){ $('#dlgTitle').textContent=title; $('#dlgText').value=text; $('#dlg').classList.add('on'); }
+$('#dlgClose').onclick=()=>$('#dlg').classList.remove('on');
+$('#dlgCopy').onclick=()=>{ $('#dlgText').select(); document.execCommand('copy'); $('#dlgCopy').textContent='已复制'; setTimeout(()=>$('#dlgCopy').textContent='复制',1200); };
+$('#dlgCopy2').onclick=()=>{ $('#dlgText').select(); document.execCommand('copy'); $('#dlgCopy2').textContent='已复制 JSON'; setTimeout(()=>$('#dlgCopy2').textContent='复制 JSON',1200); };
+$('#btnGoLead').onclick=()=>showDlg('带给「3. 找海外候选买家」', JSON.stringify(handoffJSON('3.'), null, 2));
+$('#btnGoReq').onclick=()=>showDlg('带给「6. 查产品出口要求」', JSON.stringify(handoffJSON('6.'), null, 2));
+$('#btnCopyJSON').onclick=()=>showDlg('全部交接数据', JSON.stringify(D.handoff||[], null, 2));
+$('#btnExport').onclick=()=>showDlg('结构化数据（data.json 摘要）', JSON.stringify({meta:M, kpi:I.kpi, imports:I.imports, partners:I.partner_structure, china:I.china_exports, gaps:D.case.gaps}, null, 2));
+$('#btnPrint').onclick=()=>window.print();
+
+/* ---------------- boot ---------------- */
+function renderAll(){
+  renderHeader(); renderKPI(); renderTrade(); renderPie(); renderPartners(); renderChina(); renderOverview();
+  renderSupply(); renderDownstream(); renderPolicy(); renderGaps(); renderSources();
+}
+renderAll();
+window.addEventListener('resize',()=>Object.values(chartRefs).forEach(c=>c.resize()));
+</script>
+</body>
+</html>

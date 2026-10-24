@@ -1,0 +1,48 @@
+{
+ "batch": {
+  "case_no": "SIM-MEG-2026-0518",
+  "label": "【模拟】SIMULATED — 仅供进口单证核对流程测试，不具任何法律效力",
+  "product_en": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+  "product_cn": "乙二醇（工业级）",
+  "cas": "107-21-1",
+  "hs": "2905310000",
+  "quantity_mt": 200.0,
+  "unit_price_usd": 612.0,
+  "amount_usd": 122400.0,
+  "incoterm": "CFR NINGBO",
+  "port_load": "KING ABDULLAH PORT, JUBAIL (SAJUB), SAUDI ARABIA",
+  "port_disch": "NINGBO PORT, CHINA (CNNGB)",
+  "vessel_voyage": "MSC ISABELLA V. 2618W",
+  "etd": "2026-05-12",
+  "eta": "2026-06-20",
+  "buyer": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+  "seller": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+  "consignee_of_record": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+  "uscc": "91330212MA2HC8P47K",
+  "letter_date": "2026-05-18"
+ },
+ "expected_documents": [
+  {
+   "type": "COO",
+   "name": "原产地证 Certificate of Origin",
+   "severity": "高",
+   "why": "合同第 5.2 条约定随附原产地证；沙特原产货物在中国申报享受协定/最惠国待遇及海关原产地核查时需要该证。",
+   "impacts": [
+    "进口报关（原产地要素）",
+    "关税税率适用",
+    "单证相符"
+   ],
+   "action": "向发货人索取正本原产地证（沙特商会/贸促会签发），核对出口商、收货人、HS、原产国与本批一致"
+  },
+  {
+   "type": "INSURANCE",
+   "name": "保险单 Insurance Policy",
+   "severity": "提示",
+   "why": "本合同为 CFR 条件，投保义务在买方，卖方无义务提供；若实际按 CIF 成交或信用证要求保险单，则应上传。",
+   "impacts": [
+    "单证相符（视信用证条款）"
+   ],
+   "action": "确认实际成交术语；如买方自行投保，保留保单备查即可"
+  }
+ ]
+}

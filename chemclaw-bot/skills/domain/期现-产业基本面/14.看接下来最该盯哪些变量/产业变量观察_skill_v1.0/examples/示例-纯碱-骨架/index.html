@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>纯碱（SA，郑商所） · 产业变量观察看板</title>
+<style>
+:root{
+  --bg:#0f1420; --bg2:#151c2b; --card:#1a2233; --card2:#1f2940;
+  --line:#2a3650; --line2:#37456a;
+  --txt:#e8edf7; --txt2:#9fb0cc; --txt3:#6d7f9e;
+  --accent:#4f9cf9; --accent2:#7c5cd6;
+  --up:#e0693a; --down:#1a9b8a; --warn:#c99427;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:radial-gradient(1200px 700px at 12% -10%, #1b2540 0%, transparent 55%),
+             radial-gradient(900px 600px at 92% 0%, #201a35 0%, transparent 50%),
+             var(--bg);
+  color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  font-size:14px; line-height:1.62; padding:0 0 60px; min-height:100vh;
+}
+.wrap{max-width:1360px;margin:0 auto;padding:0 24px}
+
+/* ---------- 顶部 ---------- */
+header{padding:34px 0 20px;border-bottom:1px solid var(--line)}
+.kicker{font-size:12px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;font-weight:600}
+h1{font-size:30px;line-height:1.25;margin:10px 0 6px;font-weight:700;letter-spacing:.01em}
+h1 .thin{font-weight:400;color:var(--txt2);font-size:20px}
+.sub{color:var(--txt2);font-size:13.5px}
+.metaline{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.chip{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12.5px;color:var(--txt2)}
+.chip b{color:var(--txt);font-weight:600}
+.chip.accent{border-color:rgba(79,156,249,.45);color:#a9cdfc}
+
+/* ---------- 切换与工具条 ---------- */
+.toolbar{position:sticky;top:0;z-index:30;background:rgba(15,20,32,.93);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);padding:14px 0;margin-bottom:26px}
+.tbrow{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:6px;background:var(--bg2);padding:4px;border-radius:11px;border:1px solid var(--line)}
+.tab{border:0;background:transparent;color:var(--txt2);padding:8px 18px;border-radius:8px;cursor:pointer;
+  font-size:13.5px;font-weight:500;transition:.18s;font-family:inherit}
+.tab:hover{color:var(--txt)}
+.tab.active{background:linear-gradient(135deg,#2f6fd0,#5a49b8);color:#fff;box-shadow:0 4px 14px rgba(79,156,249,.25)}
+.filters{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fbtn{border:1px solid var(--line);background:var(--bg2);color:var(--txt2);padding:6px 13px;border-radius:8px;
+  cursor:pointer;font-size:12.5px;font-family:inherit;transition:.15s;display:flex;align-items:center;gap:6px}
+.fbtn:hover{border-color:var(--line2);color:var(--txt)}
+.fbtn.active{background:var(--card2);border-color:var(--accent);color:#fff}
+.fbtn .dot{width:7px;height:7px;border-radius:50%;background:var(--c,#888)}
+.search{background:var(--bg2);border:1px solid var(--line);border-radius:9px;color:var(--txt);
+  padding:8px 14px;font-size:13px;font-family:inherit;width:220px;outline:none}
+.search:focus{border-color:var(--accent)}
+.count{font-size:12px;color:var(--txt3)}
+
+/* ---------- 概览条 ---------- */
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:30px}
+.ov{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden}
+.ov::after{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c,var(--accent))}
+.ov .k{font-size:12px;color:var(--txt3);letter-spacing:.04em}
+.ov .v{font-size:22px;font-weight:700;margin:6px 0 2px;letter-spacing:-.01em}
+.ov .n{font-size:11.5px;color:var(--txt2)}
+.flag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;margin-left:6px;
+  vertical-align:middle;font-weight:600}
+.flag.low{background:rgba(26,155,138,.18);color:#5fd8c6;border:1px solid rgba(26,155,138,.4)}
+.flag.high{background:rgba(224,105,58,.18);color:#f0956f;border:1px solid rgba(224,105,58,.4)}
+
+/* ---------- 变量卡片 ---------- */
+.cards{display:grid;grid-template-columns:1fr;gap:20px}
+.card{background:linear-gradient(170deg,var(--card) 0%,#182030 100%);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;transition:.2s;position:relative}
+.card:hover{border-color:var(--line2)}
+.card.hidden{display:none}
+.card-head{padding:20px 24px 16px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:flex-start;
+  background:linear-gradient(90deg,rgba(255,255,255,.022),transparent)}
+.rank{flex:0 0 auto;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+  font-size:19px;font-weight:800;color:#fff;background:linear-gradient(140deg,var(--c),#2a3350);
+  box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.card-title{flex:1;min-width:0}
+.card-title h3{font-size:17.5px;font-weight:650;line-height:1.4;margin-bottom:8px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.tag{font-size:11px;padding:2px 9px;border-radius:6px;background:var(--bg2);color:var(--txt2);border:1px solid var(--line)}
+.tag.cat{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c);border-color:color-mix(in srgb,var(--c) 45%,transparent);font-weight:600}
+.tag.next{background:rgba(79,156,249,.13);color:#8fc2fb;border-color:rgba(79,156,249,.4)}
+.starbtn{border:1px solid var(--line);background:var(--bg2);color:var(--txt3);width:34px;height:34px;
+  border-radius:9px;cursor:pointer;font-size:16px;line-height:1;transition:.15s}
+.starbtn.on{color:#f5c451;border-color:rgba(245,196,81,.5);background:rgba(245,196,81,.12)}
+.card-body{padding:20px 24px}
+
+.block{margin-bottom:18px}
+.block:last-child{margin-bottom:0}
+.block h4{font-size:11.5px;letter-spacing:.1em;color:var(--txt3);font-weight:700;text-transform:uppercase;
+  margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.block h4::before{content:"";width:3px;height:12px;border-radius:2px;background:var(--c,var(--accent))}
+.block p, .block li{color:#cfd9ea;font-size:13.5px}
+.block ul{list-style:none;display:grid;gap:5px}
+.block ul li{padding-left:14px;position:relative}
+.block ul li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;
+  background:var(--c,var(--accent));opacity:.75}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:820px){.trio{grid-template-columns:1fr}}
+.tri{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--tc);
+  border-radius:10px;padding:12px 14px}
+.tri .lbl{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--tc);margin-bottom:5px}
+.tri .txt{font-size:12.8px;color:#cbd6e8}
+.tri.yes{--tc:#2fbf8f} .tri.no{--tc:#e0693a} .tri.inv{--tc:#c99427}
+
+.src{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+  font-size:12.3px;color:var(--txt2)}
+.src b{color:var(--txt);font-weight:600}
+.src .row{display:flex;gap:8px;margin-bottom:4px}
+.src .row:last-child{margin-bottom:0}
+.src .kk{flex:0 0 96px;color:var(--txt3)}
+
+.gapbox{margin-top:12px;border:1px dashed rgba(201,148,39,.45);background:rgba(201,148,39,.07);
+  border-radius:10px;padding:10px 13px;font-size:12.3px;color:#dcbf7e}
+.gapbox b{color:var(--warn)}
+
+/* 迷你折线 */
+.mini{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:8px}
+.mini .mt{font-size:11.5px;color:var(--txt3);margin-bottom:6px}
+.mini svg{display:block;width:100%;height:auto}
+.mini .mnote{font-size:11px;color:var(--txt3);margin-top:5px;line-height:1.5}
+
+/* ---------- 时间线 ---------- */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2),transparent)}
+.ev{position:relative;margin-bottom:16px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:15px 18px;transition:.18s}
+.ev:hover{border-color:var(--line2);transform:translateX(2px)}
+.ev::before{content:"";position:absolute;left:-27px;top:20px;width:11px;height:11px;border-radius:50%;
+  background:var(--c,var(--accent));border:2px solid var(--bg);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 25%,transparent)}
+.ev.past{opacity:.62}
+.ev-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
+.ev-date{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;font-weight:700;color:var(--c)}
+.ev-title{font-size:14.5px;font-weight:600;color:var(--txt);margin-bottom:5px}
+.ev-meta{font-size:12.3px;color:var(--txt2)}
+.ev-meta b{color:var(--txt);font-weight:600}
+.kind{font-size:10.5px;padding:1px 8px;border-radius:5px;border:1px solid var(--line2);color:var(--txt2);background:var(--bg2)}
+.kind.fixed{border-color:rgba(47,191,143,.5);color:#5fd8b0;background:rgba(47,191,143,.1)}
+.kind.cond{border-color:rgba(201,148,39,.5);color:#dcbf7e;background:rgba(201,148,39,.1)}
+.kind.periodic{border-color:rgba(79,156,249,.5);color:#8fc2fb;background:rgba(79,156,249,.1)}
+
+/* ---------- 快照 ---------- */
+.snaptable{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.snaptable th{text-align:left;padding:11px 14px;background:var(--bg2);color:var(--txt3);
+  font-size:11.5px;font-weight:700;letter-spacing:.05em;border-bottom:1px solid var(--line);white-space:nowrap}
+.snaptable td{padding:12px 14px;border-bottom:1px solid rgba(42,54,80,.6);vertical-align:top;color:#cfd9ea}
+.snaptable tr:last-child td{border-bottom:0}
+.snaptable tr:hover td{background:rgba(255,255,255,.018)}
+.snaptable td.ind{font-weight:600;color:var(--txt);min-width:150px}
+.snaptable td.val{font-family:ui-monospace,Consolas,monospace;color:#a9cdfc;font-weight:600;white-space:nowrap}
+.scope{font-size:11.5px;color:var(--txt3)}
+
+/* 其它区块 */
+.section{margin-top:38px}
+.section > h2{font-size:19px;font-weight:650;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section > h2 .num{font-size:12px;color:var(--accent);font-family:ui-monospace,Consolas,monospace}
+.section > .desc{color:var(--txt2);font-size:13px;margin-bottom:16px;max-width:980px}
+.cand{display:grid;gap:10px}
+.candrow{display:grid;grid-template-columns:26px 1fr auto;gap:12px;background:var(--card);
+  border:1px solid var(--line);border-radius:11px;padding:13px 16px;align-items:start}
+.candrow.sel{border-color:rgba(47,191,143,.35);background:linear-gradient(90deg,rgba(47,191,143,.07),var(--card))}
+.candrow .mk{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700}
+.candrow.sel .mk{background:rgba(47,191,143,.2);color:#4fd6a9}
+.candrow:not(.sel) .mk{background:rgba(109,127,158,.15);color:var(--txt3)}
+.candrow .nm{font-weight:600;font-size:13.5px}
+.candrow .rs{font-size:12.5px;color:var(--txt2);margin-top:3px}
+.candrow .vf{font-size:11px;color:var(--txt3);white-space:nowrap}
+
+.secondary{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.seccard{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+.seccard .nm{font-weight:600;font-size:13.5px;margin-bottom:6px}
+.seccard .rs{font-size:12.5px;color:var(--txt2)}
+
+.gaptable{width:100%;border-collapse:separate;border-spacing:0;font-size:12.6px;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.gaptable th{text-align:left;padding:10px 14px;background:var(--bg2);color:var(--txt3);font-size:11.5px;
+  border-bottom:1px solid var(--line)}
+.gaptable td{padding:11px 14px;border-bottom:1px solid rgba(42,54,80,.6);color:#cfd9ea;vertical-align:top}
+.gaptable tr:last-child td{border-bottom:0}
+.gaptable td.item{font-weight:600;color:var(--txt);white-space:nowrap}
+
+.weekcal{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.wk{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:13px 15px;
+  border-top:2px solid var(--accent)}
+.wk .w{font-size:12px;color:var(--accent);font-weight:700;margin-bottom:4px}
+.wk .t{font-size:12.8px;color:#cfd9ea}
+.wk .s{font-size:11px;color:var(--txt3);margin-top:5px}
+
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:var(--txt3);font-size:11.8px;line-height:1.85}
+footer b{color:var(--txt2)}
+
+.view{display:none} .view.active{display:block}
+.empty{color:var(--txt3);text-align:center;padding:40px;font-size:13px}
+
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#2c3852;border-radius:6px}
+::-webkit-scrollbar-track{background:transparent}
+@media print{
+  .toolbar{position:static} .card{break-inside:avoid} .view{display:block!important}
+  body{background:#fff;color:#111}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="kicker">期现 · 产业基本面 · 变量观察</div>
+  <h1>纯碱（SA，郑商所） 未来最该盯什么<span class="thin"> · 产业变量观察看板</span></h1>
+  <div class="sub">关注周期：&lt;&lt;&lt;研究周期，如：未来1个月&gt;&gt;&gt;　|　数据截止：&lt;&lt;&lt;填写数据截止日，如 2026-10-19&gt;&gt;&gt;</div>
+  <div class="metaline">
+    <span class="chip accent">合约锚点　<b>&lt;&lt;&lt;主力合约、基差口径&gt;&gt;&gt;</b></span>
+    <span class="chip">重点区域　<b>华东（江苏、连云港）为主销区；西北（青海、内蒙古）为低成本产区；华北（河北）为玻璃需求地</b></span>
+    <span class="chip">口径　<b>现货为出厂/送到含税价；期货为主力收盘；基差=沙河/华东重碱-主力</b></span>
+    <span class="chip">研究定位　<b>期现兼顾</b></span>
+  </div>
+</div>
+</header><div class="toolbar"><div class="wrap"><div class="tbrow">
+  <div class="tabs">
+    <button class="tab active" data-view="cards">变量卡片</button>
+    <button class="tab" data-view="timeline">事件时间线</button>
+    <button class="tab" data-view="snapshot">产业状态快照</button>
+  </div>
+  <div class="filters"><button class="fbtn active" data-cat="all">全部</button><button class="fbtn" data-cat="fav" title="仅显示已收藏">★ 自选</button><button class="fbtn" data-cat="库存"><span class="dot" style="--c:#7c5cd6"></span>库存</button><button class="fbtn" data-cat="需求"><span class="dot" style="--c:#2f7fd1"></span>需求</button><button class="fbtn" data-cat="供给"><span class="dot" style="--c:#e0693a"></span>供给</button><button class="fbtn" data-cat="价差"><span class="dot" style="--c:#1a9b8a"></span>价差</button></div>
+  <input class="search" id="q" type="search" placeholder="搜索变量 / 事件 / 指标…">
+  <span class="count" id="count"></span>
+</div></div></div><div class="wrap"><div class="overview"><div class="ov" style="--c:#4f9cf9"><div class="k">入选变量</div><div class="v">4</div><div class="n">覆盖 4 类：价差 / 供给 / 库存 / 需求</div></div><div class="ov" style="--c:#7c5cd6"><div class="k">候选筛选</div><div class="v">5/7</div><div class="n">入选 / 全部候选，其余降为二级观察</div></div><div class="ov" style="--c:#1a9b8a"><div class="k">未来已知节点</div><div class="v">0</div><div class="n">10-20 至 11-20 区间内的公开事件与数据发布</div></div><div class="ov" style="--c:#c99427"><div class="k">数据缺口</div><div class="v">2</div><div class="n">明确限制与替代口径，均已标注</div></div></div><div class="view active" id="view-cards"><div class="cards" id="cards"><article class="card" data-cat="库存" data-vid="V1" data-search="企业库存方向——过剩是否还在加深 待核实（万吨，日期） 高库存+产能扩张下，库存拐点是纯碱最强的定价信号：去库对应现货企稳，累库对应进一步压价">
+  <div class="card-head" style="--c:#7c5cd6">
+    <div class="rank" style="--c:#7c5cd6">#1</div>
+    <div class="card-title">
+      <h3>企业库存方向——过剩是否还在加深</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#7c5cd6">库存</span>
+        <span class="tag">重要性 <span class="stars" title="5/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="5/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="5/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i></span></span>
+        <span class="tag next">下次观测：&lt;&lt;&lt;明确日期或“每周四”&gt;&gt;&gt;</span>
+        <span class="tag">周度（周四）</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V1" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#7c5cd6">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>待核实（万吨，日期）</p></div>
+        <div class="block"><h4>近期变化</h4><p>待核实</p></div>
+        <div class="block"><h4>历史位置</h4><p>待核实（近五年分位）</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>高库存+产能扩张下，库存拐点是纯碱最强的定价信号：去库对应现货企稳，累库对应进一步压价</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>产能投放/开工 → 周产量 → 企业库存 → 现货报价与基差 → 盘面</p></div>
+        
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①企业库存总量</li><li>②分区域库存</li><li>③厂家待发订单</li><li>④纯碱库存天数</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">连续 3 周去库且降幅 &gt;3%，同时现货报价止跌 → 过剩压力缓解，原“累库压价”判断需上调</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">库存再创历史新高或单周增幅 &gt;5% → 供给过剩加深，原判断得到强化</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">若口径调整（样本扩容）或厂家转出口导致库存下降但国内供给未变，则不能以库存下降推断供给收缩</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>&lt;&lt;&lt;隆众/卓创 + 日期&gt;&gt;&gt;</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>周度</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>&lt;&lt;&lt;明确日期或“每周四”&gt;&gt;&gt;</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>高（双源交叉）</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>两口径样本不同，绝对量不可混用；分区域库存部分需付费</div>
+    </div>
+  </div>
+</article><article class="card" data-cat="需求" data-vid="V2" data-search="玻璃日熔量——重碱刚需的边际 待核实 重碱需求主要跟随浮法与光伏玻璃日熔量；冷修或点火是需求端最直接的边际变量">
+  <div class="card-head" style="--c:#2f7fd1">
+    <div class="rank" style="--c:#2f7fd1">#2</div>
+    <div class="card-title">
+      <h3>玻璃日熔量——重碱刚需的边际</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#2f7fd1">需求</span>
+        <span class="tag">重要性 <span class="stars" title="5/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="4/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="4/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i></i></span></span>
+        <span class="tag next">下次观测：待填写：每周四（库存/开工）/ 每日（价格）</span>
+        <span class="tag">周度</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V2" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#2f7fd1">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>待核实</p></div>
+        <div class="block"><h4>近期变化</h4><p>待核实（冷修/点火净变动）</p></div>
+        <div class="block"><h4>历史位置</h4><p>待核实</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>重碱需求主要跟随浮法与光伏玻璃日熔量；冷修或点火是需求端最直接的边际变量</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>日熔量 → 重碱日耗 → 纯碱采购 → 企业库存</p></div>
+        
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①浮法在产日熔量</li><li>②光伏在产日熔量</li><li>③冷修/点火计划</li><li>④玻璃厂纯碱库存天数</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">日熔量净下降 &gt;1% 且玻璃厂补库意愿下降 → 需求走弱，原判断需下调</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">日熔量净上升或冷修推迟 → 需求韧性仍在</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">若玻璃厂以轻碱替代或降低纯碱单耗，则日熔量与纯碱需求的关系弱化</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>&lt;&lt;&lt;来源&gt;&gt;&gt;</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>周度</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>待填写：每周四（库存/开工）/ 每日（价格）</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>高</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>光伏产线投产进度披露滞后</div>
+    </div>
+  </div>
+</article><article class="card" data-cat="供给" data-vid="V3" data-search="开工率与周产量——供给弹性 待核实 高利润下企业倾向满负荷；检修与复产节奏决定周度边际供给">
+  <div class="card-head" style="--c:#e0693a">
+    <div class="rank" style="--c:#e0693a">#3</div>
+    <div class="card-title">
+      <h3>开工率与周产量——供给弹性</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#e0693a">供给</span>
+        <span class="tag">重要性 <span class="stars" title="4/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="5/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="4/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i></i></span></span>
+        <span class="tag next">下次观测：待填写：每周四（库存/开工）/ 每日（价格）</span>
+        <span class="tag">周度</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V3" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#e0693a">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>待核实</p></div>
+        <div class="block"><h4>近期变化</h4><p>待核实</p></div>
+        <div class="block"><h4>历史位置</h4><p>待核实</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>高利润下企业倾向满负荷；检修与复产节奏决定周度边际供给</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>利润 → 开工 → 周产量 → 库存</p></div>
+        
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①全行业开工</li><li>②分工艺开工（氨碱/联碱/天然碱）</li><li>③检修损失量</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">开工率较前周下降 &gt;3pct 且多装置检修，供给收缩</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">开工维持高位且新装置达产，供给继续释放</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">企业装置开停不公告，开工样本变动导致口径不一致</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>&lt;&lt;&lt;来源&gt;&gt;&gt;</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>周度</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>待填写：每周四（库存/开工）/ 每日（价格）</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>中</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>开工为估算样本，非全口径统计</div>
+    </div>
+  </div>
+</article><article class="card" data-cat="价差" data-vid="V4" data-search="现货与基差——压力的直接读数 待核实 高库存下的现货垮塌与基差走势，比任何预测更直接反映真实压力">
+  <div class="card-head" style="--c:#1a9b8a">
+    <div class="rank" style="--c:#1a9b8a">#4</div>
+    <div class="card-title">
+      <h3>现货与基差——压力的直接读数</h3>
+      <div class="tags">
+        <span class="tag cat" style="--c:#1a9b8a">价差</span>
+        <span class="tag">重要性 <span class="stars" title="4/5"><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i class="on" style="--c:#c99427"></i><i></i></span></span>
+        <span class="tag">可验证性 <span class="stars" title="5/5"><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i><i class="on" style="--c:#4f9cf9"></i></span></span>
+        <span class="tag">紧迫度 <span class="stars" title="4/5"><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i class="on" style="--c:#1a9b8a"></i><i></i></span></span>
+        <span class="tag next">下次观测：待填写：每周四（库存/开工）/ 每日（价格）</span>
+        <span class="tag">日频</span>
+      </div>
+    </div>
+    <button class="starbtn" data-fav="V4" title="加入自选" aria-label="收藏">☆</button>
+  </div>
+  <div class="card-body" style="--c:#1a9b8a">
+    <div class="grid2">
+      <div>
+        <div class="block"><h4>当前状态</h4><p>待核实</p></div>
+        <div class="block"><h4>近期变化</h4><p>待核实</p></div>
+        <div class="block"><h4>历史位置</h4><p>待核实</p></div>
+      </div>
+      <div>
+        <div class="block"><h4>为什么值得盯</h4><p>高库存下的现货垮塌与基差走势，比任何预测更直接反映真实压力</p></div>
+        <div class="block"><h4>与供需 / 价格的传导</h4><p>库存 → 现货报价 → 基差 → 盘面与套保</p></div>
+        
+      </div>
+    </div>
+
+    <div class="block" style="margin-top:4px"><h4>关键可核对数据</h4>
+      <ul><li>①沙河/华东重碱</li><li>②轻碱</li><li>③基差</li><li>④月差</li></ul>
+    </div>
+
+    <div class="block"><h4>判断修正条件</h4>
+      <div class="trio">
+        <div class="tri yes"><div class="lbl">✓ 确认信号</div><div class="txt">现货连续下跌且基差走弱至 -200 以下</div></div>
+        <div class="tri no"><div class="lbl">✗ 否证信号</div><div class="txt">现货企稳且基差修复</div></div>
+        <div class="tri inv"><div class="lbl">⚠ 变量失效 / 口径失真</div><div class="txt">区域价差过大时统一用沙河或华东同一基准，不可混用</div></div>
+      </div>
+    </div>
+
+    <div class="block"><h4>数据来源与更新节奏</h4>
+      <div class="src">
+        <div class="row"><div class="kk">数据来源</div><div>&lt;&lt;&lt;来源&gt;&gt;&gt;</div></div>
+        <div class="row"><div class="kk">更新频率</div><div>日频</div></div>
+        <div class="row"><div class="kk">下次可获得</div><div><b>待填写：每周四（库存/开工）/ 每日（价格）</b></div></div>
+        <div class="row"><div class="kk">置信度</div><div>高</div></div>
+      </div>
+      <div class="gapbox"><b>⚠ 口径与数据局限：</b>不同机构牌价与成交价有差异</div>
+    </div>
+  </div>
+</article></div><div class="empty" id="empty" style="display:none">没有匹配的变量，试试切换筛选或清空搜索。</div></div><div class="view" id="view-timeline">
+<p class="desc" style="color:var(--txt2);font-size:13px;margin-bottom:16px">
+  仅收录「已公开披露」或「有确定发布节奏」的节点。<span class="kind fixed">绿</span> = 有明确日期或正在进行的确定事件；
+  <span class="kind periodic">蓝</span> = 按固定节奏发布的数据；<span class="kind cond">黄</span> = 条件触发或时点模糊，只作为观察窗口，
+  <b>不代表必然发生</b>。灰化条目为已经过去的节点。</p>
+<div class="timeline"><div class="ev past" style="--c:#7c5cd6" data-search="纯碱企业库存周报（隆众/卓创，通常周四） 直接反映供给过剩是否延续，决定库存拐点">
+  <div class="ev-top">
+    <span class="ev-date">&lt;&lt;&lt;&gt;&gt;</span>
+    <span class="kind periodic">定期数据</span>
+    <span class="tag cat" style="--c:#7c5cd6">库存</span>
+    <span class="tag">&lt;&lt;&lt;YYYY-MM-DD&gt;&gt;&gt;</span>
+  </div>
+  <div class="ev-title">纯碱企业库存周报（隆众/卓创，通常周四）</div>
+  <div class="ev-meta"><b>确定性：</b>固定周度发布节奏<br><b>影响路径：</b>直接反映供给过剩是否延续，决定库存拐点<br><b>来源：</b>隆众/卓创</div>
+</div><div class="ev past" style="--c:#e0693a" data-search="&lt;&lt;&lt;新增产能投放节点（如某 100 万吨/年装置计划投产）&gt;&gt;&gt; 若兑现将抬高月度供给，压制现货">
+  <div class="ev-top">
+    <span class="ev-date">&lt;&lt;&lt;&gt;&gt;</span>
+    <span class="kind cond">已披露·时点模糊</span>
+    <span class="tag cat" style="--c:#e0693a">供给</span>
+    <span class="tag">&lt;&lt;&lt;YYYY-MM-DD&gt;&gt;&gt;</span>
+  </div>
+  <div class="ev-title">&lt;&lt;&lt;新增产能投放节点（如某 100 万吨/年装置计划投产）&gt;&gt;&gt;</div>
+  <div class="ev-meta"><b>确定性：</b>计划投产，实际以装置动态与产量爬坡为准<br><b>影响路径：</b>若兑现将抬高月度供给，压制现货<br><b>来源：</b>&lt;&lt;&lt;来源 + 日期&gt;&gt;&gt;</div>
+</div><div class="ev past" style="--c:#2f7fd1" data-search="&lt;&lt;&lt;浮法/光伏玻璃产线冷修或点火&gt;&gt;&gt; 影响重碱日耗，是需求端主要边际变化来源">
+  <div class="ev-top">
+    <span class="ev-date">&lt;&lt;&lt;&gt;&gt;</span>
+    <span class="kind cond">条件触发·观察窗</span>
+    <span class="tag cat" style="--c:#2f7fd1">需求</span>
+    <span class="tag">&lt;&lt;&lt;YYYY-MM-DD&gt;&gt;&gt;</span>
+  </div>
+  <div class="ev-title">&lt;&lt;&lt;浮法/光伏玻璃产线冷修或点火&gt;&gt;&gt;</div>
+  <div class="ev-meta"><b>确定性：</b>计划冷修/点火，时点不确定；不代表必然按期发生<br><b>影响路径：</b>影响重碱日耗，是需求端主要边际变化来源<br><b>来源：</b>&lt;&lt;&lt;来源&gt;&gt;&gt;</div>
+</div></div></div><div class="view" id="view-snapshot">
+<p class="desc" style="color:var(--txt2);font-size:13px;margin-bottom:16px">
+  产业状态核对表：价格、库存、开工、产量、需求、成本六类核心指标。<b>同一指标有多个口径时分行列出且标注口径</b>，
+  不同口径的数值不可直接比较或相减。</p>
+<table class="snaptable">
+  <thead><tr><th>指标 / 口径</th><th>当前值</th><th>近期变化</th><th>历史位置</th><th>来源</th></tr></thead>
+  <tbody><tr data-search="纯碱企业库存（隆众口径）">
+  <td class="ind">纯碱企业库存（隆众口径）<div class="scope">隆众：企业库存合计</div></td>
+  <td class="val">待核实（万吨，日期）</td>
+  <td>待核实（环比/同比）</td>
+  <td>待核实（近五年分位）</td>
+  <td class="scope">&lt;&lt;&lt;隆众周报 + 日期&gt;&gt;&gt;</td>
+</tr><tr data-search="纯碱行业开工率 / 周产量">
+  <td class="ind">纯碱行业开工率 / 周产量<div class="scope">隆众全样本</div></td>
+  <td class="val">待核实（% / 万吨，日期）</td>
+  <td>待核实</td>
+  <td>待核实</td>
+  <td class="scope">&lt;&lt;&lt;隆众周报&gt;&gt;&gt;</td>
+</tr><tr data-search="重碱下游：浮法玻璃在产日熔量">
+  <td class="ind">重碱下游：浮法玻璃在产日熔量<div class="scope">隆众/卓创在产产能口径</div></td>
+  <td class="val">待核实（万吨/日，日期）</td>
+  <td>待核实（冷修/点火）</td>
+  <td>待核实</td>
+  <td class="scope">&lt;&lt;&lt;卓创 + 日期&gt;&gt;&gt;</td>
+</tr><tr data-search="光伏玻璃在产日熔量">
+  <td class="ind">光伏玻璃在产日熔量<div class="scope">隆众/卓创</div></td>
+  <td class="val">待核实（万吨/日，日期）</td>
+  <td>待核实</td>
+  <td>待核实</td>
+  <td class="scope">&lt;&lt;&lt;隆众 + 日期&gt;&gt;&gt;</td>
+</tr><tr data-search="纯碱现货（重碱/轻碱）与基差">
+  <td class="ind">纯碱现货（重碱/轻碱）与基差<div class="scope">沙河/华东送到价；基差=现货-主力</div></td>
+  <td class="val">待核实（元/吨，日期）</td>
+  <td>待核实</td>
+  <td>待核实</td>
+  <td class="scope">&lt;&lt;&lt;生意社/隆众&gt;&gt;&gt;</td>
+</tr><tr data-search="原盐与煤炭成本 / 联碱、氨碱利润">
+  <td class="ind">原盐与煤炭成本 / 联碱、氨碱利润<div class="scope">按工艺分列（氨碱/联碱/天然碱）</div></td>
+  <td class="val">待核实</td>
+  <td>待核实</td>
+  <td>待核实</td>
+  <td class="scope">&lt;&lt;&lt;隆众/卓创&gt;&gt;&gt;</td>
+</tr></tbody>
+</table></div><div class="section">
+  <h2><span class="num">01</span>候选池与筛选依据</h2>
+  <p class="desc">先列出所有可想到的候选指标，再用「产业逻辑强度 × 可验证性 × 观察周期匹配度」筛选，只保留 3–6 个。
+  未被选中的项不是不重要，而是<b>不能在同一周期内被独立验证</b>，或与入选变量高度相关，转为二级观察。</p>
+  <div class="cand"><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">企业库存（隆众/卓创） <span class="tag cat" style="--c:#7c5cd6">库存</span></div>
+  <div class="rs">供给过剩型品种的定价核心：库存方向决定现货压力与基差</div></div>
+  <div class="vf">可验证性<br>高（周度、双源）</div>
+</div><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">重碱需求：玻璃在产日熔量 <span class="tag cat" style="--c:#2f7fd1">需求</span></div>
+  <div class="rs">重碱约一半需求在玻璃，日熔量是最直接的刚需代理</div></div>
+  <div class="vf">可验证性<br>高（周度，冷修/点火可追踪）</div>
+</div><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">开工率与周产量 <span class="tag cat" style="--c:#e0693a">供给</span></div>
+  <div class="rs">高利润能否维持高开工，决定供给弹性；检修季有季节性</div></div>
+  <div class="vf">可验证性<br>高（周度）</div>
+</div><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">新增产能投放节奏 <span class="tag cat" style="--c:#e0693a">供给</span></div>
+  <div class="rs">产能集中投放期，新装置的达产速度决定过剩加深程度</div></div>
+  <div class="vf">可验证性<br>中（计划公开，实际爬坡难核实）</div>
+</div><div class="candrow sel">
+  <div class="mk">✓</div>
+  <div><div class="nm">纯碱现货与基差 <span class="tag cat" style="--c:#1a9b8a">价差</span></div>
+  <div class="rs">高库存常伴随期货贴水/现货垮塌，基差是压力的直接读数</div></div>
+  <div class="vf">可验证性<br>高（日频）</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">原盐/煤炭成本 <span class="tag cat" style="--c:#c99427">成本</span></div>
+  <div class="rs">成本决定现金成本支撑，但短期不如库存与需求弹性大，列为二级观察</div></div>
+  <div class="vf">可验证性<br>高</div>
+</div><div class="candrow ">
+  <div class="mk">—</div>
+  <div><div class="nm">轻碱/重碱价差 <span class="tag cat" style="--c:#1a9b8a">价差</span></div>
+  <div class="rs">可反映重碱需求相对强弱，但与日熔量高度相关，暂作二级观察</div></div>
+  <div class="vf">可验证性<br>高</div>
+</div></div>
+</div>
+
+<div class="section">
+  <h2><span class="num">02</span>二级观察（不进卡片，但跌破阈值要提级）</h2>
+  <p class="desc">这些变量的信息价值真实存在，但在这个 1 个月周期内要么弹性小、要么与主变量共线。</p>
+  <div class="secondary"><div class="seccard"><div class="nm">原盐/煤炭成本</div><div class="rs">决定现金成本支撑；但当前供给过剩，成本更多是底部约束而非驱动。提级条件：现货跌破行业平均现金成本且开工明显下降。</div></div><div class="seccard"><div class="nm">轻碱/重碱价差</div><div class="rs">反映重碱相对强弱，但与日熔量高度相关，暂作二级。提级条件：轻碱价格显著强于重碱且持续 2 周以上。</div></div></div>
+</div>
+
+<div class="section">
+  <h2><span class="num">03</span>数据缺口登记</h2>
+  <p class="desc">凡是无法稳定获得的指标，一律在这里写明「为什么拿不到 / 用什么替代 / 局限在哪」，
+  而不是用估算值冒充实测值。</p>
+  <table class="gaptable">
+    <thead><tr><th>指标</th><th>为什么不可得</th><th>替代口径</th><th>局限</th></tr></thead>
+    <tbody><tr>
+  <td class="item">新增产能实际达产率</td>
+  <td>企业不披露，只能从月度产量与区域库存间接推断</td>
+  <td>用周产量增量 + 区域库存反向估算</td>
+  <td class="scope">无法区分“新装置达产”与“老装置提负荷”，结论存在歧义</td></tr><tr>
+  <td class="item">玻璃厂纯碱库存天数</td>
+  <td>属于终端调研数据，公开渠道多为定性描述</td>
+  <td>以下游成品库存与采购节奏代理</td>
+  <td class="scope">只能判断方向，不能量化</td></tr></tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2><span class="num">04</span>固定观察节奏</h2>
+  <p class="desc">把「什么时候查什么」固化下来，避免只盯价格不看数据。</p>
+  <div class="weekcal"><div class="wk"><div class="w">每周四</div><div class="t">纯碱企业库存、开工率</div><div class="s">来源：隆众/卓创</div></div><div class="wk"><div class="w">每日</div><div class="t">主力价格、基差、仓单</div><div class="s">来源：郑商所、期货公司日评</div></div><div class="wk"><div class="w">每月</div><div class="t">纯碱进出口、玻璃产量</div><div class="s">来源：海关总署、统计局</div></div></div>
+</div></div><div class="wrap"><footer>
+<b>使用说明</b><br>
+本看板由「产业变量观察」模板生成，数据截止 &lt;&lt;&lt;填写数据截止日，如 2026-10-19&gt;&gt;&gt;，
+来源均为公开发布的行业数据与机构研报（已在各项注明）。<br>
+<b>重要声明</b>：本看板是<b>研究观察工具</b>，只回答「接下来该盯什么、什么情况需要修正判断」，
+不构成对价格方向的预测，也不构成任何投资建议。标注为「预估 / 估算 / 机构口径」的数值不等同于实测。
+条件触发类事件（如海峡通行、限气时点）只表示存在观察窗口，不代表已发生或必然发生。<br>
+生成时间：2026-10-20　·　模板版本：v0.1-骨架
+</footer></div>
+<script>
+(function(){
+  var viewBtns = document.querySelectorAll('.tab');
+  var fbtns = document.querySelectorAll('.fbtn');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#cards .card'));
+  var events = Array.prototype.slice.call(document.querySelectorAll('.ev'));
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.snaptable tbody tr'));
+  var q = document.getElementById('q');
+  var countEl = document.getElementById('count');
+  var emptyEl = document.getElementById('empty');
+  var favKey = 'chemvar-fav-' + (document.title||'').slice(0,20);
+  var favs = {};
+  try { favs = JSON.parse(localStorage.getItem(favKey) || '{}') || {}; } catch(e) { favs = {}; }
+
+  function saveFavs(){ try { localStorage.setItem(favKey, JSON.stringify(favs)); } catch(e){} }
+
+  document.querySelectorAll('.starbtn').forEach(function(b){
+    var vid = b.getAttribute('data-fav');
+    if (favs[vid]) { b.classList.add('on'); b.textContent = '★'; }
+    b.addEventListener('click', function(){
+      favs[vid] = !favs[vid];
+      b.classList.toggle('on', !!favs[vid]);
+      b.textContent = favs[vid] ? '★' : '☆';
+      saveFavs();
+      apply();
+    });
+  });
+
+  var curCat = 'all', curView = 'cards';
+
+  function apply(){
+    var term = (q.value || '').trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function(c){
+      var cat = c.getAttribute('data-cat');
+      var vid = c.getAttribute('data-vid');
+      var okCat = (curCat === 'all') || (curCat === 'fav' ? !!favs[vid] : cat === curCat);
+      var okTerm = !term || (c.getAttribute('data-search')||'').indexOf(term) >= 0;
+      var show = okCat && okTerm;
+      c.classList.toggle('hidden', !show);
+      if (show) shown++;
+    });
+    if (emptyEl) emptyEl.style.display = shown ? 'none' : 'block';
+
+    [events, rows].forEach(function(list){
+      list.forEach(function(el){
+        var okTerm = !term || (el.getAttribute('data-search')||'').indexOf(term) >= 0;
+        el.style.display = okTerm ? '' : 'none';
+      });
+    });
+
+    var total = curView === 'cards' ? cards.length : (curView === 'timeline' ? events.length : rows.length);
+    if (countEl) {
+      countEl.textContent = curView === 'cards'
+        ? (shown + ' / ' + total + ' 个变量')
+        : (total + ' 条记录');
+    }
+  }
+
+  viewBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      curView = b.getAttribute('data-view');
+      viewBtns.forEach(function(x){ x.classList.toggle('active', x === b); });
+      document.querySelectorAll('.view').forEach(function(v){
+        v.classList.toggle('active', v.id === 'view-' + curView);
+      });
+      apply();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  fbtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      curCat = b.getAttribute('data-cat');
+      fbtns.forEach(function(x){ x.classList.toggle('active', x === b); });
+      apply();
+    });
+  });
+
+  if (q) q.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body></html>

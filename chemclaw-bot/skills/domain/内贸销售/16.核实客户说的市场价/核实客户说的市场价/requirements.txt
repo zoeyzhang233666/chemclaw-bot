@@ -1,0 +1,5 @@
+# 本 Skill 的依赖
+# 生成 HTML 报告不需要任何第三方包（ECharts 已内联在 scripts/assets/ 里）。
+# 生成 Excel 工作簿需要 openpyxl。
+
+openpyxl>=3.0

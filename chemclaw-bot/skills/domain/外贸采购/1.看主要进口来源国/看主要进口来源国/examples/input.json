@@ -1,0 +1,99 @@
+{
+ "scenario": "看主要进口来源国",
+ "product_name_cn": "工业级乙二醇",
+ "product_name_en": "Monoethylene glycol (MEG)",
+ "cas": "107-21-1",
+ "grade": "工业级 / 纤维级，纯度 ≥99.8%（GB/T 4649-2018）",
+ "hs_candidates": [
+  {
+   "code": "290531",
+   "name": "Ethylene glycol",
+   "selected": true
+  },
+  {
+   "code": "290532",
+   "name": "Propylene glycol",
+   "selected": false
+  },
+  {
+   "code": "290941",
+   "name": "DEG",
+   "selected": false
+  },
+  {
+   "code": "382000",
+   "name": "Anti-freeze preparations",
+   "selected": false
+  }
+ ],
+ "hs_selected": "290531",
+ "hs8_cn": "2905310000",
+ "use": "聚酯（PET）、防冻液、不饱和树脂",
+ "annual_volume": "未提供（按 1–5 万吨/年试算比价）",
+ "destination": "中国（华东 / 长江下游）",
+ "target_price": "未提供",
+ "existing_suppliers": "未提供",
+ "years": [
+  2016,
+  2017,
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025
+ ],
+ "notes": "2025 年为初步数；2017 年中国进口 netWgt 缺失。",
+ "meta": {
+  "title": "工业级乙二醇（MEG）进口来源国比较",
+  "product": "乙二醇（monoethylene glycol, MEG）",
+  "cas": "107-21-1",
+  "grade": "工业级 / 纤维级（fiber grade），纯度 ≥99.8%",
+  "hs": "290531（Ethylene glycol / ethanediol，HS2022 六位）",
+  "hs8_cn": "2905310000（中国海关 8 位，待以税则核对）",
+  "importer": "中国",
+  "years": [
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "years5": [
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "unit_note": "金额单位：百万美元（USD m）；数量单位：千吨（kt）；单位价值：美元/吨（USD/t，金额÷净重，非合同价）",
+  "built": "2026-10-20 12:33",
+  "sources": [
+   {
+    "id": "uncomtrade",
+    "name": "UN Comtrade Database（HS 2022, 290531, annual）",
+    "url": "https://comtradeapi.un.org",
+    "accessed": "2026-10"
+   },
+   {
+    "id": "uncomtrade_meta",
+    "name": "UN Comtrade commodity & country code lists",
+    "url": "https://comtradeplus.un.org",
+    "accessed": "2026-10"
+   },
+   {
+    "id": "fx",
+    "name": "Frankfurter API（ECB 参考汇率，USD/CNY）",
+    "url": "https://api.frankfurter.app",
+    "accessed": "2026-10"
+   }
+  ]
+ }
+}

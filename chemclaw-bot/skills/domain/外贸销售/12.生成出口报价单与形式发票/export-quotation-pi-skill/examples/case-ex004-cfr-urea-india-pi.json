@@ -1,0 +1,191 @@
+{
+  "meta": {
+    "skillVersion": "1.0.0",
+    "dataClass": "SIMULATED — DEMO DATA / 模拟演示数据",
+    "dataClassNote": "All names, contacts, prices and terms are SIMULATED for skill demonstration. Replace with user-confirmed commercial data before any real use. Bank details are placeholders only.",
+    "caseId": "EX-004-UREA-IND-PI",
+    "product": "Urea (Granular)",
+    "destination": "India",
+    "preparedAt": "2026-10-19",
+    "preparedBy": "export-quotation-pi skill example generator",
+    "scenario": "Proforma Invoice CFR Tuticorin to an Indian agricultural-input importer; granular urea 50 kg PP bags, shipped in breakbulk/20'FCL."
+  },
+  "docType": "PROFORMA_INVOICE",
+  "state": {
+    "stage": "READY_FOR_REVIEW",
+    "reviewConfirmed": false
+  },
+  "reference": {
+    "text": "PI-SIM-2610-004",
+    "quoteNo": "PI-SIM-2610-004",
+    "quotationRef": "PI-SIM-2610-004 Rev.0",
+    "buyerInquiryRef": "INQ-SIM-IN-4471",
+    "supplierQuoteRef": "",
+    "exporterReference": "TO BE ALLOCATED BEFORE SHIPMENT",
+    "buyerPoNo": "PO SIM-IND-00147"
+  },
+  "issueDate": "2026-10-19",
+  "seller": {
+    "name": "Hua Bin Chemical Trading Co., Ltd. (SIMULATED DEMO)",
+    "shortName": "SIMULATED CO., LTD.",
+    "logoText": "SIMULATED",
+    "address": "Unit 2108, 21/F, Harbor Commerce Tower, Nanshan District, Shenzhen, Guangdong 518000, China",
+    "country": "China",
+    "contact": "[Simulated Contact Person]",
+    "phone": "+86 000 0000 0000 (Simulated)",
+    "email": "export@example-demo.invalid",
+    "taxId": "USCI SIMULATED-0000000000"
+  },
+  "buyer": {
+    "name": "Deccan Agri Inputs Pvt. Ltd. (SIMULATED DEMO)",
+    "address": "Plot 21, SIPCOT Industrial Complex, Tuticorin 628 008, Tamil Nadu, India",
+    "country": "India",
+    "contact": "[Simulated Buyer Contact]",
+    "position": "Head - Procurement",
+    "phone": "+91 00 0000 0000 (Simulated)",
+    "email": "imports@example-demo.invalid",
+    "npwp": "GSTIN SIMULATED00A00A0Z0"
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "decimals": 2,
+    "exchangeRate": {
+      "base": "",
+      "rate": "",
+      "asOf": "",
+      "state": "reference",
+      "display": "none"
+    }
+  },
+  "tradeTerm": {
+    "code": "CFR",
+    "version": "2020",
+    "namedPlace": "Tuticorin Port, Tamil Nadu, India",
+    "namedPlaceKind": "port",
+    "transportMode": "SEA",
+    "costAllocation": {
+      "exportPacking": "Seller",
+      "loadingCharges": "Seller",
+      "exportCustoms": "Seller",
+      "originCharges": "Seller",
+      "destinationCharges": "Buyer",
+      "importCustoms": "Buyer",
+      "unloading": "Buyer",
+      "mainFreight": "Seller",
+      "insurance": "Buyer"
+    }
+  },
+  "items": [
+    {
+      "id": "L1",
+      "name": "Urea, Granular (Nitrogen fertiliser, 46% N)",
+      "cas": "57-13-6",
+      "spec": "Total nitrogen 46.0% min. (dry basis); biuret 1.0% max.; moisture 0.5% max.; granular 2-4 mm 90% min.",
+      "hsCode": "310210",
+      "origin": "China",
+      "unit": "MT",
+      "quantity": 25,
+      "unitPrice": 412,
+      "discountPct": 0,
+      "amountState": "confirmed",
+      "amountConfirmedValue": 10300.0,
+      "dangerousGoods": {
+        "status": "NOT_REGULATED",
+        "basis": "Supplier SDS: not classified as dangerous goods for transport (re-verify against current SDS)",
+        "ghsSummary": ""
+      },
+      "packageCount": 500,
+      "packageWeight": {
+        "value": 50.4,
+        "unit": "KG",
+        "net": 50,
+        "basis": "simulated declaration"
+      }
+    }
+  ],
+  "amountState": "confirmed",
+  "amountConfirmedValue": 10300.0,
+  "charges": [
+    {
+      "name": "Marine insurance (not included under CFR - for buyer account)",
+      "amount": "",
+      "addToTotal": false,
+      "note": "CFR excludes insurance; the PI must say so clearly."
+    }
+  ],
+  "packing": {
+    "summary": "500 bags x 50 kg net in PP/PE laminated bags, 1 x 20'FCL (approx. 25.2 MT gross)",
+    "terms": "IMDG: urea is not a dangerous good; check stowage segregation against oxidisers",
+    "bagNetKg": 50,
+    "shippingUnits": "1 x 20'FCL"
+  },
+  "totalPackageCount": "500",
+  "totalGrossWeight": "25,200 kg (25.20 MT)",
+  "totalVolume": "",
+  "freight": {
+    "estimatedPol": "Zhanjiang, Guangdong",
+    "estimatedPod": "Tuticorin, India"
+  },
+  "delivery": {
+    "leadTime": "20-30 calendar days after receipt of the advance payment and confirmed order",
+    "basis": "TIMING FROM RECEIPT OF PO + ADVANCE",
+    "readyDateMode": "relative",
+    "daysAfterReceipt": 20,
+    "partialShipment": "Not allowed",
+    "transhipment": "Allowed"
+  },
+  "payment": {
+    "code": "PREPAY",
+    "terms": "10% T/T advance upon PI confirmation; 90% by irrevocable L/C at sight opened 15 days before the agreed shipment window.",
+    "amountPct": 10,
+    "beneficiary": "[TO BE CONFIRMED]",
+    "beneficiaryNote": "[BANK DETAILS INTENTIONALLY OMITTED IN THIS EXAMPLE]"
+  },
+  "validity": {
+    "type": "date",
+    "validUntil": "2026-11-05"
+  },
+  "documents": [
+    {
+      "name": "Bill of Lading (3 originals + 3 copies)"
+    },
+    {
+      "name": "Commercial Invoice (1 original + 5 copies)"
+    },
+    {
+      "name": "Packing List (1 original + 3 copies)"
+    },
+    {
+      "name": "Certificate of Origin"
+    },
+    {
+      "name": "Certificate of Analysis (per shipment)"
+    },
+    {
+      "name": "Manufacturer's SDS (current revision)"
+    }
+  ],
+  "bank": {
+    "display": false,
+    "sanitized": true,
+    "detailsConfirmed": false,
+    "bankName": "",
+    "accountName": "",
+    "accountNumber": "",
+    "swift": "",
+    "note": "placeholders only"
+  },
+  "view": {
+    "logo": true,
+    "signature": true,
+    "watermark": true,
+    "accentColor": "#1B3A5B"
+  },
+  "preparation": {
+    "issuedBy": "export-quotation-pi skill v1.0.0",
+    "notice": "SIMULATED DEMO DATA — NOT FOR TRADE USE. PI example: CFR = freight included, insurance excluded. Buyer NPWP-style tax ID (GSTIN) shown on PI."
+  },
+  "review": {},
+  "validityNote": "For PI, the unit price is valid until the stated date; a PI is not a tax invoice."
+}

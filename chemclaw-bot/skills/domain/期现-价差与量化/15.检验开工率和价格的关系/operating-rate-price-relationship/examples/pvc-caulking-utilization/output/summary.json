@@ -1,0 +1,130 @@
+{
+ "n_bulletins": 7,
+ "n_origins_evaluable": 7,
+ "n_used": 6,
+ "power": [
+  {
+   "horizon": "1w",
+   "sessions": 5,
+   "n_obs": 6,
+   "n_eff_nonoverlap": 6.0,
+   "mdes_sd": 1.1437,
+   "prob_halfwidth_pp": 31.24,
+   "n_needed_mdes_020sd": 197,
+   "verdict": "insufficient"
+  },
+  {
+   "horizon": "2w",
+   "sessions": 10,
+   "n_obs": 4,
+   "n_eff_nonoverlap": 2.0,
+   "mdes_sd": 1.981,
+   "prob_halfwidth_pp": 40.55,
+   "n_needed_mdes_020sd": 197,
+   "verdict": "insufficient"
+  },
+  {
+   "horizon": "4w",
+   "sessions": 20,
+   "n_obs": 2,
+   "n_eff_nonoverlap": 0.5,
+   "mdes_sd": 3.962,
+   "prob_halfwidth_pp": 47.03,
+   "n_needed_mdes_020sd": 197,
+   "verdict": "insufficient"
+  }
+ ],
+ "align": {
+  "n_bulletins": 7,
+  "first_stat_week": "2026-09-03",
+  "last_stat_week": "2026-10-15",
+  "pub_weekdays": {
+   "5": 4,
+   "4": 3
+  },
+  "not_evaluable": 0,
+  "days_stat_to_origin": [
+   4,
+   4,
+   4,
+   4,
+   7,
+   1,
+   4
+  ],
+  "days_pub_to_origin": [
+   2,
+   2,
+   2,
+   3,
+   6,
+   0,
+   2
+  ]
+ },
+ "verdict_stat": "insufficient",
+ "min_n_eff_required": 30,
+ "n_needed_rows": 196,
+ "horizons": [
+  "1w",
+  "2w",
+  "4w"
+ ],
+ "config": {
+  "study": "PVC 开工率(产能利用率) → 未来 PVC 期货收益率",
+  "product": "PVC（聚氯乙烯，SG-5 通用型）",
+  "value_col": "util_total",
+  "out_dir": "./_op_15\\skill_build\\operating-rate-price-relationship\\examples\\pvc-caulking-utilization\\output",
+  "horizons_sessions": {
+   "1w": 5,
+   "2w": 10,
+   "4w": 20
+  },
+  "sessions_per_week": 5,
+  "weeks_per_origin": 1,
+  "level_bands": [
+   65.0,
+   70.0,
+   75.0
+  ],
+  "chg_threshold_pp": 1.0,
+  "min_history_periods": 52,
+  "min_n_eff": 30,
+  "alpha": 0.05,
+  "placebo_runs": 2000,
+  "seed": 42,
+  "scale": {
+   "fwd_ret": 100.0
+  },
+  "targets": [
+   [
+    "fwd_ret",
+    "PVC期货收益率（连续合约，复权收盘）"
+   ]
+  ],
+  "factors": [
+   [
+    "util",
+    "F1 绝对开工率（%）"
+   ],
+   [
+    "chg_pp",
+    "F2 周度变化（百分点）"
+   ],
+   [
+    "level_pct",
+    "F3 历史分位（expanding）"
+   ]
+  ],
+  "notes": {
+   "util_source": "我的钢铁网(Mysteel)转载隆众资讯《[产能利用率]：中国PVC企业产能利用率周数据统计》",
+   "util_def": "国内71家PVC生产企业及厂区的产能利用率（开工率），按周统计；同时公布电石法与乙烯法分工艺数值。正文公开部分止于'样本覆盖率…'，覆盖率为付费内容。",
+   "asof": "每周四（统计截止日）",
+   "pub_ts": "次工作日 08:00–18:30 之间（以页面 datePublished 为准，逐篇留档）",
+   "capacity_base": "2026-08-01 起甘肃金川新融 20 万吨退出样本，全国 PVC 产能基数变更为 2878.5 万吨/年（口径断点）",
+   "price": "大商所 PVC 期货；由 103 个合约按成交量换月拼接的连续合约（新浪财经日线），并对换月跳空做复权",
+   "base_rule": "基期 = 公布时间之后第一个交易日的收盘/复权收盘；窗口按交易日计（1w=5、2w=10、4w=20 个交易日）",
+   "data_gap": "公开可核验的开工率正文最早为 2026-09-03 这一期（2026-09-04 公布）。2026-09 之前的每一期正文均被登录墙截断，未做任何推断补齐。"
+  }
+ }
+}

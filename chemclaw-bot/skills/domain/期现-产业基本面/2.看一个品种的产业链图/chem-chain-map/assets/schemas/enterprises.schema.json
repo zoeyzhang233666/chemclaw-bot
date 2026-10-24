@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-atlas/schemas/enterprises.schema.json",
+  "title": "enterprises.json",
+  "type": "object",
+  "required": ["enterprises"],
+  "properties": {
+    "enterprises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "node_id", "province", "capacity_status"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "node_id": { "type": "string" },
+          "province": { "type": "string" },
+          "capacity_sbs": { "type": ["number", "null"], "description": "专有产能；字段名可随品种改，并在 meta.capacity_fields 中声明" },
+          "capacity_sbc": { "type": ["number", "null"], "description": "家族总产能" },
+          "capacity_unit": { "type": "string" },
+          "capacity_status": { "enum": ["verified", "verified_sbs", "partial", "gap"] },
+          "year": { "type": ["string", "null"] },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    }
+  },
+  "description": "capacity_status: verified/verified_sbs 已核实专有产能，可计入合计与占比；partial 只有上限口径，标 ≤ 不计入精确合计；gap 企业在产但公开证据无数字，必须留空并说明原因，禁止填约数。产能字段名通过 meta.capacity_fields 与 meta.capacity_field_names 声明（默认 capacity_sbs / capacity_sbc）。"
+}

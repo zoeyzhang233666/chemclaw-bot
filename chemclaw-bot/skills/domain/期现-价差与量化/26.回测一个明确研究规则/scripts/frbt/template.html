@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{title}} — 规则回测研究工作台</title>
+<style>{{css}}</style></head><body>
+<header>
+  <h1>{{title}}</h1>
+  <div class="sub">{{nl}}</div>
+  <div class="sub" style="margin-top:7px">
+    规则指纹 <code>{{fp}}</code> · 区间 {{first}} → {{last}} · {{sessions}} 个交易日 ·
+    信号事件 {{events}} 次 · 实际成交 {{ntr}} 笔 · 生成于 {{now}}
+  </div>
+</header>
+<div class="banner {{bcls}}">{{btxt}}</div>
+<nav>
+  <button class="active" data-t="overview">总览</button>
+  <button data-t="equity">权益与回撤</button>
+  <button data-t="trades">逐笔成交</button>
+  <button data-t="signal">信号与时点对齐</button>
+  <button data-t="sens">参数敏感性</button>
+  <button data-t="oos">样本外与稳健性</button>
+  <button data-t="rules">规则与成本假设</button>
+  <button data-t="risk">风险与数据缺口</button>
+</nav>
+<main>
+
+<section class="active" id="overview">
+  <div class="card">
+    <h2>核心指标</h2>
+    <p class="note">全部指标基于<b>真实挂牌合约</b>（非后复权连续价）逐笔计算；手续费与滑点按每边各计一次，换月视为平旧开新两笔。</p>
+    <div class="kpis">
+      <div class="kpi"><div class="k">累计收益</div><div class="v {{cls_ret}}">{{ret}}</div>
+        <div class="h">期末权益 {{end_eq}}</div></div>
+      <div class="kpi"><div class="k">年化收益 (CAGR)</div><div class="v {{cls_cagr}}">{{cagr}}</div>
+        <div class="h">{{years}} 年，244 交易日/年</div></div>
+      <div class="kpi"><div class="k">最大回撤</div><div class="v neg">{{mdd}}</div>
+        <div class="h">{{mdd_range}}</div></div>
+      <div class="kpi"><div class="k">交易笔数</div><div class="v">{{ntr}}</div>
+        <div class="h">平均持有 {{hold}} 个交易日</div></div>
+      <div class="kpi"><div class="k">胜率</div><div class="v">{{win}}</div>
+        <div class="h">按含费净额计</div></div>
+      <div class="kpi"><div class="k">盈亏比 (PF)</div><div class="v">{{pf}}</div>
+        <div class="h">平均盈亏比 {{payoff}}</div></div>
+      <div class="kpi"><div class="k">Sharpe</div><div class="v">{{sharpe}}</div>
+        <div class="h">无风险利率 {{rf}}</div></div>
+      <div class="kpi"><div class="k">持仓暴露</div><div class="v">{{expo}}</div>
+        <div class="h">最大保证金占用 {{mmu}}</div></div>
+    </div>
+  </div>
+  <div class="card"><h2>权益曲线</h2>{{eq_svg}}</div>
+  <div class="card"><h2>分年度净盈亏（元）</h2>{{ann_svg}}</div>
+  <div class="card">
+    <h2>分年度明细</h2>
+    <div class="scroll"><table><thead><tr><th>年度</th><th>交易日</th><th>期初权益</th><th>期末权益</th>
+    <th>收益</th><th>年内回撤</th><th>笔数</th><th>胜率</th><th>PF</th><th>净盈亏</th></tr></thead>
+    <tbody>{{annual_rows}}</tbody></table></div>
+  </div>
+</section>
+
+<section id="equity">
+  <div class="card"><h2>回撤曲线</h2>
+    <p class="note">回撤 = 权益 / 历史最高权益 − 1。横轴为交易日。</p>{{dd_svg}}</div>
+  <div class="card"><h2>逐日权益数据</h2>
+    <p class="note">可直接检索日期、合约与持仓。数据与 Excel 工作表 <code>06_Daily_Equity</code> 一致。</p>
+    <div class="ctrl"><input type="text" id="dq" placeholder="按日期或合约过滤，例如 2026-05 或 MA2609" style="width:300px">
+    <span class="neu" id="dcount"></span></div>
+    <div class="scroll"><table><thead><tr><th>日期</th><th>收盘权益</th><th>日收益%</th><th>回撤%</th>
+    <th>持仓合约</th><th>手数</th><th>保证金占用%</th></tr></thead><tbody id="dbody"></tbody></table></div>
+  </div>
+</section>
+
+<section id="trades">
+  <div class="card"><h2>逐笔成交明细</h2>
+    <p class="note">每行一笔完整的回合：触发信号（as-of 日 / 可交易日）、建仓合约与价格、平仓原因、毛盈亏、手续费、滑点、含费净额。
+    换月未平仓的持仓保留同一 trade_id，<code>rolls</code> 记录换月次数。</p>
+    <div class="ctrl">
+      <select id="treason"><option value="">全部平仓原因</option><option value="max_hold">max_hold（到期）</option>
+      <option value="roll">roll（换月）</option><option value="take_profit">take_profit</option>
+      <option value="stop_loss">stop_loss</option></select>
+      <select id="tsign"><option value="">全部盈亏</option><option value="p">仅盈利</option><option value="n">仅亏损</option></select>
+      <span class="neu" id="tcount"></span>
+    </div>
+    <div class="scroll"><table><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div>
+  </div>
+  <div class="card"><h2>成本拆解</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="k">毛盈亏</div><div class="v">{{gross}}</div></div>
+      <div class="kpi"><div class="k">手续费合计</div><div class="v neg">−{{fees}}</div></div>
+      <div class="kpi"><div class="k">滑点合计</div><div class="v neg">−{{slip}}</div></div>
+      <div class="kpi"><div class="k">含费净额</div><div class="v {{cls_ret}}">{{netpnl}}</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="signal">
+  <div class="card"><h2>信号与时点对齐审计</h2>
+    <p class="note">这张表是"无未来函数"的证据：每一行给出指标 as-of 日期、原始发布时间戳（或标记为"假设"）、
+    该指标最早可交易的交易日，以及规则是否触发。<b>可交易日永远严格晚于 as-of 日。</b></p>
+    <div class="ctrl"><select id="astatus"><option value="">全部周</option>
+      <option value="ev">仅触发信号</option><option value="ver">仅可核验发布时刻</option>
+      <option value="asm">仅假设发布时刻</option><option value="na">仅不可用</option></select>
+      <span class="neu" id="acount"></span></div>
+    <div class="scroll"><table><thead><tr><th>as-of 日</th><th>库存(万吨)</th><th>周变化</th>
+    <th>连降周数</th><th>方向</th><th>发布时间戳</th><th>时刻来源</th><th>可交易日</th>
+    <th>触发</th></tr></thead><tbody id="abody">{{align_rows}}</tbody></table></div>
+  </div>
+</section>
+
+<section id="sens">
+  <div class="card"><h2>参数敏感性（网格预先声明，全样本报告）</h2>
+    <p class="note">网格在回测运行前写入规格文件，<b>不做事后筛选</b>。颜色越绿收益越高，越红越差；
+    显示全部 {{nvar}} 个变体，包括亏损的。<b>若结论只在单一参数点成立，说明它不可靠。</b></p>
+    <div class="kpis" style="margin-bottom:14px">
+      <div class="kpi"><div class="k">变体数</div><div class="v">{{nvar}}</div></div>
+      <div class="kpi"><div class="k">收益中位数</div><div class="v">{{med_ret}}</div></div>
+      <div class="kpi"><div class="k">正收益变体占比</div><div class="v">{{share_pos}}</div></div>
+      <div class="kpi"><div class="k">最优 / 最差</div><div class="v" style="font-size:15px">{{best}} / {{worst}}</div></div>
+      <div class="kpi"><div class="k">基准排名</div><div class="v">{{rank}}</div>
+        <div class="h">按累计收益降序</div></div>
+    </div>
+    <div class="scroll"><table><thead><tr><th>参数变体</th><th>累计收益</th><th>CAGR</th><th>最大回撤</th>
+    <th>Sharpe</th><th>笔数</th><th>胜率</th><th>PF</th></tr></thead><tbody>{{sens_rows}}</tbody></table></div>
+  </div>
+  <div class="card"><h2>成本敏感性</h2>
+    <p class="note">手续费按倍数放大、滑点按最小变动价位数量放大。这一格回答"结论是否只是被低成本假设支撑"。</p>
+    <div class="scroll"><table><thead><tr><th>费率倍数</th><th>滑点(跳)</th><th>累计收益</th>
+    <th>最大回撤</th><th>笔数</th><th>净盈亏</th></tr></thead><tbody>{{cost_rows}}</tbody></table></div>
+  </div>
+</section>
+
+<section id="oos">
+  <div class="card"><h2>样本内 / 样本外（切分点运行前声明）</h2>
+    <p class="note">切分日期在规格文件中事先固定，未根据回测结果调整。样本外表现按原样报告，<b>不做事后删改</b>。</p>
+    {{oos_html}}
+  </div>
+  <div class="card"><h2>稳健性检验</h2>{{robust}}</div>
+</section>
+
+<section id="rules">
+  <div class="card"><h2>自然语言规则 → 可回测的显式规则</h2>
+    <table><tbody>
+      <tr><td style="text-align:left;width:130px"><b>原始描述</b></td>
+      <td style="text-align:left">{{nl}}</td></tr>
+      <tr><td style="text-align:left"><b>信号（指标侧）</b></td><td style="text-align:left">{{sig_desc}}</td></tr>
+      <tr><td style="text-align:left"><b>信号（价格侧）</b></td><td style="text-align:left">{{pf_desc}}</td></tr>
+      <tr><td style="text-align:left"><b>时点</b></td><td style="text-align:left">{{timing}}</td></tr>
+      <tr><td style="text-align:left"><b>合约选择</b></td><td style="text-align:left">{{contract}}</td></tr>
+      <tr><td style="text-align:left"><b>入场</b></td><td style="text-align:left">{{entry}}</td></tr>
+      <tr><td style="text-align:left"><b>出场</b></td><td style="text-align:left">{{exit}}</td></tr>
+      <tr><td style="text-align:left"><b>仓位</b></td><td style="text-align:left">{{position}}</td></tr>
+      <tr><td style="text-align:left"><b>成本</b></td><td style="text-align:left">{{costs}}</td></tr>
+      <tr><td style="text-align:left"><b>换月</b></td><td style="text-align:left">{{roll}}</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card"><h2>假设溯源（哪些是合约事实，哪些是假设）</h2>
+    <div class="scroll"><table><thead><tr><th>项目</th><th>依据类型</th><th>说明</th></tr></thead>
+    <tbody>{{prov_rows}}</tbody></table></div>
+  </div>
+</section>
+
+<section id="risk">
+  <div class="card"><h2>必须知道的风险与结论边界</h2>
+  <ul class="tight">
+    <li><b>样本极小。</b>本回测只有 {{ntr}} 笔完整交易，任何胜率/盈亏比都是描述性的，不具备统计显著性。
+    正收益可能完全来自个别月份，见"样本外与稳健性"页的逐年剔除检验。</li>
+    <li><b>不构成未来收益保证。</b>历史回测结果不预测未来。规则的经济含义（低库存+高基差→价格上涨）在样本期内可能已被市场定价。</li>
+    <li><b>连续合约陷阱。</b>本回测不使用后复权连续价：每个交易日映射到当时的真实挂牌合约，换月视为平旧开新两笔并各计成本。
+    因此收益中<b>已经包含</b>换月价差成本，而不是被平滑掉。</li>
+    <li><b>成交价假设。</b>入场取信号可交易日的开盘价（市价单），出场取到期日收盘价，并按半个最小变动价位计滑点。
+    真实成交在集合竞价/夜盘跳空时可能显著更差。</li>
+    <li><b>涨跌停与流动性。</b>引擎未对涨跌停做逐笔撮合模拟；若信号日次日开盘触及涨停，实际无法按该价成交。
+    {{limit_note}}</li>
+    <li><b>保证金与强平。</b>按 {{margin}} 收取保证金，未模拟盘中强平。最大保证金占用 {{mmu}}，属于低杠杆口径；
+    若按单品种集中持仓放大手数，回撤会按比例放大。</li>
+    <li><b>数据缺口（关键）。</b>{{gap}}</li>
+    <li><b>现货基差溯源未核实。</b>{{spot_note}}</li>
+    <li><b>样本选择偏差。</b>本规则是用户指定的一个具体规则，未与其他规则比较，也未做多重检验校正；
+    若同时测试了大量规则再挑选最好者，实际显著性会大幅下降。</li>
+  </ul>
+  </div>
+  <div class="card"><h2>引擎诊断</h2><table><tbody>{{diag_rows}}</tbody></table></div>
+</section>
+
+<div class="foot">
+  本报告由可复现脚本生成：<code>scripts/run_backtest.py</code> → <code>scripts/build_reports.py</code>。
+  所有中间数据（逐日权益、逐笔成交、信号对齐）同时导出为 CSV 与 Excel 工作表，可独立复核。
+  规则指纹 <code>{{fp}}</code> 对应规格文件的 SHA-256 前 16 位。
+</div>
+</main>
+<script>
+const DAILY = {{daily_js}};
+const TRADES = {{trades_js}};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById(b.dataset.t).classList.add('active');
+});
+const dbody=document.getElementById('dbody');
+function renderDaily(){
+  const q=document.getElementById('dq').value.trim().toLowerCase();
+  let rows='',n=0;
+  for(let i=0;i<DAILY.date.length;i++){
+    const d=DAILY.date[i], c=DAILY.contract[i]||'\u2014';
+    if(q && !(d.includes(q)||c.toLowerCase().includes(q))) continue;
+    n++;
+    const dd=DAILY.drawdown[i], ret=DAILY.daily_return[i];
+    rows+='<tr><td>'+d+'</td><td>'+DAILY.equity[i].toLocaleString('en-US',{maximumFractionDigits:0})+
+    '</td><td class="'+(ret>0?'pos':ret<0?'neg':'neu')+'">'+ret.toFixed(3)+
+    '</td><td class="'+(dd<0?'neg':'neu')+'">'+dd.toFixed(2)+
+    '</td><td>'+c+'</td><td>'+(DAILY.lots[i]||'')+
+    '</td><td>'+(DAILY.margin_util[i]||0).toFixed(2)+'</td></tr>';
+  }
+  dbody.innerHTML=rows;
+  document.getElementById('dcount').textContent='显示 '+n+' / '+DAILY.date.length+' 行';
+}
+document.getElementById('dq').oninput=renderDaily; renderDaily();
+const LABEL={trade_id:'#',sig_asof:'信号as-of',sig_avail:'可交易日',contract:'建仓合约',
+entry_day:'建仓日',entry_px:'建仓价',exit_day:'平仓日',exit_contract:'平仓合约',exit_px:'平仓价',
+exit_reason:'平仓原因',bars_held:'持有(日)',lots:'手数',gross_pnl:'毛盈亏',fees:'手续费',
+slippage_cost:'滑点',net_pnl_after_slip:'含费净额',basis_cur:'基差(元/吨)',
+basis_pctile:'基差分位',sig_value:'库存(万吨)',sig_run_len:'连降周数',rolls:'换月次数'};
+const thead=document.getElementById('thead');
+TRADES.cols.forEach(c=>{const th=document.createElement('th');th.textContent=LABEL[c]||c;thead.appendChild(th);});
+function renderTrades(){
+  const rs=document.getElementById('treason').value;
+  const sg=document.getElementById('tsign').value;
+  const iP=TRADES.cols.indexOf('net_pnl_after_slip');
+  const iR=TRADES.cols.indexOf('exit_reason');
+  let rows='',n=0;
+  TRADES.rows.forEach(r=>{
+    if(rs && r[iR]!==rs) return;
+    if(sg==='p' && !(r[iP]>0)) return;
+    if(sg==='n' && !(r[iP]<0)) return;
+    n++;
+    let tds='';
+    r.forEach((v,i)=>{
+      const c=TRADES.cols[i];
+      let cls='';
+      if(c==='net_pnl_after_slip'||c==='gross_pnl') cls=v>0?'pos':(v<0?'neg':'');
+      if(c==='basis_pctile' && v!=='') v=(v*100).toFixed(1)+'\u0025';
+      if(c==='exit_reason'){
+        const m={max_hold:'a',roll:'b',take_profit:'g',stop_loss:'r'};
+        tds+='<td><span class="tag '+(m[v]||'b')+'">'+v+'</span></td>'; return;
+      }
+      if(typeof v==='number' && c!=='trade_id' && c!=='lots' && c!=='bars_held' && c!=='rolls'
+         && c!=='sig_value' && c!=='basis_cur' && c!=='entry_px' && c!=='exit_px' && c!=='sig_run_len')
+        v=v.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+      tds+='<td class="'+cls+'">'+v+'</td>';
+    });
+    rows+='<tr>'+tds+'</tr>';
+  });
+  document.getElementById('tbody').innerHTML=rows;
+  document.getElementById('tcount').textContent='显示 '+n+' / '+TRADES.rows.length+' 笔';
+}
+document.getElementById('treason').onchange=renderTrades;
+document.getElementById('tsign').onchange=renderTrades;
+renderTrades();
+(function(){
+  const body=document.getElementById('abody');
+  const src=[].slice.call(body.querySelectorAll('tr'));
+  function apply(){
+    const v=document.getElementById('astatus').value;
+    let n=0;
+    src.forEach(tr=>{
+      const txt=tr.innerText;
+      let ok=true;
+      if(v==='ev') ok=tr.dataset.ev==='1';
+      if(v==='ver') ok=tr.dataset.ver==='1';
+      if(v==='asm') ok=tr.dataset.ver==='0' && txt.indexOf('\u4e0d\u53ef\u7528')<0;
+      if(v==='na') ok=txt.indexOf('\u4e0d\u53ef\u7528')>=0;
+      tr.style.display=ok?'':'none'; if(ok) n++;
+    });
+    document.getElementById('acount').textContent='显示 '+n+' / '+src.length+' 行';
+  }
+  document.getElementById('astatus').onchange=apply; apply();
+})();
+</script>
+</body></html>

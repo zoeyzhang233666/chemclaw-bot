@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0",
+  "_readme": [
+    "这是 case.json 的空模板。复制到任务目录后逐项填写，然后运行：python scripts/run_all.py --case <你的 case.json>",
+    "所有键都必须保留（即使为空数组），脚本会按结构读取。",
+    "凡是【待填】的位置，必须在 placeholders 里登记一条对应记录。",
+    "versions 必须包含 A/B/C/D 四个键；P0 放原文。",
+    "allowed_numbers 仅用于放行确有出处的数字（写全原文，如 '0.2 吨'），能不用就不用。",
+    "写完后先跑 validate_case.py，ERROR 未清零不要生成产物。"
+  ],
+  "meta": {
+    "product": "",
+    "spec": "",
+    "scenario": "",
+    "channel": "",
+    "goal": "",
+    "stage": "",
+    "seller": { "name": "", "company": "", "region": "", "contact": "【待填】" },
+    "customer": { "name": "", "role": "", "contact": "【待填】" },
+    "fictional": true,
+    "file_stem": "",
+    "hero": { "title": "", "lead": "" }
+  },
+  "product_profile": {
+    "name": "",
+    "alias": [],
+    "cas": "",
+    "standard": "",
+    "form": "",
+    "hazard": "",
+    "packaging": [],
+    "transport": "",
+    "key_specs": [],
+    "price_basis": "",
+    "payment_norm": "",
+    "downstream": [],
+    "pain_points": [],
+    "seasonality": "",
+    "ban_phrases": []
+  },
+  "customer_profile": [
+    ["", "", ""]
+  ],
+  "decision_chain": "",
+  "timeline": [
+    { "when": "", "what": "", "detail": "" }
+  ],
+  "draft": {
+    "raw": "",
+    "segments": [
+      { "t": "", "m": "" }
+    ],
+    "legend": [
+      { "m": "q", "label": "追问感，建议软化" },
+      { "m": "w", "label": "过宽表述，需限定" },
+      { "m": "b", "label": "越界，必须处理" }
+    ]
+  },
+  "facts": [
+    { "id": "F1", "text": "", "type": "事实", "source": "原话", "disposal": "可用", "note": "" }
+  ],
+  "links": ["① 开场与由头", "② 核心事项", "③ 请求", "④ 收口", "⑤ 越界项处理"],
+  "allowed_numbers": [],
+  "version_order": ["P0", "A", "B", "C", "D"],
+  "versions": {
+    "P0": { "label": "原文（我的草稿）", "media": "", "cells": ["", "", "", "", ""] },
+    "A": { "label": "A 自然版（默认推荐）", "media": "微信", "cells": ["", "", "", "", ""], "para": [""], "tone": "", "push": "", "risk": "", "fit": "", "why": [["", ""]], "score": { "tone": 2, "push": 4 } },
+    "B": { "label": "B 更短版", "media": "微信", "cells": ["", "", "", "", ""], "para": [""], "tone": "", "push": "", "risk": "", "fit": "", "why": [], "score": { "tone": 2, "push": 5 } },
+    "C": { "label": "C 正式版（邮件）", "media": "邮件", "cells": ["", "", "", "", ""], "para": [""], "tone": "", "push": "", "risk": "", "fit": "", "why": [], "score": { "tone": 5, "push": 3 } },
+    "D": { "label": "D 缓和版", "media": "微信", "cells": ["", "", "", "", ""], "para": [""], "tone": "", "push": "", "risk": "", "fit": "", "why": [], "score": { "tone": 2, "push": 2 } }
+  },
+  "email": { "subject": "", "signature": "" },
+  "audit": [
+    {
+      "id": "F1",
+      "item": "",
+      "type": "",
+      "source": "",
+      "v": { "A": "✔", "B": "✔", "C": "✔", "D": "✔" },
+      "why": ""
+    }
+  ],
+  "audit_summary": [
+    { "k": "新增价格/数字", "v": "0", "zero": true, "note": "" },
+    { "k": "新增折扣/让价", "v": "0", "zero": true, "note": "" },
+    { "k": "新增交期/账期/库存", "v": "0", "zero": true, "note": "" },
+    { "k": "新增客户需求", "v": "0", "zero": true, "note": "" },
+    { "k": "待填占位符", "v": "0", "zero": false, "note": "" }
+  ],
+  "placeholders": [
+    { "id": "P1", "item": "", "where": "A/B/C/D", "owner": "", "how": "", "risk": "" }
+  ],
+  "adjusts": [
+    { "t": "再短一点", "tag": "", "note": "", "x": "" }
+  ],
+  "scenarios": [
+    { "n": "约见", "q": "", "rec": "", "short": "", "red": "" }
+  ],
+  "replies": [
+    { "q": "", "say": "", "ban": "", "why": "" }
+  ],
+  "checklist": [
+    { "dim": "价格", "item": "" }
+  ],
+  "rules": [
+    { "k": "事实只减不增", "v": "" }
+  ],
+  "notes": [""],
+  "disclaim": ""
+}

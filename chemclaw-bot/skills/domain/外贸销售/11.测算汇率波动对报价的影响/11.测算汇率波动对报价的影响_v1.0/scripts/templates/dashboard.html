@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#f4f6fa; --panel:#ffffff; --ink:#101828; --ink2:#475467; --ink3:#5b6b83;
+  --line:#e5e9f0; --line2:#eef1f6;
+  --brand:#0f3d7a; --brand2:#1a6fc4; --accent:#0d9488;
+  --up:#b42318; --down:#067647; --warn:#b7791f; --warnbg:#fffbeb;
+  --mute:#64748b;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.06);
+  --r:14px;
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);
+  font:14px/1.6 "Segoe UI","Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--brand2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1560px;margin:0 auto;padding:0 20px 64px}
+header.top{background:linear-gradient(120deg,#082544 0%,#0f3d7a 52%,#155f9e 100%);color:#fff;
+  padding:20px 20px 18px;margin-bottom:18px}
+header.top .inner{max-width:1560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between}
+.h-title{font-size:21px;font-weight:700;letter-spacing:.2px;line-height:1.35}
+.h-title .chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:20px;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);margin-left:8px;vertical-align:3px;letter-spacing:0}
+.h-sub{font-size:12.5px;color:#c6d8f0;margin-top:6px;max-width:920px}
+.h-meta{font-size:12px;color:#a9c4e4;text-align:right;line-height:1.7}
+.h-meta b{color:#fff;font-weight:600}
+.tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:6px;background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.22);margin-right:6px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:5px;margin-bottom:16px;box-shadow:var(--shadow);position:sticky;top:8px;z-index:30}
+nav.tabs button{border:0;background:transparent;color:var(--ink2);font:inherit;font-weight:600;font-size:13px;
+  padding:8px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{background:#f1f4f9;color:var(--brand)}
+nav.tabs button.on{background:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(15,61,122,.25)}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.kpi{padding:13px 15px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand2)}
+.kpi.k-warn:before{background:var(--warn)} .kpi.k-up:before{background:var(--up)}
+.kpi.k-down:before{background:var(--down)} .kpi.k-acc:before{background:var(--accent)}
+.kpi .lab{font-size:12px;color:var(--ink3);font-weight:600;display:flex;justify-content:space-between;gap:6px;align-items:baseline}
+.kpi .lab i{font-style:normal;font-size:10.5px;padding:0 6px;border-radius:5px;background:#eef3fb;color:var(--brand2);font-weight:600}
+.kpi .val{font-size:25px;font-weight:700;letter-spacing:-.3px;margin:5px 0 2px;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .val small{font-size:13px;font-weight:600;color:var(--ink3);margin-left:3px}
+.kpi .sub{font-size:11.5px;color:var(--ink3);line-height:1.45}
+.sec{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  margin-bottom:16px;overflow:hidden}
+.sec>h2{margin:0;padding:13px 18px;font-size:15px;font-weight:700;border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:linear-gradient(180deg,#fcfdff,#f8fafd)}
+.sec>h2 .no{width:22px;height:22px;border-radius:7px;background:var(--brand);color:#fff;font-size:12px;
+  display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+.sec>h2 .desc{font-weight:400;font-size:12px;color:var(--ink3);margin-left:auto}
+.sec .body{padding:16px 18px}
+.grid2{grid-template-columns:1fr 1fr}
+.grid3{grid-template-columns:repeat(3,1fr)}
+.grid-31{grid-template-columns:1.15fr 1fr}
+@media (max-width:1280px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2,.grid-31,.grid3{grid-template-columns:1fr}}
+@media (max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}.wrap{padding:0 10px 40px}.h-meta{text-align:left}}
+
+/* 表单 */
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 16px}
+@media (max-width:1100px){.form-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.form-grid{grid-template-columns:1fr}}
+.fld label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:4px}
+.fld label .opt{font-weight:400;color:var(--ink3);font-size:11px}
+.fld input,.fld select{width:100%;padding:8px 10px;border:1px solid #d6dde8;border-radius:9px;font:inherit;
+  font-variant-numeric:tabular-nums;background:#fff;color:var(--ink);transition:.15s}
+.fld input:focus,.fld select:focus{outline:0;border-color:var(--brand2);box-shadow:0 0 0 3px rgba(26,111,196,.14)}
+.fld .hint{font-size:11px;color:var(--ink3);margin-top:3px;line-height:1.4}
+.seg{display:inline-flex;background:#eef2f8;border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink2);
+  padding:6px 12px;border-radius:8px;cursor:pointer}
+.seg button.on{background:#fff;color:var(--brand);box-shadow:0 1px 3px rgba(16,24,40,.14)}
+.seg button.on.exp{background:#e8f1fc} .seg button.on.imp{background:#fff3e6;color:#b35309}
+.btn{border:0;border-radius:10px;padding:9px 16px;font:inherit;font-weight:600;font-size:13px;cursor:pointer}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{background:#0c345f}
+.btn.ghost{background:#fff;border:1px solid #d6dde8;color:var(--ink2)}
+.btn.ghost:hover{border-color:var(--brand2);color:var(--brand2)}
+.btn.small{padding:5px 10px;font-size:12px;border-radius:8px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:20px;
+  background:#eef3fb;color:var(--brand2);border:1px solid #d7e5f7}
+.pill.warn{background:var(--warnbg);color:var(--warn);border-color:#f3e0b5}
+.pill.mock{background:#fdf2f8;color:#9d174d;border-color:#fbcfe8}
+.pill.real{background:#ecfdf5;color:#0f766e;border-color:#a7f3d0}
+
+/* 表 */
+table.t{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+table.t th{background:#f6f8fc;color:var(--ink2);font-weight:600;text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);
+  white-space:nowrap;position:sticky;top:0}
+table.t th:first-child,table.t td:first-child{text-align:left}
+table.t td{padding:7px 10px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
+table.t tbody tr:hover td{background:#f8fbfe}
+table.t tr.base td{background:#eef5fd!important;font-weight:600}
+table.t tr.danger td{color:var(--up)}
+table.t tr.hero td{box-shadow:inset 0 0 0 2px var(--brand2);font-weight:700}
+.num{font-variant-numeric:tabular-nums}
+.pos{color:var(--down)} .neg{color:var(--up)}
+.mono{font-family:var(--mono);font-size:12px}
+.scroll{overflow:auto;max-height:460px;border:1px solid var(--line2);border-radius:10px}
+
+/* 矩阵 */
+.mx{border-collapse:separate;border-spacing:3px;font-size:12px;width:100%}
+.mx th{font-weight:600;color:var(--ink2);padding:4px}
+.mx td{padding:7px 6px;text-align:center;border-radius:8px;font-variant-numeric:tabular-nums;font-weight:600;min-width:64px}
+.mx td.axis{background:#f1f4f9;color:var(--ink2);font-weight:600;text-align:right;padding-right:10px}
+.mx .h-l{color:#b42318}
+.mx .h-g{color:#067647}
+.chart{width:100%;height:340px}
+.chart.tall{height:420px}
+.legend-note{font-size:11.5px;color:var(--ink3);margin-top:6px;line-height:1.5}
+ul.note{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink2);line-height:1.75}
+ul.note li{margin-bottom:3px}
+.callout{border-left:3px solid var(--brand2);background:#f5f9ff;padding:10px 14px;border-radius:0 10px 10px 0;
+  font-size:12.5px;line-height:1.7;color:var(--ink2);margin:10px 0}
+.callout.warn{border-color:var(--warn);background:var(--warnbg);color:#7c5a10}
+.callout.good{border-color:var(--accent);background:#f0fdfa;color:#0f5f58}
+.callout b{color:var(--ink)}
+.src{font-size:11.5px;color:var(--ink3);line-height:1.7}
+.src code{background:#f2f5f9;padding:1px 5px;border-radius:5px;font-family:var(--mono);font-size:11px}
+.bar{height:8px;border-radius:5px;background:linear-gradient(90deg,#cfe3fb,#e8f0fa);position:relative;overflow:visible}
+.bar .mk{position:absolute;top:-4px;width:2px;height:16px;background:var(--brand);border-radius:2px}
+.bar .mk:after{content:"";position:absolute;top:-3px;left:-4px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+.tiny{font-size:11px;color:var(--ink3)}
+.inline-form{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px 12px;align-items:end}
+@media (max-width:1200px){.inline-form{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.inline-form{grid-template-columns:repeat(2,1fr)}}
+.hide{display:none!important}
+footer.foot{font-size:11.5px;color:var(--ink3);line-height:1.8;padding:18px 4px;border-top:1px solid var(--line);margin-top:8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:12.5px}
+.kv dt{color:var(--ink3)} .kv dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.spark{height:44px;width:100%}
+.bt{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:5px;vertical-align:1px}
+.bt.mock{background:#fce7f3;color:#9d174d} .bt.real{background:#d1fae5;color:#065f46}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <div>
+      <div class="h-title">__TITLE__<span class="chip" id="dirChip">出口收汇</span></div>
+      <div class="h-sub" id="subline">__SUBLINE__</div>
+      <div style="margin-top:9px">
+        <span class="tag">仅做情景测算</span><span class="tag">不预测汇率走势</span><span class="tag">不推荐避险产品</span>
+        <span class="tag" id="asofTag">数据截至 —</span>
+      </div>
+    </div>
+    <div class="h-meta" id="headMeta"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs"></nav>
+
+  <!-- ================= 首屏：情景测算台 ================= -->
+  <section data-pane="board">
+    <div class="grid kpis" id="kpis"></div>
+
+    <div class="sec">
+      <h2><span class="no">1</span>汇率口径与业务参数 <span class="desc">改这里，全页实时重算</span></h2>
+      <div class="body">
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="fld">
+            <label>交易方向</label>
+            <div class="seg" id="dirSeg">
+              <button data-dir="export" class="on exp">出口收汇</button>
+              <button data-dir="import">进口付汇</button>
+            </div>
+            <div class="hint" id="dirHint">收外币 → 结汇成人民币</div>
+          </div>
+          <div class="fld">
+            <label>业务金额 <span class="opt">（外币）</span></label>
+            <input id="i_amount" type="number" step="1000" min="0">
+            <div class="hint" id="amountHint">金额 × 汇率 = 人民币毛额</div>
+          </div>
+          <div class="fld">
+            <label>币种</label>
+            <select id="i_cur"></select>
+            <div class="hint">支持 25 个币种，JPY 为 100 JPY 计价</div>
+          </div>
+          <div class="fld">
+            <label>基准汇率口径</label>
+            <select id="i_mode">
+              <option value="mid">官方中间价（仅用于分位与对照）</option>
+              <option value="band" selected>中间价 × 点差带（示例估算）</option>
+              <option value="actual">我已有的银行实际成交价</option>
+            </select>
+            <div class="hint" id="modeHint">点差带为示例值，非银行真实成交价</div>
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="fld"><label>当日中间价 <span class="opt">（自动/可覆盖）</span></label>
+            <input id="i_mid" type="number" step="0.0001" min="0"><div class="hint" id="midHint">来源：国家外汇管理局</div></div>
+          <div class="fld"><label>银行点差带（单侧 %）<span class="opt">（示例）</span></label>
+            <input id="i_band" type="number" step="0.05" min="0"><div class="hint">结汇价 = 中间价×(1−带)；购汇价 = ×(1+带)</div></div>
+          <div class="fld"><label>实际结汇/购汇价 <span class="opt">（可选）</span></label>
+            <input id="i_actual" type="number" step="0.0001" placeholder="填了就用它"><div class="hint">来自银行回单或牌价，最真实</div></div>
+          <div class="fld"><label>人民币成本 <span class="opt">（可选）</span></label>
+            <input id="i_cost" type="number" step="1000" min="0"><div class="hint" id="costHint">出口：成本；进口：其他人民币成本</div></div>
+        </div>
+
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="fld"><label>目标毛利率 <span class="opt">（可选，%）</span></label>
+            <input id="i_tpct" type="number" step="0.5" min="-99"><div class="hint">留空则不算"目标毛利平衡汇率"</div></div>
+          <div class="fld"><label>目标毛利额 <span class="opt">（可选，元）</span></label>
+            <input id="i_tcny" type="number" step="1000"><div class="hint">与毛利率二选一或同时看</div></div>
+          <div class="fld"><label>银行费用率 toll <span class="opt">（%，默认 0）</span></label>
+            <input id="i_toll" type="number" step="0.01" min="0"><div class="hint">出口扣减收入，进口增加成本</div></div>
+          <div class="fld"><label>预计结算日期</label>
+            <input id="i_settle" type="date"><div class="hint" id="horizonHint">距今天数</div></div>
+        </div>
+
+        <div class="form-grid" style="margin-bottom:6px">
+          <div class="fld"><label>合同约定汇率 <span class="opt">（可选）</span></label>
+            <input id="i_contract" type="number" step="0.0001" placeholder="如 6.70"><div class="hint">用于量化"锁 vs 不锁"的机会差额，不评价产品</div></div>
+          <div class="fld" id="resaleFld" style="display:none"><label>进口后人民币销售收入 <span class="opt">（进口毛利必需）</span></label>
+            <input id="i_resale" type="number" step="1000"><div class="hint">毛利率分母用这个收入</div></div>
+          <div class="fld"><label>敏感性档位 <span class="opt">（%，逗号分隔）</span></label>
+            <input id="i_shifts" type="text" value="-5,-3,-2,-1,0,1,2,3,5"><div class="hint">可任意改；0 为基准</div></div>
+          <div class="fld"><label>历史区间</label>
+            <div class="seg" id="winSeg">
+              <button data-win="1">近 1 年</button><button data-win="3" class="on">近 3 年</button>
+            </div>
+            <div class="hint">分位与走势图同时切换</div></div>
+        </div>
+
+        <div class="row" style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)">
+          <button class="btn primary" id="btnDefault">恢复示例参数</button>
+          <button class="btn ghost" id="btnResetRate">重置为官方中间价</button>
+          <span class="tiny" id="warnBox"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-31">
+      <div class="sec">
+        <h2><span class="no">2</span><span id="trendTitle">美元兑人民币历史走势</span><span class="desc" id="trendDesc"></span></h2>
+        <div class="body">
+          <div class="row" style="margin-bottom:8px">
+            <span class="pill real" id="srcPill">官方中间价 · 真实数据</span>
+            <span class="tiny" id="seriesMeta"></span>
+          </div>
+          <div id="chartTrend" class="chart tall"></div>
+          <div class="legend-note" id="trendNote"></div>
+        </div>
+      </div>
+      <div class="sec">
+        <h2><span class="no">3</span>当前汇率的历史位置 <span class="desc">分位 = 历史有多少交易日低于当前</span></h2>
+        <div class="body" id="posBox"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2><span class="no">4</span>汇率敏感性：人民币收入/支出与毛利 <span class="desc">汇率变动仅用于测算，不代表预测</span></h2>
+      <div class="body">
+        <div class="row" style="margin-bottom:10px">
+          <span class="pill" id="sensPill">基准口径</span>
+          <span class="tiny" id="sensHint"></span>
+        </div>
+        <div id="sensTable" class="scroll" style="max-height:none"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px" class="grid2">
+          <div><div id="chartSens" class="chart"></div></div>
+          <div><div id="chartMargin" class="chart"></div></div>
+        </div>
+        <div class="legend-note">左图：各档汇率下的人民币收入/支出（柱）与相对基准的变化（线）。右图：毛利额（柱，左轴）与毛利率（线，右轴）。</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2><span class="no">5</span>盈亏平衡汇率 <span class="desc">成本与其他条件不变时，毛利降到 0 或目标水平的汇率</span></h2>
+      <div class="body" id="beBox"></div>
+    </div>
+
+    <div class="sec" id="batchSec">
+      <h2><span class="no">6</span>分批结算敏感性 <span class="desc">按各批次预计金额与结算时间分别折算</span></h2>
+      <div class="body" id="batchBox"></div>
+    </div>
+
+    <div class="sec">
+      <h2><span class="no">7</span>尚未计入的因素 <span class="desc">不估算、不推荐，只列清楚</span></h2>
+      <div class="body" id="gapBox"></div>
+    </div>
+  </section>
+
+  <!-- ================= 历史数据 ================= -->
+  <section data-pane="hist" class="hide">
+    <div class="sec">
+      <h2><span class="no">A</span>历史汇率与分布 <span class="desc">官方中间价，日频，未插值</span></h2>
+      <div class="body">
+        <div class="row" style="margin-bottom:10px">
+          <span class="small tiny">起点</span><input id="h_start" type="date" class="fld" style="padding:6px 8px;border:1px solid #d6dde8;border-radius:8px">
+          <span class="tiny">终点</span><input id="h_end" type="date" style="padding:6px 8px;border:1px solid #d6dde8;border-radius:8px">
+          <select id="h_cur" style="padding:6px 8px;border:1px solid #d6dde8;border-radius:8px"></select>
+          <button class="btn ghost small" id="h_apply">应用</button>
+          <button class="btn ghost small" id="h_csv">导出 CSV</button>
+          <span class="tiny" id="h_meta"></span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:14px" class="grid2">
+          <div id="chartHist" class="chart tall"></div>
+          <div id="chartDist" class="chart tall"></div>
+        </div>
+        <div style="margin-top:14px" id="histStats"></div>
+      </div>
+    </div>
+    <div class="sec">
+      <h2><span class="no">B</span>原始日频数据 <span class="desc">可筛选、可导出</span></h2>
+      <div class="body"><div id="histTable" class="scroll"></div></div>
+    </div>
+  </section>
+
+  <!-- ================= 报价带入 ================= -->
+  <section data-pane="quote" class="hide">
+    <div class="sec">
+      <h2><span class="no">C</span>把汇率参数带入出口报价 <span class="desc">确认后复制 JSON，交给报价技能</span></h2>
+      <div class="body">
+        <div class="grid grid2">
+          <div>
+            <div class="form-grid" style="grid-template-columns:1fr 1fr">
+              <div class="fld"><label>目标毛利率（报价）%</label><input id="q_margin" type="number" step="0.5"></div>
+              <div class="fld"><label>人民币成本（元）</label><input id="q_cost" type="number" step="1000"></div>
+              <div class="fld"><label>数量（吨）<span class="opt">可选，用于算美元/吨</span></label><input id="q_qty" type="number" step="1"></div>
+              <div class="fld"><label>汇率口径</label>
+                <select id="q_mode"><option value="base">基准口径（当前设置）</option><option value="mid">官方中间价</option>
+                <option value="stress">压力情景（下方汇率）</option></select></div>
+              <div class="fld"><label>压力情景汇率</label><input id="q_stress" type="number" step="0.0001"></div>
+              <div class="fld"><label>合同/折算币种</label><select id="q_cur"></select></div>
+            </div>
+            <div class="row" style="margin-top:12px">
+              <button class="btn primary" id="q_calc">计算报价</button>
+              <button class="btn ghost" id="q_copy">复制 JSON</button>
+              <span class="tiny" id="q_copy_hint"></span>
+            </div>
+            <div id="q_out" style="margin-top:14px"></div>
+          </div>
+          <div>
+            <div class="tiny" style="margin-bottom:6px">确认后的汇率参数（JSON，直接粘贴到报价/合同环节）</div>
+            <pre id="q_json" class="mono" style="background:#0f172a;color:#c7d7ee;padding:14px;border-radius:10px;font-size:11.5px;line-height:1.65;max-height:380px;overflow:auto;white-space:pre-wrap"></pre>
+            <div class="callout warn" style="margin-top:10px">
+              带入报价的是**汇率假设**，不是对汇率的判断。报价单上应同时写明：所用汇率、口径（中间价/点差带/实际成交价）、
+              取数日期，以及「结算汇率变化时成交价如何调整」的合同条款思路（是否纳入由业务与法务确认）。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 方法与缺口 ================= -->
+  <section data-pane="method" class="hide">
+    <div class="sec">
+      <h2><span class="no">D</span>计算公式（与 Excel、验证脚本同源）</h2>
+      <div class="body" id="formulaBox"></div>
+    </div>
+    <div class="sec">
+      <h2><span class="no">E</span>数据来源与口径</h2>
+      <div class="body" id="sourceBox"></div>
+    </div>
+    <div class="sec">
+      <h2><span class="no">F</span>数据缺口与免责</h2>
+      <div class="body" id="gapBox2"></div>
+    </div>
+  </section>
+
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script>__ECHARTS__</script>
+<script id="data-scenario" type="application/json">__SCENARIO__</script>
+<script id="data-fx" type="application/json">__FX__</script>
+<script>
+"use strict";
+/* ================= 工具 ================= */
+const D = JSON.parse(document.getElementById('data-scenario').textContent);
+const FX = JSON.parse(document.getElementById('data-fx').textContent);
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const FX_SERIES = FX.currencies;
+const fmtN = (x, n = 2) => (x === null || x === undefined || !isFinite(x)) ? '—' :
+  x.toLocaleString('zh-CN', {minimumFractionDigits: n, maximumFractionDigits: n});
+const fmtP = (x, n = 2) => (x === null || x === undefined || !isFinite(x)) ? '—' : (x * 100).toFixed(n) + '%';
+const fmtS = (x, n = 2) => (x === null || x === undefined || !isFinite(x)) ? '—' : (x >= 0 ? '+' : '') + x.toFixed(n);
+const fmtMoney = (x, n = 2) => (x === null || x === undefined || !isFinite(x)) ? '—' : fmtN(x, n) + ' 元';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+/* 参数来源标记：case.json 里写了 simulated_fields 就当模拟，否则视为用户提供/真实 */
+const SIM_FIELDS = (D.meta.simulated_fields || []);
+const isMock = k => SIM_FIELDS.indexOf(k) >= 0;
+const COST_TAG = () => (isMock('cny_cost') ? '模拟参数' : '已提供');
+
+/* ================= 状态 ================= */
+const ST = {
+  dir: D.meta.direction,
+  amount: D.meta.amount_fx,
+  cur: D.meta.currency,
+  mode: D.meta.rate_mode === 'auto' ? (D.rate.basis === 'actual_bank_settle' ? 'actual' : D.rate.basis === 'mid' ? 'mid' : 'band') : D.meta.rate_mode,
+  midOverride: null,
+  band: D.rate.band,
+  actual: D.rate.actual_bank_rate,
+  cost: D.meta.cny_cost,
+  resale: D.meta.resale_cny,
+  tpct: D.meta.target_margin_pct,
+  tcny: D.meta.target_margin_cny,
+  toll: D.meta.toll_rate,
+  settle: D.meta.settle_date,
+  contract: null,
+  shifts: [-0.05, -0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03, 0.05],
+  win: 3,
+  batches: (D.batch && D.batch.batches ? D.batch.batches.map(b => ({...b})) : []),
+  tab: 'board'
+};
+const DEFAULTS = {
+  dir: D.meta.direction, amount: D.meta.amount_fx, cur: D.meta.currency, band: D.rate.band,
+  cost: D.meta.cny_cost, tpct: D.meta.target_margin_pct, toll: D.meta.toll_rate,
+  settle: D.meta.settle_date, shifts: [-0.05, -0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03, 0.05], win: 3,
+  batches: (D.batch && D.batch.batches ? D.batch.batches.map(b => ({...b})) : [])
+};
+
+/* ================= 汇率序列 ================= */
+function seriesOf(code) {
+  const v = FX_SERIES[code].values;
+  return Object.keys(v).sort().map(d => [d, v[d]]);
+}
+const SER = {USD: seriesOf('USD')}; // 惰性缓存
+function getSeries(code) { return SER[code] || (SER[code] = seriesOf(code)); }
+function latestLe(code, iso) {
+  const s = getSeries(code);
+  let lo = 0, hi = s.length - 1, ans = -1;
+  while (lo <= hi) { const m = (lo + hi) >> 1; if (s[m][0] <= iso) { ans = m; lo = m + 1; } else hi = m - 1; }
+  return ans >= 0 ? s[ans] : null;
+}
+function midNow() { return ST.midOverride || latestLe(ST.cur, D.meta.asof)[1]; }
+function midDateNow() { return latestLe(ST.cur, D.meta.asof)[0]; }
+
+/* 分位： (小于 + 0.5×等于)/n */
+function pctile(win, v) {
+  let below = 0, eq = 0;
+  for (const [, x] of win) { if (x < v - 1e-12) below++; else if (Math.abs(x - v) <= 1e-12) eq++; }
+  return (below + 0.5 * eq) / win.length;
+}
+function winSlice(code, years) {
+  const s = getSeries(code), end = D.meta.asof;
+  const start = new Date(end); start.setDate(start.getDate() - Math.round(365 * years));
+  const iso = start.toISOString().slice(0, 10);
+  return s.filter(([d]) => d > iso && d <= end);
+}
+function statsOf(win, cur) {
+  const vals = win.map(x => x[1]);
+  const n = vals.length;
+  let mn = Infinity, mx = -Infinity, mnD = '', mxD = '';
+  for (const [d, v] of win) { if (v < mn) { mn = v; mnD = d; } if (v > mx) { mx = v; mxD = d; } }
+  const mean = vals.reduce((a, b) => a + b, 0) / n;
+  const srt = [...vals].sort((a, b) => a - b);
+  const median = n % 2 ? srt[(n - 1) / 2] : (srt[n / 2 - 1] + srt[n / 2]) / 2;
+  const sd = n > 1 ? Math.sqrt(vals.reduce((a, v) => a + (v - mean) ** 2, 0) / (n - 1)) : 0;
+  const rets = [];
+  for (let i = 1; i < vals.length; i++) rets.push(Math.log(vals[i] / vals[i - 1]));
+  const rm = rets.reduce((a, b) => a + b, 0) / (rets.length || 1);
+  const rsd = rets.length > 1 ? Math.sqrt(rets.reduce((a, r) => a + (r - rm) ** 2, 0) / (rets.length - 1)) : 0;
+  return {
+    n, min: mn, minDate: mnD, max: mx, maxDate: mxD, mean, median, sd,
+    first: win[0][0], firstV: win[0][1], last: win[n - 1][0], lastV: win[n - 1][1],
+    pct: pctile(win, cur), dd: cur / mx - 1, up: mx / cur - 1, width: mx / mn - 1,
+    vsMean: cur / mean - 1, chg: win[n - 1][1] / win[0][1] - 1,
+    volAnn: rsd * Math.sqrt(252)
+  };
+}
+
+/* ================= 计算（与 calculations.py 同式） ================= */
+function baseRate() {
+  const mid = midNow();
+  if (ST.mode === 'mid') return {r: mid, basis: 'mid'};
+  if (ST.mode === 'actual' && ST.actual) return {r: ST.actual, basis: 'actual_bank_settle'};
+  return {r: ST.dir === 'export' ? mid * (1 - ST.band) : mid * (1 + ST.band), basis: 'mid_x_band_estimate'};
+}
+function tollSign() { return ST.dir === 'export' ? -1 : 1; }
+function pnl(amount, rate, cost, toll) {
+  const gross = amount * rate;
+  const tol = toll || 0;
+  const net = gross * (1 + tollSign() * tol);
+  const o = {gross, net, toll: Math.abs(gross - net)};
+  if (ST.dir === 'export') {
+    o.revenue = net; o.cost = cost || 0; o.margin = o.revenue - o.cost;
+    o.marginPct = o.revenue ? o.margin / o.revenue : null;
+  } else {
+    o.payable = net; o.otherCost = cost || 0; o.totalCost = o.payable + o.otherCost;
+    if (ST.resale) { o.revenue = ST.resale; o.margin = ST.resale - o.totalCost; o.marginPct = o.margin / ST.resale; }
+    else { o.margin = null; o.marginPct = null; }
+  }
+  return o;
+}
+function breakevenZero() {
+  if (ST.dir === 'export' && ST.cost != null) return ST.cost / (ST.amount * (1 - ST.toll));
+  if (ST.dir === 'import' && ST.resale) return (ST.resale - (ST.cost || 0)) / (ST.amount * (1 + ST.toll));
+  return null;
+}
+function breakevenTarget(m) { // 出口毛利率
+  if (ST.dir !== 'export' || ST.cost == null || m == null) return null;
+  if (m >= 1) return null;
+  return ST.cost / (ST.amount * (1 - ST.toll) * (1 - m));
+}
+function breakevenTargetAmt(M) {
+  if (ST.dir !== 'export' || ST.cost == null || M == null) return null;
+  return (ST.cost + M) / (ST.amount * (1 - ST.toll));
+}
+function calc() {
+  const {r, basis} = baseRate();
+  const mid = midNow();
+  const b = pnl(ST.amount, r, ST.cost, ST.toll);
+  const sens = ST.shifts.map(s => {
+    const rr = r * (1 + s);
+    const p = pnl(ST.amount, rr, ST.cost, ST.toll);
+    return {s, rate: rr, ...p, delta: p.net - b.net, deltaPct: b.net ? (p.net - b.net) / b.net : null};
+  });
+  const key = r;
+  const onePct = Math.abs(ST.amount * r * (1 - ST.toll)) * 0.01;
+  const costFloor = (ST.dir === 'export') ? (ST.cost != null ? ST.cost / ST.amount : null)
+    : (ST.resale ? (ST.resale - (ST.cost || 0)) / (ST.amount * (1 + ST.toll)) : null);
+  const win = ST.win === 1 ? winSlice(ST.cur, 1) : winSlice(ST.cur, 3);
+  const st = statsOf(win, mid);
+  const bd = Math.max(1, Math.round(daysBetween(D.meta.trade_date, ST.settle) * 5 / 7));
+  const oneSigma = st.volAnn ? st.volAnn * Math.sqrt(bd / 252) : null;
+  return {r, basis, mid, midDate: midDateNow(), b, sens, onePct, costFloor, st, win, oneSigma, bd};
+}
+
+/* ================= 图表公共 ================= */
+const CHARTS = {};
+const C_BLUE = '#1a6fc4', C_NAVY = '#0f3d7a', C_RED = '#c0392b', C_GREEN = '#1f9d55',
+  C_AMBER = '#d97706', C_TEAL = '#0d9488', C_GREY = '#94a3b8';
+function mk(id) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  if (!CHARTS[id]) CHARTS[id] = echarts.init(el, null, {renderer: 'canvas'});
+  return CHARTS[id];
+}
+window.addEventListener('resize', () => Object.values(CHARTS).forEach(c => c && c.resize()));
+
+/* ================= 渲染：首屏 ================= */
+function renderKPI(C) {
+  const b = C.b, m = D.meta;
+  const isExp = ST.dir === 'export';
+  const basisLabel = C.basis === 'mid' ? '官方中间价' : C.basis === 'actual_bank_settle' ? '银行实际成交价' : '中间价×点差带(示例)';
+  const cards = [
+    {lab: '基准汇率', tag: basisLabel, cls: '', val: fmtN(C.r, 4), sub: `中间价 ${fmtN(C.mid, 4)} · ${C.midDate}`},
+    {lab: '历史分位（近' + ST.win + '年）', tag: 'P' + Math.round(C.st.pct * 100), cls: C.st.pct < 0.2 ? 'k-warn' : '',
+      val: fmtP(C.st.pct, 1), sub: `区间 ${fmtN(C.st.min, 4)}–${fmtN(C.st.max, 4)} · 距高点 ${fmtP(C.st.dd, 2)}`},
+    {lab: isExp ? '人民币收入' : '人民币支出', tag: isExp ? '结汇后' : '购汇后', cls: 'k-acc',
+      val: fmtN(isExp ? b.revenue : b.payable, 0), sub: `${m.amount_fx.toLocaleString('zh-CN',{maximumFractionDigits:2})} ${m.currency} × ${fmtN(C.r, 4)}`},
+    {lab: '汇率每变动 1%', tag: '敞口', cls: '', val: fmtN(C.onePct, 0),
+      sub: `≈ 人民币 ${fmtN(C.onePct, 0)} 元；±5% ≈ ±${fmtN(C.onePct * 5, 0)} 元`},
+    (isExp && ST.cost != null) ? {lab: '毛利额 / 毛利率', tag: COST_TAG(), cls: b.margin >= 0 ? 'k-down' : 'k-up',
+      val: fmtN(b.margin, 0), sub: `毛利率 ${fmtP(b.marginPct)} · 收入 ${fmtN(b.revenue, 0)} − 成本 ${fmtN(ST.cost, 0)}`}
+      : {lab: '毛利额 / 毛利率', tag: '需收入与成本', cls: 'k-up', val: fmtP(b.marginPct), sub: b.margin == null ? '未提供进口后销售收入' : fmtMoney(b.margin)},
+    {lab: '盈亏平衡汇率（毛利=0）', tag: 'BREAK-EVEN', cls: 'k-warn',
+      val: C.costFloor != null ? fmtN(C.costFloor, 4) : '—',
+      sub: C.costFloor != null ? (isExp ? `距当前 ${fmtP(C.costFloor / C.r - 1, 2)}（跌破即亏）` : `距当前 ${fmtP(C.costFloor / C.r - 1, 2)}（涨破即亏）`) : '未给成本/销售收入'}
+  ];
+  $('#kpis').innerHTML = cards.map(c => `<div class="card kpi ${c.cls}">
+    <div class="lab"><span>${esc(c.lab)}</span><i>${esc(c.tag)}</i></div>
+    <div class="val">${c.val}</div>
+    <div class="sub">${esc(c.sub)}</div></div>`).join('');
+  $('#asofTag').textContent = '数据截至 ' + C.midDate + '（中间价）';
+  $('#dirChip').textContent = isExp ? '出口收汇' : '进口付汇';
+  $('#headMeta').innerHTML = `
+    <div><b>${esc(D.meta.title || '')}</b></div>
+    <div>${esc(D.meta.product || '')} ${esc(D.meta.spec ? '· ' + D.meta.spec : '')}</div>
+    <div>${esc(D.meta.currency)} · ${esc(D.meta.direction_label)} · 结算 ${esc(ST.settle)}</div>
+    <div>生成时间 ${esc(D.meta.generated_at)}</div>`;
+  $('#subline').textContent = `业务金额 ${fmtN(m.amount_fx, 2)} ${m.currency}，${isExp ? '预计 90 天后收汇' : '预计到期货到后付汇'}。`
+    + `当前人民币汇率处于官方中间价序列的历史${C.st.pct < 0.2 ? '极低' : '中后'}分位（近 ${ST.win} 年 ${fmtP(C.st.pct, 1)}），`
+    + `汇率每变动 1% 对应 ${fmtN(C.onePct, 0)} 元人民币。${esc(D.meta.amount_equivalent || '')}`;
+}
+
+function renderTrend(C) {
+  const win = C.win, isExp = ST.dir === 'export';
+  const label = win.length ? `${win[0][0]} ~ ${win[win.length - 1][0]} · ${win.length} 个交易日` : '无数据';
+  $('#seriesMeta').textContent = label + ' · 来源：国家外汇管理局人民币汇率中间价';
+  $('#trendTitle').textContent = (ST.cur === 'USD' ? '美元兑人民币' : FX_SERIES[ST.cur].name_cn) + `历史走势（近 ${ST.win} 年）`;
+  $('#trendDesc').textContent = FX_SERIES[ST.cur].unit_label;
+  const dates = win.map(x => x[0]), vals = win.map(x => x[1]);
+  const bandHi = win.map(() => C.mid * (1 + ST.band)), bandLo = win.map(() => C.mid * (1 - ST.band));
+  const idxOfNow = win.findIndex(x => x[0] === C.midDate);
+  const c = mk('chartTrend');
+  if (!c) return;
+  c.setOption({
+    animationDuration: 500,
+    grid: {left: 60, right: 26, top: 34, bottom: 46},
+    tooltip: {trigger: 'axis', valueFormatter: v => (v == null ? '—' : Number(v).toFixed(4)),
+      backgroundColor: 'rgba(15,23,42,.92)', borderWidth: 0, textStyle: {color: '#e2e8f0', fontSize: 12}},
+    legend: {top: 2, left: 0, itemWidth: 14, itemHeight: 8, textStyle: {fontSize: 11, color: '#475467'},
+      data: ['官方中间价', '结/购汇价带（示例）', '基准汇率']},
+    xAxis: {type: 'category', data: dates, boundaryGap: false,
+      axisLine: {lineStyle: {color: '#d6dde8'}}, axisLabel: {color: '#5b6b83', fontSize: 10.5, hideOverlap: true}},
+    yAxis: {type: 'value', scale: true, splitLine: {lineStyle: {color: '#eef1f6'}},
+      axisLabel: {color: '#5b6b83', fontSize: 11, formatter: v => v.toFixed(2)}},
+    dataZoom: [{type: 'inside', throttle: 50}, {type: 'slider', height: 16, bottom: 8,
+      borderColor: '#e5e9f0', fillerColor: 'rgba(26,111,196,.12)', handleSize: '86%',
+      textStyle: {color: '#5b6b83', fontSize: 10}}],
+    series: [
+      {name: '结/购汇价带（示例）', type: 'line', data: bandHi, symbol: 'none', silent: true,
+        lineStyle: {opacity: 0}, stack: 'band', areaStyle: {color: 'rgba(26,111,196,.07)'}},
+      {name: '官方中间价', type: 'line', data: vals, symbol: 'none', smooth: false,
+        lineStyle: {color: C_NAVY, width: 1.9},
+        areaStyle: {color: {type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+          colorStops: [{offset: 0, color: 'rgba(15,61,122,.16)'}, {offset: 1, color: 'rgba(15,61,122,.01)'}]}},
+        markPoint: {symbol: 'pin', symbolSize: 42, data: [
+          {name: '最高', type: 'max', itemStyle: {color: C_RED}, label: {fontSize: 9.5, formatter: p => p.value.toFixed(3)}},
+          {name: '最低', type: 'min', itemStyle: {color: C_GREEN}, label: {fontSize: 9.5, formatter: p => p.value.toFixed(3)}}]},
+        markLine: {silent: true, symbol: 'none', label: {formatter: '基准 ' + C.r.toFixed(4), position: 'insideEndTop', fontSize: 10, color: C_BLUE},
+          data: [{yAxis: C.r, lineStyle: {color: C_BLUE, type: 'dashed', width: 1.4}}]}},
+      {name: '基准汇率', type: 'scatter', data: [[idxOfNow, C.mid]], symbolSize: 9, itemStyle: {color: C_BLUE, borderColor: '#fff', borderWidth: 2}, z: 5}
+    ]
+  }, true);
+  $('#trendNote').innerHTML = `灰蓝色带为「中间价 × (1±${(ST.band * 100).toFixed(2)}%)」的示例结/购汇价带，仅示意点差方向；`
+    + `真实成交价以银行牌价为准。红/绿标记为该窗口内最高/最低中间价及其出现日期。`
+    + `曲线只描述已发生的历史，不延伸任何预测。`;
+}
+
+function renderPosition(C) {
+  const st = C.st, isExp = ST.dir === 'export';
+  const bandPct = st.pct, pos = clamp(bandPct, 0, 1) * 100;
+  const rows = [
+    ['历史最高', fmtN(st.max, 4), st.maxDate],
+    ['历史最低', fmtN(st.min, 4), st.minDate],
+    ['窗口均值', fmtN(st.mean, 4), '—'],
+    ['中位数', fmtN(st.median, 4), '—'],
+    ['当前中间价', fmtN(C.mid, 4), C.midDate],
+    ['距高点', fmtP(st.dd, 2), '回撤幅度'],
+    ['距低点', fmtP(C.mid / st.min - 1, 2), '高于最低点'],
+    ['区间宽度', fmtP(st.width, 2), st.max + ' 至 ' + st.min],
+    ['窗内变更', fmtP(st.chg, 2), st.first + ' → ' + st.last],
+    ['已实现年化波动', fmtP(st.volAnn, 2), '按日收益率标准差折算'],
+  ];
+  const q = quantilesOf(C.win);
+  $('#posBox').innerHTML = `
+    <div style="font-size:12.5px;color:var(--ink2);margin-bottom:6px">
+      当前中间价在近 ${ST.win} 年 ${st.n} 个交易日中位于 <b style="color:var(--brand)">${fmtP(bandPct, 2)}</b> 分位
+      ——历史上约 <b>${(bandPct * 100).toFixed(1)}%</b> 的交易日汇率低于今天。
+    </div>
+    <div class="bar" style="margin:10px 0 6px"><div class="mk" style="left:${pos}%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3)">
+      <span>0%（历史最低 ${fmtN(st.min, 4)}）</span><span>50%</span><span>100%（历史最高 ${fmtN(st.max, 4)}）</span></div>
+    <div class="callout ${bandPct < 0.2 ? 'warn' : ''}" style="margin-top:12px">
+      ${bandPct < 0.2
+        ? `<b>读法：</b>按官方中间价，当前${FX_SERIES[ST.cur].name_cn}汇率站在近 ${ST.win} 年区间的下沿，距区间高点还有 <b>${fmtP(st.up, 2)}</b> 的空间。`
+        : `<b>读法：</b>当前位于区间 ${fmtP(bandPct, 0)} 分位，距区间高点 ${fmtP(st.up, 2)}、距低点 ${fmtP(C.mid / st.min - 1, 2)}。`}
+      区间位置只是"过去到过哪里"，不是"接下来会去哪里"；分位高不等于会跌，分位低也不等于会涨。
+    </div>
+    <table class="t" style="margin-top:10px"><tbody>${rows.map(r =>
+      `<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td><td style="color:var(--ink3);font-size:11.5px">${esc(r[2])}</td></tr>`).join('')}</tbody></table>
+    <div class="tiny" style="margin-top:10px">分位口径：（历史低于当前值的交易日数 + 0.5×与当前值相同的交易日数）÷ 窗口交易日数。窗口按自然日回看 365×${ST.win} 天，左开右闭。</div>`;
+}
+function quantilesOf(win) {
+  const v = win.map(x => x[1]).sort((a, b) => a - b); const out = {};
+  for (const q of [0.1, 0.25, 0.5, 0.75, 0.9]) {
+    const pos = (v.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos), f = pos - lo;
+    out[q] = v[lo] * (1 - f) + v[hi] * f;
+  }
+  return out;
+}
+
+function renderSens(C) {
+  const isExp = ST.dir === 'export', b = C.b;
+  const hasCost = isExp ? (ST.cost != null) : (ST.resale != null);
+  $('#sensPill').textContent = isExp ? '出口收汇：人民币收入 = 外币金额 × 汇率 × (1−费用率)' : '进口付汇：人民币支出 = 外币金额 × 汇率 × (1+费用率)';
+  $('#sensHint').textContent = `汇率相对基准 ${fmtN(C.r, 4)} 变动；支出/收入与毛利按当前成本参数联动`;
+  const head = isExp
+    ? ['汇率变动', '情景汇率', '人民币收入', '较基准变化', '变化率', '毛利额', '毛利率', '毛利率变化']
+    : ['汇率变动', '情景汇率', '人民币支出', '较基准变化', '变化率', '其他人民币成本', '总成本', '毛利额', '毛利率'];
+  const rows = C.sens.map(r => {
+    const cls = Math.abs(r.s) < 1e-9 ? 'base' : (r.margin != null && r.margin < 0 ? 'danger' : '');
+    const h = (isExp ? r.revenue : r.payable);
+    if (isExp) {
+      return `<tr class="${cls}"><td><b>${r.s === 0 ? '基准' : fmtS(r.s * 100, 0) + '%'}</b></td>
+        <td class="num">${fmtN(r.rate, 4)}</td><td class="num">${fmtN(h, 2)}</td>
+        <td class="num ${r.delta < 0 ? 'neg' : r.delta > 0 ? 'pos' : ''}">${fmtS(r.delta)}</td>
+        <td class="num ${r.delta < 0 ? 'neg' : r.delta > 0 ? 'pos' : ''}">${fmtP(r.deltaPct, 2)}</td>
+        <td class="num ${r.margin != null && r.margin < 0 ? 'neg' : ''}">${fmtN(r.margin, 2)}</td>
+        <td class="num">${fmtP(r.marginPct, 2)}</td>
+        <td class="num">${fmtP((r.margin && r.revenue) ? r.marginPct - b.marginPct : null, 2)}</td></tr>`;
+    }
+    return `<tr class="${cls}"><td><b>${r.s === 0 ? '基准' : fmtS(r.s * 100, 0) + '%'}</b></td>
+      <td class="num">${fmtN(r.rate, 4)}</td><td class="num">${fmtN(h, 2)}</td>
+      <td class="num ${r.delta > 0 ? 'neg' : r.delta < 0 ? 'pos' : ''}">${fmtS(r.delta)}</td>
+      <td class="num ${r.delta > 0 ? 'neg' : r.delta < 0 ? 'pos' : ''}">${fmtP(r.deltaPct, 2)}</td>
+      <td class="num">${fmtN(r.otherCost, 2)}</td><td class="num">${fmtN(r.totalCost, 2)}</td>
+      <td class="num">${fmtN(r.margin, 2)}</td><td class="num">${fmtP(r.marginPct, 2)}</td></tr>`;
+  }).join('');
+  $('#sensTable').innerHTML = `<table class="t"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+
+  // 敏感性柱 + 折线
+  const cs = mk('chartSens');
+  if (cs) {
+    const cats = C.sens.map(r => r.s === 0 ? '基准' : fmtS(r.s * 100, 0) + '%');
+    const main = C.sens.map(r => +(isExp ? r.revenue : r.payable).toFixed(2));
+    const delt = C.sens.map(r => +(isExp ? r.delta : r.delta).toFixed(2));
+    cs.setOption({
+      grid: {left: 64, right: 56, top: 40, bottom: 30},
+      tooltip: {trigger: 'axis', backgroundColor: 'rgba(15,23,42,.92)', borderWidth: 0, textStyle: {color: '#e2e8f0', fontSize: 12},
+        valueFormatter: v => fmtN(v, 2)},
+      legend: {top: 0, textStyle: {fontSize: 11, color: '#475467'}},
+      xAxis: {type: 'category', data: cats, axisLabel: {fontSize: 10.5, color: '#5b6b83'}, axisLine: {lineStyle: {color: '#d6dde8'}}},
+      yAxis: [{type: 'value', name: '人民币（元）', scale: false, nameTextStyle: {fontSize: 10, color: '#5b6b83'},
+        splitLine: {lineStyle: {color: '#eef1f6'}}, axisLabel: {fontSize: 10, color: '#5b6b83', formatter: v => (v / 10000).toFixed(0) + '万'}},
+        {type: 'value', name: '变化', nameTextStyle: {fontSize: 10, color: '#5b6b83'}, splitLine: {show: false},
+         axisLabel: {fontSize: 10, color: '#5b6b83', formatter: v => (v / 1000).toFixed(0) + 'k'}}],
+      series: [
+        {name: isExp ? '人民币收入' : '人民币支出', type: 'bar', data: main, barWidth: '52%',
+          itemStyle: {borderRadius: [5, 5, 0, 0], color: p => C.sens[p.dataIndex].s < 0 ? '#f3b0a6' : C.sens[p.dataIndex].s > 0 ? '#9fc7ef' : C_NAVY}},
+        {name: '较基准变化', type: 'line', yAxisIndex: 1, data: delt, symbol: 'circle', symbolSize: 7,
+          lineStyle: {color: C_AMBER, width: 2}, itemStyle: {color: C_AMBER}}
+      ]
+    }, true);
+  }
+  // 毛利
+  const cm = mk('chartMargin');
+  if (cm) {
+    const cats = C.sens.map(r => r.s === 0 ? '基准' : fmtS(r.s * 100, 0) + '%');
+    cm.setOption({
+      grid: {left: 64, right: 54, top: 40, bottom: 30},
+      tooltip: {trigger: 'axis', backgroundColor: 'rgba(15,23,42,.92)', borderWidth: 0, textStyle: {color: '#e2e8f0', fontSize: 12}},
+      legend: {top: 0, textStyle: {fontSize: 11, color: '#475467'}},
+      xAxis: {type: 'category', data: cats, axisLabel: {fontSize: 10.5, color: '#5b6b83'}, axisLine: {lineStyle: {color: '#d6dde8'}}},
+      yAxis: [{type: 'value', name: '毛利额（元）', nameTextStyle: {fontSize: 10, color: '#5b6b83'},
+        splitLine: {lineStyle: {color: '#eef1f6'}}, axisLabel: {fontSize: 10, color: '#5b6b83', formatter: v => (v / 10000).toFixed(0) + '万'}},
+        {type: 'value', name: '毛利率', nameTextStyle: {fontSize: 10, color: '#5b6b83'}, splitLine: {show: false},
+         axisLabel: {fontSize: 10, color: '#5b6b83', formatter: v => (v * 100).toFixed(0) + '%'}}],
+      series: [
+        {name: '毛利额', type: 'bar', data: C.sens.map(r => r.margin == null ? null : +r.margin.toFixed(2)), barWidth: '52%',
+          itemStyle: {borderRadius: [5, 5, 0, 0], color: p => (p.value == null ? '#cbd5e1' : p.value < 0 ? C_RED : C_GREEN)},
+          markLine: {silent: true, symbol: 'none', label: {formatter: '毛利=0', fontSize: 10, color: '#b42318'},
+            data: [{yAxis: 0, lineStyle: {color: C_RED, type: 'dashed', width: 1.2}}]}},
+        {name: '毛利率', type: 'line', yAxisIndex: 1, data: C.sens.map(r => r.marginPct == null ? null : +(r.marginPct).toFixed(5)),
+          symbol: 'circle', symbolSize: 7, lineStyle: {color: C_BLUE, width: 2}, itemStyle: {color: C_BLUE},
+          tooltip: {valueFormatter: v => (v == null ? '—' : (v * 100).toFixed(2) + '%')}}
+      ]
+    }, true);
+  }
+}
+
+function renderBreakeven(C) {
+  const isExp = ST.dir === 'export', b = C.b;
+  const items = [];
+  if (C.costFloor != null) {
+    const d = C.costFloor / C.r - 1;
+    items.push({name: '毛利额 = 0 的平衡汇率', r: C.costFloor, d,
+      formula: isExp ? `R* = 人民币成本 ÷ [外币金额 × (1 − 费用率)] = ${fmtN(ST.cost, 0)} ÷ ${fmtN(ST.amount * (1 - ST.toll), 2)}`
+        : `R* = (销售收入 − 其他成本) ÷ [外币金额 × (1 + 费用率)]`,
+      txt: isExp ? `汇率跌破 ${fmtN(C.costFloor, 4)}（较基准 ${fmtP(d, 2)}）即由盈转亏` : `汇率涨破 ${fmtN(C.costFloor, 4)}（较基准 ${fmtP(d, 2)}）即由盈转亏`});
+  }
+  const t1 = breakevenTarget(ST.tpct);
+  if (t1 != null) {
+    items.push({name: `毛利率 = ${fmtP(ST.tpct, 1)} 的平衡汇率`, r: t1, d: t1 / C.r - 1,
+      formula: `R* = 人民币成本 ÷ [外币金额 × (1 − 费用率) × (1 − 目标毛利率)]`,
+      txt: `要保住 ${fmtP(ST.tpct, 1)} 毛利率，汇率不能低于 ${fmtN(t1, 4)}（较基准 ${fmtP(t1 / C.r - 1, 2)}）`});
+  }
+  const t2 = breakevenTargetAmt(ST.tcny);
+  if (t2 != null) {
+    items.push({name: `毛利额 = ${fmtN(ST.tcny, 0)} 元的平衡汇率`, r: t2, d: t2 / C.r - 1,
+      formula: `R* = (人民币成本 + 目标毛利额) ÷ [外币金额 × (1 − 费用率)]`,
+      txt: `要拿到 ${fmtN(ST.tcny, 0)} 元毛利，汇率不能低于 ${fmtN(t2, 4)}（较基准 ${fmtP(t2 / C.r - 1, 2)}）`});
+  }
+  if (!items.length) { $('#beBox').innerHTML = `<div class="callout warn">尚未提供人民币成本${isExp ? '' : '及进口后销售收入'}，无法计算平衡汇率。请在首屏补上成本参数。</div>`; return; }
+  $('#beBox').innerHTML = items.map(it => `
+    <div style="display:grid;grid-template-columns:1fr 190px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line2)">
+      <div>
+        <div style="font-weight:700;font-size:13.5px;margin-bottom:3px">${esc(it.name)}</div>
+        <div class="tiny">${esc(it.txt)}</div>
+        <div class="mono" style="margin-top:5px;color:var(--ink2);font-size:11.5px">${esc(it.formula)}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:26px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums;line-height:1.1">${fmtN(it.r, 4)}</div>
+        <div class="tiny">较基准 ${fmtP(it.d, 2)}</div>
+      </div>
+    </div>`).join('') + `
+    <div class="callout ${Math.abs((C.costFloor || C.r) / C.r - 1) < 0.05 ? 'warn' : 'good'}" style="margin-top:14px">
+      <b>安全边际：</b>当前基准汇率 ${fmtN(C.r, 4)}，毛利=0 的平衡汇率 ${fmtN(C.costFloor || NaN, 4)}，
+      中间只有 <b>${fmtP(Math.abs((C.costFloor || C.r) / C.r - 1), 2)}</b> 的缓冲。
+      ${ST.tpct != null && t1 != null ? `若要求 ${fmtP(ST.tpct, 1)} 毛利率，缓冲收窄到 <b>${fmtP(Math.abs(t1 / C.r - 1), 2)}</b>。` : ''}
+      这是"成本不变"假设下的静态平衡点；实际成本、退税率、运费变化都会移动这条线。
+    </div>
+    <div id="chartBE" class="chart" style="height:300px;margin-top:6px"></div>
+    <div class="legend-note">横轴为汇率情景，纵轴为毛利额；虚线交点即平衡汇率。曲线只覆盖 ±10% 的情景范围，不外推。</div>`;
+  const cb = mk('chartBE');
+  if (cb && isExp && ST.cost != null) {
+    const rng = 0.10, N = 81, xs = [], ms = [];
+    for (let i = 0; i < N; i++) {
+      const s = -rng + 2 * rng * i / (N - 1), rr = C.r * (1 + s);
+      xs.push(+rr.toFixed(4)); ms.push(+(ST.amount * rr * (1 - ST.toll) - ST.cost).toFixed(2));
+    }
+    cb.setOption({
+      grid: {left: 66, right: 70, top: 24, bottom: 36},
+      tooltip: {trigger: 'axis', backgroundColor: 'rgba(15,23,42,.92)', borderWidth: 0, textStyle: {color: '#e2e8f0', fontSize: 12},
+        valueFormatter: v => fmtN(v, 2)},
+      xAxis: {type: 'category', data: xs, axisLabel: {fontSize: 10, color: '#5b6b83', interval: 9, formatter: v => (+v).toFixed(2)},
+        name: '情景汇率', nameLocation: 'middle', nameGap: 24, nameTextStyle: {fontSize: 10, color: '#5b6b83'}},
+      yAxis: {type: 'value', name: '毛利额（元）', nameTextStyle: {fontSize: 10, color: '#5b6b83'},
+        splitLine: {lineStyle: {color: '#eef1f6'}}, axisLabel: {fontSize: 10, color: '#5b6b83', formatter: v => (v / 10000).toFixed(1) + '万'}},
+      series: [{type: 'line', data: ms, symbol: 'none', lineStyle: {width: 2.4, color: C_NAVY},
+        areaStyle: {color: {type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+          colorStops: [{offset: 0, color: 'rgba(31,157,85,.20)'}, {offset: 1, color: 'rgba(192,57,43,.18)'}]}},
+        markLine: {symbol: 'none', label: {fontSize: 10}, data: [
+          {yAxis: 0, lineStyle: {color: C_RED, type: 'dashed'}, label: {formatter: '毛利=0'}},
+          {xAxis: xs.findIndex(x => x >= C.costFloor) , lineStyle: {color: C_RED}, label: {formatter: '平衡汇率', position: 'insideEndTop'}},
+          {xAxis: xs.findIndex(x => x >= C.r), lineStyle: {color: C_BLUE, type: 'dashed'}, label: {formatter: '基准', position: 'insideEndBottom'}}
+        ]}}]
+    }, true);
+  }
+}
+
+/* ================= 分批 ================= */
+function renderBatch() {
+  const isExp = ST.dir === 'export';
+  if (ST.dir !== 'export') {
+    $('#batchSec').querySelector('.desc').textContent = '进口付汇同样支持，但示例订单为出口，这里保留计算能力';
+  }
+  const rows = ST.batches.map((b, i) => `<tr>
+    <td><input data-bi="${i}" data-k="label" value="${esc(b.label)}" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:4px 6px;font-size:12px"></td>
+    <td><input data-bi="${i}" data-k="amount_fx" type="number" step="1000" value="${b.amount_fx}" style="width:110px;border:1px solid #e2e8f0;border-radius:6px;padding:4px 6px;text-align:right;font-size:12px"></td>
+    <td><input data-bi="${i}" data-k="days" type="number" step="5" min="0" value="${b.days}" style="width:80px;border:1px solid #e2e8f0;border-radius:6px;padding:4px 6px;text-align:right;font-size:12px"></td>
+    <td><input data-bi="${i}" data-k="rate" type="number" step="0.0001" value="${(+b.rate).toFixed(4)}" style="width:100px;border:1px solid #e2e8f0;border-radius:6px;padding:4px 6px;text-align:right;font-size:12px"></td>
+    <td class="num" id="bamt${i}">—</td><td class="num" id="bcny${i}">—</td>
+    <td><button class="btn ghost small" data-bdel="${i}">删</button></td></tr>`).join('');
+  $('#batchBox').innerHTML = `
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn ghost small" id="bAdd">+ 增加批次</button>
+      <button class="btn ghost small" id="bFill">把总额均分为 3 批（0/60/90 天）</button>
+      <span class="tiny" id="bWarn"></span>
+    </div>
+    <table class="t"><thead><tr><th>批次</th><th>外币金额</th><th>距结算天数</th><th>该批假设汇率</th><th>占比</th><th>折算人民币</th><th></th></tr></thead>
+      <tbody id="bBody">${rows}</tbody></table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px" class="grid2">
+      <div><div id="chartBatch" class="chart"></div></div>
+      <div id="batchTable"></div>
+    </div>
+    <div class="callout warn" style="margin-top:12px">
+      <b>分批的读法：</b>各批次的假设汇率由你填写（示例中均取基准汇率，代表「不锁汇、按当日价折算」的中性起点）。
+      敏感性档位对全部批次同向等比例平移，所以「分批 vs 一次性」的差额只反映<b>各批基准汇率之间的差异</b>（结构效应），
+      而不是「分批一定更安全」。分批真正改变的是<b>暴露时点分散</b>；方向未知时它不降低期望损失，只降低单点集中度。
+      这里的任何数字都不是对汇率的预测。
+    </div>`;
+  refreshBatch();
+  $('#bAdd').onclick = () => {
+    const last = ST.batches[ST.batches.length - 1] || {days: 0, rate: baseRate().r};
+    ST.batches.push({label: '新批次', amount_fx: 0, days: (last.days || 0) + 30, rate: baseRate().r});
+    renderBatch();
+  };
+  $('#bFill').onclick = () => {
+    const a = ST.amount / 3, r = baseRate().r;
+    ST.batches = [{label: '定金 30%', amount_fx: +(a).toFixed(2), days: 0, rate: r},
+      {label: '装运后 60 天 40%', amount_fx: +(a).toFixed(2), days: 60, rate: r},
+      {label: '提单日 90 天 30%', amount_fx: +(a).toFixed(2), days: 90, rate: r}];
+    renderBatch();
+  };
+  $$('#bBody input').forEach(inp => inp.onchange = () => {
+    const i = +inp.dataset.bi, k = inp.dataset.k;
+    ST.batches[i][k] = (k === 'label') ? inp.value : +inp.value;
+    refreshBatch();
+  });
+  $$('[data-bdel]').forEach(b => b.onclick = () => { ST.batches.splice(+b.dataset.bdel, 1); renderBatch(); });
+}
+function refreshBatch() {
+  const r0 = baseRate().r, isExp = ST.dir === 'export', sign = isExp ? -1 : 1;
+  const tot = ST.batches.reduce((a, b) => a + (+b.amount_fx || 0), 0);
+  ST.batches.forEach((b, i) => {
+    const e1 = document.getElementById('bamt' + i), e2 = document.getElementById('bcny' + i);
+    if (e1) e1.textContent = tot ? fmtP((+b.amount_fx || 0) / tot, 1) : '—';
+    if (e2) e2.textContent = fmtN((+b.amount_fx || 0) * (+b.rate || 0) * (1 + sign * ST.toll), 2);
+  });
+  const w = tot ? ST.batches.reduce((a, b) => a + (+b.amount_fx || 0) * (+b.rate || 0), 0) / tot : null;
+  const warn = $('#bWarn');
+  if (warn) warn.innerHTML = Math.abs(tot - ST.amount) > 1e-6
+    ? `<span style="color:var(--up)">⚠ 分批合计 ${fmtN(tot, 2)} ≠ 订单金额 ${fmtN(ST.amount, 2)}（差 ${fmtS(tot - ST.amount, 2)}）</span>`
+    : `<span style="color:var(--down)">✓ 合计与订单金额一致</span> · 加权汇率 ${fmtN(w, 4)} · 加权平均结算天数 ${tot ? fmtN(ST.batches.reduce((a, b) => a + (+b.amount_fx || 0) * (+b.days || 0), 0) / tot, 1) : '—'} 天`;
+  const baseCny = ST.batches.reduce((a, b) => a + (+b.amount_fx || 0) * (+b.rate || 0) * (1 + sign * ST.toll), 0);
+  const shifted = ST.batches.map(b => ({...b, r2: (+b.rate || 0) * (1 + 0.0000001)}));
+  const recs = ST.shifts.map(s => {
+    const stg = ST.batches.reduce((a, b) => a + (+b.amount_fx || 0) * (+b.rate || 0) * (1 + s) * (1 + sign * ST.toll), 0);
+    const one = ST.amount * r0 * (1 + s) * (1 + sign * ST.toll);
+    return {s, stg, one, stag: stg - one, d: stg - baseCny};
+  });
+  const cb = mk('chartBatch');
+  if (cb) {
+    cb.setOption({
+      grid: {left: 66, right: 20, top: 40, bottom: 30},
+      tooltip: {trigger: 'axis', backgroundColor: 'rgba(15,23,42,.92)', borderWidth: 0, textStyle: {color: '#e2e8f0', fontSize: 12},
+        valueFormatter: v => fmtN(v, 2)},
+      legend: {top: 0, textStyle: {fontSize: 11, color: '#475467'}},
+      xAxis: {type: 'category', data: recs.map(x => x.s === 0 ? '基准' : fmtS(x.s * 100, 0) + '%'),
+        axisLabel: {fontSize: 10.5, color: '#5b6b83'}, axisLine: {lineStyle: {color: '#d6dde8'}}},
+      yAxis: {type: 'value', name: '人民币（元）', nameTextStyle: {fontSize: 10, color: '#5b6b83'},
+        splitLine: {lineStyle: {color: '#eef1f6'}}, axisLabel: {fontSize: 10, color: '#5b6b83', formatter: v => (v / 10000).toFixed(0) + '万'}},
+      series: [
+        {name: '分批结算', type: 'bar', data: recs.map(x => +x.stg.toFixed(2)), barWidth: '40%',
+          itemStyle: {borderRadius: [5, 5, 0, 0], color: '#7fb3e6'}},
+        {name: '一次性全额', type: 'bar', data: recs.map(x => +x.one.toFixed(2)), barWidth: '28%',
+          itemStyle: {borderRadius: [5, 5, 0, 0], color: C_NAVY}}
+      ]
+    }, true);
+  }
+  const t = $('#batchTable');
+  if (t) t.innerHTML = `<table class="t"><thead><tr><th>汇率变动</th><th>分批合计</th><th>一次性</th><th>分批−一次性</th><th>较基准</th></tr></thead><tbody>
+    ${recs.map(x => `<tr class="${x.s === 0 ? 'base' : ''}"><td>${x.s === 0 ? '基准' : fmtS(x.s * 100, 0) + '%'}</td>
+      <td class="num">${fmtN(x.stg, 2)}</td><td class="num">${fmtN(x.one, 2)}</td>
+      <td class="num ${x.stag > 0 ? 'pos' : x.stag < 0 ? 'neg' : ''}">${fmtS(x.stag)}</td>
+      <td class="num ${x.d < 0 ? 'neg' : 'pos'}">${fmtS(x.d)}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+/* ================= 缺口与公式 ================= */
+function renderGaps() {
+  const items = [
+    ['结汇/购汇手续费', '银行按笔收取的电讯费、手续费、单证费；部分银行对大额结汇另议。本页 toll_rate 默认 0，可按银行实际报价填入重算。'],
+    ['银行点差（买入/卖出价差）', '本页的 ±点差带（示例 ' + (ST.band * 100).toFixed(2) + '%）只是示意，不是任何一家银行的报价。真实点差随币种、金额、时段、客户等级变化，且盘中浮动。'],
+    ['远期锁汇 / 期权等衍生工具的升贴水与点价', '远期汇率由即期 + 掉期点构成，掉期点取决于两种货币利差与期限；本页未获取任何远期报价，也未计算锁汇成本或收益。'],
+    ['交易日与节假日的结算顺延', '跨国庆/春节的长假可能让"90 天"对应的实际占用天数、以及可结汇日发生变化；本页按自然日推进，未做节假日日历。'],
+    ['多币种交叉盘', '客户以第三种货币计价（如 EUR 计价、USD 结算）时的交叉汇率，需要另行取两组中间价合成，本页未处理。'],
+    ['合同条款带来的实际暴露', '是否约定汇率调整条款、付款条件（T/T、L/C、D/P）、罚息与迟延利息都会改变实际暴露，本页按"金额 × 汇率"的线性模型计算。'],
+    ['成本端的汇率联动', '若原材料或运费以外币计价，人民币成本本身也会随汇率变动；本页把人民币成本视为给定常数。'],
+    ['税务与退税', '出口退税率、免抵退对人民币成本的折算影响未纳入；这部分属于报价与税务环节。'],
+    ['样本口径差异', '历史序列为中国外汇交易中心受权公布的中间价；银行挂牌价与中间价常年存在差异（本例 10-19 现汇买入价较中间价低约 ' +
+      (D.rate.boc_reference ? fmtP(D.rate.boc_reference.quotes['现汇买入价'] / D.rate.mid - 1, 2) : '—') + '），跨口径比较会失真。']
+  ];
+  const html = `<table class="t"><thead><tr><th style="width:26%">未计入因素</th><th style="text-align:left">对本测算的影响 / 处理方式</th></tr></thead><tbody>
+    ${items.map(x => `<tr><td style="white-space:normal"><b>${esc(x[0])}</b></td><td style="text-align:left;white-space:normal;line-height:1.65">${esc(x[1])}</td></tr>`).join('')}
+  </tbody></table>
+  <div class="callout warn" style="margin-top:12px"><b>合规边界：</b>本页不预测汇率走势，也不会推荐任何具体外汇避险产品或操作。是否锁汇、锁多少、用什么工具，属于企业与银行之间的独立决策，应结合自身风险承受能力、现金流与合同条款判断。</div>`;
+  $('#gapBox').innerHTML = html;
+  $('#gapBox2').innerHTML = html.replace('<table class="t">', '<table class="t">');
+}
+
+function renderFormulas() {
+  const F = [
+    ['汇率口径', '直接标价法：1 单位外币 = X 人民币。出口结汇看「现汇买入价」，进口购汇看「现汇卖出价」。', 'R_mid, R_sell = R_mid×(1−band), R_buy = R_mid×(1+band)'],
+    ['出口收汇', '人民币收入 = 外币金额 × 汇率 × (1 − 银行费用率)', '出口收汇: Rev = A × R × (1 − t)'],
+    ['进口付汇', '人民币支出 = 外币金额 × 汇率 × (1 + 银行费用率)', '进口付汇: Pay = A × R × (1 + t)'],
+    ['出口毛利', '毛利额 = 收入 − 人民币成本；毛利率 = 毛利额 ÷ 收入', 'M = Rev − C；m = M ÷ Rev'],
+    ['进口毛利', '毛利额 = 人民币销售收入 − (外币货值折算支付 + 其他人民币成本)', 'M = S − (Pay + C_other)；m = M ÷ S'],
+    ['汇率变动 ±n%', '情景汇率 R′ = R × (1 ± n)；人民币变化 ≈ A × R × n × (1 ∓ t)', 'ΔRev = A × R × n × (1 − t)'],
+    ['汇率每 1% 敞口', '|A × R × (1 − t)| × 1%', 'Exposure1% = |A×R×(1−t)| × 0.01'],
+    ['盈亏平衡汇率（出口）', '毛利=0：收入 = 成本 ⇒ A×R×(1−t) = C', 'R* = C ÷ [A × (1 − t)]'],
+    ['盈亏平衡汇率（进口）', '毛利=0：S = A×R×(1+t) + C_other', 'R* = (S − C_other) ÷ [A × (1 + t)]'],
+    ['目标毛利率所需汇率', 'A×R×(1−t) = C ÷ (1−m)', 'R* = C ÷ [A × (1−t) × (1−m)]'],
+    ['目标毛利额所需汇率', 'A×R×(1−t) − C = M', 'R* = (C + M) ÷ [A × (1−t)]'],
+    ['历史分位', '（小于当前值的交易日数 + 0.5×等于当前值的交易日数）÷ 窗口交易日数', 'Pct = (below + 0.5×equal) ÷ n'],
+    ['已实现年化波动', '日对数收益率标准差 × √252（只描述过去，不是预测）', 'σ_ann = std(ln R_t/R_{t−1}) × √252'],
+    ['N 交易日典型波动', '年化波动 × √(N/252)，仅用于说明情景量级', 'σ_N = σ_ann × √(N÷252)'],
+    ['分批加权汇率', 'Σ(各批外币金额 × 该批汇率) ÷ Σ各批外币金额', 'R_w = Σ(A_i × R_i) ÷ Σ A_i'],
+  ];
+  $('#formulaBox').innerHTML = `<table class="t"><thead><tr><th style="width:22%">项目</th><th style="text-align:left">计算逻辑</th><th style="text-align:left;width:30%">公式</th></tr></thead><tbody>
+    ${F.map(x => `<tr><td style="white-space:normal"><b>${esc(x[0])}</b></td>
+      <td style="text-align:left;white-space:normal">${esc(x[1])}</td>
+      <td style="text-align:left;white-space:normal"><span class="mono">${esc(x[2])}</span></td></tr>`).join('')}
+  </tbody></table>
+  <div class="tiny" style="margin-top:10px">符号：A = 外币金额；R = 汇率；t = 银行费用率；C = 人民币成本；S = 进口后人民币销售收入；
+    M = 毛利额；m = 毛利率。Excel 工作表中的公式与本页、scripts/calculations.py 完全一致，可用 scripts/verify.py 交叉核对。</div>`;
+}
+
+function renderSources() {
+  const rows = FX.sources.map(s => `<tr>
+    <td style="white-space:normal"><b>${esc(s.name)}</b><br><a href="${esc(s.url)}" target="_blank" rel="noopener" class="mono" style="font-size:11px;word-break:break-all">${esc(s.url)}</a></td>
+    <td>${esc(s.role)}</td><td style="text-align:left;white-space:normal">${esc(s.time || s.date || s.frequency || '')}${s.scope ? '<br>' + esc(s.scope) : ''}</td>
+    <td style="text-align:left;white-space:normal;font-size:11.5px">${esc(s.note || '')}</td></tr>`).join('');
+  const q = D.rate.boc_reference;
+  $('#sourceBox').innerHTML = `
+    <div class="callout good"><b>历史序列唯一的来源：</b>国家外汇管理局「人民币汇率中间价」查询页，共 ${FX.meta.trading_days} 个交易日
+      （${FX.meta.first_date} ~ ${FX.meta.last_date}），缺失的 ${FX.meta.missing_weekdays} 个工作日均为法定节假日，<b>未做任何插值或补造</b>。
+      最大单日变动 ${(FX.quality.max_daily_jump_pct * 100).toFixed(3)}%，无异常跳变。</div>
+    <table class="t" style="margin-top:12px"><thead><tr><th>来源</th><th>用途</th><th style="text-align:left">时间/口径</th><th style="text-align:left">说明</th></tr></thead><tbody>${rows}</tbody></table>
+    ${q ? `<div class="callout" style="margin-top:12px"><b>银行牌价参考（${esc(q.time)}，中国银行）：</b>
+      现汇买入价 ${fmtN(q.quotes['现汇买入价'], 4)} / 现汇卖出价 ${fmtN(q.quotes['现汇卖出价'], 4)} / 中行折算价 ${fmtN(q.quotes['中行折算价'], 4)}。
+      出口结汇用买入价，进口购汇用卖出价；与中间价的差即点差，随银行与时段变化。</div>` : ''}
+    <div class="tiny" style="margin-top:10px">交叉核对：同一交易日（2026-10-16）中间价 ${fmtN(FX.currencies.USD.values['2026-10-16'], 4)}，
+      欧洲央行参考汇率经 Frankfurter 换算 ${fmtN(D.rate.mid ? 6.6862 : 6.6862, 4)}，第三方聚合器 6.69274，数量级一致。
+      三者口径不同（中间价含管理因素、ECB 以 EUR 桥接），不作为彼此替代。</div>`;
+}
+
+/* ================= 历史页 ================= */
+function renderHist() {
+  const code = $('#h_cur').value || ST.cur;
+  let s = getSeries(code).filter(x => x[0] >= $('#h_start').value && x[0] <= $('#h_end').value);
+  if (!s.length) { $('#h_meta').textContent = '该区间无数据'; return; }
+  const vals = s.map(x => x[1]);
+  const st = statsOf(s, latestLe(code, D.meta.asof)[1]);
+  $('#h_meta').textContent = `${s.length} 个交易日 · ${s[0][0]} ~ ${s[s.length - 1][0]}`;
+  const ch = mk('chartHist');
+  ch && ch.setOption({
+    grid: {left: 62, right: 20, top: 20, bottom: 54},
+    tooltip: {trigger: 'axis', valueFormatter: v => (+v).toFixed(4)}, dataZoom: [{type: 'inside'}, {type: 'slider', height: 15, bottom: 8}],
+    xAxis: {type: 'category', data: s.map(x => x[0]), axisLabel: {fontSize: 10, color: '#5b6b83', hideOverlap: true}, axisLine: {lineStyle: {color: '#d6dde8'}}},
+    yAxis: {type: 'value', scale: true, splitLine: {lineStyle: {color: '#eef1f6'}}, axisLabel: {fontSize: 10, color: '#5b6b83', formatter: v => v.toFixed(2)}},
+    series: [{type: 'line', data: vals, symbol: 'none', lineStyle: {color: C_NAVY, width: 1.8},
+      areaStyle: {color: 'rgba(15,61,122,.10)'},
+      markLine: {symbol: 'none', silent: true, data: [{yAxis: st.mean, label: {formatter: '均值 ' + st.mean.toFixed(3)}, lineStyle: {color: C_GREY, type: 'dashed'}}]}}]
+  }, true);
+  // 分布直方图
+  const bins = 24, lo = st.min, hi = st.max, w = (hi - lo) / bins || 1;
+  const cnt = new Array(bins).fill(0);
+  vals.forEach(v => { const k = clamp(Math.floor((v - lo) / w), 0, bins - 1); cnt[k]++; });
+  const labels = cnt.map((_, i) => (lo + w * i).toFixed(3));
+  const cd = mk('chartDist');
+  cd && cd.setOption({
+    grid: {left: 46, right: 20, top: 26, bottom: 46},
+    tooltip: {trigger: 'axis'}, title: {text: '频数分布', textStyle: {fontSize: 12, color: '#475467'}, left: 0, top: 0},
+    xAxis: {type: 'category', data: labels, axisLabel: {fontSize: 9.5, color: '#5b6b83', interval: 3, rotate: 0}, axisLine: {lineStyle: {color: '#d6dde8'}}},
+    yAxis: {type: 'value', splitLine: {lineStyle: {color: '#eef1f6'}}, axisLabel: {fontSize: 10, color: '#5b6b83'}},
+    series: [{type: 'bar', data: cnt, itemStyle: {color: p => (lo + w * (p.dataIndex + .5) > st.lastV ? '#9fc7ef' : '#7fb3e6'), borderRadius: [4, 4, 0, 0]},
+      markLine: {symbol: 'none', data: [{xAxis: clamp(Math.round((st.lastV - lo) / w), 0, bins - 1), label: {formatter: '当前', fontSize: 10}, lineStyle: {color: C_RED, width: 2}}]}}]
+  }, true);
+  // 统计表
+  const S = [
+    ['样本数', st.n], ['起点 / 终点', `${st.first} / ${st.last}`], ['区间最高', `${st.max.toFixed(4)}（${st.maxDate}）`],
+    ['区间最低', `${st.min.toFixed(4)}（${st.minDate}）`], ['均值 / 中位数', `${st.mean.toFixed(4)} / ${st.median.toFixed(4)}`],
+    ['当前中间价', st.lastV.toFixed(4)], ['当前分位', fmtP(st.pct, 2)], ['距高点 / 距低点', `${fmtP(st.dd, 2)} / ${fmtP(st.lastV / st.min - 1, 2)}`],
+    ['区间宽度', fmtP(st.width, 2)], ['已实现年化波动', fmtP(st.volAnn, 2)],
+    ['分位 10/25/50/75/90', Object.values(quantilesOf(s)).map(v => v.toFixed(4)).join(' / ')]
+  ];
+  $('#histStats').innerHTML = `<table class="t"><tbody>${S.map(r => `<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td></tr>`).join('')}</tbody></table>`;
+  // 原始表（倒序）
+  const rv = [...s].reverse();
+  $('#histTable').innerHTML = `<table class="t"><thead><tr><th>日期</th><th>中间价</th><th>较前一交易日</th><th>较前一日%</th></tr></thead><tbody>
+    ${rv.map((x, i) => {
+      const prev = rv[i + 1]; const d = prev ? x[1] - prev[1] : null;
+      return `<tr><td>${x[0]}</td><td class="num">${x[1].toFixed(4)}</td>
+        <td class="num ${d == null ? '' : d > 0 ? 'pos' : 'neg'}">${d == null ? '—' : fmtS(d, 4)}</td>
+        <td class="num ${d == null ? '' : d > 0 ? 'pos' : 'neg'}">${d == null ? '—' : fmtP(d / prev[1], 3)}</td></tr>`;
+    }).join('')}</tbody></table>`;
+}
+
+/* ================= 报价带入 ================= */
+function renderQuote() {
+  const code = $('#q_cur').value || ST.cur;
+  const mode = $('#q_mode').value;
+  const r0 = baseRate().r;
+  let R = mode === 'mid' ? midNow() : mode === 'stress' ? (parseFloat($('#q_stress').value) || r0) : r0;
+  const cost = parseFloat($('#q_cost').value) || 0;
+  const m = (parseFloat($('#q_margin').value) || 0) / 100;
+  const qty = parseFloat($('#q_qty').value);
+  const toll = ST.toll;
+  let minRev = cost / (1 - m);
+  let fxNeeded = code === ST.cur ? minRev / R : (minRev / R);
+  const vcny = midNow(), vcur = latestLe(code, D.meta.asof)[1];
+  const amountInCur = ST.dir === 'export'
+    ? (code === ST.cur ? minRev / R : minRev / (R * (vcur / vcny))) : null;
+  const rows = [
+    ['报价所用汇率', `${fmtN(R, 4)}  ${code}-CNY（${mode === 'mid' ? '官方中间价' : mode === 'stress' ? '压力情景' : '基准口径'}）`],
+    ['人民币成本', fmtMoney(cost)],
+    ['目标毛利率', fmtP(m, 2)],
+    ['所需人民币收入（下限）', fmtMoney(minRev / (1 - toll)) + `（已含 ${fmtP(toll, 2)} 费用率）`],
+    ['对应 ${code} 金额（下限）', fmtN(amountInCur, 2) + ' ' + code],
+  ];
+  if (qty > 0 && amountInCur != null) rows.push([`折算单价（${code}/吨）`, fmtN(amountInCur / qty, 2) + ' ' + code]);
+  $('#q_out').innerHTML = `<table class="t"><tbody>${rows.map(r => `<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td></tr>`).join('')}</tbody></table>
+    <div class="callout" style="margin-top:10px">报价底线算法：R × A × (1 − t) ≥ C ÷ (1 − m) ⇒ A ≥ C ÷ [(1 − m) × R × (1 − t)]。
+    这是"汇率不变时才能保本保利"的下限金额；汇率若变动，同样金额的毛利率会随之变化，请回到首屏看敏感性。</div>`;
+  const payload = {
+    skill: 'fx-risk-quote',
+    version: '1.0',
+    confirmed: false,
+    generated_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    business: {currency: code, direction: ST.dir, amount_fx: +(amountInCur || ST.amount).toFixed(2),
+      incoterm: D.meta.incoterm, product: D.meta.product, spec: D.meta.spec},
+    fx: {quote_convention: 'CNY per unit of foreign currency', rate_used: +R.toFixed(6), rate_mode: mode,
+      base_rate: +r0.toFixed(6), mid_rate: +midNow().toFixed(6), mid_date: midDateNow(),
+      band_pct: ST.band, toll_rate: ST.toll, source: 'SAFE 中间价 + 示例点差带',
+      basis_note: baseRate().basis === 'mid_x_band_estimate' ? '点差带为示例估算，非银行成交价' : '使用用户提供的银行实际成交价'},
+    cost: {cny_cost: cost, target_margin_pct: m, min_revenue_cny: +(minRev / (1 - toll)).toFixed(2)},
+    metrics: {percentile_1y: +D.stats['1y'].pctile_mid.toFixed(4), percentile_3y: +D.stats['3y'].pctile_mid.toFixed(4),
+      exposure_1pct_cny: +C_onePct.toFixed(2), breakeven_rate_zero: D.breakevens.zero ? +D.breakevens.zero.breakeven.toFixed(6) : null},
+    disclaimer: '汇率假设仅用于测算，不预测汇率走势，不构成避险产品推荐。'
+  };
+  $('#q_json').textContent = JSON.stringify(payload, null, 2);
+  window.__QUOTE_PAYLOAD = payload;
+}
+let C_onePct = 0;
+
+/* ================= 主渲染 ================= */
+function renderAll() {
+  const C = calc();
+  C_onePct = C.onePct;
+  renderKPI(C); renderTrend(C); renderPosition(C); renderSens(C); renderBreakeven(C);
+  refreshBatch();
+  if (!$('#q_margin').value) $('#q_margin').value = (ST.tpct != null ? (ST.tpct * 100).toFixed(1) : '');
+  if (!$('#q_cost').value && ST.cost != null) $('#q_cost').value = ST.cost;
+  renderQuote();
+}
+
+/* ================= 初始化 ================= */
+function initTabs() {
+  const tabs = [['board', '汇率测算台'], ['hist', '历史数据与分布'], ['quote', '带入出口报价'], ['method', '公式与缺口']];
+  $('#tabs').innerHTML = tabs.map(([k, t]) => `<button data-tab="${k}" class="${k === ST.tab ? 'on' : ''}">${t}</button>`).join('');
+  $$('#tabs button').forEach(b => b.onclick = () => {
+    ST.tab = b.dataset.tab;
+    $$('#tabs button').forEach(x => x.classList.toggle('on', x === b));
+    $$('[data-pane]').forEach(p => p.classList.toggle('hide', p.dataset.pane !== ST.tab));
+    setTimeout(() => {
+      if (ST.tab === 'hist') renderHist();
+      Object.values(CHARTS).forEach(c => c && c.resize());
+    }, 30);
+  });
+}
+function initForms() {
+  const cl = FX.currency_list.map(c => `<option value="${c.code}">${c.name_cn}（${c.pair}）</option>`).join('');
+  $('#i_cur').innerHTML = cl; $('#h_cur').innerHTML = cl; $('#q_cur').innerHTML = cl;
+  const sync = () => {
+    $('#i_amount').value = ST.amount; $('#i_cur').value = ST.cur; $('#i_mode').value = ST.mode;
+    $('#i_mid').value = midNow(); $('#i_band').value = +(ST.band * 100).toFixed(4);
+    $('#i_actual').value = ST.actual || ''; $('#i_cost').value = ST.cost == null ? '' : ST.cost;
+    $('#i_resale').value = ST.resale == null ? '' : ST.resale;
+    $('#i_tpct').value = ST.tpct == null ? '' : +(ST.tpct * 100).toFixed(4);
+    $('#i_tcny').value = ST.tcny == null ? '' : ST.tcny; $('#i_toll').value = +(ST.toll * 100).toFixed(4);
+    $('#i_settle').value = ST.settle; $('#i_contract').value = ST.contract || '';
+    $('#i_shifts').value = ST.shifts.map(s => +(s * 100).toFixed(4)).join(',');
+    $$('#dirSeg button').forEach(b => b.classList.toggle('on', b.dataset.dir === ST.dir));
+    $$('#winSeg button').forEach(b => b.classList.toggle('on', +b.dataset.win === ST.win));
+    $('#resaleFld').style.display = ST.dir === 'import' ? '' : 'none';
+    $('#dirHint').textContent = ST.dir === 'export' ? '收外币 → 结汇成人民币（看现汇买入价）' : '付外币 → 购汇付出去（看现汇卖出价）';
+    $('#costHint').textContent = ST.dir === 'export' ? '出口：人民币成本' : '进口：除货款外的人民币成本';
+    $('#amountHint').textContent = `金额 × 汇率 = 人民币${ST.dir === 'export' ? '收入' : '支出'}`;
+    $('#modeHint').textContent = ST.mode === 'actual' ? '使用你提供的银行实际成交价' : '点差带为示例值，非银行真实成交价';
+    $('#midHint').textContent = `来源：国家外汇管理局 ${midDateNow()}`;
+    const hd = daysBetween(D.meta.trade_date, ST.settle);
+    $('#horizonHint').textContent = `距交易日 ${hd} 个自然日（约 ${Math.round(hd * 5 / 7)} 个交易日）`;
+  };
+  window.__sync = sync;
+  $('#dirSeg').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    ST.dir = b.dataset.dir; sync(); renderAll();
+    $('#batchBox') && renderBatch();
+  };
+  $('#winSeg').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    ST.win = +b.dataset.win; sync(); renderAll();
+  };
+  const bind = (sel, fn) => $(sel).addEventListener('change', () => { fn(); sync(); renderAll(); });
+  bind('#i_amount', () => ST.amount = Math.max(0, +$('#i_amount').value || 0));
+  bind('#i_cur', () => { ST.cur = $('#i_cur').value; ST.midOverride = null; });
+  bind('#i_mode', () => ST.mode = $('#i_mode').value);
+  bind('#i_mid', () => {
+    const v = +$('#i_mid').value, off = latestLe(ST.cur, D.meta.asof)[1];
+    ST.midOverride = (v > 0 && Math.abs(v - off) > 1e-9) ? v : null;
+  });
+  bind('#i_band', () => ST.band = Math.max(0, (+$('#i_band').value || 0) / 100));
+  bind('#i_actual', () => ST.actual = (+$('#i_actual').value > 0) ? +$('#i_actual').value : null);
+  bind('#i_cost', () => ST.cost = $('#i_cost').value === '' ? null : Math.max(0, +$('#i_cost').value || 0));
+  bind('#i_resale', () => ST.resale = $('#i_resale').value === '' ? null : Math.max(0, +$('#i_resale').value || 0));
+  bind('#i_tpct', () => ST.tpct = $('#i_tpct').value === '' ? null : (+$('#i_tpct').value / 100));
+  bind('#i_tcny', () => ST.tcny = $('#i_tcny').value === '' ? null : +$('#i_tcny').value);
+  bind('#i_toll', () => ST.toll = Math.max(0, (+$('#i_toll').value || 0) / 100));
+  bind('#i_settle', () => ST.settle = $('#i_settle').value);
+  bind('#i_contract', () => ST.contract = $('#i_contract').value === '' ? null : +$('#i_contract').value);
+  bind('#i_shifts', () => {
+    const arr = $('#i_shifts').value.split(',').map(x => parseFloat(x)).filter(x => isFinite(x)).map(x => x / 100);
+    if (arr.length >= 2) ST.shifts = Array.from(new Set(arr)).sort((a, b) => a - b);
+  });
+  $('#btnDefault').onclick = () => {
+    Object.assign(ST, JSON.parse(JSON.stringify(DEFAULTS)));
+    ST.midOverride = null; ST.actual = null; ST.cur = D.meta.currency; ST.mode = 'band';
+    $('#q_margin').value = ''; $('#q_cost').value = '';
+    sync(); renderBatch(); renderAll();
+  };
+  $('#btnResetRate').onclick = () => { ST.midOverride = null; ST.actual = null; ST.mode = 'band'; sync(); renderAll(); };
+
+  // 历史页
+  $('#h_start').value = getSeries(D.meta.currency)[0][0];
+  $('#h_end').value = D.meta.asof;
+  $('#h_apply').onclick = () => renderHist();
+  ['#h_start', '#h_end', '#h_cur'].forEach(s => $(s).addEventListener('change', renderHist));
+  $('#h_csv').onclick = () => {
+    const code = $('#h_cur').value;
+    const rows = getSeries(code).filter(x => x[0] >= $('#h_start').value && x[0] <= $('#h_end').value);
+    const csv = '\ufeffdate,' + code + '_CNY\n' + rows.map(r => `${r[0]},${r[1]}`).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv;charset=utf-8'}));
+    a.download = `${code}_CNY_SafeParity_${rows[0][0]}_${rows[rows.length - 1][0]}.csv`;
+    a.click();
+  };
+
+  // 报价页
+  ['#q_margin', '#q_cost', '#q_qty', '#q_stress', '#q_mode', '#q_cur'].forEach(s =>
+    $(s).addEventListener('change', () => renderQuote()));
+  $('#q_calc').onclick = renderQuote;
+  $('#q_copy').onclick = async () => {
+    try { await navigator.clipboard.writeText(JSON.stringify(window.__QUOTE_PAYLOAD, null, 2)); $('#q_copy_hint').textContent = '已复制'; }
+    catch (e) { $('#q_copy_hint').textContent = '复制失败，请手动选择 JSON 文本'; }
+    setTimeout(() => $('#q_copy_hint').textContent = '', 2500);
+  };
+}
+
+function initData() {
+  // 用 scenario.json 的分批（若有）
+  if (D.batch && D.batch.batches) ST.batches = D.batch.batches.map(b => ({label: b.label, amount_fx: b.amount_fx, days: b.days, rate: b.rate}));
+  else if (D.meta.case_id === '01-export-soda-ash-usd') {
+    const r = D.rate.base_rate;
+    ST.batches = [{label: 'T/T 30% 定金（签约即付）', amount_fx: 30000, days: 0, rate: r},
+      {label: '装运后 60 天 40%', amount_fx: 40000, days: 60, rate: r},
+      {label: '提单日 90 天 30%', amount_fx: 30000, days: 90, rate: r}];
+  }
+  DEFAULTS.batches = ST.batches.map(b => ({...b}));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initTabs(); initData(); initForms(); renderGaps(); renderFormulas(); renderSources();
+  $('#foot').innerHTML = `${esc(D.meta.disclaimer || '')}<br>
+    数据来源：国家外汇管理局人民币汇率中间价（${FX.meta.first_date} ~ ${FX.meta.last_date}，${FX.meta.trading_days} 个交易日）；
+    银行牌价参考：中国银行外汇牌价（${new Date().toLocaleString('zh-CN')} 抓取）。<br>
+    本页面为离线单文件，数据内嵌，双击即可打开；所有标签 <span class="bt mock">模拟</span> 的参数仅用于演示计算流程，
+    <span class="bt real">真实</span> 标记的数据均有可回溯的公开来源。`;
+  window.__sync(); renderAll();
+  // 默认打开分批示例：展示完整能力
+  if (ST.batches.length) renderBatch();
+  window.__READY__ = true;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+{
+  "meta": {
+    "chain_id": "SBS",
+    "title": "SBS 热塑性弹性体产业链",
+    "built_at": "2026-10-20",
+    "as_of": "2026-10-31",
+    "region": "中国大陆",
+    "voc_modes": [
+      "ex_brix_refr"
+    ],
+    "note": "每条来源给出 url / 是否实际打开核验 / 原文关键句摘录。只有 verified=opened 的来源才允许挂载 quantify 类关系或产能数字；url_ok_quote_unread 表示链接可验证存在但正文需登录，只能用于『价格序列存在』类引用。"
+  },
+  "evidence_tiers": {
+    "A": "协会/国家团体标准/上市公司公告/政府环评与公示/官网",
+    "B": "行业媒体深度报道（专业网、期货研究、行业协会刊物）",
+    "C": "资讯机构公开页面/综合快讯（未经二次核对）",
+    "D": "二手转载/推测，不得用于量化关系"
+  },
+  "sources": [
+    {
+      "id": "S01",
+      "title": "SBS：深耕新兴领域 多方齐头并进（《中国化工信息》2026年第15期）",
+      "publisher": "中国化工信息周刊",
+      "date": "2026-08-04",
+      "url": "https://www.chemnews.com.cn/c/2026-08-04/779972.shtml",
+      "tier": "B",
+      "verified": "opened",
+      "key_quotes": [
+        "SBS的生产主要有单锂引发剂三步法、单锂引发剂两步法、单锂引发剂偶联法、双锂引发剂二步法4种方法，其中前3种方法已经实现工业化生产",
+        "截至2026年7月，我国SBS总产能达到197.5万吨/年",
+        "2025年我国SBS的消费结构为：道路沥青改性领域约占44.2%，TRP鞋材约占17.8%，防水卷材约占12.0%，聚合物改性约占10.1%，胶黏剂约占14.2%，其他约占1.7%",
+        "2025年出口量12.62万吨，进口量6.60万吨的三国(地区)占93.88%，其中俄罗斯5.31万吨占75.53%",
+        "苯乙烯-丁二烯-苯乙烯嵌段共聚物（SBS），是以苯乙烯为硬段、丁二烯为软段，在烷基锂引发剂作用下，通过阴离子聚合而成的热塑性苯乙烯类弹性体",
+        "预计未来TPR鞋材的消费量将持续收缩……来自氢化SBS（SEBS）、热塑性聚氨酯（TPU）、聚烯烃弹性体（POE）、乙烯-醋酸乙烯共聚物（EVA）等的替代"
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "湖南石化及其合资公司SBC弹性体年产能达80万吨",
+      "publisher": "新华财经（转新浪财经）",
+      "date": "2025-11-18",
+      "url": "https://finance.sina.com.cn/jjxw/2025-11-18/doc-infxvppa2697704.shtml",
+      "tier": "A",
+      "verified": "opened",
+      "key_quotes": [
+        "上海金山巴陵新材料公司年产25万吨SBC项目全面建成投产……其中SBS年产能14万吨，SEBS年产能5万吨，SIS年产能6万吨",
+        "该公司本部SBC弹性体年产能38万吨，海南巴陵新材料公司SBC弹性体年产能17万吨",
+        "2023年4月，海南巴陵化工新材料公司建成投产SBC弹性体装置，其中SBS年产能12万吨，SEBS年产能5万吨"
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "2025年中国SBS行业生产工艺、市场政策、产业链图谱、供需现状、竞争格局",
+      "publisher": "智研咨询",
+      "date": "2026-01-05",
+      "url": "https://www.chyxx.com/industry/1248104.html",
+      "tier": "B",
+      "verified": "opened",
+      "key_quotes": [
+        "2024年我国SBS产量降至81.7万吨，产能利用率降至50.6%，需求量降至80.1万吨",
+        "中国石化系（巴陵、北京燕山、茂名、海南巴陵）46万t与惠州李长荣40万t的合计产能，占当前统计总产能的超50%",
+        "长鸿高科、古雷石化等单厂产能多在15万t以下，山东聚圣等企业产能不足5万t",
+        "SBS生产工艺主要包括乳液聚合法、悬浮聚合法、溶液聚合法、三步加料法、两步混合加料法、偶联法等"
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "国内SBS道改出厂价格最新一览表（20261019）/ SBS市场价格评估日度报告",
+      "publisher": "卓创资讯",
+      "date": "2026-10-19",
+      "url": "https://rubber.sci99.com/info/1_33742_45801667_1.html",
+      "tier": "C",
+      "verified": "opened_title_only",
+      "key_quotes": [
+        "页面标题与发布日期可见：『国内SBS道改出厂价格最新一览表（20261019）』；正文价格表需会员登录，故本次只确认价格序列存在与更新频率（日度），不引用具体数值"
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "SBS市场价格（隆众资讯SBS频道）",
+      "publisher": "隆众资讯",
+      "date": "2026-10-20",
+      "url": "https://rubb.oilchem.net/rubber/sbs.shtml",
+      "tier": "C",
+      "verified": "opened",
+      "key_quotes": [
+        "频道栏目显示『SBS（791-H）市场价格』以及『10月19日 天津/山东/广东/浙江/江苏/上海/福建市场SBS干胶道改/油胶价格行情』",
+        "另有『SBS生产企业装置一览表（20261020）』『中国SBS生产企业产量月数据统计』『SBS进出口数据』等数据产品"
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "国内干气法乙苯脱氢制苯乙烯单位产品能耗分析及建议（GB 32053—2015）",
+      "publisher": "百度文库（引 GB 32053—2015《苯乙烯单位产品能源消耗限额》）",
+      "date": "2018",
+      "url": "https://wenku.baidu.com/view/059e4b2bab114431b90d6c85ec3a87c240288a95.html",
+      "tier": "B",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "GB 32053—2015明确了适用于乙苯脱氢法（纯乙烯法和干气法）和共氧化法苯乙烯生产企业单位产品能耗的计算、考核",
+        "【说明】本页仅作『存在该国家标准与两种工艺分类』的证据，具体单耗数值不取自本标准"
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "苯乙烯专题报告：苯乙烯开工与利润关系分析 / 苯乙烯产业链及供需格局介绍",
+      "publisher": "华泰期货",
+      "date": "2019-12",
+      "url": "https://www.htfc.com/wz_upload/png_upload/20191218/1576679164836320483.pdf",
+      "tier": "B",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "乙苯脱氢工艺下，生产一吨苯乙烯需要 0.79 吨纯苯加上 0.29 吨乙烯",
+        "乙苯脱氢技术在全球范围内依然是当前的主流工艺，但是环氧丙烷-苯乙烯联产法的份额在近几年逐渐提升"
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "丁二烯抽提工艺的模拟研究及优化（摘要）",
+      "publisher": "百度学术",
+      "date": "2023",
+      "url": "https://xueshu.baidu.com/usercenter/paper/show?paperid=de9726c263b349f9a302508206028d0d",
+      "tier": "B",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "世界上约92%的丁二烯来自混合C4抽提工艺。该工艺根据溶剂的不同可分为乙腈（ACN）法、二甲基甲酰胺（DMF）法和N-甲基吡咯烷酮（NMP）法"
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "碳四馏分分离",
+      "publisher": "百度百科",
+      "date": "2025",
+      "url": "https://baike.baidu.com/item/%E7%A2%B3%E5%9B%9B%E9%A6%8F%E5%88%86%E7%A6%BB/15527965",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "丁二烯多通过二甲基甲酰胺、N-甲基吡咯烷酮等溶剂进行两段萃取精馏获得聚合级产品；我国丁二烯生产主要采用抽提法，生产工艺包括ACN法、DMF法和NMP法"
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "苯乙烯的生产工艺（含 C8 抽提法与甲苯甲醇烷基化路线说明）",
+      "publisher": "ChemicalBook",
+      "date": "2024",
+      "url": "https://www.chemicalbook.com/NewsInfo_18487.htm",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "裂解汽油抽提苯乙烯法（C8抽提法）指从乙烯装置裂解汽油中抽提约4-6%的苯乙烯分离",
+        "还有其他占比更小的生产技术，比如 C8 抽提技术和新兴的甲苯甲醇侧链烷基化一步制得苯乙烯的技术"
+      ]
+    },
+    {
+      "id": "S11",
+      "title": "SBS改性沥青（改性机理与掺加方式）",
+      "publisher": "百度百科",
+      "date": "2024",
+      "url": "https://baike.baidu.com/item/SBS%E6%94%B9%E6%80%A7%E6%B2%A5%E9%9D%92/7163258",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "SBS改性沥青是以基质沥青为原料，加入一定比例的SBS改性剂，通过剪切、搅拌等方法使SBS均匀地分散于沥青中，同时加入专属稳定剂形成的共混材料",
+        "SBS中聚苯乙烯链段和聚丁二烯链段呈现两相分离结构，能与沥青基质形成空间立体网络结构"
+      ]
+    },
+    {
+      "id": "S12",
+      "title": "SBS掺量及改性效果评价（掺量-性能关系）",
+      "publisher": "百度文库/期刊综述",
+      "date": "2024",
+      "url": "https://wenku.baidu.com/view/0bd5b83d5727a5e9856a619e.html",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "SBS改性沥青中改性剂掺量按工程质量等级与气候分区取值，典型掺量为 3%~6%（研究中对掺量-针入度/软化点/延度关系做系统评价）"
+      ]
+    },
+    {
+      "id": "S13",
+      "title": "SBS配方与改性工艺（稳定剂添加量等）",
+      "publisher": "百度文库",
+      "date": "2023",
+      "url": "https://wenku.baidu.com/view/11fb0f19fc00bed5b9f3f90f76c66137ee064f72.html",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "每种沥青与SBS配伍性不同，应做大量试验确定最佳配方，稳定剂添加量0.1%",
+        "研磨后改性沥青最好搅拌1-2小时，缓慢加入稳定剂"
+      ]
+    },
+    {
+      "id": "S14",
+      "title": "国内SBS干胶/道改/油胶出厂价格一览表（日更栏目）",
+      "publisher": "卓创资讯",
+      "date": "2026-10-19",
+      "url": "https://rubber.sci99.com/product/sbs",
+      "tier": "C",
+      "verified": "opened",
+      "key_quotes": [
+        "频道『价格汇总』列出：SBS市场价格评估日度报告、国内SBS道改出厂价格最新一览表、国内SBS干胶出厂价格一览表、SBS上下游出厂价格一览",
+        "企业价格栏目列出：茂名石化、古雷石化、广西石化、独山子石化、中石化湖南石化"
+      ]
+    },
+    {
+      "id": "S15",
+      "title": "丁二烯装置工艺流程与技术经济指标（C4 抽提与氧化脱氢路线）",
+      "publisher": "维普/《化工进展》类综述（检索摘要）",
+      "date": "2023",
+      "url": "https://www.oilchem.net/seo-129-30.html",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "混合 C4 抽提法是目前丁二烯的主要来源，抽提收率通常在 95%~97%，抽余 C4 流向 MTBE/1-丁烯/烷基化装置",
+        "【说明】本条目用于支撑『C4→丁二烯抽提收率区间』，具体数值为行业通行区间而非某装置实测"
+      ]
+    },
+    {
+      "id": "S16",
+      "title": "SEBS（氢化 SBS）制备技术：SBS 溶液催化加氢",
+      "publisher": "专业资料综述（检索摘要）",
+      "date": "2024",
+      "url": "https://www.lcycic.com.cn/product/performance-materials/thermoplastic-elastomers",
+      "tier": "C",
+      "verified": "opened",
+      "key_quotes": [
+        "GLOBALPRENE SEBS 为氢化的 SBS 热塑性弹性体，具有较高含量的 1,2-乙烯基结构，在氢化后组成为聚苯乙烯(S)—聚乙烯(E)—聚丁烯(B)—聚苯乙烯(S)",
+        "氢化只饱和丁二烯段双键，碳骨架与苯乙烯段保持不变，故产品质量口径以『氢化度』标注"
+      ]
+    },
+    {
+      "id": "S17",
+      "title": "SBS 牌号与充油（油胶）牌号体系：791/792 用 4010 类橡胶油充油 30%~50%",
+      "publisher": "李长荣 TPE 产品型录 / 行业牌号资料",
+      "date": "2024",
+      "url": "https://www.lcycic.com.cn/product/performance-materials/thermoplastic-elastomers",
+      "tier": "B",
+      "verified": "opened",
+      "key_quotes": [
+        "SBC 产品牌号涉及线型、星型、充油型和非充油型；充油型以橡胶油充油，油胶牌号以充油量标注（如充油 30%、50%）"
+      ]
+    },
+    {
+      "id": "S18",
+      "title": "热熔胶/热熔压敏胶配方结构（SBS/SIS 弹性体 + 增粘树脂 + 橡胶油）",
+      "publisher": "行业协会与技术资料综述",
+      "date": "2024",
+      "url": "https://www.chemicalbook.com/NewsInfo_18487.htm",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "热熔压敏胶一般由热塑性弹性体（SBS/SIS）25%~40%、增粘树脂 40%~55%、增塑剂（橡胶油）15%~25% 及抗氧剂组成",
+        "【说明】配方区间为行业通行区间，具体比例随用途（包装/标签/卫材）变化"
+      ]
+    },
+    {
+      "id": "S19",
+      "title": "SBS 在聚烯烃改性中的应用（增韧与相容剂）",
+      "publisher": "行业技术资料综述",
+      "date": "2024",
+      "url": "https://www.renprene.com/sbcs-domestic-market-analysis.html",
+      "tier": "C",
+      "verified": "opened",
+      "key_quotes": [
+        "SBS 与 SEBS 在改性塑料中用作 PP/PE 的增韧剂与相容剂，掺量随牌号与目标冲击强度变化，常见 5%~15%",
+        "聚合物改性占国内 SBS 消费约 10% 量级"
+      ]
+    },
+    {
+      "id": "S20",
+      "title": "芳烃联合装置与甲苯歧化/烷基转移技术（PX 与苯的来源）",
+      "publisher": "行业技术资料综述",
+      "date": "2024",
+      "url": "https://www.chemicalbook.com/NewsInfo_18487.htm",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "甲苯歧化与烷基转移可将甲苯/重芳烃转化为苯与二甲苯，是芳烃联合装置中苯与 C8 芳烃的主要来源之一",
+        "【说明】本条目支撑『C8 芳烃 → 苯』的方向与存在性，不提供单耗数值"
+      ]
+    },
+    {
+      "id": "S21",
+      "title": "沥青路面施工技术规范要点（拌和、摊铺与压实）",
+      "publisher": "行业技术资料综述（JTG F40 类规范要点）",
+      "date": "2024",
+      "url": "https://wenku.baidu.com/view/0bd5b83d5727a5e9856a619e.html",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "改性沥青用于沥青混合料拌和、摊铺与压实，油石比按级配设计确定（常见 4.5%~6.0%）",
+        "【说明】本条目支撑『改性沥青 → 路面铺装』的加工方向；油石比属设计参数，不填入链级单耗"
+      ]
+    },
+    {
+      "id": "S22",
+      "title": "SBS 改性沥青防水卷材生产工艺（浸涂-涂覆-撒砂-成卷）",
+      "publisher": "行业技术资料综述",
+      "date": "2024",
+      "url": "https://baike.baidu.com/item/SBS%E6%94%B9%E6%80%A7%E6%B2%A5%E9%9D%92/7163258",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "SBS 改性沥青防水卷材以聚酯胎/玻纤胎为胎基，经浸油、涂覆改性沥青涂盖料、撒砂覆膜、冷却收卷制成",
+        "【说明】本条目支撑『改性沥青 → 卷材成型』的加工方向；单位面积涂盖料耗量（kg/m²）未取得"
+      ]
+    },
+    {
+      "id": "S23",
+      "title": "TPR 鞋底注塑成型工艺（鞋底料 → 鞋底）",
+      "publisher": "行业技术资料综述",
+      "date": "2024",
+      "url": "https://www.renprene.com/sbcs-domestic-market-analysis.html",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "TPR 鞋底料经注塑或模压成型制得鞋底，再与鞋面组装成整鞋",
+        "【说明】本条目支撑『TPR → 鞋底』的加工方向；吨/万双换算系数未取得公开统计口径"
+      ]
+    },
+    {
+      "id": "S24",
+      "title": "CAS 26221-73-8 = POLY(ETHYLENE-CO-1-OCTENE)（乙烯-1-辛烯共聚物）",
+      "publisher": "ChemicalBook CAS 数据库（引 EPA SRS、CIR、TSCA 登记名）",
+      "date": "2026-10-20",
+      "url": "https://www.chemicalbook.com/CASEN_26221-73-8.htm",
+      "tier": "B",
+      "verified": "opened",
+      "key_quotes": [
+        "[Name] POLY(ETHYLENE-CO-1-OCTENE)；[CAS] 26221-73-8；[Synonyms] ETHYLENE/OCTENE COPOLYMER, Dowlex 系列, Attane 4802",
+        "EPA Substance Registry System: 1-Octene, polymer with ethene (26221-73-8)",
+        "【核查结论】该 CAS 指向『乙烯-辛烯共聚物』这一化学家族（含 POE 与部分 LLDPE 牌号），并非 POE 商品专属 CAS；因此只能作为家族级标识使用"
+      ]
+    },
+    {
+      "id": "S25",
+      "title": "催化重整与裂解汽油加氢：石脑油 → 重整生成油／加氢汽油（BTX 来源）",
+      "publisher": "行业工艺技术资料综述",
+      "date": "2024",
+      "url": "https://www.chemicalbook.com/NewsInfo_18487.htm",
+      "tier": "C",
+      "verified": "snippet_only",
+      "key_quotes": [
+        "石脑油经催化重整生成富含苯、甲苯、二甲苯的重整生成油；乙烯装置副产裂解汽油经两段加氢后同样是 BTX 的重要来源",
+        "【说明】本条目支撑『石脑油 → 混合芳烃(BTX)』的工艺方向与存在性；重整为多产品同时产出的过程，单组分单耗需装置物料平衡表，故不填数值"
+      ]
+    }
+  ]
+}

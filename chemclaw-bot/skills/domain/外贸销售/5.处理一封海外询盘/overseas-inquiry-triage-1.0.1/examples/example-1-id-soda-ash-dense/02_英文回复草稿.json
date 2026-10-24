@@ -1,0 +1,91 @@
+{
+  "channel": "A_confirm",
+  "tone": "friendly-professional",
+  "template": "reply_A_confirm",
+  "subject": "Re: Inquiry - Dense Soda Ash - PT Glassworks Nusantara - CFR Semarang",
+  "body": "Dear Budi Santoso,\n\nThank you for your inquiry dated 19 October 2026 regarding Dense Soda Ash.\n\nWe have reviewed your requirements and would like to confirm a few points before preparing our formal offer.\n\nAs we understand your inquiry:\n\n- Product       : Soda Ash Dense (Sodium Carbonate, Dense)\n- Specification : Na2CO3 ≥ 99.2% min; Fe ≤ 0.003%; +80 mesh ≥ 75% min\n- Quantity      : 300 MT for the first shipment; approx. 3000 MT/year\n- Delivery      : CFR Semarang, Incoterms 2020\n- Documents     : COA, SDS, TDS\n- Application   : glass manufacturing (as stated in your email)\n\nTo prepare an accurate offer, could you please confirm the following:\n\n1. We will execute your value specifications: Na2CO3 ≥ 99.2% min; Fe ≤ 0.003%; +80 mesh ≥ 75% min. Could you confirm these are the values you will verify on arrival?\n2. Could you confirm the quotation currency (USD / EUR)?\n3. May we confirm that a quotation per MT, CFR Semarang, Incoterms 2020, in USD is the basis you require?\n4. We note that you require payment by L/C. To prepare the offer correctly, could you confirm the L/C type (at sight or usance) and the validity period?\n\nOn packing, you asked for our suggestion: our standard export packing for this product is ‹PACKING_PROPOSAL›. Could you confirm whether that suits your unloading facilities, or advise the bag weight you prefer?\n\nCOA, SDS and TDS will accompany our offer. If you need any additional document (for example a Certificate of Origin, an ACFTA preferential certificate of origin, or third-party inspection at loading port), please advise - we will confirm what our documentation supports.\n\nOnce you confirm the above points, we will send our formal offer with the price on ‹PRICE_PER_MT_CFR_SEMARANG› and the related commercial terms within ‹LEAD_TIME_FOR_OFFER›.\n\nWe look forward to your reply.\n\nBest regards,\n\n‹SIGNER_NAME›\n‹SIGNER_TITLE› | ‹OURCOMPANY_NAME›\nTel: ‹OURCOMPANY_PHONE› | Web: ‹OURCOMPANY_WEBSITE›\n",
+  "placeholders": [
+    {
+      "key": "PRICE_PER_MT_CFR_SEMARANG",
+      "label_cn": "单价（含贸易术语与港口）",
+      "owner": "销售 / 报价系统",
+      "status": "open",
+      "used": true,
+      "where": ""
+    },
+    {
+      "key": "PACKING_PROPOSAL",
+      "label_cn": "我方标准出口包装建议",
+      "owner": "销售 / 技术",
+      "status": "open",
+      "used": true,
+      "where": ""
+    },
+    {
+      "key": "LEAD_TIME_FOR_OFFER",
+      "label_cn": "我方出具正式报价所需时间",
+      "owner": "销售",
+      "status": "open",
+      "used": true,
+      "where": ""
+    },
+    {
+      "key": "SIGNER_NAME",
+      "label_cn": "签字人姓名",
+      "owner": "销售",
+      "status": "open",
+      "used": true,
+      "where": ""
+    },
+    {
+      "key": "SIGNER_TITLE",
+      "label_cn": "签字人职位",
+      "owner": "销售",
+      "status": "open",
+      "used": true,
+      "where": ""
+    },
+    {
+      "key": "OURCOMPANY_NAME",
+      "label_cn": "我方公司全称",
+      "owner": "销售 / 市场",
+      "status": "open",
+      "used": true,
+      "where": ""
+    },
+    {
+      "key": "OURCOMPANY_PHONE",
+      "label_cn": "我方电话",
+      "owner": "销售 / 市场",
+      "status": "open",
+      "used": true,
+      "where": ""
+    },
+    {
+      "key": "OURCOMPANY_WEBSITE",
+      "label_cn": "我方网站",
+      "owner": "销售 / 市场",
+      "status": "open",
+      "used": true,
+      "where": ""
+    }
+  ],
+  "questions_used": [
+    "We will execute your value specifications: Na2CO3 ≥ 99.2% min; Fe ≤ 0.003%; +80 mesh ≥ 75% min. Could you confirm these are the values you will verify on arrival?",
+    "Could you confirm the quotation currency (USD / EUR)?",
+    "May we confirm that a quotation per MT, CFR Semarang, Incoterms 2020, in USD is the basis you require?",
+    "We note that you require payment by L/C. To prepare the offer correctly, could you confirm the L/C type (at sight or usance) and the validity period?"
+  ],
+  "commitment_scan": [
+    {
+      "pattern": "具体日期承诺",
+      "match": "19 October 2026",
+      "fix": "改为占位符",
+      "index": 53
+    }
+  ],
+  "price_scan": [],
+  "generated_at": "2026-10-20 09:15:35",
+  "generator": "overseas-inquiry-triage 1.0.0",
+  "simulation": true
+}

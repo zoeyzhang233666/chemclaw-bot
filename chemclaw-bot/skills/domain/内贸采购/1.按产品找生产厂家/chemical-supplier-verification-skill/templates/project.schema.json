@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/chemical-supplier-verification/project.schema.json",
+  "title": "Chemical Supplier Verification Project",
+  "type": "object",
+  "required": ["meta", "rfq", "specs", "sources", "companies", "traders", "conflicts", "gaps", "actions", "scoring"],
+  "additionalProperties": true,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["title", "brand", "product", "product_short", "application", "destination", "destination_short", "as_of", "capacity_unit", "quantity_unit", "sample_note"],
+      "additionalProperties": true,
+      "properties": {
+        "title": {"type": "string"},
+        "brand": {"type": "string"},
+        "product": {"type": "string"},
+        "product_short": {"type": "string"},
+        "cas": {"type": "string"},
+        "hs": {"type": "string"},
+        "standard": {"type": "string"},
+        "application": {"type": "string"},
+        "destination": {"type": "string"},
+        "destination_short": {"type": "string"},
+        "as_of": {"type": "string"},
+        "capacity_unit": {"type": "string"},
+        "quantity_unit": {"type": "string"},
+        "currency": {"type": "string"},
+        "sample_note": {"type": "string"},
+        "lede": {"type": "string"},
+        "disclaimer": {"type": "string"},
+        "output_basename": {"type": "string"}
+      }
+    },
+    "rfq": {
+      "type": "object",
+      "required": ["title", "product", "qty_month", "qty_year", "destination"],
+      "additionalProperties": true,
+      "properties": {
+        "title": {"type": "string"},
+        "product": {"type": "string"},
+        "spec_ref": {"type": "string"},
+        "qty_month": {"type": "number"},
+        "qty_year": {"type": "number"},
+        "destination": {"type": "string"},
+        "region_pref": {"type": "string"},
+        "application": {"type": "string"},
+        "packaging": {"type": "string"},
+        "delivery": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
+    "specs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "requirement"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {"type": "string"},
+          "label": {"type": "string"},
+          "requirement": {"type": "string"},
+          "unit": {"type": "string"},
+          "method": {"type": "string"},
+          "why": {"type": "string"},
+          "critical": {"type": "boolean"}
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "org", "title", "date", "grade", "used"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {"type": "string"},
+          "org": {"type": "string"},
+          "title": {"type": "string"},
+          "date": {"type": "string"},
+          "grade": {"type": "string", "enum": ["A", "B", "C", "D"]},
+          "url": {"type": "string"},
+          "used": {"type": "string"},
+          "accessed": {"type": "string"}
+        }
+      }
+    },
+    "companies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "full_name", "identity", "founded", "hq", "regions", "process", "products", "capacity", "capacity_year", "certainty", "spec_score", "availability", "plants", "evidence", "spec_rows", "strengths", "gaps", "action"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "full_name": {"type": "string"},
+          "ticker": {"type": "string"},
+          "listed": {"type": "boolean"},
+          "identity": {"type": "string", "enum": ["producer", "trader", "agent", "unknown"]},
+          "ownership": {"type": "string"},
+          "founded": {"type": ["string", "number"]},
+          "founded_note": {"type": "string"},
+          "employees": {"type": ["number", "null"]},
+          "employees_note": {"type": "string"},
+          "reg_cap": {"type": "string"},
+          "hq": {"type": "string"},
+          "regions": {"type": "array", "items": {"type": "string"}},
+          "process": {"type": "string"},
+          "products": {"type": "string"},
+          "capacity": {"type": "number"},
+          "capacity_year": {"type": "string"},
+          "output": {"type": ["number", "null"]},
+          "output_year": {"type": "string"},
+          "scale_note": {"type": "string"},
+          "certainty": {"type": "number", "minimum": 0, "maximum": 100},
+          "spec_score": {"type": "number", "minimum": 0, "maximum": 100},
+          "availability": {"type": "number", "minimum": 0, "maximum": 100},
+          "plants": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "province", "city", "address", "capacity", "capacity_year", "process", "source_ids"],
+              "additionalProperties": true,
+              "properties": {
+                "name": {"type": "string"},
+                "province": {"type": "string"},
+                "city": {"type": "string"},
+                "address": {"type": "string"},
+                "lon": {"type": ["number", "null"]},
+                "lat": {"type": ["number", "null"]},
+                "capacity": {"type": "number"},
+                "capacity_year": {"type": "string"},
+                "process": {"type": "string"},
+                "products": {"type": "string"},
+                "note": {"type": "string"},
+                "source_ids": {"type": "array", "items": {"type": "string"}},
+                "distance_km": {"type": ["number", "null"]},
+                "distance_band": {"type": "string"}
+              }
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "level", "type", "title", "date", "org", "quote", "proves", "source_id"],
+              "additionalProperties": true,
+              "properties": {
+                "id": {"type": "string"},
+                "level": {"type": "string", "enum": ["直接-A", "直接-B", "间接-C", "仅工商-D"]},
+                "type": {"type": "string"},
+                "title": {"type": "string"},
+                "date": {"type": "string"},
+                "org": {"type": "string"},
+                "url": {"type": "string"},
+                "quote": {"type": "string"},
+                "proves": {"type": "string"},
+                "source_id": {"type": "string"}
+              }
+            }
+          },
+          "spec_profile": {"type": "object", "additionalProperties": true},
+          "spec_rows": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "requirement", "status", "public_info", "gap"],
+              "additionalProperties": true,
+              "properties": {
+                "id": {"type": "string"},
+                "label": {"type": "string"},
+                "requirement": {"type": "string"},
+                "status": {"type": "string", "enum": ["部分公开", "未公开", "待验证"]},
+                "public_info": {"type": "string"},
+                "gap": {"type": "string"},
+                "next_action": {"type": "string"}
+              }
+            }
+          },
+          "strengths": {"type": "array", "items": {"type": "string"}},
+          "gaps": {"type": "array", "items": {"type": "string"}},
+          "action": {"type": "string"},
+          "tier": {"type": "string"},
+          "rank": {"type": "integer"},
+          "composite": {"type": "number"},
+          "scale_score": {"type": "number"},
+          "distance_score": {"type": "number"},
+          "spec_open": {"type": "integer"},
+          "spec_conclusion": {"type": "string"}
+        }
+      }
+    },
+    "traders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "region", "level", "evidence", "why", "action"],
+        "additionalProperties": true,
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "region": {"type": "string"},
+          "level": {"type": "string", "enum": ["直接-A", "直接-B", "间接-C", "仅工商-D"]},
+          "evidence": {"type": "string"},
+          "why": {"type": "string"},
+          "action": {"type": "string"}
+        }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["topic", "a", "b", "resolution"],
+        "additionalProperties": true,
+        "properties": {
+          "topic": {"type": "string"},
+          "a": {"type": "string"},
+          "b": {"type": "string"},
+          "resolution": {"type": "string"},
+          "impact": {"type": "string"}
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gap", "affected", "impact", "verify", "priority"],
+        "additionalProperties": true,
+        "properties": {
+          "gap": {"type": "string"},
+          "affected": {"type": "string"},
+          "impact": {"type": "string"},
+          "verify": {"type": "string"},
+          "priority": {"type": "string", "enum": ["P0", "P1", "P2"]}
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["phase", "action", "detail"],
+        "additionalProperties": true,
+        "properties": {
+          "phase": {"type": "string"},
+          "action": {"type": "string"},
+          "detail": {"type": "string"}
+        }
+      }
+    },
+    "rfq_questions": {"type": "array", "items": {"type": "string"}},
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tier", "company", "note"],
+        "additionalProperties": true,
+        "properties": {
+          "tier": {"type": "string"},
+          "company": {"type": "string"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "required": ["weights", "tiers"],
+      "additionalProperties": true,
+      "properties": {
+        "weights": {
+          "type": "object",
+          "required": ["certainty", "spec", "scale", "distance"],
+          "additionalProperties": true,
+          "properties": {
+            "certainty": {"type": "number"},
+            "spec": {"type": "number"},
+            "scale": {"type": "number"},
+            "distance": {"type": "number"}
+          }
+        },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["min", "label"],
+            "additionalProperties": true,
+            "properties": {
+              "min": {"type": "number"},
+              "label": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

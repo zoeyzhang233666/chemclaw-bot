@@ -1,0 +1,425 @@
+{
+  "schema_version": "1.0",
+  "title": "<采购方向> · <产品><规格> · 资质证照核验底稿",
+  "as_of": "YYYY-MM-DD",
+  "meta": {
+    "record_id": "QC-<产品缩写>-<主体缩写>-<as_of 去掉横线>",
+    "prepared_by": "<部门/岗位>",
+    "prepared_at": "YYYY-MM-DD",
+    "generated_at": "YYYY-MM-DD",
+    "scene": "内贸采购 / 查询供应商资质证照",
+    "data_classification": "内部"
+  },
+  "subject": {
+    "name": "<供应商企业全称>",
+    "uscc": "<18位统一社会信用代码>",
+    "uscc_source": "<代码来源：公示系统/上市公司公告/证照影像>",
+    "aliases": [],
+    "legal_rep": "",
+    "capital": "",
+    "founded": "",
+    "types": "",
+    "credit_status": "",
+    "reg_addr": "",
+    "site_addr": "",
+    "business_scope": "",
+    "id_note": "<身份核验要点：主体锁定依据、地址差异、关系链>",
+    "chain": "",
+    "scope_note": "经营范围 ≠ 许可范围：是否已取得具体品种许可须看证照本身。",
+    "status": "待核验"
+  },
+  "product": {
+    "name": "<产品名称>",
+    "aliases": [],
+    "cas": "<CAS>",
+    "spec": "<浓度/等级/执行标准>",
+    "form": "<液体/固体/水溶液/含稳定剂>",
+    "grade_std": "",
+    "packing": "",
+    "qty": "",
+    "usage": "<采购用途——决定是否触发使用许可/专项管理>",
+    "site": "",
+    "sds": "待供应商提供现行版 SDS",
+    "verdict_summary": "",
+    "verdict_ok": false,
+    "findings": [
+      {
+        "item": "是否属于危险化学品",
+        "value": "<属于/不属于 + 条目与浓度条件>",
+        "verdict": "pending",
+        "basis": "<目录名称 + 条目号 + 文号>",
+        "condition": "<适用条件与例外>"
+      },
+      {
+        "item": "是否属于剧毒化学品",
+        "value": "",
+        "verdict": "pending",
+        "basis": "《危险化学品目录（2015版）》剧毒标注栏",
+        "condition": ""
+      },
+      {
+        "item": "是否属于易制爆危险化学品",
+        "value": "",
+        "verdict": "pending",
+        "basis": "《易制爆危险化学品名录（2017年版）》",
+        "condition": ""
+      },
+      {
+        "item": "是否属于易制毒化学品",
+        "value": "",
+        "verdict": "pending",
+        "basis": "《易制毒化学品的分类和品种目录》",
+        "condition": ""
+      },
+      {
+        "item": "是否列入重点监管危险化学品名录",
+        "value": "",
+        "verdict": "pending",
+        "basis": "《首批重点监管的危险化学品名录》及后续批次",
+        "condition": ""
+      },
+      {
+        "item": "重大危险源临界量（GB 18218-2018）",
+        "value": "",
+        "verdict": "pending",
+        "basis": "GB 18218-2018",
+        "condition": ""
+      },
+      {
+        "item": "危险货物运输分类",
+        "value": "",
+        "verdict": "pending",
+        "basis": "GB 12268 / SDS 第14节",
+        "condition": ""
+      }
+    ],
+    "gaps": []
+  },
+  "classification_checklist": [
+    {
+      "id": "K01",
+      "item": "《危险化学品目录（2015版）》",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    },
+    {
+      "id": "K02",
+      "item": "目录实施指南（安监总厅管三〔2015〕80号）",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    },
+    {
+      "id": "K03",
+      "item": "剧毒化学品标注",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    },
+    {
+      "id": "K04",
+      "item": "《易制爆危险化学品名录（2017年版）》",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    },
+    {
+      "id": "K05",
+      "item": "《易制毒化学品的分类和品种目录》",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    },
+    {
+      "id": "K06",
+      "item": "重点监管危险化学品名录",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    },
+    {
+      "id": "K07",
+      "item": "GB 18218-2018 重大危险源",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    },
+    {
+      "id": "K08",
+      "item": "危险货物运输分类",
+      "verdict": "pending",
+      "note": "",
+      "basis": "",
+      "impact": ""
+    }
+  ],
+  "supplier_lead": "<角色判断：生产企业 / 经营企业 / 兼营，以及由此决定的核心证照>",
+  "supplier_requirements": [
+    {
+      "role": "生产企业",
+      "licence": "危险化学品安全生产许可证",
+      "required": "必须",
+      "basis": "条例第20条；原安监总局令第41号",
+      "scope_check": "许可范围是否含本产品与本浓度、产能、生产地址"
+    },
+    {
+      "role": "经营企业",
+      "licence": "危险化学品经营许可证",
+      "required": "视情形",
+      "basis": "条例第33条；原安监总局令第55号",
+      "scope_check": "许可范围是否含本产品；经营方式（带/不带储存）与交付方式是否一致"
+    },
+    {
+      "role": "生产/储存企业",
+      "licence": "危险化学品登记证",
+      "required": "必须",
+      "basis": "条例第67条；原安监总局令第53号",
+      "scope_check": "登记品种是否含本产品；企业性质是否匹配"
+    },
+    {
+      "role": "承运环节",
+      "licence": "危险货物道路运输经营许可",
+      "required": "必须",
+      "basis": "交通运输部等令2019年第29号",
+      "scope_check": "类项覆盖；车辆与押运员资质"
+    }
+  ],
+  "supplier_notes": [],
+  "erp": {
+    "name": "<我方企业全称（可为脱敏示例）>",
+    "uscc": "",
+    "usage": "",
+    "storage": "",
+    "obligations": [
+      {
+        "item": "索取并归档 SDS/COA",
+        "status": "必须",
+        "basis": "条例第34条、第67条",
+        "trigger": "任何危险化学品进货",
+        "action": "SDS 版本号写入合同与收货记录"
+      },
+      {
+        "item": "危险化学品安全使用许可证（仅法定情形）",
+        "status": "视情形",
+        "basis": "条例第29条；原安监总局令第57号第二条",
+        "trigger": "属适用行业目录 + 用量达数量标准",
+        "action": "查两项前提原文并书面留档"
+      },
+      {
+        "item": "重大危险源辨识与备案",
+        "status": "视情形",
+        "basis": "条例第25条；GB 18218-2018",
+        "trigger": "单元储量达临界量",
+        "action": "定量计算并出具辨识结论"
+      },
+      {
+        "item": "储存设施与安全条件",
+        "status": "必须",
+        "basis": "条例第22–24条",
+        "trigger": "储存危险化学品",
+        "action": "专用仓库、专人管理、出入库核查"
+      },
+      {
+        "item": "购买易制爆/剧毒品的身份与用途核验配合",
+        "status": "视情形",
+        "basis": "条例第38条、第39条",
+        "trigger": "属易制爆或剧毒品",
+        "action": "提供营业执照、经办人身份、用途说明"
+      },
+      {
+        "item": "购销后 5 日内流向信息报备",
+        "status": "视情形",
+        "basis": "条例第41条；公安部令第154号",
+        "trigger": "购买易制爆/剧毒品",
+        "action": "报县级公安机关并留存回执"
+      },
+      {
+        "item": "承运人资质核验",
+        "status": "必须",
+        "basis": "交通运输部等令2019年第29号",
+        "trigger": "公路交付",
+        "action": "索取运输资质与出运单"
+      }
+    ],
+    "notes": []
+  },
+  "certs": [
+    {
+      "id": "C01",
+      "name": "营业执照",
+      "type": "设立登记",
+      "no": "",
+      "issuer": "市场监督管理部门",
+      "valid_from": "",
+      "valid_to": "长期",
+      "need": "required",
+      "status": "pending",
+      "cover": "unknown",
+      "scope": "",
+      "field_source": "未取得",
+      "public_state": "未发现公开记录",
+      "evidence_id": "",
+      "url": "",
+      "crosscheck": [],
+      "note": ""
+    },
+    {
+      "id": "C02",
+      "name": "危险化学品安全生产许可证",
+      "type": "危险化学品生产许可",
+      "no": "",
+      "issuer": "省应急管理厅",
+      "valid_from": "",
+      "valid_to": "",
+      "need": "required",
+      "status": "pending",
+      "cover": "unknown",
+      "scope": "应载明：许可范围（本产品及浓度限定）、产能、生产地址、有效期",
+      "field_source": "未取得",
+      "public_state": "未发现公开记录",
+      "evidence_id": "",
+      "url": "",
+      "crosscheck": [],
+      "note": ""
+    }
+  ],
+  "crosscheck_lead": "",
+  "crosscheck": [
+    {
+      "item": "主体名称与统一社会信用代码",
+      "left": "",
+      "right": "",
+      "result": "部分一致",
+      "note": ""
+    }
+  ],
+  "crosscheck_notes": [],
+  "oddities_lead": "下列为核查中发现的、需供应商澄清的事实；只陈述事实与可能解读，不构成对企业的负面认定。",
+  "oddities": [
+    {
+      "item": "",
+      "found": "",
+      "meaning": "",
+      "verify": ""
+    }
+  ],
+  "request_list": [
+    {
+      "code": "R01",
+      "cert": "<证照/资料名称，例：危险化学品安全生产许可证>",
+      "issuer": "<出具机关>",
+      "priority": "P0",
+      "reason": "<为什么必须索取：挂本单的具体事实>",
+      "ask": "<要确认的具体问题：①②③④>"
+    },
+    {
+      "code": "R02",
+      "cert": "<证照/资料名称>",
+      "issuer": "<出具机关>",
+      "priority": "P1",
+      "reason": "",
+      "ask": ""
+    }
+  ],
+  "manual_check": [
+    {
+      "item": "",
+      "why": "",
+      "method": "",
+      "evidence": "",
+      "owner": ""
+    }
+  ],
+  "draft": {
+    "intro": "以下草稿可直接复制为邮件正文或改写为公函；方括号内为待填信息。",
+    "body": "主题：<我方> 供应商资质核验 · <产品><规格>资料补充请求（记录号 <record_id>）\n\n一、主体与许可\n1. …\n\n二、产品资料\n2. …\n\n三、合规流程\n3. …\n\n四、运输\n4. …\n\n我方同时确认：…\n\n顺颂\n商祺\n\n<落款>"
+  },
+  "risks": [
+    {
+      "title": "",
+      "level": "高",
+      "ref": "C02 / R01",
+      "fact": "",
+      "impact": "",
+      "action": ""
+    }
+  ],
+  "assessment": {
+    "grade_code": "G2",
+    "grade": "有条件推进（资料缺口型）",
+    "one_liner": "",
+    "summary": "",
+    "verdict": {
+      "产品危险属性": "",
+      "供应商角色": "",
+      "核心应具备证照": "",
+      "本次实际查到的证照": "",
+      "四态分布": "",
+      "放行条件": ""
+    },
+    "gates": [
+      {
+        "code": "GATE-1",
+        "name": "证照闸门",
+        "text": ""
+      },
+      {
+        "code": "GATE-2",
+        "name": "主体闸门",
+        "text": ""
+      },
+      {
+        "code": "GATE-3",
+        "name": "产品闸门",
+        "text": ""
+      },
+      {
+        "code": "GATE-4",
+        "name": "流程闸门",
+        "text": ""
+      },
+      {
+        "code": "GATE-5",
+        "name": "运输闸门",
+        "text": ""
+      }
+    ],
+    "statements": [
+      [
+        "可以写：…（有依据的表述）",
+        "不能写：…（无依据或禁止的表述）"
+      ]
+    ],
+    "next_steps": [
+      [
+        "T+0",
+        ""
+      ],
+      [
+        "T+3 工作日",
+        ""
+      ]
+    ]
+  },
+  "evidence": [
+    {
+      "id": "E01",
+      "kind": "行政法规",
+      "title": "…",
+      "publisher": "",
+      "date": "",
+      "url": "",
+      "supports": ""
+    }
+  ],
+  "scans": [],
+  "scan_note": ""
+}

@@ -1,0 +1,312 @@
+{
+  "asof": "2026-10-20",
+  "definition": "基差 = 现货价格 - 期货价格；基差率 = 基差 / 现货 * 100",
+  "spot_now": 3980.0,
+  "main_contract": "MA2701",
+  "main_close": 3157.0,
+  "basis_now": 823.0,
+  "basis_rate_now": 20.68,
+  "contracts": {
+    "MA2611": {
+      "close": 3384.0,
+      "basis": 596.0,
+      "basis_rate": 14.97,
+      "is_main": false
+    },
+    "MA2612": {
+      "close": 3231.0,
+      "basis": 749.0,
+      "basis_rate": 18.82,
+      "is_main": false
+    },
+    "MA2701": {
+      "close": 3157.0,
+      "basis": 823.0,
+      "basis_rate": 20.68,
+      "is_main": true
+    },
+    "MA2702": {
+      "close": 3093.0,
+      "basis": 887.0,
+      "basis_rate": 22.29,
+      "is_main": false
+    },
+    "MA2703": {
+      "close": 3040.0,
+      "basis": 940.0,
+      "basis_rate": 23.62,
+      "is_main": false
+    },
+    "MA2704": {
+      "close": 2992.0,
+      "basis": 988.0,
+      "basis_rate": 24.82,
+      "is_main": false
+    },
+    "MA2705": {
+      "close": 2941.0,
+      "basis": 1039.0,
+      "basis_rate": 26.11,
+      "is_main": false
+    },
+    "MA2706": {
+      "close": 2923.0,
+      "basis": 1057.0,
+      "basis_rate": 26.56,
+      "is_main": false
+    },
+    "MA2707": {
+      "close": 2895.0,
+      "basis": 1085.0,
+      "basis_rate": 27.26,
+      "is_main": false
+    },
+    "MA2708": {
+      "close": 2876.0,
+      "basis": 1104.0,
+      "basis_rate": 27.74,
+      "is_main": false
+    },
+    "MA2709": {
+      "close": 2853.0,
+      "basis": 1127.0,
+      "basis_rate": 28.32,
+      "is_main": false
+    }
+  },
+  "rolls": [
+    {
+      "date": "2026-08-06",
+      "from": "MA2609",
+      "to": "MA2610",
+      "new_close": 2478.0,
+      "old_close": 2495.0,
+      "gap": -17.0,
+      "note": ""
+    },
+    {
+      "date": "2026-09-10",
+      "from": "MA2610",
+      "to": "MA2701",
+      "new_close": 3043.0,
+      "old_close": 3430.0,
+      "gap": -387.0,
+      "note": ""
+    }
+  ],
+  "roll_summary": {
+    "n_rolls": 2,
+    "abs_gap_sum": 404.0,
+    "largest_gap": {
+      "date": "2026-09-10",
+      "from": "MA2610",
+      "to": "MA2701",
+      "new_close": 3043.0,
+      "old_close": 3430.0,
+      "gap": -387.0,
+      "note": ""
+    },
+    "warning": "直接拼接不可比合约会把 2 次换月共 404 元/吨的跳空记成价差变化"
+  },
+  "series": [
+    {
+      "date": "2026-09-21",
+      "basis": 993.0
+    },
+    {
+      "date": "2026-09-22",
+      "basis": 1091.0
+    },
+    {
+      "date": "2026-09-23",
+      "basis": 1372.0
+    },
+    {
+      "date": "2026-09-24",
+      "basis": 1180.0
+    },
+    {
+      "date": "2026-09-29",
+      "basis": 1672.0
+    },
+    {
+      "date": "2026-09-30",
+      "basis": 1508.0
+    },
+    {
+      "date": "2026-10-08",
+      "basis": 1525.0
+    },
+    {
+      "date": "2026-10-09",
+      "basis": 1537.0
+    },
+    {
+      "date": "2026-10-12",
+      "basis": 896.0
+    },
+    {
+      "date": "2026-10-13",
+      "basis": 710.0
+    },
+    {
+      "date": "2026-10-15",
+      "basis": 885.0
+    },
+    {
+      "date": "2026-10-19",
+      "basis": 852.0
+    },
+    {
+      "date": "2026-10-20",
+      "basis": 823.0
+    }
+  ],
+  "n_pairs": 13,
+  "first_pair": "2026-09-21",
+  "windows": {
+    "1y": {
+      "n": 13,
+      "current": 823.0,
+      "pct": 15.38,
+      "mean": 1157.2307692307693,
+      "median": 1091.0,
+      "stdev": 328.2212551126028,
+      "min": 710.0,
+      "max": 1672.0,
+      "p05": 777.8,
+      "p25": 885.0,
+      "p75": 1508.0,
+      "p95": 1590.9999999999998,
+      "z": -1.018,
+      "usable_as_percentile": false,
+      "reason": "有效样本仅 13 个（< 20），不足以给出历史分位结论",
+      "window": "2025-10-20 ~ 2026-10-20",
+      "coverage": {
+        "have": 13,
+        "expected": 244,
+        "ratio": 0.053,
+        "sufficient": false
+      },
+      "notes": [
+        "真实配对样本 13 / 应有约 244 个交易日，覆盖率 5%，不足以代表该窗口的基差分布",
+        "有效样本仅 13 个（< 20），不足以给出历史分位结论"
+      ]
+    },
+    "3y": {
+      "n": 13,
+      "current": 823.0,
+      "pct": 15.38,
+      "mean": 1157.2307692307693,
+      "median": 1091.0,
+      "stdev": 328.2212551126028,
+      "min": 710.0,
+      "max": 1672.0,
+      "p05": 777.8,
+      "p25": 885.0,
+      "p75": 1508.0,
+      "p95": 1590.9999999999998,
+      "z": -1.018,
+      "usable_as_percentile": false,
+      "reason": "有效样本仅 13 个（< 20），不足以给出历史分位结论",
+      "window": "2023-10-20 ~ 2026-10-20",
+      "coverage": {
+        "have": 13,
+        "expected": 732,
+        "ratio": 0.018,
+        "sufficient": false
+      },
+      "notes": [
+        "真实配对样本 13 / 应有约 732 个交易日，覆盖率 2%，不足以代表该窗口的基差分布",
+        "有效样本仅 13 个（< 20），不足以给出历史分位结论"
+      ]
+    },
+    "5y": {
+      "n": 13,
+      "current": 823.0,
+      "pct": 15.38,
+      "mean": 1157.2307692307693,
+      "median": 1091.0,
+      "stdev": 328.2212551126028,
+      "min": 710.0,
+      "max": 1672.0,
+      "p05": 777.8,
+      "p25": 885.0,
+      "p75": 1508.0,
+      "p95": 1590.9999999999998,
+      "z": -1.018,
+      "usable_as_percentile": false,
+      "reason": "有效样本仅 13 个（< 20），不足以给出历史分位结论",
+      "window": "2021-10-20 ~ 2026-10-20",
+      "coverage": {
+        "have": 13,
+        "expected": 1220,
+        "ratio": 0.011,
+        "sufficient": false
+      },
+      "notes": [
+        "真实配对样本 13 / 应有约 1220 个交易日，覆盖率 1%，不足以代表该窗口的基差分布",
+        "有效样本仅 13 个（< 20），不足以给出历史分位结论"
+      ]
+    }
+  },
+  "changes": {
+    "2026-09-21": {
+      "delta_spot": 45.0,
+      "delta_fut": 215.0,
+      "delta_basis": -170.0,
+      "share_spot": -26.4706,
+      "share_fut": 126.4706,
+      "direction": "基差走弱",
+      "from": "2026-09-21",
+      "to": "2026-10-20",
+      "contract": "MA2701",
+      "spot_from": 3935.0,
+      "spot_to": 3980.0,
+      "fut_from": 2942.0,
+      "fut_to": 3157.0
+    },
+    "2026-10-09": {
+      "delta_spot": -895.0,
+      "delta_fut": -181.0,
+      "delta_basis": -714.0,
+      "share_spot": 125.3501,
+      "share_fut": -25.3501,
+      "direction": "基差走弱",
+      "from": "2026-10-09",
+      "to": "2026-10-20",
+      "contract": "MA2701",
+      "spot_from": 4875.0,
+      "spot_to": 3980.0,
+      "fut_from": 3338.0,
+      "fut_to": 3157.0
+    }
+  },
+  "adjusted_tail": [
+    {
+      "date": "2026-10-14",
+      "raw_close": 3262.0,
+      "adj_close": 3262.0
+    },
+    {
+      "date": "2026-10-15",
+      "raw_close": 3170.0,
+      "adj_close": 3170.0
+    },
+    {
+      "date": "2026-10-16",
+      "raw_close": 3192.0,
+      "adj_close": 3192.0
+    },
+    {
+      "date": "2026-10-19",
+      "raw_close": 3143.0,
+      "adj_close": 3143.0
+    },
+    {
+      "date": "2026-10-20",
+      "raw_close": 3157.0,
+      "adj_close": 3157.0
+    }
+  ]
+}

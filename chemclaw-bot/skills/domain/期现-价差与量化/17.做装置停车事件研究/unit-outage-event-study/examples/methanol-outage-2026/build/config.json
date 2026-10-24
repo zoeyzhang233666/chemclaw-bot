@@ -1,0 +1,24 @@
+{
+ "price_col": "close",
+ "anchor_kind": "first_market",
+ "windows": [
+  1,
+  5,
+  10,
+  20
+ ],
+ "pre_window": 20,
+ "min_pre_obs": 10,
+ "benchmark_mode": "market_model",
+ "matched_days": 250,
+ "matched_min_n": 10,
+ "include_restart": false,
+ "min_evidence_grade": "E3",
+ "dedup": true,
+ "capacity_threshold_wt": null,
+ "flag_rolls": true,
+ "flag_volatility": true,
+ "vol_lookback": 60,
+ "vol_high_pct": 0.8,
+ "display_tzone": "Asia/Shanghai"
+}

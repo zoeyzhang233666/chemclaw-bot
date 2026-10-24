@@ -1,0 +1,160 @@
+---
+name: chem-market-brief
+description: Use when a chemical sales rep needs a defensible read on where a product's price actually is — 看产品近期行情 / 现货价格查询 / 涨跌幅与历史分位 / 上下游成本传导 / 区域价差 / 客户问"现在什么价、还能不能降" — for any chemical product (纯碱、烧碱、尿素、甲醇、玻璃、PVC、PTA、碳酸锂…). Delivers a self-contained interactive HTML dashboard plus a 13-sheet Excel workbook, every number carrying date + spec + region + tax basis + source, and every missing number marked as a gap instead of estimated.
+---
+
+# 化工品行情简报
+
+给内贸销售一份**能拿去和客户对话**的行情底稿：当前价、区间涨跌、历史分位、区域价差、上下游、
+事件时间线，落成 **HTML 看板 + Excel 工作簿**。品种无关——换品种只换 `research.json`。
+
+## 三条硬规矩（违反任何一条，这次交付作废）
+
+1. **只陈述已发生的事实。** 不预测涨跌，不写“预计/看涨看跌/抄底/底部已现”。
+   方向属于判断，不是事实；客户问“什么时候是底”，回答的是区间、分位、成本位置，不是预测。
+2. **每个价格数字都要六项齐全**：数值 · 规格 · 地区 · 含税与否 · 数据日期 · 来源。
+   缺一项就不许进现货表，只能进“缺口”。
+3. **拿不到就写缺口。** 不用近似值、不用行业均值顶替、不插值、不拼凑跨日期数据造“价差”。
+   报告的“数据缺口”章节比结论章节更重要——它决定这份底稿能不能拿去报价。
+
+## 六步
+
+### 第 0 步：定口径
+
+问清三件事（用户没说就按括号里的默认值，并在报告首屏标注）：
+
+| 要素 | 默认 | 为什么要问 |
+|---|---|---|
+| 品种 + 规格 | 品种必问；规格默认取该品种主流规格 | “纯碱”不含品位，“玻璃”不含厚度，报价无法比对 |
+| 重点市场 | 该品种主产销区 | 决定查哪些区域的现货 |
+| 数据基准日 | 今天 | 现货是逐日报价品种，日期不同就不能比 |
+
+同时确认该品种**有没有场内期货**：查 `scripts/common.py` 的 `PRODUCT_LIB`，没有就
+`python scripts/fetch_futures.py <品种> --probe` 试探；确认没有则在 `research.json` 里不填
+`futures`，报告会自动降级为“只有现货点价”。**完成标准**：口径三要素 + 有无期货，四项都有确定答案。
+
+### 第 1 步：抓价格（先期货，后现货）
+
+**期货序列（有期货的品种，5 分钟就能拿全）**
+
+```bash
+python scripts/fetch_futures.py 纯碱 --out raw/纯碱_daily.json
+python scripts/fetch_futures.py 玻璃 --probe        # 只探活，确认代码对不对
+python scripts/fetch_futures.py --list             # 内置品种表
+```
+
+拿到的是主连日线（不含税、含交割成本），覆盖 2019 年至今约 1,900 行，足够算 1 年/3 年/5 年分位。
+
+**现货报价（真正的难点，决定这份报告值不值钱）**
+
+按 [`references/research-playbook.md`](references/research-playbook.md) 的渠道优先级逐条找，
+命中一条就立刻记下六项口径，不要事后再补。核心顺序：
+
+1. 品种=纯碱时可直接复用 `examples/01-soda-ash-national/` 的结构，但**数字必须重新核**；
+2. 期货公司日报/月报（五矿、申万、国泰君安）常同时给“现货均价 + 基差 + 分工艺利润”，一条顶三条；
+3. 我的钢铁网 / 隆众 / 卓创 / 玻璃观察等产业资讯的**日更报价页**，通常按地区+规格给区间；
+4. 交易所/协会周报给供需（开工率、产量、库存、进出口）；
+5. 找不到就**明确记缺口**，不要用“约”“左右”“市场人士称”的数字。
+
+**完成标准**：至少 1 条六项齐全的现货；能给同一日期 ≥2 个地区就再拿一组（否则区域价差留空）。
+
+### 第 2 步：算派生指标（机器算，不要心算）
+
+`scripts/assemble.py` 负责全部派生：7/30/90/365/1095 天涨跌幅（附基准日与基准价）、
+1/3/5 年区间与分位、样本极值与回撤、≥3.5% 的异常波动日、事件→交易日对齐、区域价差。
+**不要**在 `research.json` 里手写这些数——手写必错，且与序列不一致。
+
+**完成标准**：`assemble.py` 跑通，摘要行里的每个数字都能在原始序列上复现。
+
+### 第 3 步：写研究稿
+
+复制 [`research.template.json`](research.template.json) 到 `examples/<序号>-<品种>-<地区>/research.json`，
+按 [`references/data-contract.md`](references/data-contract.md) 填。字段可以缺，**缺了就写进 `gaps`**。
+
+最容易漏、也最影响可用性的四块：
+
+- `events`：客户一定会问“为什么跌/涨”，没有事件就只能答“不知道”；
+- `margins`：解释“亏损为什么还不减产”，路线名自由（氨碱/联碱/天然气制/煤制…）；
+- `balance`：开工率、产量、库存、进出口——解释供给端是否真的在收缩；
+- `talk`：把上面四块压成客户真会问的 5 句话，**只给事实**。
+
+**完成标准**：`python scripts/validate.py research.json` 为 0 error；每条 warn 都能说清
+“为什么现在补不了、打算怎么补”。
+
+### 第 4 步：生成 HTML + Excel
+
+```bash
+python scripts/build_all.py research.json --out out
+# 等价于 validate → assemble → build_html → build_xlsx → check_html → qa_render → check_xlsx
+```
+
+单独跑也行：`assemble.py` / `build_html.py` / `build_xlsx.py`。
+
+产物（两个都必须交）：
+
+- `out/<品种>-<地区>_行情看板.html`——单文件离线、零外链、内联 ECharts，双击可开、可发微信；
+- `out/<品种>-<地区>_行情与销售事实.xlsx`——13 表，与 HTML 同源同数。
+
+**完成标准**：两个文件都生成，HTML 体积 ≈1.2 MB（说明 ECharts 内联成功）。
+
+### 第 5 步：自检并交付
+
+```bash
+python scripts/check_html.py out/xxx.html build/data.json   # 占位符/外链/数字一致/禁用词
+python scripts/qa_render.py out/xxx.html build/data.json    # 浏览器实测，没装 playwright 自动跳过
+python scripts/check_xlsx.py out/xxx.xlsx build/data.json   # 表结构/缺口/禁用词/与 data.json 同数
+```
+
+`qa_render.py` 会抓 JS 报错、检查 4 张 KPI 卡、图表是否真画出像素、7 个模块是否渲染、
+1600/1280/420 三档横向溢出、抽屉、话术生成、话术是否混入方向判断。**必须 0 失败**。
+
+`check_xlsx.py` 会核对 13 张表是否齐全且写到了核心内容、缺口条目是否都落表、
+超链接是否可点、**Excel 里的数字是否与 HTML 同源**（现货锚、期货收盘、毛利路线列）。
+这一条最容易漏——手改过 Excel 就会在这里暴露。
+
+`build_all.py` 已把三者串起来，正常只需跑它。
+
+改过模板或脚本后，跑一次回归 `python scripts/selftest.py`——它会验证两个范本、
+一条降级路径（无期货 + 只有 1 条现货），并用三个反例确认检查器真的会拒绝
+（预测词、坏日期、囤货建议）。必须打印“全部通过”。
+
+交付时同时给出：两个附件的绝对路径 + **一段 3–5 句的事实摘要** + **缺口清单**。
+不要在回复里重写整份报告，客户要的是文件。
+
+## 交付物结构（13 表固定）
+
+| # | 表 | 作用 |
+|---|---|---|
+| 00 | 封面与结论 | 一句话现状 + 12 张核心指标卡 + 使用前必读 |
+| 01 | 当前现货价 | 逐条六项口径，单点与区间分列 |
+| 02 | 期货日线 | 周线聚合 + 走势图，可复核任意一天 |
+| 03 | 走势图表底表 | 近一年日线 + 月度 OHLC，供 Excel 重画图 |
+| 04 | 涨跌幅与分位 | 5 个窗口，基准日逐条列出 |
+| 05 | 区域价差 | 同日同规格，标明基准区与主因 |
+| 06 | 成本与毛利 | 分工艺路线，路线名由数据决定 |
+| 07 | 上游原料 | 拿不到的写缺口，不编区间 |
+| 08 | 下游需求 | 下游开工 + 供需库存 |
+| 09 | 事件时间线 | 未归因的异常波动单列，不写原因 |
+| 10 | 销售事实卡 | 每条可回溯来源的“对话弹药” |
+| 11 | 话术模板 | 微信/邮件/短句，自动带入行情 |
+| 12 | 数据缺口与方法 | 缺口 + 口径提醒 + 来源清单 |
+
+## 参考
+
+- [`references/research-playbook.md`](references/research-playbook.md)——按品种找数的渠道顺序、单位陷阱、常见假数据
+- [`references/data-contract.md`](references/data-contract.md)——`research.json` 全字段与取值范围
+- [`references/quoting-rules.md`](references/quoting-rules.md)——报价口径与对外话术的边界
+- [`references/qa-checklist.md`](references/qa-checklist.md)——交付前逐项打勾
+- [`references/adapters.md`](references/adapters.md)——装到 chemclaw / workbuddy / codex / 任意 agent
+- [`examples/`](examples/)——纯碱（全量）、玻璃（跨品种验证）
+
+## 降级路径
+
+| 情况 | 做法 |
+|---|---|
+| 该品种无场内期货 | 不填 `futures`；走势/分位/异常三块自动留空并提示缺口 |
+| 只有 1 条现货 | 区域价差留空，首屏改显现货点价；摘要只说这一条 |
+| 完全无现货 | 首屏 KPI 显示“无现货报价”，全部结论改用期货，并声明口径 |
+| 没装 playwright | `--no-render`，静态检查仍执行 |
+| 没装 openpyxl | 只出 HTML，明确告知 Excel 缺依赖 |
+| 无法联网 | 用 `examples/01` 的 `research.json` 结构 + 本地已有资料填；价格字段标注“未更新至最新” |

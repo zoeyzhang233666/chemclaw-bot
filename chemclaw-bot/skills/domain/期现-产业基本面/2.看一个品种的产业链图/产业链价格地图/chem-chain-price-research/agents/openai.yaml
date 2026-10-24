@@ -1,0 +1,5 @@
+interface:
+  display_name: 化工产业链价格地图
+  short_description: 理清某化工品的上下游结构并检索各环节授权报价，产出自包含可交互的 HTML 价格地图（悬停看明细、附缺口说明）。
+policy:
+  allow_implicit_invocation: true

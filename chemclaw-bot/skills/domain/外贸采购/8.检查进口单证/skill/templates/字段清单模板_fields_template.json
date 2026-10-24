@@ -1,0 +1,75 @@
+{
+ "batch": {
+  "case_no": "例：SIM-MEG-2026-0518",
+  "label": "【模拟】/ 实际业务填写真实批次号",
+  "product_en": "英文品名",
+  "product_cn": "中文品名",
+  "cas": "CAS 号",
+  "hs": "10 位 HS 编码",
+  "quantity_mt": 0.0,
+  "unit_price_usd": 0.0,
+  "amount_usd": 0.0,
+  "incoterm": "CFR 目的港",
+  "port_load": "起运港（含城市码）",
+  "port_disch": "目的港（含城市码）",
+  "vessel_voyage": "船名 航次",
+  "etd": "YYYY-MM-DD",
+  "eta": "YYYY-MM-DD",
+  "buyer": "买方全称",
+  "seller": "卖方全称",
+  "consignee_of_record": "报关境内收货人全称",
+  "uscc": "统一社会信用代码",
+  "letter_date": "YYYY-MM-DD（写更正函的日期）"
+ },
+ "documents": [
+  {
+   "file": "01_采购合同_Purchase_Contract.docx",
+   "type": "CONTRACT",
+   "fields": {
+    "contract_no": {"value": "合同号原值", "page": 1, "line": 0, "snippet": "该值所在行的原文片段"},
+    "seller": {"value": "卖方全称", "page": 1, "line": 0, "snippet": "SELLER / 卖方：…"},
+    "buyer": {"value": "买方全称", "page": 1, "line": 0, "snippet": ""},
+    "product_en": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "product_cn": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "cas": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "hs": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "spec": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "quantity": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "unit": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "unit_price": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "amount": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "currency": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "incoterm": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "port_load": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "port_disch": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "payment": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "packages": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "pack_type": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "net_weight": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "gross_weight": {"value": "", "page": 1, "line": 0, "snippet": ""}
+   }
+  },
+  {
+   "file": "05_提单_Bill_of_Lading.png",
+   "type": "BILL_OF_LADING",
+   "fields": {
+    "bl_no": {"value": "", "page": 1, "line": 0, "snippet": "（扫描件：行号=OCR 文本行序，须配 .ocr.txt）"},
+    "shipper": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "consignee": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "notify": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "vessel": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "voyage": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "port_load": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "port_disch": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "product_en": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "hs": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "packages": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "pack_type": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "net_weight": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "gross_weight": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "batch": {"value": "", "page": 1, "line": 0, "snippet": ""},
+    "bl_date": {"value": "", "page": 1, "line": 0, "snippet": ""}
+   }
+  }
+ ]
+}

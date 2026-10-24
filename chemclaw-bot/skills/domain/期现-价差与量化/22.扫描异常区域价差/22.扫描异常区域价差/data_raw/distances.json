@@ -1,0 +1,356 @@
+{
+ "generated_at": "2026-10-20 18:30:57",
+ "source": "OSRM public routing API (router.project-osrm.org), driving profile",
+ "nodes": [
+  {
+   "code": "EC_TAICANG",
+   "market": "华东·江苏太仓",
+   "point": "江苏太仓（甲醇进口/交割集散地）",
+   "lon": 121.1,
+   "lat": 31.45
+  },
+  {
+   "code": "EC_ZIBO",
+   "market": "华东·山东淄博",
+   "point": "山东淄博（甲醇/纯碱产区与消费区）",
+   "lon": 118.05,
+   "lat": 36.81
+  },
+  {
+   "code": "N_YULIN",
+   "market": "西北·陕西榆林",
+   "point": "陕西榆林（甲醇煤炭产区外运）",
+   "lon": 109.74,
+   "lat": 38.28
+  },
+  {
+   "code": "N_ORDOS",
+   "market": "西北·内蒙古鄂尔多斯",
+   "point": "内蒙古鄂尔多斯（甲醇/天然碱产区）",
+   "lon": 109.78,
+   "lat": 39.61
+  },
+  {
+   "code": "H_WUHAN",
+   "market": "华中·湖北武汉",
+   "point": "湖北武汉（华中纯碱交割地）",
+   "lon": 114.31,
+   "lat": 30.59
+  },
+  {
+   "code": "H_TONGBAI",
+   "market": "华中·河南桐柏",
+   "point": "河南桐柏（华中天然碱产区）",
+   "lon": 113.42,
+   "lat": 32.38
+  },
+  {
+   "code": "N_SHAHE",
+   "market": "华北·河北沙河",
+   "point": "河北沙河（玻璃集中消费地）",
+   "lon": 114.5,
+   "lat": 36.86
+  },
+  {
+   "code": "N_TIANJIN",
+   "market": "华北·天津",
+   "point": "天津（PVC/甲醇华北交割与港口）",
+   "lon": 117.2,
+   "lat": 39.13
+  },
+  {
+   "code": "S_GUANGZHOU",
+   "market": "华南·广东广州",
+   "point": "广东广州（华南消费地）",
+   "lon": 113.26,
+   "lat": 23.13
+  },
+  {
+   "code": "S_XIAMEN",
+   "market": "华南·福建厦门",
+   "point": "福建厦门（华南PVC消费地与进口港）",
+   "lon": 118.09,
+   "lat": 24.48
+  },
+  {
+   "code": "W_ZHONGQING",
+   "market": "西南·重庆",
+   "point": "重庆（西南消费与长江水运节点）",
+   "lon": 106.55,
+   "lat": 29.56
+  },
+  {
+   "code": "E_HANGZHOU",
+   "market": "华东·浙江杭州",
+   "point": "浙江杭州（华东消费地）",
+   "lon": 120.15,
+   "lat": 30.28
+  }
+ ],
+ "distances": {
+  "EC_TAICANG|EC_ZIBO": {
+   "km": 754.5,
+   "hours": 8.59
+  },
+  "EC_TAICANG|N_YULIN": {
+   "km": 1564.4,
+   "hours": 17.56
+  },
+  "EC_TAICANG|N_ORDOS": {
+   "km": 1645.0,
+   "hours": 18.68
+  },
+  "EC_TAICANG|H_WUHAN": {
+   "km": 756.4,
+   "hours": 8.57
+  },
+  "EC_TAICANG|H_TONGBAI": {
+   "km": 816.6,
+   "hours": 9.23
+  },
+  "EC_TAICANG|N_SHAHE": {
+   "km": 1001.0,
+   "hours": 11.22
+  },
+  "EC_TAICANG|N_TIANJIN": {
+   "km": 1033.0,
+   "hours": 11.72
+  },
+  "EC_TAICANG|S_GUANGZHOU": {
+   "km": 1418.8,
+   "hours": 16.19
+  },
+  "EC_TAICANG|S_XIAMEN": {
+   "km": 1027.2,
+   "hours": 11.67
+  },
+  "EC_TAICANG|W_ZHONGQING": {
+   "km": 1625.6,
+   "hours": 18.22
+  },
+  "EC_TAICANG|E_HANGZHOU": {
+   "km": 188.7,
+   "hours": 2.26
+  },
+  "EC_ZIBO|N_YULIN": {
+   "km": 879.6,
+   "hours": 9.95
+  },
+  "EC_ZIBO|N_ORDOS": {
+   "km": 960.3,
+   "hours": 11.07
+  },
+  "EC_ZIBO|H_WUHAN": {
+   "km": 933.4,
+   "hours": 10.41
+  },
+  "EC_ZIBO|H_TONGBAI": {
+   "km": 771.5,
+   "hours": 8.83
+  },
+  "EC_ZIBO|N_SHAHE": {
+   "km": 345.1,
+   "hours": 4.09
+  },
+  "EC_ZIBO|N_TIANJIN": {
+   "km": 290.6,
+   "hours": 3.38
+  },
+  "EC_ZIBO|S_GUANGZHOU": {
+   "km": 1855.3,
+   "hours": 20.76
+  },
+  "EC_ZIBO|S_XIAMEN": {
+   "km": 1653.4,
+   "hours": 18.65
+  },
+  "EC_ZIBO|W_ZHONGQING": {
+   "km": 1626.9,
+   "hours": 18.57
+  },
+  "EC_ZIBO|E_HANGZHOU": {
+   "km": 851.0,
+   "hours": 9.56
+  },
+  "N_YULIN|N_ORDOS": {
+   "km": 162.8,
+   "hours": 1.94
+  },
+  "N_YULIN|H_WUHAN": {
+   "km": 1228.0,
+   "hours": 13.84
+  },
+  "N_YULIN|H_TONGBAI": {
+   "km": 973.3,
+   "hours": 11.27
+  },
+  "N_YULIN|N_SHAHE": {
+   "km": 563.8,
+   "hours": 6.46
+  },
+  "N_YULIN|N_TIANJIN": {
+   "km": 790.7,
+   "hours": 9.01
+  },
+  "N_YULIN|S_GUANGZHOU": {
+   "km": 2112.1,
+   "hours": 23.97
+  },
+  "N_YULIN|S_XIAMEN": {
+   "km": 2177.7,
+   "hours": 24.54
+  },
+  "N_YULIN|W_ZHONGQING": {
+   "km": 1250.5,
+   "hours": 14.23
+  },
+  "N_YULIN|E_HANGZHOU": {
+   "km": 1640.0,
+   "hours": 18.24
+  },
+  "N_ORDOS|H_WUHAN": {
+   "km": 1343.1,
+   "hours": 15.29
+  },
+  "N_ORDOS|H_TONGBAI": {
+   "km": 1115.7,
+   "hours": 12.76
+  },
+  "N_ORDOS|N_SHAHE": {
+   "km": 679.7,
+   "hours": 7.94
+  },
+  "N_ORDOS|N_TIANJIN": {
+   "km": 747.0,
+   "hours": 8.46
+  },
+  "N_ORDOS|S_GUANGZHOU": {
+   "km": 2285.7,
+   "hours": 25.49
+  },
+  "N_ORDOS|S_XIAMEN": {
+   "km": 2292.8,
+   "hours": 25.98
+  },
+  "N_ORDOS|W_ZHONGQING": {
+   "km": 1395.5,
+   "hours": 15.85
+  },
+  "N_ORDOS|E_HANGZHOU": {
+   "km": 1723.6,
+   "hours": 19.32
+  },
+  "H_WUHAN|H_TONGBAI": {
+   "km": 270.9,
+   "hours": 3.12
+  },
+  "H_WUHAN|N_SHAHE": {
+   "km": 765.3,
+   "hours": 8.62
+  },
+  "H_WUHAN|N_TIANJIN": {
+   "km": 1114.4,
+   "hours": 12.37
+  },
+  "H_WUHAN|S_GUANGZHOU": {
+   "km": 982.3,
+   "hours": 11.0
+  },
+  "H_WUHAN|S_XIAMEN": {
+   "km": 955.4,
+   "hours": 11.02
+  },
+  "H_WUHAN|W_ZHONGQING": {
+   "km": 874.0,
+   "hours": 9.9
+  },
+  "H_WUHAN|E_HANGZHOU": {
+   "km": 681.4,
+   "hours": 8.05
+  },
+  "H_TONGBAI|N_SHAHE": {
+   "km": 559.9,
+   "hours": 6.39
+  },
+  "H_TONGBAI|N_TIANJIN": {
+   "km": 928.1,
+   "hours": 10.49
+  },
+  "H_TONGBAI|S_GUANGZHOU": {
+   "km": 1172.4,
+   "hours": 12.99
+  },
+  "H_TONGBAI|S_XIAMEN": {
+   "km": 1215.9,
+   "hours": 13.89
+  },
+  "H_TONGBAI|W_ZHONGQING": {
+   "km": 925.0,
+   "hours": 10.51
+  },
+  "H_TONGBAI|E_HANGZHOU": {
+   "km": 790.7,
+   "hours": 9.19
+  },
+  "N_SHAHE|N_TIANJIN": {
+   "km": 419.8,
+   "hours": 4.83
+  },
+  "N_SHAHE|S_GUANGZHOU": {
+   "km": 1720.1,
+   "hours": 19.14
+  },
+  "N_SHAHE|S_XIAMEN": {
+   "km": 1658.5,
+   "hours": 19.05
+  },
+  "N_SHAHE|W_ZHONGQING": {
+   "km": 1357.7,
+   "hours": 15.51
+  },
+  "N_SHAHE|E_HANGZHOU": {
+   "km": 1079.3,
+   "hours": 11.99
+  },
+  "N_TIANJIN|S_GUANGZHOU": {
+   "km": 2095.0,
+   "hours": 23.22
+  },
+  "N_TIANJIN|S_XIAMEN": {
+   "km": 1923.7,
+   "hours": 21.52
+  },
+  "N_TIANJIN|W_ZHONGQING": {
+   "km": 1769.0,
+   "hours": 20.06
+  },
+  "N_TIANJIN|E_HANGZHOU": {
+   "km": 1120.4,
+   "hours": 12.62
+  },
+  "S_GUANGZHOU|S_XIAMEN": {
+   "km": 632.0,
+   "hours": 7.24
+  },
+  "S_GUANGZHOU|W_ZHONGQING": {
+   "km": 1259.0,
+   "hours": 14.29
+  },
+  "S_GUANGZHOU|E_HANGZHOU": {
+   "km": 1238.0,
+   "hours": 14.05
+  },
+  "S_XIAMEN|W_ZHONGQING": {
+   "km": 1624.3,
+   "hours": 18.38
+  },
+  "S_XIAMEN|E_HANGZHOU": {
+   "km": 857.4,
+   "hours": 9.84
+  },
+  "W_ZHONGQING|E_HANGZHOU": {
+   "km": 1544.9,
+   "hours": 17.68
+  }
+ }
+}

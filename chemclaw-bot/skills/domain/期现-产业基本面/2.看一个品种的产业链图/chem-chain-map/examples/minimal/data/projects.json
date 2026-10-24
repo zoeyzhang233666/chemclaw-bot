@@ -1,0 +1,19 @@
+{
+  "projects": [
+    {
+      "id": "PJ01",
+      "name": "演示新增装置",
+      "company": "演示企业一",
+      "province": "演示省",
+      "stage": "在建",
+      "capacity": 10.0,
+      "capacity_basis": null,
+      "investment": "5 亿元",
+      "start_time": "2027",
+      "evidence": [
+        "S01"
+      ],
+      "note": "演示"
+    }
+  ]
+}

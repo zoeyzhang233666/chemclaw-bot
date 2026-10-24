@@ -1,0 +1,4 @@
+﻿horizon,sessions,n_obs,n_eff_nonoverlap,mdes_sd,prob_halfwidth_pp,n_needed_mdes_020sd,verdict
+1w,5,6,6.0,1.1437,31.24,197,insufficient
+2w,10,4,2.0,1.981,40.55,197,insufficient
+4w,20,2,0.5,3.962,47.03,197,insufficient

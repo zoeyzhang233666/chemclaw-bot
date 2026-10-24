@@ -1,0 +1,2162 @@
+{
+  "version": 2,
+  "roles": [
+    {
+      "id": "chemclaw",
+      "name": "ChemClaw",
+      "category": "主控",
+      "main": true,
+      "description": "把业务目标拆成研究任务，选择合适专家、组织协作并核验最终交付。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "ChemClaw 业务主控结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "我销售纯碱，想拓展华东玻璃厂客户，请组织团队给出有证据的客户清单和拜访计划。",
+        "我销售纯碱，帮我选择合适的客户开发场景"
+      ],
+      "skills": [],
+      "color": "#2877B8",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "ChemClaw 业务主控"
+      ],
+      "avatar": {
+        "shape": "lobster"
+      }
+    },
+    {
+      "id": "role-1-1",
+      "name": "下游客户开发专家",
+      "category": "内贸销售",
+      "main": false,
+      "description": "按产品应用和工艺路线筛选真实用料工厂，形成可联系、可溯源的潜客清单。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "下游客户开发结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "帮我找江苏、浙江实际使用纯碱的玻璃工厂，区分生产企业和贸易商，交付带来源的客户表。",
+        "以纯碱为例，整理华东地区的目标客户和可追溯证据"
+      ],
+      "skills": [
+        "domain-18"
+      ],
+      "color": "#2877B8",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "下游客户开发",
+        "潜客猎手"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-1-2",
+      "name": "标杆客户拓展顾问",
+      "category": "内贸销售",
+      "main": false,
+      "description": "提取标杆客户的产品、工艺与规模特征，逐项解释相似客户的原料需求依据。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "标杆客户复制结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "以我提供的三家标杆客户为样本，分析共同的工艺和原料需求，再寻找相似客户。",
+        "以纯碱为例，整理华东地区的目标客户和可追溯证据"
+      ],
+      "skills": [
+        "domain-29"
+      ],
+      "color": "#B86D39",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "标杆客户复制"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-1-3",
+      "name": "扩产项目商机专家",
+      "category": "内贸销售",
+      "main": false,
+      "description": "追踪环评、备案、建设及投产节点，将新增用料需求转成联系时间表。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "扩产项目找客户结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "找华东未来一年可能投产的玻璃扩产项目，列出新增纯碱需求的依据和联系时点。",
+        "以纯碱为例，整理华东地区的目标客户和可追溯证据"
+      ],
+      "skills": [
+        "domain-30"
+      ],
+      "color": "#248478",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "扩产项目找客户"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-1-4",
+      "name": "采购商机情报员",
+      "category": "内贸销售",
+      "main": false,
+      "description": "从招标、采购公告和扩产事件中识别采购信号，区分有效机会与过期线索。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "采购商机扫描结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "扫描近一个月与甲醇相关的公开招标和采购线索，标出有效期、规格和联系入口。",
+        "以纯碱为例，整理华东地区的目标客户和可追溯证据"
+      ],
+      "skills": [
+        "domain-31"
+      ],
+      "color": "#8461B6",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "采购商机扫描"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-1-5",
+      "name": "重点客户研究员",
+      "category": "内贸销售",
+      "main": false,
+      "description": "梳理企业产品、装置、采购需求与组织线索，准备首次接触材料。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "目标客户研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "研究这家目标客户的产品、工厂和采购需求，整理下一次销售沟通的问题清单。",
+        "以纯碱为例，整理华东地区的目标客户和可追溯证据"
+      ],
+      "skills": [
+        "domain-33"
+      ],
+      "color": "#B34E67",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "目标客户研究"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-1-6",
+      "name": "客户拜访顾问",
+      "category": "内贸销售",
+      "main": false,
+      "description": "把聊天、邮件和拜访记录整理为承诺、异议、停滞原因和下一步行动。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "客户拜访与跟进结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "把这段微信记录整理成客户跟进卡，列出异议、承诺、待办和下次拜访重点。",
+        "以纯碱为例，整理华东地区的目标客户和可追溯证据"
+      ],
+      "skills": [
+        "domain-19",
+        "domain-20",
+        "domain-21"
+      ],
+      "color": "#4E7C3C",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "客户拜访与跟进",
+        "拜访顾问"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-1-7",
+      "name": "区域市场规划师",
+      "category": "内贸销售",
+      "main": false,
+      "description": "按城市、园区和下游行业比较客户密度，输出走访优先级与路线。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "区域客户地图结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "梳理山东纯碱下游客户的城市分布，做一张区域地图并安排三天的拜访路线。",
+        "以纯碱为例，整理华东地区的目标客户和可追溯证据"
+      ],
+      "skills": [
+        "domain-22"
+      ],
+      "color": "#936F26",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "区域客户地图"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-2-1",
+      "name": "供应商寻源专家",
+      "category": "内贸采购",
+      "main": false,
+      "description": "寻找可交付目标规格的供应商，比较产地、产能、交付半径与备选来源。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "供应商寻源结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "寻找可向华东供货的工业级甲醇生产厂家，列明产地、装置、资质和证据。",
+        "研究华东纯碱供应商，比较资质、产能和到货成本"
+      ],
+      "skills": [
+        "domain-1",
+        "domain-2",
+        "domain-5",
+        "domain-7",
+        "domain-10",
+        "domain-11",
+        "domain-13",
+        "domain-14",
+        "domain-15",
+        "domain-16"
+      ],
+      "color": "#47739A",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "供应商寻源"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-2-2",
+      "name": "生产厂家核验员",
+      "category": "内贸采购",
+      "main": false,
+      "description": "交叉核验厂址、生产许可、装置和经营范围，识别贸易商与真实生产主体。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "真实厂家核验结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "核验这份供应商名单中谁有真实生产装置，谁是贸易商，不能确认的逐项标注。",
+        "研究华东纯碱供应商，比较资质、产能和到货成本"
+      ],
+      "skills": [
+        "domain-13"
+      ],
+      "color": "#735D8E",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "真实厂家核验"
+      ],
+      "avatar": {
+        "shape": "lobster-1"
+      }
+    },
+    {
+      "id": "role-2-3",
+      "name": "供应商尽调专家",
+      "category": "内贸采购",
+      "main": false,
+      "description": "核验经营、信用、诉讼、供货记录与关联关系，列出准入条件和证据缺口。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "供应商尽调结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "对这家原料供应商做准入尽调，核实主体、生产、履约和风险，输出证据清单。",
+        "研究华东纯碱供应商，比较资质、产能和到货成本"
+      ],
+      "skills": [
+        "domain-14"
+      ],
+      "color": "#2877B8",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "供应商尽调",
+        "准入尽调"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-2-4",
+      "name": "资质风控专员",
+      "category": "内贸采购",
+      "main": false,
+      "description": "对照采购品类核验资质有效期、主体一致性与危险化学品经营条件。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "资质与风险核验结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "核对供应商营业执照和许可证的主体、有效期与供货范围，列出风险和待补资料。",
+        "研究华东纯碱供应商，比较资质、产能和到货成本"
+      ],
+      "skills": [
+        "domain-6",
+        "domain-7",
+        "domain-15"
+      ],
+      "color": "#B86D39",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "资质与风险核验"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-2-5",
+      "name": "采购比价分析师",
+      "category": "内贸采购",
+      "main": false,
+      "description": "统一规格、税费、账期、运费和交付条件，比较到厂成本与敏感因素。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "采购比价结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "对比这三份含税运到报价，统一包装、付款和账期口径，计算采购总成本。",
+        "研究华东纯碱供应商，比较资质、产能和到货成本"
+      ],
+      "skills": [
+        "domain-3",
+        "domain-4",
+        "domain-9",
+        "domain-16",
+        "domain-17"
+      ],
+      "color": "#248478",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "采购比价"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-2-6",
+      "name": "采购合同顾问",
+      "category": "内贸采购",
+      "main": false,
+      "description": "定位质量、计量、付款、交货及索赔条款，附原文位置和修改建议。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "采购合同审阅结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "审阅这份采购合同，重点检查质量标准、验收、交付、付款和违约条款。",
+        "研究华东纯碱供应商，比较资质、产能和到货成本"
+      ],
+      "skills": [
+        "domain-6"
+      ],
+      "color": "#8461B6",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "采购合同审阅"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-3-1",
+      "name": "海外市场研究员",
+      "category": "进出口",
+      "main": false,
+      "description": "比较目标国家的需求、进口结构、竞争格局与进入渠道，注明统计口径。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "海外市场研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "研究越南钛白粉进口市场，区分终端行业、潜在客户、合规要求和信息缺口。",
+        "研究甲醇进出口机会，说明价格口径和待核实条件"
+      ],
+      "skills": [
+        "domain-39",
+        "domain-47",
+        "domain-51"
+      ],
+      "color": "#B34E67",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "海外市场研究"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-3-2",
+      "name": "海外客户开发专家",
+      "category": "进出口",
+      "main": false,
+      "description": "结合海关和企业证据筛选实际买家，排除货代、物流和无关主体。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "海外买家开发结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "寻找越南涂料行业的钛白粉买家，核实真实业务和采购匹配度，保留来源。",
+        "研究甲醇进出口机会，说明价格口径和待核实条件"
+      ],
+      "skills": [
+        "domain-52"
+      ],
+      "color": "#4E7C3C",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "海外买家开发",
+        "外贸销售"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-3-3",
+      "name": "海外询盘顾问",
+      "category": "进出口",
+      "main": false,
+      "description": "提取规格、数量、目的港和付款要求，形成缺项清单与中英文回复草稿。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "海外询盘处理结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "整理这封海外询盘，核对产品规格、数量、贸易术语，起草英文澄清邮件。",
+        "研究甲醇进出口机会，说明价格口径和待核实条件"
+      ],
+      "skills": [
+        "domain-53",
+        "domain-54"
+      ],
+      "color": "#936F26",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "海外询盘处理"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-3-4",
+      "name": "出口合规顾问",
+      "category": "进出口",
+      "main": false,
+      "description": "提出 HS 编码候选及依据，核验贸易管制与文件要求，标明需专业确认的环节。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "出口合规与 HS 编码结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "核验这款化工品出口所需的 HS 编码依据和监管条件，标出需要报关机构确认的部分。",
+        "研究甲醇进出口机会，说明价格口径和待核实条件"
+      ],
+      "skills": [
+        "domain-44",
+        "domain-55",
+        "domain-56"
+      ],
+      "color": "#47739A",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "出口合规与 HS 编码"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-3-5",
+      "name": "出口报价单证专员",
+      "category": "进出口",
+      "main": false,
+      "description": "按贸易术语测算报价，检查发票、装箱单、COA 与运输信息的一致性。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "出口报价与单证结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "根据成本和运费做 FOB 与 CIF 报价草稿，并列出装箱单、发票和单证核对项。",
+        "研究甲醇进出口机会，说明价格口径和待核实条件"
+      ],
+      "skills": [
+        "domain-46",
+        "domain-49",
+        "domain-50",
+        "domain-57"
+      ],
+      "color": "#735D8E",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "出口报价与单证"
+      ],
+      "avatar": {
+        "shape": "lobster-2"
+      }
+    },
+    {
+      "id": "role-3-6",
+      "name": "海外供应商尽调员",
+      "category": "进出口",
+      "main": false,
+      "description": "交叉核验境外主体、工厂、证书和贸易记录，标注可核验范围与风险。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "海外供应商核验结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "核验这家海外供应商的注册信息、工厂证据和付款风险，整理验证路径。",
+        "研究甲醇进出口机会，说明价格口径和待核实条件"
+      ],
+      "skills": [
+        "domain-41",
+        "domain-53"
+      ],
+      "color": "#2877B8",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "海外供应商核验"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-3-7",
+      "name": "进口采购分析师",
+      "category": "进出口",
+      "main": false,
+      "description": "统一外盘、汇率、税费与港杂口径，测算到岸到厂成本和进口窗口。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "进口成本与窗口结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "统一这两份甲醇进口报价的币种、税费和到岸口径，测算完税成本与进口窗口。",
+        "研究甲醇进出口机会，说明价格口径和待核实条件"
+      ],
+      "skills": [
+        "domain-42",
+        "domain-43",
+        "domain-46",
+        "domain-49"
+      ],
+      "color": "#B86D39",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "进口成本与窗口",
+        "外贸采购"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-1",
+      "name": "现货行情分析师",
+      "category": "产业研究",
+      "main": false,
+      "description": "核对产品规格、区域、税口径与报价日期，解释近期波动及信息缺口。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "现货行情结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "整理纯碱近一个月的现货行情，注明地区、规格、税基、报价日期和来源。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-4",
+        "domain-24"
+      ],
+      "color": "#248478",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "现货行情",
+        "行情报价"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-2",
+      "name": "产业链研究员",
+      "category": "产业研究",
+      "main": false,
+      "description": "按真实工艺路线连接原料、中间体与下游，核验成本和需求传导链。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "产业链研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "画出甲醇上下游产业链，标明主要工艺、产品流向和需要跟踪的关键变量。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-63",
+        "domain-71",
+        "domain-72",
+        "aux-networkx"
+      ],
+      "color": "#8461B6",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "产业链研究"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-3",
+      "name": "供需研究员",
+      "category": "产业研究",
+      "main": false,
+      "description": "统一产量、进口、出口、消费与库存口径，保留平衡项和不可比数据。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "供需平衡结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "梳理纯碱季度供需平衡，区分已知数据、计算假设和缺失项。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-61"
+      ],
+      "color": "#B34E67",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "供需平衡",
+        "产业基本面"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-4",
+      "name": "产能装置研究员",
+      "category": "产业研究",
+      "main": false,
+      "description": "按企业装置记录产能、开停工、检修和新投产事件，区分公告与传闻。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "产能与装置跟踪结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "跟踪 PVC 近期新增产能和检修装置，整理产能、时点及来源证据。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-70",
+        "domain-75",
+        "domain-77"
+      ],
+      "color": "#4E7C3C",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "产能与装置跟踪"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-5",
+      "name": "成本利润分析师",
+      "category": "产业研究",
+      "main": false,
+      "description": "按工艺、原料单耗、能源和产品价格计算成本利润，并做敏感性分析。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "成本利润结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "测算不同煤价情景下甲醇成本与利润，明确单耗、价格口径和假设。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-3",
+        "domain-9",
+        "domain-62",
+        "domain-63"
+      ],
+      "color": "#936F26",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "成本利润"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-6",
+      "name": "产业资讯分析师",
+      "category": "产业研究",
+      "main": false,
+      "description": "核验事件时间与来源，分析对供应、需求、成本和交易预期的影响。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "产业新闻解读结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "解释这条装置停产新闻可能影响哪些产品，区分已核实事件和市场推测。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-78",
+        "domain-80"
+      ],
+      "color": "#47739A",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "产业新闻解读",
+        "舆情雷达"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-7",
+      "name": "企业深度研究员",
+      "category": "产业研究",
+      "main": false,
+      "description": "整合企业财务、装置、产品与竞争位置，区分披露事实和分析判断。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "企业深度研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "研究这家化工企业的产品、产能和经营风险，提供引用和待核实清单。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-73",
+        "domain-75"
+      ],
+      "color": "#735D8E",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "企业深度研究",
+        "深度研究员"
+      ],
+      "avatar": {
+        "shape": "lobster-3"
+      }
+    },
+    {
+      "id": "role-4-8",
+      "name": "品种研究员",
+      "category": "产业研究",
+      "main": false,
+      "description": "统筹价格、供需、库存、成本与风险，形成品种专题及跟踪指标。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "品种研究报告结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "做一份纯碱品种研究报告，覆盖供需、成本、库存与风险，交付 HTML 和明细表。",
+        "研究近期甲醇行情，区分事实、解释和数据缺口"
+      ],
+      "skills": [
+        "domain-65",
+        "domain-66",
+        "domain-67",
+        "domain-68"
+      ],
+      "color": "#2877B8",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "品种研究报告",
+        "市场研报"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-1",
+      "name": "基差研究员",
+      "category": "期现量化",
+      "main": false,
+      "description": "对齐现货与具体期货合约的日期、品质和交割条件，分析基差与收敛。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "基差研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "用我上传的现货与期货数据计算纯碱基差，统一交割品级、地区、日期和单位。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-82",
+        "domain-84",
+        "domain-89",
+        "domain-94"
+      ],
+      "color": "#B86D39",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "基差研究",
+        "价差量化"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-2",
+      "name": "月差研究员",
+      "category": "期现量化",
+      "main": false,
+      "description": "核验近远月合约、交易日和换月规则，研究库存结构与跨期价差。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "月差研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "分析甲醇 1 月与 5 月合约月差，标出合约年份和换月影响。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-93",
+        "domain-95"
+      ],
+      "color": "#248478",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "月差研究"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-3",
+      "name": "区域价差分析师",
+      "category": "期现量化",
+      "main": false,
+      "description": "扣除运费、税费和规格差异后，研究区域价差与可实现的调运条件。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "区域价差结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "比较华东与华南甲醇价格，纳入运费、税基和品质差异后分析区域价差。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-101"
+      ],
+      "color": "#8461B6",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "区域价差"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-4",
+      "name": "内外盘价差分析师",
+      "category": "期现量化",
+      "main": false,
+      "description": "统一汇率、币种、单位和贸易条件，比较内外盘与进口平价。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "国内外价差结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "比较境内外甲醇价格，统一汇率、贸易术语、税费和时间口径。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-102"
+      ],
+      "color": "#B34E67",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "国内外价差"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-5",
+      "name": "季节性研究员",
+      "category": "期现量化",
+      "main": false,
+      "description": "按交易日或自然日对齐多年份数据，呈现分位数、异常年份与样本缺口。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "季节性研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "分析这份尿素历史数据的季节性，说明样本年数、异常年份和不确定性。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-83",
+        "domain-84",
+        "domain-106",
+        "domain-107",
+        "domain-108"
+      ],
+      "color": "#4E7C3C",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "季节性研究"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-6",
+      "name": "价格联动研究员",
+      "category": "期现量化",
+      "main": false,
+      "description": "检查缺失、频率和时滞后比较相关性，区分共同趋势、相关与因果。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "价格联动与相关性结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "研究煤价与甲醇价格的相关性和滞后关系，检查缺失值、频率与样本稳定性。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-85",
+        "domain-104",
+        "domain-105",
+        "aux-statistical-analysis"
+      ],
+      "color": "#936F26",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "价格联动与相关性"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-7",
+      "name": "事件研究员",
+      "category": "期现量化",
+      "main": false,
+      "description": "定义事件窗口和对照样本，核验公告时间、异常收益及混杂因素。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "事件研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "分析历史装置检修事件前后纯碱价格的变化，设置对照窗口并说明归因局限。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-90",
+        "domain-91",
+        "domain-92",
+        "aux-statistical-analysis"
+      ],
+      "color": "#47739A",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "事件研究"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-5-8",
+      "name": "策略回测研究员",
+      "category": "期现量化",
+      "main": false,
+      "description": "将业务假设转成可复现规则，检查前视、幸存者偏差、手续费和样本外表现。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "研究规则回测结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "用上传数据回测这个基差规则，纳入手续费、滑点和换月，检查未来数据泄漏。",
+        "研究纯碱近一年期现关系，注明合约和计算口径"
+      ],
+      "skills": [
+        "domain-95",
+        "domain-96",
+        "domain-97",
+        "domain-99",
+        "domain-100",
+        "aux-statistical-analysis"
+      ],
+      "color": "#735D8E",
+      "dataTools": [
+        "chem_public_query",
+        "chem_futures_history",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "研究规则回测"
+      ],
+      "avatar": {
+        "shape": "lobster-4"
+      }
+    },
+    {
+      "id": "role-6-1",
+      "name": "化学信息专家",
+      "category": "生产辅助",
+      "main": false,
+      "description": "用 CAS、名称、分子式和结构交叉核验物质身份，比较物性条件及原始来源。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "化学物性与结构核验结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "核对乙酸乙酯的名称、CAS、结构和物性，交叉验证数据库并列出来源。",
+        "根据我提供的产品与生产资料完成核验，列出证据和限制"
+      ],
+      "skills": [
+        "domain-1",
+        "domain-59",
+        "domain-65",
+        "domain-66",
+        "domain-67",
+        "domain-71",
+        "domain-72",
+        "chemclaw-chemistry"
+      ],
+      "color": "#2877B8",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "化学物性与结构核验",
+        "产品情报"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-6-2",
+      "name": "工艺文献研究员",
+      "category": "生产辅助",
+      "main": false,
+      "description": "查找工艺与专利文献，比较路线、关键条件和证据成熟度，形成阅读清单。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "工艺文献研究结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "检索甲醇合成工艺文献，比较研究路线和证据边界，整理可查阅的文献表。",
+        "根据我提供的产品与生产资料完成核验，列出证据和限制"
+      ],
+      "skills": [
+        "domain-63",
+        "domain-71",
+        "domain-72",
+        "chemclaw-chemistry"
+      ],
+      "color": "#B86D39",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "工艺文献研究"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-6-3",
+      "name": "质量检验顾问",
+      "category": "生产辅助",
+      "main": false,
+      "description": "对照规格要求核验检测项目、单位、方法、批次和限值，列出不一致项。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "质量与 COA 核验结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "对比采购规格与这份 COA，检查指标、单位、检测方法和不符合项。",
+        "根据我提供的产品与生产资料完成核验，列出证据和限制"
+      ],
+      "skills": [
+        "domain-8",
+        "chemclaw-chemistry"
+      ],
+      "color": "#248478",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "质量与 COA 核验"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-6-4",
+      "name": "物料能耗工程师",
+      "category": "生产辅助",
+      "main": false,
+      "description": "基于用户给定的反应、单耗与边界做物料及能量衡算，明确假设和误差。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "物料与能耗测算结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "按我提供的反应式和单耗做物料衡算，列明收率、损耗和边界假设。",
+        "根据我提供的产品与生产资料完成核验，列出证据和限制"
+      ],
+      "skills": [
+        "domain-3",
+        "domain-9",
+        "domain-62",
+        "chemclaw-chemistry"
+      ],
+      "color": "#8461B6",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "物料与能耗测算"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-6-5",
+      "name": "生产数据分析师",
+      "category": "生产辅助",
+      "main": false,
+      "description": "整理生产、质量和能耗记录，识别趋势与异常，形成需现场复核的改进假设。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "生产数据分析结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "分析这份生产日报的产量、单耗和异常，注明数据质量和进一步核查方向。",
+        "根据我提供的产品与生产资料完成核验，列出证据和限制"
+      ],
+      "skills": [
+        "chemclaw-chemistry",
+        "aux-statistical-analysis"
+      ],
+      "color": "#B34E67",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "生产数据分析"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-7-1",
+      "name": "HTML 报告设计师",
+      "category": "通用交付",
+      "main": false,
+      "description": "组织证据、结论、交互图表和明细表，制作可离线打开、可打印的 HTML 报告。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "HTML 报告结论、证据与缺口清单；按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "把这些研究材料制作成离线可打开的 HTML 报告，支持目录、筛选和打印。",
+        "把我提供的研究资料制作成可打开、可编辑的交付文件"
+      ],
+      "skills": [],
+      "color": "#4E7C3C",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "HTML 报告"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-7-2",
+      "name": "图表地图设计师",
+      "category": "通用交付",
+      "main": false,
+      "description": "按数据语义选择行情、网络、地图或时间轴，检查坐标、图例、缩放和离线显示。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "交互图表与地图结论、证据与缺口清单；按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "用这份价格和区域数据做可缩放的行情图与客户分布图，保留数据表和来源。",
+        "把我提供的研究资料制作成可打开、可编辑的交付文件"
+      ],
+      "skills": [
+        "aux-scientific-visualization"
+      ],
+      "color": "#936F26",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "交互图表与地图",
+        "产业链制图"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-7-3",
+      "name": "PPT 演示设计师",
+      "category": "通用交付",
+      "main": false,
+      "description": "按受众与汇报目标设计叙事，制作可编辑的 PPTX，并检查中文、溢出和数据标注。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "PPT 制作结论、证据与缺口清单；按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "把这份研究报告做成 12 页管理层汇报 PPT，保留数据来源和关键图表。",
+        "把我提供的研究资料制作成可打开、可编辑的交付文件"
+      ],
+      "skills": [],
+      "color": "#47739A",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "PPT 制作",
+        "PPT设计师"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-7-4",
+      "name": "Excel 数据分析师",
+      "category": "通用交付",
+      "main": false,
+      "description": "清洗工作簿，保留原始数据、公式、口径和来源，交付可筛选核验的 XLSX。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "Excel 分析结论、证据与缺口清单；按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "清洗这份采购 Excel，统一单位和日期，生成可核查的对比表和图表。",
+        "把我提供的研究资料制作成可打开、可编辑的交付文件"
+      ],
+      "skills": [],
+      "color": "#735D8E",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "Excel 分析",
+        "表格专家"
+      ],
+      "avatar": {
+        "shape": "lobster-5"
+      }
+    },
+    {
+      "id": "role-7-5",
+      "name": "文档与纪要专员",
+      "category": "通用交付",
+      "main": false,
+      "description": "整理材料为可编辑文档或纪要，明确行动负责人、截止时间与未决事项。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "Word/PDF 与会议纪要结论、证据与缺口清单；按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "将会议录音转写稿整理为决策纪要、责任人和截止日期，交付 Word 与 PDF。",
+        "把我提供的研究资料制作成可打开、可编辑的交付文件"
+      ],
+      "skills": [],
+      "color": "#2877B8",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "Word/PDF 与会议纪要",
+        "文档撰稿"
+      ],
+      "avatar": {
+        "shape": "lobster-6"
+      }
+    },
+    {
+      "id": "role-7-6",
+      "name": "化工双语译审",
+      "category": "通用交付",
+      "main": false,
+      "description": "核验化学名称、规格、贸易术语和单位，交付中英对照与歧义说明。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "化工中英译审结论、证据与缺口清单；按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "译审这份化工品英文报价和 COA，核对术语、单位、产品规格和歧义。",
+        "把我提供的研究资料制作成可打开、可编辑的交付文件"
+      ],
+      "skills": [],
+      "color": "#B86D39",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "化工中英译审",
+        "中英译审"
+      ],
+      "avatar": {
+        "shape": "lobster-6"
+      }
+    },
+    {
+      "id": "role-8-1",
+      "name": "业务方案质询官",
+      "category": "方法与复核",
+      "main": false,
+      "description": "集中质询业务方案的关键假设、反证、资源约束和失败条件，提出可执行修订。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "业务方案质询结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "质询这份采购方案的关键假设、反证和资源约束，给出可以验证的修改建议。",
+        "逐项质询这份业务方案的假设、证据和执行条件"
+      ],
+      "skills": [],
+      "color": "#248478",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "业务方案质询",
+        "质询官"
+      ],
+      "avatar": {
+        "shape": "lobster-6"
+      }
+    },
+    {
+      "id": "role-8-2",
+      "name": "任务规划与验收官",
+      "category": "方法与复核",
+      "main": false,
+      "description": "把任务分解为输入、步骤、依赖和交付标准，按证据逐项验收。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "deliverables": "任务规划与验收结论、证据与缺口清单；可追溯的分析结论、HTML 报告及需要的明细表",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "examples": [
+        "把这个客户开发项目拆成任务、证据要求和交付标准，并复核最终成果。",
+        "逐项质询这份业务方案的假设、证据和执行条件"
+      ],
+      "skills": [],
+      "color": "#8461B6",
+      "dataTools": [
+        "chem_public_query",
+        "mcp__chem-data-hub__*",
+        "mcp__huagongshe__*"
+      ],
+      "previousNames": [
+        "任务规划与验收",
+        "流程参谋"
+      ],
+      "avatar": {
+        "shape": "lobster-6"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "scene-1",
+      "name": "客户开发作战群",
+      "category": "内贸销售",
+      "admin": "role-1-1",
+      "members": [
+        "role-1-1",
+        "role-1-2",
+        "role-1-3",
+        "role-1-4",
+        "role-1-5",
+        "role-1-7",
+        "role-7-4"
+      ],
+      "description": "从产品应用出发，协同完成潜客筛选、标杆复制、扩产商机和区域拜访规划。",
+      "examples": [
+        "帮我找江苏、浙江实际使用纯碱的玻璃工厂，区分生产企业和贸易商，交付带来源的客户表。"
+      ],
+      "previousNames": [
+        "下游客户开发",
+        "客户开发作战室"
+      ],
+      "color": "#2877B8",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "客户开发作战群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-1-1",
+        "role-1-2",
+        "role-1-3",
+        "role-1-7"
+      ],
+      "previousNotices": [
+        "由下游客户开发负责组织，标杆客户复制、扩产项目找客户、区域客户地图分别核验相关材料，形成可追溯结论与交付文件。\n负责人：下游客户开发\n分工：下游客户开发：按产品应用和工艺路线筛选真实用料工厂，形成可联系、可溯源的潜客清单。\n标杆客户复制：提取标杆客户的产品、工艺与规模特征，逐项解释相似客户的原料需求依据。\n扩产项目找客户：追踪环评、备案、建设及投产节点，将新增用料需求转成联系时间表。\n区域客户地图：按城市、园区和下游行业比较客户密度，输出走访优先级与路线。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动下游客户开发，产品是纯碱，先确认研究范围与交付要求。",
+        "默认 ChemClaw 接话并拆单。线索找潜客猎手；拜访包找拜访顾问；背调找准入尽调；价找行情报价；名单表找表格专家。重要交付前可 @质询官。禁止编造无来源价格与企业事实。版式可优于 skill 示例，字段与溯源必须满足 domain skill 契约。"
+      ]
+    },
+    {
+      "id": "scene-2",
+      "name": "客户拜访跟进群",
+      "category": "内贸销售",
+      "admin": "role-1-6",
+      "members": [
+        "role-1-6",
+        "role-1-5",
+        "role-7-5",
+        "role-7-6"
+      ],
+      "description": "汇总客户背景与沟通记录，梳理需求、异议、承诺和下一次拜访行动。",
+      "examples": [
+        "把这段微信记录整理成客户跟进卡，列出异议、承诺、待办和下次拜访重点。"
+      ],
+      "previousNames": [
+        "客户拜访与跟进"
+      ],
+      "color": "#B86D39",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "客户拜访跟进群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-1-6",
+        "role-1-5",
+        "role-7-6"
+      ],
+      "previousNotices": [
+        "由客户拜访与跟进负责组织，目标客户研究、化工中英译审分别核验相关材料，形成可追溯结论与交付文件。\n负责人：客户拜访与跟进\n分工：客户拜访与跟进：把聊天、邮件和拜访记录整理为承诺、异议、停滞原因和下一步行动。\n目标客户研究：梳理企业产品、装置、采购需求与组织线索，准备首次接触材料。\n化工中英译审：核验化学名称、规格、贸易术语和单位，交付中英对照与歧义说明。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动客户拜访与跟进，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-3",
+      "name": "采购寻源比价群",
+      "category": "内贸采购",
+      "admin": "role-2-1",
+      "members": [
+        "role-2-1",
+        "role-2-2",
+        "role-2-5",
+        "role-6-3",
+        "role-7-4"
+      ],
+      "description": "寻找真实货源，核验生产身份，统一报价口径，给出可比较的采购候选表。",
+      "examples": [
+        "寻找可向华东供货的工业级甲醇生产厂家，列明产地、装置、资质和证据。"
+      ],
+      "previousNames": [
+        "供应商寻源与比价",
+        "采购寻源台"
+      ],
+      "color": "#248478",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "采购寻源比价群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-2-1",
+        "role-2-2",
+        "role-2-5"
+      ],
+      "previousNotices": [
+        "由供应商寻源负责组织，真实厂家核验、采购比价分别核验相关材料，形成可追溯结论与交付文件。\n负责人：供应商寻源\n分工：供应商寻源：寻找可交付目标规格的供应商，比较产地、产能、交付半径与备选来源。\n真实厂家核验：交叉核验厂址、生产许可、装置和经营范围，识别贸易商与真实生产主体。\n采购比价：统一规格、税费、账期、运费和交付条件，比较到厂成本与敏感因素。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动供应商寻源与比价，产品是纯碱，先确认研究范围与交付要求。",
+        "找真厂家→供应商寻源；准入/证照→准入尽调；比价→行情报价；PDF 抽取→PDF助手。事实不足标 gap。定稿前可 @质询官。"
+      ]
+    },
+    {
+      "id": "scene-4",
+      "name": "供应商尽调评审群",
+      "category": "内贸采购",
+      "admin": "role-2-3",
+      "members": [
+        "role-2-3",
+        "role-2-4",
+        "role-2-6",
+        "role-6-3",
+        "role-7-5"
+      ],
+      "description": "联合审查企业、生产、资质和合同证据，形成供应商准入意见与待补资料。",
+      "examples": [
+        "对这家原料供应商做准入尽调，核实主体、生产、履约和风险，输出证据清单。"
+      ],
+      "previousNames": [
+        "供应商尽调与准入"
+      ],
+      "color": "#8461B6",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "供应商尽调评审群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-2-3",
+        "role-2-4",
+        "role-2-6"
+      ],
+      "previousNotices": [
+        "由供应商尽调负责组织，资质与风险核验、采购合同审阅分别核验相关材料，形成可追溯结论与交付文件。\n负责人：供应商尽调\n分工：供应商尽调：核验经营、信用、诉讼、供货记录与关联关系，列出准入条件和证据缺口。\n资质与风险核验：对照采购品类核验资质有效期、主体一致性与危险化学品经营条件。\n采购合同审阅：定位质量、计量、付款、交货及索赔条款，附原文位置和修改建议。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动供应商尽调与准入，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-5",
+      "name": "海外客户开拓群",
+      "category": "进出口",
+      "admin": "role-3-2",
+      "members": [
+        "role-3-2",
+        "role-3-1",
+        "role-1-5",
+        "role-3-4",
+        "role-7-6"
+      ],
+      "description": "先研究目标市场，再筛选海外买家，核验客户匹配度并准备外联材料草稿。",
+      "examples": [
+        "寻找越南涂料行业的钛白粉买家，核实真实业务和采购匹配度，保留来源。"
+      ],
+      "previousNames": [
+        "海外客户开发"
+      ],
+      "color": "#B34E67",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "海外客户开拓群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-3-2",
+        "role-3-1",
+        "role-3-3"
+      ],
+      "previousNotices": [
+        "由海外买家开发负责组织，海外市场研究、海外询盘处理分别核验相关材料，形成可追溯结论与交付文件。\n负责人：海外买家开发\n分工：海外买家开发：结合海关和企业证据筛选实际买家，排除货代、物流和无关主体。\n海外市场研究：比较目标国家的需求、进口结构、竞争格局与进入渠道，注明统计口径。\n海外询盘处理：提取规格、数量、目的港和付款要求，形成缺项清单与中英文回复草稿。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动海外客户开发，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-6",
+      "name": "出口报价单证群",
+      "category": "进出口",
+      "admin": "role-3-5",
+      "members": [
+        "role-3-5",
+        "role-3-3",
+        "role-3-4",
+        "role-7-6",
+        "role-7-5"
+      ],
+      "description": "协同处理询盘、出口合规、报价和单证，降低规格、条款与语言歧义。",
+      "examples": [
+        "根据成本和运费做 FOB 与 CIF 报价草稿，并列出装箱单、发票和单证核对项。"
+      ],
+      "previousNames": [
+        "出口报价与单证",
+        "进出口协作"
+      ],
+      "color": "#4E7C3C",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "出口报价单证群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-3-5",
+        "role-3-4",
+        "role-7-6"
+      ],
+      "previousNotices": [
+        "由出口报价与单证负责组织，出口合规与 HS 编码、化工中英译审分别核验相关材料，形成可追溯结论与交付文件。\n负责人：出口报价与单证\n分工：出口报价与单证：按贸易术语测算报价，检查发票、装箱单、COA 与运输信息的一致性。\n出口合规与 HS 编码：提出 HS 编码候选及依据，核验贸易管制与文件要求，标明需专业确认的环节。\n化工中英译审：核验化学名称、规格、贸易术语和单位，交付中英对照与歧义说明。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动出口报价与单证，产品是纯碱，先确认研究范围与交付要求。",
+        "出口询盘→外贸销售；进口窗口成本→外贸采购；英文润色→中英译审。"
+      ]
+    },
+    {
+      "id": "scene-7",
+      "name": "进口采购研判群",
+      "category": "进出口",
+      "admin": "role-3-7",
+      "members": [
+        "role-3-7",
+        "role-3-6",
+        "role-2-5",
+        "role-4-1",
+        "role-7-4"
+      ],
+      "description": "核验海外货源，测算完税到货成本，研究进口窗口和采购风险。",
+      "examples": [
+        "统一这两份甲醇进口报价的币种、税费和到岸口径，测算完税成本与进口窗口。"
+      ],
+      "previousNames": [
+        "进口采购与成本"
+      ],
+      "color": "#936F26",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "进口采购研判群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-3-7",
+        "role-3-6",
+        "role-2-5"
+      ],
+      "previousNotices": [
+        "由进口成本与窗口负责组织，海外供应商核验、采购比价分别核验相关材料，形成可追溯结论与交付文件。\n负责人：进口成本与窗口\n分工：进口成本与窗口：统一外盘、汇率、税费与港杂口径，测算到岸到厂成本和进口窗口。\n海外供应商核验：交叉核验境外主体、工厂、证书和贸易记录，标注可核验范围与风险。\n采购比价：统一规格、税费、账期、运费和交付条件，比较到厂成本与敏感因素。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动进口采购与成本，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-8",
+      "name": "行情供需研讨群",
+      "category": "产业研究",
+      "admin": "role-4-1",
+      "members": [
+        "role-4-1",
+        "role-4-3",
+        "role-4-5",
+        "role-4-6",
+        "role-4-8",
+        "role-7-2"
+      ],
+      "description": "联合梳理现货行情、供需、成本和产业新闻，解释变化依据与数据缺口。",
+      "examples": [
+        "整理纯碱近一个月的现货行情，注明地区、规格、税基、报价日期和来源。"
+      ],
+      "previousNames": [
+        "产品行情与供需"
+      ],
+      "color": "#47739A",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "行情供需研讨群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-4-1",
+        "role-4-3",
+        "role-4-5"
+      ],
+      "previousNotices": [
+        "由现货行情负责组织，供需平衡、成本利润分别核验相关材料，形成可追溯结论与交付文件。\n负责人：现货行情\n分工：现货行情：核对产品规格、区域、税口径与报价日期，解释近期波动及信息缺口。\n供需平衡：统一产量、进口、出口、消费与库存口径，保留平衡项和不可比数据。\n成本利润：按工艺、原料单耗、能源和产品价格计算成本利润，并做敏感性分析。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动产品行情与供需，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-9",
+      "name": "产业链装置跟踪群",
+      "category": "产业研究",
+      "admin": "role-4-2",
+      "members": [
+        "role-4-2",
+        "role-4-4",
+        "role-4-3",
+        "role-4-7",
+        "role-7-2"
+      ],
+      "description": "跟踪上下游产业链、在建项目、产能和装置变化，定位潜在供需影响。",
+      "examples": [
+        "画出甲醇上下游产业链，标明主要工艺、产品流向和需要跟踪的关键变量。"
+      ],
+      "previousNames": [
+        "产业链与装置跟踪"
+      ],
+      "color": "#735D8E",
+      "avatar": {
+        "shape": "lobster-7"
+      },
+      "deliverables": "产业链装置跟踪群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-4-2",
+        "role-4-4",
+        "role-4-6"
+      ],
+      "previousNotices": [
+        "由产业链研究负责组织，产能与装置跟踪、产业新闻解读分别核验相关材料，形成可追溯结论与交付文件。\n负责人：产业链研究\n分工：产业链研究：按真实工艺路线连接原料、中间体与下游，核验成本和需求传导链。\n产能与装置跟踪：按企业装置记录产能、开停工、检修和新投产事件，区分公告与传闻。\n产业新闻解读：核验事件时间与来源，分析对供应、需求、成本和交易预期的影响。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动产业链与装置跟踪，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-10",
+      "name": "期现价差研究群",
+      "category": "期现量化",
+      "admin": "role-5-1",
+      "members": [
+        "role-5-1",
+        "role-5-2",
+        "role-5-3",
+        "role-5-4",
+        "role-5-5",
+        "role-4-1",
+        "role-7-2",
+        "role-7-4"
+      ],
+      "description": "统一现货和合约口径，研究基差、月差及区域和内外盘价差，不执行交易。",
+      "examples": [
+        "用我上传的现货与期货数据计算纯碱基差，统一交割品级、地区、日期和单位。"
+      ],
+      "previousNames": [
+        "基差月差与期现研究",
+        "期现研究台"
+      ],
+      "color": "#2877B8",
+      "avatar": {
+        "shape": "lobster-8"
+      },
+      "deliverables": "期现价差研究群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-5-1",
+        "role-5-2",
+        "role-5-5"
+      ],
+      "previousNotices": [
+        "由基差研究负责组织，月差研究、季节性研究分别核验相关材料，形成可追溯结论与交付文件。\n负责人：基差研究\n分工：基差研究：对齐现货与具体期货合约的日期、品质和交割条件，分析基差与收敛。\n月差研究：核验近远月合约、交易日和换月规则，研究库存结构与跨期价差。\n季节性研究：按交易日或自然日对齐多年份数据，呈现分位数、异常年份与样本缺口。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动基差月差与期现研究，产品是纯碱，先确认研究范围与交付要求。",
+        "归因/供需→产业基本面；基差价差→价差量化；现货价→行情报价；汇报→PPT设计师。不做买卖建议。价格必带日期规格税基来源。"
+      ]
+    },
+    {
+      "id": "scene-11",
+      "name": "策略回测讨论群",
+      "category": "期现量化",
+      "admin": "role-5-8",
+      "members": [
+        "role-5-8",
+        "role-5-6",
+        "role-5-7",
+        "role-5-5",
+        "role-8-1",
+        "role-7-4"
+      ],
+      "description": "把策略想法变成可检验的研究规则，检查样本、费用、换月和回测偏差。",
+      "examples": [
+        "用上传数据回测这个基差规则，纳入手续费、滑点和换月，检查未来数据泄漏。"
+      ],
+      "previousNames": [
+        "策略假设与回测"
+      ],
+      "color": "#B86D39",
+      "avatar": {
+        "shape": "lobster-8"
+      },
+      "deliverables": "策略回测讨论群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-5-8",
+        "role-5-7",
+        "role-5-6",
+        "role-8-1"
+      ],
+      "previousNotices": [
+        "由研究规则回测负责组织，事件研究、价格联动与相关性、业务方案质询分别核验相关材料，形成可追溯结论与交付文件。\n负责人：研究规则回测\n分工：研究规则回测：将业务假设转成可复现规则，检查前视、幸存者偏差、手续费和样本外表现。\n事件研究：定义事件窗口和对照样本，核验公告时间、异常收益及混杂因素。\n价格联动与相关性：检查缺失、频率和时滞后比较相关性，区分共同趋势、相关与因果。\n业务方案质询：集中质询业务方案的关键假设、反证、资源约束和失败条件，提出可执行修订。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动策略假设与回测，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-12",
+      "name": "化学质量会诊群",
+      "category": "生产辅助",
+      "admin": "role-6-1",
+      "members": [
+        "role-6-1",
+        "role-6-3",
+        "role-6-2",
+        "role-7-6"
+      ],
+      "description": "交叉核验化学身份、物性、结构与 COA 指标，整理质量疑点和资料依据。",
+      "examples": [
+        "核对乙酸乙酯的名称、CAS、结构和物性，交叉验证数据库并列出来源。"
+      ],
+      "previousNames": [
+        "化学物性与质量核验"
+      ],
+      "color": "#248478",
+      "avatar": {
+        "shape": "lobster-8"
+      },
+      "deliverables": "化学质量会诊群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-6-1",
+        "role-6-3",
+        "role-6-4"
+      ],
+      "previousNotices": [
+        "由化学物性与结构核验负责组织，质量与 COA 核验、物料与能耗测算分别核验相关材料，形成可追溯结论与交付文件。\n负责人：化学物性与结构核验\n分工：化学物性与结构核验：用 CAS、名称、分子式和结构交叉核验物质身份，比较物性条件及原始来源。\n质量与 COA 核验：对照规格要求核验检测项目、单位、方法、批次和限值，列出不一致项。\n物料与能耗测算：基于用户给定的反应、单耗与边界做物料及能量衡算，明确假设和误差。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动化学物性与质量核验，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-13",
+      "name": "工艺生产分析群",
+      "category": "生产辅助",
+      "admin": "role-6-2",
+      "members": [
+        "role-6-2",
+        "role-6-4",
+        "role-6-5",
+        "role-6-1",
+        "role-7-4"
+      ],
+      "description": "组合工艺文献、物料能耗测算与生产数据分析，为工程人员提供辅助研究。",
+      "examples": [
+        "分析这份生产日报的产量、单耗和异常，注明数据质量和进一步核查方向。"
+      ],
+      "previousNames": [
+        "工艺文献与生产数据"
+      ],
+      "color": "#8461B6",
+      "avatar": {
+        "shape": "lobster-8"
+      },
+      "deliverables": "工艺生产分析群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-6-2",
+        "role-6-5",
+        "role-6-4"
+      ],
+      "previousNotices": [
+        "由工艺文献研究负责组织，生产数据分析、物料与能耗测算分别核验相关材料，形成可追溯结论与交付文件。\n负责人：工艺文献研究\n分工：工艺文献研究：查找工艺与专利文献，比较路线、关键条件和证据成熟度，形成阅读清单。\n生产数据分析：整理生产、质量和能耗记录，识别趋势与异常，形成需现场复核的改进假设。\n物料与能耗测算：基于用户给定的反应、单耗与边界做物料及能量衡算，明确假设和误差。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动工艺文献与生产数据，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    },
+    {
+      "id": "scene-14",
+      "name": "研报与演示协作群",
+      "category": "产业研究",
+      "admin": "role-4-8",
+      "members": [
+        "role-4-8",
+        "role-7-1",
+        "role-7-2",
+        "role-7-3",
+        "role-7-4",
+        "role-7-5",
+        "role-8-2"
+      ],
+      "description": "先完成证据核验与研究结构，再协作制作 HTML、图表、明细表和汇报 PPT。",
+      "examples": [
+        "把这份研究报告做成 12 页管理层汇报 PPT，保留数据来源和关键图表。"
+      ],
+      "previousNames": [
+        "研究报告与 PPT 制作",
+        "交付工坊"
+      ],
+      "color": "#B34E67",
+      "avatar": {
+        "shape": "lobster-8"
+      },
+      "deliverables": "研报与演示协作群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-4-8",
+        "role-7-1",
+        "role-7-3",
+        "role-7-4"
+      ],
+      "previousNotices": [
+        "由品种研究报告负责组织，HTML 报告、PPT 制作、Excel 分析分别核验相关材料，形成可追溯结论与交付文件。\n负责人：品种研究报告\n分工：品种研究报告：统筹价格、供需、库存、成本与风险，形成品种专题及跟踪指标。\nHTML 报告：组织证据、结论、交互图表和明细表，制作可离线打开、可打印的 HTML 报告。\nPPT 制作：按受众与汇报目标设计叙事，制作可编辑的 PPTX，并检查中文、溢出和数据标注。\nExcel 分析：清洗工作簿，保留原始数据、公式、口径和来源，交付可筛选核验的 XLSX。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动研究报告与 PPT 制作，产品是纯碱，先确认研究范围与交付要求。",
+        "业务结论须来自上游业务岗或已核实材料。PPT 未指定格式默认可编辑 pptx 并确认。定稿前可 @质询官；大单先 @流程参谋。"
+      ]
+    },
+    {
+      "id": "scene-15",
+      "name": "业务方案评审群",
+      "category": "方法与复核",
+      "admin": "role-8-1",
+      "members": [
+        "role-8-1",
+        "role-8-2",
+        "role-4-7",
+        "role-7-5"
+      ],
+      "description": "由质询与验收角色检验业务方案，明确反证、资源约束和可操作的改进建议。",
+      "examples": [
+        "质询这份采购方案的关键假设、反证和资源约束，给出可以验证的修改建议。"
+      ],
+      "previousNames": [
+        "业务方案质询与复核"
+      ],
+      "color": "#4E7C3C",
+      "avatar": {
+        "shape": "lobster-8"
+      },
+      "deliverables": "业务方案评审群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
+      "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
+      "sources": "化工云数据中台、化工社、公开数据库与用户资料",
+      "limits": "不编造企业事实或价格；不执行交易或工厂控制操作。",
+      "previousMembers": [
+        "role-8-1",
+        "role-8-2",
+        "role-4-7"
+      ],
+      "previousNotices": [
+        "由业务方案质询负责组织，任务规划与验收、企业深度研究分别核验相关材料，形成可追溯结论与交付文件。\n负责人：业务方案质询\n分工：业务方案质询：集中质询业务方案的关键假设、反证、资源约束和失败条件，提出可执行修订。\n任务规划与验收：把任务分解为输入、步骤、依赖和交付标准，按证据逐项验收。\n企业深度研究：整合企业财务、装置、产品与竞争位置，区分披露事实和分析判断。\n交付：可追溯结论、HTML 报告和明细表。\n示例：请启动业务方案质询与复核，产品是纯碱，先确认研究范围与交付要求。"
+      ]
+    }
+  ]
+}

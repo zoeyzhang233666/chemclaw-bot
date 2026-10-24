@@ -1,0 +1,184 @@
+{
+ "_comment": "无期货品种降级示例（示意数据，非真实品种研究；请勿当作事实引用）。用于验证 has_futures=false 时模板与校验器的降级路径。",
+ "meta": {
+  "title": "示例有机物X · 品种研究入口 | 期现与产业基本面",
+  "data_asof": "2026-10-20",
+  "generated": "2026-10-20",
+  "version": "chem-product-quicklook v1.0.0",
+  "output_name": "示例-无期货品种研究入口",
+  "labels": {"upstream": "上游原料/能源", "process": "工艺", "self": "本品种", "downstream": "下游产品", "enduse": "终端消费", "other": "关联"},
+  "footnote": "本页为降级路径演示，所有数值均为示意，不代表任何真实产品。"
+ },
+ "product": {
+  "name_cn": "示例有机物X",
+  "name_en": "Example Compound X",
+  "aliases": ["示例名一"],
+  "synonyms_en": ["sample-x"],
+  "cas": "67-56-1",
+  "hs": [{"code": "290511", "desc": "示例（占位）", "note": "本示例不追求真实归类，仅验证结构", "src": ["S01"]}],
+  "un": "1230",
+  "formula": "CH₄O",
+  "mw": "32.04",
+  "appearance": "无色液体（示意）",
+  "boiling_point": "—",
+  "freezing_point": "—",
+  "density": "—",
+  "flash_point": "—",
+  "solubility": "—",
+  "hazard_class": "危险化学品（示意）",
+  "identity_confidence": {"level": "示意", "basis": "本文件仅用于演示降级路径，不构成真实身份确认。", "src": ["S01"]},
+  "scene": ["现货贸易"],
+  "main_spec": "工业级（示意）",
+  "grades": ["工业级（示意）"],
+  "packages": "散装（示意）",
+  "uses_cn": ["下游甲", "下游乙"],
+  "has_futures": false,
+  "oneliner": "演示用品种：无境内期货合约，故跳过期货与交割模块，价格跟踪以现货报价为主。",
+  "card": [
+   {"k": "中文通用名 / 英文名", "v": "示例有机物X / Example Compound X", "sub": "别名：示例名一"},
+   {"k": "CAS / HS / UN", "v": "67-56-1 / 290511 / 1230", "sub": "占位"},
+   {"k": "分子式 / 分子量", "v": "CH₄O / 32.04", "sub": "示意"},
+   {"k": "主流规格", "v": "工业级", "sub": "示意"},
+   {"k": "计价单位", "v": "元/吨", "sub": "含税出厂"},
+   {"k": "中国总产能（2025）", "v": "缺口", "sub": "示例未提供"},
+   {"k": "工艺结构", "v": "工艺甲 60% / 工艺乙 40%（示意）", "sub": "占位"},
+   {"k": "最大下游", "v": "下游甲", "sub": "示意"},
+   {"k": "表观消费", "v": "缺口", "sub": "—"},
+   {"k": "进口/出口", "v": "缺口", "sub": "—"},
+   {"k": "期货", "v": "无境内期货合约", "sub": "见降级说明"},
+   {"k": "最新价格", "v": "缺口", "sub": "仅有单点报价，无序列"}
+  ]
+ },
+ "frame": [
+  {"name": "供应", "value": "缺口", "value_note": "产能未取得", "items": [
+    {"name": "开工率", "caliber": "周度", "gap": true},
+    {"name": "产量", "caliber": "月度", "gap": true}
+  ]},
+  {"name": "需求", "value": "—", "value_note": "下游结构示意", "items": [
+    {"name": "下游甲开工", "caliber": "周度", "gap": true}
+  ]},
+  {"name": "库存", "value": "缺口", "value_note": "无公开库存", "items": [
+    {"name": "企业库存", "caliber": "周度", "gap": true}
+  ]},
+  {"name": "价格 / 成本", "value": "缺口", "value_note": "仅单点报价", "items": [
+    {"name": "现货报价", "caliber": "日度，六项口径", "gap": true}
+  ]},
+  {"name": "贸易流 / 区域价差", "value": "—", "value_note": "替代期现维度", "items": [
+    {"name": "区域价差", "caliber": "周度", "gap": true},
+    {"name": "运费", "caliber": "周度", "gap": true}
+  ]},
+  {"name": "政策 / 产能", "value": "缺口", "value_note": "—", "items": []}
+ ],
+ "chain": {
+  "cols": [
+   {"id": "upstream", "name": "上游原料/能源"},
+   {"id": "process", "name": "生产工艺"},
+   {"id": "self", "name": "本品种"},
+   {"id": "downstream", "name": "下游产品"},
+   {"id": "enduse", "name": "终端消费"}
+  ],
+  "nodes": [
+   {"id": "up_a", "col": "upstream", "name": "原料甲（示意）", "kind": "upstream", "level": 0,
+    "meta": "示例上游", "cap": "", "children": [],
+    "research": {"summary": "示意上游节点，用于验证无期货路径的链路渲染。", "points": ["本节点为演示数据。"],
+                 "spot": [], "price_gap": "示例未提供价格序列。", "indicators": [], "companies": [],
+                 "companies_gap": "示例不列企业。", "actions": [{"id": "cost_curve", "name": "成本曲线", "desc": "示意"}],
+                 "sources": ["S01"], "gaps": ["示例缺口"]}},
+   {"id": "proc_a", "col": "process", "name": "工艺甲（示意）", "kind": "process", "level": 0,
+    "meta": "占产能 60%（示意）", "cap": "60%", "children": [],
+    "research": {"summary": "示意工艺节点。", "points": ["占位。"], "spot": [], "price_gap": "无价格。",
+                 "indicators": [], "companies": [], "companies_gap": "无。",
+                 "actions": [{"id": "capacity_survey", "name": "产能调查", "desc": "示意"}],
+                 "sources": ["S01"], "gaps": []}},
+   {"id": "self_x", "col": "self", "name": "示例有机物X", "kind": "self", "is_self": true, "has_futures": false,
+    "level": 0, "meta": "无境内期货合约；价格跟踪以现货为主", "cap": "缺口", "spot": "", "children": [],
+    "research": {"summary": "本示例的关键在于演示没有期货时页面如何降级：不出现交割与基差模块，改用区域价差与运费。",
+                 "points": ["无期货合约时，期现关系不适用（研究判断）。", "价格锚点只能记录单点报价及其六项口径。"],
+                 "spot": [], "price_gap": "仅取得单点报价，无连续序列，按缺口处理。",
+                 "indicators": [{"name": "现货报价", "caliber": "日度，六项口径", "why": "无期货时的唯一定价参照"}],
+                 "companies": [], "companies_gap": "示例不列企业。",
+                 "actions": [{"id": "price_history", "name": "价格历史", "desc": "示意"}],
+                 "sources": ["S01"], "gaps": ["产能与价格序列均缺失"]}},
+   {"id": "down_a", "col": "downstream", "name": "下游甲（示意）", "kind": "downstream", "level": 0,
+    "meta": "示意下游", "cap": "", "children": [],
+    "research": {"summary": "示意下游节点。", "points": ["占位。"], "spot": [], "price_gap": "无价格。",
+                 "indicators": [], "companies": [], "companies_gap": "无。", "actions": [],
+                 "sources": ["S01"], "gaps": []}},
+   {"id": "down_b", "col": "downstream", "name": "下游乙（示意）", "kind": "downstream", "level": 0,
+    "meta": "示意下游", "cap": "", "children": [],
+    "research": {"summary": "示意下游节点。", "points": ["占位。"], "spot": [], "price_gap": "无价格。",
+                 "indicators": [], "companies": [], "companies_gap": "无。", "actions": [],
+                 "sources": ["S01"], "gaps": []}},
+   {"id": "end_a", "col": "enduse", "name": "终端甲（示意）", "kind": "enduse", "level": 0,
+    "meta": "", "cap": "", "children": [],
+    "research": {"summary": "示意终端。", "points": ["占位。"], "spot": [], "price_gap": "无价格。",
+                 "indicators": [], "companies": [], "companies_gap": "无。", "actions": [],
+                 "sources": ["S01"], "gaps": []}}
+  ]
+ },
+ "research": {},
+ "panels": [
+  {"id": "identity_specs", "name": "产品百科与规格", "note": "示例数据，仅验证结构。", "body": [
+    {"type": "cards", "cols": 2, "items": [
+      {"title": "物质身份", "lead": "占位", "lines": [{"k": "中文名", "v": "示例有机物X"}, {"k": "CAS", "v": "67-56-1"}], "src": ["S01"]},
+      {"title": "规格", "lead": "占位", "lines": [{"k": "主流规格", "v": "工业级"}], "src": ["S01"]}
+    ]},
+    {"type": "gapnote", "title": "本模块缺口", "text": "示例文件不提供真实规格数据。"}
+  ]},
+  {"id": "routes", "name": "工艺与原料", "note": "示意。", "body": [
+    {"type": "routes", "items": [
+      {"name": "工艺甲（示意）", "brief": "原料甲 → 工艺甲 → 本品种", "share": "60%", "status": "在产", "active": true,
+       "steps": [{"name": "步骤一", "note": "示意"}],
+       "params": [{"k": "单耗", "v": "示意值", "note": "非真实"}],
+       "body": "本工艺卡为演示数据，用于验证 routes 块的渲染与展开。", "src": ["S01"]},
+      {"name": "工艺乙（示意）", "brief": "原料乙 → 工艺乙 → 本品种", "share": "40%", "status": "在产", "active": true,
+       "steps": [], "params": [], "body": "示意。", "src": ["S01"]}
+    ]}
+  ]},
+  {"id": "demand", "name": "下游与应用", "note": "示意。", "body": [
+    {"type": "table", "caption": "下游结构（示意）", "columns": [{"k": "下游"}, {"k": "占比"}, {"k": "来源"}],
+     "rows": [{"下游": "下游甲", "占比": "约 60%（示意）", "src": ["S01"]}, {"下游": "下游乙", "占比": "约 40%（示意）", "src": ["S01"]}]},
+    {"type": "logic", "items": [{"name": "需求链（示意）", "sub": "占位", "steps": ["下游开工 → 采购量", "采购量 → 区域价格"]}]}
+  ]},
+  {"id": "capacity", "name": "企业与产能", "note": "示意。", "body": [
+    {"type": "text", "title": "产能（示意）", "html": "<p>示例文件不提供产能数据，故不列企业表。</p>", "src": ["S01"]},
+    {"type": "regions", "caption": "区域（示意）", "src": ["S01"], "items": [
+      {"name": "区域甲", "scope": "示意", "value": "缺口", "note": "示例未提供"}
+    ]}
+  ]},
+  {"id": "trade_futures", "name": "贸易与区域市场", "note": "本例无期货，期现维度已降级为贸易流与区域价差。", "body": [
+    {"type": "gapnote", "title": "无期货合约说明",
+     "text": "该品种目前无境内期货合约，因此不设交易所、合约要素、交割与基差模块。价格跟踪以现货报价为主；区域研究改用区域价差与运费，需注意报价的六项口径（规格·地区·含税·日期·来源·单位）。"},
+    {"type": "table", "caption": "贸易数据（示意）", "columns": [{"k": "指标"}, {"k": "数值"}, {"k": "来源"}],
+     "rows": [{"指标": "进口量", "数值": "缺口", "src": []}, {"指标": "出口量", "数值": "缺口", "src": []}]}
+  ]},
+  {"id": "indicators", "name": "指标与逻辑", "note": "示意。", "body": [
+    {"type": "indicators", "groups": [
+      {"name": "价格（无期货品种）", "src": ["S01"], "items": [
+        {"name": "现货报价", "caliber": "日度，六项口径", "freq": "日", "importance": "高",
+         "points": ["无期货时唯一的定价参照。"], "src": ["S01"]}
+      ]}
+    ]},
+    {"type": "logic", "items": [{"name": "贸易流链（示意）", "sub": "替代期现链", "steps": ["产地价 + 运费 → 销区价", "销区价 - 产地价 → 套利空间"]}]}
+  ]}
+ ],
+ "sources": [
+  {"id": "S01", "org": "示例来源", "type": "占位", "title": "无期货降级示例数据（非真实）", "url": "", "date": "2026-10-20",
+   "use": "仅用于验证结构", "confidence": "缺口"}
+ ],
+ "gaps": [
+  {"area": "产能与产量", "desc": "示例文件未提供", "how": "通过协会年报或企业年报补数", "impact": "无法做供给分析"},
+  {"area": "现货价格序列", "desc": "仅有单点报价", "how": "订阅数据商日度报价", "impact": "无法计算分位与波动"}
+ ],
+ "caveats": ["本文件全部为演示数据，不得作为任何真实产品的结论引用。", "无期货品种不存在基差与交割，相关分析应替换为区域价差与贸易流。"],
+ "purposes": [
+  {"id": "spot", "name": "现货贸易", "panel": "capacity", "emphasize": ["upstream", "self"], "highlight_indicators": []},
+  {"id": "research", "name": "通用研究", "panel": "indicators", "emphasize": [], "highlight_indicators": []}
+ ],
+ "scenes": {
+  "price_history": {"name": "价格历史与分位", "skill": "chem-market-brief", "template": "拉取 {product} 现货报价序列，计算分位"},
+  "capacity_survey": {"name": "产能调查", "skill": "期现-产业基本面/3.看主要生产企业和产能", "template": "梳理 {product} 生产企业与产能"},
+  "cost_curve": {"name": "成本曲线", "skill": "期现-产业基本面/13.看产业链利润变化", "template": "构建 {product} 成本曲线"}
+ },
+ "vcs": {"说明": "无期货降级路径的最小可运行示例。"}
+}

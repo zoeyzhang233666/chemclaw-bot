@@ -1,0 +1,139 @@
+# Incoterms 2020 成本归属矩阵（机器可读）
+# 用途：确定"报价口径包含哪些费用"，避免重复计入。
+# 字段：
+#   seller_pays_export / seller_pays_freight / seller_pays_insurance / seller_pays_import_duty
+#   - export   出口报关及出口环节费用
+#   - freight  主运输（海运/空运/陆运）运费
+#   - insurance 运输保险
+#   - import_duty 进口关税及进口环节税费（仅 DDP 由卖方承担）
+#   - unload_after_destination 目的港卸货后至收货地的内陆运输（DAP/DPU/DDP 由卖方承担）
+# cost_items_covered_in_price: 报价"已含"的成本项目（清单见 references/yaml/cost_items.yaml）
+# cost_items_to_add: 计算到厂成本时"仍需买家另付"的项目
+# verified: false 表示按 Incoterms 2020 规则整理，落地实操（指定地点、谁付码头费）仍需合同条款确认
+version: "2020"
+source:
+  name: "ICC Incoterms 2020（国际商会）"
+  note: "规则条文为公开规则；本文件为结构化整理，不构成对个别合同条款的解释。"
+  url: "https://iccwbo.org/business-solutions/incoterms-rules/incoterms-2020/"
+rules:
+  EXW:
+    name_cn: 工厂交货
+    place_field: 卖方场所（指定地点）
+    seller_pays_export: false
+    seller_pays_freight: false
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS]
+    cost_items_to_add: [ORIGIN_CHARGES, EXPORT_CLEARANCE, OCEAN_FREIGHT, INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "EXW 下出口报关与装运港费用由买方承担；中国进口商在沙特等出口国办理出口手续常存在实操障碍，建议改用 FCA。"
+  FCA:
+    name_cn: 货交承运人
+    place_field: 指定交货地点（如港口堆场/货代仓库）
+    seller_pays_export: true
+    seller_pays_freight: false
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE]
+    cost_items_to_add: [ORIGIN_CHARGES, OCEAN_FREIGHT, INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "FCA 下若货物在卖方场所交付，卖方负责装车；在指定堆场交付则由买方负责装船相关费用。"
+  FAS:
+    name_cn: 装运港船边交货
+    place_field: 指定装运港
+    seller_pays_export: true
+    seller_pays_freight: false
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES]
+    cost_items_to_add: [OCEAN_FREIGHT, INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "FAS 不含装船费；装船费由买家承担，需在 OriginCharges 或海运费中体现，不得两地重复。"
+  FOB:
+    name_cn: 装运港船上交货
+    place_field: 指定装运港
+    seller_pays_export: true
+    seller_pays_freight: false
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES]
+    cost_items_to_add: [OCEAN_FREIGHT, INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "FOB 报价含装船前费用及装船费；买家的海运报价若为 CY-CY，注意目的港 THC 是否已含在运费内（见 freight_sheet 字段）。"
+  CFR:
+    name_cn: 成本加运费
+    place_field: 指定目的港
+    seller_pays_export: true
+    seller_pays_freight: true
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES, OCEAN_FREIGHT]
+    cost_items_to_add: [INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "CFR 已含主运输运费 → 绝不能再次加海运；但 CFR 不含保险，报价为 CFR 时保险必须另行计入。"
+  CIF:
+    name_cn: 成本、保险费加运费
+    place_field: 指定目的港（Incoterms 2020 版本要求）
+    seller_pays_export: true
+    seller_pays_freight: true
+    seller_pays_insurance: true
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES, OCEAN_FREIGHT, INSURANCE]
+    cost_items_to_add: [PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "CIF 保单最低保障为合同价的 110%；如果买方另行安排加保，加保费用另计，不能与已含保费重复。"
+  CPT:
+    name_cn: 运费付至
+    place_field: 指定目的地
+    seller_pays_export: true
+    seller_pays_freight: true
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES, OCEAN_FREIGHT]
+    cost_items_to_add: [INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "CPT 风险转移点与费用承担点不同；运费含至指定目的地，若指定目的地为内陆仓库，则内陆段运费已含，需同步扣除 InlandTruck。"
+  CIP:
+    name_cn: 运费和保险费付至
+    place_field: 指定目的地
+    seller_pays_export: true
+    seller_pays_freight: true
+    seller_pays_insurance: true
+    seller_pays_import_duty: false
+    unload_after_destination: false
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES, OCEAN_FREIGHT, INSURANCE]
+    cost_items_to_add: [PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, INLAND_TRUCK, WAREHOUSE]
+    caveat: "Incoterms 2020 起 CIP 保险要求为 A 条款（一切险级）保障 110%。"
+  DAP:
+    name_cn: 目的地交货
+    place_field: 指定目的地（可为工厂）
+    seller_pays_export: true
+    seller_pays_freight: true
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: true
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES, OCEAN_FREIGHT, INLAND_TRUCK]
+    cost_items_to_add: [INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, WAREHOUSE]
+    caveat: "DAP 由卖方承担至指定目的地（含内陆运输），但不含卸货与进口清关。"
+  DPU:
+    name_cn: 卸货地交货
+    place_field: 指定目的地
+    seller_pays_export: true
+    seller_pays_freight: true
+    seller_pays_insurance: false
+    seller_pays_import_duty: false
+    unload_after_destination: true
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES, OCEAN_FREIGHT, INLAND_TRUCK]
+    cost_items_to_add: [INSURANCE, PORT_CHARGES, CUSTOMS_BROKER, DUTY, IMPORT_VAT_CASH, WAREHOUSE]
+    caveat: "DPU 是唯一要求卖方在目的地卸货的术语。"
+  DDP:
+    name_cn: 完税后交货
+    place_field: 指定目的地
+    seller_pays_export: true
+    seller_pays_freight: true
+    seller_pays_insurance: true
+    seller_pays_import_duty: true
+    unload_after_destination: true
+    cost_items_covered_in_price: [EXW_GOODS, EXPORT_CLEARANCE, ORIGIN_CHARGES, OCEAN_FREIGHT, INSURANCE, INLAND_TRUCK, DUTY]
+    cost_items_to_add: [IMPORT_VAT_CASH]
+    caveat: "DDP 由卖方承担进口关税与清关，但进口环节增值税在中国境内通常仍由境内进口方作为纳税人缴纳（除非卖方在境内有纳税主体）；且 DDP 价格不应再被拆出运费保险重复计税——需以发票总价作为成交价格基础。"

@@ -1,0 +1,112 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>甲醇停车事件：候选样本确认表</title>
+<style>
+:root{--bg:#101418;--panel:#171e25;--line:#2a3742;--fg:#e6edf3;--dim:#8b98a5;--acc:#4fc3f7;--warn:#ffb74d;--bad:#e57373;--ok:#81c784}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1500px;margin:0 auto;padding:18px 22px 70px}
+h1{font-size:20px;margin:0 0 4px}
+.status{background:linear-gradient(90deg,#3a2a00,#1d1500);border:1px solid #8c6d2a;border-radius:8px;padding:11px 15px;margin:12px 0;font-size:13px;line-height:1.7}
+.status b{color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--panel);color:var(--dim);font-weight:500;position:sticky;top:0}
+tr.ev:hover{background:#1e2a34;cursor:pointer}
+.sub{color:var(--dim);font-size:12px}
+.num{font-family:Consolas,monospace;text-align:right}
+input[type=date],input[type=text]{background:#0b1015;border:1px solid var(--line);color:var(--fg);border-radius:5px;padding:3px 5px;font:12px Consolas,monospace}
+input[type=checkbox]{accent-color:var(--acc)}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;border:1px solid #3d6b8c;color:#90caf9}
+.tag.un{color:#ef9a9a;border-color:#8c3d3d}.tag.rs{color:#a5d6a7;border-color:#3d8c4a}
+.detail{display:none;background:#0b1218}.detail.on{display:table-row}
+.quote{background:#0b1015;border-left:2px solid var(--warn);padding:8px 12px;margin:6px 0;font-size:12.5px}
+.btn{background:var(--acc);color:#04222f;border:0;border-radius:6px;padding:8px 16px;font-weight:600;cursor:pointer}
+.btn.ghost{background:#22303b;color:var(--fg)}
+.muted{color:var(--dim)}.gap{color:var(--bad)}
+.bar{display:flex;gap:10px;align-items:center;margin:12px 0;flex-wrap:wrap}
+</style></head><body><div class="wrap">
+<h1>甲醇停车事件：候选样本确认表</h1>
+<div class="sub">品种：甲醇（MA，郑商所） ｜ 阈值口径：国内装置单套≥60万吨/年；中东进口装置单套≥100万吨/年；不满足或产能未披露者单列，不进入阈值合规子样本</div>
+<div class="status"><b>⚠ 这份表还不是研究结果。</b>
+请先核对下面 8 件事，确认无误后再点“导出确认版 CSV”，覆盖 <code>events.csv</code> 并重跑流水线：<br>
+① 每个事件是否<b>真的属于本品种</b>（企业同时有别的产品装置，容易串）；<br>
+② 产能是<b>单套</b>还是合计（合计不能当单套用）；<br>
+③ <b>市场首次获知日</b>是否真的是盘面第一次反应那天（而不是事后综述的发布日）；<br>
+④ 三个日期有没有被互相顶替；<br>
+⑤ 有没有同一次停车被拆成两条；<br>
+⑥ 区域级/跨月滚动的事件，有没有被硬塞进单一日期的框里；<br>
+⑦ 每条是否都有能在原文里搜到的原文摘录；<br>
+⑧ 剔除样本的剔除理由是否站得住。</div>
+<div class="bar">
+  <button class="btn" id="exp">导出确认版 CSV</button>
+  <button class="btn ghost" id="reset">恢复初始勾选</button>
+  <span class="sub" id="cnt"></span>
+</div>
+<table><thead><tr>
+<th style="width:32px">纳入</th><th style="width:80px">编号</th><th>事件</th><th style="width:120px">企业</th>
+<th style="width:140px">装置</th><th style="width:70px">产能</th><th style="width:64px">类型</th>
+<th style="width:118px">公告日</th><th style="width:118px">首次获知</th><th style="width:118px">实际停车</th>
+<th style="width:56px">证据</th><th style="width:52px">核验</th>
+</tr></thead><tbody id="tb"></tbody></table></div>
+<script>
+const DATA = [{"id": "EV-01", "name": "中东冲突后中东多套甲醇装置停车", "company": "中东多国多套装置（媒体未逐个披露主体）", "unit": "中东地区甲醇装置群", "product": "甲醇", "cap": null, "region": "中东", "country": "中东(intl)", "type": "unplanned", "announce": "", "first": "2026-06-15", "actual": "2026-06-14", "restart": "", "include": true, "reason": "区域级供给冲击：中东甲醇装置全面停车、天然气装置受损，进口链传导至中国华东港口；产能取证为3套合计396万吨（单套≥100万吨）", "grade": "E3", "verified": true, "title": "地缘冲突重塑供给 出口支撑力度减弱 待国内需求拐点——能源化工产业链调研报告", "media": "期货日报网", "url": "http://futures.eastmoney.com/a/202606153773281538.html", "quote": "美以伊冲突升级后，中东地区甲醇、乙二醇等化工装置全面停车，天然气装置亦受损，导致原料供应短缺，化工开工率几乎降至零；国内华东核心化工仓库甲醇与乙二醇总库存降至25万吨以下", "notes": "区域级；2026-06-14 为冲突冲击日（非交易日），媒体 06-15 报道，故首次获知日=06-15 即首个交易日；单套主体未披露"}, {"id": "EV-02", "name": "中东某国3套合计396万吨甲醇装置重启", "company": "中东某国（媒体称\"某国\"，实指伊朗）", "unit": "3套甲醇装置合计", "product": "甲醇", "cap": 396.0, "region": "中东", "country": "伊朗", "type": "restart", "announce": "", "first": "2026-06-16", "actual": "2026-06-13", "restart": "", "include": true, "reason": "单套口径需拆分：396万吨/3套，单套132万吨≥100万吨；事件方向为供给恢复（重启），作为方向性对照保留", "grade": "E3", "verified": true, "title": "甲醇期价冲高回落 产业链利润或将重新分配", "media": "证券时报网", "url": "http://finance.eastmoney.com/a/202606163773281538.html", "quote": "随着6月13日，中东某国前期停车的3套总体396万吨甲醇装置重启恢复，目前中东某国8套总体1221万吨甲醇装置运行中，占到中东某国整体甲醇产能的70.27%", "notes": "重启事件（供给恢复方向，与EV-01相反）；实际重启日 06-13（周六），媒体 06-16 披露；单套 396/3=132 万吨折算"}, {"id": "EV-03", "name": "伊朗新增Kimiya(165万吨/年)与ZPC一套165万吨/年装置停车", "company": "伊朗Kimiya / 伊朗ZPC", "unit": "Kimiya 165万吨/年；ZPC一套165万吨/年", "product": "甲醇", "cap": 165.0, "region": "中东", "country": "伊朗", "type": "unplanned", "announce": "", "first": "2026-07-28", "actual": "", "restart": "", "include": true, "reason": "单套165万吨≥100万吨阈值；装置级可核验，且有明确产能与在产状态对照（Kaveh 230万吨、KPC 66万吨仍在运行）", "grade": "E3", "verified": true, "title": "利多因素犹存 甲醇后市不宜过度看空", "media": "期货日报", "url": "http://futures.eastmoney.com/a/202607283822681230.html", "quote": "伊朗方面，新增Kimiya165万吨/年装置和ZPC一套165万吨/年装置停车，目前仅Kaveh230万吨/年、KPC66万吨/年等装置维持开工状态，且运行负荷未满", "notes": "两条独立装置同日被首次披露，按同一披露日合并为1个事件，产能取较大者165万吨"}, {"id": "EV-04", "name": "伊朗甲醇新增FPC 100万吨/年装置停车", "company": "伊朗FPC", "unit": "伊朗FPC 100万吨/年甲醇装置", "product": "甲醇", "cap": 100.0, "region": "中东", "country": "伊朗", "type": "unplanned", "announce": "", "first": "2026-10-08", "actual": "", "restart": "", "include": true, "reason": "单套100万吨=阈值；正文明确进口到港量维持同比低位、港口库存低位去化、港口基差拉升，供给传导路径完整", "grade": "E3", "verified": true, "title": "甲醇基差率居前 地缘局势不定", "media": "每日经济新闻", "url": "http://stock.eastmoney.com/a/202610083889350689.html", "quote": "伊朗甲醇新增FPC100万吨/年装置停车，沿海市场进口到港量维持同比低位，港口库存在低位基础延续去化，货量持续趋紧，港口基差拉升", "notes": "首次披露日为10月8日（国庆假期后）；事件日自动顺延到首个可交易日"}, {"id": "EV-05", "name": "伊朗多套甲醇装置胀库停车", "company": "伊朗多套装置（Kaveh/KPC 之外）", "unit": "伊朗多套甲醇装置", "product": "甲醇", "cap": null, "region": "中东", "country": "伊朗", "type": "unplanned", "announce": "", "first": "2026-10-13", "actual": "", "restart": "", "include": true, "reason": "区域级；伊朗装置持续停车但10月新发生胀库停车，影响为供给端持续收紧；单套主体未披露，按区域供应影响显著纳入", "grade": "E3", "verified": true, "title": "能化|甲醇：伊朗多套装置胀库停车 多套沿海MTO装置维持停车", "media": "一德期货", "url": "http://futures.eastmoney.com/a/202610133893421022.html", "quote": "国产开工重回高位，伊朗多套装置胀库停车，中东甲醇流出延续偏紧，短期进口仍有限，多套沿海MTO装置维持停车", "notes": "与EV-03/EV-04 存在部分重叠（同为伊朗停车群），重叠检验中作为高重叠度样本"}, {"id": "EV-06", "name": "神华榆林一体化装置检修", "company": "神华榆林", "unit": "神华榆林一体化装置", "product": "甲醇", "cap": null, "region": "西北", "country": "中国", "type": "planned", "announce": "", "first": "2026-10-16", "actual": "", "restart": "", "include": true, "reason": "国内装置；一德期货明确列为国内开工变动项，属计划检修；原文未披露配套甲醇产能，产能字段留空并列入缺口", "grade": "E3", "verified": true, "title": "能化|甲醇：伊朗多套装置停车中 多套沿海MTO装置维持停车", "media": "一德期货", "url": "http://futures.eastmoney.com/a/202610163897715115.html", "quote": "本周国内开工小幅回落，伊朗多套装置停车中，沙特、东南亚、南美等地部分装置重启，短期进口仍有限，神华榆林一体化装置检修", "notes": "产能未披露→不满足≥60万吨/年阈值的可核验部分；产能待核实"}, {"id": "EV-REJ-01", "name": "8月国内大中型甲醇装置集中检修", "company": "西北/华北/华东多套装置", "unit": "多套大中型甲醇装置", "product": "甲醇", "cap": null, "region": "多区域", "country": "中国", "type": "planned", "announce": "", "first": "2026-08-27", "actual": "", "restart": "", "include": false, "reason": "区域级、无具体主体与产能、时间范围跨整月；无法构造单一事件日→不进入正式样本", "grade": "E3", "verified": true, "title": "甲醇续涨动力不足 后市高位震荡", "media": "期货日报", "url": "http://futures.eastmoney.com/a/202608273829100120.html", "quote": "8月以来，西北、华北、华东地区多套大中型甲醇装置集中检修", "notes": "需补充逐装置清单才可入库"}, {"id": "EV-REJ-02", "name": "新疆天业三期等合计超350万吨/年装置集中停车检修（乙二醇口径）", "company": "新疆天业/通辽金煤/山西美锦/榆能化学", "unit": "三期及配套装置", "product": "乙二醇", "cap": 350.0, "region": "新疆/华北", "country": "中国", "type": "planned", "announce": "", "first": "2026-09-01", "actual": "", "restart": "", "include": false, "reason": "产品不符：原文为乙二醇装置检修（企业虽同时涉甲醇），不得作为甲醇供给事件→剔除", "grade": "E3", "verified": false, "title": "乙二醇短期易涨难跌", "media": "期货日报", "url": "http://futures.eastmoney.com/a/202609013860789760.html", "quote": "8月是国内装置检修高峰期，新疆天业三期、通辽金煤、山西美锦、榆能化学等合计超350万吨／年产能集中停车检修", "notes": "产品核验失败示例：检索命中甲醇检修语料，但正文主体是乙二醇"}];
+const ORIG = JSON.parse(JSON.stringify(DATA));
+let rows = JSON.parse(JSON.stringify(DATA));
+const tb = document.getElementById('tb');
+function draw(){
+  tb.innerHTML='';
+  rows.forEach((r,idx)=>{
+    const tr=document.createElement('tr'); tr.className='ev';
+    tr.innerHTML = `<td><input type="checkbox" data-i="${idx}" data-f="include" ${r.include!==false?'checked':''}></td>
+      <td class="sub" style="font-family:Consolas">${r.id}</td>
+      <td>${r.name}<div class="sub">${r.region||''} ${r.country||''}</div></td>
+      <td>${r.company}</td><td class="sub">${r.unit||'—'}</td>
+      <td class="num">${r.cap===null?'<span class="gap">缺</span>':r.cap}</td>
+      <td><span class="tag ${r.type==='unplanned'?'un':(r.type==='restart'?'rs':'')}">${r.type==='planned'?'计划':(r.type==='unplanned'?'意外':'重启')}</span></td>
+      <td><input type="date" data-i="${idx}" data-f="announce" value="${r.announce||''}"></td>
+      <td><input type="date" data-i="${idx}" data-f="first" value="${r.first||''}"></td>
+      <td><input type="date" data-i="${idx}" data-f="actual" value="${r.actual||''}"></td>
+      <td>${r.grade||''}</td>
+      <td>${r.verified===false?'<span class="gap">否</span>':'是'}</td>`;
+    if(r.include===false) tr.style.opacity=.5;
+    tr.addEventListener('click',e=>{ if(e.target.closest('input'))return;
+      document.getElementById('d'+idx).classList.toggle('on');});
+    tb.appendChild(tr);
+    const dr=document.createElement('tr'); dr.id='d'+idx; dr.className='detail';
+    dr.innerHTML=`<td colspan="12">
+      <div><b>筛选理由</b>：${r.reason||'—'}</div>
+      <div class="quote">「${r.quote||'（无原文摘录，此条证据不可核验）'}」</div>
+      <div class="sub">来源：${r.media||'—'} ·《${r.title||'—'}》
+      ${r.url?`　<a href="${r.url}" target="_blank" style="color:var(--acc)">打开原文</a>`:''}</div>
+      ${r.notes?`<div class="sub">备注：${r.notes}</div>`:''}
+      ${r.verified===false?'<div class="gap">产品核验未通过：正文主体不是本品种，不应作为本品种供给事件</div>':''}
+      </td>`;
+    tb.appendChild(dr);
+  });
+  const n = rows.filter(r=>r.include!==false).length;
+  document.getElementById('cnt').textContent = `共 ${rows.length} 条候选，当前勾选纳入 ${n} 条`;
+}
+tb.addEventListener('change',e=>{
+  const t=e.target; if(t.dataset.f===undefined) return;
+  const r=rows[+t.dataset.i];
+  if(t.dataset.f==='include') r.include=t.checked; else r[t.dataset.f]=t.value||'';
+  draw();
+});
+document.getElementById('reset').addEventListener('click',()=>{rows=JSON.parse(JSON.stringify(ORIG));draw();});
+document.getElementById('exp').addEventListener('click',()=>{
+  const cols=['event_id','event_name','company','unit_name','product','capacity_wt','region','country',
+    'event_type','announce_date','first_market_date','actual_start_date','actual_restart_date',
+    'include_flag','screening_reason','evidence_grade','product_verified','source_title','source_media',
+    'source_url','quote','notes'];
+  const lines=[cols.join(',')];
+  for(const r of rows){
+    lines.push([r.id,r.name,r.company,r.unit,r.product,r.cap===null?'':r.cap,r.region,r.country,r.type,
+      r.announce,r.first,r.actual,r.restart,r.include!==false?'是':'否',r.reason,r.grade,
+      r.verified===false?'否':'是',r.title,r.media,r.url,r.quote,r.notes]
+      .map(v=>`"${String(v===null||v===undefined?'':v).replace(/"/g,'""')}"`).join(','));
+  }
+  const blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='events_confirmed.csv'; a.click();
+});
+draw();
+</script></div></body></html>

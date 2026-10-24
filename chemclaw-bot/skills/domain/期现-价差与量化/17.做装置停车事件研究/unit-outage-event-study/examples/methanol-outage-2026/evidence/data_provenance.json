@@ -1,0 +1,37 @@
+{
+ "probe_time": "2026-10-20T18:26:36",
+ "futures": {
+  "source": "新浪财经 InnerFuturesNewService.getDailyKLine (公开接口)",
+  "ma0": {
+   "file": "raw/MA0.json",
+   "rows": 2863,
+   "start": "2014-12-24",
+   "end": "2026-10-20"
+  },
+  "contracts": {
+   "files": 102,
+   "start": "2018-05-18",
+   "end": "2026-10-20",
+   "note": "逐合约日线，可按成交量重建每日主力合约，并做换月价差调整"
+  }
+ },
+ "spot": {
+  "source": "生意社(100ppi) 甲醇基准价图接口 graph/cindex.php?f=graph_ppid_ave&ppid=817",
+  "file": "raw/100ppi_methanol_spot_93d.csv",
+  "points": 93,
+  "start": "2026-07-20",
+  "end": "2026-10-20",
+  "caveat": "公开接口仅返回最近约93天；更长历史需付费数据源"
+ },
+ "news": {
+  "source": "东方财富网新闻搜索 search-api-web.eastmoney.com",
+  "file": "raw/em_news_corpus.json",
+  "unique_articles": 1518,
+  "coverage": "2026-04 ~ 2026-10",
+  "deep_page_limit": "约30页/关键词"
+ },
+ "gap": [
+  "2019-2026 逐日现货历史（缺失）",
+  "2019-2025 装置级停车事件文本（缺失，公开检索受限）"
+ ]
+}

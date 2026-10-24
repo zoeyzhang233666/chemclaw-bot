@@ -1,0 +1,378 @@
+{
+  "issues": [
+    {
+      "id": "R-01",
+      "seq": 1,
+      "category": "payment",
+      "severity": "high",
+      "issue_type": "commercial",
+      "title": "信用证开证日期早于合同签署日，付款前提客观上无法满足",
+      "title_en": "L/C opening date precedes the contract date, so the payment trigger cannot be met",
+      "anchors": [
+        {"block": "p-article-6-payment-059", "clause": "6.1(B)", "quote": "The Letter of Credit shall be opened and advised to the Seller not later than 15 April 2026 and shall remain valid for presentation of documents until 21 July 2026."},
+        {"block": "xl-005", "clause": "Execution", "quote": "Date: 17 April 2026"}
+      ],
+      "clause_title": "6.1 Payment method",
+      "finding": "合同签署日为 2026-04-17，但 6.1(B) 要求信用证不迟于 2026-04-15 开出并通知卖方。该日期早于合同签署日两天，属于不可能履行的付款前提。5.1(C) 又将交货期起算点系于“卖方收到信用证”，一旦买方以“已按约在 4 月 15 日后开证”为由主张卖方迟延，双方对起算点将各执一词。",
+      "finding_en": "The contract is dated 17 April 2026 but clause 6.1(B) requires L/C opening by 15 April 2026 — two days before signature. The stated payment trigger is impossible on its face, and clause 5.1(C) anchors the delivery period to receipt of that L/C, leaving both the payment and the shipment clock without a workable start date.",
+      "consequence": "卖方无法在形式上取得“按时开证”的证明：若以 4 月 15 日为基准，买方必然违约，但买方也可反过来主张卖方未按 5.1(C) 起算而迟延交货。交期争议一旦成立，买方可能主张迟延交付、拒收或索赔，而本合同中卖方并没有对应的免责与违约金上限保护。",
+      "consequence_en": "Neither party has a defensible position on when payment or shipment was due. Delay claims can run in both directions, and a buyer alleging late shipment faces no meaningful cap because the liability clause is drafted in the seller's favour but the delivery trigger is not.",
+      "confirm": [
+        "确认合同实际签署日与生效日，检查签署页日期栏是否为空（见 R-38）",
+        "与买方书面确认信用证最迟开证日，建议改为“不迟于合同生效后 N 个银行工作日”",
+        "明确 5.1(C) 中“received in a form acceptable to the Seller”的判定标准与通知方式",
+        "核实买方是否已在合同签署前开出信用证；若已开，获取信用证全文并比对 6.1、6.2 与 Annex C"
+      ],
+      "legal_refs": [
+        {"label": "CISG 适用前提（第 1 条第 1 款 (a) 项）", "note": "CISG 在双方营业地均位于缔约国时适用。据 UNCITRAL 官方缔约国表，中国为缔约国（1986-12-11 批准、1988-01-01 生效），印度尼西亚未列入 97 个缔约方之中。因此本合同本来就不适用 CISG，15.1 的排除条款在此仅起双重保险作用。"},
+        {"label": "《中华人民共和国民法典》第 470 条、第 510 条", "note": "约定不明的，可协议补充；不能补充的按合同相关条款或交易习惯确定。存在被补充解释的空间，但结果具不确定性。"}
+      ],
+      "suggested_wording": "The Buyer shall open the Letter of Credit in a form acceptable to the Seller and advise it to the Seller not later than 10 (ten) Business Days after the Effective Date of this Contract. The Effective Date is the later of the dates on which both Parties have signed and sealed this Contract. The delivery period in Article 5.1 shall run from the date on which the Seller receives the advised Letter of Credit.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-02",
+      "seq": 2,
+      "category": "payment",
+      "severity": "high",
+      "issue_type": "unilateral",
+      "title": "逾期付款仅按5%年息计息，且卖方放弃一切其他救济",
+      "title_en": "Late payment carries 5% p.a. interest only, with an express waiver of every other remedy",
+      "anchors": [
+        {"block": "p-article-6-payment-066", "clause": "6.4(A)", "quote": "If the Buyer fails to pay any sum when due, interest shall accrue on the overdue sum at the rate of 5% per annum, calculated on the basis of a 360-day year."},
+        {"block": "p-article-6-payment-067", "clause": "6.4(B)", "quote": "Interest is the Seller's sole remedy for late payment. The Seller waives all rights to claim damages, to suspend performance, to withhold documents or to avoid this Contract on the ground of late payment."}
+      ],
+      "clause_title": "6.4 Late payment",
+      "finding": "6.4(B) 将利息约定为逾期付款的“唯一救济”，并明确放弃索赔损失、中止履行、扣留单据和解除合同的权利。这三项恰是出口商在买方拖延付款时仅有的三个实际抓手。",
+      "finding_en": "Clause 6.4(B) makes interest the sole remedy for late payment and expressly waives damages, suspension of performance, retention of documents and avoidance. Those four rights are precisely the leverage an exporter holds when a buyer stalls.",
+      "consequence": "假设逾期 90 天、标的总价 USD 268,000，5% 年息按 360 天基准仅约 USD 3,350，而同期实际资金成本与追偿成本通常更高，利息无法形成付款压力。更严重的是，卖方丧失中止发货与扣留提单的权利，若买方在货物出运后拖延付款，卖方既不能停运也不能扣单，只能等待。",
+      "consequence_en": "On a 90-day delay against a USD 268,000 contract, 5% p.a. on a 360-day basis yields roughly USD 3,350 — below typical financing and recovery cost, so the clause removes rather than creates payment pressure. Combined with the waiver of suspension and document retention, the seller has no operational lever once goods are afloat.",
+      "confirm": [
+        "核实公司对印尼客户的现行授信政策与历史平均回款天数",
+        "测算 5% 年息与实际融资成本（如美元贷款成本）的差额",
+        "确认是否可接受删除 6.4(B)，保留中止履行、扣留单据及解除权",
+        "若买方坚持，考虑改为按实际损失赔偿并以 LPR / SOFR 为参照"
+      ],
+      "legal_refs": [
+        {"label": "《中华人民共和国民法典》第 585 条（违约金与损失赔偿）", "note": "违约金低于损失的，当事人可请求法院或仲裁机构予以增加。但本合同既已明确“放弃索赔”，是否仍能主张增加存在争议，不能预设可获支持。"},
+        {"label": "《中华人民共和国民法典》第 527 条（不安抗辩权）", "note": "合同排除中止履行的约定，是否可当然对抗法定抗辩权，需法律顾问判断，本报告不作结论。"}
+      ],
+      "suggested_wording": "If the Buyer fails to pay any sum when due, interest shall accrue on the overdue sum at the rate of SOFR plus 400 basis points per annum, calculated on the actual number of days elapsed on a 360-day basis. The Seller shall additionally be entitled to claim its actual losses, to suspend performance, to withhold documents including the Bill of Lading, and to avoid this Contract, without prejudice to any interest accrued.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-03",
+      "seq": 3,
+      "category": "payment",
+      "severity": "high",
+      "issue_type": "unbalanced",
+      "title": "交货期以“收到卖方接受的信用证”为条件，但合同未约定开证形式与修改程序",
+      "title_en": "Shipment time is conditioned on an acceptable L/C, yet no L/C form or amendment procedure is fixed",
+      "anchors": [
+        {"block": "p-article-6-payment-060", "clause": "6.1(C)", "quote": "The form of the Letter of Credit shall be agreed in writing between the Parties before the date referred to in Article 6.1(B)."},
+        {"block": "p-article-5-delivery-and-shipment-050", "clause": "5.1(C)", "quote": "The delivery period is conditional upon the Seller having received the Letter of Credit in a form acceptable to the Seller and upon vessel space being available. Time of shipment shall run from the date the Seller receives the Letter of Credit."}
+      ],
+      "clause_title": "6.1(C) / 5.1(C)",
+      "finding": "6.1(C) 要求信用证格式须在 6.1(B) 日期（2026-04-15）之前书面确认，而合同签署日为 4 月 17 日 —— 该确认程序在时间上已被合同本身架空。同时，“in a form acceptable to the Seller”没有任何客观标准，5.1(C) 又把交期起算点系于此，等于把交期起算的主动权交给一个纯主观判定。",
+      "finding_en": "Clause 6.1(C) requires the L/C form to be agreed before the 6.1(B) date, which precedes signature, so the procedure cannot operate. 'In a form acceptable to the Seller' sets no objective standard, and clause 5.1(C) then ties the entire shipment clock to that subjective judgement.",
+      "consequence": "买方开出与本合同不一致的信用证（如单据条款、最迟装运期、有效期与合同冲突）时，卖方若拒绝接受，交期无法起算；若接受，则可能面临交单不符点而遭拒付。两种选择都会把违约风险转移到卖方。",
+      "consequence_en": "If the L/C omits or contradicts contract terms, rejecting it delays the shipment clock, while accepting it risks a mismatched presentation and refusal to pay. Either branch shifts the consequence onto the seller.",
+      "confirm": [
+        "调取买方拟开证的草稿（L/C draft）并逐条比对 6.2、Annex C",
+        "明确“卖方接受的格式”的判断标准，或改为以合同 6.2/Annex C 为唯一单据清单",
+        "确认信用证有效期（2026-07-21）与装运期（2026-06-30）之间的交单天数是否足够",
+        "确认信用证是否可转让，若卖方为贸易商（非生产商）需核对工厂单据可否覆盖"
+      ],
+      "legal_refs": [
+        {"label": "UCP 600（ICC 跟单信用证统一惯例）", "note": "信用证项下银行处理的是单据而非货物。本合同 6.2(C) 允许卖方按信用证交单，未规定不符点处理与拒付后的救济路径。"}
+      ],
+      "suggested_wording": "The Seller shall send the Buyer a written L/C instruction sheet within 3 Business Days after the Effective Date. The Buyer shall open the L/C exactly in accordance with that instruction sheet. Any amendment to the L/C after issuance which is not initiated by the Seller and which would delay or prejudice the Seller shall extend the delivery period and the document presentation period day-for-day.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-04",
+      "seq": 4,
+      "category": "payment",
+      "severity": "medium",
+      "issue_type": "ambiguous",
+      "title": "允许以印尼盾按“付款银行当日即期汇率”支付并视为完全清偿",
+      "title_en": "Payment in IDR at the paying bank's spot rate is treated as full discharge",
+      "anchors": [
+        {"block": "p-article-3-price-and-currency-037", "clause": "3.2(B)", "quote": "If the Buyer is restricted by Indonesian regulation from remitting USD, or if USD is not available to the Buyer, the Buyer may pay in Indonesian Rupiah at the spot rate published by the paying bank on the date of remittance, and such payment shall fully discharge the Buyer's obligation."}
+      ],
+      "clause_title": "3.2 Currency and currency risk",
+      "finding": "该条允许买方在“受印尼法规限制”或“买方无法取得美元”时改用印尼盾支付，汇率取“付款银行公布”的即期汇率，且支付即构成“完全清偿”。两个触发条件中“USD is not available to the Buyer”完全由买方自述，没有任何第三方证明要求；汇率由买方一侧的付款行单方确定。",
+      "finding_en": "The clause allows IDR payment on two triggers, the second of which ('USD is not available to the Buyer') is entirely self-certified, and prices that payment at a rate published unilaterally by the buyer's own remitting bank, with immediate full discharge.",
+      "consequence": "汇率风险与执行风险双重转移。假设付款日汇率偏离合同基准 2%，仅汇率差额即约 USD 5,360；若偏离 5%，约 USD 13,400。此外，信用证支付方式下本不应出现“买方自由选择币种”的条款，本条与 6.1 的信用证安排存在结构性不一致。",
+      "consequence_en": "Both FX and execution risk move to the seller: a 2% rate deviation is worth roughly USD 5,360 and a 5% deviation roughly USD 13,400 on this contract value. The clause also sits awkwardly with the L/C-only payment mechanism in 6.1, which does not contemplate a buyer-selected currency.",
+      "confirm": [
+        "确认印尼现行外汇管理规定是否确实限制美元付汇（需由印尼当地律师或银行核实）",
+        "确认该条款是否仅适用于信用证以外的补充付款情形",
+        "明确汇率取值来源（如中国外汇交易中心或路透中间价）与取值时点",
+        "约定汇率偏离超过一定幅度时的价格调整或拒绝受领权"
+      ],
+      "legal_refs": [
+        {"label": "印尼外汇与付汇规定", "note": "印尼对印尼盾使用、外汇收入留存等有具体规则，且近年有调整。本报告未核实具体条文，须由印尼当地银行或律师出具意见。"},
+        {"label": "《中华人民共和国民法典》第 514 条（币种）", "note": "涉外合同价款的币种与折算方式应以约定为准；约定不明时折算式存在争议。"}
+      ],
+      "suggested_wording": "All payments shall be made in United States Dollars. Payment in any other currency shall be accepted only with the Seller's prior written consent and at the CNY/USD central parity rate published by CFETS on the date of payment, plus a currency conversion charge of 1% of the amount converted.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-05",
+      "seq": 5,
+      "category": "payment",
+      "severity": "medium",
+      "issue_type": "unbalanced",
+      "title": "单据放行依赖议付行，卖方对放单延误全面免责",
+      "title_en": "Document release depends on the negotiating bank while the seller disclaims all delay",
+      "anchors": [
+        {"block": "p-article-6-payment-064", "clause": "6.3", "quote": "The negotiating bank shall release the original documents directly to the Buyer upon receipt of payment."},
+        {"block": "p-article-6-payment-065", "clause": "6.3", "quote": "The Seller shall not be responsible for any delay in the release of documents by any negotiating bank, advising bank, issuing bank, courier or port authority."}
+      ],
+      "clause_title": "6.3 Release of documents",
+      "finding": "6.3 第一段把放单义务指向“议付行”，但议付行是卖方的银行，并不受买方指示，也无义务向买方负责；第二段又让卖方对包括议付行在内的全链条延误免责。结果是在买方一侧，放单延误无人可追；在卖方一侧，又可能被主张“未及时交付单据”。",
+      "finding_en": "The obligation to release documents is placed on the negotiating bank, which acts for the seller and owes no duty to the buyer, while the next sentence exempts the seller for delays by that same bank. No party is accountable for a delay on the buyer's side, and the seller may still be blamed for late presentation.",
+      "consequence": "印尼进口清关通常需要正本提单或电放指令，放单延误 1–2 周可能直接产生滞箱费、堆存费与仓租费。合同未约定这些费用的承担方，实践中往往回到买方并提出索赔或拒付尾款。",
+      "consequence_en": "Indonesian clearance typically requires the original B/L or a telex release; a one-to-two-week delay can generate demurrage, storage and warehouse charges whose allocation the contract leaves open, inviting a set-off or a payment claim.",
+      "confirm": [
+        "确认能否采用“电放提单（telex release）”或海运单（Sea Waybill）以缩短放单环节",
+        "明确单据交接责任方（通常是国内通知行或卖方交单行）与时限",
+        "约定因放单延误产生的滞箱费、堆存费由谁承担、上限多少",
+        "确认议付行是否愿意承担对买方的放单义务（多数银行不会承担）"
+      ],
+      "legal_refs": [
+        {"label": "UCP 600 第 14 条、第 16 条", "note": "银行审单与拒付规则针对买卖双方与开证行，并不直接约束议付行对买方的放单行为。"}
+      ],
+      "suggested_wording": "The Seller shall, within 3 Business Days after receipt of payment, send to the Buyer by courier a full set of original documents or a copy of the Bill of Lading marked 'Surrendered' together with the carrier's release instruction. Each Party shall bear the port storage and container detention charges attributable to its own delay.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-06",
+      "seq": 6,
+      "category": "delivery",
+      "severity": "high",
+      "issue_type": "conflict",
+      "title": "CIF术语却约定装运港为天津新港，且卖方保留单方更换装运港的权利",
+      "title_en": "A CIF term naming Jakarta is combined with a Tianjin Xingang loading port and a unilateral right to change it",
+      "anchors": [
+        {"block": "p-article-4-trade-term-040", "clause": "4.1", "quote": "The Goods are sold CIF Jakarta, Indonesia (Incoterms 2020)."},
+        {"block": "p-article-4-trade-term-046", "clause": "4.3", "quote": "Notwithstanding Article 4.1, the Port of Loading is Tianjin Xingang, People's Republic of China. The Seller may nominate an alternative Chinese port of loading without the Buyer's consent."},
+        {"block": "p-article-4-trade-term-047", "clause": "4.3", "quote": "For the avoidance of doubt, the Seller is not obliged to deliver the Goods to any place other than the Port of Loading stated in this Article 4.3."}
+      ],
+      "clause_title": "4.1 / 4.3 Trade term and port of loading",
+      "finding": "CIF 只需指明目的港（Jakarta），装运港本不构成 CIF 术语的必需要素。但本条以“Notwithstanding Article 4.1”的表述把装运港固定在天津新港，并附加“卖方可无需买方同意更换装运港”，又声明“卖方无须在装运港以外的任何地点交货”。三句话叠加后，CIF 语境下的“到岸”义务被实质性削弱，容易被解读为一份 FOB 性质的合同加上卖方代订舱。",
+      "finding_en": "CIF requires only a named destination port. Here the loading port is fixed by an override clause, a unilateral right to change it is added, and a sentence disclaims any delivery obligation elsewhere. Read together, these effectively convert a CIF obligation into an FOB-type delivery with seller-arranged carriage.",
+      "consequence": "目的港交货义务被弱化，买方若主张卖方应负责运抵雅加达，将出现两种解释并存的局面；同时卖方单方更换装运港会改变内陆运费、出口报关口岸与商检安排，但价格（3.1）是固定的，成本增加无调价机制。对卖方自身而言，若实际从上海或宁波出运而合同载明天津，提单与合同不一致还可能被信用证或海关质疑。",
+      "consequence_en": "A buyer may reasonably read the contract as requiring delivery at Jakarta, while the seller reads it as FOB-at-Tianjin. The unilateral port-change right also shifts inland freight and customs costs to the seller while the price stays fixed, and a B/L loaded elsewhere would not match the contract.",
+      "confirm": [
+        "确认实际拟装运港（天津、上海、宁波或张家港），并与生产地陆运成本比对",
+        "确认 CIF 术语是否为本方真实意图；若主要目的是锁定运费，可考虑 CFR 或 FOB + 买方订舱",
+        "核实买方对装运港的态度，是否接受“中国任一港口”或须指定单一港口",
+        "确认更换装运港对出口退税申报、报关单与提单一致性无影响"
+      ],
+      "legal_refs": [
+        {"label": "Incoterms 2020 — CIF 规则", "note": "CIF 下卖方须订立运输合同至指定目的港，并办理符合最低要求的保险；风险在货物装船时转移。装运港不属于 CIF 的要素。"},
+        {"label": "Incoterms 2020 — 术语适用范围", "note": "Incoterms 仅规范交货、费用与风险在买卖双方间的分配，不涉及货物所有权转移、违约责任与不可抗力。"}
+      ],
+      "suggested_wording": "The Goods are sold CIF Jakarta, Indonesia (Incoterms 2020), and the named Port of Loading is [Tianjin Xingang / Shanghai], People's Republic of China. The Seller may nominate an alternative Chinese port of loading only with the Buyer's prior written consent, and any resulting increase in inland freight or port charges shall be borne by the Buyer.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-07",
+      "seq": 7,
+      "category": "delivery",
+      "severity": "high",
+      "issue_type": "conflict",
+      "title": "CIF术语版本表述冲突，不同单据引用不同版本即适用不同规则",
+      "title_en": "The Incoterms version is destabilised by a clause applying whichever version each document cites",
+      "anchors": [
+        {"block": "p-article-4-trade-term-041", "clause": "4.1", "quote": "The trade term shall be stated as \"CIF Jakarta\" in all commercial documents. Where any other version of Incoterms is referred to in any document issued in connection with this Contract (including any proforma invoice, purchase order or letter of credit), the version so referred to shall govern that document."}
+      ],
+      "clause_title": "4.1 The trade term",
+      "finding": "4.1 第一句用“CIF Jakarta, Indonesia (Incoterms 2020)”确立了 2020 版本，但第二句又规定：其他单据若援引其他版本，则该版本“管辖该单据”。这意味着同一批货物可能同时受 Incoterms 2010 与 2020 约束。按照 ICC 的规则，援引哪一版本就适用哪一版本 —— 该条并非无害申明，而是主动制造了版本碎片化。",
+      "finding_en": "The first sentence fixes Incoterms 2020, but the second lets any other document's cited version govern that document. The result is a single shipment potentially governed by two different Incoterms editions at once.",
+      "consequence": "Incoterms 2010 与 2020 在费用分配、装卸费承担与保险义务表述上存在差异（例如对 CIF 项下装卸费与运输途中安全要求的处理）。一旦发生费用争议，双方可各引一份单据主张适用不同版本，争议成本与不确定性显著上升。此外，合同同时包含 4.2(B)（卖方自主订舱）与 4.2(C)（装船转移风险），与 CIF 的默认风险点一致，但若买方主张其他版本，风险点解释可能被重新讨论。",
+      "consequence_en": "The 2010 and 2020 editions differ in how terminal handling and security-related obligations are allocated. A single document mismatch opens the door to duelling versions, which is precisely the uncertainty Incoterms is meant to remove.",
+      "confirm": [
+        "核对形式发票 ZH-PI-2026-0311 援引的 Incoterms 版本",
+        "核对买方订单与信用证草稿中的术语表述是否带版本号",
+        "统一全链条单据（PI、SC、L/C、提单、保险单）的术语表述为 CIF Jakarta Incoterms® 2020",
+        "确认双方对 ICC 关于“援引版本即适用该版本”规则的共同理解"
+      ],
+      "legal_refs": [
+        {"label": "Incoterms 2020（ICC 出版物 723E）", "note": "ICC 明确建议在合同中完整写明术语、地点与版本（例如“CIF Jakarta Incoterms® 2020”），以避免版本歧义。"}
+      ],
+      "suggested_wording": "The Goods are sold CIF Jakarta, Indonesia, Incoterms® 2020. All commercial documents, including the proforma invoice, the Letter of Credit and the Bill of Lading, shall state the trade term as 'CIF Jakarta Incoterms® 2020'. No other version of Incoterms shall apply to this Contract or to any document issued under it.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-08",
+      "seq": 8,
+      "category": "delivery",
+      "severity": "high",
+      "issue_type": "ambiguous",
+      "title": "交货期可因“任何原因”延迟且延长期由卖方单方决定",
+      "title_en": "Shipment may be delayed for any reason and the extension is nominated by the seller alone",
+      "anchors": [
+        {"block": "p-article-5-delivery-and-shipment-051", "clause": "5.1(D)", "quote": "If shipment is delayed for any reason, the Seller shall notify the Buyer and the Buyer shall accept shipment within such extended period as the Seller may nominate, provided that the extension does not exceed 30 days."}
+      ],
+      "clause_title": "5.1(D) Delivery period",
+      "finding": "“for any reason”没有限定为不可抗力或卖方无法控制的原因；“such extended period as the Seller may nominate”赋予卖方单方决定权，仅以 30 天上限作为约束。同时，合同缺少与之对应的迟延交付违约金条款，买方一侧没有对价保护。",
+      "finding_en": "The trigger is 'any reason', not force majeure; the extension period is set by the seller alone; and the 30-day cap is the sole limit. There is also no liquidated-damages clause running the other way.",
+      "consequence": "对卖方而言，这一条款在实践中可能被认为属于失衡条款而在争议中被排除或限缩解释（见 legal_refs），并不能提供可靠保护。更现实的问题是：买方会在谈判中对本条提出反对，若卖方坚持保留，可能换来买方在质量索赔或责任限额条款上加码，形成不对等交换。此外，纯碱价格波动较大，30 天延期可能对应显著的市场价差，买方可能主张损失。",
+      "consequence_en": "The clause looks protective but is the kind of one-sided extension that tribunals often read down. In practice it invites a counter-claim, and a 30-day delay on a volatile soda ash market can represent a substantial price gap for which no allocation exists.",
+      "confirm": [
+        "确认 30 天上限是否与本方产能、船期安排的现实波动匹配",
+        "确认买方对该条的态度，是否已在其 LOI 中提出反对",
+        "核对是否需要配套的迟延交付违约金条款（如每日 0.5%、上限 5%）",
+        "评估在纯碱价格高波动期内约定固定交期的风险"
+      ],
+      "legal_refs": [
+        {"label": "《中华人民共和国民法典》第 496 条、第 497 条（格式条款）", "note": "提供格式条款一方不合理免除或减轻其责任、加重对方责任的，该条款可能无效。本条是否为格式条款取决于谈判过程，需个案判断。"},
+        {"label": "《中华人民共和国民法典》第 509 条（全面履行）", "note": "当事人应当全面履行自己的义务，单方延长履行期的约定能否排除该义务存在解释空间。"}
+      ],
+      "suggested_wording": "If shipment is delayed for reasons within the Seller's control, the Buyer may claim liquidated damages of 0.3% of the value of the delayed Goods for each day of delay, up to a maximum of 5%. If shipment is delayed for reasons outside the Seller's control, including force majeure under Article 11, the delivery period shall be extended by the duration of the impediment and the Seller shall notify the Buyer in writing within 5 days of becoming aware of the impediment.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-09",
+      "seq": 9,
+      "category": "delivery",
+      "severity": "medium",
+      "issue_type": "conflict",
+      "title": "装船后买方承担“积载与绑扎不当”风险，与CIF及承运人责任结构冲突",
+      "title_en": "Risk of improper stowage shifts to the buyer after loading, which conflicts with the CIF and carrier-liability structure",
+      "anchors": [
+        {"block": "p-article-5-delivery-and-shipment-055", "clause": "5.3", "quote": "Loading, stowage, lashing, dunnage and securing of the Goods shall be carried out at the Seller's cost and shall be the Seller's responsibility until the Goods are on board the vessel."},
+        {"block": "p-article-5-delivery-and-shipment-056", "clause": "5.3", "quote": "After the Goods are on board, the Buyer shall bear the risk of, and shall indemnify the Seller against any claim arising from, improper stowage, lashing or securing, including any claim by the vessel or terminal."}
+      ],
+      "clause_title": "5.3 Loading, stowage and securing",
+      "finding": "绑扎与积载（stowage / lashing / securing）在海运实务中通常是船方的责任范围，且在 CIF 下由卖方订舱、卖方与承运人订约。本条却把装船后“因绑扎与积载不当引起”的风险与赔偿义务全部推给买方，并要求买方赔偿卖方因船方或码头索赔产生的损失。",
+      "finding_en": "Stowage, lashing and securing are normally within the carrier's responsibility, and under CIF the seller is the one contracting with the carrier. This clause nonetheless assigns post-loading cargo-securing risk and indemnity obligations to the buyer.",
+      "consequence": "本条在合同内部与 4.2(A)（卖方订舱）和 8.1（风险随装船转移）形成三向冲突：订约方是卖方，风险方是买方，索赔方通常是船方。一旦发生绑扎事故导致货损，买方会主张该损失属于卖方订舱与装载安排责任，而卖方援引 5.3 第二段反推给买方，争议难以在单一法域内解决。",
+      "consequence_en": "The contract party, the risk bearer and the claimant diverge. If securing fails, the buyer points to the seller's booking and loading arrangements while the seller points to clause 5.3 — a split that is hard to resolve under one governing law.",
+      "confirm": [
+        "核实提单及租约中关于 FIO / FIOS / Liner Terms 的约定（谁承担装卸与绑扎）",
+        "确认保单是否覆盖“packing and securing不当”所致的货损",
+        "明确大袋货物（25 MT/袋）的吊装、绑扎方案与船方作业分工",
+        "评估是否删除 5.3 第二段，改为按承运人责任处理"
+      ],
+      "legal_refs": [
+        {"label": "海牙—维斯比规则 / 中国《海商法》", "note": "承运人对积载不当造成的货损责任存在免责与责任限额规则。具体适用需结合提单条款与装运港、目的港所属公约体系判断。"}
+      ],
+      "suggested_wording": "The Seller, as the party contracting with the carrier, shall ensure that the Goods are loaded, stowed, lashed and secured in accordance with the carrier's instructions and the applicable IMO/IMSBC requirements. Risk of loss or damage arising from stowage or securing shall be allocated in accordance with Article 4.2(C) and the terms of the Bill of Lading, and neither Party shall be required to indemnify the other for loss caused by the carrier's own operations.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-10",
+      "seq": 10,
+      "category": "delivery",
+      "severity": "low",
+      "issue_type": "commercial",
+      "title": "允许与第三方货物合并提单，但未约定分票、分卸与费用分摊",
+      "title_en": "Consolidation with other buyers' cargo is permitted with no split B/L, discharge or cost mechanism",
+      "anchors": [
+        {"block": "p-article-5-delivery-and-shipment-054", "clause": "5.2(C)", "quote": "The Seller may ship the Goods under this Contract together with goods for other buyers in one Bill of Lading."},
+        {"block": "p-article-5-delivery-and-shipment-052", "clause": "5.2(A)", "quote": "Partial shipment is allowed at the Seller's option, and each partial shipment shall be invoiced and paid separately."}
+      ],
+      "clause_title": "5.2 Partial shipment, transhipment and consolidation",
+      "finding": "5.2(C) 允许合拼提单，但没有约定：(1) 是否出具分提单（house B/L）或分单；(2) 合拼船在目的港是否分开卸货；(3) 其他货主的货物导致的延误、查验、扣留如何分摊。5.2(A) 的分批装运条款又规定“每批单独开票和付款”，但 6.1 只约定了一份信用证，两者衔接不明。",
+      "finding_en": "Consolidation is permitted without any split-document, separate-discharge or cost-sharing mechanism, and the partial-shipment clause contemplates separate invoicing and payment per lot while Article 6 provides for a single L/C.",
+      "consequence": "合拼船常见的后果是：一方货物被查验而全船滞港、买方无法单独提货、分批装运下信用证金额与分批发票不匹配导致不符点。这些风险在合同中均无分配规则。",
+      "consequence_en": "Shared-vessel shipments frequently produce whole-shipment delays from a single consignment's inspection, inability to take partial delivery, and L/C discrepancies where partial invoices exceed a single credit amount.",
+      "confirm": [
+        "确认是否可能实际采用合拼船；若否，可删除 5.2(C)",
+        "若保留分批装运，确认信用证允许分批（partial shipment allowed）且金额可按批调整",
+        "约定合拼情况下出具分单、分舱积载与独立标记的做法",
+        "约定因第三方货物导致的滞港、查验费用分摊原则"
+      ],
+      "legal_refs": [
+        {"label": "UCP 600 第 31 条（分批装运）", "note": "信用证是否允许分批以信用证条款为准，与合同 5.2(A) 的允诺并不自动一致。"}
+      ],
+      "suggested_wording": "The Seller may ship the Goods in one or more lots. Partial shipment and transhipment are permitted. Where the Goods are shipped with cargo for other consignees, the Seller shall procure either a separate Bill of Lading for the Goods or a delivery order enabling the Buyer to take delivery separately, and shall bear any documented port storage cost attributable solely to the other cargo.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-11",
+      "seq": 11,
+      "category": "delivery",
+      "severity": "medium",
+      "issue_type": "unbalanced",
+      "title": "装船通知仅要求10日内发送提单副本，缺少装运前通知与到港预计",
+      "title_en": "Shipping advice is limited to a B/L copy within 10 days, with no pre-shipment notice or ETA",
+      "anchors": [
+        {"block": "p-article-5-delivery-and-shipment-057", "clause": "5.4", "quote": "The Seller shall e-mail a copy of the Bill of Lading to the Buyer's e-mail address in Article II.4 within 10 (ten) days after the on board date. No other shipping advice, pre-shipment notice or ETA notification shall be required."}
+      ],
+      "clause_title": "5.4 Shipping advice",
+      "finding": "本条以“No other shipping advice... shall be required”的封闭式表述，排除了所有其他装运通知义务。但买方在印尼侧需要提前安排进口许可、报关、码头提货窗口与内陆运输，装船后 10 天才拿到提单副本，通常不足以完成这些准备。",
+      "finding_en": "The clause closes the door on any further notice obligation. Indonesian-side import preparation, clearance, berth and inland-transport booking generally cannot be completed from a B/L copy arriving up to ten days after loading.",
+      "consequence": "买方在实务中必然索要船名、航次、预计到港日（ETA）与装运通知，若卖方拒不提供，可能构成对目的港交货配合义务的实质违反；若提供，则与本条文本不符。此外，部分目的地海关与信用证要求“装运通知”佐证，缺失可能影响清关。",
+      "consequence_en": "In practice the buyer will demand vessel name, voyage and ETA. Withholding them may amount to failing to cooperate on delivery; supplying them departs from the text. Some destination customs and L/C conditions also expect a shipping advice document.",
+      "confirm": [
+        "确认买方是否已在 LOI 或往来邮件中要求装运通知与 ETA 更新",
+        "核实印尼清关是否要求装运通知单（Shipping Advice）或到货通知",
+        "确认信用证条款是否包含装运通知传真副本（常见的软条款）",
+        "约定通知内容（船名、航次、装运日、预计到港日、提单号）与频率"
+      ],
+      "legal_refs": [
+        {"label": "Incoterms 2020 — 通知义务", "note": "CIF 项下卖方须就已完成交货给予买方充分通知，并协助买方取得运输与保险相关单据。封闭排除一切通知义务的约定与实践存在张力。"}
+      ],
+      "suggested_wording": "The Seller shall, within 3 Business Days after the on board date, send the Buyer a shipping advice stating the vessel name, voyage number, on board date, Bill of Lading number, quantity shipped and estimated time of arrival at Jakarta. The Seller shall promptly inform the Buyer of any material change to the estimated time of arrival.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    },
+    {
+      "id": "R-12",
+      "seq": 12,
+      "category": "delivery",
+      "severity": "low",
+      "issue_type": "commercial",
+      "title": "目的港卸货与提货时限10天，未约定超期仓储与滞箱费承担",
+      "title_en": "Ten-day discharge obligation with no allocation of storage or container-detention costs",
+      "anchors": [
+        {"block": "p-article-12-liability-and-indemnity-101", "clause": "12.3", "quote": "The Buyer shall take delivery of the Goods and discharge them from the vessel within 10 (ten) days after the vessel's arrival at Jakarta. The Buyer shall not refuse delivery of the Goods for any reason."},
+        {"block": "p-article-4-trade-term-045", "clause": "4.2(D)", "quote": "The Seller shall have no responsibility for the Goods after loading on board. All costs arising after loading, including demurrage, detention, port storage and vessel delay, shall be for the Buyer's account."}
+      ],
+      "clause_title": "12.3 / 4.2(D)",
+      "finding": "12.3 给买方设定了 10 天卸货期，但没有规定超期的后果（费率、上限、责任方式）；4.2(D) 虽把装船后费用归于买方，但 CIF 下的“装船后费用”与“目的港卸货费”是否同一概念未作区分。CIF 术语对目的港卸货费的承担本身有特定规则，本合同未处理。",
+      "finding_en": "The ten-day discharge obligation carries no defined consequence for breach, and clause 4.2(D) sweeps all post-loading costs to the buyer without distinguishing terminal charges at discharge, which CIF treats separately.",
+      "consequence": "印尼主要港口（如丹戎不碌）在旺季的堆存与滞港费金额可观。若买方延迟提货，卖方虽可依 4.2(D) 主张费用由买方承担，但由于 12.3 无违约后果条款，实际追偿缺乏计算基础。",
+      "consequence_en": "Storage and detention at a major Indonesian port in peak season can be material. Clause 4.2(D) allocates the cost to the buyer but, without a breach consequence in 12.3, there is no basis on which to compute a claim.",
+      "confirm": [
+        "核实拟用船舶是班轮（Liner Terms，卸货费含运价）还是租船（可能为 FIOS）",
+        "确认目的港码头操作费（THC）在 CIF 下的实际承担惯例",
+        "约定超期提货的费率（如每日 X USD）、上限与保证方式",
+        "确认卖方是否可能在装船前收取履约保证金（advance deposit）"
+      ],
+      "legal_refs": [
+        {"label": "Incoterms 2020 — CIF 费用划分", "note": "CIF 项下卖方须支付运费及运输合同项下应由卖方承担的费用，包括装船费、卸货港的卸货费（如运输合同已包含），买方承担卸货后的费用。"}
+      ],
+      "suggested_wording": "The Buyer shall take delivery of the Goods within 10 days after the vessel's arrival at Jakarta. If the Buyer fails to do so, the Buyer shall reimburse the Seller for all documented storage, demurrage and container detention charges incurred after the tenth day, and the Seller shall be entitled to arrange storage of the Goods at the Buyer's cost.",
+      "owner": "",
+      "status": "待处理",
+      "note": ""
+    }
+  ]
+}

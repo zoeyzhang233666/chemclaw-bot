@@ -1,0 +1,133 @@
+# 进口到厂成本项目清单（机器可读）
+# 每项：id / 中文名 / 英文名 / 阶段 / 是否计入海关计税价格 / 是否计入到厂成本 / 缺失是否阻断完整到厂价 / 数据来源类型
+# basis: 计量口径（TOTAL=整票, PER_TON=元/吨, PCT_OF=按比例）
+# customs_freight_related: 海关"运费及相关费用"口径（计入计税价格）
+version: "1.0"
+stages:
+  - id: A
+    name: 海外货值与出口侧
+  - id: B
+    name: 国际运输与保险
+  - id: C
+    name: 进口税费
+  - id: D
+    name: 口岸与境内物流
+  - id: E
+    name: 资金与结算（可选）
+items:
+  - id: EXW_GOODS
+    cn: 货物价款(EXW基准)
+    stage: A
+    in_customs_value: true
+    in_landed_cost: true
+    missing_blocks_full_cost: true
+    typical_source: 用户输入(供应商PI)
+    note: 由报价减去已含的出口费用、海运、保险反算；不含买方佣金。
+  - id: PACKING_EXTRA
+    cn: 包装费(另行计价部分)
+    stage: A
+    in_customs_value: true
+    in_landed_cost: true
+    missing_blocks_full_cost: false
+    typical_source: 用户输入(供应商)
+    note: 《关税法》第二十五条(三)：由买方负担的包装材料费与包装劳务费应计入计税价格。若PI已含包装，填0并注明"含于单价"。
+  - id: ORIGIN_CHARGES
+    cn: 起运港费用(码头/装载/文件)
+    stage: A
+    in_customs_value: true
+    in_landed_cost: true
+    missing_blocks_full_cost: false
+    typical_source: 用户输入(货代)/含于报价
+    note: FOB/CIF 已含装运港费用；EXW/FCA 需另加。属"运抵境内输入地点起卸前"的费用，计入海关运费。
+  - id: EXPORT_CLEARANCE
+    cn: 出口报关及原产地证等出口侧费用
+    stage: A
+    in_customs_value: true
+    in_landed_cost: true
+    missing_blocks_full_cost: false
+    typical_source: 用户输入(供应商/货代)
+    note: FOB 起通常由卖方承担并已含在报价；EXW 需买方承担。
+  - id: OCEAN_FREIGHT
+    cn: 国际海运费
+    stage: B
+    in_customs_value: true
+    in_landed_cost: true
+    missing_blocks_full_cost: true
+    typical_source: 用户输入(货代海运报价)
+    note: CFR/CIF/CPT/CIP/DAP/DDP 已含；FOB/EXW/FCA/FAS 需另加。到付与预付均计入计税价格。
+  - id: INSURANCE
+    cn: 运输保险费
+    stage: B
+    in_customs_value: true
+    in_landed_cost: true
+    missing_blocks_full_cost: false
+    typical_source: 用户输入(保险费率/保费)
+    note: CIF/CIP/DDP 已含；其余需另加。海关口径：保险费无法确定或未实际发生时按"CIF加运费"×3‰计算（不是零）。
+  - id: FINANCING
+    cn: 融资/信用证/汇兑成本
+    stage: E
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: false
+    typical_source: 用户输入
+    note: 不计入计税价格；纳入"经济全口径成本"可选项。
+  - id: DUTY
+    cn: 进口关税
+    stage: C
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: true
+    typical_source: 公开查询(税则)+计算
+    note: 关税不可抵扣，计入最终成本。
+  - id: CONSUMPTION_TAX
+    cn: 进口消费税
+    stage: C
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: false
+    typical_source: 公开查询+计算
+    note: 仅消费税应税消费品适用；一般化工原料不涉及。
+  - id: IMPORT_VAT_CASH
+    cn: 进口环节增值税(现金支出)
+    stage: C
+    in_customs_value: false
+    in_landed_cost: false
+    missing_blocks_full_cost: false
+    typical_source: 计算
+    note: 现金支出项；可抵扣的进项税额暂不计入最终成本，另行列示。
+  - id: PORT_CHARGES
+    cn: 港杂费(码头操作费/港建/堆存等)
+    stage: D
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: true
+    typical_source: 用户输入(港区标准/货代)
+    note: 起卸后费用，不计入计税价格。若海运报价已含目的港 THC，须扣除以免重复。
+  - id: CUSTOMS_BROKER
+    cn: 报关代理费
+    stage: D
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: true
+    typical_source: 用户输入(报关行报价)
+  - id: INSPECTION
+    cn: 检验检疫/检测费
+    stage: D
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: false
+    typical_source: 用户输入
+  - id: WAREHOUSE
+    cn: 仓储费(含滞港/免箱期后费用)
+    stage: D
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: true
+    typical_source: 用户输入(仓库报价)
+  - id: INLAND_TRUCK
+    cn: 国内运输费(港口→工厂)
+    stage: D
+    in_customs_value: false
+    in_landed_cost: true
+    missing_blocks_full_cost: true
+    typical_source: 用户输入(物流公司报价)

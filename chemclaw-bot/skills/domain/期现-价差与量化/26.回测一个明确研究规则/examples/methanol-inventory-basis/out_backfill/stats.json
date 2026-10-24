@@ -1,0 +1,617 @@
+{
+  "meta": {
+    "rule_id": "MA-1-5-9-basis80-inv2w-down-hold10",
+    "title": "甲醇港口库存连续两周下降 且 基差高于过去3年滚动80%分位 → 下一交易日建多，持有10个交易日",
+    "product": "甲醇 (Methanol, CZCE MA)",
+    "author": "research desk",
+    "created": "2026-10-20",
+    "version": "1.0.0",
+    "nl_rule": "甲醇港口库存连续两周下降，且甲醇基差高于过去3年滚动80%分位时，在信号可获得后的下一交易日建立甲醇期货多头，持有10个交易日。",
+    "research_question": "Does a bullish inventory+basis setup on methanol port inventory have historical predictive content for a 10-session long, after realistic contract, roll and cost modelling?",
+    "declared_before_running": true,
+    "notes": "此规格在任何回测运行之前固定；敏感性网格在 analysis.sensitivity 中预先声明，事后不得以收益最高的一组替换基准。"
+  },
+  "fingerprint": "ad5534b3d5dc67c9",
+  "digest": {
+    "publication_mode": "backfill_assumed",
+    "sessions": 2041,
+    "first_session": "2018-05-18",
+    "last_session": "2026-10-20",
+    "weeks_usable": 230,
+    "weeks_total": 230,
+    "weeks_verified_publish": 115,
+    "events": 59,
+    "contracts_used": [
+      "MA2301",
+      "MA2305",
+      "MA2309",
+      "MA2405",
+      "MA2505",
+      "MA2605",
+      "MA2609",
+      "MA2701"
+    ]
+  },
+  "stats": {
+    "sessions": 2041,
+    "years": 8.364754098360656,
+    "start_equity": 200000.0,
+    "end_equity": 198396.0,
+    "total_return": -0.008020000000000027,
+    "cagr": -0.0009621871185945263,
+    "volatility": 0.009201840601868608,
+    "sharpe": -0.10002053896346277,
+    "sortino": -0.04471031897853577,
+    "max_dd": -0.035159991144080305,
+    "max_dd_start": "2022-10-10 00:00:00",
+    "max_dd_trough": "2026-07-02 00:00:00",
+    "max_dd_recovery": null,
+    "max_dd_duration_sessions": 904,
+    "calmar": -0.02736596589719348,
+    "trades": 16,
+    "win_rate": 0.3125,
+    "profit_factor": 0.8377035605851504,
+    "payoff_ratio": 1.8429478332873308,
+    "avg_hold_sessions": 9.5,
+    "gross_pnl": -1540.0,
+    "fees": 64.0,
+    "slippage": 160.0,
+    "net_pnl": -1764.0,
+    "exposure": 0.0744732974032337,
+    "avg_margin_util": 0.0010209143102504119,
+    "max_margin_util": 0.01661409621767918
+  },
+  "diagnostics": {
+    "sessions": 2041,
+    "events_available": 59,
+    "blocked": {
+      "no_contract": 0,
+      "no_price": 0,
+      "insufficient_margin": 0,
+      "limit_reject": 0,
+      "filter_fail": 32,
+      "holding": 11
+    },
+    "price_field": "open",
+    "mtm_field": "settle",
+    "equity0": 200000.0
+  },
+  "annual": [
+    {
+      "year": 2018,
+      "sessions": 154,
+      "start_equity": 200000.0,
+      "end_equity": 200000.0,
+      "return": 0.0,
+      "max_dd": 0.0,
+      "vol": 0.0,
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "net_pnl": 0.0,
+      "exposure": 0.0
+    },
+    {
+      "year": 2019,
+      "sessions": 242,
+      "start_equity": 200000.0,
+      "end_equity": 200000.0,
+      "return": 0.0,
+      "max_dd": 0.0,
+      "vol": 0.0,
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "net_pnl": 0.0,
+      "exposure": 0.0
+    },
+    {
+      "year": 2020,
+      "sessions": 243,
+      "start_equity": 200000.0,
+      "end_equity": 200000.0,
+      "return": 0.0,
+      "max_dd": 0.0,
+      "vol": 0.0,
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "net_pnl": 0.0,
+      "exposure": 0.0
+    },
+    {
+      "year": 2021,
+      "sessions": 243,
+      "start_equity": 200000.0,
+      "end_equity": 200000.0,
+      "return": 0.0,
+      "max_dd": 0.0,
+      "vol": 0.0,
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "net_pnl": 0.0,
+      "exposure": 0.0
+    },
+    {
+      "year": 2022,
+      "sessions": 242,
+      "start_equity": 200000.0,
+      "end_equity": 197223.0,
+      "return": -0.013885000000000036,
+      "max_dd": -0.018769076919632477,
+      "vol": 0.008925894763113245,
+      "trades": 3,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "net_pnl": -2807.0,
+      "exposure": 0.12396694214876033
+    },
+    {
+      "year": 2023,
+      "sessions": 242,
+      "start_equity": 197223.0,
+      "end_equity": 195315.0,
+      "return": -0.009674328044903535,
+      "max_dd": -0.012795160807816508,
+      "vol": 0.005460900871500284,
+      "trades": 2,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "net_pnl": -1928.0,
+      "exposure": 0.08264462809917356
+    },
+    {
+      "year": 2024,
+      "sessions": 242,
+      "start_equity": 195315.0,
+      "end_equity": 195457.0,
+      "return": 0.0007270306940070359,
+      "max_dd": -0.002403090271830388,
+      "vol": 0.00353774273358535,
+      "trades": 2,
+      "win_rate": 0.5,
+      "profit_factor": 1.8187919463087248,
+      "net_pnl": 122.0,
+      "exposure": 0.07851239669421488
+    },
+    {
+      "year": 2025,
+      "sessions": 243,
+      "start_equity": 195457.0,
+      "end_equity": 194569.0,
+      "return": -0.004543198759829559,
+      "max_dd": -0.00736432625470318,
+      "vol": 0.004624970067532224,
+      "trades": 2,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "net_pnl": -908.0,
+      "exposure": 0.0823045267489712
+    },
+    {
+      "year": 2026,
+      "sessions": 190,
+      "start_equity": 194569.0,
+      "end_equity": 198396.0,
+      "return": 0.01966911481273992,
+      "max_dd": -0.01985772588858148,
+      "vol": 0.026957494052567012,
+      "trades": 7,
+      "win_rate": 0.5714285714285714,
+      "profit_factor": 1.7400039393342526,
+      "net_pnl": 3757.0,
+      "exposure": 0.33157894736842103
+    }
+  ],
+  "monthly": [
+    {
+      "month": "2018-05",
+      "return": 0.0
+    },
+    {
+      "month": "2018-06",
+      "return": 0.0
+    },
+    {
+      "month": "2018-07",
+      "return": 0.0
+    },
+    {
+      "month": "2018-08",
+      "return": 0.0
+    },
+    {
+      "month": "2018-09",
+      "return": 0.0
+    },
+    {
+      "month": "2018-10",
+      "return": 0.0
+    },
+    {
+      "month": "2018-11",
+      "return": 0.0
+    },
+    {
+      "month": "2018-12",
+      "return": 0.0
+    },
+    {
+      "month": "2019-01",
+      "return": 0.0
+    },
+    {
+      "month": "2019-02",
+      "return": 0.0
+    },
+    {
+      "month": "2019-03",
+      "return": 0.0
+    },
+    {
+      "month": "2019-04",
+      "return": 0.0
+    },
+    {
+      "month": "2019-05",
+      "return": 0.0
+    },
+    {
+      "month": "2019-06",
+      "return": 0.0
+    },
+    {
+      "month": "2019-07",
+      "return": 0.0
+    },
+    {
+      "month": "2019-08",
+      "return": 0.0
+    },
+    {
+      "month": "2019-09",
+      "return": 0.0
+    },
+    {
+      "month": "2019-10",
+      "return": 0.0
+    },
+    {
+      "month": "2019-11",
+      "return": 0.0
+    },
+    {
+      "month": "2019-12",
+      "return": 0.0
+    },
+    {
+      "month": "2020-01",
+      "return": 0.0
+    },
+    {
+      "month": "2020-02",
+      "return": 0.0
+    },
+    {
+      "month": "2020-03",
+      "return": 0.0
+    },
+    {
+      "month": "2020-04",
+      "return": 0.0
+    },
+    {
+      "month": "2020-05",
+      "return": 0.0
+    },
+    {
+      "month": "2020-06",
+      "return": 0.0
+    },
+    {
+      "month": "2020-07",
+      "return": 0.0
+    },
+    {
+      "month": "2020-08",
+      "return": 0.0
+    },
+    {
+      "month": "2020-09",
+      "return": 0.0
+    },
+    {
+      "month": "2020-10",
+      "return": 0.0
+    },
+    {
+      "month": "2020-11",
+      "return": 0.0
+    },
+    {
+      "month": "2020-12",
+      "return": 0.0
+    },
+    {
+      "month": "2021-01",
+      "return": 0.0
+    },
+    {
+      "month": "2021-02",
+      "return": 0.0
+    },
+    {
+      "month": "2021-03",
+      "return": 0.0
+    },
+    {
+      "month": "2021-04",
+      "return": 0.0
+    },
+    {
+      "month": "2021-05",
+      "return": 0.0
+    },
+    {
+      "month": "2021-06",
+      "return": 0.0
+    },
+    {
+      "month": "2021-07",
+      "return": 0.0
+    },
+    {
+      "month": "2021-08",
+      "return": 0.0
+    },
+    {
+      "month": "2021-09",
+      "return": 0.0
+    },
+    {
+      "month": "2021-10",
+      "return": 0.0
+    },
+    {
+      "month": "2021-11",
+      "return": 0.0
+    },
+    {
+      "month": "2021-12",
+      "return": 0.0
+    },
+    {
+      "month": "2022-01",
+      "return": 0.0
+    },
+    {
+      "month": "2022-02",
+      "return": 0.0
+    },
+    {
+      "month": "2022-03",
+      "return": 0.0
+    },
+    {
+      "month": "2022-04",
+      "return": 0.0
+    },
+    {
+      "month": "2022-05",
+      "return": 0.0
+    },
+    {
+      "month": "2022-06",
+      "return": 0.0
+    },
+    {
+      "month": "2022-07",
+      "return": 0.0
+    },
+    {
+      "month": "2022-08",
+      "return": 0.0
+    },
+    {
+      "month": "2022-09",
+      "return": 0.001827500000000093
+    },
+    {
+      "month": "2022-10",
+      "return": -0.017557607011102205
+    },
+    {
+      "month": "2022-11",
+      "return": 0.005571115209751731
+    },
+    {
+      "month": "2022-12",
+      "return": -0.006921033749165972
+    },
+    {
+      "month": "2023-01",
+      "return": 0.0
+    },
+    {
+      "month": "2023-02",
+      "return": 0.0
+    },
+    {
+      "month": "2023-03",
+      "return": -0.004811812009755445
+    },
+    {
+      "month": "2023-04",
+      "return": -0.004914048727798881
+    },
+    {
+      "month": "2023-05",
+      "return": 0.0014638811051661538
+    },
+    {
+      "month": "2023-06",
+      "return": 0.0
+    },
+    {
+      "month": "2023-07",
+      "return": 0.0
+    },
+    {
+      "month": "2023-08",
+      "return": 0.0
+    },
+    {
+      "month": "2023-09",
+      "return": 0.0
+    },
+    {
+      "month": "2023-10",
+      "return": 0.0
+    },
+    {
+      "month": "2023-11",
+      "return": 0.0
+    },
+    {
+      "month": "2023-12",
+      "return": 0.0
+    },
+    {
+      "month": "2024-01",
+      "return": 0.0
+    },
+    {
+      "month": "2024-02",
+      "return": -7.42390497401324e-05
+    },
+    {
+      "month": "2024-03",
+      "return": -0.0009678881346645296
+    },
+    {
+      "month": "2024-04",
+      "return": 0.00023284197705875087
+    },
+    {
+      "month": "2024-05",
+      "return": 0.0
+    },
+    {
+      "month": "2024-06",
+      "return": 0.0
+    },
+    {
+      "month": "2024-07",
+      "return": 0.0
+    },
+    {
+      "month": "2024-08",
+      "return": 0.0
+    },
+    {
+      "month": "2024-09",
+      "return": 0.0
+    },
+    {
+      "month": "2024-10",
+      "return": 0.0
+    },
+    {
+      "month": "2024-11",
+      "return": 0.0
+    },
+    {
+      "month": "2024-12",
+      "return": 0.0
+    },
+    {
+      "month": "2025-01",
+      "return": -0.0009669646009096144
+    },
+    {
+      "month": "2025-02",
+      "return": 0.0
+    },
+    {
+      "month": "2025-03",
+      "return": -0.0020203003052214896
+    },
+    {
+      "month": "2025-04",
+      "return": -0.0004341047039996271
+    },
+    {
+      "month": "2025-05",
+      "return": 0.0
+    },
+    {
+      "month": "2025-06",
+      "return": 0.0
+    },
+    {
+      "month": "2025-07",
+      "return": 0.0
+    },
+    {
+      "month": "2025-08",
+      "return": 0.0
+    },
+    {
+      "month": "2025-09",
+      "return": 0.0
+    },
+    {
+      "month": "2025-10",
+      "return": 0.0
+    },
+    {
+      "month": "2025-11",
+      "return": 0.0
+    },
+    {
+      "month": "2025-12",
+      "return": 0.0
+    },
+    {
+      "month": "2026-01",
+      "return": 0.0
+    },
+    {
+      "month": "2026-02",
+      "return": 0.0
+    },
+    {
+      "month": "2026-03",
+      "return": 0.0
+    },
+    {
+      "month": "2026-04",
+      "return": 0.013681521722370915
+    },
+    {
+      "month": "2026-05",
+      "return": -0.008287236793404706
+    },
+    {
+      "month": "2026-06",
+      "return": -0.009615752783003528
+    },
+    {
+      "month": "2026-07",
+      "return": 0.015469630347486829
+    },
+    {
+      "month": "2026-08",
+      "return": 0.0
+    },
+    {
+      "month": "2026-09",
+      "return": -0.0048910119089921045
+    },
+    {
+      "month": "2026-10",
+      "return": 0.0011884305903548942
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-map/schemas/relations.schema.json",
+  "title": "relations.json",
+  "type": "object",
+  "required": ["relations"],
+  "properties": {
+    "relations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to", "relation_type", "process", "quant_status", "evidence"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Za-z0-9_]+$" },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "relation_type": {
+            "enum": ["conversion", "coproduction", "byproduct", "substitution",
+                     "blend", "processing", "application", "route_option", "packaging"]
+          },
+          "process": { "type": "string", "minLength": 1 },
+          "family": { "type": ["string", "null"] },
+          "typical": { "type": "boolean" },
+          "quant": {
+            "type": ["object", "null"],
+            "properties": {
+              "from_per_to": { "type": ["number", "null"] },
+              "from_unit": { "type": ["string", "null"] },
+              "yield": { "type": ["number", "null"] },
+              "basis": { "type": ["string", "null"] },
+              "basis_grade": { "type": ["string", "null"] },
+              "from_per_to_range": {
+                "type": ["array", "null"],
+                "items": { "type": "number" },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "range_note": { "type": ["string", "null"] }
+            }
+          },
+          "quant_status": {
+            "enum": ["stoichiometric", "stoichiometric_derived", "commercial_grade",
+                     "formulation", "industrial_range_literature", "industrial_estimate_range",
+                     "byproduct_yield_range", "missing", "not_applicable"]
+          },
+          "quant_confidence": { "type": ["string", "null"], "enum": ["high", "medium", "low", null] },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "flow": { "type": ["string", "null"], "enum": ["mass", "none", null] },
+          "edge_style": { "type": ["string", "null"], "enum": ["solid", "dashed", "dotted", "shortdash", null] },
+          "notes": { "type": ["string", "null"] },
+          "gap_note": { "type": ["string", "null"] },
+          "route_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "description": "关系类型必须区分物质流（conversion/coproduction/byproduct，column 严格递增）与结构流（blend/processing/application/substitution/route_option/packaging）。substitution 不参与上下游血缘。quant_status=missing 表示明确缺口，不得填 0。给出 from_per_to 时必须在 quant.basis 与 quant.basis_grade 中写明计算口径与规格基准。"
+}

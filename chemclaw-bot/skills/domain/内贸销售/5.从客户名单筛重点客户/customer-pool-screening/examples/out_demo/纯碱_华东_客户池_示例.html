@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>纯碱（碳酸钠）·华东（鲁/苏/浙/皖/沪/闽/赣） 客户池筛选结果</title>
+<style>
+:root{--ink:#1a1a2e;--muted:#6b7280;--line:#e5e7eb;--brand:#1f4e79;}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:#f6f7f9}
+header{background:var(--brand);color:#fff;padding:14px 20px}
+header h1{margin:0;font-size:18px}
+header .sub{opacity:.85;font-size:12px;margin-top:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:10px 20px;background:#fff;border-bottom:1px solid var(--line)}
+.chip{font-size:12px;padding:3px 10px;border-radius:999px;background:#eef2f7}
+.chip.b{background:#dcfce7}.chip.y{background:#fef9c3}.chip.g{background:#e5e7eb}.chip.r{background:#fee2e2}
+.tabs{display:flex;gap:4px;padding:10px 20px 0}
+.tabs button{border:1px solid var(--line);border-bottom:none;background:#fff;padding:8px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px}
+.tabs button.on{background:var(--brand);color:#fff;font-weight:bold}
+.panel{display:none;background:#fff;margin:0 20px 20px;border:1px solid var(--line);border-radius:0 8px 8px 8px;padding:14px}
+.panel.on{display:block}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.toolbar input,.toolbar select{padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px}
+.toolbar input{min-width:200px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}
+th{background:#f0f4f8;cursor:pointer;user-select:none;white-space:nowrap;position:sticky;top:0}
+th.num,td.num{text-align:right}
+tbody tr:hover{background:#f8fafc}
+.p0{background:#dcfce7!important;font-weight:bold}.p1{background:#fef9c3!important}.p2{background:#e5e7eb!important}
+.wrap{max-width:260px;word-break:break-all}
+.selbar{position:sticky;bottom:0;background:#111827;color:#fff;padding:8px 14px;border-radius:8px;display:flex;gap:10px;align-items:center;margin-top:10px;font-size:13px}
+.selbar button{background:#2563eb;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px}
+.selbar button.ghost{background:#374151}
+.count{font-size:12px;color:var(--muted);margin:6px 0}
+h2{font-size:15px;margin:2px 0 10px}
+dl.meta{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:13px;margin:0}
+dl.meta dt{font-weight:bold;color:var(--brand)}
+.note{font-size:12px;color:var(--muted);line-height:1.7}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title"></h1>
+  <div class="sub" id="subtitle"></div>
+</header>
+<div class="chips" id="chips"></div>
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
+<script>
+const DATA = {"meta": {"product": "纯碱（碳酸钠）", "region": "华东（鲁/苏/浙/皖/沪/闽/赣）", "preference": "真实工厂优先", "generated": "2026-02-11", "notes": "全部信息来自公开检索（生成当日），非官方登记系统直查；『未核实』或单一来源字段，签约前以国家企业信用信息公示系统或营业执照终核；需求强度为工艺逻辑推断，未核实各家实际采购量与在用供应商。", "scoring": {"weights": {"产品匹配": 40, "工厂真实性": 25, "规模": 20, "地区": 15}, "tiers": {"P0": 80, "P1": 60, "P2": 40}}, "demand_logic": [{"行业": "浮法/日用/药用玻璃", "工序": "熔窑配合料", "作用": "主要助熔原料", "强度": "5星", "要点": "吨玻璃耗纯碱约110-150kg；深加工厂外购原片不算用户"}, {"行业": "玻璃纤维", "工序": "池窑配合料", "作用": "助熔+铝氧调节", "强度": "5星", "要点": "按池窑产线数推碱耗"}, {"行业": "洗涤剂（洗衣粉）", "工序": "配粉", "作用": "主要无机助剂", "强度": "4星", "要点": "浓缩化/液体化降低单耗但仍刚性"}, {"行业": "氧化铝", "工序": "拜耳法溶出", "作用": "调控/辅助", "强度": "2-3星", "要点": "碱耗以烧碱为主，纯碱需求有限，常见误判"}, {"行业": "氯碱/氟硅", "工序": "—", "作用": "不用纯碱", "强度": "0", "要点": "氯碱自产烧碱；一票否决高发区"}]}, "pool": [{"priority": "P0", "score": 95, "raw_name": "山东药玻", "std_name": "山东省药用玻璃股份有限公司", "uscc": "91370000168611868Q（财经F10单一来源，建议终核）", "status": "存续", "province": "山东", "region_full": "山东淄博(沂源)", "entity_type": "生产企业", "products": "药用玻璃模制瓶/管制瓶（中硼硅、低硼硅、钠钙）+丁基胶塞、铝塑盖", "demand_relation": "强", "demand_logic": "药玻窑炉配合料以纯碱为主原料；模制瓶年产能70多亿支、中硼硅市占90%+，碱耗持续量大", "s_match": 38, "s_factory": 24, "s_scale": 18, "s_region": 15, "evidence": "http://static.cninfo.com.cn/finalpage/2026-04-11/1225094071.PDF；https://q.stock.sohu.com/cn/600529/gsjj.shtml", "confidence": "高", "dedup": "无", "next_action": "首选开发：对接供应处+技术中心，携精制纯碱指标送样"}, {"priority": "P0", "score": 93, "raw_name": "泰山玻纤", "std_name": "泰山玻璃纤维有限公司", "uscc": "91370000863056413H（上交所债券受托管理报告，双源）", "status": "存续", "province": "山东", "region_full": "山东泰安", "entity_type": "生产企业", "products": "无碱玻璃纤维及制品（粗纱、短切毡、风电纱、电子纱/电子布）", "demand_relation": "强", "demand_logic": "玻纤池窑配合料纯碱占比高；17条产线、产能127万吨/年，中材科技002080全资", "s_match": 38, "s_factory": 24, "s_scale": 16, "s_region": 15, "evidence": "http://static.sse.com.cn/disclosure/bond/announcement/company/c/2961404975299666.pdf", "confidence": "高", "dedup": "无", "next_action": "按泰安/邹城/淄博三基地分线开发，关注新线点火窗口"}, {"priority": "P0", "score": 91, "raw_name": "长海股份", "std_name": "江苏长海复合材料股份有限公司", "uscc": "91320400743721247W（财经F10单一来源，建议终核）", "status": "存续", "province": "江苏", "region_full": "江苏常州(武进)", "entity_type": "生产企业", "products": "玻纤纱/毡/布制品+不饱和聚酯树脂（子公司天马集团）", "demand_relation": "强", "demand_logic": "3座玻纤池窑（纱约13万吨/年+制品10万余吨/年），300196，扩产期", "s_match": 38, "s_factory": 24, "s_scale": 14, "s_region": 15, "evidence": "http://static.cninfo.com.cn/finalpage/2026-04-03/1225075262.PDF", "confidence": "高", "dedup": "无", "next_action": "本部+天马集团一并覆盖；盯扩产采购增量"}, {"priority": "P0", "score": 91, "raw_name": "纳爱斯集团", "std_name": "纳爱斯集团有限公司", "uscc": "913311007272035890（天眼查+生意宝双源一致）", "status": "存续", "province": "浙江", "region_full": "浙江丽水", "entity_type": "生产企业", "products": "洗衣粉、皂/液（雕牌、超能、纳爱斯、100年润发）", "demand_relation": "强", "demand_logic": "纯碱为洗衣粉主要无机助剂；五省基地、总部集中采购", "s_match": 36, "s_factory": 24, "s_scale": 16, "s_region": 15, "evidence": "https://www.tianyancha.com/company/23070383", "confidence": "高", "dedup": "无", "next_action": "总部供应链集中谈判；关注浓缩化对单耗的下行影响"}, {"priority": "P0", "score": 89, "raw_name": "上海皮尔金顿玻璃", "std_name": "上海耀华皮尔金顿玻璃有限公司", "uscc": "未核实（母体耀皮玻璃600819口径91310000607210186Q）", "status": "存续（母体口径）", "province": "上海", "region_full": "上海", "entity_type": "生产企业", "products": "优质浮法玻璃原片（1987年引进皮尔金顿浮法工艺）", "demand_relation": "强", "demand_logic": "浮法熔窑吨玻璃耗纯碱约110-150kg；隶属耀皮玻璃600819体系", "s_match": 38, "s_factory": 22, "s_scale": 14, "s_region": 15, "evidence": "https://q.stock.sohu.com/cn/600819/gsjj.shtml", "confidence": "中", "dedup": "无", "next_action": "先确认签约主体（生产主体vs600819）并终核信用代码"}, {"priority": "P0", "score": 81, "raw_name": "上海和黄白猫", "std_name": "上海和黄白猫有限公司", "uscc": "91310000607253098Y（维基+报告大厅双源一致）", "status": "存续", "province": "上海", "region_full": "上海", "entity_type": "生产企业", "products": "洗洁精、洗衣粉/液、凝珠、家居清洁消毒（白猫品牌）", "demand_relation": "强", "demand_logic": "洗涤剂配方以纯碱为主要助剂；龙吴路自有工厂+重庆基地，长江和记旗下", "s_match": 36, "s_factory": 20, "s_scale": 10, "s_region": 15, "evidence": "https://www.whitecat.com/about.html", "confidence": "高", "dedup": "无", "next_action": "就近供料上海工厂；和黄系采购集中需谈集团层面"}, {"priority": "P1", "score": 72, "raw_name": "魏桥铝电", "std_name": "山东魏桥铝电有限公司", "uscc": "9137160074568737XQ（企查查+启信宝双源一致）", "status": "存续", "province": "山东", "region_full": "山东滨州(邹平)", "entity_type": "生产企业", "products": "电解铝/氧化铝、自备电力热力、铝板带精深加工（中国宏桥1378.HK体系）", "demand_relation": "弱", "demand_logic": "氧化铝拜耳法碱耗以烧碱为主，纯碱需求有限；体量极大（注册资本130亿）", "s_match": 12, "s_factory": 25, "s_scale": 20, "s_region": 15, "evidence": "https://m.qcc.com/firm/917c29099904e2529fe51214f4c8c973.html", "confidence": "高", "dedup": "无", "next_action": "若兼营烧碱则升级P0；单卖纯碱保持年度拜访"}, {"priority": "P1", "score": 65, "raw_name": "秀强股份", "std_name": "江苏秀强玻璃工艺股份有限公司", "uscc": "91321300732499521G（财经F10单一来源，建议终核）", "status": "存续", "province": "江苏", "region_full": "江苏宿迁", "entity_type": "生产企业（深加工）", "products": "家电玻璃面板/层架（海尔、美的、博西华等）、厨电/BIPV玻璃", "demand_relation": "弱（间接）", "demand_logic": "外购浮法原片深加工、自身无熔窑，不直接采购纯碱", "s_match": 14, "s_factory": 22, "s_scale": 14, "s_region": 15, "evidence": "https://www.jsxq.com/about/index.html", "confidence": "高", "dedup": "无", "next_action": "不做直接客户；借其供应链摸排浮法原片供应商"}, {"priority": "P2", "score": 57, "raw_name": "华光集团", "std_name": "中建材凯盛矿产资源集团有限公司（原安徽华光集团）", "uscc": "未核实（沿革据凯盛科技600552定期报告）", "status": "存续（年报口径）", "province": "安徽", "region_full": "安徽蚌埠", "entity_type": "生产企业（集团型）", "products": "硅质矿产/石英资源开发、光电材料（凯盛/中建材体系）", "demand_relation": "弱", "demand_logic": "本体现为矿产/新材料定位、非玻璃熔窑运营法人；凯盛系旗下玻璃法人才是纯碱用户", "s_match": 10, "s_factory": 18, "s_scale": 14, "s_region": 15, "evidence": "http://stockmc.xueqiu.com/202603/600552_20260331_CZTT.pdf", "confidence": "中", "dedup": "无", "next_action": "作入口线索穿透开发凯盛系玻璃生产法人；签约前补核信用代码"}, {"priority": "P2", "score": 46, "raw_name": "浙江省化工进出口", "std_name": "浙江省化工进出口有限公司", "uscc": "未核实（公开渠道未见可靠展示）", "status": "存续", "province": "浙江", "region_full": "浙江杭州(上城)", "entity_type": "贸易商", "products": "医药中间体、原料药、基础/精细化工品等进出口（2025营收69.55亿元）", "demand_relation": "弱（渠道）", "demand_logic": "非终端工厂；官网未列纯碱为核心品类；仅具区域分销渠道价值", "s_match": 15, "s_factory": 6, "s_scale": 10, "s_region": 15, "evidence": "https://www.zhechem.com/about.html", "confidence": "高", "dedup": "无", "next_action": "仅在直供产能富余时谈区域分销，严控账期授信"}], "excluded": [{"raw_name": "金晶集团", "std_name": "金晶（集团）有限公司", "category": "同行自产", "reason": "旗下山东金晶科技（600586）主业即『玻璃、纯碱』，熔窑纯碱自供为主并有外售；同行不是客户", "evidence": "金晶官网 https://www.cnggg.cn；巨潮600586公告"}, {"raw_name": "东岳集团", "std_name": "东岳氟硅科技集团有限公司（用户确认主体）", "category": "需求不相关", "reason": "氯碱环节自产烧碱，氟化工（萤石+硫酸）与有机硅路线不以纯碱为配料", "evidence": "官网 dongyuechem.com；桓台县政府页"}, {"raw_name": "山东鲁花集团", "std_name": "山东鲁花集团股份有限公司（2025-07更名）", "category": "需求不相关", "reason": "食用油/调味品制造（花生油年产能90万吨），纯碱非其生产原料", "evidence": "启信宝 91370682758273029N；鲁网财经更名报道"}, {"raw_name": "青岛碱业", "std_name": "（目标实体消亡）", "category": "主体消亡", "reason": "原600229于2015年被城市传媒借壳更名；80万吨/年氨碱产能2015年底整体关停退出，无主体承接", "evidence": "海湾集团董事长专访半岛网；巨潮2015-09公告"}, {"raw_name": "巨石集团有限公司", "std_name": "巨石集团有限公司", "category": "排重命中", "reason": "与现有客户池A级已成交客户精确命中（年度框架采购中）", "evidence": "现有客户池；主体核验三源一致 9133048373030919X7"}, {"raw_name": "山东华鹏", "std_name": "山东华鹏玻璃股份有限公司", "category": "排重命中", "reason": "现有客户池A级已成交（2023年起供货）；附加提示：603021现为*ST华鹏，净资产为负，建议现款/短账期", "evidence": "现有客户池；上交所公告"}], "ambiguity": [{"raw_name": "华光集团", "candidates": "①中建材凯盛矿产资源集团有限公司（蚌埠，原安徽华光玻璃集团，凯盛体系）②凯盛科技（600552，华光系发起的上市平台）③蚌埠玻璃工业设计研究院", "user_decision": "中建材凯盛矿产资源集团（原安徽华光）", "outcome": "进入客户池P2（入口线索，建议穿透凯盛系玻璃生产法人）"}, {"raw_name": "东岳集团", "candidates": "①东岳氟硅科技集团有限公司（淄博桓台，境内母公司）②东岳集团（0189.HK）③山东东岳化工④东岳硅材（300821）", "user_decision": "东岳氟硅科技集团（境内母公司）", "outcome": "需求判定不相关（氯碱自产烧碱、氟硅路线不用纯碱）→ 排除清单"}, {"raw_name": "青岛碱业", "candidates": "①历史主体青岛碱业股份有限公司（600229，2015年被城市传媒借壳更名）②青岛碱业发展有限公司（海湾系，不产纯碱）③青岛碱业新材料（实为苯乙烯项目）", "user_decision": "核销", "outcome": "排除清单（目标实体消亡：80万吨/年纯碱产能2015年整体退出，无主体承接）"}], "not_found": [{"raw_name": "上海太平洋化工集团", "hints": "上海·历史客户资料", "conclusion": "现行工商登记无此主体（置信度中）。沿革：上海市化工局→1992年前后组建上海太平洋化工(集团)公司→1996年前后并入上海华谊体系", "next_suggestion": "如需重建线索可改挂上海华谊控股集团；但其主业与纯碱采购关联弱，建议先回核原始客户档案"}, {"raw_name": "苏州新生玻璃有限公司", "hints": "江苏苏州·网络搜集", "conclusion": "多渠道检索无存续主体（置信度低）", "next_suggestion": "疑似录入口误对象：苏州新乐玻璃（1985，高新区）、苏州新日玻璃（1997，吴中）；回核原名片/发票抬头，禁止默认替换"}]};
+let state = {q:"",priority:"",province:"",entity_type:"",demand_relation:"",confidence:"",sortKey:"score",sortDir:-1,tab:"pool"};
+const sel = new Set();
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");}
+function norm(v){return v==null?"":String(v);}
+function uniq(key){const s=new Set();DATA.pool.forEach(r=>{const v=norm(r[key]);if(v)s.add(v);});return Array.from(s).sort();}
+function filtered(){
+  let rows=DATA.pool.map((r,i)=>Object.assign({_i:i},r));
+  const q=state.q.trim().toLowerCase();
+  if(q)rows=rows.filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  ["priority","province","entity_type","demand_relation","confidence"].forEach(k=>{
+    if(state[k])rows=rows.filter(r=>norm(r[k])===state[k]);
+  });
+  const key=state.sortKey;
+  rows.sort((a,b)=>{const va=a[key],vb=b[key];
+    if(typeof va==="number"&&typeof vb==="number")return (va-vb)*state.sortDir;
+    return norm(va).localeCompare(norm(vb),"zh")*state.sortDir;});
+  return rows;
+}
+const POOL_COLS=[
+ {k:"sel"},{k:"priority",l:"优先级"},{k:"score",l:"得分",num:1},{k:"std_name",l:"标准化企业名称"},
+ {k:"raw_name",l:"原始录入"},{k:"uscc",l:"统一社会信用代码",cls:"wrap"},{k:"status",l:"经营状态"},
+ {k:"region_full",l:"注册地"},{k:"entity_type",l:"企业类型"},{k:"products",l:"实际主营产品",cls:"wrap"},
+ {k:"demand_relation",l:"需求关系"},{k:"demand_logic",l:"需求逻辑",cls:"wrap"},
+ {k:"s_match",l:"匹配",num:1},{k:"s_factory",l:"真实",num:1},{k:"s_scale",l:"规模",num:1},{k:"s_region",l:"地区",num:1},
+ {k:"confidence",l:"置信度"},{k:"dedup",l:"排重"},{k:"next_action",l:"下一步动作",cls:"wrap"},{k:"evidence",l:"证据来源",cls:"wrap"}];
+function renderPool(){
+  const rows=filtered();
+  let h="<div class='toolbar'>"+
+   "<input id='q' placeholder='搜索企业/主营/逻辑…' value=\""+esc(state.q)+"\">"+
+   ["priority","province","entity_type","demand_relation","confidence"].map(k=>{
+     const lbl={priority:"优先级",province:"省份",entity_type:"企业类型",demand_relation:"需求关系",confidence:"置信度"}[k];
+     const vals=k==="priority"?Object.keys(DATA.meta.scoring?DATA.meta.scoring.tiers||{}:{})||[]:uniq(k);
+     return "<select id='f_"+k+"'><option value=''>"+lbl+":全部</option>"+vals.map(v=>"<option"+(state[k]===v?" selected":"")+">"+esc(v)+"</option>").join("")+"</select>";
+   }).join("")+
+   "<button class='ghost' onclick='resetFilters()'>重置</button>"+
+   "<span class='count'>显示 "+rows.length+" / "+DATA.pool.length+" 家 · 已选 "+sel.size+" 家</span></div>";
+  h+="<div style='overflow:auto;max-height:62vh'><table><thead><tr>"+
+   POOL_COLS.map(c=>{
+     if(c.k==="sel")return "<th style='width:34px'><input type='checkbox' onclick='toggleAll(this)' id='ckAll'></th>";
+     const active=state.sortKey===c.k;
+     return "<th class='"+(c.num?"num":"")+"' onclick='sortBy(\""+c.k+"\")'>"+c.l+(active?(state.sortDir<0?" ▾":" ▴"):"")+"</th>";
+   }).join("")+"</tr></thead><tbody>";
+  rows.forEach(r=>{
+    h+="<tr>";
+    h+="<td><input type='checkbox' "+(sel.has(r._i)?"checked":"")+" onclick='toggleSel("+r._i+")'></td>";
+    POOL_COLS.forEach(c=>{
+      if(c.k==="sel")return;
+      let v=norm(r[c.k]);
+      let cls=(c.num?"num ":"")+(c.cls||"")+"";
+      if(c.k==="priority")cls+=" "+norm(r.priority).toLowerCase();
+      h+="<td class='"+cls+"'>"+esc(v)+"</td>";
+    });
+    h+="</tr>";
+  });
+  h+="</tbody></table></div>";
+  h+="<div class='selbar'><span id='selCount'>已选 "+sel.size+" 家</span>"+
+   "<button onclick='exportCSV(true)'>导出选中 CSV</button>"+
+   "<button class='ghost' onclick='exportCSV(false)'>导出全部 CSV</button>"+
+   "<button class='ghost' onclick='copyNames()'>复制所选名单</button></div>";
+  document.getElementById("poolPanel").innerHTML=h;
+  const q=document.getElementById("q");
+  q.addEventListener("input",e=>{state.q=e.target.value;renderPool();document.getElementById("q").focus();});
+  ["priority","province","entity_type","demand_relation","confidence"].forEach(k=>{
+    const el=document.getElementById("f_"+k);
+    if(el)el.addEventListener("change",e=>{state[k]=e.target.value;renderPool();});
+  });
+}
+function resetFilters(){state={q:"",priority:"",province:"",entity_type:"",demand_relation:"",confidence:"",sortKey:"score",sortDir:-1,tab:"pool"};renderPool();}
+function sortBy(k){if(state.sortKey===k)state.sortDir*=-1;else{state.sortKey=k;state.sortDir=1;}renderPool();}
+function toggleSel(i){sel.has(i)?sel.delete(i):sel.add(i);renderPool();}
+function toggleAll(ck){const rows=filtered();rows.forEach(r=>ck.checked?sel.add(r._i):sel.delete(r._i));renderPool();}
+function csvEsc(v){v=norm(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function download(name,text){const b=new Blob(["\uFEFF"+text],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();}
+function exportCSV(onlySel){
+  const rows=filtered().filter(r=>!onlySel||sel.has(r._i));
+  if(!rows.length){alert("没有可导出的行");return;}
+  const heads=POOL_COLS.filter(c=>c.k!=="sel").map(c=>c.l);
+  const lines=[heads.join(",")].concat(rows.map(r=>POOL_COLS.filter(c=>c.k!=="sel").map(c=>csvEsc(r[c.k])).join(",")));
+  download("客户池选中.csv",lines.join("\n"));
+}
+function copyNames(){
+  const rows=DATA.pool.filter((r,i)=>sel.has(i));
+  const t=(rows.length?rows:DATA.pool).map(r=>norm(r.std_name)).join("\n");
+  navigator.clipboard.writeText(t).then(()=>alert("已复制 "+(rows.length||DATA.pool.length)+" 家企业名称"));
+}
+function simpleTable(headers,rows){
+  return "<div style='overflow:auto'><table><thead><tr>"+headers.map(h=>"<th>"+esc(h)+"</th>").join("")+"</tr></thead><tbody>"+
+   rows.map(r=>"<tr>"+r.map(c=>"<td class='wrap'>"+esc(c)+"</td>").join("")+"</tr>").join("")+"</tbody></table></div>";
+}
+function renderStatic(){
+  document.getElementById("exclPanel").innerHTML=simpleTable(
+    ["原始录入名称","标准化企业名称","排除类别","排除原因(含依据)","关联证据"],
+    DATA.excluded.map(e=>[e.raw_name,e.std_name,e.category,e.reason,e.evidence]));
+  document.getElementById("ambPanel").innerHTML=simpleTable(
+    ["原始录入名称","候选主体及辨识要点","用户确认结果","处理结果"],
+    DATA.ambiguity.map(a=>[a.raw_name,a.candidates,a.user_decision,a.outcome]));
+  document.getElementById("nfPanel").innerHTML=simpleTable(
+    ["原始录入名称","名单线索","检索结论","去向建议/相近名"],
+    DATA.not_found.map(n=>[n.raw_name,n.hints,n.conclusion,n.next_suggestion]));
+  let d="<dl class='meta'><dt>产品</dt><dd>"+esc(DATA.meta.product)+"</dd><dt>区域</dt><dd>"+esc(DATA.meta.region)+
+   "</dd><dt>偏好</dt><dd>"+esc(DATA.meta.preference||"")+"</dd><dt>生成日期</dt><dd>"+esc(DATA.meta.generated||"")+
+   "</dd><dt>评分权重</dt><dd>"+Object.entries(DATA.meta.scoring.weights).map(x=>x[0]+" 0-"+x[1]).join(" + ")+"</dd></dl>";
+  d+="<h2 style='margin-top:14px'>需求逻辑表</h2>"+simpleTable(
+    ["下游行业","使用工序","作用","强度","判定要点"],
+    DATA.meta.demand_logic.map(x=>[x["行业"],x["工序"],x["作用"],x["强度"],x["要点"]]));
+  d+="<p class='note'>"+esc(DATA.meta.notes||"")+"</p>";
+  document.getElementById("aboutPanel").innerHTML=d;
+}
+const TABS=[["pool","客户池","poolPanel"],["excluded","排除企业","exclPanel"],["amb","歧义确认","ambPanel"],["nf","未找到","nfPanel"],["about","说明","aboutPanel"]];
+function setTab(t){state.tab=t;TABS.forEach(x=>{document.getElementById(x[2]).classList.toggle("on",x[0]===t);
+  document.getElementById("tab_"+x[0]).classList.toggle("on",x[0]===t);});}
+function init(){
+  document.getElementById("title").textContent=DATA.meta.product+" · "+DATA.meta.region+" 客户池";
+  document.getElementById("subtitle").textContent="生成于 "+(DATA.meta.generated||"")+" · 偏好: "+(DATA.meta.preference||"真实工厂优先")+
+   " · 评分: "+Object.entries(DATA.meta.scoring.weights).map(x=>x[0]+x[1]).join("/");
+  const c=DATA.pool;const cnt=p=>c.filter(r=>r.priority===p).length;
+  document.getElementById("chips").innerHTML=
+   "<span class='chip'>池内 "+c.length+" 家</span><span class='chip b'>P0 "+cnt("P0")+"</span>"+
+   "<span class='chip y'>P1 "+cnt("P1")+"</span><span class='chip g'>P2 "+cnt("P2")+"</span>"+
+   "<span class='chip r'>排除 "+DATA.excluded.length+"</span><span class='chip'>未找到 "+DATA.not_found.length+"</span>";
+  document.getElementById("tabs").innerHTML=TABS.map(x=>"<button id='tab_"+x[0]+"' onclick='setTab(\""+x[0]+"\")'>"+x[1]+"</button>").join("");
+  document.getElementById("panels").innerHTML=TABS.map(x=>"<div id='"+x[2]+"' class='panel'></div>").join("");
+  renderStatic();setTab("pool");renderPool();
+}
+init();
+</script>
+</body>
+</html>

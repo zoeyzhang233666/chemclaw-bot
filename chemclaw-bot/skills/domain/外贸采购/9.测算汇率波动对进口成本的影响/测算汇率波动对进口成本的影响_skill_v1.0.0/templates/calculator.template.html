@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --line:#2b3444;
+  --txt:#e6edf3; --muted:#8b98a8; --dim:#5f6b7a;
+  --up:#f85149; --down:#3fb950; --accent:#4a9eff; --accent2:#a371f7;
+  --warn:#d29922; --sim:#a371f7; --real:#3fb950;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1480px;margin:0 auto;padding:22px 20px 80px}
+h1{font-size:22px;font-weight:650;letter-spacing:-.3px}
+h2{font-size:16px;font-weight:600;margin:0 0 14px;display:flex;align-items:center;gap:9px}
+h2::before{content:"";width:3px;height:16px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:2px}
+h3{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.sub{color:var(--muted);font-size:12.5px;margin-top:5px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;overflow-x:auto}
+.panel .tw{overflow-x:auto;margin:0 -2px}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:1150px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.g4,.g3,.g2{grid-template-columns:1fr}}
+
+/* KPI */
+.kpi{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:11px;padding:15px 16px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.kpi.u::after{background:var(--up)} .kpi.d::after{background:var(--down)} .kpi.w::after{background:var(--warn)}
+.kpi .lab{font-size:11.5px;color:var(--muted);letter-spacing:.3px;margin-bottom:7px;display:flex;gap:6px;align-items:center}
+.kpi .val{font-size:25px;font-weight:650;letter-spacing:-.8px;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .val small{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:0}
+.kpi .meta{font-size:11px;color:var(--dim);margin-top:6px}
+
+/* badge */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:1.5px 6px;border-radius:4px;letter-spacing:.3px;vertical-align:middle}
+.b-real{background:rgba(63,185,80,.14);color:var(--real);border:1px solid rgba(63,185,80,.3)}
+.b-sim{background:rgba(163,113,247,.14);color:var(--sim);border:1px solid rgba(163,113,247,.35)}
+.b-demo{background:rgba(210,153,34,.14);color:var(--warn);border:1px solid rgba(210,153,34,.35)}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px}
+th{text-align:right;padding:9px 10px;color:var(--muted);font-weight:600;font-size:11.5px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:8px 10px;text-align:right;border-bottom:1px solid rgba(43,52,68,.55)}
+tbody tr:hover{background:rgba(74,158,255,.055)}
+tr.base td{background:rgba(74,158,255,.09);font-weight:600}
+.up{color:var(--up)} .down{color:var(--down)} .zero{color:var(--dim)}
+.mono{font-family:ui-monospace,SFMono-Regular,"Cascadia Mono",Consolas,monospace}
+
+/* controls */
+.ctrl{display:grid;grid-template-columns:1fr 1fr;gap:11px 18px}
+@media(max-width:720px){.ctrl{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:6px}
+.fld input,.fld select{background:#0b1017;border:1px solid var(--line);color:var(--txt);border-radius:7px;padding:8px 10px;font-size:13.5px;font-variant-numeric:tabular-nums;width:100%;transition:border-color .15s,box-shadow .15s}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,158,255,.13)}
+.fld input:disabled{opacity:.45;cursor:not-allowed}
+.hint{font-size:10.5px;color:var(--dim);line-height:1.35}
+
+/* chart */
+.chartbox{position:relative;background:#0b1017;border:1px solid var(--line);border-radius:10px;padding:6px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:#0d1117f2;border:1px solid var(--accent);border-radius:7px;padding:7px 10px;font-size:11.5px;white-space:nowrap;opacity:0;transition:opacity .1s;z-index:20;box-shadow:0 6px 22px rgba(0,0,0,.6)}
+
+/* tabs */
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:6px 14px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;font-size:12.5px;font-weight:500;transition:.15s}
+.tab:hover{color:var(--txt);border-color:var(--accent)}
+.tab.on{background:rgba(74,158,255,.15);border-color:var(--accent);color:#cfe6ff}
+
+/* misc */
+.note{background:rgba(74,158,255,.07);border-left:3px solid var(--accent);border-radius:0 7px 7px 0;padding:11px 14px;font-size:12.5px;color:#b8c6d6;margin-bottom:14px}
+.note.warn{background:rgba(210,153,34,.08);border-left-color:var(--warn);color:#e0c88a}
+.note.danger{background:rgba(248,81,73,.08);border-left-color:var(--up);color:#f0a9a4}
+.fml{background:#0b1017;border:1px solid var(--line);border-radius:8px;padding:13px 15px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;line-height:1.95;color:#a9bdd1;overflow-x:auto}
+.fml b{color:#7ee787;font-weight:600}
+.fml i{color:var(--muted);font-style:normal}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:9px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:16px;height:3px;border-radius:2px;display:inline-block}
+.slider{width:100%;accent-color:var(--accent);height:22px}
+.footer{color:var(--dim);font-size:11.5px;text-align:center;margin-top:26px;line-height:1.9}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);font-size:11px;color:var(--muted);margin-right:6px;margin-bottom:5px}
+.split{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <div class="split">
+    <div>
+      <h1>__TITLE__</h1>
+      <div class="sub">__SUBTITLE__</div>
+    </div>
+    <div style="text-align:right">
+      <span class="pill">引擎 v__VER__</span>
+      <span class="pill" id="genat">__GENAT__</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>阅读说明：</b>本页所有绿色 <span class="badge b-real">真实数据</span> 来自公开官方/权威来源（中国人民银行授权中国外汇交易中心中间价、欧洲央行参考汇率、市场报价平台）；
+    紫色 <span class="badge b-sim">模拟值</span> 与黄色 <span class="badge b-demo">演示值</span> 仅用于演示计算机理，<b>不可用于实际决策</b>，请替换为企业实际数据。
+    本工具<b>不预测汇率走势、不推荐任何外汇避险产品或交易操作</b>，仅做给定条件下的敏感性测算。
+  </div>
+
+  <!-- ============ KPI 首屏 ============ -->
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="kpi">
+      <div class="lab">当前汇率（1 USD = x CNY）<span class="badge b-real">真实</span></div>
+      <div class="val" id="k-rate">–</div>
+      <div class="meta" id="k-rate-meta">–</div>
+    </div>
+    <div class="kpi w">
+      <div class="lab">人民币付汇金额<span class="badge b-real">真实汇率</span></div>
+      <div class="val" id="k-pay">–</div>
+      <div class="meta" id="k-pay-meta">–</div>
+    </div>
+    <div class="kpi w">
+      <div class="lab">人民币到厂成本（不含可抵扣增值税）</div>
+      <div class="val" id="k-landed">–</div>
+      <div class="meta" id="k-landed-meta">–</div>
+    </div>
+    <div class="kpi">
+      <div class="lab">历史分位（近 3 年）<span class="badge b-real">真实序列</span></div>
+      <div class="val" id="k-pct">–</div>
+      <div class="meta" id="k-pct-meta">–</div>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="kpi u">
+      <div class="lab">汇率 +1% 付汇增加</div>
+      <div class="val" id="k-up1" style="font-size:21px">–</div>
+      <div class="meta">人民币贬值 → 外币更贵 → 成本上升</div>
+    </div>
+    <div class="kpi u">
+      <div class="lab">汇率 +3% 付汇增加</div>
+      <div class="val" id="k-up3" style="font-size:21px">–</div>
+      <div class="meta">约等于每 100 万美元多付</div>
+    </div>
+    <div class="kpi u">
+      <div class="lab">汇率 +5% 付汇增加</div>
+      <div class="val" id="k-up5" style="font-size:21px">–</div>
+      <div class="meta">极端不利情景</div>
+    </div>
+    <div class="kpi d">
+      <div class="lab">汇率 −3% 付汇节省</div>
+      <div class="val" id="k-dn3" style="font-size:21px">–</div>
+      <div class="meta">人民币升值 → 成本下降</div>
+    </div>
+  </div>
+
+  <!-- ============ 参数区 ============ -->
+  <div class="panel">
+    <h2>参数设置（修改任一数值，下方所有结果实时重算）</h2>
+    <div class="grid g3">
+      <div>
+        <h3>① 交易与币种</h3>
+        <div class="ctrl" style="grid-template-columns:1fr">
+          <div class="fld"><label>采购金额（外币）</label><input type="number" id="in-amount" step="1000"><div class="hint">合同外币金额，必填</div></div>
+          <div class="fld"><label>外币币种</label><input type="text" id="in-ccy" placeholder="USD / EUR / JPY / SAR"><div class="hint">任意币种，汇率口径随之调整</div></div>
+          <div class="fld"><label>交易方向</label>
+            <select id="in-dir"><option value="IMPORT_PAYMENT">进口付汇（购汇）</option><option value="EXPORT_RECEIPT">出口收汇（结汇）</option></select>
+            <div class="hint">进口付汇：人民币贬值推高成本</div>
+          </div>
+          <div class="fld"><label>产品/规格</label><input type="text" id="in-prod"></div>
+          <div class="fld"><label>合同数量（吨，可空）</label><input type="number" id="in-qty" step="0.1"><div class="hint">用于换算到厂单位成本</div></div>
+        </div>
+      </div>
+      <div>
+        <h3>② 汇率口径（CNY per 1 外币）</h3>
+        <div class="ctrl" style="grid-template-columns:1fr 1fr">
+          <div class="fld"><label>市场汇率<span class="badge b-real">真实</span></label><input type="number" id="in-market" step="0.0001"></div>
+          <div class="fld"><label>中间价 PBOC/CFETS<span class="badge b-real">真实</span></label><input type="number" id="in-pboc" step="0.0001"></div>
+          <div class="fld"><label>银行实际购汇价<span class="badge b-demo">演示</span></label><input type="number" id="in-bank" step="0.0001"><div class="hint">现汇卖出价，实际成交口径</div></div>
+          <div class="fld"><label>海关计征汇率<span class="badge b-demo">演示</span></label><input type="number" id="in-customs" step="0.0001"><div class="hint">上月第三个星期三中间价</div></div>
+          <div class="fld"><label>基准汇率来源</label>
+            <select id="in-basis"><option value="bank">银行实际购汇价（推荐）</option><option value="pboc">人民币汇率中间价</option><option value="market">市场汇率</option></select>
+          </div>
+          <div class="fld"><label>公司预算汇率</label><input type="number" id="in-budget" step="0.0001"></div>
+        </div>
+      </div>
+      <div>
+        <h3>③ 到厂成本 / 税费</h3>
+        <div class="ctrl" style="grid-template-columns:1fr 1fr">
+          <div class="fld"><label>进口关税率 %</label><input type="number" id="in-duty" step="0.1"></div>
+          <div class="fld"><label>增值税率 %</label><input type="number" id="in-vat" step="0.1"></div>
+          <div class="fld"><label>增值税口径</label><select id="in-vatmode"><option value="deductible">可抵扣（不计入成本）</option><option value="cost">不可抵扣（计入成本）</option></select></div>
+          <div class="fld"><label>国际运费（外币）</label><input type="number" id="in-freight" step="100"></div>
+          <div class="fld"><label>港杂费（CNY）</label><input type="number" id="in-port" step="500"></div>
+          <div class="fld"><label>报关代理费（CNY）</label><input type="number" id="in-agent" step="500"></div>
+          <div class="fld"><label>内陆运输（CNY）</label><input type="number" id="in-inland" step="500"></div>
+          <div class="fld"><label>仓储及其他（CNY）</label><input type="number" id="in-storage" step="500"></div>
+          <div class="fld"><label>银行手续费（CNY）</label><input type="number" id="in-bankfee" step="100"></div>
+        </div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="grid g2">
+      <div>
+        <h3>④ 国内销售（毛利测算，可选）</h3>
+        <div class="ctrl">
+          <div class="fld"><label>国内销售价（元/吨）<span class="badge b-sim">模拟</span></label><input type="number" id="in-price" step="10"></div>
+          <div class="fld"><label>非汇率相关单位成本（元/吨）<span class="badge b-sim">模拟</span></label><input type="number" id="in-otherunit" step="10"></div>
+          <div class="fld"><label>销售价口径</label><select id="in-revbasis"><option value="tax_included">含增值税</option><option value="tax_excluded">不含税</option></select></div>
+          <div class="fld"><label>目标毛利率，逗号分隔 %</label><input type="text" id="in-targets" placeholder="0,5,10"></div>
+        </div>
+      </div>
+      <div>
+        <h3>⑤ 分批付款</h3>
+        <div class="ctrl" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="fld"><label>预付款比例 %</label><input type="number" id="in-p1" step="5" min="0" max="100"></div>
+          <div class="fld"><label>预付款距基准天数</label><input type="number" id="in-t1" step="1"></div>
+          <div class="fld"><label>预付款已锁汇率（可空）</label><input type="number" id="in-r1" step="0.0001" placeholder="不锁则随行"></div>
+          <div class="fld"><label>尾款比例 %（自动=100−预付）</label><input type="number" id="in-p2" disabled></div>
+          <div class="fld"><label>尾款距基准天数</label><input type="number" id="in-t2" step="1"></div>
+          <div class="fld"><label>尾款已锁汇率（可空）</label><input type="number" id="in-r2" step="0.0001"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 历史走势 ============ -->
+  <div class="panel">
+    <div class="split" style="margin-bottom:12px">
+      <h2 style="margin:0">历史汇率走势与当前分位 <span class="badge b-real">真实数据</span></h2>
+      <div class="tabs" style="margin:0">
+        <button class="tab on" data-win="1">近 1 年</button>
+        <button class="tab" data-win="3">近 3 年</button>
+        <button class="tab" data-win="5">近 5 年</button>
+        <button class="tab" data-win="all">全部（2019-12 起）</button>
+      </div>
+    </div>
+    <div class="chartbox">
+      <div id="chart"></div>
+      <div class="tip" id="tip"></div>
+    </div>
+    <div class="legend">
+      <span><i class="sw" style="background:#4a9eff"></i>__CCY1__/CNY 日度汇率（ECB 参考汇率）</span>
+      <span><i class="sw" style="background:#f85149;border-top:2px dashed #f85149"></i>当前银行购汇价</span>
+      <span><i class="sw" style="background:#d29922;border-top:2px dashed #d29922"></i>当前中间价</span>
+      <span><i class="sw" style="background:#a371f7;border-top:2px dashed #a371f7"></i>公司预算汇率</span>
+      <span><i class="sw" style="background:#7ee787;border-top:2px dashed #7ee787"></i>零毛利平衡汇率</span>
+    </div>
+    <div style="height:14px"></div>
+    <div class="grid g4" id="hist-stats"></div>
+  </div>
+
+  <!-- ============ 付款敏感性 ============ -->
+  <div class="panel">
+    <h2>人民币付款额汇率敏感性</h2>
+    <div class="note">
+      <b>方向关系（务必确认）：</b>汇率以「1 单位外币 = x 人民币」标价。<b>x 上升 = 外币升值 / 人民币贬值</b> → 同样金额的外币需要更多人民币，<span class="up">付汇成本增加</span>；
+      x 下降 = 人民币升值 → <span class="down">付汇成本下降</span>。金额变动严格等于 <span class="mono">外币金额 × 汇率 × 变动幅度</span>。
+    </div>
+    <div class="grid g2">
+      <div><table id="t-pay"></table></div>
+      <div>
+        <h3>四类汇率口径对照（同一笔付款）</h3>
+        <table id="t-basis"></table>
+        <div class="hint" style="margin-top:9px">中间价 / 市场汇率 / 银行购汇价 / 海关计征汇率 是<b>四个不同概念</b>，不可混用：前两者用于观察与参考，银行购汇价决定实际付款，海关计征汇率只用于计税。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 到厂成本 ============ -->
+  <div class="panel">
+    <h2>人民币到厂成本构成与汇率敏感性</h2>
+    <div class="grid g2">
+      <div id="landed-break"></div>
+      <div><table id="t-landed"></table></div>
+    </div>
+  </div>
+
+  <!-- ============ 毛利 ============ -->
+  <div class="panel" id="panel-margin">
+    <h2>毛利测算与盈亏平衡汇率</h2>
+    <div class="note warn" id="margin-warn">毛利模块依赖「国内销售价 + 非汇率成本 + 数量」三项齐全；任一缺失则仅展示付款成本，不臆造利润。</div>
+    <div class="grid g4" id="margin-kpi"></div>
+    <div style="height:14px"></div>
+    <table id="t-margin"></table>
+    <div style="height:14px"></div>
+    <div id="breakeven-box"></div>
+  </div>
+
+  <!-- ============ 分批付款 ============ -->
+  <div class="panel">
+    <h2>分批付款 / 不同结算时间敏感性</h2>
+    <table id="t-tranche"></table>
+    <div class="hint" style="margin-top:9px">已锁定汇率的批次（用户填写锁定汇率）不再随情景波动，可直观看出“部分锁定”如何降低整体敏感性。</div>
+  </div>
+
+  <!-- ============ 公式 ============ -->
+  <div class="panel">
+    <h2>计算公式与口径说明</h2>
+    <div class="fml">
+<i>// 0. 方向约定：x = 1 单位外币折合人民币（CNY per FC）</i>
+<b>基准人民币付款</b> = 外币金额 × x
+<b>敏感性</b>       = 外币金额 × x × (1 + Δ%)       <i>// Δ%&gt;0 表示人民币贬值</i>
+<b>变动额</b>       = 外币金额 × x × Δ%
+
+<i>// 1. 海关计征汇率（海关总署令第272号 第十三条）</i>
+<b>计征汇率</b> = 上一个月 <b>第三个星期三</b> 中国人民银行授权中国外汇交易中心公布的
+              <b>人民币汇率中间价</b>；该日非交易日则顺延下一交易日
+
+<i>// 2. 完税价格（以 CIF 为基数，按计征汇率折算）</i>
+<b>完税价格</b> = (货值 + 运费 + 保费 + 其他予计入费用) × 计征汇率
+<b>关税</b>     = 完税价格 × 关税率
+<b>增值税</b>   = (完税价格 + 关税 + 消费税) × 增值税率
+
+<i>// 3. 人民币到厂成本</i>
+<b>到厂成本</b> = 货值×x + 运费×x + 保费×x + 关税 + 消费税 + 增值税(不可抵扣计入时) + 人民币费用
+<i>// 注：一般纳税人取得合规增值税专用缴款书，进项税额可抵扣/留抵，不计入成本</i>
+
+<i>// 4. 毛利</i>
+<b>不含税收入</b> = 含税售价 × 数量 ÷ (1 + 增值税率)    <i>// 若为不含税售价则不需除</i>
+<b>毛利额</b> = 不含税收入 − 到厂成本 − 其他非汇率成本
+<b>毛利率</b> = 毛利额 ÷ 不含税收入
+
+<i>// 5. 盈亏平衡汇率（换算断点）</i>
+令 汇率相关成本 FX0 与汇率成正比，非汇率成本 NF 固定，R0 = 基准不含税收入
+<b>λ*</b> = [R0·(1 − 目标毛利率) − NF] ÷ FX0
+<b>平衡汇率</b> = 基准汇率 × λ*
+
+<i>// 6. 分批付款</i>
+<b>第 i 批人民币</b> = 外币金额_i × x_i       <i>// x_i 为该批结算日汇率或已锁定汇率</i>
+<b>合计变化</b>   = Σ(外币金额_i × Δx_i)
+    </div>
+  </div>
+
+  <!-- ============ 数据来源 ============ -->
+  <div class="panel">
+    <h2>数据来源与口径声明</h2>
+    <table id="t-src"></table>
+  </div>
+
+  <div class="footer">
+    __FOOTER__<br>
+    本页由 <span class="mono">build_html.py</span> 生成 · 计算引擎 <span class="mono">fx_engine.py v__VER__</span> · 全部历史汇率取自真实公开数据，未做任何伪造或平滑处理<br>
+    <b>本工具不构成汇率预测，不构成外汇避险产品推荐或交易建议。</b>
+  </div>
+</div>
+
+<script>
+/* ================= 数据注入（由构建脚本替换） ================= */
+const DATA = __DATA__;
+
+/* ================= 工具 ================= */
+const $ = id => document.getElementById(id);
+const nf = (v, d=2) => (v===null||v===undefined||isNaN(v)) ? '–' :
+  Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sgn = (v, d=2) => (v===null||v===undefined||isNaN(v)) ? '–' : (v>0?'+':'') + nf(v,d);
+const cls = v => (v>0.000001?'up':(v<-0.000001?'down':'zero'));
+const pct = (v,d=2) => (v===null||isNaN(v))?'–':nf(v,d)+'%';
+const fx4 = v => (v===null||isNaN(v))?'–':Number(v).toFixed(4);
+
+/* ================= 读取输入 ================= */
+function num(id){ const v = $(id).value.trim(); if(v==='') return null; const n = Number(v); return isNaN(n)?null:n; }
+function readInputs(){
+  return {
+    amount: num('in-amount') || 0,
+    ccy: ($('in-ccy').value||'USD').trim().toUpperCase(),
+    dir: $('in-dir').value,
+    product: $('in-prod').value,
+    qty: num('in-qty'),
+    market: num('in-market'), pboc: num('in-pboc'), bank: num('in-bank'), customs: num('in-customs'),
+    basis: $('in-basis').value, budget: num('in-budget'),
+    duty: num('in-duty')||0, vat: (num('in-vat')===null?13:num('in-vat')),
+    vatMode: $('in-vatmode').value,
+    freight: num('in-freight')||0, port: num('in-port')||0, agent: num('in-agent')||0,
+    inland: num('in-inland')||0, storage: num('in-storage')||0, bankFee: num('in-bankfee')||0,
+    price: num('in-price'), otherUnit: num('in-otherunit'),
+    revBasis: $('in-revbasis').value,
+    targets: ($('in-targets').value||'0').split(/[,，\s]+/).map(Number).filter(x=>!isNaN(x)),
+    p1: num('in-p1')||0, t1: num('in-t1')||0, r1: num('in-r1'),
+    t2: num('in-t2')||0, r2: num('in-r2')
+  };
+}
+
+/* ================= 计算（与 Python 引擎同一套公式） ================= */
+function basisRate(I){
+  if(I.basis==='bank' && I.bank) return I.bank;
+  if(I.basis==='pboc' && I.pboc) return I.pboc;
+  if(I.market) return I.market;
+  return I.bank || I.pboc || I.market;
+}
+function landedCost(I, rate){
+  const X = I.customs!=null ? I.customs : rate;
+  const fob = I.amount*rate;
+  const fr = I.freight*rate;
+  const dv = (I.amount + I.freight)*X;
+  const duty = dv*I.duty/100;
+  const vat = (dv+duty)*I.vat/100;
+  const vatInCost = I.vatMode==='cost' ? vat : 0;
+  const nonFx = I.port+I.agent+I.inland+I.storage+I.bankFee;
+  const total = fob + fr + duty + vatInCost + nonFx;
+  const fxLinked = fob + fr + duty + vatInCost;
+  return {fob, fr, dv, duty, vat, vatInCost, nonFx, total, fxLinked,
+          unit: I.qty? total/I.qty : null,
+          share: total? fxLinked/total*100 : null};
+}
+function grossMargin(landed, other, qty, price, vat, revBasis){
+  const revUnit = revBasis==='tax_included' ? price/(1+vat/100) : price;
+  const revenue = revUnit*qty;
+  const cost = landed + other;
+  return {revenue, revUnit, cost, profit: revenue-cost, margin: revenue? (revenue-cost)/revenue*100 : null};
+}
+function breakeven(landed, revenue, fxLinked, rate, target){
+  const nf = landed - fxLinked;
+  if(fxLinked<=0) return {applicable:false, reason:'汇率相关成本为 0'};
+  const lam = (revenue*(1-target/100) - nf)/fxLinked;
+  const baseMargin = revenue? (revenue-landed)/revenue*100 : null;
+  if(baseMargin!=null && baseMargin < target-1e-9)
+    return {applicable:false, reason:`基准毛利率 ${baseMargin.toFixed(2)}% 已低于目标 ${target}%，平衡汇率不适用`, baseMargin, refRate: rate*lam, refMove:(lam-1)*100};
+  if(lam<=0) return {applicable:false, reason:'汇率趋近 0 也无法达成目标毛利', baseMargin};
+  return {applicable:true, lambda:lam, rate:rate*lam, move:(lam-1)*100, target, baseMargin,
+          headroom:(lam-1)*fxLinked};
+}
+
+/* ================= 渲染 ================= */
+let HIST_WIN = '1y';
+
+function render(){
+  const I = readInputs();
+  const rate = basisRate(I);
+  if(!rate){ return; }
+  const L = landedCost(I, rate);
+
+  /* --- KPI --- */
+  $('k-rate').innerHTML = fx4(rate) + ' <small>CNY / 1 ' + I.ccy + '</small>';
+  const basisLabel = {bank:'银行实际购汇价', pboc:'人民币汇率中间价', market:'市场汇率'}[I.basis];
+  $('k-rate-meta').textContent = basisLabel + ' · ' + (DATA.meta && DATA.meta.rate_date ? DATA.meta.rate_date : '');
+  $('k-pay').innerHTML = '¥' + nf(I.amount*rate,0) + ' <small>元</small>';
+  $('k-pay-meta').textContent = nf(I.amount,0) + ' ' + I.ccy + ' × ' + fx4(rate);
+  $('k-landed').innerHTML = '¥' + nf(L.total,0) + ' <small>元</small>';
+  $('k-landed-meta').textContent = L.unit!=null ? ('单位到厂成本 ¥'+nf(L.unit,2)+'/吨 · 汇率相关占比 '+nf(L.share,1)+'%')
+                                                : ('汇率相关占比 '+nf(L.share,1)+'%');
+
+  const H = DATA.hist && DATA.hist[HIST_WIN];
+  if(H){
+    $('k-pct').innerHTML = nf(H.pctl_pboc,1) + '<small>%</small>';
+    $('k-pct-meta').textContent = '中间价分位 · 区间 '+fx4(H.min)+' ~ '+fx4(H.max)+'（'+H.n+' 个交易日）';
+  }
+
+  ['1','3','5'].forEach(k=>{
+    const v = I.amount*rate*(Number(k)/100);
+    const el = $('k-up'+k); if(el){ el.innerHTML = '<span class="up">+¥'+nf(v,0)+'</span>'; }
+  });
+  $('k-dn3').innerHTML = '<span class="down">−¥'+nf(I.amount*rate*0.03,0)+'</span>';
+
+  /* --- 付款敏感性表 --- */
+  renderPayTable(I, rate);
+  renderBasisTable(I, rate);
+  renderLanded(I, rate, L);
+  renderHistStats();
+  renderChart();
+  renderMargin(I, rate, L);
+  renderTranche(I, rate);
+  renderSources();
+}
+
+function renderPayTable(I, rate){
+  const pts = [-5,-3,-1,0,1,3,5];
+  let h = '<thead><tr><th>汇率变动</th><th>新汇率</th><th>人民币付款</th><th>变动额</th><th>方向</th></tr></thead><tbody>';
+  pts.forEach(p=>{
+    const r = rate*(1+p/100), cny = I.amount*r, d = cny - I.amount*rate;
+    h += `<tr class="${p===0?'base':''}"><td>${p>0?'+':''}${p}%</td><td class="mono">${fx4(r)}</td>
+      <td class="mono">${nf(cny,0)}</td><td class="mono ${cls(d)}">${sgn(d,0)}</td>
+      <td style="font-size:11.5px" class="${cls(d)}">${d>0?'人民币贬值·成本↑':(d<0?'人民币升值·成本↓':'基准')}</td></tr>`;
+  });
+  h += '</tbody>';
+  $('t-pay').innerHTML = h;
+}
+
+function renderBasisTable(I, rate){
+  const rows = [
+    ['市场汇率', I.market, 'ECB 参考汇率'],
+    ['人民币汇率中间价', I.pboc, 'PBOC 授权 CFETS'],
+    ['银行实际购汇价', I.bank, '现汇卖出价·实际付款'],
+    ['海关计征汇率', I.customs, '完税价格折算·计税用']
+  ];
+  let h = '<thead><tr><th>口径</th><th>汇率</th><th>付款人民币</th><th>相对基准</th></tr></thead><tbody>';
+  rows.forEach(([lab, v, note])=>{
+    if(v==null){ h += `<tr><td>${lab}</td><td colspan="3" class="zero" style="text-align:left">未提供</td></tr>`; return; }
+    const cny = I.amount*v, d = cny - I.amount*rate;
+    h += `<tr><td>${lab}<div class="hint">${note}</div></td><td class="mono">${fx4(v)}</td>
+      <td class="mono">${nf(cny,0)}</td><td class="mono ${cls(d)}">${sgn(d,0)}</td></tr>`;
+  });
+  h += '</tbody>';
+  $('t-basis').innerHTML = h;
+}
+
+function renderLanded(I, rate, L){
+  const items = [
+    ['货值（外币×汇率）', L.fob, '随汇率变动'],
+    ['国际运费（外币×汇率）', L.fr, '随汇率变动'],
+    ['海关完税价格（CIF×计征汇率）', L.dv, '计税基数'],
+    ['进口关税（'+(I.duty)+'%）', L.duty, '随汇率变动'],
+    ['增值税（'+I.vat+'%）'+(I.vatMode==='cost'?'·计入成本':'·可抵扣不计入'), L.vat, I.vatMode==='cost'?'随汇率变动':'进项可抵扣'],
+    ['人民币固定费用', L.nonFx, '与汇率无关']
+  ];
+  let h = '<thead><tr><th>成本项</th><th>金额（元）</th><th>占合计</th><th>汇率属性</th></tr></thead><tbody>';
+  items.forEach(([lab, v, attr])=>{
+    if(v===0 && lab.indexOf('国际运费')>=0) return;
+    h += `<tr><td>${lab}</td><td class="mono">${nf(v,2)}</td><td class="mono">${nf(v/L.total*100,2)}%</td>
+      <td style="font-size:11.5px;color:var(--muted)">${attr}</td></tr>`;
+  });
+  h += `<tr class="base"><td>人民币到厂成本合计</td><td class="mono">${nf(L.total,2)}</td><td class="mono">100%</td><td></td></tr>`;
+  if(L.unit!=null) h += `<tr><td>折合单位到厂成本</td><td class="mono">${nf(L.unit,2)}</td><td colspan="2" class="hint" style="text-align:left">元/吨</td></tr>`;
+  h += '</tbody>';
+  $('t-landed').innerHTML = h;
+
+  // 构成条
+  const segs = [
+    ['货值', L.fob, '#4a9eff'], ['关税', L.duty, '#f85149'],
+    ['增值税入成本', L.vatInCost, '#a371f7'], ['人民币费用', L.nonFx, '#8b98a8']
+  ].filter(s=>s[1]>0);
+  let bar = '<h3>成本结构</h3><div style="display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line)">';
+  segs.forEach(([n,v,c])=>{
+    const w = v/L.total*100;
+    bar += `<div title="${n} ${nf(v,2)} 元 (${nf(w,1)}%)" style="width:${w}%;background:${c};display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600;overflow:hidden;white-space:nowrap">${w>9?nf(w,1)+'%':''}</div>`;
+  });
+  bar += '</div><div class="legend" style="margin-top:10px">';
+  segs.forEach(([n,v,c])=>{ bar += `<span><i class="sw" style="background:${c}"></i>${n} ¥${nf(v,0)}</span>`; });
+  bar += '</div>';
+  bar += `<div class="note" style="margin-top:14px;margin-bottom:0">增值税 ¥${nf(L.vat,2)} ${I.vatMode==='cost'?'已计入成本（不可抵扣口径）':'<b>未计入成本</b>（一般纳税人取得增值税专用缴款书可抵扣/留抵）'}。
+    ${L.share!=null?`汇率相关成本占合计 <b>${nf(L.share,1)}%</b>，其余 ${nf(100-L.share,1)}% 为人民币固定费用，因此到厂成本的敏感性略低于纯付汇金额的敏感性。`:''}</div>`;
+  $('landed-break').innerHTML = bar;
+}
+
+function renderHistStats(){
+  const H = DATA.hist && DATA.hist[HIST_WIN];
+  if(!H){ $('hist-stats').innerHTML = '<div class="hint">该窗口无历史数据</div>'; return; }
+  const items = [
+    ['区间最低', fx4(H.min), H.min_date, 'd'],
+    ['区间最高', fx4(H.max), H.max_date, 'u'],
+    ['区间均值', fx4(H.mean), '中位数 '+fx4(H.median), ''],
+    ['当前分位（中间价）', nf(H.pctl_pboc,1)+'%', '市场汇率分位 '+nf(H.pctl_market,1)+'%', '']
+  ];
+  $('hist-stats').innerHTML = items.map(([l,v,m,c])=>
+    `<div class="kpi ${c}"><div class="lab">${l}</div><div class="val" style="font-size:20px">${v}</div><div class="meta">${m}</div></div>`).join('');
+}
+
+/* ================= SVG 走势图 ================= */
+function renderChart(){
+  const H = DATA.hist && DATA.hist[HIST_WIN];
+  const box = $('chart');
+  if(!H || !H.series || !H.series.length){ box.innerHTML='<div class="hint" style="padding:40px;text-align:center">无历史数据</div>'; return; }
+
+  const s = H.series;
+  const W = 1400, Hh = 420, M = {l:64, r:74, t:18, b:34};
+  const iw = W-M.l-M.r, ih = Hh-M.t-M.b;
+
+  // 采样：最多 420 点，保持首末
+  let pts = s;
+  if(s.length > 420){
+    const step = (s.length-1)/419;
+    pts = [];
+    for(let i=0;i<419;i++) pts.push(s[Math.round(i*step)]);
+    pts.push(s[s.length-1]);
+  }
+  const vals = pts.map(p=>p[1]);
+  const I = readInputs();
+  const overlays = [I.bank, I.pboc, I.budget, H.beRate].filter(v=>v!=null && isFinite(v));
+  let lo = Math.min(...vals, ...overlays), hi = Math.max(...vals, ...overlays);
+  const pad = (hi-lo)*0.10 || 0.05;
+  lo -= pad; hi += pad;
+
+  const X = i => M.l + (s.length<=1?0:(i/(s.length-1))*iw);
+  const Y = v => M.t + ih - ((v-lo)/(hi-lo))*ih;
+
+  // 路径
+  let d = '';
+  pts.forEach((p,i)=>{
+    const idx = s.length<=1 ? 0 : Math.round(i*(s.length-1)/(pts.length-1));
+    d += (i?'L':'M') + X(idx).toFixed(1) + ',' + Y(p[1]).toFixed(1);
+  });
+  const area = d + `L${X(s.length-1).toFixed(1)},${(M.t+ih).toFixed(1)}L${X(0).toFixed(1)},${(M.t+ih).toFixed(1)}Z`;
+
+  // Y 轴刻度
+  let g = '';
+  for(let i=0;i<=5;i++){
+    const v = lo + (hi-lo)*i/5, y = Y(v);
+    g += `<line x1="${M.l}" y1="${y}" x2="${W-M.r}" y2="${y}" stroke="#1f2733" stroke-width="1"/>`;
+    g += `<text x="${M.l-10}" y="${y+4}" fill="#5f6b7a" font-size="11" text-anchor="end" font-family="monospace">${v.toFixed(4)}</text>`;
+  }
+  // X 轴刻度
+  const nx = 6;
+  for(let i=0;i<nx;i++){
+    const idx = Math.round(i*(s.length-1)/(nx-1));
+    const x = X(idx);
+    g += `<line x1="${x}" y1="${M.t+ih}" x2="${x}" y2="${M.t+ih+5}" stroke="#2b3444"/>`;
+    g += `<text x="${x}" y="${M.t+ih+20}" fill="#5f6b7a" font-size="11" text-anchor="middle">${s[idx][0]}</text>`;
+  }
+
+  // 叠加线
+  const ov = (v, color, label, dash) => {
+    if(v==null || !isFinite(v) || v<lo || v>hi) return '';
+    const y = Y(v);
+    return `<line x1="${M.l}" y1="${y}" x2="${W-M.r}" y2="${y}" stroke="${color}" stroke-width="1.6" stroke-dasharray="${dash||'6 4'}"/>
+      <rect x="${W-M.r+4}" y="${y-9}" width="${M.r-8}" height="18" rx="3" fill="${color}" opacity=".16"/>
+      <text x="${W-M.r+8}" y="${y+4}" fill="${color}" font-size="10.5" font-family="monospace">${label}</text>`;
+  };
+  let ovs = '';
+  ovs += ov(I.pboc, '#d29922', '中间价', '5 4');
+  ovs += ov(I.bank, '#f85149', '购汇价', '5 4');
+  ovs += ov(I.budget, '#a371f7', '预算', '2 3');
+  ovs += ov(H.beRate, '#7ee787', '平衡', '2 3');
+
+  // 当前点
+  const last = s[s.length-1];
+  const dot = `<circle cx="${X(s.length-1)}" cy="${Y(last[1])}" r="4.5" fill="#4a9eff" stroke="#0b1017" stroke-width="2"/>`;
+
+  // 中位线
+  const med = ov(H.median, '#3d4757', '中位', '1 4');
+
+  // 悬停热区
+  let hotspots = '';
+  const step = Math.max(1, Math.floor(s.length/300));
+  for(let i=0;i<s.length;i+=step){
+    const x = X(i), w = iw/ (s.length/step);
+    hotspots += `<rect class="hs" x="${(x-w/2).toFixed(1)}" y="${M.t}" width="${Math.max(2,w).toFixed(1)}" height="${ih}" fill="transparent" data-d="${s[i][0]}" data-v="${s[i][1]}" data-x="${x.toFixed(1)}" data-y="${Y(s[i][1]).toFixed(1)}"/>`;
+  }
+
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="garea" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4a9eff" stop-opacity=".28"/>
+        <stop offset="100%" stop-color="#4a9eff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${g}
+    <path d="${area}" fill="url(#garea)"/>
+    <path d="${d}" fill="none" stroke="#4a9eff" stroke-width="1.8" stroke-linejoin="round"/>
+    ${med}${ovs}${dot}${hotspots}
+    <line id="xh" x1="0" y1="${M.t}" x2="0" y2="${M.t+ih}" stroke="#4a9eff" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+  </svg>`;
+
+  // 悬停
+  const tip = $('tip'), xh = box.querySelector('#xh');
+  box.querySelectorAll('.hs').forEach(r=>{
+    r.addEventListener('mousemove', e=>{
+      const b = box.getBoundingClientRect();
+      const svg = box.querySelector('svg').getBoundingClientRect();
+      const sx = (e.clientX - svg.left) / svg.width * W;
+      const sy = (e.clientY - svg.top) / svg.height * Hh;
+      xh.setAttribute('x1', sx); xh.setAttribute('x2', sx); xh.setAttribute('opacity','.7');
+      tip.style.opacity = 1;
+      tip.innerHTML = `<b>${r.dataset.d}</b><br><span style="color:#4a9eff;font-family:monospace;font-size:13px">${Number(r.dataset.v).toFixed(4)}</span> CNY/${DATA.ccy}`;
+      const px = e.clientX - b.left, py = e.clientY - b.top;
+      tip.style.left = Math.min(px+14, b.width-160)+'px';
+      tip.style.top = Math.max(py-46, 4)+'px';
+    });
+    r.addEventListener('mouseleave', ()=>{ tip.style.opacity=0; xh.setAttribute('opacity','0'); });
+  });
+}
+
+/* ================= 毛利 ================= */
+function renderMargin(I, rate, L){
+  const ok = I.price!=null && I.qty && I.qty>0;
+  const box = $('margin-kpi'), tb = $('t-margin'), bb = $('breakeven-box');
+  if(!ok){
+    $('margin-warn').style.display='block';
+    $('margin-warn').textContent = '缺少「国内销售价」或「合同数量」，按规则不计算毛利与盈亏平衡汇率（不臆造利润）。';
+    box.innerHTML=''; tb.innerHTML=''; bb.innerHTML='';
+    return;
+  }
+  $('margin-warn').style.display='none';
+  const other = (I.otherUnit||0)*I.qty;
+  const G = grossMargin(L.total, other, I.qty, I.price, I.vat, I.revBasis);
+
+  box.innerHTML = `
+    <div class="kpi"><div class="lab">不含税销售收入</div><div class="val" style="font-size:20px">¥${nf(G.revenue,0)}</div><div class="meta">¥${nf(G.revUnit,0)}/吨 · ${nf(I.qty,1)} 吨</div></div>
+    <div class="kpi"><div class="lab">总成本（到厂+其他）</div><div class="val" style="font-size:20px">¥${nf(G.cost,0)}</div><div class="meta">¥${nf(G.cost/I.qty,0)}/吨</div></div>
+    <div class="kpi ${G.profit>=0?'d':'u'}"><div class="lab">毛利额</div><div class="val" style="font-size:20px"><span class="${cls(G.profit)}">${sgn(G.profit,0)}</span></div><div class="meta">当前汇率下</div></div>
+    <div class="kpi ${G.margin>=0?'d':'u'}"><div class="lab">毛利率</div><div class="val" style="font-size:20px"><span class="${cls(G.margin)}">${pct(G.margin)}</span></div><div class="meta">毛利 ÷ 不含税收入</div></div>`;
+
+  // 毛利敏感性
+  let h = '<thead><tr><th>汇率变动</th><th>新汇率</th><th>到厂成本</th><th>毛利额</th><th>毛利率</th><th>判定</th></tr></thead><tbody>';
+  [-5,-3,-1,0,1,3,5].forEach(p=>{
+    const r = rate*(1+p/100);
+    // 计征汇率同步变动
+    const I2 = Object.assign({}, I);
+    if(I.customs!=null) I2.customs = I.customs*(1+p/100);
+    const L2 = landedCost(I2, r);
+    const g2 = grossMargin(L2.total, other, I.qty, I.price, I.vat, I.revBasis);
+    h += `<tr class="${p===0?'base':''}"><td>${p>0?'+':''}${p}%</td><td class="mono">${fx4(r)}</td>
+      <td class="mono">${nf(L2.total,0)}</td><td class="mono ${cls(g2.profit)}">${sgn(g2.profit,0)}</td>
+      <td class="mono ${cls(g2.margin)}">${pct(g2.margin)}</td>
+      <td style="font-size:11.5px" class="${cls(g2.profit)}">${g2.profit>0?'盈利':'亏损'}</td></tr>`;
+  });
+  h += '</tbody>';
+  tb.innerHTML = h;
+
+  // 盈亏平衡
+  const tgs = I.targets.length? I.targets : [0];
+  let bh = '<h3>盈亏平衡汇率（毛利降至指定水平时的汇率）</h3>';
+  let rows='';
+  tgs.forEach(t=>{
+    const be = breakeven(L.total, G.revenue, L.fxLinked, rate, t);
+    if(be.applicable){
+      rows += `<tr><td>目标毛利率 ${t}%</td><td class="mono"><b style="color:#7ee787">${fx4(be.rate)}</b></td>
+        <td class="mono ${cls(be.move)}">${sgn(be.move,2)}%</td><td class="mono ${cls(be.headroom)}">${sgn(be.headroom,0)}</td>
+        <td style="font-size:11.5px;color:var(--muted)">汇率升至该值或以上，毛利将被压缩至 ${t}% 以下</td></tr>`;
+    }else{
+      rows += `<tr><td>目标毛利率 ${t}%</td><td colspan="4" style="text-align:left;font-size:12px;color:var(--warn)">不适用：${be.reason}${be.refRate?`（形式解 ${fx4(be.refRate)}，仅为数学参考）`:''}</td></tr>`;
+    }
+  });
+  bh += `<table><thead><tr><th>目标</th><th>平衡汇率</th><th>相对当前变动</th><th>汇率缓冲空间（元）</th><th>含义</th></tr></thead><tbody>${rows}</tbody></table>`;
+  bh += `<div class="note" style="margin-top:12px;margin-bottom:0">计算式：<span class="mono">λ* = [R0·(1−m) − NF] ÷ FX0</span>，平衡汇率 = 基准汇率 × λ*。
+    其中 R0 = 不含税收入 ${nf(G.revenue,0)} 元，FX0 = 汇率相关成本 ${nf(L.fxLinked,0)} 元，NF = 非汇率成本 ${nf(L.total-L.fxLinked,0)} 元。
+    这表示<b>在当前销售价与成本结构下</b>，汇率升到多少会把毛利压到目标水平，<b>不构成对汇率的预测</b>。</div>`;
+  bb.innerHTML = bh;
+
+  // 供图表叠加
+  const be0 = breakeven(L.total, G.revenue, L.fxLinked, rate, 0);
+  HIST_BE = be0.applicable ? be0.rate : null;
+}
+let HIST_BE = null;
+
+/* ================= 分批付款 ================= */
+function renderTranche(I, rate){
+  const p1 = I.p1||0, p2 = 100-p1;
+  $('in-p2').value = p2;
+  const amt1 = I.amount*p1/100, amt2 = I.amount*p2/100;
+  let h = '<thead><tr><th>批次</th><th>比例</th><th>外币金额</th><th>基准人民币</th>';
+  [-5,-3,-1,1,3,5].forEach(p=> h += `<th>${p>0?'+':''}${p}%</th>`);
+  h += '</tr></thead><tbody>';
+  const rows = [
+    ['预付款', p1, amt1, I.r1],
+    ['尾款', p2, amt2, I.r2]
+  ];
+  let totals = {}; [-5,-3,-1,1,3,5].forEach(p=>totals[p]=0);
+  let baseTot = 0;
+  rows.forEach(([nm, pp, amt, locked])=>{
+    const rUse = locked!=null? locked : rate;
+    const b = amt*rUse; baseTot += b;
+    h += `<tr><td>${nm}${locked!=null?'<span class="badge b-demo" style="margin-left:5px">已锁</span>':''}</td><td class="mono">${nf(pp,1)}%</td><td class="mono">${nf(amt,0)}</td><td class="mono">${nf(b,0)}</td>`;
+    [-5,-3,-1,1,3,5].forEach(p=>{
+      const rr = locked!=null? locked : rate*(1+p/100);
+      const v = amt*rr; totals[p]+=v;
+      h += `<td class="mono">${nf(v,0)}</td>`;
+    });
+    h += '</tr>';
+  });
+  h += `<tr class="base"><td>合计</td><td class="mono">100%</td><td class="mono">${nf(I.amount,0)}</td><td class="mono">${nf(baseTot,0)}</td>`;
+  [-5,-3,-1,1,3,5].forEach(p=> h += `<td class="mono">${nf(totals[p],0)}</td>`);
+  h += '</tr>';
+  h += '<tr><td style="color:var(--muted)">相对基准变动</td><td colspan="3"></td>';
+  [-5,-3,-1,1,3,5].forEach(p=> h += `<td class="mono ${cls(totals[p]-baseTot)}">${sgn(totals[p]-baseTot,0)}</td>`);
+  h += '</tr></tbody>';
+  $('t-tranche').innerHTML = h;
+}
+
+/* ================= 来源 ================= */
+function renderSources(){
+  const S = DATA.sources || [];
+  let h = '<thead><tr><th style="width:22%">数据项</th><th style="width:14%">值</th><th style="width:14%">日期</th><th style="width:12%">性质</th><th>来源</th></tr></thead><tbody>';
+  S.forEach(s=>{
+    const bc = s.kind==='real'?'b-real':(s.kind==='demo'?'b-demo':'b-sim');
+    const bl = s.kind==='real'?'真实':(s.kind==='demo'?'演示':'模拟');
+    h += `<tr><td>${s.item}</td><td class="mono">${s.value}</td><td class="mono" style="font-size:11.5px">${s.date||'–'}</td>
+      <td><span class="badge ${bc}">${bl}</span></td><td style="text-align:left;font-size:11.5px;color:var(--muted)">${s.source}</td></tr>`;
+  });
+  h += '</tbody>';
+  $('t-src').innerHTML = h;
+}
+
+/* ================= 初始化 ================= */
+function initFromData(){
+  const d = DATA.inputs;
+  $('in-amount').value = d.amount;
+  $('in-ccy').value = d.ccy;
+  $('in-dir').value = d.dir;
+  $('in-prod').value = d.product || '';
+  $('in-qty').value = d.qty!=null? d.qty : '';
+  $('in-market').value = d.market!=null? d.market:'';
+  $('in-pboc').value = d.pboc!=null? d.pboc:'';
+  $('in-bank').value = d.bank!=null? d.bank:'';
+  $('in-customs').value = d.customs!=null? d.customs:'';
+  $('in-basis').value = d.basis||'bank';
+  $('in-budget').value = d.budget!=null? d.budget:'';
+  $('in-duty').value = d.duty;
+  $('in-vat').value = d.vat;
+  $('in-vatmode').value = d.vatMode||'deductible';
+  $('in-freight').value = d.freight||0;
+  $('in-port').value = d.port||0;
+  $('in-agent').value = d.agent||0;
+  $('in-inland').value = d.inland||0;
+  $('in-storage').value = d.storage||0;
+  $('in-bankfee').value = d.bankFee||0;
+  $('in-price').value = d.price!=null? d.price:'';
+  $('in-otherunit').value = d.otherUnit!=null? d.otherUnit:'';
+  $('in-revbasis').value = d.revBasis||'tax_included';
+  $('in-targets').value = (d.targets||[0]).join(', ');
+  $('in-p1').value = d.p1;
+  $('in-t1').value = d.t1;
+  $('in-r1').value = d.r1!=null? d.r1:'';
+  $('in-t2').value = d.t2;
+  $('in-r2').value = d.r2!=null? d.r2:'';
+}
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    HIST_WIN = t.dataset.win;
+    render();
+  });
+});
+document.querySelectorAll('input,select').forEach(el=>{
+  el.addEventListener('input', render);
+  el.addEventListener('change', render);
+});
+
+initFromData();
+HIST_WIN = '1y';
+render();
+</script>
+</body>
+</html>

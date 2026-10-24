@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-atlas/schemas/sources.schema.json",
+  "title": "sources.json",
+  "type": "object",
+  "required": ["sources"],
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "publisher", "date", "url", "tier", "verified"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "publisher": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string" },
+          "tier": { "enum": ["A", "B", "C", "D"] },
+          "verified": { "enum": ["opened", "opened_title_only", "snippet_only"] },
+          "key_quotes": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "description": "tier: A 一手权威 / B 专业二手 / C 一般二手 / D 不可用。只有 A~C 能支撑量化关系。verified 记录核验深度：opened 正文已读；opened_title_only 仅确认标题（正文被会员墙拦住）——此类不得引用具体数值；snippet_only 仅见摘要——只能支撑方向判断。局限必须写进 key_quotes。"
+}

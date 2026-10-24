@@ -1,0 +1,17 @@
+﻿id,title,url,publisher,retrieved
+S01,郑州商品交易所 每日行情与仓单日报,http://www.czce.com.cn/cn/DFSStaticFiles/Future/,郑商所,2026-10-20
+S02,新浪财经 MA 日K JSONP（含已摘牌合约）,https://stock2.finance.sina.com.cn/futures/api/jsonp.php,新浪财经,2026-10-20
+S03,国联期货甲醇周报 2026-10-09,https://www.glqh.com/u/cms/www/202610/12090335krpt.pdf,国联期货,2026-10-09
+S04,华龙期货甲醇周报 2026-10-19,http://www.hlqhgs.com/upload-files/2026/10/19/,华龙期货,2026-10-19
+S06,津投期货 甲醇产业链深度报告 2026-09-14,https://www.jtqh.com/uploadfile/2026/0921/20260921084502963.pdf,津投期货,2026-09-14
+S07,创元期货 10月甲醇月报（库存降至历史低位）,https://wwwdata.cyqh.com.cn/upload/2026-10-12/,创元期货,2026-10-12
+S10,搜狐/中金网 甲醇周度库存跟踪 2026-09-29,https://www.sohu.com/a/1082301025_121123900,中金网,2026-09-29
+S11,【热点分析】近期甲醇行情复盘与后续推演 2026-10-09,https://finance.sina.cn/2026-10-09/detail-iniurruc2835532.d.html,新浪财经,2026-10-09
+S12,【隆众聚焦】沿海烯烃装置罕见全线停车 2026-10-18,https://www.oilchem.net/26-1018-18-df7ca8e7fcc054da.html,隆众资讯,2026-10-18
+S13,隆众资讯 江苏太仓甲醇早盘日评系列 2026-09-21~10-20,https://webnewslt1.pobo.net.cn/DATA/NENG/,隆众资讯（pobo 转载）,2026-10-20
+S14,国内商品基差报告（能源化工）,https://webnewslt1.pobo.net.cn/DATA/NENG/6796770.HTML,pobo.net.cn,2026-10-20
+S15,郑商所甲醇期货业务细则解读（交割标准GB/T338-2011）,https://www.shinnytech.com/articles/business-rules/products/czce.ma,信易科技,2026-10-20
+S16,郑商所关于调整指定甲醇交割仓库的公告（太仓阳鸿升贴水0）,https://finance.sina.cn/futuremarket/qsyw/2025-03-26/detail-ineqyrfp8906971.d.html,郑商所,2025-03-26
+D02,本项目自算：主力合约持仓转移与换月跳空,build/main_continuous_adj.csv,自算,2026-10-20
+D03,本项目自算：基差与历史分位,build/panel_daily.csv,自算,2026-10-20
+D05,本项目自算：MA主连历史极值（新浪日K）,raw/fut_ma_contracts_long.csv,自算,2026-10-20

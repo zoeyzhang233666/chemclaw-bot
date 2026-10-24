@@ -1,0 +1,699 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>客户跟进卡 · 恒源新材料（工业甲醇）· 2026-10-19</title>
+<style>
+  :root{
+    --ink:#0b1220; --ink2:#16233a; --body:#243247; --muted:#64748b; --faint:#93a3b8;
+    --line:#e3e8ef; --line2:#cfd8e3; --bg:#f4f6f9; --card:#ffffff;
+    --brand:#0d3b4f; --brand2:#14617d; --brand3:#e8f2f6;
+    --gold:#b7822b; --gold-l:#fdf6e8;
+    --ai:#5b6b7c; --ai-bg:#f1f4f8;
+    --prom:#0f7a52; --prom-bg:#e9f8f1;
+    --obj:#c02626; --obj-bg:#fdeeee;
+    --req:#1d4ed8; --req-bg:#eef3ff;
+    --pend:#6d28d9; --pend-bg:#f3eeff;
+    --ours:#a85a08; --ours-bg:#fdf1e3;
+    --r:14px; --sh:0 1px 2px rgba(15,23,42,.04),0 8px 24px -12px rgba(15,23,42,.16);
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--body);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:15px;line-height:1.72;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{margin:0;color:var(--ink);font-weight:700;letter-spacing:-.01em;line-height:1.35}
+  a{color:var(--brand2);text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);
+    backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;gap:18px;height:56px}
+  .tb-brand{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--ink);font-size:14px;white-space:nowrap}
+  .tb-dot{width:9px;height:9px;border-radius:3px;background:var(--gold);box-shadow:0 0 0 3px var(--gold-l)}
+  .tb-nav{display:flex;gap:2px;overflow:auto;scrollbar-width:none;flex:1}
+  .tb-nav::-webkit-scrollbar{display:none}
+  .tb-nav a{font-size:13px;color:var(--muted);padding:6px 10px;border-radius:8px;white-space:nowrap;transition:.16s}
+  .tb-nav a:hover{background:var(--brand3);color:var(--brand)}
+  .tb-act{display:flex;gap:8px;flex-shrink:0}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;
+    color:var(--ink2);font:inherit;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:9px;
+    cursor:pointer;transition:.16s;white-space:nowrap}
+  .btn:hover{border-color:var(--brand2);color:var(--brand2);background:var(--brand3)}
+  .btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
+  .btn-primary:hover{background:var(--brand2);border-color:var(--brand2);color:#fff}
+  .btn.sm{font-size:11.5px;padding:4px 9px;border-radius:7px}
+  .hero{position:relative;overflow:hidden;color:#dbe7ee;
+    background:radial-gradient(1100px 420px at 82% -18%,rgba(29,111,139,.55),transparent 62%),
+      radial-gradient(760px 340px at 4% 118%,rgba(183,130,43,.20),transparent 60%),
+      linear-gradient(158deg,#08222e 0%,#0d3b4f 46%,#114f66 100%)}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.30;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(60% 80% at 50% 30%,#000 35%,transparent 100%)}
+  .hero .wrap{position:relative;z-index:2;padding-top:34px;padding-bottom:36px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:#f3d49a;background:rgba(255,255,255,.07);
+    border:1px solid rgba(243,212,154,.32);padding:5px 11px;border-radius:999px}
+  .hero h1{color:#fff;font-size:31px;margin:14px 0 6px;letter-spacing:-.02em}
+  .hero h1 small{font-size:15px;font-weight:600;color:#9fc3d3;letter-spacing:0;margin-left:8px}
+  .hero .sub{color:#a9c6d4;font-size:13.5px}
+  .hero .sub b{color:#fff;font-weight:600}
+  .oneliner{margin-top:18px;display:flex;gap:12px;align-items:flex-start;max-width:940px;
+    background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.14);border-left:3px solid #e0a94a;
+    padding:13px 16px;border-radius:0 12px 12px 0}
+  .oneliner .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:#e0a94a;white-space:nowrap;padding-top:2px}
+  .oneliner p{margin:0;color:#eaf2f6;font-size:14px;line-height:1.7}
+  .oneliner b{color:#fff;background:rgba(224,169,74,.2);padding:0 4px;border-radius:4px;font-weight:700}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#dbe9ef;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:5px 11px;border-radius:8px}
+  .chip i{width:7px;height:7px;border-radius:50%;background:#7fd3ad;display:inline-block}
+  .chip.warn i{background:#f0b45c}
+  .chip.risk i{background:#f27979}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-26px;position:relative;z-index:5}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px 14px;
+    box-shadow:var(--sh);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand2)}
+  .kpi.k3::before{background:var(--obj)} .kpi.k4::before{background:var(--obj)}
+  .kpi .lab{font-size:11.5px;font-weight:700;letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+  .kpi .val{font-size:22px;font-weight:800;color:var(--ink);margin:6px 0 2px;letter-spacing:-.02em}
+  .kpi .val.s{font-size:17px;line-height:1.45}
+  .kpi .note{font-size:12px;color:var(--muted)}
+  section{margin-top:38px}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+  .sec-head h2{font-size:19px;display:flex;align-items:center;gap:10px}
+  .sec-head h2 .ix{font:700 11px/1 var(--mono);color:#fff;background:var(--brand2);
+    padding:5px 7px;border-radius:6px;letter-spacing:.04em}
+  .sec-head .desc{font-size:12.5px;color:var(--muted);max-width:660px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+  .grid-info{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px;padding:8px 22px 18px}
+  .row-i{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line)}
+  .row-i:last-child{border-bottom:0}
+  .row-i dt{font-size:12.5px;color:var(--faint);font-weight:700}
+  .row-i dd{margin:0;font-size:13.5px;color:var(--ink2)}
+  .row-i dd em{font-style:normal;color:var(--muted);font-size:12px}
+  .stage-box{padding:24px 24px 18px}
+  .track{display:grid;grid-template-columns:repeat(6,1fr);gap:0;position:relative;margin:6px 0 4px}
+  .track::before{content:"";position:absolute;left:8%;right:8%;top:15px;height:3px;border-radius:2px;
+    background:linear-gradient(90deg,var(--prom) 0 var(--prog,58%),var(--line2) var(--prog,58%) 100%)}
+  .st{position:relative;text-align:center;padding-top:34px}
+  .st .dot{position:absolute;top:4px;left:50%;transform:translateX(-50%);
+    width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--line2);
+    display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--faint);z-index:2}
+  .st.done .dot{background:var(--prom);border-color:var(--prom);color:#fff}
+  .st.done .dot::after{content:"\2713"}
+  .st.now .dot{background:#fff;border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 6px rgba(183,130,43,.16)}
+  .st.now .dot::after{content:"\25CF"}
+  .st.risk .dot{border-color:var(--obj);color:var(--obj);border-style:dashed}
+  .st .t{font-size:13px;font-weight:700;color:var(--ink2)}
+  .st.now .t{color:var(--gold)}
+  .st .d{font-size:11.5px;color:var(--faint);margin-top:1px}
+  .stage-note{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+    border-top:1px solid var(--line);padding-top:16px}
+  .sn{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .sn .h{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--faint);margin-bottom:4px}
+  .sn p{margin:0;font-size:12.8px;color:var(--ink2);line-height:1.65}
+  .sn.warn{background:var(--obj-bg);border-color:#f3c9c9}
+  .sn.warn .h{color:var(--obj)}
+  .sn.ok{background:var(--prom-bg);border-color:#bfe6d4}
+  .sn.ok .h{color:var(--prom)}
+  .blockers{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh)}
+  .blk .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .blk h3{font-size:14.5px}
+  .tag{font-size:11px;font-weight:800;letter-spacing:.04em;padding:3px 8px;border-radius:6px;white-space:nowrap}
+  .tag.risk{background:var(--obj-bg);color:var(--obj)}
+  .tag.warn{background:var(--ours-bg);color:var(--ours)}
+  .tag.ok{background:var(--prom-bg);color:var(--prom)}
+  .tag.info{background:var(--req-bg);color:var(--req)}
+  .blk p{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.7}
+  .blk .facts{display:flex;flex-wrap:wrap;gap:14px;padding-top:10px;border-top:1px dashed var(--line)}
+  .blk .facts div{font-size:11.5px;color:var(--faint)}
+  .blk .facts b{display:block;font-size:15px;color:var(--ink);font-weight:800;letter-spacing:-.01em}
+  .filters{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:16px}
+  .fchip{font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line2);background:#fff;color:var(--muted);transition:.15s;user-select:none}
+  .fchip:hover{border-color:var(--brand2);color:var(--brand2)}
+  .fchip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+  .fchip .c{font-variant-numeric:tabular-nums;opacity:.72;margin-left:3px}
+  .fsep{width:1px;height:18px;background:var(--line2);margin:0 4px}
+  .tl-item{display:grid;grid-template-columns:104px 30px 1fr;gap:0;align-items:stretch}
+  .tl-time{padding:0 12px 22px 0;text-align:right}
+  .tl-time .d{font:700 12.5px var(--mono);color:var(--ink2);letter-spacing:-.02em}
+  .tl-time .t{font:600 11px var(--mono);color:var(--faint)}
+  .tl-mid{position:relative;display:flex;justify-content:center}
+  .tl-mid::before{content:"";position:absolute;top:0;bottom:0;width:2px;background:var(--line2)}
+  .tl-item:first-child .tl-mid::before{top:9px}
+  .tl-item:last-child .tl-mid::before{bottom:calc(100% - 9px)}
+  .tl-mid i{position:absolute;top:5px;width:11px;height:11px;border-radius:50%;background:#fff;
+    border:2.5px solid #475569;z-index:2}
+  .tl-body{padding:0 0 22px 16px}
+  .tl-card{background:var(--card);border:1px solid var(--line);border-left:3px solid #475569;
+    border-radius:0 12px 12px 0;padding:11px 15px;box-shadow:0 1px 2px rgba(15,23,42,.04);transition:.16s}
+  .tl-card:hover{box-shadow:var(--sh);border-color:var(--line2)}
+  .tl-card .meta{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:5px}
+  .cat{font-size:10.5px;font-weight:800;letter-spacing:.05em;padding:2px 7px;border-radius:5px}
+  .src{font:600 10.5px var(--mono);color:var(--faint);background:var(--bg);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+  .tl-card .txt{font-size:13.5px;color:var(--ink2);line-height:1.7}
+  .tl-card .txt q{font-style:normal;color:var(--ink);background:#fffbe8;padding:0 3px;border-radius:3px}
+  .flag{font-size:10.5px;font-weight:800;color:var(--obj);background:var(--obj-bg);padding:1px 6px;border-radius:5px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:0}
+  .tab{font:inherit;font-size:13px;font-weight:700;color:var(--muted);background:none;border:0;cursor:pointer;
+    padding:9px 14px;border-radius:9px 9px 0 0;border-bottom:2.5px solid transparent;transition:.15s}
+  .tab:hover{color:var(--ink2);background:var(--bg)}
+  .tab[aria-selected="true"]{color:var(--brand);background:#fff;border-bottom-color:var(--brand2)}
+  .tab .n{font-size:11px;font-weight:800;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:1px 6px;margin-left:5px;color:var(--muted)}
+  .tab[aria-selected="true"] .n{background:var(--brand3);border-color:#cfe3ea;color:var(--brand2)}
+  .panel{display:none;padding-top:2px}
+  .panel.on{display:block}
+  table{width:100%;border-collapse:collapse;font-size:13.2px}
+  thead th{text-align:left;font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--faint);
+    text-transform:uppercase;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--line2);white-space:nowrap}
+  tbody td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2);line-height:1.65}
+  tbody tr:hover td{background:#fbfcfe}
+  tbody tr:last-child td{border-bottom:0}
+  td.k{font-weight:700;color:var(--ink);white-space:nowrap}
+  td.src-cell{font:600 11.5px var(--mono);color:var(--muted);white-space:nowrap}
+  td.q{color:var(--ink)}
+  .tbl-wrap{overflow-x:auto}
+  .callout{display:flex;gap:11px;align-items:flex-start;background:var(--gold-l);border:1px solid #f0dfb8;
+    border-radius:11px;padding:12px 15px;margin-top:14px;font-size:13px;color:#6b4d14;line-height:1.7}
+  .callout .ic{font-size:15px;line-height:1.4}
+  .callout b{color:#57390a}
+  .callout.danger{background:var(--obj-bg);border-color:#f3c9c9;color:#7f1d1d}
+  .callout.danger b{color:#6b1212}
+  .callout.info{background:var(--req-bg);border-color:#d3dffa;color:#1e3a8a}
+  .callout.info b{color:#172554}
+  .ai-card{background:linear-gradient(180deg,#f8fafc,#f2f5f9);border:1px dashed #b8c4d2;border-radius:var(--r);
+    padding:20px 22px;position:relative}
+  .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .ai-badge{font-size:11px;font-weight:800;letter-spacing:.08em;color:#fff;background:var(--ai);
+    padding:4px 9px;border-radius:6px}
+  .ai-head h3{font-size:15px}
+  .ai-head .warn-txt{font-size:11.5px;color:var(--muted)}
+  .ai-card p{margin:0 0 12px;font-size:13.8px;color:#334155;line-height:1.85}
+  .ai-card p:last-child{margin-bottom:0}
+  .ai-card b{color:var(--ink)}
+  .ai-pts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  .ai-pt{background:#fff;border:1px solid #dbe2ea;border-radius:10px;padding:12px 13px}
+  .ai-pt .h{font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--ai);margin-bottom:5px}
+  .ai-pt p{margin:0;font-size:12.6px;line-height:1.7;color:#475569}
+  .unknown{border:1px solid #f3c9c9;border-radius:var(--r);overflow:hidden;background:#fff}
+  .unknown .uh{background:linear-gradient(90deg,#fdf0f0,#fff8f4);padding:13px 20px;border-bottom:1px solid #f3d9d0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .unknown .uh h3{font-size:14.5px;color:#8a1f1f}
+  .unknown .uh span{font-size:12px;color:#a15c50}
+  .conf-bar{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .prog{flex:1;min-width:180px;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand2),var(--prom));transition:width .35s ease;border-radius:999px}
+  .conf-bar .txt{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .conf-bar .txt b{color:var(--ink);font-variant-numeric:tabular-nums}
+  input[type=checkbox]{width:16px;height:16px;accent-color:var(--prom);cursor:pointer;margin:0}
+  .cf{display:flex;align-items:center;gap:9px}
+  tr.checked td{background:#f4fbf7}
+  tr.checked td.k::after{content:" \2713";color:var(--prom);font-weight:800}
+  .conf-tag{font-size:10.5px;font-weight:800;padding:2px 6px;border-radius:5px;white-space:nowrap}
+  .prio{display:inline-flex;align-items:center;justify-content:center;min-width:34px;font-size:11px;font-weight:900;padding:3px 7px;border-radius:6px}
+  .p0{background:var(--obj);color:#fff} .p1{background:#d97706;color:#fff} .p2{background:#94a3b8;color:#fff}
+  .linked-panel{display:none;margin-top:10px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:13px}
+  .linked-panel.on{display:block}
+  .linked-panel .ph{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--faint);margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .linked-panel p{margin:0 0 8px;line-height:1.75;color:var(--ink2)}
+  .linked-panel p:last-child{margin-bottom:0}
+  .linked-panel ul{margin:0;padding-left:18px;color:var(--ink2)}
+  .linked-panel li{margin-bottom:5px;line-height:1.65}
+  .draft{background:#0e2a33;color:#dbe9ef;border-radius:11px;padding:16px 18px;font-size:13.4px;line-height:1.85;
+    border:1px solid #17414f;position:relative;margin-top:16px}
+  .draft .dh{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px;font-size:11.5px;color:#8fb6c6;letter-spacing:.06em;font-weight:700}
+  .draft q{font-style:normal;color:#fff}
+  .src-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:18px 20px}
+  .src-c{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:13px 14px}
+  .src-c .n{font-size:11px;font-weight:800;color:var(--faint);letter-spacing:.06em}
+  .src-c .t{font-size:13.5px;font-weight:700;color:var(--ink);margin:3px 0 2px}
+  .src-c .m{font-size:11.5px;color:var(--muted)}
+  .src-c .c{font-size:19px;font-weight:800;color:var(--brand2);margin-top:6px;font-variant-numeric:tabular-nums}
+  footer{margin:44px 0 0;padding:24px 0 40px;border-top:1px solid var(--line);color:var(--faint);font-size:12px;line-height:1.9}
+  footer b{color:var(--muted)}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,16px);opacity:0;pointer-events:none;
+    background:var(--ink);color:#fff;font-size:13px;font-weight:600;padding:10px 18px;border-radius:999px;
+    box-shadow:0 12px 32px -8px rgba(15,23,42,.5);transition:.25s;z-index:99}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+  @media (max-width:900px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .grid-info,.blockers,.stage-note,.ai-pts,.src-grid{grid-template-columns:1fr}
+    .grid-info{gap:0}
+    .track{grid-template-columns:repeat(3,1fr);row-gap:16px}
+    .track::before{display:none}
+    .hero h1{font-size:24px}
+    .tl-item{grid-template-columns:78px 24px 1fr}
+    .tb-nav{display:none}
+  }
+  @media print{
+    body{background:#fff;font-size:11pt}
+    .topbar,.tb-act,.filters,.fsep,.btn,.toast{display:none!important}
+    .hero{background:#0d3b4f!important}
+    .kpis{margin-top:14px}
+    .card,.kpi,.blk,.tl-card,.unknown,.ai-card{box-shadow:none}
+    section{break-inside:avoid;margin-top:20px}
+    .panel{display:block!important}
+    .tabs{display:none}
+    a{color:inherit}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body data-confirm-key="甲醇_恒源新材料_跟进卡-confirm-v1">
+
+<nav class="topbar">
+  <div class="wrap">
+    <div class="tb-brand"><span class="tb-dot"></span>客户跟进卡</div>
+    <div class="tb-nav"><a href="#overview">客户速览</a><a href="#stage">阶段判定</a><a href="#blockers">卡点</a><a href="#timeline">时间线</a><a href="#facts">四类清单</a><a href="#ai">AI 摘要</a><a href="#unknown">待确认</a><a href="#confirm">字段确认</a><a href="#next">下一步</a></div>
+    <div class="tb-act"><button class="btn sm" onclick="window.print()">导出 / 打印 PDF</button></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">内贸销售 · 客户跟进记录整理</span>
+    <h1>山东恒源新材料有限公司<small>甲醇 · 临沂甲醛装置</small></h1>
+    <div class="sub">工业甲醇 国标优等品（GB/T 338）｜甲醛 20 万吨/年 + 甲缩醛｜月用约 <b>2500 吨</b>｜对接：<b>刘建军</b>（采购经理）· <b>赵工</b>（安环）</div>
+    <div class="oneliner"><span class="k">一句话结论</span><p>这单<b>不是价格问题，是资质与长约问题</b>：客户现有长约到 2027 年 3 月才到期，而危化品运输资质与罐容两条硬门槛我们还没闭环。21 天停滞不要靠催单解决，靠<b>把资质包做齐 + 给对方一个长约到期后的切换方案</b>。</p></div>
+    <div class="hero-chips"><span class="chip "><i></i>阶段：停滞</span><span class="chip warn"><i></i>停滞 7 天</span><span class="chip warn"><i></i>逾期承诺 2 项</span><span class="chip warn"><i></i>报价 2026-10-31 到期（剩 12 天）</span><span class="chip "><i></i>素材：14 条记录 / 4 份</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="kpis"><div class="kpi k1"><div class="lab">Current Stage</div><div class="val">停滞</div><div class="note">报价已出、资质未齐、长约未到期</div></div><div class="kpi k2"><div class="lab">Stalled</div><div class="val">7 天</div><div class="note">最后一次客户回复：10-12 11:30（催资质）；业务实质推进停在 09-28</div></div><div class="kpi k3"><div class="lab">Hard Gate</div><div class="val">2 项</div><div class="note">危化品运输资质 / 罐容与长约窗口</div></div><div class="kpi k4"><div class="lab">Overdue</div><div class="val">1 项</div><div class="note">资质扫描件承诺 · 逾期 19 天</div></div></div>
+
+  <section id="overview">
+    <div class="sec-head"><h2><span class="ix">01</span>客户速览</h2>
+      <div class="desc">以下字段均出自上传素材；标注为待确认者需您核对。</div></div>
+    <div class="card"><dl class="grid-info" style="margin:0"><div class="row-i"><dt>客户全称</dt><dd>山东恒源新材料有限公司 <em>（临沂，甲醛 20 万吨/年 + 甲缩醛）</em></dd></div><div class="row-i"><dt>产品品类</dt><dd>工业甲醇，国标优等品（GB/T 338），纯度 ≥99.9%</dd></div><div class="row-i"><dt>危化属性</dt><dd>第 3 类易燃液体（UN1230，Ⅱ级包装）；需&lt;b&gt;危化品经营许可证&lt;/b&gt; + &lt;b&gt;危险货物道路运输许可&lt;/b&gt;</dd></div><div class="row-i"><dt>用量</dt><dd>月均约 2500 吨（甲醛装置连续运行，日耗约 83 吨）</dd></div><div class="row-i"><dt>交付条件</dt><dd>罐车（≤30 吨/车）送至客户厂区；客户自有卸车泵，卸车时间约 2.5 小时/车</dd></div><div class="row-i"><dt>储存条件</dt><dd>客户甲醇储罐 &lt;b&gt;2×1000 m³&lt;/b&gt;；安全库存 5 天；罐容腾挪能力有限 <em>（该数据来自来访纪要，客户口述）</em></dd></div><div class="row-i"><dt>现有供应</dt><dd>2 家在供（内蒙长约 + 山东本地长约），长约 &lt;b&gt;2027 年 3 月&lt;/b&gt;到期；到厂 1780–1820 元/吨</dd></div><div class="row-i"><dt>采购流程</dt><dd>安环部先审资质 → 采购比价 → 小批量试供 → 长约/年度合同</dd></div><div class="row-i"><dt>我方最新报价</dt><dd>送到价 &lt;b&gt;1800 元/吨&lt;/b&gt;（含税含运），30 吨/车；有效期至 2026-10-31</dd></div><div class="row-i"><dt>数据来源</dt><dd>微信截图 OCR ×11 ｜ 邮件 ×2 ｜ 来访纪要 ×1 ｜ 资质文件 ×1</dd></div></dl></div>
+  </section>
+
+  <section id="stage">
+    <div class="sec-head"><h2><span class="ix">02</span>阶段判定与停滞分析</h2>
+      <div class="desc">阶段六段：初次接触 → 需求确认 → 送样 → 报价谈判 → 合同 → 停滞。</div></div>
+    
+    <div class="card stage-box">
+      <div class="track" style="--prog:94%"><div class="st done"><span class="dot"></span><div class="t">初次接触</div><div class="d">08-15</div></div><div class="st done"><span class="dot"></span><div class="t">需求确认</div><div class="d">08-20</div></div><div class="st done"><span class="dot"></span><div class="t">送样</div><div class="d">09-05 → 09-12</div></div><div class="st done"><span class="dot"></span><div class="t">报价谈判</div><div class="d">09-15 → 09-28</div></div><div class="st "><span class="dot"></span><div class="t">合同</div><div class="d">—</div></div><div class="st now risk"><span class="dot"></span><div class="t">停滞</div><div class="d">09-28 起</div></div></div>
+      <div class="stage-note">
+        <div class="sn"><div class="h">当前阶段</div><p><b>停滞</b>——需求、价格、交付方式都谈清了，但被两个<b>结构性条件</b>卡住：客户现有长约 2027 年 3 月才到期（不缺供应商），且危化品运输资质尚未完成双向核验。这不是靠催单能推进的，属「等窗口 + 补资质」型停滞。</p></div>
+        <div class="sn warn"><div class="h">停滞原因</div><p><b>停滞 7 天</b>（as_of 2026-10-19 − 最后客户回复 10-12 11:30）<br><b>客户现有长约未到期（结构性）</b>　2 家在供，长约至 2027 年 3 月；客户 09-28 原话「等长约到期我们再谈量」<br><b>危化品运输资质未完成双向核验</b>　我方《危险货物道路运输许可》扫描件已承诺提供但逾期 19 天未交；客户安环部未出具核验结论<br><b>客户罐容腾挪空间小</b>　2×1000 m³ 储罐、安全库存 5 天，新增供应商需挤占现有长约提货节奏</p></div>
+        <div class="sn ok"><div class="h">可复用筹码</div><p>价格有优势（1800 vs 客户现到厂 1780–1820）；客户甲醛装置满负荷，日耗稳定；我方有自有罐区可做<b>中转配送</b>，能解决客户罐容不足；赵工对资质完整性评价正面。</p></div>
+      </div>
+      <div class="callout danger"><span class="ic">!</span><div><b>停滞 7 天（业务实质停在 09-28，共 21 天），但不要误判为丢单。</b>客户 09-28 明确说「等长约到期再谈」——这是时间窗口问题，不是排斥。真正的风险是：若到 2027 年 1 月我们还没把运输资质与中转方案准备好，客户切换时会直接找下一家。</div></div>
+    </div>
+  </section>
+
+  <section id="blockers">
+    <div class="sec-head"><h2><span class="ix">03</span>卡点</h2>
+      <div class="desc">按「能否我方单方面推进」排序。</div></div>
+    <div class="blockers">
+      <div class="blk">
+        <div class="top"><h3>① 客户长约未到期</h3><span class="tag info">结构性 · 等窗口</span></div>
+        <p>客户 2 家在供、长约至 <b>2027 年 3 月</b>。这类停滞无法用价格或服务打破，只能<b>提前占位</b>：在 2026 年 12 月—2027 年 1 月的评审窗口前，把资质、试供记录、中转方案全部准备成「可直接签字」的状态。</p>
+        <div class="facts"><div>在供<b class="">2 家</b></div><div>长约到期<b class="">2027-03</b></div><div>窗口<b class="">2026-12 至 2027-01</b></div><div>性质<b class="g">时间问题</b></div></div>
+      </div>
+      <div class="blk">
+        <div class="top"><h3>② 危化品运输资质未闭环</h3><span class="tag risk">逾期 19 天</span></div>
+        <p>客户安环部要求：<b>危险货物道路运输许可</b>、<b>危化品经营许可证</b>、<b>罐车检验合格证</b>、<b>押运员资格</b>、MSDS。我方 09-30 承诺提供扫描件，<b>至今未交</b>。</p>
+        <div class="facts"><div>要求<b class="">5 类文件</b></div><div>已交<b class="">MSDS / 经营许可</b></div><div>缺<b class="r">道路运输许可 + 押运资格</b></div><div>逾期<b class="r">19 天</b></div></div>
+      </div>
+      <div class="blk">
+        <div class="top"><h3>③ 客户罐容不足</h3><span class="tag warn">待方案</span></div>
+        <p>客户 2×1000 m³ 储罐、安全库存 5 天、日耗约 83 吨。新供应商进入需挤占现有长约提货节奏，客户担心「多一家反而更乱」。</p>
+        <div class="facts"><div>储罐<b class="">2×1000 m³</b></div><div>安全库存<b class="">5 天</b></div><div>日耗<b class="">约 83 吨</b></div><div>痛点<b class="">腾挪空间小</b></div></div>
+      </div>
+      <div class="blk">
+        <div class="top"><h3>④ 价格只是次要障碍</h3><span class="tag ok">基本无碍</span></div>
+        <p>我方送到 1800，客户现到厂 1780–1820，处在区间内。客户 09-28 <b>没有再还价</b>，说明价格不是这一单的卡点——不要误判成价格战去主动降价。</p>
+        <div class="facts"><div>我方<b class="">1800 送到</b></div><div>客户现价<b class="">1780–1820</b></div><div>客户还价<b class="g">无</b></div><div>判断<b class="">非价格问题</b></div></div>
+      </div></div>
+  </section>
+
+  <section id="timeline">
+    <div class="sec-head"><h2><span class="ix">04</span>跟进时间线</h2>
+      <div class="desc">按时间正序，共 14 条；每条标注分类与出处。点击标签可筛选。</div></div>
+    <div class="filters" id="filters"><button class="fchip" data-cat="all" aria-pressed="true">全部<span class="c">14</span></button><span class="fsep"></span><button class="fchip" data-cat="客户需求" aria-pressed="false">客户需求<span class="c">5</span></button><button class="fchip" data-cat="客户异议" aria-pressed="false">客户异议<span class="c">1</span></button><button class="fchip" data-cat="我方承诺" aria-pressed="false">我方承诺<span class="c">1</span></button><button class="fchip" data-cat="客户动作" aria-pressed="false">客户动作<span class="c">3</span></button><button class="fchip" data-cat="我方动作" aria-pressed="false">我方动作<span class="c">3</span></button><button class="fchip" data-cat="系统提醒" aria-pressed="false">系统提醒<span class="c">1</span></button></div>
+    <div class="tl" id="tl">
+      <div class="tl-item" data-cat="客户动作">
+        <div class="tl-time"><div class="d">08-15</div><div class="t">14:20</div></div>
+        <div class="tl-mid"><i style="border-color:0E7490;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:0E7490">
+          <div class="meta"><span class="cat" style="background:E7F6FA;color:0E7490">客户动作</span>
+            <span class="src">截图1</span></div>
+          <div class="txt">行业会议后刘建军主动加微信：<q>我们临沂甲醛装置，甲醇一个月两千五百吨，你们能送罐车吗</q>。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户需求">
+        <div class="tl-time"><div class="d">08-15</div><div class="t">14:45</div></div>
+        <div class="tl-mid"><i style="border-color:1D4ED8;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:1D4ED8">
+          <div class="meta"><span class="cat" style="background:EEF3FF;color:1D4ED8">客户需求</span>
+            <span class="src">截图2</span></div>
+          <div class="txt">用量：<q>甲醛一条线 20 万吨/年，甲醇日耗八十多吨</q>，月均约 <b>2500 吨</b>。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户需求">
+        <div class="tl-time"><div class="d">08-20</div><div class="t">10:30</div></div>
+        <div class="tl-mid"><i style="border-color:1D4ED8;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:1D4ED8">
+          <div class="meta"><span class="cat" style="background:EEF3FF;color:1D4ED8">客户需求</span>
+            <span class="src">截图3</span></div>
+          <div class="txt">规格：<q>国标优等品，纯度 99.9 以上</q>；结算：<q>月结 30 天，13% 专票</q>。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户需求">
+        <div class="tl-time"><div class="d">08-20</div><div class="t">11:05</div></div>
+        <div class="tl-mid"><i style="border-color:1D4ED8;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:1D4ED8">
+          <div class="meta"><span class="cat" style="background:EEF3FF;color:1D4ED8">客户需求</span>
+            <span class="src">截图4</span><span class="flag">资质门槛</span></div>
+          <div class="txt"><b>交付条件</b>：罐车 ≤30 吨/车，厂区自有卸车泵；<b>要求提供危化品运输资质全套</b>。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户需求">
+        <div class="tl-time"><div class="d">08-20</div><div class="t">11:20</div></div>
+        <div class="tl-mid"><i style="border-color:1D4ED8;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:1D4ED8">
+          <div class="meta"><span class="cat" style="background:EEF3FF;color:1D4ED8">客户需求</span>
+            <span class="src">截图4</span></div>
+          <div class="txt">储存与库存：<q>我们两个一千方的罐，安全库存就五天</q>。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="我方动作">
+        <div class="tl-time"><div class="d">09-02</div><div class="t">09:10</div></div>
+        <div class="tl-mid"><i style="border-color:A85A08;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:A85A08">
+          <div class="meta"><span class="cat" style="background:FDF1E3;color:A85A08">我方动作</span>
+            <span class="src">邮件1</span><span class="flag">首版报价</span></div>
+          <div class="txt">发出首版报价与资质清单：送到 <b>1830 元/吨</b>，附 MSDS、危化品经营许可证。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="我方动作">
+        <div class="tl-time"><div class="d">09-05</div><div class="t">08:30</div></div>
+        <div class="tl-mid"><i style="border-color:A85A08;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:A85A08">
+          <div class="meta"><span class="cat" style="background:FDF1E3;color:A85A08">我方动作</span>
+            <span class="src">截图5</span><span class="flag">小批量试供</span></div>
+          <div class="txt">安排试供 2 车 60 吨，罐车与押运员到场，客户化验合格、卸车顺畅。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户动作">
+        <div class="tl-time"><div class="d">09-12</div><div class="t">15:40</div></div>
+        <div class="tl-mid"><i style="border-color:0E7490;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:0E7490">
+          <div class="meta"><span class="cat" style="background:E7F6FA;color:0E7490">客户动作</span>
+            <span class="src">截图6</span><span class="flag">安环核验</span></div>
+          <div class="txt">赵工反馈：<q>货没问题，卸车也顺</q>，但 <q>资质还要走安环核验</q>。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="我方动作">
+        <div class="tl-time"><div class="d">09-15</div><div class="t">10:00</div></div>
+        <div class="tl-mid"><i style="border-color:A85A08;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:A85A08">
+          <div class="meta"><span class="cat" style="background:FDF1E3;color:A85A08">我方动作</span>
+            <span class="src">邮件2</span><span class="flag">二次报价</span></div>
+          <div class="txt">二次报价：送到 <b>1800 元/吨</b>（含税含运），有效期至 10-31。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户需求">
+        <div class="tl-time"><div class="d">09-22</div><div class="t">16:10</div></div>
+        <div class="tl-mid"><i style="border-color:1D4ED8;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:1D4ED8">
+          <div class="meta"><span class="cat" style="background:EEF3FF;color:1D4ED8">客户需求</span>
+            <span class="src">来访纪要</span><span class="flag">关键信息</span></div>
+          <div class="txt">我方到厂拜访（郑海 + 物流主管）与刘建军、赵工面谈：客户明确<b>现有 2 家长约到 2027 年 3 月</b>，<q>现在加不进来，等长约到期我们再谈量</q>；同时要求资质先补齐备档。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户异议">
+        <div class="tl-time"><div class="d">09-28</div><div class="t">16:40</div></div>
+        <div class="tl-mid"><i style="border-color:C02626;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:C02626">
+          <div class="meta"><span class="cat" style="background:FDEEEE;color:C02626">客户异议</span>
+            <span class="src">截图7</span><span class="flag">停滞起点</span></div>
+          <div class="txt">客户：<q>价格我们没意见，但你们运输资质还没给我们，安环那边过不了</q>；<q>先放着，等长约到期再说</q>。—— <b>此后无回复。</b></div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="我方承诺">
+        <div class="tl-time"><div class="d">09-30</div><div class="t">10:00</div></div>
+        <div class="tl-mid"><i style="border-color:0F7A52;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:0F7A52">
+          <div class="meta"><span class="cat" style="background:E9F8F1;color:0F7A52">我方承诺</span>
+            <span class="src">截图8</span><span class="flag">逾期</span></div>
+          <div class="txt">承诺 <b>09-30 前提供危险货物道路运输许可 + 押运员资格扫描件</b>。→ 至今未提供。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="客户动作">
+        <div class="tl-time"><div class="d">10-12</div><div class="t">11:30</div></div>
+        <div class="tl-mid"><i style="border-color:0E7490;background:#fff"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:0E7490">
+          <div class="meta"><span class="cat" style="background:E7F6FA;color:0E7490">客户动作</span>
+            <span class="src">截图9</span><span class="flag">客户催办</span></div>
+          <div class="txt">赵工微信催问：<q>资质扫描件什么时候能给？我们这边要归档</q>。</div>
+        </div></div>
+      </div>
+      <div class="tl-item" data-cat="系统提醒">
+        <div class="tl-time"><div class="d">10-19</div><div class="t">10:15</div></div>
+        <div class="tl-mid"><i style="border-color:475569;background:475569"></i></div>
+        <div class="tl-body"><div class="tl-card" style="border-left-color:475569">
+          <div class="meta"><span class="cat" style="background:EEF1F5;color:475569">系统提醒</span>
+            <span class="src">系统</span><span class="flag">系统统计</span></div>
+          <div class="txt">距客户最后回复 <b>7 天</b>（业务实质推进停在 09-28，已 21 天）；资质承诺<b>逾期 19 天</b>；报价有效期剩 <b>12 天</b>；待确认项 <b>4</b> 条。</div>
+        </div></div>
+      </div></div>
+  </section>
+
+  <section id="facts">
+    <div class="sec-head"><h2><span class="ix">05</span>四类清单</h2>
+      <div class="desc">严格区分：客户说过的 / 客户反对的 / 我方承诺的 / 尚未确认的。每条带出处。</div></div>
+    
+    <div class="card" style="padding:16px 20px 20px">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-panel="p-req">① 客户明确需求<span class="n">9</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-panel="p-obj">② 客户异议<span class="n">3</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-panel="p-prom">③ 我方承诺<span class="n">6</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-panel="p-pend">④ 待确认<span class="n">4</span></button>
+      </div>
+      <div class="panel on" id="p-req">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th style="width:120px">维度</th><th>客户原话 / 纪要内容</th><th style="width:130px">出处</th><th style="width:86px">置信度</th><th style="width:180px">备注</th></tr></thead>
+          <tbody><tr><td class="k">品类 / 用途</td><td class="q">工业甲醇，国标优等品（≥99.9%）；用于<b>甲醛 20 万吨/年装置</b>（另产甲缩醛）</td><td class="src-cell">截图1 / 2</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">连续运行，日耗约 83 吨</td></tr><tr><td class="k">数量</td><td class="q">月均约 <b>2500 吨</b>；试供 2 车 60 吨</td><td class="src-cell">截图2 / 截图5</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">客户口述，未给月度保底</td></tr><tr><td class="k">规格</td><td class="q">国标优等品 GB/T 338，纯度 ≥99.9%</td><td class="src-cell">截图3</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">客户化验已确认合格</td></tr><tr><td class="k">交付方式</td><td class="q"><b>罐车 ≤30 吨/车</b>，送至客户厂区；客户自有卸车泵，约 2.5 小时/车</td><td class="src-cell">截图4</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">卸车时间影响车辆周转</td></tr><tr><td class="k">危化资质</td><td class="q"><b>危化品经营许可证、危险货物道路运输许可、罐车检验合格证、押运员资格、MSDS</b>（安环部核验后归档）</td><td class="src-cell">截图4 / 截图9</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">新供应商准入前置条件</td></tr><tr><td class="k">储存 / 库存</td><td class="q">客户甲醇储罐 <b>2×1000 m³</b>；安全库存 <b>5 天</b></td><td class="src-cell">截图4 / 来访纪要</td><td><span class="conf-tag" style="color:var(--ours);background:var(--ours-bg)">中</span></td><td style="color:var(--muted);font-size:12.5px">客户口述，未提供罐区图纸</td></tr><tr><td class="k">价格</td><td class="q">我方送到 <b>1800 元/吨</b>（含税含运）；客户现到厂 1780–1820</td><td class="src-cell">邮件2 / 来访纪要</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">客户明确「价格没意见」</td></tr><tr><td class="k">付款</td><td class="q"><b>月结 30 天</b>，开 13% 专票</td><td class="src-cell">截图3</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">未涉及承兑</td></tr><tr><td class="k">供应窗口</td><td class="q">现有 2 家长约至 <b>2027 年 3 月</b>；客户表示<b>长约到期后再谈量</b></td><td class="src-cell">来访纪要 / 截图7</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td style="color:var(--muted);font-size:12.5px">这是停滞的根本原因</td></tr></tbody></table></div>
+        <div class="callout info"><span class="ic">✓</span><div><b>整理纪律：</b>本表只收客户明确说过的条件。客户<b>未提</b>「独家供应 / 年框锁量 / 中转库 / 账期贴息 / 指定第三方化验机构」，故不列入。我方在拜访中提出的「罐区中转」是我方方案，<b>不是客户需求</b>。</div></div>
+      </div>
+      <div class="panel" id="p-obj">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th style="width:44px">#</th><th>客户异议（原话要点）</th><th style="width:140px">出处</th><th style="width:130px">状态</th><th style="width:200px">我方已给出</th><th style="width:200px">应对建议</th></tr></thead>
+          <tbody><tr><td class="k">1</td><td><b>运输资质未提供</b>：安环部无法完成供应商核验，<q>过不了安环这一关</q></td><td class="src-cell">截图7 / 截图9</td><td><span class="tag" style="color:C02626;background:FDEEEE">未解决 · 逾期 19 天</span></td><td>承诺 09-30 前提供扫描件</td><td style="color:var(--muted);font-size:12.5px">今天就补齐并直接发给赵工，抄送刘建军；附一页资质对照表降低他归档工作量</td></tr><tr><td class="k">2</td><td><b>现有长约未到期</b>：<q>现在加不进来，等长约到期再说</q></td><td class="src-cell">来访纪要</td><td><span class="tag" style="color:14617D;background:E8F2F6">结构性 · 无法立即解决</span></td><td>表达理解，提出保持月度沟通</td><td style="color:var(--muted);font-size:12.5px">不催单；改为季度性「窗口前准备度」汇报，2026-12 起加密</td></tr><tr><td class="k">3</td><td><b>罐容与提货节奏</b>：储罐 2×1000 m³、安全库存 5 天，多一家会打乱现行提货节奏</td><td class="src-cell">来访纪要</td><td><span class="tag" style="color:B45309;background:FDF1E3">待方案</span></td><td>口头提出可做中转配送</td><td style="color:var(--muted);font-size:12.5px">把中转方案写成可执行的一页纸（响应时效、最小起订、卸车配合），不要停在口头</td></tr></tbody></table></div>
+      </div>
+      <div class="panel" id="p-prom">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th style="width:44px">#</th><th>我方承诺</th><th style="width:92px">承诺日</th><th style="width:104px">截止</th><th style="width:110px">出处</th><th style="width:150px">状态</th><th style="width:170px">备注</th></tr></thead>
+          <tbody><tr><td class="k">1</td><td>发出首版报价 + MSDS + 危化品经营许可证</td><td class="src-cell">08-28</td><td class="src-cell">2026-09-02</td><td class="src-cell">邮件1</td><td><span class="tag" style="color:0F7A52;background:E9F8F1">已兑现</span></td><td style="color:var(--muted);font-size:12.5px">09-02 邮件发出</td></tr><tr><td class="k">2</td><td>安排 2 车 60 吨小批量试供</td><td class="src-cell">09-02</td><td class="src-cell">2026-09-05</td><td class="src-cell">截图5</td><td><span class="tag" style="color:0F7A52;background:E9F8F1">已兑现</span></td><td style="color:var(--muted);font-size:12.5px">09-05 到场，客户化验合格、卸车顺畅</td></tr><tr><td class="k">3</td><td>二次报价送到 1800 元/吨</td><td class="src-cell">09-12</td><td class="src-cell">2026-09-15</td><td class="src-cell">邮件2</td><td><span class="tag" style="color:0F7A52;background:E9F8F1">已兑现</span></td><td style="color:var(--muted);font-size:12.5px">09-15 邮件发出，有效期至 10-31</td></tr><tr><td class="k">4</td><td>到厂拜访，当面沟通合作窗口</td><td class="src-cell">09-16</td><td class="src-cell">2026-09-22</td><td class="src-cell">来访纪要</td><td><span class="tag" style="color:0F7A52;background:E9F8F1">已兑现</span></td><td style="color:var(--muted);font-size:12.5px">09-22 郑海 + 物流主管到厂</td></tr><tr><td class="k">5</td><td>提供 <b>危险货物道路运输许可</b> + <b>押运员资格</b>扫描件</td><td class="src-cell">09-28</td><td class="src-cell">2026-09-30</td><td class="src-cell">截图8</td><td><span class="tag" style="color:#fff;background:var(--obj)">逾期 19 天</span></td><td style="color:var(--muted);font-size:12.5px">至今未提供；客户安环部 10-12 已催问</td></tr><tr><td class="k">6</td><td>提供罐区中转配送方案（响应时效、最小起订量）</td><td class="src-cell">09-22</td><td class="src-cell">2026-10-10</td><td class="src-cell">来访纪要</td><td><span class="tag" style="color:#fff;background:var(--obj)">逾期 9 天</span></td><td style="color:var(--muted);font-size:12.5px">口头承诺，未形成书面方案</td></tr></tbody></table></div>
+        <div class="callout danger"><span class="ic">!</span><div><b>两条逾期，都卡在我方内部</b>，且都不是价格问题：一条是资质扫描件（行政动作），一条是中转方案（一页纸的事）。在客户「等窗口」的这段时间里，我方唯一能做的就是把自己变成<b>随时可签字</b>的状态——这两条逾期正在持续消耗这种状态。</div></div>
+      </div>
+      <div class="panel" id="p-pend">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th style="width:44px">#</th><th>待确认 / 未解决事项</th><th style="width:110px">类型</th><th style="width:180px">卡在谁</th><th style="width:230px">影响 / 说明</th><th style="width:140px">建议闭环时间</th></tr></thead>
+          <tbody><tr><td class="k">1</td><td><b>危险货物道路运输许可 + 押运员资格</b>扫描件（客户安环部归档用）</td><td><span class="tag" style="color:var(--pend);background:var(--pend-bg)">资质文件</span></td><td>我方物流部 / 郑海</td><td style="color:var(--muted);font-size:12.5px">新供应商准入第一道闸门；已逾期 19 天，客户已催问</td><td class="src-cell">今天 10-19</td></tr><tr><td class="k">2</td><td><b>罐区中转配送方案</b>：响应时效、最小起订量、卸车配合、异常处理</td><td><span class="tag" style="color:var(--pend);background:var(--pend-bg)">方案文件</span></td><td>我方物流部</td><td style="color:var(--muted);font-size:12.5px">解决客户「罐容不足、怕打乱节奏」的顾虑</td><td class="src-cell">10-22 前</td></tr><tr><td class="k">3</td><td><b>客户罐容与提货节奏细节</b>：月度提货批次、单批最大卸车量、是否有夜间卸车限制</td><td><span class="tag" style="color:var(--pend);background:var(--pend-bg)">信息缺口</span></td><td>客户赵工</td><td style="color:var(--muted);font-size:12.5px">决定中转方案的参数；目前只有口头「两个一千方罐」</td><td class="src-cell">下次沟通确认</td></tr><tr><td class="k">4</td><td><b>2027 年长约切换窗口的准确时间</b>：客户内部评审在 12 月还是 1 月、由谁定</td><td><span class="tag" style="color:var(--pend);background:var(--pend-bg)">信息缺口</span></td><td>客户刘建军</td><td style="color:var(--muted);font-size:12.5px">决定我方何时加密触达；错过窗口要再等一年</td><td class="src-cell">11 月前问清</td></tr></tbody></table></div>
+        <div class="callout"><span class="ic">✎</span><div><b>注意：</b>第 2 条「罐区中转」是我方提出的<b>解决方案</b>，客户从未要求；沟通时表述为「我们可以提供」，不要写成「客户要求中转」。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ai">
+    <div class="sec-head"><h2><span class="ix">06</span>AI 根据上下文整理的摘要</h2>
+      <div class="desc">此节为模型推断，<b>不是客户原话</b>，仅供决策参考，不得直接引用给客户。</div></div>
+    
+    <div class="ai-card">
+      <div class="ai-head">
+        <span class="ai-badge">AI 推断 · 非客户原话</span>
+        <h3>21 天没消息，但这单没死</h3>
+        <span class="warn-txt">生成于 2026-10-19 10:15 · 基于 4 份素材 14 条记录</span>
+      </div>
+      <p>恒源这单表面看是停滞（业务实质已停在 09-28，共 21 天；10-12 客户只来催资质），实质是<b>被客户自己的长约锁住了</b>：2 家在供、长约到 2027 年 3 月、甲醛装置满负荷不缺货。客户 09-28 说得很直白「价格我们没意见，等长约到期再说」——价格从来不是障碍，我方 1800 落在客户现价区间内，二次报价后客户没再还价。</p><p>真正危险的是我方自己的两个动作逾期：<b>运输资质扫描件逾期 19 天</b>、<b>中转方案逾期 9 天</b>。在危化品行业，安环部是独立于采购的闸门，赵工已经催了两次。客户「等窗口」的这段时间，恰好是我方把自己准备成「随时可签字」的唯一机会——如果到 2026 年 12 月评审时资质还没归档，客户切换时会直接跳过我方，而这跟价格毫无关系。</p>
+      <div class="ai-pts"><div class="ai-pt"><div class="h">判断</div><p>不是丢单，是<b>时间窗口型停滞</b>。当前成交概率中等（40%），但若窗口前资质与方案齐备，可升至 65%+。</p></div><div class="ai-pt"><div class="h">节奏</div><p>10 月补资质与方案 → 11 月保持月度触达并问清评审时间 → 12 月提交「切换方案」→ 2027 年 1–3 月落地。</p></div><div class="ai-pt"><div class="h">不要做</div><p>不要降价换关注（客户已明确价格无异议，降价反而暴露焦虑）；不要在资质没齐时反复催单。</p></div></div>
+    </div>
+  </section>
+
+  <section id="unknown">
+    <div class="sec-head"><h2><span class="ix">07</span>无法辨认 / 缺失内容</h2>
+      <div class="desc">以下内容<b>未计入</b>四类清单，避免猜测混入事实。</div></div>
+    
+    <div class="unknown">
+      <div class="uh"><h3>⚠ 3 项待补</h3><span>补齐后重新生成即可，无需重做跟进卡</span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th style="width:44px">#</th><th style="width:170px">素材</th><th>问题</th><th style="width:280px">需要您做什么</th><th style="width:86px">状态</th></tr></thead>
+        <tbody><tr><td class="k">1</td><td>资质文件 · 客户回传扫描件</td><td>客户回传的《危化品经营许可证》扫描件<b>下半部分模糊</b>，有效期与许可范围无法辨认</td><td>请客户重发清晰件，或我方提供清晰件给对方归档</td><td><span class="tag" style="color:#fff;background:var(--obj)">待补</span></td></tr><tr><td class="k">2</td><td>微信截图 · 09-12 15:40</td><td>赵工发来 <b>42 秒语音</b>，提到罐区相关安排，未转写</td><td>补语音转文字，可能含卸车时间或罐容细节</td><td><span class="tag" style="color:#fff;background:var(--obj)">待补</span></td></tr><tr><td class="k">3</td><td>来访纪要</td><td>纪要中「长约到期时间」记为 2027 年 3 月，但<b>手写批注另写「或 2 月底」</b>，两处不一致</td><td>请确认准确到期月，直接影响窗口判断</td><td><span class="tag" style="color:#fff;background:var(--obj)">待补</span></td></tr></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="confirm">
+    <div class="sec-head"><h2><span class="ix">08</span>关键字段确认</h2>
+      <div class="desc">生成跟进卡前的最后一步：逐条核对，勾选即视为确认，进度保存在本机。</div></div>
+    
+    <div class="card">
+      <div class="conf-bar">
+        <div class="txt">已确认 <b id="confNum">0</b> / <b id="confTot">10</b></div>
+        <div class="prog"><i id="confBar"></i></div>
+        <button class="btn sm" id="confReset">重置</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th style="width:52px">确认</th><th style="width:120px">字段</th><th>提取值</th><th style="width:150px">出处</th><th style="width:82px">置信度</th><th style="width:110px">标记</th></tr></thead>
+        <tbody id="confBody"><tr><td><div class="cf"><input type="checkbox" id="c1"></div></td><td class="k">产品</td><td>工业甲醇，国标优等品 GB/T 338，≥99.9%</td><td class="src-cell">截图3</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td>—</td></tr><tr><td><div class="cf"><input type="checkbox" id="c2"></div></td><td class="k">月用量</td><td>约 2500 吨（日耗约 83 吨）</td><td class="src-cell">截图2</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td><span class="tag risk" style="font-size:10.5px;padding:2px 6px">无保底承诺</span></td></tr><tr><td><div class="cf"><input type="checkbox" id="c3"></div></td><td class="k">交付方式</td><td>罐车 ≤30 吨/车，送至厂区，客户自卸</td><td class="src-cell">截图4</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td>—</td></tr><tr><td><div class="cf"><input type="checkbox" id="c4"></div></td><td class="k">危化资质要求</td><td>经营许可 / 道路运输许可 / 罐车检验 / 押运员资格 / MSDS</td><td class="src-cell">截图4</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td><span class="tag risk" style="font-size:10.5px;padding:2px 6px">缺 2 项</span></td></tr><tr><td><div class="cf"><input type="checkbox" id="c5"></div></td><td class="k">客户储罐</td><td>2×1000 m³，安全库存 5 天</td><td class="src-cell">来访纪要</td><td><span class="conf-tag" style="color:var(--ours);background:var(--ours-bg)">中</span></td><td><span class="tag risk" style="font-size:10.5px;padding:2px 6px">无图纸佐证</span></td></tr><tr><td><div class="cf"><input type="checkbox" id="c6"></div></td><td class="k">现有供应</td><td>2 家，长约至 2027-03（批注或为 2 月底）</td><td class="src-cell">来访纪要 / 截图7</td><td><span class="conf-tag" style="color:var(--ours);background:var(--ours-bg)">中</span></td><td><span class="tag risk" style="font-size:10.5px;padding:2px 6px">到期月待确认</span></td></tr><tr><td><div class="cf"><input type="checkbox" id="c7"></div></td><td class="k">我方报价</td><td>送到 1800 元/吨（含税含运），有效期 10-31</td><td class="src-cell">邮件2</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td>—</td></tr><tr><td><div class="cf"><input type="checkbox" id="c8"></div></td><td class="k">付款</td><td>月结 30 天，13% 专票</td><td class="src-cell">截图3</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td>—</td></tr><tr><td><div class="cf"><input type="checkbox" id="c9"></div></td><td class="k">成交阶段</td><td>停滞（等长约窗口 + 补资质）</td><td class="src-cell">推导</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td>—</td></tr><tr><td><div class="cf"><input type="checkbox" id="c10"></div></td><td class="k">客户价格态度</td><td>明确「价格没意见」，未还价</td><td class="src-cell">截图7</td><td><span class="conf-tag" style="color:var(--prom);background:var(--prom-bg)">高</span></td><td>—</td></tr></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="next">
+    <div class="sec-head"><h2><span class="ix">09</span>下一步动作 · 联动入口</h2>
+      <div class="desc">点击按钮展开对应联动产出。</div></div>
+    
+    <div class="card" style="padding:6px 20px 20px">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th style="width:64px">优先级</th><th style="width:170px">时间</th><th>动作</th><th style="width:190px">联动</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="prio p0">P0</span></td>
+            <td class="k">今天 10-19</td>
+            <td><b>补齐危险货物道路运输许可 + 押运员资格扫描件</b>，直接发赵工并抄送刘建军，附一页《资质对照表》说明每份文件对应哪条要求。</td>
+            <td><button class="btn sm" data-link="l-wx-1">润色客户微信</button></td>
+          </tr>
+          <tr>
+            <td><span class="prio p1">P1</span></td>
+            <td class="k">10-22 前</td>
+            <td><b>出一页纸的中转配送方案</b>：48 小时响应、最小起订 30 吨、卸车配合与异常处理，明确「多一家 = 多一层缓冲」而非打乱节奏。</td>
+            <td><button class="btn sm" data-link="l-mail-2">润色客户邮件</button></td>
+          </tr>
+          <tr>
+            <td><span class="prio p1">P1</span></td>
+            <td class="k">11 月内</td>
+            <td><b>问清评审窗口</b>：客户 2027 年供应商评审在 12 月还是 1 月、谁定、需要哪些材料；同时确认长约准确到期月（3 月 or 2 月底）。</td>
+            <td><button class="btn sm" data-link="l-call-3">通话提纲</button></td>
+          </tr>
+          <tr>
+            <td><span class="prio p2">P2</span></td>
+            <td class="k">12 月上旬</td>
+            <td><b>提交「国产替代切换方案」</b>：试供记录 + 资质包 + 中转方案 + 价格承诺，做成一份可直接进评审会的材料。</td>
+            <td><button class="btn sm" data-link="l-visit-4">准备客户拜访</button></td>
+          </tr></tbody></table></div>
+    </div>
+    <div class="linked-panel" id="l-wx-1"><div class="ph"><span>联动产出 · 微信话术草稿</span><button class="btn sm" data-copy="copy-l-wx-1">复制</button></div><p style="background:#fff;border:1px solid var(--line);border-radius:9px;padding:13px 15px;line-height:1.85;color:var(--ink)" id="copy-l-wx-1">赵工您好，资质的事我这边拖久了，跟您说明一下：道路运输许可和押运员资格的扫描件今天已经整理好，附件发您，另外我做了一张对照表，把您上次提的五项要求和我方文件一一对上，方便您归档。中转配送的方案我这两天出个一页纸的，主要解决您罐容腾挪的问题——您那边如果有夜间卸车限制或者单批最大卸车量，方便的话告诉我，我按您实际情况写。</p><p style="font-size:12px;color:var(--muted)">原则：先认错再交付，不解释内部流程；把「催单」换成「减少对方工作量」。</p></div><div class="linked-panel" id="l-mail-2"><div class="ph"><span>联动产出 · 中转方案邮件要点</span></div><ul><li><b>一页纸</b>：不写公司介绍，只写「怎么送、多久到、最少多少、出问题怎么办」。</li><li><b>响应时效</b>：下单后 48 小时内到厂，紧急情况 24 小时（需提前 1 天报备）。</li><li><b>最小起订</b>：1 车 30 吨起，支持拆批以适配客户 5 天安全库存。</li><li><b>罐容协同</b>：我方罐区可代储 3–5 天量，客户不必扩容即可增加一家供应商。</li><li><b>异常处理</b>：车辆故障 2 小时内响应替换车，延误超 6 小时按日租金补偿。</li></ul></div><div class="linked-panel" id="l-call-3"><div class="ph"><span>联动产出 · 通话提纲</span></div><ul><li><b>不谈单</b>：这通电话目标是信息，不是推进签约。</li><li><b>问窗口</b>：2027 年评审什么时候开始？谁牵头？要哪些材料？</li><li><b>对时间</b>：长约准确到期是 3 月还是 2 月底？（纪要两处不一致）</li><li><b>留钩子</b>：告知 12 月会提交一份可直接进评审会的材料，请他指出还缺什么。</li></ul></div><div class="linked-panel" id="l-visit-4"><div class="ph"><span>联动产出 · 切换方案（评审材料）大纲</span></div><ul><li><b>第 1 页</b>：一页纸结论——我方是谁、能供多少、什么价、什么时候能到。</li><li><b>第 2 页</b>：试供记录（2 车 60 吨、客户化验合格、卸车顺畅）。</li><li><b>第 3 页</b>：资质包（5 类文件 + 对照表）。</li><li><b>第 4 页</b>：中转与应急方案（解决罐容与断供风险）。</li><li><b>第 5 页</b>：商务条件（1800 送到、月结 30 天、价格有效期）。</li></ul></div>
+    
+  </section>
+
+  <section id="source">
+    <div class="sec-head"><h2><span class="ix">10</span>数据来源与整理口径</h2></div>
+    <div class="card">
+      <div class="src-grid"><div class="src-c"><div class="n">SOURCE 01</div><div class="t">微信截图 OCR</div><div class="m">11 张 · 08-15 → 10-12</div><div class="c">11</div></div><div class="src-c"><div class="n">SOURCE 02</div><div class="t">邮件往来</div><div class="m">2 封 · 09-02 / 09-15</div><div class="c">2</div></div><div class="src-c"><div class="n">SOURCE 03</div><div class="t">来访纪要</div><div class="m">1 份 · 09-22 到厂拜访</div><div class="c">1</div></div><div class="src-c"><div class="n">SOURCE 04</div><div class="t">资质文件</div><div class="m">1 份 · 客户回传扫描件（模糊）</div><div class="c">1</div></div></div>
+      <div style="padding:0 20px 20px">
+        <div class="callout info" style="margin-top:2px"><span class="ic">§</span>
+          <div><b>整理口径：</b>1. 只依据上传素材　2. 每条标注出处　3. 无法辨认单独列　4. AI 摘要单独成节　5. 停滞天数统一口径　6. 策略与事实分离</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>客户跟进卡 · 恒源新材料（工业甲醇）· 2026-10-19</b> ｜ 生成时间 2026-10-19 10:15 ｜ 共 14 条记录 / 4 份素材
+      ｜ 阶段：停滞 · 停滞 7 天<br>
+    本卡中的客户、公司与价格均为虚构示例，仅用于演示「整理客户跟进记录」功能。<br>
+    关键字段确认后归档；待办完成后请回填结果，重新生成即可重算阶段与停滞天数。
+  </footer>
+</div>
+
+<div class="toast" id="toast">已复制</div>
+<script>
+(function(){
+  "use strict";
+  var chips = document.querySelectorAll('#filters .fchip');
+  var items = document.querySelectorAll('#tl .tl-item');
+  chips.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      chips.forEach(function(b){ b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      var cat = btn.getAttribute('data-cat');
+      items.forEach(function(it){
+        it.style.display = (cat === 'all' || it.getAttribute('data-cat') === cat) ? '' : 'none';
+      });
+    });
+  });
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.setAttribute('aria-selected', x === t ? 'true' : 'false'); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+      var el = document.getElementById(t.getAttribute('data-panel'));
+      if (el) el.classList.add('on');
+    });
+  });
+  document.querySelectorAll('[data-link]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el = document.getElementById(btn.getAttribute('data-link'));
+      if (!el) return;
+      var open = el.classList.contains('on');
+      document.querySelectorAll('.linked-panel').forEach(function(p){ p.classList.remove('on'); });
+      if (!open) el.classList.add('on');
+    });
+  });
+  var toast = document.getElementById('toast');
+  var timer = null;
+  function showToast(msg){
+    if (!toast) return;
+    toast.textContent = msg || '已复制';
+    toast.classList.add('on');
+    clearTimeout(timer);
+    timer = setTimeout(function(){ toast.classList.remove('on'); }, 1800);
+  }
+  document.querySelectorAll('[data-copy]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var src = document.getElementById(btn.getAttribute('data-copy'));
+      var text = src ? (src.innerText || src.textContent || '') : '';
+      text = text.replace(/第[\s\S]*?可直接复制/, '').trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function(){ showToast('已复制到剪贴板'); })
+          .catch(function(){ showToast('复制失败，请手动选择文本'); });
+      } else { showToast('复制失败，请手动选择文本'); }
+    });
+  });
+  var KEY = document.body.getAttribute('data-confirm-key') || 'followup-confirm';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#confBody input[type=checkbox]'));
+  var numEl = document.getElementById('confNum');
+  var barEl = document.getElementById('confBar');
+  var totEl = document.getElementById('confTot');
+  if (totEl) totEl.textContent = boxes.length;
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e){ saved = {}; }
+  function paint(){
+    var n = 0;
+    boxes.forEach(function(b){
+      var tr = b.closest('tr');
+      if (b.checked) { n++; tr.classList.add('checked'); } else { tr.classList.remove('checked'); }
+    });
+    if (numEl) numEl.textContent = n;
+    if (barEl) barEl.style.width = (boxes.length ? (n / boxes.length * 100) : 0) + '%';
+  }
+  boxes.forEach(function(b){
+    b.checked = !!saved[b.id];
+    b.addEventListener('change', function(){
+      saved[b.id] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e){}
+      paint();
+      var tr = b.closest('tr');
+      var k = tr ? (tr.querySelector('td.k') || {}).textContent : '';
+      if (saved[b.id]) showToast('已确认：' + (k || ''));
+    });
+  });
+  var reset = document.getElementById('confReset');
+  if (reset) reset.addEventListener('click', function(){
+    boxes.forEach(function(b){ b.checked = false; saved[b.id] = false; });
+    try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e){}
+    paint();
+    showToast('已重置确认状态');
+  });
+  paint();
+})();
+</script>
+</body>
+</html>

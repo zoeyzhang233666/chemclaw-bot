@@ -1,0 +1,310 @@
+!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>企业深研档案 · 示例化工（虚构）——盐化新材料有限公司</title><style>
+:root{
+--ink:#111827;--sub:#5b6572;--line:#e4e8ee;--bg:#f3f5f8;--card:#ffffff;
+--blue:#1554c0;--blue-bg:#eef3fc;--blue-line:#c9dbf5;
+--red:#c0392b;--red-bg:#fdf0ee;--red-line:#f2c9c2;
+--green:#1a7f4f;--green-bg:#edf7f1;--green-line:#c4e3d4;
+--amber:#8a6100;--amber-bg:#fdf6e7;--amber-line:#ecd9a8;
+--violet:#5b46b8;--violet-bg:#f1eefc;
+--gray-bg:#eef0f3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+background:var(--bg);color:var(--ink);font-size:14px;line-height:1.68;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:18px 18px 64px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.na{color:#9aa3ad}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:16px;color:#fff;padding:26px 28px 22px;
+background:radial-gradient(1200px 400px at 10% -30%,#2f6fd8 0%,transparent 60%),
+linear-gradient(115deg,#0d1f3f 0%,#123a78 55%,#1554c0 100%);box-shadow:0 10px 30px rgba(13,31,63,.18)}
+.hero .kicker{font-size:12px;letter-spacing:.18em;opacity:.78;text-transform:uppercase}
+.hero h1{font-size:27px;font-weight:800;margin:6px 0 4px;letter-spacing:.02em}
+.hero .sub{font-size:13px;opacity:.86}
+.badges{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.badge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.3);
+border-radius:999px;padding:4px 13px;font-size:12.5px;backdrop-filter:blur(4px)}
+.badge b{font-weight:700}
+.hero .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:18px}
+.hero .stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+border-radius:12px;padding:10px 14px}
+.hero .stat .k{font-size:11.5px;opacity:.82}
+.hero .stat .v{font-size:18px;font-weight:800;margin-top:2px;letter-spacing:.01em}
+.hero .stat .m{font-size:11.5px;opacity:.72;margin-top:2px}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:16px;
+box-shadow:0 2px 6px rgba(17,24,39,.04)}
+.card>h2{font-size:16.5px;font-weight:800;display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.card>h2 .no{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+border-radius:7px;background:var(--blue);color:#fff;font-size:13px;font-weight:800}
+.card>h2 .hint{font-size:12px;font-weight:400;color:var(--sub);margin-left:4px}
+.card>p.lead{font-size:13.4px;color:var(--sub);margin:6px 0 10px}
+h3.sec{font-size:14px;font-weight:800;color:var(--blue);margin:16px 0 8px}
+.note{background:var(--amber-bg);border-left:3px solid #d9a92c;border-radius:0 8px 8px 0;
+padding:10px 14px;margin:10px 0;font-size:13px;color:#5c4607}
+.note b{color:var(--amber)}
+.gapbox{background:var(--gray-bg);border:1px dashed #c7ced8;border-radius:10px;padding:12px 16px;
+font-size:13px;color:#4b5563}
+.gapbox b{color:#374151}
+
+/* ---------- tags / grades ---------- */
+.tag{display:inline-block;font-size:11.5px;border-radius:5px;padding:1px 8px;white-space:nowrap;font-weight:600}
+.tag.ok{background:var(--green-bg);color:var(--green)}
+.tag.warn{background:var(--amber-bg);color:var(--amber)}
+.tag.risk{background:var(--red-bg);color:var(--red)}
+.tag.todo{background:var(--gray-bg);color:var(--sub)}
+.gA,.gB,.gC,.gD,.gNA{display:inline-block;font-size:11px;font-weight:800;border-radius:5px;
+padding:1px 6px;letter-spacing:.02em;cursor:help}
+.gA{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.gB{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-line)}
+.gC{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.gD{background:var(--violet-bg);color:var(--violet);border:1px solid #d7d0f5}
+.gNA{background:var(--gray-bg);color:#7b8695;border:1px solid #d5dae1}
+.est{font-size:11px;color:var(--violet);font-weight:700;border:1px dashed #c6bdf0;
+border-radius:5px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.evref{display:inline-flex;gap:4px;flex-wrap:wrap;margin-left:4px}
+.evref a{font-size:11px;font-weight:700;background:var(--blue-bg);border:1px solid var(--blue-line);
+color:var(--blue);border-radius:5px;padding:0 5px;cursor:pointer}
+.evref a:hover{background:var(--blue);color:#fff;text-decoration:none}
+
+/* ---------- tables ---------- */
+table.dt{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+table.dt th,table.dt td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+table.dt th{background:#f7f9fc;font-weight:700;white-space:nowrap;position:sticky;top:0;z-index:1}
+table.dt tr:nth-child(even) td{background:#fcfdfe}
+table.dt td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl-wrap{overflow-x:auto}
+
+/* ---------- kv grid ---------- */
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin:10px 0}
+.kv .cell{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kv .k{font-size:11.5px;color:var(--sub);letter-spacing:.02em}
+.kv .v{font-size:14.5px;font-weight:700;margin-top:3px;word-break:break-word}
+.kv .src{font-size:11px;color:#8a939f;margin-top:4px}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:8px 0}
+.kpi{background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi .k{font-size:11.5px;color:var(--sub)}
+.kpi .v{font-size:19px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi .v.neg{color:var(--red)}
+.kpi .m{font-size:11.5px;color:#8a939f;margin-top:3px}
+.kpi .evref a{font-size:10.5px}
+
+/* ---------- research conclusion cards ---------- */
+.concl{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px;margin-top:10px}
+.cc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;
+border-top:3px solid var(--blue)}
+.cc.k{ border-top-color:var(--green)} .cc.r{border-top-color:var(--red)} .cc.w{border-top-color:#d9a92c}
+.cc .q{font-size:11.7px;color:var(--sub);letter-spacing:.05em;font-weight:700}
+.cc .a{font-size:15.5px;font-weight:800;margin:5px 0 7px;line-height:1.5}
+.cc .why{font-size:13px;color:#374151}
+.cc .why b{color:var(--ink)}
+.cc .foot{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+
+/* ---------- ownership tree ---------- */
+.own-scroll{overflow-x:auto;padding:6px 0 10px}
+.own{display:flex;flex-direction:column;align-items:center;min-width:820px;font-size:12.5px}
+.own .row{display:flex;justify-content:center;align-items:flex-start;gap:56px;position:relative}
+.own .node{position:relative;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+padding:8px 12px;min-width:170px;text-align:center;box-shadow:0 2px 5px rgba(17,24,39,.05)}
+.own .node.state{border-color:#9fb3cf;background:#f7f9fc}
+.own .node.sub{border-color:#9fcaae;background:#f7fcf9}
+.own .node.assoc{border-color:#d7d0f5;background:#faf8ff}
+.own .node.target{border-color:var(--blue);background:linear-gradient(180deg,#eaf1fd,#fff);
+box-shadow:0 0 0 3px rgba(21,84,192,.13)}
+.own .node.excl{border-style:dashed;border-color:#d9a92c;background:var(--amber-bg)}
+.own .node .n{font-weight:800;font-size:13.5px}
+.own .node .r{font-size:11px;color:var(--sub)}
+.own .node .p{font-size:11.5px;font-weight:800;color:var(--blue)}
+.own .node .evref{justify-content:center}
+.own .vline{width:2px;height:22px;background:#b9c7dc;margin:0 auto}
+.own .split{width:calc(100% - 170px);height:2px;background:#b9c7dc;margin:0 auto}
+.own .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--sub);margin-top:6px}
+.own .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;
+vertical-align:-2px;border:1.5px solid}
+
+/* ---------- map ---------- */
+.map-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.95fr);gap:14px;align-items:start}
+@media(max-width:960px){.map-grid{grid-template-columns:1fr}}
+.map-svg-wrap{position:relative;border:1px solid var(--line);border-radius:12px;background:
+linear-gradient(180deg,#f9fbfe,#eef3fa);padding:6px}
+svg.cn{width:100%;height:auto;display:block}
+svg.cn .prov{fill:#e7edf6;stroke:#c3cfe0;stroke-width:.8}
+svg.cn .hull{fill:rgba(21,84,192,.10);stroke:rgba(21,84,192,.45);stroke-width:1.2;stroke-dasharray:5 4}
+svg.cn .marker{cursor:pointer}
+svg.cn .marker circle.dot{stroke:#fff;stroke-width:1.6}
+svg.cn .marker text.num{font-size:8.5px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+svg.cn .marker text.lab{font-size:8px;fill:#334155;text-anchor:middle;pointer-events:none;paint-order:stroke;
+stroke:#fff;stroke-width:2.4px;stroke-linejoin:round}
+svg.cn .marker.active circle.dot{stroke:#111827;stroke-width:2.4}
+.plant-list{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto;padding-right:2px}
+.plant{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
+.plant:hover,.plant.active{border-color:var(--blue);box-shadow:0 0 0 2px rgba(21,84,192,.12)}
+.plant .t{font-weight:800;font-size:13px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.plant .m{font-size:12px;color:var(--sub);margin-top:3px}
+.plant .k{font-size:11.5px;color:#6b7280}
+.plant .badge{display:inline-block;font-size:10.5px;border-radius:999px;padding:1px 7px;
+background:var(--gray-bg);color:#4b5563;border:1px solid #dfe3e9}
+
+/* ---------- flow (product chain) ---------- */
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch;margin-top:8px}
+@media(max-width:1020px){.flow{grid-template-columns:1fr 1fr}}
+.flow .lane{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:10px}
+.flow .lane h4{font-size:12.5px;color:var(--blue);margin-bottom:8px;letter-spacing:.04em}
+.flow .pchip{background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 9px;margin-bottom:7px}
+.flow .pchip .n{font-weight:800;font-size:12.5px}
+.flow .pchip .c{font-size:11.5px;color:var(--sub)}
+.flow .pchip .pn{font-size:10.5px;color:#6b7280;margin-top:3px}
+.flow .pchip.core{border-color:var(--blue);box-shadow:0 0 0 2px rgba(21,84,192,.1)}
+.prod-card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px;background:#fff}
+.prod-card h3{font-size:14.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prod-card .meta{font-size:12.5px;color:var(--sub);margin:4px 0 8px}
+.cap-line{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.cap{background:var(--blue-bg);border:1px solid var(--blue-line);border-radius:8px;padding:6px 10px;font-size:12px}
+.cap b{font-size:13.5px}
+.cap .src{display:block;font-size:10.8px;color:#6b7280}
+
+/* ---------- timeline ---------- */
+.tl{position:relative;margin:8px 0 6px 10px;padding-left:22px;border-left:2px solid #c9d6ea}
+.tl .item{position:relative;margin:0 0 14px}
+.tl .item::before{content:"";position:absolute;left:-29px;top:6px;width:11px;height:11px;border-radius:50%;
+background:#fff;border:2.5px solid var(--blue)}
+.tl .item.p{border-color:var(--red)} .tl .item.p::before{border-color:var(--red)}
+.tl .item.f::before{border-color:var(--green)}
+.tl .item.s::before{border-color:#d9a92c}
+.tl .d{font-size:12px;font-weight:800;color:var(--blue)}
+.tl .item.p .d{color:var(--red)} .tl .item.f .d{color:var(--green)}
+.tl .t{font-size:13.3px;margin-top:2px}
+.tl .meta{margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+
+/* ---------- filters ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px;
+background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;position:sticky;top:8px;z-index:20;
+box-shadow:0 4px 14px rgba(17,24,39,.06)}
+.filters label{font-size:11.8px;color:var(--sub);font-weight:700;margin-right:4px}
+.filters select,.filters input[type=search]{font:inherit;font-size:12.5px;padding:5px 8px;border:1px solid #cfd6df;
+border-radius:8px;background:#fff;color:var(--ink);max-width:190px}
+.filters .cnt{font-size:12px;color:var(--sub);margin-left:auto}
+.filters button{font:inherit;font-size:12px;font-weight:700;border:1px solid var(--blue);color:var(--blue);
+background:#fff;border-radius:8px;padding:5px 12px;cursor:pointer}
+.filters button:hover{background:var(--blue);color:#fff}
+.hide{display:none !important}
+
+/* ---------- evidence drawer ---------- */
+.evlist{display:flex;flex-direction:column;gap:8px}
+.evitem{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.evitem .hd{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.evitem .id{font-weight:800;color:var(--blue);font-size:12px}
+.evitem .ti{font-weight:700;font-size:13px}
+.evitem .meta{font-size:11.8px;color:var(--sub);margin-top:3px}
+.evitem blockquote{margin:7px 0 0;padding:8px 12px;background:#f8fafc;border-left:3px solid var(--blue-line);
+border-radius:0 7px 7px 0;font-size:12.5px;color:#374151}
+.evitem .u{font-size:11.5px;word-break:break-all;margin-top:5px}
+#evPanel{position:fixed;top:0;right:0;height:100vh;width:min(560px,96vw);background:#fff;z-index:90;
+box-shadow:-12px 0 40px rgba(17,24,39,.22);transform:translateX(105%);transition:transform .22s ease;
+display:flex;flex-direction:column}
+#evPanel.open{transform:translateX(0)}
+#evPanel .ph{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;
+border-bottom:1px solid var(--line);font-weight:800}
+#evPanel .pb{overflow:auto;padding:14px 18px}
+#evPanel .pc{cursor:pointer;border:none;background:var(--gray-bg);border-radius:8px;font:inherit;
+font-weight:800;width:30px;height:30px}
+#mask{position:fixed;inset:0;background:rgba(17,24,39,.35);z-index:80;display:none}
+#mask.open{display:block}
+
+/* misc */
+.footer{margin-top:22px;font-size:12px;color:var(--sub);border-top:1px solid var(--line);padding-top:14px}
+.legend-row{display:flex;gap:10px;flex-wrap:wrap;font-size:11.8px;color:var(--sub);margin:6px 0 2px}
+.legend-row span{display:inline-flex;align-items:center;gap:5px}
+.pill{display:inline-block;font-size:11px;border-radius:999px;padding:1px 9px;background:var(--blue-bg);
+color:var(--blue);border:1px solid var(--blue-line);margin-right:4px}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;background:#fff;border:1px solid var(--line);
+border-radius:12px;padding:8px 10px;box-shadow:0 2px 6px rgba(17,24,39,.04);position:sticky;top:8px;z-index:30}
+.toc a{font-size:12.3px;color:#374151;padding:3px 9px;border-radius:7px;display:inline-flex;gap:5px;align-items:center}
+.toc a i{font-style:normal;font-size:10.5px;font-weight:800;color:var(--blue);background:var(--blue-bg);
+border-radius:4px;padding:0 5px}
+.toc a:hover{background:var(--blue-bg);text-decoration:none;color:var(--blue)}
+.basis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+@media(max-width:900px){.basis{grid-template-columns:1fr}}
+.basis .b{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:12.6px}
+.basis .b h5{font-size:12.5px;margin-bottom:5px;color:var(--blue)}
+.basis .b ul{padding-left:16px}
+@media print{.filters,#evPanel,#mask{display:none}body{background:#fff}.card{break-inside:avoid}}
+</style></head><body>
+<div class="wrap">
+<div class="hero"><div class="kicker">企业深研档案 · Enterprise Dossier</div><h1>示例化工（虚构）——盐化新材料有限公司</h1><div class="sub">教学用虚构样例：非上市精细化工企业，无财务披露 · 演示“无公开资料”与“不推测财务”写法</div><div class="badges"><span class="badge">研究目的：<b>供应商调查</b></span><span class="badge">统一社会信用代码：<b>91370700MA3XXXXXXXXX（虚构占位，禁止当作真实代码）</b></span><span class="badge">证据台账：<b>6</b> 条</span><span class="badge">检索窗口：截至2026-10-20（近12个月覆盖 2025-10-20 → 2026-10-20）</span><span class="badge">非上市（有限责任公司）</span></div><div class="stats"><div class="stat"><div class="k">主营产品</div><div class="v">三氯化磷 · 三氯氧磷</div><div class="m">以环评口径为主</div></div><div class="stat"><div class="k">公开产能</div><div class="v">6 万吨/年（环评）</div><div class="m">无年报口径</div></div><div class="stat"><div class="k">员工规模</div><div class="v">约 180 人</div><div class="m">企业自述，B级</div></div><div class="stat"><div class="k">证据台账</div><div class="v">6 条</div><div class="m">教学样例，故意留缺口</div></div></div></div><nav class="toc"><a href="#sec1"><i>1</i>主体信息</a><a href="#sec2"><i>2</i>研究结论</a><a href="#sec3"><i>3</i>关键指标</a><a href="#sec4"><i>4</i>股权与关联</a><a href="#sec5"><i>5</i>产品·产能·工艺</a><a href="#sec6"><i>6</i>生产基地</a><a href="#sec7"><i>7</i>项目清单</a><a href="#sec8"><i>8</i>财务与分业务</a><a href="#sec9"><i>9</i>风险与合规</a><a href="#sec10"><i>10</i>近12个月动态</a><a href="#sec11"><i>11</i>证据台账</a><a href="#sec12"><i>12</i>全量筛选</a></nav><div class="basis"><div class="b"><h5>① 依据从哪来</h5>共 <b>6</b> 条证据，其中条目级 A 级一手来源 8 条、B 级 4 条；优先交易所公告/年报、环评与许可公示、企业官网，其次行业与财经媒体。正文里的 <b>E编号</b> 可直接点击查看原文摘录与原链接。</div><div class="b"><h5>② 边界在哪里</h5>仅研究<b>一个法人主体</b>；集团、兄弟公司、合营企业的产能与资产不并入；「分公司」无独立法人资格，产能在母公司名下；持股50%以上但章程约定共同控制者按合营企业处理。<div style="margin-top:5px">不预测经营业绩、不推测非上市主体营收与利润；经营范围所列品种未经装置/许可证据支持的不计入产品清单。</div></div><div class="b"><h5>③ 缺口怎么办</h5>未取得公开资料的条目在各章节统一标灰为「无公开资料」，并汇总在「9 风险与合规」的待核验清单，附建议核实途径；估算值一律标注「估算」并写明口径。</div></div><div class="card" id="sec1"><h2><span class="no">1</span>主体信息与消歧<span class="hint">先锁定法人主体，再看业务</span></h2><p class="lead">本样例为&lt;b&gt;虚构企业&lt;/b&gt;，仅用于演示渲染与口径纪律。研究主体为其自身（非上市有限责任公司）；同园区其他企业一律不并入。</p><h3 class="sec">工商登记（示例口径）</h3><div class="tbl-wrap"><table class="dt "><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>企业全称</td><td>示例化工——盐化新材料有限公司（虚构）<span class="evref"><a onclick="openEv('E02')" title="企业官网·公司简介（示例）">E02</a></span></td></tr><tr><td>统一社会信用代码</td><td><span class="na">无公开资料</span><div class="src" style="font-size:11.5px;color:#8a939f">教学样例未取得；实践中必须先取得再研究。</div></td></tr><tr><td>法定代表人</td><td><span class="na">无公开资料</span></td></tr><tr><td>注册与办公地址</td><td>某省某市化工园区（示例）<span class="evref"><a onclick="openEv('E04')" title="园区管委会招商信息（示例）">E04</a></span></td></tr><tr><td>注册资本</td><td><span class="na">无公开资料</span><div class="src" style="font-size:11.5px;color:#8a939f">信用公示系统未查询（教学样例）。</div></td></tr><tr><td>成立时间</td><td><span class="na">无公开资料</span></td></tr><tr><td>经营状态</td><td>存续（据官网自述正常生产）<span class="evref"><a onclick="openEv('E02')" title="企业官网·公司简介（示例）">E02</a></span></td></tr><tr><td>主营与产品</td><td>三氯化磷、三氯氧磷、副产盐酸<span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a><a onclick="openEv('E02')" title="企业官网·公司简介（示例）">E02</a></span></td></tr><tr><td>员工人数</td><td>约180人<span class="evref"><a onclick="openEv('E02')" title="企业官网·公司简介（示例）">E02</a></span></td></tr><tr><td>年营业收入/利润</td><td><span class="na">无公开资料</span><div class="src" style="font-size:11.5px;color:#8a939f">非上市且无发债披露，&lt;b&gt;不推测&lt;/b&gt;。</div></td></tr></tbody></table></div></div><h3 class="sec">同名/近名主体消歧表（3 个）</h3><div class="tbl-wrap"><table class="dt "><thead><tr><th>主体名称</th><th>统一社会信用代码</th><th>与本主体的关系</th><th>判定依据</th><th>是否纳入范围</th><th>证据</th></tr></thead><tbody><tr><td>示例化工——盐化新材料有限公司</td><td>—</td><td>研究主体（虚构）</td><td>教学样例主体</td><td><span class="tag ok">纳入研究</span></td><td><span class="gC" title="单一二手来源，需交叉验证">C 单源</span><span class="evref"><a onclick="openEv('E02')" title="企业官网·公司简介（示例）">E02</a></span></td></tr><tr><td>同园区另一家“示例化工科技有限公司”</td><td>—</td><td>无股权关系的同名近邻</td><td>名称近似但不同法人，排除；不得混用其产能</td><td><span class="tag warn">排除</span></td><td><span class="gC" title="单一二手来源，需交叉验证">C 单源</span><span class="evref"><a onclick="openEv('E04')" title="园区管委会招商信息（示例）">E04</a></span></td></tr><tr><td>园区集中供热公司</td><td>—</td><td>公用工程供应方</td><td>配套企业，非研究主体，其装置不计入</td><td><span class="tag warn">排除</span></td><td><span class="gC" title="单一二手来源，需交叉验证">C 单源</span><span class="evref"><a onclick="openEv('E04')" title="园区管委会招商信息（示例）">E04</a></span></td></tr></tbody></table></div><div class="card" id="sec2"><h2><span class="no">2</span>研究结论<span class="hint">供应商调查 视角</span></h2><div class="concl"><div class="cc k"><div class="q">能不能供得上？</div><div class="a">环评口径 6 万吨/年三氯化磷，有安许，可进入询价</div><div class="why">环评拟批准公示载明 <b>三氯化磷 6 万吨/年 + 三氯氧磷 2 万吨/年</b>，且安全生产许可证覆盖两类产品（有效期至 2029-01-08）。但<b>实际在产产量与开工率无公开资料</b>，需现场核实。</div><div class="foot"><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a><a onclick="openEv('E03')" title="安全生产许可证公示（示例）">E03</a></span></div></div><div class="cc k"><div class="q">资质是否齐全？</div><div class="a">危化品安许在有效期内；排污许可未取得公开证据</div><div class="why">安许公示覆盖产品与盐酸；<b>排污许可证编号与有效期未查到</b>，采购前应要求对方提供证照原件。</div><div class="foot"><span class="gB" title="两家以上独立公开来源或企业官网自述">B 多源</span><span class="evref"><a onclick="openEv('E03')" title="安全生产许可证公示（示例）">E03</a></span></div></div><div class="cc w"><div class="q">客户结构如何？</div><div class="a">仅有一条中标记录可佐证下游为农化方向</div><div class="why">某农化上市公司 2026-08 框架采购中标公告显示其中标；<b>但中标不等于实际供货量与年度占比</b>，客户集中度无公开资料。</div><div class="foot"><span class="gC" title="单一二手来源，需交叉验证">C 单源</span><span class="evref"><a onclick="openEv('E05')" title="下游客户采购中标公告（示例）">E05</a></span></div></div><div class="cc r"><div class="q">经营与财务风险？</div><div class="a">非上市无财务披露，无法判断偿债与盈利</div><div class="why">无年报、无发债披露，<b>本档案不推测其营收与利润</b>；建议以近两年审计报告、银行流水、纳税证明替代判断。</div><div class="foot"><span class="gNA" title="未找到可公开核实的资料">NA 无资料</span></div></div><div class="cc "><div class="q">规模判断靠什么？</div><div class="a">只能用产能/员工/中标等可核验指标</div><div class="why">环评产能 8 万吨/年合计、员工约 180 人、单项中标记录；这些可支撑“中小型精细化工企业”的定位，<b>不能</b>换算营收。</div><div class="foot"><span class="gB" title="两家以上独立公开来源或企业官网自述">B 多源</span><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a><a onclick="openEv('E02')" title="企业官网·公司简介（示例）">E02</a><a onclick="openEv('E05')" title="下游客户采购中标公告（示例）">E05</a></span></div></div></div><div class="note"><b>结论边界：</b>教学提示：非上市企业必须把“没有财务数据”变成一条明确结论，而不是留空或估算营收。</div></div><div class="card" id="sec3"><h2><span class="no">3</span>关键经营与产能指标<span class="hint">披露值标注数据源，推得值标注「估算」</span></h2><div class="kpis"><div class="kpi"><div class="k">三氯化磷产能（环评）</div><div class="v">6 万吨/年</div><div class="m">拟批准公示口径 <span class="evref"><a onclick="openEv('E01')">E01</a></span></div></div><div class="kpi"><div class="k">三氯氧磷产能（环评）</div><div class="v">2 万吨/年</div><div class="m">同上 <span class="evref"><a onclick="openEv('E01')">E01</a></span></div></div><div class="kpi"><div class="k">项目总投资</div><div class="v">1.8 亿元</div><div class="m">环评公示 <span class="evref"><a onclick="openEv('E01')">E01</a></span></div></div><div class="kpi"><div class="k">员工人数</div><div class="v">约 180 人</div><div class="m">企业自述 <span class="evref"><a onclick="openEv('E02')">E02</a></span></div></div><div class="kpi"><div class="k">安许有效期</div><div class="v">至 2029-01-08</div><div class="m">覆盖三氯化磷/三氯氧磷/盐酸 <span class="evref"><a onclick="openEv('E03')">E03</a></span></div></div><div class="kpi"><div class="k">营业收入</div><div class="v">无公开资料</div><div class="m">非上市，不推测 []</div></div></div><div class="legend-row"><span>A 已核实：官方一手：公告/年报/政府网站/证书原文</span><span>B 多源：两家以上独立公开来源或企业官网自述</span><span>C 单源：单一二手来源，需交叉验证</span><span>D 估算：行业经验值/计算推得，非披露值</span><span>NA 无资料：未找到可公开核实的资料</span></div></div><div class="card" id="sec4"><h2><span class="no">4</span>股权与关联关系<span class="hint">区分「并表」「参股」「同集团」</span></h2><p class="lead">非上市家族/民营结构未公开：仅能确认其为独立法人，股东与实控人无公开资料。</p><div class="own-scroll"><div class="own"><div class="node target" data-node="co"><div class="n">示例化工——盐化新材料有限公司</div><div class="r">研究主体 · 有限责任公司</div><span class="evref"><a onclick="openEv('E02')" title="企业官网·公司简介（示例）">E02</a></span></div><div class="vline"></div><div class="vline"></div><div class="row"><div style="display:flex;flex-direction:column;align-items:center"><div class="node sub" data-node="u1"><div class="n">三氯化磷装置（自有厂区）</div><div class="r">在产装置</div><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a></span></div></div><div style="display:flex;flex-direction:column;align-items:center"><div class="node sub" data-node="u2"><div class="n">三氯氧磷装置（自有厂区）</div><div class="r">在产装置</div><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a></span></div></div></div><div class="legend"><span><i style="border-color:var(--blue);background:#eaf1fd"></i>研究主体</span><span><i style="border-color:#9fb3cf;background:#f7f9fc"></i>国资/上级股东</span><span><i style="border-color:#9fcaae;background:#f7fcf9"></i>控股子公司/分公司</span><span><i style="border-color:#d7d0f5;background:#faf8ff"></i>参股/合营/联营（不并表）</span><span><i style="border-color:#d9a92c;background:#fdf6e7"></i>同集团但不在研究范围内（易混淆）</span></div></div></div><ul style='font-size:13px;padding-left:20px;margin-top:6px'><li>股东、实际控制人与关联企业无公开资料，须以信用公示系统与公司章程核实。</li><li>未发现可确认的子公司，故股权树只展开到装置层。</li></ul></div><div class="card" id="sec5"><h2><span class="no">5</span>产品、产能与生产工艺<span class="hint">经营范围 ≠ 实际产品</span></h2><p class="lead">只收环评/安许可佐证的三个品种；企业若有其他产品但无公开证据，一律不进清单。</p><h3 class="sec">产业链位置（上游原料 → 自身装置 → 下游产品 → 下游流向）</h3><div class="flow"><div class="lane"><h4>上游原料</h4><div class="pchip "><div class="n">黄磷</div><div class="c">外购（供应商未公开）</div><div class="pn">价格波动主要成本项</div></div><div class="pchip "><div class="n">液氯</div><div class="c">外购/园区配套</div><div class="pn">与氯碱企业联动</div></div><div class="pchip "><div class="n">公用工程</div><div class="c">园区集中供热（E04）</div><div class="pn">蒸汽依赖园区</div></div></div><div class="lane"><h4>自身装置</h4><div class="pchip "><div class="n">三氯化磷合成</div><div class="c">氯化反应</div><div class="pn">6 万吨/年</div></div><div class="pchip "><div class="n">三氯氧磷</div><div class="c">以三氯化磷为原料</div><div class="pn">2 万吨/年</div></div></div><div class="lane"><h4>主体产品</h4><div class="pchip core"><div class="n">三氯化磷</div><div class="c">主产品</div><div class="pn">环评 6 万吨/年</div></div><div class="pchip "><div class="n">三氯氧磷</div><div class="c">配套产品</div><div class="pn">环评 2 万吨/年</div></div></div><div class="lane"><h4>副产</h4><div class="pchip "><div class="n">盐酸</div><div class="c">副产</div><div class="pn">产量与去向无公开资料</div></div></div><div class="lane"><h4>下游流向</h4><div class="pchip "><div class="n">农药中间体</div><div class="c">主要去向（据中标记录）</div><div class="pn">具体客户与占比未公开</div></div><div class="pchip "><div class="n">医药中间体</div><div class="c">企业自述</div><div class="pn">B级</div></div><div class="pchip "><div class="n">塑料助剂/阻燃</div><div class="c">行业通用用途</div><div class="pn">未核实</div></div></div></div><div class="note"><b>口径提示：</b>下列产品清单只收录有公开证据支持「实际生产/销售」的品种；仅出现在经营范围但与主业无关的品种，统一列入文末「无公开资料与待核验清单」。</div><div class="prod-card"  data-f="prd" data-prod="" data-region="" data-entity="" data-grade="A" data-kw=""><h3>三氯化磷 <span class='pill'>主导</span><div style="margin-left:auto"><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a><a onclick="openEv('E03')" title="安全生产许可证公示（示例）">E03</a></span></div></h3><div class="meta">环评口径 6 万吨/年；安许覆盖；实际产量与开工率无公开资料</div><div><b>在产/生产主体：</b>示例化工自有厂区</div><div class="cap-line"><div class="cap"><b>6 万吨/年</b><span class="src">：E01</span></div></div><div><b>主要下游流向：</b>农药中间体；医药中间体；阻燃剂/增塑剂原料</div><ul style='font-size:12.8px;padding-left:20px;color:#374151;margin-top:6px'><li>安许有效期至 2029-01-08（E03）</li><li>有下游农化企业中标的间接佐证（E05）</li></ul></div><div class="prod-card"  data-f="prd" data-prod="" data-region="" data-entity="" data-grade="A" data-kw=""><h3>三氯氧磷 <span class='pill'>配套</span><div style="margin-left:auto"><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a><a onclick="openEv('E03')" title="安全生产许可证公示（示例）">E03</a></span></div></h3><div class="meta">环评口径 2 万吨/年；与三氯化磷形成上下游配套</div><div><b>在产/生产主体：</b>示例化工自有厂区</div><div class="cap-line"><div class="cap"><b>2 万吨/年</b><span class="src">：E01</span></div></div><div><b>主要下游流向：</b>农药（如有机磷类）；医药；塑料助剂</div><ul style='font-size:12.8px;padding-left:20px;color:#374151;margin-top:6px'><li>许可范围含三氯氧磷（E03）</li></ul></div><div class="prod-card"  data-f="prd" data-prod="" data-region="" data-entity="" data-grade="C" data-kw=""><h3>副产盐酸 <span class='pill'>副产</span><div style="margin-left:auto"><span class="gC" title="单一二手来源，需交叉验证">C 单源</span><span class="evref"><a onclick="openEv('E03')" title="安全生产许可证公示（示例）">E03</a></span></div></h3><div class="meta">作为副产物列入安许，产量无公开资料，需核实内部回用与外售比例</div><div><b>在产/生产主体：</b>示例化工自有厂区</div><div class="cap-line"><div class="cap"><b>无公开资料</b><span class="src">：</span></div></div><div><b>主要下游流向：</b>园区内部回用；水处理；外售</div><ul style='font-size:12.8px;padding-left:20px;color:#374151;margin-top:6px'><li>副产酸的处置与销售合规性需单独核实</li></ul></div></div><div class="card" id="sec6"><h2><span class="no">6</span>生产基地与区域布局<span class="hint">点击地图标记或右侧卡片联动</span></h2><div class="map-grid"><div class="map-svg-wrap"><svg class="cn" viewBox="20 10 160 116" role="img" aria-label="全国生产基地示意分布"><path class="prov" d="M 28,44 L 33,33 L 47,27 L 55,33 L 71,31 L 80,19 L 92,25 L 101,16 L 111,22 L 120,15 L 129,19 L 141,26 L 150,33 L 158,31 L 166,37 L 172,46 L 165,54 L 158,57 L 152,66 L 145,74 L 139,82 L 131,88 L 126,96 L 118,101 L 114,110 L 108,117 L 100,120 L 94,114 L 87,110 L 78,104 L 70,96 L 63,92 L 59,84 L 53,78 L 45,72 L 39,63 L 31,58 L 28,44 Z"/><path d="M 80,19 L 78,40 L 74,58 L 66,74" fill="none" stroke="#c3cfe0" stroke-width=".5"/><path d="M 101,16 L 104,36 L 99,56 L 94,74 L 87,92" fill="none" stroke="#c3cfe0" stroke-width=".5"/><path d="M 126,20 L 121,40 L 117,60 L 112,80 L 104,98" fill="none" stroke="#c3cfe0" stroke-width=".5"/><path d="M 145,33 L 135,44 L 128,60 L 122,78" fill="none" stroke="#c3cfe0" stroke-width=".5"/><path d="M 47,40 L 70,44 L 96,40 L 118,42 L 145,40" fill="none" stroke="#c3cfe0" stroke-width=".5"/><path d="M 45,60 L 74,58 L 100,60 L 124,58 L 152,58" fill="none" stroke="#c3cfe0" stroke-width=".5"/><path d="M 55,80 L 78,78 L 100,80 L 120,78" fill="none" stroke="#c3cfe0" stroke-width=".5"/><path class="hull" d="M 93.15,71.96 L 105.15,71.96 L 105.15,83.96 L 93.15,83.96 Z"/><g class="marker" id="mk1" data-plant="pl_1" onclick="pickPlant('pl_1')"><circle class="dot" cx="99.15" cy="77.96" r="4.2" fill="#1554c0"/><text class="num" x="99.15" y="77.96">1</text><text class="lab" x="99.15" y="71.46">厂区</text></g></svg><div class="legend-row"><span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1554c0"></i>在产主体/装置</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#c0392b"></i>在建/改造</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b46b8"></i>参股/联营（不并表）</span></div><div class="note" style="margin-bottom:0"><b>底图为示意，非精确地理边界</b>；标记点按公开地址/城市中心附近定位，用于表达区域布局关系，不能作为选址依据。</div></div><div class="plant-list"><div class="plant" id="pl_pl_1" data-plant="pl_1" onclick="pickPlant('pl_1')"><div class="t"><span>1. 示例化工自有厂区</span><span class="badge">在产</span></div><div class="m">某化工园区（示例，坐标仅示意）</div><div class="k">三氯化磷 6万吨/年（环评）、三氯氧磷 2万吨/年（环评）</div><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a></span></div></div></div><h3 class="sec">基地清单</h3><div class="tbl-wrap"><table class="dt "><thead><tr><th>基地/装置</th><th>所在地区</th><th>主体归属</th><th>并表</th><th>状态</th><th>主要产品与产能</th><th>证据</th></tr></thead><tbody><tr><td>示例化工自有厂区</td><td>某化工园区（示例，坐标仅示意）</td><td>示例化工——盐化新材料有限公司</td><td><span class="tag ok">并表</span></td><td>在产</td><td>三氯化磷6万吨/年、三氯氧磷2万吨/年（环评拟批准口径）；实际产量无公开资料</td><td><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a></span></td></tr></tbody></table></div><h3 class="sec">基地与装置证据（2）</h3><div class="evlist"><div class="evitem"><div class="hd"><span class="id">E01</span><span class="ti">年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）</span></div><div class="meta">某市生态环境局（示例） ｜ 2026-03-18 ｜ 环评公示</div><blockquote>项目建成后形成三氯化磷6万吨/年、三氯氧磷2万吨/年生产能力；总投资1.8亿元。</blockquote><div class="u"><a href="https://example.com/env-approval-demo" target="_blank" rel="noopener">https://example.com/env-approval-demo</a></div></div><div class="evitem"><div class="hd"><span class="id">E04</span><span class="ti">园区管委会招商信息（示例）</span></div><div class="meta">某化工园区管委会（示例） ｜ 2026-05-20 ｜ 政府平台</div><blockquote>园区已入驻示例化工等企业，配套集中供热与危废处置中心。</blockquote><div class="u"><a href="https://example.com/park-demo" target="_blank" rel="noopener">https://example.com/park-demo</a></div></div></div></div><div class="card" id="sec7"><h2><span class="no">7</span>项目清单（在建·拟建·已投产）</h2><div class="tbl-wrap"><table class="dt "><thead><tr><th>项目名称</th><th>类型</th><th>地点</th><th>建设内容/规模</th><th>投资额</th><th>进展</th><th>时间节点</th><th>证据</th></tr></thead><tbody><tr><td>年产6万吨三氯化磷及配套三氯氧磷项目</td><td>新建/扩产</td><td>某化工园区（示例）</td><td>三氯化磷6万吨/年 + 三氯氧磷2万吨/年</td><td>1.8 亿元</td><td>环评拟批准公示（2026-03-18）</td><td>2026-03-18 环评拟批准 → 建设期与投产时间未公开</td><td><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a></span></td></tr></tbody></table></div><h3 class="sec">项目证据（1）</h3><div class="evlist"><div class="evitem"><div class="hd"><span class="id">E01</span><span class="ti">年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）</span></div><div class="meta">某市生态环境局（示例） ｜ 2026-03-18 ｜ 环评公示</div><blockquote>项目建成后形成三氯化磷6万吨/年、三氯氧磷2万吨/年生产能力；总投资1.8亿元。</blockquote><div class="u"><a href="https://example.com/env-approval-demo" target="_blank" rel="noopener">https://example.com/env-approval-demo</a></div></div></div></div><div class="card" id="sec8"><h2><span class="no">8</span>财务与分业务资料</h2><div class="gapbox">该主体为非上市公司或公开财务数据不足，<b>不推测其营收与盈利</b>；如需判断规模，仅可使用公开产能、员工数与招投标金额等可核验指标。</div></div><div class="card" id="sec9"><h2><span class="no">9</span>公开风险与合规记录<span class="hint">只写可核实的公开事实，不评级</span></h2><div class="tbl-wrap"><table class="dt "><thead><tr><th>类别</th><th>公开事实</th><th>状态</th><th>证据</th></tr></thead><tbody><tr><td>许可</td><td>安全生产许可证覆盖三氯化磷/三氯氧磷/盐酸，有效期至 2029-01-08</td><td><span class="tag ok">正常</span></td><td><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E03')" title="安全生产许可证公示（示例）">E03</a></span></td></tr><tr><td>环保许可</td><td>排污许可证信息未取得公开证据</td><td><span class="tag warn">待复核</span></td><td><span class="gNA" title="未找到可公开核实的资料">NA 无资料</span></td></tr><tr><td>行政处罚</td><td>未检索到公开处罚记录（不等于无处罚，需信用中国核验）</td><td><span class="tag todo">待办</span></td><td><span class="gNA" title="未找到可公开核实的资料">NA 无资料</span></td></tr><tr><td>被执行/失信</td><td>未查询执行信息公开网，教学样例不含该步骤</td><td><span class="tag todo">待办</span></td><td><span class="gNA" title="未找到可公开核实的资料">NA 无资料</span></td></tr><tr><td>财务</td><td>无公开财务数据，无法判断偿债能力与盈利水平</td><td><span class="tag warn">待复核</span></td><td><span class="gNA" title="未找到可公开核实的资料">NA 无资料</span></td></tr><tr><td>客户集中度</td><td>仅见一笔框架采购中标，无法判断单一客户依赖</td><td><span class="tag warn">待复核</span></td><td><span class="gC" title="单一二手来源，需交叉验证">C 单源</span><span class="evref"><a onclick="openEv('E05')" title="下游客户采购中标公告（示例）">E05</a></span></td></tr></tbody></table></div><h3 class="sec">风险证据（2）</h3><div class="evlist"><div class="evitem"><div class="hd"><span class="id">E03</span><span class="ti">安全生产许可证公示（示例）</span></div><div class="meta">某省应急管理厅（示例） ｜ 2026-01-09 ｜ 政府平台</div><blockquote>许可范围：三氯化磷、三氯氧磷、盐酸；有效期至2029-01-08。</blockquote><div class="u"><a href="https://example.com/safety-license-demo" target="_blank" rel="noopener">https://example.com/safety-license-demo</a></div></div><div class="evitem"><div class="hd"><span class="id">E05</span><span class="ti">下游客户采购中标公告（示例）</span></div><div class="meta">某农化上市公司（示例） ｜ 2026-08-11 ｜ 官方公告</div><blockquote>三氯化磷年度框架采购中标人为示例化工，中标量以实际订单为准。</blockquote><div class="u"><a href="https://example.com/tender-demo" target="_blank" rel="noopener">https://example.com/tender-demo</a></div></div></div><h3 class="sec">无公开资料 / 待核验清单</h3><div class="tbl-wrap"><table class="dt "><thead><tr><th>事项</th><th>当前状态</th><th>建议核实途径</th></tr></thead><tbody><tr><td>统一社会信用代码、注册资本、成立日期、股东与实控人</td><td><span class="tag warn">无公开资料</span></td><td>国家企业信用信息公示系统 / 信用中国，按企业全称精确检索并截图留证</td></tr><tr><td>排污许可证编号与有效期</td><td><span class="tag warn">无公开资料</span></td><td>全国排污许可证管理信息平台按企业名称查询</td></tr><tr><td>实际产量与产能利用率</td><td><span class="tag warn">无公开资料</span></td><td>现场核实生产记录、月度电耗/蒸汽单耗；或索取近12个月产量台账</td></tr><tr><td>财务与偿债能力</td><td><span class="tag warn">无公开资料（非上市，不推测）</span></td><td>索取近两年审计报告、纳税证明、银行授信函、主要客户合同</td></tr><tr><td>行政处罚与诉讼</td><td><span class="tag warn">未查询</span></td><td>信用中国、生态环境局公示、中国执行信息公开网、裁判文书网</td></tr><tr><td>客户与供应商集中度</td><td><span class="tag warn">无公开资料</span></td><td>索取前五大客户/供应商清单与合同（脱敏版）</td></tr></tbody></table></div></div><div class="card" id="sec10"><h2><span class="no">10</span>近 12 个月重要公开动态<span class="hint">新增项目 / 经营变化 / 产品布局 / 重大公告</span></h2><div class="tl"><div class="item "  data-f="tl" data-prod="三氯化磷|三氯氧磷" data-region="某化工园区" data-entity="示例化工——盐化新材料有限公司" data-grade="A" data-kw=""><div class="d">2026-01-09</div><div class="t">安全生产许可证公示，覆盖三氯化磷、三氯氧磷、盐酸，有效期至2029-01-08</div><div class="meta"><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E03')" title="安全生产许可证公示（示例）">E03</a></span></div></div><div class="item p"  data-f="tl" data-prod="三氯化磷|三氯氧磷" data-region="某化工园区" data-entity="示例化工——盐化新材料有限公司" data-grade="A" data-kw=""><div class="d">2026-03-18</div><div class="t">年产6万吨三氯化磷及配套三氯氧磷项目环评拟批准公示，总投资1.8亿元</div><div class="meta"><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E01')" title="年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）">E01</a></span></div></div><div class="item f"  data-f="tl" data-prod="三氯化磷" data-region="" data-entity="示例化工——盐化新材料有限公司" data-grade="A" data-kw=""><div class="d">2026-08-11</div><div class="t">某农化上市公司公告三氯化磷年度框架采购中标人为该公司</div><div class="meta"><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span><span class="evref"><a onclick="openEv('E05')" title="下游客户采购中标公告（示例）">E05</a></span></div></div></div><h3 class="sec">动态证据（3）</h3><div class="evlist"><div class="evitem"><div class="hd"><span class="id">E03</span><span class="ti">安全生产许可证公示（示例）</span></div><div class="meta">某省应急管理厅（示例） ｜ 2026-01-09 ｜ 政府平台</div><blockquote>许可范围：三氯化磷、三氯氧磷、盐酸；有效期至2029-01-08。</blockquote><div class="u"><a href="https://example.com/safety-license-demo" target="_blank" rel="noopener">https://example.com/safety-license-demo</a></div></div><div class="evitem"><div class="hd"><span class="id">E01</span><span class="ti">年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）</span></div><div class="meta">某市生态环境局（示例） ｜ 2026-03-18 ｜ 环评公示</div><blockquote>项目建成后形成三氯化磷6万吨/年、三氯氧磷2万吨/年生产能力；总投资1.8亿元。</blockquote><div class="u"><a href="https://example.com/env-approval-demo" target="_blank" rel="noopener">https://example.com/env-approval-demo</a></div></div><div class="evitem"><div class="hd"><span class="id">E05</span><span class="ti">下游客户采购中标公告（示例）</span></div><div class="meta">某农化上市公司（示例） ｜ 2026-08-11 ｜ 官方公告</div><blockquote>三氯化磷年度框架采购中标人为示例化工，中标量以实际订单为准。</blockquote><div class="u"><a href="https://example.com/tender-demo" target="_blank" rel="noopener">https://example.com/tender-demo</a></div></div></div></div><div class="card" id="sec11"><h2><span class="no">11</span>证据台账（6 条）<span class="hint">A官方一手 / B多源 / C单源 / D估算</span></h2><p class="lead">每条证据可点击右侧悬浮面板查看；也可直接点击正文中的 <b>E编号</b> 打开。</p><div class="evlist"><div class="evitem" id="ev_E01"><div class="hd"><span class="id">E01</span><span class="ti">年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）</span></div><div class="meta">某市生态环境局（示例） ｜ 2026-03-18 ｜ 环评公示 ｜ 教学样例：URL 为占位示例，不可打开。</div><blockquote>项目建成后形成三氯化磷6万吨/年、三氯氧磷2万吨/年生产能力；总投资1.8亿元。</blockquote><div class="u"><a href="https://example.com/env-approval-demo" target="_blank" rel="noopener">https://example.com/env-approval-demo</a></div></div><div class="evitem" id="ev_E02"><div class="hd"><span class="id">E02</span><span class="ti">企业官网·公司简介（示例）</span></div><div class="meta">示例化工官网（示例） ｜ 2026-10-01 ｜ 企业官网 ｜ 企业自述，B级。</div><blockquote>公司现有员工180余人，主导产品三氯化磷、三氯氧磷，主要服务于农药、医药中间体客户。</blockquote><div class="u"><a href="https://example.com/about-demo" target="_blank" rel="noopener">https://example.com/about-demo</a></div></div><div class="evitem" id="ev_E03"><div class="hd"><span class="id">E03</span><span class="ti">安全生产许可证公示（示例）</span></div><div class="meta">某省应急管理厅（示例） ｜ 2026-01-09 ｜ 政府平台 ｜ 教学样例。</div><blockquote>许可范围：三氯化磷、三氯氧磷、盐酸；有效期至2029-01-08。</blockquote><div class="u"><a href="https://example.com/safety-license-demo" target="_blank" rel="noopener">https://example.com/safety-license-demo</a></div></div><div class="evitem" id="ev_E04"><div class="hd"><span class="id">E04</span><span class="ti">园区管委会招商信息（示例）</span></div><div class="meta">某化工园区管委会（示例） ｜ 2026-05-20 ｜ 政府平台 ｜ C级，单源。</div><blockquote>园区已入驻示例化工等企业，配套集中供热与危废处置中心。</blockquote><div class="u"><a href="https://example.com/park-demo" target="_blank" rel="noopener">https://example.com/park-demo</a></div></div><div class="evitem" id="ev_E05"><div class="hd"><span class="id">E05</span><span class="ti">下游客户采购中标公告（示例）</span></div><div class="meta">某农化上市公司（示例） ｜ 2026-08-11 ｜ 官方公告 ｜ 倒推客户关系的间接证据，A级但只证明中标，不证明供货量。</div><blockquote>三氯化磷年度框架采购中标人为示例化工，中标量以实际订单为准。</blockquote><div class="u"><a href="https://example.com/tender-demo" target="_blank" rel="noopener">https://example.com/tender-demo</a></div></div><div class="evitem" id="ev_E06"><div class="hd"><span class="id">E06</span><span class="ti">行业媒体：三氯化磷价格与供应格局（示例）</span></div><div class="meta">某行业资讯网（示例） ｜ 2026-09-30 ｜ 行业媒体 ｜ C级，仅作背景，不用于本企业判断。</div><blockquote>华东地区三氯化磷主流报价区间……</blockquote><div class="u"><a href="https://example.com/price-demo" target="_blank" rel="noopener">https://example.com/price-demo</a></div></div></div></div><div class="card" id="sec12"><h2><span class="no">12</span>全量结论筛选器<span class="hint">按产品 / 地区 / 主体 / 证据等级过滤</span></h2><div class="filters" id="idx_bar"><span><label for="idx_prod">产品</label><select id="idx_prod" data-f="idx" data-k="prod"><option value="">全部</option><option value="三氯化磷">三氯化磷</option><option value="三氯氧磷">三氯氧磷</option><option value="副产盐酸">副产盐酸</option></select></span><span><label for="idx_region">地区</label><select id="idx_region" data-f="idx" data-k="region"><option value="">全部</option><option value="某化工园区">某化工园区</option><option value="全国">全国</option><option value="—">—</option></select></span><span><label for="idx_entity">主体</label><select id="idx_entity" data-f="idx" data-k="entity"><option value="">全部</option><option value="示例化工——盐化新材料有限公司">示例化工——盐化新材料有限公司</option></select></span><span><label for="idx_grade">证据等级</label><select id="idx_grade" data-f="idx" data-k="grade"><option value="">全部</option><option value="A">A 已核实</option><option value="D">D 估算</option></select></span><span><label for="idx_q">关键词</label><input id="idx_q" data-f="idx" data-k="kw" type="search" placeholder="产品/地区/主体/事件"></span><button onclick="resetF('idx')">重置</button><span class="cnt" id="idx_cnt"></span></div><div class="tbl-wrap"><table class="dt" id="idx_tbl"><thead><tr><th>类型</th><th>对象</th><th>结论</th><th>主体</th><th>地区</th><th>等级</th><th>证据</th></tr></thead><tbody><tr  data-f="idx" data-prod="三氯化磷" data-region="某|化|工|园|区" data-entity="示|例|化|工|—|—|盐|化|新|材|料|有|限|公|司" data-grade="A" data-kw=""><td>产能</td><td>三氯化磷</td><td>环评口径 6 万吨/年，安许覆盖，实际产量无公开资料</td><td>示例化工——盐化新材料有限公司</td><td>某化工园区</td><td><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span></td><td><a onclick="openEv('E01')">E01</a></td></tr><tr  data-f="idx" data-prod="三氯氧磷" data-region="某|化|工|园|区" data-entity="示|例|化|工|—|—|盐|化|新|材|料|有|限|公|司" data-grade="A" data-kw=""><td>产能</td><td>三氯氧磷</td><td>环评口径 2 万吨/年</td><td>示例化工——盐化新材料有限公司</td><td>某化工园区</td><td><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span></td><td><a onclick="openEv('E01')">E01</a></td></tr><tr  data-f="idx" data-prod="三氯化磷|三氯氧磷" data-region="某|化|工|园|区" data-entity="示|例|化|工|—|—|盐|化|新|材|料|有|限|公|司" data-grade="A" data-kw=""><td>资质</td><td>安全生产许可证</td><td>覆盖三氯化磷/三氯氧磷/盐酸，有效期至2029-01-08</td><td>示例化工——盐化新材料有限公司</td><td>某化工园区</td><td><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span></td><td><a onclick="openEv('E03')">E03</a></td></tr><tr  data-f="idx" data-prod="三氯化磷" data-region="全|国" data-entity="示|例|化|工|—|—|盐|化|新|材|料|有|限|公|司" data-grade="A" data-kw=""><td>客户</td><td>农化客户</td><td>某农化上市公司框架采购中标（不证明供货量）</td><td>示例化工——盐化新材料有限公司</td><td>全国</td><td><span class="gA" title="官方一手：公告/年报/政府网站/证书原文">A 已核实</span></td><td><a onclick="openEv('E05')">E05</a></td></tr><tr  data-f="idx" data-prod="" data-region="—" data-entity="示|例|化|工|—|—|盐|化|新|材|料|有|限|公|司" data-grade="NA" data-kw=""><td>财务</td><td>营收与利润</td><td>非上市无公开披露，本档案不推测</td><td>示例化工——盐化新材料有限公司</td><td>—</td><td><span class="gNA" title="未找到可公开核实的资料">NA 无资料</span></td><td><span class="na">—</span></td></tr><tr  data-f="idx" data-prod="三氯化磷|三氯氧磷" data-region="某|化|工|园|区" data-entity="示|例|化|工|—|—|盐|化|新|材|料|有|限|公|司" data-grade="D" data-kw=""><td>估算</td><td>企业规模定位</td><td>以环评产能8万吨/年合计与员工约180人推断为中小型精细化工企业（定性，不换算营收）</td><td>示例化工——盐化新材料有限公司</td><td>某化工园区</td><td><span class="gD" title="行业经验值/计算推得，非披露值">D 估算</span></td><td><a onclick="openEv('E01')">E01</a></td></tr></tbody></table></div></div>
+<div class="footer"><b>资料边界：</b>本档案全部结论来自公开信息（交易所公告、年报、政府公示、企业官网与媒体），检索窗口 截至2026-10-20（近12个月覆盖 2025-10-20 → 2026-10-20）；每项结论标注证据编号、来源日期与可靠程度（A/B/C/D）。凡推断与估算均已显式标注，未标注者视为披露值。<b>本档案不做经营业绩预测，不构成投资、采购或授信建议</b>；经营范围中的产品清单不等同于实际生产产品；数据以原始公告为准。<br>生成时间：2026-10-20 12:27 ｜ chem-enterprise-deep-dive skill ｜ 证据 6 条 ｜ 口径告警 0 条</div>
+</div>
+<div id="mask" onclick="closeEv()"></div>
+<div id="evPanel"><div class="ph"><span>证据详情</span><button class="pc" onclick="closeEv()">×</button></div>
+<div class="pb" id="evBody"></div></div>
+<script>
+var EV = {"E01": {"eid": "E01", "id": "E01", "title": "年产6万吨三氯化磷及配套三氯氧磷项目环境影响报告书拟批准公示（示例）", "publisher": "某市生态环境局（示例）", "date": "2026-03-18", "url": "https://example.com/env-approval-demo", "type": "环评公示", "quote": "项目建成后形成三氯化磷6万吨/年、三氯氧磷2万吨/年生产能力；总投资1.8亿元。", "note": "教学样例：URL 为占位示例，不可打开。", "status": ""}, "E02": {"eid": "E02", "id": "E02", "title": "企业官网·公司简介（示例）", "publisher": "示例化工官网（示例）", "date": "2026-10-01", "url": "https://example.com/about-demo", "type": "企业官网", "quote": "公司现有员工180余人，主导产品三氯化磷、三氯氧磷，主要服务于农药、医药中间体客户。", "note": "企业自述，B级。", "status": ""}, "E03": {"eid": "E03", "id": "E03", "title": "安全生产许可证公示（示例）", "publisher": "某省应急管理厅（示例）", "date": "2026-01-09", "url": "https://example.com/safety-license-demo", "type": "政府平台", "quote": "许可范围：三氯化磷、三氯氧磷、盐酸；有效期至2029-01-08。", "note": "教学样例。", "status": ""}, "E04": {"eid": "E04", "id": "E04", "title": "园区管委会招商信息（示例）", "publisher": "某化工园区管委会（示例）", "date": "2026-05-20", "url": "https://example.com/park-demo", "type": "政府平台", "quote": "园区已入驻示例化工等企业，配套集中供热与危废处置中心。", "note": "C级，单源。", "status": ""}, "E05": {"eid": "E05", "id": "E05", "title": "下游客户采购中标公告（示例）", "publisher": "某农化上市公司（示例）", "date": "2026-08-11", "url": "https://example.com/tender-demo", "type": "官方公告", "quote": "三氯化磷年度框架采购中标人为示例化工，中标量以实际订单为准。", "note": "倒推客户关系的间接证据，A级但只证明中标，不证明供货量。", "status": ""}, "E06": {"eid": "E06", "id": "E06", "title": "行业媒体：三氯化磷价格与供应格局（示例）", "publisher": "某行业资讯网（示例）", "date": "2026-09-30", "url": "https://example.com/price-demo", "type": "行业媒体", "quote": "华东地区三氯化磷主流报价区间……", "note": "C级，仅作背景，不用于本企业判断。", "status": ""}};
+function openEv(id){
+  var e = EV[id]; if(!e) return;
+  var h = '<div class="evitem"><div class="hd"><span class="id">'+e.eid+'</span><span class="ti">'+esc(e.title)+'</span></div>';
+  h += '<div class="meta">'+esc(e.publisher)+' ｜ '+esc(e.date)+' ｜ '+esc(e.type)+'</div>';
+  if(e.quote) h += '<blockquote>'+esc(e.quote)+'</blockquote>';
+  h += '<div class="u">'+(e.url?'<a href="'+esc(e.url)+'" target="_blank" rel="noopener">'+esc(e.url)+'</a>':'<span class="na">无公开链接</span>')+'</div>';
+  if(e.note) h += '<div class="meta" style="margin-top:6px">备注：'+esc(e.note)+'</div>';
+  h += '</div>';
+  document.getElementById('evBody').innerHTML = h;
+  document.getElementById('evPanel').classList.add('open');
+  document.getElementById('mask').classList.add('open');
+}
+function closeEv(){document.getElementById('evPanel').classList.remove('open');
+document.getElementById('mask').classList.remove('open');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeEv();});
+document.addEventListener('click',function(e){
+  var t=e.target; while(t && !t.getAttribute){t=t.parentNode;}
+  if(t && t.getAttribute && t.getAttribute('data-f')){
+    var k=t.getAttribute('data-k'), f=t.getAttribute('data-f'), v=t.value||'';
+    applyF(f, k, v, t);
+  }
+},true);
+function applyF(f,k,v){
+  var rows=document.querySelectorAll('[data-f="'+f+'"]:not(select):not(input):not(button)');
+  var kw=''; var q=document.getElementById(f+'_q'); if(q) kw=(q.value||'').toLowerCase();
+  var states={};
+  document.querySelectorAll('select[data-f="'+f+'"]').forEach(function(s){states[s.getAttribute('data-k')]=s.value;});
+  var shown=0;
+  rows.forEach(function(r){
+    var ok=true;
+    for(var key in states){
+      var want=states[key]; if(!want) continue;
+      var have=(r.getAttribute('data-'+key)||'');
+      if(have!==want){ok=false;break;}
+    }
+    if(ok && kw){
+      var blob=((r.getAttribute('data-kw')||'')+' '+r.textContent).toLowerCase();
+      if(blob.indexOf(kw)<0) ok=false;
+    }
+    r.classList.toggle('hide',!ok); if(ok) shown++;
+  });
+  var c=document.getElementById(f+'_cnt'); if(c) c.textContent='命中 '+shown+' 条';
+}
+function resetF(f){
+  document.querySelectorAll('[data-f="'+f+'"]').forEach(function(el){
+    if(el.tagName==='SELECT') el.value='';
+    if(el.type==='search') el.value='';
+  });
+  document.querySelectorAll('[data-f="'+f+'"]').forEach(function(el){
+    if(el.getAttribute && el.getAttribute('data-kw')!==null) el.classList.remove('hide');
+  });
+  applyF(f,'','');
+}
+function pickPlant(id){
+  document.querySelectorAll('.plant').forEach(function(p){p.classList.toggle('active',p.getAttribute('data-plant')===id);});
+  document.querySelectorAll('svg.cn .marker').forEach(function(m){m.classList.toggle('active',m.getAttribute('data-plant')===id);});
+  var el=document.getElementById('pl_'+id); if(el) el.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+</script></body></html>

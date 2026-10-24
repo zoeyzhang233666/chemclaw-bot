@@ -1,0 +1,134 @@
+{
+  "_comment": "空白骨架：复制为 examples/<国家>-<产品>/data.json 后逐块填写。字段说明见 references/06_交付物规范与字段字典.md",
+  "meta": {
+    "title": "[国家] [产品]供应市场研究",
+    "subtitle": "对外采购视角：生产能力、出口流向、物流条件与供应风险",
+    "country": "",
+    "country_cn": "",
+    "product": "",
+    "product_cn": "",
+    "hs_code": "",
+    "hs_note": "该税号还覆盖哪些产品？是否含同系物/其他规格？",
+    "research_date": "YYYY-MM-DD",
+    "as_of_note": "是否存在重大时点（冲突/停产/政策变动），导致某年数据不能与往年直接比较？",
+    "scale_note": "产能单位 kt/a（名义设计能力）；贸易量 kt；金额 百万美元",
+    "prepared_for": "外贸采购（进口中国）初步可行性研判"
+  },
+  "sources": [
+    {
+      "id": "S01",
+      "title": "",
+      "publisher": "",
+      "url": "",
+      "date": "",
+      "type": "官方统计/年报/行业媒体/券商研究",
+      "reliability": "高/中高/中/低",
+      "note": "这篇来源提供了哪个具体数字或事实、适用于哪一年、有什么局限"
+    }
+  ],
+  "data_grades": {
+    "A": "官方年报/交易所公告/国家统计：可直接引用",
+    "B": "国际专业行业媒体：可引用需注明报道方",
+    "C": "行业数据库/第三方估算：仅交叉参照",
+    "D": "推算/推断/待核实：必须标注并给出核实路径"
+  },
+  "sites": {
+    "site1": {
+      "name": "[工业城/园区名]",
+      "region": "[省/地区]",
+      "lat": 0,
+      "lng": 0,
+      "coast": "[海岸/通道特征，如 波斯湾/红海/内陆]"
+    }
+  },
+  "companies": [
+    {
+      "id": "CO1",
+      "name": "",
+      "name_en": "",
+      "type": "集团/控股平台 | 生产法人 | 关联但无该产品",
+      "listed": "交易所:代码 或 非上市",
+      "ownership": "各股东及比例",
+      "note": "它到底持有什么？是否直接拥有装置？",
+      "contact_hint": "先找谁、要什么资料"
+    }
+  ],
+  "plants": [
+    {
+      "id": "P01",
+      "company_id": "CO1",
+      "company": "",
+      "plant": "[装置/产线名]",
+      "site": "site1",
+      "product": "",
+      "capacity_kt": 0,
+      "cap_basis": "来自哪类来源、什么年份、是否合计",
+      "startup": "",
+      "evidence_level": "A|B|C|D（可写 A/B）",
+      "conflict": "两源冲突时填写，如 700 vs 770 kt",
+      "unverified": false,
+      "notes": "检修史、工艺、扩能、共用单元",
+      "source_ids": ["S01"]
+    }
+  ],
+  "capacity_summary": {
+    "unit": "kt/a",
+    "east_coast": { "label": "", "plants": [], "cross_check": "" },
+    "west_coast": { "label": "", "plants": [], "cross_check": "" },
+    "country_cross_check": ""
+  },
+  "ownership_groups": [
+    { "group": "", "companies": [], "mechanism": "" }
+  ],
+  "feedstock": [
+    { "item": "", "role": "直接原料/上游能源/技术/公用工程", "detail": "", "source_ids": [] }
+  ],
+  "trade": {
+    "unit_volume": "kt",
+    "unit_value": "百万美元",
+    "hs": "",
+    "flow": "出口（报告方口径）",
+    "by_year": [
+      { "year": 0, "world_kt": 0, "world_musd": 0, "china_kt": 0, "china_musd": 0,
+        "partners": [{ "p": "China", "kt": 0 }] }
+    ],
+    "partners_2025_full": [{ "p": "", "kt": 0, "musd": 0 }],
+    "unit_prices_usd_t": [{ "year": 0, "world": 0, "china": 0 }],
+    "china_import_total_kt": 0,
+    "china_import_year": 0,
+    "saudi_share_of_china_imports": ""
+  },
+  "concentration": {
+    "by_company_2025_kt": [{ "company": "", "id": "CO1", "cap_kt": 0, "note": "" }]
+  },
+  "logistics": {
+    "ports": [
+      { "id": "PT1", "name": "", "site": "site1", "coast": "", "role": "", "lat": 0, "lng": 0,
+        "detail": "", "source_ids": [] }
+    ],
+    "routes_to_china": [
+      { "from": "", "to": "", "via": "", "normal_days": "", "status_2026": "", "source_ids": [] }
+    ],
+    "vessel": { "typical_dwt": "", "cargo_per_voyage": "", "note": "" },
+    "freight_2019_2025_ref": "",
+    "freight_2026_evidence": "",
+    "china_ports": [{ "port": "", "note": "" }]
+  },
+  "policy": [
+    { "id": "PL1", "type": "出口国监管/产业政策/贸易救济/中国进口监管/合规", "title": "", "detail": "",
+      "level": "A/B/C/D（可核验度）", "source_ids": [] }
+  ],
+  "events": [
+    { "id": "EV1", "date": "YYYY-MM", "title": "", "type": "计划检修/装置故障/新增产能/地缘政治/不可抗力/港口中断/市场后果",
+      "impact": "极高/高/中/低/正向", "detail": "", "source_ids": [] }
+  ],
+  "risks": [
+    { "level": "极高/高/中/低", "title": "", "desc": "", "mitigation": "" }
+  ],
+  "unverified": [
+    { "item": "", "why": "为什么无法确认", "how": "核实路径", "impact": "对采购决策的影响" }
+  ],
+  "next_steps": [
+    { "priority": 1, "action": "", "why": "", "who": "" }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "_comment": "复制本文件为 data_meta.json 后逐项填写。our_role 必填且只能是 seller 或 buyer。",
+  "meta": {
+    "title": "英文销售合同",
+    "contract_no": "XXX-0000-0000",
+    "contract_date": "1 January 2026",
+    "our_role": "seller",
+    "our_role_cn": "卖方",
+    "counterparty_country": "印度尼西亚",
+    "product": "Heavy Soda Ash (Dense Sodium Carbonate)",
+    "product_cn": "重质纯碱",
+    "hs_code": "2836.20.00",
+    "trade_term": "CIF Jakarta (Incoterms 2020)",
+    "amount": "USD 0,000.00",
+    "quantity": "1,000 MT ±10%",
+    "review_date": "2026-01-02",
+    "reviewer": "外贸业务部 / 法务",
+    "disclaimer": "本报告仅为业务风险提醒，不构成法律意见。报告仅基于所提供的合同文本及附件作出，未核验交易对手资信、货物实际品质或目的国监管现状。涉及外国法的事项须由当地执业律师复核后方可用于谈判或争议处理。",
+    "review_scope": "审阅范围：合同正文全部条款及全部附件。未审：交易对手资信、货物实测品质、目的国准入现状、税务与外汇处理。",
+    "store_key": "ftc-review:XXX-0000-0000"
+  }
+}

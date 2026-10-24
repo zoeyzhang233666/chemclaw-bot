@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>询盘整理与报价草稿 · 江苏盐城华宇玻璃</title>
+<style>
+  :root{
+    --ink:#101a2c; --sub:#5b6a82; --muted:#8d99ad; --line:#e2e8f1; --bg:#eef2f9;
+    --accent:#1e56c8; --deep:#0a2a66; --deep2:#123a8a; --gold:#c8963c;
+    --g:#0f7b3f; --g-bg:#e2f5e9; --y:#9a5b00; --y-bg:#fdf0d3; --r:#b42318; --r-bg:#fde7e4;
+    --blue-bg:#eaf0fc;
+    --shadow:0 4px 18px rgba(16,40,90,.07);
+    --shadow-lg:0 18px 50px rgba(10,42,102,.16);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;color:var(--ink);font-size:14px;line-height:1.65;
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(1100px 460px at 8% -8%, #dfe9fb 0%, transparent 62%),
+      radial-gradient(900px 420px at 102% -2%, #e8eefc 0%, transparent 58%),
+      var(--bg);
+  }
+  .num{font-variant-numeric:tabular-nums}
+  button{font-family:inherit}
+  .hidden{display:none!important}
+
+  /* ---------------- hero ---------------- */
+  .hero{background:linear-gradient(118deg,#061a44 0%,#0d3070 42%,#2560d4 100%);color:#fff;
+    padding:34px 26px 26px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-140px;top:-170px;width:560px;height:560px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.15),transparent 62%)}
+  .hero::before{content:"";position:absolute;left:-90px;bottom:-220px;width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(200,150,60,.18),transparent 65%)}
+  .hero-in{max-width:1280px;margin:0 auto;position:relative;z-index:1}
+  .kicker{font-size:11px;letter-spacing:.34em;color:#a9c2ef;font-weight:700}
+  .hero h1{margin:9px 0 8px;font-size:30px;font-weight:800;letter-spacing:.01em}
+  .hero .lede{margin:0 0 18px;font-size:14px;color:#cfdcf6;max-width:880px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.24);border-radius:999px;
+    padding:4px 13px;font-size:12px;color:#eef4ff}
+  .chip b{color:#fff;font-weight:700}
+  .chip.warn{background:rgba(253,208,102,.18);border-color:rgba(253,208,102,.5);color:#ffe6ad}
+
+  /* ---------------- steps ---------------- */
+  .steps{max-width:1280px;margin:16px auto 0;padding:0 26px;display:flex;gap:10px;flex-wrap:wrap}
+  .step{flex:1 1 200px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 14px;
+    display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);font-size:12.5px;color:var(--sub)}
+  .step i{width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#8d99ad;display:flex;
+    align-items:center;justify-content:center;font-style:normal;font-size:11.5px;font-weight:800;flex:0 0 auto}
+  .step b{color:var(--ink);font-weight:800}
+  .step.on{border-color:#bcd0f2;background:linear-gradient(180deg,#f7faff,#eef4ff)}
+  .step.on i{background:var(--accent);color:#fff}
+  .step.done i{background:var(--g);color:#fff}
+
+  /* ---------------- layout ---------------- */
+  main{max-width:1280px;margin:0 auto;padding:16px 26px 120px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px 20px;
+    margin-bottom:16px;box-shadow:var(--shadow)}
+  .panel-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .panel-head h2{margin:0;font-size:16.5px;font-weight:800;color:var(--deep)}
+  .panel-head .sub{font-size:12px;color:var(--muted)}
+  .panel-head .right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .h3{font-size:13px;font-weight:800;color:var(--deep);margin:18px 0 8px}
+  .muted{color:var(--muted)}
+  .small{font-size:12px}
+
+  /* ---------------- upload ---------------- */
+  .dz{border:2px dashed #c9d6ee;border-radius:14px;background:linear-gradient(180deg,#fbfdff,#f4f8ff);
+    padding:22px 18px;text-align:center;cursor:pointer;transition:.18s}
+  .dz:hover,.dz.over{border-color:var(--accent);background:#eef4ff}
+  .dz .ico{font-size:26px;line-height:1}
+  .dz .t1{font-size:14px;font-weight:800;color:var(--deep);margin-top:6px}
+  .dz .t2{font-size:12px;color:var(--sub);margin-top:3px}
+  .dz .fmts{margin-top:9px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+  .fmt{background:#fff;border:1px solid var(--line);border-radius:7px;padding:1px 8px;font-size:11px;color:var(--sub)}
+  .files{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .file{display:flex;align-items:center;gap:8px;background:#f6f9ff;border:1px solid #dbe6fa;border-radius:10px;
+    padding:6px 10px;font-size:12px;color:#31415f}
+  .file .tag{background:var(--accent);color:#fff;border-radius:5px;padding:0 6px;font-size:10.5px;font-weight:700}
+  .file .x{cursor:pointer;color:#9aa7bb;font-weight:800;padding:0 2px}
+  .file .x:hover{color:var(--r)}
+  .paste{margin-top:14px}
+  .paste summary{cursor:pointer;font-size:12.5px;color:var(--accent);font-weight:700;outline:none}
+  textarea{width:100%;min-height:110px;margin-top:10px;border:1px solid var(--line);border-radius:12px;
+    padding:11px 13px;font:12.5px/1.7 "PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);
+    background:#fbfdff;resize:vertical}
+  textarea:focus{outline:none;border-color:#9db9ec;box-shadow:0 0 0 3px rgba(30,86,200,.1)}
+
+  /* ---------------- tables ---------------- */
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #eef2f8;vertical-align:top}
+  thead th{background:#f4f7fd;color:#3b4a63;font-size:11.5px;font-weight:800;letter-spacing:.03em;
+    position:sticky;top:0;z-index:2}
+  tbody tr:hover{background:#fafcff}
+  .src-tbl td{font-size:12px}
+  .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11.5px}
+
+  /* ---------------- field rows ---------------- */
+  .bucket{margin-top:6px}
+  .bucket-hd{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;margin:14px 0 8px;
+    font-size:13px;font-weight:800}
+  .bucket-hd .pill{font-size:11px;font-weight:700;border-radius:999px;padding:1px 9px}
+  .bucket.must .bucket-hd{background:#fff8ea;color:#8a5300;border:1px solid #f0dcb0}
+  .bucket.must .bucket-hd .pill{background:#fff;border:1px solid #e5c98d;color:#9a5b00}
+  .bucket.assume .bucket-hd{background:#f5f8ff;color:#26467f;border:1px dashed #c9d8f2}
+  .bucket.assume .bucket-hd .pill{background:#fff;border:1px dashed #c9d8f2;color:#3b64b8}
+  .bucket-hd .note{font-weight:400;font-size:11.5px;color:var(--muted)}
+
+  .frow{display:grid;grid-template-columns:150px 1fr 200px 132px;gap:10px;align-items:start;
+    padding:10px 12px 10px 14px;border:1px solid #eef2f8;border-radius:11px;margin-bottom:7px;position:relative;
+    background:#fff;transition:.15s}
+  .frow:hover{border-color:#d6e2f7;box-shadow:0 2px 10px rgba(16,40,90,.05)}
+  .frow.miss{background:linear-gradient(90deg,#fffdf3,#fff);border-color:#f0dcb0}
+  .frow.miss::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:var(--gold)}
+  .frow.tbc{background:linear-gradient(90deg,#fffdf3,#fff);border-color:#f0dcb0;border-style:dashed}
+  .frow.tbc::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:#d99a00}
+  .frow.assume{background:linear-gradient(90deg,#fdfdff,#fff);border-style:dashed;border-color:#dbe4f4}
+  .frow.assume::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:#9db9ec}
+  .fname{font-size:13px;font-weight:800;color:#22314b;display:flex;align-items:center;gap:6px}
+  .fname .req{color:var(--r);font-size:11px}
+  .fhint{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+  .fval input{width:100%;border:1px solid #dfe7f4;border-radius:9px;padding:7px 10px;font-size:13px;
+    color:var(--ink);background:#fff;font-family:inherit}
+  .fval input:focus{outline:none;border-color:#9db9ec;box-shadow:0 0 0 3px rgba(30,86,200,.1)}
+  .frow.miss .fval input{background:#fffdf0;border-color:#e5c98d}
+  .fsrc{font-size:11px;color:var(--sub);line-height:1.5;overflow:hidden;display:-webkit-box;
+    -webkit-line-clamp:3;-webkit-box-orient:vertical}
+  .fsrc .q{color:#3b4a63}
+  .fstat{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+  select.st{border:1px solid var(--line);border-radius:8px;padding:5px 7px;font-size:11.5px;
+    background:#fff;color:#31415f;font-family:inherit;width:100%}
+  .badge{display:inline-flex;align-items:center;gap:4px;border-radius:6px;padding:1px 7px;font-size:11px;
+    font-weight:800;white-space:nowrap}
+  .b-g{background:var(--g-bg);color:var(--g)}
+  .b-y{background:var(--y-bg);color:var(--y)}
+  .b-r{background:var(--r-bg);color:var(--r)}
+  .b-b{background:var(--blue-bg);color:var(--accent)}
+  .use{font-size:10.5px;color:var(--accent);cursor:pointer;background:none;border:0;padding:0;
+    font-weight:700;text-align:left}
+  .use:hover{text-decoration:underline}
+
+  /* ---------------- gate / price ---------------- */
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:9px;margin:6px 0 4px}
+  .opt{border:1px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer;background:#fff;
+    display:flex;gap:9px;align-items:flex-start;transition:.15s}
+  .opt:hover{border-color:#bcd0f2;background:#f8fbff}
+  .opt.on{border-color:var(--accent);background:linear-gradient(180deg,#f4f8ff,#eaf1ff);
+    box-shadow:0 2px 10px rgba(30,86,200,.12)}
+  .opt .dot{width:15px;height:15px;border-radius:50%;border:2px solid #c9d6ee;flex:0 0 auto;margin-top:2px;
+    background:#fff}
+  .opt.on .dot{border-color:var(--accent);box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 8px var(--accent)}
+  .opt .t{font-size:12.5px;font-weight:700;color:#22314b}
+  .opt .d{font-size:11px;color:var(--muted);margin-top:1px}
+  .hintline{font-size:11.5px;color:var(--y);background:#fffbf0;border:1px dashed #efd9a6;border-radius:9px;
+    padding:7px 10px;margin-top:8px}
+
+  .pricerow{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start;margin-top:6px}
+  .pricebox{border:1px solid #e6d3a3;background:linear-gradient(180deg,#fffdf5,#fff9ec);border-radius:14px;
+    padding:14px 16px}
+  .pricebox .lb{font-size:11.5px;color:var(--y);font-weight:800;letter-spacing:.06em}
+  .pricein{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+  .pricein .cur{font-size:20px;font-weight:800;color:var(--deep)}
+  .pricein input{width:100%;border:0;border-bottom:2px solid #e6d3a3;background:transparent;font-size:30px;
+    font-weight:800;color:var(--deep);padding:2px 2px 4px;font-family:inherit;
+    font-variant-numeric:tabular-nums}
+  .pricein input:focus{outline:none;border-bottom-color:var(--gold)}
+  .pricein .unit{font-size:12.5px;color:var(--sub);font-weight:700}
+  .pricenote{font-size:11px;color:#a98545;margin-top:6px;line-height:1.5}
+  .calc{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fcfdff}
+  .calc .r{display:flex;justify-content:space-between;padding:9px 14px;font-size:12.5px;
+    border-bottom:1px dashed #e8eef8}
+  .calc .r:last-child{border-bottom:0;background:#f2f6fe}
+  .calc .r b{font-variant-numeric:tabular-nums;font-size:14px;color:var(--deep)}
+  .calc .r.tot b{font-size:17px}
+  .fieldline{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:12px}
+  .fl{display:flex;flex-direction:column;gap:4px}
+  .fl label{font-size:11px;color:var(--sub);font-weight:700}
+  .fl input,.fl select{border:1px solid #dfe7f4;border-radius:9px;padding:7px 10px;font-size:12.5px;
+    font-family:inherit;color:var(--ink);background:#fff}
+  .fl input:focus,.fl select:focus{outline:none;border-color:#9db9ec;box-shadow:0 0 0 3px rgba(30,86,200,.1)}
+
+  .ack{display:flex;gap:10px;align-items:flex-start;margin-top:14px;background:#f8fbff;border:1px solid #dbe6fa;
+    border-radius:12px;padding:11px 13px}
+  .ack input{margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex:0 0 auto}
+  .ack label{font-size:12.5px;color:#31415f}
+  .ack label b{color:var(--deep)}
+
+  .gatebar{position:sticky;bottom:0;z-index:20;margin-top:14px;background:rgba(255,255,255,.96);
+    backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:12px 14px;
+    box-shadow:0 -6px 24px rgba(16,40,90,.08)}
+  .gatebar .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .blocklist{flex:1 1 420px;font-size:12px;color:var(--sub)}
+  .blocklist ol{margin:4px 0 0;padding-left:18px}
+  .blocklist li{margin:1px 0}
+  .blocklist li.a{color:#9a5b00}
+  .okline{color:var(--g);font-weight:800;font-size:12.5px}
+  .btn{border:1px solid #c9d6ee;background:#fff;color:#1c4fbe;border-radius:10px;padding:9px 16px;
+    font-size:13px;font-weight:800;cursor:pointer;transition:.15s}
+  .btn:hover{background:#f1f6ff}
+  .btn.primary{background:linear-gradient(135deg,#1e56c8,#2b6ede);border-color:#1e56c8;color:#fff;
+    box-shadow:0 6px 18px rgba(30,86,200,.3)}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn[disabled]{background:#eef1f6;border-color:#e2e8f1;color:#a7b1c2;box-shadow:none;cursor:not-allowed}
+  .btn.ghost{background:#fbfdff}
+  .btn.sm{padding:6px 12px;font-size:12px;border-radius:8px}
+
+  /* ---------------- draft ---------------- */
+  .quote-doc{background:#fff;border:1px solid #dfe6f1;border-radius:12px;padding:34px 40px 30px;
+    box-shadow:0 10px 34px rgba(16,40,90,.08);max-width:980px;margin:0 auto;color:#1a2440}
+  .quote-doc .co{text-align:center;font-size:19px;font-weight:800;color:var(--deep);letter-spacing:.02em}
+  .quote-doc h1{text-align:center;font-size:25px;letter-spacing:.42em;margin:10px 0 2px;color:var(--deep);
+    font-weight:800}
+  .quote-doc .qd-sub{text-align:center;font-size:11px;color:var(--muted);letter-spacing:.18em;margin-bottom:18px}
+  .qd-meta{display:grid;grid-template-columns:1fr 1fr;gap:2px 18px;font-size:12.5px;color:#31415f;
+    border-top:2px solid var(--deep);border-bottom:1px solid var(--line);padding:9px 0;margin-bottom:16px}
+  .qd-meta b{color:var(--deep)}
+  .quote-doc table.qt{font-size:12.5px;margin-bottom:6px}
+  .quote-doc table.qt th{background:#f2f6fd;border:1px solid #dbe4f1;color:#1a2440;font-weight:800;
+    text-align:center;padding:8px 6px;font-size:12px}
+  .quote-doc table.qt td{border:1px solid #dbe4f1;padding:8px 8px;vertical-align:middle}
+  .quote-doc table.qt td.r{text-align:right;font-variant-numeric:tabular-nums}
+  .quote-doc table.qt td.c{text-align:center}
+  .quote-doc table.qt tr.total td{background:#f7f9fd;font-weight:800;color:var(--deep);font-size:13.5px}
+  .quote-doc h3{font-size:13px;margin:18px 0 6px;color:var(--deep);font-weight:800;
+    border-left:3px solid var(--gold);padding-left:9px}
+  .quote-doc ul{margin:0 0 0 2px;padding-left:18px;font-size:12.5px;color:#2b3850}
+  .quote-doc li{margin:3px 0}
+  .qd-pending li{color:#8a5300}
+  .qd-sign{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:26px;font-size:12.5px;color:#3b4a63}
+  .qd-sign div{border-top:1px solid #c8d3e6;padding-top:8px}
+  .qd-foot{margin-top:22px;border-top:1px dashed var(--line);padding-top:10px;font-size:11px;color:var(--muted)}
+  .toolbar{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:16px 0 4px}
+  .stale{background:#fffbf0;border:1px dashed #efd9a6;color:#8a5300;border-radius:11px;padding:9px 13px;
+    font-size:12.5px;max-width:980px;margin:0 auto 12px;display:flex;gap:10px;align-items:center}
+
+  /* ---------------- toast / footer ---------------- */
+  #toast{position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);background:#0a2a66;color:#fff;
+    padding:10px 20px;border-radius:999px;font-size:12.5px;opacity:0;pointer-events:none;transition:.25s;
+    z-index:99;box-shadow:var(--shadow-lg)}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  footer{max-width:1280px;margin:0 auto;padding:8px 26px 60px;font-size:11.5px;color:var(--muted)}
+  footer b{color:var(--sub)}
+
+  @media (max-width:1080px){
+    .frow{grid-template-columns:1fr;gap:8px}
+    .pricerow{grid-template-columns:1fr}
+    .quote-doc{padding:24px 18px}
+  }
+  @media print{
+    body{background:#fff}
+    .hero,.steps,.panel-head .right,.toolbar,.gatebar,#toast,footer,.stale,
+    #s-upload,#s-fields,#s-gate{display:none!important}
+    .panel{border:0;box-shadow:none;padding:0;margin:0}
+    .quote-doc{border:0;box-shadow:none;max-width:none;padding:0}
+    @page{size:A4;margin:16mm}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-in">
+    <div class="kicker">INQUIRY &nbsp;→&nbsp; QUOTATION WORKBENCH</div>
+    <h1>询盘整理与报价草稿</h1>
+    <p class="lede">把微信截图、邮件、PDF 需求里的散装询盘，整理成可逐项确认的标准字段：缺失项黄色高亮，
+      必须补齐的与可先按假设准备的分两类。只有你填入并确认单价后，“生成报价草稿”按钮才会解锁——
+      系统不替你决定价格。</p>
+    <div class="chips" id="heroChips"></div>
+  </div>
+</header>
+
+<div class="steps" id="steps">
+  <div class="step on" data-step="1"><i>1</i><span><b>上传素材</b><br>微信 / 邮件 / PDF / Excel</span></div>
+  <div class="step" data-step="2"><i>2</i><span><b>逐项确认字段</b><br>缺失黄色高亮</span></div>
+  <div class="step" data-step="3"><i>3</i><span><b>确认口径与单价</b><br>税/运费口径 + 价格闸门</span></div>
+  <div class="step" data-step="4"><i>4</i><span><b>生成报价草稿</b><br>复制 / 导出 / 转合同审阅</span></div>
+</div>
+
+<main>
+
+  <!-- ============ ① 上传 ============ -->
+  <section class="panel" id="s-upload">
+    <div class="panel-head">
+      <h2>① 上传询盘素材</h2>
+      <span class="sub">一次可传多份；同一客户的多张截图按出现顺序编号</span>
+      <div class="right">
+        <button class="btn sm ghost" id="btnDemo">载入示例询盘</button>
+      </div>
+    </div>
+
+    <div class="dz" id="dz">
+      <div class="ico">📎</div>
+      <div class="t1">把询盘拖进来，或点击选择文件</div>
+      <div class="t2">文本类文件会直接读出并重新识别字段；图片 / PDF 需先 OCR</div>
+      <div class="fmts">
+        <span class="fmt">.txt</span><span class="fmt">.md</span><span class="fmt">.csv</span>
+        <span class="fmt">.eml</span><span class="fmt">.html</span><span class="fmt">.png/.jpg</span>
+        <span class="fmt">.pdf</span><span class="fmt">.xlsx</span>
+      </div>
+    </div>
+    <input type="file" id="fileInput" multiple class="hidden"
+           accept=".txt,.md,.csv,.eml,.html,.htm,.json,.png,.jpg,.jpeg,.pdf,.xlsx,.xls">
+
+    <div class="files" id="fileList"></div>
+
+    <details class="paste" id="pasteWrap" open>
+      <summary>询盘原文 / OCR 文字（已预填本案例的默认文本，可直接改）</summary>
+      <textarea id="pasteBox" placeholder="例如：王经理你好，我们玻璃厂想找重质纯碱长期供应商，月用量 800 吨，先试单 200 吨……"></textarea>
+      <div class="small muted" style="margin-top:7px">
+        提示：上传图片 / PDF 后，请把 OCR 文字贴到这里再点“重新识别”；文本文件会直接读取。
+      </div>
+      <div style="display:flex;gap:8px;margin-top:9px;flex-wrap:wrap">
+        <button class="btn sm primary" id="btnReparse">重新识别</button>
+        <button class="btn sm ghost" id="btnClearPaste">清空</button>
+        <span class="small muted" style="align-self:center">
+          识别只补空字段，不会覆盖你已改过的值</span>
+      </div>
+    </details>
+
+    <div class="h3">素材清单（证据编号，字段出处就挂它）</div>
+    <div style="overflow:auto">
+      <table class="src-tbl">
+        <thead><tr><th style="width:88px">编号</th><th style="width:210px">类型</th>
+          <th style="width:220px">文件</th><th style="width:80px">字数</th><th>用途 / 备注</th></tr></thead>
+        <tbody id="srcBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ ② 字段确认 ============ -->
+  <section class="panel" id="s-fields">
+    <div class="panel-head">
+      <h2>② 逐项确认字段</h2>
+      <span class="sub">提取值可改；改完把状态选对——客户没说过的只能是“待客户确认”或“缺”</span>
+      <div class="right" id="fieldStats"></div>
+      <button class="btn sm ghost" id="btnExportJson" type="button">导出字段 JSON</button>
+    </div>
+
+    <div class="bucket must" id="bucketMust">
+      <div class="bucket-hd">
+        <span>A 类 · 必须补充后才能报价</span>
+        <span class="pill" id="mustCount">0 / 0 已确认</span>
+        <span class="note">缺一个，“生成报价草稿”就不成立</span>
+      </div>
+      <div id="rowsMust"></div>
+    </div>
+
+    <div class="bucket assume" id="bucketAssume">
+      <div class="bucket-hd">
+        <span>B 类 · 可先按假设准备</span>
+        <span class="pill" id="assumeCount">0 项</span>
+        <span class="note">先出草稿，报价里逐条标注“我方假设 · 待客户确认”</span>
+      </div>
+      <div id="rowsAssume"></div>
+    </div>
+  </section>
+
+  <!-- ============ ③ 口径与价格 ============ -->
+  <section class="panel" id="s-gate">
+    <div class="panel-head">
+      <h2>③ 税费口径 / 运费口径</h2>
+      <span class="sub">这两项只能由你选，脚本不从询盘里“推断”</span>
+    </div>
+    <div class="h3" style="margin-top:2px">税费口径<span class="muted small">（报价里直接引用这段文字）</span></div>
+    <div class="opts" id="taxOpts"></div>
+    <div class="hintline hidden" id="taxHint"></div>
+
+    <div class="h3">运费口径</div>
+    <div class="opts" id="freightOpts"></div>
+    <div class="hintline hidden" id="freightHint"></div>
+
+    <div class="panel-head" style="margin-top:22px">
+      <h2>④ 你的确认价格</h2>
+      <span class="sub">系统只做算术：数量 × 单价、税额、价税合计</span>
+    </div>
+
+    <div class="pricerow">
+      <div class="pricebox">
+        <div class="lb">确认单价（我方销售价格）</div>
+        <div class="pricein">
+          <span class="cur">¥</span>
+          <input id="unitPrice" type="number" min="0" step="0.01" placeholder="待你填写"
+                 inputmode="decimal" aria-label="确认单价">
+          <span class="unit" id="unitLabel">元 / 吨</span>
+        </div>
+        <div class="pricenote">留空 = 待填。这里没有默认价、参考价、区间价，也不会因为你填了数量就自动填价。</div>
+      </div>
+
+      <div class="calc" id="calc">
+        <div class="r"><span>报价数量</span><b id="cQty">—</b></div>
+        <div class="r"><span>单价口径</span><b id="cTaxed">—</b></div>
+        <div class="r"><span>不含税金额</span><b id="cNet">待填单价</b></div>
+        <div class="r"><span>税额</span><b id="cTax">—</b></div>
+        <div class="r tot"><span>价税合计</span><b id="cTotal">待填单价</b></div>
+      </div>
+    </div>
+
+    <div class="fieldline">
+      <div class="fl"><label>报价数量（吨）</label>
+        <input id="quoteQty" type="number" min="0" step="0.01" inputmode="decimal"></div>
+      <div class="fl"><label>报价有效期（天）</label>
+        <input id="validity" type="number" min="1" step="1" inputmode="numeric"></div>
+      <div class="fl"><label>税率</label>
+        <select id="taxRate">
+          <option value="0.13">13%（纯碱等化工品常规）</option>
+          <option value="0.09">9%</option>
+          <option value="0.06">6%</option>
+          <option value="0.03">3%</option>
+        </select></div>
+      <div class="fl"><label>我方公司抬头</label>
+        <input id="company" type="text" placeholder="例：某某化工（江苏）有限公司"></div>
+      <div class="fl"><label>我方联系人 / 电话</label>
+        <input id="contact" type="text" placeholder="例：李强 / 138********"></div>
+      <div class="fl"><label>报价单号</label>
+        <input id="quoteNo" type="text"></div>
+    </div>
+
+    <div class="ack">
+      <input type="checkbox" id="ackBox">
+      <label for="ackBox">
+        <b>我确认</b>：上述单价为我方本次对外销售价格，且税费 / 运费口径已由我选择。
+        系统未推荐、未调整任何价格；由此生成的报价草稿需我方负责人审阅后发出。
+      </label>
+    </div>
+
+    <div class="gatebar">
+      <div class="row">
+        <div class="blocklist" id="blockList"></div>
+        <button class="btn primary" id="btnGenerate" disabled>生成报价草稿</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ⑤ 报价草稿 ============ -->
+  <section class="panel hidden" id="s-draft">
+    <div class="panel-head">
+      <h2>⑤ 报价草稿（可审阅）</h2>
+      <span class="sub">复制 / 导出 / 打印成 PDF，或直接转“合同审阅”</span>
+      <div class="right">
+        <button class="btn sm ghost" id="btnBack">← 回去改字段</button>
+      </div>
+    </div>
+    <div class="stale hidden" id="staleBar">
+      <span>⚠</span><span>你改动过字段或价格，草稿已过期——请重新生成，避免发出与确认值不一致的版本。</span>
+      <button class="btn sm primary" id="btnRegen">重新生成</button>
+    </div>
+    <div id="quoteDoc" class="quote-doc"></div>
+    <div class="toolbar">
+      <button class="btn primary" id="btnCopy">复制全文</button>
+      <button class="btn" id="btnDownload">导出 .md</button>
+      <button class="btn" id="btnPrint">打印 / 存 PDF</button>
+      <button class="btn" id="btnContract">下一步：合同审阅 →</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <b>口径与边界</b>：字段只收询盘原话，抽不到就标“待客户确认”，不猜；A 类（产品 / 规格 / 数量 /
+  交货地点 / 客户抬头 / 税费 / 运费 / 单价）不清完不生成草稿；B 类按假设出草稿，但报价里逐条标注
+  “我方假设 · 待客户确认”；<b>系统不生成、不推荐、不调整任何商业价格</b>，单价只来自本页输入。
+  本页为纯前端工具，素材只在你本机浏览器里处理，不上传服务器。
+</footer>
+
+<div id="toast"></div>
+
+<script id="data" type="application/json">{"meta": {"inquiry_no": "INQ-20261019-01", "as_of": "2026-10-19", "customer": "江苏盐城华宇玻璃", "currency": "CNY", "unit": "吨", "sources": [{"id": "素材01", "type": "微信截图 OCR · 2026-10-18 至 10-19", "file": "input/微信截图_华宇玻璃.png", "chars": 286}, {"id": "素材02", "type": "邮件 · 2026-10-19 14:32", "file": "input/询盘邮件_华宇玻璃.eml", "chars": 610}, {"id": "素材03", "type": "客户需求表 · Excel / PDF 扫描件", "file": "input/客户需求表_华宇玻璃.xlsx", "chars": 420}], "customer_contact": "王经理", "customer_email": "wangjian@huayuglass.com", "industry": "浮法玻璃", "case_disclaimer": "教学演示案例：客户、联系人、公司与交易均为虚构。"}, "fields": {"product": {"key": "product", "label": "产品名称", "bucket": "must", "bucket_label": "必须补充后才能报价", "side": "customer", "unit": "", "hint": "重质纯碱 / 轻质纯碱 / SBS / 钛白粉…", "value": "重质纯碱", "status": "extracted", "confidence": "高", "source": "素材02 · 主题：重质纯碱询价（华宇玻璃）——补充几点", "note": "", "assume_default": ""}, "grade": {"key": "grade", "label": "规格 / 牌号", "bucket": "must", "bucket_label": "必须补充后才能报价", "side": "customer", "unit": "", "hint": "纯度、杂质、粒度、白度、熔指等内控指标", "value": "Na2CO3 ≥ 99.2%；Fe2O3 ≤ 0.003%；烧失量 ≤ 0.5%；180 目筛余 ≤ 5%", "status": "extracted", "confidence": "高", "source": "素材01 · 王经理：指标要求：Na2CO3 ≥ 99.2%，Fe2O3 ≤ 0.003%，烧失量 ≤ 0.5%，粒度 180 目筛余 ≤ 5%。", "note": "", "assume_default": ""}, "quantity": {"key": "quantity", "label": "数量", "bucket": "must", "bucket_label": "必须补充后才能报价", "side": "customer", "unit": "吨", "hint": "必须分清试单量 / 月用量 / 年用量", "value": "试单 200 吨；月用量约 800 吨", "status": "extracted", "confidence": "高", "source": "素材01 · 月用量大概 800 吨，先试单 200 吨看看稳定性。", "note": "", "assume_default": ""}, "place": {"key": "place", "label": "交货地点", "bucket": "must", "bucket_label": "必须补充后才能报价", "side": "customer", "unit": "", "hint": "省市 + 厂区或仓库；“你们送过来”不算", "value": "江苏省盐城市亭湖区 华宇玻璃一期厂区", "status": "extracted", "confidence": "高", "source": "素材02 · 交货地点：江苏省盐城市亭湖区 华宇玻璃一期厂区（需提前一天预约卸车，厂区有地磅）。", "note": "", "assume_default": ""}, "customer": {"key": "customer", "label": "客户名称", "bucket": "must", "bucket_label": "必须补充后才能报价", "side": "customer", "unit": "", "hint": "报价单抬头的开票主体全称", "value": "江苏盐城华宇玻璃", "status": "tbc", "confidence": "低", "source": "素材02 · 江苏盐城华宇玻璃 采购部 王经理；开票抬头我让财务整理好发您。", "note": "简称；开票主体全称、统一社会信用代码待客户提供营业执照/开票信息", "assume_default": ""}, "packaging": {"key": "packaging", "label": "包装", "bucket": "assume", "bucket_label": "可先按假设准备", "side": "customer", "unit": "", "hint": "吨包 / 25kg 袋 / 槽车 / 散装", "value": "1000kg 吨包；栈板 + 缠膜", "status": "extracted", "confidence": "高", "source": "素材02 · 包装请用 1000kg 吨包，栈板+缠膜，方便叉车卸货。", "note": "", "assume_default": "1000kg 吨包，栈板+缠膜"}, "delivery_date": {"key": "delivery_date", "label": "交期", "bucket": "assume", "bucket_label": "可先按假设准备", "side": "customer", "unit": "", "hint": "到厂日期，或款到后工作日", "value": "2026-10-31 前", "status": "extracted", "confidence": "中", "source": "素材02 · 试单希望 10 月底前到货；后续按月度计划滚动下单。", "note": "客户原话“10 月底前”，按 10 月 31 日前理解；具体到货日需结合排产确认", "assume_default": "款到后 5~7 个工作日到厂"}, "payment": {"key": "payment", "label": "付款条件", "bucket": "assume", "bucket_label": "可先按假设准备", "side": "customer", "unit": "", "hint": "款到发货 / 月结 30 天 / 预付比例", "value": "", "status": "assumed", "confidence": "", "source": "", "note": "询盘只要求“注明付款条件”，未给出客户条件；按我方默认假设，报价中须标“我方假设”", "assume_default": "款到发货（电汇）"}, "incoterm": {"key": "incoterm", "label": "运输方式", "bucket": "assume", "bucket_label": "可先按假设准备", "side": "customer", "unit": "", "hint": "汽运整车 / 铁路 / 水运 / 槽车", "value": "", "status": "assumed", "confidence": "", "source": "", "note": "客户要求送到厂区；运输组织方式未明确，按汽运整车假设", "assume_default": "汽运整车"}, "validity": {"key": "validity", "label": "报价有效期", "bucket": "assume", "bucket_label": "可先按假设准备", "side": "user", "unit": "天", "hint": "默认 7 天；大宗随行就市可缩到 3 天", "value": "", "status": "assumed", "confidence": "", "source": "", "note": "客户要求注明有效期；纯碱随行就市，按 7 天假设", "assume_default": "7 天"}}, "gate": {"tax_mode": {"value": "", "status": "user", "hint": "素材02：一般纳税人，需 13% 增值税专用发票 → 仅供提示，必须由我方点选确认"}, "freight_mode": {"value": "", "status": "user", "hint": "素材01/02：送到盐城厂区、预约卸车 → 倾向到厂价，但必须由我方点选确认"}}, "price": {"unit_price": null, "quote_quantity": 200.0, "quote_quantity_unit": "吨", "validity_days": 7, "company": "", "contact": "", "quote_no": "QT-20261019-01", "ack": "", "confirmed_at": "", "currency": "CNY"}, "notes": ["客户提到上轮比价记录，最后一行“1?30”字迹不清；只作为客户价格敏感度线索，不进入我方单价。", "货币单位：人民币；数量单位：吨；价格口径：元/吨。", "本案例为教学演示，客户、联系人、公司与交易均为虚构。"], "unreadable": ["素材01：手写比价表最后一行“1?30”被涂改/遮挡，无法确认是 1,130、1,230 还是 1,630；不猜，请客户补录或忽略。"]}</script>
+<script>
+"use strict";
+
+/* ============================================================ 数据 */
+const S = JSON.parse(document.getElementById("data").textContent);
+const FIELD_ORDER = ["product","grade","quantity","place","customer","packaging","delivery_date","payment","incoterm","validity"];
+const TAX_OPTIONS = ["含税（13% 增值税专用发票）", "含税（9% 增值税专用发票）", "含税（3% / 普票）", "不含税（税额另计）"];
+const FREIGHT_OPTIONS = ["到厂价（含运费）", "出厂价（不含运费）", "送到站（含运费至指定站）"];
+const STORE_KEY = "itq:" + (S.meta.inquiry_no || "draft") + ":" + (S.meta.as_of || "");
+const STATUS = {
+  extracted: {t:"已提取", c:"b-g"},
+  missing:   {t:"缺", c:"b-y"},
+  tbc:       {t:"待客户确认", c:"b-r"},
+  assumed:   {t:"我方假设", c:"b-b"}
+};
+let draft = null;          // 已生成的报价对象
+let stale = false;
+
+/* ============================================================ 工具 */
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = (v, d=2) => (v===""||v===null||isNaN(v)) ? "" : Number(v).toLocaleString("zh-CN",{minimumFractionDigits:d, maximumFractionDigits:d});
+const isPos = (v) => v !== "" && v !== null && !isNaN(v) && Number(v) > 0;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove("on"), 2200); }
+
+/* 与 _common.auto_quote_no 保持一致：INQ-20261020-01 → QT-20261020-01 */
+function autoQuoteNo(inquiryNo){
+  const d = String(inquiryNo || "").replace(/\D/g, "");
+  if (d.length >= 8) return `QT-${d.slice(0,8)}-${d.slice(8) || "01"}`;
+  const t = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `QT-${t.getFullYear()}${p(t.getMonth()+1)}${p(t.getDate())}-01`;
+}
+
+function row(key){ return S.fields[key]; }
+function eff(r){ const v = (r.value||"").trim(); return v || (r.assume_default||""); }
+function effTagged(r){
+  const v = (r.value||"").trim();
+  if (v) return v + (r.status === "assumed" ? "（我方假设）" : "");
+  const d = (r.assume_default||"").trim();
+  return d ? d + "（我方假设）" : "";
+}
+function taxRate(){ return parseFloat($("#taxRate").value) || 0; }
+function taxMode(){ return $(".opts#taxOpts .opt.on") ? S.gate.tax_mode.value : ""; }
+function freightMode(){ return S.gate.freight_mode.value; }
+function priceVal(){ const v = $("#unitPrice").value; return isPos(v) ? Number(v) : null; }
+function qtyVal(){ const v = $("#quoteQty").value; return isPos(v) ? Number(v) : null; }
+
+/* ============================================================ 闸门 */
+function blockers(){
+  const out = [];
+  FIELD_ORDER.filter(k => S.fields[k].bucket === "must").forEach(k => {
+    const r = S.fields[k];
+    const v = (r.value||"").trim();
+    if (!v) out.push(`缺：${r.label}`);
+    else if (r.status === "missing" || r.status === "tbc") out.push(`待确认：${r.label}（当前标记为${STATUS[r.status].t}）`);
+  });
+  if (!S.gate.tax_mode.value) out.push("待你选择：税费口径");
+  if (!S.gate.freight_mode.value) out.push("待你选择：运费口径");
+  if (priceVal() === null) out.push("待你填写：确认单价");
+  if (qtyVal() === null) out.push("待你填写：报价数量");
+  if (!$("#ackBox").checked) out.push("待你勾选：确认该单价为我方销售价格");
+  return out;
+}
+function mustRows(){ return FIELD_ORDER.filter(k => S.fields[k].bucket === "must").map(k => S.fields[k]); }
+function assumeRows(){ return FIELD_ORDER.filter(k => S.fields[k].bucket === "assume").map(k => S.fields[k]); }
+
+/* ============================================================ 渲染：头部 */
+function renderHero(){
+  const p = S.fields.product.value || "产品待确认";
+  const q = S.fields.quantity.value || "数量待确认";
+  const bl = blockers();
+  $("#heroChips").innerHTML = [
+    `<span class="chip">客户 <b>${esc(S.meta.customer || "待客户确认")}</b></span>`,
+    `<span class="chip">产品 <b>${esc(p)}</b></span>`,
+    `<span class="chip">数量 <b>${esc(q)}</b></span>`,
+    `<span class="chip">询盘编号 <b>${esc(S.meta.inquiry_no)}</b></span>`,
+    `<span class="chip">as_of <b>${esc(S.meta.as_of)}</b></span>`,
+    `<span class="chip ${bl.length ? "warn" : ""}">状态 <b>${bl.length ? "待补 "+bl.length+" 项" : "可生成报价草稿"}</b></span>`
+  ].join("");
+}
+
+/* ============================================================ 渲染：素材 */
+function renderSources(){
+  const tb = $("#srcBody");
+  if (!S.meta.sources.length){
+    tb.innerHTML = `<tr><td colspan="5" class="muted small">还没有素材。上传文件或粘贴原文后会自动编号。</td></tr>`;
+    return;
+  }
+  tb.innerHTML = S.meta.sources.map(s => `<tr>
+      <td><b>${esc(s.id)}</b></td><td>${esc(s.type)}</td>
+      <td class="mono">${esc(s.file || "—")}</td>
+      <td class="num">${esc(s.chars || "")}</td>
+      <td class="muted small">字段提取依据</td></tr>`).join("");
+}
+
+/* ============================================================ 渲染：字段行 */
+function statusSelect(r){
+  const opts = ["extracted","tbc","assumed","missing"].map(k =>
+    `<option value="${k}"${r.status===k?" selected":""}>${STATUS[k].t}</option>`).join("");
+  return `<select class="st" data-key="${r.key}">${opts}</select>`;
+}
+
+function fieldRow(r, bucket){
+  const st = STATUS[r.status] || STATUS.missing;
+  const missing = !(r.value||"").trim() && bucket === "must";
+  const cls = bucket === "must" ? (missing ? "miss" : (r.status==="tbc" ? "tbc" : "")) : "assume";
+  const badge = `<span class="badge ${missing ? "b-y" : st.c}">${missing ? "缺" : st.t}</span>`;
+  const src = r.source ? esc(r.source) : (bucket === "assume" ? "询盘未提及 → 采用我方默认假设" : "询盘未提及");
+  const useBtn = bucket === "assume"
+    ? `<button class="use" data-use="${r.key}">用假设值：${esc(r.assume_default || "—")}</button>` : "";
+  return `<div class="frow ${cls}" data-row="${r.key}">
+    <div>
+      <div class="fname">${esc(r.label)}${bucket==="must" ? '<span class="req">必填</span>' : ""}</div>
+      <div class="fhint">${esc(r.hint || "")}</div>
+    </div>
+    <div class="fval">
+      <input data-input="${r.key}" value="${esc(r.value||"")}"
+             placeholder="${bucket==="must" ? "待客户确认 / 待你补录" : esc(r.assume_default||"可留空，按假设")}">
+      ${useBtn}
+    </div>
+    <div class="fsrc"><span class="q">${src}</span>${r.confidence ? `<br><span class="muted">置信度 ${esc(r.confidence)}</span>` : ""}</div>
+    <div class="fstat">${badge}${statusSelect(r)}</div>
+  </div>`;
+}
+
+function renderFields(){
+  $("#rowsMust").innerHTML = mustRows().map(r => fieldRow(r, "must")).join("");
+  $("#rowsAssume").innerHTML = assumeRows().map(r => fieldRow(r, "assume")).join("");
+  const ms = mustRows();
+  const ok = ms.filter(r => (r.value||"").trim() && r.status !== "missing" && r.status !== "tbc").length;
+  $("#mustCount").textContent = `${ok} / ${ms.length} 已确认`;
+  $("#assumeCount").textContent = `${assumeRows().length} 项 · 报价中标注假设`;
+  const tbc = FIELD_ORDER.filter(k => S.fields[k].status === "tbc").length;
+  const miss = FIELD_ORDER.filter(k => !(S.fields[k].value||"").trim() && S.fields[k].bucket === "must").length;
+  $("#fieldStats").innerHTML =
+    `<span class="badge b-y">缺 ${miss}</span><span class="badge b-r">待客户确认 ${tbc}</span>` +
+    `<span class="badge b-b">假设 ${assumeRows().length}</span>`;
+}
+
+/* ============================================================ 渲染：口径 */
+function renderGate(){
+  $("#taxOpts").innerHTML = TAX_OPTIONS.map(o => `
+    <div class="opt${S.gate.tax_mode.value===o?" on":""}" data-tax="${esc(o)}">
+      <span class="dot"></span><span><span class="t">${esc(o)}</span></span></div>`).join("");
+  $("#freightOpts").innerHTML = FREIGHT_OPTIONS.map(o => `
+    <div class="opt${S.gate.freight_mode.value===o?" on":""}" data-freight="${esc(o)}">
+      <span class="dot"></span><span><span class="t">${esc(o)}</span></span></div>`).join("");
+  const th = (S.gate.tax_mode.hint||"").trim(), fh = (S.gate.freight_mode.hint||"").trim();
+  $("#taxHint").classList.toggle("hidden", !th);
+  $("#taxHint").innerHTML = th ? `🔎 询盘里能看到的线索（仅供你判断，仍需你选择）：${esc(th)}` : "";
+  $("#freightHint").classList.toggle("hidden", !fh);
+  $("#freightHint").innerHTML = fh ? `🔎 询盘里能看到的线索（仅供你判断，仍需你选择）：${esc(fh)}` : "";
+}
+
+/* ============================================================ 渲染：试算 */
+function renderCalc(){
+  const q = qtyVal(), p = priceVal(), rate = taxRate();
+  const taxed = !/不含税/.test(S.gate.tax_mode.value || "");
+  $("#cQty").textContent = q === null ? "—" : money(q, q % 1 ? 2 : 0) + " 吨";
+  $("#cTaxed").textContent = S.gate.tax_mode.value ? (taxed ? "含税单价" : "不含税单价") : "待选口径";
+  $("#unitLabel").textContent = "元 / " + (S.price.quote_quantity_unit || "吨");
+  if (p === null || q === null){
+    $("#cNet").textContent = "待填单价"; $("#cTax").textContent = "—"; $("#cTotal").textContent = "待填单价";
+    return;
+  }
+  const amount = p * q;
+  const net = taxed ? (rate ? amount/(1+rate) : amount) : amount;
+  const tax = taxed ? amount - net : net * rate;
+  $("#cNet").textContent = money(net);
+  $("#cTax").textContent = money(tax) + `（${(rate*100).toFixed(0)}%）`;
+  $("#cTotal").textContent = money(net + tax);
+}
+
+/* ============================================================ 渲染：闸门条 */
+function renderGateBar(){
+  const bl = blockers();
+  const box = $("#blockList");
+  if (!bl.length){
+    box.innerHTML = `<span class="okline">✓ 全部就绪：单价与口径均已由你确认，可以生成报价草稿。</span>`;
+  } else {
+    box.innerHTML = `<span class="small"><b>还差这一些（点字段名可跳过去）</b>
+      <ol>${bl.map(b => `<li class="a">${esc(b)}</li>`).join("")}</ol></span>`;
+  }
+  $("#btnGenerate").disabled = bl.length > 0;
+  $("#btnGenerate").textContent = bl.length ? `生成报价草稿（还差 ${bl.length} 项）` : "生成报价草稿";
+  // 步骤条
+  const ms = mustRows();
+  const ok = ms.filter(r => (r.value||"").trim() && r.status !== "missing" && r.status !== "tbc").length;
+  const step2done = ms.length > 0 && ok === ms.length && S.gate.tax_mode.value && S.gate.freight_mode.value;
+  const step1done = S.meta.sources.length > 0;
+  $$(".step").forEach(el => {
+    const n = Number(el.dataset.step);
+    el.classList.toggle("done", (n===1&&step1done) || (n===2&&step2done) || (n===3&&!bl.length) || (n===4&&!!draft));
+    el.classList.toggle("on", (n===1&&!step1done) || (n===2&&step1done&&!step2done) ||
+                              (n===3&&step2done&&!!bl.length) || (n===4&&!bl.length));
+  });
+}
+
+function renderAll(){
+  renderHero(); renderSources(); renderFields(); renderGate(); renderCalc(); renderGateBar();
+}
+
+/* ============================================================ 报价草稿 */
+function quoteCtx(){
+  const p = priceVal(), q = qtyVal(), rate = taxRate();
+  const taxed = !/不含税/.test(S.gate.tax_mode.value || "");
+  const amount = p * q;
+  const net = taxed ? (rate ? amount/(1+rate) : amount) : amount;
+  const tax = taxed ? amount - net : net * rate;
+  const days = Number($("#validity").value) || 7;
+  const until = new Date(S.meta.as_of + "T00:00:00");
+  until.setDate(until.getDate() + days);
+  const pending = [];
+  FIELD_ORDER.forEach(k => {
+    const r = S.fields[k];
+    if (k === "validity") return;            // 有效期由上方输入框决定，条款六里已写
+    if (r.bucket === "assume" && r.status !== "extracted"){
+      pending.push(`${r.label}：按我方假设「${eff(r)}」执行，请客户确认`);
+    } else if (!(r.value||"").trim() || r.status === "tbc"){
+      pending.push(`${r.label}：待客户确认（询盘中未明确）`);
+    }
+  });
+  (S.unreadable||[]).forEach(x => pending.push(x));
+  pending.push(`报价有效期：本报价按 ${days} 天执行，请客户确认是否足够`);
+  return {
+    p, q, rate, taxed, amount, net, tax, days,
+    until: until.toISOString().slice(0,10),
+    tax_mode: S.gate.tax_mode.value, freight_mode: S.gate.freight_mode.value,
+    company: ($("#company").value||"").trim() || "（我方公司抬头待填写）",
+    contact: ($("#contact").value||"").trim() || "—",
+    quote_no: ($("#quoteNo").value||"").trim() || autoQuoteNo(S.meta.inquiry_no),
+    customer: S.meta.customer || "待客户确认",
+    customer_contact: S.meta.customer_contact || "",
+    date: S.meta.as_of,
+    pending
+  };
+}
+
+function renderDraft(){
+  const c = quoteCtx();
+  const prod = S.fields.product.value || "待客户确认";
+  const grade = S.fields.grade.value || "待客户确认";
+  const qtyTxt = money(c.q, c.q % 1 ? 2 : 0);
+  const tn = c.taxed ? "含税单价" : "不含税单价";
+  $("#quoteDoc").innerHTML = `
+    <div class="co">${esc(c.company)}</div>
+    <h1>报价单</h1>
+    <div class="qd-sub">QUOTATION　·　草稿（未经我方销售负责人确认不得对外发送）</div>
+    <div class="qd-meta">
+      <div>报价单号：<b>${esc(c.quote_no)}</b></div>
+      <div>报价日期：<b>${esc(c.date)}</b></div>
+      <div>致（客户）：<b>${esc(c.customer)}</b>${c.customer_contact ? "　" + esc(c.customer_contact) : ""}</div>
+      <div>有效期至：<b>${esc(c.until)}</b>（${c.days} 天）</div>
+      <div>我方联系人：${esc(c.contact)}</div>
+      <div>询盘编号：${esc(S.meta.inquiry_no)}</div>
+    </div>
+    <table class="qt">
+      <thead><tr>
+        <th style="width:52px">序号</th><th>产品名称</th><th>规格 / 牌号</th>
+        <th style="width:92px">数量</th><th style="width:56px">单位</th>
+        <th style="width:120px">单价（元）</th><th style="width:132px">金额（元）</th><th style="width:110px">备注</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="c">1</td><td>${esc(prod)}</td><td>${esc(grade)}</td>
+          <td class="c num">${qtyTxt}</td><td class="c">${esc(S.price.quote_quantity_unit||"吨")}</td>
+          <td class="r num">${money(c.p)}<div class="small muted">${tn}</div></td>
+          <td class="r num">${money(c.amount)}<div class="small muted">${tn}</div></td>
+          <td class="c small">见条款二</td>
+        </tr>
+        <tr class="total"><td colspan="6" class="r">价税合计（人民币）</td>
+          <td class="r num">${money(c.net + c.tax)}</td><td class="c">—</td></tr>
+      </tbody>
+    </table>
+    <h3>一、价格与口径</h3>
+    <ul>
+      <li>税费口径：${esc(c.tax_mode)}；单价为${c.taxed?"含税":"不含税"}单价。</li>
+      <li>运费口径：${esc(c.freight_mode)}。</li>
+      <li>价税构成：不含税金额 ${money(c.net)} 元 + 税额 ${money(c.tax)} 元（税率 ${(c.rate*100).toFixed(0)}%）
+        = 价税合计 <b>${money(c.net + c.tax)} 元</b>。</li>
+    </ul>
+    <h3>二、数量与执行口径</h3>
+    <ul>
+      <li>询盘口径：${esc(S.fields.quantity.value || "待客户确认")}。</li>
+      <li>本报价按 <b>${qtyTxt} ${esc(S.price.quote_quantity_unit||"吨")}</b> 计价；正式合同以双方书面确认数量为准，
+        超出部分按本合同单价另行确认。</li>
+    </ul>
+    <h3>三、交付条件</h3>
+    <ul>
+      <li>交货地点：${esc(S.fields.place.value || "待客户确认")}。</li>
+      <li>运输方式：${esc(effTagged(S.fields.incoterm))}；交期：${esc(effTagged(S.fields.delivery_date))}。</li>
+      <li>包装：${esc(effTagged(S.fields.packaging))}。</li>
+    </ul>
+    <h3>四、付款条件</h3>
+    <ul><li>${esc(effTagged(S.fields.payment))}</li></ul>
+    <h3>五、质量与验收</h3>
+    <ul>
+      <li>质量指标：按 ${esc(grade)} 执行，随货提供批批 COA。</li>
+      <li>验收：到货后按双方确认指标验收；异议应在收货后 7 个工作日内书面提出。</li>
+    </ul>
+    <h3>六、报价有效期</h3>
+    <ul>
+      <li>本报价自 ${esc(c.date)} 起 <b>${c.days} 天</b>内有效（至 ${esc(c.until)}）。</li>
+      <li>逾期未确认需重新确认价格与交期；原材料大幅波动时我方有权提前书面通知调整。</li>
+    </ul>
+    <h3>七、待客户确认事项</h3>
+    <ul class="qd-pending">${c.pending.length ? c.pending.map(x=>`<li>${esc(x)}</li>`).join("") : "<li>无</li>"}</ul>
+    <h3>八、备注</h3>
+    <ul>
+      <li>本报价为草稿，须经我方销售负责人审阅后发出。</li>
+      <li>单价与口径由我方业务人员填写并确认；系统未生成、未推荐、未调整任何商业价格。</li>
+    </ul>
+    <div class="qd-sign">
+      <div>供方（盖章）：<br><br>日期：　　年　　月　　日</div>
+      <div>需方（盖章）：<br><br>日期：　　年　　月　　日</div>
+    </div>
+    <div class="qd-foot">生成说明：单价 ${money(c.p)} 元/${esc(S.price.quote_quantity_unit||"吨")} 由我方业务人员于
+      ${esc(new Date().toISOString().slice(0,10))} 确认；本文件为可审阅草稿，非最终对外报价。</div>`;
+}
+
+/* ============================================================ Markdown 导出 */
+function quoteMarkdown(){
+  const c = quoteCtx();
+  const qtyTxt = money(c.q, c.q % 1 ? 2 : 0);
+  const tn = c.taxed ? "含税单价" : "不含税单价";
+  const L = [];
+  L.push(`# 报 价 单（草稿 · 待我方审阅后发出）`, "");
+  L.push(`- 报价单号：${c.quote_no}`);
+  L.push(`- 报价日期：${c.date}　　有效期至：${c.until}（${c.days} 天）`);
+  L.push(`- 致：${c.customer}${c.customer_contact ? "（" + c.customer_contact + "）" : ""}`);
+  L.push(`- 我方：${c.company}`);
+  L.push(`- 我方联系人：${c.contact}`, "");
+  L.push("## 一、商品明细", "");
+  L.push("| 序号 | 产品 | 规格 / 牌号 | 数量 | 单位 | 单价（元） | 金额（元） | 备注 |");
+  L.push("| --- | --- | --- | --- | --- | --- | --- | --- |");
+  L.push(`| 1 | ${S.fields.product.value||"待客户确认"} | ${S.fields.grade.value||"待客户确认"} | ${qtyTxt} | ${S.price.quote_quantity_unit||"吨"} | ${money(c.p)}（${tn}） | ${money(c.amount)}（${tn}） | 见条款二 |`);
+  L.push("", `> 数量口径：${S.fields.quantity.value||"待客户确认"}。本次报价按 **${qtyTxt}** ${S.price.quote_quantity_unit||"吨"} 计算。`, "");
+  L.push("## 二、价格与口径", "");
+  L.push(`- **税费口径**：${c.tax_mode}`);
+  L.push(`- **运费口径**：${c.freight_mode}`);
+  L.push(`- 价税构成：不含税金额 ${money(c.net)} 元 + 税额 ${money(c.tax)} 元（税率 ${(c.rate*100).toFixed(0)}%）= 价税合计 **${money(c.net+c.tax)} 元**`, "");
+  L.push("## 三、交付条件", "");
+  L.push(`- 交货地点：${S.fields.place.value||"待客户确认"}`);
+  L.push(`- 运输方式：${effTagged(S.fields.incoterm)}`);
+  L.push(`- 交期：${effTagged(S.fields.delivery_date)}`);
+  L.push(`- 包装：${effTagged(S.fields.packaging)}`, "");
+  L.push("## 四、付款条件", "", `- ${effTagged(S.fields.payment)}`, "");
+  L.push("## 五、质量与验收", "", `- 质量指标：按 ${S.fields.grade.value||"待客户确认"} 执行，随货提供批批 COA。`,
+    "- 验收：到货后按双方确认指标验收；异议应在收货后 7 个工作日内书面提出。", "");
+  L.push("## 六、报价有效期", "", `- 本报价自 ${c.date} 起 **${c.days} 天**内有效（至 ${c.until}）。`,
+    "- 逾期未确认的，价格与交期需重新确认。", "");
+  L.push("## 七、待客户确认事项", "");
+  L.push(c.pending.length ? c.pending.map(x=>`- ${x}`).join("\n") : "- 无", "");
+  L.push("## 八、备注", "", "- 本报价为草稿，未经我方销售负责人确认不得对外发送。",
+    "- 单价与口径由我方业务人员填写并确认；系统未生成、未推荐、未调整任何商业价格。", "", "---", "");
+  L.push(`生成说明：单价 ${money(c.p)} 元/${S.price.quote_quantity_unit||"吨"} 由我方业务人员确认；本文件为可审阅草稿，非最终对外报价。`);
+  return L.join("\n") + "\n";
+}
+
+/* ============================================================ 简易识别（粘贴文本） */
+function tryExtract(text){
+  const hits = {};
+  const pats = {
+    product: /(重质纯碱|轻质纯碱|纯碱|SBS|SEBS|钛白粉|甲醇|液碱|烧碱|双氧水|冰醋酸|尿素|乙二醇|柠檬酸)/,
+    grade: /((?:Na2CO3|纯度|含量)\s*[≥>]?\s*\d+(?:\.\d+)?\s*%|(?:Fe2O3|铁)\s*[≤<]\s*[\d.]+\s*%|(?:烧失量)\s*[≤<]\s*[\d.]+\s*%|\d{2,4}\s*目)/,
+    quantity: /(?:月用量|月需求|每月)[^\n。；]{0,8}?(\d+(?:\.\d+)?)\s*(吨|t)|(?:试单|首批|首单)[^\n。；]{0,8}?(\d+(?:\.\d+)?)\s*(吨|t)/,
+    place: /(?:交货地点|收货地址|送到|运到)[:：]?\s*([^\n。；，,]{2,30})/,
+    customer: /([\u4e00-\u9fa5]{2,12}(?:玻璃|化工|材料|科技|实业|建材|塑胶|涂料)(?:股份)?有限公司)/,
+    payment: /(款到发货|货到付款|预付\s*\d+\s*%|月结\s*\d+\s*天|账期\s*\d+\s*天|承兑)/,
+    delivery_date: /((?:本月|下月)(?:上旬|中旬|下旬|底)|(\d{1,2})\s*月\s*(\d{1,2})?\s*[日号]?前|款到后\s*\d+\s*[个]?\s*(?:工作日|天))/,
+    packaging: /((?:\d+(?:\.\d+)?\s*(?:kg|公斤|千克)\s*)?(?:吨包|编织袋|复合袋|槽车|散装|栈板|托盘|缠膜))/
+  };
+  Object.entries(pats).forEach(([k, re]) => {
+    const m = text.match(re);
+    if (m) hits[k] = (m[0] || "").trim();
+  });
+  // 数量：优先试单
+  const trial = text.match(/(?:试单|首批|首单)[^\n。；]{0,8}?(\d+(?:\.\d+)?)\s*(吨|t)/);
+  const month = text.match(/(?:月用量|月需求|每月)[^\n。；]{0,8}?(\d+(?:\.\d+)?)\s*(吨|t)/);
+  const parts = [];
+  if (trial) parts.push(`试单 ${trial[1]} 吨`);
+  if (month) parts.push(`月用量 ${month[1]} 吨`);
+  if (parts.length){ hits.quantity = parts.join("；"); hits.__qty = Number((trial||month)[1]); }
+  return hits;
+}
+
+/* ============================================================ 交互 */
+function bind(){
+  document.body.addEventListener("input", (e) => {
+    const k = e.target.dataset.input;
+    if (k){
+      const r = S.fields[k];
+      r.value = e.target.value;
+      if (r.value.trim() && r.status === "missing") r.status = "extracted";
+      if (!r.value.trim() && r.bucket === "must") r.status = "missing";
+      const rowEl = e.target.closest(".frow");
+      const cls = r.bucket === "must" ? (!r.value.trim() ? "miss" : (r.status==="tbc" ? "tbc" : "")) : "assume";
+      rowEl.className = "frow " + cls;
+      const badge = rowEl.querySelector(".badge");
+      const missing = !r.value.trim() && r.bucket === "must";
+      badge.className = "badge " + (missing ? "b-y" : STATUS[r.status].c);
+      badge.textContent = missing ? "缺" : STATUS[r.status].t;
+      touch(); renderAll();
+      return;
+    }
+    if (["unitPrice","quoteQty","validity","company","contact","quoteNo","taxRate"].includes(e.target.id)){
+      touch(); renderCalc(); renderGateBar();
+    }
+  });
+
+  document.body.addEventListener("change", (e) => {
+    const k = e.target.dataset.key;
+    if (k){ S.fields[k].status = e.target.value; touch(); renderAll(); }
+  });
+
+  document.body.addEventListener("click", (e) => {
+    const useK = e.target.dataset.use;
+    if (useK){ S.fields[useK].value = ""; S.fields[useK].status = "assumed"; touch(); renderAll(); return; }
+    const t = e.target.closest("[data-tax]");
+    if (t){ S.gate.tax_mode.value = t.dataset.tax; touch(); renderAll(); return; }
+    const fr = e.target.closest("[data-freight]");
+    if (fr){ S.gate.freight_mode.value = fr.dataset.freight; touch(); renderAll(); return; }
+  });
+
+  $("#btnExportJson").addEventListener("click", () => {
+    const payload = { meta: S.meta, fields: S.fields, gate: S.gate, notes: S.notes || [], unreadable: S.unreadable || [] };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: "application/json;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `询盘字段_${(S.meta.customer || "客户")}_${S.meta.as_of}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+    toast("已导出字段 JSON（不含价格）");
+  });
+  $("#ackBox").addEventListener("change", () => { touch(); renderGateBar(); });
+  $("#dz").addEventListener("click", () => $("#fileInput").click());
+  ["dragenter","dragover"].forEach(ev => $("#dz").addEventListener(ev, e => {
+    e.preventDefault(); $("#dz").classList.add("over"); }));
+  ["dragleave","drop"].forEach(ev => $("#dz").addEventListener(ev, e => {
+    e.preventDefault(); $("#dz").classList.remove("over"); }));
+  $("#dz").addEventListener("drop", e => handleFiles(e.dataTransfer.files));
+  $("#fileInput").addEventListener("change", e => handleFiles(e.target.files));
+
+  $("#btnReparse").addEventListener("click", () => {
+    const text = $("#pasteBox").value.trim();
+    if (!text){ toast("先粘贴一点询盘文字"); return; }
+    applyExtract(text, "素材P1");
+    toast("已重新识别，只补了空字段");
+  });
+  $("#btnClearPaste").addEventListener("click", () => { $("#pasteBox").value = ""; });
+  $("#btnDemo").addEventListener("click", () => {
+    $("#pasteBox").value = "# 询盘原文（案例素材，已按素材编号切块）\n\n> 本案例为「整理询盘 → 生成报价草稿」教学演示。客户、联系人、公司、价格均为虚构。\n\n## 素材01 · 微信截图 OCR（2026-10-18 至 10-19）\n\n联系人：华宇玻璃 · 王经理\n\n王经理：老师您好，我们是盐城华宇玻璃，做浮法线的，想找重质纯碱的长期供应商。\n王经理：月用量大概 800 吨，先试单 200 吨看看稳定性。\n王经理：指标要求：Na2CO3 ≥ 99.2%，Fe2O3 ≤ 0.003%，烧失量 ≤ 0.5%，粒度 180 目筛余 ≤ 5%。\n王经理：送到我们盐城的厂区，吨包就行。\n王经理：（图片）这是我们上次的比价记录，最后一行单价写得急，是 1?30，你看看能不能做。\n王经理：麻烦报个价，价格有效期也写一下，我们这周要走内部比价。\n我：好的王经理，我核对下排产和物流给您回。\n\n> OCR 备注：比价表最后一行「1?30」字迹被涂改/遮挡，无法确认是 1,130、1,230 还是 1,630。按规则不猜，列入\"无法辨认\"。\n\n## 素材02 · 邮件（2026-10-19 14:32）\n\n发件人：wangjian@huayuglass.com\n主题：重质纯碱询价（华宇玻璃）——补充几点\n\n您好：\n\n补充几点，方便您报价：\n\n1）交货地点：江苏省盐城市亭湖区 华宇玻璃一期厂区（需提前一天预约卸车，厂区有地磅）。\n2）我们是增值税一般纳税人，需要 13% 增值税专用发票。\n3）试单希望 10 月底前到货；后续按月度计划滚动下单。\n4）包装请用 1000kg 吨包，栈板 + 缠膜，方便叉车卸货。\n5）请注明报价有效期与付款条件，走内部比价时这两项要一起报。\n\n进厂需先提供 COA、MSDS 与相关资质文件（纯碱非危化品，但厂区安环要备案）。\n如价格合适，可先安排小批量试供，再签年度框架。\n\n开票抬头我让财务整理好发您，先按我们厂名报即可。\n\n江苏盐城华宇玻璃  采购部  王经理\n手机 138****（微信同号）\n\n## 素材03 · 客户需求表（Excel / PDF）\n\n产品：重质纯碱\n规格：Na2CO3 ≥ 99.2%；Fe2O3 ≤ 0.003%；烧失量 ≤ 0.5%；180 目筛余 ≤ 5%\n试单：200 吨；月用量：约 800 吨\n包装：1000kg 吨包，栈板 + 缠膜\n交货：江苏省盐城市亭湖区 华宇玻璃一期厂区\n交期：试单 10 月底前\n发票：13% 增值税专用发票\n付款条件：（留白）\n报价有效期：（留白）\n";
+    $("#pasteWrap").open = true;
+    toast("示例询盘已填入，点“重新识别”试试");
+  });
+  $("#btnGenerate").addEventListener("click", generate);
+  $("#btnRegen").addEventListener("click", generate);
+  $("#btnBack").addEventListener("click", () => {
+    $("#s-draft").classList.add("hidden");
+    $("#s-gate").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  $("#btnCopy").addEventListener("click", async () => {
+    const txt = quoteMarkdown();
+    try { await navigator.clipboard.writeText(txt); toast("已复制全文（Markdown）"); }
+    catch(_){ fallbackCopy(txt); }
+  });
+  $("#btnDownload").addEventListener("click", () => {
+    const blob = new Blob([quoteMarkdown()], {type:"text/markdown;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `报价草稿_${(S.meta.customer||"客户")}_${S.meta.as_of}.md`;
+    a.click(); URL.revokeObjectURL(a.href); toast("已导出 .md");
+  });
+  $("#btnPrint").addEventListener("click", () => { document.body.classList.add("printing"); window.print(); });
+  window.addEventListener("afterprint", () => document.body.classList.remove("printing"));
+  $("#btnContract").addEventListener("click", async () => {
+    const handoff = `请按“合同审阅”口径审核下面这份报价草稿的条款风险，重点看：价格与税费口径、报价有效期、`
+      + `付款条件与账期、数量与验收口径、违约责任与争议解决；只指出问题与建议改法，不要改写价格。\n\n---\n\n`
+      + quoteMarkdown();
+    try { await navigator.clipboard.writeText(handoff); toast("已复制“合同审阅”交接文本，粘贴到合同审阅即可"); }
+    catch(_){ fallbackCopy(handoff); }
+  });
+  document.addEventListener("keydown", e => {
+    if ((e.ctrlKey||e.metaKey) && e.key === "Enter" && !$("#btnGenerate").disabled) generate();
+  });
+  // 字段名点击跳转
+  $("#blockList").addEventListener("click", e => {
+    const li = e.target.closest("li"); if (!li) return;
+    const name = li.textContent.replace(/^(缺：|待确认：|待你选择：|待你填写：|待你勾选：)/, "").split("（")[0];
+    const key = FIELD_ORDER.find(k => S.fields[k].label === name);
+    if (key){ const el = document.querySelector(`[data-row="${key}"]`); el && el.scrollIntoView({behavior:"smooth", block:"center"}); }
+    else if (/税费/.test(name)) $("#taxOpts").scrollIntoView({behavior:"smooth", block:"center"});
+    else if (/运费/.test(name)) $("#freightOpts").scrollIntoView({behavior:"smooth", block:"center"});
+    else if (/单价|数量/.test(name)) $("#unitPrice").focus();
+    else if (/勾选/.test(name)) $("#ackBox").focus();
+  });
+}
+
+function fallbackCopy(txt){
+  const ta = document.createElement("textarea");
+  ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); toast("已复制"); } catch(_){ toast("复制失败，请手动选中"); }
+  ta.remove();
+}
+
+function touch(){
+  if (draft){ stale = true; $("#staleBar").classList.remove("hidden"); }
+  save();
+}
+
+function generate(){
+  const bl = blockers();
+  if (bl.length){ toast("还差 " + bl.length + " 项，先补齐"); return; }
+  draft = quoteCtx();
+  stale = false;
+  $("#staleBar").classList.add("hidden");
+  renderDraft();
+  $("#s-draft").classList.remove("hidden");
+  renderGateBar();
+  $("#s-draft").scrollIntoView({behavior:"smooth", block:"start"});
+  toast("报价草稿已生成（草稿，需负责人审阅）");
+}
+
+function handleFiles(files){
+  Array.from(files).forEach(f => {
+    const isText = /\.(txt|md|csv|eml|html?|json)$/i.test(f.name);
+    const id = "素材" + String(S.meta.sources.length + 1).padStart(2, "0");
+    const entry = {id, type: f.name.split(".").pop().toUpperCase(), file: f.name, chars: isText ? "读取中" : "需OCR"};
+    S.meta.sources.push(entry);
+    if (isText){
+      const rd = new FileReader();
+      rd.onload = () => {
+        const text = String(rd.result || "");
+        entry.chars = text.length;
+        applyExtract(text, id);
+        renderAll(); save();
+        toast(`已读取 ${f.name}（${text.length} 字）`);
+      };
+      rd.readAsText(f, "utf-8");
+    } else {
+      renderAll(); save();
+      toast(`已登记 ${f.name}：图片/PDF 请把 OCR 文字粘贴到下方文本框再“重新识别”`);
+      $("#pasteWrap").open = true;
+    }
+  });
+  renderHero();
+}
+
+function applyExtract(text, srcId){
+  const hits = tryExtract(text);
+  FIELD_ORDER.forEach(k => {
+    const r = S.fields[k];
+    if (hits[k] && !(r.value || "").trim()){
+      r.value = hits[k];
+      r.status = "extracted";
+      r.confidence = "中";
+      r.source = `${srcId} · ${hits[k]}`;
+    }
+  });
+  if (hits.__qty && !isPos($("#quoteQty").value)) $("#quoteQty").value = hits.__qty;
+  if (!S.meta.customer && hits.customer){ S.meta.customer = hits.customer; S.fields.customer.value = hits.customer;
+    S.fields.customer.status = "extracted"; }
+  touch(); renderAll();
+}
+
+/* ============================================================ 持久化 */
+function save(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      fields: S.fields, gate: S.gate, meta: S.meta, price: S.price,
+      ui: {unitPrice:$("#unitPrice").value, quoteQty:$("#quoteQty").value, validity:$("#validity").value,
+           company:$("#company").value, contact:$("#contact").value, quoteNo:$("#quoteNo").value,
+           taxRate:$("#taxRate").value, ack:$("#ackBox").checked}
+    }));
+  }catch(_){}
+}
+function restore(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.fields) Object.keys(d.fields).forEach(k => { if (S.fields[k]) Object.assign(S.fields[k], d.fields[k]); });
+    if (d.gate) Object.assign(S.gate, d.gate);
+    if (d.meta) Object.assign(S.meta, d.meta);
+    if (d.price) Object.assign(S.price, d.price);
+    const u = d.ui || {};
+    ["unitPrice","quoteQty","validity","company","contact","quoteNo"].forEach(id => {
+      if (u[id] != null) $("#" + id).value = u[id];
+    });
+    if (u.taxRate) $("#taxRate").value = u.taxRate;
+    if (u.ack) $("#ackBox").checked = true;
+  }catch(_){}
+}
+
+/* ============================================================ 启动 */
+function init(){
+  // 打开即有默认文本：不是在空白页等用户先点“载入示例”
+  if (!$("#pasteBox").value.trim()) $("#pasteBox").value = "# 询盘原文（案例素材，已按素材编号切块）\n\n> 本案例为「整理询盘 → 生成报价草稿」教学演示。客户、联系人、公司、价格均为虚构。\n\n## 素材01 · 微信截图 OCR（2026-10-18 至 10-19）\n\n联系人：华宇玻璃 · 王经理\n\n王经理：老师您好，我们是盐城华宇玻璃，做浮法线的，想找重质纯碱的长期供应商。\n王经理：月用量大概 800 吨，先试单 200 吨看看稳定性。\n王经理：指标要求：Na2CO3 ≥ 99.2%，Fe2O3 ≤ 0.003%，烧失量 ≤ 0.5%，粒度 180 目筛余 ≤ 5%。\n王经理：送到我们盐城的厂区，吨包就行。\n王经理：（图片）这是我们上次的比价记录，最后一行单价写得急，是 1?30，你看看能不能做。\n王经理：麻烦报个价，价格有效期也写一下，我们这周要走内部比价。\n我：好的王经理，我核对下排产和物流给您回。\n\n> OCR 备注：比价表最后一行「1?30」字迹被涂改/遮挡，无法确认是 1,130、1,230 还是 1,630。按规则不猜，列入\"无法辨认\"。\n\n## 素材02 · 邮件（2026-10-19 14:32）\n\n发件人：wangjian@huayuglass.com\n主题：重质纯碱询价（华宇玻璃）——补充几点\n\n您好：\n\n补充几点，方便您报价：\n\n1）交货地点：江苏省盐城市亭湖区 华宇玻璃一期厂区（需提前一天预约卸车，厂区有地磅）。\n2）我们是增值税一般纳税人，需要 13% 增值税专用发票。\n3）试单希望 10 月底前到货；后续按月度计划滚动下单。\n4）包装请用 1000kg 吨包，栈板 + 缠膜，方便叉车卸货。\n5）请注明报价有效期与付款条件，走内部比价时这两项要一起报。\n\n进厂需先提供 COA、MSDS 与相关资质文件（纯碱非危化品，但厂区安环要备案）。\n如价格合适，可先安排小批量试供，再签年度框架。\n\n开票抬头我让财务整理好发您，先按我们厂名报即可。\n\n江苏盐城华宇玻璃  采购部  王经理\n手机 138****（微信同号）\n\n## 素材03 · 客户需求表（Excel / PDF）\n\n产品：重质纯碱\n规格：Na2CO3 ≥ 99.2%；Fe2O3 ≤ 0.003%；烧失量 ≤ 0.5%；180 目筛余 ≤ 5%\n试单：200 吨；月用量：约 800 吨\n包装：1000kg 吨包，栈板 + 缠膜\n交货：江苏省盐城市亭湖区 华宇玻璃一期厂区\n交期：试单 10 月底前\n发票：13% 增值税专用发票\n付款条件：（留白）\n报价有效期：（留白）\n";
+  $("#pasteWrap").open = true;
+  $("#quoteQty").value = (S.price && S.price.quote_quantity) ? S.price.quote_quantity : "";
+  $("#validity").value = (S.price && S.price.validity_days) ? S.price.validity_days : 7;
+  $("#company").value = (S.price && S.price.company) || "";
+  $("#contact").value = (S.price && S.price.contact) || "";
+  $("#quoteNo").value = (S.price && S.price.quote_no) || autoQuoteNo(S.meta.inquiry_no);
+  restore();
+  bind();
+  renderAll();
+  renderCalc();
+  if (location.hash === "#draft" && !blockers().length) generate();
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

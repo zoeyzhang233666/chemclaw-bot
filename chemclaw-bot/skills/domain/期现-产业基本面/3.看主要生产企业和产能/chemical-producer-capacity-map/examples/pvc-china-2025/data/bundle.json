@@ -1,0 +1,28 @@
+{
+  "_readme": "PVC 产能研究数据集（中国，2025 年度口径）。units 为唯一事实层；plants/entities/groups 为其归属链。所有 capacity 单位为万吨/年。尚未核实的字段一律留空或写「未知」，禁止臆填。",
+  "meta": {
+    "title": "中国 PVC（聚氯乙烯）生产企业与产能分布",
+    "generated": "2026-10-20",
+    "cutoff": "2026-10（数据年度以 2025 年为主，部分为 2024/2026 年披露）",
+    "sample_scope": "中国境内 PVC 树脂生产企业（含电石法、乙烯法、煤制烯烃乙烯法），覆盖大型集团全量 + 中型企业主要基地 + 部分独立厂；不含境外产能、不含糊树脂贸易环节。",
+    "coverage": "待计算",
+    "coverage_note": "样本合计为已核实企业口径，不等于全国总产能（全国口径见 benchmarks 表，多源并列）",
+    "coverage_warning": "本表为「样本口径」。全国 71 家生产企业中，本表仅覆盖主要集团与已取得一手来源的企业；未覆盖企业的产能未计入，故样本合计 < 全国产能，不得称为全国总产能。"
+  },
+  "product": {
+    "name": "聚氯乙烯（PVC，Polyvinyl Chloride）",
+    "short": "PVC",
+    "cas": "9002-86-2",
+    "formula": "(C2H3Cl)n",
+    "base_year": 2025
+  },
+  "groups": [],
+  "entities": [],
+  "plants": [],
+  "units": [],
+  "projects": [],
+  "sources": [],
+  "benchmarks": [],
+  "gaps": [],
+  "notes": {}
+}

@@ -1,0 +1,55 @@
+{
+  "demo": false,
+  "_说明": "空模板：把 【】 替换为实际内容。字段定义见 references/output-spec.md。示例见 examples/液碱32采购合同演示/contract.json",
+  "contract_meta": {
+    "title": "【合同名称】",
+    "contract_no": "【合同编号】",
+    "sign_date": "【YYYY年M月D日】",
+    "buyer": "【我方全称】（甲方）",
+    "buyer_addr": "【地址】",
+    "supplier": "【供应商全称】（乙方）",
+    "supplier_addr": "【地址】",
+    "review_as": "买方（甲方）",
+    "framework": false,
+    "page_count": 0,
+    "files_received": ["【正文 N 页】"],
+    "files_missing": ["【供应商营业执照】【承运方资质】"]
+  },
+  "sections": [
+    {
+      "id": "preamble",
+      "no": "—",
+      "title": "合同首部（合同编号、双方、签约日期）",
+      "page": 1,
+      "clause_ids": ["C01"],
+      "notes": ""
+    },
+    {
+      "id": "s1",
+      "no": "第【一】条",
+      "title": "【条款标题】",
+      "page": 1,
+      "clause_ids": ["C02"],
+      "notes": ""
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C01",
+      "sec": "preamble",
+      "no": "合同首部",
+      "page": 1,
+      "page_line": "第1页 抬头",
+      "text": "【逐字原文，不得改写】"
+    },
+    {
+      "id": "C02",
+      "sec": "s1",
+      "no": "第【一】条 【款号】",
+      "page": 1,
+      "page_line": "第1页 第N行",
+      "text": "【逐字原文，不得改写】"
+    }
+  ],
+  "attachments": []
+}

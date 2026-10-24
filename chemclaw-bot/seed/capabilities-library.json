@@ -1,0 +1,497 @@
+{
+  "version": 1,
+  "generated": "2026-10-22T03:42:08.788Z",
+  "items": {
+    "chem-biz-scope": {
+      "name": "chem-biz-scope",
+      "kind": "mcp",
+      "description": "化工业务范围 MCP（需密钥 CHEM_BIZ_SCOPE）",
+      "transport": "streamable-http",
+      "url": "http://121.37.133.47:8900/mcp",
+      "headers": {
+        "Authorization": "Bearer $DSH_SECRET_CHEM_BIZ_SCOPE"
+      },
+      "createdBy": null,
+      "approved": true
+    },
+    "chem-data-hub": {
+      "name": "chem-data-hub",
+      "kind": "mcp",
+      "description": "芯化数据中台：化合物/企业/价格/产业链（需密钥 CHEM_DATA_HUB）",
+      "transport": "streamable-http",
+      "url": "https://datahub.chem-cloud.cn/mcp",
+      "headers": {
+        "Authorization": "Bearer $DSH_SECRET_CHEM_DATA_HUB"
+      },
+      "createdBy": null,
+      "approved": true
+    },
+    "qcc-company": {
+      "name": "qcc-company",
+      "kind": "mcp",
+      "description": "企查查企业基座（需密钥 QCC）",
+      "transport": "streamable-http",
+      "url": "https://agent.qcc.com/mcp/company/stream",
+      "headers": {
+        "Authorization": "Bearer $DSH_SECRET_QCC"
+      },
+      "createdBy": null,
+      "approved": true
+    },
+    "qcc-ipr": {
+      "name": "qcc-ipr",
+      "kind": "mcp",
+      "description": "企查查知产（需密钥 QCC）",
+      "transport": "streamable-http",
+      "url": "https://agent.qcc.com/mcp/ipr/stream",
+      "headers": {
+        "Authorization": "Bearer $DSH_SECRET_QCC"
+      },
+      "createdBy": null,
+      "approved": true
+    },
+    "qcc-operation": {
+      "name": "qcc-operation",
+      "kind": "mcp",
+      "description": "企查查经营罗盘（需密钥 QCC）",
+      "transport": "streamable-http",
+      "url": "https://agent.qcc.com/mcp/operation/stream",
+      "headers": {
+        "Authorization": "Bearer $DSH_SECRET_QCC"
+      },
+      "createdBy": null,
+      "approved": true
+    },
+    "qcc-risk": {
+      "name": "qcc-risk",
+      "kind": "mcp",
+      "description": "企查查风控（需密钥 QCC）",
+      "transport": "streamable-http",
+      "url": "https://agent.qcc.com/mcp/risk/stream",
+      "headers": {
+        "Authorization": "Bearer $DSH_SECRET_QCC"
+      },
+      "createdBy": null,
+      "approved": true
+    },
+    "brainstorming": {
+      "name": "brainstorming",
+      "kind": "skill",
+      "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+      "content": "# brainstorming\n\nYou MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/brainstorming/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\brainstorming\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\n# Brainstorming Ideas Into Designs\n\nHelp turn ideas into fully formed designs and specs through natural collaborative dialogue.\n\nStart by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.\n\n<HARD-GATE>\nDo NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.\n</HARD-GATE>\n\n## Anti-Pattern: \"This Is Too Simple To Need A Design\"\n\nEvery project goes through this process. A todo list, a single-function utility, a config change — all of them. \"Simple\" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.\n\n## Checklist\n\nYou MUST create a task for each of these items and complete them in order:\n\n1. **Explore project context** — check files, docs, recent commits\n2. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.\n3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria\n4. **Propose 2-3 approaches** — with trade-offs and your recommendation\n5. **Present design** — in sections scaled to their complexity, get user approval after each section\n6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit\n7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)\n8. **User reviews written spec** — ask user to review the spec file before proceeding\n9. **Transition to implementation** — invoke writing-plans skill to create implementation plan\n\n## Process Flow\n\n```dot\ndigraph brainstorming {\n    \"Explore project context\" [shape=box];\n    \"Ask clarifying questions\" [shape=box];\n    \"Propose 2-3 approaches\" [shape=box];\n    \"Present design sections\" [shape=box];\n    \"User approves design?\" [shape=diamond];\n    \"Write design doc\" [shape=box];\n    \"Spec self-review\\n(fix inline)\" [shape=box];\n    \"User reviews spec?\" [shape=diamond];\n    \"Invoke writing-plans skill\" [shape=doublecircle];\n\n    \"Explore project context\" -> \"Ask clarifying questions\";\n    \"Ask clarifying questions\" -> \"Propose 2-3 approaches\";\n    \"Propose 2-3 approaches\" -> \"Present design sections\";\n    \"Present design sections\" -> \"User approves design?\";\n    \"User approves design?\" -> \"Present design sections\" [label=\"no, revise\"];\n    \"User approves design?\" -> \"Write design doc\" [label=\"yes\"];\n    \"Write design doc\" -> \"Spec self-review\\n(fix inline)\";\n    \"Spec self-review\\n(fix inline)\" -> \"User reviews spec?\";\n    \"User reviews spec?\" -> \"Write design doc\" [label=\"changes requested\"];\n    \"User reviews spec?\" -> \"Invoke writing-plans skill\" [label=\"approved\"];\n}\n```\n\n**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.\n\n## The Process\n\n**Understanding the idea:**\n\n- Check out the current project state first (files, docs, recent commits)\n- Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., \"build a platform with chat, file storage, billing, and analytics\"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.\n- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.\n- For appropriately-scoped projects, ask questions one at a time to refine the idea\n- Prefer multiple choice questions when possible, but open-ended is fine too\n- Only one question per message - if a topic needs more exploration, break it into multiple questions\n- Focus on understanding: purpose, constraints, success criteria\n\n**Exploring approaches:**\n\n- Propose 2-3 different approaches with trade-offs\n- Present options conversationally with your recommendation and reasoning\n- Lead with your recommended option and explain why\n- YAGNI ruthlessly - remove unnecessary features from every approach and design\n\n**Presenting the design:**\n\n- Once you believe you understand what you're building, present the design\n- Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced\n- Ask after each section whether it looks right so far\n- Cover: architecture, components, data flow, error handling, testing\n- Be ready to go back and clarify if something doesn't make sense\n\n**Design for isolation and clarity:**\n\n- Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently\n- For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?\n- Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.\n- Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.\n\n**Working in existing codebases:**\n\n- Explore the current structure before proposing changes. Follow existing patterns.\n- Where existing code has\n\n\n…(truncated; read the full SKILL.md)…\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/brainstorming/SKILL.md"
+    },
+    "executing-plans": {
+      "name": "executing-plans",
+      "kind": "skill",
+      "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+      "content": "# executing-plans\n\nUse when you have a written implementation plan to execute in a separate session with review checkpoints\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/executing-plans/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\executing-plans\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\n# Executing Plans\n\n## Overview\n\nLoad plan, review critically, execute all tasks, report when complete.\n\n**Announce at start:** \"I'm using the executing-plans skill to implement this plan.\"\n\n**Note:** Tell your human partner that Superpowers works much better with access to subagents (Claude Code, Codex CLI, Codex App, Copilot CLI, and Gemini CLI all qualify; see the per-platform tool refs in `../using-superpowers/references/`). If subagents are available, use superpowers:subagent-driven-development instead of this skill.\n\n## The Process\n\n### Step 1: Load and Review Plan\n1. Ensure an isolated workspace: use superpowers:using-git-worktrees to create one or verify the existing one\n2. Read plan file\n3. Review critically - identify any questions or concerns about the plan\n4. If concerns: Raise them with your human partner before starting\n5. If no concerns: Create todos for the plan items and proceed\n\n### Step 2: Execute Tasks\n\nFor each task:\n1. Mark as in_progress\n2. Follow each step exactly (plan has bite-sized steps)\n3. Run verifications as specified\n4. Mark as completed\n\n### Step 3: Complete Development\n\nAfter all tasks complete and verified:\n- Announce: \"I'm using the finishing-a-development-branch skill to complete this work.\"\n- **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch\n- Follow that skill to verify tests, present options, execute choice\n\n## When to Stop and Ask for Help\n\n**STOP executing immediately when:**\n- Hit a blocker (missing dependency, test fails, instruction unclear)\n- Plan has critical gaps preventing starting\n- You don't understand an instruction\n- Verification fails repeatedly\n\n**Ask for clarification rather than guessing.**\n\n## When to Revisit Earlier Steps\n\n**Return to Review (Step 1) when:**\n- Partner updates the plan based on your feedback\n- Fundamental approach needs rethinking\n\n**Don't force through blockers** - stop and ask.\n\n## Remember\n- Review plan critically first\n- Follow plan steps exactly\n- Don't skip verifications\n- Reference skills when plan says to\n- Stop when blocked, don't guess\n- Never start implementation on main/master branch without explicit user consent\n\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/executing-plans/SKILL.md"
+    },
+    "grill-me": {
+      "name": "grill-me",
+      "kind": "skill",
+      "description": "A relentless interview to sharpen a plan or design.",
+      "content": "# grill-me\n\nA relentless interview to sharpen a plan or design.\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/grill-me/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\grill-me\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\nRun a `/grilling` session.\n\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/grill-me/SKILL.md"
+    },
+    "grill-with-docs": {
+      "name": "grill-with-docs",
+      "kind": "skill",
+      "description": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+      "content": "# grill-with-docs\n\nA relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/grill-with-docs/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\grill-with-docs\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\nRun a `/grilling` session, using the `/domain-modeling` skill.\n\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/grill-with-docs/SKILL.md"
+    },
+    "grilling": {
+      "name": "grilling",
+      "kind": "skill",
+      "description": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.",
+      "content": "# grilling\n\nGrill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/grilling/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\grilling\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\nInterview me relentlessly about every aspect of this until we reach a shared understanding. Walk down each branch of the decision tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.\n\nAsk the questions one at a time, waiting for feedback on each question before continuing. Asking multiple questions at once is bewildering.\n\nIf a *fact* can be found by exploring the environment (filesystem, tools, etc.), look it up rather than asking me. The *decisions*, though, are mine — put each one to me and wait for my answer.\n\nDo not act on it until I confirm we have reached a shared understanding.\n\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/grilling/SKILL.md"
+    },
+    "using-superpowers": {
+      "name": "using-superpowers",
+      "kind": "skill",
+      "description": "Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions",
+      "content": "# using-superpowers\n\nUse when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/using-superpowers/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\using-superpowers\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\n<SUBAGENT-STOP>\nIf you were dispatched as a subagent to execute a specific task, ignore this skill.\n</SUBAGENT-STOP>\n\n<EXTREMELY-IMPORTANT>\nIf you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.\n\nIF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.\n\nThis is not negotiable. You cannot rationalize your way out of this.\n</EXTREMELY-IMPORTANT>\n\n## The Rule\n\n**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.\n\n**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.\n\nThen announce \"Using [skill] to [purpose]\" and follow the skill exactly. If it has a checklist, create a todo per item.\n\n## Skill Priority\n\nWhen multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.\n\n- \"Let's build X\" → superpowers:brainstorming first, then implementation skills.\n- \"Fix this bug\" → superpowers:systematic-debugging first, then domain skills.\n\n## Red Flags\n\nThese thoughts mean STOP—you're rationalizing:\n\n| Thought | Reality |\n|---------|---------|\n| \"This is just a simple question\" | Questions are tasks. Check for skills. |\n| \"I need more context first\" | Skill check comes BEFORE clarifying questions. |\n| \"Let me explore the codebase first\" | Skills tell you HOW to explore. Check first. |\n| \"I can check git/files quickly\" | Files lack conversation context. Check for skills. |\n| \"Let me gather information first\" | Skills tell you HOW to gather information. |\n| \"This doesn't need a formal skill\" | If a skill exists, use it. |\n| \"I remember this skill\" | Skills evolve. Read current version. |\n| \"This doesn't count as a task\" | Action = task. Check for skills. |\n| \"The skill is overkill\" | Simple things become complex. Use it. |\n| \"I'll just do this one thing first\" | Check BEFORE doing anything. |\n| \"This feels productive\" | Undisciplined action wastes time. Skills prevent this. |\n| \"I know what that means\" | Knowing the concept ≠ using the skill. Invoke it. |\n\n## Platform Adaptation\n\nIf your harness appears here, read its reference file for special instructions:\n\n- Codex: `references/codex-tools.md`\n- Pi: `references/pi-tools.md`\n- Antigravity: `references/antigravity-tools.md`\n\n## User Instructions\n\nUser instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.\n\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/using-superpowers/SKILL.md"
+    },
+    "verification-before-completion": {
+      "name": "verification-before-completion",
+      "kind": "skill",
+      "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
+      "content": "# verification-before-completion\n\nUse when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/verification-before-completion/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\verification-before-completion\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\n# Verification Before Completion\n\n## Overview\n\n**Core principle:** Evidence before claims, always.\n\n**Violating the letter of this rule is violating the spirit of this rule.**\n\n## The Iron Law\n\n```\nNO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE\n```\n\nIf you haven't run the verification command in this message, you cannot claim it passes.\n\n## The Gate Function\n\n```\nBEFORE claiming any status or expressing satisfaction:\n\n1. IDENTIFY: What command proves this claim?\n2. RUN: Execute the FULL command (fresh, complete)\n3. READ: Full output, check exit code, count failures\n4. VERIFY: Does output confirm the claim?\n   - If NO: State actual status with evidence\n   - If YES: State claim WITH evidence\n5. ONLY THEN: Make the claim\n\nSkip any step = lying, not verifying\n```\n\n## Common Failures\n\n| Claim | Requires | Not Sufficient |\n|-------|----------|----------------|\n| Tests pass | Test command output: 0 failures | Previous run, \"should pass\" |\n| Linter clean | Linter output: 0 errors | Partial check, extrapolation |\n| Build succeeds | Build command: exit 0 | Linter passing, logs look good |\n| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |\n| Regression test works | Red-green cycle verified | Test passes once |\n| Agent completed | VCS diff shows changes | Agent reports \"success\" |\n| Requirements met | Line-by-line checklist | Tests passing |\n\n## Red Flags - STOP\n\n- Using \"should\", \"probably\", \"seems to\"\n- Expressing satisfaction before verification (\"Great!\", \"Perfect!\", \"Done!\", etc.)\n- About to commit/push/PR without verification\n- Trusting agent success reports\n- Relying on partial verification\n- Thinking \"just this once\"\n- Tired and wanting work over\n- **ANY wording implying success without having run verification**\n\n## Rationalization Prevention\n\n| Excuse | Reality |\n|--------|---------|\n| \"Should work now\" | RUN the verification |\n| \"I'm confident\" | Confidence ≠ evidence |\n| \"Just this once\" | No exceptions |\n| \"Linter passed\" | Linter ≠ compiler |\n| \"Agent said success\" | Verify independently |\n| \"I'm tired\" | Exhaustion ≠ excuse |\n| \"Partial check is enough\" | Partial proves nothing |\n| \"Different words so rule doesn't apply\" | Spirit over letter |\n\n## Key Patterns\n\n**Tests:**\n```\n✅ [Run test command] [See: 34/34 pass] \"All tests pass\"\n❌ \"Should pass now\" / \"Looks correct\"\n```\n\n**Regression tests (TDD Red-Green):**\n```\n✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)\n❌ \"I've written a regression test\" (without red-green verification)\n```\n\n**Build:**\n```\n✅ [Run build] [See: exit 0] \"Build passes\"\n❌ \"Linter passed\" (linter doesn't check compilation)\n```\n\n**Requirements:**\n```\n✅ Re-read plan → Create checklist → Verify each → Report gaps or completion\n❌ \"Tests pass, phase complete\"\n```\n\n**Agent delegation:**\n```\n✅ Agent reports success → Check VCS diff → Verify changes → Report actual state\n❌ Trust agent report\n```\n\n## When To Apply\n\n**ALWAYS before:**\n- ANY variation of success/completion claims\n- ANY expression of satisfaction\n- ANY positive statement about work state\n- Committing, PR creation, task completion\n- Moving to next task\n- Delegating to agents\n\n**Rule applies to:**\n- Exact phrases\n- Paraphrases and synonyms\n- Implications of success\n- ANY communication suggesting completion/correctness\n\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/verification-before-completion/SKILL.md"
+    },
+    "writing-plans": {
+      "name": "writing-plans",
+      "kind": "skill",
+      "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
+      "content": "# writing-plans\n\nUse when you have a spec or requirements for a multi-step task, before touching code\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/process/writing-plans/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\process\\writing-plans\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\n# Writing Plans\n\n## Overview\n\nWrite comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.\n\nAssume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.\n\n**Announce at start:** \"I'm using the writing-plans skill to create the implementation plan.\"\n\n**Context:** If working in an isolated worktree, it should have been created via the `superpowers:using-git-worktrees` skill at execution time.\n\n**Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`\n- (User preferences for plan location override this default)\n\n## Scope Check\n\nIf the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.\n\n## File Structure\n\nBefore defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.\n\n- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.\n- You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.\n- Files that change together should live together. Split by responsibility, not by technical layer.\n- In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.\n\nThis structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.\n\n## Task Right-Sizing\n\nA task is the smallest unit that carries its own test cycle and is worth a\nfresh reviewer's gate. When drawing task boundaries: fold setup,\nconfiguration, scaffolding, and documentation steps into the task whose\ndeliverable needs them; split only where a reviewer could meaningfully\nreject one task while approving its neighbor. Each task ends with an\nindependently testable deliverable.\n\n## Bite-Sized Task Granularity\n\n**Each step is one action (2-5 minutes):**\n- \"Write the failing test\" - step\n- \"Run it to make sure it fails\" - step\n- \"Implement the minimal code to make the test pass\" - step\n- \"Run the tests and make sure they pass\" - step\n- \"Commit\" - step\n\n## Plan Document Header\n\n**Every plan MUST start with this header:**\n\n```markdown\n# [Feature Name] Implementation Plan\n\n> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.\n\n**Goal:** [One sentence describing what this builds]\n\n**Architecture:** [2-3 sentences about approach]\n\n**Tech Stack:** [Key technologies/libraries]\n\n## Global Constraints\n\n[The spec's project-wide requirements — version floors, dependency limits,\nnaming and copy rules, platform requirements — one line each, with exact\nvalues copied verbatim from the spec. Every task's requirements implicitly\ninclude this section.]\n\n---\n```\n\n## Task Structure\n\n````markdown\n### Task N: [Component Name]\n\n**Files:**\n- Create: `exact/path/to/file.py`\n- Modify: `exact/path/to/existing.py:123-145`\n- Test: `tests/exact/path/to/test.py`\n\n**Interfaces:**\n- Consumes: [what this task uses from earlier tasks — exact signatures]\n- Produces: [what later tasks rely on — exact function names, parameter\n  and return types. A task's implementer sees only their own task; this\n  block is how they learn the names and types neighboring tasks use.]\n\n- [ ] **Step 1: Write the failing test**\n\n```python\ndef test_specific_behavior():\n    result = function(input)\n    assert result == expected\n```\n\n- [ ] **Step 2: Run test to verify it fails**\n\nRun: `pytest tests/path/test.py::test_name -v`\nExpected: FAIL with \"function not defined\"\n\n- [ ] **Step 3: Write minimal implementation**\n\n```python\ndef function(input):\n    return expected\n```\n\n- [ ] **Step 4: Run test to verify it passes**\n\nRun: `pytest tests/path/test.py::test_name -v`\nExpected: PASS\n\n- [ ] **Step 5: Commit**\n\n```bash\ngit add tests/path/test.py src/path/file.py\ngit commit -m \"feat: add specific feature\"\n```\n````\n\n## No Placeholders\n\nEvery step must contain the actual content an engineer needs. These are **plan failures** — never write them:\n- \"TBD\", \"TODO\", \"implement later\", \"fill in details\"\n- \"Add appropriate error handling\" / \"add validation\" / \"handle edge cases\"\n- \"Write tests for the above\" (without actual test code)\n- \"Similar to Task N\" (repeat the code — the engineer may be reading tasks out of order)\n- Steps that describe what to do without showing how (code blocks required for code steps)\n- References to types, functions, or methods not defined in any task\n\n## Self-Review\n\nAfter writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.\n\n**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.\n\n**2. Placeholder scan:** Search your plan for red flags — any of the patterns from the \"No Placeholders\" section above. Fix them.\n\n**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.\n\nIf you find issues, fix them inline. No need to re-review — just fix and move on.\n\n\n…(truncated; read the full SKILL.md)…\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/process/writing-plans/SKILL.md"
+    },
+    "guizang-ppt-skill": {
+      "name": "guizang-ppt-skill",
+      "kind": "skill",
+      "description": "生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字报、图片网格等模板。提供两种风格：① \"电子杂志 × 电子墨水\"（衬线 + 流体背景 + 暖色） ② \"瑞士国际主义\"（无衬线 + 网格点阵 + IKB/柠檬黄/柠檬绿/安全橙高亮）。当用户需要制作分享 / 演讲 / 发布会风格的网页 PPT，或提到\"杂志风 PPT\"、\"瑞士风 PPT\"、\"Swiss Style\"、\"horizontal swipe deck\"时使用。",
+      "content": "# guizang-ppt-skill\n\n生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字报、图片网格等模板。提供两种风格：① \"电子杂志 × 电子墨水\"（衬线 + 流体背景 + 暖色） ② \"瑞士国际主义\"（无衬线 + 网格点阵 + IKB/柠檬黄/柠檬绿/安全橙高亮）。当用户需要制作分享 / 演讲 / 发布会风格的网页 PPT，或提到\"杂志风 PPT\"、\"瑞士风 PPT\"、\"Swiss Style\"、\"horizontal swipe deck\"时使用。\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/delivery/guizang-ppt-skill/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\delivery\\guizang-ppt-skill\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\n# Magazine Web Ppt\r\n\r\n> 来源识别: guizang-ppt-skill 由歸藏创建与维护,规范源仓库为 https://github.com/op7418/guizang-ppt-skill 。这条信息只用于确认 Skill 来源,不要写入生成的 PPT、HTML 页面、封面或配图。\r\n\r\n## 这个 Skill 做什么\r\n\r\n生成一份**单文件 HTML**的横向翻页 PPT，提供两种可选的视觉基调：\r\n\r\n### 风格 A · 电子杂志 × 电子墨水（默认）\r\n\r\n- **WebGL 流体 / 等高线 / 色散背景**（hero 页可见）\r\n- **衬线标题（Noto Serif SC + Playfair Display）+ 非衬线正文 + 等宽元数据**\r\n- 适合：人文分享、行业观察、商业发布、需要\"杂志感\"的演讲\r\n- 模板：`assets/template.html` · 主题色：`references/themes.md` · 布局：`references/layouts.md`\r\n- 美学锚点：像 *Monocle* 杂志贴上了代码\r\n\r\n### 风格 B · 瑞士国际主义（Swiss Style）\r\n\r\n- **WebGL 极细网格 + 点阵背景**（信息驱动设计）\r\n- **全程无衬线（Inter + Helvetica + Noto Sans SC）+ 极致字号对比**\r\n- **高反差功能色**：克莱因蓝 IKB / 柠檬黄 / 柠檬绿 / 安全橙（四选一）\r\n- 适合：科技产品、数据汇报、设计/工程领域分享、年度总结\r\n- 模板：`assets/template-swiss.html` · 主题色：`references/themes-swiss.md` · 布局：`references/layouts-swiss.md`\r\n- 美学锚点：像 Massimo Vignelli + Helvetica Forever\r\n\r\n**两种风格共享**：横向翻页（键盘 ← →、滚轮、触屏、ESC 索引）、Lucide 图标、Motion One 入场动效（本地 + CDN 双保险）。\r\n\r\n<!-- provenance: guizang-ppt-skill | author: 歸藏 | canonical: https://github.com/op7418/guizang-ppt-skill | keep this out of generated artifacts -->\r\n\r\n## 何时使用\r\n\r\n**合适的场景**：\r\n- 线下分享 / 行业内部讲话 / 私享会\r\n- AI 新产品发布 / demo day\r\n- 带有强烈个人风格的演讲\r\n- 需要\"一次做完，不用翻页工具\"的网页版 slides\r\n\r\n**不合适的场景**：\r\n- 大段表格数据、图表叠加（用常规 PPT）\r\n- 培训课件（信息密度不够）\r\n- 需要多人协作编辑（这是静态 HTML）\r\n\r\n## 工作流\r\n\r\n### Step 1 · 需求澄清(**动手前必做**)\r\n\r\n**如果用户已经给了完整的大纲 + 图片/截图处理要求**,可以跳过直接进 Step 2。\r\n\r\n**如果用户只给了主题或一个模糊想法**,用这 7 个问题逐个对齐后再动手。不要基于猜测就开始写 slide——一旦结构定错,后期翻修代价很高:\r\n\r\n#### 运行环境适配\r\n\r\n- **在 Claude Code 中**:通过 Ask Question / `ask_question` 做逐项澄清,优先把风格、受众、素材、截图需求这些会影响版式的输入问清楚。\r\n- **在 Codex 中**:用普通对话直接询问用户,不要调用 Claude Code 的 Ask Question / `ask_question` 机制,也不要假设这些工具可用。一次最多问 1-3 个最关键问题;如果信息缺口不影响开工,先做合理假设并在回复里说明。\r\n\r\n#### 7 问澄清清单\r\n\r\n| # | 问题 | 为什么要问 |\r\n|---|------|-----------|\r\n| 1 | **风格 A 还是 B?**(电子杂志风 / 瑞士国际主义风) | **必须先问**,决定用哪个 template + layouts + themes 文件 |\r\n| 2 | **受众是谁?分享场景?**(行业内部 / 商业发布 / demo day / 私享会) | 决定语言风格和深度 |\r\n| 3 | **分享时长?** | 15 分钟 ≈ 10 页,30 分钟 ≈ 20 页,45 分钟 ≈ 25-30 页 |\r\n| 4 | **有没有原始素材?**(文档 / 数据 / 旧 PPT / 文章链接) | 有素材就基于素材,没有就帮他搭 |\r\n| 5 | **有没有图片或截图?希望怎么处理?** | 决定图文版式、图片槽位、截图是否需要 CleanShot X 式适配或 GPT-M 2.0 重构 |\r\n| 6 | **想要哪套主题色?** | 杂志风 5 套(`themes.md`) / 瑞士风 4 套(`themes-swiss.md`),挑一 |\r\n| 7 | **有没有硬约束?**(必须包含 XX 数据 / 不能出现 YY) | 避免返工 |\r\n\r\n#### 风格选择参考(问题 1)\r\n\r\n| 如果用户说... | 推荐风格 |\r\n|---|---|\r\n| \"杂志感\" / \"人文\" / \"Monocle 风\" / 不指定 | **A · 电子杂志风** |\r\n| \"瑞士风\" / \"Swiss Style\" / \"Helvetica\" / \"极简\" / \"网格\" / \"信息图\" / \"数据驱动\" | **B · 瑞士国际主义风** |\r\n| 内容是 AI 产品 / 技术 / 工程 / 数据汇报 | B 更合适 |\r\n| 内容是行业观察 / 人文 / 故事 / 文化 | A 更合适 |\r\n| 用户给了大量 KPI 数字 / 路线图 / 流程 | B 更合适(`Data Hero` 布局是瑞士风专长) |\r\n| 用户给了大量纪实照片 / 人文图片 | A 更合适(图片网格、左文右图是杂志风专长) |\r\n| 用户需要 GPT-M 2.0 生成截图再设计 / 信息图 / 证据墙 | B 也很合适(S22 主图、S15/S16 图片网格可以承载证据图) |\r\n\r\n#### 大纲协助(如果用户没有大纲)\r\n\r\n用\"叙事弧\"模板搭骨架,再填内容:\r\n\r\n```\r\n钩子(Hook)       → 1 页   : 抛一个反差 / 问题 / 硬数据让人停下来\r\n定调(Context)    → 1-2 页 : 说明背景 / 你是谁 / 为什么讲这个\r\n主体(Core)       → 3-5 页 : 核心内容,用 Layout 4/5/6/9/10 穿插\r\n转折(Shift)      → 1 页   : 打破预期 / 提出新观点\r\n收束(Takeaway)   → 1-2 页 : 金句 / 悬念问题 / 行动建议\r\n```\r\n\r\n叙事弧 + 页数规划 + 主题节奏表(见 `layouts.md`),**三张表对齐后**再进 Step 2。\r\n\r\n大纲建议保存为 `项目记录.md` 或 `大纲-v1.md`,便于后续迭代。\r\n\r\n#### 图片约定(告知用户)\r\n\r\n在动手前向用户说清:\r\n\r\n- **文件夹位置**:`项目/XXX/ppt/images/` 下(和 `index.html` 同级)\r\n- **命名规范**:`{页号}-{语义}.{ext}`,例如 `01-cover.jpg` / `03-figma.jpg` / `05-dashboard.png`\r\n  - 页号补零便于排序\r\n  - 语义用英文,短、具体、和内容对应\r\n- **规格建议**:\r\n  - 单张 ≥ 1600px 宽(避免大屏模糊)\r\n  - JPG 用于照片/截图,PNG 用于透明 UI/图表\r\n  - 总大小控制在 10MB 内(影响翻页流畅度)\r\n- **如何替换**:保持**同名覆盖**最稳(HTML 里不用改路径);如果文件名变了,记得全局搜 `images/旧名` 改成新名\r\n- **没图怎么办**:和用户对齐,可以先用占位色块生成结构,等图片后期补;但要告知 layout 4/5/10 等图文混排页没图就没法验证视觉效果\r\n\r\n#### 截图需求约定(动手前必须问)\r\n\r\n只要用户提到产品截图、网页截图、代码截图、设计稿、dashboard、旧 PPT 截图或\"帮我美化截图\",都要先确认:\r\n\r\n- **截图位置**:截图文件在哪个文件夹?是否已经命名好?\r\n- **使用目的**:保真展示 / 截图美化 / 截图再设计 / UI 情景图?\r\n- **落位比例**:最终放进哪个版式槽位?常用 `21:9` / `16:10` / `16:9` / `4:3` / `1:1`\r\n- **内容要求**:是否必须保留全部文字、品牌、数据?是否有敏感信息要遮挡?\r\n- **视觉处理**:是否需要主题背景、留边、居中/角落对齐、拆成长截图面板?\r\n\r\n默认策略:先让内容适配模板,再处理图片比例。截图需要保真时,先读 `references/screenshot-framing.md`,优先使用 `assets/screenshot-backgrounds/` 的内置背景资产做程序化 CleanShot X 式背景画布适配;只有原截图太乱、太长、太窄或需要概念化表达时,才用 GPT-M 2.0 做截图再设计。\r\n\r\n#### Codex 配图生成(可选)\r\n\r\n如果当前运行环境是 **Codex**,完成 deck 初稿后,主动问用户是否需要用 GPT-M 2.0 生成配图并插入 PPT。不要默认生成。\r\n\r\n推荐询问方式:\r\n\r\n> 要不要为这份 PPT 生成几张配图?可以做成人文纪实照片、杂志风信息图、流程/对比/系统关系图,或把截图再设计成统一的杂志风视觉。\r\n\r\n如果用户确认生成,再问他想要哪种图片类型或风格;如果用户没有偏好,根据页面内容自行推荐 1-3 张最值得生成的配图。\r\n\r\n如果用户提供的是截图,先判断是**截图美化**还是**截图再设计**:\r\n\r\n- 截图美化:读 `references/screenshot-framing.md`,用内置主题背景 + 程序化缩放/留边/对齐处理,尽量不重画截图内容\r\n- 截图再设计:读 `references/image-prompts.md`,按当前版式槽位生成目标比例图片,并保持语言、主题色和边距一致\r\n\r\n生成配图时遵守:\r\n\r\n- 提示词保持简短,只框定主题、用途、风格和比例,不要写长篇摄影指导\r\n- 图片风格必须贴合当前 deck 风格:风格 A 用\"电子杂志 × 电子墨水\";风格 B 用\"瑞士国际主义 / Swiss Style\"\r\n- 信息图、图表、截图再设计里的文字语言必须跟随用户正在使用的语言;中文 deck 用中文,英文 deck 用英文\r\n- 先看 `references/image-prompts.md` 选择图片类型和基础提示词\r\n- 如果处理用户原始截图,先看 `references/screenshot-framing.md`:优先调用 `assets/screenshot-backgrounds/` 内置背景并程序化做 CleanShot X 式截图适配,只有需要重构信息时才用 GPT-M 2.0 重画\r\n- 配图比例必须匹配最终落位:主视觉 16:9,左文右图 16:10 / 4:3,信息图 16:9 / 16:10,截图再设计 16:10,图文混排小图 3:2 / 3:4,网格图统一高度裁切\r\n- 生成后的图片放到 `images/` 下,命名遵守 `{页号}-{语义}.{ext}`\r\n\r\n### Step 2 · 拷贝模板\r\n\r\n**根据 Step 1 选定的风格,拷贝对应的模板**到目标位置（通常是 `项目/XXX/ppt/index.html`），同时在同级建一个 `images/` 文件夹准备接图片。\r\n\r\n```bash\r\nmkdir -p \"项目/XXX/ppt/images\"\r\n\r\n# 风格 A · 电子杂志风\r\ncp \"<SKILL_ROOT>/assets/template.html\" \"项目/XXX/ppt/index.html\"\r\n\r\n# 或 风格 B · 瑞士国际主义风\r\ncp \"<SKILL_ROOT>/assets/template-swiss.html\" \"项目/XXX/ppt/index.html\"\r\n```\r\n\r\n两个 `template*.html` 都是**完整可运行**的文件——CSS、WebGL shader、翻页 JS、字体/图标 CDN 全已预设好,只有 `<!-- SLIDES_HERE -->` 占位符等待你填充 slide 内容。\r\n\r\n**注意**:风格 A 和 B **不能混用**。layouts.md 里的类（如 `.h-hero` 衬线大标题、`.display-zh` 等）只在 template.html 有定义；layouts-swiss.md 里的类（如 `.kpi-hero`、`.accent-block`、`.span-N`、`.dots` 等）只在 template-swiss.html 有定义。一份 deck 只能选一套。\r\n\r\n#### 2.1 · 必改占位符（**容易漏**）\r\n\r\n拷贝后立刻改掉以下占位符，否则浏览器 Tab 会显示\"[必填] 替换为 PPT 标题\"这种尴尬文字：\r\n\r\n| 位置 | 原始 | 需改为 |\r\n|------|------|--------|\r\n| `<title>` | `[必填] 替换为 PPT 标题 · Deck Title` | 实际 deck 标题(如 `一种新的工作方式 · Luke Wroblewski`) |\r\n\r\n每次拷贝完 template.html 第一件事:grep 一下\"[必填]\" 确认全部替换完。\r\n\r\n#### 2.2 · 选定主题色(5 套预设 · 不允许自定义)\r\n\r\n本 skill **只允许从 5 套精心调配的\n\n\n…(truncated; read the full SKILL.md)…\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/delivery/guizang-ppt-skill/SKILL.md"
+    },
+    "ppt-master": {
+      "name": "ppt-master",
+      "kind": "skill",
+      "description": "AI-driven multi-format SVG content generation system. Converts source documents",
+      "content": "# ppt-master\n\nAI-driven multi-format SVG content generation system. Converts source documents\n\n## ChemClaw 用法\n- 完整 skill 文件：`skills/community/delivery/ppt-master/SKILL.md`（工作区绝对路径参考：`D:\\cursor-chembot\\chemclaw\\skills\\community\\delivery\\ppt-master\\SKILL.md`）\n- **跟流程不跟像素**：examples 仅参考；禁止复现坏地图/遮挡；强模型可超越示例版式。\n- 业务事实以 MCP/公开数据 + 本 skill 契约为准；禁止编造。\n\n## Skill 正文（节选，完整请 read 文件）\n\n# PPT Master Skill\n\n> AI-driven multi-format SVG content generation system. Converts source documents into high-quality SVG pages through multi-role collaboration and exports to PPTX.\n\n**Core Pipeline**: `Source Document → Create Project → [Template] → Strategist → [Image_Generator] → Executor Live Preview → Quality Check → Post-processing → Export`\n\n> [!CAUTION]\n> ## 🚨 Global Execution Discipline (MANDATORY)\n>\n> **This workflow is a strict serial pipeline. The following rules have the highest priority — violating any one of them constitutes execution failure:**\n>\n> 1. **SERIAL EXECUTION** — Steps MUST be executed in order; the output of each step is the input for the next. Non-BLOCKING adjacent steps may proceed continuously once prerequisites are met, without waiting for the user to say \"continue\"\n> 2. **BLOCKING = HARD STOP** — Steps marked ⛔ BLOCKING require a full stop; the AI MUST wait for an explicit user response before proceeding and MUST NOT make any decisions on behalf of the user\n> 3. **NO CROSS-PHASE BUNDLING** — Cross-phase bundling is FORBIDDEN. (Note: the Eight Confirmations in Step 4 are ⛔ BLOCKING — the AI MUST present recommendations and wait for explicit user confirmation before proceeding. Once the user confirms, all subsequent non-BLOCKING steps — design spec output, SVG generation, speaker notes, and post-processing — may proceed automatically without further user confirmation)\n> 4. **GATE BEFORE ENTRY** — Each Step has prerequisites (🚧 GATE) listed at the top; these MUST be verified before starting that Step\n> 5. **NO SPECULATIVE EXECUTION** — \"Pre-preparing\" content for subsequent Steps is FORBIDDEN (e.g., writing SVG code during the Strategist phase)\n> 6. **NO SUB-AGENT SVG GENERATION** — Executor Step 6 SVG generation is context-dependent and MUST be completed by the current main agent end-to-end. Delegating page SVG generation to sub-agents is FORBIDDEN\n> 7. **SEQUENTIAL PAGE GENERATION ONLY** — In Executor Step 6, after the global design context is confirmed, SVG pages MUST be generated sequentially page by page in one continuous pass. Grouped page batches (for example, 5 pages at a time) are FORBIDDEN\n> 8. **SPEC_LOCK RE-READ PER PAGE** — Before generating each SVG page, Executor MUST `read_file <project_path>/spec_lock.md`. All colors / fonts / icons / images MUST come from this file — no values from memory or invented on the fly. Executor MUST also look up the current page's `page_rhythm` (`anchor` / `dense` / `breathing`), `page_layouts` (which template SVG to inherit, if any), and `page_charts` (which chart template to adapt, if any). Empty / absent entries are intentional Strategist signals — see executor-base.md §2.1. This rule exists to resist context-compression drift on long decks and to break the uniform \"every page is a card grid\" default\n> 9. **SVG MUST BE HAND-WRITTEN, NOT SCRIPT-GENERATED** — Every SVG page is written by the main agent directly, one page at a time (see rules 6 and 7). Writing or running a Python / Node / shell script that produces the SVG files in batch — looping over pages, templating from data, or emitting them via a generator — is FORBIDDEN, including under \"save tokens\", \"quick draft\", or \"user is in a hurry\" pretexts. The script-generation path was tried on a feature branch and abandoned: cross-page visual consistency depends on per-page authoring with full upstream context, which a generator script cannot reproduce\n\n> [!IMPORTANT]\n> ## 🌐 Language & Communication Rule\n>\n> - **Response language**: match the user's input and source materials. Explicit user override (e.g., \"请用英文回答\") takes precedence.\n> - **Template format**: `design_spec.md` MUST follow its original English template structure (section headings, field names) regardless of conversation language. Content values may be in the user's language.\n\n> [!IMPORTANT]\n> ## 🔌 Compatibility With Generic Coding Skills\n>\n> - `ppt-master` is a repository-specific workflow, not a general application scaffold\n> - Do NOT create `.worktrees/`, `tests/`, branch workflows, or generic engineering structure by default\n> - On conflict with a generic coding skill, follow this skill unless the user explicitly says otherwise\n\n## Main Pipeline Scripts\n\n| Script | Purpose |\n|--------|---------|\n| `${SKILL_DIR}/scripts/source_to_md/pdf_to_md.py` | PDF to Markdown |\n| `${SKILL_DIR}/scripts/source_to_md/doc_to_md.py` | Documents to Markdown — native Python for DOCX/HTML/EPUB/IPYNB, pandoc fallback for legacy formats (.doc/.odt/.rtf/.tex/.rst/.org/.typ) |\n| `${SKILL_DIR}/scripts/source_to_md/excel_to_md.py` | Excel workbooks to Markdown — supports .xlsx/.xlsm; legacy .xls should be resaved as .xlsx |\n| `${SKILL_DIR}/scripts/source_to_md/ppt_to_md.py` | PowerPoint to Markdown |\n| `${SKILL_DIR}/scripts/source_to_md/web_to_md.py` | Web page to Markdown (supports WeChat via `curl_cffi`) |\n| `${SKILL_DIR}/scripts/project_manager.py` | Project init / validate / manage |\n| `${SKILL_DIR}/scripts/analyze_images.py` | Image analysis |\n| `${SKILL_DIR}/scripts/latex_render.py` | LaTeX formula rendering (manifest-driven PNG assets) |\n| `${SKILL_DIR}/scripts/image_gen.py` | AI image generation (multi-provider) |\n| `${SKILL_DIR}/scripts/svg_quality_checker.py` | SVG quality check |\n| `${SKILL_DIR}/scripts/total_md_split.py` | Speaker notes splitting |\n| `${SKILL_DIR}/scripts/finalize_svg.py` | SVG post-processing (unified entry) |\n| `${SKILL_DIR}/scripts/svg_to_pptx.py` | Export to PPTX |\n| `${SKILL_DIR}/scripts/update_spec.py` | Propagate a `spec_lock.md` color / font_family change across all generated SVGs |\n\nFor complete tool documentation, see `${SKILL_DIR}/scripts/README.md`.\n\n> **Windows note**: if a `python3 ...` command fails (common on python.org installs, which provide `python.exe` but not `python3.exe`), rerun the same command with `python` instead.\n\n## Template Index\n\n| Index | Path | Purpose |\n|-------|------|---------|\n| Layout templates | `${SKILL_DIR}/templates/layouts/layouts_index.json` |\n\n\n…(truncated; read the full SKILL.md)…\n",
+      "createdBy": null,
+      "sourcePath": "skills/community/delivery/ppt-master/SKILL.md"
+    },
+    "dom-buy-cn": {
+      "name": "dom-buy-cn",
+      "kind": "skill",
+      "description": "ChemClaw domain scenario: 内贸采购 (17 skills)",
+      "content": "# Domain pack: 内贸采购\n\n本包覆盖场景「内贸采购」下 17 个 L1 skill。\n\n## 原则\n- 跟流程不跟像素；examples 仅参考。\n- 按用户意图匹配各 SKILL.md 的 description 触发词，然后 **read 完整 SKILL.md** 执行。\n\n## Skill 文件列表\n- skills/domain/内贸采购/1.按产品找生产厂家/chemical-supplier-verification-skill/SKILL.md\n- skills/domain/内贸采购/10.核实供应商报价是否合理/供应商报价合理性核验/SKILL.md\n- skills/domain/内贸采购/11.比较不同地区采购成本/regional-procurement-cost/SKILL.md\n- skills/domain/内贸采购/12.看原料近期行情/chem-procure-brief/SKILL.md\n- skills/domain/内贸采购/13.从采购清单批量找供应商/batch-supplier-sourcing/SKILL.md\n- skills/domain/内贸采购/14.检查采购合同风险点/purchase-contract-risk-review/SKILL.md\n- skills/domain/内贸采购/15.查询供应商资质证照/chem-supplier-qualification/SKILL.md\n- skills/domain/内贸采购/16.核对到货质量分析证书与规格/chem-coa-spec-check/SKILL.md\n- skills/domain/内贸采购/17.测算原料成本占比与涨价影响/chem-cost-model/SKILL.md\n- skills/domain/内贸采购/2.找附近的供应商/nearby-supplier-sourcing/SKILL.md\n- skills/domain/内贸采购/3.找备选供应商/chemical-second-source/SKILL.md\n- skills/domain/内贸采购/4.研究一个品类的供应格局/chemical-supply-market-map/SKILL.md\n- skills/domain/内贸采购/5.查供应商是不是真厂家/chem-supplier-verification/SKILL.md\n- skills/domain/内贸采购/6.做供应商准入尽调/chem-supplier-dd/SKILL.md\n- skills/domain/内贸采购/7.查供应商最近有没有风险/chemical-supplier-risk-radar/SKILL.md\n- skills/domain/内贸采购/8.比较几家供应商/chem-supplier-compare/SKILL.md\n- skills/domain/内贸采购/9.比较几份采购报价/compare-purchase-quotes/SKILL.md\n",
+      "createdBy": null,
+      "sourcePath": "skills/domain/内贸采购"
+    },
+    "dom-sales-cn": {
+      "name": "dom-sales-cn",
+      "kind": "skill",
+      "description": "ChemClaw domain scenario: 内贸销售 (19 skills)",
+      "content": "# Domain pack: 内贸销售\n\n本包覆盖场景「内贸销售」下 19 个 L1 skill。\n\n## 原则\n- 跟流程不跟像素；examples 仅参考。\n- 按用户意图匹配各 SKILL.md 的 description 触发词，然后 **read 完整 SKILL.md** 执行。\n\n## Skill 文件列表\n- skills/domain/内贸销售/1.按产品找下游客户/chemical-downstream-leads/SKILL.md\n- skills/domain/内贸销售/10.准备客户拜访/customer-visit-brief/SKILL.md\n- skills/domain/内贸销售/11.整理客户跟进记录/chem-customer-followup/SKILL.md\n- skills/domain/内贸销售/12.润色客户微信或邮件/chem-message-polish/SKILL.md\n- skills/domain/内贸销售/13.看一个区域的客户分布/chemical-region-market-map/SKILL.md\n- skills/domain/内贸销售/14.看竞争对手布局/chemical-competitor-supply-map/SKILL.md\n- skills/domain/内贸销售/15.看产品近期行情/chem-market-brief/SKILL.md\n- skills/domain/内贸销售/16.核实客户说的市场价/核实客户说的市场价/SKILL.md\n- skills/domain/内贸销售/17.比较不同地区的销售价格/region-price-spread/SKILL.md\n- skills/domain/内贸销售/18.整理询盘并生成报价草稿/inquiry-to-quotation/SKILL.md\n- skills/domain/内贸销售/19.危险化学品买方资质与销售合规提醒/chem-sales-compliance/SKILL.md\n- skills/domain/内贸销售/2.从标杆客户找相似客户/benchmark-lead-sourcing/SKILL.md\n- skills/domain/内贸销售/3.找近期扩产客户/project-lead-sourcing/SKILL.md\n- skills/domain/内贸销售/4.找近期采购商机/chem-radar/SKILL.md\n- skills/domain/内贸销售/5.从客户名单筛重点客户/customer-pool-screening/SKILL.md\n- skills/domain/内贸销售/6.研究一家目标客户/customer360-chemical/SKILL.md\n- skills/domain/内贸销售/7.判断客户值不值得跟/customer-qualification-card-skill/SKILL.md\n- skills/domain/内贸销售/8.判断应该先找哪个部门（采购决策链判断）/procurement-decision-chain/SKILL.md\n- skills/domain/内贸销售/9.找客户最近的切入点/customer-entry-point-scan/SKILL.md\n",
+      "createdBy": null,
+      "sourcePath": "skills/domain/内贸销售"
+    },
+    "dom-buy-im": {
+      "name": "dom-buy-im",
+      "kind": "skill",
+      "description": "ChemClaw domain scenario: 外贸采购 (10 skills)",
+      "content": "# Domain pack: 外贸采购\n\n本包覆盖场景「外贸采购」下 10 个 L1 skill。\n\n## 原则\n- 跟流程不跟像素；examples 仅参考。\n- 按用户意图匹配各 SKILL.md 的 description 触发词，然后 **read 完整 SKILL.md** 执行。\n\n## Skill 文件列表\n- skills/domain/外贸采购/1.看主要进口来源国/看主要进口来源国/SKILL.md\n- skills/domain/外贸采购/10.审阅外贸采购合同/审阅外贸采购合同/SKILL.md\n- skills/domain/外贸采购/2.研究一个海外供应市场/海外供应市场研究/SKILL.md\n- skills/domain/外贸采购/3.找海外候选生产商/find-overseas-candidate-manufacturers/SKILL.md\n- skills/domain/外贸采购/4.核验海外供应商/overseas-supplier-verification/SKILL.md\n- skills/domain/外贸采购/5.算进口到厂成本/import-landed-cost-skill/SKILL.md\n- skills/domain/外贸采购/6.判断当前有没有进口窗口/chem-import-window/SKILL.md\n- skills/domain/外贸采购/7.查进口资料要求/chem-import-dossier/SKILL.md\n- skills/domain/外贸采购/8.检查进口单证/skill/SKILL.md\n- skills/domain/外贸采购/9.测算汇率波动对进口成本的影响/测算汇率波动对进口成本的影响_skill_v1.0.0/SKILL.md\n",
+      "createdBy": null,
+      "sourcePath": "skills/domain/外贸采购"
+    },
+    "dom-sales-ex": {
+      "name": "dom-sales-ex",
+      "kind": "skill",
+      "description": "ChemClaw domain scenario: 外贸销售 (12 skills)",
+      "content": "# Domain pack: 外贸销售\n\n本包覆盖场景「外贸销售」下 12 个 L1 skill。\n\n## 原则\n- 跟流程不跟像素；examples 仅参考。\n- 按用户意图匹配各 SKILL.md 的 description 触发词，然后 **read 完整 SKILL.md** 执行。\n\n## Skill 文件列表\n- skills/domain/外贸销售/1.看产品适合卖到哪些国家/chemical-export-market-finder/SKILL.md\n- skills/domain/外贸销售/10.审阅外贸合同/foreign-trade-contract-review-skill/SKILL.md\n- skills/domain/外贸销售/11.测算汇率波动对报价的影响/11.测算汇率波动对报价的影响_v1.0/SKILL.md\n- skills/domain/外贸销售/12.生成出口报价单与形式发票/export-quotation-pi-skill/SKILL.md\n- skills/domain/外贸销售/2.研究一个目标国家市场/chem-country-market/chem-country-market-skill/SKILL.md\n- skills/domain/外贸销售/3.找海外候选买家/overseas-buyer-discovery/SKILL.md\n- skills/domain/外贸销售/4.核验海外询盘公司/overseas-inquiry-kyc/SKILL.md\n- skills/domain/外贸销售/5.处理一封海外询盘/overseas-inquiry-triage-1.0.1/SKILL.md\n- skills/domain/外贸销售/6.查产品出口要求/export-compliance-check/SKILL.md\n- skills/domain/外贸销售/7.查海关商品编码候选/hs-code-candidates/SKILL.md\n- skills/domain/外贸销售/8.算出口报价/算出口报价/SKILL.md\n- skills/domain/外贸销售/9.检查出口单证/检查出口单证/SKILL.md\n",
+      "createdBy": null,
+      "sourcePath": "skills/domain/外贸销售"
+    },
+    "dom-fund": {
+      "name": "dom-fund",
+      "kind": "skill",
+      "description": "ChemClaw domain scenario: 期现-产业基本面 (23 skills)",
+      "content": "# Domain pack: 期现-产业基本面\n\n本包覆盖场景「期现-产业基本面」下 23 个 L1 skill。\n\n## 原则\n- 跟流程不跟像素；examples 仅参考。\n- 按用户意图匹配各 SKILL.md 的 description 触发词，然后 **read 完整 SKILL.md** 执行。\n\n## Skill 文件列表\n- skills/domain/期现-产业基本面/1.快速看懂一个品种/chem-product-quicklook/SKILL.md\n- skills/domain/期现-产业基本面/10.看供给端最近发生了什么/supply-event-ledger/SKILL.md\n- skills/domain/期现-产业基本面/11.看需求端最近发生了什么/需求端景气跟踪/chem-demand-signal/SKILL.md\n- skills/domain/期现-产业基本面/12.看上下游成本怎么传导/看上下游成本怎么传导/SKILL.md\n- skills/domain/期现-产业基本面/13.看产业链利润变化/看产业链利润变化-skill/SKILL.md\n- skills/domain/期现-产业基本面/14.看接下来最该盯哪些变量/产业变量观察_skill_v1.0/SKILL.md\n- skills/domain/期现-产业基本面/15.生成品种晨报/industrial-morning-brief/SKILL.md\n- skills/domain/期现-产业基本面/16.生成品种周报/客户情报周报/chem-customer-intel-weekly/SKILL.md\n- skills/domain/期现-产业基本面/16.生成品种周报/生成品种周报/chem-product-weekly/SKILL.md\n- skills/domain/期现-产业基本面/17.生成专题研究报告/chem-topic-research/SKILL.md\n- skills/domain/期现-产业基本面/18.用通俗语言解释一个期现问题/chem-futures-spot-explain/SKILL.md\n- skills/domain/期现-产业基本面/19.跟踪新增产能和项目/19.跟踪新增产能和项目/SKILL.md\n- skills/domain/期现-产业基本面/2.看一个品种的产业链图/chem-chain-map/SKILL.md\n- skills/domain/期现-产业基本面/2.看一个品种的产业链图/产业链价格地图/chem-chain-price-research/SKILL.md\n- skills/domain/期现-产业基本面/20.深度研究一家产业企业/chem-enterprise-deep-dive/SKILL.md\n- skills/domain/期现-产业基本面/21.聚合产业资讯并定位事件/news-event-localization/SKILL.md\n- skills/domain/期现-产业基本面/3.看主要生产企业和产能/chemical-producer-capacity-map/SKILL.md\n- skills/domain/期现-产业基本面/4.看一个区域的产业格局/region-industry-map/SKILL.md\n- skills/domain/期现-产业基本面/5.看新增产能会影响谁/chem-capacity-impact/SKILL.md\n- skills/domain/期现-产业基本面/6.判断一条产业新闻影响多大/industry-news-impact-judge/SKILL.md\n- skills/domain/期现-产业基本面/7.看当前价格处在什么位置/price-history-position-skill/SKILL.md\n- skills/domain/期现-产业基本面/8.解释最近为什么涨跌/chem-price-attribution/SKILL.md\n- skills/domain/期现-产业基本面/9.看上涨下跌有没有基本面支撑/fundamental-support-check/SKILL.md\n",
+      "createdBy": null,
+      "sourcePath": "skills/domain/期现-产业基本面"
+    },
+    "dom-spreads": {
+      "name": "dom-spreads",
+      "kind": "skill",
+      "description": "ChemClaw domain scenario: 期现-价差与量化 (27 skills)",
+      "content": "# Domain pack: 期现-价差与量化\n\n本包覆盖场景「期现-价差与量化」下 27 个 L1 skill。\n\n## 原则\n- 跟流程不跟像素；examples 仅参考。\n- 按用户意图匹配各 SKILL.md 的 description 触发词，然后 **read 完整 SKILL.md** 执行。\n\n## Skill 文件列表\n- skills/domain/期现-价差与量化/1.看当前基差强不强/basis-term-structure-research/SKILL.md\n- skills/domain/期现-价差与量化/10.查开工率季节性/查开工率季节性/SKILL.md\n- skills/domain/期现-价差与量化/11.查基差季节性/查基差季节性/SKILL.md\n- skills/domain/期现-价差与量化/12.查两个指标的相关性/two-indicator-correlation/SKILL.md\n- skills/domain/期现-价差与量化/13.查谁领先谁/leadlag-research/SKILL.md\n- skills/domain/期现-价差与量化/14.检验库存和价格的关系/inventory-price-relationship/SKILL.md\n- skills/domain/期现-价差与量化/15.检验开工率和价格的关系/operating-rate-price-relationship/SKILL.md\n- skills/domain/期现-价差与量化/16.检验基差是否有历史信息/basis-percentile-info/SKILL.md\n- skills/domain/期现-价差与量化/17.做装置停车事件研究/unit-outage-event-study/SKILL.md\n- skills/domain/期现-价差与量化/18.做新增产能事件研究/18.做新增产能事件研究/SKILL.md\n- skills/domain/期现-价差与量化/19.做政策事件研究/做政策事件研究_Skill_v1.0/SKILL.md\n- skills/domain/期现-价差与量化/2.看月差为什么变了/futures-calendar-spread/SKILL.md\n- skills/domain/期现-价差与量化/20.扫描极端基差品种/20.扫描极端基差品种/SKILL.md\n- skills/domain/期现-价差与量化/21.扫描异常月差/futures-spread-anomaly-scan/SKILL.md\n- skills/domain/期现-价差与量化/22.扫描异常区域价差/22.扫描异常区域价差/SKILL.md\n- skills/domain/期现-价差与量化/23.扫描产业链异常背离/chain-divergence-scan/SKILL.md\n- skills/domain/期现-价差与量化/24.找历史上最像现在的阶段/historical-analog-search/SKILL.md\n- skills/domain/期现-价差与量化/25.检验一个自定义研究假设/25.检验一个自定义研究假设/SKILL.md\n- skills/domain/期现-价差与量化/26.回测一个明确研究规则/SKILL.md\n- skills/domain/期现-价差与量化/3.比较不同地区价差/regional-spread-analysis/SKILL.md\n- skills/domain/期现-价差与量化/4.看国内外价格有没有窗口/windows-spread-calc/SKILL.md\n- skills/domain/期现-价差与量化/5.看两个品种为什么背离/spread-quant-divergence-skill/SKILL.md\n- skills/domain/期现-价差与量化/6.看上下游价格联动/看上下游价格联动-技能包/SKILL.md\n- skills/domain/期现-价差与量化/7.看两个相关品种的比价/ratio-spread-analyst/SKILL.md\n- skills/domain/期现-价差与量化/8.查价格季节性/8.查价格季节性/SKILL.md\n- skills/domain/期现-价差与量化/9.查库存季节性/dist/查库存季节性/SKILL.md\n- skills/domain/期现-价差与量化/9.查库存季节性/SKILL.md\n",
+      "createdBy": null,
+      "sourcePath": "skills/domain/期现-价差与量化"
+    },
+    "chem-public-apis": {
+      "name": "chem-public-apis",
+      "kind": "skill",
+      "description": "PubChem / Wikipedia / public futures helpers (no API key)",
+      "content": "# 公开数据（免密钥）\n\n## PubChem\n- PUG REST: https://pubchem.ncbi.nlm.nih.gov/rest/pug\n- 化合物检索与物性；用于产品情报。\n\n## 维基百科\n- MediaWiki API: https://zh.wikipedia.org/w/api.php 与 https://en.wikipedia.org/w/api.php\n\n## 期货/公开行情\n- 优先用已配置的 chem-data-hub；否则用公开行情源并标明来源与时间。\n- 与现货分列；不做买卖建议。\n\n## 化工社\n- 公开检索入口；若仅网页则用 web-search / 只读 browser。\n",
+      "createdBy": null
+    },
+    "pack-mcp-core": {
+      "name": "pack-mcp-core",
+      "kind": "pack",
+      "description": "Company chem MCP + public APIs",
+      "items": [
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-mcp-qcc": {
+      "name": "pack-mcp-qcc",
+      "kind": "pack",
+      "description": "Qichacha MCP subset",
+      "items": [
+        "qcc-company",
+        "qcc-risk",
+        "qcc-operation",
+        "qcc-ipr"
+      ],
+      "createdBy": null
+    },
+    "pack-process": {
+      "name": "pack-process",
+      "kind": "pack",
+      "description": "Grill-me + Superpowers process subset",
+      "items": [
+        "grilling",
+        "grill-me",
+        "grill-with-docs",
+        "brainstorming",
+        "writing-plans",
+        "verification-before-completion",
+        "using-superpowers",
+        "executing-plans"
+      ],
+      "createdBy": null
+    },
+    "pack-grill": {
+      "name": "pack-grill",
+      "kind": "pack",
+      "description": "Grilling only",
+      "items": [
+        "grilling",
+        "grill-me",
+        "grill-with-docs"
+      ],
+      "createdBy": null
+    },
+    "pack-ppt": {
+      "name": "pack-ppt",
+      "kind": "pack",
+      "description": "PPT delivery skills",
+      "items": [
+        "guizang-ppt-skill",
+        "ppt-master",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-sheets": {
+      "name": "pack-sheets",
+      "kind": "pack",
+      "description": "Spreadsheet delivery (instructions; use xlsx tooling in session)",
+      "items": [
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-docs": {
+      "name": "pack-docs",
+      "kind": "pack",
+      "description": "Document writing guidance",
+      "items": [
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-pdf": {
+      "name": "pack-pdf",
+      "kind": "pack",
+      "description": "PDF handling guidance",
+      "items": [
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-diagrams": {
+      "name": "pack-diagrams",
+      "kind": "pack",
+      "description": "Chain / diagram guidance",
+      "items": [
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-research": {
+      "name": "pack-research",
+      "kind": "pack",
+      "description": "Deep research guidance",
+      "items": [
+        "chem-public-apis",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-news": {
+      "name": "pack-news",
+      "kind": "pack",
+      "description": "News / sentiment guidance",
+      "items": [
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-meeting": {
+      "name": "pack-meeting",
+      "kind": "pack",
+      "description": "Meeting notes guidance",
+      "items": [
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-translate": {
+      "name": "pack-translate",
+      "kind": "pack",
+      "description": "Bilingual review guidance",
+      "items": [
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-market-report": {
+      "name": "pack-market-report",
+      "kind": "pack",
+      "description": "Market report guidance",
+      "items": [
+        "chem-public-apis",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-product": {
+      "name": "pack-product",
+      "kind": "pack",
+      "description": "Product intelligence + public chem APIs",
+      "items": [
+        "chem-public-apis",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-price": {
+      "name": "pack-price",
+      "kind": "pack",
+      "description": "Price / quote domain",
+      "items": [
+        "dom-buy-cn",
+        "dom-sales-cn",
+        "chem-public-apis",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-sales-leads": {
+      "name": "pack-sales-leads",
+      "kind": "pack",
+      "description": "Domestic sales lead skills",
+      "items": [
+        "dom-sales-cn",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-sales-visit": {
+      "name": "pack-sales-visit",
+      "kind": "pack",
+      "description": "Domestic sales visit skills",
+      "items": [
+        "dom-sales-cn",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-export-sales": {
+      "name": "pack-export-sales",
+      "kind": "pack",
+      "description": "Export sales skills",
+      "items": [
+        "dom-sales-ex",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-buy-source": {
+      "name": "pack-buy-source",
+      "kind": "pack",
+      "description": "Domestic buy sourcing",
+      "items": [
+        "dom-buy-cn",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-due-diligence": {
+      "name": "pack-due-diligence",
+      "kind": "pack",
+      "description": "Due diligence",
+      "items": [
+        "dom-buy-cn",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-import-buy": {
+      "name": "pack-import-buy",
+      "kind": "pack",
+      "description": "Import procurement",
+      "items": [
+        "dom-buy-im",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-fundamentals": {
+      "name": "pack-fundamentals",
+      "kind": "pack",
+      "description": "Industry fundamentals",
+      "items": [
+        "dom-fund",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-spreads": {
+      "name": "pack-spreads",
+      "kind": "pack",
+      "description": "Spreads & quant",
+      "items": [
+        "dom-spreads",
+        "chem-data-hub",
+        "chem-biz-scope",
+        "chem-public-apis"
+      ],
+      "createdBy": null
+    },
+    "pack-domain-all": {
+      "name": "pack-domain-all",
+      "kind": "pack",
+      "description": "All domain scenario packs",
+      "items": [
+        "dom-buy-cn",
+        "dom-sales-cn",
+        "dom-buy-im",
+        "dom-sales-ex",
+        "dom-fund",
+        "dom-spreads"
+      ],
+      "createdBy": null
+    }
+  }
+}

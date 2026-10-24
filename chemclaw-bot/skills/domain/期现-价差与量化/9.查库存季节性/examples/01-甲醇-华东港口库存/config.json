@@ -1,0 +1,58 @@
+{
+  "_comment": "查库存季节性 · 案例配置（甲醇 · 华东港口库存）。本文件驱动 scripts/build_cache.py 与 scripts/run_all.py。字段释义见 references/01-口径字典与数据契约.md",
+  "case_id": "MA-HUADONG-PORT",
+  "asof": "2026-10-14",
+  "run_date": "2026-10-20",
+  "product": "甲醇",
+  "metric_name": "华东甲醇港口库存（江苏+浙江）",
+  "unit": "万吨",
+  "frequency": "weekly",
+  "frequency_raw": "weekly",
+  "issuer": "隆众资讯",
+  "carrier": "我的钢铁网（Mysteel）能源化工频道转载",
+  "source_url_pattern": "https://nenghua.m.mysteel.com/a/{post_id}_abc.html",
+  "primary_metric_key": "east",
+  "metrics": {
+    "east": {
+      "label": "华东总计（江苏+浙江）",
+      "component_keys": ["jiangsu", "zhejiang"],
+      "inventory_class": "port",
+      "calendar": "iso_week",
+      "note": "本报告主口径"
+    },
+    "port_total": {
+      "label": "全国港口总计（华东+华南）",
+      "component_keys": ["east", "south"],
+      "inventory_class": "port",
+      "calendar": "iso_week",
+      "note": "仅作对照，含华南（广东+福建）"
+    }
+  },
+  "regions": {
+    "jiangsu": "江苏",
+    "zhejiang": "浙江",
+    "guangdong": "广东",
+    "fujian": "福建"
+  },
+  "samples": {
+    "A": {"label": "A 样本（2022-04 起，周度、逐地区披露）", "inventory_class": "port", "calendar": "iso_week", "role": "主样本"},
+    "B": {"label": "B 样本（2016-08~2018-05 回溯，简报加总、测试期不可得）", "inventory_class": "port", "calendar": "iso_week", "role": "敏感性对照，不进主统计"}
+  },
+  "breakpoints": [
+    {"date": "2018-05-24", "kind": "数据中继", "effect": "B 样本止于 2018-05-24，到 A 样本起点 2022-04-06 之间约 3.9 年无公开连续数据，两条序列不可拼接"},
+    {"date": "2022-04-06", "kind": "统计范围变更", "effect": "A 样本起点：逐地区口径自该期起可在公开原文逐期核验；此前仅零散简报，频率不可靠"},
+    {"date": "2026-07-01", "kind": "披露变更", "effect": "逐地区库存水平（江苏/浙江/广东/福建）停止公开，仅正文披露华东、华南周度增减量；华东水平值改为本人由增减量递推（east_derived）"},
+    {"date": "2026-07-22", "kind": "披露断档", "effect": "正文不再逐周给出区域增减量（或仅给出总量级），华东递推链中断；该周及之后主口径只能以“全国港口总计”作水平替代，与华东口径不可直接比较"}
+  ],
+  "exception_windows": [
+    {"name": "2026Q2 极端下行", "start": "2026-03-25", "end": "2026-07-15", "note": "连续 8 周去库、最大单周去库 12.76 万吨，绝对水平显著低于全部历史同期，非统计错误但属分布外事件"}
+  ],
+  "guardrails": {
+    "min_sample_years": 4,
+    "min_r2_seasonal": 0.60,
+    "min_freq_weekly_max_gap_days": 10,
+    "low_sample_years_flag": 5,
+    "weekly_band": ["p10", "p25", "p50", "p75", "p90"],
+    "default_sample_years": 5
+  }
+}

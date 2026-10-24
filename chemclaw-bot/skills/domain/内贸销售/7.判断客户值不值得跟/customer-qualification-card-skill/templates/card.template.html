@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>客户多维判断卡</title>
+<style>
+  :root{
+    --ink:#101a2c; --sub:#5b6a82; --line:#e2e8f1; --bg:#eef2f9;
+    --accent:#1e56c8; --deep:#0a2a66; --gold:#c8963c;
+    --g:#0f7b3f; --g-bg:#e2f5e9; --a:#9a5b00; --a-bg:#fdf0d3; --r:#b42318; --r-bg:#fde7e4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:
+      radial-gradient(1200px 500px at 10% -10%, #dfe9fb 0%, transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, #e6eefc 0%, transparent 55%),
+      var(--bg);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink); font-size:14px; line-height:1.6}
+  a{color:#2360d6;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .hidden{display:none!important}
+
+  .hero{background:linear-gradient(118deg,#081f4d 0%,#123a8a 45%,#2b6ede 100%);color:#fff;padding:36px 28px 28px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-140px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 62%)}
+  .hero-inner{max-width:1240px;margin:0 auto;position:relative;z-index:1}
+  .kicker{font-size:11px;letter-spacing:.32em;color:#a9c2ef;font-weight:600}
+  .hero h1{margin:8px 0 6px;font-size:29px;letter-spacing:.02em;font-weight:800}
+  .hero .lede{margin:0 0 16px;font-size:14.5px;color:#cfdcf6;max-width:860px}
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.26);border-radius:999px;padding:4px 13px;font-size:12px;color:#eef4ff}
+  .chip b{color:#fff;font-weight:700}
+
+  .wrap{max-width:1240px;margin:0 auto;padding:20px 24px 70px}
+  .market{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(16,40,90,.05)}
+  .market h2{margin:0 0 10px;font-size:13px;color:var(--sub);font-weight:700;letter-spacing:.08em}
+  .mk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+  .mk{background:#f7f9fd;border:1px solid #edf1f8;border-radius:10px;padding:9px 12px}
+  .mk .v{font-size:15.5px;font-weight:800;color:var(--deep)}
+  .mk .l{font-size:11.5px;color:var(--sub);margin-top:1px}
+  .mk .s{font-size:10.5px;color:#8d99ad;margin-top:2px}
+  .mk a{font-size:10.5px}
+
+  .toolbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:14px;box-shadow:0 6px 22px rgba(16,40,90,.07)}
+  .tb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .tb-title{font-size:13.5px;font-weight:800;color:var(--deep)}
+  .tb-title i{font-style:normal;font-weight:400;color:var(--sub);font-size:12px;margin-left:6px}
+  .presets{display:flex;flex-wrap:wrap;gap:7px}
+  .presets button{border:1px solid #c9d6ee;background:#f5f8ff;color:#1c4fbe;border-radius:9px;padding:6px 13px;font-size:12.5px;cursor:pointer;transition:.15s}
+  .presets button:hover{background:#e9f0ff}
+  .presets button.on{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(30,86,200,.35)}
+  #reset{border:1px dashed #c9d6ee;background:#fff;color:var(--sub);border-radius:9px;padding:6px 12px;font-size:12px;cursor:pointer}
+  .sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:8px 22px}
+  .sl{display:flex;align-items:center;gap:9px;font-size:12.5px}
+  .sl .sn{flex:0 0 64px;color:#3b4a63;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sl input[type=range]{flex:1;accent-color:var(--accent);height:4px}
+  .sl .wv{flex:0 0 26px;text-align:right;font-size:12px;font-weight:800;color:var(--accent)}
+  .tb-note{font-size:11.5px;color:#8b96a9;margin-top:9px}
+  .tb-note b{color:#5b6a82}
+
+  .viewbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:0 2px 12px}
+  .tabs{display:flex;gap:6px;background:#dfe7f4;border-radius:10px;padding:3px}
+  .tab{border:0;background:transparent;color:#4b5d7c;padding:6px 16px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .tab.on{background:#fff;color:var(--deep);box-shadow:0 1px 4px rgba(20,50,110,.15)}
+  .legend{font-size:11.5px;color:#7c8aa1}
+  .legend .bg{padding:1px 7px;border-radius:5px;margin:0 2px;font-weight:700}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(392px,1fr));gap:15px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;box-shadow:0 3px 14px rgba(16,40,90,.06);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(16,40,90,.11)}
+  .card.top1{border-color:#d9b76a;box-shadow:0 6px 26px rgba(200,150,60,.16)}
+  .ctop{display:flex;gap:11px;align-items:flex-start;border-bottom:1px dashed #e6ecf5;padding-bottom:11px;margin-bottom:4px}
+  .rank{flex:0 0 38px;height:38px;border-radius:11px;background:#eaf0fc;color:#1c4fbe;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+  .rank.gold{background:linear-gradient(135deg,#e8c36a,#c8963c);color:#fff;box-shadow:0 2px 8px rgba(200,150,60,.45)}
+  .ctop h3{margin:0;font-size:17px}
+  .ctop .code{font-size:11.5px;color:#8d99ad;font-weight:500;margin-left:7px}
+  .ctop .tags{font-size:11px;color:#6b7a92;margin-top:3px}
+  .score{margin-left:auto;text-align:right}
+  .score .v{font-size:22px;font-weight:800;color:var(--deep);line-height:1.1}
+  .score .t{font-size:10px;color:#98a2b3;letter-spacing:.05em}
+  .meta{display:flex;flex-wrap:wrap;gap:5px;margin:9px 0 3px}
+  .meta span{background:#f3f6fb;border:1px solid #e9eef7;border-radius:7px;padding:2px 8px;font-size:11px;color:#4b5d7c}
+  .meta span b{color:#1a2946}
+  .meta .pri{background:#fff4e5;border-color:#f2ddbd;color:#8a5a12;font-weight:700}
+  .dim{display:flex;gap:9px;padding:7px 0;border-top:1px solid #f1f4fa}
+  .badge{flex:0 0 40px;height:22px;border-radius:6px;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden}
+  .b-g{background:var(--g-bg);color:var(--g)}
+  .b-a{background:var(--a-bg);color:var(--a)}
+  .b-r{background:var(--r-bg);color:var(--r)}
+  .db{flex:1;min-width:0}
+  .dn{font-size:12.8px;font-weight:800;color:#22314b;display:flex;align-items:baseline;gap:6px}
+  .dn .sc{font-size:10.5px;font-weight:700;color:#8d99ad}
+  .dn .bs{font-size:9.5px;color:#8d99ad;border:1px solid #e3ebfa;border-radius:4px;padding:0 4px}
+  .dt{font-size:12px;color:#4b5d7c;margin-top:2px}
+  .src{margin-top:3px;display:flex;flex-wrap:wrap;gap:4px}
+  .src a{font-size:10.5px;background:#f2f6fe;border:1px solid #e3ebfa;border-radius:5px;padding:0 6px;color:#2360d6}
+  .best{margin-top:10px;background:linear-gradient(90deg,#f0f6ff,#f8fbff);border-left:3px solid var(--accent);border-radius:0 9px 9px 0;padding:7px 11px;font-size:12px;color:#22314b}
+  .best b{color:var(--accent);display:block;font-size:11px;letter-spacing:.06em;margin-bottom:1px}
+  .card .foot{margin-top:12px;display:flex;gap:8px}
+  .card .foot button{flex:1;border:1px solid #c9d6ee;background:#f7faff;color:#1c4fbe;border-radius:9px;padding:8px 0;font-size:12.5px;font-weight:700;cursor:pointer}
+  .card .foot button:hover{background:#e9f0ff}
+  .card .foot button.ghost{flex:0 0 auto;padding:8px 14px;background:#fff;color:#5b6a82;border-color:#d9e2f0}
+
+  .table-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:auto;box-shadow:0 3px 14px rgba(16,40,90,.06)}
+  table.cmp{border-collapse:collapse;width:100%;min-width:900px;font-size:12px}
+  .cmp th,.cmp td{border-bottom:1px solid #eef2f8;padding:8px 10px;text-align:left;vertical-align:middle}
+  .cmp thead th{background:#f4f7fd;color:#3b4a63;font-size:11.5px;letter-spacing:.03em;position:sticky;top:0}
+  .cmp tbody tr:hover{background:#f9fbff}
+  .cmp td.name{font-weight:800;color:#1a2946;min-width:150px}
+  .cmp td.name small{display:block;font-weight:500;color:#8d99ad;font-size:11px}
+  .cmp .cell{display:flex;align-items:center;gap:6px}
+  .cmp .cell .badge{flex:0 0 34px;height:20px;font-size:11px}
+  .cmp .cell em{font-style:normal;font-size:11px;color:#5b6a82}
+  .cmp td.tot{font-weight:800;color:var(--deep);font-size:14px}
+
+  #modal{position:fixed;inset:0;background:rgba(9,18,38,.55);backdrop-filter:blur(2px);display:none;z-index:80;overflow-y:auto;padding:28px 14px}
+  #modal .box{max-width:920px;margin:0 auto;background:#fff;border-radius:18px;padding:26px 30px 30px;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+  #modal .mhead{display:flex;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:6px}
+  #modal .mhead h2{margin:0;font-size:22px}
+  #modal .mhead .code{font-size:12px;color:#8d99ad;margin:2px 0 0}
+  #modal .mhead .dists{font-size:12px;color:#4b5d7c;margin-top:4px}
+  #modal .close{margin-left:auto;border:1px solid #d9e2f0;background:#fff;border-radius:9px;padding:6px 13px;cursor:pointer;font-size:12.5px;color:#4b5d7c}
+  #modal h4{margin:20px 0 8px;font-size:14px;color:var(--deep)}
+  .dl{padding:9px 0;border-top:1px solid #f1f4fa;display:flex;gap:10px}
+  .dl .badge{flex:0 0 46px;height:24px;font-size:12px}
+  .dl .db{flex:1}
+  .dl .dn{font-size:13px}
+  .dl .dt{font-size:12px;color:#4b5d7c;margin-top:3px}
+  .v-box{background:#f0f6ff;border-left:3px solid var(--accent);padding:10px 13px;border-radius:0 10px 10px 0;font-size:12.5px}
+  .v-box.warn{background:#fff8ee;border-color:#d99a2b}
+  .v-box.plan{background:#f2fbf5;border-color:#2f9e5c}
+  ul.asks{margin:6px 0;padding-left:20px}
+  ul.asks li{margin:6px 0;font-size:12.5px;color:#2c3a53}
+  ul.asks li b{color:#1a2946}
+  .srctbl{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:4px}
+  .srctbl th{background:#f4f7fd;color:#3b4a63;font-weight:700;text-align:left;padding:6px 8px;border-bottom:1px solid #e6ecf5;font-size:11px}
+  .srctbl td{padding:5px 8px;border-bottom:1px solid #f1f4fa;vertical-align:top}
+  .srctbl td.typ{color:#6b7a92;white-space:nowrap}
+  .mnote{font-size:11px;color:#98a2b3;margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+
+  footer{max-width:1240px;margin:26px auto 0;padding:0 24px;font-size:11.5px;color:#7c8aa1;line-height:1.8}
+  footer b{color:#4b5d7c}
+
+  @media (max-width:700px){
+    .hero h1{font-size:23px}
+    .cards{grid-template-columns:1fr}
+    .sliders{grid-template-columns:1fr}
+  }
+  @media print{
+    .toolbar,.viewbar,.card .foot{display:none!important}
+    .cards{grid-template-columns:1fr 1fr}
+    .hero{padding:18px}
+    .card{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">CUSTOMER QUALIFICATION · MULTI-DIMENSION CARD</div>
+    <h1 id="pageTitle">客户多维判断卡</h1>
+    <p class="lede" id="lede">不给你一个总分黑盒——每个维度给出事实、评级与依据；权重自己调、排序自己定，事实永远原样摆在卡上。</p>
+    <div class="chips" id="heroChips"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="market">
+    <h2 id="marketTitle">市场背景</h2>
+    <div class="mk-grid" id="mkGrid"></div>
+  </section>
+
+  <section class="toolbar">
+    <div class="tb-row">
+      <div class="tb-title">维度权重 <i>拖动后卡片实时重排，但每个维度的事实和评级不会变</i></div>
+      <div class="presets" id="presets"></div>
+    </div>
+    <div class="sliders" id="sliders"></div>
+    <div class="tb-note"><b>「排序参考分」= 各维度得分 × 权重 的加权平均</b>，只用于决定「先跟谁」，不是评级、不代表成交概率。事实、依据、疑点全部保留在卡片与详情里。</div>
+  </section>
+
+  <div class="viewbar">
+    <div class="tabs">
+      <button class="tab on" data-v="cards">卡片视图</button>
+      <button class="tab" data-v="table">对比表视图</button>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+  <div class="table-wrap hidden" id="tableWrap"><table class="cmp" id="cmpTable"></table></div>
+
+  <footer id="foot"></footer>
+</main>
+
+<div id="modal"><div class="box" id="modalBox"></div></div>
+
+<script>
+"use strict";
+const CARD = __CARD_DATA__;
+const META = CARD.meta || {};
+const DIMS = CARD.dimensions;
+const CUSTOMERS = CARD.customers;
+const PRESETS = CARD.presets && CARD.presets.length ? CARD.presets : [{key:"even",name:"均衡",weights:Object.fromEntries(DIMS.map(d=>[d.key,1]))}];
+const TH = Object.assign({high:75, mid:55}, META.thresholds || {});
+const KEY = "cqc-weights-v1";
+
+const $ = s => document.querySelector(s);
+const badgeCls = sc => sc >= TH.high ? "b-g" : (sc >= TH.mid ? "b-a" : "b-r");
+const evUrl = e => e && e.url ? e.url : "#";
+
+function defaultW(){ return Object.assign({}, PRESETS[0].weights); }
+function loadW(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s && DIMS.every(d => typeof s[d.key] === "number")) return s;
+  }catch(e){}
+  return defaultW();
+}
+let W = loadW();
+function saveW(){ try{ localStorage.setItem(KEY, JSON.stringify(W)); }catch(e){} }
+
+function total(c){
+  let s = 0, w = 0;
+  for (const d of DIMS){ s += (W[d.key]||0) * c.dims[d.key].score; w += (W[d.key]||0); }
+  return w ? s / w : 0;
+}
+
+function chipHTML(){
+  const chips = [];
+  chips.push(`<span class="chip">销售产品：<b>${META.product||""}</b></span>`);
+  if (META.seller) chips.push(`<span class="chip">卖家：<b>${META.seller}</b></span>`);
+  if (META.as_of) chips.push(`<span class="chip">判断时点：<b>${META.as_of}</b></span>`);
+  if (META.method_line) chips.push(`<span class="chip">判断口径：<b>${META.method_line}</b></span>`);
+  $("#heroChips").innerHTML = chips.join("");
+  $("#pageTitle").textContent = META.title || "客户多维判断卡";
+  if (META.lede) $("#lede").textContent = META.lede;
+  $("#marketTitle").textContent = "市场背景" + (META.as_of ? " · " + META.as_of : "");
+  $("#foot").innerHTML = META.footer ||
+    `<b>估算口径：</b>${META.estimate_note || "需求、运费、距离均为估算，成交前以客户确认数为准。"}<br>` +
+    `<b>数据来源：</b>上市公司定期报告与公告、政府公开函件、行业资讯与招标信息；链接见各卡「依据」与详情页来源表。`;
+  $("#legend").innerHTML =
+    `评级：<span class="bg b-g">高</span><span class="bg b-a">中</span><span class="bg b-r">低</span>` +
+    ` ｜ 阈值 ≥${TH.high} / ${TH.mid}–${TH.high-1} / <${TH.mid}（分数仅排序参考）`;
+}
+
+function mkHTML(){
+  const M = CARD.market || [];
+  if (!M.length){ $(".market").style.display = "none"; return; }
+  $("#mkGrid").innerHTML = M.map(m =>
+    `<div class="mk"><div class="v">${m.value||""}</div><div class="l">${m.metric||""}</div>` +
+    `<div class="s">${m.when||""}${m.source? " · "+m.source:""}${m.url? ` · <a href="${m.url}" target="_blank" rel="noopener">来源</a>`:""}</div></div>`
+  ).join("");
+}
+
+function dimHTML(c, d){
+  const x = c.dims[d.key];
+  const links = (x.evidence || []).slice(0, 2)
+    .map(e => `<a href="${evUrl(e)}" target="_blank" rel="noopener">${e.label || "依据"}</a>`).join("");
+  const basis = x.basis ? `<span class="bs">${x.basis}</span>` : "";
+  return `<div class="dim">
+    <span class="badge ${badgeCls(x.score)}">${x.level}</span>
+    <div class="db">
+      <div class="dn">${d.name}${basis}<span class="sc">${x.score} 分</span></div>
+      <div class="dt">${x.fact}</div>
+      <div class="src">${links}</div>
+    </div>
+  </div>`;
+}
+
+function cardHTML(c, rank){
+  return `<article class="card ${rank===1?"top1":""}" data-id="${c.id||c.name}">
+    <div class="ctop">
+      <div class="rank ${rank===1?"gold":""}">${rank}</div>
+      <div>
+        <h3>${c.name}<span class="code">${c.code||""}</span></h3>
+        <div class="tags">${c.tags||""}</div>
+      </div>
+      <div class="score"><div class="v">${total(c).toFixed(1)}</div><div class="t">排序参考分</div></div>
+    </div>
+    <div class="meta">
+      ${c.priority? `<span class="pri">${c.priority} ${c.priority_note||""}</span>`:""}
+      <span>📍 ${c.location||""}</span><span>🚚 ${c.distance||""}</span><span>📦 ${c.demand||""}</span>
+    </div>
+    ${DIMS.map(d => dimHTML(c, d)).join("")}
+    <div class="best"><b>最强积极信号</b>${c.best||""}</div>
+    <div class="foot">
+      <button onclick="openDetail('${c.id||c.name}')">查看完整判断卡 →</button>
+      <button class="ghost" onclick="openDetail('${c.id||c.name}')">依据与疑点</button>
+    </div>
+  </article>`;
+}
+
+function render(){
+  const sl = $("#sliders");
+  sl.innerHTML = DIMS.map(d =>
+    `<div class="sl"><span class="sn" title="${d.hint||""}">${d.name}</span>
+     <input type="range" min="0" max="3" step="0.5" value="${W[d.key]}" data-k="${d.key}">
+     <span class="wv">${(W[d.key]||0).toFixed(1)}</span></div>`).join("");
+  sl.querySelectorAll("input").forEach(inp => {
+    inp.oninput = e => {
+      W[e.target.dataset.k] = parseFloat(e.target.value);
+      document.querySelectorAll("#presets button[data-p]").forEach(b => b.classList.remove("on"));
+      saveW();
+      render();
+    };
+  });
+  const order = [...CUSTOMERS].sort((a, b) => total(b) - total(a));
+  $("#cards").innerHTML = order.map((c, i) => cardHTML(c, i + 1)).join("");
+  renderTable();
+}
+
+function renderTable(){
+  const order = [...CUSTOMERS].sort((a, b) => total(b) - total(a));
+  const head = `<thead><tr><th>客户</th>${DIMS.map(d => `<th title="${d.hint||""}">${d.name}</th>`).join("")}<th>排序分</th></tr></thead>`;
+  const body = order.map(c => `<tr>
+    <td class="name">${c.name}<small>${c.code||""} · ${c.distance||""}</small></td>
+    ${DIMS.map(d => { const x = c.dims[d.key];
+      return `<td><div class="cell"><span class="badge ${badgeCls(x.score)}">${x.level}</span><em>${x.score}</em></div></td>`; }).join("")}
+    <td class="tot">${total(c).toFixed(1)}</td></tr>`).join("");
+  $("#cmpTable").innerHTML = head + "<tbody>" + body + "</tbody>";
+}
+
+function collectSources(c){
+  const seen = new Set(), out = [];
+  DIMS.forEach(d => (c.dims[d.key].evidence || []).forEach(e => {
+    if (!e.url || seen.has(e.url)) return;
+    seen.add(e.url);
+    out.push({type: "依据", label: e.label || e.url, url: e.url, date: e.date || ""});
+  }));
+  (c.sources || []).forEach(s => {
+    if (!s.url || seen.has(s.url)) return;
+    seen.add(s.url);
+    out.push({type: s.type || "来源", label: s.label || s.url, url: s.url, date: s.date || ""});
+  });
+  return out;
+}
+
+function openDetail(id){
+  const c = CUSTOMERS.find(x => (x.id || x.name) === id);
+  if (!c) return;
+  const dims = DIMS.map(d => {
+    const x = c.dims[d.key];
+    const links = (x.evidence || []).map(e => `<a href="${evUrl(e)}" target="_blank" rel="noopener">${e.label || "依据"}</a>`).join(" ");
+    return `<div class="dl"><span class="badge ${badgeCls(x.score)}">${x.level}</span>
+      <div class="db"><div class="dn">${d.name}${x.basis? `<span class="bs">${x.basis}</span>`:""}<span class="sc">${x.score} 分</span></div>
+      <div class="dt">${x.fact}</div><div class="src">${links}</div></div></div>`;
+  }).join("");
+  const asks = (c.asks || []).map((a, i) =>
+    `<li><b>${i + 1}. ${a.q}</b><br><span style="color:#7c8aa1;font-size:11.5px">为什么问：${a.dim||""}${a.why? "｜"+a.why: ""}${a.who? "｜找" + a.who: ""}</span></li>`).join("");
+  const srcs = collectSources(c);
+  const srctbl = `<table class="srctbl"><thead><tr><th style="width:70px">类型</th><th>来源</th><th style="width:80px">日期</th><th style="width:90px">链接</th></tr></thead><tbody>
+    ${srcs.map(s => `<tr><td class="typ">${s.type}</td><td>${s.label}</td><td class="typ">${s.date}</td><td><a href="${s.url}" target="_blank" rel="noopener">打开</a></td></tr>`).join("")}
+  </tbody></table>`;
+  $("#modalBox").innerHTML = `
+    <div class="mhead">
+      <div><h2>${c.name}</h2><div class="code">${c.code||""}</div>
+      <div class="dists">📍 ${c.location||""}<br>🚚 ${c.distance||""} ｜ 📦 ${c.demand||""}${c.spend? " ｜ 💰 "+c.spend: ""}</div></div>
+      <button class="close" onclick="closeDetail()">关闭 ✕</button>
+    </div>
+    <h4>七维事实判断（评级只是锚点，依据在下面）</h4>
+    ${dims}
+    <h4>最强积极信号</h4><div class="v-box">${c.best||""}</div>
+    <h4>主要疑点（打单前先想清楚）</h4><div class="v-box warn">${(c.doubts||[]).map(t => "• " + t).join("<br>")}</div>
+    <h4>建议向客户确认的事项（问对了再投资源）</h4><ul class="asks">${asks}</ul>
+    <h4>跟进打法建议</h4><div class="v-box plan">${c.action||""}</div>
+    <h4>全部依据来源</h4>${srctbl}
+    <div class="mnote">判断时点 ${META.as_of||""}。需求、运费、距离为估算口径；评级阈值：高 ≥${TH.high}、中 ${TH.mid}–${TH.high-1}、低 &lt;${TH.mid}。分数仅用于排序，不代表成交概率。</div>`;
+  $("#modal").style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+function closeDetail(){ $("#modal").style.display = "none"; document.body.style.overflow = ""; }
+
+function renderPresets(){
+  $("#presets").innerHTML = PRESETS.map((p, i) =>
+    `<button data-p="${p.key}" class="${i===0?"on":""}">${p.name}</button>`).join("") +
+    `<button id="reset">重置权重</button>`;
+  document.querySelectorAll("#presets button[data-p]").forEach(b => {
+    b.onclick = () => {
+      const p = PRESETS.find(x => x.key === b.dataset.p);
+      W = Object.assign({}, p.weights);
+      saveW();
+      document.querySelectorAll("#presets button[data-p]").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
+      render();
+    };
+  });
+  $("#reset").onclick = () => {
+    W = Object.assign({}, PRESETS[0].weights);
+    saveW();
+    document.querySelectorAll("#presets button[data-p]").forEach((x, i) => x.classList.toggle("on", i === 0));
+    render();
+  };
+}
+
+document.querySelectorAll(".tab").forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
+    t.classList.add("on");
+    const v = t.dataset.v;
+    $("#cards").classList.toggle("hidden", v !== "cards");
+    $("#tableWrap").classList.toggle("hidden", v !== "table");
+  };
+});
+$("#modal").onclick = e => { if (e.target.id === "modal") closeDetail(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+
+chipHTML(); mkHTML(); renderPresets(); render();
+</script>
+</body>
+</html>

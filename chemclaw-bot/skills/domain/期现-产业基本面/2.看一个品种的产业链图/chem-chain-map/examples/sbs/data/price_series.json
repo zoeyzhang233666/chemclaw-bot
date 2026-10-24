@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "chain_id": "SBS",
+    "window": "公开可见窗口为近 7 个交易日（30 日数据需登录，本工具不做绕过）；抓取日 2026-10-20",
+    "series_catalog_note": "每条序列给出 node_id、点位口径、地区、含税口径、来源。status=manual 表示人工登记（链接可验证但数值需登录），不得用于画价格曲线。",
+    "seo_id_range_note": "隆众 seo 价格页 ID 空间为 1~329（>329 返回 404），SBS/SIS/SEBS/丁苯橡胶无 seo 页，只能通过企业价格表（会员）获取——这是本图谱价格层的真实缺口。"
+  },
+  "series": [
+    {"id": "PR_CRUDE", "node_id": "N_CRUDE", "product": "原油", "source": "oilchem_seo", "seo_id": "111", "basis": "原油综合现货均价", "region": "全国/进口", "unit": "元/吨", "tax": "含税", "available": false, "gap": "seo-111 页面存在但不含均价表（原油以美元/桶滚动报价为主），需改用 Brent/Dubai 或 SC 期货口径"},
+    {"id": "PR_ETH", "node_id": "N_ETH", "product": "乙烯", "source": "oilchem_seo", "seo_id": "128", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true},
+    {"id": "PR_BD", "node_id": "N_BD", "product": "丁二烯", "source": "oilchem_seo", "seo_id": "129", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true},
+    {"id": "PR_BZ", "node_id": "N_BZ", "product": "纯苯", "source": "oilchem_seo", "seo_id": "132", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true},
+    {"id": "PR_C8A", "node_id": "N_C8A", "product": "二甲苯（混合）", "source": "oilchem_seo", "seo_id": "134", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "caveat": "混合二甲苯≠单一异构体，作为 C8 芳烃价格锚点使用"},
+    {"id": "PR_SM", "node_id": "N_SM", "product": "苯乙烯", "source": "oilchem_seo", "seo_id": "135", "basis": "全国主流市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true},
+    {"id": "PR_EB", "node_id": "N_EB", "product": "乙苯", "source": "oilchem_seo", "seo_id": "262", "basis": "乙苯市场均价（品种页存在）", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "caveat": "乙苯商品量小、样本少，价格代表性弱于苯乙烯；适合做『乙苯-苯乙烯价差』而非绝对成本"},
+    {"id": "PR_C4", "node_id": "N_C4BE", "product": "裂解 C4 混合馏分", "source": "manual", "basis": "无全国统一公开均价（多为企业内部互供/竞价）", "region": "—", "unit": "元/吨", "tax": "—", "available": false, "gap": "裂解 C4 无公开均价序列，只能通过丁二烯/醚后C4 间接观察"},
+    {"id": "PR_NAPHTHA", "node_id": "N_NAPHTHA", "product": "石脑油", "source": "manual", "basis": "价格中心有石脑油品种页", "region": "全国", "unit": "元/吨", "tax": "含税", "available": false, "gap": "本轮未定位到可公开抓取的 seo 页面，按缺口登记", "dc_link": "https://dc.oilchem.net/page/#/list?varietiesId=3091&name=石脑油"},
+    {"id": "PR_LPG", "node_id": "N_LPG", "product": "液化石油气/丙烷", "source": "oilchem_seo", "seo_id": "265", "basis": "丙烷市场价（替代 LPG 观察点）", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true, "caveat": "以丙烷代 LPG 观察轻质裂解原料成本，不是同一品种"},
+    {"id": "PR_ASPHALT", "node_id": "N_ASPHALT", "product": "重交沥青/道路沥青", "source": "oilchem_seo", "seo_id": "280", "basis": "重交沥青市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true},
+    {"id": "PR_RUBBER_OIL", "node_id": "N_IPP_SSBR", "product": "橡胶油", "source": "oilchem_seo", "seo_id": "272", "basis": "橡胶油市场均价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": true},
+    {"id": "PR_SBS", "node_id": "N_PRIMARY", "product": "SBS", "source": "manual", "basis": "出厂价一览表（分干胶/道改料/油胶，分企业）", "region": "全国", "unit": "元/吨", "tax": "含税(出厂)", "available": false, "gap": "SBS 出厂价一览表需会员登录；公开可见仅为『价格序列存在』（卓创/隆众日更），按缺口登记", "dc_link": "https://dc.oilchem.net/page/#/list?varietiesId=268&name=SBS"},
+    {"id": "PR_SIS", "node_id": "N_SIS", "product": "SIS", "source": "manual", "basis": "出厂价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": false, "gap": "无 seo 页、需会员"},
+    {"id": "PR_SEBS", "node_id": "N_SEBS", "product": "SEBS", "source": "manual", "basis": "出厂价/市场价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": false, "gap": "无 seo 页、需会员"},
+    {"id": "PR_SBR", "node_id": "N_SBR", "product": "丁苯橡胶（乳聚 1502）", "source": "manual", "basis": "出厂价", "region": "全国", "unit": "元/吨", "tax": "含税", "available": false, "gap": "公开快讯可查（如中石油华东抚顺1502 库提价），但区间序列需会员"}
+  ]
+}

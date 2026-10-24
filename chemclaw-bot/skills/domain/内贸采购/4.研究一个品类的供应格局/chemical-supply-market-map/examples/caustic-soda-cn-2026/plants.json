@@ -1,0 +1,13 @@
+{
+ "_note": "精简示例：只收录公开披露/行业常被引用的代表性氯碱企业，用于演示结构；产能为量级估计，必须以最新年报/协会数据替换后再使用。",
+ "plants": [
+  {"id": "CS01", "company_id": "中泰化学", "site": "阜康能源", "province": "新疆", "city": "昌吉", "lat": 44.15, "lon": 87.98, "route": "离子膜法", "capacity_base": 180, "capacity_forward": 180, "product": "液碱/片碱/PVC", "raw": "原盐+煤电", "status": "在产", "listed": "002092", "source": "S4", "note": "示例量级：新疆煤电一体化氯碱"},
+  {"id": "CS02", "company_id": "中泰化学", "site": "托克逊能化", "province": "新疆", "city": "吐鲁番", "lat": 42.79, "lon": 88.65, "route": "离子膜法", "capacity_base": 60, "capacity_forward": 60, "product": "液碱/PVC", "raw": "原盐+煤电", "status": "在产", "listed": "002092", "source": "S4", "note": "示例量级"},
+  {"id": "CS03", "company_id": "氯碱化工", "site": "漕泾基地", "province": "上海", "city": "上海", "lat": 30.78, "lon": 121.42, "route": "离子膜法", "capacity_base": 72, "capacity_forward": 72, "product": "液碱/片碱", "raw": "原盐+网电", "status": "在产", "listed": "600618", "source": "S4", "note": "示例量级：华东高价位市场"},
+  {"id": "CS04", "company_id": "新疆天业", "site": "石河子基地", "province": "新疆", "city": "石河子", "lat": 44.31, "lon": 86.08, "route": "离子膜法", "capacity_base": 120, "capacity_forward": 120, "product": "液碱/PVC", "raw": "原盐+煤电", "status": "在产", "listed": "600075", "source": "S4", "note": "示例量级"},
+  {"id": "CS05", "company_id": "陕西北元", "site": "神木锦界", "province": "陕西", "city": "榆林", "lat": 38.83, "lon": 110.49, "route": "离子膜法", "capacity_base": 110, "capacity_forward": 110, "product": "液碱/片碱/PVC", "raw": "原盐+煤电", "status": "在产", "listed": "002082", "source": "S4", "note": "示例量级"},
+  {"id": "CS06", "company_id": "宜宾天原", "site": "宜宾基地", "province": "四川", "city": "宜宾", "lat": 28.77, "lon": 104.62, "route": "离子膜法", "capacity_base": 55, "capacity_forward": 55, "product": "液碱/片碱/PVC", "raw": "原盐+电力", "status": "在产", "listed": "002386", "source": "S4", "note": "示例量级：西南市场"},
+  {"id": "CS07", "company_id": "沈阳化工", "site": "沈阳基地", "province": "辽宁", "city": "沈阳", "lat": 41.80, "lon": 123.43, "route": "离子膜法", "capacity_base": 45, "capacity_forward": 45, "product": "液碱/PVC", "raw": "原盐+网电", "status": "在产", "listed": "000698", "source": "S4", "note": "示例量级"},
+  {"id": "CS08", "company_id": "山东海化", "site": "潍坊碱厂配套氯碱", "province": "山东", "city": "潍坊", "lat": 37.02, "lon": 119.13, "route": "离子膜法", "capacity_base": 40, "capacity_forward": 40, "product": "液碱/氯产品", "raw": "原盐+自备电", "status": "在产", "listed": "000822", "source": "S4", "note": "示例量级：与纯碱共享原盐资源"}
+ ]
+}

@@ -1,0 +1,35 @@
+{
+  "family": "<品种族>",
+  "family_code": "<code>",
+  "scope_note": "本文件只适用于 <品种>。<品种> 的口径规则不得作为其他品种的默认规则；其他品种须新建 specs/<code>.json。",
+  "product": {
+    "cn_name": "<品种中文名>",
+    "aliases": [],
+    "cas": "",
+    "hs": "",
+    "unit_canonical": "元/吨",
+    "exchange_traded": false,
+    "futures": null
+  },
+  "vat_rate": 0.13,
+  "spec_terms": {
+    "<供应商可能写的规格词>": {"grade": "<映射到的等级>", "purity": "<含量>", "premium": "<相对位置，须有依据>"}
+  },
+  "regions": {
+    "<区域>": {"primary": "<计价基准点>", "sub": [], "basis": "<价格口径>"}
+  },
+  "delivery_bases": {
+    "出厂": "工厂车板交货",
+    "到厂": "含运至买方工厂",
+    "库提": "仓库/罐区提货",
+    "到港": "CFR/CIF 到港"
+  },
+  "packing": {
+    "散水": {"unit": "槽车", "adj": 0},
+    "吨桶": {"unit": "IBC 1000L", "adj_gap": "需供应商确认"}
+  },
+  "annual_anchors": [],
+  "events": [],
+  "gaps_declared": ["<该品种拿不到哪些数据>"],
+  "comparability_notes": {}
+}

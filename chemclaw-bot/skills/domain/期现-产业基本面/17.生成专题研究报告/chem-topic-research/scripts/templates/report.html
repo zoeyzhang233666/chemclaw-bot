@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#070b14;--bg2:#0b1120;--panel:rgba(255,255,255,.040);--panel2:rgba(255,255,255,.066);
+  --line:rgba(255,255,255,.088);--line2:rgba(255,255,255,.17);
+  --txt:#e9eefb;--txt2:#a8b6d1;--txt3:#73829e;
+  --blue:#4da3ff;--cyan:#38d6e0;--violet:#9b8cff;--amber:#f6b73c;--red:#ff6b7a;--green:#22c98a;--pink:#f472b6;
+  --k-fact:#4da3ff;--k-calc:#22c98a;--k-expl:#9b8cff;--k-judge:#f6b73c;--k-gap:#ff6b7a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--txt);font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100%}
+body{padding:0 0 100px;background:
+ radial-gradient(1200px 620px at 6% -8%,rgba(77,163,255,.16),transparent 60%),
+ radial-gradient(1000px 560px at 94% -6%,rgba(155,140,255,.12),transparent 62%),
+ radial-gradient(900px 700px at 50% 110%,rgba(34,201,138,.06),transparent 60%),
+ linear-gradient(180deg,#070b14,#080d18 55%,#060a12)}
+.wrap{max-width:1520px;margin:0 auto;padding:0 26px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-family:"JetBrains Mono",Consolas,"SF Mono",monospace;font-variant-numeric:tabular-nums}
+header{padding:28px 0 14px}
+.topline{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--txt3);flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--txt2)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,201,138,.14)}
+h1{font-size:33px;letter-spacing:-.4px;margin:14px 0 8px;font-weight:800;line-height:1.28}
+h1 .thin{font-weight:300;color:var(--txt2)}
+.sub{color:var(--txt2);font-size:14.5px;line-height:1.75;max-width:1180px}
+.warnbar{margin-top:14px;display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-radius:12px;border:1px solid rgba(246,183,60,.26);background:linear-gradient(90deg,rgba(246,183,60,.10),rgba(246,183,60,.02));font-size:13px;color:#ecd9ab;line-height:1.65}
+.warnbar .ic{color:var(--amber);font-weight:800;flex:none}
+.ctrl{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(7,11,20,.90);border-bottom:1px solid var(--line);padding:10px 0;margin-top:16px}
+.ctrlrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ctrlrow .sp{flex:1}
+.ghost{border:1px solid var(--line2);background:transparent;color:var(--txt2);font-size:12.5px;padding:7px 12px;border-radius:8px;cursor:pointer;font-family:inherit;transition:.16s}
+.ghost:hover{color:#fff;border-color:#4a5f86;background:rgba(255,255,255,.05)}
+.ghost.on{background:#243452;color:#fff;border-color:#3b5480}
+.keystatus{font-size:12px;color:var(--txt3)}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px;margin:20px 0 6px}
+.kpi{background:linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.020));border:1px solid var(--line);border-radius:14px;padding:14px 15px;position:relative;overflow:hidden;cursor:pointer;transition:.18s}
+.kpi:hover{border-color:var(--line2);transform:translateY(-2px)}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--k)}
+.kpi .lab{font-size:11.5px;color:var(--txt3);letter-spacing:.3px}
+.kpi .big{font-size:23px;font-weight:800;margin:7px 0 4px;letter-spacing:-.4px}
+.kpi .big small{font-size:12px;font-weight:500;color:var(--txt3);margin-left:3px}
+.kpi .small{font-size:11.5px;color:var(--txt2);line-height:1.5}
+.kpi.tone-blue{--k:var(--blue)}.kpi.tone-red{--k:var(--red)}.kpi.tone-green{--k:var(--green)}
+.kpi.tone-amber{--k:var(--amber)}.kpi.tone-violet{--k:var(--violet)}
+.grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin:18px 0}
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.card h3{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3 .tip{font-size:11.5px;color:var(--txt3);font-weight:400}
+.concl{cursor:pointer;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:13px 15px;margin-bottom:10px;transition:.16s;position:relative}
+.concl:hover{border-color:#3b5480;background:rgba(255,255,255,.055)}
+.concl .head{display:flex;gap:9px;align-items:center;margin-bottom:7px;flex-wrap:wrap}
+.concl .rank{width:22px;height:22px;border-radius:6px;background:#243452;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#cfe0ff}
+.concl .txt{font-size:13.5px;line-height:1.7;color:#dbe4f5}
+.concl .more{margin-top:9px;font-size:11.5px;color:var(--txt3)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid transparent;white-space:nowrap}
+.b-fact{color:#9ccaff;background:rgba(77,163,255,.13);border-color:rgba(77,163,255,.3)}
+.b-calc{color:#7ff0c2;background:rgba(34,201,138,.13);border-color:rgba(34,201,138,.3)}
+.b-expl{color:#c7bcff;background:rgba(155,140,255,.13);border-color:rgba(155,140,255,.3)}
+.b-judge{color:#ffd992;background:rgba(246,183,60,.13);border-color:rgba(246,183,60,.3)}
+.b-gap{color:#ffaeb6;background:rgba(255,107,122,.13);border-color:rgba(255,107,122,.3)}
+.b-conf{color:var(--txt2);background:rgba(255,255,255,.05);border-color:var(--line2)}
+section.sec{margin:34px 0 0;scroll-margin-top:70px}
+.sec .stitle{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sec .sno{font-size:12px;color:var(--blue);letter-spacing:1px;font-weight:700}
+.sec h2{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.sec .pack{font-size:11px;color:var(--txt3);border:1px solid var(--line);padding:2px 8px;border-radius:999px}
+.lede{margin:12px 0 6px;color:#c3cfe6;font-size:14px;line-height:1.85;max-width:1200px}
+.para{margin:12px 0;font-size:13.5px;line-height:1.95;color:#c8d3e8}
+.chartbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px 10px;margin:16px 0}
+.chartbox .ch{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.chartbox .ch h4{font-size:14px;font-weight:700}
+.chartbox .ch .src{font-size:11px;color:var(--txt3)}
+.chartbox .cnv{width:100%;height:300px}
+.chartbox .cnv.tall{height:380px}
+.chartbox .foot{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:var(--txt3);border-top:1px dashed var(--line);margin-top:6px;padding-top:8px;flex-wrap:wrap}
+.chartbox .note{line-height:1.6;max-width:78%}
+.mini{font-size:11.5px;color:var(--txt3);border:1px solid var(--line);border-radius:8px;padding:3px 9px;cursor:pointer;background:transparent;font-family:inherit}
+.mini:hover{color:#fff;border-color:#4a5f86}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+table.tb{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:12px 0}
+.tb th{background:rgba(255,255,255,.05);color:#b9c8e6;text-align:left;padding:9px 11px;font-weight:600;font-size:12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tb td{padding:8px 11px;border-bottom:1px solid rgba(255,255,255,.05);color:#ccd7ec;vertical-align:top;line-height:1.65}
+.tb tr:hover td{background:rgba(255,255,255,.035)}
+.tb-conf td{border-bottom:1px solid rgba(255,255,255,.03)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.callout{border-radius:12px;padding:13px 16px;margin:14px 0;border:1px solid var(--line);font-size:13px;line-height:1.8;background:rgba(255,255,255,.03)}
+.callout .ct{font-weight:700;margin-bottom:5px;display:flex;gap:8px;align-items:center}
+.callout.info{border-color:rgba(77,163,255,.25);background:rgba(77,163,255,.06)}
+.callout.warn{border-color:rgba(246,183,60,.28);background:rgba(246,183,60,.06)}
+.callout.gap{border-color:rgba(255,107,122,.28);background:rgba(255,107,122,.06)}
+.calcbox{border:1px solid rgba(34,201,138,.24);background:rgba(34,201,138,.05);border-radius:14px;padding:15px 17px;margin:16px 0}
+.calcbox .ctop{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.calcbox .ctop h4{font-size:14px}
+.calcbox .formula{margin-top:10px;font-family:"JetBrains Mono",Consolas,monospace;font-size:12.5px;line-height:1.85;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:#bfe9d6;white-space:pre-wrap;word-break:break-word}
+.calcbox .kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin-top:10px;font-size:12.5px;color:#c8d3e8}
+.calcbox .kv .k{color:var(--txt3)}
+.chainwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+@media(max-width:1000px){.chainwrap{grid-template-columns:1fr}}
+.chaincol h4{font-size:12.5px;color:var(--txt3);margin-bottom:8px;letter-spacing:.4px}
+.chaincol .node{background:rgba(255,255,255,.04);border:1px solid var(--line);border-left:3px solid var(--c,var(--blue));border-radius:10px;padding:9px 12px;margin-bottom:8px}
+.chaincol .node b{font-size:13px}
+.chaincol .node p{font-size:11.5px;color:var(--txt3);margin-top:3px;line-height:1.55}
+.qual-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.qual{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:rgba(255,255,255,.03)}
+.qual .t{font-size:11.5px;color:var(--txt3);margin-bottom:7px}
+.qual .v{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--txt3);line-height:1.9}
+/* 证据面板 */
+.scrim{position:fixed;inset:0;background:rgba(3,6,12,.55);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;height:100vh;width:min(560px,96vw);background:#0a0f1c;border-left:1px solid var(--line2);transform:translateX(102%);transition:transform .26s cubic-bezier(.3,.8,.3,1);z-index:90;display:flex;flex-direction:column}
+.panel.on{transform:none}
+.panel .ph{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.panel .ph b{font-size:14px}
+.panel .pb{overflow:auto;padding:16px 18px 40px;font-size:13px;line-height:1.8}
+.ev{border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:10px;background:rgba(255,255,255,.03)}
+.ev .et{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.ev p{color:var(--txt2);font-size:12.5px}
+.ev .url{font-size:11px;word-break:break-all;color:var(--blue)}
+.modal{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;background:rgba(3,6,12,.7);padding:24px}
+.modal.on{display:flex}
+.modal .mx{background:#0a0f1c;border:1px solid var(--line2);border-radius:16px;max-width:1100px;width:100%;max-height:86vh;display:flex;flex-direction:column}
+.modal .mh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.modal .mh b{font-size:14px}
+.modal .mb{overflow:auto;padding:12px 18px 26px}
+.mb table.tb{font-size:11.8px}
+.mb .rawhint{font-size:11.5px;color:var(--txt3);margin:6px 0 10px}
+.paste{display:none}
+.paste.on{display:block}
+.reorderbar{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:60;background:rgba(10,15,28,.94);border:1px solid var(--line2);border-radius:999px;padding:8px 14px;font-size:12.5px;color:var(--txt2);display:none;gap:10px;align-items:center}
+.reorderbar.on{display:flex}
+.sec .sh{position:relative}
+.sec.ordering{border:1px dashed rgba(77,163,255,.4);border-radius:14px;padding:10px 12px;background:rgba(77,163,255,.03)}
+.sec.ordering .sno:before{content:"≡ ";color:var(--amber)}
+.chartbox .cnv[data-empty="1"]{display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:12.5px;border:1px dashed var(--line);border-radius:10px}
+.hidden{display:none!important}
+@media print{
+  body{background:#fff;color:#111;padding:0}
+  .ctrl,.scrim,.panel,.modal,.reorderbar,.print-hide{display:none!important}
+  .card,.chartbox,.calcbox,.tb,.callout{border-color:#ccc!important;background:#fff!important}
+  .sec{page-break-inside:avoid}
+  @page{margin:14mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topline">
+      <span class="dot"></span>
+      <span id="h-aud">受众</span>
+      <span class="pill" id="h-cut">数据截止</span>
+      <span class="pill" id="h-ver">版本</span>
+      <span class="pill" id="h-gap">缺口数</span>
+      <span class="pill" id="h-src">来源数</span>
+    </div>
+    <h1 id="h-title">加载中…</h1>
+    <p class="sub" id="h-sub"></p>
+    <div class="warnbar"><span class="ic">!</span><span id="h-warn"></span></div>
+  </header>
+
+  <div class="ctrl print-hide">
+    <div class="ctrlrow">
+      <button class="ghost on" data-view="report">研究报告</button>
+      <button class="ghost" data-view="framework">研究框架</button>
+      <button class="ghost" data-view="evidence">证据总表</button>
+      <span class="sp"></span>
+      <span class="keystatus" id="keystatus">快捷键：/ 搜索 · 1/2/3 切换视图 · Esc 关闭</span>
+      <button class="ghost" id="btn-order">调整章节顺序</button>
+      <button class="ghost" id="btn-reset" style="display:none">还原顺序</button>
+      <button class="ghost" id="btn-print">打印 / 导出 PDF</button>
+      <button class="ghost" id="btn-export">导出完整材料 .md</button>
+    </div>
+  </div>
+
+  <!-- 视图 1：报告 -->
+  <div id="view-report">
+    <div class="kgrid" id="kpis"></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>核心结论 <span class="tip">点击任意结论查看证据与计算过程</span></h3>
+        <div id="concls"></div>
+      </div>
+      <div class="card">
+        <h3>阅读方式 <span class="tip">本文的结论分级</span></h3>
+        <div class="qual-grid" id="qual"></div>
+        <div style="margin-top:14px">
+          <h3 style="font-size:13px;margin-bottom:8px">研究问题与回答状态</h3>
+          <div id="qlist"></div>
+        </div>
+      </div>
+    </div>
+    <div id="sections"></div>
+  </div>
+
+  <!-- 视图 2：框架 -->
+  <div id="view-framework" class="paste">
+    <div class="card" style="margin-top:18px">
+      <h3>本报告采用的研究框架（可编辑）</h3>
+      <p class="lede" id="fw-pos"></p>
+      <table class="tb"><thead><tr><th>#</th><th>章节</th><th>要回答的问题</th><th>为什么需要</th><th>验伪点</th><th>依赖数据</th><th>方法</th></tr></thead><tbody id="fw-body"></tbody></table>
+      <p class="note" style="font-size:12px;color:var(--txt3);margin-top:10px">说明：框架来自 <span class="mono">case.json › audience_frameworks.&lt;受众&gt;</span>；改章节只需修改数据文件，不改模板。</p>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>其他受众的框架对照</h3>
+      <div id="fw-compare"></div>
+    </div>
+  </div>
+
+  <!-- 视图 3：证据总表 -->
+  <div id="view-evidence" class="paste">
+    <div class="card" style="margin-top:18px">
+      <h3>证据索引（来源 / 缺口 → 被谁引用）</h3>
+      <div class="rawhint" style="font-size:11.5px;color:var(--txt3);margin-bottom:10px">每一条来源与缺口都在此登记；未出现在引用列表中的数据一律视为未经核验。</div>
+      <table class="tb"><thead><tr><th>ID</th><th>类型</th><th>内容</th><th>层级</th><th>被引用处</th><th>链接</th></tr></thead><tbody id="ev-body"></tbody></table>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>资料缺口</h3>
+      <table class="tb"><thead><tr><th>ID</th><th>主题</th><th>缺什么</th><th>为什么缺</th><th>影响</th><th>严重度</th><th>下一步</th></tr></thead><tbody id="gap-body"></tbody></table>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>计算过程</h3>
+      <table class="tb"><thead><tr><th>ID</th><th>计算</th><th>公式</th><th>输入</th><th>结果</th><th>说明</th></tr></thead><tbody id="calc-body"></tbody></table>
+    </div>
+  </div>
+
+  <footer>
+    <div id="foot-meta"></div>
+    <div style="margin-top:6px" id="foot-disc"></div>
+    <div style="margin-top:6px">生成器：chem-topic-research v1.0 · 单文件自包含（无外部依赖） · 本页数据与证据全部来自 case.json</div>
+  </footer>
+</div>
+
+<div class="reorderbar print-hide" id="reorderbar">
+  <span>顺序调整模式：拖动章节标题上下移动</span>
+  <button class="ghost" id="btn-order-done">完成</button>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel">
+  <div class="ph"><b id="panel-t">证据</b><button class="ghost" onclick="closePanel()">关闭</button></div>
+  <div class="pb" id="panel-b"></div>
+</aside>
+<div class="modal" id="modal">
+  <div class="mx">
+    <div class="mh"><b id="modal-t">原始数据</b><button class="ghost" onclick="closeModal()">关闭</button></div>
+    <div class="mb" id="modal-b"></div>
+  </div>
+</div>
+
+<script id="payload" type="application/json">__DATA__</script>
+<script>
+/* =========================================================================
+   1. 数据层：模板只读取 PAYLOAD，不写死任何业务内容
+   ========================================================================= */
+const PAYLOAD = JSON.parse(document.getElementById('payload').textContent);
+const META = PAYLOAD.meta, PROF = PAYLOAD.profile, DS = PAYLOAD.datasets;
+const SRC = PAYLOAD.sources, GAPS = PAYLOAD.gaps, CALCS = PAYLOAD.calculations;
+const CONC = PAYLOAD.conclusions;
+const CHARTS = [];            // 已渲染的图表实例
+const LS_KEY = 'ctr-order-' + (META.slug || 'default');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmtSmart(v, key){
+  const n = Number(v);
+  if (isNaN(n)) return '—';
+  if (key === 'year' || key === 'date') return String(v);                 // 年份不加千分位
+  if (Number.isInteger(n) && Math.abs(n) >= 1900 && Math.abs(n) <= 2100 && key !== 'value' && key !== 'share') return String(n);
+  return n.toLocaleString('zh-CN', {maximumFractionDigits: 2});
+}
+const fmt = (v, d) => (v == null || v === '' || isNaN(v)) ? '—' : Number(v).toLocaleString('zh-CN', {maximumFractionDigits: d == null ? 2 : d});
+const $ = s => document.querySelector(s);
+const $id = s => document.getElementById(s);
+
+/* =========================================================================
+   2. 证据与计算面板
+   ========================================================================= */
+function srcBadge(sid){
+  if (SRC[sid]) { const s = SRC[sid]; return `<span class="badge b-fact" data-src="${sid}">${esc(sid)}·${esc(s.tier||'')}</span>`; }
+  if (GAPS[sid]) return `<span class="badge b-gap" data-gap="${sid}">${esc(sid)}·缺口</span>`;
+  return `<span class="badge b-conf">${esc(sid)}</span>`;
+}
+function evCard(sid){
+  const s = SRC[sid];
+  if (s) return `<div class="ev"><div class="et"><span class="badge b-fact">${esc(sid)}</span>
+    <span class="badge b-conf">${esc(s.kind||'')}</span><span class="badge b-conf">证据${esc(s.tier||'')}</span>
+    <span style="font-size:11.5px;color:var(--txt3)">${esc(s.date||'')}</span></div>
+    <p><b>${esc(s.org)}</b>｜${esc(s.title)}</p>
+    ${s.note?`<p style="margin-top:5px">口径：${esc(s.note)}</p>`:''}
+    ${s.url?`<a class="url" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url)}</a>`:''}</div>`;
+  const g = GAPS[sid];
+  if (g) return `<div class="ev"><div class="et"><span class="badge b-gap">${esc(sid)}</span><span class="badge b-conf">数据缺口·${esc(g.severity)}</span></div>
+    <p><b>${esc(g.topic)}</b>：缺 ${esc(g.missing)}</p>
+    <p style="margin-top:5px">原因：${esc(g.why||'')}</p>
+    <p style="margin-top:5px">影响：${esc(g.impact||'')}</p>
+    <p style="margin-top:5px">下一步：${esc(g.next_step||'')}</p></div>`;
+  return `<div class="ev"><p>未登记的引用 ${esc(sid)}</p></div>`;
+}
+function calcBlock(cid, compact){
+  const c = CALCS[cid]; if (!c) return '';
+  return `<div class="calcbox"><div class="ctop"><h4>${esc(c.id)} · ${esc(c.title)}</h4>
+    <span class="badge ${TYPE_CLASS[c.statement_type]||'b-conf'}">${esc(c.statement_type||'计算')}</span></div>
+    <div class="formula">${esc(c.formula)}</div>
+    <div class="kv"><span class="k">输入参数</span><span>${esc(c.inputs)}</span>
+      <span class="k">计算结果</span><span><b>${esc(c.output)}</b></span>
+      <span class="k">口径说明</span><span>${esc(c.result_note||'—')}</span></div>
+    ${compact?'':`<div class="et" style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">${(c.evidence||[]).map(srcBadge).join('')}</div>`}
+  </div>`;
+}
+function openPanel(html, title){
+  $id('panel-t').innerHTML = title || '证据';
+  $id('panel-b').innerHTML = html;
+  $id('panel').classList.add('on'); $id('scrim').classList.add('on');
+}
+function closePanel(){ $id('panel').classList.remove('on'); $id('scrim').classList.remove('on'); }
+function closeModal(){ $id('modal').classList.remove('on'); }
+const TYPE_CLASS = {'事实':'b-fact','计算':'b-calc','解释':'b-expl','判断':'b-judge'};
+const CONF_CLASS = {'高':'b-conf','中':'b-conf','中低':'b-judge','低':'b-gap'};
+
+function showConclusion(cid){
+  const c = CONC.find(x => x.id === cid); if (!c) return;
+  const html = `<div class="ev" style="border-color:rgba(77,163,255,.3)">
+      <div class="et"><span class="badge ${TYPE_CLASS[c.type]}">${esc(c.type)}</span>
+      <span class="badge ${CONF_CLASS[c.confidence]||'b-conf'}">置信度 ${esc(c.confidence)}</span></div>
+      <p style="font-size:13.5px;color:#dbe4f5">${esc(c.text)}</p></div>
+    <h4 style="margin:14px 0 8px;font-size:13px">支撑证据（${(c.evidence||[]).length}）</h4>
+    ${(c.evidence||[]).map(evCard).join('')}
+    <h4 style="margin:16px 0 8px;font-size:13px">计算过程（${(c.calcs||[]).length}）</h4>
+    ${(c.calcs||[]).map(x => calcBlock(x)).join('') || '<p style="color:var(--txt3);font-size:12.5px">本结论不含独立计算，直接引用来源。</p>'}
+    <h4 style="margin:16px 0 8px;font-size:13px">反证条件</h4>
+    <div class="callout gap">${esc(c.falsify || '未登记——该结论缺少可证伪条件，应视为待验证。')}</div>`;
+  openPanel(html, '结论 ' + c.id);
+}
+
+/* =========================================================================
+   3. 图表：内联 SVG，无外部依赖
+   ========================================================================= */
+const PALETTE = ['#4da3ff','#22c98a','#f6b73c','#9b8cff','#38d6e0','#ff6b7a','#f472b6','#8aa0c8'];
+function mk(tag, attrs, text){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  if (text != null) el.textContent = text;
+  return el;
+}
+function niceMax(v){ if (v <= 0) return 10; const p = Math.pow(10, Math.floor(Math.log10(v))); const n = v / p; const m = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10; return m * p; }
+
+const RENDERERS = {
+  /* 分组柱状：数据 [{label, [band]: value}] with bands 列表 */
+  stacked_bar(data){
+    const rows = data.rows || [];
+    const bands = (data.bands && data.bands.length) ? data.bands
+      : (data.keys || []).map(x => (typeof x === 'string' ? x : x.k));
+    const max = niceMax(Math.max(100, ...rows.map(r => bands.reduce((s,b)=>s+(+r[b]||0),0))));
+    const bw = 70/rows.length;
+    let out = '';
+    rows.forEach((r,i)=>{
+      const x = 15 + i*bw; let y = 92;
+      bands.forEach((b,j)=>{
+        const v = +r[b]||0; if (!v) return;
+        const h = Math.max(0, 80*v/max);
+        out += `<rect x="${x}" y="${y-h}" width="${bw*0.62}" height="${h}" fill="${PALETTE[j%PALETTE.length]}" opacity="0.88" rx="0.6"><title>${esc(r.label||r.year)} ${esc(b)}：${fmt(v,1)}</title></rect>`;
+        y -= h;
+      });
+      out += `<text x="${x+bw*0.31}" y="${96}" font-size="2.6" fill="#73829e" text-anchor="middle">${esc(r.label||r.year)}</text>`;
+    });
+    out += `<line x1="13" y1="92" x2="98" y2="92" stroke="rgba(255,255,255,.18)" stroke-width="0.25"/>`;
+    out += `<text x="13" y="6" font-size="2.4" fill="#73829e">最大值 ${fmt(max,0)}</text>`;
+    return {inner: out, viewBox: '0 0 100 100', legend: bands.map(b => (COL_NAMES[b] && COL_NAMES[b] !== '') ? COL_NAMES[b] : String(b))};
+  },
+  /* 柱状（支持正负值）：rows = [{label, value}] */
+  bar_chart(data){
+    const rows = data.rows || [], all = rows.map(r => +r.value).filter(v=>!isNaN(v));
+    const maxP = Math.max(0, ...all), minN = Math.min(0, ...all);
+    const span = (maxP - minN) || 1;
+    const bw = 88 / Math.max(rows.length, 1);
+    const zeroY = 12 + 78 * (maxP / span);
+    let out = `<line x1="4" y1="${zeroY}" x2="98" y2="${zeroY}" stroke="rgba(255,255,255,.2)" stroke-width="0.25"/>`;
+    rows.forEach((r, i) => {
+      const v = +r.value; if (isNaN(v)) return;
+      const x = 6 + i * bw + bw * 0.22;
+      const h = Math.abs(78 * v / span);
+      const y = v >= 0 ? zeroY - h : zeroY;
+      out += `<rect x="${x}" y="${y}" width="${bw * 0.56}" height="${Math.max(0.5, h)}" rx="0.8" fill="${v < 0 ? '#ff6b7a' : '#22c98a'}" opacity="0.85"><title>${esc(r.label)}：${fmt(v)}</title></rect>`;
+      out += `<text x="${x + bw * 0.28}" y="${v >= 0 ? y - 1 : y + h + 3.2}" font-size="2.3" fill="#e9eefb" text-anchor="middle">${fmt(v)}</text>`;
+      const lab = String(r.label || '');
+      const short = lab.length > 9 ? lab.slice(0, 8) + '…' : lab;
+      out += `<text x="${x + bw * 0.28}" y="96" font-size="2.1" fill="#73829e" text-anchor="middle">${esc(short)}<title>${esc(lab)}</title></text>`;
+    });
+    return {inner: out, viewBox: '0 0 100 100', legend: []};
+  },
+  /* 线型：{points:[{label, v1, v2...}], keys:[{k,name}]} —— 空值断开，不插值 */
+  line(data){
+    data = data || {};
+    // 兼容三种输入：{points,keys}、{rows,keys}、直接数组 [{label, v1, v2}]
+    const pts = data.points || (Array.isArray(data) ? data : (data.rows || []));
+    const raw = Array.isArray(data.keys) ? data.keys
+              : (Array.isArray(data.bands) ? data.bands
+              : (typeof data.keys === 'string' ? data.keys.split(',') : []));
+    const keys = raw.map(x => (typeof x === 'string' ? { k: x, name: COL_NAMES[x] || x } : x));
+    if (!keys.length) keys.push(...lineKeys({}, pts));
+    const all = pts.flatMap(p => keys.map(k => +p[k.k])).filter(v=>!isNaN(v));
+    const max = niceMax(Math.max(...all, 1)), min = Math.min(0, ...all);
+    const span = max - min || 1;
+    let out = '', legend = [];
+    keys.forEach((k,ki)=>{
+      const col = PALETTE[ki%PALETTE.length];
+      let d = '', started = false;
+      pts.forEach((p,i)=>{
+        const v = +p[k.k]; if (isNaN(v)) { started = false; return; }
+        const x = 8 + 88*(pts.length>1 ? i/(pts.length-1) : 0.5);
+        const y = 90 - 78*(v-min)/span;
+        d += (started?' L':' M') + x.toFixed(2) + ' ' + y.toFixed(2); started = true;
+      });
+      out += `<path d="${d}" fill="none" stroke="${col}" stroke-width="0.8"/>`;
+      pts.forEach((p,i)=>{
+        const v = +p[k.k]; if (isNaN(v)) return;
+        const x = 8 + 88*(pts.length>1 ? i/(pts.length-1) : 0.5);
+        const y = 90 - 78*(v-min)/span;
+        out += `<circle cx="${x}" cy="${y}" r="1.1" fill="${col}"><title>${esc(p.label||p.date)} ${esc(k.name||k.k)}：${fmt(v)}</title></circle>`;
+      });
+      legend.push(k.name || k.k);
+    });
+    pts.forEach((p,i)=>{
+      const x = 8 + 88*(pts.length>1 ? i/(pts.length-1) : 0.5);
+      const lab = String(p.label || p.date || '');
+      out += `<text x="${x}" y="96" font-size="2.2" fill="#73829e" text-anchor="middle">${esc(lab.length>7?lab.slice(0,7)+'…':lab)}<title>${esc(lab)}</title></text>`;
+    });
+    out += `<line x1="6" y1="90" x2="97" y2="90" stroke="rgba(255,255,255,.18)" stroke-width="0.25"/>`;
+    out += `<text x="6" y="6" font-size="2.4" fill="#73829e">最大值 ${fmt(max,0)}</text>`;
+    return {inner: out, viewBox:'0 0 100 100', legend};
+  },
+  bar(data){
+    return RENDERERS.bar_chart({rows: data.items || data.rows || []});
+  },
+  dual_axis(data){ return RENDERERS.line({points: data.points, keys: data.keys}); },
+  donut(data){
+    const items = data.items; const total = items.reduce((s,d)=>s+(+d.value||0),0) || 1;
+    let acc = 0, out = '', cx = 34, cy = 50, r = 26, ir = 15;
+    items.forEach((d,i)=>{
+      const frac = (+d.value||0)/total; const a0 = acc*2*Math.PI - Math.PI/2; acc += frac; const a1 = acc*2*Math.PI - Math.PI/2;
+      const large = frac > .5 ? 1 : 0;
+      const p = (ang, rr) => [cx + rr*Math.cos(ang), cy + rr*Math.sin(ang)];
+      const [x0,y0] = p(a0,r), [x1,y1]=p(a1,r), [x2,y2]=p(a1,ir), [x3,y3]=p(a0,ir);
+      out += `<path d="M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1} L${x2} ${y2} A${ir} ${ir} 0 ${large} 0 ${x3} ${y3} Z" fill="${PALETTE[i%PALETTE.length]}" opacity="0.9"><title>${esc(d.label)}：${fmt(d.value,1)}%</title></path>`;
+      out += `<text x="${78+4}" y="${20+i*4.4}" font-size="2.7" fill="#a8b6d1">${esc(d.label)} ${fmt(d.value,1)}%</text>`;
+      out += `<rect x="${76}" y="${17.6+i*4.4}" width="1.6" height="1.6" fill="${PALETTE[i%PALETTE.length]}"/>`;
+    });
+    out += `<text x="${cx}" y="${cy-1}" font-size="3" fill="#73829e" text-anchor="middle">结构</text>`;
+    return {inner: out, viewBox:'0 0 100 100', legend: items.map(d=>d.label)};
+  },
+  range_bar(data){
+    const rows = data.rows, max = niceMax(Math.max(...rows.map(r=>r.high||r.max||0), data.ref||0));
+    let out = ''; const rowH = 70/rows.length;
+    rows.forEach((r,i)=>{
+      const y = 12 + i*rowH + rowH*0.25, h = rowH*0.5;
+      const x1 = 26 + 68*(r.low||r.min)/max, x2 = 26 + 68*(r.high||r.max)/max;
+      out += `<rect x="${x1}" y="${y}" width="${Math.max(0.4,x2-x1)}" height="${h}" rx="1.2" fill="${PALETTE[i%PALETTE.length]}" opacity="0.75"><title>${esc(r.label)}：${fmt(r.low)}–${fmt(r.high)}</title></rect>`;
+      out += `<text x="24" y="${y+h*0.75}" font-size="2.6" fill="#a8b6d1" text-anchor="end">${esc(r.label)}</text>`;
+      out += `<text x="${x2+1}" y="${y+h*0.75}" font-size="2.3" fill="#73829e">${fmt(r.low,0)}–${fmt(r.high,0)}</text>`;
+    });
+    if (data.ref) { const xr = 26 + 68*data.ref/max;
+      out += `<line x1="${xr}" y1="8" x2="${xr}" y2="88" stroke="#ff6b7a" stroke-width="0.4" stroke-dasharray="1.2 1"/>`;
+      out += `<text x="${xr+1}" y="11" font-size="2.3" fill="#ff6b7a">现价 ${fmt(data.ref,0)}</text>`; }
+    return {inner: out, viewBox:'0 0 100 100', legend: []};
+  },
+  waterfall(data){
+    const steps = data.steps, max = niceMax(Math.max(...steps.map(s=>Math.abs(s.value))));
+    let out = '', acc = 0; const bw = 84/steps.length;
+    steps.forEach((s,i)=>{
+      const x = 8 + i*bw, v = +s.value;
+      const isTotal = s.total != null ? true : /净新增|合计/.test(s.step);
+      const start = isTotal ? 0 : acc;
+      const end = isTotal ? v : acc + v;
+      const y1 = 92 - 70*Math.min(start,end)/max, y2 = 92 - 70*Math.max(start,end)/max;
+      out += `<rect x="${x+bw*0.2}" y="${y2}" width="${bw*0.6}" height="${Math.max(0.6,y1-y2)}" fill="${isTotal?'#4da3ff':(v<0?'#ff6b7a':'#22c98a')}" opacity="0.85" rx="0.6"><title>${esc(s.step)}：${fmt(v,0)}</title></rect>`;
+      out += `<text x="${x+bw*0.5}" y="${95}" font-size="1.9" fill="#73829e" text-anchor="middle">${esc(s.step).slice(0,7)}</text>`;
+      out += `<text x="${x+bw*0.5}" y="${y2-1}" font-size="2.1" fill="#e9eefb" text-anchor="middle">${fmt(v,0)}</text>`;
+      if (!isTotal) acc = end;
+    });
+    return {inner: out, viewBox:'0 0 100 100', legend: []};
+  }
+};
+
+function renderChart(box, spec){
+  const host = box.querySelector('.cnv');
+  try { renderChartInner(host, box, spec); }
+  catch (e) {
+    host.dataset.empty = '1';
+    host.textContent = '图表渲染失败：' + (e && e.message) + '（数据键 ' + (spec && spec.data_key) + '）';
+    console.error('[chart]', spec && spec.data_key, e);
+  }
+}
+function renderChartInner(host, box, spec){
+  const raw = DS[spec.data_key];
+  if (!raw || (Array.isArray(raw) && !raw.length)) { host.dataset.empty = '1'; host.textContent = '该数据集为空或缺失——请检查 case.json'; return; }
+  let norm = raw;
+  switch (spec.chart_type){
+    case 'stacked_bar': norm = Array.isArray(raw) ? {rows: raw, bands: spec.bands || Object.keys(raw[0]||{}).filter(k=>k!=='year'&&k!=='label'&&k!=='note')} : raw; break;
+    case 'bar': norm = Array.isArray(raw) ? {items: raw.map(r=>({label:r.label||r.name||r.scenario||r.route, value:+(r.value!=null?r.value:r.capacity!=null?r.capacity:r.profit!=null?r.profit:r.count), note:r.note||r.assumption||r.basis||''}))} : raw; break;
+    case 'line': norm = Array.isArray(raw) ? {points: raw, keys: lineKeys(spec, raw)} : raw; break;
+    case 'dual_axis': norm = Array.isArray(raw) ? {points: raw, keys: lineKeys(spec, raw)} : raw; break;
+    case 'donut': norm = Array.isArray(raw) ? {items: raw.map(r=>({label:r.name, value:+r.share}))} : raw; break;
+    case 'range_bar': norm = Array.isArray(raw) ? {rows: raw.map(r=>({label:r.label||r.process, low:r.low, high:r.high})) , ref: spec.ref} : raw;
+                         if (spec.ref != null) norm.ref = spec.ref; break;
+    case 'waterfall': norm = Array.isArray(raw) ? {steps: raw.map(s=>({step:s.step||s.label, value:+s.value}))} : raw; break;
+  }
+  if (spec.chart_type === 'range_bar' && spec.ref == null && norm.ref == null) norm.ref = META.refPrice;
+  const r = (RENDERERS[spec.chart_type] || RENDERERS.line)(norm);
+  const vb = r.viewBox || '0 0 100 100';
+  // 关键修复：SVG 直接注入，保留内部元素
+  host.innerHTML = '<svg viewBox="' + vb + '" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible">' + r.inner + '</svg>';
+  const lg = box.querySelector('.legend');
+  if (lg) lg.innerHTML = (r.legend||[]).map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:5px;margin-right:12px;font-size:11.5px;color:#a8b6d1"><i style="width:9px;height:9px;border-radius:2px;background:${PALETTE[i%PALETTE.length]};display:inline-block"></i>${esc(t)}</span>`).join('');
+  CHARTS.push({box, spec});
+}
+function inferKeys(row){
+  if (!row) return [];
+  const skip = new Set(['label','date','year','note','source','value','shahe']);
+  const ks = Object.keys(row).filter(k=>!skip.has(k) && typeof row[k] === 'number');
+  if (!ks.length) return [{k: 'value', name: '数值'}];      // 兜底：保证至少有一条序列
+  return ks.map(k=>({k, name: COL_NAMES[k] || k}));
+}
+/* 推断折线图的数值序列；某个字段在一半以上行有数值时才纳入 */
+function lineKeys(spec, rows){
+  if (spec && Array.isArray(spec.keys) && spec.keys.length) return spec.keys;
+  const keys = [];
+  const first = (rows && rows[0]) || {};
+  Object.keys(first).forEach(k=>{
+    if (['label','date','year','note','source'].includes(k)) return;
+    const ok = rows.filter(r => typeof r[k] === 'number').length;
+    if (ok >= Math.max(1, Math.ceil(rows.length * 0.5))) keys.push({k, name: COL_NAMES[k] || k});
+  });
+  return keys.length ? keys : inferKeys(first);
+}
+function showRawData(dataKey, title, spec){
+  const raw = DS[dataKey];
+  const rows = flatten(raw);
+  const cols = rows.length ? Object.keys(rows[0]) : [];
+  let html = `<div class="rawhint">数据集：<span class="mono">${esc(dataKey)}</span> · ${rows.length} 行 · ${cols.length} 列 · 可复制为制表符文本粘贴到 Excel</div>`;
+  if (!rows.length) {
+    html += `<div class="callout gap">该数据集为空或不存在（data_key = ${esc(dataKey)}）。这不是“没有变化”，而是“没有数据”，请按资料缺口处理。</div>`;
+  } else {
+    html += `<div style="margin-bottom:8px"><button class="ghost" onclick="copyTable()">复制为 TSV</button></div>`;
+    html += `<table class="tb" id="rawtb"><thead><tr>${cols.map(c=>`<th>${esc(COL_NAMES[c]||c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td class="${typeof r[c]==='number'?'num':''}">${esc(r[c]==null?'':(typeof r[c]==='number'?fmtSmart(r[c],c):r[c]))}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    html += `<div class="rawhint" style="margin-top:8px">列名：${cols.map(c=>esc(c)+(COL_NAMES[c]?'（'+esc(COL_NAMES[c])+'）':'')).join(' · ')}</div>`;
+  }
+  if (spec && spec.source && spec.source.length) {
+    html += `<div class="rawhint" style="margin-top:12px">数据来源：</div>${spec.source.map(evCard).join('')}`;
+  }
+  if (spec && spec.conclusion_ids && spec.conclusion_ids.length){
+    html += `<div class="rawhint" style="margin-top:12px">该图支撑的结论：</div>` +
+      spec.conclusion_ids.map(cid=>{ const c=CONC.find(x=>x.id===cid); return c?`<div class="concl" onclick="closeModal();showConclusion('${cid}')"><div class="txt">${esc(c.text)}</div></div>`:''; }).join('');
+  }
+  $id('modal-t').textContent = '原始数据 · ' + (title || dataKey);
+  $id('modal-b').innerHTML = html;
+  $id('modal').classList.add('on');
+}
+const COL_NAMES = {
+  label:'标签', date:'日期', year:'年份', value:'数值', note:'备注', source:'来源ID',
+  total:'合计', heavy:'重碱', light:'轻碱', output:'周产量(万吨)', util:'开工率(%)',
+  shahе:'沙河重碱均价', shahe:'沙河重碱均价', float_tpd:'浮法日熔(吨/日)', pv_tpd:'光伏日熔(吨/日)',
+  low:'下限', high:'上限', mid:'中值', share:'占比(%)', process:'工艺', route:'工艺路线',
+  profit:'利润(元/吨)', basis:'口径', scenario:'情景', assumption:'假设', step:'环节',
+  status:'状态', capacity:'产能(万吨/年)', count:'数量', float_tpd_note:'',
+  supply:'供给(万吨)', demand:'需求(万吨)', export:'出口(万吨)', import:'进口(万吨)', quality:'数据质量'
+};
+function flatten(raw){
+  if (raw == null) return [];
+  if (Array.isArray(raw)) return raw.map(r=> (typeof r==='object'? r : {value:r}));
+  if (typeof raw === 'object'){
+    let out = [];
+    for (const k in raw){
+      const v = raw[k];
+      if (Array.isArray(v)) out = out.concat(v.map(r=>(typeof r==='object'? Object.assign({_group:k}, r) : {_group:k, value:r})));
+      else if (v && typeof v === 'object') out.push(Object.assign({_group:k}, v));
+      else out.push({_group:k, value:v});
+    }
+    return out;
+  }
+  return [{value: raw}];
+}
+function copyTable(){
+  const tb = $id('rawtb'); if (!tb) return;
+  const txt = [...tb.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>td.textContent).join('\t')).join('\n');
+  navigator.clipboard && navigator.clipboard.writeText(txt).then(()=>{ toast('已复制，可直接粘贴到 Excel'); });
+}
+
+/* =========================================================================
+   4. 渲染：首屏 / 结论 / 章节
+   ========================================================================= */
+function renderHeader(){
+  $id('h-title').innerHTML = esc(META.title) + (META.audience_label?` <span class="thin">｜${esc(META.audience_label)}版</span>`:'');
+  $id('h-sub').textContent = META.subtitle || '';
+  $id('h-aud').textContent = '受众：' + (META.audience_label || META.audience);
+  $id('h-cut').textContent = '数据截止 ' + (META.data_cutoff||'');
+  $id('h-ver').textContent = (META.version||'') + ' · 报告日 ' + (META.report_date||'');
+  $id('h-gap').textContent = '资料缺口 ' + Object.keys(GAPS).length;
+  $id('h-src').textContent = '来源 ' + Object.keys(SRC).length;
+  $id('h-warn').textContent = (META.title.includes('示例')?'':'') +
+    '本材料中的事实均标注来源（S 编号），计算结果标注计算编号与输入参数，解释与判断标注置信度与反证条件；标为“缺口”的数据未获取，不以估算替代。' + (META.disclaimer||'');
+  $id('foot-meta').textContent = [META.org, META.author, '报告日 ' + META.report_date, '数据截止 ' + META.data_cutoff, '范围 ' + (META.horizon||'')].filter(Boolean).join(' · ');
+  $id('foot-disc').textContent = META.disclaimer || '';
+  document.title = META.title;
+}
+function renderKpis(){
+  $id('kpis').innerHTML = (PAYLOAD.kpis||[]).map(k=>`
+    <div class="kpi tone-${esc(k.tone||'blue')}" data-kpi="${esc(k.id)}" title="点击查看证据">
+      <div class="lab">${esc(k.label)}</div>
+      <div class="big">${esc(k.value)}<small>${esc(k.unit||'')}</small></div>
+      <div class="small">${esc(k.delta||'')}</div>
+    </div>`).join('');
+  document.querySelectorAll('[data-kpi]').forEach(el=>{
+    el.onclick = ()=>{ const k = PAYLOAD.kpis.find(x=>x.id===el.dataset.kpi);
+      openPanel(`<div class="ev"><p><b>${esc(k.label)}：${esc(k.value)} ${esc(k.unit||'')}</b></p><p>${esc(k.delta||'')}</p></div>
+        ${k.calc?calcBlock(k.calc):''}<h4 style="margin:12px 0 8px;font-size:13px">证据</h4>${(k.evidence||[]).map(evCard).join('')}`, '指标 ' + k.id); };
+  });
+}
+function renderConclusions(){
+  $id('concls').innerHTML = CONC.map(c=>`
+    <div class="concl" data-concl="${esc(c.id)}">
+      <div class="head"><span class="rank">${c.rank}</span>
+        <span class="badge ${TYPE_CLASS[c.type]}">${esc(c.type)}</span>
+        <span class="badge ${CONF_CLASS[c.confidence]||'b-conf'}">置信度 ${esc(c.confidence)}</span>
+        <span style="font-size:11px;color:var(--txt3)">${esc(c.id)} · 证据 ${(c.evidence||[]).length} · 计算 ${(c.calcs||[]).length}</span>
+      </div>
+      <div class="txt">${esc(c.text)}</div>
+      <div class="more">点击展开：支撑证据 → 计算过程 → 反证条件</div>
+    </div>`).join('');
+  document.querySelectorAll('[data-concl]').forEach(el=> el.onclick = ()=> showConclusion(el.dataset.concl));
+}
+function renderQuality(){
+  const counts = Object.fromEntries(['事实','计算','解释','判断'].map(t=>[t, CONC.filter(c=>c.type===t).length]));
+  const hi = Object.values(SRC).filter(s=>s.tier==='A').length;
+  const items = [
+    ['事实', counts['事实'] + ' 条', 'b-fact'],
+    ['计算', counts['计算'] + ' 条', 'b-calc'],
+    ['解释', counts['解释'] + ' 条', 'b-expl'],
+    ['判断', counts['判断'] + ' 条', 'b-judge'],
+    ['A 级证据', hi + ' 条', 'b-fact'],
+    ['资料缺口', Object.keys(GAPS).length + ' 项', 'b-gap']
+  ];
+  $id('qual').innerHTML = items.map(([t,v,c])=>`<div class="qual"><div class="t">${esc(t)}</div><div class="v"><span class="badge ${c}">${esc(v)}</span></div></div>`).join('');
+  $id('qlist').innerHTML = (PAYLOAD.questions||[]).map(q=>{
+    const st = q.answered === 'yes' ? ['已回答','b-calc'] : q.answered === 'partly' ? ['部分回答','b-judge'] : ['未回答','b-gap'];
+    return `<div style="font-size:12.5px;color:#c8d3e8;padding:6px 0;border-bottom:1px dashed var(--line);display:flex;gap:8px;align-items:flex-start">
+      <span class="badge ${st[1]}" style="flex:none">${esc(q.id)} ${st[0]}</span><span>${esc(q.question)}<span style="color:var(--txt3)"> ${esc(q.note||'')}</span></span></div>`;
+  }).join('');
+}
+
+function renderSections(){
+  const host = $id('sections');
+  host.innerHTML = '';
+  const secs = (PAYLOAD.sections||[]).slice();
+  const saved = loadOrder();
+  if (saved) secs.sort((a,b)=>{ const ia = saved.indexOf(a.id), ib = saved.indexOf(b.id); return (ia<0?99:ia) - (ib<0?99:ib); });
+  secs.forEach(s => host.appendChild(buildSection(s)));
+  // 图表：HTML 里只放占位容器，渲染延后到 bindDynamic 之后统一执行
+  document.querySelectorAll('#sections .chartbox').forEach(box=>{
+    const spec = { data_key: box.dataset.key, chart_type: box.dataset.type };
+    const s = (PAYLOAD.sections||[]).find(sec => sec.id === box.closest('.sec').dataset.sid);
+    const blk = s && (s.blocks||[]).find(b => b.type === 'chart' && b.data_key === box.dataset.key);
+    if (blk) Object.assign(spec, blk);
+    CHARTS.push({box, spec});
+  });
+}
+function buildSection(s){
+  // 注意：区块中的交互元素统一在 bindDynamic() 里绑定，避免在这里重复绑定
+  const el = document.createElement('section');
+  el.className = 'sec'; el.id = 'sec-' + s.id; el.dataset.sid = s.id;
+  const blocks = (s.blocks||[]).map(b => buildBlock(b)).join('');
+  el.innerHTML = `<div class="sh">
+      <div class="stitle"><span class="sno">${esc(s.no||'')}</span><h2>${esc(s.title)}</h2>
+      <span class="pack">${esc(s.pack||'')}</span>
+      ${s.question?`<span style="font-size:12px;color:var(--txt3)">要回答：${esc(s.question)}</span>`:''}</div>
+    </div>
+    ${s.lede?`<p class="lede">${esc(s.lede)}</p>`:''}
+    ${blocks}`;
+  return el;
+}
+function buildBlock(b){
+  switch(b.type){
+    case 'para': return `<p class="para">${esc(b.text)}</p>`;
+    case 'callout': return `<div class="callout ${esc(b.tone||'info')}"><div class="ct">${b.tone==='warn'?'⚠':b.tone==='gap'?'缺口':'◆'} ${esc(b.title||'')}</div>${esc(b.text)}</div>`;
+    case 'table': return tableHTML(b);
+    case 'chart': return chartHTML(b);
+    case 'calc': return calcBlock(b.calc_id);
+    case 'conclusions_full': return CONC.map(c=>`
+        <div class="concl" data-concl="${esc(c.id)}"><div class="head"><span class="rank">${c.rank}</span>
+        <span class="badge ${TYPE_CLASS[c.type]}">${esc(c.type)}</span>
+        <span class="badge ${CONF_CLASS[c.confidence]||'b-conf'}">置信度 ${esc(c.confidence)}</span>
+        <span style="font-size:11px;color:var(--txt3)">${esc(c.id)}</span></div>
+        <div class="txt">${esc(c.text)}</div>
+        <div class="more">反证条件：${esc(c.falsify||'未登记')}</div></div>`).join('');
+    default: return `<p class="para">[未知区块类型 ${esc(b.type)}]</p>`;
+  }
+}
+function tableHTML(b){
+  let rows = b.rows || (b.rows_key ? DS[b.rows_key] || (PAYLOAD[b.rows_key]) || [] : []);
+  const cols = b.cols || [];
+  if (!Array.isArray(rows)) rows = [];
+  const head = cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const dataCols = cols.slice(1);
+  const body = rows.map(r=>{
+    if (Array.isArray(r)) return `<tr>${r.map((c,i)=>`<td class="${(i>0&&!isNaN(parseFloat(c))&&/^[-+]?[\d,.]+%?$/.test(String(c).trim()))?'num':''}">${esc(c)}</td>`).join('')}</tr>`;
+    const keys = Object.keys(r);
+    return `<tr>${keys.map(k=>{
+      let v = r[k];
+      if (k === 'evidence' || k === 'source') v = (Array.isArray(v)?v:String(v).split(',')).map(x=>x.trim()).filter(Boolean).join(', ');
+      const num = typeof v === 'number';
+      return `<td class="${num?'num':''}">${num?fmtSmart(v,k):esc(v==null?'':v)}</td>`;
+    }).join('')}</tr>`;
+  }).join('');
+  const mapping = Array.isArray(Object.values(rows)[0]) ? '' : `<div style="font-size:11px;color:var(--txt3);margin:-6px 0 8px">字段：${Object.keys(rows[0]||{}).map(esc).join(' · ')}</div>`;
+  return `<div>${b.title?`<h4 style="font-size:13.5px;margin:16px 0 6px">${esc(b.title)}</h4>`:''}${mapping}
+    <table class="tb"><thead><tr>${head}</tr></thead><tbody>${body||`<tr><td colspan="${cols.length}">无数据</td></tr>`}</tbody></table></div>`;
+}
+function chartHTML(b){
+  const srcLine = (b.source||[]).join(' · ');
+  return `<div class="chartbox" data-chart="${esc(b.id||b.data_key)}" data-key="${esc(b.data_key)}" data-type="${esc(b.chart_type)}">
+    <div class="ch"><h4>${esc(b.title||'')}</h4><span class="src">来源：${esc(srcLine||'—')}</span></div>
+    <div class="legend" style="margin-bottom:6px"></div>
+    <div class="cnv ${b.chart_type==='donut'?'tall':''}" data-key="${esc(b.data_key)}" data-type="${esc(b.chart_type)}"></div>
+    <div class="foot"><div class="note">${esc(b.note||'')}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${(b.conclusion_ids||[]).map(cid=>`<button class="mini" data-jump="${esc(cid)}">关联结论 ${esc(cid)}</button>`).join('')}
+        <button class="mini" data-raw="${esc(b.data_key)}" data-title="${esc(b.title||'')}">查看原始数据</button>
+      </div></div></div>`;
+}
+function bindDynamic(){
+  document.querySelectorAll('[data-raw]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const spec = CHARTS.map(c=>c.spec).find(s=>s.data_key===btn.dataset.raw) || {};
+      showRawData(btn.dataset.raw, btn.dataset.title, btn.dataset.type ? {source:spanSources(btn.dataset.raw), conclusion_ids: spec.conclusion_ids} : spec);
+    };
+  });
+  document.querySelectorAll('[data-jump]').forEach(btn=> btn.onclick = ()=> showConclusion(btn.dataset.jump));
+  document.querySelectorAll('.concl[data-concl]').forEach(el=> el.onclick = ()=> showConclusion(el.dataset.concl));
+  document.querySelectorAll('[data-src]').forEach(el=> el.onclick = ()=> openPanel(evCard(el.dataset.src), '来源 ' + el.dataset.src));
+  document.querySelectorAll('[data-gap]').forEach(el=> el.onclick = ()=> openPanel(evCard(el.dataset.gap), '缺口 ' + el.dataset.gap));
+}
+function spanSources(dataKey){
+  if (!dataKey || DS[dataKey] === undefined) return [];
+  const raw = DS[dataKey]; const out = [];
+  flatten(raw).forEach(r=>{ (r.source||'').toString().split(',').forEach(x=>{ x=x.trim(); if(x && !out.includes(x)) out.push(x); }); });
+  if (raw && typeof raw === 'object' && !Array.isArray(raw) && raw.source){
+    raw.source.toString().split(',').forEach(x=>{ x=x.trim(); if (x && !out.includes(x)) out.push(x); });
+  }
+  return out;
+}
+
+/* =========================================================================
+   5. 框架视图 / 证据总表
+   ========================================================================= */
+function renderFramework(){
+  const fw = (PAYLOAD.frameworks||{})[PROF.audience_key] || {};
+  $id('fw-pos').textContent = fw.positioning || '';
+  $id('fw-body').innerHTML = (fw.chapters||[]).map(c=>`<tr>
+    <td class="num">${esc(c.no)}</td><td><b>${esc(c.title)}</b></td><td>${esc(c.question||'')}</td>
+    <td>${esc(c.why||'')}</td><td>${esc(c.verify||'')}</td><td>${esc((c.data||[]).join('、'))}</td><td>${esc(c.method||'')}</td></tr>`).join('');
+  $id('fw-compare').innerHTML = Object.entries(PAYLOAD.frameworks||{}).map(([k,f])=>`
+    <div style="margin-bottom:14px"><b style="font-size:13px">${esc(f.label||k)}</b>
+    <span class="badge b-conf" style="margin-left:8px">${esc(f.length_target||'')}</span>
+    <p style="font-size:12.5px;color:var(--txt3);margin:6px 0">${esc(f.focus||'')}</p>
+    <div style="font-size:12.5px;color:#c8d3e8;line-height:1.9">${(f.chapters||[]).map(c=>`<div>${esc(c.no)} ${esc(c.title)} —— ${esc(c.question||'')}</div>`).join('')}</div>
+    ${(f.suppressed_topic_packs||[]).length?`<p style="font-size:11.5px;color:var(--txt3);margin-top:6px">屏蔽章节包：${esc(f.suppressed_topic_packs.join('、'))}</p>`:''}
+    </div>`).join('');
+}
+function renderEvidenceView(){
+  const srcRows = Object.values(SRC).map(s=>`<tr><td class="mono">${esc(s.id)}</td><td>来源</td><td><b>${esc(s.org)}</b>｜${esc(s.title)}<div style="color:var(--txt3);font-size:11.5px">${esc(s.note||'')}</div></td>
+    <td>${esc(s.tier||'')}</td><td id="ref-${esc(s.id)}" style="font-size:11.5px;color:var(--txt3)">统计中…</td>
+    <td>${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">打开</a>`:''}</td></tr>`).join('');
+  $id('ev-body').innerHTML = srcRows;
+  const used = {};
+  const use = (sid, where)=>{ (used[sid] = used[sid]||[]); if(!used[sid].includes(where)) used[sid].push(where); };
+  (PAYLOAD.sections||[]).forEach(s=>{
+    (s.blocks||[]).forEach(b=>{ (b.source||[]).forEach(x=>use(x, s.title)); (spanSources(b.data_key)||[]).forEach(x=>use(x, s.title + '·图表')); });
+  });
+  CONC.forEach(c=> (c.evidence||[]).forEach(x=>use(x, '结论 ' + c.id)));
+  Object.keys(SRC).forEach(sid=>{ const cell = $id('ref-'+sid); if(cell) cell.textContent = (used[sid]||['未引用']).join('；'); });
+  $id('gap-body').innerHTML = Object.values(GAPS).map(g=>`<tr><td class="mono">${esc(g.id)}</td><td>${esc(g.topic)}</td><td>${esc(g.missing)}</td>
+    <td>${esc(g.why||'')}</td><td>${esc(g.impact||'')}</td><td><span class="badge ${g.severity==='high'?'b-gap':g.severity==='medium'?'b-judge':'b-conf'}">${esc(g.severity)}</span></td><td>${esc(g.next_step||'')}</td></tr>`).join('');
+  $id('calc-body').innerHTML = Object.values(CALCS).map(c=>`<tr><td class="mono">${esc(c.id)}</td><td>${esc(c.title)}</td>
+    <td style="font-family:Consolas,monospace;font-size:11.5px">${esc(c.formula)}</td><td>${esc(c.inputs)}</td><td><b>${esc(c.output)}</b></td><td>${esc(c.result_note||'')}</td></tr>`).join('');
+}
+
+/* =========================================================================
+   6. 交互：视图切换、章节排序、导出
+   ========================================================================= */
+function switchView(v){
+  ['report','framework','evidence'].forEach(k=>{
+    $id('view-'+k).classList.toggle('paste', k !== v);
+    document.querySelector(`[data-view="${k}"]`).classList.toggle('on', k === v);
+  });
+}
+function loadOrder(){ try { const v = JSON.parse(localStorage.getItem(LS_KEY)||'null'); return Array.isArray(v)?v:null; } catch(e){ return null; } }
+function saveOrder(ids){ try { localStorage.setItem(LS_KEY, JSON.stringify(ids)); } catch(e){} }
+let ordering = false, dragEl = null;
+function toggleOrder(on){
+  ordering = on;
+  $id('reorderbar').classList.toggle('on', on);
+  $id('btn-reset').style.display = on ? '' : 'none';
+  document.querySelectorAll('#sections .sec').forEach(sec=>{
+    sec.classList.toggle('ordering', on);
+    sec.draggable = on;
+    if (on){
+      sec.ondragstart = e=>{ dragEl = sec; e.dataTransfer.effectAllowed='move'; };
+      sec.ondragover = e=>{ e.preventDefault(); if (!dragEl || dragEl===sec) return;
+        const r = sec.getBoundingClientRect(); const after = (e.clientY - r.top) > r.height/2;
+        sec.parentNode.insertBefore(dragEl, after ? sec.nextSibling : sec); };
+      sec.ondragend = ()=>{ dragEl = null; saveOrder([...document.querySelectorAll('#sections .sec')].map(s=>s.dataset.sid)); };
+    } else { sec.ondragstart = sec.ondragover = sec.ondragend = null; sec.draggable=false; }
+  });
+}
+function exportMarkdown(){
+  const L = [];
+  L.push('# ' + META.title);
+  L.push('');
+  L.push('> ' + (META.subtitle||''));
+  L.push('> 受众：' + (META.audience_label||META.audience) + '｜报告日：' + META.report_date + '｜数据截止：' + META.data_cutoff);
+  L.push('');
+  L.push('## 核心指标');
+  (PAYLOAD.kpis||[]).forEach(k=>L.push(`- **${k.label}**：${k.value} ${k.unit||''}（${k.delta||''}）[${(k.evidence||[]).join(',')}]`));
+  L.push('');
+  L.push('## 核心结论');
+  CONC.forEach(c=>{
+    L.push(`### ${c.rank}. ${c.text}`);
+    L.push(`- 类型：${c.type}｜置信度：${c.confidence}`);
+    L.push(`- 证据：${(c.evidence||[]).join('、')}`);
+    if((c.calcs||[]).length) L.push(`- 计算：${(c.calcs||[]).join('、')}`);
+    L.push(`- 反证条件：${c.falsify||'未登记'}`);
+    L.push('');
+  });
+  L.push('## 章节');
+  document.querySelectorAll('#sections .sec').forEach(sec=>{
+    const h = sec.querySelector('h2'); const lede = sec.querySelector('.lede');
+    L.push('### ' + (h?h.textContent:''));
+    if (lede) L.push('', lede.textContent);
+    sec.querySelectorAll('.chartbox').forEach(cb=>{
+      const t = cb.querySelector('h4'); const note = cb.querySelector('.note');
+      L.push('', `- 图表：${t?t.textContent:''}${note?'（'+note.textContent+'）':''}`);
+    });
+    sec.querySelectorAll('table.tb').forEach(tb=>{
+      const rows = [...tb.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>td.textContent.trim()).join(' | '));
+      if (rows.length){ L.push('', '| ' + rows[0] + ' |'); L.push('|' + rows[0].split('|').map(()=>' --- ').join('|') + '|'); rows.slice(1).forEach(r=>L.push('| ' + r + ' |')); }
+    });
+    sec.querySelectorAll('.callout').forEach(c=>{ L.push('', '> ' + c.textContent.trim()); });
+    L.push('');
+  });
+  L.push('## 计算过程');
+  Object.values(CALCS).forEach(c=>L.push(`- **${c.id} ${c.title}**：${c.formula} → ${c.output}（${c.result_note||''}）`));
+  L.push('', '## 证据索引');
+  Object.values(SRC).forEach(s=>L.push(`- [${s.id}] ${s.org}｜${s.title}｜${s.date}｜${s.url||''}`));
+  L.push('', '## 资料缺口');
+  Object.values(GAPS).forEach(g=>L.push(`- [${g.id}] ${g.topic}：缺 ${g.missing}；影响 ${g.impact}；下一步 ${g.next_step}`));
+  L.push('', '---', META.disclaimer||'');
+  const blob = new Blob([L.join('\n')], {type:'text/markdown;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (META.slug||'topic-report') + '_' + (META.audience_label||META.audience) + '.md';
+  a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+  toast('已导出 Markdown 完整材料');
+}
+function toast(msg){
+  const d = document.createElement('div');
+  d.textContent = msg;
+  d.style.cssText = 'position:fixed;left:50%;bottom:70px;transform:translateX(-50%);background:#123; border:1px solid #2b4; color:#cfe; padding:9px 16px;border-radius:999px;font-size:12.5px;z-index:120;box-shadow:0 6px 24px rgba(0,0,0,.4)';
+  document.body.appendChild(d); setTimeout(()=>d.remove(), 1800);
+}
+function bindUI(){
+  document.querySelectorAll('[data-view]').forEach(b=> b.onclick = ()=> switchView(b.dataset.view));
+  $id('btn-print').onclick = ()=> window.print();
+  $id('btn-export').onclick = exportMarkdown;
+  $id('btn-order').onclick = ()=> toggleOrder(!ordering);
+  $id('btn-order-done').onclick = ()=> toggleOrder(false);
+  $id('btn-reset').onclick = ()=>{ try{ localStorage.removeItem(LS_KEY); }catch(e){} location.reload(); };
+  $id('scrim').onclick = closePanel;
+  $id('modal').onclick = e=>{ if (e.target === $id('modal')) closeModal(); };
+  document.addEventListener('keydown', e=>{
+    if (e.key === 'Escape'){ closePanel(); closeModal(); }
+    if (e.key === '1') switchView('report');
+    if (e.key === '2') switchView('framework');
+    if (e.key === '3') switchView('evidence');
+  });
+}
+
+/* =========================================================================
+   7. 启动
+   ========================================================================= */
+(function boot(){
+  const stack = [];
+  const step = (name, fn) => { try { fn(); } catch (e) { stack.push(name + ': ' + (e && e.message)); console.error('[boot]', name, e); } };
+  step('header', renderHeader); step('kpis', renderKpis); step('conclusions', renderConclusions);
+  step('quality', renderQuality); step('sections', renderSections); step('charts', ()=>CHARTS.forEach(c => renderChart(c.box, c.spec)));
+  step('bind', bindDynamic); step('ui', bindUI); step('framework', renderFramework); step('evidence', renderEvidenceView);
+  step('view', ()=> switchView('report'));
+  window.__BOOT_ERRORS = stack;
+  if (stack.length) {
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;background:#4a1420;color:#ffd9de;font-size:12px;padding:8px 14px;z-index:200';
+    bar.textContent = '渲染警告：' + stack.join(' | ');
+    document.body.appendChild(bar);
+  }
+})();
+</script>
+</body>
+</html>

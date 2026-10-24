@@ -1,0 +1,58 @@
+{
+  "raw_dir": "./_ppl_raw",
+  "products": {
+    "A": {
+      "name": "PP",
+      "errors": [],
+      "warnings": [
+        "OHLC 内部矛盾 1 处，例：2020-08-06",
+        "零成交日 3 天（多为节假日前后），例：['2015-09-03', '2015-10-01', '2017-01-02']",
+        "连续序列有 1027 个日期在单合约库中找不到对应合约（多为早期历史），已保留但标注"
+      ],
+      "info": {
+        "rows": 3071,
+        "start": "2014-02-28",
+        "end": "2026-10-20",
+        "ohlc_violations": 1,
+        "abs_move_gt15": 0,
+        "zero_volume_days": 3,
+        "dates_without_listed_contract": 1027
+      }
+    },
+    "B": {
+      "name": "L",
+      "errors": [],
+      "warnings": [
+        "单日涨跌超 ±15% 1 处：[('2008-12-15', 16.40625)]",
+        "零成交日 4 天（多为节假日前后），例：['2015-09-03', '2015-10-01', '2017-01-02']",
+        "连续序列有 2630 个日期在单合约库中找不到对应合约（多为早期历史），已保留但标注"
+      ],
+      "info": {
+        "rows": 4674,
+        "start": "2007-07-31",
+        "end": "2026-10-20",
+        "ohlc_violations": 0,
+        "abs_move_gt15": 1,
+        "zero_volume_days": 4,
+        "dates_without_listed_contract": 2630
+      }
+    }
+  },
+  "cross": {
+    "A_dates": 3071,
+    "B_dates": 4674,
+    "common_dates": 3069,
+    "A_only": 2,
+    "B_only": 1605,
+    "common_start": "2014-02-28",
+    "common_end": "2026-10-20",
+    "roll_events": 48,
+    "rolls_A": 23,
+    "rolls_B": 25,
+    "max_abs_roll_spread_pct": 8.707688435887755
+  },
+  "gate": {
+    "errors": 0,
+    "passed": true
+  }
+}

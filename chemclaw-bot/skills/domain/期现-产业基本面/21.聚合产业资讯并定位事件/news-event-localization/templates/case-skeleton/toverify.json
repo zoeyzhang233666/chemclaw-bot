@@ -1,0 +1,26 @@
+{
+ "questions": [
+  {
+   "q_id": "Q01",
+   "event_id": "EVT-XXX-20261019-001",
+   "question": "【示例】要具体，可被验证",
+   "why_matters": "【示例】为什么这个问题影响结论",
+   "evidence_needed": "【示例】需要什么证据才算解决",
+   "where_to_get": "【必填，需可执行】去哪里取：具体站点+检索路径+时间范围",
+   "status": "未取得",
+   "priority": "高",
+   "blocked_by": "【示例】当前卡点：会员墙 / 需登录 / 站点451"
+  },
+  {
+   "q_id": "Q02",
+   "event_id": "*",
+   "question": "【示例】全局覆盖度问题：政府侧源是否覆盖足够？",
+   "why_matters": "【示例】源覆盖不足会让事件看板系统性偏向资讯机构口径",
+   "evidence_needed": "【示例】补查哪几个官方栏目",
+   "where_to_get": "【示例】某部委公示栏目 + 指定时间范围",
+   "status": "未取得",
+   "priority": "中",
+   "blocked_by": ""
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "report": {
+  "report_date": "2026-10-16",
+  "prev_baseline_date": "2026-10-15",
+  "prev_label": "10月15日收盘（再上一期）",
+  "title": "多品种产业研究晨报（上一期基线）",
+  "products": ["甲醇", "PP", "PVC"],
+  "region_focus": "全国 / 华东 / 华南 / 华北 / 西北",
+  "cutoff": "2026-10-16 15:00 日盘收盘（不含夜盘）",
+  "session_note": "本文件仅作为 2026-10-20 晨报的对比基线，用来验证『上期→本期』的变化检测链路；它不是一次完整的独立晨报。",
+  "analyst": "期现·产业基本面",
+  "issue": 1
+ },
+ "profile": {"name": "甲醇/PP/PVC 期现研究", "created": "2026-10-16", "reuse": true},
+ "paths": {"raw": "raw"},
+ "futures": {
+  "甲醇": {"secid": "115.MAM", "series_label": "MA主连", "name": "甲醇主连"},
+  "PP": {"secid": "114.ppm", "series_label": "PP主连", "name": "PP主连"},
+  "PVC": {"secid": "114.vm", "series_label": "V主连", "name": "PVC主连"}
+ },
+ "indicators": [
+  {"id": "MA-future", "product": "甲醇", "module": "price", "name": "甲醇主力收盘", "spec": "主连", "region": "郑商所", "unit": "元/吨", "tax": "不含税", "current": 3366, "data_date": "2026-10-16", "base": 3354, "base_date": "2026-10-15", "source": "东方财富行情", "source_url": "https://quote.eastmoney.com/"},
+  {"id": "MA-spot-JS", "product": "甲醇", "module": "price", "name": "江苏甲醇现货主流价", "spec": "国标", "region": "江苏", "unit": "元/吨", "tax": "含税", "current": 3960, "data_date": "2026-10-16", "base": 3965, "base_date": "2026-10-15", "source": "同花顺iFinD（10-19 快照）", "source_url": "https://news.10jqka.com.cn/20261019/c680848739.shtml"},
+  {"id": "MA-spot-NMG", "product": "甲醇", "module": "price", "name": "内蒙古甲醇主流价", "spec": "国标", "region": "内蒙古", "unit": "元/吨", "tax": "含税", "current": 3072.5, "data_date": "2026-10-16", "base": 3085, "base_date": "2026-10-15", "source": "同花顺iFinD", "source_url": "https://news.10jqka.com.cn/20261019/c680848739.shtml"},
+  {"id": "MA-basis", "product": "甲醇", "module": "basis", "name": "甲醇主力基差", "spec": "江苏现货-主力", "region": "江苏", "unit": "元/吨", "tax": "含税现货-不含税期货", "current": 618, "data_date": "2026-10-16", "base": 611, "base_date": "2026-10-15", "formula": "江苏主流价 - 主力收盘", "source": "派生", "source_url": ""},
+  {"id": "MA-spread", "product": "甲醇", "module": "spread", "name": "甲醇 1-5 价差", "spec": "MA2701-MA2705", "region": "郑商所", "unit": "元/吨", "tax": "不含税", "current": 233, "data_date": "2026-10-16", "base": 218, "base_date": "2026-10-15", "source": "派生（合约收盘）", "source_url": ""},
+  {"id": "MA-inv", "product": "甲醇", "module": "inventory", "name": "沿海甲醇库存", "spec": "样本港口", "region": "沿海", "unit": "万吨", "tax": "-", "current": 41.33, "data_date": "2026-10-15", "base": 37.41, "base_date": "2026-10-08", "source": "卓创资讯（同花顺转载）", "source_url": "https://goodsfu.10jqka.com.cn/20261019/c680817310.shtml"},
+  {"id": "MA-run", "product": "甲醇", "module": "runrate", "name": "国内甲醇装置开工负荷", "spec": "全国样本", "region": "全国", "unit": "%", "tax": "-", "current": 75.32, "data_date": "2026-10-15", "base": 76.7, "base_date": "2026-10-08", "source": "卓创资讯", "source_url": "https://goodsfu.10jqka.com.cn/20261019/c680817310.shtml"},
+  {"id": "MA-mto", "product": "甲醇", "module": "demand", "name": "C/MTO 行业开工", "spec": "全国", "region": "全国", "unit": "%", "tax": "-", "current": 70.67, "data_date": "2026-10-15", "base": 77.37, "base_date": "2026-10-08", "source": "卓创资讯", "source_url": "https://goodsfu.10jqka.com.cn/20261019/c680817310.shtml"},
+  {"id": "PP-future", "product": "PP", "module": "price", "name": "PP 主力收盘", "spec": "主连", "region": "大商所", "unit": "元/吨", "tax": "不含税", "current": 9343, "data_date": "2026-10-16", "base": 9387, "base_date": "2026-10-15", "source": "东方财富行情", "source_url": "https://quote.eastmoney.com/"},
+  {"id": "PP-spot-SH", "product": "PP", "module": "price", "name": "上海 PP(T30S) 主流价", "spec": "拉丝 T30S", "region": "上海", "unit": "元/吨", "tax": "含税", "current": 10900, "data_date": "2026-10-16", "base": 10900, "base_date": "2026-10-15", "source": "同花顺iFinD", "source_url": "https://news.10jqka.com.cn/20261019/c680853125.shtml"},
+  {"id": "PP-basis", "product": "PP", "module": "basis", "name": "PP 主力基差", "spec": "上海拉丝-主力", "region": "上海", "unit": "元/吨", "tax": "含税现货-不含税期货", "current": 1557, "data_date": "2026-10-16", "base": 1513, "base_date": "2026-10-15", "formula": "上海主流价 - 主力收盘", "source": "派生", "source_url": ""},
+  {"id": "PP-spread", "product": "PP", "module": "spread", "name": "PP 1-5 价差", "spec": "PP2701-PP2705", "region": "大商所", "unit": "元/吨", "tax": "不含税", "current": 621, "data_date": "2026-10-16", "base": 640, "base_date": "2026-10-15", "source": "派生（合约收盘）", "source_url": ""},
+  {"id": "V-future", "product": "PVC", "module": "price", "name": "PVC 主力收盘", "spec": "主连", "region": "大商所", "unit": "元/吨", "tax": "不含税", "current": 4858, "data_date": "2026-10-16", "base": 4808, "base_date": "2026-10-15", "source": "东方财富行情", "source_url": "https://quote.eastmoney.com/"},
+  {"id": "V-spot-EC", "product": "PVC", "module": "price", "name": "华东 PVC 电石法主流价", "spec": "电石法五型", "region": "华东", "unit": "元/吨", "tax": "含税", "current": 4801.79, "data_date": "2026-10-16", "base": 4780, "base_date": "2026-10-15", "source": "同花顺iFinD", "source_url": "https://news.10jqka.com.cn/20261019/c680842087.shtml"},
+  {"id": "V-basis", "product": "PVC", "module": "basis", "name": "PVC 主力基差", "spec": "华东电石法-主力", "region": "华东", "unit": "元/吨", "tax": "含税现货-不含税期货", "current": -56.21, "data_date": "2026-10-16", "base": -28, "base_date": "2026-10-15", "formula": "华东主流价 - 主力收盘", "source": "派生", "source_url": ""},
+  {"id": "V-spread", "product": "PVC", "module": "spread", "name": "PVC 1-5 价差", "spec": "V2701-V2705", "region": "大商所", "unit": "元/吨", "tax": "不含税", "current": -243, "data_date": "2026-10-16", "base": -260, "base_date": "2026-10-15", "source": "派生（合约收盘）", "source_url": ""},
+  {"id": "V-run", "product": "PVC", "module": "runrate", "name": "PVC 整体开工负荷", "spec": "PVC 粉全国", "region": "全国", "unit": "%", "tax": "-", "current": 64.49, "data_date": "2026-10-11", "base": 64.49, "base_date": "2026-10-04", "source": "卓创资讯（周度，上期未更新）", "source_url": "https://zx.hm-w.com/analysis/detail/28365"},
+  {"id": "SC-future", "product": "宏观", "module": "cost", "name": "原油 SC 主连收盘", "spec": "SC 主连", "region": "上期能源", "unit": "元/桶", "tax": "不含税", "current": 711.8, "data_date": "2026-10-16", "base": 690.9, "base_date": "2026-10-15", "source": "东方财富行情", "source_url": "https://quote.eastmoney.com/"}
+ ],
+ "events": [],
+ "excluded": [],
+ "gaps": [],
+ "sources": [],
+ "chain": {}
+}

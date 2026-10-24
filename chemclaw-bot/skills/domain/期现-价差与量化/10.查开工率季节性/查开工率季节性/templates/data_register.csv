@@ -1,0 +1,4 @@
+d8,aid,week_end,util,util_c2c,util_yoy,calc,calc_c2c,calc_yoy,eth,eth_c2c,eth_yoy,sample_n,cap_base,source_url,caliber,note
+26072408,NA,20260724,70.14,NA,NA,73.10,NA,NA,63.17,NA,NA,NA,NA,https://example.com/a1,隆众口径·周度,示例行：请替换为你自己的来源
+26073108,NA,20260731,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,https://example.com/a2,隆众口径·周度,示例行：缺失一律写 NA，不要填 0 或插值
+26080708,NA,20260807,71.90,NA,NA,75.14,NA,NA,64.27,NA,NA,NA,NA,https://example.com/a3,隆众口径·周度,示例行

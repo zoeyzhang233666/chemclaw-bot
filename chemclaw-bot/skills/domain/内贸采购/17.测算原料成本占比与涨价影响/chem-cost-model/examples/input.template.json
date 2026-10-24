@@ -1,0 +1,112 @@
+{
+  "_comment": "空白模板：复制本文件为 input.json 后填写。带 __ 的字段必须替换。填完跑 python scripts/validate.py input.json",
+  "meta": {
+    "product": "__产品全称（常用名 / 英文缩写，CAS __）__",
+    "product_short": "__简称，≤6字__",
+    "product_cas": "__CAS__",
+    "product_formula": "__分子式__",
+    "buyer": "__采购方视角，如：华东某厂·采购部__",
+    "region": "__区域口径__",
+    "as_of": "__YYYY-MM-DD 数据截止日__",
+    "target_tax_basis": "tax_included",
+    "target_unit": "CNY/t",
+    "vat_rate_note": "增值税 13% 为默认值，须按企业实际纳税身份核定",
+    "process_id": "__PROCESS_ID__",
+    "process_name": "__工艺名称__",
+    "process_desc": "__工艺简述（主要工序）__",
+    "reaction": "__主反应式，如 A + 2B -> C + H2O__",
+    "caveats": [
+      "本模型只测算单位产品理论原料成本，不含能源、人工、折旧、运输与期间费用。",
+      "不等于生产成本，不能用于推算利润或对外报价。",
+      "不含任何价格预测；敏感性为机械演算。"
+    ]
+  },
+  "process_params": {
+    "basis": "net",
+    "yield_pct": null,
+    "conversion_pct": null,
+    "recycle_pct": null,
+    "notes": "__单耗口径说明：来源、是否已扣回收、有没有双扣风险__"
+  },
+  "materials": [
+    {
+      "id": "__main1__",
+      "name": "__主料1全称__",
+      "cas": "__CAS__",
+      "role": "main",
+      "spec": "__规格，如 ≥99.5%__",
+      "region": "__地区__",
+      "delivery": "__出厂 / 送到 / 自提__",
+      "tax_included": true,
+      "dosage": {
+        "value": 0.0,
+        "unit": "t/t",
+        "source": "user | enterprise | eia | patent | standard | assoc | textbook | research | media | simulated | none",
+        "scope": "__工艺口径（必须与其它主料一致）__",
+        "ref": "__来源文件 + 表号/页 + 原文数值__",
+        "note": "__存疑点或口径提醒__"
+      },
+      "price": {
+        "value": 0.0,
+        "unit": "CNY/t",
+        "tax_included": true,
+        "spec": "__规格__",
+        "region": "__地区__",
+        "delivery": "__交货方式__",
+        "date": "__YYYY-MM-DD__",
+        "source_ref": "__来源名称__",
+        "url": "__可点开的链接__"
+      }
+    },
+    {
+      "id": "__main2__",
+      "name": "__主料2全称__",
+      "role": "main",
+      "spec": "__规格__",
+      "region": "__地区__",
+      "delivery": "__交货方式__",
+      "tax_included": true,
+      "dosage": {"value": 0.0, "unit": "t/t", "source": "none", "scope": "__工艺口径__", "ref": "__来源__"},
+      "price": null
+    }
+  ],
+  "history": {
+    "as_of": "__YYYY-MM-DD__",
+    "basis_note": "历史成本 = 固定单耗 × 同日真实价格；缺价日留空、不插值",
+    "offsets_pct": {},
+    "materials": [],
+    "reference_series": [],
+    "gaps": [],
+    "blend": []
+  },
+  "scenario_config": {
+    "amplitude_series": [
+      {"label": "-10%", "pct": -10},
+      {"label": "-5%", "pct": -5},
+      {"label": "0%", "pct": 0},
+      {"label": "+5%", "pct": 5},
+      {"label": "+10%", "pct": 10}
+    ]
+  },
+  "combo_scenarios": [
+    {"id": "both_up", "name": "__两个主料同时 +10%__", "changes": {"__main1__": 10, "__main2__": 10}}
+  ],
+  "byproducts": [],
+  "not_included": [
+    {"item": "能源（电、蒸汽、循环水、氮气）", "reason": "需企业能耗台账"},
+    {"item": "人工与制造费用", "reason": "不属原料"},
+    {"item": "折旧、设备维护", "reason": "资本性支出分摊"},
+    {"item": "运输、包装、仓储、资金占用", "reason": "与提货方式、账期相关"},
+    {"item": "税费（增值税以外的附加、环保税）", "reason": "不进入原料成本"}
+  ],
+  "unquantified": [],
+  "data_sources": [
+    {"id": "S1", "type": "__A/B/C/D__", "title": "__来源标题__", "url": "__链接__", "used_for": "__用于什么__"}
+  ],
+  "formula_doc": [
+    {"name": "单项成本", "f": "c_i = q_i × p_i", "v": "单耗(t/t) × 价格(元/t) = 元/吨产品"},
+    {"name": "理论原料成本", "f": "C = Σ c_i", "v": "只含已计价原料"},
+    {"name": "成本占比", "f": "w_i = c_i / C", "v": "缺价原料存在时为占已计价部分口径"},
+    {"name": "涨价影响", "f": "Δc_i = q_i × p_i × r", "v": "r 为涨跌幅"}
+  ]
+}

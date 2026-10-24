@@ -1,0 +1,14 @@
+d8,aid,week_end,util,util_c2c,util_yoy,calc,calc_c2c,calc_yoy,eth,eth_c2c,eth_yoy,sample_n,cap_base,source_url,caliber,note
+26072408,NA,20260724,70.14,NA,NA,73.10,NA,NA,63.17,NA,NA,NA,NA,https://api.mysteel.com/publishd/page/pageListIndexCharts?pageListIds=6466,隆众口径·周度,仅图表接口（ID01230780/ID01037485/ID01037486）回传的13周窗口起点；当期速讯原文不可得，环比/同比/样本数未披露
+26080708,NA,20260807,71.90,NA,NA,75.14,NA,NA,64.27,NA,NA,NA,NA,https://api.mysteel.com/publishd/page/pageListIndexCharts?pageListIds=6466,隆众口径·周度,图表接口；原文不可得；样本数与产能基数未披露
+26081408,NA,20260814,73.76,NA,NA,75.89,NA,NA,68.78,NA,NA,NA,NA,https://api.mysteel.com/publishd/page/pageListIndexCharts?pageListIds=6466,隆众口径·周度,图表接口；原文不可得；样本数与产能基数未披露
+26082108,C26D3A0FB2A7580A,20260820,70.68,-0.29,-6.93,72.78,0.20,-4.03,65.80,-1.42,-13.80,71,NA,https://www.mysteel.com/oilchem/a/26082108/C26D3A0FB2A7580A.html,隆众口径·71家样本·周度,原文“样本说明”明确覆盖71家PVC生产企业及厂区
+26082808,7DEF91BDDCB6835A,20260827,68.22,-2.46,-7.80,69.50,-3.28,-7.75,65.25,-0.55,-7.70,71,NA,https://www.mysteel.com/oilchem/a/26082808/7DEF91BDDCB6835A.html,隆众口径·71家样本·周度,原文披露同比；8月1日起甘肃金川新融20万吨退出样本，全国PVC产能基数变更为2878.5万吨/年
+26090409,F1F67482897E2712,20260903,68.30,0.08,-8.83,71.94,2.44,-4.79,59.82,-5.43,-18.32,71,NA,https://www.mysteel.com/oilchem/a/26090409/F1F67482897E2712.html,隆众口径·71家样本·周度,原文披露同比
+26091109,4A3C5544CB6261C6,20260910,69.89,1.58,NA,73.70,NA,NA,61.00,NA,NA,71,NA,https://www.mysteel.com/oilchem/a/26091109/4A3C5544CB6261C6.html,隆众口径·71家样本·周度,原文未披露同比（缺口，不填补）
+26091809,B1C2050F8AFBF228,20260917,69.23,-0.66,NA,73.27,NA,NA,59.82,NA,NA,71,NA,https://www.mysteel.com/oilchem/a/26091809/B1C2050F8AFBF228.html,隆众口径·71家样本·周度,原文未披露同比（缺口，不填补）
+26092418,6B5932167BE55491,20260924,66.74,-2.49,NA,70.57,NA,NA,57.81,NA,NA,71,NA,https://www.mysteel.com/oilchem/a/26092418/6B5932167BE55491.html,隆众口径·71家样本·周度,原文未披露同比（缺口，不填补）
+26100115,739E6FECE3C9CEC4,20261001,66.14,-0.59,NA,71.14,NA,NA,54.48,NA,NA,71,NA,https://www.mysteel.com/oilchem/a/26100115/739E6FECE3C9CEC4.html,隆众口径·71家样本·周度,原文未披露同比；同期数据分析稿注明8月1日起产能基数2878.5万吨/年
+26100817,5749DD2FBDF426C0,20261008,66.26,0.12,-16.37,72.29,1.14,-10.66,52.21,-2.27,-29.69,71,NA,https://www.mysteel.com/oilchem/a/26100817/5749DD2FBDF426C0.html,隆众口径·71家样本·周度,原文披露同比减少16.37%
+26101608,87AD42ED0F95C49B,20261015,64.59,-1.67,-12.10,69.66,-2.62,-5.05,52.78,0.57,-28.48,71,NA,https://www.mysteel.com/oilchem/a/26101608/87AD42ED0F95C49B.html,隆众口径·71家样本·周度,原文“样本说明”覆盖71家；数据分析稿注明基数2878.5万吨/年
+26073008,NA,20260730,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,https://www.mysteel.com/oilchem/a/26082108/C26D3A0FB2A7580A.html,隆众口径·反推值(C5),由20260820原文“环比减少0.29%/0.20%/1.42%”反推得 70.39/72.98/64.38；仅用于交叉校验，不作为观测值参与统计

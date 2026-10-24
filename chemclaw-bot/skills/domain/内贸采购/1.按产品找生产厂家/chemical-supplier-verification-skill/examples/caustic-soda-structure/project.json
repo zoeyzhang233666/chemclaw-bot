@@ -1,0 +1,776 @@
+{
+  "meta": {
+    "title": "烧碱生产厂家核验池（结构示例）",
+    "brand": "氯碱核验",
+    "product": "32% 液碱（氢氧化钠，NaOH）",
+    "product_short": "烧碱",
+    "cas": "1310-73-2",
+    "hs": "2815.12",
+    "standard": "GB/T 11199-2006 参照（结构示例）",
+    "application": "氧化铝 / 造纸 / 水处理",
+    "destination": "示例省·示例市（结构示例）",
+    "destination_short": "示例市",
+    "as_of": "2026-10-19",
+    "capacity_unit": "万吨/年",
+    "quantity_unit": "吨",
+    "currency": "CNY",
+    "sample_note": "4 家匿名占位企业，仅演示结构；数字不是真实产能，不可用于采购。",
+    "lede": "结构示例：换成 32% 液碱后，规格从“总碱量/粒度”变为“NaOH浓度/NaCl/Fe₂O₃”，距离权重提高，危化品资质成为 gate。",
+    "disclaimer": "本文件为匿名占位结构示例，不是真实企业数据，禁止用于采购、报价或供应商准入。",
+    "output_basename": "烧碱生产厂家核验池_结构示例_202610",
+    "theme": {
+      "accent": "#1d4ed8",
+      "accent_2": "#60a5fa",
+      "accent_soft": "#e8f0fe",
+      "ink": "#0b1726"
+    }
+  },
+  "rfq": {
+    "title": "32% 液碱 · 月度集采（结构示例）",
+    "product": "32% 液碱（NaOH）",
+    "spec_ref": "参照 GB/T 11199-2006（结构示例，限值以真实标准为准）",
+    "qty_month": 3000,
+    "qty_year": 36000,
+    "destination": "示例省·示例市（结构示例）",
+    "region_pref": "本省/邻省优先；危化品运输半径优先",
+    "application": "氧化铝 / 造纸 / 水处理",
+    "packaging": "槽车 / ISO 罐",
+    "delivery": "危化品运输，月度均衡到货",
+    "note": "结构示例：匿名占位，不可用于采购。"
+  },
+  "specs": [
+    {
+      "id": "naoh",
+      "label": "NaOH 浓度",
+      "requirement": "≥ 32.0%",
+      "unit": "%",
+      "method": "滴定/密度换算",
+      "why": "有效碱含量，决定投料量",
+      "critical": true
+    },
+    {
+      "id": "na2co3",
+      "label": "Na₂CO₃",
+      "requirement": "≤ 0.20%",
+      "unit": "%",
+      "method": "滴定",
+      "why": "影响下游反应与稳定性",
+      "critical": false
+    },
+    {
+      "id": "nacl",
+      "label": "NaCl",
+      "requirement": "≤ 0.010%",
+      "unit": "%",
+      "method": "电位滴定/离子色谱",
+      "why": "氯离子过高腐蚀设备",
+      "critical": true
+    },
+    {
+      "id": "fe2o3",
+      "label": "Fe₂O₃",
+      "requirement": "≤ 0.0005%",
+      "unit": "%",
+      "method": "ICP-OES",
+      "why": "影响产品色度与催化剂寿命",
+      "critical": true
+    },
+    {
+      "id": "sio2",
+      "label": "SiO₂",
+      "requirement": "≤ 0.005%",
+      "unit": "%",
+      "method": "ICP-OES",
+      "why": "影响结垢与下游纯度",
+      "critical": false
+    },
+    {
+      "id": "color",
+      "label": "外观/色度",
+      "requirement": "无色透明，≤20 Hazen",
+      "unit": "Hazen",
+      "method": "目视/铂钴比色",
+      "why": "客户对液碱外观有要求",
+      "critical": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "org": "结构示例来源",
+      "title": "某匿名氯碱企业官网（占位，非真实来源）",
+      "date": "2026-10-01",
+      "grade": "B",
+      "url": "https://example.com/placeholder",
+      "used": "结构示例：离子膜装置、32%液碱、槽车发货；数字为占位",
+      "accessed": "2026-10-19"
+    },
+    {
+      "id": "S02",
+      "org": "标准示例",
+      "title": "高纯氢氧化钠标准（结构示例，非原文）",
+      "date": "2026-10-01",
+      "grade": "C",
+      "url": "",
+      "used": "结构示例：NaOH/Na₂CO₃/NaCl/Fe₂O₃ 指标框架；具体限值以真实标准为准",
+      "accessed": "2026-10-19"
+    }
+  ],
+  "companies": [
+    {
+      "id": "demo-a",
+      "name": "示例氯碱A（占位）",
+      "full_name": "示例氯碱A（占位）有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "匿名占位",
+      "founded": "2005",
+      "founded_note": "结构示例，非真实成立年份",
+      "employees": 600,
+      "employees_note": "占位",
+      "reg_cap": "—",
+      "hq": "示例省·示例市",
+      "regions": [
+        "示例区域"
+      ],
+      "process": "离子膜法",
+      "products": "32% 液碱、片碱（结构示例）",
+      "capacity": 120,
+      "capacity_year": "结构示例",
+      "output": null,
+      "output_year": "—",
+      "scale_note": "结构示例占位，不是真实产能",
+      "certainty": 90,
+      "spec_score": 80,
+      "availability": 80,
+      "plants": [
+        {
+          "name": "示例氯碱A（占位）示例基地",
+          "province": "示例省",
+          "city": "示例市",
+          "address": "示例化工园区（占位地址）",
+          "lon": null,
+          "lat": null,
+          "capacity": 120,
+          "capacity_year": "结构示例",
+          "process": "离子膜法",
+          "products": "32% 液碱",
+          "note": "匿名占位，仅演示字段",
+          "source_ids": [
+            "S01"
+          ],
+          "distance_km": 90,
+          "distance_band": "≤300km 近距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-A-01",
+          "level": "直接-B",
+          "type": "官网/示例",
+          "title": "结构示例：离子膜烧碱装置",
+          "date": "2026-10-01",
+          "org": "结构示例来源",
+          "url": "https://example.com/placeholder",
+          "quote": "结构示例：示例氯碱A（占位）拥有离子膜烧碱装置，32%液碱，槽车发货；数字为占位。",
+          "proves": "生产身份结构演示",
+          "source_id": "S01"
+        }
+      ],
+      "spec_profile": {
+        "form": "liquid",
+        "concentration": "32%"
+      },
+      "spec_rows": [
+        {
+          "id": "naoh",
+          "label": "NaOH 浓度",
+          "requirement": "≥ 32.0%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "na2co3",
+          "label": "Na₂CO₃",
+          "requirement": "≤ 0.20%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "nacl",
+          "label": "NaCl",
+          "requirement": "≤ 0.010%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "fe2o3",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0005%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "sio2",
+          "label": "SiO₂",
+          "requirement": "≤ 0.005%",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "color",
+          "label": "外观/色度",
+          "requirement": "无色透明，≤20 Hazen",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        }
+      ],
+      "strengths": [
+        "离子膜工艺",
+        "液碱槽车"
+      ],
+      "gaps": [
+        "真实产能未核",
+        "批次COA缺失"
+      ],
+      "action": "结构示例：补环评/许可/COA；替换为真实企业后再评估",
+      "tier": "优先谈判",
+      "rank": 1,
+      "composite": 87.8,
+      "scale_score": 85,
+      "distance_score": 95,
+      "spec_open": 4,
+      "spec_conclusion": "结构示例：4项有公开TDS可对标，2项需COA；不可用于采购。",
+      "nearest_plant": "示例氯碱A（占位）示例基地",
+      "nearest_city": "示例市",
+      "distance_km": 90,
+      "distance_band": "≤300km 近距"
+    },
+    {
+      "id": "demo-b",
+      "name": "示例氯碱B（占位）",
+      "full_name": "示例氯碱B（占位）有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "匿名占位",
+      "founded": "2005",
+      "founded_note": "结构示例，非真实成立年份",
+      "employees": 400,
+      "employees_note": "占位",
+      "reg_cap": "—",
+      "hq": "示例省·示例市",
+      "regions": [
+        "示例区域"
+      ],
+      "process": "离子膜法",
+      "products": "32% 液碱、片碱（结构示例）",
+      "capacity": 80,
+      "capacity_year": "结构示例",
+      "output": null,
+      "output_year": "—",
+      "scale_note": "结构示例占位，不是真实产能",
+      "certainty": 88,
+      "spec_score": 75,
+      "availability": 70,
+      "plants": [
+        {
+          "name": "示例氯碱B（占位）示例基地",
+          "province": "示例省",
+          "city": "示例市",
+          "address": "示例化工园区（占位地址）",
+          "lon": null,
+          "lat": null,
+          "capacity": 80,
+          "capacity_year": "结构示例",
+          "process": "离子膜法",
+          "products": "32% 液碱",
+          "note": "匿名占位，仅演示字段",
+          "source_ids": [
+            "S01"
+          ],
+          "distance_km": 180,
+          "distance_band": "≤300km 近距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-B-01",
+          "level": "直接-B",
+          "type": "官网/示例",
+          "title": "结构示例：离子膜烧碱装置",
+          "date": "2026-10-01",
+          "org": "结构示例来源",
+          "url": "https://example.com/placeholder",
+          "quote": "结构示例：示例氯碱B（占位）拥有离子膜烧碱装置，32%液碱，槽车发货；数字为占位。",
+          "proves": "生产身份结构演示",
+          "source_id": "S01"
+        }
+      ],
+      "spec_profile": {
+        "form": "liquid",
+        "concentration": "32%"
+      },
+      "spec_rows": [
+        {
+          "id": "naoh",
+          "label": "NaOH 浓度",
+          "requirement": "≥ 32.0%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "na2co3",
+          "label": "Na₂CO₃",
+          "requirement": "≤ 0.20%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "nacl",
+          "label": "NaCl",
+          "requirement": "≤ 0.010%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "fe2o3",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0005%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "sio2",
+          "label": "SiO₂",
+          "requirement": "≤ 0.005%",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "color",
+          "label": "外观/色度",
+          "requirement": "无色透明，≤20 Hazen",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        }
+      ],
+      "strengths": [
+        "离子膜工艺",
+        "液碱槽车"
+      ],
+      "gaps": [
+        "真实产能未核",
+        "批次COA缺失"
+      ],
+      "action": "结构示例：补环评/许可/COA；替换为真实企业后再评估",
+      "tier": "重点备选",
+      "rank": 2,
+      "composite": 79.7,
+      "scale_score": 70,
+      "distance_score": 82,
+      "spec_open": 4,
+      "spec_conclusion": "结构示例：4项有公开TDS可对标，2项需COA；不可用于采购。",
+      "nearest_plant": "示例氯碱B（占位）示例基地",
+      "nearest_city": "示例市",
+      "distance_km": 180,
+      "distance_band": "≤300km 近距"
+    },
+    {
+      "id": "demo-c",
+      "name": "示例氯碱C（占位）",
+      "full_name": "示例氯碱C（占位）有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "匿名占位",
+      "founded": "2005",
+      "founded_note": "结构示例，非真实成立年份",
+      "employees": 400,
+      "employees_note": "占位",
+      "reg_cap": "—",
+      "hq": "示例省·示例市",
+      "regions": [
+        "示例区域"
+      ],
+      "process": "离子膜法",
+      "products": "32% 液碱、片碱（结构示例）",
+      "capacity": 60,
+      "capacity_year": "结构示例",
+      "output": null,
+      "output_year": "—",
+      "scale_note": "结构示例占位，不是真实产能",
+      "certainty": 82,
+      "spec_score": 70,
+      "availability": 60,
+      "plants": [
+        {
+          "name": "示例氯碱C（占位）示例基地",
+          "province": "示例省",
+          "city": "示例市",
+          "address": "示例化工园区（占位地址）",
+          "lon": null,
+          "lat": null,
+          "capacity": 60,
+          "capacity_year": "结构示例",
+          "process": "离子膜法",
+          "products": "32% 液碱",
+          "note": "匿名占位，仅演示字段",
+          "source_ids": [
+            "S01"
+          ],
+          "distance_km": 420,
+          "distance_band": "300–800km 中距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-C-01",
+          "level": "直接-B",
+          "type": "官网/示例",
+          "title": "结构示例：离子膜烧碱装置",
+          "date": "2026-10-01",
+          "org": "结构示例来源",
+          "url": "https://example.com/placeholder",
+          "quote": "结构示例：示例氯碱C（占位）拥有离子膜烧碱装置，32%液碱，槽车发货；数字为占位。",
+          "proves": "生产身份结构演示",
+          "source_id": "S01"
+        }
+      ],
+      "spec_profile": {
+        "form": "liquid",
+        "concentration": "32%"
+      },
+      "spec_rows": [
+        {
+          "id": "naoh",
+          "label": "NaOH 浓度",
+          "requirement": "≥ 32.0%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "na2co3",
+          "label": "Na₂CO₃",
+          "requirement": "≤ 0.20%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "nacl",
+          "label": "NaCl",
+          "requirement": "≤ 0.010%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "fe2o3",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0005%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "sio2",
+          "label": "SiO₂",
+          "requirement": "≤ 0.005%",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "color",
+          "label": "外观/色度",
+          "requirement": "无色透明，≤20 Hazen",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        }
+      ],
+      "strengths": [
+        "区域液碱供应"
+      ],
+      "gaps": [
+        "真实产能未核",
+        "批次COA缺失"
+      ],
+      "action": "结构示例：补环评/许可/COA；替换为真实企业后再评估",
+      "tier": "观察/成本备选",
+      "rank": 3,
+      "composite": 70.4,
+      "scale_score": 60,
+      "distance_score": 65,
+      "spec_open": 4,
+      "spec_conclusion": "结构示例：4项有公开TDS可对标，2项需COA；不可用于采购。",
+      "nearest_plant": "示例氯碱C（占位）示例基地",
+      "nearest_city": "示例市",
+      "distance_km": 420,
+      "distance_band": "300–800km 中距"
+    },
+    {
+      "id": "demo-d",
+      "name": "示例氯碱D（占位）",
+      "full_name": "示例氯碱D（占位）有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "匿名占位",
+      "founded": "2005",
+      "founded_note": "结构示例，非真实成立年份",
+      "employees": 400,
+      "employees_note": "占位",
+      "reg_cap": "—",
+      "hq": "示例省·示例市",
+      "regions": [
+        "示例区域"
+      ],
+      "process": "离子膜法",
+      "products": "32% 液碱、片碱（结构示例）",
+      "capacity": 40,
+      "capacity_year": "结构示例",
+      "output": null,
+      "output_year": "—",
+      "scale_note": "结构示例占位，不是真实产能",
+      "certainty": 76,
+      "spec_score": 60,
+      "availability": 50,
+      "plants": [
+        {
+          "name": "示例氯碱D（占位）示例基地",
+          "province": "示例省",
+          "city": "示例市",
+          "address": "示例化工园区（占位地址）",
+          "lon": null,
+          "lat": null,
+          "capacity": 40,
+          "capacity_year": "结构示例",
+          "process": "离子膜法",
+          "products": "32% 液碱",
+          "note": "匿名占位，仅演示字段",
+          "source_ids": [
+            "S01"
+          ],
+          "distance_km": 850,
+          "distance_band": "800–1500km 远距"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "E-D-01",
+          "level": "直接-B",
+          "type": "官网/示例",
+          "title": "结构示例：离子膜烧碱装置",
+          "date": "2026-10-01",
+          "org": "结构示例来源",
+          "url": "https://example.com/placeholder",
+          "quote": "结构示例：示例氯碱D（占位）拥有离子膜烧碱装置，32%液碱，槽车发货；数字为占位。",
+          "proves": "生产身份结构演示",
+          "source_id": "S01"
+        }
+      ],
+      "spec_profile": {
+        "form": "liquid",
+        "concentration": "32%"
+      },
+      "spec_rows": [
+        {
+          "id": "naoh",
+          "label": "NaOH 浓度",
+          "requirement": "≥ 32.0%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "na2co3",
+          "label": "Na₂CO₃",
+          "requirement": "≤ 0.20%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "nacl",
+          "label": "NaCl",
+          "requirement": "≤ 0.010%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "fe2o3",
+          "label": "Fe₂O₃",
+          "requirement": "≤ 0.0005%",
+          "status": "部分公开",
+          "public_info": "结构示例：官网 TDS 标注可对标",
+          "gap": "需连续3批COA与检测方法",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "sio2",
+          "label": "SiO₂",
+          "requirement": "≤ 0.005%",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        },
+        {
+          "id": "color",
+          "label": "外观/色度",
+          "requirement": "无色透明，≤20 Hazen",
+          "status": "未公开",
+          "public_info": "结构示例：未找到公开批次数据",
+          "gap": "需索取COA/第三方检测",
+          "next_action": "RFQ 中要求批次号与检测方法"
+        }
+      ],
+      "strengths": [
+        "区域液碱供应"
+      ],
+      "gaps": [
+        "真实产能未核",
+        "批次COA缺失"
+      ],
+      "action": "结构示例：补环评/许可/COA；替换为真实企业后再评估",
+      "tier": "观察/成本备选",
+      "rank": 4,
+      "composite": 57.8,
+      "scale_score": 50,
+      "distance_score": 40,
+      "spec_open": 4,
+      "spec_conclusion": "结构示例：4项有公开TDS可对标，2项需COA；不可用于采购。",
+      "nearest_plant": "示例氯碱D（占位）示例基地",
+      "nearest_city": "示例市",
+      "distance_km": 850,
+      "distance_band": "800–1500km 远距"
+    }
+  ],
+  "traders": [
+    {
+      "name": "示例贸易商（占位）",
+      "type": "贸易商",
+      "region": "示例区域",
+      "level": "仅工商-D",
+      "evidence": "经营范围含化工产品销售；店铺有液碱SKU；无生产地址/装置/环评。",
+      "why": "只有经营范围与店铺SKU，不能证明生产。",
+      "action": "不纳入；如合作，要求生产厂授权、出厂COA、发货地址与环评。"
+    }
+  ],
+  "conflicts": [
+    {
+      "topic": "示例产能口径",
+      "a": "官网简介：120万吨/年",
+      "b": "环评示例：100万吨/年",
+      "resolution": "并列保留；结构示例不判断哪个正确",
+      "impact": "影响规模分与可供量判断"
+    }
+  ],
+  "gaps": [
+    {
+      "gap": "真实数据未核",
+      "affected": "全部（结构示例）",
+      "impact": "不可用于采购",
+      "verify": "替换为真实企业/来源/日期",
+      "priority": "P0"
+    },
+    {
+      "gap": "批次COA缺失",
+      "affected": "全部",
+      "impact": "无法确认NaOH/NaCl/Fe₂O₃",
+      "verify": "索取连续3批COA+第三方检测",
+      "priority": "P0"
+    }
+  ],
+  "actions": [
+    {
+      "phase": "第1周",
+      "action": "替换占位数据",
+      "detail": "把匿名公司/数字替换为真实企业、真实来源与截止日。"
+    },
+    {
+      "phase": "第2周",
+      "action": "发RFQ+收COA",
+      "detail": "统一数量/收货地/包装；要3批COA与检测方法。"
+    },
+    {
+      "phase": "第3周",
+      "action": "小试+审厂",
+      "detail": "液碱需槽车/ISO罐；看装置、化验室、危化品资质。"
+    }
+  ],
+  "rfq_questions": [
+    "请确认生产工厂地址、离子膜装置与安全生产许可证。",
+    "请提供32%液碱产能、实际产量、月度可供量。",
+    "请提供连续3批COA（NaOH/Na₂CO₃/NaCl/Fe₂O₃/SiO₂/色度）。",
+    "请报出厂价/到厂价、槽车/ISO罐、账期。",
+    "是否接受小试与现场审核？"
+  ],
+  "recommendations": [
+    {
+      "tier": "结构示例",
+      "company": "示例氯碱A（占位）",
+      "note": "仅演示“近距+规模+证据”如何形成排序；不是真实推荐。"
+    }
+  ],
+  "scoring": {
+    "weights": {
+      "certainty": 0.3,
+      "spec": 0.25,
+      "scale": 0.2,
+      "distance": 0.25
+    },
+    "tiers": [
+      {
+        "min": 84,
+        "label": "优先谈判"
+      },
+      {
+        "min": 78,
+        "label": "重点备选"
+      },
+      {
+        "min": 0,
+        "label": "观察/成本备选"
+      }
+    ]
+  }
+}
