@@ -80,6 +80,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'on agent/inbox/discarded',
     'on session/event',
     'effect chemclaw-bot: resume interrupted turns',
+    'effect chemclaw-bot: memory recovery',
     'effect chemclaw-bot: memory section',
     'prompt chemclaw-memory 645',
     'tool remember',

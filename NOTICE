@@ -12,6 +12,8 @@ Apache License 2.0, Copyright 2026 Fei2411 and the DS Bot contributors
     and its final implementation at de55888a.
   - Complete handoff result persistence and missed-reply reconciliation adapted
     from PRs #487 and #497 at the same reference.
+  - Memory read protection, pending transactions, failure feedback and regression
+    tests adapted from PRs #430 (memory only), #492 and #495 at the same reference.
 
 
 ==============================================================================
