@@ -298,7 +298,10 @@ try {
     DEEPSEEK_BASE_URL: modelUrl, DEEPSEEK_API_KEY: 'mock-key',
     CHEMCLAW_UPDATE_URL: `http://127.0.0.1:${updateFeed.address().port}/`,
   })
-  const app = spawn(source ? executable : outsideCheckout(resolve(executable)), [...(source ? [root] : []), `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
+  // Intel macOS runners may have no working EGL display. Exercise the same
+  // renderer with software compositing rather than repeatedly crashing its GPU.
+  const graphics = process.env.CI && process.platform === 'darwin' ? ['--disable-gpu'] : []
+  const app = spawn(source ? executable : outsideCheckout(resolve(executable)), [...(source ? [root] : []), ...graphics, `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
   children.push(app)
   const exited = new Promise((done) => { app.once('exit', (code, signal) => { done({ code, signal }) }) })
   const cdp = devtools((await appPage(port, Date.now() + 120_000)).webSocketDebuggerUrl, problems)

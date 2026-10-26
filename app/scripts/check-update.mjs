@@ -97,7 +97,8 @@ try {
   for (const key of Object.keys(env)) if (/KEY|TOKEN|PASSWORD|SECRET/i.test(key)) delete env[key]
   Object.assign(env, { DS_BOT_HOME: join(work, 'home'), DS_BOT_SHELL_DATA: join(work, 'shell'), CHEMCLAW_UPDATE_URL: feed })
   const port = 9300 + Math.floor(Math.random() * 600)
-  app = spawn(resolve(executable), [`--remote-debugging-port=${String(port)}`], { env, stdio: ['ignore', 'pipe', 'pipe'] })
+  const graphics = process.env.CI && mac ? ['--disable-gpu'] : []
+  app = spawn(resolve(executable), [...graphics, `--remote-debugging-port=${String(port)}`], { env, stdio: ['ignore', 'pipe', 'pipe'] })
   const exited = new Promise((done) => { app.once('exit', (code) => { done(code) }) })
   let output = ''
   for (const stream of [app.stdout, app.stderr]) {
