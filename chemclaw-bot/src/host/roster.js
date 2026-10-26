@@ -596,7 +596,14 @@ export function install(rt) {
   async function bootstrap() {
     await rt.load()
     void rt.syncModels()
-    if (state.mainBotIds.some(id => rt.botOf(id)) && (rt.config.seedTeam === false || rt.presetTeamCurrent?.())) return
+    if (state.mainBotIds.some(id => rt.botOf(id)) && (rt.config.seedTeam === false || rt.presetTeamCurrent?.())) {
+      // ChemClaw preset installs skip team re-seed; still refresh Chinese skill metadata from the plugin seed.
+      if (rt.presetTeamCurrent?.()) {
+        const { ensureSkillLibrary } = await import('./catalog-seed.js')
+        await ensureSkillLibrary(rt)
+      }
+      return
+    }
     bootstrapping ??= (async () => {
       try {
         if (state.mainBotIds.some(id => rt.botOf(id))) return await rt.ensurePresetTeam()

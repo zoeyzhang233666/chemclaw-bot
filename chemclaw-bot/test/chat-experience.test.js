@@ -46,6 +46,23 @@ test('both skill sources and original-name aliases show business copy without ch
   assert.equal(native.description, 'English description')
 })
 
+test('unknown host skills shorten long English titles; mapped native skills stay Chinese', () => {
+  const long = 'Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions'
+  const unknown = { name: 'some-unknown-host-skill', label: long, description: long }
+  const mapped = { name: 'using-superpowers', label: long, description: long }
+  const state = { groups: [{ source: 'skill', items: [unknown, mapped] }] }
+  const projected = localizedSkillSnapshot(state, [], 'zh')
+  const [shortened, chinese] = projected.groups[0].items
+  assert.equal(shortened.name, 'some-unknown-host-skill')
+  assert.equal(shortened.label, 'some-unknown-host-skill')
+  assert.ok(shortened.description.length <= 81)
+  assert.match(shortened.description, /\u2026$|\.\.\.$|…$/)
+  assert.equal(chinese.label, '先按技能流程工作')
+  assert.match(chinese.description, /[\u4e00-\u9fff]/)
+  assert.equal(unknown.label, long)
+  assert.equal(mapped.name, 'using-superpowers')
+})
+
 test('only successful generated file results produce openers, including Unicode and spaces', () => {
   const paths = ['D:\\work\\客户报告 10月.xlsx', '/work/报告.html']
   const call = { kind: 'tool-result', content: [{ type: 'text', text: JSON.stringify({ files: [...paths, paths[0], 'https://example.com/x', 'javascript:alert(1)', 'relative.html'].map(path => ({ path })) }) }] }

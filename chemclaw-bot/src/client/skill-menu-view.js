@@ -4,6 +4,27 @@ import { language, t } from './i18n.js'
 import { freePriority } from './surface.js'
 import { NATIVE_SKILL_ZH } from './native-skill-copy.js'
 
+const TITLE_MAX = 40
+const DESCRIPTION_MAX = 80
+
+const clip = (text, max) => {
+  const value = String(text ?? '').trim()
+  if (value.length <= max) return value
+  return `${value.slice(0, Math.max(0, max - 1)).trimEnd()}…`
+}
+
+// Host skills often put the full SKILL.md description into both label and
+// description; keep the row title short so slash rows do not stack on each other.
+export function displaySkillCopy(candidate, { label, description }) {
+  const title = String(label ?? '').trim()
+  const body = String(description ?? '').trim()
+  const longTitle = title.length > TITLE_MAX || (body && title === body && title.length > TITLE_MAX / 2)
+  return {
+    label: longTitle ? candidate.name : title || candidate.name,
+    description: clip(body || title, DESCRIPTION_MAX),
+  }
+}
+
 export function localizedSkillSnapshot(snapshot, capabilities, locale = language()) {
   const items = new Map(capabilities.filter(item => item.kind === 'skill').map(item => [item.originalName, item]))
   for (const item of capabilities) items.set(item.name, item)
@@ -11,8 +32,9 @@ export function localizedSkillSnapshot(snapshot, capabilities, locale = language
     ...group, items: group.items.map(candidate => {
       const item = items.get(candidate.name)
       const copy = locale.startsWith('zh') && item?.kind !== 'skill' ? NATIVE_SKILL_ZH[candidate.name] : undefined
-      const label = copy?.[0] || (item ? skillLabel(item, locale) : candidate.label || candidate.name)
-      const description = copy?.[1] || (item ? item.purpose || item.description : candidate.description)
+      const rawLabel = copy?.[0] || (item ? skillLabel(item, locale) : candidate.label || candidate.name)
+      const rawDescription = copy?.[1] || (item ? item.purpose || item.description : candidate.description)
+      const { label, description } = displaySkillCopy(candidate, { label: rawLabel, description: rawDescription })
       // Picks are routed by source and index against the original controller.
       return { ...candidate, name: label, label, description, section: item ? t(skillCategory(item)) : candidate.section }
     }),

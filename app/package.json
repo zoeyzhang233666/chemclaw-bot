@@ -1,7 +1,7 @@
 {
   "name": "chemclaw",
   "productName": "ChemClaw",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "ChemClaw desktop app: the chemclaw-bot team on its own pinned DeepSeek Harness.",
   "author": "Fei2411",

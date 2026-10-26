@@ -1,6 +1,6 @@
 {
   "name": "chemclaw-bot",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "ChemClaw: a chemical-industry Bot team for DeepSeek Harness, with Main Bots, Bot-to-Bot messages and group chats",
   "keywords": [
     "dsh-plugin",

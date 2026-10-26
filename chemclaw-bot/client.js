@@ -3260,9 +3260,9 @@ var CONVERSATION_CSS = `
 .bt-artifact-file:focus-visible{outline:2px solid var(--bt-accent);outline-offset:2px}
 .bt-skill-menu{display:contents}
 .bt-skill-menu [data-trigger-menu]{max-width:100%;overflow-x:hidden}
-.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]){display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 10px;padding:10px 12px;min-width:0;height:auto;min-height:58px;box-sizing:border-box;text-align:left}
-.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"])>[class*=_itemName]{flex:1 1 100%;white-space:normal;line-height:20px;font-weight:500;overflow-wrap:anywhere}
-.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"])>[class*=_itemDescription]{flex:1 1 100%;margin-left:0;text-align:left;white-space:normal;line-height:19px;color:var(--bt-ink-2);overflow-wrap:anywhere}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]){display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 10px;padding:10px 12px;min-width:0;height:auto!important;min-height:58px;max-height:none;overflow:visible;box-sizing:border-box;text-align:left}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]) [class*=_itemName]{flex:1 1 100%;max-width:none;white-space:normal!important;line-height:20px;font-weight:500;overflow:visible;overflow-wrap:anywhere}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]) [class*=_itemDescription]{flex:1 1 100%;margin-left:0;max-width:none;text-align:left;white-space:normal!important;line-height:19px;color:var(--bt-ink-2);overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .bt-think{font-size:13px;line-height:18px;color:var(--bt-ink-2);margin:2px 0 4px;max-width:min(560px,78%)}
 .bt-think summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
 .bt-think summary::-webkit-details-marker{display:none}
@@ -17597,12 +17597,39 @@ var NATIVE_SKILL_ZH = {
   "wayfinder": ["规划长期项目", "把复杂目标拆成决策与阶段任务，逐步推进。"],
   "writing-great-skills": ["编写与改进技能", "检查技能的触发条件、步骤和交付要求是否清楚。"],
   "writing-plans": ["编写执行计划", "把目标拆成具体步骤，明确依赖和验收方式。"],
+  "using-superpowers": ["先按技能流程工作", "开始任务前先匹配适用技能，再按流程执行，避免跳过约定步骤。"],
+  "verification-before-completion": ["完成前先核对证据", "声称完成或通过前，先跑验证命令并确认输出，用证据说话。"],
+  "executing-plans": ["按计划逐步执行", "按已写好的实施计划推进，并在检查点做复核。"],
+  "systematic-debugging": ["系统排查问题", "先定位证据与根因，再改代码，避免盲目试错。"],
+  "requesting-code-review": ["发起代码审查", "在合并前请人审查改动是否满足需求与风险控制。"],
+  "receiving-code-review": ["处理审查意见", "核对反馈是否成立，再按证据决定改或不改。"],
+  "finishing-a-development-branch": ["收尾开发分支", "测试通过后决定合并、开 PR 或保留分支。"],
+  "using-git-worktrees": ["用 git worktree 隔离改动", "为功能或计划准备独立工作树，避免污染主目录。"],
+  "dispatching-parallel-agents": ["并行分派子任务", "把互不依赖的工作分给多个代理同时推进。"],
+  "subagent-driven-development": ["用子代理按任务开发", "按计划拆任务，用子代理实现并在节点检查。"],
+  "writing-skills": ["编写新的技能说明", "把触发条件、步骤和交付要求写成可复用的技能。"],
   "chemclaw-delivery": ["报告与文件交付", "制作报告、图表和办公文件，并提供可打开的交付物。"],
   "chemclaw-research-process": ["业务研究与方案复核", "规划研究步骤，核对证据并检查方案中的风险。"]
 };
 
 // src/client/skill-menu-view.js
 var import_react49 = require("react");
+var TITLE_MAX = 40;
+var DESCRIPTION_MAX = 80;
+var clip2 = (text, max) => {
+  const value = String(text ?? "").trim();
+  if (value.length <= max) return value;
+  return `${value.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
+};
+function displaySkillCopy(candidate, { label, description }) {
+  const title = String(label ?? "").trim();
+  const body = String(description ?? "").trim();
+  const longTitle = title.length > TITLE_MAX || body && title === body && title.length > TITLE_MAX / 2;
+  return {
+    label: longTitle ? candidate.name : title || candidate.name,
+    description: clip2(body || title, DESCRIPTION_MAX)
+  };
+}
 function localizedSkillSnapshot(snapshot, capabilities, locale = language()) {
   const items = new Map(capabilities.filter((item) => item.kind === "skill").map((item) => [item.originalName, item]));
   for (const item of capabilities) items.set(item.name, item);
@@ -17611,8 +17638,9 @@ function localizedSkillSnapshot(snapshot, capabilities, locale = language()) {
     items: group.items.map((candidate) => {
       const item = items.get(candidate.name);
       const copy2 = locale.startsWith("zh") && item?.kind !== "skill" ? NATIVE_SKILL_ZH[candidate.name] : void 0;
-      const label = copy2?.[0] || (item ? skillLabel(item, locale) : candidate.label || candidate.name);
-      const description = copy2?.[1] || (item ? item.purpose || item.description : candidate.description);
+      const rawLabel = copy2?.[0] || (item ? skillLabel(item, locale) : candidate.label || candidate.name);
+      const rawDescription = copy2?.[1] || (item ? item.purpose || item.description : candidate.description);
+      const { label, description } = displaySkillCopy(candidate, { label: rawLabel, description: rawDescription });
       return { ...candidate, name: label, label, description, section: item ? t(skillCategory(item)) : candidate.section };
     })
   }) };
