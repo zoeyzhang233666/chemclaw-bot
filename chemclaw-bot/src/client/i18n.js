@@ -7,6 +7,15 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Already saved': '已经保存过了',
+  "Couldn't save to memory": '未能保存记忆',
+  "Couldn't remove from memory": '未能删除记忆',
+  'Memory not changed': '记忆没有变化',
+  'Write something to save': '请填写要保存的内容',
+  'No saved entry matched': '没有匹配的记忆条目',
+  'The memory refused this change': '这次修改未被接受',
+  'The memory could not be changed': '记忆修改失败',
+
   'Continue': '继续',
   'Paused after {count} Bot relays. Waiting: {names}': 'Bot 之间已接力 {count} 次，已暂停。等待继续：{names}',
   'ChemClaw {version} is ready to install.': 'ChemClaw {version} 已下载好，可以安装。',
@@ -581,6 +590,7 @@ const ZH = {
   '{name} was cut off by a restart and picked its work back up': '{name} 的工作被重启打断，已经接着做',
   '{name} was cut off by a restart again and stopped': '{name} 的工作又被重启打断，已停下',
   'Picked up its work after a restart': '重启后接着做之前的工作',
+  'Continued group relays': '继续群聊接力',
   'Asked to make the tool call it wrote as text': '工具调用被写成了文字，已让它重新调用',
   'A Bot': '一个 Bot',
   '{name} is waiting for your approval': '{name} 等你批准',

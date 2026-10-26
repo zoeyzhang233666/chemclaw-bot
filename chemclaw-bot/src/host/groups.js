@@ -1078,10 +1078,10 @@ export function install(rt) {
         return
       }
       // Plugins append context as user-role messages (time, attachments), so only a
-      // message from the user, a scheduled task, or a Bot's post after the last model or
+      // message from the user, a scheduled task, a Continue, or a Bot's post after the last model or
       // tool step starts a relay.
       const opens = message => message.role === 'user'
-        && (message.source?.kind === 'user' || message.source?.kind === 'schedule' || (message.source?.kind === SOURCE_KIND && (message.source.role === 'post' || message.source.role === 'kickoff')))
+        && (message.source?.kind === 'user' || message.source?.kind === 'schedule' || (message.source?.kind === SOURCE_KIND && ['post', 'kickoff', 'resume'].includes(message.source.role)))
       const latest = [...options.messages].reverse()
         .find(message => message.role === 'assistant' || message.role === 'tool' || opens(message))
       if (latest?.role !== 'user') {

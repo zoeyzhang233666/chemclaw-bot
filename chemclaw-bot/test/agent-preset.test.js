@@ -96,6 +96,25 @@ test('a group round calls group_relay directly when the Session declares it', as
   }
 })
 
+test('Continue starts a group relay after the previous round finished', async (t) => {
+  const { relay, stop } = start()
+  t.after(stop)
+  const options = {
+    sessionId: 'room', tools: declared('group_relay'),
+    messages: [
+      userText('Hello team'),
+      { role: 'assistant', content: [] },
+      { role: 'tool', content: [] },
+      { ...userText('[Continue]'), source: { kind: 'bot', form: 'relay', role: 'resume', roomId: 'room' } },
+    ],
+  }
+  const next = () => { throw new Error('a group round never reaches the model') }
+  const chunks = await drain(relay(options, next))
+  assert.equal(chunks.find(chunk => chunk.type === 'block-end')?.block.name, 'group_relay')
+  const finished = await drain(relay({ ...options, messages: [...options.messages, { role: 'tool', content: [] }] }, next))
+  assert.deepEqual(finished, [{ type: 'finish', reason: { kind: 'stop' } }])
+})
+
 test('a group made under the PTC preset relays through run_code', async (t) => {
   const { relay, stop } = start()
   t.after(stop)

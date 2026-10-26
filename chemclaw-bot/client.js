@@ -202,6 +202,14 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "Already saved": "已经保存过了",
+  "Couldn't save to memory": "未能保存记忆",
+  "Couldn't remove from memory": "未能删除记忆",
+  "Memory not changed": "记忆没有变化",
+  "Write something to save": "请填写要保存的内容",
+  "No saved entry matched": "没有匹配的记忆条目",
+  "The memory refused this change": "这次修改未被接受",
+  "The memory could not be changed": "记忆修改失败",
   "Continue": "继续",
   "Paused after {count} Bot relays. Waiting: {names}": "Bot 之间已接力 {count} 次，已暂停。等待继续：{names}",
   "ChemClaw {version} is ready to install.": "ChemClaw {version} 已下载好，可以安装。",
@@ -825,6 +833,7 @@ var ZH = {
   "{name} was cut off by a restart and picked its work back up": "{name} 的工作被重启打断，已经接着做",
   "{name} was cut off by a restart again and stopped": "{name} 的工作又被重启打断，已停下",
   "Picked up its work after a restart": "重启后接着做之前的工作",
+  "Continued group relays": "继续群聊接力",
   "Asked to make the tool call it wrote as text": "工具调用被写成了文字，已让它重新调用",
   "A Bot": "一个 Bot",
   "{name} is waiting for your approval": "{name} 等你批准",
@@ -5815,18 +5824,58 @@ function GroupEvent({ prefix, room: room2, name, roster, actions }) {
     room2 ? (0, import_react14.createElement)("button", { type: "button", onClick: () => actions.openSession(room2.id) }, (0, import_react14.createElement)(RoomAvatar, { room: room2, roster, size: 16 }), room2.name) : name ? (0, import_react14.createElement)("span", null, name) : null
   );
 }
-function MemoryEvent({ sessionId, scope, result, roster, actions, findBot }) {
-  if (!/^(Saved to|Updated in|Removed from) /.test(result)) return null;
+var MEMORY_SAVED = /^(Saved to|Updated in|Removed from) /;
+var MEMORY_ALREADY = /^Already in /;
+var MEMORY_TEAM = /^(team|团队|共享)$/i;
+var MEMORY_OWN = /^(own|me|mine|self|yours?|自己|我)$/i;
+var MEMORY_GROUP = /^(group|this group|群|本群|群聊)$/i;
+function memoryFailure(code) {
+  if (!code) return void 0;
+  switch (code) {
+    case "memory/empty":
+      return t("Write something to save");
+    case "memory/no-match":
+      return t("No saved entry matched");
+    case "memory/refused":
+    case "memory/denied":
+      return t("The memory refused this change");
+    // A write that broke, and any failure this interface does not know.
+    default:
+      return t("The memory could not be changed");
+  }
+}
+function MemoryEvent({ sessionId, scope, tool, result, failed, code, roster, actions, findBot }) {
   const self = roster.byId[sessionId];
-  const team = /^(team|团队|共享)$/i.test(String(scope ?? "").trim());
-  const other = team || !scope ? void 0 : findBot(scope);
+  const room2 = roster.roomsById[sessionId];
+  const named = String(scope ?? "").trim();
+  const team = MEMORY_TEAM.test(named);
+  const other = team || named === "" ? void 0 : findBot(named);
   const target = other && other.id !== self?.id ? other : self;
-  if (!target) return null;
-  const label = team ? t("Team memory updated") : target === self ? t("Memory updated") : t("Updated {name}'s memory", { name: target.name });
+  const panel = team ? self?.id : MEMORY_OWN.test(named) ? self?.id : MEMORY_GROUP.test(named) ? room2?.id : named === "" ? room2?.id ?? self?.id : other?.id;
+  if (!failed && MEMORY_ALREADY.test(result)) {
+    return (0, import_react14.createElement)(
+      "div",
+      { className: "bt-event" },
+      panel === void 0 ? (0, import_react14.createElement)("span", null, (0, import_react14.createElement)(MemoryIcon), t("Already saved")) : (0, import_react14.createElement)("button", { type: "button", onClick: () => actions.openMemory(panel) }, (0, import_react14.createElement)(MemoryIcon), t("Already saved"))
+    );
+  }
+  if (!failed && MEMORY_SAVED.test(result)) {
+    if (!target) return null;
+    const label2 = team ? t("Team memory updated") : target === self ? t("Memory updated") : t("Updated {name}'s memory", { name: target.name });
+    return (0, import_react14.createElement)(
+      "div",
+      { className: "bt-event" },
+      (0, import_react14.createElement)("button", { type: "button", title: result, onClick: () => actions.openMemory(target.id) }, (0, import_react14.createElement)(MemoryIcon), label2)
+    );
+  }
+  const reason = memoryFailure(code);
+  const label = failed ? tool === "forget" ? t("Couldn't remove from memory") : t("Couldn't save to memory") : t("Memory not changed");
   return (0, import_react14.createElement)(
     "div",
-    { className: "bt-event" },
-    (0, import_react14.createElement)("button", { type: "button", title: result, onClick: () => actions.openMemory(target.id) }, (0, import_react14.createElement)(MemoryIcon), label)
+    { className: "bt-event bt-event-error", role: "status", title: code },
+    (0, import_react14.createElement)("span", null, (0, import_react14.createElement)(MemoryIcon), label),
+    reason ? (0, import_react14.createElement)("span", null, ` · ${reason}`) : null,
+    panel === void 0 ? null : (0, import_react14.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", onClick: () => actions.openMemory(panel) }, t("Manage"))
   );
 }
 function PartLine({ time }) {
@@ -6007,6 +6056,7 @@ function TriggerCell({ node, sessionId, useRoster, useSessions, useTurnClock, us
       if (source.role === "report") {
         return (0, import_react14.createElement)(GroupEvent, { prefix: t("Replies from"), room: roster.roomsById[source.roomId], name: t("a group chat"), roster, actions });
       }
+      if (source.role === "resume" && source.form === "relay" && roster.roomsById[sessionId]) return (0, import_react14.createElement)("div", { className: "bt-event" }, t("Continued group relays"));
       if (source.role === "resume" || source.resumed === true) return (0, import_react14.createElement)("div", { className: "bt-event" }, t("Picked up its work after a restart"));
       if (source.role === "retry" || source.retried === true) return (0, import_react14.createElement)("div", { className: "bt-event" }, t("Asked to make the tool call it wrote as text"));
       const run = relayed ? commRunOf(
@@ -6418,7 +6468,7 @@ function renderCall(call2, { sessionId, roster, actions, useUi, useWork, findBot
     }
     case "remember":
     case "forget":
-      return done && !call2.isError ? (0, import_react14.createElement)(MemoryEvent, { sessionId, scope: arg("scope"), result: contentText(call2.content), roster, actions, findBot }) : null;
+      return done ? (0, import_react14.createElement)(MemoryEvent, { sessionId, scope: arg("scope"), tool, result: contentText(call2.content), failed: call2.isError === true, code: call2.error?.code, roster, actions, findBot }) : null;
     default:
       return null;
   }
