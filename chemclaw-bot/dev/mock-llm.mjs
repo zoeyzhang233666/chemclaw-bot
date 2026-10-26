@@ -225,6 +225,11 @@ function decide(body) {
     }
     switch (used?.name) {
       case 'group_relay': return [text('')]
+      case 'chem_deliver': {
+        const files = JSON.parse(resultText).files ?? []
+        const names = files.map(file => file.path.split(/[\\/]/).at(-1))
+        return [text(`文件已生成。\n\n| 文件 | 状态 |\n| --- | --- |\n${names.map(name => `| ${name} | 已生成 |`).join('\n')}\n\n[打开 HTML 报告](${names.find(name => name.endsWith('.html'))})`)]
+      }
       case 'create_bot': {
         const name = used.input.name
         return [text(`${name} 已就位。`), tool('message_bot', { to: name, message: `用户刚让我建了你。请用三条要点回我：你打算先做什么、需要用户提供什么、第一周节奏。没有的写“尚未聊过”。` })]
@@ -337,6 +342,9 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    if (/生成群交付样例/.test(userLine) && tools.has('chem_deliver')) return [tool('chem_deliver', {
+      report: JSON.stringify({ title: '纯碱成本利润测算验收', filename: '纯碱成本利润测算_20261023', sections: [{ title: '文件链接验收', text: '这是隔离 mock 样例，用于验证群聊表格文件名和相对链接都能打开真实文件。', table: { columns: ['项目', '测试数值'], rows: [['样例成本', 100], ['样例利润', 20]] } }] }), formats: 'html,xlsx',
+    })]
     const said = lines.slice(openAt + 1)
       .map(line => /^[^:\n]{1,40}: \D*?(\d+)/.exec(line)?.[1])
       .filter(Boolean).map(Number)
@@ -481,6 +489,9 @@ function decide(body) {
   }
   if (/用中文简短介绍 ChemClaw/.test(userText)) return [text('我是 ChemClaw，帮助你完成有依据的化工业务研究与文件交付。'), text('先让团队帮你做哪块？')]
   const delivery = /^交付\s+(.+)$/s.exec(userText.trim())
+  if (/^生成交付样例$/.test(userText.trim()) && tools.has('chem_deliver')) return [tool('chem_deliver', {
+    report: JSON.stringify({ title: '文件交付验收', sections: [{ title: '验证结果', text: '从对话直接点击打开 HTML 和 Excel 文件。' }] }), formats: 'html,xlsx',
+  })]
   if (delivery && tools.has('present')) return [tool('present', { files: [{ path: delivery[1].trim(), description: 'ChemClaw mock verification deliverable' }] })]
   // View cards: 视图选项 and 视图表单 wait for an answer; 视图展示 and 大视图 are
   // display-only — the latter sits just under the view byte limit.
@@ -506,6 +517,32 @@ function decide(body) {
   }
   if (/^\s*大视图/.test(userText) && tools.has('show_view')) {
     return [tool('show_view', { title: 'A long note', view: { type: 'text', text: 'x'.repeat(7800) }, await_reply: false })]
+  }
+  // Interactive views: chart, local formula inputs, sandboxed HTML (display-only).
+  if (/^\s*视图图表/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', {
+      title: 'Weekly volume', await_reply: false,
+      view: { type: 'chart', kind: 'bar', categories: ['Mon', 'Tue', 'Wed'], series: [{ name: 'Tons', values: [12, 18, 9] }], unit: 't' },
+    })]
+  }
+  if (/^\s*视图计算/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', {
+      await_reply: false,
+      view: {
+        type: 'stack', let: { cost: 'qty * price' },
+        children: [
+          { type: 'slider', id: 'qty', label: 'Quantity', min: 1, max: 20, value: 4 },
+          { type: 'number', id: 'price', label: 'Price', min: 1, max: 100, value: 12.5 },
+          { type: 'metric', label: 'Cost', value: { '=': 'cost' } },
+        ],
+      },
+    })]
+  }
+  if (/^\s*视图网页/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', {
+      title: 'Custom board', await_reply: false,
+      view: { type: 'html', html: '<p style="margin:0;color:var(--bt-ink)">Sandboxed sample</p>', summary: 'A sandboxed sample' },
+    })]
   }
   // Streams slowly, then checks the team: exercises the activity row stepping aside
   // for a streaming reply and coming back for the tool.

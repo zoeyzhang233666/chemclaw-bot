@@ -4,7 +4,7 @@ import { FishLogo } from './dsh-primitives.js'
 import { isMainOf } from './sources.js'
 import { currentPart, previewOf, relativeShort } from './text.js'
 import { PlusIcon, SearchIcon, SidebarIcon, GaugeIcon, PlugIcon, PeopleIcon, ClockIcon, GearIcon, PinMarkIcon, ConnectorIcon, SwitchIcon, CloudDownloadIcon, SlidersIcon } from './icons.js'
-import { CloudMark } from './brand-icons.js'
+import { ApiHubMark } from './brand-icons.js'
 import { MAIN_LOOK } from './characters.js'
 import { botState, BotMark, BotAvatar, RoomAvatar } from './mark.js'
 import { reducedMotion } from './activity-row.js'
@@ -311,7 +311,7 @@ export function TeamSidebar(props) {
     h('button', { type: 'button', className: 'bt-row', title: t('Bots'), onClick: () => actions.openSettings('bots') }, h(PlugIcon), wide ? h('span', null, t('Bots')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Group chats'), onClick: () => actions.openSettings('groups') }, h(PeopleIcon), wide ? h('span', null, t('Group chats')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Models · ApiHub'), onClick: () => actions.openModels() }, h(SlidersIcon), wide ? h('span', null, t('Models · ApiHub')) : null),
-    h('button', { type: 'button', className: 'bt-row', title: t('Chemcloud · Data Hub'), onClick: () => actions.openSettings('connectors', 'chem-data-hub') }, h('span', { className: 'bt-row-mark', 'aria-hidden': true }, h(CloudMark)), wide ? h('span', null, t('Chemcloud · Data Hub')) : null),
+    h('button', { type: 'button', className: 'bt-row', title: t('Chemcloud · Data Hub'), onClick: () => actions.openSettings('connectors', 'chem-data-hub') }, h('span', { className: 'bt-row-mark', 'aria-hidden': true }, h(ApiHubMark)), wide ? h('span', null, t('Chemcloud · Data Hub')) : null),
     h('div', { ref: listRef, className: 'bt-list', role: 'region', 'aria-label': t('Bot list') },
       main ? h(BotRow, { ...rowProps, bot: main, marked: markedUnread[main.id] === true }) : roster.ready ? null : h('div', { className: 'bt-hint' }, t('Setting up your Main Bot…')),
       [
@@ -611,7 +611,7 @@ export const RETURN_CSS = `
 `
 
 export function BrandMark({ size = 24 }) {
-  return h('span', { className: 'bt-brand-whale' }, h(BotMark, { look: MAIN_LOOK, size }))
+  return h('span', { className: 'bt-brand-cloud' }, h(ApiHubMark, { size }))
 }
 export function BrandName() {
   return h('span', { style: { fontWeight: 600, fontSize: 14 } }, 'ChemClaw')
@@ -621,6 +621,7 @@ export function BrandName() {
 // and Connect plugins; FooterAccount only shows when the seat went to no one. The
 // shell's footer classes are CSS-module names, so they match on their stems.
 export const SIDEBAR_CSS = `
+.bt-brand-cloud{display:inline-flex;flex:none;color:var(--bt-accent)}
 .bt-side-top .bt-brand{cursor:default;padding-left:6px}
 .bt-side-top .bt-brand:hover{background:none}
 .bt-brand .bt-mark{flex:none}

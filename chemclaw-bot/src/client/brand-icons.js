@@ -1,12 +1,13 @@
 import { createElement as h } from 'react'
+import { CLOUD_OUTLINE } from '../shared/brand.js'
 
 /** APIHub brand mark: hollow cloud outline (chem-cloud Apihub). */
-export function ApiHubMark() {
+export function ApiHubMark({ size = 24 } = {}) {
   return h('svg', {
-    width: 24, height: 24, viewBox: '0 0 32 32', fill: 'none', 'aria-hidden': true,
+    width: size, height: size, viewBox: '0 0 32 32', fill: 'none', 'aria-hidden': true,
     stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
   }, h('path', {
-    d: 'M8.5 23.5h15.2c2.9 0 5.3-2.2 5.3-5.1 0-2.7-2-4.9-4.6-5.2-.6-3.8-3.9-6.7-7.9-6.7-3.2 0-6 1.9-7.3 4.6C6.6 11.4 4 14 4 17.2c0 3.5 2.7 6.3 4.5 6.3Z',
+    d: CLOUD_OUTLINE,
   }))
 }
 

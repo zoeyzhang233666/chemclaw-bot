@@ -84,9 +84,6 @@ export const CHAT_DENY_TOOLS = [
 // Group orchestrator Sessions only relay. Keep group_relay (and run_code on PTC, which
 // wraps it). Everything else on the team list leaves the schema so the first hop is small.
 export const ROOM_ALLOW_TOOLS = ['group_relay', 'run_code']
-// Answers a group gives to what members post after the round moved on (their finished
-// work, mostly), before the user speaks there again.
-export const ROOM_LATE_ROUNDS = 10
 // A member still at work this long after its first tool call lets the round go on; it
 // posts its reply when the work is done.
 export const ROOM_WORK_GRACE_MS = 15_000

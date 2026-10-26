@@ -82,9 +82,9 @@ const question = (callId, over = {}) => ({ id: 'question', callId, question: 'Wh
 const request = (callId, over = {}) => ({ id: 'request', callId, sessionId: chief.id, name: 'DEMO_TOKEN', purpose: 'Test card', status: 'pending', kind: 'fill', ...over })
 
 const text$ = value => [{ type: 'text', text: typeof value === 'string' ? value : JSON.stringify(value) }]
-const call = (name, callId, { args = {}, content = '', subCalls = [], running = false, isError = false } = {}) => (running
+const call = (name, callId, { args = {}, content = '', subCalls = [], running = false, isError = false, error } = {}) => (running
   ? { phase: 'start', name, callId, argsRaw: JSON.stringify(args), subCalls, turn: 0 }
-  : { kind: 'tool-result', name, callId, call: { name, argsRaw: JSON.stringify(args) }, content: text$(content), isError, subCalls })
+  : { kind: 'tool-result', name, callId, call: { name, argsRaw: JSON.stringify(args) }, content: text$(content), isError, ...(error === undefined ? {} : { error }), subCalls })
 const program = (subCalls, over = {}) => call('run_code', 'program', { subCalls, ...over })
 
 test('a member\'s messages in a row stack under its name, and an event line starts a new block', () => {
@@ -147,6 +147,31 @@ test('a user message inside a group relay shows its time', () => {
   const times = findAll(out, node => node.props?.className === 'bt-utime')
   assert.deepEqual(times.map(text), [clockOf(today)])
   assert.deepEqual(times.map(node => node.props.title), [`Today ${clockOf(today)}`])
+})
+
+// A group paused at its relay limit shows the wait, with a Continue button while
+// the room still parks calls — which calls room-continue with the group's id.
+test('a paused group shows the wait, and Continue releases it while calls are parked', () => {
+  const replies = [{ kind: 'paused', names: ['Writer', 'Coder'], count: 6, time: at(0, 14, 5) }]
+  const relay = call('group_relay', 'direct', { content: { replies } })
+
+  // Nothing parked on the room: the line stands alone, with no button.
+  const plain = show(relay, { sessionId: 'room' })
+  const events = findAll(plain, node => node.props?.className === 'bt-event').map(text)
+  assert.deepEqual(events, ['Paused after 6 Bot relays. Waiting: Writer and Coder'])
+  assert.equal(find(plain, node => node.type === 'button' && text(node) === 'Continue'), undefined)
+
+  const parked = { ...room, paused: [{ id: 'writer', name: 'Writer' }] }
+  const clicked = []
+  const live = show(relay, {
+    sessionId: 'room',
+    roster: team({ rooms: [parked], roomsById: { room: parked } }),
+    actions: { continueRoom: id => clicked.push(id) },
+  })
+  const button = find(live, node => node.type === 'button' && text(node) === 'Continue')
+  assert.ok(button, 'the Continue button is drawn while the room parks calls')
+  button.props.onClick()
+  assert.deepEqual(clicked, ['room'])
 })
 
 // The trigger of a post in a group chat carries the event's time, not the post's.
@@ -263,6 +288,101 @@ test('a hidden Bot-to-Bot turn draws none of its sub-calls', () => {
   const root = program([call('request_secret', 'program:ptc:1', { args: { name: 'DEMO_TOKEN' } }), call('message_bot', 'program:ptc:2', { args: { to: 'Writer' } })])
   assert.equal(shown(root, { roster }), '')
   assert.match(shown(root, { roster, turn: 2 }), /Chief needs a key.*Messaged/)
+})
+
+// The line a memory write that changed nothing draws.
+const memoryLine = (root, options) => find(show(root, options), node => node.props?.className === 'bt-event bt-event-error')
+// The buttons a line draws.
+const lineButtons = node => findAll(node, entry => entry.type === 'button')
+// A write that failed, with the kind of failure the host named.
+const failedWrite = (name, args, code, message) => call(name, `${name}:1`, {
+  args, content: `Error: ${message}`, isError: true, error: { name: 'MemoryWriteError', code },
+})
+
+test('a memory write that failed says so, and opens the memory it meant to change', () => {
+  const opened = []
+  const actions = { openMemory: id => opened.push(id) }
+  const line = memoryLine(failedWrite('remember', { scope: 'Writer' }, 'memory/refused', 'Only Main Bots and group admins write the team memory.'), { actions })
+  assert.match(text(line), /Couldn't save to memory/)
+  // The reason is ours, in our words: what the host said stays in the tool record.
+  assert.match(text(line), /The memory refused this change/)
+  assert.doesNotMatch(text(line), /team memory/)
+  assert.equal(line.props.role, 'status')
+  assert.equal(line.props.title, 'memory/refused')
+  // The way into the panel opens the scope the call named.
+  lineButtons(line)[0].props.onClick()
+  assert.deepEqual(opened, ['writer'])
+})
+
+test('a removal that failed says it could not remove the entry, and why', () => {
+  const line = memoryLine(failedWrite('forget', {}, 'memory/no-match', 'No entry in your memory matches "tea".'), {})
+  assert.match(text(line), /Couldn't remove from memory/)
+  assert.match(text(line), /No saved entry matched/)
+  // The entry the call named is not repeated in the notice.
+  assert.doesNotMatch(text(line), /tea/)
+})
+
+test('the reason follows the kind of failure, not the words of the host', () => {
+  const reason = (code, message = 'Error: Something went wrong.') => text(memoryLine(failedWrite('remember', {}, code, message), {}))
+  assert.match(reason('memory/empty'), /Write something to save/)
+  assert.match(reason('memory/no-match'), /No saved entry matched/)
+  assert.match(reason('memory/refused'), /The memory refused this change/)
+  assert.match(reason('memory/denied'), /The memory refused this change/)
+  assert.match(reason('memory/failed'), /The memory could not be changed/)
+  // A failure this interface does not know still says what happened, in short.
+  assert.match(reason('memory/bot-gone'), /The memory could not be changed/)
+})
+
+test('a write with nothing in it says what is missing', () => {
+  const line = memoryLine(failedWrite('remember', {}, 'memory/empty', 'Write the entry to save.'), {})
+  assert.match(text(line), /Couldn't save to memory · Write something to save/)
+})
+
+test('a memory write for a Bot that is gone says so, with no button to nowhere', () => {
+  const opened = []
+  const line = memoryLine(failedWrite('remember', { scope: 'Ghost' }, 'memory/refused', 'No Bot named Ghost.'), { actions: { openMemory: id => opened.push(id) } })
+  assert.match(text(line), /Couldn't save to memory/)
+  assert.equal(lineButtons(line).length, 0)
+  assert.deepEqual(opened, [])
+})
+
+test('a group write opens the memory of the group, and outside a group it has no button', () => {
+  const opened = []
+  const actions = { openMemory: id => opened.push(id) }
+  const failed = failedWrite('remember', { scope: 'group' }, 'memory/refused', 'Only the members of a group chat write its memory.')
+  const inGroup = memoryLine(failed, { sessionId: 'room', actions })
+  assert.match(text(inGroup), /Couldn't save to memory/)
+  lineButtons(inGroup)[0].props.onClick()
+  assert.deepEqual(opened, ['room'])
+  // Outside a group chat there is no group memory to open.
+  const outside = memoryLine(failed, { actions })
+  assert.equal(lineButtons(outside).length, 0)
+})
+
+test('a memory result that is no saved entry says the memory did not change', () => {
+  const line = memoryLine(call('remember', 'remember:1', { content: 'Only Main Bots and group admins write the team memory.' }), {})
+  assert.match(text(line), /Memory not changed/)
+  assert.doesNotMatch(text(line), /team memory/)
+})
+
+test('an entry that was already saved keeps the quiet line, not a failure and not a change', () => {
+  const opened = []
+  const out = show(call('remember', 'remember:1', { content: 'Already in your memory (MEMORY.md): "Likes tea". Nothing changed.' }), { actions: { openMemory: id => opened.push(id) } })
+  assert.equal(find(out, node => node.props?.className === 'bt-event bt-event-error'), undefined)
+  assert.match(text(out), /Already saved/)
+  assert.doesNotMatch(text(out), /Memory updated/)
+  lineButtons(out)[0].props.onClick()
+  assert.deepEqual(opened, ['chief'])
+})
+
+test('a save that came later does not say the earlier one recovered', () => {
+  const failed = failedWrite('remember', {}, 'memory/refused', 'Only Main Bots and group admins write the team memory.')
+  const saved = call('remember', 'remember:2', { content: 'Saved to your memory, in MEMORY.md (MEMORY.md: 20 of 4000 characters).' })
+  const out = shown(program([failed, saved]))
+  // The failure stands, with its own reason; the later save only says its own.
+  assert.equal(count(out, "Couldn't save to memory"), 1)
+  assert.equal(count(out, 'Only Main Bots and group admins write the team memory'), 0)
+  assert.match(out, /Memory updated/)
 })
 
 test('a message line opens the exchange of the chat\'s Bot, from any part', () => {
@@ -525,6 +645,23 @@ test('a goal round draws nothing, while another unknown trigger keeps its event 
   assert.match(text(trigger({ kind: 'webhook' })), /<goal_round>Keep going/)
 })
 
+test('continuing group relays is distinct from recovering work after a restart', () => {
+  const trigger = source => text(expand(TriggerCell({
+    node: { key: 'node', data: { source, turn: 2, content: text$('') }, location: { turn: { turn: 2 } } },
+    sessionId: 'room',
+    useRoster: select => select(team()),
+    useSessions: select => select({ byId: {} }),
+    useTurnClock: select => select({}),
+    useUi: select => select({ visits: {} }),
+    actions: {},
+  })))
+  const continued = trigger({ kind: 'bot', role: 'resume', form: 'relay', roomId: 'room' })
+  assert.match(continued, /Continued group relays/)
+  assert.doesNotMatch(continued, /restart/)
+  assert.match(trigger({ kind: 'bot', role: 'resume' }), /Picked up its work after a restart/)
+  assert.match(trigger({ kind: 'bot', role: 'message', resumed: true }), /Picked up its work after a restart/)
+})
+
 test('an automatically loaded skill shows its business label instead of raw instructions', () => {
   const roster = { ...team(), capabilities: [{ name: 'domain-71', kind: 'skill', description: '期现 / 2.看一个品种的产业链图' }] }
   const out = expand(TriggerCell({
@@ -589,15 +726,18 @@ test('a show_view call the host refused draws nothing; a display-only card draws
   }
   // Refusals the host returned as text reach the cell as a done call; the shared
   // check hides them so the model's retry stays the only card.
-  gone(cell('  ', { type: 'text', text: 'hi' }))
   gone(cell('Card', { type: 'nope' }))
   gone(cell('x'.repeat(8192), { type: 'text', text: 'hi' }))
   gone(cell('Pick', { type: 'options', id: 'o', options: [{ label: 'A' }] }))
   gone(cell('Meter', { type: 'metric', label: 'Done', value: '3' }, { await_reply: true }))
   const card = cell('  Status  ', { type: 'metric', label: 'Done', value: '3' })
-  const title = find(card, node => node.props?.className === 'bt-q-title')
+  const title = find(card, node => node.props?.className === 'bt-view-title')
   assert.ok(title !== undefined)
   assert.equal(text(title), 'Status')
+  // A view needs no title: it then draws without a heading.
+  const bare = cell('  ', { type: 'text', text: 'hi' })
+  assert.equal(find(bare, node => node.props?.className === 'bt-view-title'), undefined)
+  assert.ok(find(bare, node => typeof node.props?.className === 'string' && node.props.className.includes('bt-view-bare')) !== undefined)
 })
 
 test('a display-only call still draws when the args come through the value accessor', () => {
@@ -610,7 +750,39 @@ test('a display-only call still draws when the args come through the value acces
     call: { name: 'show_view', argsRaw: JSON.stringify(data) }, content: text$('The view is on screen.'), subCalls: [],
   }
   const node = show(callNode, { roster: team({ views: {} }) })
-  const title = find(node, item => item.props?.className === 'bt-q-title')
+  const title = find(node, item => item.props?.className === 'bt-view-title')
   assert.ok(title !== undefined, 'the card draws')
   assert.equal(text(title), 'Status')
+})
+
+test('a view works its formulas out, draws a chart, and keeps html in a sandboxed frame', () => {
+  const cell = view => show(call('show_view', 'view-call', { args: { view } }), { roster: team({ views: {} }) })
+  const classed = (node, name) => find(node, item => typeof item.props?.className === 'string' && item.props.className.split(' ').includes(name))
+  const calculator = {
+    type: 'stack', let: { cost: 'req * 2' },
+    children: [
+      { type: 'slider', id: 'req', label: 'Requests', min: 0, max: 100, value: 30 },
+      { type: 'metric', label: 'Cost', value: { '=': "'¥' + cost" }, tone: { '=': "cost > 50 ? 'bad' : 'good'" } },
+    ],
+  }
+  const live = cell(calculator)
+  assert.equal(text(classed(live, 'bt-widget-metric-value')), '¥60')
+  assert.equal(classed(live, 'bt-widget-metric').props['data-tone'], 'bad')
+  assert.ok(classed(live, 'bt-q') !== undefined, 'a view with inputs wears a light frame')
+  assert.equal(find(live, item => item.type === 'input' && item.props.type === 'range').props.value, 30)
+
+  const chart = cell({ type: 'chart', kind: 'bar', categories: ['A', 'B'], series: [{ values: [3, 5] }], unit: 'ms' })
+  assert.ok(classed(chart, 'bt-view-bare') !== undefined, 'a view that only shows has no frame')
+  assert.ok(find(chart, item => item.type === 'svg') !== undefined)
+  assert.equal(find(chart, item => item.type === 'figure').props['data-kind'], 'bar')
+  assert.ok(classed(chart, 'bt-view-more') !== undefined, 'the chart has its menu button')
+  for (const kind of ['hbar', 'line', 'area', 'donut']) {
+    assert.ok(find(cell({ type: 'chart', kind, categories: ['A', 'B'], series: [{ values: [3, 5] }] }), item => item.type === 'svg') !== undefined, kind)
+  }
+
+  const frame = find(cell({ type: 'html', html: '<b>hi</b>', summary: 'A greeting' }), item => item.type === 'iframe')
+  assert.equal(frame.props.sandbox, 'allow-scripts')
+  assert.match(frame.props.srcDoc, /Content-Security-Policy" content="default-src 'none'/)
+  assert.ok(frame.props.srcDoc.indexOf('Content-Security-Policy') < frame.props.srcDoc.indexOf('<b>hi</b>'), 'the policy comes before the markup')
+  assert.equal(frame.props.title, 'A greeting')
 })

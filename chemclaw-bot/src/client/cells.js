@@ -15,6 +15,8 @@ import { turnReasoning, thinkingStep } from './turn-reasoning.js'
 import { FOLD_AT, FOLD_HUGE, stripLongNote, useFold } from './fold.js'
 import { heldCardKey } from './sources.js'
 import { capabilityLabel } from './capability-settings.js'
+import { ArtifactFiles, generatedFiles } from './artifact-files.js'
+import { useArtifactLinks } from './artifact-links.js'
 
 export { clockLabel }
 
@@ -51,8 +53,9 @@ export function Bubbles({ texts, roster, selfId, actions, streaming, sessionId, 
 
 function Bubble({ text, index, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
   const { shown, folded, control } = useFold(text, { limit: fold, whole, live })
+  const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live })
   const key = msgKey ? `${msgKey}:${index}` : undefined
-  const body = h(MarkdownText, { text: linkMentions(shown, roster.bots, selfId), streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
+  const body = h(MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
   return h('div', { className: 'bt-msg' },
     h('div', { className: 'bt-msg-line' },
       lead,
@@ -294,18 +297,69 @@ function GroupEvent({ prefix, room, name, roster, actions }) {
       : name ? h('span', null, name) : null)
 }
 
-// A change remember or forget made, which opens the memory it changed. Refusals and
-// entries already saved changed nothing and show no line.
-function MemoryEvent({ sessionId, scope, result, roster, actions, findBot }) {
-  if (!/^(Saved to|Updated in|Removed from) /.test(result)) return null
+// The results a memory write answers with when it changed the memory, and the
+// one that says the entry was there already.
+const MEMORY_SAVED = /^(Saved to|Updated in|Removed from) /
+const MEMORY_ALREADY = /^Already in /
+
+// The words the memory tools take for a scope.
+const MEMORY_TEAM = /^(team|团队|共享)$/i
+const MEMORY_OWN = /^(own|me|mine|self|yours?|自己|我)$/i
+const MEMORY_GROUP = /^(group|this group|群|本群|群聊)$/i
+
+// Why a memory write changed nothing, in the interface language. The host's own
+// words stay in the tool record: they can name the entries that were asked
+// about, and the notice does not repeat them.
+function memoryFailure(code) {
+  if (!code) return undefined
+  switch (code) {
+    case 'memory/empty': return t('Write something to save')
+    case 'memory/no-match': return t('No saved entry matched')
+    case 'memory/refused':
+    case 'memory/denied': return t('The memory refused this change')
+    // A write that broke, and any failure this interface does not know.
+    default: return t('The memory could not be changed')
+  }
+}
+
+// A change remember or forget made, which opens the memory it changed. A
+// refusal and a write that failed changed nothing, and say so, with the way
+// into the memory panel.
+function MemoryEvent({ sessionId, scope, tool, result, failed, code, roster, actions, findBot }) {
   const self = roster.byId[sessionId]
-  const team = /^(team|团队|共享)$/i.test(String(scope ?? '').trim())
-  const other = team || !scope ? undefined : findBot(scope)
+  const room = roster.roomsById[sessionId]
+  const named = String(scope ?? '').trim()
+  const team = MEMORY_TEAM.test(named)
+  const other = team || named === '' ? undefined : findBot(named)
   const target = other && other.id !== self?.id ? other : self
-  if (!target) return null
-  const label = team ? t('Team memory updated') : target === self ? t('Memory updated') : t("Updated {name}'s memory", { name: target.name })
-  return h('div', { className: 'bt-event' },
-    h('button', { type: 'button', title: result, onClick: () => actions.openMemory(target.id) }, h(MemoryIcon), label))
+  // The panel that shows the memory: the Bot's own, the group's in a group chat,
+  // or none when the scope names a Bot that is not there.
+  const panel = team ? self?.id
+    : MEMORY_OWN.test(named) ? self?.id
+      : MEMORY_GROUP.test(named) ? room?.id
+        : named === '' ? (room?.id ?? self?.id)
+          : other?.id
+  if (!failed && MEMORY_ALREADY.test(result)) {
+    // The entry was there already: a quiet line, and the panel shows it.
+    return h('div', { className: 'bt-event' },
+      panel === undefined ? h('span', null, h(MemoryIcon), t('Already saved')) : h('button', { type: 'button', onClick: () => actions.openMemory(panel) }, h(MemoryIcon), t('Already saved')))
+  }
+  if (!failed && MEMORY_SAVED.test(result)) {
+    if (!target) return null
+    const label = team ? t('Team memory updated') : target === self ? t('Memory updated') : t("Updated {name}'s memory", { name: target.name })
+    return h('div', { className: 'bt-event' },
+      h('button', { type: 'button', title: result, onClick: () => actions.openMemory(target.id) }, h(MemoryIcon), label))
+  }
+  // Nothing was saved. The reason is a short line of our own; what the host
+  // said stays in the tool record.
+  const reason = memoryFailure(code)
+  const label = failed
+    ? (tool === 'forget' ? t("Couldn't remove from memory") : t("Couldn't save to memory"))
+    : t('Memory not changed')
+  return h('div', { className: 'bt-event bt-event-error', role: 'status', title: code },
+    h('span', null, h(MemoryIcon), label),
+    reason ? h('span', null, ` · ${reason}`) : null,
+    panel === undefined ? null : h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.openMemory(panel) }, t('Manage')))
 }
 
 function PartLine({ time }) {
@@ -417,6 +471,7 @@ function chatRow(row, key, { sessionId, selfId, roster, actions, useUi }) {
     case 'divider': return h(PartLine, { key, time: row.time })
     case 'user': return h(EarlierUser, { key, row })
     case 'answer': return h(AnsweredReply, { key, node: { data: row } })
+    case 'view': return h(WidgetCell, { key, sessionId, callId: row.callId, args: { title: row.title, view: row.view }, done: true, roster, actions })
     case 'bot': return h(Bubbles, { key, texts: row.texts, roster, selfId, actions, sessionId: useUi ? sessionId : undefined, msgKey: useUi ? `${sessionId}:${row.time}` : undefined, useUi, fold: FOLD_HUGE })
     case 'event': {
       if (row.role === 'report') return h(GroupEvent, { key, prefix: t('Replies from'), room: roster.roomsById[row.roomId], name: t('a group chat'), roster, actions })
@@ -498,6 +553,7 @@ export function TriggerCell({ node, sessionId, useRoster, useSessions, useTurnCl
       if (source.role === 'report') {
         return h(GroupEvent, { prefix: t('Replies from'), room: roster.roomsById[source.roomId], name: t('a group chat'), roster, actions })
       }
+      if (source.role === 'resume' && source.form === 'relay' && roster.roomsById[sessionId]) return h('div', { className: 'bt-event' }, t('Continued group relays'))
       // A request carried on keeps its role, but its message line was shown already.
       if (source.role === 'resume' || source.resumed === true) return h('div', { className: 'bt-event' }, t('Picked up its work after a restart'))
       if (source.role === 'retry' || source.retried === true) return h('div', { className: 'bt-event' }, t('Asked to make the tool call it wrote as text'))
@@ -755,6 +811,11 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
       if (reply.kind === 'missed') {
         return h('div', { key: `${reply.botId}-${index}`, className: 'bt-event' }, t("{name} didn't answer in time", { name: bot.name }))
       }
+      if (reply.kind === 'paused') {
+        return h('div', { key: `paused-${index}`, className: 'bt-event' },
+          h('span', null, t('Paused after {count} Bot relays. Waiting: {names}', { count: reply.count, names: (reply.names ?? []).join(t(' and ')) })),
+          room?.paused?.length > 0 ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.continueRoom(sessionId) }, t('Continue')) : null)
+      }
       if (reply.kind === 'resumed') {
         return h('div', { key: `${reply.botId}-${index}`, className: 'bt-event' }, t('{name} was cut off by a restart and picked its work back up', { name: bot.name }))
       }
@@ -789,7 +850,7 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
 
 // The calls ToolCell draws. A PTC program (`run_code`) dispatches the real tools as
 // its sub-calls, so a call draws by its own name wherever it sits in the tree.
-const DRAWN = new Set(['message_bot', 'stop_bot', 'create_bot', 'update_bot', 'group_relay', 'create_group', 'update_group', 'delete_group', 'post_to_group', 'ask_user', 'request_secret', 'ask_user_question', 'show_view', 'read_group_chat', 'remember', 'forget'])
+const DRAWN = new Set(['chem_deliver', 'message_bot', 'stop_bot', 'create_bot', 'update_bot', 'group_relay', 'create_group', 'update_group', 'delete_group', 'post_to_group', 'ask_user', 'request_secret', 'ask_user_question', 'show_view', 'read_group_chat', 'remember', 'forget'])
 // Calls whose card a dock above the composer carries when the call is not drawn.
 const CARDS = new Set(['ask_user', 'request_secret', 'show_view'])
 
@@ -820,12 +881,14 @@ function useShownCards(actions, sessionId, callIds) {
   }, [sessionId, key])
 }
 
-function renderCall(call, { sessionId, roster, actions, useUi, useWork, findBot, heldCards }) {
+function renderCall(call, { sessionId, roster, actions, useUi, useWork, findBot, heldCards, openFile }) {
   const tool = toolName(call)
   const done = call.kind === 'tool-result'
   const { text: arg, value: argValue } = toolArgs(call)
   const self = roster.byId[sessionId]
   switch (tool) {
+    case 'chem_deliver':
+      return h(ArtifactFiles, { files: generatedFiles(call), openFile })
     case 'message_bot': {
       const target = findBot(arg('to')) ?? { name: arg('to') ?? '…', color: 'gray' }
       if (done && call.isError) return h('div', { className: 'bt-event' }, t("Couldn't message {name}", { name: target.name }))
@@ -893,13 +956,13 @@ function renderCall(call, { sessionId, roster, actions, useUi, useWork, findBot,
     }
     case 'remember':
     case 'forget':
-      return done && !call.isError ? h(MemoryEvent, { sessionId, scope: arg('scope'), result: contentText(call.content), roster, actions, findBot }) : null
+      return done ? h(MemoryEvent, { sessionId, scope: arg('scope'), tool, result: contentText(call.content), failed: call.isError === true, code: call.error?.code, roster, actions, findBot }) : null
     default:
       return null
   }
 }
 
-export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, actions }) {
+export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, actions, openFile }) {
   const roster = useRoster(value => value)
   const heldCards = useHeldCards?.(state => state[sessionId])
   const root = node.data.root
@@ -915,6 +978,6 @@ export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCa
   useLiveNote(actions, sessionId, `tool:${root.callId ?? node.key}`, note)
   useShownCards(actions, sessionId, drawn.filter(call => CARDS.has(toolName(call)) && call.callId).map(call => call.callId))
   if (drawn.length === 0) return null
-  const env = { sessionId, roster, actions, useUi, useWork, findBot, heldCards }
+  const env = { sessionId, roster, actions, useUi, useWork, findBot, heldCards, openFile }
   return h(Fragment, null, drawn.map((call, index) => h(Fragment, { key: call.callId ?? index }, renderCall(call, env))))
 }

@@ -1,4 +1,5 @@
 export const SKILL_ZH = {
+  'Open generated file {name}': '打开生成的文件 {name}', 'Click to open file': '点击打开文件',
   'Skill library': '技能库', 'Tool services': '工具服务', 'All skills': '全部技能',
   'Installation steps': '安装步骤', 'Install into group': '安装到分组', 'Detect a group automatically': '自动识别分组', 'Group': '分组',
   'Find a skill for the work you want to do.': '按业务任务查找技能，选择后即可在对话中使用。',
