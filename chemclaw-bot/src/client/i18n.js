@@ -7,6 +7,8 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Continue': '继续',
+  'Paused after {count} Bot relays. Waiting: {names}': 'Bot 之间已接力 {count} 次，已暂停。等待继续：{names}',
   'ChemClaw {version} is ready to install.': 'ChemClaw {version} 已下载好，可以安装。',
   'Downloading ChemClaw {version}…': '正在下载 ChemClaw {version}…',
   'Restart now': '立即重启',
@@ -279,6 +281,8 @@ const ZH = {
   'Who answers': '谁来回答',
   'Choose an admin first': '先选一个管理员',
   '@mentions always pick who answers.': '@提及总是指定由谁回答。',
+  'Pause Bot relays after': 'Bot 接力几次后暂停',
+  'Counted since your last message in this group.': '从你在群里的上一条消息算起。',
   Notice: '群公告',
   'Shared instructions every member reads before speaking…': '每位成员发言前都会读到的共同说明…',
   'Group notice': '群公告',
