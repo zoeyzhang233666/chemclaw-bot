@@ -1,8 +1,8 @@
-﻿// Updates: compare this package's version with the newest release where it was
+// Updates: compare this package's version with the newest release where it was
 // installed from (the npm registry, or a GitHub tag for a versioned git install)
 // and, when the user asks, reinstall it through DSH's plugin manager. A new version
 // runs from the next DSH start. A linked or local checkout is never offered one.
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const PKG = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8'))
@@ -14,6 +14,7 @@ export const FETCH_TIMEOUT_MS = 8000
 // The first check waits until the host has settled its own start.
 const STARTUP_DELAY_MS = 15_000
 const VERSION = /^v?(\d+\.\d+\.\d+(?:-[\w.]+)?)(?:\+[\w.]+)?$/
+const applied = result => !result?.error && ['applied', 'restart-required'].includes(result?.application)
 
 /** A release version without its `v` and build metadata, or null. */
 export const cleanVersion = value => VERSION.exec(String(value ?? '').trim())?.[1] ?? null
@@ -123,11 +124,47 @@ export function install(rt) {
   let target = null
   let checking = null
 
+  // A remove-and-install update under hot reload drops this host with its bundle;
+  // a note in the data folder carries the result to the start that follows it.
+  const markerPath = typeof rt.home === 'string' ? join(rt.home, 'update.json') : null
+  const readNote = () => {
+    if (markerPath === null || !existsSync(markerPath) || rt.readOnly?.() !== undefined) return
+    let marker = null
+    try {
+      marker = JSON.parse(readFileSync(markerPath, 'utf8'))
+    } catch (error) {
+      rt.warn('chemclaw-bot: could not read the update note: %s', error?.message ?? error)
+    }
+    if (marker === null) {
+      try { unlinkSync(markerPath) } catch { /* gone is what we want */ }
+    } else if (marker.to === PKG.version) {
+      Object.assign(status, { phase: 'updated', installed: PKG.version })
+      try { unlinkSync(markerPath) } catch { /* gone is what we want */ }
+    } else if (typeof marker.error === 'string' || marker.from !== PKG.version) {
+      rt.warn('chemclaw-bot: the update to %s did not finish: %s', marker.to ?? 'a newer version', typeof marker.error === 'string' ? marker.error.slice(0, 600) : 'the install did not complete')
+      try { unlinkSync(markerPath) } catch { /* gone is what we want */ }
+    }
+    // A clean note on the version that wrote it stays: a reload can still be
+    // running the old modules (the hoisted profile layout keeps one path), and
+    // the next start that runs the new code reports the update then.
+  }
+  if (typeof rt.load === 'function') {
+    const load = rt.load.bind(rt)
+    let noted = false
+    rt.load = async () => {
+      await load()
+      if (!noted && rt.readOnly?.() === undefined) {
+        noted = true
+        readNote()
+      }
+    }
+  } else readNote()
+
   const view = () => ({
     name: status.name, current: status.current, latest: status.latest, source: status.source, notesUrl: status.notesUrl,
     repoUrl: repoUrl(), enabled,
     checkedAt: status.checkedAt, phase: status.phase, installed: status.installed, error: status.error,
-    available: status.phase !== 'installed' && target !== null && status.latest !== null && newer(status.latest, status.current),
+    available: status.phase !== 'installed' && status.phase !== 'updated' && target !== null && status.latest !== null && newer(status.latest, status.current),
   })
 
   // Asked only while the About page is open, so a closed page never calls GitHub.
@@ -170,6 +207,7 @@ export function install(rt) {
   }
 
   async function runCheck() {
+    await rt.load?.()
     // The desktop app updates as a whole, with this package inside it.
     const source = process.env.DS_BOT_APP === '1' ? { kind: 'app' } : sourceOf(await installSpecOf(ctx))
     status.source = source.kind
@@ -211,15 +249,75 @@ export function install(rt) {
     if (typeof service?.installBundle !== 'function') throw new Error('The DSH plugin manager is not available in this profile')
     const chosen = target
     Object.assign(status, { phase: 'installing', error: null })
-    void Promise.resolve(service.installBundle(chosen.spec, chosen.registry ? { registry: chosen.registry } : {}))
+    const options = chosen.registry ? { registry: chosen.registry } : {}
+    // Removing this bundle disposes our context before the promise answers, so the
+    // continuation uses plain fs for the note and a guarded logger.
+    const note = (template, ...args) => { try { rt.warn(template, ...args) } catch { /* our context is disposed */ } }
+    const mark = (error) => {
+      if (markerPath === null) return
+      try {
+        writeFileSync(markerPath, JSON.stringify({
+          from: PKG.version, to: chosen.version, spec: chosen.spec, startedAt: new Date().toISOString(),
+          ...(error === undefined ? {} : { error: String(error).slice(0, 600) }),
+        }))
+      } catch { /* a note that cannot be written just is not there */ }
+    }
+    // A refused removal leaves this version running, with nothing for a later start to report.
+    const unmark = () => { if (markerPath !== null) try { unlinkSync(markerPath) } catch { /* already gone */ } }
+    void Promise.resolve().then(() => service.installBundle(chosen.spec, options))
+      .then(async (result) => {
+        if (result?.error?.code !== 'already-installed') return result
+        // With HMR the plugin manager refuses to install a package the profile already
+        // depends on: remove the bundle (which unloads this host) and install it again.
+        if (typeof service.removeBundle !== 'function') return { error: { code: 'not-removable' } }
+        // Asked before removal drops this host: the spec that puts the old version
+        // back. A registry spec is a range that can resolve to the failed release
+        // again, so pin the version that is actually running.
+        const oldSpec = await Promise.resolve(installSpecOf(ctx)).catch(() => undefined)
+        const previous = typeof oldSpec === 'string' && sourceOf(oldSpec).kind === 'registry' ? `${PKG.name}@${PKG.version}` : oldSpec
+        if (typeof previous !== 'string' || previous.trim() === '') return { error: { code: 'previous-source-unknown', diagnostic: 'The installed source could not be read; the current plugin was kept.' } }
+        mark()
+        const removed = await Promise.resolve(service.removeBundle(PKG.name)).catch((error) => { unmark(); throw error })
+        if (!applied(removed)) {
+          unmark()
+          return { error: removed?.error ?? { code: 'remove-failed' } }
+        }
+        // The bundle is gone now; a failed install leaves no DS Bot unless the old one goes back.
+        const restore = async (failed) => {
+          if (typeof previous !== 'string' || previous === '') return failed
+          const back = await Promise.resolve(service.installBundle(previous, sourceOf(previous).kind === 'registry' && chosen.registry ? { registry: chosen.registry } : {})).catch(error => ({ error: { code: error?.message ?? 'restore failed' } }))
+          if (!applied(back)) {
+            const reason = back?.error?.diagnostic ?? back?.error?.code ?? `install ${back?.application ?? 'failed'}`
+            note('chemclaw-bot: could not reinstall %s after the failed update: %s', previous, reason)
+            return `${failed}; restoring ${previous} failed: ${reason}`
+          }
+          return `${failed}; ${previous} was reinstalled`
+        }
+        try {
+          const again = await service.installBundle(chosen.spec, options)
+          // A failure also arrives as an application state with no error; the
+          // result check below rejects every one of those, so restore sees the
+          // same failures it does.
+          if (!applied(again)) {
+            const reason = await restore(again?.error?.diagnostic ?? again?.error?.code ?? `install ${again?.application ?? 'failed'}`)
+            mark(reason)
+            return { error: { code: 'update-failed', diagnostic: reason } }
+          }
+          return again
+        } catch (error) {
+          const reason = await restore(error?.message ?? String(error))
+          mark(reason)
+          throw new Error(reason, { cause: error })
+        }
+      })
       .then((result) => {
-        if (result?.error || !['applied', 'restart-required'].includes(result?.application)) {
+        if (!applied(result)) {
           throw new Error(result?.error?.diagnostic ?? result?.error?.code ?? `install ${result?.application ?? 'failed'}`)
         }
         Object.assign(status, { phase: 'installed', installed: cleanVersion(result.version) ?? chosen.version })
       })
       .catch((error) => {
-        rt.warn('chemclaw-bot: update to %s failed: %s', chosen.spec, error?.message ?? error)
+        note('chemclaw-bot: update to %s failed: %s', chosen.spec, error?.message ?? error)
         Object.assign(status, { phase: 'failed', error: String(error?.message ?? error).slice(0, 600) })
       })
     return view()

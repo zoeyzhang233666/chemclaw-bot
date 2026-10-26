@@ -16,6 +16,8 @@ Apache License 2.0, Copyright 2026 Fei2411 and the DS Bot contributors
     tests adapted from PRs #430 (memory only), #492 and #495 at the same reference.
   - Interactive view charts, local formulas, sandboxed HTML and display replay
     adapted from PR #471 and its view-related prerequisites at de55888a.
+  - Plugin hot-update reinstall and rollback adapted from PR #505 and its final
+    implementation at de55888a, with additional rejected-rollback guards.
   - Credential-file read protection and regression tests adapted from PR #430
     (secrets only), with read-only and queued-write guards added by ChemClaw.
 
