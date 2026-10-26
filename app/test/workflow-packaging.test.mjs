@@ -43,5 +43,11 @@ test('build tool caches distinguish OS, architecture and dependency lockfile', (
     assert.match(cache.with.key, /app\/package-lock.json/)
     const node = job.steps.find(step => step.uses === 'actions/setup-node@v4')
     assert.equal(node.with.cache, 'npm')
+    const install = job.steps.find(step => step.run === 'npm ci --no-fund --no-audit')
+    const pack = job.steps.find(step => /^npm run (pack|dist)$/.test(step.run ?? ''))
+    assert.equal(install.env?.ELECTRON_CACHE, pack.env.ELECTRON_CACHE)
+    assert.equal(install.env?.ELECTRON_BUILDER_CACHE, pack.env.ELECTRON_BUILDER_CACHE)
+    assert.equal(install.env.electron_config_cache, pack.env.ELECTRON_CACHE)
+    assert.ok(cache.with.path.includes(install.env.ELECTRON_CACHE))
   }
 })
