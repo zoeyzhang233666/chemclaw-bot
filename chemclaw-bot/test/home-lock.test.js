@@ -181,7 +181,8 @@ test('a reading host follows the other host\'s keys, never writes them, and keep
   // After taking over, a new key joins both instead of replacing the file with an old copy.
   writeKeys([key('FIRST_KEY', 'first-value-1'), key('SECOND_KEY', 'second-value-2'), key('THIRD_KEY', 'third-value-3')], 9)
   rmSync(join(home, 'state.lock'))
-  assert.equal((await call('secret-set', { name: 'MINE', value: 'mine-value-1' })).ok, true)
+  const result = await call('secret-set', { name: 'MINE', value: 'mine-value-1' })
+  assert.equal(result.ok, true, JSON.stringify(result.error))
   const saved = JSON.parse(readFileSync(secretsPath, 'utf8')).secrets.map(secret => secret.name).sort()
   assert.deepEqual(saved, ['FIRST_KEY', 'MINE', 'SECOND_KEY', 'THIRD_KEY'])
 })

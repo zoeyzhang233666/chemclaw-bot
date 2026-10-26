@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict'
 import { randomBytes } from 'node:crypto'
-import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import fsPromises from 'node:fs/promises'
+import { syncBuiltinESMExports } from 'node:module'
+import { mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
-import { apply } from './legacy-runtime.js'
+import { createRuntime } from './legacy-runtime.js'
 import { canUse, encodeUrlComponent, normalizeName, redactDeep, redactor, SECRET_NAME } from '../src/host/secrets.js'
 import { fakeContext } from './fake-ctx.js'
 
@@ -82,8 +84,7 @@ const TEAM = {
   questions: {},
 }
 
-function start() {
-  const home = mkdtempSync(join(tmpdir(), 'ds-bot-secrets-'))
+function start({ home = mkdtempSync(join(tmpdir(), 'ds-bot-secrets-')) } = {}) {
   writeFileSync(join(home, 'state.json'), JSON.stringify(TEAM))
   const contributors = []
   const shellEnv = {
@@ -113,7 +114,7 @@ function start() {
   }
   let route
   ctx.connection.fetch.register = (options) => { route = options; return () => {} }
-  apply(ctx, { home })
+  const rt = createRuntime(ctx, { home })
   const call = async (endpoint, payload) => {
     const response = await route.fetch(new Request('http://localhost/api/bot', { method: 'POST', body: JSON.stringify({ endpoint, payload }) }))
     return response.json()
@@ -130,7 +131,7 @@ function start() {
   }
   const env = (agentId, command = '') => contributors.filter(entry => entry.live).at(-1)?.resolve({ agent: { id: agentId, session: { header: { id: agentId } } }, arguments: { command } }) ?? {}
   const stop = async () => { await ctx.dispose(); rmSync(home, { recursive: true, force: true, maxRetries: 5 }) }
-  return { ctx, home, call, tool, view, env, listeners, delivered, streamed, contributors, stop }
+  return { rt, ctx, home, call, tool, view, env, listeners, delivered, streamed, contributors, stop }
 }
 
 // Bootstrap would create a Main Bot when none exists; this team has one, so it only loads.
@@ -311,4 +312,90 @@ test('tool results and model requests lose the values', async (t) => {
   assert.equal(passed.length, 1)
   stream({ ...options, system: 'clean', messages: [] }, next)
   assert.equal(passed.length, 2)
+})
+
+test('a secrets file that cannot be read blocks every write instead of being overwritten', async (t) => {
+  // A directory reads as EISDIR on every platform; no chmod games needed. It has to
+  // exist before the plugin loads, or the first read has already found the file empty.
+  const home = mkdtempSync(join(tmpdir(), 'ds-bot-secrets-'))
+  mkdirSync(join(home, 'secrets.json'))
+  const bench = start({ home })
+  t.after(bench.stop)
+  const file = join(home, 'secrets.json')
+  const denied = await bench.call('secret-set', { name: 'TEST_TOKEN', value: '12345678' })
+  assert.equal(denied.ok, false)
+  assert.match(denied.error.message, /secrets\.json could not be read \(EISDIR\)\. ChemClaw does not change it/)
+  assert.ok(statSync(file).isDirectory())
+  // While it stays unreadable, nothing is written; once it is gone, saving works.
+  rmSync(file, { recursive: true })
+  const saved = await bench.call('secret-set', { name: 'TEST_TOKEN', value: '12345678' })
+  assert.equal(saved.ok, true, JSON.stringify(saved.error))
+})
+
+test('a secrets file that is not JSON is kept aside, and the store goes on', async (t) => {
+  const home = mkdtempSync(join(tmpdir(), 'ds-bot-secrets-'))
+  writeFileSync(join(home, 'secrets.json'), 'not a secrets file\n')
+  const bench = start({ home })
+  t.after(bench.stop)
+  const saved = await bench.call('secret-set', { name: 'TEST_TOKEN', value: '12345678' })
+  assert.equal(saved.ok, true, JSON.stringify(saved.error))
+  const broken = readdirSync(home).filter(name => name.startsWith('secrets.json.broken-'))
+  assert.deepEqual(broken.length, 1)
+  assert.equal(readFileSync(join(home, broken[0]), 'utf8'), 'not a secrets file\n')
+})
+
+test('a read-only process never backs up or resets malformed credential data', async t => {
+  const home = mkdtempSync(join(tmpdir(), 'chemclaw-secrets-readonly-'))
+  const original = '{broken credential data\n'
+  writeFileSync(join(home, 'secrets.json'), original)
+  const bench = start({ home })
+  t.after(bench.stop)
+  const originalReadOnly = bench.rt.readOnly
+  bench.rt.readOnly = () => 'Another host owns the team'
+  await bench.rt.loadSecrets()
+  assert.equal(readFileSync(join(home, 'secrets.json'), 'utf8'), original)
+  assert.equal(readdirSync(home).filter(name => name.startsWith('secrets.json.broken-')).length, 0)
+  bench.rt.readOnly = originalReadOnly
+  const saved = await bench.call('secret-set', { name: 'TEST_TOKEN', value: fresh() })
+  assert.equal(saved.ok, true, JSON.stringify(saved.error))
+  const backups = readdirSync(home).filter(name => name.startsWith('secrets.json.broken-'))
+  assert.equal(backups.length, 1)
+  assert.equal(readFileSync(join(home, backups[0]), 'utf8'), original)
+})
+
+test('taking over during a shared read refreshes the last writer snapshot before saving', async t => {
+  const bench = start()
+  t.after(bench.stop)
+  await bench.view()
+  const file = join(bench.home, 'secrets.json')
+  const key = name => ({ name, value: fresh(), scope: 'all', createdAt: 1, updatedAt: 1 })
+  writeFileSync(file, JSON.stringify({ version: 1, secrets: [key('FIRST')] }))
+  const originalReadOnly = bench.rt.readOnly
+  bench.rt.readOnly = () => 'Another host owns the team'
+  let release
+  let started
+  const gate = new Promise(resolve => { release = resolve })
+  const reading = new Promise(resolve => { started = resolve })
+  const originalRead = fsPromises.readFile
+  let delayed = false
+  const mock = t.mock.method(fsPromises, 'readFile', async (path, ...args) => {
+    const content = await originalRead(path, ...args)
+    if (path === file && !delayed) {
+      delayed = true
+      started()
+      await gate
+    }
+    return content
+  })
+  syncBuiltinESMExports()
+  t.after(() => { release(); mock.mock.restore(); syncBuiltinESMExports() })
+  const oldRead = bench.rt.loadSecrets()
+  await reading
+  writeFileSync(file, JSON.stringify({ version: 1, secrets: [key('FIRST'), key('LATEST')] }))
+  bench.rt.readOnly = originalReadOnly
+  const saving = bench.rt.secretEndpoint('secret-set', { name: 'MINE', value: fresh() })
+  release()
+  await oldRead
+  await saving
+  assert.deepEqual(JSON.parse(readFileSync(file, 'utf8')).secrets.map(entry => entry.name).sort(), ['FIRST', 'LATEST', 'MINE'])
 })
