@@ -225,6 +225,11 @@ function decide(body) {
     }
     switch (used?.name) {
       case 'group_relay': return [text('')]
+      case 'chem_deliver': {
+        const files = JSON.parse(resultText).files ?? []
+        const names = files.map(file => file.path.split(/[\\/]/).at(-1))
+        return [text(`文件已生成。\n\n| 文件 | 状态 |\n| --- | --- |\n${names.map(name => `| ${name} | 已生成 |`).join('\n')}\n\n[打开 HTML 报告](${names.find(name => name.endsWith('.html'))})`)]
+      }
       case 'create_bot': {
         const name = used.input.name
         return [text(`${name} 已就位。`), tool('message_bot', { to: name, message: `用户刚让我建了你。请用三条要点回我：你打算先做什么、需要用户提供什么、第一周节奏。没有的写“尚未聊过”。` })]
@@ -337,6 +342,9 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    if (/生成群交付样例/.test(userLine) && tools.has('chem_deliver')) return [tool('chem_deliver', {
+      report: JSON.stringify({ title: '纯碱成本利润测算验收', filename: '纯碱成本利润测算_20261023', sections: [{ title: '文件链接验收', text: '这是隔离 mock 样例，用于验证群聊表格文件名和相对链接都能打开真实文件。', table: { columns: ['项目', '测试数值'], rows: [['样例成本', 100], ['样例利润', 20]] } }] }), formats: 'html,xlsx',
+    })]
     const said = lines.slice(openAt + 1)
       .map(line => /^[^:\n]{1,40}: \D*?(\d+)/.exec(line)?.[1])
       .filter(Boolean).map(Number)

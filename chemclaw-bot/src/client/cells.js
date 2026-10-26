@@ -16,6 +16,7 @@ import { FOLD_AT, FOLD_HUGE, stripLongNote, useFold } from './fold.js'
 import { heldCardKey } from './sources.js'
 import { capabilityLabel } from './capability-settings.js'
 import { ArtifactFiles, generatedFiles } from './artifact-files.js'
+import { useArtifactLinks } from './artifact-links.js'
 
 export { clockLabel }
 
@@ -52,8 +53,9 @@ export function Bubbles({ texts, roster, selfId, actions, streaming, sessionId, 
 
 function Bubble({ text, index, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
   const { shown, folded, control } = useFold(text, { limit: fold, whole, live })
+  const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live })
   const key = msgKey ? `${msgKey}:${index}` : undefined
-  const body = h(MarkdownText, { text: linkMentions(shown, roster.bots, selfId), streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
+  const body = h(MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
   return h('div', { className: 'bt-msg' },
     h('div', { className: 'bt-msg-line' },
       lead,

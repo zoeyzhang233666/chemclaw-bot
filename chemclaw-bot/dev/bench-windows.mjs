@@ -40,6 +40,7 @@ boot.initProfile(dir, ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', 'che
 writeFileSync(join(dir, 'cordis.patch.yml'), `- id: chemclaw\n  config:\n    seedTeam: false\n    companyConnectors: false\n    mainName: Chief\n    mainRole: Chief of Staff\n    checkRatio: 0.45\n    updateCheck: false\n- id: llm-deepseek\n  config:\n    models:\n      - { id: deepseek-v4.1-flash, contextWindow: 100000, maxTokens: 8000, inputModalities: [text, image] }\n      - { id: deepseek-v4-pro, contextWindow: 100000, maxTokens: 8000 }\n- id: ui-settings-account\n  config:\n    version: 1\n    step: done\n    purpose: office\n    process: compact\n    completion: completed\n    usage: compact\n    developerTools: true\n`)
 writeFileSync(join(dir, 'cordis.patch.yml'), readFileSync(join(dir, 'cordis.patch.yml'), 'utf8') + '\n- id: session-log-deepseek\n  disabled: true\n- id: session-telemetry-otel\n  disabled: true\n- id: workspace-changes\n  disabled: true\n');
 if (inspectUi) writeFileSync(join(dir, 'cordis.patch.yml'), readFileSync(join(dir, 'cordis.patch.yml'), 'utf8').replace('seedTeam: false', 'seedTeam: true'))
+if (inspectUi) writeFileSync(join(dir, 'cordis.patch.yml'), readFileSync(join(dir, 'cordis.patch.yml'), 'utf8').replace('- id: workspace-changes\n  disabled: true', '- id: workspace-changes\n  config:\n    timeoutMs: 1000'))
 const profile = boot.loadProfileDirectory('dsh', dir, anchor)
 let running
 try {

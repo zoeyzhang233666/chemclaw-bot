@@ -58,5 +58,5 @@ test('only successful generated file results produce openers, including Unicode 
   const opened = []
   const view = ArtifactFiles({ files, openFile: path => opened.push(path) })
   for (const button of view.children) button.props.onClick()
-  assert.deepEqual(opened, paths)
+  assert.deepEqual(opened, paths.map(path => path.replaceAll('\\', '/')))
 })

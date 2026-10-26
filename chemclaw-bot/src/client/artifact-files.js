@@ -21,7 +21,7 @@ export function ArtifactFiles({ files, openFile }) {
   return h('div', { className: 'bt-artifact-files' }, files.map(file => {
     const name = file.path.split(/[\\/]/).at(-1)
     return h('button', { key: file.path, type: 'button', className: 'bt-artifact-file', title: file.path,
-      'aria-label': t('Open generated file {name}', { name }), onClick: () => openFile(file.path) },
+      'aria-label': t('Open generated file {name}', { name }), onClick: () => openFile(file.path.replaceAll('\\', '/')) },
     h('strong', null, name), h('span', null, t('Click to open file')))
   }))
 }
