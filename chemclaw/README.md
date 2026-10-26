@@ -22,7 +22,7 @@ node chemclaw/scripts/install-seed.mjs
    - 写出 [`SETUP_FOR_CHIEF.md`](SETUP_FOR_CHIEF.md)
 
 4. 把 `SETUP_FOR_CHIEF.md` 贴给 Main Bot（或已改名的 ChemClaw），让它创建 Bot 与群聊并 `attach_capability`。
-5. **Settings → Secrets** 配置（名称需与模板一致）：
+5. **Settings → Connectors** 配置公司数据连接（名称需与模板一致）：
    - `CHEM_DATA_HUB`
    - `CHEM_BIZ_SCOPE`
    - `QCC`

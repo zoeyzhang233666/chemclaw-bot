@@ -137,7 +137,7 @@ test('a failed MCP connection shows the error without the token, and Try again m
   assert.equal(mounts.length, 2)
 })
 
-test('deleting GITHUB_TOKEN on the Secrets page unmounts GitHub', async (t) => {
+test('deleting GITHUB_TOKEN unmounts GitHub', async (t) => {
   const realFetch = globalThis.fetch
   t.after(() => { globalThis.fetch = realFetch })
   globalThis.fetch = async () => answer(200, { login: 'octo' })

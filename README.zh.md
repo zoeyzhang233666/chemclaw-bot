@@ -31,7 +31,7 @@ ChemClaw 是一套面向化工业务的 AI 助手团队：帮你做客户开发�
 
 1. 从 [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载安装包（如 `ChemClaw-0.2.0-win-x64.exe`）并安装。
 2. 打开 ChemClaw → **设置 → 模型**：填入你的模型 Key（默认提供 APIHub 入口，领取：https://apihub.chem-cloud.cn/ ，接口：https://apihub.chem-cloud.cn/v1 ）。
-3. 如需公司化工数据：到 **设置 → 连接器 → 化工云数据中台**，只粘贴 Key（领取：https://mcp.chem-cloud.cn/ ）。不要把 Key 发到聊天里。
+3. 如需公司化工数据：到 **设置 → 连接器 → 芯化和云数据中台**，只粘贴 Key（领取：https://mcp.chem-cloud.cn/ ）。不要把 Key 发到聊天里。
 4. 在左侧点一个 Bot 或协作群，用自然语言说明产品、地区、时间和目的，例如：「帮我看华东甲醇近一个月采购谈价行情，标出缺数和来源，给我 HTML 和 Excel。」
 
 公开化学查询和免费网页搜索通常不用公司 Key；有没有连上数据，以连接器页面的状态为准。

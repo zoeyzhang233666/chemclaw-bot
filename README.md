@@ -31,7 +31,7 @@ Short rule: **trends or interaction → HTML first; static briefing → PPT is f
 
 1. Download the installer from [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) (for example `ChemClaw-0.2.0-win-x64.exe`) and install it.
 2. Open ChemClaw → **Settings → Models**, paste your model Key (APIHub is listed first: https://apihub.chem-cloud.cn/ , endpoint https://apihub.chem-cloud.cn/v1 ).
-3. For company chemical data: **Settings → Connectors → Chemical Data Hub**, paste only the Key from https://mcp.chem-cloud.cn/ . Never put Keys in chat.
+3. For company chemical data: **Settings → Connectors → Chemcloud Data Hub**, paste only the Key from https://mcp.chem-cloud.cn/ . Never put Keys in chat.
 4. Pick a Bot or group in the sidebar and ask in plain language, e.g. “East China methanol prices over the last month for procurement talks; mark gaps and sources; deliver HTML and Excel.”
 
 Public chemistry lookups and keyless web search usually need no company Key. Trust the Connectors status for whether data services are connected.

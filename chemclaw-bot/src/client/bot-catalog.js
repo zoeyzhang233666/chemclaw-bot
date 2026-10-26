@@ -12,7 +12,7 @@ export function BotCatalog({ actions, roster, kind = 'role' }) {
   const wanted = query.trim().toLowerCase()
   const items = records.filter(item => (!category || categoryOf(item) === category) && `${item.name} ${categoryOf(item)} ${item.templateInfo?.description ?? ''} ${(item.templateInfo?.examples ?? []).join(' ')}`.toLowerCase().includes(wanted))
   return h('section', { className: 'bt-expert-library' },
-    h('p', { className: 'bt-library-intro' }, t(groups ? 'Your collaboration teams are ready. Choose a group and describe your task.' : 'Your specialist Bots are ready. Choose an expert and start a conversation.')),
+    h('p', { className: 'bt-library-intro' }, t(groups ? 'Your collaboration teams are ready. Choose a group and describe your task.' : 'Your specialist Bots are ready. Browse by category and talk with a chemical expert.')),
     h('div', { className: 'bt-catalog-search' }, h(SearchIcon), h('input', { value: query, onChange: event => setQuery(event.target.value), placeholder: t('Search scenarios and experts'), 'aria-label': t('Search scenarios and experts') })),
     h('div', { className: 'bt-catalog-categories', role: 'group', 'aria-label': t('Category') }, ['', ...new Set(records.map(categoryOf))].map(value => h('button', { key: value, type: 'button', 'aria-pressed': category === value, onClick: () => setCategory(value) }, value || t('All scenarios')))),
     h('div', { className: 'bt-expert-grid' }, items.map(item => {

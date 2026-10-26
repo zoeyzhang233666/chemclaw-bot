@@ -56,7 +56,7 @@ export const SKILL_ZH = {
   'Connect data and tools. Existing connections are shared with the Connectors page.': '连接业务数据与工具；与「连接器」共用配置和连接状态。',
   'Add a tool service': '添加工具服务',
   'Advanced: Bot-specific services and bulk assignments': '高级：指定 Bot 的服务与批量分配',
-  'New bulk assignment': '新建批量分配', 'Manage credentials': '管理凭据',
+  'New bulk assignment': '新建批量分配',
   'Service address': '服务地址', 'Paste configuration': '粘贴服务配置', 'Service ID': '服务标识',
   'What this service helps with': '服务用途', 'API key (optional)': 'API Key（选填）',
   'Paste the service configuration from its provider': '粘贴服务商提供的配置',

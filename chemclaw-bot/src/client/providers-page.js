@@ -61,10 +61,15 @@ function ApiHubCard({ provider, actions, apply }) {
     h('header', null, h('span', { className: 'bt-connector-mark' }, h(ApiHubMark)), h('div', null, h('h3', null, 'APIHub'), h('span', { className: 'bt-eyebrow' }, t('Recommended by ChemClaw'))), h('span', { className: 'bt-provider-state', 'data-state': provider?.key?.configured ? 'set' : 'missing' }, t(provider?.key?.configured ? 'Key set' : 'Needs an API key'))),
     h('p', null, APIHUB.baseURL), h('p', null, t('Paste your APIHub key, fetch the available models, then choose the models to add.')),
     h('div', { className: 'bt-secret-inline' }, h('label', { className: 'bt-q-field bt-secret-field' }, h(KeyIcon), h(MaskedInput, { value: key, onChange: setKey, onEnter: discover, label: t('APIHub API key') })), h('button', { className: 'bt-soft', disabled: busy || !ready, onClick: () => void discover() }, t(busy ? 'Asking…' : 'Fetch models'))),
-    h('div', { className: 'bt-actions' }, h('a', { href: APIHUB.tokenUrl, target: '_blank', rel: 'noopener noreferrer' }, t('Get an API key')), saved ? h('span', { role: 'status', className: 'bt-secret-ok' }, t('Saved.')) : null),
+    h('div', { className: 'bt-actions' },
+      h('a', { href: APIHUB.tokenUrl, target: '_blank', rel: 'noopener noreferrer' }, t('Get an API key')),
+      provider?.key?.configured && provider.key.writable
+        ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm bt-secret-danger', disabled: busy, onClick: () => void apply(actions.setProviderKey(provider.id, null)) }, t('Remove key'))
+        : null,
+      saved ? h('span', { role: 'status', className: 'bt-secret-ok' }, t('Saved.')) : null),
     models ? h('div', { className: 'bt-provider-found' }, models.length ? models.map(model => h('button', { key: model.id, type: 'button', className: 'bt-secret-bot', 'aria-pressed': picked.includes(model.id), onClick: () => setPicked(value => value.includes(model.id) ? value.filter(id => id !== model.id) : [...value, model.id]) }, model.name || model.id, picked.includes(model.id) ? h(CheckIcon) : null)) : h('p', null, t('No models were returned. Use Add a provider and Custom API to enter model IDs manually.'))) : null,
     models?.length ? h('button', { className: 'bt-soft', disabled: busy || !picked.length, onClick: () => void save() }, t('Save selected models')) : null,
-    !models && provider ? h(ProviderRow, { provider, actions, apply, open: managing, onToggle: () => setManaging(value => !value) }) : null)
+    !models && provider ? h(ProviderRow, { provider, actions, apply, open: managing, onToggle: () => setManaging(value => !value), hideKey: true }) : null)
 }
 
 function keyState(key) {
@@ -73,7 +78,7 @@ function keyState(key) {
   return key.writable ? ['set', t('Key set')] : ['outside', t('Key set outside ChemClaw')]
 }
 
-function ProviderRow({ provider, apply, actions, open, onToggle }) {
+function ProviderRow({ provider, apply, actions, open, onToggle, hideKey = false }) {
   const [confirm, setConfirm] = useState(false)
   useEffect(() => { if (!open) setConfirm(false) }, [open])
   const state = keyState(provider.key)
@@ -86,7 +91,7 @@ function ProviderRow({ provider, apply, actions, open, onToggle }) {
         h('span', { className: 'bt-set-hint', 'data-error': provider.error ? '' : undefined }, hint)),
       state ? h('span', { className: 'bt-set-control' }, h('span', { className: 'bt-provider-state', 'data-state': state[0] }, state[1])) : null),
     open ? h('div', { className: 'bt-secret-edit' },
-      provider.key?.writable ? h(KeyEditor, { provider, apply, actions }) : null,
+      !hideKey && provider.key?.writable ? h(KeyEditor, { provider, apply, actions }) : null,
       provider.key && !provider.key.writable ? h('div', { className: 'bt-set-hint' }, t('This key comes from outside ChemClaw, such as an environment variable, and cannot be changed here.')) : null,
       provider.models.length > 0 ? h('div', { className: 'bt-secret-edit-block' },
         h('div', { className: 'bt-secret-edit-label' }, t('Models')),

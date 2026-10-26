@@ -10,7 +10,7 @@ export function ApiHubMark() {
   }))
 }
 
-/** Generic cloud used for Chemical Data Hub and public research cards. */
+/** Generic cloud used for Chemcloud Data Hub and public research cards. */
 export function CloudMark() {
   return h('svg', { width: 24, height: 24, viewBox: '0 0 32 32', fill: 'none', 'aria-hidden': true }, h('path', { d: 'M9 25a7 7 0 0 1-1-13.9A8.5 8.5 0 0 1 24 10a7.5 7.5 0 0 1-1 15H9Z', fill: 'currentColor', opacity: .16 }), h('path', { d: 'M9 25a7 7 0 0 1-1-13.9A8.5 8.5 0 0 1 24 10a7.5 7.5 0 0 1-1 15H9Z', stroke: 'currentColor', strokeWidth: 1.8 }), h('path', { d: 'M11 18h10M16 13v10', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round' }))
 }

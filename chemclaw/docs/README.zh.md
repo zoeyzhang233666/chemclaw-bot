@@ -32,7 +32,7 @@ npm start
 
 ## 连接器与文件
 
-在 ChemClaw 设置的「连接器」中连接 **化工云数据中台**，只粘贴 Key，无需填写变量名。领取地址：[mcp.chem-cloud.cn](https://mcp.chem-cloud.cn/)。服务地址固定为 `https://datahub.chem-cloud.cn/mcp`。MCP 握手和工具发现完成后才显示已连接。不要把密钥发进聊天。
+在 ChemClaw 设置的「连接器」中连接 **芯化和云数据中台**，只粘贴 Key，无需填写变量名。领取地址：[mcp.chem-cloud.cn](https://mcp.chem-cloud.cn/)。服务地址固定为 `https://datahub.chem-cloud.cn/mcp`。MCP 握手和工具发现完成后才显示已连接。不要把密钥发进聊天。
 
 化工社公开查询默认匿名；PubChem、OPSIN、中英文维基百科无需 Key。历史日频行情需在连接器中安装受管 Python 环境，需要 Python 3.11+；不承诺实时，保留来源、口径与缺口。高级入口接受 HTTPS `mcpServers` JSON。不完整的高级服务不自动连接。
 

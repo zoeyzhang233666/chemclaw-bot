@@ -96,7 +96,7 @@ export async function seedChemClawTeam(rt) {
   main.templateId = def.id
   main.templateVersion = roleCatalog.version
   main.capabilities = ['chemclaw-delivery', 'chemclaw-research-process']
-  if (main.kickoff) main.kickoff.text = '用中文简短介绍 ChemClaw。50 位专业 Bot 与 15 个协作群已建好，用户可从左侧直接选择客户开发、采购寻源、行情期现、生产分析或报告制作群开始工作，无需创建团队。模型页填写 APIHub Key，化工云数据 Key 在连接器里填写；公开搜索与化学查询无需公司 Key。询问用户今天要解决的业务问题。'
+  if (main.kickoff) main.kickoff.text = '用中文简短介绍 ChemClaw。50 位专业 Bot 与 15 个协作群已建好，用户可从左侧直接选择客户开发、采购寻源、行情期现、生产分析或报告制作群开始工作，无需创建团队。模型页填写 APIHub Key，芯化和云数据 Key 在连接器里填写；公开搜索与化学查询无需公司 Key。询问用户今天要解决的业务问题。'
   await rt.save()
   return main
 }
