@@ -398,7 +398,9 @@ export function install(rt) {
     const turn = { botId: member.id, sessionId, exchangeId }
     const { started } = round
     started.push(turn)
-    room.seen[member.id] = room.seq
+    // The read position is the one of this turn's start, and moves only when the
+    // delivery lands: a delivery that failed leaves the member where it was.
+    const seenAt = room.seq
     // Checked before the delivery, which may start the turn at once.
     const busy = rt.live.get(sessionId)?.turn !== undefined
     const done = new Promise((resolve) => {
@@ -427,10 +429,11 @@ export function install(rt) {
     })
     try {
       const skillNames = [...new Set((round.skillRequests ?? []).filter(request => request.executor === member.id).flatMap(request => request.names))]
-      await rt.deliver({ fromId: undefined, toId: member.id, sessionId, role: 'room', roomId: room.id, exchangeId, note, text, files, ...(skillNames.length ? { skillNames } : {}), ...(by ? { askedBy: by } : {}) })
+      await rt.deliver({ fromId: undefined, toId: member.id, sessionId, role: 'room', roomId: room.id, exchangeId, note, text, files, steer: busy, ...(skillNames.length ? { skillNames } : {}), ...(by ? { askedBy: by } : {}) })
+      room.seen[member.id] = seenAt
       // Still held by an earlier request: this turn cannot start until the user answers.
       if (rt.waitsForApproval?.(sessionId)) rt.roomWaiters.get(exchangeId)?.approval()
-      // Still at earlier work: the call waits in its inbox and is answered after that.
+      // Still at earlier work: the call steers it at its next step; the round goes on.
       else if (busy) rt.roomWaiters.get(exchangeId)?.resolve({ working: true })
     } catch (error) {
       rt.warn('chemclaw-bot: group delivery to %s failed: %s', member.name, error)

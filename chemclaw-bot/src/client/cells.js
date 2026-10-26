@@ -17,6 +17,7 @@ import { heldCardKey } from './sources.js'
 import { capabilityLabel } from './capability-settings.js'
 import { ArtifactFiles, generatedFiles } from './artifact-files.js'
 import { useArtifactLinks } from './artifact-links.js'
+import { parseReplies } from '../shared/group-replies.js'
 
 export { clockLabel }
 
@@ -778,8 +779,11 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
     return () => { stop = true; clearTimeout(timer) }
   }, [done, sessionId, callId])
   let replies = live.replies
+  let broken = false
   if (done) {
-    try { replies = JSON.parse(contentText(content)).replies ?? [] } catch { replies = [] }
+    const parsed = parseReplies(contentText(content))
+    replies = parsed.broken && !parsed.replies.length ? live.replies : parsed.replies
+    broken = parsed.broken
   }
   // Members speak one at a time, so only the current speaker is typing. Skip a draft
   // whose text is already in replies so commit and poll never flash a duplicate.
@@ -789,7 +793,9 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
   const pending = done || !live.speaking || drafts.some(draft => draft.botId === live.speaking) ? [] : [live.speaking]
   const speakerTool = useWork?.(work => work.bots?.[live.speaking]?.tool) ?? undefined
   const speakerDoing = useWork?.(work => (work.bots?.[live.speaking]?.tool ? workPhrase(work.bots[live.speaking]) : undefined)) ?? undefined
-  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) return null
+  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) {
+    return broken ? h('div', { className: 'bt-group-replies' }, h('div', { className: 'bt-event', role: 'status' }, t('The group replies could not be shown'))) : null
+  }
   const room = roster.roomsById[sessionId]
   return h('div', { className: 'bt-group-replies' },
     preparing ? h('div', { className: 'bt-activity', role: 'status' }, h(Shimmer, null, t('Preparing group reply…'))) : null,
@@ -839,6 +845,7 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
       const bot = roster.byId[draft.botId]
       return bot ? h(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room, roster, actions, streaming: true }) : null
     }),
+    broken ? h('div', { className: 'bt-event', role: 'status' }, t('Some group replies could not be shown')) : null,
     pending.map((id) => {
       const bot = roster.byId[id]
       if (!bot) return null

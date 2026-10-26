@@ -8,6 +8,10 @@ Apache License 2.0, Copyright 2026 Fei2411 and the DS Bot contributors
 
   - Group relay pause/continue code and regression tests adapted from PR #433.
     Upstream reference: de55888a; ChemClaw-specific roles and skill routing retained.
+  - Group delivery cursors, busy-member steering and pruned-reply display adapted
+    from DS-Bot PRs #569 (a11964f176267b6199c85e94e2e07027b10a46b2),
+    #585 (07238744eff1ea729ca68a9fcb7c13106182ec7a) and
+    #576 (229fad4dd687cb0c5c3fee6fd3ff6147e2376f63).
   - Request identities, durable receipts and regression tests adapted from PR #488
     and its final implementation at de55888a.
   - Complete handoff result persistence and missed-reply reconciliation adapted
