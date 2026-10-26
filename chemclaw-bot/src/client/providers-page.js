@@ -206,6 +206,25 @@ function FormActions({ onCancel, onAdd, ready }) {
 }
 
 export const PROVIDERS_CSS = `
+.bt-provider+.bt-provider{border-top:1px solid var(--bt-line)}
+.bt-apihub .bt-secret-inline,.bt-provider .bt-secret-inline{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap}
+.bt-secret-inline>.bt-secret-field{display:flex;flex:1 1 260px;min-width:0;gap:10px;box-sizing:border-box}
+.bt-secret-inline>button{flex:none;align-self:center}
+.bt-apihub>header>.bt-provider-state{margin-left:auto}
+.bt-provider .bt-secret-summary{width:100%;gap:20px;text-align:left}
+.bt-provider .bt-set-copy{min-width:0;display:flex;flex-direction:column;gap:5px}
+.bt-provider .bt-secret-title{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px;font-size:14px;line-height:22px;font-weight:500;overflow-wrap:anywhere}
+.bt-provider .bt-secret-edit{display:flex;flex-direction:column;gap:20px;padding:18px 20px 20px;border-top:1px solid var(--bt-line)}
+.bt-provider .bt-secret-edit-block,.bt-provider-form .bt-secret-edit-block{display:flex;flex-direction:column;gap:10px;min-width:0}
+.bt-provider .bt-secret-edit-label,.bt-provider-form .bt-secret-edit-label{font-size:12px;line-height:18px;font-weight:500;color:var(--bt-ink-2)}
+.bt-provider .bt-secret-row-actions,.bt-provider-form .bt-secret-row-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.bt-provider .bt-secret-row-actions{padding-top:16px;border-top:1px solid var(--bt-line)}
+.bt-provider .bt-secret-row-actions svg{width:14px;height:14px;flex:none}
+.bt-provider .bt-secret-field{display:flex;background:var(--bt-main);border:1px solid var(--bt-line-2);border-radius:10px;padding:10px 12px}
+.bt-provider-models .bt-tag{font-size:12px;line-height:20px;padding:4px 9px;border-radius:6px;overflow-wrap:anywhere;white-space:normal}
+.bt-apihub>.bt-provider{border:1px solid var(--bt-line);border-radius:12px;background:var(--bt-card);overflow:hidden}
+.bt-apihub .bt-provider>.bt-secret-summary{padding:14px 16px}
+@media(max-width:600px){.bt-provider .bt-secret-summary{align-items:flex-start;flex-wrap:wrap;gap:8px}.bt-provider .bt-secret-edit{padding:16px}.bt-apihub>header{flex-wrap:wrap}.bt-apihub>header>.bt-provider-state{margin-left:0}.bt-secret-inline>button{min-height:36px}}
 .bt-provider-id{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;color:var(--bt-ink-3)}
 .bt-provider .bt-set-hint[data-error]{color:var(--bt-danger)}
 .bt-provider-state{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:16px;color:var(--bt-ink-2);white-space:nowrap}

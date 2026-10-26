@@ -481,6 +481,9 @@ function decide(body) {
   }
   if (/用中文简短介绍 ChemClaw/.test(userText)) return [text('我是 ChemClaw，帮助你完成有依据的化工业务研究与文件交付。'), text('先让团队帮你做哪块？')]
   const delivery = /^交付\s+(.+)$/s.exec(userText.trim())
+  if (/^生成交付样例$/.test(userText.trim()) && tools.has('chem_deliver')) return [tool('chem_deliver', {
+    report: JSON.stringify({ title: '文件交付验收', sections: [{ title: '验证结果', text: '从对话直接点击打开 HTML 和 Excel 文件。' }] }), formats: 'html,xlsx',
+  })]
   if (delivery && tools.has('present')) return [tool('present', { files: [{ path: delivery[1].trim(), description: 'ChemClaw mock verification deliverable' }] })]
   // View cards: 视图选项 and 视图表单 wait for an answer; 视图展示 and 大视图 are
   // display-only — the latter sits just under the view byte limit.

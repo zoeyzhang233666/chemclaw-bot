@@ -15,6 +15,7 @@ import { turnReasoning, thinkingStep } from './turn-reasoning.js'
 import { FOLD_AT, FOLD_HUGE, stripLongNote, useFold } from './fold.js'
 import { heldCardKey } from './sources.js'
 import { capabilityLabel } from './capability-settings.js'
+import { ArtifactFiles, generatedFiles } from './artifact-files.js'
 
 export { clockLabel }
 
@@ -789,7 +790,7 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
 
 // The calls ToolCell draws. A PTC program (`run_code`) dispatches the real tools as
 // its sub-calls, so a call draws by its own name wherever it sits in the tree.
-const DRAWN = new Set(['message_bot', 'stop_bot', 'create_bot', 'update_bot', 'group_relay', 'create_group', 'update_group', 'delete_group', 'post_to_group', 'ask_user', 'request_secret', 'ask_user_question', 'show_view', 'read_group_chat', 'remember', 'forget'])
+const DRAWN = new Set(['chem_deliver', 'message_bot', 'stop_bot', 'create_bot', 'update_bot', 'group_relay', 'create_group', 'update_group', 'delete_group', 'post_to_group', 'ask_user', 'request_secret', 'ask_user_question', 'show_view', 'read_group_chat', 'remember', 'forget'])
 // Calls whose card a dock above the composer carries when the call is not drawn.
 const CARDS = new Set(['ask_user', 'request_secret', 'show_view'])
 
@@ -820,12 +821,14 @@ function useShownCards(actions, sessionId, callIds) {
   }, [sessionId, key])
 }
 
-function renderCall(call, { sessionId, roster, actions, useUi, useWork, findBot, heldCards }) {
+function renderCall(call, { sessionId, roster, actions, useUi, useWork, findBot, heldCards, openFile }) {
   const tool = toolName(call)
   const done = call.kind === 'tool-result'
   const { text: arg, value: argValue } = toolArgs(call)
   const self = roster.byId[sessionId]
   switch (tool) {
+    case 'chem_deliver':
+      return h(ArtifactFiles, { files: generatedFiles(call), openFile })
     case 'message_bot': {
       const target = findBot(arg('to')) ?? { name: arg('to') ?? '…', color: 'gray' }
       if (done && call.isError) return h('div', { className: 'bt-event' }, t("Couldn't message {name}", { name: target.name }))
@@ -899,7 +902,7 @@ function renderCall(call, { sessionId, roster, actions, useUi, useWork, findBot,
   }
 }
 
-export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, actions }) {
+export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, actions, openFile }) {
   const roster = useRoster(value => value)
   const heldCards = useHeldCards?.(state => state[sessionId])
   const root = node.data.root
@@ -915,6 +918,6 @@ export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCa
   useLiveNote(actions, sessionId, `tool:${root.callId ?? node.key}`, note)
   useShownCards(actions, sessionId, drawn.filter(call => CARDS.has(toolName(call)) && call.callId).map(call => call.callId))
   if (drawn.length === 0) return null
-  const env = { sessionId, roster, actions, useUi, useWork, findBot, heldCards }
+  const env = { sessionId, roster, actions, useUi, useWork, findBot, heldCards, openFile }
   return h(Fragment, null, drawn.map((call, index) => h(Fragment, { key: call.callId ?? index }, renderCall(call, env))))
 }

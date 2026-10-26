@@ -813,6 +813,17 @@ body[data-ds-dark-theme] .bt-theme-chip i{background:var(--da)}
 `
 
 export const CONVERSATION_CSS = `
+.bt-artifact-files{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:10px;margin:12px 0;min-width:0}
+.bt-artifact-file{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border:1px solid var(--bt-line-2);border-radius:12px;background:var(--bt-card);color:var(--bt-ink);font:inherit;text-align:left;cursor:pointer;min-width:0}
+.bt-artifact-file strong{font-size:13px;line-height:20px;overflow-wrap:anywhere}
+.bt-artifact-file span{font-size:12px;line-height:18px;color:var(--bt-accent)}
+.bt-artifact-file:hover{background:var(--bt-hover);border-color:var(--bt-accent)}
+.bt-artifact-file:focus-visible{outline:2px solid var(--bt-accent);outline-offset:2px}
+.bt-skill-menu{display:contents}
+.bt-skill-menu [data-trigger-menu]{max-width:100%;overflow-x:hidden}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]){display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 10px;padding:10px 12px;min-width:0;height:auto;min-height:58px;box-sizing:border-box;text-align:left}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"])>[class*=_itemName]{flex:1 1 100%;white-space:normal;line-height:20px;font-weight:500;overflow-wrap:anywhere}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"])>[class*=_itemDescription]{flex:1 1 100%;margin-left:0;text-align:left;white-space:normal;line-height:19px;color:var(--bt-ink-2);overflow-wrap:anywhere}
 .bt-think{font-size:13px;line-height:18px;color:var(--bt-ink-2);margin:2px 0 4px;max-width:min(560px,78%)}
 .bt-think summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
 .bt-think summary::-webkit-details-marker{display:none}
