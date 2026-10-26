@@ -84,9 +84,11 @@ export function loadAppProfile() {
 function ensurePresentationDefaults(dir) {
   const file = join(dir, 'cordis.patch.yml')
   let content = readFileSync(file, 'utf8')
-  // Chemical research does not need whole-repository Git snapshots. A source
-  // workspace under this checkout otherwise waits on a 30s snapshot before tools.
-  if (!/(?:^|\n)- id: workspace-changes\s*(?:\n|$)/u.test(content)) content += '\n- id: workspace-changes\n  disabled: true\n'
+  // Deliverables require this service even without a change summary. Bound Git
+  // snapshots so research in a large repository cannot wait on the 30s default.
+  const changes = '- id: workspace-changes\n  config:\n    timeoutMs: 1000\n'
+  content = content.replace(/- id: workspace-changes\r?\n  disabled: true\s*(?=\n- |$)/u, changes.trimEnd())
+  if (!/(?:^|\n)- id: workspace-changes\s*(?:\n|$)/u.test(content)) content += `\n${changes}`
   if (!/(?:^|\n)- id: ui-settings\s*(?:\n|$)/u.test(content)) content += '\n- id: ui-settings\n  config:\n    enabled: true\n'
   if (!/(?:^|\n)- id: session-controller\s*(?:\n|$)/u.test(content)) content += '\n- id: session-controller\n  config:\n    nativeOpen: true\n'
   if (!/(?:^|\n)- id: locale\s*(?:\n|$)/u.test(content)) content += '\n- id: locale\n  config:\n    preference: zh\n'

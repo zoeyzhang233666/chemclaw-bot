@@ -41,8 +41,20 @@ describe('the app profile', () => {
     assert.equal(rows(entries).find(entry => entry.id === 'ui-settings-general')?.config?.welcomeNoticeVersion, '2026-09-28.1')
   })
 
-  test('disables whole-repository snapshots in the independent research app', () => {
-    assert.equal(rows(entries).find(entry => entry.id === 'workspace-changes')?.disabled, true)
+  test('keeps deliverable routes available and bounds repository snapshots', () => {
+    const changes = rows(entries).find(entry => entry.id === 'workspace-changes')
+    assert.notEqual(changes?.disabled, true)
+    assert.equal(changes?.config?.timeoutMs, 1000)
+  })
+
+  test('repairs the earlier disabled deliverables dependency on upgrade', () => {
+    const file = join(home, 'profiles', 'chemclaw', 'cordis.patch.yml')
+    writeFileSync(file, readFileSync(file, 'utf8').replace('- id: workspace-changes\n  config:\n    timeoutMs: 1000', '- id: workspace-changes\n  disabled: true'))
+    const profile = loadAppProfile()
+    const composed = composeEntries([...profile.layers.map(layer => layer.patches), profile.patches])
+    const changes = rows(composed).find(entry => entry.id === 'workspace-changes')
+    assert.notEqual(changes?.disabled, true)
+    assert.equal(changes?.config?.timeoutMs, 1000)
   })
 
   test('upgrades an earlier preview acknowledgement without changing other preferences', () => {
