@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import { test } from 'node:test'
 import { createRuntime } from '../index.js'
 import { fakeContext } from './fake-ctx.js'
@@ -375,7 +375,11 @@ test('six business deliverable pipelines use bundled libraries inside the Bot wo
     const report = { title: `${title}工具链验收（模拟数据）`, sections: [{ title: '测试证据链', table: { columns: ['字段', '内容'], rows: [['来源', 'mock，不代表业务事实']] } }], sources: [{ label: '原创验收数据' }], limitations: '仅验证交付，不验证研究质量' }
     const result = JSON.parse(await ctx.registeredTools.get('chem_deliver').execute({ report: JSON.stringify(report), formats }, { agent, signal: AbortSignal.timeout(60000) }))
     assert.equal(result.files.length, 2)
-    for (const file of result.files) { assert.ok(file.path.startsWith(rt.teamFolder())); assert.ok(readFileSync(file.path).length > 100) }
+    const team = resolve(rt.teamFolder())
+    for (const file of result.files) {
+      assert.ok(resolve(file.path).startsWith(team))
+      assert.ok(readFileSync(file.path).length > 100)
+    }
     assert.match(result.next, /present/)
   }
   await assert.rejects(ctx.registeredTools.get('chem_deliver').execute({ report: '{}', formats: 'html' }, { agent: { id: 'unrelated-session' } }), /ChemClaw Bot/)
