@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, mkdir, writeFile, rm, symlink } from 'node:fs/promises'
+import { mkdtemp, mkdir, writeFile, rm, symlink, realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
@@ -52,9 +52,10 @@ test('a group resolves relative links against its author and finds nested delive
   const xlsx = join(own, '交付', '纯碱.xlsx')
   await Promise.all([html, xlsx].map(path => writeFile(path, 'test')))
   const { files } = await call(['报告.html', '纯碱.xlsx', '/wrong/报告.html'])
-  assert.equal(files['报告.html'], html)
-  assert.equal(files['纯碱.xlsx'], xlsx)
-  assert.equal(files['/wrong/报告.html'], html)
+  // realpath may return the Windows 8.3 form; compare the resolved paths.
+  assert.equal(files['报告.html'], await realpath(html))
+  assert.equal(files['纯碱.xlsx'], await realpath(xlsx))
+  assert.equal(files['/wrong/报告.html'], await realpath(html))
 })
 
 test('ambiguous basenames, deleted files and traversal do not receive links', async t => {
