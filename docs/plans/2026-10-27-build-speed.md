@@ -9,11 +9,12 @@ v0.2.2 的 Intel Mac Release 任务耗时 19m50s，npm 安装 2m50s、打包 14m
 不改变完整发布的资产门禁、不降级签名，也不删除技能与运行资源。
 
 Mac jobs 缓存 npm 下载，以及按 OS、架构、app lockfile 区分的 Electron/Builder
-下载缓存。原生依赖仍在当前 runner 安装；不跨架构复用 node_modules。
-缓存路径也传给 npm ci；Electron 的安装脚本使用 electron_config_cache，
-打包器使用 ELECTRON_CACHE，两者指向同一个已恢复的目录。
-缓存键升级为 desktop-tools-v2：首代缓存只保存了打包器（约 9 MB），
+下载缓存。Electron 使用当前下载器的默认目录 ~/Library/Caches/electron，
+Builder 工具使用 ELECTRON_BUILDER_CACHE 指定的目录。
+原生依赖仍在当前 runner 安装；不跨架构复用 node_modules。
+缓存键升级为 desktop-tools-v3：旧缓存只保存了打包器（约 9 MB），
 GitHub 同名精确命中的缓存不能追加内容；换代后才能保存完整 Electron 下载。
+CI 在打包后检查对应架构的 Electron ZIP 确实位于缓存目录，防止再次保存空目录。
 
 可选 dry-run 输入 benchmark_mac_zip 调用 benchmark-mac-zip.mjs，比较同一个
 签名 .app 用 ditto 的 1/6/9 级压缩耗时和体积，每份都解压验签，记录 Actions
