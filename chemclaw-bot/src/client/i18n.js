@@ -7,6 +7,9 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'ChemClaw {version} is ready to install.': 'ChemClaw {version} 已下载好，可以安装。',
+  'Downloading ChemClaw {version}…': '正在下载 ChemClaw {version}…',
+  'Restart now': '立即重启',
   'Loaded skill: {name}': '已加载技能：{name}',
   'Set up APIHub or another model': '配置 APIHub 或其他模型',
   'Your collaboration teams are ready. Choose a group and describe your task.': '协作群已为你配好负责人和专业成员。选择一个群，直接说出业务需求即可。',

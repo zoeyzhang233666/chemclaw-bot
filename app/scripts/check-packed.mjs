@@ -10,6 +10,7 @@ import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:pat
 import { setTimeout as sleep } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
+import { createServer } from 'node:http'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const [given, shotFile] = process.argv.slice(2)
@@ -32,6 +33,12 @@ const work = realpathSync.native(mkdtempSync(join(realpathSync.native(tmpdir()),
 mkdirSync(join(work, 'home'))
 mkdirSync(join(work, 'workspace'))
 const children = []
+let updateRequests = 0
+const updateFeed = createServer((_request, response) => {
+  updateRequests++
+  response.setHeader('content-type', process.platform === 'darwin' ? 'application/json' : 'text/yaml')
+  response.end(process.platform === 'darwin' ? '[]' : `version: 0.0.0\nfiles:\n  - url: unused.exe\n    sha512: ${Buffer.alloc(64).toString('base64')}\n`)
+})
 
 function stopChildren() {
   for (const child of children) {
@@ -161,6 +168,25 @@ async function chat(cdp) {
   if (await evaluate("document.body.innerText.includes('预览版说明') || document.body.innerText.includes('Preview Notice')")) throw new Error('The independent app still shows upstream preview onboarding')
   const catalog = await evaluate("fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'scenario-catalog', payload: {} }) }).then(r => r.json()).then(r => r.value)")
   if (catalog.roles.length !== 50 || catalog.groups.length !== 15) throw new Error('Incomplete scenario catalog')
+  if (!source) {
+    await until('window.dsBotApp?.updates', 'the desktop update bridge')
+    const status = await evaluate('window.dsBotApp.updates.check()')
+    if (!status.enabled || !status.checkedAt || status.phase === 'failed') throw new Error('The packaged app did not check its isolated update feed')
+    await evaluate("[...document.querySelectorAll('button')].find(node => /^(Bot|Bots)$/.test(node.textContent.trim())).click()")
+    await until("document.querySelector('.bt-settings-nav')", 'settings')
+    await evaluate("[...document.querySelectorAll('.bt-settings-item')].find(node => /^(关于 ChemClaw|About ChemClaw)$/.test(node.textContent.trim())).click()")
+    const checkButton = "[...document.querySelectorAll('.bt-settings-page button')].find(node => /^(检查更新|Check for updates)$/.test(node.textContent.trim()))"
+    await until(`${checkButton} && !${checkButton}.disabled`, 'the enabled app update button')
+    const before = updateRequests
+    await evaluate(`${checkButton}.click()`)
+    const end = Date.now() + 15_000
+    while (updateRequests === before && Date.now() < end) await sleep(100)
+    if (updateRequests === before) throw new Error('About did not check the app update feed')
+    await until(`${checkButton} && !${checkButton}.disabled`, 'the completed manual update check')
+    await evaluate("document.querySelector('.bt-settings-close').click()")
+    await until("!document.querySelector('.bt-settings')", 'settings to close')
+    console.log('check-packed: About checked the isolated app update feed')
+  }
   if (shotFile) {
     const capture = async suffix => { await sleep(650); const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.${suffix}.png`), Buffer.from(data, 'base64')) }
     await capture('home')
@@ -260,14 +286,17 @@ async function chat(cdp) {
 let failed = false
 const problems = []
 try {
+  await new Promise(resolve => updateFeed.listen(0, '127.0.0.1', resolve))
   const modelUrl = await startMock()
   const port = 9300 + Math.floor(Math.random() * 600)
   // A terminal inside an Electron-based editor may set ELECTRON_RUN_AS_NODE, which turns the app into plain Node.
   const { ELECTRON_RUN_AS_NODE: _runAsNode, ...env } = process.env
+  for (const key of Object.keys(env)) if (/KEY|TOKEN|PASSWORD|SECRET/i.test(key)) delete env[key]
   Object.assign(env, {
     DS_BOT_HOME: join(work, 'home'), DS_BOT_SHELL_DATA: join(work, 'shell'),
     DS_BOT_WORKSPACE: join(work, 'workspace'),
     DEEPSEEK_BASE_URL: modelUrl, DEEPSEEK_API_KEY: 'mock-key',
+    CHEMCLAW_UPDATE_URL: `http://127.0.0.1:${updateFeed.address().port}/`,
   })
   const app = spawn(source ? executable : outsideCheckout(resolve(executable)), [...(source ? [root] : []), `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
   children.push(app)
@@ -295,6 +324,7 @@ try {
   console.error(`check-packed: FAILED: ${error instanceof Error ? error.message : String(error)}`)
 }
 stopChildren()
+await new Promise(resolve => updateFeed.close(resolve))
 await sleep(500)
 rmSync(work, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 })
 process.exit(failed ? 1 : 0)

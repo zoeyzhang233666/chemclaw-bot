@@ -2,7 +2,14 @@ import assert from 'node:assert/strict'
 import { EventEmitter } from 'node:events'
 import { describe, test } from 'node:test'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { isNewer, RELEASES_URL, watchReleases, watchUpdates } from '../src/updates.mjs'
+import { isNewer, RELEASES_URL, updatesEnabled, watchReleases, watchUpdates } from '../src/updates.mjs'
+
+test('production packages check by default; development and isolated runs stay opt-in', () => {
+  assert.equal(updatesEnabled({ packaged: true, isolated: false }), true)
+  assert.equal(updatesEnabled({ packaged: true, isolated: true }), false)
+  assert.equal(updatesEnabled({ packaged: true, isolated: true, feed: 'http://127.0.0.1:8090/' }), true)
+  assert.equal(updatesEnabled({ packaged: false, isolated: false }), false)
+})
 
 // electron-updater's AppUpdater, as far as the app uses it. `found` makes the answer of a
 // check that finds a version, with the download that autoDownload starts.
@@ -288,6 +295,27 @@ describe('watchReleases', () => {
 })
 
 describe('watchUpdates', () => {
+  test('manual checks share an in-flight request, recover from failure and report downloaded state', async t => {
+    const updater = new FakeUpdater()
+    updater.failCheck = true
+    const updates = watchUpdates({ updater, current: '0.2.0', beforeInstall: async () => {}, log: quietLog() })
+    t.after(updates.stop)
+    await updates.latest()
+    assert.equal(updates.status().phase, 'failed')
+    assert.equal(updates.status().error, 'offline')
+    updater.failCheck = false
+    updater.found = finds('0.2.1', () => Promise.resolve(['installer.exe']))
+    const first = updates.check()
+    assert.equal(updates.check(), first)
+    await first
+    assert.equal(updater.checks, 2)
+    assert.equal(updates.status().phase, 'downloading')
+    updater.emit('update-downloaded', { version: '0.2.1' })
+    assert.equal(updates.status().phase, 'ready')
+    assert.equal(updates.status().latest, '0.2.1')
+    assert.equal(updates.status().current, '0.2.0')
+    assert.ok(updates.status().checkedAt > 0)
+  })
   test('downloads in the background, installs at the quit, and checks at once', (t) => {
     const updater = new FakeUpdater()
     t.after(watchUpdates({ updater, beforeInstall: async () => {}, log: quietLog() }).stop)
@@ -386,10 +414,11 @@ describe('watchUpdates', () => {
     assert.deepEqual(steps, ['host stopped', ['install', true, true]])
   })
 
-  test('checks again every few hours until stopped', (t) => {
+  test('checks again every few hours until stopped', async (t) => {
     t.mock.timers.enable({ apis: ['setInterval'] })
     const updater = new FakeUpdater()
     const { stop } = watchUpdates({ updater, beforeInstall: async () => {}, log: quietLog() })
+    await sleep(0)
     t.mock.timers.tick(4 * 60 * 60_000)
     assert.equal(updater.checks, 2)
     stop()

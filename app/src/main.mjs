@@ -18,12 +18,13 @@ import { copySessions, findTeam, importTeam, teamInUse, userDshHome } from './im
 import { copyData, moveProblem } from './move-data.mjs'
 import { editLocations } from './locations-dialog.mjs'
 import { CHECK_PROFILE, PROFILE } from './profile.mjs'
-import { UPDATE_TEXT, watchReleases, watchUpdates } from './updates.mjs'
+import { UPDATE_TEXT, updatesEnabled, watchReleases, watchUpdates } from './updates.mjs'
 import { CAPTION_HEIGHT, cssColor, micaAvailable, nativeThemeSource } from './window-frame.mjs'
 
 const IPC = {
   caption: 'chemclaw:caption-colors', nativeTheme: 'chemclaw:native-theme', fullscreen: 'chemclaw:fullscreen',
   dataLocation: 'chemclaw:data-location', moveData: 'chemclaw:move-data', teamWorkspace: 'chemclaw:team-workspace',
+  updateStatus: 'chemclaw:update-status', updateCheck: 'chemclaw:update-check', updateInstall: 'chemclaw:update-install',
 }
 const MOVE_PROBLEMS = { drive: 'moveDrive', nested: 'moveNested', workspace: 'moveWorkspace', program: 'inProgram', notEmpty: 'moveNotEmpty' }
 const UPDATE_CHECK_WAIT_MS = 15_000
@@ -138,6 +139,21 @@ async function start() {
   ready.catch(fail)
   // A throwaway run (DS_BOT_HOME) keeps its folders where it was told.
   const fixed = Boolean(process.env.DS_BOT_HOME)
+  const updateStatus = () => ({ current: app.getVersion(), enabled: false, phase: 'idle', ...updates?.status() })
+  ipcMain.handle(IPC.updateStatus, event => { assertWindow(event); return updateStatus() })
+  ipcMain.handle(IPC.updateCheck, async event => {
+    assertWindow(event)
+    await updates?.check()
+    return updateStatus()
+  })
+  ipcMain.handle(IPC.updateInstall, async event => {
+    assertWindow(event)
+    if (updates?.status().phase === 'ready') await updates.install()
+    else if (process.platform === 'darwin') {
+      const found = await updates?.latest()
+      if (found) await shell.openExternal(found.page)
+    }
+  })
   ipcMain.handle(IPC.dataLocation, (event) => {
     assertWindow(event)
     return { path: places.dataDir, fixed }
@@ -328,14 +344,14 @@ const notePage = message => `data:text/html;charset=utf-8,${encodeURIComponent(`
 function startUpdates() {
   const feed = process.env.CHEMCLAW_UPDATE_URL || undefined
   const throwaway = Boolean(process.env.DS_BOT_HOME)
-  if (!app.isPackaged || feed === undefined) return undefined
+  if (!updatesEnabled({ packaged: app.isPackaged, isolated: throwaway, feed })) return undefined
   if (process.platform === 'darwin') {
     return watchReleases({
       current: app.getVersion(), arch: process.arch, feed, ask: throwaway ? undefined : askDownload, open: url => shell.openExternal(url),
     })
   }
   if (process.platform === 'win32') {
-    return watchUpdates({ updater: electronUpdater.autoUpdater, feed, ask: throwaway ? undefined : askRestart, beforeInstall: stopHost })
+    return watchUpdates({ updater: electronUpdater.autoUpdater, current: app.getVersion(), feed, ask: throwaway ? undefined : askRestart, beforeInstall: stopHost })
   }
   return undefined
 }
