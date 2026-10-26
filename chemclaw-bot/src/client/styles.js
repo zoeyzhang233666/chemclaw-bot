@@ -821,9 +821,9 @@ export const CONVERSATION_CSS = `
 .bt-artifact-file:focus-visible{outline:2px solid var(--bt-accent);outline-offset:2px}
 .bt-skill-menu{display:contents}
 .bt-skill-menu [data-trigger-menu]{max-width:100%;overflow-x:hidden}
-.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]){display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 10px;padding:10px 12px;min-width:0;height:auto;min-height:58px;box-sizing:border-box;text-align:left}
-.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"])>[class*=_itemName]{flex:1 1 100%;white-space:normal;line-height:20px;font-weight:500;overflow-wrap:anywhere}
-.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"])>[class*=_itemDescription]{flex:1 1 100%;margin-left:0;text-align:left;white-space:normal;line-height:19px;color:var(--bt-ink-2);overflow-wrap:anywhere}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]){display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 10px;padding:10px 12px;min-width:0;height:auto!important;min-height:58px;max-height:none;overflow:visible;box-sizing:border-box;text-align:left}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]) [class*=_itemName]{flex:1 1 100%;max-width:none;white-space:normal!important;line-height:20px;font-weight:500;overflow:visible;overflow-wrap:anywhere}
+.bt-skill-menu :is([id^="dsh-slash-option-skill-"],[id^="dsh-slash-option-chemclaw-skills-"]) [class*=_itemDescription]{flex:1 1 100%;margin-left:0;max-width:none;text-align:left;white-space:normal!important;line-height:19px;color:var(--bt-ink-2);overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .bt-think{font-size:13px;line-height:18px;color:var(--bt-ink-2);margin:2px 0 4px;max-width:min(560px,78%)}
 .bt-think summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
 .bt-think summary::-webkit-details-marker{display:none}

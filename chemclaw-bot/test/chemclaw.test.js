@@ -318,6 +318,31 @@ test('built-in skill refresh preserves user edits', async t => {
   assert.equal(rt.state.capabilities.items['chemclaw-delivery'].content, 'Custom delivery instructions')
 })
 
+test('bootstrap backfills Chinese skill metadata on an already-seeded install', async t => {
+  const { rt } = fixture(t, { companyConnectors: false })
+  await rt.bootstrap()
+  assert.ok(rt.presetTeamCurrent())
+  for (const name of ['chemclaw-chemistry', 'chemclaw-delivery', 'domain-22']) {
+    const skill = rt.state.capabilities.items[name]
+    assert.equal(skill.builtinSource, 'chemclaw')
+    delete skill.labels
+    delete skill.originalName
+    delete skill.purpose
+    delete skill.category
+    delete skill.deliverables
+    delete skill.keywords
+  }
+  await rt.save()
+  await rt.bootstrap()
+  const chemistry = rt.state.capabilities.items['chemclaw-chemistry']
+  const region = rt.state.capabilities.items['domain-22']
+  assert.equal(chemistry.labels.zh, '化合物身份与结构核验')
+  assert.match(chemistry.purpose, /[\u4e00-\u9fff]/)
+  assert.equal(region.originalName, 'chemical-region-market-map')
+  assert.equal(region.labels.zh, '看一个区域的客户分布')
+  assert.equal(region.category, '内贸销售')
+})
+
 test('MCP import validates before saving and does not echo malformed authentication', () => {
   const doc = { mcpServers: { 'chem-data-hub': { type: 'http', url: 'https://datahub.chem-cloud.cn/mcp', headers: { Authorization: 'Bearer synthetic-test-token' } } } }
   assert.equal(parseMcpImport(doc)[0].token, 'synthetic-test-token')
