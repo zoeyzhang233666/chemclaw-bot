@@ -183,9 +183,6 @@ jobs:
   app-package-macos:
     name: Desktop app package (macOS ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
-    env:
-      ELECTRON_CACHE: ${{ runner.temp }}/electron-cache
-      ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -209,12 +206,14 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: |
-            ${{ env.ELECTRON_CACHE }}
-            ${{ env.ELECTRON_BUILDER_CACHE }}
+            ${{ runner.temp }}/electron-cache
+            ${{ runner.temp }}/electron-builder-cache
           key: desktop-tools-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
       - run: npm ci --no-fund --no-audit
       - run: npm run pack
         env:
+          ELECTRON_CACHE: ${{ runner.temp }}/electron-cache
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
           # Ad-hoc identity '-' uses no certificate or secret, so PR signing is safe; otherwise electron-builder skips signing and leaves an unsealed bundle.
           CSC_FOR_PULL_REQUEST: 'true'
       - name: Check the signed app and update path
