@@ -8791,7 +8791,7 @@ function ModelChoiceDock({ sessionId, useRoster, actions }) {
   if (!bot || currentPart(bot) !== sessionId || !roster.ready) return null;
   const models = roster.models ?? [];
   const usable = models.filter((model) => !model.needsKey);
-  if (!bot.model && bot.templateId && usable.some((model) => model.ref === roster.defaultModel)) return null;
+  if (!bot.model && bot.templateId && !bot.waiting && usable.some((model) => model.ref === roster.defaultModel)) return null;
   const lost = bot.model ? !models.some((model) => model.ref === bot.model) : false;
   if (bot.model && (!lost || models.length === 0)) return null;
   const keyFor = usable.length === 0 && actions.setProviderKey ? models.find((model) => model.needsKey) : void 0;
