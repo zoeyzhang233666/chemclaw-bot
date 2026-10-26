@@ -30,38 +30,15 @@ export const CHARACTERS = {
   ring: {body:'M48.1 4.3l8-.1 7.8 1.8 7.3 3.5 6.7 5.4 5.2 6.7 4.1 8.3 2.3 8.9 .7 9-1 9.5-2.5 8.9-4.1 8.3-5.3 7.3-6.6 6.1-7.3 4.5-7.8 2.7-8.4 .9-7.2-.8-7.3-2.5-6.7-4.1-5.6-5.3-4.5-6.5-3.5-7.8-2-8.4-.6-8.4 .9-8.9 2.2-8.4 3.5-7.8 4.9-7.2 5.8-6.1 6.3-4.5 7.1-3.3zM50.5 33.8l2.3-.3 1.7 .4 1.6 1.1 2 2.2 1.3 2.8 .8 2.7 .4 3.4-.1 3.3-1.4 6.2-3 5.6-2.2 2.4-2.2 1.6-2.3 1-2.2 .3-1.7-.4-1.6-1.1-2.8-3.7-1.5-5.2-.1-5.5 1.2-5.6 2.4-5 3.6-4z',shade:'M76.2 14.9l1.1-.5 3.4 3.8 2.8 3.9 2.3 4.5 1.6 3.9 1.6 5.6 1.1 8.3-.4 10.1-1.3 6.1-2.6 7.8-4.6 8.3-4.4 5.6-6.2 5.7-6.1 3.8-7.2 2.9-6.2 1.1-7.8-.1-7.2-1.7-3.9-1.6-4-2.2-5.5-4.5-2.8-3.4 1.7-.6 2.4-2.1 2-2.8 1.2-2.8 1.2-5 1.1-13.4 1.4-7.8 2.5-7.8 3.8-7.3 3.3-4.5 3.4-3.4 3.9-3.1 4.4-2.6 3.9-1.5 4.5-1.1 12.3-.9zM50.5 33.8l.6-.3 2.8 0 1.6 .9 2.7 2.8 3 1.4 3.3 .5 6.1 .2 3.9 .9 1.7 1 1.7 1.6 2.1 4.4 .7 4.5-.3 5-1.2 5-1.9 4.5-2.8 4.2-3.3 3.6-3.9 2.8-3.9 1.7-3.4 .6-3.3-.1-3.4-1.1-2.5-1.7-2.5-3-3.6-7-2.9-3.4-2.1-5-.6-5.6 .6-4.4 1-3.4 2.3-4.4 1.4-2.1 2.3-2.2 2.7-1.7z',light:'M41.1 5.9l.5 .1 .2 .5-.3 .6-12.4 13.3-13.1 18.1-2.3 2.1-1.1 0-.2-1.2 .2-2.8 1.6-5 4.6-8.3 3.9-5.1 4.4-4.4 4.5-3.4 5-2.8zM60.5 53.3l1.2-.3 1.1 .6 1.1 1.3 .8 1.8-.2 3.3-1.5 2.8-2 1.7-2.6 1-7.3 .2 2.2-1.4 2.6-2.6z',eyes:[[56.2,84.6,5.3,13.3,-6.8],[71.7,78.8,5.1,13.4,-6.5]]},
   gem: {body:'M57 9.3l2.9-.4 14.9 3.5 19.6 14.1 1 1.4 .6 1.6-.5 2.6-27.1 56.5-1.6 1.8-2.1 .7-15.9-3.4-42.9-30.7-1.3-1.6-.6-1.6 .5-2.6 12-25.2 1.1-1.5 1.5-1z',shade:'M75.7 14.6l.1-.4 .6 .2 16.9 12.3 1.1 .7 .5-.2 .5 .7 .6 2.6-.5 1.6-26.4 55.1-1.2 2.1-1.1 1.1-1.6 .6-2.1 0-14.3-3.3-42.8-30.7 1.5-.2 11.6 2.5 2.2-.7 2.8-2.6 11.9-24.9 .6-.8 38.2-14.2z',light:'M19.1 23.6l1.1-.4 .5 .5 11.7 2.2 1 .9-.2 .5-1.8 2.7-11.7 24.4-1.6 .6-13.3-2.8-.5-.5 12.1-25.4 1.2-1.7z',eyes:[[51.4,42.9,6.7,17.7,-10],[66.1,37.4,6.7,17.7,-10]]},
 }
-// Original ChemClaw crew silhouettes: different claws, tails and professional insignia.
-const CREW_CLAWS = [
-  'M36 39L25 30Q8 37 9 20L17 24L13 10Q29 9 30 24L42 32ZM64 39L75 30Q92 37 91 20L83 24L87 10Q71 9 70 24L58 32Z',
-  'M37 40L22 36Q6 29 12 14L21 22L24 9Q38 19 29 31L43 34ZM63 40L78 36Q94 29 88 14L79 22L76 9Q62 19 71 31L57 34Z',
-  'M38 37L28 23Q13 24 13 8L22 12L28 4Q41 16 33 25L45 32ZM62 37L72 23Q87 24 87 8L78 12L72 4Q59 16 67 25L55 32Z',
-  'M39 40L20 43Q6 40 5 28L16 31L14 19Q33 19 28 34L44 34ZM61 40L80 43Q94 40 95 28L84 31L86 19Q67 19 72 34L56 34Z',
-]
-const CREW_BADGES = [
-  'M45 59h10v10H45Z', 'M50 57l7 11H43Z', 'M43 64l7-7 7 7-7 7Z',
-  'M43 61h14v4H43ZM48 56h4v14h-4Z', 'M43 69V59h4v10ZM49 69V55h4v14ZM55 69V62h4v7Z',
-  'M42 62h16v4H42ZM46 57h8v4h-8ZM46 67h8v4h-8Z', 'M42 59h16v3H42ZM42 65h16v3H42Z', 'M44 57h12v14H44Zm3 3v8h6v-8Z',
-]
-for (let index = 0; index < 8; index++) {
-  const tail = index % 2 ? 'L62 88L53 85L50 94L47 85L38 88L42 77Z' : 'L65 88L54 87L50 95L46 87L35 88L42 77Z'
-  CHARACTERS[`lobster-${index + 1}`] = {
-    label: `ChemClaw ${index + 1}`,
-    body: `${CREW_CLAWS[index % CREW_CLAWS.length]}M38 35Q50 25 62 35L62 70L58 79${tail}M36 49L24 43L21 47L36 55ZM64 49L76 43L79 47L64 55ZM36 60L23 58L22 63L37 66ZM64 60L77 58L78 63L63 66Z`,
-    shade: 'M51 36Q63 35 59 71L53 81L51 83Z',
-    light: 'M40 38Q44 33 47 36L44 52L40 50Z',
-    paints: [[CREW_BADGES[index], '#fff', .8]],
-    eyes: [[44, 43, 4, 7, 0], [56, 43, 4, 7, 0]],
-  }
-}
 // The picker shows every character at once, six to a row. A Bot with no choice gets
-// one of the friendliest seven; the whale is left out so it stays the Main Bot's.
+// one of the friendliest shapes (lobster plus the original mascots); the whale is
+// left out of the default pool so it stays a deliberate pick.
 export const PICKER_SHAPES = Object.keys(CHARACTERS)
 export const PICKER_COLUMNS = 6
-export const DEFAULT_SHAPES = ['star', 'moon', 'gumdrop', 'peanut', 'bunny', 'kitty', 'acorn']
+export const DEFAULT_SHAPES = ['lobster', 'star', 'moon', 'gumdrop', 'peanut', 'bunny', 'kitty', 'acorn']
 export const FALLBACK_SHAPE = 'gumdrop'
 // The team's first Main Bot, and the plugin's own mark in the sidebar.
-export const MAIN_LOOK = Object.freeze({ shape: 'lobster', color: 'blue' })
-// Character colors in picker order. Black, the gradients, and the dull gray and brown
+export const MAIN_LOOK = Object.freeze({ shape: 'lobster', color: 'blue' })// Character colors in picker order. Black, the gradients, and the dull gray and brown
 // are never defaults; the user must pick them.
 export const CHARACTER_COLORS = ['black', 'brown', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'violet', 'magenta', 'gray', 'aurora']
 export const DEFAULT_COLORS = CHARACTER_COLORS.filter(color => !['black', 'gray', 'brown'].includes(color) && !GRADIENTS[color])

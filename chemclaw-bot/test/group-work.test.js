@@ -116,6 +116,60 @@ const settle = async (check) => {
 const text = message => message.content.map(block => block.text ?? '').join('\n')
 const kinds = result => result.replies.map(reply => [reply.kind ?? 'message', reply.name])
 
+test('a specialist admin leads ordinary messages and can call the renamed Main Bot for review in the group', async t => {
+  const host = await start(t, { admin: 'b' })
+  await host.tool('update_bot', { name: '化工总协调' }, 'a')
+  const result = host.round('chief-review', host.say('请评审这份采购方案'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  assert.deepEqual(host.agentOf('ga').calls, [])
+  const admin = host.begin('gb')
+  assert.match(text(admin), /Writer is this group's admin and leads its everyday work/)
+  assert.match(text(admin), /call @化工总协调 in this group/)
+  host.finish('gb', '@化工总协调 请协调采购与质量结论的分歧')
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  const chief = host.begin('ga')
+  assert.equal(chief.source.askedBy, 'b')
+  assert.match(text(chief), /Respect the current admin/)
+  assert.match(text(chief), /Writer: @化工总协调 请协调采购与质量结论的分歧/)
+  assert.match(text(chief), /Keep the task and its results in this group/)
+  host.finish('ga', '@Writer 先核实质量要求，再确认采购范围。')
+  await settle(() => host.agentOf('gb').calls.length === 2)
+  assert.match(text(host.begin('gb')), /化工总协调: @Writer 先核实质量要求/)
+  host.finish('gb', '已汇总协调意见，由本群继续落实。')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(kinds(result()), [['message', 'Writer'], ['message', '化工总协调'], ['message', 'Writer']])
+  assert.deepEqual([host.agentOf('a').calls, host.agentOf('b').calls, host.agentOf('gc').calls], [[], [], []])
+})
+
+test('a user can directly call a Main Bot that is a member but not the group admin', async t => {
+  const host = await start(t, { admin: 'b', log: [{ who: 'Writer', botId: 'b', text: 'Earlier evidence', seq: 1 }], seq: 1 })
+  const result = host.round('chief-direct', host.say('@Chief 请验收'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  const chief = host.begin('ga')
+  assert.match(text(chief), /Earlier evidence/)
+  assert.match(text(chief), /Writer is this group's admin/)
+  host.finish('ga', '验收完成，证据仍有一处缺口。')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(kinds(result()), [['message', 'Chief']])
+  assert.deepEqual([host.agentOf('gb').calls, host.agentOf('gc').calls, host.agentOf('a').calls], [[], [], []])
+})
+
+test('everyone mode and explicit all-member calls still include a Main Bot that is not the admin', async t => {
+  for (const [mode, message] of [['admin', '@所有人 请检查'], ['everyone', '请检查']]) {
+    await t.test(mode, async t => {
+      const host = await start(t, { admin: 'b', mode })
+      const result = host.round('chief-everyone', host.say(message))
+      for (const session of ['gb', 'ga', 'gc']) {
+        await settle(() => host.agentOf(session).calls.length === 1)
+        host.begin(session)
+        host.finish(session, 'Checked.')
+      }
+      await settle(() => result() !== undefined)
+      assert.deepEqual(kinds(result()), [['message', 'Writer'], ['message', 'Chief'], ['message', 'Tester']])
+    })
+  }
+})
+
 test('work past the grace lets the round go on, and the member that asked answers the result', async (t) => {
   t.mock.timers.enable({ apis: ['setTimeout'] })
   const host = await start(t)

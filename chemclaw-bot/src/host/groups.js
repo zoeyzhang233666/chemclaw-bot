@@ -312,12 +312,22 @@ export function install(rt) {
     const after = round.slots.length - index - 1
     const members = `Members: the user${peers.length ? `, ${peers.join(', ')}` : ''} and you${leads ? ' (admin)' : ''}. Members speak one at a time; each message is posted before the next speaker starts. ${ROOM_CALLS}`
     const notice = room.notice ? `Group notice (shared instructions for every member):\n${room.notice}` : ''
-    if (round.kickoff) return { text: [members, notice, leads ? adminNote(room) : '', roomKickoff(rt.uiLanguage?.())].filter(Boolean).join('\n\n'), files: [] }
+    const chief = room.members.map(rt.botOf).find(bot => bot && rt.isMain(bot.id) && bot.id !== room.admin)
+    const admin = rt.botOf(room.admin)
+    const coordination = chief ? [
+      admin ? `${admin.name} is this group's admin and leads its everyday work.` : 'This group has no admin; keep its existing speaking order.',
+      member.id === chief.id
+        ? 'You are a Main Bot participating as a coordinator here. Respect the current admin; coordinate cross-domain work, resolve conflicting conclusions or review a result when asked, without taking over the admin role.'
+        : `For cross-domain coordination, conflicting conclusions or a requested review, call @${chief.name} in this group. Routine tasks do not need the coordinator.`,
+      'Keep the task and its results in this group. Coordination is on demand, not a review of every message or deliverable.',
+    ].join(' ') : ''
+    if (round.kickoff) return { text: [members, notice, leads ? adminNote(room) : '', coordination, roomKickoff(rt.uiLanguage?.())].filter(Boolean).join('\n\n'), files: [] }
     const working = workingIn(room).filter(item => item.bot.id !== member.id)
     const text = [
       members,
       notice,
       leads ? adminNote(room) : '',
+      coordination,
       earlier.length ? `Earlier in the group, before this round (context only):\n${transcript(earlier, memberText(room))}` : '',
       current.length
         ? `This round so far${spokeThisRound ? ', since your last message' : ', starting with the new message'} (oldest first):\n${transcript(current, memberText(room))}`

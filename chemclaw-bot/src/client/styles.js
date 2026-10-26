@@ -537,8 +537,8 @@ html:not([data-windows-titlebar]) [class*="_footArea"],:not([class*="_collapsed"
 [class*="_footArea"]>[class*="_footerActions"]>div>.bt-connect-wrap{grid-column:2;order:1}
 [class*="_footArea"]>[class*="_settingsArea"]{grid-column:1;order:1;width:auto!important}
 [class*="_footArea"] button[aria-label="Settings"]{width:auto!important;padding:0!important;background:none!important;border-radius:50%!important;height:auto!important}
-/* ChemClaw: hide DeepSeek Harness account notices and full-screen onboarding. */
-.zwW4-W_stack,._44HXVa_overlay{display:none!important}
+/* ChemClaw: hide DeepSeek Harness account notices, full-screen onboarding, and native SignInDialog. */
+.zwW4-W_stack,._44HXVa_overlay,._76YFJG_dialog{display:none!important}
 ${SKIN_FOOT}{display:flex!important;flex-direction:row!important;align-items:center!important;gap:9px!important}
 ${SKIN_FOOT}>div:has(> [data-slot="sidebar.footer.action"]){display:flex!important;align-items:center!important;flex:1 1 auto!important;min-width:0!important}
 ${SKIN_FOOT}>div:has(> [data-slot="sidebar.settings"]){order:-1!important;flex:none!important;width:auto!important}

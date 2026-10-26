@@ -136,7 +136,6 @@ function clusterSeats(count, frame) {
 }
 
 export function RoomAvatar({ room, roster, size = 36 }) {
-  if (room.avatar) return h(BotMark, { bot: { ...room, color: room.color }, size })
   const members = room.members.map(id => roster.byId[id]).filter(Boolean)
   // A group with one Bot left shows the user beside it.
   const people = members.length === 1 ? [members[0], null] : members

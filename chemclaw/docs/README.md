@@ -9,7 +9,7 @@ It includes **50 roles, 15 collaboration scenarios and 108 complete business Ski
 ## Use
 
 - Windows: install `app/dist-pack/ChemClaw-0.2.0-win-x64.exe`, then configure your model.
-- Official DSH Desktop **0.2.1-rc.2**: Plugins → Add plugin → enter the full path to `chemclaw-bot-0.2.0.tgz`, install and enable. Restart if requested.
+- Official DSH Desktop **0.2.1-rc.3**: Plugins → Add plugin → enter the full path to `chemclaw-bot-0.2.0.tgz`, install and enable. Restart if requested.
 - Retired manual seed scripts are unnecessary. Existing teams, chats and custom roles remain intact.
 
 New installations use Simplified Chinese and the paper theme; English remains available. Independent app data defaults to `~/.chemclaw`; work files go in `~/ChemClaw`. Advanced directory editing validates both paths together. Import reads the user's DSH data without writing to it. Updates remain disabled until a ChemClaw feed is configured.
