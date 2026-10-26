@@ -20,6 +20,10 @@ on:
         description: Run every check and pack the package, but do not publish
         type: boolean
         default: true
+      benchmark_mac_zip:
+        description: Compare macOS ZIP compression time and size (dry run only)
+        type: boolean
+        default: false
 
 permissions:
   # write: attach the package file to the release.
@@ -49,6 +53,8 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
       # Trusted Publishing needs npm 11.5.1 or later.
       - run: npm install -g npm@11.6.2 --no-fund --no-audit
 
@@ -147,6 +153,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
       - run: npm ci --no-fund --no-audit
       - run: npm run dist
       - name: Check the packaged app
@@ -190,10 +198,39 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ${{ runner.temp }}/electron-cache
+            ${{ runner.temp }}/electron-builder-cache
+          key: desktop-tools-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
       - run: npm ci --no-fund --no-audit
       - run: npm run dist
-      - name: Check the packaged app
-        run: node scripts/check-packed.mjs
+        env:
+          ELECTRON_CACHE: ${{ runner.temp }}/electron-cache
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+      - name: Install from the zip and check
+        run: |
+          zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
+          target="$RUNNER_TEMP/chemclaw-archive-check"
+          mkdir -p "$target"
+          ditto -x -k "$zip" "$target"
+          app="$target/ChemClaw.app"
+          exe="$app/Contents/MacOS/ChemClaw"
+          codesign --verify --deep --strict "$app"
+          expected="${{ matrix.arch }}"
+          if [ "$expected" = x64 ]; then expected=x86_64; fi
+          file -b "$exe" | grep -F "$expected"
+          node scripts/check-packed.mjs "$exe"
+          node scripts/check-update.mjs "$exe" 99.0.0
+      - name: Compare ZIP compression
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run && inputs.benchmark_mac_zip
+        run: |
+          folder=mac
+          if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
+          node scripts/benchmark-mac-zip.mjs "dist-pack/$folder/ChemClaw.app" "$RUNNER_TEMP/chemclaw-zip-benchmark"
       - name: Keep the zip for real-device checks
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
