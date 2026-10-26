@@ -1,6 +1,11 @@
 ﻿import { createHash } from 'node:crypto'
 import { encodeUrlComponent } from './secrets.js'
 import { own } from './store.js'
+import { join } from 'node:path'
+import { rm, stat } from 'node:fs/promises'
+import { packageRoot, ensureSkillLibrary } from './catalog-seed.js'
+import { parseSkill, readSkillFile, skillDirectoryOf, skillFiles, managedSkillPath } from './skill-files.js'
+import { skillLabel } from '../shared/skills.js'
 
 const MCP_CLIENT = '@deepseek-ai/dsh-mcp-client'
 const NAME = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/
@@ -86,7 +91,7 @@ export function install(rt) {
     if (!allowedToEdit(item, botId)) throw new Error(`Only ${item.createdBy ? 'its creator or a Main Bot' : 'a Main Bot'} can ${verb} ${item.name}.`)
     if (!rt.isMain(botId) && usedByOthers(item.name, botId)) throw new Error(`Another Bot uses ${item.name}, so only a Main Bot can ${verb} it.`)
   }
-  const itemInput = (body, { botId, ui }) => {
+  const itemInput = (body, { botId, ui, builtinSeed = false }) => {
     const name = validateCapabilityName(body.name)
     const kind = body.kind
     if (!['mcp', 'skill', 'pack'].includes(kind)) throw new Error('Choose an MCP server, skill, or pack.')
@@ -102,6 +107,16 @@ export function install(rt) {
       createdBy: previous?.createdBy ?? (ui ? null : botId),
       createdAt: previous?.createdAt ?? now,
       updatedAt: now,
+    }
+    if (kind === 'skill') {
+      const fields = ['displayName', 'labels', 'category', 'purpose', 'inputs', 'deliverables', 'examples', 'keywords', 'recommendedBots', 'originalName', 'sourcePath', 'directory', 'instructionFile', 'invocation', 'source', 'version', 'builtinHash', 'builtinSource', 'builtinVersion']
+      for (const field of fields) {
+        if (previous?.[field] !== undefined) item[field] = previous[field]
+        if (ui && body[field] !== undefined && !['directory', 'sourcePath', 'instructionFile', 'builtinHash', 'builtinSource', 'builtinVersion'].includes(field)) item[field] = body[field]
+      }
+      // Only the built-in seeder can supply a packaged resource path.
+      if (builtinSeed && body.sourcePath) item.sourcePath = body.sourcePath
+      for (const field of ['displayName', 'purpose', 'category', 'inputs', 'deliverables']) if (item[field] !== undefined) item[field] = String(item[field]).trim().slice(0, field === 'displayName' ? 100 : 2000)
     }
     if (kind === 'mcp') {
       const transport = body.transport === 'streamable-http' ? 'streamable-http' : 'stdio'
@@ -122,7 +137,9 @@ export function install(rt) {
         Object.assign(item, { transport, url, headers: stringMap(body.headers, 'Headers'), approved: true })
       }
     } else if (kind === 'skill') {
-      item.content = String(body.content ?? '').trim()
+      if (item.directory && body.content !== undefined) throw new Error('Installed skill files are preserved. Reinstall the folder to replace its instructions.')
+      item.content = String(body.content ?? previous?.content ?? '').trim()
+      if (body.content !== undefined && !builtinSeed) item.invocation = parseSkill(item.content, name).invocation
     } else {
       const names = [...new Set(strings(body.items))]
       for (const childName of names) {
@@ -144,7 +161,7 @@ export function install(rt) {
   rt.saveBuiltinCapabilities = async definitions => {
     await rt.load()
     writeCheck()
-    for (const definition of definitions) itemInput(definition, { ui: true })
+    for (const definition of definitions) itemInput(definition, { ui: true, builtinSeed: true })
     await rt.save()
   }
   const capabilityDelete = async (name, { botId, ui } = {}) => {
@@ -155,9 +172,11 @@ export function install(rt) {
     if (!item) throw new Error(`No capability named ${name}.`)
     if (!ui) editCheck(item, botId, 'delete')
     delete items[item.name]
+    if (item.kind === 'skill') { state.removedSkills ??= []; if (!state.removedSkills.includes(item.name)) state.removedSkills.push(item.name) }
     for (const pack of Object.values(items)) if (pack.kind === 'pack') pack.items = (pack.items ?? []).filter(child => child !== item.name)
     for (const bot of Object.values(state.bots)) bot.capabilities = (bot.capabilities ?? []).filter(attached => attached !== item.name)
     await rt.save()
+    if (item.directory) await rm(managedSkillPath(rt.home, item.directory), { recursive: true, force: true })
     return true
   }
   const changeAttachment = async (endpoint, { name, bot: targetRef }, callerId) => {
@@ -241,7 +260,7 @@ export function install(rt) {
     }
     return result
   }
-  const libraryView = () => Object.values(library()).map(({ content: _content, ...item }) => ({
+  const libraryView = () => Object.values(library()).map(({ content: _content, directory: _directory, sourcePath: _sourcePath, instructionFile: _instructionFile, ...item }) => ({
     ...item,
     ...(item.env ? { env: { ...item.env } } : {}),
     ...(item.headers ? { headers: { ...item.headers } } : {}),
@@ -273,8 +292,21 @@ export function install(rt) {
   }
   const resolveUrl = (url, botId) => String(url).replace(SECRET_REFERENCE, (_match, name) => encodeUrlComponent(secretFor(name, botId)))
   const resolveList = (list, botId) => (list ?? []).map(raw => String(raw).replace(SECRET_REFERENCE, (_match, name) => secretFor(name, botId)))
+  const definitionFor = async item => {
+    const root = skillDirectoryOf(item, rt.home, packageRoot)
+    const content = item.directory ? await readSkillFile(root, item.instructionFile) : item.content
+    return { name: item.name, description: item.description || item.purpose || skillLabel(item), source: item.directory ? 'custom' : 'runtime',
+      content: content || '', invocation: item.invocation ?? { modelInvocable: true, userInvocable: true },
+      ...(root ? { path: join(root, item.instructionFile ?? 'SKILL.md'), resourceBase: { kind: 'directory', path: root } } : {}) }
+  }
+  const summaryFor = (item, provider, modelInvocable = false) => {
+    const root = skillDirectoryOf(item, rt.home, packageRoot)
+    return { name: item.name, description: item.description || item.purpose || item.name, source: 'custom', provider, rank: modelInvocable ? -1001 : -1000, locator: item.name,
+      invocation: { modelInvocable: modelInvocable && item.invocation?.modelInvocable !== false, userInvocable: item.invocation?.userInvocable !== false },
+      ...(root ? { path: join(root, item.instructionFile ?? 'SKILL.md'), resourceBase: { kind: 'directory', path: root } } : {}) }
+  }
   const configFor = (item, botId) => {
-    if (item.kind === 'skill') return { name: item.name, description: item.description, content: item.content }
+    if (item.kind === 'skill') return { name: item.name, description: item.description, content: item.content, directory: item.directory, updatedAt: item.updatedAt, invocation: item.invocation }
     if (item.transport === 'stdio') return { transport: 'stdio', serverName: item.name, command: item.command, args: resolveList(item.args, botId), env: resolveValues(item.env, botId), failOnStartupError: true }
     return { transport: 'streamable-http', serverName: item.name, url: resolveUrl(item.url, botId), headers: resolveValues(item.headers, botId), failOnStartupError: true }
   }
@@ -321,7 +353,15 @@ export function install(rt) {
           name: `chemclaw-bot-capability-skill-${name}`,
           inject: ['skills'],
           apply(c) {
-            c.effect(() => c.skills.register({ name: config.name, description: config.description, source: 'runtime', content: config.content }))
+            if (typeof c.skills.registerProvider === 'function') {
+              c.effect(() => c.skills.registerProvider(control => {
+                providerInvalidators.add(control.invalidate)
+                control.signal.addEventListener('abort', () => providerInvalidators.delete(control.invalidate), { once: true })
+                const provider = `chemclaw-assigned-${name}`
+                return { name: provider, list: async () => [summaryFor(item, provider, true)],
+                  get: async () => ({ ...await definitionFor(item), invocation: summaryFor(item, provider, true).invocation, provider }) }
+              }))
+            } else c.effect(() => c.skills.register({ name: config.name, description: config.description, source: 'runtime', content: config.content, invocation: { modelInvocable: item.invocation?.modelInvocable !== false, userInvocable: false } }))
           },
         }
         : await loadMcpPlugin()
@@ -482,11 +522,29 @@ export function install(rt) {
   }
 
   async function capabilityEndpoint(endpoint, body = {}) {
+    if (endpoint === 'skill-catalog') { await rt.load(); return { items: libraryView().filter(item => item.kind === 'skill'), revision: state.revision } }
+    if (endpoint === 'skill-reset') {
+      await rt.load(); writeCheck()
+      const item = own(library(), String(body.name))
+      if (item?.builtinSource !== 'chemclaw') throw new Error('Only a built-in skill can be restored.')
+      await ensureSkillLibrary(rt, { reset: item.name })
+      return true
+    }
     if (endpoint === 'capability-detail') {
       await rt.load()
       const item = own(ensureLibrary(), String(body.name ?? ''))
       if (!item) throw new Error('Unknown capability')
-      return { ...item }
+      if (item.kind !== 'skill') return { ...item }
+      const root = skillDirectoryOf(item, rt.home, packageRoot)
+      const definition = await definitionFor(item)
+      const files = root ? await skillFiles(root) : [{ path: 'SKILL.md', bytes: Buffer.byteLength(item.content ?? '') }]
+      const python = files.some(file => file.path.endsWith('.py'))
+      const managedPython = python && await stat(join(rt.home, 'runtime/python', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python')).then(info => info.isFile(), () => false)
+      return { ...item, content: definition.content, files,
+        usedBy: Object.values(state.bots).filter(bot => expandCapabilityNames(bot.capabilities, library()).has(item.name)).map(bot => ({ id: bot.id, name: bot.name })),
+        dependencies: { state: python && !managedPython ? 'needs-setup' : root ? 'unchecked' : 'ready',
+          manifests: files.filter(file => /(^|\/)(requirements[^/]*\.txt|pyproject\.toml|package\.json)$/.test(file.path)).map(file => file.path),
+          message: python && !managedPython ? 'Python scripts are included. Managed Python is not installed; a compatible system Python may also be used.' : root ? 'Resources are installed. Script dependencies are checked when the task needs them.' : 'Inline instructions need no additional installation.' } }
     }
     if (endpoint === 'capability-save') return capabilitySave(body, { ui: true })
     if (endpoint === 'capability-delete') return capabilityDelete(body.name, { ui: true })
@@ -516,7 +574,29 @@ export function install(rt) {
     secretsChanged?.()
     if (loadingSecrets === 0) void scheduleReconcile()
   }
-  rt.capabilitiesStateSaved = () => { void scheduleReconcile() }
+  const providerInvalidators = new Set()
+  rt.capabilitiesStateSaved = () => { for (const invalidate of providerInvalidators) invalidate(); void scheduleReconcile() }
+  const userCatalogs = new Map()
+  async function ensureUserSkillCatalog(agent) {
+    const registry = agent.ctx?.get?.('skills') ?? ctx.get?.('skills')
+    if (typeof registry?.registerProvider !== 'function' || !agent.ctx?.plugin) return false
+    if (userCatalogs.has(agent)) { await userCatalogs.get(agent).await(); return true }
+    const fiber = agent.ctx.plugin({ name: 'chemclaw-user-skills', inject: ['skills'], apply(c) {
+      c.effect(() => c.skills.registerProvider(control => {
+        providerInvalidators.add(control.invalidate)
+        control.signal.addEventListener('abort', () => providerInvalidators.delete(control.invalidate), { once: true })
+        return { name: 'chemclaw-user-skills', list: async () => Object.values(library()).filter(item => item.kind === 'skill').map(item => summaryFor(item, 'chemclaw-user-skills')),
+          get: async candidate => {
+            const item = own(library(), candidate.name)
+            return item?.kind === 'skill' ? { ...await definitionFor(item), provider: 'chemclaw-user-skills', invocation: summaryFor(item, 'chemclaw-user-skills').invocation } : undefined
+          } }
+      }))
+    } })
+    userCatalogs.set(agent, fiber)
+    agent.ctx.effect(() => () => { userCatalogs.delete(agent) }, 'chemclaw-bot: user skill catalog')
+    await fiber.await()
+    return true
+  }
   // Creation waits for these listeners, so a new Agent's first request already has its
   // tools and skill catalog. agent/pre-step is too late: a step assembles its tools first.
   ctx.on('agent/created', async function prepareCapabilities({ agent }) {
@@ -524,6 +604,7 @@ export function install(rt) {
     try {
       await rt.load()
       const bot = botOfSession(agent.session.id)
+      if (bot || rt.roomOf(agent.session.id)) await ensureUserSkillCatalog(agent)
       if ((bot?.capabilities ?? []).length > 0) await prepare(agent, agent.session.id)
     } catch (error) {
       rt.warn('chemclaw-bot: capability load failed: %s', error)
@@ -547,6 +628,8 @@ export function install(rt) {
     return async () => {
       stopped = true
       const live = [...mounts.values()]
+      await Promise.all([...userCatalogs.values()].map(fiber => fiber.dispose()))
+      userCatalogs.clear()
       mounts.clear()
       agents.clear()
       sessionStatuses.clear()
@@ -559,6 +642,13 @@ export function install(rt) {
     capabilityEndpoint,
     capabilityLibraryView: libraryView,
     capabilityStatusesView,
+    skillDefinition: name => {
+      const item = own(library(), name)
+      if (item?.kind !== 'skill') throw new Error(`Skill ${name} is no longer installed.`)
+      return definitionFor(item)
+    },
+    validateSkillName: validateCapabilityName,
+    ensureUserSkillCatalog,
     reconcileCapabilities: reconcile,
     scheduleCapabilitiesReconcile: scheduleReconcile,
     ensureCapabilities,

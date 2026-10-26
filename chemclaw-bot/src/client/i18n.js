@@ -2,6 +2,8 @@
 // Copy is looked up at render time and every slot outlet re-renders on a language
 // switch, so nothing caches a translated string.
 
+import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.js'
+
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
@@ -1062,7 +1064,7 @@ const HOST_ZH = {
   'This DeepSeek Harness has no folder chooser': '这个 DeepSeek Harness 没有文件夹选择窗口',
   'This DeepSeek Harness cannot list folders': '这个 DeepSeek Harness 不能列出文件夹',
 }
-Object.assign(ZH, HOST_ZH)
+Object.assign(ZH, HOST_ZH, SKILL_ZH)
 
 const fill = (text, params) => (params
   ? text.replace(/\{(\w+)\}/g, (match, name) => (name in params ? String(params[name]) : match))
@@ -1084,15 +1086,15 @@ export function installLocale(locale) {
 }
 
 export function t(key, params) {
-  if (service) return fill(language().startsWith('zh') ? ZH[key] ?? key : key, params)
-  return bound ? bound(key, params) : fill(key, params)
+  if (service) return fill(language().startsWith('zh') ? ZH[key] ?? key : SKILL_CATEGORIES_EN[key] ?? key, params)
+  return bound ? bound(key, params) : fill(SKILL_CATEGORIES_EN[key] ?? key, params)
 }
 
 // A message from the host, in the interface language.
 export function hostText(message) {
   if (!language().startsWith('zh')) return message
   if (Object.hasOwn(ZH, message)) return t(message)
-  for (const [pattern, template] of HOST_ERRORS) {
+  for (const [pattern, template] of [...SKILL_HOST_ERRORS, ...HOST_ERRORS]) {
     if (pattern.test(message)) return message.replace(pattern, template)
   }
   return message

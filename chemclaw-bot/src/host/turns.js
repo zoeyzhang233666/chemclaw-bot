@@ -65,6 +65,7 @@ export function install(rt) {
       ...(keeps && info.audience ? { audience: info.audience } : {}),
       ...(keeps && info.askedBy ? { askedBy: info.askedBy } : {}),
       ...(keeps && info.senderRoomId ? { fromRoomId: info.senderRoomId } : {}),
+      ...(keeps && info.skillNames ? { skillNames: info.skillNames } : {}),
       note: 'your tool call did not run',
       retried: true,
       text: RETRY_TEXT,
@@ -482,7 +483,9 @@ export function install(rt) {
             const content = Array.isArray(event.data.content) ? event.data.content : []
             const images = content.filter(block => block?.type === 'image' && !block.offloaded).map(block => block.attachment)
             const files = content.filter(block => block?.type === 'file' && block.attachment !== undefined).map(block => block.attachment)
-            queueRoomMessage(id, { text: textOf(event.data.content), ...(images.length > 0 ? { images } : {}), ...(files.length > 0 ? { files } : {}) })
+            const text = textOf(event.data.content)
+            const skillRequest = rt.skillRequest?.(text, rt.roomOf(id))
+            queueRoomMessage(id, { text, ...(skillRequest ? { skillRequest } : {}), ...(images.length > 0 ? { images } : {}), ...(files.length > 0 ? { files } : {}) })
           }
           const own = rt.chatOwners.get(id)
           if (own !== undefined) rt.dropKickoff(own)

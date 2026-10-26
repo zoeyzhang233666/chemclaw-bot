@@ -46,10 +46,12 @@
     "NOTICE",
     "seed/catalog.json",
     "seed/domain-skills.json",
+    "seed/skill-display.json",
     "seed/supplemental-skills.json",
     "seed/supplemental-sources.json",
     "seed/third-party-sources.json",
     "!src/host/chemclaw-seed.js",
+    "!skills/community/delivery/**",
     "!skills/index/**"
   ],
   "scripts": {
@@ -84,8 +86,10 @@
     "dsh-free-search": "0.9.12",
     "echarts": "6.0.0",
     "exceljs": "4.4.0",
+    "fflate": "0.8.2",
     "lightweight-charts": "5.0.9",
     "pdf-lib": "1.17.1",
-    "pptxgenjs": "4.0.1"
+    "pptxgenjs": "4.0.1",
+    "yaml": "2.8.1"
   }
 }

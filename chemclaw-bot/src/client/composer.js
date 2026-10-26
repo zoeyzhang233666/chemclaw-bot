@@ -54,6 +54,19 @@ export function useDictation(onText) {
 }
 
 export function ComposerVoice({ sessionId, inputActions, actions, useUi }) {
+  const skillDraft = useUi(state => state.skillDraft)
+  useEffect(() => {
+    if (!skillDraft || skillDraft.sessionId !== sessionId || !inputActions) return
+    let timer
+    const insert = () => {
+      const span = inputActions.captureInsertion()
+      const applied = actions.insertSkillDraft(sessionId, skillDraft, span)
+      if (applied) actions.finishSkillDraft(skillDraft.token)
+      else timer = setTimeout(insert, 150)
+    }
+    insert()
+    return () => clearTimeout(timer)
+  }, [skillDraft, sessionId, inputActions])
   const dictation = useDictation((text, final) => {
     if (final && inputActions) inputActions.insertText(text, inputActions.captureInsertion())
   })

@@ -38,19 +38,28 @@ export function install(rt) {
     const token = rt.secretValue(def.secret)
     const enabled = !stopped && state.connectors?.[def.id]?.disabled !== true && (def.anonymous || token !== undefined)
     const previous = mounts.get(def.id)
-    if (!force && previous?.token === token && previous?.enabled === enabled) return
+    const signature = def.generic ? createHash('sha256').update(JSON.stringify(def) + Object.values({ ...def.env, ...def.headers }).map(value => String(value).replace(/\$DSH_SECRET_([A-Z][A-Z0-9_]*)/g, (_match, name) => rt.secretValue(name) ?? '')).join('\n')).digest('hex') : undefined
+    if (!force && previous?.token === token && previous?.enabled === enabled && previous?.signature === signature) return
     await dispose(def.id)
     if (!enabled) { statuses.set(def.id, { state: 'off' }); return }
     statuses.set(def.id, { state: 'connecting' })
     try {
-      if (!def.url.startsWith('https://')) throw new Error('MCP addresses must use HTTPS')
+      if (def.transport !== 'stdio' && !def.url.startsWith('https://')) throw new Error('MCP addresses must use HTTPS')
+      const resolve = value => String(value).replace(/\$DSH_SECRET_([A-Z][A-Z0-9_]*)/g, (_match, name) => {
+        const secret = rt.secretValue(name)
+        if (secret === undefined) throw new Error(`Secret ${name} is missing. Configure this service in Connectors.`)
+        return secret
+      })
+      const fields = values => Object.fromEntries(Object.entries(values ?? {}).map(([key, value]) => [key, resolve(value)]))
       const loader = ctx.get?.('loader')
       if (!loader?.import || !ctx.plugin) throw new Error('This DSH cannot load connectors')
       const exports = await loader.import('@deepseek-ai/dsh-mcp-client')
       if (stopped) return
       const plugin = loader.unwrapExports?.(exports) ?? exports.default ?? exports
-      const fiber = ctx.plugin(plugin, { transport: 'streamable-http', serverName: def.id, url: def.url, headers: token ? { Authorization: `Bearer ${token}` } : {}, failOnStartupError: true, toolCallTimeoutMs: 30_000 })
-      mounts.set(def.id, { token, enabled, fiber })
+      const config = def.transport === 'stdio' ? { transport: 'stdio', command: def.command, args: (def.args ?? []).map(resolve), env: fields(def.env) }
+        : { transport: 'streamable-http', url: def.url, headers: def.generic ? fields(def.headers) : token ? { Authorization: `Bearer ${token}` } : {} }
+      const fiber = ctx.plugin(plugin, { ...config, serverName: def.id, failOnStartupError: true, toolCallTimeoutMs: 30_000 })
+      mounts.set(def.id, { token, enabled, signature, fiber })
       let timer
       try {
         await Promise.race([fiber.await(), new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Connection timed out')), rt.config.connectorTimeoutMs ?? 20_000) })])
@@ -58,7 +67,7 @@ export function install(rt) {
       if (!stopped && mounts.get(def.id)?.fiber === fiber) statuses.set(def.id, { state: 'ready' })
     } catch (error) {
       await dispose(def.id).catch(() => {})
-      mounts.set(def.id, { token, enabled })
+      mounts.set(def.id, { token, enabled, signature })
       statuses.set(def.id, { state: 'error', error: reason(error) })
     }
   }
@@ -72,6 +81,7 @@ export function install(rt) {
   rt.connectorsView = () => [...githubView(), ...definitions().map(def => ({
     id: def.id, name: def.name, description: def.description, url: def.url, tokenUrl: def.tokenUrl,
     anonymous: Boolean(def.anonymous), authenticated: rt.secretValue(def.secret) !== undefined,
+    ...(def.generic ? { generic: true, transport: def.transport } : {}),
     ...(statuses.get(def.id) ?? { state: 'off' }),
   }))]
   rt.connectorOwns = (id, url) => definitions().some(def => def.id === id || (url && def.url === url))

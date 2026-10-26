@@ -109,6 +109,8 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'effect chemclaw-bot: connectors',
     'on agent/created',
     'effect chemclaw-bot: capabilities',
+    'effect chemclaw-bot: skill import cleanup',
+    'effect chemclaw-bot: service preview cleanup',
     'tool list_scenarios',
     'tool activate_scenario',
     'effect chemclaw-bot: usage ledger',

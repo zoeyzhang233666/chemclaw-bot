@@ -467,9 +467,9 @@ export function TriggerCell({ node, sessionId, useRoster, useSessions, useTurnCl
     : body
 
   function triggerBody() {
-    if (source.kind === 'chemclaw-skill-routing') {
+    if (source.kind === 'chemclaw-skill-routing' || source.kind === 'skill-invocation') {
       const item = (roster.capabilities ?? []).find(item => item.name === source.name)
-      return h('div', { className: 'bt-event' }, t('Loaded skill: {name}', { name: item ? capabilityLabel(item) : t('Skill') }))
+      return h('div', { className: 'bt-event' }, t('Loaded skill: {name}', { name: item ? capabilityLabel(item) : source.name || t('Skill') }))
     }
     if (source.kind === 'bot') {
       // A part opens with its handoff package, so the earlier parts go right above it.

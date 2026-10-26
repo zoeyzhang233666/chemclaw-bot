@@ -1,5 +1,7 @@
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { renderSkillContent } from '@deepseek-ai/dsh-skill'
+import { explicitSkillNames } from '../shared/skills.js'
+import { mentionsIn } from './groups.js'
 
 const topics = ['产业链', '利润', '成本', '行情', '供应商', '客户', '尽调', '基差', '月差', '回测', 'ppt', 'excel', '物性', '结构', '文献', '质量', 'coa', '区域', '海外', '采购', '销售', '装置', '供需', '产能']
 
@@ -19,10 +21,26 @@ export function selectTaskSkill(text, items) {
 
 export function install(rt) {
   const loaded = new WeakMap()
+  rt.skillRequest = (text, room) => {
+    const items = Object.values(rt.state.capabilities?.items ?? {})
+    for (const item of items) if (item.kind === 'skill' && item.invocation?.userInvocable === false
+      && new RegExp(`(?:^|\\s)/${item.name}(?=\\s|$)`).test(text)) throw new Error(`Skill ${item.name} is unavailable for manual use.`)
+    const names = explicitSkillNames(text, items)
+    for (const name of rt.state.removedSkills ?? []) if (new RegExp(`(?:^|\\s)/${name}(?=\\s|$)`).test(text) && !items.some(item => item.name === name)) throw new Error(`Skill ${name} is no longer installed. Choose another skill from the library.`)
+    if (!names.length) return undefined
+    if (!room) return { names }
+    const members = room.members.map(rt.botOf).filter(Boolean)
+    const { all, found } = mentionsIn(text, members)
+    if (all || found.length > 1) throw new Error('Choose one group member to run this skill.')
+    const executor = found[0]?.id ?? room.admin ?? members[0]?.id
+    if (!executor) throw new Error('Choose a group member to run this skill.')
+    return { names, executor }
+  }
   rt.ctx.on('agent/pre-step', async ({ agent, signal, turn }, next) => {
+    const nativeCatalog = rt.isBotSession(agent.id) && await rt.ensureUserSkillCatalog?.(agent)
     const decision = await next()
     if (decision.kind === 'reject' || signal.aborted || !rt.isBotSession(agent.id)) return decision
-    const skills = rt.ctx.get?.('skills')
+    const skills = agent.ctx?.get?.('skills') ?? rt.ctx.get?.('skills')
     if (!skills) return decision
     const incoming = decision.messages.filter(message => message.role === 'user'
       && (message.source?.kind === 'user' || message.source?.role === 'room'))
@@ -31,6 +49,27 @@ export function install(rt) {
       ? [...(rt.roomOf(owner.roomId)?.log ?? [])].reverse().find(line => line.who === 'User')?.text
       : incoming.map(message => message.content.filter(block => block.type === 'text').map(block => block.text).join('\n')).join('\n')
     if (!task) return decision
+    const relayed = incoming.flatMap(message => message.source?.skillNames ?? [])
+    const explicit = owner ? relayed : rt.skillRequest(task)?.names ?? []
+    if (explicit.length) {
+      const previous = loaded.get(agent)
+      const used = previous?.turn === turn ? previous.names : new Set()
+      // Direct user gestures use DSH's canonical invocation boundary. Group relays
+      // carry durable metadata and need their instructions at the member boundary.
+      if (!owner && nativeCatalog) { loaded.set(agent, { turn, names: used, explicit: true }); return decision }
+      const messages = []
+      for (const name of explicit) {
+        if (used.has(name) || decision.messages.some(message => message.source?.kind === 'skill-invocation' && message.source.name === name)) continue
+        const item = rt.state.capabilities.items[name]
+        if (item?.kind !== 'skill' || item.invocation?.userInvocable === false) throw new Error(`Skill ${name} is unavailable for manual use.`)
+        const skill = await rt.skillDefinition(name)
+        used.add(name)
+        messages.push(createUserMessage({ source: { kind: 'skill-invocation', name, form: 'instructions' }, content: [{ type: 'text', text: renderSkillContent({ ...skill, provider: skill.provider ?? 'chemclaw' }) }] }))
+      }
+      loaded.set(agent, { turn, names: used, explicit: true })
+      return messages.length ? { ...decision, messages: [...decision.messages, ...messages] } : decision
+    }
+    if (decision.messages.some(message => message.source?.kind === 'skill-invocation') || previousExplicit(loaded.get(agent), turn)) return decision
     const bot = rt.botOf(rt.selfOf(agent.id))
     if (!bot) return decision
     const items = [...rt.expandCapabilities(bot.capabilities)].map(name => rt.state.capabilities.items[name])
@@ -51,3 +90,5 @@ export function install(rt) {
     }
   })
 }
+
+const previousExplicit = (record, turn) => record?.turn === turn && record?.explicit === true

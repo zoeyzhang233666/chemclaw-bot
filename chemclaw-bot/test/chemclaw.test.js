@@ -88,7 +88,14 @@ test('fresh bootstrap creates all 50 Bots and 15 groups once; simultaneous reque
     assert.match(room.notice, /主控：ChemClaw/)
     assert.equal(room.templateVersion, roleCatalog.version)
   }
-  assert.equal(Object.values(rt.state.capabilities.items).filter(item => item.kind === 'skill').length, 116)
+  assert.equal(Object.values(rt.state.capabilities.items).filter(item => item.kind === 'skill').length, 118)
+  assert.equal(rt.state.capabilities.items['guizang-ppt-skill'].category, '通用办公')
+  assert.equal(rt.state.capabilities.items['chemclaw-presentations'].category, '通用办公')
+  for (const skill of Object.values(rt.state.capabilities.items).filter(item => item.kind === 'skill')) {
+    assert.match(skill.labels.zh, /[\u4e00-\u9fff]/)
+    assert.match(skill.purpose, /[\u4e00-\u9fff]/, skill.name)
+    assert.match(skill.deliverables, /[\u4e00-\u9fff]/, skill.name)
+  }
 })
 
 test('upgrading a coordinator-only or partial team preserves conversations, edits and deleted presets', async t => {

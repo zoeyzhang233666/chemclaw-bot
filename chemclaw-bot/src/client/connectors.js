@@ -4,6 +4,7 @@ import { MaskedInput } from './secret-card.js'
 import { t } from './i18n.js'
 import { CloudMark, ChemistryMark } from './brand-icons.js'
 import { PlugIcon } from './icons.js'
+import { ServiceInstaller } from './service-installer.js'
 
 const TOKEN_URL = 'https://github.com/settings/personal-access-tokens/new'
 
@@ -46,7 +47,8 @@ function ConnectorRow({ connector, actions }) {
         h('span', { className: 'bt-connector-name' }, t(connector.name)),
         h('span', { className: 'bt-connector-status' }, statusText(connector))),
       h('span', { className: 'bt-connector-actions' },
-        connector.anonymous || connector.authenticated || connector.state === 'error' ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => setForm(!form) }, t('Change key')) : null,
+        !connector.generic && (connector.anonymous || connector.authenticated || connector.state === 'error') ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => setForm(!form) }, t('Change key')) : null,
+        connector.generic ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.openSettings('secrets') }, t('Manage credentials')) : null,
         connector.state === 'error' ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void run(actions.connectorRetry(connector.id)) }, t('Try again')) : null,
         on
           ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void run(actions.connectorDisconnect(connector.id)) }, t('Disconnect'))
@@ -68,6 +70,7 @@ export function ConnectorsPage({ roster, actions }) {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [data, setData] = useState(null)
+  const [adding, setAdding] = useState(false)
   const check = () => actions.dataStatus().then(setData).catch(failure => setError(failure.message))
   useEffect(() => { void check() }, [list.map(item => `${item.id}:${item.state}`).join('|')])
   useEffect(() => {
@@ -84,6 +87,8 @@ export function ConnectorsPage({ roster, actions }) {
     } catch (failure) { setError(failure.message) } finally { setBusy(false) }
   }
   return h('section', { className: 'bt-set-section bt-connectors-page' },
+    h('div', { className: 'bt-actions' }, h('button', { className: 'bt-soft', onClick: () => setAdding(!adding) }, t('Add a tool service'))),
+    adding ? h(ServiceInstaller, { actions, onClose: () => setAdding(false) }) : null,
     error ? h('div', { className: 'bt-error', role: 'alert' }, error) : null,
     h('div', { className: 'bt-set-card bt-connectors-card' }, list.filter(item => item.id !== 'huagongshe').length === 0
       ? h('div', { className: 'bt-set-row' }, h('span', { className: 'bt-set-hint' }, t('No connectors')))
