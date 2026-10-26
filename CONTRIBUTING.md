@@ -69,7 +69,7 @@ Keep one pull request to one issue. Split a large change into several pull reque
 
 1. In a pull request into `main`, set the version in `chemclaw-bot/package.json` (and matching `app/package.json`) and write the `CHANGELOG.md` section from the Changelog sentences of the merged pull requests.
 2. Before you tag, run the [release checklist](docs/dev/release-checklist.md) (in Chinese) on a real Windows machine, and on macOS when the change touches it, and post the result in the pull request.
-3. Publish a GitHub release `vX.Y.Z` on `main`. The Release workflow checks that the tag matches the version and is on `main`, runs the checks, attaches the package and installers, and publishes to npm only when the repository variable `ENABLE_NPM_PUBLISH` is `true`. Do not run `npm publish` by hand.
+3. Push a version tag `vX.Y.Z` on `main`, or dispatch the Release workflow on `main` with dry run off. The workflow creates a draft, uploads and verifies all assets, and publishes only when every platform passes. It checks that the tag matches the version and is on `main`, runs the checks, attaches the package and installers, and publishes to npm only when the repository variable `ENABLE_NPM_PUBLISH` is `true`. Do not run `npm publish` by hand.
 4. For a hotfix, start `fix/hot-<name>` from `main`, open the pull request into `main`, and release a patch version.
 
 ## Set up

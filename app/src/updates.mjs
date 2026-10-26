@@ -26,6 +26,12 @@ export const UPDATE_TEXT = {
 const CHECK_EVERY_MS = 4 * 60 * 60_000
 export const RELEASES_URL = 'https://api.github.com/repos/zoeyzhang233666/chemclaw-bot/releases?per_page=20'
 
+export function updatesEnabled({ packaged, isolated, feed }) {
+  return packaged && (!isolated || Boolean(feed))
+}
+
+const initialStatus = current => ({ current, enabled: true, phase: 'idle', latest: null, checkedAt: 0, error: null })
+
 function parseVersion(version) {
   if (typeof version !== 'string') return null
   const value = version.replace(/^v/u, '')
@@ -75,21 +81,24 @@ function isHttpsPage(page) {
 
 export function watchReleases({ current, arch, fetch = globalThis.fetch, ask, open, feed = RELEASES_URL, log = console }) {
   let asked
+  let checking = false
+  const status = initialStatus(current)
   let latest = Promise.resolve(null)
   const check = () => {
+    if (checking) return latest
+    checking = true
+    Object.assign(status, { phase: 'checking', error: null })
     latest = (async () => {
       try {
         const response = await fetch(feed, {
           headers: { accept: 'application/vnd.github+json', 'user-agent': `ChemClaw/${current}` },
         })
         if (!response.ok) {
-          log.error(`ChemClaw: update check failed: HTTP ${String(response.status)}`)
-          return null
+          throw new Error(`HTTP ${String(response.status)}`)
         }
         const releases = await response.json()
         if (!Array.isArray(releases)) {
-          log.error('ChemClaw: update check failed: releases response is not an array')
-          return null
+          throw new Error('releases response is not an array')
         }
         const currentVersion = parseVersion(current)
         const allowPrerelease = currentVersion !== null && currentVersion.pre !== null
@@ -106,6 +115,7 @@ export function watchReleases({ current, arch, fetch = globalThis.fetch, ask, op
           }
           if (found === undefined || isNewer(version, found.version)) found = { version, page: release.html_url }
         }
+        Object.assign(status, { phase: found ? 'available' : 'idle', latest: found?.version ?? null })
         if (found === undefined) return null
         log.info(`ChemClaw: update ${found.version} available`)
         if (ask !== undefined && asked !== found.version) {
@@ -116,14 +126,20 @@ export function watchReleases({ current, arch, fetch = globalThis.fetch, ask, op
         }
         return found
       } catch (error) {
-        log.error(`ChemClaw: update check failed: ${error instanceof Error ? error.message : String(error)}`)
+        const message = error instanceof Error ? error.message : String(error)
+        Object.assign(status, { phase: 'failed', error: message })
+        log.error(`ChemClaw: update check failed: ${message}`)
         return null
+      } finally {
+        checking = false
+        status.checkedAt = Date.now()
       }
     })()
+    return latest
   }
   check()
   const timer = setInterval(check, CHECK_EVERY_MS)
-  return { stop: () => { clearInterval(timer) }, latest: () => latest }
+  return { stop: () => { clearInterval(timer) }, latest: () => latest, check, status: () => ({ ...status }) }
 }
 
 /**
@@ -143,7 +159,8 @@ export function watchReleases({ current, arch, fetch = globalThis.fetch, ask, op
  * }} `latest` is what the newest check found: the version and whether its download finished.
  *   `install` stops the Host and runs the installer, which opens the app again.
  */
-export function watchUpdates({ updater, beforeInstall, ask, feed, log = console }) {
+export function watchUpdates({ updater, beforeInstall, ask, feed, current, log = console }) {
+  const status = initialStatus(current)
   updater.autoDownload = true
   updater.autoInstallOnAppQuit = true
   if (feed) updater.setFeedURL({ provider: 'generic', url: feed })
@@ -153,21 +170,44 @@ export function watchUpdates({ updater, beforeInstall, ask, feed, log = console 
   }
   let asked
   updater.on('update-downloaded', ({ version }) => {
+    Object.assign(status, { phase: 'ready', latest: version, error: null })
     log.info(`ChemClaw: update ${version} downloaded`)
     if (ask === undefined || asked === version) return
     asked = version
     void ask(version).then(now => (now ? install() : undefined))
       .catch((error) => { log.error(`ChemClaw: update ${version} not installed: ${error instanceof Error ? error.message : String(error)}`) })
   })
-  updater.on('error', (error) => { log.error(`ChemClaw: update failed: ${error instanceof Error ? error.message : String(error)}`) })
+  updater.on('error', (error) => {
+    const message = error instanceof Error ? error.message : String(error)
+    Object.assign(status, { phase: 'failed', error: message })
+    log.error(`ChemClaw: update failed: ${message}`)
+  })
   let latest = Promise.resolve(null)
+  let checking = false
   // A failed check or download also comes as an 'error' event.
   const check = () => {
-    latest = updater.checkForUpdates().then(result => (result?.isUpdateAvailable && result.downloadPromise
-      ? { version: result.updateInfo.version, downloaded: result.downloadPromise.then(() => true, () => false) }
-      : null), () => null)
+    if (checking) return latest
+    checking = true
+    if (status.phase !== 'ready') status.phase = 'checking'
+    status.error = null
+    latest = updater.checkForUpdates().then(result => {
+      if (!result?.isUpdateAvailable || !result.downloadPromise) {
+        if (status.phase !== 'ready') Object.assign(status, { phase: 'idle', latest: null })
+        return null
+      }
+      const version = result.updateInfo.version
+      if (status.phase !== 'ready' || status.latest !== version) Object.assign(status, { phase: 'downloading', latest: version })
+      return { version, downloaded: result.downloadPromise.then(() => true, error => {
+        Object.assign(status, { phase: 'failed', error: error instanceof Error ? error.message : String(error) })
+        return false
+      }) }
+    }, error => {
+      Object.assign(status, { phase: 'failed', error: error instanceof Error ? error.message : String(error) })
+      return null
+    }).finally(() => { checking = false; status.checkedAt = Date.now() })
+    return latest
   }
   check()
   const timer = setInterval(check, CHECK_EVERY_MS)
-  return { stop: () => { clearInterval(timer) }, latest: () => latest, install }
+  return { stop: () => { clearInterval(timer) }, latest: () => latest, install, check, status: () => ({ ...status }) }
 }

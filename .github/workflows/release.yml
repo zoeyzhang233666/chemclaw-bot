@@ -12,8 +12,8 @@ name: Release
 # main. A version with a pre-release part (0.2.0-rc.1) goes to the npm tag "next".
 
 on:
-  release:
-    types: [published]
+  push:
+    tags: ['v*']
   workflow_dispatch:
     inputs:
       dry_run:
@@ -35,6 +35,8 @@ jobs:
     name: Check and publish
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
     defaults:
       run:
         shell: bash
@@ -51,13 +53,24 @@ jobs:
       - run: npm install -g npm@11.6.2 --no-fund --no-audit
 
       - name: Check the tag and the branch
-        if: github.event_name == 'release'
+        id: release
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         run: |
           version="$(node -p "require('./package.json').version")"
-          if [ "$TAG" != "v$version" ]; then
-            echo "::error::The release tag is $TAG, but chemclaw-bot/package.json has version $version. Tag v$version or change the version."
+          TAG="v$version"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if [ "$DRY_RUN" = true ]; then exit 0; fi
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF_NAME" != "$TAG" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match $TAG."
+            exit 1
+          fi
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_REF" != refs/heads/main ]; then
+            echo "::error::Publish from main."
+            exit 1
+          fi
+          if git rev-parse --verify "refs/tags/$TAG" >/dev/null 2>&1 && [ "$(git rev-list -n 1 "$TAG")" != "$GITHUB_SHA" ]; then
+            echo "::error::$TAG already points at another commit. Use a new version."
             exit 1
           fi
           if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
@@ -84,8 +97,27 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.dry_run
         run: npm pack --dry-run
 
+      - name: Prepare the draft release
+        if: github.event_name == 'push' || !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          if gh release view "$TAG" --json isDraft --jq .isDraft > "$RUNNER_TEMP/release-draft"; then
+            test "$(cat "$RUNNER_TEMP/release-draft")" = true || { echo '::error::This version is already published. Use a new version.'; exit 1; }
+          else
+            notes="../docs/releases/$TAG.md"
+            prerelease=()
+            if [[ "$TAG" == *-* ]]; then prerelease=(--prerelease); fi
+            if [ -f "$notes" ]; then
+              gh release create "$TAG" --target "$GITHUB_SHA" --draft "${prerelease[@]}" --title "ChemClaw $TAG" --notes-file "$notes"
+            else
+              gh release create "$TAG" --target "$GITHUB_SHA" --draft "${prerelease[@]}" --title "ChemClaw $TAG" --generate-notes
+            fi
+          fi
+
       - name: Publish
-        if: (github.event_name == 'release' || (!inputs.dry_run && github.ref == 'refs/heads/main')) && vars.ENABLE_NPM_PUBLISH == 'true'
+        if: (github.event_name == 'push' || !inputs.dry_run) && vars.ENABLE_NPM_PUBLISH == 'true'
         run: |
           tag="$(node -p "require('./package.json').version.includes('-') ? 'next' : 'latest'")"
           echo "Publishing $(node -p "require('./package.json').version") with the npm tag $tag"
@@ -93,10 +125,10 @@ jobs:
 
       # The release keeps the package file for installs without npm.
       - name: Attach the package to the release
-        if: github.event_name == 'release'
+        if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ steps.release.outputs.tag }}
         run: |
           npm pack
           gh release upload "$TAG" "chemclaw-bot-$(node -p "require('./package.json').version").tgz" --clobber
@@ -130,10 +162,10 @@ jobs:
           compression-level: 0
 
       - name: Attach the installer to the release
-        if: github.event_name == 'release'
+        if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ needs.publish.outputs.tag }}
         run: |
           installer="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-win-x64.exe"
           gh release upload "$TAG" "$installer" "$installer.blockmap" dist-pack/latest.yml --clobber
@@ -172,10 +204,35 @@ jobs:
           if-no-files-found: error
           compression-level: 0
       - name: Attach the zip to the release
-        if: github.event_name == 'release'
+        if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ needs.publish.outputs.tag }}
         run: |
           zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
           gh release upload "$TAG" "$zip" --clobber
+
+  complete:
+    name: Publish the complete release
+    needs: [publish, app-windows, app-macos]
+    if: github.event_name == 'push' || !inputs.dry_run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify assets and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ needs.publish.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          gh release view "$TAG" --json assets --jq '.assets[] | select(.size > 0) | .name' > "$RUNNER_TEMP/assets"
+          for file in "chemclaw-bot-$version.tgz" "ChemClaw-$version-win-x64.exe" "ChemClaw-$version-win-x64.exe.blockmap" latest.yml "ChemClaw-$version-mac-arm64.zip" "ChemClaw-$version-mac-x64.zip"; do
+            grep -Fx "$file" "$RUNNER_TEMP/assets"
+          done
+          if [[ "$TAG" == *-* ]]; then
+            gh release edit "$TAG" --draft=false --prerelease --latest=false
+          else
+            gh release edit "$TAG" --draft=false --latest
+          fi

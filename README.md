@@ -29,12 +29,14 @@ Short rule: **trends or interaction → HTML first; static briefing → PPT is f
 
 ### 1. Standalone Windows app (best for most people)
 
-1. Download the installer from [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) (for example `ChemClaw-0.2.0-win-x64.exe`) and install it.
+1. Download the installer from [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) (for example `ChemClaw-0.2.1-win-x64.exe`) and install it.
 2. Open ChemClaw → **Settings → Models**, paste your model Key (APIHub is listed first: https://apihub.chem-cloud.cn/ , endpoint https://apihub.chem-cloud.cn/v1 ).
 3. For company chemical data: **Settings → Connectors → Chemcloud Data Hub**, paste only the Key from https://mcp.chem-cloud.cn/ . Never put Keys in chat.
 4. Pick a Bot or group in the sidebar and ask in plain language, e.g. “East China methanol prices over the last month for procurement talks; mark gaps and sources; deliver HTML and Excel.”
 
 Public chemistry lookups and keyless web search usually need no company Key. Trust the Connectors status for whether data services are connected.
+
+The installed app checks ChemClaw releases automatically. **Settings → About ChemClaw → Check for updates** checks again: Windows downloads the new installer and offers a restart; macOS opens the download page. Earlier builds with update checks disabled need one manual installation of this version.
 
 **Settings → Skill library** lists the complete skill collection by business category, with Chinese names, purposes and deliverables. Search by task or keyword, then choose **Use** to return to your current conversation with the skill selected. Write your request in the normal composer and send when ready; existing draft text, attachments and regular Bot skills are preserved. In groups, the admin executes it unless you @ another member. **Install a skill** accepts ZIP files, folders, SKILL.md and public GitHub links, preserves scripts and templates, and lets you choose a group before installation. Tool services and credentials remain in **Connectors**.
 
@@ -46,10 +48,10 @@ If you already use official DSH:
 2. In DSH go to **Plugins → Add plugin** and enter:
 
    ```text
-   github:zoeyzhang233666/chemclaw-bot#v0.2.0&path:/chemclaw-bot
+   github:zoeyzhang233666/chemclaw-bot#v0.2.1&path:/chemclaw-bot
    ```
 
-3. Install, enable, and restart if asked. You can also install from a `chemclaw-bot-0.2.0.tgz` path on the same Release.
+3. Install, enable, and restart if asked. You can also install from a `chemclaw-bot-0.2.1.tgz` path on the same Release.
 4. Configure model and connector Keys the same way, then start from the sidebar.
 
 Existing chats and custom roles stay; missing presets are filled in without wiping your work.

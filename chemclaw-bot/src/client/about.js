@@ -38,8 +38,37 @@ function dshHint(dsh, shown) {
 
 const linkProps = href => ({ className: 'bt-soft bt-soft-sm bt-about-link', href, target: '_blank', rel: 'noopener noreferrer' })
 
+function DesktopUpdates({ bridge, Row, run }) {
+  const [status, setStatus] = useState({ enabled: false, phase: 'idle' })
+  const [checking, setChecking] = useState(false)
+  useEffect(() => {
+    let stopped = false
+    const refresh = () => { void bridge.status().then(value => { if (!stopped) setStatus(value) }, () => {}) }
+    refresh()
+    const timer = setInterval(refresh, 2000)
+    return () => { stopped = true; clearInterval(timer) }
+  }, [bridge])
+  const check = () => {
+    setChecking(true)
+    void run(bridge.check().then(setStatus)).finally(() => setChecking(false))
+  }
+  const busy = checking || status.phase === 'checking'
+  const ready = status.phase === 'ready'
+  const available = status.phase === 'available'
+  const hint = status.phase === 'failed' ? t('Could not check for updates.')
+    : ready ? t('ChemClaw {version} is ready to install.', { version: status.latest })
+      : status.phase === 'downloading' ? t('Downloading ChemClaw {version}…', { version: status.latest })
+        : available ? t('ChemClaw {version} is available', { version: status.latest })
+          : !status.enabled ? t('Update checks are off.')
+            : status.checkedAt ? `${t('Up to date')} · ${t('Checked {time}', { time: whenText(status.checkedAt) })}` : t('Updates come with the ChemClaw app.')
+  return h(Row, { label: 'ChemClaw', hint },
+    h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy || !status.enabled || status.phase === 'downloading', onClick: check }, busy ? t('Checking…') : t('Check for updates')),
+    ready || available ? h('button', { type: 'button', className: 'bt-fb-primary', onClick: () => run(bridge.install()) }, ready ? t('Restart now') : t('Download')) : null)
+}
+
 export function AboutPage({ useUpdate, actions, run, Section, Row }) {
   const update = useUpdate(value => value) ?? {}
+  const desktop = window.dsBotApp?.updates
   const [checking, setChecking] = useState(false)
   // The whale hops when the page opens, after a check, and when an update is in.
   const [cheer, setCheer] = useState(true)
@@ -86,7 +115,8 @@ export function AboutPage({ useUpdate, actions, run, Section, Row }) {
       h('span', { className: 'bt-star-main' }, h('span', { className: 'bt-star-icon' }, h(StarLineIcon)), 'Star')) : null),
     repo ? h('p', { key: 'ask', className: 'bt-about-ask' }, t('If ChemClaw helps you, a star on GitHub helps more people find it.')) : null,
     h(Section, { key: 'updates', title: t('Updates') },
-      h(Row, { label: 'ChemClaw', hint: botHint(update) }, botControl, update.available && update.notesUrl ? h('a', linkProps(update.notesUrl), t("What's new")) : null),
+      desktop ? h(DesktopUpdates, { bridge: desktop, Row, run })
+        : h(Row, { label: 'ChemClaw', hint: botHint(update) }, botControl, update.available && update.notesUrl ? h('a', linkProps(update.notesUrl), t("What's new")) : null),
       dsh?.current ? h(Row, { label: 'DeepSeek Harness', hint: dshHint(dsh, dshShown) }, dshControl) : null),
     h(Section, { key: 'links', title: t('Links') },
       repo ? h(Row, { label: t('Source code'), hint: repo.replace(/^https:\/\//, '') }, h('a', linkProps(repo), h(GitHubMark), t('Open'))) : null,

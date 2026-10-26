@@ -9,6 +9,11 @@ const host = process.argv.find(value => value.startsWith('--chemclaw-origin='))?
 if (host !== undefined && location.origin === host) {
   // chemclaw-bot's settings show and move the app's data location through this.
   contextBridge.exposeInMainWorld('dsBotApp', {
+    updates: {
+      status: () => ipcRenderer.invoke('chemclaw:update-status'),
+      check: () => ipcRenderer.invoke('chemclaw:update-check'),
+      install: () => ipcRenderer.invoke('chemclaw:update-install'),
+    },
     dataLocation: () => ipcRenderer.invoke('chemclaw:data-location'),
     moveData: (workspace) => ipcRenderer.invoke('chemclaw:move-data', typeof workspace === 'string' ? workspace : undefined),
     teamWorkspaceChanged: (path) => { ipcRenderer.send('chemclaw:team-workspace', String(path)) },

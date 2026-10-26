@@ -29,12 +29,14 @@ ChemClaw 是一套面向化工业务的 AI 助手团队：帮你做客户开发�
 
 ### 1. 独立 Windows 应用（推荐给大多数人）
 
-1. 从 [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载安装包（如 `ChemClaw-0.2.0-win-x64.exe`）并安装。
+1. 从 [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载安装包（如 `ChemClaw-0.2.1-win-x64.exe`）并安装。
 2. 打开 ChemClaw → **设置 → 模型**：填入你的模型 Key（默认提供 APIHub 入口，领取：https://apihub.chem-cloud.cn/ ，接口：https://apihub.chem-cloud.cn/v1 ）。
 3. 如需公司化工数据：到 **设置 → 连接器 → 芯化和云数据中台**，只粘贴 Key（领取：https://mcp.chem-cloud.cn/ ）。不要把 Key 发到聊天里。
 4. 在左侧点一个 Bot 或协作群，用自然语言说明产品、地区、时间和目的，例如：「帮我看华东甲醇近一个月采购谈价行情，标出缺数和来源，给我 HTML 和 Excel。」
 
 公开化学查询和免费网页搜索通常不用公司 Key；有没有连上数据，以连接器页面的状态为准。
+
+安装版会自动检查 ChemClaw 新版本，也可以到 **设置 → 关于 ChemClaw → 检查更新** 手动检查。Windows 下载新版安装包后提示重启，macOS 打开下载页。此前关闭了更新检查的旧版，需要先手动安装一次本版本。
 
 **设置 → 技能库** 按业务分类展示完整技能集合，提供中文名称、用途和交付物。按任务或关键词搜索，点击「使用」直接返回当前正常对话框并选中技能，在输入框补充需求后发送；保留已有草稿、附件和 Bot 常用技能。群聊默认由负责人执行，也可在输入框 @ 一位群成员改派。「安装技能」支持 ZIP、文件夹、SKILL.md 和公开 GitHub 链接，保留脚本与模板，并可选择安装分组。工具服务与凭据统一在「连接器」中配置。
 
@@ -46,10 +48,10 @@ ChemClaw 是一套面向化工业务的 AI 助手团队：帮你做客户开发�
 2. 打开 DSH → **插件 → 添加插件**，填入：
 
    ```text
-   github:zoeyzhang233666/chemclaw-bot#v0.2.0&path:/chemclaw-bot
+   github:zoeyzhang233666/chemclaw-bot#v0.2.1&path:/chemclaw-bot
    ```
 
-3. 安装并启用；如提示重启请重启。也可以用同一 Release 里的 `chemclaw-bot-0.2.0.tgz` 本地路径安装。
+3. 安装并启用；如提示重启请重启。也可以用同一 Release 里的 `chemclaw-bot-0.2.1.tgz` 本地路径安装。
 4. 启用后同样在模型与连接器里配置 Key，再从侧栏选 Bot / 群聊开始用。
 
 已有对话和自定义角色会保留；缺失的预设角色会自动补齐，不会无故清空你的内容。

@@ -69,7 +69,7 @@
 
 1. 向 `main` 提 Pull Request：修改 `chemclaw-bot/package.json`（以及对应的 `app/package.json`）里的版本号，根据已合并 Pull Request 的 Changelog 句子写 `CHANGELOG.md` 的这一版。
 2. 打 tag 前在 Windows 真机上做一遍[发版前真机检查](docs/dev/release-checklist.md)，改动涉及 macOS 时在 macOS 上也做一遍，结果贴在这个 PR 里。
-3. 在 `main` 上发布 GitHub Release `vX.Y.Z`。Release 工作流会检查 tag 与版本号一致、且在 `main` 上，跑完检查后挂上包和安装包；仅当仓库变量 `ENABLE_NPM_PUBLISH` 为 `true` 时才发到 npm。不要手动 `npm publish`。
+3. 在 `main` 上通过 Release 工作流（main，关闭 dry run）或推送版本标签创建草稿、上传完整资产后自动发布 GitHub Release `vX.Y.Z`。Release 工作流会检查 tag 与版本号一致、且在 `main` 上，跑完检查后挂上包和安装包；仅当仓库变量 `ENABLE_NPM_PUBLISH` 为 `true` 时才发到 npm。不要手动 `npm publish`。
 4. 热修：从 `main` 切 `fix/hot-<短名>`，向 `main` 提 Pull Request，发一个补丁版本。
 
 ## 搭建环境

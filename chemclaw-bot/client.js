@@ -200,6 +200,9 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "ChemClaw {version} is ready to install.": "ChemClaw {version} 已下载好，可以安装。",
+  "Downloading ChemClaw {version}…": "正在下载 ChemClaw {version}…",
+  "Restart now": "立即重启",
   "Loaded skill: {name}": "已加载技能：{name}",
   "Set up APIHub or another model": "配置 APIHub 或其他模型",
   "Your collaboration teams are ready. Choose a group and describe your task.": "协作群已为你配好负责人和专业成员。选择一个群，直接说出业务需求即可。",
@@ -12702,8 +12705,42 @@ function dshHint(dsh, shown) {
   return t("Version {version}", { version: dsh.current });
 }
 var linkProps = (href) => ({ className: "bt-soft bt-soft-sm bt-about-link", href, target: "_blank", rel: "noopener noreferrer" });
+function DesktopUpdates({ bridge, Row: Row3, run }) {
+  const [status, setStatus] = (0, import_react37.useState)({ enabled: false, phase: "idle" });
+  const [checking, setChecking] = (0, import_react37.useState)(false);
+  (0, import_react37.useEffect)(() => {
+    let stopped = false;
+    const refresh = () => {
+      void bridge.status().then((value) => {
+        if (!stopped) setStatus(value);
+      }, () => {
+      });
+    };
+    refresh();
+    const timer = setInterval(refresh, 2e3);
+    return () => {
+      stopped = true;
+      clearInterval(timer);
+    };
+  }, [bridge]);
+  const check = () => {
+    setChecking(true);
+    void run(bridge.check().then(setStatus)).finally(() => setChecking(false));
+  };
+  const busy = checking || status.phase === "checking";
+  const ready = status.phase === "ready";
+  const available = status.phase === "available";
+  const hint = status.phase === "failed" ? t("Could not check for updates.") : ready ? t("ChemClaw {version} is ready to install.", { version: status.latest }) : status.phase === "downloading" ? t("Downloading ChemClaw {version}…", { version: status.latest }) : available ? t("ChemClaw {version} is available", { version: status.latest }) : !status.enabled ? t("Update checks are off.") : status.checkedAt ? `${t("Up to date")} · ${t("Checked {time}", { time: whenText(status.checkedAt) })}` : t("Updates come with the ChemClaw app.");
+  return (0, import_react37.createElement)(
+    Row3,
+    { label: "ChemClaw", hint },
+    (0, import_react37.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy || !status.enabled || status.phase === "downloading", onClick: check }, busy ? t("Checking…") : t("Check for updates")),
+    ready || available ? (0, import_react37.createElement)("button", { type: "button", className: "bt-fb-primary", onClick: () => run(bridge.install()) }, ready ? t("Restart now") : t("Download")) : null
+  );
+}
 function AboutPage({ useUpdate, actions, run, Section, Row: Row3 }) {
   const update = useUpdate((value) => value) ?? {};
+  const desktop = window.dsBotApp?.updates;
   const [checking, setChecking] = (0, import_react37.useState)(false);
   const [cheer, setCheer] = (0, import_react37.useState)(true);
   (0, import_react37.useEffect)(() => {
@@ -12766,7 +12803,7 @@ function AboutPage({ useUpdate, actions, run, Section, Row: Row3 }) {
     (0, import_react37.createElement)(
       Section,
       { key: "updates", title: t("Updates") },
-      (0, import_react37.createElement)(Row3, { label: "ChemClaw", hint: botHint(update) }, botControl, update.available && update.notesUrl ? (0, import_react37.createElement)("a", linkProps(update.notesUrl), t("What's new")) : null),
+      desktop ? (0, import_react37.createElement)(DesktopUpdates, { bridge: desktop, Row: Row3, run }) : (0, import_react37.createElement)(Row3, { label: "ChemClaw", hint: botHint(update) }, botControl, update.available && update.notesUrl ? (0, import_react37.createElement)("a", linkProps(update.notesUrl), t("What's new")) : null),
       dsh?.current ? (0, import_react37.createElement)(Row3, { label: "DeepSeek Harness", hint: dshHint(dsh, dshShown) }, dshControl) : null
     ),
     (0, import_react37.createElement)(
