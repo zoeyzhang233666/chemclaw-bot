@@ -130,8 +130,8 @@ function devtools(url, problems) {
     const id = next++
     const timer = setTimeout(() => {
       pending.delete(id)
-      reject(new Error(`the window did not answer ${method}`))
-    }, 30_000)
+      reject(new Error(`the window did not answer ${method}${params.expression ? ` (${params.expression.slice(0, 180)})` : ''}`))
+    }, 90_000)
     const settle = action => (value) => { clearTimeout(timer); action(value) }
     pending.set(id, { resolve: settle(done), reject: settle(reject) })
     socket.send(JSON.stringify({ id, method, params }))
@@ -152,6 +152,7 @@ function micaRules() {
 async function chat(cdp) {
   const evaluate = async expression => (await cdp.call('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result.value
   const until = async (expression, label, ms = 120_000) => {
+    console.log(`check-packed: waiting for ${label}`)
     const end = Date.now() + ms
     while (Date.now() < end) {
       if (await evaluate(`Boolean(${expression})`)) return
