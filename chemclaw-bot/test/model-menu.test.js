@@ -99,16 +99,16 @@ test('an unavailable model offers the same provider groups', () => {
 test('an empty catalog offers setup choices, and a ready model needs no choice dock', () => {
   const { tree } = dock([])
   assert.deepEqual(nodes(tree, node => node.type === 'button').map(button => button.children[0]), [
-    'Enter a DeepSeek API key', 'Open settings to set up a custom model',
+    'Add API Key', 'Sign in', 'Open settings to set up a custom model',
   ])
   assert.equal(dock(models, { model: models[0].ref }).tree, null)
   assert.equal(dock(models, { ready: false }).tree, null)
 })
 
-test('without DSH\'s own settings, the choice offers no way into them', () => {
+test('without DSH\'s own settings, the choice still offers Apihub links', () => {
   const buttons = tree => nodes(tree, node => node.type === 'button').map(button => button.children[0])
   assert.deepEqual(buttons(dock(models, { harness: false }).tree), ['DeepSeek Flash', 'DeepSeek Pro', 'DeepSeek Flash'])
-  assert.deepEqual(buttons(dock([], { harness: false }).tree), [])
+  assert.deepEqual(buttons(dock([], { harness: false }).tree), ['Add API Key', 'Sign in'])
 })
 
 test('the Thinking section always offers Default, so a picked level can be cleared', () => {
@@ -127,8 +127,8 @@ const keyless = [
 test('models that need an API key are no choice', () => {
   const buttons = tree => nodes(tree, node => node.type === 'button').map(button => button.children[0])
   assert.deepEqual(buttons(dock([...keyless, models[1]], { harness: false }).tree), ['DeepSeek Flash'])
-  // Where DSH's own settings are, they take the key.
-  assert.deepEqual(buttons(dock(keyless).tree), ['Enter a DeepSeek API key', 'Open settings to set up a custom model'])
+  // Where models need a key, ChemClaw offers Apihub links rather than DeepSeek account login.
+  assert.deepEqual(buttons(dock(keyless).tree), ['Add API Key', 'Sign in', 'Open settings to set up a custom model'])
 })
 
 test('a window without DSH settings asks for the missing API key in the first choice', () => {
