@@ -354,7 +354,8 @@ await step('exchange log between Chief and Writer', () => api('exchange', { a: c
 // Writer hands Chief's work on to Coder and waits, and the team view shows it; Coder's
 // result goes up to Chief with Writer's answer.
 await step('Writer waits for the work it handed on, then answers with it', async () => {
-  await send(chief().id, '转告 Writer: 转告 Coder: 慢慢做 3')
+  // Leave time to observe waiting even if Writer is checkpointing its long chat.
+  await send(chief().id, '转告 Writer: 转告 Coder: 慢慢做 10')
   const writer = botNamed('Writer').id
   for (const deadline = Date.now() + STEP_TIMEOUT_MS; Date.now() < deadline; await sleep(200)) {
     const { activity = {}, work = {} } = await api('state')
