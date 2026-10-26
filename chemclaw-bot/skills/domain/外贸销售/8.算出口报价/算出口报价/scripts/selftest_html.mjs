@@ -17,7 +17,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 
-const require = createRequire("C:/Users/EDY/node_modules/");
+const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 
 const [htmlPath, expectedPath, ...rest] = process.argv.slice(2);

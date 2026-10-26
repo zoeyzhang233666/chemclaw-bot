@@ -123,8 +123,8 @@ function devtools(url, problems) {
     const id = next++
     const timer = setTimeout(() => {
       pending.delete(id)
-      reject(new Error(`the window did not answer ${method}`))
-    }, 30_000)
+      reject(new Error(`the window did not answer ${method}${params.expression ? ` (${params.expression.slice(0, 180)})` : ''}`))
+    }, 90_000)
     const settle = action => (value) => { clearTimeout(timer); action(value) }
     pending.set(id, { resolve: settle(done), reject: settle(reject) })
     socket.send(JSON.stringify({ id, method, params }))
@@ -145,6 +145,7 @@ function micaRules() {
 async function chat(cdp) {
   const evaluate = async expression => (await cdp.call('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result.value
   const until = async (expression, label, ms = 120_000) => {
+    console.log(`check-packed: waiting for ${label}`)
     const end = Date.now() + ms
     while (Date.now() < end) {
       if (await evaluate(`Boolean(${expression})`)) return
@@ -185,9 +186,9 @@ async function chat(cdp) {
     await capture('models-dark')
     await evaluate("document.body.removeAttribute('data-ds-dark-theme')")
     await evaluate("[...document.querySelectorAll('button')].find(node => /^(连接器|Connectors)$/.test(node.textContent.trim()))?.click()")
-    await until("[...document.querySelectorAll('.bt-connector')].some(node => node.textContent.includes('化工云数据中台'))", 'company connector')
+    await until("[...document.querySelectorAll('.bt-chemcloud')].some(node => node.textContent.includes('芯化和云数据中台'))", 'company connector')
     await until("document.querySelectorAll('.bt-data-card').length >= 5", 'public data cards')
-    await evaluate("[...document.querySelectorAll('.bt-connector')].find(node => node.textContent.includes('化工云数据中台')).querySelector('button').click()")
+    await evaluate("[...document.querySelectorAll('.bt-chemcloud')].find(node => node.textContent.includes('芯化和云数据中台')).querySelector('button').click()")
     await capture('connectors')
     await evaluate("[...document.querySelectorAll('summary')].find(node => /MCP JSON/.test(node.textContent)).click()")
     await evaluate("[...document.querySelectorAll('details')].find(node => node.textContent.includes('MCP JSON')).scrollIntoView({block:'center'})")
@@ -199,8 +200,18 @@ async function chat(cdp) {
   if (stale.length > 0) throw new Error(`src/mica.css no longer matches DSH's page: ${stale.join(' | ')}`)
   const main = await evaluate("fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.mainBotId)")
   await evaluate(`document.querySelector(${JSON.stringify(`[data-bot-id="${main}"]`)}).click()`)
-  await until("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)')", 'the model choice')
-  await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)').click()")
+  // Template Bots may already inherit the harness default model (no chip UI).
+  {
+    const end = Date.now() + 30_000
+    let sawChip = false
+    let sawGreeting = false
+    while (Date.now() < end && !sawChip && !sawGreeting) {
+      sawChip = await evaluate("Boolean(document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)'))")
+      sawGreeting = await evaluate(text('今天想先解决哪个业务问题'))
+      if (!sawChip && !sawGreeting) await sleep(250)
+    }
+    if (sawChip) await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)').click()")
+  }
   // The mock model's greeting for a new team.
   await until(text('今天想先解决哪个业务问题'), 'the greeting')
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].at(-1).focus()")
@@ -233,10 +244,12 @@ async function chat(cdp) {
   await sleep(1500)
   const nativeUrl = cdp.requests.find(url => url.includes('/api/present.open?'))
   if (!nativeUrl) throw new Error('No native file action URL was offered: ' + JSON.stringify(await evaluate("[...document.querySelectorAll('[data-presented-file] button')].map(n=>n.outerHTML)")))
-  const discovery = await evaluate(`fetch(${JSON.stringify(nativeUrl)}).then(r => r.status)`)
-  console.log(`check-packed: native application discovery HTTP ${discovery}`)
+  // Association discovery is optional (and can wait on OS prompts in hosted
+  // desktops). Opening and revealing the actual file must still succeed below.
+  const discovery = await evaluate(`fetch(${JSON.stringify(nativeUrl)}, { signal: AbortSignal.timeout(5000) }).then(r => r.status).catch(error => { if (error.name === 'TimeoutError') return 'timed out (optional)'; throw error })`)
+  console.log(`check-packed: native application discovery: ${discovery}`)
   for (const action of ['reveal', 'open']) {
-    const status = await evaluate(`fetch(${JSON.stringify(nativeUrl + '&action=')} + ${JSON.stringify(action)}, { method: 'POST' }).then(r => r.status)`)
+    const status = await evaluate(`fetch(${JSON.stringify(nativeUrl + '&action=')} + ${JSON.stringify(action)}, { method: 'POST', signal: AbortSignal.timeout(30000) }).then(r => r.status)`)
     if (status !== 204) throw new Error(`Native ${action} failed: HTTP ${status}`)
   }
   rmSync(delivery)
@@ -259,7 +272,10 @@ try {
     DS_BOT_WORKSPACE: join(work, 'workspace'),
     DEEPSEEK_BASE_URL: modelUrl, DEEPSEEK_API_KEY: 'mock-key',
   })
-  const app = spawn(source ? executable : outsideCheckout(resolve(executable)), [...(source ? [root] : []), `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
+  // Intel macOS runners may have no working EGL display. Exercise the same
+  // renderer with software compositing rather than repeatedly crashing its GPU.
+  const graphics = process.env.CI && process.platform === 'darwin' ? ['--disable-gpu'] : []
+  const app = spawn(source ? executable : outsideCheckout(resolve(executable)), [...(source ? [root] : []), ...graphics, `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
   children.push(app)
   const exited = new Promise((done) => { app.once('exit', (code, signal) => { done({ code, signal }) }) })
   const cdp = devtools((await appPage(port, Date.now() + 120_000)).webSocketDebuggerUrl, problems)

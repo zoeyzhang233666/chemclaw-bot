@@ -38,7 +38,7 @@
 |---|---|---|
 | `sabic.com` | 加连字符 | `sabic-group.com`、`petrokemya-sabic.com` |
 | `petrokemya.com.sa` | 换 TLD | `petrokemya.com`、`petrokemya.net` |
-| 任一大企业 | 用免费邮箱冒充 | `petrokemya@gmail.com` |
+| 任一大企业 | 用免费邮箱冒充 | `petrokemya@example.com` |
 | 任一大企业 | 同形字符（homoglyph） | `sabic.com` 中的 `i` 换成土耳其点less i |
 
 **处置：** 一旦落入上表任一行，立即停止用该邮箱沟通交易细节，改由官网公布渠道回函确认联系人身份；在此之前，该邮箱发出的一切「付款指令」「账户变更」「紧急发货」通知一律不采信。

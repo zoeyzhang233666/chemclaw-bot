@@ -46,8 +46,9 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
-# 100ppi 前端的静态校验串（页面里 document.cookie = "HW_CHECK" + "=" + ...），不是账号凭据
-HW_TOKEN = "1c457ed26cddcdef9e8c6a5877dbbbe2"
+# 100ppi 前端的静态校验串（页面里 document.cookie = "HW_CHECK" + "=" + ...），不是账号凭据。
+# Override with HW_CHECK_TOKEN when the site rotates the public check value.
+HW_TOKEN = os.environ.get("HW_CHECK_TOKEN", "example-hw-check-token")
 
 SINA_HOSTS = ["https://stock.finance.sina.com.cn", "https://stock2.finance.sina.com.cn"]
 SPOT_LIST = "https://me.100ppi.com/news/list--1217-{page}.html"

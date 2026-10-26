@@ -4,6 +4,8 @@ import { mentionSpans } from '../shared/mentions.js'
 import { BotMark } from './mark.js'
 import { CheckIcon, CopyIcon } from './icons.js'
 import { dateLocale, t } from './i18n.js'
+import { skillLabel } from '../shared/skills.js'
+import { language } from './i18n.js'
 import { clockLabel, messageClock } from './text.js'
 import { useFold } from './fold.js'
 
@@ -50,11 +52,27 @@ export function userTextParts(text, bots, referenceLabels = []) {
   return parts
 }
 
-function UserText({ text, bots, referenceLabels, skillNames, references, actions }) {
+function SkillText({ text, roster, referenceLabels, skillNames, references, actions }) {
+  const items = new Map((roster.capabilities ?? []).filter(item => item.kind === 'skill').map(item => [item.name, item]))
+  const parts = []
+  let cursor = 0
+  for (const match of text.matchAll(/(^|\s)\/([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(?=\s|$)/g)) {
+    const item = items.get(match[2])
+    if (!item) continue
+    const start = match.index + match[1].length
+    if (start > cursor) parts.push(h(Fragment, { key: cursor }, ui.projectUserText(text.slice(cursor, start), referenceLabels, skillNames, 'skill', references)))
+    parts.push(h('button', { key: start + 0.5, className: 'bt-umention', title: `/${item.name}`, onClick: () => actions.openSettings('capabilities', item.name) }, skillLabel(item, language())))
+    cursor = start + item.name.length + 1
+  }
+  if (cursor < text.length) parts.push(h(Fragment, { key: cursor }, ui.projectUserText(text.slice(cursor), referenceLabels, skillNames, 'skill', references)))
+  return parts
+}
+
+function UserText({ text, roster, bots, referenceLabels, skillNames, references, actions }) {
   return userTextParts(text, bots, referenceLabels).map((part, index) => (part.bot
     ? h('button', { key: index, type: 'button', className: 'bt-umention', title: `@${part.bot.name}`, onClick: () => actions.openSession(part.bot.id) },
       h(BotMark, { bot: part.bot, size: 16 }), part.label)
-    : h(Fragment, { key: index }, ui.projectUserText(part.text, referenceLabels, skillNames, 'skill', references))))
+    : h(SkillText, { key: index, text: part.text, roster, referenceLabels, skillNames, references, actions })))
 }
 
 function Attachments({ attachments, renderMessageImages }) {
@@ -91,7 +109,7 @@ export function UserMessageCell({ node, sessionId, useRoster, actions, renderMes
   const steering = node.kind === 'steering'
   const groupTime = roster.roomsById?.[sessionId] && Number.isFinite(data.time) ? messageClock(data.time) : undefined
   const { shown, folded, control } = useFold(text, { markdown: false })
-  const body = h(UserText, { text: shown, bots: mentionableBots(roster, sessionId), referenceLabels, skillNames: data.skillNames ?? [], references, actions })
+  const body = h(UserText, { text: shown, roster, bots: mentionableBots(roster, sessionId), referenceLabels, skillNames: data.skillNames ?? [], references, actions })
   return h('div', { className: 'bt-umsg', 'data-steering': steering || undefined },
     h('div', { className: 'bt-ustack' },
       attachments.length > 0 ? h(Attachments, { attachments, renderMessageImages }) : null,

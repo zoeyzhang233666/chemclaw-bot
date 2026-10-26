@@ -2,19 +2,20 @@ const path = require('path');
 const fs = require('fs');
 const { createRequire } = require('module');
 
-const skillNodeModules = 'C:/Users/EDY/AppData/Local/Programs/DeepSeek Harness/resources/app.asar.unpacked/dsh/node_modules';
+const skillNodeModules = process.env.DSH_NODE_MODULES || ''
 let pw;
 try {
-  pw = createRequire(skillNodeModules + '/')('playwright');
+  pw = skillNodeModules ? createRequire(skillNodeModules + '/')('playwright') : null;
 } catch (e) {
-  pw = require('playwright');
+  pw = null;
 }
+if (!pw) pw = require('playwright');
 
 (async () => {
   const file = process.argv[2];
   const outDir = process.argv[3];
-  const candidate = 'C:/Users/EDY/AppData/Local/ms-playwright/chromium-1248/chrome-win64/chrome.exe';
-  const browser = await pw.chromium.launch(fs.existsSync(candidate) ? { executablePath: candidate } : {});
+  const candidate = process.env.PLAYWRIGHT_CHROMIUM_PATH || '';
+  const browser = await pw.chromium.launch(candidate && fs.existsSync(candidate) ? { executablePath: candidate } : {});
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
   const errors = [];
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });

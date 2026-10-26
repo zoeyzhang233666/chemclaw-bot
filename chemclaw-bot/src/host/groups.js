@@ -406,7 +406,8 @@ export function install(rt) {
       signal.addEventListener('abort', () => finish(null), { once: true })
     })
     try {
-      await rt.deliver({ fromId: undefined, toId: member.id, sessionId, role: 'room', roomId: room.id, exchangeId, note, text, files, ...(by ? { askedBy: by } : {}) })
+      const skillNames = [...new Set((round.skillRequests ?? []).filter(request => request.executor === member.id).flatMap(request => request.names))]
+      await rt.deliver({ fromId: undefined, toId: member.id, sessionId, role: 'room', roomId: room.id, exchangeId, note, text, files, ...(skillNames.length ? { skillNames } : {}), ...(by ? { askedBy: by } : {}) })
       // Still held by an earlier request: this turn cannot start until the user answers.
       if (rt.waitsForApproval?.(sessionId)) rt.roomWaiters.get(exchangeId)?.approval()
       // Still at earlier work: the call waits in its inbox and is answered after that.
@@ -477,6 +478,7 @@ export function install(rt) {
       if (message.source?.kind !== 'user') continue
       const content = Array.isArray(message.content) ? message.content : []
       const text = textOf(content)
+      if (rt.skillRequest?.(text, rt.roomOf(agent.id))) break
       if (text === '' || content.some(block => block?.type !== 'text') || text.includes('dsh-session:')) break
       lines.push({ id: message.id, text })
     }
@@ -619,6 +621,7 @@ export function install(rt) {
         appendRoom(room, {
           ...(post.botId ? { who: rt.botOf(post.botId)?.name ?? post.name ?? 'Bot', botId: post.botId } : { who: 'User' }),
           text,
+          ...(post.skillRequest ? { skillRequest: post.skillRequest } : {}),
           ...(post.files === undefined ? {} : { files: post.files }),
         })
       }
@@ -635,6 +638,7 @@ export function install(rt) {
         roomId: room.id,
         members: room.members,
         startSeq,
+        skillRequests: posts.flatMap(post => post.skillRequest ? [post.skillRequest] : []),
         ...(opener.kickoff ? { kickoff: true } : {}),
         ...(references.length > 0 ? { references, shown: [] } : {}),
         slots: openingSpeakers(room, opener).map(member => ({
@@ -779,6 +783,7 @@ export function install(rt) {
     const everyone = room.members.map(rt.botOf).filter(Boolean)
     const members = everyone.filter(bot => bot.id !== opener.botId)
     const admin = members.find(bot => rt.isAdminOf(room, bot.id))
+    if (opener.skillRequest) return members.filter(member => member.id === opener.skillRequest.executor)
     if (opener.kickoff) return admin ? [admin] : []
     if (opener.quiet) return []
     if (opener.done) return members.filter(bot => bot.id === opener.askedBy)

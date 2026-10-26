@@ -1,5 +1,5 @@
 export const CHEM_CONNECTORS = [
-  { id: 'chem-data-hub', name: 'Chemical Data Hub', description: 'Chemical prices, companies and industry chains', url: 'https://datahub.chem-cloud.cn/mcp', secret: 'CHEM_DATA_HUB', tokenUrl: 'https://mcp.chem-cloud.cn/' },
+  { id: 'chem-data-hub', name: 'Chemcloud Data Hub', description: 'Compounds, companies, trades and market prices via MCP', url: 'https://datahub.chem-cloud.cn/mcp', secret: 'CHEM_DATA_HUB', tokenUrl: 'https://mcp.chem-cloud.cn/' },
   { id: 'huagongshe', name: 'Huagongshe', description: 'Public chemistry search, structures and stoichiometry', url: 'https://huagongshe.com/mcp', secret: 'HUAGONGSHE', tokenUrl: 'https://huagongshe.com/zh-CN/mcp-guide', anonymous: true },
 ]
 

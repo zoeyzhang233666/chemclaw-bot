@@ -103,7 +103,7 @@ CI 只跑单元测试和 Linux 上的测试台。窗口外框、输入法、高 
 | 8.2 | 填一个 8 位以上的假值，选「只给这个 Bot」，保存 | 卡片变成已保存；对话里看不到值 | |
 | 8.3 | 让 Bot 在终端里打印这个变量（Windows：`echo $env:DSH_SECRET_TEST_TOKEN`；macOS：`echo $DSH_SECRET_TEST_TOKEN`） | 工具结果里是 `[secret:TEST_TOKEN]`，不是原值 | |
 | 8.4 | 再要一个 `TEST_PIN`，填 4 位假数字，让 Bot 打印 `pin` 加这个变量 | 能保存；结果是 `pin [secret:TEST_PIN]`；别处含这 4 位数字的长数字不受影响 | |
-| 8.5 | 设置 → Secrets | 列出 TEST_TOKEN；能改范围、换值、删除 | |
+| 8.5 | 设置页没有 Secrets；模型 Key 在 Models，公司数据在 Connectors | 侧栏设置列表无「密钥」项 | |
 | 8.6 | 看数据目录里的 `bot/secrets.json` 的权限（Windows：右键 → 属性 → 安全；macOS：`ls -l`） | 记下哪些用户能读 | |
 
 ## 9. Bot 浏览器

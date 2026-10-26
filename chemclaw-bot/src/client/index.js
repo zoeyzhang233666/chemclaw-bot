@@ -37,6 +37,11 @@ import { installLocale, language, t } from './i18n.js'
 import { noteClientError, quietly } from './diagnostics.js'
 import { ErrorToast, FEEDBACK_CSS } from './feedback.js'
 import { ABOUT_CSS } from './about.js'
+import { SKILL_CSS } from './skill-library.js'
+import { isUserSkill, skillLabel } from '../shared/skills.js'
+import { SKILLS_SOURCE, skillSource } from './skill-menu.js'
+import { installSkillMenu, installSkillReference } from './skill-menu-view.js'
+import { installSkillTextRule, syncSkillTextNames } from './skill-text-rule.js'
 import { MEMBER_CSS, MemberDock } from './member-status.js'
 import { USER_MESSAGE_CSS, UserMessageCell, canDrawUserMessages } from './user-message.js'
 import { noticeApprovals } from './approval-notices.js'
@@ -349,6 +354,29 @@ export function apply(ctx) {
   const show = listedOpener({ list: ctx.sessions.list, refresh: () => Promise.resolve(ctx.sessions.refresh?.()).catch(quietly('refresh sessions')), open: (target) => { expected = target; ctx.uiWorkspace.openSession(target) }, current: mainView })
   const actions = {
     ...teamActions({ call, after, partFor, roster, ui, live, cards, heldCards, turnClock }),
+    currentSessionId: mainView,
+    useSkill: async (name, target = mainView()) => {
+      const snapshot = roster.getSnapshot()
+      const item = snapshot.capabilities.find(item => item.name === name)
+      if (!item || !isUserSkill(item)) throw new Error(t('This skill is no longer available for manual use.'))
+      if (!snapshot.roomsById[target] && !snapshot.byId[target]) target = snapshot.mainBotId || snapshot.bots[0]?.id
+      if (!target) throw new Error(t('Choose a conversation first.'))
+      const pending = ui.getSnapshot().skillDraft
+      if (pending) throw new Error(t('Finish adding the previous skill to its draft first.'))
+      ui.set(state => ({ ...state, skillDraft: { sessionId: partFor(target), name: item.name, label: skillLabel(item, language()), token: Date.now() } }))
+      actions.closeSettings()
+      actions.openSession(target)
+    },
+    insertSkillDraft: (sessionId, draft, span) => {
+      const binding = ctx.sessions.binding(sessionId)
+      if (!binding) return false
+      const input = ctx.get('conversation')?.input?.for(binding.ctx)
+      if (!input) return false
+      const applied = input.insertReference({ source: SKILLS_SOURCE, ref: draft.name, label: draft.label, clipboardText: `/${draft.name}` }, { ...span, start: span.end })
+      if (applied) input.focus()
+      return applied
+    },
+    finishSkillDraft: token => ui.set(state => state.skillDraft?.token === token ? { ...state, skillDraft: null } : state),
     // The full-pane overlays sit above the conversation, so opening one must dismiss them
     // or the click appears to do nothing.
     isAgentSession: id => isAgentSessionId(id),
@@ -621,7 +649,7 @@ export function apply(ctx) {
           return binding === undefined ? undefined : triggers.sessionOf(binding.ctx)
         }
         const launched = sessionId => controllerOf(sessionId)?.launcher.getSnapshot() === CHATS_SOURCE
-        const offs = atSources({ roster, sessions: ctx.sessions, launched, iconFor: menuIcons(roster) }).map(source => triggers.registerSource(source))
+        const offs = [...atSources({ roster, sessions: ctx.sessions, launched, iconFor: menuIcons(roster) }), skillSource({ roster, actions, controllerOf })].map(source => triggers.registerSource(source))
         atMenu = { controllerOf }
         return () => {
           atMenu = null
@@ -645,6 +673,7 @@ export function apply(ctx) {
     () => installCompiledStyles(SHELL_CSS, 'shell'),
     () => installCompiledStyles(SIDEBAR_CSS, 'sidebar'),
     () => installCompiledStyles(SECRET_CSS + PROVIDERS_CSS + CHEMCLAW_UI_CSS, 'secrets'),
+    () => installCompiledStyles(SKILL_CSS, 'skills'),
     () => installCompiledStyles(MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS, 'models'),
     () => installCompiledStyles(USAGE_CSS, 'usage'),
     () => installCompiledStyles(SCHEDULE_CSS, 'schedules'),
@@ -672,6 +701,15 @@ export function apply(ctx) {
     () => installCompiledStyles(CONVERSATION_CSS, 'conversation'),
     () => installMentions(),
     () => installAtMenu(),
+    () => ctx.slots.inject('conversation.input.overlay', () => installSkillMenu(ctx.slots, face, BOT_PRIORITY)),
+    () => ctx.slots.inject('conversation.user.text.node', () => installSkillReference(ctx.slots, face, BOT_PRIORITY)),
+    () => {
+      const syncNames = () => syncSkillTextNames(roster.getSnapshot().capabilities)
+      syncNames()
+      const offRule = installSkillTextRule(ctx.uiConversation)
+      const offRoster = roster.subscribe(syncNames)
+      return () => { offRule(); offRoster() }
+    },
     installHeader,
     () => shadow('conversation.chat.node', { key: 'assistant-step', priority: BOT_PRIORITY, locale: 'chat', inject: assistantFace }, AssistantCell),
     () => shadow('conversation.chat.node', { key: 'turn-trigger', priority: BOT_PRIORITY, locale: 'chat', inject: face }, TriggerCell),

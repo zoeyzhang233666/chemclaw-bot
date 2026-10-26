@@ -4,6 +4,7 @@ import { FishLogo } from './dsh-primitives.js'
 import { isMainOf } from './sources.js'
 import { currentPart, previewOf, relativeShort } from './text.js'
 import { PlusIcon, SearchIcon, SidebarIcon, GaugeIcon, PlugIcon, PeopleIcon, ClockIcon, GearIcon, PinMarkIcon, ConnectorIcon, SwitchIcon, CloudDownloadIcon, SlidersIcon } from './icons.js'
+import { CloudMark } from './brand-icons.js'
 import { MAIN_LOOK } from './characters.js'
 import { botState, BotMark, BotAvatar, RoomAvatar } from './mark.js'
 import { reducedMotion } from './activity-row.js'
@@ -309,7 +310,8 @@ export function TeamSidebar(props) {
     wide && roster.readOnly ? h('div', { className: 'bt-hint bt-read-only', role: 'status' }, hostText(roster.readOnly)) : null,
     h('button', { type: 'button', className: 'bt-row', title: t('Bots'), onClick: () => actions.openSettings('bots') }, h(PlugIcon), wide ? h('span', null, t('Bots')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Group chats'), onClick: () => actions.openSettings('groups') }, h(PeopleIcon), wide ? h('span', null, t('Group chats')) : null),
-    h('button', { type: 'button', className: 'bt-row', title: t('Models'), onClick: () => actions.openModels() }, h(SlidersIcon), wide ? h('span', null, t('Models')) : null),
+    h('button', { type: 'button', className: 'bt-row', title: t('Models · ApiHub'), onClick: () => actions.openModels() }, h(SlidersIcon), wide ? h('span', null, t('Models · ApiHub')) : null),
+    h('button', { type: 'button', className: 'bt-row', title: t('Chemcloud · Data Hub'), onClick: () => actions.openSettings('connectors', 'chem-data-hub') }, h('span', { className: 'bt-row-mark', 'aria-hidden': true }, h(CloudMark)), wide ? h('span', null, t('Chemcloud · Data Hub')) : null),
     h('div', { ref: listRef, className: 'bt-list', role: 'region', 'aria-label': t('Bot list') },
       main ? h(BotRow, { ...rowProps, bot: main, marked: markedUnread[main.id] === true }) : roster.ready ? null : h('div', { className: 'bt-hint' }, t('Setting up your Main Bot…')),
       [
@@ -484,7 +486,7 @@ function pressSettingsShortcut() {
   }))
 }
 
-// The footer avatar opens an account menu above itself, with Bot settings as one
+// The footer avatar opens an account menu above itself, with Settings as one
 // entry. Shell panels hidden from the Bot sidebar (plugins, automation) live here too.
 // `seat` is the shell's settings.launcher seat: at priority -10 the whale wins it
 // over a shell account plugin's own launcher (the Desktop's "··· More"), which comes
@@ -532,7 +534,7 @@ export function AccountLauncher({ seat = true, settingsOpen, openSettings, openO
       [t('Usage'), GaugeIcon, () => actions.openSettings('usage')],
       [t('Connectors'), ConnectorIcon, () => actions.openConnectors()],
       [t('Automation tasks'), ClockIcon, () => actions.selectPanel('schedules')],
-      [t('Bot settings'), GearIcon, () => actions.openSettings('general')],
+      [t('Settings'), GearIcon, () => actions.openSettings('general')],
     ],
     [
       [t('Switch to classic Agent mode'), SwitchIcon, () => actions.setSurface('agent')],
@@ -622,6 +624,8 @@ export const SIDEBAR_CSS = `
 .bt-side-top .bt-brand{cursor:default;padding-left:6px}
 .bt-side-top .bt-brand:hover{background:none}
 .bt-brand .bt-mark{flex:none}
+.bt-row-mark{display:inline-flex;flex:none;width:16px;height:16px;align-items:center;justify-content:center;line-height:0}
+.bt-row-mark svg{width:16px;height:16px}
 .bt-pin{flex:none;display:inline-flex;color:var(--bt-ink-3)}
 .bt-rail .bt-row{position:relative}
 .bt-rail .bt-pin{position:absolute;top:3px;left:calc(50% + 12px)}

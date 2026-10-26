@@ -38,12 +38,18 @@ const base = resolve(harness, 'packages/bundle/base/package.json')
 const anchor = pathToFileURL(existsSync(base) ? base : resolve(harness, 'package.json')).href
 const pluginUrl = `${pathToFileURL(plugin).href}/`
 
+const harnessPkg = pathToFileURL(resolve(harness, 'package.json')).href
+const appPkg = pathToFileURL(resolve(plugin, '../app/package.json')).href
+
 registerHooks({
   resolve(specifier, context, nextResolve) {
     if (specifier.startsWith('@deepseek-ai/') && context.parentURL?.startsWith(pluginUrl)) {
-      try { return nextResolve(specifier, { ...context, parentURL: anchor }) } catch (error) {
-        if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error
-        return nextResolve(specifier, { ...context, parentURL: pathToFileURL(resolve(plugin, '../app/package.json')).href })
+      // Prefer the harness install (dev/harness or a checkout). Fall back to the desktop
+      // app's dependency tree only when the harness pin does not ship the package.
+      for (const parentURL of [anchor, harnessPkg, appPkg]) {
+        try { return nextResolve(specifier, { ...context, parentURL }) } catch (error) {
+          if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error
+        }
       }
     }
     return nextResolve(specifier, context)

@@ -116,6 +116,20 @@ const settle = async (check) => {
 const text = message => message.content.map(block => block.text ?? '').join('\n')
 const kinds = result => result.replies.map(reply => [reply.kind ?? 'message', reply.name])
 
+test('an explicit skill goes only to the selected group member even in everyone mode', async t => {
+  const host = await start(t, { mode: 'everyone' })
+  assert.equal((await host.call('capability-save', { name: 'specific', kind: 'skill', description: 'Specific skill', content: 'Selected workflow.' })).ok, true)
+  const result = host.round('single-skill', host.say('@Writer /specific Prepare a report'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  const message = host.begin('gb')
+  assert.deepEqual(message.source.skillNames, ['specific'])
+  host.finish('gb', 'Report ready.')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(kinds(result()), [['message', 'Writer']])
+  assert.deepEqual(host.agentOf('ga').calls, [])
+  assert.deepEqual(host.agentOf('gc').calls, [])
+})
+
 test('a specialist admin leads ordinary messages and can call the renamed Main Bot for review in the group', async t => {
   const host = await start(t, { admin: 'b' })
   await host.tool('update_bot', { name: '化工总协调' }, 'a')

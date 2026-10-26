@@ -9,7 +9,7 @@ groupmod -o -g "$PGID" node
 usermod -o -u "$PUID" node
 
 # First start: seed the data volume with the template home built into the image
-# (a web profile that already has ds-bot installed).
+# (a web profile that already has chemclaw-bot installed).
 if [ ! -d /data/profiles/web ]; then
   mkdir -p /data
   cp -a /opt/dsh-template/. /data/
@@ -53,7 +53,7 @@ EOF
 
 # --patch is a dsh option and must precede the app's own flags.
 set -- dsh --profile web \
-  --patch /opt/ds-bot/docker.patch.yml --patch /tmp/listen.patch.yml \
+  --patch /opt/chemclaw-bot/docker.patch.yml --patch /tmp/listen.patch.yml \
   --no-open "$@"
 
 if [ -n "${DSH_TRUSTED_HOST:-}" ]; then

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, realpathSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { isAbsolute, join, relative } from 'node:path'
 import { test } from 'node:test'
 import { createRuntime } from '../index.js'
 import { fakeContext } from './fake-ctx.js'
@@ -88,7 +88,14 @@ test('fresh bootstrap creates all 50 Bots and 15 groups once; simultaneous reque
     assert.match(room.notice, /主控：ChemClaw/)
     assert.equal(room.templateVersion, roleCatalog.version)
   }
-  assert.equal(Object.values(rt.state.capabilities.items).filter(item => item.kind === 'skill').length, 116)
+  assert.equal(Object.values(rt.state.capabilities.items).filter(item => item.kind === 'skill').length, 118)
+  assert.equal(rt.state.capabilities.items['guizang-ppt-skill'].category, '通用办公')
+  assert.equal(rt.state.capabilities.items['chemclaw-presentations'].category, '通用办公')
+  for (const skill of Object.values(rt.state.capabilities.items).filter(item => item.kind === 'skill')) {
+    assert.match(skill.labels.zh, /[\u4e00-\u9fff]/)
+    assert.match(skill.purpose, /[\u4e00-\u9fff]/, skill.name)
+    assert.match(skill.deliverables, /[\u4e00-\u9fff]/, skill.name)
+  }
 })
 
 test('upgrading a coordinator-only or partial team preserves conversations, edits and deleted presets', async t => {
@@ -368,7 +375,18 @@ test('six business deliverable pipelines use bundled libraries inside the Bot wo
     const report = { title: `${title}工具链验收（模拟数据）`, sections: [{ title: '测试证据链', table: { columns: ['字段', '内容'], rows: [['来源', 'mock，不代表业务事实']] } }], sources: [{ label: '原创验收数据' }], limitations: '仅验证交付，不验证研究质量' }
     const result = JSON.parse(await ctx.registeredTools.get('chem_deliver').execute({ report: JSON.stringify(report), formats }, { agent, signal: AbortSignal.timeout(60000) }))
     assert.equal(result.files.length, 2)
-    for (const file of result.files) { assert.ok(file.path.startsWith(rt.teamFolder())); assert.ok(readFileSync(file.path).length > 100) }
+    // Windows CI often mixes 8.3 short paths (RUNNER~1) with long ones (runneradmin);
+    // native realpath expands both to the same form.
+    const expand = path => (realpathSync.native ?? realpathSync)(path)
+    const roots = [...new Set([rt.teamFolder(), rt.defaultTeamFolder(), rt.home].filter(Boolean))].map(expand)
+    for (const file of result.files) {
+      const abs = expand(file.path)
+      assert.ok(roots.some((root) => {
+        const rel = relative(root, abs)
+        return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel))
+      }), `${abs} is outside ${roots.join(' | ')}`)
+      assert.ok(readFileSync(file.path).length > 100)
+    }
     assert.match(result.next, /present/)
   }
   await assert.rejects(ctx.registeredTools.get('chem_deliver').execute({ report: '{}', formats: 'html' }, { agent: { id: 'unrelated-session' } }), /ChemClaw Bot/)

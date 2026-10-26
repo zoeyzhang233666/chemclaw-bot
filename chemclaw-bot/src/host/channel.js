@@ -84,7 +84,7 @@ export function install(rt) {
   })
   // What a host that only reads the team may still answer.
   // Updates change the dsh profile, not the team, so a reading host may run them too.
-  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking'])
+  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking'])
 
   function setPrefs(body) {
     if (body.theme !== undefined) {
@@ -319,6 +319,16 @@ export function install(rt) {
         case 'connector-import':
           await rt.load()
           return ok(await rt.connectorEndpoint(endpoint, body))
+        case 'service-preview':
+        case 'service-save':
+        case 'service-cancel':
+          return ok(await rt.serviceEndpoint(endpoint, body))
+        case 'skill-import-preview':
+        case 'skill-import-commit':
+        case 'skill-import-cancel':
+          return ok(await rt.skillImportEndpoint(endpoint, body, signal))
+        case 'skill-catalog':
+        case 'skill-reset':
         case 'capability-detail':
         case 'capability-save':
         case 'capability-delete':

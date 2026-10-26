@@ -11,7 +11,7 @@ const seedDir = join(packageRoot, 'seed')
 const MAIN_KICKOFF = `你刚被设为用户的化工主控 ChemClaw。用一两句短消息打招呼：说明你会统筹化工 Bot 团队（潜客/寻源/行情/尽调/交付/质询等），用户可随时找你拍板。
 
 然后用一两句说明首次配置：
-1) 对话上方有「只需填 Key」卡片：粘贴 CHEM_DATA_HUB（芯化数据中台）和 CHEM_BIZ_SCOPE（业务范围）。MCP 地址已预置，不要把密钥写进聊天；也可用 request_secret，勿用 ask_user/show_view 收密钥。
+1) 对话上方有「只需填 Key」卡片：粘贴 CHEM_DATA_HUB（芯化和云数据中台）和 CHEM_BIZ_SCOPE（业务范围）。MCP 地址已预置，不要把密钥写进聊天；也可用 request_secret，勿用 ask_user/show_view 收密钥。
 2) 五个预置群聊已建好（客户开发 / 采购寻源 / 期现研究 / 进出口 / 交付工坊）。
 
 最后用一个短问题问用户：想先做哪类化工任务（找客户、寻源、行情、尽调、还是做 PPT/表格）？用中文写。`

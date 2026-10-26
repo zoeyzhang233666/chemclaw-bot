@@ -61,6 +61,17 @@ affiliates), and react-markdown and remark-gfm with the packages they use
 Copyright (c) Andrea Giammarchi). Vite is a build tool only.
 
 ChemClaw additions (2026):
+  - guizang-ppt-skill, MIT, Copyright (c) 2026 op7418 (歸藏).
+    https://github.com/op7418/guizang-ppt-skill
+    Packaged instructions, assets, references and scripts are under
+    skills/vendor/guizang-ppt-skill; its complete LICENSE is retained there.
+    The editable PowerPoint workflow in skills/builtin/presentations is original.
+    The legacy ppt-master directory is not activated without verified provenance.
+  - fflate 0.8.2, MIT, Copyright (c) 2023 Arjun Barrett.
+    https://github.com/101arrowz/fflate; used for bounded ZIP skill imports.
+  - yaml 2.8.1, ISC, Copyright Eemeli Aro.
+    https://github.com/eemeli/yaml; used to parse skill frontmatter.
+    These runtime npm dependencies retain their complete license files.
   - dsh-free-search 0.9.12, MIT, Copyright (c) 2026 dsh-free-search contributors.
     https://github.com/DDDMUC/dsh-free-search, revision b478fc83308f4708c4889a0665aeab7a3209721d.
     Loaded as a dependency through documented DSH plugin APIs; its package retains LICENSE.

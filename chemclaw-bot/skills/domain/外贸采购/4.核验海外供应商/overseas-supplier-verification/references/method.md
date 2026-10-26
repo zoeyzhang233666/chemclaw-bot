@@ -180,7 +180,7 @@
 
 - 加连字符：`abc-group.com` vs `abcgroup.com`
 - 换 TLD：`abc.com.sa` vs `abc.com` / `abc.net`
-- 免费邮箱：`abc@gmail.com` / `abc@outlook.com` / `abc@163.com`
+- 免费邮箱：`abc@example.com` / `abc@mail.example.com` / `abc@example.cn`
 - 同形字符：`rn`→`m`、`l`→`I`、`0`→`O`
 - 多一层子域：`abc.secure-mail.com`
 

@@ -12,6 +12,12 @@
     "referenceOnly": true
   },
   {
+    "name": "guizang-ppt-skill",
+    "revision": "6bfa520b86ed5a3dffdac0a3323155e2b6f516b6",
+    "license": "MIT",
+    "referenceOnly": false
+  },
+  {
     "name": "chemvision",
     "revision": "7a9369f418de9fad96db3c9273c4fabf40daaa57",
     "license": "MIT",

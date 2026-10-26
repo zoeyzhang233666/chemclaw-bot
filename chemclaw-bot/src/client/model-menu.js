@@ -205,7 +205,9 @@ export function ModelChoiceDock({ sessionId, useRoster, actions }) {
   const models = roster.models ?? []
   // A model whose provider has no API key fails every turn, so it is no choice.
   const usable = models.filter(model => !model.needsKey)
-  if (!bot.model && bot.templateId && usable.some(model => model.ref === roster.defaultModel)) return null
+  // Preset experts inherit the harness default with no card. A held greeting
+  // (waiting) still needs an explicit pick so kickoff can run.
+  if (!bot.model && bot.templateId && !bot.waiting && usable.some(model => model.ref === roster.defaultModel)) return null
   const lost = bot.model ? !models.some(model => model.ref === bot.model) : false
   // An unknown catalog (none listed) cannot tell a lost model from a slow provider.
   if (bot.model && (!lost || models.length === 0)) return null

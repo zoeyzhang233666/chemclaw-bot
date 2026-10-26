@@ -32,7 +32,7 @@ This short command does not synchronize plugin edits; use the root launcher for 
 
 ## Connectors and deliverables
 
-In ChemClaw Settings → Connectors, connect **Chemical Data Hub** by pasting a Key from [mcp.chem-cloud.cn](https://mcp.chem-cloud.cn/). Its endpoint is fixed at `https://datahub.chem-cloud.cn/mcp`. Connected means MCP initialization and tool discovery succeeded. Keep credentials out of chat.
+In ChemClaw Settings → Connectors, connect **Chemcloud Data Hub** by pasting a Key from [mcp.chem-cloud.cn](https://mcp.chem-cloud.cn/). Its endpoint is fixed at `https://datahub.chem-cloud.cn/mcp`. Connected means MCP initialization and tool discovery succeeded. Keep credentials out of chat.
 
 Huagongshe public queries are anonymous. PubChem, OPSIN and Chinese/English Wikipedia need no key. Historical daily futures data needs the managed Python environment installed from Connectors (Python 3.11+). Sources, timestamps, conventions and gaps remain explicit; free data is not promised to be real-time. Advanced setup accepts HTTPS `mcpServers` JSON. Incomplete optional services are not automatically connected.
 

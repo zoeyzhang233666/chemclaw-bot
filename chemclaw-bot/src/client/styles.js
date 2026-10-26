@@ -13,7 +13,7 @@ const SKIN_FOOT = ':is(div,footer):not([class*="_footArea"]):has(> div > [data-s
 
 // The base styles split the way the surface groups do. SHELL_CSS carries the marks,
 // the Bot sidebar, every overlay, and the shell chrome they reshape; markup shared
-// with the overlays (the exchange dialog reuses bubbles, the Secrets page reuses
+// with the overlays (the exchange dialog reuses bubbles, secret cards reuse
 // question-card fields) stays here so a plain view keeps it styled.
 // CONVERSATION_CSS re-skins the shell's own conversation DOM and styles what only
 // the conversation renders.

@@ -34,9 +34,9 @@ function nodes(tree, match) {
 }
 
 // `harness`: the window has DSH's own settings to send the user to, as the plugin does.
-function dock(models, { model, ready = true, harness = true } = {}) {
+function dock(models, { model, ready = true, harness = true, templateId, waiting } = {}) {
   const picked = []
-  const bot = { id: 'chief', name: 'Chief', model }
+  const bot = { id: 'chief', name: 'Chief', model, ...(templateId ? { templateId } : {}), ...(waiting ? { waiting: true } : {}) }
   const roster = { ready, byId: { chief: bot }, models, defaultModel: models[0]?.ref }
   const tree = ModelChoiceDock({
     sessionId: bot.id, useRoster: select => select(roster),
@@ -103,6 +103,11 @@ test('an empty catalog offers setup choices, and a ready model needs no choice d
   ])
   assert.equal(dock(models, { model: models[0].ref }).tree, null)
   assert.equal(dock(models, { ready: false }).tree, null)
+})
+
+test('a preset with a harness default hides the card unless its greeting is still waiting', () => {
+  assert.equal(dock(models, { templateId: 'role-1' }).tree, null)
+  assert.ok(dock(models, { templateId: 'role-1', waiting: true }).tree)
 })
 
 test('without DSH\'s own settings, the choice still offers Apihub links', () => {

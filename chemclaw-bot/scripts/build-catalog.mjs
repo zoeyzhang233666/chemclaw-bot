@@ -28,7 +28,7 @@ const roles = categories.flatMap(([category, names], ci) => names.split('|').map
   const groups = category === '进出口' ? ['外贸采购', '外贸销售'] : category === '产业研究' ? ['期现-产业基本面', '内贸销售', '内贸采购'] : category === '期现量化' ? ['期现-价差与量化'] : category === '生产辅助' ? ['内贸采购', '期现-产业基本面'] : [category]
   const pattern = hints[ci][ri] ? new RegExp(hints[ci][ri]) : null
   const skills = domain.filter(skill => groups.includes(skill.category) && pattern?.test(skill.scene))
-  return { id: ci === 0 ? 'chemclaw' : `role-${ci}-${ri + 1}`, name, category, main: ci === 0, description: `${name}：围绕化工业务完成资料核验、专业分析和可追溯文件交付。`, inputs: '产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。', deliverables: category === '通用交付' ? '按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF' : '可追溯的分析结论、HTML 报告及需要的明细表', sources: '化工云数据中台、化工社、公开数据库与用户资料', limits: '不编造企业事实或价格；不执行交易或工厂控制操作。', examples: [`请帮我完成${name}，先说明需要哪些资料`, examples[category]], skills: skills.map(skill => skill.id), color: ['blue', 'green', 'orange', 'violet', 'cyan'][ci % 5] }
+  return { id: ci === 0 ? 'chemclaw' : `role-${ci}-${ri + 1}`, name, category, main: ci === 0, description: `${name}：围绕化工业务完成资料核验、专业分析和可追溯文件交付。`, inputs: '产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。', deliverables: category === '通用交付' ? '按所选格式交付 HTML / PPTX / XLSX / DOCX / PDF' : '可追溯的分析结论、HTML 报告及需要的明细表', sources: '芯化和云数据中台、化工社、公开数据库与用户资料', limits: '不编造企业事实或价格；不执行交易或工厂控制操作。', examples: [`请帮我完成${name}，先说明需要哪些资料`, examples[category]], skills: skills.map(skill => skill.id), color: ['blue', 'green', 'orange', 'violet', 'cyan'][ci % 5] }
 }))
 const role = name => roles.find(item => item.name === name).id
 const workflows = {

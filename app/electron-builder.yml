@@ -40,4 +40,7 @@ mac:
 # Where the installed app looks for updates (app-update.yml in the package). The build writes
 # latest.yml beside the installer; the release workflow attaches both to the GitHub release,
 # so the build itself never publishes (--publish never).
-publish: null
+publish:
+  provider: github
+  owner: zoeyzhang233666
+  repo: chemclaw-bot

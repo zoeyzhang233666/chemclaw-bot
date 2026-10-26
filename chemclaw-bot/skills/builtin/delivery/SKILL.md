@@ -11,7 +11,7 @@ or limits on analytical ability.
 **Format choice (ChemClaw product rule):**
 - Prefer self-contained **HTML** when the deliverable needs price trend lines,
   interactive tables, filters, or in-page charts.
-- Use **PPT / PPTX** (including `ppt-master` or `chem_deliver` pptx) when the
+- Use **PPT / PPTX** (including `chemclaw-presentations` or `chem_deliver` pptx) when the
   user wants a slide deck without interactive trends—price cards and static
   layouts are fine.
 - Whenever there is a data backing sheet or row-level detail, also deliver
