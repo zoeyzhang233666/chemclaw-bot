@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, realpathSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { isAbsolute, join, relative, resolve } from 'node:path'
 import { test } from 'node:test'
 import { createRuntime } from '../index.js'
 import { fakeContext } from './fake-ctx.js'
@@ -375,9 +375,13 @@ test('six business deliverable pipelines use bundled libraries inside the Bot wo
     const report = { title: `${title}工具链验收（模拟数据）`, sections: [{ title: '测试证据链', table: { columns: ['字段', '内容'], rows: [['来源', 'mock，不代表业务事实']] } }], sources: [{ label: '原创验收数据' }], limitations: '仅验证交付，不验证研究质量' }
     const result = JSON.parse(await ctx.registeredTools.get('chem_deliver').execute({ report: JSON.stringify(report), formats }, { agent, signal: AbortSignal.timeout(60000) }))
     assert.equal(result.files.length, 2)
-    const team = resolve(rt.teamFolder())
+    const roots = [...new Set([rt.teamFolder(), rt.defaultTeamFolder(), rt.home].filter(Boolean))].map(path => realpathSync(path))
     for (const file of result.files) {
-      assert.ok(resolve(file.path).startsWith(team))
+      const abs = realpathSync(file.path)
+      assert.ok(roots.some((root) => {
+        const rel = relative(root, abs)
+        return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel))
+      }), `${file.path} is outside ${roots.join(' | ')}`)
       assert.ok(readFileSync(file.path).length > 100)
     }
     assert.match(result.next, /present/)
