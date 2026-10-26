@@ -406,8 +406,9 @@ export function install(rt) {
 
   async function secretEndpoint(endpoint, body) {
     await loadSecrets()
-    // A shared read may have started before the user repaired the file.
-    if (blocked !== undefined) await loadSecrets()
+    // A shared read may predate a repaired file or the former writer's last save.
+    // Finish a fresh writable read before mutating the map after taking over.
+    if (reading !== undefined || blocked !== undefined || (loadedReadOnly && rt.readOnly() === undefined)) await loadSecrets()
     return endpoints[endpoint](body ?? {})
   }
 

@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict'
 import { randomBytes } from 'node:crypto'
+import fsPromises from 'node:fs/promises'
+import { syncBuiltinESMExports } from 'node:module'
 import { mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -359,4 +361,41 @@ test('a read-only process never backs up or resets malformed credential data', a
   const backups = readdirSync(home).filter(name => name.startsWith('secrets.json.broken-'))
   assert.equal(backups.length, 1)
   assert.equal(readFileSync(join(home, backups[0]), 'utf8'), original)
+})
+
+test('taking over during a shared read refreshes the last writer snapshot before saving', async t => {
+  const bench = start()
+  t.after(bench.stop)
+  await bench.view()
+  const file = join(bench.home, 'secrets.json')
+  const key = name => ({ name, value: fresh(), scope: 'all', createdAt: 1, updatedAt: 1 })
+  writeFileSync(file, JSON.stringify({ version: 1, secrets: [key('FIRST')] }))
+  const originalReadOnly = bench.rt.readOnly
+  bench.rt.readOnly = () => 'Another host owns the team'
+  let release
+  let started
+  const gate = new Promise(resolve => { release = resolve })
+  const reading = new Promise(resolve => { started = resolve })
+  const originalRead = fsPromises.readFile
+  let delayed = false
+  const mock = t.mock.method(fsPromises, 'readFile', async (path, ...args) => {
+    const content = await originalRead(path, ...args)
+    if (path === file && !delayed) {
+      delayed = true
+      started()
+      await gate
+    }
+    return content
+  })
+  syncBuiltinESMExports()
+  t.after(() => { release(); mock.mock.restore(); syncBuiltinESMExports() })
+  const oldRead = bench.rt.loadSecrets()
+  await reading
+  writeFileSync(file, JSON.stringify({ version: 1, secrets: [key('FIRST'), key('LATEST')] }))
+  bench.rt.readOnly = originalReadOnly
+  const saving = bench.rt.secretEndpoint('secret-set', { name: 'MINE', value: fresh() })
+  release()
+  await oldRead
+  await saving
+  assert.deepEqual(JSON.parse(readFileSync(file, 'utf8')).secrets.map(entry => entry.name).sort(), ['FIRST', 'LATEST', 'MINE'])
 })
