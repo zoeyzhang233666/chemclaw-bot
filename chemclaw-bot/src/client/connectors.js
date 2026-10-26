@@ -77,7 +77,11 @@ export function ConnectorsPage({ roster, actions }) {
   }, [data?.dependencies.state])
   const importJson = async () => {
     setBusy(true); setError('')
-    try { await actions.connectorImport(json); setJson('') } catch (failure) { setError(failure.message) } finally { setBusy(false) }
+    try {
+      const result = await actions.connectorImport(json)
+      setJson('')
+      if (result?.skipped?.length) setError(t('Skipped stdio servers: {names}', { names: result.skipped.join(', ') }))
+    } catch (failure) { setError(failure.message) } finally { setBusy(false) }
   }
   return h('section', { className: 'bt-set-section bt-connectors-page' },
     error ? h('div', { className: 'bt-error', role: 'alert' }, error) : null,
@@ -103,7 +107,6 @@ export function ConnectorsPage({ roster, actions }) {
       h('p', { className: 'bt-set-hint' }, t('Public chemistry search and drawing work anonymously. An AI Key is optional; private data and write tools remain disabled in this release.')),
       list.find(item => item.id === 'huagongshe') ? h(ConnectorRow, { connector: list.find(item => item.id === 'huagongshe'), actions }) : null),
     h('details', { className: 'bt-advanced' }, h('summary', null, t('Advanced: import MCP JSON')),
-      h('p', { className: 'bt-set-hint' }, t('Business scope: not configured. Qichacha: not configured. Confirm the HTTPS endpoint and authentication with your service provider before importing.')),
       h('textarea', { value: json, onChange: event => setJson(event.target.value), rows: 6, placeholder: '{"mcpServers":{"service":{"type":"http","url":"https://example.com/mcp"}}}', spellCheck: false, 'aria-label': t('MCP configuration JSON') }),
       h('button', { className: 'bt-soft', disabled: busy || !json.trim(), onClick: importJson }, t(busy ? 'Connecting…' : 'Import'))))
 }

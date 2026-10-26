@@ -1,10 +1,13 @@
-import { createElement as h, Fragment, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { createElement as h, Fragment, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { currentPart } from './text.js'
-import { CheckIcon, SlidersIcon } from './icons.js'
+import { CheckIcon, CloseIcon, SlidersIcon } from './icons.js'
+import { ApiHubMark } from './brand-icons.js'
 import { BotMark } from './mark.js'
 import { KeyIcon, MaskedInput } from './secret-card.js'
 import { SPRING_POP, SPRING_SHAPE, spring, useLinger } from './motion.js'
+import { useEscape } from './overlay-hooks.js'
+import { APIHUB } from '../shared/model-providers.js'
 import { hostText, t } from './i18n.js'
 
 const MENU_EXIT_MS = 120
@@ -277,39 +280,52 @@ function ModelKeyCard({ model, actions }) {
 // Where the providers are set up: the window's own Models page, else DSH's settings.
 const manageModels = actions => actions.openModels ?? actions.openHarnessSettings
 
-// Ways to get a first model. The DeepSeek sign-in exists only where the shell carries
-// its account plugin (the Desktop); the API key and custom models use the shell's
-// own editors.
+// Ways to get a first model. ChemClaw steers users to Apihub, not DeepSeek account login.
 function setupChoices(actions) {
+  const openKeys = () => { window.open(APIHUB.tokenUrl, '_blank', 'noopener,noreferrer'); actions.openModels?.() }
+  const openPortal = () => { window.open(APIHUB.portalUrl, '_blank', 'noopener,noreferrer') }
   return [
     actions.openModels ? [t('Set up APIHub or another model'), actions.openModels] : null,
-    actions.canSignIn?.() ? [t('Sign in to DeepSeek'), () => actions.signIn()] : null,
-    actions.openHarnessOnboarding ? [t('Enter a DeepSeek API key'), () => actions.openHarnessOnboarding('deepseek-official')] : null,
+    actions.signIn ? [t('Get started'), () => actions.signIn()] : null,
+    [t('Add API Key'), openKeys],
+    [t('Sign in'), openPortal],
     actions.openHarnessSettings ? [t('Open settings to set up a custom model'), actions.openHarnessSettings] : null,
   ].filter(Boolean)
 }
 
-// The shell's own DeepSeek sign-in dialog, borrowed from its account plugin: the
-// plugin's model sign-in entry renders here with the plugin's own operations.
-export function DeepSeekSignIn({ useUi, actions }) {
+/** ChemClaw get-started: Apihub portal + keys, not DeepSeek Platform OAuth. */
+export function ApihubGetStarted({ useUi, actions }) {
   const open = useUi(state => state.signIn)
-  const entry = open ? actions.signInEntry?.() : null
-  if (!entry) return null
-  return h(SignInHost, { key: open, entry, actions })
+  if (!open) return null
+  return h(ApihubGetStartedDialog, { key: open, actions })
 }
 
-function SignInHost({ entry, actions }) {
-  const [ops] = useState(() => entry.inject?.() ?? {})
+function ApihubGetStartedDialog({ actions }) {
   const close = () => actions.closeSignIn()
-  const useHook = source => selector => useSyncExternalStore(source.subscribe, () => selector(source.getSnapshot()))
-  const [hooks] = useState(() => ({ useAccount: useHook(ops.hooks.account), useTheme: useHook(ops.hooks.theme) }))
-  return h(entry.component, {
-    ...ops,
-    ...hooks,
-    t: actions.accountT(),
-    complete: close,
-    useApiKey: () => { close(); actions.openHarnessOnboarding('deepseek-official') },
-  })
+  useEscape(close)
+  const addKey = () => {
+    window.open(APIHUB.tokenUrl, '_blank', 'noopener,noreferrer')
+    close()
+    actions.openModels?.()
+  }
+  const login = () => {
+    window.open(APIHUB.portalUrl, '_blank', 'noopener,noreferrer')
+    close()
+  }
+  return createPortal(
+    h('div', { className: 'bt-apihub-start-layer' },
+      h('div', { className: 'bt-scrim', onMouseDown: close }),
+      h('div', { className: 'bt-apihub-start', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'bt-apihub-start-title' },
+        h('div', { className: 'bt-apihub-start-head' },
+          h('span', { className: 'bt-connector-mark bt-apihub-start-mark' }, h(ApiHubMark)),
+          h('h2', { id: 'bt-apihub-start-title' }, t('Get started')),
+          h('button', { type: 'button', className: 'bt-apihub-start-x', 'aria-label': t('Close'), onClick: close }, h(CloseIcon))),
+        h('p', { className: 'bt-apihub-start-body' }, t('Sign in to your Apihub account and add an API Key to get started. Your projects and files are stored locally.')),
+        h('div', { className: 'bt-apihub-start-actions' },
+          h('button', { type: 'button', className: 'bt-apihub-start-secondary', onClick: addKey }, t('Add API Key')),
+          h('button', { type: 'button', className: 'bt-apihub-start-primary', onClick: login }, t('Sign in'))))),
+    document.body,
+  )
 }
 
 export const MODEL_CSS = `
@@ -351,5 +367,21 @@ export const MODEL_CSS = `
 @keyframes bt-model-in{from{opacity:0;transform:translateY(6px)}}
 .bt-model-spin{flex:none;width:14px;height:14px;border-radius:50%;border:1.5px solid var(--bt-line-2);border-top-color:var(--bt-ink-2);animation:bt-model-spin .7s linear infinite}
 @keyframes bt-model-spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.bt-model-dock{animation:none}.bt-model-spin{animation-duration:2s}.bt-model-caret{transition:none}.bt-model-tick svg{animation:none}}
+.bt-apihub-start-layer{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;pointer-events:auto}
+.bt-apihub-start-layer>.bt-scrim{position:absolute;inset:0}
+.bt-apihub-start{position:relative;z-index:1;width:min(420px,100%);background:var(--bt-main);border-radius:16px;border:.5px solid var(--bt-line-2);box-shadow:0 24px 80px rgba(0,0,0,.24);color:var(--bt-ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;animation:bt-dialog-rise ${SPRING_SHAPE.duration}ms ${SPRING_SHAPE.easing},bt-veil-in .2s ease-out;user-select:none}
+.bt-apihub-start-head{display:flex;align-items:center;gap:10px;padding:22px 24px 12px}
+.bt-apihub-start-mark{width:36px;height:36px;color:var(--bt-accent)}
+.bt-apihub-start-head h2{flex:1;margin:0;font-size:16px;line-height:24px;font-weight:500}
+.bt-apihub-start-x{flex:none;width:28px;height:28px;border:0;padding:0;border-radius:6px;background:none;color:var(--bt-ink-2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.bt-apihub-start-x:hover{background:var(--bt-hover);color:var(--bt-ink)}
+.bt-apihub-start-x svg{width:14px;height:14px}
+.bt-apihub-start-body{margin:0;padding:0 24px;font-size:14px;line-height:22px;color:var(--bt-ink)}
+.bt-apihub-start-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:16px 24px 22px}
+.bt-apihub-start-secondary,.bt-apihub-start-primary{box-sizing:border-box;min-width:72px;height:36px;padding:0 16px;border-radius:10px;font:inherit;font-size:14px;line-height:22px;cursor:pointer}
+.bt-apihub-start-secondary{border:.5px solid var(--bt-line-2);background:var(--bt-card);color:var(--bt-ink)}
+.bt-apihub-start-secondary:hover{background:var(--bt-hover)}
+.bt-apihub-start-primary{border:0;background:var(--bt-ink);color:var(--bt-main);font-weight:500}
+.bt-apihub-start-primary:hover{opacity:.9}
+@media (prefers-reduced-motion:reduce){.bt-model-dock{animation:none}.bt-model-spin{animation-duration:2s}.bt-model-caret{transition:none}.bt-model-tick svg{animation:none}.bt-apihub-start{animation:none}}
 `

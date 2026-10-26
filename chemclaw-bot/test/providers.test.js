@@ -76,6 +76,10 @@ const row = (view, id) => view.providers.find(provider => provider.id === id)
 
 test('built-in APIHub uses the verified endpoint, stores credentials separately and ranks first', async () => {
   const { rt, store, discovered } = dsh()
+  const { APIHUB } = await import('../src/shared/model-providers.js')
+  assert.equal(APIHUB.baseURL, 'https://apihub.chem-cloud.cn/v1')
+  assert.equal(APIHUB.tokenUrl, 'https://apihub.chem-cloud.cn/keys')
+  assert.equal(APIHUB.portalUrl, 'https://apihub.chem-cloud.cn/')
   await rt.discoverModels({ preset: 'apihub', baseURL: 'https://wrong.invalid', key: 'synthetic-apihub-test' })
   assert.equal(discovered[0][1].baseURL, 'https://apihub.chem-cloud.cn/v1')
   const view = await rt.addProvider({ preset: 'apihub', key: 'synthetic-apihub-test', models: [{ id: 'test-model' }] })

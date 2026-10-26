@@ -7,7 +7,7 @@ import { KeyIcon, MaskedInput } from './secret-card.js'
 import { Segmented, SPRING_SHAPE } from './motion.js'
 import { hostText, t } from './i18n.js'
 import { APIHUB } from '../shared/model-providers.js'
-import { CloudMark } from './brand-icons.js'
+import { ApiHubMark } from './brand-icons.js'
 
 const PROTOCOL_NAMES = { 'openai-completions': 'OpenAI Chat Completions', 'openai-responses': 'OpenAI Responses', 'anthropic-messages': 'Anthropic Messages' }
 // Anthropic's SDK appends /v1/messages itself; the OpenAI ones take the /v1 root.
@@ -58,7 +58,7 @@ function ApiHubCard({ provider, actions, apply }) {
     finally { setBusy(false) }
   }
   return h('section', { className: 'bt-apihub', 'aria-label': 'APIHub' },
-    h('header', null, h('span', { className: 'bt-connector-mark' }, h(CloudMark)), h('div', null, h('h3', null, 'APIHub'), h('span', { className: 'bt-eyebrow' }, t('Recommended by ChemClaw'))), h('span', { className: 'bt-provider-state', 'data-state': provider?.key?.configured ? 'set' : 'missing' }, t(provider?.key?.configured ? 'Key set' : 'Needs an API key'))),
+    h('header', null, h('span', { className: 'bt-connector-mark' }, h(ApiHubMark)), h('div', null, h('h3', null, 'APIHub'), h('span', { className: 'bt-eyebrow' }, t('Recommended by ChemClaw'))), h('span', { className: 'bt-provider-state', 'data-state': provider?.key?.configured ? 'set' : 'missing' }, t(provider?.key?.configured ? 'Key set' : 'Needs an API key'))),
     h('p', null, APIHUB.baseURL), h('p', null, t('Paste your APIHub key, fetch the available models, then choose the models to add.')),
     h('div', { className: 'bt-secret-inline' }, h('label', { className: 'bt-q-field bt-secret-field' }, h(KeyIcon), h(MaskedInput, { value: key, onChange: setKey, onEnter: discover, label: t('APIHub API key') })), h('button', { className: 'bt-soft', disabled: busy || !ready, onClick: () => void discover() }, t(busy ? 'Asking…' : 'Fetch models'))),
     h('div', { className: 'bt-actions' }, h('a', { href: APIHUB.tokenUrl, target: '_blank', rel: 'noopener noreferrer' }, t('Get an API key')), saved ? h('span', { role: 'status', className: 'bt-secret-ok' }, t('Saved.')) : null),

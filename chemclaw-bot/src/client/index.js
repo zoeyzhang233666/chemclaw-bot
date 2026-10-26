@@ -24,7 +24,7 @@ import { BROWSER_CSS } from './browser-pane.js'
 import { SECRET_CSS, SecretDock } from './secret-card.js'
 import { PROVIDERS_CSS } from './providers-page.js'
 import { CHEMCLAW_UI_CSS } from './chemclaw-ui.js'
-import { MODEL_CSS, ModelChoiceDock, DeepSeekSignIn } from './model-menu.js'
+import { MODEL_CSS, ModelChoiceDock, ApihubGetStarted } from './model-menu.js'
 import { BOT_SETTINGS_CSS } from './bot-settings.js'
 import { GROUP_SETTINGS_CSS } from './group-settings.js'
 import { FOLDER_CSS } from './folder-menu.js'
@@ -534,11 +534,9 @@ export function apply(ctx) {
     })
   }
   // Whether AccountLauncher holds the shell's settings seat; FooterAccount steps aside if so.
-  actions.signInEntry = () => ctx.slots.entries?.('settings.models.sign-in')?.[0] ?? null
-  actions.canSignIn = () => Boolean(actions.signInEntry())
+  actions.canSignIn = () => true
   actions.signIn = () => ui.set(state => ({ ...state, signIn: (state.signIn ?? 0) + 1 }))
   actions.closeSignIn = () => ui.set(state => ({ ...state, signIn: null }))
-  actions.accountT = () => ctx.get('locale').bind('settings.account')
   // The Voice Input plugin's speech Remote; absent while that plugin is off.
   actions.speech = () => ctx.get('remote.speech') ?? undefined
   // DSH's own settings: models, providers, keys and its plugins.
@@ -667,7 +665,7 @@ export function apply(ctx) {
     // Desktop's "··· More"), which comes back in Agent mode.
     () => shadow('settings.launcher', { priority: BOT_PRIORITY, inject: face }, AccountLauncher),
     () => shadow('shell.overlay', { id: 'bot', order: 50, inject: face }, Overlays),
-    () => shadow('shell.overlay', { id: 'bot-signin', order: 55, inject: face }, DeepSeekSignIn),
+    () => shadow('shell.overlay', { id: 'bot-signin', order: 55, inject: face }, ApihubGetStarted),
     () => shadow('shell.overlay', { id: 'bot-toast', order: 60, inject: face }, ErrorToast),
   ]
   const installConversation = () => [

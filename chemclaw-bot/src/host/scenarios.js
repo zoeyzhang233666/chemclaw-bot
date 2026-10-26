@@ -1,10 +1,25 @@
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import { domainSkills, ensureSkillLibrary, roleCatalog, roleInstructions } from './catalog-seed.js'
+import { ROOM_MAX_MEMBERS } from './constants.js'
+
+const CHIEF_MEMBERSHIP_VERSION = 4
 
 export function install(rt) {
   let queue = Promise.resolve()
   const bindings = () => (rt.state.templateBindings ??= {})
-  const noticeFor = (def, bots, adminId) => `${def.description}\n负责人：${(bots.find(bot => bot.id === adminId) ?? bots.find(bot => bot.templateId === def.admin) ?? bots[0]).name}\n分工：${bots.map(bot => `${bot.name}：${roleCatalog.roles.find(item => item.id === bot.templateId)?.description ?? bot.role}`).join('\n')}\n交付：${def.deliverables}\n示例：${def.examples[0]}`
+  const roomFor = def => rt.roomOf(bindings()[def.id]) ?? Object.values(rt.state.rooms).find(item => item.templateId === def.id || (!item.templateId && [def.name, ...(def.previousNames ?? [])].includes(item.name)))
+  const noticeFor = (def, bots, adminId) => {
+    const admin = adminId === undefined ? bots.find(bot => bot.templateId === def.admin) : bots.find(bot => bot.id === adminId)
+    const chief = bots.find(bot => bot.templateId === 'chemclaw')
+    return [
+      def.description,
+      `负责人：${admin?.name ?? '未设置'}`,
+      chief ? `主控：${chief.name}，按需协调跨领域任务、处理结论分歧与验收；日常由本群负责人组织，不逐条监听或自动复核。需要时可 @${chief.name}。` : '',
+      `分工：${bots.map(bot => `${bot.name}：${roleCatalog.roles.find(item => item.id === bot.templateId)?.description ?? bot.role}`).join('\n')}`,
+      `交付：${def.deliverables}`,
+      `示例：${def.examples[0]}`,
+    ].filter(Boolean).join('\n')
+  }
   const enqueue = work => {
     const result = queue.then(work)
     queue = result.catch(() => {})
@@ -21,16 +36,21 @@ export function install(rt) {
       if ((previous?.instructions === item.instructions || oldInstructions.includes(item.instructions)) && item.instructions !== instructions) patch.instructions = instructions
     }
     if ((previous ? item.name === previous.name : def.previousNames?.includes(item.name)) && item.name !== def.name) patch.name = def.name
+    const stockShape = shape => !shape || ['lobster', 'whale'].includes(shape) || /^lobster-\d+$/.test(shape)
     const originalLook = previous
       ? JSON.stringify(item.avatar) === JSON.stringify(previous.avatar) && item.color === previous.color
-      : !item.avatar?.image && (!item.avatar || ['lobster', 'whale'].includes(item.avatar.shape)) && !String(item.color).startsWith('#')
-    if (originalLook) Object.assign(patch, { avatar: def.avatar, color: def.color })
+      : !item.avatar?.image && stockShape(item.avatar?.shape) && !String(item.color).startsWith('#')
+    // Variant lobster shapes from older catalogs also count as stock looks to remint.
+    const remintLook = originalLook || (!item.avatar?.image && /^lobster-\d+$/.test(item.avatar?.shape ?? ''))
+    if (kind === 'role' && remintLook) Object.assign(patch, { avatar: def.avatar, color: def.color })
     if (kind === 'role' && Object.keys(patch).length) await rt.updateBot(item.id, patch)
     if (kind === 'group') {
       if (patch.name) await rt.updateRoom(item.id, { name: patch.name })
-      if (originalLook) Object.assign(item, { avatar: def.avatar, color: def.color })
+      // Groups show a cluster of member marks; drop any leftover single-shape avatar.
+      delete item.avatar
+      if (remintLook && def.color) item.color = def.color
     }
-    Object.assign(item, { templateId: def.id, templateVersion: roleCatalog.version, templateDefaults: { name: def.name, avatar: def.avatar, color: def.color, ...(kind === 'role' ? { instructions: roleInstructions(def) } : {}) }, templateInfo: { category: def.category, description: def.description, examples: def.examples, inputs: def.inputs, deliverables: def.deliverables, sources: def.sources, limits: def.limits } })
+    Object.assign(item, { templateId: def.id, templateVersion: roleCatalog.version, templateDefaults: { name: def.name, color: def.color, ...(kind === 'role' ? { avatar: def.avatar, instructions: roleInstructions(def) } : {}) }, templateInfo: { category: def.category, description: def.description, examples: def.examples, inputs: def.inputs, deliverables: def.deliverables, sources: def.sources, limits: def.limits } })
   }
   async function role(id) {
     const def = roleCatalog.roles.find(item => item.id === id)
@@ -53,27 +73,41 @@ export function install(rt) {
   async function group(id) {
     const def = roleCatalog.groups.find(item => item.id === id)
     if (!def) throw new Error('Unknown scenario template')
-    let room = rt.roomOf(bindings()[id]) ?? Object.values(rt.state.rooms).find(item => item.templateId === id || (!item.templateId && [def.name, ...(def.previousNames ?? [])].includes(item.name)))
+    let room = roomFor(def)
     const bots = []
-    for (const member of def.members) bots.push(rt.botOf(bindings()[member]) ?? await role(member))
+    for (const member of def.members) {
+      const bot = rt.botOf(bindings()[member])
+      if (!bot && room && bindings()[member]) continue
+      bots.push(bot ?? await role(member))
+    }
     const admin = bots.find(bot => bot.templateId === def.admin)
     if (room) {
       const previous = room.templateDefaults
       const previousMembers = previous?.members ?? def.previousMembers?.map(template => bindings()[template])
       const sameMembers = previousMembers && JSON.stringify([...room.members].sort()) === JSON.stringify([...previousMembers].sort())
       const patch = {}
-      if (sameMembers && room.admin === admin.id) patch.members = bots.map(bot => bot.id)
-      if (room.notice === previous?.notice || def.previousNotices?.includes(room.notice)) patch.notice = noticeFor(def, patch.members ? bots : room.members.map(rt.botOf).filter(Boolean), room.admin)
+      // This upgrade only appends the chief, even to customized teams. The room's
+      // version also records a full room's skipped attempt so later removals stick.
+      if ((room.templateVersion ?? 0) < CHIEF_MEMBERSHIP_VERSION) {
+        const chief = bots.find(bot => bot.templateId === 'chemclaw')
+        if (chief && !room.members.includes(chief.id)) {
+          if (room.members.length < ROOM_MAX_MEMBERS) patch.add = [chief.id]
+          else rt.warn('chemclaw-bot: cannot add %s to full preset group "%s" (%s); add it manually after making room', chief.name, room.name, room.id)
+        }
+      } else if (sameMembers && room.admin === admin?.id) patch.members = bots.map(bot => bot.id)
+      const members = [...(patch.members ?? room.members), ...(patch.add ?? [])].map(rt.botOf).filter(Boolean)
+      const managedNotice = room.notice === previous?.notice || def.previousNotices?.includes(room.notice)
+      if (managedNotice) patch.notice = noticeFor(def, members, room.admin)
       if (Object.keys(patch).length) await rt.updateRoom(room.id, patch)
       await describe(room, def, 'group')
-      Object.assign(room.templateDefaults, { members: bots.map(bot => bot.id), notice: noticeFor(def, bots) })
+      Object.assign(room.templateDefaults, { members: bots.map(bot => bot.id), notice: managedNotice ? room.notice : noticeFor(def, bots) })
       bindings()[id] = room.id
       await rt.save()
       return room
     }
     room = await rt.createRoom({ name: def.name, members: bots.map(bot => bot.id), admin: admin.id, mode: 'admin', notice: noticeFor(def, bots), createdBy: rt.state.mainBotIds[0] })
     await describe(room, def, 'group')
-    Object.assign(room, { avatar: def.avatar, color: def.color })
+    if (def.color) room.color = def.color
     Object.assign(room.templateDefaults, { members: bots.map(bot => bot.id), notice: noticeFor(def, bots) })
     bindings()[id] = room.id
     await rt.save()
@@ -86,7 +120,7 @@ export function install(rt) {
     for (const def of roleCatalog.roles) if (!bindings()[def.id] || rt.botOf(bindings()[def.id])) await role(def.id)
     for (const def of roleCatalog.groups) {
       if (bindings()[def.id] && !rt.roomOf(bindings()[def.id])) continue
-      if (def.members.some(id => bindings()[id] && !rt.botOf(bindings()[id]))) continue
+      if (!roomFor(def) && def.members.some(id => bindings()[id] && !rt.botOf(bindings()[id]))) continue
       await group(def.id)
     }
     rt.state.presetTeamVersion = roleCatalog.version

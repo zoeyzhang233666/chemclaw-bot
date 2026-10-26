@@ -106,6 +106,7 @@ export function install(rt) {
     }
     if (endpoint === 'connector-import') {
       const imported = parseMcpImport(body.json)
+      const skipped = imported.skipped ?? []
       for (const entry of imported) {
         const named = definitions().find(def => def.id === entry.id)
         if (entry.id === 'github' || (named && named.url !== entry.url)) throw new Error('A saved connector address cannot be replaced; use a new service name')
@@ -129,7 +130,9 @@ export function install(rt) {
       }
       await rt.save()
       await Promise.all(imported.map(entry => sync(definitions().find(def => def.id === entry.id), true)))
-      return rt.connectorsView()
+      const view = rt.connectorsView()
+      if (skipped.length) view.skipped = skipped
+      return view
     }
     const def = definitions().find(item => item.id === body.id)
     if (!def) return githubEndpoint(endpoint, body)

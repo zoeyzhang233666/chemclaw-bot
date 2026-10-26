@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 4,
   "roles": [
     {
       "id": "chemclaw",
@@ -46,7 +46,7 @@
       "skills": [
         "domain-18"
       ],
-      "color": "#2877B8",
+      "color": "#B86D39",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -57,7 +57,7 @@
         "潜客猎手"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "star"
       }
     },
     {
@@ -77,7 +77,7 @@
       "skills": [
         "domain-29"
       ],
-      "color": "#B86D39",
+      "color": "#248478",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -87,7 +87,7 @@
         "标杆客户复制"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "moon"
       }
     },
     {
@@ -107,7 +107,7 @@
       "skills": [
         "domain-30"
       ],
-      "color": "#248478",
+      "color": "#8461B6",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -117,7 +117,7 @@
         "扩产项目找客户"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "gumdrop"
       }
     },
     {
@@ -137,7 +137,7 @@
       "skills": [
         "domain-31"
       ],
-      "color": "#8461B6",
+      "color": "#B34E67",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -147,7 +147,7 @@
         "采购商机扫描"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "peanut"
       }
     },
     {
@@ -167,7 +167,7 @@
       "skills": [
         "domain-33"
       ],
-      "color": "#B34E67",
+      "color": "#4E7C3C",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -177,7 +177,7 @@
         "目标客户研究"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "bunny"
       }
     },
     {
@@ -199,7 +199,7 @@
         "domain-20",
         "domain-21"
       ],
-      "color": "#4E7C3C",
+      "color": "#936F26",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -210,7 +210,7 @@
         "拜访顾问"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "kitty"
       }
     },
     {
@@ -230,7 +230,7 @@
       "skills": [
         "domain-22"
       ],
-      "color": "#936F26",
+      "color": "#47739A",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -240,7 +240,7 @@
         "区域客户地图"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "acorn"
       }
     },
     {
@@ -269,7 +269,7 @@
         "domain-15",
         "domain-16"
       ],
-      "color": "#47739A",
+      "color": "#735D8E",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -279,7 +279,7 @@
         "供应商寻源"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "lobster"
       }
     },
     {
@@ -299,7 +299,7 @@
       "skills": [
         "domain-13"
       ],
-      "color": "#735D8E",
+      "color": "#2877B8",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -309,7 +309,7 @@
         "真实厂家核验"
       ],
       "avatar": {
-        "shape": "lobster-1"
+        "shape": "star"
       }
     },
     {
@@ -329,7 +329,7 @@
       "skills": [
         "domain-14"
       ],
-      "color": "#2877B8",
+      "color": "#B86D39",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -340,7 +340,7 @@
         "准入尽调"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "moon"
       }
     },
     {
@@ -362,7 +362,7 @@
         "domain-7",
         "domain-15"
       ],
-      "color": "#B86D39",
+      "color": "#248478",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -372,7 +372,7 @@
         "资质与风险核验"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "gumdrop"
       }
     },
     {
@@ -396,7 +396,7 @@
         "domain-16",
         "domain-17"
       ],
-      "color": "#248478",
+      "color": "#8461B6",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -406,7 +406,7 @@
         "采购比价"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "peanut"
       }
     },
     {
@@ -426,7 +426,7 @@
       "skills": [
         "domain-6"
       ],
-      "color": "#8461B6",
+      "color": "#B34E67",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -436,7 +436,7 @@
         "采购合同审阅"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "bunny"
       }
     },
     {
@@ -458,7 +458,7 @@
         "domain-47",
         "domain-51"
       ],
-      "color": "#B34E67",
+      "color": "#4E7C3C",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -468,7 +468,7 @@
         "海外市场研究"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "kitty"
       }
     },
     {
@@ -488,7 +488,7 @@
       "skills": [
         "domain-52"
       ],
-      "color": "#4E7C3C",
+      "color": "#936F26",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -499,7 +499,7 @@
         "外贸销售"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "acorn"
       }
     },
     {
@@ -520,7 +520,7 @@
         "domain-53",
         "domain-54"
       ],
-      "color": "#936F26",
+      "color": "#47739A",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -530,7 +530,7 @@
         "海外询盘处理"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "lobster"
       }
     },
     {
@@ -552,7 +552,7 @@
         "domain-55",
         "domain-56"
       ],
-      "color": "#47739A",
+      "color": "#735D8E",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -562,7 +562,7 @@
         "出口合规与 HS 编码"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "star"
       }
     },
     {
@@ -585,7 +585,7 @@
         "domain-50",
         "domain-57"
       ],
-      "color": "#735D8E",
+      "color": "#2877B8",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -595,7 +595,7 @@
         "出口报价与单证"
       ],
       "avatar": {
-        "shape": "lobster-2"
+        "shape": "moon"
       }
     },
     {
@@ -616,7 +616,7 @@
         "domain-41",
         "domain-53"
       ],
-      "color": "#2877B8",
+      "color": "#B86D39",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -626,7 +626,7 @@
         "海外供应商核验"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "gumdrop"
       }
     },
     {
@@ -649,7 +649,7 @@
         "domain-46",
         "domain-49"
       ],
-      "color": "#B86D39",
+      "color": "#248478",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -660,7 +660,7 @@
         "外贸采购"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "peanut"
       }
     },
     {
@@ -681,7 +681,7 @@
         "domain-4",
         "domain-24"
       ],
-      "color": "#248478",
+      "color": "#8461B6",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -693,7 +693,7 @@
         "行情报价"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "bunny"
       }
     },
     {
@@ -716,7 +716,7 @@
         "domain-72",
         "aux-networkx"
       ],
-      "color": "#8461B6",
+      "color": "#B34E67",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -727,7 +727,7 @@
         "产业链研究"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "kitty"
       }
     },
     {
@@ -747,7 +747,7 @@
       "skills": [
         "domain-61"
       ],
-      "color": "#B34E67",
+      "color": "#4E7C3C",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -759,7 +759,7 @@
         "产业基本面"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "acorn"
       }
     },
     {
@@ -781,7 +781,7 @@
         "domain-75",
         "domain-77"
       ],
-      "color": "#4E7C3C",
+      "color": "#936F26",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -792,7 +792,7 @@
         "产能与装置跟踪"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "lobster"
       }
     },
     {
@@ -815,7 +815,7 @@
         "domain-62",
         "domain-63"
       ],
-      "color": "#936F26",
+      "color": "#47739A",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -826,7 +826,7 @@
         "成本利润"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "star"
       }
     },
     {
@@ -847,7 +847,7 @@
         "domain-78",
         "domain-80"
       ],
-      "color": "#47739A",
+      "color": "#735D8E",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -859,7 +859,7 @@
         "舆情雷达"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "moon"
       }
     },
     {
@@ -880,7 +880,7 @@
         "domain-73",
         "domain-75"
       ],
-      "color": "#735D8E",
+      "color": "#2877B8",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -892,7 +892,7 @@
         "深度研究员"
       ],
       "avatar": {
-        "shape": "lobster-3"
+        "shape": "gumdrop"
       }
     },
     {
@@ -915,7 +915,7 @@
         "domain-67",
         "domain-68"
       ],
-      "color": "#2877B8",
+      "color": "#B86D39",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -927,7 +927,7 @@
         "市场研报"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "peanut"
       }
     },
     {
@@ -950,7 +950,7 @@
         "domain-89",
         "domain-94"
       ],
-      "color": "#B86D39",
+      "color": "#248478",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -962,7 +962,7 @@
         "价差量化"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "bunny"
       }
     },
     {
@@ -983,7 +983,7 @@
         "domain-93",
         "domain-95"
       ],
-      "color": "#248478",
+      "color": "#8461B6",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -994,7 +994,7 @@
         "月差研究"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "kitty"
       }
     },
     {
@@ -1014,7 +1014,7 @@
       "skills": [
         "domain-101"
       ],
-      "color": "#8461B6",
+      "color": "#B34E67",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -1025,7 +1025,7 @@
         "区域价差"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "acorn"
       }
     },
     {
@@ -1045,7 +1045,7 @@
       "skills": [
         "domain-102"
       ],
-      "color": "#B34E67",
+      "color": "#4E7C3C",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -1056,7 +1056,7 @@
         "国内外价差"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "lobster"
       }
     },
     {
@@ -1080,7 +1080,7 @@
         "domain-107",
         "domain-108"
       ],
-      "color": "#4E7C3C",
+      "color": "#936F26",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -1091,7 +1091,7 @@
         "季节性研究"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "star"
       }
     },
     {
@@ -1114,7 +1114,7 @@
         "domain-105",
         "aux-statistical-analysis"
       ],
-      "color": "#936F26",
+      "color": "#47739A",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -1125,7 +1125,7 @@
         "价格联动与相关性"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "moon"
       }
     },
     {
@@ -1148,7 +1148,7 @@
         "domain-92",
         "aux-statistical-analysis"
       ],
-      "color": "#47739A",
+      "color": "#735D8E",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -1159,7 +1159,7 @@
         "事件研究"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "gumdrop"
       }
     },
     {
@@ -1184,7 +1184,7 @@
         "domain-100",
         "aux-statistical-analysis"
       ],
-      "color": "#735D8E",
+      "color": "#2877B8",
       "dataTools": [
         "chem_public_query",
         "chem_futures_history",
@@ -1195,7 +1195,7 @@
         "研究规则回测"
       ],
       "avatar": {
-        "shape": "lobster-4"
+        "shape": "peanut"
       }
     },
     {
@@ -1222,7 +1222,7 @@
         "domain-72",
         "chemclaw-chemistry"
       ],
-      "color": "#2877B8",
+      "color": "#B86D39",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1233,7 +1233,7 @@
         "产品情报"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "bunny"
       }
     },
     {
@@ -1256,7 +1256,7 @@
         "domain-72",
         "chemclaw-chemistry"
       ],
-      "color": "#B86D39",
+      "color": "#248478",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1266,7 +1266,7 @@
         "工艺文献研究"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "kitty"
       }
     },
     {
@@ -1287,7 +1287,7 @@
         "domain-8",
         "chemclaw-chemistry"
       ],
-      "color": "#248478",
+      "color": "#8461B6",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1297,7 +1297,7 @@
         "质量与 COA 核验"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "acorn"
       }
     },
     {
@@ -1320,7 +1320,7 @@
         "domain-62",
         "chemclaw-chemistry"
       ],
-      "color": "#8461B6",
+      "color": "#B34E67",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1330,7 +1330,7 @@
         "物料与能耗测算"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "lobster"
       }
     },
     {
@@ -1351,7 +1351,7 @@
         "chemclaw-chemistry",
         "aux-statistical-analysis"
       ],
-      "color": "#B34E67",
+      "color": "#4E7C3C",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1361,7 +1361,7 @@
         "生产数据分析"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "star"
       }
     },
     {
@@ -1379,7 +1379,7 @@
         "把我提供的研究资料制作成可打开、可编辑的交付文件"
       ],
       "skills": [],
-      "color": "#4E7C3C",
+      "color": "#936F26",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1389,7 +1389,7 @@
         "HTML 报告"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "moon"
       }
     },
     {
@@ -1409,7 +1409,7 @@
       "skills": [
         "aux-scientific-visualization"
       ],
-      "color": "#936F26",
+      "color": "#47739A",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1420,7 +1420,7 @@
         "产业链制图"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "gumdrop"
       }
     },
     {
@@ -1438,7 +1438,7 @@
         "把我提供的研究资料制作成可打开、可编辑的交付文件"
       ],
       "skills": [],
-      "color": "#47739A",
+      "color": "#735D8E",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1449,7 +1449,7 @@
         "PPT设计师"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "peanut"
       }
     },
     {
@@ -1467,7 +1467,7 @@
         "把我提供的研究资料制作成可打开、可编辑的交付文件"
       ],
       "skills": [],
-      "color": "#735D8E",
+      "color": "#2877B8",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1478,7 +1478,7 @@
         "表格专家"
       ],
       "avatar": {
-        "shape": "lobster-5"
+        "shape": "bunny"
       }
     },
     {
@@ -1496,7 +1496,7 @@
         "把我提供的研究资料制作成可打开、可编辑的交付文件"
       ],
       "skills": [],
-      "color": "#2877B8",
+      "color": "#B86D39",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1507,7 +1507,7 @@
         "文档撰稿"
       ],
       "avatar": {
-        "shape": "lobster-6"
+        "shape": "kitty"
       }
     },
     {
@@ -1525,7 +1525,7 @@
         "把我提供的研究资料制作成可打开、可编辑的交付文件"
       ],
       "skills": [],
-      "color": "#B86D39",
+      "color": "#248478",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1536,7 +1536,7 @@
         "中英译审"
       ],
       "avatar": {
-        "shape": "lobster-6"
+        "shape": "acorn"
       }
     },
     {
@@ -1554,7 +1554,7 @@
         "逐项质询这份业务方案的假设、证据和执行条件"
       ],
       "skills": [],
-      "color": "#248478",
+      "color": "#8461B6",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1565,7 +1565,7 @@
         "质询官"
       ],
       "avatar": {
-        "shape": "lobster-6"
+        "shape": "lobster"
       }
     },
     {
@@ -1583,7 +1583,7 @@
         "逐项质询这份业务方案的假设、证据和执行条件"
       ],
       "skills": [],
-      "color": "#8461B6",
+      "color": "#B34E67",
       "dataTools": [
         "chem_public_query",
         "mcp__chem-data-hub__*",
@@ -1594,7 +1594,7 @@
         "流程参谋"
       ],
       "avatar": {
-        "shape": "lobster-6"
+        "shape": "star"
       }
     }
   ],
@@ -1611,7 +1611,8 @@
         "role-1-4",
         "role-1-5",
         "role-1-7",
-        "role-7-4"
+        "role-7-4",
+        "chemclaw"
       ],
       "description": "从产品应用出发，协同完成潜客筛选、标杆复制、扩产商机和区域拜访规划。",
       "examples": [
@@ -1622,9 +1623,6 @@
         "客户开发作战室"
       ],
       "color": "#2877B8",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "客户开发作战群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1649,7 +1647,8 @@
         "role-1-6",
         "role-1-5",
         "role-7-5",
-        "role-7-6"
+        "role-7-6",
+        "chemclaw"
       ],
       "description": "汇总客户背景与沟通记录，梳理需求、异议、承诺和下一次拜访行动。",
       "examples": [
@@ -1659,9 +1658,6 @@
         "客户拜访与跟进"
       ],
       "color": "#B86D39",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "客户拜访跟进群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1685,7 +1681,8 @@
         "role-2-2",
         "role-2-5",
         "role-6-3",
-        "role-7-4"
+        "role-7-4",
+        "chemclaw"
       ],
       "description": "寻找真实货源，核验生产身份，统一报价口径，给出可比较的采购候选表。",
       "examples": [
@@ -1696,9 +1693,6 @@
         "采购寻源台"
       ],
       "color": "#248478",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "采购寻源比价群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1723,7 +1717,8 @@
         "role-2-4",
         "role-2-6",
         "role-6-3",
-        "role-7-5"
+        "role-7-5",
+        "chemclaw"
       ],
       "description": "联合审查企业、生产、资质和合同证据，形成供应商准入意见与待补资料。",
       "examples": [
@@ -1733,9 +1728,6 @@
         "供应商尽调与准入"
       ],
       "color": "#8461B6",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "供应商尽调评审群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1759,7 +1751,8 @@
         "role-3-1",
         "role-1-5",
         "role-3-4",
-        "role-7-6"
+        "role-7-6",
+        "chemclaw"
       ],
       "description": "先研究目标市场，再筛选海外买家，核验客户匹配度并准备外联材料草稿。",
       "examples": [
@@ -1769,9 +1762,6 @@
         "海外客户开发"
       ],
       "color": "#B34E67",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "海外客户开拓群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1795,7 +1785,8 @@
         "role-3-3",
         "role-3-4",
         "role-7-6",
-        "role-7-5"
+        "role-7-5",
+        "chemclaw"
       ],
       "description": "协同处理询盘、出口合规、报价和单证，降低规格、条款与语言歧义。",
       "examples": [
@@ -1806,9 +1797,6 @@
         "进出口协作"
       ],
       "color": "#4E7C3C",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "出口报价单证群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1833,7 +1821,8 @@
         "role-3-6",
         "role-2-5",
         "role-4-1",
-        "role-7-4"
+        "role-7-4",
+        "chemclaw"
       ],
       "description": "核验海外货源，测算完税到货成本，研究进口窗口和采购风险。",
       "examples": [
@@ -1843,9 +1832,6 @@
         "进口采购与成本"
       ],
       "color": "#936F26",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "进口采购研判群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1870,7 +1856,8 @@
         "role-4-5",
         "role-4-6",
         "role-4-8",
-        "role-7-2"
+        "role-7-2",
+        "chemclaw"
       ],
       "description": "联合梳理现货行情、供需、成本和产业新闻，解释变化依据与数据缺口。",
       "examples": [
@@ -1880,9 +1867,6 @@
         "产品行情与供需"
       ],
       "color": "#47739A",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "行情供需研讨群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1906,7 +1890,8 @@
         "role-4-4",
         "role-4-3",
         "role-4-7",
-        "role-7-2"
+        "role-7-2",
+        "chemclaw"
       ],
       "description": "跟踪上下游产业链、在建项目、产能和装置变化，定位潜在供需影响。",
       "examples": [
@@ -1916,9 +1901,6 @@
         "产业链与装置跟踪"
       ],
       "color": "#735D8E",
-      "avatar": {
-        "shape": "lobster-7"
-      },
       "deliverables": "产业链装置跟踪群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1945,7 +1927,8 @@
         "role-5-5",
         "role-4-1",
         "role-7-2",
-        "role-7-4"
+        "role-7-4",
+        "chemclaw"
       ],
       "description": "统一现货和合约口径，研究基差、月差及区域和内外盘价差，不执行交易。",
       "examples": [
@@ -1956,9 +1939,6 @@
         "期现研究台"
       ],
       "color": "#2877B8",
-      "avatar": {
-        "shape": "lobster-8"
-      },
       "deliverables": "期现价差研究群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -1984,7 +1964,8 @@
         "role-5-7",
         "role-5-5",
         "role-8-1",
-        "role-7-4"
+        "role-7-4",
+        "chemclaw"
       ],
       "description": "把策略想法变成可检验的研究规则，检查样本、费用、换月和回测偏差。",
       "examples": [
@@ -1994,9 +1975,6 @@
         "策略假设与回测"
       ],
       "color": "#B86D39",
-      "avatar": {
-        "shape": "lobster-8"
-      },
       "deliverables": "策略回测讨论群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -2020,7 +1998,8 @@
         "role-6-1",
         "role-6-3",
         "role-6-2",
-        "role-7-6"
+        "role-7-6",
+        "chemclaw"
       ],
       "description": "交叉核验化学身份、物性、结构与 COA 指标，整理质量疑点和资料依据。",
       "examples": [
@@ -2030,9 +2009,6 @@
         "化学物性与质量核验"
       ],
       "color": "#248478",
-      "avatar": {
-        "shape": "lobster-8"
-      },
       "deliverables": "化学质量会诊群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -2056,7 +2032,8 @@
         "role-6-4",
         "role-6-5",
         "role-6-1",
-        "role-7-4"
+        "role-7-4",
+        "chemclaw"
       ],
       "description": "组合工艺文献、物料能耗测算与生产数据分析，为工程人员提供辅助研究。",
       "examples": [
@@ -2066,9 +2043,6 @@
         "工艺文献与生产数据"
       ],
       "color": "#8461B6",
-      "avatar": {
-        "shape": "lobster-8"
-      },
       "deliverables": "工艺生产分析群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -2094,7 +2068,8 @@
         "role-7-3",
         "role-7-4",
         "role-7-5",
-        "role-8-2"
+        "role-8-2",
+        "chemclaw"
       ],
       "description": "先完成证据核验与研究结构，再协作制作 HTML、图表、明细表和汇报 PPT。",
       "examples": [
@@ -2105,9 +2080,6 @@
         "交付工坊"
       ],
       "color": "#B34E67",
-      "avatar": {
-        "shape": "lobster-8"
-      },
       "deliverables": "研报与演示协作群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",
@@ -2132,7 +2104,8 @@
         "role-8-1",
         "role-8-2",
         "role-4-7",
-        "role-7-5"
+        "role-7-5",
+        "chemclaw"
       ],
       "description": "由质询与验收角色检验业务方案，明确反证、资源约束和可操作的改进建议。",
       "examples": [
@@ -2142,9 +2115,6 @@
         "业务方案质询与复核"
       ],
       "color": "#4E7C3C",
-      "avatar": {
-        "shape": "lobster-8"
-      },
       "deliverables": "业务方案评审群结论与行动清单；带来源的 HTML 分析报告及所需明细表、文档或 PPT。",
       "inputs": "产品/CAS、目标企业或地区、时间范围，以及已有资料；缺失项会在任务开始时确认。",
       "sources": "化工云数据中台、化工社、公开数据库与用户资料",

@@ -10,6 +10,9 @@ import { parseMcpImport } from '../src/shared/connectors.js'
 import { fetchPublic, publicUrl, install as installPublicData } from '../src/host/public-data.js'
 import { install as installCompany } from '../src/host/company-connectors.js'
 import { ensureSkillLibrary } from '../src/host/catalog-seed.js'
+import { ROOM_MAX_MEMBERS } from '../src/host/constants.js'
+import { mentionRows } from '../src/client/at-menu.js'
+import { indexRoster } from '../src/client/sources.js'
 
 function fixture(t, options = {}) {
   const home = mkdtempSync(join(tmpdir(), 'chemclaw-integration-'))
@@ -23,7 +26,7 @@ function fixture(t, options = {}) {
   let session = 0
   const workspaces = new Map()
   Object.assign(ctx, {
-    workspaceRegistry: { get: id => workspaces.get(id), resolveByPath: async () => undefined, create: async path => { const item = { id: 'workspace', path }; workspaces.set(item.id, item); return item } },
+    workspaceRegistry: { get: id => workspaces.get(id), resolveByPath: async () => undefined, create: async path => { const item = { id: 'workspace', path }; workspaces.set(item.id, item); return item }, archiveSession: async () => {} },
     llm: { listProviders: () => [], listModels: async () => [] },
     sessionController: { create: async () => ({ sessionId: `s${++session}` }), resolveAgent: async id => ({ agent: { session: { id }, followup() {} } }) },
     sessionTitle: { rename: async () => {} }, sessions: { flush: async () => {} },
@@ -51,7 +54,12 @@ test('50 role and 15 scenario templates resolve complete portable skills', () =>
   const names = new Set([...domainSkills.map(item => item.id), ...JSON.parse(readFileSync(join(packageRoot, 'seed/supplemental-skills.json'))).map(item => item.id), 'chemclaw-chemistry'])
   for (const role of roleCatalog.roles) { assert.ok(role.description && role.inputs && role.sources && role.limits && role.examples.length); for (const skill of role.skills) assert.ok(names.has(skill), `${role.name}: ${skill}`) }
   for (const skill of domainSkills) { assert.ok(!/^[A-Z]:/.test(skill.sourcePath)); assert.ok(readFileSync(join(packageRoot, skill.sourcePath), 'utf8').length > 500) }
-  for (const group of roleCatalog.groups) assert.ok(group.members.includes(group.admin))
+  for (const group of roleCatalog.groups) {
+    assert.ok(group.members.includes(group.admin))
+    assert.equal(group.members.filter(id => id === 'chemclaw').length, 1)
+    assert.notEqual(group.admin, 'chemclaw')
+    assert.ok(group.members.length <= ROOM_MAX_MEMBERS)
+  }
 })
 
 test('fresh bootstrap creates all 50 Bots and 15 groups once; simultaneous requests preserve custom instructions', async t => {
@@ -68,9 +76,18 @@ test('fresh bootstrap creates all 50 Bots and 15 groups once; simultaneous reque
   const ids = Object.keys(rt.state.bots)
   await Promise.all([rt.bootstrap(), rt.bootstrap()])
   assert.deepEqual(Object.keys(rt.state.bots), ids)
-  assert.equal(new Set([...Object.values(rt.state.bots), ...Object.values(rt.state.rooms)].map(item => `${item.avatar.shape}:${item.color}`)).size, 65)
+  assert.equal(new Set(Object.values(rt.state.bots).map(item => `${item.avatar.shape}:${item.color}`)).size, 50)
+  assert.ok(Object.values(rt.state.rooms).every(room => !room.avatar))
+  assert.ok(!Object.values(rt.state.bots).some(bot => /^lobster-\d+$/.test(bot.avatar?.shape ?? '')))
   assert.match(a.notice, /交付/)
   assert.equal(expert.templateId, roleCatalog.groups[0].admin)
+  for (const room of Object.values(rt.state.rooms)) {
+    assert.equal(room.members.filter(id => id === first.id).length, 1)
+    assert.notEqual(room.admin, first.id)
+    assert.equal(room.mode, 'admin')
+    assert.match(room.notice, /主控：ChemClaw/)
+    assert.equal(room.templateVersion, roleCatalog.version)
+  }
   assert.equal(Object.values(rt.state.capabilities.items).filter(item => item.kind === 'skill').length, 116)
 })
 
@@ -115,7 +132,7 @@ test('connector imports canonicalize services and never forward a stored credent
   assert.equal(rt.state.customConnectors.custom.url, 'https://example.invalid/mcp')
 })
 
-test('upgrading preset groups enriches untouched teams and preserves custom names, notices and membership', async t => {
+test('upgrading legacy preset groups only appends the chief and preserves custom names, notices and admins', async t => {
   const { rt } = fixture(t, { companyConnectors: false, seedTeam: false })
   await rt.bootstrap()
   const def = roleCatalog.groups[0]
@@ -140,13 +157,125 @@ test('upgrading preset groups enriches untouched teams and preserves custom name
   await rt.bootstrap()
   assert.equal(rt.state.templateBindings[def.id], room.id)
   assert.equal(room.name, def.name)
-  assert.equal(room.members.length, def.members.length)
+  const chief = rt.state.mainBotIds[0]
+  assert.deepEqual(room.members, [...bots.map(bot => bot.id), chief])
   assert.match(room.notice, /下游客户开发专家/)
   assert.equal(custom.name, '项目复盘小组')
   assert.equal(custom.notice, 'My custom notice')
-  assert.deepEqual(custom.members, keptMembers)
+  assert.deepEqual(custom.members, [...keptMembers, chief])
   assert.equal(custom.admin, bots[1].id)
   assert.equal(Object.keys(rt.state.rooms).length, 15)
+})
+
+async function version3Team(t) {
+  const host = fixture(t, { companyConnectors: false })
+  const { rt } = host
+  await rt.bootstrap()
+  const chief = rt.state.templateBindings.chemclaw
+  for (const room of Object.values(rt.state.rooms)) {
+    room.members = room.members.filter(id => id !== chief)
+    room.templateVersion = 3
+    room.templateDefaults.members = [...room.members]
+    room.notice = `Generated version 3 notice: ${room.id}`
+    room.templateDefaults.notice = room.notice
+  }
+  rt.state.presetTeamVersion = 3
+  return { ...host, chief }
+}
+
+test('version 4 adds the renamed chief once to all existing presets, preserving custom groups and settings', async t => {
+  const { rt, chief } = await version3Team(t)
+  const rooms = Object.values(rt.state.rooms)
+  const custom = rooms[0]
+  const extra = rt.state.templateBindings['role-8-2']
+  custom.members = [...custom.members.slice(1), extra]
+  custom.admin = extra
+  custom.name = 'My project team'
+  custom.notice = 'My project instructions'
+  custom.mode = 'everyone'
+  custom.workDir = '/project'
+  custom.permission = 'workspace-write'
+  custom.sessions = { [extra]: 'existing-group-session' }
+  custom.log = [{ who: 'You', text: 'Keep the history', seq: 1 }]
+  custom.seq = 1
+  rooms[1].admin = null
+  rooms[2].members.push(chief)
+  const chiefBot = rt.botOf(chief)
+  chiefBot.name = '化工总协调'
+  chiefBot.instructions = 'My coordinator instructions'
+  chiefBot.avatar = { image: 'my-avatar' }
+  chiefBot.model = { provider: 'mock', model: 'mock-model' }
+  const keptChief = structuredClone(chiefBot)
+  const personal = await rt.createRoom({ name: 'Personal room', members: custom.members.slice(0, 2), admin: custom.members[0], notice: 'Private instructions' })
+  const keptPersonal = structuredClone(personal)
+  const snapshots = rooms.map(room => structuredClone(room))
+  await rt.save()
+  await Promise.all([rt.bootstrap(), rt.bootstrap()])
+  assert.equal(Object.keys(rt.state.bots).length, 50)
+  assert.equal(Object.keys(rt.state.rooms).length, 16)
+  for (let i = 0; i < rooms.length; i++) {
+    const room = rooms[i]
+    const before = snapshots[i]
+    assert.deepEqual(room.members, [...new Set([...before.members, chief])])
+    for (const key of ['id', 'name', 'admin', 'mode', 'workDir', 'permission', 'sessions', 'log', 'seq']) assert.deepEqual(room[key], before[key], `${room.name}: ${key}`)
+    assert.equal(room.templateVersion, 4)
+    if (room === custom) assert.equal(room.notice, before.notice)
+    else assert.match(room.notice, /主控：化工总协调/)
+  }
+  assert.match(rooms[1].notice, /负责人：未设置/)
+  assert.deepEqual(personal, keptPersonal)
+  for (const key of ['id', 'name', 'instructions', 'avatar', 'model']) assert.deepEqual(chiefBot[key], keptChief[key])
+  const roster = indexRoster({ bots: Object.values(rt.state.bots), rooms })
+  for (const room of rooms) assert.deepEqual(mentionRows(roster, room.id, '化工总协调').map(row => row.text), ['@化工总协调 '])
+  await rt.ensurePresetTeam()
+  assert.deepEqual(custom.members, [...snapshots[0].members, chief])
+})
+
+test('full and deleted presets are skipped; later removal and freed space survive activation and restart', async t => {
+  const { rt, ctx, home, chief } = await version3Team(t)
+  const rooms = Object.values(rt.state.rooms)
+  const full = rooms[0]
+  full.members = Object.keys(rt.state.bots).filter(id => id !== chief).slice(0, ROOM_MAX_MEMBERS)
+  const fullMembers = [...full.members]
+  const removed = rooms[1]
+  const deleted = rooms[2]
+  delete rt.state.rooms[deleted.id]
+  const warnings = []
+  const warn = rt.warn
+  rt.warn = (...args) => { warnings.push(args.join(' ')); warn(...args) }
+  await rt.save()
+  await rt.bootstrap()
+  assert.deepEqual(full.members, fullMembers)
+  assert.equal(full.templateVersion, 4)
+  assert.match(warnings.join('\n'), /full preset group/)
+  assert.equal(rt.roomOf(deleted.id), undefined)
+  assert.equal(Object.values(rt.state.rooms).some(room => room.templateId === deleted.templateId), false)
+  assert.equal(rt.state.templateBindings[deleted.templateId], deleted.id)
+  await rt.updateRoom(removed.id, { remove: [chief] })
+  await rt.updateRoom(full.id, { remove: [fullMembers.at(-1)] })
+  await rt.activateScenario({ id: removed.templateId, kind: 'group' })
+  await rt.activateScenario({ id: full.templateId, kind: 'group' })
+  assert.equal(removed.members.includes(chief), false)
+  assert.equal(full.members.includes(chief), false)
+  await ctx.dispose()
+  const restarted = fixture(t, { home, companyConnectors: false })
+  await restarted.rt.bootstrap()
+  assert.equal(restarted.rt.roomOf(removed.id).members.includes(chief), false)
+  assert.equal(restarted.rt.roomOf(full.id).members.includes(chief), false)
+  assert.equal(restarted.rt.roomOf(deleted.id), undefined)
+})
+
+test('a deleted preset specialist stays deleted while its existing group receives the chief', async t => {
+  const { rt, chief } = await version3Team(t)
+  const room = rt.roomOf(rt.state.templateBindings['scene-1'])
+  const specialist = rt.state.templateBindings['role-1-2']
+  await rt.deleteBot(specialist)
+  const members = [...room.members]
+  await rt.save()
+  await rt.bootstrap()
+  assert.deepEqual(room.members, [...members, chief])
+  assert.equal(rt.botOf(specialist), undefined)
+  assert.equal(Object.values(rt.state.bots).some(bot => bot.templateId === 'role-1-2'), false)
 })
 
 test('legacy credentials migrate out of shell scope; public chemistry guards block private tools and disconnection is visible', async t => {
@@ -188,6 +317,23 @@ test('MCP import validates before saving and does not echo malformed authenticat
   assert.throws(() => parseMcpImport('{ "Authorization":"synthetic-test-token"'), error => !error.message.includes('synthetic-test-token'))
   doc.mcpServers['chem-data-hub'].url = 'http://example.invalid/mcp'
   assert.throws(() => parseMcpImport(doc), /HTTPS/)
+})
+
+test('MCP import accepts HTTPS url-only Cursor JSON and skips stdio command servers', () => {
+  const mixed = {
+    mcpServers: {
+      'qcc-company': { url: 'https://agent.qcc.com/mcp/company/stream', headers: { Authorization: 'Bearer synthetic-qcc-token' } },
+      'qcc-document-mcp': { command: 'npx', args: ['-y', 'qcc-document-mcp'], env: { QCC_DOCUMENT_AUTHORIZATION: 'Bearer synthetic-qcc-token' } },
+    },
+  }
+  const imported = parseMcpImport(mixed)
+  assert.equal(imported.length, 1)
+  assert.equal(imported[0].id, 'qcc-company')
+  assert.equal(imported[0].token, 'synthetic-qcc-token')
+  assert.deepEqual(imported.skipped, ['qcc-document-mcp'])
+  assert.throws(() => parseMcpImport({
+    mcpServers: { local: { command: 'npx', args: ['-y', 'qcc-document-mcp'] } },
+  }), /Stdio MCP \(command\) is not supported: local/)
 })
 
 test('connector success, authentication failure, retry, timeout, replacement and disconnect keep credentials out of ordinary state', async t => {

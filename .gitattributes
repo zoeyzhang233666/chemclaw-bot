@@ -1,0 +1,4 @@
+# Shell scripts are copied into the Docker image as they are; CRLF breaks them.
+*.sh text eol=lf
+# Windows launchers must remain readable by cmd.exe.
+/*.cmd text eol=crlf

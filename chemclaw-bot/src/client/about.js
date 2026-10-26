@@ -3,7 +3,7 @@
 import { createElement as h, useEffect, useState } from 'react'
 import { GitHubMark } from './connectors.js'
 import { whenText } from './feedback.js'
-import { dateLocale, hostText, t } from './i18n.js'
+import { hostText, t } from './i18n.js'
 import { StarLineIcon } from './icons.js'
 import { SPRING_POP } from './motion.js'
 import { BotMark } from './mark.js'
@@ -12,8 +12,6 @@ import { showsDshRow } from './dsh-offer.js'
 
 // The length of the mark's `done` hop (bt-done in styles.js).
 const CHEER_MS = 1800
-
-const starCount = count => new Intl.NumberFormat(dateLocale(), { notation: 'compact', maximumFractionDigits: 1 }).format(count)
 
 function botHint(update) {
   if (update.phase === 'installing') return t('Updating ChemClaw…')
@@ -43,12 +41,6 @@ const linkProps = href => ({ className: 'bt-soft bt-soft-sm bt-about-link', href
 export function AboutPage({ useUpdate, actions, run, Section, Row }) {
   const update = useUpdate(value => value) ?? {}
   const [checking, setChecking] = useState(false)
-  const [stars, setStars] = useState(null)
-  useEffect(() => {
-    let live = true
-    actions.repoStars().then((count) => { if (live && Number.isInteger(count)) setStars(count) }, () => {})
-    return () => { live = false }
-  }, [])
   // The whale hops when the page opens, after a check, and when an update is in.
   const [cheer, setCheer] = useState(true)
   useEffect(() => {
@@ -89,10 +81,9 @@ export function AboutPage({ useUpdate, actions, run, Section, Row }) {
         update.current ? h('span', { className: 'bt-about-version' }, t('Version {version}', { version: update.current })) : null),
       repo ? h('a', {
         className: 'bt-star', href: repo, target: '_blank', rel: 'noopener noreferrer', title: t('Star ChemClaw on GitHub'),
-        'aria-label': stars === null ? t('Star ChemClaw on GitHub') : `${t('Star ChemClaw on GitHub')} · ${t('{count} stars', { count: stars })}`,
+        'aria-label': t('Star ChemClaw on GitHub'),
       },
-      h('span', { className: 'bt-star-main' }, h('span', { className: 'bt-star-icon' }, h(StarLineIcon)), 'Star'),
-      stars === null ? null : h('span', { className: 'bt-star-count' }, starCount(stars))) : null),
+      h('span', { className: 'bt-star-main' }, h('span', { className: 'bt-star-icon' }, h(StarLineIcon)), 'Star')) : null),
     repo ? h('p', { key: 'ask', className: 'bt-about-ask' }, t('If ChemClaw helps you, a star on GitHub helps more people find it.')) : null,
     h(Section, { key: 'updates', title: t('Updates') },
       h(Row, { label: 'ChemClaw', hint: botHint(update) }, botControl, update.available && update.notesUrl ? h('a', linkProps(update.notesUrl), t("What's new")) : null),
@@ -123,11 +114,9 @@ body:not([data-bt-motion=quiet]) .bt-about-mark:hover .bt-mark[data-live][data-s
 .bt-star-icon path{transition:fill .15s ease}
 .bt-star:hover .bt-star-icon{color:#e3a008;animation:bt-star-pop ${SPRING_POP.duration}ms ${SPRING_POP.easing}}
 .bt-star:hover .bt-star-icon path{fill:currentColor}
-.bt-star-count{display:inline-flex;align-items:center;padding:0 11px;border-left:1px solid var(--bt-line-2,var(--bt-line));color:var(--bt-ink-2);font-variant-numeric:tabular-nums;animation:bt-star-count-in ${SPRING_POP.duration}ms ${SPRING_POP.easing},bt-veil-in .2s ease-out}
 @keyframes bt-star-pop{from{scale:.6;rotate:-30deg}}
-@keyframes bt-star-count-in{from{translate:-6px 0}}
 .bt-about-link{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
 .bt-about-link svg{width:14px;height:14px}
 .bt-fb-primary:disabled{opacity:.6;cursor:default;filter:none}
-@media (prefers-reduced-motion:reduce){.bt-star:hover .bt-star-icon,.bt-star-count{animation:none}}
+@media (prefers-reduced-motion:reduce){.bt-star:hover .bt-star-icon{animation:none}}
 `

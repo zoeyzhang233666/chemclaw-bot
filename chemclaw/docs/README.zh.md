@@ -9,7 +9,7 @@ ChemClaw 是基于 DeepSeek Harness（DSH）的化工业务助手，面向生产
 ## 使用
 
 - Windows：安装 `app/dist-pack/ChemClaw-0.2.0-win-x64.exe`，在应用中配置自己的模型。
-- 官方 DSH 桌面版 **0.2.1-rc.2**：插件 → 添加插件，填入 `chemclaw-bot-0.2.0.tgz` 的完整路径，安装并启用，必要时重启。
+- 官方 DSH 桌面版 **0.2.1-rc.3**：插件 → 添加插件，填入 `chemclaw-bot-0.2.0.tgz` 的完整路径，安装并启用，必要时重启。
 - 不再需要运行旧手动 seed 脚本。已有团队、对话、自定义角色保留。
 
 新安装默认简体中文、纸张主题。独立应用数据在 `~/.chemclaw`，工作文件在 `~/ChemClaw`；高级目录设置同屏校验冲突。原 DSH 数据只读导入。未配置 ChemClaw 发布源时禁用自动更新。

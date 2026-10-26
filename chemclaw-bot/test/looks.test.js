@@ -7,6 +7,7 @@ import { indexRoster } from '../src/client/sources.js'
 const ids = Array.from({ length: 3000 }, (_, index) => `session-${index.toString(16).padStart(8, '0')}-look`)
 
 test('a Bot with no look of its own never gets the whale, gray, brown, or black', () => {
+  assert.ok(DEFAULT_SHAPES.includes('lobster'))
   assert.ok(!DEFAULT_SHAPES.includes('whale'))
   for (const color of ['gray', 'brown', 'black', 'aurora']) assert.ok(!DEFAULT_COLORS.includes(color), color)
   const shapes = new Set(ids.map(defaultShape))
