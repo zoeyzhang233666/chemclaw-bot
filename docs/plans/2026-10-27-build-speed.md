@@ -12,6 +12,8 @@ Mac jobs 缓存 npm 下载，以及按 OS、架构、app lockfile 区分的 Elec
 下载缓存。原生依赖仍在当前 runner 安装；不跨架构复用 node_modules。
 缓存路径也传给 npm ci；Electron 的安装脚本使用 electron_config_cache，
 打包器使用 ELECTRON_CACHE，两者指向同一个已恢复的目录。
+缓存键升级为 desktop-tools-v2：首代缓存只保存了打包器（约 9 MB），
+GitHub 同名精确命中的缓存不能追加内容；换代后才能保存完整 Electron 下载。
 
 可选 dry-run 输入 benchmark_mac_zip 调用 benchmark-mac-zip.mjs，比较同一个
 签名 .app 用 ditto 的 1/6/9 级压缩耗时和体积，每份都解压验签，记录 Actions

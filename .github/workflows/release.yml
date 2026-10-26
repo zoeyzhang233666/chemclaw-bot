@@ -205,7 +205,7 @@ jobs:
           path: |
             ${{ runner.temp }}/electron-cache
             ${{ runner.temp }}/electron-builder-cache
-          key: desktop-tools-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
+          key: desktop-tools-v2-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
       - run: npm ci --no-fund --no-audit
         env:
           ELECTRON_CACHE: ${{ runner.temp }}/electron-cache

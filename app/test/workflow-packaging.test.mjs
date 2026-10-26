@@ -38,6 +38,8 @@ test('build tool caches distinguish OS, architecture and dependency lockfile', (
   for (const [name, id] of [['test', 'app-package-macos'], ['release', 'app-macos']]) {
     const job = workflow(name).jobs[id]
     const cache = job.steps.find(step => step.uses === 'actions/cache@v4')
+    // The first generation predates the Electron install cache and cannot be updated.
+    assert.ok(cache.with.key.startsWith('desktop-tools-v2-'))
     assert.match(cache.with.key, /runner.os/)
     assert.match(cache.with.key, /matrix.arch/)
     assert.match(cache.with.key, /app\/package-lock.json/)
