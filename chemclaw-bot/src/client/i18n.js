@@ -583,6 +583,8 @@ const ZH = {
   '{name} is typing…': '{name} 正在输入…',
   'Preparing group reply…': '正在安排群聊回复…',
   "{name} didn't answer in time": '{name} 没有及时回应',
+  'The group replies could not be shown': '群聊回复暂时无法显示',
+  'Some group replies could not be shown': '部分群聊回复无法显示',
   '{name} paused for your approval': '{name} 停下来等你批准',
   '{name} started on it': '{name} 开始做了',
   "You stopped {name}'s work": '你停下了 {name} 的工作',

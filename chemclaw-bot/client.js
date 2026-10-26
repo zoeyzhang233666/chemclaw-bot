@@ -826,6 +826,8 @@ var ZH = {
   "{name} is typing…": "{name} 正在输入…",
   "Preparing group reply…": "正在安排群聊回复…",
   "{name} didn't answer in time": "{name} 没有及时回应",
+  "The group replies could not be shown": "群聊回复暂时无法显示",
+  "Some group replies could not be shown": "部分群聊回复无法显示",
   "{name} paused for your approval": "{name} 停下来等你批准",
   "{name} started on it": "{name} 开始做了",
   "You stopped {name}'s work": "你停下了 {name} 的工作",
@@ -7077,6 +7079,64 @@ function useArtifactLinks(text, { sessionId, botId, live }) {
   return resolved.key === key ? linkArtifacts(text, refs, resolved.files) : text;
 }
 
+// src/shared/group-replies.js
+var RELAY_LIST = /"replies"\s*:\s*\[/;
+var PRUNE_MARKER = /\[\.\.\. tool result middle pruned \.\.\.\]/;
+function parseReplies(text) {
+  try {
+    const value = JSON.parse(text);
+    if (!value || typeof value !== "object" || Array.isArray(value) || !Array.isArray(value.replies)) return { replies: [], broken: true };
+    const replies2 = value.replies.filter(isReply);
+    return { replies: replies2, broken: replies2.length !== value.replies.length };
+  } catch {
+  }
+  const replies = [];
+  const head = RELAY_LIST.exec(text);
+  if (head) {
+    for (const piece of text.slice(head.index + head[0].length).split(PRUNE_MARKER)) {
+      const first = /\{\s*"/.exec(piece);
+      if (first) scanReplies(piece, first.index, replies);
+    }
+  }
+  return { replies, broken: true };
+}
+function isReply(reply) {
+  return reply !== null && typeof reply === "object" && !Array.isArray(reply) && (typeof reply.text === "string" || typeof reply.kind === "string") && (reply.text === void 0 || typeof reply.text === "string");
+}
+function scanReplies(text, start, replies) {
+  let depth = 0;
+  let from = -1;
+  let inString = false;
+  let escaped = false;
+  for (let i = start; i < text.length; i += 1) {
+    const ch = text[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      continue;
+    }
+    if (ch === "{") {
+      if (depth === 0) from = i;
+      depth += 1;
+    } else if (ch === "}") {
+      depth -= 1;
+      if (depth === 0 && from >= 0) {
+        try {
+          const reply = JSON.parse(text.slice(from, i + 1));
+          if (isReply(reply)) replies.push(reply);
+        } catch {
+        }
+        from = -1;
+      }
+    } else if (ch === "]" && depth === 0) break;
+  }
+}
+
 // src/client/cells.js
 var import_react17 = require("react");
 var import_react_dom = require("react-dom");
@@ -7859,12 +7919,11 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
     };
   }, [done, sessionId, callId]);
   let replies = live.replies;
+  let broken = false;
   if (done) {
-    try {
-      replies = JSON.parse(contentText(content)).replies ?? [];
-    } catch {
-      replies = [];
-    }
+    const parsed = parseReplies(contentText(content));
+    replies = parsed.broken && !parsed.replies.length ? live.replies : parsed.replies;
+    broken = parsed.broken;
   }
   const posted = new Set(replies.flatMap((reply) => reply.text ? [`${reply.botId}\0${reply.text}`] : []));
   const drafts = done ? [] : (live.drafts ?? []).filter((draft) => !posted.has(`${draft.botId}\0${draft.text}`));
@@ -7872,7 +7931,9 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
   const pending = done || !live.speaking || drafts.some((draft) => draft.botId === live.speaking) ? [] : [live.speaking];
   const speakerTool = useWork?.((work) => work.bots?.[live.speaking]?.tool) ?? void 0;
   const speakerDoing = useWork?.((work) => work.bots?.[live.speaking]?.tool ? workPhrase(work.bots[live.speaking]) : void 0) ?? void 0;
-  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) return null;
+  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) {
+    return broken ? (0, import_react17.createElement)("div", { className: "bt-group-replies" }, (0, import_react17.createElement)("div", { className: "bt-event", role: "status" }, t("The group replies could not be shown"))) : null;
+  }
   const room2 = roster.roomsById[sessionId];
   return (0, import_react17.createElement)(
     "div",
@@ -7943,6 +8004,7 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
       const bot = roster.byId[draft.botId];
       return bot ? (0, import_react17.createElement)(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room: room2, roster, actions, streaming: true }) : null;
     }),
+    broken ? (0, import_react17.createElement)("div", { className: "bt-event", role: "status" }, t("Some group replies could not be shown")) : null,
     pending.map((id) => {
       const bot = roster.byId[id];
       if (!bot) return null;
