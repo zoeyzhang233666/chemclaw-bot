@@ -471,6 +471,7 @@ function chatRow(row, key, { sessionId, selfId, roster, actions, useUi }) {
     case 'divider': return h(PartLine, { key, time: row.time })
     case 'user': return h(EarlierUser, { key, row })
     case 'answer': return h(AnsweredReply, { key, node: { data: row } })
+    case 'view': return h(WidgetCell, { key, sessionId, callId: row.callId, args: { title: row.title, view: row.view }, done: true, roster, actions })
     case 'bot': return h(Bubbles, { key, texts: row.texts, roster, selfId, actions, sessionId: useUi ? sessionId : undefined, msgKey: useUi ? `${sessionId}:${row.time}` : undefined, useUi, fold: FOLD_HUGE })
     case 'event': {
       if (row.role === 'report') return h(GroupEvent, { key, prefix: t('Replies from'), room: roster.roomsById[row.roomId], name: t('a group chat'), roster, actions })

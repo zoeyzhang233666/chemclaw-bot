@@ -518,6 +518,32 @@ function decide(body) {
   if (/^\s*大视图/.test(userText) && tools.has('show_view')) {
     return [tool('show_view', { title: 'A long note', view: { type: 'text', text: 'x'.repeat(7800) }, await_reply: false })]
   }
+  // Interactive views: chart, local formula inputs, sandboxed HTML (display-only).
+  if (/^\s*视图图表/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', {
+      title: 'Weekly volume', await_reply: false,
+      view: { type: 'chart', kind: 'bar', categories: ['Mon', 'Tue', 'Wed'], series: [{ name: 'Tons', values: [12, 18, 9] }], unit: 't' },
+    })]
+  }
+  if (/^\s*视图计算/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', {
+      await_reply: false,
+      view: {
+        type: 'stack', let: { cost: 'qty * price' },
+        children: [
+          { type: 'slider', id: 'qty', label: 'Quantity', min: 1, max: 20, value: 4 },
+          { type: 'number', id: 'price', label: 'Price', min: 1, max: 100, value: 12.5 },
+          { type: 'metric', label: 'Cost', value: { '=': 'cost' } },
+        ],
+      },
+    })]
+  }
+  if (/^\s*视图网页/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', {
+      title: 'Custom board', await_reply: false,
+      view: { type: 'html', html: '<p style="margin:0;color:var(--bt-ink)">Sandboxed sample</p>', summary: 'A sandboxed sample' },
+    })]
+  }
   // Streams slowly, then checks the team: exercises the activity row stepping aside
   // for a streaming reply and coming back for the tool.
   if (/^\s*慢慢说/.test(userText) && tools.has('list_bots')) {
