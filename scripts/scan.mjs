@@ -18,11 +18,14 @@ const MUST = 'must fix'
 const KEEP = 'can stay'
 
 const SELF = 'scripts/scan.mjs'
-const PLACEHOLDER = /mock|test|fake|dummy|example|placeholder|should-not|xxx|your|<|\$\{|redact|sample/i
+const PLACEHOLDER = /mock|test|fake|dummy|example|placeholder|should-not|xxx|your|<|\$\{|redact|sample|synthetic|__/i
 const VENDORS = /\b(qwen|minimax|stepfun|kimi|moonshot|zhipu|glm|mimo|anthropic|claude|openai|gemini|mistral|xai|zai)\b/i
 // Files that define the look (characters, inks, logos, themes). Vendor names there are
 // brand references; elsewhere they name model routes and can stay.
 const LOOK_FILES = /(^|\/)(src\/client\/(inks|characters|mark|themes|styles)\.js|dev\/(mascot-outlines|characters)\.mjs)$/
+// Skill packs ship worked examples, scraped pages, and their own research/shots folders.
+const SKILL_TREE = /(^|\/)skills\//
+const SKILL_SAMPLES = /(^|\/)skills\/.*\/(examples|assets|output|mock-docs|raw|例子|输出)\//
 const NOT_PUBLIC = /(^|[\s(`'"]|\.\.\/)(spec|research|backup|shots|attachments|workspace)\/|\.dsh-home/
 // Migration code and its tests must name the legacy ids (old package name, old theme and
 // color keys) to move saved data over; there, and on lines that say "legacy" (旧版), old names stay.
@@ -43,9 +46,14 @@ const TEXT_RULES = [
     id: 'secret-assignment', level: MUST, secret: true,
     re: /\b(api[_-]?key|secret|token|password|passwd)["']?\s*[:=]\s*["'][A-Za-z0-9_\-./+=]{16,}["']/gi,
   },
-  // Personal data.
-  { id: 'personal-path', level: MUST, re: /\/home\/(?!<|user\b|runner\b|node\b)[a-z_][a-z0-9_-]*\/|\/Users\/(?!<|Shared\b)[A-Za-z][\w.-]*\/|[A-Za-z]:\\Users\\(?!<|Public\b)[^\\\s`"'<>]+/g },
-  { id: 'personal-email', level: MUST, re: /\b[\w.+-]+@(qq|163|126|gmail|outlook|hotmail|foxmail|icloud|yahoo)\.(com|cn)\b/gi },
+  // Personal data. /home/ after a domain (…com/home/article) is a URL path, not a Unix home.
+  // Also skip skill samples: scraped pages use /home/… site paths; scripts must not hardcode a machine path (caught outside samples).
+  {
+    // Case-sensitive: lowercase /users/ in docs URLs (matplotlib.org/.../users/...) is not a home path.
+    id: 'personal-path', level: MUST, notFiles: SKILL_SAMPLES,
+    re: /(?<![A-Za-z0-9.])\/home\/(?!<|user\b|runner\b|node\b)[a-z_][a-z0-9_-]*\/|\/Users\/(?!<|Shared\b)[A-Za-z][\w.-]*\/|[A-Za-z]:[/\\]Users[/\\](?!<|Public\b|Shared\b)[^\\\s`"'<>]+/g,
+  },
+  { id: 'personal-email', level: MUST, re: /\b[\w.+-]+@(qq|163|126|gmail|outlook|hotmail|foxmail|icloud|yahoo)\.(com|cn)\b/gi, notFiles: SKILL_SAMPLES },
   { id: 'other-email', level: KEEP, re: /\b[\w.+-]+@(?!(\d|example\.|users\.noreply\.github\.com|localhost|(qq|163|126|gmail|outlook|hotmail|foxmail|icloud|yahoo)\.))[\w-]+\.[a-z]{2,}\b/gi },
   ...(extra ? [{ id: 'extra-pattern', level: MUST, re: extra, legacyOk: true }] : []),
   // Only original material: no vendor brands in the look, no third-party logos.
@@ -59,9 +67,10 @@ const TEXT_RULES = [
   { id: 'old-project-name', level: MUST, re: /DSH Bot\b/g, legacyOk: true },
   { id: 'old-package-name', level: MUST, re: /\bdsh-bot\b/g, legacyOk: true },
   { id: 'legacy-name-in-migration', level: KEEP, re: /\bdsh-bot\b|DeepSeek Bot\b/gi, onlyLegacy: true, summary: true },
-  // Drafts and local-only material.
-  { id: 'draft-marker', level: MUST, re: /TBD\(|DRAFT for|草稿/g },
-  { id: 'not-public-path-in-docs', level: MUST, re: new RegExp(NOT_PUBLIC.source, 'g'), files: /\.md$/ },
+  // Drafts and local-only material. Chinese UI copy uses 草稿 for "draft"; that is not a private marker.
+  { id: 'draft-marker', level: MUST, re: /TBD\(|DRAFT for/g },
+  // Skill markdown names its own research/ and shots/ folders; those are not the repo's private trees.
+  { id: 'not-public-path-in-docs', level: MUST, re: new RegExp(NOT_PUBLIC.source, 'g'), files: /\.md$/, notFiles: SKILL_TREE, unless: /backup\/</ },
   { id: 'not-public-path-in-code', level: KEEP, re: new RegExp(NOT_PUBLIC.source, 'g'), notFiles: /\.md$/ },
   { id: 'public-ip', level: KEEP, re: /\b(?!(127|10|0)\.)(?!192\.168\.)(?!172\.(1[6-9]|2\d|3[01])\.)(?!192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|169\.254\.)(\d{1,3}\.){3}\d{1,3}\b/g, unless: /version|v\d|@\d/i },
 ]

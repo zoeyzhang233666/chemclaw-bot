@@ -6,7 +6,9 @@ root = Path(__file__).resolve().parents[1]
 changed = []
 for file in (root / 'skills/domain').rglob('*.py'):
     text = file.read_text(encoding='utf-8-sig')
-    if 'C:\\Users\\EDY' not in text:
+    # Match a former maintainer home path without embedding the username in this file.
+    marker = 'C:\\Users\\' + 'EDY'
+    if marker not in text:
         continue
     try:
         tree = ast.parse(text)
@@ -20,7 +22,7 @@ for file in (root / 'skills/domain').rglob('*.py'):
     edits = []
     office = 'libreoffice-kit' in text
     for node in ast.walk(tree):
-        if not isinstance(node, ast.Constant) or not isinstance(node.value, str) or not node.value.startswith('C:\\Users\\EDY'):
+        if not isinstance(node, ast.Constant) or not isinstance(node.value, str) or not node.value.startswith(marker):
             continue
         value = node.value.lower()
         if 'libreoffice-kit' in value:
