@@ -270,10 +270,12 @@ async function chat(cdp) {
   await sleep(1500)
   const nativeUrl = cdp.requests.find(url => url.includes('/api/present.open?'))
   if (!nativeUrl) throw new Error('No native file action URL was offered: ' + JSON.stringify(await evaluate("[...document.querySelectorAll('[data-presented-file] button')].map(n=>n.outerHTML)")))
-  const discovery = await evaluate(`fetch(${JSON.stringify(nativeUrl)}).then(r => r.status)`)
-  console.log(`check-packed: native application discovery HTTP ${discovery}`)
+  // Association discovery is optional (and can wait on OS prompts in hosted
+  // desktops). Opening and revealing the actual file must still succeed below.
+  const discovery = await evaluate(`fetch(${JSON.stringify(nativeUrl)}, { signal: AbortSignal.timeout(5000) }).then(r => r.status).catch(error => { if (error.name === 'TimeoutError') return 'timed out (optional)'; throw error })`)
+  console.log(`check-packed: native application discovery: ${discovery}`)
   for (const action of ['reveal', 'open']) {
-    const status = await evaluate(`fetch(${JSON.stringify(nativeUrl + '&action=')} + ${JSON.stringify(action)}, { method: 'POST' }).then(r => r.status)`)
+    const status = await evaluate(`fetch(${JSON.stringify(nativeUrl + '&action=')} + ${JSON.stringify(action)}, { method: 'POST', signal: AbortSignal.timeout(30000) }).then(r => r.status)`)
     if (status !== 204) throw new Error(`Native ${action} failed: HTTP ${status}`)
   }
   rmSync(delivery)
