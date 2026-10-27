@@ -1,6 +1,7 @@
 {
   "name": "chemclaw",
   "productName": "ChemClaw",
+  "homepage": "https://github.com/zoeyzhang233666/chemclaw-bot",
   "version": "0.2.2",
   "private": true,
   "description": "ChemClaw desktop app: the chemclaw-bot team on its own pinned DeepSeek Harness.",
