@@ -964,6 +964,7 @@ var ZH = {
   "{name} is typing…": "{name} 正在输入…",
   "Preparing group reply…": "正在安排群聊回复…",
   "{name} didn't answer in time": "{name} 没有及时回应",
+  "{name} did not answer or call anyone; call a member with @Name": "{name} 没有回答，也没有叫谁；用 @名字 叫一个成员来回答",
   "The group replies could not be shown": "群聊回复暂时无法显示",
   "Some group replies could not be shown": "部分群聊回复无法显示",
   "{name} paused for your approval": "{name} 停下来等你批准",
@@ -8927,6 +8928,13 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
       }
       if (reply.kind === "missed") {
         return (0, import_react18.createElement)("div", { key: `${reply.botId}-${index}`, className: "bt-event" }, t("{name} didn't answer in time", { name: bot.name }));
+      }
+      if (reply.kind === "admin-passed") {
+        return (0, import_react18.createElement)(
+          "div",
+          { key: `${reply.botId}-${index}`, className: "bt-event" },
+          t("{name} did not answer or call anyone; call a member with @Name", { name: bot.name })
+        );
       }
       if (reply.kind === "paused") {
         return (0, import_react18.createElement)(

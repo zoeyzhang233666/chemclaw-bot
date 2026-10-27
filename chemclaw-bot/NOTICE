@@ -176,3 +176,12 @@ ChemClaw message layout and touch controls (2026-10-27):
   Copyright 2026 Fei2411 and DS Bot contributors.
   https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
   ChemClaw retains localized skills, artifact links and its own provider settings.
+
+ChemClaw upstream reliability follow-up (2026-10-27):
+  Adapted DS-Bot group admin-PASS notices (#605, 6c165ebaf8598bbc96e6b7d693dcd920dedb6b4b),
+  group relay Session import (#567, 8558705582fa2f9aede1ca0ff0c6ce8b752a6e8f),
+  schedule move and old-part archival (#604, 27ff8ac972cd676f7737841d299f98191b731317;
+  #573, efd07cb60bc3427d521e08bd2a2f6396a7debc99), with corresponding tests.
+  Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot
+  ChemClaw retains its DSH rc.3 runtime, chemical workflows, routing and user views.
