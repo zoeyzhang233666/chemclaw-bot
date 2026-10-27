@@ -29,7 +29,6 @@ export function install(rt) {
     if (role === 'report') return `[Group chat "${roomName}" · replies to your post${goesOn}]`
     if (role === 'kickoff') return '[Bot team setup]'
     if (role === 'secret') return '[Secret card]'
-    if (role === 'delivery-result') return '[Deliver the current result to the user now]'
     if (audience === 'user') return `[Message from ${fromName} · the user sees your reply here]`
     return `[Message from ${fromName}]`
   }
@@ -49,15 +48,13 @@ export function install(rt) {
   // `length`: the whole message's length when it went as a file (attachLong). `work`:
   // the work (handoffs.js) a result that came back goes on with. `merged`: a request
   // that takes in an earlier one its recipient had not read, under that one's exchange.
-  async function deliver({ fromId, toId, sessionId, text, role, replyTo, roomId, audience, note, exchangeId = randomUUID(), steer = false, deferred = false, resumed = false, retried = false, resent = false, merged = false, askedBy, fromRoomId, files = [], length, work, skillNames, answerRun }) {
+  async function deliver({ fromId, toId, sessionId, text, role, replyTo, roomId, audience, note, exchangeId = randomUUID(), steer = false, deferred = false, resumed = false, retried = false, resent = false, merged = false, askedBy, fromRoomId, files = [], length, work, skillNames }) {
     const from = rt.botOf(fromId)
     const to = rt.botOf(toId)
     if (to === undefined) throw new Error(`Unknown Bot ${toId}`)
     const fromName = from?.name ?? 'You'
     const room = rt.roomOf(roomId)
     const asker = work === undefined ? undefined : rt.botOf(state.works?.[work]?.from)?.name
-    const targetSessionId = sessionId ?? rt.chatOf(toId)
-    answerRun = rt.inheritAnswerRun?.({ answerRun, fromId, roomId, role, sessionId: targetSessionId, exchangeId, toId }) ?? answerRun
     // Session events reject `undefined` members, so optional fields are omitted instead.
     const source = {
       kind: SOURCE_KIND,
@@ -65,7 +62,6 @@ export function install(rt) {
       role,
       exchangeId,
       senderName: fromName,
-      ...(answerRun ? { answerRun } : {}),
       ...(skillNames?.length ? { skillNames } : {}),
       ...(work ? { work } : {}),
       ...(fromId ? { senderSessionId: fromId } : {}),
@@ -78,6 +74,7 @@ export function install(rt) {
       ...(askedBy ? { askedBy } : {}),
       ...(fromRoomId ? { senderRoomId: fromRoomId } : {}),
     }
+    const targetSessionId = sessionId ?? rt.chatOf(toId)
     if (EXCHANGE_ROLES.has(role) && !deferred && !resumed && !retried && !resent) {
       // The whole text is in its file, or in the Session it goes to; exchangeText reads
       // it back there.

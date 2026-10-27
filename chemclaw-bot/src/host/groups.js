@@ -564,7 +564,6 @@ export function install(rt) {
     if (round.kickoff) return
     const lines = waitingLines(agent).filter(line => agent.inbox.remove(line.id))
     if (lines.length === 0) return
-    rt.startAnswerRun?.(room.id, lines.at(-1).text, room.id)
     const members = room.members.map(rt.botOf).filter(Boolean)
     for (const line of lines) {
       appendRoom(room, { who: 'User', text: line.text })
@@ -593,7 +592,6 @@ export function install(rt) {
         slot.status = 'left'
         continue
       }
-      if (rt.answerClosing?.(room.id)) { slot.status = 'passed'; continue }
       if (slot.origin === 'bot') {
         // The group's one guard: Bots calling each other can go on only so long
         // without the user. Past the limit the call is parked, not dropped — the
@@ -678,7 +676,7 @@ export function install(rt) {
       const { all, found: named } = mentionsIn(spoken.join('\n\n'), everyone)
       const found = named.filter(other => other.id !== member.id)
       const callees = leads && all ? [...found, ...others.filter(other => !found.includes(other))] : found
-      if (!rt.answerClosing?.(room.id)) callMembers(round, index, callees, `${member.name} mentioned you`, member.id, 'bot')
+      callMembers(round, index, callees, `${member.name} mentioned you`, member.id, 'bot')
     }
     // A round that ended with parked calls says so once, to the group and to the
     // user: the log's "@Name" lines are real calls that wait, not drops in silence.
@@ -771,9 +769,7 @@ export function install(rt) {
         round.replies.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
       }
       if (posts.some(post => post.resumed || post.stopped || post.done)) await rt.save()
-      // Late posts may already be in the log (`logged`) so the text is not written
-      // twice; their charts still need to enter this relay's replies.
-      for (const post of posts.filter(item => item.views?.length && (item.logged === undefined || item.late))) {
+      for (const post of posts.filter(item => item.views?.length && item.logged === undefined)) {
         const member = rt.botOf(post.botId)
         if (member) postViews(round, member, post.views)
       }
@@ -935,14 +931,6 @@ export function install(rt) {
       }
       postViews(running, sender, extra.views)
       await rt.save()
-    } else if (extra.late && text && !extra.failed && extra.resumed !== true && extra.stopped !== true && extra.done !== true) {
-      // Bounded-delivery synthesis often ends after the round has already closed;
-      // still write the user-facing answer into the group log before the relay.
-      ensureRoomLog(room)
-      const line = [text, ...files.map(fileLine)].filter(Boolean).join('\n')
-      appendRoom(room, { who: sender.name, botId: sender.id, text: line, ...(files.length > 0 ? { files } : {}) })
-      logged = room.seq
-      await rt.save()
     }
     const agent = await rt.resolveAgent(room.id)
     agent.followup(createUserMessage({
@@ -967,7 +955,7 @@ export function install(rt) {
     const text = stripOwnName(member.name, reply)
     const done = isPass(text) && shown && info.askedBy !== undefined
     if (isPass(text) && !done && views.length === 0) return
-    await postToRoom(room, member, done ? '' : text, { late: true, ...(info.answerRun ? { answerRun: info.answerRun } : {}), ...(rt.answerClosing?.(room.id, info.answerRun) ? { quiet: true } : {}), ...(views.length ? { views } : {}), ...(done ? { done: true } : {}), ...(info.askedBy ? { askedBy: info.askedBy } : {}) })
+    await postToRoom(room, member, done ? '' : text, { late: true, ...(views.length ? { views } : {}), ...(done ? { done: true } : {}), ...(info.askedBy ? { askedBy: info.askedBy } : {}) })
       .catch(error => rt.warn('chemclaw-bot: late group reply from %s failed: %s', member.name, error))
   }
   rt.lateRoomReply = lateRoomReply

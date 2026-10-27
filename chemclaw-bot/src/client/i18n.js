@@ -7,11 +7,6 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
-  'Task delivery': '任务交付',
-  'This task has ended with partial results.': '本次任务已结束，以下是已收集的部分结果。',
-  'Further research and Bot discussion have stopped. The collected replies below may be incomplete; missing data has not been filled in.': '已停止继续检索和 Bot 讨论。下方回复可能尚不完整，缺失数据没有补造。',
-  'Collected results': '已收集的结果',
-  'No usable result was returned. Check the data connection or narrow the question and try again.': '本次未返回可用结果。可检查数据连接，或缩小问题范围后重试。',
   'Development preview': '开发预览',
   Bubble: '气泡',
   Flat: '平铺',
