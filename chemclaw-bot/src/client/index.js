@@ -45,6 +45,7 @@ import { SKILLS_SOURCE, skillSource } from './skill-menu.js'
 import { installSkillMenu, installSkillReference } from './skill-menu-view.js'
 import { installSkillTextRule, syncSkillTextNames } from './skill-text-rule.js'
 import { MEMBER_CSS, MemberDock } from './member-status.js'
+import { DELIVERY_CSS, DeliveryResult } from './delivery-result.js'
 import { USER_MESSAGE_CSS, UserMessageCell, canDrawUserMessages } from './user-message.js'
 import { noticeApprovals } from './approval-notices.js'
 import { listedOpener } from './open-listed.js'
@@ -756,6 +757,7 @@ export function apply(ctx) {
     () => installCompiledStyles(FEEDBACK_CSS, 'feedback'),
     () => installCompiledStyles(ABOUT_CSS, 'about'),
     () => installCompiledStyles(MEMBER_CSS, 'members'),
+    () => installCompiledStyles(DELIVERY_CSS, 'deliveries'),
     () => installCompiledStyles(USER_MESSAGE_CSS, 'user-messages'),
     () => installCompiledStyles(WIDGET_CSS, 'widgets'),
     () => installCompiledStyles(BROWSER_CSS + SIDE_CSS, 'browser'),
@@ -817,6 +819,7 @@ export function apply(ctx) {
     }, QuestionCard),
     () => shadow('conversation.input.dock', { id: 'bot-intro', order: -130, inject: face }, TeamIntro),
     () => shadow('conversation.input.dock', { id: 'bot-members', order: -120, inject: face }, MemberDock),
+    () => shadow('conversation.input.dock', { id: 'bot-delivery-result', order: -125, inject: face }, DeliveryResult),
     () => shadow('conversation.input.dock', { id: 'bot-model', order: -110, inject: face }, ModelChoiceDock),
     () => shadow('conversation.input.dock', { id: 'bot-question', order: -100, inject: face }, QuestionDock),
     () => shadow('conversation.input.dock', { id: 'bot-view', order: -95, inject: face }, WidgetDock),

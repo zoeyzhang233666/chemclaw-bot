@@ -35,6 +35,7 @@ export function answerSender(rt, id, source, text, long) {
     text: long?.text ?? text,
     ...(long?.length === undefined ? {} : { files: long.files, length: long.length }),
     role: 'reply',
+    ...(source.answerRun ? { answerRun: source.answerRun } : {}),
     replyTo: source.exchangeId,
     ...(work ? { work } : {}),
   }).catch(error => rt.warn('chemclaw-bot: reply delivery failed: %s', error))
@@ -80,6 +81,7 @@ export function install(rt) {
       ...(keeps && info.roomId ? { roomId: info.roomId } : {}),
       ...(keeps && info.exchangeId ? { exchangeId: info.exchangeId } : {}),
       ...(info?.work ? { work: info.work } : {}),
+      ...(info?.answerRun ? { answerRun: info.answerRun } : {}),
       ...(keeps && info.audience ? { audience: info.audience } : {}),
       ...(keeps && info.askedBy ? { askedBy: info.askedBy } : {}),
       ...(keeps && info.senderRoomId ? { fromRoomId: info.senderRoomId } : {}),
@@ -559,6 +561,7 @@ export function install(rt) {
             exchangeId: result.info.exchangeId,
             replyTo: result.info.replyTo,
             work: result.info.work,
+            ...(result.info.answerRun ? { answerRun: result.info.answerRun } : {}),
             ...(result.info.roomId ? { roomId: result.info.roomId } : {}),
             deferred: true,
           }).catch(error => rt.warn('chemclaw-bot: handing back a result failed: %s', error))

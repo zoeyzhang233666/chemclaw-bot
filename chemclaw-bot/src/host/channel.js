@@ -58,6 +58,7 @@ export function install(rt) {
     views: state.views ?? {},
     btwCards: rt.btwView?.() ?? {},
     sideChats: rt.sideView?.() ?? {},
+    deliveries: rt.answerResults?.() ?? {},
     // The team's DSH Agent (at most one): plain dsh Sessions, not Bots.
     agents: Object.values(state.agents),
     // Key names and who may use them; values never leave the host.

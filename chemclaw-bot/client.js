@@ -202,6 +202,11 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "Task delivery": "任务交付",
+  "This task has ended with partial results.": "本次任务已结束，以下是已收集的部分结果。",
+  "Further research and Bot discussion have stopped. The collected replies below may be incomplete; missing data has not been filled in.": "已停止继续检索和 Bot 讨论。下方回复可能尚不完整，缺失数据没有补造。",
+  "Collected results": "已收集的结果",
+  "No usable result was returned. Check the data connection or narrow the question and try again.": "本次未返回可用结果。可检查数据连接，或缩小问题范围后重试。",
   "Development preview": "开发预览",
   Bubble: "气泡",
   Flat: "平铺",
@@ -1692,8 +1697,8 @@ function bodyOf(def, paint, flat = false) {
     return "";
   }
 }
-var eyeMarkup = ([cx, cy, w, h50, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><rect class="bt-eye" x="${-w / 2}" y="${-h50 / 2}" width="${w}" height="${h50}" rx="${w / 2}"/></g>`;
-var happyEyeMarkup = ([cx, cy, w, h50, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><path class="bt-eye-happy" opacity="0" d="M${-w * 0.62} ${h50 * 0.14}Q0 ${-h50 * 0.42} ${w * 0.62} ${h50 * 0.14}" fill="none" stroke="#000" stroke-width="${w * 0.5}" stroke-linecap="round"/></g>`;
+var eyeMarkup = ([cx, cy, w, h51, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><rect class="bt-eye" x="${-w / 2}" y="${-h51 / 2}" width="${w}" height="${h51}" rx="${w / 2}"/></g>`;
+var happyEyeMarkup = ([cx, cy, w, h51, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><path class="bt-eye-happy" opacity="0" d="M${-w * 0.62} ${h51 * 0.14}Q0 ${-h51 * 0.42} ${w * 0.62} ${h51 * 0.14}" fill="none" stroke="#000" stroke-width="${w * 0.5}" stroke-linecap="round"/></g>`;
 var maskBox = (size) => `maskUnits="userSpaceOnUse" x="${-size}" y="${-size}" width="${size * 3}" height="${size * 3}"`;
 var holes = (def, eyes) => `<rect x="${-def.size}" y="${-def.size}" width="${def.size * 3}" height="${def.size * 3}" fill="#fff"/>${eyes}`;
 var MASK_ID = "%MASK%";
@@ -2455,12 +2460,12 @@ function liveSprings(apply2) {
     const dt = Math.min(0.5, Math.max(1e-3, (now - last) / 1e3));
     last = now;
     const steps = Math.ceil(dt * 240);
-    const h50 = dt / steps;
+    const h51 = dt / steps;
     let moving = false;
     for (const value of values.values()) {
       for (let index = 0; index < steps; index += 1) {
-        value.v += (-value.k * (value.x - value.to) - value.c * value.v) * h50;
-        value.x += value.v * h50;
+        value.v += (-value.k * (value.x - value.to) - value.c * value.v) * h51;
+        value.x += value.v * h51;
       }
       if (Math.abs(value.x - value.to) < 0.05 && Math.abs(value.v) < 1) {
         value.x = value.to;
@@ -19536,8 +19541,37 @@ function installSkillTextRule(uiConversation) {
   });
 }
 
-// src/client/user-message.js
+// src/client/delivery-result.js
 var import_react52 = require("react");
+function DeliveryResult({ sessionId, useRoster }) {
+  const roster = useRoster((value) => value);
+  const owner = roster.roomsById[sessionId]?.id ?? roster.byId[sessionId]?.id;
+  const results = roster.deliveries?.[owner] ?? [];
+  if (!results.length) return null;
+  return (0, import_react52.createElement)("div", { className: "bt-delivery-results" }, results.map((result) => (0, import_react52.createElement)(
+    "section",
+    { key: result.id, className: "bt-delivery-result", "aria-label": t("Task delivery") },
+    (0, import_react52.createElement)("strong", null, t("This task has ended with partial results.")),
+    result.label ? (0, import_react52.createElement)("p", null, result.label) : null,
+    (0, import_react52.createElement)("p", null, t("Further research and Bot discussion have stopped. The collected replies below may be incomplete; missing data has not been filled in.")),
+    result.notes.length ? (0, import_react52.createElement)(
+      "details",
+      { open: true },
+      (0, import_react52.createElement)("summary", null, t("Collected results")),
+      result.notes.map((note, index) => (0, import_react52.createElement)("div", { key: index }, (0, import_react52.createElement)("b", null, note.name), (0, import_react52.createElement)(import_dsh_client_ui_primitives.MarkdownText, { text: note.text, labels: mdLabels2(), variant: "compact" })))
+    ) : (0, import_react52.createElement)("p", null, t("No usable result was returned. Check the data connection or narrow the question and try again."))
+  )));
+}
+var DELIVERY_CSS = `
+.bt-delivery-results{max-height:35vh;overflow:auto}
+.bt-delivery-result{margin:6px 0;padding:12px 16px;border:1px solid var(--bt-line-2);border-radius:12px;background:var(--bt-card);color:var(--bt-ink);font-size:12px;line-height:1.6}
+.bt-delivery-result p{margin:4px 0;color:var(--bt-ink-2)}
+.bt-delivery-result summary{cursor:pointer;color:var(--bt-accent)}
+.bt-delivery-result details>div{margin-top:10px}
+`;
+
+// src/client/user-message.js
+var import_react53 = require("react");
 var ui = __toESM(require("@deepseek-ai/dsh-client-ui-primitives"), 1);
 var canDrawUserMessages = () => typeof ui.projectUserText === "function";
 function contentParts(content) {
@@ -19576,46 +19610,46 @@ function SkillText({ text, roster, referenceLabels, skillNames, references, acti
     const item = items.get(match[2]);
     if (!item) continue;
     const start = match.index + match[1].length;
-    if (start > cursor) parts.push((0, import_react52.createElement)(import_react52.Fragment, { key: cursor }, ui.projectUserText(text.slice(cursor, start), referenceLabels, skillNames, "skill", references)));
-    parts.push((0, import_react52.createElement)("button", { key: start + 0.5, className: "bt-umention", title: `/${item.name}`, onClick: () => actions.openSettings("capabilities", item.name) }, skillLabel(item, language())));
+    if (start > cursor) parts.push((0, import_react53.createElement)(import_react53.Fragment, { key: cursor }, ui.projectUserText(text.slice(cursor, start), referenceLabels, skillNames, "skill", references)));
+    parts.push((0, import_react53.createElement)("button", { key: start + 0.5, className: "bt-umention", title: `/${item.name}`, onClick: () => actions.openSettings("capabilities", item.name) }, skillLabel(item, language())));
     cursor = start + item.name.length + 1;
   }
-  if (cursor < text.length) parts.push((0, import_react52.createElement)(import_react52.Fragment, { key: cursor }, ui.projectUserText(text.slice(cursor), referenceLabels, skillNames, "skill", references)));
+  if (cursor < text.length) parts.push((0, import_react53.createElement)(import_react53.Fragment, { key: cursor }, ui.projectUserText(text.slice(cursor), referenceLabels, skillNames, "skill", references)));
   return parts;
 }
 function UserText({ text, roster, bots, referenceLabels, skillNames, references, actions }) {
-  return userTextParts(text, bots, referenceLabels).map((part, index) => part.bot ? (0, import_react52.createElement)(
+  return userTextParts(text, bots, referenceLabels).map((part, index) => part.bot ? (0, import_react53.createElement)(
     "button",
     { key: index, type: "button", className: "bt-umention", title: `@${part.bot.name}`, onClick: () => actions.openSession(part.bot.id) },
-    (0, import_react52.createElement)(BotMark, { bot: part.bot, size: 16 }),
+    (0, import_react53.createElement)(BotMark, { bot: part.bot, size: 16 }),
     part.label
-  ) : (0, import_react52.createElement)(SkillText, { key: index, text: part.text, roster, referenceLabels, skillNames, references, actions }));
+  ) : (0, import_react53.createElement)(SkillText, { key: index, text: part.text, roster, referenceLabels, skillNames, references, actions }));
 }
 function Attachments({ attachments, renderMessageImages }) {
   const compact2 = attachments.length > 1;
-  return (0, import_react52.createElement)("div", { className: "bt-uattach" }, attachments.map((block, index) => {
+  return (0, import_react53.createElement)("div", { className: "bt-uattach" }, attachments.map((block, index) => {
     if (block.type === "image") {
-      return renderMessageImages ? (0, import_react52.createElement)(import_react52.Fragment, { key: index }, renderMessageImages({ images: [{ attachment: block.attachment }], align: "end", compact: compact2 })) : null;
+      return renderMessageImages ? (0, import_react53.createElement)(import_react53.Fragment, { key: index }, renderMessageImages({ images: [{ attachment: block.attachment }], align: "end", compact: compact2 })) : null;
     }
     const file = block.attachment;
     const meta = [ui.fileExtension?.(file.name)?.toUpperCase().slice(0, 8), ui.fileSizeText?.(file.bytes)].filter(Boolean).join(" · ");
-    return (0, import_react52.createElement)(
+    return (0, import_react53.createElement)(
       "span",
       { key: index, className: "bt-ufile", title: file.name },
-      ui.FileTypeIcon ? (0, import_react52.createElement)(ui.FileTypeIcon, { path: file.name, className: "bt-ufile-icon" }) : null,
-      (0, import_react52.createElement)("span", { className: "bt-ufile-text" }, (0, import_react52.createElement)("span", { className: "bt-ufile-name" }, file.name), meta ? (0, import_react52.createElement)("span", { className: "bt-ufile-meta" }, meta) : null)
+      ui.FileTypeIcon ? (0, import_react53.createElement)(ui.FileTypeIcon, { path: file.name, className: "bt-ufile-icon" }) : null,
+      (0, import_react53.createElement)("span", { className: "bt-ufile-text" }, (0, import_react53.createElement)("span", { className: "bt-ufile-name" }, file.name), meta ? (0, import_react53.createElement)("span", { className: "bt-ufile-meta" }, meta) : null)
     );
   }));
 }
 function CopyButton({ text }) {
-  const [copied, setCopied] = (0, import_react52.useState)(false);
+  const [copied, setCopied] = (0, import_react53.useState)(false);
   const copy2 = () => {
     void navigator.clipboard?.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1e3);
     });
   };
-  return (0, import_react52.createElement)("button", { type: "button", className: "bt-tool", "aria-label": copied ? t("Copied") : t("Copy"), title: copied ? t("Copied") : t("Copy"), onClick: copy2 }, copied ? (0, import_react52.createElement)(CheckIcon) : (0, import_react52.createElement)(CopyIcon));
+  return (0, import_react53.createElement)("button", { type: "button", className: "bt-tool", "aria-label": copied ? t("Copied") : t("Copy"), title: copied ? t("Copied") : t("Copy"), onClick: copy2 }, copied ? (0, import_react53.createElement)(CheckIcon) : (0, import_react53.createElement)(CopyIcon));
 }
 var clock3 = (time) => typeof time === "number" ? new Date(time).toLocaleTimeString(dateLocale(), { hour: "numeric", minute: "2-digit" }) : void 0;
 function UserMessageCell({ node, sessionId, useRoster, actions, renderMessageImages, openFile, openSkill }) {
@@ -19627,10 +19661,10 @@ function UserMessageCell({ node, sessionId, useRoster, actions, renderMessageIma
   const steering = node.kind === "steering";
   const groupTime = roster.roomsById?.[sessionId] && Number.isFinite(data.time) ? messageClock(data.time) : void 0;
   const { shown, folded, control } = useFold(text, { markdown: false });
-  const body = (0, import_react52.createElement)(UserText, { text: shown, roster, bots: mentionableBots(roster, sessionId), referenceLabels, skillNames: data.skillNames ?? [], references, actions });
-  const row = (0, import_react52.useRef)(null);
-  const [toolsOpen, setToolsOpen] = (0, import_react52.useState)(false);
-  (0, import_react52.useEffect)(() => {
+  const body = (0, import_react53.createElement)(UserText, { text: shown, roster, bots: mentionableBots(roster, sessionId), referenceLabels, skillNames: data.skillNames ?? [], references, actions });
+  const row = (0, import_react53.useRef)(null);
+  const [toolsOpen, setToolsOpen] = (0, import_react53.useState)(false);
+  (0, import_react53.useEffect)(() => {
     if (!toolsOpen) return void 0;
     const onDown = (event) => {
       if (!row.current?.contains(event.target)) setToolsOpen(false);
@@ -19646,24 +19680,24 @@ function UserMessageCell({ node, sessionId, useRoster, actions, renderMessageIma
     if (!noHover() || event.target instanceof Element && event.target.closest("a,button,input,textarea,select,pre,code,[role=button],[role=link]")) return;
     setToolsOpen((value) => !value);
   };
-  return (0, import_react52.createElement)(
+  return (0, import_react53.createElement)(
     "div",
     { ref: row, className: "bt-umsg", "data-steering": steering || void 0 },
-    (0, import_react52.createElement)(
+    (0, import_react53.createElement)(
       "div",
       { className: "bt-ustack" },
-      attachments.length > 0 ? (0, import_react52.createElement)(Attachments, { attachments, renderMessageImages }) : null,
-      text !== "" || rest.length > 0 ? (0, import_react52.createElement)(
+      attachments.length > 0 ? (0, import_react53.createElement)(Attachments, { attachments, renderMessageImages }) : null,
+      text !== "" || rest.length > 0 ? (0, import_react53.createElement)(
         "div",
         { className: "bt-ubody", title: clock3(data.time), "data-folded": folded || void 0, onClick: tapTools },
-        control ? (0, import_react52.createElement)("div", { className: "bt-fold-body" }, body) : body,
+        control ? (0, import_react53.createElement)("div", { className: "bt-fold-body" }, body) : body,
         control,
-        rest.map((block, index) => ui.JsonBlock ? (0, import_react52.createElement)(ui.JsonBlock, { key: index, label: t("Content"), payload: block }) : null)
+        rest.map((block, index) => ui.JsonBlock ? (0, import_react53.createElement)(ui.JsonBlock, { key: index, label: t("Content"), payload: block }) : null)
       ) : null,
-      referenceLabels.length > 0 ? (0, import_react52.createElement)("div", { className: "bt-urefs" }, t("Referenced {labels}", { labels: referenceLabels.join(t(", ")) })) : null,
-      groupTime ? (0, import_react52.createElement)("div", { className: "bt-utime", title: clockLabel(data.time) }, groupTime) : null
+      referenceLabels.length > 0 ? (0, import_react53.createElement)("div", { className: "bt-urefs" }, t("Referenced {labels}", { labels: referenceLabels.join(t(", ")) })) : null,
+      groupTime ? (0, import_react53.createElement)("div", { className: "bt-utime", title: clockLabel(data.time) }, groupTime) : null
     ),
-    text === "" ? null : (0, import_react52.createElement)("div", { className: "bt-utools", "data-open": toolsOpen || void 0 }, (0, import_react52.createElement)(CopyButton, { text }))
+    text === "" ? null : (0, import_react53.createElement)("div", { className: "bt-utools", "data-open": toolsOpen || void 0 }, (0, import_react53.createElement)(CopyButton, { text }))
   );
 }
 var USER_MESSAGE_CSS = `
@@ -20451,6 +20485,7 @@ function apply(ctx) {
     () => installCompiledStyles(FEEDBACK_CSS, "feedback"),
     () => installCompiledStyles(ABOUT_CSS, "about"),
     () => installCompiledStyles(MEMBER_CSS, "members"),
+    () => installCompiledStyles(DELIVERY_CSS, "deliveries"),
     () => installCompiledStyles(USER_MESSAGE_CSS, "user-messages"),
     () => installCompiledStyles(WIDGET_CSS, "widgets"),
     () => installCompiledStyles(BROWSER_CSS + SIDE_CSS, "browser"),
@@ -20515,6 +20550,7 @@ function apply(ctx) {
     }, QuestionCard),
     () => shadow("conversation.input.dock", { id: "bot-intro", order: -130, inject: face }, TeamIntro),
     () => shadow("conversation.input.dock", { id: "bot-members", order: -120, inject: face }, MemberDock),
+    () => shadow("conversation.input.dock", { id: "bot-delivery-result", order: -125, inject: face }, DeliveryResult),
     () => shadow("conversation.input.dock", { id: "bot-model", order: -110, inject: face }, ModelChoiceDock),
     () => shadow("conversation.input.dock", { id: "bot-question", order: -100, inject: face }, QuestionDock),
     () => shadow("conversation.input.dock", { id: "bot-view", order: -95, inject: face }, WidgetDock),

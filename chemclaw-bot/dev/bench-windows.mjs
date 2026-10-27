@@ -40,6 +40,7 @@ boot.initProfile(dir, ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', 'che
 writeFileSync(join(dir, 'cordis.patch.yml'), `- id: chemclaw\n  config:\n    seedTeam: false\n    companyConnectors: false\n    mainName: Chief\n    mainRole: Chief of Staff\n    checkRatio: 0.45\n    updateCheck: false\n- id: llm-deepseek\n  config:\n    models:\n      - { id: deepseek-v4.1-flash, contextWindow: 100000, maxTokens: 8000, inputModalities: [text, image] }\n      - { id: deepseek-v4-pro, contextWindow: 100000, maxTokens: 8000 }\n- id: ui-settings-account\n  config:\n    version: 1\n    step: done\n    purpose: office\n    process: compact\n    completion: completed\n    usage: compact\n    developerTools: true\n`)
 writeFileSync(join(dir, 'cordis.patch.yml'), readFileSync(join(dir, 'cordis.patch.yml'), 'utf8') + '\n- id: session-log-deepseek\n  disabled: true\n- id: session-telemetry-otel\n  disabled: true\n- id: workspace-changes\n  disabled: true\n');
 if (inspectUi) writeFileSync(join(dir, 'cordis.patch.yml'), readFileSync(join(dir, 'cordis.patch.yml'), 'utf8').replace('seedTeam: false', 'seedTeam: true'))
+if (process.argv.includes('--delivery-check')) writeFileSync(join(dir, 'cordis.patch.yml'), readFileSync(join(dir, 'cordis.patch.yml'), 'utf8').replace('    checkRatio: 0.45', '    checkRatio: 0.45\n    answerBudget: { steps: 4, relays: 2, ms: 8000 }\n    answerFinalMs: 5000\n    answerRestoreMs: 500'))
 if (inspectUi) writeFileSync(join(dir, 'cordis.patch.yml'), readFileSync(join(dir, 'cordis.patch.yml'), 'utf8').replace('- id: workspace-changes\n  disabled: true', '- id: workspace-changes\n  config:\n    timeoutMs: 1000'))
 const profile = boot.loadProfileDirectory('dsh', dir, anchor)
 let running
@@ -53,7 +54,7 @@ try {
     console.log(`Isolated skill UI bench ready on port ${webPort}; create its stop file to finish.`)
     await new Promise(done => { const timer = setInterval(() => { if (existsSync(join(home, 'stop'))) { clearInterval(timer); done() } }, 250) })
   } else {
-    const result = await new Promise(resolve => { const smoke = spawn(process.execPath, [join(plugin, 'dev/smoke.mjs'), name, String(webPort)], { env: process.env, stdio: 'inherit', windowsHide: true }); smoke.once('exit', resolve) })
+    const result = await new Promise(resolve => { const smoke = spawn(process.execPath, [join(plugin, process.argv.includes('--delivery-check') ? 'dev/delivery-check.mjs' : 'dev/smoke.mjs'), name, String(webPort)], { env: process.env, stdio: 'inherit', windowsHide: true }); smoke.once('exit', resolve) })
     process.exitCode = result ?? 1
   }
 } finally { mock.kill(); await running?.shutdown.shutdown(process.exitCode ?? 0) }

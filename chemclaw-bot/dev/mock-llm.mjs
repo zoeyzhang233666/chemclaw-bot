@@ -117,7 +117,10 @@ function decide(body) {
   // Clock snapshots are context, not a new scripted user command.
   const messages = (body.messages ?? []).filter(m => m.role !== 'system').map(message => {
     if (message.role !== 'user') return message
-    const isClock = value => value.startsWith('Current time: ') || value.startsWith('Time sampled while preparing turn ')
+    const isClock = value => {
+      const line = value.trimStart()
+      return line.startsWith('Current time: ') || line.startsWith('Time sampled while preparing turn ') || line.startsWith('Answer the actual business question with the first useful verified data') || line.startsWith('Finish this user-facing answer now using only the collected evidence.')
+    }
     const content = typeof message.content === 'string' ? (isClock(message.content) ? '' : message.content)
       : message.content.filter(block => block.type !== 'text' || !isClock(block.text))
     return { ...message, content }
@@ -129,6 +132,10 @@ function decide(body) {
     return [text(`Side note: ${pairs} earlier pair(s) seen.`)]
   }
   const me = /You are (.+?), a Bot on the user's team/.exec(system)?.[1] ?? 'Bot'
+  if (last?.role === 'user' && textOf(last.content).trimStart().startsWith('[Deliver the current result to the user now]')) {
+    if (tools.has('show_view')) return [text('已停止进一步讨论，先交付已取得的合成验收结果。'), tool('show_view', { audience: 'user', title: '自动收敛验收', view: { type: 'chart', kind: 'line', categories: ['2026-10-25', '2026-10-26', '2026-10-27'], series: [{ name: '合成验收数据', values: [65, 70, null] }], unit: '元/吨', caption: '仅为验收的合成数据，最新一天缺失' } })]
+    return [text('自动收敛完成：已交付当前结果，最新一天缺失，不再继续讨论。')]
+  }
   const isMain = system.includes('You are the Main Bot')
   const isRelay = system.includes('# Group chat relay')
 
@@ -191,6 +198,7 @@ function decide(body) {
     const resultText = typeof result.content === 'string' ? result.content : textOf(result.content)
     const call = [...messages].reverse().find(m => m.role === 'assistant' && Array.isArray(m.content) && m.content.some(b => b.type === 'tool_use'))
     const used = call?.content.find(b => b.type === 'tool_use' && b.id === result.tool_use_id) ?? call?.content.find(b => b.type === 'tool_use')
+    if (used?.name === 'list_bots' && messages.some(message => message.role === 'user' && textOf(message.content).includes('自动收敛群验收'))) return [text('已经取得一部分合成数据，继续核对。'), tool('list_bots', {})]
     // "长任务 N [K]": N steps in one turn, each adding about K thousand characters (default 4).
     const openerAt = messages.findLastIndex(m => m.role === 'user' && !isResults(m) && /^长任务\s*\d+/.test(textOf(m.content).trimStart()))
     if (openerAt !== -1 && used?.name === 'list_bots') {
@@ -211,6 +219,7 @@ function decide(body) {
     // Secret cards: a key already there is echoed at once; a card ends the turn.
     // The note after the card can ride in the same message as the card's tool result.
     if (used?.name === 'show_view' && used.input.title === '合成数据趋势验收') return [text('走势查询完成：以下仅为合成验收数据，缺口保持为空。')]
+    if (used?.name === 'show_view' && used.input.title === '自动收敛验收') return [text('自动收敛完成：已交付当前结果，最新一天缺失，不再继续讨论。')]
     if (used?.name === 'request_secret') {
       if (/already saved/.test(resultText)) return [echoSecret(used.input.name, tools)]
       const note = textBlocks(last.content).find(value => value.trim().startsWith('[Secret card]'))
@@ -353,6 +362,7 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    if (userLine.includes('自动收敛群验收') && tools.has('list_bots')) return [text('查询合成验收数据。'), tool('list_bots', {})]
     if (/查询合成走势验证/.test(userLine) && tools.has('show_view')) {
       const dates = Array.from({ length: 57 }, (_, index) => new Date(Date.UTC(2026, 8, index + 1)).toISOString().slice(0, 10))
       return [text('先给查询结果。'), tool('show_view', { audience: 'user', title: '合成数据趋势验收', await_reply: false,
