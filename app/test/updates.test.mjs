@@ -34,6 +34,18 @@ class FakeUpdater extends EventEmitter {
 
 const finds = (version, download) => () => ({ isUpdateAvailable: true, updateInfo: { version }, downloadPromise: download() })
 
+test('Linux deb updates require their own asset and ignore a newer Mac-only release', async t => {
+  const records = [
+    { tag_name: 'v9.0.0', html_url: 'https://github.com/zoeyzhang233666/chemclaw-bot/releases/tag/v9.0.0', assets: [{ name: 'ChemClaw-9.0.0-mac-x64.zip' }] },
+    { tag_name: 'v8.0.0', html_url: 'https://github.com/zoeyzhang233666/chemclaw-bot/releases/tag/v8.0.0', assets: [{ name: 'ChemClaw-8.0.0-linux-amd64.deb' }] },
+  ]
+  const updates = watchReleases({ current: '0.2.2', arch: 'x64', asset: version => `ChemClaw-${version}-linux-amd64.deb`,
+    fetch: async () => ({ ok: true, json: async () => records }), log: { info() {}, warn() {}, error() {} },
+  })
+  t.after(updates.stop)
+  assert.deepEqual(await updates.latest(), { version: '8.0.0', page: records[1].html_url })
+})
+
 const quietLog = () => {
   const lines = []
   return { lines, info: (line) => { lines.push(line) }, error: (line) => { lines.push(line) } }

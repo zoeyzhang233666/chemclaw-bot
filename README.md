@@ -56,6 +56,10 @@ If you already use official DSH:
 
 Existing chats and custom roles stay; missing presets are filled in without wiping your work.
 
+## Linux packages in the development branch
+
+The pending feature batch adds Linux x64 AppImage and Debian/Ubuntu deb packages. The currently published 0.2.2 release does not include them. Build on Linux with `cd app`, `npm ci`, then `npm run dist`; platform CI checks startup, installation and updates before publication. AppImage updates automatically; deb installations offer the matching release download.
+
 ## Easy first prompts
 
 - “Find domestic producers for this product and give me a filterable list.”

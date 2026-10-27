@@ -464,7 +464,11 @@ function startUpdates() {
       current: app.getVersion(), arch: process.arch, feed, ask: throwaway ? undefined : askDownload, open: url => shell.openExternal(url),
     })
   }
-  if (process.platform === 'win32') {
+  if (process.platform === 'linux' && process.env.APPIMAGE === undefined) {
+    const arch = { x64: 'amd64', arm64: 'arm64' }[process.arch] ?? process.arch
+    return watchReleases({ current: app.getVersion(), arch: process.arch, feed, ask: throwaway ? undefined : askDownload, open: url => shell.openExternal(url), asset: version => `ChemClaw-${version}-linux-${arch}.deb` })
+  }
+  if (process.platform === 'win32' || process.platform === 'linux') {
     return watchUpdates({ updater: electronUpdater.autoUpdater, current: app.getVersion(), feed, ask: throwaway ? undefined : askRestart, beforeInstall: stopHost })
   }
   return undefined

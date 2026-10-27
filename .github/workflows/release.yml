@@ -258,9 +258,65 @@ jobs:
           zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
           gh release upload "$TAG" "$zip" --clobber
 
+  app-linux:
+    name: Desktop app packages (Linux x64)
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+          key: desktop-tools-v3-Linux-x64-${{ hashFiles('app/package-lock.json') }}
+      - run: npm ci --no-fund --no-audit
+      - run: npm run dist
+      - name: Check the packaged app
+        # Ubuntu 24.04's AppArmor blocks the unprivileged user namespaces that Chromium's
+        # sandbox needs; the release runner may lift that restriction (it is its own machine).
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          xvfb-run -a node scripts/check-packed.mjs
+      - name: Check the files for the release
+        # The dry run never uploads, so it checks here that every file the release attaches exists.
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          ls -l "dist-pack/ChemClaw-$version-linux-x86_64.AppImage" "dist-pack/ChemClaw-$version-linux-amd64.deb" dist-pack/latest-linux.yml
+      - name: Keep the packages for real-device checks
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChemClaw-linux-x64
+          path: |
+            app/dist-pack/ChemClaw-*-linux-x86_64.AppImage
+            app/dist-pack/ChemClaw-*-linux-amd64.deb
+          retention-days: 7
+          if-no-files-found: error
+          compression-level: 0
+      - name: Attach the packages to the release
+        if: github.event_name == 'push' || !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.publish.outputs.tag }}
+        # The AppImage carries its block map inside the file, so there is no .blockmap to attach.
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          gh release upload "$TAG" "dist-pack/ChemClaw-$version-linux-x86_64.AppImage" "dist-pack/ChemClaw-$version-linux-amd64.deb" dist-pack/latest-linux.yml --clobber
+
   complete:
     name: Publish the complete release
-    needs: [publish, app-windows, app-macos]
+    needs: [publish, app-windows, app-macos, app-linux]
     if: github.event_name == 'push' || !inputs.dry_run
     runs-on: ubuntu-latest
     steps:
@@ -274,7 +330,7 @@ jobs:
           set -euo pipefail
           version="${TAG#v}"
           gh release view "$TAG" --json assets --jq '.assets[] | select(.size > 0) | .name' > "$RUNNER_TEMP/assets"
-          for file in "chemclaw-bot-$version.tgz" "ChemClaw-$version-win-x64.exe" "ChemClaw-$version-win-x64.exe.blockmap" latest.yml "ChemClaw-$version-mac-arm64.zip" "ChemClaw-$version-mac-x64.zip"; do
+          for file in "chemclaw-bot-$version.tgz" "ChemClaw-$version-win-x64.exe" "ChemClaw-$version-win-x64.exe.blockmap" latest.yml "ChemClaw-$version-mac-arm64.zip" "ChemClaw-$version-mac-x64.zip" "ChemClaw-$version-linux-x86_64.AppImage" "ChemClaw-$version-linux-amd64.deb" latest-linux.yml; do
             grep -Fx "$file" "$RUNNER_TEMP/assets"
           done
           if [[ "$TAG" == *-* ]]; then

@@ -25,6 +25,7 @@ const executable = source ? process.env.CHEMCLAW_TEST_ELECTRON || createRequire(
 function packedExecutable() {
   const out = join(root, 'dist-pack')
   if (process.platform === 'win32') return join(out, 'win-unpacked', 'ChemClaw.exe')
+  if (process.platform === 'linux') return join(out, 'linux-unpacked', 'chemclaw')
   const dir = ['mac-arm64', 'mac'].find(name => existsSync(join(out, name))) ?? 'mac'
   return join(out, dir, 'ChemClaw.app', 'Contents', 'MacOS', 'ChemClaw')
 }
@@ -75,6 +76,31 @@ function outsideCheckout(file) {
   cpSync(appDir, copy, { recursive: true, verbatimSymlinks: true })
   console.log(`check-packed: runs a copy of ${appDir} in ${work}`)
   return join(copy, relative(appDir, file))
+}
+
+function checkSharp(app) {
+  const resources = process.platform === 'darwin' ? resolve(app, '..', '..', 'Resources') : join(dirname(app), 'resources')
+  const script = `
+    const assert = require('node:assert/strict')
+    const { createRequire } = require('node:module')
+    const appRequire = createRequire(${JSON.stringify(join(resources, 'app.asar', 'package.json'))})
+    const sharp = appRequire('sharp')
+    ;(async () => {
+      const image = await sharp({ create: { width: 4, height: 4, channels: 3, background: '#ff0000' } }).png().toBuffer()
+      const { data, info } = await sharp(image).resize(2, 2).removeAlpha().raw().toBuffer({ resolveWithObject: true })
+      assert.equal(info.width, 2)
+      assert.equal(info.height, 2)
+      assert.deepEqual([...data], Array.from({ length: 4 }, () => [255, 0, 0]).flat())
+      console.log('check-packed: sharp image processing passed (libvips ' + sharp.versions.vips + ')')
+    })().catch(error => { console.error(error); process.exitCode = 1 })
+  `
+  // Use the shipped Electron and dependencies outside the checkout, just like the Host.
+  const result = spawnSync(app, ['-e', script], {
+    cwd: work, env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', NODE_PATH: '' },
+    encoding: 'utf8', timeout: 30_000,
+  })
+  if (result.error || result.status !== 0) throw new Error(`packaged sharp failed (exit ${String(result.status)}, signal ${String(result.signal)}): ${result.error?.message ?? ''}\n${result.stderr ?? ''}`)
+  console.log(result.stdout.trim())
 }
 
 function startMock() {
@@ -462,6 +488,8 @@ const problems = []
 try {
   await new Promise(resolve => updateFeed.listen(0, '127.0.0.1', resolve))
   await new Promise(resolve => browserFixture.listen(0, '127.0.0.1', resolve))
+  const packedApp = source ? executable : outsideCheckout(resolve(executable))
+  if (!source) checkSharp(packedApp)
   const modelUrl = await startMock()
   const port = 9300 + Math.floor(Math.random() * 600)
   // A terminal inside an Electron-based editor may set ELECTRON_RUN_AS_NODE, which turns the app into plain Node.
@@ -476,7 +504,7 @@ try {
   // Intel macOS runners may have no working EGL display. Exercise the same
   // renderer with software compositing rather than repeatedly crashing its GPU.
   const graphics = process.env.CI && process.platform === 'darwin' ? ['--disable-gpu'] : []
-  const app = spawn(source ? executable : outsideCheckout(resolve(executable)), [...(source ? [root] : []), ...graphics, `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
+  const app = spawn(packedApp, [...(source ? [root] : []), ...graphics, `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
   children.push(app)
   const exited = new Promise((done) => { app.once('exit', (code, signal) => { done({ code, signal }) }) })
   const cdp = devtools((await appPage(port, Date.now() + 120_000)).webSocketDebuggerUrl, problems)

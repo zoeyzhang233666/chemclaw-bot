@@ -184,3 +184,11 @@ ChemClaw browser login import and user downloads (2026-10-27):
   Copyright 2026 Fei2411 and DS Bot contributors.
   https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
   ChemClaw retains its native partitions, approval paths and application origin checks.
+
+ChemClaw Linux packages and updates (2026-10-27):
+  Adapted Linux AppImage/deb targets, update selection, Ubuntu package/update checks
+  and release asset gating from DS-Bot de55888a93983fc51c94f7d22bc94b4f8293205d.
+  Also adapted sharp/libvips unpacking and packed-image verification from upstream
+  #544, 9262b3e64103ac2cf0d1a67aacf5ea068d93d759.
+  Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot

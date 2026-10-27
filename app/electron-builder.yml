@@ -11,6 +11,8 @@ files:
 # The Host runs pnpm as a separate Node process to install plugins, so it must be a plain file.
 asarUnpack:
   - node_modules/pnpm/**
+  # Keep versioned libvips libraries beside the native sharp module.
+  - node_modules/@img/sharp*/**
 # node-pty, sharp and koffi ship prebuilt binaries for each platform. A rebuild would compile
 # node-pty from source and needs a C++ toolchain.
 npmRebuild: false
@@ -37,6 +39,23 @@ mac:
   hardenedRuntime: false
   icon: assets/icon.png
   category: public.app-category.productivity
+linux:
+  # One AppImage runs on every distribution and updates itself; the deb is for Debian/Ubuntu,
+  # where it avoids Ubuntu 24.04's AppArmor question of an AppImage and adds a menu entry.
+  target:
+    - target: AppImage
+      arch: [x64]
+    - target: deb
+      arch: [x64]
+  # The binary and the deb's menu entry take this name; productName has a space, which a
+  # terminal command should not have.
+  executableName: chemclaw
+  # A deb needs a maintainer; package.json's author has no email, so it goes here.
+  maintainer: ChemClaw contributors <https://github.com/zoeyzhang233666/chemclaw-bot>
+  # Links the running window to the menu entry (WM_CLASS = app id).
+  syncDesktopName: true
+  icon: assets/icon.png
+  category: Utility
 # Where the installed app looks for updates (app-update.yml in the package). The build writes
 # latest.yml beside the installer; the release workflow attaches both to the GitHub release,
 # so the build itself never publishes (--publish never).
