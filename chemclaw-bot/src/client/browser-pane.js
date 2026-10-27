@@ -1,8 +1,9 @@
-// The Bot panel: one right-hand column holding a Bot's details or its browser.
-// A tab strip on top flips between them — the Bot page collapses to a tab, each
-// browser tab is a tab of its own. Browser pages are Electron webviews kept in a
-// body-level layer by bot-browsers.js; the panel draws the strip and the toolbar
-// and reports the rectangle the shown webview covers.
+// The Bot panel: one right-hand column holding a Bot's details, its browser or a
+// side chat. A tab strip on top flips between them — the Bot page collapses to a
+// tab, each browser tab and side chat is a tab of its own. Browser pages are
+// Electron webviews kept in a body-level layer by bot-browsers.js; the panel
+// draws the strip and the toolbar and reports the rectangle the shown webview
+// covers.
 import { createElement as h, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { BotMark } from './mark.js'
@@ -10,6 +11,9 @@ import { STORAGE } from './storage.js'
 import { installStyles } from './styles.js'
 import { SPRING_SHAPE, springEasing } from './motion.js'
 import { DetailsDrawer } from './details-drawer.js'
+import { SideChatView } from './side-chat.js'
+import { panelHasStrip, sideChatsOf, stripMenuKeys } from './side-model.js'
+import { DotsIcon, FolderIcon, SideIcon, TerminalIcon } from './icons.js'
 import { t } from './i18n.js'
 
 export const PANEL_LINGER_MS = 300
@@ -23,6 +27,10 @@ const DETAILS_MAX = 520
 const MIN_WIDTH = 360
 // The conversation keeps at least this much room beside the panel.
 const MIN_CHAT = 420
+const PANEL_MIN = { details: DETAILS_WIDTH, browser: MIN_WIDTH, side: DETAILS_WIDTH }
+// Below this viewport width the panel cannot leave the conversation its room:
+// it covers the conversation instead of pushing it aside.
+const overlayAt = (view, viewport) => viewport < MIN_CHAT + PANEL_MIN[view]
 // How long the Bot's mark shows that it read the page.
 const READ_FLASH_MS = 2400
 const EMPTY_PAGE = { url: '', title: '', favicon: null, loading: false, canGoBack: false, canGoForward: false, error: null, excerpt: '' }
@@ -114,21 +122,81 @@ const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(pre
 
 const tabLabel = page => page.title || shortAddress(page.url) || t('New tab')
 
+// The `···` popover anchored to its button. `items` holds {key, icon, label,
+// onPick} and {sep:true} entries; Escape or a click outside closes it. The
+// callers hide the button when the list is empty.
+export function PanelMenu({ items, className, 'aria-label': label }) {
+  const [open, setOpen] = useState(false)
+  const wrap = useRef(null)
+  useEffect(() => {
+    if (!open) return undefined
+    const onDown = (event) => { if (wrap.current && !wrap.current.contains(event.target)) setOpen(false) }
+    const onKey = (event) => {
+      if (event.key !== 'Escape') return
+      event.stopPropagation()
+      setOpen(false)
+    }
+    window.addEventListener('pointerdown', onDown)
+    window.addEventListener('keydown', onKey)
+    return () => { window.removeEventListener('pointerdown', onDown); window.removeEventListener('keydown', onKey) }
+  }, [open])
+  if (items.length === 0) return null
+  return h('span', { className: 'bt-pmenu', ref: wrap },
+    h('button', {
+      type: 'button', className, 'aria-label': label, title: label,
+      'aria-haspopup': 'menu', 'aria-expanded': open, onClick: () => setOpen(value => !value),
+    }, h(DotsIcon)),
+    open ? h('div', { className: 'bt-pmenu-pop', role: 'menu' },
+      items.map((item, index) => (item.sep
+        ? h('span', { key: `sep-${index}`, className: 'bt-pmenu-sep', role: 'separator' })
+        : h('button', {
+          key: item.key, type: 'button', role: 'menuitem', className: 'bt-pmenu-item',
+          onClick: () => { setOpen(false); item.onPick() },
+        }, h(item.icon), h('span', null, item.label))))) : null)
+}
+
+// The menu builders in side-model.js give keys; each maps to an icon, a label
+// and the action it runs. A rejected action surfaces through reportError.
+export function menuItemFor(key, actions, subject) {
+  const report = run => () => { void Promise.resolve(run()).catch(error => actions.reportError(error, 'panel-menu')) }
+  switch (key) {
+    case 'browser': return { key, icon: GlobeIcon, label: t('Browser'), onPick: report(() => actions.openBrowser(subject)) }
+    case 'new-tab': return { key, icon: PlusTabIcon, label: t('New browser tab'), onPick: report(() => actions.browserNewTab(subject)) }
+    case 'side': return { key, icon: SideIcon, label: t('Side chat'), onPick: report(() => actions.newSideChat(subject)) }
+    case 'terminal': return { key, icon: TerminalIcon, label: t('Terminal'), onPick: report(() => actions.newTerminal()) }
+    case 'files': return { key, icon: FolderIcon, label: t('Files'), onPick: report(() => actions.openFiles()) }
+    default: return { sep: true }
+  }
+}
+
+// A side chat tab names itself after its first question.
+const sideTitle = chat => chat?.entries?.[0]?.question?.trim() || t('Side chat')
+
 // The strip across the panel's top: the Bot's own tab first (the details view,
-// collapsed), then one tab per browser page, then new-tab and close.
-function PanelStrip({ bot, subject, view, ids, active, reading, onView, actions, useBrowserPages }) {
+// collapsed), then one tab per browser page, one per side chat, then `···` and
+// close.
+function PanelStrip({ bot, subject, view, ids, active, sides, side, canBrowse, reading, onView, actions, useBrowserPages }) {
   const pages = useBrowserPages(map => map)
   const wrap = useRef(null)
   const ind = useRef(null)
   const spot = useRef(null)
   const under = useRef(null)
+  const watcher = useRef(null)
   // The capsule sits under the active tab; its two edges move on different springs.
   useLayoutEffect(() => {
     const box = wrap.current
     const capsule = ind.current
     if (!box || !capsule) return undefined
-    const node = view === 'details' ? box.querySelector('.bt-ptab-bot') : box.querySelector(`[data-tab="${active}"]`)
-    under.current = node
+    const node = view === 'details'
+      ? box.querySelector('.bt-ptab-bot')
+      : view === 'side'
+        ? box.querySelector(`[data-side="${side}"]`)
+        : box.querySelector(`[data-tab="${active}"]`)
+    if (under.current !== node) {
+      if (under.current) watcher.current?.unobserve(under.current)
+      under.current = node
+      if (node) watcher.current?.observe(node)
+    }
     if (!node) { capsule.style.opacity = '0'; spot.current = null; return undefined }
     // The Bot tab is pinned at the strip's start; showing it scrolls the pages back
     // so the capsule and the pinned tab line up.
@@ -148,6 +216,7 @@ function PanelStrip({ bot, subject, view, ids, active, reading, onView, actions,
     return () => { lead.cancel(); trail.cancel() }
   })
   // A drag resizes the strip without a render; the capsule's right edge keeps to its tab.
+  // The tab itself is watched too — its width can still change after the measure.
   useEffect(() => {
     const box = wrap.current
     if (!box) return undefined
@@ -159,9 +228,16 @@ function PanelStrip({ bot, subject, view, ids, active, reading, onView, actions,
       capsule.style.left = `${spot.current.left}px`
       capsule.style.right = `${spot.current.right}px`
     })
+    watcher.current = observer
     observer.observe(box)
-    return () => observer.disconnect()
+    if (under.current) observer.observe(under.current)
+    return () => { watcher.current = null; observer.disconnect() }
   }, [])
+  const items = stripMenuKeys({
+    canBrowse,
+    canTerminal: actions.canOpenTerminal?.() === true,
+    canFiles: actions.canOpenFiles?.() === true,
+  }).map(key => menuItemFor(key, actions, subject))
   return h('div', { className: 'bt-ptabs', role: 'tablist', 'aria-label': t('Panel tabs') },
     h('div', { className: 'bt-ptabs-in', ref: wrap },
       h('button', {
@@ -186,9 +262,24 @@ function PanelStrip({ bot, subject, view, ids, active, reading, onView, actions,
             onClick: (event) => { event.stopPropagation(); void actions.browserCloseTab(bot.id, tabId) },
           }, '×'))
       }),
+      sides.map((chat) => {
+        const on = view === 'side' && chat.id === side
+        return h('button', {
+          key: chat.id, type: 'button', role: 'tab', 'aria-selected': on, 'data-side': chat.id, className: 'bt-ptab bt-ptab-side',
+          title: sideTitle(chat),
+          onClick: () => actions.openSideChat(subject, chat.id),
+          onAuxClick: (event) => { if (event.button === 1) { event.preventDefault(); void actions.closeSideChat(chat.id) } },
+        },
+          h('span', { className: 'bt-ptab-globe', 'aria-hidden': true }, h(SideIcon)),
+          h('span', { className: 'bt-ptab-title' }, sideTitle(chat)),
+          h('span', {
+            className: 'bt-ptab-x', role: 'button', 'aria-label': t('Close side chat'), title: t('Close side chat'),
+            onClick: (event) => { event.stopPropagation(); void actions.closeSideChat(chat.id) },
+          }, '×'))
+      }),
       h('span', { ref: ind, className: 'bt-ptab-ind', 'aria-hidden': true })),
-    // New tab and Close stay outside the scrolling tabs, so a narrow panel keeps both.
-    h('button', { type: 'button', className: 'bt-ptab-new', 'aria-label': t('New tab'), title: t('New tab'), onClick: () => actions.browserNewTab(subject) }, h(PlusTabIcon)),
+    // The `···` and Close stay outside the scrolling tabs, so a narrow panel keeps both.
+    h(PanelMenu, { items, className: 'bt-ptab-new', 'aria-label': t('More') }),
     h('button', { type: 'button', className: 'bt-icon-btn bt-ptab-close', 'aria-label': t('Close panel'), title: t('Close panel'), onClick: () => actions.closePanel() }, h(CloseIcon)))
 }
 
@@ -294,14 +385,17 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
 }
 
 /**
- * One aside for the Bot's details and browser. `pane` is
- * `{ id, view: 'details'|'browser', renaming, tab }`; `id` is the Session id the
- * panel follows. Without the Desktop bridge the browser view never shows.
+ * One aside for the Bot's details, browser and side chats. `pane` is
+ * `{ id, view: 'details'|'browser'|'side', renaming, tab, side }`; `id` is the
+ * Session id the panel follows and `side` the open chat's id. Without the
+ * Desktop bridge the browser view never shows; side chats need no bridge.
  */
 export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useBrowserHolds }) {
   const bot = roster.byId[pane.id]
   const canBrowse = Boolean(bot && roster.browser === true && actions.browserShow)
-  const view = pane.view === 'browser' && canBrowse ? 'browser' : 'details'
+  const sideChats = bot ? sideChatsOf(roster, bot.id) : []
+  const sideChat = sideChats.find(chat => chat?.id === pane.side)
+  const view = pane.view === 'browser' && canBrowse ? 'browser' : pane.view === 'side' && sideChat !== undefined ? 'side' : 'details'
   const tabState = useBrowserTabs(map => (bot ? (map[bot.id] ?? EMPTY_TABS) : EMPTY_TABS))
   const active = tabState.active
   const page = useBrowserPages(pages => (active ? pages[active] : null) ?? EMPTY_PAGE)
@@ -318,6 +412,7 @@ export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessi
   const instant = dragging || resizing
   const [reading, setReading] = useState(false)
 
+  const overlay = overlayAt(view, viewport)
   const panelWidth = fitWidth(width ?? (view === 'browser' ? DEFAULT_WIDTH : DETAILS_WIDTH), widthRange(view, viewport))
   useLayoutEffect(() => {
     if (leaving) return undefined
@@ -349,9 +444,9 @@ export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessi
     const switched = settling && shownView.current !== view
     shownView.current = view
     if (switched) chatRoom.hold(true)
-    chatRoom.set(leaving ? null : panelWidth)
+    chatRoom.set(leaving || overlay ? null : panelWidth)
     if (switched) chatRoom.hold(false)
-  }, [view, panelWidth, leaving, viewport])
+  }, [view, panelWidth, leaving, overlay])
   useEffect(() => () => { chatRoom.set(null); chatRoom.hold(false) }, [])
   useEffect(() => {
     let timer
@@ -380,6 +475,10 @@ export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessi
   useEffect(() => {
     if (view === 'browser' && (active === null || !tabState.ids.includes(active))) actions.setPanelView('details')
   }, [view, active, tabState.ids.length])
+  // A side chat closed here or in another window folds back into details too.
+  useEffect(() => {
+    if (pane.view === 'side' && sideChat === undefined) actions.setPanelView('details')
+  }, [pane.view, sideChat])
   // The guest leaves the screen while the details view is up, and on close.
   useEffect(() => {
     if (view !== 'browser' || leaving) void actions.browserShow?.(null)
@@ -425,6 +524,9 @@ export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessi
   for (const name of ['openBrowser', 'browserNewTab', 'browserPick']) {
     if (actions[name]) panelActions[name] = (...args) => { if (view !== 'browser') beginSwitch('browser'); return actions[name](...args) }
   }
+  for (const name of ['openSideChat', 'newSideChat']) {
+    if (actions[name]) panelActions[name] = (...args) => { if (view !== 'side') beginSwitch('side'); return actions[name](...args) }
+  }
   useLayoutEffect(() => {
     const move = fly.current
     if (!move) return
@@ -459,7 +561,7 @@ export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessi
   // A drag writes the width into the panel's and the column's own inline styles each
   // frame (each restyles one element) and renders once, on release.
   const startResize = (event) => {
-    if (event.button !== 0 || leaving) return
+    if (event.button !== 0 || leaving || overlay) return
     event.preventDefault()
     const panel = root.current
     const grip = event.currentTarget
@@ -476,7 +578,7 @@ export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessi
       next = fitWidth(from.width + from.x - move.clientX, range)
       panel.style.width = `${next}px`
       if (columns.length === 0) chatRoom.set(next)
-      for (const column of columns) column.style.setProperty('margin-right', `${reservedWidth(next)}px`, 'important')
+      for (const column of columns) column.style.setProperty('margin-right', `${next}px`, 'important')
     }
     const ends = ['pointerup', 'pointercancel', 'lostpointercapture']
     const onEnd = (end) => {
@@ -497,25 +599,28 @@ export function BotPanel({ pane, leaving, roster, actions, useSessions, useSessi
     for (const name of ends) grip.addEventListener(name, onEnd)
   }
 
-  const hasStrip = canBrowse && tabState.ids.length > 0
+  const hasStrip = panelHasStrip(canBrowse, tabState.ids.length, sideChats.length)
   return h('aside', {
-    ref: root, className: 'bt-panel', 'data-view': view, 'aria-label': view === 'browser' && bot ? t("{name}'s browser", { name: bot.name }) : t('Conversation details'),
+    ref: root, className: 'bt-panel', 'data-view': view,
+    'aria-label': view === 'browser' && bot ? t("{name}'s browser", { name: bot.name }) : view === 'side' ? t('Side chat') : t('Conversation details'),
     'data-leaving': leaving || undefined, 'aria-hidden': leaving || undefined, 'data-settling': settling || undefined,
-    'data-instant': instant || undefined, 'data-dragging': dragging || undefined, style: { '--bt-panel-w': `${panelWidth}px` },
+    'data-instant': instant || undefined, 'data-dragging': dragging || undefined, 'data-overlay': overlay || undefined, style: { '--bt-panel-w': `${panelWidth}px` },
     onAnimationEnd: (event) => { if (event.target === event.currentTarget) setLanded(true) },
   },
-    leaving ? null : h('div', { className: 'bt-panel-grip', role: 'separator', 'aria-orientation': 'vertical', 'aria-label': t('Resize panel'), onPointerDown: startResize }),
+    leaving || overlay ? null : h('div', { className: 'bt-panel-grip', role: 'separator', 'aria-orientation': 'vertical', 'aria-label': t('Resize panel'), onPointerDown: startResize }),
     // Over the whole window while dragging: the cursor stays a resize cursor and the
     // pages underneath (the chat, the guest) see no pointer.
     dragging ? createPortal(h('div', { className: 'bt-drag-shield', 'aria-hidden': true }), document.body) : null,
-    hasStrip ? h(PanelStrip, { bot, subject: pane.id, view, ids: tabState.ids, active, reading, onView: switchView, actions: panelActions, useBrowserPages }) : null,
+    hasStrip ? h(PanelStrip, { bot, subject: pane.id, view, ids: tabState.ids, active, sides: sideChats, side: pane.side, canBrowse, reading, onView: switchView, actions: panelActions, useBrowserPages }) : null,
     view === 'browser' && bot
       ? h(BrowserView, { key: `browser:${active}`, bot, tabId: active, leaving, landed: landed && !settling, actions, useBrowserPages, hold })
-      : h('div', { key: `details:${pane.id}:${pane.renaming ? 'rename' : ''}:${pane.tab ?? ''}`, className: 'bt-panel-view' },
-          h(DetailsDrawer, {
-            sessionId: pane.id, startRenaming: pane.renaming, startTab: pane.tab, hasStrip,
-            roster, actions: panelActions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages,
-          })))
+      : view === 'side' && sideChat
+        ? h('div', { key: `side:${sideChat.id}`, className: 'bt-panel-view' }, h(SideChatView, { subject: pane.id, chat: sideChat, actions: panelActions }))
+        : h('div', { key: `details:${pane.id}:${pane.renaming ? 'rename' : ''}:${pane.tab ?? ''}`, className: 'bt-panel-view' },
+            h(DetailsDrawer, {
+              sessionId: pane.id, startRenaming: pane.renaming, startTab: pane.tab, hasStrip,
+              roster, actions: panelActions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages,
+            })))
 }
 
 export const BROWSER_CSS = `
@@ -532,13 +637,13 @@ export const BROWSER_CSS = `
 .bt-ptab-bot{padding:0 7px}
 .bt-ptab-bot .bt-mark{flex:none}
 .bt-ptab-name{max-width:96px;overflow:hidden;text-overflow:ellipsis;font-weight:500;animation:bt-ptab-label .18s ease}
-@keyframes bt-ptab-label{from{opacity:0;filter:blur(4px);max-width:0}}
+@keyframes bt-ptab-label{from{opacity:0;filter:blur(4px)}}
 .bt-ptab-fav{width:14px;height:14px;flex:none;border-radius:3px;object-fit:cover;color:var(--bt-ink-3)}
 .bt-ptab-globe{display:inline-flex}
 .bt-ptab-globe svg{width:14px;height:14px}
 .bt-ptab-title{max-width:140px;overflow:hidden;text-overflow:ellipsis}
-.bt-ptab-x{flex:none;width:16px;height:16px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1;color:var(--bt-ink-3);opacity:0;transition:opacity .12s ease,background-color .12s ease}
-.bt-ptab:hover .bt-ptab-x,.bt-ptab[aria-selected=true] .bt-ptab-x{opacity:1}
+.bt-ptab-x{flex:none;width:16px;height:16px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1;color:var(--bt-ink-3);opacity:0;pointer-events:none;transition:opacity .12s ease,background-color .12s ease}
+.bt-ptab:hover .bt-ptab-x,.bt-ptab[aria-selected=true] .bt-ptab-x{opacity:1;pointer-events:auto}
 .bt-ptab-x:hover{background:var(--bt-active);color:var(--bt-ink)}
 .bt-ptab-new{position:relative;z-index:1;flex:none;width:28px;height:32px;border:0;border-radius:9px;background:none;color:var(--bt-ink-3);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .bt-ptab-new:hover{color:var(--bt-ink)}
@@ -557,8 +662,7 @@ export const BROWSER_CSS = `
 .bt-browser-bar{position:relative;display:flex;align-items:center;gap:2px;height:52px;padding:0 10px 0 12px;flex:none;border-bottom:.5px solid var(--bt-line)}
 .bt-browser-takeover{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:var(--bt-hover);border-bottom:.5px solid var(--bt-line);font-size:12px;color:var(--bt-ink-2)}
 .bt-browser-takeover[data-held]{background:var(--bt-active)}
-.bt-browser-takeover-actions{display:flex;gap:6px;flex-shrink:0}
-.bt-browser-takeover button:disabled{opacity:.5;cursor:wait}
+.bt-browser-takeover-actions{display:flex;gap:6px}
 .bt-browser-takeover button{border:1px solid var(--bt-line-2);border-radius:8px;padding:5px 9px;background:var(--bt-main);color:var(--bt-ink);font:inherit;cursor:pointer}
 .bt-browser-bar .bt-icon-btn:disabled{opacity:.35;cursor:default;background:none}
 .bt-browser-address{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:32px;margin:0 4px;padding:0 12px;border-radius:999px;background:var(--bt-hover);border:.5px solid transparent;transition:background-color .12s ease,border-color .12s ease,box-shadow .12s ease}
@@ -593,11 +697,51 @@ export const BROWSER_CSS = `
 .bt-bcard-row svg.bt-bcard-fav{width:14px;height:14px}
 .bt-bcard-title{flex:1;min-width:0;font-size:12.5px;line-height:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--bt-ink)}
 .bt-bcard-host{flex:none;font-size:11px;line-height:15px;color:var(--bt-ink-3);max-width:38%;overflow:hidden;text-overflow:ellipsis}
-.bt-bcard-x{position:absolute;top:6px;right:6px;width:22px;height:22px;border:0;border-radius:7px;background:color-mix(in srgb,var(--bt-main) 88%,transparent);color:var(--bt-ink-2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;opacity:0;transition:opacity .12s ease;backdrop-filter:blur(4px)}
-.bt-bcard:hover .bt-bcard-x{opacity:1}
+.bt-bcard-x{position:absolute;top:6px;right:6px;width:22px;height:22px;border:0;border-radius:7px;background:color-mix(in srgb,var(--bt-main) 88%,transparent);color:var(--bt-ink-2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .12s ease;backdrop-filter:blur(4px)}
+.bt-bcard:hover .bt-bcard-x{opacity:1;pointer-events:auto}
 .bt-bcard-new{display:flex;align-items:center;justify-content:center;gap:6px;height:40px;border:.5px dashed var(--bt-line-2);border-radius:12px;background:none;color:var(--bt-ink-3);font:inherit;font-size:12.5px;cursor:pointer}
 .bt-bcard-new:hover{color:var(--bt-ink);border-color:var(--bt-ink-3)}
 .bt-bcard-new svg{width:14px;height:14px}
 .bt-browser-empty-mark{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+/* Cookie imports */
+.bt-import-menu{position:absolute;top:6px;right:6px;z-index:6;width:236px;padding:6px;border-radius:16px;background:var(--bt-main);border:.5px solid var(--bt-line-2);box-shadow:0 10px 32px -8px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.06);animation:bt-bcard-in .18s cubic-bezier(.16,1,.3,1) both}
+.bt-import-menu-title{padding:6px 10px 8px;font-size:11px;font-weight:500;letter-spacing:.02em;color:var(--bt-ink-3)}
+.bt-import-item{display:flex;align-items:center;gap:9px;width:100%;min-width:0;padding:8px 10px;border:0;border-radius:8px;background:none;color:var(--bt-ink);font:inherit;font-size:12.5px;text-align:left;cursor:pointer}
+.bt-import-item:hover{background:var(--bt-hover)}
+.bt-import-item:disabled{opacity:.5;cursor:default}
+.bt-import-item-icon{flex:none;color:var(--bt-ink-3)}
+.bt-import-item-icon svg,.bt-import-item svg{width:15px;height:15px}
+.bt-import-item-name{flex:none;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bt-import-item-sub{flex:1;min-width:0;text-align:right;font-size:11px;color:var(--bt-ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bt-import-menu-note{padding:8px 10px 10px;font-size:12px;color:var(--bt-ink-3)}
+.bt-import-card{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bt-main);overflow:auto;animation:bt-foot-in .2s ease}
+.bt-import-box{width:100%;max-width:340px;max-height:100%;display:flex;flex-direction:column;gap:10px;padding:20px;border:.5px solid var(--bt-line-2);border-radius:16px;background:var(--bt-main);box-shadow:0 12px 36px -12px rgba(0,0,0,.14);overflow:auto}
+.bt-import-title{font-size:15px;line-height:21px;font-weight:600}
+.bt-import-sub{font-size:12px;line-height:17px;color:var(--bt-ink-3);margin-top:-6px}
+.bt-import-text{font-size:13px;line-height:19px;color:var(--bt-ink-2);overflow-wrap:anywhere}
+.bt-import-list{max-height:180px;overflow:auto;border:.5px solid var(--bt-line);border-radius:10px;padding:4px 10px}
+.bt-import-line{display:flex;align-items:baseline;gap:8px;padding:4px 0;min-width:0}
+.bt-import-line-name{flex:none;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--bt-ink)}
+.bt-import-line-count{flex:1;min-width:0;text-align:right;font-size:11.5px;color:var(--bt-ink-3);white-space:nowrap}
+.bt-import-line-reason{flex:1;min-width:0;font-size:11.5px;line-height:16px;color:var(--bt-ink-3);overflow-wrap:anywhere}
+.bt-import-note{font-size:12px;line-height:17px;color:var(--bt-ink-3)}
+.bt-import-warns{font-size:12px;color:var(--bt-ink-3)}
+.bt-import-warns summary{cursor:pointer;padding:2px 0}
+.bt-import-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.bt-import-primary{height:32px;padding:0 16px;border:0;border-radius:999px;background:var(--bt-accent);color:var(--bt-accent-ink);font:inherit;font-size:13px;cursor:pointer}
+.bt-import-primary:disabled{opacity:.55;cursor:default}
+.bt-import-plain{height:32px;padding:0 14px;border:.5px solid var(--bt-line-2);border-radius:999px;background:var(--bt-main);color:var(--bt-ink);font:inherit;font-size:13px;cursor:pointer}
+.bt-import-plain:hover{background:var(--bt-hover)}
+.bt-import-plain:disabled{opacity:.55;cursor:default}
+/* A viewport too narrow to leave the conversation its room: the panel covers it,
+   and its close controls get a touch-sized target. */
+.bt-panel[data-overlay]{width:100vw}
+.bt-panel[data-overlay] .bt-ptab-close,.bt-panel[data-overlay] .bt-drawer-top .bt-round{width:44px;height:44px}
+/* Touch: the hidden-but-tappable tab and card close buttons stay visible at a
+   finger-sized target instead. */
+@media (hover:none){
+  .bt-ptab-x,.bt-bcard-x{opacity:1;pointer-events:auto;width:44px;height:44px}
+  .bt-ptab-close{width:44px;height:44px}
+}
 @media (prefers-reduced-motion:reduce){.bt-ptabs,.bt-panel-view,.bt-bcard,.bt-ptab-name{animation:none}}
 `

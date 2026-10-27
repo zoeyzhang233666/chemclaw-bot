@@ -15,6 +15,11 @@ import { createServer } from 'node:http'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const [given, shotFile] = process.argv.slice(2)
 const source = given === '--source'
+if (source) {
+  const plugin = resolve(root, '../chemclaw-bot')
+  const installed = dirname(createRequire(import.meta.url).resolve('chemclaw-bot/package.json'))
+  if (resolve(installed) !== plugin) for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'src/host', 'src/shared']) cpSync(join(plugin, path), join(installed, path), { recursive: true })
+}
 const executable = source ? process.env.CHEMCLAW_TEST_ELECTRON || createRequire(import.meta.url)('electron') : given || packedExecutable()
 
 function packedExecutable() {
@@ -244,13 +249,13 @@ async function chat(cdp) {
   }
   // The mock model's greeting for a new team.
   await until(text('今天想先解决哪个业务问题'), 'the greeting')
-  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].at(-1).focus()")
+  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: 'packaged app check' })
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
   // The mock model starts its reply with 收到： and the message.
   await until(text('收到：packaged app check'), 'the reply')
   await until('window.dsBotApp?.browser?.views', 'the native browser bridge')
-  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].at(-1).focus()")
+  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: `浏览器检查 http://127.0.0.1:${browserFixture.address().port}/` })
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
   await until(text('浏览器检查完成：ChemClaw Browser Check'), 'the Bot browser tool through Host IPC')
@@ -274,7 +279,29 @@ async function chat(cdp) {
   // Closing details returns the workspace seat to the file-preview checks below.
   await evaluate("document.querySelector('.bt-pill').click()")
   console.log('check-packed: browser tool, native bridge, takeover and give-back passed')
-  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].at(-1).focus()")
+  const sendMain = async message => {
+    await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true]')].at(-1).focus()")
+    await cdp.call('Input.insertText', { text: message })
+    for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
+  }
+  await sendMain('长任务 6 1')
+  await until(text('步骤0'), 'the active main task')
+  await sendMain('/side 当前进展是什么？')
+  await until("document.querySelector('.bt-side-input')", 'the side-chat panel')
+  await until(text('Side note: 0 earlier pair(s) seen.'), 'the independent side answer')
+  await evaluate("document.querySelector('.bt-side-input').focus()")
+  await cdp.call('Input.insertText', { text: '继续解释一下' })
+  for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
+  await until(text('Side note: 1 earlier pair(s) seen.'), 'the side follow-up')
+  await until(text('长任务做完了'), 'the main task completing without interruption')
+  if (shotFile) {
+    const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' })
+    writeFileSync(resolve(`${shotFile}.side.png`), Buffer.from(data, 'base64'))
+  }
+  await evaluate("document.querySelector('.bt-ptab-close').click()")
+  console.log('check-packed: /side and follow-up answered while the main task continued')
+
+  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: '要密钥 DEMO_THEME_TEST' })
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
   await until("document.querySelector('.bt-secret-card .bt-q-x')", 'the secure-entry card')
@@ -284,7 +311,7 @@ async function chat(cdp) {
   await until("!document.querySelector('.bt-secret-card .bt-q-x')", 'secret request cancellation')
   const delivery = join(work, 'workspace', '中文文件 sample.html')
   writeFileSync(delivery, '<!doctype html><meta charset="utf-8"><title>ChemClaw delivery check</title><h1>可点击交付文件</h1><button onclick="this.textContent=\'交互成功\'">交互测试</button>')
-  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].at(-1).focus()")
+  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: `交付 ${delivery}` })
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
   await until("document.querySelector('[data-presented-file] button[aria-label]')", 'the present file card')

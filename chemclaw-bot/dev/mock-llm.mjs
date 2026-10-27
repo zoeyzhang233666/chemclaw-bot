@@ -124,6 +124,10 @@ function decide(body) {
   }).filter(message => message.role !== 'user' || message.content.length > 0)
   const last = messages.at(-1)
   const blocks = Array.isArray(last?.content) ? last.content : []
+  if (last?.role === 'user' && textBlocks(last.content).some(value => value.startsWith('chemclaw-bot/side\n'))) {
+    const pairs = messages.filter(message => message.role === 'assistant' && textBlocks(message.content).some(value => value.startsWith('Side note:'))).length
+    return [text(`Side note: ${pairs} earlier pair(s) seen.`)]
+  }
   const me = /You are (.+?), a Bot on the user's team/.exec(system)?.[1] ?? 'Bot'
   const isMain = system.includes('You are the Main Bot')
   const isRelay = system.includes('# Group chat relay')

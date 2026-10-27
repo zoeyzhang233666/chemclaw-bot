@@ -160,3 +160,10 @@ ChemClaw browser automation (2026-10-27):
   ChemClaw adaptations use playwright-core 1.61.1 (Apache-2.0, Microsoft) and
   ws 8.22.0 (MIT, Einar Otto Stangvik and contributors). Their installed packages
   retain their licenses. No separate Chromium build is downloaded or bundled.
+
+ChemClaw side chat (2026-10-27):
+  Adapted Fei2411/DS-Bot host side/aside helpers, side chat UI, panel and input
+  routing, and related tests at de55888a93983fc51c94f7d22bc94b4f8293205d
+  (Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors).
+  https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
+  ChemClaw retains its browser controls, chemical workflows and credential routes.

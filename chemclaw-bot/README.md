@@ -37,6 +37,13 @@ Install, enable, and restart if asked. Or use the full path to `chemclaw-bot-0.2
 
 For the standalone app, models, connectors and first prompts, see the repository root [README.md](../README.md).
 
+## Side chats
+
+Use `/side <question>` in a Bot chat, or choose **Side chat** in the details menu,
+to ask about progress without interrupting its main task. Follow-ups stay in a
+separate tab and cannot run tools. Closing the panel keeps the history; closing
+a side-chat tab deletes that chat.
+
 ## Bot browsers
 
 The ChemClaw desktop app gives each Bot a separate browser with saved login state.

@@ -101,3 +101,5 @@ export const OWN_CHAT_SEARCH = 20
 export const HISTORY_PAGE = 200
 export const HISTORY_PAGES_MAX = 50
 export const HISTORY_TIMEOUT_MS = 20_000
+
+export const ASIDE_LIMIT = 'Answer cut off at the output limit.'
