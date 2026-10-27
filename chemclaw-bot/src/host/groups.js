@@ -309,6 +309,32 @@ export function install(rt) {
   }
   Object.assign(rt, { keepGroupLine, dropGroupLines, warmRoom, awaitRoomWarm, warmRoomsIdle })
 
+  // A human-facing answer owns these cards, not the whole group round. Pending
+  // calls stay off the live feed; only successful turn completion releases them.
+  const pendingViews = new Map()
+  rt.stageRoomView = (sessionId, { title, view, callId }) => {
+    const turn = rt.live.get(sessionId)?.turn
+    if (turn === undefined) return 'A group view must belong to a running answer.'
+    let entry = pendingViews.get(sessionId)
+    if (entry?.turn !== turn) { entry = { turn, views: [] }; pendingViews.set(sessionId, entry) }
+    const existing = entry.views.findIndex(item => (callId !== undefined && item.id === callId) || (title !== '' && item.title === title))
+    const item = { id: callId ?? randomUUID(), title, view }
+    if (existing < 0) entry.views.push(item)
+    else entry.views[existing] = item
+    return 'The view is staged for your answer to the user. Finish this answer with the result; it becomes visible only when this turn completes.'
+  }
+  rt.takeRoomViews = (sessionId, turn, completed) => {
+    const entry = pendingViews.get(sessionId)
+    pendingViews.delete(sessionId)
+    return completed && entry !== undefined && entry.turn === turn ? entry.views : []
+  }
+  const postViews = (round, member, views = []) => {
+    for (const item of views) {
+      if (round.replies.some(reply => reply.kind === 'view' && reply.id === item.id)) continue
+      round.replies.push({ kind: 'view', botId: member.id, name: member.name, color: member.color, ...item, time: Date.now() })
+    }
+  }
+
   // Lines from before the round's opening message are kept apart from this round, so
   // an earlier round (an old count-off, say) never reads as part of the current one.
   // `files` are the files of the lines shown, which go to the member with the prompt.
@@ -448,7 +474,7 @@ export function install(rt) {
     }
     const reply = await done
     // A turn that ended leaves nothing for a stop to cancel.
-    if (typeof reply === 'string' || reply?.failure !== undefined) started.splice(started.indexOf(turn), 1)
+    if (typeof reply === 'string' || reply?.views !== undefined || reply?.failure !== undefined) started.splice(started.indexOf(turn), 1)
     if (reply === null || typeof reply === 'object') return reply
     return stripOwnName(member.name, String(reply ?? '').trim())
   }
@@ -611,7 +637,8 @@ export function install(rt) {
       const startedAt = Date.now()
       const reply = await roomTurn(room, member, session.id, { text, files: prompt.files }, slot.note ?? 'your turn', signal, round, slot.by, said)
       round.speaking = null
-      const final = typeof reply === 'string' && !isPass(reply) ? reply : undefined
+      const answer = typeof reply === 'string' ? reply : reply?.views !== undefined ? reply.text : undefined
+      const final = typeof answer === 'string' && !isPass(answer) ? answer : undefined
       if (reply?.failure !== undefined) {
         // Not a pass: the user sees why the member is silent, and the round goes on.
         dropRoomDraft(room, member.id)
@@ -639,6 +666,7 @@ export function install(rt) {
           appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
         }
       }
+      postViews(round, member, reply?.views)
       const spoken = final === undefined ? said : [...said, final]
       if (spoken.length === 0) continue
       // Only the admin's "@all" calls everyone, so a member cannot set off a storm.
@@ -741,6 +769,10 @@ export function install(rt) {
         round.replies.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
       }
       if (posts.some(post => post.resumed || post.stopped || post.done)) await rt.save()
+      for (const post of posts.filter(item => item.views?.length && item.logged === undefined)) {
+        const member = rt.botOf(post.botId)
+        if (member) postViews(round, member, post.views)
+      }
       if (releases) resumePaused(room, round)
       rt.roomProgress.set(exec.callId, round)
       try {
@@ -897,6 +929,7 @@ export function install(rt) {
         running.replies.push({ botId: sender.id, name: sender.name, color: sender.color, text: line, time: Date.now() })
         logged = room.seq
       }
+      postViews(running, sender, extra.views)
       await rt.save()
     }
     const agent = await rt.resolveAgent(room.id)
@@ -914,15 +947,15 @@ export function install(rt) {
   // inside a round. Work whose result already went out as a step line (`shown`) and
   // that ends with nothing more to say still tells the member that asked for it,
   // which answers the result: where the result sits in the turn decides nothing.
-  async function lateRoomReply(sessionId, info, reply, { shown = false } = {}) {
+  async function lateRoomReply(sessionId, info, reply, { shown = false, views = [] } = {}) {
     const owner = rt.groupOwners.get(sessionId)
     const room = rt.roomOf(owner?.roomId ?? info.roomId)
     const member = rt.botOf(owner?.botId)
     if (room === undefined || member === undefined || !room.members.includes(member.id)) return
     const text = stripOwnName(member.name, reply)
     const done = isPass(text) && shown && info.askedBy !== undefined
-    if (isPass(text) && !done) return
-    await postToRoom(room, member, done ? '' : text, { late: true, ...(done ? { done: true } : {}), ...(info.askedBy ? { askedBy: info.askedBy } : {}) })
+    if (isPass(text) && !done && views.length === 0) return
+    await postToRoom(room, member, done ? '' : text, { late: true, ...(views.length ? { views } : {}), ...(done ? { done: true } : {}), ...(info.askedBy ? { askedBy: info.askedBy } : {}) })
       .catch(error => rt.warn('chemclaw-bot: late group reply from %s failed: %s', member.name, error))
   }
   rt.lateRoomReply = lateRoomReply

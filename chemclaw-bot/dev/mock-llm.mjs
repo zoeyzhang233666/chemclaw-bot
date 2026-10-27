@@ -210,6 +210,7 @@ function decide(body) {
     }
     // Secret cards: a key already there is echoed at once; a card ends the turn.
     // The note after the card can ride in the same message as the card's tool result.
+    if (used?.name === 'show_view' && used.input.title === '合成数据趋势验收') return [text('走势查询完成：以下仅为合成验收数据，缺口保持为空。')]
     if (used?.name === 'request_secret') {
       if (/already saved/.test(resultText)) return [echoSecret(used.input.name, tools)]
       const note = textBlocks(last.content).find(value => value.trim().startsWith('[Secret card]'))
@@ -352,6 +353,15 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    if (/查询合成走势验证/.test(userLine) && tools.has('show_view')) {
+      const dates = Array.from({ length: 57 }, (_, index) => new Date(Date.UTC(2026, 8, index + 1)).toISOString().slice(0, 10))
+      return [text('先给查询结果。'), tool('show_view', { audience: 'user', title: '合成数据趋势验收', await_reply: false,
+        view: { type: 'stack', children: [
+          { type: 'chart', kind: 'line', categories: dates, series: [{ name: '合成样例', values: dates.map((_, index) => index === 20 ? null : 3000 + (index % 9) * 30) }], unit: '元/吨', caption: '仅为隔离验收的合成数据，9月21日缺失' },
+          { type: 'sources', items: [{ label: '合成验收数据', url: 'https://example.com/synthetic' }] },
+        ] },
+      })]
+    }
     if (/生成群交付样例/.test(userLine) && tools.has('chem_deliver')) return [tool('chem_deliver', {
       report: JSON.stringify({ title: '纯碱成本利润测算验收', filename: '纯碱成本利润测算_20261023', sections: [{ title: '文件链接验收', text: '这是隔离 mock 样例，用于验证群聊表格文件名和相对链接都能打开真实文件。', table: { columns: ['项目', '测试数值'], rows: [['样例成本', 100], ['样例利润', 20]] } }] }), formats: 'html,xlsx',
     })]

@@ -816,3 +816,15 @@ test('a view works its formulas out, draws a chart, and keeps html in a sandboxe
   assert.ok(frame.props.srcDoc.indexOf('Content-Security-Policy') < frame.props.srcDoc.indexOf('<b>hi</b>'), 'the policy comes before the markup')
   assert.equal(frame.props.title, 'A greeting')
 })
+
+
+test('completed group answers render persisted views and keep separate message blocks around them', () => {
+  const view = { type: 'chart', kind: 'line', categories: ['2026-10-26', '2026-10-27'], series: [{ values: [10, null] }] }
+  const replies = [{ botId: 'writer', name: 'Writer', text: 'A useful answer' }, { kind: 'view', id: 'delivery-v1', botId: 'writer', title: 'Verified trend', view }, { botId: 'chief', name: 'Chief', text: 'Another task continues' }]
+  const node = show(call('group_relay', 'completed-chart', { content: { replies } }), { sessionId: 'room' })
+  assert.match(text(node), /Verified trend/)
+  assert.equal(findAll(node, item => item.type === 'svg' && item.props.className === 'bt-chart-svg').length, 1)
+  assert.deepEqual(stackReplies(replies).length, 3)
+  const reloaded = show(call('group_relay', 'completed-chart', { content: JSON.stringify({ replies }) }), { sessionId: 'room' })
+  assert.equal(findAll(reloaded, item => item.props.className === 'bt-chart').length, 1)
+})

@@ -251,7 +251,7 @@ function checkChart(node, path, ctx) {
     for (let item = 0; item < series.values.length; item += 1) {
       const value = series.values[item]
       if (isFormula(value)) ctx.formulas.push({ source: value['='], path: `${at}.values[${item}]`, kind: 'number' })
-      else if (!isNumber(value)) return `${at}.values[${item}]: expected a number`
+      else if (value !== null && !isNumber(value)) return `${at}.values[${item}]: expected a number or null for missing data`
     }
   }
   if (node.unit !== undefined && typeof node.unit !== 'string') return `${path}.unit: expected a string`

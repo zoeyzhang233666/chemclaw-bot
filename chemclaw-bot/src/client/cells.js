@@ -6,7 +6,7 @@ import { linkMentions, mentionTarget, dayLabel, contentText, stripHeader, isHidd
 import { SmileIcon, ReplyIcon, DotsIcon, CheckIcon, DownloadIcon, CopyIcon, MemoryIcon } from './icons.js'
 import { colorOf, toolState, BotMark, RoomAvatar } from './mark.js'
 import { SettledQuestion, PendingQuestion } from './questions.js'
-import { AnsweredReply, WidgetCell } from './widget-cell.js'
+import { AnsweredReply, DeliveredView, WidgetCell } from './widget-cell.js'
 import { SecretToolCell } from './secret-card.js'
 import { t } from './i18n.js'
 import { call } from './api.js'
@@ -861,6 +861,9 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
     preparing ? h('div', { className: 'bt-activity', role: 'status' }, h(Shimmer, null, t('Preparing group reply…'))) : null,
     stackReplies(replies).map(({ reply, index, texts, time, duration }) => {
       const bot = roster.byId[reply.botId] ?? { id: reply.botId, name: reply.name, color: reply.color ?? 'gray' }
+      if (reply.kind === 'view') {
+        return h('div', { key: `view-${reply.id ?? index}`, className: 'bt-group-view' }, h(DeliveredView, { title: reply.title, view: reply.view }))
+      }
       if (reply.kind === 'user') {
         return h('div', { key: `user-${index}`, className: 'bt-urow' }, h('div', { className: 'bt-ububble' },
           h(MarkdownText, { text: reply.text, labels: mdLabels(), variant: 'compact' }),

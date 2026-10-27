@@ -188,3 +188,12 @@ function nodes(count) {
   return stack(...children)
 }
 
+
+
+test('chart observations may be missing without treating them as zeros', () => {
+  const view = { type: 'chart', kind: 'line', categories: ['Monday', 'Tuesday', 'Wednesday'], series: [{ values: [10, null, 12] }] }
+  assert.deepEqual(validateView(view), { ok: true, interactive: false })
+  for (const value of [undefined, '', false, NaN, Infinity]) {
+    assert.equal(validateView({ ...view, series: [{ values: [10, value, 12] }] }).ok, false)
+  }
+})

@@ -548,6 +548,12 @@ var ZH = {
   "Key set": "已设置 key",
   "Key set outside ChemClaw": "key 在 ChemClaw 之外设置",
   "No models": "没有模型",
+  "No data": "缺失数据",
+  "Visible range": "显示范围",
+  "Range start": "范围起点",
+  "Range end": "范围终点",
+  "Move range": "平移范围",
+  "Show all": "显示全部",
   "{count} models": "{count} 个模型",
   "This key comes from outside ChemClaw, such as an environment variable, and cannot be changed here.": "这个 key 来自 ChemClaw 之外（例如环境变量），这里改不了。",
   "and {count} more": "还有 {count} 个",
@@ -4922,7 +4928,7 @@ function checkChart(node, path, ctx) {
     for (let item = 0; item < series.values.length; item += 1) {
       const value = series.values[item];
       if (isFormula(value)) ctx.formulas.push({ source: value["="], path: `${at}.values[${item}]`, kind: "number" });
-      else if (!isNumber(value)) return `${at}.values[${item}]: expected a number`;
+      else if (value !== null && !isNumber(value)) return `${at}.values[${item}]: expected a number or null for missing data`;
     }
   }
   if (node.unit !== void 0 && typeof node.unit !== "string") return `${path}.unit: expected a string`;
@@ -5321,13 +5327,41 @@ var fit = (text, room2, size) => {
   }
   return out === "" ? "" : `${out}…`;
 };
+function categoryTicks(categories, width) {
+  if (!categories.length) return [];
+  const dates2 = categories.every((label) => /^\d{4}-\d{2}-\d{2}$/.test(label));
+  const sameYear = dates2 && categories.every((label) => label.slice(0, 4) === categories[0].slice(0, 4));
+  const compact2 = sameYear && categories.length * 78 > width;
+  const labels = categories.map((label) => compact2 ? label.slice(5) : label);
+  const room2 = Math.max(1, width);
+  const maxWidth = Math.min(120, room2, Math.max(...labels.map((label) => textWidth(label, LABEL))));
+  const count = Math.min(categories.length, Math.max(1, Math.floor(room2 / (maxWidth + 14))));
+  return Array.from({ length: count }, (_, at) => {
+    const index = count === 1 ? Math.floor((categories.length - 1) / 2) : Math.round(at * (categories.length - 1) / (count - 1));
+    const label = fit(labels[index], maxWidth, LABEL);
+    return { index, label, width: textWidth(label, LABEL) };
+  });
+}
+function lineSegments(values) {
+  const segments = [];
+  let current = [];
+  values.forEach((value, index) => {
+    if (Number.isFinite(value)) current.push(index);
+    else if (current.length) {
+      segments.push(current);
+      current = [];
+    }
+  });
+  if (current.length) segments.push(current);
+  return segments;
+}
 function formatNumber(value) {
   if (!Number.isFinite(value)) return asText(value);
   const abs = Math.abs(value);
   const digits = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
   return Number(value.toFixed(digits)).toLocaleString("en-US", { maximumFractionDigits: digits });
 }
-var withUnit = (value, unit) => unit ? unit === "%" ? `${formatNumber(value)}%` : `${formatNumber(value)} ${unit}` : formatNumber(value);
+var withUnit = (value, unit) => value === null ? t("No data") : unit ? unit === "%" ? `${formatNumber(value)}%` : `${formatNumber(value)} ${unit}` : formatNumber(value);
 function niceTicks(low, high) {
   let lo = low;
   let hi = high;
@@ -5351,8 +5385,9 @@ function chartData(node, lookup) {
     name: typeof item?.name === "string" ? item.name : "",
     color: colorAt(index),
     values: categories.map((_, at) => {
-      const value = Number(resolve(Array.isArray(item?.values) ? item.values[at] : void 0, lookup, 0));
-      return Number.isFinite(value) ? value : 0;
+      const resolved = resolve(Array.isArray(item?.values) ? item.values[at] : void 0, lookup);
+      const value = typeof resolved === "number" ? resolved : NaN;
+      return Number.isFinite(value) ? value : null;
     })
   }));
   return { kind: node.kind ?? "bar", categories, series, unit: typeof node.unit === "string" ? node.unit : "" };
@@ -5360,11 +5395,12 @@ function chartData(node, lookup) {
 var csvCell = (value) => /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
 function chartCsv({ categories, series, unit }) {
   const head = ["", ...series.map((item, index) => item.name || (series.length === 1 ? unit || t("Value") : `${t("Series")} ${index + 1}`))];
-  const rows2 = categories.map((label, at) => [label, ...series.map((item) => String(item.values[at]))]);
+  const rows2 = categories.map((label, at) => [label, ...series.map((item) => item.values[at] === null ? "" : String(item.values[at]))]);
   return [head, ...rows2].map((row) => row.map((cell) => csvCell(String(cell))).join(",")).join("\n");
 }
 function valueAxis(values, zero) {
-  const finite = values.length > 0 ? values : [0];
+  const known = values.filter(Number.isFinite);
+  const finite = known.length > 0 ? known : [0];
   const low = Math.min(...finite);
   const high = Math.max(...finite);
   if (zero) return niceTicks(Math.min(0, low), Math.max(0, high));
@@ -5389,10 +5425,14 @@ function columns({ categories, series, unit, kind }, width, active, shown) {
     parts.push((0, import_react7.createElement)("text", { key: `t${tick}`, className: "bt-chart-tick", x: plot.x - 8, y: y(tick) + 3, textAnchor: "end" }, withUnit(tick, unit)));
   }
   const points = [];
-  categories.forEach((label, at) => {
+  for (const tick of categoryTicks(categories, plot.w)) {
+    const cx = plot.x + band * tick.index + band / 2;
+    const x = Math.max(plot.x + tick.width / 2, Math.min(plot.x + plot.w - tick.width / 2, cx));
+    parts.push((0, import_react7.createElement)("text", { key: `c${tick.index}`, className: "bt-chart-label", x, y: height - 7, textAnchor: "middle" }, tick.label));
+  }
+  categories.forEach((_, at) => {
     const cx = plot.x + band * at + band / 2;
-    parts.push((0, import_react7.createElement)("text", { key: `c${at}`, className: "bt-chart-label", x: cx, y: height - 7, textAnchor: "middle" }, fit(label, band - 4, LABEL)));
-    points.push({ x: cx, y: y(Math.max(...visible.map((item) => item.values[at]), lo)) });
+    points.push({ x: cx, y: y(Math.max(...visible.map((item) => item.values[at]).filter(Number.isFinite), lo)) });
   });
   if (kind === "bar") {
     const group = band * 0.72;
@@ -5402,6 +5442,7 @@ function columns({ categories, series, unit, kind }, width, active, shown) {
     categories.forEach((_, at) => {
       visible.forEach((item, row) => {
         const value = item.values[at];
+        if (value === null) return;
         const x = plot.x + band * at + (band - group) / 2 + row * (barW + gap);
         const top2 = Math.min(y(value), zero);
         const tall = Math.max(1, Math.abs(y(value) - zero));
@@ -5414,20 +5455,23 @@ function columns({ categories, series, unit, kind }, width, active, shown) {
   } else {
     const xs = categories.map((_, at) => plot.x + band * at + band / 2);
     visible.forEach((item, row) => {
-      const line = item.values.map((value, at) => `${at === 0 ? "M" : "L"}${xs[at]},${y(value)}`).join("");
-      if (kind === "area") {
-        const base = y(Math.max(lo, Math.min(0, hi)));
-        parts.push((0, import_react7.createElement)("path", { key: `a${row}`, className: "bt-chart-area", d: `${line}L${xs.at(-1)},${base}L${xs[0]},${base}z`, style: { fill: item.color } }));
+      for (const [part, segment] of lineSegments(item.values).entries()) {
+        const line = segment.map((at, index) => `${index === 0 ? "M" : "L"}${xs[at]},${y(item.values[at])}`).join("");
+        if (kind === "area") {
+          const base = y(Math.max(lo, Math.min(0, hi)));
+          parts.push((0, import_react7.createElement)("path", { key: `a${row}-${part}`, className: "bt-chart-area", d: `${line}L${xs[segment.at(-1)]},${base}L${xs[segment[0]]},${base}z`, style: { fill: item.color } }));
+        }
+        parts.push((0, import_react7.createElement)("path", { key: `l${row}-${part}`, className: "bt-chart-line", d: line, style: { stroke: item.color } }));
       }
-      parts.push((0, import_react7.createElement)("path", { key: `l${row}`, className: "bt-chart-line", d: line, style: { stroke: item.color } }));
       item.values.forEach((value, at) => {
+        if (value === null) return;
         parts.push((0, import_react7.createElement)("circle", { key: `p${row}-${at}`, className: "bt-chart-dot", cx: xs[at], cy: y(value), r: active === at ? 4 : 2.5, style: { fill: item.color } }));
       });
     });
     if (active !== null) parts.unshift((0, import_react7.createElement)("line", { key: "guide", className: "bt-chart-guide", x1: xs[active], x2: xs[active], y1: plot.y, y2: plot.y + plot.h }));
   }
   const hits = categories.map((_, at) => ({ x: plot.x + band * at, y: plot.y, w: band, h: plot.h }));
-  return { parts, height, points, hits };
+  return { parts, height, points, hits, inset: plot.x };
 }
 function rows({ categories, series, unit }, width, active, shown) {
   const visible = series.filter((_, index) => shown[index]);
@@ -5454,13 +5498,14 @@ function rows({ categories, series, unit }, width, active, shown) {
     parts.push((0, import_react7.createElement)("text", { key: `c${at}`, className: "bt-chart-label", x: labelW - 10, y: rowY + (rowH - 10) / 2 + 4, textAnchor: "end" }, fit(label, labelW - 12, LABEL)));
     visible.forEach((item, row) => {
       const value = item.values[at];
+      if (value === null) return;
       const by = rowY + row * (barH + 2);
       const left = Math.min(x(value), zero);
       const long = Math.max(1, Math.abs(x(value) - zero));
       parts.push((0, import_react7.createElement)("rect", { key: `b${at}-${row}`, className: "bt-chart-mark", "data-dim": active !== null && active !== at ? "" : void 0, x: left, y: by, width: long, height: barH, rx: Math.min(4, long / 2), style: { fill: item.color } }));
       parts.push((0, import_react7.createElement)("text", { key: `v${at}-${row}`, className: "bt-chart-value", x: left + long + 6, y: by + barH - 3 }, withUnit(value, unit)));
     });
-    points.push({ x: Math.max(...visible.map((item) => x(item.values[at])), zero), y: rowY });
+    points.push({ x: Math.max(...visible.filter((item) => item.values[at] !== null).map((item) => x(item.values[at])), zero), y: rowY });
   });
   const hits = categories.map((_, at) => ({ x: 0, y: plot.y + rowH * at, w: width, h: rowH }));
   return { parts, height, points, hits };
@@ -5573,11 +5618,33 @@ function ChartTable({ data }) {
     )
   );
 }
+function overview(series, count) {
+  const known = series.flatMap((item) => item.values).filter(Number.isFinite);
+  const low = known.length ? Math.min(...known) : 0;
+  const high = known.length ? Math.max(...known) : 1;
+  const x = (at) => at / (count - 1) * 1e3;
+  const y = (value) => high === low ? 10 : 17 - (value - low) / (high - low) * 14;
+  return series.flatMap((item, row) => lineSegments(item.values).flatMap((segment, part) => {
+    const path = segment.map((at, index) => `${index === 0 ? "M" : "L"}${x(at)},${y(item.values[at])}`).join("");
+    return [
+      (0, import_react7.createElement)("path", { key: `a${row}-${part}`, className: "bt-chart-overview-area", d: `${path}L${x(segment.at(-1))},20L${x(segment[0])},20z` }),
+      (0, import_react7.createElement)("path", { key: `l${row}-${part}`, className: "bt-chart-overview-line", d: path, vectorEffect: "non-scaling-stroke" })
+    ];
+  }));
+}
 function WidgetChart({ node, lookup, registerChart, refreshCharts }) {
-  const data = chartData(node, lookup);
+  const allData = chartData(node, lookup);
+  const [range, setRange] = (0, import_react7.useState)(null);
+  const total = allData.categories.length;
+  const from = Math.min(range?.from ?? 0, Math.max(0, total - 1));
+  const to = Math.max(from, Math.min(range?.to ?? total - 1, total - 1));
+  const data = { ...allData, categories: allData.categories.slice(from, to + 1), series: allData.series.map((item) => ({ ...item, values: item.values.slice(from, to + 1) })) };
   const { kind, categories, series, unit } = data;
+  const dataKey = JSON.stringify(allData.categories);
+  (0, import_react7.useEffect)(() => setRange(null), [dataKey]);
   const box = (0, import_react7.useRef)(null);
   const svg = (0, import_react7.useRef)(null);
+  const rangeDrag = (0, import_react7.useRef)(null);
   const width = useWidth(box, 520);
   const [active, setActive] = (0, import_react7.useState)(null);
   const [hidden, setHidden] = (0, import_react7.useState)([]);
@@ -5608,10 +5675,10 @@ function WidgetChart({ node, lookup, registerChart, refreshCharts }) {
     setActive((current) => current === null ? 0 : (current + keys[event.key] + categories.length) % categories.length);
   };
   const point = active === null ? null : drawn.points[active];
-  const share = (at) => unit === "%" ? withUnit(drawn.values[at], unit) : `${withUnit(drawn.values[at], unit)} · ${drawn.total > 0 ? Math.round(drawn.values[at] / drawn.total * 100) : 0}%`;
+  const share = (at) => series[0]?.values[at] === null ? t("No data") : unit === "%" ? withUnit(drawn.values[at], unit) : `${withUnit(drawn.values[at], unit)} · ${drawn.total > 0 ? Math.round(drawn.values[at] / drawn.total * 100) : 0}%`;
   const tipRows = active === null || isDonut ? [] : series.filter((_, index) => shown[index]).map((item) => ({ color: item.color, name: item.name, value: withUnit(item.values[active], unit) }));
   const copy2 = () => {
-    void navigator.clipboard?.writeText(chartCsv(data)).then(() => {
+    void navigator.clipboard?.writeText(chartCsv(allData)).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
     });
@@ -5619,6 +5686,74 @@ function WidgetChart({ node, lookup, registerChart, refreshCharts }) {
   const toggleTable = () => {
     table.current = !table.current;
     setAsTable(table.current);
+  };
+  const changeRange = (start, end) => {
+    setRange({ from: start, to: end });
+    setActive(null);
+  };
+  const bound2 = (value, min, max) => Math.max(min, Math.min(value, max));
+  const startRange = (event, part) => {
+    if (event.button !== 0 || event.isPrimary === false) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const track = event.currentTarget.closest(".bt-chart-range-track").getBoundingClientRect();
+    if (track.width <= 0) return;
+    let start = from;
+    let end = to;
+    if (part === "track") {
+      const at = Math.round((event.clientX - track.left) / track.width * (total - 1));
+      start = bound2(at - Math.floor((to - from) / 2), 0, total - 1 - (to - from));
+      end = start + to - from;
+      changeRange(start, end);
+    }
+    rangeDrag.current = { pointer: event.pointerId, x: event.clientX, width: track.width, from: start, to: end, part };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const moveRange = (event) => {
+    const drag = rangeDrag.current;
+    if (!drag || event.pointerId !== drag.pointer) return;
+    const delta = Math.round((event.clientX - drag.x) / drag.width * (total - 1));
+    if (drag.part === "from") changeRange(bound2(drag.from + delta, 0, drag.to - 1), drag.to);
+    else if (drag.part === "to") changeRange(drag.from, bound2(drag.to + delta, drag.from + 1, total - 1));
+    else {
+      const start = bound2(drag.from + delta, 0, total - 1 - (drag.to - drag.from));
+      changeRange(start, start + drag.to - drag.from);
+    }
+  };
+  const endRange = (event) => {
+    if (rangeDrag.current?.pointer === event.pointerId) rangeDrag.current = null;
+  };
+  const rangeKey = (event, part) => {
+    const page = Math.max(1, Math.round((total - 1) / 10));
+    const delta = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1, PageDown: -page, PageUp: page }[event.key];
+    if (delta === void 0 && event.key !== "Home" && event.key !== "End") return;
+    event.preventDefault();
+    const next = (value, min, max) => event.key === "Home" ? min : event.key === "End" ? max : bound2(value + delta, min, max);
+    if (part === "from") changeRange(next(from, 0, to - 1), to);
+    else if (part === "to") changeRange(from, next(to, from + 1, total - 1));
+    else {
+      const start = next(from, 0, total - 1 - (to - from));
+      changeRange(start, start + to - from);
+    }
+  };
+  const rangeText = `${allData.categories[from]} – ${allData.categories[to]}`;
+  const rangeHandle = (part) => {
+    const start = part === "from";
+    const value = start ? from : to;
+    return (0, import_react7.createElement)("button", {
+      type: "button",
+      role: "slider",
+      className: "bt-chart-range-handle",
+      style: { left: `${value / (total - 1) * 100}%` },
+      "aria-label": t(start ? "Range start" : "Range end"),
+      "aria-orientation": "horizontal",
+      "aria-valuemin": start ? 0 : from + 1,
+      "aria-valuemax": start ? to - 1 : total - 1,
+      "aria-valuenow": value,
+      "aria-valuetext": allData.categories[value],
+      onPointerDown: (event) => startRange(event, part),
+      onKeyDown: (event) => rangeKey(event, part)
+    }, (0, import_react7.createElement)("span", { "aria-hidden": true }));
   };
   const menuLabel = typeof node.caption === "string" && node.caption !== "" ? node.caption : null;
   const action = (0, import_react7.useRef)(null);
@@ -5689,12 +5824,59 @@ function WidgetChart({ node, lookup, registerChart, refreshCharts }) {
       tipRows.map((row, index) => (0, import_react7.createElement)("span", { key: index }, (0, import_react7.createElement)("i", { style: { background: row.color } }), row.name ? `${row.name}  ` : "", row.value))
     ) : null
   );
-  const body = asTable ? (0, import_react7.createElement)(ChartTable, { data }) : isDonut ? (0, import_react7.createElement)("div", { className: legendBeside ? "bt-chart-donut bt-chart-donut-beside" : "bt-chart-donut", onPointerLeave: () => setActive(null) }, plot, legend) : (0, import_react7.createElement)(import_react7.Fragment, null, legend, plot);
+  const body = asTable ? (0, import_react7.createElement)(ChartTable, { data: allData }) : isDonut ? (0, import_react7.createElement)("div", { className: legendBeside ? "bt-chart-donut bt-chart-donut-beside" : "bt-chart-donut", onPointerLeave: () => setActive(null) }, plot, legend) : (0, import_react7.createElement)(import_react7.Fragment, null, legend, plot);
   return (0, import_react7.createElement)(
     "figure",
     { ref: box, className: "bt-chart", "data-kind": kind },
     (0, import_react7.createElement)("span", { id: labelId, hidden: true }, label),
     body,
+    !asTable && !isDonut && kind !== "hbar" && total > 24 ? (0, import_react7.createElement)(
+      "div",
+      { className: "bt-chart-range", style: { marginLeft: drawn.inset, marginRight: 4 } },
+      (0, import_react7.createElement)(
+        "div",
+        {
+          className: "bt-chart-range-track",
+          role: "group",
+          "aria-label": t("Visible range"),
+          onPointerDown: (event) => startRange(event, "track"),
+          onPointerMove: moveRange,
+          onPointerUp: endRange,
+          onPointerCancel: endRange,
+          onLostPointerCapture: endRange,
+          onDoubleClick: () => {
+            setRange(null);
+            setActive(null);
+          }
+        },
+        (0, import_react7.createElement)("svg", { className: "bt-chart-overview", viewBox: "0 0 1000 20", preserveAspectRatio: "none", "aria-hidden": true }, overview(allData.series.filter((_, at) => shown[at]), total)),
+        (0, import_react7.createElement)("div", {
+          className: "bt-chart-range-window",
+          role: "slider",
+          tabIndex: 0,
+          style: { left: `${from / (total - 1) * 100}%`, width: `${(to - from) / (total - 1) * 100}%` },
+          "aria-label": t("Move range"),
+          "aria-orientation": "horizontal",
+          "aria-valuemin": 0,
+          "aria-valuemax": total - 1 - (to - from),
+          "aria-valuenow": from,
+          "aria-valuetext": rangeText,
+          onPointerDown: (event) => startRange(event, "window"),
+          onKeyDown: (event) => rangeKey(event, "window")
+        }),
+        rangeHandle("from"),
+        rangeHandle("to")
+      ),
+      from !== 0 || to !== total - 1 ? (0, import_react7.createElement)(
+        "div",
+        { className: "bt-chart-range-caption" },
+        (0, import_react7.createElement)("span", null, rangeText),
+        (0, import_react7.createElement)("button", { type: "button", onClick: () => {
+          setRange(null);
+          setActive(null);
+        } }, t("Show all"))
+      ) : null
+    ) : null,
     // The SVG stays mounted under the table, so the image can still be saved from it.
     asTable ? (0, import_react7.createElement)("div", { hidden: true }, plot) : null,
     copied ? (0, import_react7.createElement)("span", { className: "bt-chart-copied", role: "status" }, t("Copied")) : null,
@@ -5703,6 +5885,21 @@ function WidgetChart({ node, lookup, registerChart, refreshCharts }) {
 }
 var CHART_CSS = `
 .bt-chart{position:relative;margin:0;min-width:0;display:flex;flex-direction:column;gap:8px}
+.bt-chart-range{min-width:0;display:flex;flex-direction:column;gap:2px;color:var(--bt-ink-2)}
+.bt-chart-range-track{position:relative;height:32px;touch-action:none;user-select:none;cursor:pointer}
+.bt-chart-range-track:before{content:'';position:absolute;inset:6px 0;background:var(--bt-line);opacity:.35;border-radius:4px}
+.bt-chart-overview{position:absolute;inset:6px 0;width:100%;height:20px;pointer-events:none}
+.bt-chart-overview-area{fill:var(--bt-ink-3);opacity:.1}
+.bt-chart-overview-line{fill:none;stroke:var(--bt-ink-3);stroke-width:1;opacity:.4}
+.bt-chart-range-window{position:absolute;top:6px;bottom:6px;border:1px solid var(--bt-line-2);border-radius:4px;background:color-mix(in srgb,var(--bt-accent) 10%,transparent);cursor:grab}
+.bt-chart-range-window:active{cursor:grabbing}
+.bt-chart-range-handle{position:absolute;top:3px;bottom:3px;width:10px;transform:translateX(-50%);padding:0;border:1px solid var(--bt-line-2);border-radius:4px;background:var(--bt-main);color:var(--bt-ink-3);cursor:ew-resize;touch-action:none}
+.bt-chart-range-handle:before{content:'';position:absolute;inset:-4px -6px}
+.bt-chart-range-handle span{display:block;width:2px;height:10px;margin:auto;border-left:1px solid currentColor;border-right:1px solid currentColor}
+.bt-chart-range-handle:hover{border-color:var(--bt-accent);color:var(--bt-accent)}
+.bt-chart-range-handle:focus-visible,.bt-chart-range-window:focus-visible{outline:2px solid var(--bt-accent);outline-offset:2px}
+.bt-chart-range-caption{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:10px;font-variant-numeric:tabular-nums}
+.bt-chart-range-caption button{padding:0;border:0;background:none;color:var(--bt-ink-2);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 .bt-chart-plot{position:relative;min-width:0}
 .bt-chart-svg{display:block;overflow:visible;outline:none;font-family:inherit}
 .bt-chart-svg text{pointer-events:none}
@@ -6347,6 +6544,10 @@ function WidgetCard({ title, view, onSubmit, onDismiss, busy = false, raised = f
     (0, import_react9.createElement)("div", { className: "bt-view-body" }, (0, import_react9.createElement)(WidgetView, { view, onSubmit, settled, answer, busy, registerChart, refreshCharts }))
   );
 }
+function DeliveredView({ title, view }) {
+  const checked = checkShownView(title, view);
+  return checked.error || checked.interactive ? null : (0, import_react9.createElement)(WidgetCard, { title: checked.title, view: checked.view });
+}
 function PendingView({ sessionId, view, actions, inline }) {
   const [answered, setAnswered] = (0, import_react9.useState)(null);
   const busyRef = (0, import_react9.useRef)(false);
@@ -6376,7 +6577,7 @@ function WidgetCell({ sessionId, callId, args, done, isError, roster, actions, h
     return (0, import_react9.createElement)(PendingView, { sessionId, view: record, actions, inline: true });
   }
   if (done && isError) return (0, import_react9.createElement)("span", { className: "bt-q-gone", hidden: true });
-  const shown = checkShownView(args?.text?.("title"), args?.value?.("view"));
+  const shown = checkShownView(args?.text?.("title") ?? args?.title, args?.value?.("view") ?? args?.view);
   if (shown.error !== void 0 || shown.interactive || args?.value?.("await_reply") === true) {
     return (0, import_react9.createElement)("span", { className: "bt-q-gone", hidden: true });
   }
@@ -8569,6 +8770,9 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
     preparing ? (0, import_react18.createElement)("div", { className: "bt-activity", role: "status" }, (0, import_react18.createElement)(Shimmer, null, t("Preparing group reply…"))) : null,
     stackReplies(replies).map(({ reply, index, texts: texts2, time, duration }) => {
       const bot = roster.byId[reply.botId] ?? { id: reply.botId, name: reply.name, color: reply.color ?? "gray" };
+      if (reply.kind === "view") {
+        return (0, import_react18.createElement)("div", { key: `view-${reply.id ?? index}`, className: "bt-group-view" }, (0, import_react18.createElement)(DeliveredView, { title: reply.title, view: reply.view }));
+      }
       if (reply.kind === "user") {
         return (0, import_react18.createElement)("div", { key: `user-${index}`, className: "bt-urow" }, (0, import_react18.createElement)(
           "div",

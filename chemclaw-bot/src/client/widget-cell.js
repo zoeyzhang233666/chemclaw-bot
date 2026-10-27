@@ -406,6 +406,11 @@ function WidgetCard({ title, view, onSubmit, onDismiss, busy = false, raised = f
   h('div', { className: 'bt-view-body' }, h(WidgetView, { view, onSubmit, settled, answer, busy, registerChart, refreshCharts })))
 }
 
+export function DeliveredView({ title, view }) {
+  const checked = checkShownView(title, view)
+  return checked.error || checked.interactive ? null : h(WidgetCard, { title: checked.title, view: checked.view })
+}
+
 // A view waiting for its answer, inline at its call or raised in the dock. Like a
 // pending question it hides on submit and comes back if the reply fails.
 export function PendingView({ sessionId, view, actions, inline }) {
@@ -442,7 +447,7 @@ export function WidgetCell({ sessionId, callId, args, done, isError, roster, act
   // Display-only cards draw from the recorded call arguments, which keep the
   // provider's encoding: checkShownView measures and unwraps them as the host did.
   // The args accessor reads strings through `text`; `value` drops them.
-  const shown = checkShownView(args?.text?.('title'), args?.value?.('view'))
+  const shown = checkShownView(args?.text?.('title') ?? args?.title, args?.value?.('view') ?? args?.view)
   // A call the host refused — a blueprint it would not show, or a reply it cannot
   // wait for — leaves no card; the model's retry then stays the only one. So does
   // a settled interactive call: answered, dismissed or replaced, it leaves no gap
