@@ -1,7 +1,7 @@
 // Electron main process: one window for the Bot team, served by the app's own DSH Host.
 // The window loads the Host's loopback address as DSH Web does: DSH's sign-in sends the page's
 // origin as the address the browser comes back to, and accepts only a loopback one.
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
+import { app, BrowserWindow, WebContentsView, dialog, ipcMain, Menu, nativeTheme, session, shell } from 'electron'
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { rm } from 'node:fs/promises'
 import { release } from 'node:os'
@@ -10,6 +10,8 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
 import { getDshRuntimeVersion } from '@deepseek-ai/dsh-app-boot'
 import electronUpdater from 'electron-updater'
+import { BotBrowserGuests } from './bot-browser.mjs'
+import { BotViews, isBotId } from './bot-views.mjs'
 import { canonicalExecPath } from './canonical-path.mjs'
 import { chooseLocations, localeText, programFolder, saveLocations, text } from './first-run.mjs'
 import { hostPort } from './host-port.mjs'
@@ -24,6 +26,12 @@ import { CAPTION_HEIGHT, cssColor, micaAvailable, nativeThemeSource } from './wi
 const IPC = {
   caption: 'chemclaw:caption-colors', nativeTheme: 'chemclaw:native-theme', fullscreen: 'chemclaw:fullscreen',
   dataLocation: 'chemclaw:data-location', moveData: 'chemclaw:move-data', teamWorkspace: 'chemclaw:team-workspace',
+  browserAcquire: 'chemclaw:browser-acquire', browserRelease: 'chemclaw:browser-release', browserForget: 'chemclaw:browser-forget',
+  browserViewChanged: 'chemclaw:browser-view-changed', browserViewCreate: 'chemclaw:browser-view-create',
+  browserViewSync: 'chemclaw:browser-view-sync', browserViewPlace: 'chemclaw:browser-view-place',
+  browserViewNavigate: 'chemclaw:browser-view-navigate', browserViewCommand: 'chemclaw:browser-view-command',
+  browserViewFocus: 'chemclaw:browser-view-focus', browserViewRead: 'chemclaw:browser-view-read',
+  browserViewClose: 'chemclaw:browser-view-close', browserViewHold: 'chemclaw:browser-view-hold',
   updateStatus: 'chemclaw:update-status', updateCheck: 'chemclaw:update-check', updateInstall: 'chemclaw:update-install',
 }
 const MOVE_PROBLEMS = { drive: 'moveDrive', nested: 'moveNested', workspace: 'moveWorkspace', program: 'inProgram', notEmpty: 'moveNotEmpty' }
@@ -53,6 +61,9 @@ let places
 let choosing
 let copying
 const copyAbort = new AbortController()
+const browserGuests = new BotBrowserGuests({ session, origin: () => origin, devTools: !app.isPackaged })
+let botViews
+app.once('will-quit', () => botViews?.dispose())
 if (!app.isPackaged && process.send) process.on('message', message => {
   if (message?.type === 'chemclaw-dev-quit') app.quit()
   if (message?.type === 'chemclaw-dev-reload') void stopHost().then(() => app.exit(75))
@@ -104,6 +115,10 @@ async function start() {
   places = { dataDir: where.dataDir, workspace: where.workspace }
   const port = await hostPort(join(app.getPath('userData'), 'host-port.json'))
   origin = `http://127.0.0.1:${String(port)}`
+  botViews = new BotViews({ window: () => mainWindow, WebContentsView, guests: browserGuests,
+    origin: () => origin, devTools: !app.isPackaged, statePath: join(app.getPath('userData'), 'bot-views.json'),
+    onChange: state => mainWindow?.webContents.send(IPC.browserViewChanged, state),
+  })
   const pnpm = join(app.getAppPath(), 'node_modules', 'pnpm', 'bin', 'pnpm.mjs')
   const profileDir = join(where.dataDir, 'profiles', PROFILE)
   mkdirSync(profileDir, { recursive: true })
@@ -134,6 +149,17 @@ async function start() {
     // update can still come when this version's Host does not start.
     updates = startUpdates()
     host = newHost()
+    host.onMessage(message => {
+      if (message?.type !== 'chemclaw:browser-endpoint' || typeof message.id !== 'string' || !isBotId(message.botId)) return
+      const downloadRoots = message.downloadRoots
+      if (!Array.isArray(downloadRoots) || downloadRoots.length > 4 || !Array.from(downloadRoots).every(root => typeof root === 'string' && isAbsolute(root))) {
+        host?.send({ type: 'chemclaw:browser-endpoint-response', id: message.id, error: 'Could not create the browser endpoint.' })
+        return
+      }
+      void botViews.endpoint(message.botId, { downloadRoots }).then(url => {
+        host?.send({ type: 'chemclaw:browser-endpoint-response', id: message.id, url })
+      }).catch(() => host?.send({ type: 'chemclaw:browser-endpoint-response', id: message.id, error: 'Could not create the browser endpoint.' }))
+    })
     return host.start()
   })()
   ready.catch(fail)
@@ -154,6 +180,35 @@ async function start() {
       if (found) await shell.openExternal(found.page)
     }
   })
+  // ds-bot's Bot browsers: one webview per lease, in the storage of the Bot's key.
+  ipcMain.handle(IPC.browserAcquire, (event, key) => {
+    assertWindow(event)
+    return browserGuests.acquire(event.sender, key)
+  })
+  ipcMain.handle(IPC.browserRelease, (event, lease) => {
+    assertWindow(event)
+    return browserGuests.release(event.sender, lease)
+  })
+  ipcMain.handle(IPC.browserForget, (event, key) => {
+    assertWindow(event)
+    const botId = typeof key === 'string' && key.startsWith('bot:') ? key.slice(4) : ''
+    return Promise.resolve(botId === '' ? undefined : botViews.forget(botId)).then(() => browserGuests.forget(event.sender, key))
+  })
+  ipcMain.handle(IPC.browserViewCreate, (event, botId, tabId, url) => {
+    assertWindow(event)
+    return botViews.create(String(botId), { tabId: String(tabId), ...(typeof url === 'string' && url !== '' ? { url } : {}) }).tabId
+  })
+  ipcMain.handle(IPC.browserViewSync, (event, botId) => {
+    assertWindow(event)
+    return botViews.sync(String(botId))
+  })
+  ipcMain.handle(IPC.browserViewPlace, (event, tabId, rect, visible) => { assertWindow(event); return botViews.place(String(tabId), rect, visible === true) })
+  ipcMain.handle(IPC.browserViewNavigate, (event, botId, tabId, url) => { assertWindow(event); return botViews.operate(String(botId), 'navigate', { tabId: String(tabId), url }) })
+  ipcMain.handle(IPC.browserViewCommand, (event, botId, tabId, command) => { assertWindow(event); return botViews.operate(String(botId), 'command', { tabId: String(tabId), command }) })
+  ipcMain.handle(IPC.browserViewFocus, (event, botId, tabId) => { assertWindow(event); return botViews.operate(String(botId), 'focus', { tabId: String(tabId) }) })
+  ipcMain.handle(IPC.browserViewRead, (event, botId, tabId, script) => { assertWindow(event); return botViews.operate(String(botId), 'read', { tabId: String(tabId), script }) })
+  ipcMain.handle(IPC.browserViewClose, (event, botId, tabId) => { assertWindow(event); return botViews.operate(String(botId), 'close', { tabId: String(tabId) }) })
+  ipcMain.handle(IPC.browserViewHold, (event, botId, held) => { assertWindow(event); return botViews.hold(String(botId), held === true) })
   ipcMain.handle(IPC.dataLocation, (event) => {
     assertWindow(event)
     return { path: places.dataDir, fixed }
@@ -395,6 +450,7 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => { mainWindow?.show() })
   mainWindow.on('page-title-updated', (event) => { event.preventDefault() })
   mainWindow.on('closed', () => { mainWindow = undefined })
+  browserGuests.bind(mainWindow)
   const contents = mainWindow.webContents
   if (win32) {
     // Fullscreen hides the caption buttons, and the page drops its band meanwhile. A reload

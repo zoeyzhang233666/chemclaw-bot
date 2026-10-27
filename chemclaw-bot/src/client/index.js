@@ -232,7 +232,7 @@ export function apply(ctx) {
 
   // Bot browsers need the Desktop shell's webview bridge, and the host serves
   // read_browser only in the Desktop profile (`browser` in the state).
-  const bridge = window.dshDesktop?.protocolVersion === 1 ? window.dshDesktop.browser ?? null : null
+  const bridge = (window.dshDesktop?.protocolVersion === 1 ? window.dshDesktop.browser : globalThis.dsBotApp?.browser) ?? null
   const browsers = bridge ? createBotBrowsers({ bridge, createSource }) : null
   if (browsers) {
     ctx.effect(() => {
@@ -559,6 +559,22 @@ export function apply(ctx) {
       browserNavigate: (tabId, input) => browsers.navigate(tabId, input),
       browserCommand: (tabId, name) => browsers.command(tabId, name),
       browserFocus: (tabId) => browsers.focus(tabId),
+      browserTakeover: bridge.views ? async botId => {
+        const result = await call('browser-takeover', { botId })
+        await bridge.views.hold(botId, true)
+        return result
+      } : undefined,
+      browserStop: bridge.views ? async botId => {
+        const result = await call('browser-stop', { botId })
+        await bridge.views.hold(botId, true)
+        return result
+      } : undefined,
+      browserGiveBack: bridge.views ? async botId => {
+        const result = await call('browser-give-back', { botId })
+        await bridge.views.hold(botId, false)
+        return result
+      } : undefined,
+
     })
   }
   // Whether AccountLauncher holds the shell's settings seat; FooterAccount steps aside if so.
@@ -603,7 +619,8 @@ export function apply(ctx) {
   }
   const browserPages = browsers?.pages ?? createSource({})
   const browserTabs = browsers?.tabs ?? createSource({})
-  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, surface, update } })
+  const browserHolds = browsers?.holds ?? createSource({})
+  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, browserHolds, surface, update } })
   ctx.effect(() => noticeApprovals({
     work,
     roster,

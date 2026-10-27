@@ -37,6 +37,19 @@ github:zoeyzhang233666/chemclaw-bot#v0.2.0&path:/chemclaw-bot
 
 更完整的「独立应用安装、模型与连接器、首次提问示例」见仓库根目录 [README.zh.md](../README.zh.md)。
 
+## Bot 浏览器
+
+ChemClaw 独立桌面端为每个 Bot 提供独立的浏览器，并保留登录状态。
+可以让 Bot 查询网站、阅读页面、点击和填写表单。在 Bot 详情中点「打开浏览器」
+即可查看过程。「接管浏览器」会断开 Bot 的控制；「交还给 Bot」允许它继续操作；
+「停止」还会取消 Bot 的工作。发布、上传、下载和删除需要审批；
+遇到登录、付款或验证码，由你接手完成。
+
+复用 Electron 已有的 Chromium，不需要再下载一份浏览器。
+安装到官方 DSH 时保留既有默认行为。外部主机可显式配置
+`browserPlugin: refs`（逐步操作）或 `task`（完整目标），以及指向兼容 Chromium 的
+`browserExecutablePath`。详见[浏览器设计](../docs/plans/2026-10-27-browser-automation.md)。
+
 ## 许可
 
 Apache-2.0。详见仓库根目录 `NOTICE`。
