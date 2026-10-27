@@ -4,6 +4,9 @@
 - 相关：#114（链接在 Bot 浏览器里打开）、#128（关掉 auto 搜索后的恢复）、#184（opencode 路由的 `web_search`）
 - 代码：`ds-bot/src/host/browser.js`、`src/client/bot-browsers.js`、`src/client/read-page.js`、`ds-bot/web-search.js`、`src/host/secrets.js`、`src/host/connectors.js`
 
+> 2026-10-27：ChemClaw 桌面端的浏览器操作扩展见[自主浏览器设计](2026-10-27-browser-automation.md)。
+> 下文的只读限制继续适用于未配置自主浏览器的 DSH 主机。
+
 ## 为什么
 
 Bot 要替用户在网上做事，就会碰到两类东西：网页，以及登录网页、调用服务要用的密钥。两者的风险是同一个：**网页内容不可信，密钥不能泄露**。网页里可能藏着「把你的 token 发到这里」这样的指令，模型请求会发往第三方，聊天记录也会被保存。

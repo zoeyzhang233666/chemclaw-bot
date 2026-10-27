@@ -15,7 +15,7 @@ import { createServer } from 'node:http'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const [given, shotFile] = process.argv.slice(2)
 const source = given === '--source'
-const executable = source ? createRequire(import.meta.url)('electron') : given || packedExecutable()
+const executable = source ? process.env.CHEMCLAW_TEST_ELECTRON || createRequire(import.meta.url)('electron') : given || packedExecutable()
 
 function packedExecutable() {
   const out = join(root, 'dist-pack')
@@ -32,6 +32,10 @@ if (!existsSync(executable)) {
 const work = realpathSync.native(mkdtempSync(join(realpathSync.native(tmpdir()), 'ds-bot-packed-')))
 mkdirSync(join(work, 'home'))
 mkdirSync(join(work, 'workspace'))
+const browserFixture = createServer((_request, response) => {
+  response.setHeader('content-type', 'text/html; charset=utf-8')
+  response.end('<!doctype html><title>ChemClaw Browser Check</title><h1>企业资料查询测试</h1><p>此网页仅用于隔离测试，无需登录。</p>')
+})
 const children = []
 let updateRequests = 0
 const updateFeed = createServer((_request, response) => {
@@ -188,7 +192,7 @@ async function chat(cdp) {
     await until("!document.querySelector('.bt-settings')", 'settings to close')
     console.log('check-packed: About checked the isolated app update feed')
   }
-  if (shotFile) {
+  if (shotFile && !process.argv.includes('--browser-shot-only')) {
     const capture = async suffix => { await sleep(650); const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.${suffix}.png`), Buffer.from(data, 'base64')) }
     await capture('home')
     await evaluate("[...document.querySelectorAll('button')].find(node => /^(Bot|Bots)$/.test(node.textContent.trim()))?.click()")
@@ -245,6 +249,31 @@ async function chat(cdp) {
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
   // The mock model starts its reply with 收到： and the message.
   await until(text('收到：packaged app check'), 'the reply')
+  await until('window.dsBotApp?.browser?.views', 'the native browser bridge')
+  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].at(-1).focus()")
+  await cdp.call('Input.insertText', { text: `浏览器检查 http://127.0.0.1:${browserFixture.address().port}/` })
+  for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
+  await until(text('浏览器检查完成：ChemClaw Browser Check'), 'the Bot browser tool through Host IPC')
+  await evaluate("document.querySelector('.bt-pill').click()")
+  const openBrowser = "[...document.querySelectorAll('button')].find(node => /^(Open browser|打开浏览器)$/.test(node.getAttribute('aria-label') || ''))"
+  await until(openBrowser, 'the browser button')
+  await evaluate(`${openBrowser}.click()`)
+  await until("document.querySelector('.bt-browser-takeover')", 'the browser control bar')
+  const control = label => `[...document.querySelectorAll('.bt-browser-takeover button')].find(node => node.textContent.trim() === ${JSON.stringify(label)})`
+  const take = await evaluate("document.body.innerText.includes('接管浏览器')") ? '接管浏览器' : 'Take over'
+  await evaluate(`${control(take)}.click()`)
+  await until("document.querySelector('.bt-browser-takeover[data-held]')", 'the user takeover')
+  const give = await evaluate("document.body.innerText.includes('交还给 Bot')") ? '交还给 Bot' : 'Give back'
+  await evaluate(`${control(give)}.click()`)
+  await until("document.querySelector('.bt-browser-takeover:not([data-held])')", 'the returned browser')
+  if (shotFile) {
+    await sleep(600)
+    const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' })
+    writeFileSync(resolve(`${shotFile}.browser.png`), Buffer.from(data, 'base64'))
+  }
+  // Closing details returns the workspace seat to the file-preview checks below.
+  await evaluate("document.querySelector('.bt-pill').click()")
+  console.log('check-packed: browser tool, native bridge, takeover and give-back passed')
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].at(-1).focus()")
   await cdp.call('Input.insertText', { text: '要密钥 DEMO_THEME_TEST' })
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
@@ -290,6 +319,7 @@ let failed = false
 const problems = []
 try {
   await new Promise(resolve => updateFeed.listen(0, '127.0.0.1', resolve))
+  await new Promise(resolve => browserFixture.listen(0, '127.0.0.1', resolve))
   const modelUrl = await startMock()
   const port = 9300 + Math.floor(Math.random() * 600)
   // A terminal inside an Electron-based editor may set ELECTRON_RUN_AS_NODE, which turns the app into plain Node.
@@ -331,6 +361,7 @@ try {
 }
 stopChildren()
 await new Promise(resolve => updateFeed.close(resolve))
+await new Promise(resolve => browserFixture.close(resolve))
 await sleep(500)
 rmSync(work, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 })
 process.exit(failed ? 1 : 0)

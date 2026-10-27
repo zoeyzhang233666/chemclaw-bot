@@ -28,6 +28,7 @@ import * as memory from './src/host/memory.js'
 import * as parts from './src/host/parts.js'
 import * as images from './src/host/images.js'
 import * as browser from './src/host/browser.js'
+import * as browserPlugins from './src/host/browser-plugins.js'
 import * as secrets from './src/host/secrets.js'
 import * as connectors from './src/host/connectors.js'
 import * as companyConnectors from './src/host/company-connectors.js'
@@ -56,7 +57,7 @@ export const inject = ['llm', 'tools', 'systemPrompt', 'sessionController', 'ses
 // the functions other modules call; they call them through `rt` at run time, never during
 // install. Listeners run and tools are listed in registration order, so this order holds:
 // usage meters model requests after every listener that rewrites them.
-const MODULES = [diagnostics, store, models, providers, permissions, turns, handoffs, requests, delivery, roster, folders, agents, prompt, timeContext, skillRouting, tools, chatIndex, groups, groupStream, approvals, resume, memory, parts, images, responseTiming, secrets, connectors, companyConnectors, capabilities, skillImport, serviceInstall, scenarios, schedules, browser, usage, update, dshUpdate, thinking, feed, channel]
+const MODULES = [diagnostics, store, models, providers, permissions, turns, handoffs, requests, delivery, roster, folders, agents, prompt, timeContext, skillRouting, tools, chatIndex, groups, groupStream, approvals, resume, memory, parts, images, responseTiming, secrets, connectors, companyConnectors, capabilities, skillImport, serviceInstall, scenarios, schedules, browser, browserPlugins, usage, update, dshUpdate, thinking, feed, channel]
 
 export function apply(ctx, config = {}) {
   createRuntime(ctx, config)

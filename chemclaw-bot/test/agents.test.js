@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { apply } from './legacy-runtime.js'
+import { toolDefs as browserRefs } from '../src/host/browser/refs.js'
+import { toolDefs as browserTasks } from '../src/host/browser/task.js'
 import { TEAM_TOOLS } from '../src/host/constants.js'
 import { fakeContext } from './fake-ctx.js'
 
@@ -203,7 +205,7 @@ test('a corrupt agents field resets instead of crashing the view', async (t) => 
 
 test('TEAM_TOOLS names exactly the tools ds-bot registers', async (t) => {
   // read_browser registers only in the Desktop profile; the flag stands in for it.
-  const { stop, ctx } = start(TEAM, { config: { browser: true } })
+  const { stop, ctx } = start(TEAM, { config: { browser: true, browserPluginApi: { id: 'all-browser-tools', tools: [...browserRefs, ...browserTasks] } } })
   t.after(stop)
   assert.deepEqual([...ctx.registeredTools.keys()].sort(), [...TEAM_TOOLS].sort())
 })

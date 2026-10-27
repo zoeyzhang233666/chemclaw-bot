@@ -7,6 +7,15 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'You control this browser': '你正在控制浏览器',
+  'The Bot controls this browser': 'Bot 可以操作此浏览器',
+  'The Bot handed this browser to you: {reason}': 'Bot 需要你接管浏览器：{reason}',
+  'Take over': '接管浏览器',
+  'Give back': '交还给 Bot',
+  'login': '登录',
+  'payment': '付款',
+  'captcha': '验证码',
+  'other': '需要人工操作',
   'Already saved': '已经保存过了',
   "Couldn't save to memory": '未能保存记忆',
   "Couldn't remove from memory": '未能删除记忆',

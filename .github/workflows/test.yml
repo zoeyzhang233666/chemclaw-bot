@@ -93,6 +93,8 @@ jobs:
           cache-dependency-path: app/package-lock.json
       - run: npm ci --no-fund --no-audit
       - run: npm run dist
+      - name: Check native Bot browser operations
+        run: node scripts/run-browser-check.mjs
       - name: Check the packaged app
         run: node scripts/check-packed.mjs
       # The runner is a fresh machine, so the installer may run here. It must install for the
@@ -230,6 +232,7 @@ jobs:
           if [ "$expected" = x64 ]; then expected=x86_64; fi
           file -b "$exe" | grep -F "$expected"
           node scripts/check-packed.mjs "$exe"
+          node scripts/run-browser-check.mjs
           node scripts/check-update.mjs "$exe" 99.0.0
 
   docker:

@@ -270,6 +270,10 @@ function decide(body) {
       case 'recall': return [text(`记忆里有：\n${resultText}`)]
       case 'web_search': return [text(result.is_error ? `搜索失败：${resultText}` : `搜到了：\n${resultText}`)]
       case 'working_directory': return [text(result.is_error ? `没进去：${resultText}` : `现在在 ${resultText}`)]
+      case 'browser_open': {
+        const title = /^Title: (.+)$/m.exec(resultText)?.[1]
+        return [text(title ? `浏览器检查完成：${title}` : `浏览器检查失败：${resultText.slice(0, 200)}`)]
+      }
       case 'read_browser': {
         const title = /^Title: (.+)$/m.exec(resultText)?.[1]
         const body = (resultText.split(/^Text[^\n]*:\n/m)[1] ?? '').split('\n\nLinks and controls')[0].replace(/\s+/g, ' ').trim()
@@ -280,6 +284,8 @@ function decide(body) {
   }
 
   const userText = textOf(last?.content).trim()
+  const browserCheck = /^浏览器检查 (http:\/\/127\.0\.0\.1:\d+\/)$/.exec(userText)
+  if (browserCheck && tools.has('browser_open')) return [tool('browser_open', { url: browserCheck[1] })]
   // "撑爆": the provider rejects the request as past its window.
   if (userText.startsWith('撑爆')) return 'overflow'
   // A file in the message (a long Bot message, a file the user sent): DSH gives its saved

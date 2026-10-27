@@ -51,6 +51,7 @@ export function install(rt) {
       return [
         '# Your identity',
         `You are ${bot.name}, a Bot on the user's team in ChemClaw.${bot.role ? ` Your role: ${bot.role}.` : ''}`,
+        rt.browserInstructions ? `\n${rt.browserInstructions}` : '',
         bot.instructions ? `\n${bot.instructions}` : '',
         '',
         rt.isMain(self) ? `${MAIN_RULES}\n\n${TEAM_RULES}` : TEAM_RULES,
