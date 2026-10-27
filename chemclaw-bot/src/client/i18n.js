@@ -1183,6 +1183,7 @@ const HOST_ZH = {
   'No such key': '没有这个密钥',
   'Type a question or a change first': '请先输入问题或要改的内容',
   'No model is available. Add one in Harness settings.': '没有可用的模型，请先在 Harness 设置里添加模型。',
+  'No configured model is available. Connect APIHub or another provider in Settings > Models.': '还没有配置可用模型。请到「设置 → 模型」连接 APIHub 或其他服务商。',
   'Memory is turned off on this host': '这台主机关闭了记忆功能',
   'The model wrote nothing': '模型没有输出内容',
   'Write the entry to save.': '请写下要保存的内容。',
