@@ -2,14 +2,15 @@
 
 日期：2026-10-28。工作树：`release-speed-next` → 分支 `fix/48-ppt-preview`。CMD `source.json` 已指向该树；验收基线备份为 `.chemclaw-dev/source.json.acceptance-backup`。
 
-## Excel 聊天内预览（已修）
+## Excel 聊天内预览（2026-10-28 修订：保留上游路径）
 
 | 项 | 结果 |
 | --- | --- |
 | 根因 | openpyxl 等写出的 xlsx 含绝对 `Target="/xl/..."` 与空 `<patternFill/>`，DSH 侧栏 Excel 预览拒绝 |
-| 修复 | `chemclaw-bot/runtime/normalize-xlsx.mjs`：需要时 ExcelJS 原地 round-trip；挂在 `present`、`chem_deliver`、artifact 打开路径 |
-| 隔离验收 | `check-packed --source --xlsx-preview-only` 与 `--xlsx-openpyxl-preview-only` 均渲染侧栏网格 |
-| 代价 | 规范化会丢掉图表/绘图/宏；数值与表名保留；失败时仍交付原文件 |
+| 处理 | 撤销额外的原地 ExcelJS round-trip 及三个调用入口，直接交给 DSH 原生只读预览 |
+| 上游依据 | DSH `dsh-v0.2.1-rc.3` 的 `packages/client/ui-sidebar-documentpreview/src/client/excel/xlsx.ts` 与 `xlsx-archive.ts` 只在浏览器内存中处理预览字节，不重新保存源文件；Bot 上游无此原地规范化模块 |
+| 回归 | `present` 中间件及精确路径/嵌套文件名解析后，带公式和模拟图表、绘图、VBA 载荷的合成 XLSX 与原始字节完全一致 |
+| 限制 | 当前 DSH 对部分 openpyxl 文件仍有解析兼容问题；不再以有损转换声称修复。需由 DSH 正式修复后升级，不修改 DSH 安装源码；原文件可在外部应用打开 |
 
 ## PPT 预览（部分）
 
@@ -25,7 +26,7 @@
 
 ## 真实业务（甲醇等）
 
-按 `2026-10-27-cursor-acceptance.md`：业务数值只能来自实源；本批未重新跑完整派活/群聊矩阵。Excel 预览修复后，工作区已有甲醇交付 xlsx 可再点开验证侧栏；本记录不附带聊天原文或密钥。
+按 `2026-10-27-cursor-acceptance.md`：业务数值只能来自实源；本批未重新跑完整真实业务矩阵。不以现有文件经过有损转换后的预览作为验收依据；本记录不附带聊天原文或密钥。
 
 ## 未做
 

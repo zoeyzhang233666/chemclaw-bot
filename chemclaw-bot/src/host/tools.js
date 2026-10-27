@@ -374,17 +374,6 @@ export function install(rt) {
     },
   }))
 
-  // openpyxl (and similar) packages often use absolute sheet targets that DSH's
-  // browser Excel preview rejects; rewrite those files before present opens them.
-  // Registered here (with the other early tools/execute hooks) so secrets redaction
-  // stays the last tools/execute listener.
-  ctx.on('tools/execute', async (exec, next) => {
-    if (exec.name !== 'present') return next()
-    const { normalizePresentFiles } = await import('../../runtime/normalize-xlsx.mjs')
-    await normalizePresentFiles(exec.arguments?.files)
-    return next()
-  })
-
   // DSH's working_directory changes a Session's folder in place, and the next part starts in
   // the Bot's working folder again. A Bot that changes to a folder outside its working folder
   // sets its working folder instead, with update_bot's checks, and goes on in a fresh part

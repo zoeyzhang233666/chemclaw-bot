@@ -284,10 +284,8 @@ async function chat(cdp) {
     const wantXlsx = process.argv.includes('--xlsx-preview-only') || wantOpenpyxl
     let file
     if (wantOpenpyxl) {
-      const { normalizeXlsxForPreview } = await import('../../chemclaw-bot/runtime/normalize-xlsx.mjs')
       file = join(work, 'workspace', 'openpyxl-preview.xlsx')
       cpSync(join(root, '..', '.chemclaw-tools', 'office48-synthetic.xlsx'), file)
-      await normalizeXlsxForPreview(file)
     } else {
       const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
       const formats = wantXlsx ? ['xlsx'] : ['pptx']
@@ -295,6 +293,7 @@ async function chat(cdp) {
         { title: '合成数据', table: { columns: ['日期', '测试数值'], rows: [['2026-10-25', 100], ['2026-10-26', 102]] } },
       ] }, join(work, 'workspace'), formats)
     }
+    const original = readFileSync(file)
     await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
     await cdp.call('Input.insertText', { text: `交付 ${file}` })
     await sleep(150)
@@ -308,6 +307,7 @@ async function chat(cdp) {
       await until("[...document.querySelectorAll('canvas')].some(node => { const rect = node.getBoundingClientRect(); return node.width > 200 && node.height > 200 && rect.width > 200 && rect.height > 200 }) && !/Office 转换失败|文件不存在|Office conversion failed/.test(document.body.innerText)", 'the rendered PPT page')
       console.log('check-packed: actual PPT delivery card rendered a page in the sidebar')
     }
+    if (!readFileSync(file).equals(original)) throw new Error('Preview changed the original Office file')
     return
   }
   if (process.argv.includes('--preview-only')) {

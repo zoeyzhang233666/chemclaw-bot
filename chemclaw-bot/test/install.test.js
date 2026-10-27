@@ -1,10 +1,11 @@
 ﻿import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { apply } from './legacy-runtime.js'
 import { fakeContext } from './fake-ctx.js'
+import { previewWorkbook } from './xlsx-fixture.js'
 
 function start(state, { config = {}, services } = {}) {
   const home = mkdtempSync(join(tmpdir(), 'ds-bot-install-'))
@@ -52,7 +53,6 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'tool stop_bot',
     'tool create_bot',
     'tool update_bot',
-    'on tools/execute',
     'on tools/execute',
     'tool list_models',
     'tool create_group',
@@ -213,6 +213,28 @@ const TEAM = {
   exchangeTurns: {},
   questions: {},
 }
+
+test('present delegates the original workbook without rewriting its contents', async t => {
+  const { ctx, stop } = start(TEAM)
+  t.after(stop)
+  const dir = mkdtempSync(join(tmpdir(), 'chemclaw-present-original-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }))
+  const path = join(dir, 'original.xlsx')
+  const original = await previewWorkbook()
+  writeFileSync(path, original)
+  const exec = { name: 'present', arguments: { files: [{ path }] }, agent: { id: 'm1', session: 'm1' } }
+  let calls = 0
+  const tool = async () => {
+    calls++
+    assert.equal(exec.arguments.files[0].path, path)
+    assert.deepEqual(readFileSync(path), original)
+    return 'presented'
+  }
+  const run = ctx.listeners.get('tools/execute').reduceRight((next, listener) => () => listener(exec, next), tool)
+  assert.equal(await run(), 'presented')
+  assert.equal(calls, 1)
+  assert.deepEqual(readFileSync(path), original)
+})
 
 test('in the Desktop profile read_browser is the last tool and reads through the window', async (t) => {
   const { ctx, call, stop } = start(TEAM, { services: { profileContext: { name: 'desktop' } } })
