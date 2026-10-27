@@ -206,17 +206,14 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: |
-            ${{ runner.temp }}/electron-cache
+            ~/Library/Caches/electron
             ${{ runner.temp }}/electron-builder-cache
-          key: desktop-tools-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
+          key: desktop-tools-v3-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
       - run: npm ci --no-fund --no-audit
         env:
-          ELECTRON_CACHE: ${{ runner.temp }}/electron-cache
-          electron_config_cache: ${{ runner.temp }}/electron-cache
           ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
       - run: npm run pack
         env:
-          ELECTRON_CACHE: ${{ runner.temp }}/electron-cache
           ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
           # Ad-hoc identity '-' uses no certificate or secret, so PR signing is safe; otherwise electron-builder skips signing and leaves an unsealed bundle.
           CSC_FOR_PULL_REQUEST: 'true'
@@ -226,6 +223,7 @@ jobs:
           if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
           app="dist-pack/$folder/ChemClaw.app"
           exe="$app/Contents/MacOS/ChemClaw"
+          test -n "$(find "$HOME/Library/Caches/electron" -name "electron-v*-darwin-${{ matrix.arch }}.zip" -print -quit)"
           codesign --verify --deep --strict "$app"
           file "$exe"
           expected="${{ matrix.arch }}"

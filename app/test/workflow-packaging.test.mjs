@@ -38,6 +38,9 @@ test('build tool caches distinguish OS, architecture and dependency lockfile', (
   for (const [name, id] of [['test', 'app-package-macos'], ['release', 'app-macos']]) {
     const job = workflow(name).jobs[id]
     const cache = job.steps.find(step => step.uses === 'actions/cache@v4')
+    // Old exact-match caches hold only builder tools and cannot be updated.
+    assert.ok(cache.with.key.startsWith('desktop-tools-v3-'))
+    assert.ok(cache.with.path.includes('~/Library/Caches/electron'))
     assert.match(cache.with.key, /runner.os/)
     assert.match(cache.with.key, /matrix.arch/)
     assert.match(cache.with.key, /app\/package-lock.json/)
@@ -45,9 +48,8 @@ test('build tool caches distinguish OS, architecture and dependency lockfile', (
     assert.equal(node.with.cache, 'npm')
     const install = job.steps.find(step => step.run === 'npm ci --no-fund --no-audit')
     const pack = job.steps.find(step => /^npm run (pack|dist)$/.test(step.run ?? ''))
-    assert.equal(install.env?.ELECTRON_CACHE, pack.env.ELECTRON_CACHE)
     assert.equal(install.env?.ELECTRON_BUILDER_CACHE, pack.env.ELECTRON_BUILDER_CACHE)
-    assert.equal(install.env.electron_config_cache, pack.env.ELECTRON_CACHE)
-    assert.ok(cache.with.path.includes(install.env.ELECTRON_CACHE))
+    assert.ok(cache.with.path.includes(pack.env.ELECTRON_BUILDER_CACHE))
   }
+  assert.match(runs(workflow('test').jobs['app-package-macos']), /find "\$HOME\/Library\/Caches\/electron" -name "electron-v\*-darwin-/)
 })
