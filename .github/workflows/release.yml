@@ -209,9 +209,17 @@ jobs:
       - run: npm ci --no-fund --no-audit
         env:
           ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
-      - run: npm run dist
+      - run: npm run pack
         env:
           ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+      - name: Create the Mac ZIP
+        run: |
+          folder=mac
+          if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
+          app="dist-pack/$folder/ChemClaw.app"
+          zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
+          codesign --verify --deep --strict "$app"
+          /usr/bin/time -p ditto -c -k --sequesterRsrc --keepParent --zlibCompressionLevel 6 "$app" "$zip"
       - name: Install from the zip and check
         run: |
           zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"

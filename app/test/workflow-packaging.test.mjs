@@ -23,7 +23,11 @@ test('releases validate the extracted archive and still require both Mac archite
   const job = config.jobs['app-macos']
   assert.deepEqual(job.strategy.matrix.include.map(row => row.arch).sort(), ['arm64', 'x64'])
   const commands = runs(job)
-  assert.match(commands, /npm run dist/)
+  assert.match(commands, /npm run pack/)
+  assert.doesNotMatch(commands, /npm run dist/)
+  const archive = job.steps.find(step => step.name === 'Create the Mac ZIP')
+  assert.match(archive.run, /ditto -c -k --sequesterRsrc --keepParent --zlibCompressionLevel 6/)
+  assert.ok(job.steps.indexOf(archive) < job.steps.findIndex(step => step.name === 'Install from the zip and check'))
   assert.match(commands, /ditto -x -k/)
   assert.match(commands, /codesign --verify --deep --strict/)
   assert.match(commands, /check-packed.mjs/)
