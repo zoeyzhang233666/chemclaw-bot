@@ -192,6 +192,11 @@ test('the client channel answers from the saved state', async (t) => {
   assert.equal('thinking' in (await call('set-prefs', { thinking: false })).value, false)
   await call('set-prefs', { thinking: true })
   assert.equal('thinking' in (await call('set-prefs', { thinking: null })).value, false)
+  assert.equal((await call('set-prefs', { sidebar: { sort: 'focus', focus: ['内贸销售'] } })).value.sidebar.sort, 'focus')
+  assert.deepEqual((await call('set-prefs', { sidebar: { collapsed: ['rooms'] } })).value.sidebar.collapsed, ['rooms'])
+  assert.equal('sort' in ((await call('set-prefs', { sidebar: { sort: 'recent' } })).value.sidebar ?? {}), false)
+  assert.deepEqual((await call('set-prefs', { sidebar: { sort: 'alpha' } })).error, { code: 'bot/invalid', message: 'Sidebar sort must be recent, manual or focus', details: {} })
+  assert.equal('sidebar' in (await call('set-prefs', { sidebar: null })).value, false)
   // A refusal from the team code keeps its message for the user.
   assert.deepEqual((await call('delete-bot', { id: 'nobody' })).error, { code: 'bot/refused', message: 'Unknown Bot', details: {} })
   // Off the Desktop profile there are no Bot browsers.

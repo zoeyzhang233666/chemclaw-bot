@@ -441,6 +441,17 @@ var ZH = {
   "New…": "新建",
   "Collapse sidebar": "收起侧边栏",
   "Expand sidebar": "展开侧边栏",
+  "Collapse {name}": "折叠 {name}",
+  "Expand {name}": "展开 {name}",
+  "Drag to reorder": "拖动排序",
+  "Sidebar order": "侧栏排序",
+  "How categories and rows are sorted in the wide sidebar.": "宽侧栏里分类与行的排序方式。",
+  "Recent activity": "最近活动",
+  Manual: "手动",
+  "Focus first": "关注优先",
+  "Focus categories": "关注分类",
+  "When Focus first is on, these categories stay at the top.": "开启「关注优先」后，这些分类会排在前面。",
+  "Add specialist Bots to choose focus categories.": "先添加专业 Bot，再选关注分类。",
   "Animation": "动画",
   "Bot animation": "Bot 动画",
   "Quiet": "安静",
@@ -4116,6 +4127,124 @@ var SETTINGS_ICONS = { general: GearIcon, bots: PeopleIcon, groups: ChatsIcon, u
 var SideIcon = lineIcon(["M4.5 4h11A1.5 1.5 0 0 1 17 5.5v6a1.5 1.5 0 0 1-1.5 1.5H9L5.5 16v-3h-1A1.5 1.5 0 0 1 3 11.5v-6A1.5 1.5 0 0 1 4.5 4z", "M6.5 7h7", "M6.5 10h4.5"]);
 var TerminalIcon = lineIcon(["M4.5 4h11A1.5 1.5 0 0 1 17 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5v-9A1.5 1.5 0 0 1 4.5 4z", "M6.5 8l2.5 2.5L6.5 13", "M11 13h3.5"]);
 var SignOutIcon = lineIcon(["M8.5 17H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2.5", "M10 10h6.5", "M13.5 7l3 3-3 3"]);
+
+// src/shared/sidebar-prefs.js
+var SIDEBAR_SORTS = /* @__PURE__ */ new Set(["recent", "manual", "focus"]);
+var ROOMS_CATEGORY = "rooms";
+var AGENTS_CATEGORY = "agents";
+var SPECIALISTS_CATEGORY = "specialists";
+var LABEL_MAX = 64;
+var ORDER_MAX = 200;
+var isId = (value) => typeof value === "string" && value.trim() !== "" && value.trim().length <= LABEL_MAX;
+var cleanIds = (list) => [...new Set(list.map((item) => String(item).trim()).filter(Boolean))].slice(0, ORDER_MAX);
+function botCategoryId(bot) {
+  const raw = bot?.templateInfo?.category || bot?.role;
+  if (typeof raw === "string" && raw.trim()) return raw.trim().slice(0, LABEL_MAX);
+  return SPECIALISTS_CATEGORY;
+}
+function readIdList(value, label) {
+  if (!Array.isArray(value) || value.some((item) => !isId(item))) throw new Error(label);
+  return cleanIds(value);
+}
+function parseSidebarPatch(input) {
+  if (input === null) return null;
+  if (typeof input !== "object" || Array.isArray(input)) throw new Error("Sidebar prefs must be an object");
+  const patch = {};
+  if (input.sort !== void 0) {
+    if (input.sort === null || input.sort === "recent") patch.sort = null;
+    else if (SIDEBAR_SORTS.has(input.sort)) patch.sort = input.sort;
+    else throw new Error("Sidebar sort must be recent, manual or focus");
+  }
+  if (input.collapsed !== void 0) {
+    if (input.collapsed === null || Array.isArray(input.collapsed) && input.collapsed.length === 0) patch.collapsed = null;
+    else patch.collapsed = readIdList(input.collapsed, "Sidebar collapsed must be short category ids");
+  }
+  if (input.categoryOrder !== void 0) {
+    if (input.categoryOrder === null || Array.isArray(input.categoryOrder) && input.categoryOrder.length === 0) patch.categoryOrder = null;
+    else patch.categoryOrder = readIdList(input.categoryOrder, "Sidebar categoryOrder must be short category ids");
+  }
+  if (input.focus !== void 0) {
+    if (input.focus === null || Array.isArray(input.focus) && input.focus.length === 0) patch.focus = null;
+    else patch.focus = readIdList(input.focus, "Sidebar focus must be short category ids");
+  }
+  if (input.itemOrder !== void 0) {
+    if (input.itemOrder === null) patch.itemOrder = null;
+    else if (typeof input.itemOrder !== "object" || Array.isArray(input.itemOrder)) throw new Error("Sidebar itemOrder must be a map of category ids");
+    else {
+      const map = {};
+      for (const [key, value] of Object.entries(input.itemOrder)) {
+        if (!isId(key)) throw new Error("Sidebar itemOrder keys must be short category ids");
+        if (value === null || Array.isArray(value) && value.length === 0) map[key.trim()] = null;
+        else map[key.trim()] = readIdList(value, "Sidebar itemOrder values must be short ids");
+      }
+      patch.itemOrder = map;
+    }
+  }
+  return patch;
+}
+function mergeSidebarPrefs(current, patchInput) {
+  const patch = parseSidebarPatch(patchInput);
+  if (patch === null) return void 0;
+  const merged = current && typeof current === "object" && !Array.isArray(current) ? { ...current } : {};
+  if (patch.sort === null) delete merged.sort;
+  else if (patch.sort !== void 0) merged.sort = patch.sort;
+  if (patch.collapsed === null) delete merged.collapsed;
+  else if (patch.collapsed !== void 0) merged.collapsed = patch.collapsed;
+  if (patch.categoryOrder === null) delete merged.categoryOrder;
+  else if (patch.categoryOrder !== void 0) merged.categoryOrder = patch.categoryOrder;
+  if (patch.focus === null) delete merged.focus;
+  else if (patch.focus !== void 0) merged.focus = patch.focus;
+  if (patch.itemOrder === null) delete merged.itemOrder;
+  else if (patch.itemOrder !== void 0) {
+    const map = { ...merged.itemOrder ?? {} };
+    for (const [key, value] of Object.entries(patch.itemOrder)) {
+      if (value === null) delete map[key];
+      else map[key] = value;
+    }
+    if (Object.keys(map).length) merged.itemOrder = map;
+    else delete merged.itemOrder;
+  }
+  return Object.keys(merged).length ? merged : void 0;
+}
+function orderIndex(list, id) {
+  const at = list?.indexOf(id) ?? -1;
+  return at < 0 ? Number.MAX_SAFE_INTEGER : at;
+}
+function sortEntries(entries2, { sort = "recent", itemOrder = {}, categoryId } = {}) {
+  const order = itemOrder[categoryId] ?? [];
+  const manual = sort === "manual" || sort === "focus" && order.length > 0;
+  if (!manual) {
+    return [...entries2].sort((a, b) => Number(Boolean(b.item.pinned)) - Number(Boolean(a.item.pinned)) || b.at - a.at);
+  }
+  return [...entries2].sort((a, b) => {
+    const pin = Number(Boolean(b.item.pinned)) - Number(Boolean(a.item.pinned));
+    if (pin) return pin;
+    const byHand = orderIndex(order, a.item.id) - orderIndex(order, b.item.id);
+    if (byHand) return byHand;
+    return b.at - a.at;
+  });
+}
+function sortCategories(groups, { sort = "recent", categoryOrder = [], focus = [] } = {}) {
+  const focusSet = new Set(focus);
+  return [...groups].sort((a, b) => {
+    if (sort === "focus") {
+      const af = focusSet.has(a.id) ? 0 : 1;
+      const bf = focusSet.has(b.id) ? 0 : 1;
+      if (af !== bf) return af - bf;
+    }
+    if (sort === "manual" || sort === "focus") {
+      const byHand = orderIndex(categoryOrder, a.id) - orderIndex(categoryOrder, b.id);
+      if (byHand) return byHand;
+    }
+    return 0;
+  });
+}
+function moveId(list, id, beforeId) {
+  const next = list.filter((item) => item !== id);
+  const at = beforeId === void 0 || beforeId === null ? next.length : next.indexOf(beforeId);
+  next.splice(at < 0 ? next.length : at, 0, id);
+  return next;
+}
 
 // src/shared/brand.js
 var CLOUD_OUTLINE = "M8.5 23.5h15.2c2.9 0 5.3-2.2 5.3-5.1 0-2.7-2-4.9-4.6-5.2-.6-3.8-3.9-6.7-7.9-6.7-3.2 0-6 1.9-7.3 4.6C6.6 11.4 4 14 4 17.2c0 3.5 2.7 6.3 4.5 6.3Z";
@@ -9468,19 +9597,62 @@ function TeamSidebar(props) {
     for (const id of list.ids) stamps[id] = previewOf(list, id) ? list.byId[id]?.updatedAt ?? 0 : 0;
     return JSON.stringify(stamps);
   });
+  const sidebar = roster.prefs?.sidebar ?? {};
+  const sortMode = sidebar.sort === "manual" || sidebar.sort === "focus" ? sidebar.sort : "recent";
+  const collapsed = (0, import_react20.useMemo)(() => new Set(sidebar.collapsed ?? []), [sidebar.collapsed]);
   const order = (0, import_react20.useMemo)(() => {
     const stamps = JSON.parse(updated);
-    const entries2 = [
-      ...roster.bots.filter((bot) => bot.id !== roster.mainBotId).map((bot) => ({ kind: "bot", item: bot, at: stamps[currentPart(bot)] ?? 0 })),
-      ...roster.rooms.map((room2) => ({ kind: "room", item: room2, at: room2.preview ? stamps[room2.id] ?? room2.createdAt : 0 })),
+    return [
+      ...roster.bots.filter((bot) => bot.id !== roster.mainBotId).map((bot) => ({ kind: "bot", item: bot, at: stamps[currentPart(bot)] ?? 0, categoryId: botCategoryId(bot) })),
+      ...roster.rooms.map((room2) => ({ kind: "room", item: room2, at: room2.preview ? stamps[room2.id] ?? room2.createdAt : 0, categoryId: ROOMS_CATEGORY })),
       // The Agent sorts by its most recent Session, falling back to when it was added.
-      ...(roster.agents ?? []).map((agent) => ({ kind: "agent", item: agent, at: Math.max(0, ...agent.sessions.map((id) => stamps[id] ?? 0)) || agent.createdAt }))
+      ...(roster.agents ?? []).map((agent) => ({ kind: "agent", item: agent, at: Math.max(0, ...agent.sessions.map((id) => stamps[id] ?? 0)) || agent.createdAt, categoryId: AGENTS_CATEGORY }))
     ];
-    return entries2.sort((a, b) => Number(Boolean(b.item.pinned)) - Number(Boolean(a.item.pinned)) || b.at - a.at);
   }, [roster, updated]);
+  const groups = (0, import_react20.useMemo)(() => {
+    const byId = /* @__PURE__ */ new Map();
+    const push = (id, label, entry) => {
+      if (!byId.has(id)) byId.set(id, { id, label, entries: [] });
+      byId.get(id).entries.push(entry);
+    };
+    for (const entry of order) {
+      if (entry.kind === "room") push(ROOMS_CATEGORY, t("Collaboration groups"), entry);
+      else if (entry.kind === "agent") push(AGENTS_CATEGORY, t("Other conversations"), entry);
+      else push(entry.categoryId, entry.categoryId === SPECIALISTS_CATEGORY ? t("Specialist Bots") : entry.categoryId, entry);
+    }
+    const listed = [...byId.values()].map((group) => ({
+      ...group,
+      entries: sortEntries(group.entries, { sort: sortMode, itemOrder: sidebar.itemOrder ?? {}, categoryId: group.id })
+    })).filter((group) => group.entries.length);
+    return sortCategories(listed, { sort: sortMode, categoryOrder: sidebar.categoryOrder ?? [], focus: sidebar.focus ?? [] });
+  }, [order, sortMode, sidebar.itemOrder, sidebar.categoryOrder, sidebar.focus]);
   const main = roster.byId[roster.mainBotId];
-  useListGlide(listRef, wide, order.map((entry) => entry.item.id).join(","));
+  useListGlide(listRef, wide, groups.flatMap((group) => group.entries.map((entry) => entry.item.id)).join(","));
   useLandOnMainBot(roster, useSessions, actions);
+  const saveSidebar = (patch) => {
+    void actions.setPrefs({ sidebar: patch }).catch((error) => actions.reportError(error, "sidebar"));
+  };
+  const toggleCollapsed = (id) => {
+    const next = new Set(collapsed);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    saveSidebar({ collapsed: [...next] });
+  };
+  const onDropCategory = (dragId, beforeId) => {
+    if (!dragId || dragId === beforeId) return;
+    const ids = groups.map((group) => group.id);
+    saveSidebar({ categoryOrder: moveId(ids, dragId, beforeId), sort: sortMode === "recent" ? "manual" : sortMode });
+  };
+  const onDropItem = (categoryId, dragId, beforeId) => {
+    if (!dragId || dragId === beforeId) return;
+    const group = groups.find((item) => item.id === categoryId);
+    if (!group) return;
+    const ids = group.entries.map((entry) => entry.item.id);
+    saveSidebar({
+      itemOrder: { [categoryId]: moveId(ids, dragId, beforeId) },
+      sort: sortMode === "recent" ? "manual" : sortMode
+    });
+  };
   const navigate = (open, id) => {
     const result = open(id);
     if (wide && window.innerWidth < 1024 && !closing.current) {
@@ -9530,17 +9702,101 @@ function TeamSidebar(props) {
       "div",
       { ref: listRef, className: "bt-list", role: "region", "aria-label": t("Bot list") },
       main ? (0, import_react20.createElement)(BotRow, { ...rowProps, bot: main, marked: markedUnread[main.id] === true }) : roster.ready ? null : (0, import_react20.createElement)("div", { className: "bt-hint" }, t("Setting up your Main Bot…")),
-      [
-        { label: t("Collaboration groups"), entries: order.filter((entry) => entry.kind === "room") },
-        ...[...new Set(roster.bots.filter((bot) => bot.id !== roster.mainBotId).map((bot) => bot.templateInfo?.category || bot.role || t("Specialist Bots")))].map((category) => ({ label: category, entries: order.filter((entry) => entry.kind === "bot" && (entry.item.templateInfo?.category || entry.item.role || t("Specialist Bots")) === category) })),
-        { label: t("Other conversations"), entries: order.filter((entry) => entry.kind === "agent") }
-      ].filter((group) => group.entries.length).map((group) => (0, import_react20.createElement)(
-        import_react20.Fragment,
-        { key: group.label },
-        wide ? (0, import_react20.createElement)("div", { className: "bt-directory-label" }, group.label, (0, import_react20.createElement)("span", null, group.entries.length)) : null,
-        group.entries.map((entry) => entry.kind === "bot" ? (0, import_react20.createElement)(BotRow, { key: entry.item.id, ...rowProps, bot: entry.item, marked: markedUnread[entry.item.id] === true }) : entry.kind === "room" ? (0, import_react20.createElement)(RoomRow, { key: entry.item.id, ...rowProps, room: entry.item, marked: markedUnread[entry.item.id] === true }) : (0, import_react20.createElement)(AgentRow, { key: entry.item.id, ...rowProps, agent: entry.item, marked: markedUnread[entry.item.id] === true }))
-      ))
+      groups.map((group) => {
+        const shut = wide && collapsed.has(group.id);
+        return (0, import_react20.createElement)(
+          import_react20.Fragment,
+          { key: group.id },
+          wide ? (0, import_react20.createElement)(DirectoryLabel, {
+            id: group.id,
+            label: group.label,
+            count: group.entries.length,
+            collapsed: shut,
+            onToggle: () => toggleCollapsed(group.id),
+            onDropCategory
+          }) : null,
+          shut ? null : group.entries.map((entry) => (0, import_react20.createElement)(DraggableRow, {
+            key: entry.item.id,
+            id: entry.item.id,
+            categoryId: group.id,
+            wide,
+            onDropItem: (dragId, beforeId) => onDropItem(group.id, dragId, beforeId)
+          }, entry.kind === "bot" ? (0, import_react20.createElement)(BotRow, { ...rowProps, bot: entry.item, marked: markedUnread[entry.item.id] === true }) : entry.kind === "room" ? (0, import_react20.createElement)(RoomRow, { ...rowProps, room: entry.item, marked: markedUnread[entry.item.id] === true }) : (0, import_react20.createElement)(AgentRow, { ...rowProps, agent: entry.item, marked: markedUnread[entry.item.id] === true })))
+        );
+      })
     )
+  );
+}
+function DirectoryLabel({ id, label, count, collapsed, onToggle, onDropCategory }) {
+  return (0, import_react20.createElement)(
+    "div",
+    {
+      className: "bt-directory-label",
+      draggable: true,
+      onDragStart: (event) => {
+        event.dataTransfer.setData("text/bt-category", id);
+        event.dataTransfer.effectAllowed = "move";
+      },
+      onDragOver: (event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        event.currentTarget.dataset.drop = "1";
+      },
+      onDragLeave: (event) => {
+        delete event.currentTarget.dataset.drop;
+      },
+      onDrop: (event) => {
+        event.preventDefault();
+        delete event.currentTarget.dataset.drop;
+        const dragId = event.dataTransfer.getData("text/bt-category");
+        if (dragId) onDropCategory(dragId, id);
+      }
+    },
+    (0, import_react20.createElement)("button", {
+      type: "button",
+      className: "bt-directory-toggle",
+      "aria-expanded": !collapsed,
+      "aria-label": collapsed ? t("Expand {name}", { name: label }) : t("Collapse {name}", { name: label }),
+      onClick: onToggle
+    }, (0, import_react20.createElement)("span", { className: "bt-directory-caret", "data-open": collapsed ? void 0 : "" }, (0, import_react20.createElement)(ChevronRightIcon)), (0, import_react20.createElement)("span", { className: "bt-directory-name" }, label)),
+    (0, import_react20.createElement)("span", { className: "bt-directory-count" }, count)
+  );
+}
+function DraggableRow({ id, categoryId, wide, onDropItem, children }) {
+  if (!wide) return children;
+  return (0, import_react20.createElement)(
+    "div",
+    {
+      className: "bt-row-drag",
+      onDragOver: (event) => {
+        if (![...event.dataTransfer.types].includes("text/bt-item")) return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        event.currentTarget.dataset.drop = "1";
+      },
+      onDragLeave: (event) => {
+        delete event.currentTarget.dataset.drop;
+      },
+      onDrop: (event) => {
+        event.preventDefault();
+        delete event.currentTarget.dataset.drop;
+        const dragId = event.dataTransfer.getData("text/bt-item");
+        const from = event.dataTransfer.getData("text/bt-item-category");
+        if (dragId && from === categoryId) onDropItem(dragId, id);
+      }
+    },
+    (0, import_react20.createElement)("span", {
+      className: "bt-row-handle",
+      draggable: true,
+      title: t("Drag to reorder"),
+      "aria-hidden": true,
+      onDragStart: (event) => {
+        event.dataTransfer.setData("text/bt-item", id);
+        event.dataTransfer.setData("text/bt-item-category", categoryId);
+        event.dataTransfer.effectAllowed = "move";
+      }
+    }, "⋮⋮"),
+    children
   );
 }
 function UpdateButton({ useUpdate, actions }) {
@@ -15975,6 +16231,28 @@ var PROVIDERS_CSS = `
 // src/client/settings.js
 var import_react44 = require("react");
 var capitalize2 = (word) => word[0].toUpperCase() + word.slice(1);
+function FocusCategories({ roster, prefs, run: run2, actions }) {
+  const focus = new Set(prefs.sidebar?.focus ?? []);
+  const categories = [...new Set(roster.bots.filter((bot) => bot.id !== roster.mainBotId).map((bot) => botCategoryId(bot)).filter((id) => id !== SPECIALISTS_CATEGORY))].sort((a, b) => a.localeCompare(b, language().startsWith("zh") ? "zh" : "en"));
+  if (categories.length === 0) return (0, import_react44.createElement)("span", { className: "bt-set-hint" }, t("Add specialist Bots to choose focus categories."));
+  const toggle = (id) => {
+    const next = new Set(focus);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    run2(actions.setPrefs({ sidebar: { focus: [...next] } }));
+  };
+  return (0, import_react44.createElement)(
+    "div",
+    { className: "bt-focus-chips", role: "group", "aria-label": t("Focus categories") },
+    categories.map((id) => (0, import_react44.createElement)("button", {
+      key: id,
+      type: "button",
+      className: "bt-focus-chip",
+      "aria-pressed": focus.has(id),
+      onClick: () => toggle(id)
+    }, id))
+  );
+}
 var SETTINGS_PAGES = [["general", "General"], ["models", "Models"], ["bots", "Bots"], ["groups", "Group chats"], ["connectors", "Connectors"], ["capabilities", "Skill library"], ["schedules", "Scheduled tasks"], ["usage", "Usage"], ["feedback", "Feedback"], ["about", "About ChemClaw"]];
 var PAGE_ICONS = { ...SETTINGS_ICONS, scenarios: PlugIcon, models: SlidersIcon, connectors: ConnectorIcon, capabilities: PlugIcon, schedules: ClockIcon, feedback: FeedbackIcon, about: InfoIcon };
 function SetSection({ title, className = "", children }) {
@@ -16088,7 +16366,22 @@ function GeneralPage({ roster, actions, run: run2 }) {
       // The flat layout's text has a width of its own; the bubble width stays for the user's messages.
       layoutOf(prefs) === "flat" ? (0, import_react44.createElement)(SetRow, { label: t("Text width") }, (0, import_react44.createElement)(WidthSlider, { label: t("Text width"), value: flatWidthOf(prefs), save: (flatWidth) => run2(actions.setPrefs({ flatWidth })) })) : null,
       (0, import_react44.createElement)(SetRow, { label: t("Bubble width") }, (0, import_react44.createElement)(WidthSlider, { label: t("Bubble width"), value: widthOf(prefs), save: (width) => run2(actions.setPrefs({ width })) })),
-      (0, import_react44.createElement)(SetRow, { label: t("Show thinking") }, (0, import_react44.createElement)(Switch, { label: t("Show thinking"), on: thinkingShown(prefs), onChange: (thinking) => run2(actions.setPrefs({ thinking })) }))
+      (0, import_react44.createElement)(SetRow, { label: t("Show thinking") }, (0, import_react44.createElement)(Switch, { label: t("Show thinking"), on: thinkingShown(prefs), onChange: (thinking) => run2(actions.setPrefs({ thinking })) })),
+      (0, import_react44.createElement)(
+        SetRow,
+        { label: t("Sidebar order"), hint: t("How categories and rows are sorted in the wide sidebar.") },
+        (0, import_react44.createElement)(Choice, {
+          label: t("Sidebar order"),
+          value: prefs.sidebar?.sort === "manual" || prefs.sidebar?.sort === "focus" ? prefs.sidebar.sort : "recent",
+          options: [["recent", "Recent activity"], ["manual", "Manual"], ["focus", "Focus first"]],
+          pick: (id) => run2(actions.setPrefs({ sidebar: { sort: id } }))
+        })
+      ),
+      (0, import_react44.createElement)(
+        SetRow,
+        { label: t("Focus categories"), hint: t("When Focus first is on, these categories stay at the top.") },
+        (0, import_react44.createElement)(FocusCategories, { roster, prefs, run: run2, actions })
+      )
     ),
     actions.setSurface ? (0, import_react44.createElement)(
       SetSection,
@@ -19207,8 +19500,25 @@ var CHEMCLAW_UI_CSS = `
 .bt-team-intro p{font-size:13px;line-height:1.8;margin:0 0 10px;overflow-wrap:anywhere}
 .bt-team-shortcuts{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.bt-team-shortcuts button{border:1px solid var(--bt-line-2);border-radius:10px;background:var(--bt-card);color:var(--bt-ink);padding:8px 11px;font:12px/1.5 system-ui,sans-serif;cursor:pointer}.bt-team-shortcuts button:hover{background:var(--bt-hover);border-color:var(--bt-accent)}
 .bt-team-example{border-left:2px solid var(--bt-accent);padding:3px 0 3px 13px;margin:12px 0}.bt-team-example>span{font-size:10px;color:var(--bt-accent);font-weight:600}.bt-team-example p{margin:4px 0 0;font-size:12px}
-.bt-directory-label{display:flex;align-items:center;justify-content:space-between;padding:17px 10px 7px;color:var(--bt-ink-3);font:500 11px/1.5 system-ui,sans-serif;letter-spacing:.04em}
-.bt-directory-label span{font-size:10px;letter-spacing:0;opacity:.8}
+.bt-directory-label{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:17px 10px 7px;color:var(--bt-ink-3);font:500 11px/1.5 system-ui,sans-serif;letter-spacing:.04em}
+.bt-directory-label[data-drop]{box-shadow:inset 0 1px 0 var(--bt-line-2)}
+.bt-directory-toggle{display:inline-flex;align-items:center;gap:4px;min-width:0;padding:0;border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;cursor:pointer;text-align:left}
+.bt-directory-toggle:hover{color:var(--bt-ink-2)}
+.bt-directory-caret{display:inline-flex;flex:none;opacity:.7;transition:transform .14s ease}
+.bt-directory-caret[data-open]{transform:rotate(90deg)}
+.bt-directory-caret svg{width:12px;height:12px}
+.bt-directory-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bt-directory-count{flex:none;font-size:10px;letter-spacing:0;opacity:.8}
+.bt-row-drag{position:relative;display:flex;align-items:stretch}
+.bt-row-drag>.bt-row{flex:1 1 auto;min-width:0;padding-left:18px}
+.bt-row-drag[data-drop]{box-shadow:inset 0 1px 0 var(--bt-line-2)}
+.bt-row-handle{position:absolute;left:2px;top:50%;transform:translateY(-50%);z-index:1;width:14px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;color:var(--bt-ink-3);font-size:9px;letter-spacing:-1px;line-height:1;opacity:0;cursor:grab;user-select:none}
+.bt-row-drag:hover .bt-row-handle,.bt-row-handle:focus-visible{opacity:.7}
+.bt-row-handle:active{cursor:grabbing;opacity:1}
+.bt-focus-chips{display:flex;flex-wrap:wrap;gap:6px;max-width:280px;justify-content:flex-end}
+.bt-focus-chip{font:inherit;font-size:12px;line-height:18px;padding:4px 9px;border-radius:8px;border:1px solid var(--bt-line);background:none;color:var(--bt-ink-2);cursor:pointer}
+.bt-focus-chip:hover{background:var(--bt-hover);color:var(--bt-ink)}
+.bt-focus-chip[aria-pressed=true]{background:var(--bt-bubble);border-color:var(--bt-line-2);color:var(--bt-ink)}
 .bt-side>button.bt-row{min-height:34px;padding:6px 8px;font-size:13px}.bt-tile-wrap{padding:8px 0}.bt-tile{gap:3px}
 .bt-head{min-width:0}.bt-pill{max-width:100%;min-width:0}.bt-panel{max-width:calc(100vw - 32px)}
 .bt-settings{--bt-set-w:min(1050px,calc(100vw - 32px));--bt-set-h:min(800px,calc(100vh - 48px))}

@@ -18,8 +18,28 @@ import { AboutPage } from './about.js'
 import { ProvidersPage } from './providers-page.js'
 import { FolderMenu } from './folder-menu.js'
 import { language, t } from './i18n.js'
+import { botCategoryId, SPECIALISTS_CATEGORY } from '../shared/sidebar-prefs.js'
 
 const capitalize = word => word[0].toUpperCase() + word.slice(1)
+
+function FocusCategories({ roster, prefs, run, actions }) {
+  const focus = new Set(prefs.sidebar?.focus ?? [])
+  const categories = [...new Set(roster.bots
+    .filter(bot => bot.id !== roster.mainBotId)
+    .map(bot => botCategoryId(bot))
+    .filter(id => id !== SPECIALISTS_CATEGORY))].sort((a, b) => a.localeCompare(b, language().startsWith('zh') ? 'zh' : 'en'))
+  if (categories.length === 0) return h('span', { className: 'bt-set-hint' }, t('Add specialist Bots to choose focus categories.'))
+  const toggle = id => {
+    const next = new Set(focus)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    run(actions.setPrefs({ sidebar: { focus: [...next] } }))
+  }
+  return h('div', { className: 'bt-focus-chips', role: 'group', 'aria-label': t('Focus categories') },
+    categories.map(id => h('button', {
+      key: id, type: 'button', className: 'bt-focus-chip', 'aria-pressed': focus.has(id), onClick: () => toggle(id),
+    }, id)))
+}
 
 // Settings dialog: a 198px page list beside the page. Bots and group chats each list
 // their members, and one opens on its own settings form. Usage widens the dialog.
@@ -103,7 +123,16 @@ function GeneralPage({ roster, actions, run }) {
       // The flat layout's text has a width of its own; the bubble width stays for the user's messages.
       layoutOf(prefs) === 'flat' ? h(SetRow, { label: t('Text width') }, h(WidthSlider, { label: t('Text width'), value: flatWidthOf(prefs), save: flatWidth => run(actions.setPrefs({ flatWidth })) })) : null,
       h(SetRow, { label: t('Bubble width') }, h(WidthSlider, { label: t('Bubble width'), value: widthOf(prefs), save: width => run(actions.setPrefs({ width })) })),
-      h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) }))),
+      h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) })),
+      h(SetRow, { label: t('Sidebar order'), hint: t('How categories and rows are sorted in the wide sidebar.') },
+        h(Choice, {
+          label: t('Sidebar order'),
+          value: prefs.sidebar?.sort === 'manual' || prefs.sidebar?.sort === 'focus' ? prefs.sidebar.sort : 'recent',
+          options: [['recent', 'Recent activity'], ['manual', 'Manual'], ['focus', 'Focus first']],
+          pick: id => run(actions.setPrefs({ sidebar: { sort: id } })),
+        })),
+      h(SetRow, { label: t('Focus categories'), hint: t('When Focus first is on, these categories stay at the top.') },
+        h(FocusCategories, { roster, prefs, run, actions }))),
     actions.setSurface ? h(SetSection, { key: 'mode', title: t('Mode') },
       h(SetRow, { label: t('Classic Agent mode') },
         h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.setSurface('agent') }, t('Switch')))) : null,

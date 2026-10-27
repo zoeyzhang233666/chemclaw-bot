@@ -6,6 +6,7 @@ import { install as installSide } from './side.js'
 import { questionReply, viewReply } from './parts.js'
 import { defaultRelayLimit } from './groups.js'
 import { validateViewAnswer } from '../shared/views.js'
+import { mergeSidebarPrefs } from '../shared/sidebar-prefs.js'
 import { COLORS, EXTRA_COLORS, ROUTE } from './constants.js'
 import { resolveArtifacts } from './artifact-paths.js'
 
@@ -130,6 +131,15 @@ export function install(rt) {
       // may grow more states later.
       if (body.thinking === true) state.prefs.thinking = true
       else if (body.thinking === false || body.thinking === null) delete state.prefs.thinking
+    }
+    if (body.sidebar !== undefined) {
+      try {
+        const next = mergeSidebarPrefs(state.prefs.sidebar, body.sidebar)
+        if (next === undefined) delete state.prefs.sidebar
+        else state.prefs.sidebar = next
+      } catch (error) {
+        throw invalid(error.message)
+      }
     }
     return rt.save()
   }

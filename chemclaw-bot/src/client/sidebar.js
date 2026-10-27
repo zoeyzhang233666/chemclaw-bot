@@ -3,7 +3,10 @@ import { createPortal } from 'react-dom'
 import { FishLogo } from './dsh-primitives.js'
 import { isMainOf } from './sources.js'
 import { currentPart, previewOf, relativeShort } from './text.js'
-import { PlusIcon, SearchIcon, SidebarIcon, GaugeIcon, PlugIcon, PeopleIcon, ClockIcon, GearIcon, PinMarkIcon, ConnectorIcon, SwitchIcon, CloudDownloadIcon, SlidersIcon, SignOutIcon } from './icons.js'
+import { PlusIcon, SearchIcon, SidebarIcon, GaugeIcon, PlugIcon, PeopleIcon, ClockIcon, GearIcon, PinMarkIcon, ConnectorIcon, SwitchIcon, CloudDownloadIcon, SlidersIcon, SignOutIcon, ChevronRightIcon } from './icons.js'
+import {
+  AGENTS_CATEGORY, ROOMS_CATEGORY, SPECIALISTS_CATEGORY, botCategoryId, moveId, sortCategories, sortEntries,
+} from '../shared/sidebar-prefs.js'
 import { ApiHubMark } from './brand-icons.js'
 import { MAIN_LOOK } from './characters.js'
 import { botState, BotMark, BotAvatar, RoomAvatar } from './mark.js'
@@ -262,19 +265,60 @@ export function TeamSidebar(props) {
     for (const id of list.ids) stamps[id] = previewOf(list, id) ? list.byId[id]?.updatedAt ?? 0 : 0
     return JSON.stringify(stamps)
   })
+  const sidebar = roster.prefs?.sidebar ?? {}
+  const sortMode = sidebar.sort === 'manual' || sidebar.sort === 'focus' ? sidebar.sort : 'recent'
+  const collapsed = useMemo(() => new Set(sidebar.collapsed ?? []), [sidebar.collapsed])
   const order = useMemo(() => {
     const stamps = JSON.parse(updated)
-    const entries = [
-      ...roster.bots.filter(bot => bot.id !== roster.mainBotId).map(bot => ({ kind: 'bot', item: bot, at: stamps[currentPart(bot)] ?? 0 })),
-      ...roster.rooms.map(room => ({ kind: 'room', item: room, at: room.preview ? stamps[room.id] ?? room.createdAt : 0 })),
+    return [
+      ...roster.bots.filter(bot => bot.id !== roster.mainBotId).map(bot => ({ kind: 'bot', item: bot, at: stamps[currentPart(bot)] ?? 0, categoryId: botCategoryId(bot) })),
+      ...roster.rooms.map(room => ({ kind: 'room', item: room, at: room.preview ? stamps[room.id] ?? room.createdAt : 0, categoryId: ROOMS_CATEGORY })),
       // The Agent sorts by its most recent Session, falling back to when it was added.
-      ...(roster.agents ?? []).map(agent => ({ kind: 'agent', item: agent, at: Math.max(0, ...agent.sessions.map(id => stamps[id] ?? 0)) || agent.createdAt })),
+      ...(roster.agents ?? []).map(agent => ({ kind: 'agent', item: agent, at: Math.max(0, ...agent.sessions.map(id => stamps[id] ?? 0)) || agent.createdAt, categoryId: AGENTS_CATEGORY })),
     ]
-    return entries.sort((a, b) => Number(Boolean(b.item.pinned)) - Number(Boolean(a.item.pinned)) || b.at - a.at)
   }, [roster, updated])
+  const groups = useMemo(() => {
+    const byId = new Map()
+    const push = (id, label, entry) => {
+      if (!byId.has(id)) byId.set(id, { id, label, entries: [] })
+      byId.get(id).entries.push(entry)
+    }
+    for (const entry of order) {
+      if (entry.kind === 'room') push(ROOMS_CATEGORY, t('Collaboration groups'), entry)
+      else if (entry.kind === 'agent') push(AGENTS_CATEGORY, t('Other conversations'), entry)
+      else push(entry.categoryId, entry.categoryId === SPECIALISTS_CATEGORY ? t('Specialist Bots') : entry.categoryId, entry)
+    }
+    const listed = [...byId.values()].map(group => ({
+      ...group,
+      entries: sortEntries(group.entries, { sort: sortMode, itemOrder: sidebar.itemOrder ?? {}, categoryId: group.id }),
+    })).filter(group => group.entries.length)
+    return sortCategories(listed, { sort: sortMode, categoryOrder: sidebar.categoryOrder ?? [], focus: sidebar.focus ?? [] })
+  }, [order, sortMode, sidebar.itemOrder, sidebar.categoryOrder, sidebar.focus])
   const main = roster.byId[roster.mainBotId]
-  useListGlide(listRef, wide, order.map(entry => entry.item.id).join(','))
+  useListGlide(listRef, wide, groups.flatMap(group => group.entries.map(entry => entry.item.id)).join(','))
   useLandOnMainBot(roster, useSessions, actions)
+  const saveSidebar = patch => { void actions.setPrefs({ sidebar: patch }).catch(error => actions.reportError(error, 'sidebar')) }
+  const toggleCollapsed = id => {
+    const next = new Set(collapsed)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    saveSidebar({ collapsed: [...next] })
+  }
+  const onDropCategory = (dragId, beforeId) => {
+    if (!dragId || dragId === beforeId) return
+    const ids = groups.map(group => group.id)
+    saveSidebar({ categoryOrder: moveId(ids, dragId, beforeId), sort: sortMode === 'recent' ? 'manual' : sortMode })
+  }
+  const onDropItem = (categoryId, dragId, beforeId) => {
+    if (!dragId || dragId === beforeId) return
+    const group = groups.find(item => item.id === categoryId)
+    if (!group) return
+    const ids = group.entries.map(entry => entry.item.id)
+    saveSidebar({
+      itemOrder: { [categoryId]: moveId(ids, dragId, beforeId) },
+      sort: sortMode === 'recent' ? 'manual' : sortMode,
+    })
+  }
   // The shell keeps wide content during its collapse fade. Normalize through its
   // public expansion action before toggling; coalesce synchronous activations
   // until React commits the result.
@@ -319,17 +363,77 @@ export function TeamSidebar(props) {
     h('button', { type: 'button', className: 'bt-row', title: t('Chemcloud · Data Hub'), onClick: () => actions.openSettings('connectors', 'chem-data-hub') }, h('span', { className: 'bt-row-mark', 'aria-hidden': true }, h(ApiHubMark)), wide ? h('span', null, t('Chemcloud · Data Hub')) : null),
     h('div', { ref: listRef, className: 'bt-list', role: 'region', 'aria-label': t('Bot list') },
       main ? h(BotRow, { ...rowProps, bot: main, marked: markedUnread[main.id] === true }) : roster.ready ? null : h('div', { className: 'bt-hint' }, t('Setting up your Main Bot…')),
-      [
-        { label: t('Collaboration groups'), entries: order.filter(entry => entry.kind === 'room') },
-        ...[...new Set(roster.bots.filter(bot => bot.id !== roster.mainBotId).map(bot => bot.templateInfo?.category || bot.role || t('Specialist Bots')))].map(category => ({ label: category, entries: order.filter(entry => entry.kind === 'bot' && (entry.item.templateInfo?.category || entry.item.role || t('Specialist Bots')) === category) })),
-        { label: t('Other conversations'), entries: order.filter(entry => entry.kind === 'agent') },
-      ].filter(group => group.entries.length).map(group => h(Fragment, { key: group.label },
-        wide ? h('div', { className: 'bt-directory-label' }, group.label, h('span', null, group.entries.length)) : null,
-        group.entries.map(entry => entry.kind === 'bot'
-          ? h(BotRow, { key: entry.item.id, ...rowProps, bot: entry.item, marked: markedUnread[entry.item.id] === true })
-          : entry.kind === 'room'
-            ? h(RoomRow, { key: entry.item.id, ...rowProps, room: entry.item, marked: markedUnread[entry.item.id] === true })
-            : h(AgentRow, { key: entry.item.id, ...rowProps, agent: entry.item, marked: markedUnread[entry.item.id] === true }))))))
+      groups.map(group => {
+        const shut = wide && collapsed.has(group.id)
+        return h(Fragment, { key: group.id },
+          wide ? h(DirectoryLabel, {
+            id: group.id, label: group.label, count: group.entries.length, collapsed: shut,
+            onToggle: () => toggleCollapsed(group.id),
+            onDropCategory,
+          }) : null,
+          shut ? null : group.entries.map(entry => h(DraggableRow, {
+            key: entry.item.id, id: entry.item.id, categoryId: group.id, wide,
+            onDropItem: (dragId, beforeId) => onDropItem(group.id, dragId, beforeId),
+          }, entry.kind === 'bot'
+            ? h(BotRow, { ...rowProps, bot: entry.item, marked: markedUnread[entry.item.id] === true })
+            : entry.kind === 'room'
+              ? h(RoomRow, { ...rowProps, room: entry.item, marked: markedUnread[entry.item.id] === true })
+              : h(AgentRow, { ...rowProps, agent: entry.item, marked: markedUnread[entry.item.id] === true }))))
+      })
+  )
+)
+}
+
+function DirectoryLabel({ id, label, count, collapsed, onToggle, onDropCategory }) {
+  return h('div', {
+    className: 'bt-directory-label',
+    draggable: true,
+    onDragStart: event => { event.dataTransfer.setData('text/bt-category', id); event.dataTransfer.effectAllowed = 'move' },
+    onDragOver: event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; event.currentTarget.dataset.drop = '1' },
+    onDragLeave: event => { delete event.currentTarget.dataset.drop },
+    onDrop: event => {
+      event.preventDefault()
+      delete event.currentTarget.dataset.drop
+      const dragId = event.dataTransfer.getData('text/bt-category')
+      if (dragId) onDropCategory(dragId, id)
+    },
+  },
+  h('button', {
+    type: 'button', className: 'bt-directory-toggle', 'aria-expanded': !collapsed,
+    'aria-label': collapsed ? t('Expand {name}', { name: label }) : t('Collapse {name}', { name: label }),
+    onClick: onToggle,
+  }, h('span', { className: 'bt-directory-caret', 'data-open': collapsed ? undefined : '' }, h(ChevronRightIcon)), h('span', { className: 'bt-directory-name' }, label)),
+  h('span', { className: 'bt-directory-count' }, count))
+}
+
+function DraggableRow({ id, categoryId, wide, onDropItem, children }) {
+  if (!wide) return children
+  return h('div', {
+    className: 'bt-row-drag',
+    onDragOver: event => {
+      if (![...event.dataTransfer.types].includes('text/bt-item')) return
+      event.preventDefault()
+      event.dataTransfer.dropEffect = 'move'
+      event.currentTarget.dataset.drop = '1'
+    },
+    onDragLeave: event => { delete event.currentTarget.dataset.drop },
+    onDrop: event => {
+      event.preventDefault()
+      delete event.currentTarget.dataset.drop
+      const dragId = event.dataTransfer.getData('text/bt-item')
+      const from = event.dataTransfer.getData('text/bt-item-category')
+      if (dragId && from === categoryId) onDropItem(dragId, id)
+    },
+  },
+  h('span', {
+    className: 'bt-row-handle', draggable: true, title: t('Drag to reorder'), 'aria-hidden': true,
+    onDragStart: event => {
+      event.dataTransfer.setData('text/bt-item', id)
+      event.dataTransfer.setData('text/bt-item-category', categoryId)
+      event.dataTransfer.effectAllowed = 'move'
+    },
+  }, '⋮⋮'),
+  children)
 }
 
 // The update button at the sidebar's top right: a cloud while a newer ChemClaw —
