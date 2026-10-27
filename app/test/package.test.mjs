@@ -34,6 +34,26 @@ test('sharp native modules and versioned libvips libraries are unpacked together
   assert.equal(filter(join(root, 'node_modules/yaml/dist/index.js'), stat), false)
 })
 
+test('Linux packages select the official sharp WASM backend without shipping conflicting GLib', () => {
+  const config = parse(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'))
+  const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'))
+  assert.equal(lock.packages[''].dependencies['@img/sharp-wasm32'], lock.packages['node_modules/sharp'].version)
+  const root = resolve('app-fixture')
+  const stat = { isDirectory: () => false }
+  const filter = new FileMatcher(root, root, value => value, ['**/*', ...config.linux.files]).createFilter()
+  for (const file of [
+    '@img/sharp-linux-x64/lib/sharp-linux-x64-0.35.5.node',
+    '@img/sharp-linuxmusl-x64/lib/sharp-linuxmusl-x64-0.35.5.node',
+    '@img/sharp-libvips-linux-x64/lib/libvips-cpp.so.8.18.7',
+  ]) assert.equal(filter(join(root, 'node_modules', file), stat), false, file)
+  const wasm = 'node_modules/@img/sharp-wasm32/lib/sharp-wasm32.wasm'
+  assert.equal(filter(join(root, wasm), stat), true)
+  const unpack = new FileMatcher(root, root, value => value, config.asarUnpack).createFilter()
+  assert.equal(unpack(join(root, wasm), stat), true)
+  assert.equal(config.win.files, undefined)
+  assert.equal(config.mac.files, undefined)
+})
+
 // A release is tagged with the version of chemclaw-bot, and the installed apps compare their own
 // version with the one in the release's latest.yml.
 test('the app has the version of chemclaw-bot', () => {

@@ -20,6 +20,7 @@
     "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
+    "@img/sharp-wasm32": "0.35.5",
     "@deepseek-ai/cordis-plugin-group": "1.0.5",
     "@deepseek-ai/dsh": "0.2.1-rc.3",
     "@deepseek-ai/dsh-anonymous-user-id": "0.2.1-rc.3",
