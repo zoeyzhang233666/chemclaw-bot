@@ -158,3 +158,12 @@ ChemClaw side chat (2026-10-27):
   (Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors).
   https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
   ChemClaw retains its browser controls, chemical workflows and credential routes.
+
+ChemClaw message layout and touch controls (2026-10-27):
+  Adapted Fei2411/DS-Bot message layout preferences, responsive styles, touch and
+  viewport helpers, stable activity row, working-folder state and legacy aside
+  history presentation, including their tests, from Apache-2.0 revision
+  de55888a93983fc51c94f7d22bc94b4f8293205d.
+  Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
+  ChemClaw retains localized skills, artifact links and its own provider settings.

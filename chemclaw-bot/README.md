@@ -62,3 +62,5 @@ Official DSH keeps its existing defaults. Advanced external hosts can set
 ## License
 
 Apache-2.0. See the repository root `NOTICE`.
+
+General settings offer bubble or flat messages, independent bubble/text widths, and an optional thinking display. On touch screens, tap a message to open its actions.

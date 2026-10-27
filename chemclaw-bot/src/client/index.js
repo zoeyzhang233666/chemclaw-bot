@@ -3,7 +3,7 @@ import { isHex, inkText, paintCss } from './inks.js'
 import { DEFAULT_MASK, SHAPES, markupCache, maskOf } from './characters.js'
 import { createSource, EMPTY_ROSTER, indexRoster, isAgentSession } from './sources.js'
 import { teamActions } from './team-actions.js'
-import { themeCss, shellTokens, registry, registerShape, registerTheme, allThemes } from './themes.js'
+import { themeCss, shellTokens, registry, registerShape, registerTheme, allThemes, layoutOf, widthOf, flatWidthOf } from './themes.js'
 import { MENTION_ORIGIN, currentPart } from './text.js'
 import { SHELL_CSS, CONVERSATION_CSS, installStyles, installCompiledStyles } from './styles.js'
 import { lookOf } from './mark.js'
@@ -20,6 +20,7 @@ import { installHeaderNavigation } from './header-navigation.js'
 import { AssistantCell, TriggerCell, TurnProcessCell, Nothing, TurnTailCell, ToolCell } from './cells.js'
 import { Overlays } from './overlays.js'
 import { createBotBrowsers, serveBrowserReads } from './bot-browsers.js'
+import { BtwDock, BtwTurnTail } from './btw.js'
 import { SIDE_CSS, sideSource } from './side-chat.js'
 import { BROWSER_CSS } from './browser-pane.js'
 import { SECRET_CSS, SecretDock } from './secret-card.js'
@@ -163,6 +164,7 @@ export function apply(ctx) {
     if (value.connectors !== undefined && JSON.stringify(value.connectors) !== JSON.stringify(current.connectors ?? [])) live.connectors = value.connectors
     if (value.capabilityStatuses !== undefined && JSON.stringify(value.capabilityStatuses) !== JSON.stringify(current.capabilityStatuses ?? {})) live.capabilityStatuses = value.capabilityStatuses
     if (Object.keys(live).length > 0 && current.ready) roster.set({ ...current, ...live })
+    if (value.btwCards !== undefined && JSON.stringify(value.btwCards) !== JSON.stringify(current.btwCards ?? {})) live.btwCards = value.btwCards
     if (value.sideChats !== undefined && JSON.stringify(value.sideChats) !== JSON.stringify(current.sideChats ?? {})) live.sideChats = value.sideChats
     if (value.unchanged || (value.revision === current.revision && value.modelsKey === current.modelsKey)) return
     // On a browser with no visit record yet, everything already there counts as seen.
@@ -299,8 +301,14 @@ export function apply(ctx) {
       const id = themes[prefs.theme] ? prefs.theme : 'paper'
       const accent = isHex(prefs.accent) ? prefs.accent : undefined
       const motion = prefs.motion === 'quiet' || prefs.motion === 'lively' ? prefs.motion : 'normal'
+      const layout = layoutOf(prefs)
+      const width = widthOf(prefs)
+      const flatWidth = flatWidthOf(prefs)
       document.body.dataset.btMotion = motion
-      const next = `${id}|${accent ?? ''}|${motion}|${registry.getSnapshot()}`
+      document.body.dataset.btLayout = layout
+      document.body.style.setProperty('--bt-msg-w', String(width / 100))
+      document.body.style.setProperty('--bt-flat-w', String(flatWidth / 100))
+      const next = `${id}|${accent ?? ''}|${motion}|${layout}|${width}|${flatWidth}|${prefs.thinking === true}|${registry.getSnapshot()}`
       if (next === key) return
       key = next
       style.textContent = themeCss(themes[id], accent)
@@ -308,7 +316,7 @@ export function apply(ctx) {
       releaseTokens = ctx.theme.overrideTokens('chemclaw-bot', shellTokens(themes[id]))
       if (typeof release === 'function') release()
       if (snapshot.ready) {
-        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion })) } catch { /* storage unavailable */ }
+        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion, layout: prefs.layout, width: prefs.width, flatWidth: prefs.flatWidth, thinking: prefs.thinking })) } catch { /* storage unavailable */ }
       }
     }
     render()
@@ -321,6 +329,9 @@ export function apply(ctx) {
         if (typeof releaseTokens === 'function') releaseTokens()
       } finally {
         delete document.body.dataset.btMotion
+        delete document.body.dataset.btLayout
+        document.body.style.removeProperty('--bt-msg-w')
+        document.body.style.removeProperty('--bt-flat-w')
         style.remove()
       }
     }
@@ -580,6 +591,8 @@ export function apply(ctx) {
     })
   }
   // Whether AccountLauncher holds the shell's settings seat; FooterAccount steps aside if so.
+  actions.signInEntry = () => ctx.slots.entries?.('settings.models.sign-in')?.[0] ?? null
+  actions.accountT = () => ctx.get('locale')?.bind('settings.account') ?? (key => key)
   actions.canSignIn = () => true
   actions.signIn = () => ui.set(state => ({ ...state, signIn: (state.signIn ?? 0) + 1 }))
   actions.closeSignIn = () => ui.set(state => ({ ...state, signIn: null }))
@@ -668,6 +681,29 @@ export function apply(ctx) {
     } }
   }
 
+  actions.turnFacts = (sessionId) => {
+    try {
+      const binding = ctx.sessions.binding(sessionId)
+      if (binding === undefined) return { turns: undefined, openTurn: undefined }
+      const conversation = ctx.uiConversation.binding(binding)
+      const chat = conversation.target('chat').getSnapshot()
+      return { turns: chat?.timeline?.turns, openTurn: conversation.openTurn.getSnapshot() }
+    } catch {
+      return { turns: undefined, openTurn: undefined }
+    }
+  }
+  actions.watchTurns = (sessionId, listener) => {
+    try {
+      const binding = ctx.sessions.binding(sessionId)
+      if (binding === undefined) return () => {}
+      const conversation = ctx.uiConversation.binding(binding)
+      const offChat = conversation.target('chat').subscribe(listener)
+      const offOpen = conversation.openTurn.subscribe(listener)
+      return () => { offChat(); offOpen() }
+    } catch {
+      return () => {}
+    }
+  }
   // A Bot surface owns the cells it shadows. It starts far below the -10 that plugins
   // commonly use and goes below whatever already holds the cell, so a plugin that
   // shadows the same cell neither breaks the install nor shows through.
@@ -762,6 +798,8 @@ export function apply(ctx) {
     // every message.
     () => shadow('conversation.chat.node', { key: 'question-reply', priority: BOT_PRIORITY, locale: 'chat' }, AnsweredReply),
     () => shadow('conversation.chat.node', { key: 'compaction', priority: BOT_PRIORITY, locale: 'chat' }, Nothing),
+    () => shadow('conversation.chat.node', { key: 'context', priority: BOT_PRIORITY, locale: 'chat' }, Nothing),
+    () => shadow('conversation.chat.turnTail', { id: 'bot-btw', order: 800, priority: BOT_PRIORITY, inject: face }, BtwTurnTail),
     ...(canDrawUserMessages() ? ['user', 'steering'].map(key => () => shadow('conversation.chat.node', { key, priority: BOT_PRIORITY, locale: 'chat', inject: face }, UserMessageCell)) : []),
     () => shadow('conversation.input.permission', { priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.input.plan', { priority: BOT_PRIORITY }, Nothing),
@@ -770,6 +808,7 @@ export function apply(ctx) {
     () => shadow('conversation.input.model', { priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'activity', order: 0, priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'usage', order: 1, priority: BOT_PRIORITY }, Nothing),
+    () => shadow('conversation.composer.dock', { id: 'btw', order: 2, priority: BOT_PRIORITY, inject: face }, BtwDock),
     () => shadow('conversation.input.left', { id: 'bot-plus', order: -100, inject: face }, ComposerPlus),
     () => shadow('conversation.input.right', { id: 'bot-voice', order: 100, inject: face }, ComposerVoice),
     () => shadow('conversation.composer', {

@@ -25,6 +25,7 @@ const Fragment = Symbol('Fragment')
 const h = (type, props, ...children) => ({ type, props: { ...props, children } })
 const react = {
   createElement: h, Fragment,
+  useSyncExternalStore: (_subscribe, getSnapshot) => getSnapshot(),
   useEffect: (effect) => { effects.push(effect) },
   useLayoutEffect: (effect) => { effects.push(effect) },
   useState: initial => [typeof initial === 'function' ? initial() : initial, value => sets.push(value)],

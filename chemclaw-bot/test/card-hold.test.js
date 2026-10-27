@@ -38,6 +38,7 @@ const react = {
   },
   useRef: initial => slot(() => ({ current: initial })),
   useId: () => slot(() => ({ id: 'card-id' })).id,
+  useSyncExternalStore: (_subscribe, getSnapshot) => getSnapshot(),
   useEffect: effect, useLayoutEffect: effect,
 }
 const keys = new Set()

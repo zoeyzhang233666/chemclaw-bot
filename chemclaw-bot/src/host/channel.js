@@ -56,6 +56,7 @@ export function install(rt) {
     exchangeTurns: state.exchangeTurns,
     questions: state.questions,
     views: state.views ?? {},
+    btwCards: rt.btwView?.() ?? {},
     sideChats: rt.sideView?.() ?? {},
     // The team's DSH Agent (at most one): plain dsh Sessions, not Bots.
     agents: Object.values(state.agents),
@@ -107,6 +108,27 @@ export function install(rt) {
       if (body.motion === null || body.motion === 'normal') delete state.prefs.motion
       else if (body.motion === 'quiet' || body.motion === 'lively') state.prefs.motion = body.motion
       else throw invalid('Motion must be quiet, normal or lively')
+    }
+    if (body.layout !== undefined) {
+      if (body.layout === null || body.layout === 'bubble') delete state.prefs.layout
+      else if (body.layout === 'flat') state.prefs.layout = body.layout
+      else throw invalid('Layout must be bubble or flat')
+    }
+    if (body.width !== undefined) {
+      if (body.width === null || body.width === 80) delete state.prefs.width
+      else if (Number.isInteger(body.width) && body.width >= 50 && body.width <= 100) state.prefs.width = body.width
+      else throw invalid('Width must be a whole percent from 50 to 100')
+    }
+    if (body.flatWidth !== undefined) {
+      if (body.flatWidth === null || body.flatWidth === 100) delete state.prefs.flatWidth
+      else if (Number.isInteger(body.flatWidth) && body.flatWidth >= 50 && body.flatWidth <= 100) state.prefs.flatWidth = body.flatWidth
+      else throw invalid('Flat text width must be a whole percent from 50 to 100')
+    }
+    if (body.thinking !== undefined) {
+      // A value this version does not know is ignored, not refused: the toggle
+      // may grow more states later.
+      if (body.thinking === true) state.prefs.thinking = true
+      else if (body.thinking === false || body.thinking === null) delete state.prefs.thinking
     }
     return rt.save()
   }
