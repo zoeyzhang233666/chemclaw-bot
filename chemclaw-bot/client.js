@@ -202,6 +202,7 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "Development preview": "开发预览",
   Bubble: "气泡",
   Flat: "平铺",
   "Sign in to DeepSeek": "登录 DeepSeek 账号",
@@ -15505,9 +15506,10 @@ function DesktopUpdates({ bridge, Row: Row3, run: run2 }) {
   const ready = status.phase === "ready";
   const available = status.phase === "available";
   const hint = status.phase === "failed" ? t("Could not check for updates.") : ready ? t("ChemClaw {version} is ready to install.", { version: status.latest }) : status.phase === "downloading" ? t("Downloading ChemClaw {version}…", { version: status.latest }) : available ? t("ChemClaw {version} is available", { version: status.latest }) : !status.enabled ? t("Update checks are off.") : status.checkedAt ? `${t("Up to date")} · ${t("Checked {time}", { time: whenText(status.checkedAt) })}` : t("Updates come with the ChemClaw app.");
+  const detail = status.preview ? `${t("Development preview")} · ${status.preview.branch} · ${status.preview.revision}` : hint;
   return (0, import_react42.createElement)(
     Row3,
-    { label: "ChemClaw", hint },
+    { label: "ChemClaw", hint: detail },
     (0, import_react42.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy || !status.enabled || status.phase === "downloading", onClick: check }, busy ? t("Checking…") : t("Check for updates")),
     ready || available ? (0, import_react42.createElement)("button", { type: "button", className: "bt-fb-primary", onClick: () => run2(bridge.install()) }, ready ? t("Restart now") : t("Download")) : null
   );

@@ -250,6 +250,24 @@ async function chat(cdp) {
   }
   // The mock model's greeting for a new team.
   await until(text('今天想先解决哪个业务问题'), 'the greeting')
+  if (process.argv.includes('--preview-only')) {
+    await evaluate("document.querySelector('.bt-account').click()")
+    await until("document.querySelector('.bt-account-menu')", 'the preview account menu')
+    await evaluate("[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(设置|Settings)$/.test(node.textContent.trim())).click()")
+    await until("document.querySelector('.bt-look-seg')", 'the source layout controls')
+    for (const label of ['消息布局', '气泡宽度', '显示思考过程']) {
+      if (!await evaluate(text(label))) throw new Error(`The preview is missing ${label}`)
+    }
+    await evaluate("document.querySelectorAll('.bt-look-seg button')[1].click()")
+    await until(text('正文宽度'), 'the source text width control')
+    if (shotFile) { await sleep(300); const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.settings.png`), Buffer.from(data, 'base64')) }
+    await evaluate("[...document.querySelectorAll('.bt-settings-item')].find(node => /^(关于 ChemClaw|About ChemClaw)$/.test(node.textContent.trim())).click()")
+    await until(text('开发预览'), 'the source revision in About')
+    if (!await evaluate(`document.body.innerText.includes(${JSON.stringify(process.env.CHEMCLAW_SOURCE_REVISION)})`)) throw new Error('About does not identify the launched source revision')
+    if (shotFile) { const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.about.png`), Buffer.from(data, 'base64')) }
+    console.log('check-packed: source layout controls and development revision passed')
+    return
+  }
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: 'packaged app check' })
   await sleep(150)

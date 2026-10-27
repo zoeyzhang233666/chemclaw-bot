@@ -165,7 +165,9 @@ async function start() {
   ready.catch(fail)
   // A throwaway run (DS_BOT_HOME) keeps its folders where it was told.
   const fixed = Boolean(process.env.DS_BOT_HOME)
-  const updateStatus = () => ({ current: app.getVersion(), enabled: false, phase: 'idle', ...updates?.status() })
+  const updateStatus = () => ({ current: app.getVersion(), enabled: false, phase: 'idle', ...updates?.status(),
+    ...(!app.isPackaged && process.env.CHEMCLAW_SOURCE_REVISION ? { preview: { branch: process.env.CHEMCLAW_SOURCE_BRANCH || 'source', revision: process.env.CHEMCLAW_SOURCE_REVISION } } : {}),
+  })
   ipcMain.handle(IPC.updateStatus, event => { assertWindow(event); return updateStatus() })
   ipcMain.handle(IPC.updateCheck, async event => {
     assertWindow(event)

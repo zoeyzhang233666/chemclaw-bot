@@ -7,6 +7,7 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Development preview': '开发预览',
   Bubble: '气泡',
   Flat: '平铺',
   'Sign in to DeepSeek': '登录 DeepSeek 账号',
