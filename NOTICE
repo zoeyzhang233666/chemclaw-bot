@@ -176,3 +176,11 @@ ChemClaw upstream reliability follow-up (2026-10-27):
   Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors.
   https://github.com/Fei2411/DS-Bot
   ChemClaw retains its DSH rc.3 runtime, chemical workflows, routing and user views.
+
+ChemClaw browser login import and user downloads (2026-10-27):
+  Adapted DS-Bot cookie-parse, cookie-import, browser-sources, downloads, browser
+  import UI, IPC bridge and tests from Apache-2.0 revision
+  de55888a93983fc51c94f7d22bc94b4f8293205d.
+  Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
+  ChemClaw retains its native partitions, approval paths and application origin checks.

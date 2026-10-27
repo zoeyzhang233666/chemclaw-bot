@@ -17609,6 +17609,11 @@ var SIDE_CSS = `
 .bt-pmenu-sep{height:.5px;flex:none;margin:4px 8px;background:var(--bt-line-2)}
 `;
 
+// src/client/browser-overlap.js
+function rectsOverlap(a, b) {
+  return a.width > 0 && a.height > 0 && b.width > 0 && b.height > 0 && a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+}
+
 // src/client/browser-pane.js
 var import_react49 = require("react");
 var import_react_dom8 = require("react-dom");
@@ -17641,6 +17646,9 @@ var StopIcon = icon(["M5.5 5.5l9 9M14.5 5.5l-9 9"]);
 var CloseIcon2 = icon(["M5.5 5.5l9 9M14.5 5.5l-9 9"]);
 var PlusTabIcon = icon(["M10 5v10M5 10h10"]);
 var LockIcon2 = icon(["M6.5 9V7a3.5 3.5 0 0 1 7 0v2", "M5.5 9h9v7h-9z"]);
+var ImportIcon = icon(["M10 3.5v8.5", "M6 8.5l4 4 4-4", "M4.5 14v1.5a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5V14"]);
+var FileIcon = icon(["M6 3.5h5.5L14.5 6.5v10H6z", "M11 3.5v3.5h3.5"]);
+var WindowIcon = icon(["M4 5h12v9.5H4z", "M4 7.5h12"]);
 function Favicon({ src, className }) {
   const [failed, setFailed] = (0, import_react49.useState)(null);
   if (!src || failed === src) return (0, import_react49.createElement)("span", { className: `${className} bt-ptab-globe` }, (0, import_react49.createElement)(GlobeIcon));
@@ -17950,7 +17958,76 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
       setControlling(false);
     }
   };
-  const showGuest = landed && !leaving && Boolean(page.url) && !page.error;
+  const [covered, setCovered] = (0, import_react49.useState)(false);
+  const imports = actions.browserImport;
+  const [flow, setFlow] = (0, import_react49.useState)(null);
+  const flowRef = (0, import_react49.useRef)(null);
+  const [sources, setSources] = (0, import_react49.useState)(null);
+  const [busy, setBusy] = (0, import_react49.useState)(false);
+  const setFlowTracked = (next) => {
+    flowRef.current = typeof next === "function" ? next(flowRef.current) : next;
+    setFlow(flowRef.current);
+  };
+  const showGuest = landed && !leaving && !covered && Boolean(page.url) && !page.error && flow === null;
+  (0, import_react49.useEffect)(() => {
+    const update = () => {
+      const panel = frame.current?.getBoundingClientRect();
+      const overlaps2 = panel && [...document.querySelectorAll('[role="dialog"],[role="menu"],[role="listbox"]')].some((element) => rectsOverlap(panel, element.getBoundingClientRect()));
+      setCovered(Boolean(overlaps2));
+    };
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["role", "data-leaving"] });
+    window.addEventListener("resize", update);
+    update();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  (0, import_react49.useEffect)(() => {
+    setFlowTracked(null);
+    return () => {
+      const id = typeof flowRef.current === "object" && flowRef.current !== null ? flowRef.current.id : null;
+      if (id) void imports?.cancel(id).catch(() => {
+      });
+    };
+  }, [tabId]);
+  const openImport = () => {
+    setFlowTracked("menu");
+    if (sources === null) void imports.sources().then(setSources, () => setSources([]));
+  };
+  const showPicked = (r) => {
+    if (r?.id) setFlowTracked({ stage: "preview", id: r.id, preview: r.preview, restarted: r.restarted === true });
+    else if (r?.error) setFlowTracked({ stage: "error", message: importError(r.error) });
+    else setFlowTracked(null);
+  };
+  const job = async (work) => {
+    setBusy(true);
+    try {
+      await work();
+    } catch (error) {
+      setFlowTracked({ stage: "error", message: String(error?.message ?? error) });
+    } finally {
+      setBusy(false);
+    }
+  };
+  const pickFile = () => job(async () => showPicked(await imports.pick()));
+  const pickSource = (source) => job(async () => {
+    const r = await imports.live(source.id);
+    if (r?.running) setFlowTracked({ stage: "running", source });
+    else showPicked(r);
+  });
+  const closeAndImport = () => job(async () => showPicked(await imports.live(flowRef.current?.source?.id, true)));
+  const applyImport = () => job(async () => {
+    const report = await imports.apply(bot.id, flowRef.current?.id);
+    setFlowTracked((current) => ({ stage: "result", report, label: current?.preview?.source?.label ?? null }));
+  });
+  const cancelImport = () => {
+    const id = typeof flow === "object" && flow !== null ? flow.id : null;
+    setFlowTracked(null);
+    if (id) void imports?.cancel(id).catch(() => {
+    });
+  };
   (0, import_react49.useLayoutEffect)(() => {
     const element = frame.current;
     if (!element || leaving || !tabId) {
@@ -18048,12 +18125,33 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
           }
         })
       ),
+      (0, import_react49.createElement)("button", {
+        type: "button",
+        className: "bt-icon-btn",
+        "aria-label": t("New browser tab"),
+        title: t("New browser tab"),
+        onClick: () => actions.browserNewTab(bot.id)
+      }, (0, import_react49.createElement)(PlusTabIcon)),
+      imports ? (0, import_react49.createElement)("button", {
+        type: "button",
+        className: "bt-icon-btn bt-import-btn",
+        "aria-label": t("Import cookies"),
+        title: t("Import cookies"),
+        "aria-expanded": flow === "menu",
+        disabled: busy,
+        onClick: () => {
+          if (flow === "menu") setFlowTracked(null);
+          else openImport();
+        }
+      }, (0, import_react49.createElement)(ImportIcon)) : null,
       page.loading ? (0, import_react49.createElement)("span", { className: "bt-browser-progress", "aria-hidden": true }) : null
     ),
     (0, import_react49.createElement)(
       "div",
       { ref: frame, className: "bt-browser-frame", "data-guest": showGuest || void 0 },
-      page.error ? (0, import_react49.createElement)(
+      flow === "menu" ? (0, import_react49.createElement)(ImportMenu, { sources, busy, onFile: pickFile, onSource: pickSource, onClose: () => setFlowTracked(null) }) : null,
+      typeof flow === "object" && flow !== null ? (0, import_react49.createElement)(ImportCard, { flow, page, busy, onApply: applyImport, onCancel: cancelImport, onCloseAndImport: closeAndImport, onDone: () => setFlowTracked(null), onReload: () => actions.browserCommand(tabId, "reload") }) : null,
+      flow === null && page.error ? (0, import_react49.createElement)(
         "div",
         { className: "bt-browser-empty" },
         (0, import_react49.createElement)("div", { className: "bt-browser-empty-title" }, t("This page didn’t load")),
@@ -18061,15 +18159,167 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
         page.url ? (0, import_react49.createElement)("button", { type: "button", className: "bt-browser-retry", onClick: () => {
           void actions.browserNavigate(tabId, page.url);
         } }, t("Try again")) : null
-      ) : !page.url ? (0, import_react49.createElement)(
+      ) : flow === null && !page.url ? (0, import_react49.createElement)(
         "div",
         { className: "bt-browser-empty" },
         (0, import_react49.createElement)(BotMark, { bot, size: 48, state: "idle", live: true }),
         (0, import_react49.createElement)("div", { className: "bt-browser-empty-title" }, t("{name}'s browser", { name: bot.name })),
-        (0, import_react49.createElement)("div", { className: "bt-browser-empty-text" }, t("Open a page here and {name} can read it with you. Logins and cookies stay with {name}; other Bots never see them.", { name: bot.name }))
+        (0, import_react49.createElement)("div", { className: "bt-browser-empty-text" }, t("Open a page here and {name} can read it with you. Logins and cookies stay with {name}; other Bots never see them.", { name: bot.name })),
+        imports ? (0, import_react49.createElement)("button", { type: "button", className: "bt-browser-retry", onClick: openImport }, t("Import cookies")) : null
       ) : null
     )
   );
+}
+function importError(error) {
+  if (error === "too-large") return t("That file is too large to be a cookie export.");
+  if (error === "unreadable") return t("That file could not be read.");
+  if (error === "app-bound") return t("This browser encrypts its cookies so only it can read them. Export them to a file first, then import that file.");
+  return String(error);
+}
+function ImportMenu({ sources, busy, onFile, onSource, onClose }) {
+  (0, import_react49.useEffect)(() => {
+    const close = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [onClose]);
+  return (0, import_react49.createElement)(
+    "div",
+    { className: "bt-import-menu", role: "menu", "aria-label": t("Import cookies") },
+    (0, import_react49.createElement)("div", { className: "bt-import-menu-title" }, t("Import cookies")),
+    (0, import_react49.createElement)(
+      "button",
+      { type: "button", className: "bt-import-item", role: "menuitem", disabled: busy, onClick: onFile },
+      (0, import_react49.createElement)(FileIcon, { className: "bt-import-item-icon" }),
+      (0, import_react49.createElement)("span", { className: "bt-import-item-name" }, t("From a file…")),
+      (0, import_react49.createElement)("span", { className: "bt-import-item-sub" }, t("cookies.txt, JSON, storageState"))
+    ),
+    sources === null ? (0, import_react49.createElement)("div", { className: "bt-import-menu-note" }, t("Loading…")) : sources.length === 0 ? (0, import_react49.createElement)("div", { className: "bt-import-menu-note" }, t("No browsers found")) : sources.map((source) => (0, import_react49.createElement)(
+      "button",
+      {
+        key: source.id,
+        type: "button",
+        className: "bt-import-item",
+        role: "menuitem",
+        disabled: busy,
+        onClick: () => onSource(source)
+      },
+      (0, import_react49.createElement)(WindowIcon, { className: "bt-import-item-icon" }),
+      (0, import_react49.createElement)("span", { className: "bt-import-item-name" }, source.label),
+      (0, import_react49.createElement)("span", { className: "bt-import-item-sub" }, t("Copy of its cookies"))
+    ))
+  );
+}
+function ImportCard({ flow, page, busy, onApply, onCancel, onCloseAndImport, onDone, onReload }) {
+  const { stage } = flow;
+  if (stage === "running") {
+    return (0, import_react49.createElement)("div", { className: "bt-import-card" }, (0, import_react49.createElement)(
+      "div",
+      { className: "bt-import-box" },
+      (0, import_react49.createElement)("div", { className: "bt-import-title" }, t("{name} is running", { name: flow.source.name })),
+      (0, import_react49.createElement)("div", { className: "bt-import-text" }, t("It must close for a moment so its cookies can be copied. It will reopen with your tabs.")),
+      (0, import_react49.createElement)(
+        "div",
+        { className: "bt-import-actions" },
+        (0, import_react49.createElement)("button", { type: "button", className: "bt-import-primary", disabled: busy, onClick: onCloseAndImport }, busy ? t("Closing…") : t("Close {name} and import", { name: flow.source.name })),
+        (0, import_react49.createElement)("button", { type: "button", className: "bt-import-plain", disabled: busy, onClick: onCancel }, t("Cancel"))
+      )
+    ));
+  }
+  if (stage === "error") {
+    return (0, import_react49.createElement)("div", { className: "bt-import-card" }, (0, import_react49.createElement)(
+      "div",
+      { className: "bt-import-box" },
+      (0, import_react49.createElement)("div", { className: "bt-import-title" }, t("Import failed")),
+      (0, import_react49.createElement)("div", { className: "bt-import-text" }, flow.message),
+      (0, import_react49.createElement)("div", { className: "bt-import-actions" }, (0, import_react49.createElement)("button", { type: "button", className: "bt-import-plain", onClick: onCancel }, t("Close")))
+    ));
+  }
+  if (stage === "result") {
+    const { report } = flow;
+    const problems = [...report.dropped ?? [], ...report.failed ?? []];
+    return (0, import_react49.createElement)("div", { className: "bt-import-card" }, (0, import_react49.createElement)(
+      "div",
+      { className: "bt-import-box" },
+      (0, import_react49.createElement)("div", { className: "bt-import-title" }, report.stored > 0 ? t("Imported {count} cookies", { count: report.stored }) : t("No cookies were stored")),
+      flow.label ? (0, import_react49.createElement)("div", { className: "bt-import-sub" }, flow.label) : null,
+      problems.length ? (0, import_react49.createElement)(
+        "div",
+        { className: "bt-import-list" },
+        problems.slice(0, 8).map((item, index) => (0, import_react49.createElement)(
+          "div",
+          { key: index, className: "bt-import-line" },
+          (0, import_react49.createElement)("span", { className: "bt-import-line-name" }, item.name ?? "—"),
+          (0, import_react49.createElement)("span", { className: "bt-import-line-reason" }, item.reason)
+        )),
+        problems.length > 8 ? (0, import_react49.createElement)("div", { className: "bt-import-line" }, (0, import_react49.createElement)("span", { className: "bt-import-line-reason" }, t("and {count} more", { count: problems.length - 8 }))) : null
+      ) : null,
+      (0, import_react49.createElement)(
+        "div",
+        { className: "bt-import-actions" },
+        page.url ? (0, import_react49.createElement)("button", { type: "button", className: "bt-import-plain", onClick: onReload }, t("Reload the page")) : null,
+        (0, import_react49.createElement)("button", { type: "button", className: "bt-import-primary", onClick: onDone }, t("Done"))
+      )
+    ));
+  }
+  const { preview } = flow;
+  return (0, import_react49.createElement)("div", { className: "bt-import-card" }, (0, import_react49.createElement)(
+    "div",
+    { className: "bt-import-box" },
+    (0, import_react49.createElement)("div", { className: "bt-import-title" }, t("Import {count} cookies", { count: preview.cookies })),
+    (0, import_react49.createElement)(
+      "div",
+      { className: "bt-import-sub" },
+      preview.source?.label ?? "",
+      flow.restarted ? ` · ${t("the browser was restarted")}` : ""
+    ),
+    preview.sites.length ? (0, import_react49.createElement)(
+      "div",
+      { className: "bt-import-list" },
+      preview.sites.map((site) => (0, import_react49.createElement)(
+        "div",
+        { key: site.site, className: "bt-import-line" },
+        (0, import_react49.createElement)("span", { className: "bt-import-line-name" }, site.site),
+        (0, import_react49.createElement)(
+          "span",
+          { className: "bt-import-line-count" },
+          t("{count}", { count: site.cookies }),
+          site.session > 0 ? ` · ${t("{count} session", { count: site.session })}` : ""
+        )
+      ))
+    ) : null,
+    preview.skipped.length ? (0, import_react49.createElement)(
+      "div",
+      { className: "bt-import-list" },
+      (0, import_react49.createElement)("div", { className: "bt-import-note" }, t("{count} skipped", { count: preview.skipped.length })),
+      preview.skipped.slice(0, 5).map((item, index) => (0, import_react49.createElement)(
+        "div",
+        { key: index, className: "bt-import-line" },
+        (0, import_react49.createElement)("span", { className: "bt-import-line-name" }, item.name ?? item.where),
+        (0, import_react49.createElement)("span", { className: "bt-import-line-reason" }, item.reason)
+      )),
+      preview.skipped.length > 5 ? (0, import_react49.createElement)("div", { className: "bt-import-line" }, (0, import_react49.createElement)("span", { className: "bt-import-line-reason" }, t("and {count} more", { count: preview.skipped.length - 5 }))) : null
+    ) : null,
+    preview.warnings.length ? (0, import_react49.createElement)(
+      "details",
+      { className: "bt-import-warns" },
+      (0, import_react49.createElement)("summary", null, t("{count} adjusted", { count: preview.warnings.reduce((n, w) => n + w.count, 0) })),
+      preview.warnings.map((w, index) => (0, import_react49.createElement)(
+        "div",
+        { key: index, className: "bt-import-line" },
+        (0, import_react49.createElement)("span", { className: "bt-import-line-reason" }, `${w.count} × ${w.message}`)
+      ))
+    ) : null,
+    preview.notes.includes("session-cookies") ? (0, import_react49.createElement)("div", { className: "bt-import-note" }, t("Cookies without an expiry stay until the app closes.")) : null,
+    preview.notes.includes("local-storage-left") ? (0, import_react49.createElement)("div", { className: "bt-import-note" }, t("Some sites also keep sign-in outside cookies; you may need to sign in again there.")) : null,
+    (0, import_react49.createElement)(
+      "div",
+      { className: "bt-import-actions" },
+      (0, import_react49.createElement)("button", { type: "button", className: "bt-import-primary", disabled: busy, onClick: onApply }, busy ? t("Importing…") : t("Import")),
+      (0, import_react49.createElement)("button", { type: "button", className: "bt-import-plain", disabled: busy, onClick: onCancel }, t("Cancel"))
+    )
+  ));
 }
 function BotPanel({ pane, leaving, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useBrowserHolds }) {
   const bot = roster.byId[pane.id];
@@ -20600,6 +20850,13 @@ function apply(ctx) {
       browserNavigate: (tabId, input) => browsers.navigate(tabId, input),
       browserCommand: (tabId, name) => browsers.command(tabId, name),
       browserFocus: (tabId) => browsers.focus(tabId),
+      browserImport: typeof bridge.importSources === "function" ? {
+        sources: () => bridge.importSources(),
+        pick: () => bridge.importPick(),
+        live: (source, close) => bridge.importLive(source, close),
+        apply: (botId, pending) => bridge.importApply(`bot:${botId}`, pending),
+        cancel: (pending) => bridge.importCancel(pending)
+      } : null,
       browserTakeover: bridge.views ? async (botId) => {
         const result = await call("browser-takeover", { botId });
         await bridge.views.hold(botId, true);

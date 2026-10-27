@@ -15,6 +15,7 @@ import { SideChatView } from './side-chat.js'
 import { panelHasStrip, sideChatsOf, stripMenuKeys } from './side-model.js'
 import { DotsIcon, FolderIcon, SideIcon, TerminalIcon } from './icons.js'
 import { t } from './i18n.js'
+import { rectsOverlap } from './browser-overlap.js'
 
 export const PANEL_LINGER_MS = 300
 const WIDTH_KEY = STORAGE.browserWidth
@@ -52,6 +53,10 @@ const StopIcon = icon(['M5.5 5.5l9 9M14.5 5.5l-9 9'])
 const CloseIcon = icon(['M5.5 5.5l9 9M14.5 5.5l-9 9'])
 const PlusTabIcon = icon(['M10 5v10M5 10h10'])
 const LockIcon = icon(['M6.5 9V7a3.5 3.5 0 0 1 7 0v2', 'M5.5 9h9v7h-9z'])
+
+const ImportIcon = icon(['M10 3.5v8.5', 'M6 8.5l4 4 4-4', 'M4.5 14v1.5a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5V14'])
+const FileIcon = icon(['M6 3.5h5.5L14.5 6.5v10H6z', 'M11 3.5v3.5h3.5'])
+const WindowIcon = icon(['M4 5h12v9.5H4z', 'M4 7.5h12'])
 
 /** A page's favicon, or the globe while there is none or it fails to load. */
 export function Favicon({ src, className }) {
@@ -285,7 +290,7 @@ function PanelStrip({ bot, subject, view, ids, active, sides, side, canBrowse, r
 
 // The browser view: toolbar (back, forward, reload/stop, address) over the frame
 // the guest webview covers.
-function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, hold }) {
+export function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, hold }) {
   const page = useBrowserPages(pages => pages[tabId ?? '']) ?? EMPTY_PAGE
   const frame = useRef(null)
   const input = useRef(null)
@@ -297,10 +302,80 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
     try { await action(bot.id) } catch (error) { actions.reportError?.(error, 'browser-control') }
     finally { setControlling(false) }
   }
+  const [covered, setCovered] = useState(false)
+
+  // Cookie imports (the desktop app's bridge only): 'menu' lists the sources; a card
+  // stage then runs running → preview → result | error above the guest.
+  const imports = actions.browserImport
+  const [flow, setFlow] = useState(null)
+  // A mirrored flow: the cleanup on leaving the tab or the panel can still cancel
+  // an unconfirmed pending import.
+  const flowRef = useRef(null)
+  const [sources, setSources] = useState(null)
+  const [busy, setBusy] = useState(false)
+  const setFlowTracked = (next) => {
+    flowRef.current = typeof next === 'function' ? next(flowRef.current) : next
+    setFlow(flowRef.current)
+  }
 
   // The guest goes on screen once the panel has landed and settled on its width,
-  // and only over a page: the empty and error states are the panel's own.
-  const showGuest = landed && !leaving && Boolean(page.url) && !page.error
+  // and only over a page: the empty, error and import states are the panel's own.
+  const showGuest = landed && !leaving && !covered && Boolean(page.url) && !page.error && flow === null
+
+  useEffect(() => {
+    const update = () => {
+      const panel = frame.current?.getBoundingClientRect()
+      const overlaps = panel && [...document.querySelectorAll('[role="dialog"],[role="menu"],[role="listbox"]')]
+        .some(element => rectsOverlap(panel, element.getBoundingClientRect()))
+      setCovered(Boolean(overlaps))
+    }
+    const observer = new MutationObserver(update)
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['role', 'data-leaving'] })
+    window.addEventListener('resize', update)
+    update()
+    return () => { observer.disconnect(); window.removeEventListener('resize', update) }
+  }, [])
+
+  // Leaving the tab or the panel abandons an unconfirmed import.
+  useEffect(() => {
+    setFlowTracked(null)
+    return () => {
+      const id = typeof flowRef.current === 'object' && flowRef.current !== null ? flowRef.current.id : null
+      if (id) void imports?.cancel(id).catch(() => {})
+    }
+    // The flow controls live in this component; the effect re-runs only per tab.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabId])
+
+  const openImport = () => {
+    setFlowTracked('menu')
+    if (sources === null) void imports.sources().then(setSources, () => setSources([]))
+  }
+  const showPicked = (r) => {
+    if (r?.id) setFlowTracked({ stage: 'preview', id: r.id, preview: r.preview, restarted: r.restarted === true })
+    else if (r?.error) setFlowTracked({ stage: 'error', message: importError(r.error) })
+    else setFlowTracked(null)
+  }
+  const job = async (work) => {
+    setBusy(true)
+    try { await work() } catch (error) { setFlowTracked({ stage: 'error', message: String(error?.message ?? error) }) } finally { setBusy(false) }
+  }
+  const pickFile = () => job(async () => showPicked(await imports.pick()))
+  const pickSource = (source) => job(async () => {
+    const r = await imports.live(source.id)
+    if (r?.running) setFlowTracked({ stage: 'running', source })
+    else showPicked(r)
+  })
+  const closeAndImport = () => job(async () => showPicked(await imports.live(flowRef.current?.source?.id, true)))
+  const applyImport = () => job(async () => {
+    const report = await imports.apply(bot.id, flowRef.current?.id)
+    setFlowTracked((current) => ({ stage: 'result', report, label: current?.preview?.source?.label ?? null }))
+  })
+  const cancelImport = () => {
+    const id = typeof flow === 'object' && flow !== null ? flow.id : null
+    setFlowTracked(null)
+    if (id) void imports?.cancel(id).catch(() => {})
+  }
   useLayoutEffect(() => {
     const element = frame.current
     if (!element || leaving || !tabId) { void actions.browserShow(null); return undefined }
@@ -369,19 +444,129 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
           onChange: event => setDraft(event.target.value),
           onKeyDown: (event) => { if (event.key === 'Escape') { event.stopPropagation(); setDraft(null); event.currentTarget.blur() } },
         })),
+      h('button', {
+        type: 'button', className: 'bt-icon-btn', 'aria-label': t('New browser tab'), title: t('New browser tab'),
+        onClick: () => actions.browserNewTab(bot.id),
+      }, h(PlusTabIcon)),
+      imports ? h('button', {
+        type: 'button', className: 'bt-icon-btn bt-import-btn', 'aria-label': t('Import cookies'), title: t('Import cookies'),
+        'aria-expanded': flow === 'menu', disabled: busy,
+        onClick: () => { if (flow === 'menu') setFlowTracked(null); else openImport() },
+      }, h(ImportIcon)) : null,
       page.loading ? h('span', { className: 'bt-browser-progress', 'aria-hidden': true }) : null),
     h('div', { ref: frame, className: 'bt-browser-frame', 'data-guest': showGuest || undefined },
-      page.error
+      flow === 'menu' ? h(ImportMenu, { sources, busy, onFile: pickFile, onSource: pickSource, onClose: () => setFlowTracked(null) }) : null,
+      typeof flow === 'object' && flow !== null
+        ? h(ImportCard, { flow, page, busy, onApply: applyImport, onCancel: cancelImport, onCloseAndImport: closeAndImport, onDone: () => setFlowTracked(null), onReload: () => actions.browserCommand(tabId, 'reload') })
+        : null,
+      flow === null && page.error
         ? h('div', { className: 'bt-browser-empty' },
             h('div', { className: 'bt-browser-empty-title' }, t('This page didn’t load')),
             h('div', { className: 'bt-browser-empty-text' }, t(page.error)),
             page.url ? h('button', { type: 'button', className: 'bt-browser-retry', onClick: () => { void actions.browserNavigate(tabId, page.url) } }, t('Try again')) : null)
-        : !page.url
+        : flow === null && !page.url
           ? h('div', { className: 'bt-browser-empty' },
               h(BotMark, { bot, size: 48, state: 'idle', live: true }),
               h('div', { className: 'bt-browser-empty-title' }, t("{name}'s browser", { name: bot.name })),
-              h('div', { className: 'bt-browser-empty-text' }, t('Open a page here and {name} can read it with you. Logins and cookies stay with {name}; other Bots never see them.', { name: bot.name })))
+              h('div', { className: 'bt-browser-empty-text' }, t('Open a page here and {name} can read it with you. Logins and cookies stay with {name}; other Bots never see them.', { name: bot.name })),
+              imports ? h('button', { type: 'button', className: 'bt-browser-retry', onClick: openImport }, t('Import cookies')) : null)
           : null))
+}
+
+
+function importError(error) {
+  if (error === 'too-large') return t('That file is too large to be a cookie export.')
+  if (error === 'unreadable') return t('That file could not be read.')
+  if (error === 'app-bound') return t('This browser encrypts its cookies so only it can read them. Export them to a file first, then import that file.')
+  return String(error)
+}
+
+// The sources popover: a cookie file, then every importable browser profile.
+function ImportMenu({ sources, busy, onFile, onSource, onClose }) {
+  useEffect(() => {
+    const close = (event) => { if (event.key === 'Escape') onClose() }
+    window.addEventListener('keydown', close)
+    return () => window.removeEventListener('keydown', close)
+  }, [onClose])
+  return h('div', { className: 'bt-import-menu', role: 'menu', 'aria-label': t('Import cookies') },
+    h('div', { className: 'bt-import-menu-title' }, t('Import cookies')),
+    h('button', { type: 'button', className: 'bt-import-item', role: 'menuitem', disabled: busy, onClick: onFile },
+      h(FileIcon, { className: 'bt-import-item-icon' }),
+      h('span', { className: 'bt-import-item-name' }, t('From a file…')),
+      h('span', { className: 'bt-import-item-sub' }, t('cookies.txt, JSON, storageState'))),
+    sources === null
+      ? h('div', { className: 'bt-import-menu-note' }, t('Loading…'))
+      : sources.length === 0
+        ? h('div', { className: 'bt-import-menu-note' }, t('No browsers found'))
+        : sources.map((source) => h('button', {
+          key: source.id, type: 'button', className: 'bt-import-item', role: 'menuitem', disabled: busy,
+          onClick: () => onSource(source),
+        },
+          h(WindowIcon, { className: 'bt-import-item-icon' }),
+          h('span', { className: 'bt-import-item-name' }, source.label),
+          h('span', { className: 'bt-import-item-sub' }, t('Copy of its cookies')))))
+}
+
+// The card that runs an import: close confirmation → preview → result | error.
+function ImportCard({ flow, page, busy, onApply, onCancel, onCloseAndImport, onDone, onReload }) {
+  const { stage } = flow
+  if (stage === 'running') {
+    return h('div', { className: 'bt-import-card' }, h('div', { className: 'bt-import-box' },
+      h('div', { className: 'bt-import-title' }, t('{name} is running', { name: flow.source.name })),
+      h('div', { className: 'bt-import-text' }, t('It must close for a moment so its cookies can be copied. It will reopen with your tabs.')),
+      h('div', { className: 'bt-import-actions' },
+        h('button', { type: 'button', className: 'bt-import-primary', disabled: busy, onClick: onCloseAndImport }, busy ? t('Closing…') : t('Close {name} and import', { name: flow.source.name })),
+        h('button', { type: 'button', className: 'bt-import-plain', disabled: busy, onClick: onCancel }, t('Cancel')))))
+  }
+  if (stage === 'error') {
+    return h('div', { className: 'bt-import-card' }, h('div', { className: 'bt-import-box' },
+      h('div', { className: 'bt-import-title' }, t('Import failed')),
+      h('div', { className: 'bt-import-text' }, flow.message),
+      h('div', { className: 'bt-import-actions' }, h('button', { type: 'button', className: 'bt-import-plain', onClick: onCancel }, t('Close')))))
+  }
+  if (stage === 'result') {
+    const { report } = flow
+    const problems = [...(report.dropped ?? []), ...(report.failed ?? [])]
+    return h('div', { className: 'bt-import-card' }, h('div', { className: 'bt-import-box' },
+      h('div', { className: 'bt-import-title' }, report.stored > 0 ? t('Imported {count} cookies', { count: report.stored }) : t('No cookies were stored')),
+      flow.label ? h('div', { className: 'bt-import-sub' }, flow.label) : null,
+      problems.length ? h('div', { className: 'bt-import-list' },
+        problems.slice(0, 8).map((item, index) => h('div', { key: index, className: 'bt-import-line' },
+          h('span', { className: 'bt-import-line-name' }, item.name ?? '—'),
+          h('span', { className: 'bt-import-line-reason' }, item.reason))),
+        problems.length > 8 ? h('div', { className: 'bt-import-line' }, h('span', { className: 'bt-import-line-reason' }, t('and {count} more', { count: problems.length - 8 }))) : null) : null,
+      h('div', { className: 'bt-import-actions' },
+        page.url ? h('button', { type: 'button', className: 'bt-import-plain', onClick: onReload }, t('Reload the page')) : null,
+        h('button', { type: 'button', className: 'bt-import-primary', onClick: onDone }, t('Done')))))
+  }
+  // stage === 'preview'
+  const { preview } = flow
+  return h('div', { className: 'bt-import-card' }, h('div', { className: 'bt-import-box' },
+    h('div', { className: 'bt-import-title' }, t('Import {count} cookies', { count: preview.cookies })),
+    h('div', { className: 'bt-import-sub' },
+      preview.source?.label ?? '',
+      flow.restarted ? ` · ${t('the browser was restarted')}` : ''),
+    preview.sites.length ? h('div', { className: 'bt-import-list' },
+      preview.sites.map((site) => h('div', { key: site.site, className: 'bt-import-line' },
+        h('span', { className: 'bt-import-line-name' }, site.site),
+        h('span', { className: 'bt-import-line-count' },
+          t('{count}', { count: site.cookies }),
+          site.session > 0 ? ` · ${t('{count} session', { count: site.session })}` : '')))) : null,
+    preview.skipped.length ? h('div', { className: 'bt-import-list' },
+      h('div', { className: 'bt-import-note' }, t('{count} skipped', { count: preview.skipped.length })),
+      preview.skipped.slice(0, 5).map((item, index) => h('div', { key: index, className: 'bt-import-line' },
+        h('span', { className: 'bt-import-line-name' }, item.name ?? item.where),
+        h('span', { className: 'bt-import-line-reason' }, item.reason))),
+      preview.skipped.length > 5 ? h('div', { className: 'bt-import-line' }, h('span', { className: 'bt-import-line-reason' }, t('and {count} more', { count: preview.skipped.length - 5 }))) : null) : null,
+    preview.warnings.length ? h('details', { className: 'bt-import-warns' },
+      h('summary', null, t('{count} adjusted', { count: preview.warnings.reduce((n, w) => n + w.count, 0) })),
+      preview.warnings.map((w, index) => h('div', { key: index, className: 'bt-import-line' },
+        h('span', { className: 'bt-import-line-reason' }, `${w.count} × ${w.message}`)))) : null,
+    preview.notes.includes('session-cookies') ? h('div', { className: 'bt-import-note' }, t('Cookies without an expiry stay until the app closes.')) : null,
+    preview.notes.includes('local-storage-left') ? h('div', { className: 'bt-import-note' }, t('Some sites also keep sign-in outside cookies; you may need to sign in again there.')) : null,
+    h('div', { className: 'bt-import-actions' },
+      h('button', { type: 'button', className: 'bt-import-primary', disabled: busy, onClick: onApply }, busy ? t('Importing…') : t('Import')),
+      h('button', { type: 'button', className: 'bt-import-plain', disabled: busy, onClick: onCancel }, t('Cancel')))))
 }
 
 /**

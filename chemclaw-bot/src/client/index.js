@@ -572,6 +572,13 @@ export function apply(ctx) {
       browserNavigate: (tabId, input) => browsers.navigate(tabId, input),
       browserCommand: (tabId, name) => browsers.command(tabId, name),
       browserFocus: (tabId) => browsers.focus(tabId),
+      browserImport: typeof bridge.importSources === 'function' ? {
+        sources: () => bridge.importSources(),
+        pick: () => bridge.importPick(),
+        live: (source, close) => bridge.importLive(source, close),
+        apply: (botId, pending) => bridge.importApply(`bot:${botId}`, pending),
+        cancel: pending => bridge.importCancel(pending),
+      } : null,
       browserTakeover: bridge.views ? async botId => {
         const result = await call('browser-takeover', { botId })
         await bridge.views.hold(botId, true)

@@ -3,15 +3,19 @@
 // origin as the address the browser comes back to, and accepts only a loopback one.
 import { app, BrowserWindow, WebContentsView, dialog, ipcMain, Menu, nativeTheme, session, shell } from 'electron'
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { rm } from 'node:fs/promises'
+import { readFile, rm } from 'node:fs/promises'
 import { release } from 'node:os'
-import { dirname, isAbsolute, join, resolve } from 'node:path'
+import { basename, dirname, isAbsolute, join, resolve } from 'node:path'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
 import { getDshRuntimeVersion } from '@deepseek-ai/dsh-app-boot'
 import electronUpdater from 'electron-updater'
-import { BotBrowserGuests } from './bot-browser.mjs'
+import { BotBrowserGuests, partitionOf } from './bot-browser.mjs'
 import { BotViews, isBotId } from './bot-views.mjs'
+import { importFromBrowser, listSources } from './browser-sources.mjs'
+import { applyCookies, CookieImports } from './cookie-import.mjs'
+import { parseCookieFile } from './cookie-parse.mjs'
+import { downloadSaver } from './downloads.mjs'
 import { canonicalExecPath } from './canonical-path.mjs'
 import { chooseLocations, localeText, programFolder, saveLocations, text } from './first-run.mjs'
 import { hostPort } from './host-port.mjs'
@@ -32,6 +36,8 @@ const IPC = {
   browserViewNavigate: 'chemclaw:browser-view-navigate', browserViewCommand: 'chemclaw:browser-view-command',
   browserViewFocus: 'chemclaw:browser-view-focus', browserViewRead: 'chemclaw:browser-view-read',
   browserViewClose: 'chemclaw:browser-view-close', browserViewHold: 'chemclaw:browser-view-hold',
+  browserImportSources: 'chemclaw:browser-import-sources', browserImportPick: 'chemclaw:browser-import-pick',
+  browserImportLive: 'chemclaw:browser-import-live', browserImportApply: 'chemclaw:browser-import-apply', browserImportCancel: 'chemclaw:browser-import-cancel',
   updateStatus: 'chemclaw:update-status', updateCheck: 'chemclaw:update-check', updateInstall: 'chemclaw:update-install',
 }
 const MOVE_PROBLEMS = { drive: 'moveDrive', nested: 'moveNested', workspace: 'moveWorkspace', program: 'inProgram', notEmpty: 'moveNotEmpty' }
@@ -63,6 +69,8 @@ let copying
 const copyAbort = new AbortController()
 const browserGuests = new BotBrowserGuests({ session, origin: () => origin, devTools: !app.isPackaged })
 let botViews
+const cookieImports = new CookieImports()
+const IMPORT_FILE_MAX = 32 * 1024 * 1024
 app.once('will-quit', () => botViews?.dispose())
 if (!app.isPackaged && process.send) process.on('message', message => {
   if (message?.type === 'chemclaw-dev-quit') app.quit()
@@ -167,6 +175,55 @@ async function start() {
   const fixed = Boolean(process.env.DS_BOT_HOME)
   const updateStatus = () => ({ current: app.getVersion(), enabled: false, phase: 'idle', ...updates?.status(),
     ...(!app.isPackaged && process.env.CHEMCLAW_SOURCE_REVISION ? { preview: { branch: process.env.CHEMCLAW_SOURCE_BRANCH || 'source', revision: process.env.CHEMCLAW_SOURCE_REVISION } } : {}),
+  })
+  // Cookie imports: a file or an installed browser's profile is parsed or harvested into a
+  // pending set first; only apply (the user's confirm) writes into the Bot's partition.
+  ipcMain.handle(IPC.browserImportSources, (event) => {
+    assertWindow(event)
+    return listSources()
+  })
+  ipcMain.handle(IPC.browserImportPick, async (event) => {
+    assertWindow(event)
+    const picked = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile'],
+      filters: [{ name: 'Cookie files', extensions: ['txt', 'json', 'cookies'] }, { name: 'All files', extensions: ['*'] }],
+    })
+    if (picked.canceled || !picked.filePaths[0]) return { canceled: true }
+    const buffer = await readFile(picked.filePaths[0])
+    if (buffer.length > IMPORT_FILE_MAX) return { error: 'too-large' }
+    const parsed = parseCookieFile(buffer)
+    if (!parsed.ok) return { error: parsed.error ?? 'unreadable', format: parsed.format }
+    return cookieImports.store(parsed, { kind: 'file', label: basename(picked.filePaths[0]) })
+  })
+  ipcMain.handle(IPC.browserImportLive, async (event, sourceId, close) => {
+    assertWindow(event)
+    const source = (await listSources()).find((item) => item.id === sourceId)
+    if (!source) throw new Error('ChemClaw: an unknown browser profile')
+    let outcome
+    try {
+      outcome = await importFromBrowser(source, { close: close === true })
+    } catch (error) {
+      if (error?.code === 'app-bound') return { error: 'app-bound' }
+      throw error
+    }
+    if (outcome.running) return { running: true, label: source.label, kind: source.kind }
+    const result = {
+      format: 'live', entries: outcome.result.cookies.length + outcome.result.skipped.length,
+      cookies: outcome.result.cookies, skipped: outcome.result.skipped, warnings: [], info: {},
+    }
+    return { ...cookieImports.store(result, { kind: source.kind, label: source.label }), restarted: outcome.restarted }
+  })
+  ipcMain.handle(IPC.browserImportApply, async (event, key, id) => {
+    assertWindow(event)
+    if (typeof key !== 'string' || !key.startsWith('bot:') || !isBotId(key.slice(4))) throw new Error('ChemClaw: a Bot storage key is required')
+    const pending = cookieImports.take(typeof id === 'string' ? id : '')
+    if (!pending) throw new Error('ChemClaw: this import is no longer pending')
+    const storage = session.fromPartition(partitionOf(key))
+    return applyCookies(storage, pending.cookies)
+  })
+  ipcMain.handle(IPC.browserImportCancel, (event, id) => {
+    assertWindow(event)
+    if (typeof id === 'string') cookieImports.drop(id)
   })
   ipcMain.handle(IPC.updateStatus, event => { assertWindow(event); return updateStatus() })
   ipcMain.handle(IPC.updateCheck, async event => {
@@ -454,6 +511,7 @@ function createWindow() {
   mainWindow.on('closed', () => { mainWindow = undefined })
   browserGuests.bind(mainWindow)
   const contents = mainWindow.webContents
+  contents.session.on('will-download', downloadSaver({ window: mainWindow, dialog, downloads: app.getPath('downloads') }))
   if (win32) {
     // Fullscreen hides the caption buttons, and the page drops its band meanwhile. A reload
     // registers the page's listener again, so the state goes out after every load too.

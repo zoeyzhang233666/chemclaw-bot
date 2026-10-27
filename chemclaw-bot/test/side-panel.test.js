@@ -59,7 +59,7 @@ runInNewContext(bundle.outputFiles[0].text, {
     return platform[name]
   },
 })
-const { PanelMenu, menuItemFor } = module.exports
+const { PanelMenu, menuItemFor, BrowserView } = module.exports
 
 const find = (node, match, out = []) => {
   if (Array.isArray(node)) node.forEach(child => find(child, match, out))
@@ -69,6 +69,18 @@ const find = (node, match, out = []) => {
   }
   return out
 }
+
+test('the browser renders takeover controls together with login import', () => {
+  const tree = BrowserView({
+    bot: { id: 'bot-a', name: 'Researcher' }, tabId: 'tab-a', landed: true, leaving: false, hold: null,
+    actions: { browserTakeover() {}, browserStop() {}, browserGiveBack() {}, browserImport: {} },
+    useBrowserPages: select => select({ 'tab-a': { url: 'https://example.com/', loading: false } }),
+  })
+  const buttons = find(tree, node => node.type === 'button')
+  assert.ok(buttons.some(node => node.children.includes('Take over')))
+  assert.ok(buttons.some(node => node.children.includes('Stop')))
+  assert.ok(buttons.some(node => node.props['aria-label'] === 'Import cookies'))
+})
 
 test('the `···` button opens the menu with an item per entry', () => {
   const actions = { openBrowser: () => {}, browserNewTab: () => {}, newSideChat: () => {}, newTerminal: () => {}, openFiles: () => {} }

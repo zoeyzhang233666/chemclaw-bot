@@ -6,7 +6,9 @@ import { createServer } from 'node:http'
 import { join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { BotBrowserGuests } from '../src/bot-browser.mjs'
+import { BotBrowserGuests, partitionOf } from '../src/bot-browser.mjs'
+import { applyCookies, CookieImports } from '../src/cookie-import.mjs'
+import { parseCookieFile } from '../src/cookie-parse.mjs'
 import { BotViews } from '../src/bot-views.mjs'
 import { openBotBrowser } from '../../chemclaw-bot/src/host/browser/session.js'
 import { gateScope } from '../../chemclaw-bot/src/host/browser/gate.js'
@@ -55,6 +57,19 @@ async function check() {
     await app.whenReady()
     await new Promise(done => fixture.listen(0, '127.0.0.1', done))
     const url = `http://127.0.0.1:${fixture.address().port}/`
+    const imports = new CookieImports()
+    const parsed = parseCookieFile(JSON.stringify([{ domain: '127.0.0.1', path: '/', name: 'fixture-sign-in', value: 'synthetic-only', secure: false }]))
+    assert.equal(parsed.ok, true)
+    const pending = imports.store(parsed, { kind: 'file', label: 'synthetic fixture' })
+    assert.ok(!JSON.stringify(pending).includes('synthetic-only'), 'preview never exposes the value')
+    const storage = session.fromPartition(partitionOf('bot:cookie-fixture-a'))
+    const isolated = session.fromPartition(partitionOf('bot:cookie-fixture-b'))
+    const report = await applyCookies(storage, imports.take(pending.id).cookies)
+    assert.equal(report.stored, 1)
+    assert.equal((await storage.cookies.get({ name: 'fixture-sign-in' })).length, 1)
+    assert.equal((await isolated.cookies.get({ name: 'fixture-sign-in' })).length, 0)
+    assert.equal(imports.take(pending.id), null)
+    console.log('browser-check: confirmed synthetic login import writes one Bot partition only; pending consumed once')
     window = new BrowserWindow({ show: false, webPreferences: { sandbox: true, contextIsolation: true } })
     await window.loadURL('about:blank')
     const guests = new BotBrowserGuests({ session, origin: () => 'http://127.0.0.1:43117', devTools: false })

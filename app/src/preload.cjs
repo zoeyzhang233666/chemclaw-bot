@@ -165,6 +165,12 @@ function browserBridge() {
       hold: (botId, held) => ipcRenderer.invoke('chemclaw:browser-view-hold', String(botId), held === true),
       subscribe(listener) { viewListeners.add(listener); return () => viewListeners.delete(listener) },
     },
+    // Cookie imports, only in the app: sources and a two-step pick/harvest → preview → apply.
+    importSources: () => ipcRenderer.invoke('chemclaw:browser-import-sources'),
+    importPick: () => ipcRenderer.invoke('chemclaw:browser-import-pick'),
+    importLive: (source, close) => ipcRenderer.invoke('chemclaw:browser-import-live', String(source), close === true),
+    importApply: (key, pending) => ipcRenderer.invoke('chemclaw:browser-import-apply', String(key), String(pending)),
+    importCancel: (pending) => ipcRenderer.invoke('chemclaw:browser-import-cancel', String(pending)),
     onOpenRequested(lease, listener) {
       const id = String(lease)
       let set = listeners.get(id)

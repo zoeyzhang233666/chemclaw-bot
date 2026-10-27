@@ -285,6 +285,8 @@ async function chat(cdp) {
   await until(openBrowser, 'the browser button')
   await evaluate(`${openBrowser}.click()`)
   await until("document.querySelector('.bt-browser-takeover')", 'the browser control bar')
+  await until("typeof window.dsBotApp?.browser?.importSources === 'function'", 'the native login-import bridge')
+  await until("document.querySelector('.bt-import-btn')", 'the login-import toolbar button')
   const control = label => `[...document.querySelectorAll('.bt-browser-takeover button')].find(node => node.textContent.trim() === ${JSON.stringify(label)})`
   const take = await evaluate("document.body.innerText.includes('接管浏览器')") ? '接管浏览器' : 'Take over'
   await evaluate(`${control(take)}.click()`)
@@ -498,6 +500,7 @@ try {
 } catch (error) {
   failed = true
   console.error(`check-packed: FAILED: ${error instanceof Error ? error.message : String(error)}`)
+  if (problems.length) console.error(`check-packed: captured page problems:\n  ${problems.join('\n  ')}`)
 }
 stopChildren()
 await new Promise(resolve => updateFeed.close(resolve))
