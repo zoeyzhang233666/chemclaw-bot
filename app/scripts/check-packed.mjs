@@ -88,12 +88,21 @@ function checkSharp(app) {
     const { createRequire } = require('node:module')
     const appRequire = createRequire(${JSON.stringify(join(resources, 'app.asar', 'package.json'))})
     const sharp = appRequire('sharp')
+    if (process.platform === 'linux') assert.ok(sharp.versions.emscripten, 'Linux must use the packaged WASM backend')
     ;(async () => {
       const image = await sharp({ create: { width: 4, height: 4, channels: 3, background: '#ff0000' } }).png().toBuffer()
       const { data, info } = await sharp(image).resize(2, 2).removeAlpha().raw().toBuffer({ resolveWithObject: true })
       assert.equal(info.width, 2)
       assert.equal(info.height, 2)
       assert.deepEqual([...data], Array.from({ length: 4 }, () => [255, 0, 0]).flat())
+      for (const format of ['jpeg', 'webp', 'gif', 'avif']) {
+        const encoded = await sharp(image)[format]().toBuffer()
+        const decoded = await sharp(encoded).resize(2, 2).raw().toBuffer({ resolveWithObject: true })
+        assert.equal(decoded.info.width, 2, format)
+        assert.equal(decoded.info.height, 2, format)
+      }
+      const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="4" height="4" fill="red"/></svg>')
+      assert.equal((await sharp(await sharp(svg).png().toBuffer()).metadata()).width, 4)
       console.log('check-packed: sharp image processing passed (libvips ' + sharp.versions.vips + ')')
     })().catch(error => { console.error(error); process.exitCode = 1 })
   `
