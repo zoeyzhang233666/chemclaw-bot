@@ -13,12 +13,15 @@ import { createRequire } from 'node:module'
 import { createServer } from 'node:http'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const [given, shotFile] = process.argv.slice(2)
-const source = given === '--source'
+const args = process.argv.slice(2).filter(arg => !arg.startsWith('--') || arg === '--source')
+const flags = new Set(process.argv.slice(2).filter(arg => arg.startsWith('--')))
+const given = args.find(arg => arg !== '--source')
+const shotFile = args.filter(arg => arg !== '--source' && arg !== given).at(0)
+const source = flags.has('--source') || given === '--source'
 if (source) {
   const plugin = resolve(root, '../chemclaw-bot')
   const installed = dirname(createRequire(import.meta.url).resolve('chemclaw-bot/package.json'))
-  if (resolve(installed) !== plugin) for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'src/host', 'src/shared']) cpSync(join(plugin, path), join(installed, path), { recursive: true })
+  if (resolve(installed) !== plugin) for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'src/host', 'src/shared', 'runtime']) cpSync(join(plugin, path), join(installed, path), { recursive: true })
 }
 const executable = source ? process.env.CHEMCLAW_TEST_ELECTRON || createRequire(import.meta.url)('electron') : given || packedExecutable()
 
@@ -276,6 +279,37 @@ async function chat(cdp) {
   }
   // The mock model's greeting for a new team.
   await until(text('今天想先解决哪个业务问题'), 'the greeting')
+  if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only') || process.argv.includes('--xlsx-openpyxl-preview-only')) {
+    const wantOpenpyxl = process.argv.includes('--xlsx-openpyxl-preview-only')
+    const wantXlsx = process.argv.includes('--xlsx-preview-only') || wantOpenpyxl
+    let file
+    if (wantOpenpyxl) {
+      const { normalizeXlsxForPreview } = await import('../../chemclaw-bot/runtime/normalize-xlsx.mjs')
+      file = join(work, 'workspace', 'openpyxl-preview.xlsx')
+      cpSync(join(root, '..', '.chemclaw-tools', 'office48-synthetic.xlsx'), file)
+      await normalizeXlsxForPreview(file)
+    } else {
+      const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
+      const formats = wantXlsx ? ['xlsx'] : ['pptx']
+      ;[file] = await deliver({ title: wantXlsx ? 'Excel预览隔离验收' : 'PPT预览隔离验收', filename: wantXlsx ? 'excel-preview-sample' : '中文演示 sample', summary: '合成验收内容，不是业务数据', sections: [
+        { title: '合成数据', table: { columns: ['日期', '测试数值'], rows: [['2026-10-25', 100], ['2026-10-26', 102]] } },
+      ] }, join(work, 'workspace'), formats)
+    }
+    await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
+    await cdp.call('Input.insertText', { text: `交付 ${file}` })
+    await sleep(150)
+    for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
+    await until("document.querySelector('[data-presented-file] button[aria-label]')", 'the delivery card')
+    await evaluate("document.querySelector('[data-presented-file] button[aria-label]').click()")
+    if (wantXlsx) {
+      await until("[...document.querySelectorAll('canvas')].some(node => { const rect = node.getBoundingClientRect(); return node.width > 200 && node.height > 200 && rect.width > 200 && rect.height > 200 }) && !/无法打开此表格|文件不存在/.test(document.body.innerText)", 'the rendered Excel grid')
+      console.log('check-packed: actual Excel delivery card rendered a grid in the sidebar')
+    } else {
+      await until("[...document.querySelectorAll('canvas')].some(node => { const rect = node.getBoundingClientRect(); return node.width > 200 && node.height > 200 && rect.width > 200 && rect.height > 200 }) && !/Office 转换失败|文件不存在|Office conversion failed/.test(document.body.innerText)", 'the rendered PPT page')
+      console.log('check-packed: actual PPT delivery card rendered a page in the sidebar')
+    }
+    return
+  }
   if (process.argv.includes('--preview-only')) {
     await evaluate("document.querySelector('.bt-account').click()")
     await until("document.querySelector('.bt-account-menu')", 'the preview account menu')

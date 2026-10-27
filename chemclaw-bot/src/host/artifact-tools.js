@@ -2,6 +2,7 @@ import { mkdir, realpath } from 'node:fs/promises'
 import { join } from 'node:path'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import { randomUUID } from 'node:crypto'
+import { normalizeXlsxForPreview } from '../../runtime/normalize-xlsx.mjs'
 
 export function install(rt) {
   rt.ctx.tools.register(defineTool({
@@ -25,6 +26,9 @@ export function install(rt) {
       await mkdir(output)
       const { deliver } = await import('../../runtime/deliver.mjs')
       const paths = await deliver(report, output, formats)
+      for (const path of paths) {
+        if (path.toLowerCase().endsWith('.xlsx')) await normalizeXlsxForPreview(path)
+      }
       return JSON.stringify({ files: paths.map(path => ({ path, description: report.title })), next: 'Inspect rendering and calculations, then call present with these files.' })
     },
   }))

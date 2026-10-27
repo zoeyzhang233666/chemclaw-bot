@@ -1,6 +1,7 @@
 import { lstat, realpath, readdir } from 'node:fs/promises'
 import { basename, isAbsolute, join, relative, resolve } from 'node:path'
 import { artifactPath } from '../shared/artifact-links.js'
+import { normalizeXlsxForPreview } from '../../runtime/normalize-xlsx.mjs'
 
 const inside = (path, root) => {
   const rest = relative(root, path)
@@ -68,6 +69,11 @@ export async function resolveArtifacts(rt, { sessionId, botId, values }, signal)
   if (!truncated) for (const [value, name] of pending) {
     const found = matches.get(name)
     if (found.size === 1) files[value] = [...found][0]
+  }
+  for (const path of Object.values(files)) {
+    if (typeof path === 'string' && path.toLowerCase().endsWith('.xlsx')) {
+      try { await normalizeXlsxForPreview(path) } catch { /* keep the original path; preview may still fail */ }
+    }
   }
   return { files, truncated }
 }
