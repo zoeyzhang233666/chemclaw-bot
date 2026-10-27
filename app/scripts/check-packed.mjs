@@ -44,10 +44,12 @@ const browserFixture = createServer((_request, response) => {
 })
 const children = []
 let updateRequests = 0
-const updateFeed = createServer((_request, response) => {
+const updateFeed = createServer((request, response) => {
   updateRequests++
-  response.setHeader('content-type', process.platform === 'darwin' ? 'application/json' : 'text/yaml')
-  response.end(process.platform === 'darwin' ? '[]' : `version: 0.0.0\nfiles:\n  - url: unused.exe\n    sha512: ${Buffer.alloc(64).toString('base64')}\n`)
+  // Manual updates (macOS and Linux deb/unpacked) request the GitHub releases API.
+  const releases = request.headers.accept?.includes('application/vnd.github+json')
+  response.setHeader('content-type', releases ? 'application/json' : 'text/yaml')
+  response.end(releases ? '[]' : `version: 0.0.0\nfiles:\n  - url: unused.exe\n    sha512: ${Buffer.alloc(64).toString('base64')}\n`)
 })
 
 function stopChildren() {
