@@ -378,7 +378,7 @@ export function TeamSidebar(props) {
           h(UpdateButton, { useUpdate: props.useUpdate, actions }),
           h('button', { type: 'button', className: 'bt-round', 'aria-label': t('New…'), title: t('New…'), onClick: () => actions.openNewChat('new') }, h(PlusIcon))),
     wide && roster.readOnly ? h('div', { className: 'bt-hint bt-read-only', role: 'status' }, hostText(roster.readOnly)) : null,
-    h('button', { type: 'button', className: 'bt-row', title: t('Settings'), onClick: () => actions.openSettings('general') }, h(GearIcon), wide ? h('span', null, t('Settings')) : null),
+    h('button', { type: 'button', className: 'bt-row', title: t('Calendar'), onClick: () => actions.openSettings('schedules') }, h(ClockIcon), wide ? h('span', null, t('Calendar')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Skill library'), onClick: () => actions.openSettings('capabilities') }, h(PlugIcon), wide ? h('span', null, t('Skill library')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Models · ApiHub'), onClick: () => actions.openModels() }, h(SlidersIcon), wide ? h('span', null, t('Models · ApiHub')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Chemcloud · Data Hub'), onClick: () => actions.openSettings('connectors', 'chem-data-hub') }, h('span', { className: 'bt-row-mark', 'aria-hidden': true }, h(ApiHubMark)), wide ? h('span', null, t('Chemcloud · Data Hub')) : null),
@@ -653,7 +653,8 @@ const NO_SUBSCRIBE = () => () => {}
 const NO_SNAPSHOT = () => null
 
 // The footer avatar opens an account menu above itself, with Bot settings as one
-// entry. Shell panels hidden from the Bot sidebar (plugins, automation) live here too.
+// entry. Automation tasks open ChemClaw's schedules page: the shell schedules
+// panel's New button calls startSession(), which in Bot mode jumps into a chat.
 // `seat` is the shell's settings.launcher seat: at priority -10 the whale wins it
 // over a shell account plugin's own launcher (the Desktop's "··· More"), which comes
 // back in Agent mode; FooterAccount stands in while no seat exists at all.
@@ -741,7 +742,7 @@ export function AccountLauncher({ seat = true, settingsOpen, openSettings, openO
     [
       [t('Experts'), PlugIcon, () => actions.openSettings('bots')],
       [t('Group chats'), PeopleIcon, () => actions.openSettings('groups')],
-      [t('Automation tasks'), ClockIcon, () => actions.selectPanel('schedules')],
+      [t('Automation tasks'), ClockIcon, () => actions.openSettings('schedules')],
       [t('Settings'), GearIcon, () => actions.openSettings('general')],
     ],
     [

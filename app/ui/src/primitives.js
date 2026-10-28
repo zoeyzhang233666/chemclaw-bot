@@ -8,7 +8,9 @@ import { MENTION_ORIGIN } from '../../../chemclaw-bot/src/client/text.js'
 // The DSH Agent's mark. The app has no DSH Agent, so nothing asks for it.
 export const FishLogo = () => null
 
-const plugins = [remarkGfm]
+// GFM's default single-tilde strikethrough turns date/price ranges like
+// 10/20~10/22 into <del>. Keep ~~strike~~; require two tildes.
+const plugins = [[remarkGfm, { singleTilde: false }]]
 
 function CodeBlock({ children, labels }) {
   const [copied, setCopied] = useState(false)
