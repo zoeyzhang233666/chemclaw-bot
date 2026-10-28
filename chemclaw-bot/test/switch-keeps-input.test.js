@@ -203,7 +203,7 @@ test('a move that fails while the plugin unloads hands its input back to the par
   await until(() => host.infos.some(line => line.includes('plugin unloaded')))
   assert.equal(host.state().bots.b.sessionId, 's1')
   // The part stays marked until the restart pass hands the input on.
-  assert.deepEqual(host.state().switching, { b: { botId: 'b' } })
+  assert.deepEqual(host.state().switching, { b: { botId: 'b', chatId: 'b' } })
 
   // carry went back in order at the front of next-turn; the held message stayed put.
   assert.deepEqual(inboxTexts(host.agentOf('b')), ['Now build it', 'and this too', 'waiting input'])
@@ -220,7 +220,7 @@ test('a move that never started keeps carry and one pause note in the inbox; a r
   assert.equal(host.warnings.length, 0)
   assert.deepEqual(inboxTexts(host.agentOf('b')), [PAUSE, 'keep me'])
   // The part stayed put and kept its input, so it stays marked.
-  assert.deepEqual(host.state().switching, { b: { botId: 'b' } })
+  assert.deepEqual(host.state().switching, { b: { botId: 'b', chatId: 'b' } })
 
   // A retry that also fails neither loses nor doubles the note; a folder move waits
   // out its retry cooldown, so the retry comes in as an overflow switch.
@@ -229,7 +229,7 @@ test('a move that never started keeps carry and one pause note in the inbox; a r
   await retry()
   await until(() => host.infos.filter(line => line.includes('plugin unloaded')).length >= 2)
   assert.deepEqual(inboxTexts(host.agentOf('b')), [PAUSE, 'keep me'])
-  assert.deepEqual(host.state().switching, { b: { botId: 'b' } })
+  assert.deepEqual(host.state().switching, { b: { botId: 'b', chatId: 'b' } })
 
   // With the plugin live again the same input moves on — the note still only once.
   fail.create = false
@@ -285,7 +285,7 @@ test('a marked earlier part hands its kept input on after a restart, once, and i
   await moveWriter(host, [said('m1', 'Now build it', 'e-carry')])
   await until(() => host.infos.some(line => line.includes('plugin unloaded')))
   assert.equal(host.state().bots.b.sessionId, 's1')
-  assert.deepEqual(host.state().switching, { b: { botId: 'b' } })
+  assert.deepEqual(host.state().switching, { b: { botId: 'b', chatId: 'b' } })
   await host.stop({ keep: true })
 
   // The restart: the kept input sits in the earlier part's (durable fake) inbox; a
@@ -311,7 +311,7 @@ test('a marked part that stayed current is woken for its kept input, once, in or
   await moveWriter(host, [said('m1', 'keep me', 'e1'), said('m2', 'and me', 'e2')])
   await until(() => host.infos.some(line => line.includes('plugin unloaded')))
   assert.equal(host.state().bots.b.sessionId, 'b')
-  assert.deepEqual(host.state().switching, { b: { botId: 'b' } })
+  assert.deepEqual(host.state().switching, { b: { botId: 'b', chatId: 'b' } })
   await host.stop({ keep: true })
 
   const second = await start({ home: host.home, services })
@@ -357,7 +357,7 @@ test('a failed task move leaves the earlier part unarchived and marked for retry
   await until(() => host.warnings.some(line => line.includes('task storage unavailable')))
   await settle()
   assert.deepEqual(host.archived, [])
-  assert.deepEqual(host.state().switching, { b: { botId: 'b' } })
+  assert.deepEqual(host.state().switching, { b: { botId: 'b', chatId: 'b' } })
 
   host.rt.moveSchedules = async () => {}
   await host.rt.heldBack()

@@ -90,27 +90,39 @@ export function install(rt) {
   const { ctx, state, home, statePath } = rt
 
   async function backupBeforeMultichat() {
-    if (!home || !statePath) return
+    if (!home || !statePath) throw new Error('Cannot back up Bot team state: home path missing')
+    let names = []
     try {
-      const names = await readdir(home)
-      if (names.some(name => name.startsWith('state.json.pre-multichat-'))) return
-      const backup = join(home, `state.json.pre-multichat-${Date.now()}`)
-      await copyFile(statePath, backup)
+      names = await readdir(home)
     } catch (error) {
       if (error?.code === 'ENOENT') return
-      rt.warn?.('chemclaw-bot: could not back up state before multi-chat migration: %s', error)
+      throw error
     }
+    if (names.some(name => name.startsWith('state.json.pre-multichat-'))) return
+    const backup = join(home, `state.json.pre-multichat-${Date.now()}`)
+    try {
+      await copyFile(statePath, backup)
+    } catch (error) {
+      // No prior file: nothing destructive to preserve.
+      if (error?.code === 'ENOENT') return
+      throw Object.assign(
+        new Error(`Could not back up state before multi-chat migration: ${error.message ?? error}`),
+        { cause: error, code: error.code },
+      )
+    }
+  }
+
+  function needsChatMigration() {
+    return Object.values(state.bots).some(bot => !Array.isArray(bot.chats) || bot.chats.length === 0)
   }
 
   function migrateChats() {
     let migrated = false
-    let needsBackup = false
     for (const bot of Object.values(state.bots)) {
-      if (!Array.isArray(bot.chats) || bot.chats.length === 0) needsBackup = true
       if (ensureBotChats(bot)) migrated = true
       syncMirror(bot)
     }
-    return { migrated, needsBackup }
+    return { migrated }
   }
 
   // sessionId → { kind:'private', botId, chatId } | { kind:'room', roomId, botId }
@@ -120,7 +132,14 @@ export function install(rt) {
   function rebuildSessionOwners() {
     sessionOwners.clear()
     for (const bot of Object.values(state.bots)) {
-      ensureBotChats(bot)
+      if (!Array.isArray(bot.chats) || bot.chats.length === 0) {
+        // Pre-migration: index the legacy tip without mutating disk-facing chats[].
+        for (const segment of bot.segments ?? []) {
+          sessionOwners.set(segment.sessionId, { kind: 'private', botId: bot.id, chatId: bot.id, past: true })
+        }
+        sessionOwners.set(bot.sessionId ?? bot.id, { kind: 'private', botId: bot.id, chatId: bot.id })
+        continue
+      }
       for (const chat of bot.chats) {
         for (const segment of chat.segments ?? []) {
           sessionOwners.set(segment.sessionId, { kind: 'private', botId: bot.id, chatId: chat.id, past: true })
@@ -164,6 +183,7 @@ export function install(rt) {
   async function createBotChat(botId, { title } = {}) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
+    assertMultichatWritable()
     ensureBotChats(bot)
     const id = await rt.createSession(title?.trim() || `${bot.name} chat`)
     const now = Date.now()
@@ -188,6 +208,7 @@ export function install(rt) {
   async function openBotChat(botId, chatId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
+    assertMultichatWritable()
     ensureBotChats(bot)
     const chat = chatById(bot, chatId)
     if (chat === undefined) throw new Error('Unknown chat')
@@ -213,6 +234,10 @@ export function install(rt) {
     return { botId: bot.id, chat: publicChat(bot, chat) }
   }
 
+  function chatSessionIds(chat) {
+    return [chat.sessionId, ...(chat.segments ?? []).map(segment => segment.sessionId)].filter(Boolean)
+  }
+
   function teamBlocksArchive(sessionId) {
     const works = Object.values(state.works ?? {})
     for (const work of works) {
@@ -221,6 +246,25 @@ export function install(rt) {
           return 'This chat still captains an agent team that cannot be safely ended yet'
         }
       }
+    }
+    return undefined
+  }
+
+  function chatBusyReason(chat) {
+    for (const sessionId of chatSessionIds(chat)) {
+      const team = teamBlocksArchive(sessionId)
+      if (team) return team
+      if (rt.live?.get(sessionId)?.turn !== undefined) return 'This chat is still running'
+      if (rt.turnsView?.()?.[sessionId] !== undefined) return 'This chat is still running'
+      const approvals = rt.approvalsView?.() ?? []
+      const list = Array.isArray(approvals) ? approvals : Object.values(approvals)
+      if (list.some(entry => entry?.sessionId === sessionId)) {
+        return 'This chat has a pending approval'
+      }
+      if (state.questions?.[sessionId] !== undefined) return 'This chat is waiting for input'
+      if (state.views?.[sessionId] !== undefined) return 'This chat is waiting for input'
+      const waiting = rt.waitingView?.()
+      if (waiting?.[sessionId] !== undefined) return 'This chat is waiting for input'
     }
     return undefined
   }
@@ -235,7 +279,7 @@ export function install(rt) {
     if (open.length <= 1 && chat.archived !== true) {
       throw new Error('A Bot needs at least one open chat')
     }
-    const blocked = teamBlocksArchive(chat.sessionId)
+    const blocked = chatBusyReason(chat)
     if (blocked) throw new Error(blocked)
     chat.archived = true
     chat.updatedAt = Date.now()
@@ -255,7 +299,7 @@ export function install(rt) {
     const chat = chatById(bot, chatId)
     if (chat === undefined) throw new Error('Unknown chat')
     if (chat.id === bot.id) throw new Error('The original chat cannot be deleted')
-    const blocked = teamBlocksArchive(chat.sessionId)
+    const blocked = chatBusyReason(chat)
     if (blocked) throw new Error(blocked)
     const tip = chat.sessionId
     const segments = [...(chat.segments ?? [])]
@@ -361,20 +405,39 @@ export function install(rt) {
   }
 
   // Hook called from store.load after adopt, before the migrated state is saved.
-  // Disk still holds the pre-migration file when needsBackup is set.
+  // When needsBackup is set, disk still holds the pre-migration file; backup must
+  // succeed before chats[] is written into memory for save.
   async function afterAdoptMigrate({ needsBackup = false } = {}) {
-    if (needsBackup) await backupBeforeMultichat()
-    migrateChats()
+    if (needsBackup) {
+      try {
+        await rt.backupBeforeMultichat()
+      } catch (error) {
+        rt.blockMultichatWrites = true
+        throw error
+      }
+    }
+    const result = migrateChats()
+    rt.blockMultichatWrites = false
     rebuildSessionOwners()
+    return result
+  }
+
+  function assertMultichatWritable() {
+    if (rt.blockMultichatWrites || needsChatMigration()) {
+      throw new Error('Multi-chat migration is blocked until state.json can be backed up')
+    }
   }
 
   Object.assign(rt, {
     sessionOwners,
     ownerOf,
     rebuildSessionOwners,
+    needsChatMigration,
     migrateChats,
+    backupBeforeMultichat,
     afterAdoptMigrate,
     ensureBotChats,
+    chatBusyReason,
     activeChat,
     chatById,
     chatBySession,

@@ -348,10 +348,15 @@ export function install(rt) {
     if (room) {
       earlier = room.segments?.[botId] ?? []
       current = room.sessions?.[botId]
+    } else if (sessionId !== undefined) {
+      // Background / Session-keyed reads: unknown Session must not fall back to activeChat.
+      const chat = rt.chatBySession?.(bot, sessionId)
+      if (chat === undefined) return []
+      earlier = chat.segments ?? []
+      current = chat.sessionId
     } else {
-      const chat = sessionId !== undefined
-        ? (rt.chatBySession?.(bot, sessionId) ?? rt.activeChat?.(bot))
-        : rt.activeChat?.(bot)
+      // UI default only: no Session named, so the focused private chat is correct.
+      const chat = rt.activeChat?.(bot)
       earlier = chat?.segments ?? bot.segments ?? []
       current = chat?.sessionId ?? rt.chatOf(botId)
     }
@@ -564,7 +569,7 @@ export function install(rt) {
     const { kept, more } = await keptMessages(session.id, {
       budget: Math.min(RECENT_TOKENS, Math.floor((lines?.check ?? 4 * RECENT_TOKENS) / 4)),
       group: place?.roomId !== undefined,
-      number: place === undefined ? 1 : partsOf(place.botId, place.roomId).length,
+      number: place === undefined ? 1 : partsOf(place.botId, place.roomId, session.id).length,
     })
     const text = checkpointText({ number: checkpointCount(input.messages) + 1, summary, kept, more })
     return {
@@ -751,19 +756,27 @@ export function install(rt) {
     const owned = rt.ownerOf?.(sessionId)
     if (owned?.kind === 'private') return { botId: owned.botId, chatId: owned.chatId }
     if (owned?.kind === 'room') return { botId: owned.botId, roomId: owned.roomId }
+    const group = rt.groupOwners.get(sessionId) ?? rt.pastOwners.get(sessionId)
+    if (group?.roomId !== undefined) return { botId: group.botId, roomId: group.roomId }
+    const past = rt.pastOwners.get(sessionId)
+    if (past?.chatId !== undefined) return { botId: past.botId, chatId: past.chatId }
     const botId = rt.chatOwners.get(sessionId)
-    if (botId !== undefined) return { botId }
-    const owner = rt.groupOwners.get(sessionId)
-    return owner && { botId: owner.botId, roomId: owner.roomId }
+    if (botId !== undefined) {
+      const chat = rt.chatBySession?.(rt.botOf(botId), sessionId)
+      if (chat !== undefined) return { botId, chatId: chat.id }
+    }
+    // Unknown Session: no silent activeChat redirect.
+    return undefined
   }
   // Tip of the container that owns this Session — never the Bot's activeChatId.
+  // Missing chatId/roomId means ownership is unknown: refuse rather than guess.
   const currentOf = (owner) => {
-    if (owner.roomId !== undefined) return rt.roomOf(owner.roomId)?.sessions?.[owner.botId]
-    if (owner.chatId !== undefined) {
+    if (owner?.roomId !== undefined) return rt.roomOf(owner.roomId)?.sessions?.[owner.botId]
+    if (owner?.chatId !== undefined) {
       const bot = rt.botOf(owner.botId)
-      return rt.chatById?.(bot, owner.chatId)?.sessionId ?? rt.chatOf(owner.botId)
+      return rt.chatById?.(bot, owner.chatId)?.sessionId
     }
-    return rt.chatOf(owner.botId)
+    return undefined
   }
   const grown = (sessionId, tokens, lines) => tokens >= (partBase.get(sessionId) ?? 0) + lines.check / 4
   // A read-only process (another dsh holds the team) neither condenses nor switches.
@@ -836,12 +849,22 @@ export function install(rt) {
       try {
         const agent = await rt.resolveAgent(sessionId)
         const held = [...agent.inbox.nextStep, ...agent.inbox.nextTurn]
-        if (currentOf(owner) !== sessionId) {
-          await forward(owner, held)
+        // Resolve the concrete Chat/room from the Session; never fall back to activeChat.
+        const place = placeOf(sessionId)
+          ?? (owner?.chatId || owner?.roomId ? owner : undefined)
+        if (place === undefined) {
+          rt.warn('chemclaw-bot: kept input in part %s has no owning chat or room; waking in place', sessionId)
+          try { wake(agent) } catch (error) { rt.warn('chemclaw-bot: part %s could not be woken for its kept input: %s', sessionId, error) }
+          delete state.switching[sessionId]
+          await rt.save()
+          continue
+        }
+        if (currentOf(place) !== sessionId) {
+          await forward(place, held)
           for (const message of held) agent.inbox.remove(message.id)
           // An interrupted switch may not have finished moving the tasks over; stop
           // the earlier part only after they sit on the part that replaced it.
-          await rt.moveSchedules?.(sessionId, currentOf(owner))
+          await rt.moveSchedules?.(sessionId, currentOf(place))
           await ctx.workspaceRegistry.archiveSession(sessionId, { stopActivity: true })
             .catch(error => rt.warn('chemclaw-bot: earlier part %s not archived: %s', sessionId, error))
         } else {
@@ -914,7 +937,9 @@ export function install(rt) {
   async function runSwitch(agent, job) {
     // Marks the part while the switch runs; it stays marked whenever input was put
     // back, so a restart knows where to look without resolving every earlier part.
-    state.switching[agent.id] = job.roomId === undefined ? { botId: job.botId } : { botId: job.botId, roomId: job.roomId }
+    state.switching[agent.id] = job.roomId === undefined
+      ? { botId: job.botId, ...(job.chatId ? { chatId: job.chatId } : {}) }
+      : { botId: job.botId, roomId: job.roomId }
     await rt.save()
     for (let attempt = 1; ; attempt += 1) {
       await agent.whenIdle()
@@ -1011,9 +1036,13 @@ export function install(rt) {
       : undefined
     const current = room !== undefined
       ? room.sessions?.[bot.id]
-      : (privateChat?.sessionId ?? rt.chatOf(bot.id))
+      : privateChat?.sessionId
     const gone = rt.botOf(bot.id) === undefined || (room !== undefined && (rt.roomOf(room.id) !== room || !room.members.includes(bot.id)))
-    if (gone || current !== agent.id) {
+    // Unknown private ownership: refuse the switch rather than writing the active chat.
+    if (gone || current === undefined || current !== agent.id || (room === undefined && privateChat === undefined)) {
+      if (room === undefined && privateChat === undefined) {
+        rt.warn('chemclaw-bot: refused private part switch for %s: Session %s has no owning chat', bot.name, agent.id)
+      }
       await ctx.workspaceRegistry.archiveSession(freshId, { stopActivity: true })
         .catch(error => rt.warn('chemclaw-bot: unused fresh part of %s not archived: %s', bot.name, error))
       return
@@ -1024,17 +1053,11 @@ export function install(rt) {
       ;(room.segments[bot.id] ??= []).push(segment)
       room.sessions[bot.id] = freshId
     } else {
-      const chat = privateChat ?? rt.activeChat?.(bot)
-      if (chat !== undefined) {
-        ;(chat.segments ??= []).push(segment)
-        chat.sessionId = freshId
-        chat.updatedAt = Date.now()
-        rt.syncMirror?.(bot)
-        rt.indexSessions?.()
-      } else {
-        ;(bot.segments ??= []).push(segment)
-        bot.sessionId = freshId
-      }
+      ;(privateChat.segments ??= []).push(segment)
+      privateChat.sessionId = freshId
+      privateChat.updatedAt = Date.now()
+      rt.syncMirror?.(bot)
+      rt.indexSessions?.()
       // The card's call stays in the old part, so the fresh part shows it in the
       // composer dock, which takes a card without a call.
       if (state.questions[agent.id] !== undefined) {
@@ -1420,5 +1443,8 @@ export function install(rt) {
     return { sessionId: parts.at(-1).sessionId, ...(await partPage(parts, index, cursor)) }
   }
 
-  Object.assign(rt, { clock, partsOf, historyEntry, partLines, noteText, earlierPage, chatPage, displayItems, followFolder, heldBack, switchJobs: () => switches.values() })
+  Object.assign(rt, {
+    clock, partsOf, placeOf, currentOf, historyEntry, partLines, noteText, earlierPage, chatPage,
+    displayItems, followFolder, heldBack, switchJobs: () => switches.values(),
+  })
 }

@@ -216,28 +216,36 @@ export function install(rt) {
     // Unnamed groups from before names followed their members may still list old names.
     const stale = Object.values(state.rooms).filter(room => !room.named && room.name !== rt.autoRoomName(room.members))
     for (const room of stale) room.name = rt.autoRoomName(room.members)
-    // Seed chats[] from the legacy single tip; never remaps historical Session ids.
-    if (typeof rt.migrateChats === 'function') {
-      const chats = rt.migrateChats()
-      if (chats.migrated) migrated = true
-      if (chats.needsBackup) state.__needsMultichatBackup = true
+    // Defer chats[] seeding until after a successful pre-multichat backup.
+    if (rt.needsChatMigration?.()) {
+      state.__pendingMultichatMigrate = true
+    } else if (typeof rt.migrateChats === 'function') {
+      rt.migrateChats()
     }
     indexSessions()
-    return { migrated: migrated || stale.length > 0, stale }
+    return { migrated: migrated || stale.length > 0, stale, pendingMultichat: state.__pendingMultichatMigrate === true }
   }
 
   const load = () => loaded ??= (async () => {
     claimLock()
     if (holder !== undefined) warn('chemclaw-bot: %s', readOnly())
-    const { migrated, stale } = adopt(await readFileState())
+    const { migrated, stale, pendingMultichat } = adopt(await readFileState())
     if (holder !== undefined) return
-    if (state.__needsMultichatBackup) {
-      delete state.__needsMultichatBackup
-      await rt.afterAdoptMigrate?.({ needsBackup: true }).catch(error => warn('chemclaw-bot: multi-chat backup failed: %s', error))
+    let migratedChats = false
+    let multichatBlocked = false
+    if (pendingMultichat || state.__pendingMultichatMigrate) {
+      delete state.__pendingMultichatMigrate
+      try {
+        const result = await rt.afterAdoptMigrate?.({ needsBackup: true })
+        migratedChats = result?.migrated === true
+      } catch (error) {
+        multichatBlocked = true
+        warn('chemclaw-bot: multi-chat migration blocked until state is backed up: %s', error)
+      }
     } else {
       await rt.afterAdoptMigrate?.().catch(error => warn('chemclaw-bot: multi-chat index rebuild failed: %s', error))
     }
-    if (migrated && stuck === undefined) {
+    if ((migrated || migratedChats) && stuck === undefined && !multichatBlocked) {
       // A failed write must not poison `loaded`: the migrated state stays in
       // memory and the next save() writes it.
       try {
