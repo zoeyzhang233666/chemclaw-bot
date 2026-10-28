@@ -11,6 +11,7 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
 import { createServer } from 'node:http'
+import { nativeOpenFixture } from './native-open-fixture.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2).filter(arg => !arg.startsWith('--') || arg === '--source')
@@ -41,6 +42,7 @@ if (!existsSync(executable)) {
 const work = realpathSync.native(mkdtempSync(join(realpathSync.native(tmpdir()), 'ds-bot-packed-')))
 mkdirSync(join(work, 'home'))
 mkdirSync(join(work, 'workspace'))
+const nativeFixture = process.platform === 'linux' ? nativeOpenFixture(work) : undefined
 const browserFixture = createServer((_request, response) => {
   response.setHeader('content-type', 'text/html; charset=utf-8')
   response.end('<!doctype html><title>ChemClaw Browser Check</title><h1>企业资料查询测试</h1><p>此网页仅用于隔离测试，无需登录。</p>')
@@ -199,7 +201,11 @@ function micaRules() {
 }
 
 async function chat(cdp) {
-  const evaluate = async expression => (await cdp.call('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result.value
+  const evaluate = async expression => {
+    const answer = await cdp.call('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })
+    if (answer.exceptionDetails) throw new Error(answer.exceptionDetails.exception?.description ?? answer.exceptionDetails.text)
+    return answer.result.value
+  }
   const until = async (expression, label, ms = 120_000) => {
     console.log(`check-packed: waiting for ${label}`)
     const end = Date.now() + ms
@@ -513,6 +519,13 @@ async function chat(cdp) {
     const status = await evaluate(`fetch(${JSON.stringify(nativeUrl + '&action=')} + ${JSON.stringify(action)}, { method: 'POST', signal: AbortSignal.timeout(30000) }).then(r => r.status)`)
     if (status !== 204) throw new Error(`Native ${action} failed: HTTP ${status}`)
   }
+  if (nativeFixture) {
+    const received = nativeFixture.received()
+    for (const path of [dirname(delivery), delivery]) {
+      if (!received.includes(path)) throw new Error('The native desktop handler did not receive ' + path)
+    }
+    console.log('check-packed: Linux desktop handler received the exact reveal and open paths')
+  }
   rmSync(delivery)
   const missing = await evaluate(`fetch(${JSON.stringify(nativeUrl)}, { method: 'POST' }).then(r => r.status)`)
   if (missing !== 404) throw new Error(`Missing file did not return 404: ${missing}`)
@@ -534,6 +547,7 @@ try {
   const { ELECTRON_RUN_AS_NODE: _runAsNode, ...env } = process.env
   for (const key of Object.keys(env)) if (/KEY|TOKEN|PASSWORD|SECRET/i.test(key)) delete env[key]
   Object.assign(env, {
+    ...nativeFixture?.env,
     DS_BOT_HOME: join(work, 'home'), DS_BOT_SHELL_DATA: join(work, 'shell'),
     DS_BOT_WORKSPACE: join(work, 'workspace'),
     DEEPSEEK_BASE_URL: modelUrl, DEEPSEEK_API_KEY: 'mock-key',
