@@ -229,8 +229,11 @@ export function install(rt) {
     const served = (await rt.catalog()).some(entry => entry.ref === bot.model)
     // A folder that went away since leaves the copy in the team workspace.
     const workDir = bot.workDir !== undefined && await rt.isFolder(bot.workDir) ? bot.workDir : undefined
+    // Drop names the library no longer has; never copy browser grants or chat history.
+    const library = state.capabilities?.items ?? {}
+    const capabilities = [...new Set(bot.capabilities ?? [])].filter(name => library[name] !== undefined)
     // No await from here to createBot's check, so two copies at once get different names.
-    return createBot({
+    const copy = await createBot({
       name: freshName(`${bot.name} copy`),
       role: bot.role,
       instructions: bot.instructions,
@@ -243,6 +246,13 @@ export function install(rt) {
       workDir,
       copyOf: bot.id,
     })
+    if (capabilities.length > 0) {
+      copy.capabilities = capabilities
+      await rt.save()
+      // Creation prepared the Session with an empty list; refresh mounts for the copy.
+      rt.capabilitiesStateSaved?.()
+    }
+    return copy
   }
 
   async function updateBot(id, patch, actorId, fromSessionId) {
