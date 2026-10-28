@@ -42,7 +42,7 @@ function open(saved) {
     route = options
     return register(options)
   }
-  const rt = createRuntime(ctx, { home })
+  const rt = createRuntime(ctx, { home, updateCheck: false })
   const call = async (endpoint, payload) => {
     const response = await route.fetch(new Request('http://localhost/api/bot', {
       method: 'POST', body: JSON.stringify({ endpoint, payload }),

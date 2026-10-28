@@ -63,8 +63,8 @@ export function sourceOf(spec) {
 const normalizeRegistry = url => `${String(url).trim().replace(/\/+$/, '')}/`
 export const encodeName = name => (name.startsWith('@') ? `@${encodeURIComponent(name.slice(1))}` : encodeURIComponent(name))
 
-export const fetchJson = async (url, headers = {}) => {
-  const response = await fetch(url, { headers: { accept: 'application/json', ...headers }, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
+export const fetchJson = async (url, headers = {}, signal = AbortSignal.timeout(FETCH_TIMEOUT_MS)) => {
+  const response = await fetch(url, { headers: { accept: 'application/json', ...headers }, signal })
   if (!response.ok) throw new Error(`${url} answered ${response.status}`)
   return response.json()
 }
@@ -171,11 +171,13 @@ export function install(rt) {
   // A failed answer keeps the last count and is asked again next time.
   let stars = { count: null, at: 0 }
   let starring = null
+  // Replaced when update checks are enabled so unload aborts in-flight fetches.
+  let lifeFetch = fetchJson
   async function repoStars() {
     const repo = repoSlug()
     if (repo === null) return null
     if (Date.now() - stars.at < STARS_TTL_MS) return stars.count
-    starring ??= fetchJson(`https://api.github.com/repos/${repo}`, { 'user-agent': `${PKG.name}/${PKG.version}` })
+    starring ??= lifeFetch(`https://api.github.com/repos/${repo}`, { 'user-agent': `${PKG.name}/${PKG.version}` })
       .then((info) => { if (Number.isInteger(info?.stargazers_count)) stars = { count: info.stargazers_count, at: Date.now() } })
       .catch(error => rt.warn('chemclaw-bot: star count failed: %s', error?.message ?? error))
       .finally(() => { starring = null })
@@ -186,7 +188,7 @@ export function install(rt) {
   async function newestFromRegistry() {
     for (const registry of await registryPlan(config, manager())) {
       try {
-        const version = cleanVersion((await fetchJson(`${registry}${encodeName(PKG.name)}/latest`)).version)
+        const version = cleanVersion((await lifeFetch(`${registry}${encodeName(PKG.name)}/latest`)).version)
         if (version) return { version, spec: `${PKG.name}@${version}`, registry }
       } catch { /* unreachable, or no copy there yet: ask the next one */ }
     }
@@ -195,7 +197,7 @@ export function install(rt) {
 
   async function newestFromGitHub(source) {
     if (!source.ref) return null
-    const release = await fetchJson(`https://api.github.com/repos/${source.owner}/${source.repo}/releases/latest`, { 'user-agent': `${PKG.name}/${PKG.version}` })
+    const release = await lifeFetch(`https://api.github.com/repos/${source.owner}/${source.repo}/releases/latest`, { 'user-agent': `${PKG.name}/${PKG.version}` })
     const version = cleanVersion(release?.tag_name)
     if (!version) return null
     // The API answers through redirects, so the release's html_url names the
@@ -324,11 +326,22 @@ export function install(rt) {
   }
 
   if (enabled) {
+    // Abort in-flight registry/GitHub fetches on unload. The startup timer is
+    // unref'd, but once check() has started a fetch, that handle keeps the
+    // process alive (seen as never-exiting `npm test` children on Linux Node 24).
+    const lifetime = new AbortController()
+    lifeFetch = (url, headers = {}) => fetchJson(
+      url,
+      headers,
+      AbortSignal.any([AbortSignal.timeout(FETCH_TIMEOUT_MS), lifetime.signal]),
+    )
     ctx.effect(() => {
       const timer = setTimeout(() => { void check() }, STARTUP_DELAY_MS)
-      // A pending first check never keeps the process alive.
       timer.unref?.()
-      return () => clearTimeout(timer)
+      return () => {
+        clearTimeout(timer)
+        lifetime.abort()
+      }
     }, 'chemclaw-bot: update check')
   }
 

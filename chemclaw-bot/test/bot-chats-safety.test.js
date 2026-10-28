@@ -48,7 +48,7 @@ function open(saved, { readonlyBackupDir = false } = {}) {
     route = options
     return register(options)
   }
-  const rt = createRuntime(ctx, { home })
+  const rt = createRuntime(ctx, { home, updateCheck: false })
   rt.live = live
   const call = async (endpoint, payload) => {
     const response = await route.fetch(new Request('http://localhost/api/bot', {
@@ -157,7 +157,7 @@ test('failed pre-multichat backup blocks destructive migration write', async (t)
   let route
   const register = ctx.connection.fetch.register
   ctx.connection.fetch.register = (options) => { route = options; return register(options) }
-  const rt = createRuntime(ctx, { home })
+  const rt = createRuntime(ctx, { home, updateCheck: false })
   // Force backup to fail before any migrate write.
   const boom = Object.assign(new Error('EACCES'), { code: 'EACCES' })
   rt.backupBeforeMultichat = async () => { throw boom }
