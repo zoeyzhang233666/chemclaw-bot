@@ -22,9 +22,9 @@
 | 对话 present 卡 → 侧栏真页 | 有 `--office-preview-only` 隔离路径；完整业务原报错文件仍缺脱敏样本 |
 | 结论 | 不把“合成样例转换成功”当成用户原文件已验收通过 |
 
-## Linux 打包门禁（阻塞）
+## Linux 打包门禁（已通过）
 
-见 `2026-10-28-linux-sharp-gate.md`。AppImage/deb 能打出；`checkSharp` 在 Electron+Linux 上 SIGSEGV。**不宣称 Linux 平台验收通过；不发版。**
+见 `2026-10-28-linux-sharp-gate.md`。官方 sharp WASM 后端已修复 Electron/Linux 原生 GLib 冲突；PR #47 的 Ubuntu x64 任务已通过打包、图像处理、deb 安装/更新、AppImage 自动更新哈希与卸载。仅记录平台验收，不合并整批功能或发版。
 
 ## 真实业务（甲醇等）
 
