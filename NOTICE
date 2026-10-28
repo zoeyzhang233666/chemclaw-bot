@@ -238,3 +238,9 @@ ChemClaw upstream parity with DS-Bot v0.2.3 (2026-10-28):
   Copyright 2026 Fei2411 and the DS Bot contributors.
   ChemClaw keeps DSH rc.3, model/company Key separation, existing approval and
   sandbox paths, HTML/Excel/PPT preview, Skills, MCP, APIHub and brand styles.
+  search-patch.mjs was verified and not ported: ChemClaw's cordis.patch.yml already
+  sets web.searchProvider to ddg (not auto), so disabling web-search-auto does not
+  leave WEB_PROVIDER_CONFIGURED_MISSING the way DS-Bot's auto selection does.
+  search-patch.mjs was verified and not ported: ChemClaw's cordis.patch.yml sets
+  web.searchProvider to ddg (not auto), so disabling web-search-auto does not
+  leave the WEB_PROVIDER_CONFIGURED_MISSING fault that DS-Bot's overlay fixes.
