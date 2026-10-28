@@ -23,3 +23,9 @@ test('NewChat offers Copy expert under Create new Bot and duplicates on pick', (
   const createGroup = text.indexOf("label: t('Create group chat')")
   assert.ok(createBot >= 0 && copyExpert > createBot && createGroup > copyExpert)
 })
+
+test('palette can open Copy expert picker', () => {
+  const text = client('palette.js')
+  assert.match(text, /openNewChat\('copy'\)/)
+  assert.match(text, /t\('Copy expert'\)/)
+})

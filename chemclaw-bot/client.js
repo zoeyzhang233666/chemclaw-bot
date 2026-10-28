@@ -1390,6 +1390,8 @@ var ZH = {
   "Scheduled task: {text}": "定时任务：{text}",
   // New group chats
   "Choose the group admin": "选择群管理员",
+  "Copy expert": "复制专家",
+  "Choose a Bot to copy…": "选择要复制的专家…",
   "Group admin": "群管理员",
   "Who to chat with…": "想和谁聊…",
   "Add at least one more Bot": "再至少添加一个 Bot",
@@ -13108,6 +13110,7 @@ function CommandPalette({ start, token, roster, actions, useSessions }) {
   const commands = [
     { key: "cmd:new", icon: (0, import_react31.createElement)(PlusIcon), title: t("New chat"), run: () => actions.openNewChat("new") },
     { key: "cmd:bot", icon: (0, import_react31.createElement)(PlusIcon), title: t("Create Bot"), run: () => actions.openNewChat("create") },
+    { key: "cmd:copy", icon: (0, import_react31.createElement)(DuplicateIcon), title: t("Copy expert"), run: () => actions.openNewChat("copy") },
     { key: "cmd:group", icon: (0, import_react31.createElement)(PeopleIcon), title: t("Create group chat"), run: () => actions.openNewChat("group") },
     { key: "cmd:settings", icon: (0, import_react31.createElement)(GearIcon), title: t("Settings"), run: () => actions.openSettings("general") }
   ].filter((command) => matchesName(command.title));
@@ -14850,6 +14853,7 @@ function NewChat({ mode, roster, actions }) {
   const [query, setQuery] = (0, import_react38.useState)("");
   const [picked, setPicked] = (0, import_react38.useState)([]);
   const [group, setGroup] = (0, import_react38.useState)(mode === "group");
+  const [copy2, setCopy] = (0, import_react38.useState)(mode === "copy");
   const [admin, setAdmin] = (0, import_react38.useState)(null);
   const [message, setMessage] = (0, import_react38.useState)("");
   const [busy, setBusy] = (0, import_react38.useState)(false);
@@ -14889,20 +14893,30 @@ function NewChat({ mode, roster, actions }) {
     setCursor(0);
     inputRef.current?.focus();
   };
-  const openBot = (bot) => run2(async () => {
-    if (choosingAdmin) {
-      chooseAdmin(bot);
+  const openBot = (bot) => {
+    if (copy2) {
+      void run2(async () => {
+        const next = await actions.duplicateBot(bot.id);
+        actions.openSession(next.id);
+        close();
+      });
       return;
     }
-    if (group || picked.length > 0) {
-      pick2(bot);
-      return;
-    }
-    if (bot.hidden) await actions.setFlags(bot.id, { hidden: false });
-    if (message.trim()) await actions.send(bot.id, message.trim());
-    actions.openSession(bot.id);
-    close();
-  });
+    void run2(async () => {
+      if (choosingAdmin) {
+        chooseAdmin(bot);
+        return;
+      }
+      if (group || picked.length > 0) {
+        pick2(bot);
+        return;
+      }
+      if (bot.hidden) await actions.setFlags(bot.id, { hidden: false });
+      if (message.trim()) await actions.send(bot.id, message.trim());
+      actions.openSession(bot.id);
+      close();
+    });
+  };
   const createBot = () => {
     if (busy) return;
     setError("");
@@ -14923,6 +14937,7 @@ function NewChat({ mode, roster, actions }) {
   };
   const createGroup = () => run2(makeGroup);
   const sendMessage = () => run2(async () => {
+    if (copy2) return;
     const text = message.trim();
     if (group && admin !== null) {
       await makeGroup();
@@ -14941,8 +14956,13 @@ function NewChat({ mode, roster, actions }) {
     close();
   });
   const options = [];
-  if (!group && picked.length === 0 && mode !== "search" && wanted === "") {
+  if (!group && !copy2 && picked.length === 0 && mode !== "search" && wanted === "") {
     options.push({ key: "new", icon: (0, import_react38.createElement)(PlusIcon), label: t("Create new Bot"), run: createBot });
+    options.push({ key: "copy", icon: (0, import_react38.createElement)(DuplicateIcon), label: t("Copy expert"), run: () => {
+      setCopy(true);
+      setCursor(0);
+      inputRef.current?.focus();
+    } });
     options.push({ key: "group", icon: (0, import_react38.createElement)(PeopleIcon), label: t("Create group chat"), run: () => {
       setGroup(true);
       setCursor(0);
@@ -14955,10 +14975,19 @@ function NewChat({ mode, roster, actions }) {
       }) });
     }
   }
+  const copying = copy2;
   for (const bot of matches) {
-    options.push({ key: bot.id, bot, label: bot.name, hint: choosingAdmin ? t("Make admin") : group || picked.length > 0 ? t("Add to group chat") : void 0, run: () => openBot(bot) });
+    options.push({
+      key: bot.id,
+      bot,
+      label: bot.name,
+      hint: copying ? t("Copy expert") : choosingAdmin ? t("Make admin") : group || picked.length > 0 ? t("Add to group chat") : void 0,
+      run: () => openBot(bot)
+    });
   }
-  if (wanted !== "" && !exact && mode !== "search") options.push({ key: "create", icon: (0, import_react38.createElement)(PlusIcon), label: t("Create new Bot “{name}”", { name: query.trim() }), run: createBot });
+  if (wanted !== "" && !exact && mode !== "search" && !copy2) {
+    options.push({ key: "create", icon: (0, import_react38.createElement)(PlusIcon), label: t("Create new Bot “{name}”", { name: query.trim() }), run: createBot });
+  }
   const active = Math.min(cursor, Math.max(options.length - 1, 0));
   const listed = options.map((option) => option.key).join("\n");
   const glide = useGlide(`${active}
@@ -15022,7 +15051,7 @@ ${listed}`, { axis: "y", ...QUICK_EDGES });
           autoFocus: true,
           value: query,
           "aria-label": t("Recipient"),
-          placeholder: mode === "search" ? t("Search Bots…") : choosingAdmin ? t("Choose the group admin") : group ? t("Who to chat with…") : t("Start a chat with…"),
+          placeholder: mode === "search" ? t("Search Bots…") : copy2 ? t("Choose a Bot to copy…") : choosingAdmin ? t("Choose the group admin") : group ? t("Who to chat with…") : t("Start a chat with…"),
           onChange: (event) => {
             setQuery(event.target.value);
             setCursor(0);
