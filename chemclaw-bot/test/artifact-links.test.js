@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, mkdir, writeFile, rm, symlink, realpath } from 'node:fs/promises'
+import { mkdtemp, mkdir, writeFile, readFile, rm, symlink, realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { artifactPath, artifactReferences, linkArtifacts } from '../src/shared/artifact-links.js'
 import { resolveArtifacts } from '../src/host/artifact-paths.js'
+import { previewWorkbook } from './xlsx-fixture.js'
 
 test('only explicit local links, inline filenames and exact table cells are resolved', () => {
   const text = '| 文件 | 大小 |\n|---|---|\n| 纯碱 成本.xlsx | 200 |\n`报告.html`\n[查看](<reports/报告.pdf#L2-L4>)\n[网站](https://example.com/x.html)\n```md\n| 不应链接.xlsx |\n```\n普通叙述 不是产物.xlsx'
@@ -63,6 +64,18 @@ test('ambiguous basenames, deleted files and traversal do not receive links', as
   await Promise.all([own, team].map(async root => { await mkdir(join(root, 'out')); await writeFile(join(root, 'out', '报告.pdf'), 'test') }))
   const { files } = await call(['报告.pdf', '已删除.xlsx', '../missing/报告.pdf'])
   assert.deepEqual(Object.keys(files), [])
+})
+
+test('resolving exact and nested workbook links preserves every original byte', async t => {
+  const { own, call } = await bench(t)
+  await mkdir(join(own, 'reports'))
+  const path = join(own, 'reports', 'original.xlsx')
+  const original = await previewWorkbook()
+  await writeFile(path, original)
+  for (const value of ['reports/original.xlsx', 'original.xlsx']) {
+    assert.equal((await call([value])).files[value], await realpath(path))
+    assert.deepEqual(await readFile(path), original)
+  }
 })
 
 test('files outside known workspaces and private data are never returned', async t => {

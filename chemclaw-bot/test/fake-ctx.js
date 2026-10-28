@@ -87,3 +87,14 @@ export function fakeContext({ services = {} } = {}) {
   }
   return ctx
 }
+
+export function fakeApproval(outcome = 'allowed-once') {
+  const requests = []
+  return {
+    requests,
+    async request(request) {
+      requests.push(request)
+      return typeof outcome === 'function' ? outcome(requests.length, request) : outcome
+    },
+  }
+}

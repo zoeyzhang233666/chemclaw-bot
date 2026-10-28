@@ -2,8 +2,23 @@ import { spawn, spawnSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, watch, writeFileSync } from 'node:fs'
 import { dirname, join, matchesGlob, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { launchSource, sourceRevision } from './launch-source.mjs'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const checkout = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const selected = launchSource(checkout, process.argv.slice(2))
+const root = selected.source
+const revision = sourceRevision(root)
+if (process.argv.includes('--info')) {
+  console.log(JSON.stringify({ source: root, data: join(selected.origin, '.chemclaw-dev'), workspace: join(selected.origin, '.chemclaw-workspace'), ...revision }, null, 2))
+  process.exit(0)
+}
+if (root !== checkout) {
+  const forwarded = spawnSync(process.execPath, [join(root, 'scripts', 'launch-chemclaw.mjs'), ...selected.args], {
+    cwd: root, env: { ...process.env, CHEMCLAW_LAUNCH_HOME: selected.origin }, stdio: 'inherit', windowsHide: true,
+  })
+  if (forwarded.error) console.error(forwarded.error.message)
+  process.exit(forwarded.status ?? 1)
+}
 const plugin = join(root, 'chemclaw-bot')
 const app = join(root, 'app')
 const environment = { ...process.env }
@@ -43,12 +58,13 @@ function sync() {
 }
 sync()
 if (process.argv.includes('--sync-only')) process.exit(0)
-const home = join(root, '.chemclaw-dev')
-const workspace = join(root, '.chemclaw-workspace')
+const home = join(selected.origin, '.chemclaw-dev')
+const workspace = join(selected.origin, '.chemclaw-workspace')
 mkdirSync(workspace, { recursive: true })
 Object.assign(environment, { DS_BOT_HOME: join(home, 'data'), DS_BOT_WORKSPACE: workspace, DS_BOT_SHELL_DATA: join(home, 'shell') })
+Object.assign(environment, { CHEMCLAW_SOURCE_BRANCH: revision.branch, CHEMCLAW_SOURCE_REVISION: `${revision.revision}${revision.modified ? ' + local changes' : ''}` })
 const electron = join(app, 'node_modules/electron/dist', process.platform === 'win32' ? 'electron.exe' : process.platform === 'darwin' ? 'Electron.app/Contents/MacOS/Electron' : 'electron')
-console.log(`ChemClaw source GUI\nDevelopment data: ${home}\nWorkspace: ${workspace}\nStarting the desktop window automatically. Keep this console open while using ChemClaw.`)
+console.log(`ChemClaw development preview\nSource: ${root}\nBranch: ${revision.branch}\nRevision: ${environment.CHEMCLAW_SOURCE_REVISION}\nDevelopment data: ${home}\nWorkspace: ${workspace}\nStarting the desktop window automatically. Keep this console open while using ChemClaw.`)
 const watchers = []
 let child
 function launch() {

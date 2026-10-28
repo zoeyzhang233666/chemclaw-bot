@@ -1,9 +1,12 @@
 // Client channel: the team view the browser renders, and the POST /api/bot endpoints.
 import { randomUUID } from 'node:crypto'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
-import { questionReply, viewReply } from './parts.js'
+import { install as installBtw } from './btw.js'
+import { install as installSide } from './side.js'
+import { handoffReply, questionReply, viewReply } from './parts.js'
 import { defaultRelayLimit } from './groups.js'
 import { validateViewAnswer } from '../shared/views.js'
+import { mergeSidebarPrefs } from '../shared/sidebar-prefs.js'
 import { COLORS, EXTRA_COLORS, ROUTE } from './constants.js'
 import { resolveArtifacts } from './artifact-paths.js'
 
@@ -21,6 +24,8 @@ export function errorCode(error) {
 }
 
 export function install(rt) {
+  installBtw(rt)
+  installSide(rt)
   const { ctx, state } = rt
 
   // The DSH interface language of the last browser that asked for the team.
@@ -52,6 +57,8 @@ export function install(rt) {
     exchangeTurns: state.exchangeTurns,
     questions: state.questions,
     views: state.views ?? {},
+    btwCards: rt.btwView?.() ?? {},
+    sideChats: rt.sideView?.() ?? {},
     // The team's DSH Agent (at most one): plain dsh Sessions, not Bots.
     agents: Object.values(state.agents),
     // Key names and who may use them; values never leave the host.
@@ -78,7 +85,7 @@ export function install(rt) {
   // and per Session, when its running turn began.
   const live = () => ({
     activity: rt.activityView(),
-    work: { bots: rt.workView(), rooms: rt.roomWorkView(), approvals: rt.approvalsView(), waiting: rt.waitingView?.() ?? {}, turns: rt.turnsView?.() ?? {} },
+    work: { bots: rt.workView(), rooms: rt.roomWorkView(), approvals: rt.approvalsView(), waiting: rt.waitingView?.() ?? {}, turns: rt.turnsView?.() ?? {}, steered: rt.steeredView?.() ?? {} },
     memoryNews: rt.memoryNews(),
     memoryReviews: rt.memoryReviews(),
     connectors: rt.connectorsView(),
@@ -102,6 +109,36 @@ export function install(rt) {
       if (body.motion === null || body.motion === 'normal') delete state.prefs.motion
       else if (body.motion === 'quiet' || body.motion === 'lively') state.prefs.motion = body.motion
       else throw invalid('Motion must be quiet, normal or lively')
+    }
+    if (body.layout !== undefined) {
+      if (body.layout === null || body.layout === 'bubble') delete state.prefs.layout
+      else if (body.layout === 'flat') state.prefs.layout = body.layout
+      else throw invalid('Layout must be bubble or flat')
+    }
+    if (body.width !== undefined) {
+      if (body.width === null || body.width === 80) delete state.prefs.width
+      else if (Number.isInteger(body.width) && body.width >= 50 && body.width <= 100) state.prefs.width = body.width
+      else throw invalid('Width must be a whole percent from 50 to 100')
+    }
+    if (body.flatWidth !== undefined) {
+      if (body.flatWidth === null || body.flatWidth === 100) delete state.prefs.flatWidth
+      else if (Number.isInteger(body.flatWidth) && body.flatWidth >= 50 && body.flatWidth <= 100) state.prefs.flatWidth = body.flatWidth
+      else throw invalid('Flat text width must be a whole percent from 50 to 100')
+    }
+    if (body.thinking !== undefined) {
+      // A value this version does not know is ignored, not refused: the toggle
+      // may grow more states later.
+      if (body.thinking === true) state.prefs.thinking = true
+      else if (body.thinking === false || body.thinking === null) delete state.prefs.thinking
+    }
+    if (body.sidebar !== undefined) {
+      try {
+        const next = mergeSidebarPrefs(state.prefs.sidebar, body.sidebar)
+        if (next === undefined) delete state.prefs.sidebar
+        else state.prefs.sidebar = next
+      } catch (error) {
+        throw invalid(error.message)
+      }
     }
     return rt.save()
   }
@@ -431,6 +468,28 @@ export function install(rt) {
           }, AbortSignal.timeout(30_000))
           return ok(true)
         }
+        case 'side-new': {
+          if (typeof body.sessionId !== 'string' || body.sessionId === '') return fail('Nothing to open', 'bot/invalid')
+          await rt.load()
+          return ok(await rt.sideNew({ sessionId: body.sessionId }))
+        }
+        case 'side-ask': {
+          if (typeof body.sessionId !== 'string' || body.sessionId === '') return fail('Nothing to ask', 'bot/invalid')
+          if (body.chatId !== undefined && typeof body.chatId !== 'string') return fail('Nothing to ask', 'bot/invalid')
+          if (String(body.text ?? '').trim() === '') return fail('Write a question.', 'bot/invalid')
+          await rt.load()
+          return ok(await rt.sideAsk({ sessionId: body.sessionId, chatId: body.chatId, recent: body.recent === true, text: String(body.text) }))
+        }
+        case 'side-cancel': {
+          if (typeof body.chatId !== 'string' || body.chatId === '' || typeof body.entryId !== 'string' || body.entryId === '') return fail('Nothing to cancel', 'bot/invalid')
+          await rt.load()
+          return ok(await rt.sideCancel({ chatId: body.chatId, entryId: body.entryId }))
+        }
+        case 'side-close': {
+          if (typeof body.chatId !== 'string' || body.chatId === '') return fail('Nothing to close', 'bot/invalid')
+          await rt.load()
+          return ok(await rt.sideClose({ chatId: body.chatId }))
+        }
         case 'update-check': {
           const fresh = body.fresh === true
           return ok({ ...(await rt.updateCheck({ fresh })), dsh: (await rt.dshUpdateCheck?.({ fresh })) ?? null })
@@ -447,11 +506,66 @@ export function install(rt) {
           const clientId = typeof body.clientId === 'string' ? body.clientId.slice(0, 100) : ''
           if (clientId === '') return fail('A browser poll needs a clientId', 'bot/invalid')
           await rt.load()
-          return ok(await rt.browserChannel.wait(clientId, rt.browserOpen(body.open)))
+          const requests = await rt.browserChannel.wait(clientId, rt.browserOpen(body.open))
+          return ok({ requests, holds: rt.browserChannel.holdSnapshot() })
         }
         case 'browser-result':
           if (rt.browserChannel === undefined) return fail('Bot browsers are off on this host', 'bot/browser-off')
           return ok(rt.browserChannel.result(body))
+        case 'browser-takeover': {
+          if (rt.browserChannel === undefined) return fail('Bot browsers are off on this host', 'bot/browser-off')
+          await rt.load()
+          const botId = String(body.botId ?? '')
+          if (!rt.botOf(botId)) return fail('Unknown Bot', 'bot/not-found')
+          // Taking over a handoff keeps its reason, note, and call, so its card stays up.
+          const asked = rt.browserChannel.holdOf(botId)
+          rt.browserChannel.setHold(botId, asked?.callId !== undefined
+            ? { by: 'user', reason: asked.reason, note: asked.note, callId: asked.callId }
+            : { by: 'user', reason: 'takeover', note: 'The user is controlling this browser.' })
+          return ok(true)
+        }
+        // A card's 'done' or 'skip' says how the handoff went. The panel's Give back
+        // sends no outcome, so its reply only says that control returned to the Bot.
+        case 'browser-give-back': {
+          if (rt.browserChannel === undefined) return fail('Bot browsers are off on this host', 'bot/browser-off')
+          await rt.load()
+          const botId = String(body.botId ?? '')
+          if (!rt.botOf(botId)) return fail('Unknown Bot', 'bot/not-found')
+          if (body.outcome !== undefined && !['done', 'skip', 'returned'].includes(body.outcome)) return fail('Nothing to send', 'bot/invalid')
+          const hold = rt.browserChannel.holdOf(botId)
+          if (hold === null) return fail('This browser is not held', 'bot/forbidden')
+          if (body.callId !== undefined && body.callId !== hold.callId) return fail('This handoff is no longer open', 'bot/stale')
+          // Claim the hold before queueing so a second answer is refused.
+          rt.browserChannel.setHold(botId, null)
+          if (hold.callId === undefined) return ok(true)
+          try {
+            const sessionId = rt.chatOf(botId)
+            const reply = handoffReply(hold, body.outcome)
+            await rt.ensureCapabilities(sessionId)
+            const agent = await rt.resolveAgent(sessionId)
+            agent.followup(createUserMessage({ content: [{ type: 'text', text: reply.text }], source: reply.source }))
+            await ctx.sessions.flush(agent.session)
+          } catch (error) {
+            if (rt.browserChannel.holdOf(botId) === null) rt.browserChannel.setHold(botId, hold)
+            throw error
+          }
+          return ok(true)
+        }
+        case 'browser-stop': {
+          await rt.load()
+          const botId = String(body.botId ?? '')
+          if (!rt.botOf(botId)) return fail('Unknown Bot', 'bot/not-found')
+          rt.browserChannel?.setHold(botId, { by: 'user', reason: 'stopped', note: 'The user is controlling this browser.' })
+          const sessionId = rt.chatOf(botId)
+          if (sessionId && rt.live.get(sessionId)?.turn !== undefined) {
+            const agent = await rt.resolveAgent(sessionId)
+            agent.cancel({ kind: 'user' })
+          }
+          for (const room of Object.values(rt.state.rooms ?? {})) {
+            if (room.members?.includes(botId)) await rt.stopMemberWork?.(room.id, botId)
+          }
+          return ok(true)
+        }
         case 'diagnostics':
           await rt.load()
           return ok(await rt.diagnostics.report(body))
@@ -486,6 +600,6 @@ export function install(rt) {
 
   ctx.effect(() => {
     void rt.load()
-    return () => {}
+    return () => Promise.all([rt.btwDispose?.(), rt.sideDispose?.()])
   }, 'chemclaw-bot: load state')
 }

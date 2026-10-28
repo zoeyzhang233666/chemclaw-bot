@@ -25,6 +25,7 @@ const Fragment = Symbol('Fragment')
 const h = (type, props, ...children) => ({ type, props: { ...props, children } })
 const react = {
   createElement: h, Fragment,
+  useSyncExternalStore: (_subscribe, getSnapshot) => getSnapshot(),
   useEffect: (effect) => { effects.push(effect) },
   useLayoutEffect: (effect) => { effects.push(effect) },
   useState: initial => [typeof initial === 'function' ? initial() : initial, value => sets.push(value)],
@@ -172,6 +173,15 @@ test('a paused group shows the wait, and Continue releases it while calls are pa
   assert.ok(button, 'the Continue button is drawn while the room parks calls')
   button.props.onClick()
   assert.deepEqual(clicked, ['room'])
+})
+
+// The admin was alone with the user's message and passed: the round shows the
+// notice, so the user sees why nothing was answered.
+test('a group whose admin passed alone shows the notice', () => {
+  const replies = [{ kind: 'admin-passed', botId: 'chief', name: 'Chief', time: at(0, 14, 5) }]
+  const out = show(call('group_relay', 'direct', { content: { replies } }), { sessionId: 'room' })
+  const events = findAll(out, node => node.props?.className === 'bt-event').map(text)
+  assert.deepEqual(events, ['Chief did not answer or call anyone; call a member with @Name'])
 })
 
 // The trigger of a post in a group chat carries the event's time, not the post's.
@@ -814,4 +824,16 @@ test('a view works its formulas out, draws a chart, and keeps html in a sandboxe
   assert.match(frame.props.srcDoc, /Content-Security-Policy" content="default-src 'none'/)
   assert.ok(frame.props.srcDoc.indexOf('Content-Security-Policy') < frame.props.srcDoc.indexOf('<b>hi</b>'), 'the policy comes before the markup')
   assert.equal(frame.props.title, 'A greeting')
+})
+
+
+test('completed group answers render persisted views and keep separate message blocks around them', () => {
+  const view = { type: 'chart', kind: 'line', categories: ['2026-10-26', '2026-10-27'], series: [{ values: [10, null] }] }
+  const replies = [{ botId: 'writer', name: 'Writer', text: 'A useful answer' }, { kind: 'view', id: 'delivery-v1', botId: 'writer', title: 'Verified trend', view }, { botId: 'chief', name: 'Chief', text: 'Another task continues' }]
+  const node = show(call('group_relay', 'completed-chart', { content: { replies } }), { sessionId: 'room' })
+  assert.match(text(node), /Verified trend/)
+  assert.equal(findAll(node, item => item.type === 'svg' && item.props.className === 'bt-chart-svg').length, 1)
+  assert.deepEqual(stackReplies(replies).length, 3)
+  const reloaded = show(call('group_relay', 'completed-chart', { content: JSON.stringify({ replies }) }), { sessionId: 'room' })
+  assert.equal(findAll(reloaded, item => item.props.className === 'bt-chart').length, 1)
 })

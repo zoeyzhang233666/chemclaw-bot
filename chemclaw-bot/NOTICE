@@ -148,3 +148,83 @@ their ideas; it does not contain their code.
     (packages/experimental/client-ui-voice-input), MIT: the voice chat
     records with the same steps (record, resample to 16 kHz mono, PCM16 WAV)
     before it calls the plugin's speech service.
+
+ChemClaw browser automation (2026-10-27):
+  Adapted from Fei2411/DS-Bot, Apache-2.0, Copyright 2026 Fei2411 and
+  DS Bot contributors, revision de55888a93983fc51c94f7d22bc94b4f8293205d:
+  https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
+  src/host/browser/{gate,loop,mount,refs,session,session-model,task}.js,
+  browser-plugins.js, browser channel/client extensions, their regression tests,
+  and app/src/{bot-browser,bot-views}.mjs. The desktop browser guests originally
+  adapt MIT-licensed DeepSeek Harness browser-guests.ts (see notices above).
+  ChemClaw adaptations use playwright-core 1.61.1 (Apache-2.0, Microsoft) and
+  ws 8.22.0 (MIT, Einar Otto Stangvik and contributors). Their installed packages
+  retain their licenses. No separate Chromium build is downloaded or bundled.
+
+ChemClaw side chat (2026-10-27):
+  Adapted Fei2411/DS-Bot host side/aside helpers, side chat UI, panel and input
+  routing, and related tests at de55888a93983fc51c94f7d22bc94b4f8293205d
+  (Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors).
+  https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
+  ChemClaw retains its browser controls, chemical workflows and credential routes.
+
+ChemClaw message layout and touch controls (2026-10-27):
+  Adapted Fei2411/DS-Bot message layout preferences, responsive styles, touch and
+  viewport helpers, stable activity row, working-folder state and legacy aside
+  history presentation, including their tests, from Apache-2.0 revision
+  de55888a93983fc51c94f7d22bc94b4f8293205d.
+  Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
+  ChemClaw retains localized skills, artifact links and its own provider settings.
+
+ChemClaw upstream reliability follow-up (2026-10-27):
+  Adapted DS-Bot group admin-PASS notices (#605, 6c165ebaf8598bbc96e6b7d693dcd920dedb6b4b),
+  group relay Session import (#567, 8558705582fa2f9aede1ca0ff0c6ce8b752a6e8f),
+  schedule move and old-part archival (#604, 27ff8ac972cd676f7737841d299f98191b731317;
+  #573, efd07cb60bc3427d521e08bd2a2f6396a7debc99), with corresponding tests.
+  Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot
+  ChemClaw retains its DSH rc.3 runtime, chemical workflows, routing and user views.
+
+ChemClaw browser login import and user downloads (2026-10-27):
+  Adapted DS-Bot cookie-parse, cookie-import, browser-sources, downloads, browser
+  import UI, IPC bridge and tests from Apache-2.0 revision
+  de55888a93983fc51c94f7d22bc94b4f8293205d.
+  Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot/tree/de55888a93983fc51c94f7d22bc94b4f8293205d
+  ChemClaw retains its native partitions, approval paths and application origin checks.
+
+ChemClaw Linux packages and updates (2026-10-27):
+  Adapted Linux AppImage/deb targets, update selection, Ubuntu package/update checks
+  and release asset gating from DS-Bot de55888a93983fc51c94f7d22bc94b4f8293205d.
+  Also adapted sharp/libvips unpacking and packed-image verification from upstream
+  #544, 9262b3e64103ac2cf0d1a67aacf5ea068d93d759.
+  Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot
+
+DS-Bot 0.2.3 screenshot and history compatibility
+  Adapted from Fei2411/DS-Bot PRs #578 and #583, Apache-2.0,
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  Fixed reference: 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Retains ChemClaw browser cancellation/serialization and history metadata.
+
+DS-Bot browser handoff cards, Apache-2.0
+  Adapted PR #591 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  ChemClaw keeps its refs/task modes, native bridge and cancellation guards.
+
+DS-Bot conversation feedback, Apache-2.0
+  Adapted PRs #598, #587 and #584 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  Retains ChemClaw direct/group routing, skills and customized roster.
+
+DS-Bot desktop tray lifecycle, Apache-2.0
+  Adapted PR #549 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  Lifecycle modules, test harnesses and checks retain their source notices;
+  ChemClaw uses its original cloud icon, own updater and pinned rc.3 runtime.
+
+DS-Bot model defaults and namespace compatibility, Apache-2.0
+  Adapted PRs #586 and #575 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  ChemClaw preserves configured-route selection and lazy preset initialization.

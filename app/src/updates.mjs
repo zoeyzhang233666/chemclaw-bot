@@ -79,7 +79,7 @@ function isHttpsPage(page) {
   }
 }
 
-export function watchReleases({ current, arch, fetch = globalThis.fetch, ask, open, feed = RELEASES_URL, log = console }) {
+export function watchReleases({ current, arch, asset: assetName = version => `ChemClaw-${version}-mac-${arch}.zip`, fetch = globalThis.fetch, ask, open, feed = RELEASES_URL, log = console }) {
   let asked
   let checking = false
   const status = initialStatus(current)
@@ -108,7 +108,7 @@ export function watchReleases({ current, arch, fetch = globalThis.fetch, ask, op
             || (release.prerelease === true && !allowPrerelease)) continue
           const version = typeof release.tag_name === 'string' ? release.tag_name.replace(/^v/u, '') : ''
           if (!isNewer(version, current)) continue
-          if (!Array.isArray(release.assets) || !release.assets.some(asset => asset?.name === `ChemClaw-${version}-mac-${arch}.zip`)) continue
+          if (!Array.isArray(release.assets) || !release.assets.some(asset => asset?.name === assetName(version))) continue
           if (!isHttpsPage(release.html_url)) {
             log.error('ChemClaw: update check failed: release page URL is not HTTPS')
             continue

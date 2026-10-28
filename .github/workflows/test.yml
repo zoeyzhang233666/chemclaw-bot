@@ -93,6 +93,8 @@ jobs:
           cache-dependency-path: app/package-lock.json
       - run: npm ci --no-fund --no-audit
       - run: npm run dist
+      - name: Check native Bot browser operations
+        run: node scripts/run-browser-check.mjs
       - name: Check the packaged app
         run: node scripts/check-packed.mjs
       # The runner is a fresh machine, so the installer may run here. It must install for the
@@ -230,7 +232,88 @@ jobs:
           if [ "$expected" = x64 ]; then expected=x86_64; fi
           file -b "$exe" | grep -F "$expected"
           node scripts/check-packed.mjs "$exe"
+          node scripts/run-browser-check.mjs
           node scripts/check-update.mjs "$exe" 99.0.0
+
+  app-package-linux:
+    name: Desktop app package (Linux x64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+          key: desktop-tools-v3-Linux-x64-${{ hashFiles('app/package-lock.json') }}
+      - run: npm ci --no-fund --no-audit
+      - run: npm run dist
+      - name: Check the packages
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          test -f "dist-pack/ChemClaw-$version-linux-x86_64.AppImage"
+          test -f "dist-pack/ChemClaw-$version-linux-amd64.deb"
+          test -f dist-pack/latest-linux.yml
+      # An AppImage mounts through FUSE 2, and Ubuntu 24.04's AppArmor blocks the unprivileged
+      # user namespaces that Chromium's sandbox needs; a throwaway runner may lift that.
+      - name: Prepare to run the app
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libfuse2t64 xvfb
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Check native Bot browser operations
+        run: xvfb-run -a node scripts/run-browser-check.mjs
+      - name: Check the packaged app
+        run: xvfb-run -a node scripts/check-packed.mjs
+      # apt-get, not dpkg: it also installs the deb's dependencies. The ./ prefix makes apt-get
+      # read a file; without it the path is taken for a package name.
+      - name: Install the deb and check
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          sudo apt-get install -y "./dist-pack/ChemClaw-$version-linux-amd64.deb"
+          test -f /usr/share/applications/chemclaw.desktop
+          xvfb-run -a node scripts/check-packed.mjs "/opt/ChemClaw/chemclaw"
+      # A deb cannot update itself: it points at the release page, as on macOS.
+      - name: The deb's app hears of a new version
+        run: xvfb-run -a node scripts/check-update.mjs "/opt/ChemClaw/chemclaw" 99.0.0
+      # The update builds the app a second time, so it runs only for changes to the app or the
+      # workflows. The AppImage downloads the new one and replaces itself as it quits.
+      - name: Does the change touch the app?
+        id: scope
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != pull_request ] || git diff --name-only "origin/$GITHUB_BASE_REF...HEAD" | grep -qE '^(app/|\.github/workflows/)'; then
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build the next version
+        if: steps.scope.outputs.update == 'true'
+        run: |
+          next="$(node -p "const [a, b, c] = require('./package.json').version.split(/[.-]/u); [a, b, Number(c) + 1].join('.')")"
+          npx electron-builder --publish never -c.extraMetadata.version="$next" -c.directories.output=dist-next
+      - name: The AppImage takes the update
+        if: steps.scope.outputs.update == 'true'
+        run: |
+          tmp="$(mktemp -d)"
+          cp dist-pack/ChemClaw-*-linux-x86_64.AppImage "$tmp/chemclaw.AppImage"
+          chmod +x "$tmp/chemclaw.AppImage"
+          xvfb-run -a node scripts/check-update.mjs "$tmp/chemclaw.AppImage" dist-next
+          pkill -f "$tmp/chemclaw" || true
+          next="$(ls dist-next/ChemClaw-*-linux-x86_64.AppImage)"
+          test "$(sha512sum "$tmp/chemclaw.AppImage" | cut -d' ' -f1)" = "$(sha512sum "$next" | cut -d' ' -f1)"
+      - name: Uninstall
+        run: |
+          sudo apt-get remove -y chemclaw
+          test ! -e "/opt/ChemClaw/chemclaw"
 
   docker:
     name: Docker startup and data migration
@@ -275,8 +358,8 @@ jobs:
   # and fails unless the matrix, leak scan, app, app package and Docker checks passed.
   result:
     name: Test result
-    needs: [test, scan, app, app-package, app-package-macos, docker]
+    needs: [test, scan, app, app-package, app-package-macos, app-package-linux, docker]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: test "${{ needs.test.result }}" = success && test "${{ needs.scan.result }}" = success && test "${{ needs.app.result }}" = success && test "${{ needs.app-package.result }}" = success && test "${{ needs.app-package-macos.result }}" = success && test "${{ needs.docker.result }}" = success
+      - run: test "${{ needs.test.result }}" = success && test "${{ needs.scan.result }}" = success && test "${{ needs.app.result }}" = success && test "${{ needs.app-package.result }}" = success && test "${{ needs.app-package-macos.result }}" = success && test "${{ needs.app-package-linux.result }}" = success && test "${{ needs.docker.result }}" = success

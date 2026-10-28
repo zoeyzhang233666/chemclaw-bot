@@ -8,14 +8,49 @@ Read the task's domain skill for required business fields and evidence.
 Choose the best presentation for the audience; examples are not pixel templates
 or limits on analytical ability.
 
-**Format choice (ChemClaw product rule):**
+**Conversation delivery first (ChemClaw product rule):**
+- Business answers must include the corresponding `show_view` whenever one of
+  these answer shapes applies; do not wait for an explicit chart request.
+  Honor the user's explicit request for text only or no charts.
+
+  | Answer shape | Required view |
+  | --- | --- |
+  | At least two numeric indicators answering current level, affordability or acceptability | `metric`, normally two to four cards |
+  | One object with at least three time observations | `line`; `area` for cumulative quantity |
+  | At least two objects compared or ranked at one time | `bar`; `hbar` for labels over six characters or more than eight categories |
+  | One whole split into three to six parts, with structure/share as the question | `donut` |
+  | At least three rows and three columns of multi-field results | `table` |
+  | Completeness, progress or quota consumption is part of the conclusion | `progress` |
+  | Risks, anomalies, conflicting measurement definitions or missing data | `callout` |
+  | Repeated conversion, cost, price comparison or break-even calculation | Inputs and formulas for a local calculator |
+  | Confirm parameters before executing | `options`, `confirm` or `form` in a supported chat |
+
+- Choose the primary component in this order: time axis → `line`/`area`;
+  otherwise size comparison → `bar`/`hbar`; otherwise composition → `donut`;
+  otherwise multi-field detail → `table`; otherwise another quantifiable
+  relationship → sandboxed `html`. Choose the suitable component directly,
+  without offering alternative chart types for the user to choose.
+- In groups mark `audience: "user"` only for a completed answer intended for the
+  human, including an interim @ question to any member. The answer need not be
+  the group's last message or come from the admin. Do not draw charts during
+  peer delegation, progress or data checking; send findings as text/data there.
+- Deliver the useful conclusion and an inline view before lengthy file exports.
+  A simple lookup can finish in chat; create a full report/workbook only when
+  requested or required by the actual task. For requested reports keep the
+  backing data and evidence, but do not block the first useful inline result.
+- Never invent a value to complete a picture. Use null for missing chart points,
+  with sources, date/spec/region/tax basis and units. Do not connect across gaps.
+  Axis tick thinning is automatic; keep complete observation labels and values.
+
+**File format choice:**
 - Prefer self-contained **HTML** when the deliverable needs price trend lines,
   interactive tables, filters, or in-page charts.
 - Use **PPT / PPTX** (including `chemclaw-presentations` or `chem_deliver` pptx) when the
   user wants a slide deck without interactive trends—price cards and static
   layouts are fine.
 - Whenever there is a data backing sheet or row-level detail, also deliver
-  **Excel**. Do not ship charts alone without the workbook when numbers exist.
+  **Excel** for a requested file report. An inline factual answer does not need
+  an unsolicited workbook before it can be shown.
 
 1. Resolve scope, specification, units, date, tax and delivery terms.
 2. Separate source records, calculations and judgments. Mark missing values;

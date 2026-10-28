@@ -1,15 +1,21 @@
 // Electron main process: one window for the Bot team, served by the app's own DSH Host.
 // The window loads the Host's loopback address as DSH Web does: DSH's sign-in sends the page's
 // origin as the address the browser comes back to, and accepts only a loopback one.
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
+import { app, BrowserWindow, WebContentsView, dialog, ipcMain, Menu, nativeImage, nativeTheme, powerMonitor, session, shell as electronShell, Tray } from 'electron'
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { rm } from 'node:fs/promises'
+import { readFile, rm } from 'node:fs/promises'
 import { release } from 'node:os'
-import { dirname, isAbsolute, join, resolve } from 'node:path'
+import { basename, dirname, isAbsolute, join, resolve } from 'node:path'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
 import { getDshRuntimeVersion } from '@deepseek-ai/dsh-app-boot'
 import electronUpdater from 'electron-updater'
+import { BotBrowserGuests, partitionOf } from './bot-browser.mjs'
+import { BotViews, isBotId } from './bot-views.mjs'
+import { importFromBrowser, listSources } from './browser-sources.mjs'
+import { applyCookies, CookieImports } from './cookie-import.mjs'
+import { parseCookieFile } from './cookie-parse.mjs'
+import { downloadSaver } from './downloads.mjs'
 import { canonicalExecPath } from './canonical-path.mjs'
 import { chooseLocations, localeText, programFolder, saveLocations, text } from './first-run.mjs'
 import { hostPort } from './host-port.mjs'
@@ -18,12 +24,22 @@ import { copySessions, findTeam, importTeam, teamInUse, userDshHome } from './im
 import { copyData, moveProblem } from './move-data.mjs'
 import { editLocations } from './locations-dialog.mjs'
 import { CHECK_PROFILE, PROFILE } from './profile.mjs'
+import { createShell, SHELL_TEXT } from './shell.mjs'
+import { createDeferredPrompt } from './update-prompt.mjs'
 import { UPDATE_TEXT, updatesEnabled, watchReleases, watchUpdates } from './updates.mjs'
 import { CAPTION_HEIGHT, cssColor, micaAvailable, nativeThemeSource } from './window-frame.mjs'
 
 const IPC = {
   caption: 'chemclaw:caption-colors', nativeTheme: 'chemclaw:native-theme', fullscreen: 'chemclaw:fullscreen',
   dataLocation: 'chemclaw:data-location', moveData: 'chemclaw:move-data', teamWorkspace: 'chemclaw:team-workspace',
+  browserAcquire: 'chemclaw:browser-acquire', browserRelease: 'chemclaw:browser-release', browserForget: 'chemclaw:browser-forget',
+  browserViewChanged: 'chemclaw:browser-view-changed', browserViewCreate: 'chemclaw:browser-view-create',
+  browserViewSync: 'chemclaw:browser-view-sync', browserViewPlace: 'chemclaw:browser-view-place',
+  browserViewNavigate: 'chemclaw:browser-view-navigate', browserViewCommand: 'chemclaw:browser-view-command',
+  browserViewFocus: 'chemclaw:browser-view-focus', browserViewRead: 'chemclaw:browser-view-read',
+  browserViewClose: 'chemclaw:browser-view-close', browserViewHold: 'chemclaw:browser-view-hold',
+  browserImportSources: 'chemclaw:browser-import-sources', browserImportPick: 'chemclaw:browser-import-pick',
+  browserImportLive: 'chemclaw:browser-import-live', browserImportApply: 'chemclaw:browser-import-apply', browserImportCancel: 'chemclaw:browser-import-cancel',
   updateStatus: 'chemclaw:update-status', updateCheck: 'chemclaw:update-check', updateInstall: 'chemclaw:update-install',
 }
 const MOVE_PROBLEMS = { drive: 'moveDrive', nested: 'moveNested', workspace: 'moveWorkspace', program: 'inProgram', notEmpty: 'moveNotEmpty' }
@@ -31,8 +47,11 @@ const UPDATE_CHECK_WAIT_MS = 15_000
 const UPDATE_DOWNLOAD_WAIT_MS = 15 * 60_000
 
 const here = dirname(fileURLToPath(import.meta.url))
+const assets = join(here, '..', 'assets')
 // Drawn by scripts/icon.mjs. Windows takes the .ico for its several sizes.
-const iconFile = join(here, '..', 'assets', process.platform === 'win32' ? 'icon.ico' : 'icon.png')
+const iconFile = join(assets, process.platform === 'win32' ? 'icon.ico' : 'icon.png')
+// The tray icon of this platform: Windows takes the .ico, macOS the template and its @2x,
+// Linux the plain png.
 // Windows 11 draws Mica behind the page; mica.css lets it through the sidebar.
 const mica = micaAvailable(process.platform, release())
 if (process.env.DS_BOT_SHELL_DATA) app.setPath('userData', process.env.DS_BOT_SHELL_DATA)
@@ -47,12 +66,57 @@ let stopping = false
 let stopped = false
 let failed = false
 let places
+// The Host answered and the window may talk to it without the launch URL.
+let hostReady = false
+// The Host's launch URL: the first window trades it for the Host's cookie.
+let launchUrl
+// The first load of the Host, which mints that cookie. It ends when the first load came
+// through (true) or when it never did (false).
+let bootstrap
+// The launch URL is good for one use only: once a browser has carried it, no browser
+// carries it again.
+let tokenSpent = false
+// The download handler of the app's session is bound once, not once per window.
+let downloadsBound = false
 // Quitting while a first-run dialog is open stops the first run, and during the copy (of the
 // first run or of a data move) it waits for the copy to stop at a safe point, so that it leaves
 // no half team and no temporary copy.
 let choosing
 let copying
 const copyAbort = new AbortController()
+const browserGuests = new BotBrowserGuests({ session, origin: () => origin, devTools: !app.isPackaged })
+let botViews
+const cookieImports = new CookieImports()
+const IMPORT_FILE_MAX = 32 * 1024 * 1024
+// The window and the tray: closing the window hides it, the tray is the way back to it and
+// the tray's Quit is the one ordinary way out.
+const shell = createShell({
+  electron: { app, Menu, Tray, powerMonitor },
+  platform: process.platform,
+  messages: () => localeText(SHELL_TEXT),
+  trayImage: () => trayImage(),
+  window: () => mainWindow,
+  build: () => rebuildWindow(),
+  reveal: (target) => {
+    if (failed) return
+    // macOS: the application menu's Hide hides the app itself, so it comes back first.
+    if (process.platform === 'darwin') app.show()
+    target.show()
+    target.focus()
+  },
+  quit: () => { app.quit() },
+  busy: () => choosing !== undefined || copying !== undefined,
+  // Before the first run has chosen its places there is no window to show, and before the
+  // first load of the Host there is no address to load.
+  ready: () => places !== undefined && origin !== undefined && bootstrap !== undefined,
+  notice: { marker: () => join(app.getPath('userData'), 'tray-close-acknowledged'), show: (options) => dialog.showMessageBox(options) },
+  // Without a tray the close asks whether the app should end.
+  fallback: { show: (options) => dialog.showMessageBox(options) },
+})
+// The tray icon goes away with the app, and a late answer to the close notice hides nothing.
+app.once('will-quit', () => { shell.dispose(); botViews?.dispose(); updates?.stop() })
+
+
 if (!app.isPackaged && process.send) process.on('message', message => {
   if (message?.type === 'chemclaw-dev-quit') app.quit()
   if (message?.type === 'chemclaw-dev-reload') void stopHost().then(() => app.exit(75))
@@ -68,27 +132,33 @@ if (canonical !== undefined) {
 } else if (!app.requestSingleInstanceLock()) {
   app.exit(0)
 } else {
-  app.on('second-instance', focusWindow)
-  app.on('window-all-closed', () => { if (!choosing) app.quit() })
+  app.on('second-instance', () => { shell.open() })
   app.on('before-quit', (event) => {
     if (choosing !== undefined) {
+      // A first-run dialog is open: the quit waits for it, and the app goes on meanwhile.
       event.preventDefault()
+      shell.cancelQuit()
       choosing.abort()
       return
     }
     if (copying !== undefined) {
+      // A copy is under way: it stops at a safe point, and the app goes on meanwhile.
       event.preventDefault()
+      shell.cancelQuit()
       if (copyAbort.signal.aborted) return
       copyAbort.abort()
       void copying.finally(() => { copying = undefined; app.quit() })
       return
     }
+    // The app is on its way out: the window may close for good.
+    shell.beginQuit()
     if (stopped || host === undefined) return
     event.preventDefault()
-    if (stopping) return
+    // The Host is already stopping: the quit follows it.
+    if (stopping) { void (hostStop ?? Promise.resolve()).then(() => { app.quit() }); return }
     void stopHost().then(() => { app.quit() })
   })
-  app.whenReady().then(start).catch(fail)
+  app.whenReady().then(async () => { shell.install(); await start() }).catch(fail)
 }
 
 function stopHost() {
@@ -104,6 +174,10 @@ async function start() {
   places = { dataDir: where.dataDir, workspace: where.workspace }
   const port = await hostPort(join(app.getPath('userData'), 'host-port.json'))
   origin = `http://127.0.0.1:${String(port)}`
+  botViews = new BotViews({ window: () => mainWindow, WebContentsView, guests: browserGuests,
+    origin: () => origin, devTools: !app.isPackaged, statePath: join(app.getPath('userData'), 'bot-views.json'),
+    onChange: state => mainWindow?.webContents.send(IPC.browserViewChanged, state),
+  })
   const pnpm = join(app.getAppPath(), 'node_modules', 'pnpm', 'bin', 'pnpm.mjs')
   const profileDir = join(where.dataDir, 'profiles', PROFILE)
   mkdirSync(profileDir, { recursive: true })
@@ -134,12 +208,74 @@ async function start() {
     // update can still come when this version's Host does not start.
     updates = startUpdates()
     host = newHost()
+    host.onMessage(message => {
+      if (message?.type !== 'chemclaw:browser-endpoint' || typeof message.id !== 'string' || !isBotId(message.botId)) return
+      const downloadRoots = message.downloadRoots
+      if (!Array.isArray(downloadRoots) || downloadRoots.length > 4 || !Array.from(downloadRoots).every(root => typeof root === 'string' && isAbsolute(root))) {
+        host?.send({ type: 'chemclaw:browser-endpoint-response', id: message.id, error: 'Could not create the browser endpoint.' })
+        return
+      }
+      void botViews.endpoint(message.botId, { downloadRoots }).then(url => {
+        host?.send({ type: 'chemclaw:browser-endpoint-response', id: message.id, url })
+      }).catch(() => host?.send({ type: 'chemclaw:browser-endpoint-response', id: message.id, error: 'Could not create the browser endpoint.' }))
+    })
     return host.start()
   })()
   ready.catch(fail)
   // A throwaway run (DS_BOT_HOME) keeps its folders where it was told.
   const fixed = Boolean(process.env.DS_BOT_HOME)
-  const updateStatus = () => ({ current: app.getVersion(), enabled: false, phase: 'idle', ...updates?.status() })
+  const updateStatus = () => ({ current: app.getVersion(), enabled: false, phase: 'idle', ...updates?.status(),
+    ...(!app.isPackaged && process.env.CHEMCLAW_SOURCE_REVISION ? { preview: { branch: process.env.CHEMCLAW_SOURCE_BRANCH || 'source', revision: process.env.CHEMCLAW_SOURCE_REVISION } } : {}),
+  })
+  // Cookie imports: a file or an installed browser's profile is parsed or harvested into a
+  // pending set first; only apply (the user's confirm) writes into the Bot's partition.
+  ipcMain.handle(IPC.browserImportSources, (event) => {
+    assertWindow(event)
+    return listSources()
+  })
+  ipcMain.handle(IPC.browserImportPick, async (event) => {
+    assertWindow(event)
+    const picked = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile'],
+      filters: [{ name: 'Cookie files', extensions: ['txt', 'json', 'cookies'] }, { name: 'All files', extensions: ['*'] }],
+    })
+    if (picked.canceled || !picked.filePaths[0]) return { canceled: true }
+    const buffer = await readFile(picked.filePaths[0])
+    if (buffer.length > IMPORT_FILE_MAX) return { error: 'too-large' }
+    const parsed = parseCookieFile(buffer)
+    if (!parsed.ok) return { error: parsed.error ?? 'unreadable', format: parsed.format }
+    return cookieImports.store(parsed, { kind: 'file', label: basename(picked.filePaths[0]) })
+  })
+  ipcMain.handle(IPC.browserImportLive, async (event, sourceId, close) => {
+    assertWindow(event)
+    const source = (await listSources()).find((item) => item.id === sourceId)
+    if (!source) throw new Error('ChemClaw: an unknown browser profile')
+    let outcome
+    try {
+      outcome = await importFromBrowser(source, { close: close === true })
+    } catch (error) {
+      if (error?.code === 'app-bound') return { error: 'app-bound' }
+      throw error
+    }
+    if (outcome.running) return { running: true, label: source.label, kind: source.kind }
+    const result = {
+      format: 'live', entries: outcome.result.cookies.length + outcome.result.skipped.length,
+      cookies: outcome.result.cookies, skipped: outcome.result.skipped, warnings: [], info: {},
+    }
+    return { ...cookieImports.store(result, { kind: source.kind, label: source.label }), restarted: outcome.restarted }
+  })
+  ipcMain.handle(IPC.browserImportApply, async (event, key, id) => {
+    assertWindow(event)
+    if (typeof key !== 'string' || !key.startsWith('bot:') || !isBotId(key.slice(4))) throw new Error('ChemClaw: a Bot storage key is required')
+    const pending = cookieImports.take(typeof id === 'string' ? id : '')
+    if (!pending) throw new Error('ChemClaw: this import is no longer pending')
+    const storage = session.fromPartition(partitionOf(key))
+    return applyCookies(storage, pending.cookies)
+  })
+  ipcMain.handle(IPC.browserImportCancel, (event, id) => {
+    assertWindow(event)
+    if (typeof id === 'string') cookieImports.drop(id)
+  })
   ipcMain.handle(IPC.updateStatus, event => { assertWindow(event); return updateStatus() })
   ipcMain.handle(IPC.updateCheck, async event => {
     assertWindow(event)
@@ -151,9 +287,38 @@ async function start() {
     if (updates?.status().phase === 'ready') await updates.install()
     else if (process.platform === 'darwin') {
       const found = await updates?.latest()
-      if (found) await shell.openExternal(found.page)
+      if (found) await electronShell.openExternal(found.page)
     }
   })
+  // ds-bot's Bot browsers: one webview per lease, in the storage of the Bot's key.
+  ipcMain.handle(IPC.browserAcquire, (event, key) => {
+    assertWindow(event)
+    return browserGuests.acquire(event.sender, key)
+  })
+  ipcMain.handle(IPC.browserRelease, (event, lease) => {
+    assertWindow(event)
+    return browserGuests.release(event.sender, lease)
+  })
+  ipcMain.handle(IPC.browserForget, (event, key) => {
+    assertWindow(event)
+    const botId = typeof key === 'string' && key.startsWith('bot:') ? key.slice(4) : ''
+    return Promise.resolve(botId === '' ? undefined : botViews.forget(botId)).then(() => browserGuests.forget(event.sender, key))
+  })
+  ipcMain.handle(IPC.browserViewCreate, (event, botId, tabId, url) => {
+    assertWindow(event)
+    return botViews.create(String(botId), { tabId: String(tabId), ...(typeof url === 'string' && url !== '' ? { url } : {}) }).tabId
+  })
+  ipcMain.handle(IPC.browserViewSync, (event, botId) => {
+    assertWindow(event)
+    return botViews.sync(String(botId))
+  })
+  ipcMain.handle(IPC.browserViewPlace, (event, tabId, rect, visible) => { assertWindow(event); return botViews.place(String(tabId), rect, visible === true) })
+  ipcMain.handle(IPC.browserViewNavigate, (event, botId, tabId, url) => { assertWindow(event); return botViews.operate(String(botId), 'navigate', { tabId: String(tabId), url }) })
+  ipcMain.handle(IPC.browserViewCommand, (event, botId, tabId, command) => { assertWindow(event); return botViews.operate(String(botId), 'command', { tabId: String(tabId), command }) })
+  ipcMain.handle(IPC.browserViewFocus, (event, botId, tabId) => { assertWindow(event); return botViews.operate(String(botId), 'focus', { tabId: String(tabId) }) })
+  ipcMain.handle(IPC.browserViewRead, (event, botId, tabId, script) => { assertWindow(event); return botViews.operate(String(botId), 'read', { tabId: String(tabId), script }) })
+  ipcMain.handle(IPC.browserViewClose, (event, botId, tabId) => { assertWindow(event); return botViews.operate(String(botId), 'close', { tabId: String(tabId) }) })
+  ipcMain.handle(IPC.browserViewHold, (event, botId, held) => { assertWindow(event); return botViews.hold(String(botId), held === true) })
   ipcMain.handle(IPC.dataLocation, (event) => {
     assertWindow(event)
     return { path: places.dataDir, fixed }
@@ -185,8 +350,19 @@ async function start() {
   // A packaged app has the icon in its bundle; Electron's own run shows Electron's.
   if (process.platform === 'darwin' && !app.isPackaged) app.dock?.setIcon(iconFile)
   createWindow()
-  // The launch URL trades its token for the Host's cookie and goes on to the page.
-  void ready.then(({ url }) => mainWindow?.loadURL(url)).catch(() => {})
+  // The launch URL trades its token for the Host's cookie and goes on to the page. The cookie
+  // is there once that load came through. The token is good for one browser only: it is spent
+  // as soon as a window carries it.
+  bootstrap = (async () => {
+    const { url } = await ready
+    launchUrl = url
+    const win = mainWindow
+    if (win === undefined) return false
+    tokenSpent = true
+    await win.loadURL(url)
+    hostReady = true
+    return true
+  })().catch(() => false)
 }
 
 // The Host starts once on the new data location first: DSH then sets up its project list
@@ -298,7 +474,7 @@ async function moveData(workspace) {
   const signal = copyAbort.signal
   copying = (async () => {
     // The settings go away first, so that nothing moves the team workspace from here on.
-    void mainWindow?.loadURL(notePage(t.moving))
+    void mainWindow?.loadURL(notePage(t.moving)).catch(() => {})
     await stopHost()
     // The app may have heard of a team workspace change while the Host stopped.
     if (await refused()) {
@@ -347,16 +523,24 @@ function startUpdates() {
   if (!updatesEnabled({ packaged: app.isPackaged, isolated: throwaway, feed })) return undefined
   if (process.platform === 'darwin') {
     return watchReleases({
-      current: app.getVersion(), arch: process.arch, feed, ask: throwaway ? undefined : askDownload, open: url => shell.openExternal(url),
+      current: app.getVersion(), arch: process.arch, feed, ask: throwaway ? undefined : version => downloadPrompt.prompt(version), open: url => electronShell.openExternal(url),
     })
   }
-  if (process.platform === 'win32') {
-    return watchUpdates({ updater: electronUpdater.autoUpdater, current: app.getVersion(), feed, ask: throwaway ? undefined : askRestart, beforeInstall: stopHost })
+  if (process.platform === 'linux' && process.env.APPIMAGE === undefined) {
+    const arch = { x64: 'amd64', arm64: 'arm64' }[process.arch] ?? process.arch
+    return watchReleases({ current: app.getVersion(), arch: process.arch, feed, ask: throwaway ? undefined : version => downloadPrompt.prompt(version), open: url => electronShell.openExternal(url), asset: version => `ChemClaw-${version}-linux-${arch}.deb` })
+  }
+  if (process.platform === 'win32' || process.platform === 'linux') {
+    return watchUpdates({ updater: electronUpdater.autoUpdater, current: app.getVersion(), feed, ask: throwaway ? undefined : version => restartPrompt.prompt(version), beforeInstall: () => { shell.beginQuit(); return stopHost() } })
   }
   return undefined
 }
 
-async function askRestart(version) {
+function windowShown() {
+  return mainWindow !== undefined && !mainWindow.isDestroyed() && mainWindow.isVisible() && !mainWindow.isMinimized()
+}
+
+async function askRestartNow(version) {
   // After a failed start, fail() installs the update itself.
   if (failed) return false
   const t = localeText(UPDATE_TEXT)
@@ -365,7 +549,7 @@ async function askRestart(version) {
   return response === 0
 }
 
-async function askDownload(version) {
+async function askDownloadNow(version) {
   if (failed) return false
   const t = localeText(UPDATE_TEXT)
   const options = { type: 'info', title: 'ChemClaw', message: t.available(version), detail: t.availableDetail, buttons: [t.download, t.later], defaultId: 0, cancelId: 1, noLink: true }
@@ -373,10 +557,27 @@ async function askDownload(version) {
   return response === 0
 }
 
+async function installUpdate() { await updates?.install() }
+
+async function openUpdatePage() {
+  const state = await updates?.latest()
+  if (typeof state?.page === 'string' && state.page.startsWith('https://')) {
+    await electronShell.openExternal(state.page)
+  }
+}
+
+const restartPrompt = createDeferredPrompt({ ask: askRestartNow, shown: windowShown, onYes: installUpdate })
+const downloadPrompt = createDeferredPrompt({ ask: askDownloadNow, shown: windowShown, onYes: openUpdatePage })
+
+async function flushDeferredUpdate() {
+  await restartPrompt.flush()
+  await downloadPrompt.flush()
+}
+
 function createWindow() {
   const dark = nativeTheme.shouldUseDarkColors
   const win32 = process.platform === 'win32'
-  mainWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1320, height: 860, minWidth: 720, minHeight: 480,
     title: 'ChemClaw', show: false, icon: iconFile,
     backgroundColor: '#faf9f5',
@@ -392,16 +593,36 @@ function createWindow() {
       additionalArguments: [`--chemclaw-origin=${origin}`, ...(win32 ? [`--chemclaw-caption=${String(CAPTION_HEIGHT)}`, ...(mica ? ['--chemclaw-mica'] : [])] : [])],
     },
   })
-  mainWindow.once('ready-to-show', () => { mainWindow?.show() })
-  mainWindow.on('page-title-updated', (event) => { event.preventDefault() })
-  mainWindow.on('closed', () => { mainWindow = undefined })
-  const contents = mainWindow.webContents
+  mainWindow = win
+  // A window that the shell has hidden, or that the app is leaving, stays out of sight.
+  win.once('ready-to-show', () => {
+    if (win.isDestroyed() || shell.isQuitting() || shell.isHidden(win)) return
+    win.show()
+  })
+  win.on('page-title-updated', (event) => { event.preventDefault() })
+  win.on('closed', () => {
+    if (mainWindow !== win) return
+    mainWindow = undefined
+    // The Bot browsers' tabs belonged to this window; they wait for the next one.
+    botViews?.release()
+  })
+  // The window hides instead of closing; the shell decides when it really goes.
+  shell.watch(win)
+  browserGuests.bind(win)
+  // The tabs that outlived the last window join this one.
+  botViews?.attach(win)
+  const contents = win.webContents
+  // The session is the same for every window of the app, so the handler is bound once.
+  if (!downloadsBound) {
+    downloadsBound = true
+    contents.session.on('will-download', downloadSaver({ window: () => mainWindow, dialog, downloads: app.getPath('downloads') }))
+  }
   if (win32) {
     // Fullscreen hides the caption buttons, and the page drops its band meanwhile. A reload
     // registers the page's listener again, so the state goes out after every load too.
-    const sendFullscreen = () => { if (mainWindow !== undefined) contents.send(IPC.fullscreen, mainWindow.isFullScreen()) }
-    mainWindow.on('enter-full-screen', sendFullscreen)
-    mainWindow.on('leave-full-screen', sendFullscreen)
+    const sendFullscreen = () => { if (mainWindow !== undefined) contents.send(IPC.fullscreen, win.isFullScreen()) }
+    win.on('enter-full-screen', sendFullscreen)
+    win.on('leave-full-screen', sendFullscreen)
     contents.on('did-finish-load', sendFullscreen)
   }
   if (mica) {
@@ -434,19 +655,86 @@ function createWindow() {
       if (input.type === 'keyDown' && (input.key === 'F12' || (input.control && input.shift && input.key.toLowerCase() === 'i'))) contents.toggleDevTools()
     })
   }
-  void mainWindow.loadURL(notePage(text().starting))
+  // The window that is shown again asks for the update that waited for it. A window that was
+  // minimized asks for it when it comes back.
+  win.on('show', () => { void flushDeferredUpdate().catch((error) => { console.error(error) }) })
+  win.on('restore', () => { void flushDeferredUpdate().catch((error) => { console.error(error) }) })
+  void win.loadURL(notePage(text().starting)).catch(() => {})
+  return win
+}
+
+// The window is gone for good: a new one takes its place and talks to the Host that runs.
+function rebuildWindow() {
+  const win = createWindow()
+  void connectHost(win).catch((error) => { console.error(error) })
+  return win
+}
+
+// The window talks to the Host that runs. The first one trades the launch URL for the Host's
+// cookie; the later ones use the plain address, which that cookie carries. The launch URL is
+// used again only when no browser carried it at all, so that a token is never spent twice.
+async function connectHost(win) {
+  if (hostReady) { await win.loadURL(`${origin}/`); return }
+  // The first load of the Host decides how this window comes in.
+  if (bootstrap !== undefined) await bootstrap
+  if (hostReady) { await win.loadURL(`${origin}/`); return }
+  // The first load never came through. The cookie may be there anyway: it belongs to the
+  // session of the browser, which outlives the window.
+  if (await hostCookie()) {
+    hostReady = true
+    await win.loadURL(`${origin}/`)
+    return
+  }
+  // There is no cookie: the launch URL is the one way in, and only while it was not used.
+  if (launchUrl !== undefined && !tokenSpent) {
+    tokenSpent = true
+    await win.loadURL(launchUrl)
+    hostReady = true
+    return
+  }
+  await win.loadURL(`${origin}/`)
+}
+
+// The Host's cookie: the launch URL trades its token for it. The app does not need to know
+// its name, only whether the browser holds one for the Host's address.
+async function hostCookie() {
+  try {
+    const cookies = await session.defaultSession.cookies.get({ url: `${origin}/` })
+    return cookies.length > 0
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+// The mark of the tray: the file of this platform, and on macOS the template that follows the
+// colour of the menu bar.
+function trayImage() {
+  const image = nativeImage.createFromPath(iconFile)
+  if (image.isEmpty()) throw new Error('The ChemClaw tray icon could not be read')
+  return process.platform === 'darwin' ? image.resize({ width: 18, height: 18 }) : image
 }
 
 function setMenu() {
   if (process.platform !== 'darwin') { Menu.setApplicationMenu(null); return }
-  Menu.setApplicationMenu(Menu.buildFromTemplate([{ role: 'appMenu' }, { role: 'fileMenu' }, { role: 'editMenu' }, { role: 'viewMenu' }, { role: 'windowMenu' }]))
-}
-
-function focusWindow() {
-  if (mainWindow === undefined || failed) return
-  if (mainWindow.isMinimized()) mainWindow.restore()
-  mainWindow.show()
-  mainWindow.focus()
+  const t = localeText(SHELL_TEXT)
+  // The application menu of macOS, without its Quit: the tray's Quit is the one ordinary way
+  // out. Only when the tray is not there does the menu carry one, so that the app can still
+  // be ended.
+  const items = [
+    { role: 'about' },
+    { type: 'separator' },
+    { role: 'services' },
+    { type: 'separator' },
+    { role: 'hide' }, { role: 'hideOthers' }, { role: 'unhide' },
+  ]
+  if (!shell.hasTray()) {
+    items.push({ type: 'separator' }, { label: t.quit, click: () => { shell.quit() } })
+  }
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    { label: app.name, submenu: items },
+    { role: 'fileMenu' }, { role: 'editMenu' }, { role: 'viewMenu' }, { role: 'windowMenu' },
+  ]))
 }
 
 function assertWindow(event) {
@@ -460,7 +748,7 @@ function fromWindow(event) {
 }
 
 function openOutside(url) {
-  if (/^https?:\/\//iu.test(url)) void shell.openExternal(url)
+  if (/^https?:\/\//iu.test(url)) void electronShell.openExternal(url)
 }
 
 // A new version may fix what keeps this one from starting.
@@ -474,7 +762,7 @@ async function fail(error) {
   const next = found ? `\n\n${found.page ? t.onFailurePage(found.version) : t.onFailure(found.version)}` : ''
   dialog.showErrorBox('ChemClaw', `${text().notStarted}\n\n${error instanceof Error ? error.message : String(error)}${next}`)
   if (found?.page) {
-    if (!throwaway) await shell.openExternal(found.page)
+    if (!throwaway) await electronShell.openExternal(found.page)
     app.quit()
     return
   }

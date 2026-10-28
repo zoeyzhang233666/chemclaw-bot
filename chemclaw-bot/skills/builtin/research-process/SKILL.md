@@ -19,3 +19,13 @@ database match is not process-safety approval. Business facts override examples.
 
 Load the packaged MIT community grilling, brainstorming and verification
 references selectively when deeper methodology helps the task.
+
+Answer the user's actual question with the smallest useful verified result first.
+A price or basis lookup should query the appropriate source and follow the
+conversational visualization rules: use the answer's shape to choose the native
+view automatically, respecting an explicit request for text only. Do not expand it into a full research report
+or call a team review unless the task needs one. Delegate only distinct missing
+work; never request approval, acknowledgements or repeated review from peers.
+Mark gaps and deliver partial findings promptly instead of delaying for perfect
+coverage. Group views are for completed answers to humans (including @ questions),
+not peer messages. Stop iterating once the requested decision is supported.

@@ -124,6 +124,10 @@ function decide(body) {
   }).filter(message => message.role !== 'user' || message.content.length > 0)
   const last = messages.at(-1)
   const blocks = Array.isArray(last?.content) ? last.content : []
+  if (last?.role === 'user' && textBlocks(last.content).some(value => value.startsWith('chemclaw-bot/side\n'))) {
+    const pairs = messages.filter(message => message.role === 'assistant' && textBlocks(message.content).some(value => value.startsWith('Side note:'))).length
+    return [text(`Side note: ${pairs} earlier pair(s) seen.`)]
+  }
   const me = /You are (.+?), a Bot on the user's team/.exec(system)?.[1] ?? 'Bot'
   const isMain = system.includes('You are the Main Bot')
   const isRelay = system.includes('# Group chat relay')
@@ -187,6 +191,24 @@ function decide(body) {
     const resultText = typeof result.content === 'string' ? result.content : textOf(result.content)
     const call = [...messages].reverse().find(m => m.role === 'assistant' && Array.isArray(m.content) && m.content.some(b => b.type === 'tool_use'))
     const used = call?.content.find(b => b.type === 'tool_use' && b.id === result.tool_use_id) ?? call?.content.find(b => b.type === 'tool_use')
+    const completionAt = messages.findLastIndex(m => m.role === 'user' && !isResults(m) && /(?:^|\n)(?:User: )?验收甲醇现货价格和上下游产业链(?:\r?\n|$)/.test(textOf(m.content).trim()))
+    if (completionAt >= 0 && used?.name === 'list_bots') {
+      const done = messages.slice(completionAt + 1).filter(isResults).length
+      if (done < 12) return [tool('list_bots', {})]
+      return [tool('chem_deliver', {
+        report: JSON.stringify({ title: '任务完成验收（合成数据）', filename: `${me}-completion-check`, sections: [{ title: '文件交付', text: '仅为隔离 mock 验收，不是实际甲醇行情。', table: { columns: ['日期', '验收值'], rows: [['2026-10-25', 100], ['2026-10-26', 102], ['2026-10-27', 101]] } }] }), formats: 'html,xlsx',
+      })]
+    }
+    if (completionAt >= 0 && used?.name === 'chem_deliver') return [tool('show_view', {
+      audience: 'user', title: '任务完成验收（合成数据）', await_reply: false,
+      view: { type: 'chart', kind: 'line', categories: ['2026-10-25', '2026-10-26', '2026-10-27'], series: [{ name: '验收值', values: [100, 102, 101] }], unit: '测试单位', caption: '合成数据，不是实际甲醇行情。' },
+    })]
+    if (completionAt >= 0 && used?.name === 'show_view') {
+      const files = messages.slice(completionAt + 1).filter(isResults).flatMap(m => m.content.filter(b => b.type === 'tool_result')).flatMap(block => {
+        try { return JSON.parse(typeof block.content === 'string' ? block.content : textOf(block.content)).files ?? [] } catch { return [] }
+      })
+      return [text(`任务完成验收：12 步研究后已交付图表和 HTML、Excel，未要求用户追问或继续。仅为合成验收数据。\n\n${files.map(file => `[${file.path.split(/[\\/]/).at(-1)}](${file.path})`).join('\n')}`)]
+    }
     // "长任务 N [K]": N steps in one turn, each adding about K thousand characters (default 4).
     const openerAt = messages.findLastIndex(m => m.role === 'user' && !isResults(m) && /^长任务\s*\d+/.test(textOf(m.content).trimStart()))
     if (openerAt !== -1 && used?.name === 'list_bots') {
@@ -206,6 +228,7 @@ function decide(body) {
     }
     // Secret cards: a key already there is echoed at once; a card ends the turn.
     // The note after the card can ride in the same message as the card's tool result.
+    if (used?.name === 'show_view' && used.input.title === '合成数据趋势验收') return [text('走势查询完成：以下仅为合成验收数据，缺口保持为空。')]
     if (used?.name === 'request_secret') {
       if (/already saved/.test(resultText)) return [echoSecret(used.input.name, tools)]
       const note = textBlocks(last.content).find(value => value.trim().startsWith('[Secret card]'))
@@ -270,6 +293,10 @@ function decide(body) {
       case 'recall': return [text(`记忆里有：\n${resultText}`)]
       case 'web_search': return [text(result.is_error ? `搜索失败：${resultText}` : `搜到了：\n${resultText}`)]
       case 'working_directory': return [text(result.is_error ? `没进去：${resultText}` : `现在在 ${resultText}`)]
+      case 'browser_open': {
+        const title = /^Title: (.+)$/m.exec(resultText)?.[1]
+        return [text(title ? `浏览器检查完成：${title}` : `浏览器检查失败：${resultText.slice(0, 200)}`)]
+      }
       case 'read_browser': {
         const title = /^Title: (.+)$/m.exec(resultText)?.[1]
         const body = (resultText.split(/^Text[^\n]*:\n/m)[1] ?? '').split('\n\nLinks and controls')[0].replace(/\s+/g, ' ').trim()
@@ -280,6 +307,9 @@ function decide(body) {
   }
 
   const userText = textOf(last?.content).trim()
+  if (/^(?:\[Message from [^\]]*\]\s*)?验收甲醇现货价格和上下游产业链$/.test(userText)) return [tool('list_bots', {})]
+  const browserCheck = /^浏览器检查 (http:\/\/127\.0\.0\.1:\d+\/)$/.exec(userText)
+  if (browserCheck && tools.has('browser_open')) return [tool('browser_open', { url: browserCheck[1] })]
   // "撑爆": the provider rejects the request as past its window.
   if (userText.startsWith('撑爆')) return 'overflow'
   // A file in the message (a long Bot message, a file the user sent): DSH gives its saved
@@ -342,6 +372,16 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    if (userLine === 'User: 验收甲醇现货价格和上下游产业链') return [tool('list_bots', {})]
+    if (/查询合成走势验证/.test(userLine) && tools.has('show_view')) {
+      const dates = Array.from({ length: 57 }, (_, index) => new Date(Date.UTC(2026, 8, index + 1)).toISOString().slice(0, 10))
+      return [text('先给查询结果。'), tool('show_view', { audience: 'user', title: '合成数据趋势验收', await_reply: false,
+        view: { type: 'stack', children: [
+          { type: 'chart', kind: 'line', categories: dates, series: [{ name: '合成样例', values: dates.map((_, index) => index === 20 ? null : 3000 + (index % 9) * 30) }], unit: '元/吨', caption: '仅为隔离验收的合成数据，9月21日缺失' },
+          { type: 'sources', items: [{ label: '合成验收数据', url: 'https://example.com/synthetic' }] },
+        ] },
+      })]
+    }
     if (/生成群交付样例/.test(userLine) && tools.has('chem_deliver')) return [tool('chem_deliver', {
       report: JSON.stringify({ title: '纯碱成本利润测算验收', filename: '纯碱成本利润测算_20261023', sections: [{ title: '文件链接验收', text: '这是隔离 mock 样例，用于验证群聊表格文件名和相对链接都能打开真实文件。', table: { columns: ['项目', '测试数值'], rows: [['样例成本', 100], ['样例利润', 20]] } }] }), formats: 'html,xlsx',
     })]

@@ -3,7 +3,7 @@ import { isHex, inkText, paintCss } from './inks.js'
 import { DEFAULT_MASK, SHAPES, markupCache, maskOf } from './characters.js'
 import { createSource, EMPTY_ROSTER, indexRoster, isAgentSession } from './sources.js'
 import { teamActions } from './team-actions.js'
-import { themeCss, shellTokens, registry, registerShape, registerTheme, allThemes } from './themes.js'
+import { themeCss, shellTokens, registry, registerShape, registerTheme, allThemes, layoutOf, widthOf, flatWidthOf } from './themes.js'
 import { MENTION_ORIGIN, currentPart } from './text.js'
 import { SHELL_CSS, CONVERSATION_CSS, installStyles, installCompiledStyles } from './styles.js'
 import { lookOf } from './mark.js'
@@ -16,10 +16,13 @@ import { VOICE_BUNDLE } from './speech.js'
 import { sameVersion } from './dsh-offer.js'
 import { QuestionCard, QuestionDock } from './questions.js'
 import { AnsweredReply, WidgetDock, WIDGET_CSS } from './widget-cell.js'
+import { HandoffDock, HANDOFF_CSS } from './handoff-card.js'
 import { installHeaderNavigation } from './header-navigation.js'
 import { AssistantCell, TriggerCell, TurnProcessCell, Nothing, TurnTailCell, ToolCell } from './cells.js'
 import { Overlays } from './overlays.js'
 import { createBotBrowsers, serveBrowserReads } from './bot-browsers.js'
+import { BtwDock, BtwTurnTail } from './btw.js'
+import { SIDE_CSS, sideSource } from './side-chat.js'
 import { BROWSER_CSS } from './browser-pane.js'
 import { SECRET_CSS, SecretDock } from './secret-card.js'
 import { PROVIDERS_CSS } from './providers-page.js'
@@ -60,7 +63,7 @@ export function apply(ctx) {
   let seenAt = seenStore.read()
   // `details` is the panel's subject (a Session id); `view` picks details or the
   // subject Bot's browser inside it.
-  const ui = createSource({ details: null, view: 'details', renaming: false, tab: null, newChat: null, exchange: null, menu: null, voice: null, palette: null, quote: null, settings: null, memory: null, toast: null, signIn: null, renameAgent: null, unread: unreadStore.read(), reactions: reactionStore.read(), visits: {} })
+  const ui = createSource({ details: null, view: 'details', renaming: false, tab: null, side: null, newChat: null, exchange: null, menu: null, voice: null, palette: null, quote: null, settings: null, memory: null, toast: null, signIn: null, renameAgent: null, unread: unreadStore.read(), reactions: reactionStore.read(), visits: {} })
   // Bot mode paints the whole team surface; Agent mode withdraws every slot and
   // style so the shell's own interface returns. `plain` stays false until a Bot-mode
   // view hosts a plain session, which drops only the conversation replacements.
@@ -162,6 +165,8 @@ export function apply(ctx) {
     if (value.connectors !== undefined && JSON.stringify(value.connectors) !== JSON.stringify(current.connectors ?? [])) live.connectors = value.connectors
     if (value.capabilityStatuses !== undefined && JSON.stringify(value.capabilityStatuses) !== JSON.stringify(current.capabilityStatuses ?? {})) live.capabilityStatuses = value.capabilityStatuses
     if (Object.keys(live).length > 0 && current.ready) roster.set({ ...current, ...live })
+    if (value.btwCards !== undefined && JSON.stringify(value.btwCards) !== JSON.stringify(current.btwCards ?? {})) live.btwCards = value.btwCards
+    if (value.sideChats !== undefined && JSON.stringify(value.sideChats) !== JSON.stringify(current.sideChats ?? {})) live.sideChats = value.sideChats
     if (value.unchanged || (value.revision === current.revision && value.modelsKey === current.modelsKey)) return
     // On a browser with no visit record yet, everything already there counts as seen.
     if (Object.keys(seenAt).length === 0) leaveVisits([...value.bots, ...value.rooms].map(entry => entry.id))
@@ -232,7 +237,7 @@ export function apply(ctx) {
 
   // Bot browsers need the Desktop shell's webview bridge, and the host serves
   // read_browser only in the Desktop profile (`browser` in the state).
-  const bridge = window.dshDesktop?.protocolVersion === 1 ? window.dshDesktop.browser ?? null : null
+  const bridge = (window.dshDesktop?.protocolVersion === 1 ? window.dshDesktop.browser : globalThis.dsBotApp?.browser) ?? null
   const browsers = bridge ? createBotBrowsers({ bridge, createSource }) : null
   if (browsers) {
     ctx.effect(() => {
@@ -297,8 +302,14 @@ export function apply(ctx) {
       const id = themes[prefs.theme] ? prefs.theme : 'paper'
       const accent = isHex(prefs.accent) ? prefs.accent : undefined
       const motion = prefs.motion === 'quiet' || prefs.motion === 'lively' ? prefs.motion : 'normal'
+      const layout = layoutOf(prefs)
+      const width = widthOf(prefs)
+      const flatWidth = flatWidthOf(prefs)
       document.body.dataset.btMotion = motion
-      const next = `${id}|${accent ?? ''}|${motion}|${registry.getSnapshot()}`
+      document.body.dataset.btLayout = layout
+      document.body.style.setProperty('--bt-msg-w', String(width / 100))
+      document.body.style.setProperty('--bt-flat-w', String(flatWidth / 100))
+      const next = `${id}|${accent ?? ''}|${motion}|${layout}|${width}|${flatWidth}|${prefs.thinking === true}|${registry.getSnapshot()}`
       if (next === key) return
       key = next
       style.textContent = themeCss(themes[id], accent)
@@ -306,7 +317,7 @@ export function apply(ctx) {
       releaseTokens = ctx.theme.overrideTokens('chemclaw-bot', shellTokens(themes[id]))
       if (typeof release === 'function') release()
       if (snapshot.ready) {
-        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion })) } catch { /* storage unavailable */ }
+        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion, layout: prefs.layout, width: prefs.width, flatWidth: prefs.flatWidth, thinking: prefs.thinking })) } catch { /* storage unavailable */ }
       }
     }
     render()
@@ -319,6 +330,9 @@ export function apply(ctx) {
         if (typeof releaseTokens === 'function') releaseTokens()
       } finally {
         delete document.body.dataset.btMotion
+        delete document.body.dataset.btLayout
+        document.body.style.removeProperty('--bt-msg-w')
+        document.body.style.removeProperty('--bt-flat-w')
         style.remove()
       }
     }
@@ -559,9 +573,35 @@ export function apply(ctx) {
       browserNavigate: (tabId, input) => browsers.navigate(tabId, input),
       browserCommand: (tabId, name) => browsers.command(tabId, name),
       browserFocus: (tabId) => browsers.focus(tabId),
+      browserImport: typeof bridge.importSources === 'function' ? {
+        sources: () => bridge.importSources(),
+        pick: () => bridge.importPick(),
+        live: (source, close) => bridge.importLive(source, close),
+        apply: (botId, pending) => bridge.importApply(`bot:${botId}`, pending),
+        cancel: pending => bridge.importCancel(pending),
+      } : null,
+      browserTakeover: bridge.views ? async botId => {
+        const result = await call('browser-takeover', { botId })
+        await bridge.views.hold(botId, true)
+        return result
+      } : undefined,
+      browserStop: bridge.views ? async botId => {
+        const result = await call('browser-stop', { botId })
+        await bridge.views.hold(botId, true)
+        return result
+      } : undefined,
+      // `answer` is a handoff card's { callId, outcome }; the panel's Give back sends none.
+      browserGiveBack: bridge.views ? async (botId, answer = {}) => {
+        const result = await call('browser-give-back', { botId, ...answer })
+        await bridge.views.hold(botId, false)
+        return result
+      } : undefined,
+
     })
   }
   // Whether AccountLauncher holds the shell's settings seat; FooterAccount steps aside if so.
+  actions.signInEntry = () => ctx.slots.entries?.('settings.models.sign-in')?.[0] ?? null
+  actions.accountT = () => ctx.get('locale')?.bind('settings.account') ?? (key => key)
   actions.canSignIn = () => true
   actions.signIn = () => ui.set(state => ({ ...state, signIn: (state.signIn ?? 0) + 1 }))
   actions.closeSignIn = () => ui.set(state => ({ ...state, signIn: null }))
@@ -601,9 +641,31 @@ export function apply(ctx) {
     update.set(previous => ({ ...value, app: previous.app }))
     wakeUpdate()
   }
+  actions.canOpenTerminal = () => ctx.get('sidebarRight') !== undefined && ctx.get('sidebarRightTabs')?.get('terminal') !== undefined
+  actions.newTerminal = () => {
+    // The column takes the drawer's space: hand it over first.
+    actions.closePanel()
+    try {
+      ctx.get('sidebarRight')?.openTab('terminal')
+    } catch (error) {
+      actions.reportError(error, 'right-sidebar')
+    }
+  }
+  // The same hand-off for DSH's files tab, where that plugin registered it.
+  actions.canOpenFiles = () => ctx.get('sidebarRight') !== undefined && ctx.get('sidebarRightTabs')?.get('files') !== undefined
+  actions.openFiles = () => {
+    actions.closePanel()
+    try {
+      ctx.get('sidebarRight')?.openTab('files')
+    } catch (error) {
+      actions.reportError(error, 'right-sidebar')
+    }
+  }
+
   const browserPages = browsers?.pages ?? createSource({})
   const browserTabs = browsers?.tabs ?? createSource({})
-  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, surface, update } })
+  const browserHolds = browsers?.holds ?? createSource({})
+  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, browserHolds, surface, update } })
   ctx.effect(() => noticeApprovals({
     work,
     roster,
@@ -628,6 +690,29 @@ export function apply(ctx) {
     } }
   }
 
+  actions.turnFacts = (sessionId) => {
+    try {
+      const binding = ctx.sessions.binding(sessionId)
+      if (binding === undefined) return { turns: undefined, openTurn: undefined }
+      const conversation = ctx.uiConversation.binding(binding)
+      const chat = conversation.target('chat').getSnapshot()
+      return { turns: chat?.timeline?.turns, openTurn: conversation.openTurn.getSnapshot() }
+    } catch {
+      return { turns: undefined, openTurn: undefined }
+    }
+  }
+  actions.watchTurns = (sessionId, listener) => {
+    try {
+      const binding = ctx.sessions.binding(sessionId)
+      if (binding === undefined) return () => {}
+      const conversation = ctx.uiConversation.binding(binding)
+      const offChat = conversation.target('chat').subscribe(listener)
+      const offOpen = conversation.openTurn.subscribe(listener)
+      return () => { offChat(); offOpen() }
+    } catch {
+      return () => {}
+    }
+  }
   // A Bot surface owns the cells it shadows. It starts far below the -10 that plugins
   // commonly use and goes below whatever already holds the cell, so a plugin that
   // shadows the same cell neither breaks the install nor shows through.
@@ -649,7 +734,7 @@ export function apply(ctx) {
           return binding === undefined ? undefined : triggers.sessionOf(binding.ctx)
         }
         const launched = sessionId => controllerOf(sessionId)?.launcher.getSnapshot() === CHATS_SOURCE
-        const offs = [...atSources({ roster, sessions: ctx.sessions, launched, iconFor: menuIcons(roster) }), skillSource({ roster, actions, controllerOf })].map(source => triggers.registerSource(source))
+        const offs = [...atSources({ roster, sessions: ctx.sessions, launched, iconFor: menuIcons(roster) }), skillSource({ roster, actions, controllerOf }), sideSource({ roster, actions })].map(source => triggers.registerSource(source))
         atMenu = { controllerOf }
         return () => {
           atMenu = null
@@ -682,7 +767,8 @@ export function apply(ctx) {
     () => installCompiledStyles(MEMBER_CSS, 'members'),
     () => installCompiledStyles(USER_MESSAGE_CSS, 'user-messages'),
     () => installCompiledStyles(WIDGET_CSS, 'widgets'),
-    browsers ? () => installCompiledStyles(BROWSER_CSS, 'browser') : null,
+    () => installCompiledStyles(HANDOFF_CSS, 'handoff'),
+    () => installCompiledStyles(BROWSER_CSS + SIDE_CSS, 'browser'),
     () => installTheme(),
     () => shadow('sidebar.workspaces', { priority: BOT_PRIORITY, inject: face }, TeamSidebar),
     () => shadow('sidebar.brand.mark', { priority: BOT_PRIORITY }, BrandMark),
@@ -722,6 +808,8 @@ export function apply(ctx) {
     // every message.
     () => shadow('conversation.chat.node', { key: 'question-reply', priority: BOT_PRIORITY, locale: 'chat' }, AnsweredReply),
     () => shadow('conversation.chat.node', { key: 'compaction', priority: BOT_PRIORITY, locale: 'chat' }, Nothing),
+    () => shadow('conversation.chat.node', { key: 'context', priority: BOT_PRIORITY, locale: 'chat' }, Nothing),
+    () => shadow('conversation.chat.turnTail', { id: 'bot-btw', order: 800, priority: BOT_PRIORITY, inject: face }, BtwTurnTail),
     ...(canDrawUserMessages() ? ['user', 'steering'].map(key => () => shadow('conversation.chat.node', { key, priority: BOT_PRIORITY, locale: 'chat', inject: face }, UserMessageCell)) : []),
     () => shadow('conversation.input.permission', { priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.input.plan', { priority: BOT_PRIORITY }, Nothing),
@@ -730,6 +818,7 @@ export function apply(ctx) {
     () => shadow('conversation.input.model', { priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'activity', order: 0, priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'usage', order: 1, priority: BOT_PRIORITY }, Nothing),
+    () => shadow('conversation.composer.dock', { id: 'btw', order: 2, priority: BOT_PRIORITY, inject: face }, BtwDock),
     () => shadow('conversation.input.left', { id: 'bot-plus', order: -100, inject: face }, ComposerPlus),
     () => shadow('conversation.input.right', { id: 'bot-voice', order: 100, inject: face }, ComposerVoice),
     () => shadow('conversation.composer', {
@@ -742,6 +831,7 @@ export function apply(ctx) {
     () => shadow('conversation.input.dock', { id: 'bot-question', order: -100, inject: face }, QuestionDock),
     () => shadow('conversation.input.dock', { id: 'bot-view', order: -95, inject: face }, WidgetDock),
     () => shadow('conversation.input.dock', { id: 'bot-secret', order: -90, inject: face }, SecretDock),
+    () => shadow('conversation.input.dock', { id: 'bot-handoff', order: -85, inject: face }, HandoffDock),
   ]
   // The return button belongs to neither group: it renders only in Agent mode.
   ctx.effect(() => installCompiledStyles(RETURN_CSS, 'return'), 'chemclaw-bot: return styles')

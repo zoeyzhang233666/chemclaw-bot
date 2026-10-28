@@ -4,6 +4,7 @@ import { CheckIcon, CloseIcon, CopyIcon, DotsIcon, DownloadIcon, InfoIcon } from
 import { t } from './i18n.js'
 import { AnsweredCell, keyLetter, useOptionKeys } from './questions.js'
 import { useDockHold } from './card-hold.js'
+import { SettledHandoff } from './handoff-card.js'
 import { heldCardKey } from './sources.js'
 import { Segmented } from './motion.js'
 import { CHART_CSS, TableIcon, WidgetChart } from './widget-chart.js'
@@ -406,6 +407,11 @@ function WidgetCard({ title, view, onSubmit, onDismiss, busy = false, raised = f
   h('div', { className: 'bt-view-body' }, h(WidgetView, { view, onSubmit, settled, answer, busy, registerChart, refreshCharts })))
 }
 
+export function DeliveredView({ title, view }) {
+  const checked = checkShownView(title, view)
+  return checked.error || checked.interactive ? null : h(WidgetCard, { title: checked.title, view: checked.view })
+}
+
 // A view waiting for its answer, inline at its call or raised in the dock. Like a
 // pending question it hides on submit and comes back if the reply fails.
 export function PendingView({ sessionId, view, actions, inline }) {
@@ -442,7 +448,7 @@ export function WidgetCell({ sessionId, callId, args, done, isError, roster, act
   // Display-only cards draw from the recorded call arguments, which keep the
   // provider's encoding: checkShownView measures and unwraps them as the host did.
   // The args accessor reads strings through `text`; `value` drops them.
-  const shown = checkShownView(args?.text?.('title'), args?.value?.('view'))
+  const shown = checkShownView(args?.text?.('title') ?? args?.title, args?.value?.('view') ?? args?.view)
   // A call the host refused — a blueprint it would not show, or a reply it cannot
   // wait for — leaves no card; the model's retry then stays the only one. So does
   // a settled interactive call: answered, dismissed or replaced, it leaves no gap
@@ -479,15 +485,20 @@ export function AnsweredView({ node }) {
   return h('div', { className: 'bt-q-inline' }, h(WidgetCard, { title: view.title ?? '', view: view.view, settled: true, answer }))
 }
 
-// A question reply node carries either questions (data.questions) or a view answer
-// (JSON text discriminated by kind); each shape gets its own renderer.
+// A question reply node carries either questions (data.questions), a view answer or
+// a browser handoff answer (JSON text discriminated by kind); each shape gets its
+// own renderer. A history page has already read the handoff answer into data.handoff.
 export function AnsweredReply({ node }) {
   const data = node?.data ?? {}
   if (Array.isArray(data.views) && data.views.length > 0) return h(AnsweredView, { node })
+  if (typeof data.handoff?.reason === 'string') return h(SettledHandoff, { handoff: data.handoff })
   if (!Array.isArray(data.questions) || data.questions.length === 0) {
     let parsed = null
     try { parsed = typeof data.text === 'string' ? JSON.parse(data.text) : null } catch { parsed = null }
     if (parsed?.kind === 'answer_to_pending_view') return h(AnsweredView, { node })
+    if (parsed?.kind === 'answer_to_pending_handoff' && typeof parsed.reason === 'string') {
+      return h(SettledHandoff, { handoff: { reason: parsed.reason, note: parsed.note ?? '', outcome: parsed.outcome } })
+    }
   }
   return h(AnsweredCell, { node })
 }

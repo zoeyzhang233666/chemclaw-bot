@@ -37,6 +37,30 @@ Install, enable, and restart if asked. Or use the full path to `chemclaw-bot-0.2
 
 For the standalone app, models, connectors and first prompts, see the repository root [README.md](../README.md).
 
+## Side chats
+
+Use `/side <question>` in a Bot chat, or choose **Side chat** in the details menu,
+to ask about progress without interrupting its main task. Follow-ups stay in a
+separate tab and cannot run tools. Closing the panel keeps the history; closing
+a side-chat tab deletes that chat.
+
+## Bot browsers
+
+The ChemClaw desktop app gives each Bot a separate browser with saved login state.
+Ask it to research a website: it can navigate, read pages, click and fill forms.
+Open the Bot's details and choose **Open browser** to follow its work. **Take over**
+revokes Bot control; **Give back** permits it again. **Stop** also cancels the Bot's work.
+Posting, uploading, downloading and deleting request approval. Complete logins,
+payments and captchas yourself when the Bot hands over the browser.
+
+This uses Electron's existing Chromium; no second browser download is required.
+Official DSH keeps its existing defaults. Advanced external hosts can set
+`browserPlugin: refs` (individual actions) or `task` (one goal), plus
+`browserExecutablePath` for a compatible local Chromium. See the
+[browser design](../docs/plans/2026-10-27-browser-automation.md).
+
 ## License
 
 Apache-2.0. See the repository root `NOTICE`.
+
+General settings offer bubble or flat messages, independent bubble/text widths, and an optional thinking display. On touch screens, tap a message to open its actions.
