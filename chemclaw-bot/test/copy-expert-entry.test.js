@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { DICTIONARY, installLocale, t } from '../src/client/i18n.js'
+import { DICTIONARY } from '../src/client/i18n.js'
 
 const client = name => readFileSync(new URL(`../src/client/${name}`, import.meta.url), 'utf8')
 
