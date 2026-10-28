@@ -1144,6 +1144,8 @@ const ZH = {
   'Scheduled task: {text}': '定时任务：{text}',
   // New group chats
   'Choose the group admin': '选择群管理员',
+  'Copy expert': '复制专家',
+  'Choose a Bot to copy…': '选择要复制的专家…',
   'Group admin': '群管理员',
   'Who to chat with…': '想和谁聊…',
   'Add at least one more Bot': '再至少添加一个 Bot',
