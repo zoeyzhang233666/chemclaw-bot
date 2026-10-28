@@ -2355,7 +2355,9 @@ var darkAccent = (accent) => {
 var themeCss = (theme, accent) => `html body{${declarations(themeVars(theme.light, false, accent ?? theme.light.accent))}}
 html body[data-ds-dark-theme]{${declarations(themeVars(theme.dark, true, darkAccent(accent) ?? theme.dark.accent))}}
 ${theme.css ?? ""}`;
-var shellTokens = ({ light, dark }) => ({
+var shellTokens = ({ light, dark }, accent) => ({
+  "--dsw-alias-brand-primary": { light: accent ?? light.accent, dark: darkAccent(accent) ?? dark.accent },
+  "--dsw-alias-state-business-primary": { light: accent ?? light.accent, dark: darkAccent(accent) ?? dark.accent },
   "--dsw-alias-bg-base": { light: light.bg, dark: dark.bg },
   "--dsw-specific-sidebar-fill": { light: light.sidebar, dark: dark.sidebar },
   "--dsw-specific-input-major": { light: light.bg, dark: dark.sidebar },
@@ -12242,11 +12244,17 @@ var RETURN_CSS = `
 function BrandMark({ size = 24 }) {
   return (0, import_react27.createElement)("span", { className: "bt-brand-cloud" }, (0, import_react27.createElement)(ApiHubMark, { size }));
 }
-function BrandName() {
-  return (0, import_react27.createElement)("span", { style: { fontWeight: 600, fontSize: 14 } }, "ChemClaw");
+function HeroBrandMark({ size = 40, className }) {
+  return (0, import_react27.createElement)("span", { className: ["bt-brand-cloud", className].filter(Boolean).join(" "), "aria-hidden": true }, (0, import_react27.createElement)(ApiHubMark, { size }));
 }
+function BrandName() {
+  return (0, import_react27.createElement)("span", { className: "bt-brand-name" }, "ChemClaw");
+}
+var BRAND_CSS = `
+.bt-brand-cloud{display:inline-flex;align-items:center;justify-content:center;flex:none;color:var(--bt-accent);line-height:0}
+.bt-brand-name{font:600 20px/1.2 system-ui,sans-serif;letter-spacing:-.04em;color:var(--bt-ink)}
+`;
 var SIDEBAR_CSS = `
-.bt-brand-cloud{display:inline-flex;flex:none;color:var(--bt-accent)}
 .bt-confirm{width:260px;max-width:72vw;padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
 .bt-confirm-text{margin:0;font-size:13px;line-height:19px;color:var(--bt-ink-2)}
 .bt-confirm-error{margin:0;font-size:12px;line-height:17px;color:var(--bt-danger);overflow-wrap:anywhere}
@@ -23524,7 +23532,7 @@ function apply(ctx) {
       key = next;
       style.textContent = themeCss(themes[id], accent);
       const release = releaseTokens;
-      releaseTokens = ctx.theme.overrideTokens("chemclaw-bot", shellTokens(themes[id]));
+      releaseTokens = ctx.theme.overrideTokens("chemclaw-bot", shellTokens(themes[id], accent));
       if (typeof release === "function") release();
       if (snapshot.ready) {
         try {
@@ -23973,6 +23981,11 @@ function apply(ctx) {
     ...options.priority === void 0 ? {} : { priority: freePriority(ctx.slots.entries(name), options) }
   }, component));
   const installHeader = () => ctx.slots.inject("conversation.session.header", () => installHeaderNavigation(ctx.slots, face, HeaderPill, BOT_PRIORITY));
+  ctx.effect(installTheme, "chemclaw-bot: shared theme");
+  ctx.effect(() => installCompiledStyles(BRAND_CSS, "brand"), "chemclaw-bot: brand styles");
+  shadow("sidebar.brand.mark", { priority: BOT_PRIORITY }, BrandMark);
+  shadow("sidebar.brand.name", { priority: BOT_PRIORITY }, BrandName);
+  shadow("conversation.hero.brand.mark", { priority: BOT_PRIORITY }, HeroBrandMark);
   let atMenu = null;
   const installAtMenu = () => {
     const fiber = ctx.inject(["inputTriggers"], (scope) => {
@@ -24014,10 +24027,7 @@ function apply(ctx) {
     () => installCompiledStyles(WIDGET_CSS, "widgets"),
     () => installCompiledStyles(HANDOFF_CSS, "handoff"),
     () => installCompiledStyles(BROWSER_CSS + SIDE_CSS, "browser"),
-    () => installTheme(),
     () => shadow("sidebar.workspaces", { priority: BOT_PRIORITY, inject: face }, TeamSidebar),
-    () => shadow("sidebar.brand.mark", { priority: BOT_PRIORITY }, BrandMark),
-    () => shadow("sidebar.brand.name", { priority: BOT_PRIORITY }, BrandName),
     () => shadow("sidebar.footer.action", { id: "bot-account", order: -200, inject: face }, FooterAccount),
     () => shadow("sidebar.footer.action", { id: "bot-connect", order: -100, inject: face }, ConnectPlugins),
     () => shadow("settings.trigger", { priority: BOT_PRIORITY }, YouAvatar),

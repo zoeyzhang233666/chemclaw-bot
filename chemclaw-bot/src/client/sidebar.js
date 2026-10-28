@@ -829,15 +829,22 @@ export const RETURN_CSS = `
 export function BrandMark({ size = 24 }) {
   return h('span', { className: 'bt-brand-cloud' }, h(ApiHubMark, { size }))
 }
-export function BrandName() {
-  return h('span', { style: { fontWeight: 600, fontSize: 14 } }, 'ChemClaw')
+export function HeroBrandMark({ size = 40, className }) {
+  return h('span', { className: ['bt-brand-cloud', className].filter(Boolean).join(' '), 'aria-hidden': true }, h(ApiHubMark, { size }))
 }
+export function BrandName() {
+  return h('span', { className: 'bt-brand-name' }, 'ChemClaw')
+}
+
+export const BRAND_CSS = `
+.bt-brand-cloud{display:inline-flex;align-items:center;justify-content:center;flex:none;color:var(--bt-accent);line-height:0}
+.bt-brand-name{font:600 20px/1.2 system-ui,sans-serif;letter-spacing:-.04em;color:var(--bt-ink)}
+`
 
 // With the whale holding the settings seat, the Bot row is just the account menu
 // and Connect plugins; FooterAccount only shows when the seat went to no one. The
 // shell's footer classes are CSS-module names, so they match on their stems.
 export const SIDEBAR_CSS = `
-.bt-brand-cloud{display:inline-flex;flex:none;color:var(--bt-accent)}
 .bt-confirm{width:260px;max-width:72vw;padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
 .bt-confirm-text{margin:0;font-size:13px;line-height:19px;color:var(--bt-ink-2)}
 .bt-confirm-error{margin:0;font-size:12px;line-height:17px;color:var(--bt-danger);overflow-wrap:anywhere}
