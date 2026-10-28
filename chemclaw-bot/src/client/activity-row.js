@@ -1,10 +1,11 @@
-import { createElement as h, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createElement as h, Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { BotMark, RoomAvatar } from './mark.js'
 import { Elapsed, Shimmer, PHRASES } from './cells.js'
 import { noteClientError } from './diagnostics.js'
 import { reducedMotion } from './motion.js'
 import { t } from './i18n.js'
+import { ToolActivities } from './tool-activity.js'
 
 // -------------------------------------------------------------------------
 // The activity row: the Bot's mark and a shimmering phrase at the transcript
@@ -117,6 +118,8 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   const pendingInput = useSession(snapshot => freshInputAt(snapshot?.pendingSubmissions, steeredAt))
   const bot = roster.byId[sessionId]
   const room = roster.roomsById[sessionId]
+  const roomWorkKey = useWork?.(work => JSON.stringify(work.rooms?.[sessionId] ?? [])) ?? '[]'
+  const roomWork = useMemo(() => JSON.parse(roomWorkKey), [roomWorkKey])
   // The one switch the row names: a working-folder move jumps the chat to a fresh
   // part while a turn is not running, so without it the conversation just empties.
   const moveAt = useWork?.((work) => {
@@ -184,11 +187,13 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   useEffect(() => { if (!running) actions.clearLive(sessionId) }, [running, sessionId])
   // Only rows that take the activity row's place grow out of it.
   useRowEntrances(() => leaving.current || Date.now() - endedAt.current < 300)
-  const host = useRunningHost(running || moveAt !== 0)
-  if (!host || phase === null || !shown) return null
-  return createPortal(h('div', { className: 'bt-typing', 'data-exiting': phase === 'out' ? '' : undefined, 'aria-hidden': true },
+  const host = useRunningHost(running || moveAt !== 0 || roomWork.length > 0)
+  if (!host) return null
+  return createPortal(h(Fragment, null,
+    roomWork.map(entry => h(ToolActivities, { key: `${sessionId}:${entry.botId}:${entry.since}`, name: roster.byId[entry.botId]?.name, entries: entry.activities })),
+    phase === null || !shown ? null : h('div', { className: 'bt-typing', 'data-exiting': phase === 'out' ? '' : undefined, 'aria-hidden': true },
     bot ? h(BotMark, { bot, size: 28, state: markState.current, live: true, pokeable: true }) : h(RoomAvatar, { room, roster, size: 28 }),
     h('span', { className: 'bt-typing-text' },
       h('span', { key: `${shown.key}:${shown.at}`, className: 'bt-typing-label' }, h(Shimmer, null, `${shown.text}…`)),
-      h(Elapsed, { at: moveAt !== 0 ? moveAt : Math.max(turnAt ?? runAt.current, inputAt), className: 'bt-typing-time' }))), host)
+      h(Elapsed, { at: moveAt !== 0 ? moveAt : Math.max(turnAt ?? runAt.current, inputAt), className: 'bt-typing-time' })))), host)
 }

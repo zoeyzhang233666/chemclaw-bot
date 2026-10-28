@@ -1,4 +1,5 @@
 import { createElement as h, Fragment, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { isHex, seriesPalette } from './inks.js'
 import { t } from './i18n.js'
 import { asText, resolve } from '../shared/views.js'
 
@@ -8,9 +9,18 @@ import { asText, resolve } from '../shared/views.js'
 // the rest; a legend hides a series; the menu shows the data as a table, copies it
 // as CSV, or saves the chart as a PNG. Colors come from the theme only.
 
-// The first series takes the accent; the rest take the team inks.
-const PALETTE = ['var(--bt-accent)', 'var(--bt-ink-tangerine)', 'var(--bt-ink-green)', 'var(--bt-ink-violet)', 'var(--bt-ink-sky)', 'var(--bt-ink-rose)', 'var(--bt-ink-yellow)', 'var(--bt-ink-cyan)', 'var(--bt-ink-magenta)']
-const colorAt = index => PALETTE[index % PALETTE.length]
+// The first series takes the accent; the rest take team inks that are not too close
+// in hue to the current accent (warm accents prefer blue, blue accents keep tangerine).
+const accentHex = () => {
+  if (typeof getComputedStyle !== 'function' || typeof document === 'undefined' || !document.body) return ''
+  const value = getComputedStyle(document.body).getPropertyValue('--bt-accent').trim()
+  return isHex(value) ? value : ''
+}
+const darkTheme = () => typeof document !== 'undefined' && Boolean(document.body?.hasAttribute('data-ds-dark-theme'))
+const colorAt = index => {
+  const palette = seriesPalette(accentHex(), darkTheme())
+  return palette[index % palette.length]
+}
 const TICK = 10
 const LABEL = 11
 // A rough width for SVG text before it is laid out; wide (CJK) characters count double.

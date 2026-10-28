@@ -92,6 +92,28 @@ test('built-in APIHub uses the verified endpoint, stores credentials separately 
   assert.equal((await rt.catalog({ fresh: true }))[0].provider, 'apihub')
 })
 
+test('built-in OpenCode Go appears in known providers and adds with its Zen Go endpoint', async () => {
+  const { rt, store, writes, discovered } = dsh()
+  const { OPENCODE_GO } = await import('../src/shared/model-providers.js')
+  assert.equal(OPENCODE_GO.id, 'opencode-go')
+  assert.equal(OPENCODE_GO.baseURL, 'https://opencode.ai/zen/go/v1')
+  assert.equal(OPENCODE_GO.apiKeyEnv, 'OPENCODE_API_KEY')
+  const before = await rt.providersView()
+  assert.deepEqual(before.addable.find(entry => entry.id === OPENCODE_GO.id), { id: 'opencode-go', name: 'opencode-go' })
+  const view = await rt.addProvider({ provider: OPENCODE_GO.id, key: 'synthetic-opencode-go' })
+  assert.equal(discovered[0][1].baseURL, OPENCODE_GO.baseURL)
+  assert.equal(discovered[0][1].api, OPENCODE_GO.api)
+  assert.equal(discovered[0][1].apiKey, 'synthetic-opencode-go')
+  assert.deepEqual(writes[0], ['llm-pi-ai', [{ op: 'set', path: ['providers', 'opencode-go'], value: {
+    displayName: 'opencode-go', api: 'openai-completions', baseURL: 'https://opencode.ai/zen/go/v1', apiKeyEnv: 'OPENCODE_API_KEY',
+    models: [{ id: 'relay-1', name: 'Relay One', contextWindow: 128000, input: ['text'] }, { id: 'relay-2' }],
+  } }]])
+  assert.equal(store.OPENCODE_API_KEY, 'synthetic-opencode-go')
+  assert.equal(row(view, 'opencode-go').models.length, 2)
+  assert.equal(view.addable.some(entry => entry.id === 'opencode-go'), false)
+  await assert.rejects(rt.addProvider({ provider: 'opencode-go', key: 'again' }), /already set up/)
+})
+
 test('models of a provider whose API key is set nowhere need the key', async () => {
   const user = { providers: { moonshotai: { apiKeyEnv: 'MOONSHOTAI_API_KEY' }, bedrock: {} } }
   const catalog = { moonshotai: ['kimi-k3'], bedrock: ['nova'] }
@@ -117,7 +139,7 @@ test('the page lists the providers set up and the ones DSH can add', async () =>
   ])
   // The account route has no key and no models before a sign-in.
   assert.equal(row(view, 'deepseek-account'), undefined)
-  assert.deepEqual(view.addable, [{ id: 'anthropic', name: 'anthropic' }])
+  assert.deepEqual(view.addable, [{ id: 'anthropic', name: 'anthropic' }, { id: 'opencode-go', name: 'opencode-go' }])
   assert.deepEqual(view.protocols, ['openai-completions', 'openai-responses', 'anthropic-messages'])
 })
 

@@ -41,6 +41,7 @@
 
 .chemclaw-dev/
 .chemclaw-workspace/
+.chemclaw-workspace-profiles/
 .chemclaw-tools/
 
 # Local pack / installer debug logs (do not publish)
@@ -48,3 +49,10 @@
 /app/pack-debug.log
 /app/pack-log.txt
 /app/*.log
+
+# Local verification output and downloaded development tools.
+/.*.log
+/.skill-pack.json
+/CURSOR_HANDOFF.md
+/app/.release-source.png*
+/app/.release-tools/

@@ -20,33 +20,13 @@ import { FolderMenu } from './folder-menu.js'
 import { BrowserPage } from './browser-settings.js'
 import { KeyIcon, SecretsPage } from './secret-card.js'
 import { language, t } from './i18n.js'
-import { botCategoryId, SPECIALISTS_CATEGORY } from '../shared/sidebar-prefs.js'
 
 const capitalize = word => word[0].toUpperCase() + word.slice(1)
-
-function FocusCategories({ roster, prefs, run, actions }) {
-  const focus = new Set(prefs.sidebar?.focus ?? [])
-  const categories = [...new Set(roster.bots
-    .filter(bot => bot.id !== roster.mainBotId)
-    .map(bot => botCategoryId(bot))
-    .filter(id => id !== SPECIALISTS_CATEGORY))].sort((a, b) => a.localeCompare(b, language().startsWith('zh') ? 'zh' : 'en'))
-  if (categories.length === 0) return h('span', { className: 'bt-set-hint' }, t('Add specialist Bots to choose focus categories.'))
-  const toggle = id => {
-    const next = new Set(focus)
-    if (next.has(id)) next.delete(id)
-    else next.add(id)
-    run(actions.setPrefs({ sidebar: { focus: [...next] } }))
-  }
-  return h('div', { className: 'bt-focus-chips', role: 'group', 'aria-label': t('Focus categories') },
-    categories.map(id => h('button', {
-      key: id, type: 'button', className: 'bt-focus-chip', 'aria-pressed': focus.has(id), onClick: () => toggle(id),
-    }, id)))
-}
 
 // Settings dialog: a 198px page list beside the page. Bots and group chats each list
 // their members, and one opens on its own settings form. Usage widens the dialog.
 // Models is there only in a window without DSH's own settings, which carry the providers.
-const SETTINGS_PAGES = [['general', 'General'], ['models', 'Models'], ['bots', 'Bots'], ['groups', 'Group chats'], ['connectors', 'Connectors'], ['capabilities', 'Skill library'], ['browser', 'Browser'], ['schedules', 'Scheduled tasks'], ['usage', 'Usage'], ['secrets', 'Secrets'], ['feedback', 'Feedback'], ['about', 'About ChemClaw']]
+const SETTINGS_PAGES = [['general', 'General'], ['models', 'Models'], ['bots', 'Experts'], ['groups', 'Group chats'], ['connectors', 'Connectors'], ['capabilities', 'Skill library'], ['browser', 'Browser'], ['schedules', 'Scheduled tasks'], ['usage', 'Usage'], ['secrets', 'Secrets'], ['feedback', 'Feedback'], ['about', 'About ChemClaw']]
 const PAGE_ICONS = { ...SETTINGS_ICONS, scenarios: PlugIcon, models: SlidersIcon, connectors: ConnectorIcon, capabilities: PlugIcon, browser: ConnectorIcon, schedules: ClockIcon, secrets: KeyIcon, feedback: FeedbackIcon, about: InfoIcon }
 
 function SetSection({ title, className = '', children }) {
@@ -125,16 +105,7 @@ function GeneralPage({ roster, actions, run }) {
       // The flat layout's text has a width of its own; the bubble width stays for the user's messages.
       layoutOf(prefs) === 'flat' ? h(SetRow, { label: t('Text width') }, h(WidthSlider, { label: t('Text width'), value: flatWidthOf(prefs), save: flatWidth => run(actions.setPrefs({ flatWidth })) })) : null,
       h(SetRow, { label: t('Bubble width') }, h(WidthSlider, { label: t('Bubble width'), value: widthOf(prefs), save: width => run(actions.setPrefs({ width })) })),
-      h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) })),
-      h(SetRow, { label: t('Sidebar order'), hint: t('How categories and rows are sorted in the wide sidebar.') },
-        h(Choice, {
-          label: t('Sidebar order'),
-          value: prefs.sidebar?.sort === 'manual' || prefs.sidebar?.sort === 'focus' ? prefs.sidebar.sort : 'recent',
-          options: [['recent', 'Recent activity'], ['manual', 'Manual'], ['focus', 'Focus first']],
-          pick: id => run(actions.setPrefs({ sidebar: { sort: id } })),
-        })),
-      h(SetRow, { label: t('Focus categories'), hint: t('When Focus first is on, these categories stay at the top.') },
-        h(FocusCategories, { roster, prefs, run, actions }))),
+      h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) }))),
     actions.setSurface ? h(SetSection, { key: 'mode', title: t('Mode') },
       h(SetRow, { label: t('Classic Agent mode') },
         h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.setSurface('agent') }, t('Switch')))) : null,
@@ -215,7 +186,7 @@ function BotsPage({ roster, actions, run }) {
   const [creating, setCreating] = useState(false)
   return [
     creating ? h(CreateBot, { key: 'create', roster, actions, inline: true, onBack: () => setCreating(false), onCreated: bot => actions.openSettings('bots', bot.id) })
-      : h('div', { key: 'new', className: 'bt-actions' }, h('button', { type: 'button', className: 'bt-soft bt-soft-sm bt-with-icon', onClick: () => setCreating(true) }, h(PlusIcon), t('New Bot'))),
+      : h('div', { key: 'new', className: 'bt-actions' }, h('button', { type: 'button', className: 'bt-soft bt-soft-sm bt-with-icon', onClick: () => setCreating(true) }, h(PlusIcon), t('New expert'))),
     h(BotCatalog, { key: 'bots', roster, actions }),
     h('details', { key: 'prefs', className: 'bt-advanced' }, h('summary', null, t('Team preferences')), h(MainBotsSection, { roster, actions, run }), h(MotionSection, { roster, actions, run })),
   ]
@@ -223,9 +194,9 @@ function BotsPage({ roster, actions, run }) {
 
 function GroupsPage({ roster, actions, run }) {
   const [creating, setCreating] = useState(false)
+  if (creating) return h(NewGroupForm, { roster, actions, run, onCancel: () => setCreating(false), onCreated: room => actions.openSettings('groups', room.id) })
   return [
-    creating ? h(NewGroupForm, { key: 'create', roster, actions, run, onCancel: () => setCreating(false), onCreated: room => actions.openSettings('groups', room.id) })
-      : h('div', { key: 'new', className: 'bt-actions' }, h('button', { type: 'button', className: 'bt-soft bt-soft-sm bt-with-icon', disabled: roster.bots.length < 2, onClick: () => setCreating(true) }, h(PlusIcon), t('Create group chat'))),
+    h('div', { key: 'new', className: 'bt-actions' }, h('button', { type: 'button', className: 'bt-soft bt-soft-sm bt-with-icon', disabled: roster.bots.length < 2, onClick: () => setCreating(true) }, h(PlusIcon), t('Create group chat'))),
     h(BotCatalog, { key: 'groups', roster, actions, kind: 'group' }),
   ]
 }
@@ -245,7 +216,7 @@ export function SettingsDialog({ page, id, roster, actions, useUpdate, leaving =
   const shown = pages.some(([key]) => key === page) ? page : 'general'
   const usageFocus = shown === 'usage' && id ? id : null
   const label = t(pages.find(([key]) => key === shown)[1])
-  const back = bot ? t('Back to Bots') : room ? t('Back to group chats') : usageFocus ? t('All usage') : null
+  const back = bot ? t('Back to experts') : room ? t('Back to group chats') : usageFocus ? t('All usage') : null
   const nav = useGlide(shown, { axis: 'y' })
   // A page enters from the right when it is one level in, from the left when it comes
   // back out, and from below beside it. Usage keeps its own entrance and its data

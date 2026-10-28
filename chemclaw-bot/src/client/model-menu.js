@@ -104,7 +104,7 @@ export const Caret = () => h('svg', { className: 'bt-model-caret', width: 12, he
 
 // A menu that opens under its trigger, or above when the window has no room below. A
 // click outside, Escape, or a scroll outside it closes it.
-export function useAnchoredMenu() {
+export function useAnchoredMenu({ width: requestedWidth, followScroll = false } = {}) {
   const [anchor, setAnchor] = useState(null)
   const [place, setPlace] = useState(null)
   const [shownPlace, leaving] = useLinger(place, MENU_EXIT_MS)
@@ -119,7 +119,12 @@ export function useAnchoredMenu() {
       close()
     }
     const onKey = (event) => { if (event.key === 'Escape') { event.stopPropagation(); close(); button.current?.focus() } }
-    const onScroll = (event) => { if (!menu.current?.contains(event.target)) close() }
+    const onScroll = (event) => {
+      if (menu.current?.contains(event.target)) return
+      const rect = button.current?.getBoundingClientRect()
+      if (followScroll && rect && rect.bottom > 0 && rect.top < viewBottom()) setAnchor({})
+      else close()
+    }
     window.addEventListener('mousedown', onDown)
     window.addEventListener('keydown', onKey, true)
     window.addEventListener('scroll', onScroll, true)
@@ -128,20 +133,20 @@ export function useAnchoredMenu() {
       window.removeEventListener('keydown', onKey, true)
       window.removeEventListener('scroll', onScroll, true)
     }
-  }, [place])
+  }, [place, followScroll])
   const open = () => setAnchor({})
   // Re-reads the trigger's rect whenever the visible viewport moves: the menu
   // tracks its anchor through the on-screen keyboard, not past it.
   useLayoutEffect(() => {
     if (anchor === null || !button.current) return
     const rect = button.current.getBoundingClientRect()
-    const width = Math.max(240, rect.width)
+    const width = requestedWidth === undefined ? Math.max(240, rect.width) : Math.min(requestedWidth, window.innerWidth - 16)
     const left = Math.max(8, Math.min(rect.right - width, window.innerWidth - width - 8))
     const below = viewBottom() - rect.bottom
     setPlace(below >= 260 || below >= rect.top
       ? { left, width, top: rect.bottom + 4, maxHeight: below - 16, '--bt-origin': 'top right' }
       : { left, width, bottom: viewBottom() - rect.top + 4, maxHeight: rect.top - 16, '--bt-origin': 'bottom right' })
-  }, [anchor, tick])
+  }, [anchor, tick, requestedWidth])
   return { isOpen: place !== null, shownPlace, leaving, button, menu, open, close }
 }
 

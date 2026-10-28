@@ -25,3 +25,33 @@ export const inkFill = color => (isHex(color) ? color : `var(--bt-ink-${inkName(
 export const inkText = color => (color === 'black' ? 'var(--bt-ink-gray)' : inkFill(color))
 // A color as a CSS background, for swatches and masked marks.
 export const paintCss = color => (GRADIENTS[color] ? `linear-gradient(135deg,${GRADIENTS[color].map(([offset, value]) => `${value} ${offset * 100}%`).join(',')})` : inkFill(color))
+
+// Chart series after the accent: blue first for warm accents, tangerine when blue is too close.
+export const TEAM_SERIES_INKS = ['blue', 'tangerine', 'green', 'violet', 'sky', 'rose', 'yellow', 'cyan', 'magenta']
+const HUE_NEAR = 40
+const chromaHue = (hex) => {
+  if (!isHex(hex)) return null
+  const [r, g, b] = [1, 3, 5].map(index => parseInt(hex.slice(index, index + 2), 16) / 255)
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const chroma = max - min
+  if (chroma < 0.12) return { chroma, hue: 0 }
+  const sector = max === r ? ((g - b) / chroma) % 6 : max === g ? (b - r) / chroma + 2 : (r - g) / chroma + 4
+  const hue = ((sector * 60) + 360) % 360
+  return { chroma, hue }
+}
+const hueGap = (a, b) => Math.min(Math.abs(a - b), 360 - Math.abs(a - b))
+export const huesNear = (a, b) => {
+  const left = chromaHue(a)
+  const right = chromaHue(b)
+  if (!left || !right) return false
+  if (left.chroma < 0.12 || right.chroma < 0.12) return false
+  return hueGap(left.hue, right.hue) < HUE_NEAR
+}
+// First slot is always the theme accent; later slots skip team inks whose hue is near it.
+export const seriesPalette = (accent, dark = false) => {
+  const tone = dark ? 1 : 0
+  const team = TEAM_SERIES_INKS.filter(name => !huesNear(accent, INKS[name][tone]))
+  const names = team.length >= 3 ? team : TEAM_SERIES_INKS
+  return ['var(--bt-accent)', ...names.map(name => `var(--bt-ink-${name})`)]
+}

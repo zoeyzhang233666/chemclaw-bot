@@ -12,6 +12,7 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
+rem Interactive GUI picker unless --source / --info / --sync-only / --no-picker is passed.
 node "%~dp0scripts\launch-chemclaw.mjs" %*
 set "launch_result=%errorlevel%"
 if not "%launch_result%"=="0" pause

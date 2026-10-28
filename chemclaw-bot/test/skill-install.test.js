@@ -9,6 +9,7 @@ import { fakeContext } from './fake-ctx.js'
 import { githubSkills, identifySkills, unpackSkills } from '../src/host/skill-import.js'
 import { managedSkillPath, parseSkill, safeSkillPath } from '../src/host/skill-files.js'
 import { parseServiceDraft } from '../src/host/service-install.js'
+import { skillEmoji, skillExample } from '../src/shared/skill-presentation.js'
 
 const content = (name = 'example') => `---\nname: ${name}\ndescription: A complete skill\n---\nRead references/data.csv and scripts/run.py.\n`
 const archive = () => zipSync({ 'bundle/示例/SKILL.md': strToU8(content()), 'bundle/示例/references/data.csv': strToU8('中文,123\n'), 'bundle/示例/scripts/run.py': strToU8('raise RuntimeError("never run at install")\n'), 'bundle/second/SKILL.md': strToU8(content('second')) })
@@ -109,6 +110,43 @@ test('GitHub repository, branch with slashes, directory and SKILL.md links retai
     assert.equal(result.source.revision, 'resolved-sha')
   }
   for (const url of ['https://github.com.evil.test/o/r', 'http://github.com/o/r', 'https://user:pass@github.com/o/r']) await assert.rejects(githubSkills(url, { request }), /public/)
+})
+
+test('manual emoji choices survive edits and reload, while invalid input leaves the saved skill intact', async t => {
+  const { rt, home } = await fixture(t)
+  const body = { name: 'custom-work', kind: 'skill', description: 'Custom workflow', content: 'Use the attached material.' }
+  await rt.capabilitySave({ ...body, emoji: '🧬' }, { ui: true })
+  await rt.capabilitySave({ ...body, description: 'Updated custom workflow' }, { ui: true })
+  assert.equal(rt.capabilityLibraryView().find(item => item.name === body.name).emoji, '🧬')
+  const ctx = fakeContext()
+  const reloaded = createRuntime(ctx, { home, github: false, diagnosticsFile: false })
+  t.after(() => ctx.dispose())
+  await reloaded.load()
+  assert.equal(reloaded.state.capabilities.items[body.name].emoji, '🧬')
+  await assert.rejects(reloaded.capabilitySave({ ...body, emoji: 'not an emoji' }, { ui: true }), /Choose an emoji/)
+  assert.equal(reloaded.state.capabilities.items[body.name].emoji, '🧬')
+  await reloaded.capabilitySave({ ...body, emoji: '' }, { ui: true })
+  assert.equal(skillEmoji(reloaded.state.capabilities.items[body.name]), '🧰')
+})
+
+test('known imports inherit curated presentation and replacement keeps manual choices', async t => {
+  const { rt } = await fixture(t)
+  const known = { name: 'domain-1', kind: 'skill', originalName: 'example', builtinSource: 'chemclaw',
+    labels: { zh: '按产品找生产厂家' }, purpose: '查找生产企业', category: '内贸采购', examples: ['An unrelated role example.'] }
+  rt.state.capabilities.items[known.name] = known
+  await rt.save()
+  const upload = { files: [{ path: 'SKILL.md', data: Buffer.from(content()).toString('base64') }] }
+  let preview = await rt.skillImportEndpoint('skill-import-preview', upload)
+  assert.equal(preview.candidates[0].emoji, '🏭')
+  assert.equal(preview.candidates[0].examples[0], skillExample(known))
+  await rt.skillImportEndpoint('skill-import-commit', { token: preview.token, selections: [{ key: '0', emoji: '🧪' }] })
+  assert.equal(rt.state.capabilities.items.example.emoji, '🧪')
+  preview = await rt.skillImportEndpoint('skill-import-preview', upload)
+  assert.equal(preview.candidates[0].emoji, '🧪')
+  await assert.rejects(rt.skillImportEndpoint('skill-import-commit', { token: preview.token, selections: [{ key: '0', conflict: 'replace', emoji: '<script>' }] }), /Choose an emoji/)
+  assert.equal(rt.state.capabilities.items.example.emoji, '🧪')
+  await rt.skillImportEndpoint('skill-import-commit', { token: preview.token, selections: [{ key: '0', conflict: 'replace' }] })
+  assert.equal(rt.state.capabilities.items.example.emoji, '🧪')
 })
 
 test('guided service parsing stores placeholders, handles local arguments and refuses credentialed URLs', () => {

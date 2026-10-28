@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom'
 import { FishLogo } from './dsh-primitives.js'
 import { isMainOf } from './sources.js'
 import { currentPart, previewOf, relativeShort } from './text.js'
-import { PlusIcon, SearchIcon, SidebarIcon, GaugeIcon, PlugIcon, PeopleIcon, ClockIcon, GearIcon, PinMarkIcon, ConnectorIcon, SwitchIcon, CloudDownloadIcon, SlidersIcon, SignOutIcon, ChevronRightIcon } from './icons.js'
+import { PlusIcon, SearchIcon, SidebarIcon, PlugIcon, PeopleIcon, ClockIcon, GearIcon, PinMarkIcon, SwitchIcon, CloudDownloadIcon, SlidersIcon, SignOutIcon, ChevronRightIcon } from './icons.js'
 import {
-  AGENTS_CATEGORY, ROOMS_CATEGORY, SPECIALISTS_CATEGORY, botCategoryId, moveId, sortCategories, sortEntries,
+  AGENTS_CATEGORY, botCategoryId, roomCategoryId, sidebarCategories, moveId, moveSidebarItem, sortCategories, sortEntries,
 } from '../shared/sidebar-prefs.js'
 import { ApiHubMark } from './brand-icons.js'
 import { MAIN_LOOK } from './characters.js'
@@ -15,6 +15,8 @@ import { Shimmer, workPhrase } from './cells.js'
 import { springEasing, SPRING_SHAPE, useViewport, viewBottom } from './motion.js'
 import { hostText, t } from './i18n.js'
 import { showsDshRow } from './dsh-offer.js'
+import { CategoryMenu, categoryLabel } from './sidebar-categories.js'
+import { SidebarFilters } from './sidebar-filters.js'
 
 // -------------------------------------------------------------------------
 // Sidebar
@@ -256,6 +258,9 @@ export function TeamSidebar(props) {
   const { wide, expandSidebar, useRoster, useUi, useSessions, actions } = props
   const listRef = useRef(null)
   const closing = useRef(false)
+  const [view, setView] = useState('recent')
+  const [category, setCategory] = useState(null)
+  const [filteredCollapsed, setFilteredCollapsed] = useState(null)
   useLayoutEffect(() => { closing.current = false })
   const roster = useRoster(value => value)
   const markedUnread = useUi(value => value.unread)
@@ -266,58 +271,74 @@ export function TeamSidebar(props) {
     return JSON.stringify(stamps)
   })
   const sidebar = roster.prefs?.sidebar ?? {}
-  const sortMode = sidebar.sort === 'manual' || sidebar.sort === 'focus' ? sidebar.sort : 'recent'
-  const collapsed = useMemo(() => new Set(sidebar.collapsed ?? []), [sidebar.collapsed])
+  const sortMode = 'manual'
+  const collapsed = useMemo(() => new Set(filteredCollapsed ?? sidebar.collapsed ?? []), [filteredCollapsed, sidebar.collapsed])
   const order = useMemo(() => {
     const stamps = JSON.parse(updated)
     return [
-      ...roster.bots.filter(bot => bot.id !== roster.mainBotId).map(bot => ({ kind: 'bot', item: bot, at: stamps[currentPart(bot)] ?? 0, categoryId: botCategoryId(bot) })),
-      ...roster.rooms.map(room => ({ kind: 'room', item: room, at: room.preview ? stamps[room.id] ?? room.createdAt : 0, categoryId: ROOMS_CATEGORY })),
+      ...roster.bots.filter(bot => bot.id !== roster.mainBotId).map(bot => ({ kind: 'bot', item: bot, at: stamps[currentPart(bot)] ?? 0, categoryId: botCategoryId(bot, sidebar) })),
+      ...roster.rooms.map(room => ({ kind: 'room', item: room, at: room.preview ? stamps[room.id] ?? room.createdAt : 0, categoryId: roomCategoryId(room, sidebar) })),
       // The Agent sorts by its most recent Session, falling back to when it was added.
       ...(roster.agents ?? []).map(agent => ({ kind: 'agent', item: agent, at: Math.max(0, ...agent.sessions.map(id => stamps[id] ?? 0)) || agent.createdAt, categoryId: AGENTS_CATEGORY })),
     ]
   }, [roster, updated])
   const groups = useMemo(() => {
     const byId = new Map()
+    for (const kind of ['bot', 'room']) {
+      for (const category of sidebarCategories(roster, kind)) byId.set(category.id, { id: category.id, kind, label: categoryLabel(category), entries: [] })
+    }
     const push = (id, label, entry) => {
-      if (!byId.has(id)) byId.set(id, { id, label, entries: [] })
+      if (!byId.has(id)) byId.set(id, { id, label, kind: entry.kind, entries: [] })
       byId.get(id).entries.push(entry)
     }
     for (const entry of order) {
-      if (entry.kind === 'room') push(ROOMS_CATEGORY, t('Collaboration groups'), entry)
-      else if (entry.kind === 'agent') push(AGENTS_CATEGORY, t('Other conversations'), entry)
-      else push(entry.categoryId, entry.categoryId === SPECIALISTS_CATEGORY ? t('Specialist Bots') : entry.categoryId, entry)
+      push(entry.categoryId, entry.kind === 'agent' ? t('Other conversations') : entry.categoryId, entry)
     }
     const listed = [...byId.values()].map(group => ({
       ...group,
       entries: sortEntries(group.entries, { sort: sortMode, itemOrder: sidebar.itemOrder ?? {}, categoryId: group.id }),
-    })).filter(group => group.entries.length)
-    return sortCategories(listed, { sort: sortMode, categoryOrder: sidebar.categoryOrder ?? [], focus: sidebar.focus ?? [] })
-  }, [order, sortMode, sidebar.itemOrder, sidebar.categoryOrder, sidebar.focus])
+    }))
+    return sortCategories(listed, { sort: sortMode, categoryOrder: sidebar.categoryOrder ?? [] })
+  }, [order, roster, sortMode, sidebar.itemOrder, sidebar.categoryOrder])
   const main = roster.byId[roster.mainBotId]
-  useListGlide(listRef, wide, groups.flatMap(group => group.entries.map(entry => entry.item.id)).join(','))
+  const kinds = view === 'recent' ? ['bot', 'room'] : [view === 'groups' ? 'room' : 'bot']
+  const categories = kinds.flatMap(kind => sidebarCategories(roster, kind))
+  const filter = category && (!category.id || categories.some(group => group.id === category.id && group.kind === category.kind)) ? category : null
+  const matches = entry => !filter || entry.kind === filter.kind && (!filter.id || entry.categoryId === filter.id)
+  const visibleGroups = !wide ? groups : view === 'recent'
+    ? [{ id: 'recent', entries: sortEntries(order.filter(matches)) }]
+    : groups.filter(group => group.kind === kinds[0] && (!filter?.id || group.id === filter.id))
+  const shortcutOrder = ['内贸销售', '产业研究'].map(id => view === 'groups' ? `rooms:${id}` : id)
+  const quickCategories = view === 'recent' ? [] : sortCategories(categories, { sort: 'manual', categoryOrder: [...shortcutOrder, ...groups.map(group => group.id)] })
+    .filter(group => group.id !== visibleGroups[0]?.id)
+  useListGlide(listRef, wide, visibleGroups.flatMap(group => group.entries.map(entry => entry.item.id)).join(','))
   useLandOnMainBot(roster, useSessions, actions)
   const saveSidebar = patch => { void actions.setPrefs({ sidebar: patch }).catch(error => actions.reportError(error, 'sidebar')) }
+  const pickCategory = next => {
+    setCategory(next)
+    setFilteredCollapsed([])
+    if (listRef.current) listRef.current.scrollTop = 0
+  }
   const toggleCollapsed = id => {
     const next = new Set(collapsed)
     if (next.has(id)) next.delete(id)
     else next.add(id)
-    saveSidebar({ collapsed: [...next] })
+    if (filteredCollapsed !== null) setFilteredCollapsed([...next])
+    const saved = new Set(sidebar.collapsed ?? [])
+    if (next.has(id)) saved.add(id)
+    else saved.delete(id)
+    saveSidebar({ collapsed: [...saved] })
   }
   const onDropCategory = (dragId, beforeId) => {
     if (!dragId || dragId === beforeId) return
     const ids = groups.map(group => group.id)
-    saveSidebar({ categoryOrder: moveId(ids, dragId, beforeId), sort: sortMode === 'recent' ? 'manual' : sortMode })
+    saveSidebar({ categoryOrder: moveId(ids, dragId, beforeId), sort: 'manual', focus: null })
   }
   const onDropItem = (categoryId, dragId, beforeId) => {
-    if (!dragId || dragId === beforeId) return
-    const group = groups.find(item => item.id === categoryId)
-    if (!group) return
-    const ids = group.entries.map(entry => entry.item.id)
-    saveSidebar({
-      itemOrder: { [categoryId]: moveId(ids, dragId, beforeId) },
-      sort: sortMode === 'recent' ? 'manual' : sortMode,
-    })
+    const patch = moveSidebarItem(groups, categoryId, dragId, beforeId)
+    if (!patch) return
+    if (filteredCollapsed !== null) setFilteredCollapsed([...collapsed].filter(id => id !== categoryId))
+    saveSidebar({ ...patch, collapsed: (sidebar.collapsed ?? []).filter(id => id !== categoryId) })
   }
   // The shell keeps wide content during its collapse fade. Normalize through its
   // public expansion action before toggling; coalesce synchronous activations
@@ -357,22 +378,39 @@ export function TeamSidebar(props) {
           h(UpdateButton, { useUpdate: props.useUpdate, actions }),
           h('button', { type: 'button', className: 'bt-round', 'aria-label': t('New…'), title: t('New…'), onClick: () => actions.openNewChat('new') }, h(PlusIcon))),
     wide && roster.readOnly ? h('div', { className: 'bt-hint bt-read-only', role: 'status' }, hostText(roster.readOnly)) : null,
-    h('button', { type: 'button', className: 'bt-row', title: t('Bots'), onClick: () => actions.openSettings('bots') }, h(PlugIcon), wide ? h('span', null, t('Bots')) : null),
-    h('button', { type: 'button', className: 'bt-row', title: t('Group chats'), onClick: () => actions.openSettings('groups') }, h(PeopleIcon), wide ? h('span', null, t('Group chats')) : null),
+    h('button', { type: 'button', className: 'bt-row', title: t('Settings'), onClick: () => actions.openSettings('general') }, h(GearIcon), wide ? h('span', null, t('Settings')) : null),
+    h('button', { type: 'button', className: 'bt-row', title: t('Skill library'), onClick: () => actions.openSettings('capabilities') }, h(PlugIcon), wide ? h('span', null, t('Skill library')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Models · ApiHub'), onClick: () => actions.openModels() }, h(SlidersIcon), wide ? h('span', null, t('Models · ApiHub')) : null),
     h('button', { type: 'button', className: 'bt-row', title: t('Chemcloud · Data Hub'), onClick: () => actions.openSettings('connectors', 'chem-data-hub') }, h('span', { className: 'bt-row-mark', 'aria-hidden': true }, h(ApiHubMark)), wide ? h('span', null, t('Chemcloud · Data Hub')) : null),
     h('div', { ref: listRef, className: 'bt-list', role: 'region', 'aria-label': t('Bot list') },
       main ? h(BotRow, { ...rowProps, bot: main, marked: markedUnread[main.id] === true }) : roster.ready ? null : h('div', { className: 'bt-hint' }, t('Setting up your Main Bot…')),
-      groups.map(group => {
-        const shut = wide && collapsed.has(group.id)
+      wide ? h('div', { className: 'bt-side-controls' },
+        h('div', { className: 'bt-side-tabs', role: 'group', 'aria-label': t('Conversations') },
+          [['experts', 'Experts'], ['groups', 'Expert groups'], ['recent', 'Recent']].map(([id, label]) => h('button', {
+            key: id, type: 'button', 'aria-pressed': view === id, onClick: () => { setView(id); pickCategory(null) },
+          }, t(label)))),
+        h(SidebarFilters, { items: [
+          { id: 'all', label: t('All'), pressed: !filter, pick: () => pickCategory(null) },
+          ...(view === 'recent' ? [['bot', 'Experts'], ['room', 'Expert groups']].map(([kind, label]) => ({ id: kind, label: t(label), pressed: filter?.kind === kind && !filter?.id, pick: () => pickCategory({ kind, id: null }) })) : []),
+          ...quickCategories.map(group => ({ id: group.id, label: categoryLabel(group), pressed: filter?.id === group.id && filter?.kind === group.kind, pick: () => pickCategory({ kind: group.kind, id: group.id }) })),
+        ] },
+          h(CategoryMenu, {
+            roster, actions, kinds, selected: filter, onPick: (kind, id) => pickCategory(kind ? { kind, id } : null),
+            onCreated: category => { setView(category.kind === 'bot' ? 'experts' : 'groups'); pickCategory({ kind: category.kind, id: category.id }) },
+            onDeleted: result => { setView(result.kind === 'bot' ? 'experts' : 'groups'); pickCategory({ kind: result.kind, id: result.targetId }) },
+          }))) : null,
+      visibleGroups.map(group => {
+        const shut = wide && view !== 'recent' && collapsed.has(group.id)
         return h(Fragment, { key: group.id },
-          wide ? h(DirectoryLabel, {
-            id: group.id, label: group.label, count: group.entries.length, collapsed: shut,
+          wide && view !== 'recent' ? h(DirectoryLabel, {
+            id: group.id, kind: group.kind, label: group.label, count: group.entries.length, collapsed: shut,
             onToggle: () => toggleCollapsed(group.id),
             onDropCategory,
+            onDropItem: dragId => onDropItem(group.id, dragId, null),
           }) : null,
+          wide && !shut && view !== 'recent' && group.entries.length === 0 ? h('div', { className: 'bt-hint bt-category-empty' }, group.kind === 'bot' ? t('No experts in this category yet.') : t('No groups in this category yet.')) : null,
           shut ? null : group.entries.map(entry => h(DraggableRow, {
-            key: entry.item.id, id: entry.item.id, categoryId: group.id, wide,
+            key: entry.item.id, id: entry.item.id, kind: entry.kind, categoryId: group.id, wide: wide && view !== 'recent',
             onDropItem: (dragId, beforeId) => onDropItem(group.id, dragId, beforeId),
           }, entry.kind === 'bot'
             ? h(BotRow, { ...rowProps, bot: entry.item, marked: markedUnread[entry.item.id] === true })
@@ -384,18 +422,28 @@ export function TeamSidebar(props) {
 )
 }
 
-function DirectoryLabel({ id, label, count, collapsed, onToggle, onDropCategory }) {
+function DragGrip() {
+  return h('svg', { width: 16, height: 20, viewBox: '0 0 16 20', fill: 'currentColor', 'aria-hidden': true },
+    [5, 10, 15].flatMap(y => [5, 11].map(x => h('circle', { key: `${x}-${y}`, cx: x, cy: y, r: 1.35 }))))
+}
+
+function DirectoryLabel({ id, kind, label, count, collapsed, onToggle, onDropCategory, onDropItem }) {
   return h('div', {
     className: 'bt-directory-label',
     draggable: true,
     onDragStart: event => { event.dataTransfer.setData('text/bt-category', id); event.dataTransfer.effectAllowed = 'move' },
-    onDragOver: event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; event.currentTarget.dataset.drop = '1' },
+    onDragOver: event => {
+      const types = [...event.dataTransfer.types]
+      if (!types.includes('text/bt-category') && !types.includes(`text/bt-item-${kind}`)) return
+      event.preventDefault(); event.dataTransfer.dropEffect = 'move'; event.currentTarget.dataset.drop = '1'
+    },
     onDragLeave: event => { delete event.currentTarget.dataset.drop },
     onDrop: event => {
       event.preventDefault()
       delete event.currentTarget.dataset.drop
       const dragId = event.dataTransfer.getData('text/bt-category')
       if (dragId) onDropCategory(dragId, id)
+      else onDropItem(event.dataTransfer.getData('text/bt-item'))
     },
   },
   h('button', {
@@ -406,12 +454,12 @@ function DirectoryLabel({ id, label, count, collapsed, onToggle, onDropCategory 
   h('span', { className: 'bt-directory-count' }, count))
 }
 
-function DraggableRow({ id, categoryId, wide, onDropItem, children }) {
+function DraggableRow({ id, kind, categoryId, wide, onDropItem, children }) {
   if (!wide) return children
   return h('div', {
-    className: 'bt-row-drag',
+    className: 'bt-row-drag', 'data-bt-item-id': id,
     onDragOver: event => {
-      if (![...event.dataTransfer.types].includes('text/bt-item')) return
+      if (![...event.dataTransfer.types].includes(`text/bt-item-${kind}`)) return
       event.preventDefault()
       event.dataTransfer.dropEffect = 'move'
       event.currentTarget.dataset.drop = '1'
@@ -421,8 +469,7 @@ function DraggableRow({ id, categoryId, wide, onDropItem, children }) {
       event.preventDefault()
       delete event.currentTarget.dataset.drop
       const dragId = event.dataTransfer.getData('text/bt-item')
-      const from = event.dataTransfer.getData('text/bt-item-category')
-      if (dragId && from === categoryId) onDropItem(dragId, id)
+      if (dragId) onDropItem(dragId, id)
     },
   },
   h('span', {
@@ -430,9 +477,10 @@ function DraggableRow({ id, categoryId, wide, onDropItem, children }) {
     onDragStart: event => {
       event.dataTransfer.setData('text/bt-item', id)
       event.dataTransfer.setData('text/bt-item-category', categoryId)
+      event.dataTransfer.setData(`text/bt-item-${kind}`, '1')
       event.dataTransfer.effectAllowed = 'move'
     },
-  }, '⋮⋮'),
+  }, h(DragGrip)),
   children)
 }
 
@@ -691,9 +739,8 @@ export function AccountLauncher({ seat = true, settingsOpen, openSettings, openO
   }, [open])
   const groups = [
     [
-      [t('Bots'), PlugIcon, () => actions.openSettings('bots')],
-      [t('Usage'), GaugeIcon, () => actions.openSettings('usage')],
-      [t('Connectors'), ConnectorIcon, () => actions.openConnectors()],
+      [t('Experts'), PlugIcon, () => actions.openSettings('bots')],
+      [t('Group chats'), PeopleIcon, () => actions.openSettings('groups')],
       [t('Automation tasks'), ClockIcon, () => actions.selectPanel('schedules')],
       [t('Settings'), GearIcon, () => actions.openSettings('general')],
     ],

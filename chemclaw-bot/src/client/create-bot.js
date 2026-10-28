@@ -9,6 +9,7 @@ import { createPayload, freshBotName, startModel } from './bot-draft.js'
 import { ModelMenu } from './model-menu.js'
 import { hostText, t } from './i18n.js'
 import { nameProblem } from '../shared/mentions.js'
+import { CategoryMenu, assignCategory } from './sidebar-categories.js'
 
 const pick = list => list[Math.floor(Math.random() * list.length)]
 const randomLook = (avoid = {}) => {
@@ -24,6 +25,7 @@ export function CreateBot({ roster, actions, start, brief = '', onBack, canGoBac
   const [image, setImage] = useState(null)
   const [library, setLibrary] = useState(false)
   const [name, setName] = useState(start?.name ?? '')
+  const [category, setCategory] = useState('')
   const [model, setModel] = useState(() => startModel(roster))
   const [effort, setEffort] = useState(undefined)
   const [busy, setBusy] = useState(false)
@@ -43,6 +45,7 @@ export function CreateBot({ roster, actions, start, brief = '', onBack, canGoBac
     setBusy(true)
     try {
       const bot = await actions.createBot(createPayload({ name: finalName, look, image, model, effort, brief }))
+      if (category) await assignCategory(actions, 'bot', bot.id, category).catch(failure => actions.reportError(failure, 'sidebar'))
       onCreated(bot)
     } catch (failure) {
       setError(failure?.message ?? String(failure))
@@ -85,6 +88,8 @@ export function CreateBot({ roster, actions, start, brief = '', onBack, canGoBac
       }),
       problem ? h('span', { className: 'bt-note bt-danger' }, hostText(problem))
         : clash ? h('span', { className: 'bt-note bt-danger' }, t('A Bot named {name} already exists', { name: finalName })) : null),
+    h('div', { className: 'bt-field' }, h('span', { className: 'bt-field-label' }, t('Sidebar category')),
+      h(CategoryMenu, { roster, actions, kinds: ['bot'], picker: true, value: category, onPick: (_kind, id) => setCategory(id) })),
     h('div', { className: 'bt-field' },
       h('span', { className: 'bt-field-label' }, t('Model')),
       h(ModelMenu, { bot: { id: 'new-bot', name: finalName, model: model || undefined, effort }, roster, actions, wide: true, onPick: ref => { setModel(ref); setEffort(undefined) }, onPickEffort: picked => setEffort(picked ?? null) }),

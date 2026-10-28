@@ -809,7 +809,8 @@ export function install(rt) {
         if (post.reportBack && rt.botOf(post.botId)) void reportRound(room, post, round)
       }
       exec.concludeTurn?.()
-      return JSON.stringify({ replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
+      return JSON.stringify({ replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}),
+        ...(round.activities?.length ? { activities: round.activities } : {}) })
     },
   }))
 

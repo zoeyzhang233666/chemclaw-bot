@@ -7,7 +7,7 @@ import { build } from 'esbuild'
 const { outputFiles } = await build({
   entryPoints: [fileURLToPath(new URL('../src/client/capability-settings.js', import.meta.url))],
   bundle: true, format: 'cjs', platform: 'browser', write: false, logLevel: 'silent',
-  external: ['react'],
+  external: ['react', 'react-dom'],
 })
 
 const cells = []
