@@ -21062,6 +21062,35 @@ function listedOpener({ list, open, refresh, current }) {
   };
 }
 
+// src/client/right-panel.js
+var RIGHTBAR_ATTRIBUTES = ["data-rightbar-collapsed", "data-rightbar-fullscreen"];
+function rightColumnOpen(doc) {
+  if (doc.querySelector("[data-rightbar-fullscreen]")) return true;
+  if (doc.querySelector("[data-rightbar-collapsed]")) return false;
+  return doc.querySelector("[data-rightbar-col]") !== null;
+}
+function drawerOpened(columnOpen) {
+  return columnOpen ? "collapse-column" : null;
+}
+function columnOpened(drawerOpen, moved) {
+  if (!drawerOpen) return null;
+  return moved ? "collapse-column" : "close-drawer";
+}
+function createSwitchWindow(settle) {
+  let token = null;
+  return {
+    moved() {
+      const self = token = {};
+      settle(() => {
+        if (token === self) token = null;
+      });
+    },
+    get pending() {
+      return token !== null;
+    }
+  };
+}
+
 // src/client/index.js
 var inject = ["sessions", "uiWorkspace", "uiConversation", "slots", "theme", "layout"];
 function apply(ctx) {
@@ -21673,6 +21702,44 @@ function apply(ctx) {
       actions.reportError(error, "right-sidebar");
     }
   };
+  ctx.effect(() => {
+    const sidebar = ctx.get("sidebarRight");
+    if (!sidebar) return void 0;
+    let open = rightColumnOpen(document);
+    const switchWindow = createSwitchWindow((done) => setTimeout(done, 400));
+    const collapseColumn = () => {
+      try {
+        if (sidebar.isExpanded()) sidebar.toggleExpanded();
+      } catch (error) {
+        actions.reportError(error, "right-sidebar");
+      }
+    };
+    const observer = new MutationObserver(() => {
+      const next = rightColumnOpen(document);
+      const opening = next && !open;
+      open = next;
+      const verdict = opening ? columnOpened(ui2.getSnapshot().details !== null, switchWindow.pending) : null;
+      if (verdict === "close-drawer") actions.closePanel();
+      else if (verdict === "collapse-column") collapseColumn();
+    });
+    observer.observe(document.documentElement, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: RIGHTBAR_ATTRIBUTES
+    });
+    const offMounted = sidebar.mounted.subscribe(() => switchWindow.moved());
+    let drawer = ui2.getSnapshot().details !== null;
+    const offUi = ui2.subscribe(() => {
+      const next = ui2.getSnapshot().details !== null;
+      if (next && !drawer && drawerOpened(rightColumnOpen(document)) === "collapse-column") collapseColumn();
+      drawer = next;
+    });
+    return () => {
+      observer.disconnect();
+      offMounted();
+      offUi();
+    };
+  }, "chemclaw-bot: one right panel");
   const browserPages = browsers?.pages ?? createSource({});
   const browserTabs = browsers?.tabs ?? createSource({});
   const browserHolds = browsers?.holds ?? createSource({});
