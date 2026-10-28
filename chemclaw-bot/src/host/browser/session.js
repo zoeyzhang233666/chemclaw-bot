@@ -719,6 +719,44 @@ export function createSession({ context, browser, page, botId, userDataDir, down
       onHold?.(null)
       return 'The browser is yours again.'
     },
+    // Script mode runs one AsyncFunction body whose helpers are these session
+    // methods, so authorizeWrite, handoff and Bot profile isolation still apply.
+    async runScript(source, origin) {
+      const body = String(source ?? '')
+      if (body.length > 8_000) throw new Error('Script is longer than 8000 characters.')
+      const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
+      let answer
+      const fn = new AsyncFunction(
+        'goto', 'snapshot', 'click', 'type', 'fill', 'select', 'press', 'scroll', 'tabs', 'screenshot', 'text', 'upload', 'handoff', 'resume', 'back', 'done',
+        `"use strict";\n${body}`,
+      )
+      const done = value => { answer = value }
+      const run = fn(
+        url => this.open(url),
+        () => this.snapshotText(),
+        (ref, options) => this.clickWithOptions(ref, options),
+        (ref, text, submit) => this.type(ref, text, submit),
+        (ref, text) => this.type(ref, text),
+        (ref, values) => this.select(ref, values),
+        key => this.press(key),
+        direction => this.scroll(direction),
+        (action, index) => action === 'list' ? this.tabs() : action === 'select' ? this.selectTab(index) : this.closeTab(index),
+        async () => {
+          const picture = await this.shot()
+          return picture.text
+        },
+        () => this.snapshotText(),
+        (ref, paths) => this.upload(ref, paths),
+        (reason, note) => this.handoff(reason, note, origin),
+        () => this.resume(),
+        () => this.back(),
+        done,
+      )
+      const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Script ran longer than 20 seconds.')), 20_000))
+      const value = await Promise.race([run, timeout])
+      const finalAnswer = answer ?? value
+      return finalAnswer === undefined ? 'Script finished without done().' : String(finalAnswer)
+    },
     async close() {
       if (browser) { await browser.close().catch(() => {}); return }
       await context.close().catch(() => {})
