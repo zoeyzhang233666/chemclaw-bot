@@ -106,7 +106,8 @@ export function SecretCard({ sessionId, bot, request, roster, actions, inline = 
   const allow = () => { if (!busy) void run(() => actions.secretAllow(request.id)) }
   const filling = request.kind === 'fill' || replacing
   const warn = insecure() ? h('div', { className: 'bt-secret-warn', role: 'note' }, h(WarnIcon), t('This page is not on HTTPS: the key crosses the network unencrypted.')) : null
-  return h('div', { className: 'bt-q bt-secret', role: 'group', 'aria-describedby': noteId, 'data-kind': request.kind, onFocusCapture: hold, onPointerDownCapture: hold },
+  // ChemClaw packaged-app checks and UI selectors still key off bt-secret-card.
+  return h('div', { className: 'bt-q bt-secret bt-secret-card', role: 'group', 'aria-describedby': noteId, 'data-kind': request.kind, onFocusCapture: hold, onPointerDownCapture: hold },
     h(SecretHead, {
       bot,
       title: request.kind === 'allow' ? t('Let {bot} use {name}?', { bot: bot.name, name: request.name }) : t('{name} needs a key', { name: bot.name }),

@@ -7166,7 +7166,7 @@ function SecretCard({ sessionId, bot, request, roster, actions, inline = false }
   const warn = insecure() ? (0, import_react11.createElement)("div", { className: "bt-secret-warn", role: "note" }, (0, import_react11.createElement)(WarnIcon), t("This page is not on HTTPS: the key crosses the network unencrypted.")) : null;
   return (0, import_react11.createElement)(
     "div",
-    { className: "bt-q bt-secret", role: "group", "aria-describedby": noteId, "data-kind": request.kind, onFocusCapture: hold, onPointerDownCapture: hold },
+    { className: "bt-q bt-secret bt-secret-card", role: "group", "aria-describedby": noteId, "data-kind": request.kind, onFocusCapture: hold, onPointerDownCapture: hold },
     (0, import_react11.createElement)(SecretHead, {
       bot,
       title: request.kind === "allow" ? t("Let {bot} use {name}?", { bot: bot.name, name: request.name }) : t("{name} needs a key", { name: bot.name }),
