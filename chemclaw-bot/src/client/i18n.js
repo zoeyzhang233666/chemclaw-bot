@@ -7,6 +7,7 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'ChemClaw expert team': 'ChemClaw专家团',
   'My schedule': '我的日程',
   'Recommended tasks': '推荐任务',
   Calendar: '日程',
@@ -332,7 +333,7 @@ const ZH = {
   'Recommended by ChemClaw': 'ChemClaw 推荐', 'APIHub API key': 'APIHub 模型密钥',
   'Paste your APIHub key, fetch the available models, then choose the models to add.': '填入 APIHub Key，获取可用模型后勾选添加。模型选择与业务数据 Key 分开管理。',
   'Save selected models': '保存所选模型',
-  'Model keys are stored by DSH credentials. After saving, choose a model in the Bot conversation.': '模型 Key 通过本地凭据库保存，不进入聊天。保存后，可在 Bot 对话中选择模型。',
+  'Model keys are stored by DSH credentials. After saving, choose a model in the conversation.': '模型 Key 通过本地凭据库保存，不进入聊天。保存后，可在对话中选择模型。',
   'Skipped stdio servers: {names}': '已跳过本地命令型 MCP：{names}',
   'Scientific tools ready': '科学分析环境已就绪', 'Install optional scientific tools': '安装可选化学与统计依赖',
   'Paste or enter a key': '粘贴或输入密钥', Category: '场景分类', Team: '协作成员',
