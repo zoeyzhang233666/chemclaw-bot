@@ -223,3 +223,8 @@ DS-Bot desktop tray lifecycle, Apache-2.0
   Copyright 2026 Fei2411 and the DS Bot contributors.
   Lifecycle modules, test harnesses and checks retain their source notices;
   ChemClaw uses its original cloud icon, own updater and pinned rc.3 runtime.
+
+DS-Bot model defaults and namespace compatibility, Apache-2.0
+  Adapted PRs #586 and #575 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  ChemClaw preserves configured-route selection and lazy preset initialization.
