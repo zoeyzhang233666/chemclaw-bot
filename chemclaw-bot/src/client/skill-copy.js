@@ -1,4 +1,11 @@
 export const SKILL_ZH = {
+  'Skill icon': '技能图标', 'Match the skill automatically': '按用途自动匹配',
+  'Choose skill icon': '选择技能图标', 'Close icon picker': '关闭图标选择',
+  'Custom icon': '自选图标', 'Automatic match': '自动匹配',
+  'Suggested icons': '推荐图标', 'All icons': '全部图标', 'More icons': '更多图标', 'Fewer icons': '收起图标',
+  'Use icon {emoji}': '使用图标 {emoji}',
+  'Matched by purpose. Choose another emoji at any time.': '根据技能用途匹配，也可以随时手动更换。',
+  'Choose an emoji from the skill icon list.': '请从技能图标列表中选择一个 Emoji。',
   'Open generated file {name}': '打开生成的文件 {name}', 'Click to open file': '点击打开文件',
   'Skill library': '技能库', 'Tool services': '工具服务', 'All skills': '全部技能',
   'Installation steps': '安装步骤', 'Install into group': '安装到分组', 'Detect a group automatically': '自动识别分组', 'Group': '分组',

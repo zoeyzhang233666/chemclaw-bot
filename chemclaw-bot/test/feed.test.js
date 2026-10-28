@@ -78,7 +78,8 @@ test('the live feed tells a window about saves, new chat entries and the reply b
   t.after(stop)
   await call('state')
   const abort = new AbortController()
-  const response = await routes['/api/bot/feed'].fetch(new Request('http://localhost/api/bot/feed', { signal: abort.signal }))
+  const request = new Request('http://localhost/api/bot/feed', { signal: abort.signal })
+  const response = await routes['/api/bot/feed'].fetch(request)
   assert.equal(response.headers.get('content-type'), 'text/event-stream; charset=utf-8')
   const next = reader(response)
   assert.equal((await next()).event, 'hello')
@@ -119,6 +120,8 @@ test('the live feed tells a window about saves, new chat entries and the reply b
   assert.deepEqual(await next(), { event: 'live', data: {} })
 
   abort.abort()
+  // Retain the Request's dependent signal until abort reaches the feed listener.
+  assert.equal(request.signal.aborted, true)
   assert.equal(await next(), undefined)
 })
 

@@ -218,6 +218,12 @@ async function chat(cdp) {
     throw new Error(`timed out waiting for ${label}`)
   }
   const text = needle => `document.body.innerText.includes(${JSON.stringify(needle)})`
+  const openSettings = async () => {
+    const button = "document.querySelector('.bt-row[title=\"Settings\"], .bt-row[title=\"设置\"]')"
+    await until(button, 'the sidebar settings button')
+    await evaluate(`${button}.click()`)
+    await until("document.querySelector('.bt-settings-nav')", 'settings')
+  }
   await cdp.call('Runtime.enable')
   await cdp.call('Log.enable')
   await cdp.call('Network.enable')
@@ -231,8 +237,7 @@ async function chat(cdp) {
     await until('window.dsBotApp?.updates', 'the desktop update bridge')
     const status = await evaluate('window.dsBotApp.updates.check()')
     if (!status.enabled || !status.checkedAt || status.phase === 'failed') throw new Error('The packaged app did not check its isolated update feed')
-    await evaluate("[...document.querySelectorAll('button')].find(node => /^(Bot|Bots)$/.test(node.textContent.trim())).click()")
-    await until("document.querySelector('.bt-settings-nav')", 'settings')
+    await openSettings()
     await evaluate("[...document.querySelectorAll('.bt-settings-item')].find(node => /^(关于 ChemClaw|About ChemClaw)$/.test(node.textContent.trim())).click()")
     const checkButton = "[...document.querySelectorAll('.bt-settings-page button')].find(node => /^(检查更新|Check for updates)$/.test(node.textContent.trim()))"
     await until(`${checkButton} && !${checkButton}.disabled`, 'the enabled app update button')
@@ -249,9 +254,8 @@ async function chat(cdp) {
   if (shotFile && !process.argv.includes('--browser-shot-only')) {
     const capture = async suffix => { await sleep(650); const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.${suffix}.png`), Buffer.from(data, 'base64')) }
     await capture('home')
-    await evaluate("[...document.querySelectorAll('button')].find(node => /^(Bot|Bots)$/.test(node.textContent.trim()))?.click()")
-    await until(text('我的 Bot'), 'the Bots page')
-    await evaluate("[...document.querySelectorAll('button')].find(node => /^(内置专家|Built-in experts)$/.test(node.textContent.trim()))?.click()")
+    await openSettings()
+    await evaluate("[...document.querySelectorAll('.bt-settings-item')].find(node => /^(专家|Experts)$/.test(node.textContent.trim())).click()")
     await until(text('下游客户开发'), 'scenario cards')
     await sleep(300)
     await capture('bots')

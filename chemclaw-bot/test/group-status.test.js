@@ -281,6 +281,46 @@ test('a Bot running a PTC program shows the tool the program is in', async (t) =
   assert.deepEqual(await now(), ['thinking', undefined])
 })
 
+test('group activities follow that group Session, retain quick steps and clear on a new turn', async (t) => {
+  const host = await start()
+  t.after(host.stop)
+  const activities = async () => (await host.call('state', {})).value.work.rooms.r1?.find(entry => entry.botId === 'b')?.activities
+  host.emit('gb', 'turn/start', { turn: 1 })
+  host.emit('b', 'turn/start', { turn: 1 })
+  host.emit('b', 'tool/call', { callId: 'private', name: 'read_file', arguments: '{"path":"private.md"}' })
+  program(host.emit, 'gb', 'program')
+  const finish = dispatch(host.emit, 'gb', 'program', 1, 'pwsh', { description: 'Inspect fixture', command: 'echo test' })
+  assert.deepEqual((await activities()).map(item => [item.tool, item.summary, item.status]), [['pwsh', 'Inspect fixture', 'running']])
+  finish()
+  assert.equal((await activities())[0].status, 'done')
+  host.emit('gb', 'tool/call', { callId: 'failed', name: 'read_file', arguments: '{"path":"missing.md"}' })
+  host.emit('gb', 'tool/result', { callId: 'failed', isError: true })
+  assert.equal((await activities()).at(-1).status, 'failed')
+  for (let i = 0; i < 30; i++) dispatch(host.emit, 'gb', 'program', i + 2, 'read_file', { path: `fixture-${i}.md` })()
+  assert.equal((await activities()).length, 24)
+  assert.doesNotMatch(JSON.stringify(await activities()), /private.md/)
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
+  assert.equal(await activities(), undefined)
+  host.emit('gb', 'turn/start', { turn: 2 })
+  assert.equal(await activities(), undefined)
+})
+
+test('a finished group member retains bounded activity in the relay result for reload', async (t) => {
+  const host = await start()
+  t.after(host.stop)
+  const result = await openTurn(t, host)
+  host.emit('gb', 'tool/call', { callId: 'fixture', name: 'pwsh', arguments: JSON.stringify({ description: 'Inspect fixture', command: 'echo test', unrelated: 'do not expose' }) })
+  host.emit('gb', 'tool/result', { callId: 'fixture', isError: true })
+  host.emit('gb', 'assistant/message', { message: { content: [{ type: 'text', text: 'Fixture checked.' }] } })
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'completed' } })
+  await settle(() => result() !== undefined)
+  const activity = result().activities[0]
+  assert.equal(activity.botId, 'b')
+  assert.equal(activity.entries[0].status, 'failed')
+  assert.equal(activity.entries[0].summary, 'Inspect fixture')
+  assert.doesNotMatch(JSON.stringify(activity), /do not expose/)
+})
+
 test('an approval asked inside a PTC program shows what that call does', async (t) => {
   const host = await start()
   t.after(host.stop)

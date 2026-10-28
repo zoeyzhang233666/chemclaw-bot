@@ -1,6 +1,7 @@
 import { createElement as h, useEffect, useRef, useState } from 'react'
 import { hostText, t } from './i18n.js'
 import { SKILL_CATEGORIES } from '../shared/skills.js'
+import { SkillEmojiPicker } from './skill-emoji-picker.js'
 
 const encode = file => new Promise((resolve, reject) => {
   const reader = new FileReader()
@@ -18,7 +19,7 @@ export function SkillInstaller({ actions, onClose, onInstalled, initialCategory 
   const [error, setError] = useState('')
   const [installCategory, setInstallCategory] = useState(SKILL_CATEGORIES.includes(initialCategory) ? initialCategory : '')
   const [dragging, setDragging] = useState(false)
-  const [writing, setWriting] = useState({ name: '', displayName: '', purpose: '', category: '我的安装', content: '' })
+  const [writing, setWriting] = useState({ name: '', displayName: '', purpose: '', category: '我的安装', emoji: '', content: '' })
   const token = useRef(null)
   const mounted = useRef(true)
   const files = useRef(null)
@@ -37,7 +38,7 @@ export function SkillInstaller({ actions, onClose, onInstalled, initialCategory 
     token.current = value.token
     if (!mounted.current) { void actions.cancelSkillImport(value.token); return }
     setPreview(value)
-    setChoices(Object.fromEntries(value.candidates.map(item => [item.key, { selected: item.valid && !item.exists, name: item.name, displayName: item.labels?.zh ?? '', purpose: item.purpose || item.description || '', category: installCategory || item.category || '未分类', conflict: 'skip' }])))
+    setChoices(Object.fromEntries(value.candidates.map(item => [item.key, { selected: item.valid && !item.exists, name: item.name, displayName: item.labels?.zh ?? '', purpose: item.purpose || item.description || '', category: installCategory || item.category || '未分类', emoji: item.emoji ?? '', conflict: 'skip' }])))
   }
   const upload = list => run(async () => {
     const chosen = [...list]
@@ -84,6 +85,7 @@ export function SkillInstaller({ actions, onClose, onInstalled, initialCategory 
         h('button', { className: 'bt-soft', disabled: busy || !url.trim() }, t('Find skills'))) : null,
       mode === 'write' ? h('form', { className: 'bt-skill-form', onSubmit: event => { event.preventDefault(); void write() } },
         [['displayName', 'Display name', ''], ['name', 'Technical ID', 'my-skill'], ['purpose', 'What this skill helps with', '']].map(([key, label, placeholder]) => h('label', { key }, t(label), h('input', { className: 'bt-input', required: key === 'name', value: writing[key], placeholder, onChange: event => setWriting({ ...writing, [key]: event.target.value }) }))),
+        h(SkillEmojiPicker, { item: writing, value: writing.emoji, disabled: busy, onChange: emoji => setWriting({ ...writing, emoji }) }),
         h('label', null, t('Category'), h('select', { className: 'bt-input', value: writing.category, onChange: event => setWriting({ ...writing, category: event.target.value }) }, [...SKILL_CATEGORIES, '我的安装'].map(value => h('option', { key: value, value }, t(value))))),
         h('label', null, t('Skill instructions'), h('textarea', { className: 'bt-input bt-input-area', required: true, rows: 8, value: writing.content, onChange: event => setWriting({ ...writing, content: event.target.value }) })),
         h('button', { className: 'bt-soft', disabled: busy }, t('Save skill'))) : null) : h('div', { className: 'bt-skill-preview' },
@@ -96,6 +98,7 @@ export function SkillInstaller({ actions, onClose, onInstalled, initialCategory 
             h('label', null, t('Display name (optional)'), h('input', { className: 'bt-input', value: choice.displayName, placeholder: item.originalName, disabled: busy, onChange: event => setChoice(item.key, { displayName: event.target.value }) })),
             h('label', null, t('Group'), h('select', { className: 'bt-input', value: choice.category, disabled: busy, onChange: event => setChoice(item.key, { category: event.target.value }) }, [...new Set([...SKILL_CATEGORIES, '未分类', choice.category])].map(value => h('option', { key: value, value }, t(value))))),
             h('label', null, t('What this skill helps with'), h('textarea', { className: 'bt-input', rows: 2, value: choice.purpose, disabled: busy, onChange: event => setChoice(item.key, { purpose: event.target.value }) })),
+            h(SkillEmojiPicker, { item: { ...item, ...choice }, value: choice.emoji, disabled: busy, onChange: emoji => setChoice(item.key, { emoji }) }),
             h('label', null, t('Technical ID'), h('input', { className: 'bt-input', value: choice.name, disabled: busy, onChange: event => setChoice(item.key, { name: event.target.value }) })),
             item.exists ? h('label', null, t('A skill with this ID is already installed'), h('select', { className: 'bt-input', value: choice.conflict, disabled: busy, onChange: event => setChoice(item.key, { conflict: event.target.value }) }, h('option', { value: 'skip' }, t('Skip existing skill')), h('option', { value: 'replace' }, t('Replace after validation'))), h('small', null, t('To keep both, enter a different technical ID.'))) : null))
       }),

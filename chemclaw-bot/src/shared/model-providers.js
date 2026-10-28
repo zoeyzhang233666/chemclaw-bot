@@ -6,3 +6,12 @@ export const APIHUB = Object.freeze({
   portalUrl: 'https://apihub.chem-cloud.cn/',
   api: 'openai-completions',
 })
+
+// OpenCode Zen Go: same key as Zen (`OPENCODE_API_KEY`), different base from `opencode`.
+export const OPENCODE_GO = Object.freeze({
+  id: 'opencode-go',
+  name: 'opencode-go',
+  baseURL: 'https://opencode.ai/zen/go/v1',
+  api: 'openai-completions',
+  apiKeyEnv: 'OPENCODE_API_KEY',
+})

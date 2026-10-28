@@ -6,6 +6,7 @@ import { rm, stat } from 'node:fs/promises'
 import { packageRoot, ensureSkillLibrary } from './catalog-seed.js'
 import { parseSkill, readSkillFile, skillDirectoryOf, skillFiles, managedSkillPath } from './skill-files.js'
 import { skillLabel } from '../shared/skills.js'
+import { validSkillEmoji } from '../shared/skill-presentation.js'
 
 const MCP_CLIENT = '@deepseek-ai/dsh-mcp-client'
 const NAME = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/
@@ -109,7 +110,7 @@ export function install(rt) {
       updatedAt: now,
     }
     if (kind === 'skill') {
-      const fields = ['displayName', 'labels', 'category', 'purpose', 'inputs', 'deliverables', 'examples', 'keywords', 'recommendedBots', 'originalName', 'sourcePath', 'directory', 'instructionFile', 'invocation', 'source', 'version', 'builtinHash', 'builtinSource', 'builtinVersion']
+      const fields = ['displayName', 'labels', 'category', 'purpose', 'emoji', 'inputs', 'deliverables', 'examples', 'keywords', 'recommendedBots', 'originalName', 'sourcePath', 'directory', 'instructionFile', 'invocation', 'source', 'version', 'builtinHash', 'builtinSource', 'builtinVersion']
       for (const field of fields) {
         if (previous?.[field] !== undefined) item[field] = previous[field]
         if (ui && body[field] !== undefined && !['directory', 'sourcePath', 'instructionFile', 'builtinHash', 'builtinSource', 'builtinVersion'].includes(field)) item[field] = body[field]
@@ -117,6 +118,7 @@ export function install(rt) {
       // Only the built-in seeder can supply a packaged resource path.
       if (builtinSeed && body.sourcePath) item.sourcePath = body.sourcePath
       for (const field of ['displayName', 'purpose', 'category', 'inputs', 'deliverables']) if (item[field] !== undefined) item[field] = String(item[field]).trim().slice(0, field === 'displayName' ? 100 : 2000)
+      if (item.emoji !== undefined && item.emoji !== '' && !validSkillEmoji(item.emoji)) throw new Error('Choose an emoji from the skill icon list.')
     }
     if (kind === 'mcp') {
       const transport = body.transport === 'streamable-http' ? 'streamable-http' : 'stdio'

@@ -3,6 +3,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, join, posix } from 'node:path'
 import { unzipSync } from 'fflate'
 import { managedSkillPath, parseSkill, safeSkillPath, SKILL_LIMITS } from './skill-files.js'
+import { skillEmoji, skillExample, validSkillEmoji } from '../shared/skill-presentation.js'
 
 function validateEntries(entries) {
   const names = new Set()
@@ -150,8 +151,11 @@ export function install(rt) {
       validateEntries(entries)
     }
     const candidates = identifySkills(entries).map(candidate => {
-      const known = Object.values(rt.state.capabilities.items).find(item => item.kind === 'skill' && item.originalName === candidate.originalName)
-      return known ? { ...candidate, category: known.category, labels: known.labels, purpose: known.purpose, inputs: known.inputs, deliverables: known.deliverables, examples: known.examples } : candidate
+      const existing = rt.state.capabilities.items[candidate.name]
+      const known = existing?.kind === 'skill' && existing.originalName === candidate.originalName ? existing
+        : Object.values(rt.state.capabilities.items).find(item => item.kind === 'skill' && item.originalName === candidate.originalName)
+      return known ? { ...candidate, category: known.category, labels: known.labels, purpose: known.purpose, inputs: known.inputs, deliverables: known.deliverables,
+        emoji: known.emoji ?? (known.builtinSource ? skillEmoji(known) : ''), examples: known.builtinSource ? [skillExample(known)] : known.examples } : candidate
     })
     const token = randomUUID()
     const root = join(rt.home, 'skills', 'staging', token)
@@ -182,6 +186,8 @@ export function install(rt) {
         if (existing && choice.conflict !== 'replace') { skipped.push(name); continue }
         if (existing && existing.kind !== 'skill') throw new Error(`A tool or pack already uses ${name}. Choose another name.`)
         if (names.has(name)) throw new Error(`Select each skill name only once: ${name}`)
+        const emoji = choice.emoji ?? existing?.emoji ?? candidate.emoji ?? ''
+        if (emoji !== '' && !validSkillEmoji(emoji)) throw new Error('Choose an emoji from the skill icon list.')
         names.add(name)
         previous[name] = existing
         const directory = `skills/installed/${randomUUID()}`
@@ -200,6 +206,7 @@ export function install(rt) {
           displayName: String(choice.displayName ?? '').trim().slice(0, 100),
           purpose: String(choice.purpose ?? candidate.purpose ?? candidate.description).trim().slice(0, 2000),
           category: String(choice.category || candidate.category || '未分类').trim().slice(0, 80),
+          emoji,
           source: stage.source, createdAt: existing?.createdAt ?? Date.now(), updatedAt: Date.now(), createdBy: null })
         for (const key of ['key', 'root', 'instruction', 'valid', 'files', 'bytes']) delete entry[key]
       }

@@ -30,6 +30,7 @@
 //   视图选项 (options card, waits) · 视图表单 (form card, waits) · 视图展示 (display-only
 //   stack) · 大视图 (display-only, just under the byte limit)
 //   查能力 [词] (names the mcp__ tools and catalog skills that contain 词; also in a group)
+//   执行过程验收 (three safe shell steps, including a failure, also in a group)
 //   A message with a file (a long Bot message as a file, a file the user sent): the Bot
 //   reads the saved path, then says how many lines it read and how the file ends.
 // Memory panel: a summary restating the entries; asks 记住|remember X, 团队记住 X,
@@ -187,6 +188,19 @@ function decide(body) {
   // A stopped call's result can share a message with the next group turn, which wins.
   const fresh = textBlocks(last?.content).some(value => value.trimStart().startsWith('[Group chat'))
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
+  const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
+  if (activityAt >= 0 && /(?:^|\n)(?:User: )?执行过程验收(?:\r?\n|$)/.test(textOf(messages[activityAt].content))) {
+    const shell = ['pwsh', 'bash'].find(name => tools.has(name))
+    if (shell) {
+      const step = messages.slice(activityAt + 1).filter(isResults).length
+      if (step >= 3) return [text('执行过程验收结束：已尝试命令、失败检查和恢复步骤。')]
+      const descriptions = ['Inspect activity fixture', 'Verify failure feedback', 'Finish activity fixture']
+      const command = shell === 'pwsh'
+        ? `Start-Sleep -Seconds 8; ${step === 1 ? 'exit 1' : "Write-Output 'activity fixture'"}`
+        : `sleep 8; ${step === 1 ? 'exit 1' : "echo 'activity fixture'"}`
+      return Object.assign([...(step === 1 ? [text('第一步已返回，继续检查失败反馈。')] : []), tool(shell, { command, description: descriptions[step] })], { delay: step === 0 ? DELAY : 8000 })
+    }
+  }
   if (result) {
     const resultText = typeof result.content === 'string' ? result.content : textOf(result.content)
     const call = [...messages].reverse().find(m => m.role === 'assistant' && Array.isArray(m.content) && m.content.some(b => b.type === 'tool_use'))

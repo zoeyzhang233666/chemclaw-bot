@@ -929,6 +929,27 @@ body[data-bt-layout=flat] .bt-think{max-width:calc(var(--bt-flat-w) * 100%)}
 .bt-time-sep{display:flex;justify-content:center;align-items:center;height:28px;margin:14px 0 8px;font-size:12px;line-height:16px;color:var(--bt-ink-2);white-space:nowrap}
 [class*="_scroll"]>[class*="_column"]::before{content:var(--bt-first-sep,none);display:block;flex:none;height:28px;margin:17px 0 12px;font-size:12px;line-height:28px;text-align:center;color:var(--bt-ink-2);white-space:nowrap}
 .bt-activity{display:flex;align-items:center;gap:10px;margin:8px 0 4px 2px;font-size:14px;color:var(--bt-ink-2)}
+.bt-tool-activity{min-width:0;max-width:100%;margin:2px 0;color:var(--bt-ink-2);font-size:14px;line-height:22px}
+.bt-tool-activity summary{cursor:pointer;list-style:none;min-width:0;border-radius:6px}
+.bt-tool-activity summary::-webkit-details-marker{display:none}
+.bt-tool-activity summary:hover{background:var(--bt-hover)}
+.bt-tool-activity summary:focus-visible{outline:2px solid var(--bt-accent);outline-offset:2px}
+.bt-tool-step>summary{display:flex;align-items:center;gap:8px;padding:6px 2px}
+.bt-tool-icon{flex:none;display:flex;align-items:center;width:18px;color:var(--bt-ink-2)}
+.bt-tool-icon svg{width:16px;height:16px}
+.bt-tool-step[data-state=running] .bt-tool-icon{color:var(--bt-accent);animation:bt-tool-pulse 1.4s ease-in-out infinite}
+.bt-tool-step[data-state=failed] .bt-tool-icon,.bt-tool-step[data-state=failed] .bt-tool-status{color:var(--bt-danger)}
+.bt-tool-kind{flex:none}
+.bt-tool-separator{color:var(--bt-ink-3)}
+.bt-tool-bot{flex:none;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+.bt-tool-summary{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bt-tool-status{flex:none;font-size:11px;color:var(--bt-ink-3)}
+.bt-tool-detail{margin:2px 4px 8px 26px;padding:8px 10px;background:var(--bt-hover);border-radius:8px;overflow-wrap:anywhere}
+.bt-tool-name{font-size:11px;color:var(--bt-ink-3)}
+.bt-tool-detail pre{margin:4px 0 0;max-height:180px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+@keyframes bt-tool-pulse{50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.bt-tool-step[data-state=running] .bt-tool-icon{animation:none}}
+@media(max-width:480px){.bt-tool-step>summary{gap:5px}.bt-tool-kind,.bt-tool-bot{max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 .bt-group-replies{display:contents}
 /* A Bot chat is flat in every work-details mode, without changing the user's mode
    (it is a DSH-wide setting): step groups lose their header and stay open, and what a

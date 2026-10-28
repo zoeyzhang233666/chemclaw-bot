@@ -38,6 +38,84 @@ runInNewContext(outputFiles[0].text, {
 })
 const { SHELL_CSS, SIDEBAR_CSS, TeamSidebar } = module.exports
 
+test('sidebar tabs filter rows, clear category filters and keep the main Bot above the controls', () => {
+  const state = []
+  let stateIndex = 0
+  const originalState = react.useState
+  react.useState = initial => {
+    const index = stateIndex++
+    if (!(index in state)) state[index] = initial
+    return [state[index], value => { state[index] = value }]
+  }
+  try {
+    const main = { id: 'main', name: 'ChemClaw' }
+    const sales = { id: 'sales', role: '内贸销售' }
+    const buying = { id: 'buying', role: '产业研究' }
+    const room = { id: 'room', name: 'Team', members: [] }
+    const roster = { mainBotId: main.id, bots: [main, sales, buying], rooms: [room], agents: [], byId: { main }, ready: true, prefs: { sidebar: { collapsed: ['内贸销售', 'rooms'] } } }
+    const actions = { setPrefs: async ({ sidebar }) => { Object.assign(roster.prefs.sidebar, sidebar) }, reportError: () => {} }
+    const nodes = []
+    const walk = node => {
+      if (Array.isArray(node)) return node.forEach(walk)
+      if (!node || typeof node !== 'object') return
+      nodes.push(node)
+      walk(node.props?.children)
+    }
+    const render = (wide = true) => {
+      stateIndex = 0
+      nodes.length = 0
+      walk(TeamSidebar({
+        wide, actions, useRoster: pick => pick(roster), useUi: pick => pick({ unread: {} }),
+        useRegistry: pick => pick({}), useSessions: pick => pick({ ids: [], byId: {} }),
+      }))
+    }
+    const click = text => {
+      const button = nodes.find(node => node.type === 'button' && node.props.children[0] === text)
+      if (button) button.props.onClick()
+      else nodes.find(node => node.type?.name === 'SidebarFilters').props.items.find(item => item.label === text).pick()
+    }
+    const ids = () => nodes.filter(node => ['BotRow', 'RoomRow'].includes(node.type?.name)).map(node => (node.props.bot ?? node.props.room).id)
+    render()
+    assert.deepEqual(ids(), ['main', 'sales', 'buying', 'room'])
+    assert.ok(nodes.findIndex(node => node.type?.name === 'BotRow') < nodes.findIndex(node => node.props?.className === 'bt-side-controls'))
+    click('Experts')
+    render()
+    assert.deepEqual(ids(), ['main', 'sales', 'buying'])
+    assert.ok(nodes.filter(node => node.type?.name === 'DirectoryLabel').every(node => !node.props.collapsed))
+    nodes.find(node => node.type?.name === 'DirectoryLabel' && node.props.id === '内贸销售').props.onToggle()
+    render()
+    assert.deepEqual(ids(), ['main', 'buying'])
+    nodes.find(node => node.type?.name === 'CategoryMenu').props.onPick('bot', '内贸销售')
+    render()
+    assert.deepEqual(ids(), ['main', 'sales'])
+    assert.equal(nodes.find(node => node.type?.name === 'DirectoryLabel').props.collapsed, false)
+    assert.ok(roster.prefs.sidebar.collapsed.includes('内贸销售'))
+    click('Expert groups')
+    render()
+    assert.deepEqual(ids(), ['main', 'room'])
+    assert.equal(nodes.find(node => node.type?.name === 'DirectoryLabel').props.collapsed, false)
+    click('Experts')
+    render()
+    assert.deepEqual(ids(), ['main', 'sales', 'buying'])
+    click('产业研究')
+    render(false)
+    assert.deepEqual(ids(), ['main', 'sales', 'buying', 'room'])
+    assert.ok(!nodes.some(node => node.props?.className === 'bt-side-controls'))
+    render()
+    const created = { id: 'custom:empty', kind: 'room', name: 'Empty group category' }
+    roster.prefs.sidebar.categories = [created]
+    nodes.find(node => node.type?.name === 'CategoryMenu').props.onCreated(created)
+    render()
+    const label = nodes.find(node => node.type?.name === 'DirectoryLabel')
+    assert.equal(label.props.id, created.id)
+    assert.equal(label.props.count, 0)
+    assert.equal(label.props.collapsed, false)
+    assert.deepEqual(ids(), ['main'])
+  } finally {
+    react.useState = originalState
+  }
+})
+
 function navigationSidebar(wide, { shell = true } = {}) {
   const calls = []
   const refs = []

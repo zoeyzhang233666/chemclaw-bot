@@ -23,6 +23,8 @@ import { parseReplies } from '../shared/group-replies.js'
 import { BtwCardView } from './btw.js'
 import { partIndexOf, withBtwRows } from './btw-model.js'
 import { layoutOf, thinkingShown } from './themes.js'
+import { toolActivityDetail } from '../shared/tool-activity.js'
+import { ToolActivities } from './tool-activity.js'
 
 export { clockLabel }
 
@@ -843,8 +845,13 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
     return () => { stop = true; clearTimeout(timer) }
   }, [done, sessionId, callId])
   let replies = live.replies
+  let activities = []
   let broken = false
   if (done) {
+    try {
+      const saved = JSON.parse(contentText(content))?.activities
+      if (Array.isArray(saved)) activities = saved.filter(entry => entry && Array.isArray(entry.entries))
+    } catch { /* A pruned result can still recover its replies below. */ }
     const parsed = parseReplies(contentText(content))
     replies = parsed.broken && !parsed.replies.length ? live.replies : parsed.replies
     broken = parsed.broken
@@ -855,9 +862,12 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
   const drafts = done ? [] : (live.drafts ?? []).filter(draft => !posted.has(`${draft.botId}\0${draft.text}`))
   const preparing = !done && !live.speaking && replies.length === 0 && drafts.length === 0
   const pending = done || !live.speaking || drafts.some(draft => draft.botId === live.speaking) ? [] : [live.speaking]
-  const speakerTool = useWork?.(work => work.bots?.[live.speaking]?.tool) ?? undefined
-  const speakerDoing = useWork?.(work => (work.bots?.[live.speaking]?.tool ? workPhrase(work.bots[live.speaking]) : undefined)) ?? undefined
-  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) {
+  const roomWorkKey = useWork?.(work => JSON.stringify(work.rooms?.[sessionId] ?? [])) ?? '[]'
+  const roomWork = JSON.parse(roomWorkKey)
+  const speakerWork = roomWork.find(entry => entry.botId === live.speaking)
+  const speakerTool = speakerWork?.tool
+  const speakerDoing = speakerTool ? workPhrase(speakerWork) : undefined
+  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && activities.length === 0 && !preparing) {
     return broken ? h('div', { className: 'bt-group-replies' }, h('div', { className: 'bt-event', role: 'status' }, t('The group replies could not be shown'))) : null
   }
   const room = roster.roomsById[sessionId]
@@ -912,6 +922,7 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
       }
       return h(GroupMessage, { key: `${reply.botId}-${index}`, bot, texts, room, roster, actions, msgKey: callId ? `${sessionId}:${callId}:${index}` : undefined, useUi, time, duration })
     }),
+    activities.map((entry, index) => h(ToolActivities, { key: `activity-${index}`, name: roster.byId[entry.botId]?.name ?? entry.name, entries: entry.entries })),
     drafts.map(draft => {
       const bot = roster.byId[draft.botId]
       return bot ? h(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room, roster, actions, streaming: true }) : null
@@ -1048,16 +1059,26 @@ export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCa
   const root = node.data.root
   const turn = node.location?.turn?.turn ?? root.turn
   const hidden = isHiddenTurn(roster, sessionId, turn)
+  const active = useWork?.(work => {
+    const entry = work.bots?.[roster.byId[sessionId]?.id]
+    return entry?.sessionId === sessionId && entry?.turn === turn
+  }) ?? true
   const findBot = nameOrId => roster.byId[nameOrId] ?? roster.bots.find(bot => bot.name.toLowerCase() === String(nameOrId ?? '').toLowerCase())
   const calls = hidden ? [] : callTree(root)
   const drawn = calls.filter(call => DRAWN.has(toolName(call)))
   // The newest call still running names the work, so a program reads as the tool it is in.
-  const running = root.kind === 'tool-result' ? undefined : calls.findLast(call => call.kind !== 'tool-result')
+  const running = !active || root.kind === 'tool-result' ? undefined : calls.findLast(call => call.kind !== 'tool-result')
   const note = running ? toolActivity(toolName(running), toolArgs(running).text, findBot, roster.byId[sessionId]) : null
-  // A running tool shows only as the activity row's phrase.
+  // The tail still gives immediate acknowledgement before any tool is called.
   useLiveNote(actions, sessionId, `tool:${root.callId ?? node.key}`, note)
   useShownCards(actions, sessionId, drawn.filter(call => CARDS.has(toolName(call)) && call.callId).map(call => call.callId))
-  if (drawn.length === 0) return null
+  const ordinary = calls.filter(call => toolName(call) && !DRAWN.has(toolName(call)) && (toolName(call) !== 'run_code' || calls.length === 1))
+  const entries = ordinary.map((call, index) => ({
+    id: call.callId ?? index,
+    ...toolActivityDetail(toolName(call) ?? '', toolArgs(call).text),
+    status: call.kind === 'tool-result' ? call.isError ? 'failed' : 'done' : active ? 'running' : 'stopped',
+  }))
+  if (drawn.length === 0 && entries.length === 0) return null
   const env = { sessionId, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages } }
-  return h(Fragment, null, drawn.map((call, index) => h(Fragment, { key: call.callId ?? index }, renderCall(call, env))))
+  return h(Fragment, null, h(ToolActivities, { entries }), drawn.map((call, index) => h(Fragment, { key: call.callId ?? index }, renderCall(call, env))))
 }

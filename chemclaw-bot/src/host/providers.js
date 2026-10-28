@@ -3,7 +3,7 @@
 // it, the route's key in DSH's credential store under the reference the route names.
 // The providers to add are the ones DSH's directory of configurable providers offers.
 
-import { APIHUB } from '../shared/model-providers.js'
+import { APIHUB, OPENCODE_GO } from '../shared/model-providers.js'
 
 const PI_AI = 'llm-pi-ai'
 const ROUTE_ID = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/
@@ -123,6 +123,10 @@ export function install(rt) {
         ...(entry.error ? { error: entry.error } : {}),
       })
     }
+    // ChemClaw's OpenCode Go route is not in DSH's directory; offer it until set up.
+    if (!providers.some(item => item.id === OPENCODE_GO.id) && !addable.some(item => item.id === OPENCODE_GO.id)) {
+      addable.push({ id: OPENCODE_GO.id, name: OPENCODE_GO.name })
+    }
     // The ones that come with the setup first, then the added ones as DSH lists them.
     providers.sort((a, b) => Number(b.id === APIHUB.id) - Number(a.id === APIHUB.id) || Number(a.removable) - Number(b.removable))
     return { available: true, providers, addable, protocols: PROTOCOLS, featured: APIHUB }
@@ -147,13 +151,15 @@ export function install(rt) {
     rt.dropCatalog()
   }
 
-  // `provider` from DSH's directory, or a route the user declares (`custom`) for an
-  // endpoint DSH ships nothing about. The route goes in first, then its key, as DSH's
-  // own Models page does it: a failed key write leaves a provider that asks for one.
+  // `provider` from DSH's directory, ChemClaw's OpenCode Go preset, or a route the user
+  // declares (`custom`) for an endpoint DSH ships nothing about. The route goes in first,
+  // then its key, as DSH's own Models page does it: a failed key write leaves a provider
+  // that asks for one.
   async function addProvider(body) {
     if (body.preset === 'apihub') return setupApiHub(body)
-    const { settings, credentials } = usable()
     const provider = String(body.provider ?? '').trim()
+    if (body.custom !== true && (provider === OPENCODE_GO.id || body.preset === OPENCODE_GO.id)) return setupOpenCodeGo(body)
+    const { settings, credentials } = usable()
     const map = sections(settings)
     const entry = entryOf(provider)
     if (entry !== undefined && (entry.settingsNs !== PI_AI || profileOf(entry, map) !== undefined)) throw invalid(`${provider} is already set up`)
@@ -195,6 +201,30 @@ export function install(rt) {
     if (!key && !info.configured) throw invalid('Enter the APIHub key')
     if (key && info.writable === false) throw invalid('This APIHub key is configured outside ChemClaw')
     await settings.mutate(PI_AI, [{ op: 'set', path: entry?.settingsPath ?? ['providers', APIHUB.id], value: { ...profile, displayName: APIHUB.name, api: APIHUB.api, baseURL: APIHUB.baseURL, apiKeyEnv: ref, models } }], map.get(PI_AI)?.revision)
+    if (key) await credentials.set(ref, key)
+    rt.dropCatalog()
+    return providersView()
+  }
+
+  // Known-provider path for OpenCode Go: discover every model at the fixed Zen Go
+  // endpoint, then write the route the way a custom API would.
+  async function setupOpenCodeGo(body) {
+    const { settings, credentials } = usable()
+    const entry = entryOf(OPENCODE_GO.id)
+    if (entry && entry.settingsNs !== PI_AI) throw invalid('An existing adapter owns the opencode-go provider name')
+    const map = sections(settings)
+    if (entry && profileOf(entry, map) !== undefined) throw invalid(`${OPENCODE_GO.id} is already set up`)
+    const ref = OPENCODE_GO.apiKeyEnv
+    const key = typeof body.key === 'string' && body.key.trim() !== '' ? checkKey(body.key) : undefined
+    const info = await credentials.describe(ref)
+    if (!key && !info.configured) throw invalid('Enter the API key')
+    if (key && info.writable === false) throw invalid(`The API key for ${OPENCODE_GO.id} is set outside ChemClaw and cannot be changed here`)
+    const models = (await discoverModels({ baseURL: OPENCODE_GO.baseURL, api: OPENCODE_GO.api, key: key ?? (await credentials.resolve(ref))?.value }))
+      .slice(0, MAX_MODELS).map(modelEntry)
+    if (!models.length) throw invalid('OpenCode Go returned no models. Check the key and try again.')
+    await settings.mutate(PI_AI, [{ op: 'set', path: entry?.settingsPath ?? ['providers', OPENCODE_GO.id], value: {
+      displayName: OPENCODE_GO.name, api: OPENCODE_GO.api, baseURL: OPENCODE_GO.baseURL, apiKeyEnv: ref, models,
+    } }], map.get(PI_AI)?.revision)
     if (key) await credentials.set(ref, key)
     rt.dropCatalog()
     return providersView()
