@@ -53,7 +53,8 @@ test('sidebar tabs filter rows, clear category filters and keep the main Bot abo
     const buying = { id: 'buying', role: '产业研究' }
     const room = { id: 'room', name: 'Team', members: [] }
     const roster = { mainBotId: main.id, bots: [main, sales, buying], rooms: [room], agents: [], byId: { main }, ready: true, prefs: { sidebar: { collapsed: ['内贸销售', 'rooms'] } } }
-    const actions = { setPrefs: async ({ sidebar }) => { Object.assign(roster.prefs.sidebar, sidebar) }, reportError: () => {} }
+    const opened = []
+    const actions = { setPrefs: async ({ sidebar }) => { Object.assign(roster.prefs.sidebar, sidebar) }, reportError: () => {}, openSettings: (...args) => opened.push(args) }
     const nodes = []
     const walk = node => {
       if (Array.isArray(node)) return node.forEach(walk)
@@ -76,6 +77,11 @@ test('sidebar tabs filter rows, clear category filters and keep the main Bot abo
     }
     const ids = () => nodes.filter(node => ['BotRow', 'RoomRow'].includes(node.type?.name)).map(node => (node.props.bot ?? node.props.room).id)
     render()
+    const calendar = nodes.find(node => node.type === 'button' && node.props.title === 'Calendar')
+    assert.ok(calendar)
+    calendar.props.onClick()
+    assert.deepEqual(opened, [['schedules']])
+    assert.ok(!nodes.some(node => node.type === 'button' && node.props.className === 'bt-row' && node.props.title === 'Settings'))
     assert.deepEqual(ids(), ['main', 'sales', 'buying', 'room'])
     assert.ok(nodes.findIndex(node => node.type?.name === 'BotRow') < nodes.findIndex(node => node.props?.className === 'bt-side-controls'))
     click('Experts')
@@ -99,6 +105,7 @@ test('sidebar tabs filter rows, clear category filters and keep the main Bot abo
     assert.deepEqual(ids(), ['main', 'sales', 'buying'])
     click('产业研究')
     render(false)
+    assert.ok(nodes.some(node => node.type === 'button' && node.props.title === 'Calendar'))
     assert.deepEqual(ids(), ['main', 'sales', 'buying', 'room'])
     assert.ok(!nodes.some(node => node.props?.className === 'bt-side-controls'))
     render()

@@ -56,3 +56,5 @@
 /CURSOR_HANDOFF.md
 /app/.release-source.png*
 /app/.release-tools/
+
+.worktrees/

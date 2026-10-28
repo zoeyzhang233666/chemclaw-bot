@@ -1,6 +1,6 @@
 import { createElement as h, useRef, useState } from 'react'
 import { FishLogo } from './dsh-primitives.js'
-import { PlusIcon, PeopleIcon, ArrowUpIcon } from './icons.js'
+import { PlusIcon, PeopleIcon, ArrowUpIcon, DuplicateIcon } from './icons.js'
 import { AdminStar, BotMark } from './mark.js'
 import { useEscape, usePaneLeft } from './overlay-hooks.js'
 import { CreateBot } from './create-bot.js'
@@ -11,6 +11,7 @@ export function NewChat({ mode, roster, actions }) {
   const [query, setQuery] = useState('')
   const [picked, setPicked] = useState([])
   const [group, setGroup] = useState(mode === 'group')
+  const [copy, setCopy] = useState(mode === 'copy')
   // A new group chat picks its admin first, then the other members.
   const [admin, setAdmin] = useState(null)
   const [message, setMessage] = useState('')
@@ -46,14 +47,24 @@ export function NewChat({ mode, roster, actions }) {
     setCursor(0)
     inputRef.current?.focus()
   }
-  const openBot = bot => run(async () => {
-    if (choosingAdmin) { chooseAdmin(bot); return }
-    if (group || picked.length > 0) { pick(bot); return }
-    if (bot.hidden) await actions.setFlags(bot.id, { hidden: false })
-    if (message.trim()) await actions.send(bot.id, message.trim())
-    actions.openSession(bot.id)
-    close()
-  })
+  const openBot = bot => {
+    if (copy) {
+      void run(async () => {
+        const next = await actions.duplicateBot(bot.id)
+        actions.openSession(next.id)
+        close()
+      })
+      return
+    }
+    void run(async () => {
+      if (choosingAdmin) { chooseAdmin(bot); return }
+      if (group || picked.length > 0) { pick(bot); return }
+      if (bot.hidden) await actions.setFlags(bot.id, { hidden: false })
+      if (message.trim()) await actions.send(bot.id, message.trim())
+      actions.openSession(bot.id)
+      close()
+    })
+  }
   const createBot = () => {
     if (busy) return
     setError('')
@@ -78,6 +89,7 @@ export function NewChat({ mode, roster, actions }) {
   }
   const createGroup = () => run(makeGroup)
   const sendMessage = () => run(async () => {
+    if (copy) return
     const text = message.trim()
     if (group && admin !== null) { await makeGroup(); return }
     if (text === '' || picked.length === 0) return
@@ -93,18 +105,31 @@ export function NewChat({ mode, roster, actions }) {
     close()
   })
   const options = []
-  if (!group && picked.length === 0 && mode !== 'search' && wanted === '') {
+  if (!group && !copy && picked.length === 0 && mode !== 'search' && wanted === '') {
     options.push({ key: 'new', icon: h(PlusIcon), label: t('Create new Bot'), run: createBot })
+    options.push({ key: 'copy', icon: h(DuplicateIcon), label: t('Copy expert'), run: () => { setCopy(true); setCursor(0); inputRef.current?.focus() } })
     options.push({ key: 'group', icon: h(PeopleIcon), label: t('Create group chat'), run: () => { setGroup(true); setCursor(0); inputRef.current?.focus() } })
     // A team holds at most one DSH Agent; the entry exists only while there is none.
     if ((roster.agents ?? []).length === 0 && actions.addAgent) {
       options.push({ key: 'agent', icon: h(FishLogo, { size: 16 }), label: t('Add DSH Agent'), run: () => run(async () => { await actions.addAgent(); close() }) })
     }
   }
+  const copying = copy
   for (const bot of matches) {
-    options.push({ key: bot.id, bot, label: bot.name, hint: choosingAdmin ? t('Make admin') : group || picked.length > 0 ? t('Add to group chat') : undefined, run: () => openBot(bot) })
+    options.push({
+      key: bot.id,
+      bot,
+      label: bot.name,
+      hint: copying ? t('Copy expert')
+        : choosingAdmin ? t('Make admin')
+        : group || picked.length > 0 ? t('Add to group chat')
+        : undefined,
+      run: () => openBot(bot),
+    })
   }
-  if (wanted !== '' && !exact && mode !== 'search') options.push({ key: 'create', icon: h(PlusIcon), label: t('Create new Bot “{name}”', { name: query.trim() }), run: createBot })
+  if (wanted !== '' && !exact && mode !== 'search' && !copy) {
+    options.push({ key: 'create', icon: h(PlusIcon), label: t('Create new Bot “{name}”', { name: query.trim() }), run: createBot })
+  }
   const active = Math.min(cursor, Math.max(options.length - 1, 0))
   const listed = options.map(option => option.key).join('\n')
   const glide = useGlide(`${active}\n${listed}`, { axis: 'y', ...QUICK_EDGES })
@@ -139,7 +164,11 @@ export function NewChat({ mode, roster, actions }) {
           h('button', { type: 'button', 'aria-label': t('Remove {name}', { name: bot.name }), onClick: () => setPicked(current => current.filter(id => id !== bot.id)) }, '×'))),
         h('input', {
           ref: inputRef, autoFocus: true, value: query, 'aria-label': t('Recipient'),
-          placeholder: mode === 'search' ? t('Search Bots…') : choosingAdmin ? t('Choose the group admin') : group ? t('Who to chat with…') : t('Start a chat with…'),
+          placeholder: mode === 'search' ? t('Search Bots…')
+            : copy ? t('Choose a Bot to copy…')
+            : choosingAdmin ? t('Choose the group admin')
+            : group ? t('Who to chat with…')
+            : t('Start a chat with…'),
           onChange: (event) => { setQuery(event.target.value); setCursor(0) },
           onKeyDown: (event) => {
             if (event.nativeEvent.isComposing) return

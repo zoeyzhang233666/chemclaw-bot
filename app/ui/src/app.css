@@ -75,6 +75,7 @@ body[data-bt-room] [data-composer-card]:has(.dsb-send:disabled) .bt-mic:not([ari
 
 /* Markdown in the bubbles (primitives.js). */
 .md_markdown{overflow-wrap:anywhere}
+.md_markdown strong,.md_markdown b{font-weight:700}
 .md_markdown h1,.md_markdown h2,.md_markdown h3,.md_markdown h4,.md_markdown h5,.md_markdown h6{margin:0;font-size:inherit;font-weight:600}
 .md_markdown h1,.md_markdown h2{font-size:1.15em}
 .md_markdown a{color:var(--bt-accent);text-decoration:none}
