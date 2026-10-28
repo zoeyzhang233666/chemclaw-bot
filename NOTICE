@@ -230,3 +230,11 @@ DS-Bot avatar library, Apache-2.0
   Adapted PRs #491 and follow-up at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
   Copyright 2026 Fei2411 and the DS Bot contributors.
   ChemClaw keeps original role artwork and 50 presets; library photos are user-owned.
+
+ChemClaw upstream parity with DS-Bot v0.2.3 (2026-10-28):
+  Adapted browser Settings grants UI, Secrets Settings purpose editing, right-panel
+  mutex, browser script mode, and selective client CSS/font/fold polish from
+  Fei2411/DS-Bot at 4a7b55069ad300eae8be42a74f31bc170b40ead7 (Apache-2.0).
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  ChemClaw keeps DSH rc.3, model/company Key separation, existing approval and
+  sandbox paths, HTML/Excel/PPT preview, Skills, MCP, APIHub and brand styles.
