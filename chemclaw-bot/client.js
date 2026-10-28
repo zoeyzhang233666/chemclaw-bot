@@ -502,6 +502,14 @@ var ZH = {
   "Search connectors": "搜索连接器",
   "No connectors": "暂无连接器",
   Capabilities: "能力",
+  "Copy as new Bot": "复制为新 Bot",
+  "None enabled": "尚未启用",
+  "1 enabled": "已启用 1 项",
+  "{count} enabled": "已启用 {count} 项",
+  "Show capabilities": "展开能力列表",
+  "Hide capabilities": "收起能力列表",
+  "No matching capabilities": "没有匹配的能力",
+  "A copy with the same job, model and capabilities, and fresh memory.": "复制分工、模型和已启用能力，记忆从零开始。",
   "Shared capabilities": "共享能力",
   "Add capability": "添加能力",
   "No capabilities saved": "还没有保存能力",
@@ -7754,19 +7762,54 @@ function BotCapabilitiesCard({ bot, roster, actions, run: run2, Card: Card2, Swi
   const items = [...roster.capabilities ?? []].sort((a, b) => Number(b.kind === "pack") - Number(a.kind === "pack") || a.name.localeCompare(b.name));
   const attached = new Set(bot.capabilities ?? []);
   const [query, setQuery] = (0, import_react15.useState)("");
+  const [open, setOpen] = (0, import_react15.useState)(false);
   const statuses = roster.capabilityStatuses?.[bot.id] ?? {};
   if (items.length === 0) return null;
+  const needle = query.trim().toLowerCase();
+  const searching = needle !== "";
+  const shown = searching ? items.filter((item) => `${capabilityLabel(item)} ${item.purpose || item.description} ${item.name}`.toLowerCase().includes(needle)) : items;
+  const expanded = open || searching;
+  const count = attached.size;
+  const summary = count === 0 ? t("None enabled") : count === 1 ? t("1 enabled") : t("{count} enabled", { count });
   return (0, import_react15.createElement)(
     Card2,
-    { title: t("Capabilities") },
-    (0, import_react15.createElement)("div", { className: "bt-set-row" }, (0, import_react15.createElement)("input", { className: "bt-input", placeholder: t("Search tasks, skills, or keywords"), value: query, onChange: (event) => setQuery(event.target.value), "aria-label": t("Search tasks, skills, or keywords") })),
-    items.filter((item) => `${capabilityLabel(item)} ${item.purpose || item.description} ${item.name}`.toLowerCase().includes(query.toLowerCase())).map((item) => (0, import_react15.createElement)(SwitchRow2, {
-      key: item.name,
-      label: capabilityLabel(item),
-      hint: [item.purpose || item.description, attached.has(item.name) ? statusText(statuses[item.name]) : void 0].filter(Boolean).join(" · "),
-      on: attached.has(item.name),
-      onChange: (enabled) => void run2(actions.setBotCapability(bot.id, item.name, enabled))
-    }))
+    null,
+    (0, import_react15.createElement)(
+      "button",
+      {
+        type: "button",
+        className: "bt-set-row bt-bs-row bt-cap-toggle",
+        "aria-expanded": expanded,
+        "aria-label": expanded ? t("Hide capabilities") : t("Show capabilities"),
+        onClick: () => setOpen((value) => !value)
+      },
+      (0, import_react15.createElement)(
+        "span",
+        { className: "bt-set-copy" },
+        (0, import_react15.createElement)("span", { className: "bt-bs-label" }, t("Capabilities")),
+        (0, import_react15.createElement)("span", { className: "bt-set-hint" }, summary)
+      ),
+      (0, import_react15.createElement)("span", { className: "bt-cap-caret", "data-open": expanded || void 0, "aria-hidden": true }, "▸")
+    ),
+    (0, import_react15.createElement)("div", { className: "bt-set-row" }, (0, import_react15.createElement)("input", {
+      className: "bt-input",
+      placeholder: t("Search tasks, skills, or keywords"),
+      value: query,
+      onChange: (event) => setQuery(event.target.value),
+      "aria-label": t("Search tasks, skills, or keywords"),
+      onClick: (event) => event.stopPropagation()
+    })),
+    expanded ? (0, import_react15.createElement)(
+      "div",
+      { className: "bt-cap-list" },
+      shown.length === 0 ? (0, import_react15.createElement)("div", { className: "bt-cap-empty" }, t("No matching capabilities")) : shown.map((item) => (0, import_react15.createElement)(SwitchRow2, {
+        key: item.name,
+        label: capabilityLabel(item),
+        hint: [item.purpose || item.description, attached.has(item.name) ? statusText(statuses[item.name]) : void 0].filter(Boolean).join(" · "),
+        on: attached.has(item.name),
+        onChange: (enabled) => void run2(actions.setBotCapability(bot.id, item.name, enabled))
+      }))
+    ) : null
   );
 }
 
@@ -13281,6 +13324,11 @@ function BotSettingsForm({ bot, roster, actions, run: run2 }) {
         (0, import_react32.createElement)("span", { className: "bt-bs-sub" }, [bot.role, isMainBot ? t("Main Bot") : ""].filter(Boolean).join(" · ") || t("Bot"))
       )
     ),
+    (0, import_react32.createElement)("button", {
+      type: "button",
+      className: "bt-soft bt-bs-copy",
+      onClick: duplicate
+    }, t("Copy as new Bot")),
     (0, import_react32.createElement)(
       Card,
       { title: t("Profile") },
@@ -13347,7 +13395,7 @@ function BotSettingsForm({ bot, roster, actions, run: run2 }) {
       (0, import_react32.createElement)(
         "button",
         { type: "button", className: "bt-set-row bt-bs-row", onClick: duplicate },
-        (0, import_react32.createElement)("span", { className: "bt-set-copy" }, (0, import_react32.createElement)("span", { className: "bt-bs-label" }, t("Duplicate")), (0, import_react32.createElement)("span", { className: "bt-set-hint" }, t("A copy with the same job and model, and fresh memory."))),
+        (0, import_react32.createElement)("span", { className: "bt-set-copy" }, (0, import_react32.createElement)("span", { className: "bt-bs-label" }, t("Duplicate")), (0, import_react32.createElement)("span", { className: "bt-set-hint" }, t("A copy with the same job, model and capabilities, and fresh memory."))),
         (0, import_react32.createElement)("span", { className: "bt-chevron" }, (0, import_react32.createElement)(ChevronRightIcon))
       ),
       isMainBot ? null : (0, import_react32.createElement)(
@@ -13366,6 +13414,13 @@ function BotSettingsForm({ bot, roster, actions, run: run2 }) {
 }
 var BOT_SETTINGS_CSS = `
 .bt-bs{display:flex;flex-direction:column;gap:18px}
+.bt-bs-copy{align-self:flex-start;margin:0 4px}
+.bt-cap-toggle{width:100%;cursor:pointer;text-align:left;border:0;background:none;font:inherit;color:inherit}
+.bt-cap-toggle:hover{background:var(--bt-hover)}
+.bt-cap-caret{flex:none;color:var(--bt-ink-3);transition:transform .18s ease}
+.bt-cap-caret[data-open]{transform:rotate(90deg)}
+.bt-cap-list{max-height:min(280px,42vh);overflow:auto;overscroll-behavior:contain;border-top:.5px solid var(--bt-line);padding-top:4px}
+.bt-cap-empty{padding:10px 12px;font-size:13px;line-height:18px;color:var(--bt-ink-3)}
 .bt-bs-hero{display:flex;align-items:center;gap:14px;padding:2px 4px}
 .bt-bs-who{display:flex;flex-direction:column;min-width:0;gap:2px}
 .bt-bs-name{font-size:17px;line-height:24px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

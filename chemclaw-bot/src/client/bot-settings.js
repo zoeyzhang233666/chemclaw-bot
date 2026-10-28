@@ -202,6 +202,10 @@ export function BotSettingsForm({ bot, roster, actions, run }) {
       h('div', { className: 'bt-bs-who' },
         h('span', { className: 'bt-bs-name' }, bot.name),
         h('span', { className: 'bt-bs-sub' }, [bot.role, isMainBot ? t('Main Bot') : ''].filter(Boolean).join(' · ') || t('Bot')))),
+    h('button', {
+      type: 'button', className: 'bt-soft bt-bs-copy',
+      onClick: duplicate,
+    }, t('Copy as new Bot')),
     h(Card, { title: t('Profile') },
       h(Row, { label: t('Name') }, h(InlineText, { label: t('Name'), value: bot.name, placeholder: 'Bob', required: true, maxLength: 40, onSave: name => save({ name }) })),
       h(Row, { label: t('Label'), hint: t('Optional. Shown under the name.') }, h(InlineText, { label: t('Label'), value: bot.role, placeholder: t('Research, admin…'), maxLength: 24, onSave: role => save({ role }) }))),
@@ -233,7 +237,7 @@ export function BotSettingsForm({ bot, roster, actions, run }) {
       isMainBot ? null : h(SwitchRow, { label: t('Hide from sidebar'), hint: t('Search still finds it.'), on: bot.hidden === true, onChange: hidden => run(actions.setFlags(bot.id, { hidden })) })),
     h(Card, { title: t('Manage') },
       h('button', { type: 'button', className: 'bt-set-row bt-bs-row', onClick: duplicate },
-        h('span', { className: 'bt-set-copy' }, h('span', { className: 'bt-bs-label' }, t('Duplicate')), h('span', { className: 'bt-set-hint' }, t('A copy with the same job and model, and fresh memory.'))),
+        h('span', { className: 'bt-set-copy' }, h('span', { className: 'bt-bs-label' }, t('Duplicate')), h('span', { className: 'bt-set-hint' }, t('A copy with the same job, model and capabilities, and fresh memory.'))),
         h('span', { className: 'bt-chevron' }, h(ChevronRightIcon))),
       isMainBot ? null : h('button', { type: 'button', className: 'bt-set-row bt-bs-row bt-bs-danger', 'data-confirm': confirming || undefined, onClick: remove },
         h('span', { className: 'bt-set-copy' },
@@ -244,6 +248,13 @@ export function BotSettingsForm({ bot, roster, actions, run }) {
 
 export const BOT_SETTINGS_CSS = `
 .bt-bs{display:flex;flex-direction:column;gap:18px}
+.bt-bs-copy{align-self:flex-start;margin:0 4px}
+.bt-cap-toggle{width:100%;cursor:pointer;text-align:left;border:0;background:none;font:inherit;color:inherit}
+.bt-cap-toggle:hover{background:var(--bt-hover)}
+.bt-cap-caret{flex:none;color:var(--bt-ink-3);transition:transform .18s ease}
+.bt-cap-caret[data-open]{transform:rotate(90deg)}
+.bt-cap-list{max-height:min(280px,42vh);overflow:auto;overscroll-behavior:contain;border-top:.5px solid var(--bt-line);padding-top:4px}
+.bt-cap-empty{padding:10px 12px;font-size:13px;line-height:18px;color:var(--bt-ink-3)}
 .bt-bs-hero{display:flex;align-items:center;gap:14px;padding:2px 4px}
 .bt-bs-who{display:flex;flex-direction:column;min-width:0;gap:2px}
 .bt-bs-name{font-size:17px;line-height:24px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
