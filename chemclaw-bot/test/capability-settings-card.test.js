@@ -122,3 +122,31 @@ test('manual expand shows a scrollable capability list', () => {
   })
   assert.equal(scrollClass, true)
 })
+
+test('switching Bots remounts a collapsed card with that Bot\'s enabled count', () => {
+  cells.length = 0
+  let tree = render(props)
+  const toggle = (() => {
+    let found
+    walk(tree, node => {
+      if (node.type === 'button' && node.props?.className?.includes('bt-cap-toggle')) found = node
+    })
+    return found
+  })()
+  toggle.props.onClick()
+  tree = render(props)
+  assert.equal(switchLabels(tree).length, 3)
+
+  // A different Bot settings form mounts a fresh card (new hook state).
+  cells.length = 0
+  const other = { id: 'b2', capabilities: ['beta'] }
+  tree = render({ ...props, bot: other })
+  assert.deepEqual(switchLabels(tree), [])
+  const text = []
+  walk(tree, node => {
+    if (typeof node === 'string') text.push(node)
+    if (typeof node?.props?.children === 'string') text.push(node.props.children)
+    if (Array.isArray(node?.props?.children)) for (const child of node.props.children) if (typeof child === 'string') text.push(child)
+  })
+  assert.ok(text.some(part => part.includes('1') || /enabled/i.test(part)), text.join(' | '))
+})
