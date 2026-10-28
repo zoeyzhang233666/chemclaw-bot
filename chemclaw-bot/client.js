@@ -202,6 +202,8 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "Not read yet": "未读",
+  "Profile updated": "角色设定已更新",
   "Sign-in needed": "需要登录",
   "Payment needed": "需要付款",
   "Verification needed": "需要验证",
@@ -3696,6 +3698,11 @@ div:has(> nav [class*="_marks"]){display:none!important}
 [class*="_userRow"] [class*="_bubble"] [class*="_markdown"],[class*="_userRow"] [class*="_bubble"] a{color:inherit}
 /* Sent messages get the hover toolbar below; steering and unsent bubbles keep none. */
 [class*="_userRow"] [class*="_actions"]{display:none!important}
+/* A steering message the Bot has not read yet shows a small unread label under
+   its bubble's right edge; --bt-steer-unread is set per window (header.js), and
+   the none fallback means no English can leak into a Chinese window. */
+[data-pending-steering]{flex-wrap:wrap}
+[data-pending-steering]::after{content:var(--bt-steer-unread,none);display:block;flex-basis:100%;width:100%;order:99;margin-top:4px;font-size:11px;line-height:14px;color:var(--bt-ink-3);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
 [data-chat-flow-kind=user] [class*="_userRow"]{flex-direction:row-reverse;align-items:center;justify-content:flex-start}
 [data-chat-flow-kind=user] [class*="_actions"]{display:flex!important;height:24px!important;gap:2px!important;opacity:0!important;visibility:hidden;transition:opacity .12s ease,visibility .12s!important;flex:none}
 [data-chat-flow-kind=user] [class*="_userRow"]:hover [class*="_actions"],[data-chat-flow-kind=user] [class*="_userRow"]:focus-within [class*="_actions"]{opacity:1!important;visibility:visible}
@@ -8796,6 +8803,7 @@ function TriggerCell({ node, sessionId, useRoster, useSessions, useTurnClock, us
       if (source.handoff === true) return roster.roomsById[sessionId] ? null : (0, import_react19.createElement)(EarlierParts, { sessionId, roster, actions });
       if (source.role === "kickoff" || source.role === "room") return null;
       if (source.role === "secret" || deferred) return null;
+      if (source.role === "update") return (0, import_react19.createElement)("div", { className: "bt-event" }, t("Profile updated"));
       if (source.role === "post") {
         if (source.logged !== void 0) return null;
         if (source.failed !== void 0 || source.resumed === true || source.stopped === true || source.done === true) return null;
@@ -9273,6 +9281,11 @@ var import_react_dom2 = require("react-dom");
 var PHRASE_HOLD_MS = 800;
 var drawPhrase = (pool) => t(pool[Math.min(pool.length - 1, Math.floor(Math.random() * pool.length))]);
 var rowVisible = ({ running, streaming, tools, relaying, bot, room: room2 }) => running && (!streaming || tools.length > 0) && !relaying && (bot !== void 0 || room2 !== void 0);
+var freshInputAt = (submissions, steeredAt) => Math.max(
+  0,
+  steeredAt ?? 0,
+  ...(submissions ?? []).filter((sub) => sub.placement !== "queued").map((sub) => sub.time)
+);
 var mountMissed = false;
 function findHost() {
   const node = document.querySelector("[data-chat-flow] [data-chat-running]") ?? document.querySelector("[data-chat-flow]");
@@ -9364,7 +9377,8 @@ function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useLive, us
   if (!running) runAt.current = 0;
   else if (runAt.current === 0) runAt.current = Date.now();
   const liveKey = useLive((state) => JSON.stringify(state[sessionId] ?? {}));
-  const pendingInput = useSession((snapshot) => Math.max(0, ...(snapshot?.pendingSubmissions ?? []).filter((sub) => sub.placement !== "queued").map((sub) => sub.time)));
+  const steeredAt = useWork?.((work) => work.steered?.[sessionId]);
+  const pendingInput = useSession((snapshot) => freshInputAt(snapshot?.pendingSubmissions, steeredAt));
   const bot = roster.byId[sessionId];
   const room2 = roster.roomsById[sessionId];
   const moveAt = useWork?.((work) => {
@@ -10493,6 +10507,9 @@ function HeaderPill({ sessionId, useRoster, useSessions, useSessionStatus, useSe
   (0, import_react22.useEffect)(() => {
     document.body.style.setProperty("--bt-placeholder", JSON.stringify(name ? t("Message {name}", { name }) : t("Message")));
   }, [name, t("Message")]);
+  (0, import_react22.useEffect)(() => {
+    document.body.style.setProperty("--bt-steer-unread", JSON.stringify(t("Not read yet")));
+  }, [t("Not read yet")]);
   (0, import_react22.useEffect)(() => {
     actions.beginVisit(sessionId);
     return () => actions.endVisit(sessionId);

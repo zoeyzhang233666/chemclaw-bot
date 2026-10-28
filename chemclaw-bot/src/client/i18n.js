@@ -7,6 +7,8 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Not read yet': '未读',
+  'Profile updated': '角色设定已更新',
   'Sign-in needed': '需要登录',
   'Payment needed': '需要付款',
   'Verification needed': '需要验证',

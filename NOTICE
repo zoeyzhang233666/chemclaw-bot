@@ -209,3 +209,8 @@ DS-Bot browser handoff cards, Apache-2.0
   Adapted PR #591 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
   Copyright 2026 Fei2411 and the DS Bot contributors.
   ChemClaw keeps its refs/task modes, native bridge and cancellation guards.
+
+DS-Bot conversation feedback, Apache-2.0
+  Adapted PRs #598, #587 and #584 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  Retains ChemClaw direct/group routing, skills and customized roster.
