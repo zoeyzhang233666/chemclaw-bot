@@ -290,20 +290,13 @@ async function chat(cdp) {
   }
   // The mock model's greeting for a new team.
   await until(text('今天想先解决哪个业务问题'), 'the greeting')
-  if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only') || process.argv.includes('--xlsx-openpyxl-preview-only')) {
-    const wantOpenpyxl = process.argv.includes('--xlsx-openpyxl-preview-only')
-    const wantXlsx = process.argv.includes('--xlsx-preview-only') || wantOpenpyxl
-    let file
-    if (wantOpenpyxl) {
-      file = join(work, 'workspace', 'openpyxl-preview.xlsx')
-      cpSync(join(root, '..', '.chemclaw-tools', 'office48-synthetic.xlsx'), file)
-    } else {
-      const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
-      const formats = wantXlsx ? ['xlsx'] : ['pptx']
-      ;[file] = await deliver({ title: wantXlsx ? 'Excel预览隔离验收' : 'PPT预览隔离验收', filename: wantXlsx ? 'excel-preview-sample' : '中文演示 sample', summary: '合成验收内容，不是业务数据', sections: [
-        { title: '合成数据', table: { columns: ['日期', '测试数值'], rows: [['2026-10-25', 100], ['2026-10-26', 102]] } },
-      ] }, join(work, 'workspace'), formats)
-    }
+  if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only')) {
+    const wantXlsx = process.argv.includes('--xlsx-preview-only')
+    const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
+    const formats = wantXlsx ? ['xlsx'] : ['pptx']
+    const [file] = await deliver({ title: wantXlsx ? 'Excel预览隔离验收' : 'PPT预览隔离验收', filename: wantXlsx ? 'excel-preview-sample' : '中文演示 sample', summary: '合成验收内容，不是业务数据', sections: [
+      { title: '合成数据', table: { columns: ['日期', '测试数值'], rows: [['2026-10-25', 100], ['2026-10-26', 102]] } },
+    ] }, join(work, 'workspace'), formats)
     const original = readFileSync(file)
     await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
     await cdp.call('Input.insertText', { text: `交付 ${file}` })
