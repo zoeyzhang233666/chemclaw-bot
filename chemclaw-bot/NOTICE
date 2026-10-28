@@ -207,3 +207,8 @@ DS-Bot 0.2.3 screenshot and history compatibility
   Copyright 2026 Fei2411 and the DS Bot contributors.
   Fixed reference: 4a7b55069ad300eae8be42a74f31bc170b40ead7.
   Retains ChemClaw browser cancellation/serialization and history metadata.
+
+DS-Bot browser handoff cards, Apache-2.0
+  Adapted PR #591 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  ChemClaw keeps its refs/task modes, native bridge and cancellation guards.

@@ -189,6 +189,7 @@ export function mountBrowserPlugin(ctx, { toolDefs, defineTool, keyOf, profileRo
               profileDir: join(profileRoot, botId),
               session,
               complete: completeFor?.(exec),
+              origin: { ...(exec.callId !== undefined ? { callId: exec.callId } : {}), ...(exec.agent?.id !== undefined ? { sessionId: exec.agent.id } : {}) },
               signal: exec.signal,
             })))
           } finally { exec.signal?.removeEventListener('abort', abort) }
