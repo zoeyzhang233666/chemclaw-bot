@@ -228,3 +228,8 @@ DS-Bot model defaults and namespace compatibility, Apache-2.0
   Adapted PRs #586 and #575 at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
   Copyright 2026 Fei2411 and the DS Bot contributors.
   ChemClaw preserves configured-route selection and lazy preset initialization.
+
+DS-Bot avatar library, Apache-2.0
+  Adapted PRs #491 and follow-up at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  ChemClaw keeps original role artwork and 50 presets; library photos are user-owned.

@@ -40,6 +40,8 @@ The installed app checks ChemClaw releases automatically. **Settings → About C
 
 Closing the app window keeps ChemClaw running in the system tray so Bots can continue working. Open it again from the tray; choose Quit there to stop the app. The first close explains this behavior.
 
+Bot settings and New Bot can import custom photos into a reusable avatar library: batch import keeps successful files, deduplicates by content, and leaves each Bot with its own copy so deleting a library photo does not change Bots that already use it. ChemClaw’s shipped role artwork stays as it is.
+
 **Settings → Skill library** lists the complete skill collection by business category, with Chinese names, purposes and deliverables. Search by task or keyword, then choose **Use** to return to your current conversation with the skill selected. Write your request in the normal composer and send when ready; existing draft text, attachments and regular Bot skills are preserved. In groups, the admin executes it unless you @ another member. **Install a skill** accepts ZIP files, folders, SKILL.md and public GitHub links, preserves scripts and templates, and lets you choose a group before installation. Tool services and credentials remain in **Connectors**.
 
 ### 2. Plugin for official DeepSeek Harness (DSH) Desktop
