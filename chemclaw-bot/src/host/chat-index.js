@@ -191,22 +191,23 @@ export function install(rt) {
 
   // Every part, caught up. Asked from the current part, the turn that asks is left out
   // (`hidden`): it is in context, and its own question would match.
-  async function indexedParts(botId, askingId) {
+  async function indexedParts(botId, askingId, sessionId) {
     const index = await openIndex()
     if (index === null) return { index }
-    const parts = rt.partsOf(botId)
+    const parts = rt.partsOf(botId, undefined, sessionId ?? askingId)
     // A part that cannot be read now is searched as far as it was indexed.
     for (const part of parts) await catchUp(index, part).catch(error => rt.warn('chemclaw-bot: indexing %s failed: %s', part.sessionId, error))
-    const turn = askingId !== undefined && askingId === parts.at(-1)?.sessionId ? index.mark.get(askingId)?.turn : undefined
+    const tip = parts.at(-1)?.sessionId
+    const turn = askingId !== undefined && askingId === tip ? index.mark.get(askingId)?.turn : undefined
     return { index, parts, hidden: turn === undefined || turn < 0 ? undefined : { session: askingId, from: turn } }
   }
 
   // Messages with all the words, best first; with none of them having all, those with
   // the most of them. Shown oldest first.
-  async function searchOwnChat(botId, query, { askingId, limit = OWN_CHAT_SEARCH } = {}) {
+  async function searchOwnChat(botId, query, { askingId, sessionId, limit = OWN_CHAT_SEARCH } = {}) {
     const terms = [...new Set(query.toLowerCase().split(/\s+/).filter(Boolean))].slice(0, SEARCH_TERMS_MAX)
-    const { index, parts, hidden } = await indexedParts(botId, askingId)
-    if (index === null) return { lines: await scanOwnChat(botId, query, limit), every: true }
+    const { index, parts, hidden } = await indexedParts(botId, askingId, sessionId)
+    if (index === null) return { lines: await scanOwnChat(botId, query, limit, sessionId), every: true }
     const sessions = parts.map(part => part.sessionId)
     const run = (wanted, max) => {
       const { sql, args } = termQuery(wanted, sessions, max, hidden)
@@ -232,9 +233,9 @@ export function install(rt) {
   }
 
   // The latest messages across all parts, oldest first.
-  async function latestOwnChat(botId, { askingId, limit = OWN_CHAT_READ } = {}) {
-    const { index, parts, hidden } = await indexedParts(botId, askingId)
-    if (index === null) return scanOwnChat(botId, '', limit)
+  async function latestOwnChat(botId, { askingId, sessionId, limit = OWN_CHAT_READ } = {}) {
+    const { index, parts, hidden } = await indexedParts(botId, askingId, sessionId)
+    if (index === null) return scanOwnChat(botId, '', limit, sessionId)
     const rows = []
     for (const part of [...parts].reverse()) {
       const below = hidden?.session === part.sessionId ? hidden.from : Number.MAX_SAFE_INTEGER
@@ -245,8 +246,8 @@ export function install(rt) {
   }
 
   // The messages around an anchor, in its part.
-  async function aroundOwnChat(botId, anchor) {
-    const { index, parts } = await indexedParts(botId)
+  async function aroundOwnChat(botId, anchor, { sessionId } = {}) {
+    const { index, parts } = await indexedParts(botId, undefined, sessionId)
     if (index === null) return { error: 'Anchors need the chat index, which is unavailable here. Search with words instead.' }
     const found = /(?:part\s*)?(\d+)?\s*#\s*(\d+)/i.exec(anchor)
     if (found === null) return { error: `"${anchor}" is not an anchor. Anchors look like "part 2 #1234", or "#1234" in the current part.` }
@@ -260,9 +261,9 @@ export function install(rt) {
 
   // Without the index: what the user, other Bots, and the Bot itself said, across all
   // parts, oldest first, by reading the logs.
-  async function scanOwnChat(botId, query, limit) {
+  async function scanOwnChat(botId, query, limit, sessionId) {
     const wanted = query.toLowerCase()
-    const parts = rt.partsOf(botId)
+    const parts = rt.partsOf(botId, undefined, sessionId)
     const signal = AbortSignal.timeout(HISTORY_TIMEOUT_MS)
     const lines = []
     for (const part of [...parts].reverse()) {

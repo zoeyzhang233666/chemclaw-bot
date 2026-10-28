@@ -39,7 +39,9 @@ export function install(rt) {
   // Roles recorded as team exchanges.
   const EXCHANGE_ROLES = new Set(['request', 'reply', 'stopped'])
 
-  // `sessionId` defaults to the recipient's own chat; group turns name its group Session.
+  // `sessionId` defaults to the recipient's active private tip (UI default via chatOf);
+  // group turns and background completions must pass the concrete Session — never rely
+  // on activeChatId for room work or a non-active private Chat's results.
   // `deferred`: a request the Bot already read mid-turn, handed back to answer in a
   // turn of its own; its exchange was recorded when it first arrived. `resumed` and
   // `retried` carry on a turn that a restart cut off or that wrote its tool call as

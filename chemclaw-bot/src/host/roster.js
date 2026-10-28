@@ -152,6 +152,7 @@ export function install(rt) {
     const dir = workDir === undefined || workDir === null ? undefined : await rt.cleanWorkDir(workDir)
     const id = await createSession(cleanName, { dir })
     try {
+      const createdAt = Date.now()
       state.bots[id] = {
         id,
         name: cleanName,
@@ -163,9 +164,22 @@ export function install(rt) {
         ...(effortId ? { effort: effortId } : {}),
         ...(dir ? { workDir: dir } : {}),
         instructions: String(instructions).trim(),
-        createdAt: Date.now(),
+        createdAt,
         createdBy: createdBy ?? null,
         capabilities: [],
+        // First private chat reuses the Bot id as chat id (legacy tip identity).
+        chats: [{
+          id,
+          title: cleanName,
+          titleSource: 'default',
+          createdAt,
+          updatedAt: createdAt,
+          sessionId: id,
+          segments: [],
+        }],
+        activeChatId: id,
+        sessionId: id,
+        segments: [],
       }
       if (main) state.mainBotIds.push(id)
       const creator = rt.botOf(createdBy)

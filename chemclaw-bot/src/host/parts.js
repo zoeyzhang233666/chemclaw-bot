@@ -339,12 +339,22 @@ export function install(rt) {
 
   // A Bot's own chat, or its Session in one group, as numbered parts, oldest first;
   // the last one is current.
-  function partsOf(botId, roomId) {
+  function partsOf(botId, roomId, sessionId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) return []
     const room = rt.roomOf(roomId)
-    const earlier = (room ? room.segments?.[botId] : bot.segments) ?? []
-    const current = room ? room.sessions?.[botId] : rt.chatOf(botId)
+    let earlier
+    let current
+    if (room) {
+      earlier = room.segments?.[botId] ?? []
+      current = room.sessions?.[botId]
+    } else {
+      const chat = sessionId !== undefined
+        ? (rt.chatBySession?.(bot, sessionId) ?? rt.activeChat?.(bot))
+        : rt.activeChat?.(bot)
+      earlier = chat?.segments ?? bot.segments ?? []
+      current = chat?.sessionId ?? rt.chatOf(botId)
+    }
     const parts = earlier.map((segment, index) => ({ ...segment, number: index + 1, startedAt: earlier[index - 1]?.endedAt ?? bot.createdAt }))
     if (current !== undefined) parts.push({ sessionId: current, number: parts.length + 1, startedAt: earlier.at(-1)?.endedAt ?? bot.createdAt })
     return parts
@@ -738,12 +748,23 @@ export function install(rt) {
   const checking = new Set()
 
   const placeOf = (sessionId) => {
+    const owned = rt.ownerOf?.(sessionId)
+    if (owned?.kind === 'private') return { botId: owned.botId, chatId: owned.chatId }
+    if (owned?.kind === 'room') return { botId: owned.botId, roomId: owned.roomId }
     const botId = rt.chatOwners.get(sessionId)
     if (botId !== undefined) return { botId }
     const owner = rt.groupOwners.get(sessionId)
     return owner && { botId: owner.botId, roomId: owner.roomId }
   }
-  const currentOf = owner => (owner.roomId === undefined ? rt.chatOf(owner.botId) : rt.roomOf(owner.roomId)?.sessions?.[owner.botId])
+  // Tip of the container that owns this Session — never the Bot's activeChatId.
+  const currentOf = (owner) => {
+    if (owner.roomId !== undefined) return rt.roomOf(owner.roomId)?.sessions?.[owner.botId]
+    if (owner.chatId !== undefined) {
+      const bot = rt.botOf(owner.botId)
+      return rt.chatById?.(bot, owner.chatId)?.sessionId ?? rt.chatOf(owner.botId)
+    }
+    return rt.chatOf(owner.botId)
+  }
   const grown = (sessionId, tokens, lines) => tokens >= (partBase.get(sessionId) ?? 0) + lines.check / 4
   // A read-only process (another dsh holds the team) neither condenses nor switches.
   const readOnly = () => rt.readOnly() !== undefined
@@ -941,7 +962,7 @@ export function install(rt) {
     const session = agent.session
     const tokens = tokensOf(session)
     const lines = await contextLines(session).catch(() => undefined)
-    const parts = partsOf(bot.id, room?.id)
+    const parts = partsOf(bot.id, room?.id, agent.id)
     const number = parts.length
     const budget = Math.min(RECENT_TOKENS, Math.floor((lines?.check ?? 4 * RECENT_TOKENS) / 4))
     const readLines = () => (job.bare ? { recent: [], earlier: [], unlisted: 0, complete: true } : handoffLines(agent.id, { budget, group: room !== undefined, number }))
@@ -983,7 +1004,14 @@ export function install(rt) {
       .catch(error => rt.warn('chemclaw-bot: permission for the fresh part of %s not applied: %s', bot.name, error))
     // The fresh part took several awaits: a Bot or group deleted meanwhile, a member that
     // left, or a part that is no longer the current one gets no fresh part.
-    const current = room !== undefined ? room.sessions?.[bot.id] : rt.chatOf(bot.id)
+    // Private rotation must follow the Session that is moving, never activeChatId.
+    const privateOwner = room === undefined ? rt.ownerOf?.(agent.id) : undefined
+    const privateChat = privateOwner?.kind === 'private'
+      ? (rt.chatById?.(bot, privateOwner.chatId) ?? rt.chatBySession?.(bot, agent.id))
+      : undefined
+    const current = room !== undefined
+      ? room.sessions?.[bot.id]
+      : (privateChat?.sessionId ?? rt.chatOf(bot.id))
     const gone = rt.botOf(bot.id) === undefined || (room !== undefined && (rt.roomOf(room.id) !== room || !room.members.includes(bot.id)))
     if (gone || current !== agent.id) {
       await ctx.workspaceRegistry.archiveSession(freshId, { stopActivity: true })
@@ -996,8 +1024,17 @@ export function install(rt) {
       ;(room.segments[bot.id] ??= []).push(segment)
       room.sessions[bot.id] = freshId
     } else {
-      ;(bot.segments ??= []).push(segment)
-      bot.sessionId = freshId
+      const chat = privateChat ?? rt.activeChat?.(bot)
+      if (chat !== undefined) {
+        ;(chat.segments ??= []).push(segment)
+        chat.sessionId = freshId
+        chat.updatedAt = Date.now()
+        rt.syncMirror?.(bot)
+        rt.indexSessions?.()
+      } else {
+        ;(bot.segments ??= []).push(segment)
+        bot.sessionId = freshId
+      }
       // The card's call stays in the old part, so the fresh part shows it in the
       // composer dock, which takes a card without a call.
       if (state.questions[agent.id] !== undefined) {

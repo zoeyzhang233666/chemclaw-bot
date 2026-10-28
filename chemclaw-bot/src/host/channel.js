@@ -45,9 +45,24 @@ export function install(rt) {
     mainBotIds: state.mainBotIds,
     // `sessionId` is the Bot's current own-chat part; `parts` its earlier ones.
     // `waiting`: the Bot holds its greeting until the user picks its model.
-    bots: Object.values(state.bots).map(({ segments, kickoff, ...bot }) => ({
-      ...bot, sessionId: rt.chatOf(bot.id), parts: (segments ?? []).map(segment => segment.sessionId), ...(kickoff ? { waiting: true } : {}),
-    })),
+    bots: Object.values(state.bots).map(({ segments, kickoff, chats, ...bot }) => {
+      const active = Array.isArray(chats) ? (chats.find(chat => chat.id === bot.activeChatId) ?? chats.find(chat => chat.archived !== true) ?? chats[0]) : undefined
+      const tipSegments = active?.segments ?? segments
+      return {
+        ...bot,
+        sessionId: rt.chatOf(bot.id),
+        parts: (tipSegments ?? []).map(segment => segment.sessionId),
+        activeChatId: bot.activeChatId ?? active?.id ?? bot.id,
+        chats: Array.isArray(chats)
+          ? chats.map(chat => rt.publicChat?.(bot, chat) ?? {
+            id: chat.id, title: chat.title, titleSource: chat.titleSource, createdAt: chat.createdAt,
+            updatedAt: chat.updatedAt, archived: chat.archived === true,
+            sessionId: chat.sessionId, parts: (chat.segments ?? []).map(segment => segment.sessionId),
+          })
+          : undefined,
+        ...(kickoff ? { waiting: true } : {}),
+      }
+    }),
     // `parts`: the members' hidden group Sessions and their earlier segments, for usage.
     rooms: Object.values(state.rooms).map(({ log, seen, lateRounds, relays, sessions, segments, ...room }) => {
       const parts = [...Object.values(sessions ?? {}), ...Object.values(segments ?? {}).flat().map(segment => segment.sessionId)]
@@ -93,7 +108,7 @@ export function install(rt) {
   })
   // What a host that only reads the team may still answer.
   // Updates change the dsh profile, not the team, so a reading host may run them too.
-  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'artifact-paths', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking', 'avatar-library'])
+  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'artifact-paths', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking', 'avatar-library', 'bot-chat-list', 'bot-chat-owners'])
 
   function setPrefs(body) {
     if (body.theme !== undefined) {
@@ -202,6 +217,27 @@ export function install(rt) {
         case 'duplicate-bot':
           await rt.load()
           return ok(await rt.duplicateBot(body.id))
+        case 'bot-chat-create':
+          await rt.load()
+          return ok(await rt.createBotChat(String(body.botId ?? ''), { title: body.title }))
+        case 'bot-chat-open':
+          await rt.load()
+          return ok(await rt.openBotChat(String(body.botId ?? ''), String(body.chatId ?? '')))
+        case 'bot-chat-rename':
+          await rt.load()
+          return ok(await rt.renameBotChat(String(body.botId ?? ''), String(body.chatId ?? ''), body.title))
+        case 'bot-chat-archive':
+          await rt.load()
+          return ok(await rt.archiveBotChat(String(body.botId ?? ''), String(body.chatId ?? '')))
+        case 'bot-chat-delete':
+          await rt.load()
+          return ok(await rt.deleteBotChat(String(body.botId ?? ''), String(body.chatId ?? '')))
+        case 'bot-chat-list':
+          await rt.load()
+          return ok(rt.listBotChats(String(body.botId ?? '')))
+        case 'bot-chat-owners':
+          await rt.load()
+          return ok(rt.ownersView(String(body.botId ?? '')))
         case 'set-prefs':
           await rt.load()
           await setPrefs(body)

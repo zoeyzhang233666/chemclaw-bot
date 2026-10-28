@@ -113,6 +113,8 @@ test('api endpoints answer an inherited name like any unknown id and never write
   const { call, state, stop } = start()
   t.after(stop)
   const prototypeNames = Object.getOwnPropertyNames(Object.prototype)
+  // Settle one-time multi-chat migration before asserting write-through safety.
+  await call('state', {})
   const before = state()
   for (const [endpoint, payload] of ENDPOINTS) {
     const control = await call(endpoint, payload('id-that-is-not-there'))
@@ -131,9 +133,10 @@ test('api endpoints answer an inherited name like any unknown id and never write
 })
 
 test('tools answer an inherited Bot name like any unknown name', async (t) => {
-  const { tool, state, stop } = start()
+  const { call, tool, state, stop } = start()
   t.after(stop)
   const prototypeNames = Object.getOwnPropertyNames(Object.prototype)
+  await call('state', {})
   const before = state()
   for (const id of BAD) {
     assert.equal(await tool('message_bot', { to: id, message: 'hi' }, 'm1'), `No Bot named ${id}. Team: Chief, Writer`)

@@ -216,6 +216,12 @@ export function install(rt) {
     // Unnamed groups from before names followed their members may still list old names.
     const stale = Object.values(state.rooms).filter(room => !room.named && room.name !== rt.autoRoomName(room.members))
     for (const room of stale) room.name = rt.autoRoomName(room.members)
+    // Seed chats[] from the legacy single tip; never remaps historical Session ids.
+    if (typeof rt.migrateChats === 'function') {
+      const chats = rt.migrateChats()
+      if (chats.migrated) migrated = true
+      if (chats.needsBackup) state.__needsMultichatBackup = true
+    }
     indexSessions()
     return { migrated: migrated || stale.length > 0, stale }
   }
@@ -225,6 +231,12 @@ export function install(rt) {
     if (holder !== undefined) warn('chemclaw-bot: %s', readOnly())
     const { migrated, stale } = adopt(await readFileState())
     if (holder !== undefined) return
+    if (state.__needsMultichatBackup) {
+      delete state.__needsMultichatBackup
+      await rt.afterAdoptMigrate?.({ needsBackup: true }).catch(error => warn('chemclaw-bot: multi-chat backup failed: %s', error))
+    } else {
+      await rt.afterAdoptMigrate?.().catch(error => warn('chemclaw-bot: multi-chat index rebuild failed: %s', error))
+    }
     if (migrated && stuck === undefined) {
       // A failed write must not poison `loaded`: the migrated state stays in
       // memory and the next save() writes it.
@@ -352,14 +364,24 @@ export function install(rt) {
   const groupOwners = new Map()
   /** @type {Map<string, {botId:string, roomId?:string}>} */
   const pastOwners = new Map()
-  const chatOf = botId => botOf(botId)?.sessionId ?? botId
+  // Default private tip for UI / explicit-botId APIs. bot-chats.install replaces this
+  // with the activeChat tip; until then mirror the legacy single tip.
+  let chatOf = botId => botOf(botId)?.sessionId ?? botId
   const indexSessions = () => {
     chatOwners.clear()
     groupOwners.clear()
     pastOwners.clear()
     for (const bot of Object.values(state.bots)) {
-      for (const segment of bot.segments ?? []) pastOwners.set(segment.sessionId, { botId: bot.id })
-      chatOwners.set(chatOf(bot.id), bot.id)
+      if (Array.isArray(bot.chats) && bot.chats.length > 0) {
+        for (const chat of bot.chats) {
+          for (const segment of chat.segments ?? []) pastOwners.set(segment.sessionId, { botId: bot.id, chatId: chat.id })
+          const tip = chat.sessionId ?? (chat.id === bot.id ? bot.id : undefined)
+          if (tip !== undefined) chatOwners.set(tip, bot.id)
+        }
+      } else {
+        for (const segment of bot.segments ?? []) pastOwners.set(segment.sessionId, { botId: bot.id })
+        chatOwners.set(bot.sessionId ?? bot.id, bot.id)
+      }
     }
     for (const room of Object.values(state.rooms)) {
       for (const [botId, segments] of Object.entries(room.segments ?? {})) {
@@ -367,6 +389,7 @@ export function install(rt) {
       }
       for (const [botId, sessionId] of Object.entries(room.sessions ?? {})) groupOwners.set(sessionId, { botId, roomId: room.id })
     }
+    rt.rebuildSessionOwners?.()
     // The agents module owns the DSH Agent session index; it installs after this.
     rt.indexAgents?.()
   }
@@ -418,8 +441,16 @@ export function install(rt) {
 
   Object.assign(rt, {
     state, load, save, refresh, readOnly, own,
-    botOf, roomOf, isMain, chatOf, selfOf, isBotSession,
+    botOf, roomOf, isMain, selfOf, isBotSession,
     chatOwners, groupOwners, pastOwners,
     groupSessionsOf, dropGroupSession, retireGroupSession, findBot, findRooms, isAdminOf,
+    indexSessions,
+  })
+  // bot-chats.install replaces chatOf with the active-chat tip resolver.
+  Object.defineProperty(rt, 'chatOf', {
+    configurable: true,
+    enumerable: true,
+    get: () => chatOf,
+    set: (value) => { chatOf = value },
   })
 }
