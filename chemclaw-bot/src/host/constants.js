@@ -66,6 +66,9 @@ export const TEAM_TOOLS = [
   'create_group', 'update_group', 'delete_group', 'post_to_group', 'ask_user', 'show_view',
   'request_secret', 'list_secrets', 'group_relay', 'read_own_chat',
   'read_group_chat', 'remember', 'forget', 'recall', 'read_browser',
+  'browser_open', 'browser_snapshot', 'browser_click', 'browser_type', 'browser_select',
+  'browser_press', 'browser_tabs', 'browser_scroll', 'browser_back', 'browser_screenshot',
+  'browser_upload', 'browser_handoff', 'browser_resume', 'browser_task',
   'list_capabilities', 'save_capability', 'delete_capability',
   'attach_capability', 'detach_capability',
   'list_scenarios', 'activate_scenario',
@@ -98,3 +101,5 @@ export const OWN_CHAT_SEARCH = 20
 export const HISTORY_PAGE = 200
 export const HISTORY_PAGES_MAX = 50
 export const HISTORY_TIMEOUT_MS = 20_000
+
+export const ASIDE_LIMIT = 'Answer cut off at the output limit.'

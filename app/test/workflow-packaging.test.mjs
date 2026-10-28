@@ -6,6 +6,28 @@ import { parse } from 'yaml'
 const workflow = name => parse(readFileSync(new URL(`../../.github/workflows/${name}.yml`, import.meta.url), 'utf8'))
 const runs = job => job.steps.map(step => step.run ?? '').join('\n')
 
+test('Linux packages are installed, updated and required by both final gates', () => {
+  const testFlow = workflow('test')
+  const linux = testFlow.jobs['app-package-linux']
+  assert.equal(linux['runs-on'], 'ubuntu-latest')
+  const checks = runs(linux)
+  assert.match(checks, /npm run dist/)
+  assert.match(checks, /check-packed\.mjs/)
+  assert.match(checks, /apt-get install/)
+  assert.match(checks, /apt-get remove -y chemclaw/)
+  assert.match(checks, /check-update\.mjs/)
+  assert.match(checks, /sha512sum/)
+  assert.ok(testFlow.jobs.result.needs.includes('app-package-linux'))
+  assert.match(runs(testFlow.jobs.result), /needs\.app-package-linux\.result/)
+  const release = workflow('release')
+  assert.ok(release.jobs.complete.needs.includes('app-linux'))
+  const assets = runs(release.jobs.complete)
+  for (const file of ['linux-x86_64.AppImage', 'linux-amd64.deb', 'latest-linux.yml']) assert.ok(assets.includes(file), file)
+  const upload = release.jobs['app-linux'].steps.find(step => step.name === 'Attach the packages to the release')
+  assert.match(upload.if, /github\.event_name == 'push'/)
+  assert.equal(upload.env.TAG, '${{ needs.publish.outputs.tag }}')
+})
+
 test('ordinary macOS checks keep signing and startup coverage without making a ZIP', () => {
   const job = workflow('test').jobs['app-package-macos']
   const commands = runs(job)

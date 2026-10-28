@@ -84,7 +84,7 @@ test('show_view registers an interactive card, refuses a group and a display-onl
   await ctx.registeredTools.get('list_bots').execute({}, { agent: { id: 'chief' } })
 
   const group = await show('writer-group', { title: 'Pick', view: CHOICES })
-  assert.equal(group.text, 'View cards only work in your own chat. In a group, ask in your message instead.')
+  assert.match(group.text, /only for answers to the human/)
   assert.equal(group.concluded, false)
   const stranger = await show('outsider', { title: 'Pick', view: CHOICES })
   assert.match(stranger.text, /^Only Bots on the team can use show_view\. Use ask_user_question if it is available in this session, or ask the user in your reply\.$/)

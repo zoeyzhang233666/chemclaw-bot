@@ -1138,3 +1138,118 @@ test('deleting a working Bot clears its activity and tells the Bots waiting for 
   host.emit('b', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
   assert.equal((await host.call('state', {})).value.activity.b, undefined)
 })
+
+
+const deliveryChart = { type: 'chart', kind: 'line', categories: ['2026-10-26', '2026-10-27'], series: [{ name: 'Basis', values: [65, null] }], unit: '元/吨' }
+
+test('a user-facing chart follows a non-admin answer before the group finishes, without entering peer context', async t => {
+  const host = await start(t, { mode: 'everyone' })
+  const result = host.round('chart-answer', host.say('展示已核实的价格'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga'); host.finish('ga', '先看 Writer 的数据。')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  const reply = await host.tool('show_view', { audience: 'user', title: 'Verified basis', view: deliveryChart }, 'gb', { callId: 'view-b' })
+  assert.match(reply, /staged/)
+  const progress = async () => (await host.call('room-progress', { roomId: 'r1' })).value
+  assert.equal((await progress())[0].replies.some(row => row.kind === 'view'), false)
+  host.finish('gb', '这里是已核实的基差，今天的数据缺失。')
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  assert.equal(result(), undefined, 'the next member is still working')
+  const visible = (await progress())[0].replies
+  assert.equal(visible.at(-1).kind, 'view')
+  assert.equal(visible.at(-1).botId, 'b')
+  assert.deepEqual(visible.at(-1).view, deliveryChart)
+  const next = host.begin('gc')
+  assert.doesNotMatch(text(next), /"series"|Verified basis/)
+  host.finish('gc', '[PASS]')
+  await settle(() => result() !== undefined)
+  assert.equal(result().replies.filter(row => row.kind === 'view').length, 1)
+  assert.equal(JSON.parse(JSON.stringify(result())).replies.at(-1).view.series[0].values[1], null)
+})
+
+test('an @ question to a specific member can deliver a chart; peer discussion without a user audience cannot', async t => {
+  const host = await start(t)
+  const result = host.round('at-question', host.say('@Writer 基差呢'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  assert.match(await host.tool('show_view', { title: 'Internal', view: deliveryChart }, 'gb'), /only for answers to the human/)
+  assert.match(await host.tool('show_view', { audience: 'user', title: 'Form', view: { type: 'options', id: 'x', options: [{ label: 'A' }] } }, 'gb'), /cannot submit/)
+  await host.tool('show_view', { audience: 'user', title: 'Basis', view: deliveryChart }, 'gb', { callId: 'at-chart' })
+  host.finish('gb', '基差 +65 元/吨；次日缺失。')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(kinds(result()), [['message', 'Writer'], ['view', 'Writer']])
+  assert.equal(host.agentOf('ga').calls.length, 0)
+})
+
+test('one answer can deliver separate untitled charts and replace a revised named chart', async t => {
+  const host = await start(t)
+  const result = host.round('several-charts', host.say('@Writer 价格和基差'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  for (const callId of ['price', 'basis']) {
+    await host.tool('show_view', { audience: 'user', view: deliveryChart }, 'gb', { callId })
+  }
+  await host.tool('show_view', { audience: 'user', title: 'Regional comparison', view: deliveryChart }, 'gb', { callId: 'regions' })
+  await host.tool('show_view', { audience: 'user', title: 'Regional comparison', view: { ...deliveryChart, kind: 'bar' } }, 'gb', { callId: 'revised' })
+  host.finish('gb', '已核实结果如下。')
+  await settle(() => result() !== undefined)
+  const views = result().replies.filter(row => row.kind === 'view')
+  assert.deepEqual(views.map(view => view.id), ['price', 'basis', 'revised'])
+  assert.equal(views.at(-1).view.kind, 'bar')
+})
+
+test('answers may deliver more than four views or metrics and combine chart and table presentations', async t => {
+  const host = await start(t)
+  const result = host.round('complete-business-answer', host.say('@Writer 给出完整数据'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  const metrics = { type: 'row', children: Array.from({ length: 5 }, (_, index) => ({ type: 'metric', label: `Indicator ${index}`, value: index })) }
+  const detail = { type: 'stack', children: [deliveryChart, { type: 'table', columns: [{ key: 'basis', label: 'Basis' }], rows: [[65], ['No data']] }] }
+  for (const [index, view] of [metrics, detail, deliveryChart, deliveryChart, deliveryChart].entries()) {
+    assert.match(await host.tool('show_view', { audience: 'user', title: `Result ${index}`, view }, 'gb', { callId: `business-view-${index}` }), /staged/)
+  }
+  host.finish('gb', '完整数据已整理。')
+  await settle(() => result() !== undefined)
+  const views = result().replies.filter(row => row.kind === 'view')
+  assert.equal(views.length, 5)
+  assert.equal(views[0].view.children.length, 5)
+  assert.deepEqual(views[1].view.children.map(node => node.type), ['chart', 'table'])
+})
+
+test('failed or cancelled answers discard staged cards and do not leak them into the next answer', async t => {
+  const host = await start(t)
+  for (const [index, reason] of [{ kind: 'aborted' }, { kind: 'error', error: { code: 'NETWORK', message: 'offline' } }].entries()) {
+    const result = host.round(`bad-${index}`, host.say('@Writer 查数据'))
+    await settle(() => host.agentOf('gb').calls.length === index + 1)
+    host.begin('gb')
+    await host.tool('show_view', { audience: 'user', title: 'Discarded', view: deliveryChart }, 'gb')
+    host.emit('gb', 'turn/end', { turn: index + 1, reason })
+    await settle(() => result() !== undefined)
+    assert.equal(result().replies.some(row => row.kind === 'view'), false)
+  }
+  const next = host.round('clean', host.say('@Writer 再查'))
+  await settle(() => host.agentOf('gb').calls.length === 3)
+  host.begin('gb'); host.finish('gb', '没有可用数据。')
+  await settle(() => next() !== undefined)
+  assert.equal(next().replies.some(row => row.kind === 'view'), false)
+})
+
+test('a late completed answer carries its chart into the next relay once', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t)
+  const first = host.round('long-chart', host.say('@Writer 查一下基差'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'work', name: 'read_file', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => first() !== undefined)
+  await host.tool('show_view', { audience: 'user', title: 'Late basis', view: deliveryChart }, 'gb', { callId: 'late-view' })
+  host.finish('gb', '查询完成，先给可验证结果。')
+  await settle(() => host.agentOf('r1').calls.length > 0)
+  const post = host.takePost()
+  assert.equal(post.source.views.length, 1)
+  const second = host.round('late-delivery', post)
+  await settle(() => second() !== undefined)
+  assert.equal(second().replies.filter(row => row.kind === 'view').length, 1)
+})

@@ -14,6 +14,7 @@ if (host !== undefined && location.origin === host) {
       check: () => ipcRenderer.invoke('chemclaw:update-check'),
       install: () => ipcRenderer.invoke('chemclaw:update-install'),
     },
+    browser: browserBridge(),
     dataLocation: () => ipcRenderer.invoke('chemclaw:data-location'),
     moveData: (workspace) => ipcRenderer.invoke('chemclaw:move-data', typeof workspace === 'string' ? workspace : undefined),
     teamWorkspaceChanged: (path) => { ipcRenderer.send('chemclaw:team-workspace', String(path)) },
@@ -132,4 +133,53 @@ function captionColors(mica) {
   // A stylesheet link is added before it loads; its rules apply without another mutation.
   document.head.addEventListener('load', send, true)
   send()
+}
+
+function browserBridge() {
+  const listeners = new Map()
+  const viewListeners = new Set()
+  ipcRenderer.on('chemclaw:browser-view-changed', (_event, change) => {
+    for (const listener of [...viewListeners]) {
+      try { listener(change) } catch (error) { console.error('ChemClaw: a browser view listener failed', error) }
+    }
+  })
+  ipcRenderer.on('chemclaw:browser-open-requested', (_event, request) => {
+    if (typeof request?.lease !== 'string' || typeof request.url !== 'string') return
+    for (const listener of [...(listeners.get(request.lease) ?? [])]) {
+      try { listener(request.url) } catch (error) { console.error('ChemClaw: a browser link handler failed', error) }
+    }
+  })
+  return {
+    acquire: key => ipcRenderer.invoke('chemclaw:browser-acquire', String(key)),
+    release: lease => ipcRenderer.invoke('chemclaw:browser-release', String(lease)),
+    forget: key => ipcRenderer.invoke('chemclaw:browser-forget', String(key)),
+    views: {
+      create: (botId, tabId, url) => ipcRenderer.invoke('chemclaw:browser-view-create', String(botId), String(tabId), typeof url === 'string' ? url : undefined),
+      sync: botId => ipcRenderer.invoke('chemclaw:browser-view-sync', String(botId)),
+      place: (tabId, rect, visible) => ipcRenderer.invoke('chemclaw:browser-view-place', String(tabId), rect, visible === true),
+      navigate: (botId, tabId, url) => ipcRenderer.invoke('chemclaw:browser-view-navigate', String(botId), String(tabId), String(url)),
+      command: (botId, tabId, command) => ipcRenderer.invoke('chemclaw:browser-view-command', String(botId), String(tabId), String(command)),
+      focus: (botId, tabId) => ipcRenderer.invoke('chemclaw:browser-view-focus', String(botId), String(tabId)),
+      read: (botId, tabId, script) => ipcRenderer.invoke('chemclaw:browser-view-read', String(botId), String(tabId), String(script)),
+      close: (botId, tabId) => ipcRenderer.invoke('chemclaw:browser-view-close', String(botId), String(tabId)),
+      hold: (botId, held) => ipcRenderer.invoke('chemclaw:browser-view-hold', String(botId), held === true),
+      subscribe(listener) { viewListeners.add(listener); return () => viewListeners.delete(listener) },
+    },
+    // Cookie imports, only in the app: sources and a two-step pick/harvest → preview → apply.
+    importSources: () => ipcRenderer.invoke('chemclaw:browser-import-sources'),
+    importPick: () => ipcRenderer.invoke('chemclaw:browser-import-pick'),
+    importLive: (source, close) => ipcRenderer.invoke('chemclaw:browser-import-live', String(source), close === true),
+    importApply: (key, pending) => ipcRenderer.invoke('chemclaw:browser-import-apply', String(key), String(pending)),
+    importCancel: (pending) => ipcRenderer.invoke('chemclaw:browser-import-cancel', String(pending)),
+    onOpenRequested(lease, listener) {
+      const id = String(lease)
+      let set = listeners.get(id)
+      if (set === undefined) { set = new Set(); listeners.set(id, set) }
+      set.add(listener)
+      return () => {
+        set.delete(listener)
+        if (set.size === 0 && listeners.get(id) === set) listeners.delete(id)
+      }
+    },
+  }
 }

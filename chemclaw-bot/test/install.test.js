@@ -1,10 +1,11 @@
 ﻿import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { apply } from './legacy-runtime.js'
 import { fakeContext } from './fake-ctx.js'
+import { previewWorkbook } from './xlsx-fixture.js'
 
 function start(state, { config = {}, services } = {}) {
   const home = mkdtempSync(join(tmpdir(), 'ds-bot-install-'))
@@ -39,6 +40,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'on llm/adapters-updated',
     'on credentials/reference-updated',
     'on settings/document-updated',
+    'on agent/request',
     'on session/event',
     'effect chemclaw-bot: agent tool restrict retry',
     'on agent/created',
@@ -167,6 +169,31 @@ test('the client channel answers from the saved state', async (t) => {
   assert.equal((await call('set-prefs', { motion: 'lively' })).value.motion, 'lively')
   assert.equal('motion' in (await call('set-prefs', { motion: 'normal' })).value, false)
   assert.deepEqual((await call('set-prefs', { motion: 'wild' })).error, { code: 'bot/invalid', message: 'Motion must be quiet, normal or lively', details: {} })
+  // So are the message layout and width, each with only its own values.
+  assert.equal((await call('set-prefs', { layout: 'flat' })).value.layout, 'flat')
+  assert.equal('layout' in (await call('set-prefs', { layout: 'bubble' })).value, false)
+  assert.deepEqual((await call('set-prefs', { layout: 'grid' })).error, { code: 'bot/invalid', message: 'Layout must be bubble or flat', details: {} })
+  assert.equal((await call('set-prefs', { width: 95 })).value.width, 95)
+  assert.equal('width' in (await call('set-prefs', { width: 80 })).value, false)
+  for (const width of [120, 49, 72.5, '90']) {
+    assert.deepEqual((await call('set-prefs', { width })).error, { code: 'bot/invalid', message: 'Width must be a whole percent from 50 to 100', details: {} }, String(width))
+  }
+  assert.equal((await call('set-prefs', { flatWidth: 70 })).value.flatWidth, 70)
+  assert.equal('flatWidth' in (await call('set-prefs', { flatWidth: 100 })).value, false)
+  assert.deepEqual((await call('set-prefs', { flatWidth: 40 })).error, { code: 'bot/invalid', message: 'Flat text width must be a whole percent from 50 to 100', details: {} })
+  // The thinking switch stores only true; false, null and unknown values leave nothing.
+  assert.equal('thinking' in (await call('set-prefs', { thinking: 'yes' })).value, false)
+  assert.equal('thinking' in (await call('set-prefs', { thinking: 1 })).value, false)
+  assert.equal((await call('set-prefs', { thinking: true })).value.thinking, true)
+  assert.equal((await call('set-prefs', { thinking: 'yes' })).value.thinking, true)
+  assert.equal('thinking' in (await call('set-prefs', { thinking: false })).value, false)
+  await call('set-prefs', { thinking: true })
+  assert.equal('thinking' in (await call('set-prefs', { thinking: null })).value, false)
+  assert.equal((await call('set-prefs', { sidebar: { sort: 'focus', focus: ['内贸销售'] } })).value.sidebar.sort, 'focus')
+  assert.deepEqual((await call('set-prefs', { sidebar: { collapsed: ['rooms'] } })).value.sidebar.collapsed, ['rooms'])
+  assert.equal('sort' in ((await call('set-prefs', { sidebar: { sort: 'recent' } })).value.sidebar ?? {}), false)
+  assert.deepEqual((await call('set-prefs', { sidebar: { sort: 'alpha' } })).error, { code: 'bot/invalid', message: 'Sidebar sort must be recent, manual or focus', details: {} })
+  assert.equal('sidebar' in (await call('set-prefs', { sidebar: null })).value, false)
   // A refusal from the team code keeps its message for the user.
   assert.deepEqual((await call('delete-bot', { id: 'nobody' })).error, { code: 'bot/refused', message: 'Unknown Bot', details: {} })
   // Off the Desktop profile there are no Bot browsers.
@@ -187,6 +214,28 @@ const TEAM = {
   questions: {},
 }
 
+test('present delegates the original workbook without rewriting its contents', async t => {
+  const { ctx, stop } = start(TEAM)
+  t.after(stop)
+  const dir = mkdtempSync(join(tmpdir(), 'chemclaw-present-original-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }))
+  const path = join(dir, 'original.xlsx')
+  const original = await previewWorkbook()
+  writeFileSync(path, original)
+  const exec = { name: 'present', arguments: { files: [{ path }] }, agent: { id: 'm1', session: 'm1' } }
+  let calls = 0
+  const tool = async () => {
+    calls++
+    assert.equal(exec.arguments.files[0].path, path)
+    assert.deepEqual(readFileSync(path), original)
+    return 'presented'
+  }
+  const run = ctx.listeners.get('tools/execute').reduceRight((next, listener) => () => listener(exec, next), tool)
+  assert.equal(await run(), 'presented')
+  assert.equal(calls, 1)
+  assert.deepEqual(readFileSync(path), original)
+})
+
 test('in the Desktop profile read_browser is the last tool and reads through the window', async (t) => {
   const { ctx, call, stop } = start(TEAM, { services: { profileContext: { name: 'desktop' } } })
   t.after(stop)
@@ -200,7 +249,7 @@ test('in the Desktop profile read_browser is the last tool and reads through the
   const poll = call('browser-wait', { clientId: 'w1', open: { b2: { url: 'https://example.com/', title: 'Example' }, nope: { url: 'https://x/' } } })
   await new Promise(resolve => setTimeout(resolve, 10))
   const reading = read({})
-  const requests = (await poll).value
+  const requests = (await poll).value.requests
   assert.deepEqual(requests.map(request => request.botId), ['b2'])
   assert.deepEqual((await call('browser-result', { id: requests[0].id, ok: true, page: { url: 'https://example.com/', title: 'Example', text: 'Hello from the page', items: [{ role: 'link', name: 'More', href: 'https://example.com/more' }] } })).value, true)
   const text = await reading

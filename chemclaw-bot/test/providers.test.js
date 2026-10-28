@@ -6,7 +6,7 @@ import { checkKey, install, keyRefFor } from '../src/host/providers.js'
 // A DSH with the official DeepSeek route, an account route, and the pi-ai adapter: its
 // directory offers catalog providers, and its settings take path writes the way DSH's
 // do, under a revision. Routes come and go with the pi-ai section.
-function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthropic: ['claude-a', 'claude-b'], moonshotai: ['kimi-k3'] } } = {}) {
+function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthropic: ['claude-a', 'claude-b'], moonshotai: ['kimi-k3'] }, defaultSelection = { provider: 'deepseek-official', model: 'deepseek-flash' } } = {}) {
   const store = { ...keys }
   const writes = []
   const listeners = new Map()
@@ -15,6 +15,7 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
   const piValue = () => ({ providers: { ...pi.base.providers, ...pi.user.providers } })
   const routes = () => Object.keys(piValue().providers)
   const services = {
+    agentDefaultModel: { currentSelection: () => defaultSelection },
     settings: {
       describe: () => [
         { ns: 'llm-deepseek', revision: 0, value: { apiKeyEnv: 'DEEPSEEK_API_KEY' }, user: {}, base: { apiKeyEnv: 'DEEPSEEK_API_KEY' } },
@@ -65,7 +66,7 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
       discoverModels: async (ns, request) => { discovered.push([ns, request]); return [{ id: 'relay-1', name: 'Relay One', contextWindow: 128000, inputModalities: ['text'] }, { id: 'relay-2' }] },
     },
   }
-  const rt = { ctx, state: { bots: {} } }
+  const rt = { ctx, state: { bots: {} }, botOf: id => rt.state.bots[id], selfOf: id => id === 'group-member' ? 'preset' : id, save: async () => {} }
   installModels(rt)
   install(rt)
   return { rt, store, writes, listeners, discovered }
@@ -239,4 +240,45 @@ test('an API key is what an HTTP header carries, without a NAME= or quotes', () 
 test('a route\'s key reference follows DSH\'s own Models page', () => {
   assert.equal(keyRefFor('moonshotai'), 'MOONSHOTAI_API_KEY')
   assert.equal(keyRefFor('my-gateway2'), 'MY_GATEWAY2_API_KEY')
+})
+
+
+test('first APIHub private and group requests skip the unkeyed profile default without warming idle presets', async () => {
+  const { rt, listeners } = dsh()
+  assert.equal(await rt.defaultModel(), undefined)
+  rt.state.bots.preset = { id: 'preset', templateId: 'chemical-main' }
+  rt.state.bots.idle = { id: 'idle', templateId: 'chemical-specialist' }
+  await rt.addProvider({ preset: 'apihub', key: 'synthetic-first-run', models: [{ id: 'ready-model' }] })
+  assert.equal(await rt.defaultModel(), 'apihub/ready-model')
+  assert.equal(rt.cachedDefault(), 'apihub/ready-model')
+  const request = listeners.get('agent/request')
+  const initial = { provider: 'deepseek-official', model: 'deepseek-flash', reasoningEffort: 'unsupported', temperature: 0.4 }
+  for (const id of ['preset', 'group-member']) {
+    const selected = await request({ agent: { id }, signal: new AbortController().signal }, async () => initial)
+    assert.deepEqual(selected, { provider: 'apihub', model: 'ready-model', temperature: 0.4 })
+  }
+  assert.equal(rt.state.bots.preset.appliedModel, 'apihub/ready-model')
+  assert.equal(rt.state.bots.idle.appliedModel, undefined)
+  assert.equal(rt.state.bots.preset.model, undefined)
+  const other = await request({ agent: { id: 'unrelated' }, signal: new AbortController().signal }, async () => initial)
+  assert.equal(other, initial)
+})
+
+test('usable explicit choices survive APIHub setup; missing-key legacy choices fall back and recover when keyed', async () => {
+  const { rt } = dsh({ keys: { DEEPSEEK_API_KEY: 'synthetic-official' } })
+  await rt.addProvider({ preset: 'apihub', key: 'synthetic-hub', models: [{ id: 'hub-model' }] })
+  const bot = { model: 'deepseek-official/deepseek-flash' }
+  assert.equal(await rt.desiredModel(bot), bot.model)
+  assert.equal(await rt.defaultModel(), bot.model)
+  await rt.clearProviderKey('deepseek-official')
+  assert.equal(await rt.defaultModel(), 'apihub/hub-model')
+  assert.equal(await rt.desiredModel(bot), 'apihub/hub-model')
+  await rt.setProviderKey('deepseek-official', 'synthetic-restored')
+  assert.equal(await rt.desiredModel(bot), bot.model)
+})
+
+test('unconfigured presets fail before an official request with an actionable setup message', async () => {
+  const { rt, listeners } = dsh()
+  rt.state.bots.preset = { id: 'preset', templateId: 'chemical-main' }
+  await assert.rejects(listeners.get('agent/request')({ agent: { id: 'preset' }, signal: new AbortController().signal }, async () => ({ provider: 'deepseek-official', model: 'deepseek-flash' })), /No configured model.*Settings > Models/)
 })

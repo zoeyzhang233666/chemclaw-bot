@@ -61,7 +61,8 @@ function DesktopUpdates({ bridge, Row, run }) {
         : available ? t('ChemClaw {version} is available', { version: status.latest })
           : !status.enabled ? t('Update checks are off.')
             : status.checkedAt ? `${t('Up to date')} · ${t('Checked {time}', { time: whenText(status.checkedAt) })}` : t('Updates come with the ChemClaw app.')
-  return h(Row, { label: 'ChemClaw', hint },
+  const detail = status.preview ? `${t('Development preview')} · ${status.preview.branch} · ${status.preview.revision}` : hint
+  return h(Row, { label: 'ChemClaw', hint: detail },
     h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy || !status.enabled || status.phase === 'downloading', onClick: check }, busy ? t('Checking…') : t('Check for updates')),
     ready || available ? h('button', { type: 'button', className: 'bt-fb-primary', onClick: () => run(bridge.install()) }, ready ? t('Restart now') : t('Download')) : null)
 }

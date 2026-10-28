@@ -82,10 +82,11 @@ export function install(rt) {
     const selection = ctx.get?.('agentDefaultModel')?.currentSelection?.()
     return selection?.provider && selection?.model ? `${selection.provider}/${selection.model}` : undefined
   }
-  // The profile default model of DSH, when it is served; else the first served model.
+  // A served model without credentials cannot be a default for a new conversation.
   function pickDefault(entries) {
     const ref = defaultRef()
-    return entries.find(entry => entry.ref === ref)?.ref ?? entries[0]?.ref
+    const usable = entries.filter(entry => !entry.needsKey)
+    return usable.find(entry => entry.ref === ref)?.ref ?? usable[0]?.ref
   }
   const defaultModel = async () => pickDefault(await catalog())
 
@@ -105,14 +106,35 @@ export function install(rt) {
   }
 
   // A Bot with no model yet waits for the user to pick one and changes nothing. A
-  // model that is no longer served falls back to the last one it ran on, then the default.
+  // model that is no longer usable falls back to the last one it ran on, then the default.
   async function desiredModel(bot) {
     if (!bot.model && bot.templateId) return defaultModel()
     if (!bot.model) return undefined
     const entries = await catalog()
-    const served = new Set(entries.map(entry => entry.ref))
+    const served = new Set(entries.filter(entry => !entry.needsKey).map(entry => entry.ref))
     return [bot.model, bot.appliedModel].find(ref => ref && served.has(ref)) ?? pickDefault(entries)
   }
+
+  // DSH builds a new Session with the profile default. Select at its documented
+  // request boundary too, so cold presets and already-warmed group Sessions never
+  // send their first request to an unkeyed bootstrap route.
+  ctx.on?.('agent/request', async ({ agent, signal }, next) => {
+    const config = await next()
+    await rt.load?.()
+    const bot = rt.botOf?.(rt.selfOf?.(agent.id))
+    if (!bot || signal.aborted || (!bot.model && !bot.templateId)) return config
+    const ref = await desiredModel(bot)
+    if (ref === undefined) throw new Error('No configured model is available. Connect APIHub or another provider in Settings > Models.')
+    const effort = await desiredEffort(bot, ref)
+    if (bot.appliedModel !== ref || bot.appliedEffort !== effort) {
+      bot.appliedModel = ref
+      if (effort === undefined) delete bot.appliedEffort
+      else bot.appliedEffort = effort
+      await rt.save()
+    }
+    const { reasoningEffort: _previous, ...rest } = config
+    return { ...rest, ...splitRef(ref), ...(effort === undefined ? {} : { reasoningEffort: effort }) }
+  })
 
   // The thinking level a Bot asked for, when the model it runs on serves it; else the
   // model's own default applies. A level the model does not have is ignored, never
@@ -202,7 +224,7 @@ export function install(rt) {
   // registers late still gets its Bots' models selected.
   let syncedKey
   const syncModels = () => {
-    const key = catalogCache.value.map(entry => entry.ref).join(',')
+    const key = catalogCache.value.map(entry => `${entry.ref}${entry.needsKey ? '!' : ''}`).join(',')
     if (key !== syncedKey) { syncedKey = key; modelsSynced = modelsSynced?.then(syncAll, syncAll) ?? syncAll() }
     return modelsSynced
   }

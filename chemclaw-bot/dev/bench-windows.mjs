@@ -53,7 +53,8 @@ try {
     console.log(`Isolated skill UI bench ready on port ${webPort}; create its stop file to finish.`)
     await new Promise(done => { const timer = setInterval(() => { if (existsSync(join(home, 'stop'))) { clearInterval(timer); done() } }, 250) })
   } else {
-    const result = await new Promise(resolve => { const smoke = spawn(process.execPath, [join(plugin, 'dev/smoke.mjs'), name, String(webPort)], { env: process.env, stdio: 'inherit', windowsHide: true }); smoke.once('exit', resolve) })
+    const check = process.argv.includes('--completion-check') ? 'dev/completion-check.mjs' : 'dev/smoke.mjs'
+    const result = await new Promise(resolve => { const smoke = spawn(process.execPath, [join(plugin, check), name, String(webPort)], { env: process.env, stdio: 'inherit', windowsHide: true }); smoke.once('exit', resolve) })
     process.exitCode = result ?? 1
   }
 } finally { mock.kill(); await running?.shutdown.shutdown(process.exitCode ?? 0) }

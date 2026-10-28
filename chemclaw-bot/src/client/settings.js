@@ -1,10 +1,10 @@
 import { createElement as h, useCallback, useEffect, useRef, useState } from 'react'
 import { ACCENT_INKS, INKS } from './inks.js'
 import { isMainOf } from './sources.js'
-import { allThemes } from './themes.js'
+import { MESSAGE_WIDTH, allThemes, flatWidthOf, layoutOf, thinkingShown, widthOf } from './themes.js'
 import { CloseIcon, ChevronLeftIcon, ClockIcon, ConnectorIcon, InfoIcon, PlugIcon, PlusIcon, SlidersIcon, SETTINGS_ICONS } from './icons.js'
 import { useEscape } from './overlay-hooks.js'
-import { BotSettingsForm } from './bot-settings.js'
+import { BotSettingsForm, Switch } from './bot-settings.js'
 import { Segmented, useGlide } from './motion.js'
 import { GroupSettingsForm, NewGroupForm } from './group-settings.js'
 import { CreateBot } from './create-bot.js'
@@ -18,8 +18,28 @@ import { AboutPage } from './about.js'
 import { ProvidersPage } from './providers-page.js'
 import { FolderMenu } from './folder-menu.js'
 import { language, t } from './i18n.js'
+import { botCategoryId, SPECIALISTS_CATEGORY } from '../shared/sidebar-prefs.js'
 
 const capitalize = word => word[0].toUpperCase() + word.slice(1)
+
+function FocusCategories({ roster, prefs, run, actions }) {
+  const focus = new Set(prefs.sidebar?.focus ?? [])
+  const categories = [...new Set(roster.bots
+    .filter(bot => bot.id !== roster.mainBotId)
+    .map(bot => botCategoryId(bot))
+    .filter(id => id !== SPECIALISTS_CATEGORY))].sort((a, b) => a.localeCompare(b, language().startsWith('zh') ? 'zh' : 'en'))
+  if (categories.length === 0) return h('span', { className: 'bt-set-hint' }, t('Add specialist Bots to choose focus categories.'))
+  const toggle = id => {
+    const next = new Set(focus)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    run(actions.setPrefs({ sidebar: { focus: [...next] } }))
+  }
+  return h('div', { className: 'bt-focus-chips', role: 'group', 'aria-label': t('Focus categories') },
+    categories.map(id => h('button', {
+      key: id, type: 'button', className: 'bt-focus-chip', 'aria-pressed': focus.has(id), onClick: () => toggle(id),
+    }, id)))
+}
 
 // Settings dialog: a 198px page list beside the page. Bots and group chats each list
 // their members, and one opens on its own settings form. Usage widens the dialog.
@@ -30,10 +50,46 @@ const PAGE_ICONS = { ...SETTINGS_ICONS, scenarios: PlugIcon, models: SlidersIcon
 function SetSection({ title, className = '', children }) {
   return h('section', { className: `bt-set-section ${className}`.trim() }, h('h3', null, title), h('div', { className: 'bt-set-card' }, children))
 }
-function SetRow({ label, hint, children }) {
-  return h('div', { className: 'bt-set-row' },
+function SetRow({ label, hint, children, className = '' }) {
+  return h('div', { className: `bt-set-row ${className}`.trim() },
     h('div', { className: 'bt-set-copy' }, h('span', null, label), hint ? h('span', { className: 'bt-set-hint' }, hint) : null),
     children ? h('div', { className: 'bt-set-control' }, children) : null)
+}
+
+const LAYOUTS = [['bubble', 'Bubble'], ['flat', 'Flat']]
+
+function Choice({ label, value, options, pick }) {
+  return h(Segmented, { label, value, className: 'bt-look-seg' }, options.map(([id, text]) => h('button', {
+    key: id, type: 'button', 'aria-pressed': value === id,
+    onClick: () => { if (value !== id) pick(id) },
+  }, t(text))))
+}
+
+// A width in percent of the column. A drag saves once it rests, as the custom accent
+// does; a change still waiting when the dialog closes is saved, not dropped.
+function WidthSlider({ label, value, save }) {
+  const [width, setWidth] = useState(value)
+  const pending = useRef(null)
+  const timer = useRef(0)
+  const saveRef = useRef(save)
+  saveRef.current = save
+  useEffect(() => { if (pending.current === null) setWidth(value) }, [value])
+  const flush = () => {
+    const next = pending.current
+    pending.current = null
+    if (next !== null) saveRef.current(next)
+  }
+  useEffect(() => () => { clearTimeout(timer.current); flush() }, [])
+  const pick = (next) => {
+    setWidth(next)
+    pending.current = next
+    clearTimeout(timer.current)
+    timer.current = setTimeout(flush, 350)
+  }
+  const { min, max, step } = MESSAGE_WIDTH
+  return h('div', { className: 'bt-range', style: { '--bt-fill': `${((width - min) / (max - min)) * 100}%` } },
+    h('input', { type: 'range', min, max, step, value: width, 'aria-label': label, 'aria-valuetext': `${width}%`, onChange: event => pick(Number(event.target.value)) }),
+    h('output', null, `${width}%`))
 }
 
 function GeneralPage({ roster, actions, run }) {
@@ -62,7 +118,21 @@ function GeneralPage({ roster, actions, run }) {
             style: { background: INKS[ink][0] }, onClick: () => run(actions.setPrefs({ accent: INKS[ink][0] })),
           })),
           h('label', { className: 'bt-swatch bt-swatch-custom', title: t('Custom accent'), 'data-on': Boolean(prefs.accent) && !ACCENT_INKS.some(ink => INKS[ink][0] === prefs.accent) },
-            h('input', { type: 'color', value: custom, 'aria-label': t('Custom accent'), onChange: event => pickCustom(event.target.value) }))))),
+            h('input', { type: 'color', value: custom, 'aria-label': t('Custom accent'), onChange: event => pickCustom(event.target.value) })))),
+      h(SetRow, { label: t('Message layout') }, h(Choice, { label: t('Message layout'), value: layoutOf(prefs), options: LAYOUTS, pick: id => run(actions.setPrefs({ layout: id })) })),
+      // The flat layout's text has a width of its own; the bubble width stays for the user's messages.
+      layoutOf(prefs) === 'flat' ? h(SetRow, { label: t('Text width') }, h(WidthSlider, { label: t('Text width'), value: flatWidthOf(prefs), save: flatWidth => run(actions.setPrefs({ flatWidth })) })) : null,
+      h(SetRow, { label: t('Bubble width') }, h(WidthSlider, { label: t('Bubble width'), value: widthOf(prefs), save: width => run(actions.setPrefs({ width })) })),
+      h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) })),
+      h(SetRow, { label: t('Sidebar order'), hint: t('How categories and rows are sorted in the wide sidebar.') },
+        h(Choice, {
+          label: t('Sidebar order'),
+          value: prefs.sidebar?.sort === 'manual' || prefs.sidebar?.sort === 'focus' ? prefs.sidebar.sort : 'recent',
+          options: [['recent', 'Recent activity'], ['manual', 'Manual'], ['focus', 'Focus first']],
+          pick: id => run(actions.setPrefs({ sidebar: { sort: id } })),
+        })),
+      h(SetRow, { label: t('Focus categories'), hint: t('When Focus first is on, these categories stay at the top.') },
+        h(FocusCategories, { roster, prefs, run, actions }))),
     actions.setSurface ? h(SetSection, { key: 'mode', title: t('Mode') },
       h(SetRow, { label: t('Classic Agent mode') },
         h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.setSurface('agent') }, t('Switch')))) : null,
