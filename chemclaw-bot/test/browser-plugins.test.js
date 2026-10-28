@@ -9,6 +9,7 @@ import { gateScope } from '../src/host/browser/gate.js'
 import { appBrowserEndpoint } from '../src/host/browser-plugins.js'
 import { mountBrowserPlugin } from '../src/host/browser/mount.js'
 import { systemPrompt as refsPrompt, toolDefs as refsTools } from '../src/host/browser/refs.js'
+import { systemPrompt as scriptPrompt, toolDefs as scriptTools } from '../src/host/browser/script.js'
 import { fakeApproval, fakeContext } from './fake-ctx.js'
 
 const TEAM = {
@@ -406,7 +407,7 @@ test('the selected plugin is the same for every Bot, and profiles stay apart', a
 test('an unknown browser plugin is refused', () => {
   const home = mkdtempSync(join(tmpdir(), 'chemclaw-browser-plugin-'))
   try {
-    assert.throws(() => createRuntime(fakeContext(), { home, browserPlugin: 'devtools' }), /Choose refs, task/)
+    assert.throws(() => createRuntime(fakeContext(), { home, browserPlugin: 'devtools' }), /Choose refs, script, task/)
   } finally {
     rmSync(home, { recursive: true, force: true })
   }
@@ -433,6 +434,23 @@ test('refs exposes the ARIA snapshot tool contract', () => {
   assert.equal(refsTools.find(tool => tool.name === 'browser_tabs').parameters.index.required, undefined)
   assert.equal(refsTools.find(tool => tool.name === 'browser_handoff').parameters.note.required, undefined)
   assert.ok(refsPrompt.includes('Posting, uploading, downloading, or deleting may need approval;'))
+})
+
+test('script mode registers browser_exec with handoff and resume only', () => {
+  assert.deepEqual(scriptTools.map(tool => tool.name), ['browser_exec', 'browser_handoff', 'browser_resume'])
+  assert.equal(scriptTools[0].parameters.script.required, true)
+  assert.ok(scriptPrompt.includes('browser_exec'))
+  assert.ok(scriptPrompt.includes('handoff("login"|"payment"|"captcha"|"other"'))
+})
+
+test('script mode mounts browser_exec for the team', async (t) => {
+  const { ctx, stop } = start({ browser: true, browserPlugin: 'script' })
+  t.after(stop)
+  assert.equal(ctx.registeredTools.has('browser_exec'), true)
+  assert.equal(ctx.registeredTools.has('browser_open'), false)
+  assert.equal(ctx.registeredTools.has('browser_task'), false)
+  assert.equal(ctx.registeredTools.has('browser_handoff'), true)
+  assert.equal(ctx.registeredTools.has('browser_resume'), true)
 })
 
 test('browserExecutablePath must be a string when configured', () => {

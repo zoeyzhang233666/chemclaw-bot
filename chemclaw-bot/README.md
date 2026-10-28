@@ -55,9 +55,9 @@ payments and captchas yourself when the Bot hands over the browser.
 
 This uses Electron's existing Chromium; no second browser download is required.
 Official DSH keeps its existing defaults. Advanced external hosts can set
-`browserPlugin: refs` (individual actions) or `task` (one goal), plus
-`browserExecutablePath` for a compatible local Chromium. See the
-[browser design](../docs/plans/2026-10-27-browser-automation.md).
+`browserPlugin: refs` (individual actions), `script` (one JavaScript body), or
+`task` (one goal), plus `browserExecutablePath` for a compatible local Chromium.
+See the [browser design](../docs/plans/2026-10-27-browser-automation.md).
 
 ## License
 

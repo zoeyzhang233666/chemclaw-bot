@@ -1,11 +1,12 @@
 // Secret cards: a Bot's request_secret shows a card where the user types a key the
-// Bot never sees, or lets the Bot use a key that is already saved. Values only ever
-// travel from these inputs to the host; nothing here reads one back.
-import { createElement as h, useId, useRef, useState } from 'react'
-import { CheckIcon, CloseIcon } from './icons.js'
-import { BotMark } from './mark.js'
+// Bot never sees, or lets the Bot use a key that is already saved. The settings page
+// lists the saved keys and who may use them. Values only ever travel from these
+// inputs to the host; nothing here reads one back.
+import { createElement as h, useEffect, useId, useRef, useState } from 'react'
+import { CheckIcon, CloseIcon, TrashIcon } from './icons.js'
+import { BotAvatar, BotMark } from './mark.js'
 import { contentText, currentPart } from './text.js'
-import { t } from './i18n.js'
+import { dateLocale, t } from './i18n.js'
 import { SPRING_POP, SPRING_SHAPE, spring } from './motion.js'
 import { useDockHold } from './card-hold.js'
 import { heldCardKey } from './sources.js'
@@ -32,6 +33,7 @@ const scopeLabel = (scope, roster) => {
   const names = (scope ?? []).map(id => roster.byId[id]?.name).filter(Boolean)
   return names.length === 0 ? t('No Bot') : names.join(t(' and '))
 }
+const when = time => (Number.isFinite(time) ? new Date(time).toLocaleString(dateLocale(), { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '')
 
 export function MaskedInput({ value, onChange, onEnter, label, autoFocus = false }) {
   return h('input', {
@@ -104,6 +106,7 @@ export function SecretCard({ sessionId, bot, request, roster, actions, inline = 
   const allow = () => { if (!busy) void run(() => actions.secretAllow(request.id)) }
   const filling = request.kind === 'fill' || replacing
   const warn = insecure() ? h('div', { className: 'bt-secret-warn', role: 'note' }, h(WarnIcon), t('This page is not on HTTPS: the key crosses the network unencrypted.')) : null
+  // ChemClaw packaged-app checks and UI selectors still key off bt-secret-card.
   return h('div', { className: 'bt-q bt-secret bt-secret-card', role: 'group', 'aria-describedby': noteId, 'data-kind': request.kind, onFocusCapture: hold, onPointerDownCapture: hold },
     h(SecretHead, {
       bot,
@@ -117,7 +120,7 @@ export function SecretCard({ sessionId, bot, request, roster, actions, inline = 
       h('label', { className: 'bt-q-field bt-secret-field' }, h(MaskedInput, { value, onChange: next => { hold(); setValue(next) }, onEnter: save, label: t('Value of {name}', { name: request.name }), autoFocus: replacing })),
       request.kind === 'fill' ? h(ScopeSwitch, { value: scope, onChange: next => { hold(); setScope(next) }, bot }) : null) : null,
     h('div', { className: 'bt-secret-note', id: noteId },
-      t('Saved securely for tools within the authorization scope. The value is not sent as chat text.'),
+      t("{bot} never sees the value. It reaches {bot}'s shell as ", { bot: bot.name }), h('code', null, `$DSH_SECRET_${request.name}`), '.',
       filling && value !== '' && !long ? t(' At least {count} characters.', { count: MIN_VALUE }) : ''),
     warn,
     error ? h('div', { className: 'bt-secret-error', role: 'alert' }, error) : null,
@@ -159,6 +162,11 @@ export function SecretToolCell({ sessionId, callId, name, done, content, roster,
   if (done && /already saved/.test(contentText(content))) {
     return h('div', { className: 'bt-event' }, h('span', { className: 'bt-secret-event' }, h(KeyIcon), t('{bot} is using {name}', { bot: bot.name, name: name ?? t('a saved key') })))
   }
+  // A read-only window shows no card, so the refusal is said in one line, or the Bot
+  // just trails off with nothing on screen.
+  if (done && contentText(content).startsWith('No card can be shown now')) {
+    return h('div', { className: 'bt-event' }, h('span', { className: 'bt-secret-event' }, h(KeyIcon), t('{bot} could not ask for a key: this window can only view the team', { bot: bot.name })))
+  }
   return null
 }
 
@@ -177,6 +185,118 @@ export function SecretDock({ sessionId, useRoster, useCards, useHeldCards, actio
   return h('div', { className: 'bt-q-dock bt-secret-dock' }, waiting.map(request => h(SecretCard, { key: JSON.stringify([sessionId, request.id, request.kind]), sessionId, bot, request, roster, actions })))
 }
 
+// -------------------------------------------------------------------------
+// Settings page
+
+function ScopeEditor({ secret, roster, onSave }) {
+  const [mode, setMode] = useState(secret.scope === 'all' ? 'all' : 'some')
+  const [picked, setPicked] = useState(secret.scope === 'all' ? [] : secret.scope)
+  const toggle = id => setPicked(list => (list.includes(id) ? list.filter(item => item !== id) : [...list, id]))
+  const same = mode === 'all' ? secret.scope === 'all' : secret.scope !== 'all' && [...picked].sort().join() === [...secret.scope].sort().join()
+  return h('div', { className: 'bt-secret-edit-block' },
+    h('div', { className: 'bt-secret-edit-label' }, t('Who may use it')),
+    h('div', { className: 'bt-secret-radios', role: 'radiogroup', 'aria-label': t('Who may use {name}', { name: secret.name }) },
+      [['all', t('All Bots')], ['some', t('Chosen Bots')]].map(([id, text]) => h('label', { key: id, className: 'bt-secret-radio' },
+        h('input', { type: 'radio', name: `scope-${secret.name}`, checked: mode === id, onChange: () => setMode(id) }), text))),
+    mode === 'some' ? h('div', { className: 'bt-secret-bots' }, roster.bots.map(bot => h('button', {
+      key: bot.id, type: 'button', className: 'bt-secret-bot', 'aria-pressed': picked.includes(bot.id), onClick: () => toggle(bot.id),
+    }, h(BotAvatar, { bot, size: 20, badge: false, live: false }), bot.name, picked.includes(bot.id) ? h(CheckIcon) : null))) : null,
+    h('div', { className: 'bt-secret-row-actions' },
+      h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: same, onClick: () => onSave(mode === 'all' ? 'all' : picked) }, t('Save access'))))
+}
+
+function PurposeEditor({ secret, onSave }) {
+  const [purpose, setPurpose] = useState(secret.purpose ?? '')
+  const same = purpose.trim() === (secret.purpose ?? '')
+  return h('div', { className: 'bt-secret-edit-block' },
+    h('div', { className: 'bt-secret-edit-label' }, t('What it is for')),
+    h('div', { className: 'bt-secret-inline' },
+      h('input', { className: 'bt-input', 'aria-label': t('What it is for'), placeholder: t('What it is for'), value: purpose, spellCheck: false, autoComplete: 'off', onChange: event => setPurpose(event.target.value) }),
+      h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: same, onClick: () => onSave(purpose.trim()) }, t('Save'))))
+}
+
+function ValueEditor({ secret, onSave }) {
+  const [value, setValue] = useState('')
+  const [replaced, setReplaced] = useState(false)
+  const long = value.trim().length >= MIN_VALUE
+  const save = () => {
+    if (!long) return
+    void Promise.resolve(onSave(value)).then(ok => { if (ok) { setValue(''); setReplaced(true) } })
+  }
+  const edit = next => { setValue(next); setReplaced(false) }
+  return h('div', { className: 'bt-secret-edit-block' },
+    h('div', { className: 'bt-secret-edit-label' }, t('Replace the value')),
+    h('div', { className: 'bt-secret-inline' },
+      h('label', { className: 'bt-q-field bt-secret-field' }, h(MaskedInput, { value, onChange: edit, onEnter: save, label: t('New value of {name}', { name: secret.name }) })),
+      h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: !long, onClick: save }, t('Replace'))),
+    value !== '' && !long ? h('div', { className: 'bt-set-hint' }, t('At least {count} characters.', { count: MIN_VALUE }))
+      : replaced ? h('div', { className: 'bt-set-hint bt-secret-ok', role: 'status' }, h(CheckIcon), t('Replaced. Bots get the new value from their next command.')) : null)
+}
+
+function SecretRow({ secret, roster, actions, run, open, onToggle }) {
+  const [confirm, setConfirm] = useState(false)
+  useEffect(() => { if (!open) setConfirm(false) }, [open])
+  const asker = secret.requestedBy ? roster.byId[secret.requestedBy]?.name ?? t('a deleted Bot') : t('you')
+  const allowed = secret.scope === 'all' ? [] : secret.scope.map(id => roster.byId[id]).filter(Boolean)
+  const meta = [t('Asked by {name}', { name: asker }), t('added {time}', { time: when(secret.createdAt) }), secret.lastUsedAt ? t('last used {time}', { time: when(secret.lastUsedAt) }) : t('not used yet')].join(' · ')
+  return h('div', { className: 'bt-secret-item', 'data-open': open ? '' : undefined },
+    h('button', { type: 'button', className: 'bt-set-row bt-secret-summary', 'aria-expanded': open, onClick: onToggle },
+      h('span', { className: 'bt-set-copy' },
+        h('span', { className: 'bt-secret-title' }, h(KeyIcon), h('code', { className: 'bt-secret-name' }, secret.name), secret.purpose ? h('span', { className: 'bt-secret-purpose' }, secret.purpose) : null),
+        h('span', { className: 'bt-set-hint' }, meta)),
+      h('span', { className: 'bt-set-control' },
+        secret.scope === 'all' ? h('span', { className: 'bt-tag' }, t('All Bots'))
+          : allowed.length === 0 ? h('span', { className: 'bt-tag' }, t('No Bot'))
+            : h('span', { className: 'bt-secret-faces', title: allowed.map(bot => bot.name).join(', ') }, allowed.slice(0, 5).map(bot => h(BotAvatar, { key: bot.id, bot, size: 20, badge: false, live: false }))))),
+    open ? h('div', { className: 'bt-secret-edit' },
+      h(ScopeEditor, { key: JSON.stringify(secret.scope), secret, roster, onSave: scope => run(actions.secretUpdate(secret.name, { scope })) }),
+      h(PurposeEditor, { key: secret.purpose ?? '', secret, onSave: purpose => run(actions.secretUpdate(secret.name, { purpose })) }),
+      h(ValueEditor, { secret, onSave: value => run(actions.secretSet({ name: secret.name, value })) }),
+      h('div', { className: 'bt-secret-row-actions' },
+        confirm
+          ? [
+              h('span', { key: 'q', className: 'bt-set-hint' }, t('Delete {name}? Bots lose it at once.', { name: secret.name })),
+              h('button', { key: 'no', type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => setConfirm(false) }, t('Keep')),
+              h('button', { key: 'yes', type: 'button', className: 'bt-soft bt-soft-sm bt-secret-danger', onClick: () => run(actions.secretDelete(secret.name)) }, t('Delete')),
+            ]
+          : h('button', { type: 'button', className: 'bt-soft bt-soft-sm bt-secret-danger', onClick: () => setConfirm(true) }, h(TrashIcon), t('Delete')))) : null)
+}
+
+function AddSecret({ actions, run, onDone }) {
+  const [name, setName] = useState('')
+  const [purpose, setPurpose] = useState('')
+  const [value, setValue] = useState('')
+  const ready = /^[A-Za-z][\w-]{0,63}$/.test(name.trim()) && value.trim().length >= MIN_VALUE
+  const save = () => {
+    if (!ready) return
+    void run(actions.secretSet({ name, purpose, value, scope: 'all' })).then(ok => { if (ok) { setValue(''); onDone() } })
+  }
+  return h('div', { className: 'bt-set-row bt-set-paste bt-secret-add' },
+    h('input', { className: 'bt-input', 'aria-label': t('Key name'), placeholder: t('NAME, e.g. GITHUB_TOKEN'), value: name, spellCheck: false, autoComplete: 'off', autoFocus: true, onChange: event => setName(event.target.value.toUpperCase()) }),
+    h('input', { className: 'bt-input', 'aria-label': t('What it is for'), placeholder: t('What it is for'), value: purpose, autoComplete: 'off', onChange: event => setPurpose(event.target.value) }),
+    h('label', { className: 'bt-q-field bt-secret-field' }, h(MaskedInput, { value, onChange: setValue, onEnter: save, label: t('Value') })),
+    h('div', { className: 'bt-secret-row-actions' },
+      h('span', { className: 'bt-set-hint' }, t('New keys are for all Bots; narrow it down afterwards.')),
+      h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: onDone }, t('Cancel')),
+      h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: !ready, onClick: save }, t('Save key'))))
+}
+
+export function SecretsPage({ roster, actions, run, Section }) {
+  const [open, setOpen] = useState(null)
+  const [adding, setAdding] = useState(false)
+  const secrets = roster.secrets ?? []
+  return [
+    h('p', { key: 'about', className: 'bt-secret-about' },
+      t('Keys your Bots asked for. Bots never see the values: they use them as '), h('code', null, '$DSH_SECRET_NAME'),
+      t(' in their shell, and every value is replaced by '), h('code', null, '[secret:NAME]'), t(' before anything goes to a model.')),
+    h(Section, { key: 'list', title: t('Secrets · {count}', { count: secrets.length }) },
+      secrets.length === 0 && !adding ? h('div', { className: 'bt-set-row' }, h('span', { className: 'bt-set-hint' }, t('No keys yet. When a Bot needs one, it shows a card in its chat.'))) : null,
+      secrets.map(secret => h(SecretRow, { key: secret.name, secret, roster, actions, run, open: open === secret.name, onToggle: () => setOpen(open === secret.name ? null : secret.name) })),
+      adding ? h(AddSecret, { actions, run, onDone: () => setAdding(false) }) : null),
+    adding ? null : h('div', { key: 'add', className: 'bt-actions' }, h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => setAdding(true) }, t('Add a key'))),
+  ]
+}
+
 export const SECRET_CSS = `
 .bt-secret-head{align-items:center;gap:10px}
 .bt-secret-who{position:relative;flex:none;display:inline-flex}
@@ -187,7 +307,7 @@ export const SECRET_CSS = `
 .bt-secret-field{align-items:center;min-height:36px}
 .bt-secret-input{flex:1;width:100%;min-width:0;margin:0;padding:0;border:0;outline:none;background:transparent;color:var(--bt-ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;line-height:20px;letter-spacing:.04em}
 .bt-secret-input[data-masked]{-webkit-text-security:disc}
-.bt-secret-input::placeholder{color:var(--bt-ink-3);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;letter-spacing:0}
+.bt-secret-input::placeholder{color:var(--bt-ink-3);font-family:var(--bt-font);letter-spacing:0}
 .bt-secret-scope{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;align-self:flex-start;padding:2px;border-radius:999px;background:var(--bt-hover)}
 .bt-secret-glide{position:absolute;top:2px;bottom:2px;left:2px;width:calc(50% - 2px);border-radius:999px;background:var(--bt-main);box-shadow:0 1px 3px rgba(20,20,20,.08),inset 0 0 0 .5px color-mix(in srgb,var(--bt-ink) 6%,transparent);transition:${spring(SPRING_SHAPE, 'transform')}}
 .bt-secret-glide[data-at="1"]{transform:translateX(100%)}
@@ -203,7 +323,7 @@ export const SECRET_CSS = `
 @keyframes bt-secret-in{from{opacity:0;transform:translateY(-2px)}}
 .bt-secret-saved{display:flex;align-items:center;gap:6px;font-size:13px;line-height:18px;color:var(--bt-ink-2)}
 .bt-secret-note{font-size:12px;line-height:17px;color:var(--bt-ink-3)}
-.bt-secret-note code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px}
+.bt-secret-note code,.bt-secret-about code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px}
 .bt-secret-warn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;font-size:12px;line-height:16px;color:#b25e09;background:color-mix(in srgb,#f59e0b 12%,transparent)}
 .bt-secret-error{font-size:12px;line-height:16px;color:var(--bt-danger)}
 .bt-secret .bt-q-btn:disabled{opacity:.5;cursor:default}
@@ -217,5 +337,27 @@ export const SECRET_CSS = `
 .bt-secret-event{display:inline-flex;align-items:center;gap:5px}
 .bt-secret-dock{flex-direction:column;align-items:center}
 .bt-secret-dock .bt-q{max-width:min(550px,calc(100% - 32px))}
-@media (prefers-reduced-motion:reduce){.bt-secret-glide{transition:none}.bt-secret-check,.bt-secret-done,.bt-secret-ok{animation:none}}
+.bt-secret-about{margin:0 0 12px;padding:0 4px;font-size:12px;line-height:17px;color:var(--bt-ink-2)}
+.bt-secret-title{display:flex;align-items:center;gap:6px;min-width:0;color:var(--bt-ink)}
+.bt-secret-title svg{flex:none;color:var(--bt-ink-2)}
+.bt-secret-purpose{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--bt-ink-2)}
+.bt-secret-faces{display:inline-flex}
+.bt-secret-faces>*+*{margin-left:-6px}
+.bt-secret-edit{display:flex;flex-direction:column;gap:14px;padding:4px 12px 14px;animation:bt-q-in ${SPRING_SHAPE.duration}ms ${SPRING_SHAPE.easing} backwards,bt-veil-in .2s ease-out backwards}
+.bt-secret-edit-block{display:flex;flex-direction:column;gap:8px}
+.bt-secret-edit-label{font-size:12px;line-height:16px;font-weight:600;color:var(--bt-ink-2)}
+.bt-secret-radios{display:flex;gap:16px;font-size:13px}
+.bt-secret-radio{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.bt-secret-bots{display:flex;flex-wrap:wrap;gap:6px}
+.bt-secret-bot{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 5px;border-radius:999px;border:.5px solid var(--bt-line);background:var(--bt-card);color:var(--bt-ink-2);font:inherit;font-size:12px;cursor:pointer;transition:background-color .12s ease,color .12s ease,border-color .12s ease}
+.bt-secret-bot[aria-pressed=true]{background:var(--bt-active);color:var(--bt-ink);border-color:var(--bt-line-2)}
+.bt-secret-bot svg{width:13px;height:13px}
+.bt-secret-inline{display:flex;gap:8px;align-items:center}
+.bt-secret-inline .bt-input{flex:1;height:34px}
+.bt-secret-row-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.bt-secret-row-actions .bt-set-hint{flex:1}
+.bt-secret-danger{color:var(--bt-danger);display:inline-flex;align-items:center;gap:4px}
+.bt-secret-danger svg{width:13px;height:13px}
+.bt-secret-add .bt-input{height:34px}
+@media (prefers-reduced-motion:reduce){.bt-secret-glide{transition:none}.bt-secret-check,.bt-secret-done,.bt-secret-ok,.bt-secret-edit{animation:none}}
 `

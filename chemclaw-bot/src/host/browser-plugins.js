@@ -6,9 +6,10 @@ import { defineTool } from '@deepseek-ai/dsh-tools'
 import { mountBrowserPlugin } from './browser/mount.js'
 import { sessionComplete } from './browser/session-model.js'
 import * as refs from './browser/refs.js'
+import * as script from './browser/script.js'
 import * as task from './browser/task.js'
 
-export const browserPlugins = { refs, task }
+export const browserPlugins = { refs, script, task }
 export function appBrowserEndpoint(botId, downloadRoots) {
   if (typeof process.send !== 'function') throw new Error('The app browser relay is unavailable.')
   const id = randomUUID()
