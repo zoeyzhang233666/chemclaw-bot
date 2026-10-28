@@ -201,3 +201,9 @@ ChemClaw Linux packages and updates (2026-10-27):
   #544, 9262b3e64103ac2cf0d1a67aacf5ea068d93d759.
   Apache-2.0, Copyright 2026 Fei2411 and DS Bot contributors.
   https://github.com/Fei2411/DS-Bot
+
+DS-Bot 0.2.3 screenshot and history compatibility
+  Adapted from Fei2411/DS-Bot PRs #578 and #583, Apache-2.0,
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  Fixed reference: 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Retains ChemClaw browser cancellation/serialization and history metadata.

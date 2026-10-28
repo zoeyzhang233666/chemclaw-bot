@@ -198,3 +198,9 @@ ChemClaw Linux image processing (2026-10-28):
   (Apache-2.0 AND LGPL-3.0-or-later AND MIT, Lovell Fuller and contributors) through sharp's own
   fallback loader. The installed package retains its license and third-party notices.
   https://github.com/lovell/sharp
+
+DS-Bot 0.2.3 screenshot and history compatibility
+  Adapted from Fei2411/DS-Bot PRs #578 and #583, Apache-2.0,
+  Copyright 2026 Fei2411 and the DS Bot contributors.
+  Fixed reference: 4a7b55069ad300eae8be42a74f31bc170b40ead7.
+  Retains ChemClaw browser cancellation/serialization and history metadata.

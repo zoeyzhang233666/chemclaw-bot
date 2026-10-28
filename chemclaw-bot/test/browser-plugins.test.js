@@ -112,6 +112,7 @@ test('app browser endpoint carries download roots for the Bot resolved from the 
   }
   try {
     mountBrowserPlugin({
+      on() {},
       effect(create) { cleanup = create() },
       tools: { register(tool) { tools.set(tool.name, tool) } },
     }, {
@@ -161,6 +162,7 @@ test('concurrent first browser calls share opening and relay connection', async 
   let connectCalls = 0
   let rootsCalls = 0
   mountBrowserPlugin({
+    on() {},
     effect(create) { cleanup = create() },
     tools: { register(tool) { tools.set(tool.name, tool) } },
   }, {
@@ -212,6 +214,7 @@ test('user takeover while opening closes the session once it resolves', async ()
   const closed = new Promise(resolve => { resolveClosed = resolve })
   let hold = null
   mountBrowserPlugin({
+    on() {},
     effect(create) { cleanup = create() },
     tools: { register(tool) { tools.set(tool.name, tool) } },
   }, {
@@ -247,6 +250,7 @@ test('user takeover refuses a browser call before opening or connecting', async 
   let openCalls = 0
   let connectCalls = 0
   mountBrowserPlugin({
+    on() {},
     effect() {},
     tools: { register(tool) { tools.set(tool.name, tool) } },
   }, {
