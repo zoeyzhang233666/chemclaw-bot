@@ -173,8 +173,19 @@ test('failed pre-multichat backup blocks destructive migration write', async (t)
   assert.equal(readFileSync(join(home, 'state.json'), 'utf8'), original)
   assert.equal(readdirSync(home).some(name => name.startsWith('state.json.pre-multichat-')), false)
   assert.equal('chats' in JSON.parse(original).bots.writer, false)
+  // Later UI/default reads and saves must not seed chats[] onto disk either.
+  assert.equal(rt.blockMultichatWrites, true)
+  assert.equal(rt.chatOf('writer'), 'tip-w')
+  assert.equal(Array.isArray(rt.botOf('writer').chats), false)
+  await rt.save().catch(() => {})
+  assert.equal(readFileSync(join(home, 'state.json'), 'utf8'), original)
+  const created = await route.fetch(new Request('http://localhost/api/bot', {
+    method: 'POST', body: JSON.stringify({ endpoint: 'bot-chat-create', payload: { botId: 'writer' } }),
+  })).then(res => res.json())
+  assert.equal(created.ok, false)
+  assert.match(created.error?.message ?? '', /backed up|migration/i)
+  assert.equal(readFileSync(join(home, 'state.json'), 'utf8'), original)
   void body
-  void rt
 })
 
 test('archive and delete refuse running, waiting, approval, and captain chats including past segments', async (t) => {

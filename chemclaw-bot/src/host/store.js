@@ -310,6 +310,14 @@ export function install(rt) {
 
   const save = ({ required = false } = {}) => {
     if (stopped) return required ? Promise.reject(new Error('The Bot team cannot be saved after this host stopped.')) : writing
+    // Never persist chats[] (or any other state) while a pre-multichat backup failed:
+    // disk must keep the pre-migration bytes until backup can succeed.
+    if (rt.blockMultichatWrites) {
+      const error = new Error('Multi-chat migration is blocked until state.json can be backed up')
+      if (required) return Promise.reject(error)
+      warn('chemclaw-bot: %s', error.message)
+      return writing
+    }
     indexSessions()
     // A reading host keeps the file's revision, so its window does not skip the next change.
     if (!writable()) return required ? Promise.reject(new Error(`This host cannot save the Bot team: ${readOnly()}`)) : writing

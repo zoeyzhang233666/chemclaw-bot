@@ -172,10 +172,16 @@ export function install(rt) {
   }
 
   // UI / default private tip only — never use for group routing or background completion.
+  // Soft ensure: never seed chats[] while a failed pre-multichat backup blocks writes.
+  function ensureChats(bot) {
+    if (rt.blockMultichatWrites) return false
+    return ensureBotChats(bot)
+  }
+
   function chatOf(botId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) return botId
-    ensureBotChats(bot)
+    ensureChats(bot)
     const chat = activeChat(bot)
     return chat?.sessionId ?? bot.sessionId ?? botId
   }
@@ -184,7 +190,7 @@ export function install(rt) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
     assertMultichatWritable()
-    ensureBotChats(bot)
+    ensureChats(bot)
     const id = await rt.createSession(title?.trim() || `${bot.name} chat`)
     const now = Date.now()
     const chat = {
@@ -209,7 +215,7 @@ export function install(rt) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
     assertMultichatWritable()
-    ensureBotChats(bot)
+    ensureChats(bot)
     const chat = chatById(bot, chatId)
     if (chat === undefined) throw new Error('Unknown chat')
     if (chat.archived === true) delete chat.archived
@@ -223,6 +229,7 @@ export function install(rt) {
   async function renameBotChat(botId, chatId, title) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
+    assertMultichatWritable()
     const chat = chatById(bot, chatId)
     if (chat === undefined) throw new Error('Unknown chat')
     const next = String(title ?? '').trim().slice(0, TITLE_MAX)
@@ -272,7 +279,8 @@ export function install(rt) {
   async function archiveBotChat(botId, chatId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
-    ensureBotChats(bot)
+    assertMultichatWritable()
+    ensureChats(bot)
     const chat = chatById(bot, chatId)
     if (chat === undefined) throw new Error('Unknown chat')
     const open = bot.chats.filter(entry => entry.archived !== true)
@@ -295,7 +303,8 @@ export function install(rt) {
   async function deleteBotChat(botId, chatId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
-    ensureBotChats(bot)
+    assertMultichatWritable()
+    ensureChats(bot)
     const chat = chatById(bot, chatId)
     if (chat === undefined) throw new Error('Unknown chat')
     if (chat.id === bot.id) throw new Error('The original chat cannot be deleted')
@@ -324,7 +333,7 @@ export function install(rt) {
   function ownChatAnchor(botId, askingId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) return undefined
-    ensureBotChats(bot)
+    ensureChats(bot)
     if (askingId !== undefined) {
       const owned = ownerOf(askingId)
       if (owned?.kind === 'private' && owned.botId === botId) return askingId
@@ -367,7 +376,8 @@ export function install(rt) {
   function listBotChats(botId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
-    ensureBotChats(bot)
+    assertMultichatWritable()
+    ensureChats(bot)
     return {
       botId: bot.id,
       activeChatId: bot.activeChatId,
@@ -378,11 +388,11 @@ export function install(rt) {
   function ownersView(botId) {
     const bot = rt.botOf(botId)
     if (bot === undefined) throw new Error('Unknown Bot')
-    ensureBotChats(bot)
+    ensureChats(bot)
     return {
       botId: bot.id,
       activeChatId: bot.activeChatId,
-      chats: bot.chats.map(chat => ({
+      chats: (bot.chats ?? []).map(chat => ({
         id: chat.id,
         sessionId: chat.sessionId ?? (chat.id === bot.id ? bot.id : undefined),
         archived: chat.archived === true,
@@ -436,7 +446,7 @@ export function install(rt) {
     migrateChats,
     backupBeforeMultichat,
     afterAdoptMigrate,
-    ensureBotChats,
+    ensureBotChats: ensureChats,
     chatBusyReason,
     activeChat,
     chatById,
