@@ -625,9 +625,17 @@ function createWindow() {
     win.on('leave-full-screen', sendFullscreen)
     contents.on('did-finish-load', sendFullscreen)
   }
+  // System UI font stack for CJK fallback; ChemClaw theme/skill CSS still wins
+  // for branded surfaces that set their own families.
+  const fonts = readFileSync(join(here, 'fonts.css'), 'utf8')
+  contents.on('dom-ready', () => { void contents.insertCSS(fonts) })
   if (mica) {
     const css = readFileSync(join(here, 'mica.css'), 'utf8')
     contents.on('dom-ready', () => { void contents.insertCSS(css) })
+  }
+  {
+    const fonts = readFileSync(join(here, 'fonts.css'), 'utf8')
+    contents.on('dom-ready', () => { void contents.insertCSS(fonts) })
   }
   contents.setWindowOpenHandler(({ url }) => {
     // DSH's sign-in opens a blank window during the click and sends it to the sign-in page later.

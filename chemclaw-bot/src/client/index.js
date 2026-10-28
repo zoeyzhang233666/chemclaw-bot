@@ -50,6 +50,7 @@ import { MEMBER_CSS, MemberDock } from './member-status.js'
 import { USER_MESSAGE_CSS, UserMessageCell, canDrawUserMessages } from './user-message.js'
 import { noticeApprovals } from './approval-notices.js'
 import { listedOpener } from './open-listed.js'
+import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, rightColumnOpen } from './right-panel.js'
 
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'slots', 'theme', 'layout']
 
@@ -662,6 +663,48 @@ export function apply(ctx) {
       actions.reportError(error, 'right-sidebar')
     }
   }
+
+  // One right-side panel at a time: the Bot drawer and DSH's right column. Whichever
+  // the user asked for last wins. The column's state is read off the frame's
+  // attributes through a MutationObserver. `mounted` moves before the DOM of a
+  // Session switch does, so a switch opens a timed window (createSwitchWindow):
+  // an attribute batch inside it is the switch revealing that Session's own
+  // column — the drawer wins and folds it back — while one outside it is the
+  // user's own opening and takes the space. Closing either side keeps HTML /
+  // Excel / PPT preview tabs usable: only the drawer vs column mutex is enforced.
+  ctx.effect(() => {
+    const sidebar = ctx.get('sidebarRight')
+    if (!sidebar) return undefined
+    let open = rightColumnOpen(document)
+    // Long enough for a fullscreen panel's slide, which reports only once it ends.
+    const switchWindow = createSwitchWindow(done => setTimeout(done, 400))
+    const collapseColumn = () => {
+      try {
+        if (sidebar.isExpanded()) sidebar.toggleExpanded()
+      } catch (error) {
+        actions.reportError(error, 'right-sidebar')
+      }
+    }
+    const observer = new MutationObserver(() => {
+      const next = rightColumnOpen(document)
+      const opening = next && !open
+      open = next
+      const verdict = opening ? columnOpened(ui.getSnapshot().details !== null, switchWindow.pending) : null
+      if (verdict === 'close-drawer') actions.closePanel()
+      else if (verdict === 'collapse-column') collapseColumn()
+    })
+    observer.observe(document.documentElement, {
+      subtree: true, attributes: true, attributeFilter: RIGHTBAR_ATTRIBUTES,
+    })
+    const offMounted = sidebar.mounted.subscribe(() => switchWindow.moved())
+    let drawer = ui.getSnapshot().details !== null
+    const offUi = ui.subscribe(() => {
+      const next = ui.getSnapshot().details !== null
+      if (next && !drawer && drawerOpened(rightColumnOpen(document)) === 'collapse-column') collapseColumn()
+      drawer = next
+    })
+    return () => { observer.disconnect(); offMounted(); offUi() }
+  }, 'chemclaw-bot: one right panel')
 
   const browserPages = browsers?.pages ?? createSource({})
   const browserTabs = browsers?.tabs ?? createSource({})

@@ -53,7 +53,7 @@ ChemClaw 独立桌面端为每个 Bot 提供独立的浏览器，并保留登录
 
 复用 Electron 已有的 Chromium，不需要再下载一份浏览器。
 安装到官方 DSH 时保留既有默认行为。外部主机可显式配置
-`browserPlugin: refs`（逐步操作）或 `task`（完整目标），以及指向兼容 Chromium 的
+`browserPlugin: refs`（逐步操作）、`script`（一段脚本）或 `task`（完整目标），以及指向兼容 Chromium 的
 `browserExecutablePath`。详见[浏览器设计](../docs/plans/2026-10-27-browser-automation.md)。
 
 ## 许可

@@ -217,6 +217,14 @@ test('a Bot outside the scope gets an allow card, and allowing resolves it', asy
   assert.deepEqual(bench.env('c3'), { DSH_SECRET_DEMO_TOKEN: value })
   assert.match(bench.delivered.at(-1).text, /^\[Secret card\]\nThe user let you use DEMO_TOKEN\./)
 
+  // Settings: edit or clear the purpose without touching the value.
+  await bench.call('secret-update', { name: 'DEMO_TOKEN', purpose: 'CI build token' })
+  assert.equal((await bench.view()).secrets[0].purpose, 'CI build token')
+  assert.deepEqual(bench.env('c3'), { DSH_SECRET_DEMO_TOKEN: value })
+  await bench.call('secret-update', { name: 'DEMO_TOKEN', purpose: '' })
+  assert.equal((await bench.view()).secrets[0].purpose, '')
+  assert.deepEqual(bench.env('c3'), { DSH_SECRET_DEMO_TOKEN: value })
+
   // Settings: narrow the scope, which turns a new card back into an allow card.
   await bench.call('secret-update', { name: 'DEMO_TOKEN', scope: ['b2', 'nope'] })
   assert.deepEqual((await bench.view()).secrets[0].scope, ['b2'])
