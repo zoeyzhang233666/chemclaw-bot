@@ -38,6 +38,8 @@ Public chemistry lookups and keyless web search usually need no company Key. Tru
 
 The installed app checks ChemClaw releases automatically. **Settings → About ChemClaw → Check for updates** checks again: Windows downloads the new installer and offers a restart; macOS opens the download page. Earlier builds with update checks disabled need one manual installation of this version.
 
+Closing the app window keeps ChemClaw running in the system tray so Bots can continue working. Open it again from the tray; choose Quit there to stop the app. The first close explains this behavior.
+
 **Settings → Skill library** lists the complete skill collection by business category, with Chinese names, purposes and deliverables. Search by task or keyword, then choose **Use** to return to your current conversation with the skill selected. Write your request in the normal composer and send when ready; existing draft text, attachments and regular Bot skills are preserved. In groups, the admin executes it unless you @ another member. **Install a skill** accepts ZIP files, folders, SKILL.md and public GitHub links, preserves scripts and templates, and lets you choose a group before installation. Tool services and credentials remain in **Connectors**.
 
 ### 2. Plugin for official DeepSeek Harness (DSH) Desktop

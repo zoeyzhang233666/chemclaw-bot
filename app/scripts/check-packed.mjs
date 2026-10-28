@@ -42,6 +42,8 @@ if (!existsSync(executable)) {
 const work = realpathSync.native(mkdtempSync(join(realpathSync.native(tmpdir()), 'ds-bot-packed-')))
 mkdirSync(join(work, 'home'))
 mkdirSync(join(work, 'workspace'))
+mkdirSync(join(work, 'shell'))
+writeFileSync(join(work, 'shell', 'tray-close-acknowledged'), '')
 const nativeFixture = process.platform === 'linux' ? nativeOpenFixture(work) : undefined
 const browserFixture = createServer((_request, response) => {
   response.setHeader('content-type', 'text/html; charset=utf-8')
@@ -187,7 +189,7 @@ function devtools(url, problems) {
     pending.set(id, { resolve: settle(done), reject: settle(reject) })
     socket.send(JSON.stringify({ id, method, params }))
   })
-  return { opened, call, requests }
+  return { opened, call, requests, close: () => new Promise(resolve => { socket.addEventListener('close', resolve, { once: true }); socket.close() }) }
 }
 
 // mica.css styles DSH's own page, which can change with a DSH upgrade; every rule must still
@@ -569,10 +571,16 @@ try {
   }
   // Closed like a user closes it, also after a failure, so that the app stops its Host. The page
   // goes away with the window, so this call gets no answer.
-  void cdp.call('Runtime.evaluate', { expression: 'window.close()' }).catch(() => undefined)
+  if (problems.length > 0) throw new Error(`page problems:\n  ${problems.join('\n  ')}`)
+  await cdp.close()
+  const browserTarget = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json()
+  const quitSocket = new WebSocket(browserTarget.webSocketDebuggerUrl)
+  await new Promise((resolve, reject) => { quitSocket.addEventListener('open', resolve, { once: true }); quitSocket.addEventListener('error', reject, { once: true }) })
+  quitSocket.send(JSON.stringify({ id: 1, method: 'Browser.close' }))
+  quitSocket.close()
   const outcome = await Promise.race([exited, sleep(40_000).then(() => undefined)])
   if (chatError) throw chatError
-  if (outcome === undefined) throw new Error('the app did not exit after its window closed')
+  if (outcome === undefined) throw new Error('the app did not exit after explicit quit')
   console.log(`check-packed: app exited (code ${String(outcome.code)}, signal ${String(outcome.signal)})`)
   if (outcome.code !== 0) throw new Error(`the app exited with code ${String(outcome.code)}`)
   if (problems.length > 0) throw new Error(`page problems:\n  ${problems.join('\n  ')}`)
