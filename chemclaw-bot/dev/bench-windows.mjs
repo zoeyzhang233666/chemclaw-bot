@@ -13,7 +13,7 @@ const require = createRequire(anchor)
 // package, resolved through its public export, before testing the source revision.
 const installedPlugin = dirname(require.resolve('chemclaw-bot/package.json'))
 if (resolve(installedPlugin) !== plugin) {
-  for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'LICENSE', 'src/host', 'src/shared', 'seed', 'skills/builtin', 'skills/vendor']) {
+  for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'LICENSE', 'src/host', 'src/shared', 'runtime', 'seed', 'skills/builtin', 'skills/vendor']) {
     if (existsSync(join(plugin, path))) cpSync(join(plugin, path), join(installedPlugin, path), { recursive: true })
   }
 }
@@ -53,7 +53,8 @@ try {
     console.log(`Isolated skill UI bench ready on port ${webPort}; create its stop file to finish.`)
     await new Promise(done => { const timer = setInterval(() => { if (existsSync(join(home, 'stop'))) { clearInterval(timer); done() } }, 250) })
   } else {
-    const check = process.argv.includes('--completion-check') ? 'dev/completion-check.mjs' : 'dev/smoke.mjs'
+    const check = process.argv.includes('--chart-check') ? 'dev/chart-integration-check.mjs'
+      : process.argv.includes('--completion-check') ? 'dev/completion-check.mjs' : 'dev/smoke.mjs'
     const result = await new Promise(resolve => { const smoke = spawn(process.execPath, [join(plugin, check), name, String(webPort)], { env: process.env, stdio: 'inherit', windowsHide: true }); smoke.once('exit', resolve) })
     process.exitCode = result ?? 1
   }

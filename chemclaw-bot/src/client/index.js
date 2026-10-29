@@ -308,10 +308,11 @@ export function apply(ctx) {
       const width = widthOf(prefs)
       const flatWidth = flatWidthOf(prefs)
       document.body.dataset.btMotion = motion
+      document.body.dataset.btAdvancedCharts = prefs.advancedCharts === false ? 'off' : 'on'
       document.body.dataset.btLayout = layout
       document.body.style.setProperty('--bt-msg-w', String(width / 100))
       document.body.style.setProperty('--bt-flat-w', String(flatWidth / 100))
-      const next = `${id}|${accent ?? ''}|${motion}|${layout}|${width}|${flatWidth}|${prefs.thinking === true}|${registry.getSnapshot()}`
+      const next = `${id}|${accent ?? ''}|${motion}|${layout}|${width}|${flatWidth}|${prefs.thinking === true}|${prefs.advancedCharts !== false}|${registry.getSnapshot()}`
       if (next === key) return
       key = next
       style.textContent = themeCss(themes[id], accent)
@@ -319,7 +320,7 @@ export function apply(ctx) {
       releaseTokens = ctx.theme.overrideTokens('chemclaw-bot', shellTokens(themes[id], accent))
       if (typeof release === 'function') release()
       if (snapshot.ready) {
-        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion, layout: prefs.layout, width: prefs.width, flatWidth: prefs.flatWidth, thinking: prefs.thinking })) } catch { /* storage unavailable */ }
+        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion, layout: prefs.layout, width: prefs.width, flatWidth: prefs.flatWidth, thinking: prefs.thinking, advancedCharts: prefs.advancedCharts })) } catch { /* storage unavailable */ }
       }
     }
     render()

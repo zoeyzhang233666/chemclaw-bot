@@ -6,6 +6,8 @@ ChemClaw is an AI team for chemical-industry work: finding customers, sourcing s
 
 Think of it as a ready-made desk of specialists. After install, the sidebar already lists professional Bots and collaboration groups—open one and start chatting. No need to build a team from scratch.
 
+Inline replies support scatter, radar, heatmap, funnel, treemap, Sankey and gauge charts alongside the existing five lightweight SVG charts. Advanced charts load locally only when needed; chart exploration does not call the model. Settings → Appearance → Advanced charts can switch them to data tables.
+
 ## What you get
 
 - **50 specialist Bots and 15 collaboration groups** for domestic sales, procurement, trade, industry research, futures-style research, production support, and delivery roles (reports, tables, slides).

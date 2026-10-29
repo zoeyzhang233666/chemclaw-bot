@@ -8,6 +8,8 @@ Think of it as a ready-made desk of specialists. After install, the sidebar alre
 
 This folder is the `chemclaw-bot` plugin for official DeepSeek Harness (DSH). The standalone Windows app uses the same plugin capabilities.
 
+Inline replies support seven additional chart types: scatter, radar, heatmap, funnel, treemap, Sankey and gauge. Their renderer loads locally on demand; the existing five SVG charts keep their lightweight path. Turn off Advanced charts in Appearance to see their full data as tables.
+
 ## What you get
 
 - **50 specialist Bots and 15 collaboration groups** for sales, procurement, trade, industry and futures-style research, production support, and delivery roles.

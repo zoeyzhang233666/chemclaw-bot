@@ -4,6 +4,7 @@
 // go through formula.js, and an html component only ever runs in a sandboxed frame.
 
 import { compileFormula, createScope, evaluate, isName, show } from './formula.js'
+import { ADVANCED_CHART_KINDS, ADVANCED_CHART_PROPS, checkAdvancedChart } from './advanced-charts.js'
 
 const LAYOUT = ['stack', 'row']
 const DISPLAY = ['text', 'metric', 'table', 'chart', 'progress', 'callout', 'sources', 'html']
@@ -13,7 +14,7 @@ const COMPONENTS = [...LAYOUT, ...DISPLAY, ...INPUT_TYPES, ...ANSWERS]
 const TONES = ['good', 'warn', 'bad']
 const TEXT_TONES = ['muted']
 const CALLOUT_TONES = ['info', 'good', 'warn', 'bad']
-export const CHART_KINDS = ['bar', 'hbar', 'line', 'area', 'donut']
+export const CHART_KINDS = ['bar', 'hbar', 'line', 'area', 'donut', ...ADVANCED_CHART_KINDS]
 const INTERACTIVE = new Set(ANSWERS)
 const INPUTS = new Set(INPUT_TYPES)
 const PROPS = {
@@ -22,7 +23,7 @@ const PROPS = {
   text: ['text', 'tone'],
   metric: ['label', 'value', 'tone', 'caption'],
   table: ['columns', 'rows'],
-  chart: ['kind', 'categories', 'series', 'unit', 'caption'],
+  chart: ['kind', 'categories', 'series', 'unit', 'caption', ...ADVANCED_CHART_PROPS],
   progress: ['label', 'percent', 'value', 'max', 'valueLabel', 'tone'],
   callout: ['text', 'tone'],
   sources: ['items'],
@@ -89,6 +90,8 @@ export function normalizeView(value) {
   for (const key of keys) Object.defineProperty(out, key, { value: normalizeView(value[key]), writable: true, enumerable: true, configurable: true })
   for (const field of NUMERIC) if (Object.hasOwn(out, field)) out[field] = numeric(out[field])
   if (Array.isArray(out.values)) out.values = out.values.map(numeric)
+  for (const key of ['xValues', 'maxima']) if (Array.isArray(out[key])) out[key] = out[key].map(numeric)
+  if (out.kind === 'sankey' && Array.isArray(out.links)) out.links = out.links.map(edge => isRecord(edge) ? { ...edge, source: numeric(edge.source), target: numeric(edge.target) } : edge)
   return out
 }
 
@@ -236,6 +239,9 @@ function checkChart(node, path, ctx) {
     const label = node.categories[index]
     if (typeof label !== 'string' && !isNumber(label)) return `${path}.categories[${index}]: expected a string`
   }
+  const advancedError = checkAdvancedChart(node, path, ctx, isFormula)
+  if (advancedError) return advancedError
+  if (node.kind === 'sankey') return undefined
   if (!Array.isArray(node.series) || node.series.length === 0) return `${path}.series: expected a non-empty array of { name?, values }`
   if (node.kind === 'donut' && node.series.length > 1) return `${path}.series: a donut takes one series; got ${node.series.length}`
   for (let index = 0; index < node.series.length; index += 1) {
@@ -563,6 +569,7 @@ function componentSummary(node, lookup) {
     case 'metric': return `metric: ${node.label}=${value(node.value)}`
     case 'table': return `table: ${(Array.isArray(node.columns) ? node.columns : []).map(column => column?.label ?? column?.key ?? '').filter(Boolean).join('/')}`
     case 'chart': {
+      if (node.kind === 'sankey') return `chart sankey: ${(node.links ?? []).map(edge => `${node.categories[edge.source]}→${node.categories[edge.target]}=${edge.value}${node.unit ? ` ${node.unit}` : ''}`).join(', ')}`
       const series = Array.isArray(node.series) ? node.series[0] : undefined
       const values = Array.isArray(series?.values) ? series.values : []
       const unit = node.unit ? ` ${node.unit}` : ''
