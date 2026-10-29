@@ -44,3 +44,17 @@ test('the group relay and non-Bot sessions do not get progress instructions', (t
   assert.doesNotMatch(prompt('room'), /progress|milestone/)
   assert.equal(prompt('outside'), '')
 })
+
+test('all user-facing Bot and native sessions receive one global visual policy independently of skills', () => {
+  const { ctx } = start()
+  const section = ctx.sections.get('chemclaw-visual-delivery')
+  for (const id of ['main', 'worker', 'group-worker', 'outside']) {
+    const policy = section.text({ agent: { id } })
+    assert.match(policy, /EVERY user-facing final answer/)
+    assert.match(policy, /existing, imported and future skills/)
+    assert.match(policy, /short factual, conceptual or confirmation/)
+    assert.doesNotMatch(ctx.sections.get('chemclaw-identity').text({ agent: { id } }), /Global visual delivery contract/)
+  }
+  assert.equal(section.text({ agent: { id: 'room' } }), '')
+  assert.equal(section.text({ agent: { id: 'outside', session: { header: { parentSession: 'parent' } } } }), '')
+})

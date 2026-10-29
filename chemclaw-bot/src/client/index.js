@@ -51,6 +51,7 @@ import { USER_MESSAGE_CSS, UserMessageCell, canDrawUserMessages } from './user-m
 import { noticeApprovals } from './approval-notices.js'
 import { listedOpener } from './open-listed.js'
 import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, rightColumnOpen } from './right-panel.js'
+import { createGenuiSurfaces } from './genui-surfaces.js'
 
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'slots', 'theme', 'layout']
 
@@ -372,6 +373,7 @@ export function apply(ctx) {
   const actions = {
     ...teamActions({ call, after, partFor, roster, ui, live, cards, heldCards, turnClock }),
     currentSessionId: mainView,
+    sendGenui: (sessionId, text) => after(call('send', { sessionId, text })),
     useSkill: async (name, target = mainView()) => {
       const snapshot = roster.getSnapshot()
       const item = snapshot.capabilities.find(item => item.name === name)
@@ -542,6 +544,15 @@ export function apply(ctx) {
       }
     },
   }
+  actions.genuiSurfaces = createGenuiSurfaces(error => actions.reportError(error, 'genui'))
+  ctx.effect(() => {
+    if (ctx.get('genuiSidechat')) {
+      actions.reportError(new Error('Another plugin already provides genuiSidechat.'), 'genui')
+      return undefined
+    }
+    const release = ctx.provide('genuiSidechat', actions.genuiSurfaces)
+    return () => { actions.genuiSurfaces.dispose(); release?.() }
+  }, 'chemclaw-bot: GenUI surfaces')
   // Without the Desktop bridge these stay undefined, and no browser control renders.
   if (browsers) {
     Object.assign(actions, {
