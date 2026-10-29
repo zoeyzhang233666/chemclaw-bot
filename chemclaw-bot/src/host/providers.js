@@ -46,8 +46,13 @@ function modelEntry(model) {
     ...(typeof model?.name === 'string' && model.name.trim() !== '' ? { name: model.name.trim() } : {}),
     ...(whole(model?.contextWindow) ? { contextWindow: model.contextWindow } : {}),
     ...(whole(model?.maxTokens) ? { maxTokens: model.maxTokens } : {}),
-    ...(Array.isArray(model?.inputModalities) && model.inputModalities.length > 0 ? { input: model.inputModalities.filter(kind => typeof kind === 'string') } : {}),
+    ...(inputOf(model) ? { input: [...inputOf(model)] } : {}),
   }
+}
+
+function inputOf(model) {
+  const input = model?.inputModalities ?? model?.input
+  return Array.isArray(input) && input.length > 0 && input.every(kind => kind === 'text' || kind === 'image') ? input : undefined
 }
 
 export function install(rt) {
@@ -71,8 +76,61 @@ export function install(rt) {
   let preparing
   function prepareProviderRoutes() {
     if (preparing) return preparing
-    preparing = restoreOpenCodeGo().finally(() => { preparing = undefined })
+    preparing = (async () => {
+      await restoreOpenCodeGo()
+      await restoreApiHubInputs()
+    })().finally(() => { preparing = undefined })
     return preparing
+  }
+
+  let nativeInputs
+  ctx.on?.('llm/adapters-updated', () => { nativeInputs = undefined })
+  // Catalog discovery is documented to be local and to retain modalities. Endpoint
+  // discovery in older DSH drops them; only an exact, unambiguous catalog ID fills a gap.
+  function catalogInputs() {
+    return nativeInputs ??= (async () => {
+      const entries = ctx.llm.listConfigurableProviders().filter(entry => entry.settingsNs === PI_AI && entry.declared === false)
+      const replies = await Promise.allSettled(entries.map(entry => ctx.llm.discoverModels(PI_AI, { provider: entry.provider })))
+      const inputs = new Map()
+      for (const reply of replies) {
+        if (reply.status !== 'fulfilled') continue
+        for (const model of reply.value) {
+          const input = inputOf(model)
+          if (!input) continue
+          const previous = inputs.get(model.id)
+          if (previous === null) continue
+          inputs.set(model.id, previous && [...previous].sort().join() !== [...input].sort().join() ? null : input)
+        }
+      }
+      return inputs
+    })().catch(error => { nativeInputs = undefined; throw error })
+  }
+
+  async function apiHubInputs(models) {
+    if (!models.some(model => inputOf(model) === undefined)) return models
+    const inputs = await catalogInputs()
+    return models.map(model => {
+      if (inputOf(model)) return model
+      const input = inputs.get(typeof model === 'string' ? model : model?.id)
+      return input ? { ...(typeof model === 'string' ? { id: model } : model), input: [...input] } : model
+    })
+  }
+
+  async function restoreApiHubInputs() {
+    const found = seams()
+    if (!found) return
+    const entry = entryOf(APIHUB.id)
+    if (entry?.settingsNs !== PI_AI) return
+    const map = sections(found.settings)
+    const profile = profileOf(entry, map)
+    if (profile?.api !== APIHUB.api || profile.baseURL?.replace(/\/+$/, '') !== APIHUB.baseURL || !Array.isArray(profile.models)) return
+    const models = await apiHubInputs(profile.models)
+    if (models.every((model, index) => model === profile.models[index])) return
+    // Discovery can yield while a settings editor saves; never write a stale route.
+    const latest = sections(found.settings)
+    if (latest.get(PI_AI)?.revision !== map.get(PI_AI)?.revision) return
+    await found.settings.mutate(PI_AI, [{ op: 'set', path: entry.settingsPath, value: { ...profile, models } }], map.get(PI_AI)?.revision)
+    rt.dropCatalog()
   }
 
   async function restoreOpenCodeGo() {
@@ -226,8 +284,8 @@ export function install(rt) {
 
   async function setupApiHub(body) {
     const { settings, credentials } = usable()
+    const models = Array.isArray(body.models) ? (await apiHubInputs(body.models.slice(0, MAX_MODELS))).map(modelEntry) : []
     const { entry, map, profile } = apiHubProfile(settings)
-    const models = Array.isArray(body.models) ? body.models.slice(0, MAX_MODELS).map(modelEntry) : []
     if (!models.length || new Set(models.map(model => model.id)).size !== models.length) throw invalid('Choose one or more different APIHub models')
     const ref = refOf(profile) ?? keyRefFor(APIHUB.id)
     const key = typeof body.key === 'string' && body.key.trim() ? checkKey(body.key) : undefined
@@ -274,6 +332,7 @@ export function install(rt) {
   // the question goes with it and is not stored.
   async function discoverModels(body) {
     usable()
+    const apiHub = body.preset === 'apihub'
     if (body.preset === 'apihub') {
       const { settings, credentials } = usable()
       const { profile } = apiHubProfile(settings)
@@ -296,12 +355,14 @@ export function install(rt) {
       if (body.baseURL === APIHUB.baseURL) throw invalid('APIHub model discovery failed. Check the Key, network and service status, then retry.')
       throw error
     }
-    return models.slice(0, MAX_MODELS).map(model => ({
+    models = models.slice(0, MAX_MODELS)
+    if (apiHub) models = await apiHubInputs(models)
+    return models.map(model => ({
       id: model.id,
       ...(model.name ? { name: model.name } : {}),
       ...(model.contextWindow ? { contextWindow: model.contextWindow } : {}),
       ...(model.maxTokens ? { maxTokens: model.maxTokens } : {}),
-      ...(model.inputModalities ? { inputModalities: [...model.inputModalities] } : {}),
+      ...(inputOf(model) ? { inputModalities: [...inputOf(model)] } : {}),
     }))
   }
 
