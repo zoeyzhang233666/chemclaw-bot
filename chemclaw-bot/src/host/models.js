@@ -50,6 +50,7 @@ export function install(rt) {
     return pending
   }
   async function readCatalog() {
+    await rt.prepareProviderRoutes?.()
     const entries = []
     for (const provider of [...ctx.llm.listProviders()].sort((a, b) => Number(b.id === 'apihub') - Number(a.id === 'apihub'))) {
       let models = []
@@ -119,6 +120,7 @@ export function install(rt) {
   // request boundary too, so cold presets and already-warmed group Sessions never
   // send their first request to an unkeyed bootstrap route.
   ctx.on?.('agent/request', async ({ agent, signal }, next) => {
+    await rt.prepareProviderRoutes?.()
     const config = await next()
     await rt.load?.()
     const bot = rt.botOf?.(rt.selfOf?.(agent.id))
