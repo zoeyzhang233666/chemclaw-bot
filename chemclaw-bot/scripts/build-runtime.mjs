@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { provisionUv } from '../src/host/python-runtime.js'
-import { readRuntimeBundle, requirementsFingerprint, requirementsHash, runtimePython, runtimeTarget } from '../src/host/runtime-bundle.js'
+import { readRuntimeBundle, requirementsFingerprint, requirementsHash, runtimePython, runtimeTarget, runtimeTar } from '../src/host/runtime-bundle.js'
 
 const execute = promisify(execFile)
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -50,11 +50,11 @@ export async function buildRuntimeBundle(packageRoot = sourceRoot) {
     await mkdir(output, { recursive: true })
     const archive = join(output, `${target}.tar.gz`)
     console.log('Packing and verifying relocation')
-    await run(process.platform === 'win32' ? 'tar.exe' : 'tar', ['-czf', archive, '-C', tree, '.'])
+    await run(runtimeTar(), ['-czf', archive, '-C', tree, '.'])
     // A second location catches absolute interpreter paths before publishing.
     const relocated = join(work, 'relocated')
     await mkdir(relocated)
-    await run(process.platform === 'win32' ? 'tar.exe' : 'tar', ['-xzf', archive, '-C', relocated])
+    await run(runtimeTar(), ['-xzf', archive, '-C', relocated])
     await run(runtimePython(relocated), ['-c', IMPORTS])
     const data = await readFile(archive)
     const manifest = { version: 1, target, python: '3.12', requirements: requirementsFingerprint(await readFile(join(packageRoot, 'runtime', 'requirements.txt'))), sha256: requirementsHash(data), archiveBytes: data.length, unpackedBytes: await bytes(tree) }

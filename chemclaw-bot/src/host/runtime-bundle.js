@@ -5,6 +5,8 @@ import { dirname, join, resolve } from 'node:path'
 
 export const runtimeTarget = () => `${process.platform}-${process.arch}`
 export const runtimePython = root => join(root, process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python')
+// Git's tar also appears on Windows PATH, but treats drive letters as remote hosts.
+export const runtimeTar = () => process.platform === 'win32' ? join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe') : 'tar'
 export const requirementsHash = data => createHash('sha256').update(data).digest('hex')
 export const requirementsFingerprint = data => requirementsHash(Buffer.from(data.toString('utf8').replace(/\r\n/g, '\n')))
 
@@ -43,7 +45,7 @@ export async function unpackRuntimeBundle(bundle, root, { run, verify }) {
     const tree = join(staging, 'python')
     await mkdir(tree)
     await writeFile(archive, data)
-    await run(process.platform === 'win32' ? 'tar.exe' : 'tar', ['-xzf', archive, '-C', tree])
+    await run(runtimeTar(), ['-xzf', archive, '-C', tree])
     await verify(runtimePython(tree))
     const previous = existsSync(destination) ? join(staging, 'previous') : undefined
     if (previous) await rename(destination, previous)

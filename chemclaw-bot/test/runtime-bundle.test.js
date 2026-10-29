@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 import { test } from 'node:test'
-import { readRuntimeBundle, requirementsFingerprint, requirementsHash, runtimePython, runtimeTarget, unpackRuntimeBundle } from '../src/host/runtime-bundle.js'
+import { readRuntimeBundle, requirementsFingerprint, requirementsHash, runtimePython, runtimeTarget, runtimeTar, unpackRuntimeBundle } from '../src/host/runtime-bundle.js'
 
 const execute = promisify(execFile)
 async function fixture(t) {
@@ -22,11 +22,15 @@ async function fixture(t) {
   await writeFile(join(packageRoot, 'runtime', 'requirements.txt'), requirements)
   const target = runtimeTarget()
   const archive = join(bundled, `${target}.tar.gz`)
-  await execute(process.platform === 'win32' ? 'tar.exe' : 'tar', ['-czf', archive, '-C', payload, '.'], { windowsHide: true })
+  await execute(runtimeTar(), ['-czf', archive, '-C', payload, '.'], { windowsHide: true })
   const manifest = { version: 1, target, requirements: requirementsFingerprint(requirements), sha256: requirementsHash(await readFile(archive)) }
   await writeFile(join(bundled, `${target}.json`), JSON.stringify(manifest))
   const calls = []
-  const run = async (command, args) => { calls.push(args); return execute(command, args, { windowsHide: true }) }
+  const run = async (command, args) => {
+    assert.equal(command, runtimeTar())
+    calls.push(args)
+    return execute(command, args, { windowsHide: true })
+  }
   const verify = async python => assert.equal(await readFile(python, 'utf8'), 'private interpreter fixture')
   return { packageRoot, root, archive, calls, run, verify }
 }
