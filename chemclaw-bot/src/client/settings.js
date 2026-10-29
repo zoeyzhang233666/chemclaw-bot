@@ -74,7 +74,7 @@ function WidthSlider({ label, value, save }) {
     h('output', null, `${width}%`))
 }
 
-function GeneralPage({ roster, actions, run }) {
+function GeneralPage({ roster, mode, actions, run }) {
   const prefs = roster.prefs ?? {}
   const themes = allThemes()
   const current = themes[prefs.theme] ? prefs.theme : 'paper'
@@ -107,8 +107,8 @@ function GeneralPage({ roster, actions, run }) {
       h(SetRow, { label: t('Bubble width') }, h(WidthSlider, { label: t('Bubble width'), value: widthOf(prefs), save: width => run(actions.setPrefs({ width })) })),
       h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) }))),
     actions.setSurface ? h(SetSection, { key: 'mode', title: t('Mode') },
-      h(SetRow, { label: t('Classic Agent mode') },
-        h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.setSurface('agent') }, t('Switch')))) : null,
+      h(SetRow, { label: t(mode === 'agent' ? 'ChemClaw expert team' : 'Classic Agent mode') },
+        h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.setSurface(mode === 'agent' ? 'bot' : 'agent') }, t('Switch')))) : null,
     h(LocationsSection, { key: 'places', actions, run }),
   ]
 }
@@ -202,7 +202,7 @@ function GroupsPage({ roster, actions, run }) {
 }
 
 // While `leaving`, the dialog plays its exit and takes no input.
-export function SettingsDialog({ page, id, roster, actions, useUpdate, leaving = false }) {
+export function SettingsDialog({ page, id, roster, mode = 'bot', actions, useUpdate, leaving = false }) {
   const [error, setError] = useState('')
   const close = useCallback(() => actions.closeSettings(), [])
   useEscape(close)
@@ -251,7 +251,7 @@ export function SettingsDialog({ page, id, roster, actions, useUpdate, leaving =
           h('h2', { key: bot?.id ?? room?.id ?? shown }, bot?.name ?? room?.name ?? label)),
         shown === 'usage' ? null : h('div', { key: pageKey, className: 'bt-settings-scroll bt-settings-page', 'data-move': last.current.move },
           errorLine,
-          shown === 'general' ? h(GeneralPage, { roster, actions, run }) : null,
+          shown === 'general' ? h(GeneralPage, { roster, mode, actions, run }) : null,
           shown === 'models' ? h(ProvidersPage, { actions, run, Section: SetSection }) : null,
           bot ? h('div', { className: 'bt-settings-form' }, h(BotSettingsForm, { key: bot.id, bot, roster, actions, run })) : null,
           shown === 'bots' && !bot ? h(BotsPage, { roster, actions, run }) : null,

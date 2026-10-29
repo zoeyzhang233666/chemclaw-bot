@@ -58,8 +58,12 @@ const darkAccent = (accent) => {
 export const themeCss = (theme, accent) => `html body{${declarations(themeVars(theme.light, false, accent ?? theme.light.accent))}}
 html body[data-ds-dark-theme]{${declarations(themeVars(theme.dark, true, darkAccent(accent) ?? theme.dark.accent))}}
 ${theme.css ?? ''}`
-export const shellTokens = ({ light, dark }) => ({
+export const shellTokens = ({ light, dark }, accent) => ({
+  '--dsw-alias-brand-primary': { light: accent ?? light.accent, dark: darkAccent(accent) ?? dark.accent },
+  '--dsw-alias-state-business-primary': { light: accent ?? light.accent, dark: darkAccent(accent) ?? dark.accent },
   '--dsw-alias-bg-base': { light: light.bg, dark: dark.bg },
+  '--dsw-alias-bg-layer-1': { light: light.card, dark: dark.card },
+  '--dsw-alias-bg-layer-2': { light: light.bg, dark: dark.bg },
   '--dsw-specific-sidebar-fill': { light: light.sidebar, dark: dark.sidebar },
   '--dsw-specific-input-major': { light: light.bg, dark: dark.sidebar },
   '--dsw-alias-label-primary': { light: light.text, dark: dark.text },

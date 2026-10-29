@@ -215,6 +215,7 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "ChemClaw expert team": "ChemClaw专家团",
   "My schedule": "我的日程",
   "Recommended tasks": "推荐任务",
   Calendar: "日程",
@@ -551,7 +552,7 @@ var ZH = {
   "APIHub API key": "APIHub 模型密钥",
   "Paste your APIHub key, fetch the available models, then choose the models to add.": "填入 APIHub Key，获取可用模型后勾选添加。模型选择与业务数据 Key 分开管理。",
   "Save selected models": "保存所选模型",
-  "Model keys are stored by DSH credentials. After saving, choose a model in the Bot conversation.": "模型 Key 通过本地凭据库保存，不进入聊天。保存后，可在 Bot 对话中选择模型。",
+  "Model keys are stored by DSH credentials. After saving, choose a model in the conversation.": "模型 Key 通过本地凭据库保存，不进入聊天。保存后，可在对话中选择模型。",
   "Skipped stdio servers: {names}": "已跳过本地命令型 MCP：{names}",
   "Scientific tools ready": "科学分析环境已就绪",
   "Install optional scientific tools": "安装可选化学与统计依赖",
@@ -1044,7 +1045,7 @@ var ZH = {
   Tangerine: "橘",
   Cobalt: "钴蓝",
   // Themes
-  DeepSeek: "DeepSeek",
+  DeepSeek: "蓝白",
   Mono: "黑白",
   Paper: "纸张",
   Moonlight: "月光",
@@ -2355,8 +2356,12 @@ var darkAccent = (accent) => {
 var themeCss = (theme, accent) => `html body{${declarations(themeVars(theme.light, false, accent ?? theme.light.accent))}}
 html body[data-ds-dark-theme]{${declarations(themeVars(theme.dark, true, darkAccent(accent) ?? theme.dark.accent))}}
 ${theme.css ?? ""}`;
-var shellTokens = ({ light, dark }) => ({
+var shellTokens = ({ light, dark }, accent) => ({
+  "--dsw-alias-brand-primary": { light: accent ?? light.accent, dark: darkAccent(accent) ?? dark.accent },
+  "--dsw-alias-state-business-primary": { light: accent ?? light.accent, dark: darkAccent(accent) ?? dark.accent },
   "--dsw-alias-bg-base": { light: light.bg, dark: dark.bg },
+  "--dsw-alias-bg-layer-1": { light: light.card, dark: dark.card },
+  "--dsw-alias-bg-layer-2": { light: light.bg, dark: dark.bg },
   "--dsw-specific-sidebar-fill": { light: light.sidebar, dark: dark.sidebar },
   "--dsw-specific-input-major": { light: light.bg, dark: dark.sidebar },
   "--dsw-alias-label-primary": { light: light.text, dark: dark.text },
@@ -2920,7 +2925,7 @@ function useLinger(value, ms) {
 
 // src/client/styles.js
 var SKIN_FOOT = ':is(div,footer):not([class*="_footArea"]):has(> div > [data-slot="sidebar.footer.action"] > .bt-connect-wrap)';
-var SHELL_CSS = `
+var SHARED_START_CSS = `
 body{--bt-ink:#141414;--bt-danger:#e02135;--bt-ink-2:rgba(20,20,20,.6);--bt-ink-3:rgba(20,20,20,.36);--bt-bubble:#eeeeee;--bt-sidebar:#f7f7f7;--bt-main:#fcfcfc;--bt-line:rgba(20,20,20,.08);--bt-line-2:rgba(20,20,20,.15);--bt-line-weak:rgba(20,20,20,.1);--bt-hover:rgba(119,119,119,.09);--bt-active:rgba(119,119,119,.17);--bt-card:#ffffff;--bt-accent:#4d6bfe;--bt-green:#00c972;--bt-star:#ff9800;--bt-user:#070707;--bt-user-ink:#fcfcfc;--bt-tag-bg:rgba(20,20,20,.06);--bt-tag-ink:rgba(20,20,20,.56);--bt-knob:#ffffff;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 /* iOS waits out a double-tap zoom on buttons; the plugin's own controls never zoom. */
 :is(.bt-tool,.bt-uaction,.bt-menu button,.bt-menu-item,.bt-icon-btn,.bt-round,.bt-pill,.bt-account,.bt-set-row,.bt-settings-item,.bt-react-strip button,.bt-palette-row,.bt-palette-clear,.bt-tab,.bt-ptab,.bt-ptab-x,.bt-bcard-x,.bt-plus,.bt-q-btn,.bt-q-x,.bt-x,.bt-nc-send,.bt-send,.bt-soft,.bt-mini,.bt-shape,.bt-swatch,.bt-color,.bt-newchat,.bt-task-day,.bt-task-remove,.bt-fb-btn){touch-action:manipulation}
@@ -3446,6 +3451,8 @@ button.bt-set-row:hover{background:var(--bt-hover)}
 .bt-connector-link{flex:1;font-size:12px;color:var(--bt-ink-2)}
 .bt-connector-error{padding-left:48px;font-size:12px;line-height:16px;color:var(--bt-danger)}
 
+`;
+var SHELL_LAYOUT_CSS = `
 /* Shell chrome reshaped for the team view. Selectors use stable data attributes where the
    shell offers them and CSS-module name suffixes elsewhere. */
 [class*="_newSession"],nav[class*="_panelList"],[class*="_logoRow"]>[class*="_brand"],[class*="_logoRow"]:not(:has([class*="_toggle"])){display:none!important}
@@ -3473,7 +3480,8 @@ ${SKIN_FOOT}{display:flex!important;flex-direction:row!important;align-items:cen
 ${SKIN_FOOT}>div:has(> [data-slot="sidebar.footer.action"]){display:flex!important;align-items:center!important;flex:1 1 auto!important;min-width:0!important}
 ${SKIN_FOOT}>div:has(> [data-slot="sidebar.settings"]){order:-1!important;flex:none!important;width:auto!important}
 [class*="_widthHandle"]{display:none!important}
-
+`;
+var SHARED_END_CSS = `
 .bt-voice-pane{flex-direction:column;align-items:center;justify-content:center;animation:bt-fade .2s ease-out}
 .bt-voice-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;max-width:560px;text-align:center}
 .bt-voice-orb{position:relative;width:200px;height:200px;display:grid;place-items:center;margin-bottom:8px}
@@ -3794,6 +3802,8 @@ body[data-ds-dark-theme] .bt-theme-chip i{background:var(--da)}
   .bt-input,.bt-bs-input,.bt-browser-address input,.bt-folder-input,.bt-secret-input,.bt-q-input,.bt-to input,.bt-palette-head input,.bt-mem-input{font-size:16px}
 }
 `;
+var SHARED_CSS = SHARED_START_CSS + SHARED_END_CSS;
+var SHELL_CSS = SHARED_START_CSS + SHELL_LAYOUT_CSS + SHARED_END_CSS;
 var CONVERSATION_CSS = `
 .bt-artifact-files{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:10px;margin:12px 0;min-width:0}
 .bt-artifact-file{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border:1px solid var(--bt-line-2);border-radius:12px;background:var(--bt-card);color:var(--bt-ink);font:inherit;text-align:left;cursor:pointer;min-width:0}
@@ -12037,18 +12047,7 @@ function pressSettingsShortcut() {
 var NO_SUBSCRIBE = () => () => {
 };
 var NO_SNAPSHOT = () => null;
-function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboarding, actions }) {
-  const [open, setOpen] = (0, import_react27.useState)(false);
-  (0, import_react27.useLayoutEffect)(() => {
-    if (!seat) return void 0;
-    actions.seatAccount(true);
-    return () => actions.seatAccount(false);
-  }, [seat]);
-  const [box, setBox] = (0, import_react27.useState)(null);
-  const button = (0, import_react27.useRef)(null);
-  (0, import_react27.useEffect)(() => {
-    if (settingsOpen) setOpen(false);
-  }, [settingsOpen]);
+function useShellSettings(openSettings, openOnboarding) {
   (0, import_react27.useEffect)(() => {
     if (!openSettings) return void 0;
     openShellSettings = openSettings;
@@ -12063,6 +12062,38 @@ function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboardi
       if (openShellOnboarding === openOnboarding) openShellOnboarding = null;
     };
   }, [openOnboarding]);
+}
+function ClassicSettingsLauncher({ wide, settingsShortcut, openSettings, openOnboarding, useUi, actions }) {
+  useShellSettings(openSettings, openOnboarding);
+  const settingsOpen = useUi((value) => value.settings !== null);
+  return (0, import_react27.createElement)("button", {
+    type: "button",
+    className: "bt-classic-settings",
+    title: t("Settings"),
+    "aria-label": t("Settings"),
+    "aria-haspopup": "dialog",
+    "aria-expanded": settingsOpen,
+    "aria-keyshortcuts": settingsShortcut?.aria,
+    onClick: () => actions.openSettings("general")
+  }, (0, import_react27.createElement)(GearIcon), wide ? (0, import_react27.createElement)("span", null, t("Settings")) : null);
+}
+function SurfaceSettingsLauncher(props) {
+  const mode = props.useSurface((value) => value.mode);
+  return (0, import_react27.createElement)(mode === "agent" ? ClassicSettingsLauncher : AccountLauncher, props);
+}
+function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboarding, actions }) {
+  const [open, setOpen] = (0, import_react27.useState)(false);
+  (0, import_react27.useLayoutEffect)(() => {
+    if (!seat) return void 0;
+    actions.seatAccount(true);
+    return () => actions.seatAccount(false);
+  }, [seat]);
+  const [box, setBox] = (0, import_react27.useState)(null);
+  const button = (0, import_react27.useRef)(null);
+  (0, import_react27.useEffect)(() => {
+    if (settingsOpen) setOpen(false);
+  }, [settingsOpen]);
+  useShellSettings(openSettings, openOnboarding);
   (0, import_react27.useEffect)(() => {
     if (!open) return void 0;
     const onDown = (event) => {
@@ -12224,9 +12255,9 @@ function BotReturn({ wide, useSurface, actions }) {
   if (mode !== "agent") return null;
   return (0, import_react27.createElement)(
     "button",
-    { type: "button", className: "bt-return", "aria-label": t("ChemClaw"), title: t("ChemClaw"), onClick: () => actions.setSurface("bot") },
+    { type: "button", className: "bt-return", "aria-label": t("ChemClaw expert team"), title: t("ChemClaw expert team"), onClick: () => actions.setSurface("bot") },
     (0, import_react27.createElement)(BotMark, { look: MAIN_LOOK, size: 20 }),
-    wide ? (0, import_react27.createElement)("span", { className: "bt-return-name" }, t("ChemClaw")) : null
+    wide ? (0, import_react27.createElement)("span", { className: "bt-return-name" }, t("ChemClaw expert team")) : null
   );
 }
 var RETURN_CSS = `
@@ -12238,15 +12269,34 @@ var RETURN_CSS = `
 /* Shell styles carry --bt-ink-deepseek and Agent mode withdraws them; pin it here. */
 .bt-return .bt-mark{--bt-ink-deepseek:#4D6BFE}
 .bt-return-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bt-classic-settings{display:flex;align-items:center;gap:10px;min-height:40px;width:100%;box-sizing:border-box;padding:8px 14px;border:0;border-radius:10px;background:none;color:var(--bt-ink);font:inherit;font-size:14px;cursor:pointer;text-align:left}
+.bt-classic-settings:hover{background:var(--bt-hover)}
+.bt-classic-settings>svg{width:20px;height:20px;flex:none}
+.bt-classic-settings:has(>svg:only-child){width:36px;min-height:36px;padding:8px;justify-content:center}
 `;
 function BrandMark({ size = 24 }) {
   return (0, import_react27.createElement)("span", { className: "bt-brand-cloud" }, (0, import_react27.createElement)(ApiHubMark, { size }));
 }
-function BrandName() {
-  return (0, import_react27.createElement)("span", { style: { fontWeight: 600, fontSize: 14 } }, "ChemClaw");
+function HeroBrandMark({ size = 40, className }) {
+  return (0, import_react27.createElement)(
+    "span",
+    { className: ["bt-hero-brand", className].filter(Boolean).join(" ") },
+    (0, import_react27.createElement)("span", { className: "bt-brand-cloud", "aria-hidden": true }, (0, import_react27.createElement)(ApiHubMark, { size })),
+    (0, import_react27.createElement)("span", null, "ChemClaw")
+  );
 }
+function BrandName() {
+  return (0, import_react27.createElement)("span", { className: "bt-brand-name" }, "ChemClaw");
+}
+var BRAND_CSS = `
+.bt-brand-cloud{display:inline-flex;align-items:center;justify-content:center;flex:none;color:var(--bt-accent);line-height:0}
+.bt-brand-name{font:600 20px/1.2 system-ui,sans-serif;letter-spacing:-.04em;color:var(--bt-ink)}
+.bt-hero-brand{display:inline-flex!important;align-items:center;gap:12px;width:auto!important;height:auto!important;white-space:nowrap;color:var(--bt-ink);font:600 clamp(26px,4vw,36px)/1.2 system-ui,sans-serif;letter-spacing:-.04em}
+/* DSH has no headline slot; its title group contains both the slogan and badge.
+   The public brand slot above supplies the complete replacement wordmark. */
+[data-content-phase=hero]:has(.bt-hero-brand) [class*="_titleGroup"]{display:none}
+`;
 var SIDEBAR_CSS = `
-.bt-brand-cloud{display:inline-flex;flex:none;color:var(--bt-accent)}
 .bt-confirm{width:260px;max-width:72vw;padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
 .bt-confirm-text{margin:0;font-size:13px;line-height:19px;color:var(--bt-ink-2)}
 .bt-confirm-error{margin:0;font-size:12px;line-height:17px;color:var(--bt-danger);overflow-wrap:anywhere}
@@ -18645,7 +18695,7 @@ function ProvidersPage({ actions, run: run2, Section }) {
   if (!view.available) return (0, import_react50.createElement)("p", { className: "bt-set-hint" }, t("This DSH cannot set up model providers."));
   return [
     (0, import_react50.createElement)(ApiHubCard, { key: "apihub", provider: view.providers.find((item) => item.id === APIHUB.id), actions, apply: apply2 }),
-    (0, import_react50.createElement)("p", { key: "note", className: "bt-models-note" }, t("Model keys are stored by DSH credentials. After saving, choose a model in the Bot conversation.")),
+    (0, import_react50.createElement)("p", { key: "note", className: "bt-models-note" }, t("Model keys are stored by DSH credentials. After saving, choose a model in the conversation.")),
     (0, import_react50.createElement)(
       Section,
       { key: "list", title: t("Model providers · {count}", { count: view.providers.length }) },
@@ -19202,7 +19252,7 @@ function WidthSlider({ label, value, save }) {
     (0, import_react52.createElement)("output", null, `${width}%`)
   );
 }
-function GeneralPage({ roster, actions, run: run2 }) {
+function GeneralPage({ roster, mode, actions, run: run2 }) {
   const prefs = roster.prefs ?? {};
   const themes = allThemes();
   const current = themes[prefs.theme] ? prefs.theme : "paper";
@@ -19266,8 +19316,8 @@ function GeneralPage({ roster, actions, run: run2 }) {
       { key: "mode", title: t("Mode") },
       (0, import_react52.createElement)(
         SetRow,
-        { label: t("Classic Agent mode") },
-        (0, import_react52.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", onClick: () => actions.setSurface("agent") }, t("Switch"))
+        { label: t(mode === "agent" ? "ChemClaw expert team" : "Classic Agent mode") },
+        (0, import_react52.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", onClick: () => actions.setSurface(mode === "agent" ? "bot" : "agent") }, t("Switch"))
       )
     ) : null,
     (0, import_react52.createElement)(LocationsSection, { key: "places", actions, run: run2 })
@@ -19390,7 +19440,7 @@ function GroupsPage({ roster, actions, run: run2 }) {
     (0, import_react52.createElement)(BotCatalog, { key: "groups", roster, actions, kind: "group" })
   ];
 }
-function SettingsDialog({ page, id, roster, actions, useUpdate, leaving = false }) {
+function SettingsDialog({ page, id, roster, mode = "bot", actions, useUpdate, leaving = false }) {
   const [error, setError] = (0, import_react52.useState)("");
   const close = (0, import_react52.useCallback)(() => actions.closeSettings(), []);
   useEscape(close);
@@ -19459,7 +19509,7 @@ function SettingsDialog({ page, id, roster, actions, useUpdate, leaving = false 
           "div",
           { key: pageKey, className: "bt-settings-scroll bt-settings-page", "data-move": last.current.move },
           errorLine,
-          shown === "general" ? (0, import_react52.createElement)(GeneralPage, { roster, actions, run: run2 }) : null,
+          shown === "general" ? (0, import_react52.createElement)(GeneralPage, { roster, mode, actions, run: run2 }) : null,
           shown === "models" ? (0, import_react52.createElement)(ProvidersPage, { actions, run: run2, Section: SetSection }) : null,
           bot ? (0, import_react52.createElement)("div", { className: "bt-settings-form" }, (0, import_react52.createElement)(BotSettingsForm, { key: bot.id, bot, roster, actions, run: run2 })) : null,
           shown === "bots" && !bot ? (0, import_react52.createElement)(BotsPage, { roster, actions, run: run2 }) : null,
@@ -21589,7 +21639,15 @@ var import_react58 = require("react");
 var import_react_dom12 = require("react-dom");
 var DIALOG_EXIT_MS = 160;
 var MENU_EXIT_MS3 = 120;
-function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity, useWork, useRegistry, useBrowserPages, useBrowserTabs, useBrowserHolds, useUpdate, actions }) {
+function SettingsOverlay({ useRoster, useUi, useSurface, useRegistry, useUpdate, actions }) {
+  const roster = useRoster((value) => value);
+  const open = useUi((value) => value.settings);
+  const mode = useSurface((value) => value.mode);
+  useRegistry((value) => value);
+  const [settings, leaving] = useLinger(open, DIALOG_EXIT_MS);
+  return settings ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(SettingsDialog, { page: settings.page, id: settings.id, roster, mode, actions, useUpdate, leaving }), document.body) : null;
+}
+function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity, useWork, useRegistry, useBrowserPages, useBrowserTabs, useBrowserHolds, actions }) {
   const roster = useRoster((value) => value);
   const ui2 = useUi((value) => value);
   useRegistry((value) => value);
@@ -21611,7 +21669,6 @@ function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity
     return () => clearTimeout(timer);
   }, [ui2.details, ui2.view, ui2.renaming, ui2.tab, ui2.side]);
   const pane = open ?? kept;
-  const [settings, settingsLeaving] = useLinger(ui2.settings, DIALOG_EXIT_MS);
   const memoryOwner = (id) => {
     const bot = roster.byId[id];
     if (bot) return { id: bot.id, name: bot.name };
@@ -21630,7 +21687,6 @@ function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity
     ui2.exchange ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(ExchangeDialog, { pair: ui2.exchange, roster, actions }), document.body) : null,
     ui2.voice ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(VoiceMode, { key: ui2.voice, sessionId: ui2.voice, roster, actions, useSessions, useSessionStatus }), document.body) : null,
     menu ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(ContextMenu, { key: `${menu.kind ?? ""}:${menu.id}:${menu.x}:${menu.y}`, menu, roster, actions, leaving: menuLeaving }), document.body) : null,
-    settings ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(SettingsDialog, { page: settings.page, id: settings.id, roster, actions, useUpdate, leaving: settingsLeaving }), document.body) : null,
     owner ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(MemoryDialog, { key: owner.id, owner, actions, leaving: memoryLeaving }), document.body) : null
   );
 }
@@ -23524,7 +23580,7 @@ function apply(ctx) {
       key = next;
       style.textContent = themeCss(themes[id], accent);
       const release = releaseTokens;
-      releaseTokens = ctx.theme.overrideTokens("chemclaw-bot", shellTokens(themes[id]));
+      releaseTokens = ctx.theme.overrideTokens("chemclaw-bot", shellTokens(themes[id], accent));
       if (typeof release === "function") release();
       if (snapshot.ready) {
         try {
@@ -23973,6 +24029,28 @@ function apply(ctx) {
     ...options.priority === void 0 ? {} : { priority: freePriority(ctx.slots.entries(name), options) }
   }, component));
   const installHeader = () => ctx.slots.inject("conversation.session.header", () => installHeaderNavigation(ctx.slots, face, HeaderPill, BOT_PRIORITY));
+  ctx.effect(installTheme, "chemclaw-bot: shared theme");
+  ctx.effect(() => installCompiledStyles(BRAND_CSS, "brand"), "chemclaw-bot: brand styles");
+  shadow("sidebar.brand.mark", { priority: BOT_PRIORITY }, BrandMark);
+  shadow("sidebar.brand.name", { priority: BOT_PRIORITY }, BrandName);
+  shadow("conversation.hero.brand.mark", { priority: BOT_PRIORITY }, HeroBrandMark);
+  shadow("settings.launcher", { priority: BOT_PRIORITY, inject: face }, SurfaceSettingsLauncher);
+  shadow("shell.overlay", { id: "bot-settings", order: 49, inject: face }, SettingsOverlay);
+  for (const [tag, css] of [
+    ["shared", SHARED_CSS],
+    ["secrets", SECRET_CSS + PROVIDERS_CSS + CHEMCLAW_UI_CSS],
+    ["skills", SKILL_CSS],
+    ["models", MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS + AVATAR_LIBRARY_CSS],
+    ["usage", USAGE_CSS],
+    ["schedules", SCHEDULE_CSS],
+    ["feedback", FEEDBACK_CSS],
+    ["about", ABOUT_CSS],
+    ["members", MEMBER_CSS],
+    ["user-messages", USER_MESSAGE_CSS],
+    ["widgets", WIDGET_CSS],
+    ["handoff", HANDOFF_CSS],
+    ["browser", BROWSER_CSS + SIDE_CSS]
+  ]) ctx.effect(() => installCompiledStyles(css, tag), `chemclaw-bot: shared ${tag} styles`);
   let atMenu = null;
   const installAtMenu = () => {
     const fiber = ctx.inject(["inputTriggers"], (scope) => {
@@ -24000,30 +24078,12 @@ function apply(ctx) {
     controller.toggleSource(CHATS_SOURCE, { trigger: "@", query: "", quoted: false, position: "inline", span });
   };
   const installShell = () => [
-    () => installCompiledStyles(SHELL_CSS, "shell"),
+    () => installCompiledStyles(SHELL_LAYOUT_CSS, "shell"),
     () => installCompiledStyles(SIDEBAR_CSS, "sidebar"),
-    () => installCompiledStyles(SECRET_CSS + PROVIDERS_CSS + CHEMCLAW_UI_CSS, "secrets"),
-    () => installCompiledStyles(SKILL_CSS, "skills"),
-    () => installCompiledStyles(MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS + AVATAR_LIBRARY_CSS, "models"),
-    () => installCompiledStyles(USAGE_CSS, "usage"),
-    () => installCompiledStyles(SCHEDULE_CSS, "schedules"),
-    () => installCompiledStyles(FEEDBACK_CSS, "feedback"),
-    () => installCompiledStyles(ABOUT_CSS, "about"),
-    () => installCompiledStyles(MEMBER_CSS, "members"),
-    () => installCompiledStyles(USER_MESSAGE_CSS, "user-messages"),
-    () => installCompiledStyles(WIDGET_CSS, "widgets"),
-    () => installCompiledStyles(HANDOFF_CSS, "handoff"),
-    () => installCompiledStyles(BROWSER_CSS + SIDE_CSS, "browser"),
-    () => installTheme(),
     () => shadow("sidebar.workspaces", { priority: BOT_PRIORITY, inject: face }, TeamSidebar),
-    () => shadow("sidebar.brand.mark", { priority: BOT_PRIORITY }, BrandMark),
-    () => shadow("sidebar.brand.name", { priority: BOT_PRIORITY }, BrandName),
     () => shadow("sidebar.footer.action", { id: "bot-account", order: -200, inject: face }, FooterAccount),
     () => shadow("sidebar.footer.action", { id: "bot-connect", order: -100, inject: face }, ConnectPlugins),
     () => shadow("settings.trigger", { priority: BOT_PRIORITY }, YouAvatar),
-    // The whale wins the seat over a shell account plugin's own launcher (the
-    // Desktop's "··· More"), which comes back in Agent mode.
-    () => shadow("settings.launcher", { priority: BOT_PRIORITY, inject: face }, AccountLauncher),
     () => shadow("shell.overlay", { id: "bot", order: 50, inject: face }, Overlays),
     () => shadow("shell.overlay", { id: "bot-signin", order: 55, inject: face }, ApihubGetStarted),
     () => shadow("shell.overlay", { id: "bot-toast", order: 60, inject: face }, ErrorToast)

@@ -28,7 +28,7 @@ export function ProvidersPage({ actions, run, Section }) {
   if (!view.available) return h('p', { className: 'bt-set-hint' }, t('This DSH cannot set up model providers.'))
   return [
     h(ApiHubCard, { key: 'apihub', provider: view.providers.find(item => item.id === APIHUB.id), actions, apply }),
-    h('p', { key: 'note', className: 'bt-models-note' }, t('Model keys are stored by DSH credentials. After saving, choose a model in the Bot conversation.')),
+    h('p', { key: 'note', className: 'bt-models-note' }, t('Model keys are stored by DSH credentials. After saving, choose a model in the conversation.')),
     h(Section, { key: 'list', title: t('Model providers · {count}', { count: view.providers.length }) },
       view.providers.filter(provider => provider.id !== APIHUB.id).map(provider => h(ProviderRow, {
         key: provider.id, provider, apply, actions,
