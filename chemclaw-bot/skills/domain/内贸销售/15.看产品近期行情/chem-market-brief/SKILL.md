@@ -101,11 +101,11 @@ python scripts/build_all.py research.json --out out
 
 ```bash
 python scripts/check_html.py out/xxx.html build/data.json   # 占位符/外链/数字一致/禁用词
-python scripts/qa_render.py out/xxx.html build/data.json    # 浏览器实测，没装 playwright 自动跳过
+python scripts/qa_render.py out/xxx.html build/data.json    # 浏览器实测，缺少浏览器依赖时明确标为未验证
 python scripts/check_xlsx.py out/xxx.xlsx build/data.json   # 表结构/缺口/禁用词/与 data.json 同数
 ```
 
-`qa_render.py` 会抓 JS 报错、检查 4 张 KPI 卡、图表是否真画出像素、7 个模块是否渲染、
+`qa_render.py` 会抓 JS 报错、检查 4 张 KPI 卡、主价格序列是否有有效图元（坐标轴和事件点不算）、7 个模块是否渲染、
 1600/1280/420 三档横向溢出、抽屉、话术生成、话术是否混入方向判断。**必须 0 失败**。
 
 `check_xlsx.py` 会核对 13 张表是否齐全且写到了核心内容、缺口条目是否都落表、
@@ -158,3 +158,11 @@ python scripts/check_xlsx.py out/xxx.xlsx build/data.json   # 表结构/缺口/�
 | 没装 playwright | `--no-render`，静态检查仍执行 |
 | 没装 openpyxl | 只出 HTML，明确告知 Excel 缺依赖 |
 | 无法联网 | 用 `examples/01` 的 `research.json` 结构 + 本地已有资料填；价格字段标注“未更新至最新” |
+
+## 模板与交付校验
+
+- 模板和例子只提供结构，例子中的历史价格、单位、路线和结论不能作为本次证据。用户仅问现价时先答所查到的现价与口径，按实际需求决定是否生成完整报告。
+- 无有效数据的可选模块从页面移除，缺项原因与补数方法集中放入数据缺口；不保留标题、固定高度画布和大块空白。数值 0 是有效数据；null 不是 0。
+- K 线只能使用真实 OHLC；仅有现货点价时画点/线，仅有报价区间时明确标为报价区间，不能把它解释为开高低收。日期独立用于横轴时，ECharts 蜡烛数据只传 [开,收,低,高] 四列。
+- 每个图表模式和时间窗都检查主数据图元、数值和单位；坐标轴、成本线、事件点有像素不代表价格序列可见。检查无数据、全 null、零值及跨品种单位。
+- 渲染依赖缺失或浏览器启动失败属于“未验证”，不能报告为 0 问题。可用 CHEM_QA_BROWSER=chrome 或 msedge 指定已安装浏览器；只有显式 --no-render 才跳过渲染，并在交付说明限制。

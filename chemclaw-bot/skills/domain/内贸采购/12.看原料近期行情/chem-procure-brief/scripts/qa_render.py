@@ -4,7 +4,7 @@
 用法：
   python qa_render.py out.html [data.json]
   python qa_render.py out.html data.json --shots shots/
-没装 playwright 时自动跳过并返回 0（静态检查仍有效）。
+没装 playwright 时返回失败并标为未验证；显式 --no-render 仅执行静态检查。
 
 断言全部从 data.json 读期望值，**不写任何品种名**，换品种可直接复用。
 """
@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import sys
+from chart_qa import check_price_chart
 
 try:
     from playwright.sync_api import sync_playwright
@@ -25,7 +26,7 @@ BANNED = ('预计涨', '预计跌', '看涨', '看跌', '抄底', '必涨', '必
 def run(html_path, data_path=None, shots=None):
     if not HAS_PW:
         print('[SKIP ] 未安装 playwright，跳过渲染检查（静态检查仍有效）')
-        return 0, []
+        return 1, ['浏览器渲染未验证：未安装 playwright']
 
     D = json.load(open(data_path, encoding='utf-8')) if data_path and os.path.exists(data_path) else None
     url = 'file:///' + os.path.abspath(html_path).replace('\\', '/')
@@ -41,7 +42,7 @@ def run(html_path, data_path=None, shots=None):
             fails.append(name + ' ' + str(detail))
 
     with sync_playwright() as pw:
-        b = pw.chromium.launch(args=['--no-sandbox'])
+        b = pw.chromium.launch(channel=os.environ.get('CHEM_QA_BROWSER') or None)
         pg = b.new_page(viewport={'width': 1600, 'height': 1100})
         pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.on('console', lambda m: errs.append('console.error: ' + m.text) if m.type == 'error' else None)
@@ -78,7 +79,7 @@ def run(html_path, data_path=None, shots=None):
             ('#gapGrid .mcard', '缺口卡', bool(D and D.get('gaps'))),
             ('#srcList a', '来源清单', bool(D and D.get('sources'))),
             ('#proofTable tbody tr', '链断点自证表', bool(D and D.get('chain_proof'))),
-            ('#balBody tbody tr', '库存开工表', bool(D and D.get('balance'))),
+            ('#balBody tr', '库存开工表', bool(D and D.get('balance'))),
             ('#factGrid .card', '可用事实卡', bool(D and D.get('facts'))),
         ]
         for sel, name, expect in expects:
@@ -87,7 +88,7 @@ def run(html_path, data_path=None, shots=None):
                 must(name + '已渲染', c >= 1, c)
             else:
                 print('  SKIP %s（本品种无该数据，应显示缺口占位）' % name)
-                must(name + '无数据时给出占位说明', ('尚未取得可靠数据' in txt) or ('未取得' in txt) or True, '')
+                must(name + '无数据时给出占位说明', pg.locator(sel.split()[0] + ' .empty').count() > 0, '')
 
         # 产业链两侧
         if D:
@@ -114,6 +115,9 @@ def run(html_path, data_path=None, shots=None):
         for c in ('candle', 'allpts', 'line'):
             pg.click('#chartTabs .pbtn[data-c="%s"]' % c)
             pg.wait_for_timeout(420)
+            if has_seq:
+                issues = check_price_chart(pg)
+                must('主图[%s]价格图元有效' % c, not issues, issues)
         must('三种图表模式均可切换', True)
         pts = pg.eval_on_selector_all('#ptSel .pbtn', 'els=>els.map(e=>e.dataset.p)')
         if len(pts) >= 2:

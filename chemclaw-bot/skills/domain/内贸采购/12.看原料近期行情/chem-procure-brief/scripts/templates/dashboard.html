@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="chemclaw-skill" content="chem-procure-brief:price-charts-v2">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>__TITLE__</title>
 <style>
@@ -78,6 +79,8 @@ section{margin-top:26px}
 #chart{width:100%;height:430px}
 #spreadChart{width:100%;height:300px}
 #costChart{width:100%;height:300px}
+[hidden]{display:none!important}
+#chart:has(.empty),#spreadChart:has(.empty){height:auto}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--txt3);margin-top:6px;padding-left:4px}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
 .hint{font-size:11.5px;color:var(--txt3);margin-top:8px;line-height:1.6}
@@ -255,7 +258,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);display
     <p class="desc" id="spreadDesc"></p>
   </div>
   <div class="panel">
-    <div id="spreadChart"></div>
+    <div id="spreadChart" hidden></div>
     <div class="tblwrap" style="margin-top:12px"><table id="spreadTable">
       <thead><tr><th>日期</th><th>采购点</th><th>基准点</th><th>该点中值</th><th>差（该点−基准）</th><th>提货方式</th><th>货源属性</th><th>来源</th></tr></thead>
       <tbody></tbody></table></div>
@@ -263,15 +266,15 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);display
   </div>
 </section>
 
-<section>
+<section id="costSection">
   <div class="shead">
     <h2><span class="n">05</span>成本：上游价格折成“每吨原料成本”</h2>
     <p class="desc">单耗 × 单价 = 原料成本。单耗必须来自公开工艺参数或企业披露；拿不到加工费就不合计，绝不补默认值。</p>
   </div>
-  <div class="two">
-    <div class="panel"><div id="costChart"></div>
+  <div class="two" id="costGrid">
+    <div class="panel" id="costPlot"><div id="costChart"></div>
       <div class="spreadnote" id="costNote"></div></div>
-    <div class="panel"><div class="tblwrap"><table id="routeTable">
+    <div class="panel" id="routeCostPanel"><div class="tblwrap"><table id="routeTable">
       <thead><tr><th>工艺路线 / 原料</th><th>单耗</th><th>单价</th><th>每吨成本</th><th>日期</th></tr></thead>
       <tbody></tbody></table></div></div>
   </div>
@@ -526,8 +529,8 @@ function renderChart(){
   } else {
     const lo = rows.map(r=>r.lo), hi = rows.map(r=>r.hi);
     opt = Object.assign({}, baseAxis, {series:[
-      {name:'区间上沿', type:'line', data:hi, symbol:'none', lineStyle:{width:0,opacity:0}, stack:'band', tooltip:{show:false}},
-      {name:'区间带', type:'line', data:lo.map((v,i)=>hi[i]-v), symbol:'none', lineStyle:{width:0,opacity:0},
+      {name:'区间下沿', type:'line', data:lo, symbol:'none', lineStyle:{width:0,opacity:0}, stack:'band', tooltip:{show:false}},
+      {name:'区间带', type:'line', data:lo.map((v,i)=>hi[i]-v), stack:'band', symbol:'none', lineStyle:{width:0,opacity:0},
        areaStyle:{color:'rgba(77,163,255,.20)'}, tooltip:{show:false}},
       {name:'中值', type:'line', data:rows.map(r=>r.mid), symbol:'circle', symbolSize:6,
        lineStyle:{width:2.4,color:'#4da3ff'}, itemStyle:{color:'#4da3ff'}}
@@ -643,6 +646,7 @@ function renderSpread(){
     tb.innerHTML = '<tr><td colspan="8">' + EMPTY + '</td></tr>';
     $('#spreadDesc').textContent = '没有同期多采购点报价。';
     $('#spreadChart').innerHTML = '';
+    $('#spreadChart').hidden = true;
     return;
   }
   const base = (sp[0] && sp[0].base_point) || (sg[0] && sg[0].base) || '主采购点';
@@ -657,6 +661,7 @@ function renderSpread(){
     || '<tr><td colspan="8">只有价差走势、没有逐日价差表。</td></tr>';
   if(spreadChart){ spreadChart.dispose(); spreadChart = null; }
   const box = $('#spreadChart');
+  box.hidden = false;
   if(!sg.length){
     box.innerHTML = '<div class="empty">没有“多区域同期跟踪”数据，故不画价差走势；上表仍给出同日价差。</div>';
     $('#spreadNote').innerHTML = '要做价差走势，需要同一跟踪表里连续多期的多区域报价（research.json 的 spread_series）。';
@@ -688,7 +693,12 @@ function renderSpread(){
 function renderCost(){
   if(costChart){ costChart.dispose(); costChart = null; }
   const box = $('#costChart');
-  const lines = D.cost_lines || [];
+  const lines = (D.cost_lines || []).filter(c=>Number.isFinite(c.value));
+  const hasRoutes = (D.route_costs||[]).some(r=>(r.lines||[]).some(l=>[l.qty,l.price,l.cost].some(Number.isFinite)));
+  $('#costSection').hidden = !lines.length && !hasRoutes;
+  $('#costPlot').hidden = !lines.length;
+  $('#routeCostPanel').hidden = !hasRoutes;
+  $('#costGrid').style.gridTemplateColumns = !lines.length || !hasRoutes ? 'minmax(0,1fr)' : '';
   if(!lines.length){ box.innerHTML = '<div class="empty">未取得成本数字，无法判断价格在成本之上还是之下。</div>'; }
   else{
     box.innerHTML = '';

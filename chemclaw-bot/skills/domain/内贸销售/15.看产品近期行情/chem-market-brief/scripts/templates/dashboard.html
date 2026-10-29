@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="chemclaw-skill" content="chem-market-brief:price-charts-v2">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>__TITLE__</title>
 <style>
@@ -206,6 +207,8 @@ textarea#msgout{min-height:340px;line-height:1.85;font-size:13px;resize:vertical
 footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--txt3);
   display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;line-height:1.7}
 .empty{font-size:12.5px;color:var(--txt3);padding:18px;text-align:center;border:1px dashed var(--line2);border-radius:10px}
+[hidden]{display:none!important}
+#chart:has(.empty),#spreadChart:has(.empty){height:auto}
 
 @media (max-width:1200px){
   .kgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -363,8 +366,8 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
         <div class="udlist" id="downList"></div>
       </div>
     </div>
-    <div style="margin-top:20px" class="udgrid">
-      <div>
+    <div style="margin-top:20px" class="udgrid" id="marginGrid">
+      <div id="marginPanel">
         <h3 style="font-size:13px;color:var(--txt2);margin-bottom:6px;letter-spacing:.5px" id="marginHead">工艺路线毛利</h3>
         <div id="marginChart"></div>
         <div class="spreadnote" id="marginNote"></div>
@@ -416,7 +419,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
           </div>
         </div>
         <div class="field"><label>客户 / 联系人</label><input class="inp" id="msgCust" value=""></div>
-        <div class="field"><label>我方报价（元/吨，含税送到）</label><input class="inp" id="msgQuote" value=""></div>
+        <div class="field"><label id="quoteLabel">我方报价</label><input class="inp" id="msgQuote" value=""></div>
         <div class="field"><label>随附条件</label><input class="inp" id="msgTerm" value=""></div>
         <div class="btnrow">
           <button class="btn" id="btnGen">生成话术</button>
@@ -482,6 +485,7 @@ const state = {region:'全国', win:'1y', chart:'candle', showCost:true, showMar
 
 /* ---------- 头部 ---------- */
 function renderHeader(){
+  $('#quoteLabel').textContent = '我方报价（' + (D.anchor?.unit || M.unit) + '，交付口径请填写）';
   const tl = [];
   tl.push(`<span class="pill"><i class="dot"></i>数据截至 ${esc(M.asof)}</span>`);
   tl.push(`<span class="pill">产品：${esc(M.product)}${M.spec?'（'+esc(M.spec)+'）':''}</span>`);
@@ -491,7 +495,7 @@ function renderHeader(){
   $('#topLine').innerHTML = tl.join('');
   $('#warnText').innerHTML = warnText();
   $('#footL').innerHTML = `${esc(M.product)} · 行情与销售事实看板 · 数据截至 ${esc(M.asof)}<br>${esc(M.disclaimer)}`;
-  $('#footR').innerHTML = `仅陈述已发生事实，不预测后市涨跌，不构成投资或交易建议。<br>${D.anchor?('现货 '+fmt(D.anchor.value)+' 元/吨取 '+esc(D.anchor.date)+'，对外报价前请以当日实盘询价校准。'):'尚未取得现货报价，首屏仅有期货价。'}`;
+  $('#footR').innerHTML = `仅陈述已发生事实，不预测后市涨跌，不构成投资或交易建议。<br>${D.anchor?('现货 '+fmt(D.anchor.value)+' '+esc(D.anchor.unit||M.unit)+' 取 '+esc(D.anchor.date)+'，对外报价前请以当日实盘询价校准。'):'尚未取得现货报价，首屏仅有期货价。'}`;
 }
 function warnText(){
   const critical = D.gaps.filter(g=>g.status==='缺口');
@@ -591,15 +595,16 @@ function renderKPI(){
 /* ---------- 图表 ---------- */
 let chart, spreadChart, marginChart;
 function seriesKey(win){ return win==='30d'?'30d':win==='90d'?'90d':win==='1y'?'1y':win==='3y'?'3y':'all_w'; }
+function chartRows(win, mode){ return mode==='monthly' ? (D.monthly?.[seriesKey(win)] || []) : (D.series[seriesKey(win)] || []); }
 function seriesFor(win, mode){
-  const src = D.series[seriesKey(win)] || [];
+  const src = chartRows(win, mode);
   if(mode==='monthly' || mode==='line'){
     const col = mode==='line' ? '#4da3ff' : '#9b8cff';
-    return {type:'line', data:src.map(x=>[x[0], x[2]]), smooth:true, symbol:'none',
+    return {type:'line', data:src.map(x=>x[2]), smooth:true, symbol:'none',
       lineStyle:{width:2,color:col}, areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,
       colorStops:[{offset:0,color:mode==='line'?'rgba(77,163,255,.30)':'rgba(155,140,255,.28)'},{offset:1,color:'rgba(77,163,255,.01)'}]}}};
   }
-  return {type:'candlestick', data:src,
+  return {type:'candlestick', data:src.map(x=>x.slice(1,5)),
     itemStyle:{color:'#ff5f6d', color0:'#19c37d', borderColor:'#ff5f6d', borderColor0:'#19c37d'}};
 }
 function costSeries(cats){
@@ -630,9 +635,9 @@ function renderChart(){
   }
   if(!chart) chart = echarts.init($('#chart'));
   const win = state.win, mode = state.chart;
-  const cats = D.series[seriesKey(win)].map(x=>x[0]);
+  const cats = chartRows(win, mode).map(x=>x[0]);
   const main = seriesFor(win, mode);
-  const marks = markPoints(win);
+  const marks = mode==='monthly' ? [] : markPoints(win);
   main.markPoint = marks.length ? {symbol:'circle', symbolSize:11, data:marks,
     itemStyle:{color:'#f6b73c', borderColor:'#0b1220', borderWidth:2}, tooltip:{show:false}, label:{show:false}} : undefined;
   chart.setOption({
@@ -652,7 +657,7 @@ function renderChart(){
       backgroundColor:'rgba(10,17,30,.96)', borderColor:'rgba(255,255,255,.16)', borderWidth:1,
       textStyle:{color:'#dfe8f8',fontSize:12}, padding:[10,13],
       formatter: ps => {
-        const i = ps[0].dataIndex, k = D.series[seriesKey(win)][i];
+        const i = ps[0].dataIndex, k = chartRows(win, mode)[i];
         if(!k) return '';
         const m = D.marks.find(x=>x.d===k[0]);
         let s = '<div style="font-size:11px;color:#8ea2c4;margin-bottom:5px">'+esc(k[0])+'</div>';
@@ -662,7 +667,7 @@ function renderChart(){
              + '开 '+fmt(k[1])+'　收 <b style="color:'+(up?'#ff8a94':'#7ef0bb')+'">'+fmt(k[2])+'</b><br>'
              + '高 '+fmt(k[4])+'　低 '+fmt(k[3])+'</div>';
         }else{
-          s += '<div style="font-family:Consolas,monospace;font-size:13px">收盘 <b>'+fmt(k[2])+'</b> '+esc(M.unit)+'</div>';
+          s += '<div style="font-family:Consolas,monospace;font-size:13px">'+(mode==='monthly'?'月均':'收盘')+' <b>'+fmt(k[2])+'</b> '+esc(M.unit)+'</div>';
         }
         if(m) s += '<div style="margin-top:7px;padding-top:7px;border-top:1px dashed rgba(255,255,255,.14);font-size:11.5px;color:#ffd166;max-width:280px;line-height:1.6">● '+esc(m.title)+'</div>';
         return s;
@@ -684,14 +689,16 @@ function renderChart(){
     }
   });
   $('#chartLegend').innerHTML = [
-    '<span><i style="background:#ff5f6d"></i>阳线 / 收涨</span>',
-    '<span><i style="background:#19c37d"></i>阴线 / 收跌</span>',
-    '<span><i style="background:#f6b73c;border-radius:50%"></i>可点击事件点</span>',
+    mode==='candle'?'<span><i style="background:#ff5f6d"></i>阳线 / 收涨</span>':'',
+    mode==='candle'?'<span><i style="background:#19c37d"></i>阴线 / 收跌</span>':`<span>${mode==='monthly'?'月度收盘均价':'收盘价'}</span>`,
+    marks.length?'<span><i style="background:#f6b73c;border-radius:50%"></i>可点击事件点</span>':'',
     D.cost_lines.length?'<span><i style="background:rgba(255,255,255,.45)"></i>成本参考线（虚）</span>':'',
     `<span style="color:var(--txt3)">单位：${esc(M.unit)} · ${D.last.close!=null?'期货主连 · 不含税':'现货口径'}</span>`
   ].join('');
   const un = D.anomalies.filter(a=>!a.event);
-  $('#chartHint').innerHTML = un.length
+  $('#chartHint').innerHTML = mode==='monthly'
+    ? '<span class="kbd">口径</span>按所选窗口内实际交易日收盘价计算月均；首末月可能不完整，不补缺失交易日。'
+    : un.length
     ? `<span class="kbd">提示</span> 共 ${D.anomalies.length} 个 ≥${esc(M.anomaly_pct)}% 的异常波动日，其中 ${un.length} 个未找到公开归因，图中仍会标出，抽屉内标注“未归因”，请勿臆测原因。`
     : `<span class="kbd">提示</span> 点击橙色事件点查看当时发生了什么；横轴可拖拽缩放。`;
 }
@@ -857,16 +864,17 @@ function renderUD(){
   ).join('') : `<tr><td colspan="3">${EMPTY}</td></tr>`;
 
   const mg = D.margins || [];
-  const routeNames = [...new Set(mg.flatMap(m=>Object.keys(m.routes||{})))];
+  const routeNames = [...new Set(mg.flatMap(m=>Object.keys(m.routes||{})))].filter(k=>mg.some(m=>Number.isFinite((m.routes||{})[k])));
   const PALETTE = ['#ff5f6d','#f6b73c','#19c37d','#4da3ff','#9b8cff','#38d6e0'];
   const keys = routeNames.map((n,i)=>[n, n, PALETTE[i%PALETTE.length]]);
   if(!mg.length || !keys.length){
     if(marginChart){ marginChart.dispose(); marginChart=null; }
-    $('#marginChart').innerHTML = EMPTY;
-    $('#marginHead').textContent = '工艺路线毛利';
-    $('#marginNote').innerHTML = '要判断“亏损为什么还不减产”，必须有分工艺路线的毛利或成本数据；拿不到就留空，不拿行业均值顶替。';
+    $('#marginPanel').hidden = true;
+    $('#marginGrid').style.gridTemplateColumns = 'minmax(0,1fr)';
     return;
   }
+  $('#marginPanel').hidden = false;
+  $('#marginGrid').style.gridTemplateColumns = '';
   $('#marginHead').textContent = '工艺路线毛利（' + M.unit + '）';
   if(!marginChart) marginChart = echarts.init($('#marginChart'));
   marginChart.setOption({
@@ -1040,7 +1048,7 @@ function buildMsg(){
              : `${cust}，您好！\n\n`;
   let body = `把今天能核对的${M.product}行情数据发您，不含任何涨跌预测，供您内部比价和排采购节奏用：\n\n`
     + lines.join('\n')
-    + (quote ? `\n\n我方报价：${quote} 元/吨${term?`（${term}）`:''}。` : '')
+    + (quote ? `\n\n我方报价：${quote} ${a?.unit||M.unit}${term?`（${term}）`:''}。` : '')
     + `\n\n如果方便，我想确认三件事：本月用量、到货节奏、以及你们现在执行的结算方式——我按这个给您算到厂全成本，而不是只比单价。`
     + `\n\n说明：以上现货为公开渠道口径，最终以当日实盘询价为准；我只提供已发生的数据，不做后市判断。`;
   const tail = ch==='email' ? `\n\n顺颂商祺\n（此处填署名）` : ch==='short' ? '' : `\n——（此处填署名/公司）`;
@@ -1051,7 +1059,7 @@ function buildMsg(){
       + (D.last.close!=null?`期货主连 ${fmt(D.last.close)}（不含税），7 日 ${pct(c['7d']&&c['7d'].pct)}、30 日 ${pct(c['30d']&&c['30d'].pct)}，`: '')
       + (w?`处近 1 年 ${fmt(w.pct_rank,1)}% 分位。`:'')
       + (bal.length?`${bal[0].k} ${bal[0].v}。`:'')
-      + (quote?`我司报价 ${quote} 元/吨${term?`，${term}`:''}。`:'')
+      + (quote?`我司报价 ${quote} ${a?.unit||M.unit}${term?`，${term}`:''}。`:'')
       + `数据仅供比价，不作涨跌判断。`;
   }
   if(need.length) txt += `\n\n（内部备注，发送前请删除：本稿仍缺 ${need.join('、')}，见看板第 10 节。）`;

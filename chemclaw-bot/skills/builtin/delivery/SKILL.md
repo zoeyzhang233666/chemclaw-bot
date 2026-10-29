@@ -73,6 +73,13 @@ or limits on analytical ability.
    show region counts instead of invented map pins.
 5. Inspect rendering for clipped text, blank maps and unreadable legends.
    Verify workbook formulas and PPT overflow. Improve on example designs.
+   Omit optional report modules with no usable data, including their headings,
+   canvases and reserved space; record the reason once in the limitations or
+   data-gap list. Zero is valid data; null is missing. Check the main data marks,
+   not just canvas pixels: axes, annotations and reference lines can render while
+   the price series is invisible. Verify every chart tab and time window, units,
+   filters, narrow layout and print output. Browser checks that cannot run must
+   be reported as unverified, never as a passing render check.
 6. Verify every file exists, call `present` with paths and descriptions, and
    include clickable Markdown links. Resolve resources from the installed
    skill, never a developer drive.

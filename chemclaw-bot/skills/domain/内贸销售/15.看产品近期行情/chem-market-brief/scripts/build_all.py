@@ -105,7 +105,8 @@ def main():
                 n, fl = qa_render.run(html_path, data_path, a.shots)
                 fails += n
             except Exception as e:
-                common.warn('渲染自检跳过：%s' % e)
+                common.warn('渲染自检未完成：%s' % e)
+                fails += 1
     if not a.html_only:
         import check_xlsx
         E, W = check_xlsx.check(xlsx_path, data_path)

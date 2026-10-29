@@ -160,6 +160,10 @@ def build(R, base_dir='.'):
         rc = common.route_cost(rt)
         if rc:
             route_costs.append(rc)
+    if not costs and not any(line.get(key) is not None for route in route_costs
+                             for line in route.get('lines', []) for key in ('qty', 'price', 'cost')):
+        gap('成本与工艺路线', '缺口', '未取得有效成本参考或路线单耗数据',
+            '不展示成本模块，不能判断成本位置', '补充单耗、单价、日期与来源')
 
     # ---------------------------------------------------------------- 产业链（自证）
     chain = {'upstream': [], 'downstream': []}
