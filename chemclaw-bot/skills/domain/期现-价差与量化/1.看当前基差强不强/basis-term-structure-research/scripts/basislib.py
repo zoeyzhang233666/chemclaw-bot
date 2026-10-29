@@ -298,11 +298,11 @@ if __name__ == '__main__':
     seq = [{'date': '2026-09-09', 'close': 3411.0}, {'date': '2026-09-10', 'close': 3043.0}]
     adj = forward_adjust(seq, g)
     assert adj[-1]['adj_close'] == 3043.0                     # 最新段=原始价
-    assert adj[0]['adj_close'] == 3411.0 - 387.0              # 历史段整体下移
-    # 复权后换月日收益率应等于新合约真实收益率
+    assert adj[0]['adj_close'] == 3310.0              # 历史段整体下移
+    # 本例用切换前同日价差平移，切换日收益对应新合约
     r_adj = adj[1]['adj_close'] / adj[0]['adj_close'] - 1
     r_true = 3043.0 / 3310.0 - 1                              # 新合约(MA2701)自身
-    assert abs(r_adj - r_true) > 0.05 or True                 # 说明：跨合约收益率本就不可直接比
+    assert abs(r_adj - r_true) < 1e-12
 
     # 样本不足判定
     w = window_stats([1, 2, 3], 2)

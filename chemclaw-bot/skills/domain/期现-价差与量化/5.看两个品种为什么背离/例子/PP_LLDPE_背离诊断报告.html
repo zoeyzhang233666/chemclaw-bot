@@ -439,11 +439,11 @@ function drawLine(cv, cfg){
 let M3=null;
 function render3(view){
   const cv=document.getElementById('c3');
-  const f=D.series.fut;
+  const f=D.series;
   const zs=D.standardized;
   let cfg;
   if(view==='norm') cfg={n:f.dates.length,dates:f.dates,
-    series:[{pts:seriesXY(f.dates,zs.PP_n),color:'#f0883e',w:2},{pts:seriesXY(f.dates,zs.L_n),color:'#3fb950',w:2}],
+    series:[{pts:seriesXY(f.dates,zs.A_n||zs.PP_n),color:'#f0883e',w:2},{pts:seriesXY(f.dates,zs.B_n||zs.L_n),color:'#3fb950',w:2}],
     fmtY:v=>FMT(v,0)};
   else if(view==='spread') cfg={n:f.dates.length,dates:f.dates,
     series:[{pts:seriesXY(f.dates,zs.spread),color:'#58a6ff',w:1.8}],zeroLine:true,fmtY:v=>FMT(v,0)};
@@ -469,9 +469,9 @@ document.querySelectorAll('.tab[data-v]').forEach(t=>{
 });
 let M4=null;
 function render4(){
-  const cv=document.getElementById('c4'), f=D.series.fut;
+  const cv=document.getElementById('c4'), f=D.series;
   const a=D.rolling_corr.w20.ret, b=D.rolling_corr.w60.ret, c=D.rolling_corr.w120.ret;
-  M4=drawLine(cv,{n:f.dates.length,dates:f.dates,band:[-a.band_ret,a.band_ret],zeroLine:true,
+  M4=drawLine(cv,{n:f.dates.length,dates:f.dates,band:[-D.rolling_corr.w20.band_ret,D.rolling_corr.w20.band_ret],zeroLine:true,
     series:[{pts:seriesXY(f.dates,a),color:'#8b949e',w:1.3},
             {pts:seriesXY(f.dates,b),color:'#58a6ff',w:2},
             {pts:seriesXY(f.dates,c),color:'#f0883e',w:2.2}],

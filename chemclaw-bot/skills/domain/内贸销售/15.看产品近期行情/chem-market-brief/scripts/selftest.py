@@ -55,6 +55,8 @@ for ex, nm in [('01-soda-ash-national', '纯碱-全国'), ('02-glass-shahe', '�
 
     html = os.path.join(d, 'output', nm + '_行情看板.html')
     xlsx = os.path.join(d, 'output', nm + '_行情与销售事实.xlsx')
+    rc, out = run(['build_html.py', os.path.join(d, 'build', 'data.json'), '--out', html])
+    expect(rc == 0, '%s rebuild from current template' % ex)
     rc, out = run(['check_html.py', html, os.path.join(d, 'build', 'data.json')])
     print(out.strip().splitlines()[-1] if out.strip() else '')
     expect(' 0 error ' in out, '%s check_html 0 error' % ex)

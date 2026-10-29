@@ -5,6 +5,7 @@
       页面数字与 data.json 是否一致（抽样）/ 禁用词是否出现。
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -70,6 +71,14 @@ def check(html_path, data_path=None):
     with open(html_path, encoding='utf-8') as f:
         html = f.read()
     E, W = [], []
+    if 'content="chem-market-brief:price-charts-v4-daily"' not in html:
+        E.append('生成器版本不匹配：请用当前 skill 的 assemble.py 和 build_html.py 重建，不能使用旧模板')
+    template_path = os.path.join(os.path.dirname(__file__), 'templates', 'dashboard.html')
+    with open(template_path, encoding='utf-8') as file:
+        template = file.read()
+    expected_hash = hashlib.sha256(template.encode('utf-8')).hexdigest()
+    if 'name="chemclaw-template-sha256" content="%s"' % expected_hash not in html:
+        E.append('模板 SHA256 与当前 skill 不一致：混用了其他副本或旧模板，必须重新生成')
     size = os.path.getsize(html_path)
 
     for tok in ('__DATA__', '__ECHARTS__', '__TITLE__', '__PRODUCT__', '__SUB__', '__H1SUFFIX__'):
@@ -96,6 +105,28 @@ def check(html_path, data_path=None):
     if payload is None:
         E.append('未能从 HTML 中取出内联数据（`const D = {...}` 解析失败）')
     else:
+        # Match the executable renderer, allowing only the input data to vary.
+        rendered_script = html.rsplit('<script>', 1)[-1].split('</script>', 1)[0]
+        template_script = template.rsplit('<script>', 1)[-1].split('</script>', 1)[0]
+        try:
+            start = rendered_script.index('const D = ') + len('const D = ')
+            _, length = json.JSONDecoder().raw_decode(rendered_script[start:])
+            normalized = rendered_script[:start] + '__DATA__' + rendered_script[start + length:]
+            if normalized.strip() != template_script.strip():
+                E.append('图表渲染脚本与当前模板不一致，静态检查不能确认该修改；请重建或完成独立渲染验收')
+        except (ValueError, json.JSONDecodeError):
+            E.append('无法核对图表渲染脚本')
+        for key in ('30d', '90d', '1y', '3y', 'all'):
+            rows = (payload.get('series') or {}).get(key) or []
+            if not rows:
+                continue
+            groups = {}
+            for row in rows:
+                groups.setdefault(row[0][:7], []).append(row[2])
+            expected = [[month, round(sum(values) / len(values), 4)] for month, values in groups.items()]
+            actual = [[row[0], row[2]] for row in (payload.get('monthly') or {}).get(key, [])]
+            if actual != expected:
+                E.append('%s 月均数据未按实际交易日收盘价聚合' % key)
         for path, text in iter_strings(payload):
             # 客户原话（talk[].q）允许出现方向词，回答（a）不允许
             if path.endswith('.q'):

@@ -124,7 +124,7 @@ def main():
     first_screen = (ROOT / "scripts" / "templates" / "inventory_seasonality.html").read_text(encoding="utf-8")
     check("E2 断点在首屏可见", "水平" in joined and "不可得" in joined, "结论句含'水平值不可得'")
     lm = S.get("level_missing") or {}
-    check("E3 水平缺失已标注", lm.get("from") is not None or True,
+    check("E3 水平缺失已标注", (lm.get("weeks") == 0 or bool(lm.get("from"))),
           f"自 {lm.get('from')} 起 {lm.get('weeks')} 周水平不可得")
     est = S["current"].get("east_from_port") or {}
     check("E4 替代值已隔离", est.get("note") is not None and "替代" in (est.get("note") or ""), est.get("note", ""))

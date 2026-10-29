@@ -4,12 +4,13 @@
 用法：
   python qa_render.py out.html [data.json]
   python qa_render.py out.html --shots shots/
-没装 playwright 时自动跳过并返回 0（静态检查仍有效）。
+没装 playwright 时返回失败并标为未验证；显式 --no-render 仅执行静态检查。
 """
 import argparse
 import json
 import os
 import sys
+from chart_qa import check_price_chart
 
 try:
     from playwright.sync_api import sync_playwright
@@ -21,7 +22,7 @@ except Exception:
 def run(html_path, data_path=None, shots=None):
     if not HAS_PW:
         print('[SKIP ] 未安装 playwright，跳过渲染检查（静态检查仍有效）')
-        return 0, []
+        return 1, ['浏览器渲染未验证：未安装 playwright']
 
     with open(html_path, encoding='utf-8') as f:
         html = f.read()
@@ -33,7 +34,7 @@ def run(html_path, data_path=None, shots=None):
         os.makedirs(shots, exist_ok=True)
 
     with sync_playwright() as pw:
-        b = pw.chromium.launch(args=['--no-sandbox'])
+        b = pw.chromium.launch(channel=os.environ.get('CHEM_QA_BROWSER') or None)
         pg = b.new_page(viewport={'width': 1600, 'height': 1100})
         pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.on('console', lambda m: errs.append('console.' + m.type + ': ' + m.text) if m.type == 'error' else None)
@@ -47,15 +48,15 @@ def run(html_path, data_path=None, shots=None):
                 print('  FAIL', name, detail)
                 fails.append(name + ' ' + str(detail))
 
-        # KPI 4 张卡
+        # Cards reflect available indicators; missing optional data is not a KPI.
         n = pg.eval_on_selector_all('#kpiGrid .card', 'els=>els.length')
-        must('KPI 卡片 = 4', n == 4, n)
+        must('KPI 卡片仅保留实际指标', 1 <= n <= 4, n)
         vals = pg.eval_on_selector_all('#kpiGrid .card .val', 'els=>els.map(e=>e.textContent.trim())')
         must('KPI 有数字或明确缺口', all(v and ('—' not in v) for v in vals), vals)
 
         # 首屏有价格
         txt = pg.inner_text('body')
-        must('页面非空白', len(txt) > 1200, len(txt))
+        must('页面有业务内容', len(txt) > 100, len(txt))
         if D and D.get('anchor'):
             must('现货锚数字出现在页面', format(round(D['anchor']['value']), ',') in txt.replace(' ', ''),
                  D['anchor']['value'])
@@ -71,8 +72,23 @@ def run(html_path, data_path=None, shots=None):
         if has_series:
             must('主图已绘制像素', isinstance(painted, int) and painted > 200, painted)
         else:
-            must('无序列时主图显示缺口', pg.eval_on_selector_all('#chart .empty', 'e=>e.length') >= 1, painted)
+            must('无序列时隐藏走势图模块', not pg.is_visible('#trendSection'), painted)
             print('  SKIP 主图已绘制像素（无价格序列）')
+
+        if has_series:
+            for mode in ('line', 'monthly', 'candle'):
+                pg.click('#chartTabs .pbtn[data-c="%s"]' % mode)
+                pg.wait_for_timeout(500)
+                issues = check_price_chart(pg)
+                must('主图[%s]价格图元有效' % mode, not issues, issues)
+        if D:
+            has_margin = any(isinstance(v, (int, float)) for m in D.get('margins', [])
+                             for v in m.get('routes', {}).values())
+            must('毛利模块按有效数据显隐', pg.is_visible('#marginPanel') == has_margin)
+            has_spread = len({row.get('region') for row in D.get('spreads', [])
+                              if isinstance(row.get('mid'), (int, float))}) >= 2
+            must('区域价差模块按有效数据显隐', pg.is_visible('#spreadSection') == has_spread)
+        must('口径限制默认收起', pg.locator('#limitations').get_attribute('open') is None)
 
         # 各模块非空；无数据时必须显示缺口占位
         has_ev = bool(D and ((D.get('events') or []) or (D.get('anomalies') or [])))

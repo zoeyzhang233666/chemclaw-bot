@@ -39,7 +39,7 @@ def main():
     check("税费口径归一 不含税", C.norm_tax("不含税价") == "不含税")
     check("税费口径归一 未注明", C.norm_tax("") == "未注明")
     check("交付口径归一 出厂", C.norm_delivery("出厂价") == "出厂")
-    check("交付口径归一 送到", C.norm_delivery("到厂") in ("送到", "未注明") or True)
+    check("交付口径归一 送到", C.norm_delivery("到厂") == "送到")
 
     print("== selftest: 判定规则（区间 + 半宽，不用固定百分比）")
     # 区间 1050–1200，半宽 75
@@ -66,7 +66,8 @@ def main():
         for kw in ("接近市场参考区间", "略高于市场参考区间", "明显偏高", "明显偏低",
                    "口径不一致，暂时无法直接比较"):
             check(f"HTML 模板含判定分支「{kw}」", kw in src)
-        check("HTML 未使用固定百分比阈值", "0.05" not in src and "5%" not in src.replace("95%", "").replace("85%", "") or True)
+        decision = src.split("/* 6) 判定：", 1)[1].split("/* 7)", 1)[0]
+        check("HTML 判定未使用固定百分比阈值", "0.05" not in decision and "5%" not in decision)
 
         # 回归：不能用 textContent 塞 HTML 标签（历史 bug：KPI 显示 "+275 <small>元/吨</small>"）
         import re as _re

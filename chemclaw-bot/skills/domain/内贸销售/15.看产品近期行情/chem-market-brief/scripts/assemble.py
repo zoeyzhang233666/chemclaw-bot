@@ -158,8 +158,19 @@ def build(R, base_dir='.'):
         series['3y'] = common.candles([r for r in rows if r['d'] >= _back(last, 1095)])
         series['5y_w'] = common.weekly([r for r in rows if r['d'] >= _back(last, 1825)])
         series['all_w'] = common.weekly(rows)
+        series['all'] = common.candles(rows)
         series['5y_m'] = common.candles([r for r in rows if r['d'] >= _back(last, 1825)][::21])
         series['all_m'] = common.candles(rows[::21])
+
+    monthly = {}
+    if last:
+        for key, days in [('30d', 30), ('90d', 90), ('1y', 365), ('3y', 1095), ('all', None)]:
+            groups = {}
+            for row in rows:
+                if days is None or row['d'] >= _back(last, days):
+                    groups.setdefault(row['d'][:7], []).append(row['c'])
+            monthly[key] = [[month, None, round(sum(values) / len(values), 4), None, None]
+                            for month, values in groups.items()]
 
     # ---------------------------------------------------------------- 异常波动
     anomalies = []
@@ -210,6 +221,9 @@ def build(R, base_dir='.'):
 
     # ---------------------------------------------------------------- 毛利（按工艺/路线）
     margins = normalize_margins(R.get('margins') or [])
+    if not any(v is not None for m in margins for v in m.get('routes', {}).values()):
+        gap('工艺路线毛利', '缺口', '未取得分工艺且有日期与来源的毛利数据',
+            '不展示毛利模块，不能据此判断装置减产动机', '补充路线、单位、日期和来源')
 
     # ---------------------------------------------------------------- 汇总
     out = {
@@ -236,7 +250,7 @@ def build(R, base_dir='.'):
                  'l': last['l'] if last else None, 'v': last['v'] if last else None,
                  'price': price_last},
         'anchor': anchor, 'chg': chg, 'win': win, 'peak': peak, 'trough': trough, 'drawdown': disc,
-        'series': series, 'anomalies': anomalies, 'marks': marks, 'events': events,
+        'series': series, 'monthly': monthly, 'anomalies': anomalies, 'marks': marks, 'events': events,
         'spots': spots, 'spreads': [], 'cost_lines': cost_lines,
         'upstream': R.get('upstream') or [], 'downstream': R.get('downstream') or [],
         'balance': R.get('balance') or [], 'margins': margins,

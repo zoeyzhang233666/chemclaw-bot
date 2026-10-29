@@ -15,7 +15,7 @@
 规则：
   - 校验有 ERROR 直接停，不出半成品；
   - WARN 打印后继续，缺口会带进报告“数据缺口”章节与 Excel 第 10 表；
-  - 渲染自检需要 playwright，缺了自动跳过，静态检查仍执行；
+  - 渲染自检需要 playwright，缺少依赖标为未验证；仅 --no-render 显式跳过；
   - 工作簿自检（check_xlsx）总会执行。
 """
 import argparse
@@ -104,7 +104,8 @@ def main():
                 n, fl = qa_render.run(html_path, data_path, a.shots)
                 fails += n
             except Exception as e:
-                common.warn('渲染自检跳过：%s' % e)
+                common.warn('渲染自检未完成：%s' % e)
+                fails += 1
     if not a.html_only:
         import check_xlsx
         E, W = check_xlsx.check(xlsx_path, data_path)
