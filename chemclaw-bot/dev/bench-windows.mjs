@@ -14,8 +14,8 @@ const require = createRequire(anchor)
 // package, resolved through its public export, before testing the source revision.
 const installedPlugin = dirname(require.resolve('chemclaw-bot/package.json'))
 if (resolve(installedPlugin) !== plugin) {
-  for (const path of ['package.json', 'cordis.patch.yml', 'index.js', 'client.js', 'NOTICE', 'LICENSE', 'src/host', 'src/shared', 'runtime', 'seed', 'skills/builtin', 'skills/vendor']) {
-    if (existsSync(join(plugin, path))) cpSync(join(plugin, path), join(installedPlugin, path), { recursive: true })
+  for (const path of ['package.json', 'cordis.patch.yml', 'index.js', 'client.js', 'NOTICE', 'LICENSE', 'src/host', 'src/shared', 'runtime', 'scripts/build-runtime.mjs', 'seed', 'skills/builtin', 'skills/vendor']) {
+    if (existsSync(join(plugin, path))) cpSync(join(plugin, path), join(installedPlugin, path), { recursive: true, filter: source => !source.startsWith(join(plugin, 'runtime', '.build-tools')) })
   }
 }
 const boot = await import(pathToFileURL(require.resolve('@deepseek-ai/dsh-app-boot')))

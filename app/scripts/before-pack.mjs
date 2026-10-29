@@ -2,6 +2,9 @@
 // (npmRebuild: false), so they fit only the architecture of the Node that ran npm. An app built for
 // another architecture would carry them and not start, so such a build stops here.
 import { Arch } from 'electron-builder'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const WHERE = {
   darwin: { x64: 'on an Intel Mac, or under Rosetta with an x64 Node', arm64: 'on a Mac with Apple silicon' },
@@ -17,10 +20,19 @@ export function archProblem({ target, platform, host = process.arch, targets = [
   return `This Node runs on ${host}, so npm installed ${host} native modules, and an ${target} app with them would not start. Install the dependencies and build ${where}.`
 }
 
-export async function beforePack(context) {
+async function prepareMarketRuntime() {
+  const require = createRequire(import.meta.url)
+  const plugin = dirname(require.resolve('chemclaw-bot/package.json'))
+  const { buildRuntimeBundle } = await import(pathToFileURL(join(plugin, 'scripts/build-runtime.mjs')))
+  await buildRuntimeBundle(plugin)
+}
+
+export async function beforePack(context, prepare = prepareMarketRuntime) {
   const targets = []
   for (const archToNames of context.packager?.packagerOptions?.targets?.values() ?? [])
     for (const arch of archToNames.keys()) targets.push(Arch[arch])
   const problem = archProblem({ target: Arch[context.arch], platform: context.electronPlatformName, targets })
   if (problem !== undefined) throw new Error(problem)
+  if (context.electronPlatformName !== process.platform) throw new Error('Build on the target operating system to bundle its market runtime.')
+  await prepare()
 }

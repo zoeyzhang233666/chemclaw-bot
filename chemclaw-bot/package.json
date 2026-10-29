@@ -40,6 +40,8 @@
     "cordis.patch.yml",
     "skills/",
     "runtime/",
+    "!runtime/.build-tools/**",
+    "scripts/build-runtime.mjs",
     "README.md",
     "README.zh.md",
     "LICENSE",
@@ -56,11 +58,12 @@
   ],
   "scripts": {
     "build": "node scripts/build-client.mjs",
+    "runtime:bundle": "node scripts/build-runtime.mjs",
     "test": "node --import ./test/harness-resolve.mjs --test \"test/*.test.js\"",
     "lint": "node scripts/lint.mjs",
     "harness": "npm install --prefix dev/harness --legacy-peer-deps=false --no-package-lock --no-fund --no-audit",
     "check": "sh dev/check.sh",
-    "pack:dist": "npm pack"
+    "pack:dist": "npm run runtime:bundle && npm pack"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "*",

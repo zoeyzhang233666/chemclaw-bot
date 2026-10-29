@@ -60,3 +60,15 @@ test('the app has the version of chemclaw-bot', () => {
   const version = file => JSON.parse(readFileSync(new URL(file, import.meta.url), 'utf8')).version
   assert.equal(version('../package.json'), version('../../chemclaw-bot/package.json'))
 })
+
+test('runtime build tools stay out of desktop packages while release archives remain included', () => {
+  const config = parse(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'))
+  const root = resolve('app-fixture')
+  const filter = new FileMatcher(root, root, value => value, ['**/*', ...config.files.filter(pattern => pattern.startsWith('!'))]).createFilter()
+  const stat = { isDirectory: () => false }
+  for (const file of ['uv-0.13.6/uv.exe', 'interpreters/python/bin/python3', 'cache/package.whl']) {
+    assert.equal(filter(join(root, 'node_modules/chemclaw-bot/runtime/.build-tools', file), stat), false, file)
+  }
+  assert.equal(filter(join(root, 'node_modules/chemclaw-bot/runtime/bundled/linux-x64.tar.gz'), stat), true)
+  assert.equal(filter(join(root, 'node_modules/chemclaw-bot/skills/builtin/delivery/SKILL.md'), stat), true)
+})

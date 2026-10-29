@@ -623,8 +623,6 @@ export function apply(ctx) {
   actions.speech = () => ctx.get('remote.speech') ?? undefined
   // DSH's own settings: models, providers, keys and its plugins.
   actions.openHarnessSettings = openHarnessSettings
-  const previewSettings = ctx.get('configForms')?.developerTools
-  if (previewSettings) actions.enableHtmlPreview = () => previewSettings.setEnabled(true)
   actions.openHarnessOnboarding = openHarnessOnboarding
   actions.voiceSetup = () => {
     const navigation = ctx.get('pluginNavigation')

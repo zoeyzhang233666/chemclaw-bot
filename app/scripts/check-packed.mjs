@@ -22,7 +22,7 @@ const source = flags.has('--source') || given === '--source'
 if (source) {
   const plugin = resolve(root, '../chemclaw-bot')
   const installed = dirname(createRequire(import.meta.url).resolve('chemclaw-bot/package.json'))
-  if (resolve(installed) !== plugin) for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'src/host', 'src/shared', 'runtime']) cpSync(join(plugin, path), join(installed, path), { recursive: true })
+  if (resolve(installed) !== plugin) for (const path of ['package.json', 'cordis.patch.yml', 'index.js', 'client.js', 'NOTICE', 'src/host', 'src/shared', 'runtime', 'scripts/build-runtime.mjs']) cpSync(join(plugin, path), join(installed, path), { recursive: true, filter: source => !source.startsWith(join(plugin, 'runtime', '.build-tools')) })
 }
 const executable = source ? process.env.CHEMCLAW_TEST_ELECTRON || createRequire(import.meta.url)('electron') : given || packedExecutable()
 
@@ -93,6 +93,14 @@ function checkSharp(app) {
     const assert = require('node:assert/strict')
     const { createRequire } = require('node:module')
     const appRequire = createRequire(${JSON.stringify(join(resources, 'app.asar', 'package.json'))})
+    const fs = require('node:fs')
+    const path = require('node:path')
+    const plugin = path.dirname(appRequire.resolve('chemclaw-bot/package.json'))
+    assert.equal(fs.existsSync(path.join(plugin, 'runtime/.build-tools')), false, 'Runtime build caches must not ship')
+    const skills = ['domain-skills', 'supplemental-skills'].flatMap(name => JSON.parse(fs.readFileSync(path.join(plugin, 'seed', name + '.json'), 'utf8')))
+    for (const file of ['presentations', 'chemistry', 'delivery', 'research-process']) skills.push({ sourcePath: 'skills/builtin/' + file + '/SKILL.md' })
+    skills.push({ sourcePath: 'skills/vendor/guizang-ppt-skill/SKILL.md' })
+    for (const { sourcePath } of skills) assert.doesNotThrow(() => fs.readFileSync(path.join(plugin, sourcePath), 'utf8'), 'Packaged skill is unreadable: ' + sourcePath)
     const sharp = appRequire('sharp')
     if (process.platform === 'linux') assert.ok(sharp.versions.emscripten, 'Linux must use the packaged WASM backend')
     ;(async () => {
