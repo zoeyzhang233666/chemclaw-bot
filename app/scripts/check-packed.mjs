@@ -219,9 +219,15 @@ async function chat(cdp) {
   }
   const text = needle => `document.body.innerText.includes(${JSON.stringify(needle)})`
   const openSettings = async () => {
-    const button = "document.querySelector('.bt-row[title=\"Settings\"], .bt-row[title=\"设置\"]')"
-    await until(button, 'the sidebar settings button')
-    await evaluate(`${button}.click()`)
+    await until("document.querySelector('.bt-classic-settings, .bt-account')", 'the settings launcher')
+    if (await evaluate("Boolean(document.querySelector('.bt-classic-settings'))")) {
+      await evaluate("document.querySelector('.bt-classic-settings').click()")
+    } else {
+      if (!await evaluate("Boolean(document.querySelector('.bt-account-menu'))")) await evaluate("document.querySelector('.bt-account').click()")
+      const item = "[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(设置|Settings)$/.test(node.textContent.trim()))"
+      await until(item, 'the account menu settings item')
+      await evaluate(`${item}.click()`)
+    }
     await until("document.querySelector('.bt-settings-nav')", 'settings')
   }
   await cdp.call('Runtime.enable')
@@ -251,6 +257,18 @@ async function chat(cdp) {
     await until("!document.querySelector('.bt-settings')", 'settings to close')
     console.log('check-packed: About checked the isolated app update feed')
   }
+  await evaluate("document.querySelector('.bt-account').click()")
+  const classicMode = "[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(切换经典 Agent 模式|Switch to classic Agent mode)$/.test(node.textContent.trim()))"
+  await until(classicMode, 'the classic Agent mode entry')
+  await evaluate(`${classicMode}.click()`)
+  await until("document.querySelector('.bt-classic-settings')", 'the classic settings button')
+  await openSettings()
+  await until("document.querySelector('.bt-look-seg')", 'classic mode appearance settings')
+  await evaluate("document.querySelector('.bt-settings-close').click()")
+  await until("!document.querySelector('.bt-settings')", 'classic settings to close')
+  await evaluate("document.querySelector('.bt-return').click()")
+  await until("document.querySelector('.bt-account')", 'the expert team account launcher')
+  console.log('check-packed: classic Settings opened and returned to the expert team')
   if (shotFile && !process.argv.includes('--browser-shot-only')) {
     const capture = async suffix => { await sleep(650); const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.${suffix}.png`), Buffer.from(data, 'base64')) }
     await capture('home')
@@ -327,9 +345,7 @@ async function chat(cdp) {
     return
   }
   if (process.argv.includes('--preview-only')) {
-    await evaluate("document.querySelector('.bt-account').click()")
-    await until("document.querySelector('.bt-account-menu')", 'the preview account menu')
-    await evaluate("[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(设置|Settings)$/.test(node.textContent.trim())).click()")
+    await openSettings()
     await until("document.querySelector('.bt-look-seg')", 'the source layout controls')
     for (const label of ['消息布局', '气泡宽度', '显示思考过程']) {
       if (!await evaluate(text(label))) throw new Error(`The preview is missing ${label}`)
@@ -402,9 +418,7 @@ async function chat(cdp) {
   await evaluate("document.querySelector('.bt-ptab-close').click()")
   console.log('check-packed: /side and follow-up answered while the main task continued')
 
-  await evaluate("document.querySelector('.bt-account').click()")
-  await until("document.querySelector('.bt-account-menu')", 'the account menu')
-  await evaluate("[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(设置|Settings)$/.test(node.textContent.trim())).click()")
+  await openSettings()
   await until("document.querySelector('.bt-look-seg')", 'message layout settings')
   await evaluate("[...document.querySelectorAll('.bt-look-seg button')].find(node => /^(平铺|Flat)$/.test(node.textContent.trim())).click()")
   await until("document.body.dataset.btLayout === 'flat'", 'flat layout to apply')
