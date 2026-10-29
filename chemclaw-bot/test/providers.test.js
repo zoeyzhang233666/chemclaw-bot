@@ -63,7 +63,11 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
         ...Object.keys(catalog).map(id => ({ provider: id, displayName: id, settingsNs: 'llm-pi-ai', settingsPath: ['providers', id], declared: false })),
         ...routes().filter(id => !(id in catalog)).map(id => ({ provider: id, displayName: piValue().providers[id].displayName ?? id, settingsNs: 'llm-pi-ai', settingsPath: ['providers', id], declared: true })),
       ],
-      discoverModels: async (ns, request) => { discovered.push([ns, request]); return [{ id: 'relay-1', name: 'Relay One', contextWindow: 128000, inputModalities: ['text'] }, { id: 'relay-2' }] },
+      discoverModels: async (ns, request) => {
+        discovered.push([ns, request])
+        return request.provider in catalog ? catalog[request.provider].map(id => ({ id }))
+          : [{ id: 'relay-1', name: 'Relay One', contextWindow: 128000, inputModalities: ['text'] }, { id: 'relay-2' }]
+      },
     },
   }
   const rt = { ctx, state: { bots: {} }, botOf: id => rt.state.bots[id], selfOf: id => id === 'group-member' ? 'preset' : id, save: async () => {} }
@@ -92,8 +96,8 @@ test('built-in APIHub uses the verified endpoint, stores credentials separately 
   assert.equal((await rt.catalog({ fresh: true }))[0].provider, 'apihub')
 })
 
-test('built-in OpenCode Go appears in known providers and adds with its Zen Go endpoint', async () => {
-  const { rt, store, writes, discovered } = dsh()
+test('OpenCode Go keeps the official catalog provider and its session headers', async () => {
+  const { rt, store, writes, discovered } = dsh({ catalog: { 'opencode-go': ['deepseek-v4.1-flash', 'glm-5.3-flash'] } })
   const { OPENCODE_GO } = await import('../src/shared/model-providers.js')
   assert.equal(OPENCODE_GO.id, 'opencode-go')
   assert.equal(OPENCODE_GO.baseURL, 'https://opencode.ai/zen/go/v1')
@@ -101,17 +105,146 @@ test('built-in OpenCode Go appears in known providers and adds with its Zen Go e
   const before = await rt.providersView()
   assert.deepEqual(before.addable.find(entry => entry.id === OPENCODE_GO.id), { id: 'opencode-go', name: 'opencode-go' })
   const view = await rt.addProvider({ provider: OPENCODE_GO.id, key: 'synthetic-opencode-go' })
-  assert.equal(discovered[0][1].baseURL, OPENCODE_GO.baseURL)
-  assert.equal(discovered[0][1].api, OPENCODE_GO.api)
-  assert.equal(discovered[0][1].apiKey, 'synthetic-opencode-go')
+  assert.deepEqual(discovered, [])
   assert.deepEqual(writes[0], ['llm-pi-ai', [{ op: 'set', path: ['providers', 'opencode-go'], value: {
-    displayName: 'opencode-go', api: 'openai-completions', baseURL: 'https://opencode.ai/zen/go/v1', apiKeyEnv: 'OPENCODE_API_KEY',
-    models: [{ id: 'relay-1', name: 'Relay One', contextWindow: 128000, input: ['text'] }, { id: 'relay-2' }],
+    displayName: 'opencode-go', apiKeyEnv: 'OPENCODE_API_KEY',
   } }]])
   assert.equal(store.OPENCODE_API_KEY, 'synthetic-opencode-go')
   assert.equal(row(view, 'opencode-go').models.length, 2)
   assert.equal(view.addable.some(entry => entry.id === 'opencode-go'), false)
   await assert.rejects(rt.addProvider({ provider: 'opencode-go', key: 'again' }), /already set up/)
+})
+
+test('OpenCode Go requires DSH native support instead of creating a generic route', async () => {
+  const { rt, writes } = dsh()
+  await assert.rejects(rt.addProvider({ provider: 'opencode-go', key: 'synthetic-key' }), /Update DSH/)
+  assert.deepEqual(writes, [])
+})
+
+const legacyGo = {
+  displayName: 'opencode-go', api: 'openai-completions', baseURL: 'https://opencode.ai/zen/go/v1',
+  apiKeyEnv: 'OPENCODE_API_KEY', models: [{ id: 'deepseek-v4.1-flash' }],
+}
+
+test('existing Go presets restore native routing before a request without changing keys or Bot selections', async () => {
+  const profile = { ...legacyGo, headers: { 'x-deployment': 'test' }, cacheRetention: 'long' }
+  const { rt, writes, store, listeners } = dsh({
+    user: { providers: { 'opencode-go': profile } }, keys: { OPENCODE_API_KEY: 'synthetic-existing' },
+    catalog: { 'opencode-go': ['deepseek-v4.1-flash'] },
+  })
+  rt.state.bots.preset = { id: 'preset', model: 'opencode-go/deepseek-v4.1-flash' }
+  const config = await listeners.get('agent/request')({ agent: { id: 'preset' }, signal: new AbortController().signal }, async () => {
+    assert.equal(writes.length, 1)
+    return { provider: 'opencode-go', model: 'deepseek-v4.1-flash' }
+  })
+  assert.equal(config.provider, 'opencode-go')
+  assert.equal(rt.state.bots.preset.model, 'opencode-go/deepseek-v4.1-flash')
+  assert.deepEqual(writes, [['llm-pi-ai', [{ op: 'set', path: ['providers', 'opencode-go'], value: {
+    displayName: 'opencode-go', apiKeyEnv: 'OPENCODE_API_KEY', headers: profile.headers, cacheRetention: 'long',
+  } }]]])
+  assert.deepEqual(store, { OPENCODE_API_KEY: 'synthetic-existing' })
+  await Promise.all([rt.providersView(), rt.prepareProviderRoutes(), rt.catalog({ fresh: true })])
+  assert.equal(writes.length, 1)
+})
+
+test('concurrent first requests share the Go migration', async () => {
+  const { rt, writes } = dsh({ user: { providers: { 'opencode-go': legacyGo } }, catalog: { 'opencode-go': ['deepseek-v4.1-flash'] } })
+  await Promise.all([rt.prepareProviderRoutes(), rt.prepareProviderRoutes(), rt.prepareProviderRoutes()])
+  assert.equal(writes.length, 1)
+})
+
+test('a selected Go model missing from the native catalog stops migration instead of switching provider', async () => {
+  const { rt, writes } = dsh({ user: { providers: { 'opencode-go': legacyGo } }, catalog: { 'opencode-go': ['deepseek-v4.1-flash'] } })
+  rt.state.bots.preset = { model: 'opencode-go/new-model' }
+  await assert.rejects(rt.prepareProviderRoutes(), /Update DSH.*new-model/)
+  assert.deepEqual(writes, [])
+  assert.equal(rt.state.bots.preset.model, 'opencode-go/new-model')
+})
+
+test('Go migration leaves custom endpoints and intentional protocol settings alone', async () => {
+  for (const profile of [
+    { ...legacyGo, baseURL: 'https://relay.example/v1' },
+    { ...legacyGo, displayName: 'Custom Go' },
+    { ...legacyGo, api: 'anthropic-messages' },
+    { apiKeyEnv: 'OPENCODE_API_KEY' },
+  ]) {
+    const { rt, writes } = dsh({ user: { providers: { 'opencode-go': profile } }, catalog: { 'opencode-go': ['deepseek-v4.1-flash'] } })
+    await rt.prepareProviderRoutes()
+    assert.deepEqual(writes, [])
+  }
+  const { rt, writes } = dsh({ base: { providers: { 'opencode-go': legacyGo } }, catalog: { 'opencode-go': ['deepseek-v4.1-flash'] } })
+  await rt.prepareProviderRoutes()
+  assert.deepEqual(writes, [])
+})
+
+test('the official DSH adapter sends stable Go session headers after preset migration', async (t) => {
+  const { apply, Config } = await import('@deepseek-ai/dsh-llm-pi-ai')
+  const captured = []
+  t.mock.method(globalThis, 'fetch', async (input, init) => {
+    const request = new Request(input, init)
+    assert.equal(new URL(request.url).hostname, 'opencode.ai')
+    const body = await request.json()
+    captured.push({ session: request.headers.get('x-opencode-session'), model: body.model })
+    if (!request.headers.has('x-opencode-session')) return Response.json({ type: 'MissingSessionID', message: 'Missing conversation header' }, { status: 400 })
+    if (new URL(request.url).pathname.endsWith('/messages')) {
+      const events = [
+        { type: 'message_start', message: { id: 'synthetic-message', type: 'message', role: 'assistant', model: body.model, content: [], usage: { input_tokens: 5, output_tokens: 0 } } },
+        { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+        { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'OK' } },
+        { type: 'content_block_stop', index: 0 },
+        { type: 'message_delta', delta: { stop_reason: 'end_turn', stop_sequence: null }, usage: { output_tokens: 1 } },
+        { type: 'message_stop' },
+      ]
+      return new Response(events.map(event => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(''), { headers: { 'content-type': 'text/event-stream' } })
+    }
+    const chunks = [
+      { id: 'synthetic-chat', choices: [{ index: 0, delta: { role: 'assistant', content: 'OK' }, finish_reason: null }] },
+      { id: 'synthetic-chat', choices: [{ index: 0, delta: {}, finish_reason: 'stop' }], usage: { prompt_tokens: 5, completion_tokens: 1, total_tokens: 6 } },
+    ]
+    return new Response(chunks.map(chunk => `data: ${JSON.stringify(chunk)}\n\n`).join('') + 'data: [DONE]\n\n', { headers: { 'content-type': 'text/event-stream' } })
+  })
+  const adapterFor = (profile) => {
+    let adapter
+    apply({
+      fiber: { entry: { options: { id: 'llm-pi-ai' } } },
+      inject() {}, on() {},
+      get: name => name === 'credentials' ? { resolve: async () => ({ value: 'synthetic-only' }) } : undefined,
+      llm: {
+        registerConfigurableProviders: () => ({ replace() {} }), registerModelDiscovery() {},
+        registerAdapter: (_providers, value) => { adapter = value; return { replace() {} } },
+      },
+    }, Config({ providers: { 'opencode-go': profile } }))
+    return adapter
+  }
+  const request = (sessionId, model = 'deepseek-v4.1-flash') => ({ provider: 'opencode-go', model, sessionId,
+    messages: [{ role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'Reply OK' }] }] })
+  const consume = async (adapter, session, model) => {
+    const chunks = []
+    for await (const chunk of adapter.stream(request(session, model))) chunks.push(chunk)
+    return chunks
+  }
+  const first = 'session-11111111-1111-4111-8111-111111111111'
+  const second = 'session-22222222-2222-4222-8222-222222222222'
+  const old = await consume(adapterFor(legacyGo), first)
+  if (captured[0].session === null) {
+    assert.ok(old.some(chunk => chunk.type === 'finish' && chunk.reason.kind === 'error'))
+    t.diagnostic('Legacy generic route reproduced MissingSessionID with this official Pi version')
+  } else {
+    assert.equal(captured[0].session, first)
+    t.diagnostic('This newer official Pi version also fixes the generic route')
+  }
+  const { rt, writes } = dsh({ user: { providers: { 'opencode-go': legacyGo } }, catalog: { 'opencode-go': ['deepseek-v4.1-flash'] } })
+  await rt.prepareProviderRoutes()
+  const fixed = adapterFor(writes[0][1][0].value)
+  const results = await Promise.all([consume(fixed, first), consume(fixed, second)])
+  results.push(await consume(fixed, first))
+  results.push(await consume(fixed, second, 'claude-haiku-5-5'))
+  for (const chunks of results) {
+    assert.ok(chunks.some(chunk => chunk.type === 'text-delta' && chunk.text === 'OK'), JSON.stringify(chunks))
+    assert.ok(chunks.some(chunk => chunk.type === 'finish' && chunk.reason.kind === 'stop'), JSON.stringify(chunks))
+  }
+  assert.deepEqual(captured.slice(1).map(item => item.session).sort(), [first, first, second, second].sort())
+  assert.equal(captured.at(-1).model, 'claude-haiku-5-5')
 })
 
 test('models of a provider whose API key is set nowhere need the key', async () => {
