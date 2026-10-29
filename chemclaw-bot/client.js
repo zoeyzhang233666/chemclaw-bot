@@ -1045,7 +1045,7 @@ var ZH = {
   Tangerine: "橘",
   Cobalt: "钴蓝",
   // Themes
-  DeepSeek: "DeepSeek",
+  DeepSeek: "蓝白",
   Mono: "黑白",
   Paper: "纸张",
   Moonlight: "月光",
