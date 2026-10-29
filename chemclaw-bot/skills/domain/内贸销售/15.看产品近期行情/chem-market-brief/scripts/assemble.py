@@ -158,12 +158,13 @@ def build(R, base_dir='.'):
         series['3y'] = common.candles([r for r in rows if r['d'] >= _back(last, 1095)])
         series['5y_w'] = common.weekly([r for r in rows if r['d'] >= _back(last, 1825)])
         series['all_w'] = common.weekly(rows)
+        series['all'] = common.candles(rows)
         series['5y_m'] = common.candles([r for r in rows if r['d'] >= _back(last, 1825)][::21])
         series['all_m'] = common.candles(rows[::21])
 
     monthly = {}
     if last:
-        for key, days in [('30d', 30), ('90d', 90), ('1y', 365), ('3y', 1095), ('all_w', None)]:
+        for key, days in [('30d', 30), ('90d', 90), ('1y', 365), ('3y', 1095), ('all', None)]:
             groups = {}
             for row in rows:
                 if days is None or row['d'] >= _back(last, days):

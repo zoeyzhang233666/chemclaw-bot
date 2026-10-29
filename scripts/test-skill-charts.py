@@ -93,7 +93,7 @@ def main():
                 if skill == SALES:
                     assert page.is_visible('#marginPanel') == (label in ('original', 'zero'))
                     assert page.locator('#limitations').get_attribute('open') is None
-                    assert page.locator('meta[name="chemclaw-skill"]').get_attribute('content') == 'chem-market-brief:price-charts-v3'
+                    assert page.locator('meta[name="chemclaw-skill"]').get_attribute('content') == 'chem-market-brief:price-charts-v4-daily'
                     if label != 'original':
                         assert '元/桶' in page.inner_text('#quoteLabel')
                         page.fill('#msgQuote', '734')
@@ -134,7 +134,7 @@ def main():
         run_script(SALES, 'check_html.py', html, data_path)
         report = html.read_text(encoding='utf-8')
         invalid = temp / 'invalid.html'
-        invalid.write_text(report.replace('chem-market-brief:price-charts-v3', 'chem-market-brief:price-charts-v1'), encoding='utf-8')
+        invalid.write_text(report.replace('chem-market-brief:price-charts-v4-daily', 'chem-market-brief:price-charts-v1'), encoding='utf-8')
         assert '版本不匹配' in run_script(SALES, 'check_html.py', invalid, data_path, expect_failure=True)
         broken = report.replace('data:src.map(x=>x.slice(1,5))', 'data:src')
         assert broken != report
@@ -158,6 +158,14 @@ def main():
         assert not page.is_visible('#marginPanel')
         assert not page.is_visible('#chainSection')
         assert '同日多地区缺失' not in page.inner_text('#kpiGrid')
+        page.click('#winSel .pbtn[data-w="all"]')
+        for mode in ('candle', 'line'):
+            page.click('#chartTabs .pbtn[data-c="%s"]' % mode)
+            page.wait_for_timeout(500)
+            assert page.evaluate('chart.getOption().xAxis[0].data') == dates
+            assert len(page.evaluate('chart.getOption().series[0].data')) == len(dates)
+            assert not module.check_price_chart(page), module.check_price_chart(page)
+        page.click('#winSel .pbtn[data-w="1y"]')
         page.click('#chartTabs .pbtn[data-c="line"]')
         assert len(page.evaluate('chart.getOption().series[0].data')) == 6
         if args.artifacts:
@@ -172,7 +180,7 @@ def main():
             page.locator('.chartcard').screenshot(path=str(args.artifacts / 'monthly-mean.png'))
         page.evaluate("chart.setOption({series:[{data:D.series['1y'].map(row=>row[2])}], xAxis:{data:D.series['1y'].map(row=>row[0])}})")
         assert module.check_price_chart(page), 'Checker accepted daily data recolored as monthly averages'
-        print('PASS synthetic oil: real candles, independent monthly means, no empty optional sections', flush=True)
+        print('PASS synthetic oil: daily candles and close in every window, separate monthly means, hidden empty sections', flush=True)
         assert not errors, errors
         browser.close()
 

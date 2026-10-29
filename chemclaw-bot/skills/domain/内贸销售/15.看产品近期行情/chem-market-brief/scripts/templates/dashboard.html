@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="chemclaw-skill" content="chem-market-brief:price-charts-v3">
+<meta name="chemclaw-skill" content="chem-market-brief:price-charts-v4-daily">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>__TITLE__</title>
 <style>
@@ -263,8 +263,8 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
   <div class="panel chartcard">
     <div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center">
       <div class="charttabs" id="chartTabs">
-        <button class="pbtn on" data-c="candle">K线</button>
-        <button class="pbtn" data-c="line">收盘价 + 事件</button>
+        <button class="pbtn on" data-c="candle">日K线</button>
+        <button class="pbtn" data-c="line">日收盘价 + 事件</button>
         <button class="pbtn" data-c="monthly">月度均价</button>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -593,7 +593,7 @@ function renderKPI(){
 
 /* ---------- 图表 ---------- */
 let chart, spreadChart, marginChart;
-function seriesKey(win){ return win==='30d'?'30d':win==='90d'?'90d':win==='1y'?'1y':win==='3y'?'3y':'all_w'; }
+function seriesKey(win){ return win==='30d'?'30d':win==='90d'?'90d':win==='1y'?'1y':win==='3y'?'3y':'all'; }
 function chartRows(win, mode){ return mode==='monthly' ? (D.monthly?.[seriesKey(win)] || []) : (D.series[seriesKey(win)] || []); }
 function seriesFor(win, mode){
   const src = chartRows(win, mode);
@@ -674,7 +674,7 @@ function renderChart(){
     xAxis:{type:'category', data:cats, boundaryGap:true,
       axisLine:{lineStyle:{color:'rgba(255,255,255,.14)'}}, axisTick:{show:false},
       axisLabel:{color:'#71809c',fontSize:10.5, hideOverlap:true,
-        formatter:v=> v && v.length>=10 ? v.slice(2,7).replace('-','/') : v}},
+        formatter:v=>mode==='monthly' ? v : String(v||'').replace(/-/g,'/')}},
     yAxis:{type:'value', scale:true, splitNumber:5,
       axisLabel:{color:'#71809c',fontSize:10.5, formatter:v=>fmt(v)},
       splitLine:{lineStyle:{color:'rgba(255,255,255,.055)'}}, axisLine:{show:false}},
@@ -1111,7 +1111,7 @@ $('#msgCust').value = '';
 $('#msgQuote').value = D.meta.suggest_quote ? String(D.meta.suggest_quote) : (D.anchor ? String(Math.round(D.anchor.value*1.01)) : '');
 $('#msgTerm').value = D.meta.suggest_term || '30 天账期，5 车起送';
 $('#chartDesc').textContent = D.last.close!=null
-  ? `主连周/日 K 为透明、可复核的连续序列；虚线为成本参考线${D.cost_lines.length?'（'+D.cost_lines.map(c=>c.name+' '+fmt(c.value)).join(' / ')+'，'+D.cost_lines[0].date+'）':''}。点击橙点查看当日事件。`
+  ? `日K线与日收盘价均保留逐交易日数据，包括“全部”时间范围；仅月度均价按月汇总。${D.cost_lines.length?'虚线为成本参考线。':''}点击橙点查看当日事件。`
   : '尚未取得连续价格序列，本模块留空。';
 renderHeader(); renderPickers(); renderKPI(); renderChart(); renderSpots(); renderChg();
 renderQuant(); renderSpread(); renderUD(); renderTimeline(); renderFacts(); renderGaps(); buildMsg();

@@ -27,7 +27,7 @@ def check_price_chart(page):
         const labels = option.xAxis[0].data;
         if (!labels.length || labels.some(label => !/^\\d{4}-\\d{2}$/.test(label)))
           issues.push('月度均价横轴必须是实际月份');
-        if (state.win !== 'all') {
+        {
           const groups = new Map();
           for (const row of D.series[seriesKey(state.win)] || []) {
             const month = row[0].slice(0,7);
@@ -39,6 +39,16 @@ def check_price_chart(page):
               expected.some((value,i)=>Math.abs(option.series[0].data[i]-value)>0.0001))
             issues.push('月均数值未按交易日收盘价聚合');
         }
+      }
+      if (typeof seriesKey === 'function' && typeof state !== 'undefined' && state.chart !== 'monthly') {
+        const rows = D.series[seriesKey(state.win)] || [];
+        const labels = option.xAxis[0].data;
+        if (labels.length !== rows.length || labels.some((day,i)=>day!==rows[i][0] || !/^\\d{4}-\\d{2}-\\d{2}$/.test(day)))
+          issues.push('日线横轴必须保留每个真实交易日');
+        if (option.series[0].data.length !== rows.length)
+          issues.push('日线被降采样，不能用周线替代日线');
+        if (state.chart === 'line' && option.series[0].data.some((value,i)=>value!==rows[i][2]))
+          issues.push('日收盘价与逐日源数据不一致');
       }
       for (const series of option.series.filter(s => s.type === 'candlestick')) {
         if (series.data.some(row => !Array.isArray(row) || row.length !== 4 || !row.every(Number.isFinite)))

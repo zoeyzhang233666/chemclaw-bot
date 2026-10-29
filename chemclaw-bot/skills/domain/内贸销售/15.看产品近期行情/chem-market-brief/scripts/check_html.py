@@ -71,7 +71,7 @@ def check(html_path, data_path=None):
     with open(html_path, encoding='utf-8') as f:
         html = f.read()
     E, W = [], []
-    if 'content="chem-market-brief:price-charts-v3"' not in html:
+    if 'content="chem-market-brief:price-charts-v4-daily"' not in html:
         E.append('生成器版本不匹配：请用当前 skill 的 assemble.py 和 build_html.py 重建，不能使用旧模板')
     template_path = os.path.join(os.path.dirname(__file__), 'templates', 'dashboard.html')
     with open(template_path, encoding='utf-8') as file:
@@ -116,7 +116,7 @@ def check(html_path, data_path=None):
                 E.append('图表渲染脚本与当前模板不一致，静态检查不能确认该修改；请重建或完成独立渲染验收')
         except (ValueError, json.JSONDecodeError):
             E.append('无法核对图表渲染脚本')
-        for key in ('30d', '90d', '1y', '3y'):
+        for key in ('30d', '90d', '1y', '3y', 'all'):
             rows = (payload.get('series') or {}).get(key) or []
             if not rows:
                 continue
