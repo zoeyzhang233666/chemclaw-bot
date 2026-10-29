@@ -1284,8 +1284,8 @@ export function install(rt) {
         if (hidden.has(event.data?.turn)) continue
         // One entry per text block: the chat shows each block in a bubble of its own.
         const content = Array.isArray(event.data?.message?.content) ? event.data.message.content : []
-        for (const block of content) {
-          if (block?.type === 'text' && typeof block.text === 'string' && block.text.trim() !== '') stamp(event, { kind: 'bot', text: block.text, time: event.time })
+        for (const [contentBlockIndex, block] of content.entries()) {
+          if (block?.type === 'text' && typeof block.text === 'string' && block.text.trim() !== '') stamp(event, { kind: 'bot', text: block.text, time: event.time, sessionId: partId, contentBlockIndex })
         }
         continue
       }

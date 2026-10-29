@@ -64,6 +64,8 @@ export const shellTokens = ({ light, dark }, accent) => ({
   '--dsw-alias-bg-base': { light: light.bg, dark: dark.bg },
   '--dsw-alias-bg-layer-1': { light: light.card, dark: dark.card },
   '--dsw-alias-bg-layer-2': { light: light.bg, dark: dark.bg },
+  '--dsw-alias-border-l1': { light: rgba(light.text, 0.15), dark: rgba(dark.text, 0.15) },
+  '--dsw-alias-border-l2': { light: rgba(light.text, 0.08), dark: rgba(dark.text, 0.08) },
   '--dsw-specific-sidebar-fill': { light: light.sidebar, dark: dark.sidebar },
   '--dsw-specific-input-major': { light: light.bg, dark: dark.sidebar },
   '--dsw-alias-label-primary': { light: light.text, dark: dark.text },

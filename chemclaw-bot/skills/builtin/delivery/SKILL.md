@@ -9,7 +9,14 @@ Choose the best presentation for the audience; examples are not pixel templates
 or limits on analytical ability.
 
 **Conversation delivery first (ChemClaw product rule):**
-- Business answers must include the corresponding `show_view` whenever one of
+- The global visual delivery contract applies to every user-facing final
+  answer, including conceptual explanations and short answers, across all
+  installed or newly imported skills. Use an appropriate inline component
+  with a brief conclusion; a file link or HTML report alone is insufficient.
+  The following table selects components, not which answers qualify. Keep
+  existing well-adapted charts/cards as the first choice, and use GenUI for
+  relationships they do not cover. Never create observations just to draw.
+- Business answers must include the corresponding inline view whenever one of
   these answer shapes applies; do not wait for an explicit chart request.
   Honor the user's explicit request for text only or no charts.
 
@@ -25,11 +32,25 @@ or limits on analytical ability.
   | Repeated conversion, cost, price comparison or break-even calculation | Inputs and formulas for a local calculator |
   | Confirm parameters before executing | `options`, `confirm` or `form` in a supported chat |
 
-- Choose the primary component in this order: time axis → `line`/`area`;
-  otherwise size comparison → `bar`/`hbar`; otherwise composition → `donut`;
-  otherwise multi-field detail → `table`; otherwise another quantifiable
-  relationship → sandboxed `html`. Choose the suitable component directly,
-  without offering alternative chart types for the user to choose.
+- Choose one primary component from the actual relationship, automatically:
+  numeric time observations → `line`/`area`; size comparison → `bar`/`hbar`;
+  small composition → `donut`; two numeric variables → `scatter`; matrix →
+  `heatmap`; quantified flows → `sankey`; normalized dimensions with explicit
+  maxima → `radar`; conversion stages → `funnel`; hierarchy → `treemap`;
+  a value against a stated maximum → `gauge`.
+- The complete bundled GenUI plugin also supplies `timeline` for dated events
+  and milestones, `steps` for ordered steps, `mermaid`/`diagram` for processes,
+  dependencies and Gantt schedules, `plot` for functions, `scene3d` for spatial
+  explanation, searchable/sortable/expandable `table`, layouts/cards, tabs,
+  accordion, forms/controls, quizzes and images/media. Read the current `genui`
+  skill for their exact syntax; no need for the user to know component names.
+  Capability answers must include current GenUI capabilities rather than an
+  older conversation's chart list. Events can use a timeline without numbers.
+- Keep existing small numeric views on `show_view`. Deliver richer GenUI in a
+  labelled `dsh-ui` JSON fence, inline in Bot and group replies (omit `panel:true`;
+  the native panel is for native DSH conversations). Do not send the same data
+  through both protocols. Keep theme defaults; avoid hardcoded colors. Local
+  filters/sorts/sliders do not call the model; explicit actions/submit do.
 - In groups mark `audience: "user"` only for a completed answer intended for the
   human, including an interim @ question to any member. The answer need not be
   the group's last message or come from the admin. Do not draw charts during

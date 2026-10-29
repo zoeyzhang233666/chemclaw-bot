@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process'
+import { randomUUID } from 'node:crypto'
 import { createRequire } from 'node:module'
 import { createServer } from 'node:net'
 import { cpSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
@@ -13,7 +14,7 @@ const require = createRequire(anchor)
 // package, resolved through its public export, before testing the source revision.
 const installedPlugin = dirname(require.resolve('chemclaw-bot/package.json'))
 if (resolve(installedPlugin) !== plugin) {
-  for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'LICENSE', 'src/host', 'src/shared', 'runtime', 'seed', 'skills/builtin', 'skills/vendor']) {
+  for (const path of ['package.json', 'cordis.patch.yml', 'index.js', 'client.js', 'NOTICE', 'LICENSE', 'src/host', 'src/shared', 'runtime', 'seed', 'skills/builtin', 'skills/vendor']) {
     if (existsSync(join(plugin, path))) cpSync(join(plugin, path), join(installedPlugin, path), { recursive: true })
   }
 }
@@ -49,6 +50,19 @@ try {
   const connection = running.ctx.get('connection')
   const url = connection.authenticatedUrl(`http://127.0.0.1:${webPort}`)
   writeFileSync(join(home, 'web.log'), `dsh web: ${url}\n`)
+  if (inspectUi && process.argv.includes('--native-fixture')) {
+    const controller = running.ctx.sessionController
+    const cwd = join(home, 'native-fixture')
+    mkdirSync(cwd, { recursive: true })
+    const { sessionId } = await controller.create({ cwd, sessionId: `session-${randomUUID()}`, agentPreset: 'standard' })
+    const title = `Native visual delivery ${Date.now()}`
+    await controller.rename({ sessionId, title })
+    const provider = (await controller.modelCatalog()).groups.find(group => group.models.some(model => model.id === 'deepseek-v4.1-flash'))
+    if (!provider) throw new Error('The isolated mock model is unavailable')
+    await controller.selectModel({ sessionId, provider: provider.id, model: 'deepseek-v4.1-flash' })
+    await controller.prompt({ sessionId, requestId: randomUUID(), mode: 'queue', content: [{ type: 'text', text: 'Explain volatility briefly' }] }, AbortSignal.timeout(30_000))
+    writeFileSync(join(home, 'native-fixture.json'), JSON.stringify({ sessionId, title }))
+  }
   if (inspectUi) {
     console.log(`Isolated skill UI bench ready on port ${webPort}; create its stop file to finish.`)
     await new Promise(done => { const timer = setInterval(() => { if (existsSync(join(home, 'stop'))) { clearInterval(timer); done() } }, 250) })

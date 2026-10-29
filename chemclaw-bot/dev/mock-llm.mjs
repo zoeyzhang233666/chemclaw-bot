@@ -61,6 +61,7 @@ import { appendFileSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { CHART_EXAMPLES, chartExampleReply } from './chart-examples.mjs'
+import { GENUI_EXAMPLES, genuiExampleText } from './genui-examples.mjs'
 
 const PORT = Number(process.env.MOCK_PORT ?? 8765)
 const LOG = process.env.MOCK_LOG ?? fileURLToPath(new URL('../../.dsh-test/mock.jsonl', import.meta.url))
@@ -323,6 +324,10 @@ function decide(body) {
   }
 
   const userText = textOf(last?.content).trim()
+  if (userText.startsWith('[chemclaw-visual-delivery turn=')) return [text('```dsh-ui\n' + JSON.stringify({ title: 'Inline answer', items: [{ type: 'text', text: 'Synthetic compact answer card.' }] }) + '\n```')]
+  const genuiKind = /^GenUI check (\w+)$/.exec(userText)?.[1]
+  if (GENUI_EXAMPLES[genuiKind]) return [text(genuiExampleText(genuiKind))]
+  if (userText.startsWith('[genui-action]')) return [text('Synthetic action received by the owning Bot.')]
   const chartKind = /^高级图表验收 (\w+)$/.exec(userText)?.[1]
   if (CHART_EXAMPLES[chartKind] && tools.has('show_view')) return [tool('show_view', chartExampleReply(chartKind))]
   if (/^(?:\[Message from [^\]]*\]\s*)?验收甲醇现货价格和上下游产业链$/.test(userText)) return [tool('list_bots', {})]
@@ -390,6 +395,8 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    const groupGenui = /^User: GenUI check (\w+)$/.exec(userLine)?.[1]
+    if (GENUI_EXAMPLES[groupGenui]) return [text(genuiExampleText(groupGenui))]
     const groupChart = /^User: 高级图表验收 (\w+)$/.exec(userLine)?.[1]
     if (CHART_EXAMPLES[groupChart] && tools.has('show_view')) return [tool('show_view', chartExampleReply(groupChart))]
     if (userLine === 'User: 验收甲醇现货价格和上下游产业链') return [tool('list_bots', {})]
