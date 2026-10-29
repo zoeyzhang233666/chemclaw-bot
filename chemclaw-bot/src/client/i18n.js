@@ -7,6 +7,13 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Advanced charts': '高级图表',
+  Retry: '重试',
+  'Load richer charts when needed. When off, show their data as tables.': '需要时加载更多图表。关闭后以表格展示其数据。',
+  'Chart unavailable. Your data is shown as a table.': '图表暂不可用，已用表格展示数据。',
+  'This data is shown as a table to preserve missing values or axis limits.': '当前数据含缺失值或超出坐标范围，已用表格完整展示。',
+  Source: '来源',
+  Target: '目标',
   'ChemClaw expert team': 'ChemClaw专家团',
   'My schedule': '我的日程',
   'Recommended tasks': '推荐任务',

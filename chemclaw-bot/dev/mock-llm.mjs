@@ -60,6 +60,7 @@ import { createHash } from 'node:crypto'
 import { appendFileSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { CHART_EXAMPLES, chartExampleReply } from './chart-examples.mjs'
 
 const PORT = Number(process.env.MOCK_PORT ?? 8765)
 const LOG = process.env.MOCK_LOG ?? fileURLToPath(new URL('../../.dsh-test/mock.jsonl', import.meta.url))
@@ -242,6 +243,7 @@ function decide(body) {
     }
     // Secret cards: a key already there is echoed at once; a card ends the turn.
     // The note after the card can ride in the same message as the card's tool result.
+    if (used?.name === 'show_view' && used.input.title?.startsWith('Synthetic chart:')) return [text('Synthetic chart acceptance complete. Missing observations remain missing.')]
     if (used?.name === 'show_view' && used.input.title === '合成数据趋势验收') return [text('走势查询完成：以下仅为合成验收数据，缺口保持为空。')]
     if (used?.name === 'request_secret') {
       if (/already saved/.test(resultText)) return [echoSecret(used.input.name, tools)]
@@ -321,6 +323,8 @@ function decide(body) {
   }
 
   const userText = textOf(last?.content).trim()
+  const chartKind = /^高级图表验收 (\w+)$/.exec(userText)?.[1]
+  if (CHART_EXAMPLES[chartKind] && tools.has('show_view')) return [tool('show_view', chartExampleReply(chartKind))]
   if (/^(?:\[Message from [^\]]*\]\s*)?验收甲醇现货价格和上下游产业链$/.test(userText)) return [tool('list_bots', {})]
   const browserCheck = /^浏览器检查 (http:\/\/127\.0\.0\.1:\d+\/)$/.exec(userText)
   if (browserCheck && tools.has('browser_open')) return [tool('browser_open', { url: browserCheck[1] })]
@@ -386,6 +390,8 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    const groupChart = /^User: 高级图表验收 (\w+)$/.exec(userLine)?.[1]
+    if (CHART_EXAMPLES[groupChart] && tools.has('show_view')) return [tool('show_view', chartExampleReply(groupChart))]
     if (userLine === 'User: 验收甲醇现货价格和上下游产业链') return [tool('list_bots', {})]
     if (/查询合成走势验证/.test(userLine) && tools.has('show_view')) {
       const dates = Array.from({ length: 57 }, (_, index) => new Date(Date.UTC(2026, 8, index + 1)).toISOString().slice(0, 10))

@@ -233,3 +233,17 @@ DS-Bot avatar library, Apache-2.0
   Adapted PRs #491 and follow-up at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
   Copyright 2026 Fei2411 and the DS Bot contributors.
   ChemClaw keeps original role artwork and 50 presets; library photos are user-owned.
+
+Apache ECharts 6.0.0 and ZRender 6.0.0
+  https://github.com/apache/echarts
+  https://github.com/ecomfe/zrender
+  ECharts: Copyright The Apache Software Foundation; Apache-2.0.
+  ZRender: Copyright (c) 2017, Baidu Inc.; BSD-3-Clause.
+  runtime/chart-engine.js bundles selected charts and the SVG renderer.
+  Original license and notice files are included in runtime/chart-licenses/.
+
+TypeScript runtime helpers (tslib), ISC
+  https://github.com/microsoft/tslib
+  Copyright (c) Microsoft Corporation.
+  Transitive chart-engine dependency; its original permission notice is retained
+  in runtime/chart-engine.js.

@@ -6,6 +6,7 @@ import { test } from 'node:test'
 import { apply } from './legacy-runtime.js'
 import { VIEW_BYTE_LIMIT, viewBytes } from '../src/shared/views.js'
 import { fakeContext } from './fake-ctx.js'
+import { CHART_EXAMPLES } from '../dev/chart-examples.mjs'
 
 const TEAM = {
   version: 1,
@@ -77,6 +78,25 @@ function start() {
 }
 
 const text = value => [{ type: 'text', text: value }]
+
+test('advanced charts use the existing private ownership and display-only turn rules', async t => {
+  const { ctx, show, call, team, stop } = start()
+  t.after(stop)
+  await ctx.registeredTools.get('list_bots').execute({}, { agent: { id: 'chief' } })
+  for (const view of Object.values(CHART_EXAMPLES)) {
+    const shown = await show('writer-now', { view })
+    assert.equal(shown.text, 'The view is on screen.')
+    assert.equal(shown.concluded, false)
+    assert.equal((await team()).views['writer-now'], undefined)
+    assert.match((await show('outsider', { view })).text, /Only Bots/)
+    assert.match((await show('writer-group', { view, audience: 'team' })).text, /only for answers to the human/)
+  }
+  assert.equal((await call('set-prefs', { advancedCharts: false })).ok, true)
+  assert.equal((await team()).prefs.advancedCharts, false)
+  assert.equal((await call('set-prefs', { advancedCharts: true })).ok, true)
+  assert.equal((await team()).prefs.advancedCharts, undefined)
+  assert.equal((await call('set-prefs', { advancedCharts: 'false' })).ok, false)
+})
 
 test('show_view registers an interactive card, refuses a group and a display-only wait, and leaves a display-only card unregistered', async (t) => {
   const { ctx, emit, show, team, stop } = start()

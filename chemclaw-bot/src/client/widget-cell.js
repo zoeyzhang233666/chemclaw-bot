@@ -8,6 +8,8 @@ import { SettledHandoff } from './handoff-card.js'
 import { heldCardKey } from './sources.js'
 import { Segmented } from './motion.js'
 import { CHART_CSS, TableIcon, WidgetChart } from './widget-chart.js'
+import { ADVANCED_CHART_CSS, AdvancedChart } from './widget-advanced-chart.js'
+import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
 import { HTML_CSS, HtmlFrame } from './widget-html.js'
 import { asText, checkShownView, choiceValue, inputDefault, resolve, viewInputs, viewScope } from '../shared/views.js'
 
@@ -300,7 +302,7 @@ function WidgetNode({ node, ctx }) {
     }
     case 'metric': return h(WidgetMetric, { node, lookup })
     case 'table': return h(WidgetTable, { node, lookup })
-    case 'chart': return h(WidgetChart, { node, lookup, registerChart: ctx.registerChart, refreshCharts: ctx.refreshCharts })
+    case 'chart': return h(ADVANCED_CHART_KINDS.includes(node.kind) ? AdvancedChart : WidgetChart, { node, lookup, registerChart: ctx.registerChart, refreshCharts: ctx.refreshCharts })
     case 'progress': return h(WidgetProgress, { node, lookup })
     case 'callout': return h(WidgetCallout, { node, lookup })
     case 'sources': return h(WidgetSources, { node })
@@ -364,9 +366,9 @@ export function ViewMenuList({ charts, pick }) {
       charts.length > 1 ? h(Fragment, null,
         index > 0 ? h('div', { className: 'bt-menu-sep', role: 'separator' }) : null,
         h('div', { className: 'bt-view-menu-label' }, chart.label ?? t('Chart {n}', { n: index + 1 }))) : null,
-      h('button', { type: 'button', role: 'menuitem', onClick: pick(chart.toggleTable) }, h(TableIcon), chart.asTable ? t('View as chart') : t('View as table')),
+      h('button', { type: 'button', role: 'menuitem', disabled: chart.canToggle === false, onClick: pick(chart.toggleTable) }, h(TableIcon), chart.asTable ? t('View as chart') : t('View as table')),
       h('button', { type: 'button', role: 'menuitem', onClick: pick(chart.copy) }, h(CopyIcon), t('Copy data')),
-      h('button', { type: 'button', role: 'menuitem', onClick: pick(chart.save) }, h(DownloadIcon), t('Download image')))))
+      h('button', { type: 'button', role: 'menuitem', disabled: chart.canSave === false, onClick: pick(chart.save) }, h(DownloadIcon), t('Download image')))))
 }
 
 function ViewMenu({ charts }) {
@@ -598,6 +600,7 @@ body[data-bt-layout=flat] .bt-q-inline .bt-view{max-width:calc(var(--bt-flat-w,1
 .bt-q-inline:has(>.bt-view-bare){margin:8px 0 12px}
 @media (prefers-reduced-motion:reduce){.bt-widget-progress-fill,.bt-view-radio-dot,.bt-view-tools,.bt-view-more{transition:none}.bt-view-bare{animation:none}}
 ${CHART_CSS}
+${ADVANCED_CHART_CSS}
 ${HTML_CSS}
 `
 
