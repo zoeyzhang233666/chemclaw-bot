@@ -128,6 +128,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'route GET /api/bot/feed',
     'effect chemclaw-bot: live feed',
     'tool chem_public_query',
+    'effect chemclaw-bot: automatic analysis setup',
     'tool chem_futures_history',
     'tool chem_deliver',
     'effect chemclaw-bot: chart engine',

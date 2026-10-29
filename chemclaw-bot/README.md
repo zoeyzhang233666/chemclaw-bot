@@ -61,6 +61,20 @@ Official DSH keeps its existing defaults. Advanced external hosts can set
 `task` (one goal), plus `browserExecutablePath` for a compatible local Chromium.
 See the [browser design](../docs/plans/2026-10-27-browser-automation.md).
 
+## Market data environment
+
+Release installers and plugin packages bundle private Python and AKShare archives.
+First launch unpacks the matching platform archive locally; users do not install
+Python or download runtime dependencies. Market queries still need access to the
+data source. Source installations without an archive prepare the market components
+automatically. `npm run pack:dist` prepares the current platform's archive, and
+desktop packaging does the same. The release pipeline includes all supported
+platform archives in the plugin package.
+
+Local molecule analysis, advanced statistics and scientific plotting libraries are
+optional and are not installed by default. Huagongshe and PubChem APIs do not need
+these libraries. Interactive previews follow the host's sandbox settings.
+
 ## License
 
 Apache-2.0. See the repository root `NOTICE`.

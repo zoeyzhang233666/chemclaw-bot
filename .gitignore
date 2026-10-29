@@ -58,3 +58,7 @@
 /app/.release-tools/
 
 .worktrees/
+
+# Platform Python/AKShare archives are produced by the release builders.
+/chemclaw-bot/runtime/bundled/
+/chemclaw-bot/runtime/.build-tools/

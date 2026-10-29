@@ -544,7 +544,6 @@ var ZH = {
   "Added to your team": "已加入团队",
   "Ready when needed": "按需启用",
   "No API key required": "公开能力无需 Key",
-  "Analysis environment": "分析运行环境",
   "Optional Huagongshe authorization": "化工社 · 可选授权",
   "Public chemistry search and drawing work anonymously. An AI Key is optional; private data and write tools remain disabled in this release.": "公开化学检索、绘图和投料计算直接匿名使用，无需 Key。AI Key 仅供可选授权；本版仍不开放个人数据与写操作。",
   ready: "可用",
@@ -561,8 +560,6 @@ var ZH = {
   "Save selected models": "保存所选模型",
   "Model keys are stored by DSH credentials. After saving, choose a model in the conversation.": "模型 Key 通过本地凭据库保存，不进入聊天。保存后，可在对话中选择模型。",
   "Skipped stdio servers: {names}": "已跳过本地命令型 MCP：{names}",
-  "Scientific tools ready": "科学分析环境已就绪",
-  "Install optional scientific tools": "安装可选化学与统计依赖",
   "Paste or enter a key": "粘贴或输入密钥",
   Category: "场景分类",
   Team: "协作成员",
@@ -570,11 +567,6 @@ var ZH = {
   "Public chemistry queries need no key. Connect Chemcloud Data Hub to use company data.": "公开化学查询无需 Key；使用公司数据请在连接器中连接芯化和云数据中台。",
   "Public research data": "公开研究数据",
   "loaded": "已加载",
-  "Check dependencies": "检查依赖",
-  "Install managed market-data environment": "安装 / 修复行情受管环境",
-  "Interactive HTML preview": "交互 HTML 预览",
-  "Enable interactive preview": "开启交互预览",
-  "Python 3.11+ is required only for market data. Installation uses an isolated environment.": "行情接口需要 Python 3.11 或更高版本；依赖安装到隔离环境，不改系统包。",
   "Interface language": "界面语言",
   "Scenarios and experts": "场景与专家",
   "Choose a business scenario. Experts inherit your default model and are created only when needed.": "选择业务场景，专家将继承默认模型，按需启用。",
@@ -2223,7 +2215,6 @@ function teamActions({ call: call2, after, partFor, roster, ui: ui2, live, cards
     connectorImport: (json) => after(call2("connector-import", { json })),
     scenarioCatalog: () => call2("scenario-catalog"),
     dataStatus: () => call2("data-status"),
-    installDependencies: (options = {}) => call2("dependencies-install", options),
     activateScenario: (id, kind) => after(call2("scenario-activate", { id, kind })),
     saveCapability: (capability) => after(call2("capability-save", capability)),
     deleteCapability: (name) => after(call2("capability-delete", { name })),
@@ -18656,13 +18647,6 @@ function ConnectorsPage({ roster, actions, focusId = null }) {
   (0, import_react47.useEffect)(() => {
     void check();
   }, [list.map((item) => `${item.id}:${item.state}`).join("|")]);
-  (0, import_react47.useEffect)(() => {
-    if (data?.dependencies.state !== "installing") return void 0;
-    const timer = setInterval(() => {
-      void check();
-    }, 2e3);
-    return () => clearInterval(timer);
-  }, [data?.dependencies.state]);
   const importJson = async () => {
     setBusy(true);
     setError("");
@@ -18695,21 +18679,6 @@ function ConnectorsPage({ roster, actions, focusId = null }) {
       source.error ? (0, import_react47.createElement)("p", { role: "status" }, source.error) : null,
       source.name === "Huagongshe" ? (0, import_react47.createElement)("div", { className: "bt-actions" }, (0, import_react47.createElement)("button", { className: "bt-soft bt-soft-sm", onClick: () => void (source.state === "off" ? actions.connectorConnect("huagongshe", "") : actions.connectorRetry("huagongshe")).then(check).catch((failure) => setError(failure.message)) }, t("Try again"))) : null
     ))),
-    (0, import_react47.createElement)(
-      "div",
-      { className: "bt-runtime-card" },
-      (0, import_react47.createElement)("h3", null, t("Analysis environment")),
-      (0, import_react47.createElement)("p", { className: "bt-set-hint" }, t("Python 3.11+ is required only for market data. Installation uses an isolated environment.")),
-      (0, import_react47.createElement)("p", { className: "bt-set-hint", role: "status" }, t(data?.dependencies.state ?? "unchecked"), data?.dependencies.science ? ` · ${t("Scientific tools ready")}` : ""),
-      (0, import_react47.createElement)(
-        "div",
-        { className: "bt-actions" },
-        (0, import_react47.createElement)("button", { className: "bt-soft", onClick: () => void check() }, t("Check dependencies")),
-        (0, import_react47.createElement)("button", { className: "bt-soft", disabled: data?.dependencies.state === "installing", onClick: () => void actions.installDependencies().then(() => check()).catch((failure) => setError(failure.message)) }, t("Install managed market-data environment")),
-        (0, import_react47.createElement)("button", { className: "bt-soft", disabled: data?.dependencies.state === "installing", onClick: () => void actions.installDependencies({ science: true }).then(() => check()).catch((failure) => setError(failure.message)) }, t("Install optional scientific tools"))
-      )
-    ),
-    actions.enableHtmlPreview ? (0, import_react47.createElement)("button", { className: "bt-soft", onClick: () => void actions.enableHtmlPreview().catch((failure) => setError(failure.message)) }, t("Enable interactive preview")) : null,
     (0, import_react47.createElement)(
       "details",
       { className: "bt-advanced" },
@@ -23276,7 +23245,6 @@ var CHEMCLAW_UI_CSS = `
 .bt-connector-form .bt-secret-field{background:var(--bt-main);border:1px solid var(--bt-line-2);border-radius:10px;padding:9px 12px;min-height:40px}
 .bt-connector-error{padding-left:0}.bt-connector-link{color:var(--bt-accent);text-underline-offset:3px}.bt-connector-actions .bt-soft{border:1px solid var(--bt-line);background:var(--bt-main)}
 .bt-data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.bt-data-card{border:1px solid var(--bt-line);border-radius:16px;background:var(--bt-card);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}.bt-data-card header{display:flex;align-items:center;gap:10px}.bt-data-card header strong{font-weight:600;font-size:13px}.bt-data-card p{font-size:11px;line-height:1.8;margin:0;color:var(--bt-ink-2)}.bt-data-card .bt-connector-mark{width:34px;height:34px;border-radius:10px}.bt-data-state{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;color:var(--bt-ink-3)}.bt-data-card[data-state=ready] .bt-data-state>span{color:var(--bt-green)}.bt-data-card[data-state=error] .bt-data-state>span{color:var(--bt-danger)}
-.bt-runtime-card{padding:18px;border-radius:16px;border:1px solid var(--bt-line);background:var(--bt-card)}.bt-runtime-card h3{margin:0 0 8px;font-size:13px}.bt-runtime-card p{margin:8px 0 14px}.bt-runtime-card .bt-actions{flex-wrap:wrap}
 .bt-q.bt-secret-card{background:var(--bt-card);border:1px solid var(--bt-line-2);box-shadow:0 4px 18px color-mix(in srgb,var(--bt-ink) 5%,transparent);padding:20px;border-radius:18px}.bt-secret-head .bt-q-title{font-size:14px;font-weight:600}.bt-secret-card .bt-q-field{background:var(--bt-main);border-radius:10px;border-color:var(--bt-line-2)}
 .bt-apihub{border:1px solid color-mix(in srgb,var(--bt-accent) 28%,var(--bt-line))!important;border-radius:16px;background:linear-gradient(120deg,color-mix(in srgb,var(--bt-accent) 5%,var(--bt-card)),var(--bt-card));padding:20px;display:flex;flex-direction:column;gap:15px}.bt-apihub>header{display:flex;align-items:center;gap:12px}.bt-apihub h3{font-size:16px;margin:0 0 3px}.bt-apihub .bt-eyebrow{color:var(--bt-accent)}.bt-apihub p{margin:0;font-size:12px;line-height:1.8;color:var(--bt-ink-2)}.bt-apihub a{color:var(--bt-accent);font-size:12px;text-underline-offset:3px}.bt-apihub .bt-secret-field{background:var(--bt-main);border:1px solid var(--bt-line-2);border-radius:10px;padding:10px 12px}.bt-apihub .bt-provider-found{display:flex;flex-wrap:wrap;gap:6px}.bt-apihub .bt-provider-found button{white-space:normal;height:auto;min-height:28px;text-align:left}.bt-models-note{margin:0;font-size:12px;color:var(--bt-ink-2);line-height:1.8}
 .bt-chemcloud{border:1px solid color-mix(in srgb,var(--bt-accent) 28%,var(--bt-line));border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--bt-accent) 6%,var(--bt-card)),var(--bt-card) 55%);padding:20px;display:flex;flex-direction:column;gap:12px}.bt-chemcloud>header{display:flex;align-items:flex-start;gap:12px;min-width:0}.bt-chemcloud-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.bt-chemcloud-title h3{margin:0;font-size:16px;line-height:24px;font-weight:600}.bt-chemcloud .bt-eyebrow{color:var(--bt-accent)}.bt-chemcloud .bt-connector-actions{flex:none;margin-left:auto;padding-top:2px}.bt-chemcloud-intro{margin:0;font-size:12px;line-height:1.8;color:var(--bt-ink-2)}.bt-chemcloud-chips{display:flex;flex-wrap:wrap;gap:6px}.bt-chemcloud-chip{display:inline-flex;align-items:center;padding:4px 9px;border-radius:8px;border:1px solid color-mix(in srgb,var(--bt-accent) 22%,var(--bt-line));background:color-mix(in srgb,var(--bt-main) 55%,transparent);color:var(--bt-ink);font-size:11px;line-height:16px;letter-spacing:.01em}.bt-chemcloud-status{margin:0;font-size:11px;line-height:1.65;color:var(--bt-ink-3)}.bt-chemcloud[data-state=ready] .bt-chemcloud-status{color:var(--bt-ink-2)}.bt-chemcloud[data-state=error] .bt-chemcloud-status{color:var(--bt-danger)}.bt-chemcloud-key{display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--bt-line)}.bt-chemcloud-key .bt-secret-field{background:var(--bt-main);border:1px solid var(--bt-line-2);border-radius:10px;padding:10px 12px}.bt-chemcloud-key-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.bt-chemcloud-key-row .bt-connector-link{font-size:12px;color:var(--bt-accent);text-underline-offset:3px}.bt-chemcloud-portal{flex:1;min-width:0;font-size:11px;line-height:16px;color:var(--bt-ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bt-chemcloud-key-row .bt-soft{margin-left:auto}
@@ -24374,8 +24342,6 @@ function apply(ctx) {
   actions.closeSignIn = () => ui2.set((state) => ({ ...state, signIn: null }));
   actions.speech = () => ctx.get("remote.speech") ?? void 0;
   actions.openHarnessSettings = openHarnessSettings;
-  const previewSettings = ctx.get("configForms")?.developerTools;
-  if (previewSettings) actions.enableHtmlPreview = () => previewSettings.setEnabled(true);
   actions.openHarnessOnboarding = openHarnessOnboarding;
   actions.voiceSetup = () => {
     const navigation = ctx.get("pluginNavigation");

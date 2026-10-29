@@ -7,7 +7,9 @@ import { archProblem, beforePack } from '../scripts/before-pack.mjs'
 test('a build for the architecture of this Node goes on', async () => {
   assert.equal(archProblem({ target: 'arm64', platform: 'darwin', host: 'arm64' }), undefined)
   assert.equal(archProblem({ target: 'x64', platform: 'win32', host: 'x64' }), undefined)
-  await beforePack({ arch: Arch[process.arch], electronPlatformName: process.platform })
+  let prepared = false
+  await beforePack({ arch: Arch[process.arch], electronPlatformName: process.platform }, async () => { prepared = true })
+  assert.equal(prepared, true)
 })
 
 test('a build for another architecture stops and says where to build it', async () => {
@@ -30,4 +32,9 @@ test('a requested universal build stops before packing either architecture', asy
 
 test('electron-builder runs the check before it packs', () => {
   assert.match(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'), /^beforePack: \.\/scripts\/before-pack\.mjs$/m)
+})
+
+test('cross-platform packaging stops before preparing the wrong runtime', async () => {
+  const platform = process.platform === 'win32' ? 'linux' : 'win32'
+  await assert.rejects(beforePack({ arch: Arch[process.arch], electronPlatformName: platform }, async () => assert.fail('must not prepare')), /target operating system/)
 })

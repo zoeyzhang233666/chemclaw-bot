@@ -120,11 +120,6 @@ export function ConnectorsPage({ roster, actions, focusId = null }) {
   const others = list.filter(item => item.id !== 'huagongshe' && item.id !== 'chem-data-hub')
   const check = () => actions.dataStatus().then(setData).catch(failure => setError(failure.message))
   useEffect(() => { void check() }, [list.map(item => `${item.id}:${item.state}`).join('|')])
-  useEffect(() => {
-    if (data?.dependencies.state !== 'installing') return undefined
-    const timer = setInterval(() => { void check() }, 2000)
-    return () => clearInterval(timer)
-  }, [data?.dependencies.state])
   const importJson = async () => {
     setBusy(true); setError('')
     try {
@@ -151,13 +146,6 @@ export function ConnectorsPage({ roster, actions, focusId = null }) {
       h('div', { className: 'bt-data-state' }, h('span', null, t(source.state)), h('span', null, t('No API key required'))),
       source.error ? h('p', { role: 'status' }, source.error) : null,
       source.name === 'Huagongshe' ? h('div', { className: 'bt-actions' }, h('button', { className: 'bt-soft bt-soft-sm', onClick: () => void (source.state === 'off' ? actions.connectorConnect('huagongshe', '') : actions.connectorRetry('huagongshe')).then(check).catch(failure => setError(failure.message)) }, t('Try again'))) : null))),
-    h('div', { className: 'bt-runtime-card' }, h('h3', null, t('Analysis environment')), h('p', { className: 'bt-set-hint' }, t('Python 3.11+ is required only for market data. Installation uses an isolated environment.')),
-    h('p', { className: 'bt-set-hint', role: 'status' }, t(data?.dependencies.state ?? 'unchecked'), data?.dependencies.science ? ` · ${t('Scientific tools ready')}` : ''),
-    h('div', { className: 'bt-actions' },
-      h('button', { className: 'bt-soft', onClick: () => void check() }, t('Check dependencies')),
-      h('button', { className: 'bt-soft', disabled: data?.dependencies.state === 'installing', onClick: () => void actions.installDependencies().then(() => check()).catch(failure => setError(failure.message)) }, t('Install managed market-data environment')),
-      h('button', { className: 'bt-soft', disabled: data?.dependencies.state === 'installing', onClick: () => void actions.installDependencies({ science: true }).then(() => check()).catch(failure => setError(failure.message)) }, t('Install optional scientific tools')))),
-    actions.enableHtmlPreview ? h('button', { className: 'bt-soft', onClick: () => void actions.enableHtmlPreview().catch(failure => setError(failure.message)) }, t('Enable interactive preview')) : null,
     h('details', { className: 'bt-advanced' }, h('summary', null, t('Optional Huagongshe authorization')),
       h('p', { className: 'bt-set-hint' }, t('Public chemistry search and drawing work anonymously. An AI Key is optional; private data and write tools remain disabled in this release.')),
       list.find(item => item.id === 'huagongshe') ? h(ConnectorRow, { connector: list.find(item => item.id === 'huagongshe'), actions }) : null),

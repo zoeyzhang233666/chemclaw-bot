@@ -58,6 +58,17 @@ ChemClaw 独立桌面端为每个 Bot 提供独立的浏览器，并保留登录
 `browserPlugin: refs`（逐步操作）、`script`（一段脚本）或 `task`（完整目标），以及指向兼容 Chromium 的
 `browserExecutablePath`。详见[浏览器设计](../docs/plans/2026-10-27-browser-automation.md)。
 
+## 行情运行环境
+
+发布安装包和插件包内置独立的 Python、AKShare 及其必要依赖。首次启动只需本地
+解包对应平台的归档，不用安装 Python，也不用下载运行环境。查询行情本身仍需
+访问数据源。没有内置归档的源码安装会自动准备行情组件。`npm run pack:dist`
+会准备当前平台的归档，桌面打包也会自动准备。发布流水线把所有支持平台的归档
+放入插件包。
+
+额外的本地分子分析、高级统计和科学绘图库不默认安装。化工社和 PubChem 的 API
+不需要这些库。交互报告预览沿用宿主的沙箱设置。
+
 ## 许可
 
 Apache-2.0。详见仓库根目录 `NOTICE`。

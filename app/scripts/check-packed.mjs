@@ -22,7 +22,7 @@ const source = flags.has('--source') || given === '--source'
 if (source) {
   const plugin = resolve(root, '../chemclaw-bot')
   const installed = dirname(createRequire(import.meta.url).resolve('chemclaw-bot/package.json'))
-  if (resolve(installed) !== plugin) for (const path of ['package.json', 'index.js', 'client.js', 'NOTICE', 'src/host', 'src/shared', 'runtime']) cpSync(join(plugin, path), join(installed, path), { recursive: true })
+  if (resolve(installed) !== plugin) for (const path of ['package.json', 'cordis.patch.yml', 'index.js', 'client.js', 'NOTICE', 'src/host', 'src/shared', 'runtime', 'scripts/build-runtime.mjs']) cpSync(join(plugin, path), join(installed, path), { recursive: true, filter: source => !source.startsWith(join(plugin, 'runtime', '.build-tools')) })
 }
 const executable = source ? process.env.CHEMCLAW_TEST_ELECTRON || createRequire(import.meta.url)('electron') : given || packedExecutable()
 

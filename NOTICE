@@ -258,3 +258,18 @@ TypeScript runtime helpers (tslib), ISC
   Copyright (c) Microsoft Corporation.
   Transitive chart-engine dependency; its original permission notice is retained
   in runtime/chart-engine.js.
+
+Analysis runtime provisioning
+----------------------------
+Release packages carry a private Python 3.12 distribution and AKShare with its
+required dependencies. Python binaries come from Astral python-build-standalone
+(https://github.com/astral-sh/python-build-standalone); the bundled distribution
+retains its Python license and third-party licenses. AKShare 1.17.74 comes from
+https://github.com/akfamily/akshare (MIT); its installed package metadata and the
+licenses of its dependencies are retained in the runtime archives.
+
+Builds and source-only installs use uv 0.13.6 from
+https://github.com/astral-sh/uv/releases/tag/0.13.6 (MIT OR Apache-2.0).
+Copyright (c) 2025 Astral Software Inc.
+The MIT license is included at runtime/uv-LICENSE-MIT in the plugin.
+ChemClaw's provisioning, verification and packaging code is original.

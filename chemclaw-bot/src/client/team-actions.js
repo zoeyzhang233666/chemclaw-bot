@@ -120,7 +120,6 @@ export function teamActions({ call, after, partFor, roster, ui, live, cards, hel
     connectorImport: json => after(call('connector-import', { json })),
     scenarioCatalog: () => call('scenario-catalog'),
     dataStatus: () => call('data-status'),
-    installDependencies: (options = {}) => call('dependencies-install', options),
     activateScenario: (id, kind) => after(call('scenario-activate', { id, kind })),
     saveCapability: capability => after(call('capability-save', capability)),
     deleteCapability: name => after(call('capability-delete', { name })),
