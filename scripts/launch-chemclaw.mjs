@@ -108,6 +108,7 @@ const expectedDependencies = JSON.stringify(JSON.parse(readFileSync(join(plugin,
 const sourceFingerprint = hashPaths([
   join(plugin, 'src'),
   join(plugin, 'seed'),
+  join(plugin, 'skills'),
   join(plugin, 'runtime'),
   join(plugin, 'package.json'),
   join(plugin, 'index.js'),

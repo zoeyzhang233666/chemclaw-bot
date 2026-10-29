@@ -48,15 +48,15 @@ def run(html_path, data_path=None, shots=None):
                 print('  FAIL', name, detail)
                 fails.append(name + ' ' + str(detail))
 
-        # KPI 4 张卡
+        # Cards reflect available indicators; missing optional data is not a KPI.
         n = pg.eval_on_selector_all('#kpiGrid .card', 'els=>els.length')
-        must('KPI 卡片 = 4', n == 4, n)
+        must('KPI 卡片仅保留实际指标', 1 <= n <= 4, n)
         vals = pg.eval_on_selector_all('#kpiGrid .card .val', 'els=>els.map(e=>e.textContent.trim())')
         must('KPI 有数字或明确缺口', all(v and ('—' not in v) for v in vals), vals)
 
         # 首屏有价格
         txt = pg.inner_text('body')
-        must('页面非空白', len(txt) > 1200, len(txt))
+        must('页面有业务内容', len(txt) > 100, len(txt))
         if D and D.get('anchor'):
             must('现货锚数字出现在页面', format(round(D['anchor']['value']), ',') in txt.replace(' ', ''),
                  D['anchor']['value'])
@@ -72,7 +72,7 @@ def run(html_path, data_path=None, shots=None):
         if has_series:
             must('主图已绘制像素', isinstance(painted, int) and painted > 200, painted)
         else:
-            must('无序列时主图显示缺口', pg.eval_on_selector_all('#chart .empty', 'e=>e.length') >= 1, painted)
+            must('无序列时隐藏走势图模块', not pg.is_visible('#trendSection'), painted)
             print('  SKIP 主图已绘制像素（无价格序列）')
 
         if has_series:
@@ -85,6 +85,10 @@ def run(html_path, data_path=None, shots=None):
             has_margin = any(isinstance(v, (int, float)) for m in D.get('margins', [])
                              for v in m.get('routes', {}).values())
             must('毛利模块按有效数据显隐', pg.is_visible('#marginPanel') == has_margin)
+            has_spread = len({row.get('region') for row in D.get('spreads', [])
+                              if isinstance(row.get('mid'), (int, float))}) >= 2
+            must('区域价差模块按有效数据显隐', pg.is_visible('#spreadSection') == has_spread)
+        must('口径限制默认收起', pg.locator('#limitations').get_attribute('open') is None)
 
         # 各模块非空；无数据时必须显示缺口占位
         has_ev = bool(D and ((D.get('events') or []) or (D.get('anomalies') or [])))

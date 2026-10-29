@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<meta name="chemclaw-template-sha256" content="bf51d38a0d76d5f582a12c239174abf0f0b08807608fd14f94f233152e9c4285">
 <meta charset="UTF-8">
-<meta name="chemclaw-skill" content="chem-market-brief:price-charts-v2">
+<meta name="chemclaw-skill" content="chem-market-brief:price-charts-v3">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>玻璃 · 行情与销售事实看板 | 2026-10-19</title>
 <style>
@@ -329,7 +330,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
   </div>
 </section>
 
-<section>
+<section id="spreadSection" hidden>
   <div class="shead">
     <h2><span class="n">05</span>主要区域价差</h2>
     <p class="desc" id="spreadDesc"></p>
@@ -350,18 +351,18 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
   </div>
 </section>
 
-<section>
+<section id="chainSection">
   <div class="shead">
-    <h2><span class="n">06</span>上游原料与主要下游</h2>
+    <h2><span class="n">06</span>产业链、成本与供需</h2>
     <p class="desc" id="udDesc"></p>
   </div>
   <div class="panel">
-    <div class="udgrid">
-      <div>
+    <div class="udgrid" id="chainGrid">
+      <div id="upPanel">
         <h3 style="font-size:13px;color:var(--txt2);margin-bottom:10px;letter-spacing:.5px" id="upHead">上游（成本项）</h3>
         <div class="udlist" id="upList"></div>
       </div>
-      <div>
+      <div id="downPanel">
         <h3 style="font-size:13px;color:var(--txt2);margin-bottom:10px;letter-spacing:.5px" id="downHead">下游（需求项）</h3>
         <div class="udlist" id="downList"></div>
       </div>
@@ -372,7 +373,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
         <div id="marginChart"></div>
         <div class="spreadnote" id="marginNote"></div>
       </div>
-      <div>
+      <div id="balancePanel">
         <h3 style="font-size:13px;color:var(--txt2);margin-bottom:10px;letter-spacing:.5px">供需与库存（带日期与来源）</h3>
         <div class="tblwrap" style="max-height:320px;overflow:auto">
           <table style="min-width:520px"><thead><tr><th>指标</th><th>最新值</th><th>日期 / 变化</th></tr></thead>
@@ -437,9 +438,11 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
 </section>
 
 <section>
+  <details id="limitations">
+  <summary style="cursor:pointer;color:var(--txt2);font-size:14px">口径说明、来源与未纳入项</summary>
   <div class="shead">
     <h2><span class="n">10</span>数据缺口、口径与方法</h2>
-    <p class="desc">没有缺口说明的行情报告通常意味着没查到东西。以下缺口直接影响“能不能报出当前现货价”，请在使用前确认。</p>
+    <p class="desc">仅保留影响结论与可比性的限制，未取得数据的可选模块不占据正文。</p>
   </div>
   <div class="panel">
     <div class="mgrid" id="gapGrid"></div>
@@ -449,6 +452,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-si
       <div class="srclist" id="srcList"></div>
     </div>
   </div>
+  </details>
 </section>
 
 <footer>
@@ -628,13 +632,9 @@ function renderKPI(){
       <div class="lab"><span>区域价差（同期同规格）</span><span class="tagpill tp-gap">口径不一</span></div>
       <div class="val"><span>${sp.val>0?'+':''}${fmt(sp.val)}</span><small>${esc(M.unit)}</small></div>
       <div class="sub2">${sp.sub}</div><div class="foot">${sp.foot}</div></div>`);
-  }else{
-    cards.push(`<div class="card"><div class="lab"><span>区域价差</span><span class="tagpill tp-gap">缺口</span></div>
-      <div class="val" style="font-size:26px;color:#ffa8b0">同日多地区缺失</div>
-      <div class="sub2">至少需要同一日期、同一规格的 2 个地区报价</div>
-      <div class="foot">跨日期相减会制造假价差</div></div>`);
   }
   $('#kpiGrid').innerHTML = cards.join('');
+  $('#kpiGrid').style.gridTemplateColumns = 'repeat(auto-fit,minmax(min(100%,230px),1fr))';
 }
 
 /* ---------- 图表 ---------- */
@@ -645,7 +645,7 @@ function seriesFor(win, mode){
   const src = chartRows(win, mode);
   if(mode==='monthly' || mode==='line'){
     const col = mode==='line' ? '#4da3ff' : '#9b8cff';
-    return {type:'line', data:src.map(x=>x[2]), smooth:true, symbol:'none',
+    return {type:'line', data:src.map(x=>x[2]), smooth:false, symbol:'circle', showSymbol:src.length===1, symbolSize:6,
       lineStyle:{width:2,color:col}, areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,
       colorStops:[{offset:0,color:mode==='line'?'rgba(77,163,255,.30)':'rgba(155,140,255,.28)'},{offset:1,color:'rgba(77,163,255,.01)'}]}}};
   }
@@ -835,16 +835,14 @@ function renderQuant(){
 
 /* ---------- 区域价差 ---------- */
 function renderSpread(){
-  const rows = D.spreads.slice().sort((a,b)=>a.mid-b.mid);
+  const rows = D.spreads.filter(s=>Number.isFinite(s.mid) && Number.isFinite(s.diff_vs_base)).sort((a,b)=>a.mid-b.mid);
   const tb = $('#spreadBody');
-  if(!rows.length){
-    tb.innerHTML = `<tr><td colspan="5" style="color:#ffa8b0">缺少“同日 + 同规格”的多地区报价，无法计算真实价差。跨日期相减会制造假价差，因此本模块留空。</td></tr>`;
-    $('#spreadDesc').textContent = '至少需要同一日期、同一规格的 2 个地区报价。';
-    $('#spreadNote').innerHTML = '补齐方式：在同一期资讯里找多地区分区域报价，或向 2–3 家不同区域贸易商询同一规格同日价格。';
+  if(new Set(rows.map(s=>s.region)).size < 2){
+    $('#spreadSection').hidden = true;
     if(spreadChart){ spreadChart.dispose(); spreadChart=null; }
-    $('#spreadChart').innerHTML = EMPTY;
     return;
   }
+  $('#spreadSection').hidden = false;
   const base = rows[0].base_region || '基准';
   const baseMid = (D.spreads.find(x=>x.region===base)||rows[0]).mid;
   tb.innerHTML = rows.map(s=>{
@@ -889,21 +887,22 @@ function udCard(x, dec){
     <div class="meta">${esc(x.chg||'')}${x.date?' · '+esc(x.date):''}<br><em>传导：</em>${esc(x.logic||'')}<br><span style="color:#5f6f8d">${esc(x.src||'')}</span></div></div>`;
 }
 function renderUD(){
-  const up = D.upstream || [], dn = D.downstream || [];
-  const upHint = (D.chain_hints.up||[]).filter(x=>!up.some(u=>u.name.includes(x)));
-  $('#upList').innerHTML = up.length ? up.map(x=>udCard(x,0)).join('') : EMPTY;
-  if(upHint.length) $('#upList').innerHTML += `<div class="ud"><div class="nm" style="color:#ffa8b0">本品种常见上游，尚未取数</div>
-    <div class="vl" style="color:#71809c">缺口</div><div class="meta">${upHint.map(esc).join('、')}<br><em>下一步：</em>见 references/research-playbook.md 的“上游取数顺序”</div></div>`;
-  const dnHint = (D.chain_hints.down||[]).filter(x=>!dn.some(u=>u.name.includes(x)));
-  $('#downList').innerHTML = dn.length ? dn.map(x=>udCard(x,2)).join('') : EMPTY;
-  if(dnHint.length) $('#downList').innerHTML += `<div class="ud"><div class="nm" style="color:#ffa8b0">本品种常见下游，尚未取数</div>
-    <div class="vl" style="color:#71809c">缺口</div><div class="meta">${dnHint.map(esc).join('、')}<br><em>下一步：</em>见 references/research-playbook.md 的“下游取数顺序”</div></div>`;
+  const up = (D.upstream||[]).filter(x=>Number.isFinite(x.value));
+  const dn = (D.downstream||[]).filter(x=>Number.isFinite(x.value));
+  $('#upList').innerHTML = up.map(x=>udCard(x,0)).join('');
+  $('#downList').innerHTML = dn.map(x=>udCard(x,2)).join('');
+  $('#upPanel').hidden = !up.length;
+  $('#downPanel').hidden = !dn.length;
+  $('#chainGrid').hidden = !up.length && !dn.length;
+  $('#chainGrid').style.gridTemplateColumns = !up.length || !dn.length ? 'minmax(0,1fr)' : '';
   $('#udDesc').textContent = '只列取得数字或明确来源的品种；拿不到的标“缺口”，不编区间。成本线用于解释“价格跌到这里为什么有争议”，不作方向判断。';
   if(D.chain_hints.up && D.chain_hints.up.length) $('#upHead').textContent = `上游（成本项：${D.chain_hints.up.join(' / ')}）`;
   if(D.chain_hints.down && D.chain_hints.down.length) $('#downHead').textContent = `下游（需求项：${D.chain_hints.down.join(' / ')}）`;
 
   const tb = $('#balBody');
-  tb.innerHTML = (D.balance||[]).length ? D.balance.map(b=>
+  const balance = (D.balance||[]).filter(b=>b.v!=null && !/^(缺口|未取得|暂无|—)/.test(String(b.v)));
+  $('#balancePanel').hidden = !balance.length;
+  tb.innerHTML = balance.length ? balance.map(b=>
     `<tr><td>${esc(b.k)}</td><td class="num" style="color:#fff;font-weight:600">${esc(b.v)}</td>
      <td style="font-size:11px;color:#9fb0d0">${esc(b.date||'')}<br>${esc(b.prev||'')}<span class="src">${esc(b.src||'')}</span></td></tr>`
   ).join('') : `<tr><td colspan="3">${EMPTY}</td></tr>`;
@@ -912,6 +911,8 @@ function renderUD(){
   const routeNames = [...new Set(mg.flatMap(m=>Object.keys(m.routes||{})))].filter(k=>mg.some(m=>Number.isFinite((m.routes||{})[k])));
   const PALETTE = ['#ff5f6d','#f6b73c','#19c37d','#4da3ff','#9b8cff','#38d6e0'];
   const keys = routeNames.map((n,i)=>[n, n, PALETTE[i%PALETTE.length]]);
+  $('#marginGrid').hidden = !keys.length && !balance.length;
+  $('#chainSection').hidden = !keys.length && !balance.length && !up.length && !dn.length;
   if(!mg.length || !keys.length){
     if(marginChart){ marginChart.dispose(); marginChart=null; }
     $('#marginPanel').hidden = true;
@@ -919,7 +920,7 @@ function renderUD(){
     return;
   }
   $('#marginPanel').hidden = false;
-  $('#marginGrid').style.gridTemplateColumns = '';
+  $('#marginGrid').style.gridTemplateColumns = !balance.length ? 'minmax(0,1fr)' : '';
   $('#marginHead').textContent = '工艺路线毛利（' + M.unit + '）';
   if(!marginChart) marginChart = echarts.init($('#marginChart'));
   marginChart.setOption({

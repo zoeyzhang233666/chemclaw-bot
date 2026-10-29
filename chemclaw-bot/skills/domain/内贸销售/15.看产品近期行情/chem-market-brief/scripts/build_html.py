@@ -8,6 +8,7 @@
 产物：零外链（无 CDN、无外部 js/css），双击即开，可发微信/邮件附件。
 """
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -37,6 +38,8 @@ def build(data_path, out_path, echarts_path=None, inline=True, template=None):
     tpl_path = template or os.path.join(HERE, 'templates', 'dashboard.html')
     with open(tpl_path, encoding='utf-8') as f:
         html = f.read()
+    template_hash = hashlib.sha256(html.encode('utf-8')).hexdigest()
+    html = html.replace('<head>', '<head>\n<meta name="chemclaw-template-sha256" content="' + template_hash + '">', 1)
 
     meta = D['meta']
     h1suffix = '行情与销售事实看板'
