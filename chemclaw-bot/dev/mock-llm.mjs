@@ -60,6 +60,8 @@ import { createHash } from 'node:crypto'
 import { appendFileSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { CHART_EXAMPLES, chartExampleReply } from './chart-examples.mjs'
+import { GENUI_EXAMPLES, genuiExampleText } from './genui-examples.mjs'
 
 const PORT = Number(process.env.MOCK_PORT ?? 8765)
 const LOG = process.env.MOCK_LOG ?? fileURLToPath(new URL('../../.dsh-test/mock.jsonl', import.meta.url))
@@ -185,6 +187,10 @@ function decide(body) {
     return [text(note(sections))]
   }
 
+  // Cancellation and delivery reminders can share a request with the next user command.
+  const delivery = textBlocks(last?.content).map(value => /^交付[ \t]+(.+)$/mu.exec(value)).find(Boolean)
+  if (delivery && tools.has('present')) return [tool('present', { files: [{ path: delivery[1].trim(), description: 'ChemClaw mock verification deliverable' }] })]
+
   // A stopped call's result can share a message with the next group turn, which wins.
   const fresh = textBlocks(last?.content).some(value => value.trimStart().startsWith('[Group chat'))
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
@@ -242,6 +248,7 @@ function decide(body) {
     }
     // Secret cards: a key already there is echoed at once; a card ends the turn.
     // The note after the card can ride in the same message as the card's tool result.
+    if (used?.name === 'show_view' && used.input.title?.startsWith('Synthetic chart:')) return [text('Synthetic chart acceptance complete. Missing observations remain missing.')]
     if (used?.name === 'show_view' && used.input.title === '合成数据趋势验收') return [text('走势查询完成：以下仅为合成验收数据，缺口保持为空。')]
     if (used?.name === 'request_secret') {
       if (/already saved/.test(resultText)) return [echoSecret(used.input.name, tools)]
@@ -321,6 +328,12 @@ function decide(body) {
   }
 
   const userText = textOf(last?.content).trim()
+  if (userText.startsWith('[chemclaw-visual-delivery turn=')) return [text('```dsh-ui\n' + JSON.stringify({ title: 'Inline answer', items: [{ type: 'text', text: 'Synthetic compact answer card.' }] }) + '\n```')]
+  const genuiKind = /^GenUI check (\w+)$/.exec(userText)?.[1]
+  if (GENUI_EXAMPLES[genuiKind]) return [text(genuiExampleText(genuiKind))]
+  if (userText.startsWith('[genui-action]')) return [text('Synthetic action received by the owning Bot.')]
+  const chartKind = /^高级图表验收 (\w+)$/.exec(userText)?.[1]
+  if (CHART_EXAMPLES[chartKind] && tools.has('show_view')) return [tool('show_view', chartExampleReply(chartKind))]
   if (/^(?:\[Message from [^\]]*\]\s*)?验收甲醇现货价格和上下游产业链$/.test(userText)) return [tool('list_bots', {})]
   const browserCheck = /^浏览器检查 (http:\/\/127\.0\.0\.1:\d+\/)$/.exec(userText)
   if (browserCheck && tools.has('browser_open')) return [tool('browser_open', { url: browserCheck[1] })]
@@ -386,6 +399,10 @@ function decide(body) {
     const userAt = lines.map(line => line.startsWith('User:')).lastIndexOf(true)
     const openAt = userAt === -1 && /starting with the new message/.test(userText) ? 0 : userAt
     const userLine = openAt === -1 ? '' : lines[openAt]
+    const groupGenui = /^User: GenUI check (\w+)$/.exec(userLine)?.[1]
+    if (GENUI_EXAMPLES[groupGenui]) return [text(genuiExampleText(groupGenui))]
+    const groupChart = /^User: 高级图表验收 (\w+)$/.exec(userLine)?.[1]
+    if (CHART_EXAMPLES[groupChart] && tools.has('show_view')) return [tool('show_view', chartExampleReply(groupChart))]
     if (userLine === 'User: 验收甲醇现货价格和上下游产业链') return [tool('list_bots', {})]
     if (/查询合成走势验证/.test(userLine) && tools.has('show_view')) {
       const dates = Array.from({ length: 57 }, (_, index) => new Date(Date.UTC(2026, 8, index + 1)).toISOString().slice(0, 10))
@@ -542,11 +559,9 @@ function decide(body) {
     return [tool('ask_user_question', { questions: [{ id: 'start', header: 'Choose', question: '先从哪块开始？', options: [{ label: '先定目标 (Recommended)', description: '先把要做成什么说清楚' }, { label: '整理日常事务' }] }] })]
   }
   if (/用中文简短介绍 ChemClaw/.test(userText)) return [text('我是 ChemClaw，帮助你完成有依据的化工业务研究与文件交付。'), text('先让团队帮你做哪块？')]
-  const delivery = /^交付\s+(.+)$/s.exec(userText.trim())
   if (/^生成交付样例$/.test(userText.trim()) && tools.has('chem_deliver')) return [tool('chem_deliver', {
     report: JSON.stringify({ title: '文件交付验收', sections: [{ title: '验证结果', text: '从对话直接点击打开 HTML 和 Excel 文件。' }] }), formats: 'html,xlsx',
   })]
-  if (delivery && tools.has('present')) return [tool('present', { files: [{ path: delivery[1].trim(), description: 'ChemClaw mock verification deliverable' }] })]
   // View cards: 视图选项 and 视图表单 wait for an answer; 视图展示 and 大视图 are
   // display-only — the latter sits just under the view byte limit.
   if (/^\s*视图选项/.test(userText) && tools.has('show_view')) {

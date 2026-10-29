@@ -49,7 +49,7 @@ export async function ensureSkillLibrary(rt, { reset } = {}) {
   for (const item of builtins) {
     if (reset !== item.name && rt.state.removedSkills?.includes(item.name)) continue
     const path = join(packageRoot, item.sourcePath)
-    const content = `${readFileSync(path, 'utf8')}\n\nInstalled skill: ${path}\nPlugin resources: ${packageRoot}\nManaged Python: ${join(rt.home, 'runtime/python', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python')} (install from Connectors when needed).\nRead referenced resources relative to this file.\n${qualityPolicy}`
+    const content = `${readFileSync(path, 'utf8')}\n\nInstalled skill: ${path}\nPlugin resources: ${packageRoot}\nManaged Python: ${join(rt.home, 'runtime/python', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python')} (prepared automatically on startup; if setup is still in progress, wait for the managed interpreter before running scripts).\nRead referenced resources relative to this file.\n${qualityPolicy}`
     const hash = value => createHash('sha256').update(value).digest('hex')
     const previous = rt.state.capabilities.items[item.name]
     let parsed

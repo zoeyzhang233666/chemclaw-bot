@@ -51,6 +51,7 @@ import { USER_MESSAGE_CSS, UserMessageCell, canDrawUserMessages } from './user-m
 import { noticeApprovals } from './approval-notices.js'
 import { listedOpener } from './open-listed.js'
 import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, rightColumnOpen } from './right-panel.js'
+import { createGenuiSurfaces } from './genui-surfaces.js'
 
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'slots', 'theme', 'layout']
 
@@ -308,10 +309,11 @@ export function apply(ctx) {
       const width = widthOf(prefs)
       const flatWidth = flatWidthOf(prefs)
       document.body.dataset.btMotion = motion
+      document.body.dataset.btAdvancedCharts = prefs.advancedCharts === false ? 'off' : 'on'
       document.body.dataset.btLayout = layout
       document.body.style.setProperty('--bt-msg-w', String(width / 100))
       document.body.style.setProperty('--bt-flat-w', String(flatWidth / 100))
-      const next = `${id}|${accent ?? ''}|${motion}|${layout}|${width}|${flatWidth}|${prefs.thinking === true}|${registry.getSnapshot()}`
+      const next = `${id}|${accent ?? ''}|${motion}|${layout}|${width}|${flatWidth}|${prefs.thinking === true}|${prefs.advancedCharts !== false}|${registry.getSnapshot()}`
       if (next === key) return
       key = next
       style.textContent = themeCss(themes[id], accent)
@@ -319,7 +321,7 @@ export function apply(ctx) {
       releaseTokens = ctx.theme.overrideTokens('chemclaw-bot', shellTokens(themes[id], accent))
       if (typeof release === 'function') release()
       if (snapshot.ready) {
-        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion, layout: prefs.layout, width: prefs.width, flatWidth: prefs.flatWidth, thinking: prefs.thinking })) } catch { /* storage unavailable */ }
+        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion, layout: prefs.layout, width: prefs.width, flatWidth: prefs.flatWidth, thinking: prefs.thinking, advancedCharts: prefs.advancedCharts })) } catch { /* storage unavailable */ }
       }
     }
     render()
@@ -371,6 +373,7 @@ export function apply(ctx) {
   const actions = {
     ...teamActions({ call, after, partFor, roster, ui, live, cards, heldCards, turnClock }),
     currentSessionId: mainView,
+    sendGenui: (sessionId, text) => after(call('send', { sessionId, text })),
     useSkill: async (name, target = mainView()) => {
       const snapshot = roster.getSnapshot()
       const item = snapshot.capabilities.find(item => item.name === name)
@@ -541,6 +544,15 @@ export function apply(ctx) {
       }
     },
   }
+  actions.genuiSurfaces = createGenuiSurfaces(error => actions.reportError(error, 'genui'))
+  ctx.effect(() => {
+    if (ctx.get('genuiSidechat')) {
+      actions.reportError(new Error('Another plugin already provides genuiSidechat.'), 'genui')
+      return undefined
+    }
+    const release = ctx.provide('genuiSidechat', actions.genuiSurfaces)
+    return () => { actions.genuiSurfaces.dispose(); release?.() }
+  }, 'chemclaw-bot: GenUI surfaces')
   // Without the Desktop bridge these stay undefined, and no browser control renders.
   if (browsers) {
     Object.assign(actions, {
@@ -611,8 +623,6 @@ export function apply(ctx) {
   actions.speech = () => ctx.get('remote.speech') ?? undefined
   // DSH's own settings: models, providers, keys and its plugins.
   actions.openHarnessSettings = openHarnessSettings
-  const previewSettings = ctx.get('configForms')?.developerTools
-  if (previewSettings) actions.enableHtmlPreview = () => previewSettings.setEnabled(true)
   actions.openHarnessOnboarding = openHarnessOnboarding
   actions.voiceSetup = () => {
     const navigation = ctx.get('pluginNavigation')

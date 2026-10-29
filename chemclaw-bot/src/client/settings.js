@@ -105,7 +105,9 @@ function GeneralPage({ roster, mode, actions, run }) {
       // The flat layout's text has a width of its own; the bubble width stays for the user's messages.
       layoutOf(prefs) === 'flat' ? h(SetRow, { label: t('Text width') }, h(WidthSlider, { label: t('Text width'), value: flatWidthOf(prefs), save: flatWidth => run(actions.setPrefs({ flatWidth })) })) : null,
       h(SetRow, { label: t('Bubble width') }, h(WidthSlider, { label: t('Bubble width'), value: widthOf(prefs), save: width => run(actions.setPrefs({ width })) })),
-      h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) }))),
+      h(SetRow, { label: t('Show thinking') }, h(Switch, { label: t('Show thinking'), on: thinkingShown(prefs), onChange: thinking => run(actions.setPrefs({ thinking })) })),
+      h(SetRow, { label: t('Advanced charts'), hint: t('Load richer charts when needed. When off, show their data as tables.') },
+        h(Switch, { label: t('Advanced charts'), on: prefs.advancedCharts !== false, onChange: advancedCharts => run(actions.setPrefs({ advancedCharts })) }))),
     actions.setSurface ? h(SetSection, { key: 'mode', title: t('Mode') },
       h(SetRow, { label: t(mode === 'agent' ? 'ChemClaw expert team' : 'Classic Agent mode') },
         h('button', { type: 'button', className: 'bt-soft bt-soft-sm', onClick: () => actions.setSurface(mode === 'agent' ? 'bot' : 'agent') }, t('Switch')))) : null,

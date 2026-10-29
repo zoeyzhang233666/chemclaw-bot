@@ -8,6 +8,8 @@ files:
   - package.json
   - src/**
   - assets/**
+  # beforePack creates these after npm installed the plugin; npm's files list no longer filters them.
+  - "!node_modules/chemclaw-bot/runtime/.build-tools/**"
 # The Host runs pnpm as a separate Node process to install plugins, so it must be a plain file.
 asarUnpack:
   - node_modules/pnpm/**

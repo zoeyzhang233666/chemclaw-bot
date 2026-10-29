@@ -244,3 +244,32 @@ ChemClaw upstream parity with DS-Bot v0.2.3 (2026-10-28):
   search-patch.mjs was verified and not ported: ChemClaw's cordis.patch.yml sets
   web.searchProvider to ddg (not auto), so disabling web-search-auto does not
   leave the WEB_PROVIDER_CONFIGURED_MISSING fault that DS-Bot's overlay fixes.
+
+Apache ECharts 6.0.0 and ZRender 6.0.0
+  https://github.com/apache/echarts
+  https://github.com/ecomfe/zrender
+  ECharts: Copyright The Apache Software Foundation; Apache-2.0.
+  ZRender: Copyright (c) 2017, Baidu Inc.; BSD-3-Clause.
+  runtime/chart-engine.js bundles selected charts and the SVG renderer.
+  Original license and notice files are included in runtime/chart-licenses/.
+
+TypeScript runtime helpers (tslib), ISC
+  https://github.com/microsoft/tslib
+  Copyright (c) Microsoft Corporation.
+  Transitive chart-engine dependency; its original permission notice is retained
+  in runtime/chart-engine.js.
+
+Analysis runtime provisioning
+----------------------------
+Release packages carry a private Python 3.12 distribution and AKShare with its
+required dependencies. Python binaries come from Astral python-build-standalone
+(https://github.com/astral-sh/python-build-standalone); the bundled distribution
+retains its Python license and third-party licenses. AKShare 1.17.74 comes from
+https://github.com/akfamily/akshare (MIT); its installed package metadata and the
+licenses of its dependencies are retained in the runtime archives.
+
+Builds and source-only installs use uv 0.13.6 from
+https://github.com/astral-sh/uv/releases/tag/0.13.6 (MIT OR Apache-2.0).
+Copyright (c) 2025 Astral Software Inc.
+The MIT license is included at runtime/uv-LICENSE-MIT in the plugin.
+ChemClaw's provisioning, verification and packaging code is original.

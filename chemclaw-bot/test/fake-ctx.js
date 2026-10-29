@@ -48,6 +48,7 @@ export function fakeContext({ services = {} } = {}) {
     },
     effect(execute, label) {
       calls.push(`effect ${label}`)
+      if (label === 'chemclaw-bot: automatic analysis setup') return
       const dispose = execute()
       if (typeof dispose === 'function') disposers.push(dispose)
     },

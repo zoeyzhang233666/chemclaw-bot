@@ -14,6 +14,7 @@ const SKIN_FOOT = ':is(div,footer):not([class*="_footArea"]):has(> div > [data-s
 // Shared components stay styled in both modes. Only the Bot sidebar layout and
 // conversation replacements are withdrawn when the native Agent surface returns.
 const SHARED_START_CSS = `
+[data-genui-surface^="chemclaw-bot/"]{min-width:0;--dsw-alias-brand-primary:var(--bt-accent);--dsw-alias-state-business-primary:var(--bt-accent);--dsw-alias-bg-base:var(--bt-main);--dsw-alias-bg-layer-1:var(--bt-card);--dsw-alias-bg-layer-2:var(--bt-main);--dsw-alias-label-primary:var(--bt-ink);--dsw-alias-label-secondary:var(--bt-ink-2);--dsw-alias-label-tertiary:var(--bt-ink-3);--dsw-alias-border-l1:var(--bt-line-2);--dsw-alias-border-l2:var(--bt-line)}
 body{--bt-ink:#141414;--bt-danger:#e02135;--bt-ink-2:rgba(20,20,20,.6);--bt-ink-3:rgba(20,20,20,.36);--bt-bubble:#eeeeee;--bt-sidebar:#f7f7f7;--bt-main:#fcfcfc;--bt-line:rgba(20,20,20,.08);--bt-line-2:rgba(20,20,20,.15);--bt-line-weak:rgba(20,20,20,.1);--bt-hover:rgba(119,119,119,.09);--bt-active:rgba(119,119,119,.17);--bt-card:#ffffff;--bt-accent:#4d6bfe;--bt-green:#00c972;--bt-star:#ff9800;--bt-user:#070707;--bt-user-ink:#fcfcfc;--bt-tag-bg:rgba(20,20,20,.06);--bt-tag-ink:rgba(20,20,20,.56);--bt-knob:#ffffff;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 /* iOS waits out a double-tap zoom on buttons; the plugin's own controls never zoom. */
 :is(.bt-tool,.bt-uaction,.bt-menu button,.bt-menu-item,.bt-icon-btn,.bt-round,.bt-pill,.bt-account,.bt-set-row,.bt-settings-item,.bt-react-strip button,.bt-palette-row,.bt-palette-clear,.bt-tab,.bt-ptab,.bt-ptab-x,.bt-bcard-x,.bt-plus,.bt-q-btn,.bt-q-x,.bt-x,.bt-nc-send,.bt-send,.bt-soft,.bt-mini,.bt-shape,.bt-swatch,.bt-color,.bt-newchat,.bt-task-day,.bt-task-remove,.bt-fb-btn){touch-action:manipulation}
@@ -606,6 +607,11 @@ const SHARED_END_CSS = `
    sender's avatar) line up with the bubble alone. */
 .bt-msg-line{position:relative;display:flex;align-items:flex-end;gap:8px;max-width:100%}
 .bt-msg-line>.bt-bubble{max-width:none;min-width:0}
+.bt-msg:has([data-genui-explicit-fence]),.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line{width:100%}
+.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line>.bt-bubble{flex:1}
+[data-genui-surface^="chemclaw-bot/"] [data-genui=true]{--dsl-g-font-h1:max(18px,calc(var(--dsh-content-font-size,14px) * 1.2));--dsl-g-gap-xl:16px}
+[data-genui-surface^="chemclaw-bot/"] input[type=range]{min-width:0;max-width:100%}
+@media(max-width:600px){.bt-msg:has([data-genui-explicit-fence]),.bt-astack[data-lead]>.bt-msg:has([data-genui-explicit-fence]){max-width:calc(100% - 8px)}}
 /* The same bubble width as beside an avatar column: the share of (100% - 30px), plus the 30px. */
 .bt-astack[data-lead]>.bt-msg{max-width:min(calc(var(--bt-msg-w) * (100% - 30px) + 30px),calc(100% - 52px))}
 .bt-tools{position:absolute;top:50%;left:100%;margin-left:6px;transform:translateY(-50%);display:flex;gap:2px;opacity:0;visibility:hidden;transition:opacity .12s ease,visibility .12s}

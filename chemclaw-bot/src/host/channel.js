@@ -9,6 +9,7 @@ import { validateViewAnswer } from '../shared/views.js'
 import { mergeSidebarPrefs } from '../shared/sidebar-prefs.js'
 import { COLORS, EXTRA_COLORS, ROUTE } from './constants.js'
 import { resolveArtifacts } from './artifact-paths.js'
+import { install as installChartAssets } from './chart-assets.js'
 
 const LANGUAGES = { zh: 'Chinese (简体中文)', en: 'English' }
 const RUN_STATS = ['sessionStats', 'tokenUsage', 'contextPressure']
@@ -24,6 +25,7 @@ export function errorCode(error) {
 }
 
 export function install(rt) {
+  installChartAssets(rt)
   installBtw(rt)
   installSide(rt)
   const { ctx, state } = rt
@@ -96,6 +98,11 @@ export function install(rt) {
   const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'artifact-paths', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking', 'avatar-library'])
 
   function setPrefs(body) {
+    if (body.advancedCharts !== undefined) {
+      if (body.advancedCharts === false) state.prefs.advancedCharts = false
+      else if (body.advancedCharts === true || body.advancedCharts === null) delete state.prefs.advancedCharts
+      else throw invalid('Advanced charts must be true or false')
+    }
     if (body.theme !== undefined) {
       if (typeof body.theme !== 'string' || !/^[a-z][\w-]{0,31}$/.test(body.theme)) throw invalid('Unknown theme')
       state.prefs.theme = body.theme
@@ -609,7 +616,7 @@ export function install(rt) {
   }), 'chemclaw-bot: api route')
 
   ctx.effect(() => {
-    void rt.load()
+    void rt.load().then(() => rt.prepareProviderRoutes?.()).catch(error => rt.warn('chemclaw-bot: preparing model providers failed: %s', error))
     return () => Promise.all([rt.btwDispose?.(), rt.sideDispose?.()])
   }, 'chemclaw-bot: load state')
 }

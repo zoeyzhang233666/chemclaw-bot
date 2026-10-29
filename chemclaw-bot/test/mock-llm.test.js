@@ -51,6 +51,21 @@ async function startMock(t) {
   })
 }
 
+test('a fresh delivery command wins over a cancelled card and visual notice in the same request', async t => {
+  const url = await startMock(t)
+  const delivery = { type: 'text', text: '交付 /tmp/synthetic-report.html' }
+  for (const content of [
+    [{ type: 'text', text: '[chemclaw-visual-delivery turn=1]\nAdd the missing view.' }, delivery],
+    [{ type: 'tool_result', tool_use_id: 'secret-call', content: 'Cancelled' }, { type: 'text', text: '[Secret card]\nThe user cancelled.' }, delivery],
+  ]) {
+    const out = await call(url, [
+      { role: 'assistant', content: [{ type: 'tool_use', id: 'secret-call', name: 'request_secret', input: { name: 'DEMO_THEME_TEST' } }] },
+      { role: 'user', content },
+    ], ['present'])
+    assert.deepEqual(out.tools.map(used => used.name), ['present'])
+  }
+})
+
 // "长任务 N [K]" adds about K×1000 characters per step, defaulting to 4. A missing K once
 // parsed as NaN, so every step after the opener silently sent no text block.
 test('长任务 writes text on every step when the step size is left out', async (t) => {

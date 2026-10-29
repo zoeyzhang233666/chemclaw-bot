@@ -10,7 +10,6 @@ import { NAME_MAX } from './requests.js'
 import { unquote } from './text.js'
 import { mentionSpans } from '../shared/mentions.js'
 import { checkShownView } from '../shared/views.js'
-import { VIEW_POLICY } from './view-policy.js'
 
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
 export const GROUP_REF = { type: 'string', required: true, description: 'Exact group chat name from list_bots' }
@@ -664,14 +663,14 @@ export function install(rt) {
 
   ctx.tools.register(defineTool({
     name: 'show_view',
-    description: `Draw a view as part of your answer to the human user in your own chat or a group. Text you write before and after the call shows around it. ${VIEW_POLICY} In groups set audience: user only for an answer meant for the human, including a direct @ question to any member. Cards are released when that answer turn completes, not at group completion. Never draw views for peer discussion, delegation or progress. A view with options, confirm, form or submit ends your turn, and the answer arrives as the user's next message; group cards cannot submit answers. Never collect a key, token or password. Keep each view under 8 KB.`,
+    description: `Draw a view as part of your answer to the human user in your own chat or a group. Text you write before and after the call shows around it. Follow the global visual delivery contract. In groups set audience: user only for an answer meant for the human, including a direct @ question to any member. Cards are released when that answer turn completes, not at group completion. Never draw views for peer discussion, delegation or progress. A view with options, confirm, form or submit ends your turn, and the answer arrives as the user's next message; group cards cannot submit answers. Never collect a key, token or password. Keep each view under 8 KB.`,
     parameters: {
       title: { type: 'string', description: 'Optional short heading shown above the view' },
       view: {
         type: 'object',
         required: true,
         additionalProperties: true,
-        description: 'One component { type, ...props }. Layout: stack (children, top to bottom) and row (children, side by side, wraps when narrow), 1 to 16 children; the outermost may define let: { name: "formula" }. Display: text ({ text: Markdown, tone?: "muted" }), metric ({ label, value, tone?: good|warn|bad, caption? }), table ({ columns: [{ key, label }], rows: [[cells]] }), chart ({ kind?: bar|hbar|line|area|donut, categories: [labels], series: [{ name?, values: [numbers or null for missing observations; never fill gaps with zero] }], unit?, caption? }; donut takes one series), progress ({ label?, percent 0-100, or value with max, valueLabel?, tone? }), callout ({ text, tone?: info|good|warn|bad }), sources ({ items: [{ label, url }] }), html ({ html, summary, height? }: only for what nothing else can draw; it runs sandboxed with no network, cannot submit, and should use the CSS variables --bt-ink, --bt-ink-2, --bt-line, --bt-card, --bt-accent, --bt-green, --bt-star, --bt-danger). Inputs, which keep their value in the page: slider ({ id, label, min, max, step?, value, unit? }), number ({ id, label, value, min?, max?, step?, unit? }), choice ({ id, label, options: [{ label, value }], value? }), toggle ({ id, label, value? }); an input id is a plain name such as price. A metric value, caption or tone, a text, a progress field, a callout, a table cell or a chart value may be a formula { "=": "expression" } over input ids and let names: numbers, \'text\', + - * / %, < <= > >= == !=, && || !, a ? b : c, and min max abs floor ceil sqrt pow round clamp fixed(x, digits) format(x, digits) percent(x, digits). Answers, which end your turn: options ({ id, options: [{ label, description? }], multi? }), confirm ({ id, confirmLabel?, cancelLabel? }), form ({ id, fields: [{ id, label, placeholder? }], submitLabel? }), submit ({ id, label }: sends the inputs\' values to you).',
+        description: 'One component { type, ...props }. Layout: stack (children, top to bottom) and row (children, side by side, wraps when narrow), 1 to 16 children; the outermost may define let: { name: "formula" }. Display: text ({ text: Markdown, tone?: "muted" }), metric ({ label, value, tone?: good|warn|bad, caption? }), table ({ columns: [{ key, label }], rows: [[cells]] }), chart ({ kind?: bar|hbar|line|area|donut|scatter|radar|heatmap|funnel|treemap|sankey|gauge, categories: [labels], series: [{ name?, values: [numbers or null for missing observations; never fill gaps with zero] }], unit?, caption? }; donut/funnel/treemap/gauge take one series. scatter adds xValues:[number|null] for each category and xUnit?. radar adds maxima:[positive axis limits], 3-12 axes. heatmap uses categories as columns and named series as rows. gauge uses one category/value and max>0. sankey omits series and uses categories as unique node names and links:[{source:index,target:index,value:positive number}], no cycles. Advanced charts: at most 80 categories, 12 series, 480 values, 120 links; radar/funnel/treemap/gauge require non-negative values; radar/gauge values must fit their stated limits. No arbitrary renderer options), progress ({ label?, percent 0-100, or value with max, valueLabel?, tone? }), callout ({ text, tone?: info|good|warn|bad }), sources ({ items: [{ label, url }] }), html ({ html, summary, height? }: only for what nothing else can draw; it runs sandboxed with no network, cannot submit, and should use the CSS variables --bt-ink, --bt-ink-2, --bt-line, --bt-card, --bt-accent, --bt-green, --bt-star, --bt-danger). Inputs, which keep their value in the page: slider ({ id, label, min, max, step?, value, unit? }), number ({ id, label, value, min?, max?, step?, unit? }), choice ({ id, label, options: [{ label, value }], value? }), toggle ({ id, label, value? }); an input id is a plain name such as price. A metric value, caption or tone, a text, a progress field, a callout, a table cell or a chart value may be a formula { "=": "expression" } over input ids and let names: numbers, \'text\', + - * / %, < <= > >= == !=, && || !, a ? b : c, and min max abs floor ceil sqrt pow round clamp fixed(x, digits) format(x, digits) percent(x, digits). Answers, which end your turn: options ({ id, options: [{ label, description? }], multi? }), confirm ({ id, confirmLabel?, cancelLabel? }), form ({ id, fields: [{ id, label, placeholder? }], submitLabel? }), submit ({ id, label }: sends the inputs\' values to you).',
       },
       audience: { type: 'string', enum: ['user', 'team'], description: 'In groups set user only for this completed answer to the human (including their @ question). Omit or team for Bot discussion: no card will be shown. Do not infer this from being the admin or last speaker.' },
       await_reply: { type: 'boolean', description: 'Wait for the user to submit the view. A view with options, confirm, form or submit always waits; a view without them cannot.' },
@@ -691,10 +690,12 @@ export function install(rt) {
       if (checked.interactive && args.await_reply === false) return 'This view has controls to submit, so it waits for the user\'s answer; call show_view without await_reply: false.'
       if (group) {
         if (checked.interactive || args.await_reply === true) return 'Group views cannot submit answers. Use charts, tables or local calculator inputs without a submit control.'
-        return rt.stageRoomView(id, { title, view, callId: exec.callId })
+        const result = rt.stageRoomView(id, { title, view, callId: exec.callId })
+        if (result.startsWith('The view is staged')) rt.noteVisualDelivery?.(id)
+        return result
       }
       const awaitReply = args.await_reply ?? checked.interactive
-      if (!awaitReply) return 'The view is on screen.'
+      if (!awaitReply) { rt.noteVisualDelivery?.(id); return 'The view is on screen.' }
       // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
       // composer dock, which takes a card without a call.
       const turn = rt.live.get(id)?.turn
@@ -707,6 +708,7 @@ export function install(rt) {
         askedAt: Date.now(),
       }
       await rt.save()
+      rt.noteVisualDelivery?.(id)
       exec.concludeTurn?.()
       return 'The view is on screen; the user\'s answer arrives as their next message.'
     },

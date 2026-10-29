@@ -34,11 +34,11 @@ This short command does not synchronize plugin edits; use the root launcher for 
 
 In ChemClaw Settings → Connectors, connect **Chemcloud Data Hub** by pasting a Key from [mcp.chem-cloud.cn](https://mcp.chem-cloud.cn/). Its endpoint is fixed at `https://datahub.chem-cloud.cn/mcp`. Connected means MCP initialization and tool discovery succeeded. Keep credentials out of chat.
 
-Huagongshe public queries are anonymous. PubChem, OPSIN and Chinese/English Wikipedia need no key. Historical daily futures data needs the managed Python environment installed from Connectors (Python 3.11+). Sources, timestamps, conventions and gaps remain explicit; free data is not promised to be real-time. Advanced setup accepts HTTPS `mcpServers` JSON. Incomplete optional services are not automatically connected.
+Huagongshe public queries are anonymous. PubChem, OPSIN and Chinese/English Wikipedia need no key. Release installers and plugin packages include private Python and AKShare archives. First launch unpacks the matching archive locally, without downloading an analysis environment or requiring Python installation. Source-only installs without an archive automatically download the market components. The larger optional molecular chemistry and statistical libraries are not installed by default. Sources, timestamps, conventions and gaps remain explicit; free data is not promised to be real-time. Advanced setup accepts HTTPS `mcpServers` JSON. Incomplete optional services are not automatically connected.
 
-DSH `present` cards preview HTML alongside chat and offer native opening/reveal. Markdown file links are clickable. Interactive HTML follows the host sandbox preference; Connectors provides an enable-preview entry. Moved/deleted files show errors.
+DSH `present` cards preview HTML alongside chat and offer native opening/reveal. Markdown file links are clickable. Interactive HTML follows the host sandbox preference; the standalone app enables report previews by default. Moved/deleted files show errors.
 
-Bundled libraries and `chem_deliver` generate ordinary HTML, XLSX, PPTX, DOCX and PDF without Python. Scientific tasks can install optional managed dependencies. Converting existing Office files or recalculating workbooks additionally requires LibreOffice. Examples are references; models may improve analysis and layout.
+Bundled libraries and `chem_deliver` generate ordinary HTML, XLSX, PPTX, DOCX and PDF without Python. Advanced local molecular modeling or statistical tasks may need additional scientific libraries; these are not required for public APIs or futures data. Converting existing Office files or recalculating workbooks additionally requires LibreOffice. Examples are references; models may improve analysis and layout.
 
 See `chemclaw/docs/使用指南.md`, `chemclaw/docs/验收记录.md` and `docs/plans/2026-10-22-chemclaw.md` in the repository.
 

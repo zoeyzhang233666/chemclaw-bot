@@ -2,9 +2,16 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { runInNewContext } from 'node:vm'
-import { bundleClient } from '../scripts/build-client.mjs'
+import { bundleClient, bundleChartEngine } from '../scripts/build-client.mjs'
 
 const committed = () => readFileSync(new URL('../client.js', import.meta.url), 'utf8')
+
+test('the lazy chart asset is current and stays out of the main client bundle', async () => {
+  const engine = readFileSync(new URL('../runtime/chart-engine.js', import.meta.url), 'utf8')
+  assert.equal(await bundleChartEngine(), engine, 'runtime/chart-engine.js is stale')
+  assert.ok(Buffer.byteLength(engine) < 800_000, 'only the selected chart engine should ship')
+  assert.doesNotMatch(committed(), /echarts\/lib|zrender\/lib/)
+})
 
 test('client.js is the build of src/client', async () => {
   assert.equal(await bundleClient(), committed(), 'client.js is stale: run `npm run build` and commit it')

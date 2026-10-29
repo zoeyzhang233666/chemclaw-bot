@@ -35,9 +35,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  market-runtime:
+    name: Bundle market data (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: win32-x64, runner: windows-latest }
+          - { target: darwin-arm64, runner: macos-latest }
+          - { target: darwin-x64, runner: macos-26-intel }
+          - { target: linux-x64, runner: ubuntu-latest }
+    defaults:
+      run:
+        working-directory: chemclaw-bot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - run: npm ci --no-fund --no-audit
+      - run: npm run runtime:bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: market-runtime-${{ matrix.target }}
+          path: chemclaw-bot/runtime/bundled/*
+          if-no-files-found: error
+          compression-level: 0
+
   publish:
     name: Check and publish
     runs-on: ubuntu-latest
+    needs: market-runtime
     timeout-minutes: 20
     outputs:
       tag: ${{ steps.release.outputs.tag }}
@@ -94,6 +126,11 @@ jobs:
           fi
 
       - run: npm ci --no-fund --no-audit
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: market-runtime-*
+          merge-multiple: true
+          path: chemclaw-bot/runtime/bundled
       - run: npm run harness
       - run: npm test
       - run: node scripts/build-client.mjs --check
@@ -155,6 +192,10 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: app/package-lock.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: market-runtime-win32-x64
+          path: chemclaw-bot/runtime/bundled
       - run: npm ci --no-fund --no-audit
       - run: npm run dist
       - name: Check the packaged app
@@ -206,6 +247,10 @@ jobs:
             ~/Library/Caches/electron
             ${{ runner.temp }}/electron-builder-cache
           key: desktop-tools-v3-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: market-runtime-darwin-${{ matrix.arch }}
+          path: chemclaw-bot/runtime/bundled
       - run: npm ci --no-fund --no-audit
         env:
           ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
@@ -280,6 +325,10 @@ jobs:
             ~/.cache/electron
             ~/.cache/electron-builder
           key: desktop-tools-v3-Linux-x64-${{ hashFiles('app/package-lock.json') }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: market-runtime-linux-x64
+          path: chemclaw-bot/runtime/bundled
       - run: npm ci --no-fund --no-audit
       - run: npm run dist
       - name: Check the packaged app

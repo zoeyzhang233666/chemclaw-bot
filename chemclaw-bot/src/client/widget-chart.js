@@ -277,7 +277,7 @@ function useWidth(box, initial) {
 
 // SVG styles live in the page's CSS; a saved image needs them written onto each node.
 const INLINE = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'opacity', 'fill-opacity', 'font-size', 'font-family', 'font-weight']
-function saveImage(svg, name) {
+export function saveImage(svg, name) {
   const clone = svg.cloneNode(true)
   const live = [svg, ...svg.querySelectorAll('*')]
   const copy = [clone, ...clone.querySelectorAll('*')]

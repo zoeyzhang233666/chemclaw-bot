@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { install as installModels } from '../src/host/models.js'
 import { checkKey, install, keyRefFor } from '../src/host/providers.js'
+import { APIHUB } from '../src/shared/model-providers.js'
 
 // A DSH with the official DeepSeek route, an account route, and the pi-ai adapter: its
 // directory offers catalog providers, and its settings take path writes the way DSH's
@@ -14,6 +15,7 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
   let pi = { user: structuredClone(user), base: structuredClone(base) }
   const piValue = () => ({ providers: { ...pi.base.providers, ...pi.user.providers } })
   const routes = () => Object.keys(piValue().providers)
+  const metadata = model => typeof model === 'string' ? { id: model } : model
   const services = {
     agentDefaultModel: { currentSelection: () => defaultSelection },
     settings: {
@@ -55,7 +57,10 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
         if (id === 'deepseek-official') return [{ id: 'deepseek-flash', name: 'DeepSeek Flash' }]
         if (id === 'deepseek-account') return []
         const profile = piValue().providers[id]
-        return profile.models ?? (catalog[id] ?? []).map(model => ({ id: model }))
+        return (profile.models ?? catalog[id] ?? []).map(model => {
+          const entry = metadata(model)
+          return { ...entry, ...(entry.input ? { inputModalities: entry.input } : {}) }
+        })
       },
       listConfigurableProviders: () => [
         { provider: 'deepseek-official', displayName: 'DeepSeek', settingsNs: 'llm-deepseek', settingsPath: [] },
@@ -65,7 +70,7 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
       ],
       discoverModels: async (ns, request) => {
         discovered.push([ns, request])
-        return request.provider in catalog ? catalog[request.provider].map(id => ({ id }))
+        return request.provider in catalog ? catalog[request.provider].map(metadata)
           : [{ id: 'relay-1', name: 'Relay One', contextWindow: 128000, inputModalities: ['text'] }, { id: 'relay-2' }]
       },
     },
@@ -78,6 +83,147 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
 
 const needing = async rt => (await rt.catalog({ fresh: true })).filter(entry => entry.needsKey).map(entry => entry.provider)
 const row = (view, id) => view.providers.find(provider => provider.id === id)
+
+const visionIds = ['minimax-m3.1-flash', 'kimi-k2.6', 'minimax-m3', 'qwen3.8-max']
+const visionCatalog = { native: visionIds.map(id => ({ id, inputModalities: ['text', 'image'] })) }
+const apiHubRoute = models => ({ displayName: APIHUB.name, api: APIHUB.api, baseURL: APIHUB.baseURL, apiKeyEnv: 'APIHUB_API_KEY', models })
+
+test('APIHub setup fills exact catalog IDs while preserving explicit inputs and unknown IDs', async () => {
+  const { rt, writes } = dsh({ catalog: visionCatalog })
+  await rt.addProvider({ preset: 'apihub', key: 'synthetic-only', models: [
+    ...visionIds.filter(id => id !== 'kimi-k2.6').map(id => ({ id })), { id: 'unknown' }, { id: 'kimi-k2.6-custom' },
+    { id: 'kimi-k2.6', input: ['text'] },
+  ] })
+  const saved = writes[0][1][0].value.models
+  assert.deepEqual(saved, [
+    ...visionIds.filter(id => id !== 'kimi-k2.6').map(id => ({ id, input: ['text', 'image'] })),
+    { id: 'unknown' }, { id: 'kimi-k2.6-custom' }, { id: 'kimi-k2.6', input: ['text'] },
+  ])
+})
+
+test('APIHub migration preserves route and model controls, keys and selections; concurrent reads write once', async () => {
+  const profile = { ...apiHubRoute(visionIds.map(id => ({ id, contextWindow: 12345, compat: { supportsDeveloperRole: false } }))),
+    headers: { 'x-deployment': 'synthetic' }, retryPolicy: { mode: 'disabled' } }
+  const { rt, writes, store } = dsh({ catalog: visionCatalog, user: { providers: { apihub: profile } }, keys: { APIHUB_API_KEY: 'synthetic-only' } })
+  rt.state.bots.preset = { model: 'apihub/kimi-k2.6' }
+  await Promise.all([rt.prepareProviderRoutes(), rt.prepareProviderRoutes(), rt.catalog()])
+  assert.equal(writes.length, 1)
+  assert.deepEqual(writes[0][1][0].value, { ...profile, models: profile.models.map(model => ({ ...model, input: ['text', 'image'] })) })
+  assert.equal(store.APIHUB_API_KEY, 'synthetic-only')
+  assert.equal(rt.state.bots.preset.model, 'apihub/kimi-k2.6')
+  await rt.providersView()
+  assert.equal(writes.length, 1)
+  assert.deepEqual((await rt.catalog()).filter(model => model.provider === 'apihub').map(model => model.input), visionIds.map(() => ['text', 'image']))
+})
+
+test('APIHub never overwrites explicit modalities or fills conflicting and inexact catalog IDs', async () => {
+  const models = [{ id: 'unknown' }, { id: 'Kimi-k2.6' }, { id: 'prefix/kimi-k2.6' },
+    { id: 'kimi-k2.6', input: ['text'] }, { id: 'minimax-m3', inputModalities: ['text'] }, { id: 'conflict' }]
+  const catalog = { ...visionCatalog, one: [{ id: 'conflict', inputModalities: ['text'] }], two: [{ id: 'conflict', inputModalities: ['text', 'image'] }] }
+  const { rt, writes } = dsh({ catalog, user: { providers: { apihub: apiHubRoute(models) } } })
+  await rt.prepareProviderRoutes()
+  assert.deepEqual(writes, [])
+})
+
+test('APIHub migration ignores other endpoints, protocols, routes and adapters', async () => {
+  for (const change of [{ baseURL: 'https://custom.invalid/v1' }, { api: 'anthropic-messages' }]) {
+    const { rt, writes } = dsh({ catalog: visionCatalog, user: { providers: { apihub: { ...apiHubRoute(['kimi-k2.6']), ...change } } } })
+    await rt.prepareProviderRoutes()
+    assert.deepEqual(writes, [])
+  }
+  const { rt, writes } = dsh({ catalog: visionCatalog, user: { providers: { relay: apiHubRoute(['kimi-k2.6']) } } })
+  await rt.prepareProviderRoutes()
+  assert.deepEqual(writes, [])
+})
+
+test('APIHub discovery exposes filled input modalities; generic discovery remains unchanged', async () => {
+  const { rt } = dsh({ catalog: { native: [{ id: 'relay-2', inputModalities: ['text', 'image'] }] } })
+  const candidates = await rt.discoverModels({ preset: 'apihub', key: 'synthetic-only' })
+  assert.deepEqual(candidates.map(model => model.inputModalities), [['text'], ['text', 'image']])
+  const generic = await rt.discoverModels({ baseURL: 'https://custom.invalid/v1' })
+  assert.equal(generic[1].inputModalities, undefined)
+})
+
+test('APIHub migration does not overwrite an editor save made during discovery', async () => {
+  const { rt, writes } = dsh({ catalog: visionCatalog, user: { providers: { apihub: apiHubRoute(['kimi-k2.6']) } } })
+  const discover = rt.ctx.llm.discoverModels
+  rt.ctx.llm.discoverModels = async (...args) => {
+    await rt.ctx.get('settings').mutate('llm-pi-ai', [{ op: 'set', path: ['providers', 'apihub'], value: apiHubRoute(['editor-chosen']) }], 0)
+    return discover(...args)
+  }
+  await rt.prepareProviderRoutes()
+  assert.equal(writes.length, 1)
+  assert.deepEqual(writes[0][1][0].value.models, ['editor-chosen'])
+})
+
+test('APIHub repair needs no credential reads and tolerates an unavailable native catalog', async () => {
+  const { rt, writes, listeners } = dsh({ catalog: visionCatalog, user: { providers: { apihub: apiHubRoute(['kimi-k2.6']) } } })
+  rt.ctx.get('credentials').resolve = async () => { throw new Error('must not read credentials') }
+  const discover = rt.ctx.llm.discoverModels
+  rt.ctx.llm.discoverModels = async () => { throw new Error('catalog unavailable') }
+  await rt.prepareProviderRoutes()
+  assert.deepEqual(writes, [])
+  rt.ctx.llm.discoverModels = discover
+  listeners.get('llm/adapters-updated')()
+  await rt.prepareProviderRoutes()
+  assert.equal(writes.length, 1)
+})
+
+test('the official DSH catalog repairs supported APIHub IDs and sends durable images', async t => {
+  const { apply, Config } = await import('@deepseek-ai/dsh-llm-pi-ai')
+  let directory, discover
+  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==', 'base64')
+  const adapterFor = profile => {
+    let adapter
+    apply({
+      fiber: { entry: { options: { id: 'llm-pi-ai' } } }, inject() {}, on() {},
+      get: name => name === 'credentials' ? { resolve: async () => ({ value: 'synthetic-only' }) }
+        : name === 'attachments' ? { imageHostPath: () => undefined, readImageRequest: async () => ({ data: image, bytes: image.length, width: 1, height: 1, mediaType: 'image/png' }) } : undefined,
+      llm: {
+        registerConfigurableProviders: entries => { directory = entries; return { replace() {} } },
+        registerModelDiscovery: (_ns, callback) => { discover = callback },
+        registerAdapter: (_providers, value) => { adapter = value; return { replace() {} } },
+      },
+    }, Config({ providers: { apihub: profile } }))
+    return adapter
+  }
+  const seen = []
+  t.mock.method(globalThis, 'fetch', async (input, init) => {
+    const request = new Request(input, init)
+    assert.equal(request.url, `${APIHUB.baseURL}/chat/completions`)
+    const body = await request.json()
+    assert.ok(body.messages.some(message => Array.isArray(message.content) && message.content.some(block => block.type === 'image_url' && block.image_url.url === `data:image/png;base64,${image.toString('base64')}`)))
+    seen.push(body.model)
+    return new Response(`data: ${JSON.stringify({ id: 'synthetic', choices: [{ index: 0, delta: { role: 'assistant', content: 'red' }, finish_reason: null }] })}\n\ndata: ${JSON.stringify({ id: 'synthetic', choices: [{ index: 0, delta: {}, finish_reason: 'stop' }] })}\n\ndata: [DONE]\n\n`, { headers: { 'content-type': 'text/event-stream' } })
+  })
+  const profile = apiHubRoute(visionIds.map(id => ({ id })))
+  const before = adapterFor(profile)
+  assert.deepEqual((await before.resolveModel('apihub', 'kimi-k2.6')).inputModalities, ['text'])
+  const catalog = await Promise.all(directory.filter(entry => entry.declared === false).map(entry => discover({ provider: entry.provider })))
+  const known = new Set(catalog.flat().filter(model => model.inputModalities?.includes('image')).map(model => model.id))
+  const { rt, writes } = dsh({ user: { providers: { apihub: profile } } })
+  const fixtureDirectory = rt.ctx.llm.listConfigurableProviders()
+  rt.ctx.llm.listConfigurableProviders = () => [...directory.filter(entry => entry.declared === false), ...fixtureDirectory.filter(entry => entry.declared !== false)]
+  rt.ctx.llm.discoverModels = (_ns, request) => discover(request)
+  await rt.prepareProviderRoutes()
+  const fixed = adapterFor(writes[0][1][0].value)
+  for (const id of visionIds) {
+    if (!known.has(id)) {
+      assert.deepEqual((await fixed.resolveModel('apihub', id)).inputModalities, ['text'])
+      t.diagnostic(`Installed official catalog has no image declaration for ${id}; leave it unchanged`)
+      continue
+    }
+    assert.deepEqual((await fixed.resolveModel('apihub', id)).inputModalities, ['text', 'image'])
+    const chunks = []
+    for await (const chunk of fixed.stream({ provider: 'apihub', model: id, sessionId: 'synthetic-session', messages: [{ role: 'user', source: { kind: 'user' }, content: [
+      { type: 'text', text: 'Which color?' }, { type: 'image', attachment: { attachmentId: 'sha256:synthetic', width: 1, height: 1, mediaType: 'image/png', bytes: image.length } },
+    ] }] })) chunks.push(chunk)
+    assert.ok(chunks.some(chunk => chunk.type === 'text-delta' && chunk.text === 'red'), JSON.stringify(chunks))
+    assert.ok(chunks.some(chunk => chunk.type === 'finish' && chunk.reason.kind === 'stop'), JSON.stringify(chunks))
+  }
+  assert.ok(seen.length > 0)
+  assert.deepEqual(seen, visionIds.filter(id => known.has(id)))
+})
 
 test('built-in APIHub uses the verified endpoint, stores credentials separately and ranks first', async () => {
   const { rt, store, discovered } = dsh()
@@ -92,7 +238,7 @@ test('built-in APIHub uses the verified endpoint, stores credentials separately 
   assert.equal(store.APIHUB_API_KEY, 'synthetic-apihub-test')
   assert.ok(!JSON.stringify(view).includes('synthetic-apihub-test'))
   await rt.discoverModels({ preset: 'apihub' })
-  assert.equal(discovered[1][1].apiKey, 'synthetic-apihub-test')
+  assert.equal(discovered.at(-1)[1].apiKey, 'synthetic-apihub-test')
   assert.equal((await rt.catalog({ fresh: true }))[0].provider, 'apihub')
 })
 

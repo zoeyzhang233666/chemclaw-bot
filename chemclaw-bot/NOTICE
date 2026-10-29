@@ -233,3 +233,62 @@ DS-Bot avatar library, Apache-2.0
   Adapted PRs #491 and follow-up at 4a7b55069ad300eae8be42a74f31bc170b40ead7.
   Copyright 2026 Fei2411 and the DS Bot contributors.
   ChemClaw keeps original role artwork and 50 presets; library photos are user-owned.
+
+Apache ECharts 6.0.0 and ZRender 6.0.0
+  https://github.com/apache/echarts
+  https://github.com/ecomfe/zrender
+  ECharts: Copyright The Apache Software Foundation; Apache-2.0.
+  ZRender: Copyright (c) 2017, Baidu Inc.; BSD-3-Clause.
+  runtime/chart-engine.js bundles selected charts and the SVG renderer.
+  Original license and notice files are included in runtime/chart-licenses/.
+
+TypeScript runtime helpers (tslib), ISC
+  https://github.com/microsoft/tslib
+  Copyright (c) Microsoft Corporation.
+  Transitive chart-engine dependency; its original permission notice is retained
+  in runtime/chart-engine.js.
+
+Analysis runtime provisioning
+----------------------------
+Release packages carry a private Python 3.12 distribution and AKShare with its
+required dependencies. Python binaries come from Astral python-build-standalone
+(https://github.com/astral-sh/python-build-standalone); the bundled distribution
+retains its Python license and third-party licenses. AKShare 1.17.74 comes from
+https://github.com/akfamily/akshare (MIT); its installed package metadata and the
+licenses of its dependencies are retained in the runtime archives.
+
+Builds and source-only installs use uv 0.13.6 from
+https://github.com/astral-sh/uv/releases/tag/0.13.6 (MIT OR Apache-2.0).
+Copyright (c) 2025 Astral Software Inc.
+The MIT license is included at runtime/uv-LICENSE-MIT in the plugin.
+ChemClaw's provisioning, verification and packaging code is original.
+
+GenUI plugin composition
+  @changfenhuang/dsh-genui 0.15.0
+  https://github.com/omdsh-dev/dsh-genui
+  Copyright (c) 2026 dsh-external; MIT.
+  Loaded as the original plugin dependency, including its renderer, engines,
+  skill and third-party notices. ChemClaw's surface adapter is original code.
+  The dependency retains THIRD_PARTY_NOTICES.md for its bundled libraries.
+
+MIT License
+
+Copyright (c) 2026 dsh-external
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
