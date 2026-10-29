@@ -187,6 +187,10 @@ function decide(body) {
     return [text(note(sections))]
   }
 
+  // Cancellation and delivery reminders can share a request with the next user command.
+  const delivery = textBlocks(last?.content).map(value => /^交付[ \t]+(.+)$/mu.exec(value)).find(Boolean)
+  if (delivery && tools.has('present')) return [tool('present', { files: [{ path: delivery[1].trim(), description: 'ChemClaw mock verification deliverable' }] })]
+
   // A stopped call's result can share a message with the next group turn, which wins.
   const fresh = textBlocks(last?.content).some(value => value.trimStart().startsWith('[Group chat'))
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
@@ -555,11 +559,9 @@ function decide(body) {
     return [tool('ask_user_question', { questions: [{ id: 'start', header: 'Choose', question: '先从哪块开始？', options: [{ label: '先定目标 (Recommended)', description: '先把要做成什么说清楚' }, { label: '整理日常事务' }] }] })]
   }
   if (/用中文简短介绍 ChemClaw/.test(userText)) return [text('我是 ChemClaw，帮助你完成有依据的化工业务研究与文件交付。'), text('先让团队帮你做哪块？')]
-  const delivery = /^交付\s+(.+)$/s.exec(userText.trim())
   if (/^生成交付样例$/.test(userText.trim()) && tools.has('chem_deliver')) return [tool('chem_deliver', {
     report: JSON.stringify({ title: '文件交付验收', sections: [{ title: '验证结果', text: '从对话直接点击打开 HTML 和 Excel 文件。' }] }), formats: 'html,xlsx',
   })]
-  if (delivery && tools.has('present')) return [tool('present', { files: [{ path: delivery[1].trim(), description: 'ChemClaw mock verification deliverable' }] })]
   // View cards: 视图选项 and 视图表单 wait for an answer; 视图展示 and 大视图 are
   // display-only — the latter sits just under the view byte limit.
   if (/^\s*视图选项/.test(userText) && tools.has('show_view')) {
