@@ -5,9 +5,9 @@ import { createSource, EMPTY_ROSTER, indexRoster, isAgentSession } from './sourc
 import { teamActions } from './team-actions.js'
 import { themeCss, shellTokens, registry, registerShape, registerTheme, allThemes, layoutOf, widthOf, flatWidthOf } from './themes.js'
 import { MENTION_ORIGIN, currentPart } from './text.js'
-import { SHELL_CSS, CONVERSATION_CSS, installStyles, installCompiledStyles } from './styles.js'
+import { SHARED_CSS, SHELL_LAYOUT_CSS, CONVERSATION_CSS, installStyles, installCompiledStyles } from './styles.js'
 import { lookOf } from './mark.js'
-import { TeamSidebar, ConnectPlugins, YouAvatar, AccountLauncher, FooterAccount, BrandMark, BrandName, BotReturn, SIDEBAR_CSS, RETURN_CSS, holdShellShortcuts, openHarnessOnboarding, openHarnessSettings } from './sidebar.js'
+import { TeamSidebar, ConnectPlugins, YouAvatar, SurfaceSettingsLauncher, FooterAccount, BrandMark, HeroBrandMark, BrandName, BotReturn, BRAND_CSS, SIDEBAR_CSS, RETURN_CSS, holdShellShortcuts, openHarnessOnboarding, openHarnessSettings } from './sidebar.js'
 import { HeaderPill } from './header.js'
 import { TeamIntro } from './team-intro.js'
 import { ComposerPlus, ComposerVoice, menuIcons } from './composer.js'
@@ -19,7 +19,7 @@ import { AnsweredReply, WidgetDock, WIDGET_CSS } from './widget-cell.js'
 import { HandoffDock, HANDOFF_CSS } from './handoff-card.js'
 import { installHeaderNavigation } from './header-navigation.js'
 import { AssistantCell, TriggerCell, TurnProcessCell, Nothing, TurnTailCell, ToolCell } from './cells.js'
-import { Overlays } from './overlays.js'
+import { Overlays, SettingsOverlay } from './overlays.js'
 import { createBotBrowsers, serveBrowserReads } from './bot-browsers.js'
 import { BtwDock, BtwTurnTail } from './btw.js'
 import { SIDE_CSS, sideSource } from './side-chat.js'
@@ -66,8 +66,8 @@ export function apply(ctx) {
   // `details` is the panel's subject (a Session id); `view` picks details or the
   // subject Bot's browser inside it.
   const ui = createSource({ details: null, view: 'details', renaming: false, tab: null, side: null, newChat: null, exchange: null, menu: null, voice: null, palette: null, quote: null, settings: null, memory: null, toast: null, signIn: null, renameAgent: null, unread: unreadStore.read(), reactions: reactionStore.read(), visits: {} })
-  // Bot mode paints the whole team surface; Agent mode withdraws every slot and
-  // style so the shell's own interface returns. `plain` stays false until a Bot-mode
+  // Agent mode returns the native controls and conversation while keeping the
+  // shared ChemClaw brand and palette. `plain` stays false until a Bot-mode
   // view hosts a plain session, which drops only the conversation replacements.
   const surface = createSource({ mode: readMode(), plain: false })
   // DSH Agent Session ids from the last pull, so a reload already knows the main
@@ -316,7 +316,7 @@ export function apply(ctx) {
       key = next
       style.textContent = themeCss(themes[id], accent)
       const release = releaseTokens
-      releaseTokens = ctx.theme.overrideTokens('chemclaw-bot', shellTokens(themes[id]))
+      releaseTokens = ctx.theme.overrideTokens('chemclaw-bot', shellTokens(themes[id], accent))
       if (typeof release === 'function') release()
       if (snapshot.ready) {
         try { localStorage.setItem(PREFS_KEY, JSON.stringify({ theme: prefs.theme, accent: prefs.accent, motion: prefs.motion, layout: prefs.layout, width: prefs.width, flatWidth: prefs.flatWidth, thinking: prefs.thinking })) } catch { /* storage unavailable */ }
@@ -766,6 +766,25 @@ export function apply(ctx) {
   }, component))
   const installHeader = () => ctx.slots.inject('conversation.session.header', () => installHeaderNavigation(ctx.slots, face, HeaderPill, BOT_PRIORITY))
 
+  // Brand slots and theme tokens belong to both surfaces; their lifetime is the
+  // plugin's, independently of which session or native control is on screen.
+  ctx.effect(installTheme, 'chemclaw-bot: shared theme')
+  ctx.effect(() => installCompiledStyles(BRAND_CSS, 'brand'), 'chemclaw-bot: brand styles')
+  shadow('sidebar.brand.mark', { priority: BOT_PRIORITY }, BrandMark)
+  shadow('sidebar.brand.name', { priority: BOT_PRIORITY }, BrandName)
+  shadow('conversation.hero.brand.mark', { priority: BOT_PRIORITY }, HeroBrandMark)
+  shadow('settings.launcher', { priority: BOT_PRIORITY, inject: face }, SurfaceSettingsLauncher)
+  shadow('shell.overlay', { id: 'bot-settings', order: 49, inject: face }, SettingsOverlay)
+  for (const [tag, css] of [
+    ['shared', SHARED_CSS],
+    ['secrets', SECRET_CSS + PROVIDERS_CSS + CHEMCLAW_UI_CSS],
+    ['skills', SKILL_CSS],
+    ['models', MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS + AVATAR_LIBRARY_CSS],
+    ['usage', USAGE_CSS], ['schedules', SCHEDULE_CSS], ['feedback', FEEDBACK_CSS],
+    ['about', ABOUT_CSS], ['members', MEMBER_CSS], ['user-messages', USER_MESSAGE_CSS],
+    ['widgets', WIDGET_CSS], ['handoff', HANDOFF_CSS], ['browser', BROWSER_CSS + SIDE_CSS],
+  ]) ctx.effect(() => installCompiledStyles(css, tag), `chemclaw-bot: shared ${tag} styles`)
+
   // The "@" menu's Bot group and the chats "+" references. The composer's controller
   // for a Session is the shell's own, so the chats open at its caret.
   let atMenu = null
@@ -799,30 +818,12 @@ export function apply(ctx) {
   // group re-skins the session itself. Each step returns a disposer from slots.inject,
   // so a surface change withdraws the whole group and the outlets re-render.
   const installShell = () => [
-    () => installCompiledStyles(SHELL_CSS, 'shell'),
+    () => installCompiledStyles(SHELL_LAYOUT_CSS, 'shell'),
     () => installCompiledStyles(SIDEBAR_CSS, 'sidebar'),
-    () => installCompiledStyles(SECRET_CSS + PROVIDERS_CSS + CHEMCLAW_UI_CSS, 'secrets'),
-    () => installCompiledStyles(SKILL_CSS, 'skills'),
-    () => installCompiledStyles(MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS + AVATAR_LIBRARY_CSS, 'models'),
-    () => installCompiledStyles(USAGE_CSS, 'usage'),
-    () => installCompiledStyles(SCHEDULE_CSS, 'schedules'),
-    () => installCompiledStyles(FEEDBACK_CSS, 'feedback'),
-    () => installCompiledStyles(ABOUT_CSS, 'about'),
-    () => installCompiledStyles(MEMBER_CSS, 'members'),
-    () => installCompiledStyles(USER_MESSAGE_CSS, 'user-messages'),
-    () => installCompiledStyles(WIDGET_CSS, 'widgets'),
-    () => installCompiledStyles(HANDOFF_CSS, 'handoff'),
-    () => installCompiledStyles(BROWSER_CSS + SIDE_CSS, 'browser'),
-    () => installTheme(),
     () => shadow('sidebar.workspaces', { priority: BOT_PRIORITY, inject: face }, TeamSidebar),
-    () => shadow('sidebar.brand.mark', { priority: BOT_PRIORITY }, BrandMark),
-    () => shadow('sidebar.brand.name', { priority: BOT_PRIORITY }, BrandName),
     () => shadow('sidebar.footer.action', { id: 'bot-account', order: -200, inject: face }, FooterAccount),
     () => shadow('sidebar.footer.action', { id: 'bot-connect', order: -100, inject: face }, ConnectPlugins),
     () => shadow('settings.trigger', { priority: BOT_PRIORITY }, YouAvatar),
-    // The whale wins the seat over a shell account plugin's own launcher (the
-    // Desktop's "··· More"), which comes back in Agent mode.
-    () => shadow('settings.launcher', { priority: BOT_PRIORITY, inject: face }, AccountLauncher),
     () => shadow('shell.overlay', { id: 'bot', order: 50, inject: face }, Overlays),
     () => shadow('shell.overlay', { id: 'bot-signin', order: 55, inject: face }, ApihubGetStarted),
     () => shadow('shell.overlay', { id: 'bot-toast', order: 60, inject: face }, ErrorToast),

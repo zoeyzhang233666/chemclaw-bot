@@ -652,23 +652,7 @@ function pressSettingsShortcut() {
 const NO_SUBSCRIBE = () => () => {}
 const NO_SNAPSHOT = () => null
 
-// The footer avatar opens an account menu above itself, with Bot settings as one
-// entry. Automation tasks open ChemClaw's schedules page: the shell schedules
-// panel's New button calls startSession(), which in Bot mode jumps into a chat.
-// `seat` is the shell's settings.launcher seat: at priority -10 the whale wins it
-// over a shell account plugin's own launcher (the Desktop's "··· More"), which comes
-// back in Agent mode; FooterAccount stands in while no seat exists at all.
-export function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboarding, actions }) {
-  const [open, setOpen] = useState(false)
-  useLayoutEffect(() => {
-    if (!seat) return undefined
-    actions.seatAccount(true)
-    return () => actions.seatAccount(false)
-  }, [seat])
-  const [box, setBox] = useState(null)
-  const button = useRef(null)
-  useEffect(() => { if (settingsOpen) setOpen(false) }, [settingsOpen])
-  // The settings dialog links back to the shell's own settings (models, providers).
+function useShellSettings(openSettings, openOnboarding) {
   useEffect(() => {
     if (!openSettings) return undefined
     openShellSettings = openSettings
@@ -679,6 +663,39 @@ export function AccountLauncher({ seat = true, settingsOpen, openSettings, openO
     openShellOnboarding = openOnboarding
     return () => { if (openShellOnboarding === openOnboarding) openShellOnboarding = null }
   }, [openOnboarding])
+}
+
+function ClassicSettingsLauncher({ wide, settingsShortcut, openSettings, openOnboarding, useUi, actions }) {
+  useShellSettings(openSettings, openOnboarding)
+  const settingsOpen = useUi(value => value.settings !== null)
+  return h('button', {
+    type: 'button', className: 'bt-classic-settings', title: t('Settings'), 'aria-label': t('Settings'),
+    'aria-haspopup': 'dialog', 'aria-expanded': settingsOpen, 'aria-keyshortcuts': settingsShortcut?.aria,
+    onClick: () => actions.openSettings('general'),
+  }, h(GearIcon), wide ? h('span', null, t('Settings')) : null)
+}
+
+export function SurfaceSettingsLauncher(props) {
+  const mode = props.useSurface(value => value.mode)
+  return h(mode === 'agent' ? ClassicSettingsLauncher : AccountLauncher, props)
+}
+
+// The footer avatar opens an account menu above itself, with Bot settings as one
+// entry. Automation tasks open ChemClaw's schedules page: the shell schedules
+// panel's New button calls startSession(), which in Bot mode jumps into a chat.
+// `seat` is the shell's settings.launcher seat; SurfaceSettingsLauncher uses the
+// direct Settings button in Agent mode. FooterAccount covers a missing seat.
+export function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboarding, actions }) {
+  const [open, setOpen] = useState(false)
+  useLayoutEffect(() => {
+    if (!seat) return undefined
+    actions.seatAccount(true)
+    return () => actions.seatAccount(false)
+  }, [seat])
+  const [box, setBox] = useState(null)
+  const button = useRef(null)
+  useEffect(() => { if (settingsOpen) setOpen(false) }, [settingsOpen])
+  useShellSettings(openSettings, openOnboarding)
   useEffect(() => {
     if (!open) return undefined
     const onDown = (event) => {
@@ -804,14 +821,13 @@ export function FooterAccount(props) {
   return h('span', { className: 'bt-foot-account' }, h(AccountLauncher, { ...props, seat: false }))
 }
 
-// The only entry registered in every mode: in Agent mode the whole Bot surface is
-// withdrawn, and this button in the shell's own footer is the way back.
+// In Agent mode this entry in the shell's footer leads back to the expert team.
 export function BotReturn({ wide, useSurface, actions }) {
   const mode = useSurface(value => value.mode)
   if (mode !== 'agent') return null
-  return h('button', { type: 'button', className: 'bt-return', 'aria-label': t('ChemClaw'), title: t('ChemClaw'), onClick: () => actions.setSurface('bot') },
+  return h('button', { type: 'button', className: 'bt-return', 'aria-label': t('ChemClaw expert team'), title: t('ChemClaw expert team'), onClick: () => actions.setSurface('bot') },
     h(BotMark, { look: MAIN_LOOK, size: 20 }),
-    wide ? h('span', { className: 'bt-return-name' }, t('ChemClaw')) : null)
+    wide ? h('span', { className: 'bt-return-name' }, t('ChemClaw expert team')) : null)
 }
 
 // Agent mode has none of the shell-group styles, so the return button carries its own.
@@ -824,20 +840,37 @@ export const RETURN_CSS = `
 /* Shell styles carry --bt-ink-deepseek and Agent mode withdraws them; pin it here. */
 .bt-return .bt-mark{--bt-ink-deepseek:#4D6BFE}
 .bt-return-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bt-classic-settings{display:flex;align-items:center;gap:10px;min-height:40px;width:100%;box-sizing:border-box;padding:8px 14px;border:0;border-radius:10px;background:none;color:var(--bt-ink);font:inherit;font-size:14px;cursor:pointer;text-align:left}
+.bt-classic-settings:hover{background:var(--bt-hover)}
+.bt-classic-settings>svg{width:20px;height:20px;flex:none}
+.bt-classic-settings:has(>svg:only-child){width:36px;min-height:36px;padding:8px;justify-content:center}
 `
 
 export function BrandMark({ size = 24 }) {
   return h('span', { className: 'bt-brand-cloud' }, h(ApiHubMark, { size }))
 }
-export function BrandName() {
-  return h('span', { style: { fontWeight: 600, fontSize: 14 } }, 'ChemClaw')
+export function HeroBrandMark({ size = 40, className }) {
+  return h('span', { className: ['bt-hero-brand', className].filter(Boolean).join(' ') },
+    h('span', { className: 'bt-brand-cloud', 'aria-hidden': true }, h(ApiHubMark, { size })),
+    h('span', null, 'ChemClaw'))
 }
+export function BrandName() {
+  return h('span', { className: 'bt-brand-name' }, 'ChemClaw')
+}
+
+export const BRAND_CSS = `
+.bt-brand-cloud{display:inline-flex;align-items:center;justify-content:center;flex:none;color:var(--bt-accent);line-height:0}
+.bt-brand-name{font:600 20px/1.2 system-ui,sans-serif;letter-spacing:-.04em;color:var(--bt-ink)}
+.bt-hero-brand{display:inline-flex!important;align-items:center;gap:12px;width:auto!important;height:auto!important;white-space:nowrap;color:var(--bt-ink);font:600 clamp(26px,4vw,36px)/1.2 system-ui,sans-serif;letter-spacing:-.04em}
+/* DSH has no headline slot; its title group contains both the slogan and badge.
+   The public brand slot above supplies the complete replacement wordmark. */
+[data-content-phase=hero]:has(.bt-hero-brand) [class*="_titleGroup"]{display:none}
+`
 
 // With the whale holding the settings seat, the Bot row is just the account menu
 // and Connect plugins; FooterAccount only shows when the seat went to no one. The
 // shell's footer classes are CSS-module names, so they match on their stems.
 export const SIDEBAR_CSS = `
-.bt-brand-cloud{display:inline-flex;flex:none;color:var(--bt-accent)}
 .bt-confirm{width:260px;max-width:72vw;padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
 .bt-confirm-text{margin:0;font-size:13px;line-height:19px;color:var(--bt-ink-2)}
 .bt-confirm-error{margin:0;font-size:12px;line-height:17px;color:var(--bt-danger);overflow-wrap:anywhere}

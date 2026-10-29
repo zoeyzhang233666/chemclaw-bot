@@ -1,7 +1,8 @@
 ﻿import { STORAGE } from './storage.js'
 
 // The plugin's surface mode: 'bot' paints the whole team interface over the shell,
-// 'agent' withdraws every replacement so the shell's own interface comes back.
+// 'agent' withdraws team controls so the shell's own interface comes back.
+// The shared brand and palette live outside these groups in both modes.
 // `plain` marks a Bot-mode view whose main view is a plain session — only the
 // conversation replacements come off then, the shell stays.
 export function groupsFor({ mode, plain = false }) {
