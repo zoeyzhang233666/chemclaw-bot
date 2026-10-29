@@ -2,3 +2,6 @@
 *.sh text eol=lf
 # Windows launchers must remain readable by cmd.exe.
 /*.cmd text eol=crlf
+# Generated browser assets must match esbuild's LF output on every platform.
+/chemclaw-bot/client.js text eol=lf
+/chemclaw-bot/runtime/chart-engine.js text eol=lf

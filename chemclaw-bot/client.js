@@ -2369,6 +2369,8 @@ var shellTokens = ({ light, dark }, accent) => ({
   "--dsw-alias-bg-base": { light: light.bg, dark: dark.bg },
   "--dsw-alias-bg-layer-1": { light: light.card, dark: dark.card },
   "--dsw-alias-bg-layer-2": { light: light.bg, dark: dark.bg },
+  "--dsw-alias-border-l1": { light: rgba(light.text, 0.15), dark: rgba(dark.text, 0.15) },
+  "--dsw-alias-border-l2": { light: rgba(light.text, 0.08), dark: rgba(dark.text, 0.08) },
   "--dsw-specific-sidebar-fill": { light: light.sidebar, dark: dark.sidebar },
   "--dsw-specific-input-major": { light: light.bg, dark: dark.sidebar },
   "--dsw-alias-label-primary": { light: light.text, dark: dark.text },
@@ -2933,6 +2935,7 @@ function useLinger(value, ms) {
 // src/client/styles.js
 var SKIN_FOOT = ':is(div,footer):not([class*="_footArea"]):has(> div > [data-slot="sidebar.footer.action"] > .bt-connect-wrap)';
 var SHARED_START_CSS = `
+[data-genui-surface^="chemclaw-bot/"]{min-width:0;--dsw-alias-brand-primary:var(--bt-accent);--dsw-alias-state-business-primary:var(--bt-accent);--dsw-alias-bg-base:var(--bt-main);--dsw-alias-bg-layer-1:var(--bt-card);--dsw-alias-bg-layer-2:var(--bt-main);--dsw-alias-label-primary:var(--bt-ink);--dsw-alias-label-secondary:var(--bt-ink-2);--dsw-alias-label-tertiary:var(--bt-ink-3);--dsw-alias-border-l1:var(--bt-line-2);--dsw-alias-border-l2:var(--bt-line)}
 body{--bt-ink:#141414;--bt-danger:#e02135;--bt-ink-2:rgba(20,20,20,.6);--bt-ink-3:rgba(20,20,20,.36);--bt-bubble:#eeeeee;--bt-sidebar:#f7f7f7;--bt-main:#fcfcfc;--bt-line:rgba(20,20,20,.08);--bt-line-2:rgba(20,20,20,.15);--bt-line-weak:rgba(20,20,20,.1);--bt-hover:rgba(119,119,119,.09);--bt-active:rgba(119,119,119,.17);--bt-card:#ffffff;--bt-accent:#4d6bfe;--bt-green:#00c972;--bt-star:#ff9800;--bt-user:#070707;--bt-user-ink:#fcfcfc;--bt-tag-bg:rgba(20,20,20,.06);--bt-tag-ink:rgba(20,20,20,.56);--bt-knob:#ffffff;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 /* iOS waits out a double-tap zoom on buttons; the plugin's own controls never zoom. */
 :is(.bt-tool,.bt-uaction,.bt-menu button,.bt-menu-item,.bt-icon-btn,.bt-round,.bt-pill,.bt-account,.bt-set-row,.bt-settings-item,.bt-react-strip button,.bt-palette-row,.bt-palette-clear,.bt-tab,.bt-ptab,.bt-ptab-x,.bt-bcard-x,.bt-plus,.bt-q-btn,.bt-q-x,.bt-x,.bt-nc-send,.bt-send,.bt-soft,.bt-mini,.bt-shape,.bt-swatch,.bt-color,.bt-newchat,.bt-task-day,.bt-task-remove,.bt-fb-btn){touch-action:manipulation}
@@ -3523,6 +3526,11 @@ var SHARED_END_CSS = `
    sender's avatar) line up with the bubble alone. */
 .bt-msg-line{position:relative;display:flex;align-items:flex-end;gap:8px;max-width:100%}
 .bt-msg-line>.bt-bubble{max-width:none;min-width:0}
+.bt-msg:has([data-genui-explicit-fence]),.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line{width:100%}
+.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line>.bt-bubble{flex:1}
+[data-genui-surface^="chemclaw-bot/"] [data-genui=true]{--dsl-g-font-h1:max(18px,calc(var(--dsh-content-font-size,14px) * 1.2));--dsl-g-gap-xl:16px}
+[data-genui-surface^="chemclaw-bot/"] input[type=range]{min-width:0;max-width:100%}
+@media(max-width:600px){.bt-msg:has([data-genui-explicit-fence]),.bt-astack[data-lead]>.bt-msg:has([data-genui-explicit-fence]){max-width:calc(100% - 8px)}}
 /* The same bubble width as beside an avatar column: the share of (100% - 30px), plus the 30px. */
 .bt-astack[data-lead]>.bt-msg{max-width:min(calc(var(--bt-msg-w) * (100% - 30px) + 30px),calc(100% - 52px))}
 .bt-tools{position:absolute;top:50%;left:100%;margin-left:6px;transform:translateY(-50%);display:flex;gap:2px;opacity:0;visibility:hidden;transition:opacity .12s ease,visibility .12s}
@@ -10218,11 +10226,81 @@ function ToolActivities({ entries: entries2, name }) {
   }));
 }
 
+// src/client/genui-surfaces.js
+var integer = (value) => Number.isSafeInteger(value) && value >= 0;
+function createGenuiSurfaces(report = () => {
+}) {
+  const surfaces = /* @__PURE__ */ new Set();
+  const adapters = /* @__PURE__ */ new Map();
+  let active = true;
+  const mount = (entry, adapter) => {
+    let live = true;
+    const sendPrompt = async (text) => {
+      if (!active || !live || !surfaces.has(entry) || !entry.root.isConnected || entry.root.getAttribute("data-genui-surface") !== entry.source) throw new Error("This GenUI message is no longer active.");
+      try {
+        await entry.sendPrompt(text);
+      } catch (error) {
+        report(error);
+        throw error;
+      }
+    };
+    let release;
+    try {
+      release = adapter.mount({ ...entry, sendPrompt });
+    } catch (error) {
+      report(error);
+    }
+    entry.mounts.set(adapter, () => {
+      live = false;
+      release?.();
+    });
+  };
+  const drop = (entry) => {
+    surfaces.delete(entry);
+    for (const release of entry.mounts.values()) release();
+    entry.mounts.clear();
+  };
+  return {
+    registerSidechatSurfaceAdapter(adapter) {
+      if (!active || typeof adapter?.id !== "string" || typeof adapter.mount !== "function") return () => {
+      };
+      if (adapters.has(adapter.id)) throw new Error(`GenUI adapter already registered: ${adapter.id}`);
+      const registration = { adapter };
+      adapters.set(adapter.id, registration);
+      for (const entry of surfaces) mount(entry, adapter);
+      return () => {
+        if (adapters.get(adapter.id) !== registration) return;
+        adapters.delete(adapter.id);
+        for (const entry of surfaces) {
+          entry.mounts.get(adapter)?.();
+          entry.mounts.delete(adapter);
+        }
+      };
+    },
+    add(surface) {
+      if (!active || !integer(surface.eventSeq) || !integer(surface.contentBlockIndex) || typeof surface.threadId !== "string" || !surface.threadId || !surface.root || surface.root.getAttribute("data-genui-surface") !== surface.source || typeof surface.text !== "string" || typeof surface.sendPrompt !== "function") return () => {
+      };
+      const entry = { ...surface, mounts: /* @__PURE__ */ new Map() };
+      surfaces.add(entry);
+      for (const { adapter } of adapters.values()) mount(entry, adapter);
+      return () => drop(entry);
+    },
+    dispose() {
+      active = false;
+      for (const entry of surfaces) drop(entry);
+      adapters.clear();
+    }
+  };
+}
+function assistantTextBlocks(blocks = []) {
+  return blocks.flatMap((block, contentBlockIndex) => block.kind === "text" && block.text.trim() ? [{ text: block.text, contentBlockIndex }] : []);
+}
+
 // src/client/cells.js
 var import_react24 = require("react");
 var import_react_dom3 = require("react-dom");
 var mdLabels3 = () => ({ code: { copyLabel: t("Copy"), copiedLabel: t("Copied") }, footnotes: t("Footnotes") });
-function Bubbles({ texts: texts2, roster, selfId, actions, streaming, sessionId, msgKey, useUi, lead, mentions, fold = FOLD_AT, whole }) {
+function Bubbles({ texts: texts2, genui, roster, selfId, actions, streaming, sessionId, msgKey, useUi, lead, mentions, fold = FOLD_AT, whole }) {
   const onClick = (event) => {
     const target = mentionTarget(event);
     if (target === null) return;
@@ -10240,6 +10318,7 @@ function Bubbles({ texts: texts2, roster, selfId, actions, streaming, sessionId,
         key: index,
         text,
         index,
+        genui: genui?.[index],
         roster,
         selfId,
         actions,
@@ -10255,12 +10334,26 @@ function Bubbles({ texts: texts2, roster, selfId, actions, streaming, sessionId,
     })
   );
 }
-function Bubble({ text, index, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
   const { shown, folded, control } = useFold(text, { limit: fold, whole, live });
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live });
   const key = msgKey ? `${msgKey}:${index}` : void 0;
   const body = (0, import_react24.createElement)(import_dsh_client_ui_primitives.MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels3(), variant: "compact", fileMentions: mentions });
   const row = (0, import_react24.useRef)(null);
+  const markdown = (0, import_react24.useRef)(null);
+  const source = genui?.source ?? "chemclaw-bot/assistant";
+  (0, import_react24.useLayoutEffect)(() => {
+    if (live || folded || !genui || !/dsh-ui/i.test(text) || !actions.genuiSurfaces) return void 0;
+    return actions.genuiSurfaces.add({
+      root: markdown.current,
+      source,
+      threadId: genui.threadId,
+      eventSeq: genui.eventSeq,
+      contentBlockIndex: genui.contentBlockIndex,
+      text,
+      sendPrompt: (prompt) => actions.sendGenui(genui.threadId, prompt)
+    });
+  }, [actions, live, folded, text, source, genui?.threadId, genui?.eventSeq, genui?.contentBlockIndex]);
   const [toolsOpen, setToolsOpen] = (0, import_react24.useState)(false);
   useDismiss(toolsOpen, () => setToolsOpen(false), [row]);
   const tapTools = (event) => {
@@ -10277,7 +10370,7 @@ function Bubble({ text, index, roster, selfId, actions, sessionId, msgKey, menti
       (0, import_react24.createElement)(
         "div",
         { className: "bt-bubble", "data-folded": folded || void 0 },
-        control ? (0, import_react24.createElement)("div", { className: "bt-fold-body" }, body) : body,
+        (0, import_react24.createElement)("div", { ref: markdown, className: control ? "bt-fold-body" : void 0, "data-genui-surface": source }, body),
         control
       ),
       live ? null : (0, import_react24.createElement)(MessageTools, { text: folded ? text : shown, name: roster.byId[selfId]?.name ?? t("Bot"), sessionId, react: key ? (emoji) => actions.toggleReaction(msgKey, index, emoji) : void 0, actions, open: toolsOpen })
@@ -10457,7 +10550,9 @@ function AssistantCell({ node, groupPart, sessionId, openFile, fileMentions, use
   const contexts = useTurnContext(String(data.turn));
   const mentions = useFileMentions({ node, openFile, fileMentions, useTurnData });
   const hidden = Boolean(roster.roomsById[sessionId]) || isHiddenTurn(roster, sessionId, data.turn);
-  const texts2 = groupPart === "reasoning" ? [] : data.blocks.filter((block) => block.kind === "text" && block.text.trim() !== "").map((block) => block.text);
+  const textBlocks = groupPart === "reasoning" ? [] : assistantTextBlocks(data.blocks);
+  const texts2 = textBlocks.map((block) => block.text);
+  const genui = data.status === "settled" ? textBlocks.map((block) => ({ threadId: sessionId, eventSeq: data.finalNode?.seq, contentBlockIndex: block.contentBlockIndex })) : void 0;
   const running = data.status === "running";
   const members = steps.length ? steps : [data];
   const shown = thinkingShown(roster.prefs);
@@ -10496,7 +10591,7 @@ function AssistantCell({ node, groupPart, sessionId, openFile, fileMentions, use
       // time makes one Elapsed show settled + running.
       ...thinking !== void 0 ? { at: typeof thinking.time === "number" ? thinking.time - (ms ?? 0) : void 0 } : { ms }
     }) : null,
-    texts2.length ? (0, import_react24.createElement)(Bubbles, { texts: texts2, roster, selfId, actions, streaming: running, sessionId, msgKey: `${sessionId}:${data.turn}:${node.key ?? data.seq ?? ""}`, useUi, mentions, fold: FOLD_HUGE }) : null
+    texts2.length ? (0, import_react24.createElement)(Bubbles, { texts: texts2, genui, roster, selfId, actions, streaming: running, sessionId, msgKey: `${sessionId}:${data.turn}:${node.key ?? data.seq ?? ""}`, useUi, mentions, fold: FOLD_HUGE }) : null
   );
 }
 function EventLine({ prefix, bots, joiner = t("and"), onOpen, whole = false }) {
@@ -10535,7 +10630,7 @@ function SpeakerHead({ bot, time }) {
     Number.isFinite(time) ? (0, import_react24.createElement)("span", { className: "bt-group-time", title: clockLabel(time) }, messageClock(time)) : null
   );
 }
-function GroupMessage({ bot, text, texts: texts2 = [text], room: room2, roster, actions, msgKey, useUi, whole, time, duration, streaming }) {
+function GroupMessage({ bot, text, texts: texts2 = [text], genui, room: room2, roster, actions, msgKey, useUi, whole, time, duration, streaming }) {
   const lead = (0, import_react24.createElement)(
     "button",
     { type: "button", className: "bt-lead", "aria-label": t("Open {name}'s chat", { name: bot.name }), onClick: () => actions.openSession(bot.id) },
@@ -10555,7 +10650,7 @@ function GroupMessage({ bot, text, texts: texts2 = [text], room: room2, roster, 
       Number.isFinite(time) ? (0, import_react24.createElement)("span", { className: "bt-group-time", title: clockLabel(time) }, messageClock(time)) : null,
       took ? (0, import_react24.createElement)("span", { className: "bt-group-took", title: t("Ran for {duration}", { duration: took }) }, took) : null
     ),
-    (0, import_react24.createElement)(Bubbles, { texts: texts2, roster, selfId: bot.id, actions, sessionId: room2?.id, msgKey, useUi, lead: flat ? null : lead, whole, streaming })
+    (0, import_react24.createElement)(Bubbles, { texts: texts2, genui, roster, selfId: bot.id, actions, sessionId: room2?.id, msgKey, useUi, lead: flat ? null : lead, whole, streaming })
   );
 }
 function stackReplies(replies) {
@@ -10729,8 +10824,9 @@ function ChatRows({ items, sessionId, roster, actions, useUi, clock: clock4 = fa
     const last = rows2.at(-1);
     if (item.kind === "bot" && last?.kind === "bot") {
       last.texts.push(item.text);
+      last.genui.push({ threadId: item.sessionId, eventSeq: item.seq, contentBlockIndex: item.contentBlockIndex });
       last.end = item.time;
-    } else rows2.push(item.kind === "bot" ? { kind: "bot", texts: [item.text], time: item.time, end: item.time } : item);
+    } else rows2.push(item.kind === "bot" ? { kind: "bot", texts: [item.text], genui: [{ threadId: item.sessionId, eventSeq: item.seq, contentBlockIndex: item.contentBlockIndex }], time: item.time, end: item.time } : item);
   }
   let before;
   return rows2.flatMap((row, index) => {
@@ -10756,7 +10852,7 @@ function chatRow(row, key, { sessionId, selfId, roster, actions, useUi }) {
     case "view":
       return (0, import_react24.createElement)(WidgetCell, { key, sessionId, callId: row.callId, args: { title: row.title, view: row.view }, done: true, roster, actions });
     case "bot": {
-      const bubbles = (0, import_react24.createElement)(Bubbles, { key, texts: row.texts, roster, selfId, actions, sessionId: useUi ? sessionId : void 0, msgKey: useUi ? `${sessionId}:${row.time}` : void 0, useUi, fold: FOLD_HUGE });
+      const bubbles = (0, import_react24.createElement)(Bubbles, { key, texts: row.texts, genui: row.genui, roster, selfId, actions, sessionId: useUi ? sessionId : void 0, msgKey: useUi ? `${sessionId}:${row.time}` : void 0, useUi, fold: FOLD_HUGE });
       const speaker = layoutOf(roster.prefs) === "flat" ? roster.byId[selfId] : void 0;
       return speaker ? (0, import_react24.createElement)(import_react24.Fragment, { key }, (0, import_react24.createElement)(SpeakerHead, { bot: speaker, time: row.time }), bubbles) : bubbles;
     }
@@ -10819,6 +10915,7 @@ function TriggerCell({ node, sessionId, useRoster, useSessions, useTurnClock, us
         const poster = roster.byId[source.senderSessionId] ?? { id: source.senderSessionId, name: source.senderName ?? t("a Bot"), color: "gray" };
         const file = source.length === void 0 ? void 0 : (data.content ?? []).find((block) => block?.type === "file")?.attachment;
         const text = stripHeader(contentText(data.content));
+        const postBlocks = (data.content ?? []).flatMap((block, contentBlockIndex) => block?.type === "text" && typeof block.text === "string" ? [{ text: stripHeader(block.text), contentBlockIndex }] : []).filter((block) => block.text.trim());
         return (0, import_react24.createElement)(GroupMessage, {
           bot: poster,
           text: file ? stripLongNote(text) : text,
@@ -10828,6 +10925,7 @@ function TriggerCell({ node, sessionId, useRoster, useSessions, useTurnClock, us
           msgKey: `${sessionId}:post:${data.seq ?? node.key}`,
           useUi,
           time: data.time,
+          ...!file ? { texts: postBlocks.map((block) => block.text), genui: postBlocks.map((block) => ({ source: "chemclaw-bot/group-post", threadId: sessionId, eventSeq: data.seq, contentBlockIndex: block.contentBlockIndex })) } : {},
           whole: file ? { length: source.length, load: () => actions.fileText(file) } : void 0
         });
       }
@@ -11024,7 +11122,7 @@ function useLiveNote(actions, sessionId, id, entry) {
     return () => actions.noteLive(sessionId, id, null);
   }, [sessionId, id, key]);
 }
-function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi, useWork }) {
+function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, actions, useUi, useWork }) {
   const [live, setLive] = (0, import_react24.useState)({ replies: [], speaking: null, drafts: [] });
   (0, import_react24.useEffect)(() => {
     if (done) return void 0;
@@ -11147,7 +11245,8 @@ function GroupReplies({ sessionId, callId, done, content, roster, actions, useUi
       if (reply.kind === "done") {
         return (0, import_react24.createElement)("div", { key: `${reply.botId}-${index}`, className: "bt-event" }, t("{name} finished its work", { name: bot.name }));
       }
-      return (0, import_react24.createElement)(GroupMessage, { key: `${reply.botId}-${index}`, bot, texts: texts2, room: room2, roster, actions, msgKey: callId ? `${sessionId}:${callId}:${index}` : void 0, useUi, time, duration });
+      const genui = done ? texts2.map((_, offset) => ({ source: `chemclaw-bot/group/${callId}`, threadId: sessionId, eventSeq, contentBlockIndex: index + offset })) : void 0;
+      return (0, import_react24.createElement)(GroupMessage, { key: `${reply.botId}-${index}`, bot, texts: texts2, genui, room: room2, roster, actions, msgKey: callId ? `${sessionId}:${callId}:${index}` : void 0, useUi, time, duration });
     }),
     activities.map((entry, index) => (0, import_react24.createElement)(ToolActivities, { key: `activity-${index}`, name: roster.byId[entry.botId]?.name ?? entry.name, entries: entry.entries })),
     drafts.map((draft) => {
@@ -11191,7 +11290,7 @@ function useShownCards(actions, sessionId, callIds) {
     return () => actions.noteCards(sessionId, ids, -1);
   }, [sessionId, key]);
 }
-function renderCall(call2, { sessionId, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks }) {
+function renderCall(call2, { sessionId, eventSeq, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks }) {
   const tool = toolName(call2);
   const done = call2.kind === "tool-result";
   const { text: arg, value: argValue } = toolArgs(call2);
@@ -11219,7 +11318,7 @@ function renderCall(call2, { sessionId, roster, actions, useUi, useWork, findBot
       return done && target ? (0, import_react24.createElement)(EventLine, { prefix: t("Updated"), bots: [target], onOpen: (bot) => actions.openSession(bot.id) }) : null;
     }
     case "group_relay":
-      return (0, import_react24.createElement)(GroupReplies, { sessionId, callId: call2.callId, done, content: call2.content, roster, actions, useUi, useWork });
+      return (0, import_react24.createElement)(GroupReplies, { sessionId, eventSeq: call2.seq ?? eventSeq, callId: call2.callId, done, content: call2.content, roster, actions, useUi, useWork });
     case "create_group":
     case "update_group":
     case "delete_group":
@@ -11299,7 +11398,7 @@ function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, us
     status: call2.kind === "tool-result" ? call2.isError ? "failed" : "done" : active ? "running" : "stopped"
   }));
   if (drawn.length === 0 && entries2.length === 0) return null;
-  const env = { sessionId, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages } };
+  const env = { sessionId, eventSeq: root.seq, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages } };
   return (0, import_react24.createElement)(import_react24.Fragment, null, (0, import_react24.createElement)(ToolActivities, { entries: entries2 }), drawn.map((call2, index) => (0, import_react24.createElement)(import_react24.Fragment, { key: call2.callId ?? index }, renderCall(call2, env))));
 }
 
@@ -24140,6 +24239,7 @@ function apply(ctx) {
   const actions = {
     ...teamActions({ call, after, partFor, roster, ui: ui2, live, cards, heldCards, turnClock }),
     currentSessionId: mainView,
+    sendGenui: (sessionId, text) => after(call("send", { sessionId, text })),
     useSkill: async (name, target = mainView()) => {
       const snapshot = roster.getSnapshot();
       const item = snapshot.capabilities.find((item2) => item2.name === name);
@@ -24309,6 +24409,18 @@ function apply(ctx) {
       }
     }
   };
+  actions.genuiSurfaces = createGenuiSurfaces((error) => actions.reportError(error, "genui"));
+  ctx.effect(() => {
+    if (ctx.get("genuiSidechat")) {
+      actions.reportError(new Error("Another plugin already provides genuiSidechat."), "genui");
+      return void 0;
+    }
+    const release = ctx.provide("genuiSidechat", actions.genuiSurfaces);
+    return () => {
+      actions.genuiSurfaces.dispose();
+      release?.();
+    };
+  }, "chemclaw-bot: GenUI surfaces");
   if (browsers) {
     Object.assign(actions, {
       // The globe button: the Bot's active tab in the browser view, or a new tab.

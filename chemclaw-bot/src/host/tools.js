@@ -10,7 +10,6 @@ import { NAME_MAX } from './requests.js'
 import { unquote } from './text.js'
 import { mentionSpans } from '../shared/mentions.js'
 import { checkShownView } from '../shared/views.js'
-import { VIEW_POLICY } from './view-policy.js'
 
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
 export const GROUP_REF = { type: 'string', required: true, description: 'Exact group chat name from list_bots' }
@@ -664,7 +663,7 @@ export function install(rt) {
 
   ctx.tools.register(defineTool({
     name: 'show_view',
-    description: `Draw a view as part of your answer to the human user in your own chat or a group. Text you write before and after the call shows around it. ${VIEW_POLICY} In groups set audience: user only for an answer meant for the human, including a direct @ question to any member. Cards are released when that answer turn completes, not at group completion. Never draw views for peer discussion, delegation or progress. A view with options, confirm, form or submit ends your turn, and the answer arrives as the user's next message; group cards cannot submit answers. Never collect a key, token or password. Keep each view under 8 KB.`,
+    description: `Draw a view as part of your answer to the human user in your own chat or a group. Text you write before and after the call shows around it. Follow the global visual delivery contract. In groups set audience: user only for an answer meant for the human, including a direct @ question to any member. Cards are released when that answer turn completes, not at group completion. Never draw views for peer discussion, delegation or progress. A view with options, confirm, form or submit ends your turn, and the answer arrives as the user's next message; group cards cannot submit answers. Never collect a key, token or password. Keep each view under 8 KB.`,
     parameters: {
       title: { type: 'string', description: 'Optional short heading shown above the view' },
       view: {
@@ -691,10 +690,12 @@ export function install(rt) {
       if (checked.interactive && args.await_reply === false) return 'This view has controls to submit, so it waits for the user\'s answer; call show_view without await_reply: false.'
       if (group) {
         if (checked.interactive || args.await_reply === true) return 'Group views cannot submit answers. Use charts, tables or local calculator inputs without a submit control.'
-        return rt.stageRoomView(id, { title, view, callId: exec.callId })
+        const result = rt.stageRoomView(id, { title, view, callId: exec.callId })
+        if (result.startsWith('The view is staged')) rt.noteVisualDelivery?.(id)
+        return result
       }
       const awaitReply = args.await_reply ?? checked.interactive
-      if (!awaitReply) return 'The view is on screen.'
+      if (!awaitReply) { rt.noteVisualDelivery?.(id); return 'The view is on screen.' }
       // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
       // composer dock, which takes a card without a call.
       const turn = rt.live.get(id)?.turn
@@ -707,6 +708,7 @@ export function install(rt) {
         askedAt: Date.now(),
       }
       await rt.save()
+      rt.noteVisualDelivery?.(id)
       exec.concludeTurn?.()
       return 'The view is on screen; the user\'s answer arrives as their next message.'
     },

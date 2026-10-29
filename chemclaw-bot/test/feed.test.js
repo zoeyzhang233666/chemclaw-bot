@@ -153,7 +153,7 @@ test('the chat endpoint pages a Bot\'s own chat from the newest part back', asyn
   const first = (await call('chat', { botId: 'm1' })).value
   assert.deepEqual(first, {
     sessionId: 'm1c',
-    items: [{ kind: 'user', text: 'second', time: 70, seq: 41 }, { kind: 'bot', text: 'reply', time: 71, seq: 42 }],
+    items: [{ kind: 'user', text: 'second', time: 70, seq: 41 }, { kind: 'bot', text: 'reply', time: 71, seq: 42, sessionId: 'm1c', contentBlockIndex: 0 }],
     cursor: { part: 1, beforeSeq: 41 },
   })
   // The current part's first message has the line that marks where the part began.
@@ -163,6 +163,19 @@ test('the chat endpoint pages a Bot\'s own chat from the newest part back', asyn
   const third = (await call('chat', { botId: 'm1', cursor: second.cursor })).value
   assert.deepEqual([third.items, third.cursor], [[{ kind: 'user', text: 'long ago', time: 5, seq: 3 }], null])
   assert.equal((await call('chat', { botId: 'nobody' })).error.code, 'bot/not-found')
+})
+
+test('archived GenUI text keeps its part, event and original content index', async (t) => {
+  const message = botMessage('unused', 71)
+  message.seq = 42
+  message.data.message.content = [{ type: 'text', text: '' }, { type: 'reasoning', text: 'hidden' }, { type: 'text', text: '```dsh-ui\n{}\n```' }, { type: 'text', text: '```dsh-ui\n{}\n```' }]
+  const { call, stop } = start({ pages: { 'm1c:end': { records: [{ event: message }], hasMore: false } } })
+  t.after(stop)
+  await call('state')
+  const page = (await call('chat', { botId: 'm1' })).value
+  const rows = page.items.filter(item => item.kind === 'bot')
+  assert.deepEqual(rows.map(item => [item.sessionId, item.seq, item.contentBlockIndex]), [['m1c', 42, 2], ['m1c', 42, 3]])
+  assert.equal(rows[0].text, rows[1].text)
 })
 
 test('a show_view call in a part reads back as a view row with its blueprint', async (t) => {
