@@ -616,7 +616,7 @@ export function install(rt) {
   }), 'chemclaw-bot: api route')
 
   ctx.effect(() => {
-    void rt.load()
+    void rt.load().then(() => rt.prepareProviderRoutes?.()).catch(error => rt.warn('chemclaw-bot: preparing model providers failed: %s', error))
     return () => Promise.all([rt.btwDispose?.(), rt.sideDispose?.()])
   }, 'chemclaw-bot: load state')
 }
