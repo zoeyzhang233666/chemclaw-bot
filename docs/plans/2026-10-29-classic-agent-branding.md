@@ -45,7 +45,7 @@ every engine upgrade.
 
 References inspected (patterns only; no third-party code or artwork copied):
 
-- [Official branding contract](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-brand-official/README.md)
+- Harness official identity package README (`packages/client/ui-brand-official`)
 - [Slot hierarchy](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/slots.md)
 - [DSH Claude Style hero treatment](https://github.com/Nwflower/dsh-claude-style/blob/master/packages/client/src/theme/hero.css)
 - [Dream Skin theme tokens](https://github.com/RevolutionLA/dsh-dream-skin/blob/main/docs/themes-spec.md)
@@ -64,7 +64,7 @@ selects and confirms one. Do not package a new EXE as part of this source review
 - Isolated mock-model Web profile: checked classic entry, Bot/Agent round trip,
   reload, system light/dark appearance, direct settings opening, Escape close,
   540px settings and APIHub-first ordering. The old title and badge are invisible,
-  the new wordmark remains visible and native workspace/composer controls remain
-  mounted. No browser script errors. Bench and mock processes stopped afterwards.
+  the new wordmark remains visible and native workspace and composer controls
+  remain mounted. No browser script errors. Bench and mock processes stopped afterwards.
 - The desktop app consumes this same plugin client; a new EXE has not been built
   or installed as part of this change.
