@@ -28,9 +28,9 @@ Every command accepts `--json` and prints `{"ok":true,"data":…}` for a run tha
 
 **Word** — `docx read` for the ids → one `docx edit` batch over the opened document → `docx read` again to confirm → `check --against <the untouched original>` for anything left. Keep the original copy untouched (no `--in-place` on it).
 
-**PowerPoint** — `pptx inventory` → edit (python-pptx through the format skill; `pptx slides`/`pptx clean` for structure) → `pptx layout` for overlap/off-slide findings → when `office-render` is in the catalog, render → `sheet` over the rendered images and look at the contact sheet before single slides → fix → recheck.
+**PowerPoint** — `pptx inventory` → edit slide text/layout with a genuinely available editing skill (for example `office-pptx` / python-pptx after runtime provisioning), while retaining ChemClaw's existing ppt-master workflow for new designs. The standalone CLI can reorder/duplicate/remove slides, but does **not** edit existing shape text. Run `pptx layout` and `check`; render and use `sheet` when an actual rendering capability is installed. Do not claim visual checks were done if no renderer is available.
 
-**Excel** — `xlsx inventory` → edit with openpyxl (format skill) → `office-recalculate` → `xlsx inventory` again and confirm no error cells and no uncached formulas.
+**Excel** — `xlsx inventory` → edit with ChemClaw's existing ExcelJS when directly accessible, or with `office-xlsx` / openpyxl only if that skill/runtime is actually installed → `xlsx inventory` and `check` again. **ExcelJS and this CLI do not calculate formulas**: after input changes, cached formula values can be stale even if no error cells exist. Use `office-recalculate` only when installed; otherwise explicitly mark calculation results as unverified. Never ask an ordinary user to install Python packages manually.
 
 **XML edits** — only through `unpack`, a real XML parser, and `pack --against`. Never sed or string-splice XML.
 
