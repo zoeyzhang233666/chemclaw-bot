@@ -406,4 +406,4 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: test "${{ needs.test.result }}" = success && test "${{ needs.scan.result }}" = success && test "${{ needs.app.result }}" = success && test "${{ needs.app-package.result }}" = success && test "${{ needs.app-package-macos.result }}" = success && test "${{ needs.app-package-linux.result }}" = success && test "${{ needs.docker.result }}" = success
+      - run: test "${{ needs.test.result }}" = success && test "${{ needs.scan.result }}" = success && test "${{ needs.app.result }}" = success && test "${{ needs.app-source.result }}" = success && test "${{ needs.app-package.result }}" = success && test "${{ needs.app-package-macos.result }}" = success && test "${{ needs.app-package-linux.result }}" = success && test "${{ needs.docker.result }}" = success
