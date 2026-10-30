@@ -194,11 +194,10 @@ test('an explicitly requested advanced chart cannot be satisfied by an unrelated
 test('multiple requested kinds only repair the missing one, and a complete grouped view needs no correction', () => {
   for (const withTimeline of [false, true]) {
     const f = setup(); f.start(); f.user('请生成热力图，并用时间轴展示事件')
-    f.answer('Here are the results.')
-    f.rt.noteVisualDelivery('s', { type: 'stack', children: [
-      { type: 'chart', kind: 'heatmap' },
-      ...(withTimeline ? [{ type: 'timeline' }] : []),
-    ] })
+    f.answer('Here are the results.' + (withTimeline
+      ? '\n' + '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'timeline', events: [{ title: 'Start' }] }] }) + '\n```'
+      : ''))
+    f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'heatmap' })
     f.stop()
     assert.equal(f.notices.length, withTimeline ? 0 : 1)
     if (!withTimeline) {
