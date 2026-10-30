@@ -173,7 +173,9 @@ export function ensurePrWorktree(checkout, pr, { fetched = true } = {}) {
       throw new Error(`Cannot fetch PR #${pr.number}: ${error.message}`)
     }
   }
-  const remoteHead = fetched ? git(checkout, ['rev-parse', pr.headRefOid], { allowFail: true }) : ''
+  // FETCH_HEAD is from the explicit PR ref fetch above; it wins if the PR was
+  // updated between listing GitHub PRs and selecting one in the picker.
+  const remoteHead = fetched ? git(checkout, ['rev-parse', 'FETCH_HEAD'], { allowFail: true }) : ''
   if (existsSync(path)) {
     validateChemclawCheckout(path)
     const worktreeRoot = git(path, ['rev-parse', '--show-toplevel'])
