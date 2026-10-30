@@ -59,7 +59,7 @@ export function deliveredViewKinds(view) {
 
 function genuiKinds(text, native = false) {
   const kinds = new Set()
-  for (const match of text.matchAll(/^ {0,3}\`\`\`[ \t]*dsh-ui(?:[>\`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}\`\`\`[ \t]*\r?$/gimu)) {
+  for (const match of text.matchAll(/^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}```[ \t]*\r?$/gimu)) {
     try {
       const spec = JSON.parse(match[1])
       if (!Array.isArray(spec?.items) || spec.items.length === 0 || (!native && spec.panel === true)) continue
