@@ -73,6 +73,14 @@ jobs:
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
       - run: npm test
+      - name: Install the published plugin shape in an empty directory
+        run: |
+          archive="$(cd ../chemclaw-bot && npm pack --silent --pack-destination "$RUNNER_TEMP")"
+          test -f "$RUNNER_TEMP/$archive"
+          root="$RUNNER_TEMP/chemclaw-fresh-install"
+          mkdir -p "$root"
+          npm install --prefix "$root" --ignore-scripts --legacy-peer-deps --no-fund --no-audit "$RUNNER_TEMP/$archive"
+          node -e 'const fs=require("node:fs");const path=require("node:path");const root=process.argv[1];const plugin=require(path.join(root,"node_modules/chemclaw-bot/package.json"));const genui=require(path.join(root,"node_modules/@changfenhuang/dsh-genui/package.json"));if(genui.version!==plugin.dependencies["@changfenhuang/dsh-genui"])throw Error("GenUI missing or incorrect in fresh plugin install");const patch=fs.readFileSync(path.join(root,"node_modules/chemclaw-bot/cordis.patch.yml"),"utf8");if(!patch.includes("@changfenhuang/dsh-genui"))throw Error("GenUI bundle patch missing from plugin archive");' "$root"
 
   app-package:
     name: Desktop app package (Windows)
