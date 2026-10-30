@@ -1059,6 +1059,20 @@ export function install(rt) {
   }
   rt.stopMemberWork = stopMemberWork
 
+  // Cancel the group's round before its members, without touching their work
+  // in private chats or other groups. Mirrors upstream DS-Bot #616.
+  async function stopRoomWork(roomId) {
+    await rt.load()
+    const room = rt.roomOf(roomId)
+    if (room === undefined) return false
+    const round = rt.roomBusy(room.id)
+    if (round) (await rt.resolveAgent(room.id)).cancel({ kind: 'user' })
+    let stopped = false
+    for (const botId of room.members) stopped = (await stopMemberWork(room.id, botId)) || stopped
+    return round || stopped
+  }
+  rt.stopRoomWork = stopRoomWork
+
   // The round said such a member posts when done; a failed model call is how it ended.
   // Nobody answers it.
   async function lateRoomFailure(sessionId, info, failure) {
