@@ -290,7 +290,7 @@ test('read_group_chat shows a Bot named "User" apart from the user', async (t) =
 
 test('read_group_chat handles textless events, mixed messages and seq reads (upstream #671)', async t => {
   const events = [
-    [{ kind: 'notice', reason: 'missed', names: ['Writer'], minutes: 5 }, 'missed'],
+    [{ kind: 'notice', reason: 'missed', names: ['Writer'], minutes: 5 }, 'did not answer within'],
     [{ kind: 'notice', reason: 'paused', names: ['Writer'], limit: 6 }, 'Paused'],
     [{ kind: 'notice', reason: 'admin-passed', names: ['Chief'] }, 'Chief'],
     [{ kind: 'lookup' }, 'looked up'],
