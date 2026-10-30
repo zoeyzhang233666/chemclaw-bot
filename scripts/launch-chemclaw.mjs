@@ -25,6 +25,31 @@ const selection = selected.selection || (
 )
 const effectiveProfile = resolveProfile(selected.origin, selection, { copyCredentials: false })
 
+// A PR may change the desktop shell, profile, or dependency lockfile as well as
+// the Bot plugin. Reusing main's already-installed app in that case silently
+// runs *old desktop code* and gives misleading PR/GenUI test results.
+function sameFiles(left, right) {
+  if (!existsSync(left) || !existsSync(right)) return !existsSync(left) && !existsSync(right)
+  const a = statSync(left)
+  const b = statSync(right)
+  if (a.isDirectory() !== b.isDirectory()) return false
+  if (a.isDirectory()) {
+    const first = readdirSync(left).sort()
+    const second = readdirSync(right).sort()
+    if (first.length !== second.length) return false
+    return first.every((name, i) => name === second[i] && sameFiles(join(left, name), join(right, name)))
+  }
+  if (!a.isFile() || !b.isFile()) return false
+  return a.size === b.size && readFileSync(left).equals(readFileSync(right))
+}
+
+function needsSelectedApp(sourceApp, entryApp) {
+  if (resolve(sourceApp) === resolve(entryApp)) return false
+  return ['src', 'scripts', 'package.json', 'package-lock.json', 'electron-builder.yml'].some(
+    path => !sameFiles(join(sourceApp, path), join(entryApp, path)),
+  )
+}
+
 function resolveAppHost(sourceRoot, origin) {
   const sourceAppPath = join(sourceRoot, 'app')
   const entryAppPath = join(origin, 'app')
@@ -33,8 +58,12 @@ function resolveAppHost(sourceRoot, origin) {
     : process.platform === 'darwin'
       ? 'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron'
       : 'node_modules/electron/dist/electron'
+  if (needsSelectedApp(sourceAppPath, entryAppPath)) {
+    // The launcher installs Electron here once if this preview app has none.
+    return { app: sourceAppPath, host: 'selected-source-app-changed' }
+  }
   if (existsSync(join(sourceAppPath, rel))) return { app: sourceAppPath, host: 'selected-source' }
-  if (existsSync(join(entryAppPath, rel))) return { app: entryAppPath, host: 'entry-reuse' }
+  if (existsSync(join(entryAppPath, rel))) return { app: entryAppPath, host: 'entry-reuse-identical-app' }
   return { app: sourceAppPath, host: 'selected-source' }
 }
 
@@ -60,9 +89,9 @@ if (argv.includes('--info')) {
   process.exit(0)
 }
 
-// Build the selected source plugin. Prefer that tree's app when Electron is
-// already installed there; otherwise reuse the entry checkout app to avoid a
-// full npm ci on every PR worktree.
+// Build the selected source plugin. Use the selected PR's own app when its
+// desktop code or dependencies differ, even if Electron is not installed yet.
+// Reuse the entry app only when desktop files are identical.
 const plugin = join(root, 'chemclaw-bot')
 const sourceApp = join(root, 'app')
 const hostInfo = resolveAppHost(root, selected.origin)
