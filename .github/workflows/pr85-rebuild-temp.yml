@@ -1,0 +1,42 @@
+# Temporary one-shot branch-only rebuild for PR #85. Remove after committing generated assets.
+name: PR85 regenerate committed client
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: ${{ github.event.pull_request.number == 85 && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/team-intro-empty-conversations-20261030' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/team-intro-empty-conversations-20261030
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - name: Build from sources
+        working-directory: chemclaw-bot
+        run: |
+          npm ci --no-fund --no-audit
+          npm run build
+          node scripts/build-client.mjs --check
+      - name: Commit generated assets on PR head only
+        run: |
+          set -euo pipefail
+          git add -- chemclaw-bot/client.js chemclaw-bot/runtime/chart-engine.js
+          if git diff --cached --quiet; then
+            echo "Generated assets already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "build: regenerate PR85 browser client from source"
+          git push origin HEAD:refs/heads/fix/team-intro-empty-conversations-20261030
