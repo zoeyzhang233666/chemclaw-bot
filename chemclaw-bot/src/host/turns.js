@@ -577,7 +577,6 @@ export function install(rt) {
       case 'turn/end': {
         setActivity(id, undefined)
         const info = entry.info
-        const owner = rt.groupOwners.get(id)
         const joined = entry.joined ?? []
         // What the group already saw of the turn is not posted again.
         const texts = entry.texts.slice(entry.shown)
