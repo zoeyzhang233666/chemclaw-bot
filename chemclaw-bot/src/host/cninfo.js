@@ -18,6 +18,22 @@ const clean = text => String(text ?? '').replace(/<[^>]*>/g, ' ').replace(/&nbsp
 const codeOf = value => String(value ?? '').match(/(?:^|\D)(\d{6})(?:\D|$)/)?.[1] ?? ''
 const safeText = (value, limit = 100) => clean(value).slice(0, limit)
 const clock = () => new Date().toISOString()
+let nextRequestAt = 0
+let requestLane = Promise.resolve()
+async function pace(signal) {
+  // The official website rate-limits bursts. Serialize public searches across Bots.
+  let done
+  const slot = new Promise(resolve => { done = resolve })
+  const prior = requestLane
+  requestLane = slot
+  await prior
+  try {
+    const wait = Math.max(0, nextRequestAt - Date.now())
+    if (wait) await new Promise(resolve => setTimeout(resolve, wait))
+    signal?.throwIfAborted()
+    nextRequestAt = Date.now() + 850
+  } finally { done() }
+}
 
 function range(begin, end) {
   if (begin && !iso(begin) || end && !iso(end) || begin && end && begin > end) throw new Error('Use YYYY-MM-DD and an ascending date range')
@@ -58,6 +74,7 @@ async function requestJson(url, options, fetcher, signal) {
   for (let attempt = 0; attempt < 2; attempt++) {
     let response
     try {
+      if (fetcher === globalThis.fetch) await pace(signal)
       response = await fetcher(url, { ...options, redirect: 'error', signal: timeout(signal, 18000) })
       if ([403, 429, 500, 502, 503, 504].includes(response.status)) {
         last = new Error('CNINFO temporarily unavailable (HTTP ' + response.status + ')')
@@ -68,6 +85,8 @@ async function requestJson(url, options, fetcher, signal) {
       if (body.length > 3_000_000) throw new Error('CNINFO returned an oversized response')
       const data = JSON.parse(body)
       if (!data || !Array.isArray(data.announcements)) throw new Error('CNINFO returned an unexpected response format; zero results cannot be confirmed')
+      // CNINFO sometimes silently returns an empty first response under rate limiting.
+      if (data.announcements.length === 0 && attempt === 0) continue
       return data
     } catch (error) {
       last = error
