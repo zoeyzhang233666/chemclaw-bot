@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { PDFDocument, StandardFonts } from 'pdf-lib'
 import { searchCninfo, validatePdfUrl, fetchCninfoPdf, install } from '../src/host/cninfo.js'
+import { cmapping, decodeToken } from '../src/host/cninfo-pdf-text.js'
 import { install as installPublicData } from '../src/host/public-data.js'
 import { fakeContext } from './fake-ctx.js'
 
@@ -124,4 +125,41 @@ test('CNINFO registers on the global DSH tool surface and appears in public rese
   assert.equal(result.status, 'ok')
   assert.equal(rt.publicDataStatus().find(source => source.name === '巨潮公告').state, 'ready')
   assert.equal((await rt.cninfoCheck()).state, 'ready')
+})
+
+test('Chinese ToUnicode font maps decode both array and scalar bfrange entries', () => {
+  const cmap = cmapping([
+    '1 beginbfchar <0001> <516C> endbfchar',
+    '1 beginbfrange <0002> <0003> [<53F8> <7ECF>] endbfrange',
+    '1 beginbfrange <0004> <0005> <8425> endbfrange',
+  ].join('\n'))
+  assert.equal(decodeToken('<0001000200030004>', cmap), '公司经营')
+  assert.equal(decodeToken('<0005>', cmap), '菦') // Unicode U+8426 follows U+8425.
+})
+
+test('unmatched Chinese keyword on ASCII-only text is not reported as a reliable extraction', async () => {
+  const doc = await PDFDocument.create()
+  doc.addPage([500, 700]).drawText('Financial data', { x: 30, y: 600 })
+  const binary = await doc.save()
+  const result = await fetchCninfoPdf('https://static.cninfo.com.cn/finalpage/2026-10-30/1225000001.PDF', {
+    keyword: '公司',
+    fetcher: async () => new Response(binary, { status: 200 }),
+  })
+  assert.equal(result.extraction.status, 'unavailable')
+  assert.deepEqual(result.extraction.evidence, [])
+  assert.equal(result.extraction.chineseChars, 0)
+  assert.match(result.extraction.previews[0].text, /Financial/)
+})
+
+test('missing English keyword returns literal PDF preview rather than made-up evidence', async () => {
+  const doc = await PDFDocument.create()
+  doc.addPage([500, 700]).drawText('The company grew', { x: 30, y: 600 })
+  const binary = await doc.save()
+  const result = await fetchCninfoPdf('https://static.cninfo.com.cn/finalpage/2026-10-30/1225000001.PDF', {
+    keyword: 'capacity',
+    fetcher: async () => new Response(binary, { status: 200 }),
+  })
+  assert.equal(result.extraction.status, 'keyword_not_found')
+  assert.equal(result.extraction.evidence.length, 0)
+  assert.match(result.extraction.previews[0].text, /company/)
 })
