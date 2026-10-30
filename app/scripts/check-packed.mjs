@@ -489,15 +489,21 @@ async function chat(cdp) {
   if (shotFile) { const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.chart.png`), Buffer.from(data, 'base64')) }
   await cdp.call('Page.bringToFront')
   const rangeBox = await evaluate("(() => { const box = document.querySelector('.bt-chart-range-track').getBoundingClientRect(); return { x: box.x, y: box.y + box.height / 2, width: box.width }; })()")
-  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: rangeBox.x, y: rangeBox.y })
-  await cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', x: rangeBox.x, y: rangeBox.y, button: 'left', buttons: 1, clickCount: 1 })
+  // The track's exact left edge may hit its background, selection window, or a handle
+  // depending on fractional pixel rounding. Press the actual start handle instead.
+  const startHandle = await evaluate("(() => { const node = document.querySelector('.bt-group-view .bt-chart-range-handle'); if (!node) return null; const box = node.getBoundingClientRect(); const x = box.left + box.width * 0.75; const y = box.top + box.height / 2; return { x, y, hit: document.elementFromPoint(x, y)?.closest('.bt-chart-range-handle') === node }; })()")
+  if (!startHandle?.hit) throw new Error(`The chart range start handle is not hit-testable: ${JSON.stringify(startHandle)}`)
+  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: startHandle.x, y: startHandle.y })
+  await cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', x: startHandle.x, y: startHandle.y, button: 'left', buttons: 1, clickCount: 1 })
   await sleep(100)
-  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: rangeBox.x + rangeBox.width * 40 / 56, y: rangeBox.y, button: 'left', buttons: 1 })
+  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: startHandle.x + rangeBox.width * 40 / 56, y: startHandle.y, button: 'left', buttons: 1 })
   await sleep(100)
-  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', x: rangeBox.x + rangeBox.width * 40 / 56, y: rangeBox.y, button: 'left', buttons: 0, clickCount: 1 })
+  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', x: startHandle.x + rangeBox.width * 40 / 56, y: startHandle.y, button: 'left', buttons: 0, clickCount: 1 })
   await until("document.querySelectorAll('.bt-group-view .bt-chart-hit').length === 17", 'the zoomed chart range')
   if (shotFile) { const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.chart-zoom.png`), Buffer.from(data, 'base64')) }
-  const selectedBox = await evaluate("(() => { const box = document.querySelector('.bt-chart-range-window').getBoundingClientRect(); return { x: box.x + box.width / 2, y: box.y + box.height / 2 }; })()")
+  const selectedBox = await evaluate("(() => { const node = document.querySelector('.bt-group-view .bt-chart-range-window'); const box = node.getBoundingClientRect(); const x = box.left + box.width / 2; const y = box.top + box.height / 2; return { x, y, hit: document.elementFromPoint(x, y)?.closest('.bt-chart-range-window') === node }; })()")
+  if (!selectedBox.hit) throw new Error(`The chart range selection window is not hit-testable: ${JSON.stringify(selectedBox)}`)
+  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: selectedBox.x, y: selectedBox.y })
   await cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', x: selectedBox.x, y: selectedBox.y, button: 'left', buttons: 1, clickCount: 1 })
   await sleep(100)
   await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: selectedBox.x - rangeBox.width * 10 / 56, y: selectedBox.y, button: 'left', buttons: 1 })
