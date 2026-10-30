@@ -103,7 +103,7 @@ function checkSharp(app) {
     const genuiManifest = JSON.parse(fs.readFileSync(pluginRequire.resolve('@changfenhuang/dsh-genui/package.json'), 'utf8'))
     assert.equal(genuiManifest.version, genuiVersion, 'The installed EXE does not carry the expected GenUI dependency')
     const patch = fs.readFileSync(path.join(plugin, 'cordis.patch.yml'), 'utf8')
-    assert.match(patch, /name: ['\"]?@changfenhuang\\/dsh-genui/u, 'The installed EXE does not enable the GenUI bundle')
+    assert.ok(patch.includes("name: '@changfenhuang/dsh-genui'"), 'The installed EXE does not enable the GenUI bundle')
     assert.equal(fs.existsSync(path.join(plugin, 'runtime/.build-tools')), false, 'Runtime build caches must not ship')
     const skills = ['domain-skills', 'supplemental-skills'].flatMap(name => JSON.parse(fs.readFileSync(path.join(plugin, 'seed', name + '.json'), 'utf8')))
     for (const file of ['presentations', 'chemistry', 'delivery', 'research-process']) skills.push({ sourcePath: 'skills/builtin/' + file + '/SKILL.md' })
