@@ -14,16 +14,15 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.os }} · Node ${{ matrix.node }} · DSH ${{ matrix.dsh }}
+    name: ${{ matrix.os }} · Node ${{ matrix.node }} · DSH pinned by app
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, node: 24, dsh: 0.2.1-rc.2 }
-          - { os: windows-latest, node: 24, dsh: 0.2.1-rc.2 }
-          - { os: ubuntu-latest, node: 22, dsh: 0.2.1-rc.2 }
-          - { os: ubuntu-latest, node: 24, dsh: 0.2.0-rc.2 }
+          - { os: ubuntu-latest, node: 24 }
+          - { os: windows-latest, node: 24 }
+          - { os: ubuntu-latest, node: 22 }
     defaults:
       run:
         shell: bash
@@ -36,8 +35,14 @@ jobs:
           cache: npm
           cache-dependency-path: chemclaw-bot/package-lock.json
       - run: npm ci --no-fund --no-audit
-      - name: Install DSH ${{ matrix.dsh }}
-        run: npm run harness -- --no-save "@deepseek-ai/dsh@${{ matrix.dsh }}"
+      # Test the exact DSH version bundled with the desktop app. Never downgrade it
+      # just for CI: retired DSH versions can fail unrelated timing-sensitive tests.
+      - name: Install current desktop-pinned DSH
+        run: |
+          dsh_version="$(node -p 'require("../app/package.json").dependencies["@deepseek-ai/dsh"]')"
+          test -n "$dsh_version" && test "$dsh_version" != undefined
+          echo "Testing DSH $dsh_version (pinned by app/package.json)"
+          npm run harness -- --no-save "@deepseek-ai/dsh@$dsh_version"
       - run: npm test
       - run: node scripts/build-client.mjs --check
       - run: npm run lint
