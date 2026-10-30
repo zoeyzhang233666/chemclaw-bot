@@ -84,6 +84,7 @@ async function requestJson(url, options, fetcher, signal) {
       const body = await response.text()
       if (body.length > 3_000_000) throw new Error('CNINFO returned an oversized response')
       const data = JSON.parse(body)
+      if (data?.announcements == null && Number(data?.totalAnnouncement) === 0) data.announcements = []
       if (!data || !Array.isArray(data.announcements)) throw new Error('CNINFO returned an unexpected response format; zero results cannot be confirmed')
       // CNINFO sometimes silently returns an empty first response under rate limiting.
       if (data.announcements.length === 0 && attempt === 0) continue
@@ -121,7 +122,7 @@ export async function searchCninfo(args, { fetcher = globalThis.fetch, signal } 
         let url, options
         if (kind === 'title') {
           url = API
-          const fields = new URLSearchParams({ pageNum: String(page), pageSize: '30', column: 'szse', tabName: 'fulltext',
+          const fields = new URLSearchParams({ pageNum: String(page), pageSize: '30', column: '', tabName: 'fulltext',
             plate: '', stock: '', searchkey: titleTerm, secid: '', category: '', trade: '',
             seDate: range(begin, end), sortName: '', sortType: '', isHLtitle: 'true' })
           options = { method: 'POST', body: fields.toString(), headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
