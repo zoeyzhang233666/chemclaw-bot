@@ -135,7 +135,7 @@ export async function searchCninfo(args, { fetcher = globalThis.fetch, signal } 
         const data = await requestJson(url, options, fetcher, signal)
         const items = data.announcements.map(normalise).filter(item => {
           if (begin && item.date && (item.date < begin || item.date > end)) return false
-          if (company && !item.company.includes(company) && !company.includes(item.company)) return false
+          if (company && (!item.company || !item.company.includes(company) && !company.includes(item.company))) return false
           if (code && item.code !== code) return false
           return Boolean(item.id && item.title && item.pdfUrl)
         })
@@ -151,10 +151,12 @@ export async function searchCninfo(args, { fetcher = globalThis.fetch, signal } 
   const distinct = [...new Map(all.map(row => [row.id || row.pdfUrl, row])).values()]
     .sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, MAX_RESULTS)
   const success = attempts.some(item => item.status === 'ok')
-  return { status: !success ? 'error' : distinct.length ? 'ok' : 'no_match',
+  const partial = success && attempts.some(item => item.status === 'error')
+  return { status: !success ? 'error' : partial ? 'partial' : distinct.length ? 'ok' : 'no_match',
     provider: 'CNINFO', source: HOME, retrievedAt: clock(), company, code, keyword, begin: begin || null, end: end || null,
     modes: attempts, truncated: all.length >= MAX_RESULTS, results: distinct,
-    notice: !success ? 'CNINFO query failed; do not state there are no announcements.' :
+    notice: !success ? 'CNINFO query failed; do not state there are no announcements.' : partial ?
+      'Some CNINFO query modes failed; results are partial and absence of a filing cannot be inferred.' :
       'Results are a bounded sample, not a completeness guarantee. Check listed-company identity and read the original PDF before using numbers.' }
 }
 export async function fetchCninfoPdf(value, { fetcher = globalThis.fetch, signal, store, keyword, startPage, maxPages } = {}) {
