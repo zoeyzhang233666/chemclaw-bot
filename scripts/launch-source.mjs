@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import { createRequire } from 'node:module'
-import { existsSync, readFileSync, realpathSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, realpathSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 
 export function launchSource(checkout, args = [], env = process.env) {
@@ -90,3 +90,46 @@ export function missingPluginDependencies(app, dependencies) {
   return Object.entries(dependencies).filter(([name, version]) => installedVersion(fromPlugin, name) !== version)
     .map(([name, version]) => `${name}@${version}`)
 }
+
+// A PR may change the desktop shell, profile, or dependency lockfile as well as
+// the Bot plugin. Reusing main's already-installed app in that case silently
+// runs *old desktop code* and gives misleading PR/GenUI test results.
+function sameFiles(left, right) {
+  if (!existsSync(left) || !existsSync(right)) return !existsSync(left) && !existsSync(right)
+  const a = statSync(left)
+  const b = statSync(right)
+  if (a.isDirectory() !== b.isDirectory()) return false
+  if (a.isDirectory()) {
+    const first = readdirSync(left).sort()
+    const second = readdirSync(right).sort()
+    if (first.length !== second.length) return false
+    return first.every((name, i) => name === second[i] && sameFiles(join(left, name), join(right, name)))
+  }
+  if (!a.isFile() || !b.isFile()) return false
+  return a.size === b.size && readFileSync(left).equals(readFileSync(right))
+}
+
+function needsSelectedApp(sourceApp, entryApp) {
+  if (resolve(sourceApp) === resolve(entryApp)) return false
+  return ['src', 'scripts', 'package.json', 'package-lock.json', 'electron-builder.yml'].some(
+    path => !sameFiles(join(sourceApp, path), join(entryApp, path)),
+  )
+}
+
+export function resolveAppHost(sourceRoot, origin) {
+  const sourceAppPath = join(sourceRoot, 'app')
+  const entryAppPath = join(origin, 'app')
+  const rel = process.platform === 'win32'
+    ? 'node_modules/electron/dist/electron.exe'
+    : process.platform === 'darwin'
+      ? 'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron'
+      : 'node_modules/electron/dist/electron'
+  if (needsSelectedApp(sourceAppPath, entryAppPath)) {
+    // The launcher installs Electron here once if this preview app has none.
+    return { app: sourceAppPath, host: 'selected-source-app-changed' }
+  }
+  if (existsSync(join(sourceAppPath, rel))) return { app: sourceAppPath, host: 'selected-source' }
+  if (existsSync(join(entryAppPath, rel))) return { app: entryAppPath, host: 'entry-reuse-identical-app' }
+  return { app: sourceAppPath, host: 'selected-source' }
+}
+
