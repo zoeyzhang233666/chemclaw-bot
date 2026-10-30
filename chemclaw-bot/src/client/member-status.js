@@ -166,11 +166,13 @@ export function StopMemberWork({ entry, bot, room, actions }) {
   if (!entry?.here || (entry.state !== 'work' && entry.state !== 'ask')) return null
   const stop = () => {
     setStopping(true)
+    // The host only acknowledges the cancellation request. Keep the button in
+    // "Stopping" state until the member's active group turn actually disappears.
     void Promise.resolve(actions.stopMemberWork(room.id, bot.id))
-      .catch(error => actions.reportError(error, 'stop'))
-      .finally(() => setStopping(false))
+      .then(accepted => { if (accepted === false) setStopping(false) })
+      .catch(error => { setStopping(false); actions.reportError(error, 'stop') })
   }
-  return h('button', { type: 'button', className: 'bt-member-stop', disabled: stopping, 'aria-label': `${t('Stop')} · ${bot.name}`, onClick: stop }, t('Stop'))
+  return h('button', { type: 'button', className: 'bt-member-stop', disabled: stopping, 'aria-label': `${t(stopping ? 'Stopping…' : 'Stop')} · ${bot.name}`, onClick: stop }, t(stopping ? 'Stopping…' : 'Stop'))
 }
 
 // Stop all active turns in this group. Work in a Bot's own chat or another group is unaffected.
@@ -180,11 +182,11 @@ export function StopRoomWork({ room, entries, actions }) {
   const stop = () => {
     setStopping(true)
     void Promise.resolve(actions.stopRoomWork(room.id))
-      .catch(error => actions.reportError(error, 'stop'))
-      .finally(() => setStopping(false))
+      .then(accepted => { if (accepted === false) setStopping(false) })
+      .catch(error => { setStopping(false); actions.reportError(error, 'stop') })
   }
   const label = t('Stop all work in this group')
-  return h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: stopping, 'aria-label': label, title: label, onClick: stop }, t('Stop all'))
+  return h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: stopping, 'aria-label': label, title: label, onClick: stop }, t(stopping ? 'Stopping…' : 'Stop all'))
 }
 
 export function MemberApprovals({ entry, bot, actions }) {
