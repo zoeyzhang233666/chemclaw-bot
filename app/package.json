@@ -20,6 +20,7 @@
     "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
+    "@changfenhuang/dsh-genui": "0.15.0",
     "@img/sharp-wasm32": "0.35.5",
     "@deepseek-ai/cordis-plugin-group": "1.0.5",
     "@deepseek-ai/dsh": "0.2.1-rc.3",
