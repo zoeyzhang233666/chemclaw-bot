@@ -1,4 +1,4 @@
-import { createElement as h, useLayoutEffect, useRef, useState } from 'react'
+import { createElement as h, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { BotMark, toolState } from './mark.js'
 import { Elapsed, Shimmer, workPhrase } from './cells.js'
 import { SPRING_SHAPE, SPRING_TAP, spring, useLinger } from './motion.js'
@@ -163,6 +163,9 @@ export function MemberState({ entry, bot, room, roster }) {
 // member's group Session otherwise; a turn waiting for an approval still holds its work.
 export function StopMemberWork({ entry, bot, room, actions }) {
   const [stopping, setStopping] = useState(false)
+  // Reset the pending request when the old group turn finishes; a later turn
+  // must have an enabled Stop button of its own.
+  useEffect(() => { if (!entry?.here) setStopping(false) }, [entry?.here])
   if (!entry?.here || (entry.state !== 'work' && entry.state !== 'ask')) return null
   const stop = () => {
     setStopping(true)
@@ -178,7 +181,9 @@ export function StopMemberWork({ entry, bot, room, actions }) {
 // Stop all active turns in this group. Work in a Bot's own chat or another group is unaffected.
 export function StopRoomWork({ room, entries, actions }) {
   const [stopping, setStopping] = useState(false)
-  if (!entries.some(entry => entry.here)) return null
+  const hasWork = entries.some(entry => entry.here)
+  useEffect(() => { if (!hasWork) setStopping(false) }, [hasWork])
+  if (!hasWork) return null
   const stop = () => {
     setStopping(true)
     void Promise.resolve(actions.stopRoomWork(room.id))
