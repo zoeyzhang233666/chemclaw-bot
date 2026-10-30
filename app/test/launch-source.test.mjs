@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, realpathSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
-import { launchSource } from '../../scripts/launch-source.mjs'
+import { launchSource, missingPluginDependencies } from '../../scripts/launch-source.mjs'
 
 test('an explicit source wins and forwarded launches keep the original data root without following another selection', t => {
   const dir = mkdtempSync(join(tmpdir(), 'chemclaw-launch-'))
@@ -33,4 +33,28 @@ test('an explicit source wins and forwarded launches keep the original data root
   writeFileSync(join(original, '.chemclaw-dev', 'source.json'), '{"source":"missing"}')
   assert.throws(() => launchSource(original, [], {}), /ENOENT/)
   assert.equal(launchSource(original, ['--source', preview], {}).source, preview)
+})
+
+
+test('dependency audit catches missing and stale bundles even when a previous stamp says ready', t => {
+  const dir = mkdtempSync(join(tmpdir(), 'chemclaw-deps-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true }))
+  const name = '@changfenhuang/dsh-genui'
+  const packageDir = join(dir, 'node_modules', '@changfenhuang', 'dsh-genui')
+  const pluginDir = join(dir, 'node_modules', 'chemclaw-bot')
+  mkdirSync(pluginDir, { recursive: true })
+  writeFileSync(join(pluginDir, 'package.json'), JSON.stringify({ name: 'chemclaw-bot' }))
+  const expected = { [name]: '0.15.0' }
+  assert.deepEqual(missingPluginDependencies(dir, expected), [`${name}@0.15.0`])
+  mkdirSync(packageDir, { recursive: true })
+  const save = version => {
+    // package.json is intentionally not exported, as with some third-party plugins.
+    writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ name, version, exports: { '.': './index.js' } }))
+    writeFileSync(join(packageDir, 'index.js'), '')
+  }
+  save('0.14.0')
+  assert.deepEqual(missingPluginDependencies(dir, expected), [`${name}@0.15.0`])
+  save('0.15.0')
+  assert.deepEqual(missingPluginDependencies(dir, expected), [])
+  assert.deepEqual(missingPluginDependencies(dir, { ...expected, 'future-plugin': '1.0.0' }), ['future-plugin@1.0.0'])
 })
