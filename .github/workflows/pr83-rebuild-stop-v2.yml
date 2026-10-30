@@ -1,0 +1,35 @@
+name: Temporary PR83 build UI after stop fix
+
+on:
+  push:
+    branches: [feat/upstream-616-stop-room-work-20261030]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.repository == 'zoeyzhang233666/chemclaw-bot' && github.ref == 'refs/heads/feat/upstream-616-stop-room-work-20261030'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - name: npm ci
+        working-directory: chemclaw-bot
+        run: npm ci --no-fund --no-audit
+      - name: Build updated client
+        working-directory: chemclaw-bot
+        run: npm run build
+      - name: Commit only regenerated artifacts
+        run: |
+          set -euo pipefail
+          git add -- chemclaw-bot/client.js chemclaw-bot/runtime/chart-engine.js
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build(client): update group stop feedback bundle'
+          git push origin HEAD:refs/heads/feat/upstream-616-stop-room-work-20261030
