@@ -2,9 +2,9 @@ import { execFileSync } from 'node:child_process'
 import assert from 'node:assert/strict'
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { test } from 'node:test'
-import { launchSource, missingPluginDependencies } from '../../scripts/launch-source.mjs'
+import { launchSource, missingPluginDependencies, resolveAppHost } from '../../scripts/launch-source.mjs'
 import { ensurePrWorktree, syncSelectedMain } from '../../scripts/launch-discover.mjs'
 
 test('an explicit source wins and forwarded launches keep the original data root without following another selection', t => {
@@ -145,4 +145,35 @@ test('picker Git sync fast-forwards clean main and PR but preserves dirty worktr
   assert.match(dirty.reason, /untracked/u)
   assert.equal(dirty.head, secondSha, 'local PR must not be silently advanced')
   assert.equal(readFileSync(join(prPath, 'untracked-pr.txt'), 'utf8'), 'user work')
+})
+
+test('a PR with different desktop code or dependencies uses its own app instead of stale main Electron', t => {
+  const dir = mkdtempSync(join(tmpdir(), 'chemclaw-app-host-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true }))
+  const entry = join(dir, 'main')
+  const preview = join(dir, 'pr')
+  for (const root of [entry, preview]) {
+    mkdirSync(join(root, 'app', 'src'), { recursive: true })
+    writeFileSync(join(root, 'app', 'package.json'), JSON.stringify({ name: 'chemclaw' }))
+    writeFileSync(join(root, 'app', 'package-lock.json'), JSON.stringify({ version: 1 }))
+    writeFileSync(join(root, 'app', 'src', 'main.mjs'), '// same app')
+  }
+  const electronPath = process.platform === 'win32'
+    ? join(entry, 'app', 'node_modules', 'electron', 'dist', 'electron.exe')
+    : process.platform === 'darwin'
+      ? join(entry, 'app', 'node_modules', 'electron', 'dist', 'Electron.app', 'Contents', 'MacOS', 'Electron')
+      : join(entry, 'app', 'node_modules', 'electron', 'dist', 'electron')
+  mkdirSync(dirname(electronPath), { recursive: true })
+  writeFileSync(electronPath, 'fake electron binary for selection test')
+  let selected = resolveAppHost(preview, entry)
+  assert.equal(selected.app, join(entry, 'app'))
+  assert.equal(selected.host, 'entry-reuse-identical-app')
+  writeFileSync(join(preview, 'app', 'src', 'main.mjs'), '// PR changed desktop profile')
+  selected = resolveAppHost(preview, entry)
+  assert.equal(selected.app, join(preview, 'app'))
+  assert.equal(selected.host, 'selected-source-app-changed')
+  writeFileSync(join(preview, 'app', 'src', 'main.mjs'), '// same app')
+  writeFileSync(join(preview, 'app', 'package-lock.json'), JSON.stringify({ version: 2 }))
+  selected = resolveAppHost(preview, entry)
+  assert.equal(selected.app, join(preview, 'app'), 'a new dependency lockfile must never run against main Electron')
 })
