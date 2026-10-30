@@ -13,7 +13,14 @@ import { toolActivityDetail } from '../shared/tool-activity.js'
 // reply streams, and holds each phrase long enough to read.
 
 const PHRASE_HOLD_MS = 180
-const drawPhrase = pool => t(pool[Math.min(pool.length - 1, Math.floor(Math.random() * pool.length))])
+const drawPhrase = pool => t(pool[0])
+// A recent completed tool stays readable only while this Agent turn continues.
+export const describeLiveTask = task => {
+  if (!task?.name) return null
+  const kind = t(toolActivityDetail(task.name, () => undefined).label)
+  const detail = task.summary || task.name
+  return task.running ? `${kind} · ${detail}` : `${t(task.failed ? 'Failed' : 'Completed')} · ${kind} · ${detail}`
+}
 export { reducedMotion }
 
 // A turn that streams text first and runs a tool after keeps its row once the
@@ -123,9 +130,13 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   const roomCurrent = room ? [...roomWork].sort((a, b) => Number(b.speaking === true) - Number(a.speaking === true) || (b.since ?? 0) - (a.since ?? 0))[0] : undefined
   const roomBot = roomCurrent && roster.byId[roomCurrent.botId]
   const roomSummary = roomCurrent?.note || roomCurrent?.target
-  const roomLabel = roomCurrent?.tool
-    ? roomSummary ? `${t(toolActivityDetail(roomCurrent.tool, () => undefined).label)} · ${roomSummary}` : workPhrase(roomCurrent)
-    : roomCurrent ? workPhrase(roomCurrent) : null
+  const roomLabel = describeLiveTask(roomCurrent?.task)
+    ?? (roomCurrent?.tool
+      ? roomSummary ? `${t(toolActivityDetail(roomCurrent.tool, () => undefined).label)} · ${roomSummary}` : workPhrase(roomCurrent)
+      : roomCurrent ? workPhrase(roomCurrent) : null)
+  const botWorkKey = useWork?.(work => JSON.stringify(work.bots?.[bot?.id] ?? null)) ?? 'null'
+  const botWork = useMemo(() => JSON.parse(botWorkKey), [botWorkKey])
+  const botTask = botWork?.sessionId === sessionId ? describeLiveTask(botWork.task) : null
   // The one switch the row names: a working-folder move jumps the chat to a fresh
   // part while a turn is not running, so without it the conversation just empties.
   const moveAt = useWork?.((work) => {
@@ -147,6 +158,7 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   const want = !visible ? null
     : moveAt !== 0 ? { key: 'move', label: t('Switching working folder'), state: 'thinking' }
       : roomCurrent ? { key: `room:${roomCurrent.botId}:${roomLabel}`, label: roomLabel, state: roomCurrent.tool ? toolState(roomCurrent.tool) : 'thinking' }
+      : botTask ? { key: `bot:${botTask}`, label: botTask, state: botWork.task.running ? toolState(botWork.task.name) : 'thinking' }
       : inputAt > (tool?.at ?? 0)
         ? { key: `input:${inputAt}`, pool: PHRASES.thinking, state: 'thinking' }
         : tool ? { key: tool.label ? `tool:${tool.label}` : 'working', label: tool.label, pool: PHRASES.working, state: tool.state ?? 'working' }

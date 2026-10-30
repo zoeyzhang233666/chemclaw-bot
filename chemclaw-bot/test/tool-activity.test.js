@@ -27,3 +27,8 @@ test('live task summary prefers explanations or safe search targets, not raw she
   assert.equal(liveActivitySummary('request_secret', () => 'must-not-leak'), '')
   assert.equal(liveActivitySummary('pwsh', key => ({ description: 'token=fixture-secret' })[key]), '')
 })
+
+test('MCP and search target fields provide live task descriptions', () => {
+  assert.equal(liveActivitySummary('mcp_chem_data_hub_search_enterprise', key => ({ enterprise_name: '芯化和云' })[key]), '芯化和云')
+  assert.equal(liveActivitySummary('web_search', key => ({ search_term: 'SBS 产业链' })[key]), 'SBS 产业链')
+})

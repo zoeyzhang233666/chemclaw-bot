@@ -155,11 +155,33 @@ export function install(rt) {
     if (name !== undefined) setActivity(id, name === 'ask_user' || name === 'show_view' ? undefined : activityOf(name))
     else if (entry.turn !== undefined) setActivity(id, 'thinking')
   }
+  // The newest tool description is temporary turn state, not a command history.
+  const safeToolSummary = (name, raw) => {
+    let args
+    try { args = JSON.parse(raw || '{}') } catch { args = {} }
+    const lookup = (value, key, depth = 0) => {
+      if (!value || typeof value !== 'object' || depth > 2) return undefined
+      if (typeof value[key] === 'string') return value[key]
+      for (const field of ['input', 'params', 'parameters', 'arguments', 'request', 'filters', 'payload']) {
+        const found = lookup(value[field], key, depth + 1)
+        if (found !== undefined) return found
+      }
+      return undefined
+    }
+    const text = liveActivitySummary(name, key => lookup(args, key))
+    if (!text) return ''
+    const safe = cleanText(text, { redact: rt.redactSecrets })
+    return safe.includes('[hidden]') ? '' : safe
+  }
   const startCall = (id, entry, callId, name, args) => {
     if (typeof callId === 'string') (entry.calls ??= new Map()).set(callId, { name, args })
+    if (entry.turn !== undefined && !['ask_user', 'request_secret', 'show_view'].includes(name)) {
+      entry.lastTask = { id: callId, name, summary: safeToolSummary(name, args), running: true }
+    }
     showCall(id, entry)
   }
-  const endCall = (id, entry, callId) => {
+  const endCall = (id, entry, callId, isError) => {
+    if (entry.lastTask?.id === callId) entry.lastTask = { ...entry.lastTask, running: false, failed: isError === true }
     entry.calls?.delete(callId)
     showCall(id, entry)
   }
@@ -273,20 +295,28 @@ export function install(rt) {
   // What the newest running call does, in its own words: what the Bot said in the step
   // that made it, the call's description, or the file, search or site it works on.
   const doingOf = (entry) => {
-    const call = [...(entry.calls?.values() ?? [])].at(-1)
-    if (call === undefined) return {}
+    const liveCalls = [...(entry.calls?.entries() ?? [])].reverse()
+    const active = liveCalls.find(([, call]) => !['run_code', 'group_relay'].includes(call.name))
+    const newest = active ?? liveCalls[0]
+    const call = newest?.[1]
+    if (call === undefined && entry.lastTask === undefined) return {}
     const said = entry.step?.replace(/\s+/g, ' ').trim().slice(0, 160)
     let args
-    try { args = JSON.parse(call.args || '{}') } catch { args = {} }
+    try { args = JSON.parse(call?.args || '{}') } catch { args = {} }
     const first = keys => keys.map(key => args?.[key]).find(value => typeof value === 'string' && value.trim() !== '')?.replace(/\s+/g, ' ').trim()
-    const note = cleanText(liveActivitySummary(call.name, key => ['description', 'justification', 'task', 'summary'].includes(key) && typeof args?.[key] === 'string' ? args[key] : undefined), { redact: rt.redactSecrets })
+    const note = call && cleanText(liveActivitySummary(call.name, key => ['description', 'justification', 'task', 'summary'].includes(key) && typeof args?.[key] === 'string' ? args[key] : undefined), { redact: rt.redactSecrets })
     const path = first(['file_path', 'path'])
     const url = first(['url'])
     let site
     try { site = url && new URL(url).host } catch { site = undefined }
     const rawTarget = path?.split(/[\\/]/).filter(Boolean).at(-1) ?? first(['query', 'pattern']) ?? site
     const target = rawTarget ? cleanText(rawTarget, { redact: rt.redactSecrets }) : undefined
-    return { tool: call.name, ...(said ? { said } : {}), ...(note ? { note: note.slice(0, 120) } : {}), ...(target ? { target: target.slice(0, 80) } : {}) }
+    const currentTask = active
+      ? { name: active[1].name, summary: safeToolSummary(active[1].name, active[1].args), running: true }
+      : entry.lastTask
+    const task = currentTask && !['run_code', 'group_relay'].includes(currentTask.name)
+      ? currentTask : entry.lastTask ?? currentTask
+    return { ...(call ? { tool: call.name } : {}), ...(said ? { said } : {}), ...(note ? { note: note.slice(0, 120) } : {}), ...(target ? { target: target.slice(0, 80) } : {}), ...(task ? { task: { name: task.name, summary: task.summary, running: task.running, failed: task.failed === true } } : {}) }
   }
 
   // Per Bot, the turn it is running and what it is doing; its own chat wins over a
@@ -404,6 +434,7 @@ export function install(rt) {
         entry.texts = []
         entry.shown = 0
         entry.step = undefined
+        entry.lastTask = undefined
         entry.info = undefined
         // A turn turned away before its first step may end without a turn/end.
         entry.switched = false
@@ -565,6 +596,7 @@ export function install(rt) {
         entry.since = undefined
         entry.steeredAt = undefined
         entry.tool = undefined
+        entry.lastTask = undefined
         entry.calls = undefined
         entry.lastText = undefined
         entry.lastCalled = undefined

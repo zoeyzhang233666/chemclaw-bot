@@ -27,7 +27,7 @@ export function liveActivitySummary(name, arg) {
   if (/secret|credential|password|cookie|authorization/i.test(name)) return ''
   const first = keys => keys.map(key => arg(key)).find(value => typeof value === 'string' && value.trim())?.trim()
   const described = first(['description', 'justification', 'task', 'summary'])
-  const query = first(['query', 'search_query', 'keywords', 'pattern', 'skill', 'name'])
+  const query = first(['query', 'search_query', 'search_term', 'searchText', 'keywords', 'keyword', 'q', 'pattern', 'enterprise_name', 'enterpriseName', 'company_name', 'companyName', 'company', 'enterprise', 'subject', 'product', 'skill', 'name'])
   const path = first(['file_path', 'path'])?.split(/[\\/]/).filter(Boolean).at(-1)
   let site
   try { site = new URL(first(['url'])).hostname } catch { /* no URL */ }
