@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
 
 export const VISUAL_NOTICE = '[chemclaw-visual-delivery'
 const textOf = content => Array.isArray(content) ? content.filter(block => block?.type === 'text').map(block => block.text ?? '').join('\n') : ''
@@ -151,7 +152,8 @@ export function install(rt) {
     restore(session)
     const entry = turns.get(id)
     if (!entry || entry.turn !== turn || entry.reminded || entry.repairing || entry.textOnly || !entry.text.trim()) return
-    const missing = missingRequestedKinds(entry.requested, entry.kinds)
+    const enabledRequests = [...entry.requested].filter(kind => rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind))
+    const missing = missingRequestedKinds(enabledRequests, entry.kinds)
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
     if (entry.visual && !knownMismatch) return
     if ((rt.state?.exchangeTurns?.[id] ?? []).includes(turn)) return
