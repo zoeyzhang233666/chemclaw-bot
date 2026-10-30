@@ -1207,6 +1207,7 @@ var ZH = {
   "{name} didn't answer in time": "{name} 没有及时回应",
   "{name} did not answer or call anyone; call a member with @Name": "{name} 没有回答，也没有叫谁；用 @名字 叫一个成员来回答",
   "The group replies could not be shown": "群聊回复暂时无法显示",
+  "This group reply was interrupted by a stop request": "本轮群聊回复已被停止指令中断",
   "Some group replies could not be shown": "部分群聊回复无法显示",
   "{name} paused for your approval": "{name} 停下来等你批准",
   "{name} started on it": "{name} 开始做了",
@@ -1224,6 +1225,7 @@ var ZH = {
   "Waiting for your approval": "等你批准",
   "Stop all work in this group": "停止本群的所有工作",
   "Stop all": "全部停止",
+  "Stopping…": "正在停止…",
   "in its own chat": "在自己的对话里",
   Reject: "拒绝",
   "Allow once": "允许一次",
@@ -11189,7 +11191,7 @@ function useLiveNote(actions, sessionId, id, entry) {
     return () => actions.noteLive(sessionId, id, null);
   }, [sessionId, id, key]);
 }
-function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, actions, useUi, useWork }) {
+function GroupReplies({ sessionId, eventSeq, callId, done, interrupted, content, roster, actions, useUi, useWork }) {
   const [live, setLive] = (0, import_react23.useState)({ replies: [], speaking: null, drafts: [] });
   (0, import_react23.useEffect)(() => {
     if (done) return void 0;
@@ -11230,7 +11232,7 @@ function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, acti
   const speakerTool = speakerWork?.tool;
   const speakerDoing = speakerTool ? workPhrase(speakerWork) : void 0;
   if (replies.length === 0 && pending2.length === 0 && drafts.length === 0 && !preparing) {
-    return broken ? (0, import_react23.createElement)("div", { className: "bt-group-replies" }, (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t("The group replies could not be shown"))) : null;
+    return broken ? (0, import_react23.createElement)("div", { className: "bt-group-replies" }, (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t(interrupted ? "This group reply was interrupted by a stop request" : "The group replies could not be shown"))) : null;
   }
   const room2 = roster.roomsById[sessionId];
   return (0, import_react23.createElement)(
@@ -11313,7 +11315,7 @@ function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, acti
       const bot = roster.byId[draft.botId];
       return bot ? (0, import_react23.createElement)(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room: room2, roster, actions, streaming: true }) : null;
     }),
-    broken ? (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t("Some group replies could not be shown")) : null,
+    broken ? (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t(interrupted ? "This group reply was interrupted by a stop request" : "Some group replies could not be shown")) : null,
     pending2.map((id) => {
       const bot = roster.byId[id];
       if (!bot) return null;
@@ -11377,8 +11379,11 @@ function renderCall(call2, { sessionId, eventSeq, roster, actions, useUi, useWor
       const target = findBot(arg("name")) ?? findBot(arg("bot")) ?? (arg("bot") ? void 0 : self);
       return done && target ? (0, import_react23.createElement)(EventLine, { prefix: t("Updated"), bots: [target], onOpen: (bot) => actions.openSession(bot.id) }) : null;
     }
-    case "group_relay":
-      return (0, import_react23.createElement)(GroupReplies, { sessionId, eventSeq: call2.seq ?? eventSeq, callId: call2.callId, done, content: call2.content, roster, actions, useUi, useWork });
+    case "group_relay": {
+      const result = done ? contentText(call2.content) : "";
+      const interrupted = call2.isError === true && (["ABORTED", "ABORTED_BEFORE_DISPATCH"].includes(call2.error?.code) || /^Error: tool call aborted(?: before dispatch)?$/i.test(result.trim()));
+      return (0, import_react23.createElement)(GroupReplies, { sessionId, eventSeq: call2.seq ?? eventSeq, callId: call2.callId, done, interrupted, content: call2.content, roster, actions, useUi, useWork });
+    }
     case "create_group":
     case "update_group":
     case "delete_group":
@@ -20563,19 +20568,29 @@ function StopMemberWork({ entry, bot, room: room2, actions }) {
   if (!entry?.here || entry.state !== "work" && entry.state !== "ask") return null;
   const stop = () => {
     setStopping(true);
-    void Promise.resolve(actions.stopMemberWork(room2.id, bot.id)).catch((error) => actions.reportError(error, "stop")).finally(() => setStopping(false));
+    void Promise.resolve(actions.stopMemberWork(room2.id, bot.id)).then((accepted) => {
+      if (accepted === false) setStopping(false);
+    }).catch((error) => {
+      setStopping(false);
+      actions.reportError(error, "stop");
+    });
   };
-  return (0, import_react54.createElement)("button", { type: "button", className: "bt-member-stop", disabled: stopping, "aria-label": `${t("Stop")} · ${bot.name}`, onClick: stop }, t("Stop"));
+  return (0, import_react54.createElement)("button", { type: "button", className: "bt-member-stop", disabled: stopping, "aria-label": `${t(stopping ? "Stopping…" : "Stop")} · ${bot.name}`, onClick: stop }, t(stopping ? "Stopping…" : "Stop"));
 }
 function StopRoomWork({ room: room2, entries: entries2, actions }) {
   const [stopping, setStopping] = (0, import_react54.useState)(false);
   if (!entries2.some((entry) => entry.here)) return null;
   const stop = () => {
     setStopping(true);
-    void Promise.resolve(actions.stopRoomWork(room2.id)).catch((error) => actions.reportError(error, "stop")).finally(() => setStopping(false));
+    void Promise.resolve(actions.stopRoomWork(room2.id)).then((accepted) => {
+      if (accepted === false) setStopping(false);
+    }).catch((error) => {
+      setStopping(false);
+      actions.reportError(error, "stop");
+    });
   };
   const label = t("Stop all work in this group");
-  return (0, import_react54.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: stopping, "aria-label": label, title: label, onClick: stop }, t("Stop all"));
+  return (0, import_react54.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: stopping, "aria-label": label, title: label, onClick: stop }, t(stopping ? "Stopping…" : "Stop all"));
 }
 function MemberApprovals({ entry, bot, actions }) {
   if (entry?.state !== "ask") return null;
