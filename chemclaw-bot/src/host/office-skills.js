@@ -4,7 +4,8 @@
 // the sub-fiber stays inactive where it does not, so the plugin runs the same
 // in DSH Web, DSH Desktop and the desktop app.
 import { existsSync, readFileSync } from 'node:fs'
-import { dirname, join, sep } from 'node:path'
+import { spawnSync } from 'node:child_process'
+import { dirname, isAbsolute, join, sep } from 'node:path'
 import { isSea } from 'node:sea'
 import { fileURLToPath } from 'node:url'
 
@@ -28,13 +29,31 @@ export function cliPath(manifest = CLI) {
   return manifest.replace(`${sep}app.asar${sep}`, `${sep}app.asar.unpacked${sep}`)
 }
 
-// Where the commands run: the app's Office payload when it shipped, plain Node
-// hosts (DSH Web, a developer Node), or the workspace-dependencies tool's node.
+// Discover standalone Node from PATH on source-preview desktops without
+// requiring the optional workspace-dependencies tool. An installer must
+// still ship a standalone runtime for new users (PR-B).
+export function findStandaloneNode(env = process.env, platform = process.platform, run = spawnSync) {
+  const paths = env.Path || env.PATH || env.path || ''
+  const separator = platform === 'win32' ? ';' : ':'
+  const name = platform === 'win32' ? 'node.exe' : 'node'
+  for (const item of paths.split(separator)) {
+    const folder = item.replace(/^"|"$/g, '')
+    if (!isAbsolute(folder)) continue
+    const executable = join(folder, name)
+    if (!existsSync(executable)) continue
+    try {
+      const result = run(executable, ['--version'], { encoding: 'utf8', timeout: 1500, windowsHide: true })
+      if (result.status === 0 && /^v\d+\.\d+\.\d+/.test(String(result.stdout).trim())) return executable
+    } catch { /* PATH candidate does not run as Node. */ }
+  }
+  return undefined
+}
+
 export function officeNode(env = process.env) {
   const bundled = env.CHEMCLAW_OFFICE_NODE
   if (bundled !== undefined && existsSync(bundled)) return { node: bundled }
   if (process.versions.electron === undefined && !isSea()) return { node: process.execPath }
-  return { node: undefined }
+  return { node: findStandaloneNode(env) }
 }
 
 function runtimeBlock() {

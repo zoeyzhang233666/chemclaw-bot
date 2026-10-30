@@ -1,9 +1,9 @@
 // Tests for the chemclaw-bot Office skill provider (src/host/office-skills.js).
 import { existsSync } from 'node:fs'
-import { sep } from 'node:path'
+import { dirname, sep } from 'node:path'
 import { describe, test } from 'node:test'
 import assert from 'node:assert'
-import { officeProvider, officeNode, cliPath } from '../src/host/office-skills.js'
+import { officeProvider, officeNode, findStandaloneNode, cliPath } from '../src/host/office-skills.js'
 
 describe('office skill provider', () => {
   test('lists office and office-tools with bundled metadata', async () => {
@@ -76,4 +76,21 @@ describe('cli path mapping', () => {
     const plain = `D:${sep}repo${sep}chemclaw-bot${sep}office.js`
     assert.equal(cliPath(plain), plain)
   })
+})
+
+test('the existing standalone Node on PATH is a valid Office CLI runtime', () => {
+  const folder = dirname(process.execPath)
+  const env = { PATH: folder, Path: folder }
+  const found = findStandaloneNode(env, process.platform, (bin, args) => {
+    assert.deepEqual(args, ['--version'])
+    assert.ok(bin.includes('node'))
+    return { status: 0, stdout: 'v24.15.0' }
+  })
+  assert.ok(found?.endsWith(process.platform === 'win32' ? 'node.exe' : 'node'))
+})
+
+test('standalone Node lookup never launches a relative PATH entry', () => {
+  assert.equal(findStandaloneNode({ PATH: '.', Path: '.' }, process.platform, () => {
+    throw new Error('relative binary was incorrectly executed')
+  }), undefined)
 })
