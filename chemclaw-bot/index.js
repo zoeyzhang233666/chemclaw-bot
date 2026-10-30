@@ -43,6 +43,7 @@ import * as cninfo from './src/host/cninfo.js'
 import * as dependencies from './src/host/dependencies.js'
 import * as artifactTools from './src/host/artifact-tools.js'
 import * as officeSkills from './src/host/office-skills.js'
+import { ensurePreviewWorkspaceAcl } from './src/host/workspace-sandbox.js'
 import * as schedules from './src/host/schedules.js'
 import * as usage from './src/host/usage.js'
 import * as update from './src/host/update.js'
@@ -67,6 +68,11 @@ export function apply(ctx, config = {}) {
 }
 
 export function createRuntime(ctx, config = {}) {
+  // DSH Windows workspace-write requires WRITE_OWNER even on writable D: folders.
+  // This helper changes only ChemClaw's exact isolated preview workspace root.
+  const acl = ensurePreviewWorkspaceAcl()
+  if (acl.status === 'granted') console.info('ChemClaw: preview workspace ACL prepared for Windows sandbox.')
+  if (acl.status === 'error') console.warn('ChemClaw: preview sandbox ACL preparation failed:', acl.message)
   const dshHome = folders.dshHomeOf(process.env.DSH_HOME)
   const home = config.home ?? join(dshHome, 'chemclaw')
   const rt = {
