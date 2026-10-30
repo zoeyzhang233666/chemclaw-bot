@@ -163,7 +163,7 @@ test('sessions do not share delivery state and disposal drops old state', () => 
 test('requested chart detection distinguishes instructions from discussions and does not invent data requirements', () => {
   assert.deepEqual(requestedChartKinds('请生成一张热力图，并用时间轴展示主要事件。'), ['heatmap', 'timeline'])
   assert.deepEqual(requestedChartKinds('Create a Sankey and a heatmap.'), ['heatmap', 'sankey'])
-  for (const question of ['为什么热力图没有显示？', '热力图是什么？', '修复生成桑基图失败的问题', 'Explain how Sankey diagrams work']) {
+  for (const question of ['为什么热力图没有显示？', '热力图是什么？', '请解释热力图的概念', '帮我检查热力图没有显示的问题', '修复生成桑基图失败的问题', 'Explain how Sankey diagrams work']) {
     assert.deepEqual(requestedChartKinds(question), [], question)
   }
   assert.deepEqual(missingRequestedKinds(['heatmap', 'timeline'], new Set(['heatmap'])), ['timeline'])
