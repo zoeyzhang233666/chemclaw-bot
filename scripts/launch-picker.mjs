@@ -87,7 +87,10 @@ function buildCatalog(origin, previous = {}) {
   ]
 
   for (const pr of listed.prs || []) {
-    const tree = trees.find(t => t.branch === pr.headRefName)
+    // Older picker versions created detached PR worktrees. Recognize those too,
+    // otherwise an existing stale PR appears as a new checkout in the menu.
+    const dedicated = resolve(origin, '..', `cursor-chembot-pr-${pr.number}`)
+    const tree = trees.find(t => t.branch === pr.headRefName || (existsSync(dedicated) && t.path === realpathSync(dedicated)))
     const mark = pr.mergeable === 'CONFLICTING' ? ' [CONFLICTING]' : ''
     items.push({
       id: `pr-${pr.number}`,
@@ -97,7 +100,7 @@ function buildCatalog(origin, previous = {}) {
       headRefOid: pr.headRefOid,
       title: pr.title,
       source: tree?.path || null,
-      label: `PR #${pr.number} - ${pr.title} [GitHub ${String(pr.headRefOid).slice(0, 8)}${tree ? `; local ${tree.short}${tree.head !== pr.headRefOid ? ' [OUTDATED]' : ''}` : '; will add worktree'}]${mark}`,
+      label: `PR #${pr.number} - ${pr.title} [GitHub ${String(pr.headRefOid).slice(0, 8)}${tree ? `; local ${tree.short}${tree.head !== pr.headRefOid ? ' [OUTDATED]' : ''}${git(tree.path, ['status', '--porcelain', '--untracked-files=normal'], { allowFail: true }) ? ' [DIRTY: no update]' : ''}` : '; will add worktree'}]${mark}`,
     })
   }
 
