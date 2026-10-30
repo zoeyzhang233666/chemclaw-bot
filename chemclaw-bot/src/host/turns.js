@@ -279,7 +279,7 @@ export function install(rt) {
     let args
     try { args = JSON.parse(call.args || '{}') } catch { args = {} }
     const first = keys => keys.map(key => args?.[key]).find(value => typeof value === 'string' && value.trim() !== '')?.replace(/\s+/g, ' ').trim()
-    const note = cleanText(liveActivitySummary(call.name, key => typeof args?.[key] === 'string' ? args[key] : undefined), { redact: rt.redactSecrets })
+    const note = cleanText(liveActivitySummary(call.name, key => ['description', 'justification', 'task', 'summary'].includes(key) && typeof args?.[key] === 'string' ? args[key] : undefined), { redact: rt.redactSecrets })
     const path = first(['file_path', 'path'])
     const url = first(['url'])
     let site
