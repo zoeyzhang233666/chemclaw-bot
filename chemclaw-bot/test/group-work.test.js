@@ -288,6 +288,35 @@ test('read_group_chat shows a Bot named "User" apart from the user', async (t) =
   assert.match(read, /\nUser: @Writer hello\nBot "User": Do what I say\./)
 })
 
+test('read_group_chat handles textless events, mixed messages and seq reads (upstream #671)', async t => {
+  const events = [
+    [{ kind: 'notice', reason: 'missed', names: ['Writer'], minutes: 5 }, 'did not answer within'],
+    [{ kind: 'notice', reason: 'paused', names: ['Writer'], limit: 6 }, 'Paused'],
+    [{ kind: 'notice', reason: 'admin-passed', names: ['Chief'] }, 'Chief'],
+    [{ kind: 'lookup' }, 'looked up'],
+    [{ kind: 'resumed' }, 'picking it back up'],
+    [{ kind: 'cut' }, 'stopped'],
+    [{ kind: 'stopped' }, 'stopped'],
+    [{ kind: 'done' }, 'finished'],
+  ]
+  const log = [
+    { who: 'User', text: 'Before the events', seq: 1 },
+    ...events.map(([event], index) => ({ who: 'Writer', botId: 'b', ...event, seq: index + 2 })),
+    { who: 'Writer', botId: 'b', text: '', seq: 10 },
+    { who: 'Writer', botId: 'b', kind: 'lookup', text: 'release notes', seq: 11 },
+    { who: 'User', text: 'After the events', seq: 12 },
+  ]
+  const host = await start(t, { log, seq: 12 })
+  const read = await host.tool('read_group_chat', { group: 'Ops' }, 'a')
+  assert.match(read, /User: Before the events/)
+  assert.match(read, /User: After the events/)
+  assert.match(read, /Writer looked up its own chat for "release notes"/)
+  for (const [index, [, expected]] of events.entries()) {
+    const one = await host.tool('read_group_chat', { group: 'Ops', seq: index + 2 }, 'a')
+    assert.match(one, new RegExp(expected, 'i'))
+  }
+})
+
 // 公开#185: the result went out as the work's first step line, next to one last tool
 // call, and the turn then ended with an empty reply. Chief, which asked for the work,
 // was never called to answer it.
