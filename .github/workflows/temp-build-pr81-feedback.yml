@@ -1,0 +1,39 @@
+name: Temporary PR81 feedback build
+on:
+  push:
+    branches: [fix/0-single-live-tool-status]
+permissions:
+  contents: write
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - name: Install build dependencies
+        working-directory: chemclaw-bot
+        run: npm ci --no-fund --no-audit
+      - name: Build generated client
+        working-directory: chemclaw-bot
+        run: npm run build
+      - name: Commit generated bundle
+        run: |
+          if git diff --quiet -- chemclaw-bot/client.js chemclaw-bot/runtime/chart-engine.js; then exit 0; fi
+          git config user.name "$(git show -s --format='%an' HEAD)"
+          git config user.email "$(git show -s --format='%ae' HEAD)"
+          git add chemclaw-bot/client.js chemclaw-bot/runtime/chart-engine.js
+          git commit -m "Rebuild single-line tool status client"
+          git push origin HEAD:fix/0-single-live-tool-status
+      - name: Install mock DSH test harness
+        working-directory: chemclaw-bot
+        run: npm run harness -- --no-save "@deepseek-ai/dsh@0.2.1-rc.2"
+      - name: Targeted status and transcript tests
+        working-directory: chemclaw-bot
+        run: node --import ./test/harness-resolve.mjs --test test/activity-row.test.js test/tool-activity.test.js test/tool-cells.test.js test/group-work.test.js
+      - name: Lint
+        working-directory: chemclaw-bot
+        run: npm run lint
