@@ -491,7 +491,7 @@ async function chat(cdp) {
   const rangeBox = await evaluate("(() => { const box = document.querySelector('.bt-chart-range-track').getBoundingClientRect(); return { x: box.x, y: box.y + box.height / 2, width: box.width }; })()")
   // The track's exact left edge may hit its background, selection window, or a handle
   // depending on fractional pixel rounding. Press the actual start handle instead.
-  const startHandle = await evaluate("(() => { const node = document.querySelector('.bt-group-view .bt-chart-range-handle[aria-label=\"Range start\"]'); if (!node) return null; const box = node.getBoundingClientRect(); const x = box.left + box.width * 0.75; const y = box.top + box.height / 2; return { x, y, hit: document.elementFromPoint(x, y)?.closest('.bt-chart-range-handle') === node }; })()")
+  const startHandle = await evaluate("(() => { const node = document.querySelector('.bt-group-view .bt-chart-range-handle'); if (!node) return null; const box = node.getBoundingClientRect(); const x = box.left + box.width * 0.75; const y = box.top + box.height / 2; return { x, y, hit: document.elementFromPoint(x, y)?.closest('.bt-chart-range-handle') === node }; })()")
   if (!startHandle?.hit) throw new Error(`The chart range start handle is not hit-testable: ${JSON.stringify(startHandle)}`)
   await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: startHandle.x, y: startHandle.y })
   await cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', x: startHandle.x, y: startHandle.y, button: 'left', buttons: 1, clickCount: 1 })
