@@ -1,9 +1,9 @@
 import { spawn, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, watch, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, watch, writeFileSync } from 'node:fs'
 import { dirname, join, matchesGlob, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { launchSource, sourceRevision } from './launch-source.mjs'
+import { ensureElectronRuntime, launchSource, missingPluginDependencies, resolveAppHost, sourceRevision } from './launch-source.mjs'
 import { resolveProfile } from './launch-profiles.mjs'
 import { runPicker, shouldShowPicker } from './launch-picker.mjs'
 
@@ -25,18 +25,6 @@ const selection = selected.selection || (
 )
 const effectiveProfile = resolveProfile(selected.origin, selection, { copyCredentials: false })
 
-function resolveAppHost(sourceRoot, origin) {
-  const sourceAppPath = join(sourceRoot, 'app')
-  const entryAppPath = join(origin, 'app')
-  const rel = process.platform === 'win32'
-    ? 'node_modules/electron/dist/electron.exe'
-    : process.platform === 'darwin'
-      ? 'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron'
-      : 'node_modules/electron/dist/electron'
-  if (existsSync(join(sourceAppPath, rel))) return { app: sourceAppPath, host: 'selected-source' }
-  if (existsSync(join(entryAppPath, rel))) return { app: entryAppPath, host: 'entry-reuse' }
-  return { app: sourceAppPath, host: 'selected-source' }
-}
 
 if (argv.includes('--info')) {
   const host = resolveAppHost(root, selected.origin)
@@ -60,9 +48,9 @@ if (argv.includes('--info')) {
   process.exit(0)
 }
 
-// Build the selected source plugin. Prefer that tree's app when Electron is
-// already installed there; otherwise reuse the entry checkout app to avoid a
-// full npm ci on every PR worktree.
+// Build the selected source plugin. Use the selected PR's own app when its
+// desktop code or dependencies differ, even if Electron is not installed yet.
+// Reuse the entry app only when desktop files are identical.
 const plugin = join(root, 'chemclaw-bot')
 const sourceApp = join(root, 'app')
 const hostInfo = resolveAppHost(root, selected.origin)
@@ -104,7 +92,8 @@ function hashPaths(paths) {
 
 const dependencyStamp = join(app, 'node_modules', '.chemclaw-dependencies.json')
 const syncStampPath = join(app, 'node_modules', '.chemclaw-sync-stamp.json')
-const expectedDependencies = JSON.stringify(JSON.parse(readFileSync(join(plugin, 'package.json'), 'utf8')).dependencies)
+const pluginDependencies = JSON.parse(readFileSync(join(plugin, 'package.json'), 'utf8')).dependencies
+const expectedDependencies = JSON.stringify(pluginDependencies)
 const sourceFingerprint = hashPaths([
   join(plugin, 'src'),
   join(plugin, 'seed'),
@@ -128,22 +117,29 @@ if (!existsSync(join(plugin, 'node_modules/esbuild'))) {
     run(['ci'], plugin)
   }
 }
-if (!existsSync(join(app, electronRel))) {
-  console.log(`Electron missing in ${app} — running npm ci (one-time for this app host)`)
-  run(['ci'], app)
-}
+ensureElectronRuntime(app, electronRel, {
+  installDependencies: () => run(['ci'], app),
+  installBinary: installer => {
+    const env = { ...environment }
+    // A global npm setting may have skipped Electron's postinstall binary download.
+    // Here a real GUI is required, so the official installer must run.
+    delete env.ELECTRON_SKIP_BINARY_DOWNLOAD
+    const result = spawnSync(process.execPath, [installer], {
+      cwd: app, env, stdio: 'inherit', windowsHide: true,
+    })
+    if (result.error || result.status !== 0) {
+      throw new Error(`Electron runtime download failed: ${result.error?.message || `exit ${result.status}`}. Check the network/proxy or Electron cache; existing npm dependencies were preserved.`)
+    }
+  },
+})
 // Avoid reinstalling the whole plugin graph when switching preview sources. The
  // sync() step replaces node_modules/chemclaw-bot contents from the selected tree.
 const stampOk = existsSync(dependencyStamp) && readFileSync(dependencyStamp, 'utf8') === expectedDependencies
 const pluginLinked = existsSync(join(app, 'node_modules', 'chemclaw-bot', 'package.json'))
-if (!stampOk && !pluginLinked) {
+if (!pluginLinked) {
   const installSpec = app === sourceApp ? '../chemclaw-bot' : plugin
   console.log(`Linking plugin into app host via npm install (${installSpec})`)
-  run(['install', installSpec, '--ignore-scripts', '--no-audit', '--no-fund'], app)
-  writeFileSync(dependencyStamp, expectedDependencies)
-} else {
-  if (!stampOk) writeFileSync(dependencyStamp, expectedDependencies)
-  console.log('App host ready — skipping npm install; syncing selected plugin files only.')
+  run(['install', installSpec, '--no-save', '--package-lock=false', '--install-links', '--ignore-scripts', '--no-audit', '--no-fund'], app)
 }
 
 const target = resolve(app, 'node_modules/chemclaw-bot')
@@ -151,8 +147,15 @@ if (target !== join(app, 'node_modules', 'chemclaw-bot') || !target.startsWith(`
 
 function sync() {
   run(['run', 'build'], plugin)
-  rmSync(target, { recursive: true, force: true })
+  // npm may nest conflicting versions under this plugin. Preserve those modules
+  // while replacing the synchronized source files; deleting them broke upgrades.
+  // A first-time npm file: install can be a symlink: unlink it, never remove its
+  // contents (which may point into the user's source checkout).
+  if (existsSync(target) && lstatSync(target).isSymbolicLink()) rmSync(target, { force: true })
   mkdirSync(target, { recursive: true })
+  for (const entry of readdirSync(target)) {
+    if (entry !== 'node_modules') rmSync(join(target, entry), { recursive: true, force: true })
+  }
   const manifest = JSON.parse(readFileSync(join(plugin, 'package.json'), 'utf8'))
   const excluded = manifest.files.filter(path => path.startsWith('!')).map(path => path.slice(1))
   const include = source => {
@@ -184,6 +187,32 @@ const canReuse = previousStamp
 
 if (canReuse) console.log('Source fingerprint unchanged — reusing existing plugin build sync.')
 else sync()
+
+// Audit *after* source sync: npm can put conflicting pinned dependencies inside
+// node_modules/chemclaw-bot, so a sync must never erase the only installed copy.
+// An existing stamp is not proof that a dependency really exists (GenUI #79).
+const OPTIONAL_VISUAL_DEP = '@changfenhuang/dsh-genui'
+const missing = missingPluginDependencies(app, pluginDependencies)
+if (missing.length) {
+  console.log(`Installing missing ChemClaw dependencies: ${missing.join(', ')}`)
+  try {
+    run(['install', '--no-save', '--package-lock=false', '--install-links', '--ignore-scripts', '--no-audit', '--no-fund', ...missing], app)
+  } catch (error) {
+    // GenUI is optional. An unavailable npm registry should not take away
+    // the user's working Bot chat and existing show_view charts.
+    if (missing.some(spec => !spec.startsWith(`${OPTIONAL_VISUAL_DEP}@`))) throw error
+    console.warn('ChemClaw: optional GenUI install failed; launching with original charts:', error.message)
+  }
+  // npm may refresh a file: dependency; restore the selected source tree
+  // while keeping nested dependency folders intact.
+  sync()
+}
+const unresolved = missingPluginDependencies(app, pluginDependencies)
+const blocking = unresolved.filter(spec => !spec.startsWith(`${OPTIONAL_VISUAL_DEP}@`))
+if (blocking.length) throw new Error(`ChemClaw required dependencies remain unavailable: ${blocking.join(', ')}. Check npm/network access.`)
+if (unresolved.length) console.warn(`ChemClaw: optional GenUI is not installed (${unresolved.join(', ')}); existing chat and charts remain available.`)
+if (!stampOk || !pluginLinked || missing.length) writeFileSync(dependencyStamp, expectedDependencies)
+console.log(!unresolved.length && missing.length ? 'ChemClaw plugin dependencies repaired.' : 'App host checked — existing features preserved.')
 
 if (argv.includes('--sync-only')) process.exit(0)
 

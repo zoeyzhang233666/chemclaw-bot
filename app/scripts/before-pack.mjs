@@ -2,9 +2,11 @@
 // (npmRebuild: false), so they fit only the architecture of the Node that ran npm. An app built for
 // another architecture would carry them and not start, so such a build stops here.
 import { Arch } from 'electron-builder'
+import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { missingPluginDependencies } from '../../scripts/launch-source.mjs'
 
 const WHERE = {
   darwin: { x64: 'on an Intel Mac, or under Rosetta with an x64 Node', arm64: 'on a Mac with Apple silicon' },
@@ -34,5 +36,13 @@ export async function beforePack(context, prepare = prepareMarketRuntime) {
   const problem = archProblem({ target: Arch[context.arch], platform: context.electronPlatformName, targets })
   if (problem !== undefined) throw new Error(problem)
   if (context.electronPlatformName !== process.platform) throw new Error('Build on the target operating system to bundle its market runtime.')
+  // Fail the installer build if a newly declared plugin dependency was not installed.
+  // CI's npm ci should install these from the lockfile; a stale local tree must fail.
+  const app = dirname(fileURLToPath(new URL('../package.json', import.meta.url)))
+  const require = createRequire(import.meta.url)
+  const plugin = dirname(require.resolve('chemclaw-bot/package.json'))
+  const manifest = JSON.parse(readFileSync(join(plugin, 'package.json'), 'utf8'))
+  const missing = missingPluginDependencies(app, manifest.dependencies)
+  if (missing.length) throw new Error(`Cannot package ChemClaw: missing plugin dependencies: ${missing.join(', ')}. Run npm ci in app/ before packaging.`)
   await prepare()
 }

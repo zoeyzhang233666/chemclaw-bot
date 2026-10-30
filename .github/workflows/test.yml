@@ -14,16 +14,15 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.os }} · Node ${{ matrix.node }} · DSH ${{ matrix.dsh }}
+    name: ${{ matrix.os }} · Node ${{ matrix.node }} · DSH pinned by app
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, node: 24, dsh: 0.2.1-rc.2 }
-          - { os: windows-latest, node: 24, dsh: 0.2.1-rc.2 }
-          - { os: ubuntu-latest, node: 22, dsh: 0.2.1-rc.2 }
-          - { os: ubuntu-latest, node: 24, dsh: 0.2.0-rc.2 }
+          - { os: ubuntu-latest, node: 24 }
+          - { os: windows-latest, node: 24 }
+          - { os: ubuntu-latest, node: 22 }
     defaults:
       run:
         shell: bash
@@ -36,8 +35,14 @@ jobs:
           cache: npm
           cache-dependency-path: chemclaw-bot/package-lock.json
       - run: npm ci --no-fund --no-audit
-      - name: Install DSH ${{ matrix.dsh }}
-        run: npm run harness -- --no-save "@deepseek-ai/dsh@${{ matrix.dsh }}"
+      # Test the exact DSH version bundled with the desktop app. Never downgrade it
+      # just for CI: retired DSH versions can fail unrelated timing-sensitive tests.
+      - name: Install current desktop-pinned DSH
+        run: |
+          dsh_version="$(node -p 'require("../app/package.json").dependencies["@deepseek-ai/dsh"]')"
+          test -n "$dsh_version" && test "$dsh_version" != undefined
+          echo "Testing DSH $dsh_version (pinned by app/package.json)"
+          npm run harness -- --no-save "@deepseek-ai/dsh@$dsh_version"
       - run: npm test
       - run: node scripts/build-client.mjs --check
       - run: npm run lint
@@ -73,6 +78,56 @@ jobs:
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
       - run: npm test
+      - name: Install the published plugin shape in an empty directory
+        run: |
+          archive="$(cd ../chemclaw-bot && npm pack --silent --pack-destination "$RUNNER_TEMP")"
+          test -f "$RUNNER_TEMP/$archive"
+          root="$RUNNER_TEMP/chemclaw-fresh-install"
+          mkdir -p "$root"
+          npm install --prefix "$root" --ignore-scripts --legacy-peer-deps --no-fund --no-audit "$RUNNER_TEMP/$archive"
+          node -e 'const fs=require("node:fs");const path=require("node:path");const root=process.argv[1];const plugin=require(path.join(root,"node_modules/chemclaw-bot/package.json"));const genui=require(path.join(root,"node_modules/@changfenhuang/dsh-genui/package.json"));if(genui.version!==plugin.dependencies["@changfenhuang/dsh-genui"])throw Error("GenUI missing or incorrect in fresh plugin install");const patch=fs.readFileSync(path.join(root,"node_modules/chemclaw-bot/cordis.patch.yml"),"utf8");if(!patch.includes("@changfenhuang/dsh-genui"))throw Error("GenUI bundle patch missing from plugin archive");' "$root"
+
+  app-source:
+    name: Source GUI installs GenUI and renders timeline (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install source and app dependencies
+        run: |
+          npm ci --prefix chemclaw-bot --no-fund --no-audit
+          npm ci --prefix app --no-fund --no-audit
+      - name: Verify a PR with changed desktop code cannot reuse stale main app
+        run: |
+          preview="${RUNNER_TEMP}/chemclaw-different-app"
+          git worktree add --detach "$preview" HEAD
+          printf '\n// Change visible only in PR preview\n' >> "$preview/app/src/profile.mjs"
+          node scripts/launch-chemclaw.mjs --no-picker --source "$preview" --info > "$RUNNER_TEMP/preview-info.json"
+          node -e 'const j=require(process.argv[1]);if(j.appHost!=="selected-source-app-changed")throw Error(`Wrong host: ${j.appHost}`)' "$RUNNER_TEMP/preview-info.json"
+          git worktree remove --force "$preview"
+      - name: Reproduce a stale source checkout with GenUI missing
+        run: |
+          rm -rf app/node_modules/@changfenhuang/dsh-genui
+          test ! -e app/node_modules/@changfenhuang/dsh-genui
+      - name: Source launcher must repair missing dependency without reinstalling all modules
+        run: node scripts/launch-chemclaw.mjs --no-picker --source . --sync-only
+      - name: Verify installed Electron runtime matches pinned supported version
+        run: |
+          node -e 'const assert=require("node:assert/strict");const cp=require("node:child_process");const app=require("./app/package.json");const expected=app.devDependencies.electron;assert.match(expected,/^[0-9]+[.][0-9]+[.][0-9]+$/,"Electron must be pinned to an exact DSH-supported version");const installed=require("./app/node_modules/electron/package.json").version;assert.equal(installed,expected,"npm source repair upgraded Electron to an incompatible version");const exe=require("./app/node_modules/electron");const result=cp.spawnSync(exe,["-p","process.versions.electron"],{env:{...process.env,ELECTRON_RUN_AS_NODE:"1"},encoding:"utf8",timeout:15000});assert.equal(result.status,0,result.stderr||"Electron binary failed to start");assert.equal(result.stdout.trim(),expected,"Electron binary differs from the pinned package");console.log("Electron runtime validated: "+expected);'
+      - name: Verify GenUI is installed and locked at the expected version
+        run: |
+          cd app
+          npm ls @changfenhuang/dsh-genui --all
+      - name: Start source GUI with isolated test profile and render GenUI timeline
+        run: node app/scripts/check-packed.mjs --source
 
   app-package:
     name: Desktop app package (Windows)
@@ -358,8 +413,8 @@ jobs:
   # and fails unless the matrix, leak scan, app, app package and Docker checks passed.
   result:
     name: Test result
-    needs: [test, scan, app, app-package, app-package-macos, app-package-linux, docker]
+    needs: [test, scan, app, app-source, app-package, app-package-macos, app-package-linux, docker]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: test "${{ needs.test.result }}" = success && test "${{ needs.scan.result }}" = success && test "${{ needs.app.result }}" = success && test "${{ needs.app-package.result }}" = success && test "${{ needs.app-package-macos.result }}" = success && test "${{ needs.app-package-linux.result }}" = success && test "${{ needs.docker.result }}" = success
+      - run: test "${{ needs.test.result }}" = success && test "${{ needs.scan.result }}" = success && test "${{ needs.app.result }}" = success && test "${{ needs.app-source.result }}" = success && test "${{ needs.app-package.result }}" = success && test "${{ needs.app-package-macos.result }}" = success && test "${{ needs.app-package-linux.result }}" = success && test "${{ needs.docker.result }}" = success

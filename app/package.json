@@ -20,6 +20,7 @@
     "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
+    "@changfenhuang/dsh-genui": "0.15.0",
     "@img/sharp-wasm32": "0.35.5",
     "@deepseek-ai/cordis-plugin-group": "1.0.5",
     "@deepseek-ai/dsh": "0.2.1-rc.3",
@@ -60,7 +61,7 @@
     "yaml": "2.9.1"
   },
   "devDependencies": {
-    "electron": "^44.7.0",
+    "electron": "44.7.0",
     "electron-builder": "^26.17.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",

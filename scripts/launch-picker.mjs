@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   defaultTrustedPrs, describeWorktreeVsMain, ensurePrWorktree, fetchRemote,
-  listOpenPullRequests, listWorktrees, mainTip,
+  listOpenPullRequests, listWorktrees, mainTip, syncSelectedMain, git,
 } from './launch-discover.mjs'
 import { resolveIntegration, writeManifest } from './launch-integrate.mjs'
 import { resolveProfile } from './launch-profiles.mjs'
@@ -68,6 +68,9 @@ function buildCatalog(origin, previous = {}) {
   if (!listed.ok) statusParts.push(`PR list failed: ${listed.error || 'unknown'}`)
   else statusParts.push(`${listed.prs.length} open PR(s)`)
 
+  const localMainHead = git(origin, ['rev-parse', 'HEAD'], { allowFail: true })
+  const mainDirty = git(origin, ['status', '--porcelain', '--untracked-files=normal'], { allowFail: true }) !== ''
+  const mainOutdated = Boolean(tip.sha && localMainHead && tip.sha !== localMainHead)
   const items = [
     {
       id: 'integration',
@@ -77,14 +80,17 @@ function buildCatalog(origin, previous = {}) {
     {
       id: 'main',
       kind: 'main',
-      label: `main - ${origin} @ ${(tip.sha || '').slice(0, 8)}`,
+      label: `main - ${origin} @ ${localMainHead.slice(0, 8)}${mainOutdated ? ` → GitHub ${(tip.sha || '').slice(0, 8)}` : ''}${mainDirty ? ' [DIRTY: automatic update blocked]' : ''}`,
       source: origin,
       branch: 'main',
     },
   ]
 
   for (const pr of listed.prs || []) {
-    const tree = trees.find(t => t.branch === pr.headRefName)
+    // Older picker versions created detached PR worktrees. Recognize those too,
+    // otherwise an existing stale PR appears as a new checkout in the menu.
+    const dedicated = resolve(origin, '..', `cursor-chembot-pr-${pr.number}`)
+    const tree = trees.find(t => t.branch === pr.headRefName || (existsSync(dedicated) && t.path === realpathSync(dedicated)))
     const mark = pr.mergeable === 'CONFLICTING' ? ' [CONFLICTING]' : ''
     items.push({
       id: `pr-${pr.number}`,
@@ -94,7 +100,7 @@ function buildCatalog(origin, previous = {}) {
       headRefOid: pr.headRefOid,
       title: pr.title,
       source: tree?.path || null,
-      label: `PR #${pr.number} - ${pr.title} [${pr.headRefName} @ ${String(pr.headRefOid).slice(0, 8)}${tree ? '; worktree ready' : '; will add worktree'}]${mark}`,
+      label: `PR #${pr.number} - ${pr.title} [GitHub ${String(pr.headRefOid).slice(0, 8)}${tree ? `; local ${tree.short}${tree.head !== pr.headRefOid ? ' [OUTDATED]' : ''}${git(tree.path, ['status', '--porcelain', '--untracked-files=normal'], { allowFail: true }) ? ' [DIRTY: no update]' : ''}` : '; will add worktree'}]${mark}`,
     })
   }
 
@@ -135,6 +141,7 @@ function buildCatalog(origin, previous = {}) {
     remoteConfirmed: fetch.ok && listed.ok,
     listed,
     tip,
+    fetchOk: fetch.ok,
   }
 }
 
@@ -218,14 +225,19 @@ export function runPicker(origin = checkout, { interactive = true } = {}) {
     const pr = (catalog.listed.prs || []).find(entry => entry.number === item.number) || {
       number: item.number, title: item.title, headRefName: item.branch, headRefOid: item.headRefOid,
     }
-    const ensured = ensurePrWorktree(root, pr)
+    const ensured = ensurePrWorktree(root, pr, { fetched: catalog.fetchOk })
     source = ensured.path
+    if (ensured.updated) notes.push(`PR #${item.number} synced to GitHub ${ensured.head.slice(0, 8)}.`)
+    else if (ensured.reason) notes.push(`PR #${item.number} NOT updated: ${ensured.reason}. Local ${ensured.head.slice(0, 8)}; GitHub ${String(pr.headRefOid).slice(0, 8)}.`)
     selection = { kind: 'pr', number: item.number, branch: item.branch }
     if (ensured.dirty) notes.push(`PR #${item.number} worktree has local changes; not overwritten.`)
   } else if (item.kind === 'worktree') {
     source = item.source
     selection = { kind: 'worktree', branch: item.branch }
   } else {
+    const update = syncSelectedMain(root, { fetched: catalog.fetchOk })
+    if (update.updated) notes.push(`main synced to GitHub ${update.head.slice(0, 8)}.`)
+    else if (update.reason) notes.push(`main NOT updated: ${update.reason}. Local ${update.head.slice(0, 8)}; GitHub ${catalog.tip.sha.slice(0, 8)}.`)
     source = root
     selection = { kind: 'main' }
   }

@@ -96,6 +96,14 @@ function checkSharp(app) {
     const fs = require('node:fs')
     const path = require('node:path')
     const plugin = path.dirname(appRequire.resolve('chemclaw-bot/package.json'))
+    const pluginRequire = createRequire(path.join(plugin, 'package.json'))
+    const pluginManifest = JSON.parse(fs.readFileSync(path.join(plugin, 'package.json'), 'utf8'))
+    const genuiVersion = pluginManifest.dependencies['@changfenhuang/dsh-genui']
+    assert.ok(genuiVersion, 'The bundled ChemClaw manifest must declare GenUI')
+    const genuiManifest = JSON.parse(fs.readFileSync(pluginRequire.resolve('@changfenhuang/dsh-genui/package.json'), 'utf8'))
+    assert.equal(genuiManifest.version, genuiVersion, 'The installed EXE does not carry the expected GenUI dependency')
+    const patch = fs.readFileSync(path.join(plugin, 'cordis.patch.yml'), 'utf8')
+    assert.ok(patch.includes("name: '@changfenhuang/dsh-genui'"), 'The installed EXE does not enable the GenUI bundle')
     assert.equal(fs.existsSync(path.join(plugin, 'runtime/.build-tools')), false, 'Runtime build caches must not ship')
     for (const file of ['src/host/cninfo.js', 'src/host/cninfo-pdf-text.js']) assert.equal(fs.existsSync(path.join(plugin, file)), true, 'Missing bundled CNINFO tool: ' + file)
     const skills = ['domain-skills', 'supplemental-skills'].flatMap(name => JSON.parse(fs.readFileSync(path.join(plugin, 'seed', name + '.json'), 'utf8')))
@@ -369,6 +377,13 @@ async function chat(cdp) {
     console.log('check-packed: source layout controls and development revision passed')
     return
   }
+  // An installed EXE must render the actual GenUI timeline, not merely ship its npm package.
+  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
+  await cdp.call('Input.insertText', { text: 'GenUI check timeline' })
+  await sleep(150)
+  for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
+  await until(`document.querySelectorAll('[class*="tlDot"]').length === 3 && document.body.innerText.includes('Pilot complete')`, 'the rendered GenUI timeline with three milestone dots')
+  console.log('check-packed: GenUI timeline rendered in the installed app')
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: 'packaged app check' })
   await sleep(150)
