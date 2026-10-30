@@ -292,3 +292,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+ChemClaw Office Tools port from DS-Bot #624 (2026-10-30):
+  Adapted ds-bot/office.js, ds-bot/src/office/, bundled office skill provider
+  and Office regression tests from Fei2411/DS-Bot at
+  f823773b07ec6ca29d60b31c31af30218a68000d, Apache-2.0.
+  Copyright 2026 Fei2411 and DS Bot contributors.
+  https://github.com/Fei2411/DS-Bot/pull/624
+  The standalone Office CLI bundles @xmldom/xmldom 0.9.12,
+  MIT License, Copyright (c) jindw and contributors.
+  https://github.com/xmldom/xmldom
+  MIT permission and warranty conditions apply to this bundled dependency;
+  see the MIT license text in chemclaw-bot/NOTICE.
