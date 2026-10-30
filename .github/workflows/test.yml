@@ -87,6 +87,37 @@ jobs:
           npm install --prefix "$root" --ignore-scripts --legacy-peer-deps --no-fund --no-audit "$RUNNER_TEMP/$archive"
           node -e 'const fs=require("node:fs");const path=require("node:path");const root=process.argv[1];const plugin=require(path.join(root,"node_modules/chemclaw-bot/package.json"));const genui=require(path.join(root,"node_modules/@changfenhuang/dsh-genui/package.json"));if(genui.version!==plugin.dependencies["@changfenhuang/dsh-genui"])throw Error("GenUI missing or incorrect in fresh plugin install");const patch=fs.readFileSync(path.join(root,"node_modules/chemclaw-bot/cordis.patch.yml"),"utf8");if(!patch.includes("@changfenhuang/dsh-genui"))throw Error("GenUI bundle patch missing from plugin archive");' "$root"
 
+  app-source:
+    name: Source GUI installs GenUI and renders timeline (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install source and app dependencies
+        run: |
+          npm ci --prefix chemclaw-bot --no-fund --no-audit
+          npm ci --prefix app --no-fund --no-audit
+      - name: Reproduce a stale source checkout with GenUI missing
+        run: |
+          rm -rf app/node_modules/@changfenhuang/dsh-genui
+          test ! -e app/node_modules/@changfenhuang/dsh-genui
+      - name: Source launcher must repair missing dependency without reinstalling all modules
+        run: node scripts/launch-chemclaw.mjs --no-picker --source . --sync-only
+      - name: Verify GenUI is installed and locked at the expected version
+        run: |
+          cd app
+          npm ls @changfenhuang/dsh-genui --all
+      - name: Start source GUI with isolated test profile and render GenUI timeline
+        run: node app/scripts/check-packed.mjs --source
+
   app-package:
     name: Desktop app package (Windows)
     runs-on: windows-latest
@@ -371,7 +402,7 @@ jobs:
   # and fails unless the matrix, leak scan, app, app package and Docker checks passed.
   result:
     name: Test result
-    needs: [test, scan, app, app-package, app-package-macos, app-package-linux, docker]
+    needs: [test, scan, app, app-source, app-package, app-package-macos, app-package-linux, docker]
     if: always()
     runs-on: ubuntu-latest
     steps:
