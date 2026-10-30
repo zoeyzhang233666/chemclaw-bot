@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto'
 import { PDFDocument } from 'pdf-lib'
 import { defineTool } from '@deepseek-ai/dsh-tools'
+import { extractPdfEvidence } from './cninfo-pdf-text.js'
 
 const API = 'https://www.cninfo.com.cn/new/hisAnnouncement/query'
 const FULL = 'https://www.cninfo.com.cn/new/fulltextSearch/full'
@@ -11,7 +12,6 @@ const CDN = 'https://static.cninfo.com.cn/'
 const UA = 'Mozilla/5.0 (compatible; ChemClaw/0.2; research)'
 const MAX_RESULTS = 90
 const MAX_PDF_BYTES = 32 * 1024 * 1024
-const cache = new Map()
 const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: value }] }
 const iso = value => /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value + 'T00:00:00Z'))
 const clean = text => String(text ?? '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/gi, ' ').replace(/\s+/g, ' ').trim()
@@ -138,7 +138,7 @@ export async function searchCninfo(args, { fetcher = globalThis.fetch, signal } 
     notice: !success ? 'CNINFO query failed; do not state there are no announcements.' :
       'Results are a bounded sample, not a completeness guarantee. Check listed-company identity and read the original PDF before using numbers.' }
 }
-export async function fetchCninfoPdf(value, { fetcher = globalThis.fetch, signal, store } = {}) {
+export async function fetchCninfoPdf(value, { fetcher = globalThis.fetch, signal, store, keyword, startPage, maxPages } = {}) {
   const url = validatePdfUrl(value)
   const response = await fetcher(url, { headers: { Accept: 'application/pdf', 'User-Agent': UA, Referer: HOME },
     redirect: 'error', signal: timeout(signal, 30000) })
@@ -168,10 +168,11 @@ export async function fetchCninfoPdf(value, { fetcher = globalThis.fetch, signal
   const data = Buffer.concat(chunks)
   if (data.subarray(0, 5).toString() !== '%PDF-') throw new Error('CNINFO response was not a PDF')
   const pdf = await PDFDocument.load(data, { updateMetadata: false })
+  const extracted = extractPdfEvidence(pdf, { keyword, startPage, maxPages })
   const ref = store ? await store({ name: url.split('/').at(-1), data }) : null
   return { status: 'downloaded', source: url, retrievedAt: clock(), sha256: createHash('sha256').update(data).digest('hex'),
-    bytes, pages: pdf.getPageCount(), attachment: ref,
-    textStatus: 'not_extracted', notice: 'PDF download and page count verified; text/page evidence is not extracted by this tool. Use a PDF reader before quoting figures or page numbers.' }
+    bytes, pages: pdf.getPageCount(), attachment: ref, extraction: extracted,
+    notice: 'Evidence excerpts are best-effort text-layer extraction, not OCR; verify figures, page references and tables against the PDF original.' }
 }
 export function install(rt) {
   const last = { state: 'unqueried' }
@@ -185,6 +186,24 @@ export function install(rt) {
     } catch (error) { track('error', error?.message ?? error) }
     return rt.cninfoStatus()
   }
+  rt.ctx.tools.register(defineTool({ name: 'chem_cninfo_resolve_company',
+    description: 'Find potential A-share listed securities identities and stock codes through CNINFO announcement metadata. Candidates are evidence-based but not an exhaustive registry; verify group, subsidiary, and listed company distinctions.',
+    parameters: { query: { type: 'string', required: true, description: 'Listed company name, abbreviation or 6-digit securities code' } }, output,
+    execute: async (args, exec) => {
+      const query = safeText(args.query, 80)
+      if (!query) throw new Error('Provide a company name or six-digit stock code')
+      const result = await searchCninfo({ keyword: query, mode: 'both', pages: 1 }, { fetcher: rt.config.cninfoFetch, signal: exec.signal })
+      const code = codeOf(query)
+      const candidates = [...new Map(result.results.filter(row =>
+        code ? row.code === code : row.company.includes(query) || query.includes(row.company)
+      ).map(row => [row.code, { code: row.code, company: row.company, exampleAnnouncement: row.title,
+        disclosedAt: row.date, source: row.pdfUrl }])).values()].slice(0, 15)
+      if (result.status === 'error') track('error', result.modes.map(item => item.message).filter(Boolean).join('; '))
+      else track('ready')
+      return JSON.stringify({ status: result.status, query, candidates, retrievedAt: result.retrievedAt,
+        notice: 'Candidate security codes from public announcement metadata; not a definitive corporate registry. Absence does not prove an enterprise is unlisted.' })
+    },
+  }))
   rt.ctx.tools.register(defineTool({ name: 'chem_cninfo_search',
     description: 'Search CNINFO official A-share company announcement metadata, title and full text, dates and original PDF URLs. For current company expansions, production capacity, financial filings, significant events or risks use this evidence source before relying on news. Distinguish no results from errors. Read the PDF before citing numbers.',
     parameters: { company: { type: 'string', description: 'Listed company name; do not confuse with holding group or subsidiaries' },
@@ -199,13 +218,16 @@ export function install(rt) {
     },
   }))
   rt.ctx.tools.register(defineTool({ name: 'chem_cninfo_read_pdf',
-    description: 'Download and verify a CNINFO announcement PDF from an exact URL returned by chem_cninfo_search. Returns PDF metadata, attachment reference (when supported), and page count. Does not extract text: use PDF reading capability before quoting page-level evidence.',
-    parameters: { url: { type: 'string', required: true, description: 'Exact HTTPS static.cninfo.com.cn/finalpage/...PDF URL from announcement search' } }, output,
+    description: 'Download an original CNINFO disclosure PDF and extract bounded best-effort text-layer excerpts with page numbers. Scanned PDFs or unsupported fonts may have no readable text; never invent page evidence or figures. Verify extracted numbers against the original.' ,
+    parameters: { url: { type: 'string', required: true, description: 'Exact HTTPS static.cninfo.com.cn/finalpage/...PDF URL from announcement search' },
+      keyword: { type: 'string', description: 'Optional exact word to find in PDF page text' },
+      startPage: { type: 'number', description: '1-based first page; default 1' }, maxPages: { type: 'number', description: 'Pages to inspect; default 25, up to 50' } }, output,
     execute: async (args, exec) => {
       const store = rt.ctx.get?.('attachments')?.saveFile
       const attachmentService = rt.ctx.get?.('attachments')
       const result = await fetchCninfoPdf(args.url, { fetcher: rt.config.cninfoFetch, signal: exec.signal,
-        store: typeof store === 'function' ? detail => attachmentService.saveFile(detail) : undefined })
+        store: typeof store === 'function' ? detail => attachmentService.saveFile(detail) : undefined,
+        keyword: args.keyword, startPage: args.startPage, maxPages: args.maxPages })
       track('ready')
       return JSON.stringify(result)
     },
