@@ -23,8 +23,7 @@ import { parseReplies } from '../shared/group-replies.js'
 import { BtwCardView } from './btw.js'
 import { partIndexOf, withBtwRows } from './btw-model.js'
 import { layoutOf, thinkingShown } from './themes.js'
-import { toolActivityDetail } from '../shared/tool-activity.js'
-import { ToolActivities } from './tool-activity.js'
+import { toolActivityDetail, liveActivitySummary } from '../shared/tool-activity.js'
 import { assistantTextBlocks } from './genui-surfaces.js'
 
 export { clockLabel }
@@ -816,7 +815,9 @@ function toolActivity(name, arg, findBot, self) {
     default:
       if (GROUP_PHRASES[name]) return { label: t(GROUP_PHRASES[name]), state: 'sending' }
       const phrase = TOOL_PHRASES.find(([pattern]) => pattern.test(name))?.[1]
-      return { label: phrase ? t(phrase) : null, state: toolState(name) }
+      const summary = liveActivitySummary(name, arg)
+      const label = summary ? `${t(toolActivityDetail(name, () => undefined).label)} · ${summary}` : phrase ? t(phrase) : null
+      return { label, state: toolState(name) }
   }
 }
 
@@ -862,13 +863,8 @@ function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, acti
     return () => { stop = true; clearTimeout(timer) }
   }, [done, sessionId, callId])
   let replies = live.replies
-  let activities = []
   let broken = false
   if (done) {
-    try {
-      const saved = JSON.parse(contentText(content))?.activities
-      if (Array.isArray(saved)) activities = saved.filter(entry => entry && Array.isArray(entry.entries))
-    } catch { /* A pruned result can still recover its replies below. */ }
     const parsed = parseReplies(contentText(content))
     replies = parsed.broken && !parsed.replies.length ? live.replies : parsed.replies
     broken = parsed.broken
@@ -884,7 +880,7 @@ function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, acti
   const speakerWork = roomWork.find(entry => entry.botId === live.speaking)
   const speakerTool = speakerWork?.tool
   const speakerDoing = speakerTool ? workPhrase(speakerWork) : undefined
-  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && activities.length === 0 && !preparing) {
+  if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) {
     return broken ? h('div', { className: 'bt-group-replies' }, h('div', { className: 'bt-event', role: 'status' }, t('The group replies could not be shown'))) : null
   }
   const room = roster.roomsById[sessionId]
@@ -940,7 +936,6 @@ function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, acti
       const genui = done ? texts.map((_, offset) => ({ source: `chemclaw-bot/group/${callId}`, threadId: sessionId, eventSeq, contentBlockIndex: index + offset })) : undefined
       return h(GroupMessage, { key: `${reply.botId}-${index}`, bot, texts, genui, room, roster, actions, msgKey: callId ? `${sessionId}:${callId}:${index}` : undefined, useUi, time, duration })
     }),
-    activities.map((entry, index) => h(ToolActivities, { key: `activity-${index}`, name: roster.byId[entry.botId]?.name ?? entry.name, entries: entry.entries })),
     drafts.map(draft => {
       const bot = roster.byId[draft.botId]
       return bot ? h(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room, roster, actions, streaming: true }) : null
@@ -1090,13 +1085,7 @@ export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCa
   // The tail still gives immediate acknowledgement before any tool is called.
   useLiveNote(actions, sessionId, `tool:${root.callId ?? node.key}`, note)
   useShownCards(actions, sessionId, drawn.filter(call => CARDS.has(toolName(call)) && call.callId).map(call => call.callId))
-  const ordinary = calls.filter(call => toolName(call) && !DRAWN.has(toolName(call)) && (toolName(call) !== 'run_code' || calls.length === 1))
-  const entries = ordinary.map((call, index) => ({
-    id: call.callId ?? index,
-    ...toolActivityDetail(toolName(call) ?? '', toolArgs(call).text),
-    status: call.kind === 'tool-result' ? call.isError ? 'failed' : 'done' : active ? 'running' : 'stopped',
-  }))
-  if (drawn.length === 0 && entries.length === 0) return null
+  if (drawn.length === 0) return null
   const env = { sessionId, eventSeq: root.seq, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages } }
-  return h(Fragment, null, h(ToolActivities, { entries }), drawn.map((call, index) => h(Fragment, { key: call.callId ?? index }, renderCall(call, env))))
+  return h(Fragment, null, drawn.map((call, index) => h(Fragment, { key: call.callId ?? index }, renderCall(call, env))))
 }

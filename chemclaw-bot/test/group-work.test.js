@@ -1092,6 +1092,11 @@ test('the team view says what a member is doing in the call\'s own words', async
   const { value } = await host.call('state', {})
   assert.deepEqual(value.work.rooms.r1.map(entry => [entry.botId, entry.tool, entry.note, entry.target]), [['b', 'pwsh', 'Download Ghidra 12.1.4 and check its hash', undefined], ['c', 'read', undefined, 'dump.py']])
   assert.equal(value.work.bots.b.note, 'Download Ghidra 12.1.4 and check its hash')
+  assert.deepEqual(value.work.bots.b.task, { name: 'pwsh', summary: 'Download Ghidra 12.1.4 and check its hash', running: true, failed: false })
+  host.emit('gb', 'tool/result', { callId: 'k1' })
+  const completed = (await host.call('state', {})).value.work.bots.b.task
+  assert.equal(completed.summary, 'Download Ghidra 12.1.4 and check its hash')
+  assert.equal(completed.running, false)
   // What the Bot said in the step that made the call comes with it.
   host.emit('ga', 'turn/start', { turn: 1 })
   step(host, 'ga', '先把 JDK\n下下来。', 'k3', 'pwsh', JSON.stringify({ description: 'Download JDK 21' }))

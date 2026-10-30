@@ -15,7 +15,7 @@ const { JSDOM } = createRequire(join(process.env.DSH_HARNESS ?? join(PLUGIN, '..
 const { outputFiles } = await build({
   stdin: {
     contents: [
-      "export { findHost, rowVisible, freshInputAt } from './src/client/activity-row.js'",
+      "export { findHost, rowVisible, freshInputAt, describeLiveTask } from './src/client/activity-row.js'",
       "export { clientErrors } from './src/client/diagnostics.js'",
     ].join('\n'),
     resolveDir: PLUGIN,
@@ -39,7 +39,7 @@ runInNewContext(outputFiles[0].text, {
   cancelAnimationFrame: id => clearTimeout(id),
   require: name => (name === 'react' ? react : name === 'react-dom' ? { createPortal: node => node } : {}),
 })
-const { findHost, rowVisible, freshInputAt, clientErrors } = module.exports
+const { findHost, rowVisible, freshInputAt, describeLiveTask, clientErrors } = module.exports
 
 test('the activity row mounts at the running slot even under an extra wrapper', () => {
   dom.window.document.body.innerHTML = '<div data-chat-flow><div class="wrap"><div data-chat-running id="slot"></div></div></div>'
@@ -95,4 +95,13 @@ test('fresh input ignores queued sends and takes the newest of the rest', () => 
   assert.equal(freshInputAt([{ placement: 'queued', time: 300 }], undefined), 0)
   assert.equal(freshInputAt(undefined, 400), 400)
   assert.equal(freshInputAt([], undefined), 0)
+})
+
+test('the lightweight status includes a real task and distinguishes completed work', () => {
+  const running = describeLiveTask({ name: 'pwsh', summary: '巨潮全文检索芯化和云', running: true })
+  const done = describeLiveTask({ name: 'pwsh', summary: '巨潮全文检索芯化和云', running: false })
+  assert.match(running, /巨潮全文检索芯化和云/)
+  assert.match(done, /巨潮全文检索芯化和云/)
+  assert.notEqual(running, done)
+  assert.equal(describeLiveTask(undefined), null)
 })

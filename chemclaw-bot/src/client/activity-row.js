@@ -1,19 +1,26 @@
-import { createElement as h, Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createElement as h, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { BotMark, RoomAvatar } from './mark.js'
-import { Elapsed, Shimmer, PHRASES } from './cells.js'
+import { BotMark, RoomAvatar, toolState } from './mark.js'
+import { Elapsed, Shimmer, PHRASES, workPhrase } from './cells.js'
 import { noteClientError } from './diagnostics.js'
 import { reducedMotion } from './motion.js'
 import { t } from './i18n.js'
-import { ToolActivities } from './tool-activity.js'
+import { toolActivityDetail } from '../shared/tool-activity.js'
 
 // -------------------------------------------------------------------------
 // The activity row: the Bot's mark and a shimmering phrase at the transcript
 // tail while it works. It lives in the shell's running status, steps aside while a
 // reply streams, and holds each phrase long enough to read.
 
-const PHRASE_HOLD_MS = 800
-const drawPhrase = pool => t(pool[Math.min(pool.length - 1, Math.floor(Math.random() * pool.length))])
+const PHRASE_HOLD_MS = 180
+const drawPhrase = pool => t(pool[0])
+// A recent completed tool stays readable only while this Agent turn continues.
+export const describeLiveTask = task => {
+  if (!task?.name) return null
+  const kind = t(toolActivityDetail(task.name, () => undefined).label)
+  const detail = task.summary || task.name
+  return task.running ? `${kind} · ${detail}` : `${t(task.failed ? 'Failed' : 'Completed')} · ${kind} · ${detail}`
+}
 export { reducedMotion }
 
 // A turn that streams text first and runs a tool after keeps its row once the
@@ -120,6 +127,16 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   const room = roster.roomsById[sessionId]
   const roomWorkKey = useWork?.(work => JSON.stringify(work.rooms?.[sessionId] ?? [])) ?? '[]'
   const roomWork = useMemo(() => JSON.parse(roomWorkKey), [roomWorkKey])
+  const roomCurrent = room ? [...roomWork].sort((a, b) => Number(b.speaking === true) - Number(a.speaking === true) || (b.since ?? 0) - (a.since ?? 0))[0] : undefined
+  const roomBot = roomCurrent && roster.byId[roomCurrent.botId]
+  const roomSummary = roomCurrent?.note || roomCurrent?.target
+  const roomLabel = describeLiveTask(roomCurrent?.task)
+    ?? (roomCurrent?.tool
+      ? roomSummary ? `${t(toolActivityDetail(roomCurrent.tool, () => undefined).label)} · ${roomSummary}` : workPhrase(roomCurrent)
+      : roomCurrent ? workPhrase(roomCurrent) : null)
+  const botWorkKey = useWork?.(work => JSON.stringify(work.bots?.[bot?.id] ?? null)) ?? 'null'
+  const botWork = useMemo(() => JSON.parse(botWorkKey), [botWorkKey])
+  const botTask = botWork?.sessionId === sessionId ? describeLiveTask(botWork.task) : null
   // The one switch the row names: a working-folder move jumps the chat to a fresh
   // part while a turn is not running, so without it the conversation just empties.
   const moveAt = useWork?.((work) => {
@@ -131,7 +148,7 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   const tools = entries.filter(entry => !entry.text).sort((a, b) => a.at - b.at)
   // Group chats show who is typing on their own while members speak.
   const relaying = tools.some(entry => entry.relay)
-  const visible = moveAt !== 0 || rowVisible({ running, streaming, tools, relaying, bot, room })
+  const visible = moveAt !== 0 || roomCurrent !== undefined || rowVisible({ running, streaming, tools, relaying, bot, room })
   const tool = tools.at(-1)
   const inputRef = useRef(0)
   // A steer keeps the run going, so nothing else resets the row: fresh input is
@@ -140,6 +157,8 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   inputRef.current = inputAt
   const want = !visible ? null
     : moveAt !== 0 ? { key: 'move', label: t('Switching working folder'), state: 'thinking' }
+      : roomCurrent ? { key: `room:${roomCurrent.botId}:${roomLabel}`, label: roomLabel, state: roomCurrent.tool ? toolState(roomCurrent.tool) : 'thinking' }
+      : botTask ? { key: `bot:${botTask}`, label: botTask, state: botWork.task.running ? toolState(botWork.task.name) : 'thinking' }
       : inputAt > (tool?.at ?? 0)
         ? { key: `input:${inputAt}`, pool: PHRASES.thinking, state: 'thinking' }
         : tool ? { key: tool.label ? `tool:${tool.label}` : 'working', label: tool.label, pool: PHRASES.working, state: tool.state ?? 'working' }
@@ -187,13 +206,11 @@ export function ActivityIndicator({ sessionId, useRoster, useSessionStatus, useL
   useEffect(() => { if (!running) actions.clearLive(sessionId) }, [running, sessionId])
   // Only rows that take the activity row's place grow out of it.
   useRowEntrances(() => leaving.current || Date.now() - endedAt.current < 300)
-  const host = useRunningHost(running || moveAt !== 0 || roomWork.length > 0)
-  if (!host) return null
-  return createPortal(h(Fragment, null,
-    roomWork.map(entry => h(ToolActivities, { key: `${sessionId}:${entry.botId}:${entry.since}`, name: roster.byId[entry.botId]?.name, entries: entry.activities })),
-    phase === null || !shown ? null : h('div', { className: 'bt-typing', 'data-exiting': phase === 'out' ? '' : undefined, 'aria-hidden': true },
-    bot ? h(BotMark, { bot, size: 28, state: markState.current, live: true, pokeable: true }) : h(RoomAvatar, { room, roster, size: 28 }),
-    h('span', { className: 'bt-typing-text' },
+  const host = useRunningHost(running || moveAt !== 0 || roomCurrent !== undefined)
+  if (!host || phase === null || !shown) return null
+  return createPortal(h('div', { className: 'bt-typing', 'data-exiting': phase === 'out' ? '' : undefined, 'aria-hidden': true },
+    bot || roomBot ? h(BotMark, { bot: bot ?? roomBot, size: 28, state: markState.current, live: true, pokeable: true }) : h(RoomAvatar, { room, roster, size: 28 }),
+    h('span', { className: 'bt-typing-text', title: shown.text },
       h('span', { key: `${shown.key}:${shown.at}`, className: 'bt-typing-label' }, h(Shimmer, null, `${shown.text}…`)),
-      h(Elapsed, { at: moveAt !== 0 ? moveAt : Math.max(turnAt ?? runAt.current, inputAt), className: 'bt-typing-time' })))), host)
+      h(Elapsed, { at: moveAt !== 0 ? moveAt : Math.max(turnAt ?? runAt.current, inputAt), className: 'bt-typing-time' }))), host)
 }

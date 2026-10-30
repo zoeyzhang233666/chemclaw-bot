@@ -287,31 +287,14 @@ test('each sub-call shows its own state, not its program\'s', () => {
   assert.match(shown(program([refused, posted])), /Couldn't post in the group.*Posted in.*Ops/)
 })
 
-test('ordinary tools expose actual activity, including PTC sub-calls', () => {
-  assert.match(shown(program([])), /Tool call.*run_code/)
-  const out = shown(program([call('bash', 'program:ptc:1', { args: { command: 'echo test', description: 'Check the fixture' } }), call('read_file', 'program:ptc:2', { args: { path: 'fixture.md' } })]))
-  assert.match(out, /Running command.*Check the fixture.*Completed.*bash.*echo test/)
-  assert.match(out, /Reading.*fixture.md/)
-  assert.doesNotMatch(out, /run_code/)
-  assert.match(shown(call('bash', 'direct', { running: true, args: { command: 'echo test' } })), /Running command.*echo test.*Running/)
+test('ordinary tool calls and old group activities do not leave transcript cards', () => {
+  assert.equal(shown(program([])), '')
+  const out = shown(program([call('bash', 'program:ptc:1', { args: { command: 'echo test', description: 'Check fixture' } }), call('read_file', 'program:ptc:2', { args: { path: 'fixture.md' } })]))
+  assert.equal(out, '')
+  assert.equal(shown(call('bash', 'direct', { running: true, args: { command: 'echo test' } })), '')
+  const legacy = [{ botId: 'writer', entries: [{ id: 'fixture', tool: 'pwsh', label: 'Running command', summary: 'Inspect fixture', status: 'failed' }] }]
+  assert.equal(text(show(call('group_relay', 'relay', { content: { replies: [], activities: legacy } }), { sessionId: 'room' })), '')
   effects = []
-})
-
-test('an interrupted call never keeps running in history or when a newer turn starts', () => {
-  const root = call('pwsh', 'interrupted', { running: true, args: { command: 'echo fixture' } })
-  assert.match(shown(root, { work: { bots: {} } }), /Stopped/)
-  assert.match(shown(root, { work: { bots: { chief: { sessionId: 'chief', turn: 2 } } } }), /Stopped/)
-  assert.match(shown(root, { work: { bots: { chief: { sessionId: 'chief', turn: 1 } } } }), /Running/)
-  assert.match(shown(root, { work: { bots: { chief: { sessionId: 'other-part', turn: 1 } } } }), /Stopped/)
-})
-
-test('group activity survives reload with its member name and failure status', () => {
-  const activities = [{ botId: 'writer', entries: [{ id: 'fixture', tool: 'pwsh', label: 'Running command', summary: 'Inspect fixture', detail: 'echo test', status: 'failed' }] }]
-  const out = show(call('group_relay', 'relay', { content: { replies: [], activities } }), { sessionId: 'room' })
-  assert.match(text(out), /Writer.*Running command.*Inspect fixture.*Failed.*pwsh.*echo test/)
-  const block = find(out, node => node.props?.className === 'bt-tool-activity')
-  assert.equal(block.type, 'div')
-  assert.doesNotMatch(text(out), /Execution steps|Earlier steps/)
 })
 
 test('a hidden Bot-to-Bot turn draws none of its sub-calls', () => {

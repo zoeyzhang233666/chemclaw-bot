@@ -281,31 +281,32 @@ test('a Bot running a PTC program shows the tool the program is in', async (t) =
   assert.deepEqual(await now(), ['thinking', undefined])
 })
 
-test('group activities follow that group Session, retain quick steps and clear on a new turn', async (t) => {
+test('group status shows only the newest real tool and clears after a turn', async (t) => {
   const host = await start()
   t.after(host.stop)
-  const activities = async () => (await host.call('state', {})).value.work.rooms.r1?.find(entry => entry.botId === 'b')?.activities
+  const work = async () => (await host.call('state', {})).value.work.rooms.r1?.find(entry => entry.botId === 'b')
   host.emit('gb', 'turn/start', { turn: 1 })
   host.emit('b', 'turn/start', { turn: 1 })
   host.emit('b', 'tool/call', { callId: 'private', name: 'read_file', arguments: '{"path":"private.md"}' })
   program(host.emit, 'gb', 'program')
   const finish = dispatch(host.emit, 'gb', 'program', 1, 'pwsh', { description: 'Inspect fixture', command: 'echo test' })
-  assert.deepEqual((await activities()).map(item => [item.tool, item.summary, item.status]), [['pwsh', 'Inspect fixture', 'running']])
+  assert.deepEqual((await work()).task, { name: 'pwsh', summary: 'Inspect fixture', running: true, failed: false })
+  assert.equal((await work()).activities, undefined)
   finish()
-  assert.equal((await activities())[0].status, 'done')
+  assert.deepEqual((await work()).task, { name: 'pwsh', summary: 'Inspect fixture', running: false, failed: false })
   host.emit('gb', 'tool/call', { callId: 'failed', name: 'read_file', arguments: '{"path":"missing.md"}' })
   host.emit('gb', 'tool/result', { callId: 'failed', isError: true })
-  assert.equal((await activities()).at(-1).status, 'failed')
+  assert.deepEqual((await work()).task, { name: 'read_file', summary: 'missing.md', running: false, failed: true })
   for (let i = 0; i < 30; i++) dispatch(host.emit, 'gb', 'program', i + 2, 'read_file', { path: `fixture-${i}.md` })()
-  assert.equal((await activities()).length, 24)
-  assert.doesNotMatch(JSON.stringify(await activities()), /private.md/)
+  assert.deepEqual((await work()).task, { name: 'read_file', summary: 'fixture-29.md', running: false, failed: false })
+  assert.doesNotMatch(JSON.stringify(await work()), /private.md|fixture-0.md/)
   host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
-  assert.equal(await activities(), undefined)
+  assert.equal(await work(), undefined)
   host.emit('gb', 'turn/start', { turn: 2 })
-  assert.equal(await activities(), undefined)
+  assert.equal((await work()).task, undefined)
 })
 
-test('a finished group member retains bounded activity in the relay result for reload', async (t) => {
+test('completed group relay keeps replies but omits finished tool history', async (t) => {
   const host = await start()
   t.after(host.stop)
   const result = await openTurn(t, host)
@@ -314,11 +315,9 @@ test('a finished group member retains bounded activity in the relay result for r
   host.emit('gb', 'assistant/message', { message: { content: [{ type: 'text', text: 'Fixture checked.' }] } })
   host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'completed' } })
   await settle(() => result() !== undefined)
-  const activity = result().activities[0]
-  assert.equal(activity.botId, 'b')
-  assert.equal(activity.entries[0].status, 'failed')
-  assert.equal(activity.entries[0].summary, 'Inspect fixture')
-  assert.doesNotMatch(JSON.stringify(activity), /do not expose/)
+  assert.equal(result().activities, undefined)
+  assert.match(JSON.stringify(result().replies), /Fixture checked\./)
+  assert.doesNotMatch(JSON.stringify(result()), /do not expose|Inspect fixture|echo test/)
 })
 
 test('an approval asked inside a PTC program shows what that call does', async (t) => {
