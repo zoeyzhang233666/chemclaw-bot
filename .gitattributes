@@ -5,3 +5,4 @@
 # Generated browser assets must match esbuild's LF output on every platform.
 /chemclaw-bot/client.js text eol=lf
 /chemclaw-bot/runtime/chart-engine.js text eol=lf
+/chemclaw-bot/office.js text eol=lf
