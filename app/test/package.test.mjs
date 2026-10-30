@@ -103,7 +103,7 @@ test('desktop and test harness lock the same DeepSeek Harness RC release', () =>
   const harness = read('../../chemclaw-bot/dev/harness/package.json')
   const harnessLock = read('../../chemclaw-bot/dev/harness/package-lock.json')
   const pinned = app.dependencies['@deepseek-ai/dsh']
-  assert.match(pinned, /^0\\.\\d+\\.\\d+-rc\\.\\d+$/u)
+  assert.match(pinned, /^0\.\d+\.\d+-rc\.\d+$/u)
 
   for (const [name, version] of Object.entries(app.dependencies)) {
     if (!name.startsWith('@deepseek-ai/dsh')) continue
