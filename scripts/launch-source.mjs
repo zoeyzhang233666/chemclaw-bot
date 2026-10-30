@@ -133,3 +133,27 @@ export function resolveAppHost(sourceRoot, origin) {
   return { app: sourceAppPath, host: 'selected-source' }
 }
 
+
+// Electron's npm package can exist without the downloaded runtime binary when
+// install scripts were skipped or a previous download failed. Repeating npm ci
+// on every launch is expensive and still may not download electron.exe.
+export function ensureElectronRuntime(app, executableRelativePath, { installDependencies, installBinary }) {
+  const executable = join(app, executableRelativePath)
+  if (existsSync(executable)) return { repaired: false, path: executable }
+  const installer = join(app, 'node_modules', 'electron', 'install.js')
+  if (!existsSync(installer)) {
+    console.log('Electron npm package missing; installing app dependencies once.')
+    installDependencies()
+  }
+  if (!existsSync(installer)) {
+    throw new Error(`Electron package installer is missing from ${app}. Restore app/node_modules/electron before launching.`)
+  }
+  if (!existsSync(executable)) {
+    console.log('Electron npm package is present but its runtime binary is missing; running the official Electron install script without reinstalling npm packages.')
+    installBinary(installer)
+  }
+  if (!existsSync(executable)) {
+    throw new Error(`Electron executable was not installed: ${executable}. Check Electron download/network/proxy settings. npm ci is not required again if node_modules/electron/install.js exists.`)
+  }
+  return { repaired: true, path: executable }
+}
