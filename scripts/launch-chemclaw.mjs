@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, watch, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, watch, writeFileSync } from 'node:fs'
 import { dirname, join, matchesGlob, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { launchSource, missingPluginDependencies, sourceRevision } from './launch-source.mjs'
@@ -140,27 +140,23 @@ const pluginLinked = existsSync(join(app, 'node_modules', 'chemclaw-bot', 'packa
 if (!pluginLinked) {
   const installSpec = app === sourceApp ? '../chemclaw-bot' : plugin
   console.log(`Linking plugin into app host via npm install (${installSpec})`)
-  run(['install', installSpec, '--no-save', '--package-lock=false', '--ignore-scripts', '--no-audit', '--no-fund'], app)
+  run(['install', installSpec, '--no-save', '--package-lock=false', '--install-links', '--ignore-scripts', '--no-audit', '--no-fund'], app)
 }
-// A linked/copied plugin may predate a new bundle dependency. Checking a stamp or
-// package.json alone would mark that stale installation as ready (GenUI #79).
-const missing = missingPluginDependencies(app, pluginDependencies)
-if (missing.length) {
-  console.log(`Installing missing ChemClaw dependencies: ${missing.join(', ')}`)
-  run(['install', '--no-save', '--package-lock=false', '--ignore-scripts', '--no-audit', '--no-fund', ...missing], app)
-}
-const unresolved = missingPluginDependencies(app, pluginDependencies)
-if (unresolved.length) throw new Error(`ChemClaw plugin dependencies are unavailable after installation: ${unresolved.join(', ')}. Check npm/network access; refusing to start with incomplete plugins.`)
-if (!stampOk || !pluginLinked) writeFileSync(dependencyStamp, expectedDependencies)
-console.log(missing.length ? 'ChemClaw plugin dependencies repaired.' : 'App host dependencies verified — no install needed.')
 
 const target = resolve(app, 'node_modules/chemclaw-bot')
 if (target !== join(app, 'node_modules', 'chemclaw-bot') || !target.startsWith(`${app}${sep}`)) throw new Error('Invalid plugin sync target')
 
 function sync() {
   run(['run', 'build'], plugin)
-  rmSync(target, { recursive: true, force: true })
+  // npm may nest conflicting versions under this plugin. Preserve those modules
+  // while replacing the synchronized source files; deleting them broke upgrades.
+  // A first-time npm file: install can be a symlink: unlink it, never remove its
+  // contents (which may point into the user's source checkout).
+  if (existsSync(target) && lstatSync(target).isSymbolicLink()) rmSync(target, { force: true })
   mkdirSync(target, { recursive: true })
+  for (const entry of readdirSync(target)) {
+    if (entry !== 'node_modules') rmSync(join(target, entry), { recursive: true, force: true })
+  }
   const manifest = JSON.parse(readFileSync(join(plugin, 'package.json'), 'utf8'))
   const excluded = manifest.files.filter(path => path.startsWith('!')).map(path => path.slice(1))
   const include = source => {
@@ -192,6 +188,22 @@ const canReuse = previousStamp
 
 if (canReuse) console.log('Source fingerprint unchanged — reusing existing plugin build sync.')
 else sync()
+
+// Audit *after* source sync: npm can put conflicting pinned dependencies inside
+// node_modules/chemclaw-bot, so a sync must never erase the only installed copy.
+// An existing stamp is not proof that a dependency really exists (GenUI #79).
+const missing = missingPluginDependencies(app, pluginDependencies)
+if (missing.length) {
+  console.log(`Installing missing ChemClaw dependencies: ${missing.join(', ')}`)
+  run(['install', '--no-save', '--package-lock=false', '--install-links', '--ignore-scripts', '--no-audit', '--no-fund', ...missing], app)
+  // npm may refresh a file: dependency; restore the selected main/PR source and
+  // keep any newly installed nested modules before launching Electron.
+  sync()
+}
+const unresolved = missingPluginDependencies(app, pluginDependencies)
+if (unresolved.length) throw new Error(`ChemClaw plugin dependencies are unavailable after installation: ${unresolved.join(', ')}. Check npm/network access; refusing to start with incomplete plugins.`)
+if (!stampOk || !pluginLinked || missing.length) writeFileSync(dependencyStamp, expectedDependencies)
+console.log(missing.length ? 'ChemClaw plugin dependencies repaired.' : 'App host dependencies verified — no install needed.')
 
 if (argv.includes('--sync-only')) process.exit(0)
 
