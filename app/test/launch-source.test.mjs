@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync,
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { test } from 'node:test'
-import { launchSource, missingPluginDependencies, resolveAppHost } from '../../scripts/launch-source.mjs'
+import { ensureElectronRuntime, launchSource, missingPluginDependencies, resolveAppHost } from '../../scripts/launch-source.mjs'
 import { ensurePrWorktree, syncSelectedMain } from '../../scripts/launch-discover.mjs'
 
 test('an explicit source wins and forwarded launches keep the original data root without following another selection', t => {
@@ -176,4 +176,47 @@ test('a PR with different desktop code or dependencies uses its own app instead 
   writeFileSync(join(preview, 'app', 'package-lock.json'), JSON.stringify({ version: 2 }))
   selected = resolveAppHost(preview, entry)
   assert.equal(selected.app, join(preview, 'app'), 'a new dependency lockfile must never run against main Electron')
+})
+
+test('Electron repair runs the official binary installer without repeating npm ci', t => {
+  const app = mkdtempSync(join(tmpdir(), 'chemclaw-electron-repair-'))
+  t.after(() => rmSync(app, { recursive: true, force: true }))
+  const executableRelativePath = join('node_modules', 'electron', 'dist', process.platform === 'win32' ? 'electron.exe' : 'electron')
+  const binary = join(app, executableRelativePath)
+  const installer = join(app, 'node_modules', 'electron', 'install.js')
+  mkdirSync(dirname(installer), { recursive: true })
+  writeFileSync(installer, '// npm package is present, runtime was not downloaded')
+  let npmCiCalls = 0
+  let binaryInstallerCalls = 0
+  const options = {
+    installDependencies: () => { npmCiCalls++ },
+    installBinary: path => {
+      assert.equal(path, installer)
+      binaryInstallerCalls++
+      mkdirSync(dirname(binary), { recursive: true })
+      writeFileSync(binary, 'fake runtime for launch repair test')
+    },
+  }
+  assert.equal(ensureElectronRuntime(app, executableRelativePath, options).repaired, true)
+  assert.equal(npmCiCalls, 0, 'do not reinstall a thousand npm dependencies')
+  assert.equal(binaryInstallerCalls, 1)
+  assert.equal(ensureElectronRuntime(app, executableRelativePath, options).repaired, false)
+  assert.equal(binaryInstallerCalls, 1, 'subsequent launches must skip the installer')
+})
+
+test('Electron repair never reports success when installer exits without creating the runtime', t => {
+  const app = mkdtempSync(join(tmpdir(), 'chemclaw-electron-fail-'))
+  t.after(() => rmSync(app, { recursive: true, force: true }))
+  const rel = join('node_modules', 'electron', 'dist', 'electron.exe')
+  assert.throws(() => ensureElectronRuntime(app, rel, {
+    installDependencies: () => {},
+    installBinary: () => {},
+  }), /Electron package installer is missing/u)
+  const installer = join(app, 'node_modules', 'electron', 'install.js')
+  mkdirSync(dirname(installer), { recursive: true })
+  writeFileSync(installer, '')
+  assert.throws(() => ensureElectronRuntime(app, rel, {
+    installDependencies: () => { throw new Error('unexpected npm ci') },
+    installBinary: () => {},
+  }), /Electron executable was not installed/u)
 })
