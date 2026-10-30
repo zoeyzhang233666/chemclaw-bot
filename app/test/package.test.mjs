@@ -16,6 +16,19 @@ test('every package that the app runs on is a dependency, not only a peer', () =
   assert.deepEqual(peerOnly, [], `add these to "dependencies" in app/package.json: ${peerOnly.join(' ')}`)
 })
 
+test('a clean EXE installation graph includes each pinned ChemClaw plugin dependency', () => {
+  const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'))
+  const manifest = JSON.parse(readFileSync(new URL('../../chemclaw-bot/package.json', import.meta.url), 'utf8'))
+  const packedPlugin = lock.packages['node_modules/chemclaw-bot']
+  assert.ok(packedPlugin, 'App lockfile must include chemclaw-bot')
+  for (const [name, version] of Object.entries(manifest.dependencies)) {
+    assert.equal(packedPlugin.dependencies?.[name], version, `App lockfile has stale ChemClaw dependency ${name}`)
+    const candidates = Object.entries(lock.packages).filter(([path, pkg]) =>
+      path.endsWith(`node_modules/${name}`) && pkg.version === version)
+    assert.ok(candidates.length, `App lockfile is missing ${name}@${version}`)
+  }
+})
+
 test('sharp native modules and versioned libvips libraries are unpacked together', () => {
   const config = parse(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'))
   const root = resolve('app-fixture')
