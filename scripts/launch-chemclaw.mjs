@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, watch, writeFileSync } from 'node:fs'
 import { dirname, join, matchesGlob, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { launchSource, sourceRevision } from './launch-source.mjs'
+import { launchSource, missingPluginDependencies, sourceRevision } from './launch-source.mjs'
 import { resolveProfile } from './launch-profiles.mjs'
 import { runPicker, shouldShowPicker } from './launch-picker.mjs'
 
@@ -104,7 +104,8 @@ function hashPaths(paths) {
 
 const dependencyStamp = join(app, 'node_modules', '.chemclaw-dependencies.json')
 const syncStampPath = join(app, 'node_modules', '.chemclaw-sync-stamp.json')
-const expectedDependencies = JSON.stringify(JSON.parse(readFileSync(join(plugin, 'package.json'), 'utf8')).dependencies)
+const pluginDependencies = JSON.parse(readFileSync(join(plugin, 'package.json'), 'utf8')).dependencies
+const expectedDependencies = JSON.stringify(pluginDependencies)
 const sourceFingerprint = hashPaths([
   join(plugin, 'src'),
   join(plugin, 'seed'),
@@ -136,15 +137,22 @@ if (!existsSync(join(app, electronRel))) {
  // sync() step replaces node_modules/chemclaw-bot contents from the selected tree.
 const stampOk = existsSync(dependencyStamp) && readFileSync(dependencyStamp, 'utf8') === expectedDependencies
 const pluginLinked = existsSync(join(app, 'node_modules', 'chemclaw-bot', 'package.json'))
-if (!stampOk && !pluginLinked) {
+if (!pluginLinked) {
   const installSpec = app === sourceApp ? '../chemclaw-bot' : plugin
   console.log(`Linking plugin into app host via npm install (${installSpec})`)
-  run(['install', installSpec, '--ignore-scripts', '--no-audit', '--no-fund'], app)
-  writeFileSync(dependencyStamp, expectedDependencies)
-} else {
-  if (!stampOk) writeFileSync(dependencyStamp, expectedDependencies)
-  console.log('App host ready — skipping npm install; syncing selected plugin files only.')
+  run(['install', installSpec, '--no-save', '--package-lock=false', '--ignore-scripts', '--no-audit', '--no-fund'], app)
 }
+// A linked/copied plugin may predate a new bundle dependency. Checking a stamp or
+// package.json alone would mark that stale installation as ready (GenUI #79).
+const missing = missingPluginDependencies(app, pluginDependencies)
+if (missing.length) {
+  console.log(`Installing missing ChemClaw dependencies: ${missing.join(', ')}`)
+  run(['install', '--no-save', '--package-lock=false', '--ignore-scripts', '--no-audit', '--no-fund', ...missing], app)
+}
+const unresolved = missingPluginDependencies(app, pluginDependencies)
+if (unresolved.length) throw new Error(`ChemClaw plugin dependencies are unavailable after installation: ${unresolved.join(', ')}. Check npm/network access; refusing to start with incomplete plugins.`)
+if (!stampOk || !pluginLinked) writeFileSync(dependencyStamp, expectedDependencies)
+console.log(missing.length ? 'ChemClaw plugin dependencies repaired.' : 'App host dependencies verified — no install needed.')
 
 const target = resolve(app, 'node_modules/chemclaw-bot')
 if (target !== join(app, 'node_modules', 'chemclaw-bot') || !target.startsWith(`${app}${sep}`)) throw new Error('Invalid plugin sync target')
