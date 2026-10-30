@@ -31,6 +31,14 @@ describe('the app profile', () => {
   })
   after(() => { rmSync(home, { recursive: true, force: true }) })
 
+  test('GenUI bundle is mounted by a fresh app profile, without replacing native charts', () => {
+    const genui = rows(entries).find(entry => entry.id === 'genui')
+    assert.equal(genui?.name, '@changfenhuang/dsh-genui')
+    assert.equal(genui?.disabled, undefined)
+    assert.equal(genui?.config?.renderUiTool, false)
+    assert.equal(rows(entries).some(entry => entry.id === 'chemclaw'), true)
+  })
+
   test('mounts DSH Web, which the window shows, and the Bot team', () => {
     const on = new Set(entries.filter((entry) => entry.disabled !== true).map((entry) => entry.id))
     for (const id of ['webserver', 'connection', 'chemclaw']) assert.ok(on.has(id), `${id} is mounted`)
