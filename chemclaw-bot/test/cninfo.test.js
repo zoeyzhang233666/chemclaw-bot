@@ -58,7 +58,7 @@ test('CNINFO mixed-mode keeps working mode when another mode fails and deduplica
       return json([filing(), filing()])
     },
   })
-  assert.equal(result.status, 'ok')
+  assert.equal(result.status, 'partial')
   assert.equal(result.results.length, 1)
   assert.equal(result.modes[0].status, 'error')
   assert.equal(result.modes[1].status, 'ok')
