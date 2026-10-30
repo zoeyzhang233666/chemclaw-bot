@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, watch, writeFileSync } from 'node:fs'
 import { dirname, join, matchesGlob, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { launchSource, missingPluginDependencies, resolveAppHost, sourceRevision } from './launch-source.mjs'
+import { ensureElectronRuntime, launchSource, missingPluginDependencies, resolveAppHost, sourceRevision } from './launch-source.mjs'
 import { resolveProfile } from './launch-profiles.mjs'
 import { runPicker, shouldShowPicker } from './launch-picker.mjs'
 
@@ -117,10 +117,21 @@ if (!existsSync(join(plugin, 'node_modules/esbuild'))) {
     run(['ci'], plugin)
   }
 }
-if (!existsSync(join(app, electronRel))) {
-  console.log(`Electron missing in ${app} — running npm ci (one-time for this app host)`)
-  run(['ci'], app)
-}
+ensureElectronRuntime(app, electronRel, {
+  installDependencies: () => run(['ci'], app),
+  installBinary: installer => {
+    const env = { ...environment }
+    // A global npm setting may have skipped Electron's postinstall binary download.
+    // Here a real GUI is required, so the official installer must run.
+    delete env.ELECTRON_SKIP_BINARY_DOWNLOAD
+    const result = spawnSync(process.execPath, [installer], {
+      cwd: app, env, stdio: 'inherit', windowsHide: true,
+    })
+    if (result.error || result.status !== 0) {
+      throw new Error(`Electron runtime download failed: ${result.error?.message || `exit ${result.status}`}. Check the network/proxy or Electron cache; existing npm dependencies were preserved.`)
+    }
+  },
+})
 // Avoid reinstalling the whole plugin graph when switching preview sources. The
  // sync() step replaces node_modules/chemclaw-bot contents from the selected tree.
 const stampOk = existsSync(dependencyStamp) && readFileSync(dependencyStamp, 'utf8') === expectedDependencies
