@@ -56,11 +56,18 @@ export async function bundleOffice() {
   const result = await build({
     absWorkingDir: PLUGIN,
     entryPoints: ['src/office/cli.js'],
-    bundle: true, format: 'esm', platform: 'node', target: 'es2022',
-    charset: 'utf8', write: false, logLevel: 'silent',
-    banner: { js: '#!/usr/bin/env node\\n// Generated from src/office by \`npm run build\` (scripts/build-client.mjs). Do not edit by hand.' },
+    bundle: true,
+    format: 'esm',
+    platform: 'node',
+    target: 'es2022',
+    charset: 'utf8',
+    write: false,
+    logLevel: 'silent',
+    banner: {
+      js: '#!/usr/bin/env node\n// Generated from src/office by `npm run build` (scripts/build-client.mjs). Do not edit by hand.',
+    },
   })
-  if (result.warnings.length) throw new Error(result.warnings.map(warning => warning.text).join('\\n'))
+  if (result.warnings.length > 0) throw new Error(`esbuild warnings:\n${result.warnings.map(warning => warning.text).join('\n')}`)
   return result.outputFiles[0].text
 }
 
