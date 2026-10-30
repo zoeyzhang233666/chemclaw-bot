@@ -19,6 +19,15 @@ jobs:
       - name: Install frontend build dependencies
         working-directory: chemclaw-bot
         run: npm ci --no-fund --no-audit
+      - name: Install test harness
+        working-directory: chemclaw-bot
+        run: npm run harness -- --no-save "@deepseek-ai/dsh@0.2.1-rc.2"
+      - name: Run focused tool UI regression tests
+        working-directory: chemclaw-bot
+        run: node --import ./test/harness-resolve.mjs --test test/tool-activity.test.js test/tool-cells.test.js test/activity-row.test.js test/group-work.test.js
+      - name: Check lint
+        working-directory: chemclaw-bot
+        run: npm run lint
       - name: Rebuild generated frontend and chart engine
         working-directory: chemclaw-bot
         run: npm run build
