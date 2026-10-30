@@ -207,7 +207,10 @@ test('TEAM_TOOLS names exactly the tools ds-bot registers', async (t) => {
   // read_browser registers only in the Desktop profile; the flag stands in for it.
   const { stop, ctx } = start(TEAM, { config: { browser: true, browserPluginApi: { id: 'all-browser-tools', tools: [...browserRefs, ...browserTasks] } } })
   t.after(stop)
-  assert.deepEqual([...ctx.registeredTools.keys()].sort(), [...TEAM_TOOLS].sort())
+  // CNINFO public-data tools remain available to ordinary DSH Agents; team-only tools are restricted.
+  const publicCninfo = ['chem_cninfo_resolve_company', 'chem_cninfo_search', 'chem_cninfo_read_pdf']
+  assert.deepEqual([...ctx.registeredTools.keys()].sort(), [...TEAM_TOOLS, ...publicCninfo].sort())
+  for (const name of publicCninfo) assert.ok(!TEAM_TOOLS.includes(name), `${name} must remain available to ordinary DSH Agents`)
 })
 
 test('agent-session honors a known workspace and falls back to the team workspace', async (t) => {
