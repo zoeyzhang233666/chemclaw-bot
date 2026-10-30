@@ -2,7 +2,7 @@ import { createElement as h } from 'react'
 import { currentPart } from './text.js'
 import { t } from './i18n.js'
 
-export function TeamIntro({ sessionId, useRoster, useSessions, actions }) {
+export function TeamIntro({ sessionId, useRoster, useSessions, useSessionStatus, actions }) {
   const roster = useRoster(value => value)
   const room = roster.roomsById[sessionId]
   const item = room ?? roster.bots.find(bot => currentPart(bot) === sessionId)

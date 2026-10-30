@@ -13244,7 +13244,7 @@ function NewMessagePills({ sessionId, useSessions, useUi, useTurnClock }) {
 
 // src/client/team-intro.js
 var import_react29 = require("react");
-function TeamIntro({ sessionId, useRoster, useSessions, actions }) {
+function TeamIntro({ sessionId, useRoster, useSessions, useSessionStatus, actions }) {
   const roster = useRoster((value) => value);
   const room = roster.roomsById[sessionId];
   const item = room ?? roster.bots.find((bot) => currentPart(bot) === sessionId);
