@@ -13252,11 +13252,17 @@ function NewMessagePills({ sessionId, useSessions, useUi, useTurnClock }) {
 
 // src/client/team-intro.js
 var import_react29 = require("react");
-function TeamIntro({ sessionId, useRoster, useSessions, actions }) {
+function TeamIntro({ sessionId, useRoster, useSessions, useSessionStatus, actions }) {
   const roster = useRoster((value) => value);
-  const item = roster.roomsById[sessionId] ?? roster.bots.find((bot) => currentPart(bot) === sessionId);
-  const preview = useSessions((list) => previewOf(list, sessionId, roster.exchangeTurns[sessionId]));
-  if (!item?.templateInfo || preview || item.preview) return null;
+  const room2 = roster.roomsById[sessionId];
+  const item = room2 ?? roster.bots.find((bot) => currentPart(bot) === sessionId);
+  const empty = useSessions((list) => {
+    const session = list.byId[sessionId];
+    const outline = list.projectionsBySession?.[sessionId]?.values?.turnOutline ?? session?.projectionValues?.turnOutline;
+    return session?.blank === true && (!Array.isArray(outline) || outline.length === 0);
+  });
+  const running = useSessionStatus((map) => map.get(sessionId)?.running === true);
+  if (!item?.templateInfo || !empty || running || item.preview || !room2 && item.parts?.length > 0) return null;
   const info = item.templateInfo;
   const main = item.id === roster.mainBotId;
   return (0, import_react29.createElement)(
@@ -13264,7 +13270,7 @@ function TeamIntro({ sessionId, useRoster, useSessions, actions }) {
     { className: "bt-team-intro", "aria-label": t("What this team can do") },
     (0, import_react29.createElement)("h2", null, item.name),
     (0, import_react29.createElement)("p", null, info.description),
-    main ? (0, import_react29.createElement)("div", { className: "bt-team-shortcuts" }, roster.rooms.filter((room2) => ["scene-1", "scene-3", "scene-8", "scene-10", "scene-13", "scene-14"].includes(room2.templateId)).map((room2) => (0, import_react29.createElement)("button", { key: room2.id, type: "button", onClick: () => actions.openSession(room2.id) }, room2.name))) : null,
+    main ? (0, import_react29.createElement)("div", { className: "bt-team-shortcuts" }, roster.rooms.filter((room3) => ["scene-1", "scene-3", "scene-8", "scene-10", "scene-13", "scene-14"].includes(room3.templateId)).map((room3) => (0, import_react29.createElement)("button", { key: room3.id, type: "button", onClick: () => actions.openSession(room3.id) }, room3.name))) : null,
     !main && item.admin ? (0, import_react29.createElement)("p", { className: "bt-set-hint" }, `${t("Admin")} · ${roster.byId[item.admin]?.name ?? ""} · ${item.members.map((id) => roster.byId[id]?.name).filter(Boolean).join(" / ")}`) : null,
     (0, import_react29.createElement)("div", { className: "bt-team-example" }, (0, import_react29.createElement)("span", null, t("Try asking")), (0, import_react29.createElement)("p", null, info.examples[0])),
     main ? (0, import_react29.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", onClick: () => actions.openSettings("groups") }, t("Group chats")) : (0, import_react29.createElement)("p", { className: "bt-set-hint" }, info.deliverables)
