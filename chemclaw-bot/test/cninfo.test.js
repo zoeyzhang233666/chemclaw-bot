@@ -134,7 +134,7 @@ test('Chinese ToUnicode font maps decode both array and scalar bfrange entries',
     '1 beginbfrange <0004> <0005> <8425> endbfrange',
   ].join('\n'))
   assert.equal(decodeToken('<0001000200030004>', cmap), '公司经营')
-  assert.equal(decodeToken('<0005>', cmap), '菦') // Unicode U+8426 follows U+8425.
+  assert.equal(decodeToken('<0005>', cmap), '萦') // Unicode U+8426 follows U+8425.
 })
 
 test('unmatched Chinese keyword on ASCII-only text is not reported as a reliable extraction', async () => {
