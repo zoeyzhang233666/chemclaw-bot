@@ -376,6 +376,13 @@ async function chat(cdp) {
     console.log('check-packed: source layout controls and development revision passed')
     return
   }
+  // An installed EXE must render the actual GenUI timeline, not merely ship its npm package.
+  await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
+  await cdp.call('Input.insertText', { text: 'GenUI check timeline' })
+  await sleep(150)
+  for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
+  await until(`document.querySelectorAll('[class*="tlDot"]').length === 3 && document.body.innerText.includes('Pilot complete')`, 'the rendered GenUI timeline with three milestone dots')
+  console.log('check-packed: GenUI timeline rendered in the installed app')
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: 'packaged app check' })
   await sleep(150)
