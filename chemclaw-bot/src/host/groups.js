@@ -1044,32 +1044,60 @@ export function install(rt) {
   }
   rt.withRoomSteps = (lines, reply) => (lines === '' ? reply : isPass(reply) ? lines : `${lines}\n\n${reply}`)
 
-  // The user stops a member's work in this group from the group's details. Messages
-  // still waiting for that member here go with it.
+  // A cancellation request is not proof that an already-running tool has exited.
+  // Keep the stop pending until DSH actually ends the exact turn as aborted.
+  // This prevents an early "stopped" notice while an uncooperative MCP tool is
+  // still executing. Other turns and other rooms never inherit this request.
+  const pendingMemberStops = new Map()
+  ctx.on('session/event', (session, event) => {
+    if (event.type !== 'turn/end') return
+    const stopped = pendingMemberStops.get(session.id)
+    if (stopped?.turn !== event.data?.turn) return
+    pendingMemberStops.delete(session.id)
+    if (event.data?.reason?.kind !== 'aborted') return
+    const room = rt.roomOf(stopped.roomId)
+    const member = rt.botOf(stopped.botId)
+    if (!room || !member || room.sessions?.[stopped.botId] !== session.id) return
+    void postToRoom(room, member, '', { quiet: true, stopped: true })
+      .catch(error => rt.warn('chemclaw-bot: confirmed stop notice for %s failed: %s', member.name, error))
+  })
+
+  // Stop only the member's hidden Session in this group. DSH cancels its
+  // current Agent turn, but an already-running tool must cooperate with
+  // exec.signal before it can finish; the UI keeps showing that work until then.
   async function stopMemberWork(roomId, botId) {
     await rt.load()
     const room = rt.roomOf(roomId)
     const member = rt.botOf(botId)
     const sessionId = rt.own(room?.sessions, botId)
-    if (room === undefined || member === undefined || sessionId === undefined || rt.live.get(sessionId)?.turn === undefined) return false
+    const turn = rt.live.get(sessionId)?.turn
+    if (room === undefined || member === undefined || sessionId === undefined || turn === undefined) return false
+    if (pendingMemberStops.get(sessionId)?.turn === turn) return true
     const agent = await rt.resolveAgent(sessionId)
-    agent.cancel({ kind: 'user' })
-    await postToRoom(room, member, '', { quiet: true, stopped: true })
+    if (rt.live.get(sessionId)?.turn !== turn) return false
+    pendingMemberStops.set(sessionId, { roomId, botId, turn })
+    try { agent.cancel({ kind: 'user' }) }
+    catch (error) { pendingMemberStops.delete(sessionId); throw error }
     return true
   }
   rt.stopMemberWork = stopMemberWork
 
-  // Cancel the group's round before its members, without touching their work
-  // in private chats or other groups. Mirrors upstream DS-Bot #616.
+  // Cancel the group relay and all current group-member turns concurrently.
+  // A slow resolve/cancel of one member must not prevent others from receiving
+  // their own cancellation. Never cancel a Bot's private or other-room Session.
   async function stopRoomWork(roomId) {
     await rt.load()
     const room = rt.roomOf(roomId)
     if (room === undefined) return false
     const round = rt.roomBusy(room.id)
-    if (round) (await rt.resolveAgent(room.id)).cancel({ kind: 'user' })
-    let stopped = false
-    for (const botId of room.members) stopped = (await stopMemberWork(room.id, botId)) || stopped
-    return round || stopped
+    const tasks = [
+      ...(round ? [rt.resolveAgent(room.id).then(agent => { agent.cancel({ kind: 'user' }); return true })] : []),
+      ...room.members.map(botId => stopMemberWork(room.id, botId)),
+    ]
+    const results = await Promise.allSettled(tasks)
+    const failed = results.find(result => result.status === 'rejected')
+    if (failed) throw failed.reason
+    return results.some(result => result.value === true)
   }
   rt.stopRoomWork = stopRoomWork
 
