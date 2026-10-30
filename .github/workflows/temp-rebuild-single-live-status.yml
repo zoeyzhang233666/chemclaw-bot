@@ -1,0 +1,32 @@
+name: Temporary build of single-line status client
+on:
+  push:
+    branches: [fix/0-single-live-tool-status]
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - name: Install frontend build dependencies
+        working-directory: chemclaw-bot
+        run: npm ci --no-fund --no-audit
+      - name: Rebuild generated frontend and chart engine
+        working-directory: chemclaw-bot
+        run: npm run build
+      - name: Commit the generated bundle to this branch only
+        run: |
+          if git diff --quiet -- chemclaw-bot/client.js chemclaw-bot/runtime/chart-engine.js; then exit 0; fi
+          git config user.name "$(git show -s --format='%an' HEAD)"
+          git config user.email "$(git show -s --format='%ae' HEAD)"
+          git add chemclaw-bot/client.js chemclaw-bot/runtime/chart-engine.js
+          git commit -m "Build client after tool activity UI changes"
+          git push origin HEAD:fix/0-single-live-tool-status

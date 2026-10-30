@@ -6,7 +6,7 @@ import { HANDOFF_ACK, MESSAGE_INLINE_MAX, REFERENCE_KIND, REPLY_KIND, SOURCE_KIN
 import { absoluteLinks } from './links.js'
 import { textOf } from './text.js'
 import { reminderText } from './schedules.js'
-import { toolActivityDetail } from '../shared/tool-activity.js'
+import { liveActivitySummary } from '../shared/tool-activity.js'
 import { cleanText } from './diagnostics.js'
 
 // A failed turn's `LlmFailure`, kept to what can be shown and logged. Like DSH's own
@@ -157,18 +157,9 @@ export function install(rt) {
   }
   const startCall = (id, entry, callId, name, args) => {
     if (typeof callId === 'string') (entry.calls ??= new Map()).set(callId, { name, args })
-    if (typeof callId === 'string' && entry.turn !== undefined) {
-      let parsed
-      try { parsed = JSON.parse(args) } catch { parsed = {} }
-      const clean = value => cleanText(value, { redact: rt.redactSecrets })
-      const detail = toolActivityDetail(name, key => typeof parsed?.[key] === 'string' ? clean(parsed[key]) : undefined)
-      const item = { id: callId, ...detail, summary: clean(detail.summary), ...(detail.detail ? { detail: clean(detail.detail) } : {}), status: 'running' }
-      entry.activities = [...(entry.activities ?? []).filter(item => item.id !== callId), item].slice(-24)
-    }
     showCall(id, entry)
   }
-  const endCall = (id, entry, callId, isError) => {
-    entry.activities = entry.activities?.map(item => item.id === callId ? { ...item, status: isError ? 'failed' : 'done' } : item)
+  const endCall = (id, entry, callId) => {
     entry.calls?.delete(callId)
     showCall(id, entry)
   }
@@ -288,7 +279,7 @@ export function install(rt) {
     let args
     try { args = JSON.parse(call.args || '{}') } catch { args = {} }
     const first = keys => keys.map(key => args?.[key]).find(value => typeof value === 'string' && value.trim() !== '')?.replace(/\s+/g, ' ').trim()
-    const note = first(['description', 'justification'])
+    const note = cleanText(liveActivitySummary(call.name, key => typeof args?.[key] === 'string' ? args[key] : undefined), { redact: rt.redactSecrets })
     const path = first(['file_path', 'path'])
     const url = first(['url'])
     let site
@@ -338,8 +329,7 @@ export function install(rt) {
     }
     for (const [id, entry] of live) {
       const owner = rt.groupOwners.get(id)
-      if (entry.turn !== undefined && owner !== undefined) add(owner.roomId, owner.botId, { since: entry.since, ...doingOf(entry),
-        ...(entry.activities?.length ? { activities: entry.activities.filter(item => item.tool !== PROGRAM_TOOL || entry.activities.length === 1) } : {}) })
+      if (entry.turn !== undefined && owner !== undefined) add(owner.roomId, owner.botId, { since: entry.since, ...doingOf(entry) })
     }
     for (const job of rt.switchJobs()) {
       if (job.roomId !== undefined) add(job.roomId, job.botId, { since: job.since, switching: true, ...(job.folder === true ? { folder: true } : {}) })
@@ -410,7 +400,6 @@ export function install(rt) {
         setActivity(id, 'thinking')
         entry.turn = event.data.turn
         entry.since = event.time ?? Date.now()
-        entry.activities = []
         entry.texts = []
         entry.shown = 0
         entry.step = undefined
@@ -557,12 +546,6 @@ export function install(rt) {
         setActivity(id, undefined)
         const info = entry.info
         const owner = rt.groupOwners.get(id)
-        const steps = (entry.activities ?? []).filter(item => item.tool !== PROGRAM_TOOL || entry.activities.length === 1)
-        if (owner && speaksInGroup(id, info) && steps.length) {
-          const round = [...roomProgress.values()].find(round => round.roomId === owner.roomId && round.speaking === owner.botId)
-          if (round) (round.activities ??= []).push({ botId: owner.botId, name: rt.botOf(owner.botId)?.name,
-            entries: steps.map(item => item.status === 'running' ? { ...item, status: 'stopped' } : item) })
-        }
         const joined = entry.joined ?? []
         // What the group already saw of the turn is not posted again.
         const texts = entry.texts.slice(entry.shown)
@@ -582,7 +565,6 @@ export function install(rt) {
         entry.steeredAt = undefined
         entry.tool = undefined
         entry.calls = undefined
-        entry.activities = undefined
         entry.lastText = undefined
         entry.lastCalled = undefined
         const later = entry.later ?? []
