@@ -106,11 +106,11 @@ test('missing GenUI disables only the optional plugin and restores it when insta
   const dir = mkdtempSync(join(tmpdir(), 'chemclaw-genui-recovery-'))
   t.after(() => rmSync(dir, { recursive: true, force: true }))
   const patch = join(dir, 'cordis.patch.yml')
-  const original = '- id: chemclaw\\n  config:\\n    enabled: true\\n'
+  const original = '- id: chemclaw\n  config:\n    enabled: true\n'
   writeFileSync(patch, original)
   ensureOptionalGenuiRecovery(dir, false)
   let result = readFileSync(patch, 'utf8')
-  assert.match(result, /- id: genui\\n  disabled: true/u)
+  assert.match(result, /- id: genui\n  disabled: true/u)
   assert.match(result, /- id: chemclaw/u)
   ensureOptionalGenuiRecovery(dir, false)
   assert.equal(readFileSync(patch, 'utf8'), result, 'repeated startup must not duplicate recovery overrides')
