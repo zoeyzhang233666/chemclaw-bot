@@ -95,3 +95,29 @@ test('runtime build tools stay out of desktop packages while release archives re
   assert.equal(filter(join(root, 'node_modules/chemclaw-bot/runtime/bundled/linux-x64.tar.gz'), stat), true)
   assert.equal(filter(join(root, 'node_modules/chemclaw-bot/skills/builtin/delivery/SKILL.md'), stat), true)
 })
+
+test('desktop and test harness lock the same DeepSeek Harness RC release', () => {
+  const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
+  const app = read('../package.json')
+  const appLock = read('../package-lock.json')
+  const harness = read('../../chemclaw-bot/dev/harness/package.json')
+  const harnessLock = read('../../chemclaw-bot/dev/harness/package-lock.json')
+  const pinned = app.dependencies['@deepseek-ai/dsh']
+  assert.match(pinned, /^0\.\d+\.\d+-rc\.\d+$/u)
+
+  for (const [name, version] of Object.entries(app.dependencies)) {
+    if (!name.startsWith('@deepseek-ai/dsh')) continue
+    assert.equal(version, pinned, `Desktop has a mismatched version for ${name}`)
+    assert.equal(appLock.packages[''].dependencies[name], pinned, `Desktop root lock is stale for ${name}`)
+    assert.equal(appLock.packages[`node_modules/${name}`]?.version, pinned, `Desktop installed lock is stale for ${name}`)
+  }
+  for (const [name, version] of Object.entries(app.overrides)) {
+    if (name.startsWith('@deepseek-ai/dsh-')) assert.equal(version, pinned, `Override for ${name} is stale`)
+  }
+  for (const [name, version] of Object.entries(harness.dependencies)) {
+    if (!name.startsWith('@deepseek-ai/dsh')) continue
+    assert.equal(version, pinned, `Harness has a mismatched version for ${name}`)
+    assert.equal(harnessLock.packages[''].dependencies[name], pinned, `Harness root lock is stale for ${name}`)
+    assert.equal(harnessLock.packages[`node_modules/${name}`]?.version, pinned, `Harness installed lock is stale for ${name}`)
+  }
+})
