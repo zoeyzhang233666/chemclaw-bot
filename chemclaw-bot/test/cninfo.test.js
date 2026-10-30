@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument, StandardFonts } from 'pdf-lib'
 import { searchCninfo, validatePdfUrl, fetchCninfoPdf, install } from '../src/host/cninfo.js'
 import { install as installPublicData } from '../src/host/public-data.js'
 import { fakeContext } from './fake-ctx.js'
@@ -89,17 +89,20 @@ test('untrusted CDN paths or caller-supplied URLs cannot redirect PDF fetch to o
 
 test('downloaded PDF is real, size-limited, and exposes a correct page count and attachment', async () => {
   const doc = await PDFDocument.create()
-  doc.addPage([500, 700])
+  const first = doc.addPage([500, 700])
+  first.drawText('CNINFO capacity 80 kt', { font: await doc.embedFont(StandardFonts.Helvetica), x: 30, y: 600 })
   doc.addPage([500, 700])
   const data = await doc.save()
   const seen = []
   const url = 'https://static.cninfo.com.cn/finalpage/2026-10-30/1225000001.PDF'
-  const result = await fetchCninfoPdf(url, {
+  const result = await fetchCninfoPdf(url, { keyword: 'capacity',
     fetcher: async (u, init) => { seen.push({ u, init }); return new Response(data, { status: 200, headers: { 'content-type': 'application/pdf' } }) },
     store: async info => ({ attachmentId: 'a1', name: info.name }),
   })
   assert.equal(result.pages, 2)
-  assert.equal(result.textStatus, 'not_extracted')
+  assert.equal(result.extraction.status, 'partial_text')
+  assert.equal(result.extraction.evidence[0].page, 1)
+  assert.match(result.extraction.evidence[0].excerpt, /80 kt/)
   assert.equal(result.attachment.attachmentId, 'a1')
   assert.equal(seen[0].init.redirect, 'error')
   assert.equal(result.sha256.length, 64)
@@ -112,6 +115,7 @@ test('CNINFO registers on the global DSH tool surface and appears in public rese
   const rt = { ctx, config: { cninfoFetch: async () => json([filing()]) } }
   installPublicData(rt)
   install(rt)
+  assert.ok(ctx.registeredTools.has('chem_cninfo_resolve_company'))
   assert.ok(ctx.registeredTools.has('chem_cninfo_search'))
   assert.ok(ctx.registeredTools.has('chem_cninfo_read_pdf'))
   const first = rt.publicDataStatus().find(source => source.name === '巨潮公告')
