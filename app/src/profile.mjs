@@ -1,6 +1,6 @@
 // The app's own DSH profile: its name, its bundles and its installation.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { initProfile, loadProfileDirectory, readProfileManifest, resolveProfileDir, writeProfileBundles } from '@deepseek-ai/dsh-app-boot'
 
@@ -16,6 +16,30 @@ const RETIRED_BUNDLES = ['deepseek-bot-engine', 'ds-bot']
 // The app's own manifest is the installation: DSH imports plugins only from the installation's dependency
 // graph, resolves bundles there first, and keeps the bundles it names as direct dependencies from removal.
 export const INSTALL_ANCHOR = fileURLToPath(new URL('../package.json', import.meta.url))
+
+// GenUI is an optional visual enhancement: a partial local install must never
+// prevent the original ChemClaw chat and show_view charts from booting.
+const GENUI_RECOVERY = '# ChemClaw managed optional GenUI recovery'
+const GENUI_RECOVERY_END = '# End ChemClaw managed optional GenUI recovery'
+const GENUI_RECOVERY_BLOCK = `${GENUI_RECOVERY}\n- id: genui\n  disabled: true\n${GENUI_RECOVERY_END}\n`
+
+export function ensureOptionalGenuiRecovery(dir, installed = existsSync(join(dirname(INSTALL_ANCHOR), 'node_modules', '@changfenhuang', 'dsh-genui', 'package.json'))) {
+  const file = join(dir, 'cordis.patch.yml')
+  const original = readFileSync(file, 'utf8')
+  const start = original.indexOf(GENUI_RECOVERY)
+  let content = original
+  if (start >= 0) {
+    const end = original.indexOf(GENUI_RECOVERY_END, start)
+    if (end < 0) throw new Error('Incomplete ChemClaw managed GenUI recovery marker; preserving profile settings.')
+    const after = end + GENUI_RECOVERY_END.length
+    content = original.slice(0, start) + original.slice(after).replace(/^\r?\n/u, '')
+  }
+  if (!installed) {
+    console.warn('ChemClaw: optional GenUI dependency is unavailable; the original chat and charts remain enabled. Reinstall app dependencies to restore GenUI.')
+    content = `${content.replace(/\s*$/u, '')}\n\n${GENUI_RECOVERY_BLOCK}`
+  }
+  if (content !== original) writeFileSync(file, content)
+}
 
 // Skip DeepSeek Harness first-run onboarding / credit screens inside ChemClaw.
 const ACCOUNT_DONE_PATCH = `- id: ui-settings-account
@@ -78,6 +102,7 @@ export function loadAppProfile() {
   claimBundles(dir)
   ensureChemClawShellPatch(dir)
   ensurePresentationDefaults(dir)
+  ensureOptionalGenuiRecovery(dir)
   return loadOwnBundles(dir, BUNDLES)
 }
 
