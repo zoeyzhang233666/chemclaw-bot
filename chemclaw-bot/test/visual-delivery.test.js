@@ -243,3 +243,17 @@ test('ordinary questions, text-only and cancelled turns never force multiple cha
   cancelled.rt.noteVisualDelivery('s', { type: 'chart', kind: 'line' }); cancelled.stop(1, true)
   assert.equal(cancelled.notices.length, 0)
 })
+
+test('disabling advanced charts prevents misleading requests to render an unavailable ECharts kind', () => {
+  const f = setup(); f.rt.state.prefs = { advancedCharts: false }
+  f.start(); f.user('请生成热力图'); f.answer('The regional data is tabulated.')
+  f.rt.noteVisualDelivery('s', { type: 'table' })
+  f.stop()
+  assert.equal(f.notices.length, 0)
+  const time = setup(); time.rt.state.prefs = { advancedCharts: false }
+  time.start(); time.user('请用时间轴展示关键事件'); time.answer('A summary')
+  time.rt.noteVisualDelivery('s', { type: 'table' })
+  time.stop()
+  assert.equal(time.notices.length, 1)
+  assert.match(time.notices[0].content[0].text, /timeline/)
+})
