@@ -26,7 +26,7 @@ export function install(rt) {
     ['OPSIN', '英文系统名称转结构；解析结果需要交叉核验'],
     ['Wikipedia', '中英文百科检索；不能作为价格或合规结论的唯一来源'],
     ['AKShare', '历史日频：国内主力连续和可覆盖的国外合约；首次使用自动准备行情组件，不保证实时'],
-  ].map(([name, coverage]) => ({ name, coverage, ...(cache.get(name.toLowerCase()) ?? { state: 'unqueried' }) }))]
+  ].map(([name, coverage]) => ({ name, coverage, ...(cache.get(name.toLowerCase()) ?? { state: 'unqueried' }) })), ...(rt.cninfoStatus ? [rt.cninfoStatus()] : [])]
   rt.searchPluginStatus = async () => {
     const rows = await rt.ctx.get?.('pluginManager')?.listPlugins?.().catch(() => []) ?? []
     const row = rows.find(row => row.moduleName === 'dsh-free-search')
