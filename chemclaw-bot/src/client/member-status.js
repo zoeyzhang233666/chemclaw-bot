@@ -1,4 +1,4 @@
-import { createElement as h, useLayoutEffect, useRef, useState } from 'react'
+import { createElement as h, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { BotMark, toolState } from './mark.js'
 import { Elapsed, Shimmer, workPhrase } from './cells.js'
 import { SPRING_SHAPE, SPRING_TAP, spring, useLinger } from './motion.js'
@@ -163,14 +163,35 @@ export function MemberState({ entry, bot, room, roster }) {
 // member's group Session otherwise; a turn waiting for an approval still holds its work.
 export function StopMemberWork({ entry, bot, room, actions }) {
   const [stopping, setStopping] = useState(false)
+  // Reset the pending request when the old group turn finishes; a later turn
+  // must have an enabled Stop button of its own.
+  useEffect(() => { if (!entry?.here) setStopping(false) }, [entry?.here])
   if (!entry?.here || (entry.state !== 'work' && entry.state !== 'ask')) return null
   const stop = () => {
     setStopping(true)
+    // The host only acknowledges the cancellation request. Keep the button in
+    // "Stopping" state until the member's active group turn actually disappears.
     void Promise.resolve(actions.stopMemberWork(room.id, bot.id))
-      .catch(error => actions.reportError(error, 'stop'))
-      .finally(() => setStopping(false))
+      .then(accepted => { if (accepted === false) setStopping(false) })
+      .catch(error => { setStopping(false); actions.reportError(error, 'stop') })
   }
-  return h('button', { type: 'button', className: 'bt-member-stop', disabled: stopping, 'aria-label': `${t('Stop')} · ${bot.name}`, onClick: stop }, t('Stop'))
+  return h('button', { type: 'button', className: 'bt-member-stop', disabled: stopping, 'aria-label': `${t(stopping ? 'Stopping…' : 'Stop')} · ${bot.name}`, onClick: stop }, t(stopping ? 'Stopping…' : 'Stop'))
+}
+
+// Stop all active turns in this group. Work in a Bot's own chat or another group is unaffected.
+export function StopRoomWork({ room, entries, actions }) {
+  const [stopping, setStopping] = useState(false)
+  const hasWork = entries.some(entry => entry.here)
+  useEffect(() => { if (!hasWork) setStopping(false) }, [hasWork])
+  if (!hasWork) return null
+  const stop = () => {
+    setStopping(true)
+    void Promise.resolve(actions.stopRoomWork(room.id))
+      .then(accepted => { if (accepted === false) setStopping(false) })
+      .catch(error => { setStopping(false); actions.reportError(error, 'stop') })
+  }
+  const label = t('Stop all work in this group')
+  return h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: stopping, 'aria-label': label, title: label, onClick: stop }, t(stopping ? 'Stopping…' : 'Stop all'))
 }
 
 export function MemberApprovals({ entry, bot, actions }) {
@@ -205,6 +226,10 @@ body[data-ds-dark-theme] .bt-mw-ask{color:#f0b84a}
 @keyframes bt-mw-seat{from{opacity:0;scale:.6}}
 @keyframes bt-mw-swap{from{opacity:0;filter:blur(4px)}}
 .bt-members{display:flex;flex-direction:column;gap:2px;margin:0 -8px}
+.bt-members-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.bt-members-head>.bt-section-title{margin:0}
+.bt-members-head>.bt-soft-sm{margin:-6px 0}
+.bt-members-head>.bt-soft-sm:disabled{opacity:.5;cursor:default}
 .bt-member{display:flex;flex-direction:column;border-radius:12px;animation:bt-rise .18s ease-out backwards}
 .bt-member-row{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 8px;border-radius:12px;transition:background-color .12s ease}
 .bt-member-row:hover{background:var(--bt-hover)}

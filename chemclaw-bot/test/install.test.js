@@ -80,6 +80,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'tool read_own_chat',
     'tool read_group_chat',
     'effect chemclaw-bot: group step lines',
+    'on session/event',
     'on llm/stream',
     'on agent/assistant-stream',
     'on session/event',

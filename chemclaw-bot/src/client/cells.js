@@ -844,7 +844,7 @@ function useLiveNote(actions, sessionId, id, entry) {
   }, [sessionId, id, key])
 }
 
-function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, actions, useUi, useWork }) {
+function GroupReplies({ sessionId, eventSeq, callId, done, interrupted, content, roster, actions, useUi, useWork }) {
   const [live, setLive] = useState({ replies: [], speaking: null, drafts: [] })
   useEffect(() => {
     if (done) return undefined
@@ -881,7 +881,7 @@ function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, acti
   const speakerTool = speakerWork?.tool
   const speakerDoing = speakerTool ? workPhrase(speakerWork) : undefined
   if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) {
-    return broken ? h('div', { className: 'bt-group-replies' }, h('div', { className: 'bt-event', role: 'status' }, t('The group replies could not be shown'))) : null
+    return broken ? h('div', { className: 'bt-group-replies' }, h('div', { className: 'bt-event', role: 'status' }, t(interrupted ? 'This group reply was interrupted by a stop request' : 'The group replies could not be shown'))) : null
   }
   const room = roster.roomsById[sessionId]
   return h('div', { className: 'bt-group-replies' },
@@ -940,7 +940,7 @@ function GroupReplies({ sessionId, eventSeq, callId, done, content, roster, acti
       const bot = roster.byId[draft.botId]
       return bot ? h(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room, roster, actions, streaming: true }) : null
     }),
-    broken ? h('div', { className: 'bt-event', role: 'status' }, t('Some group replies could not be shown')) : null,
+    broken ? h('div', { className: 'bt-event', role: 'status' }, t(interrupted ? 'This group reply was interrupted by a stop request' : 'Some group replies could not be shown')) : null,
     pending.map((id) => {
       const bot = roster.byId[id]
       if (!bot) return null
@@ -1010,8 +1010,16 @@ function renderCall(call, { sessionId, eventSeq, roster, actions, useUi, useWork
       const target = findBot(arg('name')) ?? findBot(arg('bot')) ?? (arg('bot') ? undefined : self)
       return done && target ? h(EventLine, { prefix: t('Updated'), bots: [target], onOpen: bot => actions.openSession(bot.id) }) : null
     }
-    case 'group_relay':
-      return h(GroupReplies, { sessionId, eventSeq: call.seq ?? eventSeq, callId: call.callId, done, content: call.content, roster, actions, useUi, useWork })
+    case 'group_relay': {
+      // DSH may return an abort error rather than valid JSON for a stopped
+      // group relay. Distinguish this from a genuinely corrupt reply.
+      const result = done ? contentText(call.content) : ''
+      const interrupted = call.isError === true && (
+        ['ABORTED', 'ABORTED_BEFORE_DISPATCH'].includes(call.error?.code)
+        || /^Error: tool call aborted(?: before dispatch)?$/i.test(result.trim())
+      )
+      return h(GroupReplies, { sessionId, eventSeq: call.seq ?? eventSeq, callId: call.callId, done, interrupted, content: call.content, roster, actions, useUi, useWork })
+    }
     case 'create_group':
     case 'update_group':
     case 'delete_group':
