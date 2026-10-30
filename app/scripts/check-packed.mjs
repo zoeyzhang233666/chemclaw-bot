@@ -97,6 +97,7 @@ function checkSharp(app) {
     const path = require('node:path')
     const plugin = path.dirname(appRequire.resolve('chemclaw-bot/package.json'))
     assert.equal(fs.existsSync(path.join(plugin, 'runtime/.build-tools')), false, 'Runtime build caches must not ship')
+    for (const file of ['src/host/cninfo.js', 'src/host/cninfo-pdf-text.js']) assert.equal(fs.existsSync(path.join(plugin, file)), true, 'Missing bundled CNINFO tool: ' + file)
     const skills = ['domain-skills', 'supplemental-skills'].flatMap(name => JSON.parse(fs.readFileSync(path.join(plugin, 'seed', name + '.json'), 'utf8')))
     for (const file of ['presentations', 'chemistry', 'delivery', 'research-process']) skills.push({ sourcePath: 'skills/builtin/' + file + '/SKILL.md' })
     skills.push({ sourcePath: 'skills/vendor/guizang-ppt-skill/SKILL.md' })
