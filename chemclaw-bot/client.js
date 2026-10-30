@@ -1222,6 +1222,8 @@ var ZH = {
   "{first} and {second} are waiting for your approval": "{first}、{second} 等你批准",
   "{first}, {second} and {count} more are waiting for your approval": "{first}、{second} 等 {total} 个等你批准",
   "Waiting for your approval": "等你批准",
+  "Stop all work in this group": "停止本群的所有工作",
+  "Stop all": "全部停止",
   "in its own chat": "在自己的对话里",
   Reject: "拒绝",
   "Allow once": "允许一次",
@@ -2203,6 +2205,7 @@ function teamActions({ call: call2, after, partFor, roster, ui: ui2, live, cards
     dismissView: (sessionId) => after(call2("dismiss-view", { sessionId: partFor(sessionId) })),
     answerApproval: (id, choice) => after(call2("approval-answer", { id, choice })),
     stopMemberWork: (roomId, botId) => after(call2("stop-member-work", { roomId, botId })),
+    stopRoomWork: (roomId) => after(call2("stop-room-work", { roomId })),
     // Values go out in these requests and never come back in a response.
     secretSet: (payload) => after(call2("secret-set", payload)),
     secretAllow: (requestId) => after(call2("secret-allow", { requestId })),
@@ -20564,6 +20567,16 @@ function StopMemberWork({ entry, bot, room: room2, actions }) {
   };
   return (0, import_react54.createElement)("button", { type: "button", className: "bt-member-stop", disabled: stopping, "aria-label": `${t("Stop")} · ${bot.name}`, onClick: stop }, t("Stop"));
 }
+function StopRoomWork({ room: room2, entries: entries2, actions }) {
+  const [stopping, setStopping] = (0, import_react54.useState)(false);
+  if (!entries2.some((entry) => entry.here)) return null;
+  const stop = () => {
+    setStopping(true);
+    void Promise.resolve(actions.stopRoomWork(room2.id)).catch((error) => actions.reportError(error, "stop")).finally(() => setStopping(false));
+  };
+  const label = t("Stop all work in this group");
+  return (0, import_react54.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: stopping, "aria-label": label, title: label, onClick: stop }, t("Stop all"));
+}
 function MemberApprovals({ entry, bot, actions }) {
   if (entry?.state !== "ask") return null;
   return (0, import_react54.createElement)("div", { className: "bt-member-cards" }, entry.approvals.map((approval) => (0, import_react54.createElement)(ApprovalCard, { key: approval.id, approval, bot, actions })));
@@ -20594,6 +20607,10 @@ body[data-ds-dark-theme] .bt-mw-ask{color:#f0b84a}
 @keyframes bt-mw-seat{from{opacity:0;scale:.6}}
 @keyframes bt-mw-swap{from{opacity:0;filter:blur(4px)}}
 .bt-members{display:flex;flex-direction:column;gap:2px;margin:0 -8px}
+.bt-members-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.bt-members-head>.bt-section-title{margin:0}
+.bt-members-head>.bt-soft-sm{margin:-6px 0}
+.bt-members-head>.bt-soft-sm:disabled{opacity:.5;cursor:default}
 .bt-member{display:flex;flex-direction:column;border-radius:12px;animation:bt-rise .18s ease-out backwards}
 .bt-member-row{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 8px;border-radius:12px;transition:background-color .12s ease}
 .bt-member-row:hover{background:var(--bt-hover)}
@@ -20809,7 +20826,12 @@ function GroupOverview({ room: room2, roster, actions, usage, useWork, openSetti
     (0, import_react55.createElement)(
       "div",
       { key: "members" },
-      (0, import_react55.createElement)("div", { className: "bt-section-title" }, t("Members · {count}", { count: members.length })),
+      (0, import_react55.createElement)(
+        "div",
+        { className: "bt-members-head" },
+        (0, import_react55.createElement)("div", { className: "bt-section-title" }, t("Members · {count}", { count: members.length })),
+        (0, import_react55.createElement)(StopRoomWork, { room: room2, entries: entries2, actions })
+      ),
       (0, import_react55.createElement)("div", { className: "bt-members", role: "list" }, members.map((member) => (0, import_react55.createElement)(MemberRow, {
         key: member.id,
         member,
