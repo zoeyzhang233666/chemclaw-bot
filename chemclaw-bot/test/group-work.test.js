@@ -646,12 +646,15 @@ test('a member stopped during a running round is logged at once and not repeated
   // The user stops Writer while its turn still runs inside the round.
   const stopped = await host.call('stop-member-work', { roomId: 'r1', botId: 'b' })
   assert.deepEqual([stopped.ok, stopped.value], [true, true])
+  assert.equal(logLines(host).some(line => line.kind === 'stopped'), false, 'request is not a completed stop')
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
+  await settle(() => logLines(host).some(line => line.kind === 'stopped'))
   const last = logLines(host).at(-1)
   assert.deepEqual([last.who, last.botId, last.kind], ['Writer', 'b', 'stopped'])
+  await settle(() => host.agentOf('r1').calls.length === 1)
   const post = host.takePost()
   assert.equal(post.source.stopped, true)
   assert.equal(typeof post.source.logged, 'number')
-  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
   await settle(() => host.agentOf('gc').calls.length === 1)
   host.begin('gc')
   host.finish('gc', '在整理了。')
@@ -846,6 +849,8 @@ test('the user stops a member\'s work in a group, and the group shows it', async
   host.emit('gb', 'turn/start', { turn: 1 })
   assert.equal((await host.call('stop-member-work', { roomId: 'r1', botId: 'b' })).value, true)
   assert.deepEqual(host.agentOf('gb').cancelled, [{ kind: 'user' }])
+  assert.deepEqual(logLines(host), [], 'no completed-stop notice while the tool remains active')
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
   await settle(() => host.agentOf('r1').calls.length === 1)
   const post = host.takePost()
   assert.deepEqual([post.source.stopped, post.source.quiet], [true, true])
@@ -854,6 +859,32 @@ test('the user stops a member\'s work in a group, and the group shows it', async
   assert.deepEqual(kinds(result()), [['stopped', 'Writer']])
   const log = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1.log
   assert.deepEqual(log.map(line => [line.who, line.kind]), [['Writer', 'stopped']])
+})
+
+// A non-cooperative tool keeps the Session active after cancel(). The UI must not
+// announce a completed stop until DSH emits turn/end for that exact turn.
+test('stop request stays pending during an in-flight tool and is idempotent', async t => {
+  const host = await start(t)
+  host.emit('gb', 'turn/start', { turn: 1 })
+  host.emit('gb', 'tool/call', { callId: 'slow', name: 'chem_futures_history', arguments: '{}' })
+  assert.equal((await host.call('stop-member-work', { roomId: 'r1', botId: 'b' })).value, true)
+  assert.equal((await host.call('stop-member-work', { roomId: 'r1', botId: 'b' })).value, true)
+  assert.deepEqual(host.agentOf('gb').cancelled, [{ kind: 'user' }])
+  assert.equal(logLines(host).length, 0, 'tool is still running; no false completed-stop notice')
+  const status = (await host.call('state', {})).value
+  assert.equal(status.work.rooms.r1.some(entry => entry.botId === 'b'), true)
+  host.emit('gb', 'tool/result', { callId: 'slow' })
+  assert.equal(logLines(host).length, 0, 'tool result alone is not turn completion')
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
+  await settle(() => logLines(host).filter(line => line.kind === 'stopped').length === 1)
+})
+
+test('a completed turn is not mislabeled stopped when a cancellation races it', async t => {
+  const host = await start(t)
+  host.emit('gb', 'turn/start', { turn: 1 })
+  assert.equal((await host.call('stop-member-work', { roomId: 'r1', botId: 'b' })).value, true)
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'completed' } })
+  assert.equal(logLines(host).some(line => line.kind === 'stopped'), false)
 })
 
 // Upstream #616: DSH's stop only covers the round, not lingering member turns.
@@ -870,14 +901,12 @@ test('stop all cancels this group round and its busy members, not private work',
   assert.deepEqual([response.ok, response.value], [true, true])
   for (const id of ['r1', 'ga', 'gb']) assert.deepEqual(host.agentOf(id).cancelled, [{ kind: 'user' }], id)
   for (const id of ['c', 'gc']) assert.deepEqual(host.agentOf(id).cancelled, [], id)
-  assert.deepEqual(logLines(host).map(line => [line.who, line.kind]), [
-    ['User', undefined], ['Chief', 'stopped'], ['Writer', 'stopped'],
-  ])
+  assert.deepEqual(logLines(host).map(line => [line.who, line.kind]), [['User', undefined]])
   host.emit('ga', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
+  await settle(() => logLines(host).filter(line => line.kind === 'stopped').length === 2)
   await settle(() => first() !== undefined)
-  assert.deepEqual(kinds(first()).filter(([kind]) => kind === 'stopped'), [
-    ['stopped', 'Chief'], ['stopped', 'Writer'],
-  ])
+  assert.deepEqual(logLines(host).filter(line => line.kind === 'stopped').map(line => line.who).sort(), ['Chief', 'Writer'])
 })
 
 test('members still at work show in the team view and in the prompts of the others', async (t) => {
