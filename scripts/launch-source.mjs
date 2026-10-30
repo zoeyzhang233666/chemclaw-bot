@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
+import { createRequire } from 'node:module'
 import { existsSync, readFileSync, realpathSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 
 export function launchSource(checkout, args = [], env = process.env) {
   const origin = realpathSync(resolve(env.CHEMCLAW_LAUNCH_HOME || checkout))
@@ -61,4 +62,31 @@ export function sourceRevision(source) {
   } catch {
     return { branch: 'source', revision: 'unversioned', fullRevision: 'unversioned', modified: false }
   }
+}
+
+// Check the selected source plugin's direct dependencies against the app's *actual*
+// modules, not a stamp. A stamp can survive an interrupted or skipped npm install.
+function installedVersion(fromPlugin, name) {
+  try {
+    const pkg = JSON.parse(readFileSync(fromPlugin.resolve(`${name}/package.json`), 'utf8'))
+    if (pkg.name === name) return pkg.version
+  } catch { /* Some packages do not export package.json. */ }
+  let entry
+  try { entry = fromPlugin.resolve(name) } catch { return undefined }
+  let dir = dirname(entry)
+  for (;;) {
+    try {
+      const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'))
+      if (pkg.name === name) return pkg.version
+    } catch { /* Walk to the module's package root. */ }
+    const parent = dirname(dir)
+    if (parent === dir) return undefined
+    dir = parent
+  }
+}
+
+export function missingPluginDependencies(app, dependencies) {
+  const fromPlugin = createRequire(join(app, 'node_modules', 'chemclaw-bot', 'package.json'))
+  return Object.entries(dependencies).filter(([name, version]) => installedVersion(fromPlugin, name) !== version)
+    .map(([name, version]) => `${name}@${version}`)
 }
