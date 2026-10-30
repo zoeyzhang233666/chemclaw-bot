@@ -81,7 +81,12 @@ export function install(rt) {
   }), 'chemclaw-bot: identity section')
   ctx.effect(() => ctx.systemPrompt.section({
     name: 'chemclaw-visual-delivery', order: 646, interpolate: false,
-    text: context => rt.roomOf(context?.agent?.id) || context?.agent?.session?.header?.parentSession !== undefined ? '' : VIEW_POLICY,
+    text: context => {
+      if (rt.roomOf(context?.agent?.id) || context?.agent?.session?.header?.parentSession !== undefined) return ''
+      return rt.state?.prefs?.advancedCharts === false
+        ? VIEW_POLICY + '\nAdvanced charts are disabled in ChemClaw Settings. Do not select ECharts scatter, radar, heatmap, funnel, treemap, sankey or gauge for new answers, even if they would otherwise fit. Use an existing SVG chart or honest data table instead, and mention this setting when the user explicitly requests a disabled chart. GenUI nonchart components such as timeline and Mermaid remain available. Never fabricate substitute data.'
+        : VIEW_POLICY
+    },
   }), 'chemclaw-bot: visual delivery policy')
   installVisualDelivery(rt)
 }

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE } from '../src/host/visual-delivery.js'
+import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
 
 const content = text => [{ type: 'text', text }]
@@ -158,4 +158,102 @@ test('sessions do not share delivery state and disposal drops old state', () => 
   f.ctx.emit('session/disposed', f.session)
   f.start(2); f.user('Again'); f.answer('Plain'); f.stop(2)
   assert.equal(f.notices.length, 2)
+})
+
+test('requested chart detection distinguishes instructions from discussions and does not invent data requirements', () => {
+  assert.deepEqual(requestedChartKinds('请生成一张热力图，并用时间轴展示主要事件。'), ['heatmap', 'timeline'])
+  assert.deepEqual(requestedChartKinds('Create a Sankey and a heatmap.'), ['heatmap', 'sankey'])
+  for (const question of ['为什么热力图没有显示？', '热力图是什么？', '请解释热力图的概念', '帮我检查热力图没有显示的问题', '修复生成桑基图失败的问题', 'Explain how Sankey diagrams work']) {
+    assert.deepEqual(requestedChartKinds(question), [], question)
+  }
+  assert.deepEqual(missingRequestedKinds(['heatmap', 'timeline'], new Set(['heatmap'])), ['timeline'])
+})
+
+test('recursive view-kind detection covers stacked ECharts nodes and GenUI timeline nodes', () => {
+  const kinds = deliveredViewKinds({ type: 'stack', children: [
+    { type: 'chart', kind: 'line', categories: ['A'], series: [{ values: [1] }] },
+    { type: 'chart', kind: 'heatmap', categories: ['A'], series: [{ values: [1] }] },
+    { type: 'timeline', events: [{ label: 'Start' }] },
+  ] })
+  assert.deepEqual([...kinds], ['line', 'heatmap', 'timeline'])
+  assert.deepEqual([...deliveredViewKinds(undefined)], [])
+})
+
+test('an explicitly requested advanced chart cannot be satisfied by an unrelated successful line chart', () => {
+  const f = setup(); f.start(); f.user('请绘制热力图'); f.answer('Only the price trend is shown.')
+  f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'line' })
+  f.stop(); f.stop()
+  assert.equal(f.notices.length, 1)
+  assert.match(f.notices[0].content[0].text, /explicitly requested heatmap/)
+  assert.match(f.notices[0].content[0].text, /do not repeat existing prose/)
+  f.answer('Added the heatmap'); f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'heatmap' })
+  f.stop()
+  assert.equal(f.notices.length, 1, 'one correction is the strict upper bound')
+})
+
+test('multiple requested kinds only repair the missing one, and a complete grouped view needs no correction', () => {
+  for (const withTimeline of [false, true]) {
+    const f = setup(); f.start(); f.user('请生成热力图，并用时间轴展示事件')
+    f.answer('Here are the results.' + (withTimeline
+      ? '\n' + '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'timeline', events: [{ title: 'Start' }] }] }) + '\n```'
+      : ''))
+    f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'heatmap' })
+    f.stop()
+    assert.equal(f.notices.length, withTimeline ? 0 : 1)
+    if (!withTimeline) {
+      assert.match(f.notices[0].content[0].text, /requested timeline/)
+      assert.doesNotMatch(f.notices[0].content[0].text, /requested heatmap,/)
+    }
+  }
+})
+
+test('a valid GenUI timeline counts as delivery; panel-only GenUI is not sufficient in Bot mode', () => {
+  for (const panel of [false, true]) {
+    const f = setup(); f.start(); f.user('请用时间轴展示关键事件')
+    f.answer('Result\n' + '```dsh-ui\n' + JSON.stringify({ panel, items: [{ type: 'timeline', events: [{ title: 'Start' }] }] }) + '\n```')
+    f.stop()
+    assert.equal(f.notices.length, panel ? 1 : 0)
+  }
+})
+
+test('view kinds survive a normal tool result and a hot-reload event replay', () => {
+  const history = [
+    { type: 'turn/start', data: { turn: 1 } },
+    { type: 'user/message', data: { source: { kind: 'user' }, content: content('请用桑基图展示流量') } },
+    { type: 'tool/call', data: { callId: 'v', name: 'show_view', args: { view: { type: 'chart', kind: 'sankey' } } } },
+    { type: 'tool/result', data: { message: { toolCallId: 'v', content: content('The view is on screen.') } } },
+  ]
+  const f = setup({ history }); f.answer('Flow diagram'); f.stop()
+  assert.equal(f.notices.length, 0)
+  f.start(2); f.user('请用热力图展示区域情况')
+  f.emit('tool/call', { name: 'show_view', callId: 'a', args: { view: { type: 'chart', kind: 'line' } } })
+  f.emit('tool/result', { message: { toolCallId: 'a', content: content('The view is staged for a group reply.') } })
+  f.answer('There is one line chart'); f.stop(2)
+  assert.equal(f.notices.length, 1)
+  assert.match(f.notices[0].content[0].text, /heatmap/)
+})
+
+test('ordinary questions, text-only and cancelled turns never force multiple charts', () => {
+  const plain = setup(); plain.start(); plain.user('分析近期供需'); plain.answer('Summary')
+  plain.rt.noteVisualDelivery('s', { type: 'chart', kind: 'line' }); plain.stop()
+  assert.equal(plain.notices.length, 0)
+  const text = setup(); text.start(); text.user('请绘制热力图，但只要纯文字回答'); text.answer('Summary'); text.stop()
+  assert.equal(text.notices.length, 0)
+  const cancelled = setup(); cancelled.start(); cancelled.user('请绘制热力图'); cancelled.answer('Summary')
+  cancelled.rt.noteVisualDelivery('s', { type: 'chart', kind: 'line' }); cancelled.stop(1, true)
+  assert.equal(cancelled.notices.length, 0)
+})
+
+test('disabling advanced charts prevents misleading requests to render an unavailable ECharts kind', () => {
+  const f = setup(); f.rt.state.prefs = { advancedCharts: false }
+  f.start(); f.user('请生成热力图'); f.answer('The regional data is tabulated.')
+  f.rt.noteVisualDelivery('s', { type: 'table' })
+  f.stop()
+  assert.equal(f.notices.length, 0)
+  const time = setup(); time.rt.state.prefs = { advancedCharts: false }
+  time.start(); time.user('请用时间轴展示关键事件'); time.answer('A summary')
+  time.rt.noteVisualDelivery('s', { type: 'table' })
+  time.stop()
+  assert.equal(time.notices.length, 1)
+  assert.match(time.notices[0].content[0].text, /timeline/)
 })

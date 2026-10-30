@@ -9,15 +9,16 @@ function start() {
     ['main', { name: 'Chief' }],
     ['worker', { name: 'Dev', instructions: 'Check files.' }],
   ])
+  const state = { prefs: {} }
   install({
-    ctx,
+    ctx, state,
     selfOf: id => id === 'group-worker' ? 'worker' : id,
     botOf: id => bots.get(id),
     roomOf: id => id === 'room' ? {} : undefined,
     isMain: id => id === 'main',
   })
   const prompt = id => ctx.sections.get('chemclaw-identity').text({ agent: { id } })
-  return { ctx, prompt }
+  return { ctx, prompt, state }
 }
 
 test('Bots get a scoped progress rule without changing the private/group prompt prefix', (t) => {
@@ -57,4 +58,20 @@ test('all user-facing Bot and native sessions receive one global visual policy i
   }
   assert.equal(section.text({ agent: { id: 'room' } }), '')
   assert.equal(section.text({ agent: { id: 'outside', session: { header: { parentSession: 'parent' } } } }), '')
+})
+
+test('advanced-chart setting influences model selection, without disabling GenUI timeline or changing default policy', () => {
+  const { ctx, state } = start()
+  const section = ctx.sections.get('chemclaw-visual-delivery')
+  const context = { agent: { id: 'main' } }
+  assert.doesNotMatch(section.text(context), /Advanced charts are disabled in ChemClaw Settings/)
+  state.prefs.advancedCharts = false
+  const disabled = section.text(context)
+  assert.match(disabled, /Advanced charts are disabled in ChemClaw Settings/)
+  assert.match(disabled, /GenUI nonchart components such as timeline and Mermaid remain available/)
+  assert.match(disabled, /seven advanced ECharts|advanced ECharts/i)
+  state.prefs.advancedCharts = true
+  assert.doesNotMatch(section.text(context), /Advanced charts are disabled in ChemClaw Settings/)
+  assert.equal(section.text({ agent: { id: 'room' } }), '')
+  ctx.dispose()
 })
