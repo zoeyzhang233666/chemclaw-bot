@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { after, before, describe, test } from 'node:test'
 import { composeEntries } from '@deepseek-ai/dsh-app-boot'
-import { BUNDLES, claimBundles, loadAppProfile } from '../src/profile.mjs'
+import { BUNDLES, claimBundles, ensureOptionalGenuiRecovery, loadAppProfile } from '../src/profile.mjs'
 
 // Packages of DSH's own Web front end and its browser runtime, which the window shows.
 const DSH_WEB_FRONT_END = /^@deepseek-ai\/dsh-(client-ui-|web-app|web-frontend|client-modules|host-frontend-static|cordis-client-runner|client-hmr)/u
@@ -99,4 +99,21 @@ describe('claimBundles', () => {
     claimBundles(dir)
     assert.equal(readFileSync(join(dir, 'package.json'), 'utf8'), before)
   })
+})
+
+
+test('missing GenUI disables only the optional plugin and restores it when installed', t => {
+  const dir = mkdtempSync(join(tmpdir(), 'chemclaw-genui-recovery-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true }))
+  const patch = join(dir, 'cordis.patch.yml')
+  const original = '- id: chemclaw\\n  config:\\n    enabled: true\\n'
+  writeFileSync(patch, original)
+  ensureOptionalGenuiRecovery(dir, false)
+  let result = readFileSync(patch, 'utf8')
+  assert.match(result, /- id: genui\\n  disabled: true/u)
+  assert.match(result, /- id: chemclaw/u)
+  ensureOptionalGenuiRecovery(dir, false)
+  assert.equal(readFileSync(patch, 'utf8'), result, 'repeated startup must not duplicate recovery overrides')
+  ensureOptionalGenuiRecovery(dir, true)
+  assert.equal(readFileSync(patch, 'utf8').trim(), original.trim())
 })
