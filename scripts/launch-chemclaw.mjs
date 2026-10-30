@@ -192,18 +192,28 @@ else sync()
 // Audit *after* source sync: npm can put conflicting pinned dependencies inside
 // node_modules/chemclaw-bot, so a sync must never erase the only installed copy.
 // An existing stamp is not proof that a dependency really exists (GenUI #79).
+const OPTIONAL_VISUAL_DEP = '@changfenhuang/dsh-genui'
 const missing = missingPluginDependencies(app, pluginDependencies)
 if (missing.length) {
   console.log(`Installing missing ChemClaw dependencies: ${missing.join(', ')}`)
-  run(['install', '--no-save', '--package-lock=false', '--install-links', '--ignore-scripts', '--no-audit', '--no-fund', ...missing], app)
-  // npm may refresh a file: dependency; restore the selected main/PR source and
-  // keep any newly installed nested modules before launching Electron.
+  try {
+    run(['install', '--no-save', '--package-lock=false', '--install-links', '--ignore-scripts', '--no-audit', '--no-fund', ...missing], app)
+  } catch (error) {
+    // GenUI is optional. An unavailable npm registry should not take away
+    // the user's working Bot chat and existing show_view charts.
+    if (missing.some(spec => !spec.startsWith(`${OPTIONAL_VISUAL_DEP}@`))) throw error
+    console.warn('ChemClaw: optional GenUI install failed; launching with original charts:', error.message)
+  }
+  // npm may refresh a file: dependency; restore the selected source tree
+  // while keeping nested dependency folders intact.
   sync()
 }
 const unresolved = missingPluginDependencies(app, pluginDependencies)
-if (unresolved.length) throw new Error(`ChemClaw plugin dependencies are unavailable after installation: ${unresolved.join(', ')}. Check npm/network access; refusing to start with incomplete plugins.`)
+const blocking = unresolved.filter(spec => !spec.startsWith(`${OPTIONAL_VISUAL_DEP}@`))
+if (blocking.length) throw new Error(`ChemClaw required dependencies remain unavailable: ${blocking.join(', ')}. Check npm/network access.`)
+if (unresolved.length) console.warn(`ChemClaw: optional GenUI is not installed (${unresolved.join(', ')}); existing chat and charts remain available.`)
 if (!stampOk || !pluginLinked || missing.length) writeFileSync(dependencyStamp, expectedDependencies)
-console.log(missing.length ? 'ChemClaw plugin dependencies repaired.' : 'App host dependencies verified — no install needed.')
+console.log(!unresolved.length && missing.length ? 'ChemClaw plugin dependencies repaired.' : 'App host checked — existing features preserved.')
 
 if (argv.includes('--sync-only')) process.exit(0)
 
