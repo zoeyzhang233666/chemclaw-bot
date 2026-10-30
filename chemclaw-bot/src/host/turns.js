@@ -284,7 +284,8 @@ export function install(rt) {
     const url = first(['url'])
     let site
     try { site = url && new URL(url).host } catch { site = undefined }
-    const target = path?.split(/[\\/]/).filter(Boolean).at(-1) ?? first(['query', 'pattern']) ?? site
+    const rawTarget = path?.split(/[\\/]/).filter(Boolean).at(-1) ?? first(['query', 'pattern']) ?? site
+    const target = rawTarget ? cleanText(rawTarget, { redact: rt.redactSecrets }) : undefined
     return { tool: call.name, ...(said ? { said } : {}), ...(note ? { note: note.slice(0, 120) } : {}), ...(target ? { target: target.slice(0, 80) } : {}) }
   }
 
