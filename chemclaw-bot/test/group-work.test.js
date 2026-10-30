@@ -876,7 +876,15 @@ test('stop request stays pending during an in-flight tool and is idempotent', as
   host.emit('gb', 'tool/result', { callId: 'slow' })
   assert.equal(logLines(host).length, 0, 'tool result alone is not turn completion')
   host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
-  await settle(() => logLines(host).filter(line => line.kind === 'stopped').length === 1)
+  // With no round running, postToRoom queues the stop notice for the next relay.
+  // It does not append the group log until that relay handles the message.
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const post = host.takePost()
+  assert.deepEqual([post.source.stopped, post.source.quiet], [true, true])
+  const result = host.round('stop-confirmed', post)
+  await settle(() => result() !== undefined)
+  assert.deepEqual(kinds(result()), [['stopped', 'Writer']])
+  assert.equal(logLines(host).filter(line => line.kind === 'stopped').length, 1)
 })
 
 test('a completed turn is not mislabeled stopped when a cancellation races it', async t => {
