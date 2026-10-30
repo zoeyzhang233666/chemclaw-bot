@@ -10,7 +10,7 @@ function hexUnicode(value) {
   for (let i = 0; i + 1 < bytes.length; i += 2) { const old = bytes[i]; bytes[i] = bytes[i + 1]; bytes[i + 1] = old }
   return bytes.toString('utf16le')
 }
-function cmapping(text) {
+export function cmapping(text) {
   const map = new Map()
   for (const block of text.matchAll(/beginbfchar([\s\S]*?)endbfchar/g)) {
     for (const entry of block[1].matchAll(/<([a-fA-F0-9]+)>\s*<([a-fA-F0-9]+)>/g)) {
@@ -26,6 +26,19 @@ function cmapping(text) {
         const key = (begin + offset).toString(16).padStart(item[1].length, '0').toUpperCase()
         const value = (initial + offset).toString(16).padStart(item[3].length, '0')
         map.set(key, hexUnicode(value))
+      }
+    }
+  }
+  // Some Chinese annual-report fonts encode bfrange values as an explicit array:
+  // <0001> <0003> [<4E00> <4E8C> <4E09>].
+  for (const block of text.matchAll(/beginbfrange([\s\S]*?)endbfrange/g)) {
+    for (const item of block[1].matchAll(/<([a-fA-F0-9]+)>\s*<([a-fA-F0-9]+)>\s*\[([^\]]+)\]/g)) {
+      const begin = Number.parseInt(item[1], 16), end = Number.parseInt(item[2], 16)
+      if (end < begin || end - begin > 1024) continue
+      const values = [...item[3].matchAll(/<([a-fA-F0-9]+)>/g)]
+      for (let offset = 0; offset <= end - begin && offset < values.length; offset++) {
+        const key = (begin + offset).toString(16).padStart(item[1].length, '0').toUpperCase()
+        map.set(key, hexUnicode(values[offset][1]))
       }
     }
   }
@@ -69,16 +82,24 @@ function rawString(token) {
   }
   return Buffer.from(chars)
 }
-function decodeToken(token, map) {
+export function decodeToken(token, map) {
   const bytes = rawString(token)
   if (!bytes.length) return ''
   if (map?.size) {
     const units = []
-    const length = [...map.keys()].some(key => key.length === 4) ? 2 : 1
-    for (let i = 0; i + length <= bytes.length; i += length) {
-      const key = bytes.subarray(i, i + length).toString('hex').toUpperCase()
-      const decoded = map.get(key)
-      if (decoded) units.push(decoded)
+    const widths = [...new Set([...map.keys()].map(key => key.length / 2))].sort((a, b) => b - a)
+    // A map can mix byte widths; prefer the longest supported matching code.
+    for (let i = 0; i < bytes.length;) {
+      let advance = 1
+      for (const width of widths) {
+        if (i + width > bytes.length) continue
+        const key = bytes.subarray(i, i + width).toString('hex').toUpperCase()
+        if (!map.has(key)) continue
+        units.push(map.get(key))
+        advance = width
+        break
+      }
+      i += advance
     }
     return units.join('')
   }
@@ -104,7 +125,7 @@ function pageText(page) {
     const content = decoded(stream)
     if (!content) continue
     for (const block of content.matchAll(/BT([\s\S]*?)ET/g)) {
-      const token = /\/([A-Za-z0-9_.+-]+)\s+[\d.]+\s+Tf|(\((?:\\[\s\S]|[^\\)])*\)|<[A-Fa-f0-9\s]+>)\s*(?:Tj|'|")|\[([\s\S]*?)\]\s*TJ/g
+      const token = /\/([A-Za-z0-9_.+-]+)\s+[-+]?(?:\d+\.?\d*|\.\d+)\s+Tf|(\((?:\\[\s\S]|[^\\)])*\)|<[A-Fa-f0-9\s]+>)\s*(?:Tj|'|")|\[([\s\S]*?)\]\s*TJ/g
       for (const hit of block[1].matchAll(token)) {
         if (hit[1]) currentFont = hit[1]
         else {
@@ -123,24 +144,37 @@ export function extractPdfEvidence(document, { keyword = '', startPage = 1, maxP
   const last = Math.min(pageCount, first + Math.min(50, Math.max(1, Math.floor(Number(maxPages) || 25))) - 1)
   const wanted = String(keyword).trim().slice(0, 80)
   const hits = []
+  const previews = []
   let readablePages = 0
+  let chineseChars = 0
+  let extractedChars = 0
   for (let pageNo = first; pageNo <= last; pageNo++) {
     const text = pageText(document.getPage(pageNo - 1))
     if (!text) continue
     readablePages++
+    chineseChars += (text.match(/[\u3400-\u9fff]/g) ?? []).length
+    extractedChars += text.length
+    // When a keyword is absent, show a small literal preview so the user can
+    // distinguish a wrong keyword from a font-decoding failure. No fake matches.
+    if (previews.length < 2) previews.push({ page: pageNo, text: text.slice(0, 400) })
     if (!wanted) {
-      hits.push({ page: pageNo, excerpt: text.slice(0, 700), type: 'page_start' })
+      hits.push({ page: pageNo, excerpt: text.slice(0, 1400), type: 'page_start' })
     } else {
       let at = 0
       while (hits.length < maxHits && (at = text.indexOf(wanted, at)) !== -1) {
-        hits.push({ page: pageNo, excerpt: text.slice(Math.max(0, at - 160), at + wanted.length + 220), type: 'literal_match' })
+        hits.push({ page: pageNo, excerpt: text.slice(Math.max(0, at - 160), at + wanted.length + 260), type: 'literal_match' })
         at += wanted.length
       }
     }
     if (hits.length >= maxHits) break
   }
-  return { status: readablePages ? 'partial_text' : 'unavailable', pageCount, examined: { start: first, end: last },
-    readablePages, evidence: hits.slice(0, maxHits),
-    note: readablePages ? 'Best-effort text-layer excerpts with page numbers; verify against the displayed original PDF, especially tables and units.' :
-      'No extractable text layer in the inspected pages; do not invent OCR, page citations, figures or quotations.' }
+  const unreadableChinese = Boolean(wanted.match(/[\u3400-\u9fff]/)) && chineseChars === 0
+  const status = !readablePages || unreadableChinese ? 'unavailable'
+    : wanted && !hits.length ? 'keyword_not_found' : 'partial_text'
+  return { status, pageCount, examined: { start: first, end: last },
+    readablePages, extractedChars, chineseChars, keyword: wanted || null, evidence: hits.slice(0, maxHits),
+    ...(status !== 'partial_text' ? { previews } : {}),
+    note: status === 'unavailable' ? 'No trustworthy Chinese keyword evidence could be extracted from these pages. The PDF may use unsupported fonts, a scan or images; readablePages alone does not prove text correctness.' :
+      status === 'keyword_not_found' ? 'The exact keyword was not located in the decoded text. Inspect the returned literal preview for legibility before concluding absence; do not fabricate an excerpt or page citation.' :
+      'Best-effort page-numbered text-layer excerpts; verify original PDF visually, especially table rows, totals and units.' }
 }
