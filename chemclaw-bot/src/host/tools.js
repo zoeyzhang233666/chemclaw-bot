@@ -691,11 +691,11 @@ export function install(rt) {
       if (group) {
         if (checked.interactive || args.await_reply === true) return 'Group views cannot submit answers. Use charts, tables or local calculator inputs without a submit control.'
         const result = rt.stageRoomView(id, { title, view, callId: exec.callId })
-        if (result.startsWith('The view is staged')) rt.noteVisualDelivery?.(id)
+        if (result.startsWith('The view is staged')) rt.noteVisualDelivery?.(id, view)
         return result
       }
       const awaitReply = args.await_reply ?? checked.interactive
-      if (!awaitReply) { rt.noteVisualDelivery?.(id); return 'The view is on screen.' }
+      if (!awaitReply) { rt.noteVisualDelivery?.(id, view); return 'The view is on screen.' }
       // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
       // composer dock, which takes a card without a call.
       const turn = rt.live.get(id)?.turn
@@ -708,7 +708,7 @@ export function install(rt) {
         askedAt: Date.now(),
       }
       await rt.save()
-      rt.noteVisualDelivery?.(id)
+      rt.noteVisualDelivery?.(id, view)
       exec.concludeTurn?.()
       return 'The view is on screen; the user\'s answer arrives as their next message.'
     },
