@@ -34,8 +34,8 @@ const REQUEST_FAMILIES = [
 export function requestedChartKinds(text) {
   const requested = new Set()
   for (const clause of String(text ?? '').split(/[，,。！？!?；;\n]/u)) {
-    if (/为什么|怎么|如何|是否|能不能|能否|有没有|无法|失败|报错|修复|原因|排查|\b(?:why|error|broken|failed|fail)\b/iu.test(clause)) continue
-    if (!/(?:请|帮我|给我|给出|绘制|生成|画|制作|用|使用|采用|展示|输出|添加|加上|补充|提供|\b(?:show|draw|render|plot|create|generate|include|add|use|make)\b)/iu.test(clause)) continue
+    if (/为什么|怎么|如何|是否|能不能|能否|有没有|没有|无法|失败|报错|修复|原因|排查|不显示|不工作|不支持|\b(?:why|error|broken|failed|fail)\b/iu.test(clause)) continue
+    if (!/(?:给我|给出|绘制|生成|画|制作|用|使用|采用|展示|输出|添加|加上|补充|提供|\b(?:show|draw|render|plot|create|generate|include|add|use|make)\b)/iu.test(clause)) continue
     for (const [kind, pattern] of REQUEST_FAMILIES) if (pattern.test(clause)) requested.add(kind)
   }
   return [...requested]
