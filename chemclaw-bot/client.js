@@ -20565,6 +20565,9 @@ function MemberState({ entry, bot, room: room2, roster }) {
 }
 function StopMemberWork({ entry, bot, room: room2, actions }) {
   const [stopping, setStopping] = (0, import_react54.useState)(false);
+  (0, import_react54.useEffect)(() => {
+    if (!entry?.here) setStopping(false);
+  }, [entry?.here]);
   if (!entry?.here || entry.state !== "work" && entry.state !== "ask") return null;
   const stop = () => {
     setStopping(true);
@@ -20579,7 +20582,11 @@ function StopMemberWork({ entry, bot, room: room2, actions }) {
 }
 function StopRoomWork({ room: room2, entries: entries2, actions }) {
   const [stopping, setStopping] = (0, import_react54.useState)(false);
-  if (!entries2.some((entry) => entry.here)) return null;
+  const hasWork = entries2.some((entry) => entry.here);
+  (0, import_react54.useEffect)(() => {
+    if (!hasWork) setStopping(false);
+  }, [hasWork]);
+  if (!hasWork) return null;
   const stop = () => {
     setStopping(true);
     void Promise.resolve(actions.stopRoomWork(room2.id)).then((accepted) => {
