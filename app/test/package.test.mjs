@@ -29,6 +29,16 @@ test('a clean EXE installation graph includes each pinned ChemClaw plugin depend
   }
 })
 
+test('GenUI stays a direct dependency of the desktop application and is locked for source preview', () => {
+  const app = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
+  const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'))
+  const bot = JSON.parse(readFileSync(new URL('../../chemclaw-bot/package.json', import.meta.url), 'utf8'))
+  const name = '@changfenhuang/dsh-genui'
+  assert.equal(app.dependencies[name], bot.dependencies[name])
+  assert.equal(lock.packages[''].dependencies[name], app.dependencies[name])
+  assert.equal(lock.packages[`node_modules/${name}`]?.version, app.dependencies[name])
+})
+
 test('sharp native modules and versioned libvips libraries are unpacked together', () => {
   const config = parse(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'))
   const root = resolve('app-fixture')
