@@ -15,6 +15,7 @@ import { build } from 'esbuild'
 const PLUGIN = dirname(dirname(fileURLToPath(import.meta.url)))
 const OUTPUT = join(PLUGIN, 'client.js')
 const ENGINE_OUTPUT = join(PLUGIN, 'runtime/chart-engine.js')
+const OFFICE_OUTPUT = join(PLUGIN, 'office.js')
 const PLATFORM_MODULES = ['react', 'react-dom', '@deepseek-ai/dsh-client-ui-primitives']
 
 export async function bundleClient() {
@@ -51,6 +52,18 @@ export async function bundleClient() {
   ].join('\n')
 }
 
+export async function bundleOffice() {
+  const result = await build({
+    absWorkingDir: PLUGIN,
+    entryPoints: ['src/office/cli.js'],
+    bundle: true, format: 'esm', platform: 'node', target: 'es2022',
+    charset: 'utf8', write: false, logLevel: 'silent',
+    banner: { js: '#!/usr/bin/env node\\n// Generated from src/office by \`npm run build\` (scripts/build-client.mjs). Do not edit by hand.' },
+  })
+  if (result.warnings.length) throw new Error(result.warnings.map(warning => warning.text).join('\\n'))
+  return result.outputFiles[0].text
+}
+
 export async function bundleChartEngine() {
   const result = await build({
     absWorkingDir: PLUGIN, entryPoints: ['src/client/chart-engine.js'], bundle: true,
@@ -67,17 +80,21 @@ export async function bundleChartEngine() {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const next = await bundleClient()
   const engine = await bundleChartEngine()
+  const office = await bundleOffice()
   if (process.argv.includes('--check')) {
     let current = null
     try { current = readFileSync(OUTPUT, 'utf8') } catch { /* missing counts as stale */ }
     let currentEngine
     try { currentEngine = readFileSync(ENGINE_OUTPUT, 'utf8') } catch { /* missing counts as stale */ }
-    if (current !== next || currentEngine !== engine) {
-      console.error('client.js or runtime/chart-engine.js is stale: run `npm run build` in chemclaw-bot and commit the result')
+    let currentOffice
+    try { currentOffice = readFileSync(OFFICE_OUTPUT, 'utf8') } catch { /* missing counts as stale */ }
+    if (current !== next || currentEngine !== engine || currentOffice !== office) {
+      console.error('client.js, runtime/chart-engine.js or office.js is stale: run `npm run build` in chemclaw-bot and commit the result')
       process.exit(1)
     }
   } else {
     writeFileSync(OUTPUT, next)
     writeFileSync(ENGINE_OUTPUT, engine)
+    writeFileSync(OFFICE_OUTPUT, office)
   }
 }
