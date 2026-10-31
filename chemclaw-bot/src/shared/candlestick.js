@@ -89,7 +89,7 @@ export function buildCandlestickSpec(records, { maxBars = 80, unit = '', source 
     series: hasVolume ? [...priceSeries, { name: 'Volume', type: 'bar', xAxisIndex: 1, yAxisIndex: 1, data: volumeData }] : priceSeries,
   }
   return {
-    spec: { items: [{ type: 'echart', option }] },
+    spec: { items: [{ type: 'echart', height: 420, option }] },
     meta: {
       symbol, source, unit, total: all.length, shown: rows.length, omitted: offset,
       firstDate: rows[0].date, lastDate: rows.at(-1).date,
