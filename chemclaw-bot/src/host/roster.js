@@ -137,7 +137,7 @@ export function install(rt) {
     return holdName('bot', cleanName, () => buildBot(cleanName, options))
   }
 
-  async function buildBot(cleanName, { role = '', instructions = '', color, brief = '', createdBy, main = false, avatar, model, effort, workDir, copyOf, pickModel = false }) {
+  async function buildBot(cleanName, { role = '', instructions = '', color, brief = '', createdBy, main = false, avatar, model, effort, workDir, copyOf, pickModel = false, greet = true }) {
     const cleanAvatarValue = cleanAvatar(avatar)
     // The model is fixed at creation, so a later change of the DSH default leaves it alone.
     const modelRef = model ? await rt.resolveModel(model) : pickModel ? undefined : await rt.defaultModel()
@@ -186,7 +186,7 @@ export function install(rt) {
       const text = !main && language ? `${opener}\nWrite in ${language}.` : opener
       const bot = state.bots[id]
       if (modelRef === undefined) {
-        bot.kickoff = { text, from: createdBy ?? null, ...(main ? { main: true } : {}) }
+        if (greet) bot.kickoff = { text, from: createdBy ?? null, ...(main ? { main: true } : {}) }
         await rt.save()
         return bot
       }
@@ -194,7 +194,7 @@ export function install(rt) {
       // The greeting runs on the Bot's own model, once its provider is registered.
       void rt.waitForModel(bot)
         .then(() => rt.applyModel(bot).catch(error => rt.warn('chemclaw-bot: model for %s not applied: %s', cleanName, error)))
-        .then(() => sendKickoff(bot, { text, from: createdBy }))
+        .then(() => { if (greet) sendKickoff(bot, { text, from: createdBy }) })
       return bot
     } catch (error) {
       // The Bot's Session was already made: archive it instead of leaving an orphan.
@@ -255,7 +255,7 @@ export function install(rt) {
     return copy
   }
 
-  async function updateBot(id, patch, actorId, fromSessionId) {
+  async function updateBot(id, patch, actorId, fromSessionId, { silent = false } = {}) {
     const bot = rt.botOf(id)
     if (bot === undefined) throw new Error('Unknown Bot')
     if (patch.browserGrants !== undefined && actorId !== undefined) {
@@ -341,7 +341,7 @@ export function install(rt) {
     // reply. The same edit made from a group Session reaches no own-chat turn, so
     // the notice still goes out.
     const selfEditInChat = actorId === bot.id && fromSessionId === rt.chatOf(bot.id)
-    if (notes.length > 0 && bot.kickoff === undefined && !selfEditInChat) {
+    if (notes.length > 0 && bot.kickoff === undefined && !selfEditInChat && !silent && !bot.templateId) {
       void rt.deliver({ toId: bot.id, text: notes.join('\n'), role: 'update' })
         .catch(error => rt.warn('chemclaw-bot: profile update for %s not delivered: %s', bot.name, error?.message ?? error))
     }
@@ -672,6 +672,18 @@ export function install(rt) {
 
   async function bootstrap() {
     await rt.load()
+    // Upgrades may carry a held preset greeting from an older release. It is
+    // never a real user message and must not start the preset's chat later.
+    if (rt.config.seedTeam !== false) {
+      const presetIds = new Set(Object.values(state.templateBindings ?? {}))
+      let changed = false
+      for (const bot of Object.values(state.bots)) {
+        if (bot.kickoff === undefined || (!bot.templateId && !presetIds.has(bot.id))) continue
+        delete bot.kickoff
+        changed = true
+      }
+      if (changed) await rt.save()
+    }
     void rt.syncModels()
     if (state.mainBotIds.some(id => rt.botOf(id)) && (rt.config.seedTeam === false || rt.presetTeamCurrent?.())) {
       // ChemClaw preset installs skip team re-seed; still refresh Chinese skill metadata from the plugin seed.
@@ -692,7 +704,7 @@ export function install(rt) {
       } catch (error) {
         rt.warn?.('chemclaw-bot: ChemClaw seed failed (%s); falling back to Main Bot only', error)
         if (state.mainBotIds.some(id => rt.botOf(id))) throw error
-        return createBot({ name: defaults.mainName, role: defaults.mainRole, main: true, color: 'deepseek', avatar: { shape: 'whale' }, pickModel: true })
+        return createBot({ name: defaults.mainName, role: defaults.mainRole, main: true, color: 'deepseek', avatar: { shape: 'whale' }, pickModel: true, greet: false })
       }
     })().finally(() => { bootstrapping = null })
     await bootstrapping
