@@ -1,6 +1,5 @@
 // Data-only candlestick spec for ChemClaw's already-installed GenUI ECharts.
 // This module never executes user-supplied JS or fetches external resources.
-const field = (row, names) => names.find(name => Object.hasOwn(row, name) && row[name] !== undefined)?.let
 const pick = (row, names) => {
   for (const name of names) if (Object.hasOwn(row, name) && row[name] !== undefined) return row[name]
   return undefined
