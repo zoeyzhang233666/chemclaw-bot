@@ -323,20 +323,18 @@ async function chat(cdp) {
   if (stale.length > 0) throw new Error(`src/mica.css no longer matches DSH's page: ${stale.join(' | ')}`)
   const main = await evaluate("fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.mainBotId)")
   await evaluate(`document.querySelector(${JSON.stringify(`[data-bot-id="${main}"]`)}).click()`)
-  // Template Bots may already inherit the harness default model (no chip UI).
-  {
-    const end = Date.now() + 30_000
-    let sawChip = false
-    let sawGreeting = false
-    while (Date.now() < end && !sawChip && !sawGreeting) {
-      sawChip = await evaluate("Boolean(document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)'))")
-      sawGreeting = await evaluate(text('今天想先解决哪个业务问题'))
-      if (!sawChip && !sawGreeting) await sleep(250)
-    }
-    if (sawChip) await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)').click()")
+  // Built-in Bots must open on their welcome panel. They no longer send a
+  // synthetic first user message to trigger an unsolicited model greeting.
+  await until("document.querySelector('.bt-team-intro')", 'the preset welcome page')
+  if (await evaluate("Boolean(document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)'))")) {
+    await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)').click()")
   }
-  // The mock model's greeting for a new team.
-  await until(text('今天想先解决哪个业务问题'), 'the greeting')
+  await until("document.querySelector('.bt-team-intro') && !document.querySelector('.bt-msg')", 'the blank preset conversation')
+  await sleep(500)
+  if (await evaluate("Boolean(document.querySelector('.bt-msg'))")) throw new Error('A preset sent an unsolicited first chat message')
+  const preset = await evaluate(`fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.bots.find(bot => bot.id === ${JSON.stringify(main)}))`)
+  if (!preset?.templateId || preset.waiting) throw new Error('The built-in coordinator must have a template and no held greeting')
+  console.log('check-packed: preset welcome visible with no synthetic chat message')
   if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only')) {
     const wantXlsx = process.argv.includes('--xlsx-preview-only')
     const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
