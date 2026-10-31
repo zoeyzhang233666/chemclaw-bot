@@ -43,7 +43,7 @@ export function install(rt) {
     // Variant lobster shapes from older catalogs also count as stock looks to remint.
     const remintLook = originalLook || (!item.avatar?.image && /^lobster-\d+$/.test(item.avatar?.shape ?? ''))
     if (kind === 'role' && remintLook) Object.assign(patch, { avatar: def.avatar, color: def.color })
-    if (kind === 'role' && Object.keys(patch).length) await rt.updateBot(item.id, patch)
+    if (kind === 'role' && Object.keys(patch).length) await rt.updateBot(item.id, patch, undefined, undefined, { silent: true })
     if (kind === 'group') {
       if (patch.name) await rt.updateRoom(item.id, { name: patch.name })
       // Groups show a cluster of member marks; drop any leftover single-shape avatar.
@@ -58,13 +58,15 @@ export function install(rt) {
     let bot = rt.botOf(bindings()[id]) ?? Object.values(rt.state.bots).find(item => item.templateId === id || (!item.templateId && [def.name, ...(def.previousNames ?? [])].includes(item.name)))
     if (def.main) bot ??= Object.values(rt.state.bots).find(item => rt.isMain(item.id))
     if (!bot) {
-      bot = await rt.createBot({ name: def.name, role: def.category, color: def.color, avatar: def.avatar, instructions: roleInstructions(def), brief: def.description, pickModel: true, createdBy: rt.state.mainBotIds[0] })
+      bot = await rt.createBot({ name: def.name, role: def.category, color: def.color, avatar: def.avatar, instructions: roleInstructions(def), brief: def.description, pickModel: true, greet: false, createdBy: rt.state.mainBotIds[0] })
       bot.capabilities = [...def.skills, 'chemclaw-delivery', 'chemclaw-research-process']
       bot.templateId = id
       bot.templateVersion = roleCatalog.version
       rt.dropKickoff(bot.id)
     }
     await describe(bot, def, 'role')
+    // A previously created or adopted preset may still hold an old kickoff.
+    rt.dropKickoff(bot.id)
     bindings()[id] = bot.id
     await rt.save()
     rt.scheduleCapabilitiesReconcile?.()

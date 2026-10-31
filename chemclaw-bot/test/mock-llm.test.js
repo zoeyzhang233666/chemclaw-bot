@@ -107,3 +107,11 @@ test('a Bot message hands work on with 转告 and takes its time with 慢慢做'
   const back = await call(url, [{ role: 'user', content: '[Reply from Coder · for the work Chief asked you for; your answer goes to Chief once everything you handed on is back]\n做完了' }], tools)
   assert.deepEqual([back.text, back.tools], ['Coder 交回了，我把结果交给 Chief。', []])
 })
+
+test('GenUI mock accepts a first user turn with injected runtime context', async t => {
+  const url = await startMock(t)
+  const plain = await call(url, [{ role: 'user', content: 'GenUI check timeline' }])
+  const first = await call(url, [{ role: 'user', content: 'GenUI check timeline\nCurrent runtime context. This snapshot describes the Bot.' }])
+  assert.equal(first.text, plain.text)
+  assert.match(first.text, /Pilot complete/)
+})

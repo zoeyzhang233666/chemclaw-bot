@@ -9063,7 +9063,7 @@ function ModelChoiceDock({ sessionId, useRoster, actions }) {
   return (0, import_react15.createElement)(
     "div",
     { className: "bt-model-dock" },
-    (0, import_react15.createElement)(
+    bot.templateId ? (0, import_react15.createElement)("p", { className: "bt-set-hint" }, t("Choose a model")) : (0, import_react15.createElement)(
       "div",
       { className: "bt-astack", "data-lead": "" },
       (0, import_react15.createElement)(

@@ -105,9 +105,14 @@ test('an empty catalog offers setup choices, and a ready model needs no choice d
   assert.equal(dock(models, { ready: false }).tree, null)
 })
 
-test('a preset with a harness default hides the card unless its greeting is still waiting', () => {
+test('a preset uses a neutral model setup hint instead of a first assistant bubble', () => {
   assert.equal(dock(models, { templateId: 'role-1' }).tree, null)
-  assert.ok(dock(models, { templateId: 'role-1', waiting: true }).tree)
+  for (const result of [dock(models, { templateId: 'role-1', waiting: true }), dock([], { templateId: 'role-1' })]) {
+    assert.ok(result.tree)
+    assert.equal(nodes(result.tree, node => node.props.className === 'bt-bubble').length, 0)
+    assert.equal(nodes(result.tree, node => node.props.className === 'bt-set-hint').length, 1)
+  }
+  assert.equal(nodes(dock([], {}).tree, node => node.props.className === 'bt-bubble').length, 1)
 })
 
 test('without DSH\'s own settings, the choice still offers Apihub links', () => {
