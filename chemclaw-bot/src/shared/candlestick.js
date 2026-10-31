@@ -83,8 +83,8 @@ export function buildCandlestickSpec(records, { maxBars = 80, unit = '', source 
       ? [{ ...price, gridIndex: 0, name: unit }, { type: 'value', gridIndex: 1, scale: true, splitNumber: 2 }]
       : [{ ...price, gridIndex: 0, name: unit }],
     dataZoom: [
-      { type: 'inside', xAxisIndex: hasVolume ? [0, 1] : [0], start: rows.length > 45 ? 25 : 0, end: 100 },
-      { type: 'slider', xAxisIndex: hasVolume ? [0, 1] : [0], bottom: 12, height: 18, start: rows.length > 45 ? 25 : 0, end: 100 },
+      { type: 'inside', xAxisIndex: hasVolume ? [0, 1] : [0], start: 0, end: 100 },
+      { type: 'slider', xAxisIndex: hasVolume ? [0, 1] : [0], bottom: 12, height: 18, start: 0, end: 100 },
     ],
     series: hasVolume ? [...priceSeries, { name: 'Volume', type: 'bar', xAxisIndex: 1, yAxisIndex: 1, data: volumeData }] : priceSeries,
   }
