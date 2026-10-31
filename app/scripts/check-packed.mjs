@@ -387,7 +387,21 @@ async function chat(cdp) {
   await cdp.call('Input.insertText', { text: 'GenUI check timeline' })
   await sleep(150)
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
-  await until(`document.querySelectorAll('[class*="tlDot"]').length === 3 && document.body.innerText.includes('Pilot complete')`, 'the rendered GenUI timeline with three milestone dots')
+  // Include enough synthetic fixture state to distinguish a missing user submission
+  // from a model routing failure or a GenUI rendering failure.
+  const genuiDeadline = Date.now() + 50_000
+  let timeline = false
+  while (Date.now() < genuiDeadline) {
+    timeline = await evaluate(`document.querySelectorAll('[class*="tlDot"]').length === 3 && document.body.innerText.includes('Pilot complete')`)
+    if (timeline) break
+    await sleep(500)
+  }
+  if (!timeline) {
+    const ui = await evaluate(`({ chat: document.body.innerText.slice(-900), editor: [...document.querySelectorAll('[role=textbox][contenteditable=true],textarea')].map(node=>({text:node.textContent?.slice(0,100),tag:node.tagName,role:node.getAttribute('role')})), messages:document.querySelectorAll('.bt-msg').length, intro:!!document.querySelector('.bt-team-intro') })`)
+    const lines = existsSync(join(work,'mock.log')) ? readFileSync(join(work,'mock.log'),'utf8').split('\n').filter(Boolean) : []
+    console.error('check-packed: GenUI diagnostic ' + JSON.stringify({ui, mockCount:lines.length, mockTail:lines.slice(-2).map(line=>line.slice(0,500)) }))
+    throw new Error('timed out waiting for the rendered GenUI timeline with three milestone dots')
+  }
   await until("!document.querySelector('.bt-team-intro')", 'the welcome page to hide after the first real user message')
   console.log('check-packed: GenUI timeline rendered in the installed app; welcome dismissed on first user turn')
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
