@@ -203,8 +203,8 @@ export function ModelMenu({ bot, roster, actions, run, wide = false, onPick, onP
       manage ? h('button', { type: 'button', role: 'menuitem', onClick: () => { close(); manage() } }, h(SlidersIcon), h('span', { className: 'bt-menu-label' }, t('Models and providers…'))) : null), document.body) : null)
 }
 
-// The card a Bot's chat opens on while the Bot has no model, or has one that is no
-// longer served. The first Main Bot greets the user only after a pick.
+// A missing model remains a setup control, not an unsolicited chat turn.
+// Preset Bots show an ordinary setup hint beside their welcome panel.
 export function ModelChoiceDock({ sessionId, useRoster, actions }) {
   const roster = useRoster(value => value)
   const bot = roster.byId[sessionId]
@@ -232,7 +232,8 @@ export function ModelChoiceDock({ sessionId, useRoster, actions }) {
       .catch((failure) => { setError(failure?.message ?? String(failure)); void actions.refreshModels?.() })
       .finally(() => setBusy(''))
   }
-  // The pick reads as the Bot's own first message, with the choices as replies under it.
+  // User-created Bots retain their introductory card; presets never impersonate
+  // an assistant message before the user has spoken.
   const text = lost
     ? t('{model} is not available anymore. Pick another model for me.', { model: bot.model.split('/').slice(1).join('/') })
     : keyFor
@@ -254,7 +255,7 @@ export function ModelChoiceDock({ sessionId, useRoster, actions }) {
         manage ? h('button', { key: 'manage', type: 'button', className: 'bt-model-chip bt-model-chip-quiet', onClick: manage }, h(SlidersIcon), t('Manage models')) : null,
       ]
   return h('div', { className: 'bt-model-dock' },
-    h('div', { className: 'bt-astack', 'data-lead': '' },
+    bot.templateId ? h('p', { className: 'bt-set-hint' }, t('Choose a model')) : h('div', { className: 'bt-astack', 'data-lead': '' },
       h('div', { className: 'bt-msg' },
         h('div', { className: 'bt-msg-line' },
           h(BotMark, { bot, size: 22 }),
