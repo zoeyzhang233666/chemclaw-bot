@@ -341,7 +341,7 @@ export function install(rt) {
     // reply. The same edit made from a group Session reaches no own-chat turn, so
     // the notice still goes out.
     const selfEditInChat = actorId === bot.id && fromSessionId === rt.chatOf(bot.id)
-    if (notes.length > 0 && bot.kickoff === undefined && !selfEditInChat && !silent && !bot.templateId) {
+    if (notes.length > 0 && bot.kickoff === undefined && !selfEditInChat && !silent) {
       void rt.deliver({ toId: bot.id, text: notes.join('\n'), role: 'update' })
         .catch(error => rt.warn('chemclaw-bot: profile update for %s not delivered: %s', bot.name, error?.message ?? error))
     }
