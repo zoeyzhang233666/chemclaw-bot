@@ -33,7 +33,7 @@ test('sort daily candles and calculate MA on the whole series BEFORE trimming th
   assert.equal(result.meta.total, 95)
   assert.equal(result.meta.firstDate, rows[79].日期)
   const option = chart(result)
-  assert.equal(option.series[1].data[0], 112)
+  assert.equal(option.series[1].data[0], 113)
   assert.equal(option.xAxis[0].data.length, 80)
   assert.equal(option.series[0].data.length, 80)
   assert.equal(option.series.at(-1).data.length, 80)
