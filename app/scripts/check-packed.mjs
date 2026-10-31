@@ -331,7 +331,14 @@ async function chat(cdp) {
   }
   await until("document.querySelector('.bt-team-intro') && !document.querySelector('.bt-msg')", 'the blank preset conversation')
   const presetState = `fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.bots.find(bot => bot.id === ${JSON.stringify(main)}))`
-  await until(`${presetState}.then(bot => Boolean(bot?.templateId && !bot.waiting))`, 'the coordinator model selection to settle')
+  let presetReady = false
+  const modelDeadline = Date.now() + 30_000
+  while (Date.now() < modelDeadline) {
+    const bot = await evaluate(presetState)
+    if (bot?.templateId && !bot.waiting) { presetReady = true; break }
+    await sleep(250)
+  }
+  if (!presetReady) throw new Error('The built-in coordinator model selection did not settle')
   await sleep(500)
   if (await evaluate("Boolean(document.querySelector('.bt-msg'))")) throw new Error('A preset sent an unsolicited first chat message')
   console.log('check-packed: preset welcome visible with no synthetic chat message')
