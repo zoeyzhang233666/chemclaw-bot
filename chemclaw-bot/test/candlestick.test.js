@@ -40,7 +40,7 @@ test('sort daily candles and calculate MA on the whole series BEFORE trimming th
 })
 
 test('no volume means no invented zero volume panel', () => {
-  const rows = bars(3).map(row => { const { 成交量, ...rest } = row; return rest })
+  const rows = bars(3).map(row => { const rest = { ...row }; delete rest.成交量; return rest })
   const result = buildCandlestickSpec(rows)
   assert.equal(result.meta.volumeShown, false)
   assert.equal(chart(result).grid.length, 1)
