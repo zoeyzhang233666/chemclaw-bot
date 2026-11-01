@@ -177,12 +177,12 @@ export function skillExample(item, locale = 'zh') {
   const example = item.examples?.find(value => typeof value === 'string' && value.trim())
   if (userInstalled && example) return example
   if (locale.startsWith('zh') && !userInstalled) {
-    const builtin = builtinPresentation(item)
-    if (builtin) return builtin[1]
-    // Legacy first-run skills, native DSH skills and Office all use real
-    // scenarios. Never synthesize a nearly identical "please use X" template.
+    // The newly curated catalog examples supersede old generic examples
+    // even for skills that were already present in the bundled presentation table.
     if (item.name === 'ppt-master') return ''
     if (Object.hasOwn(CURATED_SKILL_EXAMPLES_ZH, item.name)) return CURATED_SKILL_EXAMPLES_ZH[item.name]
+    const builtin = builtinPresentation(item)
+    if (builtin) return builtin[1]
   }
   if (example) return example
   // An unknown native/bundled skill cannot be promised a use case without
