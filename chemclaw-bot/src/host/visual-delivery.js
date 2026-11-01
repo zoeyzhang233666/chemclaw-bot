@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
+import { marketQuoteIntent } from './market-quote-intent.js'
 
 export const VISUAL_NOTICE = '[chemclaw-visual-delivery'
 const textOf = content => Array.isArray(content) ? content.filter(block => block?.type === 'text').map(block => block.text ?? '').join('\n') : ''
@@ -9,6 +10,7 @@ export const textOnlyRequested = text => /\b(?:text[- ]only|no (?:charts|visuals
 // Do not penalize spot chemical quotes, conceptual questions or current-only quotes.
 export function marketHistoryRequest(text) {
   const query = String(text ?? '')
+  if (marketQuoteIntent(query) === 'spot') return false
   if (!/(?:股票|股价|A股|港股|美股|ETF|期货|股指|WTI|布伦特|Brent|原油期货|期指|\b(?:stock|share|futures|equity|etf)\b)/iu.test(query)) return false
   if (/(?:为什么无法|怎么修复|为什么不|如何实现|能不能实现|是否支持|接口开发|技术方案|代码审查)/iu.test(query)) return false
   const historical = /(?:最近|近(?:一个|一|两|三|\d+)(?:月|周|天|日|年)|过去|一个月|上月|本月|月内|日线|日K|月线|周线|走势|趋势|历史|区间|(?:\d+|一|两|三)(?:天|日|周|月|年)|(?:20\d{2}[-年]\d{1,2}))/iu.test(query)
@@ -134,7 +136,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -149,6 +151,7 @@ export function install(rt) {
       // next *real* user message resets it.
       if (previous?.marketHistory) {
         next.marketHistory = previous.marketHistory
+        next.quoteIntent = previous.quoteIntent
         next.multiAssetMarket = previous.multiAssetMarket
         next.marketChartNudged = previous.marketChartNudged
         next.marketChartCommitted = previous.marketChartCommitted
@@ -181,6 +184,7 @@ export function install(rt) {
       if (source?.kind === 'user') {
         entry.human = true
         entry.textOnly = textOnlyRequested(text)
+        entry.quoteIntent = marketQuoteIntent(text)
         entry.marketHistory = marketHistoryRequest(text)
         entry.multiAssetMarket = multiAssetMarketRequest(text)
         entry.marketChartNudged = false
@@ -194,7 +198,7 @@ export function install(rt) {
       else if (source?.kind === 'bot' && source.role === 'room' && !source.askedBy) {
         const current = text.split(/This round so far[^\n]*:\n/u)[1]?.split('\n\n')[0] ?? ''
         const user = [...current.matchAll(/^User: (.*)$/gmu)].at(-1)?.[1]
-        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.marketHistory = marketHistoryRequest(user); entry.multiAssetMarket = multiAssetMarketRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
+        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.quoteIntent = marketQuoteIntent(user); entry.marketHistory = marketHistoryRequest(user); entry.multiAssetMarket = multiAssetMarketRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
       }
     } else if (event.type === 'assistant/message') {
       const text = textOf(event.data?.message?.content)
@@ -223,6 +227,8 @@ export function install(rt) {
     for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
   }
   rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
+  rt.marketQuoteIntentOf = id => stateOf(id).quoteIntent
+  rt.explicitSpotRequestOf = id => stateOf(id).quoteIntent === 'spot'
   rt.marketOhlcStatus = id => stateOf(id).marketOhlcStatus
   rt.noteMarketOhlcSource = (id, status) => {
     if (!id) return
