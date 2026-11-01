@@ -23,7 +23,7 @@ test('only generated HTML/XLSX files live in the Chinese-named demo mirrors', ()
   const mirrors = files.filter(path => path.split(/[\\/]/u).includes('例子'))
   assert.ok(mirrors.length >= 250, 'verify the large mirrored demo set has not changed shape')
   for (const path of mirrors) {
-    assert.match(path, /\\.(?:html|xlsx)$/iu, 'never exclude code, data, templates or skill instructions')
+    assert.match(path, /\.(?:html|xlsx)$/iu, 'never exclude code, data, templates or skill instructions')
     assert.ok(statSync(path).size > 0)
   }
   const skills = files.filter(path => path.endsWith('SKILL.md'))
