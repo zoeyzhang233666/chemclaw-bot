@@ -148,6 +148,8 @@ jobs:
           cache-dependency-path: app/package-lock.json
       - run: npm ci --no-fund --no-audit
       - run: npm run dist
+      - name: Audit actual installer and duplicate Python sizes
+        run: node scripts/audit-runtime-size.mjs
       - name: Check native Bot browser operations
         run: node scripts/run-browser-check.mjs
       - name: Check the packaged app

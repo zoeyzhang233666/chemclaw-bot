@@ -216,6 +216,29 @@ console.log(!unresolved.length && missing.length ? 'ChemClaw plugin dependencies
 
 if (argv.includes('--sync-only')) process.exit(0)
 
+// PR-B source previews must be usable through the ordinary CMD picker: prepare
+// their pinned Office Node/Python/skill payload automatically on first launch.
+// Do not change main/PR-A launch behavior, and reuse the verified cache.
+const activeApp = JSON.parse(readFileSync(join(app, 'package.json'), 'utf8'))
+if (typeof activeApp.scripts?.runtime === 'string') {
+  // Never reuse a partial/mismatched payload based solely on runtime.json and node.exe:
+  // a missing Python or wheel could otherwise silently disable the DSH Office overlay.
+  const { pathToFileURL } = await import('node:url')
+  const { runtimeTarget, primaryRuntimeManifest, runtimeReusable } =
+    await import(pathToFileURL(join(app, 'scripts', 'prepare-runtime.mjs')).href)
+  const target = runtimeTarget(process.platform, process.arch)
+  if (!target) throw new Error('Office preview runtime does not support this platform and architecture.')
+  const runtimeDir = join(app, 'build', 'runtime')
+  const expected = primaryRuntimeManifest(target, activeApp.version)
+  const complete = () => runtimeReusable(runtimeDir, expected)
+    && existsSync(join(runtimeDir, 'office-skills', 'office', 'SKILL.md'))
+  if (!complete()) {
+    console.log('Preparing or repairing verified Office Node/Python/skills for this PR preview.')
+    run(['run', 'runtime'], app)
+    if (!complete()) throw new Error('Office runtime is still incomplete after preparation; refusing to start a misleading Office preview.')
+  }
+}
+
 mkdirSync(effectiveProfile.workspace, { recursive: true })
 mkdirSync(effectiveProfile.data, { recursive: true })
 mkdirSync(effectiveProfile.shell, { recursive: true })

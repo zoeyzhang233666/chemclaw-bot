@@ -26,6 +26,7 @@ import { editLocations } from './locations-dialog.mjs'
 import { CHECK_PROFILE, PROFILE } from './profile.mjs'
 import { createShell, SHELL_TEXT } from './shell.mjs'
 import { preparePreviewSandboxAcl } from './preview-sandbox-acl.mjs'
+import { ensureOfficePreviewRuntime } from './office-preview-runtime.mjs'
 import { createDeferredPrompt } from './update-prompt.mjs'
 import { UPDATE_TEXT, updatesEnabled, watchReleases, watchUpdates } from './updates.mjs'
 import { CAPTION_HEIGHT, cssColor, micaAvailable, nativeThemeSource } from './window-frame.mjs'
@@ -180,6 +181,9 @@ async function start() {
     if (sandboxAcl.status === 'granted') console.info('ChemClaw: prepared Windows preview workspace ACL for DSH workspace-write.')
     if (sandboxAcl.status === 'error') console.warn('ChemClaw: preview workspace ACL check failed:', sandboxAcl.message)
   }
+  // The entry CMD picker may be an older revision; only the selected Electron
+  // app knows whether this PR needs a pinned Office payload. Prepare before Host.
+  await ensureOfficePreviewRuntime({ packaged: app.isPackaged, appDir: join(here, '..') })
   const port = await hostPort(join(app.getPath('userData'), 'host-port.json'))
   origin = `http://127.0.0.1:${String(port)}`
   botViews = new BotViews({ window: () => mainWindow, WebContentsView, guests: browserGuests,
@@ -192,7 +196,7 @@ async function start() {
   const newHost = () => new HostProcess({
     entry: join(here, 'host.mjs'),
     cwd: profileDir,
-    env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1', DS_BOT_USER_DSH_HOME: userDshHome(), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
+    env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1', DS_BOT_USER_DSH_HOME: userDshHome(), CHEMCLAW_OFFICE_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
     pnpm,
     onFailure: fail,
   })

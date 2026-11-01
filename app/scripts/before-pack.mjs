@@ -7,6 +7,7 @@ import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { missingPluginDependencies } from '../../scripts/launch-source.mjs'
+import { preparePrimaryRuntime, runtimeTarget } from './prepare-runtime.mjs'
 
 const WHERE = {
   darwin: { x64: 'on an Intel Mac, or under Rosetta with an x64 Node', arm64: 'on a Mac with Apple silicon' },
@@ -29,7 +30,16 @@ async function prepareMarketRuntime() {
   await buildRuntimeBundle(plugin)
 }
 
-export async function beforePack(context, prepare = prepareMarketRuntime) {
+export function officeRuntimeRequest(context) {
+  const target = runtimeTarget(context.electronPlatformName, Arch[context.arch])
+  if (!target) throw new Error('No Office runtime payload for ' + context.electronPlatformName + ' / ' + Arch[context.arch])
+  const dir = context.packager?.appDir ?? context.packager?.projectDir ?? dirname(fileURLToPath(new URL('../package.json', import.meta.url)))
+  return { target, output: join(dir, 'build', 'runtime'),
+    cache: process.env.CHEMCLAW_OFFICE_RUNTIME_CACHE ?? join(dir, 'build', 'runtime-cache'),
+    version: context.packager?.appInfo?.version ?? JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version }
+}
+
+export async function beforePack(context, prepare = prepareMarketRuntime, office = preparePrimaryRuntime) {
   const targets = []
   for (const archToNames of context.packager?.packagerOptions?.targets?.values() ?? [])
     for (const arch of archToNames.keys()) targets.push(Arch[arch])
@@ -45,4 +55,5 @@ export async function beforePack(context, prepare = prepareMarketRuntime) {
   const missing = missingPluginDependencies(app, manifest.dependencies)
   if (missing.length) throw new Error(`Cannot package ChemClaw: missing plugin dependencies: ${missing.join(', ')}. Run npm ci in app/ before packaging.`)
   await prepare()
+  await office(officeRuntimeRequest(context))
 }
