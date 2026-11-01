@@ -215,6 +215,13 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "OHLC": "日K线",
+  "Opening price": "开盘价",
+  "Closing price": "收盘价",
+  "Highest price": "最高价",
+  "Lowest price": "最低价",
+  "Trading volume": "成交量",
+  "Trading date": "交易日期",
   "Advanced charts": "高级图表",
   Retry: "重试",
   "Load richer charts when needed. When off, show their data as tables.": "需要时加载更多图表。关闭后以表格展示其数据。",
@@ -6908,6 +6915,28 @@ function loadChartEngine() {
 }
 
 // src/client/chart-options.js
+function candlestickTooltip(params) {
+  const points = Array.isArray(params) ? params : [params];
+  const candle = points.find((point) => point?.seriesType === "candlestick");
+  const values = candle?.data?.value ?? candle?.data;
+  if (!Array.isArray(values) || values.length < 4) return "";
+  const print = (value2) => typeof value2 === "number" && Number.isFinite(value2) ? value2.toLocaleString(void 0, { maximumFractionDigits: 6 }) : "-";
+  const date = String(candle.axisValue ?? candle.name ?? "");
+  const lines = [
+    date,
+    `${t("Opening price")}：${print(values[0])}`,
+    `${t("Closing price")}：${print(values[1])}`,
+    `${t("Highest price")}：${print(values[3])}`,
+    `${t("Lowest price")}：${print(values[2])}`
+  ];
+  for (const point of points) {
+    if (point?.seriesType === "line" && /^MA(?:5|10|20)$/.test(point.seriesName ?? ""))
+      lines.push(`${point.seriesName}：${print(point.data)}`);
+    if (point?.seriesType === "bar" && point?.seriesName === "Volume")
+      lines.push(`${t("Trading volume")}：${print(point.data?.value ?? point.data)}`);
+  }
+  return lines.join("\n");
+}
 var number = (value2, lookup) => {
   const result = resolve(value2, lookup);
   return typeof result === "number" && Number.isFinite(result) ? result : null;
@@ -6933,7 +6962,7 @@ function advancedChartTable(data, valueLabel, seriesLabel) {
   if (data.kind === "candlestick") {
     const volume = data.bars.every((bar) => bar.volume !== null);
     return {
-      columns: ["Date", "Open", "High", "Low", "Close", ...volume ? ["Volume"] : []],
+      columns: ["Trading date", "Opening price", "Highest price", "Lowest price", "Closing price", ...volume ? ["Trading volume"] : []],
       rows: data.bars.map((bar) => [bar.date, bar.open, bar.high, bar.low, bar.close, ...volume ? [bar.volume] : []])
     };
   }
@@ -6989,7 +7018,7 @@ function advancedChartOption(data, theme) {
       connectNulls: false
     }));
     const candle = {
-      name: "OHLC",
+      name: t("OHLC"),
       type: "candlestick",
       xAxisIndex: 0,
       yAxisIndex: 0,
@@ -7000,9 +7029,9 @@ function advancedChartOption(data, theme) {
     const yAxis = { ...axis, type: "value", name: unit, scale: true };
     return {
       ...base,
-      tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "cross" } },
+      tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "cross" }, formatter: candlestickTooltip },
       axisPointer: { link: [{ xAxisIndex: volume ? [0, 1] : [0] }] },
-      legend: means.length ? { ...legend, data: ["OHLC", ...means.map((item) => item.name)] } : void 0,
+      legend: means.length ? { ...legend, data: [t("OHLC"), ...means.map((item) => item.name)] } : void 0,
       grid: volume ? [{ left: 64, right: 16, top: 48, height: "54%" }, { left: 64, right: 16, top: "76%", height: "10%" }] : [{ left: 64, right: 16, top: 48, bottom: 68 }],
       xAxis: volume ? [{ ...xAxis, gridIndex: 0, axisLabel: { show: false } }, { ...xAxis, gridIndex: 1 }] : [{ ...xAxis, gridIndex: 0 }],
       yAxis: volume ? [{ ...yAxis, gridIndex: 0 }, { ...axis, type: "value", gridIndex: 1, scale: true, splitNumber: 2 }] : [{ ...yAxis, gridIndex: 0 }],
@@ -7156,7 +7185,7 @@ function DataTable({ table }) {
   return (0, import_react9.createElement)("div", { className: "bt-widget-table" }, (0, import_react9.createElement)(
     "table",
     null,
-    (0, import_react9.createElement)("thead", null, (0, import_react9.createElement)("tr", null, table.columns.map((label, at) => (0, import_react9.createElement)("th", { key: at, scope: "col" }, label === "Source" || label === "Target" ? t(label) : label)))),
+    (0, import_react9.createElement)("thead", null, (0, import_react9.createElement)("tr", null, table.columns.map((label, at) => (0, import_react9.createElement)("th", { key: at, scope: "col" }, t(label))))),
     (0, import_react9.createElement)("tbody", null, table.rows.map((row, at) => (0, import_react9.createElement)("tr", { key: at }, row.map((value2, col) => (0, import_react9.createElement)(col === 0 ? "th" : "td", {
       key: col,
       scope: col === 0 ? "row" : void 0,
