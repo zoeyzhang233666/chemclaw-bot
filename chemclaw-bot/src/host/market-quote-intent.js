@@ -11,7 +11,7 @@ export function marketQuoteIntent(text) {
   // "基差" itself entails spot/futures. Keep explicit spot-only
   // negations higher priority, such as "现货不是期货，只看现货".
   const comparison = /(?:比较|对比|价差|基差|叠加|叠在一起|同图|双线|一起看|对照|以及|分别|同时|一并|和|与|及|vs\.?|versus|spread)/iu.test(query)
-  const spotOnly = /(?:不要(?:看|用|包含)?|不用|不看|并非|而非|不是|别用|不含|不包含|非)(?:\\s*|[，,\\s]*)(?:期货|期价|盘面|连续合约|主力合约|futures?)|(?:仅看|只看|只要)(?:真实|实际|国内)?现货|(?:not|no)\\s+futures?/iu.test(query)
+  const spotOnly = /(?:不要(?:看|用|包含)?|不用|不看|并非|而非|不是|别用|不含|不包含|非)(?:\s*|[，,\s]*)(?:期货|期价|盘面|连续合约|主力合约|futures?)|(?:仅看|只看|只要)(?:真实|实际|国内)?现货|(?:not|no)\s+futures?/iu.test(query)
   if (!spotOnly && (basis || (spot && futures && comparison))) return 'mixed'
   if (spot) return 'spot'
   if (shares) return 'stock'
@@ -41,8 +41,8 @@ export function mismatchedSpotPriceView(view, title = '') {
 export function mixedOverlayRequested(text) {
   const query = String(text ?? '')
   if (marketQuoteIntent(query) !== 'mixed') return false
-  const namedComparison = /(?:现货|即期|\\bspot\\b).{0,28}(?:期货|期价|盘面|主力合约|\\bfutures?\\b)/iu.test(query)
-    || /(?:期货|期价|盘面|主力合约|\\bfutures?\\b).{0,28}(?:现货|即期|\\bspot\\b)/iu.test(query)
-  const chartRequested = /(?:叠加|叠在一起|同图|双线|画图|绘图|走势图|趋势图|历史走势|基差曲线|基差走势|基差图|\\bchart\\b|\\bplot\\b)/iu.test(query)
-  return chartRequested && (namedComparison || /(?:基差|现期价差|\\bbasis\\b)/iu.test(query))
+  const namedComparison = /(?:现货|即期|\bspot\b).{0,28}(?:期货|期价|盘面|主力合约|\bfutures?\b)/iu.test(query)
+    || /(?:期货|期价|盘面|主力合约|\bfutures?\b).{0,28}(?:现货|即期|\bspot\b)/iu.test(query)
+  const chartRequested = /(?:叠加|叠在一起|同图|双线|画图|绘图|走势图|趋势图|历史走势|基差曲线|基差走势|基差图|\bchart\b|\bplot\b)/iu.test(query)
+  return chartRequested && (namedComparison || /(?:基差|现期价差|\bbasis\b)/iu.test(query))
 }
