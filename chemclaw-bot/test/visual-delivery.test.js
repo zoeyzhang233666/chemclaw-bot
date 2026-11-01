@@ -482,3 +482,24 @@ test('all-missing native data is rejected while real gaps and formulas remain va
   assert.equal(nativeChartPayloadsUsable({ type: 'stack', children: [chart([null, null]), { type: 'metric', label: 'Last', value: 1200 }] }), false)
   assert.equal(nativeChartPayloadsUsable({ type: 'chart', kind: 'candlestick', bars: [] }), true, 'candlestick schema is validated separately')
 })
+
+test('a spot/futures basis overlay bypasses OHLC-first and permits dated native line views', () => {
+  const f = setup()
+  const spotVsFutures = { type: 'chart', kind: 'line', categories: ['2026-10-28', '2026-10-29'],
+    series: [{ name: '乙二醇现货·华东', values: [3800, 3820] },
+      { name: '乙二醇期货·EG主力', values: [3760, 3770] }] }
+  f.start(); f.user('乙二醇现货与盘面叠加走势图，看看基差')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'mixed')
+  assert.equal(f.rt.explicitSpotRequestOf('s'), false, 'spot-only ban must not reject labeled futures leg')
+  assert.equal(f.rt.marketHistoryOf('s'), false, 'do not force futures K-lines for a mixed-line chart')
+  assert.equal(multiAssetMarketRequest('乙二醇现货与盘面叠加走势图，看看基差'), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', spotVsFutures), false)
+  f.rt.noteVisualDelivery('s', spotVsFutures)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', spotVsFutures), false)
+  f.start(2)
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'mixed', 'maintain mixed intent through model continuation')
+  assert.equal(f.rt.marketHistoryOf('s'), false)
+  f.user('乙二醇现货价格，不要期货')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'spot', 'new real user question resets comparison')
+  assert.equal(f.rt.explicitSpotRequestOf('s'), true)
+})
