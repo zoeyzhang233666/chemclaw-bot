@@ -130,9 +130,20 @@ test('failed AKShare history is recorded as unavailable for an honest single lin
   } })
   const seen = []
   rt.noteMarketOhlcSource = (id, status) => seen.push([id, status])
-  await assert.rejects(
-    tools.get('chem_stock_history').execute({ symbol: '601857' }, { agent: { id: 's' } }),
-    /No stock OHLC/,
-  )
+  const stockResult = JSON.parse(await tools.get('chem_stock_history').execute(
+    { symbol: '601857' }, { agent: { id: 's' } },
+  ))
+  assert.equal(stockResult.status, 'unavailable')
+  assert.match(stockResult.next, /web_search\/web_fetch/)
   assert.deepEqual(seen, [['s', 'unavailable']])
+})
+
+test('a failed managed runtime also returns a usable web fallback rather than crashing or fabricating prices', async t => {
+  const { tools } = await fixture(t, { run: () => { throw new Error('offline') } })
+  const result = JSON.parse(await tools.get('chem_stock_history').execute(
+    { symbol: '601857' }, { agent: { id: 'stock-chat' } },
+  ))
+  assert.equal(result.status, 'unavailable')
+  assert.match(result.next, /web_search\/web_fetch/)
+  assert.equal(result.data, undefined)
 })
