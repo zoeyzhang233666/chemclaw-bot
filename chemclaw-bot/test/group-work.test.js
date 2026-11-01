@@ -1200,8 +1200,11 @@ test('the team view says when each Session\'s running turn began, for the clock 
   host.emit('gb', 'turn/start', { turn: 1 })
   host.emit('gb', 'tool/call', { callId: 'k1', name: 'pwsh', arguments: '{}' })
   const { value } = await host.call('state', {})
-  assert.deepEqual(Object.keys(value.work.turns), ['gb'])
+  // Group activity clocks also address the room id, because the activity row
+  // subscribes by room id rather than the member's backing Session id.
+  assert.deepEqual(Object.keys(value.work.turns), ['gb', 'r1'])
   assert.ok(value.work.turns.gb >= before && value.work.turns.gb <= Date.now())
+  assert.equal(value.work.turns.gb, value.work.turns.r1)
   assert.equal(value.work.turns.gb, value.work.bots.b.since)
   host.emit('gb', 'tool/result', { callId: 'k1' })
   host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'completed' } })
