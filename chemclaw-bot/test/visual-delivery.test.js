@@ -513,6 +513,7 @@ test('mixed-market completion requires a shared-date overlay AND basis, not unre
   const basis = { type: 'chart', kind: 'line', categories: dates, series: [{ name: '基差（现货减期货）', values: [20, 30, 10] }] }
   assert.deepEqual(mixedMarketVisualStatus({ type: 'stack', children: [overlay, basis] }), { overlay: true, basis: true, complete: true })
   assert.equal(mixedMarketVisualStatus(overlay).complete, false)
+  assert.equal(mixedMarketVisualStatus({ type: 'stack', children: [overlay, { ...basis, series: [{ name: '基差', values: [20, 300, 10] }] }] }).complete, false, 'basis must equal dated physical spot minus futures')
   assert.equal(mixedMarketVisualStatus({ type: 'stack', children: [
     { type: 'chart', kind: 'line', categories: dates, series: [{ name: '甲醇期货·MA主力', values: [2380, 2390, 2420] }] },
     { type: 'chart', kind: 'hbar', categories: ['华东', '华北'], series: [{ name: '甲醇现货价', values: [2400, 2420] }] },
