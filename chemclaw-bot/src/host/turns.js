@@ -67,6 +67,13 @@ const PROGRAM_TOOL = 'run_code'
 
 const RETRY_TEXT = 'Your last reply wrote a tool call as plain text (<tool_call>…), so it did not run and nothing happened. Call the tool through the tool interface now, then reply as you meant to.'
 
+// Harness session events normally use Unix epoch milliseconds. A zero or
+// seconds-scale timestamp makes the UI count decades from 1970.
+export function activityTimestamp(timestamp, now = Date.now()) {
+  return Number.isFinite(timestamp) && timestamp >= 1_600_000_000_000
+    && timestamp <= now + 60_000 ? timestamp : now
+}
+
 export function install(rt) {
   const { ctx, state } = rt
 
@@ -339,9 +346,18 @@ export function install(rt) {
   }
 
   // Per Session, when its running turn began.
-  const turnsView = () => Object.fromEntries([...live]
-    .filter(([, entry]) => entry.turn !== undefined && entry.since !== undefined)
-    .map(([id, entry]) => [id, entry.since]))
+  const turnsView = () => {
+    const times = {}
+    for (const [id, entry] of live) {
+      if (entry.turn === undefined || !Number.isFinite(entry.since) || entry.since <= 0) continue
+      times[id] = entry.since
+      // ActivityIndicator receives the *group room id*, not the member session
+      // id. Publish the current group turn's timestamp under that room id too.
+      const roomId = rt.groupOwners.get(id)?.roomId
+      if (roomId) times[roomId] = Math.max(times[roomId] ?? 0, entry.since)
+    }
+    return times
+  }
 
   // Per Session, when the user last steered its running turn: the input the
   // activity row's phrase and clock restart from.
@@ -430,7 +446,7 @@ export function install(rt) {
       case 'turn/start':
         setActivity(id, 'thinking')
         entry.turn = event.data.turn
-        entry.since = event.time ?? Date.now()
+        entry.since = activityTimestamp(event.time)
         entry.texts = []
         entry.shown = 0
         entry.step = undefined
@@ -557,7 +573,7 @@ export function install(rt) {
         // a send that never queued.
         if (event.data?.target === 'next-step' && entry.turn !== undefined
           && (event.data.inserted ?? []).some(message => message?.source?.kind === 'user')) {
-          entry.steeredAt = event.time ?? Date.now()
+          entry.steeredAt = activityTimestamp(event.time)
         }
         break
       case 'assistant/message': {
