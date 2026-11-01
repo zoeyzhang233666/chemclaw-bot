@@ -323,20 +323,25 @@ async function chat(cdp) {
   if (stale.length > 0) throw new Error(`src/mica.css no longer matches DSH's page: ${stale.join(' | ')}`)
   const main = await evaluate("fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.mainBotId)")
   await evaluate(`document.querySelector(${JSON.stringify(`[data-bot-id="${main}"]`)}).click()`)
-  // Template Bots may already inherit the harness default model (no chip UI).
-  {
-    const end = Date.now() + 30_000
-    let sawChip = false
-    let sawGreeting = false
-    while (Date.now() < end && !sawChip && !sawGreeting) {
-      sawChip = await evaluate("Boolean(document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)'))")
-      sawGreeting = await evaluate(text('今天想先解决哪个业务问题'))
-      if (!sawChip && !sawGreeting) await sleep(250)
-    }
-    if (sawChip) await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)').click()")
+  // Built-in Bots must open on their welcome panel. They no longer send a
+  // synthetic first user message to trigger an unsolicited model greeting.
+  await until("document.querySelector('.bt-team-intro')", 'the preset welcome page')
+  if (await evaluate("Boolean(document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)'))")) {
+    await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)').click()")
   }
-  // The mock model's greeting for a new team.
-  await until(text('今天想先解决哪个业务问题'), 'the greeting')
+  await until("document.querySelector('.bt-team-intro') && !document.querySelector('.bt-msg')", 'the blank preset conversation')
+  const presetState = `fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.bots.find(bot => bot.id === ${JSON.stringify(main)}))`
+  let presetReady = false
+  const modelDeadline = Date.now() + 30_000
+  while (Date.now() < modelDeadline) {
+    const bot = await evaluate(presetState)
+    if (bot?.templateId && !bot.waiting) { presetReady = true; break }
+    await sleep(250)
+  }
+  if (!presetReady) throw new Error('The built-in coordinator model selection did not settle')
+  await sleep(500)
+  if (await evaluate("Boolean(document.querySelector('.bt-msg'))")) throw new Error('A preset sent an unsolicited first chat message')
+  console.log('check-packed: preset welcome visible with no synthetic chat message')
   if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only')) {
     const wantXlsx = process.argv.includes('--xlsx-preview-only')
     const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
@@ -382,8 +387,23 @@ async function chat(cdp) {
   await cdp.call('Input.insertText', { text: 'GenUI check timeline' })
   await sleep(150)
   for (const type of ['keyDown', 'keyUp']) await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
-  await until(`document.querySelectorAll('[class*="tlDot"]').length === 3 && document.body.innerText.includes('Pilot complete')`, 'the rendered GenUI timeline with three milestone dots')
-  console.log('check-packed: GenUI timeline rendered in the installed app')
+  // Include enough synthetic fixture state to distinguish a missing user submission
+  // from a model routing failure or a GenUI rendering failure.
+  const genuiDeadline = Date.now() + 50_000
+  let timeline = false
+  while (Date.now() < genuiDeadline) {
+    timeline = await evaluate(`document.querySelectorAll('[class*="tlDot"]').length === 3 && document.body.innerText.includes('Pilot complete')`)
+    if (timeline) break
+    await sleep(500)
+  }
+  if (!timeline) {
+    const ui = await evaluate(`({ chat: document.body.innerText.slice(-900), editor: [...document.querySelectorAll('[role=textbox][contenteditable=true],textarea')].map(node=>({text:node.textContent?.slice(0,100),tag:node.tagName,role:node.getAttribute('role')})), messages:document.querySelectorAll('.bt-msg').length, intro:!!document.querySelector('.bt-team-intro') })`)
+    const lines = existsSync(join(work,'mock.log')) ? readFileSync(join(work,'mock.log'),'utf8').split('\n').filter(Boolean) : []
+    console.error('check-packed: GenUI diagnostic ' + JSON.stringify({ui, mockCount:lines.length, mockTail:lines.slice(-2).map(line=>line.slice(0,500)) }))
+    throw new Error('timed out waiting for the rendered GenUI timeline with three milestone dots')
+  }
+  await until("!document.querySelector('.bt-team-intro')", 'the welcome page to hide after the first real user message')
+  console.log('check-packed: GenUI timeline rendered in the installed app; welcome dismissed on first user turn')
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: 'packaged app check' })
   await sleep(150)
