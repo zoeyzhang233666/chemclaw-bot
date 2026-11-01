@@ -75,3 +75,27 @@ test('text-only and close-only cases remain outside the OHLC rendering path', ()
   assert.match(policy, /echart/)
   assert.match(policy, /text-only/)
 })
+
+test('actual AKShare futures columns and midnight daily timestamps normalize to OHLC bars', () => {
+  const foreign = [
+    { date: '2026-10-29T00:00:00', open: 101, high: 105, low: 100, close: 103, volume: 180 },
+    { date: '2026-10-30 00:00:00', open: 103, high: 106, low: 102, close: 104, volume: 210 },
+  ]
+  assert.deepEqual(chart(buildCandlestickSpec(foreign)).series[0].data, [[101, 103, 100, 105], [103, 104, 102, 106]])
+  const china = [
+    { '日期': '20261029', '开盘价': '101', '最高价': '105', '最低价': '100', '收盘价': '103', '成交量': '1,800' },
+    { '日期': '20261030', '开盘价': '103', '最高价': '106', '最低价': '102', '收盘价': '104', '成交量': '2,100' },
+  ]
+  assert.deepEqual(chart(buildCandlestickSpec(china)).series[0].data, [[101, 103, 100, 105], [103, 104, 102, 106]])
+  assert.throws(() => buildCandlestickSpec([{ ...foreign[0], date: '2026-10-29T08:00:00' }, foreign[1]]), /Invalid candle date/)
+})
+
+test('Bot candlestick route contains source-specific OHLC retrieval and real inline GenUI instructions', () => {
+  const policy = readFileSync(new URL('../src/host/view-policy.js', import.meta.url), 'utf8')
+  assert.match(policy, /futures_foreign_hist/)
+  assert.match(policy, /futures_zh_daily_sina/)
+  assert.match(policy, /full-option/)
+  assert.match(policy, /open,close,low,high/)
+  assert.match(policy, /the terminal cannot render OHLC/)
+  assert.match(policy, /20-40/)
+})
