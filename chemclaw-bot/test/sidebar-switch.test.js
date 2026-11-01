@@ -392,7 +392,9 @@ test('classic Agent switch is in the Bot footer and plugin entry is in the avata
 
   const footer = ConnectPlugins({ wide: true, actions })
   const switchButton = findAll(footer, node => node.type === 'button')[0]
-  assert.equal(switchButton.props.children[1], 'Switch to classic Agent mode')
+  assert.equal(switchButton.props.children[1], 'Classic mode')
+  assert.equal(switchButton.props.title, 'Switch to classic Agent mode')
+  assert.equal(switchButton.props['aria-label'], 'Switch to classic Agent mode')
   switchButton.props.onClick()
   assert.deepEqual(calls, [['surface', 'agent']])
   assert.equal(ConnectPlugins({ wide: false, actions }), null)

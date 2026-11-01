@@ -582,9 +582,10 @@ export function ConnectPlugins({ wide, actions }) {
   return h('span', { className: 'bt-connect-wrap' },
     h('button', {
       type: 'button', className: 'bt-connect bt-connect-foot',
+      title: t('Switch to classic Agent mode'), 'aria-label': t('Switch to classic Agent mode'),
       onClick: () => actions.setSurface('agent'),
     },
-    h(SwitchIcon), t('Switch to classic Agent mode')))
+    h(SwitchIcon), t('Classic mode')))
 }
 
 // Account seat of the Settings trigger: the visible label stays for assistive tech only.
