@@ -574,7 +574,7 @@ export function install(rt) {
         // a send that never queued.
         if (event.data?.target === 'next-step' && entry.turn !== undefined
           && (event.data.inserted ?? []).some(message => message?.source?.kind === 'user')) {
-          entry.steeredAt = activityTimestamp(event.time)
+          entry.steeredAt = event.time ?? Date.now()
         }
         break
       case 'assistant/message': {
