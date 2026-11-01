@@ -19,6 +19,25 @@ export function marketHistoryRequest(text) {
 
 const genuiFence = /^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?$/imu
 
+// Market chart deduplication applies only to *price visuals* in a single
+// user-requested market-history turn. Metrics and evidence tables stay allowed.
+export function marketPriceVisual(view) {
+  if (!view || typeof view !== 'object') return false
+  if (Array.isArray(view)) return view.some(marketPriceVisual)
+  if (view.type === 'html') return true
+  if (view.type === 'chart' && ['candlestick', 'line', 'area'].includes(view.kind ?? 'bar')) return true
+  return Array.isArray(view.children) && view.children.some(marketPriceVisual)
+}
+
+// Do not ask people to pick an implementation for an ordinary public-market
+// data request. Ambiguous tickers / exchanges are still valid questions.
+export function redundantMarketSourceQuestion(question, options = []) {
+  const optionText = (Array.isArray(options) ? options : []).map(option => typeof option === 'string' ? option : option?.label ?? '').join(' ')
+  const questionText = String(question ?? '')
+  return /(怎么查|如何查|怎样查|用什么查|怎么查询|从哪查|没有.*(?:接口|权限|行情)|怎么获取|用哪种方式|如何获取|数据来源|查询方式)/iu.test(questionText)
+    && /(网页|网上|搜索|网站|akshare|数据源|接口|不(?:用了|需要)|行情软件|finance|web)/iu.test(questionText + ' ' + optionText)
+}
+ 
 export function hasInlineGenui(text, native = false) {
   for (const match of text.matchAll(/^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}```[ \t]*\r?$/gimu)) {
     try {
@@ -110,7 +129,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, marketChartNudged: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, marketChartNudged: false, marketChartCommitted: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -128,6 +147,7 @@ export function install(rt) {
         entry.calls.delete(result.toolCallId)
         if (!result.isError && !event.data.error && /^The view is (?:on screen|staged)/u.test(textOf(result.content))) {
           entry.visual = true
+          if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
           for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
         }
       }
@@ -162,9 +182,19 @@ export function install(rt) {
   }
   ctx.on('session/event', (session, event) => { restore(session); observe(session, event) })
   ctx.on('session/disposed', session => turns.delete(String(session.id)))
-  rt.noteVisualDelivery = (id, view) => { const entry = stateOf(id); entry.visual = true; for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind) }
+  rt.noteVisualDelivery = (id, view) => {
+    const entry = stateOf(id)
+    entry.visual = true
+    if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
+    for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
+  }
+  rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
+  rt.marketPriceViewAlreadyCommitted = (id, view) => {
+    const entry = stateOf(id)
+    return entry.marketHistory && entry.marketChartCommitted && marketPriceVisual(view)
+  }
   rt.requiresCandlestick = id => stateOf(id).requested.has('candlestick') && !stateOf(id).textOnly
-  rt.deferMarketHistoryLineOnce = id => { const entry = stateOf(id); if (!entry.marketHistory || entry.textOnly || entry.marketChartNudged || entry.kinds.has('candlestick')) return false; entry.marketChartNudged = true; return true }
+  rt.deferMarketHistoryLineOnce = id => { const entry = stateOf(id); if (!entry.marketHistory || entry.textOnly || entry.marketChartNudged || entry.marketChartCommitted || entry.kinds.has('candlestick')) return false; entry.marketChartNudged = true; return true }
   ctx.on('agent/turn-stopping', ({ agent, turn, signal }) => {
     const session = agent.session
     const id = String(session.id)
