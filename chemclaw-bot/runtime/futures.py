@@ -94,7 +94,9 @@ def history(args):
         gaps.append('Exchange, currency and unit are unverified for this symbol; do not compare prices until supplied.')
     if stale:
         gaps.append('Latest observation is over seven calendar days old; this is historical data, not a current quote.')
-    return {'source': 'AKShare / Sina daily history', 'sourceUrl': 'https://akshare.akfamily.xyz/data/futures/futures.html', 'interface': 'futures_main_sina' if domestic else 'futures_foreign_hist', 'symbol': symbol, 'seriesType': 'main-continuous' if domestic else 'provider-contract-series', 'timezone': 'Asia/Shanghai' if domestic else 'provider-local-trading-day', 'frequency': 'daily', 'retrievedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'asOf': str(last_day), 'stale': stale, 'exchange': exchange, 'currency': currency, 'unit': unit, 'gaps': gaps, 'data': json.loads(frame.tail(10000).to_json(orient='records', force_ascii=False, date_format='iso'))}
+    if len(frame) > 50:
+        gaps.append('Only the latest 50 verified daily observations were returned for compact inline charts; longer history was omitted.')
+    return {'source': 'AKShare / Sina daily history', 'sourceUrl': 'https://akshare.akfamily.xyz/data/futures/futures.html', 'interface': 'futures_main_sina' if domestic else 'futures_foreign_hist', 'symbol': symbol, 'seriesType': 'main-continuous' if domestic else 'provider-contract-series', 'timezone': 'Asia/Shanghai' if domestic else 'provider-local-trading-day', 'frequency': 'daily', 'retrievedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'asOf': str(last_day), 'stale': stale, 'exchange': exchange, 'currency': currency, 'unit': unit, 'gaps': gaps, 'totalObservations': len(frame), 'shownObservations': min(len(frame), 50), 'data': json.loads(frame.tail(50).to_json(orient='records', force_ascii=False, date_format='iso'))}
 
 
 try:
