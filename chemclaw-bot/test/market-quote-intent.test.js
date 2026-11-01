@@ -43,3 +43,33 @@ test('futures candles and futures-labeled cards cannot be displayed as a spot pr
   assert.equal(mismatchedSpotPriceView({ type: 'row', children: [spot, labeled] }), true)
   assert.equal(mismatchedSpotPriceView(spot, '原油期货价格'), true)
 })
+
+test('basis and spot/futures overlays are mixed, not banned spot-only views or OHLC-first futures', () => {
+  const mixed = [
+    '乙二醇现货与盘面叠加走势图',
+    '乙二醇现货价格跟期价叠在一起看基差',
+    '纯碱现货和 SA0 主力连续期货同图对照',
+    '甲醇现货与期货走势比较',
+    '乙二醇基差最近一个月走势',
+    'compare methanol spot versus futures prices',
+    '纯碱现货、期货对比，显示基差',
+  ]
+  for (const question of mixed) {
+    assert.equal(marketQuoteIntent(question), 'mixed', question)
+    assert.equal(marketHistoryRequest(question), false, question + ': overlay must bypass OHLC-first rejection')
+  }
+  const spotOnly = ['纯碱最近一个月现货价格', '乙二醇现货，不要期货',
+    '现货和期货不是一回事，只看现货价格', '布伦特现货价格而非期货']
+  for (const question of spotOnly) {
+    assert.equal(marketQuoteIntent(question), 'spot', question)
+    assert.equal(marketHistoryRequest(question), false, question)
+  }
+  assert.equal(marketQuoteIntent('乙二醇期货最近一个月行情'), 'futures')
+  assert.equal(marketHistoryRequest('乙二醇期货最近一个月行情'), true)
+  // The visual guard only applies to quoteIntent === 'spot'. Explicitly
+  // mixed data may use separate clearly named series without masquerading.
+  const overlay = { type: 'chart', kind: 'line', categories: ['2026-10-28', '2026-10-29'],
+    series: [{ name: '乙二醇现货·华东', values: [3800, 3820] },
+      { name: '乙二醇期货·EG主力收盘', values: [3760, 3770] }] }
+  assert.equal(mismatchedSpotPriceView(overlay), true, 'spot-only protection must still reject futures-labeled charts')
+})

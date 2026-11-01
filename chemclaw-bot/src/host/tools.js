@@ -10,7 +10,7 @@ import { NAME_MAX } from './requests.js'
 import { unquote } from './text.js'
 import { mentionSpans } from '../shared/mentions.js'
 import { checkShownView } from '../shared/views.js'
-import { redundantMarketSourceQuestion } from './visual-delivery.js'
+import { redundantMarketSourceQuestion, nativeChartPayloadsUsable } from './visual-delivery.js'
 import { mismatchedSpotPriceView } from './market-quote-intent.js'
 
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
@@ -688,8 +688,9 @@ export function install(rt) {
       if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
+       if (!nativeChartPayloadsUsable(checked.view)) return refuse('The chart contains no drawable numeric observations. Do not submit the same empty chart again; show a sourced table or explain that data is missing, without filling gaps with zero.')
       if (rt.explicitSpotRequestOf?.(id) && mismatchedSpotPriceView(checked.view, checked.title))
-        return refuse('The user requested a physical/spot commodity price. This chart contains futures/continuous-contract data or a futures candlestick. Do not show it as spot. Query configured Chemcloud Data Hub (chem-data-hub) MCP spot prices first; if missing, seek a verified external SPOT price with product grade, geography, date, unit and source. Never use futures prices as a substitute.')
+        return refuse('The user requested a physical/spot commodity price. This chart contains futures/continuous-contract data or a futures candlestick. Do not show it as spot. Query configured Chemcloud Data Hub (chem-data-hub) MCP spot prices first; if missing, seek a verified external SPOT price with product grade, geography, date, unit and source. Never use futures prices as a substitute. This is only a SPOT-ONLY request guard: if the user explicitly requests a spot-versus-futures overlay or basis comparison, both separately verified series are allowed in one clearly labeled line chart. Do not claim a universal visualization-channel ban on spot/futures comparisons.')
       if (rt.marketPriceViewAlreadyCommitted?.(id, checked.view))
         return refuse('A price chart for this market-history request has already been delivered in this turn. Do not append another line, K-line, or HTML view for the same prices. Summarize the existing view briefly instead.')
       // Do not show a wrong chart and then append a K-line in a second correction.

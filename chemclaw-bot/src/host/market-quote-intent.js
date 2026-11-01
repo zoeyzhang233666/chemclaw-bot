@@ -3,11 +3,16 @@
 export function marketQuoteIntent(text) {
   const query = String(text ?? '')
   const spot = /(?:现货|即期|出厂价|到厂价|到岸现货|离岸现货|\bspot(?:\s+(?:price|market|quote))?\b)/iu.test(query)
-  const futures = /(?:期货|期指|主力连续|期货合约|\bfutures?\b)/iu.test(query)
+  // A quoted 盘面, 期价, or continuous-contract symbol is a futures
+  // leg in a spot-futures comparison, never a physical spot observation.
+  const futures = /(?:期货|期指|期价|盘面|主力连续|主力合约|连续合约|期货合约|\b(?:futures?|SA0|EG0|PG0|RB0|MA0|SC0)\b)/iu.test(query)
   const shares = /(?:股价|股票|A股|港股|美股|上市公司股价|\b(?:stocks?|shares?|equities|etf)\b)/iu.test(query)
-  // Only explicit comparisons are mixed. "现货不是期货" is spot, not mixed.
-  const comparison = /(?:比较|对比|价差|基差|以及|分别|同时|一并|和|与|及|vs\.?|versus|spread)/iu.test(query)
-  if (spot && futures && comparison && !/(?:不要|不是|不用|并非|而非|别用|不看|非期货|not\s+futures)/iu.test(query)) return 'mixed'
+  const basis = /(?:基差|现期价差|\b(?:basis|cash[- ]futures spread)\b)/iu.test(query)
+  // "基差" itself entails spot/futures. Keep explicit spot-only
+  // negations higher priority, such as "现货不是期货，只看现货".
+  const comparison = /(?:比较|对比|价差|基差|叠加|叠在一起|同图|双线|一起看|对照|以及|分别|同时|一并|和|与|及|vs\.?|versus|spread)/iu.test(query)
+  const spotOnly = /(?:不要|不是|不用|并非|而非|别用|不看|非期货|不包含期货|不含期货|仅看现货|只看现货|只要现货|not\s+futures)/iu.test(query)
+  if (!spotOnly && (basis || (spot && futures && comparison))) return 'mixed'
   if (spot) return 'spot'
   if (shares) return 'stock'
   if (futures) return 'futures'
