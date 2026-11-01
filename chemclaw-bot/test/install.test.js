@@ -140,6 +140,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'effect chemclaw-bot: automatic analysis setup',
     'tool chem_futures_history',
     'tool chem_stock_history',
+    'tool chem_write_webpage',
     'tool chem_deliver',
     'effect chemclaw-bot: chart engine',
     'route GET /api/bot/chart-engine-v1.js',

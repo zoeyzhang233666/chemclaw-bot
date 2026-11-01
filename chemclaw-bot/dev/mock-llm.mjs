@@ -329,7 +329,9 @@ function decide(body) {
 
   const userText = textOf(last?.content).trim()
   if (userText.startsWith('[chemclaw-visual-delivery turn=')) return [text('```dsh-ui\n' + JSON.stringify({ title: 'Inline answer', items: [{ type: 'text', text: 'Synthetic compact answer card.' }] }) + '\n```')]
-  const genuiKind = /^GenUI check (\w+)$/.exec(userText)?.[1]
+  // DSH prepends context to the first real user turn of a blank session.
+  // Recognize the test command on its own first line, not only the entire payload.
+  const genuiKind = /^GenUI check (\w+)(?=\n|$)/.exec(userText)?.[1]
   if (GENUI_EXAMPLES[genuiKind]) return [text(genuiExampleText(genuiKind))]
   if (userText.startsWith('[genui-action]')) return [text('Synthetic action received by the owning Bot.')]
   const chartKind = /^高级图表验收 (\w+)$/.exec(userText)?.[1]

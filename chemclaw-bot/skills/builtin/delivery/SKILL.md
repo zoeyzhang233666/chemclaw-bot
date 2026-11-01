@@ -63,47 +63,19 @@ or limits on analytical ability.
   with sources, date/spec/region/tax basis and units. Do not connect across gaps.
   Axis tick thinning is automatic; keep complete observation labels and values.
 
-**File format choice:**
-- Prefer self-contained **HTML** when the deliverable needs price trend lines,
-  interactive tables, filters, or in-page charts.
-- Use **PPT / PPTX** (including `chemclaw-presentations` or `chem_deliver` pptx) when the
-  user wants a slide deck without interactive trends—price cards and static
-  layouts are fine.
-- Whenever there is a data backing sheet or row-level detail, also deliver
-  **Excel** for a requested file report. An inline factual answer does not need
-  an unsolicited workbook before it can be shown.
+**Original webpages: no templates, including as fallback.**
+- When a standalone webpage is appropriate or requested, author original HTML/CSS/JavaScript for the actual analysis and audience. Choose layouts, visual hierarchy, cards, diagrams, tables, art, chart types and interactions freely. Never require a fixed number of cards, graphs, sections or colors.
+- HTML snippets, screenshots and layouts in Skills are **references only**, not a compulsory design. Add only supported visuals that help explain verified facts; do not fabricate numbers, events or images just for polish.
+- `chem_deliver` is intentionally **not** an HTML generator. It supports XLSX, PPTX, DOCX and text/table PDF only. To deliver a webpage, write full original HTML using `chem_write_webpage` (which saves it byte-for-byte, without a layout template) or use standard file-writing tools. Call `present` after inspection.
+- A webpage may use self-contained CSS, inline SVG, JavaScript, Canvas, licensed libraries and local media. Plan for offline use: include required assets locally or inside the document rather than relying on a public CDN. Do not modify host sandbox security settings.
+- If original HTML cannot be produced or validated, explain the limitation honestly; **never silently switch to a standard-looking page, generic template, or automatic HTML fallback.**
+- Use PPT/PPTX for ordinary presentations, and Excel alongside file reports when row-level backing data exists. Respect the format the user specifically requests.
 
-1. Resolve scope, specification, units, date, tax and delivery terms.
-2. Separate source records, calculations and judgments. Mark missing values;
-   never populate charts with invented facts or example data.
-3. Prefer the `chem_deliver` tool for ordinary reports: supply report JSON and
-   comma-separated formats. It runs bundled libraries inside the Host without
-   requiring a system Node or Python installation. Then inspect and call present.
-   Use the bundled `runtime/deliver.mjs` for self-contained HTML, XLSX, PPTX,
-   DOCX and text/table PDF from structured JSON. Invoke `node <plugin>/runtime/deliver.mjs input.json output-folder html,xlsx,pptx,docx,pdf`.
-   For a PDF with charts, print the HTML with the browser; the bundled PDF adapter
-   embeds Chinese fonts and tables and points to the interactive HTML for charts.
-   The input is `{title, summary, asOf, filename, sections:[{title,text,table:{columns:[],rows:[]},chart:{engine:'echarts',option:{}}}],sources:[{label,url,date}],limitations}`.
-   `chart` and `table` are optional. Financial charts use `engine:'lightweight',data:[{time:'YYYY-MM-DD',value:123}]`.
-   Maps supply a licensed `geoJSON` and `mapName` within the chart specification.
-   Use ECharts for comparisons, distributions, networks and maps; Lightweight
-   Charts for time series. Preserve their notices.
-4. Custom HTML must embed licensed libraries and data, use responsive grids,
-   explicit chart heights, ResizeObserver, wrapped labels, accessible tables,
-   readable Chinese fonts and print styles. Without reliable coordinates,
-   show region counts instead of invented map pins.
-5. Inspect rendering for clipped text, blank maps and unreadable legends.
-   Verify workbook formulas and PPT overflow. Improve on example designs.
-   Omit optional report modules with no usable data, including their headings,
-   canvases and reserved space; record the reason once in the limitations or
-   data-gap list. Zero is valid data; null is missing. Check the main data marks,
-   not just canvas pixels: axes, annotations and reference lines can render while
-   the price series is invisible. Verify every chart tab and time window, units,
-   filters, narrow layout and print output. Browser checks that cannot run must
-   be reported as unverified, never as a passing render check.
-6. Verify every file exists, call `present` with paths and descriptions, and
-   include clickable Markdown links. Resolve resources from the installed
-   skill, never a developer drive.
+1. Determine business scope, dates, specification, region, units, tax basis, data sources and target audience.
+2. Separate verified observations from calculations, hypotheses and missing data. Never invent points to complete a chart.
+3. Design each webpage from its content, author its HTML, CSS and JS directly, then save with `chem_write_webpage`. For other exports, use `chem_deliver` with suitable `formats: "xlsx,pptx,docx,pdf"` and structured JSON. The bundled `runtime/deliver.mjs` does not generate HTML.
+4. Render and inspect the actual page before presenting: verify main data marks rather than axes only, charts, labels, narrow widths, controls, print output, offline assets and legal notices. Fix issues if possible, and never report a visual test as passed when the browser could not run.
+5. Verify real file paths and deliver via `present` with clickable file links. If no actual webpage exists, do not claim a webpage was delivered.
 
 For existing document conversions use a suitable renderer. Never claim success
 when a converter is unavailable.

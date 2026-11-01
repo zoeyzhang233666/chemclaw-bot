@@ -25,11 +25,11 @@ Every user-facing final answer defaults to an inline view, including explanation
 
 | What you need | Prefer |
 |---------------|--------|
-| Price trends, filterable tables, in-page charts | **HTML** |
+| Standalone interactive webpage or dashboard | **Original model-authored HTML** (no template) |
 | Slide deck without interactive trends | **PPT** (including ppt-master) |
 | Row-level detail or a data backing sheet | **Excel as well—required** |
 
-**Trends or interaction → HTML first; static briefing → PPT is fine; any data workbook → always include Excel.**
+**Standalone interactive webpage → original authored HTML (no template/fallback); ordinary briefing → PPT; data backing sheet → Excel.**
 
 ## Install this plugin
 

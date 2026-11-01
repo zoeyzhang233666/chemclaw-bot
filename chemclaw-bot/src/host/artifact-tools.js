@@ -2,12 +2,14 @@ import { mkdir, realpath } from 'node:fs/promises'
 import { join } from 'node:path'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import { randomUUID } from 'node:crypto'
+import { install as installWebpage } from './webpage-tool.js'
 
 export function install(rt) {
+  installWebpage(rt)
   rt.ctx.tools.register(defineTool({
     name: 'chem_deliver',
-    description: 'Generate self-contained HTML, XLSX, editable PPTX, DOCX or text/table PDF from a report JSON. Runs bundled libraries without shell or Python. Inspect the results, then call present with the returned files. This helper is optional; richer custom layouts are welcome.',
-    parameters: { report: { type: 'string', required: true, description: 'JSON: title, summary, asOf, filename, sections[{title,text,table:{columns,rows},chart:{option}}], sources[{label,url,date}], limitations' }, formats: { type: 'string', required: true, description: 'Comma-separated html,xlsx,pptx,docx,pdf' } },
+    description: 'Generate XLSX, editable PPTX, DOCX or text/table PDF from a report JSON. Runs bundled libraries without shell or Python. Inspect the results, then call present with the returned files. HTML is NOT supported here: use chem_write_webpage for free-form original HTML.',
+    parameters: { report: { type: 'string', required: true, description: 'JSON: title, summary, asOf, filename, sections[{title,text,table:{columns,rows},chart:{option}}], sources[{label,url,date}], limitations' }, formats: { type: 'string', required: true, description: 'Comma-separated xlsx,pptx,docx,pdf; HTML is handled by chem_write_webpage' } },
     output: { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: value }] },
     execute: async (args, exec) => {
       if (rt.readOnly()) throw new Error(rt.readOnly())
@@ -15,7 +17,7 @@ export function install(rt) {
       const report = JSON.parse(args.report)
       if (!report || typeof report.title !== 'string' || !Array.isArray(report.sections) || report.sections.length > 100) throw new Error('Provide a report title and up to 100 sections')
       const formats = [...new Set(args.formats.split(',').map(value => value.trim()))]
-      if (!formats.length || formats.some(value => !['html', 'xlsx', 'pptx', 'docx', 'pdf'].includes(value))) throw new Error('Choose html,xlsx,pptx,docx,pdf')
+      if (!formats.length || formats.some(value => !['xlsx', 'pptx', 'docx', 'pdf'].includes(value))) throw new Error('Choose xlsx,pptx,docx,pdf; use chem_write_webpage for HTML')
       exec.signal?.throwIfAborted()
       const resolved = await rt.ctx.sessionController.resolveAgent(exec.agent.id)
       const folder = rt.sessionFolder(resolved.agent?.session) ?? rt.teamFolder() ?? rt.defaultTeamFolder()

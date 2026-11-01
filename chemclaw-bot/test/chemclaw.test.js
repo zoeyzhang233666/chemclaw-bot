@@ -68,6 +68,8 @@ test('fresh bootstrap creates all 50 Bots and 15 groups once; simultaneous reque
   assert.equal(Object.keys(rt.state.bots).length, 50); assert.equal(Object.keys(rt.state.rooms).length, 15)
   const first = rt.state.bots[rt.state.mainBotIds[0]]
   assert.equal(first.name, 'ChemClaw'); assert.equal(first.avatar.shape, 'lobster')
+  assert.ok(Object.values(rt.state.bots).every(bot => bot.templateInfo && bot.kickoff === undefined))
+  assert.ok(Object.values(rt.state.rooms).every(room => room.templateInfo && !room.log?.length))
   const [a, b] = await Promise.all([rt.activateScenario({ id: 'scene-1', kind: 'group' }), rt.activateScenario({ id: 'scene-1', kind: 'group' })])
   assert.equal(a.id, b.id); assert.equal(Object.keys(rt.state.rooms).length, 15)
   const expert = rt.state.bots[a.admin]; expert.instructions = 'User-customized instructions'
@@ -96,6 +98,19 @@ test('fresh bootstrap creates all 50 Bots and 15 groups once; simultaneous reque
     assert.match(skill.purpose, /[\u4e00-\u9fff]/, skill.name)
     assert.match(skill.deliverables, /[\u4e00-\u9fff]/, skill.name)
   }
+})
+
+test('an upgrade drops old unsent preset greetings but preserves custom Bot greetings', async t => {
+  const { rt } = fixture(t, { companyConnectors: false })
+  await rt.bootstrap()
+  const chief = rt.state.bots[rt.state.mainBotIds[0]]
+  chief.kickoff = { text: 'Old automatic greeting', main: true }
+  const custom = await rt.createBot({ name: 'Personal expert', pickModel: true })
+  assert.ok(custom.kickoff)
+  await rt.save()
+  await rt.bootstrap()
+  assert.equal(rt.state.bots[chief.id].kickoff, undefined)
+  assert.ok(rt.state.bots[custom.id].kickoff)
 })
 
 test('upgrading a coordinator-only or partial team preserves conversations, edits and deleted presets', async t => {
@@ -396,7 +411,7 @@ test('six business deliverable pipelines use bundled libraries inside the Bot wo
   const { rt, ctx } = fixture(t, { companyConnectors: false })
   await rt.bootstrap()
   const agent = { id: rt.chatOf(rt.state.mainBotIds[0]) }
-  for (const [title, formats] of [['客户开发', 'html,xlsx'], ['供应商尽调', 'html,docx'], ['行情分析', 'html,xlsx'], ['基差研究', 'html,xlsx'], ['生产辅助', 'html,pdf'], ['PPT制作', 'html,pptx']]) {
+  for (const [title, formats] of [['客户开发', 'xlsx,docx'], ['供应商尽调', 'docx,pdf'], ['行情分析', 'xlsx,pdf'], ['基差研究', 'xlsx,docx'], ['生产辅助', 'pdf,docx'], ['PPT制作', 'pptx,xlsx']]) {
     const report = { title: `${title}工具链验收（模拟数据）`, sections: [{ title: '测试证据链', table: { columns: ['字段', '内容'], rows: [['来源', 'mock，不代表业务事实']] } }], sources: [{ label: '原创验收数据' }], limitations: '仅验证交付，不验证研究质量' }
     const result = JSON.parse(await ctx.registeredTools.get('chem_deliver').execute({ report: JSON.stringify(report), formats }, { agent, signal: AbortSignal.timeout(60000) }))
     assert.equal(result.files.length, 2)

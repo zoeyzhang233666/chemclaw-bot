@@ -20,4 +20,4 @@ const report = {
 }
 mkdirSync(output, { recursive: true })
 writeFileSync(resolve(output, '../sample-report.json'), JSON.stringify(report, null, 2))
-console.log(await deliver(report, output, ['html', 'xlsx', 'pptx', 'docx', 'pdf']))
+console.log(await deliver(report, output, ['xlsx', 'pptx', 'docx', 'pdf']))
