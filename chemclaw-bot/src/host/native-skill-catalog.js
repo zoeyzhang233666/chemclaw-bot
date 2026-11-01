@@ -1,4 +1,4 @@
-// Discover only the native Office skills actually shipped with this ChemClaw host.
+// Discover DSH's registered native skills and packaged Office skills.
 // These are read-only catalog entries: the native DSH skill provider owns invocation.
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
@@ -10,20 +10,30 @@ export { NATIVE_OFFICE_COPY } from '../shared/native-office-copy.js'
 
 const USER_SOURCES = new Set(['user-dsh', 'user-agents', 'project-dsh', 'project-agents', 'custom'])
 const isOffice = name => name === 'office' || name === 'office-tools' || name.startsWith('office-')
-const nativeCategory = name => name === 'b2b-lead-sourcing' ? '内贸销售'
-  : isOffice(name) ? '通用办公'
-    : /^(?:rdkit|networkx|scientific-|statistical-|sympy)/.test(name) ? '科学分析' : '基础流程'
+const nativeCategory = (name, description = '') => NATIVE_SKILL_ZH[name]?.[2]
+  || (isOffice(name) ? '通用办公'
+    : /^(?:rdkit|networkx|scientific-|statistical-|sympy)/.test(name) ? '科学分析'
+      : /\b(chart|plot|timeline|visualiz|dashboard|graph|interactive ui)\b/i.test(description) ? '数据可视化'
+        : /^(?:code|debug|git-|test-|lint-|issue-|review-)/.test(name) ? '研发与调试'
+          : '其他技能')
 
 export function nativeOfficeSummary(name, description, provider, source = 'bundled', invocation) {
   const userInstalled = USER_SOURCES.has(source)
-  const [title, purpose] = NATIVE_OFFICE_COPY[name] ?? NATIVE_SKILL_ZH[name]
-    ?? ['专项技能 · ' + name, '按技能说明完成对应任务，查看技术名称和原始说明以了解适用范围。']
+  const originalDescription = typeof description === 'string' ? description.trim() : ''
+  // A user skill may share a technical ID with a bundled skill. Never give the
+  // user-owned item somebody else's title, category or advertised abilities.
+  const curated = userInstalled ? undefined : NATIVE_OFFICE_COPY[name] ?? NATIVE_SKILL_ZH[name]
+  const title = curated?.[0] ?? name
+  // For future, unknown providers show their *actual* source description.
+  // Do not invent a generic Chinese ability or claim functions never verified.
+  const purpose = curated?.[1] ?? (originalDescription !== name ? originalDescription : '')
   return {
     kind: 'skill', name, originalName: name, labels: { zh: title, en: name },
-    description, purpose, category: userInstalled ? '我的安装' : nativeCategory(name),
+    description: originalDescription, purpose,
+    category: userInstalled ? '我的安装' : curated?.[2] ?? nativeCategory(name, originalDescription),
     ...(userInstalled ? { userInstalled: true } : { builtinSource: provider || 'dsh' }),
     nativeSkill: true, invocation: invocation ?? { userInvocable: true, modelInvocable: true },
-    keywords: [name, description, title],
+    keywords: [name, originalDescription, title],
   }
 }
 
