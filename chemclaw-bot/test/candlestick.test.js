@@ -97,7 +97,7 @@ test('Bot candlestick route contains source-specific OHLC retrieval and real inl
   assert.match(policy, /futures_foreign_hist/)
   assert.match(policy, /futures_zh_daily_sina/)
   assert.match(policy, /full-option/)
-  assert.match(policy, /open,close,low,high/)
+  assert.match(policy, /bars:/)
   assert.match(policy, /native show_view chart/)
   assert.match(policy, /20-40/)
 })
