@@ -57,3 +57,20 @@
 **性能边界：** 截图并不能拆出 2 分钟里工具调用、模型执行和前端渲染各自的耗时，且截图没有真正调用 K 线模块，不能据此证明“新版 K 线加载慢”。后续验收应记录 AKShare 查询、模型输出、GenUI 首次绘制及二次绘制的四段时间；避免将性能原因先归给图表组件。
 
 **尚未完成：** 让 AKShare 的真实 OHLC 数据自动以机器可读方式送到 `buildCandlestickSpec` 并由对话 UI 直接显示，而不依赖模型自行拼写完整 `dsh-ui` JSON。实现前不能将此 PR 标为 Ready，更不能合并 main。下一阶段如确需确定性，可设计独立数据引用与客户端图表接收协议，须另行评估 DSH 公共 API、打包和测试。
+
+
+## 2026-11-01 第二轮现场问题：从提示词过渡到原生组件
+
+新截图显示 WTI CL 实际取得 OHLC 23 条后，Bot 仍先画高/收/低三条折线，随后生成 HTML 绘图，并输出坐标轴存在但蜡烛实体缺失的另一张图。此前提示词路由/GenUI full option 未在现场稳定工作，因此在 **本 PR（不影响 main）** 做了真正的原生图表接入：
+
+- `show_view` 新增 `kind:"candlestick"`，直接输入真实 `bars:[{date,open,high,low,close,volume?}]`，2–50 根。不得用虚假 OHLC、缺失价格或随意 ECharts option。
+- `src/shared/advanced-charts.js` 和 `views.js` 在 Host 侧校验新协议并支持历史重放；原有图表不变。共享 `normalizeCandles` 严格验证不重复日期、开高低收关系和成交量。
+- `chart-engine.js` 注册 ECharts 6 的 `CandlestickChart`、`BarChart`、`LineChart`、缩放组件；`chart-options.js` 产生原生蜡烛图/均线/真实成交量图；`widget-advanced-chart.js` 提供更高的画图区。
+- `view-policy.js` 对历史股票/期货行情优先**一个**原生 K 线图，不附 HTML/GenUI/折线重复展示；当前单次报价可用指标卡，没有完整 OHLC 时仍允许诚实地画折线。
+- `test/candlestick.test.js` 保护 K 线协议、字段完整性和图形配置；`test/candlestick-render.test.js` 使用 ECharts SVG SSR 检查是否绘出实心蜡烛而不仅是空轴。
+
+### 验收与明确限制
+
+必须检查 GitHub CI 最终通过（含 SVG 绘制检查、客户端构建一致性）、Windows CMD 选择本 PR 最新 SHA 后，在 **Bot 私聊和群聊** 验证：普通历史市场行情询问直接显示一个原生 K 线且无 HTML/多条折线，纯现货单价按事实合理回退，重新打开仍可见。普通 DSH Agent 没有 `show_view` tool，仍需进一步确认 GenUI 路线的兼容性。**UI 中禁止模型输出第二图现在主要由交付策略约束，尚不是对所有任意模型输出的代码级强制去重。** 因此不能只靠 CI 声称 100% 端到端验收完成。
+
+不要把本次未接入的 `buildCandlestickSpec` 辅助函数描述成确定性自动调用的工具。实际原生路径由 Bot 调用 `show_view(kind:"candlestick")`，ECharts 绘制不靠模型逐点写图形参数。AKShare 数据仍需由 Agent 通过可用工具取得，未添加新的私有数据源或自行拉取网络请求。
