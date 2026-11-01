@@ -166,9 +166,9 @@ export function stripUnrenderedMixedViewText(text, streaming = false) {
   if (streaming) {
     // Also conceal *incomplete* fences while the model streams, preserving
     // useful prose that preceded the hidden protocol block.
-    const fenceAt = original.search(/^ {0,3}`{3}(?:dsh-ui|json)(?:\\s|$)/gimu)
+    const fenceAt = original.search(/^ {0,3}`{3}(?:dsh-ui|json)(?:\s|$)/gimu)
     if (fenceAt >= 0) return original.slice(0, fenceAt).trim()
-    if (/^\\{/u.test(trimmed)) return ''
+    if (/^\{/u.test(trimmed)) return ''
   }
   const withoutFences = original.replace(/^ {0,3}`{3}(?:dsh-ui|json)[^\n]*\r?\n([\s\S]*?)^ {0,3}`{3}[ \t]*$/gimu,
     (whole, body) => {
