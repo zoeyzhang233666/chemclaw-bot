@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
 import { createServer } from 'node:http'
 import { nativeOpenFixture } from './native-open-fixture.mjs'
+import { checkOfficeFiles } from './check-office-e2e.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2).filter(arg => !arg.startsWith('--') || arg === '--source')
@@ -63,6 +64,7 @@ if (!source) {
     if (result.error || result.status !== 0) throw new Error('Packaged Office interpreter failed: ' + executable + ' ' + (result.stderr || result.error?.message || ''))
   }
   console.log('check-packed: bundled Office Node, Python and skill assets verified')
+  checkOfficeFiles(resources)
 }
 
 const work = realpathSync.native(mkdtempSync(join(realpathSync.native(tmpdir()), 'ds-bot-packed-')))
