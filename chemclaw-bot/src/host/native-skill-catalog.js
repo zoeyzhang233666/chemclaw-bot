@@ -42,7 +42,7 @@ export async function nativeSkillCatalog(env = process.env) {
       const file = join(officeRoot, entry.name, 'SKILL.md')
       if (!existsSync(file) || results.has(entry.name)) continue
       const source = readFileSync(file, 'utf8')
-      const description = /^description:\\s*(.+)$/m.exec(source)?.[1]?.replace(/^['"]|['"]$/g, '') || entry.name
+      const description = /^description:\s*(.+)$/m.exec(source)?.[1]?.replace(/^['"]|['"]$/g, '') || entry.name
       results.set(entry.name, nativeOfficeSummary(entry.name, description, 'dsh-office'))
     }
   }
