@@ -9918,7 +9918,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
             { className: "bt-skill-manage" },
             (0, import_react18.createElement)("summary", null, t("Manage skill")),
             (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => setEditing(true) }, t("Edit")),
-            item.builtinSource ? (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(async () => {
+            item.builtinSource === "chemclaw" ? (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(async () => {
               await actions.resetSkill(item.name);
               await load();
               onChanged();
