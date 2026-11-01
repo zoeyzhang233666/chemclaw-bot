@@ -276,7 +276,7 @@ test('close-only line does not satisfy explicitly requested K-line; real GenUI c
   f.stop(); f.stop()
   assert.equal(f.notices.length, 1)
   assert.match(f.notices[0].content[0].text, /explicitly requested candlestick/)
-  assert.match(f.notices[0].content[0].text, /do NOT synthesize bars/)
+  assert.match(f.notices[0].content[0].text, /do not synthesize bars/i)
   assert.match(f.notices[0].content[0].text, /Do not send another tool call/i)
   const good = setup()
   const ticks = String.fromCharCode(96).repeat(3)
