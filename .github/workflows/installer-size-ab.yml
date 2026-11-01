@@ -18,6 +18,7 @@ jobs:
       - name: Checkout optimized PR head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           path: optimized
           persist-credentials: false
       - name: Checkout exact PR base commit
