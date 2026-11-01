@@ -1,0 +1,27 @@
+name: Stock OHLC provider fallback
+on:
+  push:
+    branches:
+      - feat/inline-candlestick-chart
+  pull_request:
+    paths:
+      - chemclaw-bot/runtime/futures.py
+      - chemclaw-bot/runtime/test_futures_sources.py
+permissions:
+  contents: read
+jobs:
+  stock-provider-adapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: chemclaw-bot/runtime/requirements.txt
+      - name: Install only pandas for mocked provider tests
+        run: python -m pip install "pandas>=2,<3"
+      - name: Verify bundled script syntax
+        run: python -m py_compile chemclaw-bot/runtime/futures.py chemclaw-bot/runtime/test_futures_sources.py
+      - name: Run offline EastMoney, Sina, and Tencent fallback tests
+        run: python -m unittest discover -s chemclaw-bot/runtime -p test_futures_sources.py -v
