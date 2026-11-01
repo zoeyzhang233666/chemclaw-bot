@@ -39,6 +39,32 @@ if (!existsSync(executable)) {
   process.exit(2)
 }
 
+// A new user must get the Office executables and skills inside the installer;
+// an installed EXE must NOT depend on a globally installed node.exe or Python.
+if (!source) {
+  const resources = process.platform === 'darwin' ? resolve(dirname(executable), '..', 'Resources') : join(dirname(executable), 'resources')
+  const windows = process.platform === 'win32'
+  const node = join(resources, 'primary-runtime', 'dependencies', 'node', 'bin', windows ? 'node.exe' : 'node')
+  const python = join(resources, 'primary-runtime', 'dependencies', 'python', ...(windows ? ['python.exe'] : ['bin', 'python3']))
+  const needed = [
+    node, python, join(resources, 'primary-runtime', 'runtime.json'),
+    join(resources, 'office-skills', 'office', 'SKILL.md'),
+    join(resources, 'app.asar.unpacked', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js'),
+    join(resources, 'app.asar.unpacked', 'node_modules', 'chemclaw-bot', 'office.js'),
+  ]
+  const missing = needed.filter(p => !existsSync(p))
+  if (missing.length) throw new Error('Packaged Office payload missing: ' + missing.join(', '))
+  const checks = [
+    [node, ['--version']],
+    [python, ['-I', '-B', '-c', 'import docx, pptx, openpyxl, pandas, lxml, PIL']],
+  ]
+  for (const [executable, args] of checks) {
+    const result = spawnSync(executable, args, { encoding: 'utf8', timeout: 120000 })
+    if (result.error || result.status !== 0) throw new Error('Packaged Office interpreter failed: ' + executable + ' ' + (result.stderr || result.error?.message || ''))
+  }
+  console.log('check-packed: bundled Office Node, Python and skill assets verified')
+}
+
 const work = realpathSync.native(mkdtempSync(join(realpathSync.native(tmpdir()), 'ds-bot-packed-')))
 mkdirSync(join(work, 'home'))
 mkdirSync(join(work, 'workspace'))
