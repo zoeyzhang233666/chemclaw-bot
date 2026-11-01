@@ -25,6 +25,7 @@ import { copyData, moveProblem } from './move-data.mjs'
 import { editLocations } from './locations-dialog.mjs'
 import { CHECK_PROFILE, PROFILE } from './profile.mjs'
 import { createShell, SHELL_TEXT } from './shell.mjs'
+import { preparePreviewSandboxAcl } from './preview-sandbox-acl.mjs'
 import { createDeferredPrompt } from './update-prompt.mjs'
 import { UPDATE_TEXT, updatesEnabled, watchReleases, watchUpdates } from './updates.mjs'
 import { CAPTION_HEIGHT, cssColor, micaAvailable, nativeThemeSource } from './window-frame.mjs'
@@ -172,6 +173,13 @@ async function start() {
   const where = await chooseLocations(choosing.signal).finally(() => { choosing = undefined })
   if (where.quit) { app.exit(0); return }
   places = { dataDir: where.dataDir, workspace: where.workspace }
+  // This MUST happen in the Electron parent before booting the DSH Host:
+  // later Bot plugin initialization is too late for the first sandbox setup.
+  if (!app.isPackaged) {
+    const sandboxAcl = preparePreviewSandboxAcl({ workspace: where.workspace })
+    if (sandboxAcl.status === 'granted') console.info('ChemClaw: prepared Windows preview workspace ACL for DSH workspace-write.')
+    if (sandboxAcl.status === 'error') console.warn('ChemClaw: preview workspace ACL check failed:', sandboxAcl.message)
+  }
   const port = await hostPort(join(app.getPath('userData'), 'host-port.json'))
   origin = `http://127.0.0.1:${String(port)}`
   botViews = new BotViews({ window: () => mainWindow, WebContentsView, guests: browserGuests,

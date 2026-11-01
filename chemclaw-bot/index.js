@@ -42,6 +42,7 @@ import * as publicData from './src/host/public-data.js'
 import * as cninfo from './src/host/cninfo.js'
 import * as dependencies from './src/host/dependencies.js'
 import * as artifactTools from './src/host/artifact-tools.js'
+import * as officeSkills from './src/host/office-skills.js'
 import * as schedules from './src/host/schedules.js'
 import * as usage from './src/host/usage.js'
 import * as update from './src/host/update.js'
@@ -79,6 +80,6 @@ export function createRuntime(ctx, config = {}) {
       mainRole: config.mainRole ?? '化工主控',
     },
   }
-  for (const module of [...MODULES.slice(0, -1), publicData, cninfo, dependencies, artifactTools, channel]) module.install(rt)
+  for (const module of [...MODULES.slice(0, -1), publicData, cninfo, dependencies, artifactTools, channel, officeSkills]) module.install(rt)
   return rt
 }
