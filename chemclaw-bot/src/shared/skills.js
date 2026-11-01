@@ -1,6 +1,6 @@
 import skillDisplay from '../../seed/skill-display.json' with { type: 'json' }
 
-export const SKILL_CATEGORIES = ['内贸销售', '内贸采购', '外贸销售', '外贸采购', '产业基本面', '价差与量化', '通用办公', '科学分析', '基础流程']
+export const SKILL_CATEGORIES = ['内贸销售', '内贸采购', '外贸销售', '外贸采购', '产业基本面', '价差与量化', '通用办公', '数据可视化', '科学分析', '研发与调试', '基础流程', '其他技能']
 
 export const skillLabel = (item, locale = 'zh') => item.displayName || item.labels?.[locale.startsWith('zh') ? 'zh' : 'en']
   || (locale.startsWith('zh') ? skillDisplay[item.name]?.[0] : undefined)
