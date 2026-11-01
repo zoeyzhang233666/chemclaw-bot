@@ -121,20 +121,40 @@ const chartNodes = view => {
 }
 export function mixedMarketVisualStatus(view) {
   const charts = chartNodes(view)
-  const overlay = charts.some(chart => {
-    if (chart.kind !== 'line' || !Array.isArray(chart.categories) || chart.categories.length < 2) return false
+  const overlays = charts.flatMap(chart => {
+    if (chart.kind !== 'line' || !Array.isArray(chart.categories) || chart.categories.length < 2) return []
     const spot = chart.series?.find(item => spotLeg.test(String(item?.name ?? '')))
     const futures = chart.series?.find(item => futuresLeg.test(String(item?.name ?? '')) && !spotLeg.test(String(item?.name ?? '')))
-    return spot && futures && Array.isArray(spot.values) && Array.isArray(futures.values)
-      && spot.values.length === chart.categories.length && futures.values.length === chart.categories.length
-      && chart.categories.filter((_, index) => usableNumber(spot.values[index]) && usableNumber(futures.values[index])).length >= 2
+    if (!Array.isArray(spot?.values) || !Array.isArray(futures?.values)
+      || spot.values.length !== chart.categories.length || futures.values.length !== chart.categories.length) return []
+    const differences = new Map()
+    chart.categories.forEach((date, index) => {
+      if (usableNumber(spot.values[index]) && usableNumber(futures.values[index]))
+        differences.set(String(date), spot.values[index] - futures.values[index])
+    })
+    return differences.size >= 2 ? [{ chart, differences }] : []
   })
-  const basis = charts.some(chart => ['line', 'bar', 'area'].includes(chart.kind)
-    && Array.isArray(chart.categories) && chart.categories.length >= 2
-    && (chart.series ?? []).some(item => basisLeg.test(String(item?.name ?? ''))
-      && Array.isArray(item.values) && item.values.length === chart.categories.length
-      && item.values.filter(usableNumber).length >= 2))
-  return { overlay: Boolean(overlay), basis: Boolean(basis), complete: Boolean(overlay && basis) }
+  const basis = overlays.some(({ chart: overlayChart, differences }) => charts.some(chart => {
+    // Basis has its own scale: never silently plot it as a third price series.
+    if (chart === overlayChart || !['line', 'bar', 'area'].includes(chart.kind)
+      || !Array.isArray(chart.categories) || chart.categories.length < 2) return false
+    return (chart.series ?? []).some(item => {
+      if (!basisLeg.test(String(item?.name ?? '')) || !Array.isArray(item.values)
+        || item.values.length !== chart.categories.length) return false
+      let matched = 0
+      for (let i = 0; i < chart.categories.length; i += 1) {
+        const expected = differences.get(String(chart.categories[i]))
+        const actual = item.values[i]
+        if (expected === undefined || !usableNumber(actual)) continue
+        // Prices may have been rounded for display; the underlying calculation
+        // must still agree with physical spot minus exchange futures.
+        if (Math.abs(expected - actual) > 0.11) return false
+        matched += 1
+      }
+      return matched >= 2
+    })
+  }))
+  return { overlay: overlays.length > 0, basis, complete: Boolean(overlays.length > 0 && basis) }
 }
 
 // A mixed-market Bot/group answer should show native show_view, not a JSON
