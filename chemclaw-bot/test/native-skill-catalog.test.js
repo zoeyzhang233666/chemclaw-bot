@@ -47,7 +47,7 @@ test('only exact first-run seed identities are migrated; user imports and edits 
 test('native Office catalog lists only present assets, de-duplicates office and preserves Chinese copy', async t => {
   const home = mkdtempSync(join(tmpdir(), 'chemclaw-office-catalog-'))
   t.after(() => rmSync(home, { force: true, recursive: true }))
-  const standalone = await nativeSkillCatalog({ CHEMCLAW_OFFICE_RUNTIME_DIR: join(home, 'missing') })
+  const standalone = await nativeSkillCatalog(undefined, { CHEMCLAW_OFFICE_RUNTIME_DIR: join(home, 'missing') })
   assert.deepEqual(standalone.map(x => x.name).sort(), ['office', 'office-tools'])
   mkdirSync(join(home, 'primary-runtime'), { recursive: true })
   mkdirSync(join(home, 'office-skills'), { recursive: true })
@@ -57,7 +57,7 @@ test('native Office catalog lists only present assets, de-duplicates office and 
     mkdirSync(dir, { recursive: true })
     writeFileSync(join(dir, 'SKILL.md'), '---\\nname: ' + name + '\\ndescription: Native Office capability\\n---\\n')
   }
-  const list = await nativeSkillCatalog({ CHEMCLAW_OFFICE_RUNTIME_DIR: home })
+  const list = await nativeSkillCatalog(undefined, { CHEMCLAW_OFFICE_RUNTIME_DIR: home })
   assert.equal(list.length, 8)
   assert.equal(new Set(list.map(x => x.name)).size, 8)
   for (const item of list) {
@@ -71,7 +71,25 @@ test('native Office catalog lists only present assets, de-duplicates office and 
   assert.equal(list.find(item => item.name === 'office').builtinSource, 'chemclaw-office')
   assert.equal(list.find(item => item.name === 'office-pptx').builtinSource, 'dsh-office')
   rmSync(join(home, 'office-skills', 'office-pptx', 'SKILL.md'))
-  const missing = await nativeSkillCatalog({ CHEMCLAW_OFFICE_RUNTIME_DIR: home })
+  const missing = await nativeSkillCatalog(undefined, { CHEMCLAW_OFFICE_RUNTIME_DIR: home })
   assert.equal(missing.some(x => x.name === 'office-pptx'), false)
   assert.equal(existsSync(join(home, 'office-skills', 'office', 'SKILL.md')), true)
+})
+
+test('DSH registry contributes real native skills and separates user DSH roots', async () => {
+  const registry = { list: async () => [
+    { name: 'grilling', description: 'Review ideas', provider: 'dsh-skill-filesystem', source: 'bundled', invocation: { modelInvocable: true, userInvocable: true } },
+    { name: 'b2b-lead-sourcing', description: 'Sales leads', provider: 'dsh-skill-filesystem', source: 'bundled' },
+    { name: 'my-extra-workflow', description: 'Imported by user', provider: 'dsh-skill-filesystem', source: 'user-dsh' },
+    { name: 'domain-1', description: 'ChemClaw managed', provider: 'chemclaw-user-skills', source: 'custom' },
+  ] }
+  const items = await nativeSkillCatalog(registry, {})
+  assert.equal(items.some(x => x.name === 'domain-1'), false)
+  assert.equal(items.find(x => x.name === 'grilling').labels.zh, '深入推敲一个方案')
+  assert.equal(items.find(x => x.name === 'b2b-lead-sourcing').category, '内贸销售')
+  assert.equal(isMyInstallation(items.find(x => x.name === 'grilling')), false)
+  const user = items.find(x => x.name === 'my-extra-workflow')
+  assert.equal(isMyInstallation(user), true)
+  assert.equal(user.category, '我的安装')
+  assert.deepEqual(matchingSkills(items, '', '我的安装').map(x => x.name), ['my-extra-workflow'])
 })
