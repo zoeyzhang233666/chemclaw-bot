@@ -145,6 +145,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'effect chemclaw-bot: api route',
     'route POST /api/bot',
     'effect chemclaw-bot: load state',
+    'tool chem_office_runtime_status',
   ])
 })
 
