@@ -149,7 +149,7 @@ export function install(rt) {
       // One human request may have multiple model turns (tools, steering,
       // continuation). Carry market chart delivery across those turns until the
       // next *real* user message resets it.
-      if (previous?.marketHistory) {
+      if (previous?.marketHistory || previous?.quoteIntent === 'spot' || previous?.quoteIntent === 'mixed') {
         next.marketHistory = previous.marketHistory
         next.quoteIntent = previous.quoteIntent
         next.multiAssetMarket = previous.multiAssetMarket
