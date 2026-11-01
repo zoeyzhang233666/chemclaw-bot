@@ -1,4 +1,5 @@
 name: Temporary curated skill example bundle regeneration
+# Rerun after prioritizing curated overlap examples
 on:
   push:
     branches:
