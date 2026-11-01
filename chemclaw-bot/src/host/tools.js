@@ -686,7 +686,7 @@ export function install(rt) {
       if (group && args.audience !== 'user') return 'Group views are only for answers to the human. Set audience: user when delivering that answer; do not draw a view for Bot discussion or progress.'
       if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
-      if (checked.error !== undefined) return refuse(checked.error)
+      if (checked.error !== undefined) return checked.error
       if (rt.marketPriceViewAlreadyCommitted?.(id, checked.view))
         return refuse('A price chart for this market-history request has already been delivered in this turn. Do not append another line, K-line, or HTML view for the same prices. Summarize the existing view briefly instead.')
       // Do not show a wrong chart and then append a K-line in a second correction.
