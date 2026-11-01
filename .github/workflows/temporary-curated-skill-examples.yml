@@ -22,12 +22,7 @@ jobs:
           cache-dependency-path: chemclaw-bot/package-lock.json
       - run: npm ci --no-fund --no-audit
         working-directory: chemclaw-bot
-      - name: Install DSH pinned by desktop app for native skill imports
-        working-directory: chemclaw-bot
-        run: |
-          dsh_version="$(node -p 'require("../app/package.json").dependencies["@deepseek-ai/dsh"]')"
-          npm run harness -- --no-save "@deepseek-ai/dsh@$dsh_version"
-      - run: node --import ./test/harness-resolve.mjs --test test/new-skill-examples.test.js test/skill-presentation.test.js
+      - run: node --test test/new-skill-examples.test.js test/skill-presentation.test.js
         working-directory: chemclaw-bot
       - run: npm run build
         working-directory: chemclaw-bot
