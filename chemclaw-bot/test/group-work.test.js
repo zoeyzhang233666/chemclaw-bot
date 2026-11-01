@@ -1266,17 +1266,19 @@ test('a user-facing chart follows a non-admin answer before the group finishes, 
   assert.equal(JSON.parse(JSON.stringify(result())).replies.at(-1).view.series[0].values[1], null)
 })
 
-test('an @ question to a specific member can deliver a chart; peer discussion without a user audience cannot', async t => {
+test('an @ question can deliver finished metrics and charts without a user audience field; explicit team views remain hidden', async t => {
   const host = await start(t)
   const result = host.round('at-question', host.say('@Writer 基差呢'))
   await settle(() => host.agentOf('gb').calls.length === 1)
   host.begin('gb')
-  assert.match(await host.tool('show_view', { title: 'Internal', view: deliveryChart }, 'gb'), /only for answers to the human/)
-  assert.match(await host.tool('show_view', { audience: 'user', title: 'Form', view: { type: 'options', id: 'x', options: [{ label: 'A' }] } }, 'gb'), /cannot submit/)
-  await host.tool('show_view', { audience: 'user', title: 'Basis', view: deliveryChart }, 'gb', { callId: 'at-chart' })
+  assert.match(await host.tool('show_view', { audience: 'team', title: 'Internal', view: deliveryChart }, 'gb'), /team-only/)
+  assert.match(await host.tool('show_view', { title: 'Form', view: { type: 'options', id: 'x', options: [{ label: 'A' }] } }, 'gb'), /cannot submit/)
+  assert.match(await host.tool('show_view', { title: 'Basis', view: deliveryChart }, 'gb', { callId: 'at-chart' }), /staged/)
+  assert.match(await host.tool('show_view', { title: 'Basis readout', view: { type: 'metric', label: '基差', value: '+65 元/吨' } }, 'gb', { callId: 'at-metric' }), /staged/)
   host.finish('gb', '基差 +65 元/吨；次日缺失。')
   await settle(() => result() !== undefined)
-  assert.deepEqual(kinds(result()), [['message', 'Writer'], ['view', 'Writer']])
+  assert.deepEqual(kinds(result()), [['message', 'Writer'], ['view', 'Writer'], ['view', 'Writer']])
+  assert.deepEqual(result().replies.filter(row => row.kind === 'view').map(row => row.title), ['Basis', 'Basis readout'])
   assert.equal(host.agentOf('ga').calls.length, 0)
 })
 
