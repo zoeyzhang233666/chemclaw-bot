@@ -1,0 +1,36 @@
+name: Temporary skill UI bundle regeneration
+# One-shot bundle refresh for the legacy reset action
+on:
+  push:
+    branches:
+      - fix/skill-library-builtin-catalog-zh
+    paths:
+      - .github/workflows/temporary-skill-ui-bundle.yml
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    if: github.repository == 'zoeyzhang233666/chemclaw-bot'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - run: npm ci --no-fund --no-audit
+        working-directory: chemclaw-bot
+      - run: npm run build
+        working-directory: chemclaw-bot
+      - name: Commit generated client bundle to this feature branch only
+        run: |
+          if ! git diff --quiet -- chemclaw-bot/client.js; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add chemclaw-bot/client.js
+            git commit -m 'build: regenerate ChemClaw client for skill library'
+            git push origin HEAD:fix/skill-library-builtin-catalog-zh
+          fi
