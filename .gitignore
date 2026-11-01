@@ -62,3 +62,7 @@
 # Platform Python/AKShare archives are produced by the release builders.
 /chemclaw-bot/runtime/bundled/
 /chemclaw-bot/runtime/.build-tools/
+
+# Offline Office runtime payload archives and unpacked files
+/app/build/runtime/
+/app/build/runtime-cache/
