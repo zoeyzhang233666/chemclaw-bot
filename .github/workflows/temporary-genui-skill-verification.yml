@@ -1,0 +1,37 @@
+name: Temporary GenUI skill catalog verification
+on:
+  push:
+    branches: [fix/skill-library-builtin-catalog-zh]
+    paths: [.github/workflows/temporary-genui-skill-verification.yml]
+permissions:
+  contents: write
+jobs:
+  verify-build:
+    if: github.repository == 'zoeyzhang233666/chemclaw-bot'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - run: npm ci --no-fund --no-audit
+        working-directory: chemclaw-bot
+      - name: Verify tailored skill prompts and visual categories
+        run: node --test test/new-skill-examples.test.js test/skill-presentation.test.js
+        working-directory: chemclaw-bot
+      - name: Build committed client bundle
+        run: npm run build
+        working-directory: chemclaw-bot
+      - name: Push generated client bundle to isolated PR branch
+        run: |
+          if ! git diff --quiet -- chemclaw-bot/client.js; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add chemclaw-bot/client.js
+            git commit -m 'build: refresh skill catalog GenUI copy'
+            git push origin HEAD:fix/skill-library-builtin-catalog-zh
+          fi
