@@ -146,7 +146,7 @@ export function install(rt) {
       }
       rt.noteMarketOhlcSource?.(exec.agent?.id, 'ready')
       return JSON.stringify(value)
-    } catch (error) {
+    } catch {
       rt.noteMarketOhlcSource?.(exec.agent?.id, 'unavailable')
       return JSON.stringify({
         status: 'unavailable', error: 'The managed AKShare environment or market query failed.',
