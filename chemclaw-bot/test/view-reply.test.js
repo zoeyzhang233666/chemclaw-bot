@@ -89,7 +89,7 @@ test('advanced charts use the existing private ownership and display-only turn r
     assert.equal(shown.concluded, false)
     assert.equal((await team()).views['writer-now'], undefined)
     assert.match((await show('outsider', { view })).text, /Only Bots/)
-    assert.match((await show('writer-group', { view, audience: 'team' })).text, /only for answers to the human/)
+    assert.match((await show('writer-group', { view, audience: 'team' })).text, /explicitly marked team-only/)
   }
   assert.equal((await call('set-prefs', { advancedCharts: false })).ok, true)
   assert.equal((await team()).prefs.advancedCharts, false)
@@ -104,7 +104,7 @@ test('show_view registers an interactive card, refuses a group and a display-onl
   await ctx.registeredTools.get('list_bots').execute({}, { agent: { id: 'chief' } })
 
   const group = await show('writer-group', { title: 'Pick', view: CHOICES })
-  assert.match(group.text, /only for answers to the human/)
+  assert.match(group.text, /Group views cannot submit answers/)
   assert.equal(group.concluded, false)
   const stranger = await show('outsider', { title: 'Pick', view: CHOICES })
   assert.match(stranger.text, /^Only Bots on the team can use show_view\. Use ask_user_question if it is available in this session, or ask the user in your reply\.$/)
