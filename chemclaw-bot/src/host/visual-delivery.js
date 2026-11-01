@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
-import { marketQuoteIntent } from './market-quote-intent.js'
+import { marketQuoteIntent, mixedOverlayRequested } from './market-quote-intent.js'
 
 export const VISUAL_NOTICE = '[chemclaw-visual-delivery'
 const textOf = content => Array.isArray(content) ? content.filter(block => block?.type === 'text').map(block => block.text ?? '').join('\n') : ''
@@ -271,7 +271,7 @@ export function requestedViewReminder(turn, bot, kinds) {
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
 }
 
-const botMixedNeeded = (entry, isBot) => entry.quoteIntent === 'mixed' && isBot && !entry.mixedVisualCommitted
+const botMixedNeeded = (entry, isBot) => entry.mixedOverlayRequired && isBot && !entry.mixedVisualCommitted
 
 export function visualReminder(turn, bot) {
   return `${VISUAL_NOTICE} turn=${turn}]\nThe user-facing answer has no inline visual delivery. Add only the missing view now, using the evidence already obtained; do not repeat the prose, research or external actions. ${bot ? 'Prefer show_view for the existing charts and cards; use an inline dsh-ui fence for richer GenUI components (omit panel:true).' : 'Use an inline dsh-ui fence with the installed GenUI components.'} Choose from the information: numbers → metrics/chart, comparison → chart/table, events → timeline, process → steps/diagram, explanation or a short answer → a compact card. Include units and sources where available. Never invent missing values to draw a chart. An HTML/file link does not replace the inline view. Follow the conversation language.`
@@ -282,7 +282,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, mixedVisualCommitted: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -302,6 +302,7 @@ export function install(rt) {
         next.marketChartNudged = previous.marketChartNudged
         next.marketChartCommitted = previous.marketChartCommitted
         next.mixedVisualCommitted = previous.mixedVisualCommitted
+        next.mixedOverlayRequired = previous.mixedOverlayRequired
         next.marketOhlcStatus = previous.marketOhlcStatus
         next.textOnly = previous.textOnly
         next.visual = previous.visual
@@ -321,7 +322,7 @@ export function install(rt) {
         if (!result.isError && !event.data.error && /^The view is (?:on screen|staged)/u.test(textOf(result.content))) {
           entry.visual = true
           if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
-          if (entry.quoteIntent === 'mixed' && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
+          if (entry.mixedOverlayRequired && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
           for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
         }
       }
@@ -333,6 +334,7 @@ export function install(rt) {
         entry.human = true
         entry.textOnly = textOnlyRequested(text)
         entry.quoteIntent = marketQuoteIntent(text)
+        entry.mixedOverlayRequired = mixedOverlayRequested(text)
         entry.marketHistory = marketHistoryRequest(text)
         entry.multiAssetMarket = multiAssetMarketRequest(text)
         entry.marketChartNudged = false
@@ -348,7 +350,7 @@ export function install(rt) {
       else if (source?.kind === 'bot' && source.role === 'room' && !source.askedBy) {
         const current = text.split(/This round so far[^\n]*:\n/u)[1]?.split('\n\n')[0] ?? ''
         const user = [...current.matchAll(/^User: (.*)$/gmu)].at(-1)?.[1]
-        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.quoteIntent = marketQuoteIntent(user); entry.marketHistory = marketHistoryRequest(user); entry.multiAssetMarket = multiAssetMarketRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
+        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.quoteIntent = marketQuoteIntent(user); entry.mixedOverlayRequired = mixedOverlayRequested(user); entry.marketHistory = marketHistoryRequest(user); entry.multiAssetMarket = multiAssetMarketRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
       }
     } else if (event.type === 'assistant/message') {
       const text = textOf(event.data?.message?.content)
@@ -380,13 +382,14 @@ export function install(rt) {
     const entry = stateOf(id)
     entry.visual = true
     if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
-    if (entry.quoteIntent === 'mixed' && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
+    if (entry.mixedOverlayRequired && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
     for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
   }
   rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
   rt.marketQuoteIntentOf = id => stateOf(id).quoteIntent
   rt.explicitSpotRequestOf = id => stateOf(id).quoteIntent === 'spot'
   rt.mixedMarketRequestOf = id => stateOf(id).quoteIntent === 'mixed'
+  rt.strictMixedOverlayOf = id => stateOf(id).mixedOverlayRequired === true
   rt.marketOhlcStatus = id => stateOf(id).marketOhlcStatus
   rt.noteMarketOhlcSource = (id, status) => {
     if (!id) return
