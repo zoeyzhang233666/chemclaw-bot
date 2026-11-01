@@ -576,15 +576,15 @@ function UpdateButton({ useUpdate, actions }) {
                 }, dshPhase === 'installing' ? t('Updating…') : dshPhase === 'failed' ? t('Try again') : t('Update')))) : null), document.body) : null)
 }
 
-// The footer entry to the shell's plugin panel.
+// The footer entry to classic Agent mode. Keep the shell's footer button styling.
 export function ConnectPlugins({ wide, actions }) {
   if (!wide) return null
   return h('span', { className: 'bt-connect-wrap' },
     h('button', {
       type: 'button', className: 'bt-connect bt-connect-foot',
-      onClick: () => actions.selectPanel('plugins'),
+      onClick: () => actions.setSurface('agent'),
     },
-    h(PlugIcon), t('Connect plugins')))
+    h(SwitchIcon), t('Switch to classic Agent mode')))
 }
 
 // Account seat of the Settings trigger: the visible label stays for assistive tech only.
@@ -763,7 +763,7 @@ export function AccountLauncher({ seat = true, settingsOpen, openSettings, openO
       [t('Settings'), GearIcon, () => actions.openSettings('general')],
     ],
     [
-      [t('Switch to classic Agent mode'), SwitchIcon, () => actions.setSurface('agent')],
+      [t('Connect plugins'), PlugIcon, () => actions.selectPanel('plugins')],
     ],
   ]
   if (signedIn) groups.push([[accountT('signOut'), SignOutIcon, askSignOut, undefined, true]])
@@ -868,7 +868,7 @@ export const BRAND_CSS = `
 `
 
 // With the whale holding the settings seat, the Bot row is just the account menu
-// and Connect plugins; FooterAccount only shows when the seat went to no one. The
+// and the classic Agent switch; FooterAccount only shows when no seat is held. The
 // shell's footer classes are CSS-module names, so they match on their stems.
 export const SIDEBAR_CSS = `
 .bt-confirm{width:260px;max-width:72vw;padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px}
