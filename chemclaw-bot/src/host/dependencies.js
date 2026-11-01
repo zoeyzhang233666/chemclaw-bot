@@ -119,6 +119,17 @@ export function install(rt) {
   // One pinned AKShare environment serves stock and futures tools. Every Bot
   // receives these directly; the user need not know Python or which source to pick.
   const marketHistory = async (args, exec) => {
+    // Guard at execution, not just in prompt text: a physical/spot quote must
+    // never receive a futures continuous-contract price from this tool.
+    if (rt.explicitSpotRequestOf?.(exec.agent?.id)) {
+      return JSON.stringify({
+        status: 'market_mismatch',
+        requestedMarket: 'spot',
+        data: [],
+        error: 'The user explicitly requested a SPOT/PHYSICAL commodity quote. Stock/futures OHLC tools are not spot-price sources.',
+        next: 'First try the configured Chemcloud Data Hub (chem-data-hub) MCP spot price tools. If they are unavailable or return no verifiable spot quote, search/fetch independent SPOT or physical market quotes on the web. Never use futures/main-continuous, settlements or a futures K-line as a substitute. Record grade, region, unit, quote date and source.',
+      })
+    }
     try {
       await rt.ensureMarketEnvironment()
       const result = await run(python, [join(resources, 'futures.py'), JSON.stringify(args)], {
@@ -146,7 +157,7 @@ export function install(rt) {
   const historyOutput = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: value }] }
   rt.ctx.tools.register(defineTool({
     name: 'chem_futures_history',
-    description: 'FIRST CHOICE for historical futures OHLC/K-line data: use market=domestic and query=the futures instrument name (e.g. 液化气, 液化石油气/LPG -> DCE PG0, 螺纹钢 -> RB0, 甲醇 -> MA0) or symbol=known provider code; use market=foreign and symbol=CL for WTI. Resolves many listed futures through documented continuous-contract aliases and the AKShare catalog. Automatically prepared AKShare runtime, no user data-source choice. Continuous histories are NOT tradable delivery contracts. Returns dated open/high/low/close, source, symbol, and provider limitations.',
+    description: 'ONLY for requests about FUTURES (never spot, physical/现货, ex-factory or delivered quotes). FIRST CHOICE for historical futures OHLC/K-line data: use market=domestic and query=the futures instrument name (e.g. 液化气, 液化石油气/LPG -> DCE PG0, 螺纹钢 -> RB0, 甲醇 -> MA0) or symbol=known provider code; use market=foreign and symbol=CL for WTI. Resolves many listed futures through documented continuous-contract aliases and the AKShare catalog. Automatically prepared AKShare runtime, no user data-source choice. Continuous histories are NOT tradable delivery contracts. Returns dated open/high/low/close, source, symbol, and provider limitations.',
     parameters: { market: { type: 'string', required: true, enum: ['domestic', 'foreign'] }, symbol: { type: 'string', description: 'Optional verified provider symbol, e.g. PG0, RB0, CL' }, query: { type: 'string', description: 'Optional natural-language instrument name, e.g. 液化气 or 甲醇; use when no code is known' }, start: { type: 'string' }, end: { type: 'string' } },
     output: historyOutput,
     execute: async (args, exec) => marketHistory(args, exec),
