@@ -1,10 +1,12 @@
-export const ADVANCED_CHART_KINDS = ['scatter', 'radar', 'heatmap', 'funnel', 'treemap', 'sankey', 'gauge']
-export const ADVANCED_CHART_PROPS = ['xValues', 'xUnit', 'maxima', 'max', 'links']
+import { normalizeCandles } from './candlestick.js'
+
+export const ADVANCED_CHART_KINDS = ['candlestick', 'scatter', 'radar', 'heatmap', 'funnel', 'treemap', 'sankey', 'gauge']
+export const ADVANCED_CHART_PROPS = ['bars', 'xValues', 'xUnit', 'maxima', 'max', 'links']
 
 const finite = value => typeof value === 'number' && Number.isFinite(value)
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value)
 const extras = {
-  scatter: ['xValues', 'xUnit'], radar: ['maxima'], heatmap: [], funnel: [], treemap: [],
+  candlestick: ['bars'], scatter: ['xValues', 'xUnit'], radar: ['maxima'], heatmap: [], funnel: [], treemap: [],
   sankey: ['links'], gauge: ['max'],
 }
 
@@ -16,6 +18,21 @@ export function checkAdvancedChart(node, path, ctx, isFormula) {
     if (node[key] !== undefined && !extras[kind]?.includes(key)) return `${path}.${key}: not supported for ${kind ?? 'bar'}`
   }
   if (!advanced) return undefined
+  if (kind === 'candlestick') {
+    if (node.categories !== undefined || node.series !== undefined) return `${path}: candlestick uses bars only, not categories or series`
+    if (!Array.isArray(node.bars) || node.bars.length < 2 || node.bars.length > 50)
+      return `${path}.bars: expected 2 to 50 OHLC records`
+    const keys = new Set(['date', 'time', '日期', '交易日期', 'open', '开盘', '开盘价',
+      'high', '最高', '最高价', 'low', '最低', '最低价', 'close', '收盘', '收盘价', 'volume', '成交量'])
+    for (const [i, bar] of node.bars.entries()) {
+      if (!record(bar) || Object.keys(bar).some(key => !keys.has(key)))
+        return `${path}.bars[${i}]: expected only date/open/high/low/close/volume fields`
+    }
+    try { normalizeCandles(node.bars) } catch (error) { return `${path}.bars: ${error.message}` }
+    if (node.unit !== undefined && typeof node.unit !== 'string') return `${path}.unit: expected a string`
+    if (node.caption !== undefined && typeof node.caption !== 'string') return `${path}.caption: expected a string`
+    return undefined
+  }
   const count = node.categories.length
   if (count > 80) return `${path}.categories: at most 80 labels for an advanced chart`
   if (node.categories.some(label => String(label).length > 120)) return `${path}.categories: labels must be at most 120 characters`
