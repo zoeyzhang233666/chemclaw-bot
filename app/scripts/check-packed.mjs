@@ -275,8 +275,12 @@ async function chat(cdp) {
     console.log('check-packed: About checked the isolated app update feed')
   }
   await evaluate("document.querySelector('.bt-account').click()")
-  const classicMode = "[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(切换经典 Agent 模式|Switch to classic Agent mode)$/.test(node.textContent.trim()))"
-  await until(classicMode, 'the classic Agent mode entry')
+  const pluginEntry = "[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(连接插件|Connect plugins)$/.test(node.textContent.trim()))"
+  await until(pluginEntry, 'Connect plugins in the account menu')
+  await evaluate("document.querySelector('.bt-account').click()")
+  await until("!document.querySelector('.bt-account-menu')", 'account menu to close')
+  const classicMode = "[...document.querySelectorAll('button.bt-connect-foot')].find(node => /^(经典模式|Classic mode)$/.test(node.textContent.trim()))"
+  await until(classicMode, 'the classic mode footer button')
   await evaluate(`${classicMode}.click()`)
   await until("document.querySelector('.bt-classic-settings')", 'the classic settings button')
   await openSettings()

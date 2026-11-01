@@ -765,6 +765,7 @@ var ZH = {
   "This DSH cannot load connectors": "这个 DSH 不能加载连接器",
   "No such connector": "没有这个连接器",
   "Classic Agent mode": "经典 Agent 模式",
+  "Classic mode": "经典模式",
   "Switch": "切换",
   "Switch to classic Agent mode": "切换经典 Agent 模式",
   "{model} is not available anymore. Pick another model for me.": "{model} 已经不可用了。给我换一个模型吧。",
@@ -12626,10 +12627,12 @@ function ConnectPlugins({ wide, actions }) {
       {
         type: "button",
         className: "bt-connect bt-connect-foot",
-        onClick: () => actions.selectPanel("plugins")
+        title: t("Switch to classic Agent mode"),
+        "aria-label": t("Switch to classic Agent mode"),
+        onClick: () => actions.setSurface("agent")
       },
-      (0, import_react27.createElement)(PlugIcon),
-      t("Connect plugins")
+      (0, import_react27.createElement)(SwitchIcon),
+      t("Classic mode")
     )
   );
 }
@@ -12827,7 +12830,7 @@ function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboardi
       [t("Settings"), GearIcon, () => actions.openSettings("general")]
     ],
     [
-      [t("Switch to classic Agent mode"), SwitchIcon, () => actions.setSurface("agent")]
+      [t("Connect plugins"), PlugIcon, () => actions.selectPanel("plugins")]
     ]
   ];
   if (signedIn) groups.push([[accountT("signOut"), SignOutIcon, askSignOut, void 0, true]]);
