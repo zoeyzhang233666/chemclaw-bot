@@ -18,6 +18,49 @@ const GENERAL_SKILLS = {
   'chemclaw-presentations': ['制作可编辑演示文稿', '把资料整理成适合汇报、客户拜访的 PowerPoint 演示文稿。', '可编辑 PPTX、引用来源与必要的数据底稿'],
   'guizang-ppt-skill': ['制作横向网页演示文稿', '把演讲与分享内容制作成可在浏览器翻页的网页演示文稿。', '自包含 HTML 网页演示文稿'],
 }
+
+const LEGACY_DISPLAY = {
+  brainstorming: ['业务需求与方案构思', '梳理目标、约束与可行方案，适用于化工项目和产品规划。', '基础流程'],
+  'executing-plans': ['按计划执行任务', '依据既定任务计划逐项执行并核验成果。', '基础流程'],
+  'grill-me': ['业务方案质询', '追问采购、销售或研究方案的关键假设与潜在风险。', '基础流程'],
+  'grill-with-docs': ['方案质询与决策记录', '核查方案漏洞，并同步整理决策记录和术语。', '基础流程'],
+  grilling: ['深入质询业务方案', '用反证、约束和替代方案检验重要业务判断。', '基础流程'],
+  'using-superpowers': ['技能流程导航', '匹配合适的技能工作流程，明确各步骤的执行条件。', '基础流程'],
+  'verification-before-completion': ['交付前核验', '交付报告、表格或代码前核对证据和验收结果。', '基础流程'],
+  'writing-plans': ['制定任务实施计划', '将研究或交付目标拆分为可执行步骤与验收要求。', '基础流程'],
+  'guizang-ppt-skill': ['制作网页演示文稿', '制作可在浏览器横向翻页的演示文稿。', '通用办公'],
+  'ppt-master': ['复杂 PPT 素材设计（需另装）', '旧版技能说明保留；完整制作脚本未随安装包提供，须另行安装。', '通用办公'],
+  'dom-buy-cn': ['内贸采购场景导航', '查找和选择供应商寻源、报价、合同与采购核验技能。', '内贸采购'],
+  'dom-sales-cn': ['内贸销售场景导航', '查找和选择客户开发、销售报价及客户研究技能。', '内贸销售'],
+  'dom-buy-im': ['外贸采购场景导航', '查找和选择海外寻源、进口成本及单证核验技能。', '外贸采购'],
+  'dom-sales-ex': ['外贸销售场景导航', '查找和选择海外客户开发、出口报价与合规技能。', '外贸销售'],
+  'dom-fund': ['产业基本面场景导航', '查找和选择产业链、供需、产能及研究报告技能。', '产业基本面'],
+  'dom-spreads': ['价差与量化场景导航', '查找和选择基差、月差、季节性、价差和回测技能。', '价差与量化'],
+  'chem-public-apis': ['化工公开数据查询', '通过公开数据源核验化学品身份和基础市场资料。', '科学分析'],
+}
+// First-run legacy seeds were added without builtinSource; identify them by
+// their exact shipped description and origin, never by a possibly user-owned name alone.
+const legacySeed = JSON.parse(readFileSync(join(packageRoot, 'seed/capabilities-library.json'), 'utf8')).items
+export function reconcileLegacyBuiltins(items) {
+  let changed = false
+  for (const [name, [title, purpose, category]] of Object.entries(LEGACY_DISPLAY)) {
+    const item = items[name]
+    const original = legacySeed[name]
+    if (!item || item.kind !== 'skill' || item.builtinSource || item.directory || item.source
+      || item.createdBy != null || !original || item.description !== original.description
+      || (item.sourcePath && item.sourcePath !== original.sourcePath)) continue
+    item.builtinSource = 'chemclaw-legacy'
+    item.labels ??= { zh: title, en: item.originalName || name }
+    if (!item.labels.zh) item.labels.zh = title
+    if (!item.purpose) item.purpose = purpose
+    if (!item.category || item.category === '我的安装') item.category = category
+    item.keywords ??= [name, title, category]
+    if (name === 'ppt-master') item.invocation = { ...(item.invocation ?? {}), userInvocable: false, modelInvocable: false }
+    changed = true
+  }
+  return changed
+}
+
 export const qualityPolicy = `
 事实必须来自工具或用户材料；每条价格带日期、规格、地区、税费、币种和来源。区分事实、推论和缺口。
 Skills 的业务字段、计算口径和溯源是最低要求；示例排版不是上限。可组合辅助技能，采用更专业的分析与设计。
@@ -45,7 +88,7 @@ export async function ensureSkillLibrary(rt, { reset } = {}) {
   ]
   const pending = []
   const hashes = new Map()
-  let metadataChanged = false
+  let metadataChanged = reconcileLegacyBuiltins(rt.state.capabilities.items)
   for (const item of builtins) {
     if (reset !== item.name && rt.state.removedSkills?.includes(item.name)) continue
     const path = join(packageRoot, item.sourcePath)
