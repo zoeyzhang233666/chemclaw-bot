@@ -137,6 +137,11 @@ function checkSharp(app) {
     const skills = ['domain-skills', 'supplemental-skills'].flatMap(name => JSON.parse(fs.readFileSync(path.join(plugin, 'seed', name + '.json'), 'utf8')))
     for (const file of ['presentations', 'chemistry', 'delivery', 'research-process']) skills.push({ sourcePath: 'skills/builtin/' + file + '/SKILL.md' })
     skills.push({ sourcePath: 'skills/vendor/guizang-ppt-skill/SKILL.md' })
+    // Only redundant generated Chinese-named demo exports are omitted. The canonical examples remain.
+    const demoRoot = path.join(plugin, 'skills/domain/期现-价差与量化/22.扫描异常区域价差')
+    assert.equal(fs.existsSync(path.join(demoRoot, '例子')), false, 'Redundant generated demos must not be installed')
+    assert.equal(fs.existsSync(path.join(demoRoot, '22.扫描异常区域价差', 'SKILL.md')), true, 'Canonical skill must remain installable')
+    assert.equal(fs.existsSync(path.join(demoRoot, '22.扫描异常区域价差', 'examples')), true, 'Canonical examples must remain installable')
     for (const { sourcePath } of skills) assert.doesNotThrow(() => fs.readFileSync(path.join(plugin, sourcePath), 'utf8'), 'Packaged skill is unreadable: ' + sourcePath)
     const sharp = appRequire('sharp')
     if (process.platform === 'linux') assert.ok(sharp.versions.emscripten, 'Linux must use the packaged WASM backend')
