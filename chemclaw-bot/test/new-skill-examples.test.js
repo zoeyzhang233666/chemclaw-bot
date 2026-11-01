@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import { readFileSync } from 'node:fs'
 import { CURATED_SKILL_EXAMPLES_ZH } from '../src/shared/skill-examples.js'
 import { NATIVE_SKILL_ZH } from '../src/shared/native-skill-copy.js'
-import { NATIVE_OFFICE_COPY, nativeOfficeSummary } from '../src/host/native-skill-catalog.js'
+import { NATIVE_OFFICE_COPY } from '../src/shared/native-office-copy.js'
 import { BUILTIN_SKILL_PRESENTATION, skillExample } from '../src/shared/skill-presentation.js'
 import legacyIdentities from '../seed/legacy-skill-identities.json' with { type: 'json' }
 
@@ -25,12 +25,12 @@ test('every new bundled/legacy/native skill has a distinct concrete Chinese ques
 
 test('native Office cards and details get different examples based on what the skill actually does', () => {
   const questions = Object.keys(NATIVE_OFFICE_COPY).map(name =>
-    skillExample(nativeOfficeSummary(name, 'Office skill', 'chemclaw-office')))
+    skillExample({ name, kind: 'skill', nativeSkill: true, builtinSource: 'chemclaw-office' }))
   assert.equal(new Set(questions).size, 8)
-  assert.match(skillExample(nativeOfficeSummary('office-docx', '', 'dsh-office')), /Word 报告/)
-  assert.match(skillExample(nativeOfficeSummary('office-recalculate', '', 'dsh-office')), /重新计算关联公式/)
-  assert.match(skillExample(nativeOfficeSummary('office-render', '', 'dsh-office')), /图表遮挡/)
-  assert.match(skillExample(nativeOfficeSummary('office-export-pdf', '', 'dsh-office')), /PDF/)
+  assert.match(skillExample({ name: 'office-docx', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /Word 报告/)
+  assert.match(skillExample({ name: 'office-recalculate', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /重新计算关联公式/)
+  assert.match(skillExample({ name: 'office-render', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /图表遮挡/)
+  assert.match(skillExample({ name: 'office-export-pdf', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /PDF/)
 })
 
 test('business skill examples and user-supplied examples remain authoritative', () => {
