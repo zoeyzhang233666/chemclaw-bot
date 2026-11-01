@@ -2,7 +2,7 @@ import { createElement as h, useEffect, useRef, useState } from 'react'
 import { call } from './api.js'
 import { language, t } from './i18n.js'
 import { SearchIcon } from './icons.js'
-import { matchingSkills, SKILL_CATEGORIES, skillCategory, skillLabel, isUserSkill } from '../shared/skills.js'
+import { matchingSkills, SKILL_CATEGORIES, skillCategory, skillLabel, isUserSkill, isMyInstallation } from '../shared/skills.js'
 import { SkillInstaller } from './skill-installer.js'
 import { skillEmoji, skillExample } from '../shared/skill-presentation.js'
 import { SkillEmojiPicker, SKILL_EMOJI_CSS } from './skill-emoji-picker.js'
@@ -10,15 +10,32 @@ import { SkillEmojiPicker, SKILL_EMOJI_CSS } from './skill-emoji-picker.js'
 const recommended = (item, roster) => roster.bots.filter(bot => item.recommendedBots?.includes(bot.templateId))
 
 function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
-  const [item, setItem] = useState(null)
+  const [item, setItem] = useState(summary.nativeSkill ? summary : null)
   const [error, setError] = useState('')
   const [editing, setEditing] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const [busy, setBusy] = useState(false)
   const load = () => call('capability-detail', { name: summary.name }).then(setItem).catch(failure => setError(failure.message))
-  useEffect(() => { let active = true; void call('capability-detail', { name: summary.name }).then(value => { if (active) setItem(value) }, failure => { if (active) setError(failure.message) }); return () => { active = false } }, [summary.name])
+  useEffect(() => {
+    if (summary.nativeSkill) { setItem(summary); return }
+    let active = true
+    void call('capability-detail', { name: summary.name }).then(value => { if (active) setItem(value) }, failure => { if (active) setError(failure.message) })
+    return () => { active = false }
+  }, [summary.name, summary.nativeSkill])
   const run = async work => { setError(''); setBusy(true); try { await work() } catch (failure) { setError(failure.message) } finally { setBusy(false) } }
   const update = (key, value) => setItem(previous => ({ ...previous, [key]: value }))
+  // Native DSH skills are owned by their own providers, not by ChemClaw's
+  // editable capabilities store. Never offer an uninstall or misleading use action.
+  if (summary.nativeSkill) return h('section', { className: 'bt-skill-detail bt-set-card', 'aria-label': t('Skill details') },
+    h('header', { className: 'bt-skill-section-head' },
+      h('div', { className: 'bt-skill-heading' }, h('span', { className: 'bt-skill-glyph', 'aria-hidden': true }, skillEmoji(summary)),
+        h('div', null, h('span', { className: 'bt-skill-badge' }, t(skillCategory(summary))), h('h3', null, skillLabel(summary, language())))),
+      h('button', { className: 'bt-soft bt-soft-sm', onClick: onClose }, t('Close'))),
+    h('p', { className: 'bt-skill-purpose' }, summary.purpose || summary.description),
+    h('p', { className: 'bt-set-hint' }, '此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。'),
+    h('p', { className: 'bt-set-hint' }, '在对话中可以通过技能菜单选择，或输入：', h('code', null, '/' + summary.name)),
+    h('details', { className: 'bt-advanced' }, h('summary', null, t('Technical details and files')),
+      h('dl', { className: 'bt-skill-facts' }, [['Technical ID', summary.name], ['Source', summary.builtinSource]].map(([key, value]) => h('div', { key }, h('dt', null, t(key)), h('dd', null, value)))))
   return h('section', { className: 'bt-skill-detail bt-set-card', 'aria-label': t('Skill details'), 'aria-busy': busy },
     h('header', { className: 'bt-skill-section-head' }, h('div', { className: 'bt-skill-heading' }, h('span', { className: 'bt-skill-glyph', 'aria-hidden': true }, skillEmoji(item || summary)), h('div', null, h('span', { className: 'bt-skill-badge' }, t(skillCategory(item || summary))), h('h3', null, skillLabel(item || summary, language())))), h('button', { className: 'bt-soft bt-soft-sm', onClick: onClose }, t('Close'))),
     error ? h('p', { role: 'alert', className: 'bt-error' }, error) : null,
@@ -42,7 +59,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
         item.dependencies?.state === 'needs-setup' ? h('button', { className: 'bt-soft', onClick: () => actions.openSettings('connectors') }, t('Set up the analysis environment')) : null,
         h('div', { className: 'bt-expert-example' }, h('span', null, t('Try asking')), h('p', null, skillExample(item, language()))),
         h('details', { className: 'bt-advanced' }, h('summary', null, t('Technical details and files')),
-          h('dl', { className: 'bt-skill-facts' }, [['Technical ID', item.name], ['Original name', item.originalName || item.name], ['Version', item.version || item.builtinVersion || '—'], ['Source', item.source?.url || t(item.builtinSource ? 'Built-in' : 'My installation')]].map(([key, value]) => h('div', { key }, h('dt', null, t(key)), h('dd', null, value)))),
+          h('dl', { className: 'bt-skill-facts' }, [['Technical ID', item.name], ['Original name', item.originalName || item.name], ['Version', item.version || item.builtinVersion || '—'], ['Source', item.source?.url || t(isMyInstallation(item) ? 'My installation' : 'Built-in')]].map(([key, value]) => h('div', { key }, h('dt', null, t(key)), h('dd', null, value)))),
           h('pre', { className: 'bt-skill-file-tree' }, (item.files ?? []).map(file => file.path).join('\n')),
           item.dependencies?.manifests?.length ? h('p', null, t('Dependency files: {names}', { names: item.dependencies.manifests.join(' · ') })) : null,
           h('details', null, h('summary', null, t('Skill instructions')), h('pre', { className: 'bt-skill-content' }, item.content))),
@@ -64,23 +81,38 @@ export function SkillLibrary({ roster, actions, selectedId }) {
   const [installing, setInstalling] = useState(false)
   const [detail, setDetail] = useState(() => roster.capabilities.find(item => item.name === selectedId) ?? null)
   const [message, setMessage] = useState('')
+  const [nativeSkills, setNativeSkills] = useState([])
+  const [nativeError, setNativeError] = useState('')
+  useEffect(() => {
+    let active = true
+    void call('native-skill-catalog').then(result => {
+      if (!active) return
+      setNativeSkills(result.items ?? [])
+      if (selectedId && !detail) setDetail((result.items ?? []).find(item => item.name === selectedId) ?? null)
+    }, error => { if (active) setNativeError(error.message) })
+    return () => { active = false }
+  }, [])
   useEffect(() => {
     if (!detail && !installing) return
     const scroller = region.current?.closest('.bt-settings-scroll')
     if (scroller) scroller.scrollTo({ top: 0, behavior: 'instant' })
   }, [detail?.name, installing])
   const use = item => { void actions.useSkill(item.name).catch(failure => actions.reportError(failure)) }
-  const skills = (roster.capabilities ?? []).filter(item => item.kind === 'skill')
+  const managed = (roster.capabilities ?? []).filter(item => item.kind === 'skill')
+  // Prefer the managed entry if a native provider shares an ID (notably office).
+  const known = new Set(managed.map(item => item.name))
+  const skills = [...managed, ...nativeSkills.filter(item => !known.has(item.name))]
   const groups = [...new Set([...SKILL_CATEGORIES, ...skills.map(skillCategory)])].filter(value => value !== '我的安装' && skills.some(item => skillCategory(item) === value))
-  const items = matchingSkills(roster.capabilities ?? [], query, category, language()).sort((a, b) => skillLabel(a, language()).localeCompare(skillLabel(b, language()), language(), { numeric: true }))
+  const items = matchingSkills(skills, query, category, language()).sort((a, b) => skillLabel(a, language()).localeCompare(skillLabel(b, language()), language(), { numeric: true }))
   return h('section', { className: 'bt-expert-library bt-skill-library', ref: region },
     h('header', { className: 'bt-skill-section-head' }, h('p', { className: 'bt-library-intro' }, t('Find a skill for the work you want to do.')),
       h('button', { className: 'bt-soft bt-skill-primary', onClick: () => { setInstalling(!installing); setDetail(null) } }, t('Install a skill'))),
     message ? h('p', { role: 'status', className: 'bt-skill-success' }, message) : null,
+    nativeError ? h('p', { role: 'alert', className: 'bt-set-hint' }, '部分内置技能目录加载失败：' + nativeError) : null,
     installing ? h(SkillInstaller, { actions, initialCategory: category, onClose: () => setInstalling(false), onInstalled: names => { setInstalling(false); setMessage(t('{count} skills installed. Choose a skill to use it.', { count: names.length })); setCategory('我的安装') } }) : null,
     detail ? h(SkillDetail, { key: detail.name, summary: detail, roster, actions, onClose: () => setDetail(null), onUse: use, onChanged: () => setMessage('') }) : null,
     h('div', { className: 'bt-catalog-search' }, h(SearchIcon), h('input', { value: query, onChange: event => setQuery(event.target.value), placeholder: t('Search tasks, skills, or keywords'), 'aria-label': t('Search tasks, skills, or keywords') })),
-    h('div', { className: 'bt-catalog-categories', role: 'group', 'aria-label': t('Category') }, ['', ...groups, '我的安装'].map(value => h('button', { key: value, 'aria-pressed': category === value, onClick: () => setCategory(value) }, value ? t(value) : t('All skills'), h('span', { className: 'bt-skill-group-count' }, value === '我的安装' ? skills.filter(item => !item.builtinSource).length : value ? skills.filter(item => skillCategory(item) === value).length : skills.length)))),
+    h('div', { className: 'bt-catalog-categories', role: 'group', 'aria-label': t('Category') }, ['', ...groups, '我的安装'].map(value => h('button', { key: value, 'aria-pressed': category === value, onClick: () => setCategory(value) }, value ? t(value) : t('All skills'), h('span', { className: 'bt-skill-group-count' }, value === '我的安装' ? skills.filter(isMyInstallation).length : value ? skills.filter(item => skillCategory(item) === value).length : skills.length)))),
     h('p', { className: 'bt-set-hint', role: 'status' }, t('{count} skills found', { count: items.length })),
     h('div', { className: 'bt-expert-grid' }, items.map(item => h('article', { className: 'bt-expert-card bt-skill-card', key: item.name },
       h('header', null, h('span', { className: 'bt-skill-glyph', 'aria-hidden': true }, skillEmoji(item)), h('div', null, h('h3', null, skillLabel(item, language())), h('span', { className: 'bt-skill-badge' }, t(skillCategory(item))))),
@@ -88,7 +120,7 @@ export function SkillLibrary({ roster, actions, selectedId }) {
       h('div', { className: 'bt-expert-example' }, h('span', null, t('Try asking')), h('p', null, skillExample(item, language()))),
       h('footer', null, h('span', { className: 'bt-set-hint' }, t(item.builtinSource ? 'Built-in' : 'My installation')),
         h('div', { className: 'bt-actions' }, h('button', { className: 'bt-soft bt-soft-sm', onClick: () => { setDetail(item); setInstalling(false) } }, t('View details')),
-          h('button', { className: 'bt-soft bt-soft-sm bt-skill-primary', disabled: !isUserSkill(item), title: !isUserSkill(item) ? t('Manual invocation is disabled') : undefined, onClick: () => use(item) }, t('Use skill'))))))),
+          item.nativeSkill ? null : h('button', { className: 'bt-soft bt-soft-sm bt-skill-primary', disabled: !isUserSkill(item), title: !isUserSkill(item) ? t('Manual invocation is disabled') : undefined, onClick: () => use(item) }, t('Use skill'))))))),
     !items.length ? h('div', { className: 'bt-skill-empty' }, h('h3', null, t('No matching skills')), h('p', null, t('Try another keyword or category, or install your own skill.'))) : null)
 }
 
