@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { marketQuoteIntent, mismatchedSpotPriceView } from '../src/host/market-quote-intent.js'
+import { marketQuoteIntent, mismatchedSpotPriceView, mixedOverlayRequested } from '../src/host/market-quote-intent.js'
 import { marketHistoryRequest } from '../src/host/visual-delivery.js'
 
 test('physical chemical spot intent takes precedence over exchange K-line routing', () => {
@@ -72,4 +72,29 @@ test('basis and spot/futures overlays are mixed, not banned spot-only views or O
     series: [{ name: '乙二醇现货·华东', values: [3800, 3820] },
       { name: '乙二醇期货·EG主力收盘', values: [3760, 3770] }] }
   assert.equal(mismatchedSpotPriceView(overlay), true, 'spot-only protection must still reject futures-labeled charts')
+})
+
+test('negative words referring to files or chart format do not suppress mixed quote intent', () => {
+  for (const question of [
+    '甲醇现货和期货价格叠加看基差，不要表格',
+    '纯碱现货与期货走势对比，不要下载文件',
+    '乙二醇现货与盘面同图，不用网页',
+    '甲醇基差最近一个月走势图，不要假数据',
+  ]) {
+    assert.equal(marketQuoteIntent(question), 'mixed', question)
+    assert.equal(mixedOverlayRequested(question), true, question)
+  }
+  for (const question of [
+    '乙二醇现货，不要期货',
+    '现货和期货不是一回事，只看现货价格',
+    '布伦特现货价格而非期货',
+  ]) {
+    assert.equal(marketQuoteIntent(question), 'spot', question)
+    assert.equal(mixedOverlayRequested(question), false, question)
+  }
+  for (const question of ['@Writer 基差呢', '@Writer 价格和基差', '甲醇现货和期货的价差']) {
+    assert.equal(mixedOverlayRequested(question), false, question + ': does not explicitly ask for overlay chart')
+  }
+  assert.equal(mixedOverlayRequested('甲醇现货和期货价格叠加看基差'), true)
+  assert.equal(mixedOverlayRequested('甲醇基差最近一个月走势'), true)
 })
