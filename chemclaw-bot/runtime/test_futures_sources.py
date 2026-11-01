@@ -126,5 +126,47 @@ class StockSourceTests(unittest.TestCase):
             })
 
 
+    def test_lpg_natural_language_resolves_PG0_and_renders_real_provider_ohlc(self):
+        source = pd.DataFrame([
+            {'日期': '2026-10-28', '开盘价': 4000, '最高价': 4100,
+             '最低价': 3980, '收盘价': 4050, '成交量': 190},
+            {'日期': '2026-10-29', '开盘价': 4050, '最高价': 4150,
+             '最低价': 4010, '收盘价': 4120, '成交量': 220},
+        ])
+        with patch.object(self.ak, 'futures_main_sina', return_value=source, create=True) as fetch:
+            result = self.adapter.history({'market': 'domestic', 'query': '液化气期货最近一个月价格'})
+        fetch.assert_called_once_with(symbol='PG0')
+        self.assertEqual(result['symbol'], 'PG0')
+        self.assertEqual(result['exchange'], 'DCE')
+        self.assertEqual(result['currency'], 'CNY')
+        self.assertEqual(result['unit'], 'metric tonne')
+        self.assertEqual(result['seriesType'], 'main-continuous')
+        self.assertEqual(result['data'][-1]['close'], 4120)
+        self.assertEqual(result['data'][-1]['high'], 4150)
+
+    def test_common_continuous_futures_names_use_real_symbols(self):
+        cases = {
+            '液化石油气': 'PG0', 'LPG': 'PG0',
+            '甲醇期货最近一个月价格': 'MA0',
+            '螺纹钢': 'RB0', '纯碱': 'SA0',
+            '碳酸锂': 'LC0', '国际铜': None,
+        }
+        for name, expected in cases.items():
+            if expected is None:
+                continue
+            self.assertEqual(self.adapter.resolve_futures_symbol(
+                {'market': 'domestic', 'query': name}), expected)
+        self.assertEqual(self.adapter.resolve_futures_symbol(
+            {'market': 'foreign', 'query': 'WTI'}), 'CL')
+
+    def test_unknown_futures_name_uses_unique_provider_catalog_or_returns_unknown(self):
+        frame = pd.DataFrame([{'symbol': 'XY0', 'name': '测试原料连续', 'exchange': 'dce'}])
+        with patch.object(self.ak, 'futures_display_main_sina', return_value=frame, create=True):
+            self.assertEqual(self.adapter.resolve_futures_symbol(
+                {'market': 'domestic', 'query': '测试原料期货'}), 'XY0')
+            with self.assertRaisesRegex(ValueError, 'Unrecognized or ambiguous'):
+                self.adapter.resolve_futures_symbol({'market': 'domestic', 'query': '不存在品种'})
+
+
 if __name__ == '__main__':
     unittest.main()
