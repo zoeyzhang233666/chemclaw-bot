@@ -411,3 +411,23 @@ test('one market history source result selects K-line or permits only an honest 
   f.rt.noteMarketOhlcSource('s', 'ready')
   assert.equal(f.rt.marketOhlcStatus('s'), 'untried', 'spot prices must not inherit an exchange OHLC result')
 })
+
+test('a price view stays committed across model continuation turns, resets on the next real user request', () => {
+  const f = setup()
+  const line = { type: 'chart', kind: 'line', categories: ['x', 'y'], series: [{ values: [1, 2] }] }
+  f.start(1); f.user('WTI 原油期货最近一个月价格')
+  f.rt.noteMarketOhlcSource('s', 'ready')
+  f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 },
+    { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 },
+  ] })
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), true)
+  f.start(2) // a model continuation, not a new user's question
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), true)
+  assert.equal(f.rt.marketOhlcStatus('s'), 'ready')
+  f.user('中石油最近一个月股价')
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+  assert.equal(f.rt.marketOhlcStatus('s'), 'untried')
+  f.start(3)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+})
