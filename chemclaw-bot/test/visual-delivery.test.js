@@ -257,3 +257,34 @@ test('disabling advanced charts prevents misleading requests to render an unavai
   assert.equal(time.notices.length, 1)
   assert.match(time.notices[0].content[0].text, /timeline/)
 })
+
+test('an explicit K-line follow-up is distinct from discussing K-line problems', () => {
+  assert.deepEqual(requestedChartKinds('我想看k线图'), ['candlestick'])
+  assert.deepEqual(requestedChartKinds('请给我WTI原油K线图'), ['candlestick'])
+  assert.deepEqual(requestedChartKinds('为什么这里没有K线图'), [])
+  assert.deepEqual(requestedChartKinds('能不能生成K线图？'), [])
+  assert.deepEqual([...deliveredViewKinds({ type: 'echart', option: {
+    series: [{ type: 'candlestick', data: [[100, 101, 99, 102]] }],
+  } })], ['candlestick'])
+})
+
+test('close-only line does not satisfy explicitly requested K-line; real GenUI candles do', () => {
+  const f = setup()
+  f.start(); f.user('我想看K线图')
+  f.answer('Here is a closing-price line.')
+  f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'line', categories: ['1', '2'], series: [{ values: [1, 2] }] })
+  f.stop(); f.stop()
+  assert.equal(f.notices.length, 1)
+  assert.match(f.notices[0].content[0].text, /explicitly requested candlestick/)
+  assert.match(f.notices[0].content[0].text, /do NOT synthesize bars/)
+  assert.match(f.notices[0].content[0].text, /Do not send another tool call/i)
+  const good = setup()
+  const ticks = String.fromCharCode(96).repeat(3)
+  good.start(); good.user('我想看K线图')
+  good.answer(ticks + 'dsh-ui\n' + JSON.stringify({ items: [{ type: 'echart', option: {
+    xAxis: { type: 'category', data: ['2026-10-29', '2026-10-30'] },
+    series: [{ type: 'candlestick', data: [[101, 103, 100, 105], [103, 102, 101, 105]] }],
+  } }] }) + '\n' + ticks)
+  good.stop()
+  assert.equal(good.notices.length, 0)
+})
