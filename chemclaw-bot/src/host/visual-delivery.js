@@ -5,6 +5,18 @@ export const VISUAL_NOTICE = '[chemclaw-visual-delivery'
 const textOf = content => Array.isArray(content) ? content.filter(block => block?.type === 'text').map(block => block.text ?? '').join('\n') : ''
 export const textOnlyRequested = text => /\b(?:text[- ]only|no (?:charts|visuals|cards))\b|(?:只要|只用|仅用)(?:纯)?文字|(?:不要|不用)(?:图表|卡片|可视化)|纯文字(?:回答|回复)/iu.test(text)
 
+// Only historical traded-market price requests need the one-shot OHLC-first guard.
+// Do not penalize spot chemical quotes, conceptual questions or current-only quotes.
+export function marketHistoryRequest(text) {
+  const query = String(text ?? '')
+  if (!/(?:股票|股价|A股|港股|美股|ETF|期货|股指|WTI|布伦特|Brent|原油期货|期指|\b(?:stock|share|futures|equity|etf)\b)/iu.test(query)) return false
+  if (/(?:为什么无法|怎么修复|为什么不|如何实现|能不能实现|是否支持|接口开发|技术方案|代码审查)/iu.test(query)) return false
+  const historical = /(?:最近|近(?:一个|一|两|三|\d+)(?:月|周|天|日|年)|过去|一个月|上月|本月|月内|日线|日K|月线|周线|走势|趋势|历史|区间|(?:\d+|一|两|三)(?:天|日|周|月|年)|(?:20\d{2}[-年]\d{1,2}))/iu.test(query)
+  const prices = /(?:行情|股价|价格|收盘|开盘|涨跌|走势|K线|k线|蜡烛图|(?:price|chart|history|historical|trend))/iu.test(query)
+  const currentOnly = /(?:现在|目前|当前|实时|最新|此刻|现价|现报|多少钱)/iu.test(query)
+  return historical ? prices || /股价|期货|WTI|Brent/iu.test(query) : prices && !currentOnly
+}
+
 const genuiFence = /^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?$/imu
 
 export function hasInlineGenui(text, native = false) {
@@ -98,7 +110,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, marketChartNudged: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -123,12 +135,12 @@ export function install(rt) {
       const source = event.data?.source
       const text = textOf(event.data?.content)
       if (source?.form === 'notice' && text.startsWith(VISUAL_NOTICE)) { entry.reminded = true; return }
-      if (source?.kind === 'user') { entry.human = true; entry.textOnly = textOnlyRequested(text); entry.requested = new Set(requestedChartKinds(text)) }
+      if (source?.kind === 'user') { entry.human = true; entry.textOnly = textOnlyRequested(text); entry.marketHistory = marketHistoryRequest(text); entry.requested = new Set(requestedChartKinds(text)) }
       else if (source?.kind === 'schedule' || source?.audience === 'user') entry.human = true
       else if (source?.kind === 'bot' && source.role === 'room' && !source.askedBy) {
         const current = text.split(/This round so far[^\n]*:\n/u)[1]?.split('\n\n')[0] ?? ''
         const user = [...current.matchAll(/^User: (.*)$/gmu)].at(-1)?.[1]
-        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.requested = new Set(requestedChartKinds(user)) }
+        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.marketHistory = marketHistoryRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
       }
     } else if (event.type === 'assistant/message') {
       const text = textOf(event.data?.message?.content)
@@ -152,6 +164,7 @@ export function install(rt) {
   ctx.on('session/disposed', session => turns.delete(String(session.id)))
   rt.noteVisualDelivery = (id, view) => { const entry = stateOf(id); entry.visual = true; for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind) }
   rt.requiresCandlestick = id => stateOf(id).requested.has('candlestick') && !stateOf(id).textOnly
+  rt.deferMarketHistoryLineOnce = id => { const entry = stateOf(id); if (!entry.marketHistory || entry.textOnly || entry.marketChartNudged || entry.kinds.has('candlestick')) return false; entry.marketChartNudged = true; return true }
   ctx.on('agent/turn-stopping', ({ agent, turn, signal }) => {
     const session = agent.session
     const id = String(session.id)
