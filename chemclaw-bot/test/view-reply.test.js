@@ -281,3 +281,26 @@ test('a premature price line is a failed show_view call, never a phantom visible
   await assert.rejects(show('writer-now', { view: line }), /already been delivered/,
     'a second model turn must not bypass the price chart guard')
 })
+
+test('explicit commodity spot query cannot show a futures K-line or mislabeled futures quote', async t => {
+  const { ctx, show, emit, stop } = start()
+  t.after(stop)
+  await ctx.registeredTools.get('list_bots').execute({}, { agent: { id: 'chief' } })
+  emit('writer-now', 'turn/start', { turn: 50 })
+  emit('writer-now', 'user/message', {
+    source: { kind: 'user' },
+    content: [{ type: 'text', text: '纯碱现货价格' }],
+  })
+  const future = { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-28', open: 2000, high: 2030, low: 1980, close: 2010 },
+    { date: '2026-10-29', open: 2010, high: 2040, low: 1990, close: 2025 },
+  ] }
+  await assert.rejects(show('writer-now', { title: '纯碱现货', view: future }), /physical\/spot/)
+  await assert.rejects(show('writer-now', { view: {
+    type: 'metric', label: '纯碱期货主力连续', value: '虚构值',
+  } }), /physical\/spot/)
+  const spot = await show('writer-now', { view: {
+    type: 'metric', label: '华东纯碱现货出厂价（来源另附）', value: '待验证',
+  } })
+  assert.equal(spot.text, 'The view is on screen.')
+})
