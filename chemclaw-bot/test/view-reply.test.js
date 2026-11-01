@@ -257,3 +257,27 @@ test('a user message drops the open question and the open view together', async 
   assert.equal(open.questions['writer-now'], undefined)
   assert.equal(open.views['writer-now'], undefined)
 })
+
+test('a premature price line is a failed show_view call, never a phantom visible card', async t => {
+  const { ctx, show, emit, stop } = start()
+  t.after(stop)
+  await ctx.registeredTools.get('list_bots').execute({}, { agent: { id: 'chief' } })
+  emit('writer-now', 'turn/start', { turn: 7 })
+  emit('writer-now', 'user/message', {
+    source: { kind: 'user' },
+    content: [{ type: 'text', text: 'WTI 原油期货最近一个月价格' }],
+  })
+  const line = { type: 'chart', kind: 'line',
+    categories: ['2026-10-29', '2026-10-30'], series: [{ name: 'Close', values: [1, 2] }] }
+  // The UI checks tool.isError to suppress a rejected card. A successful text
+  // refusal would erroneously show the line from the original call arguments.
+  await assert.rejects(show('writer-now', { view: line }), /Before submitting a line chart/)
+  const candle = { type: 'chart', kind: 'candlestick',
+    bars: [{ date: '2026-10-29', open: 1, close: 2, low: 1, high: 3 },
+      { date: '2026-10-30', open: 2, close: 3, low: 1, high: 4 }] }
+  assert.equal((await show('writer-now', { view: candle })).text, 'The view is on screen.')
+  await assert.rejects(show('writer-now', { view: line }), /already been delivered/)
+  emit('writer-now', 'turn/start', { turn: 8 })
+  await assert.rejects(show('writer-now', { view: line }), /already been delivered/,
+    'a second model turn must not bypass the price chart guard')
+})
