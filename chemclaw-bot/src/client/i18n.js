@@ -7,6 +7,13 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'OHLC': '日K线',
+  'Opening price': '开盘价',
+  'Closing price': '收盘价',
+  'Highest price': '最高价',
+  'Lowest price': '最低价',
+  'Trading volume': '成交量',
+  'Trading date': '交易日期',
   'Advanced charts': '高级图表',
   Retry: '重试',
   'Load richer charts when needed. When off, show their data as tables.': '需要时加载更多图表。关闭后以表格展示其数据。',
