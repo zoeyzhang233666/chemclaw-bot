@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds } from '../src/host/visual-delivery.js'
+import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
 
 const content = text => [{ type: 'text', text }]
@@ -295,4 +295,46 @@ test('explicit K-line intent propagates to host chart guard and resets next turn
   assert.equal(f.rt.requiresCandlestick('s'), true)
   f.start(2); f.user('只要文字介绍最新报价')
   assert.equal(f.rt.requiresCandlestick('s'), false)
+})
+
+test('ordinary historical stock/futures queries trigger one-shot OHLC-first selection', () => {
+  const yes = [
+    'WTI 原油期货最近一个月价格',
+    '中石油最近一个月股价',
+    '中国石油最近一个月股价走势',
+    '查询中国石油股票最近一个月历史行情',
+    '请看沪深股票最近20天价格',
+    'Brent futures historical daily price',
+    '股票价格',
+  ]
+  for (const question of yes) assert.equal(marketHistoryRequest(question), true, question)
+  const no = [
+    '华东地区甲醇现货最近一个月报价',
+    '解释期货的概念',
+    '为什么无法生成K线图？',
+    '怎么修复股票K线图的渲染代码',
+    'WTI现在多少钱',
+    '中国石油企业注册地址',
+    '只要文字介绍最新股票报价',
+  ]
+  for (const question of no) assert.equal(marketHistoryRequest(question), false, question)
+})
+
+test('ordinary price history refuses a premature line once, then permits honest close-only fallback', () => {
+  const f = setup()
+  f.start()
+  f.user('中石油最近一个月股价')
+  assert.equal(f.rt.requiresCandlestick('s'), false)
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), true)
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'must not retry indefinitely')
+  f.start(2)
+  f.user('WTI原油期货最近一个月价格')
+  f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'candlestick', bars: [{ date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 }, { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 }] })
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'already delivered candles')
+  f.start(3)
+  f.user('只用纯文字回答股票历史价格')
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'text only wins')
+  f.start(4)
+  f.user('华东甲醇现货近一个月价格')
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'spot chemicals are not OHLC markets')
 })
