@@ -15,7 +15,7 @@ test('actual native candlestick renderer draws candle shapes, not only axes', ()
   const data = advancedChartData({ type: 'chart', kind: 'candlestick', bars, unit: 'USD/barrel' })
   const option = advancedChartOption(data, {
     ink: '#222', muted: '#777', line: '#ddd', card: '#fff', font: 'Arial',
-    colors: ['#4567aa', '#9977bb', '#aa9933'], narrow: false,
+    colors: ['#4567aa', '#9977bb', '#aa9933'], up: '#e46750', down: '#22a678', narrow: false,
   })
   const chart = init(null, null, { renderer: 'svg', ssr: true, width: 900, height: 450 })
   try {
