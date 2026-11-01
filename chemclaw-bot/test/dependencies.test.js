@@ -147,3 +147,25 @@ test('a failed managed runtime also returns a usable web fallback rather than cr
   assert.match(result.next, /web_search\/web_fetch/)
   assert.equal(result.data, undefined)
 })
+
+test('explicit spot inquiries cannot call futures or stock OHLC tools', async t => {
+  const { rt, tools, commands } = await fixture(t)
+  rt.explicitSpotRequestOf = id => id === 'spot-bot'
+  const before = commands.length
+  for (const [name, args] of [
+    ['chem_futures_history', { market: 'domestic', query: '纯碱' }],
+    ['chem_futures_history', { market: 'foreign', symbol: 'CL' }],
+    ['chem_stock_history', { symbol: '601857' }],
+  ]) {
+    const response = JSON.parse(await tools.get(name).execute(args, { agent: { id: 'spot-bot' } }))
+    assert.equal(response.status, 'market_mismatch')
+    assert.equal(response.requestedMarket, 'spot')
+    assert.deepEqual(response.data, [])
+    assert.match(response.next, /chem-data-hub/)
+  }
+  assert.equal(commands.length, before, 'must not install Python or query AKShare for a spot price')
+  const actualFuture = JSON.parse(await tools.get('chem_futures_history').execute(
+    { market: 'domestic', query: '纯碱' }, { agent: { id: 'futures-bot' } },
+  ))
+  assert.equal(actualFuture.source, 'test', 'normal futures queries remain supported')
+})
