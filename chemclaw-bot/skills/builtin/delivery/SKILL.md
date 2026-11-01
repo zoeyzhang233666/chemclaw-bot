@@ -51,10 +51,12 @@ or limits on analytical ability.
   the native panel is for native DSH conversations). Do not send the same data
   through both protocols. Keep theme defaults; avoid hardcoded colors. Local
   filters/sorts/sliders do not call the model; explicit actions/submit do.
-- In groups mark `audience: "user"` only for a completed answer intended for the
-  human, including an interim @ question to any member. The answer need not be
-  the group's last message or come from the admin. Do not draw charts during
-  peer delegation, progress or data checking; send findings as text/data there.
+- In groups, display-only result cards, metrics and charts are shown with the
+  completed group reply even if `audience` is omitted; explicitly setting
+  `audience: "user"` is optional. Never reject an otherwise valid finished view
+  solely for missing `audience`. Use `audience: "team"` only for internal Bot
+  delegation/progress that must not produce a public group card. Do not render
+  group cards before successful answer completion, and keep group submit controls disabled.
 - Deliver the useful conclusion and an inline view before lengthy file exports.
   A simple lookup can finish in chat; create a full report/workbook only when
   requested or required by the actual task. For requested reports keep the
