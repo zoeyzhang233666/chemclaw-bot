@@ -172,13 +172,18 @@ def history(args):
     return {'source': 'AKShare / Sina daily history', 'sourceUrl': 'https://akshare.akfamily.xyz/data/futures/futures.html', 'interface': 'futures_main_sina' if domestic else 'futures_foreign_hist', 'symbol': symbol, 'seriesType': 'main-continuous' if domestic else 'provider-contract-series', 'timezone': 'Asia/Shanghai' if domestic else 'provider-local-trading-day', 'frequency': 'daily', 'retrievedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'asOf': str(last_day), 'stale': stale, 'exchange': exchange, 'currency': currency, 'unit': unit, 'gaps': gaps, 'totalObservations': len(frame), 'shownObservations': min(len(frame), 50), 'data': json.loads(frame.tail(50).to_json(orient='records', force_ascii=False, date_format='iso'))}
 
 
-try:
-    args = json.loads(sys.argv[1])
-    print(json.dumps(stock_history(args) if args.get('market') == 'stock' else history(args), ensure_ascii=True, allow_nan=False))
-except ValueError as error:
-    # Known parameter/provider failures may be shown. Never reveal traceback paths.
-    print(json.dumps({'status': 'unavailable', 'error': str(error)[:350],
-                      'next': 'Try web_search/web_fetch for verified daily OHLC from another source before concluding data are missing. Do not repeat the failed same-provider query or fabricate bars.'}))
-except Exception:
-    print(json.dumps({'status': 'unavailable', 'error': 'A market provider or runtime returned an unexpected error.',
-                      'next': 'Try web_search/web_fetch for independently verifiable historical OHLC, or report the actual data gap without made-up numbers.'}))
+def main():
+    try:
+        args = json.loads(sys.argv[1])
+        print(json.dumps(stock_history(args) if args.get('market') == 'stock' else history(args), ensure_ascii=True, allow_nan=False))
+    except ValueError as error:
+        # Known parameter/provider failures may be shown. Never reveal traceback paths.
+        print(json.dumps({'status': 'unavailable', 'error': str(error)[:350],
+                          'next': 'Try web_search/web_fetch for verified daily OHLC from another source before concluding data are missing. Do not repeat the failed same-provider query or fabricate bars.'}))
+    except Exception:
+        print(json.dumps({'status': 'unavailable', 'error': 'A market provider or runtime returned an unexpected error.',
+                          'next': 'Try web_search/web_fetch for independently verifiable historical OHLC, or report the actual data gap without made-up numbers.'}))
+
+
+if __name__ == '__main__':
+    main()
