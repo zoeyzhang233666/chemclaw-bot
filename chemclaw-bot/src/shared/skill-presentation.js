@@ -152,7 +152,7 @@ const EMOJI_RULES = [
   ['💻', /代码|编程|coding|programming/i],
   ['🖼️', /图片|图像|image|photo/i],
 ]
-const CATEGORY_EMOJI = { '内贸采购': '🛒', '外贸采购': '🚢', '内贸销售': '🤝', '外贸销售': '🌍', '产业基本面': '🔭', '价差与量化': '📊', '通用办公': '📁', '科学分析': '🔬', '基础流程': '🧭' }
+const CATEGORY_EMOJI = { '内贸采购': '🛒', '外贸采购': '🚢', '内贸销售': '🤝', '外贸销售': '🌍', '产业基本面': '🔭', '价差与量化': '📊', '通用办公': '📁', '数据可视化': '📊', '科学分析': '🔬', '研发与调试': '💻', '基础流程': '🧭', '其他技能': '🧰' }
 const builtinPresentation = item => Object.hasOwn(BUILTIN_SKILL_PRESENTATION, item.name) ? BUILTIN_SKILL_PRESENTATION[item.name] : undefined
 
 export function skillEmoji(item) {
