@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest, genuiChartPayloadsUsable, nativeChartPayloadsUsable } from '../src/host/visual-delivery.js'
+import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest, genuiChartPayloadsUsable, nativeChartPayloadsUsable, mixedMarketVisualStatus, stripUnrenderedMixedViewText } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
 
 const content = text => [{ type: 'text', text }]
@@ -502,4 +502,59 @@ test('a spot/futures basis overlay bypasses OHLC-first and permits dated native 
   f.user('乙二醇现货价格，不要期货')
   assert.equal(f.rt.marketQuoteIntentOf('s'), 'spot', 'new real user question resets comparison')
   assert.equal(f.rt.explicitSpotRequestOf('s'), true)
+})
+
+test('mixed-market completion requires a shared-date overlay AND basis, not unrelated price charts', () => {
+  const dates = ['2026-10-28', '2026-10-29', '2026-10-30']
+  const overlay = { type: 'chart', kind: 'line', categories: dates, series: [
+    { name: '甲醇现货·华东', values: [2400, 2420, 2430] },
+    { name: '甲醇期货·MA主力', values: [2380, 2390, 2420] },
+  ] }
+  const basis = { type: 'chart', kind: 'line', categories: dates, series: [{ name: '基差（现货减期货）', values: [20, 30, 10] }] }
+  assert.deepEqual(mixedMarketVisualStatus({ type: 'stack', children: [overlay, basis] }), { overlay: true, basis: true, complete: true })
+  assert.equal(mixedMarketVisualStatus(overlay).complete, false)
+  assert.equal(mixedMarketVisualStatus({ type: 'stack', children: [
+    { type: 'chart', kind: 'line', categories: dates, series: [{ name: '甲醇期货·MA主力', values: [2380, 2390, 2420] }] },
+    { type: 'chart', kind: 'hbar', categories: ['华东', '华北'], series: [{ name: '甲醇现货价', values: [2400, 2420] }] },
+    { type: 'metric', label: '基差', value: 20 },
+  ] }).complete, false)
+  assert.equal(mixedMarketVisualStatus({ type: 'stack', children: [
+    { ...overlay, series: [{ name: '现货', values: [2400, null, null] }, overlay.series[1]] }, basis,
+  ] }).complete, false)
+})
+
+test('raw group UI JSON/fences do not count as mixed-market visual delivery', () => {
+  const raw = JSON.stringify({ type: 'stack', children: [{ type: 'chart', kind: 'line', categories: ['Oct'], series: [] }] }, null, 2)
+  const ticks = String.fromCharCode(96).repeat(3)
+  const fenced = '图表：\n' + ticks + 'dsh-ui\n' + JSON.stringify({ items: [{ type: 'text', text: 'Not rendered in group' }] }) + '\n' + ticks
+  assert.equal(stripUnrenderedMixedViewText(raw), '')
+  assert.equal(stripUnrenderedMixedViewText(raw.slice(0, 35), true), '')
+  assert.equal(stripUnrenderedMixedViewText(fenced), '图表：')
+  assert.equal(stripUnrenderedMixedViewText('解释：现货价应减期货价。'), '解释：现货价应减期货价。')
+  assert.equal(stripUnrenderedMixedViewText('{"volume": 25}'), '{"volume": 25}')
+  for (const reply of [raw, fenced]) {
+    const f = setup(); f.start(); f.user('甲醇现货和期货价格叠加看基差'); f.answer(reply); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /ONE native show_view stack/)
+    f.stop(); assert.equal(f.notices.length, 1)
+  }
+})
+
+test('complete native spot-futures+basis stack satisfies a mixed-market turn', () => {
+  const f = setup()
+  f.start(); f.user('甲醇现货和期货价格叠加看基差')
+  const dates = ['2026-10-28', '2026-10-29']
+  const full = { type: 'stack', children: [
+    { type: 'chart', kind: 'line', categories: dates, series: [
+      { name: '甲醇现货', values: [2400, 2420] },
+      { name: '甲醇期货 MA0', values: [2380, 2390] },
+    ] },
+    { type: 'chart', kind: 'line', categories: dates, series: [{ name: '基差', values: [20, 30] }] },
+  ] }
+  f.answer('同一日期现货和期货比较如下。'); f.rt.noteVisualDelivery('s', full); f.stop()
+  assert.equal(f.notices.length, 0)
+  f.start(2); f.user('甲醇现货最近一个月价格')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'spot')
+  f.answer('只能找到当日现货报价。'); f.stop(2)
+  assert.equal(f.notices.length, 1)
 })
