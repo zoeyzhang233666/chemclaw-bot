@@ -8,7 +8,7 @@ export const skillLabel = (item, locale = 'zh') => item.displayName || item.labe
 
 // Origin and category are independent: imported skills may be assigned to
 // "科学分析" or "通用办公" while still belonging to "我的安装".
-export const isMyInstallation = item => item.kind === 'skill' && !item.builtinSource && !item.nativeSkill
+export const isMyInstallation = item => item.kind === 'skill' && (item.nativeSkill ? item.userInstalled === true : !item.builtinSource)
 export const skillCategory = item => (item.category && (item.category !== '我的安装' || isMyInstallation(item))
   ? item.category : isMyInstallation(item) ? '我的安装' : '基础流程').replace(/^期现-/, '')
 export const isUserSkill = item => item.kind === 'skill' && item.invocation?.userInvocable !== false
