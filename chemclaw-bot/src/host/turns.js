@@ -67,6 +67,25 @@ const PROGRAM_TOOL = 'run_code'
 
 const RETRY_TEXT = 'Your last reply wrote a tool call as plain text (<tool_call>…), so it did not run and nothing happened. Call the tool through the tool interface now, then reply as you meant to.'
 
+// Harness session events normally use Unix epoch milliseconds. A zero or
+// seconds-scale timestamp makes the UI count decades from 1970.
+export function sessionTurnStartTimes(live, groupOwners) {
+  const times = {}
+  for (const [id, entry] of live) {
+    if (entry.turn === undefined || !Number.isFinite(entry.since) || entry.since <= 0) continue
+    times[id] = entry.since
+    // The group activity row receives the room id, not its member session id.
+    const roomId = groupOwners.get(id)?.roomId
+    if (roomId) times[roomId] = Math.max(times[roomId] ?? 0, entry.since)
+  }
+  return times
+}
+
+export function activityTimestamp(timestamp, now = Date.now()) {
+  return Number.isFinite(timestamp) && timestamp >= 1_600_000_000_000
+    && timestamp <= now + 60_000 ? timestamp : now
+}
+
 export function install(rt) {
   const { ctx, state } = rt
 
@@ -339,9 +358,7 @@ export function install(rt) {
   }
 
   // Per Session, when its running turn began.
-  const turnsView = () => Object.fromEntries([...live]
-    .filter(([, entry]) => entry.turn !== undefined && entry.since !== undefined)
-    .map(([id, entry]) => [id, entry.since]))
+  const turnsView = () => sessionTurnStartTimes(live, rt.groupOwners)
 
   // Per Session, when the user last steered its running turn: the input the
   // activity row's phrase and clock restart from.
@@ -430,7 +447,7 @@ export function install(rt) {
       case 'turn/start':
         setActivity(id, 'thinking')
         entry.turn = event.data.turn
-        entry.since = event.time ?? Date.now()
+        entry.since = activityTimestamp(event.time)
         entry.texts = []
         entry.shown = 0
         entry.step = undefined

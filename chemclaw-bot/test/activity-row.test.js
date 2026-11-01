@@ -1,5 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { activityTimestamp, sessionTurnStartTimes } from '../src/host/turns.js'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -104,4 +105,21 @@ test('the lightweight status includes a real task and distinguishes completed wo
   assert.match(done, /巨潮全文检索芯化和云/)
   assert.notEqual(running, done)
   assert.equal(describeLiveTask(undefined), null)
+})
+
+test('activity timers reject zero/seconds timestamps and map running group sessions to room ids', () => {
+  const now = 1_783_000_000_000
+  assert.equal(activityTimestamp(0, now), now)
+  assert.equal(activityTimestamp(1_780_000_000, now), now, 'seconds are not epoch milliseconds')
+  assert.equal(activityTimestamp(undefined, now), now)
+  assert.equal(activityTimestamp(now - 4000, now), now - 4000)
+  assert.equal(activityTimestamp(now + 3600000, now), now, 'reject implausible future times')
+  const sessions = new Map([
+    ['group-session', { turn: 1, since: now - 4000 }],
+    ['bot-chat', { turn: 2, since: now - 1000 }],
+    ['inactive', { turn: undefined, since: now - 8000 }],
+  ])
+  const owners = new Map([['group-session', { botId: 'bot', roomId: 'room' }]])
+  assert.deepEqual(sessionTurnStartTimes(sessions, owners),
+    { 'group-session': now - 4000, 'room': now - 4000, 'bot-chat': now - 1000 })
 })

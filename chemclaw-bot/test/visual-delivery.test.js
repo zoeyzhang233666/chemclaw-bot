@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds } from '../src/host/visual-delivery.js'
+import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest, genuiChartPayloadsUsable, nativeChartPayloadsUsable, mixedMarketVisualStatus, stripUnrenderedMixedViewText } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
 
 const content = text => [{ type: 'text', text }]
@@ -256,4 +256,306 @@ test('disabling advanced charts prevents misleading requests to render an unavai
   time.stop()
   assert.equal(time.notices.length, 1)
   assert.match(time.notices[0].content[0].text, /timeline/)
+})
+
+test('an explicit K-line follow-up is distinct from discussing K-line problems', () => {
+  assert.deepEqual(requestedChartKinds('我想看k线图'), ['candlestick'])
+  assert.deepEqual(requestedChartKinds('请给我WTI原油K线图'), ['candlestick'])
+  assert.deepEqual(requestedChartKinds('为什么这里没有K线图'), [])
+  assert.deepEqual(requestedChartKinds('能不能生成K线图？'), [])
+  assert.deepEqual([...deliveredViewKinds({ type: 'echart', option: {
+    series: [{ type: 'candlestick', data: [[100, 101, 99, 102]] }],
+  } })], ['candlestick'])
+})
+
+test('close-only line does not satisfy explicitly requested K-line; real GenUI candles do', () => {
+  const f = setup()
+  f.start(); f.user('我想看K线图')
+  f.answer('Here is a closing-price line.')
+  f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'line', categories: ['1', '2'], series: [{ values: [1, 2] }] })
+  f.stop(); f.stop()
+  assert.equal(f.notices.length, 1)
+  assert.match(f.notices[0].content[0].text, /explicitly requested candlestick/)
+  assert.match(f.notices[0].content[0].text, /do not synthesize bars/i)
+  assert.match(f.notices[0].content[0].text, /Do not send another tool call/i)
+  const good = setup()
+  const ticks = String.fromCharCode(96).repeat(3)
+  good.start(); good.user('我想看K线图')
+  good.answer(ticks + 'dsh-ui\n' + JSON.stringify({ items: [{ type: 'echart', option: {
+    xAxis: { type: 'category', data: ['2026-10-29', '2026-10-30'] },
+    series: [{ type: 'candlestick', data: [[101, 103, 100, 105], [103, 102, 101, 105]] }],
+  } }] }) + '\n' + ticks)
+  good.stop()
+  assert.equal(good.notices.length, 0)
+})
+
+test('explicit K-line intent propagates to host chart guard and resets next turn', () => {
+  const f = setup()
+  f.start(); f.user('我想看K线图')
+  assert.equal(f.rt.requiresCandlestick('s'), true)
+  f.start(2); f.user('只要文字介绍最新报价')
+  assert.equal(f.rt.requiresCandlestick('s'), false)
+})
+
+test('ordinary historical stock/futures queries trigger one-shot OHLC-first selection', () => {
+  const yes = [
+    'WTI 原油期货最近一个月价格',
+    '中石油最近一个月股价',
+    '中国石油最近一个月股价走势',
+    '查询中国石油股票最近一个月历史行情',
+    '请看沪深股票最近20天价格',
+    'Brent futures historical daily price',
+    '股票价格',
+  ]
+  for (const question of yes) assert.equal(marketHistoryRequest(question), true, question)
+  const no = [
+    '华东地区甲醇现货最近一个月报价',
+    '解释期货的概念',
+    '为什么无法生成K线图？',
+    '怎么修复股票K线图的渲染代码',
+    'WTI现在多少钱',
+    '中国石油企业注册地址',
+    '只要文字介绍最新股票报价',
+  ]
+  for (const question of no) assert.equal(marketHistoryRequest(question), false, question)
+})
+
+test('ordinary price history refuses a premature line once, then permits honest close-only fallback', () => {
+  const f = setup()
+  f.start()
+  f.user('中石油最近一个月股价')
+  assert.equal(f.rt.requiresCandlestick('s'), false)
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), true)
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'must not retry indefinitely')
+  f.start(2)
+  f.user('WTI原油期货最近一个月价格')
+  f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'candlestick', bars: [{ date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 }, { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 }] })
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'already delivered candles')
+  f.start(3)
+  f.user('只用纯文字回答股票历史价格')
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'text only wins')
+  f.start(4)
+  f.user('华东甲醇现货近一个月价格')
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'spot chemicals are not OHLC markets')
+})
+
+test('public OHLC requests do not require a user decision on data sources', () => {
+  assert.equal(redundantMarketSourceQuestion('我这边没有股票行情接口，你想让我怎么查中石油股价？', [
+    { label: '用网页搜索查询最近一个月股价' },
+    { label: '查公告' },
+    { label: '不用了' },
+  ]), true)
+  assert.equal(redundantMarketSourceQuestion('没有行情接口，要用什么获取股票价格？', [
+    { label: '用 akshare' }, { label: '用网页' },
+  ]), true)
+  assert.equal(redundantMarketSourceQuestion('你想查哪只股票的价格？', [
+    { label: '601857 中国石油' }, { label: '0857 中国石油' },
+  ]), false, 'a genuine exchange/listing ambiguity is permitted')
+  assert.equal(redundantMarketSourceQuestion('需要前复权还是不复权的历史数据？', [
+    { label: '前复权' }, { label: '不复权' },
+  ]), false)
+})
+
+test('a historical market turn accepts at most one price view, and resets on a new turn', () => {
+  const f = setup()
+  f.start(); f.user('WTI 原油期货最近一个月价格')
+  assert.equal(f.rt.marketHistoryOf('s'), true)
+  const metric = { type: 'metric', label: 'Last', value: 42 }
+  const line = { type: 'chart', kind: 'line', categories: ['1', '2'], series: [{ values: [1, 2] }] }
+  const candles = { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 },
+    { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 },
+  ] }
+  assert.equal(marketPriceVisual(metric), false)
+  assert.equal(marketPriceVisual(line), true)
+  assert.equal(marketPriceVisual({ type: 'row', children: [metric, candles] }), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+  f.rt.noteVisualDelivery('s', metric)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false, 'indicators do not consume price chart slot')
+  f.rt.noteVisualDelivery('s', candles)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', candles), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', metric), false)
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false)
+  f.start(2); f.user('华东甲醇近一个月现货价')
+  assert.equal(f.rt.marketHistoryOf('s'), false)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+  f.start(3); f.user('中石油最近一个月股价')
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', candles), false, 'new turn resets duplicate protection')
+})
+
+test('comparisons of two assets still allow independent market price charts', () => {
+  assert.equal(multiAssetMarketRequest('比较 WTI 和 Brent 最近一个月期货价格'), true)
+  assert.equal(multiAssetMarketRequest('Compare WTI versus Brent futures history'), true)
+  assert.equal(multiAssetMarketRequest('中石油最近一个月股价'), false)
+  const f = setup(); f.start(); f.user('比较 WTI 和 Brent 最近一个月期货价格')
+  const chart = { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 },
+    { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 },
+  ] }
+  f.rt.noteVisualDelivery('s', chart)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', chart), false)
+})
+
+test('one market history source result selects K-line or permits only an honest fallback', () => {
+  const f = setup()
+  f.start(); f.user('中石油最近一个月股价')
+  assert.equal(f.rt.marketOhlcStatus('s'), 'untried')
+  f.rt.noteMarketOhlcSource('s', 'ready')
+  assert.equal(f.rt.marketOhlcStatus('s'), 'ready')
+  f.start(2); f.user('WTI原油期货最近一个月价格')
+  assert.equal(f.rt.marketOhlcStatus('s'), 'untried')
+  f.rt.noteMarketOhlcSource('s', 'unavailable')
+  assert.equal(f.rt.marketOhlcStatus('s'), 'unavailable')
+  f.start(3); f.user('甲醇现货价格')
+  f.rt.noteMarketOhlcSource('s', 'ready')
+  assert.equal(f.rt.marketOhlcStatus('s'), 'untried', 'spot prices must not inherit an exchange OHLC result')
+})
+
+test('a price view stays committed across model continuation turns, resets on the next real user request', () => {
+  const f = setup()
+  const line = { type: 'chart', kind: 'line', categories: ['x', 'y'], series: [{ values: [1, 2] }] }
+  f.start(1); f.user('WTI 原油期货最近一个月价格')
+  f.rt.noteMarketOhlcSource('s', 'ready')
+  f.rt.noteVisualDelivery('s', { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 },
+    { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 },
+  ] })
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), true)
+  f.start(2) // a model continuation, not a new user's question
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), true)
+  assert.equal(f.rt.marketOhlcStatus('s'), 'ready')
+  f.user('中石油最近一个月股价')
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+  assert.equal(f.rt.marketOhlcStatus('s'), 'untried')
+  f.start(3)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+})
+
+test('spot price class persists through model continuations and resets on the next human turn', () => {
+  const f = setup()
+  f.start(1); f.user('原油现货价格')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'spot')
+  assert.equal(f.rt.explicitSpotRequestOf('s'), true)
+  assert.equal(f.rt.marketHistoryOf('s'), false)
+  assert.equal(f.rt.requiresCandlestick('s'), false)
+  f.start(2)
+  assert.equal(f.rt.explicitSpotRequestOf('s'), true)
+  f.user('纯碱现货近一个月走势')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'spot')
+  assert.equal(f.rt.marketHistoryOf('s'), false)
+  f.start(3); f.user('纯碱期货最近一个月价格')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'futures')
+  assert.equal(f.rt.explicitSpotRequestOf('s'), false)
+  assert.equal(f.rt.marketHistoryOf('s'), true)
+  f.start(4); f.user('比较现货和期货价差')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'mixed')
+  assert.equal(f.rt.explicitSpotRequestOf('s'), false)
+})
+
+test('empty or misnamed ECharts data is not a successful inline GenUI view', () => {
+  const blank = [
+    { type: 'echart', option: { xAxis: { data: ['2026-10-01'] }, series: [{ type: 'line', values: [1200] }] } },
+    { type: 'echart', option: { series: [{ type: 'line', data: [] }] } },
+    { type: 'echart', preset: 'line', series: [] },
+  ]
+  for (const item of blank) {
+    const ticks = String.fromCharCode(96).repeat(3)
+    const output = ticks + 'dsh-ui\n' + JSON.stringify({ items: [item] }) + '\n' + ticks
+    assert.equal(hasInlineGenui(output), false)
+    const f = setup(); f.start(); f.user('纯碱最近一个月现货价'); f.answer(output); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /native show_view line chart/)
+    f.stop()
+    assert.equal(f.notices.length, 1, 'one bounded correction, no repeated loop')
+  }
+  assert.equal(genuiChartPayloadsUsable([{ type: 'echart', option: { series: [{ type: 'line', data: [1, 2] }] } }]), true)
+  assert.equal(genuiChartPayloadsUsable([{ type: 'echart', option: { dataset: { source: [['date', 'price'], ['2026-10-01', 1200]] }, series: [{ type: 'line' }] } }]), true)
+  assert.equal(genuiChartPayloadsUsable([{ type: 'timeline', events: [{ title: 'Start' }] }]), true)
+})
+
+test('all-missing native data is rejected while real gaps and formulas remain valid', () => {
+  const chart = values => ({ type: 'chart', kind: 'line', categories: ['Oct 1', 'Oct 2'], series: [{ values }] })
+  assert.equal(nativeChartPayloadsUsable(chart([null, null])), false)
+  assert.equal(nativeChartPayloadsUsable(chart([1200, null])), true)
+  assert.equal(nativeChartPayloadsUsable(chart([{ '=': 'price' }, null])), true)
+  assert.equal(nativeChartPayloadsUsable({ type: 'stack', children: [chart([null, null]), { type: 'metric', label: 'Last', value: 1200 }] }), false)
+  assert.equal(nativeChartPayloadsUsable({ type: 'chart', kind: 'candlestick', bars: [] }), true, 'candlestick schema is validated separately')
+})
+
+test('a spot/futures basis overlay bypasses OHLC-first and permits dated native line views', () => {
+  const f = setup()
+  const spotVsFutures = { type: 'chart', kind: 'line', categories: ['2026-10-28', '2026-10-29'],
+    series: [{ name: '乙二醇现货·华东', values: [3800, 3820] },
+      { name: '乙二醇期货·EG主力', values: [3760, 3770] }] }
+  f.start(); f.user('乙二醇现货与盘面叠加走势图，看看基差')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'mixed')
+  assert.equal(f.rt.explicitSpotRequestOf('s'), false, 'spot-only ban must not reject labeled futures leg')
+  assert.equal(f.rt.marketHistoryOf('s'), false, 'do not force futures K-lines for a mixed-line chart')
+  assert.equal(multiAssetMarketRequest('乙二醇现货与盘面叠加走势图，看看基差'), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', spotVsFutures), false)
+  f.rt.noteVisualDelivery('s', spotVsFutures)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', spotVsFutures), false)
+  f.start(2)
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'mixed', 'maintain mixed intent through model continuation')
+  assert.equal(f.rt.marketHistoryOf('s'), false)
+  f.user('乙二醇现货价格，不要期货')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'spot', 'new real user question resets comparison')
+  assert.equal(f.rt.explicitSpotRequestOf('s'), true)
+})
+
+test('mixed-market completion requires a shared-date overlay AND basis, not unrelated price charts', () => {
+  const dates = ['2026-10-28', '2026-10-29', '2026-10-30']
+  const overlay = { type: 'chart', kind: 'line', categories: dates, series: [
+    { name: '甲醇现货·华东', values: [2400, 2420, 2430] },
+    { name: '甲醇期货·MA主力', values: [2380, 2390, 2420] },
+  ] }
+  const basis = { type: 'chart', kind: 'line', categories: dates, series: [{ name: '基差（现货减期货）', values: [20, 30, 10] }] }
+  assert.deepEqual(mixedMarketVisualStatus({ type: 'stack', children: [overlay, basis] }), { overlay: true, basis: true, complete: true })
+  assert.equal(mixedMarketVisualStatus(overlay).complete, false)
+  assert.equal(mixedMarketVisualStatus({ type: 'stack', children: [overlay, { ...basis, series: [{ name: '基差', values: [20, 300, 10] }] }] }).complete, false, 'basis must equal dated physical spot minus futures')
+  assert.equal(mixedMarketVisualStatus({ type: 'stack', children: [
+    { type: 'chart', kind: 'line', categories: dates, series: [{ name: '甲醇期货·MA主力', values: [2380, 2390, 2420] }] },
+    { type: 'chart', kind: 'hbar', categories: ['华东', '华北'], series: [{ name: '甲醇现货价', values: [2400, 2420] }] },
+    { type: 'metric', label: '基差', value: 20 },
+  ] }).complete, false)
+  assert.equal(mixedMarketVisualStatus({ type: 'stack', children: [
+    { ...overlay, series: [{ name: '现货', values: [2400, null, null] }, overlay.series[1]] }, basis,
+  ] }).complete, false)
+})
+
+test('raw group UI JSON/fences do not count as mixed-market visual delivery', () => {
+  const raw = JSON.stringify({ type: 'stack', children: [{ type: 'chart', kind: 'line', categories: ['Oct'], series: [] }] }, null, 2)
+  const ticks = String.fromCharCode(96).repeat(3)
+  const fenced = '图表：\n' + ticks + 'dsh-ui\n' + JSON.stringify({ items: [{ type: 'text', text: 'Not rendered in group' }] }) + '\n' + ticks
+  assert.equal(stripUnrenderedMixedViewText(raw), '')
+  assert.equal(stripUnrenderedMixedViewText(raw.slice(0, 35), true), '')
+  assert.equal(stripUnrenderedMixedViewText(fenced), '图表：')
+  assert.equal(stripUnrenderedMixedViewText('解释：现货价应减期货价。'), '解释：现货价应减期货价。')
+  assert.equal(stripUnrenderedMixedViewText('{"volume": 25}'), '{"volume": 25}')
+  for (const reply of [raw, fenced]) {
+    const f = setup(); f.start(); f.user('甲醇现货和期货价格叠加看基差'); f.answer(reply); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /ONE native show_view stack/)
+    f.stop(); assert.equal(f.notices.length, 1)
+  }
+})
+
+test('complete native spot-futures+basis stack satisfies a mixed-market turn', () => {
+  const f = setup()
+  f.start(); f.user('甲醇现货和期货价格叠加看基差')
+  const dates = ['2026-10-28', '2026-10-29']
+  const full = { type: 'stack', children: [
+    { type: 'chart', kind: 'line', categories: dates, series: [
+      { name: '甲醇现货', values: [2400, 2420] },
+      { name: '甲醇期货 MA0', values: [2380, 2390] },
+    ] },
+    { type: 'chart', kind: 'line', categories: dates, series: [{ name: '基差', values: [20, 30] }] },
+  ] }
+  f.answer('同一日期现货和期货比较如下。'); f.rt.noteVisualDelivery('s', full); f.stop()
+  assert.equal(f.notices.length, 0)
+  f.start(2); f.user('甲醇现货最近一个月价格')
+  assert.equal(f.rt.marketQuoteIntentOf('s'), 'spot')
+  f.answer('只能找到当日现货报价。'); f.stop(2)
+  assert.equal(f.notices.length, 1)
 })

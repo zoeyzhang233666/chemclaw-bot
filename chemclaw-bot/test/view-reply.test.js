@@ -257,3 +257,50 @@ test('a user message drops the open question and the open view together', async 
   assert.equal(open.questions['writer-now'], undefined)
   assert.equal(open.views['writer-now'], undefined)
 })
+
+test('a premature price line is a failed show_view call, never a phantom visible card', async t => {
+  const { ctx, show, emit, stop } = start()
+  t.after(stop)
+  await ctx.registeredTools.get('list_bots').execute({}, { agent: { id: 'chief' } })
+  emit('writer-now', 'turn/start', { turn: 7 })
+  emit('writer-now', 'user/message', {
+    source: { kind: 'user' },
+    content: [{ type: 'text', text: 'WTI 原油期货最近一个月价格' }],
+  })
+  const line = { type: 'chart', kind: 'line',
+    categories: ['2026-10-29', '2026-10-30'], series: [{ name: 'Close', values: [1, 2] }] }
+  // The UI checks tool.isError to suppress a rejected card. A successful text
+  // refusal would erroneously show the line from the original call arguments.
+  await assert.rejects(show('writer-now', { view: line }), /Before submitting a line chart/)
+  const candle = { type: 'chart', kind: 'candlestick',
+    bars: [{ date: '2026-10-29', open: 1, close: 2, low: 1, high: 3 },
+      { date: '2026-10-30', open: 2, close: 3, low: 1, high: 4 }] }
+  assert.equal((await show('writer-now', { view: candle })).text, 'The view is on screen.')
+  await assert.rejects(show('writer-now', { view: line }), /already been delivered/)
+  emit('writer-now', 'turn/start', { turn: 8 })
+  await assert.rejects(show('writer-now', { view: line }), /already been delivered/,
+    'a second model turn must not bypass the price chart guard')
+})
+
+test('explicit commodity spot query cannot show a futures K-line or mislabeled futures quote', async t => {
+  const { ctx, show, emit, stop } = start()
+  t.after(stop)
+  await ctx.registeredTools.get('list_bots').execute({}, { agent: { id: 'chief' } })
+  emit('writer-now', 'turn/start', { turn: 50 })
+  emit('writer-now', 'user/message', {
+    source: { kind: 'user' },
+    content: [{ type: 'text', text: '纯碱现货价格' }],
+  })
+  const future = { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-28', open: 2000, high: 2030, low: 1980, close: 2010 },
+    { date: '2026-10-29', open: 2010, high: 2040, low: 1990, close: 2025 },
+  ] }
+  await assert.rejects(show('writer-now', { title: '纯碱现货', view: future }), /physical\/spot/)
+  await assert.rejects(show('writer-now', { view: {
+    type: 'metric', label: '纯碱期货主力连续', value: '虚构值',
+  } }), /physical\/spot/)
+  const spot = await show('writer-now', { view: {
+    type: 'metric', label: '华东纯碱现货出厂价（来源另附）', value: '待验证',
+  } })
+  assert.equal(spot.text, 'The view is on screen.')
+})

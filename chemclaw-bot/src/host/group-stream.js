@@ -3,6 +3,7 @@
 // blanks between the last token and postInRound.
 import { stripWrittenCalls } from './turns.js'
 import { isPass, stripOwnName } from './groups.js'
+import { stripUnrenderedMixedViewText } from './visual-delivery.js'
 
 export function install(rt) {
   const drafts = new Map()
@@ -48,9 +49,12 @@ export function install(rt) {
     const bot = rt.botOf(owner.botId)
     if (!bot) return []
     const text = stripOwnName(bot.name, stripWrittenCalls(draft.text))
-    // Do not flash the protocol's silence marker while it is still arriving.
-    if (isPass(text) || /^[\s[【(（]*(?:p(?:a(?:s(?:s)?)?)?)?$/i.test(text)) return []
-    return [{ botId: bot.id, attemptId: draft.attemptId, text }]
+    // The room client does not interpret model-authored dsh-ui JSON as a
+    // show_view card; do not stream the protocol payload as a chat bubble.
+    const visible = rt.marketQuoteIntentOf?.(sessionId) === 'mixed'
+      ? stripUnrenderedMixedViewText(text, true) : text
+    if (!visible || isPass(visible) || /^[\s[【(（]*(?:p(?:a(?:s(?:s)?)?)?)?$/i.test(visible)) return []
+    return [{ botId: bot.id, attemptId: draft.attemptId, text: visible }]
   })
   rt.ctx.effect(() => () => drafts.clear(), 'chemclaw-bot: group drafts')
 }

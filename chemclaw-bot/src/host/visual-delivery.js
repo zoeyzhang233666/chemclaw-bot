@@ -1,17 +1,199 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
+import { marketQuoteIntent, mixedOverlayRequested } from './market-quote-intent.js'
 
 export const VISUAL_NOTICE = '[chemclaw-visual-delivery'
 const textOf = content => Array.isArray(content) ? content.filter(block => block?.type === 'text').map(block => block.text ?? '').join('\n') : ''
 export const textOnlyRequested = text => /\b(?:text[- ]only|no (?:charts|visuals|cards))\b|(?:只要|只用|仅用)(?:纯)?文字|(?:不要|不用)(?:图表|卡片|可视化)|纯文字(?:回答|回复)/iu.test(text)
 
+// Only historical traded-market price requests need the one-shot OHLC-first guard.
+// Do not penalize spot chemical quotes, conceptual questions or current-only quotes.
+export function marketHistoryRequest(text) {
+  const query = String(text ?? '')
+  // The OHLC-first guard is for a standalone traded market, never for an
+  // explicitly requested physical spot / futures overlay or basis comparison.
+  if (['spot', 'mixed'].includes(marketQuoteIntent(query))) return false
+  if (!/(?:股票|股价|A股|港股|美股|ETF|期货|股指|WTI|布伦特|Brent|原油期货|期指|\b(?:stock|share|futures|equity|etf)\b)/iu.test(query)) return false
+  if (/(?:为什么无法|怎么修复|为什么不|如何实现|能不能实现|是否支持|接口开发|技术方案|代码审查)/iu.test(query)) return false
+  const historical = /(?:最近|近(?:一个|一|两|三|\d+)(?:月|周|天|日|年)|过去|一个月|上月|本月|月内|日线|日K|月线|周线|走势|趋势|历史|区间|(?:\d+|一|两|三)(?:天|日|周|月|年)|(?:20\d{2}[-年]\d{1,2}))/iu.test(query)
+  const prices = /(?:行情|股价|价格|收盘|开盘|涨跌|走势|K线|k线|蜡烛图|(?:price|chart|history|historical|trend))/iu.test(query)
+  const currentOnly = /(?:现在|目前|当前|实时|最新|此刻|现价|现报|多少钱)/iu.test(query)
+  return historical ? prices || /股价|期货|WTI|Brent/iu.test(query) : prices && !currentOnly
+}
+
 const genuiFence = /^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?$/imu
+
+// Explicitly comparing two assets may legitimately need two different charts.
+export function multiAssetMarketRequest(text) {
+  const query = String(text ?? '')
+  return marketQuoteIntent(query) === 'mixed'
+    || /(?:对比|比较|分别|并列|两只|多只|多种|多合约|多品种|\b(?:versus|vs\.?|compare)\b)/iu.test(query)
+}
+
+// Market chart deduplication applies only to *price visuals* in a single
+// user-requested market-history turn. Metrics and evidence tables stay allowed.
+export function marketPriceVisual(view) {
+  if (!view || typeof view !== 'object') return false
+  if (Array.isArray(view)) return view.some(marketPriceVisual)
+  if (view.type === 'html') return true
+  if (view.type === 'chart' && ['candlestick', 'line', 'area'].includes(view.kind ?? 'bar')) return true
+  return Array.isArray(view.children) && view.children.some(marketPriceVisual)
+}
+
+// Do not ask people to pick an implementation for an ordinary public-market
+// data request. Ambiguous tickers / exchanges are still valid questions.
+export function redundantMarketSourceQuestion(question, options = []) {
+  const optionText = (Array.isArray(options) ? options : []).map(option => typeof option === 'string' ? option : option?.label ?? '').join(' ')
+  const questionText = String(question ?? '')
+  return /(怎么查|如何查|怎样查|用什么查|怎么查询|从哪查|没有.*(?:接口|权限|行情)|怎么获取|用哪种方式|如何获取|数据来源|查询方式)/iu.test(questionText)
+    && /(网页|网上|搜索|网站|akshare|数据源|接口|不(?:用了|需要)|行情软件|finance|web)/iu.test(questionText + ' ' + optionText)
+}
+ 
+
+// Syntax alone does not prove the GenUI ECharts payload can draw anything.
+// The GenUI plugin remains responsible for full schema and browser validation.
+const SPEC_FENCES = /^ {0,3}\u0060{3}[ \t]*dsh-ui(?:[>\u0060"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}\u0060{3}[ \t]*\r?$/gimu
+const genuiSpecs = text => {
+  const result = []
+  for (const match of String(text ?? '').matchAll(SPEC_FENCES)) {
+    try { result.push(JSON.parse(match[1])) } catch { /* handled by GenUI */ }
+  }
+  return result
+}
+const record = value => value !== null && typeof value === 'object' && !Array.isArray(value)
+const hasDataPoint = data => Array.isArray(data) && data.some(value => value !== null && value !== undefined
+  && (typeof value === 'number' ? Number.isFinite(value) : typeof value === 'string' ? value.trim() !== '' : record(value) || Array.isArray(value)))
+const echartHasSeries = series => (Array.isArray(series) ? series : series ? [series] : [])
+  .some(item => record(item) && hasDataPoint(item.data))
+const echartHasDataset = dataset => (Array.isArray(dataset) ? dataset : dataset ? [dataset] : [])
+  .some(item => record(item) && hasDataPoint(item.source))
+export function genuiChartPayloadsUsable(items) {
+  const walk = (node, depth = 0) => {
+    if (!record(node) || depth > 24) return true
+    if (node.type === 'echart') {
+      if (node.option !== undefined) {
+        if (!record(node.option) || !(echartHasSeries(node.option.series) || echartHasDataset(node.option.dataset))) return false
+      } else if (!node.preset || !(hasDataPoint(node.data) || echartHasSeries(node.series))) return false
+    }
+    for (const key of ['children', 'items'])
+      if (Array.isArray(node[key]) && !node[key].every(item => walk(item, depth + 1))) return false
+    if (Array.isArray(node.tabs) && !node.tabs.every(tab => walk(tab.content, depth + 1))) return false
+    return true
+  }
+  return Array.isArray(items) && items.length > 0 && items.every(item => walk(item))
+}
+const hasCompleteGenuiSpec = text => genuiSpecs(text).some(spec => record(spec) && Array.isArray(spec.items) && spec.items.length > 0)
+
+// Shared chart schema allows missing observations; a wholly missing series
+// must not create an empty canvas. Valid formula fields remain supported.
+export function nativeChartPayloadsUsable(view) {
+  const walk = (node, depth = 0) => {
+    if (!record(node) || depth > 24) return true
+    if (node.type === 'chart' && node.kind !== 'candlestick' && node.kind !== 'sankey') {
+      if (!Array.isArray(node.series) || !node.series.some(series =>
+        Array.isArray(series.values) && series.values.some(value =>
+          (typeof value === 'number' && Number.isFinite(value))
+          || (record(value) && typeof value['='] === 'string')))) return false
+    }
+    return !Array.isArray(node.children) || node.children.every(item => walk(item, depth + 1))
+  }
+  return walk(view)
+}
+
+
+// One complete, honest mixed-market view must contain a same-date overlay AND
+// a dated basis series. This checks structure/data presence, not provenance:
+// the model must still source physical spot and exchange futures separately.
+const spotLeg = /现货|即期|出厂|到厂|\bspot\b/iu
+const futuresLeg = /期货|期价|盘面|主力|连续|\bfutures?\b|\b(?:MA|EG|SA|PG|RB|SC)\d{0,4}\b/iu
+const basisLeg = /基差|现期价差|\bbasis\b/iu
+const usableNumber = value => typeof value === 'number' && Number.isFinite(value)
+const chartNodes = view => {
+  const charts = []
+  const walk = (node, depth = 0) => {
+    if (!node || typeof node !== 'object' || depth > 24) return
+    if (Array.isArray(node)) { for (const child of node) walk(child, depth + 1); return }
+    if (node.type === 'chart') charts.push(node)
+    if (Array.isArray(node.children)) walk(node.children, depth + 1)
+  }
+  walk(view)
+  return charts
+}
+export function mixedMarketVisualStatus(view) {
+  const charts = chartNodes(view)
+  const overlays = charts.flatMap(chart => {
+    if (chart.kind !== 'line' || !Array.isArray(chart.categories) || chart.categories.length < 2) return []
+    const spot = chart.series?.find(item => spotLeg.test(String(item?.name ?? '')))
+    const futures = chart.series?.find(item => futuresLeg.test(String(item?.name ?? '')) && !spotLeg.test(String(item?.name ?? '')))
+    if (!Array.isArray(spot?.values) || !Array.isArray(futures?.values)
+      || spot.values.length !== chart.categories.length || futures.values.length !== chart.categories.length) return []
+    const differences = new Map()
+    chart.categories.forEach((date, index) => {
+      if (usableNumber(spot.values[index]) && usableNumber(futures.values[index]))
+        differences.set(String(date), spot.values[index] - futures.values[index])
+    })
+    return differences.size >= 2 ? [{ chart, differences }] : []
+  })
+  const basis = overlays.some(({ chart: overlayChart, differences }) => charts.some(chart => {
+    // Basis has its own scale: never silently plot it as a third price series.
+    if (chart === overlayChart || !['line', 'bar', 'area'].includes(chart.kind)
+      || !Array.isArray(chart.categories) || chart.categories.length < 2) return false
+    return (chart.series ?? []).some(item => {
+      if (!basisLeg.test(String(item?.name ?? '')) || !Array.isArray(item.values)
+        || item.values.length !== chart.categories.length) return false
+      let matched = 0
+      for (let i = 0; i < chart.categories.length; i += 1) {
+        const expected = differences.get(String(chart.categories[i]))
+        const actual = item.values[i]
+        if (expected === undefined || !usableNumber(actual)) continue
+        // Prices may have been rounded for display; the underlying calculation
+        // must still agree with physical spot minus exchange futures.
+        if (Math.abs(expected - actual) > 0.11) return false
+        matched += 1
+      }
+      return matched >= 2
+    })
+  }))
+  return { overlay: overlays.length > 0, basis, complete: Boolean(overlays.length > 0 && basis) }
+}
+
+// A mixed-market Bot/group answer should show native show_view, not a JSON
+// protocol dump. Remove only view-shaped payloads; keep ordinary explanation
+// and genuine non-UI JSON intact.
+export function stripUnrenderedMixedViewText(text, streaming = false) {
+  const original = String(text ?? '')
+  const trimmed = original.trim()
+  if (streaming) {
+    // Also conceal *incomplete* fences while the model streams, preserving
+    // useful prose that preceded the hidden protocol block.
+    const fenceAt = original.search(/^ {0,3}`{3}(?:dsh-ui|json)(?:\s|$)/gimu)
+    if (fenceAt >= 0) return original.slice(0, fenceAt).trim()
+    if (/^\{/u.test(trimmed)) return ''
+  }
+  const withoutFences = original.replace(/^ {0,3}`{3}(?:dsh-ui|json)[^\n]*\r?\n([\s\S]*?)^ {0,3}`{3}[ \t]*$/gimu,
+    (whole, body) => {
+      if (/^ {0,3}`{3}dsh-ui/iu.test(whole)) return ''
+      try {
+        const spec = JSON.parse(body)
+        if (spec && (Array.isArray(spec.items) || ['stack', 'row', 'chart'].includes(spec.type))) return ''
+      } catch { /* ordinary JSON samples stay visible */ }
+      return whole
+    })
+  const candidate = withoutFences.trim()
+  if (candidate.startsWith('{')) {
+    try {
+      const spec = JSON.parse(candidate)
+      if (spec && (Array.isArray(spec.items) || ['stack', 'row', 'chart'].includes(spec.type))) return ''
+    } catch { /* keep ordinary text */ }
+  }
+  return withoutFences.trim()
+}
 
 export function hasInlineGenui(text, native = false) {
   for (const match of text.matchAll(/^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}```[ \t]*\r?$/gimu)) {
     try {
       const spec = JSON.parse(match[1])
-      if (spec && Array.isArray(spec.items) && spec.items.length && (native || spec.panel !== true)) return true
+      if (spec && genuiChartPayloadsUsable(spec.items) && (native || spec.panel !== true)) return true
     } catch { /* GenUI's own feedback handles malformed fences. */ }
   }
   return false
@@ -20,6 +202,7 @@ export function hasInlineGenui(text, native = false) {
 // Only explicit drawing instructions are enforceable. Discussions of a chart
 // problem should not force another rendering attempt.
 const REQUEST_FAMILIES = [
+  ['candlestick', /K[\s-]*线(?:图)?|蜡烛图|candlestick|ohlc/iu],
   ['heatmap', /热力图|heat[\s-]*map/iu],
   ['sankey', /桑基图|sankey/iu],
   ['scatter', /散点图|scatter[\s-]*plot/iu],
@@ -35,7 +218,7 @@ export function requestedChartKinds(text) {
   const requested = new Set()
   for (const clause of String(text ?? '').split(/[，,。！？!?；;\n]/u)) {
     if (/为什么|怎么|如何|是否|能不能|能否|有没有|没有|无法|失败|报错|修复|原因|排查|不显示|不工作|不支持|\b(?:why|error|broken|failed|fail)\b/iu.test(clause)) continue
-    if (!/(?:给我|给出|绘制|生成|画|制作|用|使用|采用|展示|输出|添加|加上|补充|提供|\b(?:show|draw|render|plot|create|generate|include|add|use|make)\b)/iu.test(clause)) continue
+    if (!/(?:给我|给出|绘制|生成|画|制作|用|使用|采用|展示|输出|添加|加上|补充|提供|想看|我要|想要|看一下|\b(?:show|draw|render|plot|create|generate|include|add|use|make)\b)/iu.test(clause)) continue
     for (const [kind, pattern] of REQUEST_FAMILIES) if (pattern.test(clause)) requested.add(kind)
   }
   return [...requested]
@@ -77,11 +260,18 @@ export function missingRequestedKinds(requested, delivered) {
 export function requestedViewReminder(turn, bot, kinds) {
   return VISUAL_NOTICE + ' turn=' + turn + ']\n'
     + 'The user explicitly requested ' + kinds.join(', ') + ', but the successfully delivered views do not include those kinds. '
-    + 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. '
+    + (kinds.includes('candlestick')
+      ? (bot
+        ? 'For a candlestick use native show_view chart kind candlestick with 2-50 actual dated OHLC bars, no categories/series. Do not add a second line chart or HTML. '
+        : 'For a candlestick use a single GenUI dsh-ui ECharts candlestick full-option view. ')
+        + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
+      : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
     + (bot ? 'Use show_view for supported ECharts chart kinds, and an inline dsh-ui fence without panel:true for GenUI timelines/diagrams. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
 }
+
+const botMixedNeeded = (entry, isBot) => entry.mixedOverlayRequired && isBot && !entry.mixedVisualCommitted
 
 export function visualReminder(turn, bot) {
   return `${VISUAL_NOTICE} turn=${turn}]\nThe user-facing answer has no inline visual delivery. Add only the missing view now, using the evidence already obtained; do not repeat the prose, research or external actions. ${bot ? 'Prefer show_view for the existing charts and cards; use an inline dsh-ui fence for richer GenUI components (omit panel:true).' : 'Use an inline dsh-ui fence with the installed GenUI components.'} Choose from the information: numbers → metrics/chart, comparison → chart/table, events → timeline, process → steps/diagram, explanation or a short answer → a compact card. Include units and sources where available. Never invent missing values to draw a chart. An HTML/file link does not replace the inline view. Follow the conversation language.`
@@ -92,14 +282,35 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
   }
   const observe = (session, event) => {
     const id = String(session.id)
-    if (event.type === 'turn/start') { turns.set(id, fresh(event.data?.turn)); return }
+    if (event.type === 'turn/start') {
+      const previous = turns.get(id)
+      const next = fresh(event.data?.turn)
+      // One human request may have multiple model turns (tools, steering,
+      // continuation). Carry market chart delivery across those turns until the
+      // next *real* user message resets it.
+      if (previous?.marketHistory || previous?.quoteIntent === 'spot' || previous?.quoteIntent === 'mixed') {
+        next.marketHistory = previous.marketHistory
+        next.quoteIntent = previous.quoteIntent
+        next.multiAssetMarket = previous.multiAssetMarket
+        next.marketChartNudged = previous.marketChartNudged
+        next.marketChartCommitted = previous.marketChartCommitted
+        next.mixedVisualCommitted = previous.mixedVisualCommitted
+        next.mixedOverlayRequired = previous.mixedOverlayRequired
+        next.marketOhlcStatus = previous.marketOhlcStatus
+        next.textOnly = previous.textOnly
+        next.visual = previous.visual
+        next.kinds = new Set(previous.kinds)
+      }
+      turns.set(id, next)
+      return
+    }
     const entry = stateOf(id)
     if (event.type === 'tool/call' && event.data?.name === 'show_view') entry.calls.set(event.data.callId, event.data.args?.view ?? event.data.input?.view)
     if (event.type === 'tool/result') {
@@ -110,6 +321,8 @@ export function install(rt) {
         entry.calls.delete(result.toolCallId)
         if (!result.isError && !event.data.error && /^The view is (?:on screen|staged)/u.test(textOf(result.content))) {
           entry.visual = true
+          if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
+          if (entry.mixedOverlayRequired && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
           for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
         }
       }
@@ -117,12 +330,27 @@ export function install(rt) {
       const source = event.data?.source
       const text = textOf(event.data?.content)
       if (source?.form === 'notice' && text.startsWith(VISUAL_NOTICE)) { entry.reminded = true; return }
-      if (source?.kind === 'user') { entry.human = true; entry.textOnly = textOnlyRequested(text); entry.requested = new Set(requestedChartKinds(text)) }
+      if (source?.kind === 'user') {
+        entry.human = true
+        entry.textOnly = textOnlyRequested(text)
+        entry.quoteIntent = marketQuoteIntent(text)
+        entry.mixedOverlayRequired = mixedOverlayRequested(text)
+        entry.marketHistory = marketHistoryRequest(text)
+        entry.multiAssetMarket = multiAssetMarketRequest(text)
+        entry.marketChartNudged = false
+        entry.marketChartCommitted = false
+        entry.mixedVisualCommitted = false
+        entry.marketOhlcStatus = 'untried'
+        entry.visual = false
+        entry.invalidGenuiChart = false
+        entry.kinds = new Set()
+        entry.requested = new Set(requestedChartKinds(text))
+      }
       else if (source?.kind === 'schedule' || source?.audience === 'user') entry.human = true
       else if (source?.kind === 'bot' && source.role === 'room' && !source.askedBy) {
         const current = text.split(/This round so far[^\n]*:\n/u)[1]?.split('\n\n')[0] ?? ''
         const user = [...current.matchAll(/^User: (.*)$/gmu)].at(-1)?.[1]
-        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.requested = new Set(requestedChartKinds(user)) }
+        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.quoteIntent = marketQuoteIntent(user); entry.mixedOverlayRequired = mixedOverlayRequested(user); entry.marketHistory = marketHistoryRequest(user); entry.multiAssetMarket = multiAssetMarketRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
       }
     } else if (event.type === 'assistant/message') {
       const text = textOf(event.data?.message?.content)
@@ -131,7 +359,13 @@ export function install(rt) {
       for (const kind of genuiKinds(text, !rt.isBotSession?.(id))) entry.kinds.add(kind)
       // Leave malformed fences to GenUI's own validation/repair budget. A valid
       // panel-only reply in a Bot surface still needs an inline equivalent.
-      if (genuiFence.test(text)) entry.repairing = !hasInlineGenui(text, true)
+      if (genuiFence.test(text)) {
+        const complete = hasCompleteGenuiSpec(text)
+        // Malformed fences belong to the upstream GenUI repair budget; valid
+        // JSON with an empty ECharts payload needs our one native fallback.
+        entry.repairing = !complete
+        entry.invalidGenuiChart = complete && !hasInlineGenui(text, true)
+      }
     }
   }
   const restore = session => {
@@ -144,7 +378,30 @@ export function install(rt) {
   }
   ctx.on('session/event', (session, event) => { restore(session); observe(session, event) })
   ctx.on('session/disposed', session => turns.delete(String(session.id)))
-  rt.noteVisualDelivery = (id, view) => { const entry = stateOf(id); entry.visual = true; for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind) }
+  rt.noteVisualDelivery = (id, view) => {
+    const entry = stateOf(id)
+    entry.visual = true
+    if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
+    if (entry.mixedOverlayRequired && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
+    for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
+  }
+  rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
+  rt.marketQuoteIntentOf = id => stateOf(id).quoteIntent
+  rt.explicitSpotRequestOf = id => stateOf(id).quoteIntent === 'spot'
+  rt.mixedMarketRequestOf = id => stateOf(id).quoteIntent === 'mixed'
+  rt.strictMixedOverlayOf = id => stateOf(id).mixedOverlayRequired === true
+  rt.marketOhlcStatus = id => stateOf(id).marketOhlcStatus
+  rt.noteMarketOhlcSource = (id, status) => {
+    if (!id) return
+    const entry = stateOf(id)
+    if (entry.marketHistory) entry.marketOhlcStatus = status === 'ready' ? 'ready' : 'unavailable'
+  }
+  rt.marketPriceViewAlreadyCommitted = (id, view) => {
+    const entry = stateOf(id)
+    return entry.marketHistory && !entry.multiAssetMarket && entry.marketChartCommitted && marketPriceVisual(view)
+  }
+  rt.requiresCandlestick = id => stateOf(id).requested.has('candlestick') && !stateOf(id).textOnly
+  rt.deferMarketHistoryLineOnce = id => { const entry = stateOf(id); if (!entry.marketHistory || entry.textOnly || entry.marketChartNudged || entry.marketChartCommitted || entry.kinds.has('candlestick')) return false; entry.marketChartNudged = true; return true }
   ctx.on('agent/turn-stopping', ({ agent, turn, signal }) => {
     const session = agent.session
     const id = String(session.id)
@@ -155,7 +412,8 @@ export function install(rt) {
     const enabledRequests = [...entry.requested].filter(kind => rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind))
     const missing = missingRequestedKinds(enabledRequests, entry.kinds)
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
-    if (entry.visual && !knownMismatch) return
+    const mixedIncomplete = botMixedNeeded(entry, rt.isBotSession?.(id) === true)
+    if (entry.visual && !knownMismatch && !mixedIncomplete) return
     if ((rt.state?.exchangeTurns?.[id] ?? []).includes(turn)) return
     const info = rt.live?.get(id)?.info
     if (info?.handoff && !info.resume || info?.role === 'request' && info.audience !== 'user') return
@@ -169,7 +427,12 @@ export function install(rt) {
       ? { kind: 'plugin:chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
       : { kind: 'plugin', plugin: 'chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
     try {
-      const reminder = knownMismatch ? requestedViewReminder(turn, bot, missing) : visualReminder(turn, bot)
+      const reminder = mixedIncomplete
+        ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
+        : knownMismatch ? requestedViewReminder(turn, bot, missing)
+      : entry.invalidGenuiChart && bot
+        ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart has an empty or misnamed ECharts data series. Do not repeat that blank chart or fetch data again. Use ONE native show_view line chart with already verified dated spot prices, or a factual table if observations are unavailable. Never substitute futures for spot. This is the only correction.`
+        : visualReminder(turn, bot)
       agent.steer({ id: randomUUID(), role: 'user', source, content: [{ type: 'text', text: reminder }] })
     } catch (error) { rt.warn?.('chemclaw-bot: visual delivery reminder failed: %s', error) }
   })

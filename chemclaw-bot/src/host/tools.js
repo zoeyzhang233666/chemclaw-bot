@@ -10,6 +10,8 @@ import { NAME_MAX } from './requests.js'
 import { unquote } from './text.js'
 import { mentionSpans } from '../shared/mentions.js'
 import { checkShownView } from '../shared/views.js'
+import { redundantMarketSourceQuestion, nativeChartPayloadsUsable, mixedMarketVisualStatus, marketPriceVisual } from './visual-delivery.js'
+import { mismatchedSpotPriceView } from './market-quote-intent.js'
 
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
 export const GROUP_REF = { type: 'string', required: true, description: 'Exact group chat name from list_bots' }
@@ -641,6 +643,8 @@ export function install(rt) {
         .filter(option => option.label !== '')
         .slice(0, 6)
       if (options.length === 0) return 'Give at least one option.'
+      if (rt.marketHistoryOf?.(id) && redundantMarketSourceQuestion(args.question, options))
+        return 'Do not ask the user to choose a public market-data source. Search available price tools/skills and attempt one verified daily OHLC lookup automatically (AKShare only if its execution tool is actually available; otherwise a verifiable daily OHLC web page). If neither is accessible, explain the real limitation without inventing prices. Ask the user only to resolve a genuinely ambiguous security/market, not to choose a technical data source.'
       // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
       // composer dock, which takes questions without a call.
       const turn = rt.live.get(id)?.turn
@@ -670,7 +674,7 @@ export function install(rt) {
         type: 'object',
         required: true,
         additionalProperties: true,
-        description: 'One component { type, ...props }. Layout: stack (children, top to bottom) and row (children, side by side, wraps when narrow), 1 to 16 children; the outermost may define let: { name: "formula" }. Display: text ({ text: Markdown, tone?: "muted" }), metric ({ label, value, tone?: good|warn|bad, caption? }), table ({ columns: [{ key, label }], rows: [[cells]] }), chart ({ kind?: bar|hbar|line|area|donut|scatter|radar|heatmap|funnel|treemap|sankey|gauge, categories: [labels], series: [{ name?, values: [numbers or null for missing observations; never fill gaps with zero] }], unit?, caption? }; donut/funnel/treemap/gauge take one series. scatter adds xValues:[number|null] for each category and xUnit?. radar adds maxima:[positive axis limits], 3-12 axes. heatmap uses categories as columns and named series as rows. gauge uses one category/value and max>0. sankey omits series and uses categories as unique node names and links:[{source:index,target:index,value:positive number}], no cycles. Advanced charts: at most 80 categories, 12 series, 480 values, 120 links; radar/funnel/treemap/gauge require non-negative values; radar/gauge values must fit their stated limits. No arbitrary renderer options), progress ({ label?, percent 0-100, or value with max, valueLabel?, tone? }), callout ({ text, tone?: info|good|warn|bad }), sources ({ items: [{ label, url }] }), html ({ html, summary, height? }: only for what nothing else can draw; it runs sandboxed with no network, cannot submit, and should use the CSS variables --bt-ink, --bt-ink-2, --bt-line, --bt-card, --bt-accent, --bt-green, --bt-star, --bt-danger). Inputs, which keep their value in the page: slider ({ id, label, min, max, step?, value, unit? }), number ({ id, label, value, min?, max?, step?, unit? }), choice ({ id, label, options: [{ label, value }], value? }), toggle ({ id, label, value? }); an input id is a plain name such as price. A metric value, caption or tone, a text, a progress field, a callout, a table cell or a chart value may be a formula { "=": "expression" } over input ids and let names: numbers, \'text\', + - * / %, < <= > >= == !=, && || !, a ? b : c, and min max abs floor ceil sqrt pow round clamp fixed(x, digits) format(x, digits) percent(x, digits). Answers, which end your turn: options ({ id, options: [{ label, description? }], multi? }), confirm ({ id, confirmLabel?, cancelLabel? }), form ({ id, fields: [{ id, label, placeholder? }], submitLabel? }), submit ({ id, label }: sends the inputs\' values to you).',
+        description: 'One component { type, ...props }. Layout: stack (children, top to bottom) and row (children, side by side, wraps when narrow), 1 to 16 children; the outermost may define let: { name: "formula" }. Display: text ({ text: Markdown, tone?: "muted" }), metric ({ label, value, tone?: good|warn|bad, caption? }), table ({ columns: [{ key, label }], rows: [[cells]] }), chart ({ kind?: bar|hbar|line|area|donut|candlestick|scatter|radar|heatmap|funnel|treemap|sankey|gauge; candlestick takes bars:[{date:YYYY-MM-DD,open:number,high:number,low:number,close:number,volume?:number}] with 2-50 verified daily rows, no categories/series; all other charts take categories: [labels], series: [{ name?, values: [numbers or null for missing observations; never fill gaps with zero] }], unit?, caption? }; donut/funnel/treemap/gauge take one series. scatter adds xValues:[number|null] for each category and xUnit?. radar adds maxima:[positive axis limits], 3-12 axes. heatmap uses categories as columns and named series as rows. gauge uses one category/value and max>0. sankey omits series and uses categories as unique node names and links:[{source:index,target:index,value:positive number}], no cycles. Advanced charts: at most 80 categories, 12 series, 480 values, 120 links; radar/funnel/treemap/gauge require non-negative values; radar/gauge values must fit their stated limits. No arbitrary renderer options), progress ({ label?, percent 0-100, or value with max, valueLabel?, tone? }), callout ({ text, tone?: info|good|warn|bad }), sources ({ items: [{ label, url }] }), html ({ html, summary, height? }: only for what nothing else can draw; it runs sandboxed with no network, cannot submit, and should use the CSS variables --bt-ink, --bt-ink-2, --bt-line, --bt-card, --bt-accent, --bt-green, --bt-star, --bt-danger). Inputs, which keep their value in the page: slider ({ id, label, min, max, step?, value, unit? }), number ({ id, label, value, min?, max?, step?, unit? }), choice ({ id, label, options: [{ label, value }], value? }), toggle ({ id, label, value? }); an input id is a plain name such as price. A metric value, caption or tone, a text, a progress field, a callout, a table cell or a chart value may be a formula { "=": "expression" } over input ids and let names: numbers, \'text\', + - * / %, < <= > >= == !=, && || !, a ? b : c, and min max abs floor ceil sqrt pow round clamp fixed(x, digits) format(x, digits) percent(x, digits). Answers, which end your turn: options ({ id, options: [{ label, description? }], multi? }), confirm ({ id, confirmLabel?, cancelLabel? }), form ({ id, fields: [{ id, label, placeholder? }], submitLabel? }), submit ({ id, label }: sends the inputs\' values to you).',
       },
       audience: { type: 'string', enum: ['user', 'team'], description: 'In groups set user only for this completed answer to the human (including their @ question). Omit or team for Bot discussion: no card will be shown. Do not infer this from being the admin or last speaker.' },
       await_reply: { type: 'boolean', description: 'Wait for the user to submit the view. A view with options, confirm, form or submit always waits; a view without them cannot.' },
@@ -684,6 +688,36 @@ export function install(rt) {
       if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
+      if (!nativeChartPayloadsUsable(checked.view)) return refuse('The chart contains no drawable numeric observations. Do not submit the same empty chart again; show a sourced table or explain that data is missing, without filling gaps with zero.')
+      // Mixed spot/futures comparisons are a single coherent deliverable. Never
+      // stage an isolated futures line or regional spot bar as a substitute.
+      // A genuine partial-data response may still use a table or text card.
+      if (rt.strictMixedOverlayOf?.(id) && marketPriceVisual(checked.view)
+        && !mixedMarketVisualStatus(checked.view).complete)
+        return refuse('This mixed spot/futures or basis request needs ONE native show_view stack containing a dated 2-series spot+futures overlay line AND a dated basis line (spot minus futures). A single futures line, a separate regional spot bar, or a metric-only claimed as a chart does not satisfy it. Use only independently verified prices on matching dates/units. If historical spot data is unavailable, report the missing leg in a factual table/text instead of inventing a chart. Do not emit raw dsh-ui JSON.')
+      if (rt.explicitSpotRequestOf?.(id) && mismatchedSpotPriceView(checked.view, checked.title))
+        return refuse('The user requested a physical/spot commodity price. This chart contains futures/continuous-contract data or a futures candlestick. Do not show it as spot. Query configured Chemcloud Data Hub (chem-data-hub) MCP spot prices first; if missing, seek a verified external SPOT price with product grade, geography, date, unit and source. Never use futures prices as a substitute. This is only a SPOT-ONLY request guard: if the user explicitly requests a spot-versus-futures overlay or basis comparison, both separately verified series are allowed in one clearly labeled line chart. Do not claim a universal visualization-channel ban on spot/futures comparisons.')
+      if (rt.marketPriceViewAlreadyCommitted?.(id, checked.view))
+        return refuse('A price chart for this market-history request has already been delivered in this turn. Do not append another line, K-line, or HTML view for the same prices. Summarize the existing view briefly instead.')
+      // Do not show a wrong chart and then append a K-line in a second correction.
+      // This guard applies only to an explicit human K-line request.
+      const substitutesKline = node => node?.type === 'html'
+        || node?.type === 'chart' && node.kind !== 'candlestick'
+        || Array.isArray(node?.children) && node.children.some(substitutesKline)
+      if (rt.requiresCandlestick?.(id) && substitutesKline(checked.view))
+        return refuse('The user explicitly requested a single native K-line. Do not draw a line/area/other chart or HTML first. Use show_view chart kind candlestick with dated real OHLC bars, or briefly say verified OHLC was unavailable. Never invent values.')
+      // For an ordinary historical price request, reject a premature line/HTML
+      // exactly once. A close-only chart remains possible when OHLC is unavailable.
+      const isMarketLine = node => node?.type === 'html'
+        || node?.type === 'chart' && ['line', 'area'].includes(node.kind)
+        || Array.isArray(node?.children) && node.children.some(isMarketLine)
+      if (isMarketLine(checked.view) && rt.marketHistoryOf?.(id)) {
+        const sourceStatus = rt.marketOhlcStatus?.(id)
+        if (sourceStatus === 'ready')
+          return refuse('Daily OHLC market data was already returned successfully by the built-in AKShare tool. Do not submit a closing-price line or HTML. Use those real rows in a single native show_view candlestick instead.')
+        if (sourceStatus !== 'unavailable')
+          return refuse('Before submitting a line chart for a historical stock/futures price request, call the built-in chem_stock_history (A shares) or chem_futures_history (futures) once. Both run AKShare automatically with no user selection. If the tool returns genuine OHLC, use native show_view candlestick. Only if the market tool fails may you submit one sourced close-only line, with a clear explanation; do not invent missing prices.')
+      }
       const title = checked.title
       const view = checked.view
       if (!checked.interactive && args.await_reply === true) return 'This view has nothing to submit; call show_view with await_reply: false.'

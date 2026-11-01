@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { checkShownView, normalizeView, validateView, validateViewAnswer, VIEW_BYTE_LIMIT, viewBytes, viewSummary } from '../src/shared/views.js'
+import { checkShownView, normalizeView, validateView, validateViewAnswer, VIEW_BYTE_LIMIT, viewBytes, viewSummary, displayViewReady } from '../src/shared/views.js'
 
 const text = (value = 'hello') => ({ type: 'text', text: value })
 const metric = (label = '进度', value = '70%') => ({ type: 'metric', label, value })
@@ -196,4 +196,14 @@ test('chart observations may be missing without treating them as zeros', () => {
   for (const value of [undefined, '', false, NaN, Infinity]) {
     assert.equal(validateView({ ...view, series: [{ values: [10, value, 12] }] }).ok, false)
   }
+})
+
+test('display-only view remains hidden until tool call successfully settles', () => {
+  for (const done of [undefined, null, false, 0]) {
+    assert.equal(displayViewReady(done, undefined), false)
+    assert.equal(displayViewReady(done, false), false)
+  }
+  assert.equal(displayViewReady(true, true), false)
+  assert.equal(displayViewReady(true, false), true)
+  assert.equal(displayViewReady(true, undefined), true)
 })

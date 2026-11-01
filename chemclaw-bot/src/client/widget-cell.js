@@ -11,7 +11,7 @@ import { CHART_CSS, TableIcon, WidgetChart } from './widget-chart.js'
 import { ADVANCED_CHART_CSS, AdvancedChart } from './widget-advanced-chart.js'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
 import { HTML_CSS, HtmlFrame } from './widget-html.js'
-import { asText, checkShownView, choiceValue, inputDefault, resolve, viewInputs, viewScope } from '../shared/views.js'
+import { asText, checkShownView, choiceValue, displayViewReady, inputDefault, resolve, viewInputs, viewScope } from '../shared/views.js'
 
 // -------------------------------------------------------------------------
 // Views (show_view): a Bot draws a declarative blueprint — text, numbers, tables,
@@ -445,8 +445,12 @@ export function WidgetCell({ sessionId, callId, args, done, isError, roster, act
     if (heldCards?.[heldCardKey('view', record.id)] > 0) return null
     return h(PendingView, { sessionId, view: record, actions, inline: true })
   }
-  // A refused call (bad blueprint) drew no card; don't render an empty one.
-  if (done && isError) return h('span', { className: 'bt-q-gone', hidden: true })
+  // A display-only view must not appear until its tool call has settled.
+  // The host can reject a premature price line after the model has already
+  // provided its arguments. Rendering pending arguments caused a visible
+  // line-chart flash before the rejected call was replaced by a K-line.
+  // Interactive views above continue to use the pending-card pathway.
+  if (!displayViewReady(done, isError)) return h('span', { className: 'bt-q-gone', hidden: true })
   // Display-only cards draw from the recorded call arguments, which keep the
   // provider's encoding: checkShownView measures and unwraps them as the host did.
   // The args accessor reads strings through `text`; `value` drops them.

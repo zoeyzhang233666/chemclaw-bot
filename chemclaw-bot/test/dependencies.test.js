@@ -50,6 +50,14 @@ test('concurrent first queries share managed Python setup, without invoking syst
   const data = await tool.execute({ market: 'domestic', symbol: 'MA0' }, {})
   assert.equal(JSON.parse(data).source, 'test')
   assert.equal(commands.at(-1).args[0], join(home, 'runtime', 'resources', 'futures.py'))
+  const stock = tools.get('chem_stock_history')
+  assert.ok(stock, 'stock OHLC must be a first-class tool on the existing AKShare runtime')
+  const observed = []
+  rt.noteMarketOhlcSource = (id, status) => observed.push({ id, status })
+  const stockResult = await stock.execute({ symbol: '601857', start: '2026-10-01', end: '2026-10-30', adjust: 'none' }, { agent: { id: 'bot-1' } })
+  assert.equal(JSON.parse(stockResult).source, 'test')
+  assert.deepEqual(JSON.parse(commands.at(-1).args[1]), { symbol: '601857', start: '2026-10-01', end: '2026-10-30', adjust: 'none', market: 'stock' })
+  assert.deepEqual(observed, [{ id: 'bot-1', status: 'ready' }])
   assert.match(await readFile(join(home, 'runtime', 'resources', 'requirements.txt'), 'utf8'), /akshare==/)
 })
 
@@ -114,4 +122,50 @@ test('startup prepares market data without science packages or settings and clea
   assert.ok(commands.every(item => !item.args.some(arg => arg.endsWith('requirements-science.txt'))))
   await dispose()
   assert.equal(commands[0].options.signal.aborted, true)
+})
+
+test('failed AKShare history is recorded as unavailable for an honest single line fallback', async t => {
+  const { rt, tools } = await fixture(t, { run: (_cmd, args) => {
+    if (args[0]?.endsWith('futures.py')) return { stdout: '{"error":"No stock OHLC"}' }
+  } })
+  const seen = []
+  rt.noteMarketOhlcSource = (id, status) => seen.push([id, status])
+  const stockResult = JSON.parse(await tools.get('chem_stock_history').execute(
+    { symbol: '601857' }, { agent: { id: 's' } },
+  ))
+  assert.equal(stockResult.status, 'unavailable')
+  assert.match(stockResult.next, /web_search\/web_fetch/)
+  assert.deepEqual(seen, [['s', 'unavailable']])
+})
+
+test('a failed managed runtime also returns a usable web fallback rather than crashing or fabricating prices', async t => {
+  const { tools } = await fixture(t, { run: () => { throw new Error('offline') } })
+  const result = JSON.parse(await tools.get('chem_stock_history').execute(
+    { symbol: '601857' }, { agent: { id: 'stock-chat' } },
+  ))
+  assert.equal(result.status, 'unavailable')
+  assert.match(result.next, /web_search\/web_fetch/)
+  assert.equal(result.data, undefined)
+})
+
+test('explicit spot inquiries cannot call futures or stock OHLC tools', async t => {
+  const { rt, tools, commands } = await fixture(t)
+  rt.explicitSpotRequestOf = id => id === 'spot-bot'
+  const before = commands.length
+  for (const [name, args] of [
+    ['chem_futures_history', { market: 'domestic', query: '纯碱' }],
+    ['chem_futures_history', { market: 'foreign', symbol: 'CL' }],
+    ['chem_stock_history', { symbol: '601857' }],
+  ]) {
+    const response = JSON.parse(await tools.get(name).execute(args, { agent: { id: 'spot-bot' } }))
+    assert.equal(response.status, 'market_mismatch')
+    assert.equal(response.requestedMarket, 'spot')
+    assert.deepEqual(response.data, [])
+    assert.match(response.next, /chem-data-hub/)
+  }
+  assert.equal(commands.length, before, 'must not install Python or query AKShare for a spot price')
+  const actualFuture = JSON.parse(await tools.get('chem_futures_history').execute(
+    { market: 'domestic', query: '纯碱' }, { agent: { id: 'futures-bot' } },
+  ))
+  assert.equal(actualFuture.source, 'test', 'normal futures queries remain supported')
 })

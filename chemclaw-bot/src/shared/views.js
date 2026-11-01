@@ -1,3 +1,7 @@
+// Never paint a display-only tool view before the host accepts the call.
+// Model arguments may contain a rejected provisional price line.
+export const displayViewReady = (done, isError) => done === true && isError !== true
+
 // View cards: the blueprint a Bot may show, and the answer a user may send back.
 // Pure, so the host can validate a card before it is stored and the client can
 // later render the same blueprint. No component runs model-written code: formulas
@@ -234,6 +238,7 @@ function checkTable(node, path, ctx) {
 
 function checkChart(node, path, ctx) {
   if (node.kind !== undefined && !CHART_KINDS.includes(node.kind)) return `${path}.kind: unknown chart ${quoted(node.kind)}; allowed: ${allowed(CHART_KINDS)}`
+  if (node.kind === 'candlestick') return checkAdvancedChart(node, path, ctx, isFormula)
   if (!Array.isArray(node.categories) || node.categories.length === 0) return `${path}.categories: expected a non-empty array of labels`
   for (let index = 0; index < node.categories.length; index += 1) {
     const label = node.categories[index]
@@ -569,6 +574,10 @@ function componentSummary(node, lookup) {
     case 'metric': return `metric: ${node.label}=${value(node.value)}`
     case 'table': return `table: ${(Array.isArray(node.columns) ? node.columns : []).map(column => column?.label ?? column?.key ?? '').filter(Boolean).join('/')}`
     case 'chart': {
+      if (node.kind === 'candlestick') {
+        const rows = node.bars ?? []
+        return `chart candlestick: ${rows.length} verified OHLC bars`
+      }
       if (node.kind === 'sankey') return `chart sankey: ${(node.links ?? []).map(edge => `${node.categories[edge.source]}→${node.categories[edge.target]}=${edge.value}${node.unit ? ` ${node.unit}` : ''}`).join(', ')}`
       const series = Array.isArray(node.series) ? node.series[0] : undefined
       const values = Array.isArray(series?.values) ? series.values : []

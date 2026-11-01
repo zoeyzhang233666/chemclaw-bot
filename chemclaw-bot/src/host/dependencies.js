@@ -116,11 +116,62 @@ export function install(rt) {
     timer.unref?.()
     return async () => { clearTimeout(timer); controller.abort(); await Promise.allSettled([market, science]) }
   }, 'chemclaw-bot: automatic analysis setup')
-  rt.ctx.tools.register(defineTool({ name: 'chem_futures_history', description: 'Fetch documented AKShare domestic main-continuous or foreign daily historical futures data with provenance. Analysis components are prepared automatically; the first query may wait for setup. Never treat continuous data as tradable contracts or delayed quotes as real-time.', parameters: { market: { type: 'string', required: true, enum: ['domestic', 'foreign'] }, symbol: { type: 'string', required: true }, start: { type: 'string' }, end: { type: 'string' } }, output: { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: value }] }, execute: async (args, exec) => {
-    await rt.ensureMarketEnvironment()
-    const result = await run(python, [join(resources, 'futures.py'), JSON.stringify(args)], { signal: exec.signal ? AbortSignal.any([exec.signal, controller.signal]) : controller.signal })
-    const value = JSON.parse(result.stdout)
-    if (value.error) throw new Error(value.error)
-    return JSON.stringify(value)
-  } }))
+  // One pinned AKShare environment serves stock and futures tools. Every Bot
+  // receives these directly; the user need not know Python or which source to pick.
+  const marketHistory = async (args, exec) => {
+    // Guard at execution, not just in prompt text: a physical/spot quote must
+    // never receive a futures continuous-contract price from this tool.
+    if (rt.explicitSpotRequestOf?.(exec.agent?.id)) {
+      return JSON.stringify({
+        status: 'market_mismatch',
+        requestedMarket: 'spot',
+        data: [],
+        error: 'The user explicitly requested a SPOT/PHYSICAL commodity quote. Stock/futures OHLC tools are not spot-price sources.',
+        next: 'First try the configured Chemcloud Data Hub (chem-data-hub) MCP spot price tools. If they are unavailable or return no verifiable spot quote, search/fetch independent SPOT or physical market quotes on the web. Never use futures/main-continuous, settlements or a futures K-line as a substitute. Record grade, region, unit, quote date and source.',
+      })
+    }
+    try {
+      await rt.ensureMarketEnvironment()
+      const result = await run(python, [join(resources, 'futures.py'), JSON.stringify(args)], {
+        signal: exec.signal ? AbortSignal.any([exec.signal, controller.signal]) : controller.signal,
+      })
+      const value = JSON.parse(result.stdout)
+      if (value.error || value.status === 'unavailable') {
+        rt.noteMarketOhlcSource?.(exec.agent?.id, 'unavailable')
+        return JSON.stringify({
+          status: 'unavailable',
+          error: String(value.error ?? 'Market OHLC source unavailable'),
+          next: 'AKShare and built-in provider fallbacks have failed. Do not retry the same stock/futures history tool in this user turn. Use available web_search/web_fetch for a different public daily OHLC source with verifiable date/open/high/low/close. If unsuccessful, explain which facts are unverified; do not claim all public markets lack data.',
+        })
+      }
+      rt.noteMarketOhlcSource?.(exec.agent?.id, 'ready')
+      return JSON.stringify(value)
+    } catch {
+      rt.noteMarketOhlcSource?.(exec.agent?.id, 'unavailable')
+      return JSON.stringify({
+        status: 'unavailable', error: 'The managed AKShare environment or market query failed.',
+        next: 'Do not retry this tool repeatedly in the same turn. Try web_search/web_fetch for an independent public daily OHLC table. If that fails, report the gap without inventing figures.',
+      })
+    }
+  }
+  const historyOutput = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: value }] }
+  rt.ctx.tools.register(defineTool({
+    name: 'chem_futures_history',
+    description: 'ONLY for requests about FUTURES (never spot, physical/现货, ex-factory or delivered quotes). FIRST CHOICE for historical futures OHLC/K-line data: use market=domestic and query=the futures instrument name (e.g. 液化气, 液化石油气/LPG -> DCE PG0, 螺纹钢 -> RB0, 甲醇 -> MA0) or symbol=known provider code; use market=foreign and symbol=CL for WTI. Resolves many listed futures through documented continuous-contract aliases and the AKShare catalog. Automatically prepared AKShare runtime, no user data-source choice. Continuous histories are NOT tradable delivery contracts. Returns dated open/high/low/close, source, symbol, and provider limitations.',
+    parameters: { market: { type: 'string', required: true, enum: ['domestic', 'foreign'] }, symbol: { type: 'string', description: 'Optional verified provider symbol, e.g. PG0, RB0, CL' }, query: { type: 'string', description: 'Optional natural-language instrument name, e.g. 液化气 or 甲醇; use when no code is known' }, start: { type: 'string' }, end: { type: 'string' } },
+    output: historyOutput,
+    execute: async (args, exec) => marketHistory(args, exec),
+  }))
+  rt.ctx.tools.register(defineTool({
+    name: 'chem_stock_history',
+    description: 'FIRST CHOICE for Chinese A-share daily historical price questions (e.g. 中国石油/中石油 601857). Tries pinned AKShare EastMoney, AKShare Sina and independent Tencent daily OHLC in that order on the automatically prepared shared Python runtime; returns real dated OHLCV, provider provenance, adjustment and exchange, or a structured fallback-to-web instruction. No user data-source selection needed. Not for H-shares or real-time quotes.',
+    parameters: {
+      symbol: { type: 'string', required: true, description: 'Six-digit Shanghai or Shenzhen A-share code, e.g. 601857 for PetroChina A shares' },
+      start: { type: 'string', description: 'Optional YYYY-MM-DD start; defaults to last ~65 calendar days' },
+      end: { type: 'string', description: 'Optional YYYY-MM-DD end; defaults to today' },
+      adjust: { type: 'string', enum: ['none', 'qfq', 'hfq'], description: 'none = unadjusted, qfq = forward-adjusted, hfq = backward-adjusted; default none' },
+    },
+    output: historyOutput,
+    execute: async (args, exec) => marketHistory({ ...args, market: 'stock' }, exec),
+  }))
 }

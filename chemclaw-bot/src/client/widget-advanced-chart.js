@@ -13,12 +13,12 @@ export function chartTheme(element) {
     return name ? token(name) : color
   })
   return { ink: token('--bt-ink'), muted: token('--bt-ink-2'), line: token('--bt-line'), card: token('--bt-main'),
-    font: style.fontFamily, colors, narrow: element.clientWidth < 380 }
+    font: style.fontFamily, colors, up: token('--bt-danger'), down: token('--bt-green'), narrow: element.clientWidth < 380 }
 }
 
 function DataTable({ table }) {
   return h('div', { className: 'bt-widget-table' }, h('table', null,
-    h('thead', null, h('tr', null, table.columns.map((label, at) => h('th', { key: at, scope: 'col' }, label === 'Source' || label === 'Target' ? t(label) : label)))),
+    h('thead', null, h('tr', null, table.columns.map((label, at) => h('th', { key: at, scope: 'col' }, t(label))))),
     h('tbody', null, table.rows.map((row, at) => h('tr', { key: at }, row.map((value, col) => h(col === 0 ? 'th' : 'td', {
       key: col, scope: col === 0 ? 'row' : undefined, className: typeof value === 'number' ? 'bt-num' : undefined,
     }, value === null ? t('No data') : String(value))))))))
@@ -126,6 +126,7 @@ export const ADVANCED_CHART_CSS = `
 .bt-advanced-chart{width:100%}
 .bt-advanced-plot-wrap{position:relative;min-width:0}
 .bt-advanced-plot{width:100%;height:300px;min-width:0;font-family:inherit}
+.bt-advanced-chart[data-kind="candlestick"] .bt-advanced-plot{height:390px}
 .bt-advanced-plot-wrap[data-table]{position:absolute;inset:0 0 auto;visibility:hidden;pointer-events:none}
 .bt-advanced-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--bt-ink-2)}
 .bt-advanced-status button{padding:0;border:0;background:none;color:var(--bt-accent);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
