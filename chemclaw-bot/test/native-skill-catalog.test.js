@@ -85,7 +85,7 @@ test('DSH registry contributes real native skills and separates user DSH roots',
   ] }
   const items = await nativeSkillCatalog(registry, {})
   assert.equal(items.some(x => x.name === 'domain-1'), false)
-  assert.equal(items.find(x => x.name === 'grilling').labels.zh, '深入推敲一个方案')
+  assert.equal(items.find(x => x.name === 'grilling').labels.zh, '深入检验关键假设')
   assert.equal(items.find(x => x.name === 'b2b-lead-sourcing').category, '内贸销售')
   assert.equal(isMyInstallation(items.find(x => x.name === 'grilling')), false)
   const user = items.find(x => x.name === 'my-extra-workflow')
