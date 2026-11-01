@@ -79,7 +79,10 @@ export function requestedViewReminder(turn, bot, kinds) {
   return VISUAL_NOTICE + ' turn=' + turn + ']\n'
     + 'The user explicitly requested ' + kinds.join(', ') + ', but the successfully delivered views do not include those kinds. '
     + (kinds.includes('candlestick')
-      ? 'For a candlestick use ONLY the installed GenUI dsh-ui echart full-option renderer, with actual verified [open,close,low,high] bars; show_view has no candlestick kind. If earlier research had only close/low or no complete OHLC, do NOT synthesize bars, fetch again or add another line chart: explain in one sentence that the OHLC source is missing and do not claim this UI cannot render candles. Do not send another tool call. '
+      ? (bot
+        ? 'For a candlestick use native show_view chart kind candlestick with 2-50 actual dated OHLC bars, no categories/series. Do not add a second line chart or HTML. '
+        : 'For a candlestick use a single GenUI dsh-ui ECharts candlestick full-option view. ')
+        + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
     + (bot ? 'Use show_view for supported ECharts chart kinds, and an inline dsh-ui fence without panel:true for GenUI timelines/diagrams. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
@@ -148,6 +151,7 @@ export function install(rt) {
   ctx.on('session/event', (session, event) => { restore(session); observe(session, event) })
   ctx.on('session/disposed', session => turns.delete(String(session.id)))
   rt.noteVisualDelivery = (id, view) => { const entry = stateOf(id); entry.visual = true; for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind) }
+  rt.requiresCandlestick = id => stateOf(id).requested.has('candlestick') && !stateOf(id).textOnly
   ctx.on('agent/turn-stopping', ({ agent, turn, signal }) => {
     const session = agent.session
     const id = String(session.id)
