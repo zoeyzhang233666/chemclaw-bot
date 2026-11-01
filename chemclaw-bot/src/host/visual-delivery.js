@@ -10,7 +10,9 @@ export const textOnlyRequested = text => /\b(?:text[- ]only|no (?:charts|visuals
 // Do not penalize spot chemical quotes, conceptual questions or current-only quotes.
 export function marketHistoryRequest(text) {
   const query = String(text ?? '')
-  if (marketQuoteIntent(query) === 'spot') return false
+  // The OHLC-first guard is for a standalone traded market, never for an
+  // explicitly requested physical spot / futures overlay or basis comparison.
+  if (['spot', 'mixed'].includes(marketQuoteIntent(query))) return false
   if (!/(?:股票|股价|A股|港股|美股|ETF|期货|股指|WTI|布伦特|Brent|原油期货|期指|\b(?:stock|share|futures|equity|etf)\b)/iu.test(query)) return false
   if (/(?:为什么无法|怎么修复|为什么不|如何实现|能不能实现|是否支持|接口开发|技术方案|代码审查)/iu.test(query)) return false
   const historical = /(?:最近|近(?:一个|一|两|三|\d+)(?:月|周|天|日|年)|过去|一个月|上月|本月|月内|日线|日K|月线|周线|走势|趋势|历史|区间|(?:\d+|一|两|三)(?:天|日|周|月|年)|(?:20\d{2}[-年]\d{1,2}))/iu.test(query)
@@ -23,7 +25,9 @@ const genuiFence = /^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?$
 
 // Explicitly comparing two assets may legitimately need two different charts.
 export function multiAssetMarketRequest(text) {
-  return /(?:对比|比较|分别|并列|两只|多只|多种|多合约|多品种|\b(?:versus|vs\.?|compare)\b)/iu.test(String(text ?? ''))
+  const query = String(text ?? '')
+  return marketQuoteIntent(query) === 'mixed'
+    || /(?:对比|比较|分别|并列|两只|多只|多种|多合约|多品种|\b(?:versus|vs\.?|compare)\b)/iu.test(query)
 }
 
 // Market chart deduplication applies only to *price visuals* in a single
