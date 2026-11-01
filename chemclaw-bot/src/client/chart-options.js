@@ -1,5 +1,31 @@
 import { resolve } from '../shared/views.js'
 import { normalizeCandles } from '../shared/candlestick.js'
+import { t } from './i18n.js'
+
+// Trusted client-owned formatter; no model-authored executable code or HTML.
+export function candlestickTooltip(params) {
+  const points = Array.isArray(params) ? params : [params]
+  const candle = points.find(point => point?.seriesType === 'candlestick')
+  const values = candle?.data?.value ?? candle?.data
+  if (!Array.isArray(values) || values.length < 4) return ''
+  const print = value => typeof value === 'number' && Number.isFinite(value)
+    ? value.toLocaleString(undefined, { maximumFractionDigits: 6 }) : '-'
+  const date = String(candle.axisValue ?? candle.name ?? '')
+  const lines = [date,
+    `${t('Opening price')}：${print(values[0])}`,
+    `${t('Closing price')}：${print(values[1])}`,
+    `${t('Highest price')}：${print(values[3])}`,
+    `${t('Lowest price')}：${print(values[2])}`,
+  ]
+  for (const point of points) {
+    if (point?.seriesType === 'line' && /^MA(?:5|10|20)$/.test(point.seriesName ?? ''))
+      lines.push(`${point.seriesName}：${print(point.data)}`)
+    if (point?.seriesType === 'bar' && point?.seriesName === 'Volume')
+      lines.push(`${t('Trading volume')}：${print(point.data?.value ?? point.data)}`)
+  }
+  return lines.join('\n')
+}
+
 
 const number = (value, lookup) => {
   const result = resolve(value, lookup)
@@ -27,7 +53,7 @@ export function advancedChartTable(data, valueLabel, seriesLabel) {
   const { categories, series, unit = '' } = data
   if (data.kind === 'candlestick') {
     const volume = data.bars.every(bar => bar.volume !== null)
-    return { columns: ['Date', 'Open', 'High', 'Low', 'Close', ...(volume ? ['Volume'] : [])],
+    return { columns: ['Trading date', 'Opening price', 'Highest price', 'Lowest price', 'Closing price', ...(volume ? ['Trading volume'] : [])],
       rows: data.bars.map(bar => [bar.date, bar.open, bar.high, bar.low, bar.close, ...(volume ? [bar.volume] : [])]) }
   }
   if (data.kind === 'sankey') return {
@@ -72,15 +98,15 @@ export function advancedChartOption(data, theme) {
       data: movingAverage(n), symbol: 'none', lineStyle: { width: 1.2 },
       itemStyle: { color: theme.colors[at % theme.colors.length] }, connectNulls: false,
     }))
-    const candle = { name: 'OHLC', type: 'candlestick', xAxisIndex: 0, yAxisIndex: 0,
+    const candle = { name: t('OHLC'), type: 'candlestick', xAxisIndex: 0, yAxisIndex: 0,
       data: bars.map(bar => [bar.open, bar.close, bar.low, bar.high]),
       itemStyle: { color: up, color0: down, borderColor: up, borderColor0: down },
     }
     const xAxis = { ...axis, type: 'category', boundaryGap: true, data: dates }
     const yAxis = { ...axis, type: 'value', name: unit, scale: true }
-    return { ...base, tooltip: { ...base.tooltip, trigger: 'axis', axisPointer: { type: 'cross' } },
+    return { ...base, tooltip: { ...base.tooltip, trigger: 'axis', axisPointer: { type: 'cross' }, formatter: candlestickTooltip },
       axisPointer: { link: [{ xAxisIndex: volume ? [0, 1] : [0] }] },
-      legend: means.length ? { ...legend, data: ['OHLC', ...means.map(item => item.name)] } : undefined,
+      legend: means.length ? { ...legend, data: [t('OHLC'), ...means.map(item => item.name)] } : undefined,
       grid: volume
         ? [{ left: 64, right: 16, top: 48, height: '54%' }, { left: 64, right: 16, top: '76%', height: '10%' }]
         : [{ left: 64, right: 16, top: 48, bottom: 68 }],
