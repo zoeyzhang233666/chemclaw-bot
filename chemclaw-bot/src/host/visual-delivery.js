@@ -19,6 +19,11 @@ export function marketHistoryRequest(text) {
 
 const genuiFence = /^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?$/imu
 
+// Explicitly comparing two assets may legitimately need two different charts.
+export function multiAssetMarketRequest(text) {
+  return /(?:对比|比较|分别|并列|两只|多只|多种|多合约|多品种|\\b(?:versus|vs\\.?|compare)\\b)/iu.test(String(text ?? ''))
+}
+
 // Market chart deduplication applies only to *price visuals* in a single
 // user-requested market-history turn. Metrics and evidence tables stay allowed.
 export function marketPriceVisual(view) {
@@ -129,7 +134,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, marketChartNudged: false, marketChartCommitted: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -155,12 +160,12 @@ export function install(rt) {
       const source = event.data?.source
       const text = textOf(event.data?.content)
       if (source?.form === 'notice' && text.startsWith(VISUAL_NOTICE)) { entry.reminded = true; return }
-      if (source?.kind === 'user') { entry.human = true; entry.textOnly = textOnlyRequested(text); entry.marketHistory = marketHistoryRequest(text); entry.requested = new Set(requestedChartKinds(text)) }
+      if (source?.kind === 'user') { entry.human = true; entry.textOnly = textOnlyRequested(text); entry.marketHistory = marketHistoryRequest(text); entry.multiAssetMarket = multiAssetMarketRequest(text); entry.requested = new Set(requestedChartKinds(text)) }
       else if (source?.kind === 'schedule' || source?.audience === 'user') entry.human = true
       else if (source?.kind === 'bot' && source.role === 'room' && !source.askedBy) {
         const current = text.split(/This round so far[^\n]*:\n/u)[1]?.split('\n\n')[0] ?? ''
         const user = [...current.matchAll(/^User: (.*)$/gmu)].at(-1)?.[1]
-        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.marketHistory = marketHistoryRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
+        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.marketHistory = marketHistoryRequest(user); entry.multiAssetMarket = multiAssetMarketRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
       }
     } else if (event.type === 'assistant/message') {
       const text = textOf(event.data?.message?.content)
@@ -191,7 +196,7 @@ export function install(rt) {
   rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
   rt.marketPriceViewAlreadyCommitted = (id, view) => {
     const entry = stateOf(id)
-    return entry.marketHistory && entry.marketChartCommitted && marketPriceVisual(view)
+    return entry.marketHistory && !entry.multiAssetMarket && entry.marketChartCommitted && marketPriceVisual(view)
   }
   rt.requiresCandlestick = id => stateOf(id).requested.has('candlestick') && !stateOf(id).textOnly
   rt.deferMarketHistoryLineOnce = id => { const entry = stateOf(id); if (!entry.marketHistory || entry.textOnly || entry.marketChartNudged || entry.marketChartCommitted || entry.kinds.has('candlestick')) return false; entry.marketChartNudged = true; return true }
