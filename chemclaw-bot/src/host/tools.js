@@ -684,6 +684,13 @@ export function install(rt) {
       if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
+      // Do not show a wrong chart and then append a K-line in a second correction.
+      // This guard applies only to an explicit human K-line request.
+      const substitutesKline = node => node?.type === 'html'
+        || node?.type === 'chart' && node.kind !== 'candlestick'
+        || Array.isArray(node?.children) && node.children.some(substitutesKline)
+      if (rt.requiresCandlestick?.(id) && substitutesKline(checked.view))
+        return 'The user explicitly requested a single native K-line. Do not draw a line/area/other chart or HTML first. Use show_view chart kind candlestick with dated real OHLC bars, or briefly say verified OHLC was unavailable. Never invent values.'
       const title = checked.title
       const view = checked.view
       if (!checked.interactive && args.await_reply === true) return 'This view has nothing to submit; call show_view with await_reply: false.'
