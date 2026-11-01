@@ -28,9 +28,9 @@ test('native Office cards and details get different examples based on what the s
   const questions = Object.keys(NATIVE_OFFICE_COPY).map(name =>
     skillExample({ name, kind: 'skill', nativeSkill: true, builtinSource: 'chemclaw-office' }))
   assert.equal(new Set(questions).size, 8)
-  assert.match(skillExample({ name: 'office-docx', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /Word 报告/)
-  assert.match(skillExample({ name: 'office-recalculate', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /重新计算关联公式/)
-  assert.match(skillExample({ name: 'office-render', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /图表遮挡/)
+  assert.match(skillExample({ name: 'office-docx', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /Word审查表/)
+  assert.match(skillExample({ name: 'office-recalculate', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /重新计算全部结果/)
+  assert.match(skillExample({ name: 'office-render', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /曲线遮挡/)
   assert.match(skillExample({ name: 'office-export-pdf', kind: 'skill', nativeSkill: true, builtinSource: 'dsh-office' }), /PDF/)
 })
 
