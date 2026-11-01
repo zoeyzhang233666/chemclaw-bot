@@ -100,6 +100,69 @@ export function nativeChartPayloadsUsable(view) {
   return walk(view)
 }
 
+
+// One complete, honest mixed-market view must contain a same-date overlay AND
+// a dated basis series. This checks structure/data presence, not provenance:
+// the model must still source physical spot and exchange futures separately.
+const spotLeg = /现货|即期|出厂|到厂|\bspot\b/iu
+const futuresLeg = /期货|期价|盘面|主力|连续|\bfutures?\b|\b(?:MA|EG|SA|PG|RB|SC)\d{0,4}\b/iu
+const basisLeg = /基差|现期价差|\bbasis\b/iu
+const usableNumber = value => typeof value === 'number' && Number.isFinite(value)
+const chartNodes = view => {
+  const charts = []
+  const walk = (node, depth = 0) => {
+    if (!node || typeof node !== 'object' || depth > 24) return
+    if (Array.isArray(node)) { for (const child of node) walk(child, depth + 1); return }
+    if (node.type === 'chart') charts.push(node)
+    if (Array.isArray(node.children)) walk(node.children, depth + 1)
+  }
+  walk(view)
+  return charts
+}
+export function mixedMarketVisualStatus(view) {
+  const charts = chartNodes(view)
+  const overlay = charts.some(chart => {
+    if (chart.kind !== 'line' || !Array.isArray(chart.categories) || chart.categories.length < 2) return false
+    const spot = chart.series?.find(item => spotLeg.test(String(item?.name ?? '')))
+    const futures = chart.series?.find(item => futuresLeg.test(String(item?.name ?? '')) && !spotLeg.test(String(item?.name ?? '')))
+    return spot && futures && Array.isArray(spot.values) && Array.isArray(futures.values)
+      && spot.values.length === chart.categories.length && futures.values.length === chart.categories.length
+      && chart.categories.filter((_, index) => usableNumber(spot.values[index]) && usableNumber(futures.values[index])).length >= 2
+  })
+  const basis = charts.some(chart => ['line', 'bar', 'area'].includes(chart.kind)
+    && Array.isArray(chart.categories) && chart.categories.length >= 2
+    && (chart.series ?? []).some(item => basisLeg.test(String(item?.name ?? ''))
+      && Array.isArray(item.values) && item.values.length === chart.categories.length
+      && item.values.filter(usableNumber).length >= 2))
+  return { overlay: Boolean(overlay), basis: Boolean(basis), complete: Boolean(overlay && basis) }
+}
+
+// A mixed-market Bot/group answer should show native show_view, not a JSON
+// protocol dump. Remove only view-shaped payloads; keep ordinary explanation
+// and genuine non-UI JSON intact.
+export function stripUnrenderedMixedViewText(text, streaming = false) {
+  const original = String(text ?? '')
+  const trimmed = original.trim()
+  if (streaming && (/^`{3}(?:dsh-ui|json)(?:\s|$)/iu.test(trimmed) || /^\{/u.test(trimmed))) return ''
+  const withoutFences = original.replace(/^ {0,3}`{3}(?:dsh-ui|json)[^\n]*\r?\n([\s\S]*?)^ {0,3}`{3}[ \t]*$/gimu,
+    (whole, body) => {
+      if (/^ {0,3}`{3}dsh-ui/iu.test(whole)) return ''
+      try {
+        const spec = JSON.parse(body)
+        if (spec && (Array.isArray(spec.items) || ['stack', 'row', 'chart'].includes(spec.type))) return ''
+      } catch { /* ordinary JSON samples stay visible */ }
+      return whole
+    })
+  const candidate = withoutFences.trim()
+  if (candidate.startsWith('{')) {
+    try {
+      const spec = JSON.parse(candidate)
+      if (spec && (Array.isArray(spec.items) || ['stack', 'row', 'chart'].includes(spec.type))) return ''
+    } catch { /* keep ordinary text */ }
+  }
+  return withoutFences.trim()
+}
+
 export function hasInlineGenui(text, native = false) {
   for (const match of text.matchAll(/^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}```[ \t]*\r?$/gimu)) {
     try {
@@ -182,6 +245,8 @@ export function requestedViewReminder(turn, bot, kinds) {
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
 }
 
+const botMixedNeeded = (entry, isBot) => entry.quoteIntent === 'mixed' && isBot && !entry.mixedVisualCommitted
+
 export function visualReminder(turn, bot) {
   return `${VISUAL_NOTICE} turn=${turn}]\nThe user-facing answer has no inline visual delivery. Add only the missing view now, using the evidence already obtained; do not repeat the prose, research or external actions. ${bot ? 'Prefer show_view for the existing charts and cards; use an inline dsh-ui fence for richer GenUI components (omit panel:true).' : 'Use an inline dsh-ui fence with the installed GenUI components.'} Choose from the information: numbers → metrics/chart, comparison → chart/table, events → timeline, process → steps/diagram, explanation or a short answer → a compact card. Include units and sources where available. Never invent missing values to draw a chart. An HTML/file link does not replace the inline view. Follow the conversation language.`
 }
@@ -191,7 +256,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, mixedVisualCommitted: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -210,6 +275,7 @@ export function install(rt) {
         next.multiAssetMarket = previous.multiAssetMarket
         next.marketChartNudged = previous.marketChartNudged
         next.marketChartCommitted = previous.marketChartCommitted
+        next.mixedVisualCommitted = previous.mixedVisualCommitted
         next.marketOhlcStatus = previous.marketOhlcStatus
         next.textOnly = previous.textOnly
         next.visual = previous.visual
@@ -229,6 +295,7 @@ export function install(rt) {
         if (!result.isError && !event.data.error && /^The view is (?:on screen|staged)/u.test(textOf(result.content))) {
           entry.visual = true
           if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
+          if (entry.quoteIntent === 'mixed' && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
           for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
         }
       }
@@ -244,6 +311,7 @@ export function install(rt) {
         entry.multiAssetMarket = multiAssetMarketRequest(text)
         entry.marketChartNudged = false
         entry.marketChartCommitted = false
+        entry.mixedVisualCommitted = false
         entry.marketOhlcStatus = 'untried'
         entry.visual = false
         entry.invalidGenuiChart = false
@@ -286,11 +354,13 @@ export function install(rt) {
     const entry = stateOf(id)
     entry.visual = true
     if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
+    if (entry.quoteIntent === 'mixed' && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
     for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
   }
   rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
   rt.marketQuoteIntentOf = id => stateOf(id).quoteIntent
   rt.explicitSpotRequestOf = id => stateOf(id).quoteIntent === 'spot'
+  rt.mixedMarketRequestOf = id => stateOf(id).quoteIntent === 'mixed'
   rt.marketOhlcStatus = id => stateOf(id).marketOhlcStatus
   rt.noteMarketOhlcSource = (id, status) => {
     if (!id) return
@@ -313,7 +383,8 @@ export function install(rt) {
     const enabledRequests = [...entry.requested].filter(kind => rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind))
     const missing = missingRequestedKinds(enabledRequests, entry.kinds)
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
-    if (entry.visual && !knownMismatch) return
+    const mixedIncomplete = botMixedNeeded(entry, rt.isBotSession?.(id) === true)
+    if (entry.visual && !knownMismatch && !mixedIncomplete) return
     if ((rt.state?.exchangeTurns?.[id] ?? []).includes(turn)) return
     const info = rt.live?.get(id)?.info
     if (info?.handoff && !info.resume || info?.role === 'request' && info.audience !== 'user') return
@@ -327,7 +398,9 @@ export function install(rt) {
       ? { kind: 'plugin:chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
       : { kind: 'plugin', plugin: 'chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
     try {
-      const reminder = knownMismatch ? requestedViewReminder(turn, bot, missing)
+      const reminder = mixedIncomplete
+        ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
+        : knownMismatch ? requestedViewReminder(turn, bot, missing)
       : entry.invalidGenuiChart && bot
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart has an empty or misnamed ECharts data series. Do not repeat that blank chart or fetch data again. Use ONE native show_view line chart with already verified dated spot prices, or a factual table if observations are unavailable. Never substitute futures for spot. This is the only correction.`
         : visualReminder(turn, bot)
