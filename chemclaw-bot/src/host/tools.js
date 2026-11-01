@@ -10,7 +10,7 @@ import { NAME_MAX } from './requests.js'
 import { unquote } from './text.js'
 import { mentionSpans } from '../shared/mentions.js'
 import { checkShownView } from '../shared/views.js'
-import { redundantMarketSourceQuestion, nativeChartPayloadsUsable } from './visual-delivery.js'
+import { redundantMarketSourceQuestion, nativeChartPayloadsUsable, mixedMarketVisualStatus, marketPriceVisual } from './visual-delivery.js'
 import { mismatchedSpotPriceView } from './market-quote-intent.js'
 
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
@@ -688,7 +688,13 @@ export function install(rt) {
       if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
-       if (!nativeChartPayloadsUsable(checked.view)) return refuse('The chart contains no drawable numeric observations. Do not submit the same empty chart again; show a sourced table or explain that data is missing, without filling gaps with zero.')
+      if (!nativeChartPayloadsUsable(checked.view)) return refuse('The chart contains no drawable numeric observations. Do not submit the same empty chart again; show a sourced table or explain that data is missing, without filling gaps with zero.')
+      // Mixed spot/futures comparisons are a single coherent deliverable. Never
+      // stage an isolated futures line or regional spot bar as a substitute.
+      // A genuine partial-data response may still use a table or text card.
+      if (rt.mixedMarketRequestOf?.(id) && marketPriceVisual(checked.view)
+        && !mixedMarketVisualStatus(checked.view).complete)
+        return refuse('This mixed spot/futures or basis request needs ONE native show_view stack containing a dated 2-series spot+futures overlay line AND a dated basis line (spot minus futures). A single futures line, a separate regional spot bar, or a metric-only claimed as a chart does not satisfy it. Use only independently verified prices on matching dates/units. If historical spot data is unavailable, report the missing leg in a factual table/text instead of inventing a chart. Do not emit raw dsh-ui JSON.')
       if (rt.explicitSpotRequestOf?.(id) && mismatchedSpotPriceView(checked.view, checked.title))
         return refuse('The user requested a physical/spot commodity price. This chart contains futures/continuous-contract data or a futures candlestick. Do not show it as spot. Query configured Chemcloud Data Hub (chem-data-hub) MCP spot prices first; if missing, seek a verified external SPOT price with product grade, geography, date, unit and source. Never use futures prices as a substitute. This is only a SPOT-ONLY request guard: if the user explicitly requests a spot-versus-futures overlay or basis comparison, both separately verified series are allowed in one clearly labeled line chart. Do not claim a universal visualization-channel ban on spot/futures comparisons.')
       if (rt.marketPriceViewAlreadyCommitted?.(id, checked.view))
