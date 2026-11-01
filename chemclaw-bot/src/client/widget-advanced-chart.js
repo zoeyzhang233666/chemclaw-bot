@@ -13,7 +13,7 @@ export function chartTheme(element) {
     return name ? token(name) : color
   })
   return { ink: token('--bt-ink'), muted: token('--bt-ink-2'), line: token('--bt-line'), card: token('--bt-main'),
-    font: style.fontFamily, colors, narrow: element.clientWidth < 380 }
+    font: style.fontFamily, colors, up: token('--bt-danger'), down: token('--bt-green'), narrow: element.clientWidth < 380 }
 }
 
 function DataTable({ table }) {
