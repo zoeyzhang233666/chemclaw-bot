@@ -146,7 +146,9 @@ export function runtimeReusable(output, manifest) {
   try { existing = parsePrimaryRuntime(JSON.parse(readFileSync(join(root, 'runtime.json'), 'utf8'))) } catch { return false }
   if (existing.payloadDigest !== manifest.payloadDigest) return false
   const entries = workspaceDependencyPaths(root, manifest)
-  return [entries.python, entries.node].every(path => existsSync(path)) && existsSync(entries.pythonPackages)
+  return [entries.python, entries.node].every(path => existsSync(path))
+    && ['docx', 'pptx', 'openpyxl'].every(name =>
+      existsSync(join(entries.pythonPackages, name, '__init__.py')))
 }
 
 /**
