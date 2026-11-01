@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion } from '../src/host/visual-delivery.js'
+import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
 
 const content = text => [{ type: 'text', text }]
@@ -382,4 +382,17 @@ test('a historical market turn accepts at most one price view, and resets on a n
   assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
   f.start(3); f.user('中石油最近一个月股价')
   assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', candles), false, 'new turn resets duplicate protection')
+})
+
+test('comparisons of two assets still allow independent market price charts', () => {
+  assert.equal(multiAssetMarketRequest('比较 WTI 和 Brent 最近一个月期货价格'), true)
+  assert.equal(multiAssetMarketRequest('Compare WTI versus Brent futures history'), true)
+  assert.equal(multiAssetMarketRequest('中石油最近一个月股价'), false)
+  const f = setup(); f.start(); f.user('比较 WTI 和 Brent 最近一个月期货价格')
+  const chart = { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 },
+    { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 },
+  ] }
+  f.rt.noteVisualDelivery('s', chart)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', chart), false)
 })
