@@ -5619,6 +5619,7 @@ function checkLinks(node, path) {
 }
 
 // src/shared/views.js
+var displayViewReady = (done, isError) => done === true && isError !== true;
 var LAYOUT = ["stack", "row"];
 var DISPLAY = ["text", "metric", "table", "chart", "progress", "callout", "sources", "html"];
 var INPUT_TYPES = ["slider", "choice", "toggle", "number"];
@@ -7996,7 +7997,7 @@ function WidgetCell({ sessionId, callId, args, done, isError, roster, actions, h
     if (heldCards?.[heldCardKey("view", record2.id)] > 0) return null;
     return (0, import_react11.createElement)(PendingView, { sessionId, view: record2, actions, inline: true });
   }
-  if (done && isError) return (0, import_react11.createElement)("span", { className: "bt-q-gone", hidden: true });
+  if (!displayViewReady(done, isError)) return (0, import_react11.createElement)("span", { className: "bt-q-gone", hidden: true });
   const shown = checkShownView(args?.text?.("title") ?? args?.title, args?.value?.("view") ?? args?.view);
   if (shown.error !== void 0 || shown.interactive || args?.value?.("await_reply") === true) {
     return (0, import_react11.createElement)("span", { className: "bt-q-gone", hidden: true });
