@@ -12626,10 +12626,10 @@ function ConnectPlugins({ wide, actions }) {
       {
         type: "button",
         className: "bt-connect bt-connect-foot",
-        onClick: () => actions.selectPanel("plugins")
+        onClick: () => actions.setSurface("agent")
       },
-      (0, import_react27.createElement)(PlugIcon),
-      t("Connect plugins")
+      (0, import_react27.createElement)(SwitchIcon),
+      t("Switch to classic Agent mode")
     )
   );
 }
@@ -12827,7 +12827,7 @@ function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboardi
       [t("Settings"), GearIcon, () => actions.openSettings("general")]
     ],
     [
-      [t("Switch to classic Agent mode"), SwitchIcon, () => actions.setSurface("agent")]
+      [t("Connect plugins"), PlugIcon, () => actions.selectPanel("plugins")]
     ]
   ];
   if (signedIn) groups.push([[accountT("signOut"), SignOutIcon, askSignOut, void 0, true]]);
