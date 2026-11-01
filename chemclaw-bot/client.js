@@ -8817,7 +8817,7 @@ var skill_display_default = {
 // src/shared/skills.js
 var SKILL_CATEGORIES = ["内贸销售", "内贸采购", "外贸销售", "外贸采购", "产业基本面", "价差与量化", "通用办公", "科学分析", "基础流程"];
 var skillLabel = (item, locale = "zh") => item.displayName || item.labels?.[locale.startsWith("zh") ? "zh" : "en"] || (locale.startsWith("zh") ? skill_display_default[item.name]?.[0] : void 0) || (item.kind === "skill" && item.description ? item.description.replace(/^.*? \/ /, "").replace(/^\d+[.、．]\s*/, "") : item.name);
-var isMyInstallation = (item) => item.kind === "skill" && !item.builtinSource && !item.nativeSkill;
+var isMyInstallation = (item) => item.kind === "skill" && (item.nativeSkill ? item.userInstalled === true : !item.builtinSource);
 var skillCategory = (item) => (item.category && (item.category !== "我的安装" || isMyInstallation(item)) ? item.category : isMyInstallation(item) ? "我的安装" : "基础流程").replace(/^期现-/, "");
 var isUserSkill = (item) => item.kind === "skill" && item.invocation?.userInvocable !== false;
 function matchingSkills(items, query = "", category = "", locale = "zh") {
@@ -9844,8 +9844,8 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
       (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", onClick: onClose }, t("Close"))
     ),
     (0, import_react18.createElement)("p", { className: "bt-skill-purpose" }, summary.purpose || summary.description),
-    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, "此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。"),
-    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, "在对话中可以通过技能菜单选择，或输入：", (0, import_react18.createElement)("code", null, "/" + summary.name)),
+    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, summary.userInstalled ? "此技能来自用户的 DSH 技能目录，可在原目录中管理；此处只读。" : "此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。"),
+    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, summary.invocation?.userInvocable === false ? "此技能只支持模型按需调用，不支持手动输入命令。" : "在对话中可以通过技能菜单选择，或输入：", summary.invocation?.userInvocable === false ? null : (0, import_react18.createElement)("code", null, "/" + summary.name)),
     (0, import_react18.createElement)(
       "details",
       { className: "bt-advanced" },
@@ -23839,7 +23839,7 @@ function skillSource({ roster, actions, controllerOf }) {
   };
 }
 
-// src/client/native-skill-copy.js
+// src/shared/native-skill-copy.js
 var NATIVE_SKILL_ZH = {
   "b2b-lead-sourcing": ["按产品找下游客户", "寻找实际使用该原料的下游工厂，交付附证据的客户清单。"],
   "ask-matt": ["帮我选择工作方法", "根据你要完成的任务，推荐适合的技能或工作流程。"],
