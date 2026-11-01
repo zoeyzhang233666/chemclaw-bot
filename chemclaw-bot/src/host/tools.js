@@ -686,16 +686,16 @@ export function install(rt) {
       if (group && args.audience !== 'user') return 'Group views are only for answers to the human. Set audience: user when delivering that answer; do not draw a view for Bot discussion or progress.'
       if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
-      if (checked.error !== undefined) return checked.error
+      if (checked.error !== undefined) return refuse(checked.error)
       if (rt.marketPriceViewAlreadyCommitted?.(id, checked.view))
-        return 'A price chart for this market-history request has already been delivered in this turn. Do not append another line, K-line, or HTML view for the same prices. Summarize the existing view briefly instead.'
+        return refuse('A price chart for this market-history request has already been delivered in this turn. Do not append another line, K-line, or HTML view for the same prices. Summarize the existing view briefly instead.')
       // Do not show a wrong chart and then append a K-line in a second correction.
       // This guard applies only to an explicit human K-line request.
       const substitutesKline = node => node?.type === 'html'
         || node?.type === 'chart' && node.kind !== 'candlestick'
         || Array.isArray(node?.children) && node.children.some(substitutesKline)
       if (rt.requiresCandlestick?.(id) && substitutesKline(checked.view))
-        return 'The user explicitly requested a single native K-line. Do not draw a line/area/other chart or HTML first. Use show_view chart kind candlestick with dated real OHLC bars, or briefly say verified OHLC was unavailable. Never invent values.'
+        return refuse('The user explicitly requested a single native K-line. Do not draw a line/area/other chart or HTML first. Use show_view chart kind candlestick with dated real OHLC bars, or briefly say verified OHLC was unavailable. Never invent values.')
       // For an ordinary historical price request, reject a premature line/HTML
       // exactly once. A close-only chart remains possible when OHLC is unavailable.
       const isMarketLine = node => node?.type === 'html'
@@ -704,9 +704,9 @@ export function install(rt) {
       if (isMarketLine(checked.view) && rt.marketHistoryOf?.(id)) {
         const sourceStatus = rt.marketOhlcStatus?.(id)
         if (sourceStatus === 'ready')
-          return 'Daily OHLC market data was already returned successfully by the built-in AKShare tool. Do not submit a closing-price line or HTML. Use those real rows in a single native show_view candlestick instead.'
+          return refuse('Daily OHLC market data was already returned successfully by the built-in AKShare tool. Do not submit a closing-price line or HTML. Use those real rows in a single native show_view candlestick instead.')
         if (sourceStatus !== 'unavailable')
-          return 'Before submitting a line chart for a historical stock/futures price request, call the built-in chem_stock_history (A shares) or chem_futures_history (futures) once. Both run AKShare automatically with no user selection. If the tool returns genuine OHLC, use native show_view candlestick. Only if the market tool fails may you submit one sourced close-only line, with a clear explanation; do not invent missing prices.'
+          return refuse('Before submitting a line chart for a historical stock/futures price request, call the built-in chem_stock_history (A shares) or chem_futures_history (futures) once. Both run AKShare automatically with no user selection. If the tool returns genuine OHLC, use native show_view candlestick. Only if the market tool fails may you submit one sourced close-only line, with a clear explanation; do not invent missing prices.')
       }
       const title = checked.title
       const view = checked.view
