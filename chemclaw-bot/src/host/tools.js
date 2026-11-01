@@ -701,8 +701,13 @@ export function install(rt) {
       const isMarketLine = node => node?.type === 'html'
         || node?.type === 'chart' && ['line', 'area'].includes(node.kind)
         || Array.isArray(node?.children) && node.children.some(isMarketLine)
-      if (isMarketLine(checked.view) && rt.deferMarketHistoryLineOnce?.(id))
-        return 'This is a historical stock/futures price request. Prefer one native candlestick view instead of a closing-price line or HTML: first use already available real dated open/high/low/close observations, or perform at most ONE suitable OHLC history lookup (AKShare if executable, otherwise a verifiable daily OHLC web table). Then call show_view {type:"chart",kind:"candlestick",bars:[{date,open,high,low,close,volume?}]} with 2-50 actual rows. If OHLC data cannot be verified, a single close-only line is allowed on the NEXT attempt, with the data limitation stated. Do not invent OHLC, repeat long searches, or add duplicate charts.';
+      if (isMarketLine(checked.view) && rt.marketHistoryOf?.(id)) {
+        const sourceStatus = rt.marketOhlcStatus?.(id)
+        if (sourceStatus === 'ready')
+          return 'Daily OHLC market data was already returned successfully by the built-in AKShare tool. Do not submit a closing-price line or HTML. Use those real rows in a single native show_view candlestick instead.'
+        if (sourceStatus !== 'unavailable')
+          return 'Before submitting a line chart for a historical stock/futures price request, call the built-in chem_stock_history (A shares) or chem_futures_history (futures) once. Both run AKShare automatically with no user selection. If the tool returns genuine OHLC, use native show_view candlestick. Only if the market tool fails may you submit one sourced close-only line, with a clear explanation; do not invent missing prices.'
+      }
       const title = checked.title
       const view = checked.view
       if (!checked.interactive && args.await_reply === true) return 'This view has nothing to submit; call show_view with await_reply: false.'
