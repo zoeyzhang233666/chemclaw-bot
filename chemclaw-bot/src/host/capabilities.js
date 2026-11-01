@@ -4,6 +4,7 @@ import { own } from './store.js'
 import { join } from 'node:path'
 import { rm, stat } from 'node:fs/promises'
 import { packageRoot, ensureSkillLibrary } from './catalog-seed.js'
+import { nativeSkillCatalog } from './native-skill-catalog.js'
 import { parseSkill, readSkillFile, skillDirectoryOf, skillFiles, managedSkillPath } from './skill-files.js'
 import { skillLabel } from '../shared/skills.js'
 import { validSkillEmoji } from '../shared/skill-presentation.js'
@@ -525,6 +526,7 @@ export function install(rt) {
 
   async function capabilityEndpoint(endpoint, body = {}) {
     if (endpoint === 'skill-catalog') { await rt.load(); return { items: libraryView().filter(item => item.kind === 'skill'), revision: state.revision } }
+    if (endpoint === 'native-skill-catalog') return { items: await nativeSkillCatalog(ctx.get?.('skills')) }
     if (endpoint === 'skill-reset') {
       await rt.load(); writeCheck()
       const item = own(library(), String(body.name))

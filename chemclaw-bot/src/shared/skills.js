@@ -1,18 +1,22 @@
 import skillDisplay from '../../seed/skill-display.json' with { type: 'json' }
 
-export const SKILL_CATEGORIES = ['内贸销售', '内贸采购', '外贸销售', '外贸采购', '产业基本面', '价差与量化', '通用办公', '科学分析', '基础流程']
+export const SKILL_CATEGORIES = ['内贸销售', '内贸采购', '外贸销售', '外贸采购', '产业基本面', '价差与量化', '通用办公', '数据可视化', '科学分析', '研发与调试', '基础流程', '其他技能']
 
 export const skillLabel = (item, locale = 'zh') => item.displayName || item.labels?.[locale.startsWith('zh') ? 'zh' : 'en']
   || (locale.startsWith('zh') ? skillDisplay[item.name]?.[0] : undefined)
   || (item.kind === 'skill' && item.description ? item.description.replace(/^.*? \/ /, '').replace(/^\d+[.、．]\s*/, '') : item.name)
 
-export const skillCategory = item => (item.category ?? '我的安装').replace(/^期现-/, '')
+// Origin and category are independent: imported skills may be assigned to
+// "科学分析" or "通用办公" while still belonging to "我的安装".
+export const isMyInstallation = item => item.kind === 'skill' && (item.nativeSkill ? item.userInstalled === true : !item.builtinSource)
+export const skillCategory = item => (item.category && (item.category !== '我的安装' || isMyInstallation(item))
+  ? item.category : isMyInstallation(item) ? '我的安装' : '基础流程').replace(/^期现-/, '')
 export const isUserSkill = item => item.kind === 'skill' && item.invocation?.userInvocable !== false
 
 export function matchingSkills(items, query = '', category = '', locale = 'zh') {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean)
   return items.filter(item => item.kind === 'skill'
-    && (!category || (category === '我的安装' ? !item.builtinSource : skillCategory(item) === category))
+    && (!category || (category === '我的安装' ? isMyInstallation(item) : skillCategory(item) === category))
     && words.every(word => [item.name, item.originalName, skillLabel(item, locale), ...Object.values(item.labels ?? {}), item.description, item.purpose, skillCategory(item), ...(item.keywords ?? [])].join(' ').toLowerCase().includes(word)))
 }
 

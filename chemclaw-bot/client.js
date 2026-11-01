@@ -8815,129 +8815,181 @@ var skill_display_default = {
 };
 
 // src/shared/skills.js
-var SKILL_CATEGORIES = ["内贸销售", "内贸采购", "外贸销售", "外贸采购", "产业基本面", "价差与量化", "通用办公", "科学分析", "基础流程"];
+var SKILL_CATEGORIES = ["内贸销售", "内贸采购", "外贸销售", "外贸采购", "产业基本面", "价差与量化", "通用办公", "数据可视化", "科学分析", "研发与调试", "基础流程", "其他技能"];
 var skillLabel = (item, locale = "zh") => item.displayName || item.labels?.[locale.startsWith("zh") ? "zh" : "en"] || (locale.startsWith("zh") ? skill_display_default[item.name]?.[0] : void 0) || (item.kind === "skill" && item.description ? item.description.replace(/^.*? \/ /, "").replace(/^\d+[.、．]\s*/, "") : item.name);
-var skillCategory = (item) => (item.category ?? "我的安装").replace(/^期现-/, "");
+var isMyInstallation = (item) => item.kind === "skill" && (item.nativeSkill ? item.userInstalled === true : !item.builtinSource);
+var skillCategory = (item) => (item.category && (item.category !== "我的安装" || isMyInstallation(item)) ? item.category : isMyInstallation(item) ? "我的安装" : "基础流程").replace(/^期现-/, "");
 var isUserSkill = (item) => item.kind === "skill" && item.invocation?.userInvocable !== false;
 function matchingSkills(items, query = "", category = "", locale = "zh") {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  return items.filter((item) => item.kind === "skill" && (!category || (category === "我的安装" ? !item.builtinSource : skillCategory(item) === category)) && words.every((word) => [item.name, item.originalName, skillLabel(item, locale), ...Object.values(item.labels ?? {}), item.description, item.purpose, skillCategory(item), ...item.keywords ?? []].join(" ").toLowerCase().includes(word)));
+  return items.filter((item) => item.kind === "skill" && (!category || (category === "我的安装" ? isMyInstallation(item) : skillCategory(item) === category)) && words.every((word) => [item.name, item.originalName, skillLabel(item, locale), ...Object.values(item.labels ?? {}), item.description, item.purpose, skillCategory(item), ...item.keywords ?? []].join(" ").toLowerCase().includes(word)));
 }
 function explicitSkillNames(text, items) {
   const names = new Set(items.filter(isUserSkill).map((item) => item.name));
   return [...new Set([...String(text).matchAll(/(?:^|\s)\/([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(?=\s|$)/g)].map((match) => match[1]).filter((name) => names.has(name)))];
 }
 
+// src/shared/skill-examples.js
+var CURATED_SKILL_EXAMPLES_ZH = {
+  "genui": "查询最近90天乙二醇华东现货价和EG期货主力价格，直接在对话中画双折线图及基差图，支持鼠标悬停查看日期、价格和来源；缺失的数据请标明。",
+  "brainstorming": "准备建设化工原料采购比价平台，面向采购员、风控和财务分别设计三个可行版本，比较功能范围、开发成本与上线顺序。",
+  "executing-plans": "按“核查华东纯碱现货价格→对比三家公开报价来源→生成带出处的采购观察表”三个步骤完成一次实际研究，逐项核验结果。",
+  "grill-me": "计划将纯碱采购由每月询价改为季度框架协议，请针对价格波动、最低采购量和违约风险逐条追问，并列出最危险的三个假设。",
+  "grill-with-docs": "拟将SBS采购集中到两家供应商，请质询断供、账期和库存风险，并整理成决策记录，注明待验证数据。",
+  "grilling": "准备向越南销售TDI，请从目标客户真实性、贸易合规、收款和运费逐层检验计划，给出进入市场前必须验证的事项。",
+  "using-superpowers": "研究华东甲醇现货价格近一个月的变化，先选择适合的查询和研究技能，最后给出涨跌幅、原因及可追溯的数据来源。",
+  "verification-before-completion": "生成最近30天乙二醇现货与EG主力期货基差表，交付前逐行核对日期、价格单位、合约、计算公式及原始数据来源。",
+  "writing-plans": "规划一套纯碱供需周报自动生成流程，具体列出库存、开工率、价格和新增产能数据的获取途径、处理步骤及验收条件。",
+  "guizang-ppt-skill": "制作一份甲醇产业链市场分享的横向翻页网页演示，展示煤制与天然气制路线、主要下游应用及价格影响因素。",
+  "dom-buy-cn": "我要采购工业级双氧水，请查找华东地区的生产厂家、需要核对的许可证和运输条件，整理可询价的供应商清单。",
+  "dom-sales-cn": "寻找华东地区可能持续采购纯碱的玻璃和洗涤剂生产企业，区分终端工厂与贸易商，整理销售线索。",
+  "dom-buy-im": "研究从中东采购甲醇运至华东港口的可行性，列出可核验的供应商、进口成本构成、单证和主要风险。",
+  "dom-sales-ex": "研究向越南出口金红石型钛白粉的市场机会，整理潜在买家类型、出口手续、成本与询盘报价注意事项。",
+  "dom-fund": "研究2027年国内甲醇供需平衡，整理新增产能、MTO需求、进口变化与成本支撑，标注关键数据来源。",
+  "dom-spreads": "分析乙二醇最近一年的基差、主力与次主力月差及历史季节性，指出当前价差所处的历史区间和异常月份。",
+  "chem-public-apis": "从PubChem等公开数据库核对苯酚的CAS号、分子式、分子量及常用英文别名，并给出原始来源链接。",
+  "b2b-lead-sourcing": "寻找华东地区使用HDI的工业涂料、胶黏剂生产企业，筛除纯贸易商，列出企业名称、产品证据和官网来源。",
+  "ask-matt": "想把化工数据中台的价格预警功能做成可验收的产品，请决定先梳理需求还是编写任务，并输出首轮要完成的具体事项。",
+  "codebase-design": "检查 https://github.com/zoeyzhang233666/chemclaw-bot 的现货与期货查询模块，分析如何在架构上防止把期货价误报为现货价。",
+  "domain-modeling": "为化工产业链数据库定义“企业、生产装置、产能、原料、产品、下游应用”六种实体及其关系，给出字段表与示例。",
+  "diagnose-windows-sandbox-acl": "Windows中ChemClaw执行文件写入时报告工作区ACL拒绝访问，列出可实际执行的权限检查命令及安全修复步骤。",
+  "handoff": "请研究华东纯碱最近30天的公开行情，并生成可供下个研究员继续使用的交接单，包含已核实事实、数据链接和待办。",
+  "issue-triage": "检查 https://github.com/zoeyzhang233666/chemclaw-bot/issues 中目前开放的问题，按影响范围、可复现性和修复优先级分类。",
+  "setup-matt-pocock-skills": "为一个化工行情看板研发项目设计需求、架构决策和问题跟踪的文档目录，并创建可供团队直接使用的初始模板。",
+  "to-spec": "为化工行情图增加“在价格曲线上标注装置检修与投产事件”功能，编写完整需求、交互规则、数据字段和验收标准。",
+  "to-tickets": "将“甲醇现货与期货基差可视化看板”拆成数据接口、价差计算、图表交互和测试任务，写明每项验收条件。",
+  "wayfinder": "为化工智能体产品制定下一季度路线图，在行情数据可靠性、技能库体验和移动端接入之间确定优先级及里程碑。",
+  "writing-great-skills": "设计一个“核验纯碱供应商报价是否合理”的Skill，评估它的触发条件、价格口径、证据链和最终交付清单。",
+  "systematic-debugging": "定位ChemClaw查询纯碱现货时错误返回期货价格的原因，检查数据源路由、结果标识与回归测试。",
+  "requesting-code-review": "审查 https://github.com/zoeyzhang233666/chemclaw-bot/pull/106 的代码改动，核对技能库分类、用户安装隔离和旧数据迁移风险。",
+  "receiving-code-review": "核对 ChemClaw PR #106 的审查意见与最新改动，区分必须修复的问题和可选建议，并给出逐项处理结论。",
+  "finishing-a-development-branch": "检查 ChemClaw PR #106 是否已满足合并条件，核对最新CI、前端构建文件、冲突和功能回归风险。",
+  "using-git-worktrees": "为 ChemClaw 的技能库改版和Office优化建立两个隔离的Git worktree，列出安全创建、切换与清理命令。",
+  "dispatching-parallel-agents": "把2026年国内MDI供需调查拆给三个智能体：核查产能项目、下游需求和价格走势，最后汇总证据并标注分歧。",
+  "subagent-driven-development": "为甲醇现货与期货基差看板分派三个研发子任务：现货数据校验、图表交互、回归测试，并逐项审查结果。",
+  "writing-skills": "编写一个“化工供应商报价合理性核验”Skill，规定地区、规格、含税口径、比价来源与异常报价的处理规则。",
+  "office": "制作一套甲醇采购月报交付物：Word市场简报、Excel价格测算表和6页PPT，确保同一数据口径。",
+  "office-tools": "创建甲醇采购测算Excel文件，包含报价、运费、增值税和到厂成本公式，并检查工作表结构与公式引用。",
+  "office-docx": "制作一份工业级双氧水供应商准入Word审查表，包含经营资质、危险化学品运输、质量指标和风险评级。",
+  "office-pptx": "制作8页可编辑PPT，研究乙二醇现货与期货基差，包含价格走势、基差变化和主要风险，数据需注明来源。",
+  "office-xlsx": "建立华东、华南甲醇采购成本Excel模型，用可编辑公式对比含税报价、运费、采购量与到厂总成本。",
+  "office-render": "制作6页纯碱供需简报PPT，再逐页预览检查标题截断、表格溢出和价格曲线遮挡，并修正排版。",
+  "office-recalculate": "制作丙烯采购成本Excel模型，设置单价、采购量、运费和税费公式，再修改单价并重新计算全部结果。",
+  "office-export-pdf": "制作一份SBS供应商考察Word报告并导出为PDF，核对中文字体、表格边界和页码是否完整。",
+  "chemclaw-delivery": "查询近30天纯碱公开市场数据，生成可交付的行情简报、带来源的Excel价格表和聊天中可查看的趋势图。",
+  "chemclaw-research-process": "研究万华化学新建及扩产项目对国内MDI供需的影响，逐项核实投资、产能、进度、时间和信息来源。"
+};
+
 // src/shared/skill-presentation.js
 var BUILTIN_SKILL_PRESENTATION = {
-  "domain-1": ["🏭", "帮我找山东生产双氧水的厂家，核实生产资质，区分生产企业和贸易商。"],
-  "domain-2": ["🏷️", "这份纯碱采购报价是否合理？请统一规格、税费和交付条件后核验。"],
-  "domain-3": ["🚚", "比较从山东和江苏采购纯碱送到杭州的总成本，列出运费与交付条件。"],
-  "domain-4": ["📈", "整理华东甲醇最近一个月的行情、成本变化和采购谈判依据。"],
-  "domain-5": ["📋", "按附件采购清单逐项找候选供应商，标明产品匹配证据和待确认项。"],
-  "domain-6": ["📜", "检查这份采购合同的质量、交付、付款和违约条款，提出修改建议。"],
-  "domain-7": ["🪪", "核查这家供应商的经营资质、许可证范围和有效期，列出缺失材料。"],
-  "domain-8": ["🧪", "把这份到货质量分析证书与采购规格逐项对照，指出超标和口径差异。"],
-  "domain-9": ["🧮", "按附件配方和采购单价，测算甲醇涨价对单位产品成本的影响。"],
-  "domain-10": ["📍", "以苏州收货仓库为中心，找运输半径内的纯碱供应商，并核实供货线索。"],
-  "domain-11": ["🔄", "按现有纯碱采购要求寻找备选供应商，比较匹配度和切换条件。"],
-  "domain-12": ["🗺️", "研究国内双氧水的生产商、产能、工艺和在建项目，评估供应风险。"],
-  "domain-13": ["🔍", "核查这家供应商是否自己生产双氧水，列出工厂和产品证据。"],
-  "domain-14": ["🛡️", "按附件准入标准尽调这家供应商，列出资质、产能和经营风险。"],
-  "domain-15": ["🚨", "核查这家供应商最近三个月的经营、司法和生产风险，注明发生时间与来源。"],
-  "domain-16": ["⚖️", "比较这三家供应商的质量、供货、价格和服务，说明各自适合的采购场景。"],
-  "domain-17": ["🏷️", "对比这三份采购报价，统一数量、规格、税费和运费口径。"],
-  "domain-18": ["🎯", "找江苏、浙江实际使用纯碱的下游工厂，保留原料需求依据和来源。"],
-  "domain-19": ["🤝", "下周拜访这家玻璃厂，请整理其业务、原料需求和需要当面确认的问题。"],
-  "domain-20": ["💬", "把这些客户聊天记录整理成需求、承诺、异议、跟进时间线和下一步。"],
-  "domain-21": ["✍️", "润色这封客户跟进邮件，保留原有事实，不增加价格或交货承诺。"],
-  "domain-22": ["🗺️", "整理华东纯碱客户的城市、园区和行业分布，安排优先拜访路线。"],
-  "domain-23": ["🔭", "整理这几家竞争对手的产品、区域和渠道布局，标明证据与缺口。"],
-  "domain-24": ["📈", "整理华东纯碱最近一个月的现货行情、涨跌和区域价差，为报价准备依据。"],
-  "domain-25": ["🏷️", "客户说拿到了这个市场价，请核查是否同规格、同地区、同税费和交付口径。"],
-  "domain-26": ["⚖️", "比较华东和华南纯碱售价，统一报价条件，说明价差和运输因素。"],
-  "domain-27": ["📝", "整理这封客户询盘的规格、数量和交付要求，准备报价草稿及待确认问题。"],
-  "domain-28": ["🛡️", "按本次危化品销售的产品和用途，检查买方资质及需要专业复核的合规事项。"],
-  "domain-29": ["🧩", "以这三家标杆客户为样本，提取工艺与原料需求特征，再找相似客户。"],
-  "domain-30": ["🏗️", "找未来一年有新建、扩建或技改项目的玻璃企业，按投产时间安排联系。"],
-  "domain-31": ["📣", "筛选最近一个月与甲醇相关的公开采购和招标线索，核对截止时间与参与条件。"],
-  "domain-32": ["🔎", "按真实需求、产品适配和证据质量，给附件客户名单排出跟进优先级。"],
-  "domain-33": ["🏢", "研究这家目标客户的业务、工艺和采购场景，找有证据的业务切入点。"],
-  "domain-34": ["⭐", "结合需求匹配、交易线索和风险，评估这家客户是否值得优先跟进。"],
-  "domain-35": ["🧭", "针对这家工厂的原料采购，分析使用、技术、采购和审批角色的联系顺序。"],
-  "domain-36": ["💡", "查这家客户近期的项目、产品和经营变化，找适合联系的话题并附来源。"],
-  "domain-37": ["🌍", "按同一统计口径，梳理中国甲醇最近一年的主要进口来源国。"],
-  "domain-38": ["📜", "审阅这份进口采购合同，检查质量、付款、运输和争议解决条款。"],
-  "domain-39": ["🌐", "研究沙特甲醇供应市场的生产商、供给条件和出口线索，评估采购适配度。"],
-  "domain-40": ["🏭", "按甲醇产品和目标地区寻找海外生产商，保留产品和工厂身份依据。"],
-  "domain-41": ["🔍", "核验这家海外供应商的公司身份、工厂、产品与经营线索。"],
-  "domain-42": ["🚢", "按这份进口报价和贸易条款，测算货值、运保费、税费及到厂成本。"],
-  "domain-43": ["🪟", "比较甲醇进口到厂成本和国内采购价，统一规格及交付口径，判断是否有进口窗口。"],
-  "domain-44": ["📋", "按产品、用途和进口地区，整理所需资料及待核实的监管要求。"],
-  "domain-45": ["✅", "核对这批进口发票、装箱单和运输文件，列出字段不一致与补正项。"],
-  "domain-46": ["💱", "按采购币种、金额和付款安排，测算汇率变化对进口成本的影响。"],
-  "domain-47": ["🌍", "比较这个产品的海外需求、贸易线索和准入条件，筛选候选出口国家。"],
-  "domain-48": ["📜", "检查这份出口合同的产品、付款、交付和责任条款，给出修改建议。"],
-  "domain-49": ["💱", "按这份报价的币种、收款安排和成本口径，测算汇率波动对报价空间的影响。"],
-  "domain-50": ["🧾", "根据双方信息、产品明细和贸易条款，制作出口报价单与形式发票草稿。"],
-  "domain-51": ["🌐", "研究越南纯碱市场的下游需求、买家结构和进入市场所需条件。"],
-  "domain-52": ["🎯", "按纯碱用途和贸易线索找海外候选买家，区分真实用料企业和中间环节。"],
-  "domain-53": ["🔎", "核查这家海外询盘公司的身份、业务和联系信息，列出可信线索与风险。"],
-  "domain-54": ["📨", "处理这封海外询盘，提取需求、核对缺失字段，并准备回复草稿。"],
-  "domain-55": ["🛃", "按产品、用途和目的国，核对出口与准入要求，附上法规来源。"],
-  "domain-56": ["🔢", "根据产品的成分、形态和用途，查找海关商品编码候选并说明归类疑点。"],
-  "domain-57": ["🧮", "按附件贸易条款、运费和税费，测算出口报价及价格空间。"],
-  "domain-58": ["✅", "检查这批出口单证的品名、数量、金额、运输和主体信息是否一致。"],
-  "domain-59": ["📖", "用通俗语言介绍甲醇的用途、工艺、供需和价格驱动，列出关键变量。"],
-  "domain-60": ["🏭", "整理甲醇最近一个月的检修、开工和产量事件，核实发生时间。"],
-  "domain-61": ["🛒", "整理甲醇下游最近一个月的生产、订单与消费变化，区分事实和预期。"],
-  "domain-62": ["⛓️", "沿实际工艺路线分析煤价变化如何传导到甲醇及其下游成本。"],
-  "domain-63": ["💰", "统一价格、单耗和时间口径，比较甲醇产业链各环节的利润变化。"],
-  "domain-64": ["👀", "把当前甲醇研究中的分歧整理成可跟踪指标，说明观察频率和验证条件。"],
-  "domain-65": ["🌅", "整理甲醇今日价格、供需和产业事件，生成有来源、有缺口说明的晨报。"],
-  "domain-66": ["🗞️", "按附件重点客户名单整理一周情报，提炼变化和可跟进行动。"],
-  "domain-67": ["🗓️", "回顾纯碱本周价格、供需和产业事件，更新驱动判断与下周观察项。"],
-  "domain-68": ["📑", "围绕甲醇新增产能对华东供应的影响，组织证据并形成专题研究报告。"],
-  "domain-69": ["💡", "用一个具体例子解释基差、月差和期现关系，说明哪些条件需要核实。"],
-  "domain-70": ["🏗️", "跟踪国内甲醇新增产能与项目进度，区分规划、在建、投产和实际爬坡。"],
-  "domain-71": ["🕸️", "绘制甲醇上下游产业链结构图，标明产品、工艺和连接依据。"],
-  "domain-72": ["🗺️", "制作甲醇产业链价格地图，每个价格点标明日期、规格和来源。"],
-  "domain-73": ["🏢", "研究这家产业企业的产品、装置、产能和价值链位置，附上证据。"],
-  "domain-74": ["📰", "汇总纯碱产业资讯，识别重复报道，定位真实事件及发生时间。"],
-  "domain-75": ["🏭", "整理国内主要纯碱生产企业和产能，逐项标注口径与来源。"],
-  "domain-76": ["🗺️", "梳理山东甲醇产业的企业、园区、产能和下游分布。"],
-  "domain-77": ["🏗️", "分析这套新增甲醇产能可能影响哪些企业和地区，区分预期与实际供应。"],
-  "domain-78": ["📣", "核实这条产业新闻的事件与时间，分析影响范围并列出尚需验证的条件。"],
-  "domain-79": ["📊", "核对纯碱当前价格在可比历史样本中的位置，说明样本和规格口径。"],
-  "domain-80": ["📉", "解释甲醇最近一个月的涨跌，逐项核实价格、供需和事件证据。"],
-  "domain-81": ["⚖️", "检查这轮纯碱涨价是否有供需基本面支持，同时列出反证和缺口。"],
-  "domain-82": ["📏", "统一现货和期货口径，比较纯碱当前基差与可比历史区间。"],
-  "domain-83": ["🌦️", "整理可比开工率历史，检查季节规律，注明样本变化和异常年份。"],
-  "domain-84": ["🌦️", "按一致合约和现货口径，检查甲醇基差的历史季节分布。"],
-  "domain-85": ["🔗", "对齐这两组指标的频率和样本，检验相关性并检查异常值与共同趋势。"],
-  "domain-86": ["⏱️", "检验这两组指标谁领先谁，检查不同滞后期及结果是否稳健。"],
-  "domain-87": ["📦", "在可比样本中检验甲醇库存与价格的关系，说明相关性与因果的区别。"],
-  "domain-88": ["⚙️", "结合工艺和供需背景，检验开工率与价格的关系及稳健性。"],
-  "domain-89": ["🧪", "按可复现的样本和规则，检验基差是否包含后续价格表现的信息。"],
-  "domain-90": ["🛑", "围绕这些装置停车事件，定义观察窗口与对照条件，检验相关市场变化。"],
-  "domain-91": ["🏗️", "区分项目预期、投产和实际爬坡时间，研究新增产能对市场的影响。"],
-  "domain-92": ["🏛️", "核实这项政策内容和落地时间，设计观察窗口并检验市场反应。"],
-  "domain-93": ["🗓️", "拆解甲醇合约月差变化，核对交割、库存和供需证据。"],
-  "domain-94": ["📡", "在统一口径下筛查异常基差，标明历史位置与需要核实的因素。"],
-  "domain-95": ["📡", "按一致合约结构扫描异常月差，区分季节性与特殊变化。"],
-  "domain-96": ["📡", "统一地区、规格和交付口径，筛查异常区域价差与运输约束。"],
-  "domain-97": ["📡", "沿真实产业联系扫描价格和利润背离，标明可比性限制与验证路径。"],
-  "domain-98": ["🕰️", "用当前供需和价格状态定义可比指标，找历史上相似的阶段并比较差异。"],
-  "domain-99": ["🧪", "把这个研究判断改写成可检验假设，明确样本、指标和反证条件。"],
-  "domain-100": ["🔬", "按这条明确规则进行回测，考虑交易成本、前视偏差和样本外表现。"],
-  "domain-101": ["⚖️", "统一地区、规格和交付条件，比较甲醇区域价差并解释变化。"],
-  "domain-102": ["🪟", "统一汇率、税费和贸易口径，比较甲醇国内外价格及进出口窗口。"],
-  "domain-103": ["↔️", "核实这两个相关品种的产业联系，分析价格背离的供需与替代因素。"],
-  "domain-104": ["🔗", "沿实际工艺路线比较上下游价格变化，检验成本传导和时滞。"],
-  "domain-105": ["⚖️", "确认这两个品种的产业联系与可比单位，分析比价变化和历史位置。"],
-  "domain-106": ["🌦️", "按同一价格口径比较多年季节走势，标明样本范围和异常年份。"],
-  "domain-107": ["📦", "用完整资源目录检查库存季节性，审核历史口径和样本可比性。"],
-  "domain-108": ["📦", "整理同口径库存历史，分析季节规律、异常年份和样本变化。"],
+  "domain-1": ["🏭", "查找山东省实际生产工业级双氧水的厂家，列出厂址、主要产品、生产资质线索和官网来源，排除纯贸易商。"],
+  "domain-2": ["🏷️", "核对华东地区最近30天工业级重质纯碱的公开报价，统一规格、含税与交货条件，判断可比价格区间并列出证据。"],
+  "domain-3": ["🚚", "比较山东和江苏采购100吨重质纯碱送到杭州的含税到厂成本，分别测算采购价、运费和交期，缺少数据时注明。"],
+  "domain-4": ["📈", "研究华东甲醇最近30天的现货价格、煤炭成本、港口库存和下游开工变化，整理采购谈判要点。"],
+  "domain-5": ["📋", "为采购100吨重质纯碱、50吨工业双氧水和20吨甲醇分别寻找国内候选生产商，列明生产证据与联系渠道。"],
+  "domain-6": ["📜", "拟采购100吨工业级重质纯碱，请先起草示范采购合同，再审查质量验收、延期交货、付款及违约条款风险。"],
+  "domain-7": ["🪪", "核查山东海化股份有限公司公开披露的生产业务、经营资质和相关证照，说明哪些文件仍需向供应商索取。"],
+  "domain-8": ["🧪", "制作工业级重质纯碱到货COA与采购规格核验清单，逐项列出应核对的关键质量指标、检测方法和异常处理。"],
+  "domain-9": ["🧮", "假设甲醇占某化工产品成本30%、原成本5000元/吨，测算甲醇采购价上涨5%、10%、20%时产品成本变化。"],
+  "domain-10": ["📍", "以苏州工业园区为收货地点，寻找周边可以供应工业级纯碱的厂家或仓储供应商，附地址与供货证据。"],
+  "domain-11": ["🔄", "每月需在华东采购200吨工业级重质纯碱，请建立备选供应商清单，比较产地、交期、生产证据和切换风险。"],
+  "domain-12": ["🗺️", "研究中国双氧水主要生产企业、产能分布、工艺和未来一年新增项目，分析采购端潜在供应风险并附来源。"],
+  "domain-13": ["🔍", "核查山东海化股份有限公司是否实际生产纯碱，提供生产基地、装置或产能的公开证据，区分厂家和贸易商。"],
+  "domain-14": ["🛡️", "对山东海化股份有限公司做公开资料层面的纯碱供应商准入尽调，核查产品、工厂、经营信息及合规风险。"],
+  "domain-15": ["🚨", "核查山东海化股份有限公司最近三个月公开可查的司法、监管、生产和经营风险，注明事件日期及来源。"],
+  "domain-16": ["⚖️", "比较山东海化、唐山三友化工和江苏苏盐井神的纯碱生产能力、运输区位、产品适配和公开风险，不编造实际报价。"],
+  "domain-17": ["🏷️", "假设采购100吨纯碱，A报价2000元/吨含税到厂，B报价1900元/吨含税出厂另加运费120元/吨，C报价1980元/吨含税出厂另加运费60元/吨，请计算总成本并排序。"],
+  "domain-18": ["🎯", "寻找江苏和浙江实际使用工业级纯碱的玻璃和洗涤剂生产企业，附工厂、产品和原料使用的公开证据。"],
+  "domain-19": ["🤝", "准备拜访旗滨集团玻璃生产业务，请根据公开资料整理产品、生产基地、纯碱用料场景和需要确认的五个问题。"],
+  "domain-20": ["💬", "整理以下销售跟进信息：周一客户问每月50吨纯碱到厂价，周二销售答复核实运费，周五客户催要COA。列出待办、承诺与下一次跟进安排。"],
+  "domain-21": ["✍️", "把以下微信润色得专业且不增加承诺：王经理您好，纯碱到厂价还在确认运费，COA已联系工厂核实，确认后第一时间发您。"],
+  "domain-22": ["🗺️", "整理江苏、浙江、安徽可能采购工业级纯碱的玻璃和洗涤剂工厂分布，按城市、行业及公开证据制定拜访优先级。"],
+  "domain-23": ["🔭", "比较山东海化、唐山三友化工和远兴能源的纯碱产能区域、产品布局及公开销售渠道，附可追溯来源。"],
+  "domain-24": ["📈", "查询华东重质纯碱最近30天现货价格和涨跌幅，并与华北同规格价格比较，为销售报价准备市场依据。"],
+  "domain-25": ["🏷️", "客户声称华东重质纯碱含税到厂价为2100元/吨，请核验最近30天公开报价，检查规格、地区、运费及税费口径。"],
+  "domain-26": ["⚖️", "比较最近30天华东与华南工业级重质纯碱含税现货价，分析区域价差和跨区域运输成本对销售的影响。"],
+  "domain-27": ["📝", "按模拟询盘起草工业级重质纯碱报价回复：杭州买方要100吨、含税到厂、15天内交货并附COA，明确待确认价格及付款条款。"],
+  "domain-28": ["🛡️", "准备在上海向工业清洗企业销售工业级双氧水，请列出买卖双方资质、危化品运输和用途核验要求并附法规来源。"],
+  "domain-29": ["🧩", "参考旗滨集团和信义玻璃的公开玻璃生产业务，在江苏浙江寻找使用纯碱的相似潜在生产客户，列出工厂证据。"],
+  "domain-30": ["🏗️", "查找未来12个月国内玻璃企业公开的新建、扩建和技改项目，列出企业、地点、进度、预计投产日期与来源。"],
+  "domain-31": ["📣", "查找最近30天公开发布的工业甲醇采购公告或招标，列出采购方、数量、截止时间、资质要求和原公告链接。"],
+  "domain-32": ["🔎", "在华东寻找十家可能使用工业级纯碱的生产企业，按原料需求、项目动态和企业真实性排列销售跟进优先级。"],
+  "domain-33": ["🏢", "研究旗滨集团玻璃业务的主要生产基地、产品和原料采购场景，分析工业级纯碱供应商有哪些潜在切入点。"],
+  "domain-34": ["⭐", "评估旗滨集团作为工业级纯碱潜在客户的价值，综合原料需求、扩产线索、采购信息和公开风险给出结论。"],
+  "domain-35": ["🧭", "向旗滨集团销售工业级纯碱时，使用部门、工厂采购、集团采购及供应商准入各承担什么角色？给出联系顺序。"],
+  "domain-36": ["💡", "调查旗滨集团最近六个月公开披露的玻璃产线、技改和项目变化，寻找可用于纯碱业务拜访的真实话题。"],
+  "domain-37": ["🌍", "统计中国最近12个月甲醇进口来源国及数量占比，比较同比变化，注明海关口径、统计期和数据来源。"],
+  "domain-38": ["📜", "假设从沙特进口1000吨工业甲醇、CIF上海、美元结算，请拟定示范采购条款并审查品质、付款和保险风险。"],
+  "domain-39": ["🌐", "研究沙特阿拉伯甲醇主要生产商、出口港口及对华贸易线索，评估中国采购企业可能面临的供应和运输风险。"],
+  "domain-40": ["🏭", "查找沙特阿拉伯可供应工业甲醇的真实生产企业，核实其官网、产品资料、工厂和可公开验证的贸易线索。"],
+  "domain-41": ["🔍", "根据SABIC公开信息核查与甲醇相关的生产业务、产品资料和企业身份，区分已验证事项与待索取的供货资质。"],
+  "domain-42": ["🚢", "假设甲醇CIF上海报价350美元/吨、汇率7.20、采购1000吨，请列出税费、港杂和运输计算过程，缺少税率时查询官方规定。"],
+  "domain-43": ["🪟", "比较最近30天甲醇CFR中国公开报价与华东甲醇现货价，统一汇率、税费和交货口径，判断进口窗口是否存在。"],
+  "domain-44": ["📋", "从沙特进口工业甲醇到上海作为化工原料，需要哪些报关、危化品和质量资料？列出适用规定及官方链接。"],
+  "domain-45": ["✅", "制作沙特进口1000吨工业甲醇的发票、装箱单与提单核对清单，说明品名、数量、重量、港口与主体信息如何相互匹配。"],
+  "domain-46": ["💱", "假设采购1000吨甲醇、合同价350美元/吨，测算人民币兑美元汇率7.0、7.2、7.4时的货值成本差异。"],
+  "domain-47": ["🌍", "比较越南、印度尼西亚和泰国作为中国金红石型钛白粉出口市场的需求、准入要求和竞争情况，筛选优先国家。"],
+  "domain-48": ["📜", "为向越南客户出口100吨金红石型钛白粉、FOB上海、美元结算编写示范合同并检查质量、付款与违约责任。"],
+  "domain-49": ["💱", "假设钛白粉出口报价2300美元/吨、人民币成本15000元/吨、90天后收款，测算汇率6.9、7.2、7.5时的毛利变化。"],
+  "domain-50": ["🧾", "按模拟订单制作金红石型钛白粉出口报价单及形式发票：卖方中国出口商A，买方越南客户B，100吨，FOB上海，2300美元/吨。"],
+  "domain-51": ["🌐", "研究越南金红石型钛白粉的涂料、塑料等下游需求，整理真实买家类型和中国出口商需要核查的进口要求。"],
+  "domain-52": ["🎯", "寻找越南可能采购金红石型钛白粉的真实涂料或塑料生产企业，优先列出官网能验证产品用途的买家。"],
+  "domain-53": ["🔎", "寻找一家公开可验证的越南涂料生产企业，核查其公司身份、业务、地址、联系方式及钛白粉原料使用线索。"],
+  "domain-54": ["📨", "模拟英文询盘为：We need 100 MT rutile TiO2, FOB Shanghai, shipment next month. Please quote. 请提取需求、补充询价问题并起草英文回复。"],
+  "domain-55": ["🛃", "核查中国金红石型钛白粉出口越南的中国出口要求、越南进口准入和标签规定，注明适用条件与官方来源。"],
+  "domain-56": ["🔢", "金红石型二氧化钛颜料以粉末出口越南时可能对应哪些HS编码？根据成分、是否配制和用途列出归类候选及依据。"],
+  "domain-57": ["🧮", "假设出口越南100吨金红石型钛白粉，成本15000元/吨、内陆运费300、港杂费150、汇率7.20，请测算FOB报价成本底线。"],
+  "domain-58": ["✅", "以100吨金红石型钛白粉FOB上海出口越南为例，制作商业发票、装箱单及提单的品名、数量、重量与主体信息核对清单。"],
+  "domain-59": ["📖", "为纯碱采购员介绍甲醇的主要工艺、下游产品、用途、供需结构和价格驱动因素，列出值得关注的数据。"],
+  "domain-60": ["🏭", "整理最近30天国内甲醇装置检修、开工率及产量变化，按事件时间、涉及产能和来源解释供给影响。"],
+  "domain-61": ["🛒", "研究最近30天国内甲醇下游MTO、甲醛和醋酸的开工、订单及需求变化，区分事实和市场预期。"],
+  "domain-62": ["⛓️", "分析动力煤价格变化如何通过煤制甲醇工艺影响甲醇成本与MTO利润，绘制成本传导路径并注明假设。"],
+  "domain-63": ["💰", "整理最近三个月煤制甲醇与MTO的产业链利润走势，列出价格、单耗和时间口径及必要的数据来源。"],
+  "domain-64": ["👀", "列出未来一个月甲醇市场需要重点跟踪的煤价、港口库存、进口、MTO开工和装置检修指标，说明预警阈值依据。"],
+  "domain-65": ["🌅", "生成今日甲醇市场晨报，包含华东现货与期货行情、库存、装置动态和下游需求，数字注明日期与来源。"],
+  "domain-66": ["🗞️", "生成最近一周国内纯碱下游玻璃企业客户情报周报，汇总公开扩产、产线调整和采购商机，列出跟进建议。"],
+  "domain-67": ["🗓️", "制作最近一周国内纯碱市场周报，整理现货价格、库存、开工、装置事件和下周关注点，标注数据口径。"],
+  "domain-68": ["📑", "研究未来12个月甲醇新增产能对华东供需的影响，写成专题报告，列出项目状态、预计投产和情景测算。"],
+  "domain-69": ["💡", "以乙二醇EG为例，结合最近可得的张家港现货与期货行情解释基差、月差及期现关系，注明合约和日期。"],
+  "domain-70": ["🏗️", "跟踪2026—2027年国内甲醇新增产能项目，区分规划、开工、试车、投产与达产阶段，附企业公告来源。"],
+  "domain-71": ["🕸️", "绘制甲醇产业链图，包含煤制和天然气制工艺以及MTO、甲醛和醋酸等下游，标明工艺关系及依据。"],
+  "domain-72": ["🗺️", "制作甲醇产业链价格地图，展示煤、甲醇、MTO相关产品最近可得价格，逐项注明地区、规格、日期和来源。"],
+  "domain-73": ["🏢", "研究万华化学的MDI与TDI主要装置、产能分布及最近一年扩产项目，分析其产业链地位并附公告证据。"],
+  "domain-74": ["📰", "汇总最近30天国内纯碱产业资讯，去除重复报道，按真实发生日期制作装置、产能和需求事件时间轴。"],
+  "domain-75": ["🏭", "统计中国主要纯碱生产企业的最新可验证产能，按天然碱与合成碱分类，注明统计时间和企业来源。"],
+  "domain-76": ["🗺️", "研究山东甲醇生产企业、化工园区、产能及下游MTO分布，制作区域产业格局清单并注明数据出处。"],
+  "domain-77": ["🏗️", "调查未来一年国内甲醇新产能投产计划，判断哪些区域和企业可能受影响，区分规划量与实际投产量。"],
+  "domain-78": ["📣", "检索最近30天一条可核实的甲醇装置停车或复产消息，分析事件规模、发生时间和对华东供给的潜在影响。"],
+  "domain-79": ["📊", "查询华东工业级重质纯碱的最新可得现货价，计算其在过去三年可比价格样本中的百分位并显示来源。"],
+  "domain-80": ["📉", "解释华东甲醇现货最近30天涨跌的原因，分别核验煤价、库存、进口、装置及下游需求证据。"],
+  "domain-81": ["⚖️", "核查国内纯碱近一个月涨跌是否有库存、开工率和玻璃需求等基本面支持，同时列出相反证据。"],
+  "domain-82": ["📏", "计算华东重质纯碱现货与对应期货的最新基差，比较过去三年同口径历史分位，说明偏强偏弱的原因。"],
+  "domain-83": ["🌦️", "绘制国内甲醇开工率过去五年的季节性曲线，比较春节前后走势，标注异常年份和数据口径。"],
+  "domain-84": ["🌦️", "绘制华东甲醇现货与MA主力期货过去五年的基差季节性图，统一换月规则并说明异常月份。"],
+  "domain-85": ["🔗", "对齐过去三年的Brent原油与华东石脑油周度价格，计算相关性和滚动相关系数，指出异常阶段。"],
+  "domain-86": ["⏱️", "检验华东甲醇港口库存变化是否领先甲醇期货价格，比较0至8周的滞后相关性并做稳健性检查。"],
+  "domain-87": ["📦", "分析过去三年华东甲醇港口库存与现货价格的关系，按库存历史分位比较价格表现并说明相关性局限。"],
+  "domain-88": ["⚙️", "检验过去三年国内甲醇开工率与华东现货价格的周度关系，检查不同滞后期和异常时期。"],
+  "domain-89": ["🧪", "检验过去五年华东甲醇基差能否预测随后5个交易日MA期货表现，考虑换月、成本和样本外检验。"],
+  "domain-90": ["🛑", "收集近三年可验证的甲醇装置停车事件，比较事件前后10个交易日的价格变化并设计对照条件。"],
+  "domain-91": ["🏗️", "整理2023年以来国内甲醇新增产能投产事件，区分公告、试车与达产日期，研究事件前后的区域价差。"],
+  "domain-92": ["🏛️", "查找最近三年一次影响中国钛白粉出口的已实施贸易或税收政策调整，核实生效日并研究出口市场反应。"],
+  "domain-93": ["🗓️", "比较甲醇近月与次近月期货合约最近三个月的月差，结合库存、交割时点和装置变化解释走势。"],
+  "domain-94": ["📡", "扫描甲醇、纯碱和乙二醇的最新现货期货基差，按过去三年历史分位筛选异常品种并注明数据缺口。"],
+  "domain-95": ["📡", "比较甲醇、乙二醇和纯碱近月与次近月期货最新月差及历史同期分位，识别异常与流动性风险。"],
+  "domain-96": ["📡", "比较华东太仓和山东最近30天甲醇现货价差，统一税费、规格和交货口径，评估运费能否解释价差。"],
+  "domain-97": ["📡", "检查最近90天甲醇价格、MTO利润与聚乙烯和聚丙烯价格的联动，识别可能的产业链背离。"],
+  "domain-98": ["🕰️", "以当前国内纯碱价格、库存和开工率为特征，查找过去五年最相似的阶段，比较随后三个月价格变化。"],
+  "domain-99": ["🧪", "检验华东甲醇港口库存高于过去三年90分位时，未来一个月现货价格下跌概率是否更高，提供统计证据。"],
+  "domain-100": ["🔬", "回测过去五年甲醇MA主力的规则：基差低于过去三年10分位时买入、持有5个交易日，考虑换月及交易成本。"],
+  "domain-101": ["⚖️", "比较华东太仓与山东甲醇最近90天现货价差，统一规格、税费和时间口径，说明价差扩大的原因。"],
+  "domain-102": ["🪟", "对比最近30天甲醇CFR中国与华东现货价，统一汇率、税费和港杂费口径，测算进口窗口是否存在。"],
+  "domain-103": ["↔️", "分析最近90天纯碱与玻璃期货价格是否背离，结合玻璃开工和纯碱库存核验两者的供需联系。"],
+  "domain-104": ["🔗", "比较过去六个月动力煤、甲醇和聚烯烃价格走势，检验煤制甲醇成本向下游传导的时滞。"],
+  "domain-105": ["⚖️", "计算过去三年甲醇与动力煤按可比成本口径换算后的比价，分析当前历史位置及生产利润含义。"],
+  "domain-106": ["🌦️", "绘制过去五年华东甲醇现货价格各年度季节性曲线，比较春节和夏季走势，标出异常年份与缺口。"],
+  "domain-107": ["📦", "统计华东甲醇港口库存过去五年的周度历史，对齐每年同一自然周的库存水平，比较季节性高低点及异常年份。"],
+  "domain-108": ["📦", "汇总华东甲醇港口库存过去五年的周度数据，制作逐年季节性与历史分位图，分析异常高库存时段。"],
   "aux-networkx": ["🕸️", "分析附件企业与供应链数据的连接关系，绘制网络图并说明关键节点。"],
   "aux-rdkit": ["🧬", "核验这些分子结构的相似性，计算所需描述符，交付结构图和分析表。"],
   "aux-scientific-visualization": ["📊", "把附件科学数据制作成可导出的专业图表，保留可编辑绘图代码。"],
@@ -8978,7 +9030,7 @@ var EMOJI_RULES = [
   ["💻", /代码|编程|coding|programming/i],
   ["🖼️", /图片|图像|image|photo/i]
 ];
-var CATEGORY_EMOJI = { "内贸采购": "🛒", "外贸采购": "🚢", "内贸销售": "🤝", "外贸销售": "🌍", "产业基本面": "🔭", "价差与量化": "📊", "通用办公": "📁", "科学分析": "🔬", "基础流程": "🧭" };
+var CATEGORY_EMOJI = { "内贸采购": "🛒", "外贸采购": "🚢", "内贸销售": "🤝", "外贸销售": "🌍", "产业基本面": "🔭", "价差与量化": "📊", "通用办公": "📁", "数据可视化": "📊", "科学分析": "🔬", "研发与调试": "💻", "基础流程": "🧭", "其他技能": "🧰" };
 var builtinPresentation = (item) => Object.hasOwn(BUILTIN_SKILL_PRESENTATION, item.name) ? BUILTIN_SKILL_PRESENTATION[item.name] : void 0;
 function skillEmoji(item) {
   if (validSkillEmoji(item.emoji)) return item.emoji;
@@ -8994,10 +9046,17 @@ function skillEmoji(item) {
   return Object.hasOwn(CATEGORY_EMOJI, category) ? CATEGORY_EMOJI[category] : "🧰";
 }
 function skillExample(item, locale = "zh") {
-  const builtin = builtinPresentation(item);
-  if (builtin && locale.startsWith("zh")) return builtin[1];
+  const userInstalled = item.kind === "skill" && isMyInstallation(item);
   const example = item.examples?.find((value2) => typeof value2 === "string" && value2.trim());
+  if (userInstalled && example) return example;
+  if (locale.startsWith("zh") && !userInstalled) {
+    if (item.name === "ppt-master") return "";
+    if (Object.hasOwn(CURATED_SKILL_EXAMPLES_ZH, item.name)) return CURATED_SKILL_EXAMPLES_ZH[item.name];
+    const builtin = builtinPresentation(item);
+    if (builtin) return builtin[1];
+  }
   if (example) return example;
+  if (item.nativeSkill || item.builtinSource) return "";
   const name = skillLabel(item, locale);
   return locale.startsWith("zh") ? `请用「${name}」处理这项任务：[填写具体需求，并附上已有资料]。` : `Use “${name}” for this task: [describe your requirements and attach relevant files].`;
 }
@@ -9795,13 +9854,17 @@ function SkillInstaller({ actions, onClose, onInstalled, initialCategory = "" })
 var import_react18 = require("react");
 var recommended = (item, roster) => roster.bots.filter((bot) => item.recommendedBots?.includes(bot.templateId));
 function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
-  const [item, setItem] = (0, import_react18.useState)(null);
+  const [item, setItem] = (0, import_react18.useState)(summary.nativeSkill ? summary : null);
   const [error, setError] = (0, import_react18.useState)("");
   const [editing, setEditing] = (0, import_react18.useState)(false);
   const [confirming, setConfirming] = (0, import_react18.useState)(false);
   const [busy, setBusy] = (0, import_react18.useState)(false);
   const load = () => call("capability-detail", { name: summary.name }).then(setItem).catch((failure) => setError(failure.message));
   (0, import_react18.useEffect)(() => {
+    if (summary.nativeSkill) {
+      setItem(summary);
+      return;
+    }
     let active = true;
     void call("capability-detail", { name: summary.name }).then((value2) => {
       if (active) setItem(value2);
@@ -9811,7 +9874,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
     return () => {
       active = false;
     };
-  }, [summary.name]);
+  }, [summary.name, summary.nativeSkill]);
   const run2 = async (work) => {
     setError("");
     setBusy(true);
@@ -9824,6 +9887,31 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
     }
   };
   const update = (key, value2) => setItem((previous) => ({ ...previous, [key]: value2 }));
+  if (summary.nativeSkill) return (0, import_react18.createElement)(
+    "section",
+    { className: "bt-skill-detail bt-set-card", "aria-label": t("Skill details") },
+    (0, import_react18.createElement)(
+      "header",
+      { className: "bt-skill-section-head" },
+      (0, import_react18.createElement)(
+        "div",
+        { className: "bt-skill-heading" },
+        (0, import_react18.createElement)("span", { className: "bt-skill-glyph", "aria-hidden": true }, skillEmoji(summary)),
+        (0, import_react18.createElement)("div", null, (0, import_react18.createElement)("span", { className: "bt-skill-badge" }, t(skillCategory(summary))), (0, import_react18.createElement)("h3", null, skillLabel(summary, language())))
+      ),
+      (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", onClick: onClose }, t("Close"))
+    ),
+    (0, import_react18.createElement)("p", { className: "bt-skill-purpose" }, summary.purpose || summary.description),
+    skillExample(summary, language()) ? (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(summary, language()))) : null,
+    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, summary.userInstalled ? "此技能来自用户的 DSH 技能目录，可在原目录中管理；此处只读。" : "此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。"),
+    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, summary.invocation?.userInvocable === false ? "此技能只支持模型按需调用，不支持手动输入命令。" : "在对话中可以通过技能菜单选择，或输入：", summary.invocation?.userInvocable === false ? null : (0, import_react18.createElement)("code", null, "/" + summary.name)),
+    (0, import_react18.createElement)(
+      "details",
+      { className: "bt-advanced" },
+      (0, import_react18.createElement)("summary", null, t("Technical details and files")),
+      (0, import_react18.createElement)("dl", { className: "bt-skill-facts" }, [["Technical ID", summary.name], ["Source", summary.builtinSource]].map(([key, value2]) => (0, import_react18.createElement)("div", { key }, (0, import_react18.createElement)("dt", null, t(key)), (0, import_react18.createElement)("dd", null, value2))))
+    )
+  );
   return (0, import_react18.createElement)(
     "section",
     { className: "bt-skill-detail bt-set-card", "aria-label": t("Skill details"), "aria-busy": busy },
@@ -9871,12 +9959,12 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
           ["Dependencies", t(item.dependencies?.message || "Resources are installed. Script dependencies are checked when the task needs them.")]
         ].map(([label, value2]) => (0, import_react18.createElement)("div", { key: label }, (0, import_react18.createElement)("dt", null, t(label)), (0, import_react18.createElement)("dd", null, value2)))),
         item.dependencies?.state === "needs-setup" ? (0, import_react18.createElement)("button", { className: "bt-soft", onClick: () => actions.openSettings("connectors") }, t("Set up the analysis environment")) : null,
-        (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))),
+        skillExample(item, language()) ? (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))) : null,
         (0, import_react18.createElement)(
           "details",
           { className: "bt-advanced" },
           (0, import_react18.createElement)("summary", null, t("Technical details and files")),
-          (0, import_react18.createElement)("dl", { className: "bt-skill-facts" }, [["Technical ID", item.name], ["Original name", item.originalName || item.name], ["Version", item.version || item.builtinVersion || "—"], ["Source", item.source?.url || t(item.builtinSource ? "Built-in" : "My installation")]].map(([key, value2]) => (0, import_react18.createElement)("div", { key }, (0, import_react18.createElement)("dt", null, t(key)), (0, import_react18.createElement)("dd", null, value2)))),
+          (0, import_react18.createElement)("dl", { className: "bt-skill-facts" }, [["Technical ID", item.name], ["Original name", item.originalName || item.name], ["Version", item.version || item.builtinVersion || "—"], ["Source", item.source?.url || t(isMyInstallation(item) ? "My installation" : "Built-in")]].map(([key, value2]) => (0, import_react18.createElement)("div", { key }, (0, import_react18.createElement)("dt", null, t(key)), (0, import_react18.createElement)("dd", null, value2)))),
           (0, import_react18.createElement)("pre", { className: "bt-skill-file-tree" }, (item.files ?? []).map((file) => file.path).join("\n")),
           item.dependencies?.manifests?.length ? (0, import_react18.createElement)("p", null, t("Dependency files: {names}", { names: item.dependencies.manifests.join(" · ") })) : null,
           (0, import_react18.createElement)("details", null, (0, import_react18.createElement)("summary", null, t("Skill instructions")), (0, import_react18.createElement)("pre", { className: "bt-skill-content" }, item.content))
@@ -9889,7 +9977,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
             { className: "bt-skill-manage" },
             (0, import_react18.createElement)("summary", null, t("Manage skill")),
             (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => setEditing(true) }, t("Edit")),
-            item.builtinSource ? (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(async () => {
+            item.builtinSource === "chemclaw" ? (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(async () => {
               await actions.resetSkill(item.name);
               await load();
               onChanged();
@@ -9921,6 +10009,21 @@ function SkillLibrary({ roster, actions, selectedId }) {
   const [installing, setInstalling] = (0, import_react18.useState)(false);
   const [detail, setDetail] = (0, import_react18.useState)(() => roster.capabilities.find((item) => item.name === selectedId) ?? null);
   const [message, setMessage] = (0, import_react18.useState)("");
+  const [nativeSkills, setNativeSkills] = (0, import_react18.useState)([]);
+  const [nativeError, setNativeError] = (0, import_react18.useState)("");
+  (0, import_react18.useEffect)(() => {
+    let active = true;
+    void call("native-skill-catalog").then((result) => {
+      if (!active) return;
+      setNativeSkills(result.items ?? []);
+      if (selectedId && !detail) setDetail((result.items ?? []).find((item) => item.name === selectedId) ?? null);
+    }, (error) => {
+      if (active) setNativeError(error.message);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
   (0, import_react18.useEffect)(() => {
     if (!detail && !installing) return;
     const scroller = region.current?.closest(".bt-settings-scroll");
@@ -9929,9 +10032,11 @@ function SkillLibrary({ roster, actions, selectedId }) {
   const use = (item) => {
     void actions.useSkill(item.name).catch((failure) => actions.reportError(failure));
   };
-  const skills = (roster.capabilities ?? []).filter((item) => item.kind === "skill");
+  const managed = (roster.capabilities ?? []).filter((item) => item.kind === "skill");
+  const known = new Set(managed.map((item) => item.name));
+  const skills = [...managed, ...nativeSkills.filter((item) => !known.has(item.name))];
   const groups = [.../* @__PURE__ */ new Set([...SKILL_CATEGORIES, ...skills.map(skillCategory)])].filter((value2) => value2 !== "我的安装" && skills.some((item) => skillCategory(item) === value2));
-  const items = matchingSkills(roster.capabilities ?? [], query, category, language()).sort((a, b) => skillLabel(a, language()).localeCompare(skillLabel(b, language()), language(), { numeric: true }));
+  const items = matchingSkills(skills, query, category, language()).sort((a, b) => skillLabel(a, language()).localeCompare(skillLabel(b, language()), language(), { numeric: true }));
   return (0, import_react18.createElement)(
     "section",
     { className: "bt-expert-library bt-skill-library", ref: region },
@@ -9945,6 +10050,7 @@ function SkillLibrary({ roster, actions, selectedId }) {
       } }, t("Install a skill"))
     ),
     message ? (0, import_react18.createElement)("p", { role: "status", className: "bt-skill-success" }, message) : null,
+    nativeError ? (0, import_react18.createElement)("p", { role: "alert", className: "bt-set-hint" }, "部分内置技能目录加载失败：" + nativeError) : null,
     installing ? (0, import_react18.createElement)(SkillInstaller, { actions, initialCategory: category, onClose: () => setInstalling(false), onInstalled: (names) => {
       setInstalling(false);
       setMessage(t("{count} skills installed. Choose a skill to use it.", { count: names.length }));
@@ -9952,14 +10058,14 @@ function SkillLibrary({ roster, actions, selectedId }) {
     } }) : null,
     detail ? (0, import_react18.createElement)(SkillDetail, { key: detail.name, summary: detail, roster, actions, onClose: () => setDetail(null), onUse: use, onChanged: () => setMessage("") }) : null,
     (0, import_react18.createElement)("div", { className: "bt-catalog-search" }, (0, import_react18.createElement)(SearchIcon), (0, import_react18.createElement)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: t("Search tasks, skills, or keywords"), "aria-label": t("Search tasks, skills, or keywords") })),
-    (0, import_react18.createElement)("div", { className: "bt-catalog-categories", role: "group", "aria-label": t("Category") }, ["", ...groups, "我的安装"].map((value2) => (0, import_react18.createElement)("button", { key: value2, "aria-pressed": category === value2, onClick: () => setCategory(value2) }, value2 ? t(value2) : t("All skills"), (0, import_react18.createElement)("span", { className: "bt-skill-group-count" }, value2 === "我的安装" ? skills.filter((item) => !item.builtinSource).length : value2 ? skills.filter((item) => skillCategory(item) === value2).length : skills.length)))),
+    (0, import_react18.createElement)("div", { className: "bt-catalog-categories", role: "group", "aria-label": t("Category") }, ["", ...groups, "我的安装"].map((value2) => (0, import_react18.createElement)("button", { key: value2, "aria-pressed": category === value2, onClick: () => setCategory(value2) }, value2 ? t(value2) : t("All skills"), (0, import_react18.createElement)("span", { className: "bt-skill-group-count" }, value2 === "我的安装" ? skills.filter(isMyInstallation).length : value2 ? skills.filter((item) => skillCategory(item) === value2).length : skills.length)))),
     (0, import_react18.createElement)("p", { className: "bt-set-hint", role: "status" }, t("{count} skills found", { count: items.length })),
     (0, import_react18.createElement)("div", { className: "bt-expert-grid" }, items.map((item) => (0, import_react18.createElement)(
       "article",
       { className: "bt-expert-card bt-skill-card", key: item.name },
       (0, import_react18.createElement)("header", null, (0, import_react18.createElement)("span", { className: "bt-skill-glyph", "aria-hidden": true }, skillEmoji(item)), (0, import_react18.createElement)("div", null, (0, import_react18.createElement)("h3", null, skillLabel(item, language())), (0, import_react18.createElement)("span", { className: "bt-skill-badge" }, t(skillCategory(item))))),
       (0, import_react18.createElement)("p", { className: "bt-expert-description bt-skill-clamp" }, item.purpose || item.description),
-      (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))),
+      skillExample(item, language()) ? (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))) : null,
       (0, import_react18.createElement)(
         "footer",
         null,
@@ -9971,7 +10077,7 @@ function SkillLibrary({ roster, actions, selectedId }) {
             setDetail(item);
             setInstalling(false);
           } }, t("View details")),
-          (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm bt-skill-primary", disabled: !isUserSkill(item), title: !isUserSkill(item) ? t("Manual invocation is disabled") : void 0, onClick: () => use(item) }, t("Use skill"))
+          item.nativeSkill ? null : (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm bt-skill-primary", disabled: !isUserSkill(item), title: !isUserSkill(item) ? t("Manual invocation is disabled") : void 0, onClick: () => use(item) }, t("Use skill"))
         )
       )
     ))),
@@ -23792,38 +23898,39 @@ function skillSource({ roster, actions, controllerOf }) {
   };
 }
 
-// src/client/native-skill-copy.js
+// src/shared/native-skill-copy.js
 var NATIVE_SKILL_ZH = {
-  "b2b-lead-sourcing": ["按产品找下游客户", "寻找实际使用该原料的下游工厂，交付附证据的客户清单。"],
-  "ask-matt": ["帮我选择工作方法", "根据你要完成的任务，推荐适合的技能或工作流程。"],
-  "brainstorming": ["梳理想法与需求", "通过讨论明确目标、需求和可选方案，再开始制作。"],
-  "codebase-design": ["改进程序模块设计", "分析代码模块的职责与接口，提出更易维护的设计。"],
-  "domain-modeling": ["统一业务术语", "梳理业务概念、定义和关系，记录团队约定。"],
-  "diagnose-windows-sandbox-acl": ["排查文件访问权限", "检查 Windows 工作区读写失败的权限原因。"],
-  "grill-me": ["质询业务方案", "逐项追问关键假设、风险和资源，让方案更具体。"],
-  "grill-with-docs": ["质询方案并记录决策", "检查方案漏洞，整理术语和决策记录。"],
-  "grilling": ["深入推敲一个方案", "持续追问关键假设、反证和失败条件，帮助完善方案。"],
-  "handoff": ["整理任务交接材料", "汇总当前进展、约束和待办，便于后续继续处理。"],
-  "issue-triage": ["整理项目问题与反馈", "核对问题证据，判断优先级与后续处理方式。"],
-  "setup-matt-pocock-skills": ["配置项目工作流程", "为项目准备问题跟踪、分类和设计文档结构。"],
-  "to-spec": ["整理需求说明书", "把已讨论的目标、约束和验收要求整理成需求说明。"],
-  "to-tickets": ["拆分执行任务", "将方案拆成可执行事项，说明各项之间的先后依赖。"],
-  "wayfinder": ["规划长期项目", "把复杂目标拆成决策与阶段任务，逐步推进。"],
-  "writing-great-skills": ["编写与改进技能", "检查技能的触发条件、步骤和交付要求是否清楚。"],
-  "writing-plans": ["编写执行计划", "把目标拆成具体步骤，明确依赖和验收方式。"],
-  "using-superpowers": ["先按技能流程工作", "开始任务前先匹配适用技能，再按流程执行，避免跳过约定步骤。"],
-  "verification-before-completion": ["完成前先核对证据", "声称完成或通过前，先跑验证命令并确认输出，用证据说话。"],
-  "executing-plans": ["按计划逐步执行", "按已写好的实施计划推进，并在检查点做复核。"],
-  "systematic-debugging": ["系统排查问题", "先定位证据与根因，再改代码，避免盲目试错。"],
-  "requesting-code-review": ["发起代码审查", "在合并前请人审查改动是否满足需求与风险控制。"],
-  "receiving-code-review": ["处理审查意见", "核对反馈是否成立，再按证据决定改或不改。"],
-  "finishing-a-development-branch": ["收尾开发分支", "测试通过后决定合并、开 PR 或保留分支。"],
-  "using-git-worktrees": ["用 git worktree 隔离改动", "为功能或计划准备独立工作树，避免污染主目录。"],
-  "dispatching-parallel-agents": ["并行分派子任务", "把互不依赖的工作分给多个代理同时推进。"],
-  "subagent-driven-development": ["用子代理按任务开发", "按计划拆任务，用子代理实现并在节点检查。"],
-  "writing-skills": ["编写新的技能说明", "把触发条件、步骤和交付要求写成可复用的技能。"],
-  "chemclaw-delivery": ["报告与文件交付", "制作报告、图表和办公文件，并提供可打开的交付物。"],
-  "chemclaw-research-process": ["业务研究与方案复核", "规划研究步骤，核对证据并检查方案中的风险。"]
+  genui: ["对话内交互图表（GenUI）", "把已有的化工行情、基差或供需数据直接呈现在聊天消息中，显示趋势图、指标卡、时间轴和可交互表格，不必另外打开网页。", "数据可视化"],
+  "b2b-lead-sourcing": ["查找化工原料下游客户", "按产品用途寻找可能实际用料的生产企业，核查业务与用料线索，整理附来源的潜在客户清单。", "内贸销售"],
+  "ask-matt": ["选择合适的工作方法", "根据当前任务判断应先梳理需求、质询方案还是拆解执行计划，说明建议采用的流程及理由。", "基础流程"],
+  brainstorming: ["讨论需求与可行方案", "在动手制作前逐项确认目标、使用场景、限制条件及可选方案，避免遗漏关键需求。", "基础流程"],
+  "codebase-design": ["检查软件模块设计", "分析代码模块的职责、依赖和接口边界，指出耦合问题并提出可实施的重构建议。", "研发与调试"],
+  "domain-modeling": ["梳理业务概念和数据关系", "统一业务实体、字段、定义及相互关系，帮助设计化工产业链或供应商数据模型。", "研发与调试"],
+  "diagnose-windows-sandbox-acl": ["排查 Windows 文件权限问题", "定位 Windows 工作目录无法读取、写入或运行命令的权限与沙箱限制，提供安全的排查步骤。", "研发与调试"],
+  "grill-me": ["逐项质询业务方案", "围绕采购、销售或研究计划追问未验证的假设、成本、风险及执行条件，找出决策盲点。", "基础流程"],
+  "grill-with-docs": ["方案质询与决策留档", "对方案逐项追问，并将已确认的取舍、理由和术语整理成可追踪的决策文档。", "基础流程"],
+  grilling: ["深入检验关键假设", "针对重要方案持续提出反证、失败情景和替代选择，识别还需要验证的证据。", "基础流程"],
+  handoff: ["整理研究与项目交接", "汇总已完成事项、依据文件、尚未解决的问题和后续负责人所需的下一步行动。", "基础流程"],
+  "issue-triage": ["分类和排查问题反馈", "核实问题能否复现，区分缺陷与功能需求，记录影响范围、优先级及建议处理方式。", "研发与调试"],
+  "setup-matt-pocock-skills": ["搭建研发协作流程", "为研发项目组织需求说明、问题清单、设计记录和执行任务的文档与目录结构。", "研发与调试"],
+  "to-spec": ["编写可验收的需求说明", "把讨论中的功能目标转成明确的使用流程、业务规则、边界条件和验收标准。", "研发与调试"],
+  "to-tickets": ["把需求拆成开发任务", "根据需求说明拆分可独立执行的任务，标明依赖顺序、预期产物与验收条件。", "研发与调试"],
+  wayfinder: ["规划长期项目路线", "把复杂项目拆成阶段目标、待决策事项和推进次序，识别当前最重要的下一步。", "基础流程"],
+  "writing-great-skills": ["审核和优化技能说明", "检查 Skill 的触发条件、输入要求、执行步骤及交付标准，指出容易误调用或遗漏的内容。", "研发与调试"],
+  "writing-plans": ["制定可执行的任务计划", "根据已经明确的需求列出步骤、先后依赖、检查点及最终验收方式。", "基础流程"],
+  "using-superpowers": ["按任务选择工作技能", "开始工作前匹配可用技能，并按约定的流程加载指引、执行和验证，避免跳过必要步骤。", "基础流程"],
+  "verification-before-completion": ["完成前核对结果和证据", "在报告、文档或程序交付前检查产物是否存在、验证是否通过，并明确尚未验证的部分。", "基础流程"],
+  "executing-plans": ["按实施计划逐步完成", "根据既定步骤推进任务，在关键节点核对结果并记录偏差，不擅自改变已确认的范围。", "基础流程"],
+  "systematic-debugging": ["定位程序故障的根因", "先复现错误并收集日志，再逐层定位原因、修改代码，最后检查是否引入其他问题。", "研发与调试"],
+  "requesting-code-review": ["提交代码审查", "在合并改动前组织代码审查，检查实现是否满足需求、测试是否充分及是否存在回归风险。", "研发与调试"],
+  "receiving-code-review": ["核实和处理代码审查意见", "逐项判断审查意见是否有代码和测试证据支持，再修复成立的问题并复核结果。", "研发与调试"],
+  "finishing-a-development-branch": ["检查分支是否可以合并", "核对分支改动、测试与遗留风险，决定是否提出 PR、合并或继续修复。", "研发与调试"],
+  "using-git-worktrees": ["隔离多个开发任务", "使用 Git worktree 为不同功能建立独立工作目录，避免测试和修改互相覆盖。", "研发与调试"],
+  "dispatching-parallel-agents": ["让多个智能体并行分工", "把互不依赖的研究或开发任务分配给多个智能体，并汇总各自成果与证据。", "基础流程"],
+  "subagent-driven-development": ["用子代理推进研发任务", "根据既定开发计划分派独立子任务，逐项检查实现、测试和审查结果。", "研发与调试"],
+  "writing-skills": ["编写新的可复用技能", "将重复性工作整理为 Skill，说明何时触发、需要哪些输入、如何执行及如何验收。", "研发与调试"],
+  "chemclaw-delivery": ["制作并交付分析文件", "将化工研究结果整理为可打开的报告、图表和数据文件，并核对文件内容与来源。", "通用办公"],
+  "chemclaw-research-process": ["规划化工业务研究与证据核验", "拆解研究问题，安排数据获取和交叉核实，区分可靠结论、推断及待确认事项。", "基础流程"]
 };
 
 // src/client/skill-menu-view.js

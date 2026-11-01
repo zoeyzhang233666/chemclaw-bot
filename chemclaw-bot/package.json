@@ -51,6 +51,7 @@
     "seed/catalog.json",
     "seed/domain-skills.json",
     "seed/skill-display.json",
+    "seed/legacy-skill-identities.json",
     "seed/supplemental-skills.json",
     "seed/supplemental-sources.json",
     "seed/third-party-sources.json",

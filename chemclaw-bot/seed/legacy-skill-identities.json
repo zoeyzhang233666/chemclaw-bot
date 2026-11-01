@@ -1,0 +1,69 @@
+{
+  "brainstorming": {
+    "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+    "sourcePath": "skills/community/process/brainstorming/SKILL.md"
+  },
+  "executing-plans": {
+    "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+    "sourcePath": "skills/community/process/executing-plans/SKILL.md"
+  },
+  "grill-me": {
+    "description": "A relentless interview to sharpen a plan or design.",
+    "sourcePath": "skills/community/process/grill-me/SKILL.md"
+  },
+  "grill-with-docs": {
+    "description": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+    "sourcePath": "skills/community/process/grill-with-docs/SKILL.md"
+  },
+  "grilling": {
+    "description": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.",
+    "sourcePath": "skills/community/process/grilling/SKILL.md"
+  },
+  "using-superpowers": {
+    "description": "Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions",
+    "sourcePath": "skills/community/process/using-superpowers/SKILL.md"
+  },
+  "verification-before-completion": {
+    "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
+    "sourcePath": "skills/community/process/verification-before-completion/SKILL.md"
+  },
+  "writing-plans": {
+    "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
+    "sourcePath": "skills/community/process/writing-plans/SKILL.md"
+  },
+  "guizang-ppt-skill": {
+    "description": "生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字报、图片网格等模板。提供两种风格：① \"电子杂志 × 电子墨水\"（衬线 + 流体背景 + 暖色） ② \"瑞士国际主义\"（无衬线 + 网格点阵 + IKB/柠檬黄/柠檬绿/安全橙高亮）。当用户需要制作分享 / 演讲 / 发布会风格的网页 PPT，或提到\"杂志风 PPT\"、\"瑞士风 PPT\"、\"Swiss Style\"、\"horizontal swipe deck\"时使用。",
+    "sourcePath": "skills/community/delivery/guizang-ppt-skill/SKILL.md"
+  },
+  "ppt-master": {
+    "description": "AI-driven multi-format SVG content generation system. Converts source documents",
+    "sourcePath": "skills/community/delivery/ppt-master/SKILL.md"
+  },
+  "dom-buy-cn": {
+    "description": "ChemClaw domain scenario: 内贸采购 (17 skills)",
+    "sourcePath": "skills/domain/内贸采购"
+  },
+  "dom-sales-cn": {
+    "description": "ChemClaw domain scenario: 内贸销售 (19 skills)",
+    "sourcePath": "skills/domain/内贸销售"
+  },
+  "dom-buy-im": {
+    "description": "ChemClaw domain scenario: 外贸采购 (10 skills)",
+    "sourcePath": "skills/domain/外贸采购"
+  },
+  "dom-sales-ex": {
+    "description": "ChemClaw domain scenario: 外贸销售 (12 skills)",
+    "sourcePath": "skills/domain/外贸销售"
+  },
+  "dom-fund": {
+    "description": "ChemClaw domain scenario: 期现-产业基本面 (23 skills)",
+    "sourcePath": "skills/domain/期现-产业基本面"
+  },
+  "dom-spreads": {
+    "description": "ChemClaw domain scenario: 期现-价差与量化 (27 skills)",
+    "sourcePath": "skills/domain/期现-价差与量化"
+  },
+  "chem-public-apis": {
+    "description": "PubChem / Wikipedia / public futures helpers (no API key)"
+  }
+}
