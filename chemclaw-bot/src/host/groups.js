@@ -26,6 +26,7 @@ import { GROUP_LINE_READ, ROOM_REPLY_TIMEOUT_MS, ROOM_STEP_GAP_MS, ROOM_WORK_GRA
 import { escapeRegExp, headOf, splitRef, textOf } from './text.js'
 import { mentionSpans, speakerOf } from '../shared/mentions.js'
 import { GROUP_REF, output } from './tools.js'
+import { stripUnrenderedMixedViewText } from './visual-delivery.js'
 import { failureLine } from './turns.js'
 
 const ROOM_LOG_MAX = 60
@@ -402,8 +403,11 @@ export function install(rt) {
   const postInRound = (room, round, member, text, duration) => {
     const sessionId = room.sessions?.[member.id]
     if (sessionId) rt.commitRoomDraft?.(sessionId)
-    appendRoom(room, { who: member.name, botId: member.id, text })
-    round.replies.push({ botId: member.id, name: member.name, color: member.color, text, time: Date.now(), ...(duration === undefined ? {} : { duration }) })
+    const visible = rt.marketQuoteIntentOf?.(sessionId) === 'mixed'
+      ? stripUnrenderedMixedViewText(text) : text
+    if (!visible) return // Never persist a raw view protocol dump as a chat reply.
+    appendRoom(room, { who: member.name, botId: member.id, text: visible })
+    round.replies.push({ botId: member.id, name: member.name, color: member.color, text: visible, time: Date.now(), ...(duration === undefined ? {} : { duration }) })
     void rt.save().catch(() => {})
   }
   const dropRoomDraft = (room, memberId) => {
