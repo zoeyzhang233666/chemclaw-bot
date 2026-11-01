@@ -50,6 +50,14 @@ test('concurrent first queries share managed Python setup, without invoking syst
   const data = await tool.execute({ market: 'domestic', symbol: 'MA0' }, {})
   assert.equal(JSON.parse(data).source, 'test')
   assert.equal(commands.at(-1).args[0], join(home, 'runtime', 'resources', 'futures.py'))
+  const stock = tools.get('chem_stock_history')
+  assert.ok(stock, 'stock OHLC must be a first-class tool on the existing AKShare runtime')
+  const observed = []
+  rt.noteMarketOhlcSource = (id, status) => observed.push({ id, status })
+  const stockResult = await stock.execute({ symbol: '601857', start: '2026-10-01', end: '2026-10-30', adjust: 'none' }, { agent: { id: 'bot-1' } })
+  assert.equal(JSON.parse(stockResult).source, 'test')
+  assert.deepEqual(JSON.parse(commands.at(-1).args[1]), { symbol: '601857', start: '2026-10-01', end: '2026-10-30', adjust: 'none', market: 'stock' })
+  assert.deepEqual(observed, [{ id: 'bot-1', status: 'ready' }])
   assert.match(await readFile(join(home, 'runtime', 'resources', 'requirements.txt'), 'utf8'), /akshare==/)
 })
 
@@ -114,4 +122,17 @@ test('startup prepares market data without science packages or settings and clea
   assert.ok(commands.every(item => !item.args.some(arg => arg.endsWith('requirements-science.txt'))))
   await dispose()
   assert.equal(commands[0].options.signal.aborted, true)
+})
+
+test('failed AKShare history is recorded as unavailable for an honest single line fallback', async t => {
+  const { rt, tools } = await fixture(t, { run: (_cmd, args) => {
+    if (args[0]?.endsWith('futures.py')) return { stdout: '{"error":"No stock OHLC"}' }
+  } })
+  const seen = []
+  rt.noteMarketOhlcSource = (id, status) => seen.push([id, status])
+  await assert.rejects(
+    tools.get('chem_stock_history').execute({ symbol: '601857' }, { agent: { id: 's' } }),
+    /No stock OHLC/,
+  )
+  assert.deepEqual(seen, [['s', 'unavailable']])
 })
