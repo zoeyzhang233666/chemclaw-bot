@@ -691,6 +691,13 @@ export function install(rt) {
         || Array.isArray(node?.children) && node.children.some(substitutesKline)
       if (rt.requiresCandlestick?.(id) && substitutesKline(checked.view))
         return 'The user explicitly requested a single native K-line. Do not draw a line/area/other chart or HTML first. Use show_view chart kind candlestick with dated real OHLC bars, or briefly say verified OHLC was unavailable. Never invent values.'
+      // For an ordinary historical price request, reject a premature line/HTML
+      // exactly once. A close-only chart remains possible when OHLC is unavailable.
+      const isMarketLine = node => node?.type === 'html'
+        || node?.type === 'chart' && ['line', 'area'].includes(node.kind)
+        || Array.isArray(node?.children) && node.children.some(isMarketLine)
+      if (isMarketLine(checked.view) && rt.deferMarketHistoryLineOnce?.(id))
+        return 'This is a historical stock/futures price request. Prefer one native candlestick view instead of a closing-price line or HTML: first use already available real dated open/high/low/close observations, or perform at most ONE suitable OHLC history lookup (AKShare if executable, otherwise a verifiable daily OHLC web table). Then call show_view {type:"chart",kind:"candlestick",bars:[{date,open,high,low,close,volume?}]} with 2-50 actual rows. If OHLC data cannot be verified, a single close-only line is allowed on the NEXT attempt, with the data limitation stated. Do not invent OHLC, repeat long searches, or add duplicate charts.';
       const title = checked.title
       const view = checked.view
       if (!checked.interactive && args.await_reply === true) return 'This view has nothing to submit; call show_view with await_reply: false.'
