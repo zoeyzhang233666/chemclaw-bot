@@ -43,6 +43,6 @@ export function mixedOverlayRequested(text) {
   if (marketQuoteIntent(query) !== 'mixed') return false
   const namedComparison = /(?:现货|即期|\bspot\b).{0,28}(?:期货|期价|盘面|主力合约|\bfutures?\b)/iu.test(query)
     || /(?:期货|期价|盘面|主力合约|\bfutures?\b).{0,28}(?:现货|即期|\bspot\b)/iu.test(query)
-  const chartRequested = /(?:叠加|叠在一起|同图|双线|画图|绘图|走势图|趋势图|历史走势|基差曲线|基差走势|基差图|\bchart\b|\bplot\b)/iu.test(query)
+  const chartRequested = /(?:叠加|叠在一起|同图|双线|画图|绘图|走势图|趋势图|历史走势|走势(?:对比|比较|分析)?|基差曲线|基差走势|基差图|\bchart\b|\bplot\b)/iu.test(query)
   return chartRequested && (namedComparison || /(?:基差|现期价差|\bbasis\b)/iu.test(query))
 }
