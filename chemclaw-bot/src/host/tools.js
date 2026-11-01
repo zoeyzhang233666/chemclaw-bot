@@ -10,6 +10,7 @@ import { NAME_MAX } from './requests.js'
 import { unquote } from './text.js'
 import { mentionSpans } from '../shared/mentions.js'
 import { checkShownView } from '../shared/views.js'
+import { redundantMarketSourceQuestion } from './visual-delivery.js'
 
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
 export const GROUP_REF = { type: 'string', required: true, description: 'Exact group chat name from list_bots' }
@@ -641,6 +642,8 @@ export function install(rt) {
         .filter(option => option.label !== '')
         .slice(0, 6)
       if (options.length === 0) return 'Give at least one option.'
+      if (rt.marketHistoryOf?.(id) && redundantMarketSourceQuestion(args.question, options))
+        return 'Do not ask the user to choose a public market-data source. Search available price tools/skills and attempt one verified daily OHLC lookup automatically (AKShare only if its execution tool is actually available; otherwise a verifiable daily OHLC web page). If neither is accessible, explain the real limitation without inventing prices. Ask the user only to resolve a genuinely ambiguous security/market, not to choose a technical data source.'
       // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
       // composer dock, which takes questions without a call.
       const turn = rt.live.get(id)?.turn
@@ -684,6 +687,8 @@ export function install(rt) {
       if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
+      if (rt.marketPriceViewAlreadyCommitted?.(id, checked.view))
+        return 'A price chart for this market-history request has already been delivered in this turn. Do not append another line, K-line, or HTML view for the same prices. Summarize the existing view briefly instead.'
       // Do not show a wrong chart and then append a K-line in a second correction.
       // This guard applies only to an explicit human K-line request.
       const substitutesKline = node => node?.type === 'html'
