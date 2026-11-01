@@ -125,12 +125,22 @@ export function install(rt) {
         signal: exec.signal ? AbortSignal.any([exec.signal, controller.signal]) : controller.signal,
       })
       const value = JSON.parse(result.stdout)
-      if (value.error) throw new Error(value.error)
+      if (value.error || value.status === 'unavailable') {
+        rt.noteMarketOhlcSource?.(exec.agent?.id, 'unavailable')
+        return JSON.stringify({
+          status: 'unavailable',
+          error: String(value.error ?? 'Market OHLC source unavailable'),
+          next: 'AKShare and built-in provider fallbacks have failed. Do not retry the same stock/futures history tool in this user turn. Use available web_search/web_fetch for a different public daily OHLC source with verifiable date/open/high/low/close. If unsuccessful, explain which facts are unverified; do not claim all public markets lack data.',
+        })
+      }
       rt.noteMarketOhlcSource?.(exec.agent?.id, 'ready')
       return JSON.stringify(value)
     } catch (error) {
       rt.noteMarketOhlcSource?.(exec.agent?.id, 'unavailable')
-      throw error
+      return JSON.stringify({
+        status: 'unavailable', error: 'The managed AKShare environment or market query failed.',
+        next: 'Do not retry this tool repeatedly in the same turn. Try web_search/web_fetch for an independent public daily OHLC table. If that fails, report the gap without inventing figures.',
+      })
     }
   }
   const historyOutput = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: value }] }
@@ -143,7 +153,7 @@ export function install(rt) {
   }))
   rt.ctx.tools.register(defineTool({
     name: 'chem_stock_history',
-    description: 'FIRST CHOICE for Chinese A-share daily historical price questions (e.g. 中国石油/中石油 601857). Runs pinned AKShare stock_zh_a_hist on the automatically prepared shared Python runtime; returns real dated OHLCV, source, adjustment and exchange. No user data-source selection needed. Not for H-shares or real-time quotes.',
+    description: 'FIRST CHOICE for Chinese A-share daily historical price questions (e.g. 中国石油/中石油 601857). Tries pinned AKShare EastMoney, AKShare Sina and independent Tencent daily OHLC in that order on the automatically prepared shared Python runtime; returns real dated OHLCV, provider provenance, adjustment and exchange, or a structured fallback-to-web instruction. No user data-source selection needed. Not for H-shares or real-time quotes.',
     parameters: {
       symbol: { type: 'string', required: true, description: 'Six-digit Shanghai or Shenzhen A-share code, e.g. 601857 for PetroChina A shares' },
       start: { type: 'string', description: 'Optional YYYY-MM-DD start; defaults to last ~65 calendar days' },
