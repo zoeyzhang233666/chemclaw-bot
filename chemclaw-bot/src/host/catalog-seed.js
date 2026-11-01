@@ -40,7 +40,7 @@ const LEGACY_DISPLAY = {
 }
 // First-run legacy seeds were added without builtinSource; identify them by
 // their exact shipped description and origin, never by a possibly user-owned name alone.
-const legacySeed = JSON.parse(readFileSync(join(packageRoot, 'seed/legacy-skill-identities.json'), 'utf8')).items
+const legacySeed = JSON.parse(readFileSync(join(packageRoot, 'seed/legacy-skill-identities.json'), 'utf8'))
 export function reconcileLegacyBuiltins(items) {
   let changed = false
   for (const [name, [title, purpose, category]] of Object.entries(LEGACY_DISPLAY)) {
