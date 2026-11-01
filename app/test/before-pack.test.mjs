@@ -2,13 +2,13 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { Arch } from 'electron-builder'
-import { archProblem, beforePack } from '../scripts/before-pack.mjs'
+import { archProblem, beforePack, officeRuntimeRequest } from '../scripts/before-pack.mjs'
 
 test('a build for the architecture of this Node goes on', async () => {
   assert.equal(archProblem({ target: 'arm64', platform: 'darwin', host: 'arm64' }), undefined)
   assert.equal(archProblem({ target: 'x64', platform: 'win32', host: 'x64' }), undefined)
   let prepared = false
-  await beforePack({ arch: Arch[process.arch], electronPlatformName: process.platform }, async () => { prepared = true })
+  await beforePack({ arch: Arch[process.arch], electronPlatformName: process.platform }, async () => { prepared = true }, async () => {})
   assert.equal(prepared, true)
 })
 
@@ -37,4 +37,19 @@ test('electron-builder runs the check before it packs', () => {
 test('cross-platform packaging stops before preparing the wrong runtime', async () => {
   const platform = process.platform === 'win32' ? 'linux' : 'win32'
   await assert.rejects(beforePack({ arch: Arch[process.arch], electronPlatformName: platform }, async () => assert.fail('must not prepare')), /target operating system/)
+})
+
+test('market and Office runtime stages run separately without replacing existing ChemClaw packaging', async () => {
+  const stages = []
+  const packager = { projectDir: 'app-dir', appInfo: { version: '0.2.2' } }
+  await beforePack({ arch: Arch[process.arch], electronPlatformName: process.platform, packager },
+    async () => stages.push('market'),
+    async req => { stages.push('office'); assert.equal(req.version, '0.2.2') })
+  assert.deepEqual(stages, ['market', 'office'])
+})
+test('Office package includes locked resources beside ASAR', () => {
+  const request = officeRuntimeRequest({ arch: Arch.x64, electronPlatformName: 'win32', packager: { projectDir: 'app-dir', appInfo: { version: '9.9.9' } } })
+  assert.equal(request.target, 'win-x64')
+  assert.equal(request.version, '9.9.9')
+  assert.match(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'), /from: build\/runtime\/primary-runtime/)
 })

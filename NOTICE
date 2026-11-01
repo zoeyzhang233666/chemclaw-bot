@@ -285,3 +285,10 @@ ChemClaw Office Tools port from DS-Bot #624 (2026-10-30):
   https://github.com/xmldom/xmldom
   MIT permission and warranty conditions apply to this bundled dependency;
   see the MIT license text in chemclaw-bot/NOTICE.
+
+
+Office Runtime Integration (PR-B):
+  Adapted from Fei2411/DS-Bot PR #624, Apache-2.0.
+  Includes locked Node.js and Astral CPython standalone redistributables,
+  Python Office libraries and LibreOffice Kit CLI; redistribute with license notices.
+  References: https://github.com/Fei2411/DS-Bot/pull/624

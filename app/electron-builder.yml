@@ -13,8 +13,16 @@ files:
 # The Host runs pnpm as a separate Node process to install plugins, so it must be a plain file.
 asarUnpack:
   - node_modules/pnpm/**
+  - node_modules/@deepseek-ai/libreoffice-kit/**
+  - node_modules/chemclaw-bot/office.js
   # Keep versioned libvips libraries beside the native sharp module.
   - node_modules/@img/sharp*/**
+# Office standalone Node/Python runtime and DSH Office SKILL.md assets.
+extraResources:
+  - from: build/runtime/primary-runtime
+    to: primary-runtime
+  - from: build/runtime/office-skills
+    to: office-skills
 # node-pty, sharp and koffi ship prebuilt binaries for each platform. A rebuild would compile
 # node-pty from source and needs a C++ toolchain.
 npmRebuild: false
