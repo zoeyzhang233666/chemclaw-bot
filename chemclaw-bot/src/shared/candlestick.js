@@ -12,7 +12,8 @@ const value = (raw, label, positive = true) => {
 }
 const dateOf = raw => {
   const str = String(raw ?? '').trim()
-  const date = /^\d{8}$/.test(str) ? `${str.slice(0, 4)}-${str.slice(4, 6)}-${str.slice(6, 8)}` : str
+  const date = /^\d{8}$/.test(str) ? `${str.slice(0, 4)}-${str.slice(4, 6)}-${str.slice(6, 8)}`
+    : /^(\d{4}-\d{2}-\d{2})[ T]00:00:00(?:\.0+)?(?:Z|\+00:00)?$/.exec(str)?.[1] ?? str
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date)) ||
       new Date(date + 'T00:00:00Z').toISOString().slice(0, 10) !== date) throw new Error('Invalid candle date')
   return date
@@ -22,10 +23,10 @@ export function normalizeCandles(records) {
   const candles = records.map((row, index) => {
     if (row === null || typeof row !== 'object' || Array.isArray(row)) throw new Error(`Invalid candle row ${index}`)
     const date = dateOf(pick(row, ['date', 'time', '日期', '交易日期']))
-    const open = value(pick(row, ['open', '开盘']), 'open')
-    const high = value(pick(row, ['high', '最高']), 'high')
-    const low = value(pick(row, ['low', '最低']), 'low')
-    const close = value(pick(row, ['close', '收盘']), 'close')
+    const open = value(pick(row, ['open', '开盘', '开盘价']), 'open')
+    const high = value(pick(row, ['high', '最高', '最高价']), 'high')
+    const low = value(pick(row, ['low', '最低', '最低价']), 'low')
+    const close = value(pick(row, ['close', '收盘', '收盘价']), 'close')
     if (low > Math.min(open, close) || high < Math.max(open, close) || high < low)
       throw new Error(`Invalid OHLC relationship at ${date}`)
     const rawVolume = pick(row, ['volume', '成交量'])
