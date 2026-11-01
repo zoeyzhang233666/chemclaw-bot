@@ -692,7 +692,7 @@ export function install(rt) {
       // Mixed spot/futures comparisons are a single coherent deliverable. Never
       // stage an isolated futures line or regional spot bar as a substitute.
       // A genuine partial-data response may still use a table or text card.
-      if (rt.mixedMarketRequestOf?.(id) && marketPriceVisual(checked.view)
+      if (rt.strictMixedOverlayOf?.(id) && marketPriceVisual(checked.view)
         && !mixedMarketVisualStatus(checked.view).complete)
         return refuse('This mixed spot/futures or basis request needs ONE native show_view stack containing a dated 2-series spot+futures overlay line AND a dated basis line (spot minus futures). A single futures line, a separate regional spot bar, or a metric-only claimed as a chart does not satisfy it. Use only independently verified prices on matching dates/units. If historical spot data is unavailable, report the missing leg in a factual table/text instead of inventing a chart. Do not emit raw dsh-ui JSON.')
       if (rt.explicitSpotRequestOf?.(id) && mismatchedSpotPriceView(checked.view, checked.title))
