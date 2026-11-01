@@ -8817,11 +8817,12 @@ var skill_display_default = {
 // src/shared/skills.js
 var SKILL_CATEGORIES = ["内贸销售", "内贸采购", "外贸销售", "外贸采购", "产业基本面", "价差与量化", "通用办公", "科学分析", "基础流程"];
 var skillLabel = (item, locale = "zh") => item.displayName || item.labels?.[locale.startsWith("zh") ? "zh" : "en"] || (locale.startsWith("zh") ? skill_display_default[item.name]?.[0] : void 0) || (item.kind === "skill" && item.description ? item.description.replace(/^.*? \/ /, "").replace(/^\d+[.、．]\s*/, "") : item.name);
-var skillCategory = (item) => (item.category ?? "我的安装").replace(/^期现-/, "");
+var isMyInstallation = (item) => item.kind === "skill" && !item.builtinSource && !item.nativeSkill;
+var skillCategory = (item) => (item.category && (item.category !== "我的安装" || isMyInstallation(item)) ? item.category : isMyInstallation(item) ? "我的安装" : "基础流程").replace(/^期现-/, "");
 var isUserSkill = (item) => item.kind === "skill" && item.invocation?.userInvocable !== false;
 function matchingSkills(items, query = "", category = "", locale = "zh") {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  return items.filter((item) => item.kind === "skill" && (!category || (category === "我的安装" ? !item.builtinSource : skillCategory(item) === category)) && words.every((word) => [item.name, item.originalName, skillLabel(item, locale), ...Object.values(item.labels ?? {}), item.description, item.purpose, skillCategory(item), ...item.keywords ?? []].join(" ").toLowerCase().includes(word)));
+  return items.filter((item) => item.kind === "skill" && (!category || (category === "我的安装" ? isMyInstallation(item) : skillCategory(item) === category)) && words.every((word) => [item.name, item.originalName, skillLabel(item, locale), ...Object.values(item.labels ?? {}), item.description, item.purpose, skillCategory(item), ...item.keywords ?? []].join(" ").toLowerCase().includes(word)));
 }
 function explicitSkillNames(text, items) {
   const names = new Set(items.filter(isUserSkill).map((item) => item.name));
@@ -9795,13 +9796,17 @@ function SkillInstaller({ actions, onClose, onInstalled, initialCategory = "" })
 var import_react18 = require("react");
 var recommended = (item, roster) => roster.bots.filter((bot) => item.recommendedBots?.includes(bot.templateId));
 function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
-  const [item, setItem] = (0, import_react18.useState)(null);
+  const [item, setItem] = (0, import_react18.useState)(summary.nativeSkill ? summary : null);
   const [error, setError] = (0, import_react18.useState)("");
   const [editing, setEditing] = (0, import_react18.useState)(false);
   const [confirming, setConfirming] = (0, import_react18.useState)(false);
   const [busy, setBusy] = (0, import_react18.useState)(false);
   const load = () => call("capability-detail", { name: summary.name }).then(setItem).catch((failure) => setError(failure.message));
   (0, import_react18.useEffect)(() => {
+    if (summary.nativeSkill) {
+      setItem(summary);
+      return;
+    }
     let active = true;
     void call("capability-detail", { name: summary.name }).then((value2) => {
       if (active) setItem(value2);
@@ -9811,7 +9816,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
     return () => {
       active = false;
     };
-  }, [summary.name]);
+  }, [summary.name, summary.nativeSkill]);
   const run2 = async (work) => {
     setError("");
     setBusy(true);
@@ -9824,6 +9829,30 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
     }
   };
   const update = (key, value2) => setItem((previous) => ({ ...previous, [key]: value2 }));
+  if (summary.nativeSkill) return (0, import_react18.createElement)(
+    "section",
+    { className: "bt-skill-detail bt-set-card", "aria-label": t("Skill details") },
+    (0, import_react18.createElement)(
+      "header",
+      { className: "bt-skill-section-head" },
+      (0, import_react18.createElement)(
+        "div",
+        { className: "bt-skill-heading" },
+        (0, import_react18.createElement)("span", { className: "bt-skill-glyph", "aria-hidden": true }, skillEmoji(summary)),
+        (0, import_react18.createElement)("div", null, (0, import_react18.createElement)("span", { className: "bt-skill-badge" }, t(skillCategory(summary))), (0, import_react18.createElement)("h3", null, skillLabel(summary, language())))
+      ),
+      (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", onClick: onClose }, t("Close"))
+    ),
+    (0, import_react18.createElement)("p", { className: "bt-skill-purpose" }, summary.purpose || summary.description),
+    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, "此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。"),
+    (0, import_react18.createElement)("p", { className: "bt-set-hint" }, "在对话中可以通过技能菜单选择，或输入：", (0, import_react18.createElement)("code", null, "/" + summary.name)),
+    (0, import_react18.createElement)(
+      "details",
+      { className: "bt-advanced" },
+      (0, import_react18.createElement)("summary", null, t("Technical details and files")),
+      (0, import_react18.createElement)("dl", { className: "bt-skill-facts" }, [["Technical ID", summary.name], ["Source", summary.builtinSource]].map(([key, value2]) => (0, import_react18.createElement)("div", { key }, (0, import_react18.createElement)("dt", null, t(key)), (0, import_react18.createElement)("dd", null, value2))))
+    )
+  );
   return (0, import_react18.createElement)(
     "section",
     { className: "bt-skill-detail bt-set-card", "aria-label": t("Skill details"), "aria-busy": busy },
@@ -9876,7 +9905,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
           "details",
           { className: "bt-advanced" },
           (0, import_react18.createElement)("summary", null, t("Technical details and files")),
-          (0, import_react18.createElement)("dl", { className: "bt-skill-facts" }, [["Technical ID", item.name], ["Original name", item.originalName || item.name], ["Version", item.version || item.builtinVersion || "—"], ["Source", item.source?.url || t(item.builtinSource ? "Built-in" : "My installation")]].map(([key, value2]) => (0, import_react18.createElement)("div", { key }, (0, import_react18.createElement)("dt", null, t(key)), (0, import_react18.createElement)("dd", null, value2)))),
+          (0, import_react18.createElement)("dl", { className: "bt-skill-facts" }, [["Technical ID", item.name], ["Original name", item.originalName || item.name], ["Version", item.version || item.builtinVersion || "—"], ["Source", item.source?.url || t(isMyInstallation(item) ? "My installation" : "Built-in")]].map(([key, value2]) => (0, import_react18.createElement)("div", { key }, (0, import_react18.createElement)("dt", null, t(key)), (0, import_react18.createElement)("dd", null, value2)))),
           (0, import_react18.createElement)("pre", { className: "bt-skill-file-tree" }, (item.files ?? []).map((file) => file.path).join("\n")),
           item.dependencies?.manifests?.length ? (0, import_react18.createElement)("p", null, t("Dependency files: {names}", { names: item.dependencies.manifests.join(" · ") })) : null,
           (0, import_react18.createElement)("details", null, (0, import_react18.createElement)("summary", null, t("Skill instructions")), (0, import_react18.createElement)("pre", { className: "bt-skill-content" }, item.content))
@@ -9921,6 +9950,21 @@ function SkillLibrary({ roster, actions, selectedId }) {
   const [installing, setInstalling] = (0, import_react18.useState)(false);
   const [detail, setDetail] = (0, import_react18.useState)(() => roster.capabilities.find((item) => item.name === selectedId) ?? null);
   const [message, setMessage] = (0, import_react18.useState)("");
+  const [nativeSkills, setNativeSkills] = (0, import_react18.useState)([]);
+  const [nativeError, setNativeError] = (0, import_react18.useState)("");
+  (0, import_react18.useEffect)(() => {
+    let active = true;
+    void call("native-skill-catalog").then((result) => {
+      if (!active) return;
+      setNativeSkills(result.items ?? []);
+      if (selectedId && !detail) setDetail((result.items ?? []).find((item) => item.name === selectedId) ?? null);
+    }, (error) => {
+      if (active) setNativeError(error.message);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
   (0, import_react18.useEffect)(() => {
     if (!detail && !installing) return;
     const scroller = region.current?.closest(".bt-settings-scroll");
@@ -9929,9 +9973,11 @@ function SkillLibrary({ roster, actions, selectedId }) {
   const use = (item) => {
     void actions.useSkill(item.name).catch((failure) => actions.reportError(failure));
   };
-  const skills = (roster.capabilities ?? []).filter((item) => item.kind === "skill");
+  const managed = (roster.capabilities ?? []).filter((item) => item.kind === "skill");
+  const known = new Set(managed.map((item) => item.name));
+  const skills = [...managed, ...nativeSkills.filter((item) => !known.has(item.name))];
   const groups = [.../* @__PURE__ */ new Set([...SKILL_CATEGORIES, ...skills.map(skillCategory)])].filter((value2) => value2 !== "我的安装" && skills.some((item) => skillCategory(item) === value2));
-  const items = matchingSkills(roster.capabilities ?? [], query, category, language()).sort((a, b) => skillLabel(a, language()).localeCompare(skillLabel(b, language()), language(), { numeric: true }));
+  const items = matchingSkills(skills, query, category, language()).sort((a, b) => skillLabel(a, language()).localeCompare(skillLabel(b, language()), language(), { numeric: true }));
   return (0, import_react18.createElement)(
     "section",
     { className: "bt-expert-library bt-skill-library", ref: region },
@@ -9945,6 +9991,7 @@ function SkillLibrary({ roster, actions, selectedId }) {
       } }, t("Install a skill"))
     ),
     message ? (0, import_react18.createElement)("p", { role: "status", className: "bt-skill-success" }, message) : null,
+    nativeError ? (0, import_react18.createElement)("p", { role: "alert", className: "bt-set-hint" }, "部分内置技能目录加载失败：" + nativeError) : null,
     installing ? (0, import_react18.createElement)(SkillInstaller, { actions, initialCategory: category, onClose: () => setInstalling(false), onInstalled: (names) => {
       setInstalling(false);
       setMessage(t("{count} skills installed. Choose a skill to use it.", { count: names.length }));
@@ -9952,7 +9999,7 @@ function SkillLibrary({ roster, actions, selectedId }) {
     } }) : null,
     detail ? (0, import_react18.createElement)(SkillDetail, { key: detail.name, summary: detail, roster, actions, onClose: () => setDetail(null), onUse: use, onChanged: () => setMessage("") }) : null,
     (0, import_react18.createElement)("div", { className: "bt-catalog-search" }, (0, import_react18.createElement)(SearchIcon), (0, import_react18.createElement)("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: t("Search tasks, skills, or keywords"), "aria-label": t("Search tasks, skills, or keywords") })),
-    (0, import_react18.createElement)("div", { className: "bt-catalog-categories", role: "group", "aria-label": t("Category") }, ["", ...groups, "我的安装"].map((value2) => (0, import_react18.createElement)("button", { key: value2, "aria-pressed": category === value2, onClick: () => setCategory(value2) }, value2 ? t(value2) : t("All skills"), (0, import_react18.createElement)("span", { className: "bt-skill-group-count" }, value2 === "我的安装" ? skills.filter((item) => !item.builtinSource).length : value2 ? skills.filter((item) => skillCategory(item) === value2).length : skills.length)))),
+    (0, import_react18.createElement)("div", { className: "bt-catalog-categories", role: "group", "aria-label": t("Category") }, ["", ...groups, "我的安装"].map((value2) => (0, import_react18.createElement)("button", { key: value2, "aria-pressed": category === value2, onClick: () => setCategory(value2) }, value2 ? t(value2) : t("All skills"), (0, import_react18.createElement)("span", { className: "bt-skill-group-count" }, value2 === "我的安装" ? skills.filter(isMyInstallation).length : value2 ? skills.filter((item) => skillCategory(item) === value2).length : skills.length)))),
     (0, import_react18.createElement)("p", { className: "bt-set-hint", role: "status" }, t("{count} skills found", { count: items.length })),
     (0, import_react18.createElement)("div", { className: "bt-expert-grid" }, items.map((item) => (0, import_react18.createElement)(
       "article",
@@ -9971,7 +10018,7 @@ function SkillLibrary({ roster, actions, selectedId }) {
             setDetail(item);
             setInstalling(false);
           } }, t("View details")),
-          (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm bt-skill-primary", disabled: !isUserSkill(item), title: !isUserSkill(item) ? t("Manual invocation is disabled") : void 0, onClick: () => use(item) }, t("Use skill"))
+          item.nativeSkill ? null : (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm bt-skill-primary", disabled: !isUserSkill(item), title: !isUserSkill(item) ? t("Manual invocation is disabled") : void 0, onClick: () => use(item) }, t("Use skill"))
         )
       )
     ))),
