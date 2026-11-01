@@ -25,7 +25,7 @@ Pick the format that fits the job:
 | A client or management slide deck without interactive trends (cards, bullet pages) | **PPT** (including ppt-master / editable PPTX) |
 | Row-level detail or a data backing sheet | **Excel as well—required** |
 
-Short rule: **trends or interaction → HTML first; static briefing → PPT is fine; any data workbook → always include Excel.**
+Short rule: **standalone interactive webpage → original authored HTML (no template/fallback); ordinary briefing → PPT; data backing sheet → Excel.**
 
 ## Two ways to use it (pick one)
 

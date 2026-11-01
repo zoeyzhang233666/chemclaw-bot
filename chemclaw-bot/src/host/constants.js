@@ -72,7 +72,7 @@ export const TEAM_TOOLS = [
   'list_capabilities', 'save_capability', 'delete_capability',
   'attach_capability', 'detach_capability',
   'list_scenarios', 'activate_scenario',
-  'chem_public_query', 'chem_futures_history', 'chem_deliver',
+  'chem_public_query', 'chem_futures_history', 'chem_deliver', 'chem_write_webpage',
 ]
 // Heavy team-admin tools: kept registered for Main Bots in their own chat, but denied
 // everywhere else so ordinary replies do not ship their schemas (~tens of KB).
