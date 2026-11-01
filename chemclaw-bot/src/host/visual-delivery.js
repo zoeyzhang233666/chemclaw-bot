@@ -45,11 +45,62 @@ export function redundantMarketSourceQuestion(question, options = []) {
     && /(网页|网上|搜索|网站|akshare|数据源|接口|不(?:用了|需要)|行情软件|finance|web)/iu.test(questionText + ' ' + optionText)
 }
  
+
+// Syntax alone does not prove the GenUI ECharts payload can draw anything.
+// The GenUI plugin remains responsible for full schema and browser validation.
+const SPEC_FENCES = /^ {0,3}\u0060{3}[ \t]*dsh-ui(?:[>\u0060"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}\u0060{3}[ \t]*\r?$/gimu
+const genuiSpecs = text => {
+  const result = []
+  for (const match of String(text ?? '').matchAll(SPEC_FENCES)) {
+    try { result.push(JSON.parse(match[1])) } catch { /* handled by GenUI */ }
+  }
+  return result
+}
+const record = value => value !== null && typeof value === 'object' && !Array.isArray(value)
+const hasDataPoint = data => Array.isArray(data) && data.some(value => value !== null && value !== undefined
+  && (typeof value === 'number' ? Number.isFinite(value) : typeof value === 'string' ? value.trim() !== '' : record(value) || Array.isArray(value)))
+const echartHasSeries = series => (Array.isArray(series) ? series : series ? [series] : [])
+  .some(item => record(item) && hasDataPoint(item.data))
+const echartHasDataset = dataset => (Array.isArray(dataset) ? dataset : dataset ? [dataset] : [])
+  .some(item => record(item) && hasDataPoint(item.source))
+export function genuiChartPayloadsUsable(items) {
+  const walk = (node, depth = 0) => {
+    if (!record(node) || depth > 24) return true
+    if (node.type === 'echart') {
+      if (node.option !== undefined) {
+        if (!record(node.option) || !(echartHasSeries(node.option.series) || echartHasDataset(node.option.dataset))) return false
+      } else if (!node.preset || !(hasDataPoint(node.data) || echartHasSeries(node.series))) return false
+    }
+    for (const key of ['children', 'items'])
+      if (Array.isArray(node[key]) && !node[key].every(item => walk(item, depth + 1))) return false
+    if (Array.isArray(node.tabs) && !node.tabs.every(tab => walk(tab.content, depth + 1))) return false
+    return true
+  }
+  return Array.isArray(items) && items.length > 0 && items.every(item => walk(item))
+}
+const hasCompleteGenuiSpec = text => genuiSpecs(text).some(spec => record(spec) && Array.isArray(spec.items) && spec.items.length > 0)
+
+// Shared chart schema allows missing observations; a wholly missing series
+// must not create an empty canvas. Valid formula fields remain supported.
+export function nativeChartPayloadsUsable(view) {
+  const walk = (node, depth = 0) => {
+    if (!record(node) || depth > 24) return true
+    if (node.type === 'chart' && node.kind !== 'candlestick' && node.kind !== 'sankey') {
+      if (!Array.isArray(node.series) || !node.series.some(series =>
+        Array.isArray(series.values) && series.values.some(value =>
+          (typeof value === 'number' && Number.isFinite(value))
+          || (record(value) && typeof value['='] === 'string')))) return false
+    }
+    return !Array.isArray(node.children) || node.children.every(item => walk(item, depth + 1))
+  }
+  return walk(view)
+}
+
 export function hasInlineGenui(text, native = false) {
   for (const match of text.matchAll(/^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}```[ \t]*\r?$/gimu)) {
     try {
       const spec = JSON.parse(match[1])
-      if (spec && Array.isArray(spec.items) && spec.items.length && (native || spec.panel !== true)) return true
+      if (spec && genuiChartPayloadsUsable(spec.items) && (native || spec.panel !== true)) return true
     } catch { /* GenUI's own feedback handles malformed fences. */ }
   }
   return false
@@ -136,7 +187,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -191,6 +242,7 @@ export function install(rt) {
         entry.marketChartCommitted = false
         entry.marketOhlcStatus = 'untried'
         entry.visual = false
+        entry.invalidGenuiChart = false
         entry.kinds = new Set()
         entry.requested = new Set(requestedChartKinds(text))
       }
@@ -207,7 +259,13 @@ export function install(rt) {
       for (const kind of genuiKinds(text, !rt.isBotSession?.(id))) entry.kinds.add(kind)
       // Leave malformed fences to GenUI's own validation/repair budget. A valid
       // panel-only reply in a Bot surface still needs an inline equivalent.
-      if (genuiFence.test(text)) entry.repairing = !hasInlineGenui(text, true)
+      if (genuiFence.test(text)) {
+        const complete = hasCompleteGenuiSpec(text)
+        // Malformed fences belong to the upstream GenUI repair budget; valid
+        // JSON with an empty ECharts payload needs our one native fallback.
+        entry.repairing = !complete
+        entry.invalidGenuiChart = complete && !hasInlineGenui(text, true)
+      }
     }
   }
   const restore = session => {
@@ -265,7 +323,10 @@ export function install(rt) {
       ? { kind: 'plugin:chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
       : { kind: 'plugin', plugin: 'chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
     try {
-      const reminder = knownMismatch ? requestedViewReminder(turn, bot, missing) : visualReminder(turn, bot)
+      const reminder = knownMismatch ? requestedViewReminder(turn, bot, missing)
+      : entry.invalidGenuiChart && bot
+        ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart has an empty or misnamed ECharts data series. Do not repeat that blank chart or fetch data again. Use ONE native show_view line chart with already verified dated spot prices, or a factual table if observations are unavailable. Never substitute futures for spot. This is the only correction.`
+        : visualReminder(turn, bot)
       agent.steer({ id: randomUUID(), role: 'user', source, content: [{ type: 'text', text: reminder }] })
     } catch (error) { rt.warn?.('chemclaw-bot: visual delivery reminder failed: %s', error) }
   })
