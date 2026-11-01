@@ -8829,6 +8829,56 @@ function explicitSkillNames(text, items) {
   return [...new Set([...String(text).matchAll(/(?:^|\s)\/([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(?=\s|$)/g)].map((match) => match[1]).filter((name) => names.has(name)))];
 }
 
+// src/shared/skill-examples.js
+var CURATED_SKILL_EXAMPLES_ZH = {
+  "brainstorming": "准备开发一个化工原料采购比价功能，请先帮我梳理采购员的实际需求、关键约束和几种实现方案。",
+  "executing-plans": "这份供应商准入流程改造计划已经定稿，请按步骤实施，每完成一项核对验收条件并记录未解决的问题。",
+  "grill-me": "我准备把纯碱采购从每月询价改成季度框架协议，请从价格风险、库存占用和供应保障逐项质询这个决定。",
+  "grill-with-docs": "评审这份化工采购系统方案，逐条追问关键假设，并把确认的取舍写成决策记录和术语表。",
+  "grilling": "我们计划进入越南 TDI 市场，请围绕客户真实性、付款风险和渠道成本持续追问，直到关键假设可以验证。",
+  "using-superpowers": "我要为 ChemClaw 增加供应商尽调功能，请先识别该用哪些现有技能、它们的先后顺序和需要的输入。",
+  "verification-before-completion": "这份乙二醇基差研究准备交付客户，请逐项核对现货地区、期货合约、日期、计算公式及证据链接。",
+  "writing-plans": "把“建立纯碱供需周报自动化流程”拆成可执行任务，列出每步的数据依赖、输出和验收标准。",
+  "guizang-ppt-skill": "把甲醇产业链分享提纲做成可以在浏览器横向翻页的杂志风演示，突出产能分布和价格驱动。",
+  "dom-buy-cn": "我要采购工业级双氧水，先帮我从内贸采购技能中选出厂家寻源、资质核验和报价对比的执行顺序。",
+  "dom-sales-cn": "我想开发华东地区的纯碱下游客户，应该先做客户筛选、采购线索查询还是客户深度研究？",
+  "dom-buy-im": "要从中东采购甲醇，请按海外供应商核验、进口成本、单证与合同检查推荐执行步骤。",
+  "dom-sales-ex": "准备向越南出口钛白粉，帮我安排目标买家开发、出口合规检查和报价单制作的工作顺序。",
+  "dom-fund": "我想研究未来一年甲醇供需平衡，请推荐产业链、产能项目和成本利润方面最合适的研究技能。",
+  "dom-spreads": "分析乙二醇期现价差时，基差季节性、跨期价差和历史事件研究应该分别怎样开展？",
+  "chem-public-apis": "帮我从公开数据库核对苯酚的 CAS、分子式和常用英文别名，并附可追溯的来源。",
+  "b2b-lead-sourcing": "寻找华东地区可能长期使用 HDI 的涂料和胶黏剂工厂，区分实际生产企业与贸易商并附证据。",
+  "ask-matt": "我想把一份化工采购想法变成可以验收的产品需求，先用哪种工作方法比较合适？",
+  "codebase-design": "检查 ChemClaw 现货与期货价格查询模块的职责边界，提出避免混用数据源的模块划分方案。",
+  "domain-modeling": "给化工产业链图谱建立统一术语：生产企业、产能、装置、原料、产品之间分别是什么关系？",
+  "diagnose-windows-sandbox-acl": "ChemClaw 在 Windows 工作区写入 Excel 时提示访问被拒绝，请排查目录权限与沙箱限制，不要直接放宽安全设置。",
+  "handoff": "把这次甲醇市场专题研究的已核实数据、未解决问题、文件路径和下一步任务整理成交接说明。",
+  "issue-triage": "整理这批 ChemClaw 用户反馈，区分功能缺陷、体验问题和数据口径错误，并给出复现步骤与优先级。",
+  "setup-matt-pocock-skills": "为化工数据产品项目配置从需求讨论、任务拆分到问题跟踪的协作流程，说明目录和文档如何组织。",
+  "to-spec": "把“客户可在行情图上查看装置检修事件”整理成产品需求说明，写清数据口径、交互和验收条件。",
+  "to-tickets": "把化工价格看板的需求说明拆成开发任务，标明数据接口、前端图表和验证任务的依赖关系。",
+  "wayfinder": "规划 ChemClaw 下一季度的产品路线，在技能体验、数据接入和移动端之间明确阶段目标及决策点。",
+  "writing-great-skills": "检查这个“供应商报价合理性核验”Skill 的触发条件、必填字段和证据要求，提出针对性改进。",
+  "systematic-debugging": "为什么查询纯碱现货价格时返回了期货行情？请从请求路由、数据源选择和响应标注定位根因。",
+  "requesting-code-review": "请审查这个化工期货 K 线功能的 PR，重点核对数据类型、现货查询回归和前端展示风险。",
+  "receiving-code-review": "审查意见认为基差计算遗漏交割月份差异，请核对代码和数据后判断哪些建议需要修改。",
+  "finishing-a-development-branch": "这个技能库分类修复分支已经完成，请核对测试结果和未解决风险，再评估是否适合发起合并。",
+  "using-git-worktrees": "我要同时测试 ChemClaw 的 Office 优化和技能库改版，请建立互不影响的工作树并说明如何切换。",
+  "dispatching-parallel-agents": "研究国内 MDI 供需时，把产能项目、下游需求和价格走势分给独立代理并行调查，最后合并证据。",
+  "subagent-driven-development": "按既定计划开发甲醇基差图，把数据校验、图表交互和回归测试分配给子代理逐项验收。",
+  "writing-skills": "把“核实客户声称的市场报价”整理成可复用 Skill，写清触发条件、规格口径、核验步骤和输出。",
+  "office": "附件包含供应商评估 Word、采购价格 Excel 和一份演示提纲，请判断需要哪些 Office 工具并完成整套交付。",
+  "office-tools": "检查这份采购测算工作簿中的工作表结构、单元格公式与合并区域，定位异常引用。",
+  "office-docx": "根据附件供应商尽调资料制作一份 Word 报告，加入分级标题、风险表格和来源清单。",
+  "office-pptx": "把乙二醇现货与期货基差研究制作成 8 页可编辑 PPT，包含价差走势图和采购建议。",
+  "office-xlsx": "根据华东、华南的甲醇采购报价制作 Excel 对比表，分别计算含税到厂价和运费影响。",
+  "office-render": "检查附件 PPT 的每一页是否存在中文截断、表格溢出或图表遮挡，指出需要修改的页面。",
+  "office-recalculate": "我更新了工作簿中的丙烯采购单价，请重新计算关联公式并检查错误值是否消除。",
+  "office-export-pdf": "把附件的化工客户拜访 PPT 转成 PDF，检查页面数量、字体和表格是否完整。",
+  "chemclaw-delivery": "把这份纯碱供需分析整理成交付给采购主管的报告、数据表和可查看的图表，并注明来源。",
+  "chemclaw-research-process": "准备研究万华化学新建项目对国内 MDI 供应的影响，请确定证据路径、关键变量与核验标准。"
+};
+
 // src/shared/skill-presentation.js
 var BUILTIN_SKILL_PRESENTATION = {
   "domain-1": ["🏭", "帮我找山东生产双氧水的厂家，核实生产资质，区分生产企业和贸易商。"],
@@ -8995,10 +9045,17 @@ function skillEmoji(item) {
   return Object.hasOwn(CATEGORY_EMOJI, category) ? CATEGORY_EMOJI[category] : "🧰";
 }
 function skillExample(item, locale = "zh") {
-  const builtin = builtinPresentation(item);
-  if (builtin && locale.startsWith("zh")) return builtin[1];
+  const userInstalled = item.kind === "skill" && isMyInstallation(item);
   const example = item.examples?.find((value2) => typeof value2 === "string" && value2.trim());
+  if (userInstalled && example) return example;
+  if (locale.startsWith("zh") && !userInstalled) {
+    if (item.name === "ppt-master") return "";
+    if (Object.hasOwn(CURATED_SKILL_EXAMPLES_ZH, item.name)) return CURATED_SKILL_EXAMPLES_ZH[item.name];
+    const builtin = builtinPresentation(item);
+    if (builtin) return builtin[1];
+  }
   if (example) return example;
+  if (item.nativeSkill || item.builtinSource) return "";
   const name = skillLabel(item, locale);
   return locale.startsWith("zh") ? `请用「${name}」处理这项任务：[填写具体需求，并附上已有资料]。` : `Use “${name}” for this task: [describe your requirements and attach relevant files].`;
 }
@@ -9844,6 +9901,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
       (0, import_react18.createElement)("button", { className: "bt-soft bt-soft-sm", onClick: onClose }, t("Close"))
     ),
     (0, import_react18.createElement)("p", { className: "bt-skill-purpose" }, summary.purpose || summary.description),
+    skillExample(summary, language()) ? (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(summary, language()))) : null,
     (0, import_react18.createElement)("p", { className: "bt-set-hint" }, summary.userInstalled ? "此技能来自用户的 DSH 技能目录，可在原目录中管理；此处只读。" : "此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。"),
     (0, import_react18.createElement)("p", { className: "bt-set-hint" }, summary.invocation?.userInvocable === false ? "此技能只支持模型按需调用，不支持手动输入命令。" : "在对话中可以通过技能菜单选择，或输入：", summary.invocation?.userInvocable === false ? null : (0, import_react18.createElement)("code", null, "/" + summary.name)),
     (0, import_react18.createElement)(
@@ -9900,7 +9958,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
           ["Dependencies", t(item.dependencies?.message || "Resources are installed. Script dependencies are checked when the task needs them.")]
         ].map(([label, value2]) => (0, import_react18.createElement)("div", { key: label }, (0, import_react18.createElement)("dt", null, t(label)), (0, import_react18.createElement)("dd", null, value2)))),
         item.dependencies?.state === "needs-setup" ? (0, import_react18.createElement)("button", { className: "bt-soft", onClick: () => actions.openSettings("connectors") }, t("Set up the analysis environment")) : null,
-        (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))),
+        skillExample(item, language()) ? (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))) : null,
         (0, import_react18.createElement)(
           "details",
           { className: "bt-advanced" },
@@ -10006,7 +10064,7 @@ function SkillLibrary({ roster, actions, selectedId }) {
       { className: "bt-expert-card bt-skill-card", key: item.name },
       (0, import_react18.createElement)("header", null, (0, import_react18.createElement)("span", { className: "bt-skill-glyph", "aria-hidden": true }, skillEmoji(item)), (0, import_react18.createElement)("div", null, (0, import_react18.createElement)("h3", null, skillLabel(item, language())), (0, import_react18.createElement)("span", { className: "bt-skill-badge" }, t(skillCategory(item))))),
       (0, import_react18.createElement)("p", { className: "bt-expert-description bt-skill-clamp" }, item.purpose || item.description),
-      (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))),
+      skillExample(item, language()) ? (0, import_react18.createElement)("div", { className: "bt-expert-example" }, (0, import_react18.createElement)("span", null, t("Try asking")), (0, import_react18.createElement)("p", null, skillExample(item, language()))) : null,
       (0, import_react18.createElement)(
         "footer",
         null,
