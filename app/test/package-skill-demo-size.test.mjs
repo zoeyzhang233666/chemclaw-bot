@@ -4,10 +4,11 @@ import assert from 'node:assert/strict'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { test } from 'node:test'
+import { fileURLToPath } from 'node:url'
 import { FileMatcher } from 'app-builder-lib/out/fileMatcher.js'
 import { parse } from 'yaml'
 
-const pluginRoot = resolve(new URL('../../chemclaw-bot', import.meta.url).pathname)
+const pluginRoot = fileURLToPath(new URL('../../chemclaw-bot/', import.meta.url))
 
 function* walk(folder) {
   for (const entry of readdirSync(folder, { withFileTypes: true })) {
