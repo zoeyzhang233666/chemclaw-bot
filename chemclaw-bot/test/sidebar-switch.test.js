@@ -15,7 +15,7 @@ const { JSDOM } = createRequire(join(process.env.DSH_HARNESS ?? join(PLUGIN, '..
 // fixtures retain refs across commits and run their layout effects after each render.
 const { outputFiles } = await build({
   stdin: {
-    contents: "export { SHELL_CSS } from './src/client/styles.js'\nexport { SIDEBAR_CSS, TeamSidebar } from './src/client/sidebar.js'",
+    contents: "export { SHELL_CSS } from './src/client/styles.js'\nexport { SIDEBAR_CSS, TeamSidebar, ConnectPlugins, AccountLauncher } from './src/client/sidebar.js'",
     resolveDir: PLUGIN,
   },
   bundle: true, format: 'cjs', platform: 'browser', write: false, logLevel: 'silent',
@@ -28,15 +28,17 @@ const react = {
   createElement: (type, props, ...children) => ({ type, props: { ...props, children } }), Fragment: Symbol('Fragment'),
   useEffect() {}, useLayoutEffect: effect => layoutEffects?.push(effect), useState: initial => [initial, () => {}],
   useMemo: make => make(), useRef: current => renderRefs ? renderRefs[refIndex++] ??= { current } : { current }, useId: () => 'id',
+  useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
 }
 const module = { exports: {} }
 const viewport = { innerWidth: 1280 }
+const menuDocument = new JSDOM('<!doctype html><html><body></body></html>').window.document
 runInNewContext(outputFiles[0].text, {
   module, exports: module.exports,
-  require: name => (name === 'react' ? react : {}),
-  window: viewport,
+  require: name => (name === 'react' ? react : name === 'react-dom' ? { createPortal: node => node } : {}),
+  window: viewport, document: menuDocument,
 })
-const { SHELL_CSS, SIDEBAR_CSS, TeamSidebar } = module.exports
+const { SHELL_CSS, SIDEBAR_CSS, TeamSidebar, ConnectPlugins, AccountLauncher } = module.exports
 
 test('sidebar tabs filter rows, clear category filters and keep the main Bot above the controls', () => {
   const state = []
@@ -366,5 +368,50 @@ test('the shell footer is a grid wherever the shell shows it', () => {
       const grid = rules.some(rule => foot.matches(rule.selector) && /(^|;)display:grid/.test(rule.body))
       assert.equal(grid, !(platform === 'windows' && collapsed), `${platform} ${collapsed ? 'collapsed' : 'open'}`)
     }
+  }
+})
+
+
+test('classic Agent switch is in the Bot footer and plugin entry is in the avatar menu', () => {
+  const calls = []
+  const actions = {
+    setSurface: value => calls.push(['surface', value]),
+    selectPanel: value => calls.push(['panel', value]),
+    seatAccount: () => {},
+    signInEntry: () => null,
+    reportError: error => { throw error },
+    openSettings: () => {},
+  }
+  const findAll = (tree, match, result = []) => {
+    if (Array.isArray(tree)) { tree.forEach(node => findAll(node, match, result)); return result }
+    if (!tree || typeof tree !== 'object') return result
+    if (match(tree)) result.push(tree)
+    findAll(tree.props?.children, match, result)
+    return result
+  }
+
+  const footer = ConnectPlugins({ wide: true, actions })
+  const switchButton = findAll(footer, node => node.type === 'button')[0]
+  assert.equal(switchButton.props.children[1], 'Switch to classic Agent mode')
+  switchButton.props.onClick()
+  assert.deepEqual(calls, [['surface', 'agent']])
+  assert.equal(ConnectPlugins({ wide: false, actions }), null)
+
+  const originalState = react.useState
+  let index = 0
+  react.useState = initial => {
+    const value = index++ === 0 ? true : index === 2 ? { left: 0, bottom: 0 } : initial
+    return [value, () => {}]
+  }
+  try {
+    const menu = AccountLauncher({ seat: false, actions })
+    const items = findAll(menu, node => node.type === 'button' && node.props.role === 'menuitem')
+    const label = item => findAll(item, node => node.type === 'span' && node.props.className === 'bt-menu-label')[0]?.props.children[0]
+    assert.equal(items.map(label).at(-1), 'Connect plugins')
+    assert.ok(!items.map(label).includes('Switch to classic Agent mode'))
+    items.at(-1).props.onClick()
+    assert.deepEqual(calls, [['surface', 'agent'], ['panel', 'plugins']])
+  } finally {
+    react.useState = originalState
   }
 })
