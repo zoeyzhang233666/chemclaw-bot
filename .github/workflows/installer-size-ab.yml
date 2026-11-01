@@ -1,0 +1,89 @@
+# PR-only measurement. Never publish a release or upload an installer binary.
+# Build both the exact PR base and head on the same fresh Windows runner.
+name: Windows installer size A/B
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  installer-size-ab:
+    if: startsWith(github.head_ref, 'perf/installer-size-')
+    runs-on: windows-latest
+    timeout-minutes: 100
+    steps:
+      - name: Checkout optimized PR head
+        uses: actions/checkout@v4
+        with:
+          path: optimized
+          persist-credentials: false
+      - name: Checkout exact PR base commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: baseline
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            baseline/app/package-lock.json
+            optimized/app/package-lock.json
+      - name: Build unmodified main baseline without publishing
+        shell: bash
+        working-directory: baseline/app
+        env:
+          CHEMCLAW_OFFICE_RUNTIME_CACHE: ${{ runner.temp }}/chemclaw-runtime-assets
+        run: |
+          npm ci --no-fund --no-audit
+          npm run dist
+          node scripts/audit-runtime-size.mjs
+      - name: Build optimized PR with identical inputs and runner
+        shell: bash
+        working-directory: optimized/app
+        env:
+          CHEMCLAW_OFFICE_RUNTIME_CACHE: ${{ runner.temp }}/chemclaw-runtime-assets
+        run: |
+          npm ci --no-fund --no-audit
+          npm run dist
+          node scripts/audit-runtime-size.mjs
+      - name: Measure actual silent installs separately, then uninstall
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          function Measure-Install([string] $root) {
+            $installer = @(Get-ChildItem -LiteralPath "$root/app/dist-pack" -Filter 'ChemClaw-*-win-x64.exe')
+            if ($installer.Count -ne 1) { throw "Expected one installer in $root, found $($installer.Count)" }
+            $proc = Start-Process -FilePath $installer[0].FullName -ArgumentList '/S' -Wait -PassThru
+            if ($proc.ExitCode -ne 0) { throw "Install failed with $($proc.ExitCode)" }
+            $dir = Join-Path $env:LOCALAPPDATA 'Programs\ChemClaw'
+            $exe = Join-Path $dir 'ChemClaw.exe'
+            if (-not (Test-Path $exe)) { throw "Install missing $exe" }
+            $bytes = [long](Get-ChildItem -LiteralPath $dir -Recurse -File | Measure-Object -Property Length -Sum).Sum
+            $uninstaller = Join-Path $dir 'Uninstall ChemClaw.exe'
+            $proc = Start-Process -FilePath $uninstaller -ArgumentList '/currentuser', '/S' -Wait -PassThru
+            if ($proc.ExitCode -ne 0) { throw "Uninstall failed with $($proc.ExitCode)" }
+            $deadline = (Get-Date).AddSeconds(120)
+            while ((Test-Path $exe) -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 2 }
+            if (Test-Path $exe) { throw "Uninstall left $exe" }
+            return $bytes
+          }
+          $before = Measure-Install 'baseline'
+          $after = Measure-Install 'optimized'
+          @{ baseline = $before; optimized = $after } | ConvertTo-Json | Set-Content -LiteralPath installed-sizes.json -Encoding utf8
+      - name: Calculate reproducible sizes and enforce savings
+        shell: bash
+        run: node optimized/app/scripts/compare-runtime-size.mjs baseline/app optimized/app installed-sizes.json
+      - name: Upload JSON measurements only, never installers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chemclaw-windows-size-ab
+          path: |
+            installed-sizes.json
+            installer-size-ab-results.json
+          if-no-files-found: warn
