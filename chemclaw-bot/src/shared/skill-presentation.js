@@ -1,4 +1,5 @@
-import { skillLabel } from './skills.js'
+import { isMyInstallation, skillLabel } from './skills.js'
+import { CURATED_SKILL_EXAMPLES_ZH } from './skill-examples.js'
 
 export const BUILTIN_SKILL_PRESENTATION = {
   'domain-1': ['🏭', '帮我找山东生产双氧水的厂家，核实生产资质，区分生产企业和贸易商。'],
@@ -170,10 +171,23 @@ export function skillEmoji(item) {
 }
 
 export function skillExample(item, locale = 'zh') {
-  const builtin = builtinPresentation(item)
-  if (builtin && locale.startsWith('zh')) return builtin[1]
+  // A user-installed skill must never inherit an unrelated built-in example
+  // just because it shares the built-in skill's technical name.
+  const userInstalled = item.kind === 'skill' && isMyInstallation(item)
   const example = item.examples?.find(value => typeof value === 'string' && value.trim())
+  if (userInstalled && example) return example
+  if (locale.startsWith('zh') && !userInstalled) {
+    const builtin = builtinPresentation(item)
+    if (builtin) return builtin[1]
+    // Legacy first-run skills, native DSH skills and Office all use real
+    // scenarios. Never synthesize a nearly identical "please use X" template.
+    if (item.name === 'ppt-master') return ''
+    if (Object.hasOwn(CURATED_SKILL_EXAMPLES_ZH, item.name)) return CURATED_SKILL_EXAMPLES_ZH[item.name]
+  }
   if (example) return example
+  // An unknown native/bundled skill cannot be promised a use case without
+  // inspecting what its actual SKILL.md supports: omit the sample instead.
+  if (item.nativeSkill || item.builtinSource) return ''
   const name = skillLabel(item, locale)
   return locale.startsWith('zh') ? `请用「${name}」处理这项任务：[填写具体需求，并附上已有资料]。`
     : `Use “${name}” for this task: [describe your requirements and attach relevant files].`
