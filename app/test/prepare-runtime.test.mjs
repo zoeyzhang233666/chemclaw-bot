@@ -62,8 +62,15 @@ describe('runtimeReusable', () => {
       writeFileSync(path, '')
     }
     mkdirSync(entries.pythonPackages, { recursive: true })
+    for (const name of ['docx', 'pptx', 'openpyxl']) {
+      mkdirSync(join(entries.pythonPackages, name), { recursive: true })
+      writeFileSync(join(entries.pythonPackages, name, '__init__.py'), '')
+    }
     writeFileSync(join(root, 'runtime.json'), JSON.stringify(manifest))
     assert.equal(runtimeReusable(output, manifest), true)
+    rmSync(join(entries.pythonPackages, 'docx', '__init__.py'))
+    assert.equal(runtimeReusable(output, manifest), false, 'missing python-docx must force runtime repair')
+    writeFileSync(join(entries.pythonPackages, 'docx', '__init__.py'), '')
     writeFileSync(join(root, 'runtime.json'), JSON.stringify({ ...manifest, payloadDigest: '0'.repeat(64) }))
     assert.equal(runtimeReusable(output, manifest), false)
   })
