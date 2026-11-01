@@ -1,4 +1,5 @@
 import { resolve } from '../shared/views.js'
+import { normalizeCandles } from '../shared/candlestick.js'
 
 const number = (value, lookup) => {
   const result = resolve(value, lookup)
@@ -6,6 +7,10 @@ const number = (value, lookup) => {
 }
 
 export function advancedChartData(node, lookup) {
+  if (node.kind === 'candlestick') {
+    const bars = normalizeCandles(node.bars)
+    return { ...node, bars, categories: bars.map(bar => bar.date), series: [], drawable: true }
+  }
   const categories = node.categories.map(String)
   const series = (node.series ?? []).map(item => ({ name: item.name ?? '', values: item.values.map(value => number(value, lookup)) }))
   const data = { ...node, categories, series, xValues: node.xValues?.map(value => number(value, lookup)) }
@@ -20,6 +25,11 @@ export function advancedChartData(node, lookup) {
 
 export function advancedChartTable(data, valueLabel, seriesLabel) {
   const { categories, series, unit = '' } = data
+  if (data.kind === 'candlestick') {
+    const volume = data.bars.every(bar => bar.volume !== null)
+    return { columns: ['Date', 'Open', 'High', 'Low', 'Close', ...(volume ? ['Volume'] : [])],
+      rows: data.bars.map(bar => [bar.date, bar.open, bar.high, bar.low, bar.close, ...(volume ? [bar.volume] : [])]) }
+  }
   if (data.kind === 'sankey') return {
     columns: ['Source', 'Target', unit || valueLabel],
     rows: data.links.map(edge => [categories[edge.source], categories[edge.target], edge.value]),
@@ -47,6 +57,48 @@ export function advancedChartOption(data, theme) {
     animation: false, color: theme.colors, backgroundColor: 'transparent',
     textStyle: { ...label, fontSize: 12 }, aria: { enabled: true },
     tooltip: { trigger: 'item', renderMode: 'richText', confine: true, backgroundColor: theme.card, borderColor: theme.line, textStyle: { ...label, fontSize: 12 } },
+  }
+  if (data.kind === 'candlestick') {
+    const bars = data.bars
+    const dates = bars.map(bar => bar.date)
+    const volume = bars.every(bar => bar.volume !== null)
+    const up = '#e46750', down = '#22a678'
+    const movingAverage = length => bars.map((_, at) => {
+      if (at < length - 1) return null
+      return Number((bars.slice(at + 1 - length, at + 1).reduce((sum, bar) => sum + bar.close, 0) / length).toFixed(6))
+    })
+    const means = [5, 10, 20].filter(n => bars.length >= n).map((n, at) => ({
+      name: `MA${n}`, type: 'line', xAxisIndex: 0, yAxisIndex: 0,
+      data: movingAverage(n), symbol: 'none', lineStyle: { width: 1.2 },
+      itemStyle: { color: theme.colors[at % theme.colors.length] }, connectNulls: false,
+    }))
+    const candle = { name: 'OHLC', type: 'candlestick', xAxisIndex: 0, yAxisIndex: 0,
+      data: bars.map(bar => [bar.open, bar.close, bar.low, bar.high]),
+      itemStyle: { color: up, color0: down, borderColor: up, borderColor0: down },
+    }
+    const xAxis = { ...axis, type: 'category', boundaryGap: true, data: dates }
+    const yAxis = { ...axis, type: 'value', name: unit, scale: true }
+    return { ...base, tooltip: { ...base.tooltip, trigger: 'axis', axisPointer: { type: 'cross' } },
+      axisPointer: { link: [{ xAxisIndex: volume ? [0, 1] : [0] }] },
+      legend: means.length ? { ...legend, data: ['OHLC', ...means.map(item => item.name)] } : undefined,
+      grid: volume
+        ? [{ left: 64, right: 16, top: 48, height: '54%' }, { left: 64, right: 16, top: '76%', height: '10%' }]
+        : [{ left: 64, right: 16, top: 48, bottom: 68 }],
+      xAxis: volume
+        ? [{ ...xAxis, gridIndex: 0, axisLabel: { show: false } }, { ...xAxis, gridIndex: 1 }]
+        : [{ ...xAxis, gridIndex: 0 }],
+      yAxis: volume
+        ? [{ ...yAxis, gridIndex: 0 }, { ...axis, type: 'value', gridIndex: 1, scale: true, splitNumber: 2 }]
+        : [{ ...yAxis, gridIndex: 0 }],
+      dataZoom: [
+        { type: 'inside', xAxisIndex: volume ? [0, 1] : [0], start: 0, end: 100 },
+        { type: 'slider', xAxisIndex: volume ? [0, 1] : [0], bottom: 8, height: 20, start: 0, end: 100 },
+      ],
+      series: [candle, ...means, ...(volume ? [{
+        name: 'Volume', type: 'bar', xAxisIndex: 1, yAxisIndex: 1,
+        data: bars.map(bar => ({ value: bar.volume, itemStyle: { color: bar.close >= bar.open ? up : down } })),
+      }] : [])],
+    }
   }
   if (data.kind === 'scatter') return { ...base, legend: series.length > 1 ? legend : undefined,
     grid: { left: 12, right: 16, top: series.length > 1 ? 38 : 20, bottom: 24, containLabel: true },
