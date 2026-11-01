@@ -18,7 +18,7 @@ export function chartTheme(element) {
 
 function DataTable({ table }) {
   return h('div', { className: 'bt-widget-table' }, h('table', null,
-    h('thead', null, h('tr', null, table.columns.map((label, at) => h('th', { key: at, scope: 'col' }, label === 'Source' || label === 'Target' ? t(label) : label)))),
+    h('thead', null, h('tr', null, table.columns.map((label, at) => h('th', { key: at, scope: 'col' }, t(label))))),
     h('tbody', null, table.rows.map((row, at) => h('tr', { key: at }, row.map((value, col) => h(col === 0 ? 'th' : 'td', {
       key: col, scope: col === 0 ? 'row' : undefined, className: typeof value === 'number' ? 'bt-num' : undefined,
     }, value === null ? t('No data') : String(value))))))))
