@@ -17,7 +17,8 @@
     "check-packed": "node scripts/check-packed.mjs",
     "shot": "node scripts/shot.mjs",
     "icon": "node scripts/icon.mjs",
-    "test": "node --test \"test/*.test.mjs\""
+    "test": "node --test \"test/*.test.mjs\"",
+    "runtime": "node scripts/prepare-runtime.mjs"
   },
   "dependencies": {
     "@changfenhuang/dsh-genui": "0.15.0",
@@ -58,7 +59,10 @@
     "electron-updater": "6.8.10",
     "pnpm": "11.7.0",
     "ws": "8.22.0",
-    "yaml": "2.9.1"
+    "yaml": "2.9.1",
+    "@deepseek-ai/dsh-skill-office": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-workspace-dependencies": "0.2.1-rc.5",
+    "@deepseek-ai/libreoffice-kit": "0.1.5"
   },
   "devDependencies": {
     "electron": "44.7.0",
@@ -67,7 +71,10 @@
     "react-dom": "19.3.0",
     "react-markdown": "10.1.0",
     "remark-gfm": "4.0.1",
-    "vite": "8.3.4"
+    "vite": "8.3.4",
+    "extract-zip": "2.0.1",
+    "papaparse": "5.5.3",
+    "tar": "7.5.22"
   },
   "overrides": {
     "@deepseek-ai/cordis": "4.0.5",
