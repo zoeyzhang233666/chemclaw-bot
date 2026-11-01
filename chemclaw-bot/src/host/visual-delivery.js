@@ -134,7 +134,7 @@ export function visualReminder(turn, bot) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', visual: false, human: false, textOnly: false, marketHistory: false, multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -194,6 +194,12 @@ export function install(rt) {
     for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
   }
   rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
+  rt.marketOhlcStatus = id => stateOf(id).marketOhlcStatus
+  rt.noteMarketOhlcSource = (id, status) => {
+    if (!id) return
+    const entry = stateOf(id)
+    if (entry.marketHistory) entry.marketOhlcStatus = status === 'ready' ? 'ready' : 'unavailable'
+  }
   rt.marketPriceViewAlreadyCommitted = (id, view) => {
     const entry = stateOf(id)
     return entry.marketHistory && !entry.multiAssetMarket && entry.marketChartCommitted && marketPriceVisual(view)
