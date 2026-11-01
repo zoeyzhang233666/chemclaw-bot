@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { readFileSync } from 'node:fs'
 import { CURATED_SKILL_EXAMPLES_ZH } from '../src/shared/skill-examples.js'
 import { NATIVE_SKILL_ZH } from '../src/shared/native-skill-copy.js'
 import { NATIVE_OFFICE_COPY } from '../src/shared/native-office-copy.js'
