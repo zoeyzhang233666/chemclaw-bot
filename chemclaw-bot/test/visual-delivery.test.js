@@ -288,3 +288,11 @@ test('close-only line does not satisfy explicitly requested K-line; real GenUI c
   good.stop()
   assert.equal(good.notices.length, 0)
 })
+
+test('explicit K-line intent propagates to host chart guard and resets next turn', () => {
+  const f = setup()
+  f.start(); f.user('我想看K线图')
+  assert.equal(f.rt.requiresCandlestick('s'), true)
+  f.start(2); f.user('只要文字介绍最新报价')
+  assert.equal(f.rt.requiresCandlestick('s'), false)
+})
