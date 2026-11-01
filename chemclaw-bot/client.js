@@ -6972,7 +6972,7 @@ function advancedChartOption(data, theme) {
     const bars = data.bars;
     const dates2 = bars.map((bar) => bar.date);
     const volume = bars.every((bar) => bar.volume !== null);
-    const up = "#e46750", down = "#22a678";
+    const up = theme.up, down = theme.down;
     const movingAverage = (length) => bars.map((_, at) => {
       if (at < length - 1) return null;
       return Number((bars.slice(at + 1 - length, at + 1).reduce((sum, bar) => sum + bar.close, 0) / length).toFixed(6));
@@ -7147,6 +7147,8 @@ function chartTheme(element) {
     card: token("--bt-main"),
     font: style.fontFamily,
     colors,
+    up: token("--bt-danger"),
+    down: token("--bt-green"),
     narrow: element.clientWidth < 380
   };
 }
