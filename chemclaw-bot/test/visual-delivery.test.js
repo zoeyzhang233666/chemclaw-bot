@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest } from '../src/host/visual-delivery.js'
+import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest, genuiChartPayloadsUsable, nativeChartPayloadsUsable } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
 
 const content = text => [{ type: 'text', text }]
@@ -451,4 +451,34 @@ test('spot price class persists through model continuations and resets on the ne
   f.start(4); f.user('比较现货和期货价差')
   assert.equal(f.rt.marketQuoteIntentOf('s'), 'mixed')
   assert.equal(f.rt.explicitSpotRequestOf('s'), false)
+})
+
+test('empty or misnamed ECharts data is not a successful inline GenUI view', () => {
+  const blank = [
+    { type: 'echart', option: { xAxis: { data: ['2026-10-01'] }, series: [{ type: 'line', values: [1200] }] } },
+    { type: 'echart', option: { series: [{ type: 'line', data: [] }] } },
+    { type: 'echart', preset: 'line', series: [] },
+  ]
+  for (const item of blank) {
+    const ticks = String.fromCharCode(96).repeat(3)
+    const output = ticks + 'dsh-ui\n' + JSON.stringify({ items: [item] }) + '\n' + ticks
+    assert.equal(hasInlineGenui(output), false)
+    const f = setup(); f.start(); f.user('纯碱最近一个月现货价'); f.answer(output); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /native show_view line chart/)
+    f.stop()
+    assert.equal(f.notices.length, 1, 'one bounded correction, no repeated loop')
+  }
+  assert.equal(genuiChartPayloadsUsable([{ type: 'echart', option: { series: [{ type: 'line', data: [1, 2] }] } }]), true)
+  assert.equal(genuiChartPayloadsUsable([{ type: 'echart', option: { dataset: { source: [['date', 'price'], ['2026-10-01', 1200]] }, series: [{ type: 'line' }] } }]), true)
+  assert.equal(genuiChartPayloadsUsable([{ type: 'timeline', events: [{ title: 'Start' }] }]), true)
+})
+
+test('all-missing native data is rejected while real gaps and formulas remain valid', () => {
+  const chart = values => ({ type: 'chart', kind: 'line', categories: ['Oct 1', 'Oct 2'], series: [{ values }] })
+  assert.equal(nativeChartPayloadsUsable(chart([null, null])), false)
+  assert.equal(nativeChartPayloadsUsable(chart([1200, null])), true)
+  assert.equal(nativeChartPayloadsUsable(chart([{ '=': 'price' }, null])), true)
+  assert.equal(nativeChartPayloadsUsable({ type: 'stack', children: [chart([null, null]), { type: 'metric', label: 'Last', value: 1200 }] }), false)
+  assert.equal(nativeChartPayloadsUsable({ type: 'chart', kind: 'candlestick', bars: [] }), true, 'candlestick schema is validated separately')
 })
