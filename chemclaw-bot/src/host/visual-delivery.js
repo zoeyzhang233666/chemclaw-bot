@@ -21,7 +21,7 @@ const genuiFence = /^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?$
 
 // Explicitly comparing two assets may legitimately need two different charts.
 export function multiAssetMarketRequest(text) {
-  return /(?:对比|比较|分别|并列|两只|多只|多种|多合约|多品种|\\b(?:versus|vs\\.?|compare)\\b)/iu.test(String(text ?? ''))
+  return /(?:对比|比较|分别|并列|两只|多只|多种|多合约|多品种|\b(?:versus|vs\.?|compare)\b)/iu.test(String(text ?? ''))
 }
 
 // Market chart deduplication applies only to *price visuals* in a single
