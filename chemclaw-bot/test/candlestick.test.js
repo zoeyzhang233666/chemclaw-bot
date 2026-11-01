@@ -169,8 +169,8 @@ test('native candle hover uses localized field names in the model-selected UI la
   assert.match(tooltip, /Lowest price.*91.7/)
   assert.match(tooltip, /MA5.*91.932/)
   assert.match(tooltip, /Trading volume.*1,000/)
-  const bars = bars(7)
+  const records = bars(7)
   const theme = { ink: '#222', muted: '#777', line: '#ddd', card: '#fff',
     colors: ['#bda', '#aac'], up: '#ff0000', down: '#00ff00', font: 'Arial', narrow: false }
-  assert.equal(advancedChartOption(advancedChartData({ type: 'chart', kind: 'candlestick', bars }), theme).tooltip.formatter, candlestickTooltip)
+  assert.equal(advancedChartOption(advancedChartData({ type: 'chart', kind: 'candlestick', bars: records }), theme).tooltip.formatter, candlestickTooltip)
 })
