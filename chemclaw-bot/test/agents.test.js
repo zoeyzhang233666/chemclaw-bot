@@ -208,7 +208,7 @@ test('TEAM_TOOLS names exactly the tools ds-bot registers', async (t) => {
   const { stop, ctx } = start(TEAM, { config: { browser: true, browserPluginApi: { id: 'all-browser-tools', tools: [...browserRefs, ...browserTasks] } } })
   t.after(stop)
   // CNINFO public-data tools remain available to ordinary DSH Agents; team-only tools are restricted.
-  const publicCninfo = ['chem_cninfo_resolve_company', 'chem_cninfo_search', 'chem_cninfo_read_pdf']
+  const publicCninfo = ['chem_cninfo_resolve_company', 'chem_cninfo_search', 'chem_cninfo_read_pdf', 'chem_office_runtime_status']
   assert.deepEqual([...ctx.registeredTools.keys()].sort(), [...TEAM_TOOLS, ...publicCninfo].sort())
   for (const name of publicCninfo) assert.ok(!TEAM_TOOLS.includes(name), `${name} must remain available to ordinary DSH Agents`)
 })
