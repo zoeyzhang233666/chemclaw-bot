@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { normalizeCandles, buildCandlestickSpec } from '../src/shared/candlestick.js'
 import { checkShownView, validateView } from '../src/shared/views.js'
-import { advancedChartData, advancedChartOption, advancedChartTable } from '../src/client/chart-options.js'
+import { advancedChartData, advancedChartOption, advancedChartTable, candlestickTooltip } from '../src/client/chart-options.js'
+import { DICTIONARY } from '../src/client/i18n.js'
 
 const bars = count => Array.from({ length: count }, (_, i) => {
   const date = new Date(Date.UTC(2026, 0, 1 + i)).toISOString().slice(0, 10)
@@ -131,7 +132,7 @@ test('native inline chart produces candlestick entities and volume with zoom and
   assert.equal(option.yAxis[0].scale, true)
   assert.equal(option.grid.length, 2)
   assert.equal(advancedChartTable(data, 'Value', 'Series').rows.length, 24)
-  assert.equal(advancedChartTable(data, 'Value', 'Series').columns[1], 'Open')
+  assert.equal(advancedChartTable(data, 'Value', 'Series').columns[1], 'Opening price')
   assert.equal(option.series.length, 5)
   const missingVolume = advancedChartOption(advancedChartData({ ...view, bars: bars(3).map(item => {
     const copy = { ...item }; delete copy.成交量; return copy
@@ -149,4 +150,27 @@ test('native loader and host tool advertise candlestick and no raw ECharts chart
   assert.match(tools, /kind\?: bar\|hbar\|line\|area\|donut\|candlestick/)
   assert.match(policy, /ONE primary inline price visualization/)
   assert.match(policy, /DO NOT also emit HTML/)
+})
+
+test('native candle hover uses localized field names in the model-selected UI language', () => {
+  for (const key of ['OHLC', 'Opening price', 'Closing price', 'Highest price', 'Lowest price', 'Trading volume', 'Trading date'])
+    assert.equal(typeof DICTIONARY.zh[key], 'string')
+  assert.equal(DICTIONARY.zh['Opening price'], '开盘价')
+  assert.equal(DICTIONARY.zh['Highest price'], '最高价')
+  const tooltip = candlestickTooltip([
+    { seriesType: 'candlestick', axisValue: '2026-10-13', data: [93.16, 94.77, 91.70, 95.11] },
+    { seriesType: 'line', seriesName: 'MA5', data: 91.932 },
+    { seriesType: 'bar', seriesName: 'Volume', data: { value: 1000 } },
+  ])
+  assert.match(tooltip, /2026-10-13/)
+  assert.match(tooltip, /Opening price.*93.16/)
+  assert.match(tooltip, /Closing price.*94.77/)
+  assert.match(tooltip, /Highest price.*95.11/)
+  assert.match(tooltip, /Lowest price.*91.7/)
+  assert.match(tooltip, /MA5.*91.932/)
+  assert.match(tooltip, /Trading volume.*1,000/)
+  const bars = bars(7)
+  const theme = { ink: '#222', muted: '#777', line: '#ddd', card: '#fff',
+    colors: ['#bda', '#aac'], up: '#ff0000', down: '#00ff00', font: 'Arial', narrow: false }
+  assert.equal(advancedChartOption(advancedChartData({ type: 'chart', kind: 'candlestick', bars }), theme).tooltip.formatter, candlestickTooltip)
 })
