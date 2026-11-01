@@ -5,7 +5,7 @@
 import { spawnSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { preparePrimaryRuntime, primaryRuntimeManifest, runtimeReusable, runtimeTarget } from '../scripts/prepare-runtime.mjs'
+// Do not import build-time packages here: packaged Electron omits devDependencies.
 
 export async function ensureOfficePreviewRuntime({
   packaged = false,
@@ -13,13 +13,19 @@ export async function ensureOfficePreviewRuntime({
   appDir,
   platform = process.platform,
   arch = process.arch,
-  prepare = preparePrimaryRuntime,
-  reusable = runtimeReusable,
+  prepare,
+  reusable,
   fileExists = existsSync,
   run = spawnSync,
 } = {}) {
   if (packaged || !/^(?:pr-\d+|integration|worktree-[\w.-]+)$/.test(profile || '')) return { status: 'skipped' }
   if (!appDir) throw new Error('Office preview requires the selected application directory')
+  // This JS file is shipped in the EXE, but scripts/ and its build-time npm
+  // dependencies are not. The import must happen only for a source PR preview.
+  const runtime = await import('../scripts/prepare-runtime.mjs')
+  prepare ??= runtime.preparePrimaryRuntime
+  reusable ??= runtime.runtimeReusable
+  const { primaryRuntimeManifest, runtimeTarget } = runtime
   const target = runtimeTarget(platform, arch)
   if (!target) throw new Error('Unsupported Office runtime platform: ' + platform + '/' + arch)
   const pkg = JSON.parse(readFileSync(join(appDir, 'package.json'), 'utf8'))
