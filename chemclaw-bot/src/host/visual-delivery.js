@@ -20,6 +20,7 @@ export function hasInlineGenui(text, native = false) {
 // Only explicit drawing instructions are enforceable. Discussions of a chart
 // problem should not force another rendering attempt.
 const REQUEST_FAMILIES = [
+  ['candlestick', /K[\s-]*线(?:图)?|蜡烛图|candlestick|ohlc/iu],
   ['heatmap', /热力图|heat[\s-]*map/iu],
   ['sankey', /桑基图|sankey/iu],
   ['scatter', /散点图|scatter[\s-]*plot/iu],
@@ -35,7 +36,7 @@ export function requestedChartKinds(text) {
   const requested = new Set()
   for (const clause of String(text ?? '').split(/[，,。！？!?；;\n]/u)) {
     if (/为什么|怎么|如何|是否|能不能|能否|有没有|没有|无法|失败|报错|修复|原因|排查|不显示|不工作|不支持|\b(?:why|error|broken|failed|fail)\b/iu.test(clause)) continue
-    if (!/(?:给我|给出|绘制|生成|画|制作|用|使用|采用|展示|输出|添加|加上|补充|提供|\b(?:show|draw|render|plot|create|generate|include|add|use|make)\b)/iu.test(clause)) continue
+    if (!/(?:给我|给出|绘制|生成|画|制作|用|使用|采用|展示|输出|添加|加上|补充|提供|想看|我要|想要|看一下|\b(?:show|draw|render|plot|create|generate|include|add|use|make)\b)/iu.test(clause)) continue
     for (const [kind, pattern] of REQUEST_FAMILIES) if (pattern.test(clause)) requested.add(kind)
   }
   return [...requested]
@@ -77,7 +78,9 @@ export function missingRequestedKinds(requested, delivered) {
 export function requestedViewReminder(turn, bot, kinds) {
   return VISUAL_NOTICE + ' turn=' + turn + ']\n'
     + 'The user explicitly requested ' + kinds.join(', ') + ', but the successfully delivered views do not include those kinds. '
-    + 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. '
+    + (kinds.includes('candlestick')
+      ? 'For a candlestick use ONLY the installed GenUI dsh-ui echart full-option renderer, with actual verified [open,close,low,high] bars; show_view has no candlestick kind. If earlier research had only close/low or no complete OHLC, do NOT synthesize bars, fetch again or add another line chart: explain in one sentence that the OHLC source is missing and do not claim this UI cannot render candles. Do not send another tool call. '
+      : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
     + (bot ? 'Use show_view for supported ECharts chart kinds, and an inline dsh-ui fence without panel:true for GenUI timelines/diagrams. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
