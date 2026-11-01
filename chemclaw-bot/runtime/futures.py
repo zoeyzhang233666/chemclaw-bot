@@ -54,7 +54,16 @@ def resolve_futures_symbol(args):
     if re.fullmatch(r'[A-Za-z]{1,4}[0-9]{1,6}', raw):
         return raw.upper()
     name = re.sub(r'[\s（）()]+', '', raw.upper())
-    name = re.sub(r'(?:主力连续|连续合约|连续|主力合约|期货价格|期货行情|期货|日K线|日K|价格|行情)$', '', name)
+    name = re.sub(r'(?:最近|近|过去)(?:一个|一|两|三|四|五|六|\d+)(?:月|周|天|日|年)', '', name)
+    name = re.sub(r'^(?:请|查询|查看|给我|国内|大商所|郑商所|上期所)+', '', name)
+    # Strip multiple suffixes, e.g. 液化气期货最近一个月价格 -> 液化气.
+    endings = ('主力连续', '连续合约', '主力合约', '期货价格', '期货行情',
+               '连续', '期货', '日K线', '日K', '价格走势', '价格', '行情', '走势')
+    for _ in range(3):
+        matched = next((ending for ending in endings if name.endswith(ending)), None)
+        if matched is None:
+            break
+        name = name[:-len(matched)]
     if name in DOMESTIC_FUTURES_ALIASES:
         return DOMESTIC_FUTURES_ALIASES[name]
     # Broader official provider catalog: exact unique match only.
