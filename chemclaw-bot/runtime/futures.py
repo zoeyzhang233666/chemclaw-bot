@@ -2,7 +2,10 @@ import datetime
 import json
 import re
 import sys
+import urllib.parse
+import urllib.request
 
+import pandas as pd
 import akshare as ak
 
 CONTRACTS = {
@@ -15,6 +18,82 @@ CONTRACTS = {
     'GC': ('COMEX', 'USD', 'troy ounce'), 'SI': ('COMEX', 'USD', 'troy ounce'),
 }
 
+
+
+def _tencent_stock_daily(symbol, adjust):
+    """Bounded public HTTPS fallback; only parses provider-returned OHLC, never guesses."""
+    ticker = ('sh' if symbol.startswith('6') else 'sz') + symbol
+    param = '{},day,,,90,{}'.format(ticker, '' if adjust == 'none' else adjust)
+    url = 'https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?' + urllib.parse.urlencode({'param': param})
+    request = urllib.request.Request(url, headers={
+        'User-Agent': 'Mozilla/5.0', 'Referer': 'https://finance.qq.com/',
+        'Accept': 'application/json',
+    })
+    with urllib.request.urlopen(request, timeout=9) as response:
+        payload = response.read(450000).decode('utf-8')
+    data = json.loads(payload)
+    node = data.get('data', {}).get(ticker, {})
+    kind = {'none': 'day', 'qfq': 'qfqday', 'hfq': 'hfqday'}[adjust]
+    rows = node.get(kind)
+    if not isinstance(rows, list) or not rows:
+        raise ValueError('Tencent did not supply the requested adjustment series')
+    values = []
+    for row in rows:
+        if not isinstance(row, list) or len(row) < 5:
+            raise ValueError('Tencent OHLC row format is invalid')
+        # Tencent: date, open, close, high, low, optional volume.
+        record = {'date': row[0], 'open': row[1], 'close': row[2], 'high': row[3], 'low': row[4]}
+        if len(row) > 5 and row[5] not in ('', None):
+            record['volume'] = row[5]
+        values.append(record)
+    return pd.DataFrame(values)
+
+
+def _stock_source_frame(symbol, adjust, start_date, end_date):
+    start = start_date.strftime('%Y%m%d')
+    end = end_date.strftime('%Y%m%d')
+    failures = []
+    sources = [
+        ('AKShare / EastMoney', 'stock_zh_a_hist',
+         lambda: ak.stock_zh_a_hist(symbol=symbol, period='daily', start_date=start,
+                                    end_date=end, adjust='' if adjust == 'none' else adjust)),
+        ('AKShare / Sina', 'stock_zh_a_daily',
+         lambda: ak.stock_zh_a_daily(symbol=('sh' if symbol.startswith('6') else 'sz') + symbol,
+                                     start_date=start_date.strftime('%Y-%m-%d'),
+                                     end_date=end_date.strftime('%Y-%m-%d'),
+                                     adjust='' if adjust == 'none' else adjust)),
+        ('Tencent public daily K-line', 'tencent_fqkline',
+         lambda: _tencent_stock_daily(symbol, adjust)),
+    ]
+    for source, interface, obtain in sources:
+        try:
+            frame = obtain()
+            if frame is None or frame.empty:
+                raise ValueError('empty response')
+            frame = frame.rename(columns={
+                '日期': 'date', '开盘': 'open', '最高': 'high',
+                '最低': 'low', '收盘': 'close', '成交量': 'volume',
+            })
+            needed = ['date', 'open', 'high', 'low', 'close']
+            if any(key not in frame.columns for key in needed):
+                raise ValueError('required OHLC fields missing')
+            frame = frame.copy()
+            frame['date'] = frame['date'].astype(str).str.slice(0, 10)
+            for key in ['open', 'high', 'low', 'close']:
+                frame[key] = pd.to_numeric(frame[key], errors='raise')
+            if 'volume' in frame.columns:
+                frame['volume'] = pd.to_numeric(frame['volume'], errors='coerce')
+            frame = frame[(frame['date'] >= str(start_date)) & (frame['date'] <= str(end_date))]
+            if len(frame) < 2:
+                raise ValueError('fewer than two dated bars')
+            frame = frame.sort_values('date').drop_duplicates('date', keep='last')
+            if len(frame) < 2:
+                raise ValueError('fewer than two unique dated bars')
+            return frame, source, interface, failures
+        except Exception as exc:
+            # Expose which provider failed, not raw network errors / local paths.
+            failures.append({'provider': source, 'reason': type(exc).__name__})
+    raise ValueError('A-share daily OHLC unavailable from EastMoney, Sina and Tencent (three bounded provider attempts). Use verifiable public web OHLC or explain the data gap.')
 
 def stock_history(args):
     """Use the same pinned AKShare runtime as chem_futures_history."""
@@ -29,18 +108,9 @@ def stock_history(args):
     start_date = datetime.date.fromisoformat(args['start']) if args.get('start') else end_date - datetime.timedelta(days=65)
     if start_date > end_date or (end_date - start_date).days > 1000:
         raise ValueError('Invalid stock date window; use at most 1000 calendar days')
-    frame = ak.stock_zh_a_hist(
-        symbol=symbol, period='daily', start_date=start_date.strftime('%Y%m%d'),
-        end_date=end_date.strftime('%Y%m%d'),
-        adjust={'none': '', 'qfq': 'qfq', 'hfq': 'hfq'}[adjust],
+    frame, source, interface, previous_failures = _stock_source_frame(
+        symbol, adjust, start_date, end_date
     )
-    required = ['日期', '开盘', '最高', '最低', '收盘']
-    if frame.empty or any(name not in frame.columns for name in required):
-        raise ValueError('A-share daily OHLC data is unavailable from AKShare/EastMoney')
-    frame = frame.rename(columns={
-        '日期': 'date', '开盘': 'open', '最高': 'high',
-        '最低': 'low', '收盘': 'close', '成交量': 'volume',
-    }).sort_values('date')
     columns = ['date', 'open', 'high', 'low', 'close']
     if 'volume' in frame.columns:
         columns.append('volume')
@@ -58,9 +128,12 @@ def stock_history(args):
     last_day = records[-1]['date']
     stale = (today - datetime.date.fromisoformat(last_day)).days > 7
     return {
-        'source': 'AKShare / EastMoney A-share historical daily OHLC',
-        'sourceUrl': 'https://akshare.akfamily.xyz/data/stock/stock.html',
-        'interface': 'stock_zh_a_hist', 'symbol': symbol,
+        'source': source, 'sourceUrl': (
+            'https://web.ifzq.gtimg.cn/appstock/app/fqkline/get'
+            if interface == 'tencent_fqkline' else
+            'https://akshare.akfamily.xyz/data/stock/stock.html'
+        ),
+        'interface': interface, 'previousSourceFailures': previous_failures, 'symbol': symbol,
         'exchange': 'SSE' if symbol.startswith('6') else 'SZSE',
         'currency': 'CNY', 'unit': 'share', 'frequency': 'daily',
         'adjustment': adjust, 'retrievedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -102,5 +175,10 @@ def history(args):
 try:
     args = json.loads(sys.argv[1])
     print(json.dumps(stock_history(args) if args.get('market') == 'stock' else history(args), ensure_ascii=True, allow_nan=False))
+except ValueError as error:
+    # Known parameter/provider failures may be shown. Never reveal traceback paths.
+    print(json.dumps({'status': 'unavailable', 'error': str(error)[:350],
+                      'next': 'Try web_search/web_fetch for verified daily OHLC from another source before concluding data are missing. Do not repeat the failed same-provider query or fabricate bars.'}))
 except Exception:
-    print(json.dumps({'error': 'Market source unavailable, unsupported symbol, invalid dates or changed schema. Retry or import exchange data; no substitute figures generated.'}))
+    print(json.dumps({'status': 'unavailable', 'error': 'A market provider or runtime returned an unexpected error.',
+                      'next': 'Try web_search/web_fetch for independently verifiable historical OHLC, or report the actual data gap without made-up numbers.'}))
