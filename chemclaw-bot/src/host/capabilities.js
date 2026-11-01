@@ -526,7 +526,7 @@ export function install(rt) {
 
   async function capabilityEndpoint(endpoint, body = {}) {
     if (endpoint === 'skill-catalog') { await rt.load(); return { items: libraryView().filter(item => item.kind === 'skill'), revision: state.revision } }
-    if (endpoint === 'native-skill-catalog') return { items: await nativeSkillCatalog() }
+    if (endpoint === 'native-skill-catalog') return { items: await nativeSkillCatalog(ctx.get?.('skills')) }
     if (endpoint === 'skill-reset') {
       await rt.load(); writeCheck()
       const item = own(library(), String(body.name))
