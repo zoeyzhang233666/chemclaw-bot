@@ -216,6 +216,23 @@ console.log(!unresolved.length && missing.length ? 'ChemClaw plugin dependencies
 
 if (argv.includes('--sync-only')) process.exit(0)
 
+// PR-B source previews must be usable through the ordinary CMD picker: prepare
+// their pinned Office Node/Python/skill payload automatically on first launch.
+// Do not change main/PR-A launch behavior, and reuse the verified cache.
+const activeAppScripts = JSON.parse(readFileSync(join(app, 'package.json'), 'utf8')).scripts || {}
+if (typeof activeAppScripts.runtime === 'string') {
+  const runtimeDir = join(app, 'build', 'runtime')
+  const runtimeReady = [
+    join(runtimeDir, 'primary-runtime', 'runtime.json'),
+    join(runtimeDir, 'office-skills', 'office', 'SKILL.md'),
+    join(runtimeDir, 'primary-runtime', 'dependencies', 'node', 'bin', process.platform === 'win32' ? 'node.exe' : 'node'),
+  ].every(existsSync)
+  if (!runtimeReady) {
+    console.log('Preparing Office tools for this PR preview (first launch only; downloaded files are verified and cached).')
+    run(['run', 'runtime'], app)
+  }
+}
+
 mkdirSync(effectiveProfile.workspace, { recursive: true })
 mkdirSync(effectiveProfile.data, { recursive: true })
 mkdirSync(effectiveProfile.shell, { recursive: true })
