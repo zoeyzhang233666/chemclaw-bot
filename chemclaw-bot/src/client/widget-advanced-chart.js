@@ -126,6 +126,7 @@ export const ADVANCED_CHART_CSS = `
 .bt-advanced-chart{width:100%}
 .bt-advanced-plot-wrap{position:relative;min-width:0}
 .bt-advanced-plot{width:100%;height:300px;min-width:0;font-family:inherit}
+.bt-advanced-chart[data-kind="candlestick"] .bt-advanced-plot{height:390px}
 .bt-advanced-plot-wrap[data-table]{position:absolute;inset:0 0 auto;visibility:hidden;pointer-events:none}
 .bt-advanced-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--bt-ink-2)}
 .bt-advanced-status button{padding:0;border:0;background:none;color:var(--bt-accent);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
