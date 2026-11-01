@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { normalizeCandles, buildCandlestickSpec } from '../src/shared/candlestick.js'
+import { checkShownView, validateView } from '../src/shared/views.js'
+import { advancedChartData, advancedChartOption, advancedChartTable } from '../src/client/chart-options.js'
 
 const bars = count => Array.from({ length: count }, (_, i) => {
   const date = new Date(Date.UTC(2026, 0, 1 + i)).toISOString().slice(0, 10)
@@ -98,4 +100,53 @@ test('Bot candlestick route contains source-specific OHLC retrieval and real inl
   assert.match(policy, /open,close,low,high/)
   assert.match(policy, /the terminal cannot render OHLC/)
   assert.match(policy, /20-40/)
+})
+
+test('native show_view accepts only real OHLC bars and rejects misleading close-only or arbitrary options', () => {
+  const view = { type: 'chart', kind: 'candlestick', bars: bars(20), caption: 'AKShare / NYMEX CL / daily', unit: 'USD/barrel' }
+  assert.deepEqual(validateView(view), { ok: true, interactive: false })
+  assert.equal(checkShownView('WTI daily K-line', view).view.kind, 'candlestick')
+  assert.match(validateView({ ...view, bars: bars(1) }).error, /2 to 50/)
+  assert.match(validateView({ ...view, bars: bars(51) }).error, /2 to 50/)
+  assert.match(validateView({ ...view, bars: bars(2).map(x => { const y = { ...x }; delete y.开盘; return y }) }).error, /Invalid open/)
+  assert.match(validateView({ ...view, categories: ['2026-01-01'] }).error, /uses bars only/)
+  assert.match(validateView({ ...view, option: { series: [{ type: 'line' }] } }).error, /unknown property/)
+  assert.match(validateView({ ...view, bars: [{ ...bars(2)[0], script: 'bad' }, bars(2)[1]] }).error, /only date/)
+})
+
+test('native inline chart produces candlestick entities and volume with zoom and accurate OHLC order', () => {
+  const view = { type: 'chart', kind: 'candlestick', bars: bars(24), caption: 'WTI', unit: 'USD/barrel' }
+  const data = advancedChartData(view)
+  const theme = { ink: '#121212', muted: '#777', line: '#ddd', card: '#fff', font: 'Arial', colors: ['#234', '#678'], narrow: false }
+  const option = advancedChartOption(data, theme)
+  assert.equal(option.series[0].type, 'candlestick')
+  assert.deepEqual(option.series[0].data[0], [99, 100, 97, 102])
+  assert.equal(option.series.at(-1).type, 'bar')
+  assert.equal(option.series.at(-1).name, 'Volume')
+  assert.equal(option.series[1].name, 'MA5')
+  assert.equal(option.series[2].name, 'MA10')
+  assert.equal(option.series[3].name, 'MA20')
+  assert.deepEqual(option.dataZoom.map(item => item.type), ['inside', 'slider'])
+  assert.equal(option.tooltip.trigger, 'axis')
+  assert.equal(option.yAxis[0].scale, true)
+  assert.equal(option.grid.length, 2)
+  assert.equal(advancedChartTable(data, 'Value', 'Series').rows.length, 24)
+  assert.equal(advancedChartTable(data, 'Value', 'Series').columns[1], 'Open')
+  assert.equal(option.series.length, 5)
+  const missingVolume = advancedChartOption(advancedChartData({ ...view, bars: bars(3).map(item => {
+    const copy = { ...item }; delete copy.成交量; return copy
+  }) }), theme)
+  assert.equal(missingVolume.grid.length, 1)
+  assert.equal(missingVolume.series.length, 1)
+})
+
+test('native loader and host tool advertise candlestick and no raw ECharts chart options', () => {
+  const engine = readFileSync(new URL('../src/client/chart-engine.js', import.meta.url), 'utf8')
+  const tools = readFileSync(new URL('../src/host/tools.js', import.meta.url), 'utf8')
+  const policy = readFileSync(new URL('../src/host/view-policy.js', import.meta.url), 'utf8')
+  assert.match(engine, /CandlestickChart/)
+  assert.match(engine, /DataZoomSliderComponent/)
+  assert.match(tools, /kind\?: bar\|hbar\|line\|area\|donut\|candlestick/)
+  assert.match(policy, /ONE primary inline price visualization/)
+  assert.match(policy, /DO NOT also emit HTML/)
 })
