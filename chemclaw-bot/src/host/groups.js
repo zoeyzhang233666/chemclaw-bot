@@ -27,6 +27,7 @@ import { escapeRegExp, headOf, splitRef, textOf } from './text.js'
 import { mentionSpans, speakerOf } from '../shared/mentions.js'
 import { GROUP_REF, output } from './tools.js'
 import { stripUnrenderedMixedViewText } from './visual-delivery.js'
+import { marketQuoteIntent } from './market-quote-intent.js'
 import { failureLine } from './turns.js'
 
 const ROOM_LOG_MAX = 60
@@ -348,6 +349,15 @@ export function install(rt) {
     const earlier = lines.filter(line => line.seq < round.startSeq).slice(-ROOM_EARLIER_MAX)
     const current = lines.filter(line => line.seq >= round.startSeq)
     const spokeThisRound = (room.seen[member.id] ?? 0) >= round.startSeq
+    // Reuse the user's actual request, not the latest assistant's chart choice.
+    // For basis overlays show_view is already bundled; HTML/ECharts download and
+    // repeated script rebuilds are not prerequisites for delivery.
+    const latestHumanRequest = [...earlier, ...current].filter(line => line.who === 'User').at(-1)?.text ?? ''
+    const mixedPriceDelivery = marketQuoteIntent(latestHumanRequest) === 'mixed'
+      && !/(?:要求|必须|生成|制作|提供).{0,12}(?:网页|html)/iu.test(latestHumanRequest)
+      ? 'The human requested a spot-versus-futures overlay/basis chart. Once you have verified same-date spot and futures observations, call show_view with audience:user and ONE native stack containing (1) two price lines on identical dates and (2) a basis line (spot minus futures). This UI already has a chart renderer: do not download/copy ECharts, create or repair HTML dashboards, write a build_html.py script, or print UI JSON/dsh-ui fences. Do a bounded MCP spot-history lookup first and a bounded futures-history lookup; if there are no 2 aligned verified dates, explain coverage in a factual table and stop, without manufacturing values or repeatedly chasing files.'
+      : ''
+
     const index = round.slots.findIndex(slot => slot.status === 'speaking')
     const before = index
     const after = round.slots.length - index - 1
@@ -370,6 +380,7 @@ export function install(rt) {
       notice,
       leads ? adminNote(room) : '',
       coordination,
+      mixedPriceDelivery,
       earlier.length ? `Earlier in the group, before this round (context only):\n${transcript(earlier, memberText(room))}` : '',
       current.length
         ? `This round so far${spokeThisRound ? ', since your last message' : ', starting with the new message'} (oldest first):\n${transcript(current, memberText(room))}`
