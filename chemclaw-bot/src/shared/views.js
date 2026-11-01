@@ -1,3 +1,7 @@
+// Never paint a display-only tool view before the host accepts the call.
+// Model arguments may contain a rejected provisional price line.
+export const displayViewReady = (done, isError) => done === true && isError !== true
+
 // View cards: the blueprint a Bot may show, and the answer a user may send back.
 // Pure, so the host can validate a card before it is stored and the client can
 // later render the same blueprint. No component runs model-written code: formulas
