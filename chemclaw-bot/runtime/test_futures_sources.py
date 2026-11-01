@@ -71,7 +71,7 @@ class StockSourceTests(unittest.TestCase):
             'date': '日期', 'open': '开盘', 'high': '最高',
             'low': '最低', 'close': '收盘', 'volume': '成交量',
         })
-        with patch.object(self.ak, 'stock_zh_a_hist', return_value=source, create=True), \\
+        with patch.object(self.ak, 'stock_zh_a_hist', return_value=source, create=True), \
              patch.object(self.ak, 'stock_zh_a_daily', side_effect=AssertionError('unexpected'), create=True):
             result = self.adapter.stock_history(self.params())
         self.assertEqual(result['interface'], 'stock_zh_a_hist')
@@ -79,7 +79,7 @@ class StockSourceTests(unittest.TestCase):
         self.assertEqual(result['data'][1]['high'], 14)
 
     def test_sina_success_after_eastmoney_failure(self):
-        with patch.object(self.ak, 'stock_zh_a_hist', side_effect=self.unavailable, create=True), \\
+        with patch.object(self.ak, 'stock_zh_a_hist', side_effect=self.unavailable, create=True), \
              patch.object(self.ak, 'stock_zh_a_daily', return_value=self.rows(), create=True):
             result = self.adapter.stock_history(self.params())
         self.assertEqual(result['interface'], 'stock_zh_a_daily')
@@ -91,8 +91,8 @@ class StockSourceTests(unittest.TestCase):
             ['2026-10-28', '10', '12', '13', '9', '100'],
             ['2026-10-29', '12', '13', '14', '11', '110'],
         ]}}}
-        with patch.object(self.ak, 'stock_zh_a_hist', side_effect=self.unavailable, create=True), \\
-             patch.object(self.ak, 'stock_zh_a_daily', side_effect=self.unavailable, create=True), \\
+        with patch.object(self.ak, 'stock_zh_a_hist', side_effect=self.unavailable, create=True), \
+             patch.object(self.ak, 'stock_zh_a_daily', side_effect=self.unavailable, create=True), \
              patch.object(self.adapter.urllib.request, 'urlopen', return_value=Response(payload)) as urlopen:
             result = self.adapter.stock_history(self.params())
         self.assertEqual(urlopen.call_count, 1)
@@ -104,8 +104,8 @@ class StockSourceTests(unittest.TestCase):
         self.assertEqual(result['adjustment'], 'none')
 
     def test_all_sources_fail_explains_web_fallback_without_fake_bars(self):
-        with patch.object(self.ak, 'stock_zh_a_hist', side_effect=self.unavailable, create=True), \\
-             patch.object(self.ak, 'stock_zh_a_daily', side_effect=self.unavailable, create=True), \\
+        with patch.object(self.ak, 'stock_zh_a_hist', side_effect=self.unavailable, create=True), \
+             patch.object(self.ak, 'stock_zh_a_daily', side_effect=self.unavailable, create=True), \
              patch.object(self.adapter.urllib.request, 'urlopen', side_effect=TimeoutError('offline')):
             argv = ['futures.py', json.dumps(self.params())]
             out = io.StringIO()
