@@ -65,7 +65,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
           h('details', null, h('summary', null, t('Skill instructions')), h('pre', { className: 'bt-skill-content' }, item.content))),
         h('footer', { className: 'bt-skill-section-head' }, h('details', { className: 'bt-skill-manage' }, h('summary', null, t('Manage skill')),
           h('button', { className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => setEditing(true) }, t('Edit')),
-          item.builtinSource ? h('button', { className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void run(async () => { await actions.resetSkill(item.name); await load(); onChanged() }) }, t('Restore default instructions')) : null,
+          item.builtinSource === 'chemclaw' ? h('button', { className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void run(async () => { await actions.resetSkill(item.name); await load(); onChanged() }) }, t('Restore default instructions')) : null,
           h('button', { className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => setConfirming(true) }, t('Uninstall'))),
           h('button', { className: 'bt-soft bt-skill-primary', disabled: !isUserSkill(item), onClick: () => onUse(item) }, t('Use skill'))),
         !isUserSkill(item) ? h('p', { className: 'bt-set-hint' }, t('The author has disabled manual invocation for this skill.')) : null,
