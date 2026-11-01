@@ -141,7 +141,25 @@ export function install(rt) {
   }
   const observe = (session, event) => {
     const id = String(session.id)
-    if (event.type === 'turn/start') { turns.set(id, fresh(event.data?.turn)); return }
+    if (event.type === 'turn/start') {
+      const previous = turns.get(id)
+      const next = fresh(event.data?.turn)
+      // One human request may have multiple model turns (tools, steering,
+      // continuation). Carry market chart delivery across those turns until the
+      // next *real* user message resets it.
+      if (previous?.marketHistory) {
+        next.marketHistory = previous.marketHistory
+        next.multiAssetMarket = previous.multiAssetMarket
+        next.marketChartNudged = previous.marketChartNudged
+        next.marketChartCommitted = previous.marketChartCommitted
+        next.marketOhlcStatus = previous.marketOhlcStatus
+        next.textOnly = previous.textOnly
+        next.visual = previous.visual
+        next.kinds = new Set(previous.kinds)
+      }
+      turns.set(id, next)
+      return
+    }
     const entry = stateOf(id)
     if (event.type === 'tool/call' && event.data?.name === 'show_view') entry.calls.set(event.data.callId, event.data.args?.view ?? event.data.input?.view)
     if (event.type === 'tool/result') {
@@ -160,7 +178,18 @@ export function install(rt) {
       const source = event.data?.source
       const text = textOf(event.data?.content)
       if (source?.form === 'notice' && text.startsWith(VISUAL_NOTICE)) { entry.reminded = true; return }
-      if (source?.kind === 'user') { entry.human = true; entry.textOnly = textOnlyRequested(text); entry.marketHistory = marketHistoryRequest(text); entry.multiAssetMarket = multiAssetMarketRequest(text); entry.requested = new Set(requestedChartKinds(text)) }
+      if (source?.kind === 'user') {
+        entry.human = true
+        entry.textOnly = textOnlyRequested(text)
+        entry.marketHistory = marketHistoryRequest(text)
+        entry.multiAssetMarket = multiAssetMarketRequest(text)
+        entry.marketChartNudged = false
+        entry.marketChartCommitted = false
+        entry.marketOhlcStatus = 'untried'
+        entry.visual = false
+        entry.kinds = new Set()
+        entry.requested = new Set(requestedChartKinds(text))
+      }
       else if (source?.kind === 'schedule' || source?.audience === 'user') entry.human = true
       else if (source?.kind === 'bot' && source.role === 'room' && !source.askedBy) {
         const current = text.split(/This round so far[^\n]*:\n/u)[1]?.split('\n\n')[0] ?? ''
