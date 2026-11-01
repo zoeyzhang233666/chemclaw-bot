@@ -8,6 +8,7 @@ import { spawnSync } from 'node:child_process'
 import { dirname, isAbsolute, join, sep } from 'node:path'
 import { isSea } from 'node:sea'
 import { fileURLToPath } from 'node:url'
+import { defineTool } from '@deepseek-ai/dsh-tools'
 
 const PROVIDER = 'chemclaw-office'
 const RANK = { office: 550, 'office-tools': 600 }
@@ -92,6 +93,52 @@ export function officeProvider() {
   }
 }
 
+
+/** A read-only real environment check; installed packages alone do not prove
+ * DSH mounted their services, and system Python is not the Office payload. */
+export function officeEnvironmentStatus(env = process.env, run = spawnSync) {
+  const runtimeDir = env.CHEMCLAW_OFFICE_RUNTIME_DIR
+  const root = runtimeDir && join(runtimeDir, 'primary-runtime')
+  const win = process.platform === 'win32'
+  const node = root && join(root, 'dependencies', 'node', 'bin', win ? 'node.exe' : 'node')
+  const python = root && join(root, 'dependencies', 'python', ...(win ? ['python.exe'] : ['bin', 'python3']))
+  const manifest = root && join(root, 'runtime.json')
+  const officeAsset = runtimeDir && join(runtimeDir, 'office-skills', 'office', 'SKILL.md')
+  const overlay = env.DSH_HOME && join(env.DSH_HOME, 'profiles', 'office.patch.yml')
+  const exists = p => Boolean(p && existsSync(p))
+  let pythonImports
+  if (exists(python)) {
+    try {
+      const result = run(python, ['-I', '-B', '-c', 'import docx, pptx, openpyxl; print("OK")'], {
+        encoding: 'utf8', windowsHide: true, timeout: 20000,
+      })
+      pythonImports = { ok: result.status === 0 && String(result.stdout).includes('OK'),
+        exitCode: result.status, error: String(result.stderr || result.error?.message || '').slice(0, 1500) }
+    } catch (error) { pythonImports = { ok: false, error: String(error.message || error) } }
+  }
+  const found = {
+    runtimeDir: runtimeDir || null,
+    manifest: { path: manifest || null, exists: exists(manifest) },
+    officeAsset: { path: officeAsset || null, exists: exists(officeAsset) },
+    node: { path: node || null, exists: exists(node) },
+    python: { path: python || null, exists: exists(python), imports: pythonImports || null },
+    overlay: { path: overlay || null, exists: exists(overlay) },
+    hostOfficeNode: env.CHEMCLAW_OFFICE_NODE || null,
+    nativeToolRegistration: 'Unknown from disk inspection: must actually invoke load_workspace_dependencies.',
+  }
+  found.payloadComplete = found.manifest.exists && found.officeAsset.exists
+    && found.node.exists && found.python.exists && pythonImports?.ok === true
+  return found
+}
+
 export function install(rt) {
   rt.ctx.inject?.({ skills: null }, ctx => ctx.skills.registerProvider(() => officeProvider()))
+  rt.ctx.tools?.register?.(defineTool({
+    name: 'chem_office_runtime_status',
+    description: 'Read-only diagnostics of ChemClaw bundled Office runtime and DSH overlay, including a real Python module import test; does not install packages or change permissions.',
+    parameters: {},
+    output: { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: value }] },
+    execute: async () => JSON.stringify(officeEnvironmentStatus()),
+  }))
 }
+
