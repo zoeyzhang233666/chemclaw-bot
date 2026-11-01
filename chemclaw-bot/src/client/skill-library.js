@@ -32,7 +32,7 @@ function SkillDetail({ summary, roster, actions, onClose, onUse, onChanged }) {
         h('div', null, h('span', { className: 'bt-skill-badge' }, t(skillCategory(summary))), h('h3', null, skillLabel(summary, language())))),
       h('button', { className: 'bt-soft bt-soft-sm', onClick: onClose }, t('Close'))),
     h('p', { className: 'bt-skill-purpose' }, summary.purpose || summary.description),
-    h('p', { className: 'bt-set-hint' }, '此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。'),
+    h('p', { className: 'bt-set-hint' }, summary.userInstalled ? '此技能来自用户的 DSH 技能目录，可在原目录中管理；此处只读。' : '此技能由 ChemClaw / DSH 内置提供，不需要另外安装，也不会出现在「我的安装」中。'),
     h('p', { className: 'bt-set-hint' }, '在对话中可以通过技能菜单选择，或输入：', h('code', null, '/' + summary.name)),
     h('details', { className: 'bt-advanced' }, h('summary', null, t('Technical details and files')),
       h('dl', { className: 'bt-skill-facts' }, [['Technical ID', summary.name], ['Source', summary.builtinSource]].map(([key, value]) => h('div', { key }, h('dt', null, t(key)), h('dd', null, value))))))
