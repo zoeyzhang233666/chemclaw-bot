@@ -117,7 +117,7 @@ test('native show_view accepts only real OHLC bars and rejects misleading close-
 test('native inline chart produces candlestick entities and volume with zoom and accurate OHLC order', () => {
   const view = { type: 'chart', kind: 'candlestick', bars: bars(24), caption: 'WTI', unit: 'USD/barrel' }
   const data = advancedChartData(view)
-  const theme = { ink: '#121212', muted: '#777', line: '#ddd', card: '#fff', font: 'Arial', colors: ['#234', '#678'], narrow: false }
+  const theme = { ink: '#121212', muted: '#777', line: '#ddd', card: '#fff', font: 'Arial', colors: ['#234', '#678'], up: '#aa5544', down: '#33aa77', narrow: false }
   const option = advancedChartOption(data, theme)
   assert.equal(option.series[0].type, 'candlestick')
   assert.deepEqual(option.series[0].data[0], [99, 100, 97, 102])
