@@ -19,9 +19,10 @@ export const OFFICE_PATCH_NAME = 'office.patch.yml'
 export function officeRuntime(runtimeDir) {
   const source = join(runtimeDir, 'primary-runtime')
   const node = join(source, 'dependencies', 'node', 'bin', process.platform === 'win32' ? 'node.exe' : 'node')
+  const python = join(source, 'dependencies', 'python', ...(process.platform === 'win32' ? ['python.exe'] : ['bin', 'python3']))
   // The skill plugin reads its SKILL.md files at boot: an incomplete payload must fall back
   // to no overlay rather than stop the Host from starting.
-  if (!existsSync(join(source, 'runtime.json')) || !existsSync(node)
+  if (!existsSync(join(source, 'runtime.json')) || !existsSync(node) || !existsSync(python)
     || !existsSync(join(runtimeDir, 'office-skills', 'office', 'SKILL.md'))) return undefined
   return { source, node }
 }
