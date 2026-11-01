@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest } from '../src/host/visual-delivery.js'
+import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
 
 const content = text => [{ type: 'text', text }]
@@ -337,4 +337,49 @@ test('ordinary price history refuses a premature line once, then permits honest 
   f.start(4)
   f.user('华东甲醇现货近一个月价格')
   assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false, 'spot chemicals are not OHLC markets')
+})
+
+test('public OHLC requests do not require a user decision on data sources', () => {
+  assert.equal(redundantMarketSourceQuestion('我这边没有股票行情接口，你想让我怎么查中石油股价？', [
+    { label: '用网页搜索查询最近一个月股价' },
+    { label: '查公告' },
+    { label: '不用了' },
+  ]), true)
+  assert.equal(redundantMarketSourceQuestion('没有行情接口，要用什么获取股票价格？', [
+    { label: '用 akshare' }, { label: '用网页' },
+  ]), true)
+  assert.equal(redundantMarketSourceQuestion('你想查哪只股票的价格？', [
+    { label: '601857 中国石油' }, { label: '0857 中国石油' },
+  ]), false, 'a genuine exchange/listing ambiguity is permitted')
+  assert.equal(redundantMarketSourceQuestion('需要前复权还是不复权的历史数据？', [
+    { label: '前复权' }, { label: '不复权' },
+  ]), false)
+})
+
+test('a historical market turn accepts at most one price view, and resets on a new turn', () => {
+  const f = setup()
+  f.start(); f.user('WTI 原油期货最近一个月价格')
+  assert.equal(f.rt.marketHistoryOf('s'), true)
+  const metric = { type: 'metric', label: 'Last', value: 42 }
+  const line = { type: 'chart', kind: 'line', categories: ['1', '2'], series: [{ values: [1, 2] }] }
+  const candles = { type: 'chart', kind: 'candlestick', bars: [
+    { date: '2026-10-29', open: 1, high: 3, low: 1, close: 2 },
+    { date: '2026-10-30', open: 2, high: 4, low: 1, close: 3 },
+  ] }
+  assert.equal(marketPriceVisual(metric), false)
+  assert.equal(marketPriceVisual(line), true)
+  assert.equal(marketPriceVisual({ type: 'row', children: [metric, candles] }), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+  f.rt.noteVisualDelivery('s', metric)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false, 'indicators do not consume price chart slot')
+  f.rt.noteVisualDelivery('s', candles)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', candles), true)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', metric), false)
+  assert.equal(f.rt.deferMarketHistoryLineOnce('s'), false)
+  f.start(2); f.user('华东甲醇近一个月现货价')
+  assert.equal(f.rt.marketHistoryOf('s'), false)
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', line), false)
+  f.start(3); f.user('中石油最近一个月股价')
+  assert.equal(f.rt.marketPriceViewAlreadyCommitted('s', candles), false, 'new turn resets duplicate protection')
 })
