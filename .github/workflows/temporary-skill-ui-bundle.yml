@@ -1,4 +1,5 @@
 name: Temporary skill UI bundle regeneration
+# One-shot feature-branch build after syntax review
 on:
   push:
     branches:
