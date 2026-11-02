@@ -93,6 +93,36 @@ export function checkOfficeFiles(resources, {
     cmd(node, [converter, 'convert', '--input', join(work, 'test.pptx'), '--output', join(work, 'preview.pdf')])
     const pdf = readFileSync(join(work, 'preview.pdf'))
     assert.ok(pdf.length > 1000 && pdf.subarray(0, 5).toString() === '%PDF-', 'Bundled Office converter did not render a real PDF')
+    // The sidebar invokes the Host's JS API, not the standalone CLI. Run that
+    // same API from the packaged Electron Node executable, rooted in app.asar.
+    // A missing JS dependency or worker failure must block the installer even
+    // when the independently staged CLI succeeds.
+    if (platform === 'win32') {
+      const electron = join(dirname(resources), 'ChemClaw.exe')
+      const program = String.raw`const { createRequire } = require('node:module');
+const { pathToFileURL } = require('node:url');
+const path = require('node:path');
+(async () => {
+  const app = createRequire(path.join(process.argv[1], 'package.json'));
+  const kit = await import(pathToFileURL(app.resolve('@deepseek-ai/libreoffice-kit')).href);
+  const converter = await kit.createConverter();
+  try {
+    await converter.render({ inputPath: process.argv[2], outputPath: process.argv[3] });
+    console.log('PACKED_HOST_OFFICE_OK ' + converter.backend);
+  } finally { await converter.dispose(); }
+})().catch(e => { console.error('PACKED_HOST_OFFICE_FAILED', e.stack || e, e.cause); process.exitCode = 1 })`
+      const embedded = run(electron, ['-e', program, join(resources, 'app.asar'), join(work, 'test.pptx'), join(work, 'host-preview.pdf')], {
+        encoding: 'utf8', windowsHide: true, timeout: 120_000,
+        env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', PYTHONPATH: '', PYTHONHOME: '', NODE_PATH: '' },
+      })
+      if (embedded.error || embedded.status !== 0) {
+        throw new Error('Packaged Electron Host Office converter failed: ' +
+          String(embedded.stderr || embedded.stdout || embedded.error?.message).slice(0, 5000))
+      }
+      const hostPdf = readFileSync(join(work, 'host-preview.pdf'))
+      assert.ok(hostPdf.length > 1000 && hostPdf.subarray(0, 5).toString() === '%PDF-', 'The packaged Host did not render a PDF')
+      console.log(String(embedded.stdout).trim())
+    }
     for (const file of ['test.docx', 'test.pptx', 'test.xlsx']) {
       const result = JSON.parse(cmd(node, [cli, 'check', join(work, file), '--json']))
       assert.equal(result.ok, true, 'OOXML check ' + file + ': ' + JSON.stringify(result))
