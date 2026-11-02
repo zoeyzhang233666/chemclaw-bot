@@ -277,8 +277,16 @@ jobs:
           expected="${{ matrix.arch }}"
           if [ "$expected" = x64 ]; then expected=x86_64; fi
           file -b "$exe" | grep -F "$expected"
-          node scripts/check-packed.mjs "$exe"
+          node scripts/check-packed.mjs "$exe" "$RUNNER_TEMP/chemclaw-mac-ui/screen" --mac-ui
           node scripts/check-update.mjs "$exe" 99.0.0
+      - name: Save macOS UI screenshots (including failures)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos-ui-${{ matrix.arch }}
+          path: ${{ runner.temp }}/chemclaw-mac-ui/*.png
+          retention-days: 7
+          if-no-files-found: warn
       - name: Compare ZIP compression
         if: github.event_name == 'workflow_dispatch' && inputs.dry_run && inputs.benchmark_mac_zip
         run: |
