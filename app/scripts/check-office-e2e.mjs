@@ -50,6 +50,7 @@ function paths(resources, platform) {
     node: join(base, 'node', 'bin', platform === 'win32' ? 'node.exe' : 'node'),
     python: join(base, 'python', ...(platform === 'win32' ? ['python.exe'] : ['bin', 'python3'])),
     cli: join(resources, 'app.asar.unpacked', 'node_modules', 'chemclaw-bot', 'office.js'),
+    converter: join(resources, 'office-converter', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js'),
   }
 }
 
@@ -59,8 +60,8 @@ export function checkOfficeFiles(resources, {
   makeTemp = () => mkdtempSync(join(tmpdir(), 'chemclaw-installed-office-')),
   cleanup = root => rmSync(root, { recursive: true, force: true }),
 } = {}) {
-  const { node, python, cli } = paths(resources, platform)
-  for (const file of [node, python, cli]) {
+  const { node, python, cli, converter } = paths(resources, platform)
+  for (const file of [node, python, cli, converter]) {
     if (!existsSync(file)) throw new Error('Installed Office payload missing ' + file)
   }
   const work = makeTemp()
@@ -86,12 +87,18 @@ export function checkOfficeFiles(resources, {
     inspect('pptx', 'inventory', 'test.pptx')
     const excel = inspect('xlsx', 'inventory', 'test.xlsx')
     assert.equal(excel.sheets?.[0]?.formulas, 1)
+    // Exercise the exact standalone CLI used by Office skills and the right
+    // sidebar conversion chain. A working Python and Office inventory alone
+    // cannot prove libreoffice-kit's JS packages and native engine are shipped.
+    cmd(node, [converter, 'convert', '--input', join(work, 'test.pptx'), '--output', join(work, 'preview.pdf')])
+    const pdf = readFileSync(join(work, 'preview.pdf'))
+    assert.ok(pdf.length > 1000 && pdf.subarray(0, 5).toString() === '%PDF-', 'Bundled Office converter did not render a real PDF')
     for (const file of ['test.docx', 'test.pptx', 'test.xlsx']) {
       const result = JSON.parse(cmd(node, [cli, 'check', join(work, file), '--json']))
       assert.equal(result.ok, true, 'OOXML check ' + file + ': ' + JSON.stringify(result))
       assert.deepEqual(result.data.findings, [], 'OOXML findings in ' + file)
     }
-    console.log('office-e2e: standalone packaged Python created DOCX/PPTX/XLSX; bundled Node Office CLI read, inventoried, checked each; Excel formula retained')
+    console.log('office-e2e: bundled Node/Python/Office CLI created and validated DOCX/PPTX/XLSX; standalone LibreOffice Kit converted a PPTX into a real PDF')
     return { ok: true, paths: { node, python, cli }, files: 3 }
   } finally { cleanup(work) }
 }
