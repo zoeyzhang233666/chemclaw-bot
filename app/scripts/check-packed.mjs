@@ -389,12 +389,49 @@ async function chat(cdp) {
   console.log('check-packed: preset welcome visible with no synthetic chat message')
   if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only')) {
     const wantXlsx = process.argv.includes('--xlsx-preview-only')
-    const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
-    const formats = wantXlsx ? ['xlsx'] : ['pptx']
-    const [file] = await deliver({ title: wantXlsx ? 'Excel预览隔离验收' : 'PPT预览隔离验收', filename: wantXlsx ? 'excel-preview-sample' : '中文演示 sample', summary: '合成验收内容，不是业务数据', sections: [
-      { title: '合成数据', table: { columns: ['日期', '测试数值'], rows: [['2026-10-25', 100], ['2026-10-26', 102]] } },
-    ] }, join(work, 'workspace'), formats)
+    // Use only interpreters and libraries SHIPPED with the app. Importing the
+    // source-tree deliver.mjs here hides preview regressions behind missing
+    // development dependencies such as exceljs on clean GitHub runners.
+    const resources = source ? join(root, 'build', 'runtime')
+      : process.platform === 'darwin' ? resolve(dirname(executable), '..', 'Resources')
+        : join(dirname(executable), 'resources')
+    const python = join(resources, 'primary-runtime', 'dependencies', 'python',
+      ...(process.platform === 'win32' ? ['python.exe'] : ['bin', 'python3']))
+    const file = join(work, 'workspace', wantXlsx ? 'excel-preview-sample.xlsx' : '中文演示 sample.pptx')
+    const pythonFixture = wantXlsx
+      ? `from openpyxl import Workbook
+import sys
+book = Workbook()
+sheet = book.active
+sheet.title = "合成数据"
+sheet.append(["日期", "测试数值"])
+sheet.append(["2026-10-25", 100])
+sheet.append(["2026-10-26", 102])
+book.save(sys.argv[1])`
+      : `from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE
+from pptx.util import Inches
+import sys
+deck = Presentation()
+first = deck.slides.add_slide(deck.slide_layouts[5])
+first.shapes.title.text = "ChemClaw PPT 侧栏预览测试"
+second = deck.slides.add_slide(deck.slide_layouts[5])
+second.shapes.title.text = "合成行情测试"
+data = CategoryChartData()
+data.categories = ["10-25", "10-26"]
+data.add_series("测试数值", [100, 102])
+second.shapes.add_chart(XL_CHART_TYPE.LINE, Inches(1), Inches(1.5), Inches(8), Inches(4), data)
+deck.save(sys.argv[1])`
+    const generated = spawnSync(python, ['-I', '-B', '-c', pythonFixture, file], {
+      encoding: 'utf8', timeout: 120_000, windowsHide: true,
+      env: { ...process.env, PYTHONPATH: '', PYTHONHOME: '', PYTHONNOUSERSITE: '1' },
+    })
+    if (generated.error || generated.status !== 0) throw new Error(
+      'The bundled Python could not create the Office sidebar fixture: ' +
+      String(generated.stderr || generated.error?.message || generated.stdout).slice(0, 1800))
     const original = readFileSync(file)
+    console.log('check-packed: created an Office preview fixture using bundled Python, without source dependencies')
     await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
     await cdp.call('Input.insertText', { text: `交付 ${file}` })
     await sleep(150)
