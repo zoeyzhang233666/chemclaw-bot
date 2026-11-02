@@ -73,3 +73,7 @@ export function stageOfficeConverter(output, {
   console.log('office-converter: staged ' + visited.size + ' packages including ' + engineName)
   return { cli: officeConverterCli(resolve(output)), packages: [...visited], engineName }
 }
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  stageOfficeConverter(join(appDir, 'build', 'runtime'))
+}
