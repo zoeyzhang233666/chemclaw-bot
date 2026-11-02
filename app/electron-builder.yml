@@ -31,8 +31,10 @@ extraResources:
     to: primary-runtime
   - from: build/runtime/office-skills
     to: office-skills
-  - from: build/runtime/office-converter
-    to: office-converter
+  # electron-builder ignores node_modules at the root of an extraResources FileSet.
+  # Copy its CONTENTS so npm's full dependency tree lands at the expected path.
+  - from: build/runtime/office-converter/node_modules
+    to: office-converter/node_modules
 # node-pty, sharp and koffi ship prebuilt binaries for each platform. A rebuild would compile
 # node-pty from source and needs a C++ toolchain.
 npmRebuild: false
