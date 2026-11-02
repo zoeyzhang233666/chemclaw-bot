@@ -243,6 +243,16 @@ jobs:
           if (Find-Entry 'HKCU:') { throw 'The uninstaller left its uninstall entry' }
           foreach ($file in $kept) { if (-not (Test-Path $file)) { throw "The uninstaller removed $file" } }
 
+      # Make the already-tested installer available for two-machine user acceptance
+      # without merging this PR or publishing a GitHub Release.
+      - name: Upload validated Windows installer for manual PPT preview testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChemClaw-v0.3.0-PR109-Windows-Test
+          path: app/dist-pack/ChemClaw-0.3.0-win-x64.exe
+          retention-days: 7
+          if-no-files-found: error
+
   app-package-macos:
     name: Desktop app package (macOS ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
