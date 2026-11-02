@@ -8,6 +8,7 @@ import { existsSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { stringify } from 'yaml'
+import { officeConverterCli } from '../scripts/stage-office-converter.mjs'
 
 export const OFFICE_PATCH_NAME = 'office.patch.yml'
 
@@ -24,12 +25,16 @@ export function officeRuntime(runtimeDir) {
   // to no overlay rather than stop the Host from starting.
   if (!existsSync(join(source, 'runtime.json')) || !existsSync(node) || !existsSync(python)
     || !existsSync(join(runtimeDir, 'office-skills', 'office', 'SKILL.md'))) return undefined
+  if (!existsSync(officeConverterCli(runtimeDir))) return undefined
   return { source, node }
 }
 
 // The payload's Node is a plain interpreter: it cannot read through the asar archive, so the
 // CLI must come from the unpacked tree electron-builder writes beside it.
-export function officeCli(manifest = fileURLToPath(import.meta.resolve('@deepseek-ai/libreoffice-kit/package.json'))) {
+export function officeCli(manifest = fileURLToPath(import.meta.resolve('@deepseek-ai/libreoffice-kit/package.json')), runtimeDir) {
+  // Ordinary Node cannot resolve modules stored inside an Electron asar. Its
+  // external Office skill CLI must point to the complete standalone bundle.
+  if (runtimeDir) return officeConverterCli(runtimeDir)
   return join(dirname(manifest).replace(`${sep}app.asar${sep}`, `${sep}app.asar.unpacked${sep}`), 'lib', 'cli.js')
 }
 
@@ -51,7 +56,7 @@ export function reconcileOfficeRuntime(profile, runtimeDir = process.env.CHEMCLA
   }
   writeFileSync(file, stringify([{ insert: [
     { id: 'workspace-dependencies', name: '@deepseek-ai/dsh-tool-workspace-dependencies', config: { source: runtime.source } },
-    { id: 'skill-office', name: '@deepseek-ai/dsh-skill-office', config: { assetRoot: join(runtimeDir, 'office-skills'), node: runtime.node, cli: officeCli() } },
+    { id: 'skill-office', name: '@deepseek-ai/dsh-skill-office', config: { assetRoot: join(runtimeDir, 'office-skills'), node: runtime.node, cli: officeCli(undefined, runtimeDir) } },
   ] }]), 'utf8')
   return { patchFiles: [file], node: runtime.node }
 }
