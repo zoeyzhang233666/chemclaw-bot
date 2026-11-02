@@ -290,11 +290,19 @@ async function chat(cdp) {
   const catalog = await evaluate("fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'scenario-catalog', payload: {} }) }).then(r => r.json()).then(r => r.value)")
   if (catalog.roles.length !== 50 || catalog.groups.length !== 15) throw new Error('Incomplete scenario catalog')
   if (!source) {
+    const manifestVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
+    const pluginVersion = JSON.parse(readFileSync(join(root, '../chemclaw-bot/package.json'), 'utf8')).version
+    // The Windows update check builds a synthetic next app version with electron-builder metadata;
+    // its bundled ChemClaw plugin deliberately keeps the release version being tested.
+    const expectedVersion = process.env.NEXT_VERSION || manifestVersion
+    if (!process.env.NEXT_VERSION && manifestVersion !== pluginVersion) throw new Error('Desktop and plugin release versions do not match')
     await until('window.dsBotApp?.updates', 'the desktop update bridge')
     const status = await evaluate('window.dsBotApp.updates.check()')
     if (!status.enabled || !status.checkedAt || status.phase === 'failed') throw new Error('The packaged app did not check its isolated update feed')
+    if (status.current !== expectedVersion) throw new Error(`The packaged app version is ${status.current}, expected ${expectedVersion}`)
     await openSettings()
     await evaluate("[...document.querySelectorAll('.bt-settings-item')].find(node => /^(关于 ChemClaw|About ChemClaw)$/.test(node.textContent.trim())).click()")
+    await until(`document.querySelector('.bt-about-version')?.textContent?.includes(${JSON.stringify(pluginVersion)})`, 'About shows the packaged ChemClaw plugin version')
     const checkButton = "[...document.querySelectorAll('.bt-settings-page button')].find(node => /^(检查更新|Check for updates)$/.test(node.textContent.trim()))"
     await until(`${checkButton} && !${checkButton}.disabled`, 'the enabled app update button')
     const before = updateRequests
