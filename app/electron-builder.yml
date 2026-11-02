@@ -18,6 +18,10 @@ files:
 asarUnpack:
   - node_modules/pnpm/**
   - node_modules/@deepseek-ai/libreoffice-kit/**
+  # The Office-to-PDF Host uses the same native engine through Electron/asar.
+  - node_modules/@deepseek-ai/libreoffice-kit-win32-*/**
+  - node_modules/@deepseek-ai/libreoffice-kit-darwin-*/**
+  - node_modules/@deepseek-ai/libreoffice-kit-wasm/**
   - node_modules/chemclaw-bot/office.js
   # Keep versioned libvips libraries beside the native sharp module.
   - node_modules/@img/sharp*/**
@@ -27,6 +31,8 @@ extraResources:
     to: primary-runtime
   - from: build/runtime/office-skills
     to: office-skills
+  - from: build/runtime/office-converter
+    to: office-converter
 # node-pty, sharp and koffi ship prebuilt binaries for each platform. A rebuild would compile
 # node-pty from source and needs a C++ toolchain.
 npmRebuild: false
