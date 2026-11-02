@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { fileURLToPath } from 'node:url'
 
 const PYTHON_CREATE = String.raw`from pathlib import Path
@@ -50,6 +51,7 @@ function paths(resources, platform) {
     node: join(base, 'node', 'bin', platform === 'win32' ? 'node.exe' : 'node'),
     python: join(base, 'python', ...(platform === 'win32' ? ['python.exe'] : ['bin', 'python3'])),
     cli: join(resources, 'app.asar.unpacked', 'node_modules', 'chemclaw-bot', 'office.js'),
+    converter: join(resources, 'office-converter', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js'),
   }
 }
 
@@ -59,8 +61,8 @@ export function checkOfficeFiles(resources, {
   makeTemp = () => mkdtempSync(join(tmpdir(), 'chemclaw-installed-office-')),
   cleanup = root => rmSync(root, { recursive: true, force: true }),
 } = {}) {
-  const { node, python, cli } = paths(resources, platform)
-  for (const file of [node, python, cli]) {
+  const { node, python, cli, converter } = paths(resources, platform)
+  for (const file of [node, python, cli, converter]) {
     if (!existsSync(file)) throw new Error('Installed Office payload missing ' + file)
   }
   const work = makeTemp()
@@ -86,12 +88,55 @@ export function checkOfficeFiles(resources, {
     inspect('pptx', 'inventory', 'test.pptx')
     const excel = inspect('xlsx', 'inventory', 'test.xlsx')
     assert.equal(excel.sheets?.[0]?.formulas, 1)
+    // Exercise the exact standalone CLI used by Office skills and the right
+    // sidebar conversion chain. A working Python and Office inventory alone
+    // cannot prove libreoffice-kit's JS packages and native engine are shipped.
+    cmd(node, [converter, 'convert', '--input', join(work, 'test.pptx'), '--output', join(work, 'preview.pdf')])
+    const pdf = readFileSync(join(work, 'preview.pdf'))
+    assert.ok(pdf.length > 1000 && pdf.subarray(0, 5).toString() === '%PDF-', 'Bundled Office converter did not render a real PDF')
+    // The sidebar invokes the Host's JS API, not the standalone CLI. Run that
+    // same API from the packaged Electron Node executable, rooted in app.asar.
+    // A missing JS dependency or worker failure must block the installer even
+    // when the independently staged CLI succeeds.
+    if (platform === 'win32') {
+      const electron = join(dirname(resources), 'ChemClaw.exe')
+      const program = String.raw`const { createRequire } = require('node:module');
+const { pathToFileURL } = require('node:url');
+const path = require('node:path');
+(async () => {
+  const loader = await import(pathToFileURL(path.join(process.argv[1], 'src', 'office-kit-loader.mjs')).href);
+  const physical = loader.officeKitResolveHook(path.dirname(process.argv[1]))(
+    '@deepseek-ai/libreoffice-kit',
+    { parentURL: pathToFileURL(path.join(process.argv[1], 'node_modules', '@deepseek-ai', 'dsh-office-to-pdf', 'lib', 'index.js')).href },
+    () => { throw Error('DSH provider did not use the physical kit'); }
+  );
+  const kit = await import(physical.url);
+  const converter = await kit.createConverter();
+  try {
+    await converter.render({ inputPath: process.argv[2], outputPath: process.argv[3] });
+    console.log('PACKED_HOST_OFFICE_OK ' + converter.backend);
+  } finally { await converter.dispose(); }
+})().catch(e => { console.error('PACKED_HOST_OFFICE_FAILED', e.stack || e, e.cause); process.exitCode = 1 })`
+      const embedded = run(electron, ['--import', pathToFileURL(join(resources, 'app.asar', 'src', 'office-kit-loader.mjs')).href,
+        '-e', program, join(resources, 'app.asar'), join(work, 'test.pptx'), join(work, 'host-preview.pdf')], {
+        encoding: 'utf8', windowsHide: true, timeout: 120_000,
+        env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', CHEMCLAW_OFFICE_RUNTIME_DIR: resources,
+          PYTHONPATH: '', PYTHONHOME: '', NODE_PATH: '' },
+      })
+      if (embedded.error || embedded.status !== 0) {
+        throw new Error('Packaged Electron Host Office converter failed: ' +
+          String(embedded.stderr || embedded.stdout || embedded.error?.message).slice(0, 5000))
+      }
+      const hostPdf = readFileSync(join(work, 'host-preview.pdf'))
+      assert.ok(hostPdf.length > 1000 && hostPdf.subarray(0, 5).toString() === '%PDF-', 'The packaged Host did not render a PDF')
+      console.log(String(embedded.stdout).trim())
+    }
     for (const file of ['test.docx', 'test.pptx', 'test.xlsx']) {
       const result = JSON.parse(cmd(node, [cli, 'check', join(work, file), '--json']))
       assert.equal(result.ok, true, 'OOXML check ' + file + ': ' + JSON.stringify(result))
       assert.deepEqual(result.data.findings, [], 'OOXML findings in ' + file)
     }
-    console.log('office-e2e: standalone packaged Python created DOCX/PPTX/XLSX; bundled Node Office CLI read, inventoried, checked each; Excel formula retained')
+    console.log('office-e2e: bundled Node/Python/Office CLI created and validated DOCX/PPTX/XLSX; standalone LibreOffice Kit converted a PPTX into a real PDF')
     return { ok: true, paths: { node, python, cli }, files: 3 }
   } finally { cleanup(work) }
 }

@@ -14,6 +14,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 import { copyPrimaryRuntime, parsePrimaryRuntime, workspaceDependencyPaths } from '@deepseek-ai/dsh-tool-workspace-dependencies'
+import { stageOfficeConverter } from './stage-office-converter.mjs'
 import extractZip from 'extract-zip'
 import Papa from 'papaparse'
 import { x as extractTar } from 'tar'
@@ -255,6 +256,9 @@ export async function preparePrimaryRuntime(options) {
   }
   const assets = options.skillSource ?? join(dirname(fileURLToPath(import.meta.resolve('@deepseek-ai/dsh-skill-office/package.json'))), 'assets')
   await prepareOfficeSkillAssets(assets, join(paths.runtime, 'office-skills'))
+  // This Node runtime cannot load modules from Electron's app.asar. Ship the
+  // native/WASM converter and all its dependencies in ordinary resources.
+  stageOfficeConverter(paths.runtime)
 }
 
 /**
