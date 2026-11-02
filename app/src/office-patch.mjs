@@ -31,10 +31,11 @@ export function officeRuntime(runtimeDir) {
 
 // The payload's Node is a plain interpreter: it cannot read through the asar archive, so the
 // CLI must come from the unpacked tree electron-builder writes beside it.
-export function officeCli(manifest = fileURLToPath(import.meta.resolve('@deepseek-ai/libreoffice-kit/package.json')), runtimeDir) {
-  // Ordinary Node cannot resolve modules stored inside an Electron asar. Its
-  // external Office skill CLI must point to the complete standalone bundle.
+export function officeCli(manifest, runtimeDir) {
+  // The separately shipped Node runtime cannot read dependencies in app.asar.
+  // Do not even resolve that package when the standalone CLI is available.
   if (runtimeDir) return officeConverterCli(runtimeDir)
+  manifest ??= fileURLToPath(import.meta.resolve('@deepseek-ai/libreoffice-kit/package.json'))
   return join(dirname(manifest).replace(`${sep}app.asar${sep}`, `${sep}app.asar.unpacked${sep}`), 'lib', 'cli.js')
 }
 
