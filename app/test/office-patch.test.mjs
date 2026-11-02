@@ -18,6 +18,9 @@ function makePayload() {
   mkdirSync(dirname(python), { recursive: true })
   writeFileSync(python, '')
   writeFileSync(join(source, 'runtime.json'), '{}')
+  const converter = join(runtimeDir, 'office-converter', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js')
+  mkdirSync(dirname(converter), { recursive: true })
+  writeFileSync(converter, '// Bundled standalone Office converter')
   mkdirSync(join(runtimeDir, 'office-skills', 'office'), { recursive: true })
   writeFileSync(join(runtimeDir, 'office-skills', 'office', 'SKILL.md'), '---\ndescription: office\n---\n')
 }
@@ -75,7 +78,7 @@ describe('reconcileOfficeRuntime', () => {
     assert.equal(skills.name, '@deepseek-ai/dsh-skill-office')
     assert.equal(skills.config.assetRoot, join(runtimeDir, 'office-skills'))
     assert.equal(skills.config.node, node)
-    assert.ok(skills.config.cli.endsWith(join('libreoffice-kit', 'lib', 'cli.js')))
+    assert.equal(skills.config.cli, join(runtimeDir, 'office-converter', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js'))
   })
 
   test('writes no overlay and drops a stale one when the payload is gone', () => {
