@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { fileURLToPath } from 'node:url'
 
 const PYTHON_CREATE = String.raw`from pathlib import Path
@@ -103,17 +104,24 @@ export function checkOfficeFiles(resources, {
 const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 (async () => {
-  const app = createRequire(path.join(process.argv[1], 'package.json'));
-  const kit = await import(pathToFileURL(app.resolve('@deepseek-ai/libreoffice-kit')).href);
+  const loader = await import(pathToFileURL(path.join(process.argv[1], 'src', 'office-kit-loader.mjs')).href);
+  const physical = loader.officeKitResolveHook(path.dirname(process.argv[1]))(
+    '@deepseek-ai/libreoffice-kit',
+    { parentURL: pathToFileURL(path.join(process.argv[1], 'node_modules', '@deepseek-ai', 'dsh-office-to-pdf', 'lib', 'index.js')).href },
+    () => { throw Error('DSH provider did not use the physical kit'); }
+  );
+  const kit = await import(physical.url);
   const converter = await kit.createConverter();
   try {
     await converter.render({ inputPath: process.argv[2], outputPath: process.argv[3] });
     console.log('PACKED_HOST_OFFICE_OK ' + converter.backend);
   } finally { await converter.dispose(); }
 })().catch(e => { console.error('PACKED_HOST_OFFICE_FAILED', e.stack || e, e.cause); process.exitCode = 1 })`
-      const embedded = run(electron, ['-e', program, join(resources, 'app.asar'), join(work, 'test.pptx'), join(work, 'host-preview.pdf')], {
+      const embedded = run(electron, ['--import', pathToFileURL(join(resources, 'app.asar', 'src', 'office-kit-loader.mjs')).href,
+        '-e', program, join(resources, 'app.asar'), join(work, 'test.pptx'), join(work, 'host-preview.pdf')], {
         encoding: 'utf8', windowsHide: true, timeout: 120_000,
-        env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', PYTHONPATH: '', PYTHONHOME: '', NODE_PATH: '' },
+        env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', CHEMCLAW_OFFICE_RUNTIME_DIR: resources,
+          PYTHONPATH: '', PYTHONHOME: '', NODE_PATH: '' },
       })
       if (embedded.error || embedded.status !== 0) {
         throw new Error('Packaged Electron Host Office converter failed: ' +
