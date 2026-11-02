@@ -20,6 +20,10 @@ const flags = new Set(process.argv.slice(2).filter(arg => arg.startsWith('--')))
 const given = args.find(arg => arg !== '--source')
 const shotFile = args.filter(arg => arg !== '--source' && arg !== given).at(0)
 const source = flags.has('--source') || given === '--source'
+const macUi = flags.has('--mac-ui')
+if (macUi && (process.platform !== 'darwin' || !shotFile)) {
+  throw new Error('--mac-ui requires macOS and a screenshot prefix after the executable')
+}
 if (source) {
   const plugin = resolve(root, '../chemclaw-bot')
   const installed = dirname(createRequire(import.meta.url).resolve('chemclaw-bot/package.json'))
@@ -268,6 +272,19 @@ async function chat(cdp) {
     throw new Error(`timed out waiting for ${label}`)
   }
   const text = needle => `document.body.innerText.includes(${JSON.stringify(needle)})`
+  const captureMac = async label => {
+    if (!macUi) return
+    await sleep(300)
+    const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' })
+    const png = Buffer.from(data, 'base64')
+    if (png.length < 8000 || png.subarray(0, 8).toString('hex') !== '89504e470d0a1a0a') {
+      throw new Error(`The macOS UI screenshot for ${label} is empty or invalid`)
+    }
+    const path = resolve(`${shotFile}.${label}.png`)
+    mkdirSync(dirname(path), { recursive: true })
+    writeFileSync(path, png)
+    console.log(`check-packed: macOS UI screenshot ${label} (${png.length} bytes)`)
+  }
   const openSettings = async () => {
     await until("document.querySelector('.bt-classic-settings, .bt-account')", 'the settings launcher')
     if (await evaluate("Boolean(document.querySelector('.bt-classic-settings'))")) {
@@ -289,6 +306,7 @@ async function chat(cdp) {
   if (await evaluate("document.body.innerText.includes('预览版说明') || document.body.innerText.includes('Preview Notice')")) throw new Error('The independent app still shows upstream preview onboarding')
   const catalog = await evaluate("fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'scenario-catalog', payload: {} }) }).then(r => r.json()).then(r => r.value)")
   if (catalog.roles.length !== 50 || catalog.groups.length !== 15) throw new Error('Incomplete scenario catalog')
+  await captureMac('home')
   if (!source) {
     const manifestVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
     const pluginVersion = JSON.parse(readFileSync(join(root, '../chemclaw-bot/package.json'), 'utf8')).version
@@ -303,6 +321,7 @@ async function chat(cdp) {
     await openSettings()
     await evaluate("[...document.querySelectorAll('.bt-settings-item')].find(node => /^(关于 ChemClaw|About ChemClaw)$/.test(node.textContent.trim())).click()")
     await until(`document.querySelector('.bt-about-version')?.textContent?.includes(${JSON.stringify(pluginVersion)})`, 'About shows the packaged ChemClaw plugin version')
+    await captureMac('about')
     const checkButton = "[...document.querySelectorAll('.bt-settings-page button')].find(node => /^(检查更新|Check for updates)$/.test(node.textContent.trim()))"
     await until(`${checkButton} && !${checkButton}.disabled`, 'the enabled app update button')
     const before = updateRequests
@@ -314,6 +333,34 @@ async function chat(cdp) {
     await evaluate("document.querySelector('.bt-settings-close').click()")
     await until("!document.querySelector('.bt-settings')", 'settings to close')
     console.log('check-packed: About checked the isolated app update feed')
+  }
+  if (macUi) {
+    await openSettings()
+    const skillsPage = "[...document.querySelectorAll('.bt-settings-item')].find(node => /^(技能库|Skill library)$/.test(node.textContent.trim()))"
+    await until(skillsPage, 'the macOS Skill library settings item')
+    await evaluate(`${skillsPage}.click()`)
+    await until("document.querySelectorAll('.bt-skill-library .bt-skill-card').length >= 50", 'the populated Chinese skill library')
+    const library = await evaluate("({ cards: document.querySelectorAll('.bt-skill-library .bt-skill-card').length, prompts: document.querySelectorAll('.bt-skill-library .bt-expert-example p').length, categories: [...document.querySelectorAll('.bt-skill-library .bt-catalog-categories button')].map(node => node.textContent.trim()) })")
+    if (library.prompts < 30 || !library.categories.some(value => value.includes('内贸采购')) || !library.categories.some(value => value.includes('我的安装'))) {
+      throw new Error(`Incomplete Chinese skill library: ${JSON.stringify(library)}`)
+    }
+    await captureMac('skill-library')
+    const procurement = "[...document.querySelectorAll('.bt-skill-library .bt-catalog-categories button')].find(node => node.textContent.includes('内贸采购'))"
+    await evaluate(`${procurement}.click()`)
+    await until("document.querySelector('.bt-skill-library .bt-catalog-categories button[aria-pressed=true]')?.textContent.includes('内贸采购')", 'the procurement category selection')
+    await until("document.querySelectorAll('.bt-skill-library .bt-skill-card').length > 1", 'the filtered procurement skills')
+    const category = await evaluate("({ cards: document.querySelectorAll('.bt-skill-library .bt-skill-card').length, hasPrompt: !!document.querySelector('.bt-skill-library .bt-skill-card .bt-expert-example p'), hasChinese: [...document.querySelectorAll('.bt-skill-library .bt-skill-card h3')].some(node => /[\\u3400-\\u9fff]/u.test(node.textContent)) })")
+    if (!category.hasPrompt || !category.hasChinese) throw new Error(`Filtered skills lost Chinese descriptions or examples: ${JSON.stringify(category)}`)
+    await captureMac('skill-category')
+    await evaluate("[...document.querySelectorAll('.bt-skill-library .bt-skill-card')].find(node => node.querySelector('.bt-expert-example p')).querySelector('button').click()")
+    await until("document.querySelector('.bt-skill-library .bt-skill-detail')", 'the skill details panel')
+    if (!await evaluate("Boolean(document.querySelector('.bt-skill-detail .bt-skill-purpose')?.textContent.trim())")) {
+      throw new Error('The selected built-in skill has no visible purpose')
+    }
+    await captureMac('skill-detail')
+    await evaluate("document.querySelector('.bt-settings-close').click()")
+    await until("!document.querySelector('.bt-settings')", 'the skill library to close')
+    console.log(`check-packed: macOS skill library, ${library.cards} cards, category filtering and details passed`)
   }
   await evaluate("document.querySelector('.bt-account').click()")
   const pluginEntry = "[...document.querySelectorAll('.bt-account-menu button')].find(node => /^(连接插件|Connect plugins)$/.test(node.textContent.trim()))"
@@ -331,7 +378,7 @@ async function chat(cdp) {
   await evaluate("document.querySelector('.bt-return').click()")
   await until("document.querySelector('.bt-account')", 'the expert team account launcher')
   console.log('check-packed: classic Settings opened and returned to the expert team')
-  if (shotFile && !process.argv.includes('--browser-shot-only')) {
+  if (shotFile && !process.argv.includes('--browser-shot-only') && !macUi) {
     const capture = async suffix => { await sleep(650); const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.${suffix}.png`), Buffer.from(data, 'base64')) }
     await capture('home')
     await openSettings()
@@ -387,6 +434,7 @@ async function chat(cdp) {
   await sleep(500)
   if (await evaluate("Boolean(document.querySelector('.bt-msg'))")) throw new Error('A preset sent an unsolicited first chat message')
   console.log('check-packed: preset welcome visible with no synthetic chat message')
+  await captureMac('welcome')
   if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only')) {
     const wantXlsx = process.argv.includes('--xlsx-preview-only')
     const { deliver } = await import('../../chemclaw-bot/runtime/deliver.mjs')
@@ -449,6 +497,7 @@ async function chat(cdp) {
   }
   await until("!document.querySelector('.bt-team-intro')", 'the welcome page to hide after the first real user message')
   console.log('check-packed: GenUI timeline rendered in the installed app; welcome dismissed on first user turn')
+  await captureMac('timeline')
   await evaluate("[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1).focus()")
   await cdp.call('Input.insertText', { text: 'packaged app check' })
   await sleep(150)
@@ -550,6 +599,7 @@ async function chat(cdp) {
   await evaluate("document.querySelectorAll('.bt-group-view .bt-chart-hit')[20].dispatchEvent(new PointerEvent('pointerover', { bubbles: true }))")
   await until("document.querySelector('.bt-chart-tip')?.textContent.includes('2026-09-21')", 'the complete hover date')
   if (!await evaluate("/缺失数据|No data/.test(document.querySelector('.bt-chart-tip').textContent)")) throw new Error('A missing chart point was converted to zero')
+  await captureMac('chart')
   await sleep(200)
   if (shotFile) { const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.chart.png`), Buffer.from(data, 'base64')) }
   await cdp.call('Page.bringToFront')
@@ -618,6 +668,7 @@ async function chat(cdp) {
   await evaluate("document.querySelector('[data-presented-file] button[aria-label]').click()")
   await until("document.querySelector('iframe')", 'the HTML preview')
   await sleep(300)
+  await captureMac('delivery')
   if (shotFile) {
     const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' })
     writeFileSync(resolve(`${shotFile}.delivery.png`), Buffer.from(data, 'base64'))
