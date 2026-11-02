@@ -154,6 +154,8 @@ jobs:
         run: node scripts/run-browser-check.mjs
       - name: Check the packaged app
         run: node scripts/check-packed.mjs
+      - name: Check right-sidebar PPTX rendering in the packaged app
+        run: node scripts/check-packed.mjs --office-preview-only
       # The runner is a fresh machine, so the installer may run here. It must install for the
       # current user only, the installed app must pass the same check, and the uninstaller must
       # remove it again.
@@ -175,6 +177,8 @@ jobs:
           if (Find-Entry 'HKLM:') { throw 'The installer installed for all users' }
           node scripts/check-packed.mjs $exe
           if ($LASTEXITCODE -ne 0) { throw 'The installed app failed its check' }
+          node scripts/check-packed.mjs $exe --office-preview-only
+          if ($LASTEXITCODE -ne 0) { throw 'The installed app cannot preview PPTX in the right sidebar' }
 
       # The update builds the app a second time, so it runs only for changes to the app or the
       # workflows. A build of the next version is the feed; the installed app downloads it, checks
