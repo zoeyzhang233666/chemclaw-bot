@@ -8,7 +8,7 @@ import { existsSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { stringify } from 'yaml'
-import { officeConverterCli } from '../scripts/stage-office-converter.mjs'
+const officeConverterCli = runtimeDir => join(runtimeDir, 'office-converter', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js')
 
 export const OFFICE_PATCH_NAME = 'office.patch.yml'
 
