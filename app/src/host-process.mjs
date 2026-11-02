@@ -2,6 +2,7 @@
 // Follows DeepSeek Harness apps/desktop/src/host-process.ts (MIT); see NOTICE.
 import { spawn } from 'node:child_process'
 import { dirname, join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const STDERR_TAIL_CHARS = 8 * 1024
 
@@ -39,7 +40,7 @@ export class HostProcess {
       // Install the Office package-resolution hook before ESM DSH bundles load.
       // Its no-op path leaves profiles without the bundled converter unchanged.
       const preload = join(dirname(entry), 'office-kit-loader.mjs')
-      const child = spawn(process.execPath, ['--import', preload, '--expose-internals', entry, pnpm], {
+      const child = spawn(process.execPath, ['--import', pathToFileURL(preload).href, '--expose-internals', entry, pnpm], {
         cwd, env: { ...env, ELECTRON_RUN_AS_NODE: '1' }, stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
       })
       this.#child = child
