@@ -405,7 +405,21 @@ async function chat(cdp) {
       await until("[...document.querySelectorAll('canvas')].some(node => { const rect = node.getBoundingClientRect(); return node.width > 200 && node.height > 200 && rect.width > 200 && rect.height > 200 }) && !/无法打开此表格|文件不存在/.test(document.body.innerText)", 'the rendered Excel grid')
       console.log('check-packed: actual Excel delivery card rendered a grid in the sidebar')
     } else {
-      await until("[...document.querySelectorAll('canvas')].some(node => { const rect = node.getBoundingClientRect(); return node.width > 200 && node.height > 200 && rect.width > 200 && rect.height > 200 }) && !/Office 转换失败|文件不存在|Office conversion failed/.test(document.body.innerText)", 'the rendered PPT page')
+      // Surface the renderer's error before the generic 120s wait expires: the native
+      // Office converter can fail even when DOCX/PPTX authoring and structural checks pass.
+      const rendered = "[...document.querySelectorAll('canvas')].some(node => { const rect = node.getBoundingClientRect(); return node.width > 200 && node.height > 200 && rect.width > 200 && rect.height > 200 })"
+      const end = Date.now() + 120_000
+      let pageReady = false
+      while (Date.now() < end) {
+        if (await evaluate(rendered)) { pageReady = true; break }
+        const error = await evaluate("(() => { const node = document.querySelector('[data-textpreview-failed]'); return node ? { code: node.getAttribute('data-textpreview-failed'), text: node.innerText.slice(0, 1500) } : null })()")
+        if (error) throw new Error('PPTX sidebar preview returned ' + JSON.stringify(error))
+        await sleep(400)
+      }
+      if (!pageReady) {
+        const detail = await evaluate("({ visible: document.body.innerText.slice(-1500), preview: document.querySelector('[data-textpreview-failed]')?.outerHTML?.slice(0, 1000) })")
+        throw new Error('PPTX sidebar never rendered a PDF page: ' + JSON.stringify(detail))
+      }
       console.log('check-packed: actual PPT delivery card rendered a page in the sidebar')
     }
     if (!readFileSync(file).equals(original)) throw new Error('Preview changed the original Office file')
