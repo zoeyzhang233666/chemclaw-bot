@@ -1,6 +1,6 @@
 # ChemClaw v0.3.0
 
-[简体中文](README.md) | English
+[简体中文](README.md) | **English** | [日本語](README.ja.md) | [한국어](README.ko.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
 **In chemical spot trading, what matters most is finding customers with genuine purchasing needs, reliable suppliers with real delivery capacity, and market prices backed by clear sources and quotation terms.**
 
@@ -22,8 +22,8 @@ Beyond Chemcloud Data Hub, ChemClaw can obtain futures and stock candlestick dat
 
 **Want to get started?** Jump to [Installation](#11-download-and-installation).
 
-<details>
-<summary>Table of contents</summary>
+## Contents
+
 
 1. [Why ChemClaw instead of just a browser-based AI?](#1-why-chemclaw-instead-of-just-a-browser-based-ai)
 2. [Where do customer leads, suppliers, prices, and research data come from?](#2-where-do-customer-leads-suppliers-prices-and-research-data-come-from)
@@ -37,8 +37,6 @@ Beyond Chemcloud Data Hub, ChemClaw can obtain futures and stock candlestick dat
 10. [Choosing among 50 specialists and 15 groups](#10-choosing-among-50-specialists-and-15-groups)
 11. [Download and installation](#11-download-and-installation)
 12. [Copy-and-paste prompts for your first tasks](#12-copy-and-paste-prompts-for-your-first-tasks)
-
-</details>
 
 ---
 
@@ -80,8 +78,8 @@ General AI assistants can search, reason, and create files; general-purpose Agen
 
 ### Six complete prompts for different roles
 
-<details>
-<summary>Show sales, procurement, export/import, spot–futures, and quant examples (sources, workflow, and deliverables)</summary>
+### Full task examples: sources, workflow, and deliverables
+
 
 > **Domestic sales — Task:** We sell dense soda ash and want to identify photovoltaic-glass manufacturers in eastern China that may add demand in the next 6–12 months, particularly in Jiangsu, Anhui, and Zhejiang.
 >
@@ -118,8 +116,6 @@ General AI assistants can search, reason, and create files; general-purpose Agen
 > **Sources and methods:** Start with authorized inventory data from Chemcloud Data Hub, primary industry sources, or a supplied Excel file. Verify both observation cutoff and first publication time. Obtain historical MA futures through `chem_futures_history`; use lead–lag skills to align frequency, assess stationarity, and scan lags. Do not backfill missing dates with information unavailable at the time.
 >
 > **Deliverables:** An auditable Excel workbook (raw observations, publication timestamps, aligned samples, all lags, sample sizes, p/q values, annual results) and an interactive research page (lag profile, rolling correlations, stability heatmap). State why statistical association is not the same as causation or out-of-sample predictability.
-
-</details>
 
 ---
 
@@ -182,7 +178,7 @@ Data Hub helps locate the right **products, downstream sectors, and business ent
 
 #### Connect your data key in three steps
 
-1. Visit **[Chemcloud Data Hub](https://mcp.chem-cloud.cn/)**, sign up or log in, and obtain a data access key according to the website instructions.
+1. Visit [**Chemcloud Data Hub**](https://mcp.chem-cloud.cn/), sign up or log in, and obtain a data access key according to the website instructions.
 2. Open **Chemcloud Data Hub** in the upper-left area of ChemClaw, paste the key, and save it. The service address is already configured.
 3. Open a **Downstream Customer Development Specialist**, **Supplier Sourcing Specialist**, or **Spot Market Analyst** and describe the product, region, business objective, and requested output.
 
@@ -197,7 +193,7 @@ Government project filings are particularly useful for physical chemical trading
 | Source | Information to look for | Sales and procurement value |
 | --- | --- | --- |
 | **Ministry of Ecology and Environment, provincial and municipal environmental agencies** | EIA acceptance, proposed approvals, approvals, reports, completion acceptance, public environmental disclosures | Find new/expanded factories; identify processes, inputs, annual consumption, site, and project status. |
-| **[National Pollutant Discharge Permit Information Platform](https://permit.mee.gov.cn/)** | Public permit and operating-entity information | Support checks on production location and activity; a permit entry alone does not prove capacity for a specific product. |
+| [**National Pollutant Discharge Permit Information Platform**](https://permit.mee.gov.cn/) | Public permit and operating-entity information | Support checks on production location and activity; a permit entry alone does not prove capacity for a specific product. |
 | **NDRC, local approval bureaus, government-service portals, investment-project filing notices** | Project registration, approval, energy reviews, planned investment, and construction scope | Discover potential capacity additions and track progress. |
 | **Industry/IT authorities, chemical parks, and industrial-zone websites** | Major projects, sector plans, resident companies, capacity-replacement and technical-upgrade notices | Identify clustered buyers, operating plants, and future supply. |
 | **Emergency-management authorities and the [National Hazardous Chemicals Safety Public Service Platform](https://whpdj.mem.gov.cn/publicInternet/home)** | Hazardous-chemical registrations and relevant safety licensing disclosures | Help verify regulated status and license scope; always check the competent authority's current records. |
@@ -259,9 +255,9 @@ This is as important a lead source as CNINFO or environmental filings. Projects 
 
 | Source | Information to monitor | Business relevance |
 | --- | --- | --- |
-| **[China Tendering and Bidding Public Service Platform](https://cebpubservice.cn/)** and regional equivalents | Tender announcements, shortlisted bids, awards | Chemical products, materials, equipment, and logistics procurements. |
-| **[National Public Resources Trading Platform](https://www.ggzy.gov.cn/)** and provincial portals | Construction and public-resource tenders, some procurement and award results | Project owners, construction stages, winners, and potential purchases. |
-| **[China Government Procurement Network](https://www.ccgp.gov.cn/)** | Government purchasing plans, invitations, RFQs, awards | Research, environmental, testing, materials, and public-sector opportunities. |
+| [**China Tendering and Bidding Public Service Platform**](https://cebpubservice.cn/) and regional equivalents | Tender announcements, shortlisted bids, awards | Chemical products, materials, equipment, and logistics procurements. |
+| [**National Public Resources Trading Platform**](https://www.ggzy.gov.cn/) and provincial portals | Construction and public-resource tenders, some procurement and award results | Project owners, construction stages, winners, and potential purchases. |
+| [**China Government Procurement Network**](https://www.ccgp.gov.cn/) | Government purchasing plans, invitations, RFQs, awards | Research, environmental, testing, materials, and public-sector opportunities. |
 | **[Sinopec procurement platform](https://ec.sinopec.com/) and [EPEC](https://epec.com/)** | Petrochemical procurement, vendor registration, purchasing processes | Sinopec-related tenders and supplier qualification. |
 | **CNPC/PetroChina procurement websites, CHN Energy, and other energy-sector platforms** | Corporate tenders, sourcing, vendor registration | Energy and chemical procurement of goods and services. |
 | **Sinochem, other chemical groups, and manufacturers' own purchasing portals** | Procurement requirements, competitive inquiries, supplier recruitment | Track specific target accounts and groups. |
@@ -311,7 +307,7 @@ Physical prices must be selected by product, assessment point, and quotation bas
 | **Chemcloud Data Hub** | Chemical spot prices, companies, value chains, and related market information | **Primary specialist entry point**; coverage and timestamps depend on authorized responses. |
 | **[Longzhong Information](https://www.oilchem.net/), SCI99/Zhuochuang, JLC, Baiinfo** | Regional petrochemical, methanol, olefin, polyurethane, chlor-alkali, fertilizer, and plastics markets; plant news | Public articles may be searchable; detailed assessments and history may require subscriptions. |
 | **Mysteel and glass/chemical-materials specialist publications** | Soda ash, glass, caustic soda, PVC, construction-materials and related markets | Check grade, region, and whether a figure is an offer, assessment, or transaction. |
-| **[SunSirs](https://www.100ppi.com/)** | Reference prices, manufacturer activity, commodity-market commentary | Cross-check only; a benchmark is not a factory's realized transaction. |
+| [**SunSirs**](https://www.100ppi.com/) | Reference prices, manufacturer activity, commodity-market commentary | Cross-check only; a benchmark is not a factory's realized transaction. |
 | **[SMM](https://www.smm.cn/), battery-materials, and fertilizer specialist sites** | Metals, battery materials, nonferrous and new-energy chemicals, fertilizers | Use only publicly accessible or authorized content; respect subscriptions. |
 | **Producer price adjustment letters and official sales notices** | List prices, sales guidance, plant news, supply arrangements | Listed prices are not necessarily negotiated transactions; identify announcement and effective dates. |
 | **Futures brokers' commodity reports, associations, statistical agencies** | Physical benchmark references, basis, inventory, utilization, supply/demand context | Identify original sources and distinguish primary data from quoted secondary figures. |
@@ -364,8 +360,8 @@ Correct product identity is fundamental to buying and selling chemicals. A compo
 
 | Source | What it helps determine | Business application |
 | --- | --- | --- |
-| **[PubChem](https://pubchem.ncbi.nlm.nih.gov/)** | Chemical names, synonyms, formula, molecular weight, molecular structure | Confirm product identity and English names in overseas inquiries. |
-| **[OPSIN](https://opsin.ch.cam.ac.uk/)** | Chemical structure corresponding to a systematic chemical name | Interpret complex IUPAC names and cross-check identity. |
+| [**PubChem**](https://pubchem.ncbi.nlm.nih.gov/) | Chemical names, synonyms, formula, molecular weight, molecular structure | Confirm product identity and English names in overseas inquiries. |
+| [**OPSIN**](https://opsin.ch.cam.ac.uk/) | Chemical structure corresponding to a systematic chemical name | Interpret complex IUPAC names and cross-check identity. |
 | **Wikipedia (English and Chinese)** | Common names, uses, processes, and background | Identify downstream applications and research terms. |
 | **Huagongshe** | Selected chemical searches, reaction/structure diagrams, stoichiometric calculations | Examine feedstock routes and theoretical material requirements. |
 | **ChemicalBook, manufacturers' SDS/TDS/COA, product brochures** | Grades, specifications, indicative properties, supply leads | Clarify common names and commercial specifications; verify against original manufacturer materials. |
@@ -770,8 +766,8 @@ For a methanol spot quote, ask the **Spot Market Analyst**. To verify a foreign 
 | Basis, calendar spreads, international spreads, quant backtests | Basis Researcher; Calendar Spread Researcher; Domestic–International Spread Analyst; Strategy Backtesting Researcher |
 | Presentations, workbooks, independent reviews | PowerPoint Presentation Designer; Excel Data Analyst; Business Proposal Reviewer |
 
-<details>
-<summary>Show the full preconfigured specialist roster</summary>
+### Preconfigured specialist roster
+
 
 - **Main controller (1):** ChemClaw (Chemical Industry Lead Bot).
 - **Domestic sales (7):** Downstream Customer Development Specialist; Benchmark Customer Expansion Advisor; Expansion Project Opportunity Specialist; Procurement Opportunity Intelligence Analyst; Key Account Researcher; Customer Visit Advisor; Regional Market Planning Specialist.
@@ -781,8 +777,6 @@ For a methanol spot quote, ask the **Spot Market Analyst**. To verify a foreign 
 - **Spot–futures & quant (8):** Basis Researcher; Calendar Spread Researcher; Regional Spread Analyst; Domestic–International Spread Analyst; Seasonality Researcher; Price Co-movement Researcher; Event Researcher; Strategy Backtesting Researcher.
 - **Production support (5):** Chemical Information Specialist; Process Literature Researcher; Quality Inspection Advisor (COA Review); Materials & Energy Engineer; Production Data Analyst.
 - **Delivery & quality review (8):** HTML Report Designer; Chart & Map Designer; PowerPoint Presentation Designer; Excel Data Analyst; Document & Meeting Notes Specialist; Bilingual Chemical Editor; Business Proposal Reviewer; Task Planning & Acceptance Specialist.
-
-</details>
 
 ### When should you use a group chat?
 
@@ -798,8 +792,8 @@ The group lead coordinates responses by default and can mention other specialist
 
 Specialists can work on different research and analysis tasks. Longer investigations can continue in the conversation, and—where session permissions allow—Bots may consult relevant prior individual or group exchanges. Still, save important original documents, figures, and final conclusions separately; conversation memory should not be the only record.
 
-<details>
-<summary>Show the 15 preconfigured specialist groups</summary>
+### 15 preconfigured specialist groups
+
 
 1. **Customer Development Taskforce:** Prospects, expansion projects, lead verification, and Excel lists.
 2. **Customer Visits & Follow-up Group:** Account research, visit preparation, notes, and next steps.
@@ -816,8 +810,6 @@ Specialists can work on different research and analysis tasks. Longer investigat
 13. **Process & Production Analysis Group:** Processes, materials, and energy consumption.
 14. **Research Report & Presentation Group:** Reports, charts, PowerPoint, file delivery.
 15. **Business Proposal Review Group:** Independent challenge, validation, and acceptance.
-
-</details>
 
 ---
 
