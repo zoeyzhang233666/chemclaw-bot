@@ -5,7 +5,7 @@
   "version": "0.3.0",
   "private": true,
   "description": "ChemClaw desktop app: the chemclaw-bot team on its own pinned DeepSeek Harness.",
-  "author": "Fei2411",
+  "author": "ChemCloud Intelligence",
   "license": "Apache-2.0",
   "type": "module",
   "main": "src/main.mjs",
