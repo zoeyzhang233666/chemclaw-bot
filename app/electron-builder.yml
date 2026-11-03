@@ -1,6 +1,6 @@
 appId: io.github.fei2411.chemclaw
 productName: ChemClaw
-copyright: Copyright 2026 Fei2411 and the ChemClaw / DS Bot contributors
+copyright: Copyright 2026 ChemCloud Intelligence and ChemClaw contributors. Portions Copyright 2026 Fei2411 and DS Bot contributors
 artifactName: ChemClaw-${version}-${os}-${arch}.${ext}
 directories:
   output: dist-pack
