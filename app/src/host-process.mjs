@@ -55,7 +55,13 @@ export class HostProcess {
         for (const listener of this.#messageListeners) listener(message)
         if (message?.type === 'ready') resolve({ url: message.url, injections: message.injections })
         else if (message?.type === 'checked') resolve({ unreadable: message.unreadable })
-        else if (message?.type === 'fatal') this.#fail(new Error(message.message), reject)
+        else if (message?.type === 'fatal') {
+          // The IPC fatal message can arrive before the close event. Preserve the
+          // stack for browser-crash detection even when stderr has not flushed.
+          const detail = this.#stderr.trim() || (typeof message.diagnostic === 'string' ? message.diagnostic : '')
+          const tail = redact(detail.slice(-STDERR_TAIL_CHARS))
+          this.#fail(new Error(tail ? `${message.message}\n${tail}` : message.message), reject)
+        }
       })
       child.once('error', (error) => { this.#fail(error, reject) })
       this.#exit = new Promise((done) => {
