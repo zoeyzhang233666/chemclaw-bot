@@ -12,6 +12,7 @@ import { getDshRuntimeVersion } from '@deepseek-ai/dsh-app-boot'
 import electronUpdater from 'electron-updater'
 import { BotBrowserGuests, partitionOf } from './bot-browser.mjs'
 import { browserFrameAssertion, browserRecoveryArgs, browserSafeMode } from './browser-recovery.mjs'
+import { createCdpDiagnosticWriter } from './cdp-diagnostics.mjs'
 import { BotViews, isBotId } from './bot-views.mjs'
 import { importFromBrowser, listSources } from './browser-sources.mjs'
 import { applyCookies, CookieImports } from './cookie-import.mjs'
@@ -210,6 +211,9 @@ async function start() {
   botViews = new BotViews({ window: () => mainWindow, WebContentsView, guests: browserGuests,
     origin: () => origin, devTools: !app.isPackaged, statePath: join(app.getPath('userData'), 'bot-views.json'),
     onChange: state => mainWindow?.webContents.send(IPC.browserViewChanged, state),
+    onDiagnostic: createCdpDiagnosticWriter(join(app.getPath('userData'), 'cdp-frame-diagnostics.log'), {
+      onError: error => console.warn('ChemClaw: CDP diagnostics could not be written:', error?.code ?? error?.name),
+    }),
   })
   const pnpm = join(app.getAppPath(), 'node_modules', 'pnpm', 'bin', 'pnpm.mjs')
   const profileDir = join(where.dataDir, 'profiles', PROFILE)
