@@ -29,6 +29,17 @@ test('a frame already present in Page.getFrameTree is not attached twice', () =>
   assert.equal(guard.accept('Page.frameAttached', { frameId: 'child', parentFrameId: 'main' }), false)
 })
 
+test('OOPIF child target frame tree and navigation keep the original parent relationship', () => {
+  const reports = []
+  const guard = new CdpFrameGuard(record => reports.push(record))
+  guard.observeTree({ frame: { id: 'main' }, childFrames: [{ frame: { id: 'oopif' } }] })
+  guard.observeTree({ frame: { id: 'oopif' } }) // OOPIF reports itself as a root
+  guard.accept('Page.frameNavigated', { frame: { id: 'oopif', url: 'about:blank' } })
+  assert.equal(guard.accept('Page.frameAttached', { frameId: 'oopif', parentFrameId: 'main' }), false)
+  assert.equal(reports.at(-1).reason, 'duplicate-attach')
+  assert.equal(guard.accept('Page.frameAttached', { frameId: 'nested', parentFrameId: 'oopif' }), true)
+})
+
 test('detach allows a new attach; swaps retain the old frame identity', () => {
   const guard = new CdpFrameGuard()
   guard.observeTree({ frame: { id: 'main' } })
