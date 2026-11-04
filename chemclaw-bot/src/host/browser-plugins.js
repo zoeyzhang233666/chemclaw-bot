@@ -111,7 +111,16 @@ async function authorizeBrowserAction(rt, exec, botId, action) {
   throw new Error('The approval could not be obtained. Nothing was done.')
 }
 
+// Only the desktop relaunch fallback disables browser automation. The Bot team,
+// its data, non-browser skills and the legacy browser channel remain available.
+export const desktopBrowserSafeMode = (env = process.env) =>
+  env.DS_BOT_APP === '1' && env.CHEMCLAW_BROWSER_SAFE_MODE === '1'
+
 export function install(rt) {
+  if (desktopBrowserSafeMode()) {
+    rt.warn?.('chemclaw-bot: browser automation is isolated for this launch after a CDP frame assertion; other Bot tools remain available.')
+    return
+  }
   const name = rt.config.browserPlugin ?? (process.env.DS_BOT_APP === '1' && rt.browserEnabled ? 'refs' : undefined)
   const injected = rt.config.browserPluginApi
   if (!name && !injected) return
