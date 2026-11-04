@@ -4,6 +4,7 @@
 // Diagnostic entries intentionally contain no URLs, browser cookies or frame IDs.
 export class CdpFrameGuard {
   #frames = new Map()
+  #swapped = new Set()
   #recent = []
   #report
 
@@ -50,6 +51,12 @@ export class CdpFrameGuard {
       }
       if (!this.#frames.has(parentFrameId)) return this.#drop(method, 'unknown-parent')
       if (this.#frames.has(frameId)) {
+        // Playwright needs the first remote -> local reattach following an OOPIF
+        // swap so it can retire the old frame session. Ordinary duplicates stay blocked.
+        if (this.#swapped.delete(frameId) && this.#frames.get(frameId) === parentFrameId) {
+          this.#record(method, 'swapped-in')
+          return true
+        }
         return this.#drop(method, this.#frames.get(frameId) === parentFrameId ? 'duplicate-attach' : 'conflicting-parent')
       }
       this.#frames.set(frameId, parentFrameId)
@@ -68,18 +75,20 @@ export class CdpFrameGuard {
     if (method === 'Page.frameDetached') {
       const { frameId, reason } = params
       if (typeof frameId !== 'string' || !frameId) return this.#drop(method, 'missing-frame-id')
-      // Playwright keeps a frame during an out-of-process swap.
-      if (reason !== 'swap') {
-        const removed = new Set([frameId])
-        let changed
-        do {
-          changed = false
-          for (const [id, parent] of this.#frames) {
-            if (removed.has(parent) && !removed.has(id)) { removed.add(id); changed = true }
-          }
-        } while (changed)
-        for (const id of removed) this.#frames.delete(id)
+      // An OOPIF swap keeps the frame itself but discards its child subtree.
+      const removed = new Set([frameId])
+      let changed
+      do {
+        changed = false
+        for (const [id, parent] of this.#frames) {
+          if (removed.has(parent) && !removed.has(id)) { removed.add(id); changed = true }
+        }
+      } while (changed)
+      for (const id of removed) {
+        this.#swapped.delete(id)
+        if (reason !== 'swap' || id !== frameId) this.#frames.delete(id)
       }
+      if (reason === 'swap') this.#swapped.add(frameId)
       this.#record(method, reason === 'swap' ? 'swap' : 'accepted')
       return true
     }
