@@ -522,8 +522,10 @@ export class BotViews {
 
   #sendToSessions(entry, message, childSessionId) {
     for (const [socket, rootSessionId] of entry.sessions) {
-      if (!entry.frameGuards.get(socket)?.accept(message.method, message.params)) continue
+      // Session routing remains valid even when one unsafe frame event is
+      // suppressed; subsequent CDP commands must still find their target.
       if (childSessionId) entry.sessionMaps.get(socket)?.set(childSessionId, { entry, nativeId: childSessionId })
+      if (!entry.frameGuards.get(socket)?.accept(message.method, message.params)) continue
       this.#send(socket, { ...message, sessionId: childSessionId || rootSessionId })
     }
   }
