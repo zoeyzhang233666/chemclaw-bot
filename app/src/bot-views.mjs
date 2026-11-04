@@ -465,6 +465,13 @@ export class BotViews {
     }
   }
 
+  #reportDiagnostic(detail) {
+    try { this.#onDiagnostic(detail) } catch {
+      // Diagnostic hooks are observational and must never break the desktop.
+      console.warn('ChemClaw CDP: diagnostic handler failed.')
+    }
+  }
+
   #installDebugger(entry) {
     const debuggerApi = entry.view.webContents.debugger
     debuggerApi.attach('1.3')
@@ -476,7 +483,7 @@ export class BotViews {
       } catch (error) {
         // An invalid native CDP event must not throw into Electron's event loop.
         // Close only this Bot's browser connection; DSH and other Bots keep running.
-        this.#onDiagnostic({ method, reason: 'native-event-error', recent: [{ method, outcome: String(error?.name ?? 'error') }] })
+        this.#reportDiagnostic({ method, reason: 'native-event-error', recent: [{ method, outcome: String(error?.name ?? 'error') }] })
         for (const socket of entry.sessions.keys()) {
           try { socket.close(1011, 'CDP frame relay error') } catch {}
         }
@@ -544,7 +551,7 @@ export class BotViews {
       sessions.set(sessionId, { entry, nativeId: undefined })
       entry.sessions.set(socket, sessionId)
       entry.sessionMaps.set(socket, sessions)
-      entry.frameGuards.set(socket, new CdpFrameGuard(diagnostic => this.#onDiagnostic(diagnostic)))
+      entry.frameGuards.set(socket, new CdpFrameGuard(diagnostic => this.#reportDiagnostic(diagnostic)))
       this.#send(socket, { method: 'Target.attachedToTarget', params: { sessionId, targetInfo: info(entry), waitingForDebugger: false } })
       this.#onChange({ type: 'changed', ...this.#state(entry) })
       return sessionId
