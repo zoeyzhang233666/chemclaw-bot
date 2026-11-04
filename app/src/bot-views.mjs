@@ -643,7 +643,7 @@ export class BotViews {
           if (nativeParams.frameId === route.entry.tabId) nativeParams.frameId = route.entry.mainFrameId
           const result = await route.entry.view.webContents.debugger.sendCommand(method, nativeParams, route.nativeId)
           const mapped = this.#framePayload(route.entry, method, result, route.nativeId)
-          if (method === 'Page.getFrameTree' && !route.entry.frameGuards.get(socket)?.observeTree(mapped.frameTree?.frame)) {
+          if (method === 'Page.getFrameTree' && !route.entry.frameGuards.get(socket)?.observeTree(mapped.frameTree)) {
             throw new Error('CDP returned an inconsistent frame tree; browser control was isolated.')
           }
           reply(mapped)
