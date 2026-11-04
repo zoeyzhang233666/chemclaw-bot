@@ -3,16 +3,19 @@
 import { appendFileSync, mkdirSync, statSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 
-const clean = value => typeof value === 'string' && /^[a-z0-9._-]{1,72}$/iu.test(value) ? value : 'unknown'
+const METHODS = new Set(['Page.frameAttached', 'Page.frameDetached', 'Page.frameNavigated', 'Page.getFrameTree'])
+const REASONS = new Set(['duplicate-attach', 'conflicting-parent', 'unknown-parent', 'missing-frame-id', 'invalid-frame-tree', 'native-event-error'])
+const OUTCOMES = new Set([...REASONS, 'accepted', 'root', 'swap', 'swapped-in', 'DataCloneError', 'TypeError', 'Error'])
+const safe = (value, allowed) => allowed.has(value) ? value : 'other'
 
 export function createCdpDiagnosticWriter(path, { maxBytes = 256 * 1024, onError = () => {} } = {}) {
   return (diagnostic) => {
     const safe = {
       at: new Date().toISOString(),
-      method: clean(diagnostic?.method),
-      reason: clean(diagnostic?.reason),
+      method: safe(diagnostic?.method, METHODS),
+      reason: safe(diagnostic?.reason, REASONS),
       recent: Array.isArray(diagnostic?.recent)
-        ? diagnostic.recent.slice(-12).map(item => ({ method: clean(item?.method), outcome: clean(item?.outcome) }))
+        ? diagnostic.recent.slice(-12).map(item => ({ method: safe(item?.method, METHODS), outcome: safe(item?.outcome, OUTCOMES) }))
         : [],
     }
     try {
