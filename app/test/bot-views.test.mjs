@@ -11,7 +11,7 @@ import { BotViews, isBotId } from '../src/bot-views.mjs'
 // symbolic link to the folder.
 const folderLink = process.platform === 'win32' ? 'junction' : 'dir'
 
-function fixture({ statePath } = {}) {
+function fixture({ statePath, onDiagnostic } = {}) {
   const changes = []
   const handlers = new Map()
   const views = []
@@ -55,7 +55,7 @@ function fixture({ statePath } = {}) {
   }
   const added = []
   let window = { contentView: { addChildView(view) { added.push(view) }, removeChildView() {} } }
-  const manager = new BotViews({ window: () => window, WebContentsView, guests, origin: () => 'http://127.0.0.1:43117', statePath, onChange: change => changes.push(change) })
+  const manager = new BotViews({ window: () => window, WebContentsView, guests, origin: () => 'http://127.0.0.1:43117', statePath, onChange: change => changes.push(change), ...(onDiagnostic ? { onDiagnostic } : {}) })
   return { manager, handlers, views, changes, added, setWindow: (next) => { window = next } }
 }
 
@@ -149,6 +149,68 @@ test('CDP relay limits targets and created tabs to the token Bot', async t => {
   assert.equal(created.result.targetId, manager.sync('a')[1].tabId)
   assert.equal(manager.sync('a').length, 2)
   assert.equal(manager.sync('b').length, 1)
+})
+
+test('duplicate CDP frame attach is filtered and later detach permits a new attach', async t => {
+  const diagnostics = []
+  const { manager, views } = fixture({ onDiagnostic: event => diagnostics.push(event) })
+  t.after(() => manager.dispose())
+  const entry = manager.create('a')
+  const socket = await openSocket(await manager.endpoint('a'))
+  t.after(() => socket.close())
+  const attached = await request(socket, 1, 'Target.attachToTarget', { targetId: entry.tabId })
+  await request(socket, 2, 'Page.getFrameTree', {}, attached.result.sessionId)
+  const events = []
+  socket.on('message', raw => {
+    const message = JSON.parse(raw.toString())
+    if (message.method?.startsWith('Page.frame')) events.push(message)
+  })
+  const debug = views[0].webContents.debugger
+  const attach = () => debug.emit('message', {}, 'Page.frameAttached', { frameId: 'child-1', parentFrameId: 'frame-a' })
+  attach()
+  attach() // Prior to the guard this second event would hit Playwright's assertion.
+  await new Promise(resolve => setTimeout(resolve, 30))
+  assert.equal(events.filter(event => event.method === 'Page.frameAttached').length, 1)
+  assert.equal(events[0].params.parentFrameId, entry.tabId)
+  assert.equal(diagnostics.at(-1)?.reason, 'duplicate-attach')
+  debug.emit('message', {}, 'Page.frameDetached', { frameId: 'child-1', reason: 'remove' })
+  attach()
+  await new Promise(resolve => setTimeout(resolve, 30))
+  assert.equal(events.filter(event => event.method === 'Page.frameAttached').length, 2)
+  assert.equal((await request(socket, 3, 'Browser.getVersion')).result.protocolVersion, '1.3')
+})
+
+test('child-target frame navigation cannot overwrite the Bot main-frame mapping', async t => {
+  const { manager, views } = fixture()
+  t.after(() => manager.dispose())
+  const entry = manager.create('a')
+  const socket = await openSocket(await manager.endpoint('a'))
+  t.after(() => socket.close())
+  const attached = await request(socket, 1, 'Target.attachToTarget', { targetId: entry.tabId })
+  assert.equal((await request(socket, 2, 'Page.getFrameTree', {}, attached.result.sessionId)).result.frameTree.frame.id, entry.tabId)
+  // A child CDP target can report its own root without parentFrameId.
+  views[0].webContents.debugger.emit('message', {}, 'Page.frameNavigated', { frame: { id: 'oopif-root', url: 'about:blank' } }, 'child-native-session')
+  assert.equal((await request(socket, 3, 'Page.getFrameTree', {}, attached.result.sessionId)).result.frameTree.frame.id, entry.tabId)
+})
+
+test('malformed native CDP event disconnects only its Bot, not the host or other Bots', async t => {
+  const diagnostics = []
+  const { manager, views } = fixture({ onDiagnostic: event => diagnostics.push(event) })
+  t.after(() => manager.dispose())
+  manager.create('a')
+  manager.create('b')
+  const socketA = await openSocket(await manager.endpoint('a'))
+  const socketB = await openSocket(await manager.endpoint('b'))
+  t.after(() => { socketA.close(); socketB.close() })
+  const targetA = (await request(socketA, 1, 'Target.getTargets')).result.targetInfos[0]
+  await request(socketA, 2, 'Target.attachToTarget', { targetId: targetA.targetId })
+  const closingA = closed(socketA)
+  // A value that cannot be cloned is a malformed native debugger event. The
+  // relay must catch it in Electron instead of throwing out of EventEmitter.
+  views[0].webContents.debugger.emit('message', {}, 'Page.frameAttached', { frameId: () => {} })
+  await closingA
+  assert.equal(diagnostics.at(-1)?.reason, 'native-event-error')
+  assert.equal((await request(socketB, 3, 'Browser.getVersion')).result.protocolVersion, '1.3')
 })
 
 test('CDP relay rejects invalid paths and Origin headers', async t => {

@@ -16,6 +16,14 @@ export const withLogTail = (message, stderr) => {
   return tail === '' ? message : `${message}:\n${tail}`
 }
 
+// A fatal IPC message may arrive before stderr has flushed. Reuse the
+// upstream redaction/formatting while preserving the Host's structured
+// diagnostic fallback needed to identify a Playwright frame assertion.
+export const withFatalDiagnostic = (message, stderr, diagnostic) => {
+  const detail = stderr.trim() || (typeof diagnostic === 'string' ? diagnostic : '')
+  return withLogTail(message, detail.slice(-STDERR_TAIL_CHARS))
+}
+
 const settlesWithin = (promise, ms) => new Promise((resolve) => {
   const timer = setTimeout(() => { resolve(false) }, ms)
   void promise.then(() => { clearTimeout(timer); resolve(true) })
@@ -62,7 +70,7 @@ export class HostProcess {
         for (const listener of this.#messageListeners) listener(message)
         if (message?.type === 'ready') resolve({ url: message.url, injections: message.injections })
         else if (message?.type === 'checked') resolve({ unreadable: message.unreadable })
-        else if (message?.type === 'fatal') this.#fail(new Error(withLogTail(message.message, this.#stderr)), reject)
+        else if (message?.type === 'fatal') this.#fail(new Error(withFatalDiagnostic(message.message, this.#stderr, message.diagnostic)), reject)
       })
       child.once('error', (error) => { this.#fail(error, reject) })
       this.#exit = new Promise((done) => {
