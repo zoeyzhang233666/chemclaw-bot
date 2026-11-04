@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url'
 import { getDshRuntimeVersion } from '@deepseek-ai/dsh-app-boot'
 import electronUpdater from 'electron-updater'
 import { BotBrowserGuests, partitionOf } from './bot-browser.mjs'
+import { browserFrameAssertion, browserRecoveryArgs, browserSafeMode } from './browser-recovery.mjs'
 import { BotViews, isBotId } from './bot-views.mjs'
 import { importFromBrowser, listSources } from './browser-sources.mjs'
 import { applyCookies, CookieImports } from './cookie-import.mjs'
@@ -67,6 +68,7 @@ let updates
 let stopping = false
 let stopped = false
 let failed = false
+let browserRecoveryPending = false
 let places
 // The Host answered and the window may talk to it without the launch URL.
 let hostReady = false
@@ -163,6 +165,25 @@ if (canonical !== undefined) {
   app.whenReady().then(async () => { shell.install(); await start() }).catch(fail)
 }
 
+function handleHostFailure(error) {
+  // The Playwright event assertion can escape its browser tool and kill the DSH
+  // child. Relaunch this one run with the browser plugin isolated; do not swallow
+  // other Host errors or loop if the fallback also fails.
+  if (!browserRecoveryPending && !browserSafeMode() && !stopping && !choosing && !copying && browserFrameAssertion(error)) {
+    browserRecoveryPending = true
+    console.warn('ChemClaw: DSH browser frame assertion; restarting once without browser automation.')
+    try {
+      app.relaunch({ args: browserRecoveryArgs(process.argv.slice(1)) })
+      app.quit()
+      return
+    } catch (relaunchError) {
+      browserRecoveryPending = false
+      console.error('ChemClaw: browser recovery relaunch failed:', relaunchError)
+    }
+  }
+  void fail(error)
+}
+
 function stopHost() {
   stopping = true
   hostStop ??= (host?.stop() ?? Promise.resolve()).catch((error) => { console.error(error) }).finally(() => { stopped = true })
@@ -196,9 +217,10 @@ async function start() {
   const newHost = () => new HostProcess({
     entry: join(here, 'host.mjs'),
     cwd: profileDir,
-    env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1', DS_BOT_USER_DSH_HOME: userDshHome(), CHEMCLAW_OFFICE_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
+    env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1',
+      CHEMCLAW_BROWSER_SAFE_MODE: browserSafeMode() ? '1' : '0', DS_BOT_USER_DSH_HOME: userDshHome(), CHEMCLAW_OFFICE_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
     pnpm,
-    onFailure: fail,
+    onFailure: handleHostFailure,
   })
   // A failed check is not a failed start: start() rejects, and the copy goes on unchecked.
   const newCheck = (home, list) => {
@@ -773,6 +795,7 @@ function openOutside(url) {
 
 // A new version may fix what keeps this one from starting.
 async function fail(error) {
+  if (browserRecoveryPending) return
   console.error(error)
   if (failed || stopping) return
   failed = true
