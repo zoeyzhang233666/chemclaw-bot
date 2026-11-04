@@ -10,7 +10,7 @@ const safe = (value, allowed) => allowed.has(value) ? value : 'other'
 
 export function createCdpDiagnosticWriter(path, { maxBytes = 256 * 1024, onError = () => {} } = {}) {
   return (diagnostic) => {
-    const safe = {
+    const record = {
       at: new Date().toISOString(),
       method: safe(diagnostic?.method, METHODS),
       reason: safe(diagnostic?.reason, REASONS),
@@ -25,7 +25,7 @@ export function createCdpDiagnosticWriter(path, { maxBytes = 256 * 1024, onError
       } catch (error) {
         if (error?.code !== 'ENOENT') throw error
       }
-      appendFileSync(path, JSON.stringify(safe) + '\n')
+      appendFileSync(path, JSON.stringify(record) + '\n')
     } catch (error) {
       // A missing/read-only disk must not bring down the Electron main process.
       try { onError(error) } catch {}
