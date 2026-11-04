@@ -193,6 +193,26 @@ test('child-target frame navigation cannot overwrite the Bot main-frame mapping'
   assert.equal((await request(socket, 3, 'Page.getFrameTree', {}, attached.result.sessionId)).result.frameTree.frame.id, entry.tabId)
 })
 
+test('malformed native CDP event disconnects only its Bot, not the host or other Bots', async t => {
+  const diagnostics = []
+  const { manager, views } = fixture({ onDiagnostic: event => diagnostics.push(event) })
+  t.after(() => manager.dispose())
+  manager.create('a')
+  manager.create('b')
+  const socketA = await openSocket(await manager.endpoint('a'))
+  const socketB = await openSocket(await manager.endpoint('b'))
+  t.after(() => { socketA.close(); socketB.close() })
+  const targetA = (await request(socketA, 1, 'Target.getTargets')).result.targetInfos[0]
+  await request(socketA, 2, 'Target.attachToTarget', { targetId: targetA.targetId })
+  const closingA = closed(socketA)
+  // A value that cannot be cloned is a malformed native debugger event. The
+  // relay must catch it in Electron instead of throwing out of EventEmitter.
+  views[0].webContents.debugger.emit('message', {}, 'Page.frameAttached', { frameId: () => {} })
+  await closingA
+  assert.equal(diagnostics.at(-1)?.reason, 'native-event-error')
+  assert.equal((await request(socketB, 3, 'Browser.getVersion')).result.protocolVersion, '1.3')
+})
+
 test('CDP relay rejects invalid paths and Origin headers', async t => {
   const { manager } = fixture()
   t.after(() => manager.dispose())
