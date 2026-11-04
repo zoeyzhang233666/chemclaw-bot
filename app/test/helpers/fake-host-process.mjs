@@ -20,6 +20,7 @@ export const state = {
   starts: 0,
   stops: 0,
   fail: false,
+  failHost: undefined,
   // The Host waits for the test to let it answer.
   held: false,
   release: () => { if (open !== undefined) { open(); open = undefined } },
@@ -35,7 +36,7 @@ export class HostProcess {
   #options
   #messageListeners = new Set()
 
-  constructor(options) { this.#options = options }
+  constructor(options) { this.#options = options; state.failHost = options.onFailure }
 
   async start() {
     state.starts += 1
