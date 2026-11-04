@@ -34,7 +34,12 @@ export class CdpFrameGuard {
       return node.childFrames.every(child => walk(child, id, depth + 1))
     }
     if (!walk(tree, null, 0)) return this.#drop('Page.getFrameTree', 'invalid-frame-tree')
-    for (const [id, parent] of frames) this.#frames.set(id, parent)
+    for (const [id, parent] of frames) {
+      // An OOPIF subtarget sees itself as a root. Preserve its parent as
+      // learned from the original page so a second frame tree cannot erase it.
+      const existing = this.#frames.get(id)
+      this.#frames.set(id, parent === null && existing !== undefined ? existing : parent)
+    }
     this.#record('Page.getFrameTree', 'accepted')
     return true
   }
@@ -68,7 +73,7 @@ export class CdpFrameGuard {
       if (typeof id !== 'string' || !id) return this.#drop(method, 'missing-frame-id')
       if (parentId && !this.#frames.has(parentId)) return this.#drop(method, 'unknown-parent')
       // Navigation can establish an existing frame before its attach event arrives.
-      this.#frames.set(id, parentId ?? null)
+      this.#frames.set(id, parentId ?? this.#frames.get(id) ?? null)
       this.#record(method, 'accepted')
       return true
     }
