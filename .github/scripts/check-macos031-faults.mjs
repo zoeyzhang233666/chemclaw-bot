@@ -45,6 +45,7 @@ export async function observeMain() {
     BotViews.prototype.endpoint = async function(...args) {
       const value = await endpoint.apply(this, args)
       globalThis.__chemclawNativeEndpoint = value
+      globalThis.__chemclawNativeRefreshEndpoint = () => endpoint.apply(this, args)
       return value
     }
     return { pid: state.pid, hostPids: state.hostPids }
@@ -106,7 +107,7 @@ export async function faultProbe(evaluate, port) {
         const message=JSON.parse(String(event.data)); if(message.id!==1)return; clearTimeout(timer)
         if(message.result?.result?.value)done(message.result.result.value);else reject(new Error('No recorded bridge endpoint'))
       })
-      socket.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'globalThis.__chemclawNativeEndpoint',returnByValue:true}}))
+      socket.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'globalThis.__chemclawNativeRefreshEndpoint()',returnByValue:true,awaitPromise:true}}))
     }).finally(() => socket.close())
     cdp = new WebSocket(endpoint)
     await new Promise((done, reject) => { cdp.addEventListener('open', done, { once: true }); cdp.addEventListener('error', reject, { once: true }) })
