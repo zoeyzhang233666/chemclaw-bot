@@ -8,6 +8,8 @@ import { installHooks } from './helpers/register.mjs'
 await installHooks()
 
 test('ordinary Host failure restarts only after the user chooses it and the old Host stops', async t => {
+  // Linux/macOS use the release-page checker rather than the mocked Windows updater.
+  t.mock.method(globalThis, 'fetch', async () => ({ ok: true, json: async () => [] }))
   await startApp()
   t.after(() => { app.quit() })
   await waitFor(() => hostState.starts > 0, 'start the fake Host')

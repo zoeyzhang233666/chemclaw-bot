@@ -2,7 +2,11 @@ name: macOS v0.3.1 ad-hoc DMG preview
 on:
   push:
     branches: [codex/mac-031-dmg-preview]
-    paths: [app/**, chemclaw-bot/**, .github/audit/mac-031-source.json]
+    paths:
+      - 'app/**'
+      - '!app/test/**'
+      - 'chemclaw-bot/**'
+      - '!chemclaw-bot/test/**'
 permissions:
   contents: read
 env:
