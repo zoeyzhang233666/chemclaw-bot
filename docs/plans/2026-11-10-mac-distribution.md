@@ -25,14 +25,15 @@ under the maintainer's present constraint.
 
 ## Installation change
 
-`electron-builder.mac-dmg.yml` is an opt-in installation preview. It builds a
+`electron-builder.mac-dmg.yml` began as an opt-in installation preview. It builds a
 Finder window containing ChemClaw.app on the left and an Applications link on
 the right. It retains the ZIP for compatibility, the existing app identifier,
 data locations and ad-hoc signing. It explicitly disables notarization and
 publishing. It does not claim to remove the system prompt.
 
-The default packaging and formal release workflow remain ZIP-based until the
-preview passes native checks. This matters because the earlier desktop design
+The initial decision kept default packaging and formal releases ZIP-based until
+native checks and maintainer acceptance. The promotion below supersedes that
+release decision. The earlier desktop design
 records Safari-downloaded unsigned DMGs being rejected as damaged on macOS 26
 (#351). Creating or mounting a DMG in CI alone cannot close that issue.
 
@@ -51,7 +52,8 @@ the retained ZIP.
 
 Local tests may use mock Electron and synthetic files only within the approved
 audit scratch root. No real application installation or user data access.
-No new commit, upload, PR, merge, release or tag is authorized by this document.
+This document does not itself authorize commits, uploads, PRs, merges or releases;
+the maintainer subsequently authorized them in the release conversation.
 
 Native checks still required:
 
@@ -68,3 +70,26 @@ Native checks still required:
 
 Do not count mocked schema/startup tests or CI mounting as a Gatekeeper pass.
 The release target remains v0.3.1. This change does not bump or publish a version.
+
+## Promotion to formal distribution (2026-11-10)
+
+After native preview checks and the maintainer's macOS 15.5 acceptance of
+`0.3.1-audit.20261110.2`, the maintainer reported that the formal ZIP still showed
+only the application's text installation fallback (#118). Formal Mac releases
+now provide the accepted Finder DMG layout alongside the ZIP. The completion
+gate requires both architectures and both formats (eleven release assets).
+The fallback remains useful when someone directly opens an uninstalled app.
+
+For the already published v0.3.1, a separate workflow downloads each existing
+release ZIP, verifies its GitHub SHA-256, signature, architecture, version and
+critical source files against the immutable release tag, then wraps that exact
+app in a DMG. A native read-only mount checks the Finder layout and compares
+all app file contents and symlink targets with the extracted ZIP. Only these
+two new assets and installation notes may be added; the nine original assets
+and tag must stay unchanged. Branch pushes only build and record evidence;
+publication requires an explicit dispatch from main.
+
+These packaging checks do not establish a warning-free first download on
+macOS 15.5 or macOS 26. Ad-hoc signing and the remaining native acceptance
+limitations above still apply. No user application or data is used by the
+supplemental workflow.

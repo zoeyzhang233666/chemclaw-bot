@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { copyFileSync, existsSync, lstatSync, mkdirSync, readlinkSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, readlinkSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { setTimeout as sleep } from 'node:timers/promises'
 
 const [image, output, extractedApp] = process.argv.slice(2).map(value => resolve(value))
@@ -20,6 +20,22 @@ assert.ok(!existsSync(output), 'Do not reuse an evidence directory')
 mkdirSync(output, { recursive: true })
 const report = { nativeMountAndStructurePassed: false, realBrowserDownload: false, warningFreeInstallVerified: false,
   installedIntoApplications: false, finderLayoutReviewed: false, priorUnquarantinedBaseline: true, operations: [] }
+const bundleContents = root => {
+  const entries = []
+  const walk = directory => {
+    for (const name of readdirSync(directory).sort()) {
+      const file = join(directory, name), stat = lstatSync(file)
+      const path = relative(root, file).normalize('NFC')
+      if (stat.isSymbolicLink()) entries.push(['link', path, readlinkSync(file)])
+      else if (stat.isDirectory()) walk(file)
+      else if (stat.isFile()) entries.push(['file', path, createHash('sha256').update(readFileSync(file)).digest('hex')])
+      else throw new Error('Unexpected bundle entry: ' + path)
+    }
+  }
+  walk(root)
+  entries.sort((a, b) => a[1].localeCompare(b[1], 'en'))
+  return { entries: entries.length, sha256: createHash('sha256').update(JSON.stringify(entries)).digest('hex') }
+}
 const command = (file, args, required = true) => {
   const result = spawnSync(file, args, { encoding: 'utf8', timeout: 120_000 })
   const entry = { file, args, status: result.status, error: result.error?.message ?? null,
@@ -44,9 +60,14 @@ try {
     assert.ok(existsSync(join(mount, '.DS_Store')), 'Finder layout metadata is missing')
     command('/usr/bin/codesign', ['--verify', '--deep', '--strict', app])
     command('/usr/bin/codesign', ['--display', '--verbose=4', app])
+    const reference = bundleContents(extractedApp), mounted = bundleContents(app)
+    assert.deepEqual(mounted, reference, 'The DMG must contain the same app files and symlink targets as the ZIP')
+    report.appContentsMatch = true
+    report.appContents = mounted
     const finder = command('/usr/bin/osascript', ['-e', 'on run argv\ntell application "Finder"\nopen (POSIX file (item 1 of argv) as alias)\nactivate\nend tell\nend run', mount], false)
     if (finder.status === 0 && !finder.error) {
-      await sleep(1500)
+      // A fresh runner's Finder icon service can still show placeholders initially.
+      await sleep(10_000)
       const shot = command('/usr/sbin/screencapture', ['-x', join(output, 'finder-layout.png')], false)
       report.finderScreenshotAvailable = shot.status === 0 && !shot.error
     } else report.finderScreenshotAvailable = false

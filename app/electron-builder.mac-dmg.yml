@@ -1,6 +1,6 @@
-# Installation preview: retains ad-hoc signing without Apple account credentials.
+# Finder installation layout used by formal DMG packaging and preview builds.
 # A DMG changes the installation layout, not Gatekeeper's trust assessment.
-# Keep ZIP compatibility until downloaded DMGs pass native first-launch checks.
+# Keep ZIP compatibility alongside the DMG.
 extends: ./electron-builder.yml
 mac:
   target: [dmg, zip]
