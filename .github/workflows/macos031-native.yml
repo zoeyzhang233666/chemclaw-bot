@@ -1,0 +1,103 @@
+name: macOS v0.3.1 native fault acceptance
+on:
+  push:
+    branches: [codex/mac-031-candidate]
+    paths:
+      - .github/scripts/check-macos031-faults.mjs
+      - .github/workflows/macos031-native.yml
+permissions:
+  contents: read
+  actions: read
+env:
+  NEXT_VERSION: 0.3.1-audit.20261110
+  CANDIDATE_COMMIT: 2065551ce4d14e9f96ed58c31afb82635cfb6621
+jobs:
+  native:
+    name: macOS 15 ARM64 / ${{ matrix.mode }}
+    runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [normal, quit-move, create, html-frame, cdp, idle]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check exact candidate run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(uname -m)" = arm64
+          sw_vers
+          test "$(gh api repos/zoeyzhang233666/chemclaw-bot/actions/runs/42748782036 --jq .head_sha)" = "$CANDIDATE_COMMIT"
+          test "$(gh api repos/zoeyzhang233666/chemclaw-bot/actions/runs/42748782036 --jq .conclusion)" = success
+          printf 'DSH_HOME=%s/unused-user-dsh\nDS_BOT_USER_DSH_HOME=%s/unused-user-dsh\n' "$RUNNER_TEMP" "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/unused-user-dsh"
+      - uses: actions/download-artifact@v4
+        with:
+          name: ChemClaw-0.3.1-audit.20261110-mac-arm64
+          path: ${{ runner.temp }}/candidate-artifact
+          run-id: 42748782036
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: mac031-build-and-normal-check
+          path: ${{ runner.temp }}/candidate-build-evidence
+          run-id: 42748782036
+          github-token: ${{ github.token }}
+      - name: Verify ZIP identity
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          import assert from 'node:assert/strict'
+          import { createHash } from 'node:crypto'
+          const root=process.env.RUNNER_TEMP
+          const find=(folder,name)=>{for(const entry of fs.readdirSync(folder,{withFileTypes:true})){const p=folder+'/'+entry.name;if(entry.isDirectory()){const result=find(p,name);if(result)return result}else if(entry.name===name)return p}}
+          const hashFile=find(root+'/candidate-build-evidence','zip-sha256.txt')
+          const sourceFile=find(root+'/candidate-build-evidence','package-source.json')
+          assert.ok(hashFile && sourceFile,'Missing build provenance')
+          const expected=fs.readFileSync(hashFile,'utf8').trim().split(/\s+/)[0]
+          const zip=root+'/candidate-artifact/ChemClaw-'+process.env.NEXT_VERSION+'-mac-arm64.zip'
+          assert.equal(createHash('sha256').update(fs.readFileSync(zip)).digest('hex'),expected)
+          assert.equal(JSON.parse(fs.readFileSync(sourceFile)).commit,process.env.CANDIDATE_COMMIT)
+          console.log('Candidate ZIP verified:',expected)
+          NODE
+          ditto -x -k "$RUNNER_TEMP/candidate-artifact/ChemClaw-$NEXT_VERSION-mac-arm64.zip" "$RUNNER_TEMP/candidate-app"
+          codesign --verify --deep --strict "$RUNNER_TEMP/candidate-app/ChemClaw.app"
+      - run: npm ci --no-fund --no-audit
+        working-directory: app
+      - name: Prepare HTML checker copy
+        run: node .github/scripts/instrument-html-audit.mjs app/scripts/check-packed.mjs app/scripts/check-packed-html-audit.mjs
+      - name: Run control or fault case
+        env:
+          MODE: ${{ matrix.mode }}
+        run: |
+          if [ "$MODE" = normal ] || [ "$MODE" = quit-move ]; then
+            node .github/scripts/check-macos-helper-path.mjs "$MODE" "$RUNNER_TEMP/candidate-app/ChemClaw.app" app/scripts/check-packed-html-audit.mjs "$RUNNER_TEMP/mac031-native"
+          else
+            node .github/scripts/check-macos031-faults.mjs "$MODE" "$RUNNER_TEMP/candidate-app/ChemClaw.app" app/scripts/check-packed-html-audit.mjs "$RUNNER_TEMP/mac031-native"
+          fi
+      - name: Upload owned-process evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac031-native-${{ matrix.mode }}
+          path: |
+            ${{ runner.temp }}/mac031-native/summary.json
+            ${{ runner.temp }}/mac031-native/*/test.log
+            ${{ runner.temp }}/mac031-native/*/checkpoint.json
+            ${{ runner.temp }}/mac031-native/*/owned-process.json
+            ${{ runner.temp }}/mac031-native/*/main-exit.json
+            ${{ runner.temp }}/mac031-native/*/notice.json
+            ${{ runner.temp }}/mac031-native/*/history-restored.json
+            ${{ runner.temp }}/mac031-native/*/screen*
+            ${{ runner.temp }}/mac031-native/*/*.ips
+          retention-days: 14
+          if-no-files-found: warn
