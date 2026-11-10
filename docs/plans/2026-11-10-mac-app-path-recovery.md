@@ -8,9 +8,12 @@ CHECK in ElectronBrowserClient::AppendExtraCommandLineSwitches. Position-stable
 and quit-before-move controls passed on macOS 15.8.2; exact macOS 15.5 remains
 unverified. See the isolated audit evidence; these are not DSH process crashes.
 
-Before starting DSH, a packaged Mac app outside Applications offers the official
-moveToApplicationsFolder flow. Successful moves quit/relaunch; failure, cancellation
-and conflicts do not start a team. The conflict handler always refuses replacement.
+The original candidate offered the official moveToApplicationsFolder flow before
+starting DSH. Following macOS 15.5 acceptance, the maintainer requested Finder's
+manual drag-to-Applications workflow instead. The current source only explains
+the quit-first installation steps, then quits without starting a team, moving or
+replacing anything. See 2026-11-10-mac-distribution.md for the opt-in DMG preview
+and the remaining ad-hoc signing limitations.
 Development and explicitly isolated DS_BOT_HOME runs skip installation, so tests
 never install into the runner's or the user's Applications directory.
 

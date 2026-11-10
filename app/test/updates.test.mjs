@@ -87,6 +87,14 @@ describe('isNewer', () => {
 })
 
 describe('watchReleases', () => {
+  test('recognizes a matching Mac DMG and ignores a newer DMG for the other architecture', async t => {
+    const records = [release('9.0.0', { assets: [{ name: 'ChemClaw-9.0.0-mac-x64.dmg' }] }),
+      release('8.0.0', { assets: [{ name: 'ChemClaw-8.0.0-mac-arm64.dmg' }] })]
+    const updates = watchReleases({ current: '0.3.0', arch: 'arm64', fetch: async () => releaseResponse(records), log: quietLog() })
+    t.after(updates.stop)
+    assert.deepEqual(await updates.latest(), { version: '8.0.0', page: records[1].html_url })
+  })
+
   test('checks the latest release at once with the GitHub headers, or uses a given feed', async (t) => {
     const calls = []
     const fetch = async (url, options) => {

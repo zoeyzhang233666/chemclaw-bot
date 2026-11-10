@@ -1,22 +1,17 @@
 {
   "baseCommit": "f1fb2a210bff53adfd04351b1dbda7e72ea72df3",
   "formalTargetVersion": "0.3.1",
-  "candidateMetadataVersion": "0.3.1-audit.20261110",
+  "candidateMetadataVersion": "0.3.1-audit.20261110.2",
   "entries": [
     {
-      "path": "NOTICE",
-      "bytes": 18249,
-      "sha256": "2969c503c8b79d6fedca0b9400c9f8c2b8cfd2f027f55e43bbd806770f55df40"
+      "path": "app/electron-builder.mac-dmg.yml",
+      "bytes": 610,
+      "sha256": "7e09628cb641847bb62628eec61016487b7a3594160c182ea646715dbfe8ddef"
     },
     {
-      "path": "README.md",
-      "bytes": 19056,
-      "sha256": "878e40017d24253ca21c02dbdcebf36db3269390ee9acf0e059ceee002ff4e69"
-    },
-    {
-      "path": "README.zh.md",
-      "bytes": 19056,
-      "sha256": "878e40017d24253ca21c02dbdcebf36db3269390ee9acf0e059ceee002ff4e69"
+      "path": "app/package.json",
+      "bytes": 3582,
+      "sha256": "47c7716afe65d94124fb9ffcea8675d6af273801d615e135c82e85b094a110e2"
     },
     {
       "path": "app/scripts/check-office-e2e.mjs",
@@ -70,8 +65,8 @@
     },
     {
       "path": "app/src/mac-install.mjs",
-      "bytes": 2560,
-      "sha256": "b6f86e0610e10fa53b284e3e78e5fb0cd0a6e7165ed5c50a7fda9c453ce0dd92"
+      "bytes": 1502,
+      "sha256": "16760e0119895b525c516e5769886db3dba26fd1e9157d21135d222701ef1ecd"
     },
     {
       "path": "app/src/main.mjs",
@@ -82,6 +77,11 @@
       "path": "app/src/renderer-recovery.mjs",
       "bytes": 1198,
       "sha256": "83bb360e276f7456339fbe1232c9824328292d7b65d72b6f2ae79cd8db79fad5"
+    },
+    {
+      "path": "app/src/updates.mjs",
+      "bytes": 10138,
+      "sha256": "ce741d1a96deeeb769f7a4a185f973cd17c31ff2be82bcdced60f7c77ad2307a"
     },
     {
       "path": "app/test/app-path.test.mjs",
@@ -104,6 +104,11 @@
       "sha256": "bfd624fcd9c7f4d06b8c7a9d85d5b9de11d61ea9f3e6aac8be3fe0e36435ed6c"
     },
     {
+      "path": "app/test/helpers/mac-install-outside.mjs",
+      "bytes": 339,
+      "sha256": "fa067ffbcaaee3eeee56a341607119c6d132938004106fb1ce203134671273ea"
+    },
+    {
       "path": "app/test/host-process.test.mjs",
       "bytes": 2119,
       "sha256": "1cb6e5ddda49859f13fa8ddb5237bd6a47caa8970d80a699a360fd575f631399"
@@ -119,9 +124,14 @@
       "sha256": "dde98bd23cb13e7ff477f24b0ceda868a70310571f007a78bfc9de900449734a"
     },
     {
+      "path": "app/test/mac-distribution.test.mjs",
+      "bytes": 1067,
+      "sha256": "89b3d13626c5b2d123ce172b7fbf893faecd18645116ddc1efbdb91bc506ddff"
+    },
+    {
       "path": "app/test/mac-install.test.mjs",
-      "bytes": 2807,
-      "sha256": "fba2e14b67a48c0710f0d71897548efaea06e0ab98f0edda388aa9f303f0236b"
+      "bytes": 2540,
+      "sha256": "b94388fcd5cd519e5f7647c52970764123041538b9fa441f26796fde06c95911"
     },
     {
       "path": "app/test/main-app-path.test.mjs",
@@ -132,6 +142,11 @@
       "path": "app/test/main-host-recovery.test.mjs",
       "bytes": 1212,
       "sha256": "84628422750c2b8d1e534a73b1dc95d8aca95715a186c7531455c3f742070b86"
+    },
+    {
+      "path": "app/test/main-mac-install.test.mjs",
+      "bytes": 1283,
+      "sha256": "2a30e0adcb51e81fa8a66e5e48e5242ed9dd381a30b58c517032bd8e7ff10660"
     },
     {
       "path": "app/test/main-renderer-recovery.test.mjs",
@@ -147,6 +162,11 @@
       "path": "app/test/stage-office-crt.test.mjs",
       "bytes": 4011,
       "sha256": "f74fd1e0c21db67625566bf08cb1dbb7ae7536abeb2ff60f0a59d75478aecd36"
+    },
+    {
+      "path": "app/test/updates.test.mjs",
+      "bytes": 18754,
+      "sha256": "10ad032628a1729ec2e39036b6d81870239e77e73d378e5a2c6e0006874ef793"
     },
     {
       "path": "chemclaw-bot/client.js",
@@ -305,8 +325,30 @@
     },
     {
       "path": "docs/plans/2026-11-10-mac-app-path-recovery.md",
-      "bytes": 2233,
-      "sha256": "454c2093dc8495b3131ef117f3ecad9f4e5e98d2edb347a9cf0aa269d14b08b4"
+      "bytes": 2433,
+      "sha256": "4e98f15ec343de952fb929a6b5fbc5e41cae18497d00b475a49b309e7d7d3c63"
+    },
+    {
+      "path": "docs/plans/2026-11-10-mac-distribution.md",
+      "bytes": 4000,
+      "sha256": "3d4fb184534486435cce661104d1872deba2f153e256b1676bf05f02eef0cca4"
+    },
+    {
+      "path": "NOTICE",
+      "bytes": 18249,
+      "sha256": "2969c503c8b79d6fedca0b9400c9f8c2b8cfd2f027f55e43bbd806770f55df40"
+    },
+    {
+      "path": "README.md",
+      "bytes": 19283,
+      "sha256": "729fb39cd98848d862f1aad3f7a30c4b25493789b287e1baa4c4cbe0fdd33c52"
+    },
+    {
+      "path": "README.zh.md",
+      "bytes": 19283,
+      "sha256": "729fb39cd98848d862f1aad3f7a30c4b25493789b287e1baa4c4cbe0fdd33c52"
     }
-  ]
+  ],
+  "parentCandidateCommit": "29f75516832ca1ba28597619042306d0bbe2537e",
+  "appleDeveloperAccountAvailable": false
 }

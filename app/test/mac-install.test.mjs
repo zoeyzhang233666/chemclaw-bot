@@ -2,70 +2,59 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { MAC_INSTALL_TEXT, prepareMacInstall } from '../src/mac-install.mjs'
 
-function fixture({ response = 0, installed = false, moved = true, conflict, error } = {}) {
+function fixture({ installed = false, answer = async () => ({ response: 0 }) } = {}) {
   const calls = { dialogs: [], moves: 0, quits: 0 }
   const app = {
     isPackaged: true,
     isInApplicationsFolder: () => installed,
-    moveToApplicationsFolder: options => {
-      calls.moves += 1
-      if (conflict) { calls.conflictAllowed = options.conflictHandler(conflict); return calls.conflictAllowed }
-      if (error) throw error
-      return moved
-    },
+    moveToApplicationsFolder: () => { calls.moves += 1; throw new Error('A running app must not move itself') },
     quit: () => { calls.quits += 1 },
   }
-  const dialog = { showMessageBox: async options => { calls.dialogs.push(options); return { response } } }
+  const dialog = { showMessageBox: options => { calls.dialogs.push(options); return answer() } }
   const prepare = options => prepareMacInstall({ app, dialog, platform: 'darwin', isolated: false, messages: MAC_INSTALL_TEXT.en, ...options })
   return { app, calls, prepare }
 }
 
-test('installed Mac apps start without a move or prompt', async () => {
+test('installed Mac apps proceed without a prompt', async () => {
   const f = fixture({ installed: true })
   assert.equal(await f.prepare(), true)
-  assert.equal(f.calls.moves, 0)
-  assert.deepEqual(f.calls.dialogs, [])
+  assert.deepEqual(f.calls, { dialogs: [], moves: 0, quits: 0 })
 })
 
-test('successful installation leaves startup to the native relaunch', async () => {
+test('opening an app outside Applications quits before team startup and never moves or replaces it', async () => {
   const f = fixture()
-  assert.equal(await f.prepare(), false)
-  assert.equal(f.calls.moves, 1)
-  assert.equal(f.calls.dialogs.length, 1)
-})
-
-test('cancelling installation quits without moving or starting the team', async () => {
-  const f = fixture({ response: 1 })
   assert.equal(await f.prepare(), false)
   assert.equal(f.calls.moves, 0)
   assert.equal(f.calls.quits, 1)
+  assert.equal(f.calls.dialogs.length, 1)
+  assert.deepEqual(f.calls.dialogs[0].buttons, ['Quit'])
 })
 
-for (const conflict of ['exists', 'existsAndRunning']) {
-  test(`installation refuses to replace an app when ${conflict}`, async () => {
-    const f = fixture({ conflict })
-    assert.equal(await f.prepare(), false)
-    assert.equal(f.calls.conflictAllowed, false)
-    assert.equal(f.calls.quits, 1)
-    assert.equal(f.calls.dialogs.at(-1).message, MAC_INSTALL_TEXT.en.conflict)
-  })
-}
+test('startup waits for the installation instruction to close', async () => {
+  let close
+  const f = fixture({ answer: () => new Promise(done => { close = done }) })
+  let completed = false
+  const pending = f.prepare().then(result => { completed = true; return result })
+  await Promise.resolve()
+  assert.equal(completed, false)
+  assert.equal(f.calls.quits, 0)
+  close({ response: 0 })
+  assert.equal(await pending, false)
+  assert.equal(f.calls.quits, 1)
+})
 
-for (const failure of [{ moved: false }, { error: new Error('mock move failure') }]) {
-  test(`failed installation quits without starting DSH (${failure.error ? 'throw' : 'cancel'})`, async () => {
-    const f = fixture(failure)
-    assert.equal(await f.prepare(), false)
-    assert.equal(f.calls.quits, 1)
-    assert.equal(f.calls.dialogs.at(-1).message, MAC_INSTALL_TEXT.en.failed)
-  })
-}
+test('a failed native dialog still quits without a move or relaunch', async () => {
+  const f = fixture({ answer: async () => { throw new Error('mock dialog failure') } })
+  await assert.rejects(f.prepare(), /mock dialog failure/u)
+  assert.equal(f.calls.quits, 1)
+  assert.equal(f.calls.moves, 0)
+})
 
-test('Windows, development and isolated runs never invoke the Mac move API', async () => {
-  for (const options of [{ platform: 'win32' }, { isolated: true }, { development: true }]) {
+test('Windows, Linux, development and isolated runs bypass installation', async () => {
+  for (const options of [{ platform: 'win32' }, { platform: 'linux' }, { isolated: true }, { development: true }]) {
     const f = fixture()
     if (options.development) f.app.isPackaged = false
     assert.equal(await f.prepare(options), true)
-    assert.equal(f.calls.moves, 0)
-    assert.deepEqual(f.calls.dialogs, [])
+    assert.deepEqual(f.calls, { dialogs: [], moves: 0, quits: 0 })
   }
 })

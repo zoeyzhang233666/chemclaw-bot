@@ -1,0 +1,117 @@
+name: macOS v0.3.1 ad-hoc DMG preview
+on:
+  push:
+    branches: [codex/mac-031-dmg-preview]
+    paths: [app/**, chemclaw-bot/**, .github/audit/mac-031-source.json]
+permissions:
+  contents: read
+env:
+  NEXT_VERSION: 0.3.1-audit.20261110.2
+jobs:
+  build-and-check:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: macos-15, label: sequoia }
+          - { runner: macos-latest, label: current }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Record environment and verify frozen source
+        run: |
+          printf 'DSH_HOME=%s/unused-user-dsh\nDS_BOT_USER_DSH_HOME=%s/unused-user-dsh\nCHEMCLAW_OFFICE_RUNTIME_CACHE=%s/office-runtime-cache\n' "$RUNNER_TEMP" "$RUNNER_TEMP" "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/unused-user-dsh" "$RUNNER_TEMP/candidate-evidence"
+          sw_vers | tee "$RUNNER_TEMP/candidate-evidence/macos.txt"
+          uname -m | tee "$RUNNER_TEMP/candidate-evidence/arch.txt"
+          test "$(uname -m)" = arm64
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict'
+          import { readFileSync } from 'node:fs'
+          import { createHash } from 'node:crypto'
+          const manifest = JSON.parse(readFileSync('.github/audit/mac-031-source.json'))
+          assert.equal(manifest.baseCommit, 'f1fb2a210bff53adfd04351b1dbda7e72ea72df3')
+          assert.equal(manifest.candidateMetadataVersion, process.env.NEXT_VERSION)
+          for (const entry of manifest.entries) {
+            assert.equal(createHash('sha256').update(readFileSync(entry.path)).digest('hex'), entry.sha256, entry.path)
+          }
+          console.log('Frozen source verified:', manifest.entries.length, 'files; candidate commit:', process.env.GITHUB_SHA)
+          NODE
+      - run: npm ci --no-fund --no-audit
+        working-directory: chemclaw-bot
+      - run: node scripts/build-client.mjs --check
+        working-directory: chemclaw-bot
+      - run: npm run runtime:bundle
+        working-directory: chemclaw-bot
+      - run: npm ci --no-fund --no-audit
+        working-directory: app
+      - name: Build ad-hoc DMG and ZIP without publishing
+        working-directory: app
+        run: npm run dist:mac-preview -- --arm64 --config.extraMetadata.version="$NEXT_VERSION"
+      - name: Verify packaged source and candidate archives
+        run: |
+          codesign --verify --deep --strict app/dist-pack/mac-arm64/ChemClaw.app
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict'
+          import { readFileSync, writeFileSync } from 'node:fs'
+          import { createHash } from 'node:crypto'
+          import { createRequire } from 'node:module'
+          const require = createRequire(new URL('./app/package.json', import.meta.url))
+          const asar = require('@electron/asar')
+          const archive = 'app/dist-pack/mac-arm64/ChemClaw.app/Contents/Resources/app.asar'
+          const paths = ['src/main.mjs', 'src/app-path.mjs', 'src/mac-install.mjs', 'src/bot-views.mjs', 'src/host-process.mjs', 'src/renderer-recovery.mjs', 'src/updates.mjs']
+          const entries = paths.map(path => {
+            const bytes = asar.extractFile(archive, path)
+            assert.deepEqual(bytes, readFileSync('app/' + path), path)
+            return { path, sha256: createHash('sha256').update(bytes).digest('hex') }
+          })
+          assert.equal(JSON.parse(asar.extractFile(archive, 'package.json')).version, process.env.NEXT_VERSION)
+          assert.equal(JSON.parse(asar.extractFile(archive, 'node_modules/@deepseek-ai/dsh/package.json')).version, '0.2.1-rc.5')
+          writeFileSync(process.env.RUNNER_TEMP + '/candidate-evidence/package-source.json', JSON.stringify({ commit: process.env.GITHUB_SHA, version: process.env.NEXT_VERSION, entries }, null, 2))
+          NODE
+          shasum -a 256 "app/dist-pack/ChemClaw-$NEXT_VERSION-mac-arm64.zip" | tee "$RUNNER_TEMP/candidate-evidence/zip-sha256.txt"
+          shasum -a 256 "app/dist-pack/ChemClaw-$NEXT_VERSION-mac-arm64.dmg" | tee "$RUNNER_TEMP/candidate-evidence/dmg-sha256.txt"
+          ditto -x -k "app/dist-pack/ChemClaw-$NEXT_VERSION-mac-arm64.zip" "$RUNNER_TEMP/candidate-app"
+          codesign --verify --deep --strict "$RUNNER_TEMP/candidate-app/ChemClaw.app"
+      - name: Prepare checker copy with HTML assertions
+        run: node .github/scripts/instrument-html-audit.mjs app/scripts/check-packed.mjs app/scripts/check-packed-html-audit.mjs
+      - name: Check normal startup, bundled Python, Office and HTML
+        run: node .github/scripts/check-macos-helper-path.mjs normal "$RUNNER_TEMP/candidate-app/ChemClaw.app" app/scripts/check-packed-html-audit.mjs "$RUNNER_TEMP/candidate-check"
+      - name: Inspect mounted DMG and record simulated quarantine assessments
+        run: node .github/scripts/check-macos-dmg-layout.mjs "app/dist-pack/ChemClaw-$NEXT_VERSION-mac-arm64.dmg" "$RUNNER_TEMP/dmg-layout" "$RUNNER_TEMP/candidate-app/ChemClaw.app"
+      - name: Upload candidate DMG and ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChemClaw-0.3.1-audit.20261110.2-mac-arm64-${{ matrix.label }}
+          path: |
+            app/dist-pack/ChemClaw-*-mac-arm64.zip
+            app/dist-pack/ChemClaw-*-mac-arm64.dmg
+          retention-days: 7
+          if-no-files-found: error
+          compression-level: 0
+      - name: Upload isolated evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac031-dmg-preview-${{ matrix.label }}-evidence
+          path: |
+            ${{ runner.temp }}/dmg-layout/summary.json
+            ${{ runner.temp }}/dmg-layout/*.png
+            ${{ runner.temp }}/candidate-evidence/*
+            ${{ runner.temp }}/candidate-check/summary.json
+            ${{ runner.temp }}/candidate-check/*/test.log
+            ${{ runner.temp }}/candidate-check/*/checkpoint.json
+            ${{ runner.temp }}/candidate-check/*/owned-process.json
+            ${{ runner.temp }}/candidate-check/*/screen*
+            ${{ runner.temp }}/candidate-check/*/*.ips
+          retention-days: 7
+          if-no-files-found: warn
