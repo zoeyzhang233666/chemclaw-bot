@@ -139,6 +139,11 @@ export function mountBrowserPlugin(ctx, { toolDefs, defineTool, keyOf, profileRo
           exec.signal?.throwIfAborted()
           if (getHold?.(botId)?.by === 'user') throw new Error('The user has taken over this browser. Wait for them to give it back.')
           let session = sessions.get(botId)
+          if (session !== undefined && (await session).isClosed?.()) {
+            sessions.delete(botId)
+            await (await session).close().catch(() => {})
+            session = undefined
+          }
           if (spec.needsBrowser && session === undefined) {
             // Store the opening promise before resolving roots so concurrent calls share the launch.
             const opening = Promise.resolve().then(async () => {
@@ -192,7 +197,15 @@ export function mountBrowserPlugin(ctx, { toolDefs, defineTool, keyOf, profileRo
               origin: { ...(exec.callId !== undefined ? { callId: exec.callId } : {}), ...(exec.agent?.id !== undefined ? { sessionId: exec.agent.id } : {}) },
               signal: exec.signal,
             })))
-          } finally { exec.signal?.removeEventListener('abort', abort) }
+          } finally {
+            exec.signal?.removeEventListener('abort', abort)
+            // A disconnected browser must not poison every later call. The
+            // failed action itself is never replayed: it may have had effects.
+            if (session?.isClosed?.()) {
+              sessions.delete(botId)
+              await session.close().catch(() => {})
+            }
+          }
         })
         turns.set(botId, turn)
         try { return await turn } finally { if (turns.get(botId) === turn) turns.delete(botId) }

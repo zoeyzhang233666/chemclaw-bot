@@ -6,6 +6,12 @@ const ROUTE = 'api/bot'
 const REFUSALS = new Set(['bot/refused', 'bot/invalid', 'bot/read-only', 'bot/not-found', 'bot/browser-off'])
 
 export const call = async (endpoint, payload, signal) => {
+  // Only the read-only roster poll gets a deadline here. Timing out a mutation
+  // must not invite the caller to replay an action whose result is unknown.
+  if (endpoint === 'state') {
+    const deadline = AbortSignal.timeout(15_000)
+    signal = signal ? AbortSignal.any([signal, deadline]) : deadline
+  }
   let response
   try {
     // Document-relative so the Web UI keeps working under a mounted base path.

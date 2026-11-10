@@ -1,0 +1,25 @@
+# Installation preview: retains ad-hoc signing without Apple account credentials.
+# A DMG changes the installation layout, not Gatekeeper's trust assessment.
+# Keep ZIP compatibility until downloaded DMGs pass native first-launch checks.
+extends: ./electron-builder.yml
+mac:
+  target: [dmg, zip]
+  notarize: false
+dmg:
+  title: ChemClaw ${version}
+  format: UDZO
+  filesystem: HFS+
+  backgroundColor: '#f2f4f7'
+  window:
+    width: 540
+    height: 380
+  iconSize: 96
+  iconTextSize: 14
+  contents:
+    - x: 140
+      y: 180
+      type: file
+    - x: 400
+      y: 180
+      type: link
+      path: /Applications

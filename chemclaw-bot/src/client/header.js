@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { currentPart, latestMemoryChange } from './text.js'
 import { ArrowUpIcon, CloseIcon, ArrowDownIcon, MemoryIcon, SidePanelIcon } from './icons.js'
 import { botState, BotAvatar, RoomAvatar } from './mark.js'
-import { ActivityIndicator } from './activity-row.js'
+import { ActivityIndicator, ContextRecoveryNotice } from './activity-row.js'
 import { clockLabel, openingTurn, unseenSince } from './cells.js'
 import { viewBottom } from './motion.js'
 import { t } from './i18n.js'
@@ -112,6 +112,7 @@ export function HeaderPill({ sessionId, useRoster, useSessions, useSessionStatus
     h('span', { className: 'bt-sr', role: 'status' }, memoryNotice ? t('Memory updated') : ''),
     h(NewMessagePills, { key: sessionId, sessionId, useSessions, useUi, useTurnClock }),
     h(ActivityIndicator, { key: `activity:${sessionId}`, sessionId, useRoster, useSessionStatus, useSession, useLive, useWork, actions }),
+    h(ContextRecoveryNotice, { key: `context:${sessionId}`, sessionId, useRoster }),
     // DSH's way into its right sidebar sits in the session header this pill replaces.
     actions.hasRightSidebar?.()
       ? h('button', { type: 'button', className: 'bt-icon-btn bt-head-side', 'data-bt-right-sidebar': '', 'aria-label': t('Show or hide the right sidebar'), title: t('Right sidebar'), onClick: () => actions.toggleRightSidebar() }, h(SidePanelIcon))

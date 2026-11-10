@@ -25,8 +25,11 @@ test('fatal IPC diagnostic identifies Playwright frame assertion before stderr i
   assert.doesNotMatch(error, /secret-value/)
 })
 
-test('fatal IPC prefers collected stderr and keeps the upstream error formatting', () => {
+test('fatal IPC retains its own cause even when stderr already has unrelated warnings', () => {
   const error = withFatalDiagnostic('DSH Host stopped', 'stderr cause\n', 'unused fallback')
-  assert.equal(error, 'DSH Host stopped:\nstderr cause')
+  assert.equal(error, 'DSH Host stopped:\nstderr cause\nunused fallback')
   assert.equal(withFatalDiagnostic('DSH Host stopped', '  ', undefined), 'DSH Host stopped')
+  const diagnostic = 'Assertion error\n    at FrameManager.frameAttached'
+  assert.match(withFatalDiagnostic('Host failed', 'earlier warning', diagnostic), /FrameManager\.frameAttached/)
+  assert.equal(withFatalDiagnostic('Host failed', diagnostic, diagnostic), `Host failed:\n${diagnostic}`)
 })

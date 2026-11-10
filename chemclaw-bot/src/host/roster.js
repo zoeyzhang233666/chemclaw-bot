@@ -345,7 +345,10 @@ export function install(rt) {
       void rt.deliver({ toId: bot.id, text: notes.join('\n'), role: 'update' })
         .catch(error => rt.warn('chemclaw-bot: profile update for %s not delivered: %s', bot.name, error?.message ?? error))
     }
-    if (modelChanged) await rt.applyModel(bot, { force: true })
+    if (modelChanged) {
+      await rt.contextRecovery?.resetBot(bot.id)
+      await rt.applyModel(bot, { force: true })
+    }
     if (moved) void rt.followFolder(bot.id)
     if (bot.model && bot.kickoff !== undefined) {
       const held = bot.kickoff

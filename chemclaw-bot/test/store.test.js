@@ -72,6 +72,20 @@ test('a failed state write rejects and leaves the saved file unchanged', async (
   assert.deepEqual(fs.readFileSync(statePath), original)
 })
 
+test('invalid context recovery records are preserved read-only instead of resetting their failure budget', async t => {
+  for (const contextRecovery of [null, { attempts: -1, blocked: false }, { attempts: 3, blocked: false }, { attempts: 100, blocked: true }]) {
+    for (const grouped of [false, true]) {
+      const saved = { version: 1, bots: { b: { id: 'b', ...(grouped ? {} : { contextRecovery }) } }, rooms: grouped ? { r: { id: 'r', members: ['b'], contextRecovery: { b: contextRecovery } } } : {} }
+      const raw = JSON.stringify(saved)
+      const { rt, statePath } = runtime(t, raw)
+      await rt.load()
+      assert.ok(rt.readOnly())
+      await assert.rejects(rt.save({ required: true }))
+      assert.equal(fs.readFileSync(statePath, 'utf8'), raw)
+    }
+  }
+})
+
 test('a failed migration write warns but load() still resolves', async (t) => {
   const { rt, statePath, warnings } = runtime(t, { version: 1, mainBotId: 'chief', bots: { chief: { id: 'chief', name: 'Chief' } } })
   // The migrated team's first write fails: a directory takes the temp file's path.
@@ -105,7 +119,7 @@ test('a failed state rename rejects and preserves the saved file', async (t) => 
   }
 })
 
-test('malformed state is backed up before a later save', async (t) => {
+test('malformed state is backed up but never replaced by an empty team', async (t) => {
   const original = '{"version":1,'
   const { rt, statePath } = runtime(t, original)
   await rt.load()
@@ -114,7 +128,77 @@ test('malformed state is backed up before a later save', async (t) => {
   assert.equal(fs.readFileSync(join(rt.home, backups[0]), 'utf8'), original)
   rt.state.prefs.marker = 'recovered'
   await rt.save()
-  assert.equal(JSON.parse(fs.readFileSync(statePath, 'utf8')).prefs.marker, 'recovered')
+  await assert.rejects(rt.save({ required: true }), /cannot save/)
+  assert.match(rt.readOnly(), /invalid JSON/)
+  assert.equal(fs.readFileSync(statePath, 'utf8'), original)
+  await rt.refresh()
+  assert.equal(fs.readdirSync(rt.home).filter(name => name.startsWith('state.json.broken-')).length, 1)
+})
+
+test('invalid team indexes are protected and can be re-read after repair', async t => {
+  for (const invalid of [{ bots: null }, { bots: { b: null } }, { rooms: [] }, { rooms: { r: { id: 'r', members: null } } }, { exchanges: null }, { prefs: null }, { bots: { b: { id: 'b', segments: [null] } } }]) {
+    const original = JSON.stringify({ version: 1, ...invalid })
+    const { rt, statePath } = runtime(t, original)
+    await rt.load()
+    assert.match(rt.readOnly(), /invalid team indexes/)
+    await rt.save()
+    assert.equal(fs.readFileSync(statePath, 'utf8'), original)
+    fs.writeFileSync(statePath, JSON.stringify({ version: 1, bots: { b: { id: 'b', name: 'Kept', sessionId: 'history' } } }))
+    await rt.refresh()
+    assert.equal(rt.readOnly(), undefined)
+    assert.equal(rt.state.bots.b.sessionId, 'history')
+    await rt.save({ required: true })
+    assert.equal(JSON.parse(fs.readFileSync(statePath, 'utf8')).bots.b.name, 'Kept')
+  }
+})
+
+test('a failed refresh preserves the last readable roster and retries unchanged files after access recovers', async t => {
+  const { rt, statePath } = runtime(t, { version: 1, bots: { b: { id: 'b', name: 'Kept', sessionId: 'history' } } })
+  await rt.load()
+  fs.writeFileSync(statePath, '{')
+  // A lock recheck causes the writer to read the externally changed file.
+  fs.unlinkSync(join(rt.home, 'state.lock'))
+  await rt.refresh()
+  assert.match(rt.readOnly(), /invalid JSON/)
+  assert.equal(rt.state.bots.b.sessionId, 'history')
+  await rt.save()
+  assert.equal(fs.readFileSync(statePath, 'utf8'), '{')
+  fs.writeFileSync(statePath, JSON.stringify({ version: 1, bots: { b: { id: 'b', name: 'Restored' } } }))
+  const restore = patch('readFile', original => async (path, ...args) => {
+    if (path === statePath) throw Object.assign(new Error('mock denied'), { code: 'EACCES' })
+    return original(path, ...args)
+  })
+  try { await rt.refresh() } finally { restore() }
+  assert.equal(rt.state.bots.b.name, 'Kept')
+  await rt.refresh()
+  assert.equal(rt.readOnly(), undefined)
+  assert.equal(rt.state.bots.b.name, 'Restored')
+})
+
+test('a disappearing saved team is not treated as a first launch', async t => {
+  const { rt, statePath } = runtime(t, { version: 1, bots: { b: { id: 'b', name: 'Kept' } } })
+  await rt.load()
+  fs.unlinkSync(statePath)
+  fs.unlinkSync(join(rt.home, 'state.lock'))
+  await rt.refresh()
+  assert.match(rt.readOnly(), /ENOENT/)
+  assert.equal(rt.state.bots.b.name, 'Kept')
+  await assert.rejects(rt.save({ required: true }), /cannot save/)
+  assert.equal(fs.existsSync(statePath), false)
+})
+
+test('a migration failure preserves the original file and can be retried without restarting the plugin', async t => {
+  const saved = { version: 1, bots: { b: { id: 'b', name: 'Kept' } }, rooms: { r: { id: 'r', members: ['b'] } } }
+  const { rt, statePath } = runtime(t, saved)
+  rt.autoRoomName = () => { throw new Error('mock service temporarily unavailable') }
+  await rt.load()
+  assert.match(rt.readOnly(), /team migration failed/)
+  assert.equal(fs.readFileSync(statePath, 'utf8'), JSON.stringify(saved))
+  rt.autoRoomName = () => 'Restored group'
+  await rt.refresh()
+  assert.equal(rt.readOnly(), undefined)
+  assert.equal(rt.state.bots.b.name, 'Kept')
+  assert.equal(rt.state.rooms.r.name, 'Restored group')
 })
 
 test('malformed state stays read-only when its backup cannot be copied', async (t) => {

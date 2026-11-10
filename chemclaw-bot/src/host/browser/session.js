@@ -125,8 +125,12 @@ export function createSession({ context, browser, page, botId, userDataDir, down
   let activeDownloads = null
   let pendingDelete = null
   let pendingDeleteLocator = null
+  let closed = false
+  context.on('close', () => { closed = true })
+  browser?.on('disconnected', () => { closed = true })
 
   const ready = () => {
+    if (closed) throw new Error('The browser connection closed. Start a new browser call to reconnect.')
     const externalHold = getHold?.()
     if (externalHold?.by === 'user') throw new Error('The user has taken over this browser. Wait for them to give it back.')
     if (hold && getHold && externalHold == null) hold = null
@@ -516,6 +520,7 @@ export function createSession({ context, browser, page, botId, userDataDir, down
     userDataDir,
     get hold() { return hold },
     get lastImage() { return lastImage },
+    isClosed: () => closed || browser?.isConnected() === false,
     takeLastImage() {
       const image = lastImage
       lastImage = ''
@@ -758,6 +763,7 @@ export function createSession({ context, browser, page, botId, userDataDir, down
       return finalAnswer === undefined ? 'Script finished without done().' : String(finalAnswer)
     },
     async close() {
+      closed = true
       if (browser) { await browser.close().catch(() => {}); return }
       await context.close().catch(() => {})
     },

@@ -576,10 +576,12 @@ export function install(rt) {
   // Session's inbox, so it does not open another round when this one ends; each also
   // restarts the relay count, and calls parked at the limit resume after the members
   // the user called.
-  function drainRoomInbox(room, round, index, agent) {
+  async function drainRoomInbox(room, round, index, agent) {
     // The greeting's prompt tells the admin the user has not written yet.
     if (round.kickoff) return
-    const lines = waitingLines(agent).filter(line => agent.inbox.remove(line.id))
+    const waiting = waitingLines(agent)
+    await rt.contextRecovery?.userInput(room.id, waiting.map(line => ({ id: line.id, source: { kind: 'user' } })))
+    const lines = waiting.filter(line => agent.inbox.remove(line.id))
     if (lines.length === 0) return
     const members = room.members.map(rt.botOf).filter(Boolean)
     for (const line of lines) {
@@ -600,7 +602,7 @@ export function install(rt) {
     // this round: it drains at the loop's head even once the slots ran out.
     for (let index = 0; index < round.slots.length || waitingLines(agent).length > 0; index += 1) {
       if (signal.aborted) break
-      drainRoomInbox(room, round, index, agent)
+      await drainRoomInbox(room, round, index, agent)
       if (index >= round.slots.length) break
       const slot = round.slots[index]
       const member = rt.botOf(slot.id)

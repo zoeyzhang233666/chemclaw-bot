@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 import { copyPrimaryRuntime, parsePrimaryRuntime, workspaceDependencyPaths } from '@deepseek-ai/dsh-tool-workspace-dependencies'
 import { stageOfficeConverter } from './stage-office-converter.mjs'
+import { officeCrtLock, stageOfficeCrt } from './stage-office-crt.mjs'
 import extractZip from 'extract-zip'
 import Papa from 'papaparse'
 import { x as extractTar } from 'tar'
@@ -258,7 +259,19 @@ export async function preparePrimaryRuntime(options) {
   await prepareOfficeSkillAssets(assets, join(paths.runtime, 'office-skills'))
   // This Node runtime cannot load modules from Electron's app.asar. Ship the
   // native/WASM converter and all its dependencies in ordinary resources.
-  stageOfficeConverter(paths.runtime)
+  const converter = stageOfficeConverter(paths.runtime, { platform: manifest.platform, arch: manifest.arch })
+  if (target === 'win-x64') {
+    const archive = await downloadPrimaryRuntimeAsset(officeCrtLock.url, officeCrtLock.sha256, paths.downloads)
+    const license = await downloadPrimaryRuntimeAsset(officeCrtLock.license.url, officeCrtLock.license.sha256, paths.downloads)
+    const staging = mkdtempSync(join(tmpdir(), 'chemclaw-office-crt-'))
+    try {
+      await extractZip(archive, { dir: staging })
+      const crt = stageOfficeCrt(converter.engineRoot, staging, license)
+      console.log(`office-converter: staged Visual C++ ${crt.version}, ${crt.files} verified release DLLs`)
+    } finally {
+      rmSync(staging, { recursive: true, force: true })
+    }
+  }
 }
 
 /**

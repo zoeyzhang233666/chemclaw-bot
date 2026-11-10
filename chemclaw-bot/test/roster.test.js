@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs'
 import fsp from 'node:fs/promises'
 import { syncBuiltinESMExports } from 'node:module'
 import { hostname, tmpdir } from 'node:os'
@@ -278,6 +278,20 @@ test('the state reports a changed model list without a new revision', async (t) 
   const first = (await call('state', {})).value
   assert.equal((await call('state', { since: first.revision, models: first.modelsKey })).value.unchanged, true)
   assert.equal((await call('state', { since: first.revision, models: 'stale' })).value.unchanged, undefined)
+})
+
+test('unchanged roster polls still report a newly unreadable team and keep the last readable bots', async t => {
+  const { call, stop, home } = start()
+  t.after(stop)
+  const first = (await call('state', {})).value
+  writeFileSync(join(home, 'state.json'), '{broken')
+  unlinkSync(join(home, 'state.lock'))
+  const failed = (await call('state', { since: first.revision, models: first.modelsKey })).value
+  assert.equal(failed.unchanged, true)
+  assert.match(failed.readOnly, /invalid JSON/)
+  const all = (await call('state', {})).value
+  assert.deepEqual(all.bots.map(bot => bot.id), first.bots.map(bot => bot.id))
+  assert.equal(readFileSync(join(home, 'state.json'), 'utf8'), '{broken')
 })
 
 test('a new team starts with a DeepSeek-blue whale as its Main Bot', async (t) => {

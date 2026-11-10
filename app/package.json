@@ -14,6 +14,7 @@
     "start": "electron .",
     "pack": "node scripts/stage-office-converter.mjs && electron-builder --dir --publish never",
     "dist": "node scripts/stage-office-converter.mjs && electron-builder --publish never",
+    "dist:mac-preview": "node scripts/stage-office-converter.mjs && electron-builder --mac --config electron-builder.mac-dmg.yml --publish never",
     "check-packed": "node scripts/check-packed.mjs",
     "shot": "node scripts/shot.mjs",
     "icon": "node scripts/icon.mjs",

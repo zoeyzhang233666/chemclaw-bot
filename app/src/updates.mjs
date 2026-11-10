@@ -7,7 +7,7 @@ export const UPDATE_TEXT = {
     restart: 'Restart now', later: 'Later',
     onFailure: version => `ChemClaw ${version} is installed when its download is done, and then ChemClaw opens again.`,
     available: version => `ChemClaw ${version} is available.`,
-    availableDetail: 'This version cannot update itself. Download the new version from its release page, then replace ChemClaw in Applications.',
+    availableDetail: 'Download the new version from its release page. Quit ChemClaw before dragging the new app to Applications to replace it, then open the installed copy.',
     download: 'Download',
     onFailurePage: version => `ChemClaw ${version} is available. After this box, its download page opens.`,
   },
@@ -17,7 +17,7 @@ export const UPDATE_TEXT = {
     restart: '立即重启', later: '稍后',
     onFailure: version => `ChemClaw ${version} 下载完会自动安装，然后重新打开。`,
     available: version => `ChemClaw ${version} 已经发布。`,
-    availableDetail: '这个版本不能自己更新。请到发布页下载新版，再用它替换「应用程序」里的 ChemClaw。',
+    availableDetail: '请到发布页下载新版。先完全退出 ChemClaw，再将新版拖到「应用程序」替换旧版，然后打开已安装的副本。',
     download: '下载',
     onFailurePage: version => `ChemClaw ${version} 已经发布。关掉这个对话框后，会打开它的下载页面。`,
   },
@@ -79,7 +79,7 @@ function isHttpsPage(page) {
   }
 }
 
-export function watchReleases({ current, arch, asset: assetName = version => `ChemClaw-${version}-mac-${arch}.zip`, fetch = globalThis.fetch, ask, open, feed = RELEASES_URL, log = console }) {
+export function watchReleases({ current, arch, asset: assetName = version => ['dmg', 'zip'].map(ext => `ChemClaw-${version}-mac-${arch}.${ext}`), fetch = globalThis.fetch, ask, open, feed = RELEASES_URL, log = console }) {
   let asked
   let checking = false
   const status = initialStatus(current)
@@ -108,7 +108,8 @@ export function watchReleases({ current, arch, asset: assetName = version => `Ch
             || (release.prerelease === true && !allowPrerelease)) continue
           const version = typeof release.tag_name === 'string' ? release.tag_name.replace(/^v/u, '') : ''
           if (!isNewer(version, current)) continue
-          if (!Array.isArray(release.assets) || !release.assets.some(asset => asset?.name === assetName(version))) continue
+          const names = [assetName(version)].flat()
+          if (!Array.isArray(release.assets) || !release.assets.some(asset => names.includes(asset?.name))) continue
           if (!isHttpsPage(release.html_url)) {
             log.error('ChemClaw: update check failed: release page URL is not HTTPS')
             continue

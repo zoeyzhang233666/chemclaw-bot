@@ -9,6 +9,7 @@ import { runProfile } from '@deepseek-ai/dsh/profile-boot'
 import { CHECK_PROFILE, INSTALL_ANCHOR, loadAppProfile, loadCheckProfile, PROFILE } from './profile.mjs'
 import { unreadableSessions } from './session-check.mjs'
 import { reconcileOfficeRuntime } from './office-patch.mjs'
+import { checkTeamReady } from './host-readiness.mjs'
 
 const MAX_FATAL_DIAGNOSTIC_CHARS = 64 * 1024
 
@@ -54,6 +55,7 @@ async function main() {
   const [webServer, connection] = [ctx.get('webServer'), ctx.get('connection')]
   // A profile patch can turn these rows off; then the window has nothing to talk to.
   if (webServer === undefined || connection === undefined) throw new Error(`The profile in ${profile.dir} does not start the engine's web server and connection.`)
+  await checkTeamReady(ctx)
   const url = connection.authenticatedUrl(`http://127.0.0.1:${String(webServer.port)}`)
   await send({ type: 'ready', url, injections: webServer.collectIndexInjections() })
 }

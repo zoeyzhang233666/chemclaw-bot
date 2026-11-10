@@ -6,6 +6,7 @@ import { noteClientError } from './diagnostics.js'
 import { reducedMotion } from './motion.js'
 import { t } from './i18n.js'
 import { toolActivityDetail } from '../shared/tool-activity.js'
+import { contextRecoveryNotice } from '../shared/context-recovery.js'
 
 // -------------------------------------------------------------------------
 // The activity row: the Bot's mark and a shimmering phrase at the transcript
@@ -66,6 +67,12 @@ function useRunningHost(active) {
     return () => { cancelAnimationFrame(frame); observer.disconnect() }
   }, [active])
   return host
+}
+
+export function ContextRecoveryNotice({ sessionId, useRoster }) {
+  const notice = useRoster(roster => contextRecoveryNotice(roster.byId[sessionId], roster.roomsById[sessionId]))
+  const host = useRunningHost(Boolean(notice))
+  return host && notice ? createPortal(h('div', { className: 'bt-event bt-event-error', role: 'alert', 'data-bt-context-recovery': '' }, t(notice)), host) : null
 }
 
 // New rows slide in. The first paint of a transcript, history

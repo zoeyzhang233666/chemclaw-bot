@@ -292,3 +292,14 @@ Office Runtime Integration (PR-B):
   Includes locked Node.js and Astral CPython standalone redistributables,
   Python Office libraries and LibreOffice Kit CLI; redistribute with license notices.
   References: https://github.com/Fei2411/DS-Bot/pull/624
+
+Windows Office conversion runtime:
+  Microsoft Visual C++ Runtime 14.44.35211.0 (x64).
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Official Microsoft release redistributable binaries are bundled unmodified
+  beside the native Office helper using its exported prebuilds.json contract.
+  Microsoft Software License Terms apply to these binaries, separately from
+  ChemClaw's Apache-2.0 license. The original runtime license and fixed archive
+  and file hashes ship in the engine's licenses/chemclaw-visual-cpp directory.
+  https://visualstudio.microsoft.com/license-terms/vs2022-cruntime/
+  https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution

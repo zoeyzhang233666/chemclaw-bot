@@ -71,7 +71,8 @@ export function stageOfficeConverter(output, {
   if (!existsSync(officeConverterCli(resolve(output)))) throw new Error('Staged Office CLI is missing')
   if (!existsSync(join(target, relative(root, engine), 'package.json'))) throw new Error('Staged Office engine is missing: ' + engineName)
   console.log('office-converter: staged ' + visited.size + ' packages including ' + engineName)
-  return { cli: officeConverterCli(resolve(output)), packages: [...visited], engineName }
+  return { cli: officeConverterCli(resolve(output)), packages: [...visited], engineName,
+    engineRoot: join(target, relative(root, engine)) }
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

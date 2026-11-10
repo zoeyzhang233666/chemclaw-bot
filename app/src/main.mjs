@@ -19,9 +19,12 @@ import { applyCookies, CookieImports } from './cookie-import.mjs'
 import { parseCookieFile } from './cookie-parse.mjs'
 import { downloadSaver } from './downloads.mjs'
 import { canonicalExecPath } from './canonical-path.mjs'
+import { watchAppPath } from './app-path.mjs'
+import { MAC_INSTALL_TEXT, prepareMacInstall } from './mac-install.mjs'
 import { chooseLocations, localeText, programFolder, saveLocations, text } from './first-run.mjs'
 import { hostPort } from './host-port.mjs'
 import { HostProcess } from './host-process.mjs'
+import { watchRenderer } from './renderer-recovery.mjs'
 import { copySessions, findTeam, importTeam, teamInUse, userDshHome } from './import.mjs'
 import { copyData, moveProblem } from './move-data.mjs'
 import { editLocations } from './locations-dialog.mjs'
@@ -70,6 +73,8 @@ let stopping = false
 let stopped = false
 let failed = false
 let browserRecoveryPending = false
+let appPath
+let appPathRecoveryPending = false
 let places
 // The Host answered and the window may talk to it without the launch URL.
 let hostReady = false
@@ -83,6 +88,7 @@ let bootstrap
 let tokenSpent = false
 // The download handler of the app's session is bound once, not once per window.
 let downloadsBound = false
+const rendererRecovery = new WeakMap()
 // Quitting while a first-run dialog is open stops the first run, and during the copy (of the
 // first run or of a data move) it waits for the copy to stop at a safe point, so that it leaves
 // no half team and no temporary copy.
@@ -108,18 +114,19 @@ const shell = createShell({
     if (process.platform === 'darwin') app.show()
     target.show()
     target.focus()
+    void rendererRecovery.get(target)?.recover()
   },
   quit: () => { app.quit() },
   busy: () => choosing !== undefined || copying !== undefined,
   // Before the first run has chosen its places there is no window to show, and before the
   // first load of the Host there is no address to load.
-  ready: () => places !== undefined && origin !== undefined && bootstrap !== undefined,
+  ready: () => !appPathRecoveryPending && appPath?.check() !== false && places !== undefined && origin !== undefined && bootstrap !== undefined,
   notice: { marker: () => join(app.getPath('userData'), 'tray-close-acknowledged'), show: (options) => dialog.showMessageBox(options) },
   // Without a tray the close asks whether the app should end.
   fallback: { show: (options) => dialog.showMessageBox(options) },
 })
 // The tray icon goes away with the app, and a late answer to the close notice hides nothing.
-app.once('will-quit', () => { shell.dispose(); botViews?.dispose(); updates?.stop() })
+app.once('will-quit', () => { appPath?.dispose(); shell.dispose(); botViews?.dispose(); updates?.stop() })
 
 
 if (!app.isPackaged && process.send) process.on('message', message => {
@@ -137,7 +144,7 @@ if (canonical !== undefined) {
 } else if (!app.requestSingleInstanceLock()) {
   app.exit(0)
 } else {
-  app.on('second-instance', () => { shell.open() })
+  app.on('second-instance', () => { if (appPath?.check() !== false) shell.open() })
   app.on('before-quit', (event) => {
     if (choosing !== undefined) {
       // A first-run dialog is open: the quit waits for it, and the app goes on meanwhile.
@@ -163,14 +170,43 @@ if (canonical !== undefined) {
     if (stopping) { void (hostStop ?? Promise.resolve()).then(() => { app.quit() }); return }
     void stopHost().then(() => { app.quit() })
   })
-  app.whenReady().then(async () => { shell.install(); await start() }).catch(fail)
+  app.whenReady().then(async () => {
+    if (!await prepareMacInstall({ app, dialog, messages: localeText(MAC_INSTALL_TEXT) })) return
+    appPath = watchAppPath({ app, onInvalid: handleAppPathChange })
+    if (!appPath.check()) return
+    shell.install()
+    await start()
+  }).catch(fail)
+}
+
+async function handleAppPathChange() {
+  if (appPathRecoveryPending) return
+  appPathRecoveryPending = true
+  shell.beginQuit()
+  mainWindow?.hide()
+  choosing?.abort()
+  copyAbort.abort()
+  try {
+    await copying?.catch(error => { console.error(error) })
+    copying = undefined
+    await stopHost()
+    const t = localeText({
+      en: { message: 'ChemClaw was moved or replaced while running.', detail: 'ChemClaw has stopped its team to avoid a crash. Quit and reopen ChemClaw from Applications. Saved conversations stay in their data folder. Check interrupted work before asking a Bot to repeat it.', quit: 'Quit' },
+      zh: { message: 'ChemClaw 在运行期间被移动或替换。', detail: 'ChemClaw 已停止团队以避免闪退。请退出，再从“应用程序”打开 ChemClaw。已保存的对话仍在原数据目录；让 Bot 重试前，请先核对中断的工作。', quit: '退出' },
+    })
+    await dialog.showMessageBox({ type: 'warning', title: 'ChemClaw', message: t.message, detail: t.detail, buttons: [t.quit], defaultId: 0, cancelId: 0, noLink: true })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    app.quit()
+  }
 }
 
 function handleHostFailure(error) {
   // The Playwright event assertion can escape its browser tool and kill the DSH
   // child. Relaunch this one run with the browser plugin isolated; do not swallow
   // other Host errors or loop if the fallback also fails.
-  if (!browserRecoveryPending && !browserSafeMode() && !stopping && !choosing && !copying && browserFrameAssertion(error)) {
+  if (!appPathRecoveryPending && !browserRecoveryPending && !browserSafeMode() && !stopping && !choosing && !copying && browserFrameAssertion(error)) {
     browserRecoveryPending = true
     console.warn('ChemClaw: DSH browser frame assertion; restarting once without browser automation.')
     try {
@@ -192,9 +228,11 @@ function stopHost() {
 }
 
 async function start() {
+  appPath?.assertAvailable()
   choosing = new AbortController()
   const where = await chooseLocations(choosing.signal).finally(() => { choosing = undefined })
   if (where.quit) { app.exit(0); return }
+  appPath?.assertAvailable()
   places = { dataDir: where.dataDir, workspace: where.workspace }
   // This MUST happen in the Electron parent before booting the DSH Host:
   // later Bot plugin initialization is too late for the first sandbox setup.
@@ -207,8 +245,10 @@ async function start() {
   // app knows whether this PR needs a pinned Office payload. Prepare before Host.
   await ensureOfficePreviewRuntime({ packaged: app.isPackaged, appDir: join(here, '..') })
   const port = await hostPort(join(app.getPath('userData'), 'host-port.json'))
+  appPath?.assertAvailable()
   origin = `http://127.0.0.1:${String(port)}`
   botViews = new BotViews({ window: () => mainWindow, WebContentsView, guests: browserGuests,
+    assertAvailable: () => appPath?.assertAvailable(),
     origin: () => origin, devTools: !app.isPackaged, statePath: join(app.getPath('userData'), 'bot-views.json'),
     onChange: state => mainWindow?.webContents.send(IPC.browserViewChanged, state),
     onDiagnostic: createCdpDiagnosticWriter(join(app.getPath('userData'), 'cdp-frame-diagnostics.log'), {
@@ -218,16 +258,20 @@ async function start() {
   const pnpm = join(app.getAppPath(), 'node_modules', 'pnpm', 'bin', 'pnpm.mjs')
   const profileDir = join(where.dataDir, 'profiles', PROFILE)
   mkdirSync(profileDir, { recursive: true })
-  const newHost = () => new HostProcess({
-    entry: join(here, 'host.mjs'),
-    cwd: profileDir,
-    env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1',
-      CHEMCLAW_BROWSER_SAFE_MODE: browserSafeMode() ? '1' : '0', DS_BOT_USER_DSH_HOME: userDshHome(), CHEMCLAW_OFFICE_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
-    pnpm,
-    onFailure: handleHostFailure,
-  })
+  const newHost = () => {
+    appPath?.assertAvailable()
+    return new HostProcess({
+      entry: join(here, 'host.mjs'),
+      cwd: profileDir,
+      env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1',
+        CHEMCLAW_BROWSER_SAFE_MODE: browserSafeMode() ? '1' : '0', DS_BOT_USER_DSH_HOME: userDshHome(), CHEMCLAW_OFFICE_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
+      pnpm,
+      onFailure: handleHostFailure,
+    })
+  }
   // A failed check is not a failed start: start() rejects, and the copy goes on unchecked.
   const newCheck = (home, list) => {
+    appPath?.assertAvailable()
     const cwd = join(home, 'profiles', CHECK_PROFILE)
     mkdirSync(cwd, { recursive: true })
     return new HostProcess({ entry: join(here, 'host.mjs'), cwd, env: { ...process.env, DSH_HOME: home, DS_BOT_CHECK: list }, pnpm, onFailure: () => {} })
@@ -396,6 +440,7 @@ async function start() {
     launchUrl = url
     const win = mainWindow
     if (win === undefined) return false
+    appPath?.assertAvailable()
     tokenSpent = true
     await win.loadURL(url)
     hostReady = true
@@ -613,6 +658,7 @@ async function flushDeferredUpdate() {
 }
 
 function createWindow() {
+  appPath?.assertAvailable()
   const dark = nativeTheme.shouldUseDarkColors
   const win32 = process.platform === 'win32'
   const win = new BrowserWindow({
@@ -650,6 +696,20 @@ function createWindow() {
   // The tabs that outlived the last window join this one.
   botViews?.attach(win)
   const contents = win.webContents
+  appPath?.bind(contents)
+  rendererRecovery.set(win, watchRenderer({
+    contents,
+    available: () => !appPathRecoveryPending && mainWindow === win && !win.isDestroyed() && !shell.isQuitting() && !stopping && !failed,
+    reload: () => connectHost(win),
+    ask: async () => {
+      const t = localeText({
+        en: { message: 'The ChemClaw window has stopped repeatedly.', detail: 'The DSH Host is still running. Reload the window to reconnect to your saved conversations. Text that was not sent may need to be entered again.', reload: 'Reload window', later: 'Later' },
+        zh: { message: 'ChemClaw 窗口连续发生异常。', detail: 'DSH 进程仍在运行。重新加载窗口可连接已保存的对话；尚未发送的输入可能需要重新填写。', reload: '重新加载窗口', later: '稍后' },
+      })
+      const result = await dialog.showMessageBox(win, { type: 'warning', title: 'ChemClaw', message: t.message, detail: t.detail, buttons: [t.reload, t.later], defaultId: 0, cancelId: 1, noLink: true })
+      return result.response === 0
+    },
+  }))
   // The session is the same for every window of the app, so the handler is bound once.
   if (!downloadsBound) {
     downloadsBound = true
@@ -676,6 +736,7 @@ function createWindow() {
     contents.on('dom-ready', () => { void contents.insertCSS(fonts) })
   }
   contents.setWindowOpenHandler(({ url }) => {
+    if (appPath?.check() === false) return { action: 'deny' }
     // DSH's sign-in opens a blank window during the click and sends it to the sign-in page later.
     if (url === 'about:blank') return { action: 'allow', overrideBrowserWindowOptions: { show: false, webPreferences: { sandbox: true } } }
     openOutside(url)
@@ -720,13 +781,16 @@ function rebuildWindow() {
 // cookie; the later ones use the plain address, which that cookie carries. The launch URL is
 // used again only when no browser carried it at all, so that a token is never spent twice.
 async function connectHost(win) {
+  appPath?.assertAvailable()
   if (hostReady) { await win.loadURL(`${origin}/`); return }
   // The first load of the Host decides how this window comes in.
   if (bootstrap !== undefined) await bootstrap
+  appPath?.assertAvailable()
   if (hostReady) { await win.loadURL(`${origin}/`); return }
   // The first load never came through. The cookie may be there anyway: it belongs to the
   // session of the browser, which outlives the window.
   if (await hostCookie()) {
+    appPath?.assertAvailable()
     hostReady = true
     await win.loadURL(`${origin}/`)
     return
@@ -787,6 +851,7 @@ function assertWindow(event) {
   const contents = mainWindow?.webContents
   if (contents === undefined || event.sender !== contents || event.senderFrame !== contents.mainFrame
     || !event.senderFrame.url.startsWith(`${origin}/`)) throw new Error('ChemClaw: rejected IPC from an unknown page')
+  appPath?.assertAvailable()
 }
 
 function fromWindow(event) {
@@ -799,7 +864,7 @@ function openOutside(url) {
 
 // A new version may fix what keeps this one from starting.
 async function fail(error) {
-  if (browserRecoveryPending) return
+  if (browserRecoveryPending || appPathRecoveryPending) return
   console.error(error)
   if (failed || stopping) return
   failed = true
@@ -807,6 +872,17 @@ async function fail(error) {
   const throwaway = Boolean(process.env.DS_BOT_HOME)
   const t = localeText(UPDATE_TEXT)
   const next = found ? `\n\n${found.page ? t.onFailurePage(found.version) : t.onFailure(found.version)}` : ''
+  if (!found && host !== undefined) {
+    const recovery = localeText({
+      en: { message: 'The DSH Host stopped or could not start.', detail: 'Restart ChemClaw to reopen your saved conversations. Interrupted work may need your attention; check completed actions before asking a Bot to repeat them.', restart: 'Restart ChemClaw', quit: 'Quit' },
+      zh: { message: 'DSH 进程已停止或未能启动。', detail: '重启 ChemClaw 可重新打开已保存的对话。中断的工作可能需要你处理；让 Bot 重试前，请先检查已经完成的操作。', restart: '重启 ChemClaw', quit: '退出' },
+    })
+    const { response } = await dialog.showMessageBox({ type: 'error', title: 'ChemClaw', message: recovery.message, detail: `${recovery.detail}\n\n${error instanceof Error ? error.message : String(error)}`, buttons: [recovery.restart, recovery.quit], defaultId: 1, cancelId: 1, noLink: true })
+    await stopHost()
+    if (response === 0) app.relaunch({ args: process.argv.slice(1) })
+    app.quit()
+    return
+  }
   dialog.showErrorBox('ChemClaw', `${text().notStarted}\n\n${error instanceof Error ? error.message : String(error)}${next}`)
   if (found?.page) {
     if (!throwaway) await electronShell.openExternal(found.page)

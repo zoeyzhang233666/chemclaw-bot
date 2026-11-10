@@ -43,6 +43,7 @@ export class BotViews {
   #address
   #onChange
   #onDiagnostic
+  #assertAvailable
   #downloadPaths = new Map()
   #downloadRoots = new Map()
   #statePath
@@ -52,7 +53,7 @@ export class BotViews {
   // The tabs whose view waits for a window to belong to.
   #waiting = new Set()
 
-  constructor({ window, WebContentsView, guests, origin, devTools = false, onChange = () => {}, statePath,
+  constructor({ window, WebContentsView, guests, origin, devTools = false, onChange = () => {}, statePath, assertAvailable = () => {},
     onDiagnostic = ({ method, reason, recent }) => console.warn('ChemClaw CDP frame relay:', method, reason, recent.map(event => event.method + ':' + event.outcome).join(',')),
   }) {
     this.#window = window
@@ -62,6 +63,7 @@ export class BotViews {
     this.#devTools = devTools
     this.#onChange = onChange
     this.#onDiagnostic = onDiagnostic
+    this.#assertAvailable = assertAvailable
     this.#statePath = statePath
     if (statePath !== undefined) {
       try {
@@ -109,6 +111,7 @@ export class BotViews {
   }
 
   create(botId, { url = 'about:blank', createdByBot = false, openerId, tabId: requestedTabId } = {}) {
+    this.#assertAvailable()
     const tabId = requestedTabId ?? randomUUID()
     const existing = this.#views.get(tabId)
     if (existing) {
@@ -158,6 +161,7 @@ export class BotViews {
       if (event.isMainFrame && !allowedNavigation(event.url, this.#origin())) event.preventDefault()
     })
     contents.setWindowOpenHandler(({ url: target, postBody }) => {
+      try { this.#assertAvailable() } catch { return { action: 'deny' } }
       if (postBody === undefined && allowedNavigation(target, this.#origin())) {
         const popup = this.create(botId, { url: target, createdByBot: entry.sessions.size > 0, openerId: tabId })
         this.#publish(popup)
@@ -176,6 +180,7 @@ export class BotViews {
     this.#remember(entry)
     this.#persist()
     this.#onChange({ type: 'created', ...this.#state(entry) })
+    this.#assertAvailable()
     const loading = contents.loadURL(url)
     this.#remember(entry)
     this.#persist()
@@ -269,6 +274,7 @@ export class BotViews {
   }
 
   async operate(botId, action, payload = {}) {
+    if (action !== 'close' && !(action === 'command' && payload.command === 'stop')) this.#assertAvailable()
     const entry = this.#owned(botId, payload.tabId)
     const contents = entry.view.webContents
     switch (action) {
@@ -321,6 +327,7 @@ export class BotViews {
   }
 
   async endpoint(botId, { downloadRoots } = {}) {
+    this.#assertAvailable()
     if (this.#held.has(botId)) throw new Error('The user has taken over this browser.')
     if (downloadRoots !== undefined) {
       if (!Array.isArray(downloadRoots) || downloadRoots.length > 4 || !Array.from(downloadRoots).every(root => typeof root === 'string' && isAbsolute(root))) {
@@ -573,6 +580,7 @@ export class BotViews {
           this.#send(socket, { id, error: { code: -32000, message: String(error?.message ?? error) }, ...(sessionId ? { sessionId } : {}) })
         }
         try {
+        if (!['Browser.close', 'Target.closeTarget', 'Target.detachFromTarget'].includes(method)) this.#assertAvailable()
         if (method === 'Browser.getVersion') { reply({ protocolVersion: '1.3', product: `Chrome/${process.versions.chrome}`, userAgent: `Electron/${process.versions.electron} Chrome/${process.versions.chrome}`, jsVersion: process.versions.v8 }); return }
         if (method === 'Browser.setDownloadBehavior') {
           const allowsDownloads = params.behavior === 'allow' || params.behavior === 'allowAndName'

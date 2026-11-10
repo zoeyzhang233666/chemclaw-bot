@@ -1819,6 +1819,10 @@ ${REST_NOTE}`);
 var ROUTE = "api/bot";
 var REFUSALS = /* @__PURE__ */ new Set(["bot/refused", "bot/invalid", "bot/read-only", "bot/not-found", "bot/browser-off"]);
 var call = async (endpoint, payload, signal) => {
+  if (endpoint === "state") {
+    const deadline = AbortSignal.timeout(15e3);
+    signal = signal ? AbortSignal.any([signal, deadline]) : deadline;
+  }
   let response;
   try {
     response = await fetch(ROUTE, {
@@ -2587,7 +2591,7 @@ function toolArgs(root) {
     return { text: (key) => root.args.text(key) ?? void 0, value: (key) => typeof root.args.value === "function" ? root.args.value(key) : void 0 };
   }
   let parsed;
-  const object = () => {
+  const object2 = () => {
     if (parsed === void 0) {
       try {
         parsed = JSON.parse(root.argsRaw ?? root.call?.argsRaw ?? "");
@@ -2600,10 +2604,10 @@ function toolArgs(root) {
   };
   return {
     text: (key) => {
-      const value2 = object()?.[key];
+      const value2 = object2()?.[key];
       return typeof value2 === "string" ? value2 : void 0;
     },
-    value: (key) => object()?.[key]
+    value: (key) => object2()?.[key]
   };
 }
 var RELAY_ROLES = /* @__PURE__ */ new Set(["request", "reply", "stopped"]);
@@ -11812,6 +11816,15 @@ function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, us
   return (0, import_react23.createElement)(import_react23.Fragment, null, drawn.map((call2, index) => (0, import_react23.createElement)(import_react23.Fragment, { key: call2.callId ?? index }, renderCall(call2, env))));
 }
 
+// src/shared/context-recovery.js
+var CONTEXT_RECOVERY_LIMIT = 2;
+var CONTEXT_RECOVERY_NOTICE = "Automatic context recovery stopped after repeated failures. Your history is preserved. Change the model or send a message to retry.";
+var object = (value2) => value2 !== null && typeof value2 === "object" && !Array.isArray(value2);
+var validContextRecovery = (value2) => object(value2) && Number.isInteger(value2.attempts) && value2.attempts >= 0 && value2.attempts <= CONTEXT_RECOVERY_LIMIT + 1 && typeof value2.blocked === "boolean" && value2.blocked === value2.attempts > CONTEXT_RECOVERY_LIMIT && (value2.userMessageId === void 0 || typeof value2.userMessageId === "string");
+function contextRecoveryNotice(bot, room2) {
+  return bot?.contextRecovery?.blocked || Object.values(room2?.contextRecovery ?? {}).some((record2) => record2.blocked) ? CONTEXT_RECOVERY_NOTICE : "";
+}
+
 // src/client/activity-row.js
 var import_react24 = require("react");
 var import_react_dom4 = require("react-dom");
@@ -11864,6 +11877,11 @@ function useRunningHost(active) {
     };
   }, [active]);
   return host;
+}
+function ContextRecoveryNotice({ sessionId, useRoster }) {
+  const notice = useRoster((roster) => contextRecoveryNotice(roster.byId[sessionId], roster.roomsById[sessionId]));
+  const host = useRunningHost(Boolean(notice));
+  return host && notice ? (0, import_react_dom4.createPortal)((0, import_react24.createElement)("div", { className: "bt-event bt-event-error", role: "alert", "data-bt-context-recovery": "" }, t(notice)), host) : null;
 }
 function useRowEntrances(replacing) {
   const check = (0, import_react24.useRef)(replacing);
@@ -13472,6 +13490,7 @@ function HeaderPill({ sessionId, useRoster, useSessions, useSessionStatus, useSe
     (0, import_react28.createElement)("span", { className: "bt-sr", role: "status" }, memoryNotice ? t("Memory updated") : ""),
     (0, import_react28.createElement)(NewMessagePills, { key: sessionId, sessionId, useSessions, useUi, useTurnClock }),
     (0, import_react28.createElement)(ActivityIndicator, { key: `activity:${sessionId}`, sessionId, useRoster, useSessionStatus, useSession, useLive, useWork, actions }),
+    (0, import_react28.createElement)(ContextRecoveryNotice, { key: `context:${sessionId}`, sessionId, useRoster }),
     // DSH's way into its right sidebar sits in the session header this pill replaces.
     actions.hasRightSidebar?.() ? (0, import_react28.createElement)("button", { type: "button", className: "bt-icon-btn bt-head-side", "data-bt-right-sidebar": "", "aria-label": t("Show or hide the right sidebar"), title: t("Right sidebar"), onClick: () => actions.toggleRightSidebar() }, (0, import_react28.createElement)(SidePanelIcon)) : null
   );
@@ -24447,6 +24466,7 @@ function apply(ctx) {
     noteMemoryNews(value2.memoryNews ?? {});
     const current = roster.getSnapshot();
     const live2 = {};
+    if (value2.readOnly !== void 0 && value2.readOnly !== current.readOnly) live2.readOnly = value2.readOnly;
     if (value2.connectors !== void 0 && JSON.stringify(value2.connectors) !== JSON.stringify(current.connectors ?? [])) live2.connectors = value2.connectors;
     if (value2.capabilityStatuses !== void 0 && JSON.stringify(value2.capabilityStatuses) !== JSON.stringify(current.capabilityStatuses ?? {})) live2.capabilityStatuses = value2.capabilityStatuses;
     if (Object.keys(live2).length > 0 && current.ready) roster.set({ ...current, ...live2 });
