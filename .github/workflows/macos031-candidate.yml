@@ -13,10 +13,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      DSH_HOME: ${{ runner.temp }}/unused-user-dsh
-      DS_BOT_USER_DSH_HOME: ${{ runner.temp }}/unused-user-dsh
-      CHEMCLAW_OFFICE_RUNTIME_CACHE: ${{ runner.temp }}/office-runtime-cache
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,6 +22,7 @@ jobs:
           node-version: 24
       - name: Record environment and verify frozen source
         run: |
+          printf 'DSH_HOME=%s/unused-user-dsh\nDS_BOT_USER_DSH_HOME=%s/unused-user-dsh\nCHEMCLAW_OFFICE_RUNTIME_CACHE=%s/office-runtime-cache\n' "$RUNNER_TEMP" "$RUNNER_TEMP" "$RUNNER_TEMP" >> "$GITHUB_ENV"
           mkdir -p "$RUNNER_TEMP/unused-user-dsh" "$RUNNER_TEMP/candidate-evidence"
           sw_vers | tee "$RUNNER_TEMP/candidate-evidence/macos.txt"
           uname -m | tee "$RUNNER_TEMP/candidate-evidence/arch.txt"
