@@ -16,7 +16,7 @@ export function inside(root, path) {
   return target
 }
 
-async function probe(evaluate, port) {
+export async function probe(evaluate, port) {
   const { existsSync, renameSync, writeFileSync } = await import('node:fs')
   const { randomUUID } = await import('node:crypto')
   const { setTimeout: pause } = await import('node:timers/promises')
@@ -42,15 +42,18 @@ async function probe(evaluate, port) {
     for (const url of [first, second]) {
       state.stage = 'navigate-' + turn + '-' + new URL(url).hostname
       save()
-      await evaluate(bridge + 'navigate(' + [bot, tab, url].map(value => JSON.stringify(value)).join(',') + ')')
+      // Creation already starts the first load; await its content before cross-site navigation.
+      if (url !== first) await evaluate(bridge + 'navigate(' + [bot, tab, url].map(value => JSON.stringify(value)).join(',') + ')')
       const end = Date.now() + 15000
-      let body = ''
+      let body = '', lastError
       while (Date.now() < end) {
-        body = await evaluate(bridge + 'read(' + [bot, tab, 'document.body.innerText'].map(value => JSON.stringify(value)).join(',') + ')')
-        if (String(body).includes('企业资料查询测试')) break
+        try {
+          body = await evaluate(bridge + 'read(' + [bot, tab, 'document.body.innerText'].map(value => JSON.stringify(value)).join(',') + ')')
+          if (String(body).includes('企业资料查询测试')) break
+        } catch (error) { lastError = error.message }
         await pause(100)
       }
-      if (!String(body).includes('企业资料查询测试')) throw new Error('Synthetic browser body missing')
+      if (!String(body).includes('企业资料查询测试')) throw new Error('Synthetic browser body missing: ' + (lastError || String(body)))
       state.completed.push({ turn, hostname: new URL(url).hostname })
       save()
     }
@@ -71,6 +74,8 @@ export function instrument(source) {
   patch('  children.push(app)', '  children.push(app)\n  writeFileSync(JSON.parse(process.env.CHEMCLAW_HELPER_CONFIG).owned, JSON.stringify({ pid: app.pid, executable: packedApp }))')
   patch("const graphics = process.env.CHEMCLAW_HTML_GRAPHICS === 'software' ? ['--disable-gpu'] : []", 'const graphics = []')
   patch('    }, 90_000)', '    }, 15_000)')
+  const detailAnchor = "    await until(\"document.querySelector('.bt-skill-library .bt-skill-detail')\", 'the skill details panel')"
+  patch(detailAnchor, detailAnchor + "\n    await until(\"Boolean(document.querySelector('.bt-skill-detail .bt-skill-purpose')?.textContent.trim())\", 'the populated skill purpose')")
   return source
 }
 
