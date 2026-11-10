@@ -40,8 +40,7 @@ export async function observeMain() {
       fs.writeFileSync(config.notice, JSON.stringify(state, null, 2))
       return { response: 0 }
     }
-    const url = require('node:url').pathToFileURL(electron.app.getAppPath() + '/src/bot-views.mjs').href
-    const { BotViews } = await import(url)
+    const { BotViews } = require(electron.app.getAppPath() + '/src/bot-views.mjs')
     const endpoint = BotViews.prototype.endpoint
     BotViews.prototype.endpoint = async function(...args) {
       const value = await endpoint.apply(this, args)

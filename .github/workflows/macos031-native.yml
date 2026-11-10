@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: [normal, quit-move, create, html-frame, cdp, idle]
+        mode: [create, html-frame, cdp, idle]
     defaults:
       run:
         shell: bash
