@@ -1,4 +1,4 @@
-# ChemClaw v0.3.0
+# ChemClaw v0.3.1
 
 **简体中文** | [English](README.en.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
@@ -188,7 +188,7 @@ ChemClaw 支持调用 DSH Agent 制作插件，甚至直接修改经典模式的
 
 **方式一：直接安装桌面版（推荐）**
 
-1. 在 [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载 **v0.3.0** 安装包并安装（Windows/macOS/Linux 文件以发布页为准）。
+1. 在 [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载 **v0.3.1** 安装包并安装（Windows/macOS/Linux 文件以发布页为准）。
 2. **配模型**：到 [APIHub](https://apihub.chem-cloud.cn/) 注册、取模型密钥，在 **设置 → 模型** 选预设的 APIHub，粘贴密钥并选可用模型。
 3. **接数据（推荐）**：到 [芯化和云数据中台](https://mcp.chem-cloud.cn/) 申请数据密钥，在 **设置 → 连接器 → 芯化和云数据中台** 粘贴保存。连接地址已预设，无需懂 MCP。
 4. 打开左侧的专家或协作群，直接提问即可。
@@ -202,7 +202,7 @@ ChemClaw 支持调用 DSH Agent 制作插件，甚至直接修改经典模式的
 
 > 巨潮公告、PubChem、OPSIN、化工社、可覆盖的 AKShare 历史行情、联网搜索等通常**无需额外密钥**，能否取到数据取决于网络和第三方来源。
 
-**方式二：作为 DeepSeek Harness 插件安装**（已用 DSH 桌面版时）：确保本机有 Git，在 **插件 → 添加插件** 输入 `github:zoeyzhang233666/chemclaw-bot#v0.3.0&path:/chemclaw-bot`，按提示启用并重启。
+**方式二：作为 DeepSeek Harness 插件安装**（已用 DSH 桌面版时）：确保本机有 Git，在 **插件 → 添加插件** 输入 `github:zoeyzhang233666/chemclaw-bot#v0.3.1&path:/chemclaw-bot`，按提示启用并重启。
 
 ## 使用前了解这些
 

@@ -4,6 +4,25 @@ All notable changes to ChemClaw are listed here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-10
+
+### Fixed
+
+- Protect saved team and conversation associations when their index cannot be read; retain the last good state and allow a retry without overwriting failed stores.
+- Recover from desktop Host, renderer and browser failures with bounded retries, explicit restart controls and clearer interrupted-task feedback.
+- Reconnect WebSocket and browser sessions and limit repeated context-rejection recovery across conversation parts and restarts.
+- Restore Office previews with bundled Node/Python assets and matching app-local Windows runtime dependencies.
+- Guard macOS browser operations after a running app is moved or replaced, and quit before asking users to drag the app into Applications.
+
+### Added
+
+- Optional macOS DMG installation preview with a conventional Finder Applications link; the standard release retains ZIP compatibility and ad-hoc signing.
+
+### Notes
+
+- Windows and macOS candidate builds received maintainer real-machine acceptance. Automated fault recovery and package checks passed; the full sleep/wake, extended-load and real-data upgrade checklist remains incomplete.
+- macOS first launch can still require Apple's per-app approval because Developer ID signing and notarization are not configured.
+
 ## [0.2.2] - 2026-10-27
 
 ### Added
