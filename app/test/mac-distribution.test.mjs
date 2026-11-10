@@ -5,7 +5,7 @@ import { parse } from 'yaml'
 import { DebugLogger } from 'builder-util'
 import { doMergeConfigs, validateConfiguration } from 'app-builder-lib/out/util/config/config.js'
 
-test('the DMG preview is valid for the pinned builder and preserves ad-hoc signing and ZIP compatibility', async () => {
+test('the DMG installer is valid for the pinned builder and preserves ad-hoc signing and ZIP compatibility', async () => {
   const base = parse(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'))
   const preview = parse(readFileSync(new URL('../electron-builder.mac-dmg.yml', import.meta.url), 'utf8'))
   const config = doMergeConfigs([base, preview])

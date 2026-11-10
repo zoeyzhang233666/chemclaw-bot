@@ -222,7 +222,7 @@ jobs:
           gh release upload "$TAG" "$installer" "$installer.blockmap" dist-pack/latest.yml --clobber
 
   app-macos:
-    name: Desktop app zip (macOS ${{ matrix.arch }})
+    name: Desktop app DMG and ZIP (macOS ${{ matrix.arch }})
     needs: publish
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
@@ -267,6 +267,11 @@ jobs:
           zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
           codesign --verify --deep --strict "$app"
           /usr/bin/time -p ditto -c -k --sequesterRsrc --keepParent --zlibCompressionLevel 6 "$app" "$zip"
+      - name: Create the Mac DMG from the same signed app
+        run: |
+          folder=mac
+          if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
+          npx --no-install electron-builder --mac dmg --${{ matrix.arch }} --prepackaged "dist-pack/$folder/ChemClaw.app" --config electron-builder.mac-dmg.yml --publish never
       - name: Install from the zip and check
         run: |
           zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
@@ -281,12 +286,19 @@ jobs:
           file -b "$exe" | grep -F "$expected"
           node scripts/check-packed.mjs "$exe" "$RUNNER_TEMP/chemclaw-mac-ui/screen" --mac-ui
           node scripts/check-update.mjs "$exe" 99.0.0
+      - name: Verify the Finder layout and unchanged app inside the DMG
+        run: |
+          dmg="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.dmg"
+          node ../.github/scripts/check-macos-dmg-layout.mjs "$dmg" "$RUNNER_TEMP/chemclaw-dmg-layout" "$RUNNER_TEMP/chemclaw-archive-check/ChemClaw.app"
       - name: Save macOS UI screenshots (including failures)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: release-macos-ui-${{ matrix.arch }}
-          path: ${{ runner.temp }}/chemclaw-mac-ui/*.png
+          path: |
+            ${{ runner.temp }}/chemclaw-mac-ui/*.png
+            ${{ runner.temp }}/chemclaw-dmg-layout/*.png
+            ${{ runner.temp }}/chemclaw-dmg-layout/summary.json
           retention-days: 7
           if-no-files-found: warn
       - name: Compare ZIP compression
@@ -295,23 +307,26 @@ jobs:
           folder=mac
           if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
           node scripts/benchmark-mac-zip.mjs "dist-pack/$folder/ChemClaw.app" "$RUNNER_TEMP/chemclaw-zip-benchmark"
-      - name: Keep the zip for real-device checks
+      - name: Keep the Mac installers for real-device checks
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: ChemClaw-mac-${{ matrix.arch }}
-          path: app/dist-pack/ChemClaw-*-mac-${{ matrix.arch }}.zip
+          path: |
+            app/dist-pack/ChemClaw-*-mac-${{ matrix.arch }}.zip
+            app/dist-pack/ChemClaw-*-mac-${{ matrix.arch }}.dmg
           retention-days: 7
           if-no-files-found: error
           compression-level: 0
-      - name: Attach the zip to the release
+      - name: Attach the Mac installers to the release
         if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.publish.outputs.tag }}
         run: |
           zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
-          gh release upload "$TAG" "$zip" --clobber
+          dmg="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.dmg"
+          gh release upload "$TAG" "$zip" "$dmg" --clobber
 
   app-linux:
     name: Desktop app packages (Linux x64)
@@ -389,7 +404,7 @@ jobs:
           set -euo pipefail
           version="${TAG#v}"
           gh release view "$TAG" --json assets --jq '.assets[] | select(.size > 0) | .name' > "$RUNNER_TEMP/assets"
-          for file in "chemclaw-bot-$version.tgz" "ChemClaw-$version-win-x64.exe" "ChemClaw-$version-win-x64.exe.blockmap" latest.yml "ChemClaw-$version-mac-arm64.zip" "ChemClaw-$version-mac-x64.zip" "ChemClaw-$version-linux-x86_64.AppImage" "ChemClaw-$version-linux-amd64.deb" latest-linux.yml; do
+          for file in "chemclaw-bot-$version.tgz" "ChemClaw-$version-win-x64.exe" "ChemClaw-$version-win-x64.exe.blockmap" latest.yml "ChemClaw-$version-mac-arm64.zip" "ChemClaw-$version-mac-x64.zip" "ChemClaw-$version-mac-arm64.dmg" "ChemClaw-$version-mac-x64.dmg" "ChemClaw-$version-linux-x86_64.AppImage" "ChemClaw-$version-linux-amd64.deb" latest-linux.yml; do
             grep -Fx "$file" "$RUNNER_TEMP/assets"
           done
           if [[ "$TAG" == *-* ]]; then

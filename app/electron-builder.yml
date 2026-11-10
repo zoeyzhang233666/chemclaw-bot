@@ -54,7 +54,8 @@ nsis:
   installerLanguages: [zh_CN, en_US]
   multiLanguageInstaller: true
 mac:
-  # A zip, not a dmg: macOS 26 calls a downloaded unsigned dmg damaged and will not open it (#351).
+  # Keep ZIP compatibility. The release workflow also wraps this app with the
+  # Finder layout in electron-builder.mac-dmg.yml; ad-hoc DMGs may require approval.
   target: zip
   # Ad-hoc signing seals the bundle; no Developer ID or notarization.
   identity: '-'
