@@ -24,13 +24,16 @@ export async function probe(evaluate, port) {
   const state = { mode: config.mode, stage: 'before-probe', completed: [], appAtStart: config.appFrom }
   const save = () => writeFileSync(config.checkpoint, JSON.stringify(state, null, 2) + '\n')
   save()
+  const bot = await evaluate("fetch('api/bot', {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({endpoint:'state',payload:{}})}).then(r=>r.json()).then(r=>{if(!r.ok)throw Error('Could not read synthetic team');return r.value.mainBotId})")
+  if (typeof bot !== 'string' || !bot.startsWith('session-')) throw new Error('No synthetic team Bot')
+  state.botId = bot
+  save()
   if (config.mode === 'live-move') {
     if (!existsSync(config.appFrom) || existsSync(config.appTo)) throw new Error('Unexpected move fixture state')
     renameSync(config.appFrom, config.appTo)
     state.stage = 'moved-while-running'
     save()
   }
-  const bot = 'session-00000000-0000-4000-8000-000000000001'
   const bridge = 'window.dsBotApp.browser.views.'
   for (let turn = 0; turn < 4; turn++) {
     const tab = randomUUID()

@@ -4,6 +4,7 @@ on:
     branches: [codex/mac-031-candidate]
     paths:
       - .github/scripts/check-macos031-faults.mjs
+      - .github/scripts/check-macos-helper-path.mjs
       - .github/workflows/macos031-native.yml
 permissions:
   contents: read
@@ -19,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: [create, html-frame, cdp, idle]
+        mode: [normal, quit-move]
     defaults:
       run:
         shell: bash
