@@ -66,7 +66,8 @@ try {
     report.appContents = mounted
     const finder = command('/usr/bin/osascript', ['-e', 'on run argv\ntell application "Finder"\nopen (POSIX file (item 1 of argv) as alias)\nactivate\nend tell\nend run', mount], false)
     if (finder.status === 0 && !finder.error) {
-      await sleep(1500)
+      // A fresh runner's Finder icon service can still show placeholders initially.
+      await sleep(10_000)
       const shot = command('/usr/sbin/screencapture', ['-x', join(output, 'finder-layout.png')], false)
       report.finderScreenshotAvailable = shot.status === 0 && !shot.error
     } else report.finderScreenshotAvailable = false
