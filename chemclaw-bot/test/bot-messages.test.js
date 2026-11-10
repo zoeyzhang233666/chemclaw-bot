@@ -53,6 +53,7 @@ async function start(seed) {
         inbox: {
           nextStep: [],
           nextTurn: [],
+          prepend(target, message) { (target === 'next-step' ? this.nextStep : this.nextTurn).unshift(message) },
           remove(id) {
             for (const list of [this.nextStep, this.nextTurn]) {
               const at = list.findIndex(message => message.id === id)
@@ -96,7 +97,7 @@ async function start(seed) {
     }
   }
   // Runs every registered waterfall listener; `next` settles the chain.
-  const fire = (name, payload) => Promise.all((ctx.listeners.get(name) ?? []).map(listener => listener(payload, () => Promise.resolve(undefined))))
+  const fire = (name, payload) => Promise.all((ctx.listeners.get(name) ?? []).map(listener => listener(payload, () => Promise.resolve(name === 'agent/pre-step' ? { kind: 'enter', messages: payload.messages } : undefined))))
   const tool = (name, args, sessionId) => ctx.registeredTools.get(name).execute(args, { agent: { id: sessionId } })
   const call = async (endpoint, payload) => (await route.fetch(new Request('http://localhost/api/bot', {
     method: 'POST', body: JSON.stringify({ endpoint, payload }),
@@ -112,6 +113,43 @@ async function start(seed) {
 }
 
 const textOf = content => content.map(block => block.text ?? '').join('\n')
+
+test('provider overflow opens at most two fresh parts and keeps blocked input until a new user request', async t => {
+  const { ctx, agentOf, fire, call, home, stop } = await start(team())
+  t.after(stop)
+  let created = 0
+  ctx.sessionController.create = async () => ({ sessionId: `bounded-${++created}` })
+  const bot = async () => (await call('state', {})).value.bots.find(item => item.id === 'b')
+  const fail = async id => {
+    await fire('agent/request-error', { failure: { code: 'CONTEXT_WINDOW_EXCEEDED' }, agent: agentOf(id) })
+  }
+  const waitFor = async check => {
+    for (let i = 0; i < 200 && !await check(); i += 1) await delay(5)
+    assert.ok(await check())
+  }
+  await fail('b')
+  await waitFor(() => agentOf('bounded-1').calls.some(([, message]) => message?.source?.handoff))
+  await fail('bounded-1')
+  await waitFor(() => agentOf('bounded-2').calls.some(([, message]) => message?.source?.handoff))
+  await fail('bounded-2')
+  await delay(30)
+  assert.equal(created, 2)
+  assert.equal((await bot()).contextRecovery.blocked, true)
+  assert.equal(JSON.parse(readFileSync(join(home, 'state.json'), 'utf8')).bots.b.contextRecovery.attempts, 3)
+
+  const agent = agentOf('bounded-2')
+  const pending = { id: 'pending-automatic-recovery', content: textBlock('continue after restart'), source: { kind: SOURCE_KIND, role: 'resume' } }
+  await fire('agent/pre-step', { agent, step: 1, signal: AbortSignal.timeout(60_000), messages: [pending] })
+  assert.ok(agent.inbox.nextTurn.some(item => item.id === pending.id))
+  assert.ok(agent.calls.some(([kind, cause]) => kind === 'cancel' && cause.kind === 'hook'))
+  assert.equal(created, 2)
+
+  // A newly submitted human message is an explicit attempt, not a replay.
+  await fire('agent/pre-step', { agent, step: 1, signal: AbortSignal.timeout(60_000), messages: [{ id: 'human-retry', content: textBlock('try again'), source: { kind: 'user' } }] })
+  assert.equal((await bot()).contextRecovery, undefined)
+  await fail('bounded-2')
+  await waitFor(() => created === 3)
+})
 
 test('message_bot steers by default; on an idle Bot it opens the next turn', async (t) => {
   const { agents, emit, tool, stop } = await start(team())

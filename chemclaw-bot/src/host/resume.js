@@ -11,11 +11,12 @@
 // request itself is never sent again there.
 import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, unlink, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { HISTORY_TIMEOUT_MS, MESSAGE_INLINE_MAX, SOURCE_KIND } from './constants.js'
 import { answerSender, failureLine, turnFailure } from './turns.js'
 import { textOf } from './text.js'
+import { replaceFile } from './files.js'
 
 // Long enough for DSH to finish opening its workspaces after a start.
 export const RESUME_DELAY_MS = 3000
@@ -86,10 +87,13 @@ const triggerOf = info => ({
 const readNotes = (file) => {
   try {
     const parsed = JSON.parse(readFileSync(file, 'utf8'))
-    const object = value => (value !== null && typeof value === 'object' && !Array.isArray(value) ? value : {})
-    return { turns: object(parsed?.turns), queued: object(parsed?.queued) }
-  } catch {
-    return { turns: {}, queued: {} }
+    const object = value => value !== null && typeof value === 'object' && !Array.isArray(value)
+    if (!object(parsed) || !object(parsed.turns) || !object(parsed.queued) || (parsed.recovery !== undefined && !object(parsed.recovery))) throw new Error('Invalid recovery indexes')
+    if (Object.values(parsed.turns).some(turn => !object(turn) || typeof turn.botId !== 'string')
+      || Object.values(parsed.queued).some(list => !Array.isArray(list) || list.some(item => !object(item) || !object(item.args) || typeof item.at !== 'number'))) throw new Error('Invalid recovery records')
+    return { turns: parsed.turns, queued: parsed.queued, recovery: parsed.recovery ?? {} }
+  } catch (error) {
+    return { turns: {}, queued: {}, recovery: {}, unreadable: error?.code !== 'ENOENT' }
   }
 }
 
@@ -98,7 +102,8 @@ export function install(rt) {
   const file = join(home, 'inflight.json')
 
   // What the last run left; read before this run notes anything.
-  let interrupted = readNotes(file)
+  const interrupted = readNotes(file)
+  const recovery = interrupted.recovery
 
   /** @type {Record<string, {botId:string, roomId?:string, since:number, trigger?:any, approval?:{tool:string, reason:string}, resumed?:boolean}>} */
   let turns = {}
@@ -110,20 +115,29 @@ export function install(rt) {
   let due = false
   const persist = () => {
     // Only the host that saves the team runs its work again.
-    if (stopped || rt.readOnly() !== undefined) return
-    latest = JSON.stringify({ turns, queued })
+    if (stopped || interrupted.unreadable || rt.readOnly() !== undefined) return Promise.resolve(false)
+    const waiting = { ...interrupted.queued }
+    for (const [id, list] of Object.entries(queued)) waiting[id] = [...(waiting[id] ?? []), ...list]
+    latest = JSON.stringify({ turns: { ...interrupted.turns, ...turns }, queued: waiting, recovery })
     // One write waits at a time and takes the latest notes, so a busy round does not
     // write the file once per change.
-    if (due) return
+    if (due) return writing
     due = true
-    // Written in place: a rename over the file fails on Windows while anything reads
-    // it, and a torn write only loses what one restart would pick up.
     writing = writing.then(async () => {
       due = false
       const snapshot = latest
+      if (rt.readOnly() !== undefined) return false
       await mkdir(home, { recursive: true })
-      await writeFile(file, snapshot, 'utf8')
-    }).catch(error => rt.warn('chemclaw-bot: noting running turns failed: %s', error))
+      const temp = `${file}.${process.pid}.tmp`
+      const writable = () => { if (rt.readOnly() !== undefined) throw new Error('The Bot team no longer has write access.') }
+      try {
+        await writeFile(temp, snapshot, 'utf8')
+        writable()
+        await replaceFile(temp, file, writable)
+      } finally { await unlink(temp).catch(() => {}) }
+      return true
+    }).catch(error => { rt.warn('chemclaw-bot: noting running turns failed: %s', error); return false })
+    return writing
   }
   const update = (id, change) => {
     const next = change(turns[id])
@@ -134,6 +148,13 @@ export function install(rt) {
     persist()
   }
   const forgetQueued = (exchangeId) => {
+    for (const [sessionId, list] of Object.entries(interrupted.queued)) {
+      const rest = list.filter(item => item.args.exchangeId !== exchangeId)
+      if (rest.length === list.length) continue
+      if (rest.length === 0) delete interrupted.queued[sessionId]
+      else interrupted.queued[sessionId] = rest
+      persist()
+    }
     for (const [sessionId, list] of Object.entries(queued)) {
       const at = list.findIndex(item => item.args.exchangeId === exchangeId)
       if (at === -1) continue
@@ -355,37 +376,80 @@ export function install(rt) {
   async function resumeAll() {
     await rt.load()
     if (rt.readOnly() !== undefined) return
+    if (interrupted.unreadable) {
+      reportRecovery(undefined, 'The interrupted-work file could not be read. It was preserved; automatic recovery is unavailable until it is repaired.')
+      return
+    }
+    for (const item of Object.values(recovery)) reportRecovery(item?.sessionId, 'A previous recovery attempt has an uncertain result. Check the conversation and completed actions before asking the Bot to continue.')
     const { turns: noted, queued: dropped } = interrupted
-    interrupted = { turns: {}, queued: {} }
-    // Taken up now, so another restart does not pick them up twice.
-    persist()
     // Agents and inboxes are read before anything wakes their Sessions.
     const cut = []
     for (const [sessionId, record] of Object.entries(noted)) {
-      const first = firstTurn.get(sessionId)
+      await rt.contextRecovery?.settled()
+      if (rt.contextRecovery?.blocked(sessionId)) {
+        rt.contextRecovery.notice(sessionId)
+        continue
+      }
+      const first = firstTurn?.get(sessionId)
       if (first?.type === 'turn/end') {
         // The turn ended while ChemClaw was not watching it: what it did is settled from
         // the Session's durable log.
-        await reconcileEnded(sessionId, record, first).catch(error => rt.warn('chemclaw-bot: settling the work of %s failed: %s', sessionId, error))
+        await recoverOnce('turns', sessionId, record, () => reconcileEnded(sessionId, record, first))
         continue
       }
       // Still running: noted again, as if it had started here.
-      if (first === undefined && (await rt.resolveAgent(sessionId).catch(() => undefined))?.status === 'running') update(sessionId, () => record)
-      else cut.push([sessionId, record])
+      let agent
+      try { agent = first === undefined ? await rt.resolveAgent(sessionId) : undefined } catch {
+        reportRecovery(sessionId, 'The interrupted session could not be read. Its recovery record was preserved for the next restart; no work was repeated.')
+        continue
+      }
+      if (first === undefined && agent?.status === 'running') {
+        delete noted[sessionId]
+        update(sessionId, () => record)
+      } else cut.push([sessionId, record])
     }
     firstTurn = undefined
     for (const [sessionId, list] of Object.entries(dropped)) {
       if (!Array.isArray(list)) continue
-      await resendQueued(sessionId, list).catch(error => rt.warn('chemclaw-bot: sending again what %s was sent failed: %s', sessionId, error))
+      if (rt.contextRecovery?.blocked(sessionId)) continue
+      await recoverOnce('queued', sessionId, list, () => resendQueued(sessionId, list))
     }
     taken = undefined
     for (const [sessionId, record] of cut) {
-      await resumeTurn(sessionId, record).catch(error => rt.warn('chemclaw-bot: picking up the turn of %s failed: %s', sessionId, error))
+      await recoverOnce('turns', sessionId, record, () => resumeTurn(sessionId, record))
+    }
+  }
+
+  function reportRecovery(sessionId, text) {
+    rt.warn('chemclaw-bot: %s', text)
+    rt.noteFailure?.({ level: 'warn', source: 'turn', text, ...(sessionId ? { sessionId } : {}) })
+  }
+
+  async function recoverOnce(kind, sessionId, record, run) {
+    const key = `${kind}:${sessionId}`
+    // Commit uncertainty before doing anything that may deliver a message. A
+    // second crash must not replay that action, even when its acknowledgement
+    // never reached this process. Keep the original record for investigation.
+    recovery[key] = { sessionId, kind, record, status: 'uncertain' }
+    delete interrupted[kind][sessionId]
+    if (!await persist()) {
+      interrupted[kind][sessionId] = record
+      delete recovery[key]
+      reportRecovery(sessionId, 'Recovery could not be recorded safely. No work was repeated; the original record is retained.')
+      return
+    }
+    try {
+      if (stopped) return
+      await run()
+      delete recovery[key]
+      await persist()
+    } catch {
+      reportRecovery(sessionId, 'Recovery failed with an uncertain result. Its record was preserved. Check the conversation and completed actions before asking the Bot to continue.')
     }
   }
 
   ctx.effect(() => {
-    const pending = Object.keys(interrupted.turns).length > 0 || Object.keys(interrupted.queued).length > 0
+    const pending = interrupted.unreadable || Object.keys(recovery).length > 0 || Object.keys(interrupted.turns).length > 0 || Object.keys(interrupted.queued).length > 0
     const timer = pending ? setTimeout(() => void resumeAll().catch(error => rt.warn('chemclaw-bot: picking up interrupted work failed: %s', error)), RESUME_DELAY_MS) : undefined
     timer?.unref?.()
     // What the turns stopped by this shutdown left stays as last noted.

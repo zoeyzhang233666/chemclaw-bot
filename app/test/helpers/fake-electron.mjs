@@ -106,6 +106,7 @@ class FakeWebContents extends EventEmitter {
     this.insertCSS = async () => {}
     this.toggleDevTools = () => {}
     this.loadURL = async url => { await this.win.loadURL(url) }
+    this.stop = () => { this.stopped = true }
   }
 }
 
@@ -117,6 +118,8 @@ class FakeApp extends EventEmitter {
     this.getLocale = () => 'en-US'
     this.getPath = (name) => paths[name] ?? join(root, String(name))
     this.getAppPath = () => paths.appPath
+    this.isInApplicationsFolder = () => true
+    this.moveToApplicationsFolder = () => { throw new Error('A unit test must not install an application') }
     this.setPath = (name, value) => { state.paths[name] = value }
     // The app starts a tick later, so that a test has its say before the app begins.
     this.whenReady = () => new Promise((done) => { setImmediate(done) })

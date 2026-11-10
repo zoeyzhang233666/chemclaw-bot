@@ -7,6 +7,7 @@ import { join } from 'node:path'
 import { LEGACY_THEMES, MAX_EXCHANGES, ROOM_MODES, TEXT_KEPT } from './constants.js'
 import { replaceFile } from './files.js'
 import { homeLock } from './home-lock.js'
+import { validContextRecovery } from '../shared/context-recovery.js'
 import { currentColor, headOf, normalize, unquote } from './text.js'
 
 // A table read that sees only the keys the table holds itself. Ids that come from
@@ -14,6 +15,31 @@ import { currentColor, headOf, normalize, unquote } from './text.js'
 // "__proto__" and other inherited names read as "not there" instead of returning
 // Object.prototype.
 export const own = (table, key) => (table != null && Object.hasOwn(table, key) ? table[key] : undefined)
+
+const UNREADABLE = Symbol('unreadable team')
+const record = value => value !== null && typeof value === 'object' && !Array.isArray(value)
+
+// Missing fields belong to older teams; present but unusable indexes must never
+// be migrated into an empty team and saved over the only copy.
+function validIndexes(saved) {
+  for (const key of ['bots', 'rooms', 'prefs', 'exchangeTurns', 'switching']) {
+    if (Object.hasOwn(saved, key) && !record(saved[key])) return false
+  }
+  if (Object.hasOwn(saved, 'exchanges') && (!Array.isArray(saved.exchanges) || saved.exchanges.some(entry => !record(entry)))) return false
+  for (const bot of Object.values(saved.bots ?? {})) {
+    if (!record(bot) || typeof bot.id !== 'string') return false
+    if (bot.contextRecovery !== undefined && !validContextRecovery(bot.contextRecovery)) return false
+    if (bot.segments !== undefined && (!Array.isArray(bot.segments) || bot.segments.some(part => !record(part) || typeof part.sessionId !== 'string'))) return false
+  }
+  for (const room of Object.values(saved.rooms ?? {})) {
+    if (!record(room) || typeof room.id !== 'string' || !Array.isArray(room.members) || room.members.some(id => typeof id !== 'string')) return false
+    if (room.contextRecovery !== undefined && (!record(room.contextRecovery) || Object.values(room.contextRecovery).some(value => !validContextRecovery(value)))) return false
+    if (room.sessions !== undefined && !record(room.sessions)) return false
+    if (room.log !== undefined && (!Array.isArray(room.log) || room.log.some(line => !record(line)))) return false
+    if (room.segments !== undefined && (!record(room.segments) || Object.values(room.segments).some(parts => !Array.isArray(parts) || parts.some(part => !record(part) || typeof part.sessionId !== 'string')))) return false
+  }
+  return true
+}
 
 export function install(rt) {
   const { ctx, home, statePath } = rt
@@ -32,6 +58,8 @@ export function install(rt) {
   let stuck
   let warnedReadOnly = false
   let stopped = false
+  let hadTeam = false
+  let backupStamp
   // mtime and size of the state.json this host last read or wrote.
   let seen = ''
   const stamp = () => {
@@ -57,7 +85,7 @@ export function install(rt) {
     }
   }
   const readOnly = () => {
-    if (stuck !== undefined) return `The Bot team file ${statePath} could not be read (${stuck}). ChemClaw does not change it; fix or move the file and reload.`
+    if (stuck !== undefined) return `The Bot team file ${statePath} could not be read (${stuck}). ChemClaw does not change it; restore a valid team file and reload.`
     if (holder === undefined) return undefined
     const where = holder.pid ? `pid ${holder.pid}${holder.host ? ` on ${holder.host}` : ''}` : 'unknown process'
     return `The Bot team in ${home} is open in another dsh (Web or Desktop, ${where}). This window shows the team but cannot change it; close the other one and reload.`
@@ -69,41 +97,49 @@ export function install(rt) {
       contents = await readFile(statePath, 'utf8')
     } catch (error) {
       seen = stamp()
-      if (error?.code === 'ENOENT') {
+      if (error?.code === 'ENOENT' && !hadTeam) {
         stuck = undefined
         return undefined
       }
       stuck = error?.code ?? error?.message ?? String(error)
       warn('chemclaw-bot: unreadable state %s: %s', statePath, error)
-      return undefined
+      return UNREADABLE
     }
     seen = stamp()
+    hadTeam = true
     let parsed
     try {
       parsed = JSON.parse(contents)
-    } catch (error) {
+    } catch {
+      stuck = 'invalid JSON'
       const backup = `${statePath}.broken-${Date.now()}`
       try {
-        await copyFile(statePath, backup)
-        stuck = undefined
-        warn('chemclaw-bot: unreadable state %s: %s; backed up as %s', statePath, error, backup)
+        if (backupStamp !== seen && holder === undefined && !lockBroken && lock.owns()) {
+          await copyFile(statePath, backup)
+          backupStamp = seen
+          warn('chemclaw-bot: invalid team JSON in %s; preserved a copy as %s', statePath, backup)
+        }
       } catch (copyError) {
-        stuck = copyError?.code ?? copyError?.message ?? error?.message ?? String(error)
-        warn('chemclaw-bot: unreadable state %s: %s; backup failed: %s', statePath, error, copyError)
+        warn('chemclaw-bot: invalid team JSON in %s; backup failed (%s)', statePath, copyError?.code ?? 'unknown error')
       }
-      return undefined
+      return UNREADABLE
     }
     if (parsed?.version === 1) {
+      if (!validIndexes(parsed)) {
+        stuck = 'invalid team indexes'
+        return UNREADABLE
+      }
       stuck = undefined
+      hadTeam = true
       return parsed
     }
     stuck = 'saved by a newer ChemClaw; update ChemClaw'
-    return undefined
+    return UNREADABLE
   }
 
   // Fill `state` from the saved file and bring an older team up to date. Returns the
   // groups whose Session titles still need the new name.
-  const adopt = (parsed) => {
+  const migrate = (parsed) => {
     const hadCapabilities = parsed !== null && parsed !== undefined && Object.hasOwn(parsed, 'capabilities')
     for (const key of Object.keys(state)) delete state[key]
     Object.assign(state, JSON.parse(EMPTY), parsed ?? {})
@@ -220,6 +256,21 @@ export function install(rt) {
     return { migrated: migrated || stale.length > 0, stale }
   }
 
+  const adopt = (parsed) => {
+    if (parsed === UNREADABLE) return { migrated: false, stale: [] }
+    const previous = { ...state }
+    try { return migrate(parsed) } catch {
+      // Do not leave half-migrated indexes visible or writable after a failed
+      // migration. A later refresh can retry once the file or service is fixed.
+      for (const key of Object.keys(state)) delete state[key]
+      Object.assign(state, previous)
+      indexSessions()
+      stuck = 'team migration failed'
+      warn('chemclaw-bot: team migration failed; keeping the last readable team and preserving %s', statePath)
+      return { migrated: false, stale: [] }
+    }
+  }
+
   const load = () => loaded ??= (async () => {
     claimLock()
     if (holder !== undefined) warn('chemclaw-bot: %s', readOnly())
@@ -236,7 +287,10 @@ export function install(rt) {
     }
     // Not awaited: renaming a session must not hold up the first roster read.
     for (const room of stale) void rt.retitleRoom(room)
-  })()
+  })().catch(error => {
+    loaded = null
+    throw error
+  })
 
   // A reading host follows the file and takes over once the other host has gone.
   const refresh = async () => {
@@ -265,7 +319,7 @@ export function install(rt) {
       }
       warn('chemclaw-bot: %s', readOnly())
     }
-    if ((stuck !== undefined || holder !== undefined) && stamp() !== seen) adopt(await readFileState())
+    if (stuck !== undefined || (holder !== undefined && stamp() !== seen)) adopt(await readFileState())
   }
 
   const warnReadOnly = () => {
@@ -301,6 +355,7 @@ export function install(rt) {
       try {
         await mkdir(home, { recursive: true })
         const ensureLock = () => {
+          if (stuck !== undefined) throw new Error('The Bot team became unreadable before it could be saved.')
           if (lockBroken) return
           if (!lock.owns()) {
             const error = new Error('chemclaw-bot lost the state lock to another dsh')
@@ -312,6 +367,7 @@ export function install(rt) {
         await writeFile(temp, snapshot, 'utf8')
         ensureLock()
         await replaceFile(temp, statePath, ensureLock)
+        hadTeam = true
         seen = stamp()
         rt.capabilitiesStateSaved?.()
         rt.stateSaved?.()

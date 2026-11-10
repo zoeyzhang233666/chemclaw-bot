@@ -1,0 +1,312 @@
+{
+  "baseCommit": "f1fb2a210bff53adfd04351b1dbda7e72ea72df3",
+  "formalTargetVersion": "0.3.1",
+  "candidateMetadataVersion": "0.3.1-audit.20261110",
+  "entries": [
+    {
+      "path": "NOTICE",
+      "bytes": 18249,
+      "sha256": "2969c503c8b79d6fedca0b9400c9f8c2b8cfd2f027f55e43bbd806770f55df40"
+    },
+    {
+      "path": "README.md",
+      "bytes": 19056,
+      "sha256": "878e40017d24253ca21c02dbdcebf36db3269390ee9acf0e059ceee002ff4e69"
+    },
+    {
+      "path": "README.zh.md",
+      "bytes": 19056,
+      "sha256": "878e40017d24253ca21c02dbdcebf36db3269390ee9acf0e059ceee002ff4e69"
+    },
+    {
+      "path": "app/scripts/check-office-e2e.mjs",
+      "bytes": 8486,
+      "sha256": "559e2a9927ea0cd2c1498606bfb5e399fa339b32eb0ded1e499940bb37de1e10"
+    },
+    {
+      "path": "app/scripts/office-crt.lock.json",
+      "bytes": 1986,
+      "sha256": "a01484221a1544f699bb163a62e2f98c539d64c65ee0ddd759a223d0e571c092"
+    },
+    {
+      "path": "app/scripts/prepare-runtime.mjs",
+      "bytes": 15615,
+      "sha256": "a93411c39e1fd040fd963c7608093b0a982ac138b12959abefa21e8f1f7d974c"
+    },
+    {
+      "path": "app/scripts/stage-office-converter.mjs",
+      "bytes": 3942,
+      "sha256": "b50047121b56a5981fdf4ac78a2a13cc4743bb52f3b2b97f3c5578b19afe44ac"
+    },
+    {
+      "path": "app/scripts/stage-office-crt.mjs",
+      "bytes": 3779,
+      "sha256": "2018cb1274f16958a0cf7e353126a26e2a0f561685fcc7c8c563a81f168e3404"
+    },
+    {
+      "path": "app/src/app-path.mjs",
+      "bytes": 2861,
+      "sha256": "f78bd38416126a7f8cf04976387b063cf0d7049ab7881ae30617d37d041b3d2d"
+    },
+    {
+      "path": "app/src/bot-views.mjs",
+      "bytes": 32125,
+      "sha256": "b74e4bf9be748a59fa5cea426d24058028b660c381c665303ea97731ece8c29e"
+    },
+    {
+      "path": "app/src/host-process.mjs",
+      "bytes": 5554,
+      "sha256": "5b9051cc3d029364fec236b6f6b18a8a0a0ed6f81522e4a49cdcc3c9dcdaf6f8"
+    },
+    {
+      "path": "app/src/host-readiness.mjs",
+      "bytes": 307,
+      "sha256": "10e024fdb29fe9cf9889cd7b5b7b0aa2219c24393a56de8fb9579d6a86932b97"
+    },
+    {
+      "path": "app/src/host.mjs",
+      "bytes": 3896,
+      "sha256": "e797892c4087e7f30983175e79f4edbf7ff2e8024695731cfae77e7500c61367"
+    },
+    {
+      "path": "app/src/mac-install.mjs",
+      "bytes": 2560,
+      "sha256": "b6f86e0610e10fa53b284e3e78e5fb0cd0a6e7165ed5c50a7fda9c453ce0dd92"
+    },
+    {
+      "path": "app/src/main.mjs",
+      "bytes": 46669,
+      "sha256": "10c5d301bd4de7698d1759f3800d777146f8cafe703c336cb575b180dd74903d"
+    },
+    {
+      "path": "app/src/renderer-recovery.mjs",
+      "bytes": 1198,
+      "sha256": "83bb360e276f7456339fbe1232c9824328292d7b65d72b6f2ae79cd8db79fad5"
+    },
+    {
+      "path": "app/test/app-path.test.mjs",
+      "bytes": 5756,
+      "sha256": "ee3168b534b2ab49d6b29c661c17f07193a4a63065cc094dc508d143ccbd4e65"
+    },
+    {
+      "path": "app/test/bot-views.test.mjs",
+      "bytes": 34086,
+      "sha256": "3d0e5afa4011f97e104bc02da38acc06447a81f5b60b7da190ea58ff3ed9f50a"
+    },
+    {
+      "path": "app/test/helpers/fake-app-path.mjs",
+      "bytes": 679,
+      "sha256": "8bb496bc887c71cc09df44c7d420eb624eedd91d55cd92d75431a6ab7466fac8"
+    },
+    {
+      "path": "app/test/helpers/fake-electron.mjs",
+      "bytes": 8405,
+      "sha256": "bfd624fcd9c7f4d06b8c7a9d85d5b9de11d61ea9f3e6aac8be3fe0e36435ed6c"
+    },
+    {
+      "path": "app/test/host-process.test.mjs",
+      "bytes": 2119,
+      "sha256": "1cb6e5ddda49859f13fa8ddb5237bd6a47caa8970d80a699a360fd575f631399"
+    },
+    {
+      "path": "app/test/host-readiness.test.mjs",
+      "bytes": 960,
+      "sha256": "a5e6f750ef32335c99cf3dfd318b6db7b549e9429feb922f1a0ca7384bcede32"
+    },
+    {
+      "path": "app/test/host-startup-timeout.test.mjs",
+      "bytes": 2313,
+      "sha256": "dde98bd23cb13e7ff477f24b0ceda868a70310571f007a78bfc9de900449734a"
+    },
+    {
+      "path": "app/test/mac-install.test.mjs",
+      "bytes": 2807,
+      "sha256": "fba2e14b67a48c0710f0d71897548efaea06e0ab98f0edda388aa9f303f0236b"
+    },
+    {
+      "path": "app/test/main-app-path.test.mjs",
+      "bytes": 2434,
+      "sha256": "c6512c75d4d09eb085304e0c2cb809c6c36a6b0490fe5ed49ea2e2c68a05d3ad"
+    },
+    {
+      "path": "app/test/main-host-recovery.test.mjs",
+      "bytes": 1212,
+      "sha256": "84628422750c2b8d1e534a73b1dc95d8aca95715a186c7531455c3f742070b86"
+    },
+    {
+      "path": "app/test/main-renderer-recovery.test.mjs",
+      "bytes": 1120,
+      "sha256": "159ce4c93aa966bc592a1d89dd7cc50636ed282f7c26ac632214d39b5e93846c"
+    },
+    {
+      "path": "app/test/renderer-recovery.test.mjs",
+      "bytes": 2250,
+      "sha256": "83dad46e4057cbcddcab4dabf649ea25724d2f8a0fc597101cc63a5141d67c96"
+    },
+    {
+      "path": "app/test/stage-office-crt.test.mjs",
+      "bytes": 4011,
+      "sha256": "f74fd1e0c21db67625566bf08cb1dbb7ae7536abeb2ff60f0a59d75478aecd36"
+    },
+    {
+      "path": "chemclaw-bot/client.js",
+      "bytes": 1540744,
+      "sha256": "ea1bee7b296010b205514fe85d81c012df6299de6039f89e2c2899c62b4c196b"
+    },
+    {
+      "path": "chemclaw-bot/index.js",
+      "bytes": 4938,
+      "sha256": "ea34b4df02ec1a33617f10f892bbf04c0ce1b45f2341cd3920f228a54055a8b8"
+    },
+    {
+      "path": "chemclaw-bot/src/client/activity-row.js",
+      "bytes": 12349,
+      "sha256": "855df69980993b2ac173eddfb49863dfaad78ba229b06968116ae571d575b62e"
+    },
+    {
+      "path": "chemclaw-bot/src/client/api.js",
+      "bytes": 2241,
+      "sha256": "7de84e34fe2ff330c552366413b738077d933906785b404df27593a8d4b4a147"
+    },
+    {
+      "path": "chemclaw-bot/src/client/header.js",
+      "bytes": 13318,
+      "sha256": "76d958b5b77f1b37c4b0c9f06fc01ab486f031850c7faff7d230ff26fdd0e866"
+    },
+    {
+      "path": "chemclaw-bot/src/client/index.js",
+      "bytes": 55636,
+      "sha256": "1b144d510074239f45017de9204b04b39dc1aaf0744b4db6b25727cff81c8d5b"
+    },
+    {
+      "path": "chemclaw-bot/src/host/browser/mount.js",
+      "bytes": 10541,
+      "sha256": "28882c1457822485795754478042d99a1522930debefb71aeaf786c51744384b"
+    },
+    {
+      "path": "chemclaw-bot/src/host/browser/session.js",
+      "bytes": 32462,
+      "sha256": "990d45babcb067ad0af0cf98d2a96d78d6cbfb0d2bbd722742bfdc3a785e2544"
+    },
+    {
+      "path": "chemclaw-bot/src/host/channel.js",
+      "bytes": 33006,
+      "sha256": "0d22234d0ee7f9144912b7533af4ab4ec907fc4d28bf40ee57915b3748eb4f10"
+    },
+    {
+      "path": "chemclaw-bot/src/host/context-recovery.js",
+      "bytes": 5351,
+      "sha256": "e637cf286e6aa458f2aab822bfb306cce00b93b22ab906d38c524dcebdbf801d"
+    },
+    {
+      "path": "chemclaw-bot/src/host/files.js",
+      "bytes": 984,
+      "sha256": "ca2545c76982e69cbb925181f5a810ba23766effe7b9f5401aa2b62afe5b4db1"
+    },
+    {
+      "path": "chemclaw-bot/src/host/groups.js",
+      "bytes": 74126,
+      "sha256": "9d41acb57879d57d6ba1f236345ede8dfe49ee63a7bda3855b02d48f2cbe6105"
+    },
+    {
+      "path": "chemclaw-bot/src/host/models.js",
+      "bytes": 13969,
+      "sha256": "bcf0beea88c77407557cbcca248ca2ba03fce6c1c8ed1aacf092017295dea9f2"
+    },
+    {
+      "path": "chemclaw-bot/src/host/parts.js",
+      "bytes": 82006,
+      "sha256": "0a8db413d1d7ba3579134b5ad1fbff6d74118078d53d9a8d4612a1ce71aa4975"
+    },
+    {
+      "path": "chemclaw-bot/src/host/resume.js",
+      "bytes": 23225,
+      "sha256": "f7ffab7e9e9a38147bef315c503760228fab5c8ee4be9edefc1b9345e835fb19"
+    },
+    {
+      "path": "chemclaw-bot/src/host/roster.js",
+      "bytes": 36988,
+      "sha256": "5e650af53a189b96528107d8e8c980e7f40288b82c8b293ca3485cfc3b19190e"
+    },
+    {
+      "path": "chemclaw-bot/src/host/store.js",
+      "bytes": 22831,
+      "sha256": "0a2353a817658a96e480c4fcbe60ea57f9e82fd480efd85be3cbc9b029fafc10"
+    },
+    {
+      "path": "chemclaw-bot/src/shared/context-recovery.js",
+      "bytes": 867,
+      "sha256": "82a153f0d23d415bf2625f6a35c6e36eeab618769f5a8b7ef9f3b35169fc2b39"
+    },
+    {
+      "path": "chemclaw-bot/test/api-deadline.test.js",
+      "bytes": 1593,
+      "sha256": "3630411cd5c29eac4d99dbcc93421d6b1c759b9a2726f8e588b10a7ab51274c6"
+    },
+    {
+      "path": "chemclaw-bot/test/bot-messages.test.js",
+      "bytes": 54347,
+      "sha256": "a97e12f4d4c040093beb5f8794d42a71b1f2f9438c73a1a7b8a512853ddd772c"
+    },
+    {
+      "path": "chemclaw-bot/test/browser-reconnect.test.js",
+      "bytes": 2095,
+      "sha256": "a10cc5151fb30aa4cd7b32ed58242ccc0f613e35122bd4a753bc45dc1a557b1d"
+    },
+    {
+      "path": "chemclaw-bot/test/context-recovery.test.js",
+      "bytes": 7903,
+      "sha256": "b0a4a8b32dd7327da0b67b6d396a76f26a3c19d227837127dfe05f614a4c2c9d"
+    },
+    {
+      "path": "chemclaw-bot/test/fake-ctx.js",
+      "bytes": 3336,
+      "sha256": "d7b114d87ca444106514539c4decd5f509ece2ec37d2f830361f3f7e5d245735"
+    },
+    {
+      "path": "chemclaw-bot/test/follow-through.test.js",
+      "bytes": 29207,
+      "sha256": "c0342c427612dff21ddad4aa3b169628d53a8b152ae504c386d359bf50af0e81"
+    },
+    {
+      "path": "chemclaw-bot/test/group-work.test.js",
+      "bytes": 76862,
+      "sha256": "b4ba778c7c9bc3a000eb9d6d05396526c7cb47ed51d707e8493b1b5b2636df86"
+    },
+    {
+      "path": "chemclaw-bot/test/install.test.js",
+      "bytes": 13969,
+      "sha256": "12b01a39f40c3a37f56955d62f5af8726214f0e39c3a57de73e4f30191ed6408"
+    },
+    {
+      "path": "chemclaw-bot/test/models.test.js",
+      "bytes": 12488,
+      "sha256": "ba70d3e51dea44d74b47e4c2dbf6ca06fbb22fab8e3bf24cdb69c067715851bc"
+    },
+    {
+      "path": "chemclaw-bot/test/plugin-readiness.test.js",
+      "bytes": 1090,
+      "sha256": "a3f50ea2efad3b6eac6a26270176acaffd1f5145a25110496c1ce6aa4eaf5dc9"
+    },
+    {
+      "path": "chemclaw-bot/test/resume-failures.test.js",
+      "bytes": 5577,
+      "sha256": "8f075365fd4ddd66f31414087b0e5c135ebeb371d130b852ccab9b9da47e9d70"
+    },
+    {
+      "path": "chemclaw-bot/test/roster.test.js",
+      "bytes": 51182,
+      "sha256": "586d11a8bcb2d08447ab13658c976def50c8572e75d542c80ca4714e5070a90c"
+    },
+    {
+      "path": "chemclaw-bot/test/store.test.js",
+      "bytes": 15072,
+      "sha256": "bb1ca077f714b906f3fcb8255022d475b3b7ada86bc522a0a15e5c0961ef4180"
+    },
+    {
+      "path": "docs/plans/2026-11-10-mac-app-path-recovery.md",
+      "bytes": 2233,
+      "sha256": "454c2093dc8495b3131ef117f3ecad9f4e5e98d2edb347a9cf0aa269d14b08b4"
+    }
+  ]
+}

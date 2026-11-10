@@ -764,7 +764,8 @@ export function install(rt) {
       if (kind === 'working-directory') continue
       const exchangeId = message.source?.exchangeId
       if (exchangeId !== undefined && pending.some(queued => queued.source?.exchangeId === exchangeId)) continue
-      const copy = createUserMessage({ content: message.content, ...(message.source ? { source: message.source } : {}) })
+      const source = kind === 'user' ? { ...message.source, contextRecoveryForwarded: true } : message.source
+      const copy = createUserMessage({ content: message.content, ...(source ? { source } : {}) })
       if (kind === 'user' || kind === SOURCE_KIND || kind === REPLY_KIND) agent.followup(copy)
       else agent.inject(copy)
       pending.push(copy)
@@ -812,6 +813,8 @@ export function install(rt) {
     await rt.load()
     if (rt.readOnly() !== undefined) return
     for (const [sessionId, owner] of Object.entries(state.switching ?? {})) {
+      await rt.contextRecovery?.settled()
+      if (rt.contextRecovery?.blocked(sessionId)) continue
       try {
         const agent = await rt.resolveAgent(sessionId)
         const held = [...agent.inbox.nextStep, ...agent.inbox.nextTurn]
@@ -838,7 +841,7 @@ export function install(rt) {
   // from the model. `folder`: the part moves on because its working folder changed.
   function startSwitch(agent, { resume = false, carry = [], info, joined, overflow = false, failed, bare = false, folder = false, hard = overflow || folder } = {}) {
     const place = placeOf(agent.id)
-    if (place === undefined || switches.has(agent.id) || readOnly()) return
+    if (place === undefined || switches.has(agent.id) || readOnly() || rt.contextRecovery?.blocked(agent.id)) return
     const job = { ...place, carry: [...carry], info, joined, resume, overflow, failed, bare, folder, hard, since: Date.now() }
     switches.set(agent.id, job)
     void runSwitch(agent, job)
@@ -1065,6 +1068,15 @@ export function install(rt) {
   ctx.on('agent/pre-step', async (payload, next) => {
     await rt.load()
     const { agent } = payload
+    await rt.contextRecovery?.userInput(agent.id, payload.messages)
+      .catch(error => rt.warn('chemclaw-bot: context recovery retry could not be saved: %s', error))
+    if (rt.contextRecovery?.blocked(agent.id)) {
+      restore(agent, payload.messages)
+      await ctx.sessions.flush(agent.session)
+      rt.contextRecovery.notice(agent.id)
+      agent.cancel({ kind: 'hook', reason: 'Repeated context recovery failed' }, { keepInbox: true })
+      return { kind: 'reject' }
+    }
     const past = rt.pastOwners.get(agent.id)
     if (past !== undefined && !rt.isBotSession(agent.id)) {
       await forward(past, payload.messages).catch(error => rt.warn('chemclaw-bot: input for %s was not handed on: %s', agent.id, error))
@@ -1183,6 +1195,7 @@ export function install(rt) {
     await rt.load()
     const { agent } = payload
     if (!rt.isBotSession(agent.id) || switches.has(agent.id) || readOnly()) return next()
+    if (rt.contextRecovery && !await rt.contextRecovery.advance(agent.id)) return undefined
     const entry = rt.liveOf(agent.id)
     entry.switched = true
     startSwitch(agent, { resume: true, info: entry.info, joined: [...(entry.joined ?? [])], overflow: true })
@@ -1193,7 +1206,8 @@ export function install(rt) {
   // the part ends up below the line, and nothing is decided again until it grows
   // past it.
   async function checkContext(agent) {
-    if (switches.has(agent.id) || freshParts.has(agent.id) || checking.has(agent.id) || readOnly()) return
+    await rt.contextRecovery?.settled()
+    if (switches.has(agent.id) || freshParts.has(agent.id) || checking.has(agent.id) || readOnly() || rt.contextRecovery?.blocked(agent.id)) return
     const lines = await contextLines(agent.session)
     const tokens = tokensOf(agent.session)
     if (lines === undefined || tokens === undefined || tokens < lines.check || !grown(agent.id, tokens, lines)) return

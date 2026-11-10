@@ -11,7 +11,7 @@ import { BotViews, isBotId } from '../src/bot-views.mjs'
 // symbolic link to the folder.
 const folderLink = process.platform === 'win32' ? 'junction' : 'dir'
 
-function fixture({ statePath, onDiagnostic } = {}) {
+function fixture({ statePath, onDiagnostic, assertAvailable } = {}) {
   const changes = []
   const handlers = new Map()
   const views = []
@@ -55,7 +55,7 @@ function fixture({ statePath, onDiagnostic } = {}) {
   }
   const added = []
   let window = { contentView: { addChildView(view) { added.push(view) }, removeChildView() {} } }
-  const manager = new BotViews({ window: () => window, WebContentsView, guests, origin: () => 'http://127.0.0.1:43117', statePath, onChange: change => changes.push(change), ...(onDiagnostic ? { onDiagnostic } : {}) })
+  const manager = new BotViews({ window: () => window, WebContentsView, guests, origin: () => 'http://127.0.0.1:43117', statePath, assertAvailable, onChange: change => changes.push(change), ...(onDiagnostic ? { onDiagnostic } : {}) })
   return { manager, handlers, views, changes, added, setWindow: (next) => { window = next } }
 }
 
@@ -103,6 +103,40 @@ function request(socket, id, method, params = {}, sessionId) {
     socket.send(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }))
   })
 }
+
+test('an unavailable app blocks new native views and navigation but permits cleanup', async t => {
+  let available = true
+  const { manager, views } = fixture({ assertAvailable: () => { if (!available) throw new Error('mock app moved') } })
+  t.after(() => manager.dispose())
+  const entry = manager.create('a', { url: 'https://example.com/' })
+  available = false
+  assert.throws(() => manager.create('a'), /mock app moved/u)
+  await assert.rejects(() => manager.operate('a', 'navigate', { tabId: entry.tabId, url: 'https://elsewhere.example/' }), /mock app moved/u)
+  await assert.rejects(() => manager.operate('a', 'read', { tabId: entry.tabId, script: 'window.open()' }), /mock app moved/u)
+  await assert.rejects(() => manager.endpoint('a'), /mock app moved/u)
+  assert.deepEqual(entry.view.webContents.windowOpenHandler({ url: 'https://popup.example/' }), { action: 'deny' })
+  assert.equal(views.length, 1)
+  assert.deepEqual(entry.view.webContents.loadedUrls, ['https://example.com/'])
+  await manager.operate('a', 'close', { tabId: entry.tabId })
+  assert.equal(manager.sync('a').length, 0)
+})
+
+test('queued CDP creation and navigation recheck app availability', async t => {
+  let available = true
+  const { manager, views } = fixture({ assertAvailable: () => { if (!available) throw new Error('mock app moved') } })
+  t.after(() => manager.dispose())
+  const endpoint = await manager.endpoint('a')
+  const socket = await openSocket(endpoint)
+  t.after(() => socket.close())
+  const target = (await request(socket, 1, 'Target.getTargets')).result.targetInfos[0]
+  const session = (await request(socket, 2, 'Target.attachToTarget', { targetId: target.targetId })).result.sessionId
+  available = false
+  assert.equal((await request(socket, 3, 'Page.navigate', { url: 'https://example.com/' }, session)).error.message, 'mock app moved')
+  assert.equal((await request(socket, 4, 'Target.createTarget', { url: 'https://example.com/' })).error.message, 'mock app moved')
+  assert.equal(views.length, 1)
+  assert.deepEqual(views[0].webContents.loadedUrls, ['about:blank'])
+  assert.equal((await request(socket, 5, 'Target.closeTarget', { targetId: target.targetId })).result.success, true)
+})
 
 test('CDP endpoint creates and loads an initial view for a Bot with no tabs', async t => {
   const { manager, views } = fixture()

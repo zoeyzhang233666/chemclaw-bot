@@ -33,6 +33,29 @@ function runtime(defaultSelection) {
   return rt
 }
 
+test('roster reads fall back to cached models while one provider discovery remains stuck', async t => {
+  const rt = runtime()
+  const cached = await rt.catalog()
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'], now: Date.now() })
+  t.mock.timers.tick(11000)
+  let requests = 0
+  let finish
+  rt.ctx.llm.listModels = () => { requests += 1; return new Promise(resolve => { finish = resolve }) }
+  const first = rt.catalogForView()
+  await Promise.resolve()
+  t.mock.timers.tick(1000)
+  assert.deepEqual(await first, cached)
+  const second = rt.catalogForView()
+  t.mock.timers.tick(1000)
+  assert.deepEqual(await second, cached)
+  assert.equal(requests, 1)
+  rt.ctx.llm.listProviders = () => []
+  // Resolve the retained request; no real network or detached work remains.
+  rt.ctx.llm.listModels = async () => []
+  finish([])
+  await rt.catalog()
+})
+
 test('the default model is the DSH default when served, else the first served model', async () => {
   assert.equal(await runtime({ provider: 'ollama', model: 'kimi-k3' }).defaultModel(), 'ollama/kimi-k3')
   assert.equal(await runtime({ provider: 'gone', model: 'x' }).defaultModel(), 'deepseek/deepseek-v4.1-flash')

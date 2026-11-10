@@ -86,6 +86,7 @@ export function install(rt) {
   // turn there runs; the approvals waiting; per Bot, who it waits for to hand back work;
   // and per Session, when its running turn began.
   const live = () => ({
+    readOnly: rt.readOnly() ?? null,
     activity: rt.activityView(),
     work: { bots: rt.workView(), rooms: rt.roomWorkView(), approvals: rt.approvalsView(), waiting: rt.waitingView?.() ?? {}, turns: rt.turnsView?.() ?? {}, steered: rt.steeredView?.() ?? {} },
     memoryNews: rt.memoryNews(),
@@ -174,7 +175,7 @@ export function install(rt) {
             // Do not warm all rooms here: that contended with the first reply. Rooms
             // warm on open (warm-room) and send awaits that job.
           }
-          await rt.catalog()
+          await rt.catalogForView()
           await rt.loadSecrets()
           if (body.since === state.revision && (body.models === undefined || body.models === modelsKey())) return ok({ revision: state.revision, unchanged: true, ...live() })
           return ok({ ...view(), ...live() })

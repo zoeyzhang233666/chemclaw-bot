@@ -8,6 +8,8 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { fileURLToPath } from 'node:url'
+import { verifyOfficeCrt } from './stage-office-crt.mjs'
+import { createRequire } from 'node:module'
 
 const PYTHON_CREATE = String.raw`from pathlib import Path
 import sys, json
@@ -65,6 +67,10 @@ export function checkOfficeFiles(resources, {
   for (const file of [node, python, cli, converter]) {
     if (!existsSync(file)) throw new Error('Installed Office payload missing ' + file)
   }
+  if (platform === 'win32') {
+    const require = createRequire(converter)
+    verifyOfficeCrt(dirname(require.resolve('@deepseek-ai/libreoffice-kit-win32-x64/package.json')))
+  }
   const work = makeTemp()
   try {
     const cmd = (exe, args) => {
@@ -91,9 +97,14 @@ export function checkOfficeFiles(resources, {
     // Exercise the exact standalone CLI used by Office skills and the right
     // sidebar conversion chain. A working Python and Office inventory alone
     // cannot prove libreoffice-kit's JS packages and native engine are shipped.
-    cmd(node, [converter, 'convert', '--input', join(work, 'test.pptx'), '--output', join(work, 'preview.pdf')])
-    const pdf = readFileSync(join(work, 'preview.pdf'))
-    assert.ok(pdf.length > 1000 && pdf.subarray(0, 5).toString() === '%PDF-', 'Bundled Office converter did not render a real PDF')
+    for (const file of ['test.docx', 'test.pptx', 'test.xlsx']) {
+      const before = readFileSync(join(work, file))
+      const output = join(work, file + '.pdf')
+      cmd(node, [converter, 'convert', '--input', join(work, file), '--output', output])
+      const pdf = readFileSync(output)
+      assert.ok(pdf.length > 1000 && pdf.subarray(0, 5).toString() === '%PDF-', 'Bundled Office converter did not render ' + file)
+      assert.deepEqual(readFileSync(join(work, file)), before, 'Conversion modified the source document')
+    }
     // The sidebar invokes the Host's JS API, not the standalone CLI. Run that
     // same API from the packaged Electron Node executable, rooted in app.asar.
     // A missing JS dependency or worker failure must block the installer even

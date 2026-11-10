@@ -49,6 +49,18 @@ export function install(rt) {
     catalogPending = pending
     return pending
   }
+  // An optional provider can hang while discovering models. The roster still
+  // uses its cached catalog; the shared discovery promise prevents piling up
+  // new requests while that provider remains stuck.
+  rt.catalogForView = async () => {
+    let timer
+    try {
+      return await Promise.race([
+        catalog(),
+        new Promise(resolve => { timer = setTimeout(() => resolve(catalogCache.value), 1000) }),
+      ])
+    } finally { clearTimeout(timer) }
+  }
   async function readCatalog() {
     await rt.prepareProviderRoutes?.()
     const entries = []

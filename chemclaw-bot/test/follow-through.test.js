@@ -110,7 +110,9 @@ const settleState = async (t, home, check) => {
 }
 const settle = async (check) => {
   const until = Date.now() + 3000
-  while (!check() && Date.now() < until) await new Promise(resolve => setImmediate(resolve))
+  // Yield between physical file reads: a tight Windows read loop can keep the
+  // destination busy through every atomic-replacement retry.
+  while (!check() && Date.now() < until) await realDelay(10)
   assert.ok(check(), 'condition not reached')
 }
 const text = message => message.content.map(block => block.text ?? '').join('\n')

@@ -106,6 +106,8 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'effect chemclaw-bot: hand on input kept in earlier parts',
     'on agent/status',
     'on llm/stream',
+    'on session/event',
+    'effect chemclaw-bot: context recovery writes',
     'on llm/stream',
     'on agent/status',
     'on session/event',
