@@ -41,12 +41,12 @@ guard let canvas = CGContext(
     fail("Cannot allocate transparent RGBA bitmap")
 }
 
-canvas.clear(CGRect(x: 0, y: 0, width: canvasSize, height: canvasSize))
+canvas.clear(CGRect(x: 0, y: 0, width: CGFloat(canvasSize), height: CGFloat(canvasSize)))
 canvas.interpolationQuality = .high
 canvas.setShouldAntialias(true)
 canvas.draw(
     sourceImage,
-    in: CGRect(x: padding, y: padding, width: artworkSize, height: artworkSize)
+    in: CGRect(x: CGFloat(padding), y: CGFloat(padding), width: CGFloat(artworkSize), height: CGFloat(artworkSize))
 )
 
 guard let outputImage = canvas.makeImage() else {
