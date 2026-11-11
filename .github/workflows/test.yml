@@ -284,6 +284,12 @@ jobs:
       - run: npm ci --no-fund --no-audit
         env:
           ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+      - name: Check native Mac icon generation before packaging
+        timeout-minutes: 5
+        run: |
+          node scripts/prepare-mac-icon.mjs
+          test -s build/icon-mac-balanced.png
+          sips -g pixelWidth -g pixelHeight build/icon-mac-balanced.png
       - run: npm run pack
         env:
           ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
