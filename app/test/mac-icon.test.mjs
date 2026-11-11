@@ -28,12 +28,18 @@ test('packaging does not regenerate the original approved raster', () => {
   }
 })
 
-test('Mac icon correction only scales original artwork and adds transparent margins', () => {
+test('Mac icon correction uses native macOS CoreGraphics, not Electron', () => {
   const script = read('../scripts/prepare-mac-icon.mjs').toString('utf8')
+  const renderer = read('../scripts/render-mac-icon.swift').toString('utf8')
   assert.match(script, /ARTWORK_SIZE = 820/)
-  assert.match(script, /OFFSET = \(ICON_SIZE - ARTWORK_SIZE\) \/ 2/)
-  assert.match(script, /clearRect\(0, 0, targetSize, targetSize\)/)
-  assert.match(script, /drawImage\(image, inset, inset, artworkSize, artworkSize\)/)
-  assert.match(script, /process\.platform !== 'darwin'/)
-  assert.doesNotMatch(script, /writeFileSync\(original/)
+  assert.match(script, /OFFSET = \\(ICON_SIZE - ARTWORK_SIZE\\) \\/ 2/)
+  assert.match(script, /spawnSync\\('\/usr\/bin\/xcrun', \\['swift', swiftSource, original, output\\]/)
+  assert.match(script, /process\\.platform === 'darwin'/)
+  assert.doesNotMatch(script, /createRequire\\(|import\\('electron'\\)|spawnSync\\(electron/)
+  assert.doesNotMatch(script, /writeFileSync\\(original/)
+  assert.match(renderer, /import CoreGraphics/)
+  assert.match(renderer, /artworkSize = 820/)
+  assert.match(renderer, /canvas\\.clear\\(/)
+  assert.match(renderer, /canvas\\.draw\\(/)
+  assert.match(renderer, /png\\.write\\(to: outputURL/)
 })
