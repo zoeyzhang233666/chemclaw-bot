@@ -16,7 +16,7 @@ test('approved original Scheme A macOS icon is a 1024px RGBA PNG', () => {
 test('macOS uses its separate tile while Windows and Linux keep original icons', () => {
   const config = read('../electron-builder.yml').toString('utf8')
   assert.match(config, /win:[\s\S]*?icon: assets\/icon\.ico\s+nsis:/)
-  assert.match(config, /mac:[\s\S]*?icon: assets\/icon-mac\.png\s+category: public\.app-category\.productivity/)
+  assert.match(config, /mac:[\s\S]*?icon: build\/icon-mac-balanced\.png\s+category: public\.app-category\.productivity/)
   assert.match(config, /linux:[\s\S]*?icon: assets\/icon\.png\s+category: Utility/)
 })
 
