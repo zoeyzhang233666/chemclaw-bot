@@ -60,7 +60,7 @@ mac:
   # Ad-hoc signing seals the bundle; no Developer ID or notarization.
   identity: '-'
   hardenedRuntime: false
-  icon: assets/icon.png
+  icon: assets/icon-mac.png
   category: public.app-category.productivity
 linux:
   # Electron's system GLib conflicts with native libvips. Let sharp use its official
