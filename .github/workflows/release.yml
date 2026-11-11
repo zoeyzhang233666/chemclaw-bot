@@ -269,6 +269,7 @@ jobs:
           /usr/bin/time -p ditto -c -k --sequesterRsrc --keepParent --zlibCompressionLevel 6 "$app" "$zip"
       - name: Create the Mac DMG from the same signed app
         run: |
+          node scripts/render-dmg-background.mjs
           folder=mac
           if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
           npx --no-install electron-builder --mac dmg --${{ matrix.arch }} --prepackaged "dist-pack/$folder/ChemClaw.app" --config electron-builder.mac-dmg.yml --publish never
