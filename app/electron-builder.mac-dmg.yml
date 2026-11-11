@@ -9,7 +9,8 @@ dmg:
   title: ChemClaw ${version}
   format: UDZO
   filesystem: HFS+
-  backgroundColor: '#f2f4f7'
+  # Background is generated from SVG in 1x and Retina variants before DMG packing.
+  background: build/dmg-background.png
   window:
     width: 540
     height: 380
