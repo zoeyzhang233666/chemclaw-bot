@@ -23,6 +23,17 @@ test('macOS uses its separate tile while Windows and Linux keep original icons',
 test('packaging does not regenerate the original approved raster', () => {
   const scripts = JSON.parse(read('../package.json').toString('utf8')).scripts
   for (const name of ['pack', 'dist', 'dist:mac-preview']) {
+    assert.ok(scripts[name].includes('node scripts/prepare-mac-icon.mjs'), name)
     assert.ok(!scripts[name].includes('build-mac-icon'), name)
   }
+})
+
+test('Mac icon correction only scales original artwork and adds transparent margins', () => {
+  const script = read('../scripts/prepare-mac-icon.mjs').toString('utf8')
+  assert.match(script, /ARTWORK_SIZE = 820/)
+  assert.match(script, /OFFSET = \(ICON_SIZE - ARTWORK_SIZE\) \/ 2/)
+  assert.match(script, /clearRect\(0, 0, targetSize, targetSize\)/)
+  assert.match(script, /drawImage\(image, inset, inset, artworkSize, artworkSize\)/)
+  assert.match(script, /process\.platform !== 'darwin'/)
+  assert.doesNotMatch(script, /writeFileSync\(original/)
 })
