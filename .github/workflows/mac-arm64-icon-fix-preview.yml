@@ -1,0 +1,77 @@
+name: ChemClaw Mac M-series DMG preview (icon fix)
+
+# Standalone M-series test installer. Does not merge PR #123 or publish a release.
+on:
+  push:
+    branches:
+      - build/mac-arm64-icon-fix-preview-20261111
+
+permissions:
+  contents: read
+
+jobs:
+  mac-arm64-dmg:
+    name: ChemClaw 0.3.1 DMG (Apple Silicon)
+    runs-on: macos-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            chemclaw-bot/package-lock.json
+            app/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/electron
+            ${{ runner.temp }}/electron-builder-cache
+          key: chemclaw-mac-icon-preview-arm64-v2-${{ hashFiles('app/package-lock.json') }}
+      - name: Bundle Apple Silicon market runtime
+        working-directory: chemclaw-bot
+        run: |
+          npm ci --no-fund --no-audit
+          npm run runtime:bundle
+      - name: Install application dependencies
+        working-directory: app
+        run: npm ci --no-fund --no-audit
+      - name: Generate native macOS icon and confirm file
+        working-directory: app
+        timeout-minutes: 5
+        run: |
+          node scripts/prepare-mac-icon.mjs
+          test -s build/icon-mac-balanced.png
+          sips -g pixelWidth -g pixelHeight build/icon-mac-balanced.png
+      - name: Package Apple Silicon application
+        working-directory: app
+        run: npm run pack
+        env:
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+          CSC_FOR_PULL_REQUEST: 'true'
+      - name: Create guided DMG
+        working-directory: app
+        run: |
+          set -euo pipefail
+          node scripts/render-dmg-background.mjs
+          app="dist-pack/mac-arm64/ChemClaw.app"
+          test -d "$app"
+          codesign --verify --deep --strict "$app"
+          npx --no-install electron-builder --mac dmg --arm64 --prepackaged "$app" --config electron-builder.mac-dmg.yml --publish never
+          dmg="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-arm64.dmg"
+          test -s "$dmg"
+          hdiutil imageinfo "$dmg" >/dev/null
+          shasum -a 256 "$dmg"
+      - name: Upload test DMG (7 days)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChemClaw-0.3.1-mac-arm64-icon-fix-DMG
+          path: app/dist-pack/ChemClaw-*-mac-arm64.dmg
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
