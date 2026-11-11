@@ -1,0 +1,104 @@
+name: Mac DMG 0.3.1 preview (non-release)
+
+# Runs only on the dedicated preview branch. Never publishes a GitHub Release.
+on:
+  push:
+    branches:
+      - build/mac-dmg-preview-20261111
+
+permissions:
+  contents: read
+
+jobs:
+  mac-dmg-preview:
+    name: Build signed app and DMG (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: arm64, runner: macos-latest }
+          - { arch: x64, runner: macos-26-intel }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            chemclaw-bot/package-lock.json
+            app/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/electron
+            ${{ runner.temp }}/electron-builder-cache
+          key: chemclaw-mac-dmg-preview-v1-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
+      - name: Bundle market runtime for this Mac architecture
+        working-directory: chemclaw-bot
+        run: |
+          npm ci --no-fund --no-audit
+          npm run runtime:bundle
+      - name: Install desktop app dependencies
+        working-directory: app
+        run: npm ci --no-fund --no-audit
+        env:
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+      - name: Package ChemClaw for macOS
+        working-directory: app
+        run: npm run pack
+        env:
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+      - name: Verify signature and generate ZIP and DMG
+        working-directory: app
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder=mac
+          if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
+          app="dist-pack/$folder/ChemClaw.app"
+          version="$(node -p "require('./package.json').version")"
+          zip="dist-pack/ChemClaw-$version-mac-${{ matrix.arch }}.zip"
+          dmg="dist-pack/ChemClaw-$version-mac-${{ matrix.arch }}.dmg"
+          codesign --verify --deep --strict "$app"
+          ditto -c -k --sequesterRsrc --keepParent --zlibCompressionLevel 6 "$app" "$zip"
+          node scripts/render-dmg-background.mjs
+          npx --no-install electron-builder --mac dmg --${{ matrix.arch }} --prepackaged "$app" --config electron-builder.mac-dmg.yml --publish never
+          test -s "$zip"
+          test -s "$dmg"
+          hdiutil imageinfo "$dmg" >/dev/null
+          echo "Produced $(basename "$zip") and $(basename "$dmg")"
+      - name: Verify Finder installation layout
+        working-directory: app
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          zip="dist-pack/ChemClaw-$version-mac-${{ matrix.arch }}.zip"
+          dmg="dist-pack/ChemClaw-$version-mac-${{ matrix.arch }}.dmg"
+          target="$RUNNER_TEMP/chemclaw-archive-check"
+          mkdir -p "$target"
+          ditto -x -k "$zip" "$target"
+          node ../.github/scripts/check-macos-dmg-layout.mjs "$dmg" "$RUNNER_TEMP/chemclaw-dmg-layout" "$target/ChemClaw.app"
+      - name: Upload Mac test installers (7 days)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChemClaw-0.3.1-mac-${{ matrix.arch }}-preview
+          path: |
+            app/dist-pack/ChemClaw-*-mac-${{ matrix.arch }}.dmg
+            app/dist-pack/ChemClaw-*-mac-${{ matrix.arch }}.zip
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
+      - name: Upload Finder screenshot and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChemClaw-0.3.1-mac-${{ matrix.arch }}-finder-review
+          path: |
+            ${{ runner.temp }}/chemclaw-dmg-layout/*.png
+            ${{ runner.temp }}/chemclaw-dmg-layout/summary.json
+          retention-days: 7
+          if-no-files-found: warn
