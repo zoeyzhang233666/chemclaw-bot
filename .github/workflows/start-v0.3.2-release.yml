@@ -1,0 +1,54 @@
+# One-time, explicitly version-scoped release dispatcher.
+# It runs only when the approved release PR adds v0.3.2 notes to main AND its
+# squash commit starts with the agreed release title. It cannot publish a
+# different version and does not override existing tags/releases.
+name: Start approved ChemClaw v0.3.2 release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docs/releases/v0.3.2.md
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch-release:
+    if: startsWith(github.event.head_commit.message, 'release: ChemClaw v0.3.2')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check versions and release collision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(node -p "require('./chemclaw-bot/package.json').version")" = "0.3.2"
+          test "$(node -p "require('./app/package.json').version")" = "0.3.2"
+          test -s docs/releases/v0.3.2.md
+          if gh release view v0.3.2 --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "::error::v0.3.2 Release already exists; refusing to overwrite it."
+            exit 1
+          fi
+          if git ls-remote --tags origin refs/tags/v0.3.2 | grep -q .; then
+            echo "::error::v0.3.2 tag already exists; refusing to move it."
+            exit 1
+          fi
+      - name: Dispatch official release workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run release.yml --repo "$GH_REPO" --ref main \
+            -f dry_run=false -f benchmark_mac_zip=false
+          echo "Official release workflow dispatched for v0.3.2 from main."
