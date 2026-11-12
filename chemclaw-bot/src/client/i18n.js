@@ -7,6 +7,7 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Give up waiting for {name}': '放弃等待{name}',
   'OHLC': '日K线',
   'Opening price': '开盘价',
   'Closing price': '收盘价',
