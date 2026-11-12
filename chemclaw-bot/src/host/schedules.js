@@ -8,6 +8,16 @@
 
 const MAX_TITLE = 120
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/
+const hostWide = service => typeof service?.edit === 'function'
+const sessionOf = entry => entry?.target === undefined ? entry?.sessionId : entry.target?.kind === 'session' ? entry.target.sessionId : undefined
+const TIMING_KINDS = { at: 'at', every_seconds: 'every', daily: 'daily', weekly: 'weekly' }
+const OTHER_TASK_REFUSAL = 'This scheduled task belongs to another chat. Only its owner can change it.'
+const TARGET_REFUSAL = 'A Bot can schedule work only in its own chat. Use target "this_session".'
+const sameOwner = (a, b) => a !== undefined && b !== undefined && a.botId === b.botId && a.roomId === b.roomId
+const timingOf = selector => {
+  const [key] = Object.keys(selector)
+  return { kind: TIMING_KINDS[key], [key]: selector[key] }
+}
 
 const invalid = message => Object.assign(new Error(message), { code: 'bot/invalid' })
 
@@ -94,9 +104,14 @@ export function install(rt) {
     if (service === null) return { available: false, tasks: [] }
     const tasks = []
     for (const entry of await service.catalog()) {
-      const owner = ownerOf(entry.sessionId)
+      const sessionId = sessionOf(entry)
+      const owner = sessionId === undefined ? undefined : ownerOf(sessionId)
       if (!known(owner)) continue
-      tasks.push({ ...entry, ...owner })
+      const now = Date.now()
+      const state = entry.status === 'active'
+        ? (now >= Date.parse(entry.scheduledAt) ? 'overdue' : 'scheduled')
+        : entry.status === 'paused' ? 'paused' : 'finished'
+      tasks.push({ ...entry, sessionId, ...owner, state })
     }
     return { available: true, tasks }
   }
@@ -113,13 +128,23 @@ export function install(rt) {
       if (title === '') throw invalid('Give the task a name')
       if (title.length > MAX_TITLE) throw invalid(`Keep the name under ${MAX_TITLE} characters`)
       if (prompt === '') throw invalid('Say what the Bot should do')
-      await service.create(bot ? rt.chatOf(bot.id) : room.id, { title, prompt, ...selectorOf(body.when) })
+      const sessionId = bot ? rt.chatOf(bot.id) : room.id
+      const selector = selectorOf(body.when)
+      if (hostWide(service)) await service.create({ title, prompt, timing: timingOf(selector), target: { kind: 'session', sessionId } })
+      else await service.create(sessionId, { title, prompt, ...selector })
       return schedulesView()
     },
     async 'schedule-delete'(body) {
       if (service === null) throw invalid('Automation tasks are off in DSH')
       if (ownerOf(body.sessionId) === undefined) throw invalid('No such task')
-      await service.delete({ sessionId: body.sessionId, id: body.id })
+      if (hostWide(service)) {
+        // Host-wide task IDs must not let the UI delete another chat's task.
+        const task = (await service.catalog()).find(item => item.id === body.id)
+        if (task === undefined || sessionOf(task) !== body.sessionId) throw invalid('No such task')
+        await service.edit({ id: body.id, action: 'delete' })
+      } else {
+        await service.delete({ sessionId: body.sessionId, id: body.id })
+      }
       return schedulesView()
     },
   }
@@ -128,6 +153,15 @@ export function install(rt) {
   // the fresh Session before the old one goes, so a failure leaves it where it was.
   async function moveSchedules(fromId, toId) {
     if (service === null) return
+    if (hostWide(service)) {
+      // Change the destination in place: preserve schedule IDs, next-run time,
+      // and paused status when a Bot opens a new part.
+      for (const task of await service.catalog()) {
+        if (task.status === 'ended' || sessionOf(task) !== fromId) continue
+        await service.edit({ id: task.id, action: 'update', patch: { target: { kind: 'session', sessionId: toId } } })
+      }
+      return
+    }
     const records = await service.list({ sessionId: fromId })
     for (const record of records) {
       const request = requestOf(record)
@@ -143,6 +177,63 @@ export function install(rt) {
       }
     }
   }
+
+  // DSH 0.2.2 lists schedules Host-wide; retain ChemClaw's per-Bot privacy
+  // for built-in schedule tools, including old parts of the same Bot.
+  ctx.on('tools/pre-execute', async (exec, next) => {
+    const decision = await next()
+    if (decision.kind !== 'allow' || service === null || !hostWide(service)) return decision
+    if (!['schedule_edit', 'schedule_view'].includes(exec.name)) return decision
+    await rt.load()
+    const caller = exec.agent?.id
+    if (!rt.isBotSession(caller)) return decision
+    const task = (await service.catalog()).find(item => item.id === exec.arguments?.id)
+    if (task === undefined) return decision
+    const sessionId = sessionOf(task)
+    if (sessionId !== undefined && sameOwner(ownerOf(caller), ownerOf(sessionId))) return decision
+    return { kind: 'deny', reason: OTHER_TASK_REFUSAL }
+  })
+  ctx.on('tools/execute', async function listOwnTasks(exec, next) {
+    if (exec.name !== 'schedule_list' || service === null || !hostWide(service)) return next()
+    await rt.load()
+    const owner = rt.isBotSession(exec.agent?.id) ? ownerOf(exec.agent.id) : undefined
+    if (owner === undefined) return next()
+    const args = exec.arguments ?? {}
+    const mine = task => {
+      const target = sessionOf(task)
+      return target !== undefined && sameOwner(owner, ownerOf(target))
+    }
+    const limit = args.limit ?? 100
+    const offset = args.offset ?? 0
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 500 || !Number.isSafeInteger(offset) || offset < 0) {
+      const result = await next()
+      if (result.isError || !Array.isArray(result.value?.items)) return result
+      const items = result.value.items.filter(mine)
+      const total = (await service.catalog()).filter(item => mine(item) && (args.active === undefined || (item.status === 'active') === args.active)).length
+      return { ...result, value: { ...result.value, items, shown: items.length, total } }
+    }
+    const pool = (await service.catalog()).filter(item => args.active === undefined || (item.status === 'active') === args.active)
+    const positions = pool.flatMap((entry, i) => mine(entry) ? [i] : [])
+    const page = positions.slice(offset, offset + limit)
+    const start = page[0] ?? pool.length
+    const original = exec.arguments
+    exec.arguments = { ...args, offset: start, limit: page.length === 0 ? 1 : Math.min(500, page.at(-1) - start + 1) }
+    let result
+    try { result = await next() }
+    finally { exec.arguments = original }
+    if (result.isError || !Array.isArray(result.value?.items)) return result
+    const items = result.value.items.filter(mine).slice(0, limit)
+    return { ...result, value: { ...result.value, items, shown: items.length, total: positions.length, limit, offset } }
+  })
+
+  // New DSH can schedule into arbitrary fresh Sessions: team Bots must stay in
+  // their own current chat so history and approvals remain attached.
+  ctx.tools.guard(exec => {
+    if (!rt.isBotSession(exec.agent?.id)) return undefined
+    if (!['schedule_create', 'schedule_edit'].includes(exec.name)) return undefined
+    const target = exec.arguments?.target
+    return target !== undefined && target !== 'this_session' ? TARGET_REFUSAL : undefined
+  })
 
   Object.assign(rt, { scheduleEndpoint: (endpoint, body) => endpoints[endpoint](body ?? {}), moveSchedules })
 }
