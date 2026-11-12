@@ -42,7 +42,7 @@ test('missing long text is reported instead of falsely claiming full recovery', 
   assert.equal(result.rows[0].legacyIncomplete, true)
   assert.equal(result.rows[0].text, 'start')
   assert.ok(result.warnings.some(w => w.includes('Missing legacy long-text')))
-  assert.ok(result.warnings.some(w => w.includes('older/missing history')))
+  assert.ok(result.warnings.some(w => w.includes('newer/missing history')))
   assert.ok(result.warnings.some(w => w.includes('older history')))
 })
 
@@ -113,4 +113,34 @@ test('legacy logs without per-row sequence retain the offset stored by the room'
   const preview = await previewLegacyRoom({ home, room })
   assert.deepEqual(preview.rows.map(row => row.seq), [101, 102])
   assert.ok(preview.warnings.some(warning => warning.includes('older history')))
+})
+
+test('internal missing messages are reported even when both ends exist', async t => {
+  const home = await temporary(t)
+  const result = await previewLegacyRoom({
+    home, room: { id: 'r1', seq: 3, log: [
+      { seq: 1, text: 'first' },
+      { seq: 3, text: 'third' },
+    ] },
+  })
+  assert.deepEqual(result.rows.map(row => row.seq), [1, 3])
+  assert.ok(result.warnings.some(w => w.includes('missing messages between sequences 1 and 3')))
+})
+
+test('a group sequence behind its recovered messages is rejected', async t => {
+  const home = await temporary(t)
+  await assert.rejects(previewLegacyRoom({
+    home, room: { id: 'r1', seq: 1, log: [{ seq: 2, text: 'conflicting state' }] },
+  }), /sequence is behind the recovered messages/)
+})
+
+test('partial historical archive still warns when the earliest sequence is missing', async t => {
+  const home = await temporary(t)
+  const result = await previewLegacyRoom({
+    home,
+    room: { id: 'r1', seq: 4, log: [{ seq: 4, text: 'recent' }] },
+    archivedRows: [{ seq: 2, text: 'archived' }, { seq: 3, text: 'archive end' }],
+  })
+  assert.deepEqual(result.rows.map(row => row.seq), [2, 3, 4])
+  assert.ok(result.warnings.some(w => w.includes('older history')))
 })
