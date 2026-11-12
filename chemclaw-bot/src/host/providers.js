@@ -9,6 +9,17 @@ const PI_AI = 'llm-pi-ai'
 const ROUTE_ID = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/
 // The wire protocols DSH's pi-ai adapter serves on a route it ships nothing about.
 export const PROTOCOLS = ['openai-completions', 'openai-responses', 'anthropic-messages']
+// rc.2 may add protocols through the adapter settings schema. Discover them when
+// available, while retaining the rc.1 fallback for older or incomplete schemas.
+export function protocolsOf(section) {
+  const schema = section?.schema
+  const refs = schema?.refs
+  const at = node => (typeof node === 'number' || typeof node === 'string' ? refs?.[String(node)] : node)
+  const root = at(schema?.uid ?? schema)
+  const api = at(at(at(root?.dict?.providers)?.inner)?.dict?.api)
+  const provided = api?.list?.map(entry => at(entry)?.value).filter(value => typeof value === 'string' && value !== '')
+  return Array.isArray(provided) && provided.length > 0 ? provided : PROTOCOLS
+}
 const MAX_MODELS = 500
 
 // The reference DSH's own Models page derives for a route's key, so a provider added
@@ -221,7 +232,7 @@ export function install(rt) {
     }
     // The ones that come with the setup first, then the added ones as DSH lists them.
     providers.sort((a, b) => Number(b.id === APIHUB.id) - Number(a.id === APIHUB.id) || Number(a.removable) - Number(b.removable))
-    return { available: true, providers, addable, protocols: PROTOCOLS, featured: APIHUB }
+    return { available: true, providers, addable, protocols: protocolsOf(map.get(PI_AI)), featured: APIHUB }
   }
 
   async function writableRef(provider) {
@@ -265,7 +276,7 @@ export function install(rt) {
     if (key !== undefined && info.writable === false) throw invalid(`The API key for ${provider} is set outside ChemClaw and cannot be changed here`)
     // A blank key keeps a key that is already there, else the provider's own sign-in.
     const keyed = key !== undefined || info.configured === true
-    const profile = custom ? customProfile(body) : {}
+    const profile = custom ? customProfile(body, protocolsOf(map.get(PI_AI))) : {}
     if (keyed) profile.apiKeyEnv = ref
     await settings.mutate(PI_AI, [{ op: 'set', path: entry?.settingsPath ?? ['providers', provider], value: profile }], map.get(PI_AI)?.revision)
     if (key !== undefined) await credentials.set(ref, key)
@@ -319,8 +330,8 @@ export function install(rt) {
     return providersView()
   }
 
-  function customProfile(body) {
-    if (!PROTOCOLS.includes(body.api)) throw invalid(`The protocol must be one of ${PROTOCOLS.join(', ')}`)
+  function customProfile(body, protocols = PROTOCOLS) {
+    if (!protocols.includes(body.api)) throw invalid(`The protocol must be one of ${protocols.join(', ')}`)
     const models = Array.isArray(body.models) ? body.models.slice(0, MAX_MODELS).map(modelEntry) : []
     if (models.length === 0) throw invalid('Add at least one model')
     if (new Set(models.map(model => model.id)).size !== models.length) throw invalid('Two models have the same id')
@@ -331,7 +342,8 @@ export function install(rt) {
   // The models an endpoint (or a provider DSH ships) says it serves. The key typed for
   // the question goes with it and is not stored.
   async function discoverModels(body) {
-    usable()
+    const { settings } = usable()
+    const protocols = protocolsOf(sections(settings).get(PI_AI))
     const apiHub = body.preset === 'apihub'
     if (body.preset === 'apihub') {
       const { settings, credentials } = usable()
@@ -346,7 +358,7 @@ export function install(rt) {
       ? { provider }
       : {
           baseURL: checkEndpoint(body.baseURL),
-          ...(PROTOCOLS.includes(body.api) ? { api: body.api } : {}),
+          ...(protocols.includes(body.api) ? { api: body.api } : {}),
           ...(typeof body.key === 'string' && body.key.trim() !== '' ? { apiKey: checkKey(body.key) } : {}),
         }
     let models
