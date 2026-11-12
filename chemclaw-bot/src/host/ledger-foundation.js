@@ -66,7 +66,9 @@ export async function previewLegacyRoom({ home, room, archivedRows = [] }) {
     if (!line || Array.isArray(line) || typeof line !== 'object') {
       throw new Error('Invalid legacy group row')
     }
-    const seq = line.seq ?? (source === 'archive' ? index + 1 : older.length + index + 1)
+    const legacyStart = Number.isSafeInteger(room.seq) && room.seq >= recent.length
+      ? room.seq - recent.length + 1 : older.length + 1
+    const seq = line.seq ?? (source === 'archive' ? index + 1 : legacyStart + index)
     if (!Number.isSafeInteger(seq) || seq < 1) throw new Error('Invalid legacy group sequence')
     if (bySeq.has(seq)) {
       const previous = bySeq.get(seq)
