@@ -470,3 +470,26 @@ test('giving up a wait that is no longer open does not change a team', async t =
   assert.equal(result.error.code, 'bot/stale')
   assert.deepEqual(await worksIn(host), {})
 })
+
+
+test('an abandoned receipt survives a restart and still marks the later reply', async t => {
+  const { start, home } = bench(t)
+  const { host, tester } = await stalledHandoff(start)
+  const request = callsOf(host.agents, 'c')[0][1]
+  assert.equal(request.source.exchangeId, tester)
+  assert.equal((await host.call('abandon-work', { id: tester })).ok, true)
+  await worksIn(host)
+  assert.ok(JSON.parse(readFileSync(join(home, 'state.json'), 'utf8')).abandonedWorks?.[tester])
+  await host.stop()
+  const second = await start()
+  const turns = turnTaker(second.agents, second.emit)
+  turns.open('c', request)
+  turns.end('c', 'late review after restart')
+  await settled(() => callsOf(second.agents, 'b').some(([, msg]) => textOf(msg.content).includes('Late answer:')))
+  const late = callsOf(second.agents, 'b').find(([, msg]) => textOf(msg.content).includes('Late answer:'))?.[1]
+  assert.ok(late)
+  assert.match(textOf(late.content), /late review after restart/)
+  assert.equal(late.source.work, undefined)
+  await worksIn(second)
+  assert.equal(JSON.parse(readFileSync(join(home, 'state.json'), 'utf8')).abandonedWorks?.[tester], undefined)
+})
