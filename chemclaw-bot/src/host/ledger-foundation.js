@@ -103,7 +103,7 @@ export async function previewLegacyRoom({ home, room, archivedRows = [] }) {
   if (Number.isSafeInteger(room.seq) && room.seq > last) {
     warnings.push('Legacy group has a later sequence than the recovered log; older/missing history must be checked separately')
   }
-  if (rows.length > 1 && rows[0].seq > 1 && archivedRows.length === 0) {
+  if (rows.length > 0 && rows[0].seq > 1 && archivedRows.length === 0) {
     warnings.push('Legacy room.log starts after sequence 1; older history may be in Session or other archives')
   }
   return { book: 'group-' + room.id, rows, warnings }
