@@ -41,6 +41,9 @@ export const ROOM_STEP_GAP_MS = 30_000
 export const SOURCE_KIND = 'bot'
 // The fixed reply that opens a fresh conversation part; it is never shown or sent on.
 export const HANDOFF_ACK = 'Noted. I have my handoff note and carry on from here.'
+// An answer arriving after the user stopped waiting is informative, but it does not
+// re-open or settle an abandoned work for a second time.
+export const LATE_ANSWER = '[Late answer: the user had already given up waiting for this work; it was marked missing. This reply is informational.]\\n\\n'
 // An answer from a question card, in the shape DSH's own late question replies use.
 export const REPLY_KIND = 'user-question-reply'
 // DSH's snapshot of a referenced conversation, logged right after the user's message
