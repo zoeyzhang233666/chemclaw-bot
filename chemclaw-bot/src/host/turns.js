@@ -57,11 +57,18 @@ export function attachReference(queued, source, text) {
 
 // A tool call some models write into their text instead of making it (the XML-like
 // form of their own chat template).
-const WRITTEN_CALL = /<tool_call>\s*<function=|<function=[\w.-]+>\s*<parameter=/
+const TAG_OPEN = '[<＜]'
+const TAG_CLOSE = '[>＞]'
+const TOOL_CALL_TAG = `${TAG_OPEN}tool_call${TAG_CLOSE}`
+const FUNCTION_TAG = `${TAG_OPEN}function=[\\w.-]+${TAG_CLOSE}`
+const PARAMETER_TAG = `${TAG_OPEN}parameter=[\\w.-]+${TAG_CLOSE}`
+const CLOSING_TAG = `${TAG_OPEN}/(?:parameter|function|tool_call)${TAG_CLOSE}`
+const WRITTEN_CALL = new RegExp(`${TOOL_CALL_TAG}\\s*${TAG_OPEN}function=|${FUNCTION_TAG}\\s*${TAG_OPEN}parameter=|${CLOSING_TAG}`)
 export const writesToolCall = text => typeof text === 'string' && WRITTEN_CALL.test(text)
 export const stripWrittenCalls = text => text
-  .replace(/<tool_call>[\s\S]*?(?:<\/tool_call>|$)/g, '')
-  .replace(/<function=[\w.-]+>[\s\S]*?(?:<\/function>|$)/g, '')
+  .replace(new RegExp(`${TOOL_CALL_TAG}[\\s\\S]*?(?:${TAG_OPEN}/tool_call${TAG_CLOSE}|$)`, 'g'), '')
+  .replace(new RegExp(`${FUNCTION_TAG}[\\s\\S]*?(?:${TAG_OPEN}/function${TAG_CLOSE}|$)`, 'g'), '')
+  .replace(new RegExp(`(?:${CLOSING_TAG}|${PARAMETER_TAG})\\s*`, 'g'), '')
   .trim()
 
 // Under DSH's PTC presentation the model calls only this tool; the program's sub-calls
@@ -69,6 +76,13 @@ export const stripWrittenCalls = text => text
 const PROGRAM_TOOL = 'run_code'
 
 const RETRY_TEXT = 'Your last reply wrote a tool call as plain text (<tool_call>…), so it did not run and nothing happened. Call the tool through the tool interface now, then reply as you meant to.'
+
+// A max-tokens ending is not a complete answer. Preserve useful partial text,
+// while making its incomplete state unambiguous to the requesting Bot or group.
+const CUT_OFF_NOTE = "[cut off at the model's output limit; the answer is not complete]"
+const CUT_OFF_EMPTY_NOTE = "[cut off at the model's output limit before it wrote anything]"
+export const cutOffText = said => (said === '' ? CUT_OFF_EMPTY_NOTE : `${said}\n\n${CUT_OFF_NOTE}`)
+
 
 // Harness session events normally use Unix epoch milliseconds. A zero or
 // seconds-scale timestamp makes the UI count decades from 1970.
@@ -600,6 +614,7 @@ export function install(rt) {
         const joined = entry.joined ?? []
         // What the group already saw of the turn is not posted again.
         const texts = entry.texts.slice(entry.shown)
+        const wroteText = entry.texts.length > 0
         const shown = entry.shown > 0
         const { lastText, lastCalled } = entry
         // A turn stopped for a switch goes on in the next part, which answers instead.
@@ -637,6 +652,20 @@ export function install(rt) {
         const reason = event.data?.reason
         const failure = reason?.kind === 'error' && !switched ? turnFailure(reason.error) : undefined
         if (failure !== undefined) noteTurnFailure(id, failure)
+        const cutOff = finishedTurn !== undefined && failure === undefined && reason?.kind === 'max-tokens'
+        if (cutOff) {
+          rt.noteFailure({
+            level: 'warn',
+            source: 'turn',
+            code: 'MAX_TOKENS',
+            text: wroteText
+              ? 'the turn was cut off at the output limit, so its answer is not complete'
+              : 'the turn was cut off at the output limit before it wrote anything',
+            bot: rt.botOf(rt.selfOf(id))?.name ?? 'unknown Bot',
+            where: placeOf(id),
+            sessionId: id,
+          })
+        }
         const held = rt.groupOwners.has(id) ? rt.takeRoomSteps?.(id) ?? '' : ''
         if (switched) { rt.takeRoomViews?.(id, finishedTurn, false); break }
         // A model that writes its tool call as text ends the turn as if it were done,
@@ -648,7 +677,9 @@ export function install(rt) {
         if (retry) void retryWrittenCall(id, info).catch(error => rt.warn('chemclaw-bot: asking %s to run its written tool call failed: %s', id, error))
         const replyText = () => {
           const reply = (wroteCall ? texts.map(stripWrittenCalls) : texts).join('\n\n').trim()
-          return wroteCall && reply === '' ? 'Tried to run a tool but wrote the call as text, so it did not run.' : reply
+          if (wroteCall && reply === '') return 'Tried to run a tool but wrote the call as text, so it did not run.'
+          if (cutOff) return reply === '' && wroteText ? CUT_OFF_NOTE : cutOffText(reply)
+          return reply
         }
         const groupReply = () => rt.withRoomSteps?.(held, replyText()) ?? replyText()
         const views = rt.takeRoomViews?.(id, finishedTurn, !retry && failure === undefined && reason?.kind === 'completed') ?? []

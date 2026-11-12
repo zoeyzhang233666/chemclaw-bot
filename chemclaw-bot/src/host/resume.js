@@ -14,7 +14,7 @@ import { readFileSync } from 'node:fs'
 import { mkdir, unlink, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { HISTORY_TIMEOUT_MS, MESSAGE_INLINE_MAX, SOURCE_KIND } from './constants.js'
-import { answerSender, failureLine, turnFailure } from './turns.js'
+import { answerSender, cutOffText, failureLine, turnFailure } from './turns.js'
 import { textOf } from './text.js'
 import { replaceFile } from './files.js'
 
@@ -361,14 +361,28 @@ export function install(rt) {
       answerSender(rt, sessionId, asker, `${name} was stopped before it could answer your message.`)
       return
     }
+    const cutOff = reason.kind === 'max-tokens'
+    if (cutOff) {
+      const room = rt.roomOf(rt.groupOwners.get(sessionId)?.roomId)
+      rt.noteFailure?.({
+        level: 'warn',
+        source: 'turn',
+        code: 'MAX_TOKENS',
+        text: said ? 'the recovered turn was cut off at the output limit' : 'the recovered turn was cut off before writing any text',
+        bot: name,
+        where: room === undefined ? 'own chat' : `group "${room.name}"`,
+        sessionId,
+      })
+    }
+    const answer = cutOff ? cutOffText(said) : said
     // The turn ended with what it said: the answer goes up the way a finished turn's
     // does, with the results that came back for it and the text it held. A work that
     // still waits for what it handed on keeps its part until that comes back.
     if (rt.waitsWork(workId)) {
-      rt.holdWork(workId, said)
+      rt.holdWork(workId, answer)
       return
     }
-    const text = rt.answerText(workId, said, name)
+    const text = rt.answerText(workId, answer, name)
     const long = text.length > MESSAGE_INLINE_MAX ? await rt.attachLong(text, `Answer from ${name}.txt`) : undefined
     answerSender(rt, sessionId, asker, text, long)
   }
