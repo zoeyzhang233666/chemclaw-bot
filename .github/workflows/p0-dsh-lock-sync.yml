@@ -1,0 +1,35 @@
+name: P0 DSH lockfile regeneration (one-shot)
+on:
+  push:
+    branches: ['fix/p0-dsh-022-rc1-rc2-compat-20261112']
+    paths: ['.github/workflows/p0-dsh-lock-sync.yml']
+permissions:
+  contents: write
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+      - name: Resolve exact DSH package tree
+        working-directory: app
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Confirm lock pin and npm package availability
+        working-directory: app
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const m=JSON.parse(fs.readFileSync('package.json','utf8')); const lock=JSON.parse(fs.readFileSync('package-lock.json','utf8')); if (lock.packages[''].dependencies['@deepseek-ai/dsh'] !== '0.2.2-rc.1') throw Error('wrong lock'); const names=Object.keys(m.dependencies).filter(x=>x.startsWith('@deepseek-ai/dsh')); for (const name of names) if(lock.packages['node_modules/'+name]?.version!=='0.2.2-rc.1') throw Error('mismatched '+name); console.log('All DSH root dependencies are 0.2.2-rc.1:', names.length)"
+      - name: Commit lockfile only on isolated PR branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "build(lock): regenerate DSH 0.2.2-rc.1 app lock"
+            git push origin HEAD:refs/heads/fix/p0-dsh-022-rc1-rc2-compat-20261112
+          fi
