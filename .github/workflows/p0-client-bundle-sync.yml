@@ -1,0 +1,38 @@
+name: P0 one-shot client bundle sync
+on:
+  push:
+    branches: ['fix/p0-abandon-handoff-20261112']
+    paths: ['.github/workflows/p0-client-bundle-sync.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    if: github.repository == 'zoeyzhang233666/chemclaw-bot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - name: Install exactly locked build dependencies
+        working-directory: chemclaw-bot
+        run: npm ci --no-fund --no-audit
+      - name: Rebuild committed client artifacts
+        working-directory: chemclaw-bot
+        run: node scripts/build-client.mjs
+      - name: Commit generated artifacts only to P0 branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add chemclaw-bot/client.js chemclaw-bot/runtime/chart-engine.js chemclaw-bot/office.js
+          if ! git diff --cached --quiet; then
+            git commit -m "build(client): update generated ChemClaw handoff menu"
+            git push origin HEAD:refs/heads/fix/p0-abandon-handoff-20261112
+          fi
