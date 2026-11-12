@@ -371,3 +371,103 @@ test('a team saved before the result was kept whole still answers, and says what
   const answer = textOf(callsOf(first.agents, 'a')[0][1].content)
   assert.match(answer, /Tester:\nx{2000}\n\[cut; 5000 characters in all, the rest was not kept\]/)
 })
+
+
+// P0: the user can give up one stalled handoff without deleting the Bots, losing
+// the parent's other work, or mislabeling a subsequent answer as a normal result.
+async function stalledHandoff(start, { sibling = false } = {}) {
+  const host = await start(seed())
+  const { agents, emit, tool } = host
+  const turns = turnTaker(agents, emit)
+  turns.userTurn('a', 'delegate the task')
+  await tool('message_bot', { to: 'Writer', message: 'work on this' }, 'a')
+  turns.end('a', 'Writer is on it')
+  turns.take('b')
+  await tool('message_bot', { to: 'Tester', message: 'review this' }, 'b')
+  if (sibling) await tool('message_bot', { to: 'Editor', message: 'edit this' }, 'b')
+  turns.end('b', 'delegated my work')
+  const all = await worksIn(host)
+  const getId = to => Object.entries(all).find(([, w]) => w.to === to)?.[0]
+  const parent = getId('b')
+  const tester = getId('c')
+  const editor = getId('d')
+  assert.ok(parent && tester)
+  assert.ok(all[parent].open.includes(tester))
+  return { host, turns, parent, tester, editor }
+}
+
+test('abandoning a stalled Bot handoff records a missing result and wakes the waiting Bot', async t => {
+  const { start } = bench(t)
+  const { host, turns, parent, tester } = await stalledHandoff(start)
+  const { agents, call } = host
+  const before = callsOf(agents, 'b').length
+  const waiting = (await call('state', {})).value.work.waiting
+  assert.equal(waiting.b.waits[0].id, tester)
+  assert.equal(waiting.b.waits[0].name, 'Tester')
+  assert.equal((await call('abandon-work', { id: tester })).ok, true)
+  const after = await worksIn(host)
+  assert.equal(after[tester], undefined)
+  assert.deepEqual(after[parent].open, [])
+  assert.equal(after[parent].results.length, 1)
+  assert.equal(after[parent].results[0].abandoned, true)
+  assert.match(after[parent].results[0].text, /not a completed answer/i)
+  // Stale clicks must not create a second result or wake-up.
+  assert.equal((await call('abandon-work', { id: tester })).ok, false)
+  await settled(() => callsOf(agents, 'b').length === before + 1)
+  const wake = callsOf(agents, 'b').at(-1)[1]
+  assert.match(textOf(wake.content), /Waiting given up/)
+  assert.match(textOf(wake.content), /not a completed answer/)
+  assert.equal(wake.source.abandoned, true)
+  turns.take('b')
+  turns.end('b', 'finished with missing review noted')
+  await settled(() => callsOf(agents, 'a').length === 1)
+  const answer = textOf(callsOf(agents, 'a').at(-1)[1].content)
+  assert.match(answer, /missing review noted/)
+  assert.match(answer, /No reply came back from Tester/)
+  assert.equal((await worksIn(host))[parent], undefined)
+})
+
+test('a reply arriving after abandonment is marked late and never reopens settled work', async t => {
+  const { start } = bench(t)
+  const { host, turns, parent, tester } = await stalledHandoff(start)
+  const { agents, call, home } = host
+  assert.equal((await call('abandon-work', { id: tester })).ok, true)
+  await settled(() => callsOf(agents, 'b').length === 2)
+  const before = await worksIn(host)
+  turns.take('c')
+  turns.end('c', 'eventually reviewed it')
+  await settled(() => callsOf(agents, 'b').length >= 3)
+  const after = await worksIn(host)
+  assert.equal(after[tester], undefined)
+  assert.deepEqual(after[parent].open, [])
+  assert.equal(after[parent].results.length, before[parent].results.length)
+  const late = callsOf(agents, 'b').at(-1)[1]
+  assert.match(textOf(late.content), /Late answer: the user had already given up waiting/)
+  assert.match(textOf(late.content), /eventually reviewed it/)
+  assert.equal(late.source.work, undefined)
+  assert.deepEqual(JSON.parse(readFileSync(join(home, 'state.json'), 'utf8')).abandonedWorks ?? {}, {})
+})
+
+test('abandoning one sibling preserves other pending handoffs', async t => {
+  const { start } = bench(t)
+  const { host, parent, tester, editor } = await stalledHandoff(start, { sibling: true })
+  assert.ok(editor)
+  const { call, agents } = host
+  assert.equal((await call('abandon-work', { id: tester })).ok, true)
+  const after = await worksIn(host)
+  assert.deepEqual(after[parent].open, [editor])
+  assert.equal(after[editor].parent, parent)
+  assert.equal(after[parent].results.length, 1)
+  assert.equal((await call('state', {})).value.work.waiting.b.waits[0].id, editor)
+  assert.equal(callsOf(agents, 'a').length, 0, 'Chief still waits for Writer')
+})
+
+test('giving up a wait that is no longer open does not change a team', async t => {
+  const { start } = bench(t)
+  const host = await start(seed())
+  host.ctx // Use the same API path as the user menu.
+  const result = await host.call('abandon-work', { id: 'not-an-open-wait' })
+  assert.equal(result.ok, false)
+  assert.equal(result.error.code, 'bot/stale')
+  assert.deepEqual(await worksIn(host), {})
+})
