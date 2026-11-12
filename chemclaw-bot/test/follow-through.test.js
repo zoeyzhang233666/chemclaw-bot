@@ -568,10 +568,10 @@ test('a written tool call is told apart from text about one', () => {
   assert.equal(writesToolCall(undefined), false)
   assert.equal(stripWrittenCalls(WRITTEN), 'Checking now.')
   // Truncated calls can leave only closing tags, including CJK angle brackets.
-  assert.equal(writesToolCall('</parameter>\\n</function>\\n</tool_call>'), true)
+  assert.equal(writesToolCall('</parameter>\n</function>\n</tool_call>'), true)
   assert.equal(writesToolCall(ORPHAN_TAGS), true)
   assert.equal(writesToolCall(MIXED_TAGS), true)
-  assert.equal(stripWrittenCalls('</parameter>\\n</function>\\n</tool_call>'), '')
+  assert.equal(stripWrittenCalls('</parameter>\n</function>\n</tool_call>'), '')
   assert.equal(stripWrittenCalls(ORPHAN_TAGS), '')
   assert.equal(stripWrittenCalls(MIXED_TAGS), 'length"＞15 Hi, everyone.')
   assert.equal(stripWrittenCalls('Checking </parameter> now.'), 'Checking now.')
