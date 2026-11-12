@@ -136,7 +136,8 @@ test('reloading reapplies Bot and DSH Agent permission restrictions; later team 
   const dshAgent = dsh.agent('dsh')
   const { rt, served } = await run(t, dsh)
   const flattened = agent => agent.denied.flat()
-  assert.equal(flattened(group).includes('message_bot'), true, 'group member tool list is scoped')
+  assert.equal(flattened(group).includes('create_bot'), true, 'group member cannot administer team')
+  assert.equal(flattened(group).includes('message_bot'), false, 'group member can delegate work to another Bot')
   assert.equal(flattened(normal).includes('create_bot'), true, 'ordinary Bot does not get admin tools')
   assert.equal(flattened(dshAgent).includes('message_bot'), true, 'DSH Agent must not receive team tools')
   const first = dshAgent.denied.length
