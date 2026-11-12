@@ -23,7 +23,10 @@ export function install(rt) {
   // global dsh surface minus this plugin's registrations. A Session whose deny
   // has not landed yet (schemas not up, restrict hook missing, a transient
   // throw) stays on the retry list until it sticks or the Session leaves.
-  const restricted = new WeakSet()
+  // Deny rules are additive: a Session created before all team tools are registered
+  // must still receive restrictions for names added later. Do not lift earlier
+  // restrictions while replacing them, or a DSH Agent could briefly see team tools.
+  const restricted = new WeakMap()
   const RETRY_MS = 5_000
   const pendingRestrict = new Set()
   let retryTimer
@@ -43,23 +46,28 @@ export function install(rt) {
     }
   }
   const restrictTeamTools = async (agent) => {
-    if (agent === undefined || restricted.has(agent)) return
+    if (agent === undefined) return
     if (agentOf(agent.session?.id) === undefined) {
       pendingRestrict.delete(agent)
       return
     }
     // Unknown names make restrict() throw, so only deny what this profile serves.
     const known = new Set(ctx.tools.schemas(agent).map(schema => schema.name))
-    const deny = TEAM_TOOLS.filter(name => known.has(name))
+    const already = restricted.get(agent) ?? new Set()
+    const deny = TEAM_TOOLS.filter(name => known.has(name) && !already.has(name))
     // An empty list can mean the schemas are not up yet, and a missing restrict
     // hook means the Agent is still being put together; both retry.
+    if (deny.length === 0 && already.size > 0) {
+      pendingRestrict.delete(agent)
+      return
+    }
     if (deny.length === 0 || typeof agent.ctx?.tools?.restrict !== 'function') {
       scheduleRetry(agent)
       return
     }
     try {
       agent.ctx.tools.restrict({ deny })
-      restricted.add(agent)
+      restricted.set(agent, new Set([...already, ...deny]))
       pendingRestrict.delete(agent)
     } catch (error) {
       rt.warn('chemclaw-bot: team tools stay visible to DSH Agent %s: %s', agent.session?.id, error)
@@ -182,5 +190,5 @@ export function install(rt) {
     await rt.save()
   }
 
-  Object.assign(rt, { agentOf, addAgent, createAgentSession, adoptAgentSession, archiveAgentSession, renameAgentSession, removeAgent })
+  Object.assign(rt, { agentOf, restrictDshAgentTools: restrictTeamTools, addAgent, createAgentSession, adoptAgentSession, archiveAgentSession, renameAgentSession, removeAgent })
 }
