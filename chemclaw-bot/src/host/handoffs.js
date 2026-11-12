@@ -8,7 +8,7 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { LATE_ANSWER, TEXT_KEPT } from './constants.js'
+import { TEXT_KEPT } from './constants.js'
 import { headOf } from './text.js'
 
 const minutes = since => {
