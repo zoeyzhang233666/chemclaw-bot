@@ -6,7 +6,7 @@ import { test } from 'node:test'
 import { setTimeout as realDelay } from 'node:timers/promises'
 import { apply } from './legacy-runtime.js'
 import { fakeContext } from './fake-ctx.js'
-import { stripWrittenCalls, writesToolCall } from '../src/host/turns.js'
+import { cutOffText, stripWrittenCalls, writesToolCall } from '../src/host/turns.js'
 
 // Chief in its own chat 'a'; Writer, the admin of group 'r1', speaks there from 'gb'.
 const seed = () => ({
@@ -547,4 +547,19 @@ test('a written tool call is told apart from text about one', () => {
   assert.equal(writesToolCall('Models such as Step write `<tool_call>` tags in their template.'), false)
   assert.equal(writesToolCall(undefined), false)
   assert.equal(stripWrittenCalls(WRITTEN), 'Checking now.')
+})
+
+test('output-limit text is explicit for partial and empty model replies', () => {
+  assert.equal(cutOffText('First part'), "First part\n\n[cut off at the model's output limit; the answer is not complete]")
+  assert.equal(cutOffText(''), "[cut off at the model's output limit before it wrote anything]")
+})
+
+test('a group member cut off by the output limit posts an incomplete-answer marker', async (t) => {
+  const home = freshHome(t)
+  const host = await start(home)
+  const result = await openRoomTurn(t, host)
+  host.emit('gb', 'assistant/message', { message: { content: [{ type: 'text', text: 'Partial result.' }] } })
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'max-tokens' } })
+  await settle(() => result() !== undefined)
+  assert.match(result().replies.map(reply => reply.text).join('\n'), /cut off at the model's output limit/)
 })
