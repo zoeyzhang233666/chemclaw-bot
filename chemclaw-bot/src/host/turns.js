@@ -54,11 +54,18 @@ export function attachReference(queued, source, text) {
 
 // A tool call some models write into their text instead of making it (the XML-like
 // form of their own chat template).
-const WRITTEN_CALL = /<tool_call>\s*<function=|<function=[\w.-]+>\s*<parameter=/
+const TAG_OPEN = '[<＜]'
+const TAG_CLOSE = '[>＞]'
+const TOOL_CALL_TAG = `${TAG_OPEN}tool_call${TAG_CLOSE}`
+const FUNCTION_TAG = `${TAG_OPEN}function=[\\w.-]+${TAG_CLOSE}`
+const PARAMETER_TAG = `${TAG_OPEN}parameter=[\\w.-]+${TAG_CLOSE}`
+const CLOSING_TAG = `${TAG_OPEN}/(?:parameter|function|tool_call)${TAG_CLOSE}`
+const WRITTEN_CALL = new RegExp(`${TOOL_CALL_TAG}\\s*${TAG_OPEN}function=|${FUNCTION_TAG}\\s*${TAG_OPEN}parameter=|${CLOSING_TAG}`)
 export const writesToolCall = text => typeof text === 'string' && WRITTEN_CALL.test(text)
 export const stripWrittenCalls = text => text
-  .replace(/<tool_call>[\s\S]*?(?:<\/tool_call>|$)/g, '')
-  .replace(/<function=[\w.-]+>[\s\S]*?(?:<\/function>|$)/g, '')
+  .replace(new RegExp(`${TOOL_CALL_TAG}[\\s\\S]*?(?:${TAG_OPEN}/tool_call${TAG_CLOSE}|$)`, 'g'), '')
+  .replace(new RegExp(`${FUNCTION_TAG}[\\s\\S]*?(?:${TAG_OPEN}/function${TAG_CLOSE}|$)`, 'g'), '')
+  .replace(new RegExp(`(?:${CLOSING_TAG}|${PARAMETER_TAG})\\s*`, 'g'), '')
   .trim()
 
 // Under DSH's PTC presentation the model calls only this tool; the program's sub-calls
@@ -66,6 +73,7 @@ export const stripWrittenCalls = text => text
 const PROGRAM_TOOL = 'run_code'
 
 const RETRY_TEXT = 'Your last reply wrote a tool call as plain text (<tool_call>…), so it did not run and nothing happened. Call the tool through the tool interface now, then reply as you meant to.'
+
 // A max-tokens ending is not a complete answer. Preserve useful partial text,
 // while making its incomplete state unambiguous to the requesting Bot or group.
 const CUT_OFF_NOTE = "[cut off at the model's output limit; the answer is not complete]"
