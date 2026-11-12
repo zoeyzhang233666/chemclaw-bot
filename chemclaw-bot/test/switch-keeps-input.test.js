@@ -426,6 +426,8 @@ test('P0: two empty output-limit cutoffs open a safe fresh Bot part without a no
   cutoffTurn(host, 'b', 2)
   idleAfterTurn(host, 'b')
   await until(() => host.state().bots.b.sessionId !== 'b')
+  await until(() => host.agentOf('s1').calls.some(([kind]) => kind === 'followup'))
+  await until(() => host.archived.length === 1)
   const bot = host.state().bots.b
   assert.equal(bot.sessionId, 's1')
   assert.equal(bot.segments[0].fallback, 'cutoff')
@@ -481,4 +483,21 @@ test('P0: two empty cutoffs in a group member Session move only that conversatio
   assert.equal(current.rooms.r1.sessions.b, 's1')
   assert.equal(current.rooms.r1.segments.b[0].fallback, 'cutoff')
   assert.equal(current.bots.b.sessionId, 'b', 'own chat is not switched by group cutoff')
+})
+
+
+test('P0: repeated empty cutoffs cannot bypass an exhausted persisted recovery budget', async t => {
+  const host = await start()
+  t.after(host.stop)
+  assert.equal(await host.rt.contextRecovery.advance('b'), true)
+  assert.equal(await host.rt.contextRecovery.advance('b'), true)
+  for (const turn of [1, 2]) {
+    cutoffTurn(host, 'b', turn)
+    idleAfterTurn(host, 'b')
+    await settle()
+  }
+  await until(() => host.state().bots.b.contextRecovery?.blocked === true)
+  assert.equal(host.state().bots.b.contextRecovery.attempts, 3)
+  assert.equal(host.state().bots.b.sessionId, 'b')
+  assert.deepEqual(host.created, [], 'no fresh part when recovery budget is exhausted')
 })
