@@ -106,3 +106,11 @@ test('no write happens if a candidate record is malformed', async t => {
   await assert.rejects(writeInitialLedger(home, 'group-r1', [null]), /Ledger record must be an object/)
   assert.equal(await readLedger(home, 'group-r1'), undefined)
 })
+
+test('legacy logs without per-row sequence retain the offset stored by the room', async t => {
+  const home = await temporary(t)
+  const room = { id: 'r1', seq: 102, log: [{ text: 'one' }, { text: 'two' }] }
+  const preview = await previewLegacyRoom({ home, room })
+  assert.deepEqual(preview.rows.map(row => row.seq), [101, 102])
+  assert.ok(preview.warnings.some(warning => warning.includes('older history')))
+})
