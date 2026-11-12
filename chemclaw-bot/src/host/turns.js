@@ -687,6 +687,7 @@ export function install(rt) {
         const failure = reason?.kind === 'error' && !switched ? turnFailure(reason.error) : undefined
         if (failure !== undefined) noteTurnFailure(id, failure)
         const cutOff = finishedTurn !== undefined && failure === undefined && reason?.kind === 'max-tokens'
+        if (!switched && finishedTurn !== undefined) rt.noteCutOffTurn?.(id, { withoutText: cutOff && !wroteText })
         if (cutOff) {
           rt.noteFailure({
             level: 'warn',

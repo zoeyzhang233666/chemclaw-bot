@@ -111,7 +111,8 @@ export function install(rt) {
     if (event.type !== 'assistant/message' || event.data?.interrupted || !rt.isBotSession(session.id)) return
     const finish = lastAssistantStreamChunk(event.data?.stream ?? [], 'finish')
     if (!['stop', 'tool-calls', 'max-tokens'].includes(finish?.reason?.kind)
-      || textOf(event.data?.message?.content) === HANDOFF_ACK) return
+      || textOf(event.data?.message?.content) === HANDOFF_ACK
+      || (finish?.reason?.kind === 'max-tokens' && textOf(event.data?.message?.content).trim() === '')) return
     const place = placeOf(session.id)
     if (place === undefined) return
     void enqueue(async () => {

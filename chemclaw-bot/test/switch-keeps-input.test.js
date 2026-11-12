@@ -33,7 +33,7 @@ const INACTIVE = 'cannot get required service "sessions" in inactive context'
 
 // `fail.create`/`fail.resolve`/`fail.flush`: true fails with the inactive-context
 // error; an Error value fails with it, so an ordinary error is testable too.
-async function start({ fail = {}, services = {}, home: reuse } = {}) {
+async function start({ fail = {}, services = {}, home: reuse, state: seed = TEAM } = {}) {
   const root = reuse === undefined
     ? realpathSync.native(mkdtempSync(join(tmpdir(), 'ds-bot-switch-')))
     : join(reuse, '..', '..')
@@ -41,7 +41,7 @@ async function start({ fail = {}, services = {}, home: reuse } = {}) {
   const team = join(home, 'workspace')
   const project = join(root, 'project')
   for (const dir of [team, project]) mkdirSync(dir, { recursive: true })
-  if (reuse === undefined) writeFileSync(join(home, 'state.json'), JSON.stringify(TEAM))
+  if (reuse === undefined) writeFileSync(join(home, 'state.json'), JSON.stringify(seed))
 
   // The real inbox is durable; the fake keeps it in a file so a "restart" sees it.
   const inboxPath = join(home, 'fake-inbox.json')
@@ -155,13 +155,20 @@ async function start({ fail = {}, services = {}, home: reuse } = {}) {
   const tool = (name, args, sessionId) => ctx.registeredTools.get(name).execute(args, { agent: agentOf(sessionId), name, callId: 'c1' })
   const preStep = (sessionId, messages = [], step = 1) => ctx.listeners.get('agent/pre-step').at(-1)(
     { agent: agentOf(sessionId), messages, step, signal: AbortSignal.timeout(60_000) }, async () => 'next')
+  let seq = 0
+  const emit = (sessionId, type, data) => {
+    const session = agentOf(sessionId).session
+    for (const fn of ctx.listeners.get('session/event') ?? []) {
+      if (fn.length >= 2) fn(session, { type, seq: ++seq, data })
+    }
+  }
   const state = () => JSON.parse(readFileSync(join(home, 'state.json'), 'utf8'))
   const stop = async ({ keep = false } = {}) => {
     await ctx.dispose()
     if (!keep) rmSync(root, { recursive: true, force: true, maxRetries: 5 })
   }
   await tool('list_bots', {}, 'a')
-  return { ctx, rt, root, home, team, project, created, resolved, archived, agentOf, call, tool, preStep, state, warnings, infos, fail, stop }
+  return { ctx, rt, root, home, team, project, created, resolved, archived, agentOf, call, tool, preStep, emit, state, warnings, infos, fail, stop }
 }
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 20))
@@ -394,4 +401,84 @@ test('a state write that fails as a switch ends is warned about, not left unhand
   await until(() => host.warnings.some(line => line.includes('did not finish') && line.includes('disk full')))
   await settle()
   assert.deepEqual(unhandled, [])
+})
+
+
+// A broken gateway can exhaust its real output limit while its configured context
+// window still looks healthy. Two consecutive *empty* cutoffs start a deterministic
+// new part without asking the same model for a summary at the same context size.
+const cutoffTurn = (host, sessionId, turn, { text } = {}) => {
+  host.emit(sessionId, 'turn/start', { turn })
+  if (text !== undefined) {
+    host.emit(sessionId, 'assistant/message', { message: { content: [{ type: 'text', text }] } })
+  }
+  host.emit(sessionId, 'turn/end', { turn, reason: { kind: 'max-tokens' } })
+}
+const idleAfterTurn = (host, sessionId) => host.ctx.emit('agent/status', { agent: host.agentOf(sessionId), status: 'idle' })
+
+test('P0: two empty output-limit cutoffs open a safe fresh Bot part without a note LLM call', async t => {
+  const host = await start()
+  t.after(host.stop)
+  cutoffTurn(host, 'b', 1)
+  idleAfterTurn(host, 'b')
+  await settle()
+  assert.equal(host.state().bots.b.sessionId, 'b', 'a single cutoff is not sufficient')
+  cutoffTurn(host, 'b', 2)
+  idleAfterTurn(host, 'b')
+  await until(() => host.state().bots.b.sessionId !== 'b')
+  const bot = host.state().bots.b
+  assert.equal(bot.sessionId, 's1')
+  assert.equal(bot.segments[0].fallback, 'cutoff')
+  assert.equal(bot.contextRecovery.attempts, 1, 'the switch spends a durable context recovery attempt')
+  const handoff = host.agentOf('s1').calls.find(([kind]) => kind === 'followup')
+  assert.ok(handoff, 'new part receives a deterministic handoff')
+  assert.match(text(handoff[1]), /kept being cut off at the output limit/)
+  assert.match(text(handoff[1]), /Nothing needs an answer now/)
+  assert.deepEqual(host.archived, [['b', { stopActivity: true }]])
+})
+
+test('P0: a normal turn between empty cutoffs resets their count', async t => {
+  const host = await start()
+  t.after(host.stop)
+  cutoffTurn(host, 'b', 1)
+  idleAfterTurn(host, 'b')
+  await settle()
+  host.emit('b', 'turn/start', { turn: 2 })
+  host.emit('b', 'turn/end', { turn: 2, reason: { kind: 'completed' } })
+  idleAfterTurn(host, 'b')
+  await settle()
+  cutoffTurn(host, 'b', 3)
+  idleAfterTurn(host, 'b')
+  await settle()
+  assert.equal(host.state().bots.b.sessionId, 'b')
+  assert.deepEqual(host.created, [])
+})
+
+test('P0: partial text on a max-tokens turn never counts as an empty cutoff', async t => {
+  const host = await start()
+  t.after(host.stop)
+  for (const turn of [1, 2]) {
+    cutoffTurn(host, 'b', turn, { text: 'Useful but incomplete analysis' })
+    idleAfterTurn(host, 'b')
+    await settle()
+  }
+  assert.equal(host.state().bots.b.sessionId, 'b')
+  assert.deepEqual(host.created, [])
+})
+
+test('P0: two empty cutoffs in a group member Session move only that conversation', async t => {
+  const team = structuredClone(TEAM)
+  team.rooms.r1 = { id: 'r1', name: 'Ops', mode: 'admin', admin: 'a', members: ['a', 'b'], named: true, sessions: { b: 'gb' }, log: [], seq: 0, seen: {} }
+  const host = await start({ state: team })
+  t.after(host.stop)
+  for (const turn of [1, 2]) {
+    cutoffTurn(host, 'gb', turn)
+    idleAfterTurn(host, 'gb')
+    await settle()
+  }
+  await until(() => host.state().rooms.r1.sessions.b !== 'gb')
+  const current = host.state()
+  assert.equal(current.rooms.r1.sessions.b, 's1')
+  assert.equal(current.rooms.r1.segments.b[0].fallback, 'cutoff')
+  assert.equal(current.bots.b.sessionId, 'b', 'own chat is not switched by group cutoff')
 })
