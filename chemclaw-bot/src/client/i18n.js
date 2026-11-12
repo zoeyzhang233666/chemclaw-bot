@@ -8,7 +8,6 @@ export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
   'Give up waiting for {name}': '放弃等待{name}',
-  'a Bot': '其他智能体',
   'OHLC': '日K线',
   'Opening price': '开盘价',
   'Closing price': '收盘价',
