@@ -1,6 +1,7 @@
 ﻿// Models. Every Bot runs on one model of its own, fixed when it is created and changed
 // only in its settings or by a Main Bot. The team's first Main Bot has none until the
 // user picks one in its chat. The Session keeps the selection durably.
+import { assembleAuxiliaryLlm } from './auxiliary-llm.js'
 import { normalize, splitRef } from './text.js'
 
 const CATALOG_TTL_MS = 10_000
@@ -260,7 +261,13 @@ export function install(rt) {
     }
   }
 
+  // Stop pending auxiliary retries when the plugin is disposed or hot-reloaded.
+  const lifetime = new AbortController()
+  ctx.effect?.(() => () => lifetime.abort(), 'chemclaw-bot: auxiliary llm retry')
+  const assembleLlm = options => assembleAuxiliaryLlm(ctx, options, { signal: lifetime.signal, backoff: rt.config?.llmRetryBackoff })
+
   Object.assign(rt, {
+    assembleLlm,
     catalog, cachedCatalog: () => catalogCache.value, cachedDefault: () => pickDefault(catalogCache.value),
     defaultRef, defaultModel, defaultEffort, resolveModel, desiredModel, reasoningOf, resolveEffort, desiredEffort,
     selectSessionModel, applyModel, waitForModel, syncModels,
