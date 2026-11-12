@@ -78,6 +78,7 @@ test('only a complete real model response clears the budget', async t => {
     ['assistant/message', message('partial', 'error')],
     ['assistant/message', message('partial', 'aborted')],
     ['assistant/message', message(HANDOFF_ACK)],
+    ['assistant/message', message('', 'max-tokens')],
     ['assistant/message', { message: { content: [{ type: 'text', text: 'partial' }] } }],
     ['turn/end', { reason: { kind: 'completed' } }],
   ]) {

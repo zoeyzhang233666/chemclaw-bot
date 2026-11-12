@@ -656,6 +656,7 @@ export function install(rt) {
       return segment.note === undefined ? `${head})` : `${head} Below is the note written at the end of part ${segment.noteFrom}, carried over unchanged.)\n\n${segment.note}`
     }
     const why = segment.fallback === 'overflow' ? 'the part overflowed the model\'s window'
+      : segment.fallback === 'cutoff' ? 'the part kept being cut off at the output limit'
       : segment.fallback === 'failure' ? 'a request in the previous part kept failing'
         : 'the model did not write a usable note'
     const head = `(ChemClaw put this note together without the model, because ${why}.`
@@ -664,13 +665,14 @@ export function install(rt) {
       : `${head} It is the note written at the end of part ${segment.noteFrom}, carried over unchanged; anything newer is in the messages below, and read_own_chat finds the rest.)\n\n${segment.note}`
   }
 
-  function handoffPackage({ room, segment, lines, number, resume, overflow, failed, bare, folder }) {
+  function handoffPackage({ room, segment, lines, number, resume, overflow, cutoff, failed, bare, folder }) {
     const where = room ? `your conversation in the group chat "${room.name}"` : 'your own chat with the user'
     const lookup = room
       ? 'read_group_chat shows the group\'s latest messages, and read_own_chat your own chat.'
       : 'read_own_chat searches every part, reads around an anchor such as [part 2 #1234 · …], and shows the note that closed any earlier part.'
     const reason = failed !== undefined ? `a request in the previous part kept failing (${failed})`
       : overflow ? 'the previous part overflowed the model\'s window'
+        : cutoff ? 'the previous part kept being cut off at the output limit'
         : folder !== undefined ? `your working folder changed to ${folder}` : 'the previous part grew long'
     const { recent, earlier, unlisted, complete } = lines
     const omitted = [
@@ -737,6 +739,13 @@ export function install(rt) {
   const noteFailures = new Map()
   // Parts the steward is deciding about at the end of a turn.
   const checking = new Set()
+  // Per-part consecutive empty output-limit cutoffs, cleared on any other watched
+  // turn. Only repeated empty answers indicate a likely route/window mismatch.
+  const emptyCutOffs = new Map()
+  rt.noteCutOffTurn = (sessionId, { withoutText }) => {
+    if (withoutText) emptyCutOffs.set(sessionId, (emptyCutOffs.get(sessionId) ?? 0) + 1)
+    else emptyCutOffs.delete(sessionId)
+  }
 
   const placeOf = (sessionId) => {
     const botId = rt.chatOwners.get(sessionId)
@@ -840,10 +849,10 @@ export function install(rt) {
 
   // `hard`: past the hard line or the window, the part moves on even without a note
   // from the model. `folder`: the part moves on because its working folder changed.
-  function startSwitch(agent, { resume = false, carry = [], info, joined, overflow = false, failed, bare = false, folder = false, hard = overflow || folder } = {}) {
+  function startSwitch(agent, { resume = false, carry = [], info, joined, overflow = false, cutoff = false, failed, bare = false, folder = false, hard = overflow || folder || cutoff } = {}) {
     const place = placeOf(agent.id)
     if (place === undefined || switches.has(agent.id) || readOnly() || rt.contextRecovery?.blocked(agent.id)) return
-    const job = { ...place, carry: [...carry], info, joined, resume, overflow, failed, bare, folder, hard, since: Date.now() }
+    const job = { ...place, carry: [...carry], info, joined, resume, overflow, cutoff, failed, bare, folder, hard, since: Date.now() }
     switches.set(agent.id, job)
     void runSwitch(agent, job)
       .catch(error => {
@@ -954,7 +963,7 @@ export function install(rt) {
     const whole = carried?.whole === true && !session.deriveMessages().some(message => message.role === 'tool')
     let written
     let failure
-    if (!job.overflow && job.failed === undefined && !whole) {
+    if (!job.overflow && !job.cutoff && job.failed === undefined && !whole) {
       try {
         written = await writeNote(agent, AbortSignal.any([signal, AbortSignal.timeout(NOTE_TIMEOUT_MS)]), { folder: job.folder })
       } catch (error) {
@@ -975,7 +984,7 @@ export function install(rt) {
     if (failure !== undefined) rt.warn('chemclaw-bot: handoff note for %s failed past the hard line; moving on with the earlier note: %s', bot.name, failure)
     const previous = parts.at(-2)
     const noted = written !== undefined ? { note: written.note }
-      : { fallback: whole ? 'whole' : job.failed !== undefined ? 'failure' : job.overflow ? 'overflow' : 'failed', ...(previous?.note ? { note: previous.note, noteFrom: previous.noteFrom ?? previous.number } : {}) }
+      : { fallback: whole ? 'whole' : job.failed !== undefined ? 'failure' : job.overflow ? 'overflow' : job.cutoff ? 'cutoff' : 'failed', ...(previous?.note ? { note: previous.note, noteFrom: previous.noteFrom ?? previous.number } : {}) }
     carried ??= await readLines()
     if (signal.aborted) throw signal.reason
     const dir = rt.workDirOf(job)
@@ -1038,7 +1047,7 @@ export function install(rt) {
         folderRetry.set(freshId, Date.now() + FOLDER_RETRY_MS)
         rt.warn('chemclaw-bot: the fresh part of %s did not start in %s; it works in %s', bot.name, intended, cwd)
       }
-      const text = handoffPackage({ room, segment, lines: carried, number: number + 1, resume, overflow: job.overflow, failed: job.failed, bare: job.bare, folder })
+      const text = handoffPackage({ room, segment, lines: carried, number: number + 1, resume, overflow: job.overflow, cutoff: job.cutoff, failed: job.failed, bare: job.bare, folder })
       freshParts.set(freshId, estimateTokens(text))
       fresh.followup(createUserMessage({ content: [{ type: 'text', text }], source: handoffSource(job, resume) }))
       await ctx.sessions.flush(fresh.session)
@@ -1209,6 +1218,21 @@ export function install(rt) {
   async function checkContext(agent) {
     await rt.contextRecovery?.settled()
     if (switches.has(agent.id) || freshParts.has(agent.id) || checking.has(agent.id) || readOnly() || rt.contextRecovery?.blocked(agent.id)) return
+    // A route whose real context window is smaller than configured can produce
+    // successive empty max-token turns even far below ChemClaw's soft check line.
+    // Count these separately, and spend the same persisted recovery budget as
+    // ordinary context overflow: moving parts must not create an infinite loop.
+    if ((emptyCutOffs.get(agent.id) ?? 0) >= 2) {
+      emptyCutOffs.delete(agent.id)
+      checking.add(agent.id)
+      try {
+        if (rt.contextRecovery && !await rt.contextRecovery.advance(agent.id)) return
+        startSwitch(agent, { cutoff: true })
+      } finally {
+        checking.delete(agent.id)
+      }
+      return
+    }
     const lines = await contextLines(agent.session)
     const tokens = tokensOf(agent.session)
     if (lines === undefined || tokens === undefined || tokens < lines.check || !grown(agent.id, tokens, lines)) return
