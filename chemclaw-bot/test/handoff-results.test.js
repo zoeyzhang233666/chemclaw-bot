@@ -465,7 +465,6 @@ test('abandoning one sibling preserves other pending handoffs', async t => {
 test('giving up a wait that is no longer open does not change a team', async t => {
   const { start } = bench(t)
   const host = await start(seed())
-  host.ctx // Use the same API path as the user menu.
   const result = await host.call('abandon-work', { id: 'not-an-open-wait' })
   assert.equal(result.ok, false)
   assert.equal(result.error.code, 'bot/stale')
