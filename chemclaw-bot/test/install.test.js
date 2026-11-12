@@ -40,6 +40,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'on llm/adapters-updated',
     'on credentials/reference-updated',
     'on settings/document-updated',
+    'effect chemclaw-bot: auxiliary llm retry',
     'on agent/request',
     'on llm/adapters-updated',
     'on session/event',
