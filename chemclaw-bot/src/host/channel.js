@@ -268,6 +268,10 @@ export function install(rt) {
         case 'update-bot':
           await rt.load()
           return ok(await rt.updateBot(body.id, body))
+        case 'abandon-work':
+          await rt.load()
+          if (rt.abandonWork(String(body.id ?? '')) !== true) return fail('That wait is no longer open', 'bot/stale')
+          return ok(true)
         // The avatar library: photos the user imported once, kept beside the team.
         case 'avatar-library':
           await rt.load()

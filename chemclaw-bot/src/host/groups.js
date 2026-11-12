@@ -22,7 +22,7 @@ import { readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { defineTool } from '@deepseek-ai/dsh-tools'
-import { GROUP_LINE_READ, ROOM_REPLY_TIMEOUT_MS, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS, SOURCE_KIND, TEAM_TOOLS, TEXT_KEPT } from './constants.js'
+import { GROUP_LINE_READ, LATE_ANSWER, ROOM_REPLY_TIMEOUT_MS, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS, SOURCE_KIND, TEAM_TOOLS, TEXT_KEPT } from './constants.js'
 import { escapeRegExp, headOf, splitRef, textOf } from './text.js'
 import { mentionSpans, speakerOf } from '../shared/mentions.js'
 import { GROUP_REF, output } from './tools.js'
@@ -1110,8 +1110,12 @@ export function install(rt) {
     const room = rt.roomOf(roomId)
     if (room === undefined) return false
     const round = rt.roomBusy(room.id)
+    // After a hot reload, the original round's in-memory record is gone, but DSH
+    // may still be running the relay Session. The adopted live turn is enough
+    // to expose Stop without pretending that the old round was reconstructed.
+    const relayRunning = Boolean(round) || rt.live.get(room.id)?.turn !== undefined
     const tasks = [
-      ...(round ? [rt.resolveAgent(room.id).then(agent => { agent.cancel({ kind: 'user' }); return true })] : []),
+      ...(relayRunning ? [rt.resolveAgent(room.id).then(agent => { agent.cancel({ kind: 'user' }); return true })] : []),
       ...room.members.map(botId => stopMemberWork(room.id, botId)),
     ]
     const results = await Promise.allSettled(tasks)
@@ -1178,7 +1182,9 @@ export function install(rt) {
     ].filter(Boolean).join('\n\n')
     // Replies the poster waited for go on with the work it posted for.
     const work = post.sub === undefined ? undefined : rt.closeWork(post.sub, `Group "${room.name}"`, text)
-    await rt.deliver({ toId: post.botId, role: 'report', roomId: room.id, text, ...(work ? { work, replyTo: post.sub } : {}) })
+    const late = work === undefined && post.sub !== undefined ? rt.abandonedWork?.(post.sub) : undefined
+    const body = late === undefined ? text : LATE_ANSWER + text
+    await rt.deliver({ toId: post.botId, role: 'report', roomId: room.id, text: body, ...(work ? { work, replyTo: post.sub } : {}) })
       .catch(error => rt.warn('chemclaw-bot: group report to %s failed: %s', post.name, error))
   }
 

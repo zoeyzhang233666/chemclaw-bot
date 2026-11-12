@@ -2,7 +2,7 @@
 // triggered, the waiters and inboxes of group rounds, and routing a finished turn's reply.
 //
 // Turn tracking: which turns were triggered by another Bot, and what they said.
-import { HANDOFF_ACK, MESSAGE_INLINE_MAX, REFERENCE_KIND, REPLY_KIND, SOURCE_KIND } from './constants.js'
+import { HANDOFF_ACK, LATE_ANSWER, MESSAGE_INLINE_MAX, REFERENCE_KIND, REPLY_KIND, SOURCE_KIND } from './constants.js'
 import { absoluteLinks } from './links.js'
 import { textOf } from './text.js'
 import { reminderText } from './schedules.js'
@@ -30,12 +30,15 @@ export const failureLine = failure => `${failure.code}${failure.status ? ` ${fai
 export function answerSender(rt, id, source, text, long) {
   const back = rt.roomOf(source.senderRoomId)?.sessions?.[source.senderSessionId]
   const work = rt.closeWork?.(source.exchangeId, rt.botOf(rt.selfOf(id))?.name ?? 'The other Bot', text)
+  const late = work === undefined ? rt.abandonedWork?.(source.exchangeId) : undefined
+  const body = late === undefined ? (long?.text ?? text) : LATE_ANSWER + (long?.text ?? text)
+  const length = long?.length === undefined ? undefined : long.length + (late === undefined ? 0 : LATE_ANSWER.length)
   void rt.deliver({
     fromId: rt.selfOf(id),
     toId: source.senderSessionId,
     ...(back ? { sessionId: back } : {}),
-    text: long?.text ?? text,
-    ...(long?.length === undefined ? {} : { files: long.files, length: long.length }),
+    text: body,
+    ...(length === undefined ? {} : { files: long.files, length }),
     role: 'reply',
     replyTo: source.exchangeId,
     ...(work ? { work } : {}),
@@ -54,11 +57,18 @@ export function attachReference(queued, source, text) {
 
 // A tool call some models write into their text instead of making it (the XML-like
 // form of their own chat template).
-const WRITTEN_CALL = /<tool_call>\s*<function=|<function=[\w.-]+>\s*<parameter=/
+const TAG_OPEN = '[<＜]'
+const TAG_CLOSE = '[>＞]'
+const TOOL_CALL_TAG = `${TAG_OPEN}tool_call${TAG_CLOSE}`
+const FUNCTION_TAG = `${TAG_OPEN}function=[\\w.-]+${TAG_CLOSE}`
+const PARAMETER_TAG = `${TAG_OPEN}parameter=[\\w.-]+${TAG_CLOSE}`
+const CLOSING_TAG = `${TAG_OPEN}/(?:parameter|function|tool_call)${TAG_CLOSE}`
+const WRITTEN_CALL = new RegExp(`${TOOL_CALL_TAG}\\s*${TAG_OPEN}function=|${FUNCTION_TAG}\\s*${TAG_OPEN}parameter=|${CLOSING_TAG}`)
 export const writesToolCall = text => typeof text === 'string' && WRITTEN_CALL.test(text)
 export const stripWrittenCalls = text => text
-  .replace(/<tool_call>[\s\S]*?(?:<\/tool_call>|$)/g, '')
-  .replace(/<function=[\w.-]+>[\s\S]*?(?:<\/function>|$)/g, '')
+  .replace(new RegExp(`${TOOL_CALL_TAG}[\\s\\S]*?(?:${TAG_OPEN}/tool_call${TAG_CLOSE}|$)`, 'g'), '')
+  .replace(new RegExp(`${FUNCTION_TAG}[\\s\\S]*?(?:${TAG_OPEN}/function${TAG_CLOSE}|$)`, 'g'), '')
+  .replace(new RegExp(`(?:${CLOSING_TAG}|${PARAMETER_TAG})\\s*`, 'g'), '')
   .trim()
 
 // Under DSH's PTC presentation the model calls only this tool; the program's sub-calls
@@ -66,6 +76,17 @@ export const stripWrittenCalls = text => text
 const PROGRAM_TOOL = 'run_code'
 
 const RETRY_TEXT = 'Your last reply wrote a tool call as plain text (<tool_call>…), so it did not run and nothing happened. Call the tool through the tool interface now, then reply as you meant to.'
+
+// DSH turn numbers are positive. This marker records a turn already running when
+// the plugin was reloaded, without inventing a number from an unread Session log.
+const RECOVERED_TURN = -1
+
+// A max-tokens ending is not a complete answer. Preserve useful partial text,
+// while making its incomplete state unambiguous to the requesting Bot or group.
+const CUT_OFF_NOTE = "[cut off at the model's output limit; the answer is not complete]"
+const CUT_OFF_EMPTY_NOTE = "[cut off at the model's output limit before it wrote anything]"
+export const cutOffText = said => (said === '' ? CUT_OFF_EMPTY_NOTE : `${said}\n\n${CUT_OFF_NOTE}`)
+
 
 // Harness session events normally use Unix epoch milliseconds. A zero or
 // seconds-scale timestamp makes the UI count decades from 1970.
@@ -166,6 +187,36 @@ export function install(rt) {
     else next[id] = value
     activity = next
   }
+  // Reconcile the Agents that DSH kept across an in-place plugin reload. Do not
+  // create a new turn or replay its input: the running process owns it already.
+  // Existing Sessions also need ChemClaw's tool restrictions restored, because an
+  // agent/created event is not emitted for them on plugin reload.
+  async function adoptLiveWork() {
+    const agents = ctx.get?.('agents')
+    if (typeof agents?.list !== 'function') return
+    await rt.load()
+    for (const agent of agents.list()) {
+      const id = agent?.session?.id ?? agent?.id
+      if (typeof id !== 'string' || agent?.session?.header?.origin === 'subagent') continue
+      const owned = rt.isBotSession(id) || rt.roomOf(id) !== undefined
+      try {
+        if (owned) rt.hideBotUnusedTools?.(agent)
+        else if (rt.agentOf?.(id) !== undefined) await rt.restrictDshAgentTools?.(agent)
+      } catch (error) {
+        rt.warn('chemclaw-bot: could not restore tool restrictions for %s: %s', id, error)
+      }
+      if (!owned || agent.status !== 'running') continue
+      const entry = liveOf(id)
+      if (entry.turn !== undefined) continue
+      entry.turn = RECOVERED_TURN
+      // The input that began this turn was consumed before the reload; later Bot
+      // requests must join as deferred work, not be answered by the old task.
+      entry.opened = true
+      entry.since ??= Date.now()
+      setActivity(id, 'thinking')
+    }
+  }
+
   // The newest call still running, a program's sub-calls included, is what the Session
   // is doing.
   const showCall = (id, entry) => {
@@ -597,6 +648,7 @@ export function install(rt) {
         const joined = entry.joined ?? []
         // What the group already saw of the turn is not posted again.
         const texts = entry.texts.slice(entry.shown)
+        const wroteText = entry.texts.length > 0
         const shown = entry.shown > 0
         const { lastText, lastCalled } = entry
         // A turn stopped for a switch goes on in the next part, which answers instead.
@@ -634,6 +686,20 @@ export function install(rt) {
         const reason = event.data?.reason
         const failure = reason?.kind === 'error' && !switched ? turnFailure(reason.error) : undefined
         if (failure !== undefined) noteTurnFailure(id, failure)
+        const cutOff = finishedTurn !== undefined && failure === undefined && reason?.kind === 'max-tokens'
+        if (cutOff) {
+          rt.noteFailure({
+            level: 'warn',
+            source: 'turn',
+            code: 'MAX_TOKENS',
+            text: wroteText
+              ? 'the turn was cut off at the output limit, so its answer is not complete'
+              : 'the turn was cut off at the output limit before it wrote anything',
+            bot: rt.botOf(rt.selfOf(id))?.name ?? 'unknown Bot',
+            where: placeOf(id),
+            sessionId: id,
+          })
+        }
         const held = rt.groupOwners.has(id) ? rt.takeRoomSteps?.(id) ?? '' : ''
         if (switched) { rt.takeRoomViews?.(id, finishedTurn, false); break }
         // A model that writes its tool call as text ends the turn as if it were done,
@@ -645,7 +711,9 @@ export function install(rt) {
         if (retry) void retryWrittenCall(id, info).catch(error => rt.warn('chemclaw-bot: asking %s to run its written tool call failed: %s', id, error))
         const replyText = () => {
           const reply = (wroteCall ? texts.map(stripWrittenCalls) : texts).join('\n\n').trim()
-          return wroteCall && reply === '' ? 'Tried to run a tool but wrote the call as text, so it did not run.' : reply
+          if (wroteCall && reply === '') return 'Tried to run a tool but wrote the call as text, so it did not run.'
+          if (cutOff) return reply === '' && wroteText ? CUT_OFF_NOTE : cutOffText(reply)
+          return reply
         }
         const groupReply = () => rt.withRoomSteps?.(held, replyText()) ?? replyText()
         const views = rt.takeRoomViews?.(id, finishedTurn, !retry && failure === undefined && reason?.kind === 'completed') ?? []
@@ -729,5 +797,5 @@ export function install(rt) {
     }
   })
 
-  Object.assign(rt, { live, liveOf, roomWaiters, roomProgress, roomInbox, activityView, workView, roomWorkView, turnsView, steeredView, callDetail, doingOf, stopRoomTurn, releaseBot, isStoppedRoomTurn: exchangeId => stoppedRoomTurns.has(exchangeId) })
+  Object.assign(rt, { live, liveOf, roomWaiters, roomProgress, roomInbox, activityView, workView, roomWorkView, turnsView, steeredView, callDetail, doingOf, stopRoomTurn, releaseBot, adoptLiveWork, isStoppedRoomTurn: exchangeId => stoppedRoomTurns.has(exchangeId) })
 }

@@ -14,9 +14,10 @@ export function install(rt) {
     return resolved.agent
   }
 
-  const headerFor = (role, fromName, roomName, audience, note = 'new message', deferred = false, { resumed = false, retried = false, asker } = {}) => {
+  const headerFor = (role, fromName, roomName, audience, note = 'new message', deferred = false, { resumed = false, retried = false, abandoned = false, asker } = {}) => {
     // What came back for work another Bot gave this one says where its answer goes.
     const goesOn = asker === undefined ? '' : ` · for the work ${asker} asked you for; your answer goes to ${asker} once everything you handed on is back`
+    if (abandoned) return `[Waiting given up · ${fromName} did not hand back this work; continue with the work it was for${goesOn}]`
     if (deferred && role === 'reply') return `[Reply from ${fromName} · you read it during your last task; go on with the work it is for now${goesOn}]`
     if (deferred && role === 'report') return `[Group chat "${roomName}" · replies to your post · you read them during your last task; go on with the work they are for now${goesOn}]`
     if (deferred && role !== 'room') return `[Message from ${fromName} · you read it during your last task; answer it now]`
@@ -51,11 +52,11 @@ export function install(rt) {
   // `length`: the whole message's length when it went as a file (attachLong). `work`:
   // the work (handoffs.js) a result that came back goes on with. `merged`: a request
   // that takes in an earlier one its recipient had not read, under that one's exchange.
-  async function deliver({ fromId, toId, sessionId, text, role, replyTo, roomId, audience, note, exchangeId = randomUUID(), steer = false, deferred = false, resumed = false, retried = false, resent = false, merged = false, askedBy, fromRoomId, files = [], length, work, skillNames }) {
+  async function deliver({ fromId, toId, sessionId, text, role, replyTo, roomId, audience, note, exchangeId = randomUUID(), steer = false, deferred = false, resumed = false, retried = false, resent = false, merged = false, abandoned = false, recordExchange = true, fromName: senderName, askedBy, fromRoomId, files = [], length, work, skillNames }) {
     const from = rt.botOf(fromId)
     const to = rt.botOf(toId)
     if (to === undefined) throw new Error(`Unknown Bot ${toId}`)
-    const fromName = from?.name ?? 'You'
+    const fromName = senderName ?? from?.name ?? 'You'
     const room = rt.roomOf(roomId)
     const asker = work === undefined ? undefined : rt.botOf(state.works?.[work]?.from)?.name
     // Session events reject `undefined` members, so optional fields are omitted instead.
@@ -76,9 +77,10 @@ export function install(rt) {
       ...(retried ? { retried: true } : {}),
       ...(askedBy ? { askedBy } : {}),
       ...(fromRoomId ? { senderRoomId: fromRoomId } : {}),
+      ...(abandoned ? { abandoned: true } : {}),
     }
     const targetSessionId = sessionId ?? rt.chatOf(toId)
-    if (EXCHANGE_ROLES.has(role) && !deferred && !resumed && !retried && !resent) {
+    if (recordExchange && EXCHANGE_ROLES.has(role) && !deferred && !resumed && !retried && !resent) {
       // The whole text is in its file, or in the Session it goes to; exchangeText reads
       // it back there.
       const kept = headOf(text, TEXT_KEPT)
@@ -95,7 +97,7 @@ export function install(rt) {
     // queues for the next turn (see turns.js for how each is routed).
     const message = createUserMessage({
       content: [
-        { type: 'text', text: `${headerFor(role, fromName, room?.name, audience, note, deferred, { resumed, retried, asker })}\n${text}` },
+        { type: 'text', text: `${headerFor(role, fromName, room?.name, audience, note, deferred, { resumed, retried, abandoned, asker })}\n${text}` },
         ...files.map(attachment => ({ type: 'file', attachment })),
       ],
       source,
