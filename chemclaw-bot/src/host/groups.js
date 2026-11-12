@@ -1110,8 +1110,12 @@ export function install(rt) {
     const room = rt.roomOf(roomId)
     if (room === undefined) return false
     const round = rt.roomBusy(room.id)
+    // After a hot reload, the original round's in-memory record is gone, but DSH
+    // may still be running the relay Session. The adopted live turn is enough
+    // to expose Stop without pretending that the old round was reconstructed.
+    const relayRunning = round !== undefined || rt.live.get(room.id)?.turn !== undefined
     const tasks = [
-      ...(round ? [rt.resolveAgent(room.id).then(agent => { agent.cancel({ kind: 'user' }); return true })] : []),
+      ...(relayRunning ? [rt.resolveAgent(room.id).then(agent => { agent.cancel({ kind: 'user' }); return true })] : []),
       ...room.members.map(botId => stopMemberWork(room.id, botId)),
     ]
     const results = await Promise.allSettled(tasks)
