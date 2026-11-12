@@ -101,6 +101,7 @@ test('desktop and test harness lock the same DeepSeek Harness RC release', () =>
   const app = read('../package.json')
   const appLock = read('../package-lock.json')
   const harness = read('../../chemclaw-bot/dev/harness/package.json')
+  const engine = read('../engine/package.json')
   const harnessLock = read('../../chemclaw-bot/dev/harness/package-lock.json')
   const pinned = app.dependencies['@deepseek-ai/dsh']
   assert.match(pinned, /^0\.\d+\.\d+-rc\.\d+$/u)
@@ -113,6 +114,9 @@ test('desktop and test harness lock the same DeepSeek Harness RC release', () =>
   }
   for (const [name, version] of Object.entries(app.overrides)) {
     if (name.startsWith('@deepseek-ai/dsh-')) assert.equal(version, pinned, `Override for ${name} is stale`)
+  }
+  for (const [name, version] of Object.entries(engine.dependencies)) {
+    if (name.startsWith('@deepseek-ai/dsh')) assert.equal(version, pinned, `Desktop Engine has a mismatched version for ${name}`)
   }
   for (const [name, version] of Object.entries(harness.dependencies)) {
     if (!name.startsWith('@deepseek-ai/dsh')) continue

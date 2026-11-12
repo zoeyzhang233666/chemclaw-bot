@@ -65,7 +65,7 @@ describe('officeCli', () => {
 describe('reconcileOfficeRuntime', () => {
   test('inserts the workspace tool and the Office skills against the payload', () => {
     makePayload()
-    const { patchFiles, node } = reconcileOfficeRuntime(profile(), runtimeDir)
+    const { patchFiles, node } = reconcileOfficeRuntime(profile(), runtimeDir, { skillConfig: { dict: { assetRoot: {}, node: {}, cli: {} } } })
     assert.equal(node, join(runtimeDir, 'primary-runtime', 'dependencies', 'node', 'bin', process.platform === 'win32' ? 'node.exe' : 'node'))
     assert.deepEqual(patchFiles, [join(home, 'profiles', OFFICE_PATCH_NAME)])
     const [row] = parse(readFileSync(patchFiles[0], 'utf8'))
@@ -79,6 +79,30 @@ describe('reconcileOfficeRuntime', () => {
     assert.equal(skills.config.assetRoot, join(runtimeDir, 'office-skills'))
     assert.equal(skills.config.node, node)
     assert.equal(skills.config.cli, join(runtimeDir, 'office-converter', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js'))
+  })
+
+  test('adapts an existing Office overlay to rc.2 pythonEnvironment without duplicate plugin IDs', () => {
+    makePayload()
+    const newer = {
+      ...profile(),
+      layers: [{
+        patches: [{
+          insert: [
+            { id: 'workspace-dependencies', name: '@deepseek-ai/dsh-tool-workspace-dependencies', disabled: true, config: { source: '' } },
+            { id: 'skill-office', name: '@deepseek-ai/dsh-skill-office', config: { pythonEnvironment: 'user' } },
+          ],
+        }],
+      }],
+    }
+    const { patchFiles } = reconcileOfficeRuntime(newer, runtimeDir, { skillConfig: { dict: { assetRoot: {}, pythonEnvironment: {} } } })
+    const rows = parse(readFileSync(patchFiles[0], 'utf8'))
+    assert.equal(rows.length, 2)
+    assert.equal(rows.some(row => 'insert' in row), false)
+    assert.deepEqual(rows.map(row => row.id), ['workspace-dependencies', 'skill-office'])
+    assert.equal(rows[0].disabled, false)
+    assert.equal(rows[0].config.source, join(runtimeDir, 'primary-runtime'))
+    assert.equal(rows[1].disabled, false)
+    assert.deepEqual(rows[1].config, { assetRoot: join(runtimeDir, 'office-skills'), pythonEnvironment: 'workspace-dependencies' })
   })
 
   test('writes no overlay and drops a stale one when the payload is gone', () => {

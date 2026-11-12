@@ -177,6 +177,7 @@ test('the official DSH catalog repairs supported APIHub IDs and sends durable im
     let adapter
     apply({
       fiber: { entry: { options: { id: 'llm-pi-ai' } } }, inject() {}, on() {},
+       waterfall: (_name, _request, headers, next) => next?.() ?? headers,
       get: name => name === 'credentials' ? { resolve: async () => ({ value: 'synthetic-only' }) }
         : name === 'attachments' ? { imageHostPath: () => undefined, readImageRequest: async () => ({ data: image, bytes: image.length, width: 1, height: 1, mediaType: 'image/png' }) } : undefined,
       llm: {
@@ -354,6 +355,7 @@ test('the official DSH adapter sends stable Go session headers after preset migr
     apply({
       fiber: { entry: { options: { id: 'llm-pi-ai' } } },
       inject() {}, on() {},
+       waterfall: (_name, _request, headers, next) => next?.() ?? headers,
       get: name => name === 'credentials' ? { resolve: async () => ({ value: 'synthetic-only' }) } : undefined,
       llm: {
         registerConfigurableProviders: () => ({ replace() {} }), registerModelDiscovery() {},

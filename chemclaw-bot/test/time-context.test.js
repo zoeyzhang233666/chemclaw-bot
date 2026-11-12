@@ -78,12 +78,13 @@ test('a loaded DSH clock gets no second clock in either listener order', async (
     const ctx = fakeContext({
       services: {
         sessionProjections: {
-          register: (definition) => { projections.set(definition.key, definition) },
+          register: (definition) => { projections.set(definition.key, definition); return { stateOf: () => definition.init() } },
           stateOf: (_session, key) => projections.get(key)?.init(),
         },
       },
     })
     ctx.sessionProjections = ctx.get('sessionProjections')
+    ctx.fiber = { assertActive() {} }
     // Prepended listeners run last-registered first.
     ctx.on = (name, listener) => { ctx.listeners.set(name, [listener, ...(ctx.listeners.get(name) ?? [])]) }
     const rt = { ctx, config: { timeZone: 'UTC' }, load: async () => {}, isBotSession: () => true, async* eventsBackwards() {} }

@@ -8,6 +8,8 @@ import { existsSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { stringify } from 'yaml'
+import { composeEntries } from '@deepseek-ai/dsh-app-boot'
+import { Config as SkillOfficeConfig } from '@deepseek-ai/dsh-skill-office'
 const officeConverterCli = runtimeDir => join(runtimeDir, 'office-converter', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js')
 
 export const OFFICE_PATCH_NAME = 'office.patch.yml'
@@ -48,16 +50,31 @@ export function officeCli(manifest, runtimeDir) {
  * @returns {{ patchFiles: string[], node?: string }} the `patchFiles` addition for this
  *   launch and the payload's Node, which the Host exports for the plugin's own use
  */
-export function reconcileOfficeRuntime(profile, runtimeDir = process.env.CHEMCLAW_OFFICE_RUNTIME_DIR) {
+export function reconcileOfficeRuntime(profile, runtimeDir = process.env.CHEMCLAW_OFFICE_RUNTIME_DIR, { skillConfig = SkillOfficeConfig } = {}) {
   const file = join(dirname(profile.dir), OFFICE_PATCH_NAME)
   const runtime = runtimeDir === undefined ? undefined : officeRuntime(runtimeDir)
   if (runtime === undefined) {
     rmSync(file, { force: true })
     return { patchFiles: [] }
   }
-  writeFileSync(file, stringify([{ insert: [
+  // rc.1 reads the standalone Node/CLI fields; rc.2 exposes
+  // pythonEnvironment and may already mount these plugin rows in its profile.
+  // Use the published skill schema instead of guessing at a DSH version.
+  const needsPythonEnvironment = 'pythonEnvironment' in (skillConfig?.dict ?? {})
+  const desired = [
     { id: 'workspace-dependencies', name: '@deepseek-ai/dsh-tool-workspace-dependencies', config: { source: runtime.source } },
-    { id: 'skill-office', name: '@deepseek-ai/dsh-skill-office', config: { assetRoot: join(runtimeDir, 'office-skills'), node: runtime.node, cli: officeCli(undefined, runtimeDir) } },
-  ] }]), 'utf8')
+    {
+      id: 'skill-office',
+      name: '@deepseek-ai/dsh-skill-office',
+      config: needsPythonEnvironment
+        ? { assetRoot: join(runtimeDir, 'office-skills'), pythonEnvironment: 'workspace-dependencies' }
+        : { assetRoot: join(runtimeDir, 'office-skills'), node: runtime.node, cli: officeCli(undefined, runtimeDir) },
+    },
+  ]
+  const existing = new Set(composeEntries([...profile.layers.map(layer => layer.patches), profile.patches]).map(entry => entry.id))
+  const inserted = desired.filter(entry => !existing.has(entry.id))
+  const overrides = desired.filter(entry => existing.has(entry.id)).map(entry => ({ ...entry, disabled: false }))
+  const patch = [...(inserted.length ? [{ insert: inserted }] : []), ...overrides]
+  writeFileSync(file, stringify(patch), 'utf8')
   return { patchFiles: [file], node: runtime.node }
 }

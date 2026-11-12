@@ -57,7 +57,7 @@ async function main() {
   if (webServer === undefined || connection === undefined) throw new Error(`The profile in ${profile.dir} does not start the engine's web server and connection.`)
   await checkTeamReady(ctx)
   const url = connection.authenticatedUrl(`http://127.0.0.1:${String(webServer.port)}`)
-  await send({ type: 'ready', url, injections: webServer.collectIndexInjections() })
+  await send({ type: 'ready', url, injections: webServer.collectIndexInjections(connection.browserPeer) })
 }
 
 main().catch(async (error) => {
