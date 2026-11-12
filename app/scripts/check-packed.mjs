@@ -354,9 +354,10 @@ async function chat(cdp) {
     await captureMac('skill-category')
     await evaluate("[...document.querySelectorAll('.bt-skill-library .bt-skill-card')].find(node => node.querySelector('.bt-expert-example p')).querySelector('button').click()")
     await until("document.querySelector('.bt-skill-library .bt-skill-detail')", 'the skill details panel')
-    if (!await evaluate("Boolean(document.querySelector('.bt-skill-detail .bt-skill-purpose')?.textContent.trim())")) {
-      throw new Error('The selected built-in skill has no visible purpose')
-    }
+    // The detail shell appears immediately, but managed skills fetch their purpose
+    // asynchronously from capability-detail. Wait for the actual description rather
+    // than treating the normal loading state as a missing purpose.
+    await until("Boolean(document.querySelector('.bt-skill-detail .bt-skill-purpose')?.textContent.trim())", 'the selected built-in skill purpose')
     await captureMac('skill-detail')
     await evaluate("document.querySelector('.bt-settings-close').click()")
     await until("!document.querySelector('.bt-settings')", 'the skill library to close')
