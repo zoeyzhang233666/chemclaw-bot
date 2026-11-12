@@ -164,6 +164,16 @@ function checkSharp(app) {
       const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="4" height="4" fill="red"/></svg>')
       assert.equal((await sharp(await sharp(svg).png().toBuffer()).metadata()).width, 4)
       console.log('check-packed: sharp image processing passed (libvips ' + sharp.versions.vips + ')')
+      // Exercise browser_exec from the *packaged* app as Electron-as-Node, not
+      // from the source worktree. A packaged asar must be able to fork the
+      // isolated VM child, and that child must still have no Node access.
+      const runnerUrl = require('node:url').pathToFileURL(path.join(plugin, 'src/host/browser/script-runner.js')).href
+      const runner = await import(runnerUrl)
+      assert.equal(await runner.runIsolatedScript('done("packed-safe")', {}), 'packed-safe')
+      assert.equal(await runner.runIsolatedScript('return typeof process', {}), 'undefined')
+      await assert.rejects(runner.runIsolatedScript('while (true) {}', {}, { timeout: 400 }), /longer than/)
+      assert.equal(await runner.runIsolatedScript('return "host-survived"', {}), 'host-survived')
+      console.log('check-packed: packaged browser_exec isolation and child process timeout passed')
     })().catch(error => { console.error(error); process.exitCode = 1 })
   `
   // Use the shipped Electron and dependencies outside the checkout, just like the Host.
