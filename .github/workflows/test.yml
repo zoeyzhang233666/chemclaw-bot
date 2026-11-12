@@ -78,6 +78,9 @@ jobs:
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
       - run: npm test
+      - name: Real DSH in-process ChemClaw hot reload (no external API keys)
+        timeout-minutes: 12
+        run: node --expose-internals scripts/check-chemclaw-hmr.mjs
       - name: Install the published plugin shape in an empty directory
         run: |
           archive="$(cd ../chemclaw-bot && npm pack --silent --pack-destination "$RUNNER_TEMP")"
