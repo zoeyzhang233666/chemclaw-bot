@@ -2,7 +2,7 @@
 // triggered, the waiters and inboxes of group rounds, and routing a finished turn's reply.
 //
 // Turn tracking: which turns were triggered by another Bot, and what they said.
-import { HANDOFF_ACK, MESSAGE_INLINE_MAX, REFERENCE_KIND, REPLY_KIND, SOURCE_KIND } from './constants.js'
+import { HANDOFF_ACK, LATE_ANSWER, MESSAGE_INLINE_MAX, REFERENCE_KIND, REPLY_KIND, SOURCE_KIND } from './constants.js'
 import { absoluteLinks } from './links.js'
 import { textOf } from './text.js'
 import { reminderText } from './schedules.js'
@@ -30,12 +30,15 @@ export const failureLine = failure => `${failure.code}${failure.status ? ` ${fai
 export function answerSender(rt, id, source, text, long) {
   const back = rt.roomOf(source.senderRoomId)?.sessions?.[source.senderSessionId]
   const work = rt.closeWork?.(source.exchangeId, rt.botOf(rt.selfOf(id))?.name ?? 'The other Bot', text)
+  const late = work === undefined ? rt.abandonedWork?.(source.exchangeId) : undefined
+  const body = late === undefined ? (long?.text ?? text) : LATE_ANSWER + (long?.text ?? text)
+  const length = long?.length === undefined ? undefined : long.length + (late === undefined ? 0 : LATE_ANSWER.length)
   void rt.deliver({
     fromId: rt.selfOf(id),
     toId: source.senderSessionId,
     ...(back ? { sessionId: back } : {}),
-    text: long?.text ?? text,
-    ...(long?.length === undefined ? {} : { files: long.files, length: long.length }),
+    text: body,
+    ...(length === undefined ? {} : { files: long.files, length }),
     role: 'reply',
     replyTo: source.exchangeId,
     ...(work ? { work } : {}),
