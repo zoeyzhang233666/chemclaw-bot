@@ -100,16 +100,26 @@ export async function previewLegacyRoom({ home, room, archivedRows = [] }) {
     rows.push({ ...line, seq, text, ...(incomplete ? { legacyIncomplete: true } : {}) })
   }
   const last = rows.at(-1)?.seq ?? 0
-  if (Number.isSafeInteger(room.seq) && room.seq > last) {
-    warnings.push('Legacy group has a later sequence than the recovered log; older/missing history must be checked separately')
+  if (Number.isSafeInteger(room.seq) && room.seq < last) {
+    throw new Error('Legacy group sequence is behind the recovered messages')
   }
-  if (rows.length > 0 && rows[0].seq > 1 && archivedRows.length === 0) {
+  if (Number.isSafeInteger(room.seq) && room.seq > last) {
+    warnings.push('Legacy group has a later sequence than the recovered log; newer/missing history must be checked separately')
+  }
+  if (rows.length > 0 && rows[0].seq > 1) {
     warnings.push('Legacy room.log starts after sequence 1; older history may be in Session or other archives')
+  }
+  for (let index = 1; index < rows.length; index += 1) {
+    const previous = rows[index - 1].seq
+    const current = rows[index].seq
+    if (current > previous + 1) {
+      warnings.push('Legacy group has missing messages between sequences ' + previous + ' and ' + current)
+    }
   }
   return { book: 'group-' + room.id, rows, warnings }
 }
 
-// Explicit one-time initialization only. Atomic no-clobber creation prevents
+// Explicit one-time initialization only. Exclusive no-clobber creation prevents
 // importing twice and never overwrites any existing book or legacy source.
 // A crash may leave an incomplete new book; readLedger reports its torn tail
 // rather than silently accepting it, and the original old files remain intact.
