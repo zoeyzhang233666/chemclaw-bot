@@ -1,12 +1,12 @@
 ﻿import { createElement as h, Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { isMainOf } from './sources.js'
 import { currentPart } from './text.js'
-import { GearIcon, PinIcon, UnreadIcon, PencilIcon, StarLineIcon, CopyIcon, HideIcon, TrashIcon, DuplicateIcon } from './icons.js'
+import { GearIcon, PinIcon, UnreadIcon, PencilIcon, StarLineIcon, CopyIcon, HideIcon, TrashIcon, DuplicateIcon, SignOutIcon } from './icons.js'
 import { useEscape } from './overlay-hooks.js'
 import { useViewport, viewBottom } from './motion.js'
 import { t } from './i18n.js'
 
-export function ContextMenu({ menu, roster, actions, leaving = false }) {
+export function ContextMenu({ menu, roster, actions, useWork, leaving = false }) {
   useEscape(() => actions.closeMenu())
   useEffect(() => {
     const onDown = (event) => { if (!(event.target instanceof Element) || !event.target.closest('.bt-menu')) actions.closeMenu() }
@@ -21,6 +21,9 @@ export function ContextMenu({ menu, roster, actions, leaving = false }) {
     if (!box) return
     setPlace({ left: Math.max(8, Math.min(menu.x, window.innerWidth - box.width - 8)), top: Math.max(8, Math.min(menu.y, viewBottom() - box.height - 8)) })
   }, [menu.x, menu.y, tick])
+  // Keep this subscription mounted for all menu types; individual entries only show waits for a Bot.
+  const waitRows = useWork(work => JSON.stringify(work?.waiting?.[menu.id]?.waits ?? []))
+  const waits = JSON.parse(waitRows)
   if (menu.kind === 'agent' || menu.kind === 'agent-session') return h(AgentMenu, { menu, roster, actions, leaving })
   const bot = roster.byId[menu.id]
   const room = roster.roomsById[menu.id]
@@ -44,6 +47,7 @@ export function ContextMenu({ menu, roster, actions, leaving = false }) {
       bot && isMainBot && mainCount > 1 ? [t('Remove Main Bot role'), StarLineIcon, () => actions.setMain(bot.id, false)] : null,
     ],
     [[t('Copy conversation ID'), CopyIcon, () => navigator.clipboard?.writeText(bot ? currentPart(bot) : menu.id)]],
+    bot ? waits.map(item => [t('Give up waiting for {name}', { name: item.name ?? t('a Bot') }), SignOutIcon, () => actions.abandonWork(item.id)]) : [],
     [
       isMainBot ? null : [t('Hide from sidebar'), HideIcon, () => actions.setFlags(menu.id, { hidden: true })],
       isMainBot ? null : [room ? t('Delete group') : t('Delete'), TrashIcon, () => (bot ? actions.deleteBot(bot.id) : actions.deleteRoom(menu.id)), true],

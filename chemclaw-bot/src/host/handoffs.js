@@ -5,7 +5,7 @@
 // that came back, together with what came back. Results find their way up by
 // themselves, so no Bot needs to message one that waits for it, and that is the one
 // hand-off refused. The open works are kept in state.json so a restart waits on.
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { TEXT_KEPT } from './constants.js'
@@ -105,7 +105,7 @@ export function install(rt) {
 
   // The answer to work `id` is on its way, with `result` from `name`. Returns the work
   // it goes on with. That work keeps waiting until a turn reads the answer (`taken`).
-  function closeWork(id, name, text) {
+  function closeWork(id, name, text, extra = {}) {
     const work = works()[id]
     if (work === undefined) return undefined
     delete works()[id]
@@ -115,7 +115,7 @@ export function install(rt) {
     if (above !== undefined) {
       // The whole result goes into a file of its own before the team file names it.
       const file = keepResult(id, text)
-      above.results.push({ id, name, text: headOf(text, TEXT_KEPT), ...(text.length > TEXT_KEPT ? { length: text.length } : {}), ...(file ? { file } : {}) })
+      above.results.push({ id, name, text: headOf(text, TEXT_KEPT), ...(text.length > TEXT_KEPT ? { length: text.length } : {}), ...(file ? { file } : {}), ...extra })
       whole.set(id, text)
     }
     for (const result of work.results ?? []) whole.delete(result.id)
@@ -192,7 +192,7 @@ export function install(rt) {
   // it handed on that has not come back yet. One that came back waits only to be read.
   const held = busy => Object.entries(works())
     .filter(([id, work]) => work.to !== undefined && work.open.length > 0 && !busy.has(id))
-    .map(([id, work]) => ({ id, work, out: work.open.map(childId => works()[childId]).filter(Boolean) }))
+    .map(([id, work]) => ({ id, work, out: work.open.map(childId => ({ id: childId, work: works()[childId] })).filter(child => child.work !== undefined) }))
   const busyWith = sessionIds => new Set(sessionIds.map(sessionId => rt.live.get(sessionId)).filter(entry => entry?.turn !== undefined).map(entry => workOf(entry.info)).filter(Boolean))
 
   // Per Bot, the Bots and groups it waits for, and the Bots it does that work for.
@@ -201,11 +201,67 @@ export function install(rt) {
     const add = (list, id) => { if (id !== undefined && !list.includes(id)) list.push(id) }
     for (const { work, out } of held(busyWith([...rt.live.keys()]))) {
       if (out.length === 0) continue
-      const entry = view[work.to] ??= { bots: [], rooms: [], for: [] }
-      for (const child of out) add(child.room ? entry.rooms : entry.bots, child.room ?? child.to)
+      const entry = view[work.to] ??= { bots: [], rooms: [], for: [], waits: [] }
+      for (const { id, work: child } of out) {
+        add(child.room ? entry.rooms : entry.bots, child.room ?? child.to)
+        entry.waits.push({
+          id,
+          ...(child.room ? { room: child.room, name: rt.roomOf(child.room)?.name } : { to: child.to, name: nameOf(child.to) ?? child.name }),
+        })
+      }
       add(entry.for, work.from)
     }
     return view
+  }
+
+  // A bounded, durable tombstone lets a late reply be recognized after a restart,
+  // without re-opening a work that the user already chose to stop waiting for.
+  const ABANDONED_KEPT = 100
+  const abandonedWorks = () => (state.abandonedWorks ??= {})
+  function rememberAbandoned(id, entry) {
+    const map = abandonedWorks()
+    map[id] = entry
+    const ids = Object.keys(map)
+    if (ids.length > ABANDONED_KEPT) {
+      for (const old of ids.sort((a, b) => (map[a].at ?? 0) - (map[b].at ?? 0)).slice(0, ids.length - ABANDONED_KEPT)) delete map[old]
+    }
+    save()
+  }
+  function takeAbandoned(id) {
+    const map = abandonedWorks()
+    const entry = map[id]
+    if (entry === undefined) return undefined
+    delete map[id]
+    save()
+    return entry
+  }
+
+  // One user-selected child is closed with a *missing answer*, not a success. Other
+  // children of the same work stay open, and the target Bot is not forcibly stopped.
+  function abandonWork(id) {
+    if (rt.readOnly?.() !== undefined) return false
+    const work = works()[id]
+    const parent = work?.parent === undefined ? undefined : works()[work.parent]
+    if (work === undefined || parent === undefined || !Array.isArray(parent.open) || !parent.open.includes(id)) return false
+    if (parent.to === undefined || rt.botOf(parent.to) === undefined) return false
+    const target = work.room !== undefined
+      ? `the group chat "${rt.roomOf(work.room)?.name ?? 'a group chat'}"`
+      : rt.botOf(work.to)?.name ?? work.name ?? 'the other Bot'
+    const name = rt.botOf(work.to)?.name ?? work.name
+      ?? (work.room !== undefined ? rt.roomOf(work.room)?.name : undefined) ?? 'the other Bot'
+    const result = `No reply came back from ${target}, and the user gave up waiting for it. This is not a completed answer. Continue with the work you were given, and clearly state that this result is missing.`
+    rememberAbandoned(id, { at: Date.now(), parent: work.parent, from: work.from, to: work.to, room: work.room, name, waiting: parent.to })
+    closeWork(id, name, result, { abandoned: true, abandonedAt: Date.now(), abandonedReason: 'user' })
+    // closeWork adds a placeholder result but deliberately does not remove open.
+    parent.open = parent.open.filter(other => other !== id)
+    save()
+    void rt.deliver({
+      fromId: work.to !== undefined && rt.botOf(work.to) !== undefined ? work.to : undefined,
+      fromName: name, toId: parent.to,
+      text: result, role: 'reply', replyTo: id, exchangeId: randomUUID(),
+      work: work.parent, abandoned: true, recordExchange: false,
+    }).catch(error => rt.warn('chemclaw-bot: giving up wait for %s could not notify %s: %s', id, parent.to, error))
+    return true
   }
 
   // A deleted Bot answers no more work and waits for none.
@@ -247,7 +303,7 @@ export function install(rt) {
     for (const { work, out } of held(busyWith(running))) {
       if (work.to !== botId) continue
       const forName = nameOf(work.from) ? `, for ${nameOf(work.from)}` : ''
-      const on = [...new Set(out.map(child => (child.room ? `group "${rt.roomOf(child.room)?.name ?? 'a group'}"` : nameOf(child.to) ?? 'a teammate')))]
+      const on = [...new Set(out.map(({ work: child }) => (child.room ? `group "${rt.roomOf(child.room)?.name ?? 'a group'}"` : nameOf(child.to) ?? 'a teammate')))]
       lines.push(on.length > 0 ? `waiting for ${on.join(' and ')} to hand back work${forName}` : `about to go on with work${forName}, whose results came back`)
     }
     if (lines.length === 0) lines.push('idle')
@@ -262,5 +318,5 @@ export function install(rt) {
     return lines.join('; ')
   }
 
-  Object.assign(rt, { workOf, openWork, closeWork, dropWork, takenWork: taken, ownsWork: owns, waitsWork: waits, holdWork: hold, workAsker: askedBy, answerText, upstreamOf, sameWork, forgetBotWork: forgetBot, statusOf, waitingView })
+  Object.assign(rt, { workOf, openWork, closeWork, dropWork, takenWork: taken, ownsWork: owns, waitsWork: waits, holdWork: hold, workAsker: askedBy, answerText, upstreamOf, sameWork, forgetBotWork: forgetBot, statusOf, waitingView, abandonWork, abandonedWork: takeAbandoned })
 }

@@ -83,6 +83,8 @@ export function teamActions({ call, after, partFor, roster, ui, live, cards, hel
     deleteAvatar: id => call('avatar-delete', { id }),
     createRoom: (members, options = {}) => after(call('create-room', { members, ...options })),
     updateBot: (id, patch) => after(call('update-bot', { id, ...patch })),
+    // Give up one user-selected stalled handoff, without stopping the delegated Bot.
+    abandonWork: id => after(call('abandon-work', { id })),
     refreshModels: () => after(call('models')).catch(() => {}),
     providers: () => call('providers'),
     setProviderKey: (provider, value) => after(call('provider-key', { provider, value })),

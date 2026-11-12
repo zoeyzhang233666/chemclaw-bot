@@ -85,5 +85,9 @@ export function createRuntime(ctx, config = {}) {
     },
   }
   for (const module of [...MODULES.slice(0, -1), publicData, cninfo, dependencies, artifactTools, channel, officeSkills]) module.install(rt)
+  // During an in-place plugin reload, DSH can keep Agents and running turns while
+  // ChemClaw's process-local maps start empty. Reconcile only after all tool
+  // registrations and permission rules have been installed.
+  void rt.adoptLiveWork?.().catch(error => rt.warn?.('chemclaw-bot: live work recovery failed: %s', error))
   return rt
 }

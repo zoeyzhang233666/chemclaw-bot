@@ -669,13 +669,33 @@ deck.save(sys.argv[1])`
   if (shotFile) { const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(`${shotFile}.chart-zoom.png`), Buffer.from(data, 'base64')) }
   const selectedBox = await evaluate("(() => { const node = document.querySelector('.bt-group-view .bt-chart-range-window'); const box = node.getBoundingClientRect(); const x = box.left + box.width / 2; const y = box.top + box.height / 2; return { x, y, hit: document.elementFromPoint(x, y)?.closest('.bt-chart-range-window') === node }; })()")
   if (!selectedBox.hit) throw new Error(`The chart range selection window is not hit-testable: ${JSON.stringify(selectedBox)}`)
+  // Inspect the actual range after zoom; Windows fractional-pixel rounding can
+  // shift the selected start by one point without changing its 17 observations.
+  const panFrom = await evaluate("Number(document.querySelector('.bt-chart-range-window').getAttribute('aria-valuenow'))")
+  const panTrackWidth = await evaluate("document.querySelector('.bt-chart-range-track').getBoundingClientRect().width")
+  const panExpected = panFrom - 10
+  if (!Number.isInteger(panFrom) || panExpected < 0 || panTrackWidth <= 0) throw new Error(`Invalid chart range before panning: ${JSON.stringify({ panFrom, panTrackWidth })}`)
   await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: selectedBox.x, y: selectedBox.y })
   await cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', x: selectedBox.x, y: selectedBox.y, button: 'left', buttons: 1, clickCount: 1 })
   await sleep(100)
-  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: selectedBox.x - rangeBox.width * 10 / 56, y: selectedBox.y, button: 'left', buttons: 1 })
-  await sleep(100)
-  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', x: selectedBox.x - rangeBox.width * 10 / 56, y: selectedBox.y, button: 'left', buttons: 0, clickCount: 1 })
-  await until("document.querySelector('.bt-chart-range-window').getAttribute('aria-valuenow') === '30'", 'the panned chart range')
+  // Deliver intermediate pointer moves rather than a single large jump. This
+  // exercises the same drag behavior and avoids missing captured pointer moves.
+  for (let step = 1; step <= 5; step++) {
+    await cdp.call('Input.dispatchMouseEvent', {
+      type: 'mouseMoved',
+      x: selectedBox.x - panTrackWidth * (10 / 56) * (step / 5),
+      y: selectedBox.y,
+      button: 'left', buttons: 1,
+    })
+    await sleep(40)
+  }
+  await cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', x: selectedBox.x - panTrackWidth * 10 / 56, y: selectedBox.y, button: 'left', buttons: 0, clickCount: 1 })
+  try {
+    await until(`Number(document.querySelector('.bt-chart-range-window')?.getAttribute('aria-valuenow')) === ${panExpected}`, 'the panned chart range', 12_000)
+  } catch (error) {
+    const observed = await evaluate("(() => { const node = document.querySelector('.bt-chart-range-window'); const track = document.querySelector('.bt-chart-range-track'); return { start: node?.getAttribute('aria-valuenow'), selected: node?.getAttribute('aria-valuetext'), trackWidth: track?.getBoundingClientRect().width, points: document.querySelectorAll('.bt-group-view .bt-chart-hit').length }; })()")
+    throw new Error(`Chart drag did not pan by ten observations: ${JSON.stringify({ panFrom, panExpected, observed })}`, { cause: error })
+  }
   if (await evaluate("document.querySelectorAll('.bt-group-view .bt-chart-hit').length") !== 17) throw new Error('Panning changed the selected span')
   await evaluate("document.querySelector('.bt-chart-range-caption button').click()")
   await until("document.querySelectorAll('.bt-group-view .bt-chart-hit').length === 57", 'all observations restored')

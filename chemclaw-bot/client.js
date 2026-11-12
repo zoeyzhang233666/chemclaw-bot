@@ -215,6 +215,7 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "Give up waiting for {name}": "放弃等待{name}",
   "OHLC": "日K线",
   "Opening price": "开盘价",
   "Closing price": "收盘价",
@@ -2191,6 +2192,8 @@ function teamActions({ call: call2, after, partFor, roster, ui: ui2, live, cards
     deleteAvatar: (id) => call2("avatar-delete", { id }),
     createRoom: (members, options = {}) => after(call2("create-room", { members, ...options })),
     updateBot: (id, patch) => after(call2("update-bot", { id, ...patch })),
+    // Give up one user-selected stalled handoff, without stopping the delegated Bot.
+    abandonWork: (id) => after(call2("abandon-work", { id })),
     refreshModels: () => after(call2("models")).catch(() => {
     }),
     providers: () => call2("providers"),
@@ -20549,7 +20552,7 @@ function SettingsDialog({ page, id, roster, mode = "bot", actions, useUpdate, le
 
 // src/client/context-menu.js
 var import_react53 = require("react");
-function ContextMenu({ menu, roster, actions, leaving = false }) {
+function ContextMenu({ menu, roster, actions, useWork, leaving = false }) {
   useEscape(() => actions.closeMenu());
   (0, import_react53.useEffect)(() => {
     const onDown = (event) => {
@@ -20566,6 +20569,8 @@ function ContextMenu({ menu, roster, actions, leaving = false }) {
     if (!box) return;
     setPlace({ left: Math.max(8, Math.min(menu.x, window.innerWidth - box.width - 8)), top: Math.max(8, Math.min(menu.y, viewBottom() - box.height - 8)) });
   }, [menu.x, menu.y, tick]);
+  const waitRows = useWork((work) => JSON.stringify(work?.waiting?.[menu.id]?.waits ?? []));
+  const waits = JSON.parse(waitRows);
   if (menu.kind === "agent" || menu.kind === "agent-session") return (0, import_react53.createElement)(AgentMenu, { menu, roster, actions, leaving });
   const bot = roster.byId[menu.id];
   const room2 = roster.roomsById[menu.id];
@@ -20592,6 +20597,7 @@ function ContextMenu({ menu, roster, actions, leaving = false }) {
       bot && isMainBot && mainCount > 1 ? [t("Remove Main Bot role"), StarLineIcon, () => actions.setMain(bot.id, false)] : null
     ],
     [[t("Copy conversation ID"), CopyIcon, () => navigator.clipboard?.writeText(bot ? currentPart(bot) : menu.id)]],
+    bot ? waits.map((item) => [t("Give up waiting for {name}", { name: item.name ?? t("a Bot") }), SignOutIcon, () => actions.abandonWork(item.id)]) : [],
     [
       isMainBot ? null : [t("Hide from sidebar"), HideIcon, () => actions.setFlags(menu.id, { hidden: true })],
       isMainBot ? null : [room2 ? t("Delete group") : t("Delete"), TrashIcon, () => bot ? actions.deleteBot(bot.id) : actions.deleteRoom(menu.id), true]
@@ -22734,7 +22740,7 @@ function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity
     ui2.palette ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(CommandPalette, { key: ui2.palette.token, start: ui2.palette.query, token: ui2.palette.token, roster, actions, useSessions }), document.body) : null,
     ui2.exchange ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(ExchangeDialog, { pair: ui2.exchange, roster, actions }), document.body) : null,
     ui2.voice ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(VoiceMode, { key: ui2.voice, sessionId: ui2.voice, roster, actions, useSessions, useSessionStatus }), document.body) : null,
-    menu ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(ContextMenu, { key: `${menu.kind ?? ""}:${menu.id}:${menu.x}:${menu.y}`, menu, roster, actions, leaving: menuLeaving }), document.body) : null,
+    menu ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(ContextMenu, { key: `${menu.kind ?? ""}:${menu.id}:${menu.x}:${menu.y}`, menu, roster, actions, useWork, leaving: menuLeaving }), document.body) : null,
     owner ? (0, import_react_dom12.createPortal)((0, import_react58.createElement)(MemoryDialog, { key: owner.id, owner, actions, leaving: memoryLeaving }), document.body) : null
   );
 }
