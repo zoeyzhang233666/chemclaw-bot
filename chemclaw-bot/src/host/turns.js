@@ -66,6 +66,9 @@ export const stripWrittenCalls = text => text
 const PROGRAM_TOOL = 'run_code'
 
 const RETRY_TEXT = 'Your last reply wrote a tool call as plain text (<tool_call>…), so it did not run and nothing happened. Call the tool through the tool interface now, then reply as you meant to.'
+// DSH turn numbers are positive. This marker records a turn already running when
+// the plugin was reloaded, without inventing a number from an unread Session log.
+const RECOVERED_TURN = -1
 
 // Harness session events normally use Unix epoch milliseconds. A zero or
 // seconds-scale timestamp makes the UI count decades from 1970.
@@ -166,6 +169,36 @@ export function install(rt) {
     else next[id] = value
     activity = next
   }
+  // Reconcile the Agents that DSH kept across an in-place plugin reload. Do not
+  // create a new turn or replay its input: the running process owns it already.
+  // Existing Sessions also need ChemClaw's tool restrictions restored, because an
+  // agent/created event is not emitted for them on plugin reload.
+  async function adoptLiveWork() {
+    const agents = ctx.get?.('agents')
+    if (typeof agents?.list !== 'function') return
+    await rt.load()
+    for (const agent of agents.list()) {
+      const id = agent?.session?.id ?? agent?.id
+      if (typeof id !== 'string' || agent?.session?.header?.origin === 'subagent') continue
+      const owned = rt.isBotSession(id) || rt.roomOf(id) !== undefined
+      try {
+        if (owned) rt.hideBotUnusedTools?.(agent)
+        else if (rt.agentOf?.(id) !== undefined) await rt.restrictDshAgentTools?.(agent)
+      } catch (error) {
+        rt.warn('chemclaw-bot: could not restore tool restrictions for %s: %s', id, error)
+      }
+      if (!owned || agent.status !== 'running') continue
+      const entry = liveOf(id)
+      if (entry.turn !== undefined) continue
+      entry.turn = RECOVERED_TURN
+      // The input that began this turn was consumed before the reload; later Bot
+      // requests must join as deferred work, not be answered by the old task.
+      entry.opened = true
+      entry.since ??= Date.now()
+      setActivity(id, 'thinking')
+    }
+  }
+
   // The newest call still running, a program's sub-calls included, is what the Session
   // is doing.
   const showCall = (id, entry) => {
@@ -729,5 +762,5 @@ export function install(rt) {
     }
   })
 
-  Object.assign(rt, { live, liveOf, roomWaiters, roomProgress, roomInbox, activityView, workView, roomWorkView, turnsView, steeredView, callDetail, doingOf, stopRoomTurn, releaseBot, isStoppedRoomTurn: exchangeId => stoppedRoomTurns.has(exchangeId) })
+  Object.assign(rt, { live, liveOf, roomWaiters, roomProgress, roomInbox, activityView, workView, roomWorkView, turnsView, steeredView, callDetail, doingOf, stopRoomTurn, releaseBot, adoptLiveWork, isStoppedRoomTurn: exchangeId => stoppedRoomTurns.has(exchangeId) })
 }
