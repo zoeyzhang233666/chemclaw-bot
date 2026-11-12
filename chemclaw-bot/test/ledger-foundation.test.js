@@ -37,7 +37,7 @@ test('a dry-run preview preserves existing legacy state and long-line files', as
 test('missing long text is reported instead of falsely claiming full recovery', async t => {
   const home = await temporary(t)
   const result = await previewLegacyRoom({
-    home, room: { id: 'old', seq: 9, log: [{ seq: 9, text: 'start', length: 60 }] },
+    home, room: { id: 'old', seq: 10, log: [{ seq: 9, text: 'start', length: 60 }] },
   })
   assert.equal(result.rows[0].legacyIncomplete, true)
   assert.equal(result.rows[0].text, 'start')
