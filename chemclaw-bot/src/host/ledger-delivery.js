@@ -101,9 +101,9 @@ async function requireDurableMessage(home, roomId, roomSeq) {
 
 export async function inspectGroupDeliveries(home, roomId) {
   const book = bookOf(roomId)
-  const journal = await readLedger(receiptHome(home), book)
-  if (!journal) return { status: 'not-initialized', entries: [], mustNotRedispatch: true }
   try {
+    const journal = await readLedger(receiptHome(home), book)
+    if (!journal) return { status: 'not-initialized', entries: [], mustNotRedispatch: true }
     const byId = verifyJournal(journal)
     const group = await readLedger(home, book)
     verifyGroupLedger(group)
