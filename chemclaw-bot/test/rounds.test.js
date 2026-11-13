@@ -530,7 +530,9 @@ test('a long group line keeps its start in state.json, and members and read_grou
   const whole = await again.ctx.registeredTools.get('read_group_chat').execute({ group: 'R1', seq: saved.seq }, exec)
   assert.ok(whole.endsWith(long))
 
-  // The file goes with the line once the log moves past it, and with the group.
+  // Rolling the bounded preview must NOT delete the sidecar: if the new
+  // state.json save fails, the last durable state may still refer to this row.
+  // Explicit room deletion still removes the room's entire sidecar directory.
   await again.emit(room.id, again.userMessage('Next'))
   const next = again.relay(room.id, 'relay-2')
   const one = await turnFor(again.sent)
@@ -538,8 +540,9 @@ test('a long group line keeps its start in state.json, and members and read_grou
   const two = await turnFor(again.sent, one)
   await again.answer(two.sessionId, two.message.source.exchangeId, 'Two.', 4)
   await next
-  await waitFor(() => (existsSync(join(home, 'group-lines', room.id, `${saved.seq}.txt`)) ? undefined : true))
-  assert.equal(existsSync(join(home, 'group-lines', room.id, `${saved.seq}.txt`)), false)
+  assert.equal(existsSync(join(home, 'group-lines', room.id, `${saved.seq}.txt`)), true,
+    'the old sidecar must survive the 60-message preview rotation')
+  assert.equal(readFileSync(join(home, 'group-lines', room.id, `${saved.seq}.txt`), 'utf8'), long)
   await again.call('delete-room', { id: room.id })
   await waitFor(() => (existsSync(join(home, 'group-lines', room.id)) ? undefined : true))
   assert.equal(existsSync(join(home, 'group-lines', room.id)), false)
