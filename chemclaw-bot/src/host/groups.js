@@ -675,6 +675,7 @@ export function install(rt) {
       round.speaking = null
       const answer = typeof reply === 'string' ? reply : reply?.views !== undefined ? reply.text : undefined
       const final = typeof answer === 'string' && !isPass(answer) ? answer : undefined
+      let committedFinal = false
       if (reply?.failure !== undefined) {
         // Not a pass: the user sees why the member is silent, and the round goes on.
         dropRoomDraft(room, member.id)
@@ -682,6 +683,9 @@ export function install(rt) {
         round.failed.push(member.name)
         const { code, status, message } = reply.failure
         round.replies.push({ kind: 'failed', botId: member.id, name: member.name, color: member.color, code, ...(status ? { status } : {}), text: message, time: Date.now() })
+        // A failed required save leaves the room's in-memory state uncertain.
+        // Do not deliver more member turns against that uncommitted room.
+        if (code === 'PERSISTENCE') return
       } else if (reply?.approval) {
         // The member's turn goes on in the background and posts when it ends.
         slot.status = 'waiting-approval'
@@ -690,9 +694,20 @@ export function install(rt) {
         slot.status = 'working'
         round.replies.push({ kind: 'working', botId: member.id, name: member.name, color: member.color, time: Date.now() })
       } else if (final !== undefined || (typeof reply === 'string' && said.length > 0)) {
+        if (final !== undefined) {
+          try {
+            committedFinal = await postInRound(room, round, member, final, Date.now() - startedAt)
+          } catch (error) {
+            dropRoomDraft(room, member.id)
+            slot.status = 'failed'
+            round.failed.push(member.name)
+            round.replies.push({ kind: 'failed', botId: member.id, name: member.name, color: member.color,
+              code: 'PERSISTENCE', text: String(error?.message ?? error).slice(0, 300), time: Date.now() })
+            // Never call the Bots referenced in a reply that failed to persist.
+            return
+          }
+        } else dropRoomDraft(room, member.id)
         slot.status = 'posted'
-        if (final !== undefined) await postInRound(room, round, member, final, Date.now() - startedAt)
-        else dropRoomDraft(room, member.id)
       } else {
         dropRoomDraft(room, member.id)
         slot.status = typeof reply === 'string' ? 'passed' : 'missed'
@@ -703,7 +718,7 @@ export function install(rt) {
         }
       }
       postViews(round, member, reply?.views)
-      const spoken = final === undefined ? said : [...said, final]
+      const spoken = committedFinal ? [...said, final] : said
       if (spoken.length === 0) continue
       // Only the admin's "@all" calls everyone, so a member cannot set off a storm.
       const leads = rt.isAdminOf(room, member.id)
