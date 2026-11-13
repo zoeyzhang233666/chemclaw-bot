@@ -27,3 +27,24 @@ export function createOrderedGroupPostQueue(post) {
   }
   return { enqueue, drain, close }
 }
+
+/**
+ * Legacy bridge for round replies. Do not publish success into the transient
+ * round result (or clear the visible draft) before the required state save.
+ * This is NOT a Ledger writer: the complete P0 cutover must replace append.
+ */
+export async function publishSavedGroupReply({ room, round, member, visible, duration, append, save, commitDraft }) {
+  if (!visible) return false
+  if (typeof append !== 'function' || typeof save !== 'function') {
+    throw new TypeError('Group reply requires append and required save callbacks')
+  }
+  append(room, { who: member.name, botId: member.id, text: visible })
+  await save({ required: true })
+  commitDraft?.()
+  round.replies.push({
+    botId: member.id, name: member.name, color: member.color,
+    text: visible, time: Date.now(),
+    ...(duration === undefined ? {} : { duration }),
+  })
+  return true
+}
