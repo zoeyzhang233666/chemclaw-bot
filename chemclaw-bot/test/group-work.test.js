@@ -1130,6 +1130,44 @@ test('a failed in-progress member step does not publish or call another Bot afte
   assert.equal(host.agentOf('gc').calls.length, 0)
 })
 
+test('a queued group message is not dispatched when its initial state save fails', async t => {
+  const host = await start(t)
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  takeGroupStateLock(host)
+  const result = host.round('admission-denied', host.say('@Writer 不应执行'))
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'PERSISTENCE_BLOCKED')
+  assert.deepEqual(result().replies, [])
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  assert.equal(host.agentOf('ga').calls.length, 0)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  const next = host.round('admission-still-blocked', host.say('@Tester 也不应执行'))
+  await settle(() => next() !== undefined)
+  assert.equal(next().code, 'PERSISTENCE_BLOCKED')
+  assert.equal(host.agentOf('gc').calls.length, 0)
+})
+
+test('a new user message during a round stays in the DSH inbox on save failure', async t => {
+  const host = await start(t)
+  const first = host.round('in-progress-admission', host.say('@Writer 先进行'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  const queued = {
+    id: 'inbox-uncommitted-user',
+    source: { kind: 'user' },
+    content: [{ type: 'text', text: '@Tester 新增任务' }],
+  }
+  const inbox = host.agentOf('r1').inbox
+  inbox.nextStep.push(queued)
+  takeGroupStateLock(host)
+  host.finish('gb', '[PASS]')
+  await settle(() => first() !== undefined)
+  assert.equal(first().code, 'PERSISTENCE_BLOCKED')
+  assert.ok(inbox.nextStep.some(message => message.id === queued.id), 'failed admission must not remove the inbox message')
+  assert.equal(host.agentOf('gc').calls.length, 0, 'a failed user message must not call Tester')
+  assert.equal(logLines(host).some(line => line.text === '@Tester 新增任务'), false)
+})
+
 test('a room whose required save failed rejects later rounds without consuming or dispatching them', async t => {
   const host = await start(t)
   const original = host.round('first-failed', host.say('@Writer 初始任务'))
