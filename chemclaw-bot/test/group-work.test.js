@@ -1015,6 +1015,15 @@ const step = (host, sessionId, said, callId, name = 'pwsh', args = '{}') => {
   host.emit(sessionId, 'tool/call', { callId, name, arguments: args })
 }
 const progress = async host => (await host.call('room-progress', { roomId: 'r1' })).value[0]
+const waitForRoundReplies = async (host, count) => {
+  const until = Date.now() + 3000
+  while (Date.now() < until) {
+    const live = await progress(host)
+    if (live?.replies?.length >= count) return live
+    await realDelay(10)
+  }
+  assert.fail('committed round reply not visible before timeout')
+}
 
 test('what a member writes while it works shows in the round at once, and its @ calls members', async (t) => {
   const host = await start(t)
@@ -1022,8 +1031,7 @@ test('what a member writes while it works shows in the round at once, and its @ 
   await settle(() => host.agentOf('gb').calls.length === 1)
   host.begin('gb')
   step(host, 'gb', '收到，我先看看 docs/ 的结构。@Tester 你等下帮我验一下', 'k1', 'list_bots')
-  await settle(() => true)
-  const live = await progress(host)
+  const live = await waitForRoundReplies(host, 1)
   assert.deepEqual(live.replies.map(reply => [reply.name, reply.text]), [['Writer', '收到，我先看看 docs/ 的结构。@Tester 你等下帮我验一下']])
   assert.equal(live.speaking, 'b')
   host.emit('gb', 'tool/result', { callId: 'k1' })
@@ -1055,8 +1063,7 @@ test('a member\'s messages carry how long its turn ran', async (t) => {
   await settle(() => host.agentOf('gb').calls.length === 1)
   host.begin('gb')
   step(host, 'gb', '收到，先看看。', 'k1', 'list_bots')
-  await settle(() => true)
-  const live = await progress(host)
+  const live = await waitForRoundReplies(host, 1)
   assert.equal(typeof live.replies[0].duration, 'number')
   assert.ok(live.replies[0].duration >= 0)
   host.emit('gb', 'tool/result', { callId: 'k1' })
