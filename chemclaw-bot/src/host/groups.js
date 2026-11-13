@@ -29,6 +29,7 @@ import { GROUP_REF, output } from './tools.js'
 import { stripUnrenderedMixedViewText } from './visual-delivery.js'
 import { mixedOverlayRequested } from './market-quote-intent.js'
 import { failureLine } from './turns.js'
+import { createOrderedGroupPostQueue } from './group-post-queue.js'
 
 const ROOM_LOG_MAX = 60
 const ROOM_FIRST_LOOK = 12
@@ -412,15 +413,19 @@ export function install(rt) {
   // A member's message in the round: in the log, for the members after it, and in the
   // round's replies, for the user. Committing the draft here (not on stream end) keeps
   // the bubble on screen until this reply is in room-progress.
-  const postInRound = (room, round, member, text, duration) => {
+  const postInRound = async (room, round, member, text, duration) => {
     const sessionId = room.sessions?.[member.id]
-    if (sessionId) rt.commitRoomDraft?.(sessionId)
     const visible = rt.marketQuoteIntentOf?.(sessionId) === 'mixed'
       ? stripUnrenderedMixedViewText(text) : text
-    if (!visible) return // Never persist a raw view protocol dump as a chat reply.
+    if (!visible) return false // Never persist a raw view protocol dump as a chat reply.
+    // Until the full Ledger cutover, this path still writes the legacy room log.
+    // Never announce the member's speech or commit its draft before a required
+    // state.json save succeeds. The future Ledger writer replaces this boundary.
     appendRoom(room, { who: member.name, botId: member.id, text: visible })
+    await rt.save({ required: true })
+    if (sessionId) rt.commitRoomDraft?.(sessionId)
     round.replies.push({ botId: member.id, name: member.name, color: member.color, text: visible, time: Date.now(), ...(duration === undefined ? {} : { duration }) })
-    void rt.save().catch(() => {})
+    return true
   }
   const dropRoomDraft = (room, memberId) => {
     const sessionId = room.sessions?.[memberId]
@@ -446,6 +451,13 @@ export function install(rt) {
     const seenAt = room.seq
     // Checked before the delivery, which may start the turn at once.
     const busy = rt.live.get(sessionId)?.turn !== undefined
+    // DSH's say() callback can be called synchronously and cannot itself await
+    // a disk write. Serialize accepted steps and drain them before resolving the
+    // member's turn, so final reply / Stop / timeout cannot overtake a pending post.
+    const queuedReplies = createOrderedGroupPostQueue(async step => {
+      const posted = await postInRound(room, round, member, step, Date.now() - startedAt)
+      if (posted) said.push(step)
+    })
     const done = new Promise((resolve) => {
       let timer
       let grace
@@ -463,8 +475,7 @@ export function install(rt) {
       const say = (raw) => {
         const step = stripOwnName(member.name, raw)
         if (isPass(step)) return
-        said.push(step)
-        postInRound(room, round, member, step, Date.now() - startedAt)
+        return queuedReplies.enqueue(step)
       }
       touch()
       rt.roomWaiters.set(exchangeId, { sessionId, botId: member.id, roomId: room.id, resolve: finish, fail: failure => finish({ failure }), touch, work, say, approval: () => finish({ approval: true }) })
@@ -490,6 +501,14 @@ export function install(rt) {
       rt.roomWaiters.get(exchangeId)?.fail({ code: lost ? 'SESSION_RESET' : 'SESSION', message: String(error?.message ?? error).slice(0, 300) })
     }
     const reply = await done
+    // Observe any save failure even when the caller of say() did not await its
+    // Promise. A failed post is not a successful group reply or a PASS.
+    const postFailure = await queuedReplies.close().then(() => undefined, error => error)
+    if (postFailure) {
+      const index = started.indexOf(turn)
+      if (index >= 0) started.splice(index, 1)
+      return { failure: { code: 'PERSISTENCE', message: String(postFailure?.message ?? postFailure).slice(0, 300) } }
+    }
     // A turn that ended leaves nothing for a stop to cancel.
     if (typeof reply === 'string' || reply?.views !== undefined || reply?.failure !== undefined) started.splice(started.indexOf(turn), 1)
     if (reply === null || typeof reply === 'object') return reply
@@ -674,7 +693,7 @@ export function install(rt) {
         round.replies.push({ kind: 'working', botId: member.id, name: member.name, color: member.color, time: Date.now() })
       } else if (final !== undefined || (typeof reply === 'string' && said.length > 0)) {
         slot.status = 'posted'
-        if (final !== undefined) postInRound(room, round, member, final, Date.now() - startedAt)
+        if (final !== undefined) await postInRound(room, round, member, final, Date.now() - startedAt)
         else dropRoomDraft(room, member.id)
       } else {
         dropRoomDraft(room, member.id)
@@ -1020,7 +1039,7 @@ export function install(rt) {
     const calls = callsIn(room, member, text)
     const running = [...rt.roomProgress.values()].find(round => round.roomId === room.id)
     if (!calls && running !== undefined) {
-      postInRound(room, running, member, text)
+      await postInRound(room, running, member, text)
       return
     }
     const quiet = !calls
