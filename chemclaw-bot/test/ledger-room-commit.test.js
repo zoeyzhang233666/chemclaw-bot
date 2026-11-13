@@ -4,6 +4,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createGroupLedgerCommitter } from '../src/host/ledger-room-commit.js'
+import { createGroupDeliveryJournal, inspectGroupDeliveries } from '../src/host/ledger-delivery.js'
 import { install as installStore } from '../src/host/store.js'
 import { publishInitialGroupBook } from '../src/host/ledger-import.js'
 import { readLedger } from '../src/host/ledger-foundation.js'
@@ -312,4 +313,52 @@ test('the adapter commits through the real ChemClaw state.lock and required stor
   assert.equal(onDisk.rooms.r1.log[0].text, 'real locked and saved message')
   assert.equal((await readLedger(home, 'group-r1')).records[0].text, 'real locked and saved message')
   assert.equal((await inspectGroupLedgerRecovery(home, onDisk.rooms.r1)).status, 'aligned')
+})
+
+test('integration: commit then fsynced attempt then DSH API then receipt, without replay after restart', async t => {
+  const { home, room, persist, stateFile } = await fixture(t)
+  const committer = create({ home, persist })
+  const receipt = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  const { seq } = await committer.commit(room, { who: 'User', text: 'check the chemical quote' })
+  await receipt.initialize(room.id)
+  let sends = 0
+  const params = { roomId: room.id, roomSeq: seq, recipientId: 'analyst', deliveryId: 'r1-seq1-analyst' }
+  await receipt.dispatchOnce({ ...params, send: async () => {
+    sends++
+    assert.equal(JSON.parse(await readFile(stateFile, 'utf8')).rooms.r1.seq, seq)
+    assert.equal((await readLedger(home, 'group-r1')).records[seq - 1].text, 'check the chemical quote')
+    const inFlight = await inspectGroupDeliveries(home, room.id)
+    assert.equal(inFlight.entries[0].status, 'unknown')
+    return { accepted: true }
+  } })
+  assert.equal(sends, 1)
+  assert.equal((await inspectGroupDeliveries(home, room.id)).entries[0].status, 'api-returned')
+  const restarted = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  await assert.rejects(restarted.dispatchOnce({
+    ...params, deliveryId: 'different-id',
+    send: async () => { sends++ },
+  }), /already attempted/)
+  assert.equal(sends, 1)
+})
+
+test('integration: failed state save stops the send pipeline before any DSH call', async t => {
+  const { home, room, stateFile } = await fixture(t)
+  const initial = await readFile(stateFile, 'utf8')
+  const committer = create({ home, persist: () => { throw new Error('state save failed') } })
+  const receipt = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  await receipt.initialize(room.id)
+  let sends = 0
+  await assert.rejects((async () => {
+    const { seq } = await committer.commit(room, { who: 'User', text: 'unsaved state' })
+    return receipt.dispatchOnce({
+      roomId: room.id, roomSeq: seq, recipientId: 'analyst',
+      deliveryId: 'cannot-send', send: async () => { sends++ },
+    })
+  })(), /state save failed/)
+  assert.equal(sends, 0)
+  assert.equal(await readFile(stateFile, 'utf8'), initial)
+  assert.equal((await readLedger(home, 'group-r1')).records.length, 1)
+  assert.deepEqual((await inspectGroupDeliveries(home, room.id)).entries, [])
+  const loadedRoom = JSON.parse(await readFile(stateFile, 'utf8')).rooms.r1
+  assert.equal((await inspectGroupLedgerRecovery(home, loadedRoom)).status, 'ledger-ahead')
 })
