@@ -228,3 +228,17 @@ test('an invalid or nonconsecutive source group book is not eligible for a recei
   await assert.rejects(writer.initialize('r1'), /inconsistent history/)
   assert.equal((await inspectGroupDeliveries(home, 'r1')).status, 'not-initialized')
 })
+
+test('malformed complete receipt JSONL is reported as blocked, not silently skipped', async t => {
+  const { home } = await fixture(t)
+  const writer = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  await writer.initialize('r1')
+  await writer.begin(params())
+  const file = journalPath(home)
+  const before = await readFile(file, 'utf8')
+  await writeFile(file, before + 'invalid-json-but-terminated\n')
+  const verdict = await inspectGroupDeliveries(home, 'r1')
+  assert.equal(verdict.status, 'blocked')
+  assert.match(verdict.reason, /corrupt complete line/)
+  assert.equal(await readFile(file, 'utf8'), before + 'invalid-json-but-terminated\n')
+})
