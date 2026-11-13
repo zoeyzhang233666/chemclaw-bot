@@ -81,6 +81,7 @@ test('round reply waits for required save before showing the answer or committin
   })
   assert.equal(room.seq, 1)
   assert.deepEqual(room.log, [{ who: '分析师', botId: 'analyst', text: '分析完成', seq: 1 }])
+  await Promise.resolve() // await the synchronous legacy append's completion
   assert.deepEqual(options, [{ required: true }])
   assert.deepEqual(round.replies, [], 'the round must not show an uncommitted reply')
   assert.equal(drafts, 0, 'the draft must not be dismissed before persistence')
@@ -117,4 +118,31 @@ test('empty or protocol-only reply is never appended or saved', async () => {
   })
   assert.equal(result, false)
   assert.equal(calls, 0)
+})
+
+test('round reply waits for an asynchronous append and does not save after an append failure', async () => {
+  const appending = deferred()
+  const calls = []
+  const round = { replies: [] }
+  const task = publishSavedGroupReply({
+    room: {}, round, member: { id: 'analyst', name: 'Analyst' }, visible: 'answer',
+    append: async () => { calls.push('append'); await appending.promise },
+    save: async () => { calls.push('save') },
+    commitDraft: () => calls.push('draft'),
+  })
+  assert.deepEqual(calls, ['append'])
+  assert.deepEqual(round.replies, [])
+  appending.resolve()
+  assert.equal(await task, true)
+  assert.deepEqual(calls, ['append', 'save', 'draft'])
+  assert.equal(round.replies.length, 1)
+
+  let saves = 0
+  const error = new Error('Ledger fsync failed')
+  await assert.rejects(publishSavedGroupReply({
+    room: {}, round: { replies: [] }, member: { id: 'a', name: 'A' }, visible: 'not durable',
+    append: async () => { throw error },
+    save: async () => { saves++ },
+  }), observed => observed === error)
+  assert.equal(saves, 0)
 })
