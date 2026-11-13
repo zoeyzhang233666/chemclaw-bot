@@ -31,6 +31,7 @@ import { mixedOverlayRequested } from './market-quote-intent.js'
 import { failureLine } from './turns.js'
 import { createOrderedGroupPostQueue, publishSavedGroupReply } from './group-post-queue.js'
 import { createGroupPersistenceGate } from './group-persistence-gate.js'
+import { createLegacyGroupLedgerGuard } from './group-legacy-ledger-guard.js'
 
 const ROOM_LOG_MAX = 60
 const ROOM_FIRST_LOOK = 12
@@ -141,6 +142,12 @@ export function install(rt) {
   // of state.json. The gate only lives for this Host instance and never clears on
   // a later successful unrelated state save.
   const persistenceGate = createGroupPersistenceGate()
+  const legacyLedgerGuard = createLegacyGroupLedgerGuard({ home: rt.home })
+  const roomWriteStatus = roomId => persistenceGate.status(roomId) ?? legacyLedgerGuard.status(roomId)
+  const assertLegacyRoomWritable = room => {
+    persistenceGate.assertWritable(room.id)
+    legacyLedgerGuard.assertWritable(room.id)
+  }
 
   // A long line keeps its start in state.json, which is written whole on every save,
   // and what a member reads of it (GROUP_LINE_READ) in a file of its own. Sidecars
@@ -210,7 +217,7 @@ export function install(rt) {
   }
 
   const appendRoom = (room, line) => {
-    persistenceGate.assertWritable(room.id)
+    assertLegacyRoomWritable(room)
     const nextSeq = room.seq + 1
     const saved = keepGroupLine(room.id, { ...line, seq: nextSeq }, line.text ?? '')
     const log = [...room.log, saved]
@@ -224,7 +231,7 @@ export function install(rt) {
   // until the required state.json snapshot succeeds. A failed save poisons only
   // this room, preserving the original DSH inbox for recovery inspection.
   const saveRequiredRoom = async room => {
-    persistenceGate.assertWritable(room.id)
+    assertLegacyRoomWritable(room)
     try {
       await rt.save({ required: true })
     } catch (error) {
@@ -457,7 +464,7 @@ export function install(rt) {
       ? stripUnrenderedMixedViewText(text) : text
     // Legacy state-saving bridge, not the Ledger cutover. The publication
     // boundary is shared with tests for successful and failed required saves.
-    persistenceGate.assertWritable(room.id)
+    assertLegacyRoomWritable(room)
     try {
       return await publishSavedGroupReply({
         room, round, member, visible, duration,
@@ -527,6 +534,7 @@ export function install(rt) {
     })
     try {
       const skillNames = [...new Set((round.skillRequests ?? []).filter(request => request.executor === member.id).flatMap(request => request.names))]
+      assertLegacyRoomWritable(room)
       await rt.deliver({ fromId: undefined, toId: member.id, sessionId, role: 'room', roomId: room.id, exchangeId, note, text, files, steer: busy, ...(skillNames.length ? { skillNames } : {}), ...(by ? { askedBy: by } : {}) })
       room.seen[member.id] = seenAt
       // Still held by an earlier request: this turn cannot start until the user answers.
@@ -642,7 +650,7 @@ export function install(rt) {
   async function drainRoomInbox(room, round, index, agent) {
     // Check before removing incoming messages; a blocked room must not consume
     // inbox messages or turn them into new Bot work.
-    persistenceGate.assertWritable(room.id)
+    assertLegacyRoomWritable(room)
     // The greeting's prompt tells the admin the user has not written yet.
     if (round.kickoff) return
     const waiting = waitingLines(agent)
@@ -668,7 +676,7 @@ export function install(rt) {
     // The inbox check keeps a message sent during the last speaker's turn inside
     // this round: it drains at the loop's head even once the slots ran out.
     for (let index = 0; index < round.slots.length || waitingLines(agent).length > 0; index += 1) {
-      if (signal.aborted || persistenceGate.status(room.id)) break
+      if (signal.aborted || roomWriteStatus(room.id)) break
       await drainRoomInbox(room, round, index, agent)
       if (index >= round.slots.length) break
       const slot = round.slots[index]
@@ -809,7 +817,7 @@ export function install(rt) {
       await rt.load()
       const room = rt.roomOf(exec.agent?.id)
       if (room === undefined) return JSON.stringify({ error: 'Not a group chat' })
-      const alreadyBlocked = persistenceGate.status(room.id)
+      const alreadyBlocked = roomWriteStatus(room.id)
       if (alreadyBlocked) return JSON.stringify({ error: alreadyBlocked.message, code: alreadyBlocked.code, replies: [], passed: [], failed: [] })
       ensureRoomLog(room)
       // Everything queued since the last relay is posted in order, so messages that the
@@ -923,7 +931,7 @@ export function install(rt) {
       if (exec.signal?.aborted) {
         for (const turn of round.started) void rt.stopRoomTurn?.(room.sessions?.[turn.botId] ?? turn.sessionId, turn.exchangeId)
       }
-      const blocked = persistenceGate.status(room.id)
+      const blocked = roomWriteStatus(room.id)
       if (blocked) {
         // No more state snapshots, followup sends or reportRound dispatch after
         // a failed required save. A future Host must inspect durable state.
@@ -1057,7 +1065,7 @@ export function install(rt) {
   // once, so it is not held back until the round ends; the relay it still opens does not
   // write it again (source `logged`).
   async function postToRoom(room, sender, text, extra = {}, files = []) {
-    persistenceGate.assertWritable(room.id)
+    assertLegacyRoomWritable(room)
     const running = [...rt.roomProgress.values()].find(round => round.roomId === room.id)
     let logged
     if (running !== undefined) {
@@ -1086,13 +1094,13 @@ export function install(rt) {
         throw error
       }
       // No success bubble or views before the required disk commit succeeds.
-      persistenceGate.assertWritable(room.id)
+      assertLegacyRoomWritable(room)
       if (pendingReply?.kind === 'failed') running.failed.push(sender.name)
       if (pendingReply) running.replies.push(pendingReply)
       postViews(running, sender, extra.views)
     }
     const agent = await rt.resolveAgent(room.id)
-    persistenceGate.assertWritable(room.id)
+    assertLegacyRoomWritable(room)
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: `[Group post from ${sender.name}]\n${text}` }, ...files.map(attachment => ({ type: 'file', attachment }))],
       source: { kind: SOURCE_KIND, form: 'relay', role: 'post', exchangeId: randomUUID(), senderName: sender.name, senderSessionId: sender.id, roomId: room.id, ...extra, ...(logged !== undefined ? { logged } : {}) },
@@ -1264,6 +1272,7 @@ export function install(rt) {
   async function greetRoom(roomId) {
     const room = rt.roomOf(roomId)
     if (!room?.admin) return
+    assertLegacyRoomWritable(room)
     const agent = await rt.resolveAgent(room.id)
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: '[Group chat created]' }],
@@ -1278,6 +1287,7 @@ export function install(rt) {
   async function continueRoom(roomId) {
     const room = rt.roomOf(roomId)
     if (room === undefined) throw new Error('Unknown group chat')
+    assertLegacyRoomWritable(room)
     if ((room.paused ?? []).length === 0) return
     room.relays = 0
     await rt.save()
