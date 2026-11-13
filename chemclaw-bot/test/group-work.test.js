@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { test } from 'node:test'
 import { setTimeout as realDelay } from 'node:timers/promises'
 import { apply } from './legacy-runtime.js'
+import { publishInitialGroupBook } from '../src/host/ledger-import.js'
 import { fakeAttachments, fakeContext } from './fake-ctx.js'
 import { GROUP_LINE_READ, MESSAGE_INLINE_MAX, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS, TEXT_KEPT } from '../src/host/constants.js'
 
@@ -1216,6 +1217,55 @@ test('legacy sidecar collision cannot overwrite older bytes or dispatch new Bot 
   assert.equal(host.agentOf('gb').calls.length, 0)
   const rejected = JSON.parse(await host.tool('group_relay', {}, 'r1', { callId: 'sidecar-collision-retry' }))
   assert.equal(rejected.code, 'PERSISTENCE_BLOCKED')
+})
+
+test('a preexisting Ledger book blocks the old group relay before it consumes or dispatches', async t => {
+  const host = await start(t)
+  await publishInitialGroupBook(host.home, 'group-r1', [])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const first = host.round('ledger-migration-required', host.say('@Writer 不可重新执行'))
+  await settle(() => first() !== undefined)
+  assert.equal(first().code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.match(first().error, /Legacy group writes and Bot dispatch are disabled/)
+  assert.deepEqual(first().replies, [])
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  assert.equal(host.agentOf('ga').calls.length, 0)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  const second = host.round('ledger-still-blocked', host.say('@Tester 不可重复调用'))
+  await settle(() => second() !== undefined)
+  assert.equal(second().code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.equal(host.agentOf('gc').calls.length, 0)
+})
+
+test('a Ledger published after the Host has started stops the next in-round member delivery', async t => {
+  const host = await start(t)
+  const result = host.round('ledger-arrives-during-round', host.say('@Writer 先检查'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  await publishInitialGroupBook(host.home, 'group-r1', [
+    { seq: 1, who: 'User', text: '@Writer 先检查' },
+  ])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  host.finish('gb', '@Tester 执行下一步')
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.equal(host.agentOf('gc').calls.length, 0)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
+test('an existing Ledger blocks legacy group edits and deletion without removing the room', async t => {
+  const host = await start(t)
+  await publishInitialGroupBook(host.home, 'group-r1', [])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const changed = await host.tool('update_group', { group: 'Ops', notice: 'should not change' }, 'a')
+  assert.match(changed, /Could not update/)
+  assert.match(changed, /Ledger book/)
+  await assert.rejects(
+    host.tool('delete_group', { group: 'Ops' }, 'a'),
+    /Ledger book/,
+  )
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  assert.equal((await host.call('state', {})).ok, true)
 })
 
 test('a queued group message is not dispatched when its initial state save fails', async t => {

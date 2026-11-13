@@ -507,12 +507,14 @@ export function install(rt) {
   async function updateRoom(id, patch, actorId) {
     const asked = rt.roomOf(id)
     if (asked === undefined) throw new Error('Unknown group chat')
+    rt.assertLegacyGroupWritable?.(asked)
     planRoomChange(asked, patch, actorId)
     const moving = patch.workDir !== undefined
     const workDir = moving ? await rt.cleanWorkDir(patch.workDir ?? '') : undefined
     // No await from here until every change is written.
     const room = rt.roomOf(id)
     if (room === undefined) throw new Error('Unknown group chat')
+    rt.assertLegacyGroupWritable?.(room)
     const { members, admin, name, notice, permission, relayLimit } = planRoomChange(room, patch, actorId)
 
     const changes = []
@@ -574,6 +576,7 @@ export function install(rt) {
   async function deleteRoom(id) {
     const room = rt.roomOf(id)
     if (room === undefined) throw new Error('Unknown group chat')
+    rt.assertLegacyGroupWritable?.(room)
     // Before the group's Sessions leave the state, which the archive reads.
     const archived = rt.archiveGroupMemory(room)
     for (const botId of Object.keys(room.sessions ?? {})) rt.dropGroupSession(room, botId)
@@ -624,6 +627,11 @@ export function install(rt) {
     const bot = rt.botOf(id)
     if (bot === undefined) throw new Error('Unknown Bot')
     if (rt.isMain(id)) throw new Error('A Main Bot cannot be deleted; remove its Main Bot role first')
+    // Bot deletion also removes its membership from every group. Check all
+    // affected group Ledgers before archiving any Bot/Session or changing state.
+    for (const room of Object.values(state.rooms)) {
+      if (room.members.includes(id)) rt.assertLegacyGroupWritable?.(room)
+    }
     // Before the Bot and its group Sessions leave the state, which the archive reads.
     const archived = rt.archiveBotMemory(id)
     const current = rt.chatOf(id)
