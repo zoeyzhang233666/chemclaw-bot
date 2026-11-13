@@ -100,7 +100,7 @@ export function createDurableGroupLedger({ home, assertWriter, beforeWrite } = {
       // orphaned/replaced inode. Fail closed if another process removed it.
       const after = await readLedger(home, book)
       if (after?.incompleteTail !== '' || after?.records.length !== record.seq ||
-          !isDeepStrictEqual(after.records.at(-1), record)) {
+          !isDeepStrictEqual(after?.records.at(-1), record)) {
         throw new Error('Group ledger path changed or the appended record was not retained')
       }
       // No side effect may be delivered by the caller until this resolves.
