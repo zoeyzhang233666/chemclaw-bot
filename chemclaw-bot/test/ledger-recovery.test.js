@@ -188,3 +188,23 @@ test('a finished notice remains a notice in the recovery preview', () => {
   assert.deepEqual(result.previewLog, [notice])
   assert.equal(Object.hasOwn(result.previewLog[0], 'text'), false)
 })
+
+test('saved room window with a sequence gap cannot be declared aligned', () => {
+  const records = [row(1), row(2), row(3)]
+  const result = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 3, log: [row(1), row(3)] },
+    ledger: snapshot(records),
+  })
+  assert.equal(result.status, 'blocked')
+  assert.match(result.reason, /inconsistent/)
+})
+
+test('too many retained state rows cannot silently become an authoritative window', () => {
+  const records = Array.from({ length: 61 }, (_, i) => row(i + 1))
+  const result = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 61, log: records },
+    ledger: snapshot(records),
+  })
+  assert.equal(result.status, 'blocked')
+  assert.match(result.reason, /bounded history/)
+})
