@@ -120,7 +120,7 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
 
       // A competing legacy appendRoom call can mutate the in-memory room even
       // inside one process. Detect it before overwriting any of its state.
-      if (room.seq !== seq || JSON.stringify(room.log ?? []) !== logStamp) {
+      if (room.id !== id || room.seq !== seq || JSON.stringify(room.log ?? []) !== logStamp) {
         throw new Error('Legacy room state changed while Ledger was being fsynced')
       }
       if (typeof record.text === 'string') {
@@ -128,6 +128,11 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
       }
       if ((await assertWriter(book)) !== true) {
         throw new Error('Exclusive writer lock lost before saving group cache')
+      }
+      // A long-text sidecar can await I/O, so re-check the room once more just
+      // before changing anything visible or asking state.json to be saved.
+      if (room.id !== id || room.seq !== seq || JSON.stringify(room.log ?? []) !== logStamp) {
+        throw new Error('Legacy room state changed before group cache commit')
       }
       const preview = previewOf(record)
       room.seq = record.seq
