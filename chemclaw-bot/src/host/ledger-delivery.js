@@ -15,6 +15,7 @@
 // An independent directory avoids colliding with the main group's book.
 // The existing strict-lock + fsync Ledger writer is reused unchanged.
 // No state.json, Session, inbox, round or live group delivery is modified.
+import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import { createDurableGroupLedger } from './ledger-append.js'
 import { readLedger } from './ledger-foundation.js'
@@ -22,6 +23,7 @@ import { publishInitialGroupBook } from './ledger-import.js'
 
 const SAFE_ID = /^[A-Za-z0-9_-]{1,160}$/
 const DELIVERY_STAGES = new Set(['attempt', 'api-returned'])
+const DIGEST = /^[a-f0-9]{64}$/
 
 function safeId(value, kind) {
   if (typeof value !== 'string' || !SAFE_ID.test(value)) {
@@ -50,7 +52,8 @@ function verifyJournal(journal) {
         entry.seq !== i + 1 || !DELIVERY_STAGES.has(entry.stage) ||
         typeof entry.deliveryId !== 'string' || !SAFE_ID.test(entry.deliveryId) ||
         typeof entry.recipientId !== 'string' || !SAFE_ID.test(entry.recipientId) ||
-        !Number.isSafeInteger(entry.roomSeq) || entry.roomSeq < 1) {
+        !Number.isSafeInteger(entry.roomSeq) || entry.roomSeq < 1 ||
+        typeof entry.sourceDigest !== 'string' || !DIGEST.test(entry.sourceDigest)) {
       throw new Error('Delivery journal is corrupt at sequence ' + (i + 1))
     }
     const earlier = seen.get(entry.deliveryId)
@@ -59,7 +62,8 @@ function verifyJournal(journal) {
       seen.set(entry.deliveryId, { ...entry, status: 'unknown' })
     } else {
       if (!earlier || earlier.status !== 'unknown' ||
-          earlier.roomSeq !== entry.roomSeq || earlier.recipientId !== entry.recipientId) {
+          earlier.roomSeq !== entry.roomSeq || earlier.recipientId !== entry.recipientId ||
+          earlier.sourceDigest !== entry.sourceDigest) {
         throw new Error('Delivery journal contains an unmatched API receipt for ' + entry.deliveryId)
       }
       seen.set(entry.deliveryId, { ...earlier, status: 'api-returned' })
@@ -68,15 +72,31 @@ function verifyJournal(journal) {
   return seen
 }
 
-async function requireDurableMessage(home, roomId, roomSeq) {
-  const book = await readLedger(home, bookOf(roomId))
+function verifyGroupLedger(book) {
   if (!book || book.incompleteTail !== '') {
     throw new Error('Group message Ledger is missing or has a damaged final record')
   }
-  if (!book.records[roomSeq - 1] || book.records[roomSeq - 1].seq !== roomSeq) {
+  for (let index = 0; index < book.records.length; index++) {
+    const record = book.records[index]
+    if (!record || record.seq !== index + 1 ||
+        record.legacyIncomplete === true ||
+        (record.length !== undefined &&
+          (typeof record.text !== 'string' || record.text.length !== record.length))) {
+      throw new Error('Group message Ledger is incomplete or has inconsistent history')
+    }
+  }
+}
+function sourceDigest(record) {
+  return createHash('sha256').update(JSON.stringify(record)).digest('hex')
+}
+async function requireDurableMessage(home, roomId, roomSeq) {
+  const book = await readLedger(home, bookOf(roomId))
+  verifyGroupLedger(book)
+  const record = book.records[roomSeq - 1]
+  if (!record || record.seq !== roomSeq) {
     throw new Error('Group message must be durable before recording a delivery attempt')
   }
-  return book
+  return sourceDigest(record)
 }
 
 export async function inspectGroupDeliveries(home, roomId) {
@@ -86,13 +106,14 @@ export async function inspectGroupDeliveries(home, roomId) {
   try {
     const byId = verifyJournal(journal)
     const group = await readLedger(home, book)
-    if (!group || group.incompleteTail !== '') {
-      throw new Error('Group message Ledger is missing or has a damaged final record')
-    }
+    verifyGroupLedger(group)
     for (const receipt of byId.values()) {
-      if (!group.records[receipt.roomSeq - 1] ||
-          group.records[receipt.roomSeq - 1].seq !== receipt.roomSeq) {
+      const record = group.records[receipt.roomSeq - 1]
+      if (!record || record.seq !== receipt.roomSeq) {
         throw new Error('Delivery journal references a missing group message')
+      }
+      if (receipt.sourceDigest !== sourceDigest(record)) {
+        throw new Error('Delivery journal source message changed since attempt')
       }
     }
     return {
@@ -140,49 +161,49 @@ export function createGroupDeliveryJournal({ home, assertWriter } = {}) {
 
   const initialize = roomId => run(roomId, async book => {
     await ensureWriter(book)
-    await requireDurableMessage(home, roomId, 1).catch(async error => {
-      // A legitimately empty new group book may be prepared for deliveries.
-      const group = await readLedger(home, book)
-      if (!group || group.incompleteTail !== '' || group.records.length !== 0) throw error
-    })
+    // A genuinely empty new group is allowed; a damaged or discontinuous
+    // source book must never receive delivery receipts.
+    verifyGroupLedger(await readLedger(home, book))
     return publishInitialGroupBook(root, book, [])
   })
 
-  const begin = ({ roomId, roomSeq, deliveryId, recipientId }) => {
+  const begin = async ({ roomId, roomSeq, deliveryId, recipientId }) => {
     bookOf(roomId)
     positiveSeq(roomSeq)
     safeId(deliveryId, 'delivery id')
     safeId(recipientId, 'recipient id')
-    const params = { roomId, roomSeq, deliveryId, recipientId }
     return run(roomId, async book => {
       await ensureWriter(book)
-      await requireDurableMessage(home, roomId, roomSeq)
+      const digest = await requireDurableMessage(home, roomId, roomSeq)
       const { journal, seen } = await journalFor(roomId)
-      if (seen.has(deliveryId)) {
-        throw new Error('Delivery already attempted; a retry could duplicate Bot work')
+      if (seen.has(deliveryId) || [...seen.values()].some(item =>
+        item.roomSeq === roomSeq && item.recipientId === recipientId)) {
+        throw new Error('Delivery already attempted for this message/recipient; a retry could duplicate Bot work')
       }
       const event = { seq: journal.records.length + 1, stage: 'attempt',
-        deliveryId, roomSeq, recipientId }
+        deliveryId, roomSeq, recipientId, sourceDigest: digest }
       await durable.append(book, event)
       return { status: 'attempt-recorded', roomSeq, deliveryId }
     })
   }
 
-  const markApiReturned = ({ roomId, roomSeq, deliveryId, recipientId }) => {
+  const markApiReturned = async ({ roomId, roomSeq, deliveryId, recipientId }) => {
     bookOf(roomId)
     positiveSeq(roomSeq)
     safeId(deliveryId, 'delivery id')
     safeId(recipientId, 'recipient id')
     return run(roomId, async book => {
       await ensureWriter(book)
+      const digest = await requireDurableMessage(home, roomId, roomSeq)
       const { journal, seen } = await journalFor(roomId)
       const earlier = seen.get(deliveryId)
-      if (!earlier || earlier.roomSeq !== roomSeq || earlier.recipientId !== recipientId) {
+      if (!earlier || earlier.roomSeq !== roomSeq || earlier.recipientId !== recipientId ||
+          earlier.sourceDigest !== digest) {
         throw new Error('Cannot accept a missing or mismatched delivery attempt')
       }
       if (earlier.status === 'api-returned') return { status: 'api-returned', reused: true }
       await durable.append(book, { seq: journal.records.length + 1,
-        stage: 'api-returned', deliveryId, roomSeq, recipientId })
+        stage: 'api-returned', deliveryId, roomSeq, recipientId, sourceDigest: digest })
       return { status: 'api-returned', reused: false }
     })
   }
