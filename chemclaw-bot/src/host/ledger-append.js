@@ -10,7 +10,7 @@
 import { open } from 'node:fs/promises'
 import { join } from 'node:path'
 import { isDeepStrictEqual } from 'node:util'
-import { ledgerFilename, readLedger } from './ledger-foundation.js'
+import { decodeLedger, ledgerFilename, readLedger } from './ledger-foundation.js'
 
 const GROUP_BOOK = /^group-[A-Za-z0-9_-]{1,160}$/
 
@@ -69,12 +69,39 @@ export function createDurableGroupLedger({ home, assertWriter, beforeWrite } = {
       // A failed hook here represents a rejected/failed write before the first
       // byte. Real I/O or fsync failures below also reject and poison this book.
       await beforeWrite?.(book, record)
-      const handle = await open(join(home, 'ledger', ledgerFilename(book)), 'a')
+      // O_EXCL is for seeding; live appends must open an EXISTING book. 'a'
+      // would silently recreate a book deleted between the read and the write.
+      const path = join(home, 'ledger', ledgerFilename(book))
+      const handle = await open(path, 'r+')
       try {
-        await handle.writeFile(line, 'utf8')
+        // Re-read through this exact fd after any awaited hook, so a replacement
+        // or an external append cannot silently pass the earlier seq check.
+        const raw = await handle.readFile('utf8')
+        const checked = decodeLedger(raw)
+        if (checked.incompleteTail !== '' || !isDeepStrictEqual(checked.records, current.records)) {
+          throw new Error('Group ledger changed between verification and append')
+        }
+        if ((await assertWriter(book)) !== true) {
+          throw new Error('Exclusive writer lock lost before group ledger append')
+        }
+        const offset = Buffer.byteLength(raw, 'utf8')
+        const bytes = Buffer.from(line, 'utf8')
+        let written = 0
+        while (written < bytes.length) {
+          const result = await handle.write(bytes, written, bytes.length - written, offset + written)
+          if (result.bytesWritten <= 0) throw new Error('Group ledger write made no progress')
+          written += result.bytesWritten
+        }
         await handle.sync()
       } finally {
         await handle.close()
+      }
+      // Confirm the canonical path still contains this exact record, not an
+      // orphaned/replaced inode. Fail closed if another process removed it.
+      const after = await readLedger(home, book)
+      if (after?.incompleteTail !== '' || after?.records.length !== record.seq ||
+          !isDeepStrictEqual(after?.records.at(-1), record)) {
+        throw new Error('Group ledger path changed or the appended record was not retained')
       }
       // No side effect may be delivered by the caller until this resolves.
       return { seq: record.seq, reused: false }
