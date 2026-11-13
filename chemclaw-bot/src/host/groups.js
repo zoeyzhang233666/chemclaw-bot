@@ -17,7 +17,7 @@
 // turn keeps running in its group Session, and what it ends with is posted to the group,
 // where the member that asked for it answers.
 import { randomUUID } from 'node:crypto'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
@@ -143,9 +143,12 @@ export function install(rt) {
   const persistenceGate = createGroupPersistenceGate()
 
   // A long line keeps its start in state.json, which is written whole on every save,
-  // and what a member reads of it (GROUP_LINE_READ) in a file of its own: written once,
-  // before the state that names it, and removed with the line. All of it stays in the
-  // group's Session, where the group chat shows it.
+  // and what a member reads of it (GROUP_LINE_READ) in a file of its own. Sidecars
+  // are written before the state that names them, but never deleted by the
+  // 60-message preview rotation: the last durable state.json may still refer to
+  // an older sequence after a failed save or crash. Only explicit group removal
+  // may delete the group's entire sidecar directory. The full original message
+  // remains in the group's DSH Session.
   const linesDir = join(rt.home, 'group-lines')
   const lineFile = (roomId, seq) => join(linesDir, roomId, `${seq}.txt`)
   const wholeLines = new Map()
@@ -156,22 +159,35 @@ export function install(rt) {
     const kept = headOf(text, TEXT_KEPT)
     if (kept.length === text.length) return line
     const read = headOf(text, GROUP_LINE_READ)
-    wholeLines.set(lineKey(roomId, line.seq), read)
     if (writes()) {
       try {
         mkdirSync(join(linesDir, roomId), { recursive: true })
-        writeFileSync(lineFile(roomId, line.seq), read, 'utf8')
+        // Never clobber an existing sequence's text, including an orphan left
+        // by a failed state save. An identical retry may reuse that sidecar;
+        // different content is an unresolved history collision, not success.
+        const path = lineFile(roomId, line.seq)
+        try {
+          writeFileSync(path, read, { encoding: 'utf8', flag: 'wx' })
+        } catch (error) {
+          if (error?.code !== 'EEXIST') throw error
+          if (readFileSync(path, 'utf8') !== read) {
+            throw new Error('Conflicting existing long-text sidecar for ' + roomId + '/' + line.seq)
+          }
+        }
       } catch (error) {
-        rt.warn('chemclaw-bot: group line %s/%s not kept whole: %s', roomId, line.seq, error)
+        persistenceGate.block(roomId, error)
+        throw error
       }
     }
+    wholeLines.set(lineKey(roomId, line.seq), read)
     return { ...line, text: kept, length: text.length }
   }
 
-  function dropGroupLine(roomId, line) {
+  function evictGroupLine(roomId, line) {
     if (line.length === undefined) return
+    // Only the bounded in-memory preview is evicted here. Never unlink a
+    // sidecar until durable-state / Ledger retention can prove it unreachable.
     wholeLines.delete(lineKey(roomId, line.seq))
-    if (writes()) void rm(lineFile(roomId, line.seq), { force: true }).catch(() => {})
   }
 
   function dropGroupLines(roomId) {
@@ -195,9 +211,12 @@ export function install(rt) {
 
   const appendRoom = (room, line) => {
     persistenceGate.assertWritable(room.id)
-    room.seq += 1
-    const log = [...room.log, keepGroupLine(room.id, { ...line, seq: room.seq }, line.text ?? '')]
-    for (const gone of log.slice(0, -ROOM_LOG_MAX)) dropGroupLine(room.id, gone)
+    const nextSeq = room.seq + 1
+    const saved = keepGroupLine(room.id, { ...line, seq: nextSeq }, line.text ?? '')
+    const log = [...room.log, saved]
+    // A sidecar collision or I/O error above must not advance room.seq.
+    room.seq = nextSeq
+    for (const gone of log.slice(0, -ROOM_LOG_MAX)) evictGroupLine(room.id, gone)
     room.log = log.slice(-ROOM_LOG_MAX)
   }
 
