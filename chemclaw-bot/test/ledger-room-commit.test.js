@@ -257,3 +257,18 @@ test('the required state saver and safe group id cannot be omitted', async t => 
   const writer = create({ home, persist })
   await assert.rejects(writer.commit({ ...room, id: '../escape' }, { who: 'User', text: 'no' }), /valid group room/)
 })
+
+test('a legacy group identity change during async write cannot redirect the state commit', async t => {
+  const { home, room, persist } = await fixture(t)
+  let saves = 0
+  const writer = create({
+    home,
+    beforeWrite: () => { room.id = 'another-room' },
+    persist: async () => { saves++; await persist() },
+  })
+  await assert.rejects(writer.commit(room, { who: 'User', text: 'original room only' }), /Legacy room state changed/)
+  assert.equal(saves, 0)
+  assert.equal(room.seq, 0)
+  assert.equal((await readLedger(home, 'group-r1')).records.length, 1)
+  assert.equal(await readLedger(home, 'group-another-room'), undefined)
+})
