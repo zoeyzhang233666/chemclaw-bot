@@ -190,3 +190,41 @@ test('unsafe IDs and a missing writer assertion are rejected before any delivery
   await assert.rejects(writer.begin(params('call-1', 0)), /positive group message sequence/)
   assert.equal((await inspectGroupDeliveries(home, 'r1')).status, 'not-initialized')
 })
+
+test('changing the delivery ID cannot repeat a call to the same message and recipient', async t => {
+  const { home } = await fixture(t)
+  const first = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  await first.initialize('r1')
+  await first.begin(params('delivery-original'))
+  const restart = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  let calls = 0
+  await assert.rejects(restart.dispatchOnce({
+    ...params('delivery-renamed'),
+    send: async () => { calls++ },
+  }), /already attempted/)
+  assert.equal(calls, 0)
+  assert.equal((await inspectGroupDeliveries(home, 'r1')).entries.length, 1)
+})
+
+test('a receipt is bound to the original durable message content, not merely its sequence', async t => {
+  const { home } = await fixture(t)
+  const writer = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  await writer.initialize('r1')
+  await writer.begin(params())
+  await writeFile(join(home, 'ledger', 'group-r1.jsonl'),
+    JSON.stringify(groupRow(1, 'tampered same sequence')) + '\n')
+  const result = await inspectGroupDeliveries(home, 'r1')
+  assert.equal(result.status, 'blocked')
+  assert.match(result.reason, /source message changed/)
+  const resumed = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  await assert.rejects(resumed.markApiReturned(params()), /missing or mismatched/)
+})
+
+test('an invalid or nonconsecutive source group book is not eligible for a receipt journal', async t => {
+  const { home } = await fixture(t)
+  await writeFile(join(home, 'ledger', 'group-r1.jsonl'),
+    JSON.stringify(groupRow(2)) + '\n')
+  const writer = createGroupDeliveryJournal({ home, assertWriter: () => true })
+  await assert.rejects(writer.initialize('r1'), /inconsistent history/)
+  assert.equal((await inspectGroupDeliveries(home, 'r1')).status, 'not-initialized')
+})
