@@ -44,7 +44,7 @@ function verifyFullBook(ledger) {
     }
     if (record.legacyIncomplete === true ||
         (record.length !== undefined && (!Number.isSafeInteger(record.length) ||
-          record.length > (typeof record.text === 'string' ? record.text.length : 0)))) {
+          record.length !== (typeof record.text === 'string' ? record.text.length : 0)))) {
       return 'Ledger contains an incomplete message at ' + (index + 1)
     }
   }
