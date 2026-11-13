@@ -148,6 +148,9 @@ export function install(rt) {
     persistenceGate.assertWritable(room.id)
     legacyLedgerGuard.assertWritable(room.id)
   }
+  // Roster edits/deletes are implemented in roster.js but modify these same
+  // persistent room records and archives; they must not bypass the boundary.
+  rt.assertLegacyGroupWritable = assertLegacyRoomWritable
 
   // A long line keeps its start in state.json, which is written whole on every save,
   // and what a member reads of it (GROUP_LINE_READ) in a file of its own. Sidecars
