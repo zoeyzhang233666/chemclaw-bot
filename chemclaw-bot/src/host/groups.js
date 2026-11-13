@@ -30,6 +30,7 @@ import { stripUnrenderedMixedViewText } from './visual-delivery.js'
 import { mixedOverlayRequested } from './market-quote-intent.js'
 import { failureLine } from './turns.js'
 import { createOrderedGroupPostQueue, publishSavedGroupReply } from './group-post-queue.js'
+import { createGroupPersistenceGate } from './group-persistence-gate.js'
 
 const ROOM_LOG_MAX = 60
 const ROOM_FIRST_LOOK = 12
@@ -136,6 +137,10 @@ const fileLine = file => `[File "${file.name}" (${file.bytes} bytes) attached]`
 
 export function install(rt) {
   const { ctx } = rt
+  // A required save that fails leaves the legacy in-memory room potentially ahead
+  // of state.json. The gate only lives for this Host instance and never clears on
+  // a later successful unrelated state save.
+  const persistenceGate = createGroupPersistenceGate()
 
   // A long line keeps its start in state.json, which is written whole on every save,
   // and what a member reads of it (GROUP_LINE_READ) in a file of its own: written once,
@@ -189,6 +194,7 @@ export function install(rt) {
   }
 
   const appendRoom = (room, line) => {
+    persistenceGate.assertWritable(room.id)
     room.seq += 1
     const log = [...room.log, keepGroupLine(room.id, { ...line, seq: room.seq }, line.text ?? '')]
     for (const gone of log.slice(0, -ROOM_LOG_MAX)) dropGroupLine(room.id, gone)
@@ -419,11 +425,19 @@ export function install(rt) {
       ? stripUnrenderedMixedViewText(text) : text
     // Legacy state-saving bridge, not the Ledger cutover. The publication
     // boundary is shared with tests for successful and failed required saves.
-    return publishSavedGroupReply({
-      room, round, member, visible, duration,
-      append: appendRoom, save: rt.save,
-      commitDraft: () => { if (sessionId) rt.commitRoomDraft?.(sessionId) },
-    })
+    persistenceGate.assertWritable(room.id)
+    try {
+      return await publishSavedGroupReply({
+        room, round, member, visible, duration,
+        append: appendRoom, save: rt.save,
+        commitDraft: () => { if (sessionId) rt.commitRoomDraft?.(sessionId) },
+      })
+    } catch (error) {
+      // Do not resume this room from an in-memory seq/log after an uncertain
+      // state save. Another room is unaffected, and no existing files are removed.
+      persistenceGate.block(room.id, error)
+      throw error
+    }
   }
   const dropRoomDraft = (room, memberId) => {
     const sessionId = room.sessions?.[memberId]
@@ -594,6 +608,9 @@ export function install(rt) {
   // restarts the relay count, and calls parked at the limit resume after the members
   // the user called.
   async function drainRoomInbox(room, round, index, agent) {
+    // Check before removing incoming messages; a blocked room must not consume
+    // inbox messages or turn them into new Bot work.
+    persistenceGate.assertWritable(room.id)
     // The greeting's prompt tells the admin the user has not written yet.
     if (round.kickoff) return
     const waiting = waitingLines(agent)
@@ -618,7 +635,7 @@ export function install(rt) {
     // The inbox check keeps a message sent during the last speaker's turn inside
     // this round: it drains at the loop's head even once the slots ran out.
     for (let index = 0; index < round.slots.length || waitingLines(agent).length > 0; index += 1) {
-      if (signal.aborted) break
+      if (signal.aborted || persistenceGate.status(room.id)) break
       await drainRoomInbox(room, round, index, agent)
       if (index >= round.slots.length) break
       const slot = round.slots[index]
@@ -759,6 +776,8 @@ export function install(rt) {
       await rt.load()
       const room = rt.roomOf(exec.agent?.id)
       if (room === undefined) return JSON.stringify({ error: 'Not a group chat' })
+      const alreadyBlocked = persistenceGate.status(room.id)
+      if (alreadyBlocked) return JSON.stringify({ error: alreadyBlocked.message, code: alreadyBlocked.code, replies: [], passed: [], failed: [] })
       ensureRoomLog(room)
       // Everything queued since the last relay is posted in order, so messages that the
       // Session folds into one turn are not lost; the newest one picks the speakers.
@@ -853,6 +872,15 @@ export function install(rt) {
       }
       if (exec.signal?.aborted) {
         for (const turn of round.started) void rt.stopRoomTurn?.(room.sessions?.[turn.botId] ?? turn.sessionId, turn.exchangeId)
+      }
+      const blocked = persistenceGate.status(room.id)
+      if (blocked) {
+        // No more state snapshots, followup sends or reportRound dispatch after
+        // a failed required save. A future Host must inspect durable state.
+        exec.concludeTurn?.()
+        return JSON.stringify({ error: blocked.message, code: blocked.code,
+          replies: round.replies, passed: round.passed,
+          ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
       }
       await rt.save()
       for (const post of posts) {
@@ -979,6 +1007,7 @@ export function install(rt) {
   // once, so it is not held back until the round ends; the relay it still opens does not
   // write it again (source `logged`).
   async function postToRoom(room, sender, text, extra = {}, files = []) {
+    persistenceGate.assertWritable(room.id)
     const running = [...rt.roomProgress.values()].find(round => round.roomId === room.id)
     let logged
     if (running !== undefined) {
@@ -1001,9 +1030,15 @@ export function install(rt) {
         logged = room.seq
       }
       postViews(running, sender, extra.views)
-      await rt.save()
+      try {
+        await rt.save({ required: true })
+      } catch (error) {
+        persistenceGate.block(room.id, error)
+        throw error
+      }
     }
     const agent = await rt.resolveAgent(room.id)
+    persistenceGate.assertWritable(room.id)
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: `[Group post from ${sender.name}]\n${text}` }, ...files.map(attachment => ({ type: 'file', attachment }))],
       source: { kind: SOURCE_KIND, form: 'relay', role: 'post', exchangeId: randomUUID(), senderName: sender.name, senderSessionId: sender.id, roomId: room.id, ...extra, ...(logged !== undefined ? { logged } : {}) },
