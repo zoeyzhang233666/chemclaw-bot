@@ -2,6 +2,7 @@
 // changing state.json, group-lines/, Session logs, or any existing ledger.
 // Not activated by the runtime until the migration PR has durable write gates.
 import { createHash } from 'node:crypto'
+import { isDeepStrictEqual } from 'node:util'
 import { mkdir, open, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 
@@ -51,6 +52,35 @@ function validRoom(room) {
   }
 }
 
+// A historical group archive can preserve the full message while state.json
+// keeps only its beginning (and the original total length). Both represent the
+// same row if their shared metadata agrees and one text is a prefix of the other.
+function reconcileDuplicateRow(first, second, seq) {
+  for (const key of new Set([...Object.keys(first), ...Object.keys(second)])) {
+    if (key === 'text' || key === 'length') continue
+    if (Object.hasOwn(first, key) && Object.hasOwn(second, key) &&
+        !isDeepStrictEqual(first[key], second[key])) {
+      throw new Error('Conflicting legacy group sequence ' + seq + ' (field ' + key + ')')
+    }
+  }
+  const a = typeof first.text === 'string' ? first.text : ''
+  const b = typeof second.text === 'string' ? second.text : ''
+  if (!a.startsWith(b) && !b.startsWith(a)) {
+    throw new Error('Conflicting legacy group sequence ' + seq + ' (text)')
+  }
+  const expectedA = Number.isSafeInteger(first.length) ? first.length : undefined
+  const expectedB = Number.isSafeInteger(second.length) ? second.length : undefined
+  if (expectedA !== undefined && expectedB !== undefined && expectedA !== expectedB) {
+    throw new Error('Conflicting legacy group sequence ' + seq + ' (length)')
+  }
+  const expected = expectedA ?? expectedB
+  const text = a.length >= b.length ? a : b
+  if (expected !== undefined && text.length > expected) {
+    throw new Error('Conflicting legacy group sequence ' + seq + ' (text exceeds length)')
+  }
+  return { ...first, ...second, text, ...(expected === undefined ? {} : { length: expected }) }
+}
+
 export async function previewLegacyRoom({ home, room, archivedRows = [] }) {
   validRoom(room)
   if (!Array.isArray(archivedRows)) throw new Error('Legacy archived rows must be an array')
@@ -72,9 +102,7 @@ export async function previewLegacyRoom({ home, room, archivedRows = [] }) {
     if (!Number.isSafeInteger(seq) || seq < 1) throw new Error('Invalid legacy group sequence')
     if (bySeq.has(seq)) {
       const previous = bySeq.get(seq)
-      if (JSON.stringify(previous.line) !== JSON.stringify(line)) {
-        throw new Error('Conflicting legacy group sequence ' + seq)
-      }
+      bySeq.set(seq, { line: reconcileDuplicateRow(previous.line, line, seq), source: 'combined' })
       continue
     }
     bySeq.set(seq, { line, source })
