@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createGroupLedgerCommitter } from '../src/host/ledger-room-commit.js'
@@ -89,6 +89,7 @@ test('old reading sidecars are never deleted when room.log rolls over its sixty-
   const initial = Array.from({ length: 60 }, (_, i) => row(i + 1, 'text ' + (i + 1)))
   const { home, room, persist } = await fixture(t, initial)
   const oldFile = join(home, 'group-lines', 'r1', '1.txt')
+  await mkdir(join(home, 'group-lines', 'r1'), { recursive: true })
   await writeFile(oldFile, 'legacy previous reader sidecar')
   const writer = create({ home, persist })
   await writer.commit(room, { who: 'User', text: 'new message' })
@@ -208,7 +209,7 @@ test('external legacy room mutation while fsync is in flight blocks state overwr
 test('a sidecar collision is a blocking error and never overwrites older user data', async t => {
   const { home, room, persist } = await fixture(t)
   const dir = join(home, 'group-lines', 'r1')
-  await import('node:fs/promises').then(fs => fs.mkdir(dir, { recursive: true }))
+  await mkdir(dir, { recursive: true })
   const existing = join(dir, '1.txt')
   await writeFile(existing, 'unrelated legacy file')
   const writer = create({ home, persist })
