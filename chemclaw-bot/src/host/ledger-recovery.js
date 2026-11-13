@@ -104,13 +104,20 @@ export function planGroupLedgerRecovery({ room, ledger }) {
   }
 
   const persisted = room.log ?? []
-  let previous = 0
+  // room.log is the latest contiguous window of at most 60 records. A gap in
+  // that retained window may represent unsaved/partially repaired state and
+  // must not be misclassified as synchronized merely because each remaining
+  // sequence happens to match the book.
+  if (persisted.length > ROOM_LOG_MAX) {
+    return blocked(stateSeq, ledgerSeq, 'Saved room.log exceeds its bounded history window')
+  }
+  let expected = stateSeq - persisted.length + 1
   for (const saved of persisted) {
-    if (!Number.isSafeInteger(saved?.seq) || saved.seq <= previous ||
-        saved.seq > stateSeq || !roomLineAgrees(saved, records[saved.seq - 1])) {
+    if (!Number.isSafeInteger(saved?.seq) || saved.seq !== expected ||
+        !roomLineAgrees(saved, records[saved.seq - 1])) {
       return blocked(stateSeq, ledgerSeq, 'Saved room.log is inconsistent with durable Ledger history')
     }
-    previous = saved.seq
+    expected++
   }
   if (stateSeq > 0 && persisted.length === 0) {
     return blocked(stateSeq, ledgerSeq, 'Saved room has a nonzero sequence but no verifiable recent log')
