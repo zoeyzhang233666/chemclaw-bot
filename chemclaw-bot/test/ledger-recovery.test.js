@@ -208,3 +208,12 @@ test('too many retained state rows cannot silently become an authoritative windo
   assert.equal(result.status, 'blocked')
   assert.match(result.reason, /bounded history/)
 })
+
+test('a ledger that declares fewer text characters than it contains is blocked', () => {
+  const result = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 0, log: [] },
+    ledger: snapshot([{ ...row(1, 'a complete message'), length: 2 }]),
+  })
+  assert.equal(result.status, 'blocked')
+  assert.match(result.reason, /incomplete message/)
+})
