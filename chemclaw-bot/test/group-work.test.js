@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { setTimeout as realDelay } from 'node:timers/promises'
 import { apply } from './legacy-runtime.js'
 import { fakeAttachments, fakeContext } from './fake-ctx.js'
-import { MESSAGE_INLINE_MAX, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS } from '../src/host/constants.js'
+import { GROUP_LINE_READ, MESSAGE_INLINE_MAX, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS, TEXT_KEPT } from '../src/host/constants.js'
 
 // Chief, the admin of group 'r1', speaks there from 'ga'; Writer from 'gb'; Tester from 'gc'.
 const seed = (room = {}, extraRooms = {}) => ({
@@ -1132,6 +1132,71 @@ test('a failed in-progress member step does not publish or call another Bot afte
   assert.deepEqual(result().replies.filter(reply => reply.kind === 'failed').map(reply => [reply.name, reply.code]), [['Writer', 'PERSISTENCE']])
   assert.equal(result().replies.some(reply => reply.name === 'Writer' && reply.kind === undefined), false)
   assert.equal(host.agentOf('gc').calls.length, 0)
+})
+
+const legacySidecarFixture = host => {
+  // The first row remains referenced by the last good state.json. Appending
+  // seq 61 rotates the preview past that row but must never erase its file.
+  const long = '历史化工数据：'.repeat(TEXT_KEPT)
+  const dir = join(host.home, 'group-lines', 'r1')
+  mkdirSync(dir, { recursive: true })
+  const file = join(dir, '1.txt')
+  writeFileSync(file, long.slice(0, GROUP_LINE_READ))
+  return { file, contents: long.slice(0, GROUP_LINE_READ) }
+}
+const sixtyLineRoom = () => {
+  const long = '历史化工数据：'.repeat(TEXT_KEPT)
+  const log = Array.from({ length: 60 }, (_, index) => index === 0
+    ? { seq: 1, who: 'User', text: long.slice(0, TEXT_KEPT), length: long.length }
+    : { seq: index + 1, who: 'User', text: 'previous message ' + (index + 1) })
+  return { seq: 60, log }
+}
+
+test('legacy sidecar survives the sixty-message preview rotation after a successful group save', async t => {
+  const host = await start(t, sixtyLineRoom())
+  const { file, contents } = legacySidecarFixture(host)
+  const result = host.round('sidecar-preserve-success', host.say('@Writer 消息编号61'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.finish('gb', '[PASS]')
+  await settle(() => result() !== undefined)
+  const durable = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1
+  assert.ok(durable.seq >= 61)
+  assert.equal(durable.log[0].seq, 2, 'the bounded state preview should still rotate')
+  assert.equal(readFileSync(file, 'utf8'), contents, 'the older sidecar must remain available')
+})
+
+test('legacy sidecar remains intact when the rolling group state fails to save', async t => {
+  const host = await start(t, sixtyLineRoom())
+  const { file, contents } = legacySidecarFixture(host)
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  takeGroupStateLock(host)
+  const result = host.round('sidecar-preserve-save-failure', host.say('@Writer 无法保存的新消息'))
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'PERSISTENCE_BLOCKED')
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  assert.equal(readFileSync(file, 'utf8'), contents)
+  assert.equal(host.agentOf('gb').calls.length, 0)
+})
+
+test('legacy sidecar collision cannot overwrite older bytes or dispatch new Bot work', async t => {
+  const host = await start(t, sixtyLineRoom())
+  const dir = join(host.home, 'group-lines', 'r1')
+  mkdirSync(dir, { recursive: true })
+  const collision = join(dir, '61.txt')
+  writeFileSync(collision, 'UNCOMMITTED_PREVIOUS_WRITE_DO_NOT_OVERWRITE')
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const longNewMessage = '@Writer ' + '化工价格数据'.repeat(TEXT_KEPT)
+  host.emit('r1', 'user/message', host.say(longNewMessage))
+  await assert.rejects(
+    host.tool('group_relay', {}, 'r1', { callId: 'sidecar-collision', signal: new AbortController().signal }),
+    /Conflicting existing long-text sidecar/,
+  )
+  assert.equal(readFileSync(collision, 'utf8'), 'UNCOMMITTED_PREVIOUS_WRITE_DO_NOT_OVERWRITE')
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  const rejected = JSON.parse(await host.tool('group_relay', {}, 'r1', { callId: 'sidecar-collision-retry' }))
+  assert.equal(rejected.code, 'PERSISTENCE_BLOCKED')
 })
 
 test('a queued group message is not dispatched when its initial state save fails', async t => {
