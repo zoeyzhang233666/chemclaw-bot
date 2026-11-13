@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, mkdir, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createLegacyGroupLedgerGuard } from '../src/host/group-legacy-ledger-guard.js'
@@ -47,6 +47,16 @@ test('invalid, incomplete and corrupt Ledger books never enable legacy fallback'
   assert.equal(guard.status('../r1').code, 'LEDGER_CHECK_FAILED')
   await makeBook('r1', '{"seq":1')
   assert.throws(() => guard.assertWritable('r1'), /Ledger book/)
+})
+
+test('a dangling Ledger symlink does not bypass legacy writer protection', async t => {
+  if (process.platform === 'win32') return t.skip('Windows symlink permissions differ')
+  const { home, guard } = await fixture(t)
+  const dir = join(home, 'ledger')
+  await mkdir(dir, { recursive: true })
+  await symlink(join(home, 'nonexistent-ledger-target'), join(dir, ledgerFilename('group-r1')))
+  assert.equal(guard.status('r1').code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.throws(() => guard.assertWritable('r1'), error => error.code === 'LEDGER_MIGRATION_REQUIRED')
 })
 
 test('a missing Ledger home rejects construction', () => {
