@@ -1179,6 +1179,25 @@ test('legacy sidecar remains intact when the rolling group state fails to save',
   assert.equal(host.agentOf('gb').calls.length, 0)
 })
 
+test('an identical existing long-text sidecar can be safely reused without truncation', async t => {
+  const host = await start(t, sixtyLineRoom())
+  const dir = join(host.home, 'group-lines', 'r1')
+  mkdirSync(dir, { recursive: true })
+  const message = '@Writer ' + '已保存的内容'.repeat(TEXT_KEPT)
+  const sidecar = join(dir, '61.txt')
+  writeFileSync(sidecar, message)
+  const result = host.round('identical-sidecar', host.say(message))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.finish('gb', '[PASS]')
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, undefined)
+  assert.equal(readFileSync(sidecar, 'utf8'), message)
+  const state = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1
+  assert.ok(state.seq >= 61)
+  assert.equal(state.log.find(line => line.seq === 61)?.length, message.length)
+})
+
 test('legacy sidecar collision cannot overwrite older bytes or dispatch new Bot work', async t => {
   const host = await start(t, sixtyLineRoom())
   const dir = join(host.home, 'group-lines', 'r1')
