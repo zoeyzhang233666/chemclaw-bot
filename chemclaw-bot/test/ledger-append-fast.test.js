@@ -104,3 +104,33 @@ test('idempotent replay may do a full read, but normal appends resume bounded va
   assert.equal(fullReads, 2, 'one initial scan and one explicit replay verification')
   assert.deepEqual((await readLedger(home, 'group-r1')).records, [row(1), row(2), row(3)])
 })
+
+test('queued message bytes are captured before the caller changes the object', async t => {
+  const home = await fixture(t)
+  let release
+  const gate = new Promise(resolve => { release = resolve })
+  const writer = createDurableGroupLedger({
+    home, assertWriter: () => true,
+    beforeWrite: async (_book, record) => {
+      if (record.seq === 1) await gate
+      if (record.seq === 2) record.text = 'mutation inside beforeWrite'
+    },
+  })
+  const first = writer.append('group-r1', row(1))
+  const secondInput = row(2, 'original queued text')
+  const second = writer.append('group-r1', secondInput)
+  secondInput.seq = 999
+  secondInput.text = 'modified by caller after append()'
+  release()
+  await Promise.all([first, second])
+  const records = (await readLedger(home, 'group-r1')).records
+  assert.deepEqual(records, [row(1), row(2, 'original queued text')])
+})
+
+test('invalid queued records poison the book instead of being ignored by the fast path', async t => {
+  const home = await fixture(t)
+  const writer = createDurableGroupLedger({ home, assertWriter: () => true })
+  await assert.rejects(writer.append('group-r1', { text: 'no sequence' }), /positive integer seq/)
+  await assert.rejects(writer.append('group-r1', row(1)), /positive integer seq/)
+  assert.deepEqual((await readLedger(home, 'group-r1')).records, [])
+})
