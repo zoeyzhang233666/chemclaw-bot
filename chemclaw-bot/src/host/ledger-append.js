@@ -1,12 +1,17 @@
 // P0 append-only group ledger writer, not yet connected to the live group runtime.
 //
-// A returned append Promise resolves only after the JSONL row has reached fsync.
-// The caller must await it BEFORE delivering the corresponding group message.
-// A failed write poisons that book's queue; never pretend delivery was durable,
-// auto-retry an uncertain write, or continue issuing messages on that book.
+// A returned append Promise resolves only after the JSONL row has reached fsync
+// AND the canonical ledger path has been verified. The caller must await it
+// before delivering its corresponding group message. A failure poisons that
+// book's queue: an uncertain write is never automatically retried.
 //
-// IMPORTANT: assertWriter must prove ownership of the team's exclusive lock.
-// readOnly() === undefined is NOT enough when store.js used its lockBroken fallback.
+// IMPORTANT: assertWriter must establish EXCLUSIVE ownership of state.lock.
+// Legacy readOnly() === undefined is not sufficient if locking degraded.
+//
+// Performance: validate the entire book once per writer/book, then cache the
+// last confirmed sequence, file identity and exact last-line bytes. Subsequent
+// normal appends inspect only file metadata, a bounded tail and the new row.
+// A restarted writer revalidates the whole book before its first write.
 import { open } from 'node:fs/promises'
 import { join } from 'node:path'
 import { isDeepStrictEqual } from 'node:util'
@@ -25,21 +30,54 @@ function ensureRecord(record) {
 }
 
 function validateBook(records) {
-  for (let i = 0; i < records.length; i++) {
-    if (records[i]?.seq !== i + 1) {
+  for (let index = 0; index < records.length; index++) {
+    if (records[index]?.seq !== index + 1) {
       throw new Error('The group ledger is not consecutive; cannot append')
     }
   }
 }
 
-export function createDurableGroupLedger({ home, assertWriter, beforeWrite } = {}) {
+function fingerprint(stats) {
+  return {
+    dev: stats.dev, ino: stats.ino, size: stats.size,
+    mtimeNs: stats.mtimeNs, ctimeNs: stats.ctimeNs,
+  }
+}
+function sameFile(a, b) {
+  return a.dev === b.dev && a.ino === b.ino && a.size === b.size
+}
+function sameVersion(a, b) {
+  return sameFile(a, b) && a.mtimeNs === b.mtimeNs && a.ctimeNs === b.ctimeNs
+}
+function byteOffset(stats) {
+  const size = Number(stats.size)
+  if (!Number.isSafeInteger(size) || size < 0) {
+    throw new Error('Group ledger is too large to append safely')
+  }
+  return size
+}
+async function verifyTail(handle, offset, bytes) {
+  if (bytes.length === 0) return
+  const actual = Buffer.alloc(bytes.length)
+  let n = 0
+  while (n < bytes.length) {
+    const result = await handle.read(actual, n, bytes.length - n, offset + n)
+    if (result.bytesRead <= 0) throw new Error('Group ledger tail was not fully readable')
+    n += result.bytesRead
+  }
+  if (!actual.equals(bytes)) throw new Error('Group ledger last record changed unexpectedly')
+}
+
+export function createDurableGroupLedger({ home, assertWriter, beforeWrite, loadBook = readLedger } = {}) {
   if (typeof home !== 'string' || !home) throw new Error('A group ledger home is required')
   if (typeof assertWriter !== 'function') {
     throw new Error('Ledger append requires an explicit exclusive-writer check')
   }
-  // Keep failures here, not as catch(() => {}) promises: a broken book is closed
-  // until the application explicitly recreates this writer after inspection.
+  if (typeof loadBook !== 'function') throw new Error('Ledger full-book reader is required')
+
   const queues = new Map()
+  // A cache is retained only after an fsynced and canonically verified write.
+  const confirmed = new Map()
   const append = (book, record) => {
     if (typeof book !== 'string' || !GROUP_BOOK.test(book)) {
       return Promise.reject(new Error('Only a safe group ledger book can be appended'))
@@ -50,60 +88,91 @@ export function createDurableGroupLedger({ home, assertWriter, beforeWrite } = {
         throw new Error('Exclusive writer lock not confirmed; group ledger write refused')
       }
       const line = ensureRecord(record)
-      const current = await readLedger(home, book)
-      if (current === undefined) throw new Error('Group ledger is not initialized; import it before writing')
-      if (current.incompleteTail !== '') {
-        throw new Error('Group ledger has a truncated final line; inspect the disk before writing')
-      }
-      validateBook(current.records)
-      const last = current.records.length
-      if (record.seq <= last) {
-        if (isDeepStrictEqual(current.records[record.seq - 1], record)) {
-          return { seq: record.seq, reused: true }
+      const cached = confirmed.get(book)
+      let full
+      if (!cached) {
+        full = await loadBook(home, book)
+        if (full === undefined) throw new Error('Group ledger is not initialized; import it before writing')
+        if (full.incompleteTail !== '') {
+          throw new Error('Group ledger has a truncated final line; inspect the disk before writing')
         }
-        throw new Error('Group ledger already has a different record at seq ' + record.seq)
+        validateBook(full.records)
+      }
+      const last = cached ? cached.seq : full.records.length
+
+      // Replays are rare; always check their durable historical record instead
+      // of blindly trusting the cache, then return without re-delivering.
+      if (record.seq <= last) {
+        const replay = full ?? await loadBook(home, book)
+        if (replay === undefined || replay.incompleteTail !== '' ||
+            replay.records.length !== last || !isDeepStrictEqual(replay.records[record.seq - 1], record)) {
+          throw new Error('Group ledger already has a different record at seq ' + record.seq)
+        }
+        return { seq: record.seq, reused: true }
       }
       if (record.seq !== last + 1) {
         throw new Error('Group ledger cannot skip from seq ' + last + ' to ' + record.seq)
       }
-      // A failed hook here represents a rejected/failed write before the first
-      // byte. Real I/O or fsync failures below also reject and poison this book.
+
+      // This hook is only for fault injection / preflight. A failure leaves the
+      // book queue poisoned, and no caller is allowed to report a delivery.
       await beforeWrite?.(book, record)
-      // O_EXCL is for seeding; live appends must open an EXISTING book. 'a'
-      // would silently recreate a book deleted between the read and the write.
       const path = join(home, 'ledger', ledgerFilename(book))
+      // 'r+' refuses a deleted book instead of silently creating a new one.
       const handle = await open(path, 'r+')
+      let writtenStat
+      let offset
+      const bytes = Buffer.from(line, 'utf8')
       try {
-        // Re-read through this exact fd after any awaited hook, so a replacement
-        // or an external append cannot silently pass the earlier seq check.
-        const raw = await handle.readFile('utf8')
-        const checked = decodeLedger(raw)
-        if (checked.incompleteTail !== '' || !isDeepStrictEqual(checked.records, current.records)) {
-          throw new Error('Group ledger changed between verification and append')
+        const before = fingerprint(await handle.stat({ bigint: true }))
+        offset = byteOffset(before)
+        if (cached) {
+          // Normal append path: O(last-record bytes), independent of history.
+          if (!sameVersion(before, cached.file)) {
+            throw new Error('Group ledger changed between verification and append')
+          }
+          await verifyTail(handle, offset - cached.tail.length, cached.tail)
+        } else {
+          // A new writer validates the complete existing file once. Re-opened
+          // bytes must still agree with the read made before beforeWrite().
+          const raw = await handle.readFile('utf8')
+          const checked = decodeLedger(raw)
+          if (checked.incompleteTail !== '' || !isDeepStrictEqual(checked.records, full.records) ||
+              Buffer.byteLength(raw, 'utf8') !== offset) {
+            throw new Error('Group ledger changed between verification and append')
+          }
         }
         if ((await assertWriter(book)) !== true) {
           throw new Error('Exclusive writer lock lost before group ledger append')
         }
-        const offset = Buffer.byteLength(raw, 'utf8')
-        const bytes = Buffer.from(line, 'utf8')
-        let written = 0
-        while (written < bytes.length) {
-          const result = await handle.write(bytes, written, bytes.length - written, offset + written)
+        let n = 0
+        while (n < bytes.length) {
+          const result = await handle.write(bytes, n, bytes.length - n, offset + n)
           if (result.bytesWritten <= 0) throw new Error('Group ledger write made no progress')
-          written += result.bytesWritten
+          n += result.bytesWritten
         }
         await handle.sync()
+        writtenStat = fingerprint(await handle.stat({ bigint: true }))
+        if (byteOffset(writtenStat) !== offset + bytes.length) {
+          throw new Error('Group ledger size changed during append')
+        }
       } finally {
         await handle.close()
       }
-      // Confirm the canonical path still contains this exact record, not an
-      // orphaned/replaced inode. Fail closed if another process removed it.
-      const after = await readLedger(home, book)
-      if (after?.incompleteTail !== '' || after?.records.length !== record.seq ||
-          !isDeepStrictEqual(after?.records.at(-1), record)) {
-        throw new Error('Group ledger path changed or the appended record was not retained')
+      // Check the current canonical path, not only a possibly orphaned fd.
+      // Reading the exact newly written row is O(new-row bytes), not O(book).
+      const verify = await open(path, 'r')
+      let actual
+      try {
+        actual = fingerprint(await verify.stat({ bigint: true }))
+        if (!sameFile(actual, writtenStat)) {
+          throw new Error('Group ledger path changed or the appended record was not retained')
+        }
+        await verifyTail(verify, offset, bytes)
+      } finally {
+        await verify.close()
       }
-      // No side effect may be delivered by the caller until this resolves.
+      confirmed.set(book, { seq: record.seq, file: actual, tail: bytes })
       return { seq: record.seq, reused: false }
     })
     queues.set(book, job)
