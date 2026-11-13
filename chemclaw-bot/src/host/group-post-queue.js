@@ -38,7 +38,7 @@ export async function publishSavedGroupReply({ room, round, member, visible, dur
   if (typeof append !== 'function' || typeof save !== 'function') {
     throw new TypeError('Group reply requires append and required save callbacks')
   }
-  append(room, { who: member.name, botId: member.id, text: visible })
+  await append(room, { who: member.name, botId: member.id, text: visible })
   await save({ required: true })
   commitDraft?.()
   round.replies.push({
