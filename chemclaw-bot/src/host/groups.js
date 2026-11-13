@@ -1012,30 +1012,34 @@ export function install(rt) {
     let logged
     if (running !== undefined) {
       ensureRoomLog(room)
+      let pendingReply
       if (extra.failed !== undefined) {
         // A failed model call is an event of the round only: no log line, as the relay does it.
         const { code, status, message } = extra.failed
-        running.failed.push(sender.name)
-        running.replies.push({ kind: 'failed', botId: sender.id, name: sender.name, color: sender.color, code, ...(status ? { status } : {}), text: message, time: Date.now() })
+        pendingReply = { kind: 'failed', botId: sender.id, name: sender.name, color: sender.color, code, ...(status ? { status } : {}), text: message, time: Date.now() }
         logged = true
       } else if (extra.resumed === true || extra.stopped === true || extra.done === true) {
         const kind = extra.done === true ? 'done' : extra.stopped === true ? 'stopped' : extra.again === true ? 'cut' : 'resumed'
         appendRoom(room, { who: sender.name, botId: sender.id, kind, text: '' })
-        running.replies.push({ kind, botId: sender.id, name: sender.name, color: sender.color, time: Date.now() })
+        pendingReply = { kind, botId: sender.id, name: sender.name, color: sender.color, time: Date.now() }
         logged = room.seq
       } else {
         const line = [text, ...files.map(fileLine)].filter(Boolean).join('\n')
         appendRoom(room, { who: sender.name, botId: sender.id, text: line, ...(files.length > 0 ? { files } : {}) })
-        running.replies.push({ botId: sender.id, name: sender.name, color: sender.color, text: line, time: Date.now() })
+        pendingReply = { botId: sender.id, name: sender.name, color: sender.color, text: line, time: Date.now() }
         logged = room.seq
       }
-      postViews(running, sender, extra.views)
       try {
         await rt.save({ required: true })
       } catch (error) {
         persistenceGate.block(room.id, error)
         throw error
       }
+      // No success bubble or views before the required disk commit succeeds.
+      persistenceGate.assertWritable(room.id)
+      if (pendingReply?.kind === 'failed') running.failed.push(sender.name)
+      if (pendingReply) running.replies.push(pendingReply)
+      postViews(running, sender, extra.views)
     }
     const agent = await rt.resolveAgent(room.id)
     persistenceGate.assertWritable(room.id)
