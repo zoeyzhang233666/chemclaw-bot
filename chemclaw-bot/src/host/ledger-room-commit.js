@@ -85,7 +85,7 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
   const ledger = createDurableGroupLedger({ home, assertWriter, beforeWrite })
   const queued = new Map()
   const verified = new Map()
-  function commit(room, line) {
+  async function commit(room, line) {
     const id = roomIdOf(room)
     const book = 'group-' + id
     // Fix the payload before joining the queue. A running Bot can otherwise
