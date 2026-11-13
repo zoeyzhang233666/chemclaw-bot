@@ -1015,6 +1015,15 @@ const step = (host, sessionId, said, callId, name = 'pwsh', args = '{}') => {
   host.emit(sessionId, 'tool/call', { callId, name, arguments: args })
 }
 const progress = async host => (await host.call('room-progress', { roomId: 'r1' })).value[0]
+const waitForRoundReplies = async (host, count) => {
+  const until = Date.now() + 3000
+  while (Date.now() < until) {
+    const live = await progress(host)
+    if (live?.replies?.length >= count) return live
+    await realDelay(10)
+  }
+  assert.fail('committed round reply not visible before timeout')
+}
 
 test('what a member writes while it works shows in the round at once, and its @ calls members', async (t) => {
   const host = await start(t)
@@ -1022,8 +1031,7 @@ test('what a member writes while it works shows in the round at once, and its @ 
   await settle(() => host.agentOf('gb').calls.length === 1)
   host.begin('gb')
   step(host, 'gb', '收到，我先看看 docs/ 的结构。@Tester 你等下帮我验一下', 'k1', 'list_bots')
-  await settle(() => true)
-  const live = await progress(host)
+  const live = await waitForRoundReplies(host, 1)
   assert.deepEqual(live.replies.map(reply => [reply.name, reply.text]), [['Writer', '收到，我先看看 docs/ 的结构。@Tester 你等下帮我验一下']])
   assert.equal(live.speaking, 'b')
   host.emit('gb', 'tool/result', { callId: 'k1' })
@@ -1055,8 +1063,7 @@ test('a member\'s messages carry how long its turn ran', async (t) => {
   await settle(() => host.agentOf('gb').calls.length === 1)
   host.begin('gb')
   step(host, 'gb', '收到，先看看。', 'k1', 'list_bots')
-  await settle(() => true)
-  const live = await progress(host)
+  const live = await waitForRoundReplies(host, 1)
   assert.equal(typeof live.replies[0].duration, 'number')
   assert.ok(live.replies[0].duration >= 0)
   host.emit('gb', 'tool/result', { callId: 'k1' })
@@ -1069,6 +1076,44 @@ test('a member\'s messages carry how long its turn ran', async (t) => {
     assert.ok(reply.duration >= 0)
   }
   assert.ok(result().replies.every(reply => reply.kind === undefined || reply.duration === undefined))
+})
+
+// Simulate another DSH host holding the group state lock. The current host
+// must not treat a reply as committed, even if a model has already generated it.
+const takeGroupStateLock = host => {
+  const path = join(host.home, 'state.lock')
+  rmSync(path, { force: true })
+  writeFileSync(path, JSON.stringify({ host: 'another-machine', pid: 1, token: 'other-writer' }))
+}
+
+test('a final member answer whose required save fails is shown as a failure and never calls its @mentions', async t => {
+  const host = await start(t)
+  const result = host.round('save-failed-final', host.say('@Writer 检查一下'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  takeGroupStateLock(host)
+  host.finish('gb', '@Tester 请直接执行')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(result().replies.filter(reply => reply.kind === 'failed').map(reply => [reply.name, reply.code]), [['Writer', 'PERSISTENCE']])
+  assert.equal(result().replies.some(reply => reply.name === 'Writer' && reply.kind === undefined), false)
+  assert.equal(host.agentOf('gc').calls.length, 0)
+  assert.deepEqual(result().failed, ['Writer'])
+  assert.deepEqual(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1.log.map(line => line.who), ['User'])
+})
+
+test('a failed in-progress member step does not publish or call another Bot after turn end', async t => {
+  const host = await start(t)
+  const result = host.round('save-failed-step', host.say('@Writer 检查一下'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  takeGroupStateLock(host)
+  step(host, 'gb', '@Tester 帮我做完', 'k1', 'list_bots')
+  host.emit('gb', 'tool/result', { callId: 'k1' })
+  host.finish('gb', '[PASS]')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(result().replies.filter(reply => reply.kind === 'failed').map(reply => [reply.name, reply.code]), [['Writer', 'PERSISTENCE']])
+  assert.equal(result().replies.some(reply => reply.name === 'Writer' && reply.kind === undefined), false)
+  assert.equal(host.agentOf('gc').calls.length, 0)
 })
 
 test('after the round went on, lines a member writes close together reach the group as one message; only the result is answered', async (t) => {
