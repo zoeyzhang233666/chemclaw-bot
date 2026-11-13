@@ -155,3 +155,45 @@ test('a genuinely empty legacy room can be initialized without invented history'
   assert.equal(result.rows, 0)
   assert.deepEqual((await readLedger(home, 'group-r1')).records, [])
 })
+
+test('an archived full message supersedes a truncated overlapping state row', async t => {
+  const home = await fixture(t)
+  const text = '完整的旧群聊消息：' + '化工市场数据'.repeat(3200)
+  const full = { seq: 1, who: 'Chief', botId: 'a', text }
+  const truncated = { ...full, text: text.slice(0, 2000), length: text.length }
+  const archivePath = await archive(home, 'r1', JSON.stringify(full) + '\n')
+  const room = { id: 'r1', seq: 1, log: [truncated] }
+  const plan = await planLegacyGroupImport({ home, room })
+  assert.equal(plan.ready, true, plan.warnings.join('; '))
+  assert.equal(plan.rows[0].text, text)
+  assert.equal(plan.rows[0].length, text.length)
+  await seedLegacyGroupLedger({ home, room })
+  assert.equal((await readLedger(home, 'group-r1')).records[0].text, text)
+  assert.equal(await readFile(archivePath, 'utf8'), JSON.stringify(full) + '\n')
+})
+
+test('the archive and truncated state must agree on speaker metadata and text prefix', async t => {
+  const home = await fixture(t)
+  await archive(home, 'r1', JSON.stringify({ seq: 1, who: 'Chief', text: 'correct whole message' }) + '\n')
+  await assert.rejects(planLegacyGroupImport({
+    home, room: { id: 'r1', seq: 1, log: [{ seq: 1, who: 'Other', text: 'correct', length: 21 }] },
+  }), /Conflicting legacy group sequence 1/)
+  await assert.rejects(planLegacyGroupImport({
+    home, room: { id: 'r1', seq: 1, log: [{ seq: 1, who: 'Chief', text: 'wrong', length: 21 }] },
+  }), /Conflicting legacy group sequence 1/)
+  assert.equal(await readLedger(home, 'group-r1'), undefined)
+})
+
+test('the archived text still reports missing bytes when it is shorter than total length', async t => {
+  const home = await fixture(t)
+  const full = { seq: 1, who: 'Chief', text: 'part only' }
+  await archive(home, 'r1', JSON.stringify(full) + '\n')
+  const plan = await planLegacyGroupImport({
+    home, room: { id: 'r1', seq: 1, log: [{ seq: 1, who: 'Chief', text: 'part', length: 100 }] },
+  })
+  assert.equal(plan.ready, false)
+  assert.ok(plan.warnings.some(w => w.includes('incomplete')))
+  await assert.rejects(seedLegacyGroupLedger({
+    home, room: { id: 'r1', seq: 1, log: [{ seq: 1, who: 'Chief', text: 'part', length: 100 }] },
+  }), /import is incomplete/)
+})
