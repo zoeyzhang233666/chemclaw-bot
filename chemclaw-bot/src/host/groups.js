@@ -29,7 +29,7 @@ import { GROUP_REF, output } from './tools.js'
 import { stripUnrenderedMixedViewText } from './visual-delivery.js'
 import { mixedOverlayRequested } from './market-quote-intent.js'
 import { failureLine } from './turns.js'
-import { createOrderedGroupPostQueue } from './group-post-queue.js'
+import { createOrderedGroupPostQueue, publishSavedGroupReply } from './group-post-queue.js'
 
 const ROOM_LOG_MAX = 60
 const ROOM_FIRST_LOOK = 12
@@ -417,15 +417,13 @@ export function install(rt) {
     const sessionId = room.sessions?.[member.id]
     const visible = rt.marketQuoteIntentOf?.(sessionId) === 'mixed'
       ? stripUnrenderedMixedViewText(text) : text
-    if (!visible) return false // Never persist a raw view protocol dump as a chat reply.
-    // Until the full Ledger cutover, this path still writes the legacy room log.
-    // Never announce the member's speech or commit its draft before a required
-    // state.json save succeeds. The future Ledger writer replaces this boundary.
-    appendRoom(room, { who: member.name, botId: member.id, text: visible })
-    await rt.save({ required: true })
-    if (sessionId) rt.commitRoomDraft?.(sessionId)
-    round.replies.push({ botId: member.id, name: member.name, color: member.color, text: visible, time: Date.now(), ...(duration === undefined ? {} : { duration }) })
-    return true
+    // Legacy state-saving bridge, not the Ledger cutover. The publication
+    // boundary is shared with tests for successful and failed required saves.
+    return publishSavedGroupReply({
+      room, round, member, visible, duration,
+      append: appendRoom, save: rt.save,
+      commitDraft: () => { if (sessionId) rt.commitRoomDraft?.(sessionId) },
+    })
   }
   const dropRoomDraft = (room, memberId) => {
     const sessionId = room.sessions?.[memberId]
