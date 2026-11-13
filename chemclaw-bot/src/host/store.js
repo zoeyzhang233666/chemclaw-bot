@@ -472,8 +472,15 @@ export function install(rt) {
   }
   const isAdminOf = (room, id) => id !== undefined && room.admin === id
 
+  // Ledger writes need strict ownership. Legacy state.json saves may use the
+  // lockBroken compatibility fallback; Ledger must refuse that downgrade.
+  const assertLedgerWriter = async () => {
+    await load()
+    return !stopped && !lockBroken && stuck === undefined && holder === undefined && lock.owns()
+  }
+
   Object.assign(rt, {
-    state, load, save, refresh, readOnly, own,
+    state, load, save, refresh, readOnly, assertLedgerWriter, own,
     botOf, roomOf, isMain, chatOf, selfOf, isBotSession,
     chatOwners, groupOwners, pastOwners,
     groupSessionsOf, dropGroupSession, retireGroupSession, findBot, findRooms, isAdminOf,
