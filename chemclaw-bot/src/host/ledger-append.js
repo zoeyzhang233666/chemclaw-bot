@@ -83,11 +83,22 @@ export function createDurableGroupLedger({ home, assertWriter, beforeWrite, load
       return Promise.reject(new Error('Only a safe group ledger book can be appended'))
     }
     const previous = queues.get(book) ?? Promise.resolve()
+    // Capture the exact JSON bytes when queued, before the caller can mutate
+    // the message while an earlier append is still awaiting fsync.
+    let prepared
+    let inputError
+    try {
+      const line = ensureRecord(record)
+      prepared = { line, durable: JSON.parse(line) }
+    } catch (error) {
+      inputError = error
+    }
     const job = previous.then(async () => {
       if ((await assertWriter(book)) !== true) {
         throw new Error('Exclusive writer lock not confirmed; group ledger write refused')
       }
-      const line = ensureRecord(record)
+      if (inputError) throw inputError
+      const { line, durable } = prepared
       const cached = confirmed.get(book)
       let full
       if (!cached) {
@@ -102,21 +113,21 @@ export function createDurableGroupLedger({ home, assertWriter, beforeWrite, load
 
       // Replays are rare; always check their durable historical record instead
       // of blindly trusting the cache, then return without re-delivering.
-      if (record.seq <= last) {
+      if (durable.seq <= last) {
         const replay = full ?? await loadBook(home, book)
         if (replay === undefined || replay.incompleteTail !== '' ||
-            replay.records.length !== last || !isDeepStrictEqual(replay.records[record.seq - 1], record)) {
-          throw new Error('Group ledger already has a different record at seq ' + record.seq)
+            replay.records.length !== last || !isDeepStrictEqual(replay.records[durable.seq - 1], durable)) {
+          throw new Error('Group ledger already has a different record at seq ' + durable.seq)
         }
-        return { seq: record.seq, reused: true }
+        return { seq: durable.seq, reused: true }
       }
-      if (record.seq !== last + 1) {
-        throw new Error('Group ledger cannot skip from seq ' + last + ' to ' + record.seq)
+      if (durable.seq !== last + 1) {
+        throw new Error('Group ledger cannot skip from seq ' + last + ' to ' + durable.seq)
       }
 
       // This hook is only for fault injection / preflight. A failure leaves the
       // book queue poisoned, and no caller is allowed to report a delivery.
-      await beforeWrite?.(book, record)
+      if (beforeWrite) await beforeWrite(book, structuredClone(durable))
       const path = join(home, 'ledger', ledgerFilename(book))
       // 'r+' refuses a deleted book instead of silently creating a new one.
       const handle = await open(path, 'r+')
@@ -172,8 +183,8 @@ export function createDurableGroupLedger({ home, assertWriter, beforeWrite, load
       } finally {
         await verify.close()
       }
-      confirmed.set(book, { seq: record.seq, file: actual, tail: bytes })
-      return { seq: record.seq, reused: false }
+      confirmed.set(book, { seq: durable.seq, file: actual, tail: bytes })
+      return { seq: durable.seq, reused: false }
     })
     queues.set(book, job)
     return job
