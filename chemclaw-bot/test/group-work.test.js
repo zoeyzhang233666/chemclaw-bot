@@ -1253,6 +1253,21 @@ test('a Ledger published after the Host has started stops the next in-round memb
   assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
 })
 
+test('an existing Ledger blocks legacy group edits and deletion without removing the room', async t => {
+  const host = await start(t)
+  await publishInitialGroupBook(host.home, 'group-r1', [])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const changed = await host.tool('update_group', { group: 'Ops', notice: 'should not change' }, 'a')
+  assert.match(changed, /Could not update/)
+  assert.match(changed, /Ledger book/)
+  await assert.rejects(
+    host.tool('delete_group', { group: 'Ops' }, 'a'),
+    /Ledger book/,
+  )
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  assert.equal((await host.call('state', {})).ok, true)
+})
+
 test('a queued group message is not dispatched when its initial state save fails', async t => {
   const host = await start(t)
   const before = readFileSync(join(host.home, 'state.json'), 'utf8')
