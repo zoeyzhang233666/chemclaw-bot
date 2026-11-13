@@ -94,12 +94,16 @@ async function start(t, room, services, extraRooms) {
   }
   // The user's message in the group, or a Bot's post the group Session took up, and the
   // round it starts.
-  const round = (callId, message) => {
+  const round = (callId, message, { withInbox = false } = {}) => {
     emit('r1', 'user/message', message)
     let result
     const stop = new AbortController()
     t.after(() => stop.abort())
-    void tool('group_relay', {}, 'r1', { callId, signal: stop.signal }).then((value) => { result = JSON.parse(value) })
+    // The default fixture deliberately exposes only an Agent ID. Tests that
+    // exercise mid-round user input need the DSH Agent inbox explicitly, just
+    // as a real group_relay tool call receives it from its execution context.
+    const agent = withInbox ? { id: 'r1', inbox: agentOf('r1').inbox } : { id: 'r1' }
+    void tool('group_relay', {}, 'r1', { callId, signal: stop.signal, agent }).then((value) => { result = JSON.parse(value) })
     const read = () => result
     return read
   }
@@ -1149,7 +1153,7 @@ test('a queued group message is not dispatched when its initial state save fails
 
 test('a new user message during a round stays in the DSH inbox on save failure', async t => {
   const host = await start(t)
-  const first = host.round('in-progress-admission', host.say('@Writer 先进行'))
+  const first = host.round('in-progress-admission', host.say('@Writer 先进行'), { withInbox: true })
   await settle(() => host.agentOf('gb').calls.length === 1)
   host.begin('gb')
   const queued = {
