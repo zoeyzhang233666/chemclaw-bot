@@ -637,6 +637,20 @@ test('a post during a running round with report_back reports only the round it o
   assert.doesNotMatch(text(report), /看一下文档/)
 })
 
+test('a group post whose required save fails never publishes a success reply or starts a relay', async t => {
+  const { host, first } = await busyRound(t)
+  takeGroupStateLock(host)
+  await host.tool('post_to_group', { group: 'Ops', message: '@Tester 未落盘的任务' }, 'a').catch(() => {})
+  const live = await progress(host)
+  assert.equal(live.replies.some(reply => reply.text === '@Tester 未落盘的任务'), false)
+  assert.equal(host.agentOf('r1').calls.length, 0)
+  assert.equal(host.agentOf('gc').calls.length, 0)
+  host.finish('gb', '[PASS]')
+  await settle(() => first() !== undefined)
+  assert.equal(first().code, 'PERSISTENCE_BLOCKED')
+  assert.equal(logLines(host).some(line => line.text === '@Tester 未落盘的任务'), false)
+})
+
 test('a late reply during a running round is logged at once and not repeated', async (t) => {
   t.mock.timers.enable({ apis: ['setTimeout'] })
   const host = await start(t)
