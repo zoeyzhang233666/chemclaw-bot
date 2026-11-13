@@ -43,6 +43,12 @@ test('only the first Host owns the strict Ledger writer lock; the reader can tak
   const second = setupStore(home)
   t.after(async () => { await second.dispose(); await first.dispose() })
   await first.rt.load()
+  // Both mock Hosts run in this Node test process, while real Desktop/Web hosts
+  // have different PIDs. Simulate that different PID in the lock record without
+  // changing the owner's token, so ownership and takeover behave like two OS processes.
+  const lockPath = join(home, 'state.lock')
+  const owned = JSON.parse(await readFile(lockPath, 'utf8'))
+  await writeFile(lockPath, JSON.stringify({ ...owned, pid: process.ppid }))
   await second.rt.load()
   assert.equal(await first.rt.assertLedgerWriter(), true)
   assert.equal(await second.rt.assertLedgerWriter(), false)
