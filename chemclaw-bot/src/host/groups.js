@@ -201,6 +201,19 @@ export function install(rt) {
     room.log = log.slice(-ROOM_LOG_MAX)
   }
 
+  // Admission boundary for group input: never dispatch a queued user/Bot post
+  // until the required state.json snapshot succeeds. A failed save poisons only
+  // this room, preserving the original DSH inbox for recovery inspection.
+  const saveRequiredRoom = async room => {
+    persistenceGate.assertWritable(room.id)
+    try {
+      await rt.save({ required: true })
+    } catch (error) {
+      persistenceGate.block(room.id, error)
+      throw error
+    }
+  }
+
   // A member's group Session, created on its first turn there. A new one starts with
   // a fresh look at the log and a brief of the member's own chat; the brief is the
   // first message, so it stays fixed and the prefix stays cacheable. Warming a room
@@ -615,20 +628,21 @@ export function install(rt) {
     if (round.kickoff) return
     const waiting = waitingLines(agent)
     await rt.contextRecovery?.userInput(room.id, waiting.map(line => ({ id: line.id, source: { kind: 'user' } })))
-    const lines = waiting.filter(line => agent.inbox.remove(line.id))
-    if (lines.length === 0) return
+    if (waiting.length === 0) return
+    // Append the full batch first, without consuming DSH's inbox, publishing
+    // round replies, or scheduling new member calls.
+    for (const line of waiting) appendRoom(room, { who: 'User', text: line.text })
+    room.relays = 0
+    resumePaused(room, round)
+    await saveRequiredRoom(room)
     const members = room.members.map(rt.botOf).filter(Boolean)
-    for (const line of lines) {
-      appendRoom(room, { who: 'User', text: line.text })
+    for (const line of waiting) {
+      agent.inbox.remove(line.id)
       round.replies.push({ kind: 'user', text: line.text, time: Date.now() })
       const { all, found } = mentionsIn(line.text, members)
       const note = all || found.length > 0 ? 'the user mentioned you' : 'new message from the user'
       callMembers(round, index - 1, openingSpeakers(room, { text: line.text }), note, undefined, 'user')
     }
-    // The user spoke in this room, so Bot relays count afresh and the paused run.
-    room.relays = 0
-    resumePaused(room, round)
-    void rt.save().catch(() => {})
   }
 
   async function runRound(room, round, signal, agent) {
@@ -782,8 +796,10 @@ export function install(rt) {
       // Everything queued since the last relay is posted in order, so messages that the
       // Session folds into one turn are not lost; the newest one picks the speakers.
       const queued = rt.roomInbox.get(room.id) ?? []
-      rt.roomInbox.delete(room.id)
-      const posts = queued.length > 0 ? queued : [{ text: '' }]
+      // Snapshot only the posts being admitted. Do not drop them from the
+      // in-memory inbox until the group's required state save is complete;
+      // later concurrent posts remain in the queue for another relay.
+      const posts = queued.length > 0 ? [...queued] : [{ text: '' }]
       // A post a running round already logged stays inside the round this relay opens.
       const startSeq = Math.min(room.seq + 1, ...posts.map(post => post.logged).filter(seq => typeof seq === 'number'))
       // The opening greeting is a cue for the admin, not a line of the group; a member's
@@ -807,7 +823,29 @@ export function install(rt) {
       // limit parked run after the speakers this message picks.
       const releases = posts.some(post => post.resume === true || (!post.botId && !post.kickoff))
       if (releases) room.relays = 0
-      await rt.save()
+      // A stop/resume/done notice must be in the same required-save batch,
+      // otherwise the relay might show it before it is durable.
+      const loggedEvents = []
+      for (const post of posts.filter(item => (item.resumed || item.stopped || item.done) && item.logged === undefined)) {
+        const bot = rt.botOf(post.botId)
+        const name = bot?.name ?? post.name
+        const kind = post.done ? 'done' : post.stopped ? 'stopped' : post.again ? 'cut' : 'resumed'
+        appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
+        loggedEvents.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
+      }
+      try {
+        await saveRequiredRoom(room)
+      } catch (error) {
+        const blocked = persistenceGate.status(room.id)
+        return JSON.stringify({ error: blocked?.message ?? String(error), code: blocked?.code ?? 'PERSISTENCE',
+          replies: [], passed: [], failed: [] })
+      }
+      if (queued.length > 0) {
+        const pending = rt.roomInbox.get(room.id) ?? []
+        const remaining = pending.filter(post => !posts.includes(post))
+        if (remaining.length > 0) rt.roomInbox.set(room.id, remaining)
+        else rt.roomInbox.delete(room.id)
+      }
       // An event post, and a member post that calls nobody, never pick the speakers
       // over a message queued with them.
       const callsNobody = post => post.member === true && openingSpeakers(room, post).length === 0
@@ -848,15 +886,8 @@ export function install(rt) {
         round.failed.push(bot?.name ?? post.name)
         round.replies.push({ kind: 'failed', botId: post.botId, name: bot?.name ?? post.name, color: bot?.color, code, ...(status ? { status } : {}), text: message, time: Date.now() })
       }
-      // The log line tells the admin and the other members on their next turn.
-      for (const post of posts.filter(item => (item.resumed || item.stopped || item.done) && item.logged === undefined)) {
-        const bot = rt.botOf(post.botId)
-        const name = bot?.name ?? post.name
-        const kind = post.done ? 'done' : post.stopped ? 'stopped' : post.again ? 'cut' : 'resumed'
-        appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
-        round.replies.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
-      }
-      if (posts.some(post => post.resumed || post.stopped || post.done)) await rt.save()
+      // These event replies were only made visible after the required commit.
+      round.replies.push(...loggedEvents)
       for (const post of posts.filter(item => item.views?.length && item.logged === undefined)) {
         const member = rt.botOf(post.botId)
         if (member) postViews(round, member, post.views)

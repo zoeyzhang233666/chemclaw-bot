@@ -94,12 +94,16 @@ async function start(t, room, services, extraRooms) {
   }
   // The user's message in the group, or a Bot's post the group Session took up, and the
   // round it starts.
-  const round = (callId, message) => {
+  const round = (callId, message, { withInbox = false } = {}) => {
     emit('r1', 'user/message', message)
     let result
     const stop = new AbortController()
     t.after(() => stop.abort())
-    void tool('group_relay', {}, 'r1', { callId, signal: stop.signal }).then((value) => { result = JSON.parse(value) })
+    // The default fixture deliberately exposes only an Agent ID. Tests that
+    // exercise mid-round user input need the DSH Agent inbox explicitly, just
+    // as a real group_relay tool call receives it from its execution context.
+    const agent = withInbox ? { id: 'r1', inbox: agentOf('r1').inbox } : { id: 'r1' }
+    void tool('group_relay', {}, 'r1', { callId, signal: stop.signal, agent }).then((value) => { result = JSON.parse(value) })
     const read = () => result
     return read
   }
@@ -1128,6 +1132,44 @@ test('a failed in-progress member step does not publish or call another Bot afte
   assert.deepEqual(result().replies.filter(reply => reply.kind === 'failed').map(reply => [reply.name, reply.code]), [['Writer', 'PERSISTENCE']])
   assert.equal(result().replies.some(reply => reply.name === 'Writer' && reply.kind === undefined), false)
   assert.equal(host.agentOf('gc').calls.length, 0)
+})
+
+test('a queued group message is not dispatched when its initial state save fails', async t => {
+  const host = await start(t)
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  takeGroupStateLock(host)
+  const result = host.round('admission-denied', host.say('@Writer 不应执行'))
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'PERSISTENCE_BLOCKED')
+  assert.deepEqual(result().replies, [])
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  assert.equal(host.agentOf('ga').calls.length, 0)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  const next = host.round('admission-still-blocked', host.say('@Tester 也不应执行'))
+  await settle(() => next() !== undefined)
+  assert.equal(next().code, 'PERSISTENCE_BLOCKED')
+  assert.equal(host.agentOf('gc').calls.length, 0)
+})
+
+test('a new user message during a round stays in the DSH inbox on save failure', async t => {
+  const host = await start(t)
+  const first = host.round('in-progress-admission', host.say('@Writer 先进行'), { withInbox: true })
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  const queued = {
+    id: 'inbox-uncommitted-user',
+    source: { kind: 'user' },
+    content: [{ type: 'text', text: '@Tester 新增任务' }],
+  }
+  const inbox = host.agentOf('r1').inbox
+  inbox.nextStep.push(queued)
+  takeGroupStateLock(host)
+  host.finish('gb', '[PASS]')
+  await settle(() => first() !== undefined)
+  assert.equal(first().code, 'PERSISTENCE_BLOCKED')
+  assert.ok(inbox.nextStep.some(message => message.id === queued.id), 'failed admission must not remove the inbox message')
+  assert.equal(host.agentOf('gc').calls.length, 0, 'a failed user message must not call Tester')
+  assert.equal(logLines(host).some(line => line.text === '@Tester 新增任务'), false)
 })
 
 test('a room whose required save failed rejects later rounds without consuming or dispatching them', async t => {
