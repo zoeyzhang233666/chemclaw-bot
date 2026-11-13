@@ -4,6 +4,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createGroupLedgerCommitter } from '../src/host/ledger-room-commit.js'
+import { install as installStore } from '../src/host/store.js'
 import { publishInitialGroupBook } from '../src/host/ledger-import.js'
 import { readLedger } from '../src/host/ledger-foundation.js'
 import { inspectGroupLedgerRecovery } from '../src/host/ledger-recovery.js'
@@ -271,4 +272,44 @@ test('a legacy group identity change during async write cannot redirect the stat
   assert.equal(room.seq, 0)
   assert.equal((await readLedger(home, 'group-r1')).records.length, 1)
   assert.equal(await readLedger(home, 'group-another-room'), undefined)
+})
+
+test('the adapter commits through the real ChemClaw state.lock and required store.save()', async t => {
+  const home = await mkdtemp(join(tmpdir(), 'chemclaw-real-store-commit-'))
+  const cleanups = []
+  t.after(async () => {
+    await Promise.all(cleanups.map(fn => fn()))
+    await rm(home, { recursive: true, force: true, maxRetries: 5, retryDelay: 30 })
+  })
+  const rt = {
+    home, statePath: join(home, 'state.json'),
+    ctx: { effect(effect) {
+      const cleanup = effect()
+      if (typeof cleanup === 'function') cleanups.push(cleanup)
+    } },
+    autoRoomName: () => 'ChemClaw Test Team',
+    retitleRoom: async () => {},
+    warn: () => {},
+  }
+  installStore(rt)
+  await rt.load()
+  assert.equal(await rt.assertLedgerWriter(), true)
+  const room = {
+    id: 'r1', members: [], name: 'Team', admin: null, mode: 'everyone',
+    seq: 0, log: [], seen: {},
+  }
+  rt.state.rooms.r1 = room
+  await rt.save({ required: true })
+  await publishInitialGroupBook(home, 'group-r1', [])
+  const committer = createGroupLedgerCommitter({
+    home,
+    assertWriter: () => rt.assertLedgerWriter(),
+    saveState: () => rt.save({ required: true }),
+  })
+  await committer.commit(room, { who: 'User', text: 'real locked and saved message' })
+  const onDisk = JSON.parse(await readFile(rt.statePath, 'utf8'))
+  assert.equal(onDisk.rooms.r1.seq, 1)
+  assert.equal(onDisk.rooms.r1.log[0].text, 'real locked and saved message')
+  assert.equal((await readLedger(home, 'group-r1')).records[0].text, 'real locked and saved message')
+  assert.equal((await inspectGroupLedgerRecovery(home, onDisk.rooms.r1)).status, 'aligned')
 })
