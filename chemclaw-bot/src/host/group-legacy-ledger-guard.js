@@ -4,7 +4,7 @@
 // create two contradictory sources of truth.
 //
 // This probe is read-only: it NEVER imports, reconciles, deletes or replays.
-import { statSync } from 'node:fs'
+import { lstatSync } from 'node:fs'
 import { join } from 'node:path'
 import { ledgerFilename } from './ledger-foundation.js'
 
@@ -21,7 +21,9 @@ export function createLegacyGroupLedgerGuard({ home } = {}) {
     }
     const path = join(home, 'ledger', ledgerFilename('group-' + roomId))
     try {
-      statSync(path)
+      // lstat also rejects a dangling Ledger symlink; following it with stat
+      // would mistake its ENOENT target for a safely un-migrated room.
+      lstatSync(path)
       // Even an incomplete or corrupt Ledger must not be bypassed: the
       // read-only recovery inspector decides what comes next, not this writer.
       return { code: 'LEDGER_MIGRATION_REQUIRED', message: MIGRATION_MESSAGE }
