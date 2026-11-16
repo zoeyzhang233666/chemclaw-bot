@@ -1,4 +1,5 @@
 export const CHEM_CONNECTORS = [
+  { id: 'ima', name: 'Tencent ima Knowledge Base', description: 'Search, upload and manage your ima knowledge bases and notes with Client ID and API Key', url: 'https://ima.qq.com', secret: 'IMA_API_KEY', tokenUrl: 'https://ima.qq.com/agent-interface', native: true },
   { id: 'chem-data-hub', name: 'Chemcloud Data Hub', description: 'Compounds, companies, trades and market prices via MCP', url: 'https://datahub.chem-cloud.cn/mcp', secret: 'CHEM_DATA_HUB', tokenUrl: 'https://mcp.chem-cloud.cn/' },
   { id: 'huagongshe', name: 'Huagongshe', description: 'Public chemistry search, structures and stoichiometry', url: 'https://huagongshe.com/mcp', secret: 'HUAGONGSHE', tokenUrl: 'https://huagongshe.com/zh-CN/mcp-guide', anonymous: true },
 ]
