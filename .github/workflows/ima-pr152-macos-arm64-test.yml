@@ -1,0 +1,72 @@
+name: PR 152 macOS Apple Silicon test package
+
+on:
+  push:
+    branches: [feat/ima-openapi-connector]
+    paths:
+      - .github/workflows/ima-pr152-macos-arm64-test.yml
+
+permissions:
+  contents: read
+
+jobs:
+  mac-arm64-test:
+    name: Build unsigned-notarized macOS ARM64 preview (PR 152)
+    runs-on: macos-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Verify feature branch and architecture
+        run: |
+          test "$GITHUB_REF_NAME" = "feat/ima-openapi-connector"
+          test "$(uname -m)" = arm64
+          echo "Built from $GITHUB_REPOSITORY@$GITHUB_SHA" > "$RUNNER_TEMP/pr152-source.txt"
+          sw_vers >> "$RUNNER_TEMP/pr152-source.txt"
+      - name: Verify bundled ChemClaw client is current
+        working-directory: chemclaw-bot
+        run: |
+          npm ci --no-fund --no-audit
+          node scripts/build-client.mjs --check
+      - name: Install desktop build dependencies
+        working-directory: app
+        run: npm ci --no-fund --no-audit
+      - name: Build PR-specific Apple Silicon DMG
+        working-directory: app
+        env:
+          CSC_FOR_PULL_REQUEST: 'true'
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+        run: npm run dist:mac-preview -- --arm64 --config.extraMetadata.version=0.3.2-ima.152
+      - name: Check executable architecture, signing, and DMG
+        run: |
+          set -euo pipefail
+          app="app/dist-pack/mac-arm64/ChemClaw.app"
+          exe="$app/Contents/MacOS/ChemClaw"
+          codesign --verify --deep --strict "$app"
+          file "$exe" | tee -a "$RUNNER_TEMP/pr152-source.txt"
+          file "$exe" | grep -F arm64
+          dmg="$(find app/dist-pack -maxdepth 1 -type f -name '*mac-arm64.dmg' -print -quit)"
+          test -n "$dmg" && test -s "$dmg"
+          shasum -a 256 "$dmg" > "$RUNNER_TEMP/pr152-sha256.txt"
+          cat "$RUNNER_TEMP/pr152-sha256.txt"
+      - name: Upload macOS M-series test DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChemClaw-PR152-mac-arm64-test
+          path: |
+            app/dist-pack/*mac-arm64.dmg
+            ${{ runner.temp }}/pr152-source.txt
+            ${{ runner.temp }}/pr152-sha256.txt
+          retention-days: 14
+          if-no-files-found: error
+          compression-level: 0
