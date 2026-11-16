@@ -7,6 +7,27 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Featured chemical industry knowledge base': '推荐化工产业知识库',
+  'Curated chemical industry research and supply-chain materials maintained in ima. Subscription happens on the official ima website, not in ChemClaw.': '芯化智数持续整理化工研报、产业链与市场资料。请前往 ima 官方页面完成订阅。',
+  'Open ima to subscribe to the Chemcloud library': '前往 ima 订阅芯化智数知识库',
+  'Step 1: Open ima, sign in (ima may show a WeChat QR code), and subscribe to the library. This QR sign-in does not authorize ChemClaw.': '第一步：打开 ima，按页面提示用微信扫码登录并订阅知识库。注意：这只是登录 ima，不等于授权 ChemClaw。',
+  'Step 2: In ima, open the official agent authorization page, create your personal Client ID and API Key, then paste them here once. The API Key may be shown only once; keep it private.': '第二步：在 ima 官方智能体授权页生成自己的 Client ID 和 API Key，复制到下方。API Key 可能只显示一次，请自行妥善保存。',
+  'Open ima authorization page': '打开 ima 官方授权页面',
+  'Paste ima Client ID': '粘贴 ima Client ID',
+  'Your credentials are stored locally, are not shown to the AI model, and can be disconnected at any time.': '凭证保存在本地密钥存储中，不会直接提供给模型；你可以随时断开连接。',
+  'Step 3: Verify your accessible knowledge bases': '第三步：验证可访问的知识库',
+  'Search all readable knowledge bases, including subscriptions where ima OpenAPI permits access. Being connected is not proof that you subscribed.': '搜索当前账号有权读取的知识库；连接账号不代表已经订阅，订阅库能否检索由 ima 官方接口权限决定。',
+  'Search knowledge base name': '搜索知识库名称',
+  'Search': '搜索',
+  'Show my libraries': '查看我的知识库',
+  'Default readable library: {name}': '默认检索知识库：{name}',
+  'Clear default': '取消默认',
+  'No accessible knowledge base matched. Subscribe on the ima website and search again.': '未找到可访问的匹配知识库。请确认已在 ima 订阅，然后重新搜索。',
+  'Selected': '已设为默认',
+  'Use for research': '设为默认检索库',
+  'Load more': '加载更多',
+  'Verified access to {name}. ChemClaw will use it as the default knowledge base.': '已验证可以读取{name}，ChemClaw 将优先从该库检索。',
+
   'Tencent ima Knowledge Base': '腾讯 ima 知识库',
   'Search, upload and manage your ima knowledge bases and notes with Client ID and API Key': '通过 Client ID 和 API Key 检索、上传及管理自己的 ima 知识库与笔记',
   'Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.': '通过 ima 官方 OpenAPI 检索知识库、导入网页和文件、管理笔记。',
