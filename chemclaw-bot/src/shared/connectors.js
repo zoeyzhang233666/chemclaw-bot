@@ -1,3 +1,9 @@
+// Official ima share link: invitation only. It is NOT an OpenAPI knowledge_base_id.
+export const IMA_FEATURED_LIBRARY = Object.freeze({
+  name: '芯化智数 · 化工产业知识库',
+  searchName: '芯化智数',
+  shareUrl: 'https://ima.qq.com/wiki/?shareId=4d781b6d98e6949ec4e2cfb1b8b329106393fbc62de98215783ae9a78e79148b',
+})
 export const CHEM_CONNECTORS = [
   { id: 'ima', name: 'Tencent ima Knowledge Base', description: 'Search, upload and manage your ima knowledge bases and notes with Client ID and API Key', url: 'https://ima.qq.com', secret: 'IMA_API_KEY', tokenUrl: 'https://ima.qq.com/agent-interface', native: true },
   { id: 'chem-data-hub', name: 'Chemcloud Data Hub', description: 'Compounds, companies, trades and market prices via MCP', url: 'https://datahub.chem-cloud.cn/mcp', secret: 'CHEM_DATA_HUB', tokenUrl: 'https://mcp.chem-cloud.cn/' },
