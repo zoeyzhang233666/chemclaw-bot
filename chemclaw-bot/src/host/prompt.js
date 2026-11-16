@@ -3,6 +3,7 @@
 
 import { VIEW_POLICY } from './view-policy.js'
 import { install as installVisualDelivery } from './visual-delivery.js'
+import { install as installDesktopRuntime } from './desktop-runtime.js'
 
 const TEAM_RULES = [
   '- For human-facing Bot/group spot-versus-futures overlay or 基差 questions, the final visual must be ONE native show_view stack with (1) a dated two-series line chart with spot and futures on the SAME date axis, and (2) a dated basis line computed from those aligned observations (physical spot minus exchange futures, same unit). Set audience: user when calling show_view in a group. Do not send a dsh-ui code fence, raw JSON, separate futures-only line plus regional spot bars, or claim that a visual JSON string is a rendered chart. If verified historical spot prices do not exist, do not manufacture observations: state the missing history explicitly and show only a factual table or current quote metric. Keep both sources and contract/grade labels distinct.',
@@ -96,4 +97,5 @@ export function install(rt) {
     },
   }), 'chemclaw-bot: visual delivery policy')
   installVisualDelivery(rt)
+  installDesktopRuntime(rt)
 }
