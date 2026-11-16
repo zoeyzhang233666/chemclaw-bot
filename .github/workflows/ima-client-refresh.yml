@@ -32,3 +32,5 @@ jobs:
             git commit -m "build: regenerate ima subscription client bundle"
             git push origin HEAD:feat/ima-openapi-connector
           fi
+
+# Refresh after translation cleanup.
