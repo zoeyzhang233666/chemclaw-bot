@@ -57,7 +57,9 @@ test('ordinary Node, Python, Office, browser tools and source edits remain usabl
 test('Windows paths and PowerShell probes receive the same protection', async () => {
   const app = 'C:\\Apps\\ChemClaw\\ChemClaw.exe'
   const { execute, exec } = start({ app })
-  await assert.rejects(execute({ ...exec(`& 'C:/Apps/ChemClaw/ChemClaw.exe' -e "process._linkedBinding('electron_browser_app')"`), name: 'pwsh' }, async () => assert.fail('must not spawn')), { code: 'CHEMCLAW_UNSUPPORTED_BROWSER_RUNTIME' })
+  for (const path of [app, app.replaceAll('\\', '/'), JSON.stringify(app)]) {
+    await assert.rejects(execute({ ...exec(`& ${path} -e "process._linkedBinding('electron_browser_app')"`), name: 'pwsh' }, async () => assert.fail('must not spawn')), { code: 'CHEMCLAW_UNSUPPORTED_BROWSER_RUNTIME' })
+  }
 })
 
 test('an indirect native failure is returned once, then repeated application launches stop for that turn', async () => {

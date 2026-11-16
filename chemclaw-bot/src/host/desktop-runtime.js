@@ -9,7 +9,9 @@ export const DESKTOP_RUNTIME_RULES = [
 ].join('\n')
 
 const SHELL_TOOLS = new Set(['bash', 'pwsh'])
-const normalize = value => value.replaceAll('\\', '/').toLowerCase()
+// A shell command can contain a Windows path quoted through JSON as well as
+// literal backslashes. Match the executable in either spelling before dispatch.
+const normalize = value => value.replace(/\\+/gu, '/').toLowerCase()
 const browserBinding = /(?:_linkedBinding\s*\(\s*['"]electron_browser_|(?:require|import)\s*\(\s*['"]electron\/js2c\/browser_init['"])/u
 const nativeFailure = /\bSIGSEGV\b|\bEXC_BAD_ACCESS\b|Segmentation fault|\bcode=139\b/u
 
