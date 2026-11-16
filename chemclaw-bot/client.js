@@ -215,6 +215,14 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "Tencent ima Knowledge Base": "腾讯 ima 知识库",
+  "Search, upload and manage your ima knowledge bases and notes with Client ID and API Key": "通过 Client ID 和 API Key 检索、上传及管理自己的 ima 知识库与笔记",
+  "Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.": "通过 ima 官方 OpenAPI 检索知识库、导入网页和文件、管理笔记。",
+  "Client ID": "Client ID",
+  "API Key": "API Key",
+  "Enter ima Client ID": "输入 ima Client ID",
+  "Enter ima API Key": "输入 ima API Key",
+  "Get ima credentials": "获取 ima 授权凭证",
   "Give up waiting for {name}": "放弃等待{name}",
   "OHLC": "日K线",
   "Opening price": "开盘价",
@@ -19190,6 +19198,93 @@ function ChemcloudCard({ connector, actions, focusKey = false }) {
     error ? (0, import_react46.createElement)("div", { className: "bt-connector-error", role: "alert" }, error) : null
   );
 }
+function ImaCard({ connector, actions }) {
+  const [clientId, setClientId] = (0, import_react46.useState)("");
+  const [apiKey, setApiKey] = (0, import_react46.useState)("");
+  const [busy, setBusy] = (0, import_react46.useState)(false);
+  const [error, setError] = (0, import_react46.useState)("");
+  const [editing, setEditing] = (0, import_react46.useState)(!connector.authenticated);
+  const connect = async () => {
+    if (busy || !clientId.trim() || !apiKey.trim()) return;
+    setBusy(true);
+    setError("");
+    try {
+      await actions.connectorConnect("ima", JSON.stringify({ clientId: clientId.trim(), apiKey: apiKey.trim() }));
+      setClientId("");
+      setApiKey("");
+      setEditing(false);
+    } catch (failure) {
+      setError(failure?.message ?? String(failure));
+    } finally {
+      setBusy(false);
+    }
+  };
+  const act = async (task) => {
+    setBusy(true);
+    setError("");
+    try {
+      await task;
+    } catch (failure) {
+      setError(failure?.message ?? String(failure));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (0, import_react46.createElement)(
+    "article",
+    { className: "bt-set-card bt-connectors-card", "aria-label": t("Tencent ima Knowledge Base") },
+    (0, import_react46.createElement)(
+      "div",
+      { className: "bt-connector", "data-state": connector.state },
+      (0, import_react46.createElement)(
+        "div",
+        { className: "bt-connector-head" },
+        (0, import_react46.createElement)("span", { className: "bt-connector-mark" }, (0, import_react46.createElement)(PlugIcon)),
+        (0, import_react46.createElement)(
+          "span",
+          { className: "bt-connector-text" },
+          (0, import_react46.createElement)("span", { className: "bt-connector-name" }, t("Tencent ima Knowledge Base")),
+          (0, import_react46.createElement)("span", { className: "bt-connector-status" }, statusText2(connector))
+        ),
+        (0, import_react46.createElement)(
+          "span",
+          { className: "bt-connector-actions" },
+          connector.state === "error" && connector.authenticated ? (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void act(actions.connectorRetry("ima")) }, t("Try again")) : null,
+          connector.authenticated ? (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => setEditing(!editing) }, t("Change key")) : null,
+          connector.authenticated ? (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void act(actions.connectorDisconnect("ima").then(() => {
+            setEditing(true);
+            setClientId("");
+            setApiKey("");
+          })) }, t("Disconnect")) : null
+        )
+      ),
+      (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.")),
+      editing ? (0, import_react46.createElement)(
+        "div",
+        { className: "bt-connector-form" },
+        (0, import_react46.createElement)(
+          "label",
+          { className: "bt-q-field bt-secret-field" },
+          (0, import_react46.createElement)("span", null, t("Client ID")),
+          (0, import_react46.createElement)("input", { value: clientId, placeholder: t("Enter ima Client ID"), autoComplete: "off", spellCheck: false, onChange: (event) => setClientId(event.target.value), "aria-label": t("Client ID") })
+        ),
+        (0, import_react46.createElement)(
+          "label",
+          { className: "bt-q-field bt-secret-field" },
+          (0, import_react46.createElement)("span", null, t("API Key")),
+          (0, import_react46.createElement)(MaskedInput, { value: apiKey, onChange: setApiKey, onEnter: connect, label: t("Enter ima API Key") })
+        ),
+        (0, import_react46.createElement)(
+          "div",
+          { className: "bt-connector-form-row" },
+          (0, import_react46.createElement)("a", { className: "bt-connector-link", href: "https://ima.qq.com/agent-interface", target: "_blank", rel: "noopener noreferrer" }, t("Get ima credentials")),
+          (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy || !clientId.trim() || !apiKey.trim(), onClick: connect }, t(busy ? "Connecting…" : "Connect"))
+        )
+      ) : null,
+      error ? (0, import_react46.createElement)("div", { role: "alert", className: "bt-connector-error" }, error) : null
+    )
+  );
+}
 function ConnectorsPage({ roster, actions, focusId = null }) {
   const list = roster?.connectors ?? [];
   const [json, setJson] = (0, import_react46.useState)("");
@@ -19198,7 +19293,8 @@ function ConnectorsPage({ roster, actions, focusId = null }) {
   const [data, setData] = (0, import_react46.useState)(null);
   const [adding, setAdding] = (0, import_react46.useState)(false);
   const chemcloud = list.find((item) => item.id === "chem-data-hub");
-  const others = list.filter((item) => item.id !== "huagongshe" && item.id !== "chem-data-hub");
+  const ima = list.find((item) => item.id === "ima");
+  const others = list.filter((item) => item.id !== "huagongshe" && item.id !== "chem-data-hub" && item.id !== "ima");
   const check = () => actions.dataStatus().then(setData).catch((failure) => setError(failure.message));
   (0, import_react46.useEffect)(() => {
     void check();
@@ -19223,6 +19319,7 @@ function ConnectorsPage({ roster, actions, focusId = null }) {
     adding ? (0, import_react46.createElement)(ServiceInstaller, { actions, onClose: () => setAdding(false) }) : null,
     error ? (0, import_react46.createElement)("div", { className: "bt-error", role: "alert" }, error) : null,
     chemcloud ? (0, import_react46.createElement)(ChemcloudCard, { connector: chemcloud, actions, focusKey: focusId === "chem-data-hub" }) : null,
+    ima ? (0, import_react46.createElement)(ImaCard, { connector: ima, actions }) : null,
     !chemcloud && others.length === 0 ? (0, import_react46.createElement)("div", { className: "bt-set-card bt-connectors-card" }, (0, import_react46.createElement)("div", { className: "bt-set-row" }, (0, import_react46.createElement)("span", { className: "bt-set-hint" }, t("No connectors")))) : others.length ? (0, import_react46.createElement)("div", { className: "bt-set-card bt-connectors-card" }, others.map((connector) => (0, import_react46.createElement)(ConnectorRow, { key: connector.id, connector, actions }))) : null,
     (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Huagongshe public queries need no key. Company credentials are optional for public research.")),
     (0, import_react46.createElement)("h3", null, t("Public research data")),
