@@ -7,6 +7,14 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  'Tencent ima Knowledge Base': '腾讯 ima 知识库',
+  'Search, upload and manage your ima knowledge bases and notes with Client ID and API Key': '通过 Client ID 和 API Key 检索、上传及管理自己的 ima 知识库与笔记',
+  'Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.': '通过 ima 官方 OpenAPI 检索知识库、导入网页和文件、管理笔记。',
+  'Client ID': 'Client ID',
+  'API Key': 'API Key',
+  'Enter ima Client ID': '输入 ima Client ID',
+  'Enter ima API Key': '输入 ima API Key',
+  'Get ima credentials': '获取 ima 授权凭证',
   'Give up waiting for {name}': '放弃等待{name}',
   'OHLC': '日K线',
   'Opening price': '开盘价',
