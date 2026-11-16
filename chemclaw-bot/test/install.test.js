@@ -120,6 +120,8 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'on llm/stream',
     'effect chemclaw-bot: load secrets',
     'effect chemclaw-bot: connectors',
+    'tool ima_openapi',
+    'tool ima_upload_file',
     'on agent/created',
     'effect chemclaw-bot: capabilities',
     'effect chemclaw-bot: skill import cleanup',
