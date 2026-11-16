@@ -1,7 +1,7 @@
 // Tencent ima OpenAPI adapter. Credentials stay in ChemClaw's secrets store and are
 // sent only to https://ima.qq.com. The provider is not an MCP server.
 import { createHash, createHmac } from 'node:crypto'
-import { readFile, stat } from 'node:fs/promises'
+import { readFile, realpath, stat } from 'node:fs/promises'
 import { basename, extname, resolve } from 'node:path'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import { within } from './folders.js'
@@ -109,6 +109,8 @@ export function cosUploadRequest(credential, data, mime, now = Math.floor(Date.n
 
 export async function uploadImaFile({ clientId, apiKey, filePath, root, knowledgeBaseId, folderId, allowDuplicate = false, request = globalThis.fetch, signal }) {
   if (!string(root) || !string(filePath) || !within(resolve(filePath), resolve(root))) throw new Error('Files can only be uploaded from the active Bot working folder.')
+  const [actualFile, actualRoot] = await Promise.all([realpath(filePath), realpath(root)])
+  if (!within(actualFile, actualRoot)) throw new Error('File symlinks cannot escape the Bot working folder.')
   if (!string(knowledgeBaseId)) throw new Error('Choose an ima knowledge base first.')
   const title = basename(filePath)
   const ext = extname(title).slice(1).toLowerCase()
@@ -123,10 +125,10 @@ export async function uploadImaFile({ clientId, apiKey, filePath, root, knowledg
     if (!allowDuplicate && duplicates.results?.some(row => row.is_repeated)) throw new Error('ima already has a file with this name. Choose another name or explicitly allow duplicates.')
   }
   const created = await api('wiki.create_media', { // Special internal step, never exposed as a model-callable operation.
-    ...target, file_name: title, file_size: details.size, content_type: format[1], file_ext: ext,
+    knowledge_base_id: knowledgeBaseId, file_name: title, file_size: details.size, content_type: format[1], file_ext: ext,
   })
   const credential = created.cos_credential
-  const data = await readFile(filePath)
+  const data = await readFile(actualFile)
   const put = cosUploadRequest(credential, data, format[1])
   let uploaded
   try { uploaded = await request(put.url, { ...put.init, signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(60_000)]) : AbortSignal.timeout(60_000) }) }
