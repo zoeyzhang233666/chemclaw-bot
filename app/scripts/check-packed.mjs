@@ -174,6 +174,22 @@ function checkSharp(app) {
       await assert.rejects(runner.runIsolatedScript('while (true) {}', {}, { timeout: 400 }), /longer than/)
       assert.equal(await runner.runIsolatedScript('return "host-survived"', {}), 'host-survived')
       console.log('check-packed: packaged browser_exec isolation and child process timeout passed')
+      // Ordinary Agent Sessions have no Bot identity and may have no browser
+      // tools. Their shell must not probe Electron browser bindings in Node mode.
+      const runtime = await import(require('node:url').pathToFileURL(path.join(plugin, 'src/host/desktop-runtime.js')).href)
+      let guard
+      let guidance
+      runtime.install({ ctx: {
+        effect: fn => fn(),
+        systemPrompt: { section: value => { guidance = value } },
+        on: (name, listener) => { if (name === 'tools/execute') guard = listener },
+      } }, { env: { DS_BOT_APP: '1' }, executable: process.execPath })
+      assert.ok(guidance.text({ agent: { id: 'ordinary-agent' } }).includes('Ordinary Agent Sessions may have no browser tools'))
+      await assert.rejects(guard({
+        name: 'bash', agent: { session: {} },
+        arguments: { command: JSON.stringify(process.execPath) + ' -e ' + JSON.stringify("process._linkedBinding('electron_browser_app')") },
+      }, async () => assert.fail('unsupported browser probe reached the shell')), { code: 'CHEMCLAW_UNSUPPORTED_BROWSER_RUNTIME' })
+      console.log('check-packed: packaged ordinary Agent browser-runtime guard passed without starting a probe')
     })().catch(error => { console.error(error); process.exitCode = 1 })
   `
   // Use the shipped Electron and dependencies outside the checkout, just like the Host.
