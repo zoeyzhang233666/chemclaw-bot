@@ -115,12 +115,40 @@ function ImaCard({ connector, actions }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [editing, setEditing] = useState(!connector.authenticated)
+  const [query, setQuery] = useState('芯化智数')
+  const [libraries, setLibraries] = useState([])
+  const [cursor, setCursor] = useState('')
+  const [isEnd, setIsEnd] = useState(true)
+  const [searched, setSearched] = useState(false)
+  const [searching, setSearching] = useState(false)
+  const [notice, setNotice] = useState('')
+
+  const find = async (term, nextCursor = '') => {
+    setSearching(true); setError('')
+    try {
+      const result = await actions.imaLibraries(term, nextCursor)
+      setLibraries(old => nextCursor ? [...old, ...(result.libraries ?? [])] : (result.libraries ?? []))
+      setCursor(result.nextCursor ?? '')
+      setIsEnd(result.isEnd !== false)
+      setSearched(true)
+    } catch (failure) { setError(failure?.message ?? String(failure)) }
+    finally { setSearching(false) }
+  }
+
+  // A successful connection may be read-only. Do not assume membership until
+  // the user's accessible knowledge-base list confirms the actual library ID.
+  useEffect(() => {
+    if (!connector.authenticated || connector.state !== 'ready') return
+    void find('芯化智数')
+  }, [connector.authenticated, connector.state])
+
   const connect = async () => {
     if (busy || !clientId.trim() || !apiKey.trim()) return
-    setBusy(true); setError('')
+    setBusy(true); setError(''); setNotice('')
     try {
       await actions.connectorConnect('ima', JSON.stringify({ clientId: clientId.trim(), apiKey: apiKey.trim() }))
       setClientId(''); setApiKey(''); setEditing(false)
+      setSearched(false); setLibraries([])
     } catch (failure) { setError(failure?.message ?? String(failure)) }
     finally { setBusy(false) }
   }
@@ -129,6 +157,13 @@ function ImaCard({ connector, actions }) {
     try { await task } catch (failure) { setError(failure?.message ?? String(failure)) }
     finally { setBusy(false) }
   }
+  const pin = async library => {
+    await act(actions.imaSelectLibrary(library.id).then(result => {
+      setNotice(t('Verified access to {name}. ChemClaw will use it as the default knowledge base.', { name: result.pinned?.name ?? library.name }))
+    }))
+  }
+  const pinned = connector.pinned
+
   return h('article', { className: 'bt-set-card bt-connectors-card', 'aria-label': t('Tencent ima Knowledge Base') },
     h('div', { className: 'bt-connector', 'data-state': connector.state },
       h('div', { className: 'bt-connector-head' },
@@ -142,18 +177,42 @@ function ImaCard({ connector, actions }) {
           connector.authenticated
             ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => setEditing(!editing) }, t('Change key')) : null,
           connector.authenticated
-            ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void act(actions.connectorDisconnect('ima').then(() => { setEditing(true); setClientId(''); setApiKey('') })) }, t('Disconnect')) : null)),
-      h('p', { className: 'bt-set-hint' }, t('Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.')),
+            ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void act(actions.connectorDisconnect('ima').then(() => { setEditing(true); setClientId(''); setApiKey(''); setLibraries([]); setSearched(false); setNotice('') })) }, t('Disconnect')) : null)),
+      h('div', { className: 'bt-connector-form' },
+        h('strong', null, t('Featured chemical industry knowledge base')),
+        h('div', null, '芯化智数 · 化工产业知识库'),
+        h('p', { className: 'bt-set-hint' }, t('Curated chemical industry research and supply-chain materials maintained in ima. Subscription happens on the official ima website, not in ChemClaw.')),
+        h('a', { className: 'bt-connector-link', href: 'https://ima.qq.com/wiki/?shareId=4d781b6d98e6949ec4e2cfb1b8b329106393fbc62de98215783ae9a78e79148b', target: '_blank', rel: 'noopener noreferrer' }, t('Open ima to subscribe to the Chemcloud library')),
+        h('p', { className: 'bt-set-hint' }, t('Step 1: Open ima, sign in (ima may show a WeChat QR code), and subscribe to the library. This QR sign-in does not authorize ChemClaw.'))),
       editing ? h('div', { className: 'bt-connector-form' },
+        h('p', { className: 'bt-set-hint' }, t('Step 2: In ima, open the official agent authorization page, create your personal Client ID and API Key, then paste them here once. The API Key may be shown only once; keep it private.')),
+        h('a', { className: 'bt-connector-link', href: 'https://ima.qq.com/agent-interface', target: '_blank', rel: 'noopener noreferrer' }, t('Open ima authorization page')),
         h('label', { className: 'bt-q-field bt-secret-field' },
           h('span', null, t('Client ID')),
-          h('input', { value: clientId, placeholder: t('Enter ima Client ID'), autoComplete: 'off', spellCheck: false, onChange: event => setClientId(event.target.value), 'aria-label': t('Client ID') })),
+          h('input', { value: clientId, placeholder: t('Paste ima Client ID'), autoComplete: 'off', spellCheck: false, onChange: event => setClientId(event.target.value), 'aria-label': t('Client ID') })),
         h('label', { className: 'bt-q-field bt-secret-field' },
           h('span', null, t('API Key')),
           h(MaskedInput, { value: apiKey, onChange: setApiKey, onEnter: connect, label: t('Enter ima API Key') })),
+        h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy || !clientId.trim() || !apiKey.trim(), onClick: connect }, t(busy ? 'Connecting…' : 'Connect')),
+        h('p', { className: 'bt-set-hint' }, t('Your credentials are stored locally, are not shown to the AI model, and can be disconnected at any time.')) ) : null,
+      connector.authenticated ? h('div', { className: 'bt-connector-form' },
+        h('strong', null, t('Step 3: Verify your accessible knowledge bases')),
+        h('p', { className: 'bt-set-hint' }, t('Search all readable knowledge bases, including subscriptions where ima OpenAPI permits access. Being connected is not proof that you subscribed.')),
         h('div', { className: 'bt-connector-form-row' },
-          h('a', { className: 'bt-connector-link', href: 'https://ima.qq.com/agent-interface', target: '_blank', rel: 'noopener noreferrer' }, t('Get ima credentials')),
-          h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy || !clientId.trim() || !apiKey.trim(), onClick: connect }, t(busy ? 'Connecting…' : 'Connect')))) : null,
+          h('input', { value: query, onChange: event => setQuery(event.target.value), onKeyDown: event => { if (event.key === 'Enter' && !searching) void find(query) }, placeholder: t('Search knowledge base name'), 'aria-label': t('Search knowledge base name') }),
+          h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: searching, onClick: () => void find(query) }, t('Search')),
+          h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: searching, onClick: () => { setQuery(''); void find('') } }, t('Show my libraries'))),
+        pinned ? h('div', { className: 'bt-set-hint' },
+          t('Default readable library: {name}', { name: pinned.name }),
+          ' · ',
+          h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void act(actions.imaClearLibrary().then(() => setNotice(''))) }, t('Clear default'))) : null,
+        searched && libraries.length === 0 ? h('p', { className: 'bt-set-hint' }, t('No accessible knowledge base matched. Subscribe on the ima website and search again.')) : null,
+        libraries.map(library => h('div', { key: library.id, className: 'bt-connector-form-row' },
+          h('span', { className: 'bt-connector-text' }, library.name),
+          h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy || pinned?.id === library.id, onClick: () => void pin(library) },
+            pinned?.id === library.id ? t('Selected') : t('Use for research')))),
+        !isEnd && cursor ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: searching, onClick: () => void find(query, cursor) }, t('Load more')) : null,
+        notice ? h('p', { role: 'status', className: 'bt-set-hint' }, notice) : null) : null,
       error ? h('div', { role: 'alert', className: 'bt-connector-error' }, error) : null))
 }
 
