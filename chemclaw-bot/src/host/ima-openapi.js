@@ -92,7 +92,7 @@ export function cosUploadRequest(credential, data, mime, now = Math.floor(Date.n
   if (!/^[a-z0-9-]+$/i.test(region) || !/^[a-z0-9-]+$/i.test(bucket) || !/^\d+$/.test(appid)) throw new Error('Unexpected COS bucket or region.')
   const bucketFull = bucket.endsWith(`-${appid}`) ? bucket : `${bucket}-${appid}`
   const host = `${bucketFull}.cos.${region}.myqcloud.com`
-  const path = '/' + key.replace(/^\/+/, '').split('/').map(encodeURIComponent).join('/')
+  const path = '/' + key.replace(/^\/+/, '').split('/').map(part => encodeURIComponent(part).replace(/[!'()*]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())).join('/')
   const start = Math.max(now, Number(credential.start_time) || now)
   const end = Math.min(start + 600, Number(credential.expired_time) || start + 600)
   if (end <= start) throw new Error('ima COS upload credentials have expired.')
