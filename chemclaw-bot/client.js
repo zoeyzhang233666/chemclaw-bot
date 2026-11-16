@@ -215,6 +215,24 @@ var SKILL_CATEGORIES_EN = { "内贸销售": "Domestic sales", "内贸采购": "D
 // src/client/i18n.js
 var NAMESPACE = "chemclaw-bot";
 var ZH = {
+  "Featured chemical industry knowledge base": "推荐化工产业知识库",
+  "Curated chemical industry research and supply-chain materials maintained in ima. Subscription happens on the official ima website, not in ChemClaw.": "芯化智数持续整理化工研报、产业链与市场资料。请前往 ima 官方页面完成订阅。",
+  "Open ima to subscribe to the Chemcloud library": "前往 ima 订阅芯化智数知识库",
+  "Step 1: Open ima, sign in (ima may show a WeChat QR code), and subscribe to the library. This QR sign-in does not authorize ChemClaw.": "第一步：打开 ima，按页面提示用微信扫码登录并订阅知识库。注意：这只是登录 ima，不等于授权 ChemClaw。",
+  "Step 2: In ima, open the official agent authorization page, create your personal Client ID and API Key, then paste them here once. The API Key may be shown only once; keep it private.": "第二步：在 ima 官方智能体授权页生成自己的 Client ID 和 API Key，复制到下方。API Key 可能只显示一次，请自行妥善保存。",
+  "Open ima authorization page": "打开 ima 官方授权页面",
+  "Paste ima Client ID": "粘贴 ima Client ID",
+  "Your credentials are stored locally, are not shown to the AI model, and can be disconnected at any time.": "凭证保存在本地密钥存储中，不会直接提供给模型；你可以随时断开连接。",
+  "Step 3: Verify your accessible knowledge bases": "第三步：验证可访问的知识库",
+  "Search all readable knowledge bases, including subscriptions where ima OpenAPI permits access. Being connected is not proof that you subscribed.": "搜索当前账号有权读取的知识库；连接账号不代表已经订阅，订阅库能否检索由 ima 官方接口权限决定。",
+  "Search knowledge base name": "搜索知识库名称",
+  "Show my libraries": "查看我的知识库",
+  "Default readable library: {name}": "默认检索知识库：{name}",
+  "Clear default": "取消默认",
+  "No accessible knowledge base matched. Subscribe on the ima website and search again.": "未找到可访问的匹配知识库。请确认已在 ima 订阅，然后重新搜索。",
+  "Use for research": "设为默认检索库",
+  "Load more": "加载更多",
+  "Verified access to {name}. ChemClaw will use it as the default knowledge base.": "已验证可以读取{name}，ChemClaw 将优先从该库检索。",
   "Tencent ima Knowledge Base": "腾讯 ima 知识库",
   "Search, upload and manage your ima knowledge bases and notes with Client ID and API Key": "通过 Client ID 和 API Key 检索、上传及管理自己的 ima 知识库与笔记",
   "Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.": "通过 ima 官方 OpenAPI 检索知识库、导入网页和文件、管理笔记。",
@@ -2237,6 +2255,9 @@ function teamActions({ call: call2, after, partFor, roster, ui: ui2, live, cards
     secretCancel: (requestId) => after(call2("secret-cancel", { requestId })),
     secretUpdate: (name, { scope, purpose } = {}) => after(call2("secret-update", { name, scope, purpose })),
     secretDelete: (name) => after(call2("secret-delete", { name })),
+    imaLibraries: (query = "", cursor = "") => call2("ima-libraries", { query, cursor }),
+    imaSelectLibrary: (id) => after(call2("ima-select-library", { id })),
+    imaClearLibrary: () => after(call2("ima-clear-library", {})),
     connectorConnect: (id, token) => after(call2("connector-connect", { id, token })),
     connectorDisconnect: (id) => after(call2("connector-disconnect", { id })),
     connectorRetry: (id) => after(call2("connector-retry", { id })),
@@ -19204,15 +19225,44 @@ function ImaCard({ connector, actions }) {
   const [busy, setBusy] = (0, import_react46.useState)(false);
   const [error, setError] = (0, import_react46.useState)("");
   const [editing, setEditing] = (0, import_react46.useState)(!connector.authenticated);
+  const [query, setQuery] = (0, import_react46.useState)("芯化智数");
+  const [libraries, setLibraries] = (0, import_react46.useState)([]);
+  const [cursor, setCursor] = (0, import_react46.useState)("");
+  const [isEnd, setIsEnd] = (0, import_react46.useState)(true);
+  const [searched, setSearched] = (0, import_react46.useState)(false);
+  const [searching, setSearching] = (0, import_react46.useState)(false);
+  const [notice, setNotice] = (0, import_react46.useState)("");
+  const find = async (term, nextCursor = "") => {
+    setSearching(true);
+    setError("");
+    try {
+      const result = await actions.imaLibraries(term, nextCursor);
+      setLibraries((old) => nextCursor ? [...old, ...result.libraries ?? []] : result.libraries ?? []);
+      setCursor(result.nextCursor ?? "");
+      setIsEnd(result.isEnd !== false);
+      setSearched(true);
+    } catch (failure) {
+      setError(failure?.message ?? String(failure));
+    } finally {
+      setSearching(false);
+    }
+  };
+  (0, import_react46.useEffect)(() => {
+    if (!connector.authenticated || connector.state !== "ready") return;
+    void find("芯化智数");
+  }, [connector.authenticated, connector.state]);
   const connect = async () => {
     if (busy || !clientId.trim() || !apiKey.trim()) return;
     setBusy(true);
     setError("");
+    setNotice("");
     try {
       await actions.connectorConnect("ima", JSON.stringify({ clientId: clientId.trim(), apiKey: apiKey.trim() }));
       setClientId("");
       setApiKey("");
       setEditing(false);
+      setSearched(false);
+      setLibraries([]);
     } catch (failure) {
       setError(failure?.message ?? String(failure));
     } finally {
@@ -19230,6 +19280,12 @@ function ImaCard({ connector, actions }) {
       setBusy(false);
     }
   };
+  const pin = async (library) => {
+    await act(actions.imaSelectLibrary(library.id).then((result) => {
+      setNotice(t("Verified access to {name}. ChemClaw will use it as the default knowledge base.", { name: result.pinned?.name ?? library.name }));
+    }));
+  };
+  const pinned = connector.pinned;
   return (0, import_react46.createElement)(
     "article",
     { className: "bt-set-card bt-connectors-card", "aria-label": t("Tencent ima Knowledge Base") },
@@ -19255,18 +19311,31 @@ function ImaCard({ connector, actions }) {
             setEditing(true);
             setClientId("");
             setApiKey("");
+            setLibraries([]);
+            setSearched(false);
+            setNotice("");
           })) }, t("Disconnect")) : null
         )
       ),
-      (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.")),
+      (0, import_react46.createElement)(
+        "div",
+        { className: "bt-connector-form" },
+        (0, import_react46.createElement)("strong", null, t("Featured chemical industry knowledge base")),
+        (0, import_react46.createElement)("div", null, "芯化智数 · 化工产业知识库"),
+        (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Curated chemical industry research and supply-chain materials maintained in ima. Subscription happens on the official ima website, not in ChemClaw.")),
+        (0, import_react46.createElement)("a", { className: "bt-connector-link", href: "https://ima.qq.com/wiki/?shareId=4d781b6d98e6949ec4e2cfb1b8b329106393fbc62de98215783ae9a78e79148b", target: "_blank", rel: "noopener noreferrer" }, t("Open ima to subscribe to the Chemcloud library")),
+        (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Step 1: Open ima, sign in (ima may show a WeChat QR code), and subscribe to the library. This QR sign-in does not authorize ChemClaw."))
+      ),
       editing ? (0, import_react46.createElement)(
         "div",
         { className: "bt-connector-form" },
+        (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Step 2: In ima, open the official agent authorization page, create your personal Client ID and API Key, then paste them here once. The API Key may be shown only once; keep it private.")),
+        (0, import_react46.createElement)("a", { className: "bt-connector-link", href: "https://ima.qq.com/agent-interface", target: "_blank", rel: "noopener noreferrer" }, t("Open ima authorization page")),
         (0, import_react46.createElement)(
           "label",
           { className: "bt-q-field bt-secret-field" },
           (0, import_react46.createElement)("span", null, t("Client ID")),
-          (0, import_react46.createElement)("input", { value: clientId, placeholder: t("Enter ima Client ID"), autoComplete: "off", spellCheck: false, onChange: (event) => setClientId(event.target.value), "aria-label": t("Client ID") })
+          (0, import_react46.createElement)("input", { value: clientId, placeholder: t("Paste ima Client ID"), autoComplete: "off", spellCheck: false, onChange: (event) => setClientId(event.target.value), "aria-label": t("Client ID") })
         ),
         (0, import_react46.createElement)(
           "label",
@@ -19274,12 +19343,46 @@ function ImaCard({ connector, actions }) {
           (0, import_react46.createElement)("span", null, t("API Key")),
           (0, import_react46.createElement)(MaskedInput, { value: apiKey, onChange: setApiKey, onEnter: connect, label: t("Enter ima API Key") })
         ),
+        (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy || !clientId.trim() || !apiKey.trim(), onClick: connect }, t(busy ? "Connecting…" : "Connect")),
+        (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Your credentials are stored locally, are not shown to the AI model, and can be disconnected at any time."))
+      ) : null,
+      connector.authenticated ? (0, import_react46.createElement)(
+        "div",
+        { className: "bt-connector-form" },
+        (0, import_react46.createElement)("strong", null, t("Step 3: Verify your accessible knowledge bases")),
+        (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("Search all readable knowledge bases, including subscriptions where ima OpenAPI permits access. Being connected is not proof that you subscribed.")),
         (0, import_react46.createElement)(
           "div",
           { className: "bt-connector-form-row" },
-          (0, import_react46.createElement)("a", { className: "bt-connector-link", href: "https://ima.qq.com/agent-interface", target: "_blank", rel: "noopener noreferrer" }, t("Get ima credentials")),
-          (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy || !clientId.trim() || !apiKey.trim(), onClick: connect }, t(busy ? "Connecting…" : "Connect"))
-        )
+          (0, import_react46.createElement)("input", { value: query, onChange: (event) => setQuery(event.target.value), onKeyDown: (event) => {
+            if (event.key === "Enter" && !searching) void find(query);
+          }, placeholder: t("Search knowledge base name"), "aria-label": t("Search knowledge base name") }),
+          (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: searching, onClick: () => void find(query) }, t("Search")),
+          (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: searching, onClick: () => {
+            setQuery("");
+            void find("");
+          } }, t("Show my libraries"))
+        ),
+        pinned ? (0, import_react46.createElement)(
+          "div",
+          { className: "bt-set-hint" },
+          t("Default readable library: {name}", { name: pinned.name }),
+          " · ",
+          (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void act(actions.imaClearLibrary().then(() => setNotice(""))) }, t("Clear default"))
+        ) : null,
+        searched && libraries.length === 0 ? (0, import_react46.createElement)("p", { className: "bt-set-hint" }, t("No accessible knowledge base matched. Subscribe on the ima website and search again.")) : null,
+        libraries.map((library) => (0, import_react46.createElement)(
+          "div",
+          { key: library.id, className: "bt-connector-form-row" },
+          (0, import_react46.createElement)("span", { className: "bt-connector-text" }, library.name),
+          (0, import_react46.createElement)(
+            "button",
+            { type: "button", className: "bt-soft bt-soft-sm", disabled: busy || pinned?.id === library.id, onClick: () => void pin(library) },
+            pinned?.id === library.id ? t("Selected") : t("Use for research")
+          )
+        )),
+        !isEnd && cursor ? (0, import_react46.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: searching, onClick: () => void find(query, cursor) }, t("Load more")) : null,
+        notice ? (0, import_react46.createElement)("p", { role: "status", className: "bt-set-hint" }, notice) : null
       ) : null,
       error ? (0, import_react46.createElement)("div", { role: "alert", className: "bt-connector-error" }, error) : null
     )
