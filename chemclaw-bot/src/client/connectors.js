@@ -108,6 +108,55 @@ function ChemcloudCard({ connector, actions, focusKey = false }) {
     error ? h('div', { className: 'bt-connector-error', role: 'alert' }, error) : null)
 }
 
+
+function ImaCard({ connector, actions }) {
+  const [clientId, setClientId] = useState('')
+  const [apiKey, setApiKey] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [editing, setEditing] = useState(!connector.authenticated)
+  const connect = async () => {
+    if (busy || !clientId.trim() || !apiKey.trim()) return
+    setBusy(true); setError('')
+    try {
+      await actions.connectorConnect('ima', JSON.stringify({ clientId: clientId.trim(), apiKey: apiKey.trim() }))
+      setClientId(''); setApiKey(''); setEditing(false)
+    } catch (failure) { setError(failure?.message ?? String(failure)) }
+    finally { setBusy(false) }
+  }
+  const act = async task => {
+    setBusy(true); setError('')
+    try { await task } catch (failure) { setError(failure?.message ?? String(failure)) }
+    finally { setBusy(false) }
+  }
+  return h('article', { className: 'bt-set-card bt-connectors-card', 'aria-label': t('Tencent ima Knowledge Base') },
+    h('div', { className: 'bt-connector', 'data-state': connector.state },
+      h('div', { className: 'bt-connector-head' },
+        h('span', { className: 'bt-connector-mark' }, h(PlugIcon)),
+        h('span', { className: 'bt-connector-text' },
+          h('span', { className: 'bt-connector-name' }, t('Tencent ima Knowledge Base')),
+          h('span', { className: 'bt-connector-status' }, statusText(connector))),
+        h('span', { className: 'bt-connector-actions' },
+          connector.state === 'error' && connector.authenticated
+            ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void act(actions.connectorRetry('ima')) }, t('Try again')) : null,
+          connector.authenticated
+            ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => setEditing(!editing) }, t('Change key')) : null,
+          connector.authenticated
+            ? h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy, onClick: () => void act(actions.connectorDisconnect('ima').then(() => { setEditing(true); setClientId(''); setApiKey('') })) }, t('Disconnect')) : null)),
+      h('p', { className: 'bt-set-hint' }, t('Search and manage personal ima knowledge bases, import links and files, and edit notes through official OpenAPI.')),
+      editing ? h('div', { className: 'bt-connector-form' },
+        h('label', { className: 'bt-q-field bt-secret-field' },
+          h('span', null, t('Client ID')),
+          h('input', { value: clientId, placeholder: t('Enter ima Client ID'), autoComplete: 'off', spellCheck: false, onChange: event => setClientId(event.target.value), 'aria-label': t('Client ID') })),
+        h('label', { className: 'bt-q-field bt-secret-field' },
+          h('span', null, t('API Key')),
+          h(MaskedInput, { value: apiKey, onChange: setApiKey, onEnter: connect, label: t('Enter ima API Key') })),
+        h('div', { className: 'bt-connector-form-row' },
+          h('a', { className: 'bt-connector-link', href: 'https://ima.qq.com/agent-interface', target: '_blank', rel: 'noopener noreferrer' }, t('Get ima credentials')),
+          h('button', { type: 'button', className: 'bt-soft bt-soft-sm', disabled: busy || !clientId.trim() || !apiKey.trim(), onClick: connect }, t(busy ? 'Connecting…' : 'Connect')))) : null,
+      error ? h('div', { role: 'alert', className: 'bt-connector-error' }, error) : null))
+}
+
 // Settings → Connectors: one row per connector.
 export function ConnectorsPage({ roster, actions, focusId = null }) {
   const list = roster?.connectors ?? []
@@ -117,7 +166,8 @@ export function ConnectorsPage({ roster, actions, focusId = null }) {
   const [data, setData] = useState(null)
   const [adding, setAdding] = useState(false)
   const chemcloud = list.find(item => item.id === 'chem-data-hub')
-  const others = list.filter(item => item.id !== 'huagongshe' && item.id !== 'chem-data-hub')
+  const ima = list.find(item => item.id === 'ima')
+  const others = list.filter(item => item.id !== 'huagongshe' && item.id !== 'chem-data-hub' && item.id !== 'ima')
   const check = () => actions.dataStatus().then(setData).catch(failure => setError(failure.message))
   useEffect(() => { void check() }, [list.map(item => `${item.id}:${item.state}`).join('|')])
   const importJson = async () => {
@@ -133,6 +183,7 @@ export function ConnectorsPage({ roster, actions, focusId = null }) {
     adding ? h(ServiceInstaller, { actions, onClose: () => setAdding(false) }) : null,
     error ? h('div', { className: 'bt-error', role: 'alert' }, error) : null,
     chemcloud ? h(ChemcloudCard, { connector: chemcloud, actions, focusKey: focusId === 'chem-data-hub' }) : null,
+    ima ? h(ImaCard, { connector: ima, actions }) : null,
     !chemcloud && others.length === 0
       ? h('div', { className: 'bt-set-card bt-connectors-card' }, h('div', { className: 'bt-set-row' }, h('span', { className: 'bt-set-hint' }, t('No connectors'))))
       : others.length
