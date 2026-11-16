@@ -384,6 +384,11 @@ export function install(rt) {
         case 'secret-delete':
           await rt.load()
           return ok(await rt.secretEndpoint(endpoint, body))
+        case 'ima-libraries':
+        case 'ima-select-library':
+        case 'ima-clear-library':
+          await rt.load()
+          return ok(await rt.imaLibraryEndpoint(endpoint, body))
         case 'connector-connect':
         case 'connector-disconnect':
         case 'connector-retry':
