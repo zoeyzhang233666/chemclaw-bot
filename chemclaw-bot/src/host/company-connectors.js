@@ -47,7 +47,7 @@ export function install(rt) {
     statuses.set(def.id, { state: 'connecting' })
     if (def.id === 'ima') {
       try {
-        await callImaApi({ clientId, apiKey: token, operation: 'wiki.get_addable_knowledge_base_list', body: { cursor: '', limit: 1 }, request: rt.config.imaFetch ?? globalThis.fetch })
+        await callImaApi({ clientId, apiKey: token, operation: 'wiki.search_knowledge_base', body: { query: '', cursor: '', limit: 1 }, request: rt.config.imaFetch ?? globalThis.fetch })
         mounts.set(def.id, { token, clientId, enabled, signature })
         statuses.set(def.id, { state: 'ready' })
       } catch (error) {
@@ -95,6 +95,7 @@ export function install(rt) {
     id: def.id, name: def.name, description: def.description, url: def.url, tokenUrl: def.tokenUrl,
     anonymous: Boolean(def.anonymous), authenticated: rt.secretValue(def.secret) !== undefined && (def.id !== 'ima' || rt.secretValue(IMA_CLIENT_ID) !== undefined),
     ...(def.generic ? { generic: true, transport: def.transport } : {}),
+    ...(def.id === 'ima' && state.connectors?.ima?.pinned ? { pinned: { ...state.connectors.ima.pinned } } : {}),
     ...(statuses.get(def.id) ?? { state: 'off' }),
   }))]
   rt.connectorOwns = (id, url) => definitions().some(def => def.id === id || (url && def.url === url))
@@ -123,6 +124,55 @@ export function install(rt) {
     return ensureJob
   }
   rt.secretsChanged = () => { githubChanged?.(); if (mountedOnce) for (const def of definitions()) void sync(def) }
+  // Curated subscriptions are read-only for most users. Discover *readable* libraries
+  // rather than relying on get_addable_knowledge_base_list (write permission only).
+  rt.imaLibraryEndpoint = async (endpoint, body = {}) => {
+    await rt.load()
+    await rt.loadSecrets()
+    const clientId = rt.secretValue(IMA_CLIENT_ID)
+    const apiKey = rt.secretValue(IMA_API_KEY)
+    if (!clientId || !apiKey || state.connectors?.ima?.disabled === true) {
+      throw new Error('Connect your own ima Client ID and API Key first.')
+    }
+    const request = rt.config.imaFetch ?? globalThis.fetch
+    const api = (operation, payload) => callImaApi({ clientId, apiKey, operation, body: payload, request })
+    if (endpoint === 'ima-libraries') {
+      const query = typeof body.query === 'string' ? body.query.trim().slice(0, 100) : ''
+      const cursor = typeof body.cursor === 'string' ? body.cursor.slice(0, 1024) : ''
+      const result = await api('wiki.search_knowledge_base', { query, cursor, limit: 20 })
+      const libraries = (Array.isArray(result.info_list) ? result.info_list : [])
+        .filter(item => typeof item?.id === 'string' && typeof item?.name === 'string')
+        .map(item => ({ id: item.id, name: item.name }))
+      return { libraries, isEnd: result.is_end === true, nextCursor: typeof result.next_cursor === 'string' ? result.next_cursor : '', pinned: state.connectors?.ima?.pinned ?? null }
+    }
+    if (endpoint === 'ima-select-library') {
+      const id = typeof body.id === 'string' ? body.id.trim() : ''
+      if (id.length < 1 || id.length > 256) throw new Error('Select a knowledge base from the search results.')
+      if (rt.readOnly() !== undefined) throw new Error(rt.readOnly())
+      // Never accept a guessed name, a public shareId, or an unverified library ID.
+      const [infoResult] = await Promise.all([
+        api('wiki.get_knowledge_base', { ids: [id] }),
+        api('wiki.get_knowledge_list', { knowledge_base_id: id, cursor: '', limit: 1 }),
+      ])
+      const info = infoResult.infos?.[id]
+      const name = info?.name ?? info?.basic_info?.name
+      if (typeof name !== 'string' || name.trim().length === 0) throw new Error('ima did not confirm this library and its readable name.')
+      const pinned = { id, name: name.trim().slice(0, 200) }
+      state.connectors ??= {}
+      state.connectors.ima = { ...(state.connectors.ima ?? {}), disabled: false, pinned }
+      await rt.save()
+      return { pinned }
+    }
+    if (endpoint === 'ima-clear-library') {
+      if (rt.readOnly() !== undefined) throw new Error(rt.readOnly())
+      if (state.connectors?.ima?.pinned) {
+        delete state.connectors.ima.pinned
+        await rt.save()
+      }
+      return { pinned: null }
+    }
+    throw new Error('Unsupported ima knowledge base action.')
+  }
   rt.connectorEndpoint = async (endpoint, body) => {
     if (endpoint === 'connector-import' || endpoint === 'connector-connect'
       || endpoint === 'connector-retry' || endpoint === 'connector-disconnect') {
