@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict'
 import { mkdtemp, writeFile, rm } from 'node:fs/promises'
+import { createRuntime } from '../index.js'
+import { fakeContext } from './fake-ctx.js'
+import { IMA_FEATURED_LIBRARY } from '../src/shared/connectors.js'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
@@ -103,5 +106,50 @@ test('upload blocks paths outside the working directory', async () => {
   } finally {
     await rm(root, { recursive: true, force: true })
     await rm(other, { recursive: true, force: true })
+  }
+})
+
+test('featured ima link is an invitation, not a knowledge base ID', () => {
+  assert.equal(IMA_FEATURED_LIBRARY.name, '芯化智数 · 化工产业知识库')
+  assert.match(IMA_FEATURED_LIBRARY.shareUrl, /^https:\/\/ima\.qq\.com\/wiki\/\?shareId=/)
+  assert.ok(!Object.hasOwn(IMA_FEATURED_LIBRARY, 'id'))
+})
+
+test('readable subscriptions can be discovered and pinned only after ima confirms access', async () => {
+  const home = await mkdtemp(join(tmpdir(), 'chem-ima-subscription-'))
+  const ctx = fakeContext()
+  const calls = []
+  const fake = async (url, init) => {
+    const name = url.split('/').pop()
+    calls.push({ name, body: JSON.parse(init.body) })
+    if (name === 'search_knowledge_base') return response({ info_list: [{ id: 'shared-base', name: IMA_FEATURED_LIBRARY.name }], is_end: true, next_cursor: '' })
+    if (name === 'get_knowledge_base') return response({ infos: { 'shared-base': { name: IMA_FEATURED_LIBRARY.name } } })
+    if (name === 'get_knowledge_list') {
+      if (JSON.parse(init.body).knowledge_base_id !== 'shared-base') return response({}, 100002)
+      return response({ knowledge_list: [], is_end: true })
+    }
+    if (name === 'search_knowledge') return response({ info_list: [{ title: 'SBS 工艺', media_id: 'm' }], is_end: true })
+    throw new Error('Unexpected ima operation: ' + name)
+  }
+  const rt = createRuntime(ctx, { home, seedTeam: false, github: false, companyConnectors: true, imaFetch: fake })
+  try {
+    await rt.load()
+    await rt.loadSecrets()
+    await rt.secretEndpoint('secret-set', { name: 'IMA_CLIENT_ID', value: opts.clientId, purpose: 'ima', scope: [] })
+    await rt.secretEndpoint('secret-set', { name: 'IMA_API_KEY', value: opts.apiKey, purpose: 'ima', scope: [] })
+    const found = await rt.imaLibraryEndpoint('ima-libraries', { query: '芯化智数' })
+    assert.deepEqual(found.libraries, [{ id: 'shared-base', name: IMA_FEATURED_LIBRARY.name }])
+    await assert.rejects(rt.imaLibraryEndpoint('ima-select-library', { id: 'unreadable-base' }), /ima OpenAPI error/)
+    const pinned = await rt.imaLibraryEndpoint('ima-select-library', { id: 'shared-base' })
+    assert.deepEqual(pinned.pinned, { id: 'shared-base', name: IMA_FEATURED_LIBRARY.name })
+    assert.deepEqual(rt.state.connectors.ima.pinned, pinned.pinned)
+    const tool = ctx.registeredTools.get('ima_openapi')
+    await tool.execute({ operation: 'wiki.search_knowledge', body_json: JSON.stringify({ query: 'SBS', cursor: '' }) }, {})
+    assert.equal(calls.at(-1).body.knowledge_base_id, 'shared-base')
+    await rt.imaLibraryEndpoint('ima-clear-library')
+    assert.equal(rt.state.connectors.ima.pinned, undefined)
+  } finally {
+    await ctx.dispose()
+    await rm(home, { recursive: true, force: true })
   }
 })
