@@ -18,6 +18,18 @@
 7. **隐私**：ima 私人资料不要主动转发到群聊、公开服务或公司数据中台。用户需要明确提出跨数据源分析时才读取与组合。
 8. **兼容性**：该功能属于 chemclaw-bot DSH 插件，无需修改 DSH 源码；第一次安装与已存在团队都能在连接器页配置。
 
+
+## 芯化智数订阅知识库（新增）
+
+- 在 Connectors → 腾讯 ima 显示公司运营的「芯化智数 · 化工产业知识库」推荐入口，仅用用户提供的官方分享 URL 引导至 ima 订阅。分享链接里的 `shareId` 不是 OpenAPI 的 `knowledge_base_id`，不得混用。
+- 用户在 ima 网站按其官方登录流程登录（可能需要微信扫码），并在 ima 官方智能体授权页面创建个人 Client ID 与 API Key。此流程不等同于 WorkBuddy 内置扫码 OAuth，也不能通过扫描二维码自动将凭证传给 ChemClaw。
+- 连接后，先用 `search_knowledge_base` 查询**可读取**的知识库，而不是 `get_addable_knowledge_base_list`（后者偏向可写权限）。查询可分页。
+- 用户在列表中选择默认研究知识库时，后端使用 `get_knowledge_base` 获取名称，并用 `get_knowledge_list` 验证其实际读取权限，成功后才在本机状态中保存 ID 和名称；单纯点击分享链接不意味着连接成功。
+- Bot 的 `wiki.search_knowledge` / `wiki.get_knowledge_list` 在未显式指定库 ID 时自动使用已验证的默认库。用户可以取消默认库；更换账号或断开ima连接会清除原默认库。
+- 管理员权限与普通订阅用户权限独立。写入仅在具体调用通过官方权限校验时执行，不共用公司管理员的 Client ID 和 API Key。
+- 普通订阅者能否通过官方 OpenAPI 实际访问此库，须使用非管理员账号完成端到端测试；在此之前不宣称已实现公开订阅后的无障碍检索。
+
+
 ## 不做什么
 
 - 不承诺第三方微信扫码 OAuth。公开可用的是 Client ID + API Key。
