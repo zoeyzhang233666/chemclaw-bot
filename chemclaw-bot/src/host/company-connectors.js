@@ -1,5 +1,6 @@
 import { CHEM_CONNECTORS, parseMcpImport } from '../shared/connectors.js'
 import { createHash } from 'node:crypto'
+import { callImaApi, IMA_API_KEY, IMA_CLIENT_ID } from './ima-openapi.js'
 
 export function install(rt) {
   if (rt.config.companyConnectors === false) return
@@ -36,13 +37,25 @@ export function install(rt) {
   }
   async function reconcile(def, force) {
     const token = rt.secretValue(def.secret)
-    const enabled = !stopped && state.connectors?.[def.id]?.disabled !== true && (def.anonymous || token !== undefined)
+    const clientId = def.id === 'ima' ? rt.secretValue(IMA_CLIENT_ID) : undefined
+    const enabled = !stopped && state.connectors?.[def.id]?.disabled !== true && (def.anonymous || (token !== undefined && (def.id !== 'ima' || clientId !== undefined)))
     const previous = mounts.get(def.id)
     const signature = def.generic ? createHash('sha256').update(JSON.stringify(def) + Object.values({ ...def.env, ...def.headers }).map(value => String(value).replace(/\$DSH_SECRET_([A-Z][A-Z0-9_]*)/g, (_match, name) => rt.secretValue(name) ?? '')).join('\n')).digest('hex') : undefined
-    if (!force && previous?.token === token && previous?.enabled === enabled && previous?.signature === signature) return
+    if (!force && previous?.token === token && previous?.enabled === enabled && previous?.signature === signature && (def.id !== 'ima' || previous?.clientId === clientId)) return
     await dispose(def.id)
     if (!enabled) { statuses.set(def.id, { state: 'off' }); return }
     statuses.set(def.id, { state: 'connecting' })
+    if (def.id === 'ima') {
+      try {
+        await callImaApi({ clientId, apiKey: token, operation: 'wiki.get_addable_knowledge_base_list', body: { cursor: '', limit: 1 }, request: rt.config.imaFetch ?? globalThis.fetch })
+        mounts.set(def.id, { token, clientId, enabled, signature })
+        statuses.set(def.id, { state: 'ready' })
+      } catch (error) {
+        mounts.set(def.id, { token, clientId, enabled, signature })
+        statuses.set(def.id, { state: 'error', error: reason(error) })
+      }
+      return
+    }
     try {
       if (def.transport !== 'stdio' && !def.url.startsWith('https://')) throw new Error('MCP addresses must use HTTPS')
       const resolve = value => String(value).replace(/\$DSH_SECRET_([A-Z][A-Z0-9_]*)/g, (_match, name) => {
@@ -80,7 +93,7 @@ export function install(rt) {
   }
   rt.connectorsView = () => [...githubView(), ...definitions().map(def => ({
     id: def.id, name: def.name, description: def.description, url: def.url, tokenUrl: def.tokenUrl,
-    anonymous: Boolean(def.anonymous), authenticated: rt.secretValue(def.secret) !== undefined,
+    anonymous: Boolean(def.anonymous), authenticated: rt.secretValue(def.secret) !== undefined && (def.id !== 'ima' || rt.secretValue(IMA_CLIENT_ID) !== undefined),
     ...(def.generic ? { generic: true, transport: def.transport } : {}),
     ...(statuses.get(def.id) ?? { state: 'off' }),
   }))]
@@ -100,6 +113,7 @@ export function install(rt) {
       for (const def of definitions()) {
         if (rt.secretValue(def.secret) !== undefined) {
           await rt.secretEndpoint('secret-update', { name: def.secret, scope: [] }).catch(() => {})
+          if (def.id === 'ima' && rt.secretValue(IMA_CLIENT_ID) !== undefined) await rt.secretEndpoint('secret-update', { name: IMA_CLIENT_ID, scope: [] }).catch(() => {})
         }
         if (!stopped) void sync(def)
       }
@@ -151,11 +165,18 @@ export function install(rt) {
     if (endpoint === 'connector-disconnect') {
       state.connectors[def.id] = { disabled: true }
       if (rt.secretValue(def.secret) !== undefined) await rt.secretEndpoint('secret-delete', { name: def.secret })
+      if (def.id === 'ima' && rt.secretValue(IMA_CLIENT_ID) !== undefined) await rt.secretEndpoint('secret-delete', { name: IMA_CLIENT_ID })
     } else if (endpoint === 'connector-connect') {
       const token = typeof body.token === 'string' ? body.token.trim() : ''
       if (!token && !def.anonymous) throw new Error('Paste a token first')
       state.connectors[def.id] = { disabled: false }
-      if (token) await rt.secretEndpoint('secret-set', { name: def.secret, value: token, purpose: def.name, scope: [] })
+      if (def.id === 'ima') {
+        let creds
+        try { creds = JSON.parse(token) } catch { throw new Error('Enter both ima Client ID and API Key') }
+        if (typeof creds?.clientId !== 'string' || !creds.clientId.trim() || typeof creds?.apiKey !== 'string' || !creds.apiKey.trim()) throw new Error('Enter both ima Client ID and API Key')
+        await rt.secretEndpoint('secret-set', { name: IMA_CLIENT_ID, value: creds.clientId.trim(), purpose: 'Tencent ima Client ID', scope: [] })
+        await rt.secretEndpoint('secret-set', { name: IMA_API_KEY, value: creds.apiKey.trim(), purpose: 'Tencent ima API Key', scope: [] })
+      } else if (token) await rt.secretEndpoint('secret-set', { name: def.secret, value: token, purpose: def.name, scope: [] })
     } else if (endpoint !== 'connector-retry') throw new Error('No such connector action')
     await rt.save()
     await sync(def, true)
