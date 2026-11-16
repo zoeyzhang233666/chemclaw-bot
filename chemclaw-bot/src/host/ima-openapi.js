@@ -153,7 +153,7 @@ export function install(rt) {
   const request = rt.config.imaFetch ?? globalThis.fetch
   ctx.tools.register(defineTool({
     name: 'ima_openapi',
-    description: 'Access the connected user’s Tencent ima knowledge bases and notes via official OpenAPI. Read: list/search knowledge bases and notes, read document content. Write: import web/WeChat URLs, create/append/edit notes, create/move/rename/tag knowledge entries. Use ONLY for a user-requested action. Do not guess target IDs. For file bytes use ima_upload_file. Deletion is not supported. Each operation uses a JSON object as body_json. Never put credentials in this input.',
+    description: 'Access the connected user’s Tencent ima knowledge bases and notes via official OpenAPI. Read: list/search knowledge bases and notes, read document content. Write: import web/WeChat URLs, create/append/edit notes, create/move/rename/tag knowledge entries. Use ONLY for a user-requested action. Do not guess target IDs. For queries about the user's curated chemical-industry subscription, use the verified default library automatically if knowledge_base_id is omitted. For file bytes use ima_upload_file. Deletion is not supported. Each operation uses a JSON object as body_json. Never put credentials in this input.',
     parameters: {
       operation: { type: 'string', required: true, enum: Object.keys(IMA_OPERATIONS), description: 'Official endpoint prefixed with wiki. or note.' },
       body_json: { type: 'string', required: true, description: 'A JSON object with endpoint parameters, e.g. {"query":"SBS","cursor":"","limit":20} for wiki.search_knowledge_base; for wiki.import_urls use {"knowledge_base_id":"id","folder_id":"id","urls":["https://..."]}; for note.import_doc use {"content_format":1,"content":"# Title"}. Folder ID equals base ID for root import.' },
@@ -162,6 +162,10 @@ export function install(rt) {
       if (IMA_OPERATIONS[args.operation] && rt.readOnly()) throw new Error(rt.readOnly())
       let body
       try { body = JSON.parse(args.body_json) } catch { throw new Error('body_json must be valid JSON.') }
+      const pinned = rt.state.connectors?.ima?.pinned
+      if (pinned && (args.operation === 'wiki.search_knowledge' || args.operation === 'wiki.get_knowledge_list')
+        && body !== null && typeof body === 'object' && !Array.isArray(body)
+        && !body.knowledge_base_id) body.knowledge_base_id = pinned.id
       const result = await callImaApi({ ...credentials(), operation: args.operation, body, request, signal: exec.signal })
       // Temporary COS credentials and protected media headers must not enter the model context.
       if (args.operation === 'wiki.get_media_info' && result.url_info?.headers) {
