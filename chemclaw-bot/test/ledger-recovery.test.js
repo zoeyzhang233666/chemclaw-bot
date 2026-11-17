@@ -189,6 +189,50 @@ test('a finished notice remains a notice in the recovery preview', () => {
   assert.equal(Object.hasOwn(result.previewLog[0], 'text'), false)
 })
 
+test('sequenced round anchors may leave intentional invisible gaps in the saved member window', () => {
+  const first = row(2, 'earlier answer')
+  const second = row(4, 'later answer')
+  const records = [
+    { seq: 1, event: 'anchor', id: 'round-1', from: 1 },
+    first,
+    { seq: 3, event: 'anchor', id: 'round-2', from: 3 },
+    second,
+  ]
+  const aligned = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 4, log: [first, second] },
+    ledger: snapshot(records),
+  })
+  assert.equal(aligned.status, 'aligned')
+  const crash = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 2, log: [first] },
+    ledger: snapshot(records),
+  })
+  assert.equal(crash.status, 'ledger-ahead')
+  assert.deepEqual(crash.unconfirmedRecords.map(item => item.seq), [3, 4])
+  assert.deepEqual(crash.previewLog.map(item => item.seq), [2, 4])
+  assert.equal(crash.mustNotRedispatch, true)
+  const onlyAnchor = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 1, log: [] },
+    ledger: snapshot(records.slice(0, 1)),
+  })
+  assert.equal(onlyAnchor.status, 'aligned')
+})
+
+test('saved member gaps with no durable round anchor stay blocked', () => {
+  const records = [row(1), row(2), row(3)]
+  const recovery = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 3, log: [row(1), row(3)] },
+    ledger: snapshot(records),
+  })
+  assert.equal(recovery.status, 'blocked')
+  const brokenAnchor = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 2, log: [row(2)] },
+    ledger: snapshot([{ seq: 1, event: 'anchor', id: '', from: 1 }, row(2)]),
+  })
+  assert.equal(brokenAnchor.status, 'blocked')
+  assert.match(brokenAnchor.reason, /invalid round anchor/)
+})
+
 test('saved room window with a sequence gap cannot be declared aligned', () => {
   const records = [row(1), row(2), row(3)]
   const result = planGroupLedgerRecovery({
