@@ -35,6 +35,14 @@ function prepareLine(line) {
       (line.text !== undefined && typeof line.text !== 'string')) {
     throw new Error('Group Ledger commit requires an unsequenced message with valid text')
   }
+  // Upstream #1317 records a round anchor outside the visible member log.
+  // This adapter assigns it a normal durable sequence while never allowing
+  // arbitrary invisible messages to bypass the room's retained history.
+  if (line.event === 'anchor' && (typeof line.id !== 'string' || !line.id ||
+      !Number.isSafeInteger(line.from) || line.from < 1 ||
+      Object.hasOwn(line, 'text') || Object.hasOwn(line, 'kind'))) {
+    throw new Error('Group Ledger anchor requires an id and positive from sequence, without visible text')
+  }
   const json = JSON.stringify(line)
   if (!json || typeof json !== 'string') throw new Error('Group Ledger message cannot be encoded')
   return JSON.parse(json)
@@ -123,7 +131,7 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
       if (room.id !== id || room.seq !== seq || JSON.stringify(room.log ?? []) !== logStamp) {
         throw new Error('Legacy room state changed while Ledger was being fsynced')
       }
-      if (typeof record.text === 'string') {
+      if (record.event !== 'anchor' && typeof record.text === 'string') {
         await publishReadingSidecar(home, id, record.seq, record.text)
       }
       if ((await assertWriter(book)) !== true) {
@@ -134,9 +142,9 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
       if (room.id !== id || room.seq !== seq || JSON.stringify(room.log ?? []) !== logStamp) {
         throw new Error('Legacy room state changed before group cache commit')
       }
-      const preview = previewOf(record)
+      const preview = record.event === 'anchor' ? undefined : previewOf(record)
       room.seq = record.seq
-      room.log = [...(room.log ?? []), preview].slice(-LOG_LIMIT)
+      if (preview !== undefined) room.log = [...(room.log ?? []), preview].slice(-LOG_LIMIT)
 
       // This callback MUST await rt.save({ required: true }). Its rejection
       // poisons this room's queue, leaving the durable book ahead of disk state.
