@@ -33,6 +33,9 @@ import { createOrderedGroupPostQueue, publishSavedGroupReply } from './group-pos
 import { createGroupPersistenceGate } from './group-persistence-gate.js'
 import { readLedger } from './ledger-foundation.js'
 import { planGroupLedgerRecovery } from './ledger-recovery.js'
+import { createGroupLedgerCommitter } from './ledger-room-commit.js'
+import { seedLegacyGroupLedger } from './ledger-import.js'
+import { createLegacyGroupLedgerGuard } from './group-legacy-ledger-guard.js'
 
 const ROOM_LOG_MAX = 60
 const ROOM_FIRST_LOOK = 12
@@ -143,6 +146,49 @@ export function install(rt) {
   // of state.json. The gate only lives for this Host instance and never clears on
   // a later successful unrelated state save.
   const persistenceGate = createGroupPersistenceGate()
+  // One production writer per group: an existing Ledger disables old state-only
+  // writes; only explicit test configuration activates the migrated writer.
+  const ledgerWriterEnabled = rt.config?.experimentalGroupLedger === true
+  const legacyLedgerGuard = createLegacyGroupLedgerGuard({ home: rt.home })
+  const roomWriteStatus = id => persistenceGate.status(id) ??
+    (ledgerWriterEnabled ? undefined : legacyLedgerGuard.status(id))
+  const assertGroupWritable = room => {
+    persistenceGate.assertWritable(room.id)
+    if (!ledgerWriterEnabled) legacyLedgerGuard.assertWritable(room.id)
+  }
+  // Roster updates and group deletion remain legacy-only; a migrated room's
+  // members, sessions and history must not be deleted by the old operations.
+  rt.assertLegacyGroupWritable = room => {
+    persistenceGate.assertWritable(room.id)
+    legacyLedgerGuard.assertWritable(room.id)
+  }
+  const preparingLedgers = new Map()
+  const ledgerCommitter = ledgerWriterEnabled ? createGroupLedgerCommitter({
+    home: rt.home,
+    assertWriter: rt.assertLedgerWriter,
+    saveState: () => rt.save({ required: true }),
+  }) : undefined
+  async function prepareLedgerRoom(room) {
+    let job = preparingLedgers.get(room.id)
+    if (job) return job
+    job = (async () => {
+      if ((await rt.assertLedgerWriter()) !== true) {
+        throw new Error('Exclusive writer lock required to prepare group Ledger')
+      }
+      const book = await readLedger(rt.home, 'group-' + room.id)
+      if (book === undefined) {
+        // Refuse incomplete imports; original archives/sidecars remain untouched.
+        await seedLegacyGroupLedger({ home: rt.home, room })
+      } else {
+        const check = planGroupLedgerRecovery({ room, ledger: book })
+        if (check.status !== 'aligned') {
+          throw new Error('Group Ledger needs recovery review (' + check.status + ')')
+        }
+      }
+    })()
+    preparingLedgers.set(room.id, job)
+    return job
+  }
 
   // A long line keeps its start in state.json, which is written whole on every save,
   // and what a member reads of it (GROUP_LINE_READ) in a file of its own. Sidecars
@@ -211,15 +257,38 @@ export function install(rt) {
     return length > shown.length ? `${shown}… (cut; ${length} characters in all)` : shown
   }
 
-  const appendRoom = (room, line) => {
-    persistenceGate.assertWritable(room.id)
-    const nextSeq = room.seq + 1
-    const saved = keepGroupLine(room.id, { ...line, seq: nextSeq }, line.text ?? '')
-    const log = [...room.log, saved]
-    // A sidecar collision or I/O error above must not advance room.seq.
-    room.seq = nextSeq
-    for (const gone of log.slice(0, -ROOM_LOG_MAX)) evictGroupLine(room.id, gone)
-    room.log = log.slice(-ROOM_LOG_MAX)
+  // DS-Bot #1317 uses one say() entry point. In this opt-in path each
+  // message must be fsynced by the existing ChemClaw committer before the
+  // bounded state cache changes or any Bot begins work.
+  const appendRoom = async (room, line) => {
+    assertGroupWritable(room)
+    try {
+      if (ledgerWriterEnabled) {
+        await prepareLedgerRoom(room)
+        const prior = room.log ?? []
+        const result = await ledgerCommitter.commit(room, line)
+        for (const gone of prior.slice(0, Math.max(0, prior.length + 1 - ROOM_LOG_MAX))) {
+          evictGroupLine(room.id, gone)
+        }
+        if (typeof result.record.text === 'string' && result.record.text.length > TEXT_KEPT) {
+          wholeLines.set(lineKey(room.id, result.seq), headOf(result.record.text, GROUP_LINE_READ))
+        }
+        return result.record
+      }
+      // A durable book discovered after a fallback Host restart must not be
+      // silently overwritten by legacy state.json-only writes.
+      legacyLedgerGuard.assertWritable(room.id)
+      const nextSeq = room.seq + 1
+      const saved = keepGroupLine(room.id, { ...line, seq: nextSeq }, line.text ?? '')
+      const log = [...room.log, saved]
+      room.seq = nextSeq
+      for (const gone of log.slice(0, -ROOM_LOG_MAX)) evictGroupLine(room.id, gone)
+      room.log = log.slice(-ROOM_LOG_MAX)
+      return { ...line, seq: nextSeq }
+    } catch (error) {
+      persistenceGate.block(room.id, error)
+      throw error
+    }
   }
 
   // Admission boundary for group input: never dispatch a queued user/Bot post
