@@ -1076,6 +1076,57 @@ export function install(rt) {
     },
   }))
 
+  // The host half of upstream DS-Bot #1317's groupRowsView. The client must
+  // never receive uncertain rows: first verify a complete Ledger against the
+  // last saved room state. This is read-only even in a secondary Host window.
+  function groupRow(record) {
+    if (record.session === true || record.event === 'anchor') return undefined
+    const botId = record.botId ?? record.about
+    const bot = botId === undefined ? undefined : rt.botOf(botId)
+    const who = { botId, name: bot?.name ?? record.names?.[0] ?? record.who, color: bot?.color }
+    const time = record.time
+    if (record.kind === undefined) {
+      if (record.botId === undefined) return { kind: 'user', text: record.text, time }
+      return { ...who, text: record.text, time, ...(record.duration === undefined ? {} : { duration: record.duration }) }
+    }
+    if (record.kind === 'lookup') return { kind: 'lookup', ...who, text: record.text, time }
+    if (record.kind !== 'notice') return { kind: record.kind, ...who, time }
+    switch (record.reason) {
+      case 'failed': return { kind: 'failed', ...who, code: record.code, text: record.message ?? record.detail, time }
+      case 'missed': return { kind: 'missed', ...who, time }
+      case 'admin-passed': return { kind: 'admin-passed', ...who, time }
+      case 'paused': return { kind: 'paused', ...who, count: record.count ?? record.limit, names: record.names, time }
+      default: return undefined
+    }
+  }
+
+  rt.groupRowsView = async (roomId, from, to, anchor) => {
+    const room = rt.roomOf(roomId)
+    if (room === undefined) return { rows: [], open: false, status: 'not-found' }
+    const book = await readLedger(rt.home, 'group-' + roomId)
+    if (book === undefined) return { rows: [], open: false, status: 'not-migrated' }
+    const recovery = planGroupLedgerRecovery({ room, ledger: book })
+    if (recovery.status !== 'aligned') {
+      return { rows: [], open: false, status: recovery.status, requiresRecovery: true }
+    }
+    const records = book.records
+    let end = to
+    if (anchor !== undefined) {
+      const at = records.findIndex(row => row.event === 'anchor' && row.id === anchor && row.from === from)
+      if (at === -1) return { rows: [], open: false, status: 'unknown-anchor' }
+      if (end === undefined) {
+        const next = records.slice(at + 1).find(row => row.event === 'anchor')
+        if (next) end = next.from - 1
+      }
+    } else if (end === undefined) {
+      const next = records.find(row => row.event === 'anchor' && Number.isSafeInteger(row.from) && row.from > from)
+      if (next) end = next.from - 1
+    }
+    const rows = records.filter(record => record.seq >= from && (end === undefined || record.seq <= end))
+      .map(groupRow).filter(Boolean)
+    return { rows, open: end === undefined, status: 'aligned' }
+  }
+
   // Upstream DS-Bot #1317: group history reads from the full Ledger, not just the
   // last sixty room.log rows. This is an intentionally read-only compatibility
   // seam until the canonical runtime writer switches over. A book whose bytes
