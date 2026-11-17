@@ -1234,9 +1234,19 @@ test('experimental #1351 registers a two-member Bot call in state before deliver
   host.begin('gb')
   host.finish('gb', 'Writer checked the inputs.')
   await settle(() => host.agentOf('gc').calls.length === 1)
+  const midway = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(midway.pending, ['c'], 'the first completed member is persisted before the second begins')
+  assert.deepEqual(midway.done, ['Writer'])
+  assert.deepEqual(midway.doneIds, ['b'])
+  assert.ok(midway.results.some(entry => entry.name === 'Writer' && Number.isSafeInteger(entry.seq)))
   host.begin('gc')
   host.finish('gc', 'Tester checked the inputs.')
   await settle(() => result() !== undefined)
+  const settled = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(settled.pending, [])
+  assert.deepEqual(settled.done, ['Writer', 'Tester'])
+  assert.deepEqual(settled.doneIds, ['b', 'c'])
+  assert.equal(settled.answered, false, 'do not claim the caller has been awakened before recovery is wired')
 })
 
 test('experimental group relay creates durable anchored windows without changing old reply display', async t => {
