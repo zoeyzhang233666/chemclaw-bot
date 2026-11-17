@@ -1231,14 +1231,16 @@ export function install(rt) {
           ? `Nothing said in "${room.name}" has "${args.query}".`
           : `In "${room.name}" (newest first):\n${matches.map(line => `#${line.seq} ${lineText(line, headOf(line.text, TEXT_KEPT))}`).join('\n')}`
       }
-      // The newest thirty still use the legacy preview until the UI and
-      // production writer cut over as one reviewed operation.
+      // Upstream #1317: recent reads stay bounded, but a Ledger validated
+      // against saved state is the sole history source. Round metadata and
+      // group-Session-only rows are not ordinary group messages.
       const short = (line) => {
         if (line.text === undefined) return ''
         const length = line.length ?? line.text.length
         return length <= TEXT_KEPT ? line.text : `${headOf(line.text, TEXT_KEPT)}… (cut; ${length} characters in all; read_group_chat with seq ${line.seq} reads it whole)`
       }
-      const lines = room.log.slice(-ROOM_READ_MAX)
+      const lines = (book === undefined ? room.log
+        : book.records.filter(entry => entry.event === undefined && entry.session !== true)).slice(-ROOM_READ_MAX)
       return lines.length === 0 ? `"${room.name}" has no messages yet.` : `Latest in "${room.name}" (oldest first):\n${transcript(lines, short)}`
     },
   }))
