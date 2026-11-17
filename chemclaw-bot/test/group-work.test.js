@@ -1215,6 +1215,8 @@ test('experimental group relay creates durable anchored windows without changing
   await settle(() => first() !== undefined)
   assert.equal(first().from, 1)
   assert.equal(typeof first().anchor, 'string')
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a'),
+    /no recoverable message 1/, 'an internal round anchor must not appear as a chat message')
   assert.deepEqual(first().replies.filter(line => !line.kind).map(line => line.text), ['First procurement reply'])
   const open = (await host.call('group-rows', { roomId: 'r1', from: first().from, anchor: first().anchor })).value
   assert.equal(open.status, 'aligned')
