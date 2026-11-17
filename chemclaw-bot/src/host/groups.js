@@ -31,6 +31,8 @@ import { mixedOverlayRequested } from './market-quote-intent.js'
 import { failureLine } from './turns.js'
 import { createOrderedGroupPostQueue, publishSavedGroupReply } from './group-post-queue.js'
 import { createGroupPersistenceGate } from './group-persistence-gate.js'
+import { readLedger } from './ledger-foundation.js'
+import { planGroupLedgerRecovery } from './ledger-recovery.js'
 
 const ROOM_LOG_MAX = 60
 const ROOM_FIRST_LOOK = 12
@@ -997,12 +999,17 @@ export function install(rt) {
     },
   }))
 
+  // Upstream DS-Bot #1317: group history reads from the full Ledger, not just the
+  // last sixty room.log rows. This is an intentionally read-only compatibility
+  // seam until the canonical runtime writer switches over. A book whose bytes
+  // disagree with saved state cannot be presented as authoritative.
   ctx.tools.register(defineTool({
     name: 'read_group_chat',
-    description: 'Read the latest messages of a group chat, including what you said there. You speak in groups from separate conversations, so your own chat does not show them. Main Bots may read any group; others the groups they are in.',
+    description: 'Read recent group messages, a numbered historical message, or search group history. Full-history retrieval requires a verified group Ledger. Main Bots may read any group; other Bots only their groups.',
     parameters: {
       group: GROUP_REF,
-      seq: { type: 'integer', description: 'Read one message whole: the seq that a cut message names' },
+      seq: { type: 'integer', description: 'Read one message by its original sequence, however old, if preserved' },
+      query: { type: 'string', description: 'Search words in verified full group history, newest matches first' },
     },
     output,
     async execute(args, exec) {
@@ -1012,14 +1019,53 @@ export function install(rt) {
       const { room, error } = rt.pickRoom(args.group, self)
       if (error) return error
       ensureRoomLog(room)
+      // The legacy cache and sidecars are still the fallback until this room's
+      // writer and reader are migrated together; this call never imports/writes.
       await loadGroupLines(room)
-      if (args.seq !== undefined) {
-        const line = room.log.find(entry => entry.seq === Number(args.seq))
-        return line === undefined ? `"${room.name}" no longer keeps message ${args.seq}; it keeps its latest ${ROOM_LOG_MAX}.` : lineText(line, memberText(room)(line))
+      let book
+      try {
+        book = await readLedger(rt.home, 'group-' + room.id)
+      } catch (error) {
+        return `Cannot read the group Ledger for "${room.name}" (${error?.message ?? error}); no history was changed.`
       }
-      // Thirty whole lines could fill the context, so a long one shows its start.
+      if (book !== undefined) {
+        const inspection = planGroupLedgerRecovery({ room, ledger: book })
+        if (inspection.status !== 'aligned') {
+          return `"${room.name}" Ledger and saved group state need recovery review (${inspection.status}); history was not read or replayed.`
+        }
+      }
+      const textForMember = (line) => {
+        if (typeof line.text !== 'string') return line.text
+        const shown = headOf(line.text, GROUP_LINE_READ)
+        return line.text.length > shown.length
+          ? `${shown}… (cut; ${line.text.length} characters in all)`
+          : shown
+      }
+      if (args.seq !== undefined) {
+        const seq = Number(args.seq)
+        // A verified book contains full text for messages that left room.log.
+        const stored = book?.records.find(entry => entry.seq === seq)
+        if (stored !== undefined) return lineText(stored, textForMember(stored))
+        const line = room.log.find(entry => entry.seq === seq)
+        return line === undefined
+          ? `"${room.name}" has no recoverable message ${args.seq} (its legacy cache keeps at most ${ROOM_LOG_MAX}).`
+          : lineText(line, memberText(room)(line))
+      }
+      if (typeof args.query === 'string' && args.query.trim() !== '') {
+        if (book === undefined) {
+          return `"${room.name}" has not migrated to a verified group Ledger; full-history search is unavailable.`
+        }
+        const words = args.query.toLowerCase().trim().split(/\s+/).filter(Boolean)
+        const matches = book.records.filter(entry => Number.isSafeInteger(entry.seq) &&
+          typeof entry.text === 'string' && words.every(word => entry.text.toLowerCase().includes(word)))
+          .slice(-20).reverse()
+        return matches.length === 0
+          ? `Nothing said in "${room.name}" has "${args.query}".`
+          : `In "${room.name}" (newest first):\n${matches.map(line => `#${line.seq} ${lineText(line, headOf(line.text, TEXT_KEPT))}`).join('\n')}`
+      }
+      // The newest thirty still use the legacy preview until the UI and
+      // production writer cut over as one reviewed operation.
       const short = (line) => {
-        // Group notifications and status events may have no text field.
         if (line.text === undefined) return ''
         const length = line.length ?? line.text.length
         return length <= TEXT_KEPT ? line.text : `${headOf(line.text, TEXT_KEPT)}… (cut; ${length} characters in all; read_group_chat with seq ${line.seq} reads it whole)`
