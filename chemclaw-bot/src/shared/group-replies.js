@@ -1,3 +1,19 @@
+// DS-Bot upstream #1317: a settled Ledger round names its durable range.
+// Old replies and pruned/invalid results remain readable through parseReplies.
+export function relayRange(text) {
+  try {
+    const value = JSON.parse(text)
+    if (Number.isSafeInteger(value?.from) && value.from > 0) {
+      return {
+        from: value.from,
+        ...(Number.isSafeInteger(value.to) && value.to >= value.from ? { to: value.to } : {}),
+        ...(typeof value.anchor === 'string' && value.anchor.length > 0 ? { anchor: value.anchor } : {}),
+      }
+    }
+  } catch { /* legacy or truncated result */ }
+  return undefined
+}
+
 // Reads the replies of a settled group_relay result. Compaction can prune the
 // middle of a long tool result, which leaves invalid JSON: then every complete
 // reply object that survived is recovered so the turn still draws what it can.
