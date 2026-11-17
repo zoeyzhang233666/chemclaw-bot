@@ -8,6 +8,7 @@ import { apply } from './legacy-runtime.js'
 import { fakeAttachments, fakeContext } from './fake-ctx.js'
 import { GROUP_LINE_READ, MESSAGE_INLINE_MAX, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS, TEXT_KEPT } from '../src/host/constants.js'
 import { publishInitialGroupBook } from '../src/host/ledger-import.js'
+import { readLedger } from '../src/host/ledger-foundation.js'
 
 // Chief, the admin of group 'r1', speaks there from 'ga'; Writer from 'gb'; Tester from 'gc'.
 const seed = (room = {}, extraRooms = {}) => ({
@@ -27,7 +28,7 @@ const seed = (room = {}, extraRooms = {}) => ({
   revision: 0,
 })
 
-async function start(t, room, services, extraRooms) {
+async function start(t, room, services, extraRooms, config = {}) {
   const home = mkdtempSync(join(tmpdir(), 'ds-bot-work-'))
   writeFileSync(join(home, 'state.json'), JSON.stringify(seed(room, extraRooms)))
   const ctx = fakeContext({ services })
@@ -64,7 +65,7 @@ async function start(t, room, services, extraRooms) {
   let route
   const register = ctx.connection.fetch.register
   ctx.connection.fetch.register = (options) => { route = options; return register(options) }
-  apply(ctx, { home })
+  apply(ctx, { home, ...config })
   t.after(async () => {
     await ctx.dispose()
     rmSync(home, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 })
@@ -1152,6 +1153,51 @@ const takeGroupStateLock = host => {
   rmSync(path, { force: true })
   writeFileSync(path, JSON.stringify({ host: 'another-machine', pid: 1, token: 'other-writer' }))
 }
+
+test('experimental #1317 writer fsyncs group user input and Bot reply before exposing success', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const result = host.round('ledger-round-durable', host.say('@Writer 请核对聚氨酯采购价格'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  const first = await readLedger(host.home, 'group-r1')
+  assert.equal(first.records.length, 1)
+  assert.match(first.records[0].text, /聚氨酯采购价格/)
+  const saved = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1
+  assert.equal(saved.seq, 1, 'member delivery must not start before a required state save')
+  assert.equal(saved.log[0].text, first.records[0].text)
+  host.begin('gb')
+  host.finish('gb', '采购建议已核对。')
+  await settle(() => result() !== undefined)
+  const book = await readLedger(host.home, 'group-r1')
+  assert.equal(book.records.length, 2)
+  assert.equal(book.records[1].text, '采购建议已核对。')
+  assert.equal(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1.seq, 2)
+  assert.deepEqual(result().replies.filter(item => item.kind === undefined).map(item => item.text), ['采购建议已核对。'])
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a'), /聚氨酯采购价格/)
+})
+
+test('experimental group writer refuses uncertain lock and never delivers unsaved user input', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  takeGroupStateLock(host)
+  const result = host.round('ledger-no-unsafe-replay', host.say('@Writer 不应执行'))
+  await settle(() => result() !== undefined)
+  assert.match(result().code, /PERSISTENCE|LEDGER/)
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  assert.equal(await readLedger(host.home, 'group-r1'), undefined)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
+test('default legacy Host refuses to append a group that already has a Ledger', async t => {
+  const host = await start(t)
+  const stateBefore = readFileSync(join(host.home, 'state.json'), 'utf8')
+  await publishInitialGroupBook(host.home, 'group-r1', [])
+  const result = host.round('no-legacy-double-writer', host.say('@Writer 数据一致性检查'))
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  assert.deepEqual((await readLedger(host.home, 'group-r1')).records, [])
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), stateBefore)
+})
 
 test('a final member answer whose required save fails is shown as a failure and never calls its @mentions', async t => {
   const host = await start(t)
