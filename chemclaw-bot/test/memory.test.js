@@ -4,6 +4,7 @@ import { hostname, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { apply } from './legacy-runtime.js'
+import { publishInitialGroupBook } from '../src/host/ledger-import.js'
 import {
   MEMORY_LIMITS, addLink, cleanEntry, cleanTopic, formatEntry, insertEntry, looksLikeKey,
   looksSecret, matchEntries, parseAsk, parseMemory, parseReview, reviewEntries, removeLink, splitMeta, writtenIn,
@@ -695,6 +696,47 @@ test('a first group review reads back to the user\'s line past a round of replie
   assert.equal(requests.length, 1)
   assert.match(requests[0].messages[0].content[0].text, /oldest first:\nUser: From now on, answer in Chinese\nWriter: Reply 1\n/)
   assert.deepEqual(JSON.parse(read('reviewed.json')), { 'group:r1': 7 })
+})
+
+test('group memory review uses verified Ledger history beyond the 60 cached messages', async t => {
+  const home = mkdtempSync(join(tmpdir(), 'chemclaw-ledger-memory-'))
+  const records = Array.from({ length: 96 }, (_, index) => ({
+    seq: index + 1,
+    who: index === 20 ? 'User' : 'Coder',
+    ...(index === 20 ? {} : { botId: 'b3' }),
+    text: index === 20 ? 'Historical user instruction: audit old chemical procurement decisions' : 'Group progress ' + (index + 1),
+  }))
+  const room = { ...TEAM.rooms.r1, seq: 96, log: records.slice(-60) }
+  writeFileSync(join(home, 'state.json'), JSON.stringify({ ...TEAM, rooms: { r1: room } }))
+  mkdirSync(join(home, 'memory'), { recursive: true })
+  writeFileSync(join(home, 'memory', 'reviewed.json'), JSON.stringify({ 'group:r1': 20 }))
+  await publishInitialGroupBook(home, 'group-r1', records)
+  const { ctx, call, requests, read, stop } = start({ home, replies: [JSON.stringify({ changes: [] })], config: { memoryReviewDelayMs: 0 } })
+  t.after(() => stop())
+  await call('state', {})
+  ctx.emit('agent/status', { agent: { id: 'g3' }, status: 'idle' })
+  await reviewed(call)
+  assert.equal(requests.length, 1, 'the user message outside the cache must still reach memory review')
+  assert.match(requests[0].messages[0].content[0].text, /User: Historical user instruction: audit old chemical procurement decisions/)
+  assert.deepEqual(JSON.parse(read('reviewed.json')), { 'group:r1': 96 })
+})
+
+test('group memory review does not advance its cursor when the Ledger is ahead of the saved room', async t => {
+  const home = mkdtempSync(join(tmpdir(), 'chemclaw-ledger-memory-recovery-'))
+  const before = { seq: 1, who: 'User', text: 'Unconfirmed delivery must not advance memory' }
+  const room = { ...TEAM.rooms.r1, seq: 1, log: [before] }
+  writeFileSync(join(home, 'state.json'), JSON.stringify({ ...TEAM, rooms: { r1: room } }))
+  mkdirSync(join(home, 'memory'), { recursive: true })
+  const cursor = JSON.stringify({ 'group:r1': 0 })
+  writeFileSync(join(home, 'memory', 'reviewed.json'), cursor)
+  await publishInitialGroupBook(home, 'group-r1', [before, { seq: 2, who: 'Coder', botId: 'b3', text: 'Uncertain Bot reply' }])
+  const { ctx, call, requests, read, stop } = start({ home, replies: [JSON.stringify({ changes: [] })], config: { memoryReviewDelayMs: 0 } })
+  t.after(() => stop())
+  await call('state', {})
+  ctx.emit('agent/status', { agent: { id: 'g3' }, status: 'idle' })
+  await reviewed(call)
+  assert.equal(requests.length, 0, 'no LLM call is allowed from a ledger-ahead snapshot')
+  assert.equal(read('reviewed.json'), cursor, 'failed recovery inspection must not change the memory cursor')
 })
 
 test('an answer that is no list of changes keeps the review\'s place, and the next one reads the turn again', async (t) => {
