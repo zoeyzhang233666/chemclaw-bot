@@ -835,8 +835,8 @@ export function install(rt) {
         slot.status = typeof reply === 'string' ? 'passed' : 'missed'
         round.passed.push(member.name)
         if (reply?.missed) {
-          round.replies.push({ kind: 'missed', botId: member.id, name: member.name, color: member.color, time: Date.now() })
           await appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
+          round.replies.push({ kind: 'missed', botId: member.id, name: member.name, color: member.color, time: Date.now() })
         }
       }
       postViews(round, member, reply?.views)
@@ -897,6 +897,9 @@ export function install(rt) {
       // late failure, its work picked up after a restart, its work the user stopped, or
       // the end of work whose result it already posted is an event of the round.
       const event = item => item.failed || item.resumed || item.stopped || item.done
+      const releases = posts.some(post => post.resume === true || (!post.botId && !post.kickoff))
+      const loggedEvents = []
+      try {
       for (const post of posts.filter(item => !item.kickoff && !item.resume && !event(item) && item.logged === undefined)) {
         // Image readings go into the log only; `@` names are picked from what the user typed.
         // A file stays with its line and reaches each member the line is shown to.
@@ -912,11 +915,9 @@ export function install(rt) {
       // The user wrote here — or pressed Continue, which opens the same round
       // without a line of its own — so Bot relays count afresh and the calls the
       // limit parked run after the speakers this message picks.
-      const releases = posts.some(post => post.resume === true || (!post.botId && !post.kickoff))
       if (releases) room.relays = 0
       // A stop/resume/done notice must be in the same required-save batch,
       // otherwise the relay might show it before it is durable.
-      const loggedEvents = []
       for (const post of posts.filter(item => (item.resumed || item.stopped || item.done) && item.logged === undefined)) {
         const bot = rt.botOf(post.botId)
         const name = bot?.name ?? post.name
@@ -924,7 +925,6 @@ export function install(rt) {
         await appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
         loggedEvents.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
       }
-      try {
         await saveRequiredRoom(room)
       } catch (error) {
         const blocked = persistenceGate.status(room.id)
