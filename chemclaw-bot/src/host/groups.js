@@ -658,7 +658,25 @@ export function install(rt) {
   // already spoke; either way it goes right after slot `index`. `origin` is who the
   // call answers to: 'user' for the user's own messages, 'bot' for a member's calls.
   // `by` is the calling member, if a member called.
-  function callMembers(round, index, callees, note, by, origin) {
+  // Upstream #1351: durably register Bot calls before the next Bot is dispatched.
+  // The registration is opt-in only; a full batch recovery protocol is not yet on.
+  const persistGroupCall = async (round, by, callees) => {
+    if (!ledgerWriterEnabled || by === undefined || callees.length === 0) return undefined
+    const room = rt.roomOf(round.roomId)
+    if (room === undefined) throw new Error('Group call has no room')
+    assertGroupWritable(room)
+    const ids = [...new Set(callees.map(member => member.id))]
+    const key = randomUUID()
+    rt.state.roomBatches[key] = {
+      key, roomId: room.id, by, pending: ids, done: [], doneIds: [],
+      results: [], worked: false, answered: false, at: Date.now(),
+    }
+    await saveRequiredRoom(room)
+    return key
+  }
+
+  async function callMembers(round, index, callees, note, by, origin) {
+    const batchKey = await persistGroupCall(round, by, callees)
     let next = index + 1
     for (const peer of callees) {
       const waiting = round.slots.findIndex((other, at) => at > index && other.id === peer.id && other.status === 'waiting')
@@ -667,6 +685,8 @@ export function install(rt) {
       called.origin = origin
       if (by === undefined) delete called.by
       else called.by = by
+      if (batchKey === undefined) delete called.batchKey
+      else called.batchKey = batchKey
       round.slots.splice(next, 0, called)
       next += 1
     }
@@ -734,7 +754,7 @@ export function install(rt) {
       round.replies.push({ kind: 'user', text: line.text, time: Date.now() })
       const { all, found } = mentionsIn(line.text, members)
       const note = all || found.length > 0 ? 'the user mentioned you' : 'new message from the user'
-      callMembers(round, index - 1, openingSpeakers(room, { text: line.text }), note, undefined, 'user')
+      await callMembers(round, index - 1, openingSpeakers(room, { text: line.text }), note, undefined, 'user')
     }
   }
 
@@ -851,7 +871,7 @@ export function install(rt) {
       const { all, found: named } = mentionsIn(spoken.join('\n\n'), everyone)
       const found = named.filter(other => other.id !== member.id)
       const callees = leads && all ? [...found, ...others.filter(other => !found.includes(other))] : found
-      callMembers(round, index, callees, `${member.name} mentioned you`, member.id, 'bot')
+      await callMembers(round, index, callees, `${member.name} mentioned you`, member.id, 'bot')
     }
     // The admin was alone with the user's message and passed: the round ends with
     // nothing said. The group says so once, so the user knows to call a member.
