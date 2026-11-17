@@ -651,6 +651,13 @@ export function install(rt) {
   const QUICK_TOOLS = new Set(TEAM_TOOLS)
   rt.workRoomTurn = (sessionId, tool) => {
     if (QUICK_TOOLS.has(tool)) return
+    if (ledgerWriterEnabled) {
+      const owner = rt.groupOwners.get(sessionId)
+      const round = [...rt.roomProgress.values()].find(value =>
+        value.roomId === owner?.roomId && value.speaking === owner?.botId)
+      const slot = round?.slots.find(value => value.id === owner.botId && value.status === 'speaking')
+      if (slot?.batchKey !== undefined) slot.worked = true
+    }
     for (const waiter of waitersOf(sessionId)) waiter.work()
   }
 
@@ -673,6 +680,28 @@ export function install(rt) {
     }
     await saveRequiredRoom(room)
     return key
+  }
+
+  // A completed same-round callee releases only its own pending membership.
+  // Late/working/missed turns are deliberately left pending until their delivery
+  // and restart protocol can confirm the result. No automatic replay or wake.
+  const settleGroupCall = async (room, slot, member, beforeSeq, spoken) => {
+    if (!ledgerWriterEnabled || slot.batchKey === undefined
+      || !['posted', 'passed', 'failed'].includes(slot.status)) return
+    const batch = rt.state.roomBatches?.[slot.batchKey]
+    if (batch === undefined || !batch.pending.includes(member.id)) return
+    batch.pending = batch.pending.filter(id => id !== member.id)
+    if (slot.status === 'posted' && spoken.length > 0) {
+      batch.done.push(member.name)
+      batch.doneIds.push(member.id)
+      for (const row of room.log) {
+        if (row.botId === member.id && row.event === undefined && row.seq > beforeSeq) {
+          batch.results.push({ name: member.name, seq: row.seq })
+        }
+      }
+      batch.worked ||= slot.worked === true
+    }
+    await saveRequiredRoom(room)
   }
 
   async function callMembers(round, index, callees, note, by, origin) {
@@ -814,6 +843,7 @@ export function install(rt) {
       round.shown?.push(member.id)
       const text = session.brief === undefined ? prompt.text : `${session.brief}\n\n${prompt.text}`
       const said = []
+      const beforeMemberSeq = room.seq
       const startedAt = Date.now()
       const reply = await roomTurn(room, member, session.id, { text, files: prompt.files }, slot.note ?? 'your turn', signal, round, slot.by, said)
       round.speaking = null
@@ -863,6 +893,9 @@ export function install(rt) {
       }
       postViews(round, member, reply?.views)
       const spoken = committedFinal ? [...said, final] : said
+      // Save batch completion before the next member runs. If this save fails,
+      // the room fails closed and the next call is not delivered.
+      await settleGroupCall(room, slot, member, beforeMemberSeq, spoken)
       if (spoken.length === 0) continue
       // Only the admin's "@all" calls everyone, so a member cannot set off a storm.
       const leads = rt.isAdminOf(room, member.id)
