@@ -26,6 +26,22 @@ function validIndexes(saved) {
     if (Object.hasOwn(saved, key) && !record(saved[key])) return false
   }
   if (Object.hasOwn(saved, 'exchanges') && (!Array.isArray(saved.exchanges) || saved.exchanges.some(entry => !record(entry)))) return false
+  // DS-Bot #1351: group call batches survive a restart. ChemClaw must not silently
+  // discard a damaged pending batch: it may represent work not yet delivered.
+  if (Object.hasOwn(saved, 'roomBatches')) {
+    if (!record(saved.roomBatches)) return false
+    const strings = value => Array.isArray(value) && value.every(item => typeof item === 'string')
+    for (const [key, batch] of Object.entries(saved.roomBatches)) {
+      if (!record(batch) || batch.key !== key || typeof batch.roomId !== 'string' || typeof batch.by !== 'string'
+        || !strings(batch.pending) || !strings(batch.done)
+        || (batch.doneIds !== undefined && !strings(batch.doneIds))
+        || !Array.isArray(batch.results)
+        || batch.results.some(item => !record(item) || typeof item.name !== 'string'
+          || !Number.isSafeInteger(item.seq) || item.seq < 1)
+        || typeof batch.worked !== 'boolean' || typeof batch.answered !== 'boolean'
+        || !Number.isSafeInteger(batch.at) || batch.at < 0) return false
+    }
+  }
   for (const bot of Object.values(saved.bots ?? {})) {
     if (!record(bot) || typeof bot.id !== 'string') return false
     if (bot.contextRecovery !== undefined && !validContextRecovery(bot.contextRecovery)) return false
@@ -45,7 +61,7 @@ export function install(rt) {
   const { ctx, home, statePath } = rt
 
   /** @type {{version:1, workspaceId?:string, mainBotIds:string[], bots:Record<string,any>, rooms:Record<string,any>, agents:Record<string,any>, capabilities:{items:Record<string,any>}, exchanges:any[], exchangeTurns:Record<string,number[]>, revision:number}} */
-  const state = { version: 1, mainBotIds: [], bots: {}, rooms: {}, agents: {}, capabilities: { items: {} }, exchanges: [], exchangeTurns: {}, works: {}, requests: {}, questions: {}, views: {}, prefs: {}, switching: {}, revision: 0 }
+  const state = { version: 1, mainBotIds: [], bots: {}, rooms: {}, agents: {}, capabilities: { items: {} }, exchanges: [], exchangeTurns: {}, works: {}, requests: {}, roomBatches: {}, questions: {}, views: {}, prefs: {}, switching: {}, revision: 0 }
   let loaded = null
   let writing = Promise.resolve()
   const { warn } = rt
