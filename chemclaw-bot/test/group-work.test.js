@@ -7,6 +7,7 @@ import { setTimeout as realDelay } from 'node:timers/promises'
 import { apply } from './legacy-runtime.js'
 import { fakeAttachments, fakeContext } from './fake-ctx.js'
 import { GROUP_LINE_READ, MESSAGE_INLINE_MAX, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS, TEXT_KEPT } from '../src/host/constants.js'
+import { publishInitialGroupBook } from '../src/host/ledger-import.js'
 
 // Chief, the admin of group 'r1', speaks there from 'ga'; Writer from 'gb'; Tester from 'gc'.
 const seed = (room = {}, extraRooms = {}) => ({
@@ -320,6 +321,54 @@ test('read_group_chat handles textless events, mixed messages and seq reads (ups
     const one = await host.tool('read_group_chat', { group: 'Ops', seq: index + 2 }, 'a')
     assert.match(one, new RegExp(expected, 'i'))
   }
+})
+
+test('upstream #1317 read_group_chat retrieves pre-60th messages and searches only a verified complete book', async t => {
+  const records = Array.from({ length: 96 }, (_, index) => ({
+    seq: index + 1, who: index % 2 ? 'Writer' : 'User',
+    ...(index % 2 ? { botId: 'b' } : {}),
+    text: 'Message ' + (index + 1) + ' on chemical demand',
+  }))
+  const originalLong = '历史全文：' + '聚氨酯供应链预测'.repeat(4000)
+  records[10].text = 'earliest special ' + originalLong
+  records[71].text = 'another special ' + originalLong
+  const log = records.slice(-60).map(entry => entry.seq === 72
+    ? { ...entry, text: entry.text.slice(0, TEXT_KEPT), length: entry.text.length }
+    : { ...entry })
+  const host = await start(t, { seq: records.length, log, seen: { a: records.length - 1 } })
+  await publishInitialGroupBook(host.home, 'group-r1', records)
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+
+  const old = await host.tool('read_group_chat', { group: 'Ops', seq: 11 }, 'a')
+  assert.match(old, /^User: earliest special 历史全文：/)
+  const fullRecent = await host.tool('read_group_chat', { group: 'Ops', seq: 72 }, 'a')
+  assert.match(fullRecent, /^Bot "Writer": another special 历史全文：/)
+  assert.ok(fullRecent.length > TEXT_KEPT, 'the full-Ledger reader must not use the 2k state preview')
+  const search = await host.tool('read_group_chat', { group: 'Ops', query: 'earliest special' }, 'a')
+  assert.match(search, /#11 User: earliest special/)
+  const mixed = await host.tool('read_group_chat', { group: 'Ops', query: 'chemical demand' }, 'a')
+  assert.match(mixed, /#96 Bot "Writer": Message 96/)
+  assert.equal((mixed.match(/#\d+ /g) ?? []).length, 20, 'the query has a bounded list of the newest twenty matches')
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 999 }, 'a'), /no recoverable message 999/)
+  const latest = await host.tool('read_group_chat', { group: 'Ops' }, 'a')
+  assert.match(latest, /Message 96 on chemical demand/)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before, 'reading must not alter saved group or session state')
+})
+
+test('Ledger read refuses an inconsistent or torn book without hiding unmigrated legacy chats', async t => {
+  const records = [
+    { seq: 1, who: 'User', text: 'keep original message' },
+    { seq: 2, who: 'User', text: 'keep another message' },
+  ]
+  const host = await start(t, { seq: 2, log: [records[0], records[1]] })
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a'), /keep original message/)
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', query: 'keep' }, 'a'), /full-history search is unavailable/)
+  await publishInitialGroupBook(host.home, 'group-r1', [records[0], { ...records[1], text: 'conflicting Ledger message' }])
+  const stateBefore = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const result = await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a')
+  assert.match(result, /need recovery review \(blocked\)/)
+  assert.doesNotMatch(result, /keep original message/)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), stateBefore)
 })
 
 // 公开#185: the result went out as the work's first step line, next to one last tool
