@@ -50,6 +50,19 @@ function verifyFullBook(ledger) {
       record.from > record.seq ||
       Object.hasOwn(record, 'text') || Object.hasOwn(record, 'kind')
     )) return 'Ledger contains an invalid round anchor at ' + record.seq
+    if (record.event === 'round' && (
+      typeof record.id !== 'string' || !record.id ||
+      !Number.isSafeInteger(record.from) || record.from < 1 ||
+      !Number.isSafeInteger(record.to) || record.to < record.from ||
+      record.to >= record.seq ||
+      !Array.isArray(record.passed) || !Array.isArray(record.failed) ||
+      !record.passed.every(name => typeof name === 'string') ||
+      !record.failed.every(name => typeof name === 'string') ||
+      Object.hasOwn(record, 'text') || Object.hasOwn(record, 'kind')
+    )) return 'Ledger contains an invalid round completion at ' + record.seq
+    if (record.event !== undefined && record.event !== 'anchor' && record.event !== 'round') {
+      return 'Ledger contains an unknown metadata event at ' + record.seq
+    }
     if (record.legacyIncomplete === true ||
         (record.length !== undefined && (!Number.isSafeInteger(record.length) ||
           record.length !== (typeof record.text === 'string' ? record.text.length : 0)))) {
@@ -120,7 +133,7 @@ export function planGroupLedgerRecovery({ room, ledger }) {
   if (persisted.length > ROOM_LOG_MAX) {
     return blocked(stateSeq, ledgerSeq, 'Saved room.log exceeds its bounded history window')
   }
-  const visibleAtSave = records.slice(0, stateSeq).filter(record => record.event !== 'anchor')
+  const visibleAtSave = records.slice(0, stateSeq).filter(record => record.event === undefined)
   const expectedWindow = visibleAtSave.slice(-ROOM_LOG_MAX)
   if (persisted.length !== expectedWindow.length) {
     return blocked(stateSeq, ledgerSeq, stateSeq > 0 && persisted.length === 0 && expectedWindow.length > 0
@@ -144,7 +157,7 @@ export function planGroupLedgerRecovery({ room, ledger }) {
   }
 
   const unconfirmedRecords = records.slice(stateSeq).map(record => ({ ...record }))
-  const recent = records.filter(record => record.event !== 'anchor').slice(-ROOM_LOG_MAX)
+  const recent = records.filter(record => record.event === undefined).slice(-ROOM_LOG_MAX)
   return {
     status: 'ledger-ahead', stateSeq, ledgerSeq,
     // "unconfirmed" means receipt/delivery status is UNKNOWN, not that the
