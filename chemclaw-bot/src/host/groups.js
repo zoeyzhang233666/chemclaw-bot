@@ -1020,12 +1020,35 @@ export function install(rt) {
           replies: round.replies, passed: round.passed,
           ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
       }
+      let closeSeq
+      if (anchor !== undefined) {
+        // Match upstream's durable `event: 'round'` boundary, but use the
+        // same strict fsync + required state-save path as other ChemClaw rows.
+        // The closure itself is invisible and does not enter member history.
+        closeSeq = room.seq
+        try {
+          await appendRoom(room, {
+            event: 'round', id: anchor, from: startSeq, to: closeSeq,
+            passed: [...round.passed], failed: [...round.failed],
+            ...(exec.signal?.aborted ? { stopped: true } : {}),
+            time: Date.now(),
+          })
+        } catch (error) {
+          const blocked = persistenceGate.status(room.id)
+          exec.concludeTurn?.()
+          return JSON.stringify({
+            error: blocked?.message ?? String(error), code: blocked?.code ?? 'PERSISTENCE',
+            replies: round.replies, passed: round.passed,
+            ...(round.failed.length ? { failed: round.failed } : {}),
+          })
+        }
+      }
       await rt.save()
       for (const post of posts) {
         if (post.reportBack && rt.botOf(post.botId)) void reportRound(room, post, round)
       }
       exec.concludeTurn?.()
-      return JSON.stringify({ ...(anchor === undefined ? {} : { from: startSeq, anchor }), replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
+      return JSON.stringify({ ...(anchor === undefined ? {} : { from: startSeq, to: closeSeq, anchor }), replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
     },
   }))
 
@@ -1089,7 +1112,7 @@ export function install(rt) {
   // never receive uncertain rows: first verify a complete Ledger against the
   // last saved room state. This is read-only even in a secondary Host window.
   function groupRow(record) {
-    if (record.session === true || record.event === 'anchor') return undefined
+    if (record.session === true || record.event !== undefined) return undefined
     const botId = record.botId ?? record.about
     const bot = botId === undefined ? undefined : rt.botOf(botId)
     const who = { botId, name: bot?.name ?? record.names?.[0] ?? record.who, color: bot?.color }
@@ -1124,12 +1147,20 @@ export function install(rt) {
       const at = records.findIndex(row => row.event === 'anchor' && row.id === anchor && row.from === from)
       if (at === -1) return { rows: [], open: false, status: 'unknown-anchor' }
       if (end === undefined) {
+        // The completion written by this very round closes its live view even
+        // if no later round has started. An interrupted round has no completion
+        // and stays open until the next anchor, as on upstream #1351/#1364.
+        const closing = records.slice(at + 1).find(row =>
+          row.event === 'round' && row.id === anchor && row.from === from)
         const next = records.slice(at + 1).find(row => row.event === 'anchor')
-        if (next) end = next.from - 1
+        if (closing) end = closing.to
+        else if (next) end = next.from - 1
       }
     } else if (end === undefined) {
+      const closing = records.find(row => row.event === 'round' && row.from === from)
       const next = records.find(row => row.event === 'anchor' && Number.isSafeInteger(row.from) && row.from > from)
-      if (next) end = next.from - 1
+      if (closing) end = closing.to
+      else if (next) end = next.from - 1
     }
     const rows = records.filter(record => record.seq >= from && (end === undefined || record.seq <= end))
       .map(groupRow).filter(Boolean)
@@ -1181,7 +1212,7 @@ export function install(rt) {
       if (args.seq !== undefined) {
         const seq = Number(args.seq)
         // A verified book contains full text for messages that left room.log.
-        const stored = book?.records.find(entry => entry.seq === seq && entry.event !== 'anchor')
+        const stored = book?.records.find(entry => entry.seq === seq && entry.event === undefined)
         if (stored !== undefined) return lineText(stored, textForMember(stored))
         const line = room.log.find(entry => entry.seq === seq)
         return line === undefined
