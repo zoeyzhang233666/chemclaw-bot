@@ -36,6 +36,8 @@ function blocked(stateSeq, ledgerSeq, reason) {
 function verifyFullBook(ledger) {
   if (!ledger || !Array.isArray(ledger.records)) return 'Ledger records are unavailable'
   if (ledger.incompleteTail !== '') return 'Ledger has an interrupted final record'
+  const opened = new Map()
+  const closed = new Set()
   for (let index = 0; index < ledger.records.length; index++) {
     const record = ledger.records[index]
     if (!record || typeof record !== 'object' || Array.isArray(record) ||
@@ -50,6 +52,10 @@ function verifyFullBook(ledger) {
       record.from > record.seq ||
       Object.hasOwn(record, 'text') || Object.hasOwn(record, 'kind')
     )) return 'Ledger contains an invalid round anchor at ' + record.seq
+    if (record.event === 'anchor') {
+      if (opened.has(record.id)) return 'Ledger repeats a round anchor id at ' + record.seq
+      opened.set(record.id, record.from)
+    }
     if (record.event === 'round' && (
       typeof record.id !== 'string' || !record.id ||
       !Number.isSafeInteger(record.from) || record.from < 1 ||
@@ -60,6 +66,12 @@ function verifyFullBook(ledger) {
       !record.failed.every(name => typeof name === 'string') ||
       Object.hasOwn(record, 'text') || Object.hasOwn(record, 'kind')
     )) return 'Ledger contains an invalid round completion at ' + record.seq
+    if (record.event === 'round') {
+      if (opened.get(record.id) !== record.from || closed.has(record.id)) {
+        return 'Ledger completion does not match an open round anchor at ' + record.seq
+      }
+      closed.add(record.id)
+    }
     if (record.event !== undefined && record.event !== 'anchor' && record.event !== 'round') {
       return 'Ledger contains an unknown metadata event at ' + record.seq
     }
