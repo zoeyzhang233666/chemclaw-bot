@@ -1212,6 +1212,33 @@ const takeGroupStateLock = host => {
   writeFileSync(path, JSON.stringify({ host: 'another-machine', pid: 1, token: 'other-writer' }))
 }
 
+test('experimental #1351 registers a two-member Bot call in state before delivering either turn', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const result = host.round('batch-registration', host.say('@Chief coordinate procurement'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer @Tester verify purchasing inputs')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  const state = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8'))
+  const batches = Object.values(state.roomBatches ?? {})
+  assert.equal(batches.length, 1, 'one Bot mention creates exactly one call batch')
+  const batch = batches[0]
+  assert.equal(batch.roomId, 'r1')
+  assert.equal(batch.by, 'a')
+  assert.deepEqual(batch.pending, ['b', 'c'])
+  assert.deepEqual(batch.done, [])
+  assert.deepEqual(batch.results, [])
+  assert.equal(batch.answered, false)
+  assert.equal(batch.worked, false)
+  assert.equal(host.agentOf('gc').calls.length, 0, 'second member is not delivered before first completes')
+  host.begin('gb')
+  host.finish('gb', 'Writer checked the inputs.')
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  host.begin('gc')
+  host.finish('gc', 'Tester checked the inputs.')
+  await settle(() => result() !== undefined)
+})
+
 test('experimental group relay creates durable anchored windows without changing old reply display', async t => {
   const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
   const first = host.round('anchored-first', host.say('@Writer first procurement request'))
