@@ -372,6 +372,58 @@ test('Ledger read refuses an inconsistent or torn book without hiding unmigrated
   assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), stateBefore)
 })
 
+test('upstream #1317 group-rows endpoint resolves verified Ledger windows and ignores anchor/session rows', async t => {
+  const records = [
+    { seq: 1, who: 'User', text: 'First procurement question', time: 101 },
+    { seq: 2, who: 'Writer', botId: 'b', text: 'First answer', time: 102 },
+    { seq: 3, who: 'ChemClaw', event: 'anchor', id: 'round-two', from: 4 },
+    { seq: 4, who: 'User', text: 'Second procurement question', time: 104 },
+    { seq: 5, who: 'Writer', botId: 'b', text: 'Second answer', time: 105 },
+    { seq: 6, who: 'ChemClaw', event: 'anchor', id: 'round-three', from: 7 },
+    { seq: 7, who: 'User', text: 'Third question', time: 107 },
+    { seq: 8, who: 'Chief', botId: 'a', text: 'Only the group Session saw this', session: true, time: 108 },
+  ]
+  const host = await start(t, { seq: records.length, log: records })
+  await publishInitialGroupBook(host.home, 'group-r1', records)
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const first = (await host.call('group-rows', { roomId: 'r1', from: 1 })).value
+  assert.equal(first.status, 'aligned')
+  assert.equal(first.open, false)
+  assert.deepEqual(first.rows.map(row => row.text), ['First procurement question', 'First answer'])
+  assert.deepEqual(first.rows.map(row => row.kind ?? 'bot'), ['user', 'bot'])
+  const middle = (await host.call('group-rows', { roomId: 'r1', from: 4, anchor: 'round-two' })).value
+  assert.equal(middle.open, false)
+  assert.deepEqual(middle.rows.map(row => row.text), ['Second procurement question', 'Second answer'])
+  const last = (await host.call('group-rows', { roomId: 'r1', from: 7, anchor: 'round-three' })).value
+  assert.equal(last.open, true)
+  assert.equal(last.active, false)
+  assert.deepEqual(last.rows.map(row => row.text), ['Third question'])
+  const bounded = (await host.call('group-rows', { roomId: 'r1', from: 2, to: 4 })).value
+  assert.equal(bounded.open, false)
+  assert.deepEqual(bounded.rows.map(row => row.text), ['First answer', 'Second procurement question'])
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
+test('group-rows never presents unverified Ledger data as restored conversation rows', async t => {
+  const first = { seq: 1, who: 'User', text: 'Saved user request' }
+  const host = await start(t, { seq: 1, log: [first] })
+  const none = (await host.call('group-rows', { roomId: 'r1', from: 1 })).value
+  assert.equal(none.status, 'not-migrated')
+  assert.deepEqual(none.rows, [])
+  await publishInitialGroupBook(host.home, 'group-r1', [first, { seq: 2, who: 'Writer', botId: 'b', text: 'Unconfirmed reply' }])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const unsafe = (await host.call('group-rows', { roomId: 'r1', from: 1 })).value
+  assert.equal(unsafe.status, 'ledger-ahead')
+  assert.equal(unsafe.requiresRecovery, true)
+  assert.deepEqual(unsafe.rows, [])
+  assert.equal(unsafe.open, false)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  const invalid = (await host.call('group-rows', { roomId: 'r1', from: 0 })).value
+  assert.deepEqual(invalid.rows, [])
+  const backward = (await host.call('group-rows', { roomId: 'r1', from: 3, to: 1 })).value
+  assert.deepEqual(backward.rows, [])
+})
+
 // 公开#185: the result went out as the work's first step line, next to one last tool
 // call, and the turn then ended with an empty reply. Chief, which asked for the work,
 // was never called to answer it.
