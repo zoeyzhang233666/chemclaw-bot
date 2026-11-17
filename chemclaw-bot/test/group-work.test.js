@@ -1206,6 +1206,42 @@ const takeGroupStateLock = host => {
   writeFileSync(path, JSON.stringify({ host: 'another-machine', pid: 1, token: 'other-writer' }))
 }
 
+test('experimental group relay creates durable anchored windows without changing old reply display', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('anchored-first', host.say('@Writer first procurement request'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.finish('gb', 'First procurement reply')
+  await settle(() => first() !== undefined)
+  assert.equal(first().from, 1)
+  assert.equal(typeof first().anchor, 'string')
+  assert.deepEqual(first().replies.filter(line => !line.kind).map(line => line.text), ['First procurement reply'])
+  const open = (await host.call('group-rows', { roomId: 'r1', from: first().from, anchor: first().anchor })).value
+  assert.equal(open.status, 'aligned')
+  assert.equal(open.open, true)
+  assert.deepEqual(open.rows.map(line => line.text), ['@Writer first procurement request', 'First procurement reply'])
+  const second = host.round('anchored-second', host.say('@Writer second procurement request'))
+  await settle(() => host.agentOf('gb').calls.length === 2)
+  host.begin('gb')
+  host.finish('gb', 'Second procurement reply')
+  await settle(() => second() !== undefined)
+  assert.ok(second().from > first().from)
+  assert.notEqual(second().anchor, first().anchor)
+  const earlier = (await host.call('group-rows', { roomId: 'r1', from: first().from, anchor: first().anchor })).value
+  const later = (await host.call('group-rows', { roomId: 'r1', from: second().from, anchor: second().anchor })).value
+  assert.equal(earlier.open, false)
+  assert.equal(later.open, true)
+  assert.deepEqual(earlier.rows.map(line => line.text), ['@Writer first procurement request', 'First procurement reply'])
+  assert.deepEqual(later.rows.map(line => line.text), ['@Writer second procurement request', 'Second procurement reply'])
+  const book = await readLedger(host.home, 'group-r1')
+  assert.deepEqual(book.records.filter(line => line.event === 'anchor').map(line => [line.id, line.from]),
+    [[first().anchor, first().from], [second().anchor, second().from]])
+  const state = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1
+  assert.deepEqual(state.log.map(line => line.seq), [2, 3, 5, 6])
+  assert.equal(state.seq, 6)
+  assert.equal((await host.call('group-rows', { roomId: 'r1', from: 1, anchor: 'forged' })).value.status, 'unknown-anchor')
+})
+
 test('experimental #1317 writer fsyncs group user input and Bot reply before exposing success', async t => {
   const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
   const result = host.round('ledger-round-durable', host.say('@Writer 请核对聚氨酯采购价格'))
