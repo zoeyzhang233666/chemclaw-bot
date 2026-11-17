@@ -267,8 +267,10 @@ export function install(rt) {
         await prepareLedgerRoom(room)
         const prior = room.log ?? []
         const result = await ledgerCommitter.commit(room, line)
-        for (const gone of prior.slice(0, Math.max(0, prior.length + 1 - ROOM_LOG_MAX))) {
-          evictGroupLine(room.id, gone)
+        if (result.preview !== undefined) {
+          for (const gone of prior.slice(0, Math.max(0, prior.length + 1 - ROOM_LOG_MAX))) {
+            evictGroupLine(room.id, gone)
+          }
         }
         if (typeof result.record.text === 'string' && result.record.text.length > TEXT_KEPT) {
           wholeLines.set(lineKey(room.id, result.seq), headOf(result.record.text, GROUP_LINE_READ))
@@ -1179,7 +1181,7 @@ export function install(rt) {
       if (args.seq !== undefined) {
         const seq = Number(args.seq)
         // A verified book contains full text for messages that left room.log.
-        const stored = book?.records.find(entry => entry.seq === seq)
+        const stored = book?.records.find(entry => entry.seq === seq && entry.event !== 'anchor')
         if (stored !== undefined) return lineText(stored, textForMember(stored))
         const line = room.log.find(entry => entry.seq === seq)
         return line === undefined
