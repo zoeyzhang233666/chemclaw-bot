@@ -1,9 +1,9 @@
-# ChemClaw P0 — 对齐 DS-Bot 上游消息 Ledger 的生产切换方案（仅审查，不启用）
+# ChemClaw P0 — 对齐 DS-Bot 上游消息 Ledger 的安全分阶段切换（测试实现，未发布）
 
 > 日期：2026-11-17 · 关联：#137、#128、#133、#150  
 > 对照的上游：[`Fei2411/DS-Bot@5e9b7da`](https://github.com/Fei2411/DS-Bot/commit/5e9b7da8882da3b68d8a0624342708c2150a9156)（检索时 `main`）。  
 > ChemClaw 对照基线：[`main@4269879`](https://github.com/zoeyzhang233666/chemclaw-bot/commit/42698794301d9ce13d5439de82f40a1aab9369bf)。  
-> **本文档不改变运行时代码、不导入真实历史、不构建或发布安装包；不能据此宣称 P0 完成。**
+> **#154 已增加显式测试开关的生产代码适配，但默认仍使用旧群聊实现；不应在真实用户配置开启测试开关、不自动迁移真实历史、不发布安装包；不能据此宣称 P0 完成。**
 
 ## 1. 上游来源与对应能力（先看源码，不另造一套）
 
@@ -22,22 +22,22 @@
 
 **已合并但独立、尚未接入生产群聊：**
 - `src/host/ledger-foundation.js`、`ledger-import.js`：旧数据读取、导入计划与初始完整账本原子发布。
-- `ledger-append.js`、`ledger-room-commit.js`：独占写者验证、尾部校验、`fsync`、`room.seq/log` 提交；`ledger-room-commit.js` 文件明确写着 **NOT connected to groups.js yet**。
+- `ledger-append.js`、`ledger-room-commit.js`：独占写者验证、尾部校验、`fsync`、`room.seq/log` 提交；#154 在 `groups.js` 加入显式 `experimentalGroupLedger` 测试分支，走严格写入器，**默认关闭且尚未完成 UI 与调度切换**。
 - `ledger-recovery.js`、`ledger-delivery.js`：只读崩溃恢复诊断、attempt→DSH→api-returned 交付回执；并未启用生产恢复/重发。
 - `group-post-queue.js`、`group-persistence-gate.js`：当前旧路径的保存顺序与失败阻断。
 - #138–#149 为分阶段基础或旧写入安全修复，**不代表 Ledger 已经启用**。
 
 **尚未完成的核心接入：**
-- `chemclaw-bot/index.js` 尚未安装上游等价的完整 Ledger 运行模块；不能直接照抄上游模块顺序和文件。
-- `src/host/groups.js` 仍有同步 `appendRoom` 和长期等待的 `group_relay`；必须逐入口改造保存/派活顺序。
+- `chemclaw-bot/index.js` 尚未安装上游等价的完整 Ledger 运行模块；#154 仅从群聊 `groups.js` 内接入经过测试的持久化提交器，不能直接照抄上游模块顺序和文件。
+- #154 将 `src/host/groups.js` 各 `appendRoom` 调用改为等待提交成功，且新增严格写锁/失败阻断；仍由测试开关激活，`group_relay` 长期等待 DSH 的调度结构尚未迁移。
 - 群聊可视化（`group-stream`、对话历史、对应前端）、`read_group_chat`、记忆与引用读取尚需核对是否全部切到单一账本数据源。
 - `delivery.js` 与私聊 `works`、`handoffs`、晚到结果需要一起审查；不可用上游完整文件覆盖 ChemClaw 定制业务。
 
 ## 3. #150 的决策：暂保持 Draft，先不合并
 
-[ChemClaw #150](https://github.com/zoeyzhang233666/chemclaw-bot/pull/150) 只在发现已存在的 Ledger 文件时阻断旧写入（`LEDGER_MIGRATION_REQUIRED`），**并不自动迁移、不接管新写入、不解封群聊**。它是 ChemClaw 过渡安全闸门，不是上游 #1317 的替代品。
+[ChemClaw #150](https://github.com/zoeyzhang233666/chemclaw-bot/pull/150) 的严格旧写入阻断逻辑现已纳入统一 #154，并与显式 opt-in Ledger writer 组合；仍不得将该安全闸门误当作完成上游 #1317 的全部生产迁移。
 
-- 在生产 cutover 分支尚未验证时，保持 Draft；不要以 #150 的 12/12 CI 为由直接合并并宣称迁移完成。
+- #150 与 #154 的重复逻辑应收敛，统一以 #154 完整通过的最新 CI 和写入/恢复/界面验收为依据，未验证前不得合并并宣称迁移完成。
 - 验证在“旧群被意外创建账本”“运行中出现账本”“已有账本但迁移未完成”时确实不丢数据；同时评估其可用性代价（被阻断的群不能工作）。
 - 后续 cutover 必须接管已阻断群，不能以简单删除账本或恢复旧写入口处理；在确认不再存在旧写入路径后再决定是否撤掉临时闸门。
 - 当前 #150 分支落后 main 的 #151 浏览器安全修复；任何进一步修改都必须用最新 main 做新一轮检查。
@@ -77,4 +77,4 @@
 
 ## 6. 下一步执行规则
 
-本 PR **仅固化上述上游来源/差异/验收**，不请求生产合并；下一项代码工作应是 PR-A 的**只读兼容导入及切换前测试**，先补能失败的集成测试，验证旧数据场景，再在独立 Draft PR 中接通单一真实写入路径。每个代码 PR 必须列出“上游来源/复用/偏离原因”，不能在无来源情况下添加另一套竞争的消息账本。
+统一 #154 已包括只读历史检索、长文/旧数据兼容、严格旧 writer 阻断、显式 opt-in 写入适配和 Host 回归测试。该测试开关禁止用于真实用户数据；下一步须在**同一 #154** 中完成群聊界面/成员读取的 Ledger 数据源切换、崩溃恢复与交付回执核对、长轮次/晚到结果回归，再决定取消开关和合并时机。每次改动列出“上游来源/复用/偏离原因”，不新建竞争 Ledger。
