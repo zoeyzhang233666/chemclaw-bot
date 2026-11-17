@@ -295,7 +295,7 @@ export function install(rt) {
   // until the required state.json snapshot succeeds. A failed save poisons only
   // this room, preserving the original DSH inbox for recovery inspection.
   const saveRequiredRoom = async room => {
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     try {
       await rt.save({ required: true })
     } catch (error) {
@@ -528,7 +528,7 @@ export function install(rt) {
       ? stripUnrenderedMixedViewText(text) : text
     // Legacy state-saving bridge, not the Ledger cutover. The publication
     // boundary is shared with tests for successful and failed required saves.
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     try {
       return await publishSavedGroupReply({
         room, round, member, visible, duration,
@@ -598,6 +598,7 @@ export function install(rt) {
     })
     try {
       const skillNames = [...new Set((round.skillRequests ?? []).filter(request => request.executor === member.id).flatMap(request => request.names))]
+      assertGroupWritable(room)
       await rt.deliver({ fromId: undefined, toId: member.id, sessionId, role: 'room', roomId: room.id, exchangeId, note, text, files, steer: busy, ...(skillNames.length ? { skillNames } : {}), ...(by ? { askedBy: by } : {}) })
       room.seen[member.id] = seenAt
       // Still held by an earlier request: this turn cannot start until the user answers.
@@ -713,7 +714,7 @@ export function install(rt) {
   async function drainRoomInbox(room, round, index, agent) {
     // Check before removing incoming messages; a blocked room must not consume
     // inbox messages or turn them into new Bot work.
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     // The greeting's prompt tells the admin the user has not written yet.
     if (round.kickoff) return
     const waiting = waitingLines(agent)
@@ -721,7 +722,7 @@ export function install(rt) {
     if (waiting.length === 0) return
     // Append the full batch first, without consuming DSH's inbox, publishing
     // round replies, or scheduling new member calls.
-    for (const line of waiting) appendRoom(room, { who: 'User', text: line.text })
+    for (const line of waiting) await appendRoom(room, { who: 'User', text: line.text })
     room.relays = 0
     resumePaused(room, round)
     await saveRequiredRoom(room)
@@ -739,7 +740,7 @@ export function install(rt) {
     // The inbox check keeps a message sent during the last speaker's turn inside
     // this round: it drains at the loop's head even once the slots ran out.
     for (let index = 0; index < round.slots.length || waitingLines(agent).length > 0; index += 1) {
-      if (signal.aborted || persistenceGate.status(room.id)) break
+      if (signal.aborted || roomWriteStatus(room.id)) break
       await drainRoomInbox(room, round, index, agent)
       if (index >= round.slots.length) break
       const slot = round.slots[index]
@@ -835,7 +836,7 @@ export function install(rt) {
         round.passed.push(member.name)
         if (reply?.missed) {
           round.replies.push({ kind: 'missed', botId: member.id, name: member.name, color: member.color, time: Date.now() })
-          appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
+          await appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
         }
       }
       postViews(round, member, reply?.views)
@@ -856,7 +857,7 @@ export function install(rt) {
     // An answer that came, or is still coming, means the round is not left silent.
     const answered = round.slots.some(slot => ['posted', 'working', 'waiting-approval'].includes(slot.status))
     if (alone && !answered) {
-      appendRoom(room, { who: 'DS Bot', kind: 'notice', reason: 'admin-passed', names: [round.soleAdmin.name] })
+      await appendRoom(room, { who: 'DS Bot', kind: 'notice', reason: 'admin-passed', names: [round.soleAdmin.name] })
       // The round the user watched shows the same notice as one line of its replies.
       round.replies.push({ kind: 'admin-passed', botId: round.soleAdmin.id, name: round.soleAdmin.name, color: round.soleAdmin.color, time: Date.now() })
       await rt.save()
@@ -865,7 +866,7 @@ export function install(rt) {
     // user: the log's "@Name" lines are real calls that wait, not drops in silence.
     if (round.parked !== undefined) {
       const limit = relayLimit(room)
-      appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'paused', names: round.parked, limit })
+      await appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'paused', names: round.parked, limit })
       round.replies.push({ kind: 'paused', names: round.parked, count: limit, time: Date.now() })
       await rt.save()
     }
@@ -880,7 +881,7 @@ export function install(rt) {
       await rt.load()
       const room = rt.roomOf(exec.agent?.id)
       if (room === undefined) return JSON.stringify({ error: 'Not a group chat' })
-      const alreadyBlocked = persistenceGate.status(room.id)
+      const alreadyBlocked = roomWriteStatus(room.id)
       if (alreadyBlocked) return JSON.stringify({ error: alreadyBlocked.message, code: alreadyBlocked.code, replies: [], passed: [], failed: [] })
       ensureRoomLog(room)
       // Everything queued since the last relay is posted in order, so messages that the
@@ -901,7 +902,7 @@ export function install(rt) {
         // A file stays with its line and reaches each member the line is shown to.
         const readings = post.images === undefined ? [] : await rt.imagesForGroup(post.images, room.id)
         const text = [post.text, ...readings, ...(post.files ?? []).map(fileLine)].filter(Boolean).join('\n')
-        appendRoom(room, {
+        await appendRoom(room, {
           ...(post.botId ? { who: rt.botOf(post.botId)?.name ?? post.name ?? 'Bot', botId: post.botId } : { who: 'User' }),
           text,
           ...(post.skillRequest ? { skillRequest: post.skillRequest } : {}),
@@ -920,7 +921,7 @@ export function install(rt) {
         const bot = rt.botOf(post.botId)
         const name = bot?.name ?? post.name
         const kind = post.done ? 'done' : post.stopped ? 'stopped' : post.again ? 'cut' : 'resumed'
-        appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
+        await appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
         loggedEvents.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
       }
       try {
@@ -994,7 +995,7 @@ export function install(rt) {
       if (exec.signal?.aborted) {
         for (const turn of round.started) void rt.stopRoomTurn?.(room.sessions?.[turn.botId] ?? turn.sessionId, turn.exchangeId)
       }
-      const blocked = persistenceGate.status(room.id)
+      const blocked = roomWriteStatus(room.id)
       if (blocked) {
         // No more state snapshots, followup sends or reportRound dispatch after
         // a failed required save. A future Host must inspect durable state.
@@ -1037,7 +1038,7 @@ export function install(rt) {
       if (room !== undefined && member !== undefined) {
         ensureRoomLog(room)
         const text = query !== '' ? query : around !== '' ? `around ${around}` : number !== undefined ? `part ${number}` : ''
-        appendRoom(room, { who: member.name, botId: member.id, kind: 'lookup', text })
+        await appendRoom(room, { who: member.name, botId: member.id, kind: 'lookup', text })
         for (const round of rt.roomProgress.values()) {
           if (round.roomId === room.id) round.replies.push({ kind: 'lookup', botId: member.id, name: member.name, color: member.color, text, time: Date.now() })
         }
@@ -1172,7 +1173,7 @@ export function install(rt) {
   // once, so it is not held back until the round ends; the relay it still opens does not
   // write it again (source `logged`).
   async function postToRoom(room, sender, text, extra = {}, files = []) {
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     const running = [...rt.roomProgress.values()].find(round => round.roomId === room.id)
     let logged
     if (running !== undefined) {
@@ -1185,12 +1186,12 @@ export function install(rt) {
         logged = true
       } else if (extra.resumed === true || extra.stopped === true || extra.done === true) {
         const kind = extra.done === true ? 'done' : extra.stopped === true ? 'stopped' : extra.again === true ? 'cut' : 'resumed'
-        appendRoom(room, { who: sender.name, botId: sender.id, kind, text: '' })
+        await appendRoom(room, { who: sender.name, botId: sender.id, kind, text: '' })
         pendingReply = { kind, botId: sender.id, name: sender.name, color: sender.color, time: Date.now() }
         logged = room.seq
       } else {
         const line = [text, ...files.map(fileLine)].filter(Boolean).join('\n')
-        appendRoom(room, { who: sender.name, botId: sender.id, text: line, ...(files.length > 0 ? { files } : {}) })
+        await appendRoom(room, { who: sender.name, botId: sender.id, text: line, ...(files.length > 0 ? { files } : {}) })
         pendingReply = { botId: sender.id, name: sender.name, color: sender.color, text: line, time: Date.now() }
         logged = room.seq
       }
@@ -1201,13 +1202,13 @@ export function install(rt) {
         throw error
       }
       // No success bubble or views before the required disk commit succeeds.
-      persistenceGate.assertWritable(room.id)
+      assertGroupWritable(room)
       if (pendingReply?.kind === 'failed') running.failed.push(sender.name)
       if (pendingReply) running.replies.push(pendingReply)
       postViews(running, sender, extra.views)
     }
     const agent = await rt.resolveAgent(room.id)
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: `[Group post from ${sender.name}]\n${text}` }, ...files.map(attachment => ({ type: 'file', attachment }))],
       source: { kind: SOURCE_KIND, form: 'relay', role: 'post', exchangeId: randomUUID(), senderName: sender.name, senderSessionId: sender.id, roomId: room.id, ...extra, ...(logged !== undefined ? { logged } : {}) },
@@ -1379,6 +1380,7 @@ export function install(rt) {
   async function greetRoom(roomId) {
     const room = rt.roomOf(roomId)
     if (!room?.admin) return
+    assertGroupWritable(room)
     const agent = await rt.resolveAgent(room.id)
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: '[Group chat created]' }],
@@ -1393,6 +1395,7 @@ export function install(rt) {
   async function continueRoom(roomId) {
     const room = rt.roomOf(roomId)
     if (room === undefined) throw new Error('Unknown group chat')
+    assertGroupWritable(room)
     if ((room.paused ?? []).length === 0) return
     room.relays = 0
     await rt.save()
