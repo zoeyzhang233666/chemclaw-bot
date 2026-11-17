@@ -1199,6 +1199,33 @@ test('default legacy Host refuses to append a group that already has a Ledger', 
   assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), stateBefore)
 })
 
+test('a Ledger published during a legacy round blocks the next Bot delivery', async t => {
+  const host = await start(t)
+  const result = host.round('ledger-appears-mid-turn', host.say('@Writer 先核对这一项'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  await publishInitialGroupBook(host.home, 'group-r1', [
+    { seq: 1, who: 'User', text: '@Writer 先核对这一项' },
+  ])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  host.finish('gb', '@Tester 下一步请执行')
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.equal(host.agentOf('gc').calls.length, 0)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
+test('a migrated group cannot be renamed or deleted by legacy roster operations', async t => {
+  const host = await start(t)
+  await publishInitialGroupBook(host.home, 'group-r1', [])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const changed = await host.tool('update_group', { group: 'Ops', notice: 'should not change' }, 'a')
+  assert.match(changed, /Could not update/)
+  assert.match(changed, /Ledger book/)
+  await assert.rejects(host.tool('delete_group', { group: 'Ops' }, 'a'), /Ledger book/)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
 test('a final member answer whose required save fails is shown as a failure and never calls its @mentions', async t => {
   const host = await start(t)
   const result = host.round('save-failed-final', host.say('@Writer 检查一下'))
