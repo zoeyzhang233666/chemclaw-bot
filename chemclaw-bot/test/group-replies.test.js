@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { parseReplies } from '../src/shared/group-replies.js'
+import { parseReplies, relayRange } from '../src/shared/group-replies.js'
 
 test('settled replies preserve nested data, escaped quotes and literal prune text', () => {
   const replies = [{ botId: 'a', text: 'Use "{x}" and \\path [... tool result middle pruned ...]', meta: { nested: [1, { value: '}' }] } }]
@@ -29,4 +29,15 @@ test('partial reply fragments and ordinary ellipses do not become invented repli
   assert.deepEqual(parseReplies('{"replies":[' + JSON.stringify(reply) + ',{"text":"cut'), { replies: [reply], broken: true })
   assert.deepEqual(parseReplies('not a relay result'), { replies: [], broken: true })
   assert.deepEqual(parseReplies('{"replies":[{"text":"cut'), { replies: [], broken: true })
+})
+
+test('upstream #1317 range is extracted without confusing legacy or truncated round replies', () => {
+  assert.deepEqual(relayRange(JSON.stringify({ from: 1, anchor: 'round-one', replies: [] })), { from: 1, anchor: 'round-one' })
+  assert.deepEqual(relayRange(JSON.stringify({ from: 40, to: 55, anchor: 'round-two', replies: [] })), { from: 40, to: 55, anchor: 'round-two' })
+  assert.deepEqual(relayRange(JSON.stringify({ from: 7, to: 2, anchor: '', replies: [] })), { from: 7 })
+  for (const result of ['{}', 'not JSON', '{"replies":[]}', '{"from":-1}', '{"from":1.5}', '{"from":"1"}', '{"from":1,"replies":[']) {
+    assert.equal(relayRange(result), undefined)
+  }
+  assert.deepEqual(parseReplies(JSON.stringify({ from: 1, anchor: 'round-one', replies: [{ botId: 'a', text: 'legacy fallback' }] })),
+    { replies: [{ botId: 'a', text: 'legacy fallback' }], broken: false })
 })
