@@ -218,6 +218,46 @@ test('sequenced round anchors may leave intentional invisible gaps in the saved 
   assert.equal(onlyAnchor.status, 'aligned')
 })
 
+test('durable round completion is excluded from member cache and the recovery preview', () => {
+  const records = [
+    { seq: 1, event: 'anchor', id: 'round-a', from: 1 },
+    row(2, 'first answer'),
+    { seq: 3, event: 'round', id: 'round-a', from: 1, to: 2, passed: ['Analyst'], failed: [] },
+    { seq: 4, event: 'anchor', id: 'round-b', from: 4 },
+    row(5, 'second answer'),
+    { seq: 6, event: 'round', id: 'round-b', from: 4, to: 5, passed: [], failed: [] },
+  ]
+  const aligned = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 6, log: [records[1], records[4]] },
+    ledger: snapshot(records),
+  })
+  assert.equal(aligned.status, 'aligned')
+  const crash = planGroupLedgerRecovery({
+    room: { id: 'r1', seq: 3, log: [records[1]] },
+    ledger: snapshot(records),
+  })
+  assert.equal(crash.status, 'ledger-ahead')
+  assert.deepEqual(crash.unconfirmedRecords.map(row => row.seq), [4, 5, 6])
+  assert.deepEqual(crash.previewLog.map(row => row.seq), [2, 5])
+  assert.equal(crash.mustNotRedispatch, true)
+})
+
+test('unknown, orphaned or repeated round completion is rejected without restoring data', () => {
+  const anchor = { seq: 1, event: 'anchor', id: 'round-a', from: 1 }
+  const invalid = [
+    [anchor, { seq: 2, event: 'round', id: 'wrong-id', from: 1, to: 1, passed: [], failed: [] }],
+    [anchor, { seq: 2, event: 'round', id: 'round-a', from: 1, to: 2, passed: [], failed: [] }],
+    [anchor, { seq: 2, event: 'round', id: 'round-a', from: 1, to: 1, passed: [], failed: [] },
+      { seq: 3, event: 'round', id: 'round-a', from: 1, to: 1, passed: [], failed: [] }],
+    [{ seq: 1, event: 'other', id: 'unknown' }],
+  ]
+  for (const records of invalid) {
+    const result = planGroupLedgerRecovery({ room: { id: 'r1', seq: 0, log: [] }, ledger: snapshot(records) })
+    assert.equal(result.status, 'blocked')
+    assert.equal(result.mustNotRedispatch, true)
+  }
+})
+
 test('saved member gaps with no durable round anchor stay blocked', () => {
   const records = [row(1), row(2), row(3)]
   const recovery = planGroupLedgerRecovery({
