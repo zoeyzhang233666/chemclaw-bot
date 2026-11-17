@@ -376,14 +376,14 @@ test('upstream #1317 group-rows endpoint resolves verified Ledger windows and ig
   const records = [
     { seq: 1, who: 'User', text: 'First procurement question', time: 101 },
     { seq: 2, who: 'Writer', botId: 'b', text: 'First answer', time: 102 },
-    { seq: 3, who: 'ChemClaw', event: 'anchor', id: 'round-two', from: 4 },
+    { seq: 3, who: 'ChemClaw', event: 'anchor', id: 'round-two', from: 3 },
     { seq: 4, who: 'User', text: 'Second procurement question', time: 104 },
     { seq: 5, who: 'Writer', botId: 'b', text: 'Second answer', time: 105 },
-    { seq: 6, who: 'ChemClaw', event: 'anchor', id: 'round-three', from: 7 },
+    { seq: 6, who: 'ChemClaw', event: 'anchor', id: 'round-three', from: 6 },
     { seq: 7, who: 'User', text: 'Third question', time: 107 },
     { seq: 8, who: 'Chief', botId: 'a', text: 'Only the group Session saw this', session: true, time: 108 },
   ]
-  const host = await start(t, { seq: records.length, log: records })
+  const host = await start(t, { seq: records.length, log: records.filter(row => row.event !== 'anchor') })
   await publishInitialGroupBook(host.home, 'group-r1', records)
   const before = readFileSync(join(host.home, 'state.json'), 'utf8')
   const first = (await host.call('group-rows', { roomId: 'r1', from: 1 })).value
@@ -391,10 +391,10 @@ test('upstream #1317 group-rows endpoint resolves verified Ledger windows and ig
   assert.equal(first.open, false)
   assert.deepEqual(first.rows.map(row => row.text), ['First procurement question', 'First answer'])
   assert.deepEqual(first.rows.map(row => row.kind ?? 'bot'), ['user', 'bot'])
-  const middle = (await host.call('group-rows', { roomId: 'r1', from: 4, anchor: 'round-two' })).value
+  const middle = (await host.call('group-rows', { roomId: 'r1', from: 3, anchor: 'round-two' })).value
   assert.equal(middle.open, false)
   assert.deepEqual(middle.rows.map(row => row.text), ['Second procurement question', 'Second answer'])
-  const last = (await host.call('group-rows', { roomId: 'r1', from: 7, anchor: 'round-three' })).value
+  const last = (await host.call('group-rows', { roomId: 'r1', from: 6, anchor: 'round-three' })).value
   assert.equal(last.open, true)
   assert.equal(last.active, false)
   assert.deepEqual(last.rows.map(row => row.text), ['Third question'])
