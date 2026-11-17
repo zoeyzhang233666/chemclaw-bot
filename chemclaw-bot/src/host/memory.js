@@ -34,6 +34,8 @@ import { replaceFile } from './files.js'
 import { inside, pendingPath, read as readPending, record as pendingRecord, relativePath, serialize as serializePending } from './memory-pending.js'
 import { splitRef, unquote } from './text.js'
 import { speakerOf } from '../shared/mentions.js'
+import { readLedger } from './ledger-foundation.js'
+import { planGroupLedgerRecovery } from './ledger-recovery.js'
 import { output } from './tools.js'
 
 // Fixed sizes, in characters. Both MEMORY.md files ride in every request of every
@@ -1477,15 +1479,26 @@ export function install(rt) {
   }
 
   // What is new in a group, from its log: the members' Sessions hold the same
-  // messages wrapped in turn prompts.
-  function groupBatch(room, since) {
-    const log = (room.log ?? []).filter(line => line.kind === undefined && typeof line.text === 'string' && line.text.trim() !== '')
+  // messages wrapped in turn prompts. For an aligned Ledger use the whole book;
+  // a rolling 60-row cache is not sufficient to resume a slow memory review.
+  async function groupBatch(room, since, savedRoom = room) {
+    const ledger = await readLedger(rt.home, 'group-' + room.id)
+    if (ledger !== undefined) {
+      const recovery = planGroupLedgerRecovery({ room: savedRoom, ledger })
+      if (recovery.status !== 'aligned') {
+        // Never advance the memory cursor from uncertain, torn or divergent data;
+        // a future recovery review must resolve it without replaying any turn.
+        throw new Error('Group memory review requires verified Ledger state (' + recovery.status + ')')
+      }
+    }
+    const source = ledger?.records ?? room.log ?? []
+    const log = source.filter(line => line.kind === undefined && typeof line.text === 'string' && line.text.trim() !== '')
     // A first review reads back at least to the user's latest line, which a round of
     // replies from many members can push out of the last few.
     const lastUser = log.findLastIndex(line => line.who === 'User' && line.botId === undefined)
     let start = since === undefined ? Math.max(0, Math.min(log.length - REVIEW_FIRST_LINES, lastUser === -1 ? log.length : lastUser)) : log.findIndex(line => line.seq > since)
-    const oldest = room.log?.[0]?.seq
-    if (since !== undefined && oldest !== undefined && oldest > since + 1) rt.warn('chemclaw-bot: %d lines of group "%s" left its log before they were reviewed', oldest - since - 1, room.name)
+    const oldest = source[0]?.seq
+    if (ledger === undefined && since !== undefined && oldest !== undefined && oldest > since + 1) rt.warn('chemclaw-bot: %d lines of group "%s" left its log before they were reviewed', oldest - since - 1, room.name)
     if (start === -1) start = log.length
     const line = (entry) => {
       const who = entry.botId === undefined && entry.who === 'User' ? 'user' : 'bot'
@@ -1598,7 +1611,7 @@ export function install(rt) {
     const since = cursorsNow()[seen.key]
     const members = live.members.map(id => rt.botOf(id)).filter(Boolean).map(bot => `${bot.name}${live.admin === bot.id ? ' (admin)' : ''}`)
     await reviewBatch({
-      key: seen.key, since, batch: groupBatch(room, since),
+      key: seen.key, since, batch: await groupBatch(room, since, live),
       keeper, name: `group "${live.name}"`, home: groupScope(live.id), teamWrites: () => false, group: true,
       who: `The group chat: "${live.name}", with the user and ${members.join(', ')}.`,
       tag: { sessionId: live.id, kind: 'memory' },
