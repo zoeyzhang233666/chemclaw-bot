@@ -1220,7 +1220,8 @@ test('experimental group relay creates durable anchored windows without changing
   assert.deepEqual(first().replies.filter(line => !line.kind).map(line => line.text), ['First procurement reply'])
   const open = (await host.call('group-rows', { roomId: 'r1', from: first().from, anchor: first().anchor })).value
   assert.equal(open.status, 'aligned')
-  assert.equal(open.open, true)
+  assert.equal(open.open, false)
+  assert.equal(first().to, 3)
   assert.deepEqual(open.rows.map(line => line.text), ['@Writer first procurement request', 'First procurement reply'])
   const second = host.round('anchored-second', host.say('@Writer second procurement request'))
   await settle(() => host.agentOf('gb').calls.length === 2)
@@ -1232,15 +1233,20 @@ test('experimental group relay creates durable anchored windows without changing
   const earlier = (await host.call('group-rows', { roomId: 'r1', from: first().from, anchor: first().anchor })).value
   const later = (await host.call('group-rows', { roomId: 'r1', from: second().from, anchor: second().anchor })).value
   assert.equal(earlier.open, false)
-  assert.equal(later.open, true)
+  assert.equal(later.open, false)
+  assert.equal(second().to, 7)
   assert.deepEqual(earlier.rows.map(line => line.text), ['@Writer first procurement request', 'First procurement reply'])
   assert.deepEqual(later.rows.map(line => line.text), ['@Writer second procurement request', 'Second procurement reply'])
   const book = await readLedger(host.home, 'group-r1')
   assert.deepEqual(book.records.filter(line => line.event === 'anchor').map(line => [line.id, line.from]),
     [[first().anchor, first().from], [second().anchor, second().from]])
   const state = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1
-  assert.deepEqual(state.log.map(line => line.seq), [2, 3, 5, 6])
-  assert.equal(state.seq, 6)
+  assert.deepEqual(state.log.map(line => line.seq), [2, 3, 6, 7])
+  assert.equal(state.seq, 8)
+  assert.deepEqual(book.records.filter(line => line.event === 'round').map(line => [line.id, line.from, line.to]),
+    [[first().anchor, first().from, first().to], [second().anchor, second().from, second().to]])
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 4 }, 'a'), /no recoverable message 4/)
+  assert.equal((await host.call('group-rows', { roomId: 'r1', from: 1, anchor: first().anchor })).value.open, false)
   assert.equal((await host.call('group-rows', { roomId: 'r1', from: 1, anchor: 'forged' })).value.status, 'unknown-anchor')
 })
 
@@ -1259,9 +1265,11 @@ test('experimental #1317 writer fsyncs group user input and Bot reply before exp
   host.finish('gb', '采购建议已核对。')
   await settle(() => result() !== undefined)
   const book = await readLedger(host.home, 'group-r1')
-  assert.equal(book.records.length, 3)
+  assert.equal(book.records.length, 4)
   assert.equal(book.records[2].text, '采购建议已核对。')
-  assert.equal(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1.seq, 3)
+  assert.equal(book.records[3].event, 'round')
+  assert.equal(result().to, 3)
+  assert.equal(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1.seq, 4)
   assert.deepEqual(result().replies.filter(item => item.kind === undefined).map(item => item.text), ['采购建议已核对。'])
   assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 2 }, 'a'), /聚氨酯采购价格/)
 })
