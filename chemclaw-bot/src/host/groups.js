@@ -893,6 +893,10 @@ export function install(rt) {
       const posts = queued.length > 0 ? [...queued] : [{ text: '' }]
       // A post a running round already logged stays inside the round this relay opens.
       const startSeq = Math.min(room.seq + 1, ...posts.map(post => post.logged).filter(seq => typeof seq === 'number'))
+      // #1317: this call owns a durable round anchor, even when no member
+      // replies. The old tool result still includes replies until the client
+      // range-based renderer and existing Session history are both migrated.
+      const anchor = ledgerWriterEnabled ? randomUUID() : undefined
       // The opening greeting is a cue for the admin, not a line of the group; a member's
       // late failure, its work picked up after a restart, its work the user stopped, or
       // the end of work whose result it already posted is an event of the round.
@@ -901,6 +905,9 @@ export function install(rt) {
       const loggedEvents = []
       let savingAdmission = false
       try {
+      if (anchor !== undefined) {
+        await appendRoom(room, { event: 'anchor', id: anchor, from: startSeq, time: Date.now() })
+      }
       for (const post of posts.filter(item => !item.kickoff && !item.resume && !event(item) && item.logged === undefined)) {
         // Image readings go into the log only; `@` names are picked from what the user typed.
         // A file stays with its line and reaches each member the line is shown to.
@@ -1016,7 +1023,7 @@ export function install(rt) {
         if (post.reportBack && rt.botOf(post.botId)) void reportRound(room, post, round)
       }
       exec.concludeTurn?.()
-      return JSON.stringify({ replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
+      return JSON.stringify({ ...(anchor === undefined ? {} : { from: startSeq, anchor }), replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
     },
   }))
 
