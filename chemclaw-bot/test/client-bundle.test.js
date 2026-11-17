@@ -14,7 +14,23 @@ test('the lazy chart asset is current and stays out of the main client bundle', 
 })
 
 test('client.js is the build of src/client', async () => {
-  assert.equal(await bundleClient(), committed(), 'client.js is stale: run `npm run build` and commit it')
+  const rebuilt = await bundleClient()
+  const current = committed()
+  // Temporary #154 bootstrap: the connected GitHub runner has esbuild, whereas
+  // GitHub's contents API only exposes the committed 1.5 MB bundle as a blob.
+  // Emit deterministic JSON chunks from the real build to capture unchanged.
+  if (rebuilt !== current && process.env.GITHUB_ACTIONS === 'true' &&
+      process.env.GITHUB_HEAD_REF === 'test/p0-upstream-ledger-legacy-upgrade-20261117') {
+    console.log('CHEMCLIENT_BEGIN ' + rebuilt.length)
+    let index = 0
+    for (let at = 0; at < rebuilt.length; at += 4096) {
+      console.log('CHEMCLIENT_CHUNK ' + index + ' ' + JSON.stringify(rebuilt.slice(at, at + 4096)))
+      index++
+    }
+    console.log('CHEMCLIENT_END ' + index)
+    assert.fail('Generated client bundle is ready to commit; restore this diagnostic before merging')
+  }
+  assert.equal(rebuilt, current, 'client.js is stale: run `npm run build` and commit it')
 })
 
 // dsh runs client.js as a classic script that hands a factory to the module loader; the
