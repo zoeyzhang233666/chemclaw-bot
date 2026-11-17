@@ -899,6 +899,7 @@ export function install(rt) {
       const event = item => item.failed || item.resumed || item.stopped || item.done
       const releases = posts.some(post => post.resume === true || (!post.botId && !post.kickoff))
       const loggedEvents = []
+      let savingAdmission = false
       try {
       for (const post of posts.filter(item => !item.kickoff && !item.resume && !event(item) && item.logged === undefined)) {
         // Image readings go into the log only; `@` names are picked from what the user typed.
@@ -925,8 +926,14 @@ export function install(rt) {
         await appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
         loggedEvents.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
       }
+        savingAdmission = true
         await saveRequiredRoom(room)
       } catch (error) {
+        // Preserve the legacy contract: a sidecar collision or bad input is
+        // thrown to the caller. Only the required-save failure was mapped to
+        // a structured status. The experimental Ledger path fails closed and
+        // reports an admission error before any Bot delivery.
+        if (!ledgerWriterEnabled && !savingAdmission) throw error
         const blocked = persistenceGate.status(room.id)
         return JSON.stringify({ error: blocked?.message ?? String(error), code: blocked?.code ?? 'PERSISTENCE',
           replies: [], passed: [], failed: [] })
