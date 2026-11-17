@@ -1,3 +1,14 @@
+// Port of upstream DS-Bot #1317's relayRange (as present in DS-Bot main 5e9b7da).
+// New group_relay results reference a Ledger sequence range; historical results
+// still contain replies directly, and must remain readable without a Ledger.
+export function relayRange(text) {
+  try {
+    const value = JSON.parse(text)
+    if (Number.isInteger(value?.from)) return { from: value.from, ...(Number.isInteger(value.to) ? { to: value.to } : {}), ...(typeof value.anchor === 'string' ? { anchor: value.anchor } : {}) }
+  } catch { /* an older result, or one cut short */ }
+  return undefined
+}
+
 // Reads the replies of a settled group_relay result. Compaction can prune the
 // middle of a long tool result, which leaves invalid JSON: then every complete
 // reply object that survived is recovered so the turn still draws what it can.
