@@ -369,6 +369,7 @@ test('Ledger read refuses an inconsistent or torn book without hiding unmigrated
   const result = await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a')
   assert.match(result, /need recovery review \(blocked\)/)
   assert.doesNotMatch(result, /keep original message/)
+  assert.match(await host.tool('read_group_chat', { group: 'Ops' }, 'a'), /need recovery review \(blocked\)/)
   assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), stateBefore)
 })
 
@@ -401,6 +402,11 @@ test('upstream #1317 group-rows endpoint resolves verified Ledger windows and ig
   const bounded = (await host.call('group-rows', { roomId: 'r1', from: 2, to: 4 })).value
   assert.equal(bounded.open, false)
   assert.deepEqual(bounded.rows.map(row => row.text), ['First answer', 'Second procurement question'])
+  const recent = await host.tool('read_group_chat', { group: 'Ops' }, 'a')
+  assert.match(recent, /First procurement question/)
+  assert.match(recent, /Third question/)
+  assert.doesNotMatch(recent, /Only the group Session saw this/, 'group-Session-only lines must not leak into member history')
+  assert.doesNotMatch(recent, /round-two|round-three/, 'Ledger round anchors are metadata, not visible chat')
   assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
 })
 
