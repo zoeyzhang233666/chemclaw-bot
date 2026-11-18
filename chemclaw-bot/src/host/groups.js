@@ -745,8 +745,8 @@ export function install(rt) {
     if (!ledgerWriterEnabled) return undefined
     const owed = Object.values(rt.state.roomBatches ?? {}).filter(batch =>
       batch.roomId === room.id && batch.pending.includes(memberId))
-    return info?.askedBy !== undefined ? owed.find(batch => batch.by === info.askedBy)
-      : info?.role !== 'room' ? owed[0] : undefined
+    const preferred = info?.askedBy === undefined ? undefined : owed.find(batch => batch.by === info.askedBy)
+    return preferred ?? (info?.role !== 'room' ? owed[0] : undefined)
   }
   const markBatchPost = (room, memberId, key, seq, text, done = false) => {
     if (!ledgerWriterEnabled || typeof key !== 'string' || !Number.isSafeInteger(seq)) return
@@ -1460,6 +1460,10 @@ export function install(rt) {
     const text = stripOwnName(member.name, reply)
     const batch = pendingBatchForTurn(room, member.id, info)
     const waitingPeers = batch !== undefined && batch.pending.some(id => id !== member.id)
+    // Like upstream #1351, keep an explicit @mention actionable even if other
+    // batch peers still work; only an ordinary partial result stays quiet.
+    const named = mentionsIn(text, room.members.map(rt.botOf).filter(Boolean))
+      .found.some(bot => bot.id !== member.id)
     const askedBy = info.askedBy ?? (info.role !== 'room' ? batch?.by : undefined)
     const done = isPass(text) && shown && askedBy !== undefined
     // Preserve legacy behavior for PASS without a result. A completely silent
@@ -1467,7 +1471,7 @@ export function install(rt) {
     if (isPass(text) && !done && views.length === 0) return
     await postToRoom(room, member, done ? '' : text, {
       late: true, ...(views.length ? { views } : {}), ...(done ? { done: true } : {}),
-      ...(batch === undefined ? {} : { batch: batch.key, ...(waitingPeers ? { quiet: true } : { batchEnd: true }) }),
+      ...(batch === undefined ? {} : { batch: batch.key, ...(waitingPeers ? (named ? {} : { quiet: true }) : { batchEnd: true }) }),
       ...(askedBy && !waitingPeers ? { askedBy } : {}),
     }).catch(error => rt.warn('chemclaw-bot: late group reply from %s failed: %s', member.name, error))
   }
