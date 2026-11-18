@@ -18,6 +18,18 @@ if (host !== undefined && location.origin === host) {
     dataLocation: () => ipcRenderer.invoke('chemclaw:data-location'),
     moveData: (workspace) => ipcRenderer.invoke('chemclaw:move-data', typeof workspace === 'string' ? workspace : undefined),
     teamWorkspaceChanged: (path) => { ipcRenderer.send('chemclaw:team-workspace', String(path)) },
+    // The same restricted native Computer Use bridge as upstream DS-Bot.
+    idleSeconds: () => ipcRenderer.invoke('chemclaw:idle-seconds'),
+    computer: entries => ipcRenderer.send('chemclaw:computer', computerEntriesOf(entries)),
+    computerCursor: event => { const clean = cursorEventOf(event); if (clean) ipcRenderer.send('chemclaw:computer-cursor', clean) },
+    onComputerAction: run => {
+      if (typeof run !== 'function') return
+      ipcRenderer.removeAllListeners('chemclaw:computer-action')
+      ipcRenderer.on('chemclaw:computer-action', (_event, action) => {
+        if (!action || typeof action.kind !== 'string') return
+        run({ kind: action.kind, botId: typeof action.botId === 'string' ? action.botId : null })
+      })
+    },
   })
   const caption = process.argv.find(value => value.startsWith('--chemclaw-caption='))
   if (caption !== undefined) {
@@ -181,5 +193,35 @@ function browserBridge() {
         if (set.size === 0 && listeners.get(id) === set) listeners.delete(id)
       }
     },
+  }
+}
+
+\n// Only bounded, serializable data crosses the Computer Use bridge.
+function computerEntriesOf(value) {
+  const rows = Array.isArray(value?.rows) ? value.rows : []
+  const labels = value?.labels ?? {}
+  return {
+    rows: rows.filter(row => row && typeof row.label === 'string').slice(0, 20).map(row => ({
+      label: String(row.label).slice(0, 80), name: String(row.name ?? '').slice(0, 60),
+      botId: typeof row.botId === 'string' ? row.botId.slice(0, 100) : null,
+      waiting: row.waiting === true, app: typeof row.app === 'string' ? row.app.slice(0, 80) : '',
+      color: typeof row.color === 'string' && /^#[0-9a-f]{3,8}$/i.test(row.color) ? row.color : '#8c806f',
+    })),
+    labels: { stop: String(labels.stop ?? 'Stop').slice(0, 30), stopAll: String(labels.stopAll ?? 'Stop all').slice(0, 30),
+      letContinue: String(labels.letContinue ?? 'Continue').slice(0, 30) },
+  }
+}
+function cursorEventOf(value) {
+  if (!value || typeof value !== 'object' || !Number.isFinite(Number(value.x)) || !Number.isFinite(Number(value.y))) return undefined
+  const botId = String(value.botId ?? '').slice(0, 80)
+  if (!botId) return undefined
+  return {
+    botId, x: Number(value.x), y: Number(value.y), mode: value.mode === 'point' ? 'point' : 'window',
+    ripple: value.ripple === true, ...(Number.isFinite(value.windowId) ? {windowId: value.windowId} : {}),
+    ...(Number.isInteger(value.pid) ? {pid: value.pid} : {}),
+    ...(Number.isFinite(value.seq) ? {seq: value.seq} : {}),
+    ...(Number.isFinite(value.t) ? {t: value.t} : {}),
+    color: /^#[0-9a-f]{3,8}$/i.test(value.color ?? '') ? value.color : '#8c806f',
+    ...(typeof value.avatar === 'string' && /^data:image\/(?:png|jpeg|webp|svg\+xml);base64,[A-Za-z0-9+/=]+$/.test(value.avatar) && value.avatar.length <= 12000 ? {avatar: value.avatar} : {}),
   }
 }
