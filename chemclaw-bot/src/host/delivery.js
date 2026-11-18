@@ -23,7 +23,9 @@ export function install(rt) {
         ...(row.length === undefined && preview.length < row.text.length ? { length: row.text.length } : {}),
         ledger: row.length === undefined || row.files?.length > 0,
       }
-      pairViewed.set(row.id, entry)
+      // The dialog receives the bounded preview, but its Show all action must
+      // read the complete, fsynced text from the pair Ledger, not that preview.
+      pairViewed.set(row.id, { ...row, ledger: entry.ledger })
       return entry
     })
   }

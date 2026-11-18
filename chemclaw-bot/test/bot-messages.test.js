@@ -177,6 +177,21 @@ test('experimental #1358 writes Bot-to-Bot attempt before sending and delivery r
     'the experimental pair Ledger, not the old state.json cache, owns new delivery')
 })
 
+test('experimental #1358 preserves full Bot message text behind a bounded dialog preview', async t => {
+  const { tool, exchanges, stop, call } = await start(team(), { experimentalPairLedger: true })
+  t.after(stop)
+  const full = 'Supplier analysis: ' + 'This is a verified chemical shipment. '.repeat(90)
+  assert.ok(full.length > 2000 && full.length < 20_000)
+  await tool('message_bot', { to: 'Writer', message: full }, 'a')
+  const list = await exchanges()
+  assert.equal(list.length, 1)
+  assert.ok(list[0].text.length <= 2000)
+  assert.equal(list[0].length, full.length)
+  const opened = await call('exchange-text', { id: list[0].id })
+  assert.equal(opened.ok, true)
+  assert.deepEqual(opened.value, { text: full, whole: true })
+})
+
 test('experimental #1358 does not show or resend an uncertain Bot-to-Bot DSH flush', async t => {
   const { ctx, agents, tool, exchanges, home, stop } = await start(team(), { experimentalPairLedger: true })
   t.after(stop)
