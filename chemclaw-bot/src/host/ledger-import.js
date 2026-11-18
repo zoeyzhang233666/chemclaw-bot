@@ -87,9 +87,9 @@ async function verifyExisting(path, contents) {
 // Unlike writing directly to a wx target, a crash cannot leave a complete-looking
 // prefix of the group's history published under the canonical book filename.
 // Orphaned .pending- files are never read as books and may be cleaned manually.
-export async function publishInitialGroupBook(home, book, records) {
-  if (typeof book !== 'string' || !book.startsWith('group-')) {
-    throw new Error('Only a group book may be initialized through this importer')
+async function publishInitialBook(home, book, records, kind) {
+  if (typeof book !== 'string' || !book.startsWith(kind + '-')) {
+    throw new Error(`Only a ${kind} book may be initialized through this importer`)
   }
   const contents = serializeRows(records)
   const dir = join(home, 'ledger')
@@ -121,6 +121,10 @@ export async function publishInitialGroupBook(home, book, records) {
     if (created) await rm(pending, { force: true })
   }
 }
+
+export const publishInitialGroupBook = (home, book, records) => publishInitialBook(home, book, records, 'group')
+// Opt-in #1358: same no-clobber/fsync initializer, a distinct pair namespace.
+export const publishInitialPairBook = (home, book, records) => publishInitialBook(home, book, records, 'pair')
 
 // Read all known old sources first. Refuse to publish a partial import: no
 // missing prefix, internal gap, damaged long-text file, or truncated archive.

@@ -18,6 +18,7 @@ import { isDeepStrictEqual } from 'node:util'
 import { decodeLedger, ledgerFilename, readLedger } from './ledger-foundation.js'
 
 const GROUP_BOOK = /^group-[A-Za-z0-9_-]{1,160}$/
+const PAIR_BOOK = /^pair-[A-Za-z0-9_-]{1,160}$/
 
 function ensureRecord(record) {
   if (!record || Array.isArray(record) || typeof record !== 'object' ||
@@ -68,7 +69,8 @@ async function verifyTail(handle, offset, bytes) {
   if (!actual.equals(bytes)) throw new Error('Group ledger last record changed unexpectedly')
 }
 
-export function createDurableGroupLedger({ home, assertWriter, beforeWrite, loadBook = readLedger } = {}) {
+export function createDurableGroupLedger({ home, assertWriter, beforeWrite, loadBook = readLedger, bookKind = 'group' } = {}) {
+  if (bookKind !== 'group' && bookKind !== 'pair') throw new Error('Ledger book kind must be group or pair')
   if (typeof home !== 'string' || !home) throw new Error('A group ledger home is required')
   if (typeof assertWriter !== 'function') {
     throw new Error('Ledger append requires an explicit exclusive-writer check')
@@ -79,8 +81,8 @@ export function createDurableGroupLedger({ home, assertWriter, beforeWrite, load
   // A cache is retained only after an fsynced and canonically verified write.
   const confirmed = new Map()
   const append = (book, record) => {
-    if (typeof book !== 'string' || !GROUP_BOOK.test(book)) {
-      return Promise.reject(new Error('Only a safe group ledger book can be appended'))
+    if (typeof book !== 'string' || !(bookKind === 'pair' ? PAIR_BOOK : GROUP_BOOK).test(book)) {
+      return Promise.reject(new Error(`Only a safe ${bookKind} ledger book can be appended`))
     }
     const previous = queues.get(book) ?? Promise.resolve()
     // Capture the exact JSON bytes when queued, before the caller can mutate
