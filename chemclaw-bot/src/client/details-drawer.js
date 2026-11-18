@@ -179,7 +179,7 @@ export function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, ro
   const owner = roster.byId[sessionId]
   const part = owner ? currentPart(owner) : sessionId
   const isMainBot = isMainOf(roster, owner?.id)
-  const [tab, setTab] = useState('details')
+  const [tab, setTab] = useState(startTab === 'computer' && roster.computer?.enabled === true ? 'computer' : 'details')
   const room = roster.roomsById[sessionId]
   // The info pane swaps its overview for the Bot or group settings view in place.
   const [view, setView] = useState(startTab === 'settings' && (owner || room) ? 'settings' : 'overview')
