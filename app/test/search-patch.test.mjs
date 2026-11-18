@@ -7,24 +7,24 @@ import { reconcileSearchSelector, SEARCH_PATCH_NAME, searchSelectorPatch } from 
 
 const DSH_WEB = '@deepseek-ai/dsh-web'
 
-// A stand-in profile: dsh-base supplies the web row, ds-bot adds the auto
+// A stand-in profile: dsh-base supplies the web row, chemclaw-bot adds the auto
 // provider and points the selector at it, and `user` rows model the profile's
 // own cordis.patch.yml.
 function profile(user = [], { auto = true } = {}) {
-  const dir = mkdtempSync(join(tmpdir(), 'ds-bot-search-patch-'))
+  const dir = mkdtempSync(join(tmpdir(), 'chemclaw-bot-search-patch-'))
   return {
-    name: 'ds-bot', dir, patchPath: join(dir, 'cordis.patch.yml'), skippedBundles: [],
+    name: 'chemclaw-bot', dir, patchPath: join(dir, 'cordis.patch.yml'), skippedBundles: [],
     layers: [
       { packageName: '@deepseek-ai/dsh-base', packageDir: '', patchPaths: [], patches: [{ insert: [{ id: 'web', name: DSH_WEB, config: { searchProvider: 'deepseek-official', fetchProvider: 'http' } }] }] },
-      { packageName: 'ds-bot', packageDir: '', patchPaths: [], patches: [
-        ...(auto ? [{ insert: [{ id: 'web-search-auto', name: 'ds-bot/web-search' }] }] : []),
+      { packageName: 'chemclaw-bot', packageDir: '', patchPaths: [], patches: [
+        ...(auto ? [{ insert: [{ id: 'web-search-auto', name: 'chemclaw-bot/web-search' }] }] : []),
         { id: 'web', config: { searchProvider: 'auto', fetchProvider: 'http' } },
       ] },
     ],
     patches: user,
   }
 }
-const disabledAuto = { id: 'web-search-auto', name: 'ds-bot/web-search', disabled: true }
+const disabledAuto = { id: 'web-search-auto', name: 'chemclaw-bot/web-search', disabled: true }
 
 describe('searchSelectorPatch', () => {
   const made = []
@@ -48,7 +48,7 @@ describe('searchSelectorPatch', () => {
 
 describe('reconcileSearchSelector', () => {
   let dir
-  before(() => { dir = mkdtempSync(join(tmpdir(), 'ds-bot-search-reconcile-')) })
+  before(() => { dir = mkdtempSync(join(tmpdir(), 'chemclaw-bot-search-reconcile-')) })
   after(() => { rmSync(dir, { recursive: true, force: true }) })
 
   test('writes the overlay where DSH only reads it through patchFiles, and drops it when satisfied', () => {

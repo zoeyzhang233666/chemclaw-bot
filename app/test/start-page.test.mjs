@@ -37,7 +37,7 @@ test('every file the page loads is relative and inside src/start', () => {
     assert.ok(existsSync(new URL(url, dir)), `${from} loads ${url}, which is missing`)
   }
   const loads = [...html.matchAll(/\s(?:src|href)="([^"#][^"]*)"/gu)].map(match => match[1])
-  assert.deepEqual(loads, ['start.css', 'start.js'])
+  assert.deepEqual(loads, ['start.css', 'start.js', 'icon.png'])
   assert.match(html, /<script type="module" src="start.js"><\/script>/u)
   for (const url of loads) inside('start.html', url)
   for (const [name, text] of Object.entries(code)) {
@@ -333,7 +333,7 @@ test('a button that opens the system picker ends with …', () => {
 
 // docs/plans/2026-10-26-windows-onboarding.md, 用词: proper names and units only.
 test('the zh copy shows no English but the allowed names and units', () => {
-  const NAMES = ['DS Bot', 'DSH Desktop', 'DSH Web']
+  const NAMES = ['ChemClaw', 'DSH Desktop', 'DSH Web']
   const WORDS = new Set(['DeepSeek', 'Bot', 'API', 'Key', 'Harness', 'DSH', 'Agent', 'MCP', 'Windows', 'PowerShell', 'GitHub', 'SmartScreen', 'OneDrive', 'cookie', 'HTTP', 'SOCKS', 'KB', 'MB', 'GB'])
   const english = []
   for (const [key, value] of Object.entries(TEXT.zh)) {

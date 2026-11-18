@@ -328,3 +328,7 @@ html[data-hidden] *{animation-play-state:paused!important}
 :root[data-effects=off] :is(.voice,.caption>*,.card,.miss,.banner,.log,.confirm,.models,[data-u]){filter:none!important;scale:none!important}
 
 @media (forced-colors:active){.sheet-edge{background:CanvasText}.sheet-fill{background:Canvas}.btn{border:1px solid ButtonText}.bar-fill{background:Highlight}.water{background:CanvasText}.arc .arc-base{stroke:GrayText!important}.arc-fill,.ring-full,.arc-glow,.plume path{stroke:Highlight}.props :is(.folder-back,.folder-front,.gear,.mate circle,.box rect){fill:CanvasText}.page rect,.mate rect{fill:Canvas}.drop{forced-color-adjust:none;background:Highlight}}
+
+/* Keep the controller's SVG targets mounted for its motion state. */
+.whale-svg { visibility: hidden }
+.chemclaw-start-icon { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none }

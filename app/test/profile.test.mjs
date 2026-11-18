@@ -34,7 +34,7 @@ describe('the app profile', () => {
 
   test('mounts DSH Web, which the window shows, and the Bot team', () => {
     const on = new Set(entries.filter((entry) => entry.disabled !== true).map((entry) => entry.id))
-    for (const id of ['webserver', 'connection', 'bot']) assert.ok(on.has(id), `${id} is mounted`)
+    for (const id of ['webserver', 'connection', 'chemclaw']) assert.ok(on.has(id), `${id} is mounted`)
     assert.ok(rows(entries).some((entry) => DSH_WEB_FRONT_END.test(entry.name ?? '')), 'the DSH Web front end is mounted')
   })
 })
@@ -51,7 +51,7 @@ describe('claimBundles', () => {
   const read = () => JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'))
 
   test('puts the app bundles first, keeps the user bundles and drops the retired ones', () => {
-    write(['@deepseek-ai/dsh-base', LEGACY_ENGINE, 'dsbot-engine', 'chemclaw-bot', 'a-plugin'])
+    write(['@deepseek-ai/dsh-base', LEGACY_ENGINE, 'dsbot-engine', 'ds-bot', 'chemclaw-bot', 'a-plugin'])
     claimBundles(dir)
     assert.deepEqual(read().dsh.profile.bundles, [...BUNDLES, 'a-plugin'])
     assert.deepEqual(read().dependencies, { 'a-plugin': '1.0.0' })

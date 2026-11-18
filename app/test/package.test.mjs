@@ -11,7 +11,8 @@ import { parse } from 'yaml'
 test('every package that the app runs on is a dependency, not only a peer', () => {
   const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'))
   const peerOnly = Object.entries(lock.packages)
-    .filter(([path, entry]) => path !== '' && entry.peer && !entry.dev && !entry.devOptional)
+    .filter(([path, entry]) => path !== '' && entry.peer && !entry.dev && !entry.devOptional
+      && !(path.startsWith('node_modules/') && lock.packages[''].dependencies[path.slice('node_modules/'.length)] === entry.version))
     .map(([path, entry]) => `${path.replace(/^.*node_modules\//u, '')}@${entry.version}`)
   assert.deepEqual(peerOnly, [], `add these to "dependencies" in app/package.json: ${peerOnly.join(' ')}`)
 })

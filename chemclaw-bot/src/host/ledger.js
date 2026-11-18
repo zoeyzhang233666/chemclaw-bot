@@ -48,6 +48,7 @@ export function install(rt) {
   // go on when its record is not on disk.
   /** @type {Map<string, Promise<unknown>>} */
   const lastWrite = new Map()
+  const blockedRooms = new Map()
   /** @type {Map<string, (book: string) => object[] | undefined>} */
   const importers = new Map()
 
@@ -102,6 +103,7 @@ export function install(rt) {
 
   // Appends a record: in memory at once, on disk in order.
   function append(book, record) {
+    if (blockedRooms.has(book)) throw blockedRooms.get(book)
     const entry = open(book)
     entry.records.push(record)
     if (Number.isInteger(record.seq)) entry.bySeq.set(record.seq, record)
@@ -110,8 +112,9 @@ export function install(rt) {
     entry.torn = false
     entry.size += Buffer.byteLength(line)
     const run = (writing.get(book) ?? Promise.resolve()).then(async () => {
+      if (blockedRooms.has(book)) throw blockedRooms.get(book)
       await mkdir(dir, { recursive: true })
-      await appendFile(pathOf(book), line, 'utf8')
+      await appendFile(pathOf(book), line, { encoding: 'utf8', flush: true })
     })
     lastWrite.set(book, run)
     writing.set(book, run.catch((error) => {
@@ -119,6 +122,12 @@ export function install(rt) {
       // Memory holds only what the disk has, so a record that did not land is written again
       // when it is sent again. Part of its line may have landed: the next one starts anew.
       if (books.get(book) !== entry) return
+      if (book.startsWith('group-') && !blockedRooms.has(book)) {
+        blockedRooms.set(book, Object.assign(new Error(
+          'Group message persistence is uncertain. Restart and review the room before sending more messages.',
+          { cause: error },
+        ), { code: 'PERSISTENCE_BLOCKED' }))
+      }
       const at = entry.records.indexOf(record)
       if (at !== -1) entry.records.splice(at, 1)
       if (Number.isInteger(record.seq) && entry.bySeq.get(record.seq) === record) entry.bySeq.delete(record.seq)
@@ -135,6 +144,7 @@ export function install(rt) {
 
   function drop(book) {
     books.delete(book)
+    blockedRooms.delete(book)
     if (!writes()) return
     const run = (writing.get(book) ?? Promise.resolve()).then(() => rm(pathOf(book), { force: true }))
     writing.set(book, run.catch(() => {}))

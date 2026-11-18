@@ -243,7 +243,7 @@ function checkOffice(app) {
 // every browser tool failed before it did anything.
 function checkPlaywright(app) {
   runInHost(app, 'Playwright', `
-    const { chromium } = createRequire(appRequire.resolve('ds-bot/package.json'))('playwright-core')
+    const { chromium } = createRequire(appRequire.resolve('chemclaw-bot/package.json'))('playwright-core')
     assert.equal(typeof chromium.connectOverCDP, 'function')
     console.log('check-packed: the browser plugins find Playwright')
   `, 30_000)

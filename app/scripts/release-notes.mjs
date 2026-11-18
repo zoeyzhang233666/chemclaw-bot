@@ -10,14 +10,15 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const REPO = 'zoeyzhang233666/chemclaw-bot'
-// The order of the table: Windows first, where most downloads are; the phone app last.
+// List the desktop installers in the same order as the release page.
 export const PACKAGES = [
   { file: 'win-x64.exe', system: '**Windows 10/11 (64-bit / 64 位)**', note: 'Double-click to install / 双击安装' },
-  { file: 'mac-arm64.zip', system: 'macOS, Apple chip / Apple 芯片' },
-  { file: 'mac-x64.zip', system: 'macOS, Intel' },
+  { file: 'mac-arm64.dmg', system: 'macOS, Apple chip / Apple 芯片' },
+  { file: 'mac-x64.dmg', system: 'macOS, Intel' },
+  { file: 'mac-arm64.zip', system: 'macOS, Apple chip (ZIP) / Apple 芯片' },
+  { file: 'mac-x64.zip', system: 'macOS, Intel (ZIP)' },
   { file: 'linux-x86_64.AppImage', system: 'Linux, AppImage' },
   { file: 'linux-amd64.deb', system: 'Linux, deb (Debian, Ubuntu)' },
-  { file: 'android.apk', system: 'Android (phone app / 手机 App)' },
 ]
 export const SUMS = 'SHA256SUMS.txt'
 // The table sits between these, so a second run replaces it instead of adding another.
@@ -65,9 +66,9 @@ export function downloadBlock({ version, sizes, repo = REPO, mirror }) {
     '|---|---|---|',
     ...rows,
     '',
-    'The `.blockmap`, `latest*.yml` and `ds-bot-*.tgz` files and the source code archives are for updates and the plugin: you do not need to download them.',
+    'The `.blockmap`, `latest*.yml` and `chemclaw-bot-*.tgz` files and the source code archives are for updates and the plugin: you do not need to download them.',
     '',
-    '`.blockmap`、`latest*.yml`、`ds-bot-*.tgz` 和源代码是给自动更新和插件用的，不用下载。',
+    '`.blockmap`、`latest*.yml`、`chemclaw-bot-*.tgz` 和源代码是给自动更新和插件用的，不用下载。',
     '',
     `To check a download, compare its SHA-256 with [${SUMS}](${sums}). / 下载后可以用 [${SUMS}](${sums}) 核对 SHA-256。`,
     END,

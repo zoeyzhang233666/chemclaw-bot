@@ -131,3 +131,16 @@ test('a write that does not reach the disk is reported to whoever waits for it',
   await rt.ledger.written('pair-a-b')
   assert.deepEqual(parseBook(readFileSync(join(home, 'ledger', 'pair-a-b.jsonl'), 'utf8')).map(record => record.id), ['x'])
 })
+
+test('a failed group write stops pending and later messages without blocking other rooms', async (t) => {
+  const { rt, file } = host(t)
+  mkdirSync(file('group-r1'), { recursive: true })
+  rt.ledger.append('group-r1', { seq: 1, text: 'first' })
+  rt.ledger.append('group-r1', { seq: 2, text: 'next' })
+  await assert.rejects(rt.ledger.written('group-r1'), { code: 'PERSISTENCE_BLOCKED' })
+  assert.deepEqual(rt.ledger.records('group-r1'), [])
+  assert.throws(() => rt.ledger.append('group-r1', { seq: 3, text: 'late' }), { code: 'PERSISTENCE_BLOCKED' })
+  rt.ledger.append('group-r2', { seq: 1, text: 'unrelated' })
+  await rt.ledger.written('group-r2')
+  assert.equal(rt.ledger.record('group-r2', 1).text, 'unrelated')
+})

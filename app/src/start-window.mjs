@@ -361,7 +361,7 @@ export class StartWindow {
     const win = new BrowserWindow({
       ...rect,
       useContentSize: true, resizable: false, maximizable: false, fullscreenable: false, minimizable: true,
-      show: false, title: 'DS Bot', icon: this.#o.icon,
+      show: false, title: 'ChemClaw', icon: this.#o.icon,
       backgroundColor: material ? '#00000000' : colors.main,
       // Frameless with the system window controls over the page's empty 40 px band.
       ...frameOptions(process.platform, material, { color: material ? '#00000000' : colors.main, symbolColor: colors.ink }),

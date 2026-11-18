@@ -53,6 +53,7 @@ if (argv.includes('--info')) {
 // Reuse the entry app only when desktop files are identical.
 const plugin = join(root, 'chemclaw-bot')
 const sourceApp = join(root, 'app')
+const link = join(root, 'link')
 const hostInfo = resolveAppHost(root, selected.origin)
 const app = hostInfo.app
 const appHost = hostInfo.host
@@ -96,6 +97,8 @@ const pluginDependencies = JSON.parse(readFileSync(join(plugin, 'package.json'),
 const expectedDependencies = JSON.stringify(pluginDependencies)
 const sourceFingerprint = hashPaths([
   join(plugin, 'src'),
+  join(link, 'src'),
+  join(link, 'package-lock.json'),
   join(plugin, 'seed'),
   join(plugin, 'skills'),
   join(plugin, 'runtime'),
@@ -146,6 +149,7 @@ const target = resolve(app, 'node_modules/chemclaw-bot')
 if (target !== join(app, 'node_modules', 'chemclaw-bot') || !target.startsWith(`${app}${sep}`)) throw new Error('Invalid plugin sync target')
 
 function sync() {
+  if (existsSync(join(link, 'package-lock.json')) && !existsSync(join(link, 'node_modules/@noble/curves/package.json'))) run(['ci'], link)
   run(['run', 'build'], plugin)
   // npm may nest conflicting versions under this plugin. Preserve those modules
   // while replacing the synchronized source files; deleting them broke upgrades.

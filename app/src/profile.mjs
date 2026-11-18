@@ -12,7 +12,7 @@ export const BUNDLES = ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', '@d
 export const CHECK_PROFILE = 'import-check'
 export const CHECK_BUNDLES = ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app']
 // Bundles that earlier builds of the app put in its profile: the engine layer of its own window (../engine).
-const RETIRED_BUNDLES = ['deepseek-bot-engine', 'ds-bot']
+const RETIRED_BUNDLES = ['deepseek-bot-engine', 'dsbot-engine', 'ds-bot']
 // The app's own manifest is the installation: DSH imports plugins only from the installation's dependency
 // graph, resolves bundles there first, and keeps the bundles it names as direct dependencies from removal.
 export const INSTALL_ANCHOR = fileURLToPath(new URL('../package.json', import.meta.url))

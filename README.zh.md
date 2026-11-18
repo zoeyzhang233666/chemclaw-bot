@@ -1,4 +1,4 @@
-# ChemClaw v0.3.1
+# ChemClaw
 
 **简体中文** | [English](README.en.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
@@ -188,7 +188,7 @@ ChemClaw 支持调用 DSH Agent 制作插件，甚至直接修改经典模式的
 
 **方式一：直接安装桌面版（推荐）**
 
-1. 在 [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载 **v0.3.1** 安装包并安装（Windows/macOS/Linux 文件以发布页为准）。
+1. 在 [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases/latest) 下载当前安装包并安装（Windows/macOS/Linux 文件以发布页为准）。
 2. **配模型**：到 [APIHub](https://apihub.chem-cloud.cn/) 注册、取模型密钥，在 **设置 → 模型** 选预设的 APIHub，粘贴密钥并选可用模型。
 3. **接数据（推荐）**：到 [芯化和云数据中台](https://mcp.chem-cloud.cn/) 申请数据密钥，在 **设置 → 连接器 → 芯化和云数据中台** 粘贴保存。连接地址已预设，无需懂 MCP。
 4. 打开左侧的专家或协作群，直接提问即可。

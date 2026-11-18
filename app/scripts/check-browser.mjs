@@ -47,9 +47,9 @@ const options = () => ({ playwrightUrl: pathToFileURL(require.resolve('playwrigh
   onHold: value => { held = value },
 })
 const ref = (snapshot, label) => {
-  const line = snapshot.split('\n').find(line => line.includes(label) && /\[ref=e\d+\]/u.test(line))
+  const line = snapshot.split('\n').find(line => line.includes(label) && /\[ref=(?:f\d+)?e\d+\]/u.test(line))
   assert.ok(line, `No ref for ${label}: ${snapshot}`)
-  return /\[ref=(e\d+)\]/u.exec(line)[1]
+  return /\[ref=((?:f\d+)?e\d+)\]/u.exec(line)[1]
 }
 const open = async value => { const browser = await openBotBrowser(value); live.push(browser); return browser }
 async function check() {

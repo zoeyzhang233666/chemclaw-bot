@@ -1,4 +1,4 @@
-# ChemClaw v0.3.0
+# ChemClaw
 
 [简体中文](README.md) | **English** | [日本語](README.ja.md) | [한국어](README.ko.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
@@ -819,7 +819,7 @@ Specialists can work on different research and analysis tasks. Longer investigat
 
 **Want to start right away? Install ChemClaw and configure an AI model.**
 
-1. Download the relevant **v0.3.0** package from [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases). Check the release page for the available Windows, macOS, and Linux downloads.
+1. Download the latest package from [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases/latest). Check the release page for the available Windows, macOS, and Linux downloads.
 2. **Configure a model:** Visit [APIHub](https://apihub.chem-cloud.cn/), sign up or sign in, and get a model key as instructed. In ChemClaw, open **Settings → Models**, choose the preconfigured **APIHub**, paste your key, select an available model, and save. The model interprets questions, researches sources, analyzes data, and creates deliverables. No manual API URL setup is required.
 3. **Connect chemical data (recommended):** Obtain a separate data key from [Chemcloud Data Hub](https://mcp.chem-cloud.cn/) and enter it under **Settings → Connectors → Chemcloud Data Hub**. This authorizes applicable product, company, value-chain, trade, and market data. **The model and data keys are different.**
 4. Open a business specialist or group in the left sidebar and ask a question.

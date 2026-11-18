@@ -138,7 +138,7 @@ class FakeWebContents extends EventEmitter {
     this.isDestroyed = () => this.win.destroyed
     this.getURL = () => this.win.url
     this.isLoading = () => false
-    this.getTitle = () => 'DS Bot'
+    this.getTitle = () => 'ChemClaw'
     this.sent = []
     this.send = (...args) => {
       this.sent.push(args)
@@ -155,7 +155,7 @@ class FakeWebContents extends EventEmitter {
 class FakeApp extends EventEmitter {
   constructor() {
     super()
-    this.name = 'DS Bot'
+    this.name = 'ChemClaw'
     this.getVersion = () => '0.2.2'
     this.getLocale = () => 'en-US'
     this.getPath = (name) => paths[name] ?? join(root, String(name))

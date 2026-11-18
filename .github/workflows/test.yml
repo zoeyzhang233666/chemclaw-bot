@@ -35,6 +35,8 @@ jobs:
           cache: npm
           cache-dependency-path: chemclaw-bot/package-lock.json
       - run: npm ci --no-fund --no-audit
+      - name: Install the phone link packages
+        run: npm ci --no-fund --no-audit --prefix ../link
       # Test the exact DSH version bundled with the desktop app. Never downgrade it
       # just for CI: retired DSH versions can fail unrelated timing-sensitive tests.
       - name: Install current desktop-pinned DSH
@@ -45,6 +47,7 @@ jobs:
           npm run harness -- --no-save "@deepseek-ai/dsh@$dsh_version"
       - run: npm test
       - run: node scripts/build-client.mjs --check
+      - run: node scripts/build-link.mjs --check
       - run: npm run lint
 
   scan:

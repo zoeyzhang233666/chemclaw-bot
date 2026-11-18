@@ -90,5 +90,5 @@ test('a build that fails on its own or is stopped ends at once', async () => {
 
 test('npm run dist goes through the retrying script', () => {
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
-  assert.equal(pkg.scripts.dist, 'node scripts/dist.mjs')
+  assert.equal(pkg.scripts.dist, 'node scripts/prepare-mac-icon.mjs && node scripts/dist.mjs')
 })

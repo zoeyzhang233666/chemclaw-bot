@@ -140,7 +140,7 @@ test('hello names the API version both sides speak, the capabilities and the not
   const hello = (await call('hello', { client: { name: 'dsh-go', version: '1.0.0' }, api: [1] })).value
   assert.equal(hello.api, API_VERSION)
   assert.equal(hello.apiMin, 1)
-  assert.equal(hello.plugin.name, 'ds-bot')
+  assert.equal(hello.plugin.name, 'chemclaw-bot')
   assert.match(hello.plugin.version, /^\d+\.\d+\.\d+/)
   assert.deepEqual(hello.capabilities, CAPABILITIES)
   assert.equal(typeof hello.boot, 'string')

@@ -62,10 +62,10 @@ test('the install source decides where a newer version is looked for', () => {
   assert.deepEqual(sourceOf('npm:ds-bot@^0.1.0'), { kind: 'registry' })
   assert.deepEqual(sourceOf('link:E:/项目库/My Bots/ds-bot'), { kind: 'path' })
   assert.deepEqual(sourceOf('/home/user/ds-bot'), { kind: 'path' })
-  assert.deepEqual(sourceOf('github:zoeyzhang233666/chemclaw-bot#v0.1.0&path:/ds-bot'),
-    { kind: 'git', owner: 'Fei2411', repo: 'DS-Bot', ref: 'v0.1.0', rest: ['path:/ds-bot'] })
+  assert.deepEqual(sourceOf('github:zoeyzhang233666/chemclaw-bot#v0.1.0&path:/chemclaw-bot'),
+    { kind: 'git', owner: 'zoeyzhang233666', repo: 'chemclaw-bot', ref: 'v0.1.0', rest: ['path:/chemclaw-bot'] })
   assert.deepEqual(sourceOf('git+https://github.com/zoeyzhang233666/chemclaw-bot.git#main'),
-    { kind: 'git', owner: 'Fei2411', repo: 'DS-Bot', rest: [] })
+    { kind: 'git', owner: 'zoeyzhang233666', repo: 'chemclaw-bot', rest: [] })
   assert.deepEqual(sourceOf('https://example.com/ds-bot-0.1.0.tgz'), { kind: 'tarball' })
   assert.deepEqual(sourceOf(undefined), { kind: 'unknown' })
 })
@@ -112,7 +112,7 @@ test('a private registry of pnpm\'s own is asked alone, and an answer stands for
 
 test('a versioned GitHub install follows the latest release tag and keeps its path', async () => {
   const { rt, installs } = start({
-    source: 'github:zoeyzhang233666/chemclaw-bot#v0.1.0&path:/ds-bot',
+    source: 'github:zoeyzhang233666/chemclaw-bot#v0.1.0&path:/chemclaw-bot',
     answers: { 'https://api.github.com/repos/zoeyzhang233666/chemclaw-bot/releases/latest': { tag_name: 'v9.1.0' } },
   })
   const view = await rt.updateCheck()
@@ -120,12 +120,12 @@ test('a versioned GitHub install follows the latest release tag and keeps its pa
   assert.equal(view.latest, '9.1.0')
   rt.updateStart()
   await flush()
-  assert.deepEqual(installs, [['github:zoeyzhang233666/chemclaw-bot#v9.1.0&path:/ds-bot', {}]])
+  assert.deepEqual(installs, [['github:zoeyzhang233666/chemclaw-bot#v9.1.0&path:/chemclaw-bot', {}]])
 })
 
 test('a versioned GitHub install follows the release to the repository\'s current address', async () => {
   const { rt, installs } = start({
-    source: 'github:old-owner/retired-dsbot#v0.1.0&path:/ds-bot',
+    source: 'github:old-owner/retired-dsbot#v0.1.0&path:/chemclaw-bot',
     answers: {
       'https://api.github.com/repos/old-owner/retired-dsbot/releases/latest': {
         tag_name: 'v9.1.0',
@@ -138,7 +138,7 @@ test('a versioned GitHub install follows the release to the repository\'s curren
   assert.equal(view.latest, '9.1.0')
   rt.updateStart()
   await flush()
-  assert.deepEqual(installs, [['github:zoeyzhang233666/chemclaw-bot#v9.1.0&path:/ds-bot', {}]])
+  assert.deepEqual(installs, [['github:zoeyzhang233666/chemclaw-bot#v9.1.0&path:/chemclaw-bot', {}]])
 })
 
 test('a linked checkout, an unversioned git install, or a disabled check never asks the network', async () => {

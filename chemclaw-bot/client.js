@@ -37197,7 +37197,7 @@ function AboutPage({ useUpdate, actions, run: run2, Section: Section2, Row: Row4
       (0, import_react53.createElement)(
         "div",
         { className: "bt-about-copy" },
-        (0, import_react53.createElement)("span", { className: "bt-about-name" }, "DS Bot"),
+        (0, import_react53.createElement)("span", { className: "bt-about-name" }, "ChemClaw"),
         update.current ? (0, import_react53.createElement)("span", { className: "bt-about-version" }, t("Version {version}", { version: update.current })) : null
       ),
       repo ? (0, import_react53.createElement)(
@@ -37218,7 +37218,7 @@ function AboutPage({ useUpdate, actions, run: run2, Section: Section2, Row: Row4
     (0, import_react53.createElement)(
       Section2,
       { key: "updates", title: t("Updates") },
-      (0, import_react53.createElement)(Row4, { label: "DS Bot", hint: ownRow?.hint ?? botHint(update) }, botControl, update.available && update.notesUrl ? (0, import_react53.createElement)("a", linkProps(update.notesUrl), t("What's new")) : null),
+      (0, import_react53.createElement)(Row4, { label: "ChemClaw", hint: ownRow?.hint ?? botHint(update) }, botControl, update.available && update.notesUrl ? (0, import_react53.createElement)("a", linkProps(update.notesUrl), t("What's new")) : null),
       dsh?.current ? (0, import_react53.createElement)(Row4, { label: "DeepSeek Harness", hint: dshHint(dsh, dshShown) }, dshControl) : null
     ),
     (0, import_react53.createElement)(
