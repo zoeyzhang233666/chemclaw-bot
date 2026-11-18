@@ -39,7 +39,10 @@ const capitalize = word => word[0].toUpperCase() + word.slice(1)
 // DS Bot's pages come first; below a rule, the pages DSH and other plugins register
 // (`settings.section`), then Feedback and About. DSH's General rows join General, and
 // its Models page opens from DS Bot's Models page as the advanced settings.
-const SETTINGS_PAGES = [['general', 'General'], ['models', 'Models'], ['local-agents', 'Local agents'], ['bots', 'Experts'], ['bot-models', 'Bot models'], ['groups', 'Group chats'], ['connectors', 'Connectors'], ['im', 'IM'], ['phone', 'Phone'], ['skills', 'Skill library'], ['capabilities', 'Capabilities'], ['browser', 'Browser'], ['computer', 'Computer use'], ['schedules', 'Scheduled tasks'], ['usage', 'Usage'], ['secrets', 'Secrets'], ['feedback', 'Feedback'], ['about', 'About ChemClaw']]
+// Keep these first five entries in the same order as the unchanged AccountLauncher
+// quick-settings menu (Usage → Models → Connectors → Automation → Settings).
+// The remaining ChemClaw settings retain their own pages; Computer use follows Browser.
+const SETTINGS_PAGES = [['usage', 'Usage'], ['models', 'Models'], ['connectors', 'Connectors'], ['schedules', 'Scheduled tasks'], ['general', 'General'], ['bots', 'Experts'], ['groups', 'Group chats'], ['skills', 'Skill library'], ['capabilities', 'Capabilities'], ['browser', 'Browser'], ['computer', 'Computer use'], ['local-agents', 'Local agents'], ['bot-models', 'Bot models'], ['im', 'IM'], ['phone', 'Phone'], ['secrets', 'Secrets'], ['feedback', 'Feedback'], ['about', 'About ChemClaw']]
 const LAST_PAGES = new Set(['feedback', 'about'])
 // DSH sections DS Bot's own pages already hold.
 const MERGED_SECTIONS = new Set(['general', 'models'])
