@@ -674,10 +674,30 @@ export function install(rt) {
     assertGroupWritable(room)
     const ids = [...new Set(callees.map(member => member.id))]
     const key = randomUUID()
-    rt.state.roomBatches[key] = {
+    const batches = (rt.state.roomBatches ??= {})
+    const batch = {
       key, roomId: room.id, by, pending: ids, done: [], doneIds: [],
       results: [], worked: false, answered: false, at: Date.now(),
     }
+    // Upstream #1351: a member may owe the same caller only once. When a
+    // newer call supersedes an unfinished call, carry over completed siblings
+    // rather than dropping the answers already recorded in that older batch.
+    for (const id of ids) {
+      const prev = Object.values(batches).find(item => item.roomId === room.id
+        && item.by === by && item.pending.includes(id))
+      if (prev === undefined) continue
+      prev.pending = prev.pending.filter(pendingId => pendingId !== id)
+      if (prev.pending.length === 0) {
+        batch.done.push(...prev.done)
+        batch.doneIds.push(...prev.doneIds)
+        batch.results.push(...prev.results)
+        batch.worked ||= prev.worked
+        batch.answered ||= prev.answered
+        delete batches[prev.key]
+      }
+    }
+    batches[key] = batch
+    // Never deliver the new call until this entire handover is durable.
     await saveRequiredRoom(room)
     return key
   }
@@ -688,8 +708,13 @@ export function install(rt) {
   const settleGroupCall = async (room, slot, member, beforeSeq, spoken) => {
     if (!ledgerWriterEnabled || slot.batchKey === undefined
       || !['posted', 'passed', 'failed'].includes(slot.status)) return
-    const batch = rt.state.roomBatches?.[slot.batchKey]
-    if (batch === undefined || !batch.pending.includes(member.id)) return
+    const original = rt.state.roomBatches?.[slot.batchKey]
+    // A later call from the same Bot can take over this member. The older slot
+    // then settles the newer batch rather than leaving it permanently pending.
+    const batch = original?.pending.includes(member.id) ? original
+      : Object.values(rt.state.roomBatches ?? {}).find(item => item.roomId === room.id
+        && item.by === slot.by && item.pending.includes(member.id))
+    if (batch === undefined) return
     batch.pending = batch.pending.filter(id => id !== member.id)
     if (slot.status === 'posted' && spoken.length > 0) {
       batch.done.push(member.name)
