@@ -290,10 +290,9 @@ test('tool results and model requests lose the values', async (t) => {
   t.after(bench.stop)
   const value = fresh()
   await bench.call('secret-set', { name: 'DEMO_TOKEN', value })
-  // The team tools' listener (working_directory) registers first.
-  // The rc.1 schedule tool filter registers after secrets. Test the redaction
-  // listener itself; the composed request pipeline still passes through it.
-  const execute = bench.listeners['tools/execute'].at(-2)
+  // Run registered hooks together, so adding a wrapper does not bypass this test.
+  const execute = (exec, run) => bench.listeners['tools/execute']
+    .reduceRight((next, listener) => () => listener(exec, next), run)()
   const ok = await execute({}, async () => ({ isError: false, value: { kind: 'foreground', stdout: { text: `${value}\n`, truncated: false } }, content: [{ type: 'text', text: value }], meta: { stdout: value } }))
   assert.equal(ok.isError, false)
   assert.deepEqual(ok.value, { kind: 'foreground', stdout: { text: '[secret:DEMO_TOKEN]\n', truncated: false } })

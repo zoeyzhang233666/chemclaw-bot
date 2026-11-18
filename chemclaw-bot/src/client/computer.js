@@ -262,7 +262,7 @@ export function PendingComputerHandoff({ sessionId, bot, hold, actions, inline }
             t('You control the computer')) : null))),
     h('div', { className: 'bt-q-foot' },
       h('button', { type: 'button', className: 'bt-q-btn', onClick: () => answer('skip') }, t('Skip')),
-      taken ? null : h('button', { type: 'button', className: 'bt-q-btn', onClick: takeOver }, t('Take over')),
+      taken ? null : h('button', { type: 'button', className: 'bt-q-btn', onClick: takeOver }, t('Take over the computer')),
       h('button', { type: 'button', className: 'bt-q-submit', onClick: () => answer('done') }, t("I'm done"))))
 }
 
@@ -355,7 +355,7 @@ export const COMPUTER_CSS = `
 .bt-cview-step{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--bt-ink-2)}
 .bt-cview-step[data-ok=no]{color:var(--bt-danger)}
 .bt-cview-step-err{font-size:11px}
-.bt-cbar{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:8px;max-width:min(760px,calc(100vw - 32px));padding:6px 12px;border-radius:999px;background:var(--bt-main);border:1px solid var(--bt-line);box-shadow:0 3px 16px rgba(67,48,25,.09);backdrop-filter:none;font-size:12.5px}
+.bt-cbar{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:8px;max-width:min(760px,calc(100vw - 32px));padding:6px 12px;border-radius:999px;background:var(--bt-main);border:1px solid var(--bt-line);box-shadow:0 3px 16px color-mix(in srgb,var(--bt-ink) 9%,transparent);backdrop-filter:none;font-size:12.5px}
 .bt-cbar-live{flex:none;width:7px;height:7px;border-radius:50%;background:var(--bt-danger);box-shadow:0 0 0 3px var(--bt-danger-glow)}
 .bt-cbar-sep{flex:none;width:1px;height:14px;background:var(--bt-line);opacity:.7}
 .bt-cbar-entry{display:flex;align-items:center;gap:6px;min-width:0}

@@ -185,7 +185,10 @@ export const nativeImage = {
 
 export const nativeTheme = { shouldUseDarkColors: false, themeSource: 'system' }
 
-export const powerMonitor = new EventEmitter()
+export const powerMonitor = Object.assign(new EventEmitter(), { getSystemIdleTime: () => 0 })
+export const screen = {
+  getPrimaryDisplay: () => ({ workArea: { x: 0, y: 0, width: 1280, height: 800 }, workAreaSize: { width: 1280, height: 800 } }),
+}
 
 // The cookies of the browser: the Host's address keeps one after the launch URL was used.
 const cookieJar = {

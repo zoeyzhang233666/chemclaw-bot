@@ -73,8 +73,26 @@ test('Linux packages select the official sharp WASM backend without shipping con
   assert.equal(filter(join(root, wasm), stat), true)
   const unpack = new FileMatcher(root, root, value => value, config.asarUnpack).createFilter()
   assert.equal(unpack(join(root, wasm), stat), true)
-  assert.equal(config.win.files, undefined)
+  const native = 'node_modules/@img/sharp-win32-x64/lib/sharp-win32-x64-0.35.5.node'
+  const windows = new FileMatcher(root, root, value => value, ['**/*', ...(config.win.files ?? [])]).createFilter()
+  assert.equal(windows(join(root, native), stat), true)
   assert.equal(config.mac.files, undefined)
+})
+
+test('Windows ships the native computer driver outside asar, and macOS preserves the signed helper', () => {
+  const config = parse(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'))
+  const root = resolve('app-fixture')
+  const stat = { isDirectory: () => false }
+  const app = new FileMatcher(root, root, value => value, ['**/*', ...config.win.files]).createFilter()
+  for (const scope of ['@trycua', '@ubjs']) {
+    assert.equal(app(join(root, 'node_modules', scope, 'driver', 'package.json'), stat), false, scope)
+    const resource = config.win.extraResources.find(entry => entry.from === `node_modules/${scope}`)
+    assert.equal(resource?.to, `node_modules/${scope}`)
+  }
+  const helper = 'node_modules/@deepseek-ai/dsh-experimental-cua-macos/native/bin/arm64/hash/DSH Computer Use.app/Contents/MacOS/DSH Computer Use'
+  const unpack = new FileMatcher(root, root, value => value, config.asarUnpack).createFilter()
+  assert.equal(unpack(join(root, helper), stat), true)
+  assert.ok(config.mac.signIgnore.some(pattern => new RegExp(pattern, 'u').test(helper)))
 })
 
 // A release is tagged with the version of chemclaw-bot, and the installed apps compare their own

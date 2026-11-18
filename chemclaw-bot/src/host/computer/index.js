@@ -917,7 +917,8 @@ export function install(rt) {
       noteStep(botId, { time: started, callId: exec.callId, app: app?.name, action: call.method ?? exec.name, kind: call.kind, ok: true })
       return result
     } catch (error) {
-      noteStep(botId, { time: started, callId: exec.callId, app: app?.name, action: call.method ?? exec.name, kind: call.kind, ok: false, error: String(error?.message ?? error).slice(0, 200) })
+      const message = String(error?.message ?? error)
+      noteStep(botId, { time: started, callId: exec.callId, app: app?.name, action: call.method ?? exec.name, kind: call.kind, ok: false, error: rt.redactSecrets(message).slice(0, 200) })
       throw error
     } finally {
       if (typeof exec.callId === 'string') inFlight.delete(exec.callId)
