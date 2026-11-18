@@ -18,8 +18,11 @@ export function pairBook(a, b) {
   return 'pair-' + ids.join('-')
 }
 
+// The filename is for upstream compatibility. An ambiguous hyphen-delimited
+// name must never stand in for the exact participants.
+const samePair = (a, b, from, to) => (a === from && b === to) || (a === to && b === from)
+
 function verified(book, a, b) {
-  const allowed = [a, b].sort()
   if (book === undefined || book.incompleteTail !== '') {
     throw new Error('Pair Ledger missing or interrupted: no automatic replay')
   }
@@ -40,10 +43,7 @@ function verified(book, a, b) {
           previous.from !== row.from || previous.to !== row.to || previous.role !== row.role)) {
         throw new Error('Pair Ledger contains an unsafe repeated exchange')
       }
-      // A hyphen-delimited upstream book name can alias for unusual Bot IDs
-      // (a-b,c versus a,b-c). Fail closed rather than show another pair's data.
-      if (row.from !== allowed[0] && row.from !== allowed[1] ||
-          row.to !== allowed[0] && row.to !== allowed[1] || row.from === row.to) {
+      if (!samePair(a, b, row.from, row.to)) {
         throw new Error('Pair Ledger record belongs to a different pair')
       }
       messages.set(row.id, row)
@@ -90,12 +90,12 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
     const existing = await inspect(a, b)
     if (existing !== undefined) return { reused: true, imported: existing.delivered.length }
     if (await assertWriter(book) !== true) throw new Error('Pair Ledger exclusive writer not confirmed')
-    const rows = legacy.filter(row => row?.from !== undefined && row?.to !== undefined &&
-      pairBook(row.from, row.to) === book).map((row, index) => {
+    const rows = legacy.filter(row => samePair(a, b, row?.from, row?.to)).map((row, index) => {
       valid(row.id, SAFE_MESSAGE, 'legacy exchange id')
       if (!ROLES.has(row.role) || typeof row.text !== 'string') throw new Error('Invalid legacy exchange')
       return { ...row, seq: index + 1, delivered: true }
     })
+    verified({ records: rows, incompleteTail: '' }, a, b)
     const result = await publishInitialPairBook(home, book, rows)
     verified(await readLedger(home, book), a, b)
     return { ...result, imported: rows.length }
@@ -103,7 +103,7 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
   const begin = ({ a, b, id, from, to, role, text, ...optional }) => exclusive(pairBook(a, b), async () => {
     valid(id, SAFE_MESSAGE, 'exchange id')
     if (!ROLES.has(role) || typeof text !== 'string') throw new Error('Invalid pair Ledger message')
-    if (pairBook(from, to) !== pairBook(a, b)) throw new Error('Pair Ledger has the wrong sender or receiver')
+    if (!samePair(a, b, from, to)) throw new Error('Pair Ledger has the wrong sender or receiver')
     const book = pairBook(a, b)
     const current = verified(await readLedger(home, book), a, b)
     const existing = current.messages.get(id)

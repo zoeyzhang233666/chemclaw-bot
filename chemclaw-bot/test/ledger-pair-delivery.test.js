@@ -114,6 +114,26 @@ test('pair #1358 rejects ambiguous hyphenated pair identities instead of leaking
   assert.deepEqual((await writer.inspect('a-b', 'c')).delivered.map(row => row.text), ['Private supplier report'])
 })
 
+test('pair #1358 keeps an aliased participant out of the original book before publish or append', async t => {
+  const home = setup(t)
+  const writer = createPairDeliveryJournal({ home, assertWriter: async () => true })
+  const original = { id: 'prior', from: 'c', to: 'a-b', role: 'reply', text: 'Original confirmed reply' }
+  const aliased = { ...original, id: 'unrelated', from: 'a', to: 'b-c', text: 'Other pair history' }
+  assert.equal((await writer.seed('a-b', 'c', [original, aliased])).imported, 1)
+  await assert.rejects(writer.begin({ ...aliased, a: 'a-b', b: 'c' }), /wrong sender/)
+  const view = await writer.inspect('a-b', 'c')
+  assert.deepEqual(view.delivered.map(row => row.text), [original.text])
+  assert.equal(view.uncertain.length, 0)
+})
+
+test('pair #1358 rejects inconsistent old exchanges before creating the book', async t => {
+  const home = setup(t)
+  const writer = createPairDeliveryJournal({ home, assertWriter: async () => true })
+  const prior = { id: 'prior', from: 'a', to: 'b', role: 'request', text: 'Original message' }
+  await assert.rejects(writer.seed('a', 'b', [prior, { ...prior, text: 'Conflicting message' }]), /unsafe repeated exchange/)
+  assert.equal(await readLedger(home, pairBook('a', 'b')), undefined)
+})
+
 test('pair #1358 rejects missing books, truncated tails, and cross-pair spoofing', async t => {
   const home = setup(t)
   const writer = createPairDeliveryJournal({ home, assertWriter: async () => true })
