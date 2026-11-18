@@ -11,18 +11,25 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
+import { createRequire } from 'node:module'
 import { crc32 } from 'node:zlib'
 import { hostExecutable } from '../src/host-process.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const [given, shotFile] = process.argv.slice(2)
-const executable = given || packedExecutable()
+const argv = process.argv.slice(2)
+const [given, shotFile] = argv.filter(arg => !arg.startsWith('--'))
+const source = argv.includes('--source')
+const officePreview = argv.includes('--office-preview-only')
+const macUi = argv.includes('--mac-ui')
+const executable = source ? createRequire(import.meta.url)('electron') : given || packedExecutable()
+const appArgs = source ? [root] : []
+if (macUi && (process.platform !== 'darwin' || !shotFile)) throw new Error('--mac-ui requires a macOS screenshot prefix')
 
 function packedExecutable() {
   const out = join(root, 'dist-pack')
   if (process.platform === 'win32') return join(out, 'win-unpacked', 'ChemClaw.exe')
   // executableName in electron-builder.yml.
-  if (process.platform === 'linux') return join(out, 'linux-unpacked', 'dsbot')
+  if (process.platform === 'linux') return join(out, 'linux-unpacked', 'chemclaw')
   const dir = ['mac-arm64', 'mac'].find(name => existsSync(join(out, name))) ?? 'mac'
   return join(out, dir, 'ChemClaw.app', 'Contents', 'MacOS', 'ChemClaw')
 }
@@ -34,7 +41,7 @@ if (!existsSync(executable)) {
 
 // The Office payload sits next to the asar as extraResources, and the LibreOffice Kit CLI is a
 // plain file in the unpacked tree; without them the app's Office skills and tools cannot run.
-{
+if (!source) {
   const resources = process.platform === 'darwin' ? join(dirname(executable), '..', 'Resources') : join(dirname(executable), 'resources')
   const windows = process.platform === 'win32'
   const unpacked = process.platform === 'linux' ? 'app' : 'app.asar.unpacked'
@@ -67,6 +74,7 @@ if (!existsSync(executable)) {
 const work = realpathSync.native(mkdtempSync(join(realpathSync.native(tmpdir()), 'ds-bot-packed-')))
 mkdirSync(join(work, 'home'))
 mkdirSync(join(work, 'shell'))
+mkdirSync(join(work, 'workspace'))
 // CDP cannot answer the native first-close dialog. The notice has its own tests; this check
 // exercises hiding and reopening a window after the user has acknowledged it.
 writeFileSync(join(work, 'shell', 'tray-close-acknowledged'), '')
@@ -385,7 +393,43 @@ function frameRules(file) {
     .filter(rule => rule.length > 0)
 }
 
-async function chat(cdp) {
+function officePreviewFixture(executable) {
+  const resources = process.platform === 'darwin' ? resolve(executable, '..', '..', 'Resources') : join(dirname(executable), 'resources')
+  const python = join(resources, 'primary-runtime', 'dependencies', 'python',
+    ...(process.platform === 'win32' ? ['python.exe'] : ['bin', 'python3']))
+  const file = join(work, 'workspace', '中文演示 sample.pptx')
+  const script = `from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE
+from pptx.util import Inches
+import sys
+deck = Presentation()
+first = deck.slides.add_slide(deck.slide_layouts[5])
+first.shapes.title.text = "ChemClaw PPT 侧栏预览测试"
+second = deck.slides.add_slide(deck.slide_layouts[5])
+second.shapes.title.text = "合成行情测试"
+data = CategoryChartData()
+data.categories = ["10-25", "10-26"]
+data.add_series("测试数值", [100, 102])
+second.shapes.add_chart(XL_CHART_TYPE.LINE, Inches(1), Inches(1.5), Inches(8), Inches(4), data)
+deck.save(sys.argv[1])`
+  const result = spawnSync(python, ['-I', '-B', '-c', script, file], {
+    encoding: 'utf8', timeout: 120_000, windowsHide: true,
+  })
+  if (result.error || result.status !== 0) throw new Error('The bundled Python could not create the Office preview fixture: ' + (result.stderr || result.error?.message))
+  return { file, original: readFileSync(file) }
+}
+
+async function capture(cdp, label) {
+  if (!shotFile) return
+  const file = resolve(macUi ? `${shotFile}.${label}.png` : shotFile)
+  const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' })
+  mkdirSync(dirname(file), { recursive: true })
+  writeFileSync(file, Buffer.from(data, 'base64'))
+  console.log(`check-packed: saved ${file}`)
+}
+
+async function chat(cdp, app) {
   const evaluate = async expression => (await cdp.call('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result.value
   const until = async (expression, label, ms = 120_000) => {
     const end = Date.now() + ms
@@ -408,10 +452,12 @@ async function chat(cdp) {
   await dismissNotice()
   const main = await evaluate("fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.mainBotId)")
   await evaluate(`document.querySelector(${JSON.stringify(`[data-bot-id="${main}"]`)}).click()`)
-  await until("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)')", 'the model choice')
-  await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)').click()")
-  // The mock model's greeting for a new team.
-  await until(text('先让团队帮你做哪块'), 'the greeting')
+  await until("document.querySelector('.bt-team-intro')", 'the preset welcome page')
+  await evaluate("document.querySelector('.bt-model-chip:not(.bt-model-chip-quiet)')?.click()")
+  const owner = `fetch('api/bot', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: 'state', payload: {} }) }).then(r => r.json()).then(r => r.value.bots.find(bot => bot.id === ${JSON.stringify(main)}))`
+  await until(`${owner}.then(bot => Boolean(bot?.templateId && !bot.waiting))`, 'the coordinator model selection', 30000)
+  if (await evaluate("Boolean(document.querySelector('.bt-msg'))")) throw new Error('A preset sent an unsolicited first message')
+  if (macUi) await capture(cdp, 'welcome')
   await dismissNotice()
   // Click the composer through the input pipeline. A bare focus() is not enough where no window
   // manager gives the window focus (xvfb in CI): the text and the Enter would go nowhere.
@@ -466,8 +512,10 @@ async function chat(cdp) {
     })()`)
     throw new Error(`timed out waiting for the focused composer; page state: ${state}`)
   }
-  await cdp.call('Input.insertText', { text: 'packaged app check' })
-  await until(text('packaged app check'), 'the typed message', 10_000)
+  const fixture = officePreview ? officePreviewFixture(app) : undefined
+  const message = fixture ? `交付 ${fixture.file}` : source ? 'GenUI check timeline' : 'packaged app check'
+  await cdp.call('Input.insertText', { text: message })
+  await until(`String(${box}?.textContent ?? ${box}?.value ?? '').includes(${JSON.stringify(message)}) || ${text(message)}`, 'the typed message', 10_000)
   // DSH's composer drops an Enter while it cannot send: while it is busy, or before it has taken
   // in the inserted text. Its send button is disabled under the same conditions, so press Enter
   // once a user could click the button, as a user who sees it greyed out would wait.
@@ -510,7 +558,6 @@ async function chat(cdp) {
   } catch (error) {
     throw new Error(`${error.message}; composer: ${await composerState()}`)
   }
-  const message = 'packaged app check'
   const draft = `String(${box}?.innerText ?? '')`
   let previousDraft = null
   let sent = false
@@ -547,13 +594,25 @@ async function chat(cdp) {
   if (!sent) throw new Error(`timed out waiting for Enter to send the message; composer: ${await composerState()}`)
   // The mock model starts its reply with 收到： and the message.
   try {
-    await until(text('收到：packaged app check'), 'the reply')
+    if (fixture) {
+      await until("document.querySelector('[data-presented-file] button[aria-label]')", 'the delivery card')
+      await evaluate("document.querySelector('[data-presented-file] button[aria-label]').click()")
+      await until("[...document.querySelectorAll('canvas')].some(canvas => { const r = canvas.getBoundingClientRect(); return canvas.width > 200 && canvas.height > 200 && r.width > 200 && r.height > 200 })", 'a rendered PowerPoint preview page')
+      if (!readFileSync(fixture.file).equals(fixture.original)) throw new Error('Office preview changed the original file')
+      console.log('check-packed: the PowerPoint delivery card renders a page')
+    } else if (source) {
+      await until("document.querySelectorAll('[class*=tlDot]').length === 3 && document.body.innerText.includes('Pilot complete')", 'the rendered GenUI timeline')
+      await until("!document.querySelector('.bt-team-intro')", 'the welcome to close after the first real message')
+      console.log('check-packed: source GUI rendered the GenUI timeline')
+    } else {
+      await until(text('收到：packaged app check'), 'the reply')
+    }
   } catch (error) {
     throw new Error(`${error.message}; composer: ${await composerState()}`)
   }
   await sleep(1000)
   console.log(`check-packed: chat ${JSON.stringify(await evaluate('document.body.innerText.slice(-200)'))}`)
-  if (process.platform === 'darwin') await checkComputerHelper(evaluate, until)
+  if (process.platform === 'darwin' && !source) await checkComputerHelper(evaluate, until)
 }
 
 async function checkComputerHelper(evaluate, until) {
@@ -595,22 +654,26 @@ async function checkComputerHelper(evaluate, until) {
 let failed = false
 const problems = []
 try {
-  const packedApp = outsideCheckout(resolve(executable))
-  checkAsarCopy(packedApp)
-  checkSharp(packedApp)
-  checkOffice(packedApp)
-  checkPlaywright(packedApp)
-  if (process.platform === 'win32') checkComputerUse(packedApp)
+  const packedApp = source ? executable : outsideCheckout(resolve(executable))
+  if (!source) {
+    checkAsarCopy(packedApp)
+    checkSharp(packedApp)
+    checkOffice(packedApp)
+    checkPlaywright(packedApp)
+    if (process.platform === 'win32') checkComputerUse(packedApp)
+  }
   const modelUrl = await startMock()
   const port = await freePort()
   const mainPort = await freePort()
   // A terminal inside an Electron-based editor may set ELECTRON_RUN_AS_NODE, which turns the app into plain Node.
   const { ELECTRON_RUN_AS_NODE: _runAsNode, ...env } = process.env
+  for (const key of Object.keys(env)) if (/KEY|TOKEN|PASSWORD|SECRET/iu.test(key)) delete env[key]
   Object.assign(env, {
+    DS_BOT_WORKSPACE: join(work, 'workspace'),
     DS_BOT_HOME: join(work, 'home'), DS_BOT_SHELL_DATA: join(work, 'shell'),
     DEEPSEEK_BASE_URL: modelUrl, DEEPSEEK_API_KEY: 'mock-key',
   })
-  const app = spawn(packedApp, [`--remote-debugging-port=${String(port)}`, `--inspect=127.0.0.1:${String(mainPort)}`], { stdio: 'inherit', env })
+  const app = spawn(packedApp, [...appArgs, `--remote-debugging-port=${String(port)}`, `--inspect=127.0.0.1:${String(mainPort)}`], { stdio: 'inherit', env })
   children.push(app)
   const exited = new Promise((done) => { app.once('exit', (code, signal) => { done({ code, signal }) }) })
   const cdp = devtools((await appPage(port, Date.now() + 120_000)).webSocketDebuggerUrl, problems)
@@ -637,12 +700,8 @@ try {
   }
   await windowState('win.focus(), win.webContents.focus(), true')
   await cdp.call('Page.bringToFront').catch(() => {})
-  const chatError = await chat(cdp).then(() => undefined, error => error)
-  if (shotFile) {
-    const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' })
-    writeFileSync(resolve(shotFile), Buffer.from(data, 'base64'))
-    console.log(`check-packed: saved ${resolve(shotFile)}`)
-  }
+  const chatError = await chat(cdp, packedApp).then(() => undefined, error => error)
+  await capture(cdp, chatError ? 'failure' : 'chat')
   if (chatError) throw chatError
   // Close the native window: a renderer-initiated close can stop page CDP evaluations even
   // when Electron prevents the close. Read visibility from the main process as well.
@@ -654,7 +713,7 @@ try {
   console.log('check-packed: the window is hidden and the Host goes on')
   // Starting the app again brings the window back; the second copy ends at once, because the
   // first one holds the lock.
-  const second = spawn(packedApp, [`--remote-debugging-port=${String(await freePort())}`], { stdio: 'ignore', env })
+  const second = spawn(packedApp, [...appArgs, `--remote-debugging-port=${String(await freePort())}`], { stdio: 'ignore', env })
   children.push(second)
   const secondExit = await Promise.race([new Promise((done) => { second.once('exit', (code) => { done(code) }) }), sleep(30_000).then(() => undefined)])
   if (secondExit === undefined) throw new Error('the second copy of the app did not end')

@@ -54,6 +54,7 @@
 // in the model input. MOCK_LOG_TOOLS=1 records each request's tool names as toolNames.
 // Non-streaming requests with web_search_* tools are treated as native search, and
 // POST /api/web_search is an Ollama-shaped search API for the searchApis config.
+import { GENUI_EXAMPLES, genuiExampleText } from './genui-examples.mjs'
 import { createServer } from 'node:http'
 import { createHash } from 'node:crypto'
 import { appendFileSync, mkdirSync } from 'node:fs'
@@ -285,6 +286,10 @@ function decide(body) {
   }
 
   const userText = textOf(last?.content).trim()
+  const delivery = textBlocks(last?.content).map(value => /^交付[ \t]+(.+)$/mu.exec(value)).find(Boolean)
+  if (delivery && tools.has('present')) return [tool('present', { files: [{ path: delivery[1].trim(), description: 'ChemClaw mock verification deliverable' }] })]
+  const genui = /^GenUI check (\w+)(?=\n|$)/mu.exec(userText)?.[1]
+  if (Object.hasOwn(GENUI_EXAMPLES, genui)) return [text(genuiExampleText(genui))]
   // "撑爆": the provider rejects the request as past its window.
   if (userText.startsWith('撑爆')) return 'overflow'
   // A file in the message (a long Bot message, a file the user sent): DSH gives its saved
