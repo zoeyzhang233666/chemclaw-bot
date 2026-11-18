@@ -689,7 +689,7 @@ export function install(rt) {
       prev.pending = prev.pending.filter(pendingId => pendingId !== id)
       if (prev.pending.length === 0) {
         batch.done.push(...prev.done)
-        batch.doneIds.push(...prev.doneIds)
+        batch.doneIds.push(...(prev.doneIds ?? []))
         batch.results.push(...prev.results)
         batch.worked ||= prev.worked
         batch.answered ||= prev.answered
