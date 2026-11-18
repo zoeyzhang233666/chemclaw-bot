@@ -7,6 +7,12 @@ import { SKILL_ZH, SKILL_HOST_ERRORS, SKILL_CATEGORIES_EN } from './skill-copy.j
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
+  "Ready": "已就绪",
+  "This time": "仅本次允许",
+  "Always": "始终允许",
+  "Stop": "停止",
+  "Copied": "已复制",
+  "failed": "失败",
   "Computer use": "电脑操控",
   "Computer": "电脑",
   "Let Bots use the computer": "允许智能体操作电脑",
