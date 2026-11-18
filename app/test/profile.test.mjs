@@ -51,7 +51,7 @@ describe('claimBundles', () => {
   const read = () => JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'))
 
   test('puts the app bundles first, keeps the user bundles and drops the retired ones', () => {
-    write(['@deepseek-ai/dsh-base', LEGACY_ENGINE, 'dsbot-engine', 'ds-bot', 'a-plugin'])
+    write(['@deepseek-ai/dsh-base', LEGACY_ENGINE, 'dsbot-engine', 'chemclaw-bot', 'a-plugin'])
     claimBundles(dir)
     assert.deepEqual(read().dsh.profile.bundles, [...BUNDLES, 'a-plugin'])
     assert.deepEqual(read().dependencies, { 'a-plugin': '1.0.0' })

@@ -7,9 +7,9 @@ CI 只跑单元测试和 Linux 上的测试台。窗口外框、输入法、高 
 ## 准备
 
 - Windows 10 / 11 x64，或 macOS（Apple 芯片）。
-- 官方的 DSH Desktop，版本和 README 里写的一致（现在是 `0.2.2-rc.1`）。只从 DeepSeek Harness 官方渠道下载。
-- 要发的包：在 `ds-bot/` 里运行 `npm pack`，得到 `ds-bot-<版本>.tgz`。
-- 桌面应用的安装包：在 `app/` 里运行 `npm run dist`，得到 `app/dist-pack/DS-Bot-<版本>-win-x64.exe`。`app/package.json` 和 `ds-bot/package.json` 的版本号要一样。
+- 官方的 DSH Desktop，版本和 README 里写的一致（现在是 `0.2.1-rc.3`）。只从 DeepSeek Harness 官方渠道下载。
+- 要发的包：在 `chemclaw-bot/` 里运行 `npm pack`，得到 `chemclaw-bot-<版本>.tgz`。
+- 桌面应用的安装包：在 `app/` 里运行 `npm run dist`，得到 `app/dist-pack/ChemClaw-<版本>-win-x64.exe`。`app/package.json` 和 `chemclaw-bot/package.json` 的版本号要一样。
 - 也可以用发版工作流的试运行：在 GitHub 的 Actions 里选 Release → Run workflow，勾着 dry run 运行。跑完后在这次运行的页面下载 Windows 安装包和两个 Mac 的 zip（保留 7 天）。它们和 Release 里的文件在同样的 runner 上、用同样的方法打包，不发布任何东西。
 - 一个能用的模型（DeepSeek API key 或账号）。测试里要填的密钥都用**假值**。
 - 想保留现有数据，先备份数据目录：Windows 是 `C:\Users\<用户名>\.dsh\`，macOS 是 `~/.dsh/`。最好用一台没有自己团队数据的机器或账户来测。
@@ -28,15 +28,15 @@ CI 只跑单元测试和 Linux 上的测试台。窗口外框、输入法、高 
 |---|---|---|---|---|
 | 2.1 | `.tgz` | 插件 → 添加插件 → 填 `.tgz` 的完整路径（去掉引号）→ 安装 → 立即启用 | 装好；需要时提示重启 | |
 | 2.2 | `.tgz` 的路径 | 用系统「复制为路径 / 拷贝路径名」得到的路径直接填；路径里有空格、中文时也试一次 | 能装 | |
-| 2.3 | npm（发布后） | 填 `ds-bot`；再用「中国大陆镜像源」装一次 | 两种安装源都能装，版本是新版 | |
-| 2.4 | GitHub（发布后，需要 Git） | 填 `github:Fei2411/DS-Bot#v<版本>&path:/ds-bot` | 能装；没装 Git 时记下错误信息 | |
+| 2.3 | npm（发布后） | 填 `chemclaw-bot`；再用「中国大陆镜像源」装一次 | 两种安装源都能装，版本是新版 | |
+| 2.4 | GitHub（发布后，需要 Git） | 填 `github:zoeyzhang233666/chemclaw-bot#v<版本>&path:/chemclaw-bot` | 能装；没装 Git 时记下错误信息 | |
 | 2.5 | 命令行 | 应用菜单 → 管理 dsh 命令 → 安装；退出 Desktop；新开终端运行 `dsh --version`、`dsh plugin --profile desktop add <tgz 路径>` | 能装；重启 Desktop 后生效 | |
 | 2.6 | 重启 | 完全退出（Windows：托盘图标 → 退出；macOS：⌘Q）再打开 | 团队界面出现 | |
 | 2.7 | 恢复（可选） | 故意装坏一次，看恢复对话框里的「禁用第三方插件」 | 能回到普通 DSH | |
 
 已知的坑：
 
-- 以前用 `link:` 按路径装过、之后又移动或删除了源码目录：DSH 卸载插件时不删 profile 里 `node_modules/ds-bot` 这个失效的链接，再装 `.tgz` 会报没有写入权限（详情里是 `EPERM … rename … node_modules\ds-bot`）。退出 Desktop，只删掉这个链接，再装一次。Windows：`cmd /c rmdir "%USERPROFILE%\.dsh\profiles\desktop\node_modules\ds-bot"`。这是 DSH 的问题，正常安装的用户不会遇到。
+- 以前用 `link:` 按路径装过、之后又移动或删除了源码目录：DSH 卸载插件时不删 profile 里 `node_modules/chemclaw-bot` 这个失效的链接，再装 `.tgz` 会报没有写入权限（详情里是 `EPERM … rename … node_modules\chemclaw-bot`）。退出 Desktop，只删掉这个链接，再装一次。Windows：`cmd /c rmdir "%USERPROFILE%\.dsh\profiles\desktop\node_modules\chemclaw-bot"`。这是 DSH 的问题，正常安装的用户不会遇到。
 - 2.5 要用 Desktop 自己装的 `dsh`。npm 全局装的 `dsh` 改不了 Desktop 的 profile（`profile "desktop" is managed exclusively by the Electron application`）。两个都装了时，先用 `where.exe dsh`（macOS：`which -a dsh`）看用的是哪一个。
 
 ## 3. 窗口外框
@@ -103,12 +103,10 @@ CI 只跑单元测试和 Linux 上的测试台。窗口外框、输入法、高 
 | 8.2 | 填一个 8 位以上的假值，选「只给这个 Bot」，保存 | 卡片变成已保存；对话里看不到值 | |
 | 8.3 | 让 Bot 在终端里打印这个变量（Windows：`echo $env:DSH_SECRET_TEST_TOKEN`；macOS：`echo $DSH_SECRET_TEST_TOKEN`） | 工具结果里是 `[secret:TEST_TOKEN]`，不是原值 | |
 | 8.4 | 再要一个 `TEST_PIN`，填 4 位假数字，让 Bot 打印 `pin` 加这个变量 | 能保存；结果是 `pin [secret:TEST_PIN]`；别处含这 4 位数字的长数字不受影响 | |
-| 8.5 | 设置 → Secrets | 列出 TEST_TOKEN；能改范围、换值、删除 | |
+| 8.5 | 设置页没有 Secrets；模型 Key 在 Models，公司数据在 Connectors | 侧栏设置列表无「密钥」项 | |
 | 8.6 | 看数据目录里的 `bot/secrets.json` 的权限（Windows：右键 → 属性 → 安全；macOS：`ls -l`） | 记下哪些用户能读 | |
 
 ## 9. Bot 浏览器
-
-DSH Desktop 和桌面应用各做一遍。
 
 | # | 检查 | 期望 | 结果 |
 |---|---|---|---|
@@ -118,7 +116,7 @@ DSH Desktop 和桌面应用各做一遍。
 | 9.4 | 选中一段文字，再让 Bot 读 | Bot 读到选中的文字 | |
 | 9.5 | 拖面板左边缘 | 能调宽度；关掉再开，宽度保留 | |
 | 9.6 | 切到另一个 Bot | 面板换成那个 Bot 的；登录状态互不相通 | |
-| 9.7 | 在一个要登录的网站登录，退出再开 | 记住的地址还在；DSH Desktop 里要重新登录，桌面应用里还是登录状态 | |
+| 9.7 | 退出 Desktop 再开 | 记住的地址还在；登录状态的表现记下来 | |
 
 ## 10. Desktop 和 Web 同时开
 
@@ -135,26 +133,24 @@ DSH Desktop 和桌面应用各做一遍。
 
 | # | 步骤 | 期望 | 结果 |
 |---|---|---|---|
-| 11.1 | 插件页卸载 `ds-bot`，重启 | 回到普通 DSH；数据目录里的 `bot/` 还在 | |
+| 11.1 | 插件页卸载 `chemclaw-bot`，重启 | 回到普通 DSH；数据目录里的 `bot/` 还在 | |
 | 11.2 | 重新安装 | 原来的团队、对话、记忆、密钥都在 | |
 | 11.3 | 从上一个发布版本升级到这一版 | 团队、主题、颜色、浏览器宽度和标签页都保留 | |
 
 ## 12. 桌面应用（Windows）
 
-发布 Release 时不勾「Set as the latest release」。工作流的最后一个任务「Download table, checksums and Latest」等所有安装包都传完，最后一步才把它标为 Latest。工作流跑完后确认：Release 里有 `SHA256SUMS.txt` 和不带版本号的文件（如 `DS-Bot-win-x64.exe`），说明开头是「下载 / Download」表，Release 标着「Latest」。有任务失败时，在这次运行里重跑失败的任务（Re-run failed jobs）；不要手动标为 Latest，那样 Release 就没有校验和和下载表。
-
-12.7 和 12.8 要等整个 Release 工作流跑完、Release 页上显示「Latest」之后再做：Windows 的自动更新只看标为 Latest 的 Release，在那之前它会一直说没有新版本。Release 里还要有安装包、它的 `.blockmap` 和 `latest.yml`。上一个发布版本没有安装包时，跳过这两项。
+12.7 和 12.8 要在 Release 发布、工作流传完安装包之后做：Release 里要有安装包、它的 `.blockmap` 和 `latest.yml`。上一个发布版本没有安装包时，跳过这两项。
 
 | # | 步骤 | 期望 | 结果 |
 |---|---|---|---|
-| 12.1 | 运行安装包，选安装位置，安装 | 不要管理员权限；只装给当前用户；开始菜单里有 DS Bot | |
-| 12.2 | 第一次打开：启动窗口出现（盘够时没有位置行）；有 DSH 团队时选复制 | 团队、对话、模型设置都在；DSH 里原来的团队不变 | |
-| 12.3 | 给一个 Bot 发消息；再打开设置 → 关于 DS Bot | 收到回复；DS Bot 一行写「随 DS Bot 应用一起更新。」 | |
+| 12.1 | 运行安装包，选安装位置，安装 | 不要管理员权限；只装给当前用户；开始菜单里有 ChemClaw | |
+| 12.2 | 第一次打开：选数据位置和总工作区；有 DSH 团队时选复制 | 团队、对话、模型设置都在；DSH 里原来的团队不变 | |
+| 12.3 | 给一个 Bot 发消息；再打开设置 → 关于 ChemClaw | 收到回复；DS Bot 一行写「随 ChemClaw 应用一起更新。」 | |
 | 12.4 | 看窗口：拖标题栏，双击标题栏，点最小化、最大化、关闭；切换浅色和深色 | 没有系统边框；拖得动，双击会最大化，最大化后顶部没有缝；三个按钮都能用，底色和下面的界面一样；Windows 11 上侧栏透出 Mica，Windows 10 上标题栏和侧栏同色 | |
 | 12.5 | 按 `Ctrl+Alt+B` | 侧栏收起，再按一次展开 | |
 | 12.6 | 设置 → 通用 →「位置」：把总工作区换到另一个文件夹，给 Bot 发消息；再把数据位置换到一个空文件夹 | 总工作区换完，Bot 的下一轮在新文件夹里；数据复制完 App 自己重启，团队和对话都在，「位置」里是新的数据位置，旧文件夹还在 | |
 | 12.7 | 装上一个发布版本的 App，打开它，等它提示新版本已经下载好，选「立即重启」 | App 关掉后自己装好新版并重新打开；关于页里是新版本号；团队都在 | |
-| 12.8 | 再装一次上一个版本，等下载好的提示，选「先不重启」，从托盘退出 App，等半分钟再打开 | 打开的是新版 | |
+| 12.8 | 再装一次上一个版本，等下载好的提示，选「稍后」，退出 App，等半分钟再打开 | 打开的是新版 | |
 
 ## 13. 桌面应用（macOS）
 
@@ -163,20 +159,8 @@ DSH Desktop 和桌面应用各做一遍。
 | # | 步骤 | 期望 | 结果 |
 |---|---|---|---|
 | 13.1 | 发布 Release，等工作流传完文件 | Release 里有 arm64 和 x64 两个 zip | |
-| 13.2 | 用 Safari 从 Release 页下载这台 Mac 的 zip（Safari 会自动解压），把 DS Bot 拖到「应用程序」，第一次打开 | Gatekeeper 拦下，不说「已损坏」；到「系统设置 → 隐私与安全性」点「仍要打开」后能打开 | |
-| 13.3 | 第一次打开：启动窗口出现（盘够时没有位置行）；有 DSH 团队时选复制；给一个 Bot 发消息 | 团队、对话、模型设置都在；收到回复；关于页写「随 DS Bot 应用一起更新。」 | |
+| 13.2 | 用 Safari 从 Release 页下载这台 Mac 的 zip（Safari 会自动解压），把 ChemClaw 拖到「应用程序」，第一次打开 | Gatekeeper 拦下，不说「已损坏」；到「系统设置 → 隐私与安全性」点「仍要打开」后能打开 | |
+| 13.3 | 第一次打开：选数据位置和总工作区；有 DSH 团队时选复制；给一个 Bot 发消息 | 团队、对话、模型设置都在；收到回复；关于页写「随 ChemClaw 应用一起更新。」 | |
 | 13.4 | 设置 → 通用 →「位置」：把总工作区换到另一个文件夹，给 Bot 发消息；再把数据位置换到一个空文件夹 | 总工作区换完，Bot 的下一轮在新文件夹里；数据复制完 App 自己重启，团队和对话都在，「位置」里是新的数据位置，旧文件夹还在 | |
-| 13.5 | 关闭窗口，再从托盘或 Dock 重新打开；最后从托盘选「退出 DS Bot」 | 第一次关窗提示留在托盘继续运行，确认后窗口隐藏、引擎照常；点 Dock 图标或托盘「打开 DS Bot」窗口回来；托盘「退出 DS Bot」才完全退出 | |
+| 13.5 | 关闭窗口 | 应用退出，Dock 里不留着 | |
 | 13.6 | 装上一个发布版本的 App 并打开，等新版提示后点「下载」 | 打开这次 Release 的发布页；应用不自己安装新版 | |
-
-## 14. 手机 App（Android）
-
-APK 用上传密钥签名，密钥放在仓库的 `ANDROID_KEYSTORE_BASE64`、`ANDROID_KEYSTORE_PASSWORD`、`ANDROID_KEY_ALIAS` 三个 secret 里。以后的每个 APK 都要用同一把密钥，否则 Android 不让覆盖安装。缺 secret 时 Release 的「Phone app (Android)」任务会失败。
-
-| # | 步骤 | 期望 | 结果 |
-|---|---|---|---|
-| 14.1 | 发布 Release，等工作流传完文件 | Release 里有 `DS-Bot-<版本>-android.apk`，下载表里有 Android 一行 | |
-| 14.2 | 在电脑的 DS Bot 里打开 设置 → 手机，打开「手机访问」 | 服务器是 `wss://relay.dsbot.app/v1/link`，状态变成已开 | |
-| 14.3 | 在一台没装过 DS Bot 的 Android 手机上，从 Release 页下载 APK 并安装，打开后用相机扫电脑上的二维码 | 能装上；扫码后配对成功，进入团队 | |
-| 14.4 | 关掉 Wi-Fi，用移动数据给一个 Bot 发消息；打开一张聊天里的照片 | 收到回复；照片先显示预览，点开后显示原图 | |
-| 14.5 | 装着上一个发布版本的 APK 时，装这一版 | 直接覆盖安装，配对还在 | |

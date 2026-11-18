@@ -9,7 +9,7 @@
 
 ## 关闭
 
-- `Fixes #N` 只在 PR 合进**默认分支 `main`** 时生效。合进 `dev` 的修复不会关 Issue，这是故意的：Issue 开着表示「`dev` 已修，等发版」。发版的 PR 要在正文里列出这一批所有的 `Fixes #N`。
+- `Fixes #N` 只在 PR 合进**默认分支 `main`** 时生效。ChemClaw 公开仓以 `main` 为集成分支；合进 `main` 后带 `Fixes #N` 的 Issue 会关闭。
 - 关闭原因只有两种：`completed`（修好了、答复了）和 `not planned`（重复、上游、不做、缺信息到期）。`gh issue close` 的 `--reason` 要加引号：`--reason "not planned"`。
 
 ## 转讨论

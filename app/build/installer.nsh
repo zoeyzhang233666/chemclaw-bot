@@ -9,57 +9,41 @@
 ; phantom language table (makensis warning 6040, treated as error).
 !macro customHeader
   !ifdef LANG_SIMPCHINESE
-    LangString dsbInstDirNotWritable ${LANG_SIMPCHINESE} "无法写入「$dsbCheckTarget」。请换一个位置。"
+    LangString chemInstDirNotWritable ${LANG_SIMPCHINESE} "无法写入「$chemCheckTarget」。请换一个位置。"
   !endif
   !ifdef LANG_ENGLISH
-    LangString dsbInstDirNotWritable ${LANG_ENGLISH} "Cannot write to $dsbCheckTarget. Choose another location."
+    LangString chemInstDirNotWritable ${LANG_ENGLISH} "Cannot write to $chemCheckTarget. Choose another location."
   !endif
 !macroend
 
-; #626: the installer never asks for administrator rights, so a folder the user
+; Upstream DS-Bot #626/#630: the installer never asks for administrator rights, so a folder the user
 ; cannot write to only fails halfway through the install, with a misleading
 ; error. A content-less page between the directory page and the install checks
 ; that the chosen folder can be created and written to, and sends the user back
 ; to the directory page when it cannot.
 !macro customPageAfterChangeDir
   !ifdef allowToChangeInstallationDirectory
-    Var /GLOBAL dsbCheckTarget
+    Var /GLOBAL chemCheckTarget
 
-    ; The builder's default instFilesPre appends APP_FILENAME when the chosen path
-    ; lacks the new product name. An upgrade must keep the registered folder instead.
-    !define /redef MUI_PAGE_CUSTOMFUNCTION_PRE dsbInstFilesPre
+    Page custom chemCheckInstDir
 
-    Function dsbResolveInstDir
-      StrCpy $dsbCheckTarget $INSTDIR
-      ReadRegStr $0 HKCU "${INSTALL_REGISTRY_KEY}" InstallLocation
-      ${If} $0 != ""
-      ${AndIf} $0 == $INSTDIR
-        Return
-      ${EndIf}
-      Push $INSTDIR
-      Call instFilesPre
-      StrCpy $dsbCheckTarget $INSTDIR
-      Pop $INSTDIR
-    FunctionEnd
-
-    Function dsbInstFilesPre
-      Call dsbResolveInstDir
-      StrCpy $INSTDIR $dsbCheckTarget
-    FunctionEnd
-
-    Page custom dsbCheckInstDir
-
-    Function dsbCheckInstDir
+    Function chemCheckInstDir
       ${if} ${isUpdated}
         Abort
       ${endif}
 
-      ; Probe the same destination that the install page will use.
-      Call dsbResolveInstDir
+      ; instFilesPre appends ${APP_FILENAME} to $INSTDIR only after this page,
+      ; so the same rule is applied here on a copy and $INSTDIR stays untouched.
+      ${StrContains} $0 "${APP_FILENAME}" $INSTDIR
+      ${if} $0 == ""
+        StrCpy $chemCheckTarget "$INSTDIR\${APP_FILENAME}"
+      ${else}
+        StrCpy $chemCheckTarget $INSTDIR
+      ${endif}
 
       ; $R1: the nearest ancestor that exists. Folders this check creates are
       ; removed again below, and only as far up as this ancestor.
-      StrCpy $R1 $dsbCheckTarget
+      StrCpy $R1 $chemCheckTarget
       ${Do}
         ${If} ${FileExists} "$R1"
           ${ExitDo}
@@ -74,16 +58,16 @@
 
       ; what the install does right after this: create the folder, write files
       StrCpy $R3 0
-      ${IfNot} ${FileExists} "$dsbCheckTarget"
+      ${IfNot} ${FileExists} "$chemCheckTarget"
         ClearErrors
-        CreateDirectory "$dsbCheckTarget"
+        CreateDirectory "$chemCheckTarget"
         ${If} ${Errors}
           StrCpy $R3 1
         ${EndIf}
       ${EndIf}
       ${If} $R3 == 0
         ClearErrors
-        GetTempFileName $R2 "$dsbCheckTarget"
+        GetTempFileName $R2 "$chemCheckTarget"
         ${If} ${Errors}
         ${OrIf} $R2 == ""
           StrCpy $R3 1
@@ -97,7 +81,7 @@
         ${EndIf}
       ${EndIf}
 
-      StrCpy $R4 $dsbCheckTarget
+      StrCpy $R4 $chemCheckTarget
       ${DoWhile} $R4 != $R1
         RMDir "$R4"
         ${StdUtils.GetParentPath} $R2 "$R4"
@@ -109,7 +93,7 @@
       ${Loop}
 
       ${If} $R3 != 0
-        MessageBox MB_OK|MB_ICONEXCLAMATION "$(dsbInstDirNotWritable)"
+        MessageBox MB_OK|MB_ICONEXCLAMATION "$(chemInstDirNotWritable)"
         SendMessage $HWNDPARENT 0x408 -1 0
       ${EndIf}
       Abort

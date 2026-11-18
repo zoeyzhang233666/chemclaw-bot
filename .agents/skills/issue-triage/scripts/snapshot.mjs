@@ -9,7 +9,7 @@ import { join, resolve } from 'node:path'
 const args = process.argv.slice(2)
 const option = (name, fallback) => (args.includes(name) ? args[args.indexOf(name) + 1] : fallback)
 const out = resolve(option('--out', join(tmpdir(), 'issue-triage')))
-const repo = option('--repo', 'Fei2411/DS-Bot')
+const repo = option('--repo', 'zoeyzhang233666/chemclaw-bot')
 
 const run = (cmd, cmdArgs) => execFileSync(cmd, cmdArgs, { encoding: 'utf8', maxBuffer: 1 << 28 })
 const gh = cmdArgs => JSON.parse(run('gh', [...cmdArgs, '--repo', repo]))
@@ -31,9 +31,9 @@ const days = iso => Math.floor((Date.now() - new Date(iso).getTime()) / DAY)
 const pullRefs = new Map()
 for (const pull of pulls) for (const n of refsIn(`${pull.title}\n${pull.body}`)) pullRefs.set(n, [...(pullRefs.get(n) ?? []), pull.number])
 
-// Commits on dev and main that name an issue: the cheapest evidence that it is fixed.
+// Commits on main that name an issue: the cheapest evidence that it is fixed.
 const commitRefs = new Map()
-for (const branch of ['origin/dev', 'origin/main']) {
+for (const branch of ['origin/main']) {
   let log = ''
   try { log = run('git', ['log', branch, '-n', '3000', '--format=%h%x1f%s%x1f%b%x1e']) } catch { continue }
   for (const entry of log.split('\x1e')) {

@@ -8,6 +8,9 @@ import { dump, load } from 'js-yaml'
 import { parse } from 'yaml'
 import { copyTree, disk, within } from './copy-tree.mjs'
 
+const PROFILE = 'chemclaw'
+const TEAM_FOLDER = 'chemclaw'
+
 export { within }
 
 const { existsSync, readdirSync, readFileSync, statSync } = disk
@@ -50,7 +53,15 @@ export function sessionIdsOf(team) {
  * @returns {{ from: string, team: any, bots: number, rooms: number, profiles: { name: string, rows: any[] }[] } | undefined}
  */
 export function findTeam(from) {
-  const statePath = join(from, 'bot', 'state.json')
+  return findTeamIn(from, 'bot')
+}
+
+export function findChemClawTeam(from) {
+  return findTeamIn(from, TEAM_FOLDER)
+}
+
+function findTeamIn(from, folder) {
+  const statePath = join(from, folder, 'state.json')
   if (!existsSync(statePath)) return undefined
   const team = readJson(statePath)
   const bots = Object.keys(team.bots ?? {}).length
@@ -229,8 +240,8 @@ export function newerSessions(from, team) {
  * @returns {Promise<{ copied: string[], newer: string[] }>} the ids copied, and those left for their newer format
  */
 export async function restoreSessions(to, signal) {
-  const record = join(to, 'bot', 'imported.json')
-  const statePath = join(to, 'bot', 'state.json')
+  const record = join(to, TEAM_FOLDER, 'imported.json')
+  const statePath = join(to, TEAM_FOLDER, 'state.json')
   const none = { copied: [], newer: [] }
   if (!existsSync(record) || !existsSync(statePath)) return none
   const { from } = readJson(record)
@@ -288,11 +299,11 @@ async function copyKey(from, to, name) {
 }
 
 async function writeModelRows(to, rows) {
-  const file = join(to, 'profiles', 'ds-bot', 'cordis.patch.yml')
+  const file = join(to, 'profiles', PROFILE, 'cordis.patch.yml')
   const current = existsSync(file) ? load(await readFile(file, 'utf8'), { schema: entryListSchema }) : undefined
   const ids = new Set(rows.map(row => row.id))
   const kept = Array.isArray(current) ? current.filter(row => !ids.has(row?.id)) : []
-  await mkdir(join(to, 'profiles', 'ds-bot'), { recursive: true })
+  await mkdir(join(to, 'profiles', PROFILE), { recursive: true })
   await writeFile(file, dump([...kept, ...rows], { schema: entryListSchema }))
 }
 
@@ -312,7 +323,7 @@ async function writeModelRows(to, rows) {
 export async function importTeam({ from, to, workspace, profile, dsh, signal, leaveRegenerable = false, skipWork = false, onProgress }) {
   const found = findTeam(from)
   if (found === undefined) throw new Error(`There is no Bot team in ${from}`)
-  const present = existsSync(join(to, 'bot', 'state.json')) ? readJson(join(to, 'bot', 'state.json')) : undefined
+  const present = existsSync(join(to, TEAM_FOLDER, 'state.json')) ? readJson(join(to, TEAM_FOLDER, 'state.json')) : undefined
   if (Object.keys(present?.bots ?? {}).length > 0) throw new Error(`${to} already has a Bot team`)
   for (const name of (existsSync(to) ? readdirSync(to) : []).filter(entry => /^\.import-\d+$/u.test(entry))) {
     await rm(join(to, name), { recursive: true, force: true })
@@ -330,13 +341,13 @@ export async function importTeam({ from, to, workspace, profile, dsh, signal, le
 async function copyThroughStage({ found, from, to, workspace, profile, dsh, signal, stage, leaveRegenerable, skipWork, seen }) {
   const oldBot = join(from, 'bot')
   signal?.throwIfAborted()
-  await cpSeen(oldBot, join(stage, 'bot'), { recursive: true, seen, filter: path => !LEFT_BEHIND.has(relative(oldBot, path).split(/[\\/]/u)[0]) })
-  const team = readJson(join(stage, 'bot', 'state.json'))
+  await cpSeen(oldBot, join(stage, TEAM_FOLDER), { recursive: true, seen, filter: path => !LEFT_BEHIND.has(relative(oldBot, path).split(/[\\/]/u)[0]) })
+  const team = readJson(join(stage, TEAM_FOLDER, 'state.json'))
   // The new data location registers its own team workspace. A DSH Agent's Sessions do not move
   // to a fresh part, so they would go on working in the old team folder in the user's DSH home.
   delete team.workspaceId
   team.agents = {}
-  await writeFile(join(stage, 'bot', 'state.json'), JSON.stringify(team, null, 2))
+  await writeFile(join(stage, TEAM_FOLDER, 'state.json'), JSON.stringify(team, null, 2))
   const { found: sessions, missing } = sessionDirs(from, sessionIdsOf(found.team))
   signal?.throwIfAborted()
   await copySessionDirs(from, stage, sessions, signal, seen)
@@ -373,9 +384,9 @@ async function copyThroughStage({ found, from, to, workspace, profile, dsh, sign
     ...(skipWork ? { workFiles: 'skipped' } : leaveRegenerable ? { workFiles: 'regenerable left out' } : {}),
   }
   signal?.throwIfAborted()
-  await writeFile(join(stage, 'bot', 'imported.json'), `${JSON.stringify(summary, null, 2)}\n`)
+  await writeFile(join(stage, TEAM_FOLDER, 'imported.json'), `${JSON.stringify(summary, null, 2)}\n`)
   // Until this rename the data has no Bot team, so a copy that stopped can run again.
-  await rm(join(to, 'bot'), { recursive: true, force: true })
-  await rename(join(stage, 'bot'), join(to, 'bot'))
+  await rm(join(to, TEAM_FOLDER), { recursive: true, force: true })
+  await rename(join(stage, TEAM_FOLDER), join(to, TEAM_FOLDER))
   return summary
 }

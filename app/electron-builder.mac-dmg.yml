@@ -1,0 +1,26 @@
+# Finder installation layout used by formal DMG packaging and preview builds.
+# A DMG changes the installation layout, not Gatekeeper's trust assessment.
+# Keep ZIP compatibility alongside the DMG.
+extends: ./electron-builder.yml
+mac:
+  target: [dmg, zip]
+  notarize: false
+dmg:
+  title: ChemClaw ${version}
+  format: UDZO
+  filesystem: HFS+
+  # Background is generated from SVG in 1x and Retina variants before DMG packing.
+  background: build/dmg-background.png
+  window:
+    width: 540
+    height: 380
+  iconSize: 96
+  iconTextSize: 14
+  contents:
+    - x: 140
+      y: 180
+      type: file
+    - x: 400
+      y: 180
+      type: link
+      path: /Applications

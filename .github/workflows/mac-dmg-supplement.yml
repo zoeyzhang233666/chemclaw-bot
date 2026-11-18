@@ -1,0 +1,101 @@
+name: Supplement published Mac DMGs
+on:
+  push:
+    branches: [fix/118-mac-dmg-release]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing stable release tag
+        required: true
+        default: v0.3.1
+        type: string
+      publish:
+        description: Add verified DMGs to the existing release without replacing assets
+        default: false
+        type: boolean
+permissions:
+  contents: read
+env:
+  GH_REPO: ${{ github.repository }}
+  RELEASE_TAG: ${{ inputs.tag || 'v0.3.1' }}
+jobs:
+  build:
+    name: Verify existing-app DMG (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: arm64, runner: macos-15 }
+          - { arch: x64, runner: macos-26-intel }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci --no-fund --no-audit
+        working-directory: app
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - name: Build from the released ZIP and verify app identity and Finder layout
+        run: node .github/scripts/mac-dmg-supplement.mjs build ${{ matrix.arch }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Save verified DMG and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-dmg-supplement-${{ matrix.arch }}
+          path: |
+            ${{ runner.temp }}/mac-dmg-supplement/output/*.dmg
+            ${{ runner.temp }}/mac-dmg-supplement/input.json
+            ${{ runner.temp }}/mac-dmg-supplement/check/summary.json
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - name: Save native layout evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-dmg-evidence-${{ matrix.arch }}
+          path: |
+            ${{ runner.temp }}/mac-dmg-supplement/check/*.png
+            ${{ runner.temp }}/mac-dmg-supplement/check/summary.json
+            ${{ runner.temp }}/mac-dmg-supplement/input.json
+          if-no-files-found: warn
+          retention-days: 7
+  publish:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: mac-dmg-supplement-arm64
+          path: ${{ runner.temp }}/verified-dmgs/arm64
+      - uses: actions/download-artifact@v4
+        with:
+          name: mac-dmg-supplement-x64
+          path: ${{ runner.temp }}/verified-dmgs/x64
+      - name: Add both verified DMGs and preserve existing assets
+        run: node .github/scripts/mac-dmg-supplement.mjs publish "$RUNNER_TEMP/verified-dmgs"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-dmg-publication-record
+          path: ${{ runner.temp }}/mac-dmg-supplement/published.json
+          if-no-files-found: error

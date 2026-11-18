@@ -20,11 +20,11 @@ const executable = given || packedExecutable()
 
 function packedExecutable() {
   const out = join(root, 'dist-pack')
-  if (process.platform === 'win32') return join(out, 'win-unpacked', 'DS Bot.exe')
+  if (process.platform === 'win32') return join(out, 'win-unpacked', 'ChemClaw.exe')
   // executableName in electron-builder.yml.
   if (process.platform === 'linux') return join(out, 'linux-unpacked', 'dsbot')
   const dir = ['mac-arm64', 'mac'].find(name => existsSync(join(out, name))) ?? 'mac'
-  return join(out, dir, 'DS Bot.app', 'Contents', 'MacOS', 'DS Bot')
+  return join(out, dir, 'ChemClaw.app', 'Contents', 'MacOS', 'ChemClaw')
 }
 
 if (!existsSync(executable)) {
@@ -44,7 +44,7 @@ if (!existsSync(executable)) {
     join('primary-runtime', 'dependencies', 'node', 'bin', windows ? 'node.exe' : 'node'),
     join('office-skills', 'office', 'SKILL.md'),
     join(unpacked, 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js'),
-    join(unpacked, 'node_modules', 'ds-bot', 'office.js'),
+    join(unpacked, 'node_modules', 'chemclaw-bot', 'office.js'),
   ]
   const missing = required.filter((entry) => !existsSync(join(resources, entry)))
   // macOS carries the signed "DSH Computer Use" helper outside the asar, in a
@@ -274,7 +274,7 @@ function checkComputerUse(app) {
 }
 
 function startMock() {
-  const mock = spawn(process.execPath, [join(root, '..', 'ds-bot', 'dev', 'mock-llm.mjs')], {
+  const mock = spawn(process.execPath, [join(root, '..', 'chemclaw-bot', 'dev', 'mock-llm.mjs')], {
     env: { ...process.env, MOCK_PORT: '0', MOCK_LOG: join(work, 'mock.log') }, stdio: ['ignore', 'pipe', 'inherit'],
   })
   children.push(mock)

@@ -5,7 +5,7 @@ import { app } from 'electron'
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
-import { findTeam, userDshHome } from './import.mjs'
+import { findTeam, findChemClawTeam, userDshHome } from './import.mjs'
 import { installFolder } from './move-data.mjs'
 import { freeSpace } from './place.mjs'
 import { langOf, t } from './start/text.mjs'
@@ -57,12 +57,12 @@ export async function pickRoot(from, signal, ui) {
 }
 
 /** The places a first start offers. */
-export const defaultPlaces = () => ({ dataDir: join(homedir(), '.ds-bot'), workspace: join(homedir(), 'DS Bot') })
+export const defaultPlaces = () => ({ dataDir: join(homedir(), '.chemclaw'), workspace: join(homedir(), 'ChemClaw') })
 
 /** The Bot team in a data folder, if it has one. */
 export function teamIn(dataDir) {
   try {
-    return findTeam(dataDir)
+    return findChemClawTeam(dataDir)
   } catch {
     return undefined
   }
@@ -74,7 +74,7 @@ export function teamIn(dataDir) {
  */
 export function teamsAt(dataDir = defaultPlaces().dataDir) {
   const team = teamIn(dataDir)
-  return { team, offered: team === undefined && teamIn(userDshHome()) !== undefined }
+  return { team, offered: team === undefined && findTeam(userDshHome()) !== undefined }
 }
 
 /**

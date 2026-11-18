@@ -85,9 +85,9 @@ const HOST_CREDENTIALS = [
 // The app's data location after the Host's first start, and the folder chosen for the Bots' files.
 function newHome(root) {
   const to = join(root, 'ds-bot')
-  write(join(to, 'bot', 'state.json'), JSON.stringify({ version: 1, mainBotIds: [], bots: {}, rooms: {} }))
+  write(join(to, 'chemclaw', 'state.json'), JSON.stringify({ version: 1, mainBotIds: [], bots: {}, rooms: {} }))
   write(join(to, '.credentials.yaml'), HOST_CREDENTIALS)
-  write(join(to, 'profiles', 'ds-bot', 'cordis.patch.yml'), '- id: llm-pi-ai\n  config:\n    providers: {}\n- id: webserver\n  config:\n    port: 0\n- id: ui-settings-general\n  config:\n    welcomeNoticeVersion: seen\n')
+  write(join(to, 'profiles', 'chemclaw', 'cordis.patch.yml'), '- id: llm-pi-ai\n  config:\n    providers: {}\n- id: webserver\n  config:\n    port: 0\n- id: ui-settings-general\n  config:\n    welcomeNoticeVersion: seen\n')
   const workspace = join(root, 'DS Bot')
   write(join(workspace, 'kept.txt'), 'new kept')
   return { to, workspace }
@@ -105,12 +105,12 @@ describe('importTeam', () => {
   after(() => { rmSync(root, { recursive: true, force: true }) })
 
   test('copies the team without its lock, its turns in flight, its workspace, its old workspace id or Agents', () => {
-    const team = readJson(join(to, 'bot', 'state.json'))
+    const team = readJson(join(to, 'chemclaw', 'state.json'))
     assert.deepEqual(Object.keys(team.bots), ['session-a', 'session-b'])
     assert.equal(team.workspaceId, undefined)
     assert.deepEqual(team.agents, {})
-    assert.equal(readFileSync(join(to, 'bot', 'memory', 'session-a.md'), 'utf8'), 'remember')
-    for (const name of ['state.lock', 'inflight.json', 'workspace']) assert.equal(existsSync(join(to, 'bot', name)), false, name)
+    assert.equal(readFileSync(join(to, 'chemclaw', 'memory', 'session-a.md'), 'utf8'), 'remember')
+    for (const name of ['state.lock', 'inflight.json', 'workspace']) assert.equal(existsSync(join(to, 'chemclaw', name)), false, name)
   })
 
   test('copies every Session the team names into the same folder group, and only those', () => {
@@ -128,7 +128,7 @@ describe('importTeam', () => {
     assert.equal(readFileSync(join(to, 'attachments', 'ab', 'cdef'), 'utf8'), 'file')
     assert.equal(readFileSync(join(to, '.credentials.yaml'), 'utf8'), 'DEEPSEEK_API_KEY: fake\n')
     assert.equal(readFileSync(join(to, '.env'), 'utf8'), 'X=1\n')
-    const patch = parse(readFileSync(join(to, 'profiles', 'ds-bot', 'cordis.patch.yml'), 'utf8'))
+    const patch = parse(readFileSync(join(to, 'profiles', 'chemclaw', 'cordis.patch.yml'), 'utf8'))
     // The data location's other rows stay, such as the Settings page's own.
     assert.deepEqual(patch.map(row => row.id), ['webserver', 'ui-settings-general', 'llm-pi-ai', 'agent-default-model'])
     assert.deepEqual(patch[1].config, { welcomeNoticeVersion: 'seen' })
@@ -141,7 +141,7 @@ describe('importTeam', () => {
   })
 
   test('records the import, leaves nothing staged and changes nothing in the old home', () => {
-    const record = readJson(join(to, 'bot', 'imported.json'))
+    const record = readJson(join(to, 'chemclaw', 'imported.json'))
     assert.deepEqual({ ...record, at: undefined }, {
       from, at: undefined, dsh: '0.2.0-rc.2', bots: 2, rooms: 1, sessions: 6, missingSessions: ['session-gone'],
       keys: ['.credentials.yaml', '.env'], keptKeys: [], modelSettings: 'desktop',
@@ -169,7 +169,7 @@ describe('a copy that stopped', () => {
     write(join(to, 'sessions', '--site--', 'session-b', 'session.v4.jsonl.zstd'), 'junk')
     const summary = await importTeam({ from, to, workspace })
     assert.equal(summary.sessions, 6)
-    assert.deepEqual(Object.keys(readJson(join(to, 'bot', 'state.json')).bots), ['session-a', 'session-b'])
+    assert.deepEqual(Object.keys(readJson(join(to, 'chemclaw', 'state.json')).bots), ['session-a', 'session-b'])
     assert.equal(readFileSync(join(to, 'sessions', '--site--', 'session-b', 'session.v4.jsonl.zstd'), 'utf8'), 'session-b')
     assert.deepEqual(staged(to), [])
   })
@@ -178,7 +178,7 @@ describe('a copy that stopped', () => {
     const to = join(root, 'stopped')
     mkdirSync(to, { recursive: true })
     await assert.rejects(importTeam({ from, to, workspace: join(root, 'stopped-files'), signal: AbortSignal.abort() }), { name: 'AbortError' })
-    assert.equal(existsSync(join(to, 'bot')), false)
+    assert.equal(existsSync(join(to, 'chemclaw')), false)
     assert.deepEqual(staged(to), [])
   })
 
@@ -194,12 +194,12 @@ describe('a copy that stopped', () => {
       },
     }
     await assert.rejects(importTeam({ from, to, workspace, signal }), { name: 'AbortError' })
-    assert.equal(Object.keys(readJson(join(to, 'bot', 'state.json')).bots).length, 0)
+    assert.equal(Object.keys(readJson(join(to, 'chemclaw', 'state.json')).bots).length, 0)
     assert.equal(existsSync(movedIn), true)
     assert.deepEqual(staged(to), [])
     const summary = await importTeam({ from, to, workspace })
     assert.equal(summary.sessions, 6)
-    assert.deepEqual(Object.keys(readJson(join(to, 'bot', 'state.json')).bots), ['session-a', 'session-b'])
+    assert.deepEqual(Object.keys(readJson(join(to, 'chemclaw', 'state.json')).bots), ['session-a', 'session-b'])
     assert.equal(readFileSync(join(movedIn, 'session.v4.jsonl.zstd'), 'utf8'), 'session-a')
     assert.deepEqual(staged(to), [])
   })
@@ -211,7 +211,7 @@ describe('a copy that stopped', () => {
     write(workspace, 'not a folder')
     await assert.rejects(importTeam({ from, to, workspace }))
     assert.deepEqual(staged(to), [])
-    assert.equal(Object.keys(readJson(join(to, 'bot', 'state.json')).bots).length, 0)
+    assert.equal(Object.keys(readJson(join(to, 'chemclaw', 'state.json')).bots).length, 0)
   })
 })
 
@@ -241,7 +241,7 @@ describe('keys the data location has already', () => {
     assert.equal(readFileSync(join(to, '.env'), 'utf8'), 'X=1\n')
     assert.deepEqual(summary.keys, ['.env'])
     assert.deepEqual(summary.keptKeys, ['.credentials.yaml'])
-    assert.deepEqual(readJson(join(to, 'bot', 'imported.json')).keptKeys, ['.credentials.yaml'])
+    assert.deepEqual(readJson(join(to, 'chemclaw', 'imported.json')).keptKeys, ['.credentials.yaml'])
   })
 
   test('keeps one with an account sign-in, in the old flat layout or that does not read as YAML', async () => {
@@ -337,7 +337,7 @@ describe('JS expressions in profile patches', () => {
     ].join('\n'))
     const { to, workspace } = newHome(root)
     // DSH writes the data location's own patch too, and it may hold a !!js value.
-    write(join(to, 'profiles', 'ds-bot', 'cordis.patch.yml'), [
+    write(join(to, 'profiles', 'chemclaw', 'cordis.patch.yml'), [
       '- id: webserver', '  config:', '    port: 0',
       '- id: ui-settings-general', '  config:', "    welcomeNoticeVersion: !!js process.env.NOTICE ?? 'seen'", '',
     ].join('\n'))
@@ -352,7 +352,7 @@ describe('JS expressions in profile patches', () => {
       process.off('warning', onWarning)
     }
     assert.deepEqual(warnings, [])
-    const text = readFileSync(join(to, 'profiles', 'ds-bot', 'cordis.patch.yml'), 'utf8')
+    const text = readFileSync(join(to, 'profiles', 'chemclaw', 'cordis.patch.yml'), 'utf8')
     assert.match(text, /!!js/u)
     const rows = Object.fromEntries(load(text, { schema: entryListSchema }).map(row => [row.id, row]))
     assert.deepEqual(rows['agent-default-model'].config.model, { __jsExpr: "process.env.X ?? 'deepseek-official/deepseek-flash'" })

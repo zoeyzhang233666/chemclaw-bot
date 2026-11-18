@@ -2,18 +2,18 @@
 import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 
-export const PRODUCT_NAME = 'DS Bot'
-export const APP_ID = 'io.github.fei2411.dsbot'
-export const LEGACY_PRODUCT_NAME = 'DeepSeek Bot'
+export const PRODUCT_NAME = 'ChemClaw'
+export const APP_ID = 'io.github.fei2411.chemclaw'
+export const LEGACY_PRODUCT_NAME = 'ChemClaw'
 export const LEGACY_ENGINE = 'deepseek-bot-engine'
-export const LEGACY_ARTIFACT_PREFIX = 'DeepSeek-Bot'
+export const LEGACY_ARTIFACT_PREFIX = 'ChemClaw'
 
 /** Keep the shell data and Chromium encryption identity of an existing installation. */
 export function configureIdentity(app, { env = process.env, platform = process.platform, exists = existsSync, mkdir = mkdirSync } = {}) {
   const current = app.getPath('userData')
   const explicit = env.DS_BOT_SHELL_DATA
   // An explicitly isolated run must never discover an installed application.
-  const legacy = explicit || env.DS_BOT_HOME ? undefined : join(app.getPath('appData'), LEGACY_PRODUCT_NAME)
+  const legacy = explicit || env.DS_BOT_HOME || current === join(app.getPath('appData'), LEGACY_PRODUCT_NAME) ? undefined : join(app.getPath('appData'), LEGACY_PRODUCT_NAME)
   const reuse = legacy !== undefined && exists(legacy) && !exists(join(current, 'locations.json'))
   const userData = explicit || (reuse ? legacy : current)
   mkdir(userData, { recursive: true })

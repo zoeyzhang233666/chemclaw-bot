@@ -1,32 +1,29 @@
 name: Release
 
-# Publishes ds-bot to npm when a GitHub release is published, then attaches the desktop app's
-# Windows installer, macOS zips and Linux packages, and the phone app's Android APK, to the release. Windows and the Linux
-# AppImage update from latest.yml / latest-linux.yml; macOS and the Linux deb open the release
-# page for a manual download.
+# Releases chemclaw-bot: attach the npm pack .tgz and ChemClaw desktop installers to the
+# GitHub release. Windows updates from latest.yml; macOS opens the release page for a manual download.
 #
-# npm Trusted Publishing: npm trusts this workflow through GitHub's OIDC token, so the
-# repository keeps no npm token, and every version gets a provenance statement. It is set
-# up once on npmjs.com: package ds-bot → Settings → Trusted Publisher → GitHub Actions,
-# user Fei2411, repository DS-Bot, workflow release.yml, no environment.
+# npm Trusted Publishing (optional): set repository variable ENABLE_NPM_PUBLISH=true after
+# configuring Trusted Publisher on npmjs.com for package chemclaw-bot → GitHub Actions,
+# owner zoeyzhang233666, repository chemclaw-bot, workflow release.yml, no environment.
+# Until then the Publish step is skipped; the .tgz is still attached to the release.
 #
-# The release tag must be v<version in ds-bot/package.json> and must point at a commit on
-# main. A version with a pre-release part (0.2.0-rc.1) goes to the npm tag "next", so that
-# "latest" stays on the last stable version.
-#
-# Publish the release with "Set as latest release" turned off: the last job marks it Latest
-# once every package, the download table and SHA256SUMS.txt are on it, so a releases/latest
-# link never finds a release whose installer is still being built.
+# The release tag must be v<version in chemclaw-bot/package.json> and must point at a commit on
+# main. A version with a pre-release part (0.2.0-rc.1) goes to the npm tag "next".
 
 on:
-  release:
-    types: [published]
+  push:
+    tags: ['v*']
   workflow_dispatch:
     inputs:
       dry_run:
         description: Run every check and pack the package, but do not publish
         type: boolean
         default: true
+      benchmark_mac_zip:
+        description: Compare macOS ZIP compression time and size (dry run only)
+        type: boolean
+        default: false
 
 permissions:
   # write: attach the package file to the release.
@@ -38,14 +35,48 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  market-runtime:
+    name: Bundle market data (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: win32-x64, runner: windows-latest }
+          - { target: darwin-arm64, runner: macos-latest }
+          - { target: darwin-x64, runner: macos-26-intel }
+          - { target: linux-x64, runner: ubuntu-latest }
+    defaults:
+      run:
+        working-directory: chemclaw-bot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
+      - run: npm ci --no-fund --no-audit
+      - run: npm run runtime:bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: market-runtime-${{ matrix.target }}
+          path: chemclaw-bot/runtime/bundled/*
+          if-no-files-found: error
+          compression-level: 0
+
   publish:
     name: Check and publish
     runs-on: ubuntu-latest
+    needs: market-runtime
     timeout-minutes: 20
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
     defaults:
       run:
         shell: bash
-        working-directory: ds-bot
+        working-directory: chemclaw-bot
     steps:
       - uses: actions/checkout@v4
         with:
@@ -54,17 +85,30 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: chemclaw-bot/package-lock.json
       # Trusted Publishing needs npm 11.5.1 or later.
       - run: npm install -g npm@11.6.2 --no-fund --no-audit
 
       - name: Check the tag and the branch
-        if: github.event_name == 'release'
+        id: release
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         run: |
           version="$(node -p "require('./package.json').version")"
-          if [ "$TAG" != "v$version" ]; then
-            echo "::error::The release tag is $TAG, but ds-bot/package.json has version $version. Tag v$version or change the version."
+          TAG="v$version"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if [ "$DRY_RUN" = true ]; then exit 0; fi
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF_NAME" != "$TAG" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match $TAG."
+            exit 1
+          fi
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_REF" != refs/heads/main ]; then
+            echo "::error::Publish from main."
+            exit 1
+          fi
+          if git rev-parse --verify "refs/tags/$TAG" >/dev/null 2>&1 && [ "$(git rev-list -n 1 "$TAG")" != "$GITHUB_SHA" ]; then
+            echo "::error::$TAG already points at another commit. Use a new version."
             exit 1
           fi
           if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
@@ -77,14 +121,17 @@ jobs:
           version="$(node -p "require('./package.json').version")"
           app="$(node -p "require('../app/package.json').version")"
           if [ "$app" != "$version" ]; then
-            echo "::error::app/package.json has version $app, but ds-bot/package.json has $version. Give both the same version."
+            echo "::error::app/package.json has version $app, but chemclaw-bot/package.json has $version. Give both the same version."
             exit 1
           fi
 
-      # The tests rebuild link.js from ../link and run its Relay Server, which have their own packages.
-      - name: Install the phone link's packages
-        run: npm ci --no-fund --no-audit --prefix ../link
       - run: npm ci --no-fund --no-audit
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: market-runtime-*
+          merge-multiple: true
+          path: chemclaw-bot/runtime/bundled
+      - run: npm ci --no-fund --no-audit --prefix ../link
       - run: npm run harness
       - run: npm test
       - run: node scripts/build-client.mjs --check
@@ -94,8 +141,27 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.dry_run
         run: npm pack --dry-run
 
+      - name: Prepare the draft release
+        if: github.event_name == 'push' || !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          if gh release view "$TAG" --json isDraft --jq .isDraft > "$RUNNER_TEMP/release-draft"; then
+            test "$(cat "$RUNNER_TEMP/release-draft")" = true || { echo '::error::This version is already published. Use a new version.'; exit 1; }
+          else
+            notes="../docs/releases/$TAG.md"
+            prerelease=()
+            if [[ "$TAG" == *-* ]]; then prerelease=(--prerelease); fi
+            if [ -f "$notes" ]; then
+              gh release create "$TAG" --target "$GITHUB_SHA" --draft "${prerelease[@]}" --title "ChemClaw $TAG" --notes-file "$notes"
+            else
+              gh release create "$TAG" --target "$GITHUB_SHA" --draft "${prerelease[@]}" --title "ChemClaw $TAG" --generate-notes
+            fi
+          fi
+
       - name: Publish
-        if: github.event_name == 'release' || (!inputs.dry_run && github.ref == 'refs/heads/main')
+        if: (github.event_name == 'push' || !inputs.dry_run) && vars.ENABLE_NPM_PUBLISH == 'true'
         run: |
           tag="$(node -p "require('./package.json').version.includes('-') ? 'next' : 'latest'")"
           echo "Publishing $(node -p "require('./package.json').version") with the npm tag $tag"
@@ -103,13 +169,13 @@ jobs:
 
       # The release keeps the package file for installs without npm.
       - name: Attach the package to the release
-        if: github.event_name == 'release'
+        if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ steps.release.outputs.tag }}
         run: |
           npm pack
-          gh release upload "$TAG" "ds-bot-$(node -p "require('./package.json').version").tgz" --clobber
+          gh release upload "$TAG" "chemclaw-bot-$(node -p "require('./package.json').version").tgz" --clobber
 
   app-windows:
     name: Desktop app installer (Windows)
@@ -125,32 +191,39 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: market-runtime-win32-x64
+          path: chemclaw-bot/runtime/bundled
       - run: npm ci --no-fund --no-audit
-      - run: node scripts/seed-electron-checksums.mjs
       - run: npm run dist
       - name: Check the packaged app
         run: node scripts/check-packed.mjs
+      - name: Validate Windows PPTX right-sidebar preview
+        run: node scripts/check-packed.mjs --office-preview-only
       - name: Keep the installer for real-device checks
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: DS-Bot-win-x64
-          path: app/dist-pack/DS-Bot-*-win-x64.exe
+          name: ChemClaw-win-x64
+          path: app/dist-pack/ChemClaw-*-win-x64.exe
           retention-days: 7
           if-no-files-found: error
           compression-level: 0
 
       - name: Attach the installer to the release
-        if: github.event_name == 'release'
+        if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ needs.publish.outputs.tag }}
         run: |
-          installer="dist-pack/DS-Bot-$(node -p "require('./package.json').version")-win-x64.exe"
+          installer="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-win-x64.exe"
           gh release upload "$TAG" "$installer" "$installer.blockmap" dist-pack/latest.yml --clobber
 
   app-macos:
-    name: Desktop app zip (macOS ${{ matrix.arch }})
+    name: Desktop app DMG and ZIP (macOS ${{ matrix.arch }})
     needs: publish
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
@@ -169,29 +242,93 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/electron
+            ${{ runner.temp }}/electron-builder-cache
+          key: desktop-tools-v3-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('app/package-lock.json') }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: market-runtime-darwin-${{ matrix.arch }}
+          path: chemclaw-bot/runtime/bundled
       - run: npm ci --no-fund --no-audit
-      - run: node scripts/seed-electron-checksums.mjs
-      - run: npm run dist
-      - name: Check the packaged app
-        run: node scripts/check-packed.mjs
-      - name: Keep the zip for real-device checks
+        env:
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+      - run: npm run pack
+        env:
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-builder-cache
+      - name: Create the Mac ZIP
+        run: |
+          folder=mac
+          if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
+          app="dist-pack/$folder/ChemClaw.app"
+          zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
+          codesign --verify --deep --strict "$app"
+          /usr/bin/time -p ditto -c -k --sequesterRsrc --keepParent --zlibCompressionLevel 6 "$app" "$zip"
+      - name: Create the Mac DMG from the same signed app
+        run: |
+          node scripts/render-dmg-background.mjs
+          folder=mac
+          if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
+          npx --no-install electron-builder --mac dmg --${{ matrix.arch }} --prepackaged "dist-pack/$folder/ChemClaw.app" --config electron-builder.mac-dmg.yml --publish never
+      - name: Install from the zip and check
+        run: |
+          zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
+          target="$RUNNER_TEMP/chemclaw-archive-check"
+          mkdir -p "$target"
+          ditto -x -k "$zip" "$target"
+          app="$target/ChemClaw.app"
+          exe="$app/Contents/MacOS/ChemClaw"
+          codesign --verify --deep --strict "$app"
+          expected="${{ matrix.arch }}"
+          if [ "$expected" = x64 ]; then expected=x86_64; fi
+          file -b "$exe" | grep -F "$expected"
+          node scripts/check-packed.mjs "$exe" "$RUNNER_TEMP/chemclaw-mac-ui/screen" --mac-ui
+          node scripts/check-update.mjs "$exe" 99.0.0
+      - name: Verify the Finder layout and unchanged app inside the DMG
+        run: |
+          dmg="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.dmg"
+          node ../.github/scripts/check-macos-dmg-layout.mjs "$dmg" "$RUNNER_TEMP/chemclaw-dmg-layout" "$RUNNER_TEMP/chemclaw-archive-check/ChemClaw.app"
+      - name: Save macOS UI screenshots (including failures)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos-ui-${{ matrix.arch }}
+          path: |
+            ${{ runner.temp }}/chemclaw-mac-ui/*.png
+            ${{ runner.temp }}/chemclaw-dmg-layout/*.png
+            ${{ runner.temp }}/chemclaw-dmg-layout/summary.json
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Compare ZIP compression
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run && inputs.benchmark_mac_zip
+        run: |
+          folder=mac
+          if [ "${{ matrix.arch }}" = arm64 ]; then folder=mac-arm64; fi
+          node scripts/benchmark-mac-zip.mjs "dist-pack/$folder/ChemClaw.app" "$RUNNER_TEMP/chemclaw-zip-benchmark"
+      - name: Keep the Mac installers for real-device checks
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: DS-Bot-mac-${{ matrix.arch }}
-          path: app/dist-pack/DS-Bot-*-mac-${{ matrix.arch }}.zip
+          name: ChemClaw-mac-${{ matrix.arch }}
+          path: |
+            app/dist-pack/ChemClaw-*-mac-${{ matrix.arch }}.zip
+            app/dist-pack/ChemClaw-*-mac-${{ matrix.arch }}.dmg
           retention-days: 7
           if-no-files-found: error
           compression-level: 0
-      - name: Attach the zip to the release
-        if: github.event_name == 'release'
+      - name: Attach the Mac installers to the release
+        if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ needs.publish.outputs.tag }}
         run: |
-          zip="dist-pack/DS-Bot-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
-          legacy="$(node scripts/legacy-release-assets.mjs "$zip")"
-          gh release upload "$TAG" "$zip" "$legacy" --clobber
+          zip="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.zip"
+          dmg="dist-pack/ChemClaw-$(node -p "require('./package.json').version")-mac-${{ matrix.arch }}.dmg"
+          gh release upload "$TAG" "$zip" "$dmg" --clobber
 
   app-linux:
     name: Desktop app packages (Linux x64)
@@ -207,8 +344,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+          key: desktop-tools-v3-Linux-x64-${{ hashFiles('app/package-lock.json') }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: market-runtime-linux-x64
+          path: chemclaw-bot/runtime/bundled
       - run: npm ci --no-fund --no-audit
-      - run: node scripts/seed-electron-checksums.mjs
       - run: npm run dist
       - name: Check the packaged app
         # Ubuntu 24.04's AppArmor blocks the unprivileged user namespaces that Chromium's
@@ -220,174 +368,49 @@ jobs:
         # The dry run never uploads, so it checks here that every file the release attaches exists.
         run: |
           version="$(node -p "require('./package.json').version")"
-          ls -l "dist-pack/DS-Bot-$version-linux-x86_64.AppImage" "dist-pack/DS-Bot-$version-linux-amd64.deb" dist-pack/latest-linux.yml
+          ls -l "dist-pack/ChemClaw-$version-linux-x86_64.AppImage" "dist-pack/ChemClaw-$version-linux-amd64.deb" dist-pack/latest-linux.yml
       - name: Keep the packages for real-device checks
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: DS-Bot-linux-x64
+          name: ChemClaw-linux-x64
           path: |
-            app/dist-pack/DS-Bot-*-linux-x86_64.AppImage
-            app/dist-pack/DS-Bot-*-linux-amd64.deb
+            app/dist-pack/ChemClaw-*-linux-x86_64.AppImage
+            app/dist-pack/ChemClaw-*-linux-amd64.deb
           retention-days: 7
           if-no-files-found: error
           compression-level: 0
       - name: Attach the packages to the release
-        if: github.event_name == 'release'
+        if: github.event_name == 'push' || !inputs.dry_run
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ needs.publish.outputs.tag }}
         # The AppImage carries its block map inside the file, so there is no .blockmap to attach.
         run: |
           version="$(node -p "require('./package.json').version")"
-          legacy="$(node scripts/legacy-release-assets.mjs "dist-pack/DS-Bot-$version-linux-amd64.deb")"
-          gh release upload "$TAG" "dist-pack/DS-Bot-$version-linux-x86_64.AppImage" "dist-pack/DS-Bot-$version-linux-amd64.deb" "$legacy" dist-pack/latest-linux.yml --clobber
+          gh release upload "$TAG" "dist-pack/ChemClaw-$version-linux-x86_64.AppImage" "dist-pack/ChemClaw-$version-linux-amd64.deb" dist-pack/latest-linux.yml --clobber
 
-  # The phone app's APK, signed with the upload key in the ANDROID_KEYSTORE_BASE64,
-  # ANDROID_KEYSTORE_PASSWORD and ANDROID_KEY_ALIAS secrets. Every later APK must carry
-  # the same key, or Android refuses it as an update. A dry run without the secrets
-  # signs with the debug key, and that APK is for checks only.
-  app-android:
-    name: Phone app (Android)
-    needs: publish
+  complete:
+    name: Publish the complete release
+    needs: [publish, app-windows, app-macos, app-linux]
+    if: github.event_name == 'push' || !inputs.dry_run
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    defaults:
-      run:
-        shell: bash
-        working-directory: mobile
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-      - run: npm ci --no-fund --no-audit --prefix ../link
-      - run: npm ci --no-fund --no-audit
-      - run: npm run typecheck
-      - run: npm test
-      - run: npx expo prebuild --platform android --no-install
-      - name: Build the APK
-        env:
-          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-        run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
-            export DSBOT_ANDROID_KEYSTORE="$RUNNER_TEMP/upload.jks" DSBOT_ANDROID_KEYSTORE_PASSWORD="$KEYSTORE_PASSWORD" DSBOT_ANDROID_KEY_ALIAS="$KEY_ALIAS"
-          elif [ "$GITHUB_EVENT_NAME" = release ]; then
-            echo "::error::The ANDROID_KEYSTORE_BASE64 secret is missing, so the APK cannot be signed for release."
-            exit 1
-          else
-            echo "::warning::No upload key: this dry run signs the APK with the debug key."
-          fi
-          (cd android && ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a,armeabi-v7a)
-          rm -f "$RUNNER_TEMP/upload.jks"
-          version="$(node -p "require('../ds-bot/package.json').version")"
-          mkdir -p dist
-          cp android/app/build/outputs/apk/release/app-release.apk "dist/DS-Bot-$version-android.apk"
-      - name: Check the signature
-        run: |
-          if unzip -l dist/DS-Bot-*-android.apk | grep -Eq 'lib/(x86|x86_64)/'; then
-            echo "::error::Release APK contains x86 simulator binaries."
-            exit 1
-          fi
-          # --min-sdk-version 21 makes apksigner verify the v1 JAR signature too, even though
-          # the app's minSdkVersion is 24 (where Android prefers v2/v3).
-          apksigner="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/apksigner"
-          zipalign="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/zipalign"
-          aapt2="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/aapt2"
-          badging="$("$aapt2" dump badging dist/DS-Bot-*-android.apk)"
-          compile_sdk="$(printf '%s\n' "$badging" | sed -n "s/.*compileSdkVersion='\([0-9]*\)'.*/\1/p" | head -n1)"
-          target_sdk="$(printf '%s\n' "$badging" | sed -n "s/.*targetSdkVersion:'\([0-9]*\)'.*/\1/p" | head -n1)"
-          if [ -z "$compile_sdk" ] || [ -z "$target_sdk" ] || [ "$compile_sdk" -gt "$target_sdk" ]; then
-            echo "::error::Invalid Android SDK levels in APK: compileSdkVersion=$compile_sdk targetSdkVersion=$target_sdk"
-            exit 1
-          fi
-          if ! printf '%s\n' "$badging" | grep -q "android.permission.POST_NOTIFICATIONS"; then
-            echo "::error::Release APK does not declare android.permission.POST_NOTIFICATIONS."
-            exit 1
-          fi
-          "$zipalign" -c -P 16 4 dist/DS-Bot-*-android.apk
-          certs="$("$apksigner" verify --min-sdk-version 21 --verbose --print-certs dist/DS-Bot-*-android.apk)"
-          echo "$certs" | grep -E '(^Verified using v[123] |certificate (DN|SHA-256 digest):)'
-          for scheme in 'v1 scheme (JAR signing): true' 'v2 scheme (APK Signature Scheme v2): true' 'v3 scheme (APK Signature Scheme v3): true'; do
-            if ! echo "$certs" | grep -Fq "Verified using $scheme"; then
-              echo "::error::The APK is missing signature $scheme."
-              exit 1
-            fi
-          done
-          if [ "$GITHUB_EVENT_NAME" = release ] && echo "$certs" | grep -q 'CN=Android Debug'; then
-            echo "::error::The APK is signed with the debug key."
-            exit 1
-          fi
-      - name: Keep the APK for real-device checks
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
-        with:
-          name: DS-Bot-android
-          path: mobile/dist/DS-Bot-*-android.apk
-          retention-days: 7
-          if-no-files-found: error
-          compression-level: 0
-      - name: Attach the APK to the release
-        if: github.event_name == 'release'
+      - name: Verify assets and publish
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
-        run: gh release upload "$TAG" dist/DS-Bot-*-android.apk --clobber
-
-  downloads:
-    name: Download table, checksums and Latest
-    needs: [app-windows, app-macos, app-linux, app-android]
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    defaults:
-      run:
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ needs.publish.outputs.tag }}
         shell: bash
-        working-directory: app
-    env:
-      GH_TOKEN: ${{ github.token }}
-      TAG: ${{ github.event.release.tag_name }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - name: Download the packages from the release
-        if: github.event_name == 'release'
         run: |
-          version="$(node -p "require('./package.json').version")"
-          gh release download "$TAG" --dir "$RUNNER_TEMP/packages" --pattern "DS-Bot-$version-*"
-          gh release view "$TAG" --json body --jq .body > "$RUNNER_TEMP/notes.md"
-      # The dry run has no release, so it checks the table and the checksums on the packages
-      # that the app jobs kept.
-      - name: Download the packages of the dry run
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/download-artifact@v4
-        with:
-          pattern: DS-Bot-*
-          path: ${{ runner.temp }}/packages
-          merge-multiple: true
-      - name: Write the download table and the checksums
-        run: |
-          version="$(node -p "require('./package.json').version")"
-          notes=()
-          if [ -f "$RUNNER_TEMP/notes.md" ]; then notes=("$RUNNER_TEMP/notes.md"); fi
-          node scripts/release-notes.mjs "$version" "$RUNNER_TEMP/packages" "$RUNNER_TEMP/attach" "${notes[@]}" > "$RUNNER_TEMP/body.md"
-          ls -l "$RUNNER_TEMP/attach"
-          cat "$RUNNER_TEMP/body.md" >> "$GITHUB_STEP_SUMMARY"
-      - name: Attach the checksums and the copies without a version
-        if: github.event_name == 'release'
-        run: gh release upload "$TAG" "$RUNNER_TEMP"/attach/* --clobber
-      - name: Put the download table on top of the notes
-        if: github.event_name == 'release'
-        run: gh release edit "$TAG" --notes-file "$RUNNER_TEMP/body.md"
-      # GitHub cannot make a pre-release Latest.
-      - name: Mark the release as Latest
-        if: github.event_name == 'release' && !github.event.release.prerelease
-        run: gh release edit "$TAG" --latest
+          set -euo pipefail
+          version="${TAG#v}"
+          gh release view "$TAG" --json assets --jq '.assets[] | select(.size > 0) | .name' > "$RUNNER_TEMP/assets"
+          for file in "chemclaw-bot-$version.tgz" "ChemClaw-$version-win-x64.exe" "ChemClaw-$version-win-x64.exe.blockmap" latest.yml "ChemClaw-$version-mac-arm64.zip" "ChemClaw-$version-mac-x64.zip" "ChemClaw-$version-mac-arm64.dmg" "ChemClaw-$version-mac-x64.dmg" "ChemClaw-$version-linux-x86_64.AppImage" "ChemClaw-$version-linux-amd64.deb" latest-linux.yml; do
+            grep -Fx "$file" "$RUNNER_TEMP/assets"
+          done
+          if [[ "$TAG" == *-* ]]; then
+            gh release edit "$TAG" --draft=false --prerelease --latest=false
+          else
+            gh release edit "$TAG" --draft=false --latest
+          fi

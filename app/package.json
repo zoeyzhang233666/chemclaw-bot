@@ -1,26 +1,27 @@
 {
-  "name": "dsbot",
-  "productName": "DS Bot",
-  "version": "0.3.8",
+  "name": "chemclaw",
+  "productName": "ChemClaw",
+  "version": "0.4.0",
   "private": true,
-  "description": "DS Bot desktop app: the ds-bot team on its own pinned DeepSeek Harness.",
-  "author": "Fei2411",
-  "homepage": "https://github.com/Fei2411/DS-Bot",
-  "desktopName": "dsbot.desktop",
+  "description": "ChemClaw desktop app: the chemclaw-bot team on its own pinned DeepSeek Harness.",
+  "author": "ChemCloud Intelligence",
+  "homepage": "https://github.com/zoeyzhang233666/chemclaw-bot",
+  "desktopName": "chemclaw.desktop",
   "license": "Apache-2.0",
   "type": "module",
   "main": "src/main.mjs",
   "scripts": {
     "build": "vite build",
     "start": "electron .",
-    "pack": "electron-builder --dir --publish never",
+    "pack": "node scripts/prepare-mac-icon.mjs && electron-builder --dir --publish never",
     "dist": "node scripts/dist.mjs",
     "check-packed": "node scripts/check-packed.mjs",
     "runtime": "node scripts/prepare-runtime.mjs",
     "check-lifecycle": "node scripts/check-lifecycle.mjs",
     "shot": "node scripts/shot.mjs",
     "icon": "node scripts/icon.mjs",
-    "test": "node --import ./test/reset-env.mjs --test \"test/*.test.mjs\""
+    "test": "node --import ./test/reset-env.mjs --test \"test/*.test.mjs\"",
+    "dist:mac-preview": "node scripts/prepare-mac-icon.mjs && node scripts/render-dmg-background.mjs && electron-builder --mac --config electron-builder.mac-dmg.yml --publish never"
   },
   "dependencies": {
     "@deepseek-ai/cordis-plugin-group": "1.1.0",
@@ -65,12 +66,17 @@
     "@deepseek-ai/dsh-workflow": "0.2.2-rc.1",
     "@deepseek-ai/libreoffice-kit": "0.1.5",
     "deep-view": "0.1.2",
-    "ds-bot": "file:../ds-bot",
     "electron-updater": "6.8.10",
     "js-yaml": "4.3.2",
     "pnpm": "11.7.0",
-    "ws": "8.18.3",
-    "yaml": "2.9.1"
+    "ws": "8.22.0",
+    "yaml": "2.9.1",
+    "chemclaw-bot": "file:../chemclaw-bot",
+    "@changfenhuang/dsh-genui": "0.15.0",
+    "@img/sharp-wasm32": "0.35.5",
+    "@deepseek-ai/dsh-skill": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-agent": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-agent-loop": "0.2.2-rc.1"
   },
   "devDependencies": {
     "electron": "44.7.0",
@@ -89,7 +95,12 @@
     "@deepseek-ai/cordis": "4.1.0",
     "@deepseek-ai/dsh-llm": "0.2.2-rc.1",
     "@deepseek-ai/dsh-tools": "0.2.2-rc.1",
-    "@deepseek-ai/dsh-web": "0.2.2-rc.1"
+    "@deepseek-ai/dsh-web": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-agent": "$@deepseek-ai/dsh-agent",
+    "@deepseek-ai/dsh-scope": "$@deepseek-ai/dsh-scope",
+    "@deepseek-ai/dsh-typert-protocol": "$@deepseek-ai/dsh-typert-protocol",
+    "@deepseek-ai/dsh-skill": "$@deepseek-ai/dsh-skill",
+    "@deepseek-ai/dsh-agent-loop": "$@deepseek-ai/dsh-agent-loop"
   },
   "optionalDependencies": {
     "@deepseek-ai/dsh-experimental-cua-macos": "0.2.2-rc.1"

@@ -1,0 +1,67 @@
+name: macOS 15 HTML preview audit
+on:
+  push:
+    branches: [codex/mac15-html-audit]
+permissions:
+  contents: read
+jobs:
+  original-release:
+    name: macOS 15 ARM64 / ${{ matrix.graphics }}
+    runs-on: macos-15
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        graphics: [default, software]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c5c81d72a17dc4073a43e6fbc93c06412527c21c
+          path: audited-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: audited-source/app/package-lock.json
+      - name: Record exact environment and source
+        run: |
+          sw_vers
+          uname -m
+          test "$(git -C audited-source rev-parse HEAD)" = c5c81d72a17dc4073a43e6fbc93c06412527c21c
+          node --input-type=module -e 'import assert from "node:assert/strict"; assert.equal(process.arch, "arm64"); assert.equal(process.platform, "darwin")'
+      - name: Download original v0.3.0 Apple silicon ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/original-release"
+          gh release download v0.3.0 --repo zoeyzhang233666/chemclaw-bot --pattern ChemClaw-0.3.0-mac-arm64.zip --dir "$RUNNER_TEMP/original-release"
+          node --input-type=module -e 'import {readFileSync} from "node:fs"; import {createHash} from "node:crypto"; import assert from "node:assert/strict"; assert.equal(createHash("sha256").update(readFileSync(process.argv[1])).digest("hex"),"7875096e9df9d87b42cf1bdb46b29824f575250a1d4b095d82e5c47250884688")' "$RUNNER_TEMP/original-release/ChemClaw-0.3.0-mac-arm64.zip"
+          ditto -x -k "$RUNNER_TEMP/original-release/ChemClaw-0.3.0-mac-arm64.zip" "$RUNNER_TEMP/original-app"
+          codesign --verify --deep --strict "$RUNNER_TEMP/original-app/ChemClaw.app"
+      - run: npm ci --no-fund --no-audit
+        working-directory: audited-source/app
+      - name: Prepare instrumented test copy
+        run: node .github/scripts/instrument-html-audit.mjs audited-source/app/scripts/check-packed.mjs audited-source/app/scripts/check-packed-html-audit.mjs
+      - name: Exercise original app with synthetic data and mock model
+        env:
+          CHEMCLAW_HTML_GRAPHICS: ${{ matrix.graphics }}
+          DSH_HOME: ${{ runner.temp }}/unused-user-dsh
+          DS_BOT_USER_DSH_HOME: ${{ runner.temp }}/unused-user-dsh
+        run: |
+          mkdir -p "$RUNNER_TEMP/chemclaw-html-audit" "$RUNNER_TEMP/unused-user-dsh"
+          node audited-source/app/scripts/check-packed-html-audit.mjs "$RUNNER_TEMP/original-app/ChemClaw.app/Contents/MacOS/ChemClaw" "$RUNNER_TEMP/chemclaw-html-audit/screen" --mac-ui 2>&1 | tee "$RUNNER_TEMP/chemclaw-html-audit/test.log"
+      - name: Save runtime results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos15-html-${{ matrix.graphics }}
+          path: ${{ runner.temp }}/chemclaw-html-audit/**
+          retention-days: 14
+          if-no-files-found: warn
