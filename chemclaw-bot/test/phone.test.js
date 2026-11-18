@@ -27,7 +27,7 @@ function open(home) {
   const ctx = fakeContext()
   const register = ctx.connection.fetch.register
   ctx.connection.fetch.register = (route) => { ctx.route = route; return register(route) }
-  apply(ctx, { home, github: false })
+  apply(ctx, { home, seedTeam: false, companyConnectors: false, automaticDependencies: false, github: false })
   const call = async (endpoint, payload) => (await (await ctx.route.fetch(new Request('http://localhost/api/bot', { method: 'POST', body: JSON.stringify({ endpoint, payload }) }))).json())
   return { ctx, call }
 }

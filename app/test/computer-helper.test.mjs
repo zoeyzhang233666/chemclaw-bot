@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { prepareComputerHelper } from '../../ds-bot/src/host/computer/mac-helper.js'
+import { prepareComputerHelper } from '../../chemclaw-bot/src/host/computer/mac-helper.js'
 
 const BUNDLE = 'a'.repeat(64)
 const EXECUTABLE = join('DSH Computer Use.app', 'Contents', 'MacOS', 'dsh-cua-native')

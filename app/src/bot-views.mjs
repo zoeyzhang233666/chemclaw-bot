@@ -1,3 +1,4 @@
+import { CdpFrameGuard } from './cdp-frame-guard.mjs'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { mkdirSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { rm } from 'node:fs/promises'
@@ -119,7 +120,7 @@ export class BotViews {
         webviewTag: false, plugins: false, navigateOnDragDrop: false, disableDialogs: true, devTools: this.#devTools,
       },
     })
-    const entry = { tabId, botId, view, createdByBot, openerId, sessions: new Map(), sessionMaps: new Map(), downloads: new Map(), downloadPath: this.#downloadPaths.get(botId), mainFrameId: undefined }
+    const entry = { tabId, botId, view, createdByBot, openerId, sessions: new Map(), sessionMaps: new Map(), frameGuards: new Map(), downloads: new Map(), downloadPath: this.#downloadPaths.get(botId), mainFrameId: undefined }
     this.#views.set(tabId, entry)
     const owner = this.#window()
     if (owner !== undefined && owner !== null) owner.contentView.addChildView(view)
@@ -302,6 +303,7 @@ export class BotViews {
     entry.view.webContents.close()
     entry.sessions.clear()
     entry.sessionMaps.clear()
+    entry.frameGuards.clear()
     this.#onChange({ type: 'closed', botId, tabId })
     return true
   }
@@ -473,11 +475,26 @@ export class BotViews {
     }
   }
 
+  #reportFrameDiagnostic({ method, reason }) {
+    console.warn('ChemClaw CDP frame relay:', method, reason)
+  }
+
   #installDebugger(entry) {
     const debuggerApi = entry.view.webContents.debugger
     debuggerApi.attach('1.3')
     debuggerApi.on('message', (_event, method, params, childSessionId) => {
-      this.#sendToSessions(entry, { method, params: this.#framePayload(entry, method, params) }, childSessionId)
+      try {
+        this.#sendToSessions(entry, {
+          method, params: this.#framePayload(entry, method, params, childSessionId),
+        }, childSessionId)
+      } catch (error) {
+        // An invalid native CDP event must not throw into Electron's event loop.
+        // Close only this Bot's browser connection; DSH and other Bots keep running.
+        this.#reportFrameDiagnostic({ method, reason: 'native-event-error', recent: [{ method, outcome: String(error?.name ?? 'error') }] })
+        for (const socket of entry.sessions.keys()) {
+          try { socket.close(1011, 'CDP frame relay error') } catch {}
+        }
+      }
     })
   }
 
@@ -485,13 +502,17 @@ export class BotViews {
     return frameId === entry.mainFrameId ? entry.tabId : frameId
   }
 
-  #framePayload(entry, method, payload) {
+  #framePayload(entry, method, payload, childSessionId) {
     const value = structuredClone(payload)
-    if (method === 'Page.getFrameTree' && value.frameTree?.frame && !value.frameTree.frame.parentId) {
-      entry.mainFrameId = value.frameTree.frame.id
+    // OOPIF child targets have their own root frame. They must not replace
+    // the Bot tab's root frame ID while Playwright is attaching.
+    if (!childSessionId) {
+      if (method === 'Page.getFrameTree' && value.frameTree?.frame && !value.frameTree.frame.parentId) {
+        entry.mainFrameId = value.frameTree.frame.id
+      }
+      if (method === 'Page.frameNavigated' && value.frame && !value.frame.parentId) entry.mainFrameId = value.frame.id
+      if (method === 'Page.frameAttached' && !value.parentFrameId) entry.mainFrameId = value.frameId
     }
-    if (method === 'Page.frameNavigated' && value.frame && !value.frame.parentId) entry.mainFrameId = value.frame.id
-    if (method === 'Page.frameAttached' && !value.parentFrameId) entry.mainFrameId = value.frameId
     const mapFrame = frame => {
       if (!frame) return
       if (frame.id !== undefined) frame.id = this.#frameId(entry, frame.id)
@@ -508,7 +529,10 @@ export class BotViews {
 
   #sendToSessions(entry, message, childSessionId) {
     for (const [socket, rootSessionId] of entry.sessions) {
+      // Session routing remains valid even when one unsafe frame event is
+      // suppressed; subsequent CDP commands must still find their target.
       if (childSessionId) entry.sessionMaps.get(socket)?.set(childSessionId, { entry, nativeId: childSessionId })
+      if (!entry.frameGuards.get(socket)?.accept(message.method, message.params)) continue
       this.#send(socket, { ...message, sessionId: childSessionId || rootSessionId })
     }
   }
@@ -536,6 +560,7 @@ export class BotViews {
       sessions.set(sessionId, { entry, nativeId: undefined })
       entry.sessions.set(socket, sessionId)
       entry.sessionMaps.set(socket, sessions)
+      entry.frameGuards.set(socket, new CdpFrameGuard(detail => this.#reportFrameDiagnostic(detail)))
       this.#send(socket, { method: 'Target.attachedToTarget', params: { sessionId, targetInfo: info(entry), waitingForDebugger: false } })
       this.#onChange({ type: 'changed', ...this.#state(entry) })
       return sessionId
@@ -597,6 +622,7 @@ export class BotViews {
           if (route?.nativeId) await route.entry.view.webContents.debugger.sendCommand('Target.detachFromTarget', { sessionId: route.nativeId })
           route?.entry.sessions.delete(socket)
           route?.entry.sessionMaps.delete(socket)
+          route?.entry.frameGuards.delete(socket)
           sessions.delete(params.sessionId); reply({}); return
         }
         if (method === 'Target.getTargetInfo') {
@@ -613,7 +639,11 @@ export class BotViews {
           const nativeParams = { ...params }
           if (nativeParams.frameId === route.entry.tabId) nativeParams.frameId = route.entry.mainFrameId
           const result = await route.entry.view.webContents.debugger.sendCommand(method, nativeParams, route.nativeId)
-          reply(this.#framePayload(route.entry, method, result))
+          const mapped = this.#framePayload(route.entry, method, result, route.nativeId)
+          if (method === 'Page.getFrameTree' && !route.entry.frameGuards.get(socket)?.observeTree(mapped.frameTree)) {
+            throw new Error('CDP returned an inconsistent frame tree; browser control was isolated.')
+          }
+          reply(mapped)
           return
         }
         if (['Browser.getBrowserCommandLine', 'Browser.getWindowForTarget', 'Target.setDiscoverTargets'].includes(method)) { reply({}); return }
@@ -625,6 +655,7 @@ export class BotViews {
       for (const entry of targets()) {
         entry.sessions.delete(socket)
         entry.sessionMaps.delete(socket)
+        entry.frameGuards.delete(socket)
         this.#onChange({ type: 'changed', ...this.#state(entry) })
       }
       sessions.clear()

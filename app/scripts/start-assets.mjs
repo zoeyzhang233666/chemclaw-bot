@@ -10,11 +10,11 @@
 // Usage: node scripts/start-assets.mjs [--check]   (--check exits 1 when a block is stale and
 // writes nothing)
 import { readFileSync, writeFileSync } from 'node:fs'
-import { CHARACTERS, characterMarkup, MASK_ID } from '../../ds-bot/src/client/characters.js'
-import { INKS } from '../../ds-bot/src/client/inks.js'
-import { allThemes, themeCss } from '../../ds-bot/src/client/themes.js'
+import { CHARACTERS, characterMarkup, MASK_ID } from '../../chemclaw-bot/src/client/characters.js'
+import { INKS } from '../../chemclaw-bot/src/client/inks.js'
+import { allThemes, themeCss } from '../../chemclaw-bot/src/client/themes.js'
 
-const client = new URL('../../ds-bot/src/client/', import.meta.url)
+const client = new URL('../../chemclaw-bot/src/client/', import.meta.url)
 const page = new URL('../src/start/', import.meta.url)
 
 const THEME_TOKENS = ['--bt-main', '--bt-card', '--bt-ink', '--bt-ink-2', '--bt-line', '--bt-line-2', '--bt-hover', '--bt-accent', '--bt-accent-ink']

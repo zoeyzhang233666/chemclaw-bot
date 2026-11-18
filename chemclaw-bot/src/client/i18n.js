@@ -1,4 +1,4 @@
-import { SKILL_ZH } from './skill-copy.js'
+import { CHEMCLAW_ZH } from './chemclaw-copy.js'
 // Interface copy follows the DSH language. Keys are the English text; `zh`, `zh-TW`,
 // `ja`, `ko`, `es`, `fr` and `de` map them. Copy is looked up at render time and every
 // slot outlet re-renders on a language switch, so nothing caches a translated string.
@@ -12,7 +12,7 @@ import { DSH_DE, HOST_ERRORS_DE, DE } from './locales/de.js'
 export const NAMESPACE = 'chemclaw-bot'
 
 const ZH = {
-  ...SKILL_ZH,
+  ...CHEMCLAW_ZH,
   'About ChemClaw': '关于 ChemClaw',
   Experts: '专家',
   'Skill library': '技能库',
@@ -1853,14 +1853,16 @@ export const LANGUAGES = [
   { id: 'de', label: 'Deutsch', fallback: 'en' },
 ]
 
+const CHEMCLAW_EN = Object.fromEntries(Object.keys(CHEMCLAW_ZH).map(key => [key, key]))
+
 export const DICTIONARY = {
   zh: ZH,
   'zh-TW': ZH_TW,
-  ja: JA,
-  ko: KO,
-  es: ES,
-  fr: FR,
-  de: DE,
+  ja: { ...CHEMCLAW_EN, ...JA },
+  ko: { ...CHEMCLAW_EN, ...KO },
+  es: { ...CHEMCLAW_EN, ...ES },
+  fr: { ...CHEMCLAW_EN, ...FR },
+  de: { ...CHEMCLAW_EN, ...DE },
 }
 
 const HOST_ERROR_TABLE = {

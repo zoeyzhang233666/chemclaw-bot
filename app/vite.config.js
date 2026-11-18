@@ -9,7 +9,9 @@ const ownPrimitives = {
   name: 'ds-bot-primitives',
   enforce: 'pre',
   resolveId(source, importer) {
-    return source === './dsh-primitives.js' && importer?.replaceAll('\\', '/').includes('/ds-bot/src/client/') ? primitives : null
+    const fromPlugin = importer?.replaceAll('\\', '/').includes('/chemclaw-bot/src/client/')
+    const bridge = source === './dsh-primitives.js' || source === '@deepseek-ai/dsh-client-ui-primitives'
+    return bridge && fromPlugin ? primitives : null
   },
 }
 
@@ -18,7 +20,7 @@ export default defineConfig({
   root: fileURLToPath(new URL('./ui', import.meta.url)),
   base: './',
   plugins: [ownPrimitives],
-  // The Bot views come from the plugin's interface code in ../ds-bot, which has no React
+  // The Bot views come from the plugin's interface code in ../chemclaw-bot, which has no React
   // of its own.
   resolve: { dedupe: ['react', 'react-dom'] },
   // One bundle: the window loads it from disk, not over a network.

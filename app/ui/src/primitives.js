@@ -3,7 +3,7 @@
 import { createElement as h, useMemo, useRef, useState } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { MENTION_ORIGIN } from '../../../ds-bot/src/client/text.js'
+import { MENTION_ORIGIN } from '../../../chemclaw-bot/src/client/text.js'
 
 // The DSH Agent's mark. The app has no DSH Agent, so nothing asks for it.
 export const FishLogo = () => null
@@ -43,3 +43,18 @@ export function MarkdownText({ text, labels, variant }) {
   return h('div', { className: variant === 'compact' ? 'md_markdown md-compact' : 'md_markdown' },
     h(Markdown, { remarkPlugins: plugins, components }, text ?? ''))
 }
+
+export {
+  GearIcon as IconSettingsOutlineMedium,
+  PeopleIcon as IconUserOutlineMedium,
+  PeopleIcon as IconAgentPresetOutlineMedium,
+  GearIcon as IconPersonalizationOutlineMedium,
+  FolderIcon as IconArchiveOutlineMedium,
+} from '../../../chemclaw-bot/src/client/icons.js'
+
+// Optional native-renderer helpers fall back to the plugin's plain renderer.
+export const FileTypeIcon = undefined
+export const JsonBlock = undefined
+export const fileExtension = undefined
+export const fileSizeText = undefined
+export const projectUserText = undefined

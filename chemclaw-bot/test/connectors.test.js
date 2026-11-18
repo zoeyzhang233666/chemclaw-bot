@@ -60,7 +60,7 @@ function setup({ fail = false, github = { api: 'https://gh.test' } } = {}) {
     }
   }
   capture(ctx)
-  apply(ctx, { home, github })
+  apply(ctx, { home, seedTeam: false, companyConnectors: false, automaticDependencies: false, github })
   return { ctx, home, mounts }
 }
 
@@ -155,7 +155,7 @@ test('github: false hides only the GitHub connector', async (t) => {
   const home = teamHome()
   const ctx = fakeContext()
   capture(ctx)
-  apply(ctx, { home, github: false })
+  apply(ctx, { home, seedTeam: false, companyConnectors: false, automaticDependencies: false, github: false })
   t.after(async () => { await ctx.dispose(); rmSync(home, { recursive: true, force: true, maxRetries: 5 }) })
   const rows = (await call(ctx, 'state', {})).value.connectors.connectors
   assert.equal(rows.find(row => row.id === 'github'), undefined)

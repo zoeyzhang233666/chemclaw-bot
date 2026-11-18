@@ -75,7 +75,8 @@ export { name, inject } from './src/host/entry.js'
 const MODULES = [diagnostics, store, ledger, models, providers, permissions, turns, steer, handoffs, requests, delivery, roster, folders, privacy, agents, prompt, timeContext, skillRouting, tools, chatIndex, groups, goals, agentCommands, tasks, approvals, resume, memory, parts, changes, images, avatarLibrary, secrets, connectors, companyConnectors, capabilities, skillImport, serviceInstall, scenarios, desktopRuntime, learning, schedules, browser, browserPlugins, computer, usage, update, dshUpdate, thinking, mobile, feed, phone, im, publicData, cninfo, dependencies, channel, remote, officeSkills, goalSkills, localAgents]
 
 export function apply(ctx, config = {}) {
-  createRuntime(ctx, { seedTeam: true, companyConnectors: true, automaticDependencies: true, ...config })
+  const rt = createRuntime(ctx, { seedTeam: true, companyConnectors: true, automaticDependencies: true, ...config })
+  ctx.provide?.('chemclawReady', { check: async () => { await rt.load(); return true } })
 }
 
 export function createRuntime(ctx, config = {}) {

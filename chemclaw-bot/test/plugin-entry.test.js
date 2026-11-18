@@ -48,7 +48,7 @@ console.log('imported', entry.name)
 await entry.apply({}, {}).then(() => console.log('applied'), error => console.log('apply failed:', error.message))`
     const run = spawnSync(process.execPath, ['--import', pathToFileURL(join(dir, 'register.mjs')).href, '--input-type=module', '-e', script], { encoding: 'utf8' })
     assert.equal(run.status, 0, run.stderr)
-    assert.deepEqual(run.stdout.trim().split('\n'), ['imported ds-bot', 'apply failed: host failed to load'])
+    assert.deepEqual(run.stdout.trim().split('\n'), ['imported chemclaw-bot', 'apply failed: host failed to load'])
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }

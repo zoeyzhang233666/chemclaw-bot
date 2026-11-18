@@ -63,6 +63,7 @@ win:
       arch: [x64]
   icon: assets/icon.ico
 nsis:
+  guid: 472c94a3-56db-5fff-abcc-bb9e9d517e5d
   oneClick: false
   perMachine: false
   allowElevation: false

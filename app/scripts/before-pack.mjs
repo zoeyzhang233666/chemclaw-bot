@@ -2,10 +2,8 @@
 // (npmRebuild: false), so they fit only the architecture of the Node that ran npm. An app built for
 // another architecture would carry them and not start, so such a build stops here.
 import { Arch } from 'electron-builder'
-import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { preparePrimaryRuntime, runtimeTarget } from './prepare-runtime.mjs'
 
 const WHERE = {
@@ -49,9 +47,5 @@ export async function beforePack(context, prepare = preparePrimaryRuntime) {
     for (const arch of archToNames.keys()) targets.push(Arch[arch])
   const problem = archProblem({ target: Arch[context.arch], platform: context.electronPlatformName, targets })
   if (problem !== undefined) throw new Error(problem)
-  const request = officeRuntimeRequest(context)
-  if (context.electronPlatformName === 'darwin') {
-    execFileSync(process.execPath, [fileURLToPath(new URL('./prepare-mac-icon.mjs', import.meta.url))], { stdio: 'inherit' })
-  }
-  await prepare(request)
+  await prepare(officeRuntimeRequest(context))
 }

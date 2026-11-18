@@ -41,7 +41,7 @@ for (const platform of ['win32', 'darwin', 'linux']) {
     } else {
       assert.deepEqual(f.names, [LEGACY_PRODUCT_NAME])
       f.app.emit('ready')
-      assert.deepEqual(f.names, [LEGACY_PRODUCT_NAME, 'DS Bot'])
+      assert.deepEqual(f.names, [LEGACY_PRODUCT_NAME, 'ChemClaw'])
     }
   })
 }
@@ -94,7 +94,7 @@ for (const suffix of ['mac-arm64.zip', 'mac-x64.zip', 'linux-amd64.deb']) {
 
 test('renaming the Windows application preserves the published installer GUID', () => {
   const config = parse(readFileSync(new URL('../electron-builder.yml', import.meta.url), 'utf8'))
-  const published = UUID.v5('io.github.fei2411.deepseekbot', UUID.parse('50e065bc-3134-11e6-9bab-38c9862bdaf3'))
+  const published = UUID.v5('io.github.fei2411.chemclaw', UUID.parse('50e065bc-3134-11e6-9bab-38c9862bdaf3'))
   assert.equal(config.appId, APP_ID)
   assert.equal(config.nsis.guid, published)
 })

@@ -40,6 +40,7 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
     },
     credentials: {
       describe: async ref => ({ configured: ref in store, writable: !readOnly.includes(ref) }),
+      resolve: async ref => (ref in store ? { value: store[ref] } : undefined),
       set: async (ref, value) => { writes.push(['set', ref]); store[ref] = value },
       unset: async (ref) => { writes.push(['unset', ref]); delete store[ref] },
     },
@@ -391,4 +392,17 @@ test('retained models keep explicit metadata before catalog defaults fill absent
   assert.equal(models[0].contextWindow, 64000)
   assert.deepEqual(models[0].input, ['text'])
   assert.equal(models[0].name, 'My Model')
+})
+
+test('APIHub discovers models at its fixed endpoint and stores the key in DSH credentials', async () => {
+  const { rt, store, discovered, writes } = dsh()
+  const models = await rt.discoverModels({ preset: 'apihub', key: 'fixture-api-key' })
+  assert.equal(discovered[0][1].baseURL, 'https://apihub.chem-cloud.cn/v1')
+  assert.equal(store.APIHUB_API_KEY, undefined)
+  const result = await rt.addProvider({ preset: 'apihub', key: 'fixture-api-key', models: models.slice(0, 1) })
+  assert.equal(row(result, 'apihub').key.configured, true)
+  assert.deepEqual(writes.at(-1), ['set', 'APIHUB_API_KEY'])
+  assert.equal(store.APIHUB_API_KEY, 'fixture-api-key')
+  await rt.discoverModels({ preset: 'apihub' })
+  assert.equal(discovered.at(-1)[1].baseURL, 'https://apihub.chem-cloud.cn/v1')
 })
