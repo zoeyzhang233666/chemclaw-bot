@@ -88,8 +88,7 @@ export function createComputerIndicator({ BrowserWindow, screen, html, ipcMain, 
   }
 }
 
-// The bar's own page: the same glass pill the in-app indicator wears, themed by
-// the system appearance. Only the pill is painted; the window is transparent.
+// The bar's own page: ChemClaw's warm paper surface, independent of system dark mode. Only the pill is painted; the window is transparent.
 export function indicatorHtml(entries, labels = {}) {
   const avatar = (entry) => entry.avatar !== undefined
     ? `<img class="ava" src="${escapeHtml(entry.avatar)}" alt="">`
@@ -103,11 +102,10 @@ export function indicatorHtml(entries, labels = {}) {
   const stopAll = entries.filter(entry => !entry.waiting).length > 1
     ? `<button class="all" data-act="stopall:">${escapeHtml(labels.stopAll ?? 'Stop all')}</button>` : ''
   return `<!doctype html><html><head><meta charset="utf-8"><style>
-:root{color-scheme:light dark}
+:root{color-scheme:light}
 body{margin:0;background:transparent;overflow:hidden;font:12.5px -apple-system,sans-serif;-webkit-app-region:no-drag;user-select:none}
-.bar{display:inline-flex;align-items:center;gap:8px;height:36px;white-space:nowrap;padding:0 12px;margin:4px 12px;border-radius:999px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:12.5px}
-@media (prefers-color-scheme:light){.bar{background:#faf8f2;border:1px solid #d8d0c3;box-shadow:0 5px 20px rgba(67,48,25,.13);color:#302a23}.bar i,.go{color:#555}}
-@media (prefers-color-scheme:dark){.bar{background:rgba(30,30,32,.88);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 6px 24px rgba(0,0,0,.4);color:#f2f2f7}.bar i{color:#aaa}.go{color:#0a84ff}}
+.bar{display:inline-flex;align-items:center;gap:8px;height:36px;white-space:nowrap;padding:0 12px;margin:4px 12px;border-radius:999px;font-size:12.5px}
+.bar{background:#faf8f2;border:1px solid #d8d0c3;box-shadow:0 5px 20px rgba(67,48,25,.13);color:#302a23}.bar i{color:#6a6156}
 .live{flex:none;width:7px;height:7px;border-radius:50%;background:#ff453a;box-shadow:0 0 0 3px rgba(255,69,58,.24)}
 .sep{flex:none;width:1px;height:14px;background:currentColor;opacity:.2}
 .entry{display:flex;align-items:center;gap:6px;min-width:0}
