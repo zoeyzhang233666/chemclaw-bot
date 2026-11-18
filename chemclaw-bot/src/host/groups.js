@@ -1014,6 +1014,17 @@ export function install(rt) {
       // A member a Bot's post calls by name works for that Bot.
       const named = opener.botId === undefined ? [] : mentionsIn(opener.text ?? '', room.members.map(rt.botOf).filter(Boolean)).found
       const speakers = openingSpeakers(room, opener)
+      // Upstream #1351 also registers a Bot's opening @mentions as a batch.
+      // The durable save must finish before any called member is dispatched.
+      const openingCallees = opener.botId === undefined ? [] : speakers.filter(member => named.includes(member))
+      let openingBatchKey
+      try {
+        openingBatchKey = await persistGroupCall({ roomId: room.id }, opener.botId, openingCallees)
+      } catch (error) {
+        const blocked = persistenceGate.status(room.id)
+        return JSON.stringify({ error: blocked?.message ?? String(error), code: blocked?.code ?? 'PERSISTENCE',
+          replies: [], passed: [], failed: [] })
+      }
       // The admin alone with the user's message: when it passes, the round ends with
       // nothing said, and the group says so once.
       const admin = room.members.map(rt.botOf).filter(Boolean).find(bot => rt.isAdminOf(room, bot.id))
@@ -1030,7 +1041,7 @@ export function install(rt) {
           id: member.id, name: member.name, status: 'waiting',
           origin: opener.botId === undefined ? 'user' : 'bot',
           ...(opener.kickoff ? { note: 'the group was just created' } : {}),
-          ...(named.includes(member) ? { by: opener.botId } : {}),
+          ...(named.includes(member) ? { by: opener.botId, ...(openingBatchKey === undefined ? {} : { batchKey: openingBatchKey }) } : {}),
           ...(opener.done ? { note: `${opener.name ?? 'a member'} finished the work you asked for` } : {}),
         })),
         ...(soleAdmin ? { soleAdmin: { id: admin.id, name: admin.name, color: admin.color } } : {}),

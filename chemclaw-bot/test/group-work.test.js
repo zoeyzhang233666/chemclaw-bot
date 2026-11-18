@@ -1249,6 +1249,32 @@ test('experimental #1351 registers a two-member Bot call in state before deliver
   assert.equal(settled.answered, false, 'do not claim the caller has been awakened before recovery is wired')
 })
 
+test('experimental #1351 saves a Bot opening-post call batch before dispatching members', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  host.emit('ga', 'turn/start', { turn: 1 })
+  host.emit('ga', 'user/message', { content: [{ type: 'text', text: 'go' }],
+    source: { kind: 'bot', role: 'room', exchangeId: 'opening', roomId: 'r1', hop: 0 } })
+  step(host, 'ga', '@Writer @Tester verify an initial procurement question', 'initial-tool')
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const result = host.round('bot-opening-post', host.takePost())
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  const saved = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8'))
+  const batches = Object.values(saved.roomBatches ?? {})
+  assert.equal(batches.length, 1)
+  assert.equal(batches[0].by, 'a')
+  assert.deepEqual(batches[0].pending, ['b', 'c'])
+  assert.equal(host.agentOf('gc').calls.length, 0)
+  host.begin('gb')
+  host.finish('gb', 'Writer finished')
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  const midway = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(midway.pending, ['c'])
+  host.begin('gc')
+  host.finish('gc', 'Tester finished')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, [])
+})
+
 test('experimental group relay creates durable anchored windows without changing old reply display', async t => {
   const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
   const first = host.round('anchored-first', host.say('@Writer first procurement request'))
