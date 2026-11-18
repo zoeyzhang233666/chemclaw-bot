@@ -19,7 +19,7 @@ import { heldCardKey } from './sources.js'
 import { capabilityLabel } from './capability-settings.js'
 import { ArtifactFiles, generatedFiles } from './artifact-files.js'
 import { useArtifactLinks } from './artifact-links.js'
-import { parseReplies } from '../shared/group-replies.js'
+import { parseReplies, relayRange } from '../shared/group-replies.js'
 import { BtwCardView } from './btw.js'
 import { partIndexOf, withBtwRows } from './btw-model.js'
 import { layoutOf, thinkingShown } from './themes.js'
@@ -862,26 +862,63 @@ function GroupReplies({ sessionId, eventSeq, callId, done, interrupted, content,
     void tick()
     return () => { stop = true; clearTimeout(timer) }
   }, [done, sessionId, callId])
+  // DS-Bot #1317: settled Ledger rounds name their durable sequence range.
+  // The old reply list stays as a fallback for pre-migration and unverifiable
+  // histories. Never present an inconsistent Ledger as successfully restored.
+  const resultText = done ? contentText(content) : ''
+  const range = done ? relayRange(resultText) : undefined
+  const rowsKey = range === undefined ? undefined : `${sessionId}:${range.from}:${range.to ?? ''}:${range.anchor ?? ''}`
+  const [ledgerView, setLedgerView] = useState({ key: null, result: null })
+  const view = ledgerView.key === rowsKey ? ledgerView.result : null
+  // A quiet open round is fetched again when the team revision changes. Active
+  // rounds poll their last range; closed rounds never poll continuously.
+  const quietKey = view?.status === 'aligned' && view.open && !view.active ? roster.revision : undefined
+  useEffect(() => {
+    if (rowsKey === undefined) return undefined
+    let stopped = false
+    let timer
+    const tick = async () => {
+      const next = await actions.groupRows(sessionId, range.from, range.to, range.anchor)
+      if (stopped) return
+      if (next !== null && Array.isArray(next?.rows)) {
+        setLedgerView({ key: rowsKey, result: next })
+        if (next.status === 'aligned' && next.open && next.active) {
+          timer = setTimeout(tick, document.hidden ? 5000 : 1000)
+        }
+      }
+    }
+    void tick()
+    return () => { stopped = true; clearTimeout(timer) }
+  }, [rowsKey, quietKey])
   let replies = live.replies
   let broken = false
   if (done) {
-    const parsed = parseReplies(contentText(content))
+    const parsed = parseReplies(resultText)
     replies = parsed.broken && !parsed.replies.length ? live.replies : parsed.replies
     broken = parsed.broken
+    if (range !== undefined && view?.status === 'aligned') {
+      replies = view.rows
+      broken = false
+    }
   }
+  const unverified = done && range !== undefined && view !== null && view.status !== 'aligned'
   // Members speak one at a time, so only the current speaker is typing. Skip a draft
   // whose text is already in replies so commit and poll never flash a duplicate.
   const posted = new Set(replies.flatMap(reply => reply.text ? [`${reply.botId}\0${reply.text}`] : []))
   const drafts = done ? [] : (live.drafts ?? []).filter(draft => !posted.has(`${draft.botId}\0${draft.text}`))
   const preparing = !done && !live.speaking && replies.length === 0 && drafts.length === 0
-  const pending = done || !live.speaking || drafts.some(draft => draft.botId === live.speaking) ? [] : [live.speaking]
+  const pending = done
+    ? (range !== undefined && view?.status === 'aligned' && view.open && view.active ? view.speaking ?? [] : [])
+    : (!live.speaking || drafts.some(draft => draft.botId === live.speaking) ? [] : [live.speaking])
   const roomWorkKey = useWork?.(work => JSON.stringify(work.rooms?.[sessionId] ?? [])) ?? '[]'
   const roomWork = JSON.parse(roomWorkKey)
-  const speakerWork = roomWork.find(entry => entry.botId === live.speaking)
+  const speakerWork = roomWork.find(entry => entry.botId === pending[0])
   const speakerTool = speakerWork?.tool
   const speakerDoing = speakerTool ? workPhrase(speakerWork) : undefined
   if (replies.length === 0 && pending.length === 0 && drafts.length === 0 && !preparing) {
-    return broken ? h('div', { className: 'bt-group-replies' }, h('div', { className: 'bt-event', role: 'status' }, t(interrupted ? 'This group reply was interrupted by a stop request' : 'The group replies could not be shown'))) : null
+    return broken || unverified
+      ? h('div', { className: 'bt-group-replies' }, h('div', { className: 'bt-event', role: 'status' }, t(unverified ? 'Group history needs recovery review; saved replies remain available' : interrupted ? 'This group reply was interrupted by a stop request' : 'The group replies could not be shown')))
+      : null
   }
   const room = roster.roomsById[sessionId]
   return h('div', { className: 'bt-group-replies' },
@@ -933,14 +970,14 @@ function GroupReplies({ sessionId, eventSeq, callId, done, interrupted, content,
       if (reply.kind === 'done') {
         return h('div', { key: `${reply.botId}-${index}`, className: 'bt-event' }, t('{name} finished its work', { name: bot.name }))
       }
-      const genui = done ? texts.map((_, offset) => ({ source: `chemclaw-bot/group/${callId}`, threadId: sessionId, eventSeq, contentBlockIndex: index + offset })) : undefined
+      const genui = done && !(range !== undefined && view?.status === 'aligned') ? texts.map((_, offset) => ({ source: `chemclaw-bot/group/${callId}`, threadId: sessionId, eventSeq, contentBlockIndex: index + offset })) : undefined
       return h(GroupMessage, { key: `${reply.botId}-${index}`, bot, texts, genui, room, roster, actions, msgKey: callId ? `${sessionId}:${callId}:${index}` : undefined, useUi, time, duration })
     }),
     drafts.map(draft => {
       const bot = roster.byId[draft.botId]
       return bot ? h(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room, roster, actions, streaming: true }) : null
     }),
-    broken ? h('div', { className: 'bt-event', role: 'status' }, t(interrupted ? 'This group reply was interrupted by a stop request' : 'Some group replies could not be shown')) : null,
+    broken || unverified ? h('div', { className: 'bt-event', role: 'status' }, t(unverified ? 'Group history needs recovery review; showing the saved round result' : interrupted ? 'This group reply was interrupted by a stop request' : 'Some group replies could not be shown')) : null,
     pending.map((id) => {
       const bot = roster.byId[id]
       if (!bot) return null

@@ -56,6 +56,68 @@ test('group line is durable before visible state mutation and before the require
   assert.equal(JSON.parse(await readFile(stateFile, 'utf8')).rooms.r1.seq, 1)
 })
 
+test('upstream #1317 round anchor is sequenced and fsynced but never exposed as a member line', async t => {
+  const { home, room, persist } = await fixture(t)
+  const writer = create({ home, persist })
+  const result = await writer.commit(room, { event: 'anchor', id: 'round-one', from: 1, time: 100 })
+  assert.equal(result.seq, 1)
+  assert.equal(result.preview, undefined)
+  assert.equal(room.seq, 1)
+  assert.deepEqual(room.log, [], 'a group round anchor must not become a member message')
+  const user = await writer.commit(room, { who: 'User', text: 'Procurement question' })
+  assert.equal(user.seq, 2)
+  assert.deepEqual(room.log.map(entry => entry.seq), [2])
+  const next = await writer.commit(room, { event: 'anchor', id: 'round-two', from: 3, time: 101 })
+  assert.equal(next.seq, 3)
+  assert.deepEqual(room.log.map(entry => entry.seq), [2])
+  assert.deepEqual((await readLedger(home, 'group-r1')).records.map(entry => entry.seq), [1, 2, 3])
+  assert.equal((await inspectGroupLedgerRecovery(home, room)).status, 'aligned')
+})
+
+test('round completion is fsynced and sequenced, but never becomes a group message', async t => {
+  const { home, room, persist, stateFile } = await fixture(t)
+  const writer = create({ home, persist })
+  await writer.commit(room, { event: 'anchor', id: 'round-one', from: 1 })
+  await writer.commit(room, { who: 'User', text: 'User request' })
+  await writer.commit(room, { who: 'Analyst', botId: 'a1', text: 'First answer' })
+  const before = room.log.map(item => ({ ...item }))
+  const done = await writer.commit(room, {
+    event: 'round', id: 'round-one', from: 1, to: 3,
+    passed: ['Analyst'], failed: [], time: 101,
+  })
+  assert.equal(done.seq, 4)
+  assert.equal(done.preview, undefined)
+  assert.equal(room.seq, 4)
+  assert.deepEqual(room.log, before, 'round completion does not enter the member history')
+  const saved = JSON.parse(await readFile(stateFile, 'utf8')).rooms.r1
+  assert.equal(saved.seq, 4)
+  assert.deepEqual(saved.log, before)
+  const book = await readLedger(home, 'group-r1')
+  assert.equal(book.records[3].event, 'round')
+  assert.equal(book.records[3].to, 3)
+  assert.equal((await inspectGroupLedgerRecovery(home, room)).status, 'aligned')
+})
+
+test('round completion cannot declare a future message already durable', async t => {
+  const { home, room, persist } = await fixture(t)
+  const writer = create({ home, persist })
+  await writer.commit(room, { event: 'anchor', id: 'round', from: 1 })
+  await assert.rejects(writer.commit(room, {
+    event: 'round', id: 'round', from: 1, to: 2, passed: [], failed: [],
+  }), /future messages/)
+  assert.deepEqual((await readLedger(home, 'group-r1')).records.map(record => record.event), ['anchor'])
+  assert.equal(room.seq, 1)
+  assert.deepEqual(room.log, [])
+})
+
+test('invalid invisible round anchors cannot create unverified holes in the member history', async t => {
+  const { home, room, persist } = await fixture(t)
+  const writer = create({ home, persist })
+  await assert.rejects(writer.commit(room, { event: 'anchor', id: '', from: 1 }), /anchor requires/)
+  assert.equal(room.seq, 0)
+  assert.deepEqual((await readLedger(home, 'group-r1')).records, [])
+})
+
 test('concurrent group commits preserve order, unique sequence and state cache', async t => {
   const { home, room, persist } = await fixture(t)
   const writer = create({ home, persist })

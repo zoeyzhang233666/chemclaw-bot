@@ -35,6 +35,29 @@ function prepareLine(line) {
       (line.text !== undefined && typeof line.text !== 'string')) {
     throw new Error('Group Ledger commit requires an unsequenced message with valid text')
   }
+  // Upstream #1317 records a round anchor outside the visible member log.
+  // This adapter assigns it a normal durable sequence while never allowing
+  // arbitrary invisible messages to bypass the room's retained history.
+  if (line.event === 'anchor' && (typeof line.id !== 'string' || !line.id ||
+      !Number.isSafeInteger(line.from) || line.from < 1 ||
+      Object.hasOwn(line, 'text') || Object.hasOwn(line, 'kind'))) {
+    throw new Error('Group Ledger anchor requires an id and positive from sequence, without visible text')
+  }
+  // Upstream #1351/#1364 also records how a round ended. Like its anchor,
+  // this is sequenced metadata, never a member message or long-text sidecar.
+  if (line.event !== undefined && line.event !== 'anchor' && line.event !== 'round') {
+    throw new Error('Unknown group Ledger metadata event')
+  }
+  if (line.event === 'round' && (
+      typeof line.id !== 'string' || !line.id ||
+      !Number.isSafeInteger(line.from) || line.from < 1 ||
+      !Number.isSafeInteger(line.to) || line.to < line.from ||
+      !Array.isArray(line.passed) || !Array.isArray(line.failed) ||
+      !line.passed.every(name => typeof name === 'string') ||
+      !line.failed.every(name => typeof name === 'string') ||
+      Object.hasOwn(line, 'text') || Object.hasOwn(line, 'kind'))) {
+    throw new Error('Group Ledger round completion requires an id, bounded range and speaker lists')
+  }
   const json = JSON.stringify(line)
   if (!json || typeof json !== 'string') throw new Error('Group Ledger message cannot be encoded')
   return JSON.parse(json)
@@ -116,6 +139,10 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
         }
       }
       const record = { ...original, seq: seq + 1 }
+      if ((record.event === 'anchor' && record.from > record.seq) ||
+          (record.event === 'round' && record.to >= record.seq)) {
+        throw new Error('Group Ledger round metadata cannot reference future messages')
+      }
       await ledger.append(book, record)
 
       // A competing legacy appendRoom call can mutate the in-memory room even
@@ -123,7 +150,7 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
       if (room.id !== id || room.seq !== seq || JSON.stringify(room.log ?? []) !== logStamp) {
         throw new Error('Legacy room state changed while Ledger was being fsynced')
       }
-      if (typeof record.text === 'string') {
+      if (record.event === undefined && typeof record.text === 'string') {
         await publishReadingSidecar(home, id, record.seq, record.text)
       }
       if ((await assertWriter(book)) !== true) {
@@ -134,9 +161,9 @@ export function createGroupLedgerCommitter({ home, assertWriter, saveState, befo
       if (room.id !== id || room.seq !== seq || JSON.stringify(room.log ?? []) !== logStamp) {
         throw new Error('Legacy room state changed before group cache commit')
       }
-      const preview = previewOf(record)
+      const preview = record.event !== undefined ? undefined : previewOf(record)
       room.seq = record.seq
-      room.log = [...(room.log ?? []), preview].slice(-LOG_LIMIT)
+      if (preview !== undefined) room.log = [...(room.log ?? []), preview].slice(-LOG_LIMIT)
 
       // This callback MUST await rt.save({ required: true }). Its rejection
       // poisons this room's queue, leaving the durable book ahead of disk state.

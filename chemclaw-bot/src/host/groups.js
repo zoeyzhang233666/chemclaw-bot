@@ -31,6 +31,11 @@ import { mixedOverlayRequested } from './market-quote-intent.js'
 import { failureLine } from './turns.js'
 import { createOrderedGroupPostQueue, publishSavedGroupReply } from './group-post-queue.js'
 import { createGroupPersistenceGate } from './group-persistence-gate.js'
+import { readLedger } from './ledger-foundation.js'
+import { planGroupLedgerRecovery } from './ledger-recovery.js'
+import { createGroupLedgerCommitter } from './ledger-room-commit.js'
+import { seedLegacyGroupLedger } from './ledger-import.js'
+import { createLegacyGroupLedgerGuard } from './group-legacy-ledger-guard.js'
 
 const ROOM_LOG_MAX = 60
 const ROOM_FIRST_LOOK = 12
@@ -141,6 +146,49 @@ export function install(rt) {
   // of state.json. The gate only lives for this Host instance and never clears on
   // a later successful unrelated state save.
   const persistenceGate = createGroupPersistenceGate()
+  // One production writer per group: an existing Ledger disables old state-only
+  // writes; only explicit test configuration activates the migrated writer.
+  const ledgerWriterEnabled = rt.config?.experimentalGroupLedger === true
+  const legacyLedgerGuard = createLegacyGroupLedgerGuard({ home: rt.home })
+  const roomWriteStatus = id => persistenceGate.status(id) ??
+    (ledgerWriterEnabled ? undefined : legacyLedgerGuard.status(id))
+  const assertGroupWritable = room => {
+    persistenceGate.assertWritable(room.id)
+    if (!ledgerWriterEnabled) legacyLedgerGuard.assertWritable(room.id)
+  }
+  // Roster updates and group deletion remain legacy-only; a migrated room's
+  // members, sessions and history must not be deleted by the old operations.
+  rt.assertLegacyGroupWritable = room => {
+    persistenceGate.assertWritable(room.id)
+    legacyLedgerGuard.assertWritable(room.id)
+  }
+  const preparingLedgers = new Map()
+  const ledgerCommitter = ledgerWriterEnabled ? createGroupLedgerCommitter({
+    home: rt.home,
+    assertWriter: rt.assertLedgerWriter,
+    saveState: () => rt.save({ required: true }),
+  }) : undefined
+  async function prepareLedgerRoom(room) {
+    let job = preparingLedgers.get(room.id)
+    if (job) return job
+    job = (async () => {
+      if ((await rt.assertLedgerWriter()) !== true) {
+        throw new Error('Exclusive writer lock required to prepare group Ledger')
+      }
+      const book = await readLedger(rt.home, 'group-' + room.id)
+      if (book === undefined) {
+        // Refuse incomplete imports; original archives/sidecars remain untouched.
+        await seedLegacyGroupLedger({ home: rt.home, room })
+      } else {
+        const check = planGroupLedgerRecovery({ room, ledger: book })
+        if (check.status !== 'aligned') {
+          throw new Error('Group Ledger needs recovery review (' + check.status + ')')
+        }
+      }
+    })()
+    preparingLedgers.set(room.id, job)
+    return job
+  }
 
   // A long line keeps its start in state.json, which is written whole on every save,
   // and what a member reads of it (GROUP_LINE_READ) in a file of its own. Sidecars
@@ -209,22 +257,47 @@ export function install(rt) {
     return length > shown.length ? `${shown}… (cut; ${length} characters in all)` : shown
   }
 
-  const appendRoom = (room, line) => {
-    persistenceGate.assertWritable(room.id)
-    const nextSeq = room.seq + 1
-    const saved = keepGroupLine(room.id, { ...line, seq: nextSeq }, line.text ?? '')
-    const log = [...room.log, saved]
-    // A sidecar collision or I/O error above must not advance room.seq.
-    room.seq = nextSeq
-    for (const gone of log.slice(0, -ROOM_LOG_MAX)) evictGroupLine(room.id, gone)
-    room.log = log.slice(-ROOM_LOG_MAX)
+  // DS-Bot #1317 uses one say() entry point. In this opt-in path each
+  // message must be fsynced by the existing ChemClaw committer before the
+  // bounded state cache changes or any Bot begins work.
+  const appendRoom = async (room, line) => {
+    assertGroupWritable(room)
+    try {
+      if (ledgerWriterEnabled) {
+        await prepareLedgerRoom(room)
+        const prior = room.log ?? []
+        const result = await ledgerCommitter.commit(room, line)
+        if (result.preview !== undefined) {
+          for (const gone of prior.slice(0, Math.max(0, prior.length + 1 - ROOM_LOG_MAX))) {
+            evictGroupLine(room.id, gone)
+          }
+        }
+        if (typeof result.record.text === 'string' && result.record.text.length > TEXT_KEPT) {
+          wholeLines.set(lineKey(room.id, result.seq), headOf(result.record.text, GROUP_LINE_READ))
+        }
+        return result.record
+      }
+      // A durable book discovered after a fallback Host restart must not be
+      // silently overwritten by legacy state.json-only writes.
+      legacyLedgerGuard.assertWritable(room.id)
+      const nextSeq = room.seq + 1
+      const saved = keepGroupLine(room.id, { ...line, seq: nextSeq }, line.text ?? '')
+      const log = [...room.log, saved]
+      room.seq = nextSeq
+      for (const gone of log.slice(0, -ROOM_LOG_MAX)) evictGroupLine(room.id, gone)
+      room.log = log.slice(-ROOM_LOG_MAX)
+      return { ...line, seq: nextSeq }
+    } catch (error) {
+      persistenceGate.block(room.id, error)
+      throw error
+    }
   }
 
   // Admission boundary for group input: never dispatch a queued user/Bot post
   // until the required state.json snapshot succeeds. A failed save poisons only
   // this room, preserving the original DSH inbox for recovery inspection.
   const saveRequiredRoom = async room => {
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     try {
       await rt.save({ required: true })
     } catch (error) {
@@ -457,7 +530,7 @@ export function install(rt) {
       ? stripUnrenderedMixedViewText(text) : text
     // Legacy state-saving bridge, not the Ledger cutover. The publication
     // boundary is shared with tests for successful and failed required saves.
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     try {
       return await publishSavedGroupReply({
         room, round, member, visible, duration,
@@ -527,6 +600,7 @@ export function install(rt) {
     })
     try {
       const skillNames = [...new Set((round.skillRequests ?? []).filter(request => request.executor === member.id).flatMap(request => request.names))]
+      assertGroupWritable(room)
       await rt.deliver({ fromId: undefined, toId: member.id, sessionId, role: 'room', roomId: room.id, exchangeId, note, text, files, steer: busy, ...(skillNames.length ? { skillNames } : {}), ...(by ? { askedBy: by } : {}) })
       room.seen[member.id] = seenAt
       // Still held by an earlier request: this turn cannot start until the user answers.
@@ -577,6 +651,13 @@ export function install(rt) {
   const QUICK_TOOLS = new Set(TEAM_TOOLS)
   rt.workRoomTurn = (sessionId, tool) => {
     if (QUICK_TOOLS.has(tool)) return
+    if (ledgerWriterEnabled) {
+      const owner = rt.groupOwners.get(sessionId)
+      const round = [...rt.roomProgress.values()].find(value =>
+        value.roomId === owner?.roomId && value.speaking === owner?.botId)
+      const slot = round?.slots.find(value => value.id === owner.botId && value.status === 'speaking')
+      if (slot?.batchKey !== undefined) slot.worked = true
+    }
     for (const waiter of waitersOf(sessionId)) waiter.work()
   }
 
@@ -584,7 +665,124 @@ export function install(rt) {
   // already spoke; either way it goes right after slot `index`. `origin` is who the
   // call answers to: 'user' for the user's own messages, 'bot' for a member's calls.
   // `by` is the calling member, if a member called.
-  function callMembers(round, index, callees, note, by, origin) {
+  // Upstream #1351: durably register Bot calls before the next Bot is dispatched.
+  // The registration is opt-in only; a full batch recovery protocol is not yet on.
+  const persistGroupCall = async (round, by, callees) => {
+    if (!ledgerWriterEnabled || by === undefined || callees.length === 0) return undefined
+    const room = rt.roomOf(round.roomId)
+    if (room === undefined) throw new Error('Group call has no room')
+    assertGroupWritable(room)
+    const ids = [...new Set(callees.map(member => member.id))]
+    const key = randomUUID()
+    const batches = (rt.state.roomBatches ??= {})
+    const batch = {
+      key, roomId: room.id, by, pending: ids, done: [], doneIds: [],
+      results: [], worked: false, answered: false, at: Date.now(),
+    }
+    // Upstream #1351: a member may owe the same caller only once. When a
+    // newer call supersedes an unfinished call, carry over completed siblings
+    // rather than dropping the answers already recorded in that older batch.
+    for (const id of ids) {
+      const prev = Object.values(batches).find(item => item.roomId === room.id
+        && item.by === by && item.pending.includes(id))
+      if (prev === undefined) continue
+      prev.pending = prev.pending.filter(pendingId => pendingId !== id)
+      if (prev.pending.length === 0) {
+        batch.done.push(...prev.done)
+        batch.doneIds.push(...(prev.doneIds ?? []))
+        batch.results.push(...prev.results)
+        batch.worked ||= prev.worked
+        batch.answered ||= prev.answered
+        delete batches[prev.key]
+      }
+    }
+    batches[key] = batch
+    // Never deliver the new call until this entire handover is durable.
+    await saveRequiredRoom(room)
+    return key
+  }
+
+  // A completed same-round callee releases only its own pending membership.
+  // Late/working/missed turns are deliberately left pending until their delivery
+  // and restart protocol can confirm the result. No automatic replay or wake.
+  const settleGroupCall = async (room, slot, member, beforeSeq, spoken) => {
+    if (!ledgerWriterEnabled || slot.batchKey === undefined) return
+    const original = rt.state.roomBatches?.[slot.batchKey]
+    // A later call from the same Bot can take over this member. The older slot
+    // then settles the newer batch rather than leaving it permanently pending.
+    const batch = original?.pending.includes(member.id) ? original
+      : Object.values(rt.state.roomBatches ?? {}).find(item => item.roomId === room.id
+        && item.by === slot.by && item.pending.includes(member.id))
+    if (batch === undefined) return
+    if (slot.status === 'working' || slot.status === 'waiting-approval') {
+      // #1351: the caller must know that tool work started even when the turn
+      // yields. Its pending member is NOT settled until the late post is durable.
+      if (slot.worked === true && !batch.worked) {
+        batch.worked = true
+        await saveRequiredRoom(room)
+      }
+      return
+    }
+    if (!['posted', 'passed', 'failed'].includes(slot.status)) return
+    batch.pending = batch.pending.filter(id => id !== member.id)
+    if (slot.status === 'posted' && spoken.length > 0) {
+      batch.done.push(member.name)
+      batch.doneIds.push(member.id)
+      for (const row of room.log) {
+        if (row.botId === member.id && row.event === undefined && row.seq > beforeSeq) {
+          batch.results.push({ name: member.name, seq: row.seq })
+        }
+      }
+      batch.worked ||= slot.worked === true
+    }
+    await saveRequiredRoom(room)
+  }
+
+  // Upstream #1351: a background member completes the batch only when its
+  // result row and the updated batch are committed together. A DSH followup
+  // alone is not a receipt: it may never be admitted by the group Session.
+  const pendingBatchForTurn = (room, memberId, info) => {
+    if (!ledgerWriterEnabled) return undefined
+    const owed = Object.values(rt.state.roomBatches ?? {}).filter(batch =>
+      batch.roomId === room.id && batch.pending.includes(memberId))
+    const preferred = info?.askedBy === undefined ? undefined : owed.find(batch => batch.by === info.askedBy)
+    return preferred ?? (info?.role !== 'room' ? owed[0] : undefined)
+  }
+  const markBatchPost = (room, memberId, key, seq, text, done = false) => {
+    if (!ledgerWriterEnabled || typeof key !== 'string' || !Number.isSafeInteger(seq)) return
+    const batch = rt.state.roomBatches?.[key]
+    if (batch?.roomId !== room.id || !batch.pending.includes(memberId)) return
+    batch.pending = batch.pending.filter(id => id !== memberId)
+    if (text !== '' || done) {
+      const name = rt.botOf(memberId)?.name ?? memberId
+      batch.done.push(name)
+      ;(batch.doneIds ??= []).push(memberId)
+      if (text !== '') batch.results.push({ name, seq })
+      if (text !== '' && mentionsIn(text, room.members.map(rt.botOf).filter(Boolean))
+        .found.some(bot => bot.id !== memberId)) batch.answered = true
+    }
+    // Do not delete a completed batch or wake its caller here: a missing DSH
+    // delivery receipt still requires manual recovery review after a restart.
+  }
+
+  // Upstream #1351: a permanently silent/failed/stopped member must no longer
+  // block all the siblings in its caller's batch. A confirmed Stop drops every
+  // batch owed by this member; a failure or PASS drops just the matching call.
+  // Keep the settled batch itself for explicit restart/recovery review.
+  const exitGroupCall = (room, memberId, key, { all = false } = {}) => {
+    if (!ledgerWriterEnabled) return false
+    let changed = false
+    for (const batch of Object.values(rt.state.roomBatches ?? {})) {
+      if (batch.roomId !== room.id || !batch.pending.includes(memberId)) continue
+      if (!all && (key === undefined || batch.key !== key)) continue
+      batch.pending = batch.pending.filter(id => id !== memberId)
+      changed = true
+    }
+    return changed
+  }
+
+  async function callMembers(round, index, callees, note, by, origin) {
+    const batchKey = await persistGroupCall(round, by, callees)
     let next = index + 1
     for (const peer of callees) {
       const waiting = round.slots.findIndex((other, at) => at > index && other.id === peer.id && other.status === 'waiting')
@@ -593,6 +791,8 @@ export function install(rt) {
       called.origin = origin
       if (by === undefined) delete called.by
       else called.by = by
+      if (batchKey === undefined) delete called.batchKey
+      else called.batchKey = batchKey
       round.slots.splice(next, 0, called)
       next += 1
     }
@@ -642,7 +842,7 @@ export function install(rt) {
   async function drainRoomInbox(room, round, index, agent) {
     // Check before removing incoming messages; a blocked room must not consume
     // inbox messages or turn them into new Bot work.
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     // The greeting's prompt tells the admin the user has not written yet.
     if (round.kickoff) return
     const waiting = waitingLines(agent)
@@ -650,7 +850,7 @@ export function install(rt) {
     if (waiting.length === 0) return
     // Append the full batch first, without consuming DSH's inbox, publishing
     // round replies, or scheduling new member calls.
-    for (const line of waiting) appendRoom(room, { who: 'User', text: line.text })
+    for (const line of waiting) await appendRoom(room, { who: 'User', text: line.text })
     room.relays = 0
     resumePaused(room, round)
     await saveRequiredRoom(room)
@@ -660,7 +860,7 @@ export function install(rt) {
       round.replies.push({ kind: 'user', text: line.text, time: Date.now() })
       const { all, found } = mentionsIn(line.text, members)
       const note = all || found.length > 0 ? 'the user mentioned you' : 'new message from the user'
-      callMembers(round, index - 1, openingSpeakers(room, { text: line.text }), note, undefined, 'user')
+      await callMembers(round, index - 1, openingSpeakers(room, { text: line.text }), note, undefined, 'user')
     }
   }
 
@@ -668,7 +868,7 @@ export function install(rt) {
     // The inbox check keeps a message sent during the last speaker's turn inside
     // this round: it drains at the loop's head even once the slots ran out.
     for (let index = 0; index < round.slots.length || waitingLines(agent).length > 0; index += 1) {
-      if (signal.aborted || persistenceGate.status(room.id)) break
+      if (signal.aborted || roomWriteStatus(room.id)) break
       await drainRoomInbox(room, round, index, agent)
       if (index >= round.slots.length) break
       const slot = round.slots[index]
@@ -720,6 +920,7 @@ export function install(rt) {
       round.shown?.push(member.id)
       const text = session.brief === undefined ? prompt.text : `${session.brief}\n\n${prompt.text}`
       const said = []
+      const beforeMemberSeq = room.seq
       const startedAt = Date.now()
       const reply = await roomTurn(room, member, session.id, { text, files: prompt.files }, slot.note ?? 'your turn', signal, round, slot.by, said)
       round.speaking = null
@@ -763,12 +964,15 @@ export function install(rt) {
         slot.status = typeof reply === 'string' ? 'passed' : 'missed'
         round.passed.push(member.name)
         if (reply?.missed) {
+          await appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
           round.replies.push({ kind: 'missed', botId: member.id, name: member.name, color: member.color, time: Date.now() })
-          appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
         }
       }
       postViews(round, member, reply?.views)
       const spoken = committedFinal ? [...said, final] : said
+      // Save batch completion before the next member runs. If this save fails,
+      // the room fails closed and the next call is not delivered.
+      await settleGroupCall(room, slot, member, beforeMemberSeq, spoken)
       if (spoken.length === 0) continue
       // Only the admin's "@all" calls everyone, so a member cannot set off a storm.
       const leads = rt.isAdminOf(room, member.id)
@@ -777,7 +981,7 @@ export function install(rt) {
       const { all, found: named } = mentionsIn(spoken.join('\n\n'), everyone)
       const found = named.filter(other => other.id !== member.id)
       const callees = leads && all ? [...found, ...others.filter(other => !found.includes(other))] : found
-      callMembers(round, index, callees, `${member.name} mentioned you`, member.id, 'bot')
+      await callMembers(round, index, callees, `${member.name} mentioned you`, member.id, 'bot')
     }
     // The admin was alone with the user's message and passed: the round ends with
     // nothing said. The group says so once, so the user knows to call a member.
@@ -785,7 +989,7 @@ export function install(rt) {
     // An answer that came, or is still coming, means the round is not left silent.
     const answered = round.slots.some(slot => ['posted', 'working', 'waiting-approval'].includes(slot.status))
     if (alone && !answered) {
-      appendRoom(room, { who: 'DS Bot', kind: 'notice', reason: 'admin-passed', names: [round.soleAdmin.name] })
+      await appendRoom(room, { who: 'DS Bot', kind: 'notice', reason: 'admin-passed', names: [round.soleAdmin.name] })
       // The round the user watched shows the same notice as one line of its replies.
       round.replies.push({ kind: 'admin-passed', botId: round.soleAdmin.id, name: round.soleAdmin.name, color: round.soleAdmin.color, time: Date.now() })
       await rt.save()
@@ -794,7 +998,7 @@ export function install(rt) {
     // user: the log's "@Name" lines are real calls that wait, not drops in silence.
     if (round.parked !== undefined) {
       const limit = relayLimit(room)
-      appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'paused', names: round.parked, limit })
+      await appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'paused', names: round.parked, limit })
       round.replies.push({ kind: 'paused', names: round.parked, count: limit, time: Date.now() })
       await rt.save()
     }
@@ -809,7 +1013,7 @@ export function install(rt) {
       await rt.load()
       const room = rt.roomOf(exec.agent?.id)
       if (room === undefined) return JSON.stringify({ error: 'Not a group chat' })
-      const alreadyBlocked = persistenceGate.status(room.id)
+      const alreadyBlocked = roomWriteStatus(room.id)
       if (alreadyBlocked) return JSON.stringify({ error: alreadyBlocked.message, code: alreadyBlocked.code, replies: [], passed: [], failed: [] })
       ensureRoomLog(room)
       // Everything queued since the last relay is posted in order, so messages that the
@@ -821,40 +1025,65 @@ export function install(rt) {
       const posts = queued.length > 0 ? [...queued] : [{ text: '' }]
       // A post a running round already logged stays inside the round this relay opens.
       const startSeq = Math.min(room.seq + 1, ...posts.map(post => post.logged).filter(seq => typeof seq === 'number'))
+      // #1317: this call owns a durable round anchor, even when no member
+      // replies. The old tool result still includes replies until the client
+      // range-based renderer and existing Session history are both migrated.
+      const anchor = ledgerWriterEnabled ? randomUUID() : undefined
       // The opening greeting is a cue for the admin, not a line of the group; a member's
       // late failure, its work picked up after a restart, its work the user stopped, or
       // the end of work whose result it already posted is an event of the round.
       const event = item => item.failed || item.resumed || item.stopped || item.done
+      const releases = posts.some(post => post.resume === true || (!post.botId && !post.kickoff))
+      const loggedEvents = []
+      let savingAdmission = false
+      try {
+      if (anchor !== undefined) {
+        await appendRoom(room, { event: 'anchor', id: anchor, from: startSeq, time: Date.now() })
+      }
       for (const post of posts.filter(item => !item.kickoff && !item.resume && !event(item) && item.logged === undefined)) {
         // Image readings go into the log only; `@` names are picked from what the user typed.
         // A file stays with its line and reaches each member the line is shown to.
         const readings = post.images === undefined ? [] : await rt.imagesForGroup(post.images, room.id)
         const text = [post.text, ...readings, ...(post.files ?? []).map(fileLine)].filter(Boolean).join('\n')
-        appendRoom(room, {
+        await appendRoom(room, {
           ...(post.botId ? { who: rt.botOf(post.botId)?.name ?? post.name ?? 'Bot', botId: post.botId } : { who: 'User' }),
           text,
           ...(post.skillRequest ? { skillRequest: post.skillRequest } : {}),
           ...(post.files === undefined ? {} : { files: post.files }),
         })
+        if (post.botId !== undefined) markBatchPost(room, post.botId, post.batch, room.seq, text)
       }
       // The user wrote here — or pressed Continue, which opens the same round
       // without a line of its own — so Bot relays count afresh and the calls the
       // limit parked run after the speakers this message picks.
-      const releases = posts.some(post => post.resume === true || (!post.botId && !post.kickoff))
       if (releases) room.relays = 0
       // A stop/resume/done notice must be in the same required-save batch,
       // otherwise the relay might show it before it is durable.
-      const loggedEvents = []
       for (const post of posts.filter(item => (item.resumed || item.stopped || item.done) && item.logged === undefined)) {
         const bot = rt.botOf(post.botId)
         const name = bot?.name ?? post.name
         const kind = post.done ? 'done' : post.stopped ? 'stopped' : post.again ? 'cut' : 'resumed'
-        appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
+        await appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
+        if (post.botId !== undefined) {
+          if (post.stopped) exitGroupCall(room, post.botId, undefined, { all: true })
+          else markBatchPost(room, post.botId, post.batch, room.seq, '', post.done === true)
+        }
         loggedEvents.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
       }
-      try {
+      // Failure events have no chat-log row, but the cancelled obligation must
+      // be cleared in the same required save as their group-round admission.
+      for (const post of posts.filter(item => item.failed && item.logged === undefined && item.botId !== undefined)) {
+        exitGroupCall(room, post.botId, post.batch)
+      }
+
+        savingAdmission = true
         await saveRequiredRoom(room)
       } catch (error) {
+        // Preserve the legacy contract: a sidecar collision or bad input is
+        // thrown to the caller. Only the required-save failure was mapped to
+        // a structured status. The experimental Ledger path fails closed and
+        // reports an admission error before any Bot delivery.
+        if (!ledgerWriterEnabled && !savingAdmission) throw error
         const blocked = persistenceGate.status(room.id)
         return JSON.stringify({ error: blocked?.message ?? String(error), code: blocked?.code ?? 'PERSISTENCE',
           replies: [], passed: [], failed: [] })
@@ -873,6 +1102,17 @@ export function install(rt) {
       // A member a Bot's post calls by name works for that Bot.
       const named = opener.botId === undefined ? [] : mentionsIn(opener.text ?? '', room.members.map(rt.botOf).filter(Boolean)).found
       const speakers = openingSpeakers(room, opener)
+      // Upstream #1351 also registers a Bot's opening @mentions as a batch.
+      // The durable save must finish before any called member is dispatched.
+      const openingCallees = opener.botId === undefined ? [] : speakers.filter(member => named.includes(member))
+      let openingBatchKey
+      try {
+        openingBatchKey = await persistGroupCall({ roomId: room.id }, opener.botId, openingCallees)
+      } catch (error) {
+        const blocked = persistenceGate.status(room.id)
+        return JSON.stringify({ error: blocked?.message ?? String(error), code: blocked?.code ?? 'PERSISTENCE',
+          replies: [], passed: [], failed: [] })
+      }
       // The admin alone with the user's message: when it passes, the round ends with
       // nothing said, and the group says so once.
       const admin = room.members.map(rt.botOf).filter(Boolean).find(bot => rt.isAdminOf(room, bot.id))
@@ -889,7 +1129,7 @@ export function install(rt) {
           id: member.id, name: member.name, status: 'waiting',
           origin: opener.botId === undefined ? 'user' : 'bot',
           ...(opener.kickoff ? { note: 'the group was just created' } : {}),
-          ...(named.includes(member) ? { by: opener.botId } : {}),
+          ...(named.includes(member) ? { by: opener.botId, ...(openingBatchKey === undefined ? {} : { batchKey: openingBatchKey }) } : {}),
           ...(opener.done ? { note: `${opener.name ?? 'a member'} finished the work you asked for` } : {}),
         })),
         ...(soleAdmin ? { soleAdmin: { id: admin.id, name: admin.name, color: admin.color } } : {}),
@@ -923,7 +1163,7 @@ export function install(rt) {
       if (exec.signal?.aborted) {
         for (const turn of round.started) void rt.stopRoomTurn?.(room.sessions?.[turn.botId] ?? turn.sessionId, turn.exchangeId)
       }
-      const blocked = persistenceGate.status(room.id)
+      const blocked = roomWriteStatus(room.id)
       if (blocked) {
         // No more state snapshots, followup sends or reportRound dispatch after
         // a failed required save. A future Host must inspect durable state.
@@ -932,12 +1172,35 @@ export function install(rt) {
           replies: round.replies, passed: round.passed,
           ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
       }
+      let closeSeq
+      if (anchor !== undefined) {
+        // Match upstream's durable `event: 'round'` boundary, but use the
+        // same strict fsync + required state-save path as other ChemClaw rows.
+        // The closure itself is invisible and does not enter member history.
+        closeSeq = room.seq
+        try {
+          await appendRoom(room, {
+            event: 'round', id: anchor, from: startSeq, to: closeSeq,
+            passed: [...round.passed], failed: [...round.failed],
+            ...(exec.signal?.aborted ? { stopped: true } : {}),
+            time: Date.now(),
+          })
+        } catch (error) {
+          const blocked = persistenceGate.status(room.id)
+          exec.concludeTurn?.()
+          return JSON.stringify({
+            error: blocked?.message ?? String(error), code: blocked?.code ?? 'PERSISTENCE',
+            replies: round.replies, passed: round.passed,
+            ...(round.failed.length ? { failed: round.failed } : {}),
+          })
+        }
+      }
       await rt.save()
       for (const post of posts) {
         if (post.reportBack && rt.botOf(post.botId)) void reportRound(room, post, round)
       }
       exec.concludeTurn?.()
-      return JSON.stringify({ replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
+      return JSON.stringify({ ...(anchor === undefined ? {} : { from: startSeq, to: closeSeq, anchor }), replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
     },
   }))
 
@@ -966,7 +1229,7 @@ export function install(rt) {
       if (room !== undefined && member !== undefined) {
         ensureRoomLog(room)
         const text = query !== '' ? query : around !== '' ? `around ${around}` : number !== undefined ? `part ${number}` : ''
-        appendRoom(room, { who: member.name, botId: member.id, kind: 'lookup', text })
+        await appendRoom(room, { who: member.name, botId: member.id, kind: 'lookup', text })
         for (const round of rt.roomProgress.values()) {
           if (round.roomId === room.id) round.replies.push({ kind: 'lookup', botId: member.id, name: member.name, color: member.color, text, time: Date.now() })
         }
@@ -997,12 +1260,76 @@ export function install(rt) {
     },
   }))
 
+  // The host half of upstream DS-Bot #1317's groupRowsView. The client must
+  // never receive uncertain rows: first verify a complete Ledger against the
+  // last saved room state. This is read-only even in a secondary Host window.
+  function groupRow(record) {
+    if (record.session === true || record.event !== undefined) return undefined
+    const botId = record.botId ?? record.about
+    const bot = botId === undefined ? undefined : rt.botOf(botId)
+    const who = { botId, name: bot?.name ?? record.names?.[0] ?? record.who, color: bot?.color }
+    const time = record.time
+    if (record.kind === undefined) {
+      if (record.botId === undefined) return { kind: 'user', text: record.text, time }
+      return { ...who, text: record.text, time, ...(record.duration === undefined ? {} : { duration: record.duration }) }
+    }
+    if (record.kind === 'lookup') return { kind: 'lookup', ...who, text: record.text, time }
+    if (record.kind !== 'notice') return { kind: record.kind, ...who, time }
+    switch (record.reason) {
+      case 'failed': return { kind: 'failed', ...who, code: record.code, text: record.message ?? record.detail, time }
+      case 'missed': return { kind: 'missed', ...who, time }
+      case 'admin-passed': return { kind: 'admin-passed', ...who, time }
+      case 'paused': return { kind: 'paused', ...who, count: record.count ?? record.limit, names: record.names, time }
+      default: return undefined
+    }
+  }
+
+  rt.groupRowsView = async (roomId, from, to, anchor) => {
+    const room = rt.roomOf(roomId)
+    if (room === undefined) return { rows: [], open: false, status: 'not-found' }
+    const book = await readLedger(rt.home, 'group-' + roomId)
+    if (book === undefined) return { rows: [], open: false, status: 'not-migrated' }
+    const recovery = planGroupLedgerRecovery({ room, ledger: book })
+    if (recovery.status !== 'aligned') {
+      return { rows: [], open: false, status: recovery.status, requiresRecovery: true }
+    }
+    const records = book.records
+    let end = to
+    if (anchor !== undefined) {
+      const at = records.findIndex(row => row.event === 'anchor' && row.id === anchor && row.from === from)
+      if (at === -1) return { rows: [], open: false, status: 'unknown-anchor' }
+      if (end === undefined) {
+        // The completion written by this very round closes its live view even
+        // if no later round has started. An interrupted round has no completion
+        // and stays open until the next anchor, as on upstream #1351/#1364.
+        const closing = records.slice(at + 1).find(row =>
+          row.event === 'round' && row.id === anchor && row.from === from)
+        const next = records.slice(at + 1).find(row => row.event === 'anchor')
+        if (closing) end = closing.to
+        else if (next) end = next.from - 1
+      }
+    } else if (end === undefined) {
+      const closing = records.find(row => row.event === 'round' && row.from === from)
+      const next = records.find(row => row.event === 'anchor' && Number.isSafeInteger(row.from) && row.from > from)
+      if (closing) end = closing.to
+      else if (next) end = next.from - 1
+    }
+    const rows = records.filter(record => record.seq >= from && (end === undefined || record.seq <= end))
+      .map(groupRow).filter(Boolean)
+    return { rows, open: end === undefined, status: 'aligned' }
+  }
+
+  // Upstream DS-Bot #1317: group history reads from the full Ledger, not just the
+  // last sixty room.log rows. This is an intentionally read-only compatibility
+  // seam until the canonical runtime writer switches over. A book whose bytes
+  // disagree with saved state cannot be presented as authoritative.
   ctx.tools.register(defineTool({
     name: 'read_group_chat',
-    description: 'Read the latest messages of a group chat, including what you said there. You speak in groups from separate conversations, so your own chat does not show them. Main Bots may read any group; others the groups they are in.',
+    description: 'Read recent group messages, a numbered historical message, or search group history. Full-history retrieval requires a verified group Ledger. Main Bots may read any group; other Bots only their groups.',
     parameters: {
       group: GROUP_REF,
-      seq: { type: 'integer', description: 'Read one message whole: the seq that a cut message names' },
+      seq: { type: 'integer', description: 'Read one message by its original sequence, however old, if preserved' },
+      query: { type: 'string', description: 'Search words in verified full group history, newest matches first' },
     },
     output,
     async execute(args, exec) {
@@ -1012,19 +1339,60 @@ export function install(rt) {
       const { room, error } = rt.pickRoom(args.group, self)
       if (error) return error
       ensureRoomLog(room)
+      // The legacy cache and sidecars are still the fallback until this room's
+      // writer and reader are migrated together; this call never imports/writes.
       await loadGroupLines(room)
-      if (args.seq !== undefined) {
-        const line = room.log.find(entry => entry.seq === Number(args.seq))
-        return line === undefined ? `"${room.name}" no longer keeps message ${args.seq}; it keeps its latest ${ROOM_LOG_MAX}.` : lineText(line, memberText(room)(line))
+      let book
+      try {
+        book = await readLedger(rt.home, 'group-' + room.id)
+      } catch (error) {
+        return `Cannot read the group Ledger for "${room.name}" (${error?.message ?? error}); no history was changed.`
       }
-      // Thirty whole lines could fill the context, so a long one shows its start.
+      if (book !== undefined) {
+        const inspection = planGroupLedgerRecovery({ room, ledger: book })
+        if (inspection.status !== 'aligned') {
+          return `"${room.name}" Ledger and saved group state need recovery review (${inspection.status}); history was not read or replayed.`
+        }
+      }
+      const textForMember = (line) => {
+        if (typeof line.text !== 'string') return line.text
+        const shown = headOf(line.text, GROUP_LINE_READ)
+        return line.text.length > shown.length
+          ? `${shown}… (cut; ${line.text.length} characters in all)`
+          : shown
+      }
+      if (args.seq !== undefined) {
+        const seq = Number(args.seq)
+        // A verified book contains full text for messages that left room.log.
+        const stored = book?.records.find(entry => entry.seq === seq && entry.event === undefined)
+        if (stored !== undefined) return lineText(stored, textForMember(stored))
+        const line = room.log.find(entry => entry.seq === seq)
+        return line === undefined
+          ? `"${room.name}" has no recoverable message ${args.seq} (its legacy cache keeps at most ${ROOM_LOG_MAX}).`
+          : lineText(line, memberText(room)(line))
+      }
+      if (typeof args.query === 'string' && args.query.trim() !== '') {
+        if (book === undefined) {
+          return `"${room.name}" has not migrated to a verified group Ledger; full-history search is unavailable.`
+        }
+        const words = args.query.toLowerCase().trim().split(/\s+/).filter(Boolean)
+        const matches = book.records.filter(entry => Number.isSafeInteger(entry.seq) &&
+          typeof entry.text === 'string' && words.every(word => entry.text.toLowerCase().includes(word)))
+          .slice(-20).reverse()
+        return matches.length === 0
+          ? `Nothing said in "${room.name}" has "${args.query}".`
+          : `In "${room.name}" (newest first):\n${matches.map(line => `#${line.seq} ${lineText(line, headOf(line.text, TEXT_KEPT))}`).join('\n')}`
+      }
+      // Upstream #1317: recent reads stay bounded, but a Ledger validated
+      // against saved state is the sole history source. Round metadata and
+      // group-Session-only rows are not ordinary group messages.
       const short = (line) => {
-        // Group notifications and status events may have no text field.
         if (line.text === undefined) return ''
         const length = line.length ?? line.text.length
         return length <= TEXT_KEPT ? line.text : `${headOf(line.text, TEXT_KEPT)}… (cut; ${length} characters in all; read_group_chat with seq ${line.seq} reads it whole)`
       }
-      const lines = room.log.slice(-ROOM_READ_MAX)
+      const lines = (book === undefined ? room.log
+        : book.records.filter(entry => entry.event === undefined && entry.session !== true)).slice(-ROOM_READ_MAX)
       return lines.length === 0 ? `"${room.name}" has no messages yet.` : `Latest in "${room.name}" (oldest first):\n${transcript(lines, short)}`
     },
   }))
@@ -1057,7 +1425,7 @@ export function install(rt) {
   // once, so it is not held back until the round ends; the relay it still opens does not
   // write it again (source `logged`).
   async function postToRoom(room, sender, text, extra = {}, files = []) {
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     const running = [...rt.roomProgress.values()].find(round => round.roomId === room.id)
     let logged
     if (running !== undefined) {
@@ -1070,15 +1438,19 @@ export function install(rt) {
         logged = true
       } else if (extra.resumed === true || extra.stopped === true || extra.done === true) {
         const kind = extra.done === true ? 'done' : extra.stopped === true ? 'stopped' : extra.again === true ? 'cut' : 'resumed'
-        appendRoom(room, { who: sender.name, botId: sender.id, kind, text: '' })
+        await appendRoom(room, { who: sender.name, botId: sender.id, kind, text: '' })
         pendingReply = { kind, botId: sender.id, name: sender.name, color: sender.color, time: Date.now() }
         logged = room.seq
       } else {
         const line = [text, ...files.map(fileLine)].filter(Boolean).join('\n')
-        appendRoom(room, { who: sender.name, botId: sender.id, text: line, ...(files.length > 0 ? { files } : {}) })
+        await appendRoom(room, { who: sender.name, botId: sender.id, text: line, ...(files.length > 0 ? { files } : {}) })
         pendingReply = { botId: sender.id, name: sender.name, color: sender.color, text: line, time: Date.now() }
         logged = room.seq
       }
+      // A live late post and its batch completion share the required state save.
+      if (extra.stopped) exitGroupCall(room, sender.id, undefined, { all: true })
+      else if (extra.failed) exitGroupCall(room, sender.id, extra.batch)
+      else markBatchPost(room, sender.id, extra.batch, logged, text, extra.done === true)
       try {
         await rt.save({ required: true })
       } catch (error) {
@@ -1086,13 +1458,13 @@ export function install(rt) {
         throw error
       }
       // No success bubble or views before the required disk commit succeeds.
-      persistenceGate.assertWritable(room.id)
+      assertGroupWritable(room)
       if (pendingReply?.kind === 'failed') running.failed.push(sender.name)
       if (pendingReply) running.replies.push(pendingReply)
       postViews(running, sender, extra.views)
     }
     const agent = await rt.resolveAgent(room.id)
-    persistenceGate.assertWritable(room.id)
+    assertGroupWritable(room)
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: `[Group post from ${sender.name}]\n${text}` }, ...files.map(attachment => ({ type: 'file', attachment }))],
       source: { kind: SOURCE_KIND, form: 'relay', role: 'post', exchangeId: randomUUID(), senderName: sender.name, senderSessionId: sender.id, roomId: room.id, ...extra, ...(logged !== undefined ? { logged } : {}) },
@@ -1113,10 +1485,31 @@ export function install(rt) {
     const member = rt.botOf(owner?.botId)
     if (room === undefined || member === undefined || !room.members.includes(member.id)) return
     const text = stripOwnName(member.name, reply)
-    const done = isPass(text) && shown && info.askedBy !== undefined
-    if (isPass(text) && !done && views.length === 0) return
-    await postToRoom(room, member, done ? '' : text, { late: true, ...(views.length ? { views } : {}), ...(done ? { done: true } : {}), ...(info.askedBy ? { askedBy: info.askedBy } : {}) })
-      .catch(error => rt.warn('chemclaw-bot: late group reply from %s failed: %s', member.name, error))
+    const batch = pendingBatchForTurn(room, member.id, info)
+    const waitingPeers = batch !== undefined && batch.pending.some(id => id !== member.id)
+    // Like upstream #1351, keep an explicit @mention actionable even if other
+    // batch peers still work; only an ordinary partial result stays quiet.
+    const named = mentionsIn(text, room.members.map(rt.botOf).filter(Boolean))
+      .found.some(bot => bot.id !== member.id)
+    const askedBy = info.askedBy ?? (info.role !== 'room' ? batch?.by : undefined)
+    const done = isPass(text) && shown && askedBy !== undefined
+    // Preserve legacy behavior for PASS without a result. A completely silent
+    // pending Ledger batch still needs the later no-result recovery protocol.
+    if (isPass(text) && !done && views.length === 0) {
+      // A silent PASS is a completed turn, not a task to replay after restart.
+      // The batch has no result row to record; save its changed pending list
+      // before acknowledging this no-result completion.
+      if (batch !== undefined && exitGroupCall(room, member.id, batch.key)) {
+        await saveRequiredRoom(room).catch(error =>
+          rt.warn('chemclaw-bot: silent group completion for %s was not saved: %s', member.name, error))
+      }
+      return
+    }
+    await postToRoom(room, member, done ? '' : text, {
+      late: true, ...(views.length ? { views } : {}), ...(done ? { done: true } : {}),
+      ...(batch === undefined ? {} : { batch: batch.key, ...(waitingPeers ? (named ? {} : { quiet: true }) : { batchEnd: true }) }),
+      ...(askedBy && !waitingPeers ? { askedBy } : {}),
+    }).catch(error => rt.warn('chemclaw-bot: late group reply from %s failed: %s', member.name, error))
   }
   rt.lateRoomReply = lateRoomReply
 
@@ -1254,8 +1647,10 @@ export function install(rt) {
     const member = rt.botOf(owner?.botId)
     if (room === undefined || member === undefined || !room.members.includes(member.id)) return
     const { code, status, message } = failure
+    const batch = pendingBatchForTurn(room, member.id, info)
     await postToRoom(room, member, `Could not finish: its model call failed (${failureLine(failure)}).`, {
       late: true, quiet: true, failed: { code, ...(status ? { status } : {}), message },
+      ...(batch === undefined ? {} : { batch: batch.key }),
     }).catch(error => rt.warn('chemclaw-bot: late group failure from %s failed: %s', member.name, error))
   }
   rt.lateRoomFailure = lateRoomFailure
@@ -1264,6 +1659,7 @@ export function install(rt) {
   async function greetRoom(roomId) {
     const room = rt.roomOf(roomId)
     if (!room?.admin) return
+    assertGroupWritable(room)
     const agent = await rt.resolveAgent(room.id)
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: '[Group chat created]' }],
@@ -1278,6 +1674,7 @@ export function install(rt) {
   async function continueRoom(roomId) {
     const room = rt.roomOf(roomId)
     if (room === undefined) throw new Error('Unknown group chat')
+    assertGroupWritable(room)
     if ((room.paused ?? []).length === 0) return
     room.relays = 0
     await rt.save()

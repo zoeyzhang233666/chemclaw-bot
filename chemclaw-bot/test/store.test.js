@@ -61,6 +61,50 @@ function runtime(t, saved) {
   return { rt, home, statePath, warnings, dispose }
 }
 
+test('upstream #1351: complete group call batches persist across a team reload without waking anyone', async t => {
+  const batch = {
+    key: 'call-1', roomId: 'room-1', by: 'a', pending: ['b', 'c'],
+    done: ['Analyst'], doneIds: ['d'], results: [{ name: 'Analyst', seq: 17 }],
+    worked: true, answered: false, at: 1730000000000,
+  }
+  const saved = {
+    version: 1, mainBotIds: ['a'], bots: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } },
+    rooms: { 'room-1': { id: 'room-1', members: ['a', 'b', 'c'], log: [] } },
+    roomBatches: { 'call-1': batch },
+  }
+  const { rt, statePath } = runtime(t, saved)
+  await rt.load()
+  assert.deepEqual(rt.state.roomBatches['call-1'], batch)
+  await rt.save({ required: true })
+  assert.deepEqual(JSON.parse(fs.readFileSync(statePath, 'utf8')).roomBatches['call-1'], batch)
+})
+
+test('upstream #1351: missing batches start empty, but damaged pending work is never silently discarded', async t => {
+  const old = runtime(t, { version: 1, bots: {}, rooms: {} })
+  await old.rt.load()
+  assert.deepEqual(old.rt.state.roomBatches, {})
+  const good = {
+    key: 'call-1', roomId: 'room-1', by: 'a', pending: ['b'], done: [],
+    results: [], worked: false, answered: false, at: 1730000000000,
+  }
+  const invalid = [
+    null,
+    [],
+    { 'call-1': { ...good, pending: 'b' } },
+    { 'call-1': { ...good, results: [{ name: 'Analyst', seq: -2 }] } },
+    { 'call-1': { ...good, key: 'wrong' } },
+    { 'call-1': { ...good, doneIds: [null] } },
+  ]
+  for (const roomBatches of invalid) {
+    const saved = JSON.stringify({ version: 1, bots: {}, rooms: {}, roomBatches })
+    const { rt, statePath } = runtime(t, saved)
+    await rt.load()
+    assert.ok(rt.readOnly(), 'a broken pending batch must block state writes')
+    await assert.rejects(rt.save({ required: true }))
+    assert.equal(fs.readFileSync(statePath, 'utf8'), saved, 'no recovery attempt may replace the original team file')
+  }
+})
+
 test('a failed state write rejects and leaves the saved file unchanged', async (t) => {
   const { rt, statePath } = runtime(t)
   await rt.load()

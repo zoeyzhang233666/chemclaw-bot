@@ -96,7 +96,7 @@ export function install(rt) {
   })
   // What a host that only reads the team may still answer.
   // Updates change the dsh profile, not the team, so a reading host may run them too.
-  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'native-skill-catalog', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'artifact-paths', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking', 'avatar-library'])
+  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'native-skill-catalog', 'run-stats', 'room-progress', 'group-rows', 'exchange', 'exchange-text', 'file-text', 'artifact-paths', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking', 'avatar-library'])
 
   function setPrefs(body) {
     if (body.advancedCharts !== undefined) {
@@ -217,11 +217,12 @@ export function install(rt) {
         case 'exchange': {
           await rt.load()
           const pair = new Set([body.a, body.b])
-          return ok(state.exchanges.filter(entry => pair.has(entry.from) && pair.has(entry.to)))
+          return ok(rt.pairExchangesOf ? await rt.pairExchangesOf(body.a, body.b)
+            : state.exchanges.filter(entry => pair.has(entry.from) && pair.has(entry.to)))
         }
         case 'exchange-text': {
           await rt.load()
-          const entry = state.exchanges.find(item => item.id === body.id)
+          const entry = rt.pairExchangeOf?.(body.id) ?? state.exchanges.find(item => item.id === body.id)
           if (entry === undefined) return fail('This message is no longer kept', 'bot/stale')
           return ok(await rt.exchangeText(entry))
         }
@@ -255,6 +256,26 @@ export function install(rt) {
           return ok(await rt.usageView({ timeZone: typeof body.timeZone === 'string' ? body.timeZone.slice(0, 64) : undefined }))
         case 'room-progress':
           return ok([...rt.roomProgress.entries()].filter(([, entry]) => entry.roomId === body.roomId).map(([callId, entry]) => ({ callId, replies: entry.replies, speaking: entry.speaking ?? null, drafts: rt.roomDrafts?.(body.roomId) ?? [] })))
+        // Mirrors the upstream #1317 group-rows endpoint. Future Ledger UI
+        // consumes this without treating a divergent or torn book as history.
+        case 'group-rows': {
+          await rt.load()
+          const room = rt.roomOf(body.roomId) ?? rt.roomOf(rt.pastOwners.get(body.roomId)?.roomId)
+          const from = Number(body.from)
+          const to = body.to === undefined ? undefined : Number(body.to)
+          if (room === undefined || !Number.isSafeInteger(from) || from < 1 ||
+              (to !== undefined && (!Number.isSafeInteger(to) || to < from))) {
+            return ok({ rows: [], open: false, speaking: [], active: false })
+          }
+          const anchor = typeof body.anchor === 'string' && body.anchor.length <= 160 ? body.anchor : undefined
+          const view = await rt.groupRowsView(room.id, from, to, anchor)
+          const active = view.open && [...rt.roomProgress.values()].some(round => round.roomId === room.id)
+          const speaking = active
+            ? [...rt.roomProgress.values()].filter(round => round.roomId === room.id)
+              .flatMap(round => round.slots.filter(slot => slot.status === 'speaking').map(slot => slot.id))
+            : []
+          return ok({ ...view, active, speaking })
+        }
         case 'warm-room': {
           await rt.load()
           if (typeof body.roomId !== 'string') throw invalid('roomId required')

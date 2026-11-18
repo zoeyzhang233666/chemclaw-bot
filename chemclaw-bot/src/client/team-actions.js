@@ -142,6 +142,7 @@ export function teamActions({ call, after, partFor, roster, ui, live, cards, hel
     exchangeText: id => call('exchange-text', { id }).catch(() => undefined),
     fileText: file => call('file-text', { file }).catch(() => undefined),
     roomProgress: roomId => call('room-progress', { roomId }).catch(() => []),
+    groupRows: (roomId, from, to, anchor) => call('group-rows', { roomId, from, ...(to === undefined ? {} : { to }), ...(anchor === undefined ? {} : { anchor }) }).catch(() => null),
     warmRoom: roomId => call('warm-room', { roomId }).catch(() => ({ warmed: 0 })),
     earlier: (sessionId, cursor) => call('earlier', { sessionId, cursor: cursor ?? null }),
     // Hours come back in this browser's time zone, so days start at local midnight.

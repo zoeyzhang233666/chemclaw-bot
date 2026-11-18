@@ -2254,6 +2254,7 @@ function teamActions({ call: call2, after, partFor, roster, ui: ui2, live, cards
     exchangeText: (id) => call2("exchange-text", { id }).catch(() => void 0),
     fileText: (file) => call2("file-text", { file }).catch(() => void 0),
     roomProgress: (roomId) => call2("room-progress", { roomId }).catch(() => []),
+    groupRows: (roomId, from, to, anchor) => call2("group-rows", { roomId, from, ...to === void 0 ? {} : { to }, ...anchor === void 0 ? {} : { anchor } }).catch(() => null),
     warmRoom: (roomId) => call2("warm-room", { roomId }).catch(() => ({ warmed: 0 })),
     earlier: (sessionId, cursor) => call2("earlier", { sessionId, cursor: cursor ?? null }),
     // Hours come back in this browser's time zone, so days start at local midnight.
@@ -10277,6 +10278,20 @@ function useArtifactLinks(text, { sessionId, botId, live }) {
 }
 
 // src/shared/group-replies.js
+function relayRange(text) {
+  try {
+    const value2 = JSON.parse(text);
+    if (Number.isSafeInteger(value2?.from) && value2.from > 0) {
+      return {
+        from: value2.from,
+        ...Number.isSafeInteger(value2.to) && value2.to >= value2.from ? { to: value2.to } : {},
+        ...typeof value2.anchor === "string" && value2.anchor.length > 0 ? { anchor: value2.anchor } : {}
+      };
+    }
+  } catch {
+  }
+  return void 0;
+}
 var RELAY_LIST = /"replies"\s*:\s*\[/;
 var PRUNE_MARKER = /\[\.\.\. tool result middle pruned \.\.\.\]/;
 function parseReplies(text) {
@@ -11573,24 +11588,55 @@ function GroupReplies({ sessionId, eventSeq, callId, done, interrupted, content,
       clearTimeout(timer);
     };
   }, [done, sessionId, callId]);
+  const resultText = done ? contentText(content) : "";
+  const range = done ? relayRange(resultText) : void 0;
+  const rowsKey = range === void 0 ? void 0 : `${sessionId}:${range.from}:${range.to ?? ""}:${range.anchor ?? ""}`;
+  const [ledgerView, setLedgerView] = (0, import_react23.useState)({ key: null, result: null });
+  const view = ledgerView.key === rowsKey ? ledgerView.result : null;
+  const quietKey = view?.status === "aligned" && view.open && !view.active ? roster.revision : void 0;
+  (0, import_react23.useEffect)(() => {
+    if (rowsKey === void 0) return void 0;
+    let stopped = false;
+    let timer;
+    const tick = async () => {
+      const next = await actions.groupRows(sessionId, range.from, range.to, range.anchor);
+      if (stopped) return;
+      if (next !== null && Array.isArray(next?.rows)) {
+        setLedgerView({ key: rowsKey, result: next });
+        if (next.status === "aligned" && next.open && next.active) {
+          timer = setTimeout(tick, document.hidden ? 5e3 : 1e3);
+        }
+      }
+    };
+    void tick();
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+    };
+  }, [rowsKey, quietKey]);
   let replies = live.replies;
   let broken = false;
   if (done) {
-    const parsed = parseReplies(contentText(content));
+    const parsed = parseReplies(resultText);
     replies = parsed.broken && !parsed.replies.length ? live.replies : parsed.replies;
     broken = parsed.broken;
+    if (range !== void 0 && view?.status === "aligned") {
+      replies = view.rows;
+      broken = false;
+    }
   }
+  const unverified = done && range !== void 0 && view !== null && view.status !== "aligned";
   const posted = new Set(replies.flatMap((reply) => reply.text ? [`${reply.botId}\0${reply.text}`] : []));
   const drafts = done ? [] : (live.drafts ?? []).filter((draft) => !posted.has(`${draft.botId}\0${draft.text}`));
   const preparing = !done && !live.speaking && replies.length === 0 && drafts.length === 0;
-  const pending2 = done || !live.speaking || drafts.some((draft) => draft.botId === live.speaking) ? [] : [live.speaking];
+  const pending2 = done ? range !== void 0 && view?.status === "aligned" && view.open && view.active ? view.speaking ?? [] : [] : !live.speaking || drafts.some((draft) => draft.botId === live.speaking) ? [] : [live.speaking];
   const roomWorkKey = useWork?.((work) => JSON.stringify(work.rooms?.[sessionId] ?? [])) ?? "[]";
   const roomWork = JSON.parse(roomWorkKey);
-  const speakerWork = roomWork.find((entry) => entry.botId === live.speaking);
+  const speakerWork = roomWork.find((entry) => entry.botId === pending2[0]);
   const speakerTool = speakerWork?.tool;
   const speakerDoing = speakerTool ? workPhrase(speakerWork) : void 0;
   if (replies.length === 0 && pending2.length === 0 && drafts.length === 0 && !preparing) {
-    return broken ? (0, import_react23.createElement)("div", { className: "bt-group-replies" }, (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t(interrupted ? "This group reply was interrupted by a stop request" : "The group replies could not be shown"))) : null;
+    return broken || unverified ? (0, import_react23.createElement)("div", { className: "bt-group-replies" }, (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t(unverified ? "Group history needs recovery review; saved replies remain available" : interrupted ? "This group reply was interrupted by a stop request" : "The group replies could not be shown"))) : null;
   }
   const room2 = roster.roomsById[sessionId];
   return (0, import_react23.createElement)(
@@ -11666,14 +11712,14 @@ function GroupReplies({ sessionId, eventSeq, callId, done, interrupted, content,
       if (reply.kind === "done") {
         return (0, import_react23.createElement)("div", { key: `${reply.botId}-${index}`, className: "bt-event" }, t("{name} finished its work", { name: bot.name }));
       }
-      const genui = done ? texts2.map((_, offset) => ({ source: `chemclaw-bot/group/${callId}`, threadId: sessionId, eventSeq, contentBlockIndex: index + offset })) : void 0;
+      const genui = done && !(range !== void 0 && view?.status === "aligned") ? texts2.map((_, offset) => ({ source: `chemclaw-bot/group/${callId}`, threadId: sessionId, eventSeq, contentBlockIndex: index + offset })) : void 0;
       return (0, import_react23.createElement)(GroupMessage, { key: `${reply.botId}-${index}`, bot, texts: texts2, genui, room: room2, roster, actions, msgKey: callId ? `${sessionId}:${callId}:${index}` : void 0, useUi, time, duration });
     }),
     drafts.map((draft) => {
       const bot = roster.byId[draft.botId];
       return bot ? (0, import_react23.createElement)(GroupMessage, { key: `draft-${draft.attemptId}`, bot, text: draft.text, room: room2, roster, actions, streaming: true }) : null;
     }),
-    broken ? (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t(interrupted ? "This group reply was interrupted by a stop request" : "Some group replies could not be shown")) : null,
+    broken || unverified ? (0, import_react23.createElement)("div", { className: "bt-event", role: "status" }, t(unverified ? "Group history needs recovery review; showing the saved round result" : interrupted ? "This group reply was interrupted by a stop request" : "Some group replies could not be shown")) : null,
     pending2.map((id) => {
       const bot = roster.byId[id];
       if (!bot) return null;

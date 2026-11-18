@@ -7,6 +7,8 @@ import { setTimeout as realDelay } from 'node:timers/promises'
 import { apply } from './legacy-runtime.js'
 import { fakeAttachments, fakeContext } from './fake-ctx.js'
 import { GROUP_LINE_READ, MESSAGE_INLINE_MAX, ROOM_STEP_GAP_MS, ROOM_WORK_GRACE_MS, TEXT_KEPT } from '../src/host/constants.js'
+import { publishInitialGroupBook } from '../src/host/ledger-import.js'
+import { readLedger } from '../src/host/ledger-foundation.js'
 
 // Chief, the admin of group 'r1', speaks there from 'ga'; Writer from 'gb'; Tester from 'gc'.
 const seed = (room = {}, extraRooms = {}) => ({
@@ -26,7 +28,7 @@ const seed = (room = {}, extraRooms = {}) => ({
   revision: 0,
 })
 
-async function start(t, room, services, extraRooms) {
+async function start(t, room, services, extraRooms, config = {}) {
   const home = mkdtempSync(join(tmpdir(), 'ds-bot-work-'))
   writeFileSync(join(home, 'state.json'), JSON.stringify(seed(room, extraRooms)))
   const ctx = fakeContext({ services })
@@ -63,7 +65,7 @@ async function start(t, room, services, extraRooms) {
   let route
   const register = ctx.connection.fetch.register
   ctx.connection.fetch.register = (options) => { route = options; return register(options) }
-  apply(ctx, { home })
+  apply(ctx, { home, ...config })
   t.after(async () => {
     await ctx.dispose()
     rmSync(home, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 })
@@ -320,6 +322,112 @@ test('read_group_chat handles textless events, mixed messages and seq reads (ups
     const one = await host.tool('read_group_chat', { group: 'Ops', seq: index + 2 }, 'a')
     assert.match(one, new RegExp(expected, 'i'))
   }
+})
+
+test('upstream #1317 read_group_chat retrieves pre-60th messages and searches only a verified complete book', async t => {
+  const records = Array.from({ length: 96 }, (_, index) => ({
+    seq: index + 1, who: index % 2 ? 'Writer' : 'User',
+    ...(index % 2 ? { botId: 'b' } : {}),
+    text: 'Message ' + (index + 1) + ' on chemical demand',
+  }))
+  const originalLong = '历史全文：' + '聚氨酯供应链预测'.repeat(4000)
+  records[10].text = 'earliest special ' + originalLong
+  records[71].text = 'another special ' + originalLong
+  const log = records.slice(-60).map(entry => entry.seq === 72
+    ? { ...entry, text: entry.text.slice(0, TEXT_KEPT), length: entry.text.length }
+    : { ...entry })
+  const host = await start(t, { seq: records.length, log, seen: { a: records.length - 1 } })
+  await publishInitialGroupBook(host.home, 'group-r1', records)
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+
+  const old = await host.tool('read_group_chat', { group: 'Ops', seq: 11 }, 'a')
+  assert.match(old, /^User: earliest special 历史全文：/)
+  const fullRecent = await host.tool('read_group_chat', { group: 'Ops', seq: 72 }, 'a')
+  assert.match(fullRecent, /^Writer: another special 历史全文：/)
+  assert.ok(fullRecent.length > TEXT_KEPT, 'the full-Ledger reader must not use the 2k state preview')
+  const search = await host.tool('read_group_chat', { group: 'Ops', query: 'earliest special' }, 'a')
+  assert.match(search, /#11 User: earliest special/)
+  const mixed = await host.tool('read_group_chat', { group: 'Ops', query: 'chemical demand' }, 'a')
+  assert.match(mixed, /#96 Writer: Message 96/)
+  assert.equal((mixed.match(/#\d+ /g) ?? []).length, 20, 'the query has a bounded list of the newest twenty matches')
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 999 }, 'a'), /no recoverable message 999/)
+  const latest = await host.tool('read_group_chat', { group: 'Ops' }, 'a')
+  assert.match(latest, /Message 96 on chemical demand/)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before, 'reading must not alter saved group or session state')
+})
+
+test('Ledger read refuses an inconsistent or torn book without hiding unmigrated legacy chats', async t => {
+  const records = [
+    { seq: 1, who: 'User', text: 'keep original message' },
+    { seq: 2, who: 'User', text: 'keep another message' },
+  ]
+  const host = await start(t, { seq: 2, log: [records[0], records[1]] })
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a'), /keep original message/)
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', query: 'keep' }, 'a'), /full-history search is unavailable/)
+  await publishInitialGroupBook(host.home, 'group-r1', [records[0], { ...records[1], text: 'conflicting Ledger message' }])
+  const stateBefore = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const result = await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a')
+  assert.match(result, /need recovery review \(blocked\)/)
+  assert.doesNotMatch(result, /keep original message/)
+  assert.match(await host.tool('read_group_chat', { group: 'Ops' }, 'a'), /need recovery review \(blocked\)/)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), stateBefore)
+})
+
+test('upstream #1317 group-rows endpoint resolves verified Ledger windows and ignores anchor/session rows', async t => {
+  const records = [
+    { seq: 1, who: 'User', text: 'First procurement question', time: 101 },
+    { seq: 2, who: 'Writer', botId: 'b', text: 'First answer', time: 102 },
+    { seq: 3, who: 'ChemClaw', event: 'anchor', id: 'round-two', from: 3 },
+    { seq: 4, who: 'User', text: 'Second procurement question', time: 104 },
+    { seq: 5, who: 'Writer', botId: 'b', text: 'Second answer', time: 105 },
+    { seq: 6, who: 'ChemClaw', event: 'anchor', id: 'round-three', from: 6 },
+    { seq: 7, who: 'User', text: 'Third question', time: 107 },
+    { seq: 8, who: 'Chief', botId: 'a', text: 'Only the group Session saw this', session: true, time: 108 },
+  ]
+  const host = await start(t, { seq: records.length, log: records.filter(row => row.event !== 'anchor') })
+  await publishInitialGroupBook(host.home, 'group-r1', records)
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const first = (await host.call('group-rows', { roomId: 'r1', from: 1 })).value
+  assert.equal(first.status, 'aligned')
+  assert.equal(first.open, false)
+  assert.deepEqual(first.rows.map(row => row.text), ['First procurement question', 'First answer'])
+  assert.deepEqual(first.rows.map(row => row.kind ?? 'bot'), ['user', 'bot'])
+  const middle = (await host.call('group-rows', { roomId: 'r1', from: 3, anchor: 'round-two' })).value
+  assert.equal(middle.open, false)
+  assert.deepEqual(middle.rows.map(row => row.text), ['Second procurement question', 'Second answer'])
+  const last = (await host.call('group-rows', { roomId: 'r1', from: 6, anchor: 'round-three' })).value
+  assert.equal(last.open, true)
+  assert.equal(last.active, false)
+  assert.deepEqual(last.rows.map(row => row.text), ['Third question'])
+  const bounded = (await host.call('group-rows', { roomId: 'r1', from: 2, to: 4 })).value
+  assert.equal(bounded.open, false)
+  assert.deepEqual(bounded.rows.map(row => row.text), ['First answer', 'Second procurement question'])
+  const recent = await host.tool('read_group_chat', { group: 'Ops' }, 'a')
+  assert.match(recent, /First procurement question/)
+  assert.match(recent, /Third question/)
+  assert.doesNotMatch(recent, /Only the group Session saw this/, 'group-Session-only lines must not leak into member history')
+  assert.doesNotMatch(recent, /round-two|round-three/, 'Ledger round anchors are metadata, not visible chat')
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
+test('group-rows never presents unverified Ledger data as restored conversation rows', async t => {
+  const first = { seq: 1, who: 'User', text: 'Saved user request' }
+  const host = await start(t, { seq: 1, log: [first] })
+  const none = (await host.call('group-rows', { roomId: 'r1', from: 1 })).value
+  assert.equal(none.status, 'not-migrated')
+  assert.deepEqual(none.rows, [])
+  await publishInitialGroupBook(host.home, 'group-r1', [first, { seq: 2, who: 'Writer', botId: 'b', text: 'Unconfirmed reply' }])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const unsafe = (await host.call('group-rows', { roomId: 'r1', from: 1 })).value
+  assert.equal(unsafe.status, 'ledger-ahead')
+  assert.equal(unsafe.requiresRecovery, true)
+  assert.deepEqual(unsafe.rows, [])
+  assert.equal(unsafe.open, false)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+  const invalid = (await host.call('group-rows', { roomId: 'r1', from: 0 })).value
+  assert.deepEqual(invalid.rows, [])
+  const backward = (await host.call('group-rows', { roomId: 'r1', from: 3, to: 1 })).value
+  assert.deepEqual(backward.rows, [])
 })
 
 // 公开#185: the result went out as the work's first step line, next to one last tool
@@ -1103,6 +1211,379 @@ const takeGroupStateLock = host => {
   rmSync(path, { force: true })
   writeFileSync(path, JSON.stringify({ host: 'another-machine', pid: 1, token: 'other-writer' }))
 }
+
+test('experimental #1351 registers a two-member Bot call in state before delivering either turn', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const result = host.round('batch-registration', host.say('@Chief coordinate procurement'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer @Tester verify purchasing inputs')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  const state = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8'))
+  const batches = Object.values(state.roomBatches ?? {})
+  assert.equal(batches.length, 1, 'one Bot mention creates exactly one call batch')
+  const batch = batches[0]
+  assert.equal(batch.roomId, 'r1')
+  assert.equal(batch.by, 'a')
+  assert.deepEqual(batch.pending, ['b', 'c'])
+  assert.deepEqual(batch.done, [])
+  assert.deepEqual(batch.results, [])
+  assert.equal(batch.answered, false)
+  assert.equal(batch.worked, false)
+  assert.equal(host.agentOf('gc').calls.length, 0, 'second member is not delivered before first completes')
+  host.begin('gb')
+  host.finish('gb', 'Writer checked the inputs.')
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  const midway = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(midway.pending, ['c'], 'the first completed member is persisted before the second begins')
+  assert.deepEqual(midway.done, ['Writer'])
+  assert.deepEqual(midway.doneIds, ['b'])
+  assert.ok(midway.results.some(entry => entry.name === 'Writer' && Number.isSafeInteger(entry.seq)))
+  host.begin('gc')
+  host.finish('gc', 'Tester checked the inputs.')
+  await settle(() => result() !== undefined)
+  const settled = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(settled.pending, [])
+  assert.deepEqual(settled.done, ['Writer', 'Tester'])
+  assert.deepEqual(settled.doneIds, ['b', 'c'])
+  assert.equal(settled.answered, false, 'do not claim the caller has been awakened before recovery is wired')
+})
+
+test('experimental #1351 saves a Bot opening-post call batch before dispatching members', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  host.emit('ga', 'turn/start', { turn: 1 })
+  host.emit('ga', 'user/message', { content: [{ type: 'text', text: 'go' }],
+    source: { kind: 'bot', role: 'room', exchangeId: 'opening', roomId: 'r1', hop: 0 } })
+  step(host, 'ga', '@Writer @Tester verify an initial procurement question', 'initial-tool')
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const result = host.round('bot-opening-post', host.takePost())
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  const saved = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8'))
+  const batches = Object.values(saved.roomBatches ?? {})
+  assert.equal(batches.length, 1)
+  assert.equal(batches[0].by, 'a')
+  assert.deepEqual(batches[0].pending, ['b', 'c'])
+  assert.equal(host.agentOf('gc').calls.length, 0)
+  host.begin('gb')
+  host.finish('gb', 'Writer finished')
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  const midway = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(midway.pending, ['c'])
+  host.begin('gc')
+  host.finish('gc', 'Tester finished')
+  await settle(() => result() !== undefined)
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, [])
+})
+
+test('experimental #1351 merges a repeated Bot call without losing completed siblings', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('first-batch', host.say('@Chief coordinate procurement'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer @Tester check the supplier')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'still-working', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  host.begin('gc')
+  host.finish('gc', 'Tester verified the supplier')
+  await settle(() => first() !== undefined)
+  const prior = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)
+    .find(batch => batch.by === 'a')
+  assert.deepEqual(prior.pending, ['b'])
+  assert.deepEqual(prior.doneIds, ['c'])
+  assert.equal(prior.results.length, 1)
+
+  await host.tool('post_to_group', { group: 'Ops', message: '@Writer revise the supplier list' }, 'a')
+  const second = host.round('second-batch', host.takePost())
+  await settle(() => Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)
+    .some(batch => batch.by === 'a' && batch.key !== prior.key))
+  const updated = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)
+    .filter(batch => batch.by === 'a')
+  assert.equal(updated.length, 1, 'one caller cannot leave two batches pending for Writer')
+  assert.deepEqual(updated[0].pending, ['b'])
+  assert.deepEqual(updated[0].doneIds, ['c'])
+  assert.deepEqual(updated[0].done, ['Tester'])
+  assert.deepEqual(updated[0].results, prior.results, 'the earlier Tester result survives the handover')
+  assert.equal(updated[0].answered, false, 'no caller wake before a durable receipt')
+  await settle(() => second() !== undefined)
+})
+
+test('experimental #1351 late result stays pending until the group Ledger admits its post', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('late-batch-first', host.say('@Chief coordinate the supplier check'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer @Tester verify the supplier')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'supplier-check', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  host.begin('gc')
+  host.finish('gc', 'Tester checked the supplier')
+  await settle(() => first() !== undefined)
+  const previous = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(previous.pending, ['b'])
+  assert.equal(previous.worked, true, 'the tool work is persisted without settling it')
+  host.emit('gb', 'tool/result', { callId: 'supplier-check' })
+  host.finish('gb', 'Writer finished the supplier check')
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const queued = host.agentOf('r1').calls[0]
+  assert.equal(queued.source.batch, previous.key)
+  assert.equal(queued.source.batchEnd, true)
+  assert.equal(queued.source.askedBy, 'a')
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, ['b'],
+    'DSH followup is not a committed Ledger result')
+  const admitted = host.round('late-batch-committed', host.takePost())
+  await settle(() => host.agentOf('ga').calls.length === 2)
+  const saved = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(saved.pending, [])
+  assert.deepEqual(saved.doneIds, ['c', 'b'])
+  assert.equal(saved.results.length, 2)
+  assert.equal(saved.results.at(-1).name, 'Writer')
+  assert.ok(Number.isSafeInteger(saved.results.at(-1).seq))
+  assert.equal(saved.answered, false, 'no automatic replay or unacknowledged wake')
+  host.begin('ga')
+  host.finish('ga', 'Thanks, both supplier checks are recorded')
+  await settle(() => admitted() !== undefined)
+})
+
+test('experimental #1351 late @mention can call a Bot while other batch members still work', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('mention-batch-first', host.say('@Chief verify supplier background'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer @Tester verify the supplier')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'writer-work', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  host.begin('gc')
+  host.emit('gc', 'tool/call', { callId: 'tester-work', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => first() !== undefined)
+  const batch = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(batch.pending, ['b', 'c'])
+  host.emit('gb', 'tool/result', { callId: 'writer-work' })
+  host.finish('gb', '@Chief Please review the supplier anomaly')
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const post = host.takePost()
+  assert.equal(post.source.batch, batch.key)
+  assert.equal(post.source.quiet, undefined, 'a real @mention must not be swallowed by quiet partial-result logic')
+  assert.equal(post.source.askedBy, undefined, 'other batch members still work; no automatic caller wake')
+  const next = host.round('mention-batch-post', post)
+  await settle(() => host.agentOf('ga').calls.length === 2)
+  const saved = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(saved.pending, ['c'])
+  assert.equal(saved.answered, true)
+  host.begin('ga')
+  host.finish('ga', 'Reviewed; continue checking')
+  await settle(() => next() !== undefined)
+})
+
+test('experimental #1351 silent late PASS clears its own pending call without posting or replaying', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('pass-pending', host.say('@Chief check the supplier'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer verify and PASS if there is no finding')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'silent-check', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => first() !== undefined)
+  const before = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(before.pending, ['b'])
+  host.emit('gb', 'tool/result', { callId: 'silent-check' })
+  host.finish('gb', '[PASS]')
+  await settle(() => Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending.length === 0)
+  const settled = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(settled.done, [])
+  assert.deepEqual(settled.results, [])
+  assert.equal(host.agentOf('r1').calls.length, 0, 'silent PASS must not invent a reply or replay work')
+})
+
+test('experimental #1351 late failure settles only its caller after durable group admission', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('failed-pending', host.say('@Chief check the supplier'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer check the supplier')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'failing-check', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => first() !== undefined)
+  const batch = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(batch.pending, ['b'])
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'error', error: { code: 'RATE_LIMIT', message: 'provider unavailable' } } })
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const post = host.takePost()
+  assert.equal(post.source.failed.code, 'RATE_LIMIT')
+  assert.equal(post.source.batch, batch.key)
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, ['b'],
+    'the failure event has not been admitted or durably saved')
+  const admitted = host.round('failed-admission', post)
+  await settle(() => admitted() !== undefined)
+  const persisted = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(persisted.pending, [])
+  assert.deepEqual(persisted.done, [])
+  assert.deepEqual(persisted.results, [])
+})
+
+test('experimental #1351 confirmed member Stop settles its pending work only on group admission', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('stopped-pending', host.say('@Chief check the supplier'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer check the supplier')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'stopped-check', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => first() !== undefined)
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, ['b'])
+  assert.equal((await host.call('stop-member-work', { roomId: 'r1', botId: 'b' })).value, true)
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, ['b'],
+    'a cancellation request alone is not an acknowledged stop')
+  host.emit('gb', 'turn/end', { turn: 1, reason: { kind: 'aborted' } })
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const post = host.takePost()
+  assert.equal(post.source.stopped, true)
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, ['b'],
+    'DSH delivery is not a required-save group receipt')
+  const admitted = host.round('confirmed-stop-admission', post)
+  await settle(() => admitted() !== undefined)
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, [])
+})
+
+test('experimental group relay creates durable anchored windows without changing old reply display', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('anchored-first', host.say('@Writer first procurement request'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.finish('gb', 'First procurement reply')
+  await settle(() => first() !== undefined)
+  assert.equal(first().from, 1)
+  assert.equal(typeof first().anchor, 'string')
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 1 }, 'a'),
+    /no recoverable message 1/, 'an internal round anchor must not appear as a chat message')
+  assert.deepEqual(first().replies.filter(line => !line.kind).map(line => line.text), ['First procurement reply'])
+  const open = (await host.call('group-rows', { roomId: 'r1', from: first().from, anchor: first().anchor })).value
+  assert.equal(open.status, 'aligned')
+  assert.equal(open.open, false)
+  assert.equal(first().to, 3)
+  assert.deepEqual(open.rows.map(line => line.text), ['@Writer first procurement request', 'First procurement reply'])
+  const second = host.round('anchored-second', host.say('@Writer second procurement request'))
+  await settle(() => host.agentOf('gb').calls.length === 2)
+  host.begin('gb')
+  host.finish('gb', 'Second procurement reply')
+  await settle(() => second() !== undefined)
+  assert.ok(second().from > first().from)
+  assert.notEqual(second().anchor, first().anchor)
+  const earlier = (await host.call('group-rows', { roomId: 'r1', from: first().from, anchor: first().anchor })).value
+  const later = (await host.call('group-rows', { roomId: 'r1', from: second().from, anchor: second().anchor })).value
+  assert.equal(earlier.open, false)
+  assert.equal(later.open, false)
+  assert.equal(second().to, 7)
+  assert.deepEqual(earlier.rows.map(line => line.text), ['@Writer first procurement request', 'First procurement reply'])
+  assert.deepEqual(later.rows.map(line => line.text), ['@Writer second procurement request', 'Second procurement reply'])
+  const book = await readLedger(host.home, 'group-r1')
+  assert.deepEqual(book.records.filter(line => line.event === 'anchor').map(line => [line.id, line.from]),
+    [[first().anchor, first().from], [second().anchor, second().from]])
+  const state = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1
+  assert.deepEqual(state.log.map(line => line.seq), [2, 3, 6, 7])
+  assert.equal(state.seq, 8)
+  assert.deepEqual(book.records.filter(line => line.event === 'round').map(line => [line.id, line.from, line.to]),
+    [[first().anchor, first().from, first().to], [second().anchor, second().from, second().to]])
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 4 }, 'a'), /no recoverable message 4/)
+  assert.equal((await host.call('group-rows', { roomId: 'r1', from: 1, anchor: first().anchor })).value.open, false)
+  assert.equal((await host.call('group-rows', { roomId: 'r1', from: 1, anchor: 'forged' })).value.status, 'unknown-anchor')
+})
+
+test('experimental #1317 writer fsyncs group user input and Bot reply before exposing success', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const result = host.round('ledger-round-durable', host.say('@Writer 请核对聚氨酯采购价格'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  const first = await readLedger(host.home, 'group-r1')
+  assert.equal(first.records.length, 2)
+  assert.equal(first.records[0].event, 'anchor')
+  assert.match(first.records[1].text, /聚氨酯采购价格/)
+  const saved = JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1
+  assert.equal(saved.seq, 2, 'anchor and message must be durable before member delivery')
+  assert.equal(saved.log[0].text, first.records[1].text)
+  host.begin('gb')
+  host.finish('gb', '采购建议已核对。')
+  await settle(() => result() !== undefined)
+  const book = await readLedger(host.home, 'group-r1')
+  assert.equal(book.records.length, 4)
+  assert.equal(book.records[2].text, '采购建议已核对。')
+  assert.equal(book.records[3].event, 'round')
+  assert.equal(result().to, 3)
+  assert.equal(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).rooms.r1.seq, 4)
+  assert.deepEqual(result().replies.filter(item => item.kind === undefined).map(item => item.text), ['采购建议已核对。'])
+  assert.match(await host.tool('read_group_chat', { group: 'Ops', seq: 2 }, 'a'), /聚氨酯采购价格/)
+})
+
+test('experimental group writer refuses uncertain lock and never delivers unsaved user input', async t => {
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  takeGroupStateLock(host)
+  const result = host.round('ledger-no-unsafe-replay', host.say('@Writer 不应执行'))
+  await settle(() => result() !== undefined)
+  assert.match(result().code, /PERSISTENCE|LEDGER/)
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  assert.equal(await readLedger(host.home, 'group-r1'), undefined)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
+test('default legacy Host refuses to append a group that already has a Ledger', async t => {
+  const host = await start(t)
+  const stateBefore = readFileSync(join(host.home, 'state.json'), 'utf8')
+  await publishInitialGroupBook(host.home, 'group-r1', [])
+  const result = host.round('no-legacy-double-writer', host.say('@Writer 数据一致性检查'))
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.equal(host.agentOf('gb').calls.length, 0)
+  assert.deepEqual((await readLedger(host.home, 'group-r1')).records, [])
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), stateBefore)
+})
+
+test('a Ledger published during a legacy round blocks the next Bot delivery', async t => {
+  const host = await start(t)
+  const result = host.round('ledger-appears-mid-turn', host.say('@Writer 先核对这一项'))
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  await publishInitialGroupBook(host.home, 'group-r1', [
+    { seq: 1, who: 'User', text: '@Writer 先核对这一项' },
+  ])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  host.finish('gb', '@Tester 下一步请执行')
+  await settle(() => result() !== undefined)
+  assert.equal(result().code, 'LEDGER_MIGRATION_REQUIRED')
+  assert.equal(host.agentOf('gc').calls.length, 0)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
+
+test('a migrated group cannot be renamed or deleted by legacy roster operations', async t => {
+  const host = await start(t)
+  await publishInitialGroupBook(host.home, 'group-r1', [])
+  const before = readFileSync(join(host.home, 'state.json'), 'utf8')
+  const changed = await host.tool('update_group', { group: 'Ops', notice: 'should not change' }, 'a')
+  assert.match(changed, /Could not update/)
+  assert.match(changed, /Ledger book/)
+  await assert.rejects(host.tool('delete_group', { group: 'Ops' }, 'a'), /Ledger book/)
+  assert.equal(readFileSync(join(host.home, 'state.json'), 'utf8'), before)
+})
 
 test('a final member answer whose required save fails is shown as a failure and never calls its @mentions', async t => {
   const host = await start(t)

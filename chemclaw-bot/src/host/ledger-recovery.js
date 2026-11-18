@@ -36,11 +36,44 @@ function blocked(stateSeq, ledgerSeq, reason) {
 function verifyFullBook(ledger) {
   if (!ledger || !Array.isArray(ledger.records)) return 'Ledger records are unavailable'
   if (ledger.incompleteTail !== '') return 'Ledger has an interrupted final record'
+  const opened = new Map()
+  const closed = new Set()
   for (let index = 0; index < ledger.records.length; index++) {
     const record = ledger.records[index]
     if (!record || typeof record !== 'object' || Array.isArray(record) ||
         record.seq !== index + 1) {
       return 'Ledger contains a gap, duplicate, or invalid sequence at ' + (index + 1)
+    }
+    // Round anchors are durable, sequential metadata, not member messages.
+    // Reject malformed markers instead of allowing them to hide lost history.
+    if (record.event === 'anchor' && (
+      typeof record.id !== 'string' || !record.id ||
+      !Number.isSafeInteger(record.from) || record.from < 1 ||
+      record.from > record.seq ||
+      Object.hasOwn(record, 'text') || Object.hasOwn(record, 'kind')
+    )) return 'Ledger contains an invalid round anchor at ' + record.seq
+    if (record.event === 'anchor') {
+      if (opened.has(record.id)) return 'Ledger repeats a round anchor id at ' + record.seq
+      opened.set(record.id, record.from)
+    }
+    if (record.event === 'round' && (
+      typeof record.id !== 'string' || !record.id ||
+      !Number.isSafeInteger(record.from) || record.from < 1 ||
+      !Number.isSafeInteger(record.to) || record.to < record.from ||
+      record.to >= record.seq ||
+      !Array.isArray(record.passed) || !Array.isArray(record.failed) ||
+      !record.passed.every(name => typeof name === 'string') ||
+      !record.failed.every(name => typeof name === 'string') ||
+      Object.hasOwn(record, 'text') || Object.hasOwn(record, 'kind')
+    )) return 'Ledger contains an invalid round completion at ' + record.seq
+    if (record.event === 'round') {
+      if (opened.get(record.id) !== record.from || closed.has(record.id)) {
+        return 'Ledger completion does not match an open round anchor at ' + record.seq
+      }
+      closed.add(record.id)
+    }
+    if (record.event !== undefined && record.event !== 'anchor' && record.event !== 'round') {
+      return 'Ledger contains an unknown metadata event at ' + record.seq
     }
     if (record.legacyIncomplete === true ||
         (record.length !== undefined && (!Number.isSafeInteger(record.length) ||
@@ -104,26 +137,28 @@ export function planGroupLedgerRecovery({ room, ledger }) {
   }
 
   const persisted = room.log ?? []
-  // room.log is the latest contiguous window of at most 60 records. A gap in
-  // that retained window may represent unsaved/partially repaired state and
-  // must not be misclassified as synchronized merely because each remaining
-  // sequence happens to match the book.
+  // Upstream #1317 stores invisible round anchors alongside messages. In this
+  // strict sequenced format those anchors advance room.seq but not room.log.
+  // The saved cache must equal the latest *visible* window by exact sequence,
+  // including any skipped anchor numbers; gaps between visible messages are
+  // valid ONLY when the matching durable rows are verified round anchors.
   if (persisted.length > ROOM_LOG_MAX) {
     return blocked(stateSeq, ledgerSeq, 'Saved room.log exceeds its bounded history window')
   }
-  let expected = stateSeq - persisted.length + 1
-  for (const saved of persisted) {
-    if (!Number.isSafeInteger(saved?.seq) || saved.seq !== expected ||
-        !roomLineAgrees(saved, records[saved.seq - 1])) {
+  const visibleAtSave = records.slice(0, stateSeq).filter(record => record.event === undefined)
+  const expectedWindow = visibleAtSave.slice(-ROOM_LOG_MAX)
+  if (persisted.length !== expectedWindow.length) {
+    return blocked(stateSeq, ledgerSeq, stateSeq > 0 && persisted.length === 0 && expectedWindow.length > 0
+      ? 'Saved room has a nonzero sequence but no verifiable recent log'
+      : 'Saved room.log is inconsistent with durable Ledger history')
+  }
+  for (let i = 0; i < expectedWindow.length; i++) {
+    const saved = persisted[i]
+    const durable = expectedWindow[i]
+    if (!Number.isSafeInteger(saved?.seq) || saved.seq !== durable.seq ||
+        !roomLineAgrees(saved, durable)) {
       return blocked(stateSeq, ledgerSeq, 'Saved room.log is inconsistent with durable Ledger history')
     }
-    expected++
-  }
-  if (stateSeq > 0 && persisted.length === 0) {
-    return blocked(stateSeq, ledgerSeq, 'Saved room has a nonzero sequence but no verifiable recent log')
-  }
-  if (persisted.length > 0 && persisted.at(-1).seq !== stateSeq) {
-    return blocked(stateSeq, ledgerSeq, 'Saved room.log does not end at the saved room sequence')
   }
   if (stateSeq === ledgerSeq) {
     return {
@@ -134,7 +169,7 @@ export function planGroupLedgerRecovery({ room, ledger }) {
   }
 
   const unconfirmedRecords = records.slice(stateSeq).map(record => ({ ...record }))
-  const recent = records.slice(-ROOM_LOG_MAX)
+  const recent = records.filter(record => record.event === undefined).slice(-ROOM_LOG_MAX)
   return {
     status: 'ledger-ahead', stateSeq, ledgerSeq,
     // "unconfirmed" means receipt/delivery status is UNKNOWN, not that the
