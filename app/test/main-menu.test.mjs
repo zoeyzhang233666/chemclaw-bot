@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict'
 import { before, test } from 'node:test'
 import { app, state } from './helpers/fake-electron.mjs'
+import { state as host } from './helpers/fake-host-process.mjs'
 import { startApp, waitFor } from './helpers/app-harness.mjs'
 import { installHooks } from './helpers/register.mjs'
 
@@ -25,6 +26,11 @@ test('the application menu of macOS has no Quit', async () => {
   // The menu keeps the rest of macOS: about, services and the hiding of the app.
   const roles = items.map(item => item.role).filter(Boolean)
   for (const role of ['about', 'services', 'hide', 'hideOthers', 'unhide']) assert.ok(roles.includes(role), `the menu keeps ${role}`)
+})
+
+test('a Mac source preview uses the provider without a packaged helper override', async () => {
+  await waitFor(() => host.starts > 0, 'start the source Host')
+  assert.equal(host.computerHelperHome, process.env.DS_BOT_COMPUTER_HELPER_HOME)
 })
 
 test('the app ends', async () => {

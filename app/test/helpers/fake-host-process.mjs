@@ -36,7 +36,11 @@ export class HostProcess {
   #options
   #messageListeners = new Set()
 
-  constructor(options) { this.#options = options; state.failHost = options.onFailure }
+  constructor(options) {
+    this.#options = options
+    state.failHost = options.onFailure
+    state.computerHelperHome = options.env?.DS_BOT_COMPUTER_HELPER_HOME
+  }
 
   async start() {
     state.starts += 1

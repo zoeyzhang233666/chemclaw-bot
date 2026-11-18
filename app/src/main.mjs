@@ -282,11 +282,19 @@ async function start() {
   mkdirSync(profileDir, { recursive: true })
   const newHost = () => {
     appPath?.assertAvailable()
+    const runtimeDir = app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime')
     return new HostProcess({
       entry: join(here, 'host.mjs'),
       cwd: profileDir,
-      env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1',
-        CHEMCLAW_BROWSER_SAFE_MODE: browserSafeMode() ? '1' : '0', DS_BOT_USER_DSH_HOME: userDshHome(), DS_BOT_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), DS_BOT_COMPUTER_HELPER_HOME: join(app.getPath('userData'), 'computer-use'), CHEMCLAW_OFFICE_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
+      env: {
+        ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1',
+        CHEMCLAW_BROWSER_SAFE_MODE: browserSafeMode() ? '1' : '0', DS_BOT_USER_DSH_HOME: userDshHome(),
+        DS_BOT_RUNTIME_DIR: runtimeDir, CHEMCLAW_OFFICE_RUNTIME_DIR: runtimeDir,
+        ...(app.isPackaged && process.platform === 'darwin'
+          ? { DS_BOT_COMPUTER_HELPER_HOME: join(app.getPath('userData'), 'computer-use') }
+          : {}),
+        ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}),
+      },
       pnpm,
       onFailure: handleHostFailure,
     })
