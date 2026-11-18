@@ -58,9 +58,13 @@ function inspectWriteTarget(el, { url, mode, active = false }) {
       if (kind === 'payment') return action(kind, label)
       const method = methodOf(form, target)
       if (method === 'get' || method === 'dialog') return null
+      return action(kind ?? 'post', label)
+    }
+    if (target?.matches?.('a[href]') || target?.closest?.('a[href]')) {
+      const label = labelOf(target)
+      const kind = kindOf(label)
       return kind ? action(kind, label) : null
     }
-    if (target?.matches?.('a[href]') || target?.closest?.('a[href]')) return null
     const tag = target?.tagName?.toLowerCase()
     const type = target?.getAttribute('type')?.toLowerCase()
     const role = target?.getAttribute('role')?.toLowerCase()
@@ -71,7 +75,7 @@ function inspectWriteTarget(el, { url, mode, active = false }) {
     if (!buttonLike) return null
     const label = labelOf(target)
     const kind = kindOf(label)
-    return kind ? action(kind, label) : null
+    return action(kind ?? 'post', label)
   }
 
   if (mode !== 'submit') return null
@@ -81,7 +85,7 @@ function inspectWriteTarget(el, { url, mode, active = false }) {
   if (methodOf(form, submitter) !== 'post') return null
   const label = labelOf(submitter)
   const kind = kindOf(label)
-  return kind ? action(kind, label) : null
+  return action(kind ?? 'post', label)
 }
 
 // playwright-core ships with DS Bot and drives the desktop app's own browser; a
