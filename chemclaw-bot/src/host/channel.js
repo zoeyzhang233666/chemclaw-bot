@@ -217,11 +217,12 @@ export function install(rt) {
         case 'exchange': {
           await rt.load()
           const pair = new Set([body.a, body.b])
-          return ok(state.exchanges.filter(entry => pair.has(entry.from) && pair.has(entry.to)))
+          return ok(rt.pairExchangesOf ? await rt.pairExchangesOf(body.a, body.b)
+            : state.exchanges.filter(entry => pair.has(entry.from) && pair.has(entry.to)))
         }
         case 'exchange-text': {
           await rt.load()
-          const entry = state.exchanges.find(item => item.id === body.id)
+          const entry = rt.pairExchangeOf?.(body.id) ?? state.exchanges.find(item => item.id === body.id)
           if (entry === undefined) return fail('This message is no longer kept', 'bot/stale')
           return ok(await rt.exchangeText(entry))
         }

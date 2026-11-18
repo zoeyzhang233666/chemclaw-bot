@@ -9,6 +9,7 @@ import { fakeAttachments, fakeContext } from './fake-ctx.js'
 import { install as installTurns } from '../src/host/turns.js'
 import { install as installParts } from '../src/host/parts.js'
 import { SOURCE_KIND } from '../src/host/constants.js'
+import { readLedger } from '../src/host/ledger-foundation.js'
 
 // A two-Bot team, optionally with b in a group Session 'gb' of room 'Ops'.
 function team({ group = false } = {}) {
@@ -31,7 +32,7 @@ function team({ group = false } = {}) {
 
 // Services for a full apply(): resolveAgent returns a per-Session agent that
 // records followup/steer/inject/cancel calls.
-async function start(seed) {
+async function start(seed, config = {}) {
   const home = mkdtempSync(join(tmpdir(), 'ds-bot-messages-'))
   writeFileSync(join(home, 'state.json'), JSON.stringify(seed))
   const ctx = fakeContext()
@@ -89,7 +90,7 @@ async function start(seed) {
     route = options
     return register(options)
   }
-  apply(ctx, { home })
+  apply(ctx, { home, ...config })
   let seq = 0
   const emit = (id, type, data, extra) => {
     for (const listener of ctx.listeners.get('session/event') ?? []) {
@@ -149,6 +150,42 @@ test('provider overflow opens at most two fresh parts and keeps blocked input un
   assert.equal((await bot()).contextRecovery, undefined)
   await fail('bounded-2')
   await waitFor(() => created === 3)
+})
+
+test('experimental #1358 writes Bot-to-Bot attempt before sending and delivery receipt after DSH flush', async t => {
+  const { ctx, agents, tool, exchanges, home, stop, call } = await start(team(), { experimentalPairLedger: true })
+  t.after(stop)
+  let observed = false
+  ctx.sessions.flush = async session => {
+    if (session.id !== 'b') return
+    const before = await readLedger(home, 'pair-a-b')
+    assert.equal(before.records.length, 1, 'the attempt is already on disk during the DSH send')
+    assert.equal(before.records[0].event, undefined)
+    assert.equal(before.records[0].text, 'Supplier check')
+    assert.equal(agents.get('b').calls.length, 1)
+    observed = true
+  }
+  const reply = await tool('message_bot', { to: 'Writer', message: 'Supplier check' }, 'a')
+  assert.match(reply, /Delivered to Writer/)
+  assert.equal(observed, true)
+  const book = await readLedger(home, 'pair-a-b')
+  assert.deepEqual(book.records.map(row => row.event ?? 'attempt'), ['attempt', 'delivered'])
+  assert.deepEqual((await exchanges()).map(entry => entry.text), ['Supplier check'])
+  const item = (await exchanges())[0]
+  assert.deepEqual((await call('exchange-text', { id: item.id })).value, { text: 'Supplier check', whole: true })
+  assert.deepEqual(JSON.parse(readFileSync(join(home, 'state.json'), 'utf8')).exchanges, [],
+    'the experimental pair Ledger, not the old state.json cache, owns new delivery')
+})
+
+test('experimental #1358 does not show or resend an uncertain Bot-to-Bot DSH flush', async t => {
+  const { ctx, agents, tool, exchanges, home, stop } = await start(team(), { experimentalPairLedger: true })
+  t.after(stop)
+  ctx.sessions.flush = async () => { throw new Error('DSH flush failed after enqueue') }
+  await assert.rejects(tool('message_bot', { to: 'Writer', message: 'Uncertain supplier job' }, 'a'), /DSH flush failed/)
+  const book = await readLedger(home, 'pair-a-b')
+  assert.deepEqual(book.records.map(row => row.event ?? 'attempt'), ['attempt'])
+  assert.equal(agents.get('b').calls.length, 1, 'only the original DSH send is attempted')
+  assert.deepEqual(await exchanges(), [], 'uncertain sends are not shown as confirmed')
 })
 
 test('message_bot steers by default; on an idle Bot it opens the next turn', async (t) => {

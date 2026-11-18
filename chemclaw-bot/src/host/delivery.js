@@ -3,9 +3,32 @@ import { randomUUID } from 'node:crypto'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { HISTORY_TIMEOUT_MS, LONG_HEAD, MESSAGE_INLINE_MAX, READ_LINE_MAX, SOURCE_KIND, TEXT_KEPT, TEXT_SHOW_MAX } from './constants.js'
 import { headOf, textOf } from './text.js'
+import { createPairDeliveryJournal } from './ledger-pair-delivery.js'
 
 export function install(rt) {
   const { ctx, state } = rt
+  const pairJournal = rt.config?.experimentalPairLedger === true
+    ? createPairDeliveryJournal({ home: rt.home, assertWriter: rt.assertLedgerWriter }) : undefined
+  const pairViewed = new Map()
+  // #1358 opt-in: a pair's historical state.json messages are imported once;
+  // only acknowledged pair-Ledger messages appear in its exchange dialog.
+  const exchangesOf = async (a, b) => {
+    const legacy = state.exchanges.filter(entry => [a, b].includes(entry.from) && [a, b].includes(entry.to))
+    if (pairJournal === undefined) return legacy
+    const current = await pairJournal.inspect(a, b)
+    if (current === undefined) return legacy
+    return current.delivered.map(row => {
+      const preview = headOf(row.text, TEXT_KEPT)
+      const entry = { ...row, text: preview,
+        ...(row.length === undefined && preview.length < row.text.length ? { length: row.text.length } : {}),
+        ledger: row.length === undefined || row.files?.length > 0,
+      }
+      pairViewed.set(row.id, entry)
+      return entry
+    })
+  }
+  rt.pairExchangesOf = exchangesOf
+  rt.pairExchangeOf = id => pairViewed.get(id)
 
   const resolveAgent = async (sessionId) => {
     const resolved = await ctx.sessionController.resolveAgent(sessionId)
@@ -80,7 +103,12 @@ export function install(rt) {
       ...(abandoned ? { abandoned: true } : {}),
     }
     const targetSessionId = sessionId ?? rt.chatOf(toId)
-    if (recordExchange && EXCHANGE_ROLES.has(role) && !deferred && !resumed && !retried && !resent) {
+    const pairRole = fromId !== undefined && from !== undefined && recordExchange && EXCHANGE_ROLES.has(role)
+    if (pairJournal !== undefined && pairRole && (merged || resent)) {
+      throw new Error('Pair Ledger merged/resend delivery requires explicit recovery review; no automatic replay')
+    }
+    const pairWrite = pairJournal !== undefined && pairRole && !deferred && !resumed && !retried
+    if (!pairWrite && recordExchange && EXCHANGE_ROLES.has(role) && !deferred && !resumed && !retried && !resent) {
       // The whole text is in its file, or in the Session it goes to; exchangeText reads
       // it back there.
       const kept = headOf(text, TEXT_KEPT)
@@ -93,6 +121,13 @@ export function install(rt) {
     }
     await rt.ensureCapabilities(targetSessionId)
     const agent = await resolveAgent(targetSessionId)
+    if (pairWrite) {
+      await pairJournal.seed(fromId, toId, state.exchanges)
+      // The whole message and id are fsynced before any DSH steer/followup.
+      // A repeated id with an uncertain attempt is refused, not replayed.
+      await pairJournal.begin({ a: fromId, b: toId, id: exchangeId,
+        from: fromId, to: toId, role, text, replyTo, roomId, audience })
+    }
     // A steered message cuts into a running turn at its next step; a follow-up
     // queues for the next turn (see turns.js for how each is routed).
     const message = createUserMessage({
@@ -105,6 +140,13 @@ export function install(rt) {
     if (steer) agent.steer(message)
     else agent.followup(message)
     await ctx.sessions.flush(agent.session)
+    if (pairWrite) {
+      // The DSH flush returned. A failed receipt must never turn into a
+      // second send; it remains an uncertain attempt for manual review.
+      await pairJournal.delivered({ a: fromId, b: toId, id: exchangeId,
+        sessionId: targetSessionId }).catch(error =>
+        rt.warn('chemclaw-bot: pair Ledger delivery receipt for %s uncertain: %s', exchangeId, error))
+    }
     return exchangeId
   }
 
@@ -112,6 +154,10 @@ export function install(rt) {
   // there is its header line, then the text. `whole` is false when only the start could
   // be read (the Session is gone, or the message is past what the dialog shows).
   async function exchangeText(entry) {
+    if (entry.ledger === true && entry.files?.length > 0) {
+      return await fileText(entry.files[0]) ?? { text: headOf(entry.text, TEXT_SHOW_MAX), whole: false }
+    }
+    if (entry.ledger === true) return { text: headOf(entry.text, TEXT_SHOW_MAX), whole: entry.length === undefined }
     if (entry.length === undefined) return { text: entry.text, whole: true }
     if (entry.files?.length > 0) return await fileText(entry.files[0]) ?? { text: entry.text, whole: false }
     try {
