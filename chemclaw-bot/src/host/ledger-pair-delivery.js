@@ -18,7 +18,8 @@ export function pairBook(a, b) {
   return 'pair-' + ids.join('-')
 }
 
-function verified(book) {
+function verified(book, a, b) {
+  const allowed = [a, b].sort()
   if (book === undefined || book.incompleteTail !== '') {
     throw new Error('Pair Ledger missing or interrupted: no automatic replay')
   }
@@ -38,6 +39,12 @@ function verified(book) {
           acknowledged.get(row.id) !== previous.seq ||
           previous.from !== row.from || previous.to !== row.to || previous.role !== row.role)) {
         throw new Error('Pair Ledger contains an unsafe repeated exchange')
+      }
+      // A hyphen-delimited upstream book name can alias for unusual Bot IDs
+      // (a-b,c versus a,b-c). Fail closed rather than show another pair's data.
+      if (row.from !== allowed[0] && row.from !== allowed[1] ||
+          row.to !== allowed[0] && row.to !== allowed[1] || row.from === row.to) {
+        throw new Error('Pair Ledger record belongs to a different pair')
       }
       messages.set(row.id, row)
       if (row.delivered === true) {
@@ -75,7 +82,7 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
   const inspect = async (a, b) => {
     const book = pairBook(a, b)
     const file = await readLedger(home, book)
-    return file === undefined ? undefined : verified(file)
+    return file === undefined ? undefined : verified(file, a, b)
   }
   const seed = (a, b, legacy = []) => exclusive(pairBook(a, b), async () => {
     if (!Array.isArray(legacy)) throw new Error('Pair Ledger legacy exchanges must be an array')
@@ -90,7 +97,7 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
       return { ...row, seq: index + 1, delivered: true }
     })
     const result = await publishInitialPairBook(home, book, rows)
-    verified(await readLedger(home, book))
+    verified(await readLedger(home, book), a, b)
     return { ...result, imported: rows.length }
   })
   const begin = ({ a, b, id, from, to, role, text, ...optional }) => exclusive(pairBook(a, b), async () => {
@@ -98,7 +105,7 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
     if (!ROLES.has(role) || typeof text !== 'string') throw new Error('Invalid pair Ledger message')
     if (pairBook(from, to) !== pairBook(a, b)) throw new Error('Pair Ledger has the wrong sender or receiver')
     const book = pairBook(a, b)
-    const current = verified(await readLedger(home, book))
+    const current = verified(await readLedger(home, book), a, b)
     const existing = current.messages.get(id)
     if (optional.merged === true) {
       if (existing === undefined || existing.from !== from || existing.to !== to ||
@@ -125,7 +132,7 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
     const book = pairBook(a, b)
     valid(id, SAFE_MESSAGE, 'exchange id')
     if (typeof sessionId !== 'string' || sessionId === '') throw new Error('Pair Ledger requires recipient Session id')
-    const current = verified(await readLedger(home, book))
+    const current = verified(await readLedger(home, book), a, b)
     const attempt = current.messages.get(id)
     if (attempt === undefined) throw new Error('No recorded pair delivery attempt')
     if (current.delivered.some(row => row.id === id && row.seq === attempt.seq)) return { reused: true }

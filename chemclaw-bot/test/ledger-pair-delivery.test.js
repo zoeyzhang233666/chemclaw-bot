@@ -102,6 +102,18 @@ test('pair #1358 refuses append without exclusive lock, without displaying a gho
   await assert.rejects(restarted.delivered({ a: 'a', b: 'b', id: 'x-1', sessionId: 'b' }), /No recorded/)
 })
 
+test('pair #1358 rejects ambiguous hyphenated pair identities instead of leaking another exchange', async t => {
+  const home = setup(t)
+  const writer = createPairDeliveryJournal({ home, assertWriter: async () => true })
+  assert.equal(pairBook('a-b', 'c'), pairBook('a', 'b-c'), 'older DS-Bot-compatible pair names may collide')
+  await writer.seed('a-b', 'c')
+  await writer.begin({ a: 'a-b', b: 'c', id: 'unique-1', from: 'a-b', to: 'c', role: 'request', text: 'Private supplier report' })
+  await writer.delivered({ a: 'a-b', b: 'c', id: 'unique-1', sessionId: 'c' })
+  await assert.rejects(writer.inspect('a', 'b-c'), /different pair/)
+  await assert.rejects(writer.seed('a', 'b-c'), /different pair/)
+  assert.deepEqual((await writer.inspect('a-b', 'c')).delivered.map(row => row.text), ['Private supplier report'])
+})
+
 test('pair #1358 rejects missing books, truncated tails, and cross-pair spoofing', async t => {
   const home = setup(t)
   const writer = createPairDeliveryJournal({ home, assertWriter: async () => true })
