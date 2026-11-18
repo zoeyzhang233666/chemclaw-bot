@@ -216,7 +216,7 @@ export function ModelChoiceDock({ sessionId, useRoster, actions }) {
   const models = roster.models ?? []
   // A model whose provider has no API key fails every turn, so it is no choice.
   const usable = models.filter(model => !model.needsKey)
-  // Preset experts inherit the harness default with no card. A held greeting
+  // Preset experts inherit the ChemClaw default with no card. A held greeting
   // (waiting) still needs an explicit pick so kickoff can run.
   if (!bot.model && bot.templateId && !bot.waiting && usable.some(model => model.ref === roster.defaultModel)) return null
   const lost = bot.model ? !models.some(model => model.ref === bot.model) : false
@@ -249,7 +249,7 @@ export function ModelChoiceDock({ sessionId, useRoster, actions }) {
           h('div', { className: 'bt-model-choice-chips' }, list.map(model => h('button', {
             key: model.ref, type: 'button', className: 'bt-model-chip', disabled: busy !== '', 'aria-busy': busy === model.ref || undefined,
             'aria-label': `${model.name} · ${provider}`,
-            title: model.ref === roster.defaultModel ? `${model.ref} · ${t('Harness default')}` : model.ref,
+            title: model.ref === roster.defaultModel ? `${model.ref} · ${t('ChemClaw default')}` : model.ref,
             onClick: () => pick(model.ref),
           }, model.name, busy === model.ref ? h('span', { className: 'bt-model-spin', 'aria-label': t('Saving…') }) : null))))),
         manage ? h('button', { key: 'manage', type: 'button', className: 'bt-model-chip bt-model-chip-quiet', onClick: manage }, h(SlidersIcon), t('Manage models')) : null,

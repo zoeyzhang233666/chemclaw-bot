@@ -1054,7 +1054,7 @@ var ZH = {
   Models: "模型",
   "Models · ApiHub": "模型 · ApiHub",
   "Chemcloud · Data Hub": "芯化和云 · 数据中台",
-  "Harness default": "Harness 默认",
+  "ChemClaw default": "ChemClaw 默认",
   Saving: "保存中",
   "Manage models": "管理模型",
   // Shapes
@@ -9428,7 +9428,7 @@ function ModelChoiceDock({ sessionId, useRoster, actions }) {
         disabled: busy !== "",
         "aria-busy": busy === model.ref || void 0,
         "aria-label": `${model.name} · ${provider}`,
-        title: model.ref === roster.defaultModel ? `${model.ref} · ${t("Harness default")}` : model.ref,
+        title: model.ref === roster.defaultModel ? `${model.ref} · ${t("ChemClaw default")}` : model.ref,
         onClick: () => pick3(model.ref)
       }, model.name, busy === model.ref ? (0, import_react15.createElement)("span", { className: "bt-model-spin", "aria-label": t("Saving…") }) : null)))
     )),

@@ -84,6 +84,11 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
 const needing = async rt => (await rt.catalog({ fresh: true })).filter(entry => entry.needsKey).map(entry => entry.provider)
 const row = (view, id) => view.providers.find(provider => provider.id === id)
 
+function liveAgent(id) {
+  let selected = { provider: 'deepseek-official', model: 'deepseek-flash', reasoningEffort: 'unsupported' }
+  return { id, model: { current: () => selected, select: route => { selected = route } } }
+}
+
 const visionIds = ['minimax-m3.1-flash', 'kimi-k2.6', 'minimax-m3', 'qwen3.8-max']
 const visionCatalog = { native: visionIds.map(id => ({ id, inputModalities: ['text', 'image'] })) }
 const apiHubRoute = models => ({ displayName: APIHUB.name, api: APIHUB.api, baseURL: APIHUB.baseURL, apiKeyEnv: 'APIHUB_API_KEY', models })
@@ -273,18 +278,16 @@ const legacyGo = {
   apiKeyEnv: 'OPENCODE_API_KEY', models: [{ id: 'deepseek-v4.1-flash' }],
 }
 
-test('existing Go presets restore native routing before a request without changing keys or Bot selections', async () => {
+test('existing Go presets restore native routing before a Session starts without changing keys or Bot selections', async () => {
   const profile = { ...legacyGo, headers: { 'x-deployment': 'test' }, cacheRetention: 'long' }
   const { rt, writes, store, listeners } = dsh({
     user: { providers: { 'opencode-go': profile } }, keys: { OPENCODE_API_KEY: 'synthetic-existing' },
     catalog: { 'opencode-go': ['deepseek-v4.1-flash'] },
   })
   rt.state.bots.preset = { id: 'preset', model: 'opencode-go/deepseek-v4.1-flash' }
-  const config = await listeners.get('agent/request')({ agent: { id: 'preset' }, signal: new AbortController().signal }, async () => {
-    assert.equal(writes.length, 1)
-    return { provider: 'opencode-go', model: 'deepseek-v4.1-flash' }
-  })
-  assert.equal(config.provider, 'opencode-go')
+  const agent = liveAgent('preset')
+  await listeners.get('agent/created')({ agent })
+  assert.equal(agent.model.current().provider, 'opencode-go')
   assert.equal(rt.state.bots.preset.model, 'opencode-go/deepseek-v4.1-flash')
   assert.deepEqual(writes, [['llm-pi-ai', [{ op: 'set', path: ['providers', 'opencode-go'], value: {
     displayName: 'opencode-go', apiKeyEnv: 'OPENCODE_API_KEY', headers: profile.headers, cacheRetention: 'long',
@@ -546,25 +549,31 @@ test('a route\'s key reference follows DSH\'s own Models page', () => {
 })
 
 
-test('first APIHub private and group requests skip the unkeyed profile default without warming idle presets', async () => {
+test('APIHub setup updates an open chat and routes a cold member before its first step', async () => {
   const { rt, listeners } = dsh()
   assert.equal(await rt.defaultModel(), undefined)
   rt.state.bots.preset = { id: 'preset', templateId: 'chemical-main' }
   rt.state.bots.idle = { id: 'idle', templateId: 'chemical-specialist' }
+  const chat = liveAgent('preset')
+  const unrelated = liveAgent('unrelated')
+  const get = rt.ctx.get
+  rt.ctx.get = name => name === 'agents' ? { list: () => [chat, unrelated] } : get(name)
+  await listeners.get('agent/created')({ agent: chat })
+  assert.equal(chat.model.current().provider, 'deepseek-official')
   await rt.addProvider({ preset: 'apihub', key: 'synthetic-first-run', models: [{ id: 'ready-model' }] })
   assert.equal(await rt.defaultModel(), 'apihub/ready-model')
   assert.equal(rt.cachedDefault(), 'apihub/ready-model')
-  const request = listeners.get('agent/request')
-  const initial = { provider: 'deepseek-official', model: 'deepseek-flash', reasoningEffort: 'unsupported', temperature: 0.4 }
-  for (const id of ['preset', 'group-member']) {
-    const selected = await request({ agent: { id }, signal: new AbortController().signal }, async () => initial)
-    assert.deepEqual(selected, { provider: 'apihub', model: 'ready-model', temperature: 0.4 })
-  }
+  const group = liveAgent('group-member')
+  await listeners.get('agent/created')({ agent: group })
+  assert.deepEqual(chat.model.current(), { provider: 'apihub', model: 'ready-model' })
+  assert.deepEqual(group.model.current(), chat.model.current())
+  assert.equal(listeners.has('agent/request'), false)
   assert.equal(rt.state.bots.preset.appliedModel, 'apihub/ready-model')
   assert.equal(rt.state.bots.idle.appliedModel, undefined)
   assert.equal(rt.state.bots.preset.model, undefined)
-  const other = await request({ agent: { id: 'unrelated' }, signal: new AbortController().signal }, async () => initial)
-  assert.equal(other, initial)
+  assert.equal(unrelated.model.current().provider, 'deepseek-official')
+  await rt.addProvider({ preset: 'apihub', models: [{ id: 'replacement-model' }] })
+  assert.equal(chat.model.current().model, 'replacement-model')
 })
 
 test('usable explicit choices survive APIHub setup; missing-key legacy choices fall back and recover when keyed', async () => {
@@ -572,16 +581,18 @@ test('usable explicit choices survive APIHub setup; missing-key legacy choices f
   await rt.addProvider({ preset: 'apihub', key: 'synthetic-hub', models: [{ id: 'hub-model' }] })
   const bot = { model: 'deepseek-official/deepseek-flash' }
   assert.equal(await rt.desiredModel(bot), bot.model)
-  assert.equal(await rt.defaultModel(), bot.model)
+  assert.equal(await rt.defaultModel(), 'apihub/hub-model')
   await rt.clearProviderKey('deepseek-official')
   assert.equal(await rt.defaultModel(), 'apihub/hub-model')
   assert.equal(await rt.desiredModel(bot), 'apihub/hub-model')
   await rt.setProviderKey('deepseek-official', 'synthetic-restored')
   assert.equal(await rt.desiredModel(bot), bot.model)
+  await rt.clearProviderKey('apihub')
+  assert.equal(await rt.defaultModel(), bot.model)
 })
 
 test('unconfigured presets fail before an official request with an actionable setup message', async () => {
   const { rt, listeners } = dsh()
   rt.state.bots.preset = { id: 'preset', templateId: 'chemical-main' }
-  await assert.rejects(listeners.get('agent/request')({ agent: { id: 'preset' }, signal: new AbortController().signal }, async () => ({ provider: 'deepseek-official', model: 'deepseek-flash' })), /No configured model.*Settings > Models/)
+  await assert.rejects(listeners.get('agent/pre-step')({ agent: liveAgent('preset'), signal: new AbortController().signal }, () => assert.fail('The unconfigured step must stop')), /No configured model.*Settings > Models/)
 })

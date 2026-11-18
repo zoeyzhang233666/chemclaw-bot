@@ -833,7 +833,7 @@ const ZH = {
   Models: '模型',
   'Models · ApiHub': '模型 · ApiHub',
   'Chemcloud · Data Hub': '芯化和云 · 数据中台',
-  'Harness default': 'Harness 默认',
+  'ChemClaw default': 'ChemClaw 默认',
   Saving: '保存中',
   'Manage models': '管理模型',
 

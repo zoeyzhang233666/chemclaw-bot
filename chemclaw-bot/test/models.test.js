@@ -117,7 +117,7 @@ test('startup model sync leaves new inherited presets cold and preserves explici
   }
   await rt.catalog()
   await rt.syncModels()
-  assert.deepEqual(selected, ['chosen:deepseek/v4-flash', 'existing:stepfun/step-5'])
+  assert.deepEqual(selected, ['chosen:deepseek/v4-flash'])
   assert.equal(rt.state.bots.cold.appliedModel, undefined)
 })
 

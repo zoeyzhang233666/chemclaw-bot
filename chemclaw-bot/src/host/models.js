@@ -100,7 +100,9 @@ export function install(rt) {
   function pickDefault(entries) {
     const ref = defaultRef()
     const usable = entries.filter(entry => !entry.needsKey)
-    return usable.find(entry => entry.ref === ref)?.ref ?? usable[0]?.ref
+    const preferred = usable.find(entry => entry.ref === ref)
+    return preferred?.provider === 'apihub' ? preferred.ref
+      : usable.find(entry => entry.provider === 'apihub')?.ref ?? preferred?.ref ?? usable[0]?.ref
   }
   const defaultModel = async () => pickDefault(await catalog())
 
@@ -129,27 +131,46 @@ export function install(rt) {
     return [bot.model, bot.appliedModel].find(ref => ref && served.has(ref)) ?? pickDefault(entries)
   }
 
-  // DSH builds a new Session with the profile default. Select at its documented
-  // request boundary too, so cold presets and already-warmed group Sessions never
-  // send their first request to an unkeyed bootstrap route.
-  ctx.on?.('agent/request', async ({ agent, signal }, next) => {
-    await rt.prepareProviderRoutes?.()
-    const config = await next()
-    await rt.load?.()
+  async function selectAgentModel(agent, signal) {
+    if (signal?.aborted || !agent.model?.select || rt.readOnly?.()) return
     const bot = rt.botOf?.(rt.selfOf?.(agent.id))
-    if (!bot || signal.aborted || (!bot.model && !bot.templateId)) return config
-    const ref = await desiredModel(bot)
-    if (ref === undefined) throw new Error('No configured model is available. Connect APIHub or another provider in Settings > Models.')
-    const effort = await desiredEffort(bot, ref)
-    if (bot.appliedModel !== ref || bot.appliedEffort !== effort) {
-      bot.appliedModel = ref
-      if (effort === undefined) delete bot.appliedEffort
-      else bot.appliedEffort = effort
-      await rt.save()
+    if (bot ? rt.isBotSession?.(agent.id) === false : rt.roomOf?.(agent.id) === undefined) return
+    const ref = bot ? await desiredModel(bot) : await defaultModel()
+    if (ref === undefined || signal?.aborted) return
+    const effort = bot ? await desiredEffort(bot, ref) : undefined
+    if (signal?.aborted) return
+    const route = { ...splitRef(ref), ...(effort === undefined ? {} : { reasoningEffort: effort }) }
+    if (!sameSelection(agent.model.current(), route)) agent.model.select(route)
+    if (!bot || (bot.appliedModel === ref && bot.appliedEffort === effort)) return
+    bot.appliedModel = ref
+    if (effort === undefined) delete bot.appliedEffort
+    else bot.appliedEffort = effort
+    await rt.save()
+  }
+
+  // DSH awaits creation listeners before releasing queued input, and takes the
+  // model snapshot before pre-step. Select on the live Agent without changing the
+  // Harness-wide default or opening the sessions of idle presets.
+  async function prepareAgentModel(agent, signal) {
+    try {
+      await rt.load?.()
+      await selectAgentModel(agent, signal)
+    } catch (error) {
+      rt.warn('chemclaw-bot: model for %s not selected: %s', agent.id, error)
     }
-    const { reasoningEffort: _previous, ...rest } = config
-    return { ...rest, ...splitRef(ref), ...(effort === undefined ? {} : { reasoningEffort: effort }) }
+  }
+  ctx.on?.('agent/created', ({ agent, signal }) => prepareAgentModel(agent, signal))
+  ctx.on?.('agent/pre-step', async ({ agent, signal }, next) => {
+    const bot = rt.botOf?.(rt.selfOf?.(agent.id))
+    if (!signal.aborted && rt.isBotSession?.(agent.id) !== false && (bot?.model || bot?.templateId) && await desiredModel(bot) === undefined) {
+      throw new Error('No configured model is available. Connect APIHub or another provider in Settings > Models.')
+    }
+    return next()
   })
+  async function syncLiveModels() {
+    const agents = ctx.get?.('agents')?.list?.() ?? []
+    await Promise.all(agents.map(agent => prepareAgentModel(agent)))
+  }
 
   // The thinking level a Bot asked for, when the model it runs on serves it; else the
   // model's own default applies. A level the model does not have is ignored, never
@@ -205,7 +226,7 @@ export function install(rt) {
     return run
   }
 
-  const sameSelection = (a, b) => a.provider === b.provider && a.model === b.model && a.reasoningEffort === b.reasoningEffort
+  const sameSelection = (a, b) => a?.provider === b.provider && a.model === b.model && a.reasoningEffort === b.reasoningEffort
 
   // `force` re-selects even when the record says it is applied: the composer's own
   // model picker can move the Session without telling this plugin.
@@ -256,9 +277,10 @@ export function install(rt) {
     for (const bot of Object.values(state.bots)) {
       // A new preset with no explicit selection already inherits DSH's default.
       // Materializing every idle preset here competes with the user's first turn.
-      if (bot.templateId && !bot.model && !bot.appliedModel && bot.effort === undefined) continue
+      if (bot.templateId && !bot.model) continue
       await applyModel(bot).catch(error => rt.warn('chemclaw-bot: model for %s not applied: %s', bot.name, error))
     }
+    await syncLiveModels()
   }
 
   // Stop pending auxiliary retries when the plugin is disposed or hot-reloaded.
@@ -270,7 +292,7 @@ export function install(rt) {
     assembleLlm,
     catalog, cachedCatalog: () => catalogCache.value, cachedDefault: () => pickDefault(catalogCache.value),
     defaultRef, defaultModel, defaultEffort, resolveModel, desiredModel, reasoningOf, resolveEffort, desiredEffort,
-    selectSessionModel, applyModel, waitForModel, syncModels,
+    selectSessionModel, applyModel, waitForModel, syncModels, selectAgentModel, syncLiveModels,
     dropCatalog,
   })
 }
