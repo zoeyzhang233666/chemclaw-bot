@@ -64,7 +64,10 @@
     "@deepseek-ai/dsh-skill-office": "0.2.2-rc.1",
     "@deepseek-ai/dsh-tool-workspace-dependencies": "0.2.2-rc.1",
     "@deepseek-ai/libreoffice-kit": "0.1.5",
-    "@deepseek-ai/cordis-plugin-include": "1.1.0"
+    "@deepseek-ai/cordis-plugin-include": "1.1.0",
+    "@deepseek-ai/dsh-computer-use": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-cua": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-experimental-computer-use-cua-driver-native": "0.2.2-rc.1"
   },
   "devDependencies": {
     "electron": "44.7.0",
@@ -83,5 +86,8 @@
     "@deepseek-ai/dsh-llm": "0.2.2-rc.1",
     "@deepseek-ai/dsh-tools": "0.2.2-rc.1",
     "@deepseek-ai/dsh-web": "0.2.2-rc.1"
+  },
+  "optionalDependencies": {
+    "@deepseek-ai/dsh-experimental-cua-macos": "0.2.2-rc.1"
   }
 }
