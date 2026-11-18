@@ -1,5 +1,5 @@
 import { defineTool } from '@deepseek-ai/dsh-tools'
-import { domainSkills, ensureSkillLibrary, roleCatalog, roleInstructions } from './catalog-seed.js'
+import { domainSkills, roleCatalog, roleInstructions } from './catalog-seed.js'
 import { ROOM_MAX_MEMBERS } from './constants.js'
 
 const CHIEF_MEMBERSHIP_VERSION = 4
@@ -117,7 +117,6 @@ export function install(rt) {
   }
   rt.ensurePresetTeam = () => enqueue(async () => {
     if (rt.state.presetTeamVersion >= roleCatalog.version) return
-    await ensureSkillLibrary(rt)
     // A recorded but deleted template is a user choice, not a missing first-run preset.
     for (const def of roleCatalog.roles) if (!bindings()[def.id] || rt.botOf(bindings()[def.id])) await role(def.id)
     for (const def of roleCatalog.groups) {

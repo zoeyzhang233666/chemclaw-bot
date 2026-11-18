@@ -678,6 +678,8 @@ try {
   const exited = new Promise((done) => { app.once('exit', (code, signal) => { done({ code, signal }) }) })
   const cdp = devtools((await appPage(port, Date.now() + 120_000)).webSocketDebuggerUrl, problems)
   await cdp.opened
+  await cdp.call('Runtime.enable')
+  await cdp.call('Log.enable')
   const main = devtools((await appPage(mainPort, Date.now() + 30_000, true)).webSocketDebuggerUrl, problems)
   await main.opened
   const windowState = async expression => {
@@ -690,13 +692,16 @@ try {
   }
   // Wait until the start window finishes its cross-fade and closes before driving the team window;
   // otherwise the splash teardown on Xvfb drops window focus after the composer was clicked.
+  const ready = 'BrowserWindow.getAllWindows().length === 1 && !win?.isDestroyed() && win?.isVisible() && win?.webContents.getURL().startsWith("http://127.0.0.1:")'
   const revealEnd = Date.now() + 120_000
+  let revealed = false
   while (Date.now() < revealEnd) {
-    if (await windowState('BrowserWindow.getAllWindows().length === 1 && win !== undefined && !win.isDestroyed() && win.isVisible()') === true) break
+    if (await windowState(ready).catch(() => false) === true) { revealed = true; break }
     await sleep(200)
   }
-  if (await windowState('BrowserWindow.getAllWindows().length === 1 && win !== undefined && !win.isDestroyed() && win.isVisible()') !== true) {
-    throw new Error('timed out waiting for the start window to hand off to the team window')
+  if (!revealed) {
+    const view = await cdp.call('Runtime.evaluate', { expression: 'document.body.innerText.slice(-450)', returnByValue: true }).catch(() => undefined)
+    throw new Error(`timed out waiting for the start window to hand off: ${view?.result.value ?? 'no renderer context'}`)
   }
   await windowState('win.focus(), win.webContents.focus(), true')
   await cdp.call('Page.bringToFront').catch(() => {})
@@ -723,7 +728,7 @@ try {
   // The tray's Quit is the way out; the check cannot click the tray, so it asks the browser
   // target to close, which ends the app gracefully.
   // Stopping the Host closes its event stream; that expected shutdown is not a page failure.
-  if (problems.length > 0) throw new Error(`page problems:\n  ${problems.join('\n  ')}`)
+  if (problems.length > 0) throw new Error(`the renderer reported ${problems.length} page problems`)
   cdp.close()
   main.close()
   await browserClose(port)
@@ -735,6 +740,9 @@ try {
 } catch (error) {
   failed = true
   console.error(`check-packed: FAILED: ${error instanceof Error ? error.message : String(error)}`)
+  for (const problem of [...new Set(problems)].slice(0, 8)) {
+    console.error(problem.replace(/[?&]token=[\w-]+/gu, '[test grant redacted]').slice(0, 500))
+  }
 }
 stopChildren()
 await sleep(500)

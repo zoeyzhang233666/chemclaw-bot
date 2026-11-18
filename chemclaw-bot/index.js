@@ -76,7 +76,10 @@ const MODULES = [diagnostics, store, ledger, models, providers, permissions, tur
 
 export function apply(ctx, config = {}) {
   const rt = createRuntime(ctx, { seedTeam: true, companyConnectors: true, automaticDependencies: true, ...config })
-  ctx.provide?.('chemclawReady', { check: async () => { await rt.load(); return true } })
+  ctx.provide?.('chemclawReady', {
+    check: async () => { await rt.load(); return true },
+    prepareTeam: () => rt.bootstrap(),
+  })
 }
 
 export function createRuntime(ctx, config = {}) {

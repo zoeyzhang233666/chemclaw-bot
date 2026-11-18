@@ -50,6 +50,7 @@ export function install(rt) {
   const { ctx, defaults, state } = rt
 
   let bootstrapping = null
+  let presetsPrepared = false
 
   // The team folder is DS Bot's own: deleted, it is made again before a Session needs it.
   async function keepTeamFolder() {
@@ -1019,14 +1020,16 @@ export function install(rt) {
     void rt.restoreApiHubInputs?.().catch(error => rt.warn('ChemClaw: APIHub model metadata sync failed: %s', error))
     void rt.syncModels()
     if (rt.config.seedTeam !== false) {
+      if (presetsPrepared) return
       bootstrapping ??= (async () => {
         const { ensureSkillLibrary, seedChemClawTeam } = await import('./catalog-seed.js')
         for (const bot of Object.values(state.bots)) {
           if (bot.templateId) dropKickoff(bot.id)
         }
-        if (!state.mainBotIds.some(id => rt.botOf(id))) await seedChemClawTeam(rt)
         await ensureSkillLibrary(rt)
+        if (!state.mainBotIds.some(id => rt.botOf(id))) await seedChemClawTeam(rt)
         await rt.ensurePresetTeam()
+        presetsPrepared = true
       })().finally(() => { bootstrapping = null })
       return await bootstrapping
     }

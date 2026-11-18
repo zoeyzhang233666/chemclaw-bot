@@ -296,7 +296,6 @@ export async function ensureSkillLibrary(rt, { reset } = {}) {
 }
 
 export async function seedChemClawTeam(rt) {
-  await ensureSkillLibrary(rt)
   const def = roleCatalog.roles[0]
   const main = await rt.createBot({ name: rt.defaults.mainName, role: rt.defaults.mainRole, main: true, color: 'blue', avatar: { shape: 'lobster' }, pickModel: true, greet: false, instructions: roleInstructions(def) })
   main.templateId = def.id
