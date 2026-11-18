@@ -17,6 +17,7 @@ import { sameVersion } from './dsh-offer.js'
 import { QuestionCard, QuestionDock } from './questions.js'
 import { AnsweredReply, WidgetDock, WIDGET_CSS } from './widget-cell.js'
 import { HandoffDock, HANDOFF_CSS } from './handoff-card.js'
+import { AppAccessDock, ComputerHandoffDock, ComputerIndicator, COMPUTER_CSS } from './computer.js'
 import { installHeaderNavigation } from './header-navigation.js'
 import { AssistantCell, TriggerCell, TurnProcessCell, Nothing, TurnTailCell, ToolCell } from './cells.js'
 import { Overlays, SettingsOverlay } from './overlays.js'
@@ -116,6 +117,9 @@ export function apply(ctx) {
   const activity = createSource({})
   // Per Bot, the turn it runs and its tool; and the approvals waiting for the user.
   const work = createSource({ bots: {}, approvals: [] })
+  // Volatile Computer Use leases and approval cards refresh without a team revision.
+  const computer = createSource({})
+  let computerKey = ''
   let workKey = ''
   // Per Session, what its transcript has in flight (running tools, a streaming reply).
   const live = createSource({})
@@ -162,6 +166,8 @@ export function apply(ctx) {
     const nextWork = JSON.stringify(value.work ?? null)
     if (nextWork !== workKey) { workKey = nextWork; work.set(value.work ?? { bots: {}, approvals: [] }) }
     noteMemoryNews(value.memoryNews ?? {})
+    const nextComputer = JSON.stringify(value.computerLive ?? {})
+    if (nextComputer !== computerKey) { computerKey = nextComputer; computer.set(value.computerLive ?? {}) }
     const current = roster.getSnapshot()
     // Connector and capability states change without a new revision.
     const live = {}
@@ -720,7 +726,7 @@ export function apply(ctx) {
   const browserPages = browsers?.pages ?? createSource({})
   const browserTabs = browsers?.tabs ?? createSource({})
   const browserHolds = browsers?.holds ?? createSource({})
-  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, browserHolds, surface, update } })
+  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, browserHolds, computer, surface, update } })
   ctx.effect(() => noticeApprovals({
     work,
     roster,
@@ -793,7 +799,7 @@ export function apply(ctx) {
     ['models', MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS + AVATAR_LIBRARY_CSS],
     ['usage', USAGE_CSS], ['schedules', SCHEDULE_CSS], ['feedback', FEEDBACK_CSS],
     ['about', ABOUT_CSS], ['members', MEMBER_CSS], ['user-messages', USER_MESSAGE_CSS],
-    ['widgets', WIDGET_CSS], ['handoff', HANDOFF_CSS], ['browser', BROWSER_CSS + SIDE_CSS],
+    ['widgets', WIDGET_CSS], ['handoff', HANDOFF_CSS], ['browser', BROWSER_CSS + SIDE_CSS], ['computer', COMPUTER_CSS],
   ]) ctx.effect(() => installCompiledStyles(css, tag), `chemclaw-bot: shared ${tag} styles`)
 
   // The "@" menu's Bot group and the chats "+" references. The composer's controller
@@ -836,6 +842,7 @@ export function apply(ctx) {
     () => shadow('sidebar.footer.action', { id: 'bot-connect', order: -100, inject: face }, ConnectPlugins),
     () => shadow('settings.trigger', { priority: BOT_PRIORITY }, YouAvatar),
     () => shadow('shell.overlay', { id: 'bot', order: 50, inject: face }, Overlays),
+    () => shadow('shell.overlay', { id: 'bot-computer-indicator', order: 51, inject: face }, ComputerIndicator),
     () => shadow('shell.overlay', { id: 'bot-signin', order: 55, inject: face }, ApihubGetStarted),
     () => shadow('shell.overlay', { id: 'bot-toast', order: 60, inject: face }, ErrorToast),
   ]
@@ -888,6 +895,8 @@ export function apply(ctx) {
     () => shadow('conversation.input.dock', { id: 'bot-view', order: -95, inject: face }, WidgetDock),
     () => shadow('conversation.input.dock', { id: 'bot-secret', order: -90, inject: face }, SecretDock),
     () => shadow('conversation.input.dock', { id: 'bot-handoff', order: -85, inject: face }, HandoffDock),
+    () => shadow('conversation.input.dock', { id: 'bot-computer-handoff', order: -84, inject: face }, ComputerHandoffDock),
+    () => shadow('conversation.input.dock', { id: 'bot-computer-access', order: -83, inject: face }, AppAccessDock),
   ]
   // The return button belongs to neither group: it renders only in Agent mode.
   ctx.effect(() => installCompiledStyles(RETURN_CSS, 'return'), 'chemclaw-bot: return styles')
