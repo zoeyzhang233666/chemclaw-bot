@@ -47479,8 +47479,8 @@ function apply(ctx) {
     }
     if (value.memoryNews !== void 0) noteMemoryNews(value.memoryNews);
     const current2 = roster.getSnapshot();
-    if (value.companyConnectors !== void 0 && JSON.stringify(value.companyConnectors) !== JSON.stringify(current2.companyConnectors ?? [])) live2.companyConnectors = value.companyConnectors;
     const live2 = {};
+    if (value.companyConnectors !== void 0 && JSON.stringify(value.companyConnectors) !== JSON.stringify(current2.companyConnectors ?? [])) live2.companyConnectors = value.companyConnectors;
     if (value.partsRunning !== void 0 && JSON.stringify(value.partsRunning) !== JSON.stringify(current2.partsRunning ?? {})) live2.partsRunning = value.partsRunning;
     if (value.secretStore !== void 0 && JSON.stringify(value.secretStore) !== JSON.stringify(current2.secretStore ?? {})) live2.secretStore = value.secretStore;
     if (value.secrets !== void 0 && JSON.stringify(value.secrets) !== JSON.stringify(current2.secrets ?? [])) live2.secrets = value.secrets;

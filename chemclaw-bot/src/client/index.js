@@ -219,9 +219,9 @@ export function apply(ctx) {
     }
     if (value.memoryNews !== undefined) noteMemoryNews(value.memoryNews)
     const current = roster.getSnapshot()
-    if (value.companyConnectors !== undefined && JSON.stringify(value.companyConnectors) !== JSON.stringify(current.companyConnectors ?? [])) live.companyConnectors = value.companyConnectors
     // Connector, capability and phone states change without a new revision.
     const live = {}
+    if (value.companyConnectors !== undefined && JSON.stringify(value.companyConnectors) !== JSON.stringify(current.companyConnectors ?? [])) live.companyConnectors = value.companyConnectors
     if (value.partsRunning !== undefined && JSON.stringify(value.partsRunning) !== JSON.stringify(current.partsRunning ?? {})) live.partsRunning = value.partsRunning
     if (value.secretStore !== undefined && JSON.stringify(value.secretStore) !== JSON.stringify(current.secretStore ?? {})) live.secretStore = value.secretStore
     if (value.secrets !== undefined && JSON.stringify(value.secrets) !== JSON.stringify(current.secrets ?? [])) live.secrets = value.secrets
