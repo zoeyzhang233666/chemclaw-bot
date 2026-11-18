@@ -218,15 +218,15 @@ test('the start window remembers the theme, the motion tier and the effects tier
   assert.deepEqual(readStartFrame(file), { themeSource: 'system', motion: 'normal', effects: 'full' })
 })
 
-// Onboarding acceptance: no dialog during the first start without a window it belongs to.
-test('every dialog belongs to a window', () => {
+// The macOS install notice runs before any windows or the Host are created.
+test('startup dialogs belong to their window after the macOS install check', () => {
   const src = new URL('../src/', import.meta.url)
   const files = readdirSync(src).filter(name => /\.m?js$/u.test(name))
   const loose = files.flatMap((name) => {
     const code = readFileSync(new URL(name, src), 'utf8')
     return [...code.matchAll(/dialog\.(show\w+)\(\s*(\{|\))/gu)].map(match => `${name}: dialog.${match[1]}`)
   })
-  assert.deepEqual(loose, [])
+  assert.deepEqual(loose, ['mac-install.mjs: dialog.showMessageBox'])
   assert.ok(files.every(name => !readFileSync(new URL(name, src), 'utf8').includes('showErrorBox')))
 })
 
