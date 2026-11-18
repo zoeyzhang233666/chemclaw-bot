@@ -47,6 +47,7 @@ const LEVEL_LABEL = { view: 'view only', background: 'background control', foreg
 // permissions, and the places macOS/Windows keep credentials and system settings.
 const PROTECTED_IDS = new Set([
   'io.github.fei2411.dsbot',
+  'io.github.fei2411.chemclaw',
   'com.chemcloud.chemclaw',
   'com.chemcloud.chemclaw-bot',
   'com.deepseek.harness.computer-use',
