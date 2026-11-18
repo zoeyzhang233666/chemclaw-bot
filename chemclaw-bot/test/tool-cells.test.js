@@ -12,6 +12,7 @@ const { outputFiles } = await build({
       "export { ToolCell, TriggerCell, callTree, stackReplies } from './src/client/cells.js'",
       "export { QuestionDock } from './src/client/questions.js'",
       "export { SecretDock } from './src/client/secret-card.js'",
+      "export { ComputerApprovalDock } from './src/client/computer.js'",
       "export { countCards } from './src/client/sources.js'",
     ].join('\n'),
     resolveDir: fileURLToPath(new URL('..', import.meta.url)),
@@ -45,7 +46,7 @@ runInNewContext(outputFiles[0].text, {
     throw new Error(`Unexpected platform module ${name}`)
   },
 })
-const { ToolCell, TriggerCell, callTree, stackReplies, QuestionDock, SecretDock, countCards } = module.exports
+const { ToolCell, TriggerCell, callTree, stackReplies, QuestionDock, SecretDock, ComputerApprovalDock, countCards } = module.exports
 
 // Runs the effects collected since the last render; returns the cleanups.
 const mount = () => {
@@ -214,6 +215,40 @@ const show = (root, options) => {
   return out
 }
 const shown = (root, options) => text(show(root, options))
+
+test('computer calls leave no transcript rows, even around other tools in a program', () => {
+  assert.equal(show(call('cua', 'live', { running: true })), null)
+  const message = call('message_bot', 'message', { args: { to: 'Writer' } })
+  assert.equal(shown(program([
+    call('cua', 'windows'),
+    call('cua_driver_native__getApp', 'mac'),
+    call('computer_handoff', 'confirm'),
+    message,
+  ])), shown(message))
+})
+
+test('computer confirmation stays above the composer independently of tool history', async () => {
+  const live = {
+    asks: { app: { id: 'app', botId: chief.id, appName: 'TextEdit', callId: 'call' } },
+    holds: { chief: { id: 'confirm', callId: 'handoff', reason: 'confirm', by: 'bot' } },
+  }
+  const answered = []
+  const dock = (sessionId, state = live) => expand(ComputerApprovalDock({
+    sessionId, useRoster: select => select(team()), useComputer: select => select(state),
+    actions: {
+      computerAppAnswer: (...args) => answered.push(args),
+      computerHoldAnswer: (...args) => answered.push(args),
+    },
+  }))
+  const shown = dock(chief.id)
+  assert.match(text(shown), /Allow Chief to use TextEdit\?.*Needs your confirmation/)
+  assert.equal(dock(writer.id), null)
+  assert.equal(dock(chief.id, {}), null)
+  find(shown, element => element.type === 'button' && text(element) === 'This time').props.onClick()
+  find(shown, element => element.type === 'button' && text(element) === 'Skip').props.onClick()
+  await Promise.resolve()
+  assert.equal(JSON.stringify(answered), JSON.stringify([['app', 'once'], ['chief', { callId: 'handoff', outcome: 'skip' }]]))
+})
 
 // One finished call of every kind ToolCell draws, and what it shows.
 const BRANCHES = [

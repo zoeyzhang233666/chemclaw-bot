@@ -1,4 +1,3 @@
-import { ComputerCallRow, ComputerHandoffCall } from './computer.js'
 import { createElement as h, Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { MarkdownText } from './dsh-primitives.js'
@@ -788,6 +787,8 @@ const TOOL_PHRASES = [
 ]
 const GROUP_PHRASES = { create_group: 'Creating a group', update_group: 'Updating the group', delete_group: 'Deleting the group', post_to_group: 'Posting in the group' }
 function toolActivity(name, arg, findBot, self) {
+  if (name === 'computer_handoff') return null
+  if (name === 'cua' || name?.startsWith('cua_driver_native__')) return { label: t('Operating'), state: 'working' }
   switch (name) {
     case 'ask_user': return null
     case 'request_secret': return null
@@ -955,8 +956,7 @@ function GroupReplies({ sessionId, eventSeq, callId, done, interrupted, content,
 // its sub-calls, so a call draws by its own name wherever it sits in the tree.
 const DRAWN = new Set(['chem_deliver', 'message_bot', 'stop_bot', 'create_bot', 'update_bot', 'group_relay', 'create_group', 'update_group', 'delete_group', 'post_to_group', 'ask_user', 'request_secret', 'ask_user_question', 'show_view', 'browser_handoff', 'read_group_chat', 'remember', 'forget'])
 // Calls whose card a dock above the composer carries when the call is not drawn.
-const CARDS = new Set(['ask_user', 'request_secret', 'show_view', 'browser_handoff', 'computer_handoff'])
-const isComputerToolName = name => name === 'cua' || name === 'computer_handoff' || name?.startsWith('cua_driver_native__') === true
+const CARDS = new Set(['ask_user', 'request_secret', 'show_view', 'browser_handoff'])
 
 // The root and its sub-calls in dispatch order, each call once.
 export function callTree(root) {
@@ -1054,8 +1054,6 @@ function renderCall(call, { sessionId, eventSeq, roster, actions, useUi, useWork
       return h(SecretToolCell, { sessionId, callId: call.callId, name: arg('name'), done, content: call.content, roster, actions, heldCards })
     case 'browser_handoff':
       return h(HandoffCall, { sessionId, callId: call.callId, roster, actions, heldCards, hooks })
-    case 'computer_handoff':
-      return h(ComputerHandoffCall, { sessionId, callId: call.callId, roster, actions, heldCards, hooks })
     case 'ask_user_question': {
       if (!done) return null
       let parsed = null
@@ -1074,11 +1072,11 @@ function renderCall(call, { sessionId, eventSeq, roster, actions, useUi, useWork
     case 'forget':
       return done ? h(MemoryEvent, { sessionId, scope: arg('scope'), tool, result: contentText(call.content), failed: call.isError === true, code: call.error?.code, roster, actions, findBot }) : null
     default:
-      return isComputerToolName(tool) ? h(ComputerCallRow, { sessionId, call, roster, actions, hooks }) : null
+      return null
   }
 }
 
-export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, useBrowserHolds, useBrowserTabs, useBrowserPages, useComputer, actions, openFile }) {
+export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, useBrowserHolds, useBrowserTabs, useBrowserPages, actions, openFile }) {
   const roster = useRoster(value => value)
   const heldCards = useHeldCards?.(state => state[sessionId])
   const root = node.data.root
@@ -1090,7 +1088,7 @@ export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCa
   }) ?? true
   const findBot = nameOrId => roster.byId[nameOrId] ?? roster.bots.find(bot => bot.name.toLowerCase() === String(nameOrId ?? '').toLowerCase())
   const calls = hidden ? [] : callTree(root)
-  const drawn = calls.filter(call => DRAWN.has(toolName(call)) || isComputerToolName(toolName(call)))
+  const drawn = calls.filter(call => DRAWN.has(toolName(call)))
   // The newest call still running names the work, so a program reads as the tool it is in.
   const running = !active || root.kind === 'tool-result' ? undefined : calls.findLast(call => call.kind !== 'tool-result')
   const note = running ? toolActivity(toolName(running), toolArgs(running).text, findBot, roster.byId[sessionId]) : null
@@ -1098,6 +1096,6 @@ export function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCa
   useLiveNote(actions, sessionId, `tool:${root.callId ?? node.key}`, note)
   useShownCards(actions, sessionId, drawn.filter(call => CARDS.has(toolName(call)) && call.callId).map(call => call.callId))
   if (drawn.length === 0) return null
-  const env = { sessionId, eventSeq: root.seq, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages, useComputer } }
+  const env = { sessionId, eventSeq: root.seq, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages } }
   return h(Fragment, null, drawn.map((call, index) => h(Fragment, { key: call.callId ?? index }, renderCall(call, env))))
 }
