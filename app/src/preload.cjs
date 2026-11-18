@@ -196,7 +196,8 @@ function browserBridge() {
   }
 }
 
-\n// Only bounded, serializable data crosses the Computer Use bridge.
+
+// Only bounded, serializable data crosses the Computer Use bridge.
 function computerEntriesOf(value) {
   const rows = Array.isArray(value?.rows) ? value.rows : []
   const labels = value?.labels ?? {}
