@@ -75,6 +75,7 @@ export function install(rt) {
     prefs: state.prefs,
     // Whether a Desktop window should serve Bot browser reads (see browser.js).
     browser: rt.browserEnabled,
+    computer: rt.computerView?.() ?? { enabled: false },
     // False when config.memory turns memory off: no Memory row or panel.
     memory: rt.memoryEnabled !== false,
     // Set while another dsh host holds the team (store.js): why this one cannot change it.
@@ -93,10 +94,11 @@ export function install(rt) {
     memoryReviews: rt.memoryReviews(),
     connectors: rt.connectorsView(),
     capabilityStatuses: rt.capabilityStatusesView(),
+    computerLive: rt.computerLive?.() ?? {},
   })
   // What a host that only reads the team may still answer.
   // Updates change the dsh profile, not the team, so a reading host may run them too.
-  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'native-skill-catalog', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'artifact-paths', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking', 'avatar-library'])
+  const READS = new Set(['state', 'models', 'efforts', 'providers', 'provider-models', 'earlier', 'chat', 'capability-detail', 'skill-catalog', 'native-skill-catalog', 'run-stats', 'room-progress', 'exchange', 'exchange-text', 'file-text', 'artifact-paths', 'usage', 'schedules', 'memory-view', 'browser-wait', 'browser-result', 'diagnostics', 'diagnostics-log', 'diagnostics-clear', 'update-check', 'update-install', 'dsh-update-install', 'repo-stars', 'approval-answer', 'thinking', 'avatar-library', 'computer-cursor-wait', 'computer-shot', 'computer-system-status', 'computer-user-active'])
 
   function setPrefs(body) {
     if (body.advancedCharts !== undefined) {
@@ -157,6 +159,7 @@ export function install(rt) {
       await rt.refresh()
       const readOnly = rt.readOnly()
       if (readOnly !== undefined && !READS.has(endpoint)) return fail(readOnly, 'bot/read-only')
+      if (endpoint.startsWith('computer-')) return ok(await rt.computerEndpoint(endpoint.slice('computer-'.length), body))
       switch (endpoint) {
         case 'data-status':
           return ok({ sources: [await rt.searchPluginStatus(), ...rt.publicDataStatus()], dependencies: await rt.dependenciesStatus() })
