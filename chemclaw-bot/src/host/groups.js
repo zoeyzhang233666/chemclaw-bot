@@ -706,8 +706,7 @@ export function install(rt) {
   // Late/working/missed turns are deliberately left pending until their delivery
   // and restart protocol can confirm the result. No automatic replay or wake.
   const settleGroupCall = async (room, slot, member, beforeSeq, spoken) => {
-    if (!ledgerWriterEnabled || slot.batchKey === undefined
-      || !['posted', 'passed', 'failed'].includes(slot.status)) return
+    if (!ledgerWriterEnabled || slot.batchKey === undefined) return
     const original = rt.state.roomBatches?.[slot.batchKey]
     // A later call from the same Bot can take over this member. The older slot
     // then settles the newer batch rather than leaving it permanently pending.
@@ -715,6 +714,16 @@ export function install(rt) {
       : Object.values(rt.state.roomBatches ?? {}).find(item => item.roomId === room.id
         && item.by === slot.by && item.pending.includes(member.id))
     if (batch === undefined) return
+    if (slot.status === 'working' || slot.status === 'waiting-approval') {
+      // #1351: the caller must know that tool work started even when the turn
+      // yields. Its pending member is NOT settled until the late post is durable.
+      if (slot.worked === true && !batch.worked) {
+        batch.worked = true
+        await saveRequiredRoom(room)
+      }
+      return
+    }
+    if (!['posted', 'passed', 'failed'].includes(slot.status)) return
     batch.pending = batch.pending.filter(id => id !== member.id)
     if (slot.status === 'posted' && spoken.length > 0) {
       batch.done.push(member.name)
@@ -727,6 +736,33 @@ export function install(rt) {
       batch.worked ||= slot.worked === true
     }
     await saveRequiredRoom(room)
+  }
+
+  // Upstream #1351: a background member completes the batch only when its
+  // result row and the updated batch are committed together. A DSH followup
+  // alone is not a receipt: it may never be admitted by the group Session.
+  const pendingBatchForTurn = (room, memberId, info) => {
+    if (!ledgerWriterEnabled) return undefined
+    const owed = Object.values(rt.state.roomBatches ?? {}).filter(batch =>
+      batch.roomId === room.id && batch.pending.includes(memberId))
+    return info?.askedBy !== undefined ? owed.find(batch => batch.by === info.askedBy)
+      : info?.role !== 'room' ? owed[0] : undefined
+  }
+  const markBatchPost = (room, memberId, key, seq, text, done = false) => {
+    if (!ledgerWriterEnabled || typeof key !== 'string' || !Number.isSafeInteger(seq)) return
+    const batch = rt.state.roomBatches?.[key]
+    if (batch?.roomId !== room.id || !batch.pending.includes(memberId)) return
+    batch.pending = batch.pending.filter(id => id !== memberId)
+    if (text !== '' || done) {
+      const name = rt.botOf(memberId)?.name ?? memberId
+      batch.done.push(name)
+      ;(batch.doneIds ??= []).push(memberId)
+      if (text !== '') batch.results.push({ name, seq })
+      if (text !== '' && mentionsIn(text, room.members.map(rt.botOf).filter(Boolean))
+        .found.some(bot => bot.id !== memberId)) batch.answered = true
+    }
+    // Do not delete a completed batch or wake its caller here: a missing DSH
+    // delivery receipt still requires manual recovery review after a restart.
   }
 
   async function callMembers(round, index, callees, note, by, origin) {
@@ -999,6 +1035,7 @@ export function install(rt) {
           ...(post.skillRequest ? { skillRequest: post.skillRequest } : {}),
           ...(post.files === undefined ? {} : { files: post.files }),
         })
+        if (post.botId !== undefined) markBatchPost(room, post.botId, post.batch, room.seq, text)
       }
       // The user wrote here — or pressed Continue, which opens the same round
       // without a line of its own — so Bot relays count afresh and the calls the
@@ -1011,6 +1048,7 @@ export function install(rt) {
         const name = bot?.name ?? post.name
         const kind = post.done ? 'done' : post.stopped ? 'stopped' : post.again ? 'cut' : 'resumed'
         await appendRoom(room, { who: name, botId: post.botId, kind, text: '' })
+        if (post.botId !== undefined) markBatchPost(room, post.botId, post.batch, room.seq, '', post.done === true)
         loggedEvents.push({ kind, botId: post.botId, name, color: bot?.color, time: Date.now() })
       }
         savingAdmission = true
@@ -1384,6 +1422,8 @@ export function install(rt) {
         pendingReply = { botId: sender.id, name: sender.name, color: sender.color, text: line, time: Date.now() }
         logged = room.seq
       }
+      // A live late post and its batch completion share the required state save.
+      markBatchPost(room, sender.id, extra.batch, logged, text, extra.done === true)
       try {
         await rt.save({ required: true })
       } catch (error) {
@@ -1418,10 +1458,18 @@ export function install(rt) {
     const member = rt.botOf(owner?.botId)
     if (room === undefined || member === undefined || !room.members.includes(member.id)) return
     const text = stripOwnName(member.name, reply)
-    const done = isPass(text) && shown && info.askedBy !== undefined
+    const batch = pendingBatchForTurn(room, member.id, info)
+    const waitingPeers = batch !== undefined && batch.pending.some(id => id !== member.id)
+    const askedBy = info.askedBy ?? (info.role !== 'room' ? batch?.by : undefined)
+    const done = isPass(text) && shown && askedBy !== undefined
+    // Preserve legacy behavior for PASS without a result. A completely silent
+    // pending Ledger batch still needs the later no-result recovery protocol.
     if (isPass(text) && !done && views.length === 0) return
-    await postToRoom(room, member, done ? '' : text, { late: true, ...(views.length ? { views } : {}), ...(done ? { done: true } : {}), ...(info.askedBy ? { askedBy: info.askedBy } : {}) })
-      .catch(error => rt.warn('chemclaw-bot: late group reply from %s failed: %s', member.name, error))
+    await postToRoom(room, member, done ? '' : text, {
+      late: true, ...(views.length ? { views } : {}), ...(done ? { done: true } : {}),
+      ...(batch === undefined ? {} : { batch: batch.key, ...(waitingPeers ? { quiet: true } : { batchEnd: true }) }),
+      ...(askedBy && !waitingPeers ? { askedBy } : {}),
+    }).catch(error => rt.warn('chemclaw-bot: late group reply from %s failed: %s', member.name, error))
   }
   rt.lateRoomReply = lateRoomReply
 

@@ -1311,6 +1311,47 @@ test('experimental #1351 merges a repeated Bot call without losing completed sib
   await settle(() => second() !== undefined)
 })
 
+test('experimental #1351 late result stays pending until the group Ledger admits its post', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
+  const first = host.round('late-batch-first', host.say('@Chief coordinate the supplier check'))
+  await settle(() => host.agentOf('ga').calls.length === 1)
+  host.begin('ga')
+  host.finish('ga', '@Writer @Tester verify the supplier')
+  await settle(() => host.agentOf('gb').calls.length === 1)
+  host.begin('gb')
+  host.emit('gb', 'tool/call', { callId: 'supplier-check', name: 'write', arguments: '{}' })
+  t.mock.timers.tick(ROOM_WORK_GRACE_MS)
+  await settle(() => host.agentOf('gc').calls.length === 1)
+  host.begin('gc')
+  host.finish('gc', 'Tester checked the supplier')
+  await settle(() => first() !== undefined)
+  const previous = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(previous.pending, ['b'])
+  assert.equal(previous.worked, true, 'the tool work is persisted without settling it')
+  host.emit('gb', 'tool/result', { callId: 'supplier-check' })
+  host.finish('gb', 'Writer finished the supplier check')
+  await settle(() => host.agentOf('r1').calls.length === 1)
+  const queued = host.agentOf('r1').calls[0]
+  assert.equal(queued.source.batch, previous.key)
+  assert.equal(queued.source.batchEnd, true)
+  assert.equal(queued.source.askedBy, 'a')
+  assert.deepEqual(Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0].pending, ['b'],
+    'DSH followup is not a committed Ledger result')
+  const admitted = host.round('late-batch-committed', host.takePost())
+  await settle(() => host.agentOf('ga').calls.length === 2)
+  const saved = Object.values(JSON.parse(readFileSync(join(host.home, 'state.json'), 'utf8')).roomBatches)[0]
+  assert.deepEqual(saved.pending, [])
+  assert.deepEqual(saved.doneIds, ['c', 'b'])
+  assert.equal(saved.results.length, 2)
+  assert.equal(saved.results.at(-1).name, 'Writer')
+  assert.ok(Number.isSafeInteger(saved.results.at(-1).seq))
+  assert.equal(saved.answered, false, 'no automatic replay or unacknowledged wake')
+  host.begin('ga')
+  host.finish('ga', 'Thanks, both supplier checks are recorded')
+  await settle(() => admitted() !== undefined)
+})
+
 test('experimental group relay creates durable anchored windows without changing old reply display', async t => {
   const host = await start(t, {}, undefined, undefined, { experimentalGroupLedger: true })
   const first = host.round('anchored-first', host.say('@Writer first procurement request'))
