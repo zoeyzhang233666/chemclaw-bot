@@ -186,6 +186,7 @@ class FakeApp extends EventEmitter {
   }
 
   get isPackaged() { return state.packaged === true }
+  isInApplicationsFolder() { return true }
 }
 
 export const app = new FakeApp()
