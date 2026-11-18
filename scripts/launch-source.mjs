@@ -87,8 +87,12 @@ function installedVersion(fromPlugin, name) {
 
 export function missingPluginDependencies(app, dependencies) {
   const fromPlugin = createRequire(join(app, 'node_modules', 'chemclaw-bot', 'package.json'))
-  return Object.entries(dependencies).filter(([name, version]) => installedVersion(fromPlugin, name) !== version)
-    .map(([name, version]) => `${name}@${version}`)
+  let satisfies
+  try { ({ satisfies } = fromPlugin('semver')) } catch { /* Exact pins can still be verified. */ }
+  return Object.entries(dependencies).filter(([name, version]) => {
+    const installed = installedVersion(fromPlugin, name)
+    return installed === undefined || (installed !== version && satisfies?.(installed, version) !== true)
+  }).map(([name, version]) => `${name}@${version}`)
 }
 
 // A PR may change the desktop shell, profile, or dependency lockfile as well as

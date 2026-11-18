@@ -21,7 +21,7 @@ const [given, shotFile] = argv.filter(arg => !arg.startsWith('--'))
 const source = argv.includes('--source')
 const officePreview = argv.includes('--office-preview-only')
 const macUi = argv.includes('--mac-ui')
-const executable = source ? createRequire(import.meta.url)('electron') : given || packedExecutable()
+const executable = given || (source ? createRequire(import.meta.url)('electron') : packedExecutable())
 const appArgs = source ? [root] : []
 if (macUi && (process.platform !== 'darwin' || !shotFile)) throw new Error('--mac-ui requires a macOS screenshot prefix')
 

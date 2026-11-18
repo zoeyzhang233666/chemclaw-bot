@@ -68,10 +68,11 @@ environment.CHEMCLAW_LAUNCH_HOME = selected.origin
 environment.CHEMCLAW_NO_PICKER = '1'
 
 function run(args, cwd) {
-  const command = process.platform === 'win32' ? process.env.ComSpec || 'cmd.exe' : 'npm'
+  const windows = process.platform === 'win32'
+  const command = windows ? process.env.ComSpec || 'cmd.exe' : 'npm'
   const quoted = args.map(arg => /[\s&<>|^"]/u.test(arg) ? `"${arg.replaceAll('"', '')}"` : arg).join(' ')
-  const commandArgs = process.platform === 'win32' ? ['/d', '/s', '/c', `npm.cmd ${quoted}`] : args
-  const result = spawnSync(command, commandArgs, { cwd, env: environment, stdio: 'inherit', windowsHide: true })
+  const commandArgs = windows ? ['/d', '/s', '/c', `"npm.cmd ${quoted}"`] : args
+  const result = spawnSync(command, commandArgs, { cwd, env: environment, stdio: 'inherit', windowsHide: true, windowsVerbatimArguments: windows })
   if (result.status !== 0) throw new Error(`npm ${args.join(' ')} failed. Check network access and use Node.js 24 LTS.`)
 }
 
