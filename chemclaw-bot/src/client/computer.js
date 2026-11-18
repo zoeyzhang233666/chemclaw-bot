@@ -302,6 +302,8 @@ export function SettledComputerHandoff({ handoff }) {
 export function ComputerIndicator({ useComputer, useRoster, actions }) {
   const live = useComputer?.(map => map) ?? {}
   const roster = useRoster(value => value)
+  // Native desktop builds show the paper-styled floating strip outside the window.
+  if (typeof globalThis.dsBotApp?.computer === 'function') return null
   const leases = live.leases ?? []
   const waiting = Object.entries(live.bots ?? {}).filter(([, entry]) => entry.waitingFor === 'user-idle')
   if (leases.length === 0 && waiting.length === 0) return null

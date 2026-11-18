@@ -726,6 +726,80 @@ export function apply(ctx) {
   const browserPages = browsers?.pages ?? createSource({})
   const browserTabs = browsers?.tabs ?? createSource({})
   const browserHolds = browsers?.holds ?? createSource({})
+
+  // Desktop bridge: the always-visible native indicator, mouse cursor and OS idle gate.
+  // All actions still go through ChemClaw's user-controlled Computer Use endpoint.
+  const appComputer = globalThis.dsBotApp
+  if (typeof appComputer?.computer === 'function') {
+    ctx.effect(() => {
+      const sync = () => {
+        const live = computer.getSnapshot()
+        const people = roster.getSnapshot().byId
+        const name = id => people[id]?.name ?? t('a Bot')
+        const look = id => lookOf(people[id])
+        const rows = (live.leases ?? []).map(entry => ({
+          botId: entry.botId, name: name(entry.botId), color: look(entry.botId).color, avatar: look(entry.botId).image,
+          app: entry.kind === 'foreground' ? t('In the foreground') : entry.appName,
+          label: `${name(entry.botId)} · ${entry.kind === 'foreground' ? t('In the foreground') : entry.appName}`,
+        }))
+        for (const [botId, entry] of Object.entries(live.bots ?? {})) {
+          if (entry.waitingFor === 'user-idle') rows.push({
+            botId, waiting: true, name: name(botId), color: look(botId).color, avatar: look(botId).image,
+            app: t('waits for the computer'), label: t('{name} waits for the computer', { name: name(botId) }),
+          })
+        }
+        appComputer.computer({ rows, labels: { stop: t('Stop'), stopAll: t('Stop all'), letGo: t('Let it continue') } })
+      }
+      sync()
+      const offLive = computer.subscribe(sync)
+      const offRoster = roster.subscribe(sync)
+      return () => { offLive(); offRoster(); appComputer.computer({ rows: [] }) }
+    }, 'chemclaw-bot: native computer indicator')
+  }
+  if (typeof appComputer?.computerCursor === 'function') {
+    ctx.effect(() => {
+      let stopped = false
+      const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
+      const run = async () => {
+        let after = 0
+        while (!stopped) {
+          if (roster.getSnapshot().computer?.enabled !== true) { await pause(1500); continue }
+          try {
+            const reply = await call('computer-cursor-wait', { after })
+            for (const event of reply?.events ?? []) {
+              if (Number.isFinite(event.seq) && event.seq > after) after = event.seq
+              if (Number.isFinite(event.t) && Number.isFinite(reply?.now) && reply.now - event.t > 3000) continue
+              const look = lookOf(roster.getSnapshot().byId[event.botId])
+              appComputer.computerCursor({ ...event, color: look.color, avatar: look.image })
+            }
+          } catch { await pause(1500) }
+        }
+      }
+      void run()
+      return () => { stopped = true }
+    }, 'chemclaw-bot: native computer cursor')
+  }
+  if (typeof appComputer?.idleSeconds === 'function') {
+    ctx.effect(() => {
+      const push = () => {
+        if (roster.getSnapshot().computer?.enabled !== true) return
+        void Promise.resolve(appComputer.idleSeconds()).then(idle => {
+          if (Number.isFinite(idle)) return call('computer-user-active', { idleSeconds: idle }).catch(() => {})
+        }).catch(() => {})
+      }
+      const timer = setInterval(push, 2000)
+      push()
+      return () => clearInterval(timer)
+    }, 'chemclaw-bot: computer OS idle gate')
+  }
+  if (typeof appComputer?.onComputerAction === 'function') {
+    appComputer.onComputerAction(({ kind, botId }) => {
+      if (kind === 'stop') void actions.computerStop(botId)
+      else if (kind === 'stopall') void actions.computerStop(null, true)
+      else if (kind === 'letgo') void actions.computerAllowForeground(botId)
+    })
+  }
+
   const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, browserHolds, computer, surface, update } })
   ctx.effect(() => noticeApprovals({
     work,

@@ -208,7 +208,7 @@ function computerEntriesOf(value) {
       color: typeof row.color === 'string' && /^#[0-9a-f]{3,8}$/i.test(row.color) ? row.color : '#8c806f',
     })),
     labels: { stop: String(labels.stop ?? 'Stop').slice(0, 30), stopAll: String(labels.stopAll ?? 'Stop all').slice(0, 30),
-      letContinue: String(labels.letContinue ?? 'Continue').slice(0, 30) },
+      letGo: String(labels.letGo ?? 'Continue').slice(0, 30) },
   }
 }
 function cursorEventOf(value) {
