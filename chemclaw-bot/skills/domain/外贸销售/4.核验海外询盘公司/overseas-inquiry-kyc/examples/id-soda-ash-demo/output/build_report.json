@@ -1,0 +1,52 @@
+{
+  "input": "./skills\\overseas-inquiry-kyc\\examples\\id-soda-ash-demo\\inquiry.json",
+  "outdir": "./skills\\overseas-inquiry-kyc\\examples\\id-soda-ash-demo\\output",
+  "warnings": [],
+  "steps": [
+    {
+      "step": "validate",
+      "ok": true
+    },
+    {
+      "step": "html",
+      "ok": true,
+      "path": "./skills\\overseas-inquiry-kyc\\examples\\id-soda-ash-demo\\output\\印尼重质纯碱询盘_模拟_核验报告.html",
+      "bytes": 131745,
+      "sha256": "b22605c810dd48996b37c2addb29013f16f63cdd557800bc9bd635f1739ff5bb"
+    },
+    {
+      "step": "xlsx",
+      "ok": true,
+      "path": "./skills\\overseas-inquiry-kyc\\examples\\id-soda-ash-demo\\output\\印尼重质纯碱询盘_模拟_核验工作簿.xlsx",
+      "bytes": 59170,
+      "sha256": "1e499ce41784a1be9ce51cd45ec492fa5401fdf609cf08214472607e10d492f9"
+    },
+    {
+      "step": "check_xlsx",
+      "ok": true
+    }
+  ],
+  "validate": {
+    "errors": [],
+    "warnings": [],
+    "infos": [
+      "K21 为 A/D 区块的“已核实”，请确认来源均有检索日期",
+      "核验项 24 条：已核实 4 / 存在疑点 2 / 未核实 18",
+      "来源 10 条；资料索取 12 项"
+    ]
+  },
+  "check_xlsx": {
+    "errors": [],
+    "warnings": [],
+    "sheets": 14
+  },
+  "summary": {
+    "checks": 24,
+    "verified": 4,
+    "discrepancy": 2,
+    "unverified": 18,
+    "sources": 10,
+    "requests": 12,
+    "verdict": "主体与业务逻辑未见硬矛盾，但存在需解释的疑点，可继续商业沟通并同步补齐资料"
+  }
+}

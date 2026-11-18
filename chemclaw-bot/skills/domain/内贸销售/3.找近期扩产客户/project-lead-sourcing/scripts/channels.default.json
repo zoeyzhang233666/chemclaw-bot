@@ -1,0 +1,108 @@
+{
+  "_comment": "通道注册表。b2bctl probe 会逐条实测并把结果写进项目根 channels.json。换电脑/换国家请直接改这个文件（或用 --channels 指定自己的）。字段说明：probe.url 用于探测；probe.min_len 低于此长度视为空壳/JS 渲染；probe.contains 命中才算目标页；adapter 指向 tools/ 下的适配器（可选）。",
+  "channels": [
+    {
+      "id": "cninfo_search",
+      "name": "巨潮资讯 公告全文检索（GET）",
+      "kind": "公告",
+      "url": "http://www.cninfo.com.cn/new/fulltextSearch/full?searchkey=%E5%85%AC%E5%91%8A&isfulltext=true&sortName=nothing&sortType=desc&pageNum=1&pageSize=30",
+      "probe": { "method": "GET", "min_len": 500, "contains": "announcements" },
+      "note": "覆盖 A 股上市公司公告；排序为相关度，seDate 参数不生效，需客户端按日期过滤。",
+      "adapter": "tools/cninfo.py"
+    },
+    {
+      "id": "cninfo_post",
+      "name": "巨潮资讯 公告检索（POST，支持真实日期区间）",
+      "kind": "公告",
+      "url": "http://www.cninfo.com.cn/new/hisAnnouncement/query",
+      "probe": { "method": "PROBE_POST", "min_len": 50, "contains": "announcements" },
+      "note": "需 Referer + X-Requested-With 头；标题检索 + 服务端日期区间，比 GET 精准。",
+      "adapter": "tools/cninfo.py"
+    },
+    {
+      "id": "eastmoney_notice_dir",
+      "name": "东方财富 公告目录（支持日期区间）",
+      "kind": "公告",
+      "url": "http://np-anotice-stock.eastmoney.com/api/security/ann?page_size=10&page_index=1&ann_type=A&client_source=web&stock_list=600176&begin_time=2026-01-01&end_time=2026-12-31&f_node=0&s_node=0",
+      "probe": { "method": "GET", "min_len": 200, "contains": "art_code" },
+      "note": "返回 art_code，可直接拼全文接口。",
+      "adapter": "tools/eastmoney.py"
+    },
+    {
+      "id": "eastmoney_notice_full",
+      "name": "东方财富 公告全文",
+      "kind": "公告",
+      "url": "http://np-cnotice-stock.eastmoney.com/api/content/ann?art_code=AN202608251828419161&page_index=1&client_source=web&page_size=5000",
+      "probe": { "method": "GET", "min_len": 500, "contains": "notice_content" },
+      "note": "本类环境里唯一能稳定取到『公告正文文本』的通道，支持翻页。",
+      "adapter": "tools/eastmoney.py"
+    },
+    {
+      "id": "eia_quanzhou",
+      "name": "泉州市生态环境局 环评公示（受理/拟审批/审批决定）",
+      "kind": "环评",
+      "url": "http://sthjj.quanzhou.gov.cn/hjgl/hbsp/nzchpspyjgk/",
+      "probe": { "method": "GET", "min_len": 3000, "contains": null },
+      "note": "纯 http 静态列表，逐页 index.html / index_N.html，能拿到非上市企业的项目名与正文。三栏：hpslqkgk 受理、nzchpspyjgk 拟审批、zchpspjdgk 审批决定。",
+      "adapter": "tools/eia.py"
+    },
+    {
+      "id": "eia_tongling",
+      "name": "铜陵市生态环境局 环评（ASP 平台）",
+      "kind": "环评",
+      "url": "http://218.22.184.155:8231/work_List_Search.aspx?LCJD=1&lcjd1=1",
+      "probe": { "method": "GET", "min_len": 1500, "contains": null },
+      "note": "安徽口径，列表带项目全称。属地方自建 ASP 站点，地址可能变更。",
+      "adapter": null
+    },
+    {
+      "id": "eia_jiangsu_sthj",
+      "name": "江苏省生态环境厅",
+      "kind": "环评",
+      "url": "http://sthjt.jiangsu.gov.cn/",
+      "probe": { "method": "GET", "min_len": 1000, "contains": null },
+      "note": "首页可达，但**环评列表栏目为 JS 渲染**，抓不到项目清单；仅已知详情页可读。",
+      "adapter": null
+    },
+    {
+      "id": "eia_fujian_sthj",
+      "name": "福建省生态环境厅",
+      "kind": "环评",
+      "url": "http://sthjt.fujian.gov.cn/",
+      "probe": { "method": "GET", "min_len": 1000, "contains": null },
+      "note": "公告公示栏基本无工业建设项目，实用度低。",
+      "adapter": null
+    },
+    {
+      "id": "eia_suzhou",
+      "name": "苏州市生态环境局",
+      "kind": "环评",
+      "url": "http://sthjj.suzhou.gov.cn/szhbj/bjgs/bjgs_lists.shtml",
+      "probe": { "method": "GET", "min_len": 800, "contains": null },
+      "note": "列表页可达但正文多为 JS 渲染。",
+      "adapter": null
+    },
+    {
+      "id": "eia_weifang",
+      "name": "潍坊市生态环境局",
+      "kind": "环评",
+      "url": "http://sthjj.weifang.gov.cn/",
+      "probe": { "method": "GET", "min_len": 800, "contains": null },
+      "note": "逐批次页项目较少，可作补充。",
+      "adapter": null
+    },
+    {
+      "id": "chem_news_chinairn",
+      "name": "中国产业信息/化工新闻类站点",
+      "kind": "新闻",
+      "url": "http://www.chinairn.com/",
+      "probe": { "method": "GET", "min_len": 800, "contains": null },
+      "note": "用于补充项目新闻线索；可信度低于公告与环评，需回溯原始来源。",
+      "adapter": null
+    }
+  ],
+  "_host_tools_comment": "如果宿主 agent 自带联网搜索（如 codex 的搜索、chemclaw 的检索工具），请把能力手工登记到项目 root 的 channels.json 里，status 写『可用(宿主工具)』——这类通道不走本文件的 probe。",
+  "host_tools": [
+    { "id": "host_web_search", "name": "宿主 agent 的联网搜索工具", "kind": "搜索", "status": "未登记", "note": "有则在 channels.json 里登记；无则依赖本注册表里的 http 通道。" }
+  ]
+}

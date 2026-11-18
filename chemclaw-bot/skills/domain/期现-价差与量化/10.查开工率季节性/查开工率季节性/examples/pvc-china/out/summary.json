@@ -1,0 +1,37 @@
+{
+ "metric": "util",
+ "obs_count": 12,
+ "date_from": "2026-07-24",
+ "date_to": "2026-10-15",
+ "iso_from": "2026-W30",
+ "iso_to": "2026-W42",
+ "years": [
+  2026
+ ],
+ "weeks_per_year": {
+  "2026": 12
+ },
+ "coverage_years": 1,
+ "coverage_weeks": 12,
+ "seasonal_ss_share": 1.0,
+ "seasonal_verdict": "不足以判定季节性：跨年观测<3个年份",
+ "current": {
+  "label": "2026年",
+  "n": 12,
+  "mean": 68.82,
+  "median": 68.77,
+  "min": 64.59,
+  "max": 73.76,
+  "stdev": 2.65,
+  "cv": 0.0384,
+  "p10": 66.15,
+  "p25": 66.62,
+  "p75": 70.28,
+  "p90": 71.78,
+  "small_sample": false
+ },
+ "latest": 64.59,
+ "latest_week_end": "20261015",
+ "sample_n": 71.0,
+ "pct_method": "经验分位·线性插值（=Excel PERCENTILE.INC / R quantile type=7）"
+}

@@ -1,0 +1,32 @@
+{
+  "built_at": "2026-10-19T14:56:29",
+  "data": "./skills\\chemical-second-source\\examples\\02-minimal-template\\data.json",
+  "asof": "2026-10-19",
+  "product": "示例化工品 X（虚构，仅用于演示 schema）",
+  "counts": {
+    "candidates": 3,
+    "near": 2,
+    "qualified": 2,
+    "new_plants": 1,
+    "same_groups": 1,
+    "risks": 3,
+    "sources": 3,
+    "spec_items": 5
+  },
+  "outputs": [
+    {
+      "file": "示例化工品X_第二供应源备选池_对比工作台_2026-10-19.html",
+      "bytes": 83413,
+      "sha256": "668467d56c5a7f7a48aeed2a3903f173307484a1f109e7c01f447301c5573984"
+    },
+    {
+      "file": "示例化工品X_第二供应源备选池_对比工作簿_2026-10-19.xlsx",
+      "bytes": 32410,
+      "sha256": "5e9603328a71116b0ef4561a6b53d60c97eb0b79af7085091c5e3b6eb7b19e14"
+    }
+  ],
+  "warnings": [
+    "candidates 少于 5 家，作为“备选池”偏薄；建议 5–15 家",
+    "候选池内同组 示例集团 有 2 家（示例工厂 A（虚构）, 示例工厂 B（虚构）），同时入选不能算两个独立源"
+  ]
+}

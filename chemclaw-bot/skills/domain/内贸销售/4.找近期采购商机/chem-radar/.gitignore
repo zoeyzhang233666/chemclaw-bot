@@ -1,0 +1,9 @@
+﻿# 运行时产物，不必随 skill 分发
+__pycache__/
+*.pyc
+out/
+leads.json
+剔除记录.json
+leads_raw/_*.json
+leads_raw/_*.txt
+checks.json

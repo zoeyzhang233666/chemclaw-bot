@@ -1,0 +1,280 @@
+{
+  "case_id": "EC-2026-001",
+  "as_of": "2026-10-19",
+  "entries": 30,
+  "by_topic": {
+    "中国出口": {
+      "total": 9,
+      "已核实": 6,
+      "待确认": 1,
+      "参考": 2
+    },
+    "目的国进口": {
+      "total": 9,
+      "已核实": 4,
+      "待确认": 4,
+      "参考": 1
+    },
+    "运输": {
+      "total": 7,
+      "已核实": 5,
+      "待确认": 2,
+      "参考": 0
+    },
+    "标签与包装": {
+      "total": 5,
+      "已核实": 4,
+      "待确认": 1,
+      "参考": 0
+    }
+  },
+  "open_questions": 12,
+  "regs": 19,
+  "errors": [],
+  "warnings": [
+    "法规 R16 声明覆盖 TR-01，但 TR-01 未挂接 reg_ids"
+  ],
+  "ok": true,
+  "items": [
+    {
+      "id": "CN-01",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "已核实",
+      "reg": "《危险化学品目录（2015版）》（安监总局等 10 部门 2015年第5号公告）；《危险化学品安全管理条例》（国务院令第591号）",
+      "effective": "2015-05-01 施行（现行）"
+    },
+    {
+      "id": "CN-02",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "已核实",
+      "reg": "《易制爆危险化学品名录》（2017年版）（公安部 2017年5月11日公布）；《危险化学品安全管理条例》第23条",
+      "effective": "2017年公布并施行（现行）"
+    },
+    {
+      "id": "CN-03",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "已核实（本案例不触发）",
+      "reg": "商务部公告 2026年第40号《商务部等5部门关于调整〈向特定国家（地区）出口易制毒化学品管理目录〉的公告》；《向特定国家（地区）出口易制毒化学品暂行管理规定》",
+      "effective": "2026-09-22 发布之日起（本案例适用版本）"
+    },
+    {
+      "id": "CN-04",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "待确认（需合规人员对现行目录逐条核对）",
+      "reg": "《中华人民共和国出口管制法》；《中华人民共和国两用物项出口管制清单》（商务部等 2024年第51号公告，2024-12-01 实施）；2026年度《两用物项和技术进出口许可证管理目录》（商务部、海关总署 2025年第91号公告，2026-0",
+      "effective": "CCL：2024-12-01；2026 目录：2026-01-01"
+    },
+    {
+      "id": "CN-05",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "已核实",
+      "reg": "海关总署公告 2020年第129号（2021-01-10 实施，废止原质检总局 2012年第30号）；危化品目录 2023 年版第 5 号公告（公告 2020年第129号仍为现行检验依据，进出口危化品及包装检验监管按此执行）",
+      "effective": "2021-01-10 实施"
+    },
+    {
+      "id": "CN-06",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "已核实",
+      "reg": "海关总署公告 2020年第129号 第三条",
+      "effective": "2021-01-10 实施"
+    },
+    {
+      "id": "CN-07",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "已核实（材料待取得）",
+      "reg": "海关总署公告 2020年第129号 第七条；《中华人民共和国进出口商品检验法》",
+      "effective": "2021-01-10 实施"
+    },
+    {
+      "id": "CN-08",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "参考信息（以单一窗口为准）",
+      "reg": "中国国际贸易单一窗口（2026 年数据）；2026 年《中华人民共和国进出口税则》",
+      "effective": "2026 年度"
+    },
+    {
+      "id": "CN-09",
+      "topic": "中国出口",
+      "section": "cn_export",
+      "status": "参考信息（需出口方财务复核）",
+      "reg": "国家税务总局出口退税率文库（2026 年）",
+      "effective": "2026 年度"
+    },
+    {
+      "id": "VN-01",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "已核实",
+      "reg": "Luật Hóa chất 69/2025/QH15；Nghị định 24/2026/NĐ-CP、25/2026/NĐ-CP、26/2026/NĐ-CP；Thông tư 01/2026/TT-BCT、02/2026/TT-BCT",
+      "effective": "法律 2026-01-01；决议与通告 2026-01-17"
+    },
+    {
+      "id": "VN-02",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "已核实",
+      "reg": "Nghị định 26/2026/NĐ-CP 第 6 条；Thông tư 01/2026/TT-BCT 第 12 项（申报信息与反馈表单）",
+      "effective": "2026-01-17"
+    },
+    {
+      "id": "VN-03",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "待确认（不得猜测）",
+      "reg": "Nghị định 24/2026/NĐ-CP（2026-01-17）附件 I–V；Nghị định 26/2026/NĐ-CP 第 7–10 条",
+      "effective": "2026-01-17"
+    },
+    {
+      "id": "VN-04",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "待确认（取决于 VN-03 结论）",
+      "reg": "Nghị định 26/2026/NĐ-CP 第 10 条",
+      "effective": "2026-01-17"
+    },
+    {
+      "id": "VN-05",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "已核实（标签样张待制作）",
+      "reg": "Thông tư 01/2026/TT-BCT 第 5 条（SDS 内容）、附录 I（SDS 16 项）、化学品分类与标注条款；Nghị định 26/2026/NĐ-CP",
+      "effective": "2026-01-17"
+    },
+    {
+      "id": "VN-06",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "已核实（需制作越南语版）",
+      "reg": "Thông tư 01/2026/TT-BCT 第 5 条与附录 I；Nghị định 26/2026/NĐ-CP 第 6 条第 2 款 c",
+      "effective": "2026-01-17"
+    },
+    {
+      "id": "VN-07",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "参考信息（需报关行/进口方复核）",
+      "reg": "Nghị định 26/2023/NĐ-CP 及修订议定；Nghị định 126/2022/NĐ-CP（ATIGA）、118/2022/NĐ-CP（ACFTA）、129/2022/NĐ-CP（RCEP）",
+      "effective": "各议定实施日起；以现行版本为准"
+    },
+    {
+      "id": "VN-08",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "待确认",
+      "reg": "Nghị định 24/2026/NĐ-CP、26/2026/NĐ-CP；越南海关 ECUS 现行税则",
+      "effective": "2026-01-17 起新规"
+    },
+    {
+      "id": "VN-09",
+      "topic": "目的国进口",
+      "section": "import_vn",
+      "status": "需确认（用途声明）",
+      "reg": "越南食品安全法；Nghị định 26/2026/NĐ-CP；海关总署公告 2020年第129号 第八条",
+      "effective": "现行"
+    },
+    {
+      "id": "TR-01",
+      "topic": "运输",
+      "section": "transport",
+      "status": "已核实",
+      "reg": "UN 规章范本；IMDG Code 42-24（2024 版，2026-01-01 强制）；ADR 2025；IATA DGR 第 67 版（2026）",
+      "effective": "IMDG 42-24：2026-01-01；IATA DGR 67：2026-01-01；ADR：2025"
+    },
+    {
+      "id": "TR-02",
+      "topic": "运输",
+      "section": "transport",
+      "status": "已核实",
+      "reg": "UN 规章范本/IMDG 危险货物一览表；IATA DGR UN2014/UN2984 条目",
+      "effective": "同 TR-01"
+    },
+    {
+      "id": "TR-03",
+      "topic": "运输",
+      "section": "transport",
+      "status": "已核实（积载/隔离码需按表格逐条落实）",
+      "reg": "IMO IMDG Code 42-24；Resolution MSC.556(108)",
+      "effective": "2026-01-01 强制"
+    },
+    {
+      "id": "TR-04",
+      "topic": "运输",
+      "section": "transport",
+      "status": "待确认（以 IATA DGR 现行版本与承运人政策为准）",
+      "reg": "IATA Dangerous Goods Regulations, 67th Edition (2026)",
+      "effective": "2026-01-01"
+    },
+    {
+      "id": "TR-05",
+      "topic": "运输",
+      "section": "transport",
+      "status": "待确认（需货代与两国承运人确认）",
+      "reg": "GB 6944《危险货物分类和品名编号》；JT/T 617《危险货物道路运输规则》；ADR 2025（对照）；越南 QCVN 危险化学品安全技术规范",
+      "effective": "现行"
+    },
+    {
+      "id": "TR-06",
+      "topic": "运输",
+      "section": "transport",
+      "status": "已核实（ADR 口径）；IMDG 口径待 DG 顾问复核",
+      "reg": "ADR 2025 表 A；IMDG 42-24 第 3.4/3.5 章",
+      "effective": "2025 / 2026-01-01"
+    },
+    {
+      "id": "TR-07",
+      "topic": "运输",
+      "section": "transport",
+      "status": "已核实（单据待取得）",
+      "reg": "IMDG 42-24 第 4、6 章（IBC02）；海关总署公告 2020年第129号 第七条",
+      "effective": "2026-01-01 / 2021-01-10"
+    },
+    {
+      "id": "LB-01",
+      "topic": "标签与包装",
+      "section": "label_pkg",
+      "status": "已核实（类别2）；其他危害类别待 SDS 确认",
+      "reg": "GB 30000.14-2013（2014-11-01 实施）；易制爆危险化学品名录（2017年版）6.1 项",
+      "effective": "2014-11-01 / 2017"
+    },
+    {
+      "id": "LB-02",
+      "topic": "标签与包装",
+      "section": "label_pkg",
+      "status": "已核实",
+      "reg": "IMDG 42-24 第 5.2 章",
+      "effective": "2026-01-01"
+    },
+    {
+      "id": "LB-03",
+      "topic": "标签与包装",
+      "section": "label_pkg",
+      "status": "已核实（样张待制作）",
+      "reg": "海关总署公告 2020年第129号 第三条；Thông tư 01/2026/TT-BCT（分类与标注）",
+      "effective": "2021-01-10 / 2026-01-17"
+    },
+    {
+      "id": "LB-04",
+      "topic": "标签与包装",
+      "section": "label_pkg",
+      "status": "已核实（具体 IBC 型号待供应商确认）",
+      "reg": "IMDG 42-24 IBC02/PP10；BAM DGG-Info 属性说明",
+      "effective": "2026-01-01"
+    },
+    {
+      "id": "LB-05",
+      "topic": "标签与包装",
+      "section": "label_pkg",
+      "status": "待确认（需进口方复核越南产品标准）",
+      "reg": "越南 QCVN 技术规范体系；GB/T 1616-2014《工业过氧化氢》",
+      "effective": "现行"
+    }
+  ]
+}

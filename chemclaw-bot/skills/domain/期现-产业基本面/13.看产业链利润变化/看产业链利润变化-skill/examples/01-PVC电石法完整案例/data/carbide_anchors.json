@@ -1,0 +1,38 @@
+[
+ {
+  "date": "2026-01-01",
+  "price": 2750.0,
+  "quote": "上半年乌海地区最高价格在2750元/吨",
+  "source": "隆众聚焦 2026-06-02 https://www.mysteel.com/oilchem/a/26060214/FAF52BAD5C7B2CA0.html"
+ },
+ {
+  "date": "2026-05-31",
+  "price": 2500.0,
+  "quote": "降至5月末2500元/吨左右",
+  "source": "隆众聚焦 2026-06-02 同上"
+ },
+ {
+  "date": "2026-05-28",
+  "price": 2500.0,
+  "quote": "乌海主流贸易价格涨至2500元/吨",
+  "source": "新浪财经 2026-05-29 https://finance.sina.com.cn/wm/2026-05-29/doc-inhzqccm9516100.shtml"
+ },
+ {
+  "date": "2026-08-03",
+  "price": 2400.0,
+  "quote": "乌海主流贸易价格上调至2400元/吨",
+  "source": "隆众 电石市场一周前瞻 20260803 https://nenghua.m.mysteel.com/a/26080308/B23DAF7886B826D4_abc.html"
+ },
+ {
+  "date": "2026-09-07",
+  "price": 2750.0,
+  "quote": "乌海地区主流贸易价格报价在2750元/吨",
+  "source": "隆众 PVC早间提示 20260908 https://www.oilchem.net/26-0908-08-0ac49a26bf1d5373.html"
+ },
+ {
+  "date": "2026-09-15",
+  "price": 2700.0,
+  "quote": "内蒙古乌海地区电石价格为2700元/吨",
+  "source": "财经新闻 2026-09-23 https://finance.sina.com.cn/money/future/fmnews/2026-09-23/doc-inisuxhf5279993.shtml"
+ }
+]

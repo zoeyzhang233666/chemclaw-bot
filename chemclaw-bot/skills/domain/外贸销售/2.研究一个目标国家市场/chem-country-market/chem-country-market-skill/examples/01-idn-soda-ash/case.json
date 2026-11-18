@@ -1,0 +1,1958 @@
+{
+ "meta": {
+  "schema_version": "1.0",
+  "title": "中国重质纯碱出口印度尼西亚 · 国别市场研究",
+  "subject": {
+   "product_cn": "纯碱（碳酸钠，disodium carbonate）",
+   "product_en": "Soda ash (sodium carbonate)",
+   "grade": "重质纯碱（dense soda ash）为主，兼看轻质",
+   "hs_code": "2836.20",
+   "specifications": [
+    "GB/T 210-2022 Ⅱ类优等品：总碱量（干基）≥99.2%，NaCl ≤0.70%，Fe ≤0.0035%（示例口径，需以我方实际规格为准）",
+    "重质纯碱堆积密度 ≥0.90 g/mL，180 μm 筛余 ≤70%（同上）"
+   ],
+   "unit": "t"
+  },
+  "country": {
+   "name_cn": "印度尼西亚",
+   "name_en": "Indonesia",
+   "iso2": "ID",
+   "iso3": "IDN",
+   "un_m49": 360,
+   "cny_un_code": 156
+  },
+  "research_year": 2025,
+  "window": 5,
+  "data_asof": "2026-10-19",
+  "trade_source": {
+   "name": "UN Comtrade public API（preview / 公开 API）",
+   "dataset": "C/A/HS，HS6 283620，年度",
+   "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS",
+   "pull_record": "2026-10-19 通过公开 API 拉取 reporterCode=360（印尼，进口/出口）与 reporterCode=156（中国，出口）2018–2025 年全部伙伴数据，原始响应存于 raw/ 目录",
+   "value_basis": "进口=CIF 海关价值（USD）；出口=FOB（USD）",
+   "weight_basis": "净重 netWgt（kg），部分年度印尼未报送净重",
+   "notes": [
+    "印尼进口值与伙伴国中国出口值不完全一致：两者由不同海关申报，CIF/FOB、转口贸易、口岸价差均会造成偏差；本报告两套数字并列，不合并。",
+    "印尼 2019、2020 年进口净重报送为 0；2023、2025 年净重为空（未报送），因此这四年只能看金额，数量留缺口，不做推算。",
+    "2025 年为 Comtrade 当年数据，可能随对方海关后续修订而微调。"
+   ]
+  },
+  "revision_note": "rev2：补入 CCU 中试检测结果、TKDN 政策、PPN/PPh22 口径、HS 2836.20 适用范围说明与更精确的来源映射"
+ },
+ "structure": {
+  "product": [
+   "HS 2836.20 项下为碳酸钠（纯碱），全球统一分为重质（dense）与轻质（light）两种形态，但在六位税号层面不再细分，海关统计无法区分重质与轻质，也无法区分工业级与食品级。",
+   "纯碱的主原料为原盐、石灰石（氨碱法）或原盐+Nacl 联产（联碱法）；美国、土耳其、博茨瓦纳以天然碱（trona）为主，成本结构与中国合成法不同。",
+   "中国重质纯碱出口以吨包（1,000/1,250 kg jumbo bag）为主，FOB 北方港口；印尼进口商通常按 CIF Tanjung Priok（雅加达）或 Tanjung Perak（泗水）计价。"
+  ],
+  "value_chain": [
+   {
+    "step": "原料",
+    "detail": "原盐、石灰石、氨/二氧化碳；印尼原盐自给能力有限"
+   },
+   {
+    "step": "纯碱生产",
+    "detail": "氨碱法（索尔维）或联碱法；本地长期无规模化生产（见 industries）"
+   },
+   {
+    "step": "进口/贸易",
+    "detail": "印尼进口商、分销商、外资玻璃/洗涤剂厂直接采购"
+   },
+   {
+    "step": "下游",
+    "detail": "平板/浮法玻璃、日用玻璃瓶罐、洗涤剂与个护、陶瓷、纸浆造纸、水处理、食品级/医药"
+   }
+  ],
+  "applications": [
+   {
+    "name": "玻璃（浮法/日用玻璃）",
+    "role": "助熔剂，降低石英砂熔融温度",
+    "import_relevance": "高；按重量计最大单一应用",
+    "evidence": "s-pkt-groundbreaking#pabrik-kaca-deterjen"
+   },
+   {
+    "name": "洗涤剂与个护",
+    "role": "碱性助剂、软化水、配方中的钠源",
+    "import_relevance": "高；轻质纯碱为主",
+    "evidence": "s-pkt-groundbreaking#kaca-deterjen"
+   },
+   {
+    "name": "陶瓷",
+    "role": "釉料与坯体助熔",
+    "import_relevance": "中",
+    "evidence": "s-pkt-groundbreaking#kaca-deterjen"
+   },
+   {
+    "name": "纸浆造纸",
+    "role": "制浆化学与 pH 调节",
+    "import_relevance": "中",
+    "evidence": "s-pkt-groundbreaking#pulp-paper"
+   },
+   {
+    "name": "食品级纯碱",
+    "role": "食品添加剂（E500）",
+    "import_relevance": "低（按量），但涉及清真认证与 BPOM 登记",
+    "evidence": "s-yizhou-idn#halal"
+   }
+  ],
+  "notes": "“按重量计占比”“各应用吨耗”等数字均未取得公开权威来源，本报告不给出，列入数据缺口。",
+  "hs_scope_note": "HS 2836.20 的描述是“碳酸盐；碳酸钠（disodium carbonate）”，国际层面不再区分重质/轻质、工业级/食品级（税号释义见 s-hscodeatlas；碳酸氢钠为独立税号 2836.30）。因此“印尼进口 2836.20 的金额与数量”只能近似视为纯碱（重+轻）总量，不能拆出重质份额，也不能据此判断食品级占比。",
+  "hs_scope_sources": [
+   "s-hscodeatlas"
+  ]
+ },
+ "trade": {
+  "imports": [
+   {
+    "year": 2021,
+    "value_usd": 188396580.0,
+    "qty_t": 821476.4,
+    "source": "comtrade"
+   },
+   {
+    "year": 2022,
+    "value_usd": 343972948.0,
+    "qty_t": 916828.9,
+    "source": "comtrade"
+   },
+   {
+    "year": 2023,
+    "value_usd": 281036031.0,
+    "qty_t": null,
+    "source": "comtrade"
+   },
+   {
+    "year": 2024,
+    "value_usd": 216143181.0,
+    "qty_t": 844114.6,
+    "source": "comtrade"
+   },
+   {
+    "year": 2025,
+    "value_usd": 225569362.788,
+    "qty_t": null,
+    "source": "comtrade"
+   }
+  ],
+  "imports_history_note": "另取得 2018、2019 年金额（USD 255,384,794 / 251,935,406），净重均未报送，仅作长周期对照，不计入分位与增速。",
+  "partners": {
+   "2018": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 159941537.0,
+     "qty_t": 671952.3,
+     "share_value_pct": 62.6,
+     "unit_usd_t": 238.0
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 56637127.0,
+     "qty_t": 186059.7,
+     "share_value_pct": 22.2,
+     "unit_usd_t": 304.4
+    },
+    {
+     "rank": 3,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 21845800.0,
+     "qty_t": 93138.5,
+     "share_value_pct": 8.6,
+     "unit_usd_t": 234.6
+    },
+    {
+     "rank": 4,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 9158158.0,
+     "qty_t": 29889.5,
+     "share_value_pct": 3.6,
+     "unit_usd_t": 306.4
+    },
+    {
+     "rank": 5,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 4382609.0,
+     "qty_t": 19150.2,
+     "share_value_pct": 1.7,
+     "unit_usd_t": 228.9
+    },
+    {
+     "rank": 6,
+     "code": 404,
+     "name": "肯尼亚 Kenya",
+     "value_usd": 935251.0,
+     "qty_t": 4523.3,
+     "share_value_pct": 0.4,
+     "unit_usd_t": 206.8
+    },
+    {
+     "rank": 7,
+     "code": 616,
+     "name": "波兰 Poland",
+     "value_usd": 803800.0,
+     "qty_t": 2720.0,
+     "share_value_pct": 0.3,
+     "unit_usd_t": 295.5
+    },
+    {
+     "rank": 8,
+     "code": 276,
+     "name": "德国 Germany",
+     "value_usd": 539521.0,
+     "qty_t": 1942.5,
+     "share_value_pct": 0.2,
+     "unit_usd_t": 277.7
+    }
+   ],
+   "2019": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 179197799.0,
+     "qty_t": 712612.0,
+     "share_value_pct": 71.1,
+     "unit_usd_t": 251.5
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 37269422.0,
+     "qty_t": 131379.7,
+     "share_value_pct": 14.8,
+     "unit_usd_t": 283.7
+    },
+    {
+     "rank": 3,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 23423741.0,
+     "qty_t": 96178.4,
+     "share_value_pct": 9.3,
+     "unit_usd_t": 243.5
+    },
+    {
+     "rank": 4,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 6774432.0,
+     "qty_t": 24225.0,
+     "share_value_pct": 2.7,
+     "unit_usd_t": 279.6
+    },
+    {
+     "rank": 5,
+     "code": 392,
+     "name": "日本 Japan",
+     "value_usd": 2906871.0,
+     "qty_t": 12561.6,
+     "share_value_pct": 1.2,
+     "unit_usd_t": 231.4
+    },
+    {
+     "rank": 6,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 1376996.0,
+     "qty_t": 5724.0,
+     "share_value_pct": 0.5,
+     "unit_usd_t": 240.6
+    },
+    {
+     "rank": 7,
+     "code": 364,
+     "name": "伊朗 Iran",
+     "value_usd": 314654.0,
+     "qty_t": 1309.3,
+     "share_value_pct": 0.1,
+     "unit_usd_t": 240.3
+    },
+    {
+     "rank": 8,
+     "code": 642,
+     "name": "罗马尼亚 Romania",
+     "value_usd": 200852.0,
+     "qty_t": 700.0,
+     "share_value_pct": 0.1,
+     "unit_usd_t": 286.9
+    }
+   ],
+   "2020": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 117651481.0,
+     "qty_t": 523880.2,
+     "share_value_pct": 64.6,
+     "unit_usd_t": 224.6
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 36895703.0,
+     "qty_t": 167505.4,
+     "share_value_pct": 20.2,
+     "unit_usd_t": 220.3
+    },
+    {
+     "rank": 3,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 17752873.0,
+     "qty_t": 85335.9,
+     "share_value_pct": 9.7,
+     "unit_usd_t": 208.0
+    },
+    {
+     "rank": 4,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 6952477.0,
+     "qty_t": 30259.5,
+     "share_value_pct": 3.8,
+     "unit_usd_t": 229.8
+    },
+    {
+     "rank": 5,
+     "code": 364,
+     "name": "伊朗 Iran",
+     "value_usd": 1324284.0,
+     "qty_t": 5757.8,
+     "share_value_pct": 0.7,
+     "unit_usd_t": 230.0
+    },
+    {
+     "rank": 6,
+     "code": 344,
+     "name": "ISO 344",
+     "value_usd": 885363.0,
+     "qty_t": 4582.0,
+     "share_value_pct": 0.5,
+     "unit_usd_t": 193.2
+    },
+    {
+     "rank": 7,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 411047.0,
+     "qty_t": 1767.6,
+     "share_value_pct": 0.2,
+     "unit_usd_t": 232.5
+    },
+    {
+     "rank": 8,
+     "code": 276,
+     "name": "德国 Germany",
+     "value_usd": 87917.0,
+     "qty_t": 14.8,
+     "share_value_pct": 0.0,
+     "unit_usd_t": 5924.7
+    }
+   ],
+   "2021": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 129183443.0,
+     "qty_t": 603657.4,
+     "share_value_pct": 68.6,
+     "unit_usd_t": 214.0
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 35851187.0,
+     "qty_t": 118281.2,
+     "share_value_pct": 19.0,
+     "unit_usd_t": 303.1
+    },
+    {
+     "rank": 3,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 7968427.0,
+     "qty_t": 38027.7,
+     "share_value_pct": 4.2,
+     "unit_usd_t": 209.5
+    },
+    {
+     "rank": 4,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 7027920.0,
+     "qty_t": 26284.3,
+     "share_value_pct": 3.7,
+     "unit_usd_t": 267.4
+    },
+    {
+     "rank": 5,
+     "code": 784,
+     "name": "阿联酋 UAE",
+     "value_usd": 5143714.0,
+     "qty_t": 21463.2,
+     "share_value_pct": 2.7,
+     "unit_usd_t": 239.7
+    },
+    {
+     "rank": 6,
+     "code": 512,
+     "name": "ISO 512",
+     "value_usd": 1169996.0,
+     "qty_t": 6000.0,
+     "share_value_pct": 0.6,
+     "unit_usd_t": 195.0
+    },
+    {
+     "rank": 7,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 546583.0,
+     "qty_t": 2273.4,
+     "share_value_pct": 0.3,
+     "unit_usd_t": 240.4
+    },
+    {
+     "rank": 8,
+     "code": 364,
+     "name": "伊朗 Iran",
+     "value_usd": 501000.0,
+     "qty_t": 2500.0,
+     "share_value_pct": 0.3,
+     "unit_usd_t": 200.4
+    }
+   ],
+   "2022": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 224187651.0,
+     "qty_t": 629907.7,
+     "share_value_pct": 65.2,
+     "unit_usd_t": 355.9
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 74559356.0,
+     "qty_t": 168908.4,
+     "share_value_pct": 21.7,
+     "unit_usd_t": 441.4
+    },
+    {
+     "rank": 3,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 18129709.0,
+     "qty_t": 47503.7,
+     "share_value_pct": 5.3,
+     "unit_usd_t": 381.6
+    },
+    {
+     "rank": 4,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 10045802.0,
+     "qty_t": 26356.7,
+     "share_value_pct": 2.9,
+     "unit_usd_t": 381.1
+    },
+    {
+     "rank": 5,
+     "code": 784,
+     "name": "阿联酋 UAE",
+     "value_usd": 6197300.0,
+     "qty_t": 15801.1,
+     "share_value_pct": 1.8,
+     "unit_usd_t": 392.2
+    },
+    {
+     "rank": 6,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 4829597.0,
+     "qty_t": 13819.0,
+     "share_value_pct": 1.4,
+     "unit_usd_t": 349.5
+    },
+    {
+     "rank": 7,
+     "code": 364,
+     "name": "伊朗 Iran",
+     "value_usd": 3844500.0,
+     "qty_t": 9800.0,
+     "share_value_pct": 1.1,
+     "unit_usd_t": 392.3
+    },
+    {
+     "rank": 8,
+     "code": 586,
+     "name": "巴基斯坦 Pakistan",
+     "value_usd": 1853031.0,
+     "qty_t": 4404.0,
+     "share_value_pct": 0.5,
+     "unit_usd_t": 420.8
+    }
+   ],
+   "2023": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 185100601.0,
+     "qty_t": 524484.5,
+     "share_value_pct": 65.9,
+     "unit_usd_t": 352.9
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 53305441.0,
+     "qty_t": 144942.9,
+     "share_value_pct": 19.0,
+     "unit_usd_t": 367.8
+    },
+    {
+     "rank": 3,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 28155557.0,
+     "qty_t": 89663.2,
+     "share_value_pct": 10.0,
+     "unit_usd_t": 314.0
+    },
+    {
+     "rank": 4,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 6485000.0,
+     "qty_t": 17000.0,
+     "share_value_pct": 2.3,
+     "unit_usd_t": 381.5
+    },
+    {
+     "rank": 5,
+     "code": 586,
+     "name": "巴基斯坦 Pakistan",
+     "value_usd": 3053234.0,
+     "qty_t": 9011.0,
+     "share_value_pct": 1.1,
+     "unit_usd_t": 338.8
+    },
+    {
+     "rank": 6,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 2922944.0,
+     "qty_t": 9836.2,
+     "share_value_pct": 1.0,
+     "unit_usd_t": 297.2
+    },
+    {
+     "rank": 7,
+     "code": 784,
+     "name": "阿联酋 UAE",
+     "value_usd": 1407029.0,
+     "qty_t": 5241.0,
+     "share_value_pct": 0.5,
+     "unit_usd_t": 268.5
+    },
+    {
+     "rank": 8,
+     "code": 404,
+     "name": "肯尼亚 Kenya",
+     "value_usd": 394937.0,
+     "qty_t": 1242.0,
+     "share_value_pct": 0.1,
+     "unit_usd_t": 318.0
+    }
+   ],
+   "2024": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 149175355.0,
+     "qty_t": 608481.8,
+     "share_value_pct": 69.0,
+     "unit_usd_t": 245.2
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 29847233.0,
+     "qty_t": 105109.0,
+     "share_value_pct": 13.8,
+     "unit_usd_t": 284.0
+    },
+    {
+     "rank": 3,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 21375476.0,
+     "qty_t": 68308.9,
+     "share_value_pct": 9.9,
+     "unit_usd_t": 312.9
+    },
+    {
+     "rank": 4,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 8225635.0,
+     "qty_t": 34642.2,
+     "share_value_pct": 3.8,
+     "unit_usd_t": 237.4
+    },
+    {
+     "rank": 5,
+     "code": 784,
+     "name": "阿联酋 UAE",
+     "value_usd": 4540667.0,
+     "qty_t": 18518.2,
+     "share_value_pct": 2.1,
+     "unit_usd_t": 245.2
+    },
+    {
+     "rank": 6,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 855305.0,
+     "qty_t": 3105.0,
+     "share_value_pct": 0.4,
+     "unit_usd_t": 275.5
+    },
+    {
+     "rank": 7,
+     "code": 616,
+     "name": "波兰 Poland",
+     "value_usd": 675000.0,
+     "qty_t": 3000.0,
+     "share_value_pct": 0.3,
+     "unit_usd_t": 225.0
+    },
+    {
+     "rank": 8,
+     "code": 586,
+     "name": "巴基斯坦 Pakistan",
+     "value_usd": 390008.0,
+     "qty_t": 1500.0,
+     "share_value_pct": 0.2,
+     "unit_usd_t": 260.0
+    }
+   ],
+   "2025": [
+    {
+     "rank": 1,
+     "code": 842,
+     "name": "美国 USA",
+     "value_usd": 157117602.2,
+     "qty_t": 731566.0,
+     "share_value_pct": 69.7,
+     "unit_usd_t": 214.8
+    },
+    {
+     "rank": 2,
+     "code": 156,
+     "name": "中国 China",
+     "value_usd": 60914156.642,
+     "qty_t": 287009.0,
+     "share_value_pct": 27.0,
+     "unit_usd_t": 212.2
+    },
+    {
+     "rank": 3,
+     "code": 792,
+     "name": "土耳其 Türkiye",
+     "value_usd": 4326057.178,
+     "qty_t": 20205.9,
+     "share_value_pct": 1.9,
+     "unit_usd_t": 214.1
+    },
+    {
+     "rank": 4,
+     "code": 784,
+     "name": "阿联酋 UAE",
+     "value_usd": 2167976.14,
+     "qty_t": 10399.9,
+     "share_value_pct": 1.0,
+     "unit_usd_t": 208.5
+    },
+    {
+     "rank": 5,
+     "code": 699,
+     "name": "印度 India",
+     "value_usd": 315211.0,
+     "qty_t": 1382.1,
+     "share_value_pct": 0.1,
+     "unit_usd_t": 228.1
+    },
+    {
+     "rank": 6,
+     "code": 490,
+     "name": "中国台湾 Other Asia, nes",
+     "value_usd": 267297.09,
+     "qty_t": 22.5,
+     "share_value_pct": 0.1,
+     "unit_usd_t": 11884.0
+    },
+    {
+     "rank": 7,
+     "code": 586,
+     "name": "巴基斯坦 Pakistan",
+     "value_usd": 113400.0,
+     "qty_t": 504.0,
+     "share_value_pct": 0.1,
+     "unit_usd_t": 225.0
+    },
+    {
+     "rank": 8,
+     "code": 100,
+     "name": "保加利亚 Bulgaria",
+     "value_usd": 104517.0,
+     "qty_t": 420.0,
+     "share_value_pct": 0.0,
+     "unit_usd_t": 248.8
+    }
+   ]
+  },
+  "partners_note": "伙伴国明细来自 Comtrade reporterCode=360、partnerCode 逐国返回；仅列前 5 位，完整明细见 raw/ 与 Excel「02 主要进口来源国」。2021/2024/2025 年土耳其与印度在返回数据中的 3 位代码偶有重叠，名称以 raw 原始响应为准。",
+  "china_exports": [
+   {
+    "year": 2018,
+    "to_idn_usd": 42668738.0,
+    "to_idn_t": 167632.6,
+    "to_world_usd": 343853621.0
+   },
+   {
+    "year": 2019,
+    "to_idn_usd": 34030712.0,
+    "to_idn_t": 145651.3,
+    "to_world_usd": 341979415.0
+   },
+   {
+    "year": 2020,
+    "to_idn_usd": 30263116.0,
+    "to_idn_t": 171705.8,
+    "to_world_usd": 254647578.0
+   },
+   {
+    "year": 2021,
+    "to_idn_usd": 26159632.0,
+    "to_idn_t": 102904.0,
+    "to_world_usd": 195929741.0
+   },
+   {
+    "year": 2022,
+    "to_idn_usd": 67582307.0,
+    "to_idn_t": 181306.9,
+    "to_world_usd": 804561270.0
+   },
+   {
+    "year": 2023,
+    "to_idn_usd": 41530294.0,
+    "to_idn_t": 127838.2,
+    "to_world_usd": 484723292.0
+   },
+   {
+    "year": 2024,
+    "to_idn_usd": 26676177.0,
+    "to_idn_t": 114994.8,
+    "to_world_usd": 293737040.0
+   },
+   {
+    "year": 2025,
+    "to_idn_usd": 51596159.0,
+    "to_idn_t": 290615.1,
+    "to_world_usd": 398406981.0
+   }
+  ],
+  "china_exports_note": "中国海关（经 Comtrade）口径：对印尼出口金额与印尼自华进口金额存在差异（如 2025 年 5,159.6 万美元 vs 6,091.4 万美元），属正常统计差异，不做调和。",
+  "local_supply": [
+   {
+    "year": 2020,
+    "local_output_t": 0,
+    "evidence": "s-pkt-groundbreaking",
+    "kind": "fact"
+   }
+  ],
+  "consumption_reference": [
+   {
+    "value_t": 1000000,
+    "label": "“每年约 100 万吨、全部依赖进口”",
+    "asof": "2025-11-02",
+    "kind": "company_statement",
+    "source": "s-konstruksimedia",
+    "note": "Pupuk Indonesia 董事长在开工仪式上的表述；与 Comtrade 2024 年 84.4 万吨净重存在差异，是否含港澳/转口或为非海关口径无法核实，不采用为消费量。"
+   },
+   {
+    "value_t": 1000000,
+    "label": "“印尼每年仍需进口近 100 万吨纯碱”",
+    "asof": "2023-05-05",
+    "kind": "media_quote",
+    "source": "s-kompas-pkt",
+    "note": "媒体转述 Pupuk Kaltim 说法，未见原始数据。"
+   },
+   {
+    "value_t": 300000,
+    "label": "“新厂 30 万吨/年，约满足全国需求 30%”",
+    "asof": "2025-11-02",
+    "kind": "company_statement",
+    "source": "s-pkt-groundbreaking",
+    "note": "按此反推需求约 100 万吨/年，与上条口径一致，但仍是企业表述，不是官方统计。"
+   }
+  ],
+  "imports_history": [
+   {
+    "year": 2018,
+    "value_usd": 255384794.0,
+    "qty_t": 1013615.7,
+    "source": "comtrade"
+   },
+   {
+    "year": 2019,
+    "value_usd": 251935406.0,
+    "qty_t": null,
+    "source": "comtrade"
+   },
+   {
+    "year": 2020,
+    "value_usd": 182257189.0,
+    "qty_t": null,
+    "source": "comtrade"
+   },
+   {
+    "year": 2021,
+    "value_usd": 188396580.0,
+    "qty_t": 821476.4,
+    "source": "comtrade"
+   },
+   {
+    "year": 2022,
+    "value_usd": 343972948.0,
+    "qty_t": 916828.9,
+    "source": "comtrade"
+   },
+   {
+    "year": 2023,
+    "value_usd": 281036031.0,
+    "qty_t": null,
+    "source": "comtrade"
+   },
+   {
+    "year": 2024,
+    "value_usd": 216143181.0,
+    "qty_t": 844114.6,
+    "source": "comtrade"
+   },
+   {
+    "year": 2025,
+    "value_usd": 225569362.788,
+    "qty_t": null,
+    "source": "comtrade"
+   }
+  ],
+  "exports": [
+   {
+    "year": 2018,
+    "value_usd": 3967913.67,
+    "qty_t": 9630.2,
+    "top_dest": "尼日利亚 Nigeria"
+   },
+   {
+    "year": 2019,
+    "value_usd": 4420681.163,
+    "qty_t": 11025.2,
+    "top_dest": "尼日利亚 Nigeria"
+   },
+   {
+    "year": 2020,
+    "value_usd": 7362190.446,
+    "qty_t": 18028.5,
+    "top_dest": "尼日利亚 Nigeria"
+   },
+   {
+    "year": 2021,
+    "value_usd": 6888907.093,
+    "qty_t": 17150.5,
+    "top_dest": "尼日利亚 Nigeria"
+   },
+   {
+    "year": 2022,
+    "value_usd": 3983584.704,
+    "qty_t": 9039.6,
+    "top_dest": "尼日利亚 Nigeria"
+   },
+   {
+    "year": 2023,
+    "value_usd": 3711262.388,
+    "qty_t": 8733.8,
+    "top_dest": "尼日利亚 Nigeria"
+   },
+   {
+    "year": 2024,
+    "value_usd": 3745896.11,
+    "qty_t": 7881.7,
+    "top_dest": "尼日利亚 Nigeria"
+   },
+   {
+    "year": 2025,
+    "value_usd": 5338305.131,
+    "qty_t": 11068.5,
+    "top_dest": "尼日利亚 Nigeria"
+   }
+  ]
+ },
+ "industries": {
+  "description_note": "本地纯碱供应：截至数据日未发现任何在运的规模化纯碱生产装置。",
+  "local_production": [
+   {
+    "id": "f-pkt-sodaash",
+    "name": "PT Pupuk Kalimantan Timur（Pupuk Kaltim，Pupuk Indonesia 集团）",
+    "role": "纯碱生产（新建）",
+    "location": "Kaltim Industrial Estate（KIE），Bontang，东加里曼丹",
+    "capacity_t": 300000,
+    "capacity_basis": "公司新闻稿：满负荷年产 30 万吨，约满足全国需求 30%",
+    "status": "在建",
+    "status_asof": "2025-11-02",
+    "products": [
+     "重质纯碱（玻璃/洗涤剂/食品/纸浆/陶瓷）",
+     "副产氯化铵（肥料原料）"
+    ],
+    "tech": "利用现有合成氨装置的 CO₂ 生产纯碱（公司称每年可吸收约 17.4 万吨 CO₂），副产氯化铵",
+    "facts": [
+     "2025-10-31 在 Bontang KIE 举行开工（groundbreaking），Pupuk Indonesia 董事长 Rahmad Pribadi、Pupuk Kaltim 董事长 Gusrizal 出席（s-pkt-groundbreaking）",
+     "公司称可替代进口、每年节约约 1 万亿印尼盾纯碱进口支出、约 2,500 亿印尼盾氯化铵进口支出（s-pkt-groundbreaking，为企业测算）",
+     "官方新闻稿发布日 2025-11-10，文中同时出现“Fri (31/10/2023)”字样，日期自相矛盾；正文上下文与多家媒体均指向 2025-10-31，本报告以媒体一致口径为准并标为待核实"
+    ],
+    "sources": [
+     "s-pkt-groundbreaking",
+     "s-antara-sodaash"
+    ],
+    "verify": [
+     "投产时间表与达产节奏",
+     "产品规格（堆积密度/Fe/NaCl）是否满足浮法与日用玻璃",
+     "是否进入印尼玻璃企业合格供应商名录",
+     "副产氯化铵的销路"
+    ]
+   },
+   {
+    "id": "f-petrokimia-ccu",
+    "name": "PT Petrokimia Gresik（Pupuk Indonesia 集团）",
+    "role": "纯碱（CCU 中试）",
+    "location": "Gresik，东爪哇",
+    "capacity_t": null,
+    "capacity_basis": "中试规模，未公开产能；Kemenperin 对外表述的潜力为“每年最多替代 100 万吨进口”",
+    "status": "中试/示范",
+    "status_asof": "2026-10-17",
+    "products": [
+     "纯碱（CCU 路线示范品）"
+    ],
+    "tech": "碳捕集利用（CCU）：把装置 CO₂ 转化为纯碱",
+    "facts": [
+     "CCU 中试把捕集的 CO₂ 转化为纯碱与碳酸氢钠；纯碱经 BBSPJIKFK、BSPJI Surabaya、Petrokimia Gresik、Sucofindo 四方检测，Na₂CO₃ 含量约 99%，称符合 SNI（s-akurat-ccu）",
+     "2026-10-17 工业部长 Sarmuji 在 Gresik 表示 CCU“已产出数量可观的纯碱”，并要求扩大中试（s-akurat-ccu）",
+     "Pupuk Indonesia 总经理 Rahmad Pribadi 称已在做工业规模 CCU 的经济性测算；Kemenperin 称潜在可替代进口最多 100 万吨/年、并带来约 2 亿美元/年的额外收入（s-bisnis-ccu）",
+     "2026-10 工业部长视察 Xinyi Glass 后表示 Petrokimia Gresik 的纯碱将向 Xinyi 供货（s-beritajatim-xinyi、s-bisnis-kemenperin）"
+    ],
+    "sources": [
+     "s-akurat-ccu",
+     "s-bisnis-ccu",
+     "s-beritajatim-xinyi",
+     "s-bisnis-kemenperin"
+    ],
+    "verify": [
+     "中试实际年产量（吨）",
+     "工业规模装置的投资决定时间与产能",
+     "能否稳定满足浮法玻璃对 Fe/粒度的要求",
+     "价格机制（是否低于进口到岸价）",
+     "是否已签 Xinyi 供货协议、数量多少"
+    ]
+   }
+  ],
+  "local_absence_evidence": [
+   {
+    "claim": "印尼长期没有规模化纯碱生产，需求几乎全部依赖进口；政府自 1990 年代起多次尝试未成",
+    "source": "s-detiks-sodaash",
+    "kind": "media"
+   },
+   {
+    "claim": "Asahimas Chemical 的产品清单为烧碱、盐酸、次氯酸钠、EDC、VCM、PVC，不含碳酸钠",
+    "source": "s-asc-products",
+    "kind": "company"
+   },
+   {
+    "claim": "市场机构把印尼描述为“import-driven ecosystem”，无显著本土产能",
+    "source": "s-indexbox",
+    "kind": "market_research"
+   }
+  ],
+  "consumers": [
+   {
+    "id": "c-xinyi-gresik",
+    "name": "PT Xinyi Glass Indonesia",
+    "type": "浮法与深加工玻璃",
+    "location": "JIIPE 经济特区，Gresik，东爪哇",
+    "products": "浮法玻璃及深加工，出口至 45 个国家",
+    "buying_role": "直接用户（大口径进口）",
+    "facts": [
+     "工业部长 Sarmuji 在 2026-10-16 视察时表示，该厂 TKDN（本地含量）约 80%，剩余 20% 的进口原料全部是纯碱（s-bisnis-kemenperin、s-xinyi2）",
+     "该厂产品已出口到 45 个国家，约 70% 员工来自 Gresik 本地（s-beritajatim-xinyi、s-bisnis-kemenperin）",
+     "Kemenperin 希望 Petrokimia Gresik 的纯碱投产后由 Xinyi 作为本地采购方（s-bisnis-kemenperin）"
+    ],
+    "sources": [
+     "s-beritajatim-xinyi",
+     "s-bisnis-kemenperin",
+     "s-klikjatim"
+    ],
+    "verify": [
+     "年产线数/熔化量（冷修排期直接决定纯碱采购节奏）",
+     "当前纯碱供应商与合同结构",
+     "年度采购量与规格",
+     "是否接受中国货源（含烧成/包装要求）"
+    ]
+   },
+   {
+    "id": "c-muliaglass",
+    "name": "PT Muliaglass（Mulia Industrindo Tbk 子公司）",
+    "type": "浮法玻璃 + 瓶罐玻璃 + 夹层/钢化 + 玻璃砖",
+    "location": "Bekasi 等（西爪哇）",
+    "products": "浮法（2–12 mm 多色）、玻璃瓶罐、玻璃砖、汽车安全玻璃",
+    "buying_role": "直接用户",
+    "facts": [
+     "公司资料：浮法事业部 1989 年成立，年产能 612,500 吨（s-mulia-brochure）"
+    ],
+    "sources": [
+     "s-muliaglass-en",
+     "s-mulia-brochure",
+     "s-mlia-profile"
+    ],
+    "verify": [
+     "浮法 612,500 吨/年为 1989 年建线产能，是否已扩产或冷修停线（需年报）",
+     "瓶罐玻璃产能",
+     "纯碱采购渠道"
+    ]
+   },
+   {
+    "id": "c-asahimas-flatglass",
+    "name": "PT Asahimas Flat Glass Tbk（AMFG）",
+    "type": "浮法玻璃与建筑/汽车玻璃",
+    "location": "Anyer/Tangerang 等",
+    "products": "Indofloat 浮法、压花、夹层、钢化、中空",
+    "buying_role": "直接用户",
+    "facts": [
+     "作为印尼主要浮法玻璃厂商，其“Indofloat”被下游经销商列为一线品牌（s-optima-indofloat，经销商口径）"
+    ],
+    "sources": [
+     "s-optima-indofloat"
+    ],
+    "verify": [
+     "浮法产线数量与冷修计划",
+     "纯碱年采购量",
+     "食品安全级/工业级区分"
+    ]
+   },
+   {
+    "id": "c-unilever-id",
+    "name": "PT Unilever Indonesia",
+    "type": "洗涤剂/个护快消",
+    "location": "Tangerang 等（西爪哇/万丹）",
+    "products": "洗衣粉、洗洁精、肥皂等",
+    "buying_role": "最终用户/配方方；采购多经贸易商",
+    "facts": [
+     "2021 年 Petrokimia Gresik 纯碱项目宣布时，合作方包括 PT Garam 与 Unilever（s-kompas-pg-unilever）"
+    ],
+    "sources": [
+     "s-kompas-pg-unilever"
+    ],
+    "verify": [
+     "纯碱年用量",
+     "可接受的供应商认证流程（食品级 vs 工业级）",
+     "是否要求清真认证"
+    ]
+   },
+   {
+    "id": "c-wings",
+    "name": "Wings Group（Wings Surya 等）",
+    "type": "洗涤剂/个护快消",
+    "location": "Sidoarjo 等",
+    "products": "SoKlin 洗衣液、洗涤剂等",
+    "buying_role": "最终用户/配方方",
+    "facts": [
+     "公开 MSDS 显示其洗涤剂配方含纯碱（s-wings-msds，第三方上传文档，仅作旁证）"
+    ],
+    "sources": [
+     "s-wings-msds"
+    ],
+    "verify": [
+     "纯碱年用量与采购主体（总部集中采购 or 分厂）"
+    ]
+   }
+  ],
+  "consumers_unnamed": [
+   {
+    "segment": "中小玻璃与瓶罐厂",
+    "why_unnamed": "未找到可核实企业级资料，仅能以行业描述方式呈现",
+    "search_hint": "KBLI 23111 / 23112 名录（BPS SIINas、OSS）"
+   },
+   {
+    "segment": "洗涤剂中小品牌与代工（Maklon）",
+    "why_unnamed": "同上",
+    "search_hint": "Kosmetika/deterjen maklon 名录"
+   },
+   {
+    "segment": "陶瓷与水处理",
+    "why_unnamed": "同上",
+    "search_hint": "KBLI 2392x 陶瓷"
+   }
+  ]
+ },
+ "downstream": {
+  "note": "本区仅列已取得公开来源的产业事实；下游产量、吨耗、按应用拆分的需求量均未取得权威数据，不填数。",
+  "items": [
+   {
+    "segment": "玻璃（浮法与日用玻璃）",
+    "demand_signal": "工业部长 2026-10-16 表示 Xinyi Glass Indonesia 的 20% 进口原料即为纯碱；政府推动本地产纯碱替代进口",
+    "scale_note": "Muliaglass 浮法线年产能 612,500 吨（1989 年建线口径）",
+    "sources": [
+     "s-beritajatim-xinyi",
+     "s-mulia-brochure"
+    ],
+    "gap": "全国浮法/瓶罐玻璃产量、冷修计划、吨玻璃纯碱单耗"
+   },
+   {
+    "segment": "洗涤剂与个护",
+    "demand_signal": "Kemenperin 明确把洗涤剂列为本地产纯碱的目标下游（surabaya.bisnis.com 2026-10-16）",
+    "scale_note": "Unilever 曾作为 Petrokimia Gresik 纯碱项目合作方公开出现",
+    "sources": [
+     "s-bisnis-kemenperin",
+     "s-kompas-pg-unilever"
+    ],
+    "gap": "印尼洗涤剂产量与纯碱单耗、STPP 用量（影响轻/重质需求结构）"
+   },
+   {
+    "segment": "陶瓷",
+    "demand_signal": "Pupuk Indonesia 开工稿把陶瓷列为纯碱下游之一",
+    "scale_note": "—",
+    "sources": [
+     "s-pkt-groundbreaking"
+    ],
+    "gap": "陶瓷砖产量与纯碱用量"
+   },
+   {
+    "segment": "纸浆造纸",
+    "demand_signal": "同上",
+    "scale_note": "—",
+    "sources": [
+     "s-pkt-groundbreaking"
+    ],
+    "gap": "制浆产能与纯碱（或替代碱）消耗"
+   },
+   {
+    "segment": "食品级纯碱",
+    "demand_signal": "进口食品须满足清真（Halal）与 BPOM 要求；2026 年起对进口食品实施装运前清真一致性核查",
+    "scale_note": "—",
+    "sources": [
+     "s-yizhou-idn"
+    ],
+    "gap": "食品级纯碱进口量与登记企业清单"
+   },
+   {
+    "segment": "生物柴油（B40）",
+    "demand_signal": "2025-01-01 起实施 B40 掺混；棕榈油原料路线理论上会增加油脂精炼碱耗",
+    "scale_note": "B40 启动见 s-gapki-b40",
+    "sources": [
+     "s-gapki-b40",
+     "s-biofuels-b40"
+    ],
+    "gap": "B40 实际掺混量与精炼厂碱耗数据；本报告不据此推算纯碱增量"
+   }
+  ]
+ },
+ "competition": {
+  "source_countries": [
+   {
+    "name": "美国 USA",
+    "basis": "天然碱（trona），成本与碳足迹优势；在印尼长期占据第一供应国地位",
+    "evidence": "comtrade; s-usgs"
+   },
+   {
+    "name": "中国 China",
+    "basis": "合成法为主，出口价格低、船期短、可吨包定制",
+    "evidence": "comtrade"
+   },
+   {
+    "name": "土耳其 Türkiye",
+    "basis": "天然碱出口国，2022 年出口量激增，2023 年在印尼份额回升",
+    "evidence": "comtrade; s-usgs"
+   },
+   {
+    "name": "印度 India",
+    "basis": "2024 年升至第三大来源国（USD 2,137.5 万）",
+    "evidence": "comtrade"
+   },
+   {
+    "name": "阿联酋 UAE",
+    "basis": "长期小幅供货，2021 年占 2.7%",
+    "evidence": "comtrade"
+   },
+   {
+    "name": "保加利亚 / 巴基斯坦",
+    "basis": "零散供货",
+    "evidence": "comtrade"
+   }
+  ],
+  "price_observation": [
+   {
+    "claim": "2026 年印尼到岸（CIF）重质纯碱估计 USD 280–360/吨，轻质低 USD 15–30/吨",
+    "kind": "market_research",
+    "source": "s-indexbox",
+    "note": "机构估算（原文用 estimated），非成交价；本报告不采用为事实价格。"
+   }
+  ],
+  "distributors": [
+   {
+    "name": "PT Lestari Kimia",
+    "role": "工业化学品分销（零售与批发）",
+    "products": "SODA ASH LIGHT / SODA ASH DENSE",
+    "source": "s-lestari-kimia"
+   },
+   {
+    "name": "PT Bumi Prima Lestari 等",
+    "role": "Indotrading 平台登记的纯碱供应商/分销商",
+    "products": "Dense soda ash",
+    "source": "s-indotrading"
+   }
+  ],
+  "china_hs_code_note": "中国海关对重质纯碱使用本国 8 位税号 2836.20.10（纯碱），对轻质/其他碳酸钠另有税号；Comtrade 按 HS6 283620 汇总，因此中国出口统计里重、轻质混合。印尼进口侧无法按形态拆分，两边口径都不支持“重质占比”这类结论，本报告不做拆分。"
+ },
+ "policy": {
+  "hs_line": {
+   "code": "2836.20.00（BTKI 2022 八位税号）",
+   "description": "Sodium carbonates（碳酸钠）",
+   "verify_note": "八位税号与分档税率需以 INSW（insw.go.id）或 DJBC 最新 BTKI 查询为准；本报声明本项为待核实项"
+  },
+  "tariffs": [
+   {
+    "id": "t-mfn",
+    "item": "最惠国（MFN）进口关税",
+    "rate": null,
+    "status": "gap",
+    "detail": "第三方汇总站以 WITS 2023 口径给出纯碱 HS 2836.20 的最惠国基本关税为 0%（s-yizhou-idn）；印尼 2025 年第 4 号财政部条例（PMK 4/2025）只把八类商品（书籍、钢铁、纺织、自行车等）的 MFN 简化为 0%/15%/25%，未涵盖纯碱（s-tradegov-tariff）。印尼整体平均 MFN 约 8.1%（非农产品 8.0%），但化工品中“部分税目税率更高或未约束”（s-tradegov-tariff）。结论：0% 这一数字目前只有第三方汇总站一个出处，未经 INSW/BTKI 官方页面核验，报价前必须核验。",
+    "sources": [
+     "s-yizhou-idn",
+     "s-tradegov-tariff",
+     "s-insw-hs"
+    ]
+   },
+   {
+    "id": "t-acfta",
+    "item": "中国—东盟自贸区（ACFTA）协定税率",
+    "rate": null,
+    "status": "gap",
+    "detail": "第三方汇总站称中国原产凭 Form E 为 0%（WITS 2021 口径，s-yizhou-idn）；两家印尼进口服务商同样把 Form E 描述为 ACFTA 优惠原产地证（s-cekindo-duty、s-indoexpress）。但“该税号一定在 0% 清单内”这一点没有官方页面佐证——若 MFN 本身已是 0%，Form E 的实际作用主要体现在原产地合规与后续反倾销/保障措施应对上。",
+    "sources": [
+     "s-yizhou-idn",
+     "s-cekindo-duty",
+     "s-indoexpress",
+     "s-asean-tariff-finder"
+    ]
+   },
+   {
+    "id": "t-rcep",
+    "item": "RCEP 协定税率",
+    "rate": null,
+    "status": "gap",
+    "detail": "RCEP 自 2023-01-02 对印尼生效（s-rcep-indonesia），纯碱具体减让档期未核验；实践中应逐票比对 MFN、ACFTA 与 RCEP 三种税率取低。",
+    "sources": [
+     "s-rcep-indonesia",
+     "s-asean-tariff-finder"
+    ]
+   },
+   {
+    "id": "t-vat",
+    "item": "进口增值税 PPN 与所得税预缴 PPh 22",
+    "rate": null,
+    "status": "gap",
+    "detail": "PPN：法定税率 12%（2022 年 HPP 法，2025-01-01 起），非奢侈品按 11/12 计税基础征收，实际税负约 11%（PMK 131/2024）；纯碱属普通商品，预计适用有效 11%。PPh 22：自 2025-08-01 起按 PMK 51/2025，有 API 的进口商 2.5%、无 API 7.5%，特定清单商品 7.5%/10%，无 NPWP 加倍。以上为进口服务商的整理口径（s-cekindo-duty、s-indoexpress），需在报关时由进口商用实际税号确认。",
+    "sources": [
+     "s-cekindo-duty",
+     "s-indoexpress",
+     "s-tradegov-tariff"
+    ]
+   }
+  ],
+  "ntm": [
+   {
+    "id": "p-tkdn",
+    "item": "本地含量（TKDN）与政府采购本地化",
+    "status": "need_confirm",
+    "detail": "Permenperin 35/2025 重构了 TKDN 计算与认证：在印尼投资、拥有自有生产设施并使用多数本地员工的企业，TKDN 自动获得至少 25% 起评；研发/技术人才最多再加 20%，支持 Kemenperin 战略项目的企业另有 15% 的 BMP 加分；证书有效期延长至 5 年，计算只到第 2 层供应链。该规则主要作用于政府采购、BUMN/BUMD 招标与享受激励的企业，纯碱作为原料一般不单独认证，但其下游（玻璃、洗涤剂成品）若投标政府项目会被要求 TKDN。对出口方的含义：投标类下游客户可能更倾向本地原料；具体是否触发、如何计算，必须由客户按商品确认。",
+    "sources": [
+     "s-kemenperin-tkdn",
+     "s-kompas-tkdn",
+     "s-kemenperin-tkdn-page"
+    ]
+   },
+   {
+    "id": "p-lartas",
+    "item": "进口许可（LARTAS / API-U）",
+    "status": "need_confirm",
+    "detail": "Permendag 20/2025（BN 2025/No.453，20 页）专门规范化学品、危险品与矿产品进口，Politeknik/JDIH 已公开摘要页但其 LARTAS 清单（Lampiran）未能在公开文本中读到纯碱税号（s-permendag20）；同一法规包的 Permendag 16/2025 为通用进口规定。是否需要对 HS 2836.20.00 申请 PI（进口批准）/LS（验货报告），必须以税号在 INSW 逐项查询，或由印尼进口商出示其 INATRADE 查询结果。",
+    "sources": [
+     "s-kemendag-9permen",
+     "s-tradegov-restricted",
+     "s-insw-hs"
+    ]
+   },
+   {
+    "id": "p-bpom-food",
+    "item": "食品级：BPOM 登记与 Halal 认证",
+    "status": "need_confirm",
+    "detail": "食品添加剂用途须完成 BPOM 登记；2024 年第 42 号政府条例要求自 2026-10-17 前确定进口食品清真义务安排，BPJPH 2026 年第 4 号条例对进口食品实施装运前清真一致性核查（LPPH）。工业级纯碱一般不适用，但玻璃/洗涤剂客户可能要求清真声明。",
+    "sources": [
+     "s-yizhou-idn"
+    ]
+   },
+   {
+    "id": "p-msds",
+    "item": "化学品安全与标签（GHS/SNI）",
+    "status": "need_confirm",
+    "detail": "纯碱不属于危险货物（无 UN 编号，通常按普通货物运输），但需随货提供 SDS 与合规标签；印尼对部分化工品有 SNI 强制认证，纯碱是否在强制清单内未核实。玻璃/洗涤剂客户通常还会要求 REACH/RoHS 类声明与清真（Halal）声明，但工业级用途一般不进入 BPJPH 的清真强制范围。",
+    "sources": [
+     "s-insw-hs"
+    ]
+   }
+  ],
+  "trade_relations": [
+   {
+    "id": "r-acfta",
+    "item": "中国—东盟自贸区（ACFTA）升级议定书",
+    "status": "fact",
+    "detail": "ACFTA 3.0 议定书于 2025-10-28 签署（仅签署，生效需各方批准），覆盖数字经济、绿色经济等新领域；传统货物贸易降税安排仍以 ACFTA 货物贸易协定为准，中国原产需 Form E Form E 原产地证书。",
+    "sources": [
+     "s-acfta3"
+    ]
+   },
+   {
+    "id": "r-rcep",
+    "item": "RCEP",
+    "status": "fact",
+    "detail": "RCEP 自 2023-01-02 起对印度尼西亚生效：中印尼之间在同一产品上有第二条协定税率与原产地规则路径，具体税率与生效档期仍需按税号在 ASEAN Tariff Finder 或 INSW 上比对，取较低者并核对原产地规则。",
+    "sources": [
+     "s-rcep-indonesia"
+    ]
+   },
+   {
+    "id": "r-import-policy",
+    "item": "2025 年进口管理重构",
+    "status": "fact",
+    "detail": "印尼 2025 年 6 月废止 Permendag 8/2024，改为 9 项新条例（16–24/2025），整体方向是简化许可；但对化学品（20/2025）单独规定。",
+    "sources": [
+     "s-kemendag-9permen"
+    ]
+   },
+   {
+    "id": "r-localization",
+    "item": "进口替代与本地产能",
+    "status": "fact",
+    "detail": "进口替代正在形成两条并行的本地供给路径：①Pupuk Kaltim 30 万吨/年纯碱项目 2025-10-31 开工；②Petrokimia Gresik 的 CCU 中试已产出纯碱（Na2CO3 约 99%，经 BBSPJIKFK、BSPJI Surabaya 等四方检测，称符合 SNI），Kemenperin 与 Pupuk Indonesia 正在做工业规模的经济性测算，对外表述的潜力为“每年替代最多 100 万吨进口”。两条路径都还停留在“在建/中试”，尚未形成可对外报价的现货供给。",
+    "sources": [
+     "s-pkt-groundbreaking",
+     "s-akurat-ccu",
+     "s-bisnis-ccu",
+     "s-bisnis-kemenperin"
+    ]
+   }
+  ]
+ },
+ "reports": [
+  {
+   "id": "rp-usgs",
+   "type": "官方统计（第三方）",
+   "title": "USGS Mineral Commodity Summaries 2024 — Soda Ash",
+   "key_points": [
+    "2023 年全球纯碱产量约 6,500 万吨（天然 2,300 万 + 合成 4,200 万，估算）",
+    "中国约 2,900 万吨、土耳其约 1,100 万吨、美国约 1,100 万吨，合计占 78%",
+    "美国、土耳其天然碱在成本与碳排放上优于合成法"
+   ],
+   "source": "s-usgs",
+   "caveat": "全球口径，不含印尼本国数据"
+  },
+  {
+   "id": "rp-indexbox",
+   "type": "市场机构估算",
+   "title": "IndexBox：Indonesia Soda Ash Market 2026 Analysis and Forecast to 2035",
+   "key_points": [
+    "进口占国内消费约 90–95%（估算）",
+    "玻璃占消费 60–65%（估算）",
+    "2026 年 CIF 重质 280–360 美元/吨（估算）",
+    "港口拥堵带来 2–4 周提货波动"
+   ],
+   "source": "s-indexbox",
+   "caveat": "商业研究机构估算，方法与原始数据未公开，只能作为方向性参考"
+  },
+  {
+   "id": "rp-kemenperin",
+   "type": "政府表态",
+   "title": "Kemenperin：推动本地产纯碱替代进口（2026-10-16/17）",
+   "key_points": [
+    "Xinyi Glass 进口原料 20% 全部为纯碱",
+    "Petrokimia Gresik 纯碱装置即将投产，拟供 Xinyi",
+    "目标下游：玻璃、洗涤剂、纺织"
+   ],
+   "source": "s-bisnis-kemenperin",
+   "caveat": "部长现场表态，无产量数据"
+  },
+  {
+   "id": "rp-local-supply",
+   "type": "企业公告",
+   "title": "Pupuk Indonesia / Pupuk Kaltim：印尼首座纯碱厂开工",
+   "key_points": [
+    "产能 30 万吨/年",
+    "约满足 30% 全国需求",
+    "改用 CO₂，副产氯化铵"
+   ],
+   "source": "s-pkt-groundbreaking",
+   "caveat": "企业自述，产能指设计能力，非产量"
+  },
+  {
+   "id": "rp-tkdn",
+   "type": "官方政策解读",
+   "title": "Permenperin 35/2025 与 TKDN 改革（Kemenperin / Kompas.id 2025-09-12）",
+   "key_points": [
+    "在印尼建厂生产的企业 TKDN 自动获得至少 25% 起评",
+    "研发与本土技术人才最多加 20%；BMP 另有 15%",
+    "证书有效期延长至 5 年、计算只到第 2 层供应链",
+    "主要作用于政府采购与 BUMN/BUMD 招标"
+   ],
+   "source": "s-kompas-tkdn",
+   "caveat": "政策原文与部长表态；纯碱作为原料不直接纳入 TKDN，影响主要经由下游玻璃/洗涤剂成品的投标需求传导，需按客户确认"
+  }
+ ],
+ "sources": [
+  {
+   "id": "comtrade",
+   "kind": "官方统计",
+   "publisher": "UN Comtrade",
+   "title": "Comtrade public API — HS 283620, reporter 360/156",
+   "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS",
+   "date": "2026-10-19 拉取",
+   "tier": 1
+  },
+  {
+   "id": "s-pkt-groundbreaking",
+   "kind": "企业公告",
+   "publisher": "PT Pupuk Indonesia",
+   "title": "Pupuk Indonesia Bangun Pabrik Soda Ash Pertama di Tanah Air",
+   "url": "https://www.pupuk-indonesia.com/media-info/detail/786/pupuk-indonesia-bangun-pabrik-soda-ash-pertama-di-tanah-air",
+   "date": "2025-11-10",
+   "tier": 1
+  },
+  {
+   "id": "s-antara-sodaash",
+   "kind": "新闻",
+   "publisher": "ANTARA",
+   "title": "Indonesia begins construction of first soda ash plant",
+   "url": "https://en.antaranews.com/news/389177/indonesia-begins-construction-of-first-soda-ash-plant",
+   "date": "2025-10-31",
+   "tier": 2
+  },
+  {
+   "id": "s-detiks-sodaash",
+   "kind": "新闻",
+   "publisher": "detikFinance",
+   "title": "Setelah 30 Tahun Gagal, RI Akhirnya Bangun Pabrik Soda Ash Pertama Rp 5 T",
+   "url": "https://finance.detik.com/industri/d-8188521/setelah-30-tahun-gagal-ri-akhirnya-bangun-pabrik-soda-ash-pertama-rp-5-t",
+   "date": "2025-11-01",
+   "tier": 2
+  },
+  {
+   "id": "s-konstruksimedia",
+   "kind": "新闻",
+   "publisher": "Konstruksi Media",
+   "title": "Gagal 30 Tahun, Indonesia Akhirnya Resmi Bangun Pabrik Soda Ash Pertama Senilai Rp5 Triliun di Bontang",
+   "url": "https://konstruksimedia.com/gagal-30-tahun-indonesia-akhirnya-resmi-bangun-pabrik-soda-ash-pertama-senilai-rp5-triliun-di-bontang/",
+   "date": "2025-11-02",
+   "tier": 3
+  },
+  {
+   "id": "s-kompas-pkt",
+   "kind": "新闻",
+   "publisher": "Kompas.com",
+   "title": "Menilik Potensi Produksi Soda Ash di Indonesia",
+   "url": "https://money.kompas.com/read/2023/05/05/060000026/menilik-potensi-produksi-soda-ash-di-indonesia",
+   "date": "2023-05-05",
+   "tier": 3
+  },
+  {
+   "id": "s-beritajatim-xinyi",
+   "kind": "新闻",
+   "publisher": "BeritaJatim",
+   "title": "Xinyi Glass Gresik Masih Impor 20 Persen Bahan Baku, Menperin Sarmuji Soroti Pasokan Soda Ash",
+   "url": "https://beritajatim.com/xinyi-glass-gresik-masih-impor-20-persen-bahan-baku-menperin-soroti-pasokan-soda-ash",
+   "date": "2026-10-16",
+   "tier": 2
+  },
+  {
+   "id": "s-bisnis-kemenperin",
+   "kind": "新闻",
+   "publisher": "Bisnis.com Surabaya",
+   "title": "Tekan Impor Bahan Baku, Kemenperin Genjot Produksi Soda Ash Dalam Negeri",
+   "url": "https://surabaya.bisnis.com/read/20261016/532/2013200/tekan-impor-bahan-baku-kemenperin-genjot-produksi-soda-ash-dalam-negeri",
+   "date": "2026-10-16",
+   "tier": 2
+  },
+  {
+   "id": "s-klikjatim",
+   "kind": "新闻",
+   "publisher": "Klik Jatim",
+   "title": "Pemerintah Dorong Petrokimia Gresik Pasok Soda Ash ke Xinyi Glass",
+   "url": "https://klikjatim.com/news-50414-pemerintah-",
+   "date": "2026-10-19",
+   "tier": 3
+  },
+  {
+   "id": "s-validnews-ccu",
+   "kind": "新闻",
+   "publisher": "Validnews",
+   "title": "Kemenperin Kembangkan Teknologi CCU Untuk Tekan Impor Soda Ash",
+   "url": "https://validnews.id/ekonomi/2026/10/17/kemenperin-kembangkan-teknologi-ccu-untuk-tekan-impor-soda-ash-144400224",
+   "date": "2026-10-17",
+   "tier": 3
+  },
+  {
+   "id": "s-kompas-pg-unilever",
+   "kind": "新闻",
+   "publisher": "Kompas.com",
+   "title": "Bangun Pabrik Soda Ash, Petrokimia Gresik Gandeng PT Garam dan Unilever",
+   "url": "https://money.kompas.com/read/2021/09/02/203902626/bangun-pabrik-soda-ash-petrokimia-gresik-gandeng-pt-garam-dan-unilever",
+   "date": "2021-09-02",
+   "tier": 3
+  },
+  {
+   "id": "s-asc-products",
+   "kind": "企业官网",
+   "publisher": "PT Asahimas Chemical",
+   "title": "Products / ASC at a glance",
+   "url": "https://www.asc.co.id/new-companyprofile/product.html",
+   "date": "2026 查阅",
+   "tier": 1
+  },
+  {
+   "id": "s-muliaglass-en",
+   "kind": "企业官网",
+   "publisher": "PT Muliaglass",
+   "title": "MuliaGlass — Pabrik Kaca Float, Glass Block, Kemasan Botol",
+   "url": "https://muliaglass.com/en/",
+   "date": "2026 查阅",
+   "tier": 1
+  },
+  {
+   "id": "s-mulia-brochure",
+   "kind": "企业资料",
+   "publisher": "PT Muliaglass",
+   "title": "A reflection of quality — Float Glass brochure",
+   "url": "https://muliaglass.com/wp-content/uploads/2024/12/Booklet-Mulia-Brochures-Float-Glass.pdf",
+   "date": "2024-12-03",
+   "tier": 1
+  },
+  {
+   "id": "s-mlia-profile",
+   "kind": "第三方资料",
+   "publisher": "Financial Times / Mulia Industrindo",
+   "title": "MLIA:JKT profile",
+   "url": "https://markets.ft.com/data/equities/tearsheet/profile?s=MLIA:JKT",
+   "date": "2026 查阅",
+   "tier": 3
+  },
+  {
+   "id": "s-optima-indofloat",
+   "kind": "经销商",
+   "publisher": "PT Optima Berkat Sinergi",
+   "title": "Kaca Clear Indofloat",
+   "url": "https://www.optimaglass.co.id/kaca-clear-indofloat-2/",
+   "date": "2026 查阅",
+   "tier": 3
+  },
+  {
+   "id": "s-wings-msds",
+   "kind": "第三方文档",
+   "publisher": "Scribd（用户上传）",
+   "title": "MSDS Wings Detergent",
+   "url": "https://www.scribd.com/document/444672159/MSDS-Wings-Detergent-pdf",
+   "date": "未注明",
+   "tier": 4
+  },
+  {
+   "id": "s-lestari-kimia",
+   "kind": "分销商",
+   "publisher": "Lestari Kimia",
+   "title": "SODA ASH LIGHT / SODA ASH DENSE",
+   "url": "https://lestarikimia.com/id/product/soda-ash-dense/",
+   "date": "2026 查阅",
+   "tier": 3
+  },
+  {
+   "id": "s-indotrading",
+   "kind": "B2B 平台",
+   "publisher": "Indotrading",
+   "title": "Daftar Importir, Distributor, Supplier Dense Soda Ash Indonesia",
+   "url": "https://www.indotrading.com/company_dense-soda-ash_9562/",
+   "date": "2026 查阅",
+   "tier": 3
+  },
+  {
+   "id": "s-yizhou-idn",
+   "kind": "第三方汇总",
+   "publisher": "Yizhou Chem（贸易商内容站）",
+   "title": "Soda Ash HS Code 2836.20 / Indonesia market page（引用 WITS 税率、清真要求）",
+   "url": "https://yizhouchem.com/markets/indonesia",
+   "date": "2026-10-11",
+   "tier": 4
+  },
+  {
+   "id": "s-tradegov-tariff",
+   "kind": "政府指南",
+   "publisher": "U.S. International Trade Administration",
+   "title": "Indonesia — Import Tariffs (Country Commercial Guide)",
+   "url": "https://www.trade.gov/country-commercial-guides/indonesia-import-tariffs",
+   "date": "2025-11-17",
+   "tier": 2
+  },
+  {
+   "id": "s-tradegov-restricted",
+   "kind": "政府指南",
+   "publisher": "U.S. International Trade Administration",
+   "title": "Indonesia — Prohibited and Restricted Imports",
+   "url": "https://www.trade.gov/country-commercial-guides/indonesia-prohibited-and-restricted-imports",
+   "date": "2025-11-17",
+   "tier": 2
+  },
+  {
+   "id": "s-insw-hs",
+   "kind": "官方平台",
+   "publisher": "Indonesia National Single Window (INSW)",
+   "title": "Tarif & LARTAS 查询：HS 2836200000",
+   "url": "https://insw.go.id/intr/tarif-hs-code/1/2836200000",
+   "date": "2026 查阅（页面需登录/动态加载，本报告未从该页直接读取到税率）",
+   "tier": 1
+  },
+  {
+   "id": "s-kemendag-9permen",
+   "kind": "政府公告",
+   "publisher": "Kementerian Perdagangan",
+   "title": "Permendag 8/2024 Resmi Dicabut, Ini 9 Aturan Penggantinya（含 Permendag 20/2025 化学品进口）",
+   "url": "https://www.kemendag.go.id/berita/pojok-media/permendag-82024-resmi-dicabut-ini-9-aturan-penggantinya",
+   "date": "2025-07-02",
+   "tier": 1
+  },
+  {
+   "id": "s-asean-tariff-finder",
+   "kind": "官方工具",
+   "publisher": "DJBC / ASEAN",
+   "title": "ASEAN Tariff Finder",
+   "url": "https://www.beacukai.go.id/asean-tariff-finder",
+   "date": "2026 查阅",
+   "tier": 1
+  },
+  {
+   "id": "s-acfta3",
+   "kind": "协定",
+   "publisher": "ASEAN / 中国商务部",
+   "title": "ACFTA 3.0 升级议定书签署（2025-10-28，吉隆坡）",
+   "url": "https://asean.org/",
+   "date": "2025-10-28",
+   "tier": 1
+  },
+  {
+   "id": "s-rcep-note",
+   "kind": "协定",
+   "publisher": "RCEP 秘书处",
+   "title": "RCEP 对印度尼西亚生效（2023-01-02）",
+   "url": "https://rcepsec.org/",
+   "date": "2023-01-02",
+   "tier": 1
+  },
+  {
+   "id": "s-usgs",
+   "kind": "官方统计（第三方）",
+   "publisher": "USGS",
+   "title": "Mineral Commodity Summaries 2024 — Soda Ash",
+   "url": "https://pubs.usgs.gov/periodicals/mcs2024/mcs2024-soda-ash.pdf",
+   "date": "2024-01",
+   "tier": 1
+  },
+  {
+   "id": "s-indexbox",
+   "kind": "市场机构",
+   "publisher": "IndexBox",
+   "title": "Indonesia Soda Ash Market 2026 Analysis and Forecast to 2035",
+   "url": "https://www.indexbox.io/store/indonesia-soda-ash-market-analysis-forecast-size-trends-and-insights/",
+   "date": "2026-08-09",
+   "tier": 3
+  },
+  {
+   "id": "s-gapki-b40",
+   "kind": "行业协会",
+   "publisher": "GAPKI",
+   "title": "Govt Starts B40 Program To Strengthen Energy Resilience",
+   "url": "https://gapki.id/en/news/2025/01/07/govt-starts-b40-program-to-strengthen-energy-resilience/",
+   "date": "2025-01-07",
+   "tier": 2
+  },
+  {
+   "id": "s-biofuels-b40",
+   "kind": "新闻",
+   "publisher": "Biofuels News",
+   "title": "Indonesia to fully implement B40 biodiesel",
+   "url": "https://biofuels-news.com/news/indonesia-to-fully-implement-b40-biodiesel/",
+   "date": "2025-03-20",
+   "tier": 3
+  },
+  {
+   "id": "s-hscodeatlas",
+   "kind": "企业公开资料",
+   "publisher": "HS Code Atlas（第三方 HS 数据库）",
+   "title": "HS Code 2836.20: Carbonates; disodium carbonate — product examples, similar codes",
+   "url": "https://hscodeatlas.com/hs-code/283620/",
+   "date": "2026 查阅",
+   "tier": 4,
+   "note": "用于说明 2836.20 项下可含 Na2CO3 以外的其他碳酸盐（如碳酸氢钠 2836.30 为独立税号），因此贸易数据近似等于纯碱但非严格等价。"
+  },
+  {
+   "id": "s-rcep-indonesia",
+   "kind": "协定",
+   "publisher": "ASEAN Secretariat / RCEP Secretariat",
+   "title": "Regional Comprehensive Economic Partnership (RCEP) — entry into force for Indonesia, 2 January 2023",
+   "url": "https://rcepsec.org/2023/01/02/rcep-agreement-enters-into-force-for-indonesia/",
+   "date": "2023-01-02",
+   "tier": 1
+  },
+  {
+   "id": "s-acfta-upgrade",
+   "kind": "协定",
+   "publisher": "ASEAN Secretariat",
+   "title": "ASEAN-China Free Trade Area (ACFTA) 3.0 Upgrade Protocol signed",
+   "url": "https://asean.org/asean-china-free-trade-area-upgrade-protocol-signed/",
+   "date": "2025-10-28",
+   "tier": 1
+  },
+  {
+   "id": "s-kemenperin-tkdn",
+   "kind": "官方政策",
+   "publisher": "Kementerian Perindustrian",
+   "title": "Permenperin No. 35 Tahun 2025 — tata cara sertifikasi TKDN dan BMP（含 25%/20%/15% 激励分档）",
+   "url": "https://peraturan.bpk.go.id/Details/333003/permenperin-no-35-tahun-2025",
+   "date": "2025-09",
+   "tier": 1
+  },
+  {
+   "id": "s-kompas-tkdn",
+   "kind": "新闻",
+   "publisher": "Kompas.id",
+   "title": "Terbitkan Aturan TKDN Baru, Kementerian Perindustrian Janjikan Insentif",
+   "url": "https://www.kompas.id/artikel/empat-pilar-reformasi-tkdn-untuk-perkuat-industri-nasional",
+   "date": "2025-09-12",
+   "tier": 2
+  },
+  {
+   "id": "s-kemenperin-tkdn-page",
+   "kind": "官方政策",
+   "publisher": "Kementerian Perindustrian (TKDN)",
+   "title": "Tingkat Komponen Dalam Negeri (TKDN) — daftar regulasi & sertifikat",
+   "url": "https://tkdn.kemenperin.go.id/regulasi.php",
+   "date": "2026 查阅",
+   "tier": 1
+  },
+  {
+   "id": "s-cekindo-duty",
+   "kind": "企业公开资料",
+   "publisher": "Cekindo（印尼商务服务商）",
+   "title": "Import Duties in Indonesia 2026: MFN duty, VAT (PMK 131/2024), PPh 22 (PMK 51/2025)",
+   "url": "https://www.cekindo.com/blog/import-duty-indonesia",
+   "date": "2026",
+   "tier": 4
+  },
+  {
+   "id": "s-indoexpress",
+   "kind": "企业公开资料",
+   "publisher": "IndoExpress（印尼货代）",
+   "title": "Regulasi Impor Indonesia 2026: bea masuk, PPN, PPh 22, Form E ACFTA, LARTAS",
+   "url": "https://www.indoexpress.co.id/regulasi-impor-indonesia.html",
+   "date": "2026",
+   "tier": 4
+  },
+  {
+   "id": "s-akurat-ccu",
+   "kind": "新闻",
+   "publisher": "Akurat.co",
+   "title": "Teknologi CCU Petrokimia Gresik Hasilkan Soda Ash, Impor Bisa Ditekan",
+   "url": "https://www.akurat.co/riil/899347/teknologi-ccu-petrokimia-gresik-hasilkan-soda-ash-impor-bisa-ditekan",
+   "date": "2026-10-17",
+   "tier": 3
+  },
+  {
+   "id": "s-bisnis-ccu",
+   "kind": "新闻",
+   "publisher": "Bisnis.com Surabaya",
+   "title": "Incar Potensi Soda Ash, Pupuk Indonesia Kalkulasi Teknologi Penangkap Karbon",
+   "url": "https://surabaya.bisnis.com/read/20261016/531/2013239/incar-potensi-soda-ash-pupuk-indonesia-kalkulasi-teknologi-penangkap-karbon",
+   "date": "2026-10-16",
+   "tier": 2
+  },
+  {
+   "id": "s-permendag20",
+   "kind": "官方政策",
+   "publisher": "Kementerian Perdagangan (JDIH)",
+   "title": "Permendag No. 20 Tahun 2025 — Kebijakan dan Pengaturan Impor Bahan Kimia, Bahan Berbahaya, dan Bahan Tambang（摘要页，BN 2025/No.453, 20 hlm）",
+   "url": "https://jdih.kemendag.go.id/uploads/peraturan/2025/1785664445_1bd28c0600eaaf1d.pdf",
+   "date": "2025-06-30",
+   "tier": 1
+  },
+  {
+   "id": "s-xinyi2",
+   "kind": "新闻",
+   "publisher": "Bisnis.com Surabaya",
+   "title": "Tekan Impor Bahan Baku, Kemenperin Genjot Produksi Soda Ash Dalam Negeri",
+   "url": "https://surabaya.bisnis.com/read/20261016/532/2013200/tekan-impor-bahan-baku-kemenperin-genjot-produksi-soda-ash-dalam-negeri",
+   "date": "2026-10-16",
+   "tier": 2
+  }
+ ],
+ "gaps": [
+  {
+   "id": "g-qty",
+   "level": "数据级",
+   "item": "年度进口数量（吨）",
+   "why": "Comtrade 中印尼 2019、2020 年净重为 0，2023、2025 年未报送",
+   "impact": "无法给出完整的五年数量增速与数量份额",
+   "how_to_close": "BPS《Statistik Perdagangan Luar Negeri Indonesia Impor》分章册（HS 28 章）；印尼海关 PIB 明细（付费数据商）；或由进口商提供其进口报关记录"
+  },
+  {
+   "id": "g-tariff",
+   "level": "政策级",
+   "item": "2836.20.00 的 MFN / ACFTA / RCEP 实际税率、LARTAS 许可与 TKDN 的实际适用",
+   "why": "INSW 页面动态加载、无法直接读取；未找到可引用的官方税率截图或公告",
+   "impact": "无法给出到岸成本精确测算与是否需要进口许可证",
+   "how_to_close": "①用 HS 2836200000 在 INSW（insw.go.id）或 ASEAN Tariff Finder 查询并截图；②索取印尼进口商 INATRADE 查询结果；③向 ITPC 雅加达/经商处求证；④CCU 侧“最多替代 100 万吨”需核对 Kemenperin 原始测算"
+  },
+  {
+   "id": "g-consumption",
+   "level": "市场级",
+   "item": "真实消费量与应用结构",
+   "why": "所有可得数字均为企业/媒体表述或机构估算（约 100 万吨、玻璃占 60–65%），无官方统计",
+   "impact": "不能把“100 万吨需求”“玻璃占六成”当成事实写进报价逻辑",
+   "how_to_close": "Kemenperin 化工司规划数据；GAPKINDO（印尼玻璃协会）产量数据；Xinyi/Muliaglass/Asahimas 的采购访谈；注意“100 万吨”目前只是企业与部长的表述"
+  },
+  {
+   "id": "g-local-capacity",
+   "level": "企业级",
+   "item": "Pupuk Kaltim 投产时间、Petrokimia Gresik 中试规模",
+   "why": "Pupuk Kaltim 仅有开工与媒体；Petrokimia Gresik 仅有部长视察与中试检测结果，均无投产公告、环评文件或实际产量",
+   "impact": "2027–2028 年本地供给替代节奏无法判断",
+   "how_to_close": "Pupuk Kaltim 年报与项目页；AMDAL 环评公示；上市公司 Keterbukaan Informasi；Bisnis/Kontan 对 Petrokimia CCU 后续报道"
+  },
+  {
+   "id": "g-buyers",
+   "level": "企业级",
+   "item": "各玻璃/洗涤剂厂纯碱年采购量、供应商结构、开证与付款条件",
+   "why": "无公开披露",
+   "impact": "无法量化单客户可拿下份额",
+   "how_to_close": "通过 3 找海外候选买家做线索与访谈；要求客户提供上一年度采购结构"
+  },
+  {
+   "id": "g-price",
+   "level": "市场级",
+   "item": "印尼到岸成交价与重/轻质价差",
+   "why": "仅机构估算；Comtrade 单位价值只反映海关平均申报价",
+   "impact": "不能以机构估算价作为报价锚",
+   "how_to_close": "印尼本地分销商报价（Lestari Kimia、Indotrading 挂价）；客户询价回盘；中国同行对印尼的 CFR/CIF 报价（注意区分重质/轻质与包装条款）"
+  },
+  {
+   "id": "g-quality",
+   "level": "产品级",
+   "item": "印尼玻璃客户对 Fe、粒度、堆积密度的具体要求与认证",
+   "why": "未找到客户规格书",
+   "impact": "重质纯碱是否能直接替代美碱需客户验证",
+   "how_to_close": "索取客户 incoming spec；提供我方 COA 与样品"
+  },
+  {
+   "id": "g-tkdn",
+   "level": "政策级",
+   "item": "TKDN 本地含量要求对本产品下游客户的实际影响",
+   "why": "Permenperin 35/2025 与配套 Dirjen 规则只规定了计算与认证办法，“哪个商品必须达到多少 TKDN”由各部门/采购方分别设定，纯碱不在强制清单内",
+   "impact": "若客户（如玻璃厂）投标政府或 BUMN 项目，其原料本地化压力可能改变采购偏好，报价逻辑要预留本地替代风险",
+   "how_to_close": "向客户确认其 TKDN 义务来源（招标文件条款）；查 tkdn.kemenperin.go.id 的行业 Dirjen 规则；关注 Petrokimia/Kaltim 的投产公告"
+  }
+ ],
+ "verify_actions": [
+  {
+   "priority": "P0",
+   "action": "用 HS 2836.20.00 在 INSW 查 MFN/ACFTA 税率与 LARTAS，并索取截图",
+   "owner": "销售+印尼报关行",
+   "when": "报价前"
+  },
+  {
+   "priority": "P0",
+   "action": "用 HS 2836200000 在 INSW/ASEAN Tariff Finder 双语截图存档 MFN 与 ACFTA 税率及 LARTAS 状态",
+   "owner": "销售+印尼报关行",
+   "when": "首次报价前"
+  },
+  {
+   "priority": "P1",
+   "action": "确认 CCU 中试是否真实达产、Petrokimia 供货商谈进度（直接影响 2027 年后报价空间）",
+   "owner": "销售",
+   "when": "季度复盘"
+  },
+  {
+   "priority": "P0",
+   "action": "核实 Pupuk Kaltim 纯碱投产时间表与 Petrokimia Gresik 装置状态",
+   "owner": "销售",
+   "when": "首访前"
+  },
+  {
+   "priority": "P1",
+   "action": "收集 3–5 家玻璃/洗涤剂客户的纯碱 incoming spec 与采购量",
+   "owner": "销售",
+   "when": "首轮触达"
+  },
+  {
+   "priority": "P1",
+   "action": "取得印尼本地上一年成交价区间（分销商报价 + 客户反馈）",
+   "owner": "销售",
+   "when": "首轮触达"
+  },
+  {
+   "priority": "P2",
+   "action": "向 ITPC 雅加达 / 经商处确认 2025 年进口新规对纯碱的实际执行",
+   "owner": "合规/销售",
+   "when": "签约前"
+  },
+  {
+   "priority": "P2",
+   "action": "核对 BPS 分章进口数量，补齐 2023/2025 数量口径",
+   "owner": "市场分析",
+   "when": "月度复盘"
+  },
+  {
+   "priority": "P1",
+   "action": "向 Xinyi/Muliaglass/Asahimas 索取纯碱 incoming spec（Fe、粒度、堆积密度）与年用量",
+   "owner": "销售",
+   "when": "首轮触达"
+  }
+ ]
+}

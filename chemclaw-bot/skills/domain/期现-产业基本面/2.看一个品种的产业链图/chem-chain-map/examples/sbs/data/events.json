@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "purpose": "产业事件清单：用于把图谱做成『研究导航入口』。事件须注明影响节点、影响方向、影响强度与来源，不臆测数量级。",
+    "direction_legend": {"supply_+": "供给增加", "supply_-": "供给减少", "demand_+": "需求增加", "demand_-": "需求减少", "cost_+": "成本上升", "cost_-": "成本下降", "structural": "结构性变化"}
+  },
+  "events": [
+    {"id": "EV01", "date": "2025-11", "title": "上海金山巴陵 25 万吨 SBC 装置全面建成投产", "affects": ["N_PRIMARY", "N_SIS", "N_SEBS"], "direction": "supply_+", "strength": "高", "detail": "SBS 14 + SEBS 5 + SIS 6 万吨/年；一套装置多产品可切换，将改变华东供给与 SIS/SEBS 的进口替代节奏", "evidence": ["S01", "S02"]},
+    {"id": "EV02", "date": "2026-07", "title": "中国 SBS 总产能达 197.5 万吨/年", "affects": ["N_PRIMARY"], "direction": "supply_+", "strength": "高", "detail": "十四五新增 61.0 万吨，行业进入供给过剩与低端同质化竞争阶段", "evidence": ["S01"]},
+    {"id": "EV03", "date": "2025", "title": "消费结构：道路沥青改性 44.2%、TPR 鞋材 17.8%、胶黏剂 14.2%、防水 12.0%", "affects": ["N_MODIFIED_ASPH", "N_TPR", "N_HMPSA", "N_WP_MEMBRANE"], "direction": "structural", "strength": "高", "detail": "胶黏剂是唯一增速高于整体的传统下游；鞋材与防水卷材收缩", "evidence": ["S01"]},
+    {"id": "EV04", "date": "2025", "title": "出口 12.62 万吨（+27.73%），欧洲占 34.07%", "affects": ["N_PRIMARY"], "direction": "demand_+", "strength": "中", "detail": "欧洲本土 SBS 产能不足、中国货价格较低，出口成为供需调节器", "evidence": ["S01"]},
+    {"id": "EV05", "date": "2025", "title": "进口 6.60 万吨中俄罗斯占 75.53%", "affects": ["N_PRIMARY"], "direction": "supply_+", "strength": "中", "detail": "低价俄罗斯货源对国内低端市场形成价格压制", "evidence": ["S01"]},
+    {"id": "EV06", "date": "2026-10", "title": "丁二烯价格高位震荡（10-19 全国均价 13365 元/吨，周内 +0.44%）", "affects": ["N_BD", "N_PRIMARY"], "direction": "cost_+", "strength": "高", "detail": "丁二烯占 SBS 干胶原料成本约七成，是 SBS 成本端最主要变量；10-12 单日 -407 元/吨，显示波动率仍高", "evidence": ["PR_BD"]},
+    {"id": "EV07", "date": "2026-10", "title": "苯乙烯 10-19 全国均价 10934.58 元/吨，较 10-15 跌幅明显", "affects": ["N_SM", "N_PRIMARY"], "direction": "cost_+", "strength": "中", "detail": "苯乙烯高位宽幅震荡（S05：『供应收缩叠加内需从低位修复 苯乙烯高位宽幅震荡』）", "evidence": ["PR_SM", "S05"]},
+    {"id": "EV08", "date": "2026-10", "title": "SBS 供需双弱、库存探至年内新低", "affects": ["N_PRIMARY", "N_MODIFIED_ASPH", "N_TPR"], "direction": "demand_-", "strength": "中", "detail": "生产端装置降负，下游道路沥青改性与 TPR 鞋材开工低位，成本支撑与需求疲软博弈（S05 文章标题与导语）", "evidence": ["S05"]},
+    {"id": "EV09", "date": "2026", "title": "地缘冲突重塑周期：2026 年 SBS 产业链运行与年末冬储研判", "affects": ["N_CRUDE", "N_BD", "N_SM", "N_PRIMARY"], "direction": "cost_+", "strength": "中", "detail": "原油-石脑油-裂解链条的地缘扰动经 C4/BTEX 传导至 SBS；冬储节奏影响 12 月-次年 1 月需求", "evidence": ["S05"]},
+    {"id": "EV10", "date": "2026", "title": "鞋材端持续受 SEBS/TPU/POE/EVA 替代", "affects": ["N_TPR", "N_APP_FOOTWEAR", "N_SEBS", "N_TPU", "N_EVA", "N_POE"], "direction": "structural", "strength": "高", "detail": "制鞋产业外迁 + 轻量化替代，TPR 需求持续收缩", "evidence": ["S01"]},
+    {"id": "EV11", "date": "2026", "title": "防水卷材行业 II 型及以上占比提升", "affects": ["N_WP_MEMBRANE", "N_APP_CONSTRUCTION"], "direction": "demand_+", "strength": "中", "detail": "城市更新、地下管廊、轨道交通防水升级+环保政策淘汰非环保沥青基卷材，对单平米 SBS 用量为正向", "evidence": ["S01"]},
+    {"id": "EV12", "date": "2026", "title": "VOCs 政策推动热熔胶替代溶剂型胶", "affects": ["N_HMPSA", "N_MUSTICK", "N_PRIMARY", "N_APP_PACKAGING"], "direction": "demand_+", "strength": "中", "detail": "对 SBS 与 SIS 均为正向，但 SIS 在卫材压敏胶中份额更大", "evidence": ["S01"]}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "id": "EV01",
+      "date": "2026-10-15",
+      "title": "演示事件：某装置检修",
+      "detail": "演示用，非真实事件",
+      "affects": [
+        "N_PRIMARY"
+      ],
+      "direction": "supply_-",
+      "strength": "中",
+      "evidence": [
+        "S01"
+      ]
+    }
+  ]
+}

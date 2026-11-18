@@ -1,0 +1,117 @@
+{
+  "_meta": {
+    "case": "中国某聚酯企业从沙特阿拉伯进口工业级乙二醇(MEG)，合同金额 100 万美元，90 天付汇",
+    "prepared_at": "2026-10-20",
+    "simulated_fields": [
+      "quantity",
+      "costs",
+      "sales",
+      "payment.tranches 中的付款天数为演示假设"
+    ],
+    "real_fields": [
+      "rates.*",
+      "history",
+      "hs_code",
+      "tax_rates"
+    ]
+  },
+  "case_name": "MEG_沙特_100万美元_90天付汇",
+  "direction": "IMPORT_PAYMENT",
+  "foreign_currency": "USD",
+  "local_currency": "CNY",
+  "pair": "USD/CNY",
+  "quote_direction": "FC_CNY",
+  "amount_fc": 1000000,
+  "product": "工业级乙二醇（MEG, Monoethylene Glycol），聚酯级 ≥99.9%",
+  "hs_code": "2905310000",
+  "origin": "沙特阿拉伯（Jubail / Al Jubail）",
+  "incoterm": "CFR 中国华东主港",
+  "quantity": 1136.4,
+  "quantity_note": "按 100 万美元 ÷ 880 美元/吨（MEGlobal 2026年11月 ACP，CFR 亚洲主港）= 1136.4 吨推算，用于单位成本换算；实际提单数量以合同为准。",
+  "rates": {
+    "market": 6.6807,
+    "market_date": "2026-10-19",
+    "pboc": 6.72,
+    "pboc_date": "2026-10-20 09:15",
+    "bank": 6.7435,
+    "bank_date": "2026-10-20",
+    "customs": 6.72,
+    "customs_date": "2026-09-16",
+    "source": {
+      "market": "ECB 欧元参考汇率经 EUR/USD 交叉折算（Frankfurter API），2026-10-19",
+      "pboc": "中国外汇交易中心 CFETS 人民币汇率中间价 ccpr.json（人民银行授权），2026-10-20 09:15",
+      "bank": "DEMO：以 CFETS 中间价 6.7200 为基准 +35bp 模拟的银行现汇卖出价（银行实盘须由用户提供）",
+      "customs": "DEMO：按海关总署令第272号第十三条，取 2026 年 9 月第三个星期三（9/16）CFETS 中间价；实际值须查海关每月公布数据"
+    }
+  },
+  "budget_rate": 6.8,
+  "costs": {
+    "freight_fc": 0,
+    "insurance_fc": 0,
+    "other_fc": 0,
+    "cny_freight": 0,
+    "cny_port": 38000,
+    "cny_customs_agent": 12000,
+    "cny_inland": 26000,
+    "cny_storage": 9000,
+    "cny_bank_fee": 6800,
+    "cny_other": 0,
+    "duty_rate": 5.5,
+    "cdc_rate": 0,
+    "vat_rate": 13,
+    "vat_mode": "deductible"
+  },
+  "sales": {
+    "price_cny": 7600,
+    "price_note": "【模拟教学值】设定为 7,600 元/吨（含税）。同期华东主流现货为 5,722 元/吨（同花顺 iFinD，2026-10-14），本值显著高于市场价，仅用于演示“毛利随汇率变动 + 零毛利/5%毛利盈亏平衡汇率落在历史区间内”的机理；真实测算须替换为企业实际销售合同价。",
+    "other_cost_cny_unit": 260,
+    "other_cost_note": "【模拟值】仓储、销售费用、资金占用等非汇率相关单位成本，须按企业实际替换。",
+    "revenue_basis": "tax_included",
+    "target_margins_pct": [
+      0,
+      5,
+      10
+    ]
+  },
+  "payment": {
+    "payment_date": "2027-01-18",
+    "cash_days": 0,
+    "scenario_pct": [
+      0,
+      1,
+      3,
+      5,
+      -1,
+      -3,
+      -5
+    ],
+    "tranches": [
+      {
+        "name": "预付款/T-T 30%（签约后 30 天）",
+        "pct": 0.3,
+        "days": -60
+      },
+      {
+        "name": "装运前尾款 70%（装船后 90 天）",
+        "pct": 0.7,
+        "days": 0
+      }
+    ]
+  },
+  "sensitivity": {
+    "points": [
+      -5,
+      -3,
+      -1,
+      0,
+      1,
+      3,
+      5
+    ]
+  },
+  "history_windows": [
+    1,
+    3,
+    5
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "_comment": "contract.json 骨架。复制到新案例目录后填空；不要删除字段，缺失值留空字符串。",
+  "demo": true,
+  "demo_label": "【模拟合同】本文件为演示材料，双方名称、地址、金额与条款均为编写，不对应任何真实交易或主体，不得用于真实签约。",
+  "language": "en-zh",
+  "contract_meta": {
+    "title": "【产品中文名】采购合同 · Purchase Contract for 【Product】 (【Incoterms】 【Port】, Incoterms® 【year】)",
+    "title_en": "Purchase Contract for 【Product】",
+    "contract_no": "【合同编号】",
+    "sign_date": "YYYY-MM-DD",
+    "buyer": "【我方公司全称】（模拟）",
+    "buyer_en": "【BUYER CO., LTD.】 (fictitious)",
+    "buyer_addr": "【我方地址】（模拟地址）",
+    "supplier": "【卖方公司全称】（模拟）",
+    "supplier_en": "【SUPPLIER FZE】 (fictitious)",
+    "supplier_addr": "【卖方地址】 (fictitious)",
+    "review_as": "中国买方（进口商）— Buyer / Importer",
+    "our_side": "buyer",
+    "product": {
+      "name_cn": "【产品中文名（等级）】",
+      "name_en": "【Product name, grade】",
+      "cas_written": "【合同上写的CAS，若错误则填错误值并在此后风险条目中说明】",
+      "hs_6": "【HS 前6位】",
+      "hs_cn": "【中国税则号列】"
+    },
+    "incoterms": {
+      "rule": "CIF",
+      "year": "2020",
+      "place": "【指定目的港】",
+      "named_port": "【港口名】"
+    },
+    "payment_summary": "【付款结构一句话】",
+    "shipment_period": "【装运期一句话】",
+    "framework": false,
+    "page_count": 0,
+    "files_received": [
+      "【合同原件 X 页（P1–PX），含附件…】",
+      "【形式发票 / 邮件附规格等】"
+    ],
+    "files_missing": [
+      "【卖方营业执照/登记证、授权书】",
+      "【SDS 原件、实际生产商信息】",
+      "【我方内部合同标准/授信批复】"
+    ]
+  },
+  "sections": [
+    {
+      "id": "pre",
+      "no": "封面与首部",
+      "title": "Cover & Parties",
+      "page": 1,
+      "clause_ids": ["C01"]
+    },
+    {
+      "id": "s1",
+      "no": "第 1 条",
+      "title": "Goods and Quantity｜货物与数量",
+      "page": 1,
+      "clause_ids": ["C02", "C03"]
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C01",
+      "sec": "pre",
+      "no": "",
+      "page": 1,
+      "page_line": "第1页 第1段",
+      "text": "【逐字原文，不改写、不修错字】",
+      "zh": "【中文对照——我方的理解，非官方译文】",
+      "kind": "cover"
+    },
+    {
+      "id": "C02",
+      "sec": "s1",
+      "no": "1.1",
+      "page": 1,
+      "page_line": "第1页 第2段",
+      "text": "【逐字原文】",
+      "zh": "【中文对照】",
+      "kind": "goods"
+    },
+    {
+      "id": "A1-T1",
+      "sec": "a1",
+      "no": "Annex 1 · Row 1",
+      "page": 6,
+      "page_line": "第6页 表1数据行",
+      "text": "【规格表某一行原文，逐行拆条】",
+      "zh": "【中文对照】",
+      "kind": "table_row"
+    }
+  ]
+}

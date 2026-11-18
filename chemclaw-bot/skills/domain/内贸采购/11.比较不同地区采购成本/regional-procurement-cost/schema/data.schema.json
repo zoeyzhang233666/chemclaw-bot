@@ -1,0 +1,245 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "区域采购成本比较 · 研究稿数据契约",
+  "type": "object",
+  "required": ["meta", "request", "product", "sources", "quotes", "routes", "regions", "cost_params"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["scenario_id", "scenario", "generated_at"],
+      "properties": {
+        "scenario_id": { "type": "string" },
+        "scenario": { "enum": ["live", "demo"] },
+        "generated_at": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "request": {
+      "type": "object",
+      "required": ["product", "receipt_address"],
+      "properties": {
+        "product": { "type": "string" },
+        "spec": { "type": "string" },
+        "receipt_address": { "type": "string" },
+        "quantity_t": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "product": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "grade": { "type": "string" },
+        "spec": { "type": "string" },
+        "density": { "type": ["number", "string"] },
+        "tax": {
+          "type": "object",
+          "properties": { "goods_vat": { "type": "number", "minimum": 0, "maximum": 1 } }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "url", "type", "level", "retrieved_at"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "type": { "type": "string" },
+          "level": { "type": "string" },
+          "retrieved_at": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "quotes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "source_id", "region_key", "grade", "spec", "price", "unit", "tax_included", "date"],
+        "properties": {
+          "id": { "type": "string" },
+          "source_id": { "type": "string" },
+          "date": { "type": "string" },
+          "market": { "type": "string" },
+          "region_key": { "type": "string" },
+          "grade": { "type": "string" },
+          "spec": { "type": "string" },
+          "price_low": { "type": ["number", "null"] },
+          "price_high": { "type": ["number", "null"] },
+          "price": { "type": "number" },
+          "price_type": { "type": "string" },
+          "unit": { "enum": ["元/吨", "元/千克", "元/立方米"] },
+          "tax_included": { "type": "boolean" },
+          "delivery_basis": { "type": "string" },
+          "evidence": { "type": "string" },
+          "verify": { "type": "string" },
+          "comparable": { "type": "boolean" },
+          "comparable_note": { "type": "string" }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "origin_city", "dest_city", "basis"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "origin_city": { "type": "string" },
+          "dest_city": { "type": "string" },
+          "basis": { "enum": ["measured_legs", "measured", "via_points"] },
+          "measured_km": { "type": ["number", "null"] },
+          "via_points": { "type": "array", "items": { "type": "string" } },
+          "detour_factor": { "type": "number", "exclusiveMinimum": 0 },
+          "distance_source": { "type": "string" },
+          "distance_ref_note": { "type": "string" },
+          "mode": { "type": "string" },
+          "transport_mode": { "type": "string" },
+          "legs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["from", "to", "km"],
+              "properties": {
+                "from": { "type": "string" },
+                "to": { "type": "string" },
+                "km": { "type": "number", "exclusiveMinimum": 0 },
+                "hours": { "type": ["number", "null"] },
+                "source": { "type": "string" },
+                "url": { "type": "string" },
+                "road": { "type": "string" }
+              }
+            }
+          },
+          "alternatives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": { "mode": { "type": "string" }, "note": { "type": "string" } }
+            }
+          },
+          "freight_unit": { "type": ["number", "null"] },
+          "freight_total": { "type": ["number", "null"] },
+          "loading_total": { "type": ["number", "null"] },
+          "unloading_total": { "type": ["number", "null"] },
+          "inspection_total": { "type": ["number", "null"] },
+          "other_total": { "type": ["number", "null"] },
+          "freight_line_note": { "type": "string" }
+        }
+      }
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "quote_id", "route_id"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "label": { "type": "string" },
+          "market": { "type": "string" },
+          "quote_id": { "type": "string" },
+          "route_id": { "type": "string" },
+          "producers": { "type": "array", "items": { "type": "string" } },
+          "include": { "type": "boolean" }
+        }
+      }
+    },
+    "benchmark_region_id": { "type": "string" },
+    "cost_params": {
+      "type": "object",
+      "properties": {
+        "qty": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "enum": ["t", "kg"] },
+        "loadingUnit": { "type": ["number", "null"] },
+        "unloadingUnit": { "type": ["number", "null"] },
+        "inspectionUnit": { "type": ["number", "null"] },
+        "taxRate": { "type": "number" },
+        "priceBasis": { "enum": ["incl_tax", "excl_tax"] }
+      }
+    },
+    "history": {
+      "type": "object",
+      "properties": {
+        "span": { "type": "string" },
+        "series": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "name": { "type": "string" },
+              "source_id": { "type": "string" },
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": { "date": { "type": "string" }, "value": { "type": "number" } }
+                }
+              }
+            }
+          }
+        },
+        "regional_spread": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["date", "region_key", "heavy_low", "heavy_high"],
+            "properties": {
+              "date": { "type": "string" },
+              "region_key": { "type": "string" },
+              "heavy_low": { "type": "number" },
+              "heavy_high": { "type": "number" },
+              "region_note": { "type": "string" },
+              "source_id": { "type": "string" }
+            }
+          }
+        },
+        "price_change_window": {
+          "type": "object",
+          "properties": {
+            "from": { "type": "string" },
+            "to": { "type": "string" },
+            "pct": { "type": "number" }
+          }
+        }
+      }
+    },
+    "gap_rules": { "type": "array", "items": { "type": "string" } },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "what"],
+        "properties": {
+          "key": { "type": "string" },
+          "title": { "type": "string" },
+          "what": { "type": "string" },
+          "why": { "type": "string" },
+          "how_to_fix": { "type": "string" },
+          "impact": { "type": "string" },
+          "severity": { "enum": ["blocker", "warn"] }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "text"],
+        "properties": {
+          "key": { "type": "string" },
+          "text": { "type": "string" },
+          "source": { "type": "string" }
+        }
+      }
+    }
+  }
+}

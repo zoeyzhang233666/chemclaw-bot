@@ -1,0 +1,89 @@
+两个相关品种比价分析 · 工作区说明
+==================================
+
+这个目录是跑分析时的工作区。脚本默认从这里的子目录读，往 out/ 写。
+
+目录约定
+--------
+csv/      放原始价格数据（每个品种一个文件）
+          必需列： date, close
+          可选列： open, high, low, volume, oi
+          date 格式统一 YYYY-MM-DD；close 必须是数字或留空（留空=当天缺失）
+
+events/   放产业事件台账（可选）
+          列： date, scope, ratio_rel, verify, title, source
+          verify 取值 A/B/C，含义见 SKILL.md 第 6 步
+
+out/      所有产物都写在这里
+          price_A.csv / price_B.csv    装配后的规范化价格
+          roll_ledger.csv              换月台账
+          qc_report.json               数据质量闸门结果
+          result.json                  全量分析结果（A/B 方向）
+          result_BA.json               全量分析结果（B/A 方向）
+          events.csv                   事件台账
+          report.html                  交互式报告
+          report.xlsx                  工作簿
+
+raw/      如果你想从原始 K 线 json 开始，把它放这里
+          （新浪 InnerFuturesNewService.getDailyKLine 的返回，文件名形如 PP0.json、L2609.json）
+
+
+从零跑一遍（以 PP / L 为例）
+-----------------------------
+在 SKILL 根目录执行：
+
+  # 1) 内核自测，必须全绿
+  python scripts/selftest.py
+
+  # 2) 装配 + 换月 + 质量闸门（ERROR 必须为 0）
+  python scripts/prep_data.py --raw 工作区/raw --out 工作区/out \
+      --prefix-a PP --prefix-b L
+
+  # 3) 主分析（A/B）
+  python scripts/analyze.py --a 工作区/out/price_A.csv --b 工作区/out/price_B.csv \
+      --rolls 工作区/out/roll_ledger.csv --out 工作区/out/result.json \
+      --name-a PP --name-b L
+
+  # 4) 反方向（B/A）
+  python scripts/analyze.py --a 工作区/out/price_A.csv --b 工作区/out/price_B.csv \
+      --rolls 工作区/out/roll_ledger.csv --out 工作区/out/result_BA.json \
+      --name-a PP --name-b L --direction BA
+
+  # 5) 事件台账
+  python scripts/events.py 工作区/out/events.csv
+
+  # 6) HTML
+  python scripts/build_html.py --result 工作区/out/result.json \
+      --result-ba 工作区/out/result_BA.json --events 工作区/out/events.csv \
+      --meta 工作区/out/meta.json --out 工作区/out/report.html
+
+  # 7) Excel
+  python scripts/build_excel.py --result 工作区/out/result.json \
+      --price-a 工作区/out/price_A.csv --price-b 工作区/out/price_B.csv \
+      --events 工作区/out/events.csv --qc 工作区/out/qc_report.json \
+      --out 工作区/out/report.xlsx
+
+  # 8) 校验
+  python scripts/verify_excel.py --xlsx 工作区/out/report.xlsx \
+      --result 工作区/out/result.json
+  node scripts/js_check.js 工作区/out/report.html
+
+
+只用手头已有的价格数据（没有原始 json）
+-----------------------------------------
+跳过第 2 步，直接把价格放到 csv/ 并改名：
+
+  cp csv/你的PP.csv 工作区/out/price_A.csv     # 列名保持 date,close,...
+  cp csv/你的L.csv  工作区/out/price_B.csv
+
+然后从第 3 步开始。换月台账可以不给（--rolls 省略），
+但那样报告里就没有换月标记，必须在结论里说明这一点。
+
+
+注意
+----
+- 所有步骤都不会修改你的原始数据，只会读。
+- 缺失数据不插值：某天某一边缺就是缺，那天整体剔除，并体现在 N 里。
+- prep_data.py 的 gate 必须 PASS（errors=0）才继续。有 ERROR 先修数据，不要绕过。
+- 结果里每个数字都带 N 和窗口，报告只能引用 result.json 里算出来的数。
+- 不要因为比价处于极端位置就写成"必然回归"。见 SKILL.md 的红线。

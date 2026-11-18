@@ -1,0 +1,95 @@
+{
+ "meta": {
+  "product": "重质纯碱",
+  "regions": [
+   "SD",
+   "HB",
+   "JS"
+  ],
+  "status": "DEMO"
+ },
+ "counts": {
+  "PASS": 7,
+  "WARN": 4,
+  "ERROR": 0
+ },
+ "issues": [
+  {
+   "id": "Q1",
+   "level": "PASS",
+   "title": "样本长度",
+   "detail": "152 期（≥52 期，足以计算 1 年分位）",
+   "action": ""
+  },
+  {
+   "id": "Q2",
+   "level": "WARN",
+   "title": "缺口处理",
+   "detail": "剔除 4 期（缺口未插值）｜2023-10-20 缺 山东；2024-02-09 缺 江苏；2024-12-20 缺 河北；2025-05-02 缺 江苏",
+   "action": "在报告中列出剔除日期；如缺口>10%需说明原因"
+  },
+  {
+   "id": "Q3",
+   "level": "PASS",
+   "title": "口径换算",
+   "detail": "三地区均无缺失参数；换算步数合计 0（=0 表示报价已同口径，无需调整）",
+   "action": ""
+  },
+  {
+   "id": "Q4",
+   "level": "PASS",
+   "title": "单周变动幅度",
+   "detail": "无单周变动超过 30% 的异常点",
+   "action": ""
+  },
+  {
+   "id": "Q5",
+   "level": "PASS",
+   "title": "区域差异存在",
+   "detail": "6/6 个有序对当前价差非零",
+   "action": ""
+  },
+  {
+   "id": "Q6",
+   "level": "WARN",
+   "title": "无真实运费报价",
+   "detail": "真实 0 / 默认参考 6 / 未获得 0",
+   "action": "扣费后差异只能作敏感性参考，报告中不得作为套利依据"
+  },
+  {
+   "id": "Q6b",
+   "level": "WARN",
+   "title": "运费已内含在报价中",
+   "detail": "主口径为送到价，运费不可重复扣减",
+   "action": "报告须明写；运费调整仅用于出厂价口径与物流可行性核对"
+  },
+  {
+   "id": "Q7",
+   "level": "WARN",
+   "title": "DEMO 数据",
+   "detail": "价格序列为拟真构造，非真实报价",
+   "action": "报告顶部必须挂 DEMO 徽标；金额与分位不得对外引用"
+  },
+  {
+   "id": "Q8",
+   "level": "PASS",
+   "title": "窗口样本量",
+   "detail": "所有窗口 N ≥ 30",
+   "action": ""
+  },
+  {
+   "id": "Q9",
+   "level": "PASS",
+   "title": "价差等价校验",
+   "detail": "M[i][j] = −M[j][i] 全部成立",
+   "action": ""
+  },
+  {
+   "id": "Q10",
+   "level": "PASS",
+   "title": "下游占比",
+   "detail": "各地区合计均 ≈100%",
+   "action": ""
+  }
+ ]
+}

@@ -1,0 +1,434 @@
+{
+  "engine_version": "1.0.0",
+  "input": {
+    "product_cn": "重质纯碱（碳酸钠）",
+    "product_en": "Sodium Carbonate Heavy Ash (Soda Ash Dense)",
+    "spec": "Na2CO3 ≥ 99.2%，堆积密度 ~1.0 g/cm³，工业级，25kg 覆膜编织袋",
+    "hs_code": "2836200000",
+    "quantity_mt": 500,
+    "unit": "吨",
+    "factory_place": "山东·青岛周边工厂",
+    "pol": "青岛港 Qingdao (CNQDG)",
+    "pod": "雅加达港 Jakarta (IDJKT)",
+    "currency": "USD",
+    "fx_rate": 7.1,
+    "gp_mode": "margin_on_price",
+    "gp_value": 0.08,
+    "gp_basis_term": "FOB",
+    "terms": [
+      "FOB",
+      "CFR",
+      "CIF"
+    ]
+  },
+  "lines": [
+    {
+      "code": "EXW",
+      "name_cn": "出厂价（不含包装）",
+      "name_en": "Ex-works price excl. packaging",
+      "segment": "S1",
+      "amount": 1450.0,
+      "status": "filled",
+      "source": "user",
+      "basis": "用户输入，元/吨；不含包装、不含出口环节费用",
+      "liability": "seller",
+      "note": ""
+    },
+    {
+      "code": "PKG",
+      "name_cn": "包装成本",
+      "name_en": "Packaging cost",
+      "segment": "S2",
+      "amount": 60.0,
+      "status": "filled",
+      "source": "user",
+      "basis": "用户输入，元/吨（袋装/吨袋/托盘等折算吨价）",
+      "liability": "seller",
+      "note": ""
+    },
+    {
+      "code": "INLAND",
+      "name_cn": "内陆运输（工厂→起运港）",
+      "name_en": "Inland haulage to port of shipment",
+      "segment": "S3",
+      "amount": 110.0,
+      "status": "filled",
+      "source": "user",
+      "basis": "货代报价或用户输入，元/吨",
+      "liability": "seller（FCA 卖方场所交货除外）",
+      "note": ""
+    },
+    {
+      "code": "PORT",
+      "name_cn": "港口及报关费用",
+      "name_en": "Export port charges & customs clearance",
+      "segment": "S4",
+      "amount": 95.0,
+      "status": "filled",
+      "source": "user",
+      "basis": "货代报价或用户输入，元/吨（THC、报关、单证、码头作业等）",
+      "liability": "seller",
+      "note": ""
+    },
+    {
+      "code": "FREIGHT",
+      "name_cn": "海运费（起运港→目的港）",
+      "name_en": "Ocean freight to port of destination",
+      "segment": "S5",
+      "amount": 355.0,
+      "status": "filled",
+      "source": "forwarder_quote",
+      "basis": "1,250.00 USD/柜 × 7.1000 ÷ 25 吨/柜 = 355.00 元/吨",
+      "liability": "seller（CFR/CIF/CPT/CIP/D 组）",
+      "note": ""
+    },
+    {
+      "code": "INSURANCE",
+      "name_cn": "海运保险费",
+      "name_en": "Marine cargo insurance premium",
+      "segment": "S6",
+      "amount": 6.936390087288051,
+      "status": "filled",
+      "source": "user",
+      "basis": "CIF×110%×0.3000% 自洽解 = 6.9364 元/吨",
+      "liability": "seller（CIF/CIP 必投；其他术语由买方投保）",
+      "note": ""
+    },
+    {
+      "code": "EXPORT_TAX",
+      "name_cn": "出口关税及其他出口税费",
+      "name_en": "Export duty & other export taxes",
+      "segment": "S7",
+      "amount": 0.0,
+      "status": "filled",
+      "source": "user",
+      "basis": "用户输入，元/吨；增值税出口退税不在此列",
+      "liability": "seller",
+      "note": ""
+    },
+    {
+      "code": "OTHER",
+      "name_cn": "其他出口费用",
+      "name_en": "Other export costs",
+      "segment": "S8",
+      "amount": 25.0,
+      "status": "filled",
+      "source": "user",
+      "basis": "用户输入，元/吨（结汇费、检验、认证、配额等）",
+      "liability": "seller",
+      "note": ""
+    },
+    {
+      "code": "DEST_PORT",
+      "name_cn": "目的港费用 / 目的地交货费用",
+      "name_en": "Destination port & delivery charges",
+      "segment": "S9",
+      "amount": null,
+      "status": "not_required",
+      "source": "not_required",
+      "basis": "DAP/DPU/DDP 卖方承担；F/C 组由买方承担、不计入卖方成本",
+      "liability": "seller（D 组）/ buyer（F/C 组）",
+      "note": ""
+    }
+  ],
+  "segments": {
+    "S1": {
+      "name": "出厂基础",
+      "sum_cny_per_t": 1450.0,
+      "missing": []
+    },
+    "S2": {
+      "name": "包装",
+      "sum_cny_per_t": 60.0,
+      "missing": []
+    },
+    "S3": {
+      "name": "内陆运输至起运港",
+      "sum_cny_per_t": 110.0,
+      "missing": []
+    },
+    "S4": {
+      "name": "出口港务及报关",
+      "sum_cny_per_t": 95.0,
+      "missing": []
+    },
+    "S5": {
+      "name": "国际海运",
+      "sum_cny_per_t": 355.0,
+      "missing": []
+    },
+    "S6": {
+      "name": "海运保险",
+      "sum_cny_per_t": 6.936390087288051,
+      "missing": []
+    },
+    "S7": {
+      "name": "出口环节税费",
+      "sum_cny_per_t": 0.0,
+      "missing": []
+    },
+    "S8": {
+      "name": "其他出口费用",
+      "sum_cny_per_t": 25.0,
+      "missing": []
+    },
+    "S9": {
+      "name": "目的地及进口环节",
+      "sum_cny_per_t": null,
+      "missing": [
+        "DEST_PORT"
+      ]
+    }
+  },
+  "terms": {
+    "FCA": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "note": "货交承运人（卖方场所或指定点）；任何运输方式；出口清关由卖方负责",
+      "risk": "货交买方指定承运人时（若在卖方场所，装上买方车辆后即为交付）",
+      "cost_cny_per_t": 1510.0
+    },
+    "FAS": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "note": "船边交货（起运港）；卖方将货置于买方指定船舶旁",
+      "risk": "货物置于船舶旁（alongside the vessel）时",
+      "cost_cny_per_t": 1620.0
+    },
+    "FOB": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "note": "装运港船上交货；卖方承担至货物装上船为止的费用",
+      "risk": "货物在装运港装上船（on board）时转移给买方",
+      "cost_cny_per_t": 1740.0
+    },
+    "CFR": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "note": "成本加运费（目的港）；卖方付海运费，风险仍在装运港转移",
+      "risk": "货物在装运港装上船（on board）时转移给买方",
+      "cost_cny_per_t": 2095.0
+    },
+    "CIF": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "note": "成本、保险加运费（目的港）；卖方投保，最低合同价×110%，默认 ICC(C)",
+      "risk": "货物在装运港装上船（on board）时转移给买方",
+      "cost_cny_per_t": 2101.936390087288
+    },
+    "CPT": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "note": "运费付至（指定目的地）；任何运输方式；卖方付主运费",
+      "risk": "货交第一承运人时转移给买方",
+      "cost_cny_per_t": 2095.0
+    },
+    "CIP": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "note": "运费加保险付至（指定目的地）；CIP 要求至少 ICC(A) 或同类条款",
+      "risk": "货交第一承运人时转移给买方",
+      "cost_cny_per_t": 2101.936390087288
+    },
+    "DAP": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S9"
+      ],
+      "note": "目的地交货（未卸货）；卖方承担运输风险至目的地",
+      "risk": "货物在目的地（运输工具上，待卸）置于买方处置时转移",
+      "cost_cny_per_t": null
+    },
+    "DPU": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S9"
+      ],
+      "note": "目的地卸货后交货；卖方须在目的地完成卸货",
+      "risk": "货物在目的地卸货完成、置于买方处置时转移",
+      "cost_cny_per_t": null
+    },
+    "DDP": {
+      "segments": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S9"
+      ],
+      "note": "完税后交货；卖方承担出口与进口清关、进口关税",
+      "risk": "货物在目的地（已完成进口清关）置于买方处置时转移；卖方承担进口关税",
+      "cost_cny_per_t": null
+    }
+  },
+  "quotes": {
+    "FOB": {
+      "term": "FOB",
+      "cost_cny_per_t": 1740.0,
+      "price_cny_per_t": 1891.3,
+      "price_raw_cny_per_t": 1891.3043478260868,
+      "gp_cny_per_t": 151.29999999999995,
+      "gp_on_raw_cny_per_t": 151.30434782608677,
+      "margin": 0.0799978850526093,
+      "markup": 0.08695402298850573,
+      "price_fx_per_t": 266.38,
+      "total_cny": 945650.0,
+      "total_fx": 133190.14,
+      "gp_total_cny": 75650.0,
+      "cost_total_cny": 870000.0
+    },
+    "CFR": {
+      "term": "CFR",
+      "cost_cny_per_t": 2095.0,
+      "price_cny_per_t": 2277.17,
+      "price_raw_cny_per_t": 2277.173913043478,
+      "gp_cny_per_t": 182.17000000000007,
+      "gp_on_raw_cny_per_t": 182.17391304347802,
+      "margin": 0.07999841909036219,
+      "markup": 0.08695465393794753,
+      "price_fx_per_t": 320.73,
+      "total_cny": 1138585.0,
+      "total_fx": 160364.08,
+      "gp_total_cny": 91085.0,
+      "cost_total_cny": 1047500.0
+    },
+    "CIF": {
+      "term": "CIF",
+      "cost_cny_per_t": 2101.936390087288,
+      "price_cny_per_t": 2284.71,
+      "price_raw_cny_per_t": 2284.7134674861827,
+      "gp_cny_per_t": 182.7736099127119,
+      "gp_on_raw_cny_per_t": 182.77707739889456,
+      "margin": 0.07999860372332239,
+      "markup": 0.08695487207637229,
+      "price_fx_per_t": 321.79,
+      "total_cny": 1142355.0,
+      "total_fx": 160895.07,
+      "gp_total_cny": 91386.8,
+      "cost_total_cny": 1050968.2
+    }
+  },
+  "missing": [],
+  "warnings": [],
+  "refund": {
+    "enabled": true,
+    "note": "退税是现金流回收（通常滞后），不是当期成本；是否计入报价须由销售与财务确认。",
+    "input_tax_basis": "出厂成本为不含税价",
+    "refund_rate_pct": 13.0,
+    "refund_cny_per_t": 226.2,
+    "refund_total_cny": 113100.0,
+    "formula": "退税额 = 计税依据 × 退税率"
+  },
+  "identity_checks": {
+    "cfr_eq_fob_plus_freight": {
+      "ok": true,
+      "a": 2095.0,
+      "b": 2095.0
+    },
+    "cif_eq_cfr_plus_insurance": {
+      "ok": true,
+      "a": 2101.936390087288,
+      "b": 2101.936390087288
+    },
+    "insurance_eq_110pct_cif_times_rate": {
+      "ok": true,
+      "a": 6.936390087288051,
+      "b": 6.936390087288052
+    },
+    "check_margin_eq_gp_over_price": {
+      "FOB": {
+        "ok": true,
+        "a": 0.0799978850526093,
+        "b": 0.0799978850526093
+      },
+      "CFR": {
+        "ok": true,
+        "a": 0.07999841909036219,
+        "b": 0.07999841909036219
+      },
+      "CIF": {
+        "ok": true,
+        "a": 0.07999860372332239,
+        "b": 0.07999860372332239
+      }
+    },
+    "check_markup_eq_gp_over_cost": {
+      "FOB": {
+        "ok": true,
+        "a": 0.08695402298850573,
+        "b": 0.08695402298850573
+      },
+      "CFR": {
+        "ok": true,
+        "a": 0.08695465393794753,
+        "b": 0.08695465393794753
+      },
+      "CIF": {
+        "ok": true,
+        "a": 0.08695487207637229,
+        "b": 0.08695487207637229
+      }
+    },
+    "check_margin_markup_relation": {
+      "FOB": {
+        "ok": true,
+        "a": 1.0,
+        "b": 1.0
+      },
+      "CFR": {
+        "ok": true,
+        "a": 1.0,
+        "b": 1.0
+      },
+      "CIF": {
+        "ok": true,
+        "a": 1.0,
+        "b": 1.0
+      }
+    }
+  }
+}

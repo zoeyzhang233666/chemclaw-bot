@@ -1,0 +1,3 @@
+﻿horizon,sessions,n_obs,n_eff_nonoverlap,mdes_sd,prob_halfwidth_pp,n_needed_mdes_020sd,verdict
+1w,5,520,520.0,0.1229,4.28,197,usable
+4w,20,520,130.0,0.2457,8.47,197,usable

@@ -1,0 +1,566 @@
+{
+  "meta": {
+    "title": "海外询盘企业核验报告 · 印度尼西亚 · 重质纯碱",
+    "subtitle": "PT Sinar Kaca Nusantara（模拟主体）· 25,000 MT/年 重质纯碱询价",
+    "client_slug": "id-soda-ash-demo",
+    "synthetic": true,
+    "synthetic_note": "本案例为演示而制作的模拟询盘：询盘企业 PT Sinar Kaca Nusantara、其域名 sinarkacanusa.co.id、邮箱、地址、联系人均为虚构，不代表任何真实注册企业。所有“已核实”结论，指的是“信息的提取与形成过程符合方法（来源可点回、口径可复核）”，不代表该模拟主体在现实中存在。真实企业仅在“官方核验入口”一节作为公开渠道被引用，本报告没有、也不会声称任何真实企业曾发送此询盘。",
+    "as_of": "2026-10-19",
+    "prepared_by": "外贸销售 · 询盘核验工作流 v1.0",
+    "inquiry_id": "INQ-2026-1012-ID-01",
+    "product": "重质纯碱（Dense Soda Ash / Sodium Carbonate, Na₂CO₃）",
+    "product_spec": "Na₂CO₃ ≥ 99.2% · 堆积密度 0.90–1.20 g/cm³ · 颗粒 150–1000 μm · 参考 ISO 8506 / GB 210.1",
+    "quantity": "25,000 MT / 年，首批 500 MT",
+    "incoterm": "CFR Tanjung Priok（雅加达丹戎不碌港），另询 CIF Surabaya",
+    "packaging": "1,000 kg 吨袋（PP 覆膜，带吊环）",
+    "product_use_case": "浮法玻璃 / 器皿玻璃熔窑助熔剂",
+    "hs_code": "2836.20.00（纯碱，HS 2022）",
+    "disclaimer": "本报告为公开信息核验辅助材料，不构成法律尽调、资信评级、投资建议或对交易对手的定性结论。“未核实”只表示公开渠道未覆盖，不等于“虚假”；“存在疑点”只列出具体可核对的矛盾，不推断主观动机。不给出任何“诈骗概率”。“已核实”项指提取过程与来源可复核，不构成对该主体现实存在性的证明。"
+  },
+
+  "inquiry": {
+    "subject": "[MOCK · 模拟询盘] Inquiry for Dense Soda Ash 25,000 MT/Year — PT Sinar Kaca Nusantara (Indonesia)",
+    "from": "Andi Pratama Wibowo <andi.pratama@sinarkacanusa.co.id>",
+    "from_name": "Andi Pratama Wibowo · Senior Procurement Manager",
+    "to": "Sales Dept. <sales@yourcompany.example.com>",
+    "date": "2026-10-12 09:41 (WIB, UTC+7)",
+    "reply_to": "andi.pratama@sinarkacanusa.co.id",
+    "body_lines": [
+      "Dear Sir/Madam,",
+      "We are PT Sinar Kaca Nusantara, a glass manufacturer based in Indonesia. We would like to request a quotation for the following product.",
+      "",
+      "— Product: Dense Soda Ash (Sodium Carbonate 99.2% min)",
+      "— Annual requirement: 25,000 MT/year, first shipment 500 MT",
+      "— Packaging: 1,000 kg jumbo bags",
+      "— Delivery: CFR Tanjung Priok, Jakarta (also please quote CIF Surabaya)",
+      "— Payment: please indicate your terms (we normally work with 30% TT deposit + 70% against copy B/L)",
+      "",
+      "About us: our company has been established since 2011 and operates two float-glass furnaces in the Bekasi industrial area, with an annual capacity of about 1.2 million square metres of glass. We are an official importer with our own warehouse near Tanjung Priok port.",
+      "",
+      "You may visit our website: www.sinarkacanusa.co.id",
+      "Our registered office is in Jakarta. Company registration documents are available upon signing of an NDA.",
+      "",
+      "Kindly send your best price, specification sheet, COA and delivery lead time.",
+      "",
+      "Best regards,",
+      "Andi Pratama Wibowo",
+      "Senior Procurement Manager | PT Sinar Kaca Nusantara",
+      "Jl. Raya Bekasi KM 27, Cakung, Jakarta Timur 13910, Indonesia",
+      "M: +62 812-3456-7890 | E: andi.pratama@sinarkacanusa.co.id",
+      "W: www.sinarkacanusa.co.id"
+    ],
+    "notes": [
+      "邮件抬头自称玻璃制造商，但同样自称“official importer”并“有自己的仓库”，制造与贸易两种身份同时出现，需要在后续核实中拆开。",
+      "注册文件“签署 NDA 后才提供”是一个需要记录的流程性信号：不是矛盾，但会推迟主体核验。",
+      "报价请求同时给了两个成交方式（CFR Tanjung Priok / CIF Surabaya），验厂地址、卸货港、仓库位置需要进一步对齐。"
+    ],
+    "attachments": [
+      {"name": "Company Profile 2026.pdf", "note": "对方随信附上 12 页公司介绍，未含执照、NIB、工厂照片；内容与邮件口径一致（自述）。"},
+      {"name": "Inquiry Sheet SKN-2026-10.xlsx", "note": "询价明细表：25,000 MT/年、首批 500 MT、吨袋、CFR 雅加达。"},
+      {"name": "Andi_Pratama_card.jpg", "note": "名片扫描件：英文名 + 印尼职位“Senior Procurement Manager”，含手机号与官网。"}
+    ]
+  },
+
+  "extraction": [
+    {"id": "X01", "field": "公司英文名", "value": "PT Sinar Kaca Nusantara", "evidence": "邮件正文 “We are PT Sinar Kaca Nusantara” + 签名栏", "confidence": "high", "note": "PT = Perseroan Terbatas（印尼有限责任公司），必须与 AHU 登记全称逐字比对，包括 PT 前缀后的空格与大小写。"},
+    {"id": "X02", "field": "公司所在地", "value": "Jakarta（注册地）；Bekasi/Cakung（厂区与仓库）", "evidence": "签名栏 “Jl. Raya Bekasi KM 27, Cakung, Jakarta Timur 13910” + 正文 “registered office is in Jakarta”", "confidence": "medium", "note": "签名栏地址属 Jakarta Timur（东雅加达），正文说厂区在 Bekasi —— 两个行政区，需确认哪个是注册地址。"},
+    {"id": "X03", "field": "网站", "value": "www.sinarkacanusa.co.id", "evidence": "签名栏 + 正文", "confidence": "high", "note": "域名后缀为 .co.id，印尼二级域名通常要求持有对应名称的注册文件或商标证明。"},
+    {"id": "X04", "field": "域名", "value": "sinarkacanusa.co.id", "evidence": "由网站字段拆解", "confidence": "high", "note": "注意：公司名 Sinar Kaca Nusantara 缩略为 sinarkacanusa，吞掉了 Nusantara 的 t，写作 canusa 而非 kantara —— 属可解释的缩写，但需与官网、名片一致。"},
+    {"id": "X05", "field": "企业邮箱", "value": "andi.pratama@sinarkacanusa.co.id", "evidence": "From 头 + Reply-To + 签名", "confidence": "high", "note": "域名与企业邮箱域一致；需核验 SPF/DMARC 与真实发信服务器，而不只看后缀。"},
+    {"id": "X06", "field": "联系人", "value": "Andi Pratama Wibowo", "evidence": "签名栏", "confidence": "high", "note": "印尼人名常见双名结构，需在 LinkedIn 与名片上双向确认职位。"},
+    {"id": "X07", "field": "职位", "value": "Senior Procurement Manager", "evidence": "签名栏 + 名片", "confidence": "high"},
+    {"id": "X08", "field": "电话", "value": "+62 812-3456-7890（手机）", "evidence": "签名栏", "confidence": "high", "note": "仅有手机号，无公司总机/固定电话；印尼 +62 812 为 Telkomsel 移动号段，不能作为企业固定联络渠道的证据。"},
+    {"id": "X09", "field": "询价产品", "value": "Dense Soda Ash, Na₂CO₃ 99.2% min", "evidence": "正文 Product 行 + 附件询价表", "confidence": "high"},
+    {"id": "X10", "field": "数量与节奏", "value": "25,000 MT/年；首批 500 MT", "evidence": "正文 + Inquiry Sheet SKN-2026-10.xlsx", "confidence": "high"},
+    {"id": "X11", "field": "包装", "value": "1,000 kg 吨袋", "evidence": "正文 Packaging 行", "confidence": "high", "note": "重质纯碱常用 1,000 kg/1,250 kg 吨袋，与产品形态相符。"},
+    {"id": "X12", "field": "交付条款", "value": "CFR Tanjung Priok；另询 CIF Surabaya", "evidence": "正文 Delivery 行", "confidence": "high", "note": "两个港口分别在雅加达与泗水，相距约 800 km；若最终收货地在泗水，物流与价格结构不同。"},
+    {"id": "X13", "field": "付款方式", "value": "对方常态：30% TT 定金 + 70% 见提单副本", "evidence": "正文 Payment 行", "confidence": "medium", "note": "这是对方自述的“常态”，不是承诺；我方应以自身风控条款为准。"},
+    {"id": "X14", "field": "自述背景①", "value": "成立于 2011 年", "evidence": "正文 About us", "confidence": "medium", "note": "需与 AHU 登记日期比对，而不能只看对方自述。"},
+    {"id": "X15", "field": "自述背景②", "value": "Bekasi 工业区两座浮法玻璃熔窑，年产能约 120 万平方米", "evidence": "正文 About us", "confidence": "medium", "note": "玻璃产能单位应关注重量箱/吨/平方米；120 万 m² 对两座浮法窑偏低，需要追问产能、熔窑日熔化量（t/d）与产品厚度结构。"},
+    {"id": "X16", "field": "自述背景③", "value": "official importer，拥有丹戎不碌港附近自有仓库", "evidence": "正文 About us", "confidence": "medium", "note": "“own warehouse”与“official importer”是两种不同能力，需索取 NIB/API-U（进口商）与仓库地址。"},
+    {"id": "X17", "field": "资料提供条件", "value": "注册文件签署 NDA 后提供", "evidence": "正文末段", "confidence": "high", "note": "流程性条件，不是矛盾；但会推迟主体核验，需要并行推进替代材料。"}
+  ],
+
+  "subject": {
+    "name_extracted": "PT Sinar Kaca Nusantara",
+    "name_normalized": "PT SINAR KACA NUSANTARA",
+    "registry_check": {
+      "portal": "AHU Online（Ditjen AHU, Kementerian Hukum dan HAM）· Pencarian Perseroan / Profil Badan Usaha",
+      "search_terms": ["PT Sinar Kaca Nusantara", "SINAR KACA NUSANTARA"],
+      "result": "模拟环境未登录查询 → 无结果返回",
+      "result_note": "本条为演示：真实执行时应在 AHU Online 按全称检索，记录检索时间、命中条目与截图。无结果时要区分三种情况：① 名称录入错误；② 企业类型不是 PT（如 CV、PT PMA 需另查）；③ 登记信息未收录或已变更。不能直接判为不存在。",
+      "status": "unverified"
+    },
+    "nib_oss": {
+      "portal": "OSS-RBA（oss.go.id）· Pencarian NIB / Cek Status Perizinan Berusaha",
+      "result": "模拟环境未取得 NIB，无法在 OSS 检索",
+      "result_note": "NIB（13 位 Nomor Induk Berusaha）是印尼最实用的核验锚点：可用来核对公司名、注册地址、KBLI 业务分类与许可状态。",
+      "status": "unverified"
+    },
+    "npwp_tax": {
+      "portal": "DJP Online（pajak.go.id）/ 对方出具的 NPWP 打印页",
+      "result": "未提供 NPWP 号",
+      "status": "unverified"
+    },
+    "customs_id": {
+      "portal": "印尼海关（DJBC）进口商识别号 / API-U 证明",
+      "result": "对方自称 official importer，但未提供 API-U / customs ID",
+      "status": "unverified"
+    },
+    "summary_rows": [
+      {"k": "登记全称（待核）", "v": "PT SINAR KACA NUSANTARA", "verified": false},
+      {"k": "法律形式（自述）", "v": "PT（Perseroan Terbatas，印尼有限责任公司）", "verified": false},
+      {"k": "成立年份（自述）", "v": "2011", "verified": false},
+      {"k": "注册地址（自述）", "v": "Jakarta（具体地址未在邮件中给出；签名栏为 Cakung, Jakarta Timur 13910）", "verified": false},
+      {"k": "NIB / OSS 状态", "v": "未提供", "verified": false},
+      {"k": "NPWP（税号）", "v": "未提供", "verified": false},
+      {"k": "进口资质（API-U）", "v": "自述为 official importer，无凭证", "verified": false}
+    ]
+  },
+
+  "domains": [
+    {
+      "domain": "sinarkacanusa.co.id",
+      "tld": ".co.id",
+      "resolve": "模拟环境未发起 DNS 解析",
+      "whois": "未查询（本报告不以域名注册时间作为企业真伪判据）",
+      "website": "模拟环境未抓取页面；应按 首页 / About us / Products / Contact 四页核对",
+      "ssl": "未查询",
+      "mx": "未查询",
+      "note": "核查顺序：官网是否存在并可用 → 官网上的公司名/地址/电话/邮箱是否与邮件一致 → 域名 WHOIS 与邮箱 MX/SPF/DMARC → 域名注册人与企业主体的关系（仅作佐证，不作判据）。"
+    }
+  ],
+
+  "email_auth": [
+    {"item": "发件域名", "observed": "sinarkacanusa.co.id", "expected": "与企业官网域名一致", "mismatch": "same", "note": "后缀与企业自称域名一致，这一步通过。"},
+    {"item": "Reply-To", "observed": "andi.pratama@sinarkacanusa.co.id", "expected": "与 From 域一致", "mismatch": "same", "note": "未出现“From 一个域、Reply-To 跳到 Gmail/免费邮箱”的常见跳转手法。"},
+    {"item": "SPF 记录", "observed": "未查询", "expected": "存在 v=spf1 且包含实际发信服务器", "mismatch": "unknown", "note": "免费域名邮箱常缺 SPF，不能据此判定造假；只作为“发信基础设施是否正规”的佐证项。"},
+    {"item": "DKIM / DMARC", "observed": "未查询", "expected": "存在 p=none 或更严格的 DMARC 策略", "mismatch": "unknown", "note": "DMARC 缺失在中小企业中常见；应写“未核实”，不写“异常”。"},
+    {"item": "邮件头 Received 链", "observed": "未核验原始邮件头", "expected": "首跳 IP 与发信地区（印尼）相符", "mismatch": "unknown", "note": "请把原始邮件（.eml）交给技术同事查看 Received 链与 X-Originating-IP。"},
+    {"item": "签名与抬头公司名", "observed": "签名、邮件正文、附件抬头均为 PT Sinar Kaca Nusantara", "expected": "三处一致", "mismatch": "same", "note": "内部一致性良好；但一致性只说明“对方文案自洽”，不说明主体真实。"}
+  ],
+
+  "matrix": [
+    {"id": "M01", "item": "公司名称", "claimed": "PT Sinar Kaca Nusantara", "other": "官网 “PT Sinar Kaca Nusantara”（未抓取，按名义）", "mismatch": "unknown", "note": "需抓取官网 About/Footer 逐字比对，包括是否写成 PT. / PT SINAR KACA NUSANTARA。"},
+    {"id": "M02", "item": "域名 vs 公司名", "claimed": "sinarkacanusa.co.id", "other": "Sinar Kaca Nusantara → sinarkacanusa", "mismatch": "partial", "note": "缩写可解释，但“Nusantara → canusa”不是标准缩写，需要对方口头/书面确认或在官网确认这是其官方域名。"},
+    {"id": "M03", "item": "企业邮箱", "claimed": "andi.pratama@sinarkacanusa.co.id", "other": "官网 Contact 页邮箱（未抓取）", "mismatch": "unknown", "note": "核验点是“官网 Contact 页是否列出同一域名”，而不是“是否列出同一个人”。"},
+    {"id": "M04", "item": "地址（签名栏）", "claimed": "Jl. Raya Bekasi KM 27, Cakung, Jakarta Timur 13910", "other": "注册地（AHU，未取得）", "mismatch": "unknown", "note": "Cakung 属 East Jakarta，邮编 13910 与 Cakung 区间相符（表面自洽），但注册地址未核实。"},
+    {"id": "M05", "item": "地址（正文）", "claimed": "厂区在 Bekasi 工业区", "other": "签名地址（Jakarta Timur）", "mismatch": "partial", "note": "Bekasi 与 East Jakarta 是两个行政区，边界相邻；须确认“注册地 / 工厂 / 仓库”三个地址，不能合并成一个。"},
+    {"id": "M06", "item": "电话", "claimed": "+62 812-3456-7890（手机）", "other": "官网/名片上的公司电话（未抓取）", "mismatch": "unknown", "note": "只有手机号是中小企业常态，但采购 25,000 吨级原料的企业通常有公司总机，建议索取。"},
+    {"id": "M07", "item": "联系人职位", "claimed": "Senior Procurement Manager", "other": "名片（模拟）", "mismatch": "same", "note": "邮件与名片一致；仍需通过 LinkedIn/官网团队页确认其确实在该公司任职。"},
+    {"id": "M08", "item": "成立年份", "claimed": "2011", "other": "AHU 成立日期（未取得）", "mismatch": "unknown", "note": "自述年份必须与登记日期比对。"},
+    {"id": "M09", "item": "企业资质", "claimed": "official importer", "other": "NIB/API-U（未提供）", "mismatch": "unknown", "note": "“official importer”在印尼对应 API-U / 进口商识别号，可被 OSS 与海关核验。"},
+    {"id": "M10", "item": "网站与主体关系", "claimed": "www.sinarkacanusa.co.id 即公司网站", "other": "域名注册人（未查询）", "mismatch": "unknown", "note": "域名注册人为个人/代理商很常见，只能作佐证，不作判定依据。"}
+  ],
+
+  "business_fit": {
+    "headline": "重质纯碱与浮法玻璃熔窑的助熔剂用途高度匹配；但“两座浮法窑 + 年产能 120 万 m²”与 25,000 MT/年 纯碱需求之间的量化关系需要对方补充",
+    "verdict": "产品与行业逻辑成立，规模口径待核",
+    "product_use": "重质纯碱（dense soda ash）是玻璃熔制的主要助熔剂，可显著降低硅砂的熔融温度；浮法/器皿玻璃是纯碱最大下游之一。",
+    "demand_math": [
+      {"label": "对方自述玻璃年产能", "value": "1.2 百万 m²/年", "note": "对两座浮法熔窑偏低，需核实是否为“一座窑”的单线数据，或单位为重量箱/吨。"},
+      {"label": "纯碱需求（自述）", "value": "25,000 MT/年", "note": "约 2,083 MT/月，折合 8–10 个 20 尺箱/月或整车散货，属中等规模工业采购。"},
+      {"label": "行业粗算口径", "value": "纯碱约占玻璃原料配方的 10–20%（按熔窑配方与工艺波动）", "note": "需用对方实际配方与拉引量（t/d）反算，不能直接套用。现算结论：对方披露的玻璃产能与纯碱需求不宜简单相乘，应要求对方提供熔窑日熔化量与年投料结构。"}
+    ],
+    "keywords": [
+      {"id": "B01", "kode": "23111", "label": "Industri Kaca Lembaran（平板玻璃制造）", "why": "浮法/平板玻璃正是重质纯碱的核心下游，业务逻辑最顺", "status": "unverified", "note": "须在 OSS/NIB 上确认该公司登记包含 23111，而非仅有贸易类 KBLI。"},
+      {"id": "B02", "kode": "46651", "label": "Perdagangan Besar Bahan dan Barang Kimia（化工品批发）", "why": "若为贸易/分销身份，此 KBLI 才合理", "status": "unverified", "note": "对方同时自称 importer，若登记只有 46651 而无 23111，则“玻璃制造商”身份需重新解释。"},
+      {"id": "B03", "kode": "52101", "label": "Pergudangan dan Penyimpanan（仓储）", "why": "自述“own warehouse”需相应能力或租约", "status": "unverified", "note": "仓储可以租用，不代表必须自有 KBLI；但仓库地址需与港区位置逻辑相符。"},
+      {"id": "B04", "kode": "46632", "label": "Perdagangan Besar Kaca（玻璃批发）", "why": "若对方实为玻璃分销商，则纯碱需求应大幅低于 25,000 吨", "status": "unverified", "note": "这一条与 B01 是互斥解释，必须二选一核清。"}
+    ],
+    "signals": [
+      {"id": "S01", "signal": "产品形态匹配", "status": "verified", "strength": "high", "note": "对方指定 dense soda ash + 1,000 kg 吨袋，与浮法玻璃窑的投料与仓储方式一致；轻质纯碱才常用于洗涤/日化。"},
+      {"id": "S02", "signal": "规格水平", "status": "verified", "strength": "medium", "note": "Na₂CO₃ ≥ 99.2% 属常见工业级要求，与玻璃级纯碱的行业惯例一致。"},
+      {"id": "S03", "signal": "采购量与自述产能的匹配", "status": "unverified", "strength": "medium", "note": "两座浮法窑配 25,000 MT/年纯碱在数量级上并非不合理，但“120 万 m²/年”的玻璃产能与之不匹配，需要一个说法。"},
+      {"id": "S04", "signal": "物流与港口逻辑", "status": "verified", "strength": "medium", "note": "Tanjung Priok 是雅加达主港，CFR 条款合理；CIF Surabaya 则对应另一条收货路径，需确认最终工厂位置。"},
+      {"id": "S05", "signal": "贸易 vs 制造身份", "status": "unverified", "strength": "high", "note": "邮件同时出现“glass manufacturer”和“official importer with own warehouse”，两种身份都成立也可以，但决定了我方报价口径与合同主体。"}
+    ]
+  },
+
+  "checks": [
+    {
+      "id": "K01", "section": "A", "title": "企业是否真实存在（登记检索）",
+      "status": "unverified", "severity": "high", "source_ids": ["SRC01", "SRC02"],
+      "question": "在 AHU Online 与 OSS 上，能否检索到与“PT Sinar Kaca Nusantara”完全一致的登记主体？",
+      "finding": "模拟环境未完成登记检索：对方未提供 NIB/Perseroan 登记号，也未提供营业执照扫描件。缺少 NIB 时，按全称检索可能出现同名、近似名或查无结果等多种情况。",
+      "verified_facts": ["对方自称法律形式为 PT（印尼有限责任公司），这一形式本身是印尼最常见的法人类型，不等于已登记。"],
+      "doubts": [],
+      "unknowns": ["登记全称与登记号（Perseroan）", "NIB 与 OSS 许可状态", "成立日期", "注册地址", "经营范围 KBLI 明细"],
+      "boundary": "“查不到”可能来自名称写法、企业类型差异或登记未收录，不能据此判定虚假；只有“存在且资料互相矛盾”才能写“存在疑点”。",
+      "next_ids": ["Q01", "Q02", "Q05"],
+      "action": "请对方提供 NIB（13 位）与 AHU 登记的批准文号；自己动手在 AHU Online 用全称与注册号两路检索并留证。"
+    },
+    {
+      "id": "K02", "section": "A", "title": "公司名称与登记名称是否一致",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC01"],
+      "question": "邮件与签名中的名称，是否与登记证书上的名称逐字一致？",
+      "finding": "无法比对：缺少登记证书。已完成的是一致性检查——邮件抬头、正文、签名、附件抬头四处均写作“PT Sinar Kaca Nusantara”。",
+      "verified_facts": ["名称在询盘内部四处一致（提取结果 X01、矩阵 M01）。"],
+      "doubts": [],
+      "unknowns": ["登记证书上的全称（是否含句点、是否缩写 Nusantara）", "是否存在同名分店/分支（Kantor Cabang）"],
+      "boundary": "内部一致只能证明“文案自洽”，不能证明“登记存在”，两者必须分开写。",
+      "next_ids": ["Q01", "Q03"],
+      "action": "索取 AKTA Pendirian（公司章程公证件）首页与 SK Kemenkumham 批准页。"
+    },
+    {
+      "id": "K03", "section": "A", "title": "公证/章程与签章一致性",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC01"],
+      "question": "若后续收到章程或授权书，其公司名、董事签名、印章与询盘主体是否一致？",
+      "finding": "尚未收到任何盖章文件，暂无可比对对象。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["签章样式", "董事（Direktur）姓名与授权", "印章与登记名称是否一致"],
+      "boundary": "印尼公证件常用印尼语；核对时不要只看英文翻译件，要同时看 docx 原文与译文对应关系。",
+      "next_ids": ["Q03", "Q06"],
+      "action": "收到文件后，逐项比对：名称拼写、地址、董事姓名、印章文字。"
+    },
+    {
+      "id": "K04", "section": "A", "title": "同名企业 / 近似名主体排查",
+      "status": "unverified", "severity": "high", "source_ids": ["SRC01", "SRC04"],
+      "question": "是否存在同名或高度近似名企业，导致资料被错误关联？",
+      "finding": "“Sinar Kaca”在印尼是常见的行业命名组合（Sinar = 光，Kaca = 玻璃），出现在不同城市的不同 PT 上是完全可能的。在未取得登记号之前，任何检索到的“Sinar Kaca”类企业都不能直接与本询盘主体合并。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["是否有同名 PT 在其他城市", "是否有名称相似的 CV/UD（个体与合伙制）"],
+      "boundary": "这是本方法最重要的一条纪律：只有登记号/NIB 相同才是同一主体；名称相同、域名相似、Logo 相似都不构成同一性。",
+      "next_ids": ["Q01", "Q02"],
+      "action": "检索时同时记录：登记号、城市、成立日期、KBLI，四项齐备才允许建立关联。"
+    },
+    {
+      "id": "K05", "section": "A", "title": "询盘背景自述（成立年份、产能、仓库）",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC04"],
+      "question": "2011 年成立、两座浮法窑、120 万 m²/年、丹戎不碌附近自有仓库，这些自述能否被公开来源印证？",
+      "finding": "全部来自对方自述，未获第三方印证。其中“120 万 m²/年”与“两座浮法窑”在数量级上偏低，是值得追问的具体点（不是矛盾，而是口径不清）。",
+      "verified_facts": [],
+      "doubts": ["玻璃产能口径疑似不完整（m² 与重量箱/吨混用，或仅计一条线）"],
+      "unknowns": ["熔窑日熔化量（t/d）", "玻璃品种与厚度结构", "仓库地址与租约"],
+      "boundary": "自述信息只能归为 D 级线索；产能口径不一致要写“口径待澄清”，不写“虚报”。",
+      "next_ids": ["Q07", "Q08"],
+      "action": "用一份标准《供应商/客户背景表》让对方填：熔窑数量、日熔化量、年投料结构、仓库地址。"
+    },
+
+    {
+      "id": "K06", "section": "B", "title": "主营业务与询价产品是否相关",
+      "status": "verified", "severity": "low", "source_ids": ["SRC04", "SRC05"],
+      "question": "作为玻璃制造企业，询价重质纯碱是否属于其正常业务？",
+      "finding": "属于高度相关的正常采购：重质纯碱是浮法/器皿玻璃熔制的主要助熔剂，是纯碱最大下游之一（玻璃约占全球纯碱消费的一半以上）。对方指定 dense 形态与吨袋包装，也符合玻璃窑的投料习惯。",
+      "verified_facts": ["产品用途与对方自称行业一致（B01/23111 平板玻璃制造为纯碱核心下游）。", "规格与形态（dense、≥99.2%、吨袋）与玻璃级采购惯例一致。"],
+      "doubts": [],
+      "unknowns": ["对方是否登记 KBLI 23111（制造）或仅有 46651/46632（贸易）"],
+      "boundary": "“业务相关”只说明询价合理，不说明主体真实，也不说明规模属实。",
+      "next_ids": ["Q05", "Q07"],
+      "action": "把 KBLI 明细作为业务相关性的硬证据：有 23111 才能称“自己生产玻璃”。"
+    },
+    {
+      "id": "K07", "section": "B", "title": "登记业务分类（KBLI）与询价匹配度",
+      "status": "unverified", "severity": "high", "source_ids": ["SRC03", "SRC05"],
+      "question": "OSS 上的 KBLI 是否同时覆盖玻璃制造与化工品批发？",
+      "finding": "未取得 NIB，无法读取 KBLI。已准备好对照口径：23111（平板玻璃制造）、46651（化工品批发）、46632（玻璃批发）、52101（仓储）。四种分类对应四种完全不同的商业模式与采购量。",
+      "verified_facts": ["KBLI 23111 = Industri Kaca Lembaran（平板玻璃制造），46651 = Perdagangan Besar Bahan dan Barang Kimia（化工品批发）——口径来源见 SRC03。"],
+      "doubts": [],
+      "unknowns": ["该公司 NIB 上的主 KBLI 与副 KBLI", "是否有 23111", "许可是否处于 active 状态"],
+      "boundary": "KBLI 是业务分类，不是“能不能做”的许可；但 KBLI 与自述身份矛盾时，必须要求解释。",
+      "next_ids": ["Q01", "Q02"],
+      "action": "拿到 NIB 后在 OSS 查询 KBLI 明细，与 B01–B04 逐条对照。"
+    },
+    {
+      "id": "K08", "section": "B", "title": "采购规模与自述产能的量化关系",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC04"],
+      "question": "25,000 MT/年纯碱，与“两座浮法窑、120 万 m²/年”的玻璃产能是否算得通？",
+      "finding": "量级与“两座浮法窑”大体相容，但与“120 万 m²/年”不相容：按常见浮法玻璃的纯碱单耗反算，两个数据无法同时成立，说明至少有一个口径不完整。",
+      "verified_facts": ["25,000 MT/年 ≈ 2,083 MT/月，属中等规模工业采购（8–10 标箱/月量级或整车散货）。"],
+      "doubts": ["玻璃产能单位（m²/年）与熔窑能力（t/d）之间缺少换算所需数据"],
+      "unknowns": ["熔窑日熔化量", "纯碱单耗（kg/t 玻璃）", "玻璃厚度结构", "是否含外协加工用量"],
+      "boundary": "算不通不等于造假；常见原因是口径不同（只算一条线、只算成品面积、或把加工玻璃当原片）。要求对方补充数据即可。",
+      "next_ids": ["Q07", "Q08"],
+      "action": "请对方填写熔窑与投料结构表，再按 kg 纯碱/t 玻璃 反算验证。"
+    },
+    {
+      "id": "K09", "section": "B", "title": "进口商身份与采购角色",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC04", "SRC06"],
+      "question": "对方是最终用户（工厂自用）、进口分销商，还是仅代第三方询价的中间人？",
+      "finding": "三种角色的采购条件完全不同：自用工厂看配方与稳定供货；分销商看价格与资金周转；中间人看佣金。对方自称 official importer 与 manufacturer 并存，需先定角色，再定报价与合同主体。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["进口商识别号（API-U）", "是否代其他工厂询价", "是否要求独家代理"],
+      "boundary": "“中间人”本身不是风险，但合同主体、付款主体、收货主体必须一致或明确授权。",
+      "next_ids": ["Q02", "Q09"],
+      "action": "在回信中直接询问：合同签字主体、收货人、进口报关主体是否为同一法人。"
+    },
+    {
+      "id": "K10", "section": "B", "title": "规格与包装的技术合理性",
+      "status": "verified", "severity": "low", "source_ids": ["SRC05"],
+      "question": "对方提出的规格、包装与交付条款，是否符合该行业的通行做法？",
+      "finding": "合格：dense soda ash + Na₂CO₃ ≥99.2% + 1,000 kg 吨袋 + CFR Tanjung Priok 都是玻璃行业通用的表述。缺少的技术项是堆积密度区间、粒度分布、铁含量（Fe₂O₃）与白度——这些恰恰是玻璃客户最关心的杂质。",
+      "verified_facts": ["产品形态与工业用途吻合。"],
+      "doubts": [],
+      "unknowns": ["Fe₂O₃ 上限（玻璃品质关键）", "堆积密度与粒度分布", "是否要求特定品牌/原产地"],
+      "boundary": "规格写得“合理”不代表对方真懂，也不代表一定买单；缺项应补进我方标准技术问卷。",
+      "next_ids": ["Q10"],
+      "action": "回信附《技术问卷 TDS 确认表》，重点确认 Fe₂O₃、粒度与堆积密度。"
+    },
+
+    {
+      "id": "K11", "section": "C", "title": "官网是否可用且与企业对应",
+      "status": "unverified", "severity": "high", "source_ids": ["SRC04"],
+      "question": "www.sinarkacanusa.co.id 是否存在、可访问，且页面上写明同一公司名？",
+      "finding": "模拟环境未抓取。需按固定顺序核对：① 是否可解析访问；② About/Footer 是否出现同一公司名；③ 是否有 Products（玻璃、浮法线）与 Contact（地址、电话、邮箱）页面；④ 页面是否有可核对的老照片/设备照片。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["网站可访问性", "页面公司名", "Contact 页邮箱域", "网站版权年份与最后更新"],
+      "boundary": "域名注册时间早/晚都不能证明或否证企业真实性；网站可能是代理商做的模板站，也可能刚上线。",
+      "next_ids": ["Q04"],
+      "action": "分工截图存档：首页、About、Products、Contact 各一张，标注抓取时间。"
+    },
+    {
+      "id": "K12", "section": "C", "title": "域名、企业邮箱与发信真实性",
+      "status": "unverified", "severity": "high", "source_ids": ["SRC07"],
+      "question": "发信邮箱与企业域名是否同一体系，发信服务器是否可信？",
+      "finding": "后缀一致（From 与 Reply-To 均为 @sinarkacanusa.co.id，未跳到免费邮箱），这是正面信号；但 SPF/DKIM/DMARC 与邮件头 Received 链均未核验，无法判断是否有人伪造显示名。",
+      "verified_facts": ["From / Reply-To / 签名三处邮箱域一致（矩阵 M03、email_auth 表）。"],
+      "doubts": [],
+      "unknowns": ["SPF 记录", "DMARC 策略", "原始邮件头的首跳 IP", "MX 服务商是否为企业邮箱服务"],
+      "boundary": "后缀一致只能排除“最粗糙的冒用”，不能排除“用相似域名伪装成对方”；必须结合 WHOIS、官网与回拨确认。",
+      "next_ids": ["Q04", "Q11"],
+      "action": "保存 .eml 原始文件，查 Received 链与 SPF 记录；同时改由电话/视频回拨确认对方身份。"
+    },
+    {
+      "id": "K13", "section": "C", "title": "地址交叉验证",
+      "status": "unverified",
+      "severity": "medium", "source_ids": ["SRC04"],
+      "question": "签名栏地址、正文所述厂区与注册地址能否互相解释？",
+      "finding": "签名栏写的是 Cakung, Jakarta Timur 13910（东雅加达工业区），正文说厂区在 Bekasi 工业区。两地相邻但属不同行政区：可以同时成立（注册/办公在 Cakung，工厂在 Bekasi），但这意味着必须区分三个地址：注册地址、工厂地址、仓库地址。",
+      "verified_facts": ["签名栏地址与邮编 13910 的区域（Cakung）表面自洽。"],
+      "doubts": ["正文“Bekasi”与签名“Jakarta Timur”的关系未说明；若工厂真在 Bekasi，为何签名地址是 Cakung 需要解释（办公地/注册地 vs 厂区）。"],
+      "unknowns": ["AHU 上的注册地址", "工厂门牌地址", "仓库地址"],
+      "boundary": "地址不一致本身很常见（注册地≠工厂≠仓库），只有无法解释的地址矛盾才升级为疑点。本条按“部分一致”处理。",
+      "next_ids": ["Q01", "Q06"],
+      "action": "索取三个地址并要求对方说明各自用途；后续可用 Google Maps 街景与工牌照交叉验证。"
+    },
+    {
+      "id": "K14", "section": "C", "title": "电话与企业渠道",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC04"],
+      "question": "除了个人手机号，是否存在可核验的公司固定电话或官方渠道？",
+      "finding": "仅提供 +62 812 开头的手机号（Telkomsel 移动号段）。中小外贸企业只给手机是常态，但零米级原料采购通常有公司总机或采购部门邮箱。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["公司总机", "采购部门公共邮箱", "WhatsApp Business 账号归属"],
+      "boundary": "手机号不是负面证据；但它不能作为“企业真实存在”的证据，也不能作为唯一联络渠道。",
+      "next_ids": ["Q04", "Q11"],
+      "action": "索取公司总机与采购部公共邮箱；所有关键确认走“邮件 + 回拨”双通道。"
+    },
+    {
+      "id": "K15", "section": "C", "title": "联系人身份",
+      "status": "unverified", "severity": "low", "source_ids": ["SRC04"],
+      "question": "Andi Pratama Wibowo 是否确为该公司的采购负责人？",
+      "finding": "邮件与名片自述一致（Senior Procurement Manager），但未见官网团队页、LinkedIn 任职或其他独立来源。",
+      "verified_facts": ["职位在邮件与名片两处一致。"],
+      "doubts": [],
+      "unknowns": ["LinkedIn/领英任职记录", "邮箱是否为个人账户还是部门账户"],
+      "boundary": "人名与职位可核对，但“存在这个人”不等于“这个人有权代表公司签约”；授权需要在后续合同阶段由公司出具。",
+      "next_ids": ["Q04", "Q09"],
+      "action": "视频会议核对身份，并在报价阶段要求公司授权书（Surat Kuasa）。"
+    },
+    {
+      "id": "K16", "section": "C", "title": "资料提供条件（NDA 前置）",
+      "status": "discrepancy", "severity": "low", "source_ids": ["SRC04"],
+      "question": "对方以“签署 NDA 后才提供注册文件”为条件，是否会影响核验？",
+      "finding": "这是流程性条件，被列为疑点不是因为违规，而是因为它使关键主体核验在时间上后置。常见做法是先提供不含商业机密的证照首页（可打码敏感号段），NDA 只用于保护配方、客户名单等商业信息。",
+      "verified_facts": ["对方在正文中明确说明“Company registration documents are available upon signing of an NDA”。"],
+      "doubts": ["把“注册证照”与“商业机密”绑定在同一个 NDA 条件里，使对方在我方完成核验前掌握节奏。"],
+      "unknowns": ["NDA 是否为单方模板", "签署 NDA 是否会触发排他或泄密责任条款"],
+      "boundary": "NDA 前置≠不合理要求；采购方也常用。写疑点时要说清“影响的是时序，不是真实性”。",
+      "next_ids": ["Q03"],
+      "action": "回信提出“证照首页脱敏先行 + NDA 只在讨论配方/客户时签署”。"
+    },
+
+    {
+      "id": "K17", "section": "D", "title": "经营异常与信用负面（印尼）",
+      "status": "unverified", "severity": "high", "source_ids": ["SRC08"],
+      "question": "是否存在公开的经营异常、税务、许可失效或失信信息？",
+      "finding": "未检索到任何正面或负面公开信息，因为没有可检索的锚点（NIB/NPWP）。拿到 NIB 后可查 OSS 许可状态、印尼税务局状态、以及公开诉讼/仲裁数据库。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["许可是否 active", "是否被列入受限名单", "是否有商事判决"],
+      "boundary": "“搜不到负面”与“没有负面”不是一件事；未完成检索前一律写“未核实”，不写“无风险”。",
+      "next_ids": ["Q01", "Q02"],
+      "action": "NIB 到手后 48 小时内完成 OSS 许可状态核查并截图存档。"
+    },
+    {
+      "id": "K18", "section": "D", "title": "制裁与出口管制筛查",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC09", "SRC10"],
+      "question": "交易对手、付款行、收货人是否出现在制裁名单或受限清单上？",
+      "finding": "尚未执行名单筛查；纯碱本身不是典型两用/管制物项，但买方、银行、最终收货地仍需过一遍名单。",
+      "verified_facts": ["纯碱（HS 2836.20）不在常见敏感物项清单中，出口管制关注度低。"],
+      "doubts": [],
+      "unknowns": ["公司名与联系人在 OFAC/EU/UN 名单上的匹配结果", "付款银行与付款账户国别"],
+      "boundary": "未做筛查就签合同，是出口业务最常见的合规漏洞；一次名单检索成本极低。",
+      "next_ids": ["Q11"],
+      "action": "用 SRC09/SRC10 的名单接口做一次模糊匹配，保存检索截图；命中则要求解释。"
+    },
+    {
+      "id": "K19", "section": "D", "title": "重大诉讼与负面报道",
+      "status": "unverified", "severity": "medium", "source_ids": ["SRC08"],
+      "question": "公开渠道是否有关于该公司的诉讼、破产、停产或重大负面报道？",
+      "finding": "未检索（缺少可检索锚点与当地语检索词）。建议用印尼语关键词组合检索，而不是只用英文名。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["诉讼/仲裁记录", "印尼语新闻", "行业协会公告"],
+      "boundary": "同名企业负面报道严禁直接归属；每条负面必须同时满足“名称 + 城市 + 行业”或“登记号”才可关联。",
+      "next_ids": ["Q01", "Q02"],
+      "action": "用印尼语检索：\"PT Sinar Kaca Nusantara\" + 城市 + 玻璃；结果逐条做归属判断。"
+    },
+    {
+      "id": "K20", "section": "D", "title": "反洗钱与付款路径",
+      "status": "unverified", "severity": "high", "source_ids": ["SRC06"],
+      "question": "对方提出的付款方式（30% 定金 + 70% 见提单副本）与账户名称是否安全？",
+      "finding": "这是对方“常态”的自述，不是我方承诺。真正需要核验的是：付款账户户名是否与合同主体一致；是否存在要求付至个人账户或第三国账户的倾向。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["收款账户是否为印尼本地对公账户", "户名与登记名称是否一致", "是否接受 L/C at sight"],
+      "boundary": "“见提单副本付款”对卖方风险偏高；这不是对方可疑，而是我方条款选择问题。",
+      "next_ids": ["Q09", "Q12"],
+      "action": "明确以下任一：L/C at sight（可接受）、或 30% 定金 + 见提单副本付尾款的改进版、或银行保函；并核对账户户名。"
+    },
+    {
+      "id": "K21", "section": "D", "title": "结构性与明显风险信号汇总",
+      "status": "verified", "severity": "low", "source_ids": ["SRC04"],
+      "question": "是否存在典型的异常联系渠道或不一致资料（如免费邮箱冒充企业、要求改收款账户等）？",
+      "finding": "已在询盘原文层面完成排查，未发现：① 免费邮箱（gmail/yahoo）冒充企业邮箱；② 邮件中的收款账户变更请求；③ 明显前后矛盾的报价条件；④ 冒充知名企业身份的迹象（对方名称并非任何知名品牌）。",
+      "verified_facts": ["询盘在“渠道自洽性”这一层没有出现典型异常手法。", "对方未以自己的名义套用其他知名企业的名称、Logo 或网站。"],
+      "doubts": [],
+      "unknowns": ["官网是否存在与其他企业高度雷同的模板内容（需抓取后比对）"],
+      "boundary": "“没发现异常手法”只是排除了一类，不等于安全；下一层要看主体与资金的真实对应。",
+      "next_ids": ["Q04", "Q11"],
+      "action": "保留原邮件 PDF/EML；在合同签署前再做一次同样的渠道自洽性复查。"
+    },
+    {
+      "id": "K22", "section": "D", "title": "贸易合规与最终用途（出口侧）",
+      "status": "unverified", "severity": "low", "source_ids": ["SRC06"],
+      "question": "重质纯碱出口印尼，是否需要特殊许可或最终用途声明？",
+      "finding": "纯碱为普通工业品，不属于两用物项；从出口侧看主要是中国方的报关、原产地与外汇收汇问题；从进口侧看，印尼对部分商品设 lartas（限制）要求，需按具体 HS 编码与最新 Permendag 核对是否涉及进口许可。",
+      "verified_facts": ["HS 2836.20 为主要对照编码。"],
+      "doubts": [],
+      "unknowns": ["印尼当前 lartas 清单对 2836.20 的覆盖情况", "对方是否具备相应进口许可"],
+      "boundary": "进口许可本质上是买方义务；但若对方无相应资质，可能导致无法清关、进而影响我方货款。",
+      "next_ids": ["Q02", "Q12"],
+      "action": "核对最新印尼进口规定与本 HS 编码，把结果写入合同前检查表。"
+    },
+
+    {
+      "id": "K23", "section": "E", "title": "资料清单完整性与确认节奏",
+      "status": "discrepancy", "severity": "medium", "source_ids": ["SRC04"],
+      "question": "现有资料是否足以支撑报价与合同？还缺哪些、按什么顺序要？",
+      "finding": "现有资料只能支撑“业务相关性”判断，不足以支撑报价与合同主体确认。按影响排序：NIB/KBLI 与登记证（决定是否真实存在）→ 地址三方对齐（决定物流与验厂）→ 付款与账户（决定收汇安全）→ 技术与产能数据（决定报价口径）。",
+      "verified_facts": ["已形成 12 项索取的资料清单（Q01–Q12），按 P0/P1/P2 分级。"],
+      "doubts": ["当前资料包中没有任何可由第三方独立核验的文件，全部为自述。"],
+      "unknowns": ["对方是否愿意在签约前提供上述文件"],
+      "boundary": "这是“资料缺口”而非“对方造假”；把它列成疑点，是因为它直接影响我方能否安全报价。",
+      "next_ids": ["Q01", "Q03", "Q04"],
+      "action": "用统一英文模板一次性发出 P0 清单，并要求 5 个工作日内回复。"
+    },
+    {
+      "id": "K24", "section": "E", "title": "核验结论的可复核性",
+      "status": "verified", "severity": "low", "source_ids": ["SRC01", "SRC03"],
+      "question": "本报告的每条结论是否都能点回来源、且区分了“缺失”与“矛盾”？",
+      "finding": "已完成：24 项核验项中，每一项都标注了状态（已核实/存在疑点/未核实）、来源 ID 与下一步动作；凡是“无法取得”的信息一律记为未核实，没有被包装成否定结论。",
+      "verified_facts": ["报告内所有来源均可在“来源库”点开。", "未使用“诈骗概率”等无依据表述，也未以域名注册时间判断企业真伪。"],
+      "doubts": [],
+      "unknowns": [],
+      "boundary": "可复核性指的是过程，不是结论正确性；对方后续提供的材料可能改变全部结论。",
+      "next_ids": ["Q01"],
+      "action": "把本报告与对方回复一起归档，作为下次复核的基线。"
+    }
+  ],
+
+  "linkage": [
+    {"id": "L01", "name": "查询中可能出现的近似名主体（示例说明）", "relation": "name_collision", "detail": "“Sinar Kaca”“Kaca Nusantara”在印尼是高频组合词，可能在泗水、棉兰等地存在同名或近似名的 PT/CV。在取得登记号前，任何名称命中都不得与本询盘主体合并。", "rule": "只有登记号/NIB 相同才判定同一主体。"},
+    {"id": "L02", "name": "官网域名与主体关系", "relation": "domain_link", "detail": "sinarkacanusa.co.id 的注册人可能是公司、也可能是代办商或个人；域名 WHOIS 只能说明“谁注册了域名”，不能说明“谁经营这家公司”。", "rule": "域名只作佐证，不作判据。"},
+    {"id": "L03", "name": "贸易 vs 制造的两种解释", "relation": "role_ambiguity", "detail": "对方同时自称制造商与进口商。两种解释都合法，但对应不同的核验重点：制造商看玻璃产线与熔窑；进口商看 NIB/API-U 与仓库。", "rule": "先定角色，再定资料清单与报价口径。"},
+    {"id": "L04", "name": "品牌冒用的排除", "relation": "impersonation", "detail": "本询盘未发现冒用其他已注册企业名称、Logo 或网站的迹象（对方名称与任何知名玻璃品牌均不重合）。此项已完成排查。", "rule": "冒用判定的硬条件：用他人名称/标识对外交易，且非授权。"}
+  ],
+
+  "risks": [
+    {"id": "R01", "category": "主体身份", "severity": "high", "status": "unverified", "fact": "未取得 NIB/登记证，主体真实性无法核验。", "impact": "无法确认合同相对方，报价与后续发运缺乏法律锚点。", "source_ids": ["SRC01", "SRC02"], "action": "P0：索取 NIB 与 AHU 登记批准文号。"},
+    {"id": "R02", "category": "业务身份", "severity": "medium", "status": "unverified", "fact": "“玻璃制造商”与“official importer”两重身份并存，KBLI 未读取。", "impact": "报价口径、合同主体、收货人可能不一致。", "source_ids": ["SRC03", "SRC04"], "action": "索取 KBLI 明细并直接询问合同签字主体。"},
+    {"id": "R03", "category": "规模口径", "severity": "medium", "status": "discrepancy", "fact": "自述“两座浮法窑、120 万 m²/年”与 25,000 MT/年纯碱需求不能同时成立。", "impact": "可能存在产能口径不清或采购用途不明（如转售/代购）。", "source_ids": ["SRC04"], "action": "要求填写熔窑 t/d 与投料结构表。"},
+    {"id": "R04", "category": "联系方式", "severity": "medium", "status": "unverified", "fact": "仅有个人手机，无公司总机；SPF/DMARC 与邮件头未核验。", "impact": "一旦发生付款或改单指令，缺少双通道复核。", "source_ids": ["SRC04", "SRC07"], "action": "索取总机；保存 .eml；回拨确认。"},
+    {"id": "R05", "category": "地址一致性", "severity": "low", "status": "discrepancy", "fact": "签名地址（Cakung, Jakarta Timur）与正文厂区（Bekasi）分属不同行政区。", "impact": "验厂与物流决策需要三个地址分离处理。", "source_ids": ["SRC04"], "action": "索取注册地/工厂/仓库三个地址并说明用途。"},
+    {"id": "R06", "category": "收汇安全", "severity": "high", "status": "unverified", "fact": "对方自述的付款方式为 30% 定金 + 70% 见提单副本，账户信息未提供。", "impact": "见提单副本放货，卖方在收到尾款前即失去货权控制。", "source_ids": ["SRC06"], "action": "坚持 L/C at sight 或提高定金比例；核对收款账户户名。"},
+    {"id": "R07", "category": "合规筛查", "severity": "medium", "status": "unverified", "fact": "尚未执行制裁名单与负面新闻筛查。", "impact": "合规缺口，可能在付款银行端被拦截。", "source_ids": ["SRC09", "SRC10"], "action": "执行一次名单筛查并留档。"},
+    {"id": "R08", "category": "信息缺口", "severity": "medium", "status": "unverified", "fact": "全部材料均为对方自述，无第三方可核验文件。", "impact": "业务相关性判断成立，但主体与规模判断均不成立。", "source_ids": ["SRC04"], "action": "按 Q01–Q12 清单一次性索取。"}
+  ],
+
+  "sources": [
+    {"id": "SRC01", "name": "Ditjen AHU Online · Pencarian Perseroan / Profil Badan Usaha", "org": "Kementerian Hukum dan HAM RI（印尼法律与人权部）", "url": "https://ahu.go.id/", "grade": "A", "kind": "registry", "date": "2026-10", "retrieved": "2026-10-19", "note": "印尼 PT 登记信息的官方入口；按全称或登记号检索。", "reliability": 5},
+    {"id": "SRC02", "name": "OSS-RBA · Pencarian NIB / Perizinan Berusaha", "org": "Kementerian Investasi dan Hilirisasi / BKPM", "url": "https://oss.go.id/", "grade": "A", "kind": "registry", "date": "2026-10", "retrieved": "2026-10-19", "note": "以 13 位 NIB 为锚点，可查 KBLI 分类与许可状态。", "reliability": 5},
+    {"id": "SRC03", "name": "KBLI 2020 业务分类（23111 Industri Kaca Lembaran / 46651 Perdagangan Besar Bahan dan Barang Kimia）", "org": "Badan Pusat Statistik（BPS）/ OSS", "url": "https://oss.go.id/id/kbli", "grade": "A", "kind": "standard", "date": "2020", "retrieved": "2026-10-19", "note": "23111 覆盖平板/浮法玻璃等kaca lembaran制造；46651 覆盖化工品批发（含 soda、garam industri 等）。KBLI 2025 已启用，检索时按新编码与旧码对照。", "reliability": 5},
+    {"id": "SRC04", "name": "模拟询盘邮件 INQ-2026-1012-ID-01 原文（含 Company Profile 2026.pdf 附件说明）", "org": "模拟数据（非真实主体）", "url": "", "grade": "D", "kind": "counterparty_document", "date": "2026-10-12", "retrieved": "2026-10-19", "note": "对方自述，仅作提取来源；不得作为主体真实性的证据。", "reliability": 1},
+    {"id": "SRC05", "name": "纯碱下游用途与玻璃占比（行业公开资料综合）", "org": "行业研究机构公开报告", "url": "https://www.glass-international.com/features/a-global-overview-of-the-soda-ash-market", "grade": "C", "kind": "industry", "date": "2024", "retrieved": "2026-10-19", "note": "用于说明“玻璃是纯碱最大下游之一”，不作定量结论。", "reliability": 3},
+    {"id": "SRC06", "name": "印尼进口政策（Kebijakan dan Pengaturan Impor, Permendag 36/2023 及其修订）", "org": "Kementerian Perdagangan RI", "url": "https://jdih.kemendag.go.id/", "grade": "A", "kind": "regulation", "date": "2023-12", "retrieved": "2026-10-19", "note": "进口许可与 lartas 的法规入口；具体 HS 是否受限需按最新修订逐条核对。", "reliability": 5},
+    {"id": "SRC07", "name": "邮件认证（SPF/DKIM/DMARC）核查方法参考", "org": "公开技术文档", "url": "https://dmarc.org/overview/", "grade": "B", "kind": "method", "date": "2026", "retrieved": "2026-10-19", "note": "说明为何 SPF/DMARC 缺失只是佐证，不是造假判据。", "reliability": 4},
+    {"id": "SRC08", "name": "企业核验实践指南（AHU + OSS + NIB/KBLI 三步法）", "org": "第三方 KYB 服务商公开指南与印尼本地服务商说明", "url": "https://asiaverify.com/resources/guides/verifying-companies-in-indonesia-complete-guide-for-2025", "grade": "C", "kind": "method", "date": "2025", "retrieved": "2026-10-19", "note": "仅用于说明检索路径，不用于任何主体结论。", "reliability": 3},
+    {"id": "SRC09", "name": "OFAC Sanctions List Service", "org": "U.S. Department of the Treasury", "url": "https://sanctionslist.ofac.treas.gov/", "grade": "A", "kind": "sanctions", "date": "2026-10", "retrieved": "2026-10-19", "note": "名单筛查入口之一。", "reliability": 5},
+    {"id": "SRC10", "name": "EU Consolidated Financial Sanctions List / UN Security Council Consolidated List", "org": "European Union / United Nations", "url": "https://www.un.org/securitycouncil/content/un-sc-consolidated-list", "grade": "A", "kind": "sanctions", "date": "2026-10", "retrieved": "2026-10-19", "note": "跨区域交叉筛查。", "reliability": 5}
+  ],
+
+  "requests": [
+    {"id": "Q01", "priority": "P0", "category": "主体", "zh": "公司 NIB（13 位 Nomor Induk Berusaha）截图", "en": "Company NIB (Nomor Induk Berusaha) — a screenshot from the OSS account showing the 13-digit NIB and KBLI list", "why": "OSS 上的 NIB 是主体与业务分类最直接的可核验锚点。", "source_ids": ["SRC02"]},
+    {"id": "Q02", "priority": "P0", "category": "主体", "zh": "AHU 登记信息页（Profil Perseroan：登记号、成立日期、注册地址、董事）", "en": "AHU Online company profile page (registration number, date of establishment, registered address, directors)", "why": "与 NIB 交叉，确认名称、地址与登记日期一致。", "source_ids": ["SRC01"]},
+    {"id": "Q03", "priority": "P0", "category": "主体", "zh": "营业执照/章程公证件首页与 SK Kemenkumham（可对敏感号段打码）", "en": "First page of the deed of establishment (AKTA) and the ministerial approval (SK Kemenkumham), sensitive numbers may be redacted", "why": "替代 NDA 前置，让核验不被无限期推后。", "source_ids": ["SRC01"]},
+    {"id": "Q04", "priority": "P0", "category": "渠道", "zh": "官网 About/Contact 页截图 + 公司总机 + 采购部门公共邮箱", "en": "Screenshots of the About and Contact pages, plus the company switchboard number and a purchasing department mailbox", "why": "建立第二条独立核实渠道，避免只依赖发信人一人。", "source_ids": ["SRC04"]},
+    {"id": "Q05", "priority": "P1", "category": "业务", "zh": "KBLI 明细：是否含 23111（平板玻璃制造）/ 46651（化工批发）/ 46632（玻璃批发）", "en": "The full KBLI list registered on the NIB (23111 flat glass manufacturing / 46651 chemical wholesale / 46632 glass wholesale)", "why": "决定对方是工厂、分销商还是中间人。", "source_ids": ["SRC03"]},
+    {"id": "Q06", "priority": "P1", "category": "地址", "zh": "注册地址、工厂地址、仓库地址三个门牌，并说明各自用途", "en": "Three separate addresses — registered office, factory and warehouse — with a note on the purpose of each", "why": "解决签名地址（Cakung）与正文厂区（Bekasi）的口径差异。", "source_ids": ["SRC04"]},
+    {"id": "Q07", "priority": "P1", "category": "产能", "zh": "浮法熔窑数量、日熔化量（t/d）、玻璃品种与厚度结构", "en": "Number of float furnaces, melting capacity in tonnes/day, product range and thickness mix", "why": "用熔窑数据反算纯碱需求，验证 25,000 MT/年。", "source_ids": ["SRC04"]},
+    {"id": "Q08", "priority": "P1", "category": "产能", "zh": "年投料结构（硅砂、纯碱、石灰石等）与纯碱单耗（kg/t 玻璃）", "en": "Annual raw-material mix and soda ash consumption per tonne of glass (kg/t)", "why": "验证采购规模与产品用途。", "source_ids": ["SRC04"]},
+    {"id": "Q09", "priority": "P1", "category": "合同", "zh": "合同签字主体、收货人、进口报关主体是否为同一法人；是否代第三方询价", "en": "Whether the contracting party, consignee and importer of record are the same legal entity; whether you are enquiring on behalf of a third party", "why": "决定合同主体，避免“签约一个、收货另一个”。", "source_ids": ["SRC06"]},
+    {"id": "Q10", "priority": "P2", "category": "技术", "zh": "技术问卷：Fe₂O₃ 上限、堆积密度、粒度分布、是否指定原产地/品牌", "en": "Technical questionnaire: Fe2O3 max, bulk density, particle size distribution, preferred origin or brand", "why": "玻璃客户最敏感的杂质项缺失，影响报价与批次匹配。", "source_ids": ["SRC05"]},
+    {"id": "Q11", "priority": "P1", "category": "渠道", "zh": "原始邮件（.eml/.msg）或要求对方从公司公邮回复确认", "en": "The original message with full headers (.eml), or a re-confirmation from the company's official mailbox", "why": "核对 Received 链与发信服务器归属。", "source_ids": ["SRC07"]},
+    {"id": "Q12", "priority": "P1", "category": "付款", "zh": "收款账户户名与开户行；是否接受 L/C at sight", "en": "Name on the bank account and the issuing bank; whether an L/C at sight is acceptable", "why": "收汇安全与反洗钱核查的起点。", "source_ids": ["SRC06"]}
+  ],
+
+  "actions": [
+    {"id": "T01", "phase": "T+0", "action": "发送核验回信（英文）", "detail": "附 Q01–Q04 的 P0 清单，说明“证照首页可脱敏先行、NDA 只用于商业机密”。", "owner": "外贸业务（客户经理）", "priority": "P0", "status": "open"},
+    {"id": "T02", "phase": "T+1", "action": "存档原始邮件与名片", "detail": "保存 .eml、PDF、名片扫描件；记录发信 IP 与时间戳。", "owner": "外贸业务（助理）", "priority": "P0", "status": "open"},
+    {"id": "T03", "phase": "T+2", "action": "自行检索登记信息", "detail": "在 AHU 与 OSS 用全称检索并截图留证，与对方提供的 NIB 双向比对。", "owner": "商务/合规", "priority": "P0", "status": "open"},
+    {"id": "T04", "phase": "T+3", "action": "官网与域名核验", "detail": "抓取四页截图；查 WHOIS、MX、SPF/DMARC；比对页面上地址电话。", "owner": "技术/IT", "priority": "P1", "status": "open"},
+    {"id": "T05", "phase": "T+5", "action": "制裁名单筛查", "detail": "公司名 + 联系人 + 城市，跑 OFAC/EU/UN 三份名单。", "owner": "合规", "priority": "P1", "status": "open"},
+    {"id": "T06", "phase": "T+5", "action": "汇总缺口是否闭合", "detail": "若 P0 项在 5 个工作日内未闭合，暂缓正式报价，只发“价格有效期说明”。", "owner": "外贸主管", "priority": "P0", "status": "open"},
+    {"id": "T07", "phase": "T+10", "action": "报价与条款准备", "detail": "以 L/C at sight 或 30% 定金为基准出条件；合同主体须与付款主体一致。", "owner": "外贸业务 + 财务", "priority": "P1", "status": "open"},
+    {"id": "T08", "phase": "T+15", "action": "视频会议核对", "detail": "与对方采购负责人视频，核对工厂背景与熔窑数据；必要时约第三方验厂。", "owner": "外贸主管", "priority": "P2", "status": "open"}
+  ],
+
+  "messages": [
+    {
+      "id": "MSG01", "title": "首次回信 · 索取 P0 注册资料（推荐）",
+      "channel": "邮件", "purpose": "在不让对方觉得被冒犯的前提下，拿到可独立核验的主体资料。",
+      "body_en": "Subject: Re: Inquiry for Dense Soda Ash 25,000 MT/Year — Documents for Onboarding\n\nDear Mr. Andi Pratama Wibowo,\n\nThank you for your inquiry and for the detailed specification. We are glad to work with you and will prepare the CFR Tanjung Priok and CIF Surabaya prices.\n\nTo open the price file in our system, our compliance team asks for a short set of company documents. These are standard for all new customers, and sensitive numbers may be redacted:\n\n1. Your company NIB (13-digit Nomor Induk Berusaha) — a screenshot from the OSS account is sufficient;\n2. Your AHU Online company profile (registration number, date of establishment, registered address);\n3. The first page of your deed of establishment (AKTA) and the ministerial approval (SK Kemenkumham);\n4. Your website Contact page and a landline number for your purchasing department.\n\nWe fully respect your NDA. In our experience, an NDA is best used for technical formulas and customer lists, while the four items above are normally shared without it. If you prefer, we can sign an NDA now and receive the redacted documents in parallel.\n\nWe also have the following commercial questions:\n\n5. Please confirm whether the contracting entity, the consignee and the importer of record are the same PT;\n6. Our standard terms for a first order are an irrevocable L/C at sight, or 30% T/T deposit with the balance against a bank-issued document set. Please let us know which works for you;\n7. Please confirm whether the final receiving factory is in Bekasi or Surabaya.\n\nFor your technical file, we would also appreciate your Fe2O3 limit, bulk density range and particle size distribution.\n\nOnce items 1–4 are received, we will issue the official quotation within 3 working days.\n\nBest regards,\n[Your name]\n[Company] · [Title]\n[Phone] · [Email]",
+      "notes": ["礼貌 + 标准化 + 给出可替代路径（打码/并行）。", "把“报价前置条件”写成公司流程，而不是对对方的质疑。"]
+    },
+    {
+      "id": "MSG02", "title": "追问 · 业务规模与产能口径",
+      "channel": "邮件", "purpose": "解决 25,000 MT/年 与“两座浮法窑、120 万 m²/年”的口径落差。",
+      "body_en": "Subject: Technical clarifications — soda ash quantity and furnace capacity\n\nDear Mr. Andi,\n\nTo match the right grade and packaging to your furnaces, could you kindly share:\n\n1. The number of float-glass furnaces and the melting capacity of each (tonnes/day);\n2. Your annual raw-material mix, and the soda ash consumption per tonne of glass (kg/t);\n3. The split between architectural glass, processed glass and any third-party (toll) melting;\n4. Whether the 25,000 MT/year figure covers only your own furnaces or also resale to other glass plants.\n\nThis will help us propose a volume-based price structure and a monthly delivery schedule that matches your warehouse near Tanjung Priok.\n\nBest regards,\n[Your name]",
+      "notes": ["用“匹配合适等级与包装”来解释为什么要问，降低对方抵触。", "第 4 条直接覆盖“中间人/分销商”的可能，避免猜。"]
+    },
+    {
+      "id": "MSG03", "title": "NDA 前置的回应话术（简短版）",
+      "channel": "邮件", "purpose": "对方坚持先签 NDA 时使用。",
+      "body_en": "Subject: Re: NDA before company documents\n\nDear Mr. Andi,\n\nNo problem signing an NDA — we can use our mutual NDA template, which covers technical specifications, pricing and customer information, and can be executed within one working day.\n\nMay I suggest that we run two tracks in parallel: we sign the NDA today, and in the meantime you send the NIB and AHU profile with the tax and registration numbers redacted. This lets our compliance team start the review while the NDA is being completed, and we can issue the quotation on schedule.\n\nBest regards,\n[Your name]",
+      "notes": ["不拒绝 NDA，只把“证照”与“商业机密”拆开。", "给出明确时间承诺（1 个工作日）。"]
+    },
+    {
+      "id": "MSG04", "title": "资料已收到后的确认回信（闭环）",
+      "channel": "邮件", "purpose": "拿到 NIB/登记证后，告诉对方哪些已核对通过、哪些还需要补充。",
+      "body_en": "Subject: Re: Company documents received — verification update\n\nDear Mr. Andi,\n\nThank you for the documents. We have checked the following:\n\n- Company name and registration number: matched with the AHU record;\n- NIB and KBLI list: received;\n- Registered address: consistent with your letterhead.\n\nTwo items are still open on our side:\n\n1. Please clarify the relationship between the registered office in Cakung and the factory in Bekasi, and give us the warehouse address used for import clearance;\n2. Please confirm the furnace melting capacity (t/d) so that we can align the annual quantity with our production planning.\n\nOnce these two points are confirmed, we will issue the formal quotation with the CFR Tanjung Priok price, the CIF Surabaya option and the payment terms.\n\nBest regards,\n[Your name]",
+      "notes": ["先说自己核对了什么（建立互信），再列未闭合项。", "不透露内部评分与风险标签。"]
+    }
+  ],  "boundaries": [
+    "“未核实”不等于“虚假”：印尼登记信息、税务、海关与诉讼数据均有访问门槛，公开渠道未覆盖是常态。",
+    "“存在疑点”只对应具体可核对的矛盾（如地址口径、规模口径、NDA 前置），不推断主观动机，不给诈骗概率。",
+    "同名企业与本条询盘主体严格隔离：只有登记号/NIB 一致才允许合并信息。",
+    "域名注册时间、网站新旧、邮箱后缀本身都不是企业真伪的判据，只能作为佐证。",
+    "本报告不含价格判断；“业务相关性成立”不代表规模真实，也不代表可以赊销。",
+    "所有自述信息（成立于 2011、两座浮法窑、自有仓库）一律标注为 D 级线索，在取得第三方文件前不作为结论。"
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "title": "示例产品生产厂家核验池",
+    "brand": "示例核验",
+    "product": "示例产品（等级/形态）",
+    "product_short": "示例产品",
+    "cas": "000-00-0",
+    "hs": "0000.00",
+    "standard": "GB/T 0000-0000",
+    "application": "示例下游用途",
+    "destination": "示例省·示例市（示例园区）",
+    "destination_short": "示例市",
+    "as_of": "2026-10-19",
+    "capacity_unit": "万吨/年",
+    "quantity_unit": "吨",
+    "currency": "CNY",
+    "sample_note": "1 家示例企业，仅用于验证字段，不是完整报告。",
+    "lede": "最小示例：换成你的产品、收货地、规格与来源，再跑 validate_project.py 与 run_all.py。",
+    "disclaimer": "示例数据，不可用于采购。",
+    "output_basename": "示例产品生产厂家核验池_示例市_202610",
+    "theme": {"accent": "#0f766e", "accent_2": "#14b8a6", "accent_soft": "#e6f4f1", "ink": "#0b1726"}
+  },
+  "rfq": {
+    "title": "示例产品 · 月度集采",
+    "product": "示例产品",
+    "spec_ref": "示例标准",
+    "qty_month": 1000,
+    "qty_year": 12000,
+    "destination": "示例省·示例市（示例园区）",
+    "region_pref": "本省/邻省优先",
+    "application": "示例下游用途",
+    "packaging": "吨袋/散装",
+    "delivery": "月度均衡到货",
+    "note": "示例需求，可替换。"
+  },
+  "specs": [
+    {"id": "s1", "label": "主含量", "requirement": "≥ 99.0%", "unit": "%", "method": "滴定", "why": "决定投料量", "critical": true},
+    {"id": "s2", "label": "水分", "requirement": "≤ 0.5%", "unit": "%", "method": "干燥恒重", "why": "影响称量与结块", "critical": false},
+    {"id": "s3", "label": "杂质 A", "requirement": "≤ 0.02%", "unit": "%", "method": "ICP-OES", "why": "影响下游质量", "critical": true},
+    {"id": "s4", "label": "杂质 B", "requirement": "≤ 0.05%", "unit": "%", "method": "离子色谱", "why": "影响腐蚀/色度", "critical": false},
+    {"id": "s5", "label": "粒度", "requirement": "0.2–1.5 mm ≥ 90%", "unit": "mm", "method": "筛分", "why": "影响输送与反应", "critical": false},
+    {"id": "s6", "label": "外观", "requirement": "白色粉末/颗粒", "unit": "—", "method": "目视", "why": "客户验收项", "critical": false}
+  ],
+  "sources": [
+    {"id": "S01", "org": "示例机构", "title": "示例年度报告（占位）", "date": "2026-04-01", "grade": "A", "url": "https://example.com/s01", "used": "示例产能与基地；请替换为真实来源", "accessed": "2026-10-19"}
+  ],
+  "companies": [
+    {
+      "id": "demo",
+      "name": "示例企业（占位）",
+      "full_name": "示例企业有限公司",
+      "ticker": "—",
+      "listed": false,
+      "identity": "producer",
+      "ownership": "民营",
+      "founded": "2010",
+      "founded_note": "占位",
+      "employees": 300,
+      "employees_note": "占位",
+      "reg_cap": "—",
+      "hq": "示例省·示例市",
+      "regions": ["华东"],
+      "process": "示例工艺",
+      "products": "示例产品",
+      "capacity": 50,
+      "capacity_year": "2025A",
+      "output": null,
+      "output_year": "—",
+      "scale_note": "占位",
+      "certainty": 90,
+      "spec_score": 70,
+      "availability": 80,
+      "plants": [
+        {
+          "name": "示例基地",
+          "province": "江苏",
+          "city": "示例市",
+          "address": "示例园区（占位地址）",
+          "lon": 120.0,
+          "lat": 31.0,
+          "capacity": 50,
+          "capacity_year": "2025A",
+          "process": "示例工艺",
+          "products": "示例产品",
+          "note": "占位",
+          "source_ids": ["S01"],
+          "distance_km": 120,
+          "distance_band": "≤300km 近距"
+        }
+      ],
+      "evidence": [
+        {"id": "E01", "level": "直接-A", "type": "定期报告", "title": "示例年度报告（占位）", "date": "2026-04-01", "org": "示例机构", "url": "https://example.com/s01", "quote": "示例：公司拥有 50 万吨/年装置。", "proves": "产能与基地", "source_id": "S01"}
+      ],
+      "spec_profile": {"form": "solid"},
+      "spec_rows": [
+        {"id": "s1", "label": "主含量", "requirement": "≥ 99.0%", "status": "部分公开", "public_info": "占位：官网宣称 ≥99.0%", "gap": "需批次COA", "next_action": "RFQ 索取COA"},
+        {"id": "s2", "label": "水分", "requirement": "≤ 0.5%", "status": "未公开", "public_info": "占位：未找到", "gap": "需批次COA", "next_action": "RFQ 索取COA"},
+        {"id": "s3", "label": "杂质 A", "requirement": "≤ 0.02%", "status": "未公开", "public_info": "占位：未找到", "gap": "需第三方检测", "next_action": "小试+检测"},
+        {"id": "s4", "label": "杂质 B", "requirement": "≤ 0.05%", "status": "待验证", "public_info": "占位：口径不一", "gap": "需复核", "next_action": "现场取样"},
+        {"id": "s5", "label": "粒度", "requirement": "0.2–1.5 mm ≥ 90%", "status": "部分公开", "public_info": "占位：TDS 标注", "gap": "需COA", "next_action": "RFQ 索取COA"},
+        {"id": "s6", "label": "外观", "requirement": "白色粉末/颗粒", "status": "部分公开", "public_info": "占位：官网图", "gap": "需实物", "next_action": "索取样品"}
+      ],
+      "strengths": ["近距", "有A级证据"],
+      "gaps": ["批次COA缺失", "外销量未披露"],
+      "action": "补COA、外销量、运费后进入试单",
+      "tier": "重点备选",
+      "rank": 1,
+      "composite": 78.7,
+      "scale_score": 62,
+      "distance_score": 92,
+      "spec_open": 3,
+      "spec_conclusion": "3 项部分公开，3 项需补；无批次 COA。",
+      "nearest_plant": "示例基地",
+      "nearest_city": "示例市",
+      "distance_km": 120,
+      "distance_band": "≤300km 近距"
+    }
+  ],
+  "traders": [
+    {"name": "示例贸易商（占位）", "type": "贸易商", "region": "示例区域", "level": "仅工商-D", "evidence": "经营范围含销售；无生产装置证据。", "why": "只有经营范围，不能证明生产。", "action": "不纳入；要求授权与出厂COA。"}
+  ],
+  "conflicts": [
+    {"topic": "示例口径冲突", "a": "来源A：50万吨/年", "b": "来源B：40万吨/年", "resolution": "并列保留，待环评复核", "impact": "影响规模分"}
+  ],
+  "gaps": [
+    {"gap": "批次COA缺失", "affected": "全部", "impact": "无法确认关键指标", "verify": "索取连续3批COA", "priority": "P0"}
+  ],
+  "actions": [
+    {"phase": "第1周", "action": "发统一RFQ", "detail": "统一规格/数量/收货地，要求出厂价+到厂价。"}
+  ],
+  "rfq_questions": [
+    "请确认生产工厂全称、地址与自有装置。",
+    "请提供产能、最新产量与月度可供量。",
+    "请提供连续 3 批 COA。",
+    "请报出厂价/到厂价、包装、账期。",
+    "是否接受样品小试与现场审核？"
+  ],
+  "recommendations": [
+    {"tier": "主供候选", "company": "示例企业（占位）", "note": "字段示例，不是真实推荐。"}
+  ],
+  "scoring": {
+    "weights": {"certainty": 0.35, "spec": 0.30, "scale": 0.20, "distance": 0.15},
+    "tiers": [
+      {"min": 84, "label": "优先谈判"},
+      {"min": 78, "label": "重点备选"},
+      {"min": 0, "label": "观察/成本备选"}
+    ]
+  }
+}

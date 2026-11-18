@@ -1,0 +1,4 @@
+product_key,product,region_code,region,spec,spec_tier,delivery,tax,quote_type,date,price,unit,maker,source,source_url,report_id
+soda,纯碱,H_HENAN,河南,重质纯碱 工业级 Na2CO3≥99.2%,heavy,出厂,含税,dealer_listing,2026-10-18,1100,元/吨,示例厂家A,ChemicalBook,https://www.chemicalbook.com/PriceInfo_XXXXXXX.htm,XXXXXXX
+soda,纯碱,EC_JIANGSU,江苏,重质纯碱 工业级 Na2CO3≥99.2%,heavy,送到,含税,dealer_listing,2026-10-18,1180,元/吨,示例厂家B,ChemicalBook,https://www.chemicalbook.com/PriceInfo_XXXXXXX.htm,XXXXXXX
+soda,纯碱,N_HEBEI,河北沙河,重质纯碱 工业级 Na2CO3≥99.2%,heavy,送到,含税,dealer_listing,2026-10-18,1150,元/吨,示例厂家C,ChemicalBook,https://www.chemicalbook.com/PriceInfo_XXXXXXX.htm,XXXXXXX

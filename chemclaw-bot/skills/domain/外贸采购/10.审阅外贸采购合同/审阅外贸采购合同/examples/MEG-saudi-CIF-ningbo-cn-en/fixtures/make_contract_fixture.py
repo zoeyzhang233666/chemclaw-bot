@@ -1,0 +1,324 @@
+"""一次性生成「模拟」MEG 采购合同合同数据结构 contract.json。
+
+本文件只是**构建夹具（fixture builder）**：把模拟合同的条款原文、中文对照、
+页码位置集中在一处，便于逐条核对；输出 contract.json 供 HTML / Excel / DOCX
+三个构建脚本共用。
+
+注意：合同条款是**模拟编写**的，用于演示外贸合同审查方法，
+      双方名称、地址、银行与金额均不对应任何真实主体或交易。
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent / "contract.json"
+
+# (id, 条款编号, 英文原文, 中文对照, 页, 页内位置, kind)
+# 原文中刻意保留的问题：定义冲突、单据"包括但不限于"、异议期起算点模糊、
+# 尾款与卸货脱钩、议付行/开证行/适用法律矛盾、责任上限 5%、风险转移与所有权不分等。
+RAW = [
+    # ---------------- 封面与首部（P1） ----------------
+    ("C01", "封面 / Cover",
+     "PURCHASE CONTRACT — INDUSTRIAL GRADE MONOETHYLENE GLYCOL (MEG) — Contract No. GY-PO-2026-MEG-017 — SIMULATED CONTRACT FOR CONTRACT-REVIEW TRAINING PURPOSES ONLY. Names, addresses, bank details and amounts are fictitious.",
+     "采购合同——工业级单乙二醇（MEG）——合同编号 GY-PO-2026-MEG-017。本页为「模拟合同」，仅用于合同审查演练；文中各方名称、地址、银行与金额均为虚构。",
+     1, "第1页 页眉", "cover"),
+    ("C02", "Parties",
+     "This Purchase Contract (the \"Contract\") is made on 8 October 2026 between GULF PETROCHEMICAL TRADING FZE, a free zone establishment organised under the laws of the United Arab Emirates and having its registered office at Office 1203, Tower B, Jebel Ali Free Zone, Dubai, U.A.E. (\"Seller\", \"Supplier\"), and ZHEJIANG HONYU NEW MATERIALS CO., LTD. (浙江宏宇新材料有限公司), a company organised under the laws of the People's Republic of China with its registered address at No. 88 Huancheng East Road, Hangzhou City, Zhejiang Province, China (\"Buyer\").",
+     "本合同由下列双方于 2026 年 10 月 8 日签订：阿联酋自由贸易区企业 GULF PETROCHEMICAL TRADING FZE（注册地址：阿联酋迪拜杰贝阿里自由区 B 座 1203 室，简称「卖方／供应商」）；与浙江宏宇新材料有限公司（依中国法律设立，注册地址：浙江省杭州市环城东路 88 号，简称「买方」）。",
+     1, "第1页 第1段", "parties"),
+    ("C03", "1. Goods and Quantity",
+     "1.1 The Seller agrees to sell and the Buyer agrees to buy 5,000 MT (+/-3%) of MONOETHYLENE GLYCOL, technical grade, hereinafter \"the Goods\", of Saudi Arabian origin. The quantity shall be measured at the loading port by shore-tank gauge and the Seller's certificate of quantity shall be final and binding.",
+     "1.1 卖方同意出售、买方同意购买工业级单乙二醇 5,000 公吨（±3%），以下简称「货物」，原产国：沙特阿拉伯。数量以装货港岸罐计量为准，卖方数量证书为终局并对双方有约束力。",
+     1, "第1页 第2段", "goods"),
+    # ---------------- 质量规格（P1-P2） ----------------
+    ("C04", "2. Quality",
+     "2.1 The Goods shall be fibre grade ethylene glycol conforming to the Seller's standard specification for \"Fiber Grade MEG\" in force on the date of this Contract, a copy of which was provided to the Buyer by email on 2 October 2026. The Seller may update its standard specification from time to time and the specification in force at the time of loading shall apply.",
+     "2.1 货物应为合格品级乙二醇（纤级），符合「卖方在本合同签订日有效的『纤级 MEG』标准规格」，该规格副本已于 2026 年 10 月 2 日通过电子邮件提供给买方。卖方可不时更新其标准规格，以装货时有效的规格版本为准。",
+     1, "第1页 第3段", "quality"),
+    ("C05", "2. Quality",
+     "2.2 Quality shall be determined by the Seller's laboratory at Jubail, Saudi Arabia, on composite samples drawn from the shore tanks before loading. A certificate of analysis (COA) issued by the Seller's laboratory shall be final and conclusive as to the quality of the Goods.",
+     "2.2 质量由卖方位于沙特阿拉伯朱拜勒的实验室，以装货前从岸罐抽取的混合样进行测定。卖方实验室出具的检验报告（COA）对货物质量具有终局性和决定性效力。",
+     1, "第1页 第4段", "quality"),
+    ("C06", "3. Specifications (INCORRECT — INTENTIONAL ERROR)",
+     "3.1 Ethylene glycol (CAS 7732-18-5), purity 99.9% min, ethylene glycol content expressed on a molar basis; the CAS Registry Number of the Goods shall be recorded in the COA and on the shipping documents as CAS No. 7732-18-5.",
+     "3.1 乙二醇（CAS 7732-18-5），纯度不低于 99.9%，乙二醇含量按摩尔基准表示；货物的 CAS 登记号应载于 COA 及装运单据，为 CAS 7732-18-5。",
+     1, "第1页 第5段", "spec_error"),
+    ("C07", "4. Technical Specification (Annex 1)",
+     "4.1 The technical specification of the Goods is set out in Annex 1 to this Contract. In the event of any conflict between Annex 1 and any other part of this Contract, Annex 1 shall prevail as regards quality.",
+     "4.1 货物的技术规格见本合同附件 1。附件 1 与本合同其他任何部分就质量事项存在冲突时，以附件 1 为准。",
+     2, "第2页 第1段", "annex_ref"),
+    # ---------------- 价格、贸易术语（P2） ----------------
+    ("C08", "5. Price and Incoterms",
+     "5.1 Price: USD 512.00 per metric ton (MT), CIF Ningbo Port, Incoterms 2020, including all costs of loading, ocean freight, and marine insurance up to the port of destination, subject to the provisions of this Contract.",
+     "5.1 价格：每公吨 512.00 美元，CIF 宁波港，适用 Incoterms 2020，包含装货、海运费及至目的港的海运保险费用，但以本合同规定为准。",
+     2, "第2页 第2段", "price"),
+    ("C09", "5. Price and Incoterms",
+     "5.2 Contract value: USD 2,560,000.00 (five thousand MT at USD 512.00/MT). In the event of quantity tolerance under Clause 1.1, the value shall be adjusted pro rata. The Buyer is not obliged to take delivery of any quantity in excess of 5,000 MT +3%.",
+     "5.2 合同金额：美元 2,560,000.00（5,000 公吨 × 512.00 美元／公吨）。如按第 1.1 条发生数量溢短装，金额相应比例调整。买方无义务接收超过 5,000 公吨 +3% 的数量。",
+     2, "第2页 第3段", "price"),
+    ("C10", "5. Price and Incoterms",
+     "5.3 The price is fixed and firm for the whole contractual quantity. No price adjustment shall be made for exchange rate movements, freight rate movements or changes in Chinese import duties and taxes.",
+     "5.3 价格为整个合同数量的固定价，不因汇率变动、运价变动或中国进口关税与税费变化而调整。",
+     2, "第2页 第4段", "price"),
+    ("C11", "6. Delivery and Shipment",
+     "6.1 Shipment period: within 45 days after the Seller's receipt of the advance payment. The Seller shall notify the Buyer of the estimated loading date 10 days in advance.",
+     "6.1 装运期：卖方收到预付款后 45 天内。卖方应提前 10 天通知买方预计装货日期。",
+     2, "第2页 第5段", "delivery"),
+    ("C12", "6. Delivery and Shipment",
+     "6.2 Port of loading: Jubail Commercial Port, Saudi Arabia. Port of destination: Ningbo Port, People's Republic of China. Partial shipments are not allowed. Transhipment is allowed at the carrier's option.",
+     "6.2 装运港：沙特阿拉伯朱拜勒商业港。目的港：中华人民共和国宁波港。不允许分批装运。允许承运人自行选择转运。",
+     2, "第2页 第6段", "shipment"),
+    ("C13", "6. Delivery and Shipment",
+     "6.3 The Seller shall book the ocean carriage in a single lot on a vessel not exceeding 20 years of age and shall advise the Buyer of the vessel name, voyage number and B/L number within 5 days after sailing.",
+     "6.3 卖方应以单批次整船订舱，承运船舶船龄不超过 20 年，并应在开航后 5 天内告知买方船名、航次及提单号。",
+     2, "第2页 第7段", "shipment"),
+    # ---------------- 包装、文件（P3） ----------------
+    ("C14", "7. Packing and Marking",
+     "7.1 The Goods shall be shipped in bulk in vessel's tanks. The Seller shall provide a Safety Data Sheet (SDS) in English complying with GHS, a certificate of analysis (COA), a certificate of origin issued by the Saudi Chamber of Commerce, and a non-wood packing declaration, each in original and copy form.",
+     "7.1 货物应以散装形式装载于船舶货舱。卖方应提供符合 GHS 的英文安全数据表（SDS）、检验报告（COA）、沙特商会出具的产地证及非木质包装声明，各一份正本及副本。",
+     3, "第3页 第1段", "docs"),
+    ("C15", "7. Packing and Marking",
+     "7.2 The Buyer shall be responsible for obtaining, at its own cost and risk, all import licences, automatic import licences, customs clearance and quarantine requirements of the People's Republic of China, and for any Chinese language labelling or safety labels required for the Goods upon import.",
+     "7.2 买方应自行承担费用和风险，取得中华人民共和国的全部进口许可、自动进口许可证、报关与检疫要求，并负责货物进口所需的中文标签或安全标签。",
+     3, "第3页 第2段", "docs"),
+    # ---------------- 付款（P3） ----------------
+    ("C16", "8. Payment",
+     "8.1 Advance payment: 30% of contract value, i.e. USD 768,000.00, shall be paid by T/T within 5 banking days after the Buyer's receipt of a proforma invoice. The advance payment shall be non-refundable except as expressly provided in this Contract.",
+     "8.1 预付款：合同金额的 30%，即 768,000.00 美元，买方应在收到形式发票后 5 个银行日内以电汇支付。除本合同另有明确规定外，预付款不予退还。",
+     3, "第3页 第3段", "payment"),
+    ("C17", "8. Payment",
+     "8.2 Balance payment: 70% of contract value, i.e. USD 1,792,000.00, by irrevocable L/C at sight in favour of the Seller, opened by the Buyer 10 days before the shipment period. The L/C shall be issued at the Seller's bank and shall be subject to UCP 600.",
+     "8.2 尾款：合同金额的 70%，即 1,792,000.00 美元，以不可撤销即期信用证支付给卖方，由买方在装运期前 10 天开立。信用证由卖方银行开立，适用 UCP 600。",
+     3, "第3页 第4段", "payment"),
+    ("C18", "8. Payment",
+     "8.3 The L/C shall be payable against the following documents: (a) commercial invoice in 3 copies; (b) full set of clean on board ocean bill of lading; (c) certificate of origin; (d) certificate of analysis; (e) insurance policy; (f) packing list; (g) such other documents as the Seller may reasonably require.",
+     "8.3 信用证凭下列单据支付：(a) 商业发票 3 份；(b) 全套清洁已装船海运提单；(c) 产地证；(d) 检验报告；(e) 保险单；(f) 装箱单；(g) 卖方合理要求的其他单据。",
+     3, "第3页 第5段", "payment"),
+    ("C19", "8. Payment",
+     "8.4 The Buyer shall pay the balance within 10 days after the vessel's arrival at Ningbo Port and after the discharge has been completed and the cargo has been accepted at the Buyer's plant.",
+     "8.4 尾款：买方应在船舶抵达宁波港、卸货完成且货物在买方工厂验收后 10 天内支付。",
+     3, "第3页 第6段", "payment"),
+    ("C20", "9. Inspection and Claims",
+     "9.1 The Buyer shall have the right to inspect the Goods within 3 days after the vessel's arrival at the port of destination. Any claim for quality or quantity shall be submitted by the Buyer to the Seller in writing within 7 days after the arrival of the vessel, failing which the Buyer shall be deemed to have accepted the Goods and shall have no further claim. The Seller's certificate of analysis shall be final in case of dispute.",
+     "9.1 买方有权在船舶抵达目的港后 3 天内对货物进行检验。质量或数量索赔，买方应在船舶抵达后 7 天内以书面形式提交卖方，逾期视为买方已验收货物且不得再提出任何索赔。争议时以卖方检验报告为准。",
+     3, "第3页 第7段", "inspection"),
+    ("C21", "9. Inspection and Claims",
+     "9.2 If the Goods fail to meet the agreed specification, the Buyer may reject the Goods, and the Seller shall replace the rejected Goods within 60 days. Any loss or damage caused by such failure shall be borne by the Seller in accordance with Clause 11.",
+     "9.2 如货物不符合约定规格，买方可拒收货物，卖方应在 60 天内更换被拒收货物。因该不符合所造成的损失或损害，由卖方依第 11 条承担。",
+     4, "第4页 第1段", "claims"),
+    ("C22", "9. Inspection and Claims",
+     "9.3 Third party inspection by SGS or an equivalent independent inspection agency as nominated by the Seller shall be final and binding on both parties.",
+     "9.3 由卖方指定的 SGS 或同等独立检验机构进行的第三方检验，对双方具有终局约束力。",
+     4, "第4页 第2段", "inspection"),
+    # ---------------- 风险、所有权、保险（P4） ----------------
+    ("C23", "10. Title, Risk and Insurance",
+     "10.1 All risk of loss of or damage to the Goods shall pass from the Seller to the Buyer upon the Buyer's receipt of the full set of original bills of lading. Until that time the Seller shall bear all risk and the Buyer shall have no obligation to accept the Goods.",
+     "10.1 货物的全部灭失或损坏风险，应自买方向卖方收到全套正本提单时起由卖方转移至买方。在此之前，卖方承担全部风险，买方无接收货物的义务。",
+     4, "第4页 第3段", "risk"),
+    ("C24", "10. Title, Risk and Insurance",
+     "10.2 Title in the Goods shall pass to the Buyer at the port of destination when the Goods have been fully discharged and accepted by the Buyer. The Buyer shall pay all port charges and terminal handling charges at the port of destination.",
+     "10.2 货物所有权应于货物在目的港卸货完毕并经买方验收时转移给买方。买方应支付目的港的全部港口费用及码头操作费。",
+     4, "第4页 第4段", "title"),
+    ("C25", "10. Title, Risk and Insurance",
+     "10.3 The Seller shall insure the Goods with the Seller's group insurer for the benefit of the Seller, in the currency of the Contract, for minimum 110% of the invoice value, on the terms of the Institute Cargo Clauses (C).",
+     "10.3 卖方应以卖方集团保险公司的保险，为卖方利益对货物投保，币种为合同币种，保额为发票金额的 110% 最低，投保条款为协会货物条款（C）。",
+     4, "第4页 第5段", "insurance"),
+    # ---------------- 违约（P4-P5） ----------------
+    ("C26", "11. Liability and Liquidated Damages",
+     "11.1 In the event of delay in shipment, the Seller shall pay liquidated damages at the rate of 0.05% of the value of the delayed goods for each day of delay, up to a maximum of 5% of the contract value.",
+     "11.1 如发生迟延装运，卖方应按迟延货物货值每天 0.05% 支付违约金，最高不超过合同金额的 5%。",
+     4, "第4页 第6段", "penalty"),
+    ("C27", "11. Liability and Liquidated Damages",
+     "11.2 The Seller's aggregate liability for delay, quality deviation, quantity shortage and any other breach, whether in contract, tort or otherwise, shall not exceed the advance payment received under Clause 8.1. The Seller shall not be liable for loss of profit, loss of use, loss of market, demurrage, storage or any indirect or consequential loss.",
+     "11.2 卖方对迟延、质量差异、数量短少的责任总额，无论基于合同、侵权或其他，均不超过其依第 8.1 条收取的预付款金额。卖方不对利润损失、使用损失、市场损失、滞期费、仓储费或任何间接损失承担责任。",
+     5, "第5页 第1段", "penalty"),
+    ("C28", "11. Liability and Liquidated Damages",
+     "11.3 The Buyer shall keep confidential the contract price and all terms of this Contract and shall not disclose them to any third party, including any other supplier or customer, at any time.",
+     "11.3 买方应对合同价格及本合同全部条款保密，任何时候均不得向任何第三方（包括其他供应商或客户）披露。",
+     5, "第5页 第2段", "penalty"),
+    # ---------------- 不可抗力、争议解决（P5） ----------------
+    ("C29", "12. Force Majeure",
+     "12.1 Force majeure means an event which the affected party could not reasonably predict, avoid or overcome, including war, strike, epidemic, government act, cancellation of export permit, plant shutdown, breakdown of equipment, changes in market price, and shortage or delay of raw materials or transportation. The payment obligation of the Buyer shall not be affected by force majeure.",
+     "12.1 不可抗力指受影响方无法合理预见、避免或克服的事件，包括战争、罢工、疫情、政府行为、出口许可取消、装置停车、设备故障、市场价格变化，以及原材料或运输短缺或迟延。买方的付款义务不受不可抗力影响。",
+     5, "第5页 第3段", "force_majeure"),
+    ("C30", "13. Governing Law and Dispute Resolution",
+     "13.1 This Contract shall be governed by the laws of England and Wales. In the event of any dispute, the parties shall first attempt to resolve it through friendly negotiation within 30 days. Failing such resolution, the dispute shall be finally settled by arbitration. The arbitration shall be conducted in Singapore in accordance with the Rules of the Singapore International Arbitration Centre, sitting in the Dubai International Financial Centre (\"DIFC\"). In the absence of another agreement, the arbitral tribunal shall consist of one arbitrator. In the event of any conflict, the governing law of this Contract shall prevail.",
+     "13.1 本合同适用英格兰与威尔士法律。如发生争议，双方应首先在 30 天内友好协商解决。协商不成，争议应最终由仲裁解决。仲裁在新加坡按新加坡国际仲裁中心（SIAC）规则进行，仲裁地（seated）为迪拜国际金融中心（DIFC）。除另有约定外，仲裁庭由一名仲裁员组成。如有冲突，以本合同准据法为准。",
+     5, "第5页 第4段", "dispute"),
+    ("C31", "13. Governing Law and Dispute Resolution",
+     "13.2 Nothing in this Clause 13 shall affect the Seller's right to pursue the payment of the advance payment and the balance in any competent court.",
+     "13.2 本第 13 条任何规定均不影响卖方在任何有管辖权的法院追索预付款及尾款的权利。",
+     5, "第5页 第5段", "dispute"),
+    ("C32", "14. Language and Entire Agreement",
+     "14.1 This Contract is made in the English and Chinese languages, both versions being equally authentic. In case of any discrepancy, the English version shall prevail. Notwithstanding the foregoing, the arbitration agreement shall be interpreted in favour of the Chinese version.",
+     "14.1 本合同以英文和中文两种文字签订，两种文本具有同等效力。如有不一致，以英文文本为准。尽管有前述规定，仲裁协议的解释应以中文文本为准。",
+     5, "第5页 第6段", "language"),
+    ("C33", "14. Language and Entire Agreement",
+     "14.2 This Contract, together with the Annexes, constitutes the entire agreement between the parties and supersedes all prior communications, including the Seller's proforma invoice dated 2 October 2026.",
+     "14.2 本合同连同各附件构成双方之间的完整协议，并取代此前所有往来，包括卖方 2026 年 10 月 2 日的形式发票。",
+     5, "第5页 第7段", "language"),
+    # ---------------- 签署（P6） ----------------
+    ("C34", "15. Signature",
+     "15.1 Signed by the duly authorised representatives of the parties: For and on behalf of GULF PETROCHEMICAL TRADING FZE (Seller); For and on behalf of ZHEJIANG HONYU NEW MATERIALS CO., LTD. (Buyer). This Contract takes effect upon signature and the return of a signed copy by the Seller, by email, which shall be binding on both parties.",
+     "15.1 由双方授权代表签署：代表 GULF PETROCHEMICAL TRADING FZE（卖方）；代表浙江宏宇新材料有限公司（买方）。本合同自双方签署且卖方以电子邮件回传已签署副本之日起生效，该副本对双方具有约束力。",
+     6, "第6页 签署栏", "signature"),
+]
+
+# 附件 1（P6-P7）：技术规格表 —— 表格每个数据行单独成一条 clause，便于精确引用
+ANNEX1 = [
+    ("A1-H", "ANNEX 1 — Technical Specification (Fiber Grade MEG, Saudi Arabian origin)",
+     "附件 1——技术规格（纤级 MEG，沙特阿拉伯原产）"),
+    ("A1-C1", "Parameter", "项目"),
+    ("A1-C2", "Specification", "规格"),
+    ("A1-T1", "Purity (ethylene glycol content), % m/m (MOLAR: 99.9 min)", "纯度（乙二醇含量），% m/m（原文另注 MOLAR：99.9 min）"),
+    ("A1-T2", "Water content, % m/m: 0.05 max (METHOD NOT SPECIFIED)", "水分，% m/m：0.05 max（原文未注明试验方法）"),
+    ("A1-T3", "Diethylene glycol (DEG), % m/m: 0.05 max", "二乙二醇（DEG），% m/m：0.05 max"),
+    ("A1-T4", "Triethylene glycol (TEG), % m/m: 0.05 max", "三乙二醇（TEG），% m/m：0.05 max"),
+    ("A1-T5", "Iron (Fe), ppm: 0.10 max", "铁（Fe），ppm：0.10 max"),
+    ("A1-T6", "UV transmittance at 220 nm, %: 70 min", "220 nm 紫外透光率，%：70 min"),
+    ("A1-T7", "UV transmittance at 350 nm, %: 98 min", "350 nm 紫外透光率，%：98 min"),
+    ("A1-T8", "(HAZE / COLOUR): blank — to be agreed", "（浊度/色度）：空白——待商定"),
+    ("A1-N1", "Note 1: Test methods: ASTM E202 and ASTM D7844 unless otherwise stated. GB/T standards are NOT applicable to this Contract.",
+     "注 1：试验方法：除非另有注明，采用 ASTM E202 与 ASTM D7844。本合同不适用 GB/T 标准。"),
+    ("A1-N2", "Note 2: Specification effective 14 August 2026, version 4.2. Earlier versions are superseded.",
+     "注 2：本规格版本 4.2，生效日 2026 年 8 月 14 日，此前的版本均已失效。"),
+]
+
+ANNEX2_ROWS = [
+    ("A2-T1", "Commercial invoice", "3", "—"),
+    ("A2-T2", "Full set of 3/3 original clean on board B/L", "3/3", "original"),
+    ("A2-T3", "Certificate of origin (Chamber of Commerce)", "1 + copy", "original"),
+    ("A2-T4", "Certificate of analysis (COA)", "1 + copy", "original or copy"),
+    ("A2-T5", "Insurance policy", "1 + copy", "original"),
+    ("A2-T6", "Packing list", "3", "copy"),
+    ("A2-T7", "SDS (GHS, English)", "—", "to be provided after shipment"),
+    ("A2-T8", "Non-wood packing declaration", "1", "copy"),
+]
+
+def build() -> dict:
+    clauses = []
+    sections = []
+
+    def add_section(sid, no, title, page, notes=""):
+        sections.append({"id": sid, "no": no, "title": title, "page": page,
+                         "clause_ids": [], "notes": notes})
+
+    def add_clause(sid, cid, no, page, page_line, text, zh, kind=""):
+        clauses.append({"id": cid, "sec": sid, "no": no, "page": page,
+                        "page_line": page_line, "text": text, "zh": zh, "kind": kind})
+        next(s for s in sections if s["id"] == sid)["clause_ids"].append(cid)
+
+    add_section("pre", "封面与首部", "封面 / Cover & Parties", 1, "双语封面；模拟合同标识")
+    add_section("s1", "第 1 条", "Goods and Quantity｜货物与数量", 1)
+    add_section("s2", "第 2-4 条", "Quality and Specification｜质量与规格", 1)
+    add_section("s3", "第 5 条", "Price and Incoterms｜价格与贸易术语", 2)
+    add_section("s4", "第 6 条", "Delivery and Shipment｜交货与装运", 2)
+    add_section("s5", "第 7 条", "Packing and Documents｜包装与单据", 3)
+    add_section("s6", "第 8 条", "Payment｜付款", 3)
+    add_section("s7", "第 9 条", "Inspection and Claims｜检验与索赔", 3)
+    add_section("s8", "第 10 条", "Title, Risk and Insurance｜所有权、风险与保险", 4)
+    add_section("s9", "第 11 条", "Liability and Liquidated Damages｜责任与违约金", 4)
+    add_section("s10", "第 12 条", "Force Majeure｜不可抗力", 5)
+    add_section("s11", "第 13 条", "Governing Law and Dispute Resolution｜准据法与争议解决", 5)
+    add_section("s12", "第 14-15 条", "Language, Entire Agreement and Signature｜语言、完整协议与签署", 5)
+    add_section("a1", "附件 1", "Technical Specification｜技术规格表", 6)
+    add_section("a2", "附件 2", "Documents under L/C｜信用证单据清单", 7)
+
+    # 分节
+    key = "C01"
+    for cid, no, en, zh, page, line, kind in RAW:
+        if cid == "C01":
+            add_clause("pre", cid, no, page, line, en, zh, kind)
+        elif cid in ("C03",):
+            add_clause("s1", cid, no, page, line, en, zh, kind)
+        elif cid in ("C04", "C05", "C06", "C07"):
+            add_clause("s2", cid, no, page, line, en, zh, kind)
+        elif cid in ("C08", "C09", "C10"):
+            add_clause("s3", cid, no, page, line, en, zh, kind)
+        elif cid in ("C11", "C12", "C13"):
+            add_clause("s4", cid, no, page, line, en, zh, kind)
+        elif cid in ("C14", "C15"):
+            add_clause("s5", cid, no, page, line, en, zh, kind)
+        elif cid in ("C16", "C17", "C18", "C19"):
+            add_clause("s6", cid, no, page, line, en, zh, kind)
+        elif cid in ("C20", "C21", "C22"):
+            add_clause("s7", cid, no, page, line, en, zh, kind)
+        elif cid in ("C23", "C24", "C25"):
+            add_clause("s8", cid, no, page, line, en, zh, kind)
+        elif cid in ("C26", "C27", "C28"):
+            add_clause("s9", cid, no, page, line, en, zh, kind)
+        elif cid == "C29":
+            add_clause("s10", cid, no, page, line, en, zh, kind)
+        elif cid in ("C30", "C31"):
+            add_clause("s11", cid, no, page, line, en, zh, kind)
+        else:
+            add_clause("s12", cid, no, page, line, en, zh, kind)
+        assert cid == key or True
+
+    # 附件 1（按呈现顺序：标题 → 表头 → 数据行 → 注释）
+    for cid, en, zh in ANNEX1:
+        if cid == "A1-H":
+            add_clause("a1", cid, "ANNEX 1", 6, "第6页 附件标题", en, zh, "annex_head")
+        elif cid.startswith("A1-C"):
+            add_clause("a1", cid, cid, 7, "第7页 表1表头", en, zh, "table_head")
+        elif cid.startswith("A1-N"):
+            add_clause("a1", cid, "Note", 7, "第7页 表1注释", en, zh, "note")
+        else:
+            add_clause("a1", cid, cid, 7, "第7页 表1数据行", en, zh, "table_row")
+
+    add_clause("a2", "A2-H", "ANNEX 2", 7, "第7页 附件标题",
+               "ANNEX 2 — Documents Required under the Letter of Credit (refer to Clause 8.3)",
+               "附件 2——信用证项下要求提交的单据（见第 8.3 条）", "annex_head")
+    for cid, doc, qty, origin in ANNEX2_ROWS:
+        add_clause("a2", cid, cid, 7, "第7页 表2数据行",
+                   f"{doc} — quantity: {qty} — original/copy: {origin}",
+                   f"{doc}——份数：{qty}——正本/副本：{origin}", "table_row")
+
+    return {
+        "demo": True,
+        "demo_label": "模拟合同（Simulated Contract）",
+        "language": "en-zh",
+        "contract_meta": {
+            "title": "工业级单乙二醇（MEG）采购合同 · Purchase Contract for MEG (CIF Ningbo, Incoterms® 2020)",
+            "title_en": "Purchase Contract for Industrial Grade Monoethylene Glycol (MEG)",
+            "contract_no": "GY-PO-2026-MEG-017",
+            "sign_date": "2026-10-08",
+            "buyer": "浙江宏宇新材料有限公司（模拟）",
+            "buyer_en": "ZHEJIANG HONYU NEW MATERIALS CO., LTD. (fictitious)",
+            "buyer_addr": "浙江省杭州市环城东路 88 号（模拟地址）",
+            "supplier": "GULF PETROCHEMICAL TRADING FZE（模拟，阿联酋自由区企业）",
+            "supplier_en": "GULF PETROCHEMICAL TRADING FZE (fictitious)",
+            "supplier_addr": "Office 1203, Tower B, Jebel Ali Free Zone, Dubai, U.A.E. (fictitious)",
+            "review_as": "中国买方（进口商）— Buyer / Importer",
+            "our_side": "buyer",
+            "product": {"name_cn": "单乙二醇（工业级/纤维级）", "name_en": "Monoethylene Glycol (MEG), fiber grade",
+                        "cas_written": "7732-18-5", "hs_6": "2905.31", "hs_cn": "2905 31 00 00"},
+            "incoterms": {"rule": "CIF", "year": "2020", "place": "宁波港 Ningbo Port", "named_port": "Ningbo"},
+            "payment_summary": "30% T/T 预付款 + 70% 即期信用证（合同内部条款冲突）",
+            "shipment_period": "收到预付款后 45 天内（起算点系于卖方收款）",
+            "framework": False,
+            "page_count": 7,
+            "files_received": [
+                "本合同英文原件（含中文对照本）共 7 页（P1–P7），含附件 1 技术规格表、附件 2 单据清单",
+                "卖方 2026-10-02 形式发票（PI，被第 14.2 条排除效力，未作为附件）",
+                "卖方 2026-10-02 邮件所附「Fiber Grade MEG」标准规格（仅邮件，未签署，未作为附件附入）",
+            ],
+            "files_missing": [
+                "卖方主体证明：营业执照/自由区登记证（Free Zone License）、法定代表人授权书、出口商登记",
+                "卖方法定名称与第 2 条签署主体是否一致（FZE 与实产沙特炼厂的关系）——是否为转口贸易商",
+                "SDS（GHS 版，英文及拟用中文版）——合同第 7.1 条约定随货提供，但复核时未取得",
+                "实际生产商名称与批次的出厂检验原始记录、第 7 页附件 1 所引 ASTM E202 / D7844 版本号",
+                "卖方银行资信与收汇路径（自由区账户 vs 沙特账户），与信用证开证行安排",
+                "我方公司标准采购合同模板与内部合同审查标准（未提供，按通用外贸审查口径）",
+            ],
+        },
+        "sections": sections,
+        "clauses": clauses,
+    }
+
+
+if __name__ == "__main__":
+    data = build()
+    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"wrote {OUT}  sections={len(data['sections'])} clauses={len(data['clauses'])}")

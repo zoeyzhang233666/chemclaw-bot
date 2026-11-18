@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "title": "【模板】某化工品产业链价格地图",
+    "product": "EXAMPLE",
+    "data_date": "2026-01-01",
+    "retrieved_at": "2026-01-01（占位）",
+    "unit": "元/吨",
+    "lang": "zh-CN",
+    "headline": "这是空白模板：结构已就位，价格全部留空待补。请把占位节点替换成目标品种的真实环节。",
+    "basis_note": "模板中的名称、日期与口径均为占位文本，不代表任何真实行情。",
+    "sources": [
+      { "name": "（占位）宿主化工数据工具", "type": "price_db", "note": "取价后请改成真实来源名" },
+      { "name": "（占位）行业资讯", "type": "news", "note": "资讯口径与报价口径不同，单独列入明细区" }
+    ]
+  },
+  "stages": [
+    { "key": "up", "label": "上游原料", "color": "up" },
+    { "key": "mid", "label": "中间体", "color": "mid" },
+    { "key": "raw", "label": "直接原料与助剂", "color": "raw" },
+    { "key": "product", "label": "本体产品", "color": "product" },
+    { "key": "app", "label": "下游应用", "color": "app" }
+  ],
+  "nodes": [
+    {
+      "id": "feed-a",
+      "name": "起始原料 A",
+      "stage": "up",
+      "role": "application",
+      "desc": "占位：把这里换成目标品种的起始原料（如石脑油、丙烯、甲醇…），取到价后改为 role=material 并补 price 与 rows。",
+      "gap_label": "模板占位：尚未取价",
+      "short": ["替换成真实品种名称", "取价后改为有价环节"]
+    },
+    {
+      "id": "feed-b",
+      "name": "共原料 B",
+      "stage": "up",
+      "role": "application",
+      "desc": "占位：并行投入的第二条原料线。若它其实在更下游投入，请改 stage。",
+      "gap_label": "模板占位：尚未取价",
+      "short": ["替换成真实品种名称", "注明它与本体的关系"]
+    },
+    {
+      "id": "inter",
+      "name": "中间体",
+      "stage": "mid",
+      "role": "application",
+      "desc": "占位：原料到本体之间的中间产物。没有中间体就把这一列删掉（同时删 stages 里对应项）。",
+      "gap_label": "模板占位：尚未取价",
+      "short": ["有中间体才保留本列", "注明转化路径"]
+    },
+    {
+      "id": "aux",
+      "name": "溶剂 / 助剂",
+      "stage": "raw",
+      "role": "application",
+      "desc": "占位：工艺需要但不进入分子的投入，连线上用 kind=dashed 表示，避免读者误以为按化学计量消耗。",
+      "gap_label": "模板占位：尚未取价",
+      "short": ["非等量投入用虚线", "可删"]
+    },
+    {
+      "id": "product",
+      "name": "本体产品",
+      "stage": "product",
+      "role": "application",
+      "desc": "占位：本产品。取到价后改为 role=material，price 填代表值，rows 逐条列出地区/规格/日期/来源。",
+      "gap_label": "模板占位：尚未取价",
+      "short": ["本产品节点", "规格差异写在 rows 里"]
+    },
+    {
+      "id": "app-1",
+      "name": "下游应用一",
+      "stage": "app",
+      "role": "application",
+      "desc": "占位：主要应用方向。即使取不到价也要画出来，并写清缺价原因。",
+      "gap_label": "本次无授权报价",
+      "short": ["替换成真实应用", "缺价也要保留在图上"]
+    },
+    {
+      "id": "app-2",
+      "name": "下游应用二",
+      "stage": "app",
+      "role": "application",
+      "desc": "占位：第二应用方向。",
+      "gap_label": "本次无授权报价",
+      "short": ["替换成真实应用", "缺价也要保留在图上"]
+    }
+  ],
+  "links": [
+    { "from": "feed-a", "to": "inter", "label": "转化", "kind": "solid" },
+    { "from": "feed-b", "to": "product", "label": "并入", "kind": "solid" },
+    { "from": "inter", "to": "product", "label": "主路径", "kind": "solid" },
+    { "from": "aux", "to": "product", "label": "工艺助剂", "kind": "dashed" },
+    { "from": "product", "to": "app-1", "label": "主要用途", "kind": "solid" },
+    { "from": "product", "to": "app-2", "label": "次要用途", "kind": "solid" }
+  ],
+  "tables": [],
+  "gaps": [
+    {
+      "scope": "起始原料 A",
+      "reason": "空白模板：尚未取价，替换成真实品种后补 rows 与 price。",
+      "evidence": "无（占位文本；真实研究时写清是接口 0 条、无权限还是仅资讯口径）"
+    },
+    {
+      "scope": "共原料 B",
+      "reason": "空白模板：尚未取价。",
+      "evidence": "无（占位文本）"
+    },
+    {
+      "scope": "中间体",
+      "reason": "空白模板：尚未取价。",
+      "evidence": "无（占位文本）"
+    },
+    {
+      "scope": "溶剂 / 助剂",
+      "reason": "空白模板：尚未取价。助剂即使有价也要注明是工艺投入、非等量消耗。",
+      "evidence": "无（占位文本）"
+    },
+    {
+      "scope": "本体产品",
+      "reason": "空白模板：尚未取价。本产品至少要有一个代表价 + 逐条地区/规格记录。",
+      "evidence": "无（占位文本）"
+    },
+    {
+      "scope": "下游应用一",
+      "reason": "本次无授权报价（模板占位）。下游应用常无结构化报价，属正常缺口。",
+      "evidence": "无（占位文本）"
+    },
+    {
+      "scope": "下游应用二",
+      "reason": "本次无授权报价（模板占位）。",
+      "evidence": "无（占位文本）"
+    }
+  ],
+  "notes": {
+    "price_basis": [
+      "模板说明：本文件不含任何真实价格，请勿直接交付。"
+    ],
+    "chain_basis": [
+      "产业链结构按示意绘制，仅表示原料—本体—应用的投入关系，不代表已被证实的因果传导。"
+    ],
+    "gap_notes": [
+      "取不到价格的环节保持空白并登记进缺口清单，不使用 0 或估算值占位。"
+    ],
+    "source_notes": [
+      "取价后请把 meta.sources 与每条 rows 的 source 改成真实来源。"
+    ]
+  }
+}

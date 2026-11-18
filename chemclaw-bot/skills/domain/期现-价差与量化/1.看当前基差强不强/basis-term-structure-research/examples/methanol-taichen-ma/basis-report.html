@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>太仓甲醇基差研究报告 · 2026-10-20</title>
+<style>
+:root{
+ --bg:#0d1117;--panel:#151b24;--panel2:#1b2430;--line:#26303d;--ink:#e6edf3;--dim:#8b98a5;
+ --acc:#39d0d8;--acc2:#f7b731;--up:#ff5f6d;--down:#2ea97d;--warn:#ffb020;--grid:#222c38;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 "Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:22px 20px 60px}
+header{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:.4px}
+h1 small{font-size:13px;color:var(--dim);font-weight:400;margin-left:8px}
+h2{font-size:16px;margin:30px 0 10px;padding-left:9px;border-left:3px solid var(--acc)}
+h3{font-size:14px;margin:18px 0 8px;color:var(--ink)}
+.sub{color:var(--dim);font-size:12.5px}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi{flex:1 1 200px;min-width:200px}
+.kpi .lab{color:var(--dim);font-size:12px}
+.kpi .val{font-size:27px;font-weight:700;letter-spacing:.5px;margin-top:2px}
+.kpi .val small{font-size:13px;font-weight:400;color:var(--dim)}
+.kpi .note{font-size:11.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+.up{color:var(--up)}.down{color:var(--down)}.warn{color:var(--warn)}.acc{color:var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--dim);font-weight:600;background:var(--panel2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;border:1px solid var(--line);color:var(--dim);margin-right:4px}
+.tag.y{color:var(--down);border-color:#25543f}
+.tag.n{color:var(--up);border-color:#5a2b32}
+.tag.u{color:var(--warn);border-color:#5b4a1d}
+.banner{background:linear-gradient(90deg,#2a1d1d,#1a2330);border:1px solid #5a3b3b;border-radius:10px;padding:12px 16px;margin:16px 0}
+.banner b{color:#ffb3b3}
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin:6px 0 0}
+.legend i{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:5px}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--dim);padding:5px 12px;border-radius:7px;cursor:pointer;font-size:12.5px}
+.btn.on{background:#12363a;border-color:var(--acc);color:var(--acc)}
+code{background:#0b1017;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12px;color:#9fe8ec}
+.foot{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;color:var(--dim);font-size:11.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap">
+
+<header>
+  <h1>华东甲醇（太仓）· 郑商所 MA 基差研究<small>数据截至 2026-10-20 收盘</small></h1>
+  <div class="sub">
+    基差口径：<b>基差 = 现货价格 − 期货价格</b>；
+    现货＝隆众资讯「江苏太仓 甲醇 出罐 现汇 含税（GB/T 338-2011 优等品）」；
+    期货＝郑商所 MA 合约收盘价。单位：元/吨。
+  </div>
+</header>
+
+<div class="row">
+  <div class="card kpi">
+    <div class="lab">当前基差（<span id="kpi-ct">MA2701</span>）</div>
+    <div class="val acc" id="kpi-basis">+823<small> 元/吨</small></div>
+    <div class="note" id="kpi-basis-note">现货 3,980 − 期货 3,157；基差率 20.68%</div>
+  </div>
+  <div class="card kpi">
+    <div class="lab">近 12 个交易日变化</div>
+    <div class="val down">-170<small> 元/吨</small></div>
+    <div class="note">2026-09-21 → 2026-10-20；现货贡献 -26%、期货贡献 +126%</div>
+  </div>
+  <div class="card kpi">
+    <div class="lab">可用样本分位（非历史分位）</div>
+    <div class="val warn">15<small> % / n=13</small></div>
+    <div class="note">仅 2026-09-21~2026-10-20 的真实样本，<b>不可当作 1/3/5 年历史分位</b></div>
+  </div>
+  <div class="card kpi">
+    <div class="lab">区间峰值基差</div>
+    <div class="val up">+1,672<small> 元/吨</small></div>
+    <div class="note">2026-09-29；较峰值已回落 -714</div>
+  </div>
+</div>
+
+<div class="banner">
+  <b>关于「极端分位是否必然回归」</b>——本报告不作此判断。当前基差处于
+  <b>深度正基差（现货升水）</b>状态，且有可核查的产业事实支撑（见第 5 节）。
+  同时必须提示：现货日度序列仅有 13 个真实有价日，且均集中在 2026 年 9-10 月的一次价格异常拉升行情内，无法代表 1/3/5 年的基差分布。本报告以“可用样本分位”形式给出参考值，不将其作为历史分位结论。
+</div>
+
+<h2>1 · 现货与期货价格双轴对照</h2>
+<div class="card">
+<svg viewBox="0 0 1180 330" class="chart"><line x1="56" y1="298.0" x2="1118" y2="298.0" stroke="#222c38"/><text x="50" y="298.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">2588</text><line x1="56" y1="242.4" x2="1118" y2="242.4" stroke="#222c38"/><text x="50" y="242.4" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">3094</text><line x1="56" y1="186.8" x2="1118" y2="186.8" stroke="#222c38"/><text x="50" y="186.8" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">3601</text><line x1="56" y1="131.2" x2="1118" y2="131.2" stroke="#222c38"/><text x="50" y="131.2" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">4107</text><line x1="56" y1="75.6" x2="1118" y2="75.6" stroke="#222c38"/><text x="50" y="75.6" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">4614</text><line x1="56" y1="20.0" x2="1118" y2="20.0" stroke="#222c38"/><text x="50" y="20.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">5120</text><path d="M56.0,150.1 L144.5,139.1 L233.0,120.5 L321.5,127.6 L410.0,74.4 L498.5,90.3 L587.0,63.4 L675.5,46.9 L764.0,129.2 L852.5,149.0 L941.0,136.9 L1029.5,143.5 L1118.0,145.2" fill="none" stroke="#f7b731" stroke-width="2.2"/><circle cx="56.0" cy="150.1" r="3.2" fill="#f7b731"/><circle cx="144.5" cy="139.1" r="3.2" fill="#f7b731"/><circle cx="233.0" cy="120.5" r="3.2" fill="#f7b731"/><circle cx="321.5" cy="127.6" r="3.2" fill="#f7b731"/><circle cx="410.0" cy="74.4" r="3.2" fill="#f7b731"/><circle cx="498.5" cy="90.3" r="3.2" fill="#f7b731"/><circle cx="587.0" cy="63.4" r="3.2" fill="#f7b731"/><circle cx="675.5" cy="46.9" r="3.2" fill="#f7b731"/><circle cx="764.0" cy="129.2" r="3.2" fill="#f7b731"/><circle cx="852.5" cy="149.0" r="3.2" fill="#f7b731"/><circle cx="941.0" cy="136.9" r="3.2" fill="#f7b731"/><circle cx="1029.5" cy="143.5" r="3.2" fill="#f7b731"/><circle cx="1118.0" cy="145.2" r="3.2" fill="#f7b731"/><path d="M56.0,259.1 L144.5,258.9 L233.0,271.1 L321.5,257.2 L410.0,257.9 L498.5,255.8 L587.0,230.8 L675.5,215.7 L764.0,227.6 L852.5,227.0 L941.0,234.1 L1029.5,237.1 L1118.0,235.5" fill="none" stroke="#39d0d8" stroke-width="2.2"/><circle cx="56.0" cy="259.1" r="3.2" fill="#39d0d8"/><circle cx="144.5" cy="258.9" r="3.2" fill="#39d0d8"/><circle cx="233.0" cy="271.1" r="3.2" fill="#39d0d8"/><circle cx="321.5" cy="257.2" r="3.2" fill="#39d0d8"/><circle cx="410.0" cy="257.9" r="3.2" fill="#39d0d8"/><circle cx="498.5" cy="255.8" r="3.2" fill="#39d0d8"/><circle cx="587.0" cy="230.8" r="3.2" fill="#39d0d8"/><circle cx="675.5" cy="215.7" r="3.2" fill="#39d0d8"/><circle cx="764.0" cy="227.6" r="3.2" fill="#39d0d8"/><circle cx="852.5" cy="227.0" r="3.2" fill="#39d0d8"/><circle cx="941.0" cy="234.1" r="3.2" fill="#39d0d8"/><circle cx="1029.5" cy="237.1" r="3.2" fill="#39d0d8"/><circle cx="1118.0" cy="235.5" r="3.2" fill="#39d0d8"/><text x="56.0" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">09-21</text><text x="144.5" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">09-22</text><text x="233.0" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">09-23</text><text x="321.5" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">09-24</text><text x="410.0" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">09-29</text><text x="498.5" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">09-30</text><text x="587.0" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">10-08</text><text x="675.5" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">10-09</text><text x="764.0" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">10-12</text><text x="852.5" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">10-13</text><text x="941.0" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">10-15</text><text x="1029.5" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">10-19</text><text x="1118.0" y="314" fill="#8b98a5" font-size="10" text-anchor="middle">10-20</text></svg>
+<div class="legend"><span><i style="background:#f7b731"></i>太仓现货（隆众，出罐含税）</span>
+<span><i style="background:#39d0d8"></i>MA2701 收盘</span></div>
+<div class="sub" style="margin-top:8px">
+  10-08/10-09 双节后跳涨（现货 4,725 → 4,875）；10-12 沿海 MTO 集中停车引发负反馈，
+  现货 6 个交易日回落约 880 元/吨，期货同期仅回落约 180 元/吨。
+</div>
+</div>
+
+<h2>2 · 基差曲线（可切换合约口径）</h2>
+<div class="card">
+<div class="btns" id="ctl-contract">
+  <span class="sub" style="align-self:center;margin-right:6px">期货合约：</span>
+  <button class="btn on" data-ct="MA2701">MA2701 主力</button>
+  <button class="btn" data-ct="MA2612">MA2612</button>
+  <button class="btn" data-ct="MA2611">MA2611 近月</button>
+</div>
+<div id="basis-chart"><svg viewBox="0 0 1180 300" class="chart" preserveAspectRatio="none"><line x1="56" y1="270.0" x2="1162" y2="270.0" stroke="#222c38"/><text x="50" y="270.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">0.00</text><line x1="56" y1="214.0" x2="1162" y2="214.0" stroke="#222c38"/><text x="50" y="214.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">447</text><line x1="56" y1="158.0" x2="1162" y2="158.0" stroke="#222c38"/><text x="50" y="158.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">894</text><line x1="56" y1="102.0" x2="1162" y2="102.0" stroke="#222c38"/><text x="50" y="102.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">1341</text><line x1="56" y1="46.0" x2="1162" y2="46.0" stroke="#222c38"/><text x="50" y="46.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">1787</text><line x1="56" y1="270.0" x2="1162" y2="270.0" stroke="#5a6b7d" stroke-dasharray="4 3"/><path d="M56.0,145.6 L148.2,133.3 L240.3,98.1 L332.5,122.1 L424.7,60.5 L516.8,81.0 L609.0,78.9 L701.2,77.4 L793.3,157.7 L885.5,181.0 L977.7,159.1 L1069.8,163.2 L1162.0,166.9 L1162.0,270.0 L56.0,270.0 Z" fill="rgba(57,208,216,.13)" stroke="none"/><path d="M56.0,145.6 L148.2,133.3 L240.3,98.1 L332.5,122.1 L424.7,60.5 L516.8,81.0 L609.0,78.9 L701.2,77.4 L793.3,157.7 L885.5,181.0 L977.7,159.1 L1069.8,163.2 L1162.0,166.9" fill="none" stroke="#39d0d8" stroke-width="2"/><circle cx="56.0" cy="145.6" r="3" fill="#39d0d8"/><circle cx="1162.0" cy="166.9" r="3" fill="#39d0d8"/><text x="56.0" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">09-21</text><text x="148.2" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">09-22</text><text x="240.3" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">09-23</text><text x="332.5" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">09-24</text><text x="424.7" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">09-29</text><text x="516.8" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">09-30</text><text x="609.0" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">10-08</text><text x="701.2" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">10-09</text><text x="793.3" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">10-12</text><text x="885.5" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">10-13</text><text x="977.7" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">10-15</text><text x="1069.8" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">10-19</text><text x="1162.0" y="285" fill="#8b98a5" font-size="10" text-anchor="middle">10-20</text></svg></div>
+<div id="basis-readout" class="sub" style="margin-top:8px"></div>
+<div class="sub" style="margin-top:4px">
+  注：默认曲线为固定合约 MA2701；换月价差已在第 4 节单独量化，未混入本曲线。
+  切换上方合约会同步改写首屏基差卡与本节读数。
+</div>
+</div>
+
+<h2>3 · 基差变动归因</h2>
+<div class="grid2">
+  <div class="card">
+    <h3>近 12 个交易日（2026-09-21 → 2026-10-20）</h3>
+    <table>
+      <tr><th>项目</th><th class="num">变化</th><th class="num">占基差变化</th></tr>
+      <tr><td>现货</td><td class="num">+45</td><td class="num">-26%</td></tr>
+      <tr><td>期货</td><td class="num">+215</td><td class="num">+126%</td></tr>
+      <tr><td><b>基差</b></td><td class="num"><b>-170</b></td><td class="num">100%</td></tr>
+    </table>
+    <div class="sub" style="margin-top:8px">Δ基差 = Δ现货 − Δ期货；贡献以 Δ基差 为分母，两者之和恒为 100%。</div>
+  </div>
+  <div class="card">
+    <h3>峰值以来（2026-10-09 → 2026-10-20）</h3>
+    <table>
+      <tr><th>项目</th><th class="num">变化</th><th class="num">占基差变化</th></tr>
+      <tr><td>现货</td><td class="num">-895</td><td class="num">+125%</td></tr>
+      <tr><td>期货</td><td class="num">-181</td><td class="num">-25%</td></tr>
+      <tr><td><b>基差</b></td><td class="num"><b>-714</b></td><td class="num">100%</td></tr>
+    </table>
+    <div class="sub" style="margin-top:8px">基差回落主要由<b>现货补跌</b>完成，而非期货上涨。</div>
+  </div>
+</div>
+
+<h2>4 · 合约口径：固定合约 vs 主力连续</h2>
+<div class="card">
+  <table>
+    <tr><th>合约</th><th class="num">收盘价</th><th class="num">基差</th><th class="num">基差率</th></tr>
+    <tr><td>MA2611</td><td class="num">3384</td><td class="num">+596</td><td class="num">14.97%</td></tr><tr><td>MA2612</td><td class="num">3231</td><td class="num">+749</td><td class="num">18.82%</td></tr><tr><td>MA2701</td><td class="num">3157</td><td class="num">+823</td><td class="num">20.68%</td></tr>
+  </table>
+  <div class="sub" style="margin-top:10px;line-height:1.75">
+  <b>为什么同一现货会有不同基差：</b>10-20 现货 3,980 同时对上近月 MA2611、MA2612 与主力 MA2701，
+  曲线近高远低（深度 Back），近月基差 +596、主力基差 +823，
+  相差 227 元/吨。隆众 10-19 报「现货小单基差 +600（对 MA2611）」，
+  与本表 MA2611 口径 +596 相差 4 元/吨（日期差一个交易日），同口径可比。
+  外部核验：国内商品基差报告 10-20 报「现货 3980 / 主力 3157 / 基差 823 / 基差率 20.68%」，与本报告完全一致。
+  </div>
+</div>
+<div class="card">
+  <h3>主力换月记录（gap 与 shift 的区别决定了复权是否干净）</h3>
+  <table>
+    <tr><th>换月日</th><th>切换</th><th class="num">gap（切换日新旧主力差）</th>
+    <th class="num">shift（前一日新旧同日差）</th></tr>
+    <tr><td>2024-12-09</td><td>MA2501->MA2505</td><td class="num">+12</td><td class="num">+22</td></tr><tr><td>2025-04-10</td><td>MA2505->MA2509</td><td class="num">-109</td><td class="num">-123</td></tr><tr><td>2025-08-11</td><td>MA2509->MA2601</td><td class="num">+96</td><td class="num">+92</td></tr><tr><td>2025-12-10</td><td>MA2601->MA2605</td><td class="num">+76</td><td class="num">+77</td></tr><tr><td>2026-04-13</td><td>MA2605->MA2609</td><td class="num">-311</td><td class="num">-280</td></tr><tr><td>2026-08-06</td><td>MA2609->MA2610</td><td class="num">-17</td><td class="num">-8</td></tr><tr><td>2026-09-10</td><td>MA2610->MA2701</td><td class="num">-387</td><td class="num">-412</td></tr>
+  </table>
+  <div class="sub" style="margin-top:8px">
+    <b>换月处理：</b>行情商发布的 MA0 主连在换月当日仍打印<b>旧合约</b>收益，价格阶梯被推到次日
+    （2026-09-11 显示 −12.07%，而各固定合约当日实际变动仅 −1%~+1%）。因此复权必须按
+    <b>同日价差 shift</b> 平移换月日之前的全部价格，复权后换月日收益率才等于新合约自身收益率。
+    本报告主体曲线只使用固定合约口径，不做跨合约拼接。
+  </div>
+</div>
+
+<h2>5 · 基本面证据：支持 / 不支持「基差强势」</h2>
+<div class="card">
+<table>
+  <tr><th style="width:70px">结论</th><th>证据</th><th>日期 / 来源</th></tr>
+
+  <tr><td><span class="tag y">支持</span></td>
+      <td><b>港口库存处于历史极低位置。</b>隆众口径港口库存 2026-07-16 谷值 40.52 万吨，
+          为近五年低位；2026-10-09 市场口径进一步降至约 30 万吨，创历史新低。
+          低库存 + 可流通货源集中，是现货升水（正基差）的直接原因。</td>
+      <td>2026-07-16 / 10-09<br>S06 · S07</td></tr>
+
+  <tr><td><span class="tag y">支持</span></td>
+      <td><b>进口通道未恢复。</b>伊朗对华直接进口自 2025-11 起连续 9 个月报关为零；
+          霍尔木兹海峡通行受限，10 月到港维持低位（10-01~10-08 到港仅 6.88 万吨）。</td>
+      <td>2026-09 / 10<br>S06 · S03</td></tr>
+
+  <tr><td><span class="tag y">支持</span></td>
+      <td><b>可交割资源全部集中在厂库，仓库仓单为 0。</b>10-20 郑商所甲醇仓单总计 6,633 张，
+          其中仓库口径 <b>0 张</b>，全部登记在厂库（杭实化工 1,866、安徽中能 1,400、国贸石化 1,000、
+          金桥化工 900、中化化销 600、定州天鹭 600、河南心连心 267、安徽昊源 200）。
+          太仓阳鸿等港口仓库仓单为 0，意味着“买期货交割拿货”在太仓几乎不可行，现货端必须付升水。</td>
+      <td>2026-10-20<br>S01</td></tr>
+
+  <tr><td><span class="tag y">支持</span></td>
+      <td><b>太仓为基准交割地、升贴水 0。</b>太仓阳鸿石化（仓库 0801）期货升贴水 0 元/吨，
+          故太仓现货与期货标的在地区、品质上可直接对比，基差不含跨区贴水修正。</td>
+      <td>2025-03-26<br>S16</td></tr>
+
+  <tr><td><span class="tag n">不支持</span></td>
+      <td><b>去库已转为累库。</b>港口库存自低位回升：10-14 为 36.72 万吨（+6.21，+20.35%），
+          另终端口径 10-15 为 41.33 万吨（+3.92，+10.48%）。去库叙事被打破，
+          是基差从 1,537 回落至 823 的直接触发因素。</td>
+      <td>2026-10-14 / 10-15<br>S04 · S07</td></tr>
+
+  <tr><td><span class="tag n">不支持</span></td>
+      <td><b>需求负反馈正在实现。</b>沿海 MTO 因高价甲醇集中停车（业内“罕见全线停车”），
+          MTO 行业开工率由 6 月月均 82.05% 降至 10 月预期 73.50%。需求端削弱会同时压低现货与基差。</td>
+      <td>2026-10-12 / 10-18<br>S12 · S04</td></tr>
+
+  <tr><td><span class="tag n">不支持</span></td>
+      <td><b>仓单在增加。</b>仓单由 10-12 的 5,216 张增至 10-19 的 7,083 张（+1,867 张，约 1.87 万吨），
+          10-20 回落至 6,633 张。仓单回升意味着可交割资源在被生产出来，对近月升水构成压力。</td>
+      <td>2026-10-12 ~ 10-20<br>S01</td></tr>
+
+  <tr><td><span class="tag n">不支持</span></td>
+      <td><b>现货自身在补跌。</b>近 12 个交易日基差 -170 元/吨中，
+          现货贡献 -26%（现货 +45、期货 +215）；
+          峰值以来基差 -714 元/吨中现货贡献 +125%。
+          基差修复主要由现货下跌完成，说明“现货坚挺”在减弱。</td>
+      <td>2026-09-21 ~ 2026-10-20<br>D03</td></tr>
+
+  <tr><td><span class="tag u">存疑</span></td>
+      <td><b>两套港口库存口径、两个更新日不一致。</b>10-14 的 36.72 万吨（+6.21）与 10-15 的 41.33 万吨（+3.92）
+          来自不同终端转述，数值不可互换、也不可相减得出“一日增 4.6 万吨”。本报告并列呈现，不合并。</td>
+      <td>2026-10-14 / 10-15<br>S04 · S07</td></tr>
+
+  <tr><td><span class="tag u">存疑</span></td>
+      <td><b>历史分位无法可靠计算。</b>现货日度序列仅 13 个真实有价日（2026-09-21 起），
+          且全部落在同一次极端行情内。任何“处于 1/3/5 年 X% 分位”的说法目前都不可验证。</td>
+      <td>—<br>D03</td></tr>
+</table>
+</div>
+
+<h2>6 · 库存与仓单</h2>
+<div class="grid2">
+  <div class="card">
+    <h3>港口库存（隆众口径，万吨）</h3>
+    <svg viewBox="0 0 560 220" class="chart" preserveAspectRatio="none"><line x1="56" y1="190.0" x2="542" y2="190.0" stroke="#222c38"/><text x="50" y="190.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">15</text><line x1="56" y1="154.0" x2="542" y2="154.0" stroke="#222c38"/><text x="50" y="154.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">54</text><line x1="56" y1="118.0" x2="542" y2="118.0" stroke="#222c38"/><text x="50" y="118.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">93</text><line x1="56" y1="82.0" x2="542" y2="82.0" stroke="#222c38"/><text x="50" y="82.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">131</text><line x1="56" y1="46.0" x2="542" y2="46.0" stroke="#222c38"/><text x="50" y="46.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">170</text><path d="M56.0,59.9 L116.8,69.7 L177.5,166.3 L238.2,145.3 L299.0,152.8 L359.8,165.7 L420.5,176.1 L481.2,169.8 L542.0,165.6 L542.0,190.0 L56.0,190.0 Z" fill="rgba(247,183,49,.12)" stroke="none"/><path d="M56.0,59.9 L116.8,69.7 L177.5,166.3 L238.2,145.3 L299.0,152.8 L359.8,165.7 L420.5,176.1 L481.2,169.8 L542.0,165.6" fill="none" stroke="#f7b731" stroke-width="2"/><text x="56.0" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-18</text><text x="116.8" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">02-26</text><text x="177.5" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">07-16</text><text x="238.2" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-03</text><text x="299.0" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-10</text><text x="359.8" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-23</text><text x="420.5" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">10-09</text><text x="481.2" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">10-14</text><text x="542.0" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">10-15</text></svg>
+    <div class="sub" style="margin-top:6px">仅关键时点值，非连续周度序列。</div>
+  </div>
+  <div class="card">
+    <h3>郑商所甲醇仓单（张）</h3>
+    <svg viewBox="0 0 560 220" class="chart" preserveAspectRatio="none"><line x1="56" y1="190.0" x2="542" y2="190.0" stroke="#222c38"/><text x="50" y="190.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">4992</text><line x1="56" y1="154.0" x2="542" y2="154.0" stroke="#222c38"/><text x="50" y="154.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">5571</text><line x1="56" y1="118.0" x2="542" y2="118.0" stroke="#222c38"/><text x="50" y="118.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">6150</text><line x1="56" y1="82.0" x2="542" y2="82.0" stroke="#222c38"/><text x="50" y="82.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">6728</text><line x1="56" y1="46.0" x2="542" y2="46.0" stroke="#222c38"/><text x="50" y="46.0" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">7307</text><path d="M56.0,135.7 L88.4,135.7 L120.8,135.7 L153.2,135.7 L185.6,135.7 L218.0,144.7 L250.4,144.7 L282.8,158.5 L315.2,169.8 L347.6,176.1 L380.0,145.0 L412.4,145.0 L444.8,115.9 L477.2,91.0 L509.6,59.9 L542.0,87.9 L542.0,190.0 L56.0,190.0 Z" fill="rgba(57,208,216,.13)" stroke="none"/><path d="M56.0,135.7 L88.4,135.7 L120.8,135.7 L153.2,135.7 L185.6,135.7 L218.0,144.7 L250.4,144.7 L282.8,158.5 L315.2,169.8 L347.6,176.1 L380.0,145.0 L412.4,145.0 L444.8,115.9 L477.2,91.0 L509.6,59.9 L542.0,87.9" fill="none" stroke="#39d0d8" stroke-width="2"/><circle cx="56.0" cy="135.7" r="3" fill="#39d0d8"/><circle cx="542.0" cy="87.9" r="3" fill="#39d0d8"/><text x="56.0" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-21</text><text x="120.8" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-23</text><text x="185.6" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-28</text><text x="250.4" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">09-30</text><text x="315.2" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">10-09</text><text x="380.0" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">10-13</text><text x="444.8" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">10-15</text><text x="509.6" y="205" fill="#8b98a5" font-size="10" text-anchor="middle">10-19</text></svg>
+    <div class="sub" style="margin-top:6px">10-12 低点 5,216 → 10-19 高点 7,083 → 10-20 回落 6,633。</div>
+  </div>
+</div>
+<div class="card">
+  <h3>库存明细</h3>
+  <table><tr><th>日期</th><th>项目</th><th class="num">万吨</th><th class="num">变化</th><th>备注</th><th>来源</th></tr>
+  <tr><td>2025-09-18</td><td>港口库存(隆众)</td><td class="num">155.19</td><td class="num">—</td><td>历史峰值</td><td>S06</td></tr><tr><td>2026-02-26</td><td>港口库存(隆众)</td><td class="num">144.67</td><td class="num">—</td><td>年内高位区域</td><td>S06</td></tr><tr><td>2026-07-16</td><td>港口库存(隆众)</td><td class="num">40.52</td><td class="num">—</td><td>近5年谷值</td><td>S06</td></tr><tr><td>2026-09-03</td><td>港口库存(隆众)</td><td class="num">63.18</td><td class="num">—</td><td></td><td>S06</td></tr><tr><td>2026-09-10</td><td>港口库存(隆众)</td><td class="num">55.11</td><td class="num">—</td><td>华东49.81+华南5.30</td><td>S06</td></tr><tr><td>2026-09-23</td><td>港口库存(隆众)</td><td class="num">41.20</td><td class="num">—</td><td>接近7月40.15历史低位</td><td>S10</td></tr><tr><td>2026-10-09</td><td>港口库存(隆众)</td><td class="num">30.00</td><td class="num">—</td><td>创历史新低(市场叙述)</td><td>S07</td></tr><tr><td>2026-10-14</td><td>港口库存(隆众)</td><td class="num">36.72</td><td class="num">+6.21</td><td>周度口径，环比+20.35%</td><td>S04</td></tr><tr><td>2026-10-15</td><td>港口库存(隆众)</td><td class="num">41.33</td><td class="num">+3.92</td><td>另一终端转述口径，与36.72不同源</td><td>S07</td></tr><tr><td>2026-10-08</td><td>生产企业厂库</td><td class="num">32.13</td><td class="num">+13.72</td><td>环比+13.72%，同比-5.35%</td><td>S07</td></tr><tr><td>2026-10-14</td><td>生产企业厂库</td><td class="num">35.69</td><td class="num">+3.46</td><td>环比+10.74%</td><td>S04</td></tr><tr><td>2026-10-14</td><td>企业订单待发</td><td class="num">19.23</td><td class="num">+0.56</td><td>环比+3.00%</td><td>S04</td></tr><tr><td>2026-09-09</td><td>西北厂家库存</td><td class="num">18.46</td><td class="num">—</td><td>区间峰值42.93(2024-02-18)/谷值16.91(2026-02-11)</td><td>S06</td></tr></table>
+</div>
+<div class="card">
+  <h3>仓单日报（张）</h3>
+  <table><tr><th>日期</th><th class="num">仓单总计</th><th class="num">增减</th>
+  <th class="num">仓库口径</th><th class="num">厂库口径</th></tr><tr><td>2026-09-21</td><td class="num">5865</td><td class="num">+0</td><td class="num">0</td><td class="num">5865</td></tr><tr><td>2026-09-22</td><td class="num">5865</td><td class="num">+0</td><td class="num">0</td><td class="num">5865</td></tr><tr><td>2026-09-23</td><td class="num">5865</td><td class="num">+0</td><td class="num">0</td><td class="num">5865</td></tr><tr><td>2026-09-24</td><td class="num">5865</td><td class="num">+0</td><td class="num">0</td><td class="num">5865</td></tr><tr><td>2026-09-28</td><td class="num">5865</td><td class="num">+0</td><td class="num">0</td><td class="num">5865</td></tr><tr><td>2026-09-29</td><td class="num">5720</td><td class="num">-145</td><td class="num">0</td><td class="num">5720</td></tr><tr><td>2026-09-30</td><td class="num">5720</td><td class="num">+0</td><td class="num">0</td><td class="num">5720</td></tr><tr><td>2026-10-08</td><td class="num">5498</td><td class="num">-222</td><td class="num">0</td><td class="num">5498</td></tr><tr><td>2026-10-09</td><td class="num">5316</td><td class="num">-182</td><td class="num">0</td><td class="num">5316</td></tr><tr><td>2026-10-12</td><td class="num">5216</td><td class="num">-100</td><td class="num">0</td><td class="num">5216</td></tr><tr><td>2026-10-13</td><td class="num">5716</td><td class="num">+500</td><td class="num">0</td><td class="num">5716</td></tr><tr><td>2026-10-14</td><td class="num">5716</td><td class="num">+0</td><td class="num">0</td><td class="num">5716</td></tr><tr><td>2026-10-15</td><td class="num">6183</td><td class="num">+467</td><td class="num">0</td><td class="num">6183</td></tr><tr><td>2026-10-16</td><td class="num">6583</td><td class="num">+400</td><td class="num">0</td><td class="num">6583</td></tr><tr><td>2026-10-19</td><td class="num">7083</td><td class="num">+500</td><td class="num">0</td><td class="num">7083</td></tr><tr><td>2026-10-20</td><td class="num">6633</td><td class="num">-450</td><td class="num">0</td><td class="num">6633</td></tr></table>
+  <div class="sub" style="margin-top:8px">
+    “仓库口径”汇总太仓阳鸿、南通千红、江苏苏豪、常州宏川等实体仓库；“厂库口径”汇总杭实化工、安徽中能、
+    国贸石化等厂库。本期所有有效仓单均在厂库，实体仓库为 0。
+  </div>
+</div>
+
+<h2>7 · 历史极值时期的基本面背景</h2>
+<div class="card">
+  <table><tr><th>日期</th><th class="num">MA 主连收盘</th><th>当时背景</th><th>后续</th><th>来源</th></tr>
+  <tr data-ex="0" title="点击查看当时产业背景"><td>2021-10-12</td><td class="num">4054</td><td>动力煤双控+能耗双控，煤价抽升拉升甲醇；供需错配峰值</td><td>之后随发改强力保供、煤价见顶回落，11月起期货大幅走弱</td><td class="num">D05</td></tr><tr data-ex="1" title="点击查看当时产业背景"><td>2022-03-09</td><td class="num">3290</td><td>俄乌冲突+伊朗供应预期受扰，原油吸引能化普涨</td><td>情绪退潮后回落至2500区间</td><td class="num">D05</td></tr><tr data-ex="2" title="点击查看当时产业背景"><td>2020-04-01</td><td class="num">1555</td><td>疫情冲击需求+原油负价事件，能化集体崩盘</td><td>之后随需求修复反弹</td><td class="num">D05</td></tr><tr data-ex="3" title="点击查看当时产业背景"><td>2026-10-09</td><td class="num">3959</td><td>霍尔木兹海峡封锁+伊朗断供，港口库存创历史新低</td><td>本轮基差峰值区间</td><td class="num">S03</td></tr></table>
+  <div id="ex-detail" style="display:none;margin-top:10px;padding:10px 12px;background:#0f1620;
+       border:1px solid #2d6b74;border-radius:8px;font-size:12.5px;line-height:1.7"></div>
+  <div class="sub" style="margin-top:6px">↑ 点击任一历史极值行，展开当时的产业背景与后续走势。</div>
+  <div class="sub" style="margin-top:8px">
+    最接近的一次：<b>2021 年 10 月</b>，动力煤双控推升成本、供应紧张，MA 主连 2021-10-12 收 4,054 元/吨
+    创历史最高，10 月下旬快速回落。本轮（2026 年 10 月）驱动不同——主因是<b>进口断档 + 港口极低库存</b>
+    而非煤价，但两者都叠加了“低库存 + 强现货”，基差形态可以类比。
+  </div>
+</div>
+
+<h2>8 · 产业事件时间线</h2>
+<div class="card"><table><tr><th style="width:92px">日期</th><th style="width:74px">类别</th>
+<th>事件</th><th>对基差的含义</th><th>来源</th></tr><tr><td>2025-10-01</td><td><span class="tag">供应</span></td><td>伊朗对华直接进口最后一票（10.40万吨）；此后连续9个月报关为零</td><td>进口断档，港口可流通货源持续收缩</td><td class="num">S06</td></tr><tr><td>2026-06-12</td><td><span class="tag">干扰</span></td><td>美伊冲突升级，霍尔木兹海峡通行受阻</td><td>引发地缘溢价，本轮上涨起点</td><td class="num">S09</td></tr><tr><td>2026-07-16</td><td><span class="tag">库存</span></td><td>隆众口径港口库存40.52万吨，近5年谷值</td><td>库存缓冲极薄</td><td class="num">S06</td></tr><tr><td>2026-09-08</td><td><span class="tag">行情</span></td><td>主力盘中封涨停，收涨4.58%报3359</td><td>期现同步拉升</td><td class="num">S06</td></tr><tr><td>2026-09-09</td><td><span class="tag">监管</span></td><td>郑商所发布风险提示函；主力收盘持仓单日-14.84万手</td><td>风险管理干预，资金情绪与产业事实分离</td><td class="num">S06</td></tr><tr><td>2026-09-10</td><td><span class="tag">合约</span></td><td>主力由MA2610切换至MA2701（持仓转移）</td><td>换月日：新主力当日收盘较旧主力低368元/吨</td><td class="num">D02</td></tr><tr><td>2026-09-10</td><td><span class="tag">供应</span></td><td>港口库存55.11万吨，9月上旬再度去库</td><td>低库存+进口不足主导</td><td class="num">S06</td></tr><tr><td>2026-10-08</td><td><span class="tag">行情</span></td><td>节后首日MA2611直接封于3625，涨9.02%；太仓现货5040-4750</td><td>基差当日达975元/吨</td><td class="num">S11</td></tr><tr><td>2026-10-09</td><td><span class="tag">行情</span></td><td>MA2611最高3959元/吨，年内最高；太仓现货5490</td><td>基差拉升至1040元/吨</td><td class="num">S03</td></tr><tr><td>2026-10-10</td><td><span class="tag">供应</span></td><td>国能榆林60万吨/年烯烃及180万吨/年甲醇装置全线停车检修约45天</td><td>西北甲醇需求与供应同时减量</td><td class="num">S07</td></tr><tr><td>2026-10-12</td><td><span class="tag">需求</span></td><td>沿海多家MTO装置停车检修，期货跳水超350元/吨</td><td>高价负反馈启动，基差开始快速回落</td><td class="num">S07</td></tr><tr><td>2026-10-15</td><td><span class="tag">库存</span></td><td>港口库存止跌回升（两个转述口径：36.72/41.33万吨）</td><td>去库预期被打破，基差下行加速</td><td class="num">S04</td></tr><tr><td>2026-10-18</td><td><span class="tag">需求</span></td><td>业内“沿海烯烃装置罕见全线停车”，11月供需矛盾或难逆转</td><td>需求端给出最强弱化信号</td><td class="num">S12</td></tr><tr><td>2026-10-19</td><td><span class="tag">供应</span></td><td>太仓现货小单基差+600元/吨（相对MA2611）；月中+500~540</td><td>现货升水仍在，但已远低于10月9日的+1050~1100</td><td class="num">S13</td></tr><tr><td>2026-10-20</td><td><span class="tag">盘面</span></td><td>MA2611收3384，MA2701收3157；仓单总计6633张（-450），存续仓单为0</td><td>仓单全部落在厂库，交割现货仍紧张</td><td class="num">D03</td></tr></table></div>
+
+<h2>9 · 数据缺口声明</h2>
+<div class="card"><ul style="margin:0;padding-left:18px;line-height:1.9"><li><b>spot_daily_series</b>：太仓现货日度序列仅可获取 2026-09-21 至今（共13 个有价日）；2025年及以前的日度现货报价不公开，因此 1/3/5 年基差分位无法用真实序列计算，本报告不做拼接估算。</li><li><b>port_inventory_dual</b>：港口库存存在隆众与卓创两套口径，数值不可互换；本表仅用隆众口径。</li><li><b>inventory_weekly_series</b>：库存仅取得关键时点值（峰值/谷值/周度更新），未取得连续周度序列。</li><li><b>single_terminal_1015</b>：2026-10-15 港口库存41.33万吨与 10-14 的 36.72 万吨来自不同终端转述，未合并为同一时间序列。</li><li><b>mto_operating_rate</b>：MTO 开工率仅有行业叙述（如 10 月预期降至 73.50%），未取得官方周度序列。</li></ul></div>
+
+<h2>10 · 数据来源</h2>
+<div class="card"><table><tr><th>编号</th><th>来源</th><th>链接</th><th>发布方</th><th>获取日</th></tr>
+<tr><td>S01</td><td>郑州商品交易所 每日行情与仓单日报</td><td style="word-break:break-all">http://www.czce.com.cn/cn/DFSStaticFiles/Future/</td><td>郑商所</td><td>2026-10-20</td></tr><tr><td>S02</td><td>新浪财经 MA 日K JSONP（含已摘牌合约）</td><td style="word-break:break-all">https://stock2.finance.sina.com.cn/futures/api/jsonp.php</td><td>新浪财经</td><td>2026-10-20</td></tr><tr><td>S03</td><td>国联期货甲醇周报 2026-10-09</td><td style="word-break:break-all">https://www.glqh.com/u/cms/www/202610/12090335krpt.pdf</td><td>国联期货</td><td>2026-10-09</td></tr><tr><td>S04</td><td>华龙期货甲醇周报 2026-10-19</td><td style="word-break:break-all">http://www.hlqhgs.com/upload-files/2026/10/19/</td><td>华龙期货</td><td>2026-10-19</td></tr><tr><td>S06</td><td>津投期货 甲醇产业链深度报告 2026-09-14</td><td style="word-break:break-all">https://www.jtqh.com/uploadfile/2026/0921/20260921084502963.pdf</td><td>津投期货</td><td>2026-09-14</td></tr><tr><td>S07</td><td>创元期货 10月甲醇月报（库存降至历史低位）</td><td style="word-break:break-all">https://wwwdata.cyqh.com.cn/upload/2026-10-12/</td><td>创元期货</td><td>2026-10-12</td></tr><tr><td>S10</td><td>搜狐/中金网 甲醇周度库存跟踪 2026-09-29</td><td style="word-break:break-all">https://www.sohu.com/a/1082301025_121123900</td><td>中金网</td><td>2026-09-29</td></tr><tr><td>S11</td><td>【热点分析】近期甲醇行情复盘与后续推演 2026-10-09</td><td style="word-break:break-all">https://finance.sina.cn/2026-10-09/detail-iniurruc2835532.d.html</td><td>新浪财经</td><td>2026-10-09</td></tr><tr><td>S12</td><td>【隆众聚焦】沿海烯烃装置罕见全线停车 2026-10-18</td><td style="word-break:break-all">https://www.oilchem.net/26-1018-18-df7ca8e7fcc054da.html</td><td>隆众资讯</td><td>2026-10-18</td></tr><tr><td>S13</td><td>隆众资讯 江苏太仓甲醇早盘日评系列 2026-09-21~10-20</td><td style="word-break:break-all">https://webnewslt1.pobo.net.cn/DATA/NENG/</td><td>隆众资讯（pobo 转载）</td><td>2026-10-20</td></tr><tr><td>S14</td><td>国内商品基差报告（能源化工）</td><td style="word-break:break-all">https://webnewslt1.pobo.net.cn/DATA/NENG/6796770.HTML</td><td>pobo.net.cn</td><td>2026-10-20</td></tr><tr><td>S15</td><td>郑商所甲醇期货业务细则解读（交割标准GB/T338-2011）</td><td style="word-break:break-all">https://www.shinnytech.com/articles/business-rules/products/czce.ma</td><td>信易科技</td><td>2026-10-20</td></tr><tr><td>S16</td><td>郑商所关于调整指定甲醇交割仓库的公告（太仓阳鸿升贴水0）</td><td style="word-break:break-all">https://finance.sina.cn/futuremarket/qsyw/2025-03-26/detail-ineqyrfp8906971.d.html</td><td>郑商所</td><td>2025-03-26</td></tr><tr><td>D02</td><td>本项目自算：主力合约持仓转移与换月跳空</td><td style="word-break:break-all">build/main_continuous_adj.csv</td><td>自算</td><td>2026-10-20</td></tr><tr><td>D03</td><td>本项目自算：基差与历史分位</td><td style="word-break:break-all">build/panel_daily.csv</td><td>自算</td><td>2026-10-20</td></tr><tr><td>D05</td><td>本项目自算：MA主连历史极值（新浪日K）</td><td style="word-break:break-all">raw/fut_ma_contracts_long.csv</td><td>自算</td><td>2026-10-20</td></tr></table></div>
+
+<div class="foot">
+  计算式：基差＝现货−期货；基差率＝基差/现货；经验分位＝样本中小于等于当前值的占比；
+  Δ基差＝Δ现货−Δ期货；贡献＝Δ现货/Δ基差 与 −Δ期货/Δ基差（和为 100%）。<br>
+  本文件为研究交付物，所有数字均可回溯至第 10 节来源或同目录 Excel 工作簿；
+  缺失数据一律留空并在第 9 节声明，未使用插值、近似值或不可比拼接。
+</div>
+</div>
+<script>
+const DATA = {"asof": "2026-10-20", "spotNow": 3980.0, "basisByContract": {"MA2611": [{"d": "2026-09-21", "v": 734.0}, {"d": "2026-09-22", "v": 852.0}, {"d": "2026-09-23", "v": 1190.0}, {"d": "2026-09-24", "v": 949.0}, {"d": "2026-09-29", "v": 1289.0}, {"d": "2026-09-30", "v": 1096.0}, {"d": "2026-10-08", "v": 1100.0}, {"d": "2026-10-09", "v": 1040.0}, {"d": "2026-10-12", "v": 589.0}, {"d": "2026-10-13", "v": 492.0}, {"d": "2026-10-15", "v": 701.0}, {"d": "2026-10-19", "v": 660.0}, {"d": "2026-10-20", "v": 596.0}], "MA2612": [{"d": "2026-09-21", "v": 884.0}, {"d": "2026-09-22", "v": 1000.0}, {"d": "2026-09-23", "v": 1314.0}, {"d": "2026-09-24", "v": 1098.0}, {"d": "2026-09-29", "v": 1517.0}, {"d": "2026-09-30", "v": 1352.0}, {"d": "2026-10-08", "v": 1350.0}, {"d": "2026-10-09", "v": 1329.0}, {"d": "2026-10-12", "v": 773.0}, {"d": "2026-10-13", "v": 623.0}, {"d": "2026-10-15", "v": 808.0}, {"d": "2026-10-19", "v": 779.0}, {"d": "2026-10-20", "v": 749.0}], "MA2701": [{"d": "2026-09-21", "v": 993.0}, {"d": "2026-09-22", "v": 1091.0}, {"d": "2026-09-23", "v": 1372.0}, {"d": "2026-09-24", "v": 1180.0}, {"d": "2026-09-29", "v": 1672.0}, {"d": "2026-09-30", "v": 1508.0}, {"d": "2026-10-08", "v": 1525.0}, {"d": "2026-10-09", "v": 1537.0}, {"d": "2026-10-12", "v": 896.0}, {"d": "2026-10-13", "v": 710.0}, {"d": "2026-10-15", "v": 885.0}, {"d": "2026-10-19", "v": 852.0}, {"d": "2026-10-20", "v": 823.0}]}, "closeByContract": {"MA2611": [{"d": "2026-09-21", "v": 3201.0}, {"d": "2026-09-22", "v": 3183.0}, {"d": "2026-09-23", "v": 3015.0}, {"d": "2026-09-24", "v": 3191.0}, {"d": "2026-09-29", "v": 3336.0}, {"d": "2026-09-30", "v": 3384.0}, {"d": "2026-10-08", "v": 3625.0}, {"d": "2026-10-09", "v": 3835.0}, {"d": "2026-10-12", "v": 3536.0}, {"d": "2026-10-13", "v": 3453.0}, {"d": "2026-10-15", "v": 3354.0}, {"d": "2026-10-19", "v": 3335.0}, {"d": "2026-10-20", "v": 3384.0}], "MA2612": [{"d": "2026-09-21", "v": 3051.0}, {"d": "2026-09-22", "v": 3035.0}, {"d": "2026-09-23", "v": 2891.0}, {"d": "2026-09-24", "v": 3042.0}, {"d": "2026-09-29", "v": 3108.0}, {"d": "2026-09-30", "v": 3128.0}, {"d": "2026-10-08", "v": 3375.0}, {"d": "2026-10-09", "v": 3546.0}, {"d": "2026-10-12", "v": 3352.0}, {"d": "2026-10-13", "v": 3322.0}, {"d": "2026-10-15", "v": 3247.0}, {"d": "2026-10-19", "v": 3216.0}, {"d": "2026-10-20", "v": 3231.0}], "MA2701": [{"d": "2026-09-21", "v": 2942.0}, {"d": "2026-09-22", "v": 2944.0}, {"d": "2026-09-23", "v": 2833.0}, {"d": "2026-09-24", "v": 2960.0}, {"d": "2026-09-29", "v": 2953.0}, {"d": "2026-09-30", "v": 2972.0}, {"d": "2026-10-08", "v": 3200.0}, {"d": "2026-10-09", "v": 3338.0}, {"d": "2026-10-12", "v": 3229.0}, {"d": "2026-10-13", "v": 3235.0}, {"d": "2026-10-15", "v": 3170.0}, {"d": "2026-10-19", "v": 3143.0}, {"d": "2026-10-20", "v": 3157.0}]}, "extremes": [{"date": "2021-10-12", "close": 4054.0, "bg": "动力煤双控+能耗双控，煤价抽升拉升甲醇；供需错配峰值", "after": "之后随发改强力保供、煤价见顶回落，11月起期货大幅走弱", "src": "D05"}, {"date": "2022-03-09", "close": 3290.0, "bg": "俄乌冲突+伊朗供应预期受扰，原油吸引能化普涨", "after": "情绪退潮后回落至2500区间", "src": "D05"}, {"date": "2020-04-01", "close": 1555.0, "bg": "疫情冲击需求+原油负价事件，能化集体崩盘", "after": "之后随需求修复反弹", "src": "D05"}, {"date": "2026-10-09", "close": 3959.0, "bg": "霍尔木兹海峡封锁+伊朗断供，港口库存创历史新低", "after": "本轮基差峰值区间", "src": "S03"}]};
+
+function fmt(n, d){ return (n>0?'+':'') + n.toLocaleString('zh-CN',{minimumFractionDigits:d||0,maximumFractionDigits:d||0}); }
+function fmtU(n){ return n.toLocaleString('zh-CN'); }
+
+/* 用与 Python 端 svg_line 相同的几何规则在前端重绘 */
+function drawLine(pts, color, fill){
+  const W=1180,H=300,pt=46,pr=18,pb=30,pl=56;
+  const vals=pts.map(p=>p.v);
+  let lo=Math.min(...vals,0), hi=Math.max(...vals,0);
+  const span=(hi-lo)||1; lo-=span*0.12; hi+=span*0.12;
+  const X=i=>pl+(W-pl-pr)*(i/Math.max(pts.length-1,1));
+  const Y=v=>pt+(H-pt-pb)*(1-(v-lo)/(hi-lo));
+  let s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="none">';
+  for(let g=0;g<5;g++){
+    const v=lo+(hi-lo)*g/4, y=Y(v);
+    s+='<line x1="'+pl+'" y1="'+y.toFixed(1)+'" x2="'+(W-pr)+'" y2="'+y.toFixed(1)+'" stroke="#222c38"/>';
+    s+='<text x="'+(pl-6)+'" y="'+y.toFixed(1)+'" fill="#8b98a5" font-size="10" text-anchor="end" dominant-baseline="middle">'+v.toFixed(0)+'</text>';
+  }
+  if(lo<=0&&hi>=0){ s+='<line x1="'+pl+'" y1="'+Y(0).toFixed(1)+'" x2="'+(W-pr)+'" y2="'+Y(0).toFixed(1)+'" stroke="#5a6b7d" stroke-dasharray="4 3"/>'; }
+  let d='';
+  pts.forEach((p,i)=>{ d+=(i===0?'M':'L')+X(i).toFixed(1)+','+Y(p.v).toFixed(1); });
+  s+='<path d="'+d+' L'+X(pts.length-1).toFixed(1)+','+(H-pb)+' L'+X(0).toFixed(1)+','+(H-pb)+' Z" fill="'+fill+'" stroke="none"/>';
+  s+='<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2"/>';
+  [0,pts.length-1].forEach(i=>{ s+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(pts[i].v).toFixed(1)+'" r="3" fill="'+color+'"/>'; });
+  const step=Math.max(1,Math.floor(pts.length/7));
+  for(let i=0;i<pts.length;i+=step){
+    s+='<text x="'+X(i).toFixed(1)+'" y="'+(H-pb+15)+'" fill="#8b98a5" font-size="10" text-anchor="middle">'+pts[i].d.slice(5)+'</text>';
+  }
+  return s+'</svg>';
+}
+
+function selectContract(ct){
+  document.querySelectorAll('#ctl-contract .btn').forEach(b=>{
+    b.classList.toggle('on', b.dataset.ct===ct);
+  });
+  const bs=DATA.basisByContract[ct]||[];
+  const cl=DATA.closeByContract[ct]||[];
+  document.getElementById('basis-chart').innerHTML=drawLine(bs,'#39d0d8','rgba(57,208,216,.13)');
+  // 同步首屏基差卡
+  const lastB=bs.length?bs[bs.length-1].v:null;
+  const lastC=cl.length?cl[cl.length-1].v:null;
+  document.getElementById('kpi-ct').textContent=ct;
+  if(lastB!==null){
+    document.getElementById('kpi-basis').innerHTML=fmt(lastB)+'<small> 元/吨</small>';
+    document.getElementById('kpi-basis-note').textContent=
+      '现货 '+fmtU(DATA.spotNow)+' − 期货 '+fmtU(lastC)+'；基差率 '+(lastB/DATA.spotNow*100).toFixed(2)+'%';
+  }
+  const mn=Math.min(...bs.map(p=>p.v)), mx=Math.max(...bs.map(p=>p.v));
+  document.getElementById('basis-readout').textContent=
+    ct+' 口径：区间 '+fmt(mn)+' ~ '+fmt(mx)+' 元/吨；最新 '+fmt(lastB)+
+    '；真实样本 '+bs.length+' 个（不足 20 个，不给历史分位）';
+}
+
+document.querySelectorAll('#ctl-contract .btn').forEach(b=>{
+  b.addEventListener('click',()=>selectContract(b.dataset.ct));
+});
+
+/* 历史极值：点击展开当时的产业背景 */
+document.querySelectorAll('tr[data-ex]').forEach(tr=>{
+  tr.style.cursor='pointer';
+  tr.addEventListener('click',()=>{
+    const i=+tr.dataset.ex, e=DATA.extremes[i], box=document.getElementById('ex-detail');
+    box.style.display='block';
+    box.innerHTML='<b>'+e.date+'</b>（MA 主连收盘 '+fmtU(e.close)+'，来源 '+e.src+'）<br>'
+      +'<b>当时背景：</b>'+e.bg+'<br><b>后续：</b>'+e.after;
+  });
+});
+selectContract('MA2701');
+</script>
+</body></html>

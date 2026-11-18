@@ -1,0 +1,62 @@
+{
+  "project_id": "my-project",
+  "product": {
+    "name": "（产品正式名，如 纯碱 / 钛白粉 / 柠檬酸）",
+    "formula": "",
+    "grades": "（规格级别，如 重质/轻质、食品级、药用级）",
+    "aliases": [],
+    "use_summary": "（该产品在各下游工序中的身份与作用，一句话）"
+  },
+  "region": {
+    "label": "（区域名，如 华东）",
+    "provinces": []
+  },
+  "benchmark": {
+    "name": "（标杆客户全称，尽量带代码）",
+    "stock_code": "",
+    "profile_file": "benchmark_profile.json"
+  },
+  "similarity_dimensions": [
+    {"name": "产品结构", "keywords": ["产品结构", "配方", "产品"],
+     "guide": "（本产品：最终产品是否同属某化学体系/配方骨架）"},
+    {"name": "工艺路线", "keywords": ["工艺路线", "熔窑", "窑炉", "助熔", "工序", "反应", "中和", "沉淀", "脱硫"],
+     "guide": "（本产品：以什么身份进入主流程——助熔剂/反应物/中和剂/脱硫剂…）"},
+    {"name": "下游市场", "keywords": ["下游"],
+     "guide": "（本产品：下游行业是否无替代、景气是否决定开工率）"},
+    {"name": "规模", "keywords": ["规模"],
+     "guide": "（本产品：自有装置/窑炉与单厂年用量量级）"},
+    {"name": "产业链位置", "keywords": ["产业链"],
+     "guide": "（本产品：中游加工厂、对该原料为纯采购方）"}
+  ],
+  "lanes": [],
+  "strength_rules": [
+    [5, ["（千吨级/年行业关键词）"]],
+    [4, ["（百吨级）"]],
+    [3, ["（数十吨级）"]],
+    [2, ["（十吨级及以下）"]]
+  ],
+  "default_strength": 3,
+  "priority_thresholds": {"high": 11, "mid": 9},
+  "confidence_scores": {"高": 3, "中": 2, "低": 0},
+  "peer_keywords": ["（自己也生产该产品的工艺关键词，如 氨碱/联碱/天然碱）"],
+  "buckets": {
+    "（统计品类名）": ["（细分行业关键词，只匹配细分行业字段）"],
+    "其他": ["其他"]
+  },
+  "industry_map": [
+    ["（行业板块）", "（细分方向）", "（用料逻辑 / 工序）", "★★★★★", "（采购与开发要点）"]
+  ],
+  "extra_fields": ["相似维度", "相似逻辑"],
+  "report": {
+    "title": "（报告与工作簿标题，留空则自动生成）",
+    "workbook_output": "下游潜客池.xlsx",
+    "html_output": "标杆客户复制与潜客池报告.html",
+    "benchmark_name": "（报告中使用的标杆简称）",
+    "product_short": "（报告中使用的产品简称）",
+    "headline_facts": ["（标杆的三条硬事实，写进摘要）"],
+    "sales_script": "（复制话术：我方已为XX稳定供应……）",
+    "sop_steps": ["（可复制动作清单，4–8 条）"],
+    "evidence_note": "（本次取证通道说明，写进证据分级一节）",
+    "boundary_note": "（使用边界说明）"
+  }
+}

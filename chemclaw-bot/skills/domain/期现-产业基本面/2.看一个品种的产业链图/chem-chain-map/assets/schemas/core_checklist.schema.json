@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-atlas/schemas/core_checklist.schema.json",
+  "title": "core_checklist.json",
+  "type": "object",
+  "required": ["meta", "core_nodes", "core_relations"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["frozen_at", "scope_statement"],
+      "properties": {
+        "frozen_at": { "type": "string", "description": "冻结日期。必须在检索资料之前。" },
+        "scope_statement": { "type": "string", "description": "覆盖边界声明，须含『只对本清单有效』类限定。" },
+        "effective_depth": {
+          "type": "object",
+          "properties": { "up": { "type": "integer" }, "down": { "type": "integer" } }
+        }
+      }
+    },
+    "core_nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "node_id", "label", "required_criteria", "priority"],
+        "properties": {
+          "id": { "type": "string" },
+          "node_id": { "type": "string" },
+          "label": { "type": "string" },
+          "required_criteria": {
+            "type": "array",
+            "items": {
+              "enum": ["node_present", "identity_verified", "role_classified",
+                       "evidence_linked", "price_mapped", "capacity_mapped", "evidence_quote"]
+            }
+          },
+          "priority": { "enum": ["P0", "P1", "P2"] }
+        }
+      }
+    },
+    "core_relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to", "label", "required_criteria", "priority"],
+        "properties": {
+          "id": { "type": "string" },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "relation_type": { "type": "string" },
+          "label": { "type": "string" },
+          "required_criteria": {
+            "type": "array",
+            "items": {
+              "enum": ["node_present", "direction_verified", "quant_available", "evidence_linked"]
+            }
+          },
+          "priority": { "enum": ["P0", "P1", "P2"] }
+        }
+      }
+    }
+  },
+  "description": "清单必须在检索资料之前冻结，之后不得增删，否则覆盖率失去意义。覆盖率 = 通过条目 / 本清单条目总数。建议核心节点 >= 15 项、核心关系 >= 20 项，且 P0/P1/P2 三档齐全。"
+}

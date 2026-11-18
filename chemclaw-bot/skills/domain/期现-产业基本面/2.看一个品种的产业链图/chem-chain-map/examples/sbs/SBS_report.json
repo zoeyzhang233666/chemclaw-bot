@@ -1,0 +1,776 @@
+{
+  "chain_id": "SBS",
+  "counts": {
+    "nodes": 36,
+    "relations": 48,
+    "sources": 25,
+    "graph_nodes": 36,
+    "graph_relations": 48,
+    "layout": {
+      "nodes": 36,
+      "edges": 48,
+      "overlap": 0,
+      "outside": 0,
+      "edge_through_node": 0,
+      "edge_collinear": 1,
+      "diagonal": 0,
+      "detour": 7
+    }
+  },
+  "coverage": {
+    "definition": "覆盖率 = 逐项判定通过的核心清单条目 / 预先冻结的核心清单条目；节点与关系合计计入，不按条数加权。",
+    "scenario": "覆盖：SBS 的两条直接原料链（苯乙烯：苯+乙烯→乙苯→苯乙烯；丁二烯：石脑油裂解 C4→抽提→丁二烯），以及石脑油/重整芳烃这一层源头；下游覆盖 5 类主要应用骨架（道路改性沥青、防水卷材、鞋材、胶黏剂、聚合物改性）与 5 类主要替代品（SIS/SEBS/TPU/EVA/SBR）。不覆盖：所有新兴应用（医疗、锂电、光伏密封等）、所有替代路线（生物基丁二烯、甲苯甲醇烷基化等）、牌号级完整清单、地缘与贸易流维度。",
+    "nodes": {
+      "passed": 29,
+      "total": 29,
+      "rate": 100.0,
+      "by_priority": {
+        "P0": {
+          "passed": 18,
+          "total": 18
+        },
+        "P1": {
+          "passed": 8,
+          "total": 8
+        },
+        "P2": {
+          "passed": 3,
+          "total": 3
+        }
+      },
+      "detail": [
+        {
+          "core_id": "core_node_01",
+          "label": "SBS（目标品种）",
+          "node_id": "N_PRIMARY",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_02",
+          "label": "苯乙烯（直接原料）",
+          "node_id": "N_SM",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_03",
+          "label": "丁二烯（直接原料）",
+          "node_id": "N_BD",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_04",
+          "label": "乙苯（苯乙烯中间体）",
+          "node_id": "N_EB",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_05",
+          "label": "纯苯（乙苯原料）",
+          "node_id": "N_BZ",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_06",
+          "label": "乙烯（乙苯原料）",
+          "node_id": "N_ETH",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_07",
+          "label": "裂解 C4 馏分（丁二烯原料）",
+          "node_id": "N_C4BE",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_08",
+          "label": "石脑油（乙烯/芳烃原料）",
+          "node_id": "N_NAPHTHA",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_09",
+          "label": "混合 C8 芳烃（C8 抽提路线）",
+          "node_id": "N_C8A",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_10",
+          "label": "基质沥青（改性沥青基料）",
+          "node_id": "N_ASPHALT",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_11",
+          "label": "SBS 改性沥青",
+          "node_id": "N_MODIFIED_ASPH",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_12",
+          "label": "沥青路面（铺装材料）",
+          "node_id": "N_PAVEMENT_DECK",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_13",
+          "label": "终端：公路与市政道路",
+          "node_id": "N_APP_ROAD",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_14",
+          "label": "SBS 改性沥青防水卷材",
+          "node_id": "N_WP_MEMBRANE",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_15",
+          "label": "终端：建筑与市政防水",
+          "node_id": "N_APP_CONSTRUCTION",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_16",
+          "label": "TPR/TPE 鞋底料",
+          "node_id": "N_TPR",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_17",
+          "label": "鞋底/鞋用部件",
+          "node_id": "N_FOOTWEAR_OUTSOLE",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_18",
+          "label": "终端：鞋类制造",
+          "node_id": "N_APP_FOOTWEAR",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_19",
+          "label": "热熔胶 / 热熔压敏胶",
+          "node_id": "N_HMPSA",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_20",
+          "label": "终端：包装与物流",
+          "node_id": "N_APP_PACKAGING",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_21",
+          "label": "改性聚烯烃（增韧改性料）",
+          "node_id": "N_PP_MODIF",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_22",
+          "label": "终端：家电与汽车",
+          "node_id": "N_APP_HOMEAPPL",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_23",
+          "label": "SEBS（氢化 SBS）",
+          "node_id": "N_SEBS",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_24",
+          "label": "SIS（替代/同族）",
+          "node_id": "N_SIS",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_25",
+          "label": "TPU（鞋材替代）",
+          "node_id": "N_TPU",
+          "priority": "P2",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_26",
+          "label": "EVA（鞋材替代）",
+          "node_id": "N_EVA",
+          "priority": "P2",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_27",
+          "label": "SBR（鞋底体系替代）",
+          "node_id": "N_SBR",
+          "priority": "P2",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_28",
+          "label": "LPG / 轻烃（裂解原料替代）",
+          "node_id": "N_LPG",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_29",
+          "label": "裂解汽油（C8 抽提路线原料）",
+          "node_id": "N_PYREXTRACT",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        }
+      ]
+    },
+    "relations": {
+      "passed": 32,
+      "total": 36,
+      "rate": 88.9,
+      "by_priority": {
+        "P0": {
+          "passed": 19,
+          "total": 19
+        },
+        "P1": {
+          "passed": 10,
+          "total": 12
+        },
+        "P2": {
+          "passed": 3,
+          "total": 5
+        }
+      },
+      "detail": [
+        {
+          "core_id": "core_rel_01",
+          "label": "苯乙烯→SBS",
+          "from": "N_SM",
+          "to": "N_PRIMARY",
+          "rel_id": "R14",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_02",
+          "label": "丁二烯→SBS",
+          "from": "N_BD",
+          "to": "N_PRIMARY",
+          "rel_id": "R13",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_03",
+          "label": "乙苯脱氢→苯乙烯",
+          "from": "N_EB",
+          "to": "N_SM",
+          "rel_id": "R03",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_04",
+          "label": "苯→乙苯",
+          "from": "N_BZ",
+          "to": "N_EB",
+          "rel_id": "R01",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_05",
+          "label": "乙烯→乙苯",
+          "from": "N_ETH",
+          "to": "N_EB",
+          "rel_id": "R02",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_06",
+          "label": "C4 抽提→丁二烯",
+          "from": "N_C4BE",
+          "to": "N_BD",
+          "rel_id": "R12",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_07",
+          "label": "裂解副产 C4 馏分",
+          "from": "N_NAPHTHA",
+          "to": "N_C4BE",
+          "rel_id": "R10",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_08",
+          "label": "石脑油裂解→乙烯",
+          "from": "N_NAPHTHA",
+          "to": "N_ETH",
+          "rel_id": "R05",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_09",
+          "label": "轻烃裂解路线（替代原料）",
+          "from": "N_LPG",
+          "to": "N_ETH",
+          "rel_id": "R08",
+          "priority": "P1",
+          "pass": false,
+          "failed": [
+            "evidence_linked"
+          ]
+        },
+        {
+          "core_id": "core_rel_10",
+          "label": "石脑油重整→重整生成油",
+          "from": "N_NAPHTHA",
+          "to": "N_BTX",
+          "rel_id": "R47",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_11",
+          "label": "重整芳烃抽提→纯苯",
+          "from": "N_BTX",
+          "to": "N_BZ",
+          "rel_id": "R06",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_12",
+          "label": "重整生成油→C8 芳烃馏分",
+          "from": "N_BTX",
+          "to": "N_C8A",
+          "rel_id": "R49",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_13",
+          "label": "C8 抽提制苯乙烯（独立路线）",
+          "from": "N_PYREXTRACT",
+          "to": "N_SM",
+          "rel_id": "R45",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_14",
+          "label": "裂解副产裂解汽油",
+          "from": "N_NAPHTHA",
+          "to": "N_PYREXTRACT",
+          "rel_id": "R11",
+          "priority": "P1",
+          "pass": false,
+          "failed": [
+            "evidence_linked"
+          ]
+        },
+        {
+          "core_id": "core_rel_15",
+          "label": "常减压蒸馏→石脑油",
+          "from": "N_CRUDE",
+          "to": "N_NAPHTHA",
+          "rel_id": "R07",
+          "priority": "P2",
+          "pass": false,
+          "failed": [
+            "evidence_linked"
+          ]
+        },
+        {
+          "core_id": "core_rel_16",
+          "label": "炼厂轻烃分离→LPG",
+          "from": "N_CRUDE",
+          "to": "N_LPG",
+          "rel_id": "R09",
+          "priority": "P2",
+          "pass": false,
+          "failed": [
+            "evidence_linked"
+          ]
+        },
+        {
+          "core_id": "core_rel_17",
+          "label": "SBS 掺入→改性沥青",
+          "from": "N_PRIMARY",
+          "to": "N_MODIFIED_ASPH",
+          "rel_id": "R16",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_18",
+          "label": "基质沥青→改性沥青",
+          "from": "N_ASPHALT",
+          "to": "N_MODIFIED_ASPH",
+          "rel_id": "R17",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_19",
+          "label": "改性沥青→沥青路面",
+          "from": "N_MODIFIED_ASPH",
+          "to": "N_PAVEMENT_DECK",
+          "rel_id": "R20",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_20",
+          "label": "路面→公路与市政道路",
+          "from": "N_PAVEMENT_DECK",
+          "to": "N_APP_ROAD",
+          "rel_id": "R28",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_21",
+          "label": "SBS→防水卷材涂盖料",
+          "from": "N_PRIMARY",
+          "to": "N_WP_MEMBRANE",
+          "rel_id": "R18",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_22",
+          "label": "改性沥青→卷材成型",
+          "from": "N_MODIFIED_ASPH",
+          "to": "N_WP_MEMBRANE",
+          "rel_id": "R19",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_23",
+          "label": "卷材→建筑防水",
+          "from": "N_WP_MEMBRANE",
+          "to": "N_APP_CONSTRUCTION",
+          "rel_id": "R29",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_24",
+          "label": "SBS→TPR 鞋底料",
+          "from": "N_PRIMARY",
+          "to": "N_TPR",
+          "rel_id": "R25",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_25",
+          "label": "TPR→鞋底",
+          "from": "N_TPR",
+          "to": "N_FOOTWEAR_OUTSOLE",
+          "rel_id": "R26",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_26",
+          "label": "鞋底→鞋",
+          "from": "N_FOOTWEAR_OUTSOLE",
+          "to": "N_APP_FOOTWEAR",
+          "rel_id": "R27",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_27",
+          "label": "SBS→热熔胶",
+          "from": "N_PRIMARY",
+          "to": "N_HMPSA",
+          "rel_id": "R22",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_28",
+          "label": "SIS→热熔压敏胶",
+          "from": "N_SIS",
+          "to": "N_HMPSA",
+          "rel_id": "R23",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_29",
+          "label": "热熔胶→包装物流",
+          "from": "N_HMPSA",
+          "to": "N_APP_PACKAGING",
+          "rel_id": "R36",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_30",
+          "label": "SBS→改性聚烯烃",
+          "from": "N_PRIMARY",
+          "to": "N_PP_MODIF",
+          "rel_id": "R31",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_31",
+          "label": "改性料→家电/汽车",
+          "from": "N_PP_MODIF",
+          "to": "N_APP_HOMEAPPL",
+          "rel_id": "R33",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_32",
+          "label": "SBS 加氢→SEBS",
+          "from": "N_PRIMARY",
+          "to": "N_SEBS",
+          "rel_id": "R15",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_33",
+          "label": "SIS ↔ SBS 市场替代",
+          "from": "N_SIS",
+          "to": "N_PRIMARY",
+          "rel_id": "R37",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_34",
+          "label": "TPU ↔ SBS 鞋材替代",
+          "from": "N_TPU",
+          "to": "N_PRIMARY",
+          "rel_id": "R38",
+          "priority": "P2",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_35",
+          "label": "EVA ↔ SBS 鞋材替代",
+          "from": "N_EVA",
+          "to": "N_PRIMARY",
+          "rel_id": "R39",
+          "priority": "P2",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_36",
+          "label": "SBR ↔ TPR 鞋底体系替代",
+          "from": "N_SBR",
+          "to": "N_TPR",
+          "rel_id": "R43",
+          "priority": "P2",
+          "pass": true,
+          "failed": []
+        }
+      ]
+    },
+    "overall": {
+      "passed": 61,
+      "total": 65,
+      "rate": 93.8
+    }
+  },
+  "fatal": [],
+  "warn": [
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_BD 的证据 S08 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_SM 的证据 S06 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_SM 的证据 S07 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_EB 的证据 S06 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_EB 的证据 S07 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_BZ 的证据 S07 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_C8A 的证据 S10 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_ETH 的证据 S07 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_C4BE 的证据 S08 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_C4BE 的证据 S15 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_NAPHTHA 的证据 S07 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_CRUDE 的证据 S09 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_PYREXTRACT 的证据 S10 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_ASPHALT 的证据 S11 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_MODIFIED_ASPH 的证据 S11 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_MODIFIED_ASPH 的证据 S12 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_PAVEMENT_DECK 的证据 S11 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_PAVEMENT_DECK 的证据 S12 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_HMPSA 的证据 S18 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_BOPP_TAPE 的证据 S18 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_APP_ROAD 的证据 S12 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_APP_PACKAGING 的证据 S18 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_BTX 的证据 S07 仅为摘要/标题级"
+    },
+    {
+      "code": "EVIDENCE_SHALLOW",
+      "msg": "节点 N_BTX 的证据 S10 仅为摘要/标题级"
+    },
+    {
+      "code": "LAYOUT_COLLINEAR",
+      "msg": "1 对连线的垂直段重合"
+    }
+  ],
+  "info": [],
+  "ok": true
+}

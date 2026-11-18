@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>客户拜访背景卡 · 福莱特玻璃集团（纯碱采购）· 2026-10-15</title>
+<style>
+  :root{
+    --ink:#1c2b36; --muted:#5b6b78; --line:#dde5ec;
+    --brand:#0d4a7a; --brand-2:#0e6ba8; --brand-bg:#eef5fb;
+    --cyan:#0e8a8a; --amber:#b45309; --amber-bg:#fff7e8;
+    --green:#1a7f4b; --green-bg:#eaf7ef; --red:#b3352c; --red-bg:#fdf0ef;
+    --card:#ffffff; --page:#f3f6f9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif; color:var(--ink);
+       background:var(--page); line-height:1.55; font-size:13.5px; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .page{max-width:1020px; margin:18px auto 40px; padding:0 14px;}
+
+  /* ===== 头部 ===== */
+  header{background:linear-gradient(135deg,#0d4a7a 0%,#0e6ba8 62%,#0e8a8a 100%); color:#fff;
+         border-radius:14px; padding:22px 26px 18px; position:relative; overflow:hidden;}
+  header::after{content:""; position:absolute; right:-60px; top:-70px; width:240px; height:240px;
+         background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%); border-radius:50%;}
+  .crumb{font-size:12px; opacity:.85; letter-spacing:.06em;}
+  h1{font-size:23px; margin:4px 0 2px; letter-spacing:.02em;}
+  .sub{font-size:13px; opacity:.92;}
+  .badge{display:inline-block; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+         border-radius:999px; padding:2px 10px; font-size:12px; margin:8px 6px 0 0;}
+  .meta{display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:12px; font-size:12.5px;}
+  .meta b{font-weight:600; opacity:.9;}
+
+  /* ===== KPI ===== */
+  .kpis{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin:12px 0;}
+  .kpi{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
+  .kpi .v{font-size:17px; font-weight:700; color:var(--brand);}
+  .kpi .v small{font-size:11.5px; color:var(--muted); font-weight:500;}
+  .kpi .l{font-size:11.5px; color:var(--muted); margin-top:2px;}
+  .kpi .d{font-size:11px; margin-top:3px; font-weight:600;}
+  .down{color:var(--red);} .up{color:var(--green);} .flat{color:var(--amber);}
+
+  /* ===== 通用区块 ===== */
+  section.card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+               padding:16px 20px; margin-bottom:12px;}
+  h2{font-size:15.5px; color:var(--brand); display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  h2 .no{background:var(--brand); color:#fff; border-radius:6px; font-size:12px; padding:1px 7px; font-weight:600;}
+  h2 .hint{font-size:11.5px; color:var(--muted); font-weight:400; margin-left:auto;}
+  table{width:100%; border-collapse:collapse; font-size:12.8px;}
+  th{background:var(--brand-bg); color:var(--brand); text-align:left; font-weight:600;
+     padding:7px 9px; border:1px solid var(--line); white-space:nowrap;}
+  td{padding:7px 9px; border:1px solid var(--line); vertical-align:top;}
+  tr:nth-child(even) td{background:#fafcfe;}
+  a{color:var(--brand-2); text-decoration:none;} a:hover{text-decoration:underline;}
+  .tag{display:inline-block; border-radius:5px; padding:1px 7px; font-size:11px; font-weight:600; margin-right:6px; white-space:nowrap;}
+  .tag-blue{background:var(--brand-bg); color:var(--brand);}
+  .tag-cyan{background:#e6f5f5; color:var(--cyan);}
+  .tag-amber{background:var(--amber-bg); color:var(--amber);}
+  .tag-red{background:var(--red-bg); color:var(--red);}
+  .tag-green{background:var(--green-bg); color:var(--green);}
+  .tag-gray{background:#eef1f4; color:var(--muted);}
+  .src{font-size:11px; color:var(--muted);}
+
+  /* ===== 版本切换 ===== */
+  .tabs{display:flex; gap:8px; margin-bottom:0;}
+  .tab{flex:1; text-align:center; padding:9px 6px; background:#e6edf4; color:#41576b; border:1px solid var(--line);
+       border-bottom:none; border-radius:10px 10px 0 0; cursor:pointer; font-weight:600; font-size:13.5px;}
+  .tab.active{background:var(--card); color:var(--brand); box-shadow:0 -2px 0 var(--brand) inset;}
+  .ver{display:none;} .ver.active{display:block;}
+  .verbar{border-left:4px solid var(--brand); background:var(--brand-bg); border-radius:0 8px 8px 0;
+          padding:9px 12px; margin-bottom:12px; font-size:12.8px;}
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  h3{font-size:13.5px; color:var(--brand-2); margin:10px 0 6px;}
+  ul.tight{padding-left:18px;} ul.tight li{margin:3px 0;}
+  .q{border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:7px; background:#fdfefe;}
+  .q .qn{font-weight:700; color:var(--brand); margin-right:6px;}
+  .q .why{font-size:11.5px; color:var(--muted); margin-top:2px;}
+  .q label{display:flex; gap:8px; align-items:flex-start; cursor:pointer;}
+
+  /* ===== 时间轴 ===== */
+  .tl{position:relative; padding-left:16px;}
+  .tl::before{content:""; position:absolute; left:5px; top:4px; bottom:4px; width:2px; background:var(--line);}
+  .tl-item{position:relative; padding:0 0 10px 14px;}
+  .tl-item::before{content:""; position:absolute; left:-15px; top:6px; width:9px; height:9px; border-radius:50%;
+                   background:var(--brand-2); border:2px solid #fff; box-shadow:0 0 0 1px var(--line);}
+  .tl-item .dt{font-weight:700; color:var(--brand); font-size:12.5px; margin-right:8px;}
+
+  /* ===== 提示框 ===== */
+  .callout{border-radius:10px; padding:10px 14px; margin-top:10px; font-size:12.8px;}
+  .callout b{display:block; margin-bottom:3px;}
+  .co-amber{background:var(--amber-bg); border:1px solid #f2dfb6; color:#6b3d04;}
+  .co-green{background:var(--green-bg); border:1px solid #c9e8d6; color:#14532d;}
+  .co-blue{background:var(--brand-bg); border:1px solid #cfe0ef; color:#0d3a5c;}
+  .empty{border:2px dashed #c7d4df; background:#f8fafc; border-radius:10px; padding:14px 16px; text-align:center; color:var(--muted); font-size:12.8px;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .chip{background:#fff; border:1px solid var(--line); border-radius:999px; padding:2px 10px; font-size:11.5px; color:var(--muted);}
+
+  /* ===== 来源/页脚 ===== */
+  details.source summary{cursor:pointer; font-size:12.5px; color:var(--brand); font-weight:600;}
+  details.source ol{margin:8px 0 0 20px; font-size:11.8px; color:var(--muted);}
+  details.source li{margin:2px 0;}
+  footer{font-size:11.5px; color:var(--muted); text-align:center; margin-top:14px;}
+  .printbtn{position:fixed; right:18px; bottom:18px; background:var(--brand); color:#fff; border:none;
+            border-radius:999px; padding:9px 18px; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(13,74,122,.35);}
+
+  /* ===== 打印 ===== */
+  @media print{
+    body{background:#fff; font-size:11.5px;}
+    .page{max-width:none; margin:0; padding:0;}
+    header{border-radius:0; padding:14px 18px;}
+    section.card{break-inside:avoid; box-shadow:none;}
+    .printbtn{display:none;}
+    .kpis{grid-template-columns:repeat(5,1fr);}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============ 头部 ============ -->
+  <header>
+    <div class="crumb">ChemClaw · 准备客户拜访 · 内贸销售演示样例</div>
+    <h1>拜访背景卡 · 福莱特玻璃集团股份有限公司</h1>
+    <div class="sub">601865.SH / 6865.HK ｜ 光伏玻璃全球第二 · 纯碱重质碱大客户 ｜ 建议拜访对象：基地/集团采购</div>
+    <span class="badge">我方产品：纯碱（重质碱为主·国标优等品）</span>
+    <span class="badge">本次目的：首次接触 → 进名录 + 小样试单</span>
+    <span class="badge">建议时长：30–45 分钟</span>
+    <div class="meta">
+      <span><b>生成日期</b>：2026-10-15</span>
+      <span><b>数据截至</b>：2026-10-15（公开信息）</span>
+      <span><b>历史沟通</b>：未上传记录 → 第⑤节留空，不虚构客户需求</span>
+    </div>
+  </header>
+
+  <!-- ============ KPI ============ -->
+  <div class="kpis">
+    <div class="kpi"><div class="v">≈1.91万 <small>t/d</small></div><div class="l">在产熔化量（2026-03，华泰口径）</div><div class="d flat">2025冷修约3000t/d</div></div>
+    <div class="kpi"><div class="v">66.68<small>亿元</small></div><div class="l">2026H1 营业收入</div><div class="d down">▼ 同比 -13.8%</div></div>
+    <div class="kpi"><div class="v">-3.63<small>亿元</small></div><div class="l">2026H1 归母净利</div><div class="d down">A股上市首份半年亏损</div></div>
+    <div class="kpi"><div class="v">≈40<small>%</small></div><div class="l">光伏玻璃CR2（信义+福莱特）</div><div class="d flat">福莱特国内约21%</div></div>
+    <div class="kpi"><div class="v">1063–1220<small>元/吨</small></div><div class="l">重质碱现货（全国主要区域）</div><div class="d down">▼ 低位阴跌，较1月跌10%+</div></div>
+  </div>
+
+  <!-- ============ ① 客户速览 ============ -->
+  <section class="card">
+    <h2><span class="no">①</span>客户实际做什么 <span class="hint">点击文中链接可查证来源</span></h2>
+    <table>
+      <tr><th style="width:96px">主营</th><td>光伏玻璃（面板+背板）为主，兼营超白浮法玻璃、家居玻璃、光伏电站EPC。<b>下游是晶科、天合等组件厂</b>，属光伏辅材环节。</td></tr>
+      <tr><th>行业地位</th><td><span class="tag tag-blue">全球第二</span>国内市占率约21%，与信义光能合计CR2约40%（<a href="https://www.sgpjbg.com.cn/labelsyh/fulaiteguangfubolixingyejingzhenggeju/1/6950650.html">国联民生 2026-08-21</a>）；公司官网口径"市占率约30%"。</td></tr>
+      <tr><th>生产基地</th><td>浙江嘉兴（本部）｜安徽凤阳｜江苏南通·通州湾（新基地，2026年投产）｜越南</td></tr>
+      <tr><th>公开产能</th><td>截至2026年3月在产约<b>1.91万t/d</b>；2025年冷修约3000t/d，2026年2月新点火2条1600t/d（<a href="https://www.hibor.com.cn/repinfodetail_5007657.html">华泰证券</a>；南通1600t/d点火见<a href="https://m.mysteel.com/oilchem/a/26030611/6ED8BD3C34575F21_abc.html">隆众 2026-03-06</a>）。</td></tr>
+      <tr><th>产业链位置</th><td>窑炉24小时连续运行 → 对纯碱是<b>大宗刚需、连续到货</b>采购，断供即面临被动冷修，供应稳定性权重极高。</td></tr>
+      <tr><th>企业规模</th><td>A+H两地上市（2015港股/2019A股，嘉兴首家）；2025年归母净利9.81亿元（大幅下滑），2026H1亏损。</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ 版本切换 ============ -->
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-v="caigou">🤝 采购人员版</div>
+    <div class="tab" data-v="jishu">🔬 技术人员版</div>
+    <div class="tab" data-v="laoban">💼 老板版</div>
+  </div>
+
+  <!-- 采购版 -->
+  <section class="card ver active" id="v-caigou">
+    <h2><span class="no">②</span>为什么适合它 + 怎么讲 <span class="hint">拜访对象：采购经理</span></h2>
+    <div class="verbar"><b>本版目标：</b>建立联系 → 摸清采购机制（长协/招标/在供家数）→ 争取小样试单资格。客户正亏损降本，<b>主攻"到厂综合成本+账期+保供"，不打价格战</b>。</div>
+    <div class="cols">
+      <div>
+        <h3>可讲的卖点</h3>
+        <ul class="tight">
+          <li>纯碱是玻璃配合料第一大化工原料（经验单耗约0.18–0.2吨/吨玻璃液，行业经验值，供参考）</li>
+          <li>重质碱粒度分布均匀 → 配料混合均匀、熔化效率与成品率友好，呼应其大窑炉置换降耗路线</li>
+          <li>产能规模大、多基地发运：<b>散装罐车+吨袋</b>双模式，保连续供应</li>
+          <li>按"货价+运距+及时率"的<b>到厂综合成本</b>口径报价，配合其招标节奏</li>
+          <li>渐进路径：小样 → 小批量试供 → 长协锁量</li>
+        </ul>
+        <h3>风险与机会</h3>
+        <ul class="tight">
+          <li><span class="tag tag-red">风险</span>客户亏损压价、行业冷修收缩碱耗</li>
+          <li><span class="tag tag-green">机会</span>南通新线点火=新增碱耗；光伏玻璃8月提价若Q4落地，客户有<b>补库/锁价窗口</b></li>
+          <li><span class="tag tag-green">机会</span>煤价10月反弹推高碱厂成本 → 客户或愿提前锁价（待现场验证）</li>
+        </ul>
+      </div>
+      <div>
+        <h3>⑥ 最值得问清的7个问题</h3>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">1.</span>凤阳/南通/嘉兴各基地在产窑炉数与日熔量？未来6个月有无点火或冷修计划？</span></label><div class="why">估需求量与采购节奏，判断切口大小</div></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">2.</span>纯碱长协与招标的比例？招标周期？当前在供家数？</span></label><div class="why">判断供应商格局与我们的切入位置</div></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">3.</span>规格红线：堆积密度、粒度、NaCl、Fe上限？到厂如何验收？</span></label><div class="why">判断我们的牌号是否达标</div></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">4.</span>现有供应商有不满意的点吗（质量波动/断供/延迟）？是否考虑引入第二供应商？</span></label><div class="why">找痛点=找入口</div></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">5.</span>定价基准是到厂价还是出厂价？账期与结算方式？低价阶段有无提前锁价需求？</span></label><div class="why">定商务方案框架</div></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">6.</span>物流：汽运还是水运+短驳？罐车还是吨袋卸货？及时率如何考核？</span></label><div class="why">测算到厂成本与服务承诺</div></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">7.</span>供应商准入需要什么认证/样品评估？从送样到试供多久？</span></label><div class="why">拿到明确的下一步路径</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 技术版 -->
+  <section class="card ver" id="v-jishu">
+    <h2><span class="no">②</span>技术对接要点 <span class="hint">拜访对象：技术/质量工程师</span></h2>
+    <div class="verbar"><b>本版目标：</b>用规格与稳定性对话，拿到<b>送样评估的标准与流程</b>。避免谈价，聚焦指标、批次一致性与异常处理机制。</div>
+    <div class="cols">
+      <div>
+        <h3>技术弹药（行业通用逻辑，具体指标以客户标准为准）</h3>
+        <table>
+          <tr><th>指标</th><th>对光伏玻璃的意义</th><th>我方能力（拜访前填写）</th></tr>
+          <tr><td>堆积密度（重质碱）</td><td>高→配混均匀、飞扬少、熔化效率稳定</td><td>＿＿＿</td></tr>
+          <tr><td>粒度分布</td><td>影响配合料混合均匀性与熔化速度</td><td>＿＿＿</td></tr>
+          <tr><td>Fe含量</td><td>铁引入→玻璃发绿、透光率下降，光伏玻璃敏感</td><td>＿＿＿</td></tr>
+          <tr><td>NaCl含量</td><td>氯高→耐候性风险与窑炉腐蚀加剧</td><td>＿＿＿</td></tr>
+          <tr><td>批次稳定性</td><td>窑炉24h连续运行，指标波动=成品率风险</td><td>＿＿＿</td></tr>
+        </table>
+        <div class="callout co-blue"><b>切换注意</b>重质碱通常用于大窑炉配合料；如客户轻质碱用于深加工环节，另备轻质碱规格书。</div>
+      </div>
+      <div>
+        <h3>⑥ 技术版问题清单</h3>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">1.</span>现用重质碱各指标的实际控制范围（内控标准，不止国标）？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">2.</span>Fe/Cl等杂质超批对透光与成品率的实际影响？容忍度多少？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">3.</span>批次稳定性如何监控？出现异常批次的处理与索赔惯例？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">4.</span>送样评估的判定标准、检测项目与周期？需要多大量？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">5.</span>更换/增加碱供应商是否需要小炉过渡试验？成本谁承担？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">6.</span>包装与洁净度要求（吨袋内衬/罐车清洁度）？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">7.</span>质量协议与抽检频次怎么约定？</span></label></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 老板版 -->
+  <section class="card ver" id="v-laoban">
+    <h2><span class="no">②</span>战略合作要点 <span class="hint">拜访对象：基地/集团高管</span></h2>
+    <div class="verbar"><b>本版目标：</b>把"卖碱"升级为"供应链安全与降本合作"，拿到<b>更高层面的合作意向与决策链</b>。少讲产品参数，多讲行业判断与我方保供能力。</div>
+    <div class="cols">
+      <div>
+        <h3>可讲的判断（均有公开出处）</h3>
+        <ul class="tight">
+          <li>光伏玻璃行业出清：2025年行业在产日熔量降至9万t/d以下（约-5%，中诚信 2026-05-27），CR2集中度提升，龙头话语权增强</li>
+          <li>客户2026H1首亏、正全力降本 → 原材料"到厂综合成本+稳定供应"是其核心诉求</li>
+          <li>"反内卷"推动行业8月集体提价、库存57→50天改善（高盛口径，2026-10-05）→ 景气修复中<b>保供能力</b>价值凸显</li>
+          <li>我方产能规模、发运半径、多基地调度 → 承诺长协保供与应急预案</li>
+        </ul>
+        <div class="callout co-green"><b>一句开场</b>"看到贵司南通基地今年投产、行业也在回暖，我们希望作为第二供应源加入贵司纯碱供应体系，先从抗风险的角度合作。"</div>
+      </div>
+      <div>
+        <h3>⑥ 老板版问题清单</h3>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">1.</span>未来3年产能布局（凤阳/南通/越南）与原材料战略采购的规划？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">2.</span>大宗原料战略采购的决策机制：谁拍板、什么节奏？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">3.</span>对我方这类供应商，期望的合作模式：长协锁量/框架协议/联合储备？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">4.</span>供应安全底线：单基地最小安全库存与多源要求是什么？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">5.</span>降本上更看重单价，还是到厂综合成本与账期？</span></label></div>
+        <div class="q"><label><input type="checkbox"><span><span class="qn">6.</span>对供应商的ESG/体系审计有何要求？</span></label></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ③ 大事记 ============ -->
+  <section class="card">
+    <h2><span class="no">③</span>近6–12个月重要事情 <span class="hint">2025.10 – 2026.10</span></h2>
+    <div class="tl">
+      <div class="tl-item"><span class="dt">2025年内</span><span class="tag tag-amber">冷修</span>冷修约3000t/d产能，光伏玻璃产销量同比下降 <span class="src">（2025年报；华泰研报）</span></div>
+      <div class="tl-item"><span class="dt">2026-02/03</span><span class="tag tag-green">点火</span>南通基地2条1600t/d新窑炉点火 <span class="src">（<a href="https://m.mysteel.com/oilchem/a/26030611/6ED8BD3C34575F21_abc.html">隆众资讯 2026-03-06</a>）→ 新增碱耗点</span></div>
+      <div class="tl-item"><span class="dt">2026-03-27</span><span class="tag tag-blue">业绩</span>2025年报：归母净利9.81亿元，同比大幅下滑；披露分红预案 <span class="src">（<a href="https://static.cninfo.com.cn/finalpage/2026-03-27/1225035597.PDF">2025年报</a>）</span></div>
+      <div class="tl-item"><span class="dt">2026-04-27</span><span class="tag tag-green">项目</span>南通基地确认为省级重大竣工项目：总投资38.85亿元，年产150万吨超薄超高透面板及背板，已投产 <span class="src">（<a href="https://zhengwu.0513.org/news/detail/42940">南通市政府</a>）</span></div>
+      <div class="tl-item"><span class="dt">2026-05-27</span><span class="tag tag-amber">评级</span>中诚信跟踪评级：2025年产销量下降，提示新投产窑炉<b>产能消纳风险</b>；行业在产日熔量降至9万t/d以下（约-5%） <span class="src">（<a href="https://stockmc.xueqiu.com/202605/601865_20260527_K5T5.pdf">中诚信</a>）</span></div>
+      <div class="tl-item"><span class="dt">2026-05</span><span class="tag tag-red">行业</span>德力股份解除55亿元光伏玻璃大单（2021年签订、五年零交付）——行业需求信号 <span class="src">（<a href="https://www.tmtpost.com/8153344.html">钛媒体 2026-10-12</a>）</span></div>
+      <div class="tl-item"><span class="dt">2026-08-26</span><span class="tag tag-red">业绩</span>2026半年报：营收66.68亿元（-13.8%），归母净利<b>-3.63亿元</b>，A股上市以来首份半年亏损 <span class="src">（<a href="https://stockmc.xueqiu.com/202608/601865_20260826_WKOM.pdf">半年报</a>；<a href="https://www.tmtpost.com/8153344.html">钛媒体</a>）</span></div>
+      <div class="tl-item"><span class="dt">2026-08</span><span class="tag tag-green">行业</span>光伏玻璃"反内卷"集体提价：2.0mm镀膜 8~8.5→9~9.5元/㎡；库存57→50天改善，但组件厂对新价接受度有限 <span class="src">（<a href="http://m.solarzoom.com/article-203980-1.html">期货日报/SOLARZOOM 2026-09-21</a>；<a href="https://caifuhao.eastmoney.com/news/20260804085627124629330">高盛口径 2026-10-05</a>）</span></div>
+      <div class="tl-item"><span class="dt">2026-09-02</span><span class="tag tag-amber">冷修</span>生意头条PriceSeek发布"福莱特光伏玻璃产线冷修影响分析"→ 近期仍有产线冷修 <span class="src">（<a href="https://toutiao.toocle.com/detail-11312879.html">PriceSeek</a>）</span></div>
+      <div class="tl-item"><span class="dt">2026-10-13</span><span class="tag tag-blue">行业</span>证券日报：光伏玻璃价格回升彰显"反内卷"成效，去产能持续推进 <span class="src">（<a href="https://www.stcn.com/article/detail/3120300.html">证券日报</a>）</span></div>
+    </div>
+  </section>
+
+  <!-- ============ ④ 行情 ============ -->
+  <section class="card">
+    <h2><span class="no">④</span>相关市场行情 <span class="hint">截至 2026-10-15，价格均注明日期与来源</span></h2>
+    <table>
+      <tr><th style="width:110px">品种</th><th>规格/地区</th><th style="width:150px">价格</th><th style="width:190px">近期变化</th><th style="width:210px">来源（日期）</th></tr>
+      <tr><td><b>纯碱</b>（我方产品）</td><td>重质碱现货</td><td>华北1120–1220<br>华东1130–1230<br>华中1090–1180 元/吨</td><td><span class="tag tag-red">▼弱势</span>期货01合约持续下探；下游按需、低价成交增加</td><td class="src"><a href="https://finance.sina.com.cn/money/future/fmnews/2026-10-15/doc-inivhiep7438382.shtml">海证期货引隆众</a>（2026-10-15）</td></tr>
+      <tr><td>纯碱（参考价）</td><td>重质碱全国</td><td>1062.86 元/吨</td><td><span class="tag tag-red">▼-1.19%</span>较10月1日1075.71元/吨</td><td class="src"><a href="https://soda.100ppi.com/kx/list---1.html">生意社</a>（2026-10-14）</td></tr>
+      <tr><td>纯碱（对比基期）</td><td>华北重碱送到</td><td>1300–1350 元/吨</td><td><span class="tag tag-red">▼累计跌10%+</span>1月至今的下行通道；供增需减、库存高位</td><td class="src"><a href="https://nenghua.m.mysteel.com/a/26012016/BF73F6405A21CFA7_abc.html">Mysteel</a>（2026-01-20）；国信期货月报（2026-01-25）</td></tr>
+      <tr><td>原盐（原料）</td><td>氯化钠各地</td><td>180–380 元/吨<br><span class="src">海盐250–380/井矿盐270/湖盐180</span></td><td><span class="tag tag-amber">→低位</span>2026年1–7月产量同比-7.68%</td><td class="src"><a href="https://www.chemicalbook.com/priceindex_cb4104636.htm">ChemicalBook</a>（2026-09底）；<a href="https://idea-cp.cnfin.com/ice/2026/09/18/a3976dbb862e4b52b8fb28148979cea6.pdf">中盐指数月报</a>（2026-09-18）</td></tr>
+      <tr><td>动力煤（原料）</td><td>北港 Q5500</td><td>1018 元/吨（+5）</td><td><span class="tag tag-green">▲反弹</span>供应偏紧上行，碱厂成本支撑渐显</td><td class="src"><a href="https://www.sxcoal.com/news/detail/2110323975349547009">煤炭资源网 CCI</a>（2026-10-15）</td></tr>
+      <tr><td>客户侧：光伏玻璃</td><td>2.0mm 镀膜</td><td>9–9.5 元/㎡</td><td><span class="tag tag-green">▲提价</span>2026-08集体上调（原8~8.5）；3.2mm至15~16元/㎡，落地待验证</td><td class="src"><a href="http://m.solarzoom.com/article-203980-1.html">期货日报/SOLARZOOM</a>（2026-09-21）</td></tr>
+    </table>
+    <div class="callout co-amber"><b>谈判含义</b>典型买方市场，客户压价与去库存意愿强，勿硬拼单价；主攻"到厂综合成本+账期+保供+规格稳定性"。若光伏玻璃提价Q4落地、组件排产回暖，客户存在补库与锁量窗口——现场确认其Q4采购节奏。</div>
+  </section>
+
+  <!-- ============ ⑤ 历史沟通 ============ -->
+  <section class="card">
+    <h2><span class="no">⑤</span>历史沟通中已确认 / 未解决 <span class="hint">仅依据上传记录</span></h2>
+    <div class="empty">
+      ⚠️ 本次<b>未上传任何历史沟通记录</b>（微信 / 邮件 / 拜访纪要 / 报价单）——此节为空，<b>不臆测客户已确认的事项</b>。<br>
+      拖入聊天、邮件或会议纪要后，本节将只填充有据可查的"已确认事项 / 未解决问题"，并同步个性化第⑥节提问。
+    </div>
+    <div class="chips">
+      <span class="chip">首访现场请建立基线 ▸</span>
+      <span class="chip">在供供应商与份额</span><span class="chip">招标周期</span><span class="chip">规格红线</span>
+      <span class="chip">账期与结算</span><span class="chip">物流与验收方式</span><span class="chip">准入流程</span>
+    </div>
+  </section>
+
+  <!-- ============ 来源 ============ -->
+  <section class="card">
+    <h2><span class="no">📎</span>数据来源（19条，均为公开信息）</h2>
+    <details class="source" open>
+      <summary>客户与行业（福莱特官网 / 券商研报 / 公告 / 政府与媒体）</summary>
+      <ol>
+        <li>福莱特官网（市占率约30%、四大基地）<a href="https://www.flatgroup.com.cn/about">flatgroup.com.cn/about</a></li>
+        <li>国联民生证券·竞争格局：CR2约40%、国内21%、冷修占23%（2026-08-21）<a href="https://www.sgpjbg.com.cn/labelsyh/fulaiteguangfubolixingyejingzhenggeju/1/6950650.html">sgpjbg.com.cn</a></li>
+        <li>华泰证券·福莱特研报：在产约19100t/d、2025冷修约3000t/d、2026-02新点火2×1600t/d <a href="https://www.hibor.com.cn/repinfodetail_5007657.html">hibor.com.cn</a></li>
+        <li>隆众资讯/我的钢铁网·南通1600t/d点火（2026-03-06）<a href="https://m.mysteel.com/oilchem/a/26030611/6ED8BD3C34575F21_abc.html">mysteel.com</a></li>
+        <li>福莱特2025年年度报告（2026-03-27）<a href="https://static.cninfo.com.cn/finalpage/2026-03-27/1225035597.PDF">cninfo.com.cn</a></li>
+        <li>南通市政府·省级重大项目观摩（2026-04-27）<a href="https://zhengwu.0513.org/news/detail/42940">0513.org</a></li>
+        <li>中诚信国际2026年度跟踪评级（2026-05-27）<a href="https://stockmc.xueqiu.com/202605/601865_20260527_K5T5.pdf">xueqiu.com</a></li>
+        <li>福莱特2026年半年度报告（2026-08-26）<a href="https://stockmc.xueqiu.com/202608/601865_20260826_WKOM.pdf">xueqiu.com</a></li>
+        <li>钛媒体·光伏玻璃中报盘点：福莱特首亏3.63亿、装机-66%、德力解约（2026-10-12）<a href="https://www.tmtpost.com/8153344.html">tmtpost.com</a></li>
+        <li>生意头条PriceSeek·福莱特产线冷修分析（2026-09-02）<a href="https://toutiao.toocle.com/detail-11312879.html">toocle.com</a></li>
+        <li>期货日报/SOLARZOOM·光伏玻璃集体提价（2026-09-21）<a href="http://m.solarzoom.com/article-203980-1.html">solarzoom.com</a></li>
+        <li>东方财富财富号·高盛库存57→50天（2026-10-05）<a href="https://caifuhao.eastmoney.com/news/20260804085627124629330">eastmoney.com</a></li>
+        <li>证券日报·反内卷成效（2026-10-13）<a href="https://www.stcn.com/article/detail/3120300.html">stcn.com</a></li>
+      </ol>
+    </details>
+    <details class="source">
+      <summary>行情数据（纯碱 / 原盐 / 动力煤）</summary>
+      <ol>
+        <li>海证期货·纯碱日评引隆众现货价（新浪财经 2026-10-15）<a href="https://finance.sina.com.cn/money/future/fmnews/2026-10-15/doc-inivhiep7438382.shtml">sina.com.cn</a></li>
+        <li>生意社·重质纯碱参考价1062.86元/吨（2026-10-14）<a href="https://soda.100ppi.com/kx/list---1.html">100ppi.com</a></li>
+        <li>我的钢铁网·华北纯碱：轻碱出厂1220–1280、重碱送到1300–1350（2026-01-20）<a href="https://nenghua.m.mysteel.com/a/26012016/BF73F6405A21CFA7_abc.html">mysteel.com</a></li>
+        <li>国信期货·玻璃纯碱月报：供增需减、远兴二期放量（2026-01-25）<a href="https://www.fxbaogao.com/detail/5239744">fxbaogao.com</a></li>
+        <li>ChemicalBook·氯化钠各地价格180–380元/吨（2026-09底）<a href="https://www.chemicalbook.com/priceindex_cb4104636.htm">chemicalbook.com</a></li>
+        <li>中盐系列价格指数月报：原盐产量同比-7.68%（2026-09-18）<a href="https://idea-cp.cnfin.com/ice/2026/09/18/a3976dbb862e4b52b8fb28148979cea6.pdf">cnfin.com</a></li>
+        <li>煤炭资源网·CCI5500报1018元/吨（2026-10-15）<a href="https://www.sxcoal.com/news/detail/2110323975349547009">sxcoal.com</a></li>
+        <li>我的钢铁网·北港Q5500报995–1015元/吨（2026-10-10）<a href="https://coal.mysteel.com/a/26101017/839AC0BDB17CABBD.html">mysteel.com</a></li>
+      </ol>
+    </details>
+  </section>
+
+  <footer>
+    ChemClaw 演示样例 ｜ 本卡基于公开信息整理，客户需求与痛点均为"待验证假设"，未虚构客户原话 ｜
+    原则：无历史沟通记录时，第⑤节留空并明示 ｜ 生成于 2026-10-15
+  </footer>
+</div>
+
+<button class="printbtn" onclick="window.print()">🖨 打印 / 存PDF</button>
+
+<script>
+  const tabs=document.querySelectorAll('.tab');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.ver').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('v-'+t.dataset.v).classList.add('active');
+  }));
+</script>
+</body>
+</html>

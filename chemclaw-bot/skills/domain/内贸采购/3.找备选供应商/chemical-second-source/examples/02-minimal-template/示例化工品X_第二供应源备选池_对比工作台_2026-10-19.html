@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="化工品第二供应源 / 备选供应商对比工作台">
+<title>示例化工品 X · 第二供应源备选池</title>
+<style>:root{
+  --bg:#eef2f7; --card:#ffffff; --ink:#0b1b2b; --muted:#5a6b7d; --line:#d9e2ec;
+  --navy:#08243f; --navy-2:#0c3357; --blue:#1f5eff; --blue-soft:#e8efff;
+  --teal:#0e7490; --teal-soft:#e6f6f8; --amber:#b45309; --amber-soft:#fff5e6;
+  --red:#b42318; --red-soft:#fdeceb; --green:#067647; --green-soft:#e8f7f0;
+  --violet:#6d28d9; --shadow:0 10px 30px rgba(8,36,63,.08);
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC","Source Han Sans SC",system-ui,-apple-system,sans-serif;
+  font-size:14px; line-height:1.62; -webkit-font-smoothing:antialiased;
+  padding-bottom:96px;
+}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1420px;margin:0 auto;padding:0 26px}
+.num{font-variant-numeric:tabular-nums}
+.sub{color:var(--muted);font-size:12px;line-height:1.5}
+.mini{display:inline-block;margin:2px 4px 2px 0;padding:1px 7px;border:1px solid var(--line);border-radius:999px;background:#f7fafc;font-size:11px;color:#40556a}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;background:linear-gradient(120deg,#06192d 0%,#0a2c4c 52%,#0b3d52 100%);color:#eaf3fb;overflow:hidden;padding:30px 0 26px}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;mask-image:linear-gradient(180deg,rgba(0,0,0,.9),transparent 92%)}
+.hero:after{content:"";position:absolute;right:-140px;top:-180px;width:620px;height:620px;background:radial-gradient(circle,rgba(31,94,255,.30),transparent 62%);pointer-events:none}
+.hero .wrap{position:relative;z-index:2}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.kicker{font-size:11px;letter-spacing:.22em;color:#8fb6dd;text-transform:uppercase}
+.kicker b{color:#ffcf7a;font-weight:700}
+.hero h1{margin:4px 0 8px;font-size:clamp(24px,3vw,38px);line-height:1.25;letter-spacing:.01em;font-weight:700}
+.hero h1 span{color:#ffd28a}
+.hero-sub{color:#b9cde3;font-size:14px;max-width:980px}
+.hero-sub b{color:#fff;font-weight:600}
+.scenario{font-size:11.5px;color:#9fc0df;margin-top:9px;border-left:2px solid #ffcf7a;padding-left:9px;line-height:1.55}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.hbadge{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);color:#dceafb;font-size:12px}
+.hbadge b{color:#fff;font-size:14px}
+.hbadge--warn{background:rgba(255,183,77,.12);border-color:rgba(255,183,77,.35);color:#ffd9a1}
+.stamp{text-align:right;font-size:11px;color:#8fb6dd;line-height:1.7}
+.stamp b{display:block;color:#fff;font-size:12px;letter-spacing:.06em}
+
+/* ---------- Sections ---------- */
+.section{margin:26px 0}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.section-head h2{margin:0;font-size:19px;letter-spacing:.01em}
+.section-head h2 em{font-style:normal;color:var(--blue);font-size:12px;letter-spacing:.16em;margin-right:8px;vertical-align:2px}
+.section-head p{margin:0;color:var(--muted);font-size:12px}
+.note{font-size:12px;color:var(--muted)}
+.note strong{color:var(--ink)}
+
+/* ---------- Baseline + KPI ---------- */
+.topgrid{display:grid;grid-template-columns:1.25fr .95fr;gap:18px;margin-top:-34px;position:relative;z-index:3}
+.baseline{background:linear-gradient(135deg,#0a2c4c,#0c3d5c);color:#eaf3fb;border-radius:16px;padding:22px 22px 18px;box-shadow:0 18px 40px rgba(8,36,63,.22);position:relative;overflow:hidden}
+.baseline:after{content:"";position:absolute;right:-60px;bottom:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,186,92,.18),transparent 70%)}
+.baseline-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:relative;z-index:1}
+.blabel{font-size:10px;letter-spacing:.2em;color:#8fb6dd;margin-bottom:4px}
+.baseline h3{margin:0;font-size:22px;line-height:1.3}
+.baseline .code{font-size:12px;color:#a9c5df;margin-top:2px}
+.baseline .pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#dceafb;border-radius:999px;padding:4px 10px;font-size:11px;white-space:nowrap}
+.bmetrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px;position:relative;z-index:1}
+.bmetric{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:10px 11px}
+.bmetric span{display:block;font-size:10px;color:#9dbdd9;letter-spacing:.08em}
+.bmetric b{font-size:18px;color:#fff;font-weight:700}
+.bmetric small{font-size:10px;color:#9dbdd9;margin-left:3px}
+.bwarn{margin-top:13px;display:flex;gap:10px;align-items:flex-start;background:rgba(255,120,100,.12);border:1px solid rgba(255,120,100,.28);border-radius:10px;padding:9px 12px;font-size:12px;color:#ffd6cf;position:relative;z-index:1}
+.bwarn b{color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+.kpi:nth-child(2):before{background:var(--teal)} .kpi:nth-child(3):before{background:var(--amber)} .kpi:nth-child(4):before{background:var(--violet)}
+.kpi span{display:block;font-size:11px;color:var(--muted);letter-spacing:.04em}
+.kpi b{font-size:26px;line-height:1.25;letter-spacing:-.02em}
+.kpi small{font-size:11px;color:var(--muted);margin-left:4px}
+.kpi p{margin:2px 0 0;font-size:11px;color:var(--muted)}
+
+/* ---------- Params ---------- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.params{display:grid;grid-template-columns:1.2fr 1.2fr .8fr .8fr 1.2fr;gap:14px;align-items:end}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;letter-spacing:.03em}
+.field .ro{background:#f6f9fc;border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:12px;color:#33475c;min-height:38px;display:flex;align-items:center}
+.field input,.field select{width:100%;border:1px solid #c9d6e4;border-radius:9px;padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);background:#fff;outline:none}
+.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,94,255,.12)}
+.calc{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+.calc b{color:var(--ink);font-size:14px}
+.calc .dot{width:5px;height:5px;border-radius:50%;background:var(--teal);display:inline-block;margin-right:6px}
+
+/* ---------- Filters ---------- */
+.filters{position:sticky;top:0;z-index:30;background:rgba(238,242,247,.94);backdrop-filter:blur(10px);border-bottom:1px solid rgba(217,226,236,.9);padding:11px 0;margin:22px 0 16px}
+.filterrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{position:relative;flex:1 1 240px;max-width:340px}
+.search input{width:100%;border:1px solid #c9d6e4;border-radius:10px;padding:8px 12px 8px 34px;font:inherit;font-size:13px;background:#fff;outline:none}
+.search svg{position:absolute;left:10px;top:9px;opacity:.45}
+.chip{border:1px solid #cfdae7;background:#fff;color:#33475c;border-radius:999px;padding:6px 11px;font-size:12px;cursor:pointer;transition:.16s;white-space:nowrap}
+.chip:hover{border-color:#9db4cc}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip b{font-weight:700;margin-left:3px;opacity:.75}
+.sort{margin-left:auto;display:flex;gap:8px;align-items:center}
+.sort select{border:1px solid #cfdae7;border-radius:9px;padding:7px 9px;background:#fff;font:inherit;font-size:12px;color:#33475c}
+.viewtoggle{display:flex;border:1px solid #cfdae7;border-radius:9px;overflow:hidden;background:#fff}
+.viewtoggle button{border:0;background:transparent;padding:7px 11px;font:inherit;font-size:12px;color:#5a6b7d;cursor:pointer}
+.viewtoggle button.on{background:var(--navy);color:#fff}
+
+/* ---------- Cards ---------- */
+.pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(338px,1fr));gap:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 6px 18px rgba(8,36,63,.05);display:flex;flex-direction:column;gap:11px;position:relative;transition:.18s;min-width:0}
+.card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(8,36,63,.10);border-color:#c3d3e4}
+.card.sel{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,94,255,.13),0 14px 30px rgba(8,36,63,.10)}
+.card-top{display:flex;gap:10px;align-items:flex-start}
+.idx{flex:none;width:30px;height:30px;border-radius:9px;background:#f0f5fa;border:1px solid #dbe6f1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#38536d}
+.card-title{flex:1;min-width:0}
+.card-title h3{margin:0;font-size:15.5px;line-height:1.35;letter-spacing:.01em}
+.card-title p{margin:2px 0 0;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.checkbox{flex:none;position:relative;width:22px;height:22px}
+.checkbox input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.checkbox span{position:absolute;inset:0;border:1.5px solid #b9c9d9;border-radius:6px;background:#fff;transition:.15s}
+.checkbox input:checked + span{background:var(--blue);border-color:var(--blue)}
+.checkbox input:checked + span:after{content:"";position:absolute;left:6px;top:2.5px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.card-diff{font-size:12px;color:#3b5065;background:#f7fafd;border:1px solid #e6eef6;border-radius:9px;padding:8px 10px;line-height:1.55;min-height:58px}
+.card-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.m{background:#fbfdff;border:1px solid #e7eef6;border-radius:9px;padding:7px 8px;min-width:0}
+.m span{display:block;font-size:10px;color:#7a8b9d;white-space:nowrap}
+.m b{display:block;font-size:15px;line-height:1.35;color:#13283d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m b small{font-size:10px;color:#7a8b9d;font-weight:400}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:10.5px;padding:3px 8px;border-radius:6px;background:#f2f6fa;border:1px solid #e1e9f1;color:#3d5268;white-space:nowrap}
+.tag.green{background:var(--green-soft);border-color:#bfe6d2;color:#05603a}
+.tag.amber{background:var(--amber-soft);border-color:#f3d9ae;color:#8a4b08}
+.tag.red{background:var(--red-soft);border-color:#f3c6c2;color:#912018}
+.tag.blue{background:var(--blue-soft);border-color:#c9d9ff;color:#1741a6}
+.tag.violet{background:#f2ecff;border-color:#ddd0ff;color:#5925b8}
+.riskline{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.dots{display:inline-flex;gap:2px}
+.dots i{width:6px;height:6px;border-radius:50%;background:#e3eaf2}
+.dots i.on{background:var(--amber)}
+.dots.lv5 i.on{background:var(--red)} .dots.lv4 i.on{background:#d97706} .dots.lv3 i.on{background:#ca8a04} .dots.lv2 i.on{background:var(--green)}
+.card details{margin-top:auto;border-top:1px dashed #e3ebf3;padding-top:8px}
+.card summary{cursor:pointer;font-size:11.5px;color:var(--blue);list-style:none;display:flex;align-items:center;gap:5px}
+.card summary::-webkit-details-marker{display:none}
+.card summary:before{content:"+";font-weight:700}
+.card details[open] summary:before{content:"−"}
+.detail-grid{display:grid;grid-template-columns:1fr;gap:9px;margin-top:9px}
+.detail-block{font-size:11.5px;color:#40556a;line-height:1.6}
+.detail-block h4{margin:0 0 3px;font-size:11px;color:#7a8b9d;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.detail-block ul{margin:0;padding-left:16px}
+.detail-block li{margin:1px 0}
+.ev{display:block;margin:3px 0;font-size:11.5px;line-height:1.45}
+.grade{display:inline-block;font-size:9px;padding:0 4px;border-radius:4px;background:#eef3f8;border:1px solid #dbe5ef;color:#5a6b7d;margin-left:3px;vertical-align:1px}
+
+/* ---------- Pool table view ---------- */
+.pooltable{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:12px}
+.pooltable th{background:#f5f8fc;text-align:left;padding:10px 10px;border-bottom:1px solid var(--line);color:#51657a;font-weight:600;white-space:nowrap}
+.pooltable td{padding:9px 10px;border-bottom:1px solid #edf2f7;vertical-align:top}
+.pooltable tr:last-child td{border-bottom:0}
+.pooltable tr:hover td{background:#fbfdff}
+.pooltable .name{font-weight:700;color:#12273b}
+.pooltable .tiny{font-size:10.5px;color:var(--muted)}
+.hide{display:none!important}
+
+/* ---------- Charts ---------- */
+.chartgrid{display:grid;grid-template-columns:1.6fr .9fr;gap:15px}
+.chart-card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:15px 16px}
+.chart-card h3{margin:0 0 2px;font-size:14px}
+.chart-card p{margin:0 0 8px;font-size:11px;color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.stack{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid #e1e9f1;margin-top:14px}
+.stack span{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;white-space:nowrap}
+.stacknote{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
+.stacknote .row{display:flex;align-items:center;gap:8px;font-size:12px;color:#40556a}
+.stacknote .bar{height:7px;border-radius:4px;background:#e9eff6;flex:1;overflow:hidden}
+.stacknote .bar i{display:block;height:100%}
+.stacknote b{width:42px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ---------- Same source ---------- */
+.sourcegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.sourcecard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:var(--shadow);position:relative}
+.sourcecard .flag{position:absolute;right:12px;top:12px;font-size:10px;padding:2px 8px;border-radius:999px;background:var(--red-soft);border:1px solid #f3c6c2;color:var(--red)}
+.sourcecard h3{margin:0 0 2px;font-size:14px;padding-right:64px}
+.sourcecard .parent{font-size:11px;color:var(--muted);margin-bottom:9px}
+.entities{display:flex;flex-direction:column;gap:5px;margin:8px 0}
+.entity{display:flex;gap:7px;align-items:flex-start;font-size:12px;background:#f8fafc;border:1px solid #e7eef6;border-radius:8px;padding:6px 8px}
+.entity:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue);margin-top:6px;flex:none}
+.sourcecard .impl{font-size:11.5px;color:#3b5065;line-height:1.55;border-top:1px dashed #e3ebf3;padding-top:8px;margin-top:8px}
+.sourcecard .impl b{color:var(--ink)}
+
+/* ---------- Spec matrix ---------- */
+.specwrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.spectable{width:100%;border-collapse:separate;border-spacing:0;font-size:11.5px;min-width:1050px}
+.spectable th{position:sticky;top:0;background:#f5f8fc;padding:9px 8px;border-bottom:1px solid var(--line);color:#51657a;font-weight:600;text-align:center;white-space:nowrap;z-index:2}
+.spectable th:first-child,.spectable td:first-child{position:sticky;left:0;background:#fff;text-align:left;z-index:1;min-width:150px}
+.spectable thead th:first-child{background:#f5f8fc;z-index:3}
+.spectable td{padding:8px;border-bottom:1px solid #edf2f7;text-align:center}
+.spectable tr:hover td{background:#fbfdff}
+.st{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10.5px;white-space:nowrap;border:1px solid}
+.st.coa{background:var(--green-soft);border-color:#bfe6d2;color:#05603a}
+.st.sample{background:var(--amber-soft);border-color:#f3d9ae;color:#8a4b08}
+.st.audit{background:var(--blue-soft);border-color:#c9d9ff;color:#1741a6}
+.spec-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:9px}
+
+/* ---------- Risk table ---------- */
+.riskhead{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.riskhead .chip{font-size:11px;padding:4px 10px}
+.risktable{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:11.5px}
+.risktable th{background:#f5f8fc;text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);color:#51657a;font-weight:600;white-space:nowrap}
+.risktable td{padding:8px 10px;border-bottom:1px solid #edf2f7;vertical-align:top;line-height:1.5}
+.risktable tr:last-child td{border-bottom:0}
+.risktable tr:hover td{background:#fbfdff}
+.riskdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.riskdot.f{background:var(--red)} .riskdot.e{background:var(--amber)} .riskdot.q{background:var(--blue)} .riskdot.s{background:var(--violet)} .riskdot.i{background:#64748b}
+.status{font-size:10px;padding:1px 6px;border-radius:4px;border:1px solid #dbe5ef;background:#f6f9fc;color:#5a6b7d;white-space:nowrap}
+.status.ok{background:var(--green-soft);border-color:#bfe6d2;color:#05603a}
+.status.pending{background:var(--amber-soft);border-color:#f3d9ae;color:#8a4b08}
+
+/* ---------- Actions ---------- */
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.action{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:var(--shadow);position:relative}
+.action .phase{display:inline-block;font-size:10px;letter-spacing:.06em;color:var(--blue);background:var(--blue-soft);border:1px solid #c9d9ff;border-radius:999px;padding:2px 8px;margin-bottom:7px}
+.action h3{margin:0 0 5px;font-size:13.5px}
+.action p{margin:0;font-size:11.5px;color:#40556a;line-height:1.6}
+.action .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:9px;font-size:10.5px;color:var(--muted);border-top:1px dashed #e3ebf3;padding-top:7px}
+.action .meta b{color:#33475c;font-weight:600}
+
+/* ---------- Sources ---------- */
+.sources{columns:2;column-gap:26px;font-size:11.5px;color:#40556a}
+.sources .src{break-inside:avoid;margin:0 0 8px;line-height:1.5}
+.sources .src .grade{margin-right:5px}
+.foot{border-top:1px solid var(--line);margin-top:28px;padding:18px 0 30px;font-size:11px;color:var(--muted);line-height:1.7}
+.foot a{color:var(--blue);text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- Tray ---------- */
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(7,26,46,.97);border-top:1px solid rgba(255,255,255,.12);color:#eaf3fb;padding:10px 0;transform:translateY(112%);transition:transform .22s ease;box-shadow:0 -10px 30px rgba(0,0,0,.18)}
+.tray.show{transform:none}
+.tray .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tray .count{font-size:12px;color:#a9c5df;white-space:nowrap}
+.tray .count b{color:#fff;font-size:15px}
+.tray .names{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.tray .nm{font-size:11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:3px 8px;color:#dceafb;display:inline-flex;gap:5px;align-items:center}
+.tray .nm button{border:0;background:transparent;color:#8fb6dd;cursor:pointer;font-size:13px;line-height:1;padding:0}
+.btn{border:0;border-radius:9px;padding:9px 16px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn.primary{background:linear-gradient(135deg,#2f6bff,#1f5eff);color:#fff;box-shadow:0 6px 16px rgba(31,94,255,.35)}
+.btn.primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:#dceafb}
+.btn.light{background:#fff;border:1px solid #cfdae7;color:#33475c}
+.btn.dark{background:var(--navy);color:#fff}
+
+/* ---------- Modal ---------- */
+.modal{position:fixed;inset:0;z-index:80;background:rgba(5,16,29,.66);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow:auto}
+.modal.open{display:flex}
+.dialog{background:#f7fafc;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.35);width:min(1280px,100%);max-height:92vh;overflow:auto;position:relative}
+.dialog-head{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:16px 20px;display:flex;gap:14px;justify-content:space-between;align-items:flex-start;border-radius:18px 18px 0 0}
+.dialog-head h2{margin:0;font-size:18px}
+.dialog-head p{margin:2px 0 0;font-size:11.5px;color:var(--muted)}
+.dialog-actions{display:flex;gap:8px;flex-wrap:wrap}
+.close{width:34px;height:34px;border-radius:9px;border:1px solid #d7e2ee;background:#fff;font-size:18px;line-height:1;color:#5a6b7d;cursor:pointer}
+.dialog-body{padding:16px 20px 22px}
+.cmpwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff;max-height:56vh}
+.cmptable{border-collapse:separate;border-spacing:0;width:100%;font-size:11.5px;min-width:760px}
+.cmptable th,.cmptable td{border-bottom:1px solid #edf2f7;padding:8px 10px;vertical-align:top;text-align:left}
+.cmptable thead th{position:sticky;top:0;background:#f5f8fc;z-index:3;border-bottom:1px solid var(--line);min-width:190px}
+.cmptable thead th:first-child{left:0;z-index:4;min-width:138px}
+.cmptable tbody th{position:sticky;left:0;background:#fbfdff;z-index:2;font-weight:600;color:#51657a;min-width:138px;border-right:1px solid #edf2f7}
+.cmptable td.base,.cmptable thead th.base{background:#eef3f8}
+.cmptable tbody tr:hover td.base{background:#e8eef6}
+.cmptable td.best{background:var(--green-soft)}
+.cmptable td.worst{background:var(--red-soft)}
+.cmptable td .sub{margin-top:2px}
+.radargrid{display:grid;grid-template-columns:420px 1fr;gap:16px;margin-top:16px;align-items:start}
+.radar-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.diffcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.diffcard h3{margin:0 0 6px;font-size:13px}
+.diffcard ul{margin:0;padding-left:17px;font-size:11.5px;color:#3b5065;line-height:1.7}
+.diffcard li{margin:3px 0}
+.diffcard li b{color:var(--ink)}
+.footnote{font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.6}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,20px);background:#0b1b2b;color:#fff;padding:9px 16px;border-radius:10px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:100;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:1100px){
+  .topgrid{grid-template-columns:1fr}
+  .params{grid-template-columns:repeat(2,1fr)}
+  .chartgrid{grid-template-columns:1fr}
+  .actions{grid-template-columns:1fr 1fr}
+  .radargrid{grid-template-columns:1fr}
+  .sources{columns:1}
+}
+@media (max-width:720px){
+  .wrap{padding:0 14px}
+  .hero{padding:22px 0 18px}
+  .hero h1{font-size:25px}
+  .topgrid{margin-top:-18px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .bmetrics{grid-template-columns:1fr 1fr}
+  .params{grid-template-columns:1fr}
+  .pool{grid-template-columns:1fr}
+  .actions{grid-template-columns:1fr}
+  .filters{position:static}
+  .sort{margin-left:0}
+  .tray .wrap{gap:8px}
+  .dialog-head{flex-direction:column}
+}
+@media print{
+  body{background:#fff;padding:0}
+  body.printing-compare .hero,body.printing-compare .filters,body.printing-compare .params,
+  body.printing-compare .topgrid,body.printing-compare .charts,body.printing-compare .same-source,
+  body.printing-compare .spec,body.printing-compare .risk,body.printing-compare .actions,
+  body.printing-compare .sources,body.printing-compare .foot,body.printing-compare .tray,
+  body.printing-compare .toast,body.printing-compare .method-sec{display:none!important}
+  body:not(.printing-compare) .modal{display:none!important}
+  body.printing-compare .modal{position:static;display:block;background:#fff;padding:0;overflow:visible}
+  body.printing-compare .dialog{max-height:none;box-shadow:none;width:100%}
+  body.printing-compare .dialog-head{position:static}
+  body.printing-compare .cmpwrap{max-height:none;overflow:visible}
+  body.printing-compare .dialog-actions{display:none}
+}
+
+/* ---------- Method / judgement ---------- */
+.methodgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.methodcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px 18px;box-shadow:var(--shadow)}
+.methodcard h3{margin:0 0 11px;font-size:14px;color:var(--navy);letter-spacing:.02em}
+.mstep{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed #edf2f7;font-size:12px;color:#40556a}
+.mstep:last-child{border-bottom:0}
+.mstep>b{flex:none;width:20px;height:20px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-size:10px;display:flex;align-items:center;justify-content:center}
+.mstep strong{color:var(--ink);margin-right:4px}
+.judgement{padding:7px 0;border-bottom:1px dashed #edf2f7;font-size:12px;color:#40556a}
+.judgement:last-child{border-bottom:0}
+.judgement>b{display:inline-block;min-width:82px;color:var(--teal);margin-right:6px}
+@media (max-width:1100px){.methodgrid{grid-template-columns:1fr}}
+@media print{.method-sec{display:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">PROCUREMENT INTELLIGENCE · <b>第二供应源工作台</b></div>
+        <h1 id="heroTitle"></h1>
+      </div>
+      <div class="stamp"><b id="stampDate"></b><span id="stampNote"></span></div>
+    </div>
+    <div class="hero-sub" id="heroSub"></div>
+    <div class="scenario" id="heroScenario"></div>
+    <div class="hero-badges" id="heroBadges"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="topgrid">
+    <div class="baseline" id="baselineCard"></div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2><em>01</em>采购参数与物流假设</h2>
+      <p id="paramsSub">参数只影响车次/运费估算；规格与商务条款以询价单为准</p>
+    </div>
+    <div class="panel">
+      <div class="params">
+        <div class="field"><label>产品 / 规格</label><div class="ro" id="pSpec"></div></div>
+        <div class="field"><label>收货地</label><div class="ro" id="pRecv"></div></div>
+        <div class="field"><label>月采购量（吨）</label><input id="qty" type="number" min="1" step="10" value="800"></div>
+        <div class="field"><label>汽运费率（元/吨·km）</label><input id="rate" type="number" min="0.05" max="1.5" step="0.01" value="0.45"></div>
+        <div class="field"><label>物流口径</label><div class="ro" id="pMode"></div></div>
+      </div>
+      <div class="calc" id="calcLine"></div>
+      <div class="note" id="paramNote" style="margin-top:9px"></div>
+    </div>
+  </section>
+
+  <section class="section" id="poolSection">
+    <div class="section-head">
+      <h2><em>02</em>备选供应商池</h2>
+      <p id="poolSub">勾选 2–5 家进入横向比较；展开卡片可看证据与核实项</p>
+    </div>
+    <div class="filters">
+      <div class="filterrow">
+        <div class="search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#33475c" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="搜索企业、集团、城市、产品…">
+        </div>
+        <div id="chips" style="display:flex;gap:7px;flex-wrap:wrap"></div>
+        <div class="sort">
+          <select id="sort">
+            <option value="distance">按运距最近</option>
+            <option value="capacity">按产能最大</option>
+            <option value="risk">按风险最低</option>
+            <option value="name">按名称</option>
+          </select>
+          <div class="viewtoggle">
+            <button id="viewCard" class="on">卡片</button>
+            <button id="viewTable">表格</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="pool" class="pool"></div>
+    <div id="poolTableWrap" class="hide"></div>
+  </section>
+
+  <section class="section charts">
+    <div class="section-head">
+      <h2><em>03</em>组合视角：规模 × 区位</h2>
+      <p id="chartsSub">气泡越靠左上＝越近、越大；颜色＝工艺路线</p>
+    </div>
+    <div class="chartgrid">
+      <div class="chart-card">
+        <h3 id="scatterTitle"></h3>
+        <p id="scatterNote"></p>
+        <svg id="scatter" viewBox="0 0 760 400" width="100%" role="img" aria-label="产能与运距散点图"></svg>
+        <div class="legend" id="scatterLegend"></div>
+      </div>
+      <div class="chart-card">
+        <h3>工艺阵营</h3>
+        <p id="stackNoteTop"></p>
+        <div class="stack" id="stack"></div>
+        <div class="stacknote" id="stacknote"></div>
+        <div class="note" id="stackInsight" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section same-source">
+    <div class="section-head">
+      <h2><em>04</em>同源与股权关系</h2>
+      <p>同源不等于不能买，但“同时入选”会高估第二供应源的独立性</p>
+    </div>
+    <div class="sourcegrid" id="sourcegrid"></div>
+    <div class="note" id="sameNote" style="margin-top:12px"></div>
+  </section>
+
+  <section class="section spec">
+    <div class="section-head">
+      <h2><em>05</em>规格兼容性与试样矩阵</h2>
+      <p id="specSub">“COA 可追溯”不等于“规格兼容”；新装置、新工艺、非资质品牌一律先试样</p>
+    </div>
+    <div class="specwrap"><table class="spectable" id="spectable"></table></div>
+    <div class="spec-legend" id="specLegend"></div>
+  </section>
+
+  <section class="section risk">
+    <div class="section-head">
+      <h2><em>06</em>公开风险与证据台账</h2>
+      <p>只列可追溯的公开事实；“待核实”不作为结论使用</p>
+    </div>
+    <div class="riskhead" id="riskhead"></div>
+    <div style="overflow:auto"><table class="risktable" id="risktable"></table></div>
+  </section>
+
+  <section class="section actions-sec">
+    <div class="section-head">
+      <h2><em>07</em><span id="actionTitle">90 天推进清单</span></h2>
+      <p>动作是“验证与建源”，不是“替换现有供应商”</p>
+    </div>
+    <div class="actions" id="actions"></div>
+  </section>
+
+  <section class="section method-sec" id="methodSec">
+    <div class="section-head">
+      <h2><em>08</em>研究口径与关键判断</h2>
+      <p id="methodSub"></p>
+    </div>
+    <div class="methodgrid">
+      <div class="methodcard"><h3>研究步骤</h3><div id="methodSteps"></div></div>
+      <div class="methodcard"><h3>这版池子的关键判断</h3><div id="judgements"></div></div>
+    </div>
+  </section>
+
+  <section class="section sources-sec">
+    <div class="section-head">
+      <h2><em>09</em>数据来源与证据等级</h2>
+      <p>A=公告/政府；B=协会/券商/主流媒体；C=企业官网/百科</p>
+    </div>
+    <div class="sources" id="sources"></div>
+    <div class="foot" id="footerText"></div>
+  </section>
+
+</main>
+
+<div class="tray" id="tray">
+  <div class="wrap">
+    <div class="count">已选 <b id="selCount">0</b> 家</div>
+    <div class="names" id="selNames"></div>
+    <button class="btn ghost" id="clearBtn">清空</button>
+    <button class="btn primary" id="compareBtn" disabled>横向比较（至少 2 家）</button>
+  </div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="dialog">
+    <div class="dialog-head">
+      <div>
+        <h2 id="modalTitle">横向比较</h2>
+        <p id="modalSub"></p>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn light" id="printCompare">打印比较</button>
+        <button class="close" id="closeModal" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="dialog-body">
+      <div class="cmpwrap"><table class="cmptable" id="cmptable"></table></div>
+      <div class="radargrid">
+        <div class="radar-card">
+          <svg id="radar" viewBox="0 0 400 400" width="100%" role="img" aria-label="供应商雷达图"></svg>
+          <div class="legend" id="radarLegend"></div>
+          <div class="footnote">雷达为 0–100 的相对刻度：产能对数归一、区位按运距、成本按工艺、资质按准入、风险按等级、独立性按同源。仅用于讨论，不是评分模型。</div>
+        </div>
+        <div class="diffcard">
+          <h3>与现有供应商的关键差异</h3>
+          <ul id="diffList"></ul>
+          <div class="footnote">绿色/红色仅标记可量化项的相对位置（运距、运费、产能、风险分），不代表商务结论。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>window.__DSH_DATA__={"meta":{"title":"示例化工品 X · 第二供应源备选池","product":"示例化工品 X（虚构，仅用于演示 schema）","product_short":"示例品 X","unit":"万吨/年","asof":"2026-10-19","buyer_site":"示例市（示例园区）","buyer_short":"示例市","volume":"500 吨/月","volume_t":500,"volume_period":"月","spec":"示例规格：主含量 ≥99.0%；水分 ≤0.5%；粒度按客户封样","use_case":"示例下游（虚构）","scenario":"这是合成数据模板，只演示 data.json 的字段与研究结构，不是真实企业、不是真实价格，也不构成任何采购结论。复制本目录后替换为你的产品数据。","qualification_label":"示例行业准入","qualification_short":"准入","grade_label":"等级 / 牌号","near_km":500,"processes":[{"name":"路线甲","color":"#b45309","cost_score":55},{"name":"路线乙","color":"#1f5eff","cost_score":78}],"risk_categories":["财务","装置","资质","同源","行业"],"same_source_note":"示例：A 与 B 同属“示例集团”，同时入选只能算一个独立源；C 为独立企业。","spec_note":"示例：首样 20 kg × 2 批；检测周期 7 个工作日；判定按客户内控。","process_insight":"示例：路线乙成本潜力更高，但新装置稳定性需验证；路线甲质量更稳。","disclaimer":"合成数据，仅用于演示 skill 的输入/输出结构，不构成任何商业建议。","action_window":"60 天","price_assumption":5000,"method_note":"示例方法：先定规格，再核身份与同源，最后试样。","method_steps":[{"label":"锚定规格","text":"把现有供应商 COA 拆成可检测指标。"},{"label":"核身份","text":"确认是生产企业，不是贸易商。"},{"label":"查同源","text":"股权穿透，避免假第二源。"},{"label":"试样","text":"新装置/新工艺先首样。"}],"key_judgements":[{"label":"示例判断","text":"B 运距最近但为新装置；A 规模最大但财务偏弱；C 风险最低但运距远。"},{"label":"决策边界","text":"本页只缩小验证范围，不替采购决定替换。"}],"stamp_note":"合成数据 · 仅演示结构 · 非真实研究","dd_items":[{"label":"营业执照","hint":"示例：营业执照与股权穿透"},{"label":"生产许可","hint":"示例：行业生产许可"},{"label":"质量体系","hint":"示例：ISO9001"},{"label":"近12月COA","hint":"示例：至少 3 批"},{"label":"产能证明","hint":"示例：环评/公告"},{"label":"环保/安全","hint":"示例：许可与处罚记录"},{"label":"财务/涉诉","hint":"示例：审计与征信"},{"label":"样品/封样","hint":"示例：首样与留样"}],"fin_year":"2025","output_year":"2024","distance_bands":[]},"params":{"product":"示例化工品 X","spec":"主含量 ≥99.0%；水分 ≤0.5%","monthly":500,"receiver":"示例市（示例园区）","baseline":"现有供应商（示例）","freight_rate":0.4,"water_rate":0.1,"truck_load_t":30,"price_assumption":5000},"baseline":{"id":"B00","name":"现有供应商（示例）","short":"现有供应商","role":"现有供应商","province":"示例省","city":"示例市","site":"示例园区 A 区","distance":600,"transport":"汽运","freight_low":180,"freight_high":300,"process":"路线甲","capacity":100,"capacity_note":"示例：单基地 100 万吨/年","grade":"标准级","brand":"示例牌","qualified":true,"listed":"未上市","code":"—","group":"示例集团","controller":"示例实控人","ownership":"民营","employees":"约 800 人","revenue":"20.0","profit":"0.8","output":"—","products":"示例化工品 X、副产品 Y","spec_fit":"基准","sample":"—","risk_score":3,"risk_level":"中","same_source":"无","same_note":"示例：集团内无第二平台。","diff":"基准：路线甲 100 万吨、600 km。","risk_summary":"示例：盈利偏薄，装置老旧。","warn":"示例：2025 年净利 0.8 亿元，装置运行 15 年；这是“建第二源”的背景，不是立即更换的理由。","verify":["2026 年长协政策","检修计划"],"evidence":["SRC01"],"tags":["现有供应商","路线甲","标准级"]},"candidates":[{"id":"C01","name":"示例工厂 A（虚构）","short":"示例 A","role":"备选","province":"示例省","city":"示例市","site":"示例园区 B 区","distance":80,"transport":"汽运","freight_low":30,"freight_high":50,"process":"路线甲","capacity":150,"capacity_note":"示例：150 万吨/年，2018 年投产","grade":"标准级 / 高纯级","brand":"示例 A 牌","qualified":true,"listed":"未上市","code":"—","group":"示例集团","controller":"示例实控人","ownership":"民营","employees":"约 1,200 人","revenue":"30.0","profit":"1.2","output":"—","products":"示例化工品 X、副产品 Y","spec_fit":"高","sample":"建议","risk_score":2,"risk_level":"低","same_source":"与示例 B 同集团","same_note":"示例 A 与 B 同属示例集团，同时入选只能算一个独立源。","diff":"运距缩短 520 km；产能为现有的 150%；同工艺。","risk_summary":"示例：同集团关联交易；财务稳健。","verify":["与 B 的销售主体","高纯级批次稳定性"],"evidence":["SRC01","SRC02"],"tags":["近场","同工艺","规模大"],"new_plant":false},{"id":"C02","name":"示例工厂 B（虚构）","short":"示例 B","role":"备选","province":"示例省","city":"示例市","site":"示例园区 C 区","distance":120,"transport":"汽运 / 水运","freight_low":35,"freight_high":60,"process":"路线乙","capacity":80,"capacity_note":"示例：80 万吨/年，2025 年新装置","grade":"标准级","brand":"示例 B 牌","qualified":false,"listed":"未上市","code":"—","group":"示例集团","controller":"示例实控人","ownership":"民营","employees":"约 500 人","revenue":"未披露","profit":"未披露","output":"—","products":"示例化工品 X","spec_fit":"中","sample":"必须","risk_score":3,"risk_level":"中","same_source":"与示例 A 同集团","same_note":"示例 B 与 A 同属示例集团。","diff":"运距缩短 480 km；新装置 2025 年投产；非准入。","risk_summary":"示例：新装置爬坡；非准入；财务未披露。","verify":["新线达产","准入申请进度","重质比例"],"evidence":["SRC02"],"tags":["近场","新装置","非准入"],"new_plant":true},{"id":"C03","name":"示例工厂 C（虚构）","short":"示例 C","role":"备选","province":"示例省 2","city":"示例市 2","site":"示例园区 D 区","distance":900,"transport":"铁路 / 汽运","freight_low":250,"freight_high":420,"process":"路线甲","capacity":60,"capacity_note":"示例：60 万吨/年，2010 年投产","grade":"高纯级","brand":"示例 C 牌","qualified":true,"listed":"示例交易所","code":"000000","group":"示例 C 集团","controller":"示例 C 实控人","ownership":"国企","employees":"约 900 人","revenue":"18.0","profit":"1.5","output":"—","products":"示例化工品 X","spec_fit":"高","sample":"建议","risk_score":1,"risk_level":"低","same_source":"无","same_note":"示例：独立企业。","diff":"运距增加 300 km；产能为现有的 60%；财务最稳。","risk_summary":"示例：规模偏小；运距远；财务稳健。","verify":["铁路发运周期","高纯级 COA"],"evidence":["SRC03"],"tags":["同工艺","上市","远距"],"new_plant":false}],"spec_items":[{"id":"assay","label":"主含量","target":"≥99.0%"},{"id":"water","label":"水分","target":"≤0.5%"},{"id":"particle","label":"粒度","target":"按客户封样"},{"id":"impurity","label":"关键杂质","target":"按客户内控"},{"id":"pack","label":"包装","target":"25 kg 袋 / 吨袋"}],"spec_status":{"C01":{"assay":"COA","water":"COA","particle":"试样","impurity":"COA","pack":"审核"},"C02":{"assay":"试样","water":"试样","particle":"试样","impurity":"试样","pack":"审核"},"C03":{"assay":"COA","water":"COA","particle":"试样","impurity":"COA","pack":"审核"}},"same_source":[{"group":"示例集团","parent":"示例集团（虚构）","entities":["示例工厂 A（虚构）","示例工厂 B（虚构）"],"relation":"同集团、不同法人","implication":"示例：同时入选只能算一个独立源。","verify":"两家销售主体与关联交易","flag":"同集团"}],"risks":[{"company":"示例工厂 A（虚构）","type":"同源","category":"同源","fact":"示例：与 B 同属示例集团。","impact":"不能作为两个独立源。","source_id":"SRC01","status":"已公开"},{"company":"示例工厂 B（虚构）","type":"装置","category":"装置","fact":"示例：2025 年新装置，负荷爬坡。","impact":"稳定性需 3–6 个月观察。","source_id":"SRC02","status":"已公开"},{"company":"示例工厂 C（虚构）","type":"规模","category":"资质","fact":"示例：60 万吨/年，单一基地。","impact":"旺季保供能力有限。","source_id":"SRC03","status":"待核实"}],"actions":[{"phase":"第 0–30 天","action":"锁定 2 家","detail":"示例：A 与 C 进入首轮；B 作为同源备选不重复计入。","owner":"采购","output":"询价单"},{"phase":"第 31–60 天","action":"首样","detail":"示例：每家 20 kg × 2 批。","owner":"质量","output":"检测报告"},{"phase":"第 31–60 天","action":"同源核实","detail":"示例：核 A/B 销售主体。","owner":"法务","output":"股权穿透图"}],"sources":[{"id":"SRC01","name":"示例来源 1（虚构）","url":"https://example.com/source-1","grade":"A","date":"2026-01-01"},{"id":"SRC02","name":"示例来源 2（虚构）","url":"https://example.com/source-2","grade":"B","date":"2026-02-01"},{"id":"SRC03","name":"示例来源 3（虚构）","url":"https://example.com/source-3","grade":"C","date":"2026-03-01"}]};</script>
+<script>/* Chemical Second Source Workbench — generic renderer.
+   All product-specific language comes from DATA.meta; no hard-coded chemical names. */
+const DATA = window.__DSH_DATA__;
+const M = Object.assign({
+  product: '目标化工品',
+  product_short: '目标品',
+  unit: '万吨/年',
+  asof: '',
+  buyer_site: '',
+  buyer_short: '',
+  volume: '',
+  volume_t: 0,
+  volume_period: '月',
+  spec: '',
+  use_case: '',
+  scenario: '',
+  qualification_label: '准入/资质',
+  qualification_short: '准入',
+  grade_label: '等级 / 品牌',
+  near_km: 500,
+  distance_bands: [],
+  processes: [],
+  risk_categories: ['财务', '装置', '资质', '同源', '行业'],
+  same_source_note: '',
+  spec_note: '',
+  disclaimer: '',
+  action_window: '90 天',
+  price_assumption: null,
+  fin_year: '',
+  output_year: '',
+  method_steps: [],
+  key_judgements: [],
+  stamp_note: '公开信息研究 · 非报价 · 非决策建议'
+}, DATA.meta || {});
+const base = DATA.baseline || {};
+const suppliers = DATA.candidates || [];
+const sources = DATA.sources || [];
+const specItems = DATA.spec_items || [];
+const specStatus = DATA.spec_status || {};
+const sameGroups = DATA.same_source || [];
+const risks = DATA.risks || [];
+const actions = DATA.actions || [];
+
+if (!Array.isArray(M.processes) || !M.processes.length) {
+  M.processes = [...new Set([base.process, ...suppliers.map(s => s.process)].filter(Boolean))].map((name, i) => ({
+    name, color: ['#b45309', '#1f5eff', '#067647', '#6d28d9', '#0e7490', '#be123c'][i % 6], cost_score: 60
+  }));
+}
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => new Intl.NumberFormat('zh-CN').format(Number(n) || 0);
+const num = n => Number(n) || 0;
+const state = { selected: new Set(), filter: 'all', q: '', sort: 'distance', view: 'card', riskFilter: '全部' };
+
+const PROC_LIST = (M.processes || []).map(p => typeof p === 'string' ? { name: p } : p);
+const PROC_COLOR = {};
+const PROC_COST = {};
+const FALLBACK_COLORS = ['#b45309', '#1f5eff', '#067647', '#6d28d9', '#0e7490', '#be123c'];
+PROC_LIST.forEach((p, i) => {
+  PROC_COLOR[p.name] = p.color || FALLBACK_COLORS[i % FALLBACK_COLORS.length];
+  PROC_COST[p.name] = Number(p.cost_score) || 60;
+});
+const procColor = p => PROC_COLOR[p] || '#64748b';
+const procCost = p => PROC_COST[p] || 60;
+const buyerShort = M.buyer_short || String(M.buyer_site || '').replace(/[（(].*$/, '').replace(/市$/, '') || '收货地';
+const FY = M.fin_year ? String(M.fin_year) + ' ' : '';
+const OY = M.output_year ? String(M.output_year) + ' ' : '';
+const sourceMap = {};
+sources.forEach(s => { if (s.id) sourceMap[s.id] = s; });
+const sourceOf = id => sourceMap[id] || null;
+const sourceLink = (id, fallbackName, fallbackUrl) => {
+  const s = sourceOf(id);
+  const name = s ? s.name : (fallbackName || '来源待补');
+  const url = s ? s.url : fallbackUrl;
+  const grade = s ? s.grade : '';
+  return url ? `<a class="ev" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}${grade ? `<span class="grade">${esc(grade)}</span>` : ''}</a>` : `<span class="ev">${esc(name)}</span>`;
+};
+
+/* ---------- Hero / KPI ---------- */
+function renderHero() {
+  $('#heroTitle').innerHTML = `${esc(M.product)}<span>备选池</span>`;
+  $('#stampDate').textContent = M.asof ? `数据截止 ${M.asof}` : '数据截止日待填';
+  $('#stampNote').textContent = M.stamp_note;
+  $('#heroSub').innerHTML = `现有供应商：<b>${esc(base.short || base.name || '待填')}（${esc(base.process || '')} ${fmt(base.capacity)} ${esc(M.unit)}）</b> · 收货地：<b>${esc(M.buyer_site || '待填')}</b> · 采购量：<b>${esc(M.volume || '待填')}</b> · 规格：<b>${esc(M.spec || '待填')}</b><br>目标：建立可验证的第二供应源，而不是把“备选”直接变成“替换”。`;
+  $('#heroScenario').textContent = M.scenario || '示例场景：参数可按实际项目替换；研究结构与证据要求保持不变。';
+  const near = suppliers.filter(s => num(s.distance) <= num(M.near_km)).length;
+  const qual = suppliers.filter(s => s.qualified).length;
+  const fresh = suppliers.filter(s => s.new_plant).length;
+  $('#heroBadges').innerHTML = `
+    <span class="hbadge"><b>${suppliers.length}</b> 家备选</span>
+    <span class="hbadge"><b>${near}</b> 家 ≤${fmt(M.near_km)} km</span>
+    <span class="hbadge"><b>${qual}</b> 家${esc(M.qualification_short)}</span>
+    <span class="hbadge"><b>${fresh}</b> 家新装置</span>
+    <span class="hbadge"><b>${sameGroups.length}</b> 组股权关系</span>
+    <span class="hbadge hbadge--warn">排序 ≠ 建议 · 决策权在采购</span>`;
+}
+
+function renderKpis() {
+  const provinces = [...new Set(suppliers.map(s => s.province).filter(Boolean))];
+  const near = suppliers.filter(s => num(s.distance) <= num(M.near_km));
+  const qual = suppliers.filter(s => s.qualified);
+  const needSample = suppliers.filter(s => s.sample === '必须' || (specStatus[s.id] && Object.values(specStatus[s.id]).some(v => v !== 'COA')));
+  $('#kpis').innerHTML = `
+    <div class="kpi"><span>备选池</span><b>${suppliers.length}<small>家</small></b><p>${esc(provinces.join('、') || '—')}</p></div>
+    <div class="kpi"><span>近场（≤${fmt(M.near_km)} km）</span><b>${near.length}<small>家</small></b><p>${esc(near.map(s => s.city).filter(Boolean).slice(0, 6).join('、') || '—')}</p></div>
+    <div class="kpi"><span>${esc(M.qualification_label)}</span><b>${qual.length}<small>家</small></b><p>${esc(qual.map(s => s.short).slice(0, 6).join('、') || '—')}</p></div>
+    <div class="kpi"><span>需要首样验证</span><b>${needSample.length}<small>家</small></b><p>新装置 / 新工艺 / 非准入为必验项</p></div>`;
+}
+
+/* ---------- Baseline / params ---------- */
+function renderBaseline() {
+  const b = base;
+  const rev = b.revenue == null || b.revenue === '' ? '—' : b.revenue;
+  const profit = b.profit == null || b.profit === '' ? '—' : b.profit;
+  const loss = String(profit).trim().startsWith('-');
+  $('#baselineCard').innerHTML = `
+    <div class="baseline-top">
+      <div>
+        <div class="blabel">BASELINE / 现有供应商</div>
+        <h3>${esc(b.name || b.short || '待填')}</h3>
+        <div class="code">${esc(b.listed || '')} ${esc(b.code && b.code !== '—' ? b.code : '')} · ${esc(b.group || '')} · 实控人 ${esc(b.controller || '待核')}</div>
+      </div>
+      <span class="pill">${esc(b.process || '')} · ${b.qualified ? esc(M.qualification_short) : '非' + esc(M.qualification_short)} ${esc(b.brand || '')}</span>
+    </div>
+    <div class="bmetrics">
+      <div class="bmetric"><span>${esc(M.product_short)}产能</span><b>${fmt(b.capacity)}<small>${esc(M.unit)}</small></b></div>
+      <div class="bmetric"><span>到${esc(buyerShort)}运距</span><b>${fmt(b.distance)}<small>km</small></b></div>
+      <div class="bmetric"><span>${FY}营收</span><b>${esc(rev)}<small>亿元</small></b></div>
+      <div class="bmetric"><span>${FY}归母净利</span><b style="color:${loss ? '#ffb4a8' : '#d9fbe8'}">${esc(profit)}<small>亿元</small></b></div>
+    </div>
+    <div class="bwarn"><span>⚠</span><div><b>基准风险：</b>${esc(b.warn || b.risk_summary || '待补公开风险事实')} 这是“建第二源”的背景，不等于应立即更换。</div></div>`;
+}
+
+function renderParams() {
+  const P = DATA.params || {};
+  $('#pSpec').textContent = P.spec || M.spec || '待填';
+  $('#pRecv').textContent = P.receiver || M.buyer_site || '待填';
+  $('#qty').value = P.monthly || M.volume_t || 800;
+  $('#rate').value = P.freight_rate || 0.45;
+  $('#pMode').textContent = `汽运 ${P.freight_rate || 0.45}；水运 ${P.water_rate || 0.12}（估算）`;
+  $('#paramNote').innerHTML = `运费区间为公开地理距离 × 行业常见费率的结构化估算，<strong>不是承运商报价</strong>；铁路/水运需另询。到厂成本还取决于出厂价、账期、返利、包装与卸货条件，本页不合成“唯一到厂价”。`;
+  updateCalc();
+  $('#qty').addEventListener('input', updateCalc);
+  $('#rate').addEventListener('input', updateCalc);
+}
+
+function updateCalc() {
+  const P = DATA.params || {};
+  const qty = Math.max(1, Number($('#qty').value) || P.monthly || 800);
+  const rate = Math.max(0.05, Number($('#rate').value) || P.freight_rate || 0.45);
+  const truck = Number(P.truck_load_t) || 30;
+  const trucks = Math.ceil(qty / truck);
+  const months = M.volume_period === '年' ? 1 : 12;
+  const annual = qty * months;
+  const baseFreight = Math.round(num(base.distance) * rate);
+  const price = Number(P.price_assumption || M.price_assumption || 0);
+  $('#calcLine').innerHTML = `
+    <span><i class="dot"></i>年需求 <b>${fmt(annual)}</b> 吨</span>
+    <span><i class="dot"></i>月车次（${truck} 吨/车）<b>${trucks}</b> 车</span>
+    <span><i class="dot"></i>现有供应商单吨汽运估算 <b>${fmt(baseFreight)}</b> 元/吨</span>
+    ${price > 0 ? `<span><i class="dot"></i>运费占货值（按 ${fmt(price)} 元/吨） <b>${(baseFreight / price * 100).toFixed(1)}%</b></span>` : ''}`;
+}
+
+/* ---------- Filters / pool ---------- */
+function buildFilters() {
+  const f = [
+    ['all', '全部'],
+    ['near', `≤${fmt(M.near_km)} km`],
+    ['qual', M.qualification_short],
+    ['new', '新装置'],
+    ['same', '同源/同集团']
+  ];
+  PROC_LIST.forEach(p => f.push(['proc:' + p.name, p.name]));
+  return f;
+}
+const FILTERS = buildFilters();
+
+function countFilter(k) {
+  if (k === 'all') return suppliers.length;
+  if (k === 'near') return suppliers.filter(s => num(s.distance) <= num(M.near_km)).length;
+  if (k === 'qual') return suppliers.filter(s => s.qualified).length;
+  if (k === 'new') return suppliers.filter(s => s.new_plant).length;
+  if (k === 'same') return suppliers.filter(s => s.same_source && s.same_source !== '无').length;
+  if (k.startsWith('proc:')) return suppliers.filter(s => s.process === k.slice(5)).length;
+  return 0;
+}
+
+function renderChips() {
+  $('#chips').innerHTML = FILTERS.map(([k, label]) => {
+    const on = state.filter === k ? 'on' : '';
+    return `<button class="chip ${on}" data-f="${esc(k)}">${esc(label)}<b>${countFilter(k)}</b></button>`;
+  }).join('');
+  $$('#chips .chip').forEach(b => b.addEventListener('click', () => {
+    state.filter = b.dataset.f;
+    renderChips();
+    renderPool();
+  }));
+}
+
+function filtered() {
+  let list = suppliers.slice();
+  const q = state.q.trim().toLowerCase();
+  if (q) list = list.filter(s => [s.name, s.short, s.group, s.city, s.site, s.products, s.controller, s.brand, s.grade].filter(Boolean).join(' ').toLowerCase().includes(q));
+  if (state.filter === 'near') list = list.filter(s => num(s.distance) <= num(M.near_km));
+  if (state.filter === 'qual') list = list.filter(s => s.qualified);
+  if (state.filter === 'new') list = list.filter(s => s.new_plant);
+  if (state.filter === 'same') list = list.filter(s => s.same_source && s.same_source !== '无');
+  if (state.filter.startsWith('proc:')) list = list.filter(s => s.process === state.filter.slice(5));
+  if (state.sort === 'distance') list.sort((a, b) => num(a.distance) - num(b.distance));
+  if (state.sort === 'capacity') list.sort((a, b) => num(b.capacity) - num(a.capacity));
+  if (state.sort === 'risk') list.sort((a, b) => num(a.risk_score) - num(b.risk_score) || num(a.distance) - num(b.distance));
+  if (state.sort === 'name') list.sort((a, b) => String(a.name).localeCompare(String(b.name), 'zh-CN'));
+  return list;
+}
+
+function tagClass(t) {
+  const s = String(t || '');
+  if (/同源|不独立|亏损|装置老化|高风险|非准入|非资质/.test(s)) return 'red';
+  if (/新装置|规模偏小|远距|纵向|待核|外资/.test(s)) return 'amber';
+  if (/近场|同工艺|低成本|规模|准入|资质|区域|水运|央企|上市|国企|龙头|一体化/.test(s)) return 'green';
+  return '';
+}
+
+function riskDots(n) {
+  const v = Math.max(1, Math.min(5, Number(n) || 3));
+  return `<span class="dots lv${v}">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= v ? 'on' : ''}"></i>`).join('')}</span>`;
+}
+
+function cardHTML(s, idx) {
+  const sel = state.selected.has(s.id);
+  const tags = (s.tags || s.highlights || []);
+  const ev = (s.evidence || []).map(id => sourceOf(id)).filter(Boolean);
+  return `<article class="card ${sel ? 'sel' : ''}" data-id="${esc(s.id)}">
+    <div class="card-top">
+      <div class="idx">${String(idx).padStart(2, '0')}</div>
+      <div class="card-title">
+        <h3>${esc(s.name)}</h3>
+        <p>${esc(s.group || '')} · ${esc(s.listed || '')}${s.code && s.code !== '—' ? ' ' + esc(s.code) : ''}</p>
+      </div>
+      <label class="checkbox" title="加入对比">
+        <input type="checkbox" data-sel="${esc(s.id)}" ${sel ? 'checked' : ''} aria-label="选择 ${esc(s.name)}">
+        <span></span>
+      </label>
+    </div>
+    <div class="card-diff">${esc(s.diff || '')}</div>
+    <div class="card-metrics">
+      <div class="m"><span>产能 ${esc(M.unit)}</span><b>${fmt(s.capacity)}</b></div>
+      <div class="m"><span>运距 km</span><b>${fmt(s.distance)}</b></div>
+      <div class="m"><span>运费 元/吨</span><b>${fmt(s.freight_low)}–${fmt(s.freight_high)}</b></div>
+      <div class="m"><span>风险等级</span><b style="font-size:12px">${esc(s.risk_level || '待核')} ${riskDots(s.risk_score)}</b></div>
+    </div>
+    <div class="tags">
+      <span class="tag" style="background:${procColor(s.process)}18;border-color:${procColor(s.process)}55;color:${procColor(s.process)}">${esc(s.process)}</span>
+      <span class="tag ${s.qualified ? 'green' : 'amber'}">${s.qualified ? esc(M.qualification_short) : '非' + esc(M.qualification_short)}</span>
+      <span class="tag">${esc(s.spec_fit || '待核')}兼容</span>
+      ${tags.map(h => `<span class="tag ${(s.tag_tones || {})[h] || tagClass(h)}">${esc(h)}</span>`).join('')}
+    </div>
+    <details>
+      <summary>证据、风险与待核实项</summary>
+      <div class="detail-grid">
+        <div class="detail-block"><h4>身份 / 证据</h4>
+          <div>${esc(s.site)} · ${esc(s.ownership)} · ${esc(s.employees)}</div>
+          ${ev.length ? ev.map(e => sourceLink(e.id)).join('') : '<div class="sub">证据待补</div>'}
+        </div>
+        <div class="detail-block"><h4>产能 / 产品</h4>
+          <div>${esc(s.capacity_note || '')}</div>
+          <div>${esc(s.products || '')}</div>
+          <div class="sub">${FY}营收/净利：${esc(s.revenue == null ? '—' : s.revenue)} / ${esc(s.profit == null ? '—' : s.profit)} 亿元</div>
+        </div>
+        <div class="detail-block"><h4>风险摘要</h4><div>${esc(s.risk_summary || '')}</div></div>
+        <div class="detail-block"><h4>同源判断</h4><div>${esc(s.same_note || '')}</div></div>
+        <div class="detail-block"><h4>需人工核实</h4><ul>${(s.verify || []).map(v => `<li>${esc(v)}</li>`).join('')}</ul></div>
+      </div>
+    </details>
+  </article>`;
+}
+
+function renderPool() {
+  const list = filtered();
+  const wrap = $('#pool');
+  if (state.view === 'card') {
+    wrap.classList.remove('hide');
+    $('#poolTableWrap').classList.add('hide');
+    wrap.innerHTML = list.length ? list.map((s, i) => cardHTML(s, i + 1)).join('') : `<div class="panel">没有匹配的供应商，试试清空搜索或切换筛选。</div>`;
+    $$('#pool .checkbox input').forEach(cb => cb.addEventListener('change', () => toggle(cb.dataset.sel)));
+    $$('#pool .card').forEach(c => c.addEventListener('click', e => {
+      if (e.target.closest('a') || e.target.closest('label') || e.target.closest('summary') || e.target.closest('details')) return;
+      const cb = c.querySelector('input[data-sel]');
+      if (cb) cb.click();
+    }));
+  } else {
+    wrap.classList.add('hide');
+    const tw = $('#poolTableWrap');
+    tw.classList.remove('hide');
+    tw.innerHTML = `<table class="pooltable"><thead><tr>
+      <th>选</th><th>企业</th><th>工艺</th><th>产能</th><th>运距</th><th>运费</th><th>${esc(M.qualification_short)}</th><th>风险</th><th>同源</th><th>兼容/试样</th>
+    </tr></thead><tbody>${list.map(s => `<tr>
+      <td><input type="checkbox" data-sel="${esc(s.id)}" ${state.selected.has(s.id) ? 'checked' : ''} aria-label="选择 ${esc(s.name)}"></td>
+      <td><div class="name">${esc(s.name)}</div><div class="tiny">${esc(s.group || '')}</div></td>
+      <td>${esc(s.process)}</td>
+      <td class="num">${fmt(s.capacity)} ${esc(M.unit)}</td>
+      <td class="num">${fmt(s.distance)} km</td>
+      <td class="num">${fmt(s.freight_low)}–${fmt(s.freight_high)}</td>
+      <td>${s.qualified ? '是' : '否'}</td>
+      <td>${esc(s.risk_level || '')}</td>
+      <td>${esc(s.same_source || '无')}</td>
+      <td>${esc(s.spec_fit || '')} / ${esc(s.sample || '')}</td>
+    </tr>`).join('')}</tbody></table>`;
+    $$('#poolTableWrap input[data-sel]').forEach(cb => cb.addEventListener('change', () => toggle(cb.dataset.sel)));
+  }
+}
+
+/* ---------- Selection ---------- */
+function toggle(id) {
+  if (state.selected.has(id)) state.selected.delete(id);
+  else {
+    if (state.selected.size >= 5) { toast('最多选择 5 家；请先移除一家'); renderPool(); return; }
+    state.selected.add(id);
+  }
+  syncSelection();
+}
+function syncSelection() {
+  $$('input[data-sel]').forEach(cb => { cb.checked = state.selected.has(cb.dataset.sel); });
+  $$('#pool .card').forEach(c => c.classList.toggle('sel', state.selected.has(c.dataset.id)));
+  $('#selCount').textContent = state.selected.size;
+  const names = [...state.selected].map(id => suppliers.find(s => s.id === id)).filter(Boolean);
+  $('#selNames').innerHTML = names.map(s => `<span class="nm">${esc(s.short)}<button data-rm="${esc(s.id)}" aria-label="移除">×</button></span>`).join('');
+  $$('#selNames button').forEach(b => b.addEventListener('click', () => { state.selected.delete(b.dataset.rm); syncSelection(); }));
+  $('#tray').classList.toggle('show', state.selected.size > 0);
+  $('#compareBtn').disabled = state.selected.size < 2;
+  if (state.view === 'table') renderPool();
+}
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ---------- Scatter ---------- */
+function drawScatter() {
+  const svg = $('#scatter'); if (!svg) return;
+  const W = 760, H = 400, pad = { l: 58, r: 22, t: 22, b: 48 };
+  const maxD = Math.max(500, num(M.near_km), Math.ceil(Math.max(...suppliers.map(s => num(s.distance)), 1) / 500) * 500);
+  const maxC = Math.max(100, Math.ceil(Math.max(...suppliers.map(s => num(s.capacity)), num(base.capacity), 1) * 1.15 / 100) * 100);
+  const x = d => pad.l + Math.min(num(d), maxD) / maxD * (W - pad.l - pad.r);
+  const y = c => H - pad.b - (Math.log10(Math.max(num(c), 10)) - 1) / (Math.log10(maxC) - 1) * (H - pad.t - pad.b);
+  const near = num(M.near_km);
+  let out = '';
+  out += `<rect x="${x(0)}" y="${y(maxC)}" width="${x(near) - x(0)}" height="${y(100) - y(maxC)}" fill="#e8f7f0" opacity=".65"/>`;
+  const yTicks = [50, 100, 200, 500, 1000, 2000, 5000].filter(v => v <= maxC);
+  if (!yTicks.length) yTicks.push(maxC);
+  yTicks.forEach(v => {
+    out += `<line x1="${pad.l}" y1="${y(v)}" x2="${W - pad.r}" y2="${y(v)}" stroke="#e6edf4"/>`;
+    out += `<text x="${pad.l - 8}" y="${y(v) + 3}" text-anchor="end" font-size="10" fill="#7a8b9d">${fmt(v)}</text>`;
+  });
+  const xStep = maxD / 5;
+  for (let v = 0; v <= maxD; v += xStep) {
+    out += `<line x1="${x(v)}" y1="${pad.t}" x2="${x(v)}" y2="${H - pad.b}" stroke="#eef3f8"/>`;
+    out += `<text x="${x(v)}" y="${H - pad.b + 16}" text-anchor="middle" font-size="10" fill="#7a8b9d">${fmt(Math.round(v))}</text>`;
+  }
+  out += `<line x1="${x(near)}" y1="${pad.t}" x2="${x(near)}" y2="${H - pad.b}" stroke="#9ec9b4" stroke-dasharray="4 4"/>`;
+  out += `<line x1="${pad.l}" y1="${y(100)}" x2="${W - pad.r}" y2="${y(100)}" stroke="#b9c9d9" stroke-dasharray="2 5"/>`;
+  out += `<text x="${pad.l + 4}" y="${pad.t + 12}" font-size="10" fill="#5a6b7d">${esc(M.unit)}（对数）</text>`;
+  out += `<text x="${W - pad.r}" y="${H - pad.b + 34}" text-anchor="end" font-size="10" fill="#5a6b7d">到${esc(buyerShort)}运距 km</text>`;
+  out += `<text x="${x(near) - 6}" y="${pad.t + 12}" text-anchor="end" font-size="10" fill="#067647">${fmt(near)} km 近场</text>`;
+  suppliers.forEach(s => {
+    const cx = x(s.distance), cy = y(s.capacity);
+    out += `<circle cx="${cx}" cy="${cy}" r="7" fill="${procColor(s.process)}" stroke="#fff" stroke-width="2" opacity=".92"><title>${esc(s.name)} · ${fmt(s.capacity)} ${esc(M.unit)} · ${fmt(s.distance)} km</title></circle>`;
+    out += `<text x="${cx + 9}" y="${cy + 3.5}" font-size="9.5" fill="#33475c">${esc(s.short)}</text>`;
+  });
+  const bx = x(base.distance), by = y(base.capacity);
+  out += `<path d="M${bx} ${by - 8} L${bx + 8} ${by} L${bx} ${by + 8} L${bx - 8} ${by} Z" fill="#b42318" stroke="#fff" stroke-width="2"><title>${esc(base.name)} · ${fmt(base.capacity)} ${esc(M.unit)} · ${fmt(base.distance)} km</title></path>`;
+  out += `<text x="${bx + 11}" y="${by + 3}" font-size="9.5" fill="#b42318" font-weight="700">现有 ${esc(base.short)}</text>`;
+  svg.innerHTML = out;
+  const q = suppliers.filter(s => s.qualified).length;
+  $('#scatterTitle').textContent = `${M.product_short}产能 vs 到${buyerShort}运距`;
+  $('#scatterNote').textContent = `纵轴为对数刻度；虚线为 ${fmt(near)} km 近场边界与 100 ${M.unit} 规模线`;
+  $('#scatterLegend').innerHTML = PROC_LIST.map(p => `<span><i style="background:${procColor(p.name)}"></i>${esc(p.name)}</span>`).join('') +
+    `<span><i style="background:#b42318;border-radius:50%"></i>现有供应商（${esc(base.short)}）</span>` +
+    `<span><i style="background:#e8f7f0;border:1px solid #bfe6d2"></i>近场 + 规模 ≥100 ${esc(M.unit)}</span>` +
+    `<span>${q} 家具备${esc(M.qualification_short)}</span>`;
+}
+
+/* ---------- Stack ---------- */
+function drawStack() {
+  const groups = PROC_LIST.map(p => [p.name, procColor(p.name)]);
+  const all = [base, ...suppliers];
+  const counts = groups.map(([p]) => all.filter(s => s.process === p).length);
+  const total = all.length || 1;
+  $('#stack').innerHTML = groups.map(([p, c], i) => `<span style="width:${counts[i] / total * 100}%;background:${c}">${esc(p)} ${counts[i]}</span>`).join('');
+  $('#stacknote').innerHTML = groups.map(([p, c], i) => {
+    const caps = all.filter(s => s.process === p).reduce((a, s) => a + num(s.capacity), 0);
+    return `<div class="row"><b>${counts[i]} 家</b><div class="bar"><i style="width:${counts[i] / total * 100}%;background:${c}"></i></div><span style="width:120px;text-align:right">${fmt(caps)} ${esc(M.unit)}</span></div>`;
+  }).join('') + `<div class="row"><b>合计</b><div class="bar"><i style="width:100%;background:#0b1b2b"></i></div><span style="width:120px;text-align:right">${fmt(all.reduce((a, s) => a + num(s.capacity), 0))} ${esc(M.unit)}</span></div>`;
+  const top = groups.map(([p], i) => ({ p, n: counts[i] })).sort((a, b) => b.n - a.n)[0];
+  $('#stackNoteTop').textContent = `${suppliers.length} 家备选 + 现有供应商；${top ? top.p + ' 占多数（' + top.n + ' 家）' : ''}`;
+  $('#stackInsight').textContent = M.process_insight || '工艺只决定“成本倾向”，不决定质量；同工艺不等于同规格，新装置/新工艺/非准入仍需首样验证。';
+}
+
+/* ---------- Same source ---------- */
+function renderSameSource() {
+  const flagColor = f => /同源|纵向|不独立/.test(f) ? '#b42318' : /同集团/.test(f) ? '#b45309' : /非同源/.test(f) ? '#067647' : '#64748b';
+  $('#sourcegrid').innerHTML = sameGroups.length ? sameGroups.map(g => `
+    <div class="sourcecard">
+      <span class="flag" style="color:${flagColor(g.flag)};border-color:${flagColor(g.flag)}55;background:${flagColor(g.flag)}12">${esc(g.flag || '关系')}</span>
+      <h3>${esc(g.group)}</h3>
+      <div class="parent">${esc(g.parent || '')}</div>
+      <div class="entities">${(g.entities || []).map(e => `<div class="entity">${esc(e)}</div>`).join('')}</div>
+      <div class="sub">关系：${esc(g.relation || '')}</div>
+      <div class="impl"><b>影响：</b>${esc(g.implication || '')}<br><b>核实：</b>${esc(g.verify || '')}</div>
+    </div>`).join('') : `<div class="panel">未发现同源/同集团关系；仍需逐家做股权穿透。</div>`;
+  $('#sameNote').innerHTML = M.same_source_note ? `<strong>特别提示：</strong>${esc(M.same_source_note)}` : '';
+}
+
+/* ---------- Spec ---------- */
+function renderSpec() {
+  const items = specItems;
+  const head = `<thead><tr><th>企业</th>${items.map(i => `<th>${esc(i.label)}<div class="sub" style="font-weight:400">${esc(i.target || '')}</div></th>`).join('')}</tr></thead>`;
+  const body = suppliers.map(s => {
+    const st = specStatus[s.id] || {};
+    return `<tr><td><b>${esc(s.short)}</b><div class="sub">${esc(s.process)} · ${s.qualified ? esc(M.qualification_short) : '非' + esc(M.qualification_short)}</div></td>${items.map(i => {
+      const v = st[i.id] || '试样';
+      const cls = v === 'COA' ? 'coa' : v === '试样' ? 'sample' : 'audit';
+      return `<td><span class="st ${cls}">${esc(v)}</span></td>`;
+    }).join('')}</tr>`;
+  }).join('');
+  $('#spectable').innerHTML = head + `<tbody>${body}</tbody>`;
+  $('#specLegend').innerHTML = `<span><span class="st coa">COA</span> 可凭批次 COA/出厂检验追溯</span>
+    <span><span class="st sample">试样</span> 必须首样或小批量验证</span>
+    <span><span class="st audit">审核</span> 需现场审核/封样/包装确认</span>
+    <span>${esc(M.spec_note || '首样建议：每家 20–50 kg × 3 批；检测周期 7–10 个工作日；判定依据客户内控 + 国标/行标。')}</span>`;
+}
+
+/* ---------- Risks ---------- */
+const RISK_CATS = ['全部'].concat(M.risk_categories || []);
+function riskCat(r) {
+  if (r.category) return r.category;
+  const t = String(r.type || '');
+  if (/财务|成本|价格|亏损/.test(t)) return '财务';
+  if (/装置|产能|环保|安全|供给/.test(t)) return '装置';
+  if (/资质|规模|准入|质量/.test(t)) return '资质';
+  if (/同源|股权|独立性/.test(t)) return '同源';
+  return '行业';
+}
+function renderRiskHead() {
+  $('#riskhead').innerHTML = RISK_CATS.map(c => {
+    const n = c === '全部' ? risks.length : risks.filter(r => riskCat(r) === c).length;
+    return `<button class="chip ${state.riskFilter === c ? 'on' : ''}" data-risk="${esc(c)}">${esc(c)}<b>${n}</b></button>`;
+  }).join('');
+  $$('#riskhead .chip').forEach(b => b.addEventListener('click', () => { state.riskFilter = b.dataset.risk; renderRiskHead(); renderRisks(); }));
+}
+function renderRisks() {
+  const list = state.riskFilter === '全部' ? risks : risks.filter(r => riskCat(r) === state.riskFilter);
+  const dot = c => ({'财务':'f','装置':'e','资质':'q','同源':'s'}[c] || 'i');
+  $('#risktable').innerHTML = `<thead><tr><th>企业</th><th>类型</th><th>公开事实</th><th>影响</th><th>来源</th><th>状态</th></tr></thead><tbody>${list.map(r => {
+    const cat = riskCat(r);
+    return `<tr>
+      <td><b>${esc(r.company || '')}</b></td>
+      <td><span class="riskdot ${dot(cat)}"></span>${esc(cat)}</td>
+      <td>${esc(r.fact || '')}</td>
+      <td>${esc(r.impact || '')}</td>
+      <td>${sourceLink(r.source_id, r.source, r.url)}</td>
+      <td><span class="status ${r.status === '已公开' ? 'ok' : 'pending'}">${esc(r.status || '待核实')}</span></td>
+    </tr>`;
+  }).join('')}</tbody>`;
+}
+
+/* ---------- Actions ---------- */
+function renderActions() {
+  $('#actionTitle').textContent = `${M.action_window || '90 天'}推进清单`;
+  $('#actions').innerHTML = actions.map(a => `<div class="action">
+    <span class="phase">${esc(a.phase || '')}</span>
+    <h3>${esc(a.action || '')}</h3>
+    <p>${esc(a.detail || '')}</p>
+    <div class="meta"><span>责任：<b>${esc(a.owner || '待定')}</b></span><span>产出：<b>${esc(a.output || '')}</b></span></div>
+  </div>`).join('');
+}
+
+/* ---------- Method / sources / footer ---------- */
+function renderMethod() {
+  const steps = M.method_steps || [];
+  const js = M.key_judgements || [];
+  if (!steps.length && !js.length) { $('#methodSec').classList.add('hide'); return; }
+  $('#methodSub').textContent = M.method_note || '研究口径可复核；结论只用于缩小验证范围，不替代采购决策。';
+  $('#methodSteps').innerHTML = steps.map((s, i) => `<div class="mstep"><b>${i + 1}</b><div><strong>${esc(s.label || s.title || '')}</strong><div>${esc(s.text || '')}</div></div></div>`).join('');
+  $('#judgements').innerHTML = js.map(s => `<div class="judgement"><b>${esc(s.label || '')}</b><div>${esc(s.text || '')}</div></div>`).join('');
+}
+function renderSources() {
+  $('#sources').innerHTML = sources.map((s, i) => `<div class="src"><span class="grade">${esc(s.grade || '?')}</span><b>${i + 1}.</b> ${esc(s.name)}${s.date ? ` <span class="sub">（${esc(s.date)}）</span>` : ''}${s.url ? ` <a href="${esc(s.url)}" target="_blank" rel="noopener">原文</a>` : ''}</div>`).join('');
+  const xlsx = '示例化工品X_第二供应源备选池_对比工作簿_2026-10-19.xlsx';
+  $('#footerText').innerHTML = `${esc(M.disclaimer || '本页为采购研究辅助材料，不构成供应商选择、替换或授标建议。')}<br>
+    配套工作簿：<a href="${esc(xlsx)}" download>${esc(xlsx)}</a>（10 个工作表：说明 / 备选池 / 图表 / 横向对比 / 试样 / 同源 / 风险 / 行动 / 来源 / 尽调）<br>
+    ${M.asof ? '数据截止 ' + esc(M.asof) + ' · ' : ''}场景：${esc(M.buyer_site || '')} / ${esc(M.product)} ${esc(M.volume || '')} / 现有供应商 ${esc(base.short || '')} · 仅用于内部采购评估。`;
+}
+
+/* ---------- Compare ---------- */
+const CMP_ROWS = [
+  { label: '企业全称', get: s => esc(s.name) },
+  { label: '集团 / 实控人', get: s => `${esc(s.group || '')}<div class="sub">${esc(s.controller || '')}</div>` },
+  { label: '股权性质', get: s => esc(s.ownership || '') },
+  { label: '生产地', get: s => `${esc(s.province || '')} · ${esc(s.city || '')}<div class="sub">${esc(s.site || '')}</div>` },
+  { label: `距${buyerShort}（km）`, get: s => fmt(s.distance), num: 'low', val: s => num(s.distance) },
+  { label: '运输方式', get: s => esc(s.transport || '') },
+  { label: '估算运费中值（元/吨）', get: s => fmt((num(s.freight_low) + num(s.freight_high)) / 2), num: 'low', val: s => (num(s.freight_low) + num(s.freight_high)) / 2 },
+  { label: '工艺', get: s => esc(s.process || '') },
+  { label: `${M.product_short}产能（${M.unit}）`, get: s => fmt(s.capacity), num: 'high', val: s => num(s.capacity) },
+  { label: M.grade_label || '等级 / 品牌', get: s => `${esc(s.grade || '')}<div class="sub">${esc(s.brand || '')}</div>` },
+  { label: '主营产品', get: s => esc(s.products || '') },
+  { label: `${FY}营收（亿元）`, get: s => esc(s.revenue == null ? '—' : s.revenue) },
+  { label: `${FY}净利（亿元）`, get: s => esc(s.profit == null ? '—' : s.profit) },
+  { label: '员工（公开）', get: s => esc(s.employees || '—') },
+  { label: M.qualification_label || '准入 / 资质', get: s => s.qualified ? '是' : '否' },
+  { label: '规格兼容性', get: s => esc(s.spec_fit || '待核') },
+  { label: '试样要求', get: s => esc(s.sample || '—') },
+  { label: '风险等级', get: s => esc(s.risk_level || '') },
+  { label: '风险分（1–5，低=好）', get: s => esc(s.risk_score), num: 'low', val: s => num(s.risk_score) },
+  { label: '同源关系', get: s => esc(s.same_source || '无') },
+  { label: '同源说明', get: s => esc(s.same_note || '') },
+  { label: '需人工核实', get: s => (s.verify || []).map(v => esc(v)).join('；') },
+  { label: `与${base.short || '现有'}差异`, get: s => esc(s.diff || '') }
+];
+
+function openCompare() {
+  const chosen = [...state.selected].map(id => suppliers.find(s => s.id === id)).filter(Boolean);
+  if (chosen.length < 2) { toast('请至少选择 2 家'); return; }
+  const cols = [base, ...chosen];
+  $('#modalTitle').textContent = `横向比较 · 现有供应商 + ${chosen.length} 家备选`;
+  $('#modalSub').textContent = `第一列为现有供应商 ${base.name}；绿色/红色标记可量化项在“现有 + 所选备选”中的相对位置，不代表替换建议。`;
+  let html = `<thead><tr><th>对比维度</th>${cols.map((s, i) => `<th class="${i === 0 ? 'base' : ''}">${esc(s.short)}<div class="sub" style="font-weight:400">${i === 0 ? '现有供应商' : esc(s.process) + ' · ' + fmt(s.capacity) + ' ' + esc(M.unit)}</div></th>`).join('')}</tr></thead><tbody>`;
+  CMP_ROWS.forEach(row => {
+    let best = null, worst = null;
+    if (row.num) {
+      const vals = cols.map(row.val);
+      best = row.num === 'low' ? Math.min(...vals) : Math.max(...vals);
+      worst = row.num === 'low' ? Math.max(...vals) : Math.min(...vals);
+    }
+    html += `<tr><th>${esc(row.label)}</th>${cols.map((s, i) => {
+      let cls = '';
+      if (row.num) {
+        const v = row.val(s);
+        if (v === best && best !== worst) cls = 'best';
+        if (v === worst && best !== worst) cls = 'worst';
+      }
+      return `<td class="${cls} ${i === 0 ? 'base' : ''}">${row.get(s)}</td>`;
+    }).join('')}</tr>`;
+  });
+  $('#cmptable').innerHTML = html + '</tbody>';
+
+  const axes = [
+    { label: '产能规模', v: s => Math.min(100, Math.log10(Math.max(num(s.capacity), 1)) / Math.log10(Math.max(...cols.map(x => num(x.capacity)), 1)) * 100) },
+    { label: '区位物流', v: s => Math.max(4, 100 - num(s.distance) / Math.max(...cols.map(x => num(x.distance)), 1) * 100) },
+    { label: '成本潜力', v: s => procCost(s.process) },
+    { label: '资质合规', v: s => s.qualified ? 100 : 55 },
+    { label: '风险稳健', v: s => 100 - (num(s.risk_score) - 1) * 20 },
+    { label: '供应独立性', v: s => s.same_source === '无' ? 100 : 45 }
+  ];
+  $('#radar').innerHTML = radarSVG(axes, cols);
+  $('#radarLegend').innerHTML = cols.map((s, i) => `<span><i style="background:${i === 0 ? '#64748b' : procColor(s.process)}"></i>${esc(s.short)}${i === 0 ? '（现有）' : ''}</span>`).join('');
+  $('#diffList').innerHTML = chosen.map(s => {
+    const d = num(s.distance) - num(base.distance);
+    const c = num(s.capacity) - num(base.capacity);
+    const pct = base.capacity ? Math.round(Math.abs(c) / num(base.capacity) * 100) : 0;
+    const dir = d === 0 ? '持平' : (d < 0 ? `缩短 ${fmt(Math.abs(d))} km` : `增加 ${fmt(Math.abs(d))} km`);
+    return `<li><b>${esc(s.short)}</b>：工艺${s.process === base.process ? '同为 ' + esc(s.process) : '由 ' + esc(base.process) + ' 转为 ' + esc(s.process)}；运距${dir}；产能${c >= 0 ? '+' : '-'}${fmt(Math.abs(c))} ${esc(M.unit)}（${pct}%）；${esc(M.qualification_short)}${s.qualified ? '具备' : '不具备'}；风险等级${esc(s.risk_level || '待核')}。<span class="sub">${s.same_source && s.same_source !== '无' ? '同源提示：' + esc(s.same_source) + '。' : ''}</span></li>`;
+  }).join('');
+  $('#modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function radarSVG(axes, list) {
+  const cx = 200, cy = 200, R = 132, n = axes.length;
+  const ang = i => -Math.PI / 2 + i * 2 * Math.PI / n;
+  const hasBase = list[0] && (list[0].role === '现有供应商' || list[0].id === base.id);
+  let out = '';
+  [0.25, 0.5, 0.75, 1].forEach(k => {
+    const pts = axes.map((_, i) => `${cx + Math.cos(ang(i)) * R * k},${cy + Math.sin(ang(i)) * R * k}`).join(' ');
+    out += `<polygon points="${pts}" fill="none" stroke="#dbe5ef" stroke-width="1"/>`;
+  });
+  axes.forEach((a, i) => {
+    out += `<line x1="${cx}" y1="${cy}" x2="${cx + Math.cos(ang(i)) * R}" y2="${cy + Math.sin(ang(i)) * R}" stroke="#e3ebf3"/>`;
+    const lx = cx + Math.cos(ang(i)) * (R + 26), ly = cy + Math.sin(ang(i)) * (R + 26);
+    out += `<text x="${lx}" y="${ly + 4}" text-anchor="middle" font-size="11" fill="#5a6b7d">${esc(a.label)}</text>`;
+  });
+  list.forEach((s, idx) => {
+    const isBase = hasBase && idx === 0;
+    const color = isBase ? '#64748b' : procColor(s.process);
+    const pts = axes.map((a, i) => {
+      const v = Math.max(0, Math.min(100, a.v(s))) / 100;
+      return `${cx + Math.cos(ang(i)) * R * v},${cy + Math.sin(ang(i)) * R * v}`;
+    }).join(' ');
+    out += `<polygon points="${pts}" fill="${color}" fill-opacity="${isBase ? '.05' : '.12'}" stroke="${color}" stroke-width="2" ${isBase ? 'stroke-dasharray="5 4"' : ''}/>`;
+    axes.forEach((a, i) => {
+      const v = Math.max(0, Math.min(100, a.v(s))) / 100;
+      out += `<circle cx="${cx + Math.cos(ang(i)) * R * v}" cy="${cy + Math.sin(ang(i)) * R * v}" r="${isBase ? 2.6 : 3}" fill="${color}"/>`;
+    });
+  });
+  return out;
+}
+
+/* ---------- Init ---------- */
+function init() {
+  renderHero();
+  renderKpis();
+  renderBaseline();
+  renderParams();
+  renderChips();
+  renderPool();
+  drawScatter();
+  drawStack();
+  renderSameSource();
+  renderSpec();
+  renderRiskHead();
+  renderRisks();
+  renderActions();
+  renderMethod();
+  renderSources();
+
+  $('#q').addEventListener('input', e => { state.q = e.target.value; renderPool(); });
+  $('#sort').addEventListener('change', e => { state.sort = e.target.value; renderPool(); });
+  $('#viewCard').addEventListener('click', () => { state.view = 'card'; $('#viewCard').classList.add('on'); $('#viewTable').classList.remove('on'); renderPool(); });
+  $('#viewTable').addEventListener('click', () => { state.view = 'table'; $('#viewTable').classList.add('on'); $('#viewCard').classList.remove('on'); renderPool(); });
+  $('#clearBtn').addEventListener('click', () => { state.selected.clear(); syncSelection(); });
+  $('#compareBtn').addEventListener('click', openCompare);
+  $('#closeModal').addEventListener('click', () => { $('#modal').classList.remove('open'); document.body.style.overflow = ''; });
+  $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') { $('#modal').classList.remove('open'); document.body.style.overflow = ''; } });
+  $('#printCompare').addEventListener('click', () => {
+    document.body.classList.add('printing-compare');
+    window.print();
+    setTimeout(() => document.body.classList.remove('printing-compare'), 400);
+  });
+  window.addEventListener('beforeprint', () => {
+    if ($('#modal').classList.contains('open')) document.body.classList.add('printing-compare');
+  });
+  window.addEventListener('afterprint', () => document.body.classList.remove('printing-compare'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { $('#modal').classList.remove('open'); document.body.style.overflow = ''; } });
+  window.addEventListener('resize', () => { drawScatter(); });
+  syncSelection();
+}
+init();
+</script>
+</body>
+</html>

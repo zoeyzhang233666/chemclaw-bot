@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>工业用32%液碱（氢氧化钠溶液）采购合同 · 合同风险审查</title>
+<style>
+:root{{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f6f8fb;--card:#ffffff;--brand:#0f3d5c;--accent:#c2410c;--left:46%;}}
+*{{box-sizing:border-box}}
+html,body{{margin:0;padding:0}}
+body{{font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.65}}
+a{{color:#0b5cad}}
+.demo-banner{{background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 12px,#fde68a 12px,#fde68a 24px);color:#78350f;padding:10px 26px;font-size:13px;border-bottom:1px solid #f59e0b}}
+.hero{{background:linear-gradient(135deg,#0b2e45 0%,#0f3d5c 45%,#155e75 100%);color:#e6f2f7;padding:26px 30px 22px}}
+.hero .kicker{{font-size:12px;letter-spacing:.2em;color:#7dd3fc;text-transform:uppercase}}
+.hero h1{{margin:6px 0 4px;font-size:26px;font-weight:700;letter-spacing:.02em}}
+.hero .meta{{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12.5px;color:#bae6fd;margin-top:10px}}
+.hero .meta b{{color:#fff;font-weight:600}}
+.pills{{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}}
+.pill{{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:3px 10px;border-radius:999px;font-size:12px}}
+.tabs{{display:flex;gap:2px;background:#0b2e45;padding:0 18px;position:sticky;top:0;z-index:50}}
+.tabs button{{background:transparent;border:0;color:#9ec5d8;padding:12px 18px;font-size:14px;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}}
+.tabs button.active{{color:#fff;border-bottom-color:#f59e0b;font-weight:600}}
+.tabs button:hover{{color:#fff}}
+.panel{{display:none;padding:20px 24px 40px}}
+.panel.active{{display:block}}
+.stats{{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:6px 0 18px}}
+.stat{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}}
+.stat .num{{font-size:30px;font-weight:700;color:var(--brand);line-height:1.1}}
+.stat .lbl{{font-size:12px;color:var(--muted)}}
+.grid2{{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}}
+.card{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 2px rgba(15,23,42,.04)}}
+.card h3{{margin:0 0 10px;font-size:15px;color:var(--brand)}}
+.toprow,.qrow,.irow,.cla{{list-style:none}}
+ol.top{{padding-left:0;margin:0}}
+.toprow{{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);cursor:pointer;font-size:13.5px}}
+.toprow:hover{{color:var(--accent)}}
+.toprow:last-child{{border-bottom:0}}
+.sev{{display:inline-block;padding:0 7px;border-radius:5px;font-size:11.5px;font-weight:600;white-space:nowrap}}
+.topicbar{{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}}
+.topicbar-item{{display:flex;flex-direction:column;align-items:center;background:#eef4f8;border-radius:8px;padding:4px 10px;font-size:12px;color:#155e75;min-width:56px}}
+.topicbar-item i{{font-style:normal;font-weight:700;font-size:16px;color:#0f3d5c}}
+.miss{{color:#9a3412}}
+.uinote{{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#7c2d12;margin-top:10px}}
+.disclaimer{{background:#fff1f2;border:1px solid #fecdd3;color:#881337;border-radius:10px;padding:12px 14px;font-size:12.5px;margin-top:16px}}
+/* ---------- review workspace ---------- */
+.ws{{display:grid;grid-template-columns:var(--left) 1fr;gap:0;border-top:1px solid var(--line);}
+.ws-left,.ws-right{{height:calc(100vh - 118px);overflow:auto;scroll-behavior:smooth}}
+.ws-left{{background:#fdfdfb;border-right:1px solid var(--line);padding:16px 18px 80px}}
+.ws-right{{padding:14px 18px 90px;background:#f3f6f9}}
+.toolbar{{position:sticky;top:0;background:var(--bg);z-index:40;padding:10px 24px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}}
+.toolbar .row{{display:flex;flex-wrap:wrap;gap:6px;align-items:center}}
+.toolbar .lbl{{font-size:12px;color:var(--muted);margin-right:4px}}
+.fbtn,.kbtn,.sbtn,.tb{{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 11px;font-size:12.5px;cursor:pointer;font-family:inherit;color:#334155}}
+.fbtn b,.kbtn b{{font-weight:700;color:var(--brand)}}
+.fbtn.active{{background:var(--tc,#0f3d5c);border-color:transparent;color:#fff}}
+.fbtn.active b{{color:#fff}}
+.kbtn.active{{background:var(--brand);color:#fff;border-color:transparent}}
+.kbtn.active b{{color:#fff}}
+.btn{{border:1px solid #0f3d5c;background:#0f3d5c;color:#fff;border-radius:8px;padding:5px 12px;font-size:12.5px;cursor:pointer;font-family:inherit}}
+.btn.ghost{{background:#fff;color:#0f3d5c}}
+#search{{flex:1;min-width:180px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-family:inherit;font-size:13px}}
+.csec{{margin-bottom:18px}}
+.csec h3{{font-size:15px;margin:16px 0 8px;color:#0f3d5c;border-left:4px solid #f59e0b;padding-left:10px;display:flex;align-items:center;gap:8px}}
+.sec-no{{background:#0f3d5c;color:#fff;border-radius:4px;font-size:12px;padding:1px 7px}}
+.pg{{margin-left:auto;font-size:11px;color:#94a3b8;font-weight:400;background:#f1f5f9;border-radius:4px;padding:0 6px}}
+.clause{{padding:8px 10px;border-radius:8px;margin:4px 0;cursor:default;transition:background .15s}}
+.clause:hover{{background:#f4f7fa}}
+.clause.flagged{{background:#fffdf5}}
+.clause.flash{{background:#fef3c7;box-shadow:inset 0 0 0 2px #f59e0b}}
+.clause-no{{font-size:11.5px;color:#64748b;display:flex;align-items:center;gap:6px;margin-bottom:2px}}
+.clause-text{{font-size:13.5px;color:#1e293b;text-align:justify}}
+.clause-chips{{display:flex;gap:3px;margin-left:auto}}
+.hit-chip{{border:0;border-radius:4px;font-size:10.5px;padding:0 5px;cursor:pointer;font-weight:700;color:#fff;background:#64748b}}
+.hit-chip.s5{{background:#b91c1c}}.hit-chip.s4{{background:#ea580c}}.hit-chip.s3{{background:#d97706}}.hit-chip.s2{{background:#16a34a}}
+.attachment{{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0}}
+.att-head{{font-weight:700;color:#0f3d5c;display:flex;gap:8px;align-items:center;margin-bottom:8px}}
+.c-table{{width:100%;border-collapse:collapse;font-size:12.5px}}
+.c-table caption{{caption-side:top;text-align:left;color:#64748b;font-size:12px;padding-bottom:6px}}
+.c-table th{{background:#eef4f8;text-align:left;padding:6px 8px;border:1px solid #dbe5ec;font-weight:600}}
+.c-table td{{padding:6px 8px;border:1px solid #e2e8f0}}
+.c-table tr td:nth-child(2){{color:#7c2d12}}
+.att-note{{font-size:12.5px;color:#475569;background:#f8fafc;border-left:3px solid #cbd5e1;padding:8px 10px}}
+.att-list{{font-size:13px;color:#1e293b;padding-left:20px}}
+/* ---------- cards ---------- */
+.fcard{{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.05);transition:box-shadow .2s,transform .2s}}
+.fcard.flash{{box-shadow:0 0 0 3px #f59e0b,0 6px 18px rgba(245,158,11,.25)}}
+.fc-head{{display:flex;align-items:center;gap:7px;padding:9px 13px;background:#f8fafc;border-bottom:1px solid var(--line);cursor:pointer;flex-wrap:wrap}}
+.rid{{font-family:Consolas,monospace;font-weight:700;color:#0f3d5c}}
+.topic,.kind{{font-size:11.5px;padding:1px 7px;border-radius:5px}}
+.kind{{background:#eef2ff;color:#3730a3}}
+.kind.k-缺失{{background:#fde68a;color:#78350f}}
+.kind.k-表述不清{{background:#dbeafe;color:#1e3a8a}}
+.status-pill{{margin-left:auto;font-size:11.5px;color:#64748b;border:1px dashed #cbd5e1;border-radius:999px;padding:0 8px}}
+.status-pill.set{{color:#065f46;border-color:#6ee7b7;background:#ecfdf5}}
+.caret{{color:#94a3b8;transition:transform .2s}}
+.fcard.open .caret{{transform:rotate(90deg)}}
+.fc-title{{margin:10px 14px 0;font-size:14.5px;line-height:1.5;color:#111827}}
+.fc-body{{display:none;padding:8px 14px 14px}}
+.fcard.open .fc-body{{display:block}}
+.sec{{margin-top:10px}}
+.sec h5{{margin:0 0 4px;font-size:12px;color:#0f3d5c;letter-spacing:.05em}}
+.sec p{{margin:0 0 4px;font-size:13.2px;color:#334155;text-align:justify}}
+.quote{{margin:6px 0;padding:7px 10px;background:#f8fafc;border-left:3px solid #94a3b8;border-radius:0 6px 6px 0;display:flex;flex-direction:column;gap:2px}}
+.q-src{{font-size:11px;color:#64748b}}
+.q-text{{font-size:12.8px;color:#111827}}
+.anchors{{display:flex;flex-wrap:wrap;gap:6px}}
+.anchor-btn{{border:1px solid #cbd5e1;background:#f8fafc;border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;color:#0f3d5c;font-family:inherit}}
+.anchor-btn:hover{{background:#e0f2fe;border-color:#7dd3fc}}
+.missing{{color:#9a3412;font-weight:600;font-size:12.5px}}
+.cons,.todo{{margin:2px 0 0;padding-left:18px;font-size:12.8px;color:#334155}}
+.cons li::marker{{color:#dc2626}}
+.todo li::marker{{color:#0f766e}}
+.law-chips span{{display:inline-block;font-size:11.5px;background:#eef2f7;border-radius:5px;padding:1px 7px;margin:2px 4px 0 0;color:#334155}}
+.note-sec{{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:8px 10px}}
+.note-controls{{display:flex;gap:8px}}
+.note-controls select,.note-controls input{{border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-family:inherit;font-size:12.5px}}
+.note-controls input{{flex:1}}
+/* ---------- index table ---------- */
+table.qtable,table.idx{{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;font-size:12.8px}}
+.qtable th,table.idx th{{background:#0f3d5c;color:#fff;text-align:left;padding:8px 10px;font-weight:600;position:sticky;top:0}}
+.qtable td,table.idx td{{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}}
+.qtable tr:hover,table.idx tr:hover{{background:#f0f9ff;cursor:pointer}}
+.mono{{font-family:Consolas,monospace;color:#0f3d5c;font-weight:600;white-space:nowrap}}
+.t{{max-width:420px}}
+.pr{{font-size:11.5px;padding:0 7px;border-radius:5px;font-weight:700;color:#fff}}
+.pr-高{{background:#b91c1c}}.pr-中{{background:#d97706}}.pr-低{{background:#64748b}}
+.qtabs{{display:flex;gap:6px;margin:4px 0 12px;flex-wrap:wrap}}
+.qtab-btn{{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:13px}}
+.qtab-btn.active{{background:#0f3d5c;color:#fff;border-color:transparent}}
+.qtab{{display:none}}.qtab.active{{display:block}}
+.qtab-desc{{color:#64748b;font-size:12.5px;margin:0 0 8px}}
+.mini{{display:inline-block;font-size:10.5px;color:#fff;background:#64748b;border-radius:4px;padding:0 4px;margin-right:2px;font-family:Consolas,monospace}}
+.mini.s5{{background:#b91c1c}}.mini.s4{{background:#ea580c}}.mini.s3{{background:#d97706}}.mini.s2{{background:#16a34a}}
+.legend{{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#475569;margin:8px 0 12px}}
+.legend i{{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}}
+.st{{font-size:12px;padding:0 7px;border-radius:5px}}
+.st.ok{{background:#dcfce7;color:#166534}}.st.warn{{background:#fef3c7;color:#92400e}}
+.foot{{padding:18px 24px;color:#64748b;font-size:12px;border-top:1px solid var(--line);margin-top:20px}}
+@media (max-width:1100px){{.ws{{grid-template-columns:1fr}} .ws-left,.ws-right{{height:auto}} .stats{{grid-template-columns:repeat(2,1fr)}} .grid2{{grid-template-columns:1fr}}}}
+@media print{{.tabs,.toolbar,.note-sec{{display:none}} .ws{{display:block}} .ws-left,.ws-right{{height:auto;overflow:visible}} .fc-body{{display:block}}}}
+</style>
+</head>
+<body>
+<div class="demo-banner">⚠ 本页面演示所用合同为 <b>虚构演示合同</b>：双方名称、金额、条款均为演示编写，不对应任何真实交易或公司。审查结论仅用于演示业务审查方法，不构成法律意见。</div>
+<header class="hero">
+  <div class="kicker">内贸采购 · 合同风险审查 / Contract Risk Review</div>
+  <h1>工业用32%液碱（氢氧化钠溶液）采购合同</h1>
+  <div class="meta">
+    <span>合同编号 <b>XS-2026-LY-0715</b></span><span>我方身份 <b>买方（甲方）</b></span><span>供应商 <b>滨海宏源化工贸易有限公司（乙方，虚构）</b></span>
+    <span>签订日期 <b>2026年10月12日</b></span><span>审查日期 <b>2026-10-19</b></span><span>审查人 <b>采购业务审查（Agent 演示）</b></span>
+  </div>
+  <div class="pills"><span class="pill">标的：工业用氢氧化钠溶液（32%液碱，NaOH质量分数32%）</span><span class="pill">状态：已签署（2026年10月12日），处于待执行/首批订单前阶段</span><span class="pill">审查范围：合同正文 6 页 + 附件一 + 附件二；未含乙方资质文件、承运方证照、报价单原件</span></div>
+</header>
+<nav class="tabs">
+  <button class="active" data-panel="overview">总览</button>
+  <button data-panel="workspace">原文 × 风险双栏</button>
+  <button data-panel="index">条款索引</button>
+  <button data-panel="tasks">问题清单（采购/法务/供应商）</button>
+  <button data-panel="laws">法规标准核对</button>
+  <button data-panel="method">方法与边界</button>
+</nav>
+
+<section class="panel active" id="panel-overview">
+  <div class="stats"><div class="stat"><div class="num">36</div><div class="lbl">风险条目合计</div></div><div class="stat"><div class="num">20</div><div class="lbl">缺失条款</div></div><div class="stat"><div class="num">16</div><div class="lbl">表述不清/冲突</div></div><div class="stat"><div class="num">47</div><div class="lbl">被引用的原文条款</div></div><div class="stat"><div class="num">39</div><div class="lbl">待确认问题</div></div></div>
+  <div class="grid2">
+    <div class="card"><h3>一句话结论</h3><p style="margin:0 0 12px;font-size:14px">合同整体偏向卖方：质量判定、异议期、调价、停供、责任上限均单向倾斜，并有 1 处「年末补货」条款存在实质承诺采购风险</p>
+      <h3>最需要先处理的 8 条</h3><ol class="top"><li data-goto-finding="R10" class="toprow"><span class="sev" style="color:#ffffff;background:#b91c1c">极高</span><b>R10</b> 危险货物运输责任全部推给承运人，未核实承运方资质、车辆罐体适装介质与检验有效期</li><li data-goto-finding="R19" class="toprow"><span class="sev" style="color:#ffffff;background:#b91c1c">极高</span><b>R19</b> 账户变更仅凭「电话或微信通知」，存在付款欺诈（BEC）风险；未约定先票后款或同步交付</li><li data-goto-finding="R20" class="toprow"><span class="sev" style="color:#ffffff;background:#b91c1c">极高</span><b>R20</b> 「年末补足框架量货款」条款实质接近最低采购承诺，指向不明</li><li data-goto-finding="R01" class="toprow"><span class="sev" style="color:#ffffff;background:#ea580c">高</span><b>R01</b> 附件一未给氢氧化钠含量上限，合同浓度 32% 与附件 ≥30% 口径不一致</li><li data-goto-finding="R03" class="toprow"><span class="sev" style="color:#ffffff;background:#ea580c">高</span><b>R03</b> 「出厂检验合格即视为质量合格」剥夺买方检验权，且 1.2 与 3.1 自相矛盾</li><li data-goto-finding="R04" class="toprow"><span class="sev" style="color:#ffffff;background:#ea580c">高</span><b>R04</b> 3 日质量异议期过短，且起算点（到货还是验收）未明确</li><li data-goto-finding="R08" class="toprow"><span class="sev" style="color:#ffffff;background:#ea580c">高</span><b>R08</b> 交货时间「7 个工作日」自相矛盾，且检修/减量/物流紧张均可顺延</li><li data-goto-finding="R09" class="toprow"><span class="sev" style="color:#ffffff;background:#ea580c">高</span><b>R09</b> 交货地点为「甲方指定地点（另行通知）」，风险转移节点不可确定</li></ol>
+      <div class="uinote">内部备注：—</div>
+    </div>
+    <div class="card"><h3>合同未约定 / 需补齐的事项（缺失，不作推测）</h3><ul><li>供应商资质（危化品经营许可证/生产许可/营业执照）未作为附件</li><li>承运方资质、罐车适装介质与检验有效期未约定</li><li>第三方检验机构与检验费用分摊未约定</li><li>最低/最高采购量、单批允差、尾差处理</li><li>质保金/质量扣款机制</li><li>调价基准与上限</li><li>不可抗力对等解除与预付款返还</li><li>转让/分包与保密条款</li><li>合同适用法律与送达地址</li></ul>
+      <h3 style="margin-top:14px">本次收到的文件</h3><ul><li>✅ 《工业用32%液碱采购合同》正文 7 页（PDF，含附件）</li><li>✅ 附件一《产品技术规范（32%液碱）》1 页</li><li>✅ 附件二《框架合同使用说明》1 页</li><li>✅ 《产品安全信息（GHS 提示）》1 页（由审查人整理，非合同条款）</li><li class='miss'>❌ 乙方营业执照、危险化学品经营许可证、安全生产许可/生产许可证明（未随合同提供）</li><li class='miss'>❌ 乙方承运方（或其委托的运输公司）《道路运输经营许可证》、罐车罐体检验合格证、适装介质列表（未提供）</li><li class='miss'>❌ 产品出厂检验报告、批号追溯规则（仅在附件一提及，未作为附件）</li><li class='miss'>❌ 公司《标准采购合同模板》《供应商准入与年度审核制度》《合同评审授权手册》（用户未提供，本次按通用采购管理要求提示）</li><li class='miss'>❌ 历史质量争议/退货/商务调整台账（用户未提供，无法引用真实案例，仅作行业经验提示并标注）</li></ul>
+      <h3 style="margin-top:14px">风险主题分布</h3><div class="topicbar"><div class="topicbar-item" style="--w:5"><span>质量</span><i>5</i></div><div class="topicbar-item" style="--w:2"><span>数量</span><i>2</i></div><div class="topicbar-item" style="--w:3"><span>交货</span><i>3</i></div><div class="topicbar-item" style="--w:2"><span>包装容器</span><i>2</i></div><div class="topicbar-item" style="--w:1"><span>计量</span><i>1</i></div><div class="topicbar-item" style="--w:3"><span>价格税费</span><i>3</i></div><div class="topicbar-item" style="--w:4"><span>付款</span><i>4</i></div><div class="topicbar-item" style="--w:5"><span>安全合规</span><i>5</i></div><div class="topicbar-item" style="--w:3"><span>违约责任</span><i>3</i></div><div class="topicbar-item" style="--w:2"><span>不可抗力</span><i>2</i></div><div class="topicbar-item" style="--w:2"><span>争议解决</span><i>2</i></div><div class="topicbar-item" style="--w:4"><span>通用</span><i>4</i></div></div>
+      <p style="font-size:12px;color:#64748b;margin:10px 0 0">上述测算均以合同原文 2,000 吨与 1,150 元/吨（含13%增值税）为基数，仅用于说明量级，不代表实际损失预测。</p>
+    </div>
+  </div>
+  <div class="disclaimer">本结果属于业务审查提示，不是法律意见，也不替代律师或法务的专业审查。涉及条款效力、是否可执行、法律责任分配等问题，必须以公司法务/外部律师意见为准。法律、法规与标准的适用性核对日期为 2026-10-19，正式签约或索赔前应再次核对权威渠道（国家法律法规数据库、全国标准信息公共服务平台）。</div>
+</section>
+
+<section class="panel" id="panel-workspace">
+  <div class="toolbar">
+    <div class="row"><span class="lbl">主题</span><button class="fbtn active" data-topic="all">全部主题</button><button class="fbtn" data-topic="quality" style="--tc:#0e7490">质量 <b>5</b></button><button class="fbtn" data-topic="quantity" style="--tc:#7c3aed">数量 <b>2</b></button><button class="fbtn" data-topic="delivery" style="--tc:#1d4ed8">交货 <b>3</b></button><button class="fbtn" data-topic="packaging" style="--tc:#b45309">包装容器 <b>2</b></button><button class="fbtn" data-topic="measure" style="--tc:#475569">计量 <b>1</b></button><button class="fbtn" data-topic="price" style="--tc:#0f766e">价格税费 <b>3</b></button><button class="fbtn" data-topic="payment" style="--tc:#be185d">付款 <b>4</b></button><button class="fbtn" data-topic="safety" style="--tc:#b91c1c">安全合规 <b>5</b></button><button class="fbtn" data-topic="breach" style="--tc:#9333ea">违约责任 <b>3</b></button><button class="fbtn" data-topic="forcemajeure" style="--tc:#64748b">不可抗力 <b>2</b></button><button class="fbtn" data-topic="dispute" style="--tc:#334155">争议解决 <b>2</b></button><button class="fbtn" data-topic="general" style="--tc:#6b7280">通用 <b>4</b></button></div>
+    <div class="row"><span class="lbl">类型</span><button class="kbtn active" data-kind="all">全部类型</button><button class="kbtn" data-kind="缺失">缺失 <b>20</b></button><button class="kbtn" data-kind="表述不清">表述不清 <b>16</b></button><span class="lbl" style="margin-left:12px">严重度</span><button class="sbtn" data-sev="5" style="color:#ffffff;background:#b91c1c">极高 5</button><button class="sbtn" data-sev="4" style="color:#ffffff;background:#ea580c">高 4</button><button class="sbtn" data-sev="3" style="color:#7c2d12;background:#fcd34d">中 3</button><button class="sbtn" data-sev="2" style="color:#14532d;background:#bbf7d0">低 2</button></div>
+    <div class="row">
+      <input id="search" placeholder="搜索风险、原文、待确认问题…（支持「溴」「押金」「仲裁」等词）">
+      <button class="btn ghost" id="btn-all-open">展开全部</button>
+      <button class="btn ghost" id="btn-all-close">收起全部</button>
+      <button class="btn ghost" id="btn-export">导出处理状态 JSON</button>
+      <span id="count-hint" style="font-size:12px;color:#64748b"></span>
+    </div>
+  </div>
+  <div class="ws" id="ws">
+    <div class="ws-left" id="left"><section class="csec" id="sec-preamble"><h3><span class="sec-no">—</span>合同首部（合同编号、双方、签约日期）<span class="pg">P1</span></h3><div class="clause flagged" id="clause-C01" data-clause="C01"><div class="clause-no">合同首部<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R21" title="供应商资质（危化品经营许可/安全生产许可）未作为合同条件与附件">R21</button><button class="hit-chip s3" data-goto-finding="R36" title="文件不齐：缺少供应商资质、承运方证照、报价单、技术协议、订单模板">R36</button></div></div><div class="clause-text">合同编号：XS-2026-LY-0715。甲  方（买方）：恒星精化科技（江苏）有限公司，地址：江苏省常州市高新区滨江化工园兴港大道18号。乙  方（卖方）：滨海宏源化工贸易有限公司，地址：江苏省盐城市滨海县沿海化工园区恒源路66号。签订日期：2026年10月12日。签订地点：江苏省常州市。甲乙双方经友好协商，就甲方向乙方采购工业用氢氧化钠（液碱）事宜，根据《中华人民共和国民法典》等法律法规，订立本合同。</div></div></section><section class="csec" id="sec-s1"><h3><span class="sec-no">第一条</span>产品名称、规格与质量标准<span class="pg">P1</span></h3><div class="clause flagged" id="clause-C02" data-clause="C02"><div class="clause-no">第一条 1.1<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R01" title="附件一未给氢氧化钠含量上限，合同浓度 32% 与附件 ≥30% 口径不一致">R01</button><button class="hit-chip s3" data-goto-finding="R06" title="采购总量「约 2,000 吨」无约束力，「约」字不构成最低采购承诺">R06</button><button class="hit-chip s2" data-goto-finding="R07" title="交付数量允差、单批起送量与尾差处理未约定">R07</button></div></div><div class="clause-text">1.1 产品名称：工业用氢氧化钠（俗称液碱、烧碱）。规格浓度：32%（质量分数，以NaOH计）。采购数量：约 2,000 吨（本合同为框架合同，分批下订单，详见附件二）。等级：不分等级。</div></div><div class="clause flagged" id="clause-C03" data-clause="C03"><div class="clause-no">第一条 1.2<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R01" title="附件一未给氢氧化钠含量上限，合同浓度 32% 与附件 ≥30% 口径不一致">R01</button><button class="hit-chip s4" data-goto-finding="R03" title="「出厂检验合格即视为质量合格」剥夺买方检验权，且 1.2 与 3.1 自相矛盾">R03</button><button class="hit-chip s3" data-goto-finding="R33" title="附件效力条款「附件与正文冲突以正文为准」，使附件一的技术指标失去优先性">R33</button><button class="hit-chip s2" data-goto-finding="R25" title="引用「国家有关标准」但未列明适用标准与版本年份">R25</button></div></div><div class="clause-text">1.2 质量标准：执行 GB/T 209-2018《工业用氢氧化钠》标准，或双方认可的企业标准。乙方出厂检验合格即视为质量合格，甲方不得以日常复检结果为由拒收或索赔。</div></div><div class="clause flagged" id="clause-C04" data-clause="C04"><div class="clause-no">第一条 1.3<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R03" title="「出厂检验合格即视为质量合格」剥夺买方检验权，且 1.2 与 3.1 自相矛盾">R03</button><button class="hit-chip s4" data-goto-finding="R04" title="3 日质量异议期过短，且起算点（到货还是验收）未明确">R04</button></div></div><div class="clause-text">1.3 产品质量以乙方出厂检验结果为准；甲方如对质量有异议，应在到货后 3 日内提出，逾期视为质量验收合格。</div></div><div class="clause flagged" id="clause-C05" data-clause="C05"><div class="clause-no">第一条 1.4<span class="pg">P1</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R05" title="质检报告、SDS、安全标签未作为到货必备交付物，仅在 1.4/10.1 提及「可协商」">R05</button><button class="hit-chip s3" data-goto-finding="R36" title="文件不齐：缺少供应商资质、承运方证照、报价单、技术协议、订单模板">R36</button></div></div><div class="clause-text">1.4 乙方应随车提供产品合格证明及检验报告；如甲方要求，可另行协商提供。具体技术指标见附件一。</div></div></section><section class="csec" id="sec-s2"><h3><span class="sec-no">第二条</span>交货时间、地点与运输方式<span class="pg">P2</span></h3><div class="clause flagged" id="clause-C06" data-clause="C06"><div class="clause-no">第二条 2.1<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R08" title="交货时间「7 个工作日」自相矛盾，且检修/减量/物流紧张均可顺延">R08</button><button class="hit-chip s3" data-goto-finding="R30" title="无「不可抗力期间临时供应保障」与「替代供应」约定">R30</button></div></div><div class="clause-text">2.1 交货时间：乙方应在接到甲方订单后 7 个工作日内交货，具体时间为甲方要求的时间。遇乙方检修、装置减量或物流紧张，交货时间相应顺延，顺延期间不视为乙方违约。</div></div><div class="clause flagged" id="clause-C07" data-clause="C07"><div class="clause-no">第二条 2.2<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s5" data-goto-finding="R10" title="危险货物运输责任全部推给承运人，未核实承运方资质、车辆罐体适装介质与检验有效期">R10</button><button class="hit-chip s4" data-goto-finding="R09" title="交货地点为「甲方指定地点（另行通知）」，风险转移节点不可确定">R09</button></div></div><div class="clause-text">2.2 交货地点：甲方指定地点（以甲方另行通知为准）。交货方式：乙方送货到厂，运输由乙方负责安排，运输费用由乙方承担。</div></div><div class="clause flagged" id="clause-C08" data-clause="C08"><div class="clause-no">第二条 2.3<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R09" title="交货地点为「甲方指定地点（另行通知）」，风险转移节点不可确定">R09</button></div></div><div class="clause-text">2.3 风险转移：货物风险自乙方交付至甲方指定地点时起由甲方承担。运输途中发生泄漏、洒漏或罐体腐蚀破损的，由承运人负责处理，乙方不承担运输过程中的损失。</div></div><div class="clause flagged" id="clause-C09" data-clause="C09"><div class="clause-no">第二条 2.4<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s5" data-goto-finding="R10" title="危险货物运输责任全部推给承运人，未核实承运方资质、车辆罐体适装介质与检验有效期">R10</button><button class="hit-chip s4" data-goto-finding="R21" title="供应商资质（危化品经营许可/安全生产许可）未作为合同条件与附件">R21</button><button class="hit-chip s4" data-goto-finding="R23" title="装卸安全责任、应急预案联络人、泄漏处置分工未约定">R23</button></div></div><div class="clause-text">2.4 乙方应自行安排具备相应资质的车辆及人员运输。因运输引发的安全事故、行政处罚及第三方索赔，均由乙方及承运人自行承担，与甲方无关。</div></div></section><section class="csec" id="sec-s3"><h3><span class="sec-no">第三条</span>验收与质量异议<span class="pg">P2</span></h3><div class="clause flagged" id="clause-C10" data-clause="C10"><div class="clause-no">第三条 3.1<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R03" title="「出厂检验合格即视为质量合格」剥夺买方检验权，且 1.2 与 3.1 自相矛盾">R03</button><button class="hit-chip s2" data-goto-finding="R25" title="引用「国家有关标准」但未列明适用标准与版本年份">R25</button></div></div><div class="clause-text">3.1 验收标准：按 GB/T 209-2018 及附件一执行。验收方法：甲方按每车次取样化验；另有约定的，以乙方质检报告为准。</div></div><div class="clause flagged" id="clause-C11" data-clause="C11"><div class="clause-no">第三条 3.2<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R04" title="3 日质量异议期过短，且起算点（到货还是验收）未明确">R04</button></div></div><div class="clause-text">3.2 甲方应在到货后 3 日内完成验收。如对质量有异议，应在异议期内书面通知乙方，逾期未提出的，视为验收合格。</div></div><div class="clause flagged" id="clause-C12" data-clause="C12"><div class="clause-no">第三条 3.3<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R04" title="3 日质量异议期过短，且起算点（到货还是验收）未明确">R04</button></div></div><div class="clause-text">3.3 甲方提出质量异议后，双方应协商解决；协商不成的，以第三方检测机构的检验结果为准。检测费用由检测结果不利的一方承担。</div></div><div class="clause flagged" id="clause-C13" data-clause="C13"><div class="clause-no">第三条 3.4<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R04" title="3 日质量异议期过短，且起算点（到货还是验收）未明确">R04</button></div></div><div class="clause-text">3.4 经检验产品不符合约定的，乙方应在收到通知后换货；货物已被甲方使用或已卸入甲方储罐的，不再退换。</div></div></section><section class="csec" id="sec-s4"><h3><span class="sec-no">第四条</span>价格、税费与开票<span class="pg">P2</span></h3><div class="clause flagged" id="clause-C14" data-clause="C14"><div class="clause-no">第四条 4.1<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R15" title="供应商可单方调价（提前 3 日通知），无调价基准与上限">R15</button><button class="hit-chip s3" data-goto-finding="R34" title="框架合同缺少订单完整要素约束：微信/传真下单「收到即确认」">R34</button><button class="hit-chip s2" data-goto-finding="R14" title="价格结构不清：暂定 1,150 元/吨含税，但含运费、包装、装卸，且另有吨桶押金">R14</button></div></div><div class="clause-text">4.1 价格：到厂含税单价以双方确认的订单价格为准，暂按人民币 1,150 元/吨（大写：壹仟壹佰伍拾元整，含13%增值税）执行。价格包含运输费、装卸费、包装费及税费。</div></div><div class="clause flagged" id="clause-C15" data-clause="C15"><div class="clause-no">第四条 4.2<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R15" title="供应商可单方调价（提前 3 日通知），无调价基准与上限">R15</button></div></div><div class="clause-text">4.2 价格调整：基于市场价格变化，双方可协商调整价格，调整后的价格以双方书面确认为准。乙方有权根据原料及市场行情调整价格，调整应提前 3 日通知甲方。</div></div><div class="clause flagged" id="clause-C16" data-clause="C16"><div class="clause-no">第四条 4.3<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s5" data-goto-finding="R19" title="账户变更仅凭「电话或微信通知」，存在付款欺诈（BEC）风险；未约定先票后款或同步交付">R19</button><button class="hit-chip s3" data-goto-finding="R16" title="先付款后开票，税率变动费用由买方承担，未约定发票类型与红线">R16</button></div></div><div class="clause-text">4.3 乙方应在收到货款后开具增值税专用发票，税率按开票时有效税率执行。因税率变动增加的费用由甲方承担。</div></div><div class="clause flagged" id="clause-C17" data-clause="C17"><div class="clause-no">第四条 4.4<span class="pg">P2</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R13" title="计量以乙方装车磅单为准，异议须在卸货前提出，且 4.4 与 6.4 重复">R13</button></div></div><div class="clause-text">4.4 数量以乙方装车磅单为准，甲方如有异议，应在卸货前提出。</div></div></section><section class="csec" id="sec-s5"><h3><span class="sec-no">第五条</span>付款方式与期限<span class="pg">P3</span></h3><div class="clause flagged" id="clause-C18" data-clause="C18"><div class="clause-no">第五条 5.1<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R17" title="预付款 30% 无担保、无履约锁定，预付款基数是「合同总额」而非「框架量」">R17</button></div></div><div class="clause-text">5.1 甲方应在合同签订后支付合同总额 30% 的预付款（人民币 690,000 元），预付款支付后乙方安排首批交货。</div></div><div class="clause flagged" id="clause-C19" data-clause="C19"><div class="clause-no">第五条 5.2<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R18" title="无质保金/质量尾款，质量索赔缺乏「付款扣减」抓手">R18</button><button class="hit-chip s4" data-goto-finding="R28" title="「不得以质量争议拒付」实质排除买方抗辩权；供应商可停货">R28</button><button class="hit-chip s3" data-goto-finding="R26" title="违约金比例不对称：甲方逾期付款 0.1%/日，乙方逾期交货 0.05%/日">R26</button></div></div><div class="clause-text">5.2 剩余货款于每批货物验收合格后 30 日内支付；甲方逾期付款的，应按逾期金额每日 0.1% 向乙方支付违约金。</div></div><div class="clause flagged" id="clause-C20" data-clause="C20"><div class="clause-no">第五条 5.3<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s5" data-goto-finding="R20" title="「年末补足框架量货款」条款实质接近最低采购承诺，指向不明">R20</button></div></div><div class="clause-text">5.3 甲方应于每年年末支付当年度框架量不足部分的货款，以保证乙方年度销售的实现。</div></div><div class="clause flagged" id="clause-C21" data-clause="C21"><div class="clause-no">第五条 5.4<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s5" data-goto-finding="R19" title="账户变更仅凭「电话或微信通知」，存在付款欺诈（BEC）风险；未约定先票后款或同步交付">R19</button></div></div><div class="clause-text">5.4 甲方付款应汇入乙方指定账户：账户名称滨海宏源化工贸易有限公司，账号以乙方通知为准，如账户变更，乙方以电话或微信方式通知甲方即可，由此产生的风险由甲方承担。</div></div></section><section class="csec" id="sec-s6"><h3><span class="sec-no">第六条</span>包装、容器与计量<span class="pg">P3</span></h3><div class="clause flagged" id="clause-C22" data-clause="C22"><div class="clause-no">第六条 6.1<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R11" title="吨桶押金「300 元/只」但数量、退还条件、押金抵扣均未约定">R11</button><button class="hit-chip s3" data-goto-finding="R24" title="储存条件、罐区适装与混罐风险未写入（含跨品种换罐）">R24</button><button class="hit-chip s2" data-goto-finding="R12" title="空桶返还时点「另行协商」，返还运费用买方承担，未约定超期与损耗">R12</button><button class="hit-chip s2" data-goto-finding="R14" title="价格结构不清：暂定 1,150 元/吨含税，但含运费、包装、装卸，且另有吨桶押金">R14</button></div></div><div class="clause-text">6.1 包装形式：散装液碱采用乙方自有罐车运输，或采用聚乙烯（PE）吨桶包装（每桶净重 1,000 kg）。包装形式由乙方根据运力自行决定。包装费用已包含在单价内。</div></div><div class="clause flagged" id="clause-C23" data-clause="C23"><div class="clause-no">第六条 6.2<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R11" title="吨桶押金「300 元/只」但数量、退还条件、押金抵扣均未约定">R11</button><button class="hit-chip s2" data-goto-finding="R14" title="价格结构不清：暂定 1,150 元/吨含税，但含运费、包装、装卸，且另有吨桶押金">R14</button></div></div><div class="clause-text">6.2 如采用吨桶包装，吨桶押金为每只人民币 300 元，由甲方在支付预付款时一并支付，押金于原料使用完毕后视情况退还。</div></div><div class="clause flagged" id="clause-C24" data-clause="C24"><div class="clause-no">第六条 6.3<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R23" title="装卸安全责任、应急预案联络人、泄漏处置分工未约定">R23</button><button class="hit-chip s3" data-goto-finding="R24" title="储存条件、罐区适装与混罐风险未写入（含跨品种换罐）">R24</button><button class="hit-chip s2" data-goto-finding="R12" title="空桶返还时点「另行协商」，返还运费用买方承担，未约定超期与损耗">R12</button></div></div><div class="clause-text">6.3 空桶由甲方负责返还乙方，返还时间另行协商，运费由甲方承担。罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任。</div></div><div class="clause flagged" id="clause-C25" data-clause="C25"><div class="clause-no">第六条 6.4<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R13" title="计量以乙方装车磅单为准，异议须在卸货前提出，且 4.4 与 6.4 重复">R13</button></div></div><div class="clause-text">6.4 计量以乙方装车过磅数量为准，甲方按乙方磅单数量结算并确认到货数量。</div></div></section><section class="csec" id="sec-s7"><h3><span class="sec-no">第七条</span>违约责任<span class="pg">P3</span></h3><div class="clause flagged" id="clause-C26" data-clause="C26"><div class="clause-no">第七条 7.1<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R26" title="违约金比例不对称：甲方逾期付款 0.1%/日，乙方逾期交货 0.05%/日">R26</button></div></div><div class="clause-text">7.1 乙方逾期交货的，每逾期一日按该批次货款的 0.05% 向甲方支付违约金。因乙方原因导致交货延迟超过 30 日的，甲方有权解除订单。乙方不承担因迟延交货导致的停产损失。</div></div><div class="clause flagged" id="clause-C27" data-clause="C27"><div class="clause-no">第七条 7.2<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R27" title="质量违约封顶 2% 且「不得另行主张损失」；总责任上限 5% 过低">R27</button></div></div><div class="clause-text">7.2 经检验产品质量不符合约定的，乙方按该批次货款的 2% 支付违约金，双方以此作为最终解决方案，甲方不得另行主张损失赔偿。</div></div><div class="clause flagged" id="clause-C28" data-clause="C28"><div class="clause-no">第七条 7.3<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R18" title="无质保金/质量尾款，质量索赔缺乏「付款扣减」抓手">R18</button><button class="hit-chip s4" data-goto-finding="R28" title="「不得以质量争议拒付」实质排除买方抗辩权；供应商可停货">R28</button></div></div><div class="clause-text">7.3 甲方逾期付款超过 15 日的，乙方有权暂停发货直至甲方付清全部欠款。甲方不得以质量争议、赔偿等理由拒付或延付货款。</div></div><div class="clause flagged" id="clause-C29" data-clause="C29"><div class="clause-no">第七条 7.4<span class="pg">P3</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R27" title="质量违约封顶 2% 且「不得另行主张损失」；总责任上限 5% 过低">R27</button></div></div><div class="clause-text">7.4 除本合同另有约定外，任何一方因本合同产生的责任以本合同项下货款总额的 5% 为限。</div></div></section><section class="csec" id="sec-s8"><h3><span class="sec-no">第八条</span>不可抗力<span class="pg">P4</span></h3><div class="clause flagged" id="clause-C30" data-clause="C30"><div class="clause-no">第八条 8.1<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R29" title="不可抗力定义过宽：把检修、计划停车、原料采购困难、价格波动写进不可抗力">R29</button><button class="hit-chip s3" data-goto-finding="R30" title="无「不可抗力期间临时供应保障」与「替代供应」约定">R30</button></div></div><div class="clause-text">8.1 因不可抗力（含乙方生产装置例行检修、计划停车、原料采购困难、市场价格剧烈波动等）导致乙方不能履行合同的，乙方不承担违约责任。</div></div><div class="clause flagged" id="clause-C31" data-clause="C31"><div class="clause-no">第八条 8.2<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R29" title="不可抗力定义过宽：把检修、计划停车、原料采购困难、价格波动写进不可抗力">R29</button></div></div><div class="clause-text">8.2 遭受不可抗力的一方应及时通知对方。不可抗力持续超过 15 日的，乙方有权单方解除合同且不承担赔偿责任。</div></div></section><section class="csec" id="sec-s9"><h3><span class="sec-no">第九条</span>争议解决<span class="pg">P4</span></h3><div class="clause flagged" id="clause-C32" data-clause="C32"><div class="clause-no">第九条 9.1<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R31" title="仲裁条款：机构名称需核实（「常州仲裁委员会」），且未约定仲裁语言/地点/规则版本">R31</button><button class="hit-chip s2" data-goto-finding="R32" title="未约定适用法律、管辖法院替代方案与送达地址">R32</button></div></div><div class="clause-text">9.1 双方因本合同发生争议的，应友好协商解决；协商不成的，提交常州仲裁委员会按其仲裁规则进行仲裁。仲裁裁决为终局裁决。</div></div></section><section class="csec" id="sec-s10"><h3><span class="sec-no">第十条</span>其他约定<span class="pg">P4</span></h3><div class="clause flagged" id="clause-C33" data-clause="C33"><div class="clause-no">第十条 10.1<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R05" title="质检报告、SDS、安全标签未作为到货必备交付物，仅在 1.4/10.1 提及「可协商」">R05</button><button class="hit-chip s3" data-goto-finding="R22" title="SDS 与安全标签只给一次电子版，未约定随货、批号与版本更新">R22</button><button class="hit-chip s2" data-goto-finding="R25" title="引用「国家有关标准」但未列明适用标准与版本年份">R25</button></div></div><div class="clause-text">10.1 乙方保证所供产品符合国家有关标准。产品安全技术说明书（SDS）及安全标签由乙方在首次供货时提供一份电子版，后续不再重复提供。</div></div><div class="clause flagged" id="clause-C34" data-clause="C34"><div class="clause-no">第十条 10.2<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R23" title="装卸安全责任、应急预案联络人、泄漏处置分工未约定">R23</button></div></div><div class="clause-text">10.2 甲方保证具备仓储、使用本合同产品的相应条件。因甲方存储、使用不当引发的事故，由甲方自行承担。乙方应提供甲方装卸作业的安全技术指导，费用双方另行协商。</div></div><div class="clause flagged" id="clause-C35" data-clause="C35"><div class="clause-no">第十条 10.3<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s2" data-goto-finding="R35" title="合同未约定转让、分包限制与保密条款">R35</button></div></div><div class="clause-text">10.3 任何一方不得单方变更或解除本合同；需要变更的，应经双方协商一致并签订书面协议。</div></div><div class="clause flagged" id="clause-C36" data-clause="C36"><div class="clause-no">第十条 10.4<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R33" title="附件效力条款「附件与正文冲突以正文为准」，使附件一的技术指标失去优先性">R33</button></div></div><div class="clause-text">10.4 本合同附件与正文具有同等法律效力；附件与正文不一致的，以正文为准。</div></div><div class="clause flagged" id="clause-C37" data-clause="C37"><div class="clause-no">第十条 10.5<span class="pg">P4</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R36" title="文件不齐：缺少供应商资质、承运方证照、报价单、技术协议、订单模板">R36</button><button class="hit-chip s2" data-goto-finding="R32" title="未约定适用法律、管辖法院替代方案与送达地址">R32</button><button class="hit-chip s2" data-goto-finding="R35" title="合同未约定转让、分包限制与保密条款">R35</button></div></div><div class="clause-text">10.5 本合同一式两份，甲乙双方各执一份，自双方授权代表签字并加盖公章之日起生效。合同未尽事宜，由双方另行协商。</div></div></section><section class="csec" id="sec-a1"><h3><span class="sec-no">附件一</span>产品技术规范（32%液碱）<span class="pg">P5</span></h3><div class="clause flagged" id="clause-A1-T1" data-clause="A1-T1" style="padding-left:34px"><div class="clause-no">附件一 表1 第1行<span class="pg">P5</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R01" title="附件一未给氢氧化钠含量上限，合同浓度 32% 与附件 ≥30% 口径不一致">R01</button><button class="hit-chip s3" data-goto-finding="R33" title="附件效力条款「附件与正文冲突以正文为准」，使附件一的技术指标失去优先性">R33</button></div></div><div class="clause-text">项目：氢氧化钠（以NaOH计）质量分数；指标：≥ 30.0%。</div></div><div class="clause flagged" id="clause-A1-T2" data-clause="A1-T2" style="padding-left:34px"><div class="clause-no">附件一 表1 第2行<span class="pg">P5</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R02" title="附件一氯化钠、铁含量留空，关键杂质未约限值">R02</button></div></div><div class="clause-text">项目：碳酸钠（以Na2CO3计）质量分数；指标：不多于0.2%。</div></div><div class="clause flagged" id="clause-A1-T3" data-clause="A1-T3" style="padding-left:34px"><div class="clause-no">附件一 表1 第3行<span class="pg">P5</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R02" title="附件一氯化钠、铁含量留空，关键杂质未约限值">R02</button></div></div><div class="clause-text">项目：氯化钠（以NaCl计）质量分数；指标：空白（未填写）。</div></div><div class="clause flagged" id="clause-A1-T4" data-clause="A1-T4" style="padding-left:34px"><div class="clause-no">附件一 表1 第4行<span class="pg">P5</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R02" title="附件一氯化钠、铁含量留空，关键杂质未约限值">R02</button></div></div><div class="clause-text">项目：铁（以Fe计）质量分数；指标：空白（未填写）。</div></div><div class="clause flagged" id="clause-A1-T5" data-clause="A1-T5"><div class="clause-no">附件一 说明行<span class="pg">P5</span><div class="clause-chips"><button class="hit-chip s4" data-goto-finding="R04" title="3 日质量异议期过短，且起算点（到货还是验收）未明确">R04</button><button class="hit-chip s3" data-goto-finding="R02" title="附件一氯化钠、铁含量留空，关键杂质未约限值">R02</button><button class="hit-chip s2" data-goto-finding="R25" title="引用「国家有关标准」但未列明适用标准与版本年份">R25</button></div></div><div class="clause-text">说明：检验方法按 GB/T 4348 系列执行。取样按每车随机抽取 1 桶，其余指标由乙方自检。外观为无色透明液体，允许微浊。</div></div></section><section class="csec" id="sec-a2"><h3><span class="sec-no">附件二</span>框架合同使用说明<span class="pg">P6</span></h3><div class="clause flagged" id="clause-A2-01" data-clause="A2-01"><div class="clause-no">附件二 第1条<span class="pg">P6</span><div class="clause-chips"><button class="hit-chip s5" data-goto-finding="R20" title="「年末补足框架量货款」条款实质接近最低采购承诺，指向不明">R20</button><button class="hit-chip s3" data-goto-finding="R06" title="采购总量「约 2,000 吨」无约束力，「约」字不构成最低采购承诺">R06</button></div></div><div class="clause-text">1. 本合同为年度框架合同，合同期内甲方预计采购量 2,000 吨（±15%），实际采购以甲方下发的采购订单为准。</div></div><div class="clause flagged" id="clause-A2-02" data-clause="A2-02"><div class="clause-no">附件二 第2条<span class="pg">P6</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R34" title="框架合同缺少订单完整要素约束：微信/传真下单「收到即确认」">R34</button></div></div><div class="clause-text">2. 甲方可通过传真、邮件或微信发送订单，乙方收到订单后即视为确认，订单可作为实际履行的依据。</div></div><div class="clause flagged" id="clause-A2-03" data-clause="A2-03"><div class="clause-no">附件二 第3条<span class="pg">P6</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R34" title="框架合同缺少订单完整要素约束：微信/传真下单「收到即确认」">R34</button><button class="hit-chip s2" data-goto-finding="R07" title="交付数量允差、单批起送量与尾差处理未约定">R07</button></div></div><div class="clause-text">3. 单笔订单应载明数量、价格、交货时间与地点；未载明的，以本合同及乙方报价单为准。</div></div></section><section class="csec" id="sec-a3"><h3><span class="sec-no">附件三</span>产品安全信息（GHS 提示）<span class="pg">P7</span></h3><div class="clause flagged" id="clause-A3-01" data-clause="A3-01"><div class="clause-no">附件三 信息1<span class="pg">P7</span><div class="clause-chips"><button class="hit-chip s3" data-goto-finding="R36" title="文件不齐：缺少供应商资质、承运方证照、报价单、技术协议、订单模板">R36</button><button class="hit-chip s2" data-goto-finding="R25" title="引用「国家有关标准」但未列明适用标准与版本年份">R25</button></div></div><div class="clause-text">品名：氢氧化钠溶液，质量分数 32%（以 NaOH 计），CAS 号 1310-73-2；危险货物编号 UN 1824，类别第8类腐蚀性物质，包装类别 II，中国危险货物编号 82001。</div></div><div class="clause flagged" id="clause-A3-02" data-clause="A3-02"><div class="clause-no">附件三 信息2<span class="pg">P7</span><div class="clause-chips"><button class="hit-chip s2" data-goto-finding="R25" title="引用「国家有关标准」但未列明适用标准与版本年份">R25</button></div></div><div class="clause-text">危险性说明：造成严重皮肤灼伤和眼损伤；对水生生物有害。防护要求：耐碱手套、护目镜/面屏、耐碱防护服与防滑靴；溅入眼内立即用大量清水冲洗并就医。储存：储罐/容器应耐碱，避免与酸类、铝、锌等金属及部分有机物接触。</div></div></section><section class='attachment' id='att-附件一'><div class="att-head">附件一　产品技术规范（32%液碱）<span class="pg">P5</span></div><table class="c-table"><caption>表1　产品技术指标（合同附件一，原文照录）</caption><thead><tr><th>项目</th><th>指标（原文）</th><th>检验方法（原文）</th></tr></thead><tbody><tr><td>氢氧化钠（以NaOH计）质量分数</td><td>≥ 30.0%</td><td>GB/T 4348.1</td></tr><tr><td>碳酸钠（以Na2CO3计）质量分数</td><td>不多于0.2%</td><td>GB/T 4348.1</td></tr><tr><td>氯化钠（以NaCl计）质量分数</td><td>空白</td><td>未约定</td></tr><tr><td>铁（以Fe计）质量分数</td><td>空白</td><td>未约定</td></tr><tr><td>外观</td><td>无色透明液体，允许微浊</td><td>目测</td></tr><tr><td>硫酸盐/硅酸盐</td><td>未列入</td><td>未列入</td></tr></tbody></table><p class="att-note">说明：检验方法按 GB/T 4348 系列执行。取样按每车随机抽取 1 桶，其余指标由乙方自检。外观为无色透明液体，允许微浊。</p></section><section class='attachment' id='att-附件二'><div class="att-head">附件二　框架合同使用说明<span class="pg">P6</span></div><ol class='att-list'><li>1. 本合同为年度框架合同，合同期内甲方预计采购量 2,000 吨（±15%），实际采购以甲方下发的采购订单为准。</li><li>2. 甲方可通过传真、邮件或微信发送订单，乙方收到订单后即视为确认，订单可作为实际履行的依据。</li><li>3. 单笔订单应载明数量、价格、交货时间与地点；未载明的，以本合同及乙方报价单为准。</li></ol></section><section class='attachment' id='att-附件三'><div class="att-head">附件三　产品安全信息（GHS 提示）<span class="pg">P7</span></div><ol class='att-list'><li>1. 品名：氢氧化钠溶液，质量分数 32%（以 NaOH 计），CAS 号 1310-73-2；危险货物编号 UN 1824，类别第8类腐蚀性物质，包装类别 II，中国危险货物编号 82001。</li><li>2. 危险性说明：造成严重皮肤灼伤和眼损伤；对水生生物有害。防护要求：耐碱手套、护目镜/面屏、耐碱防护服与防滑靴；溅入眼内立即用大量清水冲洗并就医。储存：储罐/容器应耐碱，避免与酸类、铝、锌等金属及部分有机物接触。</li><li>说明：本附件为本次审查整理的安全信息提示，不作为合同条款；GHS 分类与防护要求以供应商提供的现行 SDS（GB/T 16483-2008）与安全标签（GB 15258-2009）为准。</li></ol></section></div>
+    <div class="ws-right" id="right">
+<article class="fcard" id="finding-R01" data-id="R01" data-topic="quality"
+         data-kind="缺失" data-sev="4" data-clauses="C02,A1-T1,C03"
+         data-search="附件一未给氢氧化钠含量上限，合同浓度 32% 与附件 ≥30% 口径不一致第1.1条写「规格浓度：32%（质量分数，以naoh计）」，附件一表1第1行把指标写成「≥30.0%」；1.2 条又规定「或双方认可的企业标准」。三处口径不同：正文没有允差，附件下限 30%，另有企业标准可替代。按 2000 吨/年测算：若整年按 30% 交付而按 32% 口径使用，有效 naoh 少供约 40 吨（2000×2%）；按有效成分折算，等于多付约 4.5 万元货款（按本次 1,150 元/吨）。同时下游反应配比按 32% 设定时，浓度偏低会造成碱耗偏差和成品检验不合格。「32%」是否有允差区间，允差内是否按有效 naoh 折算计价 附件一与正文冲突时（1.1 的 32% vs 附件 ≥30%）哪一条优先，是否修改附件指标 如引用企业标准，请提供标准全文、编号与备案信息 高浓度批次（&gt;32.5%）是否有折算或调价规则">
+  <header class="fc-head" data-jump>
+    <span class="rid">R01</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#0e7490">质量</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">附件一未给氢氧化钠含量上限，合同浓度 32% 与附件 ≥30% 口径不一致</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>第1.1条写「规格浓度：32%（质量分数，以NaOH计）」，附件一表1第1行把指标写成「≥30.0%」；1.2 条又规定「或双方认可的企业标准」。三处口径不同：正文没有允差，附件下限 30%，另有企业标准可替代。</p><blockquote class="quote"><span class="q-src">第一条 1.1 · 第1页</span><span class="q-text">“1.1 产品名称：工业用氢氧化钠（俗称液碱、烧碱）。规格浓度：32%（质量分数，以NaOH计）。采购数量：约 2,000 吨（本合同为框架合同，分批下订单，详见附件二）。等级：不分等级。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 表1 第1行 · 第5页</span><span class="q-text">“项目：氢氧化钠（以NaOH计）质量分数；指标：≥ 30.0%。”</span></blockquote><blockquote class="quote"><span class="q-src">第一条 1.2 · 第1页</span><span class="q-text">“1.2 质量标准：执行 GB/T 209-2018《工业用氢氧化钠》标准，或双方认可的企业标准。乙方出厂检验合格即视为质量合格，甲方不得以日常复检结果为由拒收或索赔。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C02">📍 第一条 1.1 · P1</button><button class="anchor-btn" data-goto-clause="A1-T1">📍 附件一 表1 第1行 · P5</button><button class="anchor-btn" data-goto-clause="C03">📍 第一条 1.2 · P1</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定 32% 的允差（如 31.5%~32.5% 或 ≥31.0%）；没有约定含量偏高时如何计价（高浓度对下游配比、换热与结晶风险的影响）；没有约定「企业标准」的具体文本与备案号。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>按 2000 吨/年测算：若整年按 30% 交付而按 32% 口径使用，有效 NaOH 少供约 40 吨（2000×2%）；按有效成分折算，等于多付约 4.5 万元货款（按本次 1,150 元/吨）。同时下游反应配比按 32% 设定时，浓度偏低会造成碱耗偏差和成品检验不合格。</p><ul class="cons"><li>采购结算与生产配方不一致，配比偏差进入成品质量</li><li>含量不在 31%~32.5% 区间的批次无法主张违约（附件允许 ≥30%）</li><li>企业标准替代后，到底按哪个标准判定无路径</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>「32%」是否有允差区间，允差内是否按有效 NaOH 折算计价</li><li>附件一与正文冲突时（1.1 的 32% vs 附件 ≥30%）哪一条优先，是否修改附件指标</li><li>如引用企业标准，请提供标准全文、编号与备案信息</li><li>高浓度批次（&gt;32.5%）是否有折算或调价规则</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>GB/T 209-2018</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R02" data-id="R02" data-topic="quality"
+         data-kind="缺失" data-sev="3" data-clauses="A1-T2,A1-T3,A1-T4,A1-T5"
+         data-search="附件一氯化钠、铁含量留空，关键杂质未约限值附件一表1中「氯化钠（以nacl计）」与「铁（以fe计）」两行的指标栏为空白；说明栏只写「检验方法按 gb/t 4348 系列执行」。32% 液碱中的 nacl、fe 会影响下游产品纯度与设备腐蚀速率。留空指标在争议时无法主张不合格；若下游产品对氯含量有内控标准，来料超标只能自行消化或被迫返工。下游产品对 nacl、fe 的内控上限是多少，是否需要写进附件 空白项是「暂不检测」还是「无限制」，请供应商书面明确 是否需要补充硫酸盐、硅酸盐等项目">
+  <header class="fc-head" data-jump>
+    <span class="rid">R02</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#0e7490">质量</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">附件一氯化钠、铁含量留空，关键杂质未约限值</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>附件一表1中「氯化钠（以NaCl计）」与「铁（以Fe计）」两行的指标栏为空白；说明栏只写「检验方法按 GB/T 4348 系列执行」。</p><blockquote class="quote"><span class="q-src">附件一 表1 第2行 · 第5页</span><span class="q-text">“项目：碳酸钠（以Na2CO3计）质量分数；指标：不多于0.2%。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 表1 第3行 · 第5页</span><span class="q-text">“项目：氯化钠（以NaCl计）质量分数；指标：空白（未填写）。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 表1 第4行 · 第5页</span><span class="q-text">“项目：铁（以Fe计）质量分数；指标：空白（未填写）。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 说明行 · 第5页</span><span class="q-text">“说明：检验方法按 GB/T 4348 系列执行。取样按每车随机抽取 1 桶，其余指标由乙方自检。外观为无色透明液体，允许微浊。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="A1-T2">📍 附件一 表1 第2行 · P5</button><button class="anchor-btn" data-goto-clause="A1-T3">📍 附件一 表1 第3行 · P5</button><button class="anchor-btn" data-goto-clause="A1-T4">📍 附件一 表1 第4行 · P5</button><button class="anchor-btn" data-goto-clause="A1-T5">📍 附件一 说明行 · P5</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>两项杂质没有限值，等于对供应商没有约束力；没有约定硫酸盐、硅酸盐等对下游工艺可能敏感的项目；没有说明空白格子的含义（不检？不限制？）。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>32% 液碱中的 NaCl、Fe 会影响下游产品纯度与设备腐蚀速率。留空指标在争议时无法主张不合格；若下游产品对氯含量有内控标准，来料超标只能自行消化或被迫返工。</p><ul class="cons"><li>来料杂质超标时难以拒收或索赔（合同未设定限值）</li><li>高盐/高铁批次累积影响下游产品合格率与设备寿命</li><li>空白指标容易被供应商理解为「不限制」</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>下游产品对 NaCl、Fe 的内控上限是多少，是否需要写进附件</li><li>空白项是「暂不检测」还是「无限制」，请供应商书面明确</li><li>是否需要补充硫酸盐、硅酸盐等项目</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>GB/T 209-2018</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R03" data-id="R03" data-topic="quality"
+         data-kind="表述不清" data-sev="4" data-clauses="C03,C04,C10"
+         data-search="「出厂检验合格即视为质量合格」剥夺买方检验权，且 1.2 与 3.1 自相矛盾1.2 条：「乙方出厂检验合格即视为质量合格，甲方不得以日常复检结果为由拒收或索赔」；1.3 条「以乙方出厂检验结果为准」；3.1 条却写「甲方按每车次取样化验；另有约定的，以乙方质检报告为准」。条款给供应商留出「以出厂报告抗辩」的空间。实务中，买方卸入储罐后再发现偏差，若合同已声明「以出厂检验为准」，举证立场很弱；同时 3.1 条的「每车次取样化验」也会被 1.2 条架空，质量部执行标准无法落地。以哪一方的检验结果作为判定基准（建议：以双方认可仲裁检验结果为准） 甲方 iso 体系中「进货检验」是否要求独立复检，条款能否与体系文件兼容 是否约定「出厂报告仅供参考，以到货检验为准」">
+  <header class="fc-head" data-jump>
+    <span class="rid">R03</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#0e7490">质量</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">「出厂检验合格即视为质量合格」剥夺买方检验权，且 1.2 与 3.1 自相矛盾</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>1.2 条：「乙方出厂检验合格即视为质量合格，甲方不得以日常复检结果为由拒收或索赔」；1.3 条「以乙方出厂检验结果为准」；3.1 条却写「甲方按每车次取样化验；另有约定的，以乙方质检报告为准」。</p><blockquote class="quote"><span class="q-src">第一条 1.2 · 第1页</span><span class="q-text">“1.2 质量标准：执行 GB/T 209-2018《工业用氢氧化钠》标准，或双方认可的企业标准。乙方出厂检验合格即视为质量合格，甲方不得以日常复检结果为由拒收或索赔。”</span></blockquote><blockquote class="quote"><span class="q-src">第一条 1.3 · 第1页</span><span class="q-text">“1.3 产品质量以乙方出厂检验结果为准；甲方如对质量有异议，应在到货后 3 日内提出，逾期视为质量验收合格。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.1 · 第2页</span><span class="q-text">“3.1 验收标准：按 GB/T 209-2018 及附件一执行。验收方法：甲方按每车次取样化验；另有约定的，以乙方质检报告为准。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C03">📍 第一条 1.2 · P1</button><button class="anchor-btn" data-goto-clause="C04">📍 第一条 1.3 · P1</button><button class="anchor-btn" data-goto-clause="C10">📍 第三条 3.1 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>到底以谁的检验结果为准，合同给了相反的两个答案；没有约定双方检验结果冲突时的处理规则；没有约定甲方日常复检的效力边界。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>条款给供应商留出「以出厂报告抗辩」的空间。实务中，买方卸入储罐后再发现偏差，若合同已声明「以出厂检验为准」，举证立场很弱；同时 3.1 条的「每车次取样化验」也会被 1.2 条架空，质量部执行标准无法落地。</p><ul class="cons"><li>到货检验形同虚设，质量管控失去合同依据</li><li>争议时双方各持一份检验报告，判定路径不清晰</li><li>公司内审/合规检查时会被问到「验收入库依据」</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>以哪一方的检验结果作为判定基准（建议：以双方认可仲裁检验结果为准）</li><li>甲方 ISO 体系中「进货检验」是否要求独立复检，条款能否与体系文件兼容</li><li>是否约定「出厂报告仅供参考，以到货检验为准」</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R04" data-id="R04" data-topic="quality"
+         data-kind="表述不清" data-sev="4" data-clauses="C04,C11,C12,C13,A1-T5"
+         data-search="3 日质量异议期过短，且起算点（到货还是验收）未明确1.3 条与 3.2 条都写「到货后 3 日内提出异议，逾期视为验收合格」；附件一说明栏写「其余指标由乙方自检」。散装液体到厂后直接卸入储罐，卸货即发生混罐；3 日窗口内若取样或外送检测不能完成，异议权自动丧失。附件一的「其余指标由乙方自检」又把举证责任推回供应商。异议期起算点与时长（如卸货前取样、卸货后 7 个工作日内提出） 是否设置「隐蔽瑕疵/混罐污染」的例外条款 批量生产使用后才暴露的问题如何处理（追溯至哪批）">
+  <header class="fc-head" data-jump>
+    <span class="rid">R04</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#0e7490">质量</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">3 日质量异议期过短，且起算点（到货还是验收）未明确</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>1.3 条与 3.2 条都写「到货后 3 日内提出异议，逾期视为验收合格」；附件一说明栏写「其余指标由乙方自检」。</p><blockquote class="quote"><span class="q-src">第一条 1.3 · 第1页</span><span class="q-text">“1.3 产品质量以乙方出厂检验结果为准；甲方如对质量有异议，应在到货后 3 日内提出，逾期视为质量验收合格。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.2 · 第2页</span><span class="q-text">“3.2 甲方应在到货后 3 日内完成验收。如对质量有异议，应在异议期内书面通知乙方，逾期未提出的，视为验收合格。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.3 · 第2页</span><span class="q-text">“3.3 甲方提出质量异议后，双方应协商解决；协商不成的，以第三方检测机构的检验结果为准。检测费用由检测结果不利的一方承担。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.4 · 第2页</span><span class="q-text">“3.4 经检验产品不符合约定的，乙方应在收到通知后换货；货物已被甲方使用或已卸入甲方储罐的，不再退换。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 说明行 · 第5页</span><span class="q-text">“说明：检验方法按 GB/T 4348 系列执行。取样按每车随机抽取 1 桶，其余指标由乙方自检。外观为无色透明液体，允许微浊。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C04">📍 第一条 1.3 · P1</button><button class="anchor-btn" data-goto-clause="C11">📍 第三条 3.2 · P2</button><button class="anchor-btn" data-goto-clause="C12">📍 第三条 3.3 · P2</button><button class="anchor-btn" data-goto-clause="C13">📍 第三条 3.4 · P2</button><button class="anchor-btn" data-goto-clause="A1-T5">📍 附件一 说明行 · P5</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>「到货」是指车辆到达、卸货完成还是磅单日期，没有定义；液体罐车卸入储罐后无法单独取样，3 日内难以完成复检，也没有约定「隐蔽瑕疵」（如抽样后才发现的分层、混罐污染）如何处理。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>散装液体到厂后直接卸入储罐，卸货即发生混罐；3 日窗口内若取样或外送检测不能完成，异议权自动丧失。附件一的「其余指标由乙方自检」又把举证责任推回供应商。</p><ul class="cons"><li>质量问题超期发现即失去异议权</li><li>混罐污染、批次叠加导致问题无法归属到具体批次</li><li>质量部需要赶在 3 日内产出结论，流程上不现实</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>异议期起算点与时长（如卸货前取样、卸货后 7 个工作日内提出）</li><li>是否设置「隐蔽瑕疵/混罐污染」的例外条款</li><li>批量生产使用后才暴露的问题如何处理（追溯至哪批）</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R05" data-id="R05" data-topic="quality"
+         data-kind="缺失" data-sev="3" data-clauses="C05,C33"
+         data-search="质检报告、sds、安全标签未作为到货必备交付物，仅在 1.4/10.1 提及「可协商」1.4 条：「乙方应随车提供产品合格证明及检验报告；如甲方要求，可另行协商提供」；10.1 条：sds 与安全标签「首次供货时提供一份电子版，后续不再重复提供」。到货携带的资料不齐，质量部无法当场核批次与指标；sds 版本与实物不一致时，甲方在内部培训、应急演练与安全检查中会使用过期数据。危化品的 sds/标签合规通常由生产/供货方提供，但合同应把「提供」写成义务而不是「可协商」。每批是否必须随车提供检验报告（批号、生产日期、关键指标） sds 与标签是否每次变更都书面通知并重发 检验报告的出具单位（自检/第三方）与保存方式（电子签章）">
+  <header class="fc-head" data-jump>
+    <span class="rid">R05</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#0e7490">质量</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">质检报告、SDS、安全标签未作为到货必备交付物，仅在 1.4/10.1 提及「可协商」</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>1.4 条：「乙方应随车提供产品合格证明及检验报告；如甲方要求，可另行协商提供」；10.1 条：SDS 与安全标签「首次供货时提供一份电子版，后续不再重复提供」。</p><blockquote class="quote"><span class="q-src">第一条 1.4 · 第1页</span><span class="q-text">“1.4 乙方应随车提供产品合格证明及检验报告；如甲方要求，可另行协商提供。具体技术指标见附件一。”</span></blockquote><blockquote class="quote"><span class="q-src">第十条 10.1 · 第4页</span><span class="q-text">“10.1 乙方保证所供产品符合国家有关标准。产品安全技术说明书（SDS）及安全标签由乙方在首次供货时提供一份电子版，后续不再重复提供。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C05">📍 第一条 1.4 · P1</button><button class="anchor-btn" data-goto-clause="C33">📍 第十条 10.1 · P4</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有把「每批随车检验报告 + 批号、生产日期」列为交付义务与拒收条件；没有约定 SDS 和标签版本变更时的更新通知义务；没有约定安全标签贴在每一包装/罐车上。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>到货携带的资料不齐，质量部无法当场核批次与指标；SDS 版本与实物不一致时，甲方在内部培训、应急演练与安全检查中会使用过期数据。危化品的 SDS/标签合规通常由生产/供货方提供，但合同应把「提供」写成义务而不是「可协商」。</p><ul class="cons"><li>批次追溯断链，质量问题无法定位到生产批次</li><li>安全检查中发现 SDS 过期或标签缺失，甲方也会被追问</li><li>无合格证明的货物入库后无合法凭证支持索赔</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>每批是否必须随车提供检验报告（批号、生产日期、关键指标）</li><li>SDS 与标签是否每次变更都书面通知并重发</li><li>检验报告的出具单位（自检/第三方）与保存方式（电子签章）</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>GB 15258-2009</span><span>GB/T 16483-2008</span><span>GB/T 191-2008</span><span>GB 190-2009</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R06" data-id="R06" data-topic="quantity"
+         data-kind="缺失" data-sev="3" data-clauses="C02,A2-01"
+         data-search="采购总量「约 2,000 吨」无约束力，「约」字不构成最低采购承诺1.1 条写「采购数量：约 2,000 吨（框架合同，分批下订单）」；附件二第1条写「合同期内甲方预计采购量 2,000 吨（±15%），实际采购以甲方下发的采购订单为准」。对买方看似有利（可以不下单），但需注意 5.3 条另有「年度框架量不足部分由甲方补付货款」，与 1.1 的「以订单为准」相冲突，可能被理解为年度最低采购承诺。两种解释同时存在时，争议中如何认定需要专业意见。「约 2,000 吨」是否构成最低采购量，未达成时是否承担任何责任 5.3 条的「年度框架量不足」是否与本条冲突，是否删除或澄清 乙方是否有义务接单、是否有优先供货安排">
+  <header class="fc-head" data-jump>
+    <span class="rid">R06</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#7c3aed">数量</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">采购总量「约 2,000 吨」无约束力，「约」字不构成最低采购承诺</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>1.1 条写「采购数量：约 2,000 吨（框架合同，分批下订单）」；附件二第1条写「合同期内甲方预计采购量 2,000 吨（±15%），实际采购以甲方下发的采购订单为准」。</p><blockquote class="quote"><span class="q-src">第一条 1.1 · 第1页</span><span class="q-text">“1.1 产品名称：工业用氢氧化钠（俗称液碱、烧碱）。规格浓度：32%（质量分数，以NaOH计）。采购数量：约 2,000 吨（本合同为框架合同，分批下订单，详见附件二）。等级：不分等级。”</span></blockquote><blockquote class="quote"><span class="q-src">附件二 第1条 · 第6页</span><span class="q-text">“1. 本合同为年度框架合同，合同期内甲方预计采购量 2,000 吨（±15%），实际采购以甲方下发的采购订单为准。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C02">📍 第一条 1.1 · P1</button><button class="anchor-btn" data-goto-clause="A2-01">📍 附件二 第1条 · P6</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定最低采购量/最低采购金额，也没有约定未达量时的责任；「约」与「预计」都不是承诺量；没有约定乙方的最低供货义务（只约定甲方以订单为准，未约定乙方必须接单甚至优先供货）。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>对买方看似有利（可以不下单），但需注意 5.3 条另有「年度框架量不足部分由甲方补付货款」，与 1.1 的「以订单为准」相冲突，可能被理解为年度最低采购承诺。两种解释同时存在时，争议中如何认定需要专业意见。</p><ul class="cons"><li>框架量是否构成最低采购承诺存在两种解释</li><li>供应商可能以「年度量未达成」主张补偿</li><li>乙方是否必须接单、是否有优先供货义务未明确</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>「约 2,000 吨」是否构成最低采购量，未达成时是否承担任何责任</li><li>5.3 条的「年度框架量不足」是否与本条冲突，是否删除或澄清</li><li>乙方是否有义务接单、是否有优先供货安排</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R07" data-id="R07" data-topic="quantity"
+         data-kind="缺失" data-sev="2" data-clauses="C02,A2-03"
+         data-search="交付数量允差、单批起送量与尾差处理未约定合同未约定每车或每批交付数量的允差；附件二第3条只要求「单笔订单载明数量、价格、交货时间与地点」。罐车装车量通常受额载限制，最后一车可能是半罐；若无允差约定，超量部分买方可能被迫接收并付费，短量部分又难以追补。年度 2,000 吨按 30 吨/车计算约需 67 车，尾差问题一年会出现多次。每车/每批允差区间与超短量处理规则 单批最小起送量、最后一车尾差的处理方式 超量交付是否接收、是否按合同价结算">
+  <header class="fc-head" data-jump>
+    <span class="rid">R07</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#7c3aed">数量</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">交付数量允差、单批起送量与尾差处理未约定</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>合同未约定每车或每批交付数量的允差；附件二第3条只要求「单笔订单载明数量、价格、交货时间与地点」。</p><blockquote class="quote"><span class="q-src">第一条 1.1 · 第1页</span><span class="q-text">“1.1 产品名称：工业用氢氧化钠（俗称液碱、烧碱）。规格浓度：32%（质量分数，以NaOH计）。采购数量：约 2,000 吨（本合同为框架合同，分批下订单，详见附件二）。等级：不分等级。”</span></blockquote><blockquote class="quote"><span class="q-src">附件二 第3条 · 第6页</span><span class="q-text">“3. 单笔订单应载明数量、价格、交货时间与地点；未载明的，以本合同及乙方报价单为准。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C02">📍 第一条 1.1 · P1</button><button class="anchor-btn" data-goto-clause="A2-03">📍 附件二 第3条 · P6</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有每车允差（如 ±0.5%）、单批最小起送量、尾差（最后一车不足）如何处理、超量交付是否接收及是否付费。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>罐车装车量通常受额载限制，最后一车可能是半罐；若无允差约定，超量部分买方可能被迫接收并付费，短量部分又难以追补。年度 2,000 吨按 30 吨/车计算约需 67 车，尾差问题一年会出现多次。</p><ul class="cons"><li>货车实装量与订单量不一致时，结算口径不明确</li><li>超量补单或短量欠供的商务处理无依据</li><li>大宗采购的计划与库存周转无法对齐</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>每车/每批允差区间与超短量处理规则</li><li>单批最小起送量、最后一车尾差的处理方式</li><li>超量交付是否接收、是否按合同价结算</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R08" data-id="R08" data-topic="delivery"
+         data-kind="表述不清" data-sev="4" data-clauses="C06"
+         data-search="交货时间「7 个工作日」自相矛盾，且检修/减量/物流紧张均可顺延2.1 条：乙方「应在接到甲方订单后 7 个工作日内交货，具体时间为甲方要求的时间。遇乙方检修、装置减量或物流紧张，交货时间相应顺延，顺延期间不视为乙方违约」。甲方生产线每天消耗液碱，一旦断供就要降负荷或停产。条款把「物流紧张」写成顺延理由，等于供应商可以随时用运力不足解释延迟交货，而 7.1 条的逾期违约金基本无法触发。交货时限以哪一条为准，是否改为「订单确认后 x 个自然日」 顺延情形是否需书面通知、附证明、有上限 「物流紧张」是否纳入顺延原因，是否应区分承运方责任">
+  <header class="fc-head" data-jump>
+    <span class="rid">R08</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#1d4ed8">交货</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">交货时间「7 个工作日」自相矛盾，且检修/减量/物流紧张均可顺延</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>2.1 条：乙方「应在接到甲方订单后 7 个工作日内交货，具体时间为甲方要求的时间。遇乙方检修、装置减量或物流紧张，交货时间相应顺延，顺延期间不视为乙方违约」。</p><blockquote class="quote"><span class="q-src">第二条 2.1 · 第2页</span><span class="q-text">“2.1 交货时间：乙方应在接到甲方订单后 7 个工作日内交货，具体时间为甲方要求的时间。遇乙方检修、装置减量或物流紧张，交货时间相应顺延，顺延期间不视为乙方违约。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C06">📍 第二条 2.1 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>「7 个工作日」与「甲方要求的时间」哪个优先没有说明；顺延没有上限、没有提前通知义务、没有要求提供证明；没有约定承运运力不足是否也属于可顺延情形。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>甲方生产线每天消耗液碱，一旦断供就要降负荷或停产。条款把「物流紧张」写成顺延理由，等于供应商可以随时用运力不足解释延迟交货，而 7.1 条的逾期违约金基本无法触发。</p><ul class="cons"><li>交付时间实质由供应商控制，甲方排产无保障</li><li>逾期违约金难以启动</li><li>停产待料风险转嫁给买方</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>交货时限以哪一条为准，是否改为「订单确认后 X 个自然日」</li><li>顺延情形是否需书面通知、附证明、有上限</li><li>「物流紧张」是否纳入顺延原因，是否应区分承运方责任</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R09" data-id="R09" data-topic="delivery"
+         data-kind="表述不清" data-sev="4" data-clauses="C07,C08"
+         data-search="交货地点为「甲方指定地点（另行通知）」，风险转移节点不可确定2.2 条写「交货地点：甲方指定地点（以甲方另行通知为准）」；2.3 条写「风险自乙方交付至甲方指定地点时起由甲方承担，运输途中发生泄漏……由承运人负责，乙方不承担运输过程中的损失」。泄漏/洒漏损失可能落到买方——若卸车环节由甲方人员操作，责任边界不清；承运人是乙方安排的，甲方与其无合同关系，直接索赔困难。罐区卸车能力（车位、卸车泵、防溢流设施）未在合同中体现。交货地点的完整地址与卸车条件 风险转移时点的精确定义（到达/接管/卸完/过磅） 运输途中泄漏由乙方还是承运人承担，是否要求乙方对承运方行为负责">
+  <header class="fc-head" data-jump>
+    <span class="rid">R09</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#1d4ed8">交货</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">交货地点为「甲方指定地点（另行通知）」，风险转移节点不可确定</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>2.2 条写「交货地点：甲方指定地点（以甲方另行通知为准）」；2.3 条写「风险自乙方交付至甲方指定地点时起由甲方承担，运输途中发生泄漏……由承运人负责，乙方不承担运输过程中的损失」。</p><blockquote class="quote"><span class="q-src">第二条 2.2 · 第2页</span><span class="q-text">“2.2 交货地点：甲方指定地点（以甲方另行通知为准）。交货方式：乙方送货到厂，运输由乙方负责安排，运输费用由乙方承担。”</span></blockquote><blockquote class="quote"><span class="q-src">第二条 2.3 · 第2页</span><span class="q-text">“2.3 风险转移：货物风险自乙方交付至甲方指定地点时起由甲方承担。运输途中发生泄漏、洒漏或罐体腐蚀破损的，由承运人负责处理，乙方不承担运输过程中的损失。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C07">📍 第二条 2.2 · P2</button><button class="anchor-btn" data-goto-clause="C08">📍 第二条 2.3 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有写具体地址与卸货条件（是否有专用卸车泵、接液池、防火间距、罐区卸车口编号）；「交付至指定地点」是否指车辆到达、接管卸货完成还是过磅，没有定义；泄漏损失归承运人，但乙方作为运输安排方却不承担运输途中损失，与 2.2「运输由乙方负责」相互矛盾。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>泄漏/洒漏损失可能落到买方——若卸车环节由甲方人员操作，责任边界不清；承运人是乙方安排的，甲方与其无合同关系，直接索赔困难。罐区卸车能力（车位、卸车泵、防溢流设施）未在合同中体现。</p><ul class="cons"><li>运输途中泄漏的损失兜底方可能是买方</li><li>卸车过程中洒漏/超压的责任分配不清</li><li>风险转移时点不明，保险与索赔主体难以确定</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>交货地点的完整地址与卸车条件</li><li>风险转移时点的精确定义（到达/接管/卸完/过磅）</li><li>运输途中泄漏由乙方还是承运人承担，是否要求乙方对承运方行为负责</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>危险货物道路运输安全管理办法（交通运输部令2019年第29号）</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R10" data-id="R10" data-topic="delivery"
+         data-kind="缺失" data-sev="5" data-clauses="C09,C07"
+         data-search="危险货物运输责任全部推给承运人，未核实承运方资质、车辆罐体适装介质与检验有效期2.4 条：「乙方应自行安排具备相应资质的车辆及人员运输。因运输引发的安全事故、行政处罚及第三方索赔，均由乙方及承运人自行承担，与甲方无关。」液碱属于腐蚀性危险货物（un1824，第8类）。乙方是贸易商，不持有运输资质，实际承运应由持证运输企业完成。即便合同写明「与甲方无关」，在监管层面，甲方作为使用/接收单位仍需对充装、卸车、查验记录承担相应义务；发生泄漏、超载或车辆不适装时，甲方现场通常难辞其责。实际承运方名称、道路运输经营许可证编号与经营范围 罐车检验合格证、适装介质列表、下次检验日期 是否要求乙方对承运方行为承担连带责任 甲方卸车前查验清单及拒卸权">
+  <header class="fc-head" data-jump>
+    <span class="rid">R10</span>
+    <span class="sev" style="color:#ffffff;background:#b91c1c">极高 · 5</span>
+    <span class="topic" style="color:#fff;background:#1d4ed8">交货</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">危险货物运输责任全部推给承运人，未核实承运方资质、车辆罐体适装介质与检验有效期</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>2.4 条：「乙方应自行安排具备相应资质的车辆及人员运输。因运输引发的安全事故、行政处罚及第三方索赔，均由乙方及承运人自行承担，与甲方无关。」</p><blockquote class="quote"><span class="q-src">第二条 2.4 · 第2页</span><span class="q-text">“2.4 乙方应自行安排具备相应资质的车辆及人员运输。因运输引发的安全事故、行政处罚及第三方索赔，均由乙方及承运人自行承担，与甲方无关。”</span></blockquote><blockquote class="quote"><span class="q-src">第二条 2.2 · 第2页</span><span class="q-text">“2.2 交货地点：甲方指定地点（以甲方另行通知为准）。交货方式：乙方送货到厂，运输由乙方负责安排，运输费用由乙方承担。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C09">📍 第二条 2.4 · P2</button><button class="anchor-btn" data-goto-clause="C07">📍 第二条 2.2 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定承运方资质证明的提供与审验（道路运输经营许可证、经营范围含危险货物运输）；没有约定罐体检验合格证、适装介质列表、押运人员配备；没有约定乙方对承运方行为的连带责任；没有约定甲方在卸车前查验的权限与不达标时的拒卸权利。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>液碱属于腐蚀性危险货物（UN1824，第8类）。乙方是贸易商，不持有运输资质，实际承运应由持证运输企业完成。即便合同写明「与甲方无关」，在监管层面，甲方作为使用/接收单位仍需对充装、卸车、查验记录承担相应义务；发生泄漏、超载或车辆不适装时，甲方现场通常难辞其责。</p><ul class="cons"><li>承运方资质缺失，事故后甲方被一并追责</li><li>罐体不适装或超期未检，卸车前无人把关</li><li>「与甲方无关」的约定不能对抗行政监管与第三人</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>实际承运方名称、道路运输经营许可证编号与经营范围</li><li>罐车检验合格证、适装介质列表、下次检验日期</li><li>是否要求乙方对承运方行为承担连带责任</li><li>甲方卸车前查验清单及拒卸权</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>危险货物道路运输安全管理办法（交通运输部令2019年第29号）</span><span>道路危险货物运输管理规定</span><span>JT/T 617-2018</span><span>GB 18564.1-2019</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R11" data-id="R11" data-topic="packaging"
+         data-kind="表述不清" data-sev="4" data-clauses="C23,C22"
+         data-search="吨桶押金「300 元/只」但数量、退还条件、押金抵扣均未约定6.1 条：包装形式由乙方根据运力自行决定（罐车或 1,000 kg pe 吨桶）；6.2 条：吨桶押金每只 300 元，甲方在支付预付款时一并支付，押金于原料使用完毕后「视情况退还」。按 1,000 kg/桶包装 2,000 吨计算，押金规模可达 60 万元，超过本次合同的预付款（69 万元）量级，等于在预付款之外再垫付一笔无担保资金。若供应商在原材料用完后拖延返还，「视情况」将成为争议焦点，财务挂账难以处理。押金只数是否与实际使用桶数挂钩、是否按实际收取 退还条件与时限（如空桶验收合格后 x 个工作日内） 破损、丢失、超期未还的扣款标准 押金支付方式（是否抵扣应付货款而非另行付款）">
+  <header class="fc-head" data-jump>
+    <span class="rid">R11</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#b45309">包装容器</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">吨桶押金「300 元/只」但数量、退还条件、押金抵扣均未约定</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>6.1 条：包装形式由乙方根据运力自行决定（罐车或 1,000 kg PE 吨桶）；6.2 条：吨桶押金每只 300 元，甲方在支付预付款时一并支付，押金于原料使用完毕后「视情况退还」。</p><blockquote class="quote"><span class="q-src">第六条 6.2 · 第3页</span><span class="q-text">“6.2 如采用吨桶包装，吨桶押金为每只人民币 300 元，由甲方在支付预付款时一并支付，押金于原料使用完毕后视情况退还。”</span></blockquote><blockquote class="quote"><span class="q-src">第六条 6.1 · 第3页</span><span class="q-text">“6.1 包装形式：散装液碱采用乙方自有罐车运输，或采用聚乙烯（PE）吨桶包装（每桶净重 1,000 kg）。包装形式由乙方根据运力自行决定。包装费用已包含在单价内。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C23">📍 第六条 6.2 · P3</button><button class="anchor-btn" data-goto-clause="C22">📍 第六条 6.1 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有核定押金只数（2,000 吨按 1 吨/桶需 2,000 只，押金 60 万元）；没有约定押金退还的触发条件、时限和抵扣顺序；「视情况」没有客观标准；没有约定吨桶破损、丢失、超期未还的扣款标准；没有约定押金是否计息或是否退还取货凭证。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>按 1,000 kg/桶包装 2,000 吨计算，押金规模可达 60 万元，超过本次合同的预付款（69 万元）量级，等于在预付款之外再垫付一笔无担保资金。若供应商在原材料用完后拖延返还，「视情况」将成为争议焦点，财务挂账难以处理。</p><ul class="cons"><li>大额押金无据可依、「视情况」被解释为不退还</li><li>押金退还时限不明，长期挂账在预付/其他应收款</li><li>吨桶破损与丢失的责任与扣款标准缺失</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>押金只数是否与实际使用桶数挂钩、是否按实际收取</li><li>退还条件与时限（如空桶验收合格后 X 个工作日内）</li><li>破损、丢失、超期未还的扣款标准</li><li>押金支付方式（是否抵扣应付货款而非另行付款）</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R12" data-id="R12" data-topic="packaging"
+         data-kind="缺失" data-sev="2" data-clauses="C24,C22"
+         data-search="空桶返还时点「另行协商」，返还运费用买方承担，未约定超期与损耗6.3 条：空桶由甲方负责返还乙方，返还时间另行协商，运费由甲方承担。「罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任」。甲方厂区空间有限，空桶如果积压占用场地与消防通道会产生安全与存储成本；跨品种/跨批次混用未清洗的罐体会把残留物带入下一批，属于典型的「串料」污染风险。空桶返还时限、超期占用费 罐车清洗频次、清洗记录、残液处理要求 串料污染的举证责任与赔偿机制">
+  <header class="fc-head" data-jump>
+    <span class="rid">R12</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#b45309">包装容器</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">空桶返还时点「另行协商」，返还运费用买方承担，未约定超期与损耗</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>6.3 条：空桶由甲方负责返还乙方，返还时间另行协商，运费由甲方承担。「罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任」。</p><blockquote class="quote"><span class="q-src">第六条 6.3 · 第3页</span><span class="q-text">“6.3 空桶由甲方负责返还乙方，返还时间另行协商，运费由甲方承担。罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任。”</span></blockquote><blockquote class="quote"><span class="q-src">第六条 6.1 · 第3页</span><span class="q-text">“6.1 包装形式：散装液碱采用乙方自有罐车运输，或采用聚乙烯（PE）吨桶包装（每桶净重 1,000 kg）。包装形式由乙方根据运力自行决定。包装费用已包含在单价内。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C24">📍 第六条 6.3 · P3</button><button class="anchor-btn" data-goto-clause="C22">📍 第六条 6.1 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>空桶返还的时限、单次最少返还批量、超期占用费和残液处理要求均未约定；罐车罐体清洗频次、清洗记录与残液去向未约定；「清洗不当」的举证责任未明确。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>甲方厂区空间有限，空桶如果积压占用场地与消防通道会产生安全与存储成本；跨品种/跨批次混用未清洗的罐体会把残留物带入下一批，属于典型的「串料」污染风险。</p><ul class="cons"><li>空桶积压占用厂区，消防与环保检查风险</li><li>罐体清洗不当导致串料，质量纠纷时举证困难</li><li>返还运费与人工成本实际由买方承担</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>空桶返还时限、超期占用费</li><li>罐车清洗频次、清洗记录、残液处理要求</li><li>串料污染的举证责任与赔偿机制</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>GB 15603-2022</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R13" data-id="R13" data-topic="measure"
+         data-kind="表述不清" data-sev="3" data-clauses="C17,C25"
+         data-search="计量以乙方装车磅单为准，异议须在卸货前提出，且 4.4 与 6.4 重复4.4 条与 6.4 条内容几乎相同：「数量以乙方装车磅单为准，甲方按乙方磅单数量结算并确认到货数量」；4.4 另写「甲方如有异议，应在卸货前提出」。一次 30 吨车若短量 200 kg，按年度 2,000 吨测算约 13 吨/年，折合金额约 1.5 万元。散装液体只能依赖双方地磅与卸车前后称重，若到货即卸，异议权几乎无法行使。甲方地磅复磅权与偏差阈值 超差处理（按甲方复磅/双方协商/第三方公磅） 是否改为「卸车前双方共同过磅并签认」">
+  <header class="fc-head" data-jump>
+    <span class="rid">R13</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#475569">计量</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">计量以乙方装车磅单为准，异议须在卸货前提出，且 4.4 与 6.4 重复</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>4.4 条与 6.4 条内容几乎相同：「数量以乙方装车磅单为准，甲方按乙方磅单数量结算并确认到货数量」；4.4 另写「甲方如有异议，应在卸货前提出」。</p><blockquote class="quote"><span class="q-src">第四条 4.4 · 第2页</span><span class="q-text">“4.4 数量以乙方装车磅单为准，甲方如有异议，应在卸货前提出。”</span></blockquote><blockquote class="quote"><span class="q-src">第六条 6.4 · 第3页</span><span class="q-text">“6.4 计量以乙方装车过磅数量为准，甲方按乙方磅单数量结算并确认到货数量。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C17">📍 第四条 4.4 · P2</button><button class="anchor-btn" data-goto-clause="C25">📍 第六条 6.4 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有约定甲方地磅复磅与超出偏差时的处理规则；没有约定以哪一方地磅为准；「卸货前提出异议」在罐车到厂排队、夜间到货场景下难以执行；没有约定计量方式（质量/体积）与容重。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>一次 30 吨车若短量 200 kg，按年度 2,000 吨测算约 13 吨/年，折合金额约 1.5 万元。散装液体只能依赖双方地磅与卸车前后称重，若到货即卸，异议权几乎无法行使。</p><ul class="cons"><li>短量长期不被发现，年损失累积</li><li>混罐后无法复称，数量争议无证据</li><li>结算依据单方掌控</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>甲方地磅复磅权与偏差阈值</li><li>超差处理（按甲方复磅/双方协商/第三方公磅）</li><li>是否改为「卸车前双方共同过磅并签认」</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R14" data-id="R14" data-topic="price"
+         data-kind="表述不清" data-sev="2" data-clauses="C14,C22,C23"
+         data-search="价格结构不清：暂定 1,150 元/吨含税，但含运费、包装、装卸，且另有吨桶押金4.1 条：到厂含税单价以订单价格为准，暂按 1,150 元/吨（含13%增值税），「价格包含运输费、装卸费、包装费及税费」。「含装卸费」可能只覆盖装车，卸车环节的费用容易被现场追加；下单时如果订单价格与合同价不一致，以哪个为准未说明，可能出现拆单或临时加价。计价是按实际产品质量还是折百；是否按净重结算 装卸费包含到哪个节点（卸车/吨桶搬运） 订单价格与合同暂定价冲突时的优先顺位 押金、清洗费是否在价格之外">
+  <header class="fc-head" data-jump>
+    <span class="rid">R14</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#0f766e">价格税费</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">价格结构不清：暂定 1,150 元/吨含税，但含运费、包装、装卸，且另有吨桶押金</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>4.1 条：到厂含税单价以订单价格为准，暂按 1,150 元/吨（含13%增值税），「价格包含运输费、装卸费、包装费及税费」。</p><blockquote class="quote"><span class="q-src">第四条 4.1 · 第2页</span><span class="q-text">“4.1 价格：到厂含税单价以双方确认的订单价格为准，暂按人民币 1,150 元/吨（大写：壹仟壹佰伍拾元整，含13%增值税）执行。价格包含运输费、装卸费、包装费及税费。”</span></blockquote><blockquote class="quote"><span class="q-src">第六条 6.1 · 第3页</span><span class="q-text">“6.1 包装形式：散装液碱采用乙方自有罐车运输，或采用聚乙烯（PE）吨桶包装（每桶净重 1,000 kg）。包装形式由乙方根据运力自行决定。包装费用已包含在单价内。”</span></blockquote><blockquote class="quote"><span class="q-src">第六条 6.2 · 第3页</span><span class="q-text">“6.2 如采用吨桶包装，吨桶押金为每只人民币 300 元，由甲方在支付预付款时一并支付，押金于原料使用完毕后视情况退还。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C14">📍 第四条 4.1 · P2</button><button class="anchor-btn" data-goto-clause="C22">📍 第六条 6.1 · P3</button><button class="anchor-btn" data-goto-clause="C23">📍 第六条 6.2 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有约定计价口径是按净重还是毛重、是否按 100% NaOH 折百计价；装卸（含罐车卸车、吨桶人工）与空桶回收的装卸是否另有费用；没有写明不含项目（押金、清洗费）；没有约定单价随浓度的调整关系。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>「含装卸费」可能只覆盖装车，卸车环节的费用容易被现场追加；下单时如果订单价格与合同价不一致，以哪个为准未说明，可能出现拆单或临时加价。</p><ul class="cons"><li>卸车费用被追加到现场结算</li><li>计价口径不一致引发对账差异</li><li>订单价格与合同价格冲突</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>计价是按实际产品质量还是折百；是否按净重结算</li><li>装卸费包含到哪个节点（卸车/吨桶搬运）</li><li>订单价格与合同暂定价冲突时的优先顺位</li><li>押金、清洗费是否在价格之外</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R15" data-id="R15" data-topic="price"
+         data-kind="缺失" data-sev="4" data-clauses="C14,C15"
+         data-search="供应商可单方调价（提前 3 日通知），无调价基准与上限4.2 条：「价格调整：基于市场价格变化，双方可协商调整价格」与「乙方有权根据原料及市场行情调整价格，调整应提前 3 日通知甲方」两句并存。液碱属于大宗化工品，局部市场常有短期波动。3 日的通知期不足以重新询价或找替代供应商，等于把价格波动的风险单向推给买方；同时 2.1 允许顺延、7.3 允许停供，价格与交付形成单向杠杆。调价依据（具体指数/区域报价/第三方资讯） 调价上限与提前通知时长 调价后买方的选择权（就价或终止） 「协商」与「单方调价」是否只保留一种">
+  <header class="fc-head" data-jump>
+    <span class="rid">R15</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#0f766e">价格税费</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">供应商可单方调价（提前 3 日通知），无调价基准与上限</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>4.2 条：「价格调整：基于市场价格变化，双方可协商调整价格」与「乙方有权根据原料及市场行情调整价格，调整应提前 3 日通知甲方」两句并存。</p><blockquote class="quote"><span class="q-src">第四条 4.1 · 第2页</span><span class="q-text">“4.1 价格：到厂含税单价以双方确认的订单价格为准，暂按人民币 1,150 元/吨（大写：壹仟壹佰伍拾元整，含13%增值税）执行。价格包含运输费、装卸费、包装费及税费。”</span></blockquote><blockquote class="quote"><span class="q-src">第四条 4.2 · 第2页</span><span class="q-text">“4.2 价格调整：基于市场价格变化，双方可协商调整价格，调整后的价格以双方书面确认为准。乙方有权根据原料及市场行情调整价格，调整应提前 3 日通知甲方。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C14">📍 第四条 4.1 · P2</button><button class="anchor-btn" data-goto-clause="C15">📍 第四条 4.2 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有调价基准（参考哪个区域/哪个指数/哪家资讯机构报价）、调价幅度上限、通知期内是否可选择不就价或解除；「协商」与「乙方有权」两种机制混在一起，哪一句有效不清楚。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>液碱属于大宗化工品，局部市场常有短期波动。3 日的通知期不足以重新询价或找替代供应商，等于把价格波动的风险单向推给买方；同时 2.1 允许顺延、7.3 允许停供，价格与交付形成单向杠杆。</p><ul class="cons"><li>采购预算失控，采购价可能高于市场均价</li><li>临时调价后无退出机制，只能接受</li><li>双方对「市场价」的理解不同导致频繁争议</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>调价依据（具体指数/区域报价/第三方资讯）</li><li>调价上限与提前通知时长</li><li>调价后买方的选择权（就价或终止）</li><li>「协商」与「单方调价」是否只保留一种</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R16" data-id="R16" data-topic="price"
+         data-kind="缺失" data-sev="3" data-clauses="C16"
+         data-search="先付款后开票，税率变动费用由买方承担，未约定发票类型与红线4.3 条：「乙方应在收到货款后开具增值税专用发票，税率按开票时有效税率执行。因税率变动增加的费用由甲方承担。」先付款后开票，甲方承担的是「已付款但进项税未到账」的资金与合规风险；税率变动风险单向由买方承担；发票品名若写成其他产品，可能影响进项抵扣与成本归集。开票时限与发票品名（应为「氢氧化钠」） 发票不合规时是否拒付及换开义务 税率变动风险如何分担 是否可要求「先票后付」或同步交付">
+  <header class="fc-head" data-jump>
+    <span class="rid">R16</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#0f766e">价格税费</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">先付款后开票，税率变动费用由买方承担，未约定发票类型与红线</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>4.3 条：「乙方应在收到货款后开具增值税专用发票，税率按开票时有效税率执行。因税率变动增加的费用由甲方承担。」</p><blockquote class="quote"><span class="q-src">第四条 4.3 · 第2页</span><span class="q-text">“4.3 乙方应在收到货款后开具增值税专用发票，税率按开票时有效税率执行。因税率变动增加的费用由甲方承担。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C16">📍 第四条 4.3 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定开票时限（收到货款后多少日）、发票税率与品名是否需与合同一致、发票不合规（如税号错误、金额不符）时能否拒付；没有约定专票与普票；没有约定发票作为付款前提的条件。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>先付款后开票，甲方承担的是「已付款但进项税未到账」的资金与合规风险；税率变动风险单向由买方承担；发票品名若写成其他产品，可能影响进项抵扣与成本归集。</p><ul class="cons"><li>发票滞后导致进项税抵扣延误</li><li>发票不合规（税率、品名）时已付款难以追回</li><li>税率变动成本转嫁买方</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>开票时限与发票品名（应为「氢氧化钠」）</li><li>发票不合规时是否拒付及换开义务</li><li>税率变动风险如何分担</li><li>是否可要求「先票后付」或同步交付</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>中华人民共和国增值税暂行条例（现行；具体税率以开票时有效规定为准）</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R17" data-id="R17" data-topic="payment"
+         data-kind="表述不清" data-sev="4" data-clauses="C18"
+         data-search="预付款 30% 无担保、无履约锁定，预付款基数是「合同总额」而非「框架量」5.1 条：「甲方应在合同签订后支付合同总额 30% 的预付款（人民币 690,000 元），预付款支付后乙方安排首批交货。」预付款在首批交货前支付，乙方是贸易商而非生产企业的直供（首部信息显示为贸易公司），资金占用与违约风险较高；若首批未能按期交货，甲方既有预付款损失，又已锁定年度数量安排。预付款计算基数与对应数量 是否要求提供履约保证/保函 预付款抵扣与退还规则及期限 乙方是否具备履行能力（结合资质核查）">
+  <header class="fc-head" data-jump>
+    <span class="rid">R17</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#be185d">付款</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">预付款 30% 无担保、无履约锁定，预付款基数是「合同总额」而非「框架量」</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>5.1 条：「甲方应在合同签订后支付合同总额 30% 的预付款（人民币 690,000 元），预付款支付后乙方安排首批交货。」</p><blockquote class="quote"><span class="q-src">第五条 5.1 · 第3页</span><span class="q-text">“5.1 甲方应在合同签订后支付合同总额 30% 的预付款（人民币 690,000 元），预付款支付后乙方安排首批交货。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C18">📍 第五条 5.1 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>690,000 元对应总额 230 万元（2,000 吨×1,150 元），但合同是框架、以订单为准，预付款的基数不明确；没有约定预付款对应的交货担保（保函/保证）、是否可退、是否抵扣首批货款；没有约定乙方未交货时预付款的返还期限。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>预付款在首批交货前支付，乙方是贸易商而非生产企业的直供（首部信息显示为贸易公司），资金占用与违约风险较高；若首批未能按期交货，甲方既有预付款损失，又已锁定年度数量安排。</p><ul class="cons"><li>预付款被挪用或供应商无法交货，追讨成本高</li><li>框架合同下预付款基数产生争议</li><li>预付款抵扣与退还没有规则，导致重复付款风险</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>预付款计算基数与对应数量</li><li>是否要求提供履约保证/保函</li><li>预付款抵扣与退还规则及期限</li><li>乙方是否具备履行能力（结合资质核查）</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R18" data-id="R18" data-topic="payment"
+         data-kind="缺失" data-sev="4" data-clauses="C19,C28"
+         data-search="无质保金/质量尾款，质量索赔缺乏「付款扣减」抓手5.2 条：剩余货款于每批货物验收合格后 30 日内支付；7.3 条另约定「甲方不得以质量争议、赔偿等理由拒付或延付货款」。质量纠纷发生后，甲方只能先行付款再走索赔，实际执行难度很大。液碱用后无法退还（3.4 条已明确「已卸入储罐不再退换」），质量问题只能靠索赔。是否设置 5%~10% 质保金/质量尾款 能否约定质量索赔从后续应付货款中直接扣减 7.3 条的「不得拒付」是否限定为「无争议部分」">
+  <header class="fc-head" data-jump>
+    <span class="rid">R18</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#be185d">付款</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">无质保金/质量尾款，质量索赔缺乏「付款扣减」抓手</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>5.2 条：剩余货款于每批货物验收合格后 30 日内支付；7.3 条另约定「甲方不得以质量争议、赔偿等理由拒付或延付货款」。</p><blockquote class="quote"><span class="q-src">第五条 5.2 · 第3页</span><span class="q-text">“5.2 剩余货款于每批货物验收合格后 30 日内支付；甲方逾期付款的，应按逾期金额每日 0.1% 向乙方支付违约金。”</span></blockquote><blockquote class="quote"><span class="q-src">第七条 7.3 · 第3页</span><span class="q-text">“7.3 甲方逾期付款超过 15 日的，乙方有权暂停发货直至甲方付清全部欠款。甲方不得以质量争议、赔偿等理由拒付或延付货款。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C19">📍 第五条 5.2 · P3</button><button class="anchor-btn" data-goto-clause="C28">📍 第七条 7.3 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有质保金或质量扣留金；没有约定质量索赔可从后续货款中直接抵扣；结合 7.3 条，买方连临时的拒付抗辩也被排除。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>质量纠纷发生后，甲方只能先行付款再走索赔，实际执行难度很大。液碱用后无法退还（3.4 条已明确「已卸入储罐不再退换」），质量问题只能靠索赔。</p><ul class="cons"><li>质量问题只能付款后再索赔，追偿成本高</li><li>买方丧失常用的商业谈判筹码</li><li>质量异常批次仍全额付款</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>是否设置 5%~10% 质保金/质量尾款</li><li>能否约定质量索赔从后续应付货款中直接扣减</li><li>7.3 条的「不得拒付」是否限定为「无争议部分」</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R19" data-id="R19" data-topic="payment"
+         data-kind="缺失" data-sev="5" data-clauses="C21,C16"
+         data-search="账户变更仅凭「电话或微信通知」，存在付款欺诈（bec）风险；未约定先票后款或同步交付5.4 条：「账号以乙方通知为准，如账户变更，乙方以电话或微信方式通知甲方即可，由此产生的风险由甲方承担。」内贸采购最常见的资金损失之一就是邮件/微信冒充供应商变更收款账户。合同一旦写明「通知即可、风险由甲方承担」，即使打了假账，甲方也难以直接向乙方主张。账户变更是否必须书面盖章并经电话双人核验 是否要求收款账户与开票主体一致 付款是否以发票到达为前提">
+  <header class="fc-head" data-jump>
+    <span class="rid">R19</span>
+    <span class="sev" style="color:#ffffff;background:#b91c1c">极高 · 5</span>
+    <span class="topic" style="color:#fff;background:#be185d">付款</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">账户变更仅凭「电话或微信通知」，存在付款欺诈（BEC）风险；未约定先票后款或同步交付</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>5.4 条：「账号以乙方通知为准，如账户变更，乙方以电话或微信方式通知甲方即可，由此产生的风险由甲方承担。」</p><blockquote class="quote"><span class="q-src">第五条 5.4 · 第3页</span><span class="q-text">“5.4 甲方付款应汇入乙方指定账户：账户名称滨海宏源化工贸易有限公司，账号以乙方通知为准，如账户变更，乙方以电话或微信方式通知甲方即可，由此产生的风险由甲方承担。”</span></blockquote><blockquote class="quote"><span class="q-src">第四条 4.3 · 第2页</span><span class="q-text">“4.3 乙方应在收到货款后开具增值税专用发票，税率按开票时有效税率执行。因税率变动增加的费用由甲方承担。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C21">📍 第五条 5.4 · P3</button><button class="anchor-btn" data-goto-clause="C16">📍 第四条 4.3 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>这种约定等于把账户变更的验证义务完全推给甲方，却没有约定任何验证机制；没有约定付款以专票到达/发票信息核对为前提；没有约定收款账户须与合同首部一致。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>内贸采购最常见的资金损失之一就是邮件/微信冒充供应商变更收款账户。合同一旦写明「通知即可、风险由甲方承担」，即使打了假账，甲方也难以直接向乙方主张。</p><ul class="cons"><li>被骗汇后乙方可用合同条款抗辩</li><li>财务付款审批缺少合同依据</li><li>账户信息与开票主体不一致时无法自动拦截</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>账户变更是否必须书面盖章并经电话双人核验</li><li>是否要求收款账户与开票主体一致</li><li>付款是否以发票到达为前提</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R20" data-id="R20" data-topic="payment"
+         data-kind="缺失" data-sev="5" data-clauses="C20,A2-01"
+         data-search="「年末补足框架量货款」条款实质接近最低采购承诺，指向不明5.3 条：「甲方应于每年年末支付当年度框架量不足部分的货款，以保证乙方年度销售的实现。」如果该条被解释为「无论是否下单，年末都要补足 2,000 吨的货款」，实际影响是约 230 万元/年的承诺采购。这是整份合同在商务层面影响最大的条款之一，但字面表述含糊。该条是否意在构成「最低采购额」；若是，按什么价、什么交付方式结算 与 1.1「以订单为准」如何协调 是否删除或改为「不构成最低采购承诺」">
+  <header class="fc-head" data-jump>
+    <span class="rid">R20</span>
+    <span class="sev" style="color:#ffffff;background:#b91c1c">极高 · 5</span>
+    <span class="topic" style="color:#fff;background:#be185d">付款</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">「年末补足框架量货款」条款实质接近最低采购承诺，指向不明</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>5.3 条：「甲方应于每年年末支付当年度框架量不足部分的货款，以保证乙方年度销售的实现。」</p><blockquote class="quote"><span class="q-src">第五条 5.3 · 第3页</span><span class="q-text">“5.3 甲方应于每年年末支付当年度框架量不足部分的货款，以保证乙方年度销售的实现。”</span></blockquote><blockquote class="quote"><span class="q-src">附件二 第1条 · 第6页</span><span class="q-text">“1. 本合同为年度框架合同，合同期内甲方预计采购量 2,000 吨（±15%），实际采购以甲方下发的采购订单为准。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C20">📍 第五条 5.3 · P3</button><button class="anchor-btn" data-goto-clause="A2-01">📍 附件二 第1条 · P6</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>「不足部分」按什么价格计算、是否对应实物交付、是否抵扣后续订单均未约定；这与 1.1「以订单为准」、附件二「预计量」并不一致。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>如果该条被解释为「无论是否下单，年末都要补足 2,000 吨的货款」，实际影响是约 230 万元/年的承诺采购。这是整份合同在商务层面影响最大的条款之一，但字面表述含糊。</p><ul class="cons"><li>采购预算面临刚性支出风险</li><li>可能与内部预算、年度采购计划冲突</li><li>与框架合同的「以订单为准」相互矛盾，争议中解释不确定</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>该条是否意在构成「最低采购额」；若是，按什么价、什么交付方式结算</li><li>与 1.1「以订单为准」如何协调</li><li>是否删除或改为「不构成最低采购承诺」</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R21" data-id="R21" data-topic="safety"
+         data-kind="缺失" data-sev="4" data-clauses="C01,C09"
+         data-search="供应商资质（危化品经营许可/安全生产许可）未作为合同条件与附件合同首部只列乙方名称、地址；正文仅 2.4 条笼统要求「具备相应资质」，未指向具体证照与有效期。氢氧化钠溶液列入《危险化学品目录》（2015版），经营需危险化学品经营许可。宏源化工是贸易公司，而是不是生产企业需要进一步核实；若其在无证或超范围经营，采购方的合规链条同样可能受牵连。危险化学品经营许可证编号、经营范围与有效期 是否为生产企业（安全生产许可证）还是贸易商 证照失效的通知义务与终止权">
+  <header class="fc-head" data-jump>
+    <span class="rid">R21</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#b91c1c">安全合规</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">供应商资质（危化品经营许可/安全生产许可）未作为合同条件与附件</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>合同首部只列乙方名称、地址；正文仅 2.4 条笼统要求「具备相应资质」，未指向具体证照与有效期。</p><blockquote class="quote"><span class="q-src">合同首部 · 第1页</span><span class="q-text">“合同编号：XS-2026-LY-0715。甲 方（买方）：恒星精化科技（江苏）有限公司，地址：江苏省常州市高新区滨江化工园兴港大道18号。乙 方（卖方）：滨海宏源化工贸易有限公司，地址：江苏省盐城市滨海县沿海化工园区恒源路66号。签订日期：2026年10月12日。签订地点：江苏省常州市。……”</span></blockquote><blockquote class="quote"><span class="q-src">第二条 2.4 · 第2页</span><span class="q-text">“2.4 乙方应自行安排具备相应资质的车辆及人员运输。因运输引发的安全事故、行政处罚及第三方索赔，均由乙方及承运人自行承担，与甲方无关。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C01">📍 合同首部 · P1</button><button class="anchor-btn" data-goto-clause="C09">📍 第二条 2.4 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定乙方须提供并维持危险化学品经营许可证（经营范围含氢氧化钠）、营业执照、如为生产企业则提供安全生产许可证；没有约定证照失效时的通知与解除权；没有把证照作为附件。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>氢氧化钠溶液列入《危险化学品目录》（2015版），经营需危险化学品经营许可。宏源化工是贸易公司，而是不是生产企业需要进一步核实；若其在无证或超范围经营，采购方的合规链条同样可能受牵连。</p><ul class="cons"><li>供应商资质存疑，采购合规链条出现断点</li><li>证照失效后无法及时终止合作</li><li>内部供应商准入资料不完整</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>危险化学品经营许可证编号、经营范围与有效期</li><li>是否为生产企业（安全生产许可证）还是贸易商</li><li>证照失效的通知义务与终止权</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>危险化学品安全管理条例（国务院令第591号，2013年修订）</span><span>危险化学品经营许可证管理办法（安监总局令第55号，79号修正）</span><span>危险化学品目录（2015版）</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R22" data-id="R22" data-topic="safety"
+         data-kind="表述不清" data-sev="3" data-clauses="C33"
+         data-search="sds 与安全标签只给一次电子版，未约定随货、批号与版本更新10.1 条：「产品安全技术说明书（sds）及安全标签由乙方在首次供货时提供一份电子版，后续不再重复提供。」安全标签不只是形式文件：甲方员工在卸车、储运、应急处置中依赖标签与 sds。版本过期或实物无标签，在外部安全检查中通常会被直接认定问题。是否可要求每批随货提供安全标签、sds 更新即通知 sds 版本号与修订日期是否随批记录 标签编制依据（gb 15258）">
+  <header class="fc-head" data-jump>
+    <span class="rid">R22</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#b91c1c">安全合规</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">SDS 与安全标签只给一次电子版，未约定随货、批号与版本更新</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>10.1 条：「产品安全技术说明书（SDS）及安全标签由乙方在首次供货时提供一份电子版，后续不再重复提供。」</p><blockquote class="quote"><span class="q-src">第十条 10.1 · 第4页</span><span class="q-text">“10.1 乙方保证所供产品符合国家有关标准。产品安全技术说明书（SDS）及安全标签由乙方在首次供货时提供一份电子版，后续不再重复提供。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C33">📍 第十条 10.1 · P4</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有约定每批随货提供安全标签、SDS 版本更换时通知与重发、SDS 更新周期；没有约定安全标签的内容要求（按 GB 15258 编制）。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>安全标签不只是形式文件：甲方员工在卸车、储运、应急处置中依赖标签与 SDS。版本过期或实物无标签，在外部安全检查中通常会被直接认定问题。</p><ul class="cons"><li>到货罐车/吨桶标签与实物不符或缺标签</li><li>SDS 过期，应急操作指导错误</li><li>安全培训与检查数据失准</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>是否可要求每批随货提供安全标签、SDS 更新即通知</li><li>SDS 版本号与修订日期是否随批记录</li><li>标签编制依据（GB 15258）</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>GB 15258-2009</span><span>GB/T 16483-2008</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R23" data-id="R23" data-topic="safety"
+         data-kind="缺失" data-sev="4" data-clauses="C34,C09,C24"
+         data-search="装卸安全责任、应急预案联络人、泄漏处置分工未约定10.2 条：「乙方应提供甲方装卸作业的安全技术指导，费用双方另行协商」；2.4 条将运输事故责任全部推给乙方及承运人。卸车是危险化学品作业风险最高的环节之一。如果没有约定谁操作、谁监护、谁负责接液与消防，一旦发生泄漏，既难以快速处置，也容易在事故调查中承担连带责任。卸车作业由谁操作、谁监护 双方安全联络人与应急电话 泄漏处置分工与费用承担 托运清单/安全卡是否随车">
+  <header class="fc-head" data-jump>
+    <span class="rid">R23</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#b91c1c">安全合规</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">装卸安全责任、应急预案联络人、泄漏处置分工未约定</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>10.2 条：「乙方应提供甲方装卸作业的安全技术指导，费用双方另行协商」；2.4 条将运输事故责任全部推给乙方及承运人。</p><blockquote class="quote"><span class="q-src">第十条 10.2 · 第4页</span><span class="q-text">“10.2 甲方保证具备仓储、使用本合同产品的相应条件。因甲方存储、使用不当引发的事故，由甲方自行承担。乙方应提供甲方装卸作业的安全技术指导，费用双方另行协商。”</span></blockquote><blockquote class="quote"><span class="q-src">第二条 2.4 · 第2页</span><span class="q-text">“2.4 乙方应自行安排具备相应资质的车辆及人员运输。因运输引发的安全事故、行政处罚及第三方索赔，均由乙方及承运人自行承担，与甲方无关。”</span></blockquote><blockquote class="quote"><span class="q-src">第六条 6.3 · 第3页</span><span class="q-text">“6.3 空桶由甲方负责返还乙方，返还时间另行协商，运费由甲方承担。罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C34">📍 第十条 10.2 · P4</button><button class="anchor-btn" data-goto-clause="C09">📍 第二条 2.4 · P2</button><button class="anchor-btn" data-goto-clause="C24">📍 第六条 6.3 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定卸车作业由谁操作、双方安全联络人、应急联系电话、泄漏时的处置分工与费用承担；没有约定乙方需运输前提供托运清单/安全卡（这属于法定内容，也需在合同中压给供应商）；没有约定作业前安全交底。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>卸车是危险化学品作业风险最高的环节之一。如果没有约定谁操作、谁监护、谁负责接液与消防，一旦发生泄漏，既难以快速处置，也容易在事故调查中承担连带责任。</p><ul class="cons"><li>卸车作业责任边界模糊，事故中甲方被追责</li><li>缺少应急联络，处置滞后</li><li>安全交底与培训记录缺失</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>卸车作业由谁操作、谁监护</li><li>双方安全联络人与应急电话</li><li>泄漏处置分工与费用承担</li><li>托运清单/安全卡是否随车</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>危险货物道路运输安全管理办法（交通运输部令2019年第29号）</span><span>GB 15603-2022</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R24" data-id="R24" data-topic="safety"
+         data-kind="缺失" data-sev="3" data-clauses="C24,C22"
+         data-search="储存条件、罐区适装与混罐风险未写入（含跨品种换罐）6.3 条只写「罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任」。32% 与 48% 液碱或不同工艺碱液共用罐车是常见做法，残留会导致浓度与杂质波动。甲方储罐若未检查耐碱性（如碳钢储罐的应力腐蚀），也会产生设备与安全风险。换品种运输的清洗证明 甲方储罐材质与容量是否满足 32% 液碱储存 是否要求按罐/按品种分开运输">
+  <header class="fc-head" data-jump>
+    <span class="rid">R24</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#b91c1c">安全合规</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">储存条件、罐区适装与混罐风险未写入（含跨品种换罐）</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>6.3 条只写「罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任」。</p><blockquote class="quote"><span class="q-src">第六条 6.3 · 第3页</span><span class="q-text">“6.3 空桶由甲方负责返还乙方，返还时间另行协商，运费由甲方承担。罐车卸货后由乙方自行清洗，如因清洗不当造成的质量问题，甲方不承担责任。”</span></blockquote><blockquote class="quote"><span class="q-src">第六条 6.1 · 第3页</span><span class="q-text">“6.1 包装形式：散装液碱采用乙方自有罐车运输，或采用聚乙烯（PE）吨桶包装（每桶净重 1,000 kg）。包装形式由乙方根据运力自行决定。包装费用已包含在单价内。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C24">📍 第六条 6.3 · P3</button><button class="anchor-btn" data-goto-clause="C22">📍 第六条 6.1 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定乙方换品种运输时的清洗与证明、储罐的材质/衬里与容量条件、是否需要氮封或保温、是否可能混入其他碱液（如48%液碱）的同源残留。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>32% 与 48% 液碱或不同工艺碱液共用罐车是常见做法，残留会导致浓度与杂质波动。甲方储罐若未检查耐碱性（如碳钢储罐的应力腐蚀），也会产生设备与安全风险。</p><ul class="cons"><li>串罐导致浓度与杂质异常</li><li>储罐腐蚀、泄漏等安全事故</li><li>批次可追溯性下降</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>换品种运输的清洗证明</li><li>甲方储罐材质与容量是否满足 32% 液碱储存</li><li>是否要求按罐/按品种分开运输</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>GB 15603-2022</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R25" data-id="R25" data-topic="safety"
+         data-kind="表述不清" data-sev="2" data-clauses="C03,C33,A1-T5,C10,A3-01,A3-02"
+         data-search="引用「国家有关标准」但未列明适用标准与版本年份10.1 条「符合国家有关标准」；附件一说明「检验方法按 gb/t 4348 系列执行」；3.1 条「按 gb/t 209-2018 及附件一执行」。标准版本变化会导致「符合标准」的认定发生变化。注意：gb 12268-2012 已于 2025-10-01 被 gb 12268-2025 替代，gb 6944 也更新为 2025 版；合同中若引用旧版编号或笼统写「系列」，执行时会产生版本争议。适用标准清单与版本（含 gb 12268-2025、jt/t 617-2018 等） 标准更新时的合同更新机制 gb/t 4348 的具体分部和年份">
+  <header class="fc-head" data-jump>
+    <span class="rid">R25</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#b91c1c">安全合规</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">引用「国家有关标准」但未列明适用标准与版本年份</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>10.1 条「符合国家有关标准」；附件一说明「检验方法按 GB/T 4348 系列执行」；3.1 条「按 GB/T 209-2018 及附件一执行」。</p><blockquote class="quote"><span class="q-src">第一条 1.2 · 第1页</span><span class="q-text">“1.2 质量标准：执行 GB/T 209-2018《工业用氢氧化钠》标准，或双方认可的企业标准。乙方出厂检验合格即视为质量合格，甲方不得以日常复检结果为由拒收或索赔。”</span></blockquote><blockquote class="quote"><span class="q-src">第十条 10.1 · 第4页</span><span class="q-text">“10.1 乙方保证所供产品符合国家有关标准。产品安全技术说明书（SDS）及安全标签由乙方在首次供货时提供一份电子版，后续不再重复提供。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 说明行 · 第5页</span><span class="q-text">“说明：检验方法按 GB/T 4348 系列执行。取样按每车随机抽取 1 桶，其余指标由乙方自检。外观为无色透明液体，允许微浊。”</span></blockquote><blockquote class="quote"><span class="q-src">第三条 3.1 · 第2页</span><span class="q-text">“3.1 验收标准：按 GB/T 209-2018 及附件一执行。验收方法：甲方按每车次取样化验；另有约定的，以乙方质检报告为准。”</span></blockquote><blockquote class="quote"><span class="q-src">附件三 信息1 · 第7页</span><span class="q-text">“品名：氢氧化钠溶液，质量分数 32%（以 NaOH 计），CAS 号 1310-73-2；危险货物编号 UN 1824，类别第8类腐蚀性物质，包装类别 II，中国危险货物编号 82001。”</span></blockquote><blockquote class="quote"><span class="q-src">附件三 信息2 · 第7页</span><span class="q-text">“危险性说明：造成严重皮肤灼伤和眼损伤；对水生生物有害。防护要求：耐碱手套、护目镜/面屏、耐碱防护服与防滑靴；溅入眼内立即用大量清水冲洗并就医。储存：储罐/容器应耐碱，避免与酸类、铝、锌等金属及部分有机物接触。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C03">📍 第一条 1.2 · P1</button><button class="anchor-btn" data-goto-clause="C33">📍 第十条 10.1 · P4</button><button class="anchor-btn" data-goto-clause="A1-T5">📍 附件一 说明行 · P5</button><button class="anchor-btn" data-goto-clause="C10">📍 第三条 3.1 · P2</button><button class="anchor-btn" data-goto-clause="A3-01">📍 附件三 信息1 · P7</button><button class="anchor-btn" data-goto-clause="A3-02">📍 附件三 信息2 · P7</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有列明适用的安全与标识标准编号与版本（如 GB 12268-2025、JT/T 617-2018、GB 15258-2009、GB/T 191-2008）；「GB/T 4348 系列」也没有给具体分部和年份。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>标准版本变化会导致「符合标准」的认定发生变化。注意：GB 12268-2012 已于 2025-10-01 被 GB 12268-2025 替代，GB 6944 也更新为 2025 版；合同中若引用旧版编号或笼统写「系列」，执行时会产生版本争议。</p><ul class="cons"><li>标准版本升级后合同无更新机制</li><li>「国家标准」范围不清，供应商可援引较宽松版本</li><li>检验方法不一致导致数据不可比</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>适用标准清单与版本（含 GB 12268-2025、JT/T 617-2018 等）</li><li>标准更新时的合同更新机制</li><li>GB/T 4348 的具体分部和年份</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>GB/T 209-2018</span><span>GB 12268-2025</span><span>JT/T 617-2018</span><span>GB 15258-2009</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R26" data-id="R26" data-topic="breach"
+         data-kind="表述不清" data-sev="3" data-clauses="C19,C26"
+         data-search="违约金比例不对称：甲方逾期付款 0.1%/日，乙方逾期交货 0.05%/日5.2 条：甲方逾期付款按逾期金额每日 0.1% 支付违约金；7.1 条：乙方逾期交货按批次货款的 0.05%/日支付违约金。方向明显偏向供应商。以 30 万元/批测算：甲方迟付 15 日约 4,500 元；乙方迟交 15 日约 2,250 元。同时甲方逾期条款没有上限，在资金调度不顺时可能迅速累积。违约金是否过高及其司法调整空间，需要法务判断。双方违约金比例是否对等 违约金累计上限 是否改为按同期 lpr 一定倍数计算（需法务判断）">
+  <header class="fc-head" data-jump>
+    <span class="rid">R26</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#9333ea">违约责任</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">违约金比例不对称：甲方逾期付款 0.1%/日，乙方逾期交货 0.05%/日</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>5.2 条：甲方逾期付款按逾期金额每日 0.1% 支付违约金；7.1 条：乙方逾期交货按批次货款的 0.05%/日支付违约金。</p><blockquote class="quote"><span class="q-src">第五条 5.2 · 第3页</span><span class="q-text">“5.2 剩余货款于每批货物验收合格后 30 日内支付；甲方逾期付款的，应按逾期金额每日 0.1% 向乙方支付违约金。”</span></blockquote><blockquote class="quote"><span class="q-src">第七条 7.1 · 第3页</span><span class="q-text">“7.1 乙方逾期交货的，每逾期一日按该批次货款的 0.05% 向甲方支付违约金。因乙方原因导致交货延迟超过 30 日的，甲方有权解除订单。乙方不承担因迟延交货导致的停产损失。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C19">📍 第五条 5.2 · P3</button><button class="anchor-btn" data-goto-clause="C26">📍 第七条 7.1 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>违约金没有上限（如累计不超过合同额的 5%/10%）；0.1%/日折年化约 36.5%，明显偏高；没有约定逾期交货违约金的上限与累计扣减规则。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>方向明显偏向供应商。以 30 万元/批测算：甲方迟付 15 日约 4,500 元；乙方迟交 15 日约 2,250 元。同时甲方逾期条款没有上限，在资金调度不顺时可能迅速累积。违约金是否过高及其司法调整空间，需要法务判断。</p><ul class="cons"><li>违约金负担明显偏向买方</li><li>迟付累积到高额罚息，甚至威胁供应商停货</li><li>迟交惩罚过低，难以约束交付</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>双方违约金比例是否对等</li><li>违约金累计上限</li><li>是否改为按同期 LPR 一定倍数计算（需法务判断）</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R27" data-id="R27" data-topic="breach"
+         data-kind="表述不清" data-sev="4" data-clauses="C27,C29"
+         data-search="质量违约封顶 2% 且「不得另行主张损失」；总责任上限 5% 过低7.2 条：质量不合格时乙方按该批货款 2% 支付违约金，「双方以此作为最终解决方案，甲方不得另行主张损失赔偿」；7.4 条：任何一方责任以合同项下货款总额的 5% 为限。以 2,000 吨×1,150 元计，总货款约 230 万元，5% 上限约 11.5 万元，而 2% 的单批封顶甚至不足以覆盖一次停产。液碱不合格可能造成整条线停产与下游客户退货，损失远高于此。责任上限范围与实际损失规模的匹配度 是否排除故意/重大过失、人身与安全事故 质量损失是否包含停线、返工、下游索赔">
+  <header class="fc-head" data-jump>
+    <span class="rid">R27</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#9333ea">违约责任</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">质量违约封顶 2% 且「不得另行主张损失」；总责任上限 5% 过低</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>7.2 条：质量不合格时乙方按该批货款 2% 支付违约金，「双方以此作为最终解决方案，甲方不得另行主张损失赔偿」；7.4 条：任何一方责任以合同项下货款总额的 5% 为限。</p><blockquote class="quote"><span class="q-src">第七条 7.2 · 第3页</span><span class="q-text">“7.2 经检验产品质量不符合约定的，乙方按该批次货款的 2% 支付违约金，双方以此作为最终解决方案，甲方不得另行主张损失赔偿。”</span></blockquote><blockquote class="quote"><span class="q-src">第七条 7.4 · 第3页</span><span class="q-text">“7.4 除本合同另有约定外，任何一方因本合同产生的责任以本合同项下货款总额的 5% 为限。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C27">📍 第七条 7.2 · P3</button><button class="anchor-btn" data-goto-clause="C29">📍 第七条 7.4 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有区分可修复与不可修复的质量问题，没有约定退换、停线损失、返工成本、客户索赔的传导；没有排除责任限制的例外（故意、重大过失、人身伤害、危化品事故）。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>以 2,000 吨×1,150 元计，总货款约 230 万元，5% 上限约 11.5 万元，而 2% 的单批封顶甚至不足以覆盖一次停产。液碱不合格可能造成整条线停产与下游客户退货，损失远高于此。</p><ul class="cons"><li>供应商责任被大幅限缩，买方自担损失</li><li>发生安全事故时可赔付不足</li><li>与内部「质量索赔」流程严重脱节</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>责任上限范围与实际损失规模的匹配度</li><li>是否排除故意/重大过失、人身与安全事故</li><li>质量损失是否包含停线、返工、下游索赔</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R28" data-id="R28" data-topic="breach"
+         data-kind="表述不清" data-sev="4" data-clauses="C28,C19"
+         data-search="「不得以质量争议拒付」实质排除买方抗辩权；供应商可停货7.3 条：「甲方逾期付款超过 15 日的，乙方有权暂停发货直至甲方付清全部欠款。甲方不得以质量争议、赔偿等理由拒付或延付货款。」这意味着哪怕到货明显不合格，买方仍须全额付款，否则供应商可以合法停供。这是质量风险与资金风险的叠加。「无争议部分按期支付、争议部分暂缓」是否可以作为替代方案 停供的最低通知期">
+  <header class="fc-head" data-jump>
+    <span class="rid">R28</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#9333ea">违约责任</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">「不得以质量争议拒付」实质排除买方抗辩权；供应商可停货</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>7.3 条：「甲方逾期付款超过 15 日的，乙方有权暂停发货直至甲方付清全部欠款。甲方不得以质量争议、赔偿等理由拒付或延付货款。」</p><blockquote class="quote"><span class="q-src">第七条 7.3 · 第3页</span><span class="q-text">“7.3 甲方逾期付款超过 15 日的，乙方有权暂停发货直至甲方付清全部欠款。甲方不得以质量争议、赔偿等理由拒付或延付货款。”</span></blockquote><blockquote class="quote"><span class="q-src">第五条 5.2 · 第3页</span><span class="q-text">“5.2 剩余货款于每批货物验收合格后 30 日内支付；甲方逾期付款的，应按逾期金额每日 0.1% 向乙方支付违约金。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C28">📍 第七条 7.3 · P3</button><button class="anchor-btn" data-goto-clause="C19">📍 第五条 5.2 · P3</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有区分「无争议货款」与「争议部分」；没有约定质量索赔能否抵扣。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>这意味着哪怕到货明显不合格，买方仍须全额付款，否则供应商可以合法停供。这是质量风险与资金风险的叠加。</p><ul class="cons"><li>质量纠纷期间断供风险</li><li>买方丧失货款抗辩与抵扣手段</li><li>内部应付账款管理失去缓冲</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>「无争议部分按期支付、争议部分暂缓」是否可以作为替代方案</li><li>停供的最低通知期</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R29" data-id="R29" data-topic="forcemajeure"
+         data-kind="表述不清" data-sev="4" data-clauses="C30,C31"
+         data-search="不可抗力定义过宽：把检修、计划停车、原料采购困难、价格波动写进不可抗力8.1 条把「乙方生产装置例行检修、计划停车、原料采购困难、市场价格剧烈波动」列为不可抗力，乙方因此不承担违约责任；8.2 条：不可抗力持续超过 15 日，乙方可单方解除合同且不赔偿。把商业风险装进不可抗力条款，相当于供应商可以在价格不利或库存紧张时以「不可抗力」退出或停供。解除后已付预付款如何返还也没有约定。不可抗力定义是否收窄至法定情形 双方是否享有对等的通知与解除权 解除后预付款与在途货物的处理">
+  <header class="fc-head" data-jump>
+    <span class="rid">R29</span>
+    <span class="sev" style="color:#ffffff;background:#ea580c">高 · 4</span>
+    <span class="topic" style="color:#fff;background:#64748b">不可抗力</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">不可抗力定义过宽：把检修、计划停车、原料采购困难、价格波动写进不可抗力</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>8.1 条把「乙方生产装置例行检修、计划停车、原料采购困难、市场价格剧烈波动」列为不可抗力，乙方因此不承担违约责任；8.2 条：不可抗力持续超过 15 日，乙方可单方解除合同且不赔偿。</p><blockquote class="quote"><span class="q-src">第八条 8.1 · 第4页</span><span class="q-text">“8.1 因不可抗力（含乙方生产装置例行检修、计划停车、原料采购困难、市场价格剧烈波动等）导致乙方不能履行合同的，乙方不承担违约责任。”</span></blockquote><blockquote class="quote"><span class="q-src">第八条 8.2 · 第4页</span><span class="q-text">“8.2 遭受不可抗力的一方应及时通知对方。不可抗力持续超过 15 日的，乙方有权单方解除合同且不承担赔偿责任。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C30">📍 第八条 8.1 · P4</button><button class="anchor-btn" data-goto-clause="C31">📍 第八条 8.2 · P4</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>这些情形通常属于商业风险，不属于法定不可抗力；合同没有约定甲方的对等解除权、已付款项的返还规则、解除后的交接安排。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>把商业风险装进不可抗力条款，相当于供应商可以在价格不利或库存紧张时以「不可抗力」退出或停供。解除后已付预付款如何返还也没有约定。</p><ul class="cons"><li>供应商可无责停供</li><li>预付款返还无规则</li><li>解除后无替代供应安排</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>不可抗力定义是否收窄至法定情形</li><li>双方是否享有对等的通知与解除权</li><li>解除后预付款与在途货物的处理</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R30" data-id="R30" data-topic="forcemajeure"
+         data-kind="缺失" data-sev="3" data-clauses="C30,C06"
+         data-search="无「不可抗力期间临时供应保障」与「替代供应」约定合同未约定乙方停供、检修期间的替代供应安排。液碱断供会直接影响下游车间。若没有替代供应条款，停机待料的损失全部由买方承担，而供应商受不可抗力条款保护。检修/停车计划是否需提前告知 是否约定替代供应的协助义务与费用承担">
+  <header class="fc-head" data-jump>
+    <span class="rid">R30</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#64748b">不可抗力</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">无「不可抗力期间临时供应保障」与「替代供应」约定</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>合同未约定乙方停供、检修期间的替代供应安排。</p><blockquote class="quote"><span class="q-src">第八条 8.1 · 第4页</span><span class="q-text">“8.1 因不可抗力（含乙方生产装置例行检修、计划停车、原料采购困难、市场价格剧烈波动等）导致乙方不能履行合同的，乙方不承担违约责任。”</span></blockquote><blockquote class="quote"><span class="q-src">第二条 2.1 · 第2页</span><span class="q-text">“2.1 交货时间：乙方应在接到甲方订单后 7 个工作日内交货，具体时间为甲方要求的时间。遇乙方检修、装置减量或物流紧张，交货时间相应顺延，顺延期间不视为乙方违约。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C30">📍 第八条 8.1 · P4</button><button class="anchor-btn" data-goto-clause="C06">📍 第二条 2.1 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定检修计划的事前披露、提前备货、推荐替代供应商，也没有约定由甲方自行采购时的差额损失承担。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>液碱断供会直接影响下游车间。若没有替代供应条款，停机待料的损失全部由买方承担，而供应商受不可抗力条款保护。</p><ul class="cons"><li>断供损失全部由买方承担</li><li>缺少检修日历与库存协同机制</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>检修/停车计划是否需提前告知</li><li>是否约定替代供应的协助义务与费用承担</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R31" data-id="R31" data-topic="dispute"
+         data-kind="表述不清" data-sev="3" data-clauses="C32"
+         data-search="仲裁条款：机构名称需核实（「常州仲裁委员会」），且未约定仲裁语言/地点/规则版本9.1 条：「协商不成的，提交常州仲裁委员会按其仲裁规则进行仲裁。仲裁裁决为终局裁决。」仲裁条款有效与否直接影响纠纷的处理路径。仲裁机构名称写错或不存在，可能导致条款无效或需另行确认机构，在争议发生前就应先核实；这类条款是否有效，需要法务确认。仲裁机构全称与是否受理该标的 仲裁地、语言与规则版本 是否补充送达地址与诉讼/仲裁的替代方案">
+  <header class="fc-head" data-jump>
+    <span class="rid">R31</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#334155">争议解决</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">仲裁条款：机构名称需核实（「常州仲裁委员会」），且未约定仲裁语言/地点/规则版本</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>9.1 条：「协商不成的，提交常州仲裁委员会按其仲裁规则进行仲裁。仲裁裁决为终局裁决。」</p><blockquote class="quote"><span class="q-src">第九条 9.1 · 第4页</span><span class="q-text">“9.1 双方因本合同发生争议的，应友好协商解决；协商不成的，提交常州仲裁委员会按其仲裁规则进行仲裁。仲裁裁决为终局裁决。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C32">📍 第九条 9.1 · P4</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>仲裁机构名称是否准确、是否存在需核实（如常州的仲裁机构为常州市相关仲裁委员会），仲裁地、语言、规则版本、送达地址条款均未约定。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>仲裁条款有效与否直接影响纠纷的处理路径。仲裁机构名称写错或不存在，可能导致条款无效或需另行确认机构，在争议发生前就应先核实；这类条款是否有效，需要法务确认。</p><ul class="cons"><li>仲裁机构名称与登记不一致可能影响条款效力</li><li>争议解决成本与时间不可预期</li><li>缺少送达地址约定，通知送达风险</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>仲裁机构全称与是否受理该标的</li><li>仲裁地、语言与规则版本</li><li>是否补充送达地址与诉讼/仲裁的替代方案</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>中华人民共和国仲裁法（2025年9月12日修订，2026年3月1日起施行，共8章96条）</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R32" data-id="R32" data-topic="dispute"
+         data-kind="缺失" data-sev="2" data-clauses="C32,C37"
+         data-search="未约定适用法律、管辖法院替代方案与送达地址仅 9.1 条约定仲裁；10.5 条仅约定未尽事宜另行协商。内贸合同如无约定，一般默认适用中国法、未约定仲裁或管辖时由被告住所地或合同履行地法院管辖；但事先明确对降低争议成本有利。送达地址明确可避免供应商「躲债」。是否补充送达地址与电子送达条款 争议期间是否继续履行无争议部分">
+  <header class="fc-head" data-jump>
+    <span class="rid">R32</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#334155">争议解决</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">未约定适用法律、管辖法院替代方案与送达地址</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>仅 9.1 条约定仲裁；10.5 条仅约定未尽事宜另行协商。</p><blockquote class="quote"><span class="q-src">第九条 9.1 · 第4页</span><span class="q-text">“9.1 双方因本合同发生争议的，应友好协商解决；协商不成的，提交常州仲裁委员会按其仲裁规则进行仲裁。仲裁裁决为终局裁决。”</span></blockquote><blockquote class="quote"><span class="q-src">第十条 10.5 · 第4页</span><span class="q-text">“10.5 本合同一式两份，甲乙双方各执一份，自双方授权代表签字并加盖公章之日起生效。合同未尽事宜，由双方另行协商。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C32">📍 第九条 9.1 · P4</button><button class="anchor-btn" data-goto-clause="C37">📍 第十条 10.5 · P4</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定合同适用法律（内贸默认适用中国法，但未明示）；没有约定送达地址与电子送达条款；没有约定争议期间履约义务继续履行。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>内贸合同如无约定，一般默认适用中国法、未约定仲裁或管辖时由被告住所地或合同履行地法院管辖；但事先明确对降低争议成本有利。送达地址明确可避免供应商「躲债」。</p><ul class="cons"><li>争议期间可能出现「先停供再打官司」</li><li>送达困难导致诉讼拖延</li><li>仲裁与诉讼路径不清</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>是否补充送达地址与电子送达条款</li><li>争议期间是否继续履行无争议部分</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>中华人民共和国民事诉讼法</span><span>中华人民共和国民法典（2020年5月28日通过，2021年1月1日施行，共7编1260条）</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R33" data-id="R33" data-topic="general"
+         data-kind="表述不清" data-sev="3" data-clauses="C36,C03,A1-T1"
+         data-search="附件效力条款「附件与正文冲突以正文为准」，使附件一的技术指标失去优先性10.4 条：「本合同附件与正文具有同等法律效力；附件与正文不一致的，以正文为准。」技术附件本应是质量判定的唯一依据，被「正文优先」削弱后，供应商可以援引更宽泛的正文表述或者反过来援引（更宽松的）附件口径。技术附件是否应优先于正文 附件一的版本控制方式">
+  <header class="fc-head" data-jump>
+    <span class="rid">R33</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#6b7280">通用</span>
+    <span class="kind k-表述不清">表述不清</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">附件效力条款「附件与正文冲突以正文为准」，使附件一的技术指标失去优先性</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>10.4 条：「本合同附件与正文具有同等法律效力；附件与正文不一致的，以正文为准。」</p><blockquote class="quote"><span class="q-src">第十条 10.4 · 第4页</span><span class="q-text">“10.4 本合同附件与正文具有同等法律效力；附件与正文不一致的，以正文为准。”</span></blockquote><blockquote class="quote"><span class="q-src">第一条 1.2 · 第1页</span><span class="q-text">“1.2 质量标准：执行 GB/T 209-2018《工业用氢氧化钠》标准，或双方认可的企业标准。乙方出厂检验合格即视为质量合格，甲方不得以日常复检结果为由拒收或索赔。”</span></blockquote><blockquote class="quote"><span class="q-src">附件一 表1 第1行 · 第5页</span><span class="q-text">“项目：氢氧化钠（以NaOH计）质量分数；指标：≥ 30.0%。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C36">📍 第十条 10.4 · P4</button><button class="anchor-btn" data-goto-clause="C03">📍 第一条 1.2 · P1</button><button class="anchor-btn" data-goto-clause="A1-T1">📍 附件一 表1 第1行 · P5</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p>没有区分技术附件与商务条款的优先顺序；如果正文的「32%」与附件一的「≥30%」冲突，按本条应以 32% 为准，但正文没有允差，实务中会回到附件执行。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>技术附件本应是质量判定的唯一依据，被「正文优先」削弱后，供应商可以援引更宽泛的正文表述或者反过来援引（更宽松的）附件口径。</p><ul class="cons"><li>质量判定依据不唯一</li><li>附件一更新后无法自然覆盖正文</li><li>与技术协议的冲突处理缺乏规则</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>技术附件是否应优先于正文</li><li>附件一的版本控制方式</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R34" data-id="R34" data-topic="general"
+         data-kind="缺失" data-sev="3" data-clauses="A2-02,A2-03,C14"
+         data-search="框架合同缺少订单完整要素约束：微信/传真下单「收到即确认」附件二第2条：甲方可通过传真、邮件或微信发送订单，乙方收到订单后即视为确认；第3条：单笔订单应载明数量、价格、交货时间与地点，未载明的以本合同及乙方报价单为准。在实际执行中，微信群里的口头数量可能被当成订单；价格以「乙方报价单为准」，又绕回了 4.2 条的单方调价。采购内部审批与合同履约之间会出现缺口。订单模板与确认方式（书面回传） 订单价格是否必须落在合同价格机制内 订单与实际送货不一致时以谁为准">
+  <header class="fc-head" data-jump>
+    <span class="rid">R34</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#6b7280">通用</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">框架合同缺少订单完整要素约束：微信/传真下单「收到即确认」</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>附件二第2条：甲方可通过传真、邮件或微信发送订单，乙方收到订单后即视为确认；第3条：单笔订单应载明数量、价格、交货时间与地点，未载明的以本合同及乙方报价单为准。</p><blockquote class="quote"><span class="q-src">附件二 第2条 · 第6页</span><span class="q-text">“2. 甲方可通过传真、邮件或微信发送订单，乙方收到订单后即视为确认，订单可作为实际履行的依据。”</span></blockquote><blockquote class="quote"><span class="q-src">附件二 第3条 · 第6页</span><span class="q-text">“3. 单笔订单应载明数量、价格、交货时间与地点；未载明的，以本合同及乙方报价单为准。”</span></blockquote><blockquote class="quote"><span class="q-src">第四条 4.1 · 第2页</span><span class="q-text">“4.1 价格：到厂含税单价以双方确认的订单价格为准，暂按人民币 1,150 元/吨（大写：壹仟壹佰伍拾元整，含13%增值税）执行。价格包含运输费、装卸费、包装费及税费。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="A2-02">📍 附件二 第2条 · P6</button><button class="anchor-btn" data-goto-clause="A2-03">📍 附件二 第3条 · P6</button><button class="anchor-btn" data-goto-clause="C14">📍 第四条 4.1 · P2</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>「收到即视为确认」意味着订单成立的门槛很低，但订单本身可能缺少价格、交货时间；没有约定订单模板、双方确认、订单价格上限，供应商也可能自行报价。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>在实际执行中，微信群里的口头数量可能被当成订单；价格以「乙方报价单为准」，又绕回了 4.2 条的单方调价。采购内部审批与合同履约之间会出现缺口。</p><ul class="cons"><li>未经审批的口头订单被确认</li><li>订单价格自动跟随供应商报价</li><li>订单与合同附件不一致时没有处理规则</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>订单模板与确认方式（书面回传）</li><li>订单价格是否必须落在合同价格机制内</li><li>订单与实际送货不一致时以谁为准</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R35" data-id="R35" data-topic="general"
+         data-kind="缺失" data-sev="2" data-clauses="C35,C37"
+         data-search="合同未约定转让、分包限制与保密条款10.3 条只约定不得单方变更或解除；合同没有转让、分包、保密条款。乙方是贸易商，若将部分订单转给其他供应商，质量与责任归属会变得模糊；采购价格外泄也会影响后续谈判。是否禁止转让或分包、需经书面同意的要求 保密条款范围">
+  <header class="fc-head" data-jump>
+    <span class="rid">R35</span>
+    <span class="sev" style="color:#14532d;background:#bbf7d0">低 · 2</span>
+    <span class="topic" style="color:#fff;background:#6b7280">通用</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">合同未约定转让、分包限制与保密条款</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>10.3 条只约定不得单方变更或解除；合同没有转让、分包、保密条款。</p><blockquote class="quote"><span class="q-src">第十条 10.3 · 第4页</span><span class="q-text">“10.3 任何一方不得单方变更或解除本合同；需要变更的，应经双方协商一致并签订书面协议。”</span></blockquote><blockquote class="quote"><span class="q-src">第十条 10.5 · 第4页</span><span class="q-text">“10.5 本合同一式两份，甲乙双方各执一份，自双方授权代表签字并加盖公章之日起生效。合同未尽事宜，由双方另行协商。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C35">📍 第十条 10.3 · P4</button><button class="anchor-btn" data-goto-clause="C37">📍 第十条 10.5 · P4</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>没有约定乙方能否将供货义务转让给第三方（贸易商常见做法），也没有约定价格与采购量的保密义务。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>乙方是贸易商，若将部分订单转给其他供应商，质量与责任归属会变得模糊；采购价格外泄也会影响后续谈判。</p><ul class="cons"><li>实际供货方与合同主体不一致</li><li>质量责任在多方间推诿</li><li>价格信息外泄</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>是否禁止转让或分包、需经书面同意的要求</li><li>保密条款范围</li></ul></div>
+    <div class="sec"><h5>核对的法律 / 标准（适用性以文末为准）</h5><div class="law-chips"><span>中华人民共和国民法典（2020年5月28日通过，2021年1月1日施行，共7编1260条）</span></div></div>
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article>
+<article class="fcard" id="finding-R36" data-id="R36" data-topic="general"
+         data-kind="缺失" data-sev="3" data-clauses="C01,C37,C05,A3-01"
+         data-search="文件不齐：缺少供应商资质、承运方证照、报价单、技术协议、订单模板首部与 10.5 条均未列附件清单，合同仅 2 个附件，均为技术/使用说明性质。审查只能基于合同文本，无法核验主体资格与履行能力；签约前需补齐尽调材料，否则资质风险、履约风险无法评估。签约前需补齐的尽调材料清单 公司标准合同模板的使用要求 内部采购政策中的审批权限">
+  <header class="fc-head" data-jump>
+    <span class="rid">R36</span>
+    <span class="sev" style="color:#7c2d12;background:#fcd34d">中 · 3</span>
+    <span class="topic" style="color:#fff;background:#6b7280">通用</span>
+    <span class="kind k-缺失">缺失</span>
+    <span class="status-pill" data-status-pill>待处理</span>
+    <span class="caret">▸</span>
+  </header>
+  <h4 class="fc-title">文件不齐：缺少供应商资质、承运方证照、报价单、技术协议、订单模板</h4>
+  <div class="fc-body">
+    <div class="sec"><h5>合同写了什么（原文摘录）</h5><p>首部与 10.5 条均未列附件清单，合同仅 2 个附件，均为技术/使用说明性质。</p><blockquote class="quote"><span class="q-src">合同首部 · 第1页</span><span class="q-text">“合同编号：XS-2026-LY-0715。甲 方（买方）：恒星精化科技（江苏）有限公司，地址：江苏省常州市高新区滨江化工园兴港大道18号。乙 方（卖方）：滨海宏源化工贸易有限公司，地址：江苏省盐城市滨海县沿海化工园区恒源路66号。签订日期：2026年10月12日。签订地点：江苏省常州市。……”</span></blockquote><blockquote class="quote"><span class="q-src">第十条 10.5 · 第4页</span><span class="q-text">“10.5 本合同一式两份，甲乙双方各执一份，自双方授权代表签字并加盖公章之日起生效。合同未尽事宜，由双方另行协商。”</span></blockquote><blockquote class="quote"><span class="q-src">第一条 1.4 · 第1页</span><span class="q-text">“1.4 乙方应随车提供产品合格证明及检验报告；如甲方要求，可另行协商提供。具体技术指标见附件一。”</span></blockquote><blockquote class="quote"><span class="q-src">附件三 信息1 · 第7页</span><span class="q-text">“品名：氢氧化钠溶液，质量分数 32%（以 NaOH 计），CAS 号 1310-73-2；危险货物编号 UN 1824，类别第8类腐蚀性物质，包装类别 II，中国危险货物编号 82001。”</span></blockquote></div>
+    <div class="sec"><h5>原文位置</h5><div class="anchors"><button class="anchor-btn" data-goto-clause="C01">📍 合同首部 · P1</button><button class="anchor-btn" data-goto-clause="C37">📍 第十条 10.5 · P4</button><button class="anchor-btn" data-goto-clause="C05">📍 第一条 1.4 · P1</button><button class="anchor-btn" data-goto-clause="A3-01">📍 附件三 信息1 · P7</button></div></div>
+    <div class="sec"><h5>哪些没写清楚 / 缺失</h5><p class="missing">⚠ 本项在合同中未见约定（缺失），不作推测。</p><p>缺少供应商营业执照、危化品经营许可证、承运方证照与罐体检验资料、报价单、历史争议记录、公司标准合同模板与内部采购政策（本次评审未提供）。</p></div>
+    <div class="sec"><h5>业务风险与可能后果</h5><p>审查只能基于合同文本，无法核验主体资格与履行能力；签约前需补齐尽调材料，否则资质风险、履约风险无法评估。</p><ul class="cons"><li>资质与履约能力风险无法评估</li><li>合同附件清单不完整，争议时缺少依据</li></ul></div>
+    <div class="sec"><h5>需要向谁确认 / 确认什么</h5><ul class="todo"><li>签约前需补齐的尽调材料清单</li><li>公司标准合同模板的使用要求</li><li>内部采购政策中的审批权限</li></ul></div>
+    
+    <div class="sec note-sec">
+      <h5>处理状态与备注（仅存于本浏览器，可导出）</h5>
+      <div class="note-controls">
+        <select data-status><option>待处理</option><option>已确认</option><option>待供应商回复</option><option>已解决</option><option>不适用</option></select>
+        <input type="text" data-note placeholder="内部处理备注…">
+      </div>
+    </div>
+  </div>
+</article></div>
+  </div>
+</section>
+
+<section class="panel" id="panel-index">
+  <p style="color:#64748b;font-size:12.8px;margin-top:0">条款索引是全文锚点：每行可点击，跳转到「原文 × 风险」并对该条款高亮。<b>风险编号</b>列显示引用了该条款的所有风险条目。</p>
+  <table class="idx"><thead><tr><th>条款ID</th><th>条款编号</th><th>页码</th><th>原文摘要（逐字摘录）</th><th>关联风险</th></tr></thead><tbody><tr data-goto-clause="C01" class="irow"><td class="mono">C01</td><td>合同首部</td><td>P1</td><td class="t">合同编号：XS-2026-LY-0715。甲 方（买方）：恒星精化科技（江苏）有限公……</td><td><span class='mini s4'>R21</span><span class='mini s3'>R36</span></td></tr><tr data-goto-clause="C02" class="irow"><td class="mono">C02</td><td>第一条 1.1</td><td>P1</td><td class="t">1.1 产品名称：工业用氢氧化钠（俗称液碱、烧碱）。……</td><td><span class='mini s4'>R01</span><span class='mini s3'>R06</span><span class='mini s2'>R07</span></td></tr><tr data-goto-clause="C03" class="irow"><td class="mono">C03</td><td>第一条 1.2</td><td>P1</td><td class="t">1.2 质量标准：执行 GB/T 209-2018《工业用氢氧化钠》标准，……</td><td><span class='mini s4'>R01</span><span class='mini s4'>R03</span><span class='mini s3'>R33</span><span class='mini s2'>R25</span></td></tr><tr data-goto-clause="C04" class="irow"><td class="mono">C04</td><td>第一条 1.3</td><td>P1</td><td class="t">1.3 产品质量以乙方出厂检验结果为准；甲方如对质量有异议，……</td><td><span class='mini s4'>R03</span><span class='mini s4'>R04</span></td></tr><tr data-goto-clause="C05" class="irow"><td class="mono">C05</td><td>第一条 1.4</td><td>P1</td><td class="t">1.4 乙方应随车提供产品合格证明及检验报告；……</td><td><span class='mini s3'>R05</span><span class='mini s3'>R36</span></td></tr><tr data-goto-clause="C06" class="irow"><td class="mono">C06</td><td>第二条 2.1</td><td>P2</td><td class="t">2.1 交货时间：乙方应在接到甲方订单后 7 个工作日内交货，……</td><td><span class='mini s4'>R08</span><span class='mini s3'>R30</span></td></tr><tr data-goto-clause="C07" class="irow"><td class="mono">C07</td><td>第二条 2.2</td><td>P2</td><td class="t">2.2 交货地点：甲方指定地点（以甲方另行通知为准）。……</td><td><span class='mini s5'>R10</span><span class='mini s4'>R09</span></td></tr><tr data-goto-clause="C08" class="irow"><td class="mono">C08</td><td>第二条 2.3</td><td>P2</td><td class="t">2.3 风险转移：货物风险自乙方交付至甲方指定地点时起由甲方承担。……</td><td><span class='mini s4'>R09</span></td></tr><tr data-goto-clause="C09" class="irow"><td class="mono">C09</td><td>第二条 2.4</td><td>P2</td><td class="t">2.4 乙方应自行安排具备相应资质的车辆及人员运输。……</td><td><span class='mini s5'>R10</span><span class='mini s4'>R21</span><span class='mini s4'>R23</span></td></tr><tr data-goto-clause="C10" class="irow"><td class="mono">C10</td><td>第三条 3.1</td><td>P2</td><td class="t">3.1 验收标准：按 GB/T 209-2018 及附件一执行。……</td><td><span class='mini s4'>R03</span><span class='mini s2'>R25</span></td></tr><tr data-goto-clause="C11" class="irow"><td class="mono">C11</td><td>第三条 3.2</td><td>P2</td><td class="t">3.2 甲方应在到货后 3 日内完成验收。如对质量有异议，应在异议期内书面通知乙方，……</td><td><span class='mini s4'>R04</span></td></tr><tr data-goto-clause="C12" class="irow"><td class="mono">C12</td><td>第三条 3.3</td><td>P2</td><td class="t">3.3 甲方提出质量异议后，双方应协商解决；……</td><td><span class='mini s4'>R04</span></td></tr><tr data-goto-clause="C13" class="irow"><td class="mono">C13</td><td>第三条 3.4</td><td>P2</td><td class="t">3.4 经检验产品不符合约定的，乙方应在收到通知后换货；……</td><td><span class='mini s4'>R04</span></td></tr><tr data-goto-clause="C14" class="irow"><td class="mono">C14</td><td>第四条 4.1</td><td>P2</td><td class="t">4.1 价格：到厂含税单价以双方确认的订单价格为准，……</td><td><span class='mini s4'>R15</span><span class='mini s3'>R34</span><span class='mini s2'>R14</span></td></tr><tr data-goto-clause="C15" class="irow"><td class="mono">C15</td><td>第四条 4.2</td><td>P2</td><td class="t">4.2 价格调整：基于市场价格变化，双方可协商调整价格，……</td><td><span class='mini s4'>R15</span></td></tr><tr data-goto-clause="C16" class="irow"><td class="mono">C16</td><td>第四条 4.3</td><td>P2</td><td class="t">4.3 乙方应在收到货款后开具增值税专用发票，税率按开票时有效税率执行。……</td><td><span class='mini s5'>R19</span><span class='mini s3'>R16</span></td></tr><tr data-goto-clause="C17" class="irow"><td class="mono">C17</td><td>第四条 4.4</td><td>P2</td><td class="t">4.4 数量以乙方装车磅单为准，甲方如有异议，应在卸货前提出。</td><td><span class='mini s3'>R13</span></td></tr><tr data-goto-clause="C18" class="irow"><td class="mono">C18</td><td>第五条 5.1</td><td>P3</td><td class="t">5.1 甲方应在合同签订后支付合同总额 30% 的预付款（人民币 690,000 元……</td><td><span class='mini s4'>R17</span></td></tr><tr data-goto-clause="C19" class="irow"><td class="mono">C19</td><td>第五条 5.2</td><td>P3</td><td class="t">5.2 剩余货款于每批货物验收合格后 30 日内支付；……</td><td><span class='mini s4'>R18</span><span class='mini s4'>R28</span><span class='mini s3'>R26</span></td></tr><tr data-goto-clause="C20" class="irow"><td class="mono">C20</td><td>第五条 5.3</td><td>P3</td><td class="t">5.3 甲方应于每年年末支付当年度框架量不足部分的货款，以保证乙方年度销售的实现。</td><td><span class='mini s5'>R20</span></td></tr><tr data-goto-clause="C21" class="irow"><td class="mono">C21</td><td>第五条 5.4</td><td>P3</td><td class="t">5.4 甲方付款应汇入乙方指定账户：账户名称滨海宏源化工贸易有限公司，……</td><td><span class='mini s5'>R19</span></td></tr><tr data-goto-clause="C22" class="irow"><td class="mono">C22</td><td>第六条 6.1</td><td>P3</td><td class="t">6.1 包装形式：散装液碱采用乙方自有罐车运输，……</td><td><span class='mini s4'>R11</span><span class='mini s3'>R24</span><span class='mini s2'>R12</span><span class='mini s2'>R14</span></td></tr><tr data-goto-clause="C23" class="irow"><td class="mono">C23</td><td>第六条 6.2</td><td>P3</td><td class="t">6.2 如采用吨桶包装，吨桶押金为每只人民币 300 元，……</td><td><span class='mini s4'>R11</span><span class='mini s2'>R14</span></td></tr><tr data-goto-clause="C24" class="irow"><td class="mono">C24</td><td>第六条 6.3</td><td>P3</td><td class="t">6.3 空桶由甲方负责返还乙方，返还时间另行协商，运费由甲方承担。……</td><td><span class='mini s4'>R23</span><span class='mini s3'>R24</span><span class='mini s2'>R12</span></td></tr><tr data-goto-clause="C25" class="irow"><td class="mono">C25</td><td>第六条 6.4</td><td>P3</td><td class="t">6.4 计量以乙方装车过磅数量为准，甲方按乙方磅单数量结算并确认到货数量。</td><td><span class='mini s3'>R13</span></td></tr><tr data-goto-clause="C26" class="irow"><td class="mono">C26</td><td>第七条 7.1</td><td>P3</td><td class="t">7.1 乙方逾期交货的，每逾期一日按该批次货款的 0.05% 向甲方支付违约金。……</td><td><span class='mini s3'>R26</span></td></tr><tr data-goto-clause="C27" class="irow"><td class="mono">C27</td><td>第七条 7.2</td><td>P3</td><td class="t">7.2 经检验产品质量不符合约定的，乙方按该批次货款的 2% 支付违约金，……</td><td><span class='mini s4'>R27</span></td></tr><tr data-goto-clause="C28" class="irow"><td class="mono">C28</td><td>第七条 7.3</td><td>P3</td><td class="t">7.3 甲方逾期付款超过 15 日的，乙方有权暂停发货直至甲方付清全部欠款。……</td><td><span class='mini s4'>R18</span><span class='mini s4'>R28</span></td></tr><tr data-goto-clause="C29" class="irow"><td class="mono">C29</td><td>第七条 7.4</td><td>P3</td><td class="t">7.4 除本合同另有约定外，任何一方因本合同产生的责任以本合同项下货款总额的 5% ……</td><td><span class='mini s4'>R27</span></td></tr><tr data-goto-clause="C30" class="irow"><td class="mono">C30</td><td>第八条 8.1</td><td>P4</td><td class="t">8.1 因不可抗力（含乙方生产装置例行检修、计划停车、原料采购困难、……</td><td><span class='mini s4'>R29</span><span class='mini s3'>R30</span></td></tr><tr data-goto-clause="C31" class="irow"><td class="mono">C31</td><td>第八条 8.2</td><td>P4</td><td class="t">8.2 遭受不可抗力的一方应及时通知对方。不可抗力持续超过 15 日的，……</td><td><span class='mini s4'>R29</span></td></tr><tr data-goto-clause="C32" class="irow"><td class="mono">C32</td><td>第九条 9.1</td><td>P4</td><td class="t">9.1 双方因本合同发生争议的，应友好协商解决；……</td><td><span class='mini s3'>R31</span><span class='mini s2'>R32</span></td></tr><tr data-goto-clause="C33" class="irow"><td class="mono">C33</td><td>第十条 10.1</td><td>P4</td><td class="t">10.1 乙方保证所供产品符合国家有关标准。……</td><td><span class='mini s3'>R05</span><span class='mini s3'>R22</span><span class='mini s2'>R25</span></td></tr><tr data-goto-clause="C34" class="irow"><td class="mono">C34</td><td>第十条 10.2</td><td>P4</td><td class="t">10.2 甲方保证具备仓储、使用本合同产品的相应条件。……</td><td><span class='mini s4'>R23</span></td></tr><tr data-goto-clause="C35" class="irow"><td class="mono">C35</td><td>第十条 10.3</td><td>P4</td><td class="t">10.3 任何一方不得单方变更或解除本合同；……</td><td><span class='mini s2'>R35</span></td></tr><tr data-goto-clause="C36" class="irow"><td class="mono">C36</td><td>第十条 10.4</td><td>P4</td><td class="t">10.4 本合同附件与正文具有同等法律效力；附件与正文不一致的，以正文为准。</td><td><span class='mini s3'>R33</span></td></tr><tr data-goto-clause="C37" class="irow"><td class="mono">C37</td><td>第十条 10.5</td><td>P4</td><td class="t">10.5 本合同一式两份，甲乙双方各执一份，自双方授权代表签字并加盖公章之日起生效。……</td><td><span class='mini s3'>R36</span><span class='mini s2'>R32</span><span class='mini s2'>R35</span></td></tr><tr data-goto-clause="A1-T1" class="irow"><td class="mono">A1-T1</td><td>附件一 表1 第1行</td><td>P5</td><td class="t">项目：氢氧化钠（以NaOH计）质量分数；指标：≥ 30.0%。</td><td><span class='mini s4'>R01</span><span class='mini s3'>R33</span></td></tr><tr data-goto-clause="A1-T2" class="irow"><td class="mono">A1-T2</td><td>附件一 表1 第2行</td><td>P5</td><td class="t">项目：碳酸钠（以Na2CO3计）质量分数；指标：不多于0.2%。</td><td><span class='mini s3'>R02</span></td></tr><tr data-goto-clause="A1-T3" class="irow"><td class="mono">A1-T3</td><td>附件一 表1 第3行</td><td>P5</td><td class="t">项目：氯化钠（以NaCl计）质量分数；指标：空白（未填写）。</td><td><span class='mini s3'>R02</span></td></tr><tr data-goto-clause="A1-T4" class="irow"><td class="mono">A1-T4</td><td>附件一 表1 第4行</td><td>P5</td><td class="t">项目：铁（以Fe计）质量分数；指标：空白（未填写）。</td><td><span class='mini s3'>R02</span></td></tr><tr data-goto-clause="A1-T5" class="irow"><td class="mono">A1-T5</td><td>附件一 说明行</td><td>P5</td><td class="t">说明：检验方法按 GB/T 4348 系列执行。……</td><td><span class='mini s4'>R04</span><span class='mini s3'>R02</span><span class='mini s2'>R25</span></td></tr><tr data-goto-clause="A2-01" class="irow"><td class="mono">A2-01</td><td>附件二 第1条</td><td>P6</td><td class="t">1. 本合同为年度框架合同，合同期内甲方预计采购量 2,000 吨（±15%），……</td><td><span class='mini s5'>R20</span><span class='mini s3'>R06</span></td></tr><tr data-goto-clause="A2-02" class="irow"><td class="mono">A2-02</td><td>附件二 第2条</td><td>P6</td><td class="t">2. 甲方可通过传真、邮件或微信发送订单，乙方收到订单后即视为确认，……</td><td><span class='mini s3'>R34</span></td></tr><tr data-goto-clause="A2-03" class="irow"><td class="mono">A2-03</td><td>附件二 第3条</td><td>P6</td><td class="t">3. 单笔订单应载明数量、价格、交货时间与地点；未载明的，以本合同及乙方报价单为准。</td><td><span class='mini s3'>R34</span><span class='mini s2'>R07</span></td></tr><tr data-goto-clause="A3-01" class="irow"><td class="mono">A3-01</td><td>附件三 信息1</td><td>P7</td><td class="t">品名：氢氧化钠溶液，质量分数 32%（以 NaOH 计），……</td><td><span class='mini s3'>R36</span><span class='mini s2'>R25</span></td></tr><tr data-goto-clause="A3-02" class="irow"><td class="mono">A3-02</td><td>附件三 信息2</td><td>P7</td><td class="t">危险性说明：造成严重皮肤灼伤和眼损伤；对水生生物有害。……</td><td><span class='mini s2'>R25</span></td></tr></tbody></table>
+</section>
+
+<section class="panel" id="panel-tasks">
+  <p style="color:#64748b;font-size:12.8px;margin-top:0">同一份风险条目按「谁去办」拆成三张清单：内部采购（商务与供应保障）、法务（条款效力与责任分配）、供应商（向乙方索要的事实、文件与承诺）。点击任意行定位到原文与风险卡片；勾选框状态同样保存在本浏览器。</p>
+  <div class="qtabs"><button class="qtab-btn active" data-owner="legal">内部法务 · 13 项</button><button class="qtab-btn" data-owner="procurement">内部采购 · 12 项</button><button class="qtab-btn" data-owner="supplier">内部供应商 · 14 项</button></div><div class="qpanes"><div class="qtab active" data-owner="legal"><p class="qtab-desc">条款效力、责任分配、争议解决、需要律师判断的问题</p><table class="qtable"><thead><tr><th>关联风险</th><th>优先级</th><th>风险标题</th><th>需要确认的问题</th><th>条款</th><th>已处理</th></tr></thead><tbody><tr data-goto-finding="R03" class="qrow"><td class="mono">R03</td><td><span class="pr pr-高">高</span></td><td class="t">「出厂检验合格即视为质量合格」剥夺买方检验权，且 1.2 与 3.1 自相矛盾</td><td>1.2 与 3.1 对检验结果优先级的表述冲突，条款应以谁为准；是否存在对买方不利的解释风险</td><td class="mono">C03, C04, C10</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R03"></label></td></tr><tr data-goto-finding="R04" class="qrow"><td class="mono">R04</td><td><span class="pr pr-高">高</span></td><td class="t">3 日质量异议期过短，且起算点（到货还是验收）未明确</td><td>3 日异议期与「已卸入储罐不再退换」叠加后，买方质量救济是否实质丧失；是否需要在合同补充协议中修订</td><td class="mono">C04, C11, C12, C13, A1-T5</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R04"></label></td></tr><tr data-goto-finding="R20" class="qrow"><td class="mono">R20</td><td><span class="pr pr-高">高</span></td><td class="t">「年末补足框架量货款」条款实质接近最低采购承诺，指向不明</td><td>5.3「年末补足框架量货款」是否构成最低采购承诺，与框架合同「以订单为准」如何协调</td><td class="mono">C20, A2-01</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R20"></label></td></tr><tr data-goto-finding="R27" class="qrow"><td class="mono">R27</td><td><span class="pr pr-高">高</span></td><td class="t">质量违约封顶 2% 且「不得另行主张损失」；总责任上限 5% 过低</td><td>7.2 质量违约金 2% 封顶、7.4 总责任 5% 上限的效力与风险敞口；是否在行业惯例与司法实践中有调整空间</td><td class="mono">C27, C29</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R27"></label></td></tr><tr data-goto-finding="R29" class="qrow"><td class="mono">R29</td><td><span class="pr pr-高">高</span></td><td class="t">不可抗力定义过宽：把检修、计划停车、原料采购困难、价格波动写进不可抗力</td><td>将检修、计划停车、原料采购困难、价格波动写入不可抗力是否成立；条款是否需要修订</td><td class="mono">C30, C31</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R29"></label></td></tr><tr data-goto-finding="R18" class="qrow"><td class="mono">R18</td><td><span class="pr pr-中">中</span></td><td class="t">无质保金/质量尾款，质量索赔缺乏「付款扣减」抓手</td><td>7.3「不得以质量争议拒付」与质保金缺失叠加，是否可行；补充协议中如何保留抗辩权</td><td class="mono">C19, C28</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R18"></label></td></tr><tr data-goto-finding="R26" class="qrow"><td class="mono">R26</td><td><span class="pr pr-中">中</span></td><td class="t">违约金比例不对称：甲方逾期付款 0.1%/日，乙方逾期交货 0.05%/日</td><td>违约金 0.1%/日（年化约36.5%）与 0.05%/日是否需调整为对等并设上限</td><td class="mono">C19, C26</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R26"></label></td></tr><tr data-goto-finding="R31" class="qrow"><td class="mono">R31</td><td><span class="pr pr-高">高</span></td><td class="t">仲裁条款：机构名称需核实（「常州仲裁委员会」），且未约定仲裁语言/地点/规则版本</td><td>按2025修订、2026年3月1日施行的新《仲裁法》，本条仲裁机构名称与约定是否需修改，仲裁协议是否有效</td><td class="mono">C32</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R31"></label></td></tr><tr data-goto-finding="R31" class="qrow"><td class="mono">R31</td><td><span class="pr pr-中">中</span></td><td class="t">仲裁条款：机构名称需核实（「常州仲裁委员会」），且未约定仲裁语言/地点/规则版本</td><td>仲裁机构「常州仲裁委员会」的名称与受理范围是否准确，仲裁条款是否需修订</td><td class="mono">C32</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R31"></label></td></tr><tr data-goto-finding="R10" class="qrow"><td class="mono">R10</td><td><span class="pr pr-中">中</span></td><td class="t">危险货物运输责任全部推给承运人，未核实承运方资质、车辆罐体适装介质与检验有效期</td><td>运输责任全部推给承运人后，买方在行政监管与第三人索赔中的责任边界</td><td class="mono">C09, C07</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R10"></label></td></tr><tr data-goto-finding="R21" class="qrow"><td class="mono">R21</td><td><span class="pr pr-中">中</span></td><td class="t">供应商资质（危化品经营许可/安全生产许可）未作为合同条件与附件</td><td>供应商资质缺失对合同履行与合规的影响；是否应把证照作为合同生效或供货前提</td><td class="mono">C01, C09</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R21"></label></td></tr><tr data-goto-finding="R33" class="qrow"><td class="mono">R33</td><td><span class="pr pr-中">中</span></td><td class="t">附件效力条款「附件与正文冲突以正文为准」，使附件一的技术指标失去优先性</td><td>10.4 附件效力条款是否应改为技术附件优先</td><td class="mono">C36, C03, A1-T1</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R33"></label></td></tr><tr data-goto-finding="R35" class="qrow"><td class="mono">R35</td><td><span class="pr pr-低">低</span></td><td class="t">合同未约定转让、分包限制与保密条款</td><td>是否需要增加禁止转让/分包与保密条款</td><td class="mono">C35, C37</td><td><label class="chk"><input type="checkbox" data-qbox="legal-R35"></label></td></tr></tbody></table></div><div class="qtab" data-owner="procurement"><p class="qtab-desc">商务谈判、计划与供应保障、供应商管理</p><table class="qtable"><thead><tr><th>关联风险</th><th>优先级</th><th>风险标题</th><th>需要确认的问题</th><th>条款</th><th>已处理</th></tr></thead><tbody><tr data-goto-finding="R01" class="qrow"><td class="mono">R01</td><td><span class="pr pr-高">高</span></td><td class="t">附件一未给氢氧化钠含量上限，合同浓度 32% 与附件 ≥30% 口径不一致</td><td>32% 浓度允差条款如何与生产配方对齐；是否需要按有效 NaOH 折百计价</td><td class="mono">C02, A1-T1, C03</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R01"></label></td></tr><tr data-goto-finding="R06" class="qrow"><td class="mono">R06</td><td><span class="pr pr-高">高</span></td><td class="t">采购总量「约 2,000 吨」无约束力，「约」字不构成最低采购承诺</td><td>框架量 2,000 吨是否与年度采购计划一致；未达标时的商务处理</td><td class="mono">C02, A2-01</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R06"></label></td></tr><tr data-goto-finding="R08" class="qrow"><td class="mono">R08</td><td><span class="pr pr-高">高</span></td><td class="t">交货时间「7 个工作日」自相矛盾，且检修/减量/物流紧张均可顺延</td><td>供应商检修/停车/物流紧张预案；是否需要引入第二供应商做备产能</td><td class="mono">C06</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R08"></label></td></tr><tr data-goto-finding="R15" class="qrow"><td class="mono">R15</td><td><span class="pr pr-高">高</span></td><td class="t">供应商可单方调价（提前 3 日通知），无调价基准与上限</td><td>调价机制的公允参考（区域报价/行业指数）与自身议价空间</td><td class="mono">C14, C15</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R15"></label></td></tr><tr data-goto-finding="R17" class="qrow"><td class="mono">R17</td><td><span class="pr pr-高">高</span></td><td class="t">预付款 30% 无担保、无履约锁定，预付款基数是「合同总额」而非「框架量」</td><td>预付款 69 万元的风险敞口；是否需要预付款保函或调整为先货后款</td><td class="mono">C18</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R17"></label></td></tr><tr data-goto-finding="R34" class="qrow"><td class="mono">R34</td><td><span class="pr pr-高">高</span></td><td class="t">框架合同缺少订单完整要素约束：微信/传真下单「收到即确认」</td><td>订单模板与下单审批流程；微信群下单的内部管控</td><td class="mono">A2-02, A2-03, C14</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R34"></label></td></tr><tr data-goto-finding="R36" class="qrow"><td class="mono">R36</td><td><span class="pr pr-高">高</span></td><td class="t">文件不齐：缺少供应商资质、承运方证照、报价单、技术协议、订单模板</td><td>签约前尽调材料清单（营业执照、危化品经营许可、运输资质、报价单）</td><td class="mono">C01, C37, C05, A3-01</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R36"></label></td></tr><tr data-goto-finding="R21" class="qrow"><td class="mono">R21</td><td><span class="pr pr-高">高</span></td><td class="t">供应商资质（危化品经营许可/安全生产许可）未作为合同条件与附件</td><td>供应商是否为生产企业、产能与库存情况；能否直供</td><td class="mono">C01, C09</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R21"></label></td></tr><tr data-goto-finding="R07" class="qrow"><td class="mono">R07</td><td><span class="pr pr-中">中</span></td><td class="t">交付数量允差、单批起送量与尾差处理未约定</td><td>每车允差与尾差处理；年度车次与罐容匹配</td><td class="mono">C02, A2-03</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R07"></label></td></tr><tr data-goto-finding="R23" class="qrow"><td class="mono">R23</td><td><span class="pr pr-中">中</span></td><td class="t">装卸安全责任、应急预案联络人、泄漏处置分工未约定</td><td>卸车作业分工（乙方司机/甲方操作人员）与安全交底安排</td><td class="mono">C34, C09, C24</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R23"></label></td></tr><tr data-goto-finding="R30" class="qrow"><td class="mono">R30</td><td><span class="pr pr-中">中</span></td><td class="t">无「不可抗力期间临时供应保障」与「替代供应」约定</td><td>断供备选方案与安全库存水平</td><td class="mono">C30, C06</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R30"></label></td></tr><tr data-goto-finding="R14" class="qrow"><td class="mono">R14</td><td><span class="pr pr-中">中</span></td><td class="t">价格结构不清：暂定 1,150 元/吨含税，但含运费、包装、装卸，且另有吨桶押金</td><td>价格构成中装卸费的覆盖范围；订单价格与合同价的关系</td><td class="mono">C14, C22, C23</td><td><label class="chk"><input type="checkbox" data-qbox="procurement-R14"></label></td></tr></tbody></table></div><div class="qtab" data-owner="supplier"><p class="qtab-desc">直接向乙方索要的事实、文件与承诺</p><table class="qtable"><thead><tr><th>关联风险</th><th>优先级</th><th>风险标题</th><th>需要确认的问题</th><th>条款</th><th>已处理</th></tr></thead><tbody><tr data-goto-finding="R02" class="qrow"><td class="mono">R02</td><td><span class="pr pr-高">高</span></td><td class="t">附件一氯化钠、铁含量留空，关键杂质未约限值</td><td>附件一空白指标（NaCl、Fe）的具体限值，以及检验方法</td><td class="mono">A1-T2, A1-T3, A1-T4, A1-T5</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R02"></label></td></tr><tr data-goto-finding="R05" class="qrow"><td class="mono">R05</td><td><span class="pr pr-高">高</span></td><td class="t">质检报告、SDS、安全标签未作为到货必备交付物，仅在 1.4/10.1 提及「可协商」</td><td>每批是否可随车提供检验报告、批号与生产日期；SDS 更新通知机制</td><td class="mono">C05, C33</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R05"></label></td></tr><tr data-goto-finding="R07" class="qrow"><td class="mono">R07</td><td><span class="pr pr-中">中</span></td><td class="t">交付数量允差、单批起送量与尾差处理未约定</td><td>每车允差、单批起送量与尾差处理</td><td class="mono">C02, A2-03</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R07"></label></td></tr><tr data-goto-finding="R10" class="qrow"><td class="mono">R10</td><td><span class="pr pr-高">高</span></td><td class="t">危险货物运输责任全部推给承运人，未核实承运方资质、车辆罐体适装介质与检验有效期</td><td>实际承运方名称与资质、罐体检验合格证、适装介质列表</td><td class="mono">C09, C07</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R10"></label></td></tr><tr data-goto-finding="R08" class="qrow"><td class="mono">R08</td><td><span class="pr pr-高">高</span></td><td class="t">交货时间「7 个工作日」自相矛盾，且检修/减量/物流紧张均可顺延</td><td>交付时限的准确定义与顺延的书面证明要求</td><td class="mono">C06</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R08"></label></td></tr><tr data-goto-finding="R09" class="qrow"><td class="mono">R09</td><td><span class="pr pr-中">中</span></td><td class="t">交货地点为「甲方指定地点（另行通知）」，风险转移节点不可确定</td><td>交货地点的完整地址与卸车条件确认</td><td class="mono">C07, C08</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R09"></label></td></tr><tr data-goto-finding="R11" class="qrow"><td class="mono">R11</td><td><span class="pr pr-高">高</span></td><td class="t">吨桶押金「300 元/只」但数量、退还条件、押金抵扣均未约定</td><td>吨桶押金的实际只数、退还条件与时限</td><td class="mono">C23, C22</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R11"></label></td></tr><tr data-goto-finding="R12" class="qrow"><td class="mono">R12</td><td><span class="pr pr-中">中</span></td><td class="t">空桶返还时点「另行协商」，返还运费用买方承担，未约定超期与损耗</td><td>空桶返还时限与罐车清洗记录</td><td class="mono">C24, C22</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R12"></label></td></tr><tr data-goto-finding="R13" class="qrow"><td class="mono">R13</td><td><span class="pr pr-中">中</span></td><td class="t">计量以乙方装车磅单为准，异议须在卸货前提出，且 4.4 与 6.4 重复</td><td>是否同意甲方地磅复磅与超差处理</td><td class="mono">C17, C25</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R13"></label></td></tr><tr data-goto-finding="R16" class="qrow"><td class="mono">R16</td><td><span class="pr pr-中">中</span></td><td class="t">先付款后开票，税率变动费用由买方承担，未约定发票类型与红线</td><td>开票时限、发票品名（氢氧化钠）与税率变动分担</td><td class="mono">C16</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R16"></label></td></tr><tr data-goto-finding="R19" class="qrow"><td class="mono">R19</td><td><span class="pr pr-高">高</span></td><td class="t">账户变更仅凭「电话或微信通知」，存在付款欺诈（BEC）风险；未约定先票后款或同步交付</td><td>收款账户书面确认与变更的核验方式</td><td class="mono">C21, C16</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R19"></label></td></tr><tr data-goto-finding="R21" class="qrow"><td class="mono">R21</td><td><span class="pr pr-高">高</span></td><td class="t">供应商资质（危化品经营许可/安全生产许可）未作为合同条件与附件</td><td>提供危险化学品经营许可证/生产许可证明与营业执照</td><td class="mono">C01, C09</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R21"></label></td></tr><tr data-goto-finding="R22" class="qrow"><td class="mono">R22</td><td><span class="pr pr-中">中</span></td><td class="t">SDS 与安全标签只给一次电子版，未约定随货、批号与版本更新</td><td>每批随货安全标签与 SDS 版本记录</td><td class="mono">C33</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R22"></label></td></tr><tr data-goto-finding="R24" class="qrow"><td class="mono">R24</td><td><span class="pr pr-中">中</span></td><td class="t">储存条件、罐区适装与混罐风险未写入（含跨品种换罐）</td><td>换品种运输的罐体清洗证明</td><td class="mono">C24, C22</td><td><label class="chk"><input type="checkbox" data-qbox="supplier-R24"></label></td></tr></tbody></table></div></div>
+</section>
+
+<section class="panel" id="panel-laws">
+  <p style="color:#64748b;font-size:12.8px;margin-top:0">适用性核对日期：<b>2026-10-19</b>。下表只说明「这条法规/标准是否存在、是否现行、与本合同的关联点」，<b>不</b>据此对合同效力下结论；正式签约或索赔前，请通过国家法律法规数据库与全国标准信息公共服务平台再次核对。</p>
+  <table class="qtable"><thead><tr><th>法规 / 标准</th><th>适用点</th><th>核验状态</th><th>核验依据（来源与日期）</th><th>与本合同的关联</th></tr></thead><tbody><tr><td class="t"><a href="https://www.npc.gov.cn/" target="_blank" rel="noopener">中华人民共和国民法典（2020年5月28日通过，2021年1月1日施行，共7编1260条）</a></td><td>合同编：买卖合同标的、质量、检验期间、风险负担、违约责任、不可抗力、争议解决</td><td><span class="st ok">现行</span></td><td>2020年5月28日十三届全国人大三次会议通过，2021年1月1日起施行（核对日期2026-10-19）</td><td>合同基本法律依据；本报告只把它作为共性依据，具体条文适用与效力判断交由法务。</td></tr><tr><td class="t"><a href="https://policy.mofcom.gov.cn/claw/clawContent.shtml?id=103718" target="_blank" rel="noopener">中华人民共和国仲裁法（2025年9月12日修订，2026年3月1日起施行，共8章96条）</a></td><td>仲裁协议（含仲裁机构约定）、仲裁裁决效力、涉外仲裁</td><td><span class="st ok">现行（2025修订版自2026-03-01施行）</span></td><td>十四届全国人大常委会第十七次会议2025年9月12日修订通过，自2026年3月1日起施行（商务部全球法规网、人民日报等，核对日期2026-10-19）</td><td>重要：本次审查日期为2026-10-19，新法已生效；仲裁条款的效力判断须按新法由法务确认，本报告不下结论。</td></tr><tr><td class="t"><a href="https://www.mem.gov.cn/fw/flfgbz/fg/201709/P020220609517465250797.pdf" target="_blank" rel="noopener">危险化学品安全管理条例（国务院令第591号，2013年修订）</a></td><td>危化品生产、经营、储存、使用环节的许可与安全管理</td><td><span class="st ok">现行</span></td><td>应急管理部网站公布的条例文本载明「根据2013年12月7日《国务院关于修改部分行政法规的决定》修订」（核对日期2026-10-19）</td><td>供应商资质、储存与使用合规的合同基础</td></tr><tr><td class="t"><a href="https://www.mem.gov.cn/gk/gwgg/201503/t20150309_241330.shtml" target="_blank" rel="noopener">危险化学品目录（2015版）</a></td><td>危化品品目认定（氢氧化钠溶液列入）</td><td><span class="st ok">现行（2015年第5号公告发布）</span></td><td>应急管理部网站公告（核对日期2026-10-19）；目录更新情况建议签约前再核</td><td>判断液碱是否属危化品</td></tr><tr><td class="t"><a href="https://www.mem.gov.cn/gk/gwgg/agwzlfl/zjl_01/201505/t20150527_233724.shtml" target="_blank" rel="noopener">危险化学品经营许可证管理办法（安监总局令第55号，79号修正）</a></td><td>危化品经营许可、经营范围、有效期</td><td><span class="st ok">现行</span></td><td>应急管理部网站公布文本（核对日期2026-10-19）</td><td>核实贸易商供应商资质</td></tr><tr><td class="t"><a href="https://xxgk.mot.gov.cn/2020/gz/202112/t20211223_3632681.html" target="_blank" rel="noopener">危险货物道路运输安全管理办法（交通运输部令2019年第29号）</a></td><td>托运人、承运人、装货人、收货人义务；托运清单、安全卡、罐体适装、押运</td><td><span class="st ok">现行（2020-01-01施行）</span></td><td>交通运输部网站「现行有效」文本（核对日期2026-10-19）</td><td>运输责任、罐车与卸车作业的合同提示</td></tr><tr><td class="t"><a href="https://faolex.fao.org/docs/pdf/chn245098.pdf" target="_blank" rel="noopener">道路危险货物运输管理规定</a></td><td>危货运输经营许可与运输行为要求</td><td><span class="st ok">现行</span></td><td>公开文本核对（2026-10-19）</td><td>承运方资质核查</td></tr><tr><td class="t"><a href="https://mech.pku.edu.cn/aqgz/gzzd/19cd65c1ea2949efaa50abb46e5bb3e8.htm" target="_blank" rel="noopener">易制毒化学品的分类和品种目录（含2025年新增）</a></td><td>第三类含盐酸、硫酸等；氢氧化钠未列入</td><td><span class="st ok">现行（2025年7月20日新增公告）</span></td><td>北京大学力学与工程科学学院公布的2025版目录（核对日期2026-10-19）</td><td>避免误把液碱当易制毒化学品；若同批采购盐酸/硫酸需另办购买备案</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=87F391EC0249BF6017AD55B4552DFD34" target="_blank" rel="noopener">GB/T 209-2018 工业用氢氧化钠</a></td><td>产品要求、采样、试验方法、检验规则、标志、包装、运输、贮存</td><td><span class="st ok">现行（2019-11-01实施）</span></td><td>全国标准信息公共服务平台「标准状态：现行」（核对日期2026-10-19）</td><td>合同引用的质量标准</td></tr><tr><td class="t"><a href="https://std.samr.gov.cn/gb/search/gbDetailed?id=31D72E7FB9C492EDE06397BE0A0AC2E0" target="_blank" rel="noopener">GB 12268-2025 危险货物品名表</a></td><td>危险货物分类、品名、编号、包装的一般规定</td><td><span class="st ok">现行（2025-10-01实施）；GB 12268-2012 同日起废止</span></td><td>全国标准信息公共服务平台：GB 12268-2012「废止于2025-10-01」，被GB 12268-2025全部代替（核对日期2026-10-19）</td><td>重要：合同若沿用旧编号或写「国家有关标准」，需核对现行版本</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=327BB8F7F348C6A9C685ACBC0B960E2F" target="_blank" rel="noopener">GB 6944-2025 危险货物分类和品名编号</a></td><td>危险货物分类与编号</td><td><span class="st ok">现行（2025-10-01实施），代替 GB 6944-2012</span></td><td>国家标准全文公开系统：发布2025-03-28、实施2025-10-01；国家标准委公告载明代替GB 6944-2012（核对日期2026-10-19）</td><td>液碱分类（UN1824、第8类腐蚀品）的现行依据</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=9B64ABB5E55498AC460E240EBDC811B9" target="_blank" rel="noopener">GB 190-2009 危险货物包装标志</a></td><td>危险货物包装图示标志（分类、尺寸、颜色、使用）</td><td><span class="st ok">现行（强制性，2010-05-01实施）</span></td><td>全国标准信息公共服务平台「标准状态：现行」（核对日期2026-10-19）</td><td>包装与标志要求；吨桶/罐车标贴</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=94AC5B9F53378BC77A22810BC0EF7F0E" target="_blank" rel="noopener">GB/T 191-2008 包装储运图示标志</a></td><td>包装储运图示标志</td><td><span class="st ok">现行</span></td><td>全国标准信息公共服务平台（核对日期2026-10-19）</td><td>储运标志</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=4D487D68BF0BD87E68CE0EA68183DAD6" target="_blank" rel="noopener">GB 15258-2009 化学品安全标签编写规定</a></td><td>安全标签内容与格式</td><td><span class="st ok">现行</span></td><td>全国标准信息公共服务平台「标准状态：现行」（2010-05-01实施，核对日期2026-10-19）；已注意到该标准存在修订动态，签约前建议再核</td><td>安全标签</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/std_list" target="_blank" rel="noopener">GB/T 16483-2008 化学品安全技术说明书内容和项目顺序</a></td><td>SDS 16 部分结构与内容</td><td><span class="st ok">现行</span></td><td>行业通行引用（核对日期2026-10-19）</td><td>SDS 提供的合同义务</td></tr><tr><td class="t"><a href="https://www.miit.gov.cn/ssqqhxptyflhbqzdgz/gzdt/art/2023/art_890ff4c3a760425ea63b60f6913a330f.html" target="_blank" rel="noopener">GB 15603-2022 危险化学品仓库储存通则</a></td><td>危化品储存场所、间距、分区、管理</td><td><span class="st ok">现行（2023-07-01施行）</span></td><td>国家标准化管理委员会2022年第19号公告（核对日期2026-10-19）</td><td>甲方储罐/仓库条件与供应商预检提示</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=5A313CE4381FD0E019A616744D706641" target="_blank" rel="noopener">GB 18564.1-2019 道路运输液体危险货物罐式车辆 第1部分：金属常压罐体技术要求</a></td><td>罐体技术要求、适装介质与检验</td><td><span class="st ok">现行</span></td><td>全国标准信息公共服务平台（核对日期2026-10-19）</td><td>罐车适装介质与检验有效期核查</td></tr><tr><td class="t"><a href="https://xxgk.mot.gov.cn/2020/gz/202112/t20211223_3632681.html" target="_blank" rel="noopener">JT/T 617-2018 危险货物道路运输规则（617.1~617.7）</a></td><td>分类、包装、托运、装卸、车辆与作业要求</td><td><span class="st ok">现行（2018-12-01施行；后续有第1号修改单）</span></td><td>交通运输部与行业标准信息核对（核对日期2026-10-19）</td><td>运输合同责任的法规基础</td></tr><tr><td class="t"><a href="https://openstd.samr.gov.cn/bzgk/std/std_list" target="_blank" rel="noopener">GB/T 4348.1（系列）工业用氢氧化钠 氢氧化钠和碳酸钠含量的测定等</a></td><td>NaOH、Na2CO3、NaCl、Fe 的测定方法</td><td><span class="st ok">现行（GB/T 4348.1-2018 经国家标准全文公开系统核对；其余分部本次未逐版核对）</span></td><td>行业标准引用惯例；本次未能逐版核对分部年份（已标注）</td><td>检验方法；附件一未标注版本</td></tr><tr><td class="t"><a href="https://www.chinatax.gov.cn/" target="_blank" rel="noopener">中华人民共和国增值税暂行条例（现行；具体税率以开票时有效规定为准）</a></td><td>增值税税率、开票与纳税义务</td><td><span class="st ok">现行（行政法规，以现行版本为准）</span></td><td>法规文本存在且现行；本次未逐条核对最新修正版本，签约前请财务/法务核对现行文本（核对日期2026-10-19）</td><td>发票、税率与税率变动风险分担</td></tr><tr><td class="t"><a href="https://www.court.gov.cn/" target="_blank" rel="noopener">中华人民共和国民事诉讼法</a></td><td>管辖、送达、证据保全</td><td><span class="st ok">现行</span></td><td>法典现行；本次仅作背景引用，未逐条核对最新修正（核对日期2026-10-19）</td><td>送达地址与管辖替代方案提示</td></tr></tbody></table>
+  <div class="disclaimer">本结果属于业务审查提示，不是法律意见，也不替代律师或法务的专业审查。涉及条款效力、是否可执行、法律责任分配等问题，必须以公司法务/外部律师意见为准。法律、法规与标准的适用性核对日期为 2026-10-19，正式签约或索赔前应再次核对权威渠道（国家法律法规数据库、全国标准信息公共服务平台）。</div>
+</section>
+
+<section class="panel" id="panel-method">
+  <div class="grid2">
+    <div class="card"><h3>本次审查步骤</h3><ol><li>① 识别文件与缺件：正文、附件、订单模板、资质文件是否齐全</li><li>② 条款编号与索引：章—条—款—页行，作为一切引用的锚点</li><li>③ 按采购主题逐条比对：质量、数量、交付、包装、计量、价格税费、付款、安全合规、违约、不可抗力、争议解决</li><li>④ 区分「写了什么 / 没写什么 / 写得不清楚」三类，缺失项标记为缺失，不推测内容</li><li>⑤ 用「我方角色（买方）+ 标的物特性（危化品/大宗液体）」推导业务后果</li><li>⑥ 分配到内部采购、法务、供应商三类待办清单，并附上需要交付的确认问题</li></ol></div>
+    <div class="card"><h3>业务提醒与法律意见的边界</h3>
+      <p style="font-size:13.2px">本页面输出的是<b>业务审查提示</b>：说明合同写了什么、哪些没写清楚、可能产生哪些采购业务后果、建议向谁确认。</p>
+      <p style="font-size:13.2px">它<b>不是法律意见</b>：不对条款效力、是否可执行、法律责任如何分配作出结论；涉及解释争议与诉讼仲裁的事项，由法务/法律顾问或外部律师判断。</p>
+      <p style="font-size:13.2px">数据来源限定为：用户提供的合同文本 + 公开可核验的法规标准。合同以外的信息（供应商资质、履约能力）一律标为「未提供/需核实」，不作推测。</p>
+      <h3 style="margin-top:14px">处理状态说明</h3>
+      <p style="font-size:12.8px;color:#475569">状态与备注仅保存在当前浏览器的 localStorage 中，便于业务同事各自消化；需要共享时点击「导出处理状态 JSON」，把文件回传给采购负责人汇总。</p>
+    </div>
+  </div>
+  <div class="disclaimer">本结果属于业务审查提示，不是法律意见，也不替代律师或法务的专业审查。涉及条款效力、是否可执行、法律责任分配等问题，必须以公司法务/外部律师意见为准。法律、法规与标准的适用性核对日期为 2026-10-19，正式签约或索赔前应再次核对权威渠道（国家法律法规数据库、全国标准信息公共服务平台）。</div>
+</section>
+
+<div class="foot">共 36 条风险 · 页面由 skill「检查采购合同风险点」生成 · 单文件离线可用 · 打印时自动展开全部卡片</div>
+
+<script>
+  
+(function(){
+  var SEED = {};
+  var KEY = 'cr-status-' + (document.title||'').slice(0,40);
+  var store = {};
+  try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { store = {}; }
+  Object.keys(SEED).forEach(function(k){ if(!store[k]) store[k]=SEED[k]; });
+
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} }
+
+  // tabs
+  var tabs = document.querySelectorAll('.tabs button');
+  tabs.forEach(function(b){ b.addEventListener('click', function(){
+    tabs.forEach(function(x){x.classList.remove('active')}); b.classList.add('active');
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+    var target = document.getElementById('panel-' + b.dataset.panel);
+    target.classList.add('active');
+    if(b.dataset.panel === 'workspace'){ setTimeout(layoutHeights, 30); }
+  });});
+
+  // right heights based on toolbar
+  function layoutHeights(){
+    var tb = document.querySelector('#panel-workspace .toolbar');
+    if(!tb) return;
+    var h = tb.offsetHeight + 118;
+    document.querySelectorAll('.ws-left,.ws-right').forEach(function(el){ el.style.height = 'calc(100vh - ' + h + 'px)'; });
+  }
+  window.addEventListener('resize', layoutHeights);
+
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.fcard'));
+  cards.forEach(function(c){
+    var id = c.dataset.id;
+    if(store[id]) {
+      var sel = c.querySelector('[data-status]'); var inp = c.querySelector('[data-note]');
+      if(store[id].status){ sel.value = store[id].status; }
+      if(store[id].note){ inp.value = store[id].note; }
+      paintStatus(c, store[id].status);
+    }
+    c.querySelector('[data-jump]').addEventListener('click', function(){ c.classList.toggle('open'); });
+    c.querySelector('[data-status]').addEventListener('change', function(e){
+      store[id] = store[id] || {}; store[id].status = e.target.value; save(); paintStatus(c, e.target.value);
+    });
+    c.querySelector('[data-note]').addEventListener('input', function(e){
+      store[id] = store[id] || {}; store[id].note = e.target.value; save();
+    });
+    c.querySelectorAll('.anchor-btn').forEach(function(b){
+      b.addEventListener('click', function(){ gotoClause(b.dataset.gotoClause); });
+    });
+  });
+  function paintStatus(card, s){
+    var pill = card.querySelector('[data-status-pill]');
+    if(!pill) return;
+    pill.textContent = s || '待处理';
+    pill.classList.toggle('set', !!s && s !== '待处理');
+  }
+  document.querySelectorAll('[data-goto-finding]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var id = el.dataset.gotoFinding;
+      switchTab('workspace');
+      var card = document.getElementById('finding-' + id);
+      if(!card) return;
+      // clear filters so card is visible
+      resetFilters();
+      card.classList.add('open');
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+      card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash')}, 1800);
+      var cid = card.dataset.clauses.split(',')[0];
+      setTimeout(function(){ gotoClause(cid, false); }, 500);
+    });
+  });
+  document.querySelectorAll('[data-goto-clause]').forEach(function(el){
+    el.addEventListener('click', function(){ gotoClause(el.dataset.gotoClause); });
+  });
+  function switchTab(name){
+    var b = document.querySelector('.tabs button[data-panel="' + name + '"]'); if(b) b.click();
+  }
+  function gotoClause(cid, alsoCard){
+    switchTab('workspace');
+    var el = document.getElementById('clause-' + cid); if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('flash'); setTimeout(function(){el.classList.remove('flash')}, 1800);
+    if(alsoCard !== false){
+      var chip = el.querySelector('.hit-chip'); if(chip) chip.click();
+    }
+  }
+
+  // filters
+  var curTopic = 'all', curKind = 'all', curSev = new Set(), q = '';
+  var sevBtns = document.querySelectorAll('.sbtn');
+  sevBtns.forEach(function(b){ b.addEventListener('click', function(){
+    var v = b.dataset.sev;
+    if(curSev.has(v)) { curSev.delete(v); b.classList.remove('on'); } else { curSev.add(v); b.classList.add('on'); }
+    apply();
+  });});
+  document.querySelectorAll('.fbtn').forEach(function(b){ b.addEventListener('click', function(){
+    curTopic = b.dataset.topic;
+    document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); apply();
+  });});
+  document.querySelectorAll('.kbtn').forEach(function(b){ b.addEventListener('click', function(){
+    curKind = b.dataset.kind;
+    document.querySelectorAll('.kbtn').forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); apply();
+  });});
+  document.getElementById('search').addEventListener('input', function(e){ q = e.target.value.trim().toLowerCase(); apply(); });
+  function resetFilters(){
+    curTopic='all'; curKind='all'; curSev.clear(); q='';
+    document.getElementById('search').value='';
+    document.querySelectorAll('.fbtn').forEach(function(x){x.classList.toggle('active', x.dataset.topic==='all')});
+    document.querySelectorAll('.kbtn').forEach(function(x){x.classList.toggle('active', x.dataset.kind==='all')});
+    sevBtns.forEach(function(x){x.classList.remove('on')});
+    apply();
+  }
+  function visible(c){
+    if(curTopic !== 'all' && c.dataset.topic !== curTopic) return false;
+    if(curKind !== 'all' && c.dataset.kind !== curKind) return false;
+    if(curSev.size && !curSev.has(c.dataset.sev)) return false;
+    if(q && (c.dataset.search + ' ' + c.textContent.toLowerCase()).indexOf(q) === -1) return false;
+    return true;
+  }
+  function apply(){
+    var n = 0;
+    cards.forEach(function(c){ var v = visible(c); c.style.display = v ? '' : 'none'; if(v) n++; });
+    document.getElementById('count-hint').textContent = '显示 ' + n + ' / ' + cards.length + ' 条';
+    // dim clauses without visible findings
+    var shownIds = new Set();
+    cards.forEach(function(c){ if(visible(c)) shownIds.add(c.dataset.id); });
+    var anyFilter = curTopic!=='all' || curKind!=='all' || curSev.size || q;
+    document.querySelectorAll('.clause').forEach(function(cl){
+      if(!anyFilter) { cl.style.opacity=''; return; }
+      var chips = cl.querySelectorAll('.hit-chip'); var on = false;
+      chips.forEach(function(ch){ if(shownIds.has(ch.dataset.gotoFinding)) on = true; });
+      cl.style.opacity = on ? '' : '.35';
+    });
+  }
+  apply();
+  document.getElementById('btn-all-open').onclick = function(){ cards.forEach(function(c){ if(c.style.display!=='none') c.classList.add('open'); }); };
+  document.getElementById('btn-all-close').onclick = function(){ cards.forEach(function(c){ c.classList.remove('open'); }); };
+  document.getElementById('btn-export').onclick = function(){
+    var blob = new Blob([JSON.stringify(store, null, 2)], {type:'application/json'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'contract-review-status.json'; a.click();
+  };
+
+  // question tabs
+  document.querySelectorAll('.qtab-btn').forEach(function(b){ b.addEventListener('click', function(){
+    document.querySelectorAll('.qtab-btn').forEach(function(x){x.classList.remove('active')}); b.classList.add('active');
+    document.querySelectorAll('.qtab').forEach(function(p){p.classList.toggle('active', p.dataset.owner === b.dataset.owner)});
+  });});
+  document.querySelectorAll('.qrow').forEach(function(r){
+    r.addEventListener('click', function(e){
+      if(e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+      var id = r.dataset.gotoFinding; switchTab('workspace');
+      var card = document.getElementById('finding-' + id); if(!card) return;
+      resetFilters(); card.classList.add('open');
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+      card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash')}, 1800);
+    });
+  });
+  document.querySelectorAll('.toprow').forEach(function(r){
+    r.addEventListener('click', function(){
+      var id = r.dataset.gotoFinding; switchTab('workspace');
+      var card = document.getElementById('finding-' + id); if(!card) return;
+      resetFilters(); card.classList.add('open');
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+      card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash')}, 1800);
+    });
+  });
+  window.addEventListener('load', layoutHeights);
+})();
+
+</script>
+</body>
+</html>

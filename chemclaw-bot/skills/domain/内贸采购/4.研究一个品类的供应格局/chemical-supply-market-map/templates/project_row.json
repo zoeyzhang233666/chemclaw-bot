@@ -1,0 +1,24 @@
+{
+  "_comment": "projects.json 单条模板。置换/搬迁/技改必须填 capacity_retired；净增不确定就把 net 设 null。",
+  "projects": [
+    {
+      "id": "J01",
+      "name": "项目名",
+      "company_id": "集团ID",
+      "province": "省份",
+      "route": "工艺",
+      "capacity": 0,
+      "capacity_retired": 0,
+      "type": "新建",
+      "status": "在建",
+      "date": "2026-06",
+      "year": 2026,
+      "step": "环评 / 施工 / 试车 / 达产",
+      "net": null,
+      "impact": "对供给的影响（一句话）",
+      "source": "S1"
+    }
+  ],
+  "_type_enum": ["新建", "扩建", "技改", "置换", "搬迁", "退出"],
+  "_status_enum": ["已投产", "在建", "拟建", "规划"]
+}

@@ -1,0 +1,1465 @@
+{
+  "meta": {
+    "report_id": "OSM-MEG-SA-20261020",
+    "title": "沙特阿拉伯 乙二醇（MEG）实际生产企业核验调查报告",
+    "subtitle": "海外候选生产商调查 · 制造证据分级 · 集团/生产/销售主体分离",
+    "product": {
+      "name_cn": "乙二醇（单乙二醇 / MEG）",
+      "name_en": "Monoethylene glycol (MEG)",
+      "cas": "107-21-1",
+      "un_no": "3082 (UN, 环境有害物质、液态, 见随附SDS) / 依承运方与运输条件确认",
+      "hs_cn": "2905.31.00.00",
+      "hs_un": "2905.31",
+      "spec_summary": "纤维级（聚酯级）/PET瓶级 / 工业级；典型纯度 ≥99.5%（质量分数），水分 ≤0.1%，色度 APHA ≤5，铁 ≤0.1 ppm，酸度（以乙酸计）≤0.005%",
+      "packaging": "散装（ISO tank / 化学品船 / 液袋）/ 230 kg 桶 / 1000 kg IBC（以供应商实际供货为准）",
+      "process_route": "乙烯 →（银催化剂气相氧化）环氧乙烷（EO）→（EO 水合或 OMEGA 碳酸乙烯酯水解）单乙二醇，并联产 DEG/TEG"
+    },
+    "buyer_context": {
+      "origin": "沙特阿拉伯（Kingdom of Saudi Arabia）",
+      "destination": "中国（主要到岸港：华东/华南港口，如张家港、太仓、宁波、广州）",
+      "intent": "寻找公开资料显示可能实际生产 MEG 的沙特企业，优先核验实际工厂与装置",
+      "quantity": "未提供 — 需采购方补充（待核验问题 Q-00）",
+      "only_actual_manufacturers": "是（用户要求优先核验实际生产厂家）",
+      "certifications_needed": "未指定 — 建议至少 ISO 9001 / ISO 14001 / ISO 45001，SDS、COA、REACH 预注册或注册状态（出口欧盟时）",
+      "packaging_needed": "未指定 — 散装/ISO tank 为大宗 MEG 主流方式"
+    },
+    "research_date": "2026-10-20",
+    "timezone_note": "用户要求以真实公开资料为证据；本报告所有引用均注明来源与访问日期",
+    "evidence_grade_legend": [
+      {
+        "grade": "A",
+        "label": "有直接公开制造证据",
+        "def": "生产企业官网产品页/产能表、年报、EPSCC 合同、官方投产公告、装置级公开产能数据等，直接指向该企业拥有该产品的生产装置"
+      },
+      {
+        "grade": "B",
+        "label": "有产品业务关联但制造身份待核验",
+        "def": "存在产品相关公开记载（行业名录、招标、项目记录、集团口径提及），但缺少装置级直接证据，或证据链存在矛盾"
+      },
+      {
+        "grade": "C",
+        "label": "仅存在行业相关性",
+        "def": "属石化/化工集团或其附属，但无该产品制造证据，或明确生产的是易混淆的同类产品（如丙二醇、聚醚多元醇）"
+      },
+      {
+        "grade": "D",
+        "label": "贸易/代理/身份不明",
+        "def": "贸易商、代理、经销、平台挂牌卖家或无法确认经营实体"
+      }
+    ],
+    "disclaimer": "本报告仅基于公开可获得资料。公开设计产能不等于当前实际可供货能力；产能、装置运行状态、认证与联系方式均以企业书面确认为准。未核验字段一律标注为『待核验』，不虚构。"
+  },
+  "entity_types": [
+    {
+      "code": "MANUFACTURER",
+      "label": "制造企业（工厂主体）"
+    },
+    {
+      "code": "JV_MANUFACTURER",
+      "label": "合资制造企业（工厂主体）"
+    },
+    {
+      "code": "GROUP_SALES",
+      "label": "集团销售/营销主体"
+    },
+    {
+      "code": "AFFILIATE_SALES",
+      "label": "附属公司销售主体"
+    },
+    {
+      "code": "TRADER",
+      "label": "一般贸易商"
+    },
+    {
+      "code": "AGENT",
+      "label": "代理/经销商"
+    },
+    {
+      "code": "UNKNOWN",
+      "label": "身份不明"
+    }
+  ],
+  "groups": [
+    {
+      "id": "G-SABIC",
+      "name": "SABIC（沙特基础工业公司）",
+      "name_en": "Saudi Basic Industries Corporation",
+      "type": "综合石化集团（上市公司，Tadawul 2010）",
+      "note": "集团本体为控股/营销+部分自营装置；MEG 主要由其制造型附属公司生产，通过 SABIC 全球销售网络（含中国）销售。",
+      "evidence": [
+        {
+          "src": "S1",
+          "text": "SABIC 官网石化年报页面记载 United EG3 700,000 吨/年 MEG 投产"
+        },
+        {
+          "src": "S2",
+          "text": "SABIC 新闻稿：制造型附属公司 United 的 EG-3 装置估计年产 700,000 吨 MEG"
+        }
+      ]
+    },
+    {
+      "id": "G-ARAMCO-SABIC",
+      "name": "Saudi Aramco（与 SABIC 合资系列）",
+      "type": "国家石油公司（上游/炼化）",
+      "note": "通过 Petro Rabigh（与住友化学合资）、Yanpet（ExxonMobil 合资）等参与 MEG；本身不是 MEG 制造商主体。"
+    },
+    {
+      "id": "G-SPDC",
+      "name": "SPDC（沙特日本石化开发公司联合体）",
+      "name_en": "Saudi Petrochemical Development Co. consortium (Japan)",
+      "type": "日方合资方 + 销售主体",
+      "note": "与 SABIC 各持股 50% 于 SHARQ；SPDC 自身不拥有 MEG 装置，而是按约定收购并营销 SHARQ 约 1/3 产品，主要销往中国、印度、日本及东南亚。"
+    },
+    {
+      "id": "G-ZAMIL",
+      "name": "Zamil Group Holding",
+      "type": "沙特私人工业集团",
+      "note": "Sipchem 的母公司层级；Sipchem 的 MEG 制造身份需另行核验。"
+    },
+    {
+      "id": "G-DOW-ARAMCO",
+      "name": "Sadara（Aramco + Dow 合资）",
+      "type": "合资制造企业",
+      "note": "生产 Glycol 类产品（丙二醇、丁基乙二醇醚等）与聚醚多元醇，非 MEG。"
+    }
+  ],
+  "companies": [
+    {
+      "id": "C-SHARQ",
+      "rank": 1,
+      "legal_name": "Eastern Petrochemical Company (SHARQ)",
+      "legal_name_ar": "الشركة الشرقية للبتروكيماويات",
+      "cn_name": "苏尔克（沙特）东方石化公司",
+      "entity_type": "JV_MANUFACTURER",
+      "entity_type_label": "合资制造企业（工厂主体）",
+      "grade": "A",
+      "grade_reason": "SHARQ 通过其合资方 SPDC 官方页面公布 MEG 名义产能 1.38–1.40 Mt/a，并公布 MEG 典型质量指标与技术参数；SABIC 自述 SHARQ 为其 EG 生产附属之一；CCFGroup 装置级数据显示 Sharq1/2/4 单线 450/450/700 kt/a 且向中国出口。",
+      "group": "G-SABIC",
+      "ownership": "SABIC 50% / SPDC（日本企业联合体）50%",
+      "established": "1981-09-05",
+      "hq": "Al-Jubail Industrial City, Eastern Province, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Al-Jubail Industrial City（朱拜勒工业城，东部省）",
+      "lat_lng": null,
+      "product_page": "https://spdc.co.jp/english/ethylene/index.html",
+      "website": "https://spdc.co.jp/english/company/sharq_summary/",
+      "official_channels": [
+        {
+          "channel": "SHARQ 官方信息（经JV方SPDC披露）",
+          "value": "https://spdc.co.jp/english/company/sharq_summary/",
+          "status": "已核验（网页可访问）"
+        },
+        {
+          "channel": "产品/营销入口（SABIC 全球销售）",
+          "value": "https://www.sabic.com/en/products/chemicals/glycols/sabic-monoethylene-glycol",
+          "status": "存在，本次抓取超时，需二次确认"
+        },
+        {
+          "channel": "SABIC 官方询盘页（表单，官网未公开总机）",
+          "value": "https://www.sabic.com/en/contact",
+          "status": "已核验（2026-10-20 全文读取；仅在线表单）"
+        },
+        {
+          "channel": "SABIC 全球销售办公室名录（官方 PDF，含中国区）",
+          "value": "https://www.sabic.com/en/about/locations/sales-office",
+          "status": "已核验（页面可访问并指向官方 Sales Offices 目录 PDF）"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG",
+          "grade": "纤维级/聚酯级",
+          "spec": "色度 APHA ≤5；比重 20/20℃ 1.1151–1.1156；馏程 5%:196℃, 95%:200℃；水分 ≤0.1 wt%；铁 ≤0.1 ppm；酸度（以乙酸）≤0.005 wt%；灰分 ≤0.005 g/100ml；氯化物 ≤0.5 ppm",
+          "source": "S3"
+        },
+        {
+          "product": "DEG / TEG",
+          "grade": "副产",
+          "spec": "公开规格未取得 — 待核验",
+          "source": "S3"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "1.38（SPDC 2025 版页面）/ 1.40（SPDC 业务页）",
+        "unit": "Mt/a 名义设计产能",
+        "detail": "CCFGroup 装置级：Sharq1 450 kt/a、Sharq2 450 kt/a、Sharq4 700 kt/a（另有 Sharq3 装置未在该表列出，待核验）",
+        "caveat": "名义产能≠当前可售量；2024 年多套装置因负现金流停产检修"
+      },
+      "process": "乙烯 → EO/EG（Sharq 与 Petrokemya 共建乙烯装置保障原料）；工艺许可方公开资料未在本次核验中取得 — 待核验",
+      "evidence": [
+        {
+          "id": "E1",
+          "type": "官网产能表",
+          "grade": "直接",
+          "src": "S3",
+          "text": "SPDC 页面：Annual production capacity — MEG 1.38 million tons；Product sales: All products are received and marketed by SPDC and SABIC",
+          "conf": "高"
+        },
+        {
+          "id": "E2",
+          "type": "官网技术参数",
+          "grade": "直接",
+          "src": "S3b",
+          "text": "SPDC MEG TYPICAL PROPERTY VALUES 表（APHA≤5、水分≤0.1%、铁≤0.1ppm 等）与生产工艺图示",
+          "conf": "高"
+        },
+        {
+          "id": "E3",
+          "type": "装置级产能/运行状态",
+          "grade": "直接",
+          "src": "S5",
+          "text": "CCFGroup：Sharq1 450 kt/a、Sharq2 450 kt/a、Sharq4 700 kt/a，2023-10 起停车、2024-03/04 复产",
+          "conf": "中"
+        },
+        {
+          "id": "E4",
+          "type": "EPC/产能扩张记录",
+          "grade": "直接",
+          "src": "S8",
+          "text": "MEES 2005：SHARQ 委托 Samsung Engineering 建设 700,000 t/a EG 装置（Sharq III）",
+          "conf": "中"
+        },
+        {
+          "id": "E5",
+          "type": "官方贸易救济名单",
+          "grade": "间接",
+          "src": "S4",
+          "text": "Argaam/WTO：欧盟对沙特 MEG 反倾销名单含 Al Sharqiyah Petrochemicals Co.（应为 Sharq 之表述），11.1%",
+          "conf": "中"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 9001 / ISO 14001 / ISO 45001",
+          "status": "待核验 — 未取得 SHARQ 企业级证书编号",
+          "note": "集团层面证书不可直接替代工厂证书"
+        }
+      ],
+      "export_info": "SHARQ 产品全部由 SPDC 与 SABIC 接收并销售；SPDC 口径营销约 1/3 产量，主要销往中国、印度、日本、东南亚。",
+      "risks": [
+        "MEG 装置历史上多次因经济性停车检修，当前开工率未知",
+        "SHARQ 本身不直接对第三方签约，采购需通过 SABIC 或 SPDC 渠道"
+      ],
+      "open_questions": [
+        "QS-01",
+        "QS-02",
+        "QS-03",
+        "QS-04"
+      ]
+    },
+    {
+      "id": "C-JUPC",
+      "rank": 2,
+      "legal_name": "Jubail United Petrochemical Company (United / JUPC)",
+      "legal_name_ar": "شركة الجبيل المتحدة للبتروكيماويات",
+      "cn_name": "朱拜勒联合石化公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（SABIC 附属工厂主体）",
+      "grade": "A",
+      "grade_reason": "三星 E&A（EPC 承包方）项目页明确载明 EPCC 客户为 JUPC、EO/EG 产能 700,000 MTPA、2021 年完成；SABIC 新闻稿与 Tadawul 文件经 Argaam/EOG 转述确认 EG-3 于 2022-10 商业运营；CCFGroup 给出 JUPC2 640 kt/a 装置级数据。",
+      "group": "G-SABIC",
+      "ownership": "SABIC 全资/控股附属（以最新年报为准，待核验具体持股）",
+      "established": "2000 年代设立，2004 年一期投产（待核验具体日期）",
+      "hq": "Jubail, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Al-Jubail Industrial City（东部省）",
+      "product_page": "SABIC 产品页（集团层面）",
+      "website": "https://www.samsungena.com/en/business/project-template?idx=57",
+      "official_channels": [
+        {
+          "channel": "SABIC 官方询盘页（表单，官网未公开总机）",
+          "value": "https://www.sabic.com/en/contact",
+          "status": "已核验（2026-10-20 全文读取；仅在线表单）"
+        },
+        {
+          "channel": "SABIC 全球销售办公室名录（官方 PDF，含中国区）",
+          "value": "https://www.sabic.com/en/about/locations/sales-office",
+          "status": "已核验（页面可访问并指向官方 Sales Offices 目录 PDF）"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG",
+          "grade": "聚酯级/纤维级",
+          "spec": "产品规格书未公开获取 — 待核验（SABIC 品牌规格请索取）",
+          "source": "需索取"
+        },
+        {
+          "product": "DEG / TEG",
+          "grade": "副产",
+          "spec": "公开规格未取得 — 待核验",
+          "source": "需索取"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "EG-3 新建 0.70 Mt/a（2022 商业运营）；另有既有 EG-1/EG-2（其中 JUPC2 约 640 kt/a）",
+        "unit": "Mt/a",
+        "detail": "CCFGroup：JUPC2 640 kt/a，2023-12 停车、计划 2024-03 复产后又于 2024-07 停车且复产日未定",
+        "caveat": "三套 EG 合计名义产能需以企业书面确认；运行状态波动明显"
+      },
+      "process": "EO/EG，工艺许可方为 Scientific Design（SABIC 合资公司）；EPC 为 Samsung E&A（SAMSUNG E&A 页面：世界最大 EO/EG 装置之一，700 kt/a MEG）",
+      "evidence": [
+        {
+          "id": "E6",
+          "type": "EPC 承包方项目页",
+          "grade": "直接",
+          "src": "S6",
+          "text": "SAMSUNG E&A 项目页：Client = Jubail United Petrochemical Company (JUPC)，Capacity EG 700,000 MTPA，Completion 2021，Services E·P·C",
+          "conf": "高"
+        },
+        {
+          "id": "E7",
+          "type": "官方新闻稿转述",
+          "grade": "直接",
+          "src": "S7",
+          "text": "SABIC 新闻稿（2021-11-17）：manufacturing affiliate United 的 EG Plant-3 initial startup，估计年产 700,000 吨 MEG",
+          "conf": "高"
+        },
+        {
+          "id": "E8",
+          "type": "交易所文件/商业运营",
+          "grade": "直接",
+          "src": "S9",
+          "text": "EOG Asia/Argaam（2022-10-18）：SABIC 宣布 Jubail MEG 装置开始商业运营，700,000 t/y，2021 年晚期试车，Tadawul 备案",
+          "conf": "高"
+        },
+        {
+          "id": "E9",
+          "type": "装置级运行数据",
+          "grade": "直接",
+          "src": "S5",
+          "text": "CCFGroup：JUPC2 640 kt/a，2024 年多次停车",
+          "conf": "中"
+        },
+        {
+          "id": "E10",
+          "type": "EPC 历史记录",
+          "grade": "直接",
+          "src": "S10",
+          "text": "Toyo Engineering（2005）：为 UNITED 在建 630,000 MTPA EG 装置",
+          "conf": "高"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 9001 / 14001 / 45001",
+          "status": "待核验 — 需 JUPC 工厂级证书"
+        }
+      ],
+      "export_info": "产品经 SABIC 全球销售网络出口，中国为主要目的地之一（SABIC 官方称物流枢纽覆盖亚洲）。",
+      "risks": [
+        "EG-3 为新装置，需确认当前负荷与合格率",
+        "既有 JUPC2 装置运行不稳定（2024 年长期停车）"
+      ],
+      "open_questions": [
+        "QS-05",
+        "QS-06",
+        "QS-07"
+      ]
+    },
+    {
+      "id": "C-YANSAB",
+      "rank": 3,
+      "legal_name": "Yanbu National Petrochemical Company (Yansab)",
+      "legal_name_ar": "شركة ينبع الوطنية للبتروكيماويات",
+      "cn_name": "延布国家石化公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（SABIC 附属，上市公司）",
+      "grade": "A",
+      "grade_reason": "Yansab 官网『Products』页以企业自身名义列出 MEG 700 KTA、DEG 65 KTA、TEG 5 KTA 的装置产能表；Toyo Engineering（EPC 方）2005 年公告称其为『世界最大 Yansab 乙二醇装置 700,000 MTPA』；Yansab 官网公布官方地址、电话与传真。",
+      "group": "G-SABIC",
+      "ownership": "SABIC 持股（2025 年报摘要称 51%；维基旧资料称 55%+10% 关联方，存在差异 — 待核验年报原文）",
+      "established": "2006-02-11（商业运营 2010-03-01）",
+      "hq": "P.O. Box 31396, Yanbu Industrial City 41912, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Yanbu Industrial City（延布工业城，麦地那省，红海岸）",
+      "product_page": "https://www.yansab.com.sa/en/products",
+      "website": "https://www.yansab.com.sa/en",
+      "official_channels": [
+        {
+          "channel": "公司总机/联系页",
+          "value": "Tel +966 14 325 9000；Fax +966 14 325 9502",
+          "status": "已核验（官网 Contact Us 页）"
+        },
+        {
+          "channel": "邮箱",
+          "value": "shares@yansab.sabic.com（股东/投资者关系用途）",
+          "status": "已核验；购货询盘邮箱官网未列 — 待核验"
+        },
+        {
+          "channel": "官网联系页",
+          "value": "https://www.yansab.com.sa/en/our-company/contact-us",
+          "status": "已核验"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG",
+          "grade": "SABIC 牌号（聚酯纤维/瓶级 PET 用途）",
+          "spec": "官网仅给用途与产能；详细规格待索取 COA/规格书",
+          "source": "S4b"
+        },
+        {
+          "product": "DEG 65 KTA / TEG 5 KTA",
+          "grade": "副产",
+          "spec": "待核验",
+          "source": "S4b"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "0.70",
+        "unit": "Mt/a（KTA 700）",
+        "detail": "官网产能表：Ethylene 1,300 / MEG 700 / DEG 65 / TEG 5 (KTA)",
+        "caveat": "名义产能；2024 年曾有 EG 装置计划性停车检修与提前复产（Argaam 报道）"
+      },
+      "process": "EO/EG，Scientific Design 工艺（Toyo 公告：基于 Scientific Design 最新技术）；EPC 为东洋工程（lump-sum turnkey）",
+      "evidence": [
+        {
+          "id": "E11",
+          "type": "企业官网产能表",
+          "grade": "直接",
+          "src": "S4b",
+          "text": "Yansab Products 页：Mono Ethylene Glycol 700 KTA；Di Ethylene Glycol 65；Tri Ethylene Glycol 5；Ethylene Glycols 用途=聚酯纤维与PET软包装",
+          "conf": "高"
+        },
+        {
+          "id": "E12",
+          "type": "EPC 承包商公告",
+          "grade": "直接",
+          "src": "S10",
+          "text": "Toyo Engineering（2005-07-19）：SABIC 授予 Yansab 700,000 MTPA EG 装置；Scientific Design 技术；TOYO 第4套沙特 EG 订单",
+          "conf": "高"
+        },
+        {
+          "id": "E13",
+          "type": "交易所披露/运行事件",
+          "grade": "直接",
+          "src": "S11",
+          "text": "Argaam：Yansab 计划 25 天 EG 装置检修（Tadawul 声明），另一则称提前完成检修并复产",
+          "conf": "高"
+        },
+        {
+          "id": "E14",
+          "type": "官方贸易救济名单",
+          "grade": "间接",
+          "src": "S4",
+          "text": "欧盟反倾销名单含 Yansab，11.1%",
+          "conf": "中"
+        },
+        {
+          "id": "E15",
+          "type": "公开认证",
+          "grade": "直接",
+          "src": "S12",
+          "text": "CEM 案例研究（2022）：YANSAB ISO 50001 能源管理体系案例",
+          "conf": "中"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 50001（能源管理）",
+          "status": "公开案例研究提及 — 证书号待核验"
+        },
+        {
+          "cert": "ISO 9001 / 14001 / 45001",
+          "status": "待核验 — 官网 EHSSQ 页面与年报应载明"
+        }
+      ],
+      "export_info": "Yansab 为出口导向型装置，产品通过 SABIC 销售渠道；欧盟曾对其 MEG 征收 11.1% 反倾销税（2021），出口欧盟路径需关注。",
+      "risks": [
+        "装置位于红海岸，经苏伊士/红海航线至中国，受红海局势与运费影响",
+        "SABIC 持股比例资料存在矛盾（51% vs 65% 口径）"
+      ],
+      "open_questions": [
+        "QS-08",
+        "QS-09",
+        "QS-10",
+        "QS-11"
+      ]
+    },
+    {
+      "id": "C-ZAMIL-SIPCHEM",
+      "rank": 4,
+      "legal_name": "Sahara International Petrochemical Company (Sipchem / Sahapco)",
+      "legal_name_ar": "الشركة السعودية العالمية للبتروكيماويات",
+      "cn_name": "撒哈拉国际石化公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（Zamil 集团旗下，上市）",
+      "grade": "B",
+      "grade_reason": "Sipchem 为 JV 企业，其在 Jubail 拥有甲醇、BDO/THF、醋酸、VAM、EVA、PBT 等装置（工业信息源与Affiliates 页面摘要可证）。但本次公开检索未取得 Sipchem 自有 MEG 装置的装置级证据；其 2006 年公布的大烯烃/衍生品综合体产品清单中亦未见 MEG（仅 HDPE/LDPE/PP/EVA）。故判定为『产品业务关联待核验』而非直接制造证据。",
+      "group": "G-ZAMIL",
+      "ownership": "Zamil Group Holding 旗下；Tadawul 2310 上市",
+      "established": "1999-12-22",
+      "hq": "Al Khobar, Eastern Province, Saudi Arabia（亦有大庆/Jubail 办公）",
+      "country": "Saudi Arabia",
+      "site": "Al-Jubail Industrial City",
+      "product_page": "https://www.sipchem.com/en/affiliate-integration（ affiliates 列表：甲醇/BDO/醋酸/VAM/EVA/PBT 等；无 MEG 专设附属）",
+      "website": "https://www.sipchem.com",
+      "official_channels": [
+        {
+          "channel": "官网 Contact Us（表单）",
+          "value": "https://www.sipchem.com/en/contact-us",
+          "status": "可访问页面，但存在 Cloudflare 验证；电话/邮箱需企业确认"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG",
+          "grade": "未确认",
+          "spec": "未确认",
+          "source": "待核验"
+        },
+        {
+          "product": "甲醇 / BDO / THF / 醋酸 / VAM / EVA / PBT（已确认装置）",
+          "grade": "工业级",
+          "spec": "与目标品不同类",
+          "source": "S13"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "未获证 — 待核验",
+        "unit": "—",
+        "detail": "检索中未见 Sipchem 名义 MEG 产能；其 Wahaj/大烯烃综合体未将 MEG 列入产品清单",
+        "caveat": "若存在 MEG 装置，应在 Kadoba/Tumadur 等附属中 — 待企业确认"
+      },
+      "process": "未获取",
+      "evidence": [
+        {
+          "id": "E16",
+          "type": "企业附属公司列表",
+          "grade": "间接",
+          "src": "S13",
+          "text": "Sipchem Affiliates 页（检索摘要）：International Methanol Company—甲醇；International Diol Company—BDO/THF；未见 MEG 生产附属",
+          "conf": "中"
+        },
+        {
+          "id": "E17",
+          "type": "项目公开资料",
+          "grade": "间接",
+          "src": "S14",
+          "text": "Arab News 2006：Sipchem 烯烃与衍生品综合体 = 1.3 Mt/a 乙烯/丙烯 → 800 kt/a 聚合物（HDPE/LDPE/PP/EVA），产品清单未见 MEG",
+          "conf": "中"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 9001 等",
+          "status": "待核验（企业级）"
+        }
+      ],
+      "export_info": "Sipchem 为出口型，产品主要销往亚洲；MEG 出口能力未获证。",
+      "risks": [
+        "被第三方名录列为『区域 MEG 供应商』时，极可能是贸易/转售或与 Wahaj 项目混淆"
+      ],
+      "open_questions": [
+        "QS-12",
+        "QS-13",
+        "QS-14"
+      ]
+    },
+    {
+      "id": "C-PETRORABIGH",
+      "rank": 5,
+      "legal_name": "Rabigh Refining and Petrochemical Company (Petro Rabigh)",
+      "legal_name_ar": "شركة رابغ للتكرير والبتروكيماويات",
+      "cn_name": "拉比格炼化公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（Aramco/住友化学合资，上市）",
+      "grade": "A",
+      "grade_reason": "Petro Rabigh 官网『Our Products』产品页明确声明：Petro Rabigh produces 600 KTA of Mono Ethylene Glycol (MEG)。Argaam 亦将其列为沙特 MEG 生产商之一。",
+      "group": "G-ARAMCO-SABIC",
+      "ownership": "Saudi Aramco 与 Sumitomo Chemical 合资（持股比例待核验最新年报）",
+      "established": "2005（商业运营 2009）",
+      "hq": "Rabigh, Makkah Province, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Rabigh（红海岸炼化一体化基地）",
+      "product_page": "https://www.petrorabigh.com/en/OurProducts/Monomer/Pages/MonoEthyleneGlycolMEG.aspx",
+      "website": "https://www.petrorabigh.com/en",
+      "official_channels": [
+        {
+          "channel": "官网产品页/联系入口",
+          "value": "https://www.petrorabigh.com/en",
+          "status": "存在；直连抓取被 WAF 拦截（403），需企业确认联系邮箱"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG",
+          "grade": "聚酯级（用途：聚酯纤维、PET 瓶片/膜、防冻液、制动液）",
+          "spec": "官网未列详细指标 — 待索取",
+          "source": "S15"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "0.60",
+        "unit": "KTA 600",
+        "detail": "官网原文：produces 600 KTA of MEG",
+        "caveat": "名义产能；需确认当前装置运行与可售量"
+      },
+      "process": "炼化一体化（石脑油/乙烷）→ 乙烯 → EO/EG；具体许可方待核验",
+      "evidence": [
+        {
+          "id": "E18",
+          "type": "官网产品页（WAF拦截，索引原文）",
+          "grade": "直接",
+          "src": "S15",
+          "text": "Petro Rabigh MEG 产品页：『Petro Rabigh produces 600 KTA of Mono Ethylene Glycol (MEG)』",
+          "conf": "高（页面被WAF拦截直连，以检索索引原文为准；需二次截图存档）"
+        },
+        {
+          "id": "E19",
+          "type": "媒体/数据商名单",
+          "grade": "间接",
+          "src": "S4",
+          "text": "Argaam：Yansab、Saudi Kayan、Petro Rabigh、YANPET、Jubail United 在沙特生产 MEG",
+          "conf": "中"
+        },
+        {
+          "id": "E20",
+          "type": "交易所年报",
+          "grade": "直接",
+          "src": "S16",
+          "text": "Petro Rabigh 2024 年报（Tadawul 存档）应列 MEG 产能 — 待下载核验",
+          "conf": "待下载"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 9001/14001/45001",
+          "status": "待核验"
+        }
+      ],
+      "export_info": "Petro Rabigh 产品经其营销安排（含住友化学渠道）销售；出口中国需确认具体供货方主体。",
+      "risks": [
+        "官网被 WAF 保护，直连核验受限",
+        "需确认营销权归属：是 Petro Rabigh 直接销售还是住友化学代理"
+      ],
+      "open_questions": [
+        "QS-15",
+        "QS-16",
+        "QS-17"
+      ]
+    },
+    {
+      "id": "C-YANPET",
+      "rank": 6,
+      "legal_name": "Saudi Yanbu Petrochemical Company (Yanpet)",
+      "legal_name_ar": "شركة ينبع السعودية للبتروكيماويات",
+      "cn_name": "沙特延布石化公司",
+      "entity_type": "JV_MANUFACTURER",
+      "entity_type_label": "合资制造企业（ExxonMobil/SABIC 各50%）",
+      "grade": "A",
+      "grade_reason": "Toyo Engineering 官方公告明确：YANPET 在 Yanbu 的 420,000 MTPA EG 装置由 TOYO 于 2000 年建成；ICIS 报道 Yanpet 拥有 520,000 吨/年 MEG 装置（含检修）；CCFGroup 列出 Yanpet1 380 kt/a 装置并记录 2024 年运行事件；Argaam 将其列为沙特 MEG 生产商。",
+      "group": "G-ARAMCO-SABIC",
+      "ownership": "SABIC 50% / ExxonMobil（Mobil Yanbu Petrochemical）50%",
+      "established": "1980（1985 投产）",
+      "hq": "Yanbu, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Yanbu Industrial City（延布，红海岸）",
+      "product_page": "未取得独立官网产品页 — 待核验",
+      "website": "https://www.sabic.com（集团口径）",
+      "official_channels": [
+        {
+          "channel": "SABIC 官方询盘页（表单，官网未公开总机）",
+          "value": "https://www.sabic.com/en/contact",
+          "status": "已核验（2026-10-20 全文读取；仅在线表单）"
+        },
+        {
+          "channel": "ExxonMobil 渠道",
+          "value": " ExxonMobil 化工销售网络",
+          "status": "待核验具体联络点"
+        },
+        {
+          "channel": "SABIC 全球销售办公室名录（官方 PDF，含中国区）",
+          "value": "https://www.sabic.com/en/about/locations/sales-office",
+          "status": "已核验（页面可访问并指向官方 Sales Offices 目录 PDF）"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG",
+          "grade": "聚酯级",
+          "spec": "公开规格未取得 — 待核验",
+          "source": "待索取"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "约 0.38–0.52（装置口径不一）",
+        "unit": "kt/a",
+        "detail": "TOYO：Yanpet EG 装置 420,000 MTPA（2000）；ICIS：520,000 t/y MEG 装置；CCFGroup：Yanpet1 380 kt/a；另有 Frem 资料称 Yanpet-2 新增 410 kt/a 使 EG 能力达 660 kt/y（口径差异大）",
+        "caveat": "公开产能口径互相矛盾，必须以企业确认；2024 年多次停车"
+      },
+      "process": "乙烷裂解 → EO/EG（TOYO/科学设计体系）；细节待核验",
+      "evidence": [
+        {
+          "id": "E21",
+          "type": "EPC 官方公告",
+          "grade": "直接",
+          "src": "S10",
+          "text": "Toyo（2005）：YANPET Yanbu 的 420,000 MTPA EG 装置由 TOYO 于 2000 年建成",
+          "conf": "高"
+        },
+        {
+          "id": "E22",
+          "type": "行业媒体",
+          "grade": "直接",
+          "src": "S17",
+          "text": "ICIS：Saudi's Yanpet to shut 520,000 tonne/year MEG unit in mid-May",
+          "conf": "中高"
+        },
+        {
+          "id": "E23",
+          "type": "装置级运行",
+          "grade": "直接",
+          "src": "S5",
+          "text": "CCFGroup：Yanpet1 380 kt/a，2024 年 1 月停车 2 月复产、8 月停车 10 月复产、12 月再检修",
+          "conf": "中"
+        },
+        {
+          "id": "E24",
+          "type": "媒体名单",
+          "grade": "间接",
+          "src": "S4",
+          "text": "Argaam 列 YANPET 为沙特 MEG 生产商；欧盟名单含 YANPET",
+          "conf": "中"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 50001 等",
+          "status": "待核验（50001insights 有 YANPET 案例，需下载核验）"
+        }
+      ],
+      "export_info": "通过 SABIC 与 ExxonMobil 渠道出口；欧盟反倾销名单在列。",
+      "risks": [
+        "产能口径矛盾（380/420/520/660 kt/a）",
+        "无独立官网，需通过集团渠道核验工厂身份"
+      ],
+      "open_questions": [
+        "QS-18",
+        "QS-19",
+        "QS-20"
+      ]
+    },
+    {
+      "id": "C-KAYAN",
+      "rank": 7,
+      "legal_name": "Saudi Kayan Petrochemical Company",
+      "legal_name_ar": "شركة كيان السعودية للبتروكيماويات",
+      "cn_name": "沙特凯扬石化公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（SABIC 参股，上市）",
+      "grade": "A",
+      "grade_reason": "Industrial Info Resources 项目报道详列 Saudi Kayan EG 装置设计：550 kt/a EO → 700 kt/a MEG + 58 kt/a DEG + 3 kt/a TEG，工艺许可方 Scientific Design，EPC 为 CTCI，2007-06 开工；Argaam 亦列其为沙特 MEG 生产商；其年报 PDF 链接存在（待下载核验产品表）。注：首要证据为 EPC/装置设计项目记录（中等置信），建议以下载年报产品表补强至『高』。",
+      "group": "G-SABIC",
+      "ownership": "SABIC 35%（项目期口径）+ 沙特工业投资/公众；最新持股待核验",
+      "established": "2007 年 IPO；2009–2010 投产",
+      "hq": "Jubail, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Al-Jubail Industrial City（东部省）",
+      "product_page": "https://www.saudikayan.com（年报 PDF 可下载）",
+      "website": "https://www.saudikayan.com",
+      "official_channels": [
+        {
+          "channel": "官网",
+          "value": "https://www.saudikayan.com",
+          "status": "存在；购买询盘邮箱待核验"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG",
+          "grade": "聚酯级",
+          "spec": "公开规格未取得 — 待核验",
+          "source": "待索取"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "0.70",
+        "unit": "kt/a",
+        "detail": "设计：550 kt/a EO → 700 kt/a MEG；base-load 模式下抽提 163 kt/a EO 外售后，MEG 493 / DEG 40 / TEG 2 kt/a",
+        "caveat": "两种运行模式产能不同，实际可售 MEG 取决于模式切换"
+      },
+      "process": "Scientific Design EO/EG 工艺；装置含 EO 反应段、CO2 脱除段、EO 汽提再吸收、乙二醇反应段、脱水回收段、乙二醇精制段",
+      "evidence": [
+        {
+          "id": "E25",
+          "type": "EPC/装置设计项目记录",
+          "grade": "直接",
+          "src": "S18",
+          "text": "Industrial Info（2008）：Saudi Kayan EG 装置设计 700,000 t/yr MEG、58,000 DEG、3,000 TEG；许可方 Scientific Design；EPC CTCI；2007-06 开工",
+          "conf": "中高"
+        },
+        {
+          "id": "E26",
+          "type": "第三方转述（媒体名单）",
+          "grade": "间接",
+          "src": "S4",
+          "text": "Argaam：Saudi Kayan 在沙特生产 MEG",
+          "conf": "中"
+        },
+        {
+          "id": "E27",
+          "type": "年报（待下载核验）",
+          "grade": "直接",
+          "src": "S19",
+          "text": "Saudi Kayan 2024 年报 PDF 链接存在 — 待下载核验产品/产能表",
+          "conf": "待下载"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 9001 等",
+          "status": "待核验"
+        }
+      ],
+      "export_info": "出口型，产品经 SABIC 及自营销售；需确认对华供货主体。",
+      "risks": [
+        "EO 外售模式影响 MEG 实际可供量",
+        "年报资料需下载核验"
+      ],
+      "open_questions": [
+        "QS-21",
+        "QS-22",
+        "QS-23"
+      ]
+    },
+    {
+      "id": "C-SADARA",
+      "rank": 9,
+      "legal_name": "Sadara Chemical Company",
+      "legal_name_ar": "شركة صدارة للكيميائيات",
+      "cn_name": "萨达拉化学公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（Aramco/Dow 合资）— 非目标产品",
+      "grade": "C",
+      "grade_reason": "Sadara 官网称其为王国首家生产『Glycol Products』的企业，但产品页实际列示的是丙二醇、丁基乙二醇醚、聚醚多元醇等；26 套装置中未见 MEG（MEG 需要 EO/EG 装置）。属易混淆的『glycol』类，非 MEG 制造商。",
+      "group": "G-DOW-ARAMCO",
+      "ownership": "Saudi Aramco 与 Dow 合资（Dow 股权后转由 Aramco 等承接，待核验）",
+      "established": "2011-10",
+      "hq": "Jubail, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Al-Jubail Industrial City（PlasChem Park 旁）",
+      "product_page": "https://www.sadara.com/products",
+      "website": "https://www.sadara.com",
+      "official_channels": [
+        {
+          "channel": "官网",
+          "value": "https://www.sadara.com",
+          "status": "已核验"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "丙二醇/PG、丁基乙二醇醚、聚醚多元醇（非 MEG）",
+          "grade": "—",
+          "spec": "—",
+          "source": "S20"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "0（非 MEG 生产商）",
+        "unit": "—",
+        "detail": "26 套装置，总产能 >3 Mt/a 化学品与塑料",
+        "caveat": "—"
+      },
+      "process": "—",
+      "evidence": [
+        {
+          "id": "E28",
+          "type": "企业官网",
+          "grade": "直接（反证）",
+          "src": "S20",
+          "text": "Sadara Products 页：Other plants produce Elastomers, Ethylene Amines, Propylene Glycol, Butyl Glycol Ether and Solution PE；首家常产『Glycol Products』指 Polyols/PG 类",
+          "conf": "高"
+        }
+      ],
+      "certifications": [
+        {
+          "cert": "ISO 系列",
+          "status": "待核验"
+        }
+      ],
+      "export_info": "产品销往 100+ 国家。",
+      "risks": [
+        "极易被关键词检索误判为 MEG 供应商"
+      ],
+      "open_questions": [
+        "QS-24"
+      ]
+    },
+    {
+      "id": "C-PETROKEMYA",
+      "rank": 10,
+      "legal_name": "Arabian Petrochemical Company (Petrokemya)",
+      "legal_name_ar": "شركة بتروكيميا العربية",
+      "cn_name": "阿拉伯石化公司",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（SABIC 全资附属）— 无 MEG 证据",
+      "grade": "C",
+      "grade_reason": "Petrokemya 位于 Jubail，产品为乙烯、聚乙烯、丁烯-1、丙烯、VCM、PVC、ABS 等；与 SHARQ 共建乙烯装置，但公开产品清单未见 MEG。部分资料将其列入反倾销名单（Argaam 原文），属名单口径混杂，不能据此认定其生产 MEG。",
+      "group": "G-SABIC",
+      "ownership": "SABIC 全资附属",
+      "established": "1981（1985 投产）",
+      "hq": "Jubail, Saudi Arabia",
+      "country": "Saudi Arabia",
+      "site": "Al-Jubail Industrial City",
+      "product_page": "未取得官网产品页 — 待核验",
+      "website": "https://www.sabic.com",
+      "official_channels": [
+        {
+          "channel": "SABIC 官方询盘页（表单，官网未公开总机）",
+          "value": "https://www.sabic.com/en/contact",
+          "status": "已核验（2026-10-20 全文读取；仅在线表单）"
+        },
+        {
+          "channel": "SABIC 全球销售办公室名录（官方 PDF，含中国区）",
+          "value": "https://www.sabic.com/en/about/locations/sales-office",
+          "status": "已核验（页面可访问并指向官方 Sales Offices 目录 PDF）"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "乙烯/聚乙烯/丁烯-1/丙烯/VCM/PVC/ABS（非 MEG）",
+          "grade": "—",
+          "spec": "—",
+          "source": "S21"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "未获证",
+        "unit": "—",
+        "detail": "—",
+        "caveat": "—"
+      },
+      "process": "—",
+      "evidence": [
+        {
+          "id": "E29",
+          "type": "行业资料",
+          "grade": "间接",
+          "src": "S21",
+          "text": "KNAK 沙特石化装置汇编：PETROKEMYA 产品为 Ethylene/Polyethylene/Butene-1/Propylene/VCM/PVC/ABS，未见 EG",
+          "conf": "中"
+        },
+        {
+          "id": "E30",
+          "type": "官网",
+          "grade": "间接",
+          "src": "S22",
+          "text": "offshore-technology 综合体概况：Petrokemya 主要产品 ethylene、ethylbenzene、styrene、EDC、polyethylene 等",
+          "conf": "中"
+        }
+      ],
+      "certifications": [],
+      "export_info": "—",
+      "risks": [
+        "反倾销名单口径易造成误判"
+      ],
+      "open_questions": [
+        "QS-25"
+      ]
+    },
+    {
+      "id": "C-SPDC",
+      "rank": 8,
+      "legal_name": "SPDC LTD.（沙特石化开发公司，日本联合体平台）",
+      "cn_name": "SPDC 有限公司（日本）",
+      "entity_type": "AFFILIATE_SALES",
+      "entity_type_label": "附属公司销售主体（非工厂）",
+      "grade": "D",
+      "grade_reason": "SPDC 自身不拥有生产装置；其官方说明：SPDC 与 SABIC 各出资 50% 于 SHARQ，SPDC 按约收购并营销 SHARQ 约 1/3 产品（主要销往中国、印度、日本、东南亚）。应作为 SHARQ 的销售窗口识别，而不是生产企业。",
+      "group": "G-SPDC",
+      "ownership": "日本企业联合体（旭化成、三井、三菱等） + SABIC 50/50 平台",
+      "established": "—",
+      "hq": "Tokyo, Japan",
+      "country": "Japan",
+      "site": "无自有生产装置",
+      "product_page": "https://spdc.co.jp/english/ethylene/index.html",
+      "website": "https://spdc.co.jp/english/",
+      "official_channels": [
+        {
+          "channel": "官网",
+          "value": "https://spdc.co.jp/english/company/sharq_summary/",
+          "status": "已核验"
+        }
+      ],
+      "products_specs": [
+        {
+          "product": "MEG（营销 SHARQ 产品）",
+          "grade": "—",
+          "spec": "应用 SHARQ 规格",
+          "source": "S3"
+        }
+      ],
+      "capacity": {
+        "meg_mtpa": "0（自身）",
+        "unit": "—",
+        "detail": "作为营销方承接 SHARQ 约 1/3 产量",
+        "caveat": "—"
+      },
+      "process": "—",
+      "evidence": [
+        {
+          "id": "E31",
+          "type": "企业官网",
+          "grade": "直接",
+          "src": "S3c",
+          "text": "SPDC：『Product sales: All products are received and marketed by SPDC and SABIC』；『SPDC receives almost one-third of SHARQ products and markets them mainly in China, India, Japan and Southeast Asia』",
+          "conf": "高"
+        }
+      ],
+      "certifications": [],
+      "export_info": "主要销往中国、印度、日本、东南亚（含韩国、台湾地区）。",
+      "risks": [
+        "以『生产商』身份被推荐的概率高；实为销售主体"
+      ],
+      "open_questions": [
+        "QS-26"
+      ]
+    }
+  ],
+  "trade_notes": [
+    {
+      "type": "平台挂牌/贸易商",
+      "desc": "ECHEMI、LookChem 等 B2B 平台将以生产企业名义挂牌的条目（如 Yanbu National Petrochemical Company 在 ECHEMI 上以『Chemical Trading Company』身份出现）— 平台身份标签不等于制造证据。",
+      "grade": "D"
+    },
+    {
+      "type": "第三方供应商名录",
+      "desc": "Petrochemical.com 等聚合站点的『Glycols (MEG/DEG/TEG) Supplier』标签，属目录信息，不作制造证据。",
+      "grade": "D"
+    },
+    {
+      "type": "代理/贸易",
+      "desc": "未取得任何沙特本地 MEG 贸易商/代理的已核验身份；MEG 大宗品通常由生产方或其股东营销方直供，中间商加价与真实性风险高。",
+      "grade": "D"
+    }
+  ],
+  "market_context": [
+    {
+      "claim": "2024 年中国 MEG 进口 655.4 万吨，同比下降 8.3%；沙特为第一大来源国 338.2 万吨（占 52%）",
+      "source": "S23",
+      "conf": "中高（CCFGroup/ChinaTexnet 统计）"
+    },
+    {
+      "claim": "2024 年沙特多套装置因负现金流减产/停车，如 Yanpet1 与 JUPC2",
+      "source": "S23",
+      "conf": "中高"
+    },
+    {
+      "claim": "2025 年来自沙特、科威特、阿曼、伊朗、阿联酋的进口合计占 66.3%（约 512 万吨），其中沙特约 55%",
+      "source": "S24",
+      "conf": "中（来源为期货公司研究，需以海关数据交叉核验）"
+    }
+  ],
+  "questions": [
+    {
+      "id": "QS-01",
+      "company": "C-SHARQ",
+      "q": "SHARQ 当前 MEG 各线（Sharq1/2/3/4）的最新名义产能与近 12 个月实际运行天数、平均负荷率？"
+    },
+    {
+      "id": "QS-02",
+      "company": "C-SHARQ",
+      "q": "本次是否由 SABIC 或 SPDC 作为签约主体？请明确对华 MEG 报价的合同主体、结算币种与发运港。"
+    },
+    {
+      "id": "QS-03",
+      "company": "C-SHARQ",
+      "q": "能否提供 SHARQ 工厂层面的 ISO 9001/14001/45001 证书编号与有效期（非集团证书）？"
+    },
+    {
+      "id": "QS-04",
+      "company": "C-SHARQ",
+      "q": "MEG 出厂 COA 的常规检测项与规格上限（APHA、水分、铁、酸度、紫外线透过率）？UV 透过率（220/275/350 nm）指标请一并提供。"
+    },
+    {
+      "id": "QS-05",
+      "company": "C-JUPC",
+      "q": "EG-3（700 kt/a）自 2022 年商业运营以来是否有累计运行数据/负荷率？当前是否有出口中国的可分配量？"
+    },
+    {
+      "id": "QS-06",
+      "company": "C-JUPC",
+      "q": "JUPC EG-1/EG-2/EG-3 三套装置的合计名义产能与产品牌号清单？"
+    },
+    {
+      "id": "QS-07",
+      "company": "C-JUPC",
+      "q": "JUPC 是否有独立法人联系窗口，还是全部由 SABIC 统一销售？如为后者，请给出 SABIC 亚洲/中国区 MEG 销售对接人。"
+    },
+    {
+      "id": "QS-08",
+      "company": "C-YANSAB",
+      "q": "Yansab MEG 装置当前负荷与计划检修窗口（近年是否有 25 天级检修）？"
+    },
+    {
+      "id": "QS-09",
+      "company": "C-YANSAB",
+      "q": "Yansab 的采购询盘应发往哪个邮箱/部门（官网仅列 shares@yansab.sabic.com）？"
+    },
+    {
+      "id": "QS-10",
+      "company": "C-YANSAB",
+      "q": "Yansab 的 SABIC 持股比例以 2025 年报为准是多少（公开资料存在 51% 与 65% 两种口径）？"
+    },
+    {
+      "id": "QS-11",
+      "company": "C-YANSAB",
+      "q": "经红海/苏伊士至中国的典型发运周期、常用装运港与近期运费水平？"
+    },
+    {
+      "id": "QS-12",
+      "company": "C-ZAMIL-SIPCHEM",
+      "q": "Sipchem 及其附属（International Diol、Wahaj 等）是否拥有 MEG/EO 装置？如有，请提供装置名称、地点、产能与投产时间。"
+    },
+    {
+      "id": "QS-13",
+      "company": "C-ZAMIL-SIPCHEM",
+      "q": "若 Sipchem 不生产 MEG，其是否从事 MEG 转售/代理？此时其身份为贸易商而非制造商。"
+    },
+    {
+      "id": "QS-14",
+      "company": "C-ZAMIL-SIPCHEM",
+      "q": "Sipchem 官网 affililates 列表的历史版本中是否曾列 MEG 相关附属？请提供 2023–2025 年报的产品表。"
+    },
+    {
+      "id": "QS-15",
+      "company": "C-PETRORABIGH",
+      "q": "Petro Rabigh 600 KTA MEG 装置当前运行状态与可售量；营销由 Petro Rabigh 直营还是住友化学代理？"
+    },
+    {
+      "id": "QS-16",
+      "company": "C-PETRORABIGH",
+      "q": "请提供 MEG 产品规格书（COA 常规项）与装运包装（散装/ISO tank/桶）选项。"
+    },
+    {
+      "id": "QS-17",
+      "company": "C-PETRORABIGH",
+      "q": "Petro Rabigh 工厂级 ISO 9001/14001/45001 证书编号与有效期？"
+    },
+    {
+      "id": "QS-18",
+      "company": "C-YANPET",
+      "q": "Yanpet MEG 名义产能究竟是 380 / 420 / 520 / 660 kt/a 中哪一个？请提供装置清单与设计能力文件。"
+    },
+    {
+      "id": "QS-19",
+      "company": "C-YANPET",
+      "q": "Yanpet 是否有独立官网与联系窗口？采购应通过 SABIC 还是 ExxonMobil 渠道？"
+    },
+    {
+      "id": "QS-20",
+      "company": "C-YANPET",
+      "q": "Yanpet 是否出具工厂级质量体系证书？能否提供近 12 个月 COA 样本？"
+    },
+    {
+      "id": "QS-21",
+      "company": "C-KAYAN",
+      "q": "Saudi Kayan 当前 EO 外售与 MEG 生产模式切换比例？近 12 个月 MEG 实际产量？"
+    },
+    {
+      "id": "QS-22",
+      "company": "C-KAYAN",
+      "q": "请提供 2024/2025 年报中产品产能表页面（PDF 页码），以核验 700 kt/a MEG 口径。"
+    },
+    {
+      "id": "QS-23",
+      "company": "C-KAYAN",
+      "q": "Kayan 对华销售是否经 SABIC？签约主体、付款方式（LC/TT）与最小起订量？"
+    },
+    {
+      "id": "QS-24",
+      "company": "C-SADARA",
+      "q": "Sadara 的『Glycol Products』是否包含 MEG？（行业判断为否，仅含 PG/丁基乙二醇醚/聚醚多元醇）请书面澄清以免误采。"
+    },
+    {
+      "id": "QS-25",
+      "company": "C-PETROKEMYA",
+      "q": "Petrokemya 是否曾拥有 EG 装置（历史）？当前是否有 MEG 产销？"
+    },
+    {
+      "id": "QS-26",
+      "company": "C-SPDC",
+      "q": "SPDC 营销 SHARQ MEG 的合同格式、贸易术语（FOB/CFR）与对华最低批量？"
+    },
+    {
+      "id": "QS-00",
+      "company": "通用",
+      "q": "采购批量、到岸港、结算方式、认证与包装要求请先确认，以便统一询盘口径。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "SABIC 2022 Annual Report — Petrochemicals（2022 年 United 第三套 EG 装置商业运营，700,000 mt MEG）",
+      "url": "https://www.sabic.com/en/reports/annual-2022/our-businesses/petrochemicals",
+      "date": "2023",
+      "access": "2026-10-20",
+      "status": "检索索引命中",
+      "note": "检索索引命中，直连超时"
+    },
+    {
+      "id": "S2",
+      "title": "SABIC News — SABIC Affiliate United Begins Startup Activities at Its New Ethylene Glycol Plant",
+      "url": "https://www.sabic.com/en/news/31184-sabic-affiliate-united-begins-startup-activities-at-its-new-ethylene-glycol-plant",
+      "date": "2021-11-17",
+      "access": "2026-10-20",
+      "status": "检索索引命中",
+      "note": "检索索引命中，直连 307 重定向"
+    },
+    {
+      "id": "S3",
+      "title": "SPDC — Profile of SHARQ（产能表、销售安排）",
+      "url": "https://spdc.co.jp/english/company/sharq_summary/",
+      "date": "2025 版",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验（HTTP 200 全文读取）"
+    },
+    {
+      "id": "S3b",
+      "title": "SPDC — Ethylene Glycol（MEG 典型物性表、工艺流程）",
+      "url": "https://spdc.co.jp/english/ethylene/index.html",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S3c",
+      "title": "SPDC — Our Business（SHARQ 产能 1.40 Mt MEG；SPDC 营销约 1/3 产品主要销往中国、印度、日本、东南亚）",
+      "url": "https://spdc.co.jp/english/about/index.html",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S4",
+      "title": "Argaam — Saudi Arabia files complaint to WTO about MEG anti-dumping duties（列 Yansab、Saudi Kayan、Sharq、YANPET、Petrokemya、JUPC）",
+      "url": "https://www.argaam.com/en/article/articledetail/id/1490717",
+      "date": "2021-08-20",
+      "access": "2026-10-20",
+      "status": "检索索引命中",
+      "note": "检索索引全文命中"
+    },
+    {
+      "id": "S4b",
+      "title": "Yansab — Products（MEG 700 KTA、DEG 65 KTA、TEG 5 KTA）",
+      "url": "https://www.yansab.com.sa/en/products",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验（HTTP 200 全文读取）"
+    },
+    {
+      "id": "S5",
+      "title": "CCFGroup / ChinaTexnet — China's MEG imports & exports in 2024（沙特分装置产能与运行状态）",
+      "url": "https://www.chinatexnet.com/textile-news/2025-02-17/1018122.html",
+      "date": "2025-02-17",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S6",
+      "title": "SAMSUNG E&A — JUPC UNITED EO/EG III Project（Client: JUPC，EG 700,000 MTPA，EPC）",
+      "url": "https://www.samsungena.com/en/business/project-template?idx=57",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S7",
+      "title": "Polyestertime 转引 Saudi Gazette — SABIC to build 700,000 metric tons plant（United 第三套 EG 装置、Scientific Design 技术、Samsung Engineering EPC）",
+      "url": "https://www.polyestertime.com/sabic-petrochemical-plant",
+      "date": "2018-01-02（原文 2017-12）",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S8",
+      "title": "MEES — Samsung To Build Sharq Ethylene Glycol Plant（700,000 t/y，Sharq III）",
+      "url": "https://archives.mees.com/issues/346/articles/14319",
+      "date": "2005-09-26",
+      "access": "2026-10-20",
+      "status": "检索索引命中",
+      "note": "检索索引命中"
+    },
+    {
+      "id": "S9",
+      "title": "EOG Asia — Sabic starts-up operations at Jubail MEG plant（700,000 t/y，2022-10 商业运营，Tadawul 备案）",
+      "url": "https://www.eog-asia.com/sabic-starts-up-operations-at-jubail-meg-plant/",
+      "date": "2022-10-18",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S10",
+      "title": "Toyo Engineering — Largest Scale Yansab Ethylene Glycol Plant awarded（700,000 MTPA；YANPET 420,000 MTPA；UNITED 630,000 MTPA）",
+      "url": "https://www.toyo-eng.com/jp/en/company/news/?n=1397",
+      "date": "2005-07-19",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S11",
+      "title": "Argaam — Yansab plans 25-day ethylene glycol plant shutdown / resumes ops",
+      "url": "https://www.argaam.com/en/article/articledetail/id/1874631",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "检索索引命中",
+      "note": "检索索引命中"
+    },
+    {
+      "id": "S12",
+      "title": "Clean Energy Ministerial — ISO 50001 Case Study: YANSAB (Saudi Arabia)",
+      "url": "https://www.cleanenergyministerial.org/content/uploads/2022/09/cem-em-casestudy-yansab-saudiarabia.pdf",
+      "date": "2022",
+      "access": "2026-10-20",
+      "status": "待下载",
+      "note": "检索索引命中（PDF 待下载）"
+    },
+    {
+      "id": "S13",
+      "title": "Sipchem — Affiliates（International Methanol Co 甲醇；International Diol Co BDO/THF 等）",
+      "url": "https://www.sipchem.com/en/affiliate-integration",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "直连失败",
+      "note": "Cloudflare 403，检索索引摘要"
+    },
+    {
+      "id": "S14",
+      "title": "Arab News — Sipchem Launches Complex for Olefins, Derivatives（1.3 Mt 烯烃 → 800 kt 聚合物，产品清单无 MEG）",
+      "url": "https://www.arabnews.com/archive/291425",
+      "date": "2006-11-21",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S15",
+      "title": "Petro Rabigh — Mono Ethylene Glycol (MEG) 产品页（produces 600 KTA of MEG）",
+      "url": "https://www.petrorabigh.com/en/OurProducts/Monomer/Pages/MonoEthyleneGlycolMEG.aspx",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "直连失败",
+      "note": "直连 403（WAF），检索索引原文命中"
+    },
+    {
+      "id": "S16",
+      "title": "Petro Rabigh — Annual Report 2024（Tadawul 存档）",
+      "url": "https://www.saudiexchange.sa/Resources/fsPdf/921_418_2025-05-05_12-15-31_en.pdf",
+      "date": "2025-05-05",
+      "access": "2026-10-20",
+      "status": "待下载",
+      "note": "检索索引命中（PDF 待下载）"
+    },
+    {
+      "id": "S17",
+      "title": "ICIS — Saudi's Yanpet to shut 520,000 tonne/year MEG unit",
+      "url": "https://www.icis.com/explore/resources/news/2011/05/04/9456607/",
+      "date": "2011-05-04",
+      "access": "2026-10-20",
+      "status": "检索索引命中",
+      "note": "检索索引命中"
+    },
+    {
+      "id": "S18",
+      "title": "Industrial Info — Saudi Kayan Moves Forward with Construction of Ethylene Glycol Plant at Jubail（700 kt MEG / 58 kt DEG / 3 kt TEG；Scientific Design；CTCI）",
+      "url": "https://www.industrialinfo.com/news/article/saudi-kayan-moves-forward-with-construction-of-ethylene-glycol-plant-at-jubail-industrial-city--140258",
+      "date": "2008-10-22",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S19",
+      "title": "Saudi Kayan — Annual Report 2024",
+      "url": "https://www.saudikayan.com/en/Images/Annual%20Report%202024%20SK_tcm1043-46850.pdf",
+      "date": "2025",
+      "access": "2026-10-20",
+      "status": "待下载",
+      "note": "检索索引命中（PDF 待下载）"
+    },
+    {
+      "id": "S20",
+      "title": "Sadara — Products / Who We Are（Glycol Products = PG/丁基乙二醇醚/聚醚多元醇）",
+      "url": "https://www.sadara.com/products",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S21",
+      "title": "KNAK 沙特石化装置汇编 — PETROKEMYA（产品清单无 EG）",
+      "url": "https://knak.jp/ichiran/saudi/sabic/petrokem.htm",
+      "date": "2012 版",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验（旧资料，需更新）"
+    },
+    {
+      "id": "S22",
+      "title": "Offshore Technology — Petrokemya Al-Jubail Complex 概况",
+      "url": "https://www.offshore-technology.com/marketdata/petrokemya-al-jubail-complex-saudi-arabia/",
+      "date": "2022",
+      "access": "2026-10-20",
+      "status": "检索索引命中",
+      "note": "检索索引命中"
+    },
+    {
+      "id": "S23",
+      "title": "CCFGroup（经 ChinaTexnet）— China's MEG imports 2024：总进口 655.4 万吨，沙特 338.2 万吨占 52%",
+      "url": "https://www.chinatexnet.com/textile-news/2025-02-17/1018122.html",
+      "date": "2025-02-17",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "已核验"
+    },
+    {
+      "id": "S24",
+      "title": "华泰期货 — 美伊冲突下乙二醇的平衡表变化（2025 年中国进口来源集中度）",
+      "url": "https://www.htfc.com/wz_upload/png_upload/20260410/17757849888922ea4d2.pdf",
+      "date": "2026-04-10",
+      "access": "2026-10-20",
+      "status": "直连失败",
+      "note": "直连失败，检索索引摘要"
+    },
+    {
+      "id": "S25",
+      "title": "SABIC — Sales Offices Download（Global Directory PDF，含各国销售办公室）",
+      "url": "https://www.sabic.com/en/Images/Global-Directory_150926_tcm1010-40120.pdf",
+      "date": "2026",
+      "access": "2026-10-20",
+      "status": "直连失败",
+      "note": "官方 PDF 直连 TLS 失败（本机网络）；页面已核验可访问，PDF 待下载"
+    },
+    {
+      "id": "S26",
+      "title": "SABIC — Contact Us（官方询盘表单页；仅在线表单，未公开总机）",
+      "url": "https://www.sabic.com/en/contact",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "HTTP 200 全文读取"
+    },
+    {
+      "id": "S27",
+      "title": "SABIC — Sales Offices（官方销售办公室目录下载页）",
+      "url": "https://www.sabic.com/en/about/locations/sales-office",
+      "date": "—",
+      "access": "2026-10-20",
+      "status": "已核验",
+      "note": "HTTP 200 全文读取；目录 PDF 需另行下载"
+    }
+  ]
+}

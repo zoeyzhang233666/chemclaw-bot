@@ -1,0 +1,56 @@
+{
+ "_readme": [
+  "这是 research.json 的空骨架，不是可运行的数据。照 examples/01-soda-ash-national/research.json 的填法填。",
+  "填完先跑 python scripts/validate.py research.json，0 error 才能继续。",
+  "字段含义见 references/data-contract.md；找数渠道见 references/research-playbook.md。",
+  "原则：手写只写原始事实；涨跌幅、分位、极值、价差这些派生指标由 assemble.py 算，不要手填。",
+  "凡是拿不到的，写进 gaps（含 impact 与 fix），不要用近似值填。"
+ ],
+ "meta": {
+  "product": null,
+  "spec": null,
+  "region": null,
+  "asof": null,
+  "unit": "元/吨",
+  "title": null,
+  "peer_products": [],
+  "anomaly_pct": 3.5,
+  "suggest_quote": null,
+  "suggest_term": null
+ },
+ "futures": {
+  "exchange": null,
+  "code": null,
+  "series": "raw/<品种>_daily.json",
+  "note": "主连连续合约，不含税、含交割成本"
+ },
+ "anchor": {
+  "label": null,
+  "value": null,
+  "unit": "元/吨",
+  "range_lo": null,
+  "range_hi": null,
+  "date": null,
+  "basis": "含税 · 出厂",
+  "prev_date": null,
+  "prev_mid": null,
+  "note": null,
+  "src": null
+ },
+ "spot": [],
+ "spread_base": {
+  "region": null,
+  "dates": []
+ },
+ "cost_lines": [],
+ "margins": [],
+ "upstream": [],
+ "downstream": [],
+ "balance": [],
+ "events": [],
+ "facts": [],
+ "talk": [],
+ "gaps": [],
+ "caveats": [],
+ "sources": []
+}

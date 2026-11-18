@@ -1,0 +1,72 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Length 3067 >>
+stream
+BT /F3 8 Tf 1 0 0 1 48 800 Tm (*** [MOCK DOCUMENT] Simulated record for workflow demonstration only. NOT a real supplier document. Company names, batch numbers, prices and test data are entirely fictional.  \(Chinese note: ????????????????\) ***) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 787 Tm (================================================================================================) Tj ET
+BT /F2 20 Tf 1 0 0 1 48 768 Tm (CERTIFICATE OF ANALYSIS) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 737 Tm (Supplier        : HANWOO CHEMICAL CO., LTD. \(FICTIONAL\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 722 Tm (Product         : HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 707 Tm (CAS No.         : 7722-84-1) Tj ET
+BT /F2 10 Tf 1 0 0 1 48 692 Tm (Batch No.       : L2609A) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 677 Tm (Batch size      : 20,000 kg) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 662 Tm (Manufacture date: 2026-09-28) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 647 Tm (Shelf life      : 6 months from manufacture date) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 632 Tm (Standard        : Company Standard \(internal\)) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 609 Tm (Test item                Unit        Specification      Result       Method) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 595 Tm (------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 581 Tm (H2O2 content             % \(m/m\)     30.0 - 31.0        30.4         \(not stated\)) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 567 Tm (Stability                %           min. 97            99.2         \(not stated\)) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 553 Tm (Colour                   Pt-Co       max. 10            5            \(not stated\)) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 539 Tm (Appearance               -           clear liquid       pass         visual) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 525 Tm (pH                       -           2.0 - 4.5          3.1          \(not stated\)) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 511 Tm (Residue after evaporation%           max. 0.05          0.02         \(not stated\)) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 493 Tm (Iron \(Fe\)                -           \(not tested\)       -            -) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 479 Tm (Chloride                 -           \(not tested\)       -            -) Tj ET
+BT /F3 9 Tf 1 0 0 1 48 465 Tm (TOC                      -           \(not tested\)       -            -) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 443 Tm (NOTE \(for demonstration\): Fe / chloride / TOC are commonly required by) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 430 Tm (electronics-grade users, and test method numbers are missing - both are) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 417 Tm (intentional gaps in this mock COA.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 394 Tm (Conclusion      : The above batch conforms to the company specification.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 367 Tm (Issued by       : QA Manager  \(signature\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 352 Tm (Date            : 2026-10-10) Tj ET
+BT /F3 8 Tf 1 0 0 1 48 327 Tm (*** END OF MOCK COA ***  Fictional document, generated for demonstration. ***) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 6 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> >>
+endobj
+6 0 obj
+<< /Type /Pages /Count 1 /Kids [5 0 R] >>
+endobj
+7 0 obj
+<< /Type /Catalog /Pages 6 0 R >>
+endobj
+8 0 obj
+<< /Title (MOCK COA - Batch L2609A \(fictional\)) /Producer (chem-import-dossier mock generator) >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000009 00000 n 
+0000000106 00000 n 
+0000000208 00000 n 
+0000000303 00000 n 
+0000003422 00000 n 
+0000003568 00000 n 
+0000003625 00000 n 
+0000003674 00000 n 
+trailer
+<< /Size 9 /Root 7 0 R /Info 8 0 R >>
+startxref
+3789
+%%EOF

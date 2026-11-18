@@ -1,0 +1,45 @@
+{
+  "id": "caustic_soda_liquid",
+  "name_cn": "液碱（氢氧化钠溶液）",
+  "name_en": "Caustic Soda Liquid 32% / 50%",
+  "synonyms": ["caustic soda lye", "sodium hydroxide solution", "32% caustic", "液碱", "烧碱溶液"],
+  "other_languages": {
+    "vi": ["xút lỏng", "dung dịch NaOH"],
+    "id": ["soda api cair"],
+    "es": ["sosa cáustica líquida"],
+    "pt": ["soda cáustica líquida"],
+    "ar": ["صودا كاوية سائلة"]
+  },
+  "cas": "1310-73-2",
+  "ec": "215-185-5",
+  "un": "1824",
+  "hs_candidates": ["28151200"],
+  "hs_note": "2815.12（氢氧化钠水溶液）为常见候选，需报关行确认。",
+  "hazard": {
+    "class": "8 (corrosive)",
+    "packing_group": "II",
+    "gd": "UN1824, Class 8, PG II",
+    "note": "液碱为危险品，通常走 ISO tank / IBC；目的港是否接收、罐箱回空费用都需单独核实。"
+  },
+  "grades": [
+    {"code": "32", "cn": "32% 液碱", "typical": {"NaOH": "≥32%"}},
+    {"code": "50", "cn": "50% 液碱", "typical": {"NaOH": "≥50%"}}
+  ],
+  "typical_specs": {
+    "NaOH": {"unit": "%", "value": "≥32.0"},
+    "Na2CO3": {"unit": "%", "value": "≤0.2"},
+    "NaCl": {"unit": "%", "value": "≤0.008"},
+    "Fe2O3": {"unit": "%", "value": "≤0.0008"}
+  },
+  "applications": ["pulp and paper", "water treatment", "alumina", "chemical synthesis"],
+  "packing_options": ["ISO tank", "IBC 1000 L", "flexitank (limited)", "drum 200 L"],
+  "sales_notes": [
+    "32% 与 50% 的运费摊薄完全不同，浓度必须确认。",
+    "液碱询盘常带「price per DMT (dry metric ton)」口径，须与「湿吨」区分清楚。"
+  ],
+  "do_not_assume": [
+    "不能默认 32%",
+    "不能默认运输方式",
+    "不能默认目的港接收危险品"
+  ]
+}

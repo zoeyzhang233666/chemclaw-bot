@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --ink:#0f2540; --ink2:#3c4f66; --ink3:#7b8ca3; --line:#e2e8f0; --line2:#eef2f7;
+  --bg:#f5f7fa; --card:#ffffff; --deep:#12365c; --main:#2f6db3; --acc:#c0392b;
+  --ok:#16794b; --up:#c0392b; --down:#1f7a4d; --warn:#a15c00; --warnbg:#fff6e5;
+  --gapbg:#fdecec; --gap:#b52b2b; --chip:#eef4fb;
+  --radius:12px; --shadow:0 1px 2px rgba(16,42,72,.06),0 6px 18px rgba(16,42,72,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.6 "Microsoft YaHei","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--main);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1500px;margin:0 auto;padding:0 22px}
+.mono{font-family:"JetBrains Mono","Cascadia Mono",Consolas,monospace;font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------------- 顶栏 ---------------- */
+header{background:linear-gradient(135deg,#0e2c4c 0%,#173e66 55%,#1d4a78 100%);color:#fff;padding:18px 0 16px;
+  box-shadow:0 2px 12px rgba(6,26,48,.25)}
+.hd{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
+.hd h1{margin:0;font-size:22px;letter-spacing:.5px;font-weight:700}
+.hd .sub{margin-top:5px;font-size:12.5px;color:#b9cde3;line-height:1.7}
+.hd .badges{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:999px;
+  padding:4px 12px;font-size:12px;color:#e4eefa;white-space:nowrap}
+.badge.warn{background:rgba(255,196,84,.18);border-color:rgba(255,196,84,.45);color:#ffe4b0}
+.badge.ok{background:rgba(74,222,128,.16);border-color:rgba(74,222,128,.4);color:#c9f7d9}
+
+/* ---------------- KPI ---------------- */
+.kpis{display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr;gap:14px;margin:18px 0 4px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi.hero{background:linear-gradient(140deg,#12365c,#215488 80%);color:#fff;border-color:#173e66}
+.kpi.hero:after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%)}
+.kpi .lab{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:6px}
+.kpi.hero .lab{color:#bcd3ea}
+.kpi .val{font-size:31px;font-weight:700;letter-spacing:-.5px;margin-top:2px;line-height:1.15}
+.kpi.hero .val{font-size:38px}
+.kpi .unit{font-size:13px;font-weight:500;color:var(--ink3);margin-left:4px}
+.kpi.hero .unit{color:#c8dcef}
+.kpi .foot{font-size:11.5px;color:var(--ink3);margin-top:4px;border-top:1px dashed var(--line);padding-top:6px}
+.kpi.hero .foot{color:#bcd3ea;border-color:rgba(255,255,255,.2)}
+.delta-up{color:var(--up)} .delta-down{color:var(--down)}
+.kpi.hero .delta-up{color:#ffb4a6} .kpi.hero .delta-down{color:#9ff0bf}
+.tick{font-size:11px;padding:1px 7px;border-radius:999px;background:var(--chip);color:var(--main);font-weight:600}
+.chipset{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2);background:#fff;
+  border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.dot{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+/* ---------------- 布局 ---------------- */
+main{padding-bottom:60px}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card>h3{margin:0;padding:12px 16px;border-bottom:1px solid var(--line2);font-size:14px;display:flex;align-items:center;gap:8px}
+.card>h3 .idx{background:var(--deep);color:#fff;border-radius:6px;font-size:11px;padding:1px 7px;font-weight:600}
+.card>h3 .hint{margin-left:auto;font-weight:400;font-size:11.5px;color:var(--ink3)}
+.body{padding:14px 16px}
+
+/* 左侧控制台 */
+.ctl{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.ctl .body{padding:12px 14px}
+.sec-t{font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.6px;margin:14px 0 8px;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px}
+.sec-t:before{content:"";width:3px;height:12px;background:var(--main);border-radius:2px}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.row label{font-size:12px;color:var(--ink2);flex:0 0 84px}
+input[type=number],input[type=text],select{width:100%;padding:5px 7px;border:1px solid #cfd8e3;border-radius:7px;
+  font:inherit;font-size:12.5px;color:var(--ink);background:#fff;font-variant-numeric:tabular-nums;transition:.15s}
+input[type=number]:focus,input[type=text]:focus,select:focus{outline:none;border-color:var(--main);box-shadow:0 0 0 3px rgba(47,109,179,.12)}
+input.dirty{background:#fffbe8;border-color:#e2b93b}
+.matbox{border:1px solid var(--line2);border-radius:9px;padding:8px 9px;margin-bottom:9px;background:#fbfcfe}
+.matbox .mt{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:12.5px;font-weight:700;color:var(--ink)}
+.matbox .mt .tagd{font-size:10px;font-weight:500;padding:1px 6px;border-radius:5px;background:var(--chip);color:var(--main)}
+.matbox .mt .tagd.sim{background:#fff2cc;color:#8a5b00}
+.btn{border:1px solid #cfd8e3;background:#fff;border-radius:8px;padding:6px 11px;font:inherit;font-size:12.5px;
+  cursor:pointer;color:var(--ink2);transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--main);color:var(--main);background:#f6faff}
+.btn.pri{background:var(--main);border-color:var(--main);color:#fff}
+.btn.pri:hover{background:#245c9b;color:#fff}
+.btn.ghost{background:transparent;border-style:dashed}
+.btn.wide{width:100%;justify-content:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.switch{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink2);margin:6px 0}
+.switch input{width:auto;margin:0}
+
+/* 工艺切换 */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tab{padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:12.5px;cursor:pointer;
+  color:var(--ink2);transition:.15s;line-height:1.3;text-align:left}
+.tab small{display:block;font-size:10.5px;color:var(--ink3)}
+.tab:hover{border-color:var(--main);color:var(--main)}
+.tab.on{background:var(--deep);border-color:var(--deep);color:#fff;box-shadow:0 4px 12px rgba(18,54,92,.25)}
+.tab.on small{color:#bfd6ee}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f2f6fb;color:var(--ink2);font-weight:700;text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);
+  white-space:nowrap;font-size:11.5px}
+th:first-child,td:first-child{text-align:left}
+td{padding:8px 10px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
+td.nm{white-space:normal;min-width:150px}
+tr:hover td{background:#fafcff}
+tr.sel td{background:#eef5fd}
+tfoot td{font-weight:700;background:#f7fafd;border-top:2px solid var(--line)}
+.gapcell{color:var(--gap);background:var(--gapbg);border-radius:5px;padding:1px 6px;font-size:11.5px;font-weight:600}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:600}
+.pill.eia{background:#e6f7ee;color:#16794b} .pill.patent{background:#e8f0ff;color:#2b5ba8}
+.pill.user{background:#e7f6fb;color:#0e6f8e} .pill.simulated{background:#fff2cc;color:#8a5b00}
+.pill-none{background:#f1f3f6;color:#68788c}
+.bar{height:8px;border-radius:5px;background:#eef2f7;overflow:hidden;min-width:70px;display:inline-block;vertical-align:middle}
+.bar>i{display:block;height:100%;border-radius:5px}
+.linky{cursor:pointer;border-bottom:1px dashed var(--main);color:var(--main)}
+.linky:hover{background:#f0f7ff}
+
+/* 快捷列 */
+.panel-right{display:flex;flex-direction:column;gap:16px;min-width:0}
+.chart{width:100%;height:330px}
+.chart.sm{height:280px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.two3{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+
+/* 历史窗口卡 */
+.win{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.winc{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fbfcfe}
+.winc .l{font-size:11.5px;color:var(--ink3);display:flex;justify-content:space-between}
+.winc .v{font-size:20px;font-weight:700;margin-top:2px}
+.winc .d{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.winc.gap{background:var(--gapbg);border-color:#f3c9c9}
+.winc.gap .v{color:var(--gap);font-size:14px}
+
+/* 热力表 */
+.heat td{cursor:pointer;transition:.1s}
+.heat td:hover{outline:2px solid var(--deep);outline-offset:-2px}
+
+/* 情景卡 */
+.scen{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sc{border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:#fff}
+.sc .n{font-size:12.5px;color:var(--ink2);font-weight:600;min-height:34px}
+.sc .v{font-size:20px;font-weight:700;margin:2px 0}
+.sc .u{font-size:11.5px;color:var(--ink3)}
+.sc.up{border-left:4px solid var(--up)} .sc.down{border-left:4px solid var(--down)} .sc.mid{border-left:4px solid var(--ink3)}
+
+/* 缺口 */
+.gaps li{margin-bottom:7px;padding-left:12px;border-left:3px solid #f3a1a1;font-size:12.5px;color:var(--ink2)}
+.gaps li b{color:var(--gap)}
+.notinc{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.ni{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;background:#fffafa}
+.ni b{color:#8a2b2b;display:block;font-size:12.5px;margin-bottom:2px}
+.ni span{color:var(--ink3)}
+
+/* 抽屉 */
+.drawer{position:fixed;top:0;right:0;height:100vh;width:min(560px,92vw);background:#fff;box-shadow:-16px 0 40px rgba(10,30,55,.22);
+  transform:translateX(102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);z-index:60;display:flex;flex-direction:column}
+.drawer.on{transform:translateX(0)}
+.drawer .dh{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px;background:#fbfcfe}
+.drawer .dh h2{margin:0;font-size:16px}
+.drawer .dh .x{margin-left:auto;cursor:pointer;border:none;background:#eef2f7;width:30px;height:30px;border-radius:8px;font-size:16px;color:var(--ink2)}
+.drawer .db{padding:16px 20px;overflow:auto;flex:1}
+.scrim{position:fixed;inset:0;background:rgba(12,28,48,.35);opacity:0;pointer-events:none;transition:.25s;z-index:55}
+.scrim.on{opacity:1;pointer-events:auto}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:6px 12px;font-size:12.5px;margin-bottom:14px}
+.kv dt{color:var(--ink3)} .kv dd{margin:0;color:var(--ink)}
+.step{font-size:12px;border-left:2px solid var(--line);padding:2px 0 10px 12px;margin-left:4px;position:relative}
+.step:before{content:"";position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--main)}
+.step b{display:block;color:var(--ink2);font-weight:600;font-size:11.5px}
+.step .f{font-family:Consolas,monospace;font-size:11.5px;color:var(--ink3);margin-top:1px}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#12365c;color:#fff;padding:10px 18px;border-radius:10px;
+  font-size:13px;opacity:0;transition:.25s;z-index:99;box-shadow:0 10px 30px rgba(10,30,55,.3);pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* modal (保存模型) */
+.modal{position:fixed;inset:0;display:none;place-items:center;z-index:80;background:rgba(12,28,48,.4)}
+.modal.on{display:grid}
+.modal .m{background:#fff;border-radius:14px;width:min(520px,94vw);box-shadow:0 24px 60px rgba(10,30,55,.3);overflow:hidden}
+.modal .mh{padding:16px 20px;border-bottom:1px solid var(--line);font-weight:700}
+.modal .mb{padding:16px 20px}
+.modal .mf{padding:12px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;background:#fbfcfe}
+.mlist{max-height:240px;overflow:auto;margin-top:10px}
+.mitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line2);border-radius:8px;margin-bottom:6px;font-size:12.5px}
+.mitem .t{flex:1}
+.mitem .t small{display:block;color:var(--ink3);font-size:11px}
+
+/* footer */
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px 0 40px;font-size:12px;color:var(--ink3);line-height:1.9}
+.disc{background:#fff8f0;border:1px solid #f3d9b8;border-radius:10px;padding:11px 14px;font-size:12.5px;color:#7a4a12;margin:16px 0}
+.disc b{color:#a33a12}
+
+@media (max-width:1180px){
+  .grid{grid-template-columns:1fr}
+  .ctl{position:static;max-height:none}
+  .kpis{grid-template-columns:1fr 1fr}
+  .two3,.split{grid-template-columns:1fr}
+  .scen{grid-template-columns:1fr 1fr}
+  .win{grid-template-columns:1fr 1fr}
+  .notinc{grid-template-columns:1fr}
+}
+@media print{
+  .ctl,.drawer,.scrim,.btn,.tabs{display:none!important}
+  body{background:#fff}
+  .card{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hd">
+    <div>
+      <h1 id="hTitle">理论原料成本模型</h1>
+      <div class="sub" id="hSub"></div>
+    </div>
+    <div class="badges" id="hBadges"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="kpis" id="kpis"></section>
+  <div class="chipset" id="chipset"></div>
+
+  <div class="grid">
+    <!-- ============ 左：控制台 ============ -->
+    <aside class="card ctl">
+      <h3><span class="idx">参数</span>我的成本参数<span class="hint">改动即时重算</span></h3>
+      <div class="body">
+        <div class="sec-t">工艺路线</div>
+        <div class="tabs" id="tabs"></div>
+
+        <div class="sec-t">原料单耗 / 价格</div>
+        <div id="mateditor"></div>
+
+        <div class="sec-t">涨跌幅度（%）</div>
+        <div class="row" id="ratesRow"></div>
+        <div class="btnrow" style="margin-top:6px">
+          <button class="btn ghost" id="btnRate5">恢复 ±5/±10</button>
+        </div>
+
+        <div class="sec-t">口径</div>
+        <div class="row"><label>价格口径</label>
+          <select id="selTax"><option value="tax_included">含税</option><option value="tax_excluded">不含税</option></select>
+        </div>
+        <div class="row"><label>产品单位</label><input type="text" value="元 / 吨产品" disabled></div>
+
+        <div class="sec-t">模型</div>
+        <div class="btnrow">
+          <button class="btn pri" id="btnSave">保存为我的成本模型</button>
+        </div>
+        <div class="btnrow" style="margin-top:6px">
+          <button class="btn" id="btnAuto">刷新市场价格</button>
+          <button class="btn" id="btnReset">回到原始参数</button>
+        </div>
+        <div class="btnrow" style="margin-top:6px">
+          <button class="btn wide" id="btnPrint">打印 / 导出 PDF</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ 右：主区 ============ -->
+    <div class="panel-right">
+
+      <section class="card">
+        <h3><span class="idx">1</span>成本构成<span class="hint" id="compHint"></span></h3>
+        <div class="two3 body">
+          <div style="overflow:auto">
+            <table id="tblComp">
+              <thead><tr><th>原料</th><th>单耗<br>(t/t)</th><th>价格<br>(元/t)</th><th>单项成本<br>(元/t)</th><th>占比</th><th>来源</th></tr></thead>
+              <tbody></tbody><tfoot></tfoot>
+            </table>
+            <div style="font-size:11.5px;color:var(--ink3);margin-top:10px" id="compNote"></div>
+          </div>
+          <div id="chPie" class="chart sm"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3><span class="idx">2</span>历史理论原料成本<span class="hint" id="histHint"></span></h3>
+        <div class="body" style="padding-bottom:6px">
+          <div class="win" id="winCards"></div>
+        </div>
+        <div class="body" style="padding-top:6px">
+          <div id="chHist" class="chart"></div>
+          <div style="font-size:11.5px;color:var(--ink3)" id="histNote"></div>
+        </div>
+      </section>
+
+      <div class="split">
+        <section class="card">
+          <h3><span class="idx">3</span>敏感性热力图<span class="hint">Δ 元/吨产品</span></h3>
+          <div class="body" style="overflow:auto">
+            <table class="heat" id="tblHeat"></table>
+            <div style="font-size:11.5px;color:var(--ink3);margin-top:8px">
+              单元格数字 = 单耗 × 价格 × 涨跌幅；<b>点任一原料</b>查看历史价格与来源。右侧合计行 = 全部原料同步变动的效果。
+            </div>
+          </div>
+        </section>
+        <section class="card">
+          <h3><span class="idx">4</span>谁在推动成本变化<span class="hint">贡献分解</span></h3>
+          <div class="body">
+            <div id="chContrib" class="chart sm"></div>
+            <div id="contribText" style="font-size:12.5px;color:var(--ink2)"></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h3><span class="idx">5</span>多原料组合情景<span class="hint">同时涨跌</span></h3>
+        <div class="body">
+          <div class="scen" id="scenCards"></div>
+          <div style="overflow:auto;margin-top:12px">
+            <table id="tblCombo"><thead></thead><tbody></tbody></table>
+          </div>
+          <div class="btnrow" style="margin-top:10px">
+            <button class="btn" id="btnAllUp">整体 +5%</button>
+            <button class="btn" id="btnAllDown">整体 −5%</button>
+            <button class="btn" id="btnZero">全部归零</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="split">
+        <section class="card">
+          <h3><span class="idx">6</span>近期价格变化最明显的原料</h3>
+          <div class="body" id="recentBox"></div>
+        </section>
+        <section class="card">
+          <h3><span class="idx">7</span>理论原料成本 vs 产品价<span class="hint">加工价差 ≠ 利润</span></h3>
+          <div class="body"><div id="chSpread" class="chart sm"></div>
+            <div style="font-size:11.5px;color:var(--ink3)" id="spreadNote"></div></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h3><span class="idx">8</span>缺口与未纳入项<span class="hint">这些不是 0</span></h3>
+        <div class="body two3">
+          <div>
+            <div class="sec-t" style="margin-top:0">尚未量化 / 数据缺口</div>
+            <ul class="gaps" id="gapList"></ul>
+          </div>
+          <div>
+            <div class="sec-t" style="margin-top:0">未纳入成本项（不计入，也不当 0）</div>
+            <div class="notinc" id="niList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3><span class="idx">9</span>计算公式与数据来源</h3>
+        <div class="body" style="overflow:auto">
+          <div class="sec-t" style="margin-top:0">计算公式</div>
+          <table id="tblFormula"><thead><tr><th>项目</th><th style="text-align:left">公式</th><th style="text-align:left">本例取值 / 说明</th></tr></thead><tbody></tbody></table>
+          <div class="sec-t">单位与口径</div>
+          <table id="tblUnits"><thead><tr><th>原料</th><th style="text-align:left">单耗换算</th><th style="text-align:left">价格换算</th><th style="text-align:left">税口径</th></tr></thead><tbody></tbody></table>
+          <div class="sec-t">数据来源</div>
+          <table id="tblSrc"><thead><tr><th>ID</th><th style="text-align:left">类型</th><th style="text-align:left">标题</th><th style="text-align:left">用于</th></tr></thead><tbody></tbody></table>
+        </div>
+      </section>
+
+      <div class="disc">
+        <b>使用边界：</b>本页的"理论原料成本"= Σ(有价格的原料单耗 × 价格)，<b>不等于</b>完整生产成本，<b>不等于</b>利润。
+        能源、人工、折旧、维护、运输、包装等未纳入项目一律没有计入（不是 0）。本页<b>不预测</b>原料未来价格，
+        敏感性结果只是"假设涨/跌 X%"的机械演算。
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="wrap">
+  由 chem-cost-model（测算原料成本占比与涨价影响）技能生成 ｜ 数据截止 <span id="fAsof"></span> ｜
+  所有价格均标注规格 / 地区 / 含税与否 / 计价单位 / 日期 / 来源；缺口留空不插值。
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="dh"><h2 id="dTitle"></h2><button class="x" id="dClose">×</button></div>
+  <div class="db" id="dBody"></div>
+</aside>
+
+<div class="modal" id="modal">
+  <div class="m">
+    <div class="mh">我的成本模型</div>
+    <div class="mb">
+      <div class="row"><label style="flex:0 0 60px">模型名</label><input type="text" id="mName" placeholder="例如：DOP-华东-11月采购测算"></div>
+      <div style="font-size:12px;color:var(--ink3);margin-top:8px">
+        将当前单耗、价格、涨跌幅、口径保存到本机浏览器（localStorage）。下次打开本页可直接载入继续修改。
+      </div>
+      <div class="mlist" id="mList"></div>
+    </div>
+    <div class="mf"><button class="btn" id="mCancel">关闭</button><button class="btn pri" id="mSave">保存当前参数</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>/*__ECHARTS_PLACEHOLDER__*/</script>
+<script>window.__DATA__ = /*__DATA_PLACEHOLDER__*/null;</script>
+<script>/*__APP_PLACEHOLDER__*/</script>
+</body>
+</html>

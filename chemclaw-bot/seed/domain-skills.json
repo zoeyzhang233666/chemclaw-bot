@@ -1,0 +1,758 @@
+[
+  {
+    "id": "domain-1",
+    "name": "chemical-supplier-verification",
+    "category": "内贸采购",
+    "scene": "1.按产品找生产厂家",
+    "sourcePath": "skills/domain/内贸采购/1.按产品找生产厂家/chemical-supplier-verification-skill/SKILL.md"
+  },
+  {
+    "id": "domain-2",
+    "name": "供应商报价合理性核验",
+    "category": "内贸采购",
+    "scene": "10.核实供应商报价是否合理",
+    "sourcePath": "skills/domain/内贸采购/10.核实供应商报价是否合理/供应商报价合理性核验/SKILL.md"
+  },
+  {
+    "id": "domain-3",
+    "name": "regional-procurement-cost",
+    "category": "内贸采购",
+    "scene": "11.比较不同地区采购成本",
+    "sourcePath": "skills/domain/内贸采购/11.比较不同地区采购成本/regional-procurement-cost/SKILL.md"
+  },
+  {
+    "id": "domain-4",
+    "name": "chem-procure-brief",
+    "category": "内贸采购",
+    "scene": "12.看原料近期行情",
+    "sourcePath": "skills/domain/内贸采购/12.看原料近期行情/chem-procure-brief/SKILL.md"
+  },
+  {
+    "id": "domain-5",
+    "name": "batch-supplier-sourcing",
+    "category": "内贸采购",
+    "scene": "13.从采购清单批量找供应商",
+    "sourcePath": "skills/domain/内贸采购/13.从采购清单批量找供应商/batch-supplier-sourcing/SKILL.md"
+  },
+  {
+    "id": "domain-6",
+    "name": "contract-review-risk-points",
+    "category": "内贸采购",
+    "scene": "14.检查采购合同风险点",
+    "sourcePath": "skills/domain/内贸采购/14.检查采购合同风险点/purchase-contract-risk-review/SKILL.md"
+  },
+  {
+    "id": "domain-7",
+    "name": "chem-supplier-qualification",
+    "category": "内贸采购",
+    "scene": "15.查询供应商资质证照",
+    "sourcePath": "skills/domain/内贸采购/15.查询供应商资质证照/chem-supplier-qualification/SKILL.md"
+  },
+  {
+    "id": "domain-8",
+    "name": "coa-spec-check",
+    "category": "内贸采购",
+    "scene": "16.核对到货质量分析证书与规格",
+    "sourcePath": "skills/domain/内贸采购/16.核对到货质量分析证书与规格/chem-coa-spec-check/SKILL.md"
+  },
+  {
+    "id": "domain-9",
+    "name": "chem-cost-model",
+    "category": "内贸采购",
+    "scene": "17.测算原料成本占比与涨价影响",
+    "sourcePath": "skills/domain/内贸采购/17.测算原料成本占比与涨价影响/chem-cost-model/SKILL.md"
+  },
+  {
+    "id": "domain-10",
+    "name": "nearby-supplier-sourcing",
+    "category": "内贸采购",
+    "scene": "2.找附近的供应商",
+    "sourcePath": "skills/domain/内贸采购/2.找附近的供应商/nearby-supplier-sourcing/SKILL.md"
+  },
+  {
+    "id": "domain-11",
+    "name": "chemical-second-source",
+    "category": "内贸采购",
+    "scene": "3.找备选供应商",
+    "sourcePath": "skills/domain/内贸采购/3.找备选供应商/chemical-second-source/SKILL.md"
+  },
+  {
+    "id": "domain-12",
+    "name": "chemical-supply-market-map",
+    "category": "内贸采购",
+    "scene": "4.研究一个品类的供应格局",
+    "sourcePath": "skills/domain/内贸采购/4.研究一个品类的供应格局/chemical-supply-market-map/SKILL.md"
+  },
+  {
+    "id": "domain-13",
+    "name": "chem-supplier-verification",
+    "category": "内贸采购",
+    "scene": "5.查供应商是不是真厂家",
+    "sourcePath": "skills/domain/内贸采购/5.查供应商是不是真厂家/chem-supplier-verification/SKILL.md"
+  },
+  {
+    "id": "domain-14",
+    "name": "chem-supplier-dd",
+    "category": "内贸采购",
+    "scene": "6.做供应商准入尽调",
+    "sourcePath": "skills/domain/内贸采购/6.做供应商准入尽调/chem-supplier-dd/SKILL.md"
+  },
+  {
+    "id": "domain-15",
+    "name": "chemical-supplier-risk-radar",
+    "category": "内贸采购",
+    "scene": "7.查供应商最近有没有风险",
+    "sourcePath": "skills/domain/内贸采购/7.查供应商最近有没有风险/chemical-supplier-risk-radar/SKILL.md"
+  },
+  {
+    "id": "domain-16",
+    "name": "chem-supplier-compare",
+    "category": "内贸采购",
+    "scene": "8.比较几家供应商",
+    "sourcePath": "skills/domain/内贸采购/8.比较几家供应商/chem-supplier-compare/SKILL.md"
+  },
+  {
+    "id": "domain-17",
+    "name": "compare-purchase-quotes",
+    "category": "内贸采购",
+    "scene": "9.比较几份采购报价",
+    "sourcePath": "skills/domain/内贸采购/9.比较几份采购报价/compare-purchase-quotes/SKILL.md"
+  },
+  {
+    "id": "domain-18",
+    "name": "chemical-downstream-leads",
+    "category": "内贸销售",
+    "scene": "1.按产品找下游客户",
+    "sourcePath": "skills/domain/内贸销售/1.按产品找下游客户/chemical-downstream-leads/SKILL.md"
+  },
+  {
+    "id": "domain-19",
+    "name": "customer-visit-brief",
+    "category": "内贸销售",
+    "scene": "10.准备客户拜访",
+    "sourcePath": "skills/domain/内贸销售/10.准备客户拜访/customer-visit-brief/SKILL.md"
+  },
+  {
+    "id": "domain-20",
+    "name": "chem-customer-followup",
+    "category": "内贸销售",
+    "scene": "11.整理客户跟进记录",
+    "sourcePath": "skills/domain/内贸销售/11.整理客户跟进记录/chem-customer-followup/SKILL.md"
+  },
+  {
+    "id": "domain-21",
+    "name": "chemical-sales-message-polish",
+    "category": "内贸销售",
+    "scene": "12.润色客户微信或邮件",
+    "sourcePath": "skills/domain/内贸销售/12.润色客户微信或邮件/chem-message-polish/SKILL.md"
+  },
+  {
+    "id": "domain-22",
+    "name": "chemical-region-market-map",
+    "category": "内贸销售",
+    "scene": "13.看一个区域的客户分布",
+    "sourcePath": "skills/domain/内贸销售/13.看一个区域的客户分布/chemical-region-market-map/SKILL.md"
+  },
+  {
+    "id": "domain-23",
+    "name": "chemical-competitor-supply-map",
+    "category": "内贸销售",
+    "scene": "14.看竞争对手布局",
+    "sourcePath": "skills/domain/内贸销售/14.看竞争对手布局/chemical-competitor-supply-map/SKILL.md"
+  },
+  {
+    "id": "domain-24",
+    "name": "chem-market-brief",
+    "category": "内贸销售",
+    "scene": "15.看产品近期行情",
+    "sourcePath": "skills/domain/内贸销售/15.看产品近期行情/chem-market-brief/SKILL.md"
+  },
+  {
+    "id": "domain-25",
+    "name": "核实客户说的市场价",
+    "category": "内贸销售",
+    "scene": "16.核实客户说的市场价",
+    "sourcePath": "skills/domain/内贸销售/16.核实客户说的市场价/核实客户说的市场价/SKILL.md"
+  },
+  {
+    "id": "domain-26",
+    "name": "region-price-spread",
+    "category": "内贸销售",
+    "scene": "17.比较不同地区的销售价格",
+    "sourcePath": "skills/domain/内贸销售/17.比较不同地区的销售价格/region-price-spread/SKILL.md"
+  },
+  {
+    "id": "domain-27",
+    "name": "inquiry-to-quotation",
+    "category": "内贸销售",
+    "scene": "18.整理询盘并生成报价草稿",
+    "sourcePath": "skills/domain/内贸销售/18.整理询盘并生成报价草稿/inquiry-to-quotation/SKILL.md"
+  },
+  {
+    "id": "domain-28",
+    "name": "chem-sales-compliance",
+    "category": "内贸销售",
+    "scene": "19.危险化学品买方资质与销售合规提醒",
+    "sourcePath": "skills/domain/内贸销售/19.危险化学品买方资质与销售合规提醒/chem-sales-compliance/SKILL.md"
+  },
+  {
+    "id": "domain-29",
+    "name": "benchmark-lead-sourcing",
+    "category": "内贸销售",
+    "scene": "2.从标杆客户找相似客户",
+    "sourcePath": "skills/domain/内贸销售/2.从标杆客户找相似客户/benchmark-lead-sourcing/SKILL.md"
+  },
+  {
+    "id": "domain-30",
+    "name": "project-lead-sourcing",
+    "category": "内贸销售",
+    "scene": "3.找近期扩产客户",
+    "sourcePath": "skills/domain/内贸销售/3.找近期扩产客户/project-lead-sourcing/SKILL.md"
+  },
+  {
+    "id": "domain-31",
+    "name": "chemical-procurement-radar",
+    "category": "内贸销售",
+    "scene": "4.找近期采购商机",
+    "sourcePath": "skills/domain/内贸销售/4.找近期采购商机/chem-radar/SKILL.md"
+  },
+  {
+    "id": "domain-32",
+    "name": "customer-pool-screening",
+    "category": "内贸销售",
+    "scene": "5.从客户名单筛重点客户",
+    "sourcePath": "skills/domain/内贸销售/5.从客户名单筛重点客户/customer-pool-screening/SKILL.md"
+  },
+  {
+    "id": "domain-33",
+    "name": "customer360-chemical",
+    "category": "内贸销售",
+    "scene": "6.研究一家目标客户",
+    "sourcePath": "skills/domain/内贸销售/6.研究一家目标客户/customer360-chemical/SKILL.md"
+  },
+  {
+    "id": "domain-34",
+    "name": "customer-qualification-card",
+    "category": "内贸销售",
+    "scene": "7.判断客户值不值得跟",
+    "sourcePath": "skills/domain/内贸销售/7.判断客户值不值得跟/customer-qualification-card-skill/SKILL.md"
+  },
+  {
+    "id": "domain-35",
+    "name": "procurement-decision-chain",
+    "category": "内贸销售",
+    "scene": "8.判断应该先找哪个部门（采购决策链判断）",
+    "sourcePath": "skills/domain/内贸销售/8.判断应该先找哪个部门（采购决策链判断）/procurement-decision-chain/SKILL.md"
+  },
+  {
+    "id": "domain-36",
+    "name": "customer-entry-point-scan",
+    "category": "内贸销售",
+    "scene": "9.找客户最近的切入点",
+    "sourcePath": "skills/domain/内贸销售/9.找客户最近的切入点/customer-entry-point-scan/SKILL.md"
+  },
+  {
+    "id": "domain-37",
+    "name": "看主要进口来源国",
+    "category": "外贸采购",
+    "scene": "1.看主要进口来源国",
+    "sourcePath": "skills/domain/外贸采购/1.看主要进口来源国/看主要进口来源国/SKILL.md"
+  },
+  {
+    "id": "domain-38",
+    "name": "审阅外贸采购合同",
+    "category": "外贸采购",
+    "scene": "10.审阅外贸采购合同",
+    "sourcePath": "skills/domain/外贸采购/10.审阅外贸采购合同/审阅外贸采购合同/SKILL.md"
+  },
+  {
+    "id": "domain-39",
+    "name": "overseas-supply-market-research",
+    "category": "外贸采购",
+    "scene": "2.研究一个海外供应市场",
+    "sourcePath": "skills/domain/外贸采购/2.研究一个海外供应市场/海外供应市场研究/SKILL.md"
+  },
+  {
+    "id": "domain-40",
+    "name": "find-overseas-candidate-manufacturers",
+    "category": "外贸采购",
+    "scene": "3.找海外候选生产商",
+    "sourcePath": "skills/domain/外贸采购/3.找海外候选生产商/find-overseas-candidate-manufacturers/SKILL.md"
+  },
+  {
+    "id": "domain-41",
+    "name": "overseas-supplier-verification",
+    "category": "外贸采购",
+    "scene": "4.核验海外供应商",
+    "sourcePath": "skills/domain/外贸采购/4.核验海外供应商/overseas-supplier-verification/SKILL.md"
+  },
+  {
+    "id": "domain-42",
+    "name": "import-landed-cost",
+    "category": "外贸采购",
+    "scene": "5.算进口到厂成本",
+    "sourcePath": "skills/domain/外贸采购/5.算进口到厂成本/import-landed-cost-skill/SKILL.md"
+  },
+  {
+    "id": "domain-43",
+    "name": "import-window-check",
+    "category": "外贸采购",
+    "scene": "6.判断当前有没有进口窗口",
+    "sourcePath": "skills/domain/外贸采购/6.判断当前有没有进口窗口/chem-import-window/SKILL.md"
+  },
+  {
+    "id": "domain-44",
+    "name": "chem-import-dossier",
+    "category": "外贸采购",
+    "scene": "7.查进口资料要求",
+    "sourcePath": "skills/domain/外贸采购/7.查进口资料要求/chem-import-dossier/SKILL.md"
+  },
+  {
+    "id": "domain-45",
+    "name": "检查进口单证",
+    "category": "外贸采购",
+    "scene": "8.检查进口单证",
+    "sourcePath": "skills/domain/外贸采购/8.检查进口单证/skill/SKILL.md"
+  },
+  {
+    "id": "domain-46",
+    "name": "测算汇率波动对进口成本的影响",
+    "category": "外贸采购",
+    "scene": "9.测算汇率波动对进口成本的影响",
+    "sourcePath": "skills/domain/外贸采购/9.测算汇率波动对进口成本的影响/测算汇率波动对进口成本的影响_skill_v1.0.0/SKILL.md"
+  },
+  {
+    "id": "domain-47",
+    "name": "chemical-export-market-finder",
+    "category": "外贸销售",
+    "scene": "1.看产品适合卖到哪些国家",
+    "sourcePath": "skills/domain/外贸销售/1.看产品适合卖到哪些国家/chemical-export-market-finder/SKILL.md"
+  },
+  {
+    "id": "domain-48",
+    "name": "foreign-trade-contract-review",
+    "category": "外贸销售",
+    "scene": "10.审阅外贸合同",
+    "sourcePath": "skills/domain/外贸销售/10.审阅外贸合同/foreign-trade-contract-review-skill/SKILL.md"
+  },
+  {
+    "id": "domain-49",
+    "name": "fx-rate-risk-quote",
+    "category": "外贸销售",
+    "scene": "11.测算汇率波动对报价的影响",
+    "sourcePath": "skills/domain/外贸销售/11.测算汇率波动对报价的影响/11.测算汇率波动对报价的影响_v1.0/SKILL.md"
+  },
+  {
+    "id": "domain-50",
+    "name": "export-quotation-pi-skill",
+    "category": "外贸销售",
+    "scene": "12.生成出口报价单与形式发票",
+    "sourcePath": "skills/domain/外贸销售/12.生成出口报价单与形式发票/export-quotation-pi-skill/SKILL.md"
+  },
+  {
+    "id": "domain-51",
+    "name": "chem-country-market",
+    "category": "外贸销售",
+    "scene": "2.研究一个目标国家市场",
+    "sourcePath": "skills/domain/外贸销售/2.研究一个目标国家市场/chem-country-market/chem-country-market-skill/SKILL.md"
+  },
+  {
+    "id": "domain-52",
+    "name": "overseas-buyer-discovery",
+    "category": "外贸销售",
+    "scene": "3.找海外候选买家",
+    "sourcePath": "skills/domain/外贸销售/3.找海外候选买家/overseas-buyer-discovery/SKILL.md"
+  },
+  {
+    "id": "domain-53",
+    "name": "overseas-inquiry-kyc",
+    "category": "外贸销售",
+    "scene": "4.核验海外询盘公司",
+    "sourcePath": "skills/domain/外贸销售/4.核验海外询盘公司/overseas-inquiry-kyc/SKILL.md"
+  },
+  {
+    "id": "domain-54",
+    "name": "overseas-inquiry-triage",
+    "category": "外贸销售",
+    "scene": "5.处理一封海外询盘",
+    "sourcePath": "skills/domain/外贸销售/5.处理一封海外询盘/overseas-inquiry-triage-1.0.1/SKILL.md"
+  },
+  {
+    "id": "domain-55",
+    "name": "export-compliance-check",
+    "category": "外贸销售",
+    "scene": "6.查产品出口要求",
+    "sourcePath": "skills/domain/外贸销售/6.查产品出口要求/export-compliance-check/SKILL.md"
+  },
+  {
+    "id": "domain-56",
+    "name": "hs-code-candidates",
+    "category": "外贸销售",
+    "scene": "7.查海关商品编码候选",
+    "sourcePath": "skills/domain/外贸销售/7.查海关商品编码候选/hs-code-candidates/SKILL.md"
+  },
+  {
+    "id": "domain-57",
+    "name": "算出口报价",
+    "category": "外贸销售",
+    "scene": "8.算出口报价",
+    "sourcePath": "skills/domain/外贸销售/8.算出口报价/算出口报价/SKILL.md"
+  },
+  {
+    "id": "domain-58",
+    "name": "检查出口单证",
+    "category": "外贸销售",
+    "scene": "9.检查出口单证",
+    "sourcePath": "skills/domain/外贸销售/9.检查出口单证/检查出口单证/SKILL.md"
+  },
+  {
+    "id": "domain-59",
+    "name": "chem-product-quicklook",
+    "category": "期现-产业基本面",
+    "scene": "1.快速看懂一个品种",
+    "sourcePath": "skills/domain/期现-产业基本面/1.快速看懂一个品种/chem-product-quicklook/SKILL.md"
+  },
+  {
+    "id": "domain-60",
+    "name": "supply-event-ledger",
+    "category": "期现-产业基本面",
+    "scene": "10.看供给端最近发生了什么",
+    "sourcePath": "skills/domain/期现-产业基本面/10.看供给端最近发生了什么/supply-event-ledger/SKILL.md"
+  },
+  {
+    "id": "domain-61",
+    "name": "chem-demand-signal",
+    "category": "期现-产业基本面",
+    "scene": "11.看需求端最近发生了什么",
+    "sourcePath": "skills/domain/期现-产业基本面/11.看需求端最近发生了什么/需求端景气跟踪/chem-demand-signal/SKILL.md"
+  },
+  {
+    "id": "domain-62",
+    "name": "cost-pass-through",
+    "category": "期现-产业基本面",
+    "scene": "12.看上下游成本怎么传导",
+    "sourcePath": "skills/domain/期现-产业基本面/12.看上下游成本怎么传导/看上下游成本怎么传导/SKILL.md"
+  },
+  {
+    "id": "domain-63",
+    "name": "看产业链利润变化",
+    "category": "期现-产业基本面",
+    "scene": "13.看产业链利润变化",
+    "sourcePath": "skills/domain/期现-产业基本面/13.看产业链利润变化/看产业链利润变化-skill/SKILL.md"
+  },
+  {
+    "id": "domain-64",
+    "name": "chem-supply-demand-variables",
+    "category": "期现-产业基本面",
+    "scene": "14.看接下来最该盯哪些变量",
+    "sourcePath": "skills/domain/期现-产业基本面/14.看接下来最该盯哪些变量/产业变量观察_skill_v1.0/SKILL.md"
+  },
+  {
+    "id": "domain-65",
+    "name": "industrial-morning-brief",
+    "category": "期现-产业基本面",
+    "scene": "15.生成品种晨报",
+    "sourcePath": "skills/domain/期现-产业基本面/15.生成品种晨报/industrial-morning-brief/SKILL.md"
+  },
+  {
+    "id": "domain-66",
+    "name": "chem-customer-intel-weekly",
+    "category": "期现-产业基本面",
+    "scene": "16.生成品种周报",
+    "sourcePath": "skills/domain/期现-产业基本面/16.生成品种周报/客户情报周报/chem-customer-intel-weekly/SKILL.md"
+  },
+  {
+    "id": "domain-67",
+    "name": "chem-product-weekly",
+    "category": "期现-产业基本面",
+    "scene": "16.生成品种周报",
+    "sourcePath": "skills/domain/期现-产业基本面/16.生成品种周报/生成品种周报/chem-product-weekly/SKILL.md"
+  },
+  {
+    "id": "domain-68",
+    "name": "chem-topic-research",
+    "category": "期现-产业基本面",
+    "scene": "17.生成专题研究报告",
+    "sourcePath": "skills/domain/期现-产业基本面/17.生成专题研究报告/chem-topic-research/SKILL.md"
+  },
+  {
+    "id": "domain-69",
+    "name": "explain-futures-spot-question",
+    "category": "期现-产业基本面",
+    "scene": "18.用通俗语言解释一个期现问题",
+    "sourcePath": "skills/domain/期现-产业基本面/18.用通俗语言解释一个期现问题/chem-futures-spot-explain/SKILL.md"
+  },
+  {
+    "id": "domain-70",
+    "name": "new-capacity-project-tracker",
+    "category": "期现-产业基本面",
+    "scene": "19.跟踪新增产能和项目",
+    "sourcePath": "skills/domain/期现-产业基本面/19.跟踪新增产能和项目/19.跟踪新增产能和项目/SKILL.md"
+  },
+  {
+    "id": "domain-71",
+    "name": "chem-chain-map",
+    "category": "期现-产业基本面",
+    "scene": "2.看一个品种的产业链图",
+    "sourcePath": "skills/domain/期现-产业基本面/2.看一个品种的产业链图/chem-chain-map/SKILL.md"
+  },
+  {
+    "id": "domain-72",
+    "name": "chem-chain-price-research",
+    "category": "期现-产业基本面",
+    "scene": "2.看一个品种的产业链图",
+    "sourcePath": "skills/domain/期现-产业基本面/2.看一个品种的产业链图/产业链价格地图/chem-chain-price-research/SKILL.md"
+  },
+  {
+    "id": "domain-73",
+    "name": "深度研究一家产业企业",
+    "category": "期现-产业基本面",
+    "scene": "20.深度研究一家产业企业",
+    "sourcePath": "skills/domain/期现-产业基本面/20.深度研究一家产业企业/chem-enterprise-deep-dive/SKILL.md"
+  },
+  {
+    "id": "domain-74",
+    "name": "news-event-localization",
+    "category": "期现-产业基本面",
+    "scene": "21.聚合产业资讯并定位事件",
+    "sourcePath": "skills/domain/期现-产业基本面/21.聚合产业资讯并定位事件/news-event-localization/SKILL.md"
+  },
+  {
+    "id": "domain-75",
+    "name": "chemical-producer-capacity-map",
+    "category": "期现-产业基本面",
+    "scene": "3.看主要生产企业和产能",
+    "sourcePath": "skills/domain/期现-产业基本面/3.看主要生产企业和产能/chemical-producer-capacity-map/SKILL.md"
+  },
+  {
+    "id": "domain-76",
+    "name": "region-industry-map",
+    "category": "期现-产业基本面",
+    "scene": "4.看一个区域的产业格局",
+    "sourcePath": "skills/domain/期现-产业基本面/4.看一个区域的产业格局/region-industry-map/SKILL.md"
+  },
+  {
+    "id": "domain-77",
+    "name": "chem-capacity-impact",
+    "category": "期现-产业基本面",
+    "scene": "5.看新增产能会影响谁",
+    "sourcePath": "skills/domain/期现-产业基本面/5.看新增产能会影响谁/chem-capacity-impact/SKILL.md"
+  },
+  {
+    "id": "domain-78",
+    "name": "industry-news-impact-judge",
+    "category": "期现-产业基本面",
+    "scene": "6.判断一条产业新闻影响多大",
+    "sourcePath": "skills/domain/期现-产业基本面/6.判断一条产业新闻影响多大/industry-news-impact-judge/SKILL.md"
+  },
+  {
+    "id": "domain-79",
+    "name": "price-history-position",
+    "category": "期现-产业基本面",
+    "scene": "7.看当前价格处在什么位置",
+    "sourcePath": "skills/domain/期现-产业基本面/7.看当前价格处在什么位置/price-history-position-skill/SKILL.md"
+  },
+  {
+    "id": "domain-80",
+    "name": "chem-price-attribution",
+    "category": "期现-产业基本面",
+    "scene": "8.解释最近为什么涨跌",
+    "sourcePath": "skills/domain/期现-产业基本面/8.解释最近为什么涨跌/chem-price-attribution/SKILL.md"
+  },
+  {
+    "id": "domain-81",
+    "name": "fundamental-support-check",
+    "category": "期现-产业基本面",
+    "scene": "9.看上涨下跌有没有基本面支撑",
+    "sourcePath": "skills/domain/期现-产业基本面/9.看上涨下跌有没有基本面支撑/fundamental-support-check/SKILL.md"
+  },
+  {
+    "id": "domain-82",
+    "name": "basis-term-structure-research",
+    "category": "期现-价差与量化",
+    "scene": "1.看当前基差强不强",
+    "sourcePath": "skills/domain/期现-价差与量化/1.看当前基差强不强/basis-term-structure-research/SKILL.md"
+  },
+  {
+    "id": "domain-83",
+    "name": "operating-rate-seasonality",
+    "category": "期现-价差与量化",
+    "scene": "10.查开工率季节性",
+    "sourcePath": "skills/domain/期现-价差与量化/10.查开工率季节性/查开工率季节性/SKILL.md"
+  },
+  {
+    "id": "domain-84",
+    "name": "查基差季节性",
+    "category": "期现-价差与量化",
+    "scene": "11.查基差季节性",
+    "sourcePath": "skills/domain/期现-价差与量化/11.查基差季节性/查基差季节性/SKILL.md"
+  },
+  {
+    "id": "domain-85",
+    "name": "two-indicator-correlation",
+    "category": "期现-价差与量化",
+    "scene": "12.查两个指标的相关性",
+    "sourcePath": "skills/domain/期现-价差与量化/12.查两个指标的相关性/two-indicator-correlation/SKILL.md"
+  },
+  {
+    "id": "domain-86",
+    "name": "leadlag-research",
+    "category": "期现-价差与量化",
+    "scene": "13.查谁领先谁",
+    "sourcePath": "skills/domain/期现-价差与量化/13.查谁领先谁/leadlag-research/SKILL.md"
+  },
+  {
+    "id": "domain-87",
+    "name": "inventory-price-relationship",
+    "category": "期现-价差与量化",
+    "scene": "14.检验库存和价格的关系",
+    "sourcePath": "skills/domain/期现-价差与量化/14.检验库存和价格的关系/inventory-price-relationship/SKILL.md"
+  },
+  {
+    "id": "domain-88",
+    "name": "operating-rate-price-relationship",
+    "category": "期现-价差与量化",
+    "scene": "15.检验开工率和价格的关系",
+    "sourcePath": "skills/domain/期现-价差与量化/15.检验开工率和价格的关系/operating-rate-price-relationship/SKILL.md"
+  },
+  {
+    "id": "domain-89",
+    "name": "basis-percentile-info",
+    "category": "期现-价差与量化",
+    "scene": "16.检验基差是否有历史信息",
+    "sourcePath": "skills/domain/期现-价差与量化/16.检验基差是否有历史信息/basis-percentile-info/SKILL.md"
+  },
+  {
+    "id": "domain-90",
+    "name": "unit-outage-event-study",
+    "category": "期现-价差与量化",
+    "scene": "17.做装置停车事件研究",
+    "sourcePath": "skills/domain/期现-价差与量化/17.做装置停车事件研究/unit-outage-event-study/SKILL.md"
+  },
+  {
+    "id": "domain-91",
+    "name": "new-capacity-event-study",
+    "category": "期现-价差与量化",
+    "scene": "18.做新增产能事件研究",
+    "sourcePath": "skills/domain/期现-价差与量化/18.做新增产能事件研究/18.做新增产能事件研究/SKILL.md"
+  },
+  {
+    "id": "domain-92",
+    "name": "policy-event-study",
+    "category": "期现-价差与量化",
+    "scene": "19.做政策事件研究",
+    "sourcePath": "skills/domain/期现-价差与量化/19.做政策事件研究/做政策事件研究_Skill_v1.0/SKILL.md"
+  },
+  {
+    "id": "domain-93",
+    "name": "futures-calendar-spread",
+    "category": "期现-价差与量化",
+    "scene": "2.看月差为什么变了",
+    "sourcePath": "skills/domain/期现-价差与量化/2.看月差为什么变了/futures-calendar-spread/SKILL.md"
+  },
+  {
+    "id": "domain-94",
+    "name": "scan-extreme-basis",
+    "category": "期现-价差与量化",
+    "scene": "20.扫描极端基差品种",
+    "sourcePath": "skills/domain/期现-价差与量化/20.扫描极端基差品种/20.扫描极端基差品种/SKILL.md"
+  },
+  {
+    "id": "domain-95",
+    "name": "futures-spread-anomaly-scan",
+    "category": "期现-价差与量化",
+    "scene": "21.扫描异常月差",
+    "sourcePath": "skills/domain/期现-价差与量化/21.扫描异常月差/futures-spread-anomaly-scan/SKILL.md"
+  },
+  {
+    "id": "domain-96",
+    "name": "scan-regional-spread-anomalies",
+    "category": "期现-价差与量化",
+    "scene": "22.扫描异常区域价差",
+    "sourcePath": "skills/domain/期现-价差与量化/22.扫描异常区域价差/22.扫描异常区域价差/SKILL.md"
+  },
+  {
+    "id": "domain-97",
+    "name": "chain-divergence-scan",
+    "category": "期现-价差与量化",
+    "scene": "23.扫描产业链异常背离",
+    "sourcePath": "skills/domain/期现-价差与量化/23.扫描产业链异常背离/chain-divergence-scan/SKILL.md"
+  },
+  {
+    "id": "domain-98",
+    "name": "historical-analog-search",
+    "category": "期现-价差与量化",
+    "scene": "24.找历史上最像现在的阶段",
+    "sourcePath": "skills/domain/期现-价差与量化/24.找历史上最像现在的阶段/historical-analog-search/SKILL.md"
+  },
+  {
+    "id": "domain-99",
+    "name": "research-hypothesis-test",
+    "category": "期现-价差与量化",
+    "scene": "25.检验一个自定义研究假设",
+    "sourcePath": "skills/domain/期现-价差与量化/25.检验一个自定义研究假设/25.检验一个自定义研究假设/SKILL.md"
+  },
+  {
+    "id": "domain-100",
+    "name": "futures-rule-backtest",
+    "category": "期现-价差与量化",
+    "scene": "26.回测一个明确研究规则",
+    "sourcePath": "skills/domain/期现-价差与量化/26.回测一个明确研究规则/SKILL.md"
+  },
+  {
+    "id": "domain-101",
+    "name": "chemical-region-spread",
+    "category": "期现-价差与量化",
+    "scene": "3.比较不同地区价差",
+    "sourcePath": "skills/domain/期现-价差与量化/3.比较不同地区价差/regional-spread-analysis/SKILL.md"
+  },
+  {
+    "id": "domain-102",
+    "name": "windows-spread-calc",
+    "category": "期现-价差与量化",
+    "scene": "4.看国内外价格有没有窗口",
+    "sourcePath": "skills/domain/期现-价差与量化/4.看国内外价格有没有窗口/windows-spread-calc/SKILL.md"
+  },
+  {
+    "id": "domain-103",
+    "name": "spread-quant-divergence",
+    "category": "期现-价差与量化",
+    "scene": "5.看两个品种为什么背离",
+    "sourcePath": "skills/domain/期现-价差与量化/5.看两个品种为什么背离/spread-quant-divergence-skill/SKILL.md"
+  },
+  {
+    "id": "domain-104",
+    "name": "看上下游价格联动",
+    "category": "期现-价差与量化",
+    "scene": "6.看上下游价格联动",
+    "sourcePath": "skills/domain/期现-价差与量化/6.看上下游价格联动/看上下游价格联动-技能包/SKILL.md"
+  },
+  {
+    "id": "domain-105",
+    "name": "ratio-spread-analyst",
+    "category": "期现-价差与量化",
+    "scene": "7.看两个相关品种的比价",
+    "sourcePath": "skills/domain/期现-价差与量化/7.看两个相关品种的比价/ratio-spread-analyst/SKILL.md"
+  },
+  {
+    "id": "domain-106",
+    "name": "查价格季节性",
+    "category": "期现-价差与量化",
+    "scene": "8.查价格季节性",
+    "sourcePath": "skills/domain/期现-价差与量化/8.查价格季节性/8.查价格季节性/SKILL.md"
+  },
+  {
+    "id": "domain-107",
+    "name": "查库存季节性",
+    "category": "期现-价差与量化",
+    "scene": "9.查库存季节性",
+    "sourcePath": "skills/domain/期现-价差与量化/9.查库存季节性/dist/查库存季节性/SKILL.md"
+  },
+  {
+    "id": "domain-108",
+    "name": "查库存季节性",
+    "category": "期现-价差与量化",
+    "scene": "9.查库存季节性",
+    "sourcePath": "skills/domain/期现-价差与量化/9.查库存季节性/SKILL.md"
+  }
+]

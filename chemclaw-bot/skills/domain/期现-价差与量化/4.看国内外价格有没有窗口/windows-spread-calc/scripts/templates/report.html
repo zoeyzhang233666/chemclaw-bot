@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#0f1419; --panel:#161d25; --panel2:#1c252f; --line:#26313d; --line2:#33414f;
+  --tx:#e8edf2; --tx2:#9fb0c0; --tx3:#6b7d8f;
+  --up:#e05c4b; --down:#2ea36a; --warn:#e0a33b; --info:#3b8ed0; --accent:#4ec9b0; --violet:#9d7bd8;
+  --mono:'SF Mono',Consolas,'Cascadia Mono',monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.62 -apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft YaHei',sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:0 22px 80px}
+a{color:var(--info);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3,h4{line-height:1.32;margin:0}
+code,.mono,.num{font-family:var(--mono)}
+
+/* ---------- 头部 ---------- */
+header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#131a21,#0f1419);padding:26px 0 20px;margin-bottom:22px}
+.hrow{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap;align-items:flex-start}
+h1{font-size:22px;letter-spacing:.2px}
+.sub{color:var(--tx2);font-size:13px;margin-top:8px;line-height:1.75}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:11px;border:1px solid var(--line2);color:var(--tx2);margin:0 6px 6px 0;white-space:nowrap}
+.tag.hot{border-color:#5d3a2e;color:#e8a58f;background:#2a1b17}
+.tag.good{border-color:#28543f;color:#7fd6a8;background:#152a20}
+.tag.warn{border-color:#5c4820;color:#e6c176;background:#2a2313}
+.tag.info{border-color:#28465e;color:#8fc4e8;background:#132230}
+.stamp{text-align:right;color:var(--tx3);font-size:12px;font-family:var(--mono);min-width:210px}
+
+/* ---------- 卡片 / 网格 ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+.card h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card h3 .n{display:inline-flex;width:21px;height:21px;border-radius:5px;background:#243040;color:var(--accent);font-size:11px;align-items:center;justify-content:center;font-family:var(--mono)}
+.card .hint{color:var(--tx3);font-size:12px;margin:2px 0 14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:940px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ---------- KPI ---------- */
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:14px 16px}
+.kpi .k{font-size:12px;color:var(--tx2);display:flex;justify-content:space-between;gap:8px}
+.kpi .v{font-family:var(--mono);font-size:23px;margin-top:6px;letter-spacing:-.3px}
+.kpi .u{font-size:12px;color:var(--tx3);margin-left:4px;font-family:inherit}
+.kpi .f{font-size:11px;color:var(--tx3);margin-top:6px;line-height:1.5}
+.pos{color:var(--up)} .neg{color:var(--down)} .neu{color:var(--tx)}
+
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--tx2);font-weight:500;font-size:12px;background:#131a21;position:sticky;top:0;z-index:2}
+th:first-child,td:first-child{text-align:left}
+td.l,th.l{text-align:left}
+tbody tr:hover td{background:#1a222b}
+.tbl-scroll{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.small{font-size:12px;color:var(--tx2)}
+.muted{color:var(--tx3)}
+
+/* ---------- 控件 ---------- */
+.ctl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:940px){.ctl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.field label{display:block;font-size:11px;color:var(--tx2);margin-bottom:5px;letter-spacing:.3px}
+.field input,.field select{width:100%;background:#0d1319;border:1px solid var(--line2);color:var(--tx);border-radius:6px;padding:7px 9px;font-family:var(--mono);font-size:13px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--info);box-shadow:0 0 0 3px rgba(59,142,208,.14)}
+.field .tip{font-size:10.5px;color:var(--tx3);margin-top:4px;line-height:1.45}
+.field.changed input{border-color:var(--warn);background:#1e1a10}
+.btn{background:#22303d;border:1px solid var(--line2);color:var(--tx);border-radius:6px;padding:7px 13px;font-size:12.5px;cursor:pointer}
+.btn:hover{background:#2a3a49;border-color:#3d4e5e}
+.btn.pri{background:#1d4257;border-color:#2b6584;color:#bfe4f5}
+.btnrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:6px;overflow:hidden}
+.seg button{background:#0d1319;border:none;color:var(--tx2);padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+.seg button.on{background:#1d4257;color:#cfe9f7}
+
+/* ---------- 图表 ---------- */
+.chart{width:100%;height:340px}
+.chart.sm{height:260px}
+.chart.xl{height:420px}
+
+/* ---------- 瀑布 ---------- */
+.wf{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.wf .r{display:grid;grid-template-columns:230px 1fr 104px;gap:10px;align-items:center;font-size:12.5px}
+.wf .lbl{color:var(--tx2);text-align:right;padding-right:6px;line-height:1.35}
+.wf .bar{position:relative;height:19px;background:#0d1319;border-radius:3px;overflow:hidden}
+.wf .fill{position:absolute;top:0;bottom:0;border-radius:3px}
+.wf .val{font-family:var(--mono);text-align:right;font-size:12px}
+.wf .r.base .lbl,.wf .r.subtotal .lbl,.wf .r.total .lbl{color:var(--tx);font-weight:600}
+.wf .r.total{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2)}
+
+/* ---------- 提示条 ---------- */
+.note{border-left:3px solid var(--info);background:#121c25;padding:11px 14px;border-radius:0 7px 7px 0;font-size:12.5px;color:var(--tx2);margin:12px 0;line-height:1.7}
+.note.warn{border-color:var(--warn);background:#1d1a11}
+.note.bad{border-color:var(--up);background:#1e1413}
+.note b{color:var(--tx)}
+.flag{font-size:10.5px;padding:1px 6px;border-radius:9px;border:1px solid var(--line2);font-family:var(--mono)}
+.flag.a{border-color:#28543f;color:#7fd6a8}
+.flag.b{border-color:#5c4820;color:#e6c176}
+.flag.c{border-color:#5d3a2e;color:#e8a58f}
+
+/* ---------- 折叠 ---------- */
+details{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;background:var(--panel2)}
+details>summary{padding:11px 15px;cursor:pointer;font-size:13.5px;color:var(--tx);list-style:none;display:flex;justify-content:space-between;gap:10px}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:'▸';color:var(--accent);margin-right:7px;transition:transform .15s}
+details[open]>summary::before{transform:rotate(90deg)}
+details>div{padding:0 16px 16px}
+
+/* ---------- 正文 ---------- */
+.p{color:var(--tx2);font-size:13.5px;line-height:1.85}
+.p b,.p strong{color:var(--tx)}
+ul.clean{margin:8px 0 0;padding-left:20px;color:var(--tx2);font-size:13px;line-height:1.85}
+ul.clean li{margin-bottom:5px}
+ul.clean li b{color:var(--tx)}
+.hl{background:#22303d;border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:12.5px;color:#cfe9f7}
+.foot{color:var(--tx3);font-size:11.5px;text-align:center;padding:26px 0 0;border-top:1px solid var(--line);margin-top:26px;line-height:1.8}
+.srcurl{font-family:var(--mono);font-size:11px;color:var(--tx3);word-break:break-all}
+.live{font-size:11px;color:var(--accent);font-family:var(--mono)}
+#recalcTag{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <div style="min-width:320px;flex:1">
+        <h1>__H1__</h1>
+        <div class="sub" id="subline"></div>
+        <div id="tagline" style="margin-top:10px"></div>
+      </div>
+      <div class="stamp">
+        <div>数据基准日 <b id="stBase" style="color:var(--tx)"></b></div>
+        <div>观察窗口 <span id="stWin"></span></div>
+        <div style="margin-top:6px" id="stGen"></div>
+        <div class="live" id="recalcTag">● 交互重算已生效</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 0. 基准结论 ============ -->
+<section class="card">
+  <h3><span class="n">0</span>基准时点的四层成本与四个价缺口径</h3>
+  <div class="hint" id="kpiHint"></div>
+  <div class="grid g4" id="kpiRow1"></div>
+  <div class="grid g4" id="kpiRow2" style="margin-top:14px"></div>
+  <div id="kpiNote"></div>
+</section>
+
+<!-- ============ 1. 交互参数 ============ -->
+<section class="card">
+  <h3><span class="n">1</span>交互面板：改一个参数，全页重算</h3>
+  <div class="hint">下列参数即模型全部外生输入。改动后上方 KPI、下方成本瀑布、价差曲线与敏感性矩阵全部按同一套公式实时重算（浏览器内 <span class="hl">WSC.import_cost</span>，与 Excel/Python 数值一致，容差 1e-6）。</div>
+  <div class="ctl" id="ctlTop"></div>
+  <div class="ctl" id="ctlCost" style="margin-top:14px"></div>
+  <div class="ctl" id="ctlTax" style="margin-top:14px"></div>
+  <div class="btnrow">
+    <button class="btn pri" id="btnReset">恢复基准值</button>
+    <div class="seg" id="segRange">
+      <button data-w="3">近3月</button><button data-w="6">近6月</button><button data-w="12" class="on">近12月</button><button data-w="0">全部</button>
+    </div>
+    <span class="small muted" id="chgNote"></span>
+  </div>
+  <div id="ctlWarn"></div>
+</section>
+
+<!-- ============ 2. 成本瀑布 ============ -->
+<section class="card">
+  <h3><span class="n">2</span>成本瀑布：从美元报价到可比经济成本</h3>
+  <div class="hint">左列为逐项成本，右列为累计值。术语已包含的费用自动置 0（见第 6 节口径守卫），因此不会重复计费。</div>
+  <div class="grid g2" style="align-items:start">
+    <div class="wf" id="wfBox"></div>
+    <div>
+      <div class="chart sm" id="chWaterfall"></div>
+      <div class="small muted" style="margin-top:6px">横轴为累计成本（元/吨）；虚线分别标出 CIF、landed_cash、net_cash 与国内可比价。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 价差曲线 ============ -->
+<section class="card">
+  <h3><span class="n">3</span>历史价差曲线：窗口是持续存在还是一闪而过</h3>
+  <div class="hint" id="serHint"></div>
+  <div class="chart xl" id="chGap"></div>
+  <div class="grid g4" style="margin-top:14px" id="serStats"></div>
+  <div class="tbl-scroll" style="margin-top:14px;max-height:420px">
+    <table id="tblSeries">
+      <thead><tr>
+        <th class="l">日期</th><th>海外报价<br><span class="muted">USD/t</span></th><th>汇率<br><span class="muted">CNY/USD</span></th>
+        <th>海运费<br><span class="muted">USD/t</span></th><th>CIF<br><span class="muted">元/t</span></th><th>含税到岸<br><span class="muted">元/t</span></th>
+        <th>经济成本<br><span class="muted">元/t</span></th><th>国内可比<br><span class="muted">元/t</span></th>
+        <th>G3 价差<br><span class="muted">元/t</span></th><th class="l">取值来源</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="note">表内每一行的报价、汇率、运费都取"该时点可获得的值"，并在末列标注来源等级：<span class="flag a">实测</span> 该日真实取值；<span class="flag b">月度均值</span> 用当月可得运价均值替代；<span class="flag c">假设</span> 无历史值、沿用基准日参数。凡标"假设"的行，其成本侧数字只能读作条件性结果，不能读作历史实际成本。</div>
+</section>
+
+<!-- ============ 4. 驱动分解 ============ -->
+<section class="card">
+  <h3><span class="n">4</span>价差为什么变了：四类驱动分解</h3>
+  <div class="hint" id="attrHint"></div>
+  <div class="grid g2" style="align-items:start">
+    <div>
+      <table id="tblAttr"><thead><tr><th class="l">驱动因子</th><th>变化</th><th>对价差贡献<br><span class="muted">元/吨</span></th></tr></thead><tbody></tbody></table>
+      <div id="attrClosure" class="small muted" style="margin-top:8px"></div>
+    </div>
+    <div class="chart sm" id="chAttr"></div>
+  </div>
+</section>
+
+<!-- ============ 5. 敏感性 ============ -->
+<section class="card">
+  <h3><span class="n">5</span>敏感性：哪个参数最能把窗口关上</h3>
+  <div class="hint">上：单参数灵敏度（各自独立变动，其余保持面板当前值）。下：海运费 × 汇率二维矩阵，单元格为 G3 经济口径价差（元/吨），绿色=国内更强，红色=进口更便宜。</div>
+  <div class="chart xl" id="chSens"></div>
+  <div class="tbl-scroll" style="margin-top:16px;max-height:460px">
+    <table id="tblMatrix"><thead></thead><tbody></tbody></table>
+  </div>
+</section>
+
+<!-- ============ 6. 口径守卫 ============ -->
+<section class="card">
+  <h3><span class="n">6</span>口径守卫：贸易术语已含什么、不能重复算什么</h3>
+  <div class="hint">这是本 Skill 的硬性检查。只要某费用已被术语包含，参数里再填值就自动按 0 计，并在下方提示。</div>
+  <div class="grid g2" style="align-items:start">
+    <div>
+      <table id="tblTerms"><thead><tr><th class="l">费用层</th><th>当前术语</th><th class="l">说明</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div>
+      <div id="guardBox"></div>
+      <details><summary>全部贸易术语的包含关系对照</summary><div><table id="tblTermAll"></table></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. 数据口径 ============ -->
+<section class="card">
+  <h3><span class="n">7</span>数据口径：每个数字的六要素</h3>
+  <div class="hint">数值 · 规格 · 地区 · 含税与否 · 日期 · 来源。任何一项缺失都必须出现在第 8 节缺口清单里。</div>
+  <div class="tbl-scroll" style="max-height:none">
+    <table id="tblSrc"><thead><tr><th class="l">角色</th><th class="l">数值与口径</th><th class="l">日期</th><th class="l">来源</th><th class="l">可信度</th></tr></thead><tbody></tbody></table>
+  </div>
+</section>
+
+<!-- ============ 8. 缺口 ============ -->
+<section class="card">
+  <h3><span class="n">8</span>数据缺口：这次结论哪里还不牢</h3>
+  <div class="hint">缺口不是免责声明，而是下一次要补的数据清单。按严重度排序，每条都写明对结论的影响与补齐办法。</div>
+  <div id="gapBox"></div>
+</section>
+
+<!-- ============ 9. 公式 ============ -->
+<section class="card">
+  <h3><span class="n">9</span>底层公式与逐项代入</h3>
+  <div class="hint">公式与 Python / Excel 完全同源（<span class="hl">scripts/core.py</span> 与 Excel「公式表」）；此处展示当前面板参数下的实际代入值。</div>
+  <div class="tbl-scroll" style="max-height:none">
+    <table id="tblFormula"><thead><tr><th class="l">#</th><th class="l">项目</th><th class="l">公式</th><th>当前值</th><th class="l">单位</th></tr></thead><tbody></tbody></table>
+  </div>
+</section>
+
+<!-- ============ 10. 边界与声明 ============ -->
+<section class="card">
+  <h3><span class="n">10</span>边界与声明</h3>
+  <div id="discBox"></div>
+</section>
+
+<div class="foot">
+  <div id="footLine"></div>
+  <div style="margin-top:6px">本页为自包含单文件报告：图表库、计算内核与数据均已内联，可离线打开、可直接发邮件。</div>
+</div>
+</div>
+
+<script>__ECHARTS__</script>
+<script>__COREJS__</script>
+<script>
+/* =====================================================================
+   报告渲染层：只读 DATA + 调用 WSC（与 Python core.py 等价的公式内核）
+   ===================================================================== */
+var DATA = __DATA__;
+
+/* ---------------- 工具 ---------------- */
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function fx(n,d){ if(n===null||n===undefined||isNaN(n)) return '—';
+  var s=Number(n).toFixed(d===undefined?2:d); var p=s.split('.');
+  p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,','); return p.join('.'); }
+function f0(n){ return fx(n,0); }
+function sgn(n,d){ if(n===null||n===undefined||isNaN(n)) return '—';
+  return (n>0?'+':'')+fx(n,d===undefined?0:d); }
+function cls(n){ return n===null||n===undefined||isNaN(n)?'neu':(n>0?'pos':(n<0?'neg':'neu')); }
+function pctf(n,d){ if(n===null||n===undefined||isNaN(n)) return '—'; return (n>0?'+':'')+Number(n).toFixed(d===undefined?2:d)+'%'; }
+function el(tag,cls_,html){ var e=document.createElement(tag); if(cls_)e.className=cls_; if(html!=null)e.innerHTML=html; return e; }
+
+var META = DATA.meta, PARAMS0 = DATA.params;
+var BASE = JSON.parse(JSON.stringify(PARAMS0));       /* 基准参数快照，用于"恢复基准值" */
+var CUR  = JSON.parse(JSON.stringify(PARAMS0));       /* 当前参数 */
+/* 国内价格不属于进口成本参数，但同样需要在面板里可改、并进入四口径价差，
+   故单独挂到 CUR 上；缺了它 G1-G4 会全部算成 "-CIF" 而显示 0。 */
+CUR.dom_quote = (DATA.domestic && DATA.domestic.dom_price) || 0;
+CUR.dom_tax = (DATA.domestic && DATA.domestic.dom_tax) || '含税';
+CUR.dom_term_incl_freight = (DATA.domestic && DATA.domestic.dom_term_incl_freight !== false);
+CUR.dom_freight_to_bench = (DATA.domestic && DATA.domestic.dom_freight_to_bench) || 0;
+CUR.dom_scale_adj = (DATA.domestic && DATA.domestic.dom_scale_adj) || 0;
+var UI   = { term: META.quote_term, rangeW: 12 };
+var CHARTS = {};
+
+/* ---------------- 参数定义（面板） ---------------- */
+var FIELDS_TOP = [
+  {k:'price_quote', label:'海外报价', unit:'USD/t', step:1, tip:'取报价区间中值；区间见第 7 节'},
+  {k:'fx_usdcny',  label:'汇率 USD/CNY', unit:'CNY/USD', step:0.0001, tip:'基准日 ECB 参考汇率；面板可改'},
+  {k:'term',       label:'贸易术语', unit:'', type:'term', tip:'改术语会自动屏蔽已含费用'},
+  {k:'dom_quote',  label:'国内现货价', unit:'元/吨', step:10, tip:'含税、送到基准地、现汇'}
+];
+var FIELDS_COST = [
+  {k:'ocean_freight', label:'国际海运费', unit:'USD/t', step:1, tip:'术语含运费时按 0 计（CFR/CIF/DAP）'},
+  {k:'insurance_rate_pct', label:'保险费率', unit:'%', step:0.01, scale:100, tip:'运费+货值 × 加成率 × 费率'},
+  {k:'insurance_rate', label:'保险加成率', unit:'倍', step:0.05, tip:'惯例 110%'},
+  {k:'discharge_fee', label:'目的港卸货/港杂', unit:'USD/t', step:0.5, tip:'CIF/CFR 均不含卸货'},
+  {k:'inland_dest', label:'进口国内陆运费', unit:'元/吨', step:10, tip:'港口到厂/到库'},
+  {k:'inland_origin', label:'出口国内陆运费', unit:'USD/t', step:1, tip:'EXW 才需要单列'},
+  {k:'export_clear', label:'出口报关杂费', unit:'USD/t', step:0.5, tip:'EXW 才需要单列'},
+  {k:'unload_fee', label:'装卸/损耗附加', unit:'元/吨', step:5, tip:'含滞港、损耗分摊等显式费用'}
+];
+var FIELDS_TAX = [
+  {k:'duty_rate', label:'进口关税率', unit:'%', step:0.5, scale:100, tip:'最惠国税率见第 7 节来源'},
+  {k:'other_tax_rate', label:'其他税率', unit:'%', step:0.5, scale:100, tip:'反倾销/反补贴等，按实际执行'},
+  {k:'vat_rate', label:'进口增值税率', unit:'%', step:1, scale:100, tip:'标准 13%'},
+  {k:'vat_credit_ratio', label:'增值税可抵扣比例', unit:'%', step:5, scale:100, tip:'一般纳税人全额抵扣=100%'}
+];
+
+/* ---------------- 渲染控件 ---------------- */
+function buildField(def){
+  var d = el('div','field');
+  var lab = el('label', null, esc(def.label) + (def.unit? ' <span class="muted">('+esc(def.unit)+')</span>':''));
+  d.appendChild(lab);
+  var inp;
+  if(def.type==='term'){
+    inp = document.createElement('select');
+    Object.keys(WSC.TERM_LABEL).forEach(function(t){
+      var o=document.createElement('option'); o.value=t; o.textContent=t+' · '+WSC.TERM_LABEL[t].split(' ')[1]; inp.appendChild(o);
+    });
+    inp.value = UI.term;
+    inp.addEventListener('change', function(){ UI.term = inp.value; CUR.term = UI.term; renderAll(); });
+  }else{
+    inp = document.createElement('input');
+    inp.type='number'; inp.step = def.step; inp.min=0;
+    inp.value = val(def);
+    inp.addEventListener('input', function(){
+      var v = parseFloat(inp.value);
+      CUR[def.k] = isNaN(v) ? 0 : (def.scale? v/def.scale : v);
+      d.classList.toggle('changed', Math.abs((CUR[def.k]||0)-(BASE[def.k]||0))>1e-12);
+      renderAll();
+    });
+    inp.dataset.k = def.k;
+  }
+  d.appendChild(inp);
+  if(def.tip) d.appendChild(el('div','tip',esc(def.tip)));
+  return d;
+}
+function val(def){ var v = CUR[def.k]; return def.scale? Number((v*def.scale).toFixed(6)) : v; }
+function rebuildControls(){
+  $('ctlTop').innerHTML=''; $('ctlCost').innerHTML=''; $('ctlTax').innerHTML='';
+  $('ctlTop').appendChild(buildField(FIELDS_TOP[0]));
+  $('ctlTop').appendChild(buildField({k:'dom_quote', label:'国内现货价', unit:'元/吨', step:10, tip:'含税、送到基准地、现汇'}));
+  $('ctlTop').appendChild(buildField(FIELDS_TOP[1]));
+  $('ctlTop').appendChild(buildField(FIELDS_TOP[2]));
+  FIELDS_COST.forEach(function(f){ $('ctlCost').appendChild(buildField(f)); });
+  FIELDS_TAX.forEach(function(f){ $('ctlTax').appendChild(buildField(f)); });
+}
+
+/* ---------------- 计算 ---------------- */
+function compute(){
+  var p = {
+    price_quote: CUR.price_quote, currency: CUR.currency || 'USD', term: CUR.term,
+    fx_usdcny: CUR.fx_usdcny, purity: CUR.purity||1, gross_weight_factor: CUR.gross_weight_factor||1,
+    inland_origin: CUR.inland_origin||0, export_clear: CUR.export_clear||0,
+    ocean_freight: CUR.ocean_freight||0, insurance_rate: CUR.insurance_rate,
+    insurance_rate_pct: CUR.insurance_rate_pct||0, discharge_fee: CUR.discharge_fee||0,
+    inland_dest: CUR.inland_dest||0, unload_fee: CUR.unload_fee||0,
+    duty_rate: CUR.duty_rate||0, other_tax_rate: CUR.other_tax_rate||0,
+    vat_rate: CUR.vat_rate, vat_credit_ratio: CUR.vat_credit_ratio
+  };
+  var cost = WSC.import_cost(p);
+  var dcfg = {
+    dom_quote: CUR.dom_quote, dom_tax: CUR.dom_tax,
+    term_incl_freight: CUR.dom_term_incl_freight,
+    dom_freight_to_bench: CUR.dom_freight_to_bench,
+    dom_scale_adj: CUR.dom_scale_adj, vat_rate: CUR.vat_rate
+  };
+  var comp = WSC.comparable_price(dcfg, cost);
+  var gaps = WSC.gap_table(CUR.dom_quote, cost, comp);
+  return {p:p, cost:cost, comp:comp, gaps:gaps, warns:WSC.check_terms(p).concat(WSC.check_config(p))};
+}
+
+/* ---------------- 0. KPI ---------------- */
+function renderKPI(S){
+  var c=S.cost, g={}; S.gaps.forEach(function(x){ g[x.code]=x.value; });
+  var box1 = [
+    ['海外报价（'+c.term+' 折算）', f0(c.cif), '元/吨 CIF', '报价 '+fx(c.quote,1)+' USD/t × 汇率 '+fx(c.fx,4)],
+    ['税费现金支出', f0(c.cash_out), '元/吨', '关税 '+f0(c.duty)+' + 不可抵扣 VAT '+f0((c.vat||0)-(c.vat_credit||0))],
+    ['可抵扣进口增值税', f0(c.vat_credit), '元/吨', '进项税 '+f0(c.vat)+' × 可抵扣 '+fx((CUR.vat_credit_ratio||0)*100,0)+'%'],
+    ['可比经济成本', f0(c.net_cash), '元/吨', '含税到岸 '+f0(c.landed_cash)+' − 可抵扣 '+f0(c.vat_credit)]
+  ];
+  var box2 = [
+    ['G1 CIF vs 国内未税', sgn(g.G1_cif_vs_domnet), '元/吨', '国内未税 '+f0(S.comp.dom_net_price)+' − CIF '+f0(c.cif), g.G1_cif_vs_domnet],
+    ['G2 含税到岸 vs 国内含税', sgn(g.G2_landedcash_vs_domallin), '元/吨', '国内含税 '+f0(S.comp.dom_price)+' − 到岸 '+f0(c.landed_cash), g.G2_landedcash_vs_domallin],
+    ['G3 经济成本 vs 国内含税', sgn(g.G3_netcash_vs_domallin), '元/吨', '国内含税 '+f0(S.comp.dom_price)+' − 经济成本 '+f0(c.net_cash), g.G3_netcash_vs_domallin],
+    ['G4 进项税调整后', sgn(g.G4_vatadj), '元/吨', '国内未税 '+f0(S.comp.dom_net_price)+' − 经济成本 '+f0(c.net_cash), g.G4_vatadj]
+  ];
+  function card(a, colored){
+    var cl = colored? cls(a[4]) : '';
+    return '<div class="kpi"><div class="k"><span>'+esc(a[0])+'</span></div>'+
+      '<div class="v '+cl+'">'+(colored? esc(a[1]) : esc(a[1]))+'<span class="u">'+esc(a[2])+'</span></div>'+
+      '<div class="f">'+esc(a[3])+'</div></div>';
+  }
+  $('kpiRow1').innerHTML = box1.map(function(a){return card(a,false);}).join('');
+  $('kpiRow2').innerHTML = box2.map(function(a){return card(a,true);}).join('');
+
+  var n = $('kpiNote');
+  var ratio = c.cif>0? (c.net_cash-c.cif)/c.cif*100 : 0;
+  n.innerHTML = '<div class="note">'+
+    '国内含税送到 <b>'+f0(S.comp.dom_price)+' 元/吨</b> ÷ 折人民币 CIF <b>'+f0(c.cif)+' 元/吨</b> = <b>'+fx(S.comp.dom_price/c.cif,3)+' 倍</b>，'+
+    '价差结构里 <b>'+fx(ratio,1)+'%</b> 来自"报价→经济成本"的成本项（运费 '+f0(c.freight)+'、保险 '+f0(c.insurance)+'、卸货 '+f0(c.discharge)+'、税 '+f0(c.duty+c.other_tax+(c.vat-c.vat_credit))+'、国内端 '+f0(c.inland_dest+c.unload)+'），'+
+    '其余为商品本身的国际-国内价格差。两个口径必须分开读：<b>G1</b> 是纯价格差，<b>G3</b> 才是"抵扣完增值税后的经济成本"差；两者相差越大，说明价差的税制成分越重。'+
+    '</div>';
+  var q = CUR.price_quote, f = CUR.fx_usdcny;
+  $('kpiHint').innerHTML = '口径：'+esc(META.spec)+' · 海外 '+esc(META.quote_region)+' '+esc(META.quote_term)+' · 国内 '+esc(META.dom_region)+' '+esc(META.dom_basis)+
+    ' · 单位 元/吨 · 本页所有金额均扣除贸易术语已含费用的重复项';
+}
+
+/* ---------------- 1. 口径告警 ---------------- */
+function renderWarns(S){
+  var box = $('ctlWarn'); box.innerHTML='';
+  if(S.warns.length){
+    S.warns.forEach(function(i){
+      box.appendChild(el('div','note '+(i.level==='error'?'bad':'warn'), '<b>'+(i.level==='error'?'口径冲突':'提示')+'：</b>'+esc(i.msg)));
+    });
+  }else{
+    box.appendChild(el('div','note','<b>口径检查通过：</b>当前术语 '+esc(S.cost.term)+' 下没有填任何"术语已含"的费用项，不存在重复计费。'));
+  }
+  var bad = S.warns.some(function(i){return i.level==='error';});
+  $('recalcTag').style.display = bad? 'none':'block';
+  var chg = Object.keys(BASE).filter(function(k){ return JSON.stringify(BASE[k])!==JSON.stringify(CUR[k]); });
+  $('chgNote').textContent = chg.length? '已改动 '+chg.length+' 项：'+chg.map(function(k){return k+'='+CUR[k];}).join('，') : '当前为基准参数';
+}
+
+/* ---------------- 2. 瀑布 ---------------- */
+var WF_DEF = [
+  ['goods_cny',   '海外报价折人民币', 'base'],
+  ['inland_origin','出口国内陆运费', 'cost'],
+  ['export_clear','出口报关杂费', 'cost'],
+  ['freight',     '国际海运费', 'cost'],
+  ['insurance',   '保险费', 'cost'],
+  ['_cif',        '= CIF 折人民币', 'subtotal'],
+  ['discharge',   '目的港卸货/港杂', 'cost'],
+  ['duty',        '进口关税', 'cost'],
+  ['other_tax',   '其他税（反倾销等）', 'cost'],
+  ['vat',         '进口增值税', 'cost'],
+  ['inland_dest', '进口国内陆运费', 'cost'],
+  ['unload',      '装卸/损耗附加', 'cost'],
+  ['_landed',     '= 含税到岸 landed_cash', 'subtotal'],
+  ['_credit',     '可抵扣进口增值税', 'credit'],
+  ['_net',        '= 可比经济成本 net_cash', 'total'],
+  ['_dom',        '国内可比送到价（含税）', 'dom'],
+  ['_gap',        '= G3 经济口径价差', 'gap']
+];
+function wfValue(S, key){
+  var c=S.cost;
+  switch(key){
+    case '_cif': return c.cif;
+    case '_landed': return c.landed_cash;
+    case '_credit': return -c.vat_credit;
+    case '_net': return c.net_cash;
+    case '_dom': return S.comp.dom_price;
+    case '_gap': return S.comp.dom_price - c.net_cash;
+    default: return c[key]||0;
+  }
+}
+function renderWaterfall(S){
+  var rows = WF_DEF.map(function(d){ return {key:d[0], label:d[1], kind:d[2], v:wfValue(S,d[0])}; });
+  /* 隐藏恒为 0 的项，避免视觉噪声 */
+  rows = rows.filter(function(r){ return r.kind!=='cost' || Math.abs(r.v)>1e-9; });
+  var maxAbs = 1;
+  rows.forEach(function(r){ maxAbs = Math.max(maxAbs, Math.abs(r.v)); });
+  var html = rows.map(function(r){
+    var w = Math.min(100, Math.abs(r.v)/maxAbs*100);
+    var col = r.kind==='credit'? 'var(--accent)' : r.kind==='gap'? (r.v>=0?'var(--up)':'var(--down)')
+            : r.kind==='dom'? 'var(--violet)' : r.kind==='subtotal'? 'var(--info)' : r.kind==='total'? '#e8edf2' : '#3a4b5c';
+    var valCls = r.kind==='gap'||r.kind==='credit'? cls(r.v) : '';
+    return '<div class="r '+r.kind+'"><div class="lbl">'+esc(r.label)+'</div>'+
+      '<div class="bar"><div class="fill" style="width:'+w.toFixed(2)+'%;background:'+col+'"></div></div>'+
+      '<div class="val '+valCls+'">'+(r.kind==='cost'&&r.v>=0? f0(r.v) : sgn(r.v))+'</div></div>';
+  }).join('');
+  $('wfBox').innerHTML = html;
+
+  /* ECharts 横向累计瀑布 */
+  var cum = 0, base=[], inc=[], dec=[], labels=[], marks=[];
+  rows.forEach(function(r){
+    labels.push(r.label.replace(/^= /,''));
+    if(r.kind==='base'||r.kind==='subtotal'||r.kind==='total'||r.kind==='dom'){
+      base.push(0); inc.push(r.v); dec.push(0); cum = r.v;
+    }else{
+      if(r.v>=0){ base.push(cum); inc.push(r.v); dec.push(0); cum += r.v; }
+      else{ cum += r.v; base.push(cum); inc.push(0); dec.push(-r.v); }
+    }
+  });
+  var opt = {
+    backgroundColor:'transparent',
+    grid:{left:180,right:80,top:20,bottom:24},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#161d25',borderColor:'#33414f',textStyle:{color:'#e8edf2',fontSize:12},
+      formatter:function(ps){ var i=ps[0].dataIndex; var r=rows[i];
+        return '<b>'+esc(r.label)+'</b><br/>金额：'+f0(r.v)+' 元/吨'; }},
+    xAxis:{type:'value',axisLabel:{color:'#6b7d8f',fontSize:11,formatter:function(v){return f0(v);}},splitLine:{lineStyle:{color:'#1f2833'}}},
+    yAxis:{type:'category',data:labels,axisLabel:{color:'#9fb0c0',fontSize:11},axisLine:{lineStyle:{color:'#26313d'}},inverse:true},
+    series:[
+      {name:'base',type:'bar',stack:'w',itemStyle:{color:'transparent'},data:base,silent:true},
+      {name:'增加',type:'bar',stack:'w',itemStyle:{color:'#2f5d78'},data:inc,barWidth:'58%',
+        label:{show:true,position:'right',color:'#9fb0c0',fontSize:10,formatter:function(p){return p.value? f0(p.value):'';}}},
+      {name:'抵减',type:'bar',stack:'w',itemStyle:{color:'#2e7d5b'},data:dec,barWidth:'58%',
+        label:{show:true,position:'right',color:'#2e7d5b',fontSize:10,formatter:function(p){return p.value? '−'+f0(p.value):'';}}}
+    ]
+  };
+  mount('chWaterfall', opt);
+}
+
+/* ---------------- 3. 价差曲线 ---------------- */
+function seriesRows(){
+  var rows = DATA.series.rows.filter(function(r){ return r.status==='ok'; });
+  if(UI.rangeW>0 && rows.length){
+    var cut = new Date(rows[rows.length-1].date); cut.setMonth(cut.getMonth()-UI.rangeW);
+    var cs = cut.toISOString().slice(0,10);
+    rows = rows.filter(function(r){ return r.date>=cs; });
+  }
+  return rows;
+}
+function renderSeries(S){
+  var rows = seriesRows();
+  var dates = rows.map(function(r){return r.date;});
+  var g3 = rows.map(function(r){return r.gap_net_cash;});
+  var g1 = rows.map(function(r){return r.gap_cif;});
+  var g2 = rows.map(function(r){return r.gap_landed_cash;});
+  var other = rows.map(function(r){return r.implied_other;});
+
+  var marks = [];
+  var iLast = rows.length-1;
+  if(iLast>=0) marks.push({coord:[dates[iLast], rows[iLast].gap_net_cash], name:'最新'});
+
+  var opt = {
+    backgroundColor:'transparent',
+    legend:{top:0,textStyle:{color:'#9fb0c0',fontSize:11},itemWidth:14,itemHeight:8},
+    grid:{left:66,right:70,top:34,bottom:52},
+    tooltip:{trigger:'axis',backgroundColor:'#161d25',borderColor:'#33414f',textStyle:{color:'#e8edf2',fontSize:12},
+      formatter:function(ps){ var i=ps[0].dataIndex, r=rows[i];
+        return '<b>'+r.date+'</b><br/>'+
+          '海外报价(A)：'+fx(r.ov_usd,1)+' USD/t<br/>'+
+          '汇率(A)：'+fx(r.fx,4)+'（'+r.fx_date+'）<br/>'+
+          '海运费：'+fx(r.frt_usd,1)+' USD/t <span style="color:#6b7d8f">'+r.frt_source+'</span><br/>'+
+          'CIF：'+f0(r.cif)+' 元/t<br/>含税到岸：'+f0(r.landed_cash)+' 元/t<br/>经济成本：'+f0(r.net_cash)+' 元/t<br/>'+
+          '国内可比：'+f0(r.dom_price)+' 元/t<br/>'+
+          '<b>G3 价差：'+(r.gap_net_cash>=0?'+':'')+f0(r.gap_net_cash)+' 元/t</b>'; }},
+    xAxis:{type:'category',data:dates,boundaryGap:false,
+      axisLabel:{color:'#6b7d8f',fontSize:11},axisLine:{lineStyle:{color:'#26313d'}}},
+    yAxis:[
+      {type:'value',name:'价差 元/吨',nameTextStyle:{color:'#6b7d8f',fontSize:11},
+       axisLabel:{color:'#6b7d8f',fontSize:11,formatter:function(v){return f0(v);}},splitLine:{lineStyle:{color:'#1f2833'}}},
+      {type:'value',name:'美元/吨',nameTextStyle:{color:'#6b7d8f',fontSize:11},position:'right',
+       axisLabel:{color:'#6b7d8f',fontSize:11},splitLine:{show:false}}
+    ],
+    series:[
+      {name:'G3 经济口径价差',type:'line',data:g3,smooth:false,symbol:'circle',symbolSize:5,
+       lineStyle:{color:'#4ec9b0',width:2},itemStyle:{color:'#4ec9b0'},
+       areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(78,201,176,.28)'},{offset:1,color:'rgba(78,201,176,0)'}]}},
+       markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#5a6a7a',width:1},
+         data:[{yAxis:0,label:{formatter:'零线',color:'#8b9baa',fontSize:10,position:'insideEndTop'}}]}},
+      {name:'G2 现金口径价差',type:'line',data:g2,symbol:'none',lineStyle:{color:'#e0a33b',width:1.4,type:'dashed'}},
+      {name:'G1 纯价格口径',type:'line',data:g1,symbol:'none',lineStyle:{color:'#3b8ed0',width:1.4,type:'dotted'}},
+      {name:'市场隐含其余成本',type:'line',yAxisIndex:1,data:other,symbol:'none',lineStyle:{color:'#9d7bd8',width:1.2,opacity:.75}}
+    ]
+  };
+  mount('chGap', opt);
+
+  /* 统计卡 */
+  var st = DATA.series.stats || {};
+  function card3(t, o, f){
+    if(!o) return '<div class="kpi"><div class="k">'+t+'</div><div class="v">—</div><div class="f">样本不足</div></div>';
+    return '<div class="kpi"><div class="k"><span>'+t+'</span><span class="muted">n='+o.n+'</span></div>'+
+      '<div class="v '+cls(o.end)+'">'+sgn(o.end,0)+'<span class="u">元/吨</span></div>'+
+      '<div class="f">'+f+'</div></div>';
+  }
+  $('serStats').innerHTML =
+    card3('G3 最新（'+esc(META.base_date)+'）', st.gap_net_cash, '区间均值 '+f0(st.gap_net_cash&&st.gap_net_cash.avg)+'，最高 '+f0(st.gap_net_cash&&st.gap_net_cash.max)+'（'+esc(st.gap_net_cash&&st.gap_net_cash.max_date||'')+'）')+
+    card3('区间变化', st.gap_net_cash? {n:st.gap_net_cash.n, end:st.gap_net_cash.change}: null, '自 '+esc(st.gap_net_cash&&st.gap_net_cash.start_date||'')+' 的 '+f0(st.gap_net_cash&&st.gap_net_cash.start)+' 起')+
+    card3('区间最低', st.gap_net_cash? {n:st.gap_net_cash.n, end:st.gap_net_cash.min}: null, esc(st.gap_net_cash&&st.gap_net_cash.min_date||''))+
+    card3('隐含其余成本均值', st.implied_other, '国内价 − CIF − 运费 − 保险 − 卸货，不含税');
+
+  /* 明细表 */
+  var srcFlag = function(t){ return t==='actual'? '<span class="flag a">实测</span>'
+    : t==='monthly_avg'? '<span class="flag b">月度均值</span>' : '<span class="flag c">假设</span>'; };
+  var tbody = $('tblSeries').querySelector('tbody');
+  tbody.innerHTML = rows.slice().reverse().map(function(r){
+    return '<tr><td class="l mono">'+r.date+'</td>'+
+      '<td class="mono">'+fx(r.ov_usd,1)+'</td>'+
+      '<td class="mono">'+fx(r.fx,4)+'</td>'+
+      '<td class="mono">'+fx(r.frt_usd,1)+'</td>'+
+      '<td class="mono">'+f0(r.cif)+'</td>'+
+      '<td class="mono">'+f0(r.landed_cash)+'</td>'+
+      '<td class="mono">'+f0(r.net_cash)+'</td>'+
+      '<td class="mono">'+f0(r.dom_price)+'</td>'+
+      '<td class="mono '+cls(r.gap_net_cash)+'">'+sgn(r.gap_net_cash,0)+'</td>'+
+      '<td class="l small">'+srcFlag(r.frt_source)+' <span class="muted">'+esc(r.ov_source?'报价A · 汇率'+r.fx_date:'')+'</span></td></tr>';
+  }).join('') || '<tr><td colspan="10" class="muted" style="text-align:center">窗口内无有效观测</td></tr>';
+  $('serHint').innerHTML = '有效观测 <b>'+DATA.series.n_ok+'</b> 条（'+DATA.meta.window+'）。曲线只画同时具备"海外报价 + 汇率 + 国内价"的时点；'
+    + '任一时点缺一项即跳过，不插值、不用邻近值顶替。紫色线为市场隐含的其余成本（税费+通道+杂费），可作为参数合理性的旁证。';
+  $('serHint').innerHTML += ' <span class="muted">注意：本品种的海外到岸价为周度/事件性发布，不是逐日连续序列，因此曲线是"离散观测点"而非连续行情。</span>';
+}
+
+/* ---------------- 4. 归因 ---------------- */
+function renderAttr(S){
+  var a = DATA.attribution;
+  var tbody = $('tblAttr').querySelector('tbody');
+  if(!a || !a.available){
+    $('attrHint').textContent = '缺少可比历史时点，无法做驱动分解。';
+    tbody.innerHTML = '<tr><td colspan="3" class="muted">—</td></tr>';
+    $('chAttr').innerHTML=''; return;
+  }
+  $('attrHint').innerHTML = '对比时点 <b>'+esc(a.compare_date)+'</b> → 基准时点 <b>'+esc(META.base_date)+'</b>。方法：从对比期参数出发，逐项替换为基准期值，看 G3 价差变化多少（逐项一次替换，交互项残差单列）。';
+  tbody.innerHTML = a.items.map(function(i){
+    return '<tr><td class="l">'+esc(i.label)+'</td><td class="small muted">'+esc(i.detail)+'</td>'+
+      '<td class="mono '+cls(i.value)+'">'+sgn(i.value,0)+'</td></tr>';
+  }).join('') +
+    '<tr><td class="l"><b>合计</b></td><td class="small muted">'+sgn(a.start_gap,0)+' → '+sgn(a.end_gap,0)+'</td><td class="mono"><b>'+sgn(a.total_change,0)+'</b></td></tr>';
+  $('attrClosure').innerHTML = '分项加总 '+sgn(a.sum_of_factors,0)+'，总计 '+sgn(a.total_change,0)+'，闭合残差 '+fx(a.residual,6)+
+    (Math.abs(a.residual)<1e-6? ' <span class="flag a">闭合</span>' : ' <span class="flag c">未闭合，见缺口清单</span>');
+
+  var labels = a.items.map(function(i){return i.label;});
+  var vals = a.items.map(function(i){return i.value;});
+  mount('chAttr', {
+    backgroundColor:'transparent',
+    grid:{left:120,right:60,top:16,bottom:24},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#161d25',borderColor:'#33414f',textStyle:{color:'#e8edf2',fontSize:12}},
+    xAxis:{type:'value',axisLabel:{color:'#6b7d8f',fontSize:11,formatter:function(v){return f0(v);}},splitLine:{lineStyle:{color:'#1f2833'}}},
+    yAxis:{type:'category',data:labels,axisLabel:{color:'#9fb0c0',fontSize:11},axisLine:{lineStyle:{color:'#26313d'}}},
+    series:[{type:'bar',data:vals.map(function(v){ return {value:v, itemStyle:{color: v>=0? '#e05c4b':'#2ea36a'}}; }),barWidth:'55%',
+      label:{show:true,position:'right',color:'#9fb0c0',fontSize:10,formatter:function(p){return (p.value>0?'+':'')+f0(p.value);}}}]
+  });
+}
+
+/* ---------------- 5. 敏感性 ---------------- */
+function renderSens(S){
+  var items = DATA.sensitivity.items || {};
+  var order = ['price','freight','fx','duty','insurance_pct','discharge','credit','inland_dest','term'];
+  var labels=[], base=[], lo=[], hi=[], rows=[];
+  order.forEach(function(k){
+    var it = items[k]; if(!it) return;
+    var ncs = it.rows.map(function(r){return r.net_cash;});
+    var mn=Math.min.apply(null,ncs), mx=Math.max.apply(null,ncs);
+    labels.push(it.label);
+    base.push(S.cost.net_cash);
+    lo.push(mn); hi.push(mx);
+    rows.push(it);
+  });
+  mount('chSens', {
+    backgroundColor:'transparent',
+    legend:{top:0,textStyle:{color:'#9fb0c0',fontSize:11}},
+    grid:{left:150,right:120,top:34,bottom:28},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#161d25',borderColor:'#33414f',textStyle:{color:'#e8edf2',fontSize:12}},
+    xAxis:{type:'value',name:'经济成本 元/吨',nameTextStyle:{color:'#6b7d8f',fontSize:11},
+      axisLabel:{color:'#6b7d8f',fontSize:11,formatter:function(v){return f0(v);}},splitLine:{lineStyle:{color:'#1f2833'}}},
+    yAxis:{type:'category',data:labels,axisLabel:{color:'#9fb0c0',fontSize:11},axisLine:{lineStyle:{color:'#26313d'}}},
+    series:[
+      {name:'参数区间下限',type:'bar',stack:'r',itemStyle:{color:'transparent'},data:lo,silent:true},
+      {name:'变动幅度',type:'bar',stack:'r',barWidth:'46%',data:hi.map(function(v,i){return v-lo[i];}),
+        itemStyle:{color:'#3b6f96',borderRadius:3},
+        label:{show:true,position:'right',color:'#9fb0c0',fontSize:10,
+          formatter:function(p){ var i=p.dataIndex; return f0(lo[i])+' ~ '+f0(hi[i])+'（'+f0(hi[i]-lo[i])+'）'; }}},
+      {name:'当前经济成本',type:'scatter',data:base.map(function(v,i){return [v,i];}),symbolSize:9,
+        itemStyle:{color:'#4ec9b0'}}
+    ]
+  });
+
+  /* 二维矩阵：行 = 运费，列 = 汇率 */
+  var m = DATA.sensitivity.matrix;
+  if (m && m.cells && m.cells.length) {
+    var maxAbs = 1;
+    m.cells.forEach(function(row){ row.forEach(function(c){ maxAbs = Math.max(maxAbs, Math.abs(c.gap)); }); });
+    var head = '<thead><tr><th class="l">运费 ＼ 汇率</th>';
+    m.fx.forEach(function(f){ head += '<th>' + fx(f, 4) + '</th>'; });
+    head += '</tr></thead>';
+    var body = m.cells.map(function(row, i){
+      var tr = '<tr><td class="l mono">' + fx(m.freight[i], 1) + ' USD/t</td>';
+      row.forEach(function(c){
+        var a = Math.min(.72, Math.abs(c.gap) / maxAbs * .72);
+        var col = c.gap >= 0 ? 'rgba(224,92,75,' + a.toFixed(2) + ')' : 'rgba(46,163,106,' + a.toFixed(2) + ')';
+        tr += '<td class="mono" style="background:' + col + '" title="经济成本 ' + f0(c.net_cash) +
+              ' 元/吨">' + sgn(c.gap, 0) + '</td>';
+      });
+      return tr + '</tr>';
+    }).join('');
+    $('tblMatrix').innerHTML = head + '<tbody>' + body + '</tbody>'
+      + '<tfoot><tr><td colspan="' + (m.fx.length + 1) + '" class="l small muted" style="border:none;padding-top:8px">'
+      + '行 = 国际海运费（USD/吨），列 = 汇率（CNY/USD）；单元格 = 国内含税送到价 − 可比经济成本（元/吨）。'
+      + '红 = 国内更强（进口成本低），绿 = 进口更贵。当前术语 ' + esc(S.cost.term)
+      + (S.cost.includes.freight ? ' 已含运费，矩阵中的运费列仅在改用 FOB/EXW 口径时才有意义。' : '。')
+      + '</td></tr></tfoot>';
+  } else {
+    $('tblMatrix').innerHTML = '<tbody><tr><td class="muted">未定义敏感性网格</td></tr></tbody>';
+  }
+}
+
+/* ---------------- 6. 口径守卫 ---------------- */
+var TERM_ALL = ['EXW','FCA','FOB','CFR','CIF','DAP'];
+var LAYER_CN = {goods:'货值',inland_origin:'出口国内陆运费',export_clear:'出口报关杂费',freight:'国际海运费',
+  insurance:'保险费',discharge:'目的港卸货/港杂',inland_dest:'进口国内陆运'};
+var LAYER_NOTE = {
+  goods:'F 组及之后均含货值',
+  inland_origin:'工厂仓库→装运港',
+  export_clear:'出口报关、单证',
+  freight:'主运费（至目的港）',
+  insurance:'海上运输保险',
+  discharge:'卸货/港杂（含 THC）',
+  inland_dest:'目的港→收货地'
+};
+function renderTerms(S){
+  var inc = S.cost.includes;
+  var tbody = $('tblTerms').querySelector('tbody');
+  tbody.innerHTML = Object.keys(LAYER_CN).map(function(k){
+    var v = inc[k];
+    return '<tr><td class="l">'+LAYER_CN[k]+'</td>'+
+      '<td>'+(v? '<span class="flag a">已含</span>':'<span class="flag b">未含，需单列</span>')+'</td>'+
+      '<td class="l small muted">'+LAYER_NOTE[k]+'</td></tr>';
+  }).join('');
+
+  $('guardBox').innerHTML =
+    '<div class="note'+(S.warns.some(function(w){return w.level==="error";})?" bad":"")+'">'+
+    '<b>当前术语 '+esc(S.cost.term)+'：</b>'+
+    Object.keys(LAYER_CN).filter(function(k){return inc[k];}).map(function(k){return LAYER_CN[k];}).join('、')+
+    ' 由报价承担；其余各项才进入折算。'+
+    (inc.freight? '<br/>由于报价已含海运费，面板里的"国际海运费"按 0 计；若货代报出的是 FOB 价，应把术语改成 FOB 再填运费。':'')+
+    (inc.insurance? '<br/>CIF 已含保险，保险费率按 0 计，不会二次计入。':'')+
+    '</div>'+
+    '<div class="note"><b>同一批货不能算两遍：</b>若上游给的是 FOB 价，而你又按 CFR 参数再填一次运费，成本会被高估约一份运费；反之若拿着 CFR 价却按 FOB 参数填运费，则相当于把运费当成了可谈判空间。这两种误配都会让"窗口"结论失真，因此由代码强制拦截。</div>';
+
+  var t = '<thead><tr><th class="l">费用层</th>';
+  TERM_ALL.forEach(function(x){ t+='<th>'+x+'</th>'; });
+  t+='</tr></thead><tbody>';
+  Object.keys(LAYER_CN).forEach(function(k){
+    t += '<tr><td class="l">'+LAYER_CN[k]+'</td>';
+    TERM_ALL.forEach(function(x){ t += '<td>'+(WSC.TERM_INCLUDES[x][k]? '●':'—')+'</td>'; });
+    t += '</tr>';
+  });
+  t+='</tbody>';
+  $('tblTermAll').innerHTML = t;
+}
+
+/* ---------------- 7. 数据来源 ---------------- */
+function renderSources(S){
+  var tbody = $('tblSrc').querySelector('tbody');
+  var rows = [];
+  rows.push(['海外报价', esc(META.spec)+' · '+esc(META.quote_region)+' · '+esc(META.quote_term)+' · '+fx(S.cost.quote,1)+' '+esc(S.cost.currency)+'/吨 · '+esc(META.quote_basis), META.base_date, (DATA.sources.filter(function(s){return s.role==='overseas';})[0]||{}), '']);
+  rows.push(['国内现货', esc(META.spec)+' · '+esc(META.dom_region)+' · 含税 · '+f0(S.comp.dom_price)+' 元/吨 · 现汇', META.base_date, (DATA.sources.filter(function(s){return s.role==='domestic';})[0]||{}), '']);
+  rows.push(['汇率', 'USD/CNY = '+fx(CUR.fx_usdcny,4)+'（面板可改）', META.base_date, (DATA.sources.filter(function(s){return s.role==='fx';})[0]||{}), '']);
+  rows.push(['海运费', (S.cost.freight>0? fx(CUR.ocean_freight,1)+' USD/t':'术语已含，按 0 计'), META.base_date, (DATA.sources.filter(function(s){return s.role==='freight';})[0]||{}), '']);
+  rows.push(['税费', '关税 '+fx((CUR.duty_rate||0)*100,2)+'% · 其他税 '+fx((CUR.other_tax_rate||0)*100,2)+'% · 增值税 '+fx((CUR.vat_rate||0)*100,0)+'% · 可抵扣 '+fx((CUR.vat_credit_ratio||0)*100,0)+'%', META.base_date, (DATA.sources.filter(function(s){return s.role==='tax';})[0]||{}), '']);
+  (DATA.sources||[]).filter(function(s){ return ['overseas','domestic','fx','freight','tax','series'].indexOf(s.role)<0; }).forEach(function(s){
+    rows.push([s.role_cn||s.role, s.value||s.note||'', s.date||'', s, '']);
+  });
+  tbody.innerHTML = rows.map(function(r){
+    var s = r[3] || {};
+    var links = (s.urls||[]).slice(0,3).map(function(u){ return '<a class="srcurl" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(u.replace(/^https?:\/\//,''))+'</a>'; }).join('<br/>');
+    return '<tr><td class="l">'+esc(r[0])+'</td><td class="l">'+r[1]+'</td><td class="l mono">'+esc(r[2])+'</td>'+
+      '<td class="l small">'+esc(s.name||'—')+'<br/>'+(links||'')+'</td>'+
+      '<td class="l">'+(s.conf? '<span class="flag '+(s.conf==='高'?'a':(s.conf==='中'?'b':'c'))+'">'+esc(s.conf)+'</span>':'—')+'</td></tr>';
+  }).join('');
+}
+
+/* ---------------- 8. 缺口 ---------------- */
+function renderGaps(){
+  var g = DATA.gaps || [];
+  var sv = {'高':'c','中':'b','低':'a'};
+  $('gapBox').innerHTML = g.map(function(x,i){
+    return '<details'+(i<3?' open':'')+'><summary><span><b>'+(i+1)+'. '+esc(x.item)+'</b></span>'+
+      '<span class="flag '+(sv[x.severity]||'b')+'">'+(x.severity||'中')+'</span></summary>'+
+      '<div class="p"><b>对结论的影响：</b>'+esc(x.impact)+'<br/><b>补齐办法：</b>'+esc(x.fix)+
+      (x.scope? '<br/><span class="muted small">关联模块：'+esc(x.scope)+'</span>':'')+'</div></details>';
+  }).join('') || '<div class="note">无缺口记录（按本 Skill 规则，这本身应被视为异常）。</div>';
+}
+
+/* ---------------- 9. 公式 ---------------- */
+function renderFormulas(S){
+  var nameMap = {
+    1:['货值折人民币', f0(S.cost.goods_cny)],
+    2:['保险费', f0(S.cost.insurance)],
+    3:['CIF 到岸价', f0(S.cost.cif)],
+    4:['进口关税', f0(S.cost.duty)],
+    5:['进口增值税', f0(S.cost.vat)],
+    6:['可抵扣增值税', f0(S.cost.vat_credit)],
+    7:['含税到岸成本', f0(S.cost.landed_cash)],
+    8:['可比经济成本', f0(S.cost.net_cash)],
+    9:['折纯/毛净口径', f0(S.cost.unit_net)],
+    10:['四口径价差', S.gaps.map(function(x){return x.code.slice(0,2)+' '+sgn(x.value,0);}).join('；')],
+    11:['市场隐含其余成本', S.seriesLastImplied!=null? f0(S.seriesLastImplied): '—'],
+    12:['归因闭合', DATA.attribution&&DATA.attribution.available? fx(DATA.attribution.residual,6):'—']
+  };
+  var html = (DATA.formulas||[]).map(function(f){
+    var v = nameMap[f.no]? nameMap[f.no][1] : '—';
+    return '<tr><td class="l mono">'+f.no+'</td><td class="l"><b>'+esc(f.name)+'</b></td>'+
+      '<td class="l small mono">'+esc(f.formula)+'</td><td class="mono">'+esc(v)+'</td>'+
+      '<td class="l small muted">'+esc(f.unit||'')+'</td></tr>';
+  }).join('');
+  $('tblFormula').querySelector('tbody').innerHTML = html;
+}
+
+/* ---------------- 10. 声明 ---------------- */
+function renderDisc(){
+  var d = DATA.disclaimers||[];
+  $('discBox').innerHTML = '<ul class="clean">'+d.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';
+}
+
+/* ---------------- 图表挂载 ---------------- */
+function mount(id, opt){
+  var dom = $(id); if(!dom) return;
+  if(CHARTS[id]){ CHARTS[id].setOption(opt, true); CHARTS[id].resize(); return; }
+  CHARTS[id] = echarts.init(dom, null, {renderer:'canvas'});
+  CHARTS[id].setOption(opt);
+}
+window.addEventListener('resize', function(){ Object.keys(CHARTS).forEach(function(k){ CHARTS[k].resize(); }); });
+
+/* ---------------- 头 / 脚 ---------------- */
+function renderHead(){
+  $('subline').innerHTML = esc(META.must_read && META.must_read.length? META.must_read[0] : '');
+  var tags = [
+    ['hot', META.product+' · '+META.spec],
+    ['info', '海外：'+META.quote_region+' '+META.quote_term],
+    ['info', '国内：'+META.dom_region+' '+META.dom_basis],
+    ['warn', 'HS '+META.hs_code],
+    ['good', '四层口径 + 四口径价差']
+  ];
+  $('tagline').innerHTML = tags.map(function(t){ return '<span class="tag '+t[0]+'">'+esc(t[1])+'</span>'; }).join('');
+  $('stBase').textContent = META.base_date;
+  $('stWin').textContent = META.window;
+  $('stGen').textContent = META.generated_at||'';
+  $('footLine').innerHTML = esc(META.title||'') + ' · 生成于 ' + esc(META.generated_at||'') + ' · ' + esc(META.author||'');
+}
+
+/* ---------------- 总渲染 ---------------- */
+function renderAll(){
+  var S = compute();
+  var last = DATA.series.rows.filter(function(r){return r.status==='ok';}).pop();
+  S.seriesLastImplied = last? last.implied_other : null;
+  renderKPI(S); renderWarns(S); renderWaterfall(S); renderSeries(S);
+  renderAttr(S); renderSens(S); renderTerms(S); renderGaps(); renderFormulas(S);
+  /* 来源表里含面板值，需随参数刷新 */
+  renderSources(S);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderHead(); renderDisc(); buildFieldCache(); rebuildControls(); renderAll();
+  $('btnReset').addEventListener('click', function(){
+    CUR = JSON.parse(JSON.stringify(BASE)); UI.term = META.quote_term; rebuildControls(); renderAll();
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#segRange button'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('#segRange button'), function(x){x.classList.remove('on');});
+      b.classList.add('on'); UI.rangeW = parseInt(b.dataset.w,10); renderAll();
+    });
+  });
+});
+function buildFieldCache(){ /* 预留：控件级缓存 */ }
+</script>
+</body>
+</html>

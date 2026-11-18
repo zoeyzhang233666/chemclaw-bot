@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/chemical-supplier-risk-radar/data.schema.json",
+  "title": "Chemical Supplier Risk Radar data.json",
+  "type": "object",
+  "required": ["meta", "suppliers", "events"],
+  "additionalProperties": true,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["title", "product", "query_date", "query_time", "window_default", "windows"],
+      "additionalProperties": true,
+      "properties": {
+        "schema_version": {"type": "string", "default": "1.0"},
+        "title": {"type": "string", "minLength": 2},
+        "subtitle": {"type": "string"},
+        "product": {"type": "string", "minLength": 1},
+        "product_en": {"type": "string"},
+        "product_full": {"type": "string"},
+        "query_date": {"type": "string", "format": "date"},
+        "query_time": {"type": "string"},
+        "window_default": {"type": "string", "enum": ["3m", "6m", "12m"]},
+        "windows": {
+          "type": "object",
+          "required": ["3m", "6m", "12m"],
+          "additionalProperties": false,
+          "properties": {
+            "3m": {"$ref": "#/$defs/window"},
+            "6m": {"$ref": "#/$defs/window"},
+            "12m": {"$ref": "#/$defs/window"}
+          }
+        },
+        "scope_note": {"type": "string"},
+        "scope_summary": {"type": "string"},
+        "financial_period": {"type": "string"},
+        "period_tag": {"type": "string"},
+        "channels": {"type": "string"},
+        "nature": {"type": "string"},
+        "industry_title": {"type": "string"}
+      }
+    },
+    "suppliers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/supplier"}
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/event"}
+    },
+    "industry": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "source", "date"],
+        "additionalProperties": true,
+        "properties": {
+          "text": {"type": "string"},
+          "source": {"type": "string"},
+          "date": {"type": "string", "format": "date"}
+        }
+      }
+    },
+    "coverage_check": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cat", "status", "note", "level"],
+        "additionalProperties": true,
+        "properties": {
+          "cat": {"type": "string", "enum": ["经营异常", "行政处罚", "诉讼仲裁", "安全环保事故", "重大股权变化", "停产/项目变化"]},
+          "status": {"type": "string"},
+          "note": {"type": "string"},
+          "level": {"type": "string", "enum": ["高", "中", "低", "待复核", "—"]}
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "scope": {"type": "array", "items": {"type": "string"}},
+        "evidence_levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["level", "label", "desc"],
+            "additionalProperties": true,
+            "properties": {
+              "level": {"type": "string", "enum": ["A", "B", "C"]},
+              "label": {"type": "string"},
+              "desc": {"type": "string"}
+            }
+          }
+        },
+        "limits": {"type": "array", "items": {"type": "string"}},
+        "search_queries": {"type": "array", "items": {"type": "string"}},
+        "disclaimer": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "required": ["label", "start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": "string"},
+        "start": {"type": "string", "format": "date"},
+        "end": {"type": "string", "format": "date"}
+      }
+    },
+    "supplier": {
+      "type": "object",
+      "required": ["id", "name", "full_name", "code", "market", "region", "process", "capacity", "capacity_short", "risk_level", "risk_label", "conclusion", "coverage"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "full_name": {"type": "string"},
+        "code": {"type": "string"},
+        "market": {"type": "string"},
+        "region": {"type": "string"},
+        "process": {"type": "string"},
+        "capacity": {"type": "string"},
+        "capacity_short": {"type": "string"},
+        "revenue": {"type": "string"},
+        "profit": {"type": "string"},
+        "profit_yoy": {"type": "string"},
+        "risk_level": {"type": "string", "enum": ["高", "中", "中低", "低"]},
+        "risk_label": {"type": "string"},
+        "conclusion": {"type": "string"},
+        "coverage": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": ["id", "date", "supplier_id", "supplier", "category", "severity", "direction", "title", "fact", "why", "source", "source_type", "source_date", "url", "evidence", "questions", "action"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {"type": "string"},
+        "date": {"type": "string", "format": "date"},
+        "supplier_id": {"type": "string"},
+        "supplier": {"type": "string"},
+        "category": {"type": "string", "enum": ["工商", "司法", "处罚", "安全环保", "经营动态"]},
+        "severity": {"type": "string", "enum": ["高", "中", "低"]},
+        "direction": {"type": "string", "enum": ["风险", "中性", "正向"]},
+        "title": {"type": "string", "minLength": 4},
+        "fact": {"type": "string", "minLength": 40},
+        "why": {"type": "string", "minLength": 10},
+        "source": {"type": "string"},
+        "source_type": {"type": "string"},
+        "source_date": {"type": "string", "format": "date"},
+        "url": {"type": "string", "pattern": "^https?://"},
+        "url_label": {"type": "string"},
+        "evidence": {"type": "string", "enum": ["A", "B", "C"]},
+        "questions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "action": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

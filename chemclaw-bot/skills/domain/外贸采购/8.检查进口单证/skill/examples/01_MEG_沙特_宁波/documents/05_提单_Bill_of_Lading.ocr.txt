@@ -1,0 +1,21 @@
+【模拟单证 · SIMULATED DOCUMENT · 仅供流程测试，不具法律效力】
+MEDITERRANEAN SHIPPING COMPANY (SIMULATED) — BILL OF LADING  原件 ORIGINAL 01
+B/L No. MEDUHUB0618825        Booking No. 2451-8817263
+Shipper 发货人: AL-NOOR PETROCHEMICAL COMPANY
+P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Saudi Arabia
+Consignee 收货人: NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.
+Room 1806, Building A, Yinzhou Trade Center, 1188 Tiantong South Road, Ningbo 315100, China
+Notify Party 通知方: NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.
+Unit 5, 31/F Eastern Harbour Tower, Beijing, 100020, China   TEL +86 574 2688 1180
+Place of Receipt 收货地: JUBAIL, SAUDI ARABIA   Pre-carriage by: BY TRUCK
+Vessel / Voyage 船名航次: MSC ISABELLA   V. 2618W
+Port of Loading 起运港: KING ABDULLAH PORT, JUBAIL (SAJUB)
+Port of Discharge 卸货港: NINGBO, CHINA (CNNGB)   Place of Delivery: NINGBO, CHINA
+Container No. / Seal 箱号封号: TIFU 238137 3 / MSK-092151   No. of Packages 件数: 9 ISO TANKS
+Description of Goods 货物描述: SHIPPERS LOAD, STOW, COUNT & SEAL
+ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000
+BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM
+Freight & Charges 运费: FREIGHT PREPAID
+No. of Original B/L 正本份数: THREE (3)   Date of Issue 签发日期: 2026-05-12   Place of Issue: JUBAIL, SAUDI ARABIA
+ON BOARD 装船日期 2026-05-12   E.T.A. NINGBO 预计到港 2026-06-20
+SIMULATED B/L - generated for import-document cross-check test.

@@ -1,0 +1,10 @@
+{
+  "name": "chem-biz-scope",
+  "kind": "mcp",
+  "description": "化工业务范围 MCP（需密钥 CHEM_BIZ_SCOPE）",
+  "transport": "streamable-http",
+  "url": "http://121.37.133.47:8900/mcp",
+  "headers": {
+    "Authorization": "Bearer $DSH_SECRET_CHEM_BIZ_SCOPE"
+  }
+}

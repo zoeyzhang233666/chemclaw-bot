@@ -1,0 +1,39 @@
+{
+  "case_id": "01-export-soda-ash-usd",
+  "title": "中国出口重质纯碱 10 万美元订单，预计 90 天后收汇",
+  "product": "重质纯碱",
+  "spec": "重质纯碱（Dense Soda Ash, Na₂CO₃ ≥ 99.2%，GB/T 210-2022 II 类）",
+  "incoterm": "FOB 中国主港（示例）",
+  "currency": "USD",
+  "direction": "export",
+  "asof": "2026-10-19",
+  "trade_date": "2026-10-19",
+  "settle_date": "2027-01-17",
+  "amount_fx": 100000,
+  "amount_display": "USD 100,000.00",
+  "amount_equivalent": "按出口 FOB 约 260–270 美元/吨折算，约 370–385 吨；吨数仅作业务量感参考，不是报价依据。",
+  "cny_cost": 600000,
+  "cny_cost_source": "模拟参数（MOCK）——示例假定人民币成本（含出厂价、内陆集港、港杂、内陆运费等人民币口径支出）为 60 万元，仅用于演示计算流程，非该订单真实成本。",
+  "target_margin_pct": 0.10,
+  "target_margin_cny": null,
+  "toll_rate": 0.0,
+  "bank_band_pct": 0.0025,
+  "actual_bank_rate": null,
+  "contract_rate": null,
+  "rate_mode": "auto",
+  "windows": [1, 3],
+  "shifts": [-0.05, -0.03, -0.02, -0.01, 0.0, 0.01, 0.02, 0.03, 0.05],
+  "curve_range_pct": 0.10,
+  "batches": [],
+  "batches_alt": [
+    {"label": "T/T 30% 定金（签约即付）", "amount_fx": 30000, "days": 0},
+    {"label": "装运后 60 天 40%", "amount_fx": 40000, "days": 60},
+    {"label": "提单日 90 天 30%", "amount_fx": 30000, "days": 90}
+  ],
+  "simulated_fields": ["cny_cost", "settle_date", "batches_alt"],
+  "notes": [
+    "汇率历史数据全部来自国家外汇管理局公布的人民币汇率中间价（中国外汇交易中心受权发布），未做插值或补造。",
+    "人民币成本 60 万元、90 天结算期、分批比例均为模拟参数，用于演示完整计算流程。",
+    "结汇手续费、远期锁汇点价、银行点差、电讯费等未计入主口径（toll_rate 默认为 0），仅在对照口径中体现。"
+  ]
+}

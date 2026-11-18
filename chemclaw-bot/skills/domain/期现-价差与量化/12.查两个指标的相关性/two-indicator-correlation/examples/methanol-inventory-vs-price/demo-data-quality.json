@@ -1,0 +1,46 @@
+{
+ "file": "demo_methanol_weekly.csv",
+ "x_name": "港口库存",
+ "y_name": "太仓现货价",
+ "n_rows": 156,
+ "n_pairs": 156,
+ "period": [
+  "2023-10-11",
+  "2026-09-30"
+ ],
+ "missing_x": [],
+ "missing_y": [],
+ "findings": [
+  {
+   "level": "INFO",
+   "code": "P3",
+   "msg": "覆盖区间 2023-10-11 ~ 2026-09-30，共 156 期；有效配对 N=156",
+   "detail": null
+  },
+  {
+   "level": "INFO",
+   "code": "P6",
+   "msg": "相邻观测间隔：中位数 7 天，最小 7，最大 7，目标频率 7 天",
+   "detail": null
+  },
+  {
+   "level": "INFO",
+   "code": "P8",
+   "msg": "12 期滚动窗口需要 ≥10 个有效配对，当前 N=156 → 可计算",
+   "detail": null
+  },
+  {
+   "level": "INFO",
+   "code": "P8",
+   "msg": "26 期滚动窗口需要 ≥21 个有效配对，当前 N=156 → 可计算",
+   "detail": null
+  },
+  {
+   "level": "INFO",
+   "code": "P8",
+   "msg": "52 期滚动窗口需要 ≥42 个有效配对，当前 N=156 → 可计算",
+   "detail": null
+  }
+ ],
+ "pass": true
+}

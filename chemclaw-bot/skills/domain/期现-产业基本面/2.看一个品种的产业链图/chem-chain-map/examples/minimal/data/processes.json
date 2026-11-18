@@ -1,0 +1,71 @@
+{
+  "routes": [
+    {
+      "id": "RT_A",
+      "target_node": "N_PRIMARY",
+      "route_name": "工艺路线 A（催化转化）",
+      "family": "转化",
+      "commercialized": true,
+      "share_note": "演示：主流路线",
+      "key_steps": [
+        "原料制备",
+        "催化转化",
+        "精制"
+      ],
+      "solvent": "演示溶剂",
+      "temperature": "120℃",
+      "pressure": "0.5 MPa",
+      "initiator": "演示催化剂",
+      "unit_consumption": {
+        "原料A": {
+          "value": 0.85,
+          "unit": "t/t",
+          "basis": "计量+收率",
+          "status": "derived"
+        }
+      },
+      "evidence": [
+        "S01"
+      ],
+      "confidence": "medium",
+      "missing": [
+        "蒸汽单耗"
+      ],
+      "differentiator": "与路线 B 相比原料不同"
+    },
+    {
+      "id": "RT_B",
+      "target_node": "N_PRIMARY",
+      "route_name": "工艺路线 B（另一原料）",
+      "family": "转化",
+      "commercialized": false,
+      "share_note": "演示：非主流/未工业化",
+      "key_steps": [
+        "原料预处理",
+        "反应"
+      ],
+      "solvent": null,
+      "temperature": null,
+      "pressure": null,
+      "initiator": null,
+      "unit_consumption": {
+        "原料C": {
+          "value": null,
+          "unit": "t/t",
+          "basis": null,
+          "status": "missing"
+        }
+      },
+      "evidence": [
+        "S01"
+      ],
+      "confidence": "low",
+      "missing": [
+        "单耗",
+        "温度",
+        "压力"
+      ],
+      "differentiator": "原料不同，成本锚不同"
+    }
+  ]
+}

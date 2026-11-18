@@ -1,0 +1,4646 @@
+{
+ "documents": [
+  {
+   "file": "01_采购合同_Purchase_Contract.docx",
+   "type": "CONTRACT",
+   "fields": {
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 5,
+     "snippet": "Contract No. 合同号：HYNM-2026-0518-MEG     Date 日期：2026-03-18     Place 签订地：Ningbo, China"
+    },
+    "seller": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "page": 1,
+     "line": 9,
+     "snippet": "Name 名称AL-NOOR PETROCHEMICAL TRADING COMPANYNINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "buyer": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "Name 名称AL-NOOR PETROCHEMICAL TRADING COMPANYNINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 21,
+     "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+    },
+    "product_cn": {
+     "value": "乙二醇（工业级）",
+     "page": 1,
+     "line": 21,
+     "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "spec": {
+     "value": "≥99.9%",
+     "page": 1,
+     "line": 21,
+     "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+    },
+    "quantity": {
+     "value": "200.000 MT",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "unit": {
+     "value": "MT",
+     "page": 1,
+     "line": 19,
+     "snippet": "USD/MT"
+    },
+    "unit_price": {
+     "value": "612.00",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "amount": {
+     "value": "122,400.00",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "currency": {
+     "value": "USD",
+     "page": 1,
+     "line": 18,
+     "snippet": "ItemDescription of Goods / 商品描述CAS No.HS CodeQuantityUnitUnit PriceAmount USD"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 30,
+     "snippet": "CFR NINGBOUnit price per MT, CFRKING ABDULLAH PORT,NINGBO PORT, CHINAT/T 30% advance + 70%"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL",
+     "page": 1,
+     "line": 0,
+     "snippet": "Port of Loading 装运港：KING ABDULLAH PORT, JUBAIL (SAJUB), SAUDI ARABIA"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA",
+     "page": 1,
+     "line": 0,
+     "snippet": "Port of Discharge 目的港：NINGBO PORT, CHINA (CNNGB)"
+    },
+    "payment": {
+     "value": "T/T 30% advance + 70% against B/L copy",
+     "page": 1,
+     "line": 30,
+     "snippet": "第 1 页第 30 行（贸易条款表第 2 行）：T/T 30% advance + 70% against B/L copy"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 11,
+     "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951,Room 1806, Building A, Yinzhou Trade Center, 1188"
+    },
+    "pack_type": {
+     "value": "ISO TANK CONTAINERS",
+     "page": 1,
+     "line": 27,
+     "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 27,
+     "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 27,
+     "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+    }
+   },
+   "type_cn": "采购合同"
+  },
+  {
+   "file": "02_形式发票_Proforma_Invoice.docx",
+   "type": "PROFORMA_INVOICE",
+   "fields": {
+    "pi_no": {
+     "value": "PI-ALN-26-0312",
+     "page": 1,
+     "line": 5,
+     "snippet": "No. PI-ALN-26-0312          Date 2026-03-12          Validity: 30 days from date"
+    },
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 11,
+     "snippet": "ReferenceBuyer PO PO-HYNM-2603-011 / Contract Ref. HYNM-2026-0518-MEG"
+    },
+    "po_no": {
+     "value": "PO-HYNM-2603-011",
+     "page": 1,
+     "line": 11,
+     "snippet": "ReferenceBuyer PO PO-HYNM-2603-011 / Contract Ref. HYNM-2026-0518-MEG"
+    },
+    "seller": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "page": 1,
+     "line": 6,
+     "snippet": "SELLER / EXPORTER 卖方AL-NOOR PETROCHEMICAL TRADING COMPANY"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 8,
+     "snippet": "Consignee 收货人NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "Notify Party 通知方NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "origin": {
+     "value": "SAUDI ARABIA",
+     "page": 1,
+     "line": 7,
+     "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG)",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "product_cn": {
+     "value": "乙二醇",
+     "page": 1,
+     "line": 21,
+     "snippet": "乙二醇（工业级）"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "spec": {
+     "value": "≥99.9% wt",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "quantity": {
+     "value": "200.000 MT",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "unit_price": {
+     "value": "612.00",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "amount": {
+     "value": "122,400.00",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "currency": {
+     "value": "USD",
+     "page": 1,
+     "line": 14,
+     "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 14,
+     "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 14,
+     "snippet": "第 1 页第 14 行（贸易条款表第 1 行）：KING ABDULLAH PORT, / JUBAIL (SAJUB)"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA",
+     "page": 1,
+     "line": 0,
+     "snippet": "POL: KING ABDULLAH PORT, JUBAIL (SAJUB)  ·  POD: NINGBO PORT, CHINA (CNNGB)"
+    },
+    "payment": {
+     "value": "L/C at sight (to be advised)",
+     "page": 1,
+     "line": 14,
+     "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 7,
+     "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 26,
+     "snippet": "Bulk in ISO tank containers180,000 KGS180,180 KGS9"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 26,
+     "snippet": "Bulk in ISO tank containers180,000 KGS180,180 KGS9"
+    }
+   },
+   "type_cn": "形式发票"
+  },
+  {
+   "file": "03_商业发票_Commercial_Invoice.docx",
+   "type": "COMMERCIAL_INVOICE",
+   "fields": {
+    "invoice_no": {
+     "value": "ALN-INV-26-0518",
+     "page": 1,
+     "line": 6,
+     "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+    },
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 7,
+     "snippet": "Contract No. 合同号HYNM-2026-0518-MEGPO No. 订单号PO-HYNM-2603-011"
+    },
+    "po_no": {
+     "value": "PO-HYNM-2603-011",
+     "page": 1,
+     "line": 7,
+     "snippet": "Contract No. 合同号HYNM-2026-0518-MEGPO No. 订单号PO-HYNM-2603-011"
+    },
+    "bl_no": {
+     "value": "MEDUHUB0618825",
+     "page": 1,
+     "line": 8,
+     "snippet": "B/L No. 提单号MEDUHUB0618825Incoterm 贸易术语CFR NINGBO"
+    },
+    "seller": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "page": 1,
+     "line": 3,
+     "snippet": "AL-NOOR PETROCHEMICAL TRADING COMPANY"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 12,
+     "snippet": "Consignee 收货人NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 15,
+     "snippet": "Notify Party 通知方NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD. / Floor 9, Port Railway Building, 266"
+    },
+    "origin": {
+     "value": "SAUDI ARABIA",
+     "page": 1,
+     "line": 4,
+     "snippet": "P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (INDUSTRIAL GRADE)",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "product_cn": {
+     "value": "乙二醇",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 28,
+     "snippet": "8 TANKSPacking in ISO tank containers2905310000"
+    },
+    "quantity": {
+     "value": "160.000 MT",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "unit_price": {
+     "value": "612.00",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "amount": {
+     "value": "117,000.00",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "currency": {
+     "value": "USD",
+     "page": 1,
+     "line": 26,
+     "snippet": "USD/MTUSD"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 8,
+     "snippet": "B/L No. 提单号MEDUHUB0618825Incoterm 贸易术语CFR NINGBO"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 17,
+     "snippet": "Port of Loading 起运港KING ABDULLAH PORT, JUBAIL (SAJUB)"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA (CNNGB)",
+     "page": 1,
+     "line": 18,
+     "snippet": "Port of Discharge 卸货港NINGBO PORT, CHINA (CNNGB)"
+    },
+    "vessel": {
+     "value": "MSC ISABELLA",
+     "page": 1,
+     "line": 19,
+     "snippet": "Vessel / Voyage 船名航次MSC ISABELLA  V. 2618W"
+    },
+    "voyage": {
+     "value": "V. 2618W",
+     "page": 1,
+     "line": 19,
+     "snippet": "Vessel / Voyage 船名航次MSC ISABELLA  V. 2618W"
+    },
+    "packages": {
+     "value": "8",
+     "page": 1,
+     "line": 6,
+     "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+    },
+    "pack_type": {
+     "value": "ISOTANK",
+     "page": 1,
+     "line": 21,
+     "snippet": "Packing 包装ISOTANK, 8 TANKS"
+    },
+    "net_weight": {
+     "value": "160,000",
+     "page": 1,
+     "line": 22,
+     "snippet": "Gross / Net Weight 毛重/净重160,160 KGS  /  160,000 KGS"
+    },
+    "gross_weight": {
+     "value": "160,160",
+     "page": 1,
+     "line": 22,
+     "snippet": "Gross / Net Weight 毛重/净重160,160 KGS  /  160,000 KGS"
+    },
+    "payment": {
+     "value": "L/C NO. LC2605NB0088 AT SIGHT",
+     "page": 1,
+     "line": 3,
+     "snippet": "AL-NOOR PETROCHEMICAL TRADING COMPANY"
+    },
+    "lc_no": {
+     "value": "LC2605NB0088",
+     "page": 1,
+     "line": 39,
+     "snippet": "Payment Terms 付款方式L/C NO. LC2605NB0088 AT SIGHT, BENEFICIARY: AL-NOOR PETROCHEMICAL TRADING"
+    },
+    "marks": {
+     "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "page": 1,
+     "line": 23,
+     "snippet": "Shipping Marks 唛头ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA"
+    }
+   },
+   "type_cn": "商业发票"
+  },
+  {
+   "file": "04_装箱单_Packing_List.xlsx",
+   "type": "PACKING_LIST",
+   "fields": {
+    "packing_no": {
+     "value": "ALN-PL-26-0518",
+     "page": 1,
+     "line": 5,
+     "snippet": "A=Packing List No. 装箱单号 | B=ALN-PL-26-0518 | E=Date 日期 | F=2026-05-15"
+    },
+    "invoice_no": {
+     "value": "ALN-INV-26-0518",
+     "page": 1,
+     "line": 6,
+     "snippet": "A=Invoice No. 发票号 | B=ALN-INV-26-0518 | E=Contract No. 合同号 | F=HYNM-2026-0518-MEG"
+    },
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 6,
+     "snippet": "A=Invoice No. 发票号 | B=ALN-INV-26-0518 | E=Contract No. 合同号 | F=HYNM-2026-0518-MEG"
+    },
+    "bl_no": {
+     "value": "MEDUHUB0618825",
+     "page": 1,
+     "line": 7,
+     "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+    },
+    "vessel": {
+     "value": "MSC ISABELLA",
+     "page": 1,
+     "line": 7,
+     "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+    },
+    "voyage": {
+     "value": "V. 2618W",
+     "page": 1,
+     "line": 7,
+     "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 8,
+     "snippet": "A=Port of Loading 起运港 | B=KING ABDULLAH PORT, JUBAIL (SAJUB) | E=Port of Discharge 卸货港 | F=NINGBO PORT, CHINA (CNNGB)"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA (CNNGB)",
+     "page": 1,
+     "line": 8,
+     "snippet": "A=Port of Loading 起运港 | B=KING ABDULLAH PORT, JUBAIL (SAJUB) | E=Port of Discharge 卸货港 | F=NINGBO PORT, CHINA (CNNGB)"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "A=Receiver 收货人 | B=NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD. | F=Notify 通知方 | G=NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "A=Receiver 收货人 | B=NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD. | F=Notify 通知方 | G=NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "product_en": {
+     "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "page": 1,
+     "line": 11,
+     "snippet": "A11 唛头/包装行：… PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)；品名见电子表格罐明细表"
+    },
+    "pack_type": {
+     "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "page": 1,
+     "line": 11,
+     "snippet": "A=SHIPPING MARKS 唛头：ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA   |   PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 23,
+     "snippet": "A23=TOTAL  B23=9 ISO TANKS  D23#=SUM(D14:D22)；D25#=D23"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 23,
+     "snippet": "G23# = SUM(G14:G22)；单罐净重 E14:E22 = 20,000 KGS，G 列 = D×E",
+     "extra": "G14:G22 = 20,000 ×9"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 23,
+     "snippet": "H23# = SUM(H14:H22)；单罐毛重 F14:F22 = 20,020 KGS，H 列 = D×F",
+     "extra": "F14:F22 = 20,020 ×9"
+    },
+    "batch": {
+     "value": "MEG2605-B12",
+     "page": 1,
+     "line": 14,
+     "snippet": "A=1 | B=TIFU 238137 3 | C=20FT ISOTANK | D=1 | E=20000 | F=20020 | I=MEG2605-B12 | J=MSK-092151 | G#=D14*E14 | H#=D14*F14"
+    },
+    "marks": {
+     "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "page": 1,
+     "line": 11,
+     "snippet": "A=SHIPPING MARKS 唛头：ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA   |   PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)"
+    }
+   },
+   "type_cn": "装箱单"
+  },
+  {
+   "file": "05_提单_Bill_of_Lading.png",
+   "type": "BILL_OF_LADING",
+   "fields": {
+    "bl_no": {
+     "value": "MEDUHUB0618825",
+     "page": 1,
+     "line": 3,
+     "snippet": "B/L No. MEDUHUB0618825        Booking No. 2451-8817263"
+    },
+    "shipper": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "page": 1,
+     "line": 4,
+     "snippet": "Shipper 发货人: AL-NOOR PETROCHEMICAL COMPANY"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 6,
+     "snippet": "Consignee 收货人: NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 8,
+     "snippet": "Notify Party 通知方: NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "vessel": {
+     "value": "MSC ISABELLA",
+     "page": 1,
+     "line": 11,
+     "snippet": "Vessel / Voyage 船名航次: MSC ISABELLA   V. 2618W"
+    },
+    "voyage": {
+     "value": "V. 2618W",
+     "page": 1,
+     "line": 11,
+     "snippet": "Vessel / Voyage 船名航次: MSC ISABELLA   V. 2618W"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 12,
+     "snippet": "Port of Loading 起运港: KING ABDULLAH PORT, JUBAIL (SAJUB)"
+    },
+    "port_disch": {
+     "value": "NINGBO, CHINA (CNNGB)",
+     "page": 1,
+     "line": 13,
+     "snippet": "Port of Discharge 卸货港: NINGBO, CHINA (CNNGB)   Place of Delivery: NINGBO, CHINA"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 16,
+     "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 16,
+     "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 16,
+     "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+    },
+    "pack_type": {
+     "value": "ISO TANKS",
+     "page": 1,
+     "line": 14,
+     "snippet": "Container No. / Seal 箱号封号: TIFU 238137 3 / MSK-092151   No. of Packages 件数: 9 ISO TANKS"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 17,
+     "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 17,
+     "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+    },
+    "batch": {
+     "value": "MEG2605-B11",
+     "page": 1,
+     "line": 17,
+     "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+    },
+    "bl_date": {
+     "value": "2026-05-12",
+     "page": 1,
+     "line": 19,
+     "snippet": "No. of Original B/L 正本份数: THREE (3)   Date of Issue 签发日期: 2026-05-12   Place of Issue: JUBAIL, SAUDI ARABIA"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 17,
+     "snippet": "Freight & Charges 运费：FREIGHT PREPAID   CFR NINGBO"
+    }
+   },
+   "type_cn": "提单"
+  },
+  {
+   "file": "06_分析证书_COA.docx",
+   "type": "COA",
+   "fields": {
+    "coa_no": {
+     "value": "COA-MEG-260512",
+     "page": 1,
+     "line": 6,
+     "snippet": "Certificate No. 证书编号COA-MEG-260512Date of Analysis 分析日2026-05-10"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 9,
+     "snippet": "GRADE"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 8,
+     "snippet": "Product 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIALCAS No.107-21-1"
+    },
+    "batch": {
+     "value": "MEG2605-B12",
+     "page": 1,
+     "line": 10,
+     "snippet": "Batch No. 批号MEG2605-B12Date of Mfg. 生产日期2026-05-10"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 11,
+     "snippet": "Quantity 代表数量180,000 kg (9 × 20 MT)Packages 包装件数9 ISO TANKS"
+    },
+    "manufacturer": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "page": 1,
+     "line": 3,
+     "snippet": "AL-NOOR PETROCHEMICAL COMPANY"
+    },
+    "po_no": {
+     "value": "PO-HYNM-2603-011",
+     "page": 1,
+     "line": 14,
+     "snippet": "Customer 客户NINGBO HAIYUAN NEW MATERIALOrder / PO No.PO-HYNM-2603-011"
+    },
+    "spec": {
+     "value": "≥99.99",
+     "page": 1,
+     "line": 18,
+     "snippet": "1Ethylene Glycol content (Purity), wt%≥ 99.99ASTM E231399.97Pass"
+    },
+    "quantity": {
+     "value": "180,000 kg",
+     "page": 1,
+     "line": 11,
+     "snippet": "Quantity 代表数量180,000 kg (9 × 20 MT)Packages 包装件数9 ISO TANKS"
+    }
+   },
+   "type_cn": "分析证书"
+  },
+  {
+   "file": "07_化学品安全技术说明书_SDS.docx",
+   "type": "SDS",
+   "fields": {
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 7,
+     "snippet": "Product name 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE 乙二醇（工业级）"
+    },
+    "product_cn": {
+     "value": "乙二醇（工业级）",
+     "page": 1,
+     "line": 7,
+     "snippet": "Product name 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE 乙二醇（工业级）"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 9,
+     "snippet": "CAS No.107-21-1"
+    },
+    "un_no": {
+     "value": "UN 3082",
+     "page": 1,
+     "line": 11,
+     "snippet": "UN No. / Proper ShippingUN 3082 / ENVIRONMENTALLY HAZARDOUS SUBSTANCE, LIQUID, N.O.S. (ETHYLENE GLYCOL)"
+    },
+    "hazard_class": {
+     "value": "9",
+     "page": 2,
+     "line": 0,
+     "snippet": "Hazard class 危险类别 9 (Class 9)；Packing group 包装类别 III；Marine pollutant YES"
+    },
+    "packages": {
+     "value": "8",
+     "page": 1,
+     "line": 4,
+     "snippet": "according to GHS (Globally Harmonized System), UN Model Regulations Rev. 8 / 依据 GHS 编制"
+    },
+    "net_weight": {
+     "value": "160,000",
+     "page": 2,
+     "line": 5,
+     "snippet": "Net weight per shipment160,000 KGSGross weight per shipment160,160 KGS"
+    },
+    "gross_weight": {
+     "value": "160,160",
+     "page": 2,
+     "line": 5,
+     "snippet": "Net weight per shipment160,000 KGSGross weight per shipment160,160 KGS"
+    },
+    "manufacturer": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "page": 1,
+     "line": 5,
+     "snippet": "AL-NOOR PETROCHEMICAL COMPANY  |  Revision Rev 4.0 / 2024-02  |  语言：English（中文要点见各节括注）"
+    }
+   },
+   "type_cn": "安全技术说明书"
+  },
+  {
+   "file": "08_产品规格书_Product_Spec_Sheet.png",
+   "type": "SPEC_SHEET",
+   "fields": {
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 3,
+     "snippet": "Product 产品: ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE / 乙二醇（工业级）"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 4,
+     "snippet": "CAS No.: 107-21-1   HS Code: 2905310000"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 4,
+     "snippet": "CAS No.: 107-21-1   HS Code: 2905310000"
+    },
+    "spec": {
+     "value": "≥99.9%",
+     "page": 1,
+     "line": 6,
+     "snippet": "Standard Grade 标准等级: Industrial Grade; Purity (wt) ≥ 99.9%"
+    },
+    "pack_type": {
+     "value": "BULK IN ISO TANK CONTAINERS",
+     "page": 1,
+     "line": 11,
+     "snippet": "Packing 包装形式: BULK IN ISO TANK CONTAINERS (ISOTANK) / 散装 ISO 罐"
+    },
+    "packages": {
+     "value": "8",
+     "page": 1,
+     "line": 13,
+     "snippet": "Reference packages 参考件数: 8 ISO TANKS"
+    }
+   },
+   "type_cn": "产品规格书"
+  }
+ ],
+ "matrix": [
+  {
+   "field": "contract_no",
+   "field_cn": "合同号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "HYNM-2026-0518-MEG",
+     "fvalue": "HYNM20260518MEG",
+     "norm": "HYNM20260518MEG",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "HYNM-2026-0518-MEG",
+      "page": 1,
+      "line": 5,
+      "snippet": "Contract No. 合同号：HYNM-2026-0518-MEG     Date 日期：2026-03-18     Place 签订地：Ningbo, China"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "HYNM-2026-0518-MEG",
+     "fvalue": "HYNM20260518MEG",
+     "norm": "HYNM20260518MEG",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "HYNM-2026-0518-MEG",
+      "page": 1,
+      "line": 11,
+      "snippet": "ReferenceBuyer PO PO-HYNM-2603-011 / Contract Ref. HYNM-2026-0518-MEG"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "HYNM-2026-0518-MEG",
+     "fvalue": "HYNM20260518MEG",
+     "norm": "HYNM20260518MEG",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "HYNM-2026-0518-MEG",
+      "page": 1,
+      "line": 7,
+      "snippet": "Contract No. 合同号HYNM-2026-0518-MEGPO No. 订单号PO-HYNM-2603-011"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "HYNM-2026-0518-MEG",
+     "fvalue": "HYNM20260518MEG",
+     "norm": "HYNM20260518MEG",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "HYNM-2026-0518-MEG",
+      "page": 1,
+      "line": 6,
+      "snippet": "A=Invoice No. 发票号 | B=ALN-INV-26-0518 | E=Contract No. 合同号 | F=HYNM-2026-0518-MEG"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "4 份单证一致",
+   "expected": "HYNM20260518MEG",
+   "basis": "4 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "invoice_no",
+   "field_cn": "发票号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "ALN-INV-26-0518",
+     "fvalue": "ALNINV260518",
+     "norm": "ALNINV260518",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "ALN-INV-26-0518",
+      "page": 1,
+      "line": 6,
+      "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "ALN-INV-26-0518",
+     "fvalue": "ALNINV260518",
+     "norm": "ALNINV260518",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "ALN-INV-26-0518",
+      "page": 1,
+      "line": 6,
+      "snippet": "A=Invoice No. 发票号 | B=ALN-INV-26-0518 | E=Contract No. 合同号 | F=HYNM-2026-0518-MEG"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "2 份单证一致",
+   "expected": "ALNINV260518",
+   "basis": "2 份单证相互印证（以商业发票为准（结算依据）），以多数一致值为准"
+  },
+  {
+   "field": "pi_no",
+   "field_cn": "形式发票号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "PI-ALN-26-0312",
+     "fvalue": "PIALN260312",
+     "norm": "PIALN260312",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "PI-ALN-26-0312",
+      "page": 1,
+      "line": 5,
+      "snippet": "No. PI-ALN-26-0312          Date 2026-03-12          Validity: 30 days from date"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": null,
+   "basis": null
+  },
+  {
+   "field": "packing_no",
+   "field_cn": "装箱单号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "ALN-PL-26-0518",
+     "fvalue": "ALNPL260518",
+     "norm": "ALNPL260518",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "ALN-PL-26-0518",
+      "page": 1,
+      "line": 5,
+      "snippet": "A=Packing List No. 装箱单号 | B=ALN-PL-26-0518 | E=Date 日期 | F=2026-05-15"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": "ALNPL260518",
+   "basis": "以装箱单实装数据为准"
+  },
+  {
+   "field": "bl_no",
+   "field_cn": "提单号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "MEDUHUB0618825",
+     "fvalue": "MEDUHUB0618825",
+     "norm": "MEDUHUB0618825",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "MEDUHUB0618825",
+      "page": 1,
+      "line": 8,
+      "snippet": "B/L No. 提单号MEDUHUB0618825Incoterm 贸易术语CFR NINGBO"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "MEDUHUB0618825",
+     "fvalue": "MEDUHUB0618825",
+     "norm": "MEDUHUB0618825",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "MEDUHUB0618825",
+      "page": 1,
+      "line": 7,
+      "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "MEDUHUB0618825",
+     "fvalue": "MEDUHUB0618825",
+     "norm": "MEDUHUB0618825",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "MEDUHUB0618825",
+      "page": 1,
+      "line": 3,
+      "snippet": "B/L No. MEDUHUB0618825        Booking No. 2451-8817263"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "3 份单证一致",
+   "expected": "MEDUHUB0618825",
+   "basis": "以商业发票为准（结算依据）"
+  },
+  {
+   "field": "coa_no",
+   "field_cn": "COA 编号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": "COA-MEG-260512",
+     "fvalue": "COAMEG260512",
+     "norm": "COAMEG260512",
+     "type": "COA",
+     "loc": {
+      "value": "COA-MEG-260512",
+      "page": 1,
+      "line": 6,
+      "snippet": "Certificate No. 证书编号COA-MEG-260512Date of Analysis 分析日2026-05-10"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": null,
+   "basis": null
+  },
+  {
+   "field": "po_no",
+   "field_cn": "订单号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "PO-HYNM-2603-011",
+     "fvalue": "POHYNM2603011",
+     "norm": "POHYNM2603011",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "PO-HYNM-2603-011",
+      "page": 1,
+      "line": 11,
+      "snippet": "ReferenceBuyer PO PO-HYNM-2603-011 / Contract Ref. HYNM-2026-0518-MEG"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "PO-HYNM-2603-011",
+     "fvalue": "POHYNM2603011",
+     "norm": "POHYNM2603011",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "PO-HYNM-2603-011",
+      "page": 1,
+      "line": 7,
+      "snippet": "Contract No. 合同号HYNM-2026-0518-MEGPO No. 订单号PO-HYNM-2603-011"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": "PO-HYNM-2603-011",
+     "fvalue": "POHYNM2603011",
+     "norm": "POHYNM2603011",
+     "type": "COA",
+     "loc": {
+      "value": "PO-HYNM-2603-011",
+      "page": 1,
+      "line": 14,
+      "snippet": "Customer 客户NINGBO HAIYUAN NEW MATERIALOrder / PO No.PO-HYNM-2603-011"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "3 份单证一致",
+   "expected": "POHYNM2603011",
+   "basis": "3 份单证相互印证（单证相互印证），以多数一致值为准"
+  },
+  {
+   "field": "lc_no",
+   "field_cn": "信用证号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "LC2605NB0088",
+     "fvalue": "LC2605NB0088",
+     "norm": "LC2605NB0088",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "LC2605NB0088",
+      "page": 1,
+      "line": 39,
+      "snippet": "Payment Terms 付款方式L/C NO. LC2605NB0088 AT SIGHT, BENEFICIARY: AL-NOOR PETROCHEMICAL TRADING"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": "LC2605NB0088",
+   "basis": "以商业发票为准（结算依据）"
+  },
+  {
+   "field": "seller",
+   "field_cn": "卖方名称",
+   "kind": "party",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "fvalue": "AL NOOR PETROCHEMICAL TRADING",
+     "norm": "AL NOOR PETROCHEMICAL TRADING",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+      "page": 1,
+      "line": 9,
+      "snippet": "Name 名称AL-NOOR PETROCHEMICAL TRADING COMPANYNINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "fvalue": "AL NOOR PETROCHEMICAL TRADING",
+     "norm": "AL NOOR PETROCHEMICAL TRADING",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+      "page": 1,
+      "line": 6,
+      "snippet": "SELLER / EXPORTER 卖方AL-NOOR PETROCHEMICAL TRADING COMPANY"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "fvalue": "AL NOOR PETROCHEMICAL TRADING",
+     "norm": "AL NOOR PETROCHEMICAL TRADING",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+      "page": 1,
+      "line": 3,
+      "snippet": "AL-NOOR PETROCHEMICAL TRADING COMPANY"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "3 份单证一致",
+   "expected": "AL NOOR PETROCHEMICAL TRADING",
+   "basis": "3 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "buyer",
+   "field_cn": "买方名称",
+   "kind": "party",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "fvalue": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "norm": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+      "page": 1,
+      "line": 9,
+      "snippet": "Name 名称AL-NOOR PETROCHEMICAL TRADING COMPANYNINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+   "basis": "以合同约定为准"
+  },
+  {
+   "field": "consignee",
+   "field_cn": "收货人",
+   "kind": "party",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "fvalue": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "norm": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+      "page": 1,
+      "line": 8,
+      "snippet": "Consignee 收货人NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "fvalue": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "norm": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+      "page": 1,
+      "line": 12,
+      "snippet": "Consignee 收货人NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "fvalue": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "norm": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+      "page": 1,
+      "line": 9,
+      "snippet": "A=Receiver 收货人 | B=NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD. | F=Notify 通知方 | G=NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "fvalue": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "norm": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+      "page": 1,
+      "line": 6,
+      "snippet": "Consignee 收货人: NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "4 份单证一致",
+   "expected": "NINGBO HAIYUAN NEW MATERIAL TRADING",
+   "basis": "以商业发票为准（结算依据）"
+  },
+  {
+   "field": "notify",
+   "field_cn": "通知方",
+   "kind": "party",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "fvalue": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "norm": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+      "page": 1,
+      "line": 9,
+      "snippet": "Notify Party 通知方NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "fvalue": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "norm": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+      "page": 1,
+      "line": 15,
+      "snippet": "Notify Party 通知方NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD. / Floor 9, Port Railway Building, 266"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "fvalue": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "norm": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+      "page": 1,
+      "line": 9,
+      "snippet": "A=Receiver 收货人 | B=NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD. | F=Notify 通知方 | G=NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "fvalue": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "norm": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+      "page": 1,
+      "line": 8,
+      "snippet": "Notify Party 通知方: NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "4 份单证一致",
+   "expected": "NINGBO DONGHAI INTERNATIONAL LOGISTICS",
+   "basis": "以商业发票为准（结算依据）"
+  },
+  {
+   "field": "shipper",
+   "field_cn": "发货人",
+   "kind": "party",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "fvalue": "AL NOOR PETROCHEMICAL",
+     "norm": "AL NOOR PETROCHEMICAL",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "AL-NOOR PETROCHEMICAL COMPANY",
+      "page": 1,
+      "line": 4,
+      "snippet": "Shipper 发货人: AL-NOOR PETROCHEMICAL COMPANY"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": "AL NOOR PETROCHEMICAL",
+   "basis": "以提单实装数据为准（经船方确认）"
+  },
+  {
+   "field": "manufacturer",
+   "field_cn": "生产商",
+   "kind": "party",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "fvalue": "AL NOOR PETROCHEMICAL",
+     "norm": "AL NOOR PETROCHEMICAL",
+     "type": "COA",
+     "loc": {
+      "value": "AL-NOOR PETROCHEMICAL COMPANY",
+      "page": 1,
+      "line": 3,
+      "snippet": "AL-NOOR PETROCHEMICAL COMPANY"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "fvalue": "AL NOOR PETROCHEMICAL",
+     "norm": "AL NOOR PETROCHEMICAL",
+     "type": "SDS",
+     "loc": {
+      "value": "AL-NOOR PETROCHEMICAL COMPANY",
+      "page": 1,
+      "line": 5,
+      "snippet": "AL-NOOR PETROCHEMICAL COMPANY  |  Revision Rev 4.0 / 2024-02  |  语言：English（中文要点见各节括注）"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "2 份单证一致",
+   "expected": "AL NOOR PETROCHEMICAL",
+   "basis": "2 份单证相互印证（以分析证书为准（质量依据）），以多数一致值为准"
+  },
+  {
+   "field": "origin",
+   "field_cn": "原产国",
+   "kind": "text",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "SAUDI ARABIA",
+     "fvalue": "SAUDI ARABIA",
+     "norm": "SAUDI ARABIA",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "SAUDI ARABIA",
+      "page": 1,
+      "line": 7,
+      "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "SAUDI ARABIA",
+     "fvalue": "SAUDI ARABIA",
+     "norm": "SAUDI ARABIA",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "SAUDI ARABIA",
+      "page": 1,
+      "line": 4,
+      "snippet": "P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "2 份单证一致",
+   "expected": "SAUDI ARABIA",
+   "basis": "2 份单证相互印证（单证相互印证），以多数一致值为准"
+  },
+  {
+   "field": "product_en",
+   "field_cn": "英文品名",
+   "kind": "text",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "fvalue": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "norm": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+      "page": 1,
+      "line": 21,
+      "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "ETHYLENE GLYCOL (MEG)",
+     "fvalue": "ETHYLENE GLYCOL (MEG)",
+     "norm": "ETHYLENE GLYCOL (MEG)",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "ETHYLENE GLYCOL (MEG)",
+      "page": 1,
+      "line": 19,
+      "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "ETHYLENE GLYCOL (INDUSTRIAL GRADE)",
+     "fvalue": "ETHYLENE GLYCOL (INDUSTRIAL GRADE)",
+     "norm": "ETHYLENE GLYCOL (INDUSTRIAL GRADE)",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "ETHYLENE GLYCOL (INDUSTRIAL GRADE)",
+      "page": 1,
+      "line": 27,
+      "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "fvalue": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "norm": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+      "page": 1,
+      "line": 11,
+      "snippet": "A11 唛头/包装行：… PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)；品名见电子表格罐明细表"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "fvalue": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "norm": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+      "page": 1,
+      "line": 16,
+      "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "fvalue": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "norm": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "type": "COA",
+     "loc": {
+      "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+      "page": 1,
+      "line": 9,
+      "snippet": "GRADE"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "fvalue": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "norm": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "type": "SDS",
+     "loc": {
+      "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+      "page": 1,
+      "line": 7,
+      "snippet": "Product name 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE 乙二醇（工业级）"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "fvalue": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "norm": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "type": "SPEC_SHEET",
+     "loc": {
+      "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+      "page": 1,
+      "line": 3,
+      "snippet": "Product 产品: ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE / 乙二醇（工业级）"
+     }
+    }
+   },
+   "status": "无法判断",
+   "explain": "文字表述不同（属正常单证结构差异，不构成不符）：01_采购合同_Purchase_Contract.docx,06_分析证书_COA.docx,07_化学品安全技术说明书_SDS.docx: ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE；02_形式发票_Proforma_Invoice.docx: ETHYLENE GLYCOL (MEG)；03_商业发票_Commercial_Invoice.docx: ETHYLENE GLYCOL (INDUSTRIAL GRADE)；04_装箱单_Packing_List.xlsx: BULK IN ISO TANK CONTAINERS (ISOTANK)；05_提单_Bill_of_Lading.png,08_产品规格书_Product_Spec_Sheet.png: ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+   "expected": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+   "basis": "3 份单证相互印证（以合同约定为准），以多数一致值为准",
+   "soft_note": true
+  },
+  {
+   "field": "product_cn",
+   "field_cn": "中文品名",
+   "kind": "text",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "乙二醇（工业级）",
+     "fvalue": "乙二醇（工业级）",
+     "norm": "乙二醇（工业级）",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "乙二醇（工业级）",
+      "page": 1,
+      "line": 21,
+      "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "乙二醇",
+     "fvalue": "乙二醇",
+     "norm": "乙二醇",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "乙二醇",
+      "page": 1,
+      "line": 21,
+      "snippet": "乙二醇（工业级）"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "乙二醇",
+     "fvalue": "乙二醇",
+     "norm": "乙二醇",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "乙二醇",
+      "page": 1,
+      "line": 27,
+      "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "乙二醇（工业级）",
+     "fvalue": "乙二醇（工业级）",
+     "norm": "乙二醇（工业级）",
+     "type": "SDS",
+     "loc": {
+      "value": "乙二醇（工业级）",
+      "page": 1,
+      "line": 7,
+      "snippet": "Product name 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE 乙二醇（工业级）"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "文字表述不同（属正常单证结构差异，不构成不符）：01_采购合同_Purchase_Contract.docx,07_化学品安全技术说明书_SDS.docx: 乙二醇（工业级）；02_形式发票_Proforma_Invoice.docx,03_商业发票_Commercial_Invoice.docx: 乙二醇",
+   "expected": "乙二醇（工业级）",
+   "basis": "2 份单证相互印证（以合同约定为准），以多数一致值为准",
+   "soft_note": true
+  },
+  {
+   "field": "cas",
+   "field_cn": "CAS 号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "107-21-1",
+     "fvalue": "107211",
+     "norm": "107211",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "107-21-1",
+      "page": 1,
+      "line": 20,
+      "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "107-21-1",
+     "fvalue": "107211",
+     "norm": "107211",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "107-21-1",
+      "page": 1,
+      "line": 19,
+      "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "107-21-1",
+     "fvalue": "107211",
+     "norm": "107211",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "107-21-1",
+      "page": 1,
+      "line": 27,
+      "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": "107-21-1",
+     "fvalue": "107211",
+     "norm": "107211",
+     "type": "COA",
+     "loc": {
+      "value": "107-21-1",
+      "page": 1,
+      "line": 8,
+      "snippet": "Product 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIALCAS No.107-21-1"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "107-21-1",
+     "fvalue": "107211",
+     "norm": "107211",
+     "type": "SDS",
+     "loc": {
+      "value": "107-21-1",
+      "page": 1,
+      "line": 9,
+      "snippet": "CAS No.107-21-1"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": "107-21-1",
+     "fvalue": "107211",
+     "norm": "107211",
+     "type": "SPEC_SHEET",
+     "loc": {
+      "value": "107-21-1",
+      "page": 1,
+      "line": 4,
+      "snippet": "CAS No.: 107-21-1   HS Code: 2905310000"
+     }
+    }
+   },
+   "status": "一致",
+   "explain": "6 份单证一致",
+   "expected": "107211",
+   "basis": "6 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "hs",
+   "field_cn": "HS 编码",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "2905310000",
+     "fvalue": "2905310000",
+     "norm": "2905310000",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "2905310000",
+      "page": 1,
+      "line": 20,
+      "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "2905310000",
+     "fvalue": "2905310000",
+     "norm": "2905310000",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "2905310000",
+      "page": 1,
+      "line": 19,
+      "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "2905310000",
+     "fvalue": "2905310000",
+     "norm": "2905310000",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "2905310000",
+      "page": 1,
+      "line": 28,
+      "snippet": "8 TANKSPacking in ISO tank containers2905310000"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "2905310000",
+     "fvalue": "2905310000",
+     "norm": "2905310000",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "2905310000",
+      "page": 1,
+      "line": 16,
+      "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": "2905310000",
+     "fvalue": "2905310000",
+     "norm": "2905310000",
+     "type": "SPEC_SHEET",
+     "loc": {
+      "value": "2905310000",
+      "page": 1,
+      "line": 4,
+      "snippet": "CAS No.: 107-21-1   HS Code: 2905310000"
+     }
+    }
+   },
+   "status": "一致",
+   "explain": "5 份单证一致",
+   "expected": "2905310000",
+   "basis": "以合同约定为准"
+  },
+  {
+   "field": "spec",
+   "field_cn": "规格/含量",
+   "kind": "spec",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "≥99.9%",
+     "fvalue": "≥99.9%",
+     "norm": 99.9,
+     "type": "CONTRACT",
+     "loc": {
+      "value": "≥99.9%",
+      "page": 1,
+      "line": 21,
+      "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "≥99.9% wt",
+     "fvalue": "≥99.9%",
+     "norm": 99.9,
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "≥99.9% wt",
+      "page": 1,
+      "line": 19,
+      "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": "≥99.99",
+     "fvalue": "—",
+     "norm": null,
+     "type": "COA",
+     "loc": {
+      "value": "≥99.99",
+      "page": 1,
+      "line": 18,
+      "snippet": "1Ethylene Glycol content (Purity), wt%≥ 99.99ASTM E231399.97Pass"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": "≥99.9%",
+     "fvalue": "≥99.9%",
+     "norm": 99.9,
+     "type": "SPEC_SHEET",
+     "loc": {
+      "value": "≥99.9%",
+      "page": 1,
+      "line": 6,
+      "snippet": "Standard Grade 标准等级: Industrial Grade; Purity (wt) ≥ 99.9%"
+     }
+    }
+   },
+   "status": "一致",
+   "explain": "4 份单证一致",
+   "expected": 99.9,
+   "basis": "3 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "quantity",
+   "field_cn": "数量(MT)",
+   "kind": "num",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "200.000 MT",
+     "fvalue": "200",
+     "norm": 200.0,
+     "type": "CONTRACT",
+     "loc": {
+      "value": "200.000 MT",
+      "page": 1,
+      "line": 20,
+      "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "200.000 MT",
+     "fvalue": "200",
+     "norm": 200.0,
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "200.000 MT",
+      "page": 1,
+      "line": 19,
+      "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "160.000 MT",
+     "fvalue": "160",
+     "norm": 160.0,
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "160.000 MT",
+      "page": 1,
+      "line": 27,
+      "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": "180,000 kg",
+     "fvalue": "180,000",
+     "norm": 180000.0,
+     "type": "COA",
+     "loc": {
+      "value": "180,000 kg",
+      "page": 1,
+      "line": 11,
+      "snippet": "Quantity 代表数量180,000 kg (9 × 20 MT)Packages 包装件数9 ISO TANKS"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法直接比较",
+   "explain": "形式发票数量为报价拟装数量，商业发票为实装数量，两者可不相同；应以提单/装箱单实装数量为准",
+   "expected": 200.0,
+   "basis": "2 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "unit",
+   "field_cn": "计量单位",
+   "kind": "text",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "MT",
+     "fvalue": "MT",
+     "norm": "MT",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "MT",
+      "page": 1,
+      "line": 19,
+      "snippet": "USD/MT"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": "MT",
+   "basis": "以合同约定为准"
+  },
+  {
+   "field": "unit_price",
+   "field_cn": "单价",
+   "kind": "num",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "612.00",
+     "fvalue": "612",
+     "norm": 612.0,
+     "type": "CONTRACT",
+     "loc": {
+      "value": "612.00",
+      "page": 1,
+      "line": 20,
+      "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "612.00",
+     "fvalue": "612",
+     "norm": 612.0,
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "612.00",
+      "page": 1,
+      "line": 19,
+      "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "612.00",
+     "fvalue": "612",
+     "norm": 612.0,
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "612.00",
+      "page": 1,
+      "line": 27,
+      "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "3 份单证一致",
+   "expected": 612.0,
+   "basis": "3 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "amount",
+   "field_cn": "金额",
+   "kind": "num",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "122,400.00",
+     "fvalue": "122,400",
+     "norm": 122400.0,
+     "type": "CONTRACT",
+     "loc": {
+      "value": "122,400.00",
+      "page": 1,
+      "line": 20,
+      "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "122,400.00",
+     "fvalue": "122,400",
+     "norm": 122400.0,
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "122,400.00",
+      "page": 1,
+      "line": 19,
+      "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "117,000.00",
+     "fvalue": "117,000",
+     "norm": 117000.0,
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "117,000.00",
+      "page": 1,
+      "line": 27,
+      "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法直接比较",
+   "explain": "形式发票为报价用，商业发票为实际结算金额，二者可不相同；仅数量/单价/贸易术语应一致",
+   "expected": 122400.0,
+   "basis": "2 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "currency",
+   "field_cn": "币种",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "USD",
+     "fvalue": "USD",
+     "norm": "USD",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "USD",
+      "page": 1,
+      "line": 18,
+      "snippet": "ItemDescription of Goods / 商品描述CAS No.HS CodeQuantityUnitUnit PriceAmount USD"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "USD",
+     "fvalue": "USD",
+     "norm": "USD",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "USD",
+      "page": 1,
+      "line": 14,
+      "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "USD",
+     "fvalue": "USD",
+     "norm": "USD",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "USD",
+      "page": 1,
+      "line": 26,
+      "snippet": "USD/MTUSD"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "3 份单证一致",
+   "expected": "USD",
+   "basis": "3 份单证相互印证（以合同约定为准），以多数一致值为准"
+  },
+  {
+   "field": "incoterm",
+   "field_cn": "贸易术语",
+   "kind": "incoterm",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "CFR NINGBO",
+     "fvalue": "CFR",
+     "norm": "CFR",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "CFR NINGBO",
+      "page": 1,
+      "line": 30,
+      "snippet": "CFR NINGBOUnit price per MT, CFRKING ABDULLAH PORT,NINGBO PORT, CHINAT/T 30% advance + 70%"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "CFR NINGBO",
+     "fvalue": "CFR",
+     "norm": "CFR",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "CFR NINGBO",
+      "page": 1,
+      "line": 14,
+      "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "CFR NINGBO",
+     "fvalue": "CFR",
+     "norm": "CFR",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "CFR NINGBO",
+      "page": 1,
+      "line": 8,
+      "snippet": "B/L No. 提单号MEDUHUB0618825Incoterm 贸易术语CFR NINGBO"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "CFR NINGBO",
+     "fvalue": "CFR",
+     "norm": "CFR",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "CFR NINGBO",
+      "page": 1,
+      "line": 17,
+      "snippet": "Freight & Charges 运费：FREIGHT PREPAID   CFR NINGBO"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "4 份单证一致",
+   "expected": "CFR",
+   "basis": "以合同约定为准"
+  },
+  {
+   "field": "port_load",
+   "field_cn": "起运港",
+   "kind": "port",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "KING ABDULLAH PORT, JUBAIL",
+     "fvalue": "KINGABDULLAHJUBAIL",
+     "norm": "KINGABDULLAHJUBAIL",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "KING ABDULLAH PORT, JUBAIL",
+      "page": 1,
+      "line": 0,
+      "snippet": "Port of Loading 装运港：KING ABDULLAH PORT, JUBAIL (SAJUB), SAUDI ARABIA"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "fvalue": "KINGABDULLAHJUBAIL",
+     "norm": "KINGABDULLAHJUBAIL",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+      "page": 1,
+      "line": 14,
+      "snippet": "第 1 页第 14 行（贸易条款表第 1 行）：KING ABDULLAH PORT, / JUBAIL (SAJUB)"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "fvalue": "KINGABDULLAHJUBAIL",
+     "norm": "KINGABDULLAHJUBAIL",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+      "page": 1,
+      "line": 17,
+      "snippet": "Port of Loading 起运港KING ABDULLAH PORT, JUBAIL (SAJUB)"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "fvalue": "KINGABDULLAHJUBAIL",
+     "norm": "KINGABDULLAHJUBAIL",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+      "page": 1,
+      "line": 8,
+      "snippet": "A=Port of Loading 起运港 | B=KING ABDULLAH PORT, JUBAIL (SAJUB) | E=Port of Discharge 卸货港 | F=NINGBO PORT, CHINA (CNNGB)"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "fvalue": "KINGABDULLAHJUBAIL",
+     "norm": "KINGABDULLAHJUBAIL",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+      "page": 1,
+      "line": 12,
+      "snippet": "Port of Loading 起运港: KING ABDULLAH PORT, JUBAIL (SAJUB)"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "5 份单证一致",
+   "expected": "KINGABDULLAHJUBAIL",
+   "basis": "以合同约定为准"
+  },
+  {
+   "field": "port_disch",
+   "field_cn": "目的港",
+   "kind": "port",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "NINGBO PORT, CHINA",
+     "fvalue": "NINGBO",
+     "norm": "NINGBO",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "NINGBO PORT, CHINA",
+      "page": 1,
+      "line": 0,
+      "snippet": "Port of Discharge 目的港：NINGBO PORT, CHINA (CNNGB)"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "NINGBO PORT, CHINA",
+     "fvalue": "NINGBO",
+     "norm": "NINGBO",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "NINGBO PORT, CHINA",
+      "page": 1,
+      "line": 0,
+      "snippet": "POL: KING ABDULLAH PORT, JUBAIL (SAJUB)  ·  POD: NINGBO PORT, CHINA (CNNGB)"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "NINGBO PORT, CHINA (CNNGB)",
+     "fvalue": "NINGBO",
+     "norm": "NINGBO",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "NINGBO PORT, CHINA (CNNGB)",
+      "page": 1,
+      "line": 18,
+      "snippet": "Port of Discharge 卸货港NINGBO PORT, CHINA (CNNGB)"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "NINGBO PORT, CHINA (CNNGB)",
+     "fvalue": "NINGBO",
+     "norm": "NINGBO",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "NINGBO PORT, CHINA (CNNGB)",
+      "page": 1,
+      "line": 8,
+      "snippet": "A=Port of Loading 起运港 | B=KING ABDULLAH PORT, JUBAIL (SAJUB) | E=Port of Discharge 卸货港 | F=NINGBO PORT, CHINA (CNNGB)"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "NINGBO, CHINA (CNNGB)",
+     "fvalue": "NINGBO",
+     "norm": "NINGBO",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "NINGBO, CHINA (CNNGB)",
+      "page": 1,
+      "line": 13,
+      "snippet": "Port of Discharge 卸货港: NINGBO, CHINA (CNNGB)   Place of Delivery: NINGBO, CHINA"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "5 份单证一致",
+   "expected": "NINGBO",
+   "basis": "以合同约定为准"
+  },
+  {
+   "field": "vessel",
+   "field_cn": "船名",
+   "kind": "vessel",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "MSC ISABELLA",
+     "fvalue": "MSCISABELLA",
+     "norm": "MSCISABELLA",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "MSC ISABELLA",
+      "page": 1,
+      "line": 19,
+      "snippet": "Vessel / Voyage 船名航次MSC ISABELLA  V. 2618W"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "MSC ISABELLA",
+     "fvalue": "MSCISABELLA",
+     "norm": "MSCISABELLA",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "MSC ISABELLA",
+      "page": 1,
+      "line": 7,
+      "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "MSC ISABELLA",
+     "fvalue": "MSCISABELLA",
+     "norm": "MSCISABELLA",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "MSC ISABELLA",
+      "page": 1,
+      "line": 11,
+      "snippet": "Vessel / Voyage 船名航次: MSC ISABELLA   V. 2618W"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "3 份单证一致",
+   "expected": "MSCISABELLA",
+   "basis": "以商业发票为准（结算依据）"
+  },
+  {
+   "field": "voyage",
+   "field_cn": "航次",
+   "kind": "code",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "V. 2618W",
+     "fvalue": "V2618W",
+     "norm": "V2618W",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "V. 2618W",
+      "page": 1,
+      "line": 19,
+      "snippet": "Vessel / Voyage 船名航次MSC ISABELLA  V. 2618W"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "V. 2618W",
+     "fvalue": "V2618W",
+     "norm": "V2618W",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "V. 2618W",
+      "page": 1,
+      "line": 7,
+      "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "V. 2618W",
+     "fvalue": "V2618W",
+     "norm": "V2618W",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "V. 2618W",
+      "page": 1,
+      "line": 11,
+      "snippet": "Vessel / Voyage 船名航次: MSC ISABELLA   V. 2618W"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "3 份单证一致",
+   "expected": "V2618W",
+   "basis": "以商业发票为准（结算依据）"
+  },
+  {
+   "field": "packages",
+   "field_cn": "件数",
+   "kind": "int",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "9",
+     "fvalue": "9",
+     "norm": 9,
+     "type": "CONTRACT",
+     "loc": {
+      "value": "9",
+      "page": 1,
+      "line": 11,
+      "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951,Room 1806, Building A, Yinzhou Trade Center, 1188"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "9",
+     "fvalue": "9",
+     "norm": 9,
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "9",
+      "page": 1,
+      "line": 7,
+      "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "8",
+     "fvalue": "8",
+     "norm": 8,
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "8",
+      "page": 1,
+      "line": 6,
+      "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "9",
+     "fvalue": "9",
+     "norm": 9,
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "9",
+      "page": 1,
+      "line": 23,
+      "snippet": "A23=TOTAL  B23=9 ISO TANKS  D23#=SUM(D14:D22)；D25#=D23"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "9",
+     "fvalue": "9",
+     "norm": 9,
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "9",
+      "page": 1,
+      "line": 16,
+      "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": "9",
+     "fvalue": "9",
+     "norm": 9,
+     "type": "COA",
+     "loc": {
+      "value": "9",
+      "page": 1,
+      "line": 11,
+      "snippet": "Quantity 代表数量180,000 kg (9 × 20 MT)Packages 包装件数9 ISO TANKS"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "8",
+     "fvalue": "8",
+     "norm": 8,
+     "type": "SDS",
+     "loc": {
+      "value": "8",
+      "page": 1,
+      "line": 4,
+      "snippet": "according to GHS (Globally Harmonized System), UN Model Regulations Rev. 8 / 依据 GHS 编制"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": "8",
+     "fvalue": "8",
+     "norm": 8,
+     "type": "SPEC_SHEET",
+     "loc": {
+      "value": "8",
+      "page": 1,
+      "line": 13,
+      "snippet": "Reference packages 参考件数: 8 ISO TANKS"
+     }
+    }
+   },
+   "status": "无法直接比较",
+   "explain": "SDS 第 14 节的包装件数/毛净重属'该产品常规运输形式'的说明，非本船实发数量；与本票实际件数不同不构成单证不符",
+   "expected": 8,
+   "basis": "3 份单证相互印证（以商业发票为准（结算依据）），以多数一致值为准"
+  },
+  {
+   "field": "pack_type",
+   "field_cn": "包装方式",
+   "kind": "text",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "ISO TANK CONTAINERS",
+     "fvalue": "ISO TANK CONTAINERS",
+     "norm": "ISO TANK CONTAINERS",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "ISO TANK CONTAINERS",
+      "page": 1,
+      "line": 27,
+      "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "ISOTANK",
+     "fvalue": "ISOTANK",
+     "norm": "ISOTANK",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "ISOTANK",
+      "page": 1,
+      "line": 21,
+      "snippet": "Packing 包装ISOTANK, 8 TANKS"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "fvalue": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "norm": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+      "page": 1,
+      "line": 11,
+      "snippet": "A=SHIPPING MARKS 唛头：ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA   |   PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "ISO TANKS",
+     "fvalue": "ISO TANKS",
+     "norm": "ISO TANKS",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "ISO TANKS",
+      "page": 1,
+      "line": 14,
+      "snippet": "Container No. / Seal 箱号封号: TIFU 238137 3 / MSK-092151   No. of Packages 件数: 9 ISO TANKS"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": "BULK IN ISO TANK CONTAINERS",
+     "fvalue": "BULK IN ISO TANK CONTAINERS",
+     "norm": "BULK IN ISO TANK CONTAINERS",
+     "type": "SPEC_SHEET",
+     "loc": {
+      "value": "BULK IN ISO TANK CONTAINERS",
+      "page": 1,
+      "line": 11,
+      "snippet": "Packing 包装形式: BULK IN ISO TANK CONTAINERS (ISOTANK) / 散装 ISO 罐"
+     }
+    }
+   },
+   "status": "无法判断",
+   "explain": "文字表述不同（属正常单证结构差异，不构成不符）：01_采购合同_Purchase_Contract.docx: ISO TANK CONTAINERS；03_商业发票_Commercial_Invoice.docx: ISOTANK；04_装箱单_Packing_List.xlsx: BULK IN ISO TANK CONTAINERS (ISOTANK)；05_提单_Bill_of_Lading.png: ISO TANKS；08_产品规格书_Product_Spec_Sheet.png: BULK IN ISO TANK CONTAINERS",
+   "expected": "ISO TANK CONTAINERS",
+   "basis": "以合同约定为准",
+   "soft_note": true
+  },
+  {
+   "field": "net_weight",
+   "field_cn": "净重(KGS)",
+   "kind": "num",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "180,000",
+     "fvalue": "180,000",
+     "norm": 180000.0,
+     "type": "CONTRACT",
+     "loc": {
+      "value": "180,000",
+      "page": 1,
+      "line": 27,
+      "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "180,000",
+     "fvalue": "180,000",
+     "norm": 180000.0,
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "180,000",
+      "page": 1,
+      "line": 26,
+      "snippet": "Bulk in ISO tank containers180,000 KGS180,180 KGS9"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "160,000",
+     "fvalue": "160,000",
+     "norm": 160000.0,
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "160,000",
+      "page": 1,
+      "line": 22,
+      "snippet": "Gross / Net Weight 毛重/净重160,160 KGS  /  160,000 KGS"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "180,000",
+     "fvalue": "180,000",
+     "norm": 180000.0,
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "180,000",
+      "page": 1,
+      "line": 23,
+      "snippet": "G23# = SUM(G14:G22)；单罐净重 E14:E22 = 20,000 KGS，G 列 = D×E",
+      "extra": "G14:G22 = 20,000 ×9"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "180,000",
+     "fvalue": "180,000",
+     "norm": 180000.0,
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "180,000",
+      "page": 1,
+      "line": 17,
+      "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "160,000",
+     "fvalue": "160,000",
+     "norm": 160000.0,
+     "type": "SDS",
+     "loc": {
+      "value": "160,000",
+      "page": 2,
+      "line": 5,
+      "snippet": "Net weight per shipment160,000 KGSGross weight per shipment160,160 KGS"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法直接比较",
+   "explain": "同 SDS 说明性数据，非本票实发重量",
+   "expected": 160000.0,
+   "basis": "2 份单证相互印证（以商业发票为准（结算依据）），以多数一致值为准"
+  },
+  {
+   "field": "gross_weight",
+   "field_cn": "毛重(KGS)",
+   "kind": "num",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "180,180",
+     "fvalue": "180,180",
+     "norm": 180180.0,
+     "type": "CONTRACT",
+     "loc": {
+      "value": "180,180",
+      "page": 1,
+      "line": 27,
+      "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "180,180",
+     "fvalue": "180,180",
+     "norm": 180180.0,
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "180,180",
+      "page": 1,
+      "line": 26,
+      "snippet": "Bulk in ISO tank containers180,000 KGS180,180 KGS9"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "160,160",
+     "fvalue": "160,160",
+     "norm": 160160.0,
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "160,160",
+      "page": 1,
+      "line": 22,
+      "snippet": "Gross / Net Weight 毛重/净重160,160 KGS  /  160,000 KGS"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "180,180",
+     "fvalue": "180,180",
+     "norm": 180180.0,
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "180,180",
+      "page": 1,
+      "line": 23,
+      "snippet": "H23# = SUM(H14:H22)；单罐毛重 F14:F22 = 20,020 KGS，H 列 = D×F",
+      "extra": "F14:F22 = 20,020 ×9"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "180,180",
+     "fvalue": "180,180",
+     "norm": 180180.0,
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "180,180",
+      "page": 1,
+      "line": 17,
+      "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "160,160",
+     "fvalue": "160,160",
+     "norm": 160160.0,
+     "type": "SDS",
+     "loc": {
+      "value": "160,160",
+      "page": 2,
+      "line": 5,
+      "snippet": "Net weight per shipment160,000 KGSGross weight per shipment160,160 KGS"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法直接比较",
+   "explain": "同 SDS 说明性数据，非本票实发重量",
+   "expected": 160160.0,
+   "basis": "2 份单证相互印证（以商业发票为准（结算依据）），以多数一致值为准"
+  },
+  {
+   "field": "batch",
+   "field_cn": "批号",
+   "kind": "code",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "MEG2605-B12",
+     "fvalue": "MEG2605B12",
+     "norm": "MEG2605B12",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "MEG2605-B12",
+      "page": 1,
+      "line": 14,
+      "snippet": "A=1 | B=TIFU 238137 3 | C=20FT ISOTANK | D=1 | E=20000 | F=20020 | I=MEG2605-B12 | J=MSK-092151 | G#=D14*E14 | H#=D14*F14"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "MEG2605-B11",
+     "fvalue": "MEG2605B11",
+     "norm": "MEG2605B11",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "MEG2605-B11",
+      "page": 1,
+      "line": 17,
+      "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": "MEG2605-B12",
+     "fvalue": "MEG2605B12",
+     "norm": "MEG2605B12",
+     "type": "COA",
+     "loc": {
+      "value": "MEG2605-B12",
+      "page": 1,
+      "line": 10,
+      "snippet": "Batch No. 批号MEG2605-B12Date of Mfg. 生产日期2026-05-10"
+     }
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "不一致",
+   "explain": "04_装箱单_Packing_List.xlsx,06_分析证书_COA.docx: MEG2605B12；05_提单_Bill_of_Lading.png: MEG2605B11",
+   "expected": "MEG2605B12",
+   "basis": "2 份单证相互印证（以装箱单实装数据为准），以多数一致值为准"
+  },
+  {
+   "field": "payment",
+   "field_cn": "付款方式",
+   "kind": "payment",
+   "strict": "strict",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": "T/T 30% advance + 70% against B/L copy",
+     "fvalue": "TT_30_70",
+     "norm": "TT_30_70",
+     "type": "CONTRACT",
+     "loc": {
+      "value": "T/T 30% advance + 70% against B/L copy",
+      "page": 1,
+      "line": 30,
+      "snippet": "第 1 页第 30 行（贸易条款表第 2 行）：T/T 30% advance + 70% against B/L copy"
+     }
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": "L/C at sight (to be advised)",
+     "fvalue": "LC_AT_SIGHT",
+     "norm": "LC_AT_SIGHT",
+     "type": "PROFORMA_INVOICE",
+     "loc": {
+      "value": "L/C at sight (to be advised)",
+      "page": 1,
+      "line": 14,
+      "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+     }
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "L/C NO. LC2605NB0088 AT SIGHT",
+     "fvalue": "LC_AT_SIGHT",
+     "norm": "LC_AT_SIGHT",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "L/C NO. LC2605NB0088 AT SIGHT",
+      "page": 1,
+      "line": 3,
+      "snippet": "AL-NOOR PETROCHEMICAL TRADING COMPANY"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "待确认",
+   "explain": "合同约定的付款方式为 T/T 30% 预付 + 70% 见提单副本付款；商业发票载明即期信用证 （L/C NO. LC2605NB0088）。二者可能并行（信用证为买方开立、合同未修订），也可能意味着改证/改约——必须向买方确认后决定按哪条路径付款，不能直接判为单证不符",
+   "expected": "LC_AT_SIGHT",
+   "basis": "2 份单证相互印证（单证相互印证），以多数一致值为准"
+  },
+  {
+   "field": "bl_date",
+   "field_cn": "提单日期",
+   "kind": "date",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": "2026-05-12",
+     "fvalue": "2026-05-12",
+     "norm": "2026-05-12",
+     "type": "BILL_OF_LADING",
+     "loc": {
+      "value": "2026-05-12",
+      "page": 1,
+      "line": 19,
+      "snippet": "No. of Original B/L 正本份数: THREE (3)   Date of Issue 签发日期: 2026-05-12   Place of Issue: JUBAIL, SAUDI ARABIA"
+     }
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": "2026-05-12",
+   "basis": "以提单实装数据为准（经船方确认）"
+  },
+  {
+   "field": "eta",
+   "field_cn": "预计到港",
+   "kind": "date",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "所有单证均未识别该字段",
+   "expected": null,
+   "basis": null
+  },
+  {
+   "field": "un_no",
+   "field_cn": "UN 编号",
+   "kind": "code",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "UN 3082",
+     "fvalue": "UN3082",
+     "norm": "UN3082",
+     "type": "SDS",
+     "loc": {
+      "value": "UN 3082",
+      "page": 1,
+      "line": 11,
+      "snippet": "UN No. / Proper ShippingUN 3082 / ENVIRONMENTALLY HAZARDOUS SUBSTANCE, LIQUID, N.O.S. (ETHYLENE GLYCOL)"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": null,
+   "basis": null
+  },
+  {
+   "field": "hazard_class",
+   "field_cn": "危险类别",
+   "kind": "code",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": null
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PACKING_LIST",
+     "loc": null
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": "9",
+     "fvalue": "9",
+     "norm": "9",
+     "type": "SDS",
+     "loc": {
+      "value": "9",
+      "page": 2,
+      "line": 0,
+      "snippet": "Hazard class 危险类别 9 (Class 9)；Packing group 包装类别 III；Marine pollutant YES"
+     }
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "无法判断",
+   "explain": "仅 1 份单证载明，无对照源",
+   "expected": null,
+   "basis": null
+  },
+  {
+   "field": "marks",
+   "field_cn": "唛头",
+   "kind": "text",
+   "strict": "soft",
+   "cells": {
+    "01_采购合同_Purchase_Contract.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "CONTRACT",
+     "loc": null
+    },
+    "02_形式发票_Proforma_Invoice.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "PROFORMA_INVOICE",
+     "loc": null
+    },
+    "03_商业发票_Commercial_Invoice.docx": {
+     "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "fvalue": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "norm": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "type": "COMMERCIAL_INVOICE",
+     "loc": {
+      "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+      "page": 1,
+      "line": 23,
+      "snippet": "Shipping Marks 唛头ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA"
+     }
+    },
+    "04_装箱单_Packing_List.xlsx": {
+     "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "fvalue": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "norm": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "type": "PACKING_LIST",
+     "loc": {
+      "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+      "page": 1,
+      "line": 11,
+      "snippet": "A=SHIPPING MARKS 唛头：ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA   |   PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)"
+     }
+    },
+    "05_提单_Bill_of_Lading.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "BILL_OF_LADING",
+     "loc": null
+    },
+    "06_分析证书_COA.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "COA",
+     "loc": null
+    },
+    "07_化学品安全技术说明书_SDS.docx": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SDS",
+     "loc": null
+    },
+    "08_产品规格书_Product_Spec_Sheet.png": {
+     "value": null,
+     "fvalue": "未载明",
+     "type": "SPEC_SHEET",
+     "loc": null
+    }
+   },
+   "status": "一致",
+   "explain": "2 份单证一致",
+   "expected": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+   "basis": "2 份单证相互印证（以商业发票为准（结算依据）），以多数一致值为准"
+  }
+ ],
+ "findings": [
+  {
+   "id": "ISSUE-01",
+   "field": "batch",
+   "field_cn": "批号",
+   "status": "不一致",
+   "severity": "中",
+   "title": "【不一致】批号 在各单证中不同",
+   "detail": "装箱单_Packing_List 载明「MEG2605-B12」；分析证书_COA 载明「MEG2605-B12」；提单_Bill_of_Lading 载明「MEG2605-B11」。",
+   "locations": [
+    {
+     "file": "04_装箱单_Packing_List.xlsx",
+     "kind": "装箱单",
+     "page": 1,
+     "line": 14,
+     "value": "MEG2605-B12",
+     "snippet": "A=1 | B=TIFU 238137 3 | C=20FT ISOTANK | D=1 | E=20000 | F=20020 | I=MEG2605-B12 | J=MSK-092151 | G#=D14*E14 | H#=D14*F14"
+    },
+    {
+     "file": "06_分析证书_COA.docx",
+     "kind": "分析证书",
+     "page": 1,
+     "line": 10,
+     "value": "MEG2605-B12",
+     "snippet": "Batch No. 批号MEG2605-B12Date of Mfg. 生产日期2026-05-10"
+    },
+    {
+     "file": "05_提单_Bill_of_Lading.png",
+     "kind": "提单",
+     "page": 1,
+     "line": 17,
+     "value": "MEG2605-B11",
+     "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+    }
+   ],
+   "impacts": [
+    "单证之间的一致性"
+   ],
+   "action": "要求相关方更正并出具书面确认"
+  },
+  {
+   "id": "ISSUE-02",
+   "field": "-",
+   "field_cn": "单证齐全性",
+   "status": "缺失",
+   "severity": "高",
+   "title": "【缺失】缺少原产地证 Certificate of Origin",
+   "detail": "合同第 5.2 条约定随附原产地证；沙特原产货物在中国申报享受协定/最惠国待遇及海关原产地核查时需要该证。",
+   "locations": [
+    {
+     "file": "（未上传）",
+     "kind": "原产地证 Certificate of Origin",
+     "page": null,
+     "line": null,
+     "value": "缺失"
+    }
+   ],
+   "impacts": [
+    "进口报关（原产地要素）",
+    "关税税率适用",
+    "单证相符"
+   ],
+   "action": "向发货人索取正本原产地证（沙特商会/贸促会签发），核对出口商、收货人、HS、原产国与本批一致"
+  },
+  {
+   "id": "ISSUE-03",
+   "field": "-",
+   "field_cn": "单证齐全性",
+   "status": "缺失",
+   "severity": "提示",
+   "title": "【缺失】缺少保险单 Insurance Policy",
+   "detail": "本合同为 CFR 条件，投保义务在买方，卖方无义务提供；若实际按 CIF 成交或信用证要求保险单，则应上传。",
+   "locations": [
+    {
+     "file": "（未上传）",
+     "kind": "保险单 Insurance Policy",
+     "page": null,
+     "line": null,
+     "value": "缺失"
+    }
+   ],
+   "impacts": [
+    "单证相符（视信用证条款）"
+   ],
+   "action": "确认实际成交术语；如买方自行投保，保留保单备查即可"
+  },
+  {
+   "id": "ISSUE-04",
+   "field": "amount",
+   "field_cn": "金额",
+   "status": "计算错误",
+   "severity": "高",
+   "title": "【计算错误】03_商业发票_Commercial_Invoice.docx 单价 × 数量 ≠ 填列金额",
+   "detail": "单价 × 数量 = 160 × 612，单证填写金额 117,000.00，差额 19,080.00（多计）。",
+   "locations": [
+    {
+     "file": "03_商业发票_Commercial_Invoice.docx",
+     "kind": "商业发票",
+     "page": 1,
+     "line": 27,
+     "value": "117,000.00",
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    }
+   ],
+   "impacts": [
+    "对外付汇金额",
+    "信用证单证相符",
+    "进口报关价格申报",
+    "海关审价风险"
+   ],
+   "action": "要求卖方重新出具商业发票，使 金额 = 单价 × 数量；若单价确有变更，须书面确认并同步更正报关资料"
+  }
+ ],
+ "calculations": [
+  {
+   "doc": "01_采购合同_Purchase_Contract.docx",
+   "kind": "采购合同",
+   "check": "单价 × 数量 = 金额",
+   "formula": "200 × 612",
+   "expected": 122400.0,
+   "actual": 122400.0,
+   "ok": true,
+   "loc": {
+    "value": "122,400.00",
+    "page": 1,
+    "line": 20,
+    "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+   },
+   "gap": 0.0
+  },
+  {
+   "doc": "01_采购合同_Purchase_Contract.docx",
+   "kind": "采购合同",
+   "check": "毛重 ≥ 净重 且皮重合理(0<tare<15%净重)",
+   "formula": "毛重 180,180 − 净重 180,000",
+   "expected": 180000.0,
+   "actual": 180180.0,
+   "ok": true,
+   "loc": {
+    "value": "180,180",
+    "page": 1,
+    "line": 27,
+    "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+   },
+   "gap": 180.0
+  },
+  {
+   "doc": "01_采购合同_Purchase_Contract.docx",
+   "kind": "采购合同",
+   "check": "单件平均净重是否合理",
+   "formula": "净重 ÷ 件数",
+   "expected": 20000.0,
+   "actual": 20000.0,
+   "ok": true,
+   "loc": {
+    "value": "9",
+    "page": 1,
+    "line": 11,
+    "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951,Room 1806, Building A, Yinzhou Trade Center, 1188"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "01_采购合同_Purchase_Contract.docx",
+   "kind": "采购合同",
+   "check": "数量 ÷ 件数 = 单件装载量(kg)",
+   "formula": "200 MT ÷ 9",
+   "expected": 22222.2,
+   "actual": 22222.2,
+   "ok": true,
+   "loc": {
+    "value": "9",
+    "page": 1,
+    "line": 11,
+    "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951,Room 1806, Building A, Yinzhou Trade Center, 1188"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "02_形式发票_Proforma_Invoice.docx",
+   "kind": "形式发票",
+   "check": "单价 × 数量 = 金额",
+   "formula": "200 × 612",
+   "expected": 122400.0,
+   "actual": 122400.0,
+   "ok": true,
+   "loc": {
+    "value": "122,400.00",
+    "page": 1,
+    "line": 19,
+    "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+   },
+   "gap": 0.0
+  },
+  {
+   "doc": "02_形式发票_Proforma_Invoice.docx",
+   "kind": "形式发票",
+   "check": "毛重 ≥ 净重 且皮重合理(0<tare<15%净重)",
+   "formula": "毛重 180,180 − 净重 180,000",
+   "expected": 180000.0,
+   "actual": 180180.0,
+   "ok": true,
+   "loc": {
+    "value": "180,180",
+    "page": 1,
+    "line": 26,
+    "snippet": "Bulk in ISO tank containers180,000 KGS180,180 KGS9"
+   },
+   "gap": 180.0
+  },
+  {
+   "doc": "02_形式发票_Proforma_Invoice.docx",
+   "kind": "形式发票",
+   "check": "单件平均净重是否合理",
+   "formula": "净重 ÷ 件数",
+   "expected": 20000.0,
+   "actual": 20000.0,
+   "ok": true,
+   "loc": {
+    "value": "9",
+    "page": 1,
+    "line": 7,
+    "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "02_形式发票_Proforma_Invoice.docx",
+   "kind": "形式发票",
+   "check": "数量 ÷ 件数 = 单件装载量(kg)",
+   "formula": "200 MT ÷ 9",
+   "expected": 22222.2,
+   "actual": 22222.2,
+   "ok": true,
+   "loc": {
+    "value": "9",
+    "page": 1,
+    "line": 7,
+    "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "03_商业发票_Commercial_Invoice.docx",
+   "kind": "商业发票",
+   "check": "单价 × 数量 = 金额",
+   "formula": "160 × 612",
+   "expected": 97920.0,
+   "actual": 117000.0,
+   "ok": false,
+   "loc": {
+    "value": "117,000.00",
+    "page": 1,
+    "line": 27,
+    "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+   },
+   "gap": 19080.0
+  },
+  {
+   "doc": "03_商业发票_Commercial_Invoice.docx",
+   "kind": "商业发票",
+   "check": "毛重 ≥ 净重 且皮重合理(0<tare<15%净重)",
+   "formula": "毛重 160,160 − 净重 160,000",
+   "expected": 160000.0,
+   "actual": 160160.0,
+   "ok": true,
+   "loc": {
+    "value": "160,160",
+    "page": 1,
+    "line": 22,
+    "snippet": "Gross / Net Weight 毛重/净重160,160 KGS  /  160,000 KGS"
+   },
+   "gap": 160.0
+  },
+  {
+   "doc": "03_商业发票_Commercial_Invoice.docx",
+   "kind": "商业发票",
+   "check": "单件平均净重是否合理",
+   "formula": "净重 ÷ 件数",
+   "expected": 20000.0,
+   "actual": 20000.0,
+   "ok": true,
+   "loc": {
+    "value": "8",
+    "page": 1,
+    "line": 6,
+    "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "03_商业发票_Commercial_Invoice.docx",
+   "kind": "商业发票",
+   "check": "数量 ÷ 件数 = 单件装载量(kg)",
+   "formula": "160 MT ÷ 8",
+   "expected": 20000.0,
+   "actual": 20000.0,
+   "ok": true,
+   "loc": {
+    "value": "8",
+    "page": 1,
+    "line": 6,
+    "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "04_装箱单_Packing_List.xlsx",
+   "kind": "装箱单",
+   "check": "毛重 ≥ 净重 且皮重合理(0<tare<15%净重)",
+   "formula": "毛重 180,180 − 净重 180,000",
+   "expected": 180000.0,
+   "actual": 180180.0,
+   "ok": true,
+   "loc": {
+    "value": "180,180",
+    "page": 1,
+    "line": 23,
+    "snippet": "H23# = SUM(H14:H22)；单罐毛重 F14:F22 = 20,020 KGS，H 列 = D×F",
+    "extra": "F14:F22 = 20,020 ×9"
+   },
+   "gap": 180.0
+  },
+  {
+   "doc": "04_装箱单_Packing_List.xlsx",
+   "kind": "装箱单",
+   "check": "单件平均净重是否合理",
+   "formula": "净重 ÷ 件数",
+   "expected": 20000.0,
+   "actual": 20000.0,
+   "ok": true,
+   "loc": {
+    "value": "9",
+    "page": 1,
+    "line": 23,
+    "snippet": "A23=TOTAL  B23=9 ISO TANKS  D23#=SUM(D14:D22)；D25#=D23"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "05_提单_Bill_of_Lading.png",
+   "kind": "提单",
+   "check": "毛重 ≥ 净重 且皮重合理(0<tare<15%净重)",
+   "formula": "毛重 180,180 − 净重 180,000",
+   "expected": 180000.0,
+   "actual": 180180.0,
+   "ok": true,
+   "loc": {
+    "value": "180,180",
+    "page": 1,
+    "line": 17,
+    "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+   },
+   "gap": 180.0
+  },
+  {
+   "doc": "05_提单_Bill_of_Lading.png",
+   "kind": "提单",
+   "check": "单件平均净重是否合理",
+   "formula": "净重 ÷ 件数",
+   "expected": 20000.0,
+   "actual": 20000.0,
+   "ok": true,
+   "loc": {
+    "value": "9",
+    "page": 1,
+    "line": 16,
+    "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "06_分析证书_COA.docx",
+   "kind": "分析证书",
+   "check": "数量 ÷ 件数 = 单件装载量(kg)",
+   "formula": "180,000 MT ÷ 9",
+   "expected": 20000000.0,
+   "actual": 20000000.0,
+   "ok": true,
+   "loc": {
+    "value": "9",
+    "page": 1,
+    "line": 11,
+    "snippet": "Quantity 代表数量180,000 kg (9 × 20 MT)Packages 包装件数9 ISO TANKS"
+   },
+   "gap": 0
+  },
+  {
+   "doc": "07_化学品安全技术说明书_SDS.docx",
+   "kind": "安全技术说明书",
+   "check": "毛重 ≥ 净重 且皮重合理(0<tare<15%净重)",
+   "formula": "毛重 160,160 − 净重 160,000",
+   "expected": 160000.0,
+   "actual": 160160.0,
+   "ok": true,
+   "loc": {
+    "value": "160,160",
+    "page": 2,
+    "line": 5,
+    "snippet": "Net weight per shipment160,000 KGSGross weight per shipment160,160 KGS"
+   },
+   "gap": 160.0
+  },
+  {
+   "doc": "07_化学品安全技术说明书_SDS.docx",
+   "kind": "安全技术说明书",
+   "check": "单件平均净重是否合理",
+   "formula": "净重 ÷ 件数",
+   "expected": 20000.0,
+   "actual": 20000.0,
+   "ok": true,
+   "loc": {
+    "value": "8",
+    "page": 1,
+    "line": 4,
+    "snippet": "according to GHS (Globally Harmonized System), UN Model Regulations Rev. 8 / 依据 GHS 编制"
+   },
+   "gap": 0
+  }
+ ],
+ "pending": [
+  {
+   "id": "PENDING-01",
+   "field": "payment",
+   "field_cn": "付款方式",
+   "status": "待确认",
+   "severity": "高",
+   "title": "【待确认】付款方式 在不同单证中不同，需确认以哪一份为准",
+   "detail": "合同约定的付款方式为 T/T 30% 预付 + 70% 见提单副本付款；商业发票载明即期信用证 （L/C NO. LC2605NB0088）。二者可能并行（信用证为买方开立、合同未修订），也可能意味着改证/改约——必须向买方确认后决定按哪条路径付款，不能直接判为单证不符",
+   "locations": [
+    {
+     "file": "01_采购合同_Purchase_Contract.docx",
+     "kind": "采购合同",
+     "page": 1,
+     "line": 30,
+     "value": "T/T 30% advance + 70% against B/L copy",
+     "snippet": "第 1 页第 30 行（贸易条款表第 2 行）：T/T 30% advance + 70% against B/L copy"
+    },
+    {
+     "file": "02_形式发票_Proforma_Invoice.docx",
+     "kind": "形式发票",
+     "page": 1,
+     "line": 14,
+     "value": "L/C at sight (to be advised)",
+     "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+    },
+    {
+     "file": "03_商业发票_Commercial_Invoice.docx",
+     "kind": "商业发票",
+     "page": 1,
+     "line": 3,
+     "value": "L/C NO. LC2605NB0088 AT SIGHT",
+     "snippet": "AL-NOOR PETROCHEMICAL TRADING COMPANY"
+    }
+   ],
+   "impacts": [
+    "付款路径与时间节点",
+    "信用证是否开立"
+   ],
+   "question": "本批货物实际按哪条路径付款？若按信用证（LC2605NB0088 即期）执行，请买方书面确认合同付款条款已作修订；若按合同 T/T 执行，请确认信用证是否已撤销、相关费用由谁承担。",
+   "action": "确认本批次实际付款方式（T/T 或 L/C），并统一写入全部单证"
+  }
+ ],
+ "summary": {
+  "doc_count": 8,
+  "docs": [
+   {
+    "file": "01_采购合同_Purchase_Contract.docx",
+    "type": "CONTRACT",
+    "type_cn": "采购合同"
+   },
+   {
+    "file": "02_形式发票_Proforma_Invoice.docx",
+    "type": "PROFORMA_INVOICE",
+    "type_cn": "形式发票"
+   },
+   {
+    "file": "03_商业发票_Commercial_Invoice.docx",
+    "type": "COMMERCIAL_INVOICE",
+    "type_cn": "商业发票"
+   },
+   {
+    "file": "04_装箱单_Packing_List.xlsx",
+    "type": "PACKING_LIST",
+    "type_cn": "装箱单"
+   },
+   {
+    "file": "05_提单_Bill_of_Lading.png",
+    "type": "BILL_OF_LADING",
+    "type_cn": "提单"
+   },
+   {
+    "file": "06_分析证书_COA.docx",
+    "type": "COA",
+    "type_cn": "分析证书"
+   },
+   {
+    "file": "07_化学品安全技术说明书_SDS.docx",
+    "type": "SDS",
+    "type_cn": "安全技术说明书"
+   },
+   {
+    "file": "08_产品规格书_Product_Spec_Sheet.png",
+    "type": "SPEC_SHEET",
+    "type_cn": "产品规格书"
+   }
+  ],
+  "finding_count": 4,
+  "by_status": {
+   "不一致": 1,
+   "缺失": 2,
+   "计算错误": 1,
+   "一致": 20,
+   "无法判断": 14,
+   "无法直接比较": 5,
+   "待确认": 0
+  },
+  "by_severity": {
+   "中": 1,
+   "高": 2,
+   "提示": 1
+  },
+  "matrix_rows": 41,
+  "consistent_rows": 20,
+  "inconsistent_rows": 1,
+  "not_comparable_rows": 5,
+  "unverifiable_rows": 14,
+  "change_note_rows": 1,
+  "pending_count": 1,
+  "calc_checks": null
+ },
+ "batch": {
+  "case_no": "SIM-MEG-2026-0518",
+  "label": "【模拟】SIMULATED — 仅供进口单证核对流程测试，不具任何法律效力",
+  "product_en": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+  "product_cn": "乙二醇（工业级）",
+  "cas": "107-21-1",
+  "hs": "2905310000",
+  "quantity_mt": 200.0,
+  "unit_price_usd": 612.0,
+  "amount_usd": 122400.0,
+  "incoterm": "CFR NINGBO",
+  "port_load": "KING ABDULLAH PORT, JUBAIL (SAJUB), SAUDI ARABIA",
+  "port_disch": "NINGBO PORT, CHINA (CNNGB)",
+  "vessel_voyage": "MSC ISABELLA V. 2618W",
+  "etd": "2026-05-12",
+  "eta": "2026-06-20",
+  "buyer": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+  "seller": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+  "consignee_of_record": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+  "uscc": "91330212MA2HC8P47K",
+  "letter_date": "2026-05-18"
+ },
+ "calculations_summary": {
+  "total": 19,
+  "failed": 1
+ }
+}

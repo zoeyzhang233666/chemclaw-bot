@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBS 产业链价格地图 · 数据日 2026-10-15</title>
+<style>
+  :root{ --bg:#f3f5f9; --card:#fff; --tx:#16202c; --mut:#66768c; --line:#e3e9f1; }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--tx);
+    font:15px/1.65 "Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif;}
+  .wrap{max-width:1640px;margin:0 auto;padding:22px 20px 60px}
+  h1{font-size:26px;margin:0 0 6px;letter-spacing:.4px}
+  .sub{margin:0 0 4px;color:var(--mut);font-size:13.5px}
+  .sub b{color:var(--tx)}
+  .hint{margin:8px 0 0;font-size:13px;color:#3c5a86;background:#e9f1fd;border:1px solid #cfe0f8;
+    border-radius:8px;padding:7px 12px;display:inline-block}
+  .legend{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;padding:0;margin:14px 0 16px;
+    font-size:12.5px;color:var(--mut)}
+  .legend li{display:flex;align-items:center;gap:6px}
+  .dot{width:13px;height:13px;border-radius:4px;display:inline-block;border:1px solid}
+  .dash{width:22px;height:0;border-top:2px dashed #b7c2d2;display:inline-block}
+  .keyfinding{background:var(--card);border:1px solid var(--line);border-left:4px solid #5a7bc4;
+    border-radius:10px;padding:12px 16px;margin:0 0 16px}
+  .keyfinding h2{font-size:15px;margin:0 0 4px;color:#2c3e58}
+  .keyfinding p{margin:0;font-size:14.5px}
+  .stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:16px;align-items:start}
+  .chart-scroll{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:6px;overflow:auto;box-shadow:0 1px 3px rgba(20,40,70,.05)}
+  #chain{display:block;width:100%;height:auto}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;
+    position:sticky;top:16px;max-height:calc(100vh - 40px);overflow:auto;
+    box-shadow:0 1px 3px rgba(20,40,70,.05)}
+  .panel h2{margin:0 0 4px;font-size:17px}
+  .panel .pl{color:var(--mut);font-size:12.5px;margin:0 0 10px}
+  .panel .pbig{font-size:30px;font-weight:700;letter-spacing:.5px;margin:2px 0 0}
+  .panel .pbig span{font-size:14px;font-weight:500;color:var(--mut);margin-left:6px}
+  .panel .pmeta{font-size:13px;color:var(--mut);margin:6px 0 12px}
+  .panel button{font-size:12.5px;padding:5px 11px;border-radius:7px;border:1px solid #cfd8e5;
+    background:#f7f9fc;cursor:pointer}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f7f9fc;font-weight:600;color:#42536b;white-space:nowrap;font-size:12.5px}
+  td.r,th.r{text-align:right}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+  td.dim{color:var(--mut);font-size:12.3px}
+  .tblwrap{max-height:430px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+  .tblwrap table{border:0}
+  .tblwrap th{position:sticky;top:0;z-index:1}
+  .tables{margin-top:22px}
+  .tables h2{font-size:19px;margin:0 0 4px}
+  .tables .tnote{color:var(--mut);font-size:13px;margin:0 0 10px}
+  .filterrow{margin:0 0 12px}
+  .filterrow input{width:100%;max-width:420px;padding:8px 11px;border:1px solid #cfd8e5;
+    border-radius:9px;font-size:13.5px;background:#fff}
+  details.grp{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    margin-bottom:12px;overflow:hidden}
+  details.grp>summary{cursor:pointer;padding:13px 16px;font-weight:600;font-size:15px;background:#fafcfe;
+    display:flex;justify-content:space-between;align-items:center;gap:10px}
+  details.grp>summary::-webkit-details-marker{display:none}
+  details.grp>summary .cnt{font-weight:500;font-size:12.5px;color:var(--mut)}
+  details.grp .body{padding:0 12px 12px}
+  .nhead{font-size:13px;color:#42536b;margin:12px 0 6px}
+  .gnote{font-size:12.8px;color:var(--mut);margin:10px 0 6px}
+  .gaps{background:#fdf6ef;border:1px solid #f0dcc8;border-radius:12px;padding:14px 18px;margin-top:22px}
+  .gaps h2{font-size:17px;margin:0 0 8px;color:#8a4a1e}
+  .gaps ul{margin:0;padding-left:20px;font-size:13.5px}
+  .gaps li{margin:4px 0}
+  .notes{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+    margin-top:22px;font-size:13.5px}
+  .notes h2{font-size:18px;margin:0 0 8px}
+  .notes h3{font-size:14.5px;margin:16px 0 6px}
+  .notes ul{margin:6px 0;padding-left:20px}
+  .notes li{margin:3px 0}
+  .gap{color:#a1521c;font-weight:600}
+  .tip{position:absolute;z-index:40;pointer-events:none;max-width:420px;background:#101a26;color:#eef3f9;
+    border-radius:10px;padding:11px 13px;font-size:12.6px;line-height:1.5;
+    box-shadow:0 8px 26px rgba(10,25,45,.28);display:none}
+  .tip h4{margin:0 0 3px;font-size:14.5px}
+  .tip .tp{font-size:19px;font-weight:700;margin:1px 0 4px}
+  .tip .tp span{font-size:12px;font-weight:400;color:#a9bacd;margin-left:5px}
+  .tip .tm{color:#a9bacd;font-size:11.8px;margin:0 0 7px}
+  .tip table{font-size:12px}
+  .tip th,.tip td{border-bottom:1px solid #25324399;padding:3px 6px;color:#dfe8f2}
+  .tip th{background:transparent;color:#93a6bb;font-weight:500}
+  .tip .more{margin-top:6px;color:#93a6bb;font-size:11.5px}
+  @media (max-width:1080px){
+    .stage{grid-template-columns:minmax(0,1fr)}
+    .panel{position:static;max-height:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>SBS 产业链价格地图</h1>
+  <p class="sub">数据日 <b>2026-10-15</b> · 价格单位 <b>元/吨</b> · 检索时间 2026-10-16 · 价格来源：ChemClaw 化工数据中枢 · 现货报价库、ChemClaw 化工数据中枢 · 市场资讯</p>
+  <p class="hint">把鼠标移到任意环节即可预览该品种的最新报价细节；点击环节可在右侧锁定完整报价清单；下方为可检索的完整明细与缺口说明。</p>
+  <ul class="legend"><li><span class="dot" style="background:#eaf1fc;border-color:#6d9ee0"></span>上游原料</li><li><span class="dot" style="background:#e8f6ef;border-color:#4cb287"></span>中间体 / 芳烃链</li><li><span class="dot" style="background:#fdf3e2;border-color:#d9a03c"></span>SBS 直接原料与溶剂</li><li><span class="dot" style="background:#f1ecfd;border-color:#8d72dc"></span>SBS 产品</li><li><span class="dot" style="background:#fbf0e9;border-color:#d98a56"></span>下游应用（本次无授权报价）</li><li><span class="dash"></span>虚线 = 溶剂 / 助剂投入</li></ul>
+</header>
+
+<section class="keyfinding">
+  <h2>核心结论</h2>
+  <p>链上各环节均可用最新交易日 2026-10-15 报价定位；下游改性沥青与热熔胶本次无授权报价。</p>
+</section>
+
+<div class="stage">
+  <div class="chart-scroll">
+    <svg id="chain" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="SBS 产业链价格地图：产业链各环节与最新报价"></svg>
+  </div>
+  <aside class="panel" id="panel"></aside>
+  <div class="tip" id="tip"></div>
+</div>
+
+<section class="gaps"><h2>本次未取到授权价格的环节</h2><ul><li><b>SBS 改性沥青</b> —— 检索观测数为 0，无可用报价序列</li><li><b>热熔胶 / 压敏胶</b> —— 检索观测数为 0，无可用报价</li><li><b>鞋材、防水卷材、聚合物改性（PS/HDPE 增韧）、电线电缆料</b> —— 本次未检索到授权价格记录</li><li><b>独山子石化 T171G（上海）</b> —— 市场样本缺货，报价为「无货无价格」</li><li><b>湖南石化 815E</b> —— 市场缺货，暂无报盘</li></ul></section>
+
+<section class="tables" id="tables">
+  <h2>完整报价明细</h2>
+  <p class="tnote">原料与中间体数字为最新交易日同地区同规格报价均值；SBS 为逐条企业/市场报价，不同牌号、提货方式与地区不可平均或相减。</p>
+  <div class="filterrow"><input id="tableFilter" type="search" placeholder="在明细中检索：地区 / 牌号 / 价格 / 备注"></div>
+</section>
+
+<section class="notes">
+  <h2>口径、方法与缺口说明</h2>
+  <h3>缺口清单（留空不估算）</h3><ul><li><span class="gap">SBS 改性沥青</span>：检索观测数为 0，无可用报价序列（依据：compound_price_live(改性沥青) 返回 observations=0，data_gaps 提示未识别到可计算的日期与价格记录）</li><li><span class="gap">热熔胶 / 压敏胶</span>：检索观测数为 0，无可用报价（依据：compound_price_live(热熔胶) 返回 observations=0，data 为空数组）</li><li><span class="gap">鞋材、防水卷材、聚合物改性（PS/HDPE 增韧）、电线电缆料</span>：本次未检索到授权价格记录（依据：未发起或未返回可用的价格序列）</li><li><span class="gap">独山子石化 T171G（上海）</span>：市场样本缺货，报价为「无货无价格」（依据：市场资讯原文记录）</li><li><span class="gap">湖南石化 815E</span>：市场缺货，暂无报盘（依据：市场资讯原文记录）</li></ul><h3>价格口径</h3><ul><li>石脑油、乙烯、纯苯、环己烷、丁二烯、苯乙烯：取自现货报价库，数字为最新交易日（2026-10-15）同地区同规格报价的均值，不是期间均价；同日不同来源的极值在明细「说明」列保留。</li><li>SBS 干胶与油胶：为逐条企业或市场报价（不同生产企业、不同牌号、不同提货方式），图中为代表性报价，并非全市场统一价，也不与其他品种做价差计算。</li><li>原始记录未声明税制与币种时，字段显示为「税制未提供 / 币种未单列」；已声明含税的条目在说明列注明。</li><li>丁苯橡胶与基质沥青仅为相关参照，不属于 SBS 产业链本体，不可直接比较。</li></ul><h3>产业链关系</h3><ul><li>石脑油经蒸汽裂解产乙烯并联产 C4 馏分；C4 经抽提得丁二烯；乙烯与纯苯经烷基化制乙苯、再脱氢得苯乙烯；纯苯加氢制环己烷（聚合溶剂）。</li><li>丁二烯与苯乙烯以烷基锂为引发剂，在环己烷等溶剂中经阴离子溶液聚合得 SBS，可制成干胶或加填充油制成充油油胶。</li><li>该工艺路线为行业通用机理示意，本次未以数据源独立核验工艺参数；价格数据来自数据中枢授权报价记录。</li></ul><h3>缺口处理原则</h3><ul><li>缺口一律留空，不以估算值填充，也不由原料价格反推下游成品价格。</li><li>缺口需保留原始证据（观测数为 0 的返回值或资讯原句），便于复核。</li></ul><h3>数据来源</h3><ul><li>现货报价库与市场资讯快照均来自 ChemClaw 化工数据中枢（数据日 2026-10-15，检索时间 2026-10-16）。</li><li>价格与备注均为原始记录摘录，来源未做独立第三方核验。</li></ul>
+</section>
+
+<div class="footerline" style="margin-top:18px;color:#66768c;font-size:12.5px">
+  本页为单文件离线页面：图表与明细由内联脚本渲染，不含外部资源；价格逐条来自原始记录，未做第三方独立核验。
+</div>
+</div>
+
+<script id="chain-data" type="application/json">{"canvas":{"w":1297.4,"h":728},"columns":[{"x":22,"y":44,"w":210.0,"h":660,"label":"上游原料","band":"#eef3fb","labelX":127.0,"labelY":74},{"x":254.0,"y":44,"w":224.0,"h":660,"label":"中间体 / 芳烃链","band":"#eef7f2","labelX":366.0,"labelY":74},{"x":500.0,"y":44,"w":224.0,"h":660,"label":"SBS 直接原料与溶剂","band":"#fbf5ea","labelX":612.0,"labelY":74},{"x":746.0,"y":44,"w":219.96,"h":660,"label":"SBS 产品","band":"#f4effc","labelX":855.98,"labelY":74},{"x":987.96,"y":44,"w":287.44,"h":660,"label":"下游应用（本次无授权报价）","band":"#fbf1eb","labelX":1131.68,"labelY":74}],"nodes":[{"id":"naphtha","name":"石脑油","role":"material","x":40.0,"y":335.0,"w":174.0,"h":112,"fill":"#eaf1fc","stroke":"#6d9ee0","text":"#1d4e8f","price":"9,727.5","unit":"元/吨","basis":"华东 · 加氢","gapLabel":"本次无授权报价","short":[],"desc":"蒸汽裂解制乙烯/丙烯、以及催化重整制芳烃的起始原料。","stage":"up","rows":[{"region":"华东","spec":"加氢","price":"9,727.5","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"},{"region":"华东","spec":"直馏","price":"9,901.5","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"}]},{"id":"ethylene","name":"乙烯","role":"material","x":287.0,"y":193.0,"w":158,"h":112,"fill":"#e8f6ef","stroke":"#4cb287","text":"#12654a","price":"9,300","unit":"元/吨","basis":"华东 · 规格未提供","gapLabel":"本次无授权报价","short":[],"desc":"经蒸汽裂解产出，本环节同时副产 C4 馏分，是丁二烯的来源。","stage":"mid","rows":[{"region":"华东","spec":"未提供","price":"9,300","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"},{"region":"华中","spec":"未提供","price":"9,400","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"},{"region":"华南","spec":"未提供","price":"9,600","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"}]},{"id":"benzene","name":"纯苯","role":"material","x":272.0,"y":335.0,"w":188.0,"h":112,"fill":"#e8f6ef","stroke":"#4cb287","text":"#12654a","price":"10,163.6","unit":"元/吨","basis":"华东 · 规格未提供","gapLabel":"本次无授权报价","short":[],"desc":"来自重整与抽提；与乙烯制乙苯，再脱氢得苯乙烯；加氢可得环己烷。","stage":"mid","rows":[{"region":"华东","spec":"未提供","price":"10,163.6","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值（同日原始记录区间 9,720–10,655）"}]},{"id":"cyclohexane","name":"环己烷","role":"material","x":287.0,"y":477.0,"w":158,"h":112,"fill":"#e8f6ef","stroke":"#4cb287","text":"#12654a","price":"9,700","unit":"元/吨","basis":"华东 · 规格未提供","gapLabel":"本次无授权报价","short":[],"desc":"由纯苯加氢制得，是 SBS 阴离子溶液聚合常用的聚合溶剂。","stage":"mid","rows":[{"region":"华东","spec":"未提供","price":"9,700","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"},{"region":"北方","spec":"未提供","price":"9,450","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"},{"region":"西北","spec":"未提供","price":"9,006","date":"2026-10-15","source":"现货报价库","note":"同地区同规格报价均值"}]},{"id":"butadiene","name":"丁二烯","role":"material","x":532.0,"y":264.0,"w":160.0,"h":112,"fill":"#fdf3e2","stroke":"#d9a03c","text":"#7a5410","price":"13,234","unit":"元/吨","basis":"华东 · 聚合级","gapLabel":"本次无授权报价","short":[],"desc":"来自裂解 C4 抽提，SBS 两种主原料之一（占胶重约七成，行业通行配比）。","stage":"raw","rows":[{"region":"华东","spec":"聚合级","price":"13,234","date":"2026-10-15","source":"现货报价库","note":"较 10-14 的 13,432 回落"},{"region":"华北","spec":"聚合级","price":"13,600","date":"2026-10-15","source":"现货报价库","note":"较 10-14 持平"},{"region":"华中","spec":"聚合级","price":"13,500","date":"2026-10-15","source":"现货报价库","note":"较 10-14 持平"},{"region":"华南","spec":"聚合级","price":"13,437.5","date":"2026-10-15","source":"现货报价库","note":"较 10-14 持平"},{"region":"东北","spec":"聚合级","price":"13,035","date":"2026-10-15","source":"现货报价库","note":"较 10-14 持平"},{"region":"西北","spec":"工业级","price":"12,500","date":"2026-10-15","source":"现货报价库","note":"较 10-14 的 12,800 回落；工业级与聚合级不同口径"}]},{"id":"styrene","name":"苯乙烯","role":"material","x":518.0,"y":406.0,"w":188.0,"h":112,"fill":"#fdf3e2","stroke":"#d9a03c","text":"#7a5410","price":"11,212.7","unit":"元/吨","basis":"华东 · 苯乙烯","gapLabel":"本次无授权报价","short":[],"desc":"由乙苯脱氢制得，SBS 另一主原料（占胶重约三成，行业通行配比）。","stage":"raw","rows":[{"region":"华东","spec":"苯乙烯","price":"11,212.7","date":"2026-10-15","source":"现货报价库","note":"较 10-14 的 11,425 回落"},{"region":"华东","spec":"聚合级","price":"10,820","date":"2026-10-15","source":"现货报价库","note":"仅 10-15 有记录，与上一行规格不同"},{"region":"华南","spec":"苯乙烯","price":"11,366","date":"2026-10-15","source":"现货报价库","note":"较 10-14 的 11,416.7 小幅回落"},{"region":"华中","spec":"苯乙烯","price":"11,300","date":"2026-10-15","source":"现货报价库","note":"较 10-14 持平"},{"region":"西北","spec":"苯乙烯","price":"11,400","date":"2026-10-15","source":"现货报价库","note":"较 10-14 的 11,100 上涨"},{"region":"东北","spec":"苯乙烯","price":"11,120","date":"2026-10-15","source":"现货报价库","note":"仅 10-15 有记录"},{"region":"华北","spec":"苯乙烯","price":"10,928.6","date":"2026-10-15","source":"现货报价库","note":"仅 10-15 有记录"}]},{"id":"sbsdry","name":"SBS 干胶","role":"material","x":764.0,"y":264.0,"w":184.0,"h":112,"fill":"#f1ecfd","stroke":"#8d72dc","text":"#4b32a3","price":"15,500","unit":"元/吨","basis":"湖南石化 791-H · 自提含税","gapLabel":"本次无授权报价","short":[],"desc":"道改与通用级干胶；图中为该批次报价区间上沿的代表价，完整清单见下方明细。","stage":"product","rows":[{"region":"未细分","spec":"791-H","price":"15,500","date":"2026-10-15","source":"市场资讯","note":"湖南石化，库提/自提含税"},{"region":"未细分","spec":"796","price":"15,400","date":"2026-10-15","source":"现货报价库","note":"企业报价"},{"region":"未细分","spec":"791","price":"15,300","date":"2026-10-15","source":"现货报价库","note":"企业报价"},{"region":"未细分","spec":"792E","price":"15,200","date":"2026-10-15","source":"市场资讯","note":"湖南石化，库提/自提含税"},{"region":"华中","spec":"792E","price":"15,350","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"792E","price":"15,650","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华东","spec":"792E","price":"15,650","date":"2026-10-15","source":"现货报价库","note":"市场报价（多来源同值）"},{"region":"华北","spec":"792E","price":"15,650","date":"2026-10-15","source":"现货报价库","note":"市场报价（多来源同值）"},{"region":"华东","spec":"3501","price":"15,050","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"3501","price":"14,850","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"3546","price":"14,850","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"3411","price":"14,850","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华北","spec":"LG501S","price":"14,750","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华北","spec":"LG411S","price":"14,750","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"791-H","price":"14,600","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华东","spec":"791-H","price":"14,600","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华中","spec":"791-H","price":"14,300","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华东","spec":"7301H","price":"14,250","date":"2026-10-15","source":"现货报价库","note":"市场报价"}]},{"id":"sbsoil","name":"SBS 油胶（充油）","role":"material","x":767.2,"y":406.0,"w":177.5,"h":112,"fill":"#f1ecfd","stroke":"#8d72dc","text":"#4b32a3","price":"13,850","unit":"元/吨","basis":"古雷石化 4412 · 送到含税","gapLabel":"本次无授权报价","short":[],"desc":"加填充油后的充油牌号，多用于鞋材、胶粘剂与沥青改性复配。","stage":"product","rows":[{"region":"未细分","spec":"4412","price":"13,850","date":"2026-10-15","source":"现货报价库","note":"古雷石化，现款现汇/送到/含税"},{"region":"华南","spec":"4412","price":"13,850","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"4412","price":"13,900","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"未细分","spec":"4402","price":"13,700","date":"2026-10-15","source":"现货报价库","note":"古雷石化，现款现汇/送到/含税"},{"region":"未细分","spec":"4452","price":"13,250","date":"2026-10-15","source":"现货报价库","note":"古雷石化，现款现汇/送到/含税"},{"region":"华东","spec":"4452","price":"13,450","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"4452","price":"13,300","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"4452","price":"13,350","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"未细分","spec":"F875","price":"13,250","date":"2026-10-15","source":"现货报价库","note":"企业报价"},{"region":"华东","spec":"F875","price":"13,450","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"F875","price":"13,350","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"F875","price":"13,000","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华东","spec":"1475","price":"13,800","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"1475","price":"13,700","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"1475","price":"13,600","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华东","spec":"T161B","price":"14,100","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"西南","spec":"T161B","price":"13,900","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"西北","spec":"T161B","price":"14,400","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华南","spec":"T161B","price":"13,500","date":"2026-10-15","source":"现货报价库","note":"企业报价"},{"region":"华南","spec":"T171G","price":"13,500","date":"2026-10-15","source":"现货报价库","note":"企业报价"},{"region":"华南","spec":"T6302H","price":"13,800","date":"2026-10-15","source":"现货报价库","note":"企业报价，现款现汇/自提/含税"},{"region":"西南","spec":"T6302H","price":"14,200","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"西北","spec":"T6302H","price":"14,400","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"华东","spec":"T6302H","price":"13,950","date":"2026-10-15","source":"现货报价库","note":"市场报价"},{"region":"西部","spec":"T6302H","price":"13,650","date":"2026-10-15","source":"现货报价库","note":"市场报价"}]},{"id":"app-asphalt","name":"改性沥青 / 防水卷材","role":"application","x":1006.0,"y":98.0,"w":251.4,"h":124,"fill":"#fbf0e9","stroke":"#d98a56","text":"#8a4a1e","price":"","unit":"元/吨","basis":"","gapLabel":"本次无授权报价（检索观测数为 0）","short":["SBS 掺量通常 3%–5%（行业通用区间）","本次「改性沥青」观测数为 0，价格留空"],"desc":"SBS 作为沥青改性剂使用，掺量通常 3%–5%（行业通用区间）。本次检索「改性沥青」观测数为 0，故不标注价格；基质沥青仅作基料参照，见明细表末组。","stage":"app","rows":[]},{"id":"app-shoe","name":"鞋材（鞋底料）","role":"application","x":1013.9,"y":252.0,"w":235.5,"h":124,"fill":"#fbf0e9","stroke":"#d98a56","text":"#8a4a1e","price":"","unit":"元/吨","basis":"","gapLabel":"本次无授权报价（检索观测数为 0）","short":["充油 SBS 与树脂、填充油复配","本次未检索到该环节授权价格"],"desc":"充油 SBS 与树脂、填充油复配用于鞋底料。本次未检索到鞋材环节的授权价格记录，留空不估算。","stage":"app","rows":[]},{"id":"app-hotmelt","name":"热熔胶 / 压敏胶","role":"application","x":1012.0,"y":406.0,"w":239.4,"h":124,"fill":"#fbf0e9","stroke":"#d98a56","text":"#8a4a1e","price":"","unit":"元/吨","basis":"","gapLabel":"本次无授权报价（检索观测数为 0）","short":["SBS 与增粘树脂、增塑剂复配","本次「热熔胶」观测数为 0，价格留空"],"desc":"SBS 与增粘树脂、增塑剂复配制热熔压敏胶。本次检索「热熔胶」观测数为 0，无可用报价。","stage":"app","rows":[]},{"id":"app-polymer","name":"聚合物改性 / 电线电缆","role":"application","x":1013.9,"y":560.0,"w":235.5,"h":124,"fill":"#fbf0e9","stroke":"#d98a56","text":"#8a4a1e","price":"","unit":"元/吨","basis":"","gapLabel":"本次无授权报价（检索观测数为 0）","short":["用于 PS、HDPE 增韧及电缆护套料","本次未检索到该环节授权价格"],"desc":"用于 PS、HDPE 等树脂增韧及电缆护套料。本次未检索到该环节的授权价格记录。","stage":"app","rows":[]}],"links":[{"d":"M 214.0 374.0 C 246.8 374.0, 254.2 249.0, 287.0 249.0","dash":false,"from":"naphtha","to":"ethylene","label":"蒸汽裂解","lx":250.5,"ly":305.5},{"d":"M 214.0 408.0 C 244.0 408.0, 242.0 391.0, 272.0 391.0","dash":false,"from":"naphtha","to":"benzene","label":"重整/抽提","lx":243.0,"ly":393.5},{"d":"M 445.0 232.0 C 484.1 232.0, 492.9 320.0, 532.0 320.0","dash":false,"from":"ethylene","to":"butadiene","label":"C4 抽提","lx":488.5,"ly":270.0},{"d":"M 445.0 266.0 C 477.9 266.0, 485.1 445.0, 518.0 445.0","dash":false,"from":"ethylene","to":"styrene","label":"烷基化","lx":481.5,"ly":349.5},{"d":"M 460.0 374.0 C 490.0 374.0, 488.0 479.0, 518.0 479.0","dash":false,"from":"benzene","to":"styrene","label":"乙苯","lx":489.0,"ly":420.5},{"d":"M 460.0 408.0 C 490.0 408.0, 257.0 533.0, 287.0 533.0","dash":false,"from":"benzene","to":"cyclohexane","label":"加氢","lx":373.5,"ly":464.5},{"d":"M 692.0 303.0 C 724.4 303.0, 731.6 286.0, 764.0 286.0","dash":false,"from":"butadiene","to":"sbsdry","label":"聚合","lx":728.0,"ly":288.5},{"d":"M 706.0 445.0 C 736.0 445.0, 734.0 320.0, 764.0 320.0","dash":false,"from":"styrene","to":"sbsdry","label":"聚合","lx":735.0,"ly":376.5},{"d":"M 692.0 337.0 C 725.8 337.0, 733.4 445.0, 767.2 445.0","dash":false,"from":"butadiene","to":"sbsoil","label":"聚合 + 充油","lx":729.61,"ly":385.0},{"d":"M 706.0 479.0 C 736.0 479.0, 737.2 479.0, 767.2 479.0","dash":false,"from":"styrene","to":"sbsoil","label":"聚合 + 充油","lx":736.61,"ly":473.0},{"d":"M 445.0 533.0 C 588.5 533.0, 620.5 354.0, 764.0 354.0","dash":true,"from":"cyclohexane","to":"sbsdry","label":"聚合溶剂","lx":604.5,"ly":437.5},{"d":"M 948.0 303.0 C 978.0 303.0, 976.0 160.0, 1006.0 160.0","dash":false,"from":"sbsdry","to":"app-asphalt","label":"沥青改性","lx":976.96,"ly":225.5},{"d":"M 948.0 337.0 C 978.0 337.0, 983.9 314.0, 1013.9 314.0","dash":false,"from":"sbsdry","to":"app-shoe","label":"鞋材复配","lx":980.945,"ly":319.5},{"d":"M 944.7 445.0 C 975.0 445.0, 981.7 468.0, 1012.0 468.0","dash":false,"from":"sbsoil","to":"app-hotmelt","label":"胶粘剂","lx":978.35,"ly":450.5},{"d":"M 944.7 479.0 C 975.9 479.0, 982.8 622.0, 1013.9 622.0","dash":false,"from":"sbsoil","to":"app-polymer","label":"树脂增韧","lx":979.335,"ly":544.5}],"stages":[{"key":"up","label":"上游原料"},{"key":"mid","label":"中间体 / 芳烃链"},{"key":"raw","label":"SBS 直接原料与溶剂"},{"key":"product","label":"SBS 产品"},{"key":"app","label":"下游应用（本次无授权报价）"}],"stageStyle":{"up":{"fill":"#eaf1fc","stroke":"#6d9ee0","text":"#1d4e8f","band":"#eef3fb"},"mid":{"fill":"#e8f6ef","stroke":"#4cb287","text":"#12654a","band":"#eef7f2"},"raw":{"fill":"#fdf3e2","stroke":"#d9a03c","text":"#7a5410","band":"#fbf5ea"},"product":{"fill":"#f1ecfd","stroke":"#8d72dc","text":"#4b32a3","band":"#f4effc"},"app":{"fill":"#fbf0e9","stroke":"#d98a56","text":"#8a4a1e","band":"#fbf1eb"}},"tables":[{"title":"SBS 市场资讯补充（2026-10-15，口径与报价库不同，单独列出）","note":"资讯口径为市场评论中的主流意向价与参考送到价，与报价库的逐条报价分列，未合并计算。","rows":[{"region":"浙江","spec":"4452","price":"13,450","date":"2026-10-15","source":"市场资讯","note":"主流意向价，较前一交易日跌 100"},{"region":"浙江","spec":"F875","price":"13,400–13,500","date":"2026-10-15","source":"市场资讯","note":"主流意向价区间，较前一交易日持稳"},{"region":"福建","spec":"4412","price":"13,850–13,900","date":"2026-10-15","source":"市场资讯","note":"较前一交易日跌 100"},{"region":"福建","spec":"4452","price":"13,300","date":"2026-10-15","source":"市场资讯","note":"较前一交易日跌 100"},{"region":"福建","spec":"1475","price":"13,700","date":"2026-10-15","source":"市场资讯","note":"较前一交易日跌 50"},{"region":"福建","spec":"F875","price":"13,300–13,400","date":"2026-10-15","source":"市场资讯","note":"较前一交易日跌 100"},{"region":"上海","spec":"1475","price":"13,800","date":"2026-10-15","source":"市场资讯","note":"主流意向价，较前一交易日跌 50"},{"region":"华南","spec":"3501","price":"14,800–14,900","date":"2026-10-15","source":"市场资讯","note":"参考送到价，较前一交易日持稳"},{"region":"华南","spec":"3411","price":"14,800–14,900","date":"2026-10-15","source":"市场资讯","note":"参考送到价，较前一交易日持稳"},{"region":"岳阳","spec":"792E","price":"15,200–15,500","date":"2026-10-15","source":"市场资讯","note":"午前参考自提价区间"},{"region":"上海","spec":"T171G","price":"无货无价格","date":"2026-10-15","source":"市场资讯","note":"独山子石化，样本缺货","missing":true},{"region":"未标注","spec":"815E","price":"缺货、暂无报盘","date":"2026-10-15","source":"市场资讯","note":"湖南石化，市场缺货","missing":true}]},{"title":"相关参照品（非本品原料或产物，不可直接比较）","note":"丁苯橡胶是部分应用中的替代/互补胶种，基质沥青是 SBS 改性沥青的基料，均不属于 SBS 产业链本体价格。","rows":[{"region":"西北","spec":"丁苯橡胶 1502E","price":"16,150","date":"2026-10-15","source":"现货报价库","note":"兰州石化，现款现汇/自提/含税；较前一日 -300（-1.82%）"},{"region":"西北","spec":"丁苯橡胶 1712","price":"14,050","date":"2026-10-15","source":"现货报价库","note":"兰州石化，现款现汇/自提/含税；较前一日 -300（-2.09%）"},{"region":"多地区","spec":"丁苯橡胶 2564T","price":"13,800","date":"2026-10-15","source":"现货报价库","note":"浙江石化，现款现汇/送到/含税"},{"region":"华北","spec":"基质沥青 70#A","price":"7,800","date":"2026-10-15","source":"现货报价库","note":"河北鑫海 / 河北伦特，含税汽运"},{"region":"华北","spec":"基质沥青 90#A","price":"7,900","date":"2026-10-15","source":"现货报价库","note":"河北鑫海 / 河北伦特，含税汽运"},{"region":"华南（海南）","spec":"基质沥青 70#","price":"7,950","date":"2026-10-15","source":"现货报价库","note":"海南京博，含税汽运"},{"region":"西北（新疆）","spec":"基质沥青 90#","price":"5,100","date":"2026-10-15","source":"现货报价库","note":"法康尼，含税汽运"}]}],"gaps":[{"scope":"SBS 改性沥青","reason":"检索观测数为 0，无可用报价序列","evidence":"compound_price_live(改性沥青) 返回 observations=0，data_gaps 提示未识别到可计算的日期与价格记录"},{"scope":"热熔胶 / 压敏胶","reason":"检索观测数为 0，无可用报价","evidence":"compound_price_live(热熔胶) 返回 observations=0，data 为空数组"},{"scope":"鞋材、防水卷材、聚合物改性（PS/HDPE 增韧）、电线电缆料","reason":"本次未检索到授权价格记录","evidence":"未发起或未返回可用的价格序列"},{"scope":"独山子石化 T171G（上海）","reason":"市场样本缺货，报价为「无货无价格」","evidence":"市场资讯原文记录"},{"scope":"湖南石化 815E","reason":"市场缺货，暂无报盘","evidence":"市场资讯原文记录"}],"notes":{"price_basis":["石脑油、乙烯、纯苯、环己烷、丁二烯、苯乙烯：取自现货报价库，数字为最新交易日（2026-10-15）同地区同规格报价的均值，不是期间均价；同日不同来源的极值在明细「说明」列保留。","SBS 干胶与油胶：为逐条企业或市场报价（不同生产企业、不同牌号、不同提货方式），图中为代表性报价，并非全市场统一价，也不与其他品种做价差计算。","原始记录未声明税制与币种时，字段显示为「税制未提供 / 币种未单列」；已声明含税的条目在说明列注明。","丁苯橡胶与基质沥青仅为相关参照，不属于 SBS 产业链本体，不可直接比较。"],"chain_basis":["石脑油经蒸汽裂解产乙烯并联产 C4 馏分；C4 经抽提得丁二烯；乙烯与纯苯经烷基化制乙苯、再脱氢得苯乙烯；纯苯加氢制环己烷（聚合溶剂）。","丁二烯与苯乙烯以烷基锂为引发剂，在环己烷等溶剂中经阴离子溶液聚合得 SBS，可制成干胶或加填充油制成充油油胶。","该工艺路线为行业通用机理示意，本次未以数据源独立核验工艺参数；价格数据来自数据中枢授权报价记录。"],"gap_notes":["缺口一律留空，不以估算值填充，也不由原料价格反推下游成品价格。","缺口需保留原始证据（观测数为 0 的返回值或资讯原句），便于复核。"],"source_notes":["现货报价库与市场资讯快照均来自 ChemClaw 化工数据中枢（数据日 2026-10-15，检索时间 2026-10-16）。","价格与备注均为原始记录摘录，来源未做独立第三方核验。"]},"meta":{"title":"SBS 产业链价格地图","product":"SBS（苯乙烯-丁二烯-苯乙烯嵌段共聚物）","data_date":"2026-10-15","retrieved_at":"2026-10-16","unit":"元/吨","lang":"zh-CN","headline":"链上各环节均可用最新交易日 2026-10-15 报价定位；下游改性沥青与热熔胶本次无授权报价。","basis_note":"原料与中间体数字为最新交易日同地区同规格报价均值；SBS 为逐条企业/市场报价，不同牌号、提货方式与地区不可平均或相减。","sources":[{"name":"ChemClaw 化工数据中枢 · 现货报价库","type":"price_db","note":"按品种/地区/规格记录的单条现货报价，含日期与口径字段。"},{"name":"ChemClaw 化工数据中枢 · 市场资讯","type":"news","note":"早间提示、午间小结等市场评论口径（含主流意向价、送到价），与报价库口径分列。"}]}}</script>
+<script>
+(function () {
+  "use strict";
+  var L = JSON.parse(document.getElementById('chain-data').textContent);
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.getElementById('chain');
+  var tip = document.getElementById('tip');
+  var stage = document.querySelector('.stage');
+  var panel = document.getElementById('panel');
+  var byId = {};
+  L.nodes.forEach(function (n) { byId[n.id] = n; });
+
+  function mk(tag, attrs, txt) {
+    var e = document.createElementNS(NS, tag);
+    if (attrs) { for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); } }
+    if (txt !== undefined && txt !== null) e.textContent = txt;
+    return e;
+  }
+
+  var gLinks = mk('g'), gLabels = mk('g'), gNodes = mk('g');
+
+  function defs() {
+    var d = mk('defs');
+    var m = mk('marker', { id: 'arw', viewBox: '0 0 10 10', refX: '9', refY: '5',
+      markerWidth: '7', markerHeight: '7', orient: 'auto-start-reverse' });
+    m.appendChild(mk('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#b7c2d2' }));
+    d.appendChild(m);
+    return d;
+  }
+
+  function render() {
+    var c = L.canvas;
+    svg.setAttribute('viewBox', '0 0 ' + c.w + ' ' + c.h);
+    svg.style.minWidth = Math.min(c.w, 1100) + 'px';
+    svg.appendChild(mk('rect', { x: 0, y: 0, width: c.w, height: c.h, fill: '#ffffff' }));
+
+    L.columns.forEach(function (col) {
+      svg.appendChild(mk('rect', { x: col.x, y: col.y, width: col.w, height: col.h,
+        rx: 16, fill: col.band, opacity: 0.55 }));
+      if (col.label) {
+        svg.appendChild(mk('text', { x: col.labelX, y: col.labelY, 'text-anchor': 'middle',
+          'font-size': 15, 'font-weight': 600, fill: '#5b6b80' }, col.label));
+      }
+    });
+
+    svg.appendChild(defs());
+    svg.appendChild(gLinks);
+    svg.appendChild(gLabels);
+    svg.appendChild(gNodes);
+
+    L.links.forEach(function (lk, i) {
+      var p = mk('path', { d: lk.d, fill: 'none', stroke: '#b7c2d2',
+        'stroke-width': lk.dash ? 1.6 : 2,
+        'stroke-dasharray': lk.dash ? '6 5' : 'none',
+        'data-i': i, 'data-f': lk.from, 'data-t': lk.to });
+      p.setAttribute('marker-end', 'url(#arw)');
+      gLinks.appendChild(p);
+      if (lk.label) {
+        gLabels.appendChild(mk('text', { x: lk.lx, y: lk.ly, 'text-anchor': 'middle',
+          'font-size': 12, fill: '#7b8a9e', 'data-lb': i,
+          'paint-order': 'stroke', stroke: '#ffffff', 'stroke-width': 4 }, lk.label));
+      }
+    });
+
+    L.nodes.forEach(function (n) {
+      var g = mk('g', { 'class': 'node', style: 'cursor:pointer',
+        transform: 'translate(' + n.x + ',' + n.y + ')' });
+      g.appendChild(mk('rect', { x: 0, y: 0, width: n.w, height: n.h, rx: 13,
+        fill: n.fill, stroke: n.stroke, 'stroke-width': 1.6 }));
+      if (n.role === 'application') {
+        g.appendChild(mk('text', { x: 16, y: 32, 'font-size': 16, 'font-weight': 700, fill: n.text }, n.name));
+        g.appendChild(mk('text', { x: 16, y: 60, 'font-size': 12.5, fill: '#a1521c' }, n.gapLabel));
+        n.short.forEach(function (s, i) {
+          g.appendChild(mk('text', { x: 16, y: 88 + 22 * i, 'font-size': 12, fill: '#7d6a5c' }, s));
+        });
+      } else {
+        var cxm = n.w / 2;
+        g.appendChild(mk('text', { x: cxm, y: 28, 'text-anchor': 'middle', 'font-size': 17,
+          'font-weight': 700, fill: n.text }, n.name));
+        g.appendChild(mk('text', { x: cxm, y: 66, 'text-anchor': 'middle', 'font-size': 25,
+          'font-weight': 700, fill: '#16202c' }, n.price));
+        if (n.unit) {
+          g.appendChild(mk('text', { x: cxm, y: 86, 'text-anchor': 'middle', 'font-size': 12.5,
+            fill: '#66768c' }, n.unit));
+        }
+        if (n.basis) {
+          g.appendChild(mk('text', { x: cxm, y: 104, 'text-anchor': 'middle', 'font-size': 11.5,
+            fill: '#66768c' }, n.basis));
+        }
+      }
+      g.addEventListener('mouseenter', function (ev) { hover(ev, n); });
+      g.addEventListener('mousemove', function (ev) { moveTip(ev); });
+      g.addEventListener('mouseleave', unhover);
+      g.addEventListener('click', function () { select(n); });
+      gNodes.appendChild(g);
+    });
+  }
+
+  function highlight(id) {
+    var ps = gLinks.querySelectorAll('path');
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i];
+      var on = id && (p.getAttribute('data-f') === id || p.getAttribute('data-t') === id);
+      p.setAttribute('stroke', on ? '#5a7bc4' : (id ? '#dde3ec' : '#b7c2d2'));
+      p.setAttribute('stroke-width', on ? 3 : (p.getAttribute('stroke-dasharray') === 'none' ? 2 : 1.6));
+    }
+    var ls = gLabels.querySelectorAll('text');
+    for (var j = 0; j < ls.length; j++) {
+      var t = ls[j], k = parseInt(t.getAttribute('data-lb'), 10), lk = L.links[k];
+      t.setAttribute('opacity', (!id || lk.from === id || lk.to === id) ? '1' : '0.25');
+    }
+  }
+
+  function rowsTable(rows, max) {
+    var out = rows.slice(0, max);
+    var h = '<table><tr><th>地区</th><th>牌号/规格</th><th class="r">价格</th></tr>';
+    out.forEach(function (r) {
+      h += '<tr><td>' + esc(r.region || '—') + '</td><td>' + esc(r.spec || '—') +
+           '</td><td class="r">' + esc(r.price || '—') + '</td></tr>';
+    });
+    h += '</table>';
+    if (rows.length > max) h += '<div class="more">另有 ' + (rows.length - max) + ' 条记录，见下方明细表</div>';
+    return h;
+  }
+
+  function esc(s) {
+    return String(s === undefined || s === null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function hover(ev, n) {
+    highlight(n.id);
+    var h = '<h4>' + esc(n.name) + '</h4>';
+    if (n.role === 'application') {
+      h += '<div class="tm">' + esc(n.gapLabel) + '</div><div>' + esc(n.desc) + '</div>';
+    } else {
+      h += '<div class="tp">' + esc(n.price) + (n.unit ? '<span>' + esc(n.unit) + '</span>' : '') + '</div>';
+      h += '<div class="tm">' + esc(n.basis) + ' · 数据日 ' + esc(L.meta.data_date || '') + '</div>';
+      if (n.rows.length) h += rowsTable(n.rows, 8);
+    }
+    tip.innerHTML = h;
+    tip.style.display = 'block';
+    moveTip(ev);
+  }
+
+  function moveTip(ev) {
+    var r = stage.getBoundingClientRect();
+    var x = ev.clientX - r.left + 16, y = ev.clientY - r.top + 14;
+    tip.style.left = '0px'; tip.style.top = '0px';
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    if (x + tw > r.width - 8) x = Math.max(8, ev.clientX - r.left - tw - 16);
+    if (y + th > r.height + 40) y = Math.max(8, ev.clientY - r.top - th - 12);
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+
+  function unhover() { tip.style.display = 'none'; highlight(null); }
+
+  function panelDefault() {
+    var rows = L.nodes.filter(function (n) { return n.role !== 'application'; });
+    var h = '<h2>价格明细</h2><p class="pl">数据日 ' + esc(L.meta.data_date || '') +
+            ' · 单位 ' + esc(L.meta.unit || '') + '</p>' +
+            '<p style="font-size:13.5px;color:#42536b;margin:0 0 12px">把鼠标移到左侧图上任意环节可预览报价；点击环节后在这里列出该环节的完整原始记录。</p>' +
+            '<table><tr><th>环节</th><th class="r">最新价</th><th>口径</th></tr>';
+    rows.forEach(function (n) {
+      h += '<tr><td><b>' + esc(n.name) + '</b></td><td class="num">' + esc(n.price) +
+           '</td><td class="dim">' + esc(n.basis) + '</td></tr>';
+    });
+    h += '</table>';
+    if (L.gaps.length) {
+      h += '<p class="pl" style="margin-top:12px">下游应用环节本次未检索到授权价格，不以估算值填充。</p>';
+    }
+    panel.innerHTML = h;
+  }
+
+  function select(n) {
+    var h = '<h2>' + esc(n.name) + '</h2>';
+    h += '<p class="pl">' + (n.role === 'application' ? '下游应用环节'
+      : ('数据日 ' + esc(L.meta.data_date || '') + ' · 单位 ' + esc(n.unit))) + '</p>';
+    if (n.role === 'application') {
+      h += '<p style="font-size:13.5px;color:#a1521c;font-weight:600;margin:4px 0 8px">' + esc(n.gapLabel) + '</p>';
+      h += '<p style="font-size:13.5px;color:#42536b">' + esc(n.desc) + '</p>';
+    } else {
+      h += '<p class="pbig">' + esc(n.price) + (n.unit ? '<span>' + esc(n.unit) + '</span>' : '') + '</p>';
+      h += '<p class="pmeta">' + esc(n.basis) + '</p>';
+      if (n.desc) h += '<p style="font-size:13.5px;color:#42536b">' + esc(n.desc) + '</p>';
+      if (n.rows.length) {
+        h += '<div class="tblwrap"><table><tr><th>地区</th><th>牌号/规格</th><th class="r">价格</th><th>说明</th></tr>';
+        n.rows.forEach(function (r) {
+          h += '<tr><td>' + esc(r.region) + '</td><td>' + esc(r.spec) + '</td><td class="num">' +
+               esc(r.price) + '</td><td class="dim">' + esc(r.note) +
+               (r.date ? '<br>' + esc(r.date) : '') + (r.source ? ' · ' + esc(r.source) : '') + '</td></tr>';
+        });
+        h += '</table></div>';
+      }
+    }
+    h += '<p style="margin:12px 0 0"><button id="pback">返回总览</button></p>';
+    panel.innerHTML = h;
+    document.getElementById('pback').addEventListener('click', panelDefault);
+  }
+
+  function fullTable(rows) {
+    var h = '<div class="tblwrap"><table><tr><th>地区</th><th>牌号/规格</th><th class="r">价格</th>' +
+            '<th>说明</th><th>日期</th><th>来源</th></tr>';
+    rows.forEach(function (r) {
+      h += '<tr><td>' + esc(r.region) + '</td><td>' + esc(r.spec) + '</td><td class="num">' +
+           esc(r.price) + '</td><td class="dim">' + esc(r.note) + '</td><td class="dim">' +
+           esc(r.date || '') + '</td><td class="dim">' + esc(r.source || '') + '</td></tr>';
+    });
+    return h + '</table></div>';
+  }
+
+  function renderTables() {
+    var host = document.getElementById('tables');
+    var groups = [];
+    L.stages.forEach(function (st) {
+      var ns = L.nodes.filter(function (n) { return n.stage === st.key && n.role !== 'application'; });
+      if (ns.length) groups.push({ title: st.label || st.key, nodes: ns });
+    });
+    groups.forEach(function (g, i) {
+      var cnt = g.nodes.reduce(function (a, n) { return a + n.rows.length; }, 0);
+      var d = document.createElement('details');
+      d.className = 'grp';
+      if (i === groups.length - 1 || (groups.length === 1 && i === 0)) d.open = true;
+      d.innerHTML = '<summary><span>' + esc(g.title) + '</span><span class="cnt">' + cnt +
+        ' 条记录</span></summary><div class="body">' +
+        g.nodes.map(function (n) {
+          return '<p class="nhead"><b>' + esc(n.name) + '</b> — 图上标注 ' + esc(n.price) +
+            (n.unit ? ' ' + esc(n.unit) : '') + (n.basis ? '（' + esc(n.basis) + '）' : '') + '</p>' +
+            fullTable(n.rows);
+        }).join('') + '</div>';
+      host.appendChild(d);
+    });
+    (L.tables || []).forEach(function (g) {
+      var d = document.createElement('details');
+      d.className = 'grp';
+      d.innerHTML = '<summary><span>' + esc(g.title) + '</span><span class="cnt">' +
+        (g.rows || []).length + ' 条记录</span></summary><div class="body">' +
+        (g.note ? '<p class="gnote">' + esc(g.note) + '</p>' : '') + fullTable(g.rows || []) + '</div>';
+      host.appendChild(d);
+    });
+  }
+
+  function renderFilter() {
+    var box = document.getElementById('tableFilter');
+    if (!box) return;
+    box.addEventListener('input', function () {
+      var q = box.value.trim().toLowerCase();
+      var tbls = document.getElementById('tables').querySelectorAll('table');
+      for (var i = 0; i < tbls.length; i++) {
+        var rows = tbls[i].querySelectorAll('tr');
+        var visible = 0;
+        for (var j = 1; j < rows.length; j++) {
+          var hit = !q || rows[j].textContent.toLowerCase().indexOf(q) >= 0;
+          rows[j].style.display = hit ? '' : 'none';
+          if (hit) visible++;
+        }
+        tbls[i].style.display = (visible || !q) ? '' : 'none';
+      }
+    });
+  }
+
+  render();
+  panelDefault();
+  renderTables();
+  renderFilter();
+})();
+</script>
+</body>
+</html>

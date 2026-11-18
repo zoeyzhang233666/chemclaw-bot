@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --ink:#111827; --ink-2:#334155; --muted:#64748b; --line:#e2e8f0; --line-2:#cbd5e1;
+  --paper:#ffffff; --bg:#eef2f6; --navy:#0b2b3f; --navy-2:#123c55; --teal:#0f766e;
+  --teal-2:#14b8a6; --amber:#b45309; --amber-bg:#fef3c7; --green:#15803d; --green-bg:#e8f7ee;
+  --red:#b91c1c; --red-bg:#fee7e7; --gray-bg:#eef1f4; --gray:#475569;
+  --shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.18);
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+    radial-gradient(1200px 600px at 10% -10%, #dbeafe 0%, transparent 55%),
+    radial-gradient(900px 500px at 95% 0%, #d1fae5 0%, transparent 50%),
+    var(--bg);
+  color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC","Source Han Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(15,118,110,.25)}
+a:hover{border-bottom-color:var(--teal)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(160%) blur(12px);
+  background:rgba(255,255,255,.86);border-bottom:1px solid rgba(148,163,184,.35)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em;white-space:nowrap}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(180deg,var(--teal-2),var(--teal));box-shadow:0 0 0 4px rgba(20,184,166,.15)}
+.brand small{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.navlinks{display:flex;gap:4px;overflow:auto;scrollbar-width:none;margin-left:auto}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{border:0;color:var(--ink-2);font-size:13px;font-weight:600;padding:7px 10px;border-radius:9px;white-space:nowrap}
+.navlinks a:hover{background:#eef6f5;color:var(--teal)}
+.navlinks a.active{background:var(--navy);color:#fff}
+.chip-progress{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--ink-2);
+  background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.chip-progress b{color:var(--teal)}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 0 8px}
+.hero-card{background:linear-gradient(135deg,var(--navy) 0%,#0d3a52 55%,#0f4f5c 100%);
+  border-radius:22px;padding:34px 36px 28px;color:#e8f1f6;box-shadow:0 30px 60px -30px rgba(8,47,73,.65);position:relative;overflow:hidden}
+.hero-card::after{content:"";position:absolute;right:-120px;top:-140px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(20,184,166,.28),transparent 65%);pointer-events:none}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9fd3cf;font-weight:700}
+.eyebrow::before{content:"";width:26px;height:1px;background:#5eead4}
+.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:30px;align-items:start;margin-top:14px}
+h1{margin:6px 0 6px;font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;font-weight:900;
+  font-size:clamp(28px,3.6vw,42px);line-height:1.2;letter-spacing:.01em;color:#fff}
+.hero-sub{color:#c7dbe6;font-size:15px;margin:0 0 18px}
+.hero-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px;margin-top:16px}
+.hero-meta div{display:flex;gap:10px;font-size:13px;color:#d6e5ee;border-top:1px solid rgba(255,255,255,.12);padding-top:9px}
+.hero-meta span{color:#8fb3c6;min-width:56px}
+.verdict-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px}
+.verdict-badge{display:inline-flex;align-items:center;gap:8px;background:#e8f7ee;color:#14532d;font-weight:900;
+  border-radius:999px;padding:7px 14px;font-size:13px;letter-spacing:.02em}
+.verdict-badge .ic{width:18px;height:18px;border-radius:50%;background:#16a34a;color:#fff;display:grid;place-items:center;font-size:12px}
+.verdict-box h2{margin:12px 0 6px;font-size:19px;color:#fff;line-height:1.45}
+.verdict-box p{margin:0;color:#b9d2df;font-size:13px}
+.verdict-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.vchip{font-size:12px;font-weight:700;border-radius:8px;padding:5px 9px;background:rgba(255,255,255,.1);color:#d9ecf3;border:1px solid rgba(255,255,255,.14)}
+.vchip.ok{background:rgba(22,163,74,.22);color:#bbf7d0;border-color:rgba(34,197,94,.35)}
+
+/* ---------- sections ---------- */
+section{margin:26px 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 14px;padding-left:14px;border-left:4px solid var(--teal)}
+.sec-head h2{margin:0;font-size:21px;letter-spacing:.01em}
+.sec-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.sec-no{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--teal);text-transform:uppercase}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.pad{padding:22px 24px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mt{margin-top:16px}
+.small{font-size:12.5px;color:var(--muted)}
+.tiny{font-size:11.5px;color:var(--muted)}
+.kicker{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:#f1f5f9;color:var(--ink-2);font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  position:sticky;top:0;z-index:2;border-bottom:1px solid var(--line-2)}
+tbody tr:hover td{background:#f8fbfc}
+td.num{white-space:nowrap;color:var(--muted)}
+.tbl-wrap{max-height:none;overflow:auto;border-radius:12px;border:1px solid var(--line)}
+.tbl-wrap table{margin:0}
+.tbl-wrap th{background:#eef4f8}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:800;white-space:nowrap}
+.tag.green{background:var(--green-bg);color:#166534}
+.tag.amber{background:var(--amber-bg);color:#92400e}
+.tag.red{background:var(--red-bg);color:#991b1b}
+.tag.gray{background:var(--gray-bg);color:var(--gray)}
+.tag.teal{background:#e6f4f1;color:#0f766e}
+.tag.navy{background:#e7eef6;color:#123c55}
+
+/* ---------- identity ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.pchip{border:1px solid var(--line-2);background:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:.15s}
+.pchip:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-1px)}
+.pchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.pchip small{display:block;font-weight:600;font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.pchip.on small{color:#a9c8d8}
+.qa{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fbfdfe}
+.qa h4{margin:0 0 6px;font-size:14px;color:var(--ink)}
+.qa p{margin:0;font-size:13px;color:var(--ink-2)}
+.qa .impact{display:inline-block;margin-top:8px;font-size:11px;font-weight:800;color:var(--amber);background:var(--amber-bg);border-radius:6px;padding:3px 8px}
+.preview{border:1px dashed var(--line-2);border-radius:12px;background:#f8fafc;padding:16px 18px;margin-top:16px}
+.preview h4{margin:0 0 8px;font-size:14px}
+.preview .row{display:flex;gap:10px;font-size:12.5px;margin-top:6px;color:var(--ink-2)}
+.preview .row b{min-width:76px;color:var(--muted);font-weight:700}
+.notice{background:var(--amber-bg);border:1px solid #fcd34d;color:#78350f;border-radius:12px;padding:12px 14px;font-size:12.5px}
+
+/* ---------- verdict ---------- */
+.flags{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.flag{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.flag .t{font-size:12px;font-weight:800;color:var(--ink-2);line-height:1.4}
+.flag .v{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;font-weight:800;color:var(--green)}
+.flag .v .ic{width:18px;height:18px;border-radius:50%;background:var(--green-bg);color:var(--green);display:grid;place-items:center;font-size:11px}
+.flag .n{margin-top:6px;font-size:11px;color:var(--muted);line-height:1.5}
+.cons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cons .item{border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,#fff,#f8fafc)}
+.cons .item .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--teal);text-transform:uppercase}
+.cons .item .v{margin-top:6px;font-size:12.5px;color:var(--ink-2);line-height:1.65}
+.basis details{border:1px solid var(--line);border-radius:12px;padding:0;margin-bottom:10px;background:#fff;overflow:hidden}
+.basis summary{cursor:pointer;padding:13px 16px;font-weight:700;font-size:13.5px;display:flex;gap:10px;align-items:flex-start;list-style:none}
+.basis summary::-webkit-details-marker{display:none}
+.basis summary .idx{flex:0 0 22px;height:22px;border-radius:6px;background:#e7eef6;color:#123c55;display:grid;place-items:center;font-size:11px;font-weight:800}
+.basis .body{padding:0 16px 14px 48px;font-size:12.5px;color:var(--ink-2)}
+.basis .body .src{margin-top:8px;font-size:11.5px;color:var(--muted)}
+.ghs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ghs .item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+.ghs .item b{display:block;font-size:12.5px}
+.ghs .item span{font-size:11px;color:var(--muted)}
+
+/* ---------- buyer ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--line-2)}
+.stat.a::before{background:#16a34a}.stat.b::before{background:#d97706}.stat.c::before{background:#dc2626}.stat.n::before{background:#94a3b8}
+.stat .n{font-size:28px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.stat .l{margin-top:6px;font-size:12px;font-weight:800;color:var(--ink-2)}
+.stat .d{margin-top:3px;font-size:11px;color:var(--muted)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 14px}
+.fbtn{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.fbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.bcard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff;margin-bottom:12px}
+.bcard .h{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bcard .h b{font-size:14.5px}
+.bcard .finding{margin:9px 0 0;font-size:13px;color:var(--ink-2)}
+.bcard .ask{margin-top:10px;font-size:12.5px;background:#f1f7ff;border-left:3px solid #3b82f6;padding:8px 12px;border-radius:0 8px 8px 0;color:#1e3a5f}
+.bcard .ask b{color:#1d4ed8}
+.bcard .ev{margin-top:8px;font-size:11.5px;color:var(--muted)}
+.bcard .ev a{font-size:11.5px}
+.bcard .note{margin-top:8px;font-size:11.5px;color:var(--muted);font-style:italic}
+
+/* ---------- checklist ---------- */
+.prog{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.bar{flex:1;height:10px;border-radius:999px;background:#e6ebf1;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--teal-2));transition:width .4s}
+.prog .pct{font-size:13px;font-weight:800;color:var(--teal);min-width:92px;text-align:right}
+.grp{margin:16px 0 6px;font-size:12px;font-weight:900;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.ck{display:grid;grid-template-columns:30px 86px 1fr 150px 130px;gap:10px;align-items:start;
+  border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;margin-bottom:8px;transition:.15s}
+.ck:hover{border-color:var(--line-2);box-shadow:0 4px 14px -10px rgba(15,23,42,.35)}
+.ck.done{background:#f7fdf9;border-color:#bbf7d0}
+.ck .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--line-2);background:#fff;cursor:pointer;display:grid;place-items:center;margin-top:1px}
+.ck.done .box{background:var(--green);border-color:var(--green);color:#fff}
+.ck .box::after{content:"";font-size:13px;font-weight:900;color:#fff}
+.ck.done .box::after{content:"✓"}
+.ck .id{font-size:11.5px;font-weight:800;color:var(--teal);letter-spacing:.04em}
+.ck .body .t{font-size:13px;font-weight:700;color:var(--ink)}
+.ck .body .m{margin-top:5px;font-size:11.5px;color:var(--muted);line-height:1.6}
+.ck .body .m b{color:var(--ink-2);font-weight:700}
+.ck select{border:1px solid var(--line-2);border-radius:8px;padding:6px 8px;font-size:12px;background:#fff;color:var(--ink-2);font-weight:700;width:100%}
+.ck input.note{border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;width:100%;color:var(--ink-2);background:#fbfdff}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.btn{border:1px solid var(--line-2);background:#fff;border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:800;color:var(--ink-2);cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--teal);color:var(--teal)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary:hover{background:#123c55;color:#fff}
+.btn.ghost{background:transparent}
+
+/* ---------- docs ---------- */
+.doc{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.doc .top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.doc .id{font-size:11px;font-weight:900;color:var(--muted);letter-spacing:.1em}
+.doc h4{margin:8px 0 6px;font-size:13.5px}
+.doc p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+.doc .meta{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.mini{font-size:10.5px;font-weight:800;border-radius:6px;padding:2px 7px;background:#f1f5f9;color:var(--ink-2)}
+
+/* ---------- draft ---------- */
+.tabs{display:flex;gap:6px;margin:0 0 10px}
+.tab{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;cursor:pointer;color:var(--ink-2)}
+.tab.on{background:var(--teal);border-color:var(--teal);color:#fff}
+textarea.draft{width:100%;min-height:300px;border:1px solid var(--line-2);border-radius:12px;padding:16px 18px;
+  font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:13px;line-height:1.85;color:var(--ink-2);
+  background:#fbfdff;resize:vertical}
+.textarea-meta{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:11.5px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--navy);color:#fff;
+  border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- misc ---------- */
+.note-box{border-left:4px solid var(--teal);background:#f0fdfa;padding:14px 16px;border-radius:0 12px 12px 0;font-size:13px;color:#134e4a}
+.warn-box{border-left:4px solid var(--amber);background:#fffbeb;padding:14px 16px;border-radius:0 12px 12px 0;font-size:13px;color:#78350f}
+.danger-box{border-left:4px solid var(--red);background:#fef2f2;padding:14px 16px;border-radius:0 12px 12px 0;font-size:13px;color:#7f1d1d}
+footer{margin:40px 0 60px;padding:22px 0 0;border-top:1px solid var(--line-2);font-size:12px;color:var(--muted)}
+.hr{height:1px;background:var(--line);margin:18px 0}
+.mono{font-family:"JetBrains Mono",Consolas,"Courier New",monospace;font-size:12px}
+.nowrap{white-space:nowrap}
+.center{text-align:center}
+.right{text-align:right}
+
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr}
+  .flags,.cons{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid-3,.grid-4{grid-template-columns:repeat(2,1fr)}
+  .ck{grid-template-columns:28px 1fr;grid-auto-rows:auto}
+  .ck .id{grid-column:2}
+  .ck .body{grid-column:2}
+  .ck select,.ck input.note{grid-column:2}
+  .navlinks{display:none}
+}
+@media print{
+  body{background:#fff}
+  .topbar,.actions,.filters,.tabs,.btn,.toast{display:none!important}
+  .card,.hero-card{box-shadow:none;border:1px solid #cbd5e1}
+  section{break-inside:avoid}
+  .tbl-wrap{overflow:visible}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>销售合规提醒 <small id="brandCase">CASE</small></div>
+    <nav class="navlinks" id="navLinks"></nav>
+    <div class="chip-progress">清单 <b id="topProg">0/0</b></div>
+  </div>
+</div>
+
+<main class="wrap" id="app"></main>
+
+<div class="toast" id="toast">已复制</div>
+
+<script>
+const CASE = /*__CASE__*/ null;
+</script>
+<script>
+/* ================= helpers ================= */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const esc = (s) => String(s==null?"":s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const nl2br = (s) => esc(s).replace(/\n/g,"<br>");
+const money = (n) => Number(n||0).toLocaleString("zh-CN");
+const STATUS = {
+  A:{label:"公开可见",cls:"green"}, B:{label:"需核对原件",cls:"amber"},
+  C:{label:"无公开信息",cls:"red"}, NA:{label:"不适用",cls:"gray"}
+};
+const CK_STATES = ["未开始","进行中","已完成","不适用"];
+const STORE_KEY = "hzcheck:" + (CASE.meta.case_no || "case");
+
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._tm); t._tm = setTimeout(()=>t.classList.remove("on"), 1600);
+}
+function badge(code){
+  const m = STATUS[code] || STATUS.NA;
+  return `<span class="tag ${m.cls}">${m.label}</span>`;
+}
+function secHead(no, title, desc){
+  return `<div class="sec-head"><div><div class="sec-no">${esc(no)}</div><h2>${esc(title)}</h2><p>${esc(desc||"")}</p></div></div>`;
+}
+
+/* ================= hero ================= */
+function renderHero(){
+  const m = CASE.meta, d = CASE.determination, p = CASE.product;
+  const chips = [
+    ["危险化学品经营许可", "不适用"],
+    ["买方危化品资质", "不适用"],
+    ["公安备案", "无需"],
+    ["运输", "普通货物"]
+  ];
+  return `
+  <section class="hero" id="top">
+    <div class="hero-card">
+      <div class="eyebrow">内贸销售 · 客户准入 · 销售合规</div>
+      <div class="hero-grid">
+        <div>
+          <h1>${esc(p.name)}</h1>
+          <p class="hero-sub">${esc(m.buyer.name)} · ${esc(m.deal.qty)} · ${esc(m.deal.delivery)}</p>
+          <div class="hero-meta">
+            <div><span>案例编号</span>${esc(m.case_no)}</div>
+            <div><span>判定日</span>${esc(m.as_of)}</div>
+            <div><span>CAS</span>${esc(p.cas)}</div>
+            <div><span>用途</span>${esc(m.deal.use_type)}（${esc(m.deal.use_detail)}）</div>
+            <div><span>卖方</span>${esc(m.seller.name)}</div>
+            <div><span>买方</span>${esc(m.buyer.ticker || "")}</div>
+          </div>
+        </div>
+        <div class="verdict-box">
+          <div class="verdict-badge"><span class="ic">✓</span>${esc(d.verdict)}</div>
+          <h2>不列入《危险化学品目录（2015 版）》<br>本单不触发危化品许可、资质查验与备案</h2>
+          <p>判定依据：目录比对 + GHS 分类（皮肤刺激 2 / 眼刺激 2A），置信度 ${esc(d.confidence.split("；")[0])}。</p>
+          <div class="verdict-chips">
+            ${chips.map(([k,v])=>`<span class="vchip ok">${esc(k)} · ${esc(v)}</span>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="warn-box" style="margin-top:14px">${esc(m.disclaimer)}</div>
+  </section>`;
+}
+
+/* ================= step 1 identity ================= */
+function renderIdentity(){
+  const p = CASE.product;
+  const chips = CASE.cross_products.map(cp =>
+    `<button class="pchip ${cp.cas===p.cas?"on":""}" data-cas="${esc(cp.cas)}">${esc(cp.name)}<small>CAS ${esc(cp.cas)}</small></button>`
+  ).join("");
+
+  const qa = p.identity_checks.map((q,i)=>`
+    <div class="qa">
+      <h4>${i+1}. ${esc(q.q)}</h4>
+      <p>${esc(q.a)}</p>
+      <span class="impact">${esc(q.impact)}</span>
+    </div>`).join("");
+
+  const specRows = p.spec_table.map(s=>`<tr><td>${esc(s.item)}</td><td><b>${esc(s.value)}</b></td><td>${esc(s.unit)}</td><td class="small">${esc(s.note)}</td></tr>`).join("");
+
+  return `
+  <section id="identity">
+    ${secHead("Step 01","产品身份确认","浓度、形态、等级都可能改变判定结果。先选定产品，再核对身份问答；本单结论只对纯碱（CAS 497-19-8）工业级重质固态成立。")}
+    <div class="grid-2">
+      <div class="card pad">
+        <div class="kicker">选择产品</div>
+        <div class="chips mt" id="productChips">${chips}</div>
+        <div id="altPanel"></div>
+        <details class="mt" style="border:1px dashed var(--line-2);border-radius:12px;padding:12px 14px;background:#fbfdff">
+          <summary style="cursor:pointer;font-weight:800;font-size:13px">没找到？手动输入产品信息</summary>
+          <div class="grid-3 mt">
+            <label class="small">产品名称<input id="qName" class="note" style="width:100%;margin-top:4px" placeholder="如：氢氧化钾"></label>
+            <label class="small">CAS 号<input id="qCas" class="note" style="width:100%;margin-top:4px" placeholder="如：1310-58-3"></label>
+            <label class="small">浓度 / 形态<input id="qForm" class="note" style="width:100%;margin-top:4px" placeholder="如：48% 液碱"></label>
+          </div>
+          <div class="actions"><button class="btn primary" id="manualCheck">生成自查提示</button></div>
+          <div id="manualOut" class="mt"></div>
+        </details>
+      </div>
+      <div class="card pad">
+        <div class="kicker">身份信息</div>
+        <table class="mt">
+          <tbody>
+            <tr><td class="small" style="width:110px">产品名称</td><td><b>${esc(p.name)}</b></td></tr>
+            <tr><td class="small">别名</td><td>${esc(p.alias)}</td></tr>
+            <tr><td class="small">CAS / 分子式</td><td class="mono">${esc(p.cas)} · ${esc(p.formula)} · M ${esc(p.mw)}</td></tr>
+            <tr><td class="small">等级 / 标准</td><td>${esc(p.grade)}<div class="tiny">${esc(p.standard)}</div></td></tr>
+            <tr><td class="small">外观</td><td>${esc(p.appearance)}</td></tr>
+            <tr><td class="small">包装</td><td>${esc(p.packing)}</td></tr>
+            <tr><td class="small">储存</td><td>${esc(p.storage)}</td></tr>
+            <tr><td class="small">保质期</td><td>${esc(p.shelf_life)}</td></tr>
+            <tr><td class="small">HS 编码</td><td class="mono">${esc(p.hs_code)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">身份确认问答 · 这五个问题最容易被忽略</div>
+      <div class="grid-2 mt">${qa}</div>
+      <div class="warn-box mt">${esc(p.identity_caution)}</div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">典型规格（以 GB/T 210-2022 与批次 COA 为准）</div>
+      <div class="tbl-wrap mt"><table>
+        <thead><tr><th>项目</th><th>典型值</th><th>单位</th><th>说明</th></tr></thead>
+        <tbody>${specRows}</tbody>
+      </table></div>
+    </div>
+  </section>`;
+}
+
+/* ================= verdict ================= */
+function renderVerdict(){
+  const d = CASE.determination;
+  const flags = d.flags.map(f=>`
+    <div class="flag">
+      <div class="t">${esc(f.label)}</div>
+      <div class="v"><span class="ic">${f.value?"!":"✓"}</span>${f.value?"是":"否 · 不适用"}</div>
+      <div class="n">${esc(f.note)}</div>
+    </div>`).join("");
+
+  const ghs = d.ghs.map(g=>`<div class="item"><b>${esc(g.class)}</b><span>${esc(g.category)} · ${esc(g.h)}</span></div>`).join("");
+
+  const cons = [
+    ["经营许可", d.consequence.license],
+    ["备案", d.consequence.filing],
+    ["记录留存", d.consequence.records],
+    ["运输", d.consequence.transport]
+  ].map(([k,v])=>`<div class="item"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join("");
+
+  const basis = d.basis.map((b,i)=>`
+    <details class="basis-item" ${i<2?"open":""}>
+      <summary><span class="idx">${i+1}</span><span>${esc(b.claim)}</span></summary>
+      <div class="body">
+        <div>${esc(b.detail)}</div>
+        <div class="src">来源：${esc(b.source)} ${esc(b.article)} · ${esc(b.date)} · 置信度：<b>${esc(b.confidence)}</b>
+          ${b.url?` · <a href="${esc(b.url)}" target="_blank" rel="noopener">打开原文</a>`:""}</div>
+      </div>
+    </details>`).join("");
+
+  const boundary = d.boundary.map(b=>`<tr><td><b>${esc(b.scenario)}</b></td><td>${esc(b.effect)}</td></tr>`).join("");
+
+  return `
+  <section id="verdict">
+    ${secHead("Step 02","危险属性判定卡","结论先行：是否危化品、属于哪一类、依据是什么、什么情况下会翻盘。")}
+    <div class="card pad">
+      <div class="grid-2">
+        <div>
+          <div class="kicker">名录标记（8 项）</div>
+          <div class="flags mt">${flags}</div>
+        </div>
+        <div>
+          <div class="kicker">GHS 分类（按 SDS）</div>
+          <div class="ghs mt">${ghs}</div>
+          <div class="note-box mt">${esc(d.ghs_note)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">本次交易的直接后果</div>
+      <div class="cons mt">${cons}</div>
+      <div class="danger-box mt"><b>罚则提示：</b>${esc(d.consequence.penalty_note)}</div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">判定依据（逐条可核验）</div>
+      <div class="basis mt">${basis}</div>
+      <div class="hr"></div>
+      <div class="small"><b>复核步骤：</b>${d.verification_steps.map((s,i)=>`${i+1}) ${esc(s)}`).join("　")}</div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">边界条件 · 什么情况下结论会变</div>
+      <div class="tbl-wrap mt"><table><thead><tr><th style="width:38%">情形</th><th>对判定的影响</th></tr></thead><tbody>${boundary}</tbody></table></div>
+    </div>
+  </section>`;
+}
+
+/* ================= buyer ================= */
+function renderBuyer(){
+  const cs = CASE.buyer_checks;
+  const st = {A:0,B:0,C:0,NA:0};
+  cs.forEach(c=>st[c.status]=(st[c.status]||0)+1);
+  const stats = `
+    <div class="stats">
+      <div class="stat a"><div class="n">${st.A}</div><div class="l">A 公开可见</div><div class="d">可直接引用的公开证据</div></div>
+      <div class="stat b"><div class="n">${st.B}</div><div class="l">B 需核对原件</div><div class="d">有入口/间接证据，未见原件</div></div>
+      <div class="stat c"><div class="n">${st.C}</div><div class="l">C 无公开信息</div><div class="d">必须向买方索取</div></div>
+      <div class="stat n"><div class="n">${st.NA}</div><div class="l">NA 不适用</div><div class="d">本品种/用途不触发</div></div>
+    </div>`;
+
+  const legend = CASE.status_legend.map(s=>`<div class="doc"><div class="top"><span class="id">${esc(s.code)}</span>${badge(s.code)}</div><p style="margin-top:8px">${esc(s.desc)}</p></div>`).join("");
+
+  const cards = cs.map(c=>`
+    <div class="bcard" data-status="${esc(c.status)}">
+      <div class="h"><span class="tag navy">${esc(c.id)}</span><b>${esc(c.item)}</b>${badge(c.status)}<span class="tag gray">${esc(c.category)}</span><span class="tag ${c.risk==="中"?"amber":c.risk==="无"?"gray":"teal"}">风险 ${esc(c.risk)}</span></div>
+      <p class="finding">${esc(c.finding)}</p>
+      ${c.evidence && c.evidence.length ? `<div class="ev">公开证据：${c.evidence.map(e=>`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.label)}</a>${e.date?`（${esc(e.date)}）`:""}`).join(" ｜ ")}</div>` : `<div class="ev">公开证据：<b>无</b></div>`}
+      <div class="ask"><b>需向买方索取：</b>${esc(c.ask)}</div>
+      ${c.note?`<div class="note">${esc(c.note)}</div>`:""}
+    </div>`).join("");
+
+  return `
+  <section id="buyer">
+    ${secHead("Step 03","买方公开资质核查","三种状态分开写：公开可见 / 需核对原件 / 无公开信息。任何“大概有”“应该有”都不进入结论。")}
+    ${stats}
+    <div class="filters" id="buyerFilters">
+      <button class="fbtn on" data-f="all">全部 ${cs.length}</button>
+      <button class="fbtn" data-f="A">A 公开可见 ${st.A}</button>
+      <button class="fbtn" data-f="B">B 需核对原件 ${st.B}</button>
+      <button class="fbtn" data-f="C">C 无公开信息 ${st.C}</button>
+      <button class="fbtn" data-f="NA">NA 不适用 ${st.NA}</button>
+    </div>
+    <div id="buyerList">${cards}</div>
+    <div class="grid-4 mt">${legend}</div>
+  </section>`;
+}
+
+/* ================= checklist ================= */
+function allObligations(){
+  const out = [];
+  [["seller","销售方"],["buyer","买方"],["joint","双方"]].forEach(([k,label])=>{
+    (CASE.obligations[k]||[]).forEach(o=>out.push({...o, group:label, groupKey:k}));
+  });
+  return out;
+}
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }catch(e){ return {}; }
+}
+function saveState(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
+
+function renderChecklist(){
+  const items = allObligations();
+  const state = loadState();
+  const groups = ["销售方","买方","双方"];
+  let html = "";
+  groups.forEach(g=>{
+    const rows = items.filter(i=>i.group===g);
+    if(!rows.length) return;
+    html += `<div class="grp">${esc(g)} · ${rows.length} 项</div>`;
+    rows.forEach(o=>{
+      const s = state[o.id] || {};
+      const status = s.status || "未开始";
+      html += `
+      <div class="ck ${status==="已完成"?"done":""}" data-id="${esc(o.id)}">
+        <div class="box" role="checkbox" tabindex="0" aria-label="标记完成"></div>
+        <div class="id">${esc(o.id)}</div>
+        <div class="body">
+          <div class="t">${esc(o.item)}</div>
+          <div class="m"><b>依据</b> ${esc(o.basis)}　<b>留存</b> ${esc(o.retention)}　<b>备案</b> ${esc(o.filing)}　<b>时点</b> ${esc(o.timing)}</div>
+        </div>
+        <select class="st">${CK_STATES.map(x=>`<option ${x===status?"selected":""}>${x}</option>`).join("")}</select>
+        <input class="note" placeholder="完成日期 / 备注" value="${esc(s.note||"")}">
+      </div>`;
+    });
+  });
+  return `
+  <section id="checklist">
+    ${secHead("Step 04","本单合规检查清单","可勾选、可保存（本机浏览器）、可导出；勾选结果可归入客户档案。")}
+    <div class="card pad">
+      <div class="prog"><div class="bar"><i id="bar"></i></div><div class="pct" id="pct">0%</div><div class="tiny" id="progText">0 / 0</div></div>
+      <div id="ckList">${html}</div>
+      <div class="actions">
+        <button class="btn primary" id="exportJson">导出勾选结果（JSON）</button>
+        <button class="btn" id="exportCsv">导出清单（CSV）</button>
+        <button class="btn" id="copyPending">复制未完成项</button>
+        <button class="btn ghost" id="resetCk">重置</button>
+        <button class="btn ghost" id="printPage">打印 / 存 PDF</button>
+      </div>
+      <div class="tiny mt">勾选结果保存在本机浏览器（localStorage），不会上传；换电脑或清理缓存会丢失，重要节点请导出 JSON 归档。</div>
+    </div>
+  </section>`;
+}
+function refreshProgress(){
+  const items = allObligations();
+  const state = loadState();
+  const done = items.filter(o=>(state[o.id]||{}).status==="已完成").length;
+  const na = items.filter(o=>(state[o.id]||{}).status==="不适用").length;
+  const total = items.length;
+  const eff = Math.max(total-na,1);
+  const pct = Math.round(done/eff*100);
+  const bar = $("#bar"); if(bar) bar.style.width = pct+"%";
+  const p1=$("#pct"); if(p1) p1.textContent = pct+"%";
+  const p2=$("#progText"); if(p2) p2.textContent = `${done} / ${total} 已完成${na?`（不适用 ${na} 项）`:""}`;
+  const tp=$("#topProg"); if(tp) tp.textContent = `${done}/${total}`;
+}
+
+/* ================= docs ================= */
+function renderDocs(){
+  const d = CASE.documents.map(x=>`
+    <div class="doc">
+      <div class="top"><span class="id">${esc(x.id)}</span><span class="tag ${x.mandatory.includes("必备")?"red":x.mandatory==="建议"?"amber":"gray"}">${esc(x.mandatory)}</span></div>
+      <h4>${esc(x.name)}</h4>
+      <p>${esc(x.purpose)}</p>
+      <div class="meta"><span class="mini">提供方 ${esc(x.issuer)}</span><span class="mini">形式 ${esc(x.form)}</span><span class="mini">有效期 ${esc(x.validity)}</span></div>
+      <div class="tiny" style="margin-top:6px">${esc(x.note)}</div>
+    </div>`).join("");
+  return `
+  <section id="docs">
+    ${secHead("Step 05","需向买方索取的证照与资料","按本单用途取，不要一次全要：必备 4 项先行，建议项后补，分支项按食品级/转售情形启用。")}
+    <div class="grid-3">${d}</div>
+  </section>`;
+}
+
+/* ================= retention ================= */
+function renderRetention(){
+  const rows = [];
+  const map = {seller:"销售方",buyer:"买方",joint:"双方"};
+  ["seller","buyer","joint"].forEach(k=>{
+    (CASE.obligations[k]||[]).forEach(o=>rows.push(`
+      <tr><td class="num">${esc(o.id)}</td><td>${map[k]}</td><td>${esc(o.item)}</td><td class="small">${esc(o.basis)}</td>
+      <td><b>${esc(o.retention)}</b></td><td>${esc(o.filing)}</td><td class="small">${esc(o.evidence)}</td></tr>`));
+  });
+  return `
+  <section id="retention">
+    ${secHead("Step 06","留存年限与备案矩阵","口径写清楚：危化品销售记录 ≥3 年；本单一般化工品无法定 3 年要求，商务资料建议 ≥5 年，会计凭证 30 年。")}
+    <div class="card pad">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>编号</th><th>责任方</th><th>事项</th><th>依据</th><th>留存年限</th><th>是否备案</th><th>证据</th></tr></thead>
+        <tbody>${rows.join("")}</tbody>
+      </table></div>
+      <div class="note-box mt"><b>结论：</b>本单无需向公安机关或应急管理部门备案；无危化品销售记录 3 年强制要求。若同车/同合同混入烧碱、硫酸等危化品，留存与备案按危化品口径单独执行。</div>
+    </div>
+  </section>`;
+}
+
+/* ================= gaps + draft ================= */
+function renderGaps(){
+  const gaps = CASE.gaps.map(g=>`
+    <div class="bcard">
+      <div class="h"><span class="tag navy">${esc(g.id)}</span><b>${esc(g.gap)}</b>
+        <span class="tag ${g.severity==="高"?"red":g.severity==="中"?"amber":"green"}">${esc(g.severity)}</span>
+        <span class="tag gray">${esc(g.owner)}</span></div>
+      <p class="finding">${esc(g.why)}</p>
+      <div class="ask"><b>要什么：</b>${esc(g.ask)}</div>
+    </div>`).join("");
+
+  return `
+  <section id="gaps">
+    ${secHead("Step 07","缺口清单与索要话术","缺口 → 一句话要什么 → 一键生成邮件/微信草稿；草稿可编辑，发送前请核对称呼与库位。")}
+    <div class="grid-2">
+      <div>${gaps}</div>
+      <div class="card pad">
+        <div class="kicker">生成索要资料的消息</div>
+        <div class="tabs mt" id="draftTabs">
+          <button class="tab on" data-tone="formal">邮件 · 标准版</button>
+          <button class="tab" data-tone="pending">邮件 · 仅列缺口</button>
+          <button class="tab" data-tone="wechat">微信 · 短版</button>
+        </div>
+        <textarea class="draft" id="draftBox"></textarea>
+        <div class="textarea-meta"><span id="draftCount">0 字</span><span>可直接改称呼、库位、联系人</span></div>
+        <div class="actions">
+          <button class="btn primary" id="copyDraft">复制草稿</button>
+          <button class="btn" id="regenDraft">重新生成</button>
+        </div>
+        <div class="tiny mt">发送前请确认：① 收件人是采购对接人而非公共邮箱；② 不要在首封邮件里列全部 12 项；③ 涉及食品级/转售分支时，先电话说明再发函。</div>
+      </div>
+    </div>
+  </section>`;
+}
+function buildDraft(tone){
+  const m = CASE.meta, d = CASE.determination;
+  if(tone==="wechat") return CASE.draft.wechat;
+  const pending = CASE.gaps.map((g,i)=>`${i+1}. ${g.ask.replace(/^请提供/,"").replace(/^请/,"")}（${g.gap}）`).join("\n");
+  if(tone==="pending"){
+    return `尊敬的${m.buyer.name.replace(/股份有限公司$/,"")}采购部：\n\n您好！关于我司拟供应的${CASE.product.name}（CAS ${CASE.product.cas}，${CASE.product.grade}），为完成供应商准入与合同归档，尚有以下资料需请贵司协助：\n\n${pending}\n\n以上资料仅用于准入与合规留档，我方按内部制度保存不少于 5 年。如贵司有标准模板，请直接发我，我方按贵司版本填写。\n\n顺颂商祺！\n\n${m.seller.name}\n销售部 · （姓名）\n（电话 / 邮箱）`;
+  }
+  return CASE.draft.formal;
+}
+
+/* ================= compare ================= */
+function renderCompare(){
+  const rows = CASE.cross_products.map(p=>`
+    <tr><td><b>${esc(p.name)}</b></td><td class="mono">${esc(p.cas)}</td>
+    <td>${p.verdict.includes("非")?`<span class="tag green">${esc(p.verdict)}</span>`:`<span class="tag amber">${esc(p.verdict)}</span>`}</td>
+    <td class="small">${esc(p.flags)}</td><td class="small">${esc(p.buyer_req)}</td>
+    <td class="small">${esc(p.seller_req)}</td><td class="small">${esc(p.transport)}</td></tr>`).join("");
+  return `
+  <section id="compare">
+    ${secHead("Step 08","同流程产品对照","同一个流程换产品，结论完全不同。这张表是“判定引擎”的演示，也是销售最容易混错的地方。")}
+    <div class="card pad">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>产品</th><th>CAS</th><th>判定</th><th>特殊名录</th><th>买方要求</th><th>销售方要求</th><th>运输</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      <div class="warn-box mt"><b>对照要点：</b>① 纯碱与小苏打是“碱”但不是危化品，最易与烧碱混称；② 硫酸是易制毒第三类，购买要公安备案；③ 双氧水含量 &gt;8% 即属易制爆，销售方要记录 3 年、3 日内报公安备案；④ 甲醇属重点监管，储存装卸要求高。</div>
+    </div>
+  </section>`;
+}
+
+/* ================= sources + manual + footer ================= */
+function renderSources(){
+  const rows = CASE.sources.map((s,i)=>`
+    <tr><td class="num">${i+1}</td><td><span class="tag gray">${esc(s.type)}</span></td>
+    <td><b>${esc(s.title)}</b><div class="tiny">${esc(s.used_for)}</div></td>
+    <td class="small">${esc(s.publisher)}</td><td class="small nowrap">${esc(s.date)}</td>
+    <td>${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">打开</a>`:"—"}</td></tr>`).join("");
+  return `
+  <section id="sources">
+    ${secHead("Step 09","法规索引与版本",`检索时点 ${CASE.meta.as_of}。法规更新、目录调整后，本卡结论需重跑。`)}
+    <div class="card pad"><div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>类型</th><th>名称 / 用途</th><th>发布机构</th><th>日期</th><th>链接</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div></div>
+  </section>`;
+}
+function renderManual(){
+  const rows = CASE.manual_confirm.map(m=>`
+    <tr><td><b>${esc(m.item)}</b></td><td>${esc(m.why)}</td><td>${esc(m.who)}</td><td class="nowrap">${esc(m.deadline)}</td><td><span class="tag gray">☐ 待确认</span></td></tr>`).join("");
+  return `
+  <section id="manual">
+    ${secHead("Step 10","必须由人确认的事项","以下 6 项机器不能替代。确认后才可对外出具判定或承诺。")}
+    <div class="card pad"><div class="tbl-wrap"><table>
+      <thead><tr><th>确认项</th><th>为什么必须人工确认</th><th>谁确认</th><th>截止</th><th>状态</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div></div>
+  </section>`;
+}
+
+/* ================= app ================= */
+function renderApp(){
+  $("#app").innerHTML = renderHero() + renderIdentity() + renderVerdict() + renderBuyer()    + renderChecklist() + renderDocs() + renderRetention() + renderGaps()
+    + renderCompare() + renderSources() + renderManual()
+    + `<footer>
+        <b>版本</b> v1.0 · 判定日 ${esc(CASE.meta.as_of)} · 案例 ${esc(CASE.meta.case_no)}<br>
+        ${esc(CASE.meta.disclaimer)}<br>
+        <span class="tiny">本页由 chem-sales-compliance 生成；数据源与条文见「法规索引」。PDF/打印：Ctrl/Cmd + P。</span>
+      </footer>`;
+  const bc = $("#brandCase"); if(bc) bc.textContent = CASE.meta.case_no;
+  bind();
+  refreshProgress();
+}
+
+/* ================= interactions ================= */
+function bind(){
+  // nav
+  const secs = [
+    ["top","概览"],["identity","产品身份"],["verdict","判定卡"],["buyer","买方资质"],
+    ["checklist","合规清单"],["docs","证照"],["retention","留存备案"],["gaps","缺口话术"],
+    ["compare","对照"],["sources","法规"],["manual","人工确认"]
+  ];
+  $("#navLinks").innerHTML = secs.map(([id,label])=>`<a href="#${id}" data-id="${id}">${label}</a>`).join("");
+  const links = $$("#navLinks a");
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(a=>a.classList.toggle("active", a.dataset.id===e.target.id));
+      }
+    });
+  }, {rootMargin:"-45% 0px -50% 0px", threshold:0.01});
+  secs.forEach(([id])=>{ const el=document.getElementById(id); if(el) io.observe(el); });
+
+  // product chips
+  $$("#productChips .pchip").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      $$("#productChips .pchip").forEach(b=>b.classList.remove("on"));
+      btn.classList.add("on");
+      const cp = CASE.cross_products.find(x=>x.cas===btn.dataset.cas);
+      const panel = $("#altPanel");
+      if(!cp){ panel.innerHTML=""; return; }
+      if(cp.cas === CASE.product.cas){
+        panel.innerHTML = `<div class="note-box mt"><b>已回到本单：</b>${esc(cp.name)}，CAS ${esc(cp.cas)}，判定为<b>${esc(cp.verdict)}</b>。本页结论对当前交易有效。</div>`;
+        return;
+      }
+      panel.innerHTML = `
+        <div class="preview">
+          <h4>对照预览：${esc(cp.name)}（CAS ${esc(cp.cas)}）</h4>
+          <div class="row"><b>判定</b><span>${esc(cp.verdict)}</span></div>
+          <div class="row"><b>特殊名录</b><span>${esc(cp.flags)}</span></div>
+          <div class="row"><b>买方要求</b><span>${esc(cp.buyer_req)}</span></div>
+          <div class="row"><b>销售方要求</b><span>${esc(cp.seller_req)}</span></div>
+          <div class="row"><b>运输</b><span>${esc(cp.transport)}</span></div>
+          <div class="row"><b>备注</b><span>${esc(cp.note)}</span></div>
+          <div class="mt"><span class="tag amber">仅对照预览，不改写本单《纯碱》结论</span></div>
+        </div>`;
+    });
+  });
+
+  // manual product check
+  $("#manualCheck").addEventListener("click", ()=>{
+    const name = $("#qName").value.trim() || "（未填名称）";
+    const cas = $("#qCas").value.trim() || "（未填 CAS）";
+    const form = $("#qForm").value.trim() || "（未填浓度/形态）";
+    $("#manualOut").innerHTML = `
+      <div class="warn-box">
+        <b>自查提示（${esc(name)} / ${esc(cas)} / ${esc(form)}）：</b>
+        该产品不在本页预置库中，<b>不能直接给出判定</b>。请按以下顺序核验：
+        ① 在《危险化学品目录（2015 版）》按品名、别名、CAS 三路检索，留存截图；
+        ② 核对是否列入剧毒、易制爆、易制毒、重点监管、特别管控名录；
+        ③ 调取本批 SDS，按 GHS 分类比对危化品确定原则；
+        ④ 若危险特性不确定，按 60 号令做鉴定分类后再交易；
+        ⑤ 结论齐备前，不报价、不承诺交期。
+      </div>`;
+  });
+
+  // buyer filters
+  $$("#buyerFilters .fbtn").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      $$("#buyerFilters .fbtn").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+      const f = b.dataset.f;
+      $$("#buyerList .bcard").forEach(card=>{
+        card.style.display = (f==="all" || card.dataset.status===f) ? "" : "none";
+      });
+    });
+  });
+
+  // checklist
+  const state = loadState();
+  $$("#ckList .ck").forEach(row=>{
+    const id = row.dataset.id;
+    const sel = row.querySelector("select.st");
+    const note = row.querySelector("input.note");
+    const box = row.querySelector(".box");
+    const cur = state[id] || {};
+    sel.value = cur.status || "未开始";
+    note.value = cur.note || "";
+    const sync = ()=>{
+      state[id] = {status: sel.value, note: note.value};
+      saveState(state);
+      row.classList.toggle("done", sel.value==="已完成");
+      refreshProgress();
+    };
+    sel.addEventListener("change", sync);
+    note.addEventListener("change", sync);
+    const toggle = ()=>{
+      sel.value = (sel.value==="已完成") ? "未开始" : "已完成";
+      sync();
+    };
+    box.addEventListener("click", toggle);
+    box.addEventListener("keydown", (e)=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); toggle(); }});
+  });
+
+  $("#exportJson").addEventListener("click", ()=>{
+    const payload = {case_no: CASE.meta.case_no, exported_at: new Date().toISOString(), items: loadState()};
+    download(`合规清单_${CASE.meta.case_no}.json`, JSON.stringify(payload, null, 2), "application/json");
+  });
+  $("#exportCsv").addEventListener("click", ()=>{
+    const items = allObligations();
+    const s = loadState();
+    const head = ["编号","责任方","事项","依据","留存年限","是否备案","状态","备注"];
+    const lines = [head.join(",")].concat(items.map(o=>{
+      const v = s[o.id]||{};
+      return [o.id,o.group,o.item,o.basis,o.retention,o.filing,v.status||"未开始",v.note||""]
+        .map(x=>`"${String(x).replace(/"/g,'""')}"`).join(",");
+    }));
+    download(`合规清单_${CASE.meta.case_no}.csv`, "\ufeff"+lines.join("\n"), "text/csv");
+  });
+  $("#copyPending").addEventListener("click", async ()=>{
+    const s = loadState();
+    const items = allObligations().filter(o=>(s[o.id]||{}).status!=="已完成" && (s[o.id]||{}).status!=="不适用");
+    const text = items.map((o,i)=>`${i+1}. [${o.group}] ${o.item}（留存：${o.retention}）`).join("\n");
+    await copyText(text || "全部已完成");
+    toast("未完成项已复制");
+  });
+  $("#resetCk").addEventListener("click", ()=>{
+    if(!confirm("确定重置本机保存的勾选状态？")) return;
+    localStorage.removeItem(STORE_KEY);
+    renderApp();
+    toast("已重置");
+  });
+  $("#printPage").addEventListener("click", ()=>window.print());
+
+  // draft
+  let tone = "formal";
+  const boxEl = $("#draftBox");
+  const setDraft = ()=>{
+    boxEl.value = buildDraft(tone);
+    $("#draftCount").textContent = boxEl.value.length + " 字";
+  };
+  $$("#draftTabs .tab").forEach(t=>{
+    t.addEventListener("click", ()=>{
+      $$("#draftTabs .tab").forEach(x=>x.classList.remove("on"));
+      t.classList.add("on");
+      tone = t.dataset.tone;
+      setDraft();
+    });
+  });
+  boxEl.addEventListener("input", ()=>{ $("#draftCount").textContent = boxEl.value.length + " 字"; });
+  $("#regenDraft").addEventListener("click", ()=>{ setDraft(); toast("已重新生成"); });
+  $("#copyDraft").addEventListener("click", async ()=>{ await copyText(boxEl.value); toast("草稿已复制"); });
+  setDraft();
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+}
+function download(name, content, mime){
+  const blob = new Blob([content], {type: mime+";charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+}
+
+renderApp();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+[
+  {
+    "license": "See SKILL.md license declaration and bundled license notices",
+    "origin": "User-provided chemical/scientific skill collection",
+    "name": "rdkit",
+    "archiveSha256": "6F47261B96926D5888E439CBC7D5BB2E6E4617A08DC231AD59F4B43A1C99E42A",
+    "skillAuthor": "K-Dense Inc.",
+    "licenseNoticeSource": "https://raw.githubusercontent.com/K-Dense-AI/scientific-agent-skills/593377bb048752abb0152deab9fbb1083a6087df/LICENSE.md",
+    "licenseNoticeRevision": "593377bb048752abb0152deab9fbb1083a6087df",
+    "note": "Skill contents come from the user-provided archive identified by its SHA-256; the pinned upstream license supplies the full author notice. Individual SKILL.md library license declarations are retained."
+  },
+  {
+    "license": "See SKILL.md license declaration and bundled license notices",
+    "origin": "User-provided chemical/scientific skill collection",
+    "name": "networkx",
+    "archiveSha256": "1C4C056FF59607C520FB118AA0519C6DA5699D3BFF1E294D9DBDE2B95C91FC6D",
+    "skillAuthor": "K-Dense Inc.",
+    "licenseNoticeSource": "https://raw.githubusercontent.com/K-Dense-AI/scientific-agent-skills/593377bb048752abb0152deab9fbb1083a6087df/LICENSE.md",
+    "licenseNoticeRevision": "593377bb048752abb0152deab9fbb1083a6087df",
+    "note": "Skill contents come from the user-provided archive identified by its SHA-256; the pinned upstream license supplies the full author notice. Individual SKILL.md library license declarations are retained."
+  },
+  {
+    "license": "See SKILL.md license declaration and bundled license notices",
+    "origin": "User-provided chemical/scientific skill collection",
+    "name": "scientific-visualization",
+    "archiveSha256": "96A27DB74B291DB02B5A5DE866CABF83465EEEB4283F21D5F55A559ECBC4971B",
+    "skillAuthor": "K-Dense Inc.",
+    "licenseNoticeSource": "https://raw.githubusercontent.com/K-Dense-AI/scientific-agent-skills/593377bb048752abb0152deab9fbb1083a6087df/LICENSE.md",
+    "licenseNoticeRevision": "593377bb048752abb0152deab9fbb1083a6087df",
+    "note": "Skill contents come from the user-provided archive identified by its SHA-256; the pinned upstream license supplies the full author notice. Individual SKILL.md library license declarations are retained."
+  },
+  {
+    "license": "See SKILL.md license declaration and bundled license notices",
+    "origin": "User-provided chemical/scientific skill collection",
+    "name": "statistical-analysis",
+    "archiveSha256": "DF89412243BBC3582064DF9142BAD3CCE1FBF8E98271492AABE0BF0FCAC499BD",
+    "skillAuthor": "K-Dense Inc.",
+    "licenseNoticeSource": "https://raw.githubusercontent.com/K-Dense-AI/scientific-agent-skills/593377bb048752abb0152deab9fbb1083a6087df/LICENSE.md",
+    "licenseNoticeRevision": "593377bb048752abb0152deab9fbb1083a6087df",
+    "note": "Skill contents come from the user-provided archive identified by its SHA-256; the pinned upstream license supplies the full author notice. Individual SKILL.md library license declarations are retained."
+  },
+  {
+    "license": "See SKILL.md license declaration and bundled license notices",
+    "origin": "User-provided chemical/scientific skill collection",
+    "name": "sympy",
+    "archiveSha256": "16472F3B5B607606A7CDBBC2C45709421F495CD50EEBBEFAD69416C990E84738",
+    "skillAuthor": "K-Dense Inc.",
+    "licenseNoticeSource": "https://raw.githubusercontent.com/K-Dense-AI/scientific-agent-skills/593377bb048752abb0152deab9fbb1083a6087df/LICENSE.md",
+    "licenseNoticeRevision": "593377bb048752abb0152deab9fbb1083a6087df",
+    "note": "Skill contents come from the user-provided archive identified by its SHA-256; the pinned upstream license supplies the full author notice. Individual SKILL.md library license declarations are retained."
+  }
+]

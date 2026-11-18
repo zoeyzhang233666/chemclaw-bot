@@ -1,0 +1,1982 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>危险化学品买方资质与销售合规提醒 · 纯碱（工业重质碳酸钠） ｜ HZ-2026-1019-001</title>
+<style>
+:root{
+  --ink:#111827; --ink-2:#334155; --muted:#64748b; --line:#e2e8f0; --line-2:#cbd5e1;
+  --paper:#ffffff; --bg:#eef2f6; --navy:#0b2b3f; --navy-2:#123c55; --teal:#0f766e;
+  --teal-2:#14b8a6; --amber:#b45309; --amber-bg:#fef3c7; --green:#15803d; --green-bg:#e8f7ee;
+  --red:#b91c1c; --red-bg:#fee7e7; --gray-bg:#eef1f4; --gray:#475569;
+  --shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.18);
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+    radial-gradient(1200px 600px at 10% -10%, #dbeafe 0%, transparent 55%),
+    radial-gradient(900px 500px at 95% 0%, #d1fae5 0%, transparent 50%),
+    var(--bg);
+  color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC","Source Han Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(15,118,110,.25)}
+a:hover{border-bottom-color:var(--teal)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(160%) blur(12px);
+  background:rgba(255,255,255,.86);border-bottom:1px solid rgba(148,163,184,.35)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em;white-space:nowrap}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(180deg,var(--teal-2),var(--teal));box-shadow:0 0 0 4px rgba(20,184,166,.15)}
+.brand small{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.navlinks{display:flex;gap:4px;overflow:auto;scrollbar-width:none;margin-left:auto}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{border:0;color:var(--ink-2);font-size:13px;font-weight:600;padding:7px 10px;border-radius:9px;white-space:nowrap}
+.navlinks a:hover{background:#eef6f5;color:var(--teal)}
+.navlinks a.active{background:var(--navy);color:#fff}
+.chip-progress{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--ink-2);
+  background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.chip-progress b{color:var(--teal)}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 0 8px}
+.hero-card{background:linear-gradient(135deg,var(--navy) 0%,#0d3a52 55%,#0f4f5c 100%);
+  border-radius:22px;padding:34px 36px 28px;color:#e8f1f6;box-shadow:0 30px 60px -30px rgba(8,47,73,.65);position:relative;overflow:hidden}
+.hero-card::after{content:"";position:absolute;right:-120px;top:-140px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(20,184,166,.28),transparent 65%);pointer-events:none}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9fd3cf;font-weight:700}
+.eyebrow::before{content:"";width:26px;height:1px;background:#5eead4}
+.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:30px;align-items:start;margin-top:14px}
+h1{margin:6px 0 6px;font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;font-weight:900;
+  font-size:clamp(28px,3.6vw,42px);line-height:1.2;letter-spacing:.01em;color:#fff}
+.hero-sub{color:#c7dbe6;font-size:15px;margin:0 0 18px}
+.hero-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px;margin-top:16px}
+.hero-meta div{display:flex;gap:10px;font-size:13px;color:#d6e5ee;border-top:1px solid rgba(255,255,255,.12);padding-top:9px}
+.hero-meta span{color:#8fb3c6;min-width:56px}
+.verdict-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px}
+.verdict-badge{display:inline-flex;align-items:center;gap:8px;background:#e8f7ee;color:#14532d;font-weight:900;
+  border-radius:999px;padding:7px 14px;font-size:13px;letter-spacing:.02em}
+.verdict-badge .ic{width:18px;height:18px;border-radius:50%;background:#16a34a;color:#fff;display:grid;place-items:center;font-size:12px}
+.verdict-box h2{margin:12px 0 6px;font-size:19px;color:#fff;line-height:1.45}
+.verdict-box p{margin:0;color:#b9d2df;font-size:13px}
+.verdict-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.vchip{font-size:12px;font-weight:700;border-radius:8px;padding:5px 9px;background:rgba(255,255,255,.1);color:#d9ecf3;border:1px solid rgba(255,255,255,.14)}
+.vchip.ok{background:rgba(22,163,74,.22);color:#bbf7d0;border-color:rgba(34,197,94,.35)}
+
+/* ---------- sections ---------- */
+section{margin:26px 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 14px;padding-left:14px;border-left:4px solid var(--teal)}
+.sec-head h2{margin:0;font-size:21px;letter-spacing:.01em}
+.sec-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.sec-no{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--teal);text-transform:uppercase}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.pad{padding:22px 24px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mt{margin-top:16px}
+.small{font-size:12.5px;color:var(--muted)}
+.tiny{font-size:11.5px;color:var(--muted)}
+.kicker{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:#f1f5f9;color:var(--ink-2);font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  position:sticky;top:0;z-index:2;border-bottom:1px solid var(--line-2)}
+tbody tr:hover td{background:#f8fbfc}
+td.num{white-space:nowrap;color:var(--muted)}
+.tbl-wrap{max-height:none;overflow:auto;border-radius:12px;border:1px solid var(--line)}
+.tbl-wrap table{margin:0}
+.tbl-wrap th{background:#eef4f8}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:800;white-space:nowrap}
+.tag.green{background:var(--green-bg);color:#166534}
+.tag.amber{background:var(--amber-bg);color:#92400e}
+.tag.red{background:var(--red-bg);color:#991b1b}
+.tag.gray{background:var(--gray-bg);color:var(--gray)}
+.tag.teal{background:#e6f4f1;color:#0f766e}
+.tag.navy{background:#e7eef6;color:#123c55}
+
+/* ---------- identity ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.pchip{border:1px solid var(--line-2);background:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:.15s}
+.pchip:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-1px)}
+.pchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.pchip small{display:block;font-weight:600;font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.pchip.on small{color:#a9c8d8}
+.qa{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fbfdfe}
+.qa h4{margin:0 0 6px;font-size:14px;color:var(--ink)}
+.qa p{margin:0;font-size:13px;color:var(--ink-2)}
+.qa .impact{display:inline-block;margin-top:8px;font-size:11px;font-weight:800;color:var(--amber);background:var(--amber-bg);border-radius:6px;padding:3px 8px}
+.preview{border:1px dashed var(--line-2);border-radius:12px;background:#f8fafc;padding:16px 18px;margin-top:16px}
+.preview h4{margin:0 0 8px;font-size:14px}
+.preview .row{display:flex;gap:10px;font-size:12.5px;margin-top:6px;color:var(--ink-2)}
+.preview .row b{min-width:76px;color:var(--muted);font-weight:700}
+.notice{background:var(--amber-bg);border:1px solid #fcd34d;color:#78350f;border-radius:12px;padding:12px 14px;font-size:12.5px}
+
+/* ---------- verdict ---------- */
+.flags{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.flag{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.flag .t{font-size:12px;font-weight:800;color:var(--ink-2);line-height:1.4}
+.flag .v{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;font-weight:800;color:var(--green)}
+.flag .v .ic{width:18px;height:18px;border-radius:50%;background:var(--green-bg);color:var(--green);display:grid;place-items:center;font-size:11px}
+.flag .n{margin-top:6px;font-size:11px;color:var(--muted);line-height:1.5}
+.cons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cons .item{border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,#fff,#f8fafc)}
+.cons .item .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--teal);text-transform:uppercase}
+.cons .item .v{margin-top:6px;font-size:12.5px;color:var(--ink-2);line-height:1.65}
+.basis details{border:1px solid var(--line);border-radius:12px;padding:0;margin-bottom:10px;background:#fff;overflow:hidden}
+.basis summary{cursor:pointer;padding:13px 16px;font-weight:700;font-size:13.5px;display:flex;gap:10px;align-items:flex-start;list-style:none}
+.basis summary::-webkit-details-marker{display:none}
+.basis summary .idx{flex:0 0 22px;height:22px;border-radius:6px;background:#e7eef6;color:#123c55;display:grid;place-items:center;font-size:11px;font-weight:800}
+.basis .body{padding:0 16px 14px 48px;font-size:12.5px;color:var(--ink-2)}
+.basis .body .src{margin-top:8px;font-size:11.5px;color:var(--muted)}
+.ghs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ghs .item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+.ghs .item b{display:block;font-size:12.5px}
+.ghs .item span{font-size:11px;color:var(--muted)}
+
+/* ---------- buyer ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--line-2)}
+.stat.a::before{background:#16a34a}.stat.b::before{background:#d97706}.stat.c::before{background:#dc2626}.stat.n::before{background:#94a3b8}
+.stat .n{font-size:28px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.stat .l{margin-top:6px;font-size:12px;font-weight:800;color:var(--ink-2)}
+.stat .d{margin-top:3px;font-size:11px;color:var(--muted)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 14px}
+.fbtn{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.fbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.bcard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff;margin-bottom:12px}
+.bcard .h{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bcard .h b{font-size:14.5px}
+.bcard .finding{margin:9px 0 0;font-size:13px;color:var(--ink-2)}
+.bcard .ask{margin-top:10px;font-size:12.5px;background:#f1f7ff;border-left:3px solid #3b82f6;padding:8px 12px;border-radius:0 8px 8px 0;color:#1e3a5f}
+.bcard .ask b{color:#1d4ed8}
+.bcard .ev{margin-top:8px;font-size:11.5px;color:var(--muted)}
+.bcard .ev a{font-size:11.5px}
+.bcard .note{margin-top:8px;font-size:11.5px;color:var(--muted);font-style:italic}
+
+/* ---------- checklist ---------- */
+.prog{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.bar{flex:1;height:10px;border-radius:999px;background:#e6ebf1;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--teal-2));transition:width .4s}
+.prog .pct{font-size:13px;font-weight:800;color:var(--teal);min-width:92px;text-align:right}
+.grp{margin:16px 0 6px;font-size:12px;font-weight:900;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.ck{display:grid;grid-template-columns:30px 86px 1fr 150px 130px;gap:10px;align-items:start;
+  border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;margin-bottom:8px;transition:.15s}
+.ck:hover{border-color:var(--line-2);box-shadow:0 4px 14px -10px rgba(15,23,42,.35)}
+.ck.done{background:#f7fdf9;border-color:#bbf7d0}
+.ck .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--line-2);background:#fff;cursor:pointer;display:grid;place-items:center;margin-top:1px}
+.ck.done .box{background:var(--green);border-color:var(--green);color:#fff}
+.ck .box::after{content:"";font-size:13px;font-weight:900;color:#fff}
+.ck.done .box::after{content:"✓"}
+.ck .id{font-size:11.5px;font-weight:800;color:var(--teal);letter-spacing:.04em}
+.ck .body .t{font-size:13px;font-weight:700;color:var(--ink)}
+.ck .body .m{margin-top:5px;font-size:11.5px;color:var(--muted);line-height:1.6}
+.ck .body .m b{color:var(--ink-2);font-weight:700}
+.ck select{border:1px solid var(--line-2);border-radius:8px;padding:6px 8px;font-size:12px;background:#fff;color:var(--ink-2);font-weight:700;width:100%}
+.ck input.note{border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;width:100%;color:var(--ink-2);background:#fbfdff}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.btn{border:1px solid var(--line-2);background:#fff;border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:800;color:var(--ink-2);cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--teal);color:var(--teal)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary:hover{background:#123c55;color:#fff}
+.btn.ghost{background:transparent}
+
+/* ---------- docs ---------- */
+.doc{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.doc .top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.doc .id{font-size:11px;font-weight:900;color:var(--muted);letter-spacing:.1em}
+.doc h4{margin:8px 0 6px;font-size:13.5px}
+.doc p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+.doc .meta{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.mini{font-size:10.5px;font-weight:800;border-radius:6px;padding:2px 7px;background:#f1f5f9;color:var(--ink-2)}
+
+/* ---------- draft ---------- */
+.tabs{display:flex;gap:6px;margin:0 0 10px}
+.tab{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;cursor:pointer;color:var(--ink-2)}
+.tab.on{background:var(--teal);border-color:var(--teal);color:#fff}
+textarea.draft{width:100%;min-height:300px;border:1px solid var(--line-2);border-radius:12px;padding:16px 18px;
+  font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:13px;line-height:1.85;color:var(--ink-2);
+  background:#fbfdff;resize:vertical}
+.textarea-meta{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:11.5px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--navy);color:#fff;
+  border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- misc ---------- */
+.note-box{border-left:4px solid var(--teal);background:#f0fdfa;padding:14px 16px;border-radius:0 12px 12px 0;font-size:13px;color:#134e4a}
+.warn-box{border-left:4px solid var(--amber);background:#fffbeb;padding:14px 16px;border-radius:0 12px 12px 0;font-size:13px;color:#78350f}
+.danger-box{border-left:4px solid var(--red);background:#fef2f2;padding:14px 16px;border-radius:0 12px 12px 0;font-size:13px;color:#7f1d1d}
+footer{margin:40px 0 60px;padding:22px 0 0;border-top:1px solid var(--line-2);font-size:12px;color:var(--muted)}
+.hr{height:1px;background:var(--line);margin:18px 0}
+.mono{font-family:"JetBrains Mono",Consolas,"Courier New",monospace;font-size:12px}
+.nowrap{white-space:nowrap}
+.center{text-align:center}
+.right{text-align:right}
+
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr}
+  .flags,.cons{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid-3,.grid-4{grid-template-columns:repeat(2,1fr)}
+  .ck{grid-template-columns:28px 1fr;grid-auto-rows:auto}
+  .ck .id{grid-column:2}
+  .ck .body{grid-column:2}
+  .ck select,.ck input.note{grid-column:2}
+  .navlinks{display:none}
+}
+@media print{
+  body{background:#fff}
+  .topbar,.actions,.filters,.tabs,.btn,.toast{display:none!important}
+  .card,.hero-card{box-shadow:none;border:1px solid #cbd5e1}
+  section{break-inside:avoid}
+  .tbl-wrap{overflow:visible}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>销售合规提醒 <small id="brandCase">CASE</small></div>
+    <nav class="navlinks" id="navLinks"></nav>
+    <div class="chip-progress">清单 <b id="topProg">0/0</b></div>
+  </div>
+</div>
+
+<main class="wrap" id="app"></main>
+
+<div class="toast" id="toast">已复制</div>
+
+<script>
+const CASE = {
+  "meta": {
+    "title": "危险化学品买方资质与销售合规提醒 · 纯碱（工业重质碳酸钠）",
+    "short_title": "纯碱 · 买方资质与销售合规提醒",
+    "case_no": "HZ-2026-1019-001",
+    "as_of": "2026-10-19",
+    "prepared_for": "内贸销售 · 华东纯碱销售线",
+    "seller": {
+      "name": "我方（示例：华东某化工贸易有限公司）",
+      "role": "贸易商 / 转售（非生产商）",
+      "scope": "一般化工产品贸易；本单不含危险化学品",
+      "license_note": "营业执照经营范围含化工产品销售；如同时经营烧碱、硫酸等危化品，须另行取得危险化学品经营许可证（本单不适用）"
+    },
+    "buyer": {
+      "name": "福莱特玻璃集团股份有限公司",
+      "ticker": "601865.SH / 6865.HK",
+      "credit_code": "待核（以营业执照原件为准，本卡不引用未核验的统一社会信用代码）",
+      "site": "安徽省滁州市凤阳县（凤阳生产基地）；集团注册地：浙江省嘉兴市秀洲区运河路1999号",
+      "contact": "采购部（姓名/电话待补，不代填）"
+    },
+    "deal": {
+      "qty": "首单 500 吨；框架 1,000 吨/月",
+      "use_type": "自用生产",
+      "use_detail": "光伏玻璃 / 浮法玻璃配合料，起助熔、澄清作用",
+      "delivery": "买方凤阳基地仓库车板交货（具体库位以买方通知为准）",
+      "price_terms": "含税到厂价（13% 增值税专用发票）",
+      "packing": "1000 kg 吨包为主，可按需 25 kg 袋装",
+      "payment": "月结 30 天（以合同为准）"
+    },
+    "disclaimer": "本结果为资料提醒，不构成法律意见，也不能替代监管部门与企业安全合规部门的判定。判定所依据的法规、目录与标准均标注版本与时点；法规更新、产品实际成分变化、买方用途变化均可能导致结论失效，需重新核验。"
+  },
+  "product": {
+    "name": "工业碳酸钠（重质）",
+    "alias": "纯碱、苏打、Soda Ash",
+    "cas": "497-19-8",
+    "formula": "Na₂CO₃",
+    "mw": "105.99",
+    "hs_code": "2836.20.00.00",
+    "grade": "工业级 Ⅱ类 优等品（GB/T 210-2022）",
+    "appearance": "白色结晶粉末或颗粒；轻质堆积密度约 0.5–0.6 g/mL，重质约 0.9–1.1 g/mL",
+    "standard": "GB/T 210-2022《工业碳酸钠》（2022-04-15 发布，2022-11-01 实施，代替 GB/T 210.1-2004、GB/T 210.2-2004）",
+    "packing": "1000 kg 吨包 / 25 kg 编织袋；托盘、打膜按买方要求",
+    "storage": "阴凉、干燥、通风库房；防潮、防雨、避免与酸类混存；密封保存",
+    "shelf_life": "干燥密封条件下 24 个月（以 COA 与包装标识为准）",
+    "identity_checks": [
+      {
+        "q": "轻质纯碱与重质纯碱，危化品判定是否相同？",
+        "a": "相同。二者是同一物质（CAS 497-19-8），差异仅在堆积密度、粒径与流动性：轻质约 0.5–0.6 g/mL，重质约 0.9–1.1 g/mL。两者都未列入《危险化学品目录（2015 版）》。差异影响的是包装、运输装载率、投料方式与计量，不影响危化品属性。",
+        "impact": "判定不变 · 影响物流与计量"
+      },
+      {
+        "q": "工业级与食品添加剂级，判定是否相同？",
+        "a": "危化品判定相同（都不属于危化品），但合规路径不同：食品添加剂碳酸钠执行 GB 1886.1-2021，生产须取得食品生产许可（SC），标签、原料与生产环境按食品安全要求管理；本单为工业级、用于玻璃生产，不触发食品许可。",
+        "impact": "判定不变 · 触发食品合规分支"
+      },
+      {
+        "q": "纯碱溶液（如 20% 溶液）是否属于危化品？",
+        "a": "不属于。目录按品种列入，碳酸钠及其水溶液均未列入。但溶液 pH 约 11–12，对皮肤、眼睛有刺激性，应按 SDS 佩戴护目镜、耐碱手套，避免与酸类混存。",
+        "impact": "判定不变 · 防护要求提高"
+      },
+      {
+        "q": "一水合、十水合碳酸钠是否属于危化品？",
+        "a": "不属于。一水合（CAS 5968-11-6）、十水合（CAS 6132-02-1）均未列入目录；但有效碱含量不同，结算须按合同约定的折算口径（以 Na₂CO₃ 干基计）。",
+        "impact": "判定不变 · 影响结算口径"
+      },
+      {
+        "q": "名称容易混淆的品种有哪些？",
+        "a": "烧碱（氢氧化钠，CAS 1310-73-2）是危险化学品（皮肤腐蚀 1A）；小苏打（碳酸氢钠，CAS 144-55-8）不是；纯碱不是。合同、发票、COA、SDS、包装标识上的品名必须写 CAS，禁止只写“碱”。",
+        "impact": "高风险混淆点 · 必须写 CAS"
+      }
+    ],
+    "spec_table": [
+      {
+        "item": "总碱量（以 Na₂CO₃ 计，干基）",
+        "value": "≥ 99.2",
+        "unit": "%",
+        "note": "Ⅱ类优等品典型值，按 GB/T 210-2022 与 COA"
+      },
+      {
+        "item": "总碱量（湿基）",
+        "value": "≥ 97.9",
+        "unit": "%",
+        "note": "受水分影响，结算前确认口径"
+      },
+      {
+        "item": "氯化物（以 NaCl 计，干基）",
+        "value": "≤ 0.70",
+        "unit": "%",
+        "note": "玻璃配合料关注氯含量"
+      },
+      {
+        "item": "铁（以 Fe 计，干基）",
+        "value": "≤ 0.0035",
+        "unit": "%",
+        "note": "光伏玻璃对铁敏感，建议加严"
+      },
+      {
+        "item": "水不溶物",
+        "value": "≤ 0.03",
+        "unit": "%",
+        "note": "影响玻璃液澄清"
+      },
+      {
+        "item": "堆积密度（重质）",
+        "value": "≥ 0.90",
+        "unit": "g/mL",
+        "note": "轻质约 0.5–0.6，不可混装计量"
+      },
+      {
+        "item": "粒度（重质，典型）",
+        "value": "0.18–2.00",
+        "unit": "mm",
+        "note": "以双方技术协议为准"
+      },
+      {
+        "item": "水分",
+        "value": "≤ 0.30",
+        "unit": "%",
+        "note": "防潮包装，超标易结块"
+      }
+    ],
+    "identity_caution": "本卡以「工业级 Ⅱ类 优等品、重质、固态、CAS 497-19-8」为前提。若实际货物为轻质、食品级、溶液、水合物，或含硫化钠等副产杂质，请先改选/补充身份信息再出结论。"
+  },
+  "determination": {
+    "verdict": "非危险化学品",
+    "code": "NON_HAZCHEM",
+    "one_line": "纯碱（碳酸钠，CAS 497-19-8）未列入《危险化学品目录（2015 版）》，不属于剧毒、易制爆、易制毒、重点监管或特别管控化学品；本单不适用危化品经营许可、购买资质查验与公安备案。",
+    "level": "常规化工品",
+    "confidence": "高（目录比对 + GHS 分类双重支撑）；建议按“核验步骤”做一次目录原文二次比对并存档",
+    "flags": [
+      {
+        "key": "in_catalog",
+        "label": "列入《危险化学品目录（2015版）》",
+        "value": false,
+        "note": "共 2828 个条目；按品名/别名/CAS 检索未收录碳酸钠 / 497-19-8"
+      },
+      {
+        "key": "highly_toxic",
+        "label": "剧毒化学品",
+        "value": false,
+        "note": "目录内 148 种剧毒化学品中不含碳酸钠"
+      },
+      {
+        "key": "explosive_precursor",
+        "label": "易制爆危险化学品",
+        "value": false,
+        "note": "《易制爆危险化学品名录（2017 年版）》不含碳酸钠"
+      },
+      {
+        "key": "drug_precursor",
+        "label": "易制毒化学品",
+        "value": false,
+        "note": "《易制毒化学品的分类和品种目录》不含碳酸钠"
+      },
+      {
+        "key": "key_monitored",
+        "label": "重点监管的危险化学品",
+        "value": false,
+        "note": "第一批 / 第二批名录均不含碳酸钠"
+      },
+      {
+        "key": "special_control",
+        "label": "特别管控危险化学品",
+        "value": false,
+        "note": "《特别管控危险化学品目录（第一版）》不含碳酸钠"
+      },
+      {
+        "key": "monitored_chemical",
+        "label": "监控化学品",
+        "value": false,
+        "note": "《监控化学品管理条例》附表不含碳酸钠"
+      },
+      {
+        "key": "ozone_depleting",
+        "label": "消耗臭氧层物质",
+        "value": false,
+        "note": "不适用"
+      }
+    ],
+    "ghs": [
+      {
+        "class": "皮肤腐蚀 / 刺激",
+        "category": "类别 2",
+        "h": "H315 造成皮肤刺激"
+      },
+      {
+        "class": "严重眼损伤 / 眼刺激",
+        "category": "类别 2A",
+        "h": "H319 造成严重眼刺激"
+      },
+      {
+        "class": "特异性靶器官毒性（一次接触）",
+        "category": "类别 3（呼吸道刺激）",
+        "h": "H335 可能引起呼吸道刺激（粉尘）"
+      }
+    ],
+    "ghs_note": "GHS 分类为刺激性，非腐蚀 1A/1B/1C、非急性毒性 1–3、非易燃、非氧化性，未达到《危险化学品目录》确定原则所涵盖的危险类别；同时目录未收录，故判定为非危险化学品。",
+    "basis": [
+      {
+        "claim": "危险化学品实行目录管理制度：列入目录的，按危化品管理；目录由应急管理部会同有关部门确定、公布并适时调整。",
+        "source": "《中华人民共和国危险化学品安全法》",
+        "article": "第三条",
+        "detail": "本法所称危险化学品，是指具有毒害、腐蚀、爆炸、燃烧、助燃等性质……国家建立健全危险化学品目录管理制度。",
+        "url": "https://www.chemicalsafety.org.cn/xinwenzixun/guojiazhengce/detail/694fb6479f2e3",
+        "date": "2025-12-27 通过",
+        "confidence": "已核原文"
+      },
+      {
+        "claim": "《危险化学品目录（2015 版）》共 2828 个条目；按“碳酸钠 / 纯碱 / 497-19-8”三路检索，未见收录。",
+        "source": "《危险化学品目录（2015 版）》",
+        "article": "目录检索比对",
+        "detail": "目录条目按品名 / 别名 / CAS 排序。检索结果为空，建议在应急管理部官方查询入口再做一次二次核验并留存截图。",
+        "url": "https://www.mem.gov.cn/gk/zcjd/201503/t20150331_233183.shtml",
+        "date": "2015-02-27 公布",
+        "confidence": "人工比对，建议二次核验"
+      },
+      {
+        "claim": "未列入目录、但符合危险化学品确定原则的化学品，企业应按《化学品物理危险性鉴定与分类管理办法》（原安监总局令第 60 号）进行鉴定分类；经鉴定属于危化品的，还须办理危化品登记。",
+        "source": "应急管理部《危险化学品目录（2015 版）》解读",
+        "article": "政策解读",
+        "detail": "目录管理 + 鉴别分类制度相结合，形成对危化品安全管理的全覆盖。纯碱危险特性明确（刺激性、非腐蚀/非易燃/非氧化），不属于需鉴定后按危化品管理的情形。",
+        "url": "https://www.mem.gov.cn/gk/zcjd/201503/t20150331_233183.shtml",
+        "date": "2015-03-31",
+        "confidence": "已核原文"
+      },
+      {
+        "claim": "纯碱的 GHS 分类为皮肤刺激 2、眼刺激 2A、STOT-SE 3（呼吸道刺激），不包含腐蚀 1A/1B/1C、急性毒性 1–3、易燃、氧化等危化品确定原则涵盖的类别。",
+        "source": "化学品安全技术说明书（SDS）与 GB 30000 系列分类标准",
+        "article": "GHS 分类",
+        "detail": "以供应商最新版 SDS 为准；本卡以工业重质碳酸钠典型 SDS 归类，不替代具体批次的 SDS。",
+        "url": "",
+        "date": "随批次",
+        "confidence": "需以本批 SDS 复核"
+      },
+      {
+        "claim": "危险化学品判定与“是否腐蚀性/碱性”不是同一件事：判定看目录列入与确定原则，不看 pH 或俗称。",
+        "source": "实务口径（目录管理原则）",
+        "article": "—",
+        "detail": "纯碱溶液 pH 可达 11–12，但 pH 高不等于危化品；反之，列入目录的物质即使低浓度也仍按目录条目条件判断（如过氧化氢溶液含量 >8%、氨溶液含氨 >10%）。",
+        "url": "",
+        "date": "—",
+        "confidence": "方法论说明"
+      }
+    ],
+    "boundary": [
+      {
+        "scenario": "轻质 ↔ 重质",
+        "effect": "判定不变（同一 CAS）；影响包装、装载率、投料与计量"
+      },
+      {
+        "scenario": "工业级 ↔ 食品添加剂级",
+        "effect": "危化品判定不变；食品级触发 GB 1886.1-2021 与食品生产许可（SC）分支"
+      },
+      {
+        "scenario": "固体 ↔ 溶液",
+        "effect": "判定不变；溶液按刺激性化学品防护，避免与酸混存"
+      },
+      {
+        "scenario": "无水 ↔ 一水合 / 十水合",
+        "effect": "判定不变；有效碱含量与结算口径变化"
+      },
+      {
+        "scenario": "含硫化钠等副产杂质的“副产碱”",
+        "effect": "可能改变判定（硫化钠为危化品），须先做成分分析与鉴定分类，不得按纯碱直接放行"
+      },
+      {
+        "scenario": "品名误写为“烧碱 / 片碱 / 液碱”",
+        "effect": "实物若为氢氧化钠则属危化品，须立即切换危化品流程（经营许可、买方资质查验、运输资质）"
+      }
+    ],
+    "verification_steps": [
+      "在应急管理部官网“危险化学品查询”或目录原文中检索“碳酸钠 / 497-19-8”，留存检索截图（含日期）。",
+      "向生产商索取本批次 SDS（GB/T 16483 格式），核对 GHS 分类与目录比对结论是否一致。",
+      "若买方或监管对判定有异议，委托有资质的鉴定机构按 60 号令做物理危险性鉴定与分类，报告归档。",
+      "法规依据时点：本卡适用《危险化学品安全法》（2026-05-01 施行）；目录与名录版本见“法规索引”。"
+    ],
+    "consequence": {
+      "license": "卖方无需危险化学品经营许可（本单）；买方无需危化品经营/使用许可、无需剧毒购买许可证或易制爆用途说明。",
+      "filing": "无需向公安机关备案销售流向；无需录入剧毒/易制爆计算机系统。",
+      "records": "无法定 3 年强制留存要求；建议商务资料保存 ≥5 年，会计凭证按《会计档案管理办法》保存 30 年。",
+      "transport": "按普通货物运输；不适用危险货物道路运输许可、押运员、危险货物托运清单。",
+      "penalty_note": "向无证单位销售剧毒/易制爆的罚则（法第一百零七条，20–50 万元并吊证）本单不适用；但若将危化品匿报为纯碱运输，仍触发法第八十三条与第一百一十条。"
+    }
+  },
+  "buyer_checks": [
+    {
+      "id": "B0",
+      "item": "上市公司公开披露（主体存续 / 主营 / 生产基地）",
+      "category": "主体资格",
+      "status": "A",
+      "finding": "公开可见：公司为 A+H 两地上市（601865.SH / 6865.HK），2025 年年度报告经审计并披露主营为光伏玻璃、浮法玻璃、工程玻璃、家居玻璃的生产销售，主要基地包括浙江嘉兴、安徽凤阳及越南海防。可作为主体存续与主营范围的公开证据。",
+      "evidence": [
+        {
+          "label": "福莱特 2025 年年度报告（2026-03-27 披露）",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-03-27/1225035597.PDF",
+          "date": "2026-03-27"
+        },
+        {
+          "label": "福莱特官网 · 集团简介与产品",
+          "url": "https://www.flatgroup.com.cn",
+          "date": "2026-10-19"
+        }
+      ],
+      "ask": "无需索取（年报可自行下载留档）；营业执照原件另见 B1",
+      "risk": "低",
+      "note": "“公开可见”只证明公开披露内容，不替代营业执照登记事项；两者互为补充。"
+    },
+    {
+      "id": "B1",
+      "item": "营业执照与经营范围",
+      "category": "主体资格",
+      "status": "B",
+      "finding": "公开可见其主营为光伏玻璃、浮法玻璃、工程玻璃、家居玻璃的生产与销售（2025 年年度报告、公司官网）；营业执照原件与经营范围原文尚未取得，不能据此认定登记事项已覆盖本次采购用途。",
+      "evidence": [
+        {
+          "label": "福莱特 2025 年年度报告（2026-03-27 披露）",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-03-27/1225035597.PDF",
+          "date": "2026-03-27"
+        },
+        {
+          "label": "福莱特官网 · 产品与服务",
+          "url": "https://www.flatgroup.com.cn",
+          "date": "2026-10-19"
+        }
+      ],
+      "ask": "营业执照副本复印件（加盖公章），需含经营范围页与最新登记日期",
+      "risk": "低",
+      "note": "玻璃制造企业采购纯碱作为原料，属于其主营业务范围内的常规采购；经营范围核对的目的是确认主体存续与登记信息一致，而非取得危化品许可。"
+    },
+    {
+      "id": "B2",
+      "item": "危险化学品经营许可证",
+      "category": "危化品资质",
+      "status": "NA",
+      "finding": "不适用。纯碱为非危险化学品，买方采购自用无需危化品经营许可；如其将纯碱转售，也无需就该品种取得危化品经营许可。",
+      "evidence": [
+        {
+          "label": "《危险化学品安全法》第五十三条（经营许可仅限危化品）",
+          "url": "https://www.chemicalsafety.org.cn/xinwenzixun/guojiazhengce/detail/694fb6479f2e3",
+          "date": "2026-05-01 施行"
+        }
+      ],
+      "ask": "无需索取（如买方主动提供，可作为其危化品管理能力的加分项）",
+      "risk": "无",
+      "note": "若本次同时销售烧碱、硫酸等危化品，则该品种适用经营许可与买方资质查验，不能沿用本行结论。"
+    },
+    {
+      "id": "B3",
+      "item": "危险化学品安全使用许可证",
+      "category": "危化品资质",
+      "status": "NA",
+      "finding": "不适用。买方使用纯碱从事玻璃生产，纯碱非危化品，不落入安全使用许可的品种与数量范围。",
+      "evidence": [
+        {
+          "label": "《危险化学品安全法》第四十八条（使用许可限于规定种类的危化品且用量达标）",
+          "url": "https://www.chemicalsafety.org.cn/xinwenzixun/guojiazhengce/detail/694fb6479f2e3",
+          "date": "2026-05-01 施行"
+        }
+      ],
+      "ask": "无需索取",
+      "risk": "无",
+      "note": "如买方厂区同时大量使用氨、甲醇等使用许可品种，应另行核查，与本单无关。"
+    },
+    {
+      "id": "B4",
+      "item": "剧毒化学品购买许可证",
+      "category": "危化品资质",
+      "status": "NA",
+      "finding": "不适用。纯碱非剧毒化学品。",
+      "evidence": [
+        {
+          "label": "《危险化学品安全法》第五十八条、第六十条",
+          "url": "https://www.chemicalsafety.org.cn/xinwenzixun/guojiazhengce/detail/694fb6479f2e3",
+          "date": "2026-05-01 施行"
+        }
+      ],
+      "ask": "无需索取",
+      "risk": "无",
+      "note": "剧毒品销售须查验购买许可证并按证载品种、数量销售；本单不涉及。"
+    },
+    {
+      "id": "B5",
+      "item": "易制爆危险化学品合法用途说明 / 备案",
+      "category": "危化品资质",
+      "status": "NA",
+      "finding": "不适用。纯碱未列入《易制爆危险化学品名录（2017 年版）》。",
+      "evidence": [
+        {
+          "label": "《危险化学品安全法》第五十八条、第六十一条",
+          "url": "https://www.chemicalsafety.org.cn/xinwenzixun/guojiazhengce/detail/694fb6479f2e3",
+          "date": "2026-05-01 施行"
+        }
+      ],
+      "ask": "无需索取",
+      "risk": "无",
+      "note": "易制爆品种须取得买方用途说明，销售方留存记录 ≥3 年并于 3 日内报县级公安备案；本单不触发。"
+    },
+    {
+      "id": "B6",
+      "item": "易制毒化学品购买备案证明",
+      "category": "危化品资质",
+      "status": "NA",
+      "finding": "不适用。纯碱不在《易制毒化学品的分类和品种目录》内。",
+      "evidence": [
+        {
+          "label": "《易制毒化学品管理条例》与公安部《易制毒化学品购销和运输管理办法》",
+          "url": "https://www.sz.gov.cn/cn/xxgk/zfxxgj/zcfg/content/post_8002299.html",
+          "date": "2018 修正"
+        }
+      ],
+      "ask": "无需索取",
+      "risk": "无",
+      "note": "硫酸、盐酸、甲苯等属易制毒第三类，购买需县级公安备案；纯碱不涉及。"
+    },
+    {
+      "id": "B7",
+      "item": "排污许可证（玻璃制造）",
+      "category": "环保与安全",
+      "status": "B",
+      "finding": "玻璃制造属排污许可管理范围（重点/简化管理，视窑炉规模与环评类别而定），公开平台可按企业名称查询；本次未取得证书编号与有效期。",
+      "evidence": [
+        {
+          "label": "全国排污许可证管理信息平台（公开端）",
+          "url": "https://permit.mee.gov.cn",
+          "date": "2026-10-19"
+        },
+        {
+          "label": "福莱特 2025 年年度报告（基地与经营概况）",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-03-27/1225035597.PDF",
+          "date": "2026-03-27"
+        }
+      ],
+      "ask": "排污许可证副本或登记回执（含证书编号、有效期、行业类别）",
+      "risk": "低",
+      "note": "该资质不构成纯碱销售的前置条件；索取目的是供应商准入档案完整与绿色供应链要求。"
+    },
+    {
+      "id": "B8",
+      "item": "环评批复 / 环保验收",
+      "category": "环保与安全",
+      "status": "C",
+      "finding": "无公开信息（可核验的批复文号与验收意见未取得）。光伏玻璃项目环评公示分散在地方生态环境部门网站，需按项目主体逐一核对。",
+      "evidence": [],
+      "ask": "项目环评批复文号与验收意见（或建设项目环境影响登记表备案回执）",
+      "risk": "低",
+      "note": "仅在买方要求供应商 ESG 审核或绿色工厂申报时索取，常规交易可后补。"
+    },
+    {
+      "id": "B9",
+      "item": "食品生产许可证（SC）",
+      "category": "行业专项",
+      "status": "NA",
+      "finding": "不适用（本单工业级、用于玻璃生产）。若买方采购食品添加剂级碳酸钠用于食品接触场景，则须核查其食品生产许可与 GB 1886.1-2021 符合性。",
+      "evidence": [
+        {
+          "label": "GB 1886.1-2021《食品安全国家标准 食品添加剂 碳酸钠》",
+          "url": "https://down.foodmate.net/standard/sort/3/97875.html",
+          "date": "2021-08-22 发布"
+        }
+      ],
+      "ask": "仅食品级分支索取：食品生产许可证（SC）副本",
+      "risk": "无（本单）",
+      "note": "食品级纯碱的卖方也可能是贸易商，需确认其上游生产商 SC 与批次检验报告。"
+    },
+    {
+      "id": "B10",
+      "item": "收货授权与经办人身份",
+      "category": "交付与授权",
+      "status": "C",
+      "finding": "无公开信息。收货人、授权签字人、过磅与验收责任人须由买方书面指定，公开渠道无法取得。",
+      "evidence": [],
+      "ask": "收货授权委托书（加盖公章）+ 经办人身份证复印件 + 收货库位与联系人",
+      "risk": "中",
+      "note": "大宗散装 / 吨包交货常见争议点：非授权人员签收、代收后否认、卸货破损责任不清。"
+    },
+    {
+      "id": "B11",
+      "item": "道路运输经营资质（买方自提时）",
+      "category": "运输",
+      "status": "B",
+      "finding": "若买方自提，承运纯碱属普通货物运输，需持道路运输经营许可证（普通货运）；若由我方送货，则由我方核对承运人资质。公开信息未取得。",
+      "evidence": [
+        {
+          "label": "《危险化学品安全法》第六十五条（危货运输许可；普货按普货管理）",
+          "url": "https://www.chemicalsafety.org.cn/xinwenzixun/guojiazhengce/detail/694fb6479f2e3",
+          "date": "2026-05-01 施行"
+        }
+      ],
+      "ask": "运输方式确认函：自提 / 送货；自提时提供承运人道路运输经营许可证",
+      "risk": "低",
+      "note": "纯碱不适用危险货物运输许可、押运员与危险货物托运清单；但不得与危化品混装、不得匿报。"
+    },
+    {
+      "id": "B12",
+      "item": "安全生产标准化 / ISO 体系证书",
+      "category": "管理体系",
+      "status": "C",
+      "finding": "无公开信息（非强制公开，企业通常仅在供应商审核时提供）。",
+      "evidence": [],
+      "ask": "如进入合格供应商名录需要：ISO 9001 / ISO 45001 / 安全生产标准化证书",
+      "risk": "低",
+      "note": "属于供应商准入加分项，不是本单法定前置条件。"
+    }
+  ],
+  "status_legend": [
+    {
+      "code": "A",
+      "label": "公开可见",
+      "desc": "已取得可点开的公开证据，且与本次交易直接相关",
+      "color": "green"
+    },
+    {
+      "code": "B",
+      "label": "需核对原件",
+      "desc": "存在公开入口或间接证据，但未取得原件/截图，不能据此下合规结论",
+      "color": "amber"
+    },
+    {
+      "code": "C",
+      "label": "无公开信息",
+      "desc": "公开渠道无此类信息或依法不公开，必须向买方索取",
+      "color": "red"
+    },
+    {
+      "code": "NA",
+      "label": "不适用",
+      "desc": "该资质对本品种/本用途不适用，附不适用依据",
+      "color": "gray"
+    }
+  ],
+  "obligations": {
+    "seller": [
+      {
+        "id": "S1",
+        "item": "合同、发票、COA、SDS、包装标识的品名与 CAS 一致（497-19-8），禁止只写“碱”或误写“烧碱”",
+        "basis": "《产品质量法》第二十七条；本卡判定卡",
+        "retention": "合同 ≥5 年",
+        "filing": "无",
+        "timing": "签约与每批交付",
+        "evidence": "合同、发票、COA、SDS、包装照片"
+      },
+      {
+        "id": "S2",
+        "item": "随货提供中文化学品安全技术说明书（SDS），建议按 GB/T 16483 编制；非危化品虽非法定强制，但客户准入、招标与职业健康管理普遍要求",
+        "basis": "《危险化学品安全法》第五十七条（危化品强制）；非危化品按客户要求",
+        "retention": "≥5 年（版本留档）",
+        "filing": "无",
+        "timing": "首批及版本更新时",
+        "evidence": "SDS 签收记录"
+      },
+      {
+        "id": "S3",
+        "item": "提供批次 COA / 质检报告，指标覆盖 GB/T 210-2022 与双方技术协议（总碱量、氯化物、铁、水不溶物、堆积密度）",
+        "basis": "GB/T 210-2022；合同质量条款",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "每批",
+        "evidence": "COA、出厂检验报告"
+      },
+      {
+        "id": "S4",
+        "item": "包装标识齐全：品名、净重、批号、生产日期、厂名厂址、执行标准、储运图示（防潮/防雨）；吨包吊带与强度符合装卸要求",
+        "basis": "《产品质量法》第二十七条；GB/T 191",
+        "retention": "包装照片 ≥3 年",
+        "filing": "无",
+        "timing": "每批",
+        "evidence": "包装照片、标签样张"
+      },
+      {
+        "id": "S5",
+        "item": "计量与允差：以买方地磅或双方认可计量为准，磅差在合同约定范围内（常见 ±0.3%–0.5%）；净重与毛重标识一致",
+        "basis": "合同计量条款",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "每车",
+        "evidence": "地磅单、签收单"
+      },
+      {
+        "id": "S6",
+        "item": "按普通货物安排运输：防潮、防雨、防破包；不得与酸类混装；不得在普通货物中夹带危险化学品或匿报",
+        "basis": "《危险化学品安全法》第八十三条（禁止夹带/匿报）",
+        "retention": "运输单据 ≥5 年",
+        "filing": "无",
+        "timing": "每车",
+        "evidence": "运输委托单、承运人资质"
+      },
+      {
+        "id": "S7",
+        "item": "开具 13% 增值税专用发票，票面品名与合同、出库单一致；不得变更品名走“化工原料”等笼统科目",
+        "basis": "《发票管理办法》；税务合规",
+        "retention": "按会计档案 30 年",
+        "filing": "无",
+        "timing": "每票",
+        "evidence": "发票、出库单"
+      },
+      {
+        "id": "S8",
+        "item": "若同一车辆/同一合同同时涉及烧碱、硫酸等危化品：须分车运输、分别适用危化品经营许可与买方资质查验，不得以纯碱名义混装",
+        "basis": "《危险化学品安全法》第五十三、六十、六十五条",
+        "retention": "≥3 年（危化品部分）",
+        "filing": "危化品部分按品种备案",
+        "timing": "每次",
+        "evidence": "分车记录、许可复印件"
+      },
+      {
+        "id": "S9",
+        "item": "如实告知：不得将非危化品宣称为危化品抬价，也不得将危化品匿报为非危化品；买方询问时必须给出书面判定依据",
+        "basis": "《产品质量法》；《危险化学品安全法》第八十三条",
+        "retention": "告知记录 ≥5 年",
+        "filing": "无",
+        "timing": "询价/投标/交付",
+        "evidence": "判定卡、邮件"
+      },
+      {
+        "id": "S10",
+        "item": "变更管理：产品来源、等级、杂质、包装或用途发生变化时，重新判定并书面通知买方",
+        "basis": "合同变更条款；内部合规制度",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "变更前",
+        "evidence": "变更单、新版 SDS/COA"
+      }
+    ],
+    "buyer": [
+      {
+        "id": "P1",
+        "item": "提供营业执照副本（加盖公章）、开票信息、收货授权与经办人身份",
+        "basis": "合同主体与交付要求",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "首单前",
+        "evidence": "证照复印件"
+      },
+      {
+        "id": "P2",
+        "item": "书面确认用途（自用生产 / 最终产品 / 年用量），用途变更须书面通知",
+        "basis": "本卡合规判定；合同用途条款",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "首单前",
+        "evidence": "用途说明"
+      },
+      {
+        "id": "P3",
+        "item": "按 SDS 落实职业防护（防尘口罩、护目镜、耐碱手套）与粉尘清扫，避免与酸类混存",
+        "basis": "《职业病防治法》；SDS",
+        "retention": "培训记录（建议 ≥3 年）",
+        "filing": "无",
+        "timing": "持续",
+        "evidence": "培训记录"
+      },
+      {
+        "id": "P4",
+        "item": "食品级分支：如采购食品添加剂级，提供食品生产许可证（SC）与用途说明",
+        "basis": "《食品安全法》；GB 1886.1-2021",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "食品级首单前",
+        "evidence": "SC 副本"
+      },
+      {
+        "id": "P5",
+        "item": "转售分支：如买方转售，须向下游如实提供 SDS 与 COA，并确认下游用途不涉及危化品非法使用",
+        "basis": "《产品质量法》；SDS 传递义务",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "转售前",
+        "evidence": "下游合同/用途说明"
+      },
+      {
+        "id": "P6",
+        "item": "环保合规：排污许可证/登记在有效期内，窑炉烟气与粉尘治理设施正常运行（供应商 ESG 审核时提供）",
+        "basis": "《排污许可管理条例》",
+        "retention": "证书有效期",
+        "filing": "排污许可平台",
+        "timing": "年度审核",
+        "evidence": "排污许可证"
+      }
+    ],
+    "joint": [
+      {
+        "id": "J1",
+        "item": "合同写明品名 + CAS + 规格 + 数量 + 包装 + 交期 + 验收标准 + 质量异议期（建议 7–15 天）+ 磅差处理",
+        "basis": "《民法典》合同编",
+        "retention": "≥5 年",
+        "filing": "无",
+        "timing": "签约",
+        "evidence": "合同正本"
+      },
+      {
+        "id": "J2",
+        "item": "建立“一批一档”：合同、订单、COA、磅单、签收单、发票、SDS 版本、沟通记录",
+        "basis": "内部合规与审计",
+        "retention": "≥5 年（会计凭证 30 年）",
+        "filing": "无",
+        "timing": "每批",
+        "evidence": "档案目录"
+      },
+      {
+        "id": "J3",
+        "item": "质量争议处理：留样（建议每批 1 kg，保存 6 个月）、第三方检测约定、索赔时限",
+        "basis": "合同质量条款",
+        "retention": "留样 6 个月",
+        "filing": "无",
+        "timing": "争议时",
+        "evidence": "留样记录、检测报告"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "D1",
+      "name": "营业执照副本（加盖公章）",
+      "issuer": "买方",
+      "purpose": "核主体存续、经营范围、法定代表人",
+      "form": "复印件加盖公章 / 电子营业执照",
+      "validity": "在营（注意年报异常）",
+      "mandatory": "必备",
+      "note": "经营范围原文必须可见"
+    },
+    {
+      "id": "D2",
+      "name": "开票信息与一般纳税人资格",
+      "issuer": "买方",
+      "purpose": "开具 13% 增值税专用发票",
+      "form": "加盖财务章的开票信息表",
+      "validity": "长期（变更时更新）",
+      "mandatory": "必备",
+      "note": "名称、税号、地址电话、开户行账号"
+    },
+    {
+      "id": "D3",
+      "name": "收货授权委托书 + 经办人身份证",
+      "issuer": "买方",
+      "purpose": "确认签收与验收权限，防范无权代理",
+      "form": "原件/扫描件加盖公章",
+      "validity": "本单/年度",
+      "mandatory": "必备",
+      "note": "写清库位、联系人、可签收人名单"
+    },
+    {
+      "id": "D4",
+      "name": "用途说明（自用生产 / 最终产品 / 年用量）",
+      "issuer": "买方",
+      "purpose": "合规判定与留档；确认非危化品非法用途",
+      "form": "盖章说明或邮件确认",
+      "validity": "年度更新",
+      "mandatory": "建议必备",
+      "note": "写清最终产品：光伏玻璃/浮法玻璃"
+    },
+    {
+      "id": "D5",
+      "name": "排污许可证 / 排污登记回执",
+      "issuer": "买方",
+      "purpose": "环保合规与供应商准入",
+      "form": "副本复印件",
+      "validity": "证书有效期",
+      "mandatory": "建议",
+      "note": "许可平台可查，索取以归档为准"
+    },
+    {
+      "id": "D6",
+      "name": "环评批复 / 验收意见",
+      "issuer": "买方",
+      "purpose": "项目合规与 ESG 审核",
+      "form": "批复文号 + 扫描件",
+      "validity": "长期",
+      "mandatory": "可选",
+      "note": "常规交易可后补"
+    },
+    {
+      "id": "D7",
+      "name": "质量协议 / 技术协议",
+      "issuer": "双方",
+      "purpose": "锁定指标、检验方法、异议期、索赔",
+      "form": "双方盖章",
+      "validity": "合同期",
+      "mandatory": "必备",
+      "note": "光伏玻璃建议加严铁含量"
+    },
+    {
+      "id": "D8",
+      "name": "包装与卸货条件确认",
+      "issuer": "买方",
+      "purpose": "吨包/散装、卸车设备、库容与堆高",
+      "form": "确认单/邮件",
+      "validity": "本单",
+      "mandatory": "建议",
+      "note": "避免卸货破损与滞车"
+    },
+    {
+      "id": "D9",
+      "name": "运输方式确认（自提/送货）+ 承运人资质",
+      "issuer": "买方/我方",
+      "purpose": "责任划分与普货运输合规",
+      "form": "确认函",
+      "validity": "本单/年度",
+      "mandatory": "建议",
+      "note": "自提时核对道路运输经营许可证"
+    },
+    {
+      "id": "D10",
+      "name": "食品生产许可证（SC）",
+      "issuer": "买方",
+      "purpose": "仅食品添加剂级分支",
+      "form": "副本复印件",
+      "validity": "证书有效期",
+      "mandatory": "分支必备",
+      "note": "工业级不适用"
+    },
+    {
+      "id": "D11",
+      "name": "下游转售资质/用途说明",
+      "issuer": "买方",
+      "purpose": "仅转售分支，穿透下游用途",
+      "form": "说明函",
+      "validity": "年度",
+      "mandatory": "分支必备",
+      "note": "防止流入危化品非法使用场景"
+    },
+    {
+      "id": "D12",
+      "name": "廉洁与合规承诺",
+      "issuer": "买方",
+      "purpose": "反商业贿赂与供应商行为准则",
+      "form": "双方签署",
+      "validity": "合作期",
+      "mandatory": "可选",
+      "note": "大型集团常见要求"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G1",
+      "gap": "营业执照原件/经营范围页未取得",
+      "why": "公开渠道仅见主营描述，不能替代登记事项核验",
+      "ask": "请提供营业执照副本复印件（加盖公章），需含经营范围页",
+      "severity": "中",
+      "owner": "买方采购"
+    },
+    {
+      "id": "G2",
+      "gap": "收货授权与经办人身份未确认",
+      "why": "吨包/散装交货易发生非授权签收与破损责任争议",
+      "ask": "请提供收货授权委托书（盖章）及经办人身份证复印件，并注明收货库位与联系人",
+      "severity": "中",
+      "owner": "买方采购/仓储"
+    },
+    {
+      "id": "G3",
+      "gap": "用途与最终产品未书面确认",
+      "why": "用途决定是否需要食品级/转售分支，也是合规留档要件",
+      "ask": "请书面确认本批纯碱用于光伏玻璃/浮法玻璃生产（自用），并给出年度用量预估",
+      "severity": "低",
+      "owner": "买方采购/技术"
+    },
+    {
+      "id": "G4",
+      "gap": "排污许可证编号与有效期未取得",
+      "why": "供应商准入与 ESG 审核需要，非法定前置",
+      "ask": "请提供排污许可证副本或登记回执（含编号与有效期）",
+      "severity": "低",
+      "owner": "买方安环"
+    },
+    {
+      "id": "G5",
+      "gap": "运输责任与承运人资质未确认",
+      "why": "自提/送货责任边界不清，破损与滞车费用易扯皮",
+      "ask": "请确认本单为自提还是送货；自提请提供承运人道路运输经营许可证",
+      "severity": "低",
+      "owner": "买方物流"
+    }
+  ],
+  "manual_confirm": [
+    {
+      "item": "目录二次核验",
+      "why": "本卡为人工比对，需在官方查询入口复核并留存截图",
+      "who": "我方合规/销售支持",
+      "deadline": "首单前"
+    },
+    {
+      "item": "经营范围与主体存续",
+      "why": "营业执照原件未取得，且需排除经营异常/严重违法失信",
+      "who": "我方商务",
+      "deadline": "首单前"
+    },
+    {
+      "item": "用途与最终产品",
+      "why": "决定是否触发食品级/转售分支",
+      "who": "买方采购",
+      "deadline": "首单前"
+    },
+    {
+      "item": "是否食品级",
+      "why": "食品添加剂级需 SC 与 GB 1886.1 符合性，路径完全不同",
+      "who": "买方技术/采购",
+      "deadline": "报价前"
+    },
+    {
+      "item": "运输与卸货责任",
+      "why": "纯碱按普货运输，但破损、雨淋、滞车责任需在合同中写明",
+      "who": "双方物流",
+      "deadline": "签约前"
+    },
+    {
+      "item": "属地监管口径",
+      "why": "极少数地区对大宗化工品有额外报备要求，需向属地应急/市场监管确认",
+      "who": "我方合规",
+      "deadline": "首单前"
+    }
+  ],
+  "draft": {
+    "subject": "【资料补充】福莱特 × 工业碳酸钠（CAS 497-19-8）供应商准入资料",
+    "formal": "尊敬的福莱特采购部：\n\n您好！关于我司拟向贵司供应工业重质碳酸钠（纯碱，CAS 497-19-8，执行 GB/T 210-2022，Ⅱ类优等品）一事，首单计划 500 吨、后续 1,000 吨/月，交货至贵司凤阳基地。\n\n经我方合规核对：纯碱未列入《危险化学品目录（2015 版）》，不属于剧毒、易制爆、易制毒及重点监管化学品，本单无需危险化学品经营许可、购买资质查验与公安备案。为完成供应商准入与合同归档，仍需请贵司协助提供以下常规资料：\n\n1. 营业执照副本复印件（加盖公章，需含经营范围页）；\n2. 开票信息及一般纳税人资格证明；\n3. 收货授权委托书及经办人身份证复印件（请注明收货库位与联系人）；\n4. 用途说明：本批纯碱用于光伏玻璃/浮法玻璃生产（自用），并请给出年度用量预估；\n5. 排污许可证副本或登记回执（含编号与有效期，用于供应商 ESG 档案）；\n6. 质量/技术协议文本（如贵司有标准模板，我方按贵司版本签署）。\n\n以上资料仅用于供应商准入与合规留档，我方将按内部制度保存不少于 5 年，不用于其他用途。如贵司需要，我方可同步提供本批 SDS、COA 样张及我方营业执照。\n\n顺颂商祺！\n\nXX化工贸易有限公司\n销售部 · （姓名）\n（电话 / 邮箱）",
+    "wechat": "王经理您好，关于纯碱首单 500 吨的准入资料，麻烦帮忙安排几份：①营业执照副本盖章件（含经营范围页）；②开票信息+一般纳税人证明；③收货授权书和经办人身份证；④用途说明（光伏/浮法玻璃自用，附年度用量）；⑤排污许可证副本。纯碱不是危化品，不需要危化品许可证，这些是供应商建档和合同归档用的。资料齐了我这边当天走合同流程，SDS 和 COA 样张我先发您。"
+  },
+  "sources": [
+    {
+      "type": "法律",
+      "title": "《中华人民共和国危险化学品安全法》（2025-12-27 通过，2026-05-01 施行）",
+      "publisher": "全国人大常委会 / 中国化学品安全协会",
+      "url": "https://www.chemicalsafety.org.cn/xinwenzixun/guojiazhengce/detail/694fb6479f2e3",
+      "date": "2025-12-27",
+      "used_for": "第三条、第四十八、五十三、五十七、五十八、六十、六十一、六十五、八十三、一百零四、一百零七条"
+    },
+    {
+      "type": "法律",
+      "title": "《中华人民共和国危险化学品安全法》全文（中国人大网）",
+      "publisher": "中国人大网",
+      "url": "http://www.npc.gov.cn/npc/c2/c30834/202512/t20251227_450708.html",
+      "date": "2025-12-27",
+      "used_for": "条文原文比对"
+    },
+    {
+      "type": "目录",
+      "title": "《危险化学品目录（2015 版）》及政策解读",
+      "publisher": "应急管理部",
+      "url": "https://www.mem.gov.cn/gk/zcjd/201503/t20150331_233183.shtml",
+      "date": "2015-03-31",
+      "used_for": "2828 条目、目录管理 + 鉴别分类制度"
+    },
+    {
+      "type": "名录",
+      "title": "《易制爆危险化学品名录（2017 年版）》",
+      "publisher": "公安部",
+      "url": "https://chem.nxu.edu.cn/__local/B/BF/3B/3E803EC799C033BFB5D92CBD8B4_43D30A42_16D70.pdf",
+      "date": "2017",
+      "used_for": "过氧化氢等易制爆判定（对照）"
+    },
+    {
+      "type": "名录",
+      "title": "《易制毒化学品的分类和品种目录》与《易制毒化学品管理条例》",
+      "publisher": "国务院 / 公安部",
+      "url": "https://www.sz.gov.cn/cn/xxgk/zfxxgj/zcfg/content/post_8002299.html",
+      "date": "2018 修正",
+      "used_for": "硫酸、盐酸等第三类易制毒判定（对照）"
+    },
+    {
+      "type": "标准",
+      "title": "GB/T 210-2022《工业碳酸钠》",
+      "publisher": "国家标准化管理委员会",
+      "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=B3EC3B18FA96E6DED5E89E32186CBA4A",
+      "date": "2022-04-15",
+      "used_for": "产品指标、检验与标识"
+    },
+    {
+      "type": "标准",
+      "title": "GB 1886.1-2021《食品安全国家标准 食品添加剂 碳酸钠》",
+      "publisher": "国家卫生健康委员会 / 市场监管总局",
+      "url": "https://down.foodmate.net/standard/sort/3/97875.html",
+      "date": "2021-08-22",
+      "used_for": "食品级分支"
+    },
+    {
+      "type": "年报",
+      "title": "福莱特玻璃集团股份有限公司 2025 年年度报告",
+      "publisher": "上海证券交易所 / 巨潮资讯",
+      "url": "https://static.cninfo.com.cn/finalpage/2026-03-27/1225035597.PDF",
+      "date": "2026-03-27",
+      "used_for": "买方主营、基地、经营情况"
+    },
+    {
+      "type": "年报",
+      "title": "福莱特 2020 年年度报告（纯碱采购定价机制披露）",
+      "publisher": "上海证券交易所",
+      "url": "http://pdf.dfcfw.com/pdf/H2_AN202103291478098605_01.pdf",
+      "date": "2021-03-29",
+      "used_for": "纯碱为主要原材料、按月定价的历史披露"
+    },
+    {
+      "type": "官网",
+      "title": "福莱特玻璃集团股份有限公司官网",
+      "publisher": "福莱特",
+      "url": "https://www.flatgroup.com.cn",
+      "date": "2026-10-19",
+      "used_for": "产品与主营业务"
+    },
+    {
+      "type": "平台",
+      "title": "全国排污许可证管理信息平台（公开端）",
+      "publisher": "生态环境部",
+      "url": "https://permit.mee.gov.cn",
+      "date": "2026-10-19",
+      "used_for": "排污许可公开查询入口（本次未取证）"
+    },
+    {
+      "type": "法规",
+      "title": "《中华人民共和国产品质量法》",
+      "publisher": "全国人大常委会",
+      "url": "https://www.gov.cn/banshi/2005-08/31/content_68753.htm",
+      "date": "2018 修正",
+      "used_for": "销售者标识、进货检查验收义务"
+    },
+    {
+      "type": "法规",
+      "title": "《会计档案管理办法》（财政部、国家档案局令第 79 号）",
+      "publisher": "财政部",
+      "url": "http://www.mof.gov.cn/gkml/caizhengwengao/wg2016/wg201601/201605/t20160517_1999455.htm",
+      "date": "2016-01-01 施行",
+      "used_for": "会计凭证 30 年保存期"
+    }
+  ],
+  "cross_products": [
+    {
+      "name": "纯碱（工业重质碳酸钠）",
+      "cas": "497-19-8",
+      "verdict": "非危险化学品",
+      "flags": "—",
+      "buyer_req": "无危化品前置资质；营业执照 + 用途确认",
+      "seller_req": "无需危化品经营许可；SDS/COA/标识",
+      "transport": "普通货物",
+      "note": "本单"
+    },
+    {
+      "name": "烧碱（氢氧化钠，32% 液碱 / 片碱）",
+      "cas": "1310-73-2",
+      "verdict": "危险化学品（皮肤腐蚀 1A）",
+      "flags": "非剧毒 / 非易制爆 / 非易制毒",
+      "buyer_req": "营业执照；转售需危化品经营许可；使用许可视品种与用量",
+      "seller_req": "危化品经营许可证；SDS + 标签；危货运输",
+      "transport": "危险货物（8 类）",
+      "note": "对照：与纯碱名称最易混，合同必须写 CAS"
+    },
+    {
+      "name": "硫酸（98%）",
+      "cas": "7664-93-9",
+      "verdict": "危险化学品（皮肤腐蚀 1A）",
+      "flags": "易制毒第三类",
+      "buyer_req": "县级公安易制毒购买备案证明",
+      "seller_req": "危化品经营许可 + 非药品类易制毒经营备案（30 日内）",
+      "transport": "危险货物（8 类）",
+      "note": "对照：第三类易制毒，购买前备案"
+    },
+    {
+      "name": "甲醇",
+      "cas": "67-56-1",
+      "verdict": "危险化学品（易燃液体 2 / 急性毒性 3）",
+      "flags": "重点监管（第一批）",
+      "buyer_req": "营业执照；转售需经营许可；使用许可视用量",
+      "seller_req": "危化品经营许可；SDS + 标签；危货运输",
+      "transport": "危险货物（3 类）",
+      "note": "对照：重点监管，储存与装卸要求高"
+    },
+    {
+      "name": "双氧水（27.5%）",
+      "cas": "7722-84-1",
+      "verdict": "危险化学品（氧化性液体）",
+      "flags": "易制爆（含量 >8%）",
+      "buyer_req": "本单位合法用途说明；不得为个人",
+      "seller_req": "危化品经营许可；销售记录 ≥3 年；3 日内报县级公安备案并录入系统",
+      "transport": "危险货物（5.1 类）",
+      "note": "对照：易制爆，记录与备案要求最重"
+    },
+    {
+      "name": "小苏打（碳酸氢钠）",
+      "cas": "144-55-8",
+      "verdict": "非危险化学品",
+      "flags": "—",
+      "buyer_req": "常规商务资料；食品级需 SC",
+      "seller_req": "SDS/COA/标识",
+      "transport": "普通货物",
+      "note": "对照：同为“碱”，常与纯碱混称"
+    }
+  ],
+  "legends": {
+    "verdict_note": "判定口径：以《危险化学品目录（2015 版）》列入为准；未列入但危险特性未确定的，按 60 号令鉴定分类。本卡对纯碱的结论为“未列入 + GHS 分类不落入确定原则”。",
+    "record_note": "留存年限口径：危化品销售记录 ≥3 年（法第六十一条）；本单为一般化工品，建议商务资料 ≥5 年，会计凭证 30 年。",
+    "filing_note": "备案口径：纯碱无需公安/应急备案；危化品中剧毒、易制爆须 3 日内报县级公安备案并录入计算机系统。"
+  },
+  "_path": "./chem-sales-compliance\\examples\\01-纯碱-福莱特\\case.json"
+};
+</script>
+<script>
+/* ================= helpers ================= */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const esc = (s) => String(s==null?"":s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const nl2br = (s) => esc(s).replace(/\n/g,"<br>");
+const money = (n) => Number(n||0).toLocaleString("zh-CN");
+const STATUS = {
+  A:{label:"公开可见",cls:"green"}, B:{label:"需核对原件",cls:"amber"},
+  C:{label:"无公开信息",cls:"red"}, NA:{label:"不适用",cls:"gray"}
+};
+const CK_STATES = ["未开始","进行中","已完成","不适用"];
+const STORE_KEY = "hzcheck:" + (CASE.meta.case_no || "case");
+
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._tm); t._tm = setTimeout(()=>t.classList.remove("on"), 1600);
+}
+function badge(code){
+  const m = STATUS[code] || STATUS.NA;
+  return `<span class="tag ${m.cls}">${m.label}</span>`;
+}
+function secHead(no, title, desc){
+  return `<div class="sec-head"><div><div class="sec-no">${esc(no)}</div><h2>${esc(title)}</h2><p>${esc(desc||"")}</p></div></div>`;
+}
+
+/* ================= hero ================= */
+function renderHero(){
+  const m = CASE.meta, d = CASE.determination, p = CASE.product;
+  const chips = [
+    ["危险化学品经营许可", "不适用"],
+    ["买方危化品资质", "不适用"],
+    ["公安备案", "无需"],
+    ["运输", "普通货物"]
+  ];
+  return `
+  <section class="hero" id="top">
+    <div class="hero-card">
+      <div class="eyebrow">内贸销售 · 客户准入 · 销售合规</div>
+      <div class="hero-grid">
+        <div>
+          <h1>${esc(p.name)}</h1>
+          <p class="hero-sub">${esc(m.buyer.name)} · ${esc(m.deal.qty)} · ${esc(m.deal.delivery)}</p>
+          <div class="hero-meta">
+            <div><span>案例编号</span>${esc(m.case_no)}</div>
+            <div><span>判定日</span>${esc(m.as_of)}</div>
+            <div><span>CAS</span>${esc(p.cas)}</div>
+            <div><span>用途</span>${esc(m.deal.use_type)}（${esc(m.deal.use_detail)}）</div>
+            <div><span>卖方</span>${esc(m.seller.name)}</div>
+            <div><span>买方</span>${esc(m.buyer.ticker || "")}</div>
+          </div>
+        </div>
+        <div class="verdict-box">
+          <div class="verdict-badge"><span class="ic">✓</span>${esc(d.verdict)}</div>
+          <h2>不列入《危险化学品目录（2015 版）》<br>本单不触发危化品许可、资质查验与备案</h2>
+          <p>判定依据：目录比对 + GHS 分类（皮肤刺激 2 / 眼刺激 2A），置信度 ${esc(d.confidence.split("；")[0])}。</p>
+          <div class="verdict-chips">
+            ${chips.map(([k,v])=>`<span class="vchip ok">${esc(k)} · ${esc(v)}</span>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="warn-box" style="margin-top:14px">${esc(m.disclaimer)}</div>
+  </section>`;
+}
+
+/* ================= step 1 identity ================= */
+function renderIdentity(){
+  const p = CASE.product;
+  const chips = CASE.cross_products.map(cp =>
+    `<button class="pchip ${cp.cas===p.cas?"on":""}" data-cas="${esc(cp.cas)}">${esc(cp.name)}<small>CAS ${esc(cp.cas)}</small></button>`
+  ).join("");
+
+  const qa = p.identity_checks.map((q,i)=>`
+    <div class="qa">
+      <h4>${i+1}. ${esc(q.q)}</h4>
+      <p>${esc(q.a)}</p>
+      <span class="impact">${esc(q.impact)}</span>
+    </div>`).join("");
+
+  const specRows = p.spec_table.map(s=>`<tr><td>${esc(s.item)}</td><td><b>${esc(s.value)}</b></td><td>${esc(s.unit)}</td><td class="small">${esc(s.note)}</td></tr>`).join("");
+
+  return `
+  <section id="identity">
+    ${secHead("Step 01","产品身份确认","浓度、形态、等级都可能改变判定结果。先选定产品，再核对身份问答；本单结论只对纯碱（CAS 497-19-8）工业级重质固态成立。")}
+    <div class="grid-2">
+      <div class="card pad">
+        <div class="kicker">选择产品</div>
+        <div class="chips mt" id="productChips">${chips}</div>
+        <div id="altPanel"></div>
+        <details class="mt" style="border:1px dashed var(--line-2);border-radius:12px;padding:12px 14px;background:#fbfdff">
+          <summary style="cursor:pointer;font-weight:800;font-size:13px">没找到？手动输入产品信息</summary>
+          <div class="grid-3 mt">
+            <label class="small">产品名称<input id="qName" class="note" style="width:100%;margin-top:4px" placeholder="如：氢氧化钾"></label>
+            <label class="small">CAS 号<input id="qCas" class="note" style="width:100%;margin-top:4px" placeholder="如：1310-58-3"></label>
+            <label class="small">浓度 / 形态<input id="qForm" class="note" style="width:100%;margin-top:4px" placeholder="如：48% 液碱"></label>
+          </div>
+          <div class="actions"><button class="btn primary" id="manualCheck">生成自查提示</button></div>
+          <div id="manualOut" class="mt"></div>
+        </details>
+      </div>
+      <div class="card pad">
+        <div class="kicker">身份信息</div>
+        <table class="mt">
+          <tbody>
+            <tr><td class="small" style="width:110px">产品名称</td><td><b>${esc(p.name)}</b></td></tr>
+            <tr><td class="small">别名</td><td>${esc(p.alias)}</td></tr>
+            <tr><td class="small">CAS / 分子式</td><td class="mono">${esc(p.cas)} · ${esc(p.formula)} · M ${esc(p.mw)}</td></tr>
+            <tr><td class="small">等级 / 标准</td><td>${esc(p.grade)}<div class="tiny">${esc(p.standard)}</div></td></tr>
+            <tr><td class="small">外观</td><td>${esc(p.appearance)}</td></tr>
+            <tr><td class="small">包装</td><td>${esc(p.packing)}</td></tr>
+            <tr><td class="small">储存</td><td>${esc(p.storage)}</td></tr>
+            <tr><td class="small">保质期</td><td>${esc(p.shelf_life)}</td></tr>
+            <tr><td class="small">HS 编码</td><td class="mono">${esc(p.hs_code)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">身份确认问答 · 这五个问题最容易被忽略</div>
+      <div class="grid-2 mt">${qa}</div>
+      <div class="warn-box mt">${esc(p.identity_caution)}</div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">典型规格（以 GB/T 210-2022 与批次 COA 为准）</div>
+      <div class="tbl-wrap mt"><table>
+        <thead><tr><th>项目</th><th>典型值</th><th>单位</th><th>说明</th></tr></thead>
+        <tbody>${specRows}</tbody>
+      </table></div>
+    </div>
+  </section>`;
+}
+
+/* ================= verdict ================= */
+function renderVerdict(){
+  const d = CASE.determination;
+  const flags = d.flags.map(f=>`
+    <div class="flag">
+      <div class="t">${esc(f.label)}</div>
+      <div class="v"><span class="ic">${f.value?"!":"✓"}</span>${f.value?"是":"否 · 不适用"}</div>
+      <div class="n">${esc(f.note)}</div>
+    </div>`).join("");
+
+  const ghs = d.ghs.map(g=>`<div class="item"><b>${esc(g.class)}</b><span>${esc(g.category)} · ${esc(g.h)}</span></div>`).join("");
+
+  const cons = [
+    ["经营许可", d.consequence.license],
+    ["备案", d.consequence.filing],
+    ["记录留存", d.consequence.records],
+    ["运输", d.consequence.transport]
+  ].map(([k,v])=>`<div class="item"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join("");
+
+  const basis = d.basis.map((b,i)=>`
+    <details class="basis-item" ${i<2?"open":""}>
+      <summary><span class="idx">${i+1}</span><span>${esc(b.claim)}</span></summary>
+      <div class="body">
+        <div>${esc(b.detail)}</div>
+        <div class="src">来源：${esc(b.source)} ${esc(b.article)} · ${esc(b.date)} · 置信度：<b>${esc(b.confidence)}</b>
+          ${b.url?` · <a href="${esc(b.url)}" target="_blank" rel="noopener">打开原文</a>`:""}</div>
+      </div>
+    </details>`).join("");
+
+  const boundary = d.boundary.map(b=>`<tr><td><b>${esc(b.scenario)}</b></td><td>${esc(b.effect)}</td></tr>`).join("");
+
+  return `
+  <section id="verdict">
+    ${secHead("Step 02","危险属性判定卡","结论先行：是否危化品、属于哪一类、依据是什么、什么情况下会翻盘。")}
+    <div class="card pad">
+      <div class="grid-2">
+        <div>
+          <div class="kicker">名录标记（8 项）</div>
+          <div class="flags mt">${flags}</div>
+        </div>
+        <div>
+          <div class="kicker">GHS 分类（按 SDS）</div>
+          <div class="ghs mt">${ghs}</div>
+          <div class="note-box mt">${esc(d.ghs_note)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">本次交易的直接后果</div>
+      <div class="cons mt">${cons}</div>
+      <div class="danger-box mt"><b>罚则提示：</b>${esc(d.consequence.penalty_note)}</div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">判定依据（逐条可核验）</div>
+      <div class="basis mt">${basis}</div>
+      <div class="hr"></div>
+      <div class="small"><b>复核步骤：</b>${d.verification_steps.map((s,i)=>`${i+1}) ${esc(s)}`).join("　")}</div>
+    </div>
+
+    <div class="card pad mt">
+      <div class="kicker">边界条件 · 什么情况下结论会变</div>
+      <div class="tbl-wrap mt"><table><thead><tr><th style="width:38%">情形</th><th>对判定的影响</th></tr></thead><tbody>${boundary}</tbody></table></div>
+    </div>
+  </section>`;
+}
+
+/* ================= buyer ================= */
+function renderBuyer(){
+  const cs = CASE.buyer_checks;
+  const st = {A:0,B:0,C:0,NA:0};
+  cs.forEach(c=>st[c.status]=(st[c.status]||0)+1);
+  const stats = `
+    <div class="stats">
+      <div class="stat a"><div class="n">${st.A}</div><div class="l">A 公开可见</div><div class="d">可直接引用的公开证据</div></div>
+      <div class="stat b"><div class="n">${st.B}</div><div class="l">B 需核对原件</div><div class="d">有入口/间接证据，未见原件</div></div>
+      <div class="stat c"><div class="n">${st.C}</div><div class="l">C 无公开信息</div><div class="d">必须向买方索取</div></div>
+      <div class="stat n"><div class="n">${st.NA}</div><div class="l">NA 不适用</div><div class="d">本品种/用途不触发</div></div>
+    </div>`;
+
+  const legend = CASE.status_legend.map(s=>`<div class="doc"><div class="top"><span class="id">${esc(s.code)}</span>${badge(s.code)}</div><p style="margin-top:8px">${esc(s.desc)}</p></div>`).join("");
+
+  const cards = cs.map(c=>`
+    <div class="bcard" data-status="${esc(c.status)}">
+      <div class="h"><span class="tag navy">${esc(c.id)}</span><b>${esc(c.item)}</b>${badge(c.status)}<span class="tag gray">${esc(c.category)}</span><span class="tag ${c.risk==="中"?"amber":c.risk==="无"?"gray":"teal"}">风险 ${esc(c.risk)}</span></div>
+      <p class="finding">${esc(c.finding)}</p>
+      ${c.evidence && c.evidence.length ? `<div class="ev">公开证据：${c.evidence.map(e=>`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.label)}</a>${e.date?`（${esc(e.date)}）`:""}`).join(" ｜ ")}</div>` : `<div class="ev">公开证据：<b>无</b></div>`}
+      <div class="ask"><b>需向买方索取：</b>${esc(c.ask)}</div>
+      ${c.note?`<div class="note">${esc(c.note)}</div>`:""}
+    </div>`).join("");
+
+  return `
+  <section id="buyer">
+    ${secHead("Step 03","买方公开资质核查","三种状态分开写：公开可见 / 需核对原件 / 无公开信息。任何“大概有”“应该有”都不进入结论。")}
+    ${stats}
+    <div class="filters" id="buyerFilters">
+      <button class="fbtn on" data-f="all">全部 ${cs.length}</button>
+      <button class="fbtn" data-f="A">A 公开可见 ${st.A}</button>
+      <button class="fbtn" data-f="B">B 需核对原件 ${st.B}</button>
+      <button class="fbtn" data-f="C">C 无公开信息 ${st.C}</button>
+      <button class="fbtn" data-f="NA">NA 不适用 ${st.NA}</button>
+    </div>
+    <div id="buyerList">${cards}</div>
+    <div class="grid-4 mt">${legend}</div>
+  </section>`;
+}
+
+/* ================= checklist ================= */
+function allObligations(){
+  const out = [];
+  [["seller","销售方"],["buyer","买方"],["joint","双方"]].forEach(([k,label])=>{
+    (CASE.obligations[k]||[]).forEach(o=>out.push({...o, group:label, groupKey:k}));
+  });
+  return out;
+}
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }catch(e){ return {}; }
+}
+function saveState(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
+
+function renderChecklist(){
+  const items = allObligations();
+  const state = loadState();
+  const groups = ["销售方","买方","双方"];
+  let html = "";
+  groups.forEach(g=>{
+    const rows = items.filter(i=>i.group===g);
+    if(!rows.length) return;
+    html += `<div class="grp">${esc(g)} · ${rows.length} 项</div>`;
+    rows.forEach(o=>{
+      const s = state[o.id] || {};
+      const status = s.status || "未开始";
+      html += `
+      <div class="ck ${status==="已完成"?"done":""}" data-id="${esc(o.id)}">
+        <div class="box" role="checkbox" tabindex="0" aria-label="标记完成"></div>
+        <div class="id">${esc(o.id)}</div>
+        <div class="body">
+          <div class="t">${esc(o.item)}</div>
+          <div class="m"><b>依据</b> ${esc(o.basis)}　<b>留存</b> ${esc(o.retention)}　<b>备案</b> ${esc(o.filing)}　<b>时点</b> ${esc(o.timing)}</div>
+        </div>
+        <select class="st">${CK_STATES.map(x=>`<option ${x===status?"selected":""}>${x}</option>`).join("")}</select>
+        <input class="note" placeholder="完成日期 / 备注" value="${esc(s.note||"")}">
+      </div>`;
+    });
+  });
+  return `
+  <section id="checklist">
+    ${secHead("Step 04","本单合规检查清单","可勾选、可保存（本机浏览器）、可导出；勾选结果可归入客户档案。")}
+    <div class="card pad">
+      <div class="prog"><div class="bar"><i id="bar"></i></div><div class="pct" id="pct">0%</div><div class="tiny" id="progText">0 / 0</div></div>
+      <div id="ckList">${html}</div>
+      <div class="actions">
+        <button class="btn primary" id="exportJson">导出勾选结果（JSON）</button>
+        <button class="btn" id="exportCsv">导出清单（CSV）</button>
+        <button class="btn" id="copyPending">复制未完成项</button>
+        <button class="btn ghost" id="resetCk">重置</button>
+        <button class="btn ghost" id="printPage">打印 / 存 PDF</button>
+      </div>
+      <div class="tiny mt">勾选结果保存在本机浏览器（localStorage），不会上传；换电脑或清理缓存会丢失，重要节点请导出 JSON 归档。</div>
+    </div>
+  </section>`;
+}
+function refreshProgress(){
+  const items = allObligations();
+  const state = loadState();
+  const done = items.filter(o=>(state[o.id]||{}).status==="已完成").length;
+  const na = items.filter(o=>(state[o.id]||{}).status==="不适用").length;
+  const total = items.length;
+  const eff = Math.max(total-na,1);
+  const pct = Math.round(done/eff*100);
+  const bar = $("#bar"); if(bar) bar.style.width = pct+"%";
+  const p1=$("#pct"); if(p1) p1.textContent = pct+"%";
+  const p2=$("#progText"); if(p2) p2.textContent = `${done} / ${total} 已完成${na?`（不适用 ${na} 项）`:""}`;
+  const tp=$("#topProg"); if(tp) tp.textContent = `${done}/${total}`;
+}
+
+/* ================= docs ================= */
+function renderDocs(){
+  const d = CASE.documents.map(x=>`
+    <div class="doc">
+      <div class="top"><span class="id">${esc(x.id)}</span><span class="tag ${x.mandatory.includes("必备")?"red":x.mandatory==="建议"?"amber":"gray"}">${esc(x.mandatory)}</span></div>
+      <h4>${esc(x.name)}</h4>
+      <p>${esc(x.purpose)}</p>
+      <div class="meta"><span class="mini">提供方 ${esc(x.issuer)}</span><span class="mini">形式 ${esc(x.form)}</span><span class="mini">有效期 ${esc(x.validity)}</span></div>
+      <div class="tiny" style="margin-top:6px">${esc(x.note)}</div>
+    </div>`).join("");
+  return `
+  <section id="docs">
+    ${secHead("Step 05","需向买方索取的证照与资料","按本单用途取，不要一次全要：必备 4 项先行，建议项后补，分支项按食品级/转售情形启用。")}
+    <div class="grid-3">${d}</div>
+  </section>`;
+}
+
+/* ================= retention ================= */
+function renderRetention(){
+  const rows = [];
+  const map = {seller:"销售方",buyer:"买方",joint:"双方"};
+  ["seller","buyer","joint"].forEach(k=>{
+    (CASE.obligations[k]||[]).forEach(o=>rows.push(`
+      <tr><td class="num">${esc(o.id)}</td><td>${map[k]}</td><td>${esc(o.item)}</td><td class="small">${esc(o.basis)}</td>
+      <td><b>${esc(o.retention)}</b></td><td>${esc(o.filing)}</td><td class="small">${esc(o.evidence)}</td></tr>`));
+  });
+  return `
+  <section id="retention">
+    ${secHead("Step 06","留存年限与备案矩阵","口径写清楚：危化品销售记录 ≥3 年；本单一般化工品无法定 3 年要求，商务资料建议 ≥5 年，会计凭证 30 年。")}
+    <div class="card pad">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>编号</th><th>责任方</th><th>事项</th><th>依据</th><th>留存年限</th><th>是否备案</th><th>证据</th></tr></thead>
+        <tbody>${rows.join("")}</tbody>
+      </table></div>
+      <div class="note-box mt"><b>结论：</b>本单无需向公安机关或应急管理部门备案；无危化品销售记录 3 年强制要求。若同车/同合同混入烧碱、硫酸等危化品，留存与备案按危化品口径单独执行。</div>
+    </div>
+  </section>`;
+}
+
+/* ================= gaps + draft ================= */
+function renderGaps(){
+  const gaps = CASE.gaps.map(g=>`
+    <div class="bcard">
+      <div class="h"><span class="tag navy">${esc(g.id)}</span><b>${esc(g.gap)}</b>
+        <span class="tag ${g.severity==="高"?"red":g.severity==="中"?"amber":"green"}">${esc(g.severity)}</span>
+        <span class="tag gray">${esc(g.owner)}</span></div>
+      <p class="finding">${esc(g.why)}</p>
+      <div class="ask"><b>要什么：</b>${esc(g.ask)}</div>
+    </div>`).join("");
+
+  return `
+  <section id="gaps">
+    ${secHead("Step 07","缺口清单与索要话术","缺口 → 一句话要什么 → 一键生成邮件/微信草稿；草稿可编辑，发送前请核对称呼与库位。")}
+    <div class="grid-2">
+      <div>${gaps}</div>
+      <div class="card pad">
+        <div class="kicker">生成索要资料的消息</div>
+        <div class="tabs mt" id="draftTabs">
+          <button class="tab on" data-tone="formal">邮件 · 标准版</button>
+          <button class="tab" data-tone="pending">邮件 · 仅列缺口</button>
+          <button class="tab" data-tone="wechat">微信 · 短版</button>
+        </div>
+        <textarea class="draft" id="draftBox"></textarea>
+        <div class="textarea-meta"><span id="draftCount">0 字</span><span>可直接改称呼、库位、联系人</span></div>
+        <div class="actions">
+          <button class="btn primary" id="copyDraft">复制草稿</button>
+          <button class="btn" id="regenDraft">重新生成</button>
+        </div>
+        <div class="tiny mt">发送前请确认：① 收件人是采购对接人而非公共邮箱；② 不要在首封邮件里列全部 12 项；③ 涉及食品级/转售分支时，先电话说明再发函。</div>
+      </div>
+    </div>
+  </section>`;
+}
+function buildDraft(tone){
+  const m = CASE.meta, d = CASE.determination;
+  if(tone==="wechat") return CASE.draft.wechat;
+  const pending = CASE.gaps.map((g,i)=>`${i+1}. ${g.ask.replace(/^请提供/,"").replace(/^请/,"")}（${g.gap}）`).join("\n");
+  if(tone==="pending"){
+    return `尊敬的${m.buyer.name.replace(/股份有限公司$/,"")}采购部：\n\n您好！关于我司拟供应的${CASE.product.name}（CAS ${CASE.product.cas}，${CASE.product.grade}），为完成供应商准入与合同归档，尚有以下资料需请贵司协助：\n\n${pending}\n\n以上资料仅用于准入与合规留档，我方按内部制度保存不少于 5 年。如贵司有标准模板，请直接发我，我方按贵司版本填写。\n\n顺颂商祺！\n\n${m.seller.name}\n销售部 · （姓名）\n（电话 / 邮箱）`;
+  }
+  return CASE.draft.formal;
+}
+
+/* ================= compare ================= */
+function renderCompare(){
+  const rows = CASE.cross_products.map(p=>`
+    <tr><td><b>${esc(p.name)}</b></td><td class="mono">${esc(p.cas)}</td>
+    <td>${p.verdict.includes("非")?`<span class="tag green">${esc(p.verdict)}</span>`:`<span class="tag amber">${esc(p.verdict)}</span>`}</td>
+    <td class="small">${esc(p.flags)}</td><td class="small">${esc(p.buyer_req)}</td>
+    <td class="small">${esc(p.seller_req)}</td><td class="small">${esc(p.transport)}</td></tr>`).join("");
+  return `
+  <section id="compare">
+    ${secHead("Step 08","同流程产品对照","同一个流程换产品，结论完全不同。这张表是“判定引擎”的演示，也是销售最容易混错的地方。")}
+    <div class="card pad">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>产品</th><th>CAS</th><th>判定</th><th>特殊名录</th><th>买方要求</th><th>销售方要求</th><th>运输</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      <div class="warn-box mt"><b>对照要点：</b>① 纯碱与小苏打是“碱”但不是危化品，最易与烧碱混称；② 硫酸是易制毒第三类，购买要公安备案；③ 双氧水含量 &gt;8% 即属易制爆，销售方要记录 3 年、3 日内报公安备案；④ 甲醇属重点监管，储存装卸要求高。</div>
+    </div>
+  </section>`;
+}
+
+/* ================= sources + manual + footer ================= */
+function renderSources(){
+  const rows = CASE.sources.map((s,i)=>`
+    <tr><td class="num">${i+1}</td><td><span class="tag gray">${esc(s.type)}</span></td>
+    <td><b>${esc(s.title)}</b><div class="tiny">${esc(s.used_for)}</div></td>
+    <td class="small">${esc(s.publisher)}</td><td class="small nowrap">${esc(s.date)}</td>
+    <td>${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">打开</a>`:"—"}</td></tr>`).join("");
+  return `
+  <section id="sources">
+    ${secHead("Step 09","法规索引与版本",`检索时点 ${CASE.meta.as_of}。法规更新、目录调整后，本卡结论需重跑。`)}
+    <div class="card pad"><div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>类型</th><th>名称 / 用途</th><th>发布机构</th><th>日期</th><th>链接</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div></div>
+  </section>`;
+}
+function renderManual(){
+  const rows = CASE.manual_confirm.map(m=>`
+    <tr><td><b>${esc(m.item)}</b></td><td>${esc(m.why)}</td><td>${esc(m.who)}</td><td class="nowrap">${esc(m.deadline)}</td><td><span class="tag gray">☐ 待确认</span></td></tr>`).join("");
+  return `
+  <section id="manual">
+    ${secHead("Step 10","必须由人确认的事项","以下 6 项机器不能替代。确认后才可对外出具判定或承诺。")}
+    <div class="card pad"><div class="tbl-wrap"><table>
+      <thead><tr><th>确认项</th><th>为什么必须人工确认</th><th>谁确认</th><th>截止</th><th>状态</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div></div>
+  </section>`;
+}
+
+/* ================= app ================= */
+function renderApp(){
+  $("#app").innerHTML = renderHero() + renderIdentity() + renderVerdict() + renderBuyer()    + renderChecklist() + renderDocs() + renderRetention() + renderGaps()
+    + renderCompare() + renderSources() + renderManual()
+    + `<footer>
+        <b>版本</b> v1.0 · 判定日 ${esc(CASE.meta.as_of)} · 案例 ${esc(CASE.meta.case_no)}<br>
+        ${esc(CASE.meta.disclaimer)}<br>
+        <span class="tiny">本页由 chem-sales-compliance 生成；数据源与条文见「法规索引」。PDF/打印：Ctrl/Cmd + P。</span>
+      </footer>`;
+  const bc = $("#brandCase"); if(bc) bc.textContent = CASE.meta.case_no;
+  bind();
+  refreshProgress();
+}
+
+/* ================= interactions ================= */
+function bind(){
+  // nav
+  const secs = [
+    ["top","概览"],["identity","产品身份"],["verdict","判定卡"],["buyer","买方资质"],
+    ["checklist","合规清单"],["docs","证照"],["retention","留存备案"],["gaps","缺口话术"],
+    ["compare","对照"],["sources","法规"],["manual","人工确认"]
+  ];
+  $("#navLinks").innerHTML = secs.map(([id,label])=>`<a href="#${id}" data-id="${id}">${label}</a>`).join("");
+  const links = $$("#navLinks a");
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(a=>a.classList.toggle("active", a.dataset.id===e.target.id));
+      }
+    });
+  }, {rootMargin:"-45% 0px -50% 0px", threshold:0.01});
+  secs.forEach(([id])=>{ const el=document.getElementById(id); if(el) io.observe(el); });
+
+  // product chips
+  $$("#productChips .pchip").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      $$("#productChips .pchip").forEach(b=>b.classList.remove("on"));
+      btn.classList.add("on");
+      const cp = CASE.cross_products.find(x=>x.cas===btn.dataset.cas);
+      const panel = $("#altPanel");
+      if(!cp){ panel.innerHTML=""; return; }
+      if(cp.cas === CASE.product.cas){
+        panel.innerHTML = `<div class="note-box mt"><b>已回到本单：</b>${esc(cp.name)}，CAS ${esc(cp.cas)}，判定为<b>${esc(cp.verdict)}</b>。本页结论对当前交易有效。</div>`;
+        return;
+      }
+      panel.innerHTML = `
+        <div class="preview">
+          <h4>对照预览：${esc(cp.name)}（CAS ${esc(cp.cas)}）</h4>
+          <div class="row"><b>判定</b><span>${esc(cp.verdict)}</span></div>
+          <div class="row"><b>特殊名录</b><span>${esc(cp.flags)}</span></div>
+          <div class="row"><b>买方要求</b><span>${esc(cp.buyer_req)}</span></div>
+          <div class="row"><b>销售方要求</b><span>${esc(cp.seller_req)}</span></div>
+          <div class="row"><b>运输</b><span>${esc(cp.transport)}</span></div>
+          <div class="row"><b>备注</b><span>${esc(cp.note)}</span></div>
+          <div class="mt"><span class="tag amber">仅对照预览，不改写本单《纯碱》结论</span></div>
+        </div>`;
+    });
+  });
+
+  // manual product check
+  $("#manualCheck").addEventListener("click", ()=>{
+    const name = $("#qName").value.trim() || "（未填名称）";
+    const cas = $("#qCas").value.trim() || "（未填 CAS）";
+    const form = $("#qForm").value.trim() || "（未填浓度/形态）";
+    $("#manualOut").innerHTML = `
+      <div class="warn-box">
+        <b>自查提示（${esc(name)} / ${esc(cas)} / ${esc(form)}）：</b>
+        该产品不在本页预置库中，<b>不能直接给出判定</b>。请按以下顺序核验：
+        ① 在《危险化学品目录（2015 版）》按品名、别名、CAS 三路检索，留存截图；
+        ② 核对是否列入剧毒、易制爆、易制毒、重点监管、特别管控名录；
+        ③ 调取本批 SDS，按 GHS 分类比对危化品确定原则；
+        ④ 若危险特性不确定，按 60 号令做鉴定分类后再交易；
+        ⑤ 结论齐备前，不报价、不承诺交期。
+      </div>`;
+  });
+
+  // buyer filters
+  $$("#buyerFilters .fbtn").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      $$("#buyerFilters .fbtn").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+      const f = b.dataset.f;
+      $$("#buyerList .bcard").forEach(card=>{
+        card.style.display = (f==="all" || card.dataset.status===f) ? "" : "none";
+      });
+    });
+  });
+
+  // checklist
+  const state = loadState();
+  $$("#ckList .ck").forEach(row=>{
+    const id = row.dataset.id;
+    const sel = row.querySelector("select.st");
+    const note = row.querySelector("input.note");
+    const box = row.querySelector(".box");
+    const cur = state[id] || {};
+    sel.value = cur.status || "未开始";
+    note.value = cur.note || "";
+    const sync = ()=>{
+      state[id] = {status: sel.value, note: note.value};
+      saveState(state);
+      row.classList.toggle("done", sel.value==="已完成");
+      refreshProgress();
+    };
+    sel.addEventListener("change", sync);
+    note.addEventListener("change", sync);
+    const toggle = ()=>{
+      sel.value = (sel.value==="已完成") ? "未开始" : "已完成";
+      sync();
+    };
+    box.addEventListener("click", toggle);
+    box.addEventListener("keydown", (e)=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); toggle(); }});
+  });
+
+  $("#exportJson").addEventListener("click", ()=>{
+    const payload = {case_no: CASE.meta.case_no, exported_at: new Date().toISOString(), items: loadState()};
+    download(`合规清单_${CASE.meta.case_no}.json`, JSON.stringify(payload, null, 2), "application/json");
+  });
+  $("#exportCsv").addEventListener("click", ()=>{
+    const items = allObligations();
+    const s = loadState();
+    const head = ["编号","责任方","事项","依据","留存年限","是否备案","状态","备注"];
+    const lines = [head.join(",")].concat(items.map(o=>{
+      const v = s[o.id]||{};
+      return [o.id,o.group,o.item,o.basis,o.retention,o.filing,v.status||"未开始",v.note||""]
+        .map(x=>`"${String(x).replace(/"/g,'""')}"`).join(",");
+    }));
+    download(`合规清单_${CASE.meta.case_no}.csv`, "\ufeff"+lines.join("\n"), "text/csv");
+  });
+  $("#copyPending").addEventListener("click", async ()=>{
+    const s = loadState();
+    const items = allObligations().filter(o=>(s[o.id]||{}).status!=="已完成" && (s[o.id]||{}).status!=="不适用");
+    const text = items.map((o,i)=>`${i+1}. [${o.group}] ${o.item}（留存：${o.retention}）`).join("\n");
+    await copyText(text || "全部已完成");
+    toast("未完成项已复制");
+  });
+  $("#resetCk").addEventListener("click", ()=>{
+    if(!confirm("确定重置本机保存的勾选状态？")) return;
+    localStorage.removeItem(STORE_KEY);
+    renderApp();
+    toast("已重置");
+  });
+  $("#printPage").addEventListener("click", ()=>window.print());
+
+  // draft
+  let tone = "formal";
+  const boxEl = $("#draftBox");
+  const setDraft = ()=>{
+    boxEl.value = buildDraft(tone);
+    $("#draftCount").textContent = boxEl.value.length + " 字";
+  };
+  $$("#draftTabs .tab").forEach(t=>{
+    t.addEventListener("click", ()=>{
+      $$("#draftTabs .tab").forEach(x=>x.classList.remove("on"));
+      t.classList.add("on");
+      tone = t.dataset.tone;
+      setDraft();
+    });
+  });
+  boxEl.addEventListener("input", ()=>{ $("#draftCount").textContent = boxEl.value.length + " 字"; });
+  $("#regenDraft").addEventListener("click", ()=>{ setDraft(); toast("已重新生成"); });
+  $("#copyDraft").addEventListener("click", async ()=>{ await copyText(boxEl.value); toast("草稿已复制"); });
+  setDraft();
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+}
+function download(name, content, mime){
+  const blob = new Blob([content], {type: mime+";charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+}
+
+renderApp();
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "series": [
+    {
+      "id": "PR_B",
+      "node_id": "N_PRIMARY",
+      "product": "示例产品 B",
+      "source": "manual",
+      "basis": "演示出厂价",
+      "region": "演示",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": false,
+      "points": [],
+      "gap": "演示：无公开价格序列"
+    },
+    {
+      "id": "PR_RA",
+      "node_id": "N_RA",
+      "product": "原料 A",
+      "source": "manual",
+      "basis": "演示市场价",
+      "region": "演示",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": false,
+      "points": [],
+      "gap": "演示：无公开价格序列"
+    }
+  ]
+}

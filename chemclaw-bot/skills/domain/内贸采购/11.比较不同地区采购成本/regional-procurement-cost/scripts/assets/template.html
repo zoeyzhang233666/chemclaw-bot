@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#f5f7fa; --panel:#ffffff; --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --line:#e2e8f0;
+  --brand:#0f4c81; --brand2:#1d6fb8; --accent:#c2410c; --good:#047857; --warn:#b45309; --bad:#b91c1c;
+  --sh-low:0 1px 2px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.18);
+  --sh-mid:0 2px 6px rgba(15,23,42,.08),0 18px 40px -20px rgba(15,23,42,.25);
+  --r:14px; --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg); color:var(--ink); font-size:14px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--brand2);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit}
+.wrap{max-width:1480px;margin:0 auto;padding:0 22px 96px}
+/* ---------- 顶部 ---------- */
+header.hero{
+  background:linear-gradient(135deg,#0b3a63 0%,#0f4c81 45%,#16608f 100%);
+  color:#fff;padding:26px 0 22px;margin-bottom:22px;
+  box-shadow:0 12px 30px -18px rgba(11,58,99,.9);
+}
+.hero .wrap{padding-bottom:0}
+.hero-top{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between}
+.hero h1{margin:0;font-size:23px;font-weight:700;letter-spacing:.3px}
+.hero .sub{margin:6px 0 0;color:#cfe0f0;font-size:13px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);
+  color:#eaf3fb;border-radius:999px;padding:4px 11px;font-size:12px;white-space:nowrap}
+.chip b{font-weight:600;color:#fff}
+.demo-banner{background:rgba(255,255,255,.1);border-left:3px solid #fbbf24;border-radius:8px;padding:10px 14px;margin-top:14px;font-size:12.5px;color:#fef3c7}
+/* ---------- 通用卡片 ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-low);min-width:0;max-width:100%}
+.card.panel{overflow:hidden}
+.grid{display:grid;gap:16px;min-width:0}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(196px,1fr));margin-bottom:18px}
+.kpi{padding:15px 17px;position:relative;overflow:hidden}
+.kpi .lab{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:6px}
+.kpi .val{font-size:26px;font-weight:700;margin-top:6px;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.kpi .val small{font-size:13px;font-weight:500;color:var(--ink3);margin-left:4px}
+.kpi .hint{font-size:11.5px;color:var(--ink3);margin-top:4px}
+.kpi::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand2)}
+.kpi.good::after{background:var(--good)} .kpi.warn::after{background:var(--warn)} .kpi.bad::after{background:var(--bad)}
+/* ---------- 区块标题 ---------- */
+section{margin-top:26px;scroll-margin-top:14px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:0 0 12px}
+.sec-h h2{font-size:17px;margin:0;font-weight:700;letter-spacing:.2px}
+.sec-h .no{font-family:var(--mono);font-size:12px;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px}
+.sec-h .desc{color:var(--ink3);font-size:12.5px}
+/* ---------- 控制台 ---------- */
+.console{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1.55fr);gap:16px}
+@media (max-width:1080px){.console{grid-template-columns:minmax(0,1fr)}}
+.panel{padding:16px 18px}
+.panel h3{margin:0 0 4px;font-size:14px;font-weight:700}
+.panel .pdesc{color:var(--ink3);font-size:12px;margin:0 0 14px}
+.field{margin-bottom:13px}
+.field label{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin-bottom:5px;font-weight:500}
+.field label .u{color:var(--ink3);font-weight:400;font-family:var(--mono);font-size:11px}
+.field input,.field select,.field textarea{
+  width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:#fbfdfe;color:var(--ink);
+  transition:border-color .15s,box-shadow .15s;font-variant-numeric:tabular-nums;
+}
+.field input:focus,.field select:focus{outline:none;border-color:var(--brand2);box-shadow:0 0 0 3px rgba(29,111,184,.13);background:#fff}
+.field input.empty{background:#fffaf3;border-color:#f3d6b0}
+.field .note{font-size:11px;color:var(--ink3);margin-top:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.regions-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}
+.pick{border:1px solid var(--line);border-radius:11px;padding:9px 11px;cursor:pointer;transition:.15s;background:#fbfdfe;user-select:none}
+.pick:hover{border-color:#b9cfe4}
+.pick.on{background:#eef6fd;border-color:var(--brand2);box-shadow:0 0 0 1px var(--brand2) inset}
+.pick .pn{font-weight:600;font-size:13px;display:flex;align-items:center;gap:7px}
+.pick .pn i{width:12px;height:12px;border-radius:4px;border:1.5px solid #94a3b8;display:inline-block;position:relative}
+.pick.on .pn i{background:var(--brand2);border-color:var(--brand2)}
+.pick.on .pn i::after{content:"";position:absolute;left:3.2px;top:.6px;width:3.5px;height:7px;border:1.6px solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
+.pick .pm{font-size:11.5px;color:var(--ink3);margin-top:3px;font-variant-numeric:tabular-nums}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:9px;padding:7px 13px;font-size:12.5px;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand2);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand2)}
+.btn.warn{color:var(--bad);border-color:#f0c4c4}
+/* ---------- 表格 ---------- */
+.tbl-wrap{overflow:auto;border-radius:11px;border:1px solid var(--line);min-width:0;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:12.6px;font-variant-numeric:tabular-nums;background:#fff}
+th,td{padding:9px 11px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:#f1f5f9;color:var(--ink2);font-weight:600;font-size:11.8px;position:sticky;top:0;z-index:2}
+td:first-child,th:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#f8fbfe}
+tr.sel td{background:#eef6fd}
+.num{font-variant-numeric:tabular-nums}
+.na{color:#b45309;font-size:11.5px;background:#fff7ed;border:1px dashed #f3c795;border-radius:6px;padding:1px 7px;display:inline-block}
+.tag{display:inline-block;font-size:11px;border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+.tag.self{background:#fff1e6;color:#b45309;border:1px solid #f5d0a8}
+.tag.deliv{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+.tag.exw{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.pos{color:var(--bad)} .neg{color:var(--good)}
+.bar{height:7px;border-radius:4px;background:#e2e8f0;overflow:hidden;min-width:60px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#1d6fb8,#0f4c81)}
+/* ---------- 图表 ---------- */
+.chart{width:100%;height:380px}
+.chart.tall{height:440px}
+.chart-lite{display:none}
+/* ---------- 地图 ---------- */
+.mapbox{position:relative;background:#f8fbfd;border-radius:11px;overflow:hidden}
+.mapbox svg{display:block;width:100%;height:auto}
+.route-line{stroke-linecap:round;fill:none}
+.route-label{font-size:10px;fill:#475569;font-family:var(--mono)}
+.node-label{font-size:12px;font-weight:600;fill:#0f172a}
+.node-sub{font-size:10px;fill:#64748b}
+.dest-label{font-size:13px;font-weight:700;fill:#c2410c}
+/* ---------- 明细 ---------- */
+details.calc{border:1px solid var(--line);border-radius:11px;margin-bottom:10px;overflow:hidden;background:#fff}
+details.calc>summary{cursor:pointer;padding:11px 15px;font-weight:600;font-size:13px;background:#f8fafc;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.calc>summary::-webkit-details-marker{display:none}
+details.calc>summary::before{content:"▸";color:var(--brand2);margin-right:8px;transition:.2s;display:inline-block}
+details.calc[open]>summary::before{transform:rotate(90deg)}
+details.calc>summary .amt{font-variant-numeric:tabular-nums;color:var(--ink2);font-weight:500;font-size:12.5px}
+details.calc .body{padding:4px 15px 15px}
+.formula{font-family:var(--mono);font-size:12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:#1e293b;overflow-x:auto;white-space:pre-wrap;line-height:1.75}
+.formula b{color:var(--brand);font-weight:600}
+.lines{width:100%;font-size:12.3px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.lines td{padding:6px 8px;border-bottom:1px dashed var(--line);white-space:normal;text-align:left}
+.lines td:last-child{text-align:right;font-weight:600;white-space:nowrap}
+.lines tr.total td{border-top:1.5px solid var(--ink2);border-bottom:0;font-weight:700;color:var(--brand)}
+.lines tr.unk td:last-child{color:var(--warn);font-weight:600;font-size:11.5px}
+/* ---------- 徽标 ---------- */
+.risk{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;border-radius:999px;padding:2px 10px;font-weight:600}
+.risk.blocker{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.risk.warn{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+.risk.ok{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+/* ---------- 缺口 ---------- */
+.gap{border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:9px;padding:11px 14px;margin-bottom:10px;background:#fffdf8}
+.gap.blocker{border-left-color:var(--bad);background:#fffafa}
+.gap h4{margin:0 0 6px;font-size:13px;display:flex;align-items:center;gap:8px}
+.gap dl{margin:0;display:grid;grid-template-columns:78px 1fr;gap:3px 10px;font-size:12.2px}
+.gap dt{color:var(--ink3)} .gap dd{margin:0;color:var(--ink2)}
+/* ---------- 供应商 ---------- */
+.sup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.sup{border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:#fff}
+.sup h4{margin:0 0 4px;font-size:13.5px;display:flex;align-items:center;gap:8px}
+.sup .pp{font-size:12px;color:var(--ink2);margin:2px 0}
+.sup .lk{font-size:12px;margin-top:8px;display:flex;flex-wrap:wrap;gap:10px}
+/* ---------- 引用 ---------- */
+.src{font-size:12px;padding:10px 13px;border:1px solid var(--line);border-radius:9px;margin-bottom:8px;background:#fff}
+.src .sn{font-weight:600;font-size:12.5px}
+.src .su{word-break:break-all;font-family:var(--mono);font-size:11px;color:var(--brand2)}
+/* ---------- 页脚 ---------- */
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--ink3);font-size:11.8px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+/* ---------- 悬浮导航 ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(245,247,250,.92);backdrop-filter:blur(9px);border-bottom:1px solid var(--line);margin:0 -22px 16px;padding:7px 22px;display:flex;gap:4px;overflow-x:auto}
+.nav a{font-size:12.2px;color:var(--ink2);padding:4px 10px;border-radius:7px;white-space:nowrap}
+.nav a:hover{background:#e8eef5;text-decoration:none;color:var(--brand)}
+.nav a.act{background:var(--brand);color:#fff}
+.toast{position:fixed;right:20px;bottom:20px;background:#0f172a;color:#fff;padding:10px 16px;border-radius:10px;font-size:12.5px;box-shadow:var(--sh-mid);opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:99;max-width:340px}
+.toast.show{opacity:1;transform:none}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11.5px;color:var(--ink3);margin-top:8px}
+.legend i{display:inline-block;width:22px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.note-box{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-size:12.2px;color:var(--ink2)}
+.note-box.warn{background:#fffdf6;border-color:#f5e0b7}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:960px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <h1 id="hTitle">__TITLE__</h1>
+        <p class="sub" id="hSub"></p>
+        <div class="meta" id="hChips"></div>
+      </div>
+    </div>
+    <div class="demo-banner" id="hBanner"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="nav" id="nav">
+    <a href="#s-kpi" class="act">总览</a>
+    <a href="#s-console">参数与区域</a>
+    <a href="#s-price">现货价格口径</a>
+    <a href="#s-map">运输距离</a>
+    <a href="#s-landed">到厂成本</a>
+    <a href="#s-decomp">因素分解</a>
+    <a href="#s-history">价差历史</a>
+    <a href="#s-detail">计算明细</a>
+    <a href="#s-gaps">缺口与假设</a>
+    <a href="#s-supplier">找供应商</a>
+    <a href="#s-source">数据来源</a>
+  </nav>
+
+  <!-- 总览 -->
+  <section id="s-kpi">
+    <div class="grid kpis" id="kpis"></div>
+    <div class="card panel" style="padding:14px 18px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span class="risk ok" id="readinessBadge">—</span>
+        <div style="font-size:12.6px;color:var(--ink2);line-height:1.75" id="readiness"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 控制台 -->
+  <section id="s-console">
+    <div class="sec-h"><span class="no">01</span><h2>参数与区域选择</h2><span class="desc">改任何一项，下方全部结果立即重算（不上传、不联网）</span></div>
+    <div class="console">
+      <div class="card panel">
+        <h3>采购条件</h3>
+        <p class="pdesc">收货地、数量与费用口径。费用留空表示「未知」，填 0 表示「已确认包含在车板价里」。</p>
+        <div class="field">
+          <label>收货地 <span class="u">城市 / 区县</span></label>
+          <input id="inDest" placeholder="如：苏州">
+          <div class="note">仅用于标注口径；换收货地请用「New」重新生成线路与距离。</div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>采购数量 <span class="u">吨</span></label>
+            <input id="inQty" type="number" min="1" step="10">
+          </div>
+          <div class="field">
+            <label>运价含税/不含税 <span class="u"></span></label>
+            <select id="inPriceBasis">
+              <option value="incl_tax">含税价比价</option>
+              <option value="excl_tax">不含税价比价</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>装车费 <span class="u">元/吨</span></label>
+            <input id="inLoad" type="number" step="1" placeholder="留空=未知">
+          </div>
+          <div class="field">
+            <label>卸车费 <span class="u">元/吨</span></label>
+            <input id="inUnload" type="number" step="1" placeholder="留空=未知">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>检测/取样 <span class="u">元/吨</span></label>
+            <input id="inInspect" type="number" step="1" placeholder="留空=未知">
+          </div>
+          <div class="field">
+            <label>运费税率 <span class="u">%</span></label>
+            <input id="inTax" type="number" step="1" value="9">
+          </div>
+        </div>
+        <h3 style="margin-top:8px">来源区域（点击选择）</h3>
+        <p class="pdesc">取消勾选即从对比中移除。</p>
+        <div class="regions-pick" id="picks"></div>
+        <div class="btns">
+          <button class="btn primary" id="btnApplyFreight">批量填运价</button>
+          <button class="btn" id="btnReset">恢复初始值</button>
+          <button class="btn warn" id="btnClearFreight">全部清空运价</button>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <h3>线路与运费（逐条填实价）</h3>
+        <p class="pdesc">运价有三种填法，系统按优先级取用：<b>总运费</b> &gt; <b>元/吨·公里 × 里程</b> &gt; <b>元/吨包干</b>。三者都空则该项到厂成本显示为「待补」。</p>
+        <div class="tbl-wrap">
+          <table id="tblFreight">
+            <thead><tr>
+              <th>线路</th><th>里程 km</th><th>元/吨（包干）</th><th>元/吨·公里</th><th>总运费 元</th><th>装车</th><th>卸车</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="note-box" style="margin-top:12px">
+          <b>口径提醒：</b>运价请注明是否含税（公路运输增值税 9%，一般纳税人可抵扣）与是否含装卸。<span id="freightHint"></span>
+        </div>
+        <div class="btns" style="margin-top:10px">
+          <button class="btn" id="btnExportCsv">导出当前参数 CSV</button>
+          <button class="btn" id="btnCopyCfg">复制参数 JSON</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 现货价格 -->
+  <section id="s-price">
+    <div class="sec-h"><span class="no">02</span><h2>各地区现货价格（统一口径后）</h2><span class="desc">同规格 · 同单位 · 同税费口径 · 同数据日</span></div>
+    <div class="card panel">
+      <div class="tbl-wrap" style="border:0">
+        <table id="tblPrice">
+          <thead><tr>
+            <th>区域</th><th>市场</th><th>交货口径</th><th>区间 元/吨</th><th>取用值</th><th>不含税</th><th>数据日</th><th>来源</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div><div class="chart" id="chPrice"></div></div>
+        <div><div class="chart" id="chSpread"></div></div>
+      </div>
+      <div class="note-box warn" id="priceNote" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <!-- 地图 -->
+  <section id="s-map">
+    <div class="sec-h"><span class="no">03</span><h2>来源地 → 收货地 运输距离</h2><span class="desc">每条线路的可核验里程、依据与可用运输方式</span></div>
+    <div class="card panel">
+      <div class="mapbox" id="map"></div>
+      <div class="legend" id="mapLegend"></div>
+      <div class="tbl-wrap" style="margin-top:14px">
+        <table id="tblDist">
+          <thead><tr><th>区域</th><th>起点（底）</th><th>距收货地 km</th><th>起点（高）</th><th>距收货地 km</th><th>里程依据</th><th>可核验</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="note-box" style="margin-top:12px">
+        <b>里程怎么来的：</b>全部来自可在线复核的公路路线里程（高速主推方案），不是估算。若你拿到承运方 GPS 实跑里程，直接替换研究稿里的 <code>legs[].km</code> 即可，全链条会跟着变。
+      </div>
+    </div>
+  </section>
+
+  <!-- 到厂成本 -->
+  <section id="s-landed">
+    <div class="sec-h"><span class="no">04</span><h2>参考到厂成本</h2><span class="desc">裸价 + 运输 + 装卸 + 其他</span></div>
+    <div class="card panel">
+      <div class="note-box warn" id="landedWarn" style="display:none;margin-bottom:12px"></div>
+      <div class="tbl-wrap" style="border:0">
+        <table id="tblLanded">
+          <thead><tr>
+            <th>区域</th><th>裸价</th><th>运费/吨</th><th>装卸/吨</th><th>到厂/吨</th><th>比基准</th><th>整单总额</th><th>状态</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="btns" style="margin-top:12px">
+        <button class="btn primary" id="btnModeLanded">显示到厂价</button>
+        <button class="btn" id="btnModeBare">显示市场裸价</button>
+        <button class="btn" id="btnModeGap">显示价差分解</button>
+      </div>
+      <div class="chart tall" id="chLanded"></div>
+    </div>
+  </section>
+
+  <!-- 因素分解 -->
+  <section id="s-decomp">
+    <div class="sec-h"><span class="no">05</span><h2>到厂成本差异的因素分解</h2><span class="desc">市场裸价差 / 运输费用 / 装卸与其他，各贡献多少</span></div>
+    <div class="card panel">
+      <div class="grid2">
+        <div><div class="chart" id="chWaterfall"></div></div>
+        <div><div class="chart" id="chContrib"></div></div>
+      </div>
+      <div id="decompText" class="note-box" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <!-- 价差历史 -->
+  <section id="s-history">
+    <div class="sec-h"><span class="no">06</span><h2>区域价差历史区间</h2><span class="desc">过去一段时间同日同规格的区域价差走势与区间</span></div>
+    <div class="card panel">
+      <div class="chart tall" id="chHistory"></div>
+      <div class="chart" id="chSpreadHist"></div>
+      <div class="tbl-wrap" style="margin-top:10px">
+        <table id="tblHist"><thead></thead><tbody></tbody></table>
+      </div>
+      <div class="note-box" id="histNote" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <!-- 明细 -->
+  <section id="s-detail">
+    <div class="sec-h"><span class="no">07</span><h2>逐区计算明细（公式可代入）</h2><span class="desc">每一分钱从哪里来</span></div>
+    <div id="details"></div>
+  </section>
+
+  <!-- 缺口 -->
+  <section id="s-gaps">
+    <div class="sec-h"><span class="no">08</span><h2>数据缺口与关键假设</h2><span class="desc">缺什么、为什么缺、补上之后会怎样</span></div>
+    <div class="grid2">
+      <div class="card panel"><h3>必须补齐才能出排名</h3><p class="pdesc">缺失项不会被估算填充，只会被标成「待补」。</p><div id="gaps"></div></div>
+      <div class="card panel"><h3>关键假设与边界</h3><p class="pdesc">所有未注明口径的数字都按以下假设理解。</p><div id="assume"></div><h3 style="margin-top:16px">口径红线</h3><div id="rules" style="font-size:12.3px;color:var(--ink2)"></div></div>
+    </div>
+  </section>
+
+  <!-- 供应商 -->
+  <section id="s-supplier">
+    <div class="sec-h"><span class="no">09</span><h2>从某个区域继续找当地供应商</h2><span class="desc">点击区域，跳到当地候选供应商查询</span></div>
+    <div class="card panel"><div class="sup-grid" id="sups"></div>
+      <div class="note-box" style="margin-top:12px">这里的名单只是「该区域的主要产能方与产区」，不等于具体报价供应商；实际询价请用右侧链接检索当地厂商，并把真实报价回填到运费与价格字段。</div>
+    </div>
+  </section>
+
+  <!-- 来源 -->
+  <section id="s-source">
+    <div class="sec-h"><span class="no">10</span><h2>数据来源与采集日期</h2><span class="desc">每个价格都能点回原文</span></div>
+    <div class="card panel"><div id="sources"></div></div>
+  </section>
+
+  <footer>
+    <div id="footL"></div>
+    <div id="footR"></div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+<script id="model-data" type="application/json">__MODEL_JSON__</script>
+<script>__ENGINE_JS__</script>
+<script>__ECHARTS_JS__</script>
+<script>
+(function(){
+  'use strict';
+  var E = window.RegionCostEngine;
+  var M = JSON.parse(document.getElementById('model-data').textContent);
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------------- 状态 ---------------- */
+  var state = {
+    params: JSON.parse(JSON.stringify(M.defaultParams)),
+    routes: JSON.parse(JSON.stringify(M.routes)),
+    active: M.regions.map(function(r){ return r.id; }),
+    viewMode: 'landed',
+    refId: M.benchmark_region_id || (M.regions[0] && M.regions[0].id),
+    dest: (M.request && M.request.receipt_address) ? M.request.receipt_address : ''
+  };
+  // 线路参数从 route 顶层搬到 state.routes（已含在 copy 中）
+  var IS_DEMO = M.meta && M.meta.scenario === 'demo';
+
+  /* ---------------- 工具 ---------------- */
+  function n(v, d){ if(v===null||v===undefined||isNaN(v)) return '—'; return Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d||0,maximumFractionDigits:d||0}); }
+  function money(v){ if(v===null||v===undefined||isNaN(v)) return '<span class="na">待补</span>'; return n(v,0); }
+  function sgn(v, d){ if(v===null||v===undefined||isNaN(v)) return '<span class="na">待补</span>'; var s = v>0?'+':''; var cls = v>0?'pos':(v<0?'neg':''); return '<span class="'+cls+'">'+s+n(v,d)+'</span>'; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function toast(msg){ var t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(function(){t.classList.remove('show');},2200); }
+  function srcName(id){ return (M.sources[id] && M.sources[id].name) || id || '—'; }
+  function srcUrl(id){ return (M.sources[id] && M.sources[id].url) || ''; }
+
+  /* ---------------- 计算 ---------------- */
+  function compute(){
+    var regions = M.regions.filter(function(r){ return state.active.indexOf(r.id)>=0; }).map(function(r){
+      var rt = state.routes.find(function(x){ return x.id===r.route_id; });
+      var q = r.price ? { value: r.price.value, price: r.price.value, unit: r.price.unit, spec: r.price.spec } : { value: null };
+      var line = rt ? {
+        freight_unit: rt.freight_unit, freight_total: rt.freight_total,
+        loading_total: rt.loading_total, unloading_total: rt.unloading_total,
+        inspection_total: rt.inspection_total, other_total: rt.other_total
+      } : null;
+      return { id: r.id, name: r.name, route_id: r.route_id, price: q, line: line, meta: r };
+    });
+    // 把每条线路的专项费用覆盖进去（按 region 绑定，而不是全局）
+    var routesForCalc = state.routes.map(function(rt){
+      var rg = regions.find(function(x){ return x.route_id===rt.id; });
+      var o = JSON.parse(JSON.stringify(rt));
+      delete o.freight; // 防止旧对象干扰
+      if (rg && rg.line) {
+        o.freight_unit = rg.line.freight_unit;
+        o.freight_total = rg.line.freight_total;
+        o.loading_total = rg.line.loading_total;
+        o.unloading_total = rg.line.unloading_total;
+        o.inspection_total = rg.line.inspection_total;
+        o.other_total = rg.line.other_total;
+      }
+      return o;
+    });
+    var res = E.calculate({
+      cost: state.params,
+      routes: routesForCalc,
+      benchmark_region_id: state.refId,
+      regions: regions.map(function(r){ return { id: r.id, name: r.name, route_id: r.route_id, price: r.price }; })
+    });
+    // 回挂元数据
+    res.regions.forEach(function(r){
+      var m = regions.find(function(x){ return x.id===r.id; });
+      r.meta = m ? m.meta : null;
+      var rt = state.routes.find(function(x){ return x.id===r.route_id; });
+      r.routeMeta = rt || null;
+    });
+    return res;
+  }
+
+  /* ---------------- 首屏 ---------------- */
+  function renderHeader(){
+    $('#hTitle').textContent = (M.request && M.request.product) ? (M.request.product + ' · 区域采购成本比较') : '区域采购成本比较';
+    var r = M.request || {};
+    $('#hSub').textContent = '收货地：' + (state.dest || '未填') + ' ｜ 采购量：' + n(state.params.qty) + ' 吨 ｜ 对比：' + M.regions.map(function(x){ return x.name; }).join(' / ');
+    var chips = [];
+    if (r.spec) chips.push('<span class="chip">规格 <b>' + esc(r.spec.split('，')[0]) + '</b></span>');
+    var dates = M.regions.map(function(x){ return x.price && x.price.date; }).filter(Boolean);
+    var dset = Array.from(new Set(dates));
+    if (dset.length) chips.push('<span class="chip">价格数据日 <b>' + esc(dset.join(' / ')) + '</b></span>');
+    chips.push('<span class="chip">单位 <b>元/吨（含税）</b></span>');
+    chips.push('<span class="chip">生成 <b>' + esc((M.meta && M.meta.generated_at) || '') + '</b></span>');
+    $('#hChips').innerHTML = chips.join('');
+    $('#hBanner').innerHTML = IS_DEMO
+      ? '<b>演示模式：</b>本页使用合成示例数据，仅演示计算流程与口径规则，不代表任何真实市场报价。请换成你自己的 research.json 重新生成。'
+      : '<b>口径声明：</b>本页所有价格均为<b>含 13% 增值税</b>的人民币价格，单位<b>元/吨</b>，按“同规格、同交货口径”归集。运费、装卸费等未取得可核实报价的一律留空，<b>未做任何估算填充</b>。';
+  }
+
+  function renderKpis(res){
+    var box = $('#kpis');
+    var priced = res.regions.filter(function(r){ return r.price.per_ton!==null; });
+    var low = null, high = null;
+    priced.forEach(function(r){ if(!low||r.price.per_ton<low.price.per_ton) low=r; if(!high||r.price.per_ton>high.price.per_ton) high=r; });
+    var spread = (low&&high) ? high.price.per_ton - low.price.per_ton : null;
+    var dmin = null, dmax = null;
+    res.regions.forEach(function(r){ if(r.distance&&r.distance.ok){ var l=r.distance.km, h=r.distance.km_high||r.distance.km; if(dmin===null||l<dmin) dmin=l; if(dmax===null||h>dmax) dmax=h; } });
+    var fullCount = res.regions.filter(function(r){ return r.landed.full; }).length;
+    var landedBest = null;
+    res.regions.forEach(function(r){ if(r.landed.full && (!landedBest || r.landed.per_ton < landedBest.landed.per_ton)) landedBest = r; });
+    var cards = [
+      { lab:'裸价最低', cls:'good', val: low ? (low.name) : '—', unit: '', hint: low ? ('裸价 ' + n(low.price.per_ton) + ' 元/吨（含税）') : '无有效价格' },
+      { lab:'区域裸价极差', cls:'warn', val: spread!==null ? n(spread) : '—', unit:'元/吨', hint: (low&&high)? (high.name+' − '+low.name+'，约 '+(high.price.per_ton?((spread/low.price.per_ton*100).toFixed(1)):'—')+'%') : '' },
+      { lab:'运输距离范围', cls:'', val: (dmin!==null? n(dmin)+'~'+n(dmax) : '—'), unit:'km', hint: '按可核验公路里程（起终点两端）' },
+      { lab:'已完成到厂成本', cls: fullCount===res.regions.length?'good':(fullCount?'warn':'bad'), val: fullCount + ' / ' + res.regions.length, unit:'个区域', hint: fullCount===res.regions.length ? '可给出排序' : '缺运费或费用，不排名' },
+      { lab:'到厂最低（如已填全）', cls:'good', val: landedBest ? landedBest.name : '—', unit:'', hint: landedBest ? ('到厂 '+n(landedBest.landed.per_ton)+' 元/吨') : '填齐运费后自动生成' }
+    ];
+    box.innerHTML = cards.map(function(c){
+      return '<div class="card kpi '+c.cls+'"><div class="lab">'+c.lab+'</div><div class="val">'+c.val+(c.unit?'<small>'+c.unit+'</small>':'')+'</div><div class="hint">'+esc(c.hint)+'</div></div>';
+    }).join('');
+
+    var badge = $('#readinessBadge'), txt = $('#readiness');
+    var missing = res.regions.filter(function(r){ return !r.landed.full; });
+    if (!missing.length) {
+      badge.className='risk ok'; badge.textContent='可计算到厂排序';
+      txt.innerHTML = '全部 '+res.regions.length+' 个区域的裸价、运费与费用均已填写，下方「参考到厂成本」可以给出排序。<b>注意：</b>排序只反映你填入的运价口径，运价口径（含税/含装卸/是否回程）必须一致。';
+    } else {
+      badge.className='risk blocker'; badge.textContent='不排名 · 缺关键参数';
+      txt.innerHTML = '有 <b>'+missing.length+'</b> 个区域缺少运费或专项费用：'+missing.map(function(r){return r.name;}).join('、')+
+        '。按「不估算、不编造」的规则，<b>本页不给出到厂成本排名</b>，只给裸价差、运输距离与待补项。填好左侧运价后立即会自动出现排序。';
+    }
+  }
+
+  /* ---------------- 控制台 ---------------- */
+  function renderPicks(){
+    $('#picks').innerHTML = M.regions.map(function(r){
+      var on = state.active.indexOf(r.id)>=0;
+      var p = r.price ? (r.price.per_ton!==null ? n(r.price.per_ton)+' 元/吨' : '价格待补') : '价格待补';
+      return '<div class="pick '+(on?'on':'')+'" data-id="'+r.id+'"><div class="pn"><i></i>'+esc(r.name)+'</div><div class="pm">'+p+'</div></div>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('.pick'), function(el){
+      el.onclick = function(){
+        var id = el.getAttribute('data-id'), i = state.active.indexOf(id);
+        if (i>=0) { if (state.active.length<=1) { toast('至少保留一个区域'); return; } state.active.splice(i,1); }
+        else state.active.push(id);
+        renderAll();
+      };
+    });
+  }
+
+  function renderFreightTable(){
+    var tb = $('#tblFreight tbody');
+    tb.innerHTML = state.routes.map(function(rt){
+      var d = rt.distance || {};
+      var km = d.ok ? (d.km_high && d.km_high!==d.km ? n(d.km)+'~'+n(d.km_high) : n(d.km)) : '<span class="na">缺</span>';
+      return '<tr data-id="'+rt.id+'"><td>'+esc(rt.origin_city||rt.label)+' → '+esc(rt.dest_city||'')+'</td>'+
+        '<td class="num">'+km+'</td>'+
+        '<td><input type="number" min="0" step="1" style="width:92px" data-f="freight_unit" value="'+(rt.freight_unit==null?'':rt.freight_unit)+'" placeholder="留空"></td>'+
+        '<td><input type="number" min="0" step="0.01" style="width:92px" data-f="freight_rate" value="'+(rt.freight_rate==null?'':rt.freight_rate)+'" placeholder="可选"></td>'+
+        '<td><input type="number" min="0" step="100" style="width:100px" data-f="freight_total" value="'+(rt.freight_total==null?'':rt.freight_total)+'" placeholder="留空"></td>'+
+        '<td><input type="number" min="0" step="1" style="width:74px" data-f="loading_total" value="'+(rt.loading_total==null?'':rt.loading_total)+'" placeholder="—"></td>'+
+        '<td><input type="number" min="0" step="1" style="width:74px" data-f="unloading_total" value="'+(rt.unloading_total==null?'':rt.unloading_total)+'" placeholder="—"></td>'+
+        '</tr>';
+    }).join('');
+    Array.prototype.forEach.call(tb.querySelectorAll('input'), function(inp){
+      inp.oninput = function(){
+        var tr = inp.closest('tr'), id = tr.getAttribute('data-id');
+        var rt = state.routes.find(function(x){ return x.id===id; });
+        var f = inp.getAttribute('data-f'), v = inp.value;
+        if (f==='freight_rate') {
+          // 元/吨·公里 × 里程 → 元/吨包干
+          var km = rt.distance && rt.distance.ok ? rt.distance.km : 0;
+          rt.freight_rate = v==='' ? null : Number(v);
+          var fu = (rt.freight_rate!=null && km>0) ? +(rt.freight_rate*km).toFixed(2) : null;
+          rt.freight_unit = fu;
+          var fuInp = tr.querySelector('[data-f="freight_unit"]');
+          if (fuInp) fuInp.value = fu==null ? '' : fu;
+        } else {
+          rt[f] = v==='' ? null : Number(v);
+        }
+        rerenderCosts();
+      };
+    });
+  }
+
+  function syncParamsUI(){
+    $('#inQty').value = state.params.qty;
+    $('#inLoad').value = state.params.loadingUnit==null?'':state.params.loadingUnit;
+    $('#inUnload').value = state.params.unloadingUnit==null?'':state.params.unloadingUnit;
+    $('#inInspect').value = state.params.inspectionUnit==null?'':state.params.inspectionUnit;
+    $('#inTax').value = state.params.taxRate;
+    $('#inPriceBasis').value = state.params.priceBasis || 'incl_tax';
+    $('#inDest').value = state.dest;
+    ['#inLoad','#inUnload','#inInspect'].forEach(function(s){ $(s).classList.toggle('empty', $(s).value===''); });
+  }
+
+  /* ---------------- 价格表与图 ---------------- */
+  function renderPriceTable(res){
+    var tb = $('#tblPrice tbody');
+    tb.innerHTML = res.regions.map(function(r){
+      var p = r.price, meta = r.meta || {};
+      var tag = p.delivery_basis ? ('<span class="tag '+(/自提/.test(p.delivery_basis)?'self':(/出厂/.test(p.delivery_basis)?'exw':'deliv'))+'">'+esc(p.delivery_basis)+'</span>') : '';
+      var rng = (p.price_low!=null && p.price_high!=null) ? n(p.price_low)+'–'+n(p.price_high) : '—';
+      return '<tr><td><b>'+esc(r.name)+'</b>'+(meta.market?'<span style="color:#94a3b8;font-size:11px"> · '+esc(meta.market)+'</span>':'')+'</td>'+
+        '<td style="text-align:left;font-size:11.5px;color:#64748b">'+esc(meta.market||'—')+'</td>'+
+        '<td>'+(p.delivery_basis||'—')+tag+'</td>'+
+        '<td class="num">'+rng+'</td>'+
+        '<td class="num"><b>'+money(p.per_ton)+'</b></td>'+
+        '<td class="num">'+(p.ex_tax_per_ton!=null?n(p.ex_tax_per_ton):'—')+'</td>'+
+        '<td>'+esc(p.date||'')+'</td>'+
+        '<td style="text-align:left"><a href="'+esc(srcUrl(p.source_id))+'" target="_blank" rel="noopener">'+esc(srcName(p.source_id))+'</a></td></tr>';
+    }).join('');
+
+    var note = [];
+    var selfPick = res.regions.filter(function(r){ return r.price.delivery_basis && /自提/.test(r.price.delivery_basis); });
+    if (selfPick.length) note.push('<b>交货口径差异（重要）：</b>'+selfPick.map(function(r){return r.name;}).join('、')+' 是<b>自提</b>价，买方要自己承担提货运输；其余区域是<b>送到/出厂</b>，但“送到”通常只送到本地或本大区，送到收货地还要加运费。<b>三个口径不能直接相减得出“谁便宜”的最终结论</b>，必须先统一到“到厂”。');
+    var ranges = res.regions.filter(function(r){ return r.price.price_high!=null && r.price.price_low!=null && r.price.price_high-r.price.price_low >= 100; });
+    if (ranges.length) note.push('<b>宽区间：</b>'+ranges.map(function(r){return r.name+'（'+(r.price.price_high-r.price.price_low)+' 元宽）';}).join('、')+' 的区间较宽，取中值可能掩盖低端/高端货源差异，建议按上限与下限各算一遍。');
+    $('#priceNote').innerHTML = note.length?note.join('<br>'):'各区域价格口径一致，可直接比较裸价差。';
+  }
+
+  function renderPriceCharts(res){
+    if (!window.echarts) return;
+    var names = res.regions.map(function(r){return r.name;});
+    var lows = res.regions.map(function(r){return r.price.price_low;});
+    var highs = res.regions.map(function(r){return r.price.price_high;});
+    var mids = res.regions.map(function(r){return r.price.per_ton;});
+    var base = Math.max(0, Math.min.apply(null, lows.filter(function(x){return x!=null;}).concat([999])) - 80);
+    var c1 = echarts.init($('#chPrice'));
+    c1.setOption({
+      title:{text:'各区域重碱现货区间（元/吨，含税）',left:0,textStyle:{fontSize:13,fontWeight:600}},
+      grid:{left:52,right:20,top:56,bottom:36},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:function(v){return v==null?'—':v+' 元/吨';}},
+      xAxis:{type:'category',data:names,axisLine:{lineStyle:{color:'#cbd5e1'}},axisLabel:{color:'#475569'}},
+      yAxis:{type:'value',min:base,axisLabel:{color:'#64748b'},splitLine:{lineStyle:{color:'#eef2f7'}}},
+      series:[
+        {name:'区间上限',type:'bar',stack:'r',data:lows.map(function(l,h){return l==null?null:h-l;}),itemStyle:{color:'transparent'},silent:true,barWidth:'46%'},
+        {name:'区间',type:'bar',stack:'r',data:highs.map(function(h,i){return (h!=null&&lows[i]!=null)?h-lows[i]:null;}),itemStyle:{color:'#93c5fd',borderRadius:[4,4,4,4]},label:{show:true,position:'inside',color:'#1e3a5f',fontSize:10,formatter:function(p){return (lows[p.dataIndex]!=null?lows[p.dataIndex]:'')+'–'+(highs[p.dataIndex]!=null?highs[p.dataIndex]:'');}}},
+        {name:'取用值（中值）',type:'scatter',data:mids,symbolSize:11,itemStyle:{color:'#0f4c81'},label:{show:true,position:'top',formatter:function(p){return p.value;},fontSize:11,fontWeight:600,color:'#0f4c81'}}
+      ]
+    });
+
+    var ref = res.regions.find(function(r){return r.id===res.summary.reference_region_id;});
+    var refV = ref?ref.price.per_ton:null;
+    var diffs = res.regions.map(function(r){ return (r.price.per_ton!=null && refV!=null) ? Math.round(r.price.per_ton-refV) : null; });
+    var c2 = echarts.init($('#chSpread'));
+    c2.setOption({
+      title:{text:'相对基准（'+(ref?ref.name:'—')+'）的裸价差（元/吨）',left:0,textStyle:{fontSize:13,fontWeight:600}},
+      grid:{left:56,right:24,top:56,bottom:36},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:function(v){return v==null?'—':(v>0?'+':'')+v+' 元/吨';}},
+      xAxis:{type:'category',data:names,axisLine:{lineStyle:{color:'#cbd5e1'}},axisLabel:{color:'#475569'}},
+      yAxis:{type:'value',axisLabel:{color:'#64748b'},splitLine:{lineStyle:{color:'#eef2f7'}}},
+      series:[{type:'bar',data:diffs,barWidth:'46%',itemStyle:{color:function(p){return p.value<0?'#059669':(p.value>0?'#dc2626':'#94a3b8');},borderRadius:4},
+        label:{show:true,position:'outside',formatter:function(p){return p.value==null?'':(p.value>0?'+':'')+p.value;},fontSize:11,color:'#334155'}}]
+    });
+    window._charts.push(c1,c2);
+  }
+
+  /* ---------------- 地图 ---------------- */
+  function project(lon, lat){
+    // 简单等距投影，覆盖 100°E–125°E, 20°N–45°N
+    var x = (lon-100)/25, y = (45-lat)/25;
+    return [x, y];
+  }
+  function renderMap(res){
+    var W=900, H=620, PAD=54;
+    var pts = [];
+    var destCity = (M.destination && M.destination.city) || (res.regions[0] && res.regions[0].routeMeta && res.regions[0].routeMeta.dest_city) || '苏州';
+    var dcoord = E.resolvePlace(destCity);
+    var destXY = dcoord ? project(dcoord.coord[0], dcoord.coord[1]) : [0.82,0.45];
+    var sx = function(p){ return PAD + p[0]*(W-2*PAD); };
+    var sy = function(p){ return PAD + p[1]*(H-2*PAD); };
+    var colors = ['#c2410c','#0f766e','#7c3aed','#b45309','#0369a1','#be123c'];
+    var svg = ['<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'];
+    // 背景网格
+    svg.push('<defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fbfd"/><stop offset="1" stop-color="#eef4fa"/></linearGradient>');
+    svg.push('<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.16"/></filter></defs>');
+    svg.push('<rect width="'+W+'" height="'+H+'" fill="url(#g1)"/>');
+    for (var gx=0; gx<=4; gx++) {
+      var X = PAD + gx*(W-2*PAD)/4;
+      svg.push('<line x1="'+X+'" y1="'+PAD+'" x2="'+X+'" y2="'+(H-PAD)+'" stroke="#e3ebf3" stroke-width="1"/>');
+      svg.push('<text x="'+X+'" y="'+(H-PAD+18)+'" font-size="10" fill="#94a3b8" text-anchor="middle">'+(100+gx*6.25).toFixed(1)+'°E</text>');
+    }
+    for (var gy=0; gy<=4; gy++) {
+      var Y = PAD + gy*(H-2*PAD)/4;
+      svg.push('<line x1="'+PAD+'" y1="'+Y+'" x2="'+(W-PAD)+'" y2="'+Y+'" stroke="#e3ebf3" stroke-width="1"/>');
+      svg.push('<text x="'+(PAD-8)+'" y="'+(Y+3)+'" font-size="10" fill="#94a3b8" text-anchor="end">'+(45-gy*6.25).toFixed(2)+'°N</text>');
+    }
+    // 线路
+    res.regions.forEach(function(r, i){
+      var c = colors[i%colors.length];
+      var rt = r.routeMeta;
+      if (!rt || !r.distance || !r.distance.ok) return;
+      var leg = (r.distance.legs||[])[0];
+      var from = leg ? E.resolvePlace(leg.from) : E.resolvePlace(rt.origin_city);
+      if (!from) return;
+      var p1 = project(from.coord[0], from.coord[1]), p2 = destXY;
+      var x1=sx(p1),y1=sy(p1),x2=sx(p2),y2=sy(p2);
+      var mx=(x1+x2)/2, my=(y1+y2)/2 - Math.abs(x2-x1)*0.16 - 18;
+      var dpath = 'M'+x1+','+y1+' Q'+mx+','+my+' '+x2+','+y2;
+      svg.push('<path class="route-line" d="'+dpath+'" stroke="'+c+'" stroke-width="2.6" stroke-dasharray="1 0" opacity="0.9"/>');
+      // 距离标签
+      var kmTxt = (r.distance.km_high&&r.distance.km_high!==r.distance.km) ? (r.distance.km+'~'+r.distance.km_high+' km') : (r.distance.km+' km');
+      var lx = (x1+x2)/2 + (x2>x1?-6:6), ly = my - 8;
+      var lab = r.name+' · '+kmTxt;
+      var w = lab.length*6.6+14;
+      svg.push('<rect x="'+(lx - (x2>x1?0:w))+'" y="'+(ly-13)+'" width="'+w+'" height="19" rx="5" fill="#fff" stroke="'+c+'" stroke-opacity=".45"/>');
+      svg.push('<text class="route-label" x="'+(lx - (x2>x1?0:w)+7)+'" y="'+(ly)+'" fill="'+c+'">'+esc(lab)+'</text>');
+      // 起点
+      svg.push('<circle cx="'+x1+'" cy="'+y1+'" r="7.5" fill="'+c+'" filter="url(#sh)"/>');
+      svg.push('<circle cx="'+x1+'" cy="'+y1+'" r="2.6" fill="#fff"/>');
+      var nameW = String(rt.origin_city).length*12+10;
+      svg.push('<text class="node-label" x="'+(x1+12)+'" y="'+(y1-6)+'">'+esc(rt.origin_city)+'</text>');
+      svg.push('<text class="node-sub" x="'+(x1+12)+'" y="'+(y1+9)+'">'+esc(r.name)+(r.price&&r.price.per_ton!=null?(' · '+n(r.price.per_ton)+' 元/吨'):'')+'</text>');
+    });
+    // 收货地
+    var dx=sx(destXY), dy=sy(destXY);
+    svg.push('<circle cx="'+dx+'" cy="'+dy+'" r="20" fill="#c2410c" opacity="0.14"><animate attributeName="r" values="15;24;15" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.2;0.05;0.2" dur="2.8s" repeatCount="indefinite"/></circle>');
+    svg.push('<circle cx="'+dx+'" cy="'+dy+'" r="9" fill="#c2410c" stroke="#fff" stroke-width="2.5" filter="url(#sh)"/>');
+    svg.push('<text class="dest-label" x="'+(dx+15)+'" y="'+(dy-2)+'">收货地 · '+esc(destCity)+'</text>');
+    svg.push('<text class="node-sub" x="'+(dx+15)+'" y="'+(dy+13)+'">'+(M.destination&&M.destination.coord?('E'+M.destination.coord[0].toFixed(2)+' N'+M.destination.coord[1].toFixed(2)):'')+'</text>');
+    svg.push('</svg>');
+    $('#map').innerHTML = svg.join('');
+    $('#mapLegend').innerHTML = res.regions.map(function(r,i){
+      return '<span><i style="background:'+colors[i%colors.length]+'"></i>'+esc(r.name)+'（'+(r.routeMeta?esc(r.routeMeta.transport_mode||r.routeMeta.mode||'公路'):'—')+'）</span>';
+    }).join('');
+  }
+
+  function renderDistTable(res){
+    var tb = $('#tblDist tbody');
+    tb.innerHTML = res.regions.map(function(r){
+      var d = r.distance || {}, rt = r.routeMeta || {};
+      var legs = (d.legs||[]).slice();
+      var lo = legs[0] || null, hi = legs.length>1 ? legs[legs.length-1] : null;
+      return '<tr><td><b>'+esc(r.name)+'</b></td>'+
+        '<td style="text-align:left">'+esc(lo?lo.from:(rt.origin_city||'—'))+(lo&&lo.road?'<div style="font-size:11px;color:#64748b">'+esc(lo.road)+'</div>':'')+'</td>'+
+        '<td class="num">'+(lo?n(lo.km):'—')+'</td>'+
+        '<td style="text-align:left">'+(hi?esc(hi.from)+(hi.road?'<div style="font-size:11px;color:#64748b">'+esc(hi.road)+'</div>':''):'—')+'</td>'+
+        '<td class="num">'+(hi?n(hi.km):'—')+'</td>'+
+        '<td style="text-align:left;white-space:normal;max-width:420px;font-size:11.6px;color:#475569">'+esc(d.note||d.reason||'—')+'</td>'+
+        '<td>'+(d.verified||d.basis==='measured'?'<span class="risk ok">已核验</span>':'<span class="risk warn">估算</span>')+'</td></tr>';
+    }).join('');
+  }
+
+  /* ---------------- 到厂成本 ---------------- */
+  function renderLanded(res){
+    var ref = res.regions.find(function(r){return r.id===res.summary.reference_region_id;});
+    var mode = state.viewMode;
+    var tb = $('#tblLanded tbody');
+    var allFull = res.regions.length && res.regions.every(function(r){return r.landed.full;});
+    tb.innerHTML = res.regions.map(function(r){
+      var qty = state.params.qty;
+      var opPT = r.operating.per_ton;
+      var opKnown = !(r.gaps.indexOf('装车费')>=0 || r.gaps.indexOf('卸车费')>=0);
+      var landed = r.landed.full ? n(r.landed.per_ton) : '<span class="na">待补</span>';
+      var gap = (r.landed.full && ref && ref.landed.full && r.id!==ref.id) ? r.landed.per_ton - ref.landed.per_ton : null;
+      var total = r.landed.full ? n(r.landed.total) : '<span class="na">待补</span>';
+      var st = r.landed.full ? '<span class="risk ok">可算</span>' : '<span class="risk blocker">缺'+(r.gaps.length)+'项</span>';
+      return '<tr data-id="'+r.id+'"><td><b>'+esc(r.name)+'</b></td>'+
+        '<td class="num">'+money(r.price.per_ton)+'</td>'+
+        '<td class="num">'+(r.freight.per_ton!=null?n(r.freight.per_ton):'<span class="na">待填运价</span>')+'</td>'+
+        '<td class="num">'+(opKnown?n(opPT):'<span class="na">待填</span>')+'</td>'+
+        '<td class="num"><b>'+landed+'</b></td>'+
+        '<td class="num">'+sgn(gap)+'</td>'+
+        '<td class="num">'+total+'</td>'+
+        '<td>'+st+'</td></tr>';
+    }).join('');
+
+    var warnBox = $('#landedWarn');
+    if (!allFull) {
+      warnBox.style.display='block';
+      warnBox.innerHTML = '<b>未给出到厂成本排名。</b>以下区域缺少运费或装卸费：' + res.regions.filter(function(r){return !r.landed.full;}).map(function(r){return r.name+'（'+r.gaps.join('、')+'）';}).join('；') +
+        '。表格中的「待补」就是真实的缺口，不是 0。<b>请不要用“距离 × 某个假设运价”自己补一个数再拿去比价</b>——要拿到承运方报价再填进来。';
+    } else { warnBox.style.display='none'; }
+    renderLandedChart(res, mode);
+    renderDecomp(res);
+  }
+
+  function renderLandedChart(res, mode){
+    if (!window.echarts) return;
+    var names = res.regions.map(function(r){return r.name;});
+    var price = res.regions.map(function(r){return r.price.per_ton;});
+    var freight = res.regions.map(function(r){return r.freight.per_ton;});
+    var op = res.regions.map(function(r){return r.operating.per_ton;});
+    var opt = {
+      title:{text: mode==='gap' ? '到厂成本差异拆解（元/吨）' : '市场裸价 vs 运输与装卸（元/吨）', left:0, textStyle:{fontSize:13,fontWeight:600}},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:function(v){return v==null?'—':v.toFixed(0)+' 元/吨';}},
+      legend:{top:28,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11}},
+      grid:{left:56,right:20,top:66,bottom:40},
+      xAxis:{type:'category',data:names,axisLabel:{color:'#475569'},axisLine:{lineStyle:{color:'#cbd5e1'}}},
+      yAxis:{type:'value',name:'元/吨',nameTextStyle:{fontSize:10,color:'#94a3b8'},axisLabel:{color:'#64748b'},splitLine:{lineStyle:{color:'#eef2f7'}}},
+      series:[
+        {name:'市场裸价',type:'bar',stack:'a',data:price,itemStyle:{color:'#0f4c81'},barWidth:'46%',
+         label:{show:true,position:'inside',fontSize:10,color:'#fff',formatter:function(p){return Math.round(p.value);}}},
+        {name:'运输费用',type:'bar',stack:'a',data:freight,itemStyle:{color:'#f59e0b'},
+         label:{show:true,position:'inside',fontSize:10,color:'#fff',formatter:function(p){return p.value==null?'':Math.round(p.value);}}},
+        {name:'装卸/其他',type:'bar',stack:'a',data:op,itemStyle:{color:'#94a3b8'},
+         label:{show:true,position:'inside',fontSize:10,color:'#fff',formatter:function(p){return p.value==null?'':Math.round(p.value);}}}
+      ]
+    };
+    if (mode==='bare') {
+      opt.title.text = '市场裸价比较（未含运费与装卸）';
+      opt.series = [opt.series[0]];
+    }
+    window._chLanded.setOption(opt, true);
+  }
+
+  function renderDecomp(res){
+    if (!window.echarts) return;
+    var ref = res.regions.find(function(r){return r.id===res.summary.reference_region_id;});
+    var others = res.regions.filter(function(r){return r.id!==res.summary.reference_region_id;});
+    if (!ref) { $('#decompText').innerHTML='未设置基准区域。'; return; }
+    var refName = ref.name;
+    var refL = ref.landed.full ? ref.landed.per_ton : null;
+    // 瀑布图：基准 → 各项贡献
+    var cats = ['基准 '+refName].concat(others.map(function(r){return r.name;}));
+    var wf = [];
+    var accum = ref.price.per_ton != null ? ref.price.per_ton : 0;
+    wf.push({name:'基准裸价',value:accum,itemStyle:{color:'#0f4c81'}});
+    others.forEach(function(r){
+      if (r.price.per_ton==null) return;
+      wf.push({name:r.name+' 裸价差',value:r.vs_ref.price_gap||0,itemStyle:{color:(r.vs_ref.price_gap||0)<0?'#059669':'#dc2626'}});
+    });
+    var c = window._chWaterfall;
+    var d = others.map(function(r){
+      var f = (r.vs_ref.factors||[]).filter(function(x){return x.key!=='price';});
+      return { name:r.name, price:r.vs_ref.price_gap, freight:f[0]?f[0].value:null, op:f[1]?f[1].value:null, landed:r.vs_ref.landed_gap };
+    });
+    c.setOption({
+      title:{text:'到厂差异 = 裸价差 + 运输差 + 装卸差（相对 '+refName+'）',left:0,textStyle:{fontSize:13,fontWeight:600}},
+      tooltip:{trigger:'axis',valueFormatter:function(v){return v==null?'待填':((v>0?'+':'')+Math.round(v)+' 元/吨');}},
+      legend:{top:28,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11}},
+      grid:{left:56,right:20,top:66,bottom:40},
+      xAxis:{type:'category',data:d.map(function(x){return x.name;}),axisLabel:{color:'#475569'}},
+      yAxis:{type:'value',axisLabel:{color:'#64748b'},splitLine:{lineStyle:{color:'#eef2f7'}}},
+      series:[
+        {name:'市场裸价差',type:'bar',data:d.map(function(x){return x.price;}),itemStyle:{color:'#0f4c81'}},
+        {name:'运输费用差',type:'bar',data:d.map(function(x){return x.freight;}),itemStyle:{color:'#f59e0b'},label:{show:true,position:'top',fontSize:10,color:'#92400e',formatter:function(p){return p.value==null?'待填':Math.round(p.value);}}},
+        {name:'装卸/其他差',type:'bar',data:d.map(function(x){return x.op;}),itemStyle:{color:'#94a3b8'}}
+      ]
+    });
+
+    // 贡献占比：以裸价差 + 运输差 的绝对值之和归一
+    var c2 = window._chContrib;
+    var cats2=[], priceP=[], freP=[];
+    d.forEach(function(x){
+      cats2.push(x.name);
+      var p = Math.abs(x.price||0), f = Math.abs(x.freight||0), s = p+f;
+      priceP.push(s? +(p/s*100).toFixed(1) : null);
+      freP.push(s? +(f/s*100).toFixed(1) : null);
+    });
+    c2.setOption({
+      title:{text:'差异来源占比（%）——裸价 vs 运输',left:0,textStyle:{fontSize:13,fontWeight:600}},
+      tooltip:{trigger:'axis',valueFormatter:function(v){return v==null?'—':v+'%';}},
+      legend:{top:28,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11}},
+      grid:{left:56,right:24,top:66,bottom:40},
+      xAxis:{type:'value',max:100,axisLabel:{formatter:'{value}%',color:'#64748b'},splitLine:{lineStyle:{color:'#eef2f7'}}},
+      yAxis:{type:'category',data:cats2,axisLabel:{color:'#475569'}},
+      series:[
+        {name:'市场裸价',type:'bar',stack:'s',data:priceP,itemStyle:{color:'#0f4c81'},label:{show:true,formatter:function(p){return p.value==null?'':p.value+'%';},fontSize:10,color:'#fff'}},
+        {name:'运输费用',type:'bar',stack:'s',data:freP,itemStyle:{color:'#f59e0b'},label:{show:true,formatter:function(p){return p.value==null?'':p.value+'%';},fontSize:10,color:'#fff'}}
+      ]
+    });
+
+    // 文字结论
+    var txt = [];
+    txt.push('<b>怎么看：</b>以 '+esc(refName)+' 为基准。Δ到厂 = Δ裸价 + Δ运输 + Δ装卸。三个数字相加必须等于 Δ到厂；如果不等，说明还有未计入的费用项。');
+    others.forEach(function(r){
+      if (r.price.per_ton==null) { txt.push(esc(r.name)+'：无有效裸价，无法分解。'); return; }
+      var gapP = r.vs_ref.price_gap;
+      var f = (r.vs_ref.factors||[]);
+      var gapF = f[1]?f[1].value:null;
+      var line = '<b>'+esc(r.name)+'</b>：裸价'+(gapP>0?'贵':'便宜')+' <b>'+Math.abs(gapP).toFixed(0)+'</b> 元/吨';
+      if (gapF==null) line += '；运输费用差<b>待填</b>，因此<b>无法判断运输是否足以抵消价格优势</b>。';
+      else {
+        line += '；运输'+(gapF>0?'多花':'省')+' <b>'+Math.abs(gapF).toFixed(0)+'</b> 元/吨 → ';
+        var net = gapP+gapF;
+        line += net>0 ? '净劣势 <b>'+net.toFixed(0)+'</b> 元/吨（价格优势不足以覆盖运输）' : '净优势 <b>'+Math.abs(net).toFixed(0)+'</b> 元/吨（运输未抵消价格优势）';
+      }
+      txt.push(line);
+    });
+
+    // 盈亏平衡运价：判断"方向"用，不是报价
+    var refP = ref.price.per_ton;
+    if (refP != null) {
+      var be = [];
+      others.forEach(function(r){
+        if (r.price.per_ton==null || !r.distance || !r.distance.ok) return;
+        var d = r.distance.km, dh = r.distance.km_high || d;
+        var gap = r.price.per_ton - refP;
+        if (gap >= 0) return;   // 只有更便宜的才需要看平衡点
+        var beLow = Math.abs(gap)/dh, beHigh = Math.abs(gap)/d;
+        be.push(esc(r.name)+'：裸价便宜 '+Math.abs(gap).toFixed(0)+' 元/吨 ÷ '+n(d)+'~'+n(dh)+' km = 临界运价 <b>'+beLow.toFixed(3)+' ~ '+beHigh.toFixed(3)+'</b> 元/吨·公里');
+      });
+      if (be.length) {
+        txt.push('<br><b>盈亏平衡运价（只看方向，不是报价）：</b>如果某条线路的<b>实际</b>吨公里运价低于下值，异地采购才可能划算；高于下值，价格优势会被运费吃光。<br>' + be.join('<br>') +
+          '<br><span style="color:#b45309">⚠ 这个数不能反向用于「估算运费」——它是用来检验真实报价的尺子，不是运价本身。</span>');
+      }
+    }
+    var refGap = ref.landed.full ? ref.landed.per_ton : null;
+    $('#decompText').innerHTML = txt.join('<br>');
+  }
+
+  /* ---------------- 历史 ---------------- */
+  function renderHistory(){
+    var H = M.history || {};
+    var hasSeries = H.available && H.series && H.series.length;
+    var ch1 = window._chHist, ch2 = window._chHist2;
+    if (!hasSeries) {
+      ch1.clear(); ch2.clear();
+      ch1.setOption({title:{text:'暂无历史序列',subtext:'研究稿 history 为空或数据不足',left:'center',top:'40%',textStyle:{fontSize:14,color:'#64748b'},subtextStyle:{fontSize:12,color:'#94a3b8'}}});
+      ch2.clear();
+      $('#histNote').innerHTML = '本报告没有采集到可核验的历史序列，因此<b>不给出价差历史区间</b>。补上 <code>history.series</code> 或 <code>history.regional_spread</code> 后即可显示。';
+      return;
+    }
+    var xs = [];
+    H.series.forEach(function(s){ s.points.forEach(function(p){ if(xs.indexOf(p.date)<0) xs.push(p.date); }); });
+    xs.sort();
+    var series = H.series.map(function(s){
+      var map = {}; s.points.forEach(function(p){ map[p.date]=p.value; });
+      return { name:s.name, type:'line', smooth:true, showSymbol:xs.length<20, symbolSize:5, connectNulls:false,
+        data: xs.map(function(d){ return map[d]===undefined?null:map[d]; }),
+        lineStyle:{width:2}, areaStyle: s.key.indexOf('national')>=0 ? {opacity:0.07} : null };
+    });
+    ch1.setOption({
+      title:{text:'价格走势（元/吨）',subtext:H.span||'',left:0,top:0,textStyle:{fontSize:13,fontWeight:600},subtextStyle:{fontSize:11,color:'#94a3b8'}},
+      tooltip:{trigger:'axis'},
+      legend:{top:6,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11}},
+      grid:{left:56,right:20,top:70,bottom:40},
+      xAxis:{type:'category',data:xs,axisLabel:{color:'#64748b',fontSize:10},axisLine:{lineStyle:{color:'#cbd5e1'}}},
+      yAxis:{type:'value',scale:true,axisLabel:{color:'#64748b'},splitLine:{lineStyle:{color:'#eef2f7'}}},
+      series:series
+    });
+
+    var sp = H.spreads || [];
+    if (sp.length) {
+      var dates = sp.map(function(x){return x.date;});
+      var names = M.regions.filter(function(r){ return state.active.indexOf(r.id)>=0; }).map(function(r){return r.name;});
+      var ser = names.map(function(nm){
+        return { name:nm, type:'line', smooth:true, symbolSize:6,
+          data: sp.map(function(x){
+            var rid = (M.regions.find(function(r){return r.name===nm;})||{}).id;
+            var row = x.rows[rid];
+            return (row && row.spread_vs_ref_mid!=null) ? row.spread_vs_ref_mid : null;
+          }) };
+      });
+      ch2.setOption({
+        title:{text:'区域重碱价差（相对基准，元/吨）',left:0,textStyle:{fontSize:13,fontWeight:600}},
+        tooltip:{trigger:'axis',valueFormatter:function(v){return v==null?'—':((v>0?'+':'')+v+' 元/吨');}},
+        legend:{top:6,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11}},
+        grid:{left:56,right:20,top:70,bottom:40},
+        xAxis:{type:'category',data:dates,axisLabel:{color:'#64748b',fontSize:10}},
+        yAxis:{type:'value',axisLabel:{color:'#64748b'},splitLine:{lineStyle:{color:'#eef2f7'}}},
+        series:ser
+      }, true);
+
+      // 历史区间表
+      var th = $('#tblHist thead'), tb = $('#tblHist tbody');
+      var regs = M.regions.filter(function(r){ return state.active.indexOf(r.id)>=0; });
+      th.innerHTML = '<tr><th>日期</th>'+regs.map(function(r){return '<th>'+esc(r.name)+'（区间）</th>';}).join('')+'<th>最大区域价差</th></tr>';
+      tb.innerHTML = sp.slice().reverse().map(function(x){
+        var vals = regs.map(function(r){return x.rows[r.id];}).filter(Boolean);
+        var mids = vals.map(function(v){return v.mid;});
+        var rng = mids.length>1 ? (Math.max.apply(null,mids)-Math.min.apply(null,mids)) : null;
+        return '<tr><td>'+esc(x.date)+'</td>'+regs.map(function(r){
+          var v = x.rows[r.id];
+          if (!v) return '<td><span class="na">缺</span></td>';
+          return '<td class="num">'+n(v.low)+'–'+n(v.high)+'</td>';
+        }).join('')+'<td class="num">'+(rng!=null?'<b>'+n(rng)+'</b>':'—')+'</td></tr>';
+      }).join('');
+      // 区间统计
+      var allSpread = [];
+      sp.forEach(function(x){
+        var vals = regs.map(function(r){return x.rows[r.id];}).filter(Boolean);
+        var mids = vals.map(function(v){return v.mid;});
+        if (mids.length>1) allSpread.push({date:x.date, rng:Math.max.apply(null,mids)-Math.min.apply(null,mids)});
+      });
+      if (allSpread.length) {
+        var mn = allSpread.reduce(function(a,b){return b.rng<a.rng?b:a;});
+        var mx = allSpread.reduce(function(a,b){return b.rng>a.rng?b:a;});
+        var avg = allSpread.reduce(function(s,x){return s+x.rng;},0)/allSpread.length;
+        $('#histNote').innerHTML = '<b>价差区间：</b>在已采集的 <b>'+allSpread.length+'</b> 个可比交易日里，区域间最大裸价差（按中值）在 <b>'+n(mn.rng)+'</b>（'+mn.date+'）到 <b>'+n(mx.rng)+'</b>（'+mx.date+'）元/吨之间，均值 <b>'+n(avg)+'</b> 元/吨。'+
+          (H.price_change_window? ' 同期价格中枢变动 '+H.price_change_window.pct+'%（'+H.price_change_window.from+' → '+H.price_change_window.to+'）。':'')+
+          '<br>注意：这些日期不是每个区域都有同日报价，<b>缺的日期不插值</b>，所以区间统计只覆盖可比日。';
+      }
+    } else {
+      ch2.clear();
+      ch2.setOption({title:{text:'暂无同日可比的分区价差序列',left:'center',top:'40%',textStyle:{fontSize:13,color:'#64748b'}}});
+      $('#tblHist').innerHTML='';
+      $('#histNote').innerHTML = '没有同一天的区域内重碱报价，按规则<b>不做跨日期拼凑的价差</b>。补充 <code>history.regional_spread</code>（同日、同规格、注明交货口径）即可生成。';
+    }
+  }
+
+  /* ---------------- 明细 ---------------- */
+  function renderDetails(res){
+    var qty = state.params.qty;
+    var html = res.regions.map(function(r){
+      var rt = r.routeMeta || {};
+      var dist = r.distance || {};
+      var p = r.price;
+      var frows = [];
+      frows.push(['市场裸价（含税）', p.per_ton!=null? n(p.per_ton)+' 元/吨':'待补', p.per_ton!=null]);
+      frows.push(['整单货值 = 裸价 × 数量', p.per_ton!=null? '¥'+n(p.per_ton*qty)+' / '+n(qty)+' 吨':'待补', p.per_ton!=null]);
+      var legsTxt = (dist.legs||[]).map(function(l){return l.from+'→'+l.to+' '+n(l.km)+' km';}).join('；');
+      frows.push(['运输里程', dist.ok ? (dist.km_high&&dist.km_high!==dist.km ? n(dist.km)+' ~ '+n(dist.km_high)+' km' : n(dist.km)+' km') : '缺', !!dist.ok]);
+      frows.push(['里程依据', esc(dist.note||'—'), true]);
+      frows.push(['运输方式', esc(rt.transport_mode||rt.mode||'—'), true]);
+      var fHow = {manual_total:'按你填写的整单总运费',unit_x_distance:'按「元/吨 × 里程」计算',manual_unit_only:'只填了单价，缺里程',none:'未填运价',segments:'多段运费合计'}[r.freight.how] || '—';
+      frows.push(['运费（'+fHow+'）', r.freight.per_ton!=null ? n(r.freight.per_ton,1)+' 元/吨（整单 ¥'+n(r.freight.solved)+'）' : '待填', r.freight.per_ton!=null]);
+      var opd = r.operating.detail;
+      var opKnown = !(r.gaps.indexOf('装车费')>=0 || r.gaps.indexOf('卸车费')>=0);
+      frows.push(['装车费 + 卸车费', opKnown ? n(opd.loading+opd.unloading,1)+' 元/吨' : '待填', opKnown]);
+      if (opd.inspection) frows.push(['检测/取样', n(opd.inspection,1)+' 元/吨', true]);
+      frows.push(['到厂成本（元/吨）', r.landed.full ? '<b>'+n(r.landed.per_ton,0)+'</b>' : '待补', r.landed.full]);
+      frows.push(['到厂总额', r.landed.full ? '¥'+n(r.landed.total,0) : '待补', r.landed.full]);
+
+      var formula = '到厂成本/吨 = 裸价 + 运费/吨 + (装车 + 卸车 + 检测 + 其他)/吨\n';
+      formula += '           = ' + (p.per_ton!=null?n(p.per_ton):'〔裸价〕') + ' + ' + (r.freight.per_ton!=null?n(r.freight.per_ton,1):'〔运费〕') + ' + ' + (opKnown?n(r.operating.per_ton,1):'〔装卸〕') + '\n';
+      formula += '           = ' + (r.landed.full?('<b>'+n(r.landed.per_ton,0)+' 元/吨</b>'):'<b style="color:#b45309">待补（缺运价/装卸费）</b>') + '\n';
+      formula += '到厂总额   = ' + n(qty) + ' 吨 × 到厂成本/吨 = ' + (r.landed.full?'¥'+n(r.landed.total,0):'待补');
+
+      var alt = (rt.alternatives||[]).map(function(a){return a.mode+'：'+a.note;}).join('<br>');
+      return '<details class="calc"><summary><span>'+esc(r.name)+' · '+esc(rt.label||'')+'</span><span class="amt">'+(r.landed.full? n(r.landed.per_ton,0)+' 元/吨' : '待补')+'</span></summary>'+
+        '<div class="body"><div class="grid2" style="margin-bottom:12px">'+
+        '<div><table class="lines">'+frows.map(function(x){return '<tr class="'+(x[2]?'':'unk')+'"><td>'+x[0]+'</td><td>'+x[1]+'</td></tr>';}).join('')+'</table></div>'+
+        '<div><div class="formula">'+formula+'</div>'+
+        '<div style="font-size:12px;color:#475569;margin-top:10px"><b>可替代运输方式：</b><br>'+(alt||'—')+'</div>'+
+        '<div style="font-size:12px;color:#475569;margin-top:8px"><b>口径备注：</b>'+esc(rt.distance_ref_note||rt.distance_source||'')+'</div>'+
+        '</div></div></div></details>';
+    }).join('');
+    $('#details').innerHTML = html;
+  }
+
+  /* ---------------- 缺口 ---------------- */
+  function renderGaps(res){
+    $('#gaps').innerHTML = (M.gaps||[]).map(function(g){
+      var cls = g.severity==='blocker'?'gap blocker':'gap';
+      return '<div class="'+cls+'"><h4><span class="risk '+(g.severity==='blocker'?'blocker':'warn')+'">'+(g.severity==='blocker'?'阻断':'提示')+'</span>'+esc(g.title||g.key)+'</h4><dl>'+
+        '<dt>缺什么</dt><dd>'+esc(g.what||'')+'</dd>'+
+        '<dt>为什么缺</dt><dd>'+esc(g.why||'')+'</dd>'+
+        '<dt>怎么补</dt><dd>'+esc(g.how_to_fix||'')+'</dd>'+
+        '<dt>影响</dt><dd>'+esc(g.impact||'')+'</dd></dl></div>';
+    }).join('') || '<div class="note-box">研究稿未登记缺口。</div>';
+
+    $('#assume').innerHTML = (M.assumptions||[]).map(function(a){
+      return '<div class="gap" style="border-left-color:#0f4c81;background:#fbfdff"><dl class="a"><dt>'+esc(a.key)+'</dt><dd>'+esc(a.text)+'</dd></dl></div>';
+    }).join('') || '<div class="note-box">未登记假设。</div>';
+
+    $('#rules').innerHTML = (M.gap_rules||[]).map(function(x){return '<div>· '+esc(x)+'</div>';}).join('');
+  }
+
+  /* ---------------- 供应商 ---------------- */
+  function renderSuppliers(){
+    $('#sups').innerHTML = M.regions.map(function(r){
+      var prods = (r.producers||[]).map(function(p){return '<span class="tag deliv">'+esc(p)+'</span>';}).join(' ');
+      var q1 = encodeURIComponent(r.name + ' 纯碱 生产厂家 联系方式');
+      var q2 = encodeURIComponent(r.name + ' 重质纯碱 报价');
+      var prov = r.name.replace(/(本地|（.*）)/g,'');
+      return '<div class="sup"><h4><a href="https://www.baidu.com/s?wd='+q1+'" target="_blank" rel="noopener">'+esc(r.name)+' → 找当地供应商</a></h4>'+
+        '<div class="pp">主要产能方：'+(prods||'—')+'</div>'+
+        '<div class="pp" style="color:#64748b">市场归属：'+esc(r.market||'—')+' ｜ 典型产地：'+esc(r.origin_city||'—')+'</div>'+
+        '<div class="lk"><a href="https://www.100ppi.com/mprice/" target="_blank" rel="noopener">生意社报价中心</a>'+
+        '<a href="https://www.oilchem.net/" target="_blank" rel="noopener">隆众资讯</a>'+
+        '<a href="https://www.baidu.com/s?wd='+q2+'" target="_blank" rel="noopener">检索该区报价</a></div></div>';
+    }).join('');
+  }
+
+  /* ---------------- 来源 ---------------- */
+  function renderSources(){
+    var used = {};
+    M.regions.forEach(function(r){ if(r.price&&r.price.source_id) used[r.price.source_id]=true; });
+    (M.history&&M.history.series||[]).forEach(function(s){ used[s.source_id]=true; });
+    ((M.history&&M.history.regional_spread)||[]).forEach(function(s){ used[s.source_id]=true; });
+    var list = Object.keys(M.sources||{}).filter(function(k){return used[k]||M.sources[k].always_show;});
+    if (!list.length) list = Object.keys(M.sources||{});
+    $('#sources').innerHTML = list.map(function(k){
+      var s = M.sources[k]||{};
+      return '<div class="src"><div class="sn">'+esc(k)+' · '+esc(s.name)+'</div>'+
+        '<div style="color:#475569;font-size:11.8px">类型：'+esc(s.type||'—')+' ｜ 口径：'+esc(s.level||'—')+' ｜ 采集：'+esc(s.retrieved_at||'—')+'</div>'+
+        (s.url?'<a class="su" href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.url)+'</a>':'')+
+        (s.note?'<div style="color:#64748b;font-size:11.5px;margin-top:3px">'+esc(s.note)+'</div>':'')+'</div>';
+    }).join('');
+  }
+
+  /* ---------------- 渲染编排 ---------------- */
+  function renderAll(){
+    renderPicks();
+    syncParamsUI();
+    var res = compute();
+    window._res = res;
+    renderKpis(res);
+    renderPriceTable(res);
+    renderMap(res);
+    renderDistTable(res);
+    renderLanded(res);
+    renderDetails(res);
+    renderPriceCharts(res);
+    renderHistory();
+  }
+  function rerenderCosts(){
+    var res = compute(); window._res = res;
+    renderKpis(res); renderLanded(res); renderDetails(res); renderPriceCharts(res);
+  }
+
+  window._charts = [];
+  window._chLanded = null;
+  window._chWaterfall = null;
+  window._chContrib = null;
+  window._chHist = null;
+  window._chHist2 = null;
+
+  function initCharts(){
+    if (!window.echarts) return;
+    window._chLanded = echarts.init($('#chLanded'));
+    window._chWaterfall = echarts.init($('#chWaterfall'));
+    window._chContrib = echarts.init($('#chContrib'));
+    window._chHist = echarts.init($('#chHistory'));
+    window._chHist2 = echarts.init($('#chSpreadHist'));
+    window.addEventListener('resize', function(){
+      [window._chLanded, window._chWaterfall, window._chContrib, window._chHist, window._chHist2].forEach(function(c){ if(c) c.resize(); });
+      window._charts.forEach(function(c){ c.resize(); });
+    });
+  }
+
+  /* ---------------- 事件 ---------------- */
+  function bind(){
+    var map = { 'inQty':'qty', 'inTax':'taxRate' };
+    Object.keys(map).forEach(function(id){
+      $('#'+id).oninput = function(){ var v = this.value; state.params[map[id]] = v===''?null:Number(v); rerenderCosts(); };
+    });
+    var units = { 'inLoad':'loadingUnit', 'inUnload':'unloadingUnit', 'inInspect':'inspectionUnit' };
+    Object.keys(units).forEach(function(id){
+      $('#'+id).oninput = function(){ var v = this.value; state.params[units[id]] = v===''?null:Number(v); this.classList.toggle('empty', v===''); rerenderCosts(); };
+    });
+    $('#inPriceBasis').onchange = function(){ state.params.priceBasis = this.value; rerenderCosts(); };
+    $('#inDest').oninput = function(){ state.dest = this.value; $('#hSub').textContent = '收货地：' + (state.dest||'未填') + ' ｜ 采购量：' + n(state.params.qty) + ' 吨 ｜ 对比：' + M.regions.map(function(x){return x.name;}).join(' / '); };
+
+    $('#btnApplyFreight').onclick = function(){
+      var unit = prompt('给所有线路填同一个「元/吨」包干运价（留空取消）。\n注意：仅当你确认这个价对所有线路都成立时才这么做。', '');
+      if (unit===null) return;
+      var v = unit.trim()==='' ? null : Number(unit);
+      if (v!==null && !isFinite(v)) { toast('请输入数字'); return; }
+      state.routes.forEach(function(rt){ rt.freight_unit = v; rt.freight_total = null; rt.freight_rate = null; });
+      renderFreightTable(); rerenderCosts(); toast(v===null?'已清空运价':'已填入 '+v+' 元/吨');
+    };
+    $('#btnReset').onclick = function(){
+      state.params = JSON.parse(JSON.stringify(M.defaultParams));
+      state.routes = JSON.parse(JSON.stringify(M.routes));
+      state.active = M.regions.map(function(r){return r.id;});
+      renderFreightTable(); renderAll(); toast('已恢复初始值');
+    };
+    $('#btnClearFreight').onclick = function(){
+      state.routes.forEach(function(rt){ rt.freight_unit=null; rt.freight_total=null; rt.freight_rate=null; rt.loading_total=null; rt.unloading_total=null; });
+      renderFreightTable(); rerenderCosts(); toast('运价与装卸费已清空');
+    };
+    $('#btnExportCsv').onclick = function(){
+      var rows = [['线路','起点','终点','里程km','元/吨','元/吨·公里','总运费','装车','卸车']];
+      state.routes.forEach(function(rt){
+        var d = rt.distance||{};
+        rows.push([rt.label||'', rt.origin_city||'', rt.dest_city||'', d.km||'', rt.freight_unit==null?'':rt.freight_unit, rt.freight_rate==null?'':rt.freight_rate, rt.freight_total==null?'':rt.freight_total, rt.loading_total==null?'':rt.loading_total, rt.unloading_total==null?'':rt.unloading_total]);
+      });
+      var csv = rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
+      var blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '运费参数_' + (M.meta&&M.meta.generated_at||'') + '.csv'; a.click();
+      toast('已导出 CSV');
+    };
+    $('#btnCopyCfg').onclick = function(){
+      var cfg = { cost: state.params, routes: state.routes.map(function(r){ return {id:r.id, freight_unit:r.freight_unit, freight_rate:r.freight_rate, freight_total:r.freight_total, loading_total:r.loading_total, unloading_total:r.unloading_total}; }) };
+      var t = JSON.stringify(cfg, null, 2);
+      if (navigator.clipboard) navigator.clipboard.writeText(t).then(function(){toast('参数已复制到剪贴板');}, function(){toast('复制失败，请手动选择');});
+      else toast('浏览器不支持剪贴板，请手动复制');
+    };
+    $('#btnModeLanded').onclick = function(){ state.viewMode='landed'; document.querySelectorAll('#s-landed .btn').forEach(function(b){b.classList.remove('primary');}); this.classList.add('primary'); renderLanded(window._res); };
+    $('#btnModeBare').onclick = function(){ state.viewMode='bare'; document.querySelectorAll('#s-landed .btn').forEach(function(b){b.classList.remove('primary');}); this.classList.add('primary'); renderLanded(window._res); };
+    $('#btnModeGap').onclick = function(){ state.viewMode='gap'; document.querySelectorAll('#s-landed .btn').forEach(function(b){b.classList.remove('primary');}); this.classList.add('primary'); renderLanded(window._res); };
+
+    // 导航高亮
+    var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY + 120, cur = secs[0];
+      secs.forEach(function(s){ if (s.offsetTop <= y) cur = s; });
+      links.forEach(function(a){ a.classList.toggle('act', a.getAttribute('href') === '#'+cur.id); });
+    }, {passive:true});
+  }
+
+  /* ---------------- 启动 ---------------- */
+  function boot(){
+    initCharts();
+    bind();
+    $('#freightHint').textContent = (M.routes||[]).every(function(r){return r.freight_unit==null && r.freight_total==null;})
+      ? ' 当前所有线路运价均为空，图表只显示裸价与运输距离。' : '';
+    renderHeader();
+    renderFreightTable();
+    renderSuppliers();
+    renderGaps();
+    renderSources();
+    renderAll();
+    document.getElementById('footL').textContent = '生成时间 ' + ((M.meta&&M.meta.generated_at)||'') + ' ｜ 数据口径见「数据来源」' + (IS_DEMO?' ｜ 演示数据':'');
+    document.getElementById('footR').textContent = '本地离线计算 · 不上传任何数据 · 参数改动可导出 CSV/JSON';
+    window.__ready = true;
+  }
+  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+</body>
+</html>

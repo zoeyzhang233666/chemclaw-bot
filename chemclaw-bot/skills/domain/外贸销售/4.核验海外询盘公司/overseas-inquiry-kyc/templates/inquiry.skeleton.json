@@ -1,0 +1,463 @@
+{
+  "meta": {
+    "title": "海外询盘企业核验报告 · 【国家】 · 【产品】",
+    "subtitle": "【询盘公司名】· 【产品规格】· 核验基准日 【YYYY-MM-DD】",
+    "synthetic": true,
+    "synthetic_note": "本报告为使用骨架样例生成的演示数据，所有公司名称、域名、联系人、地址均为虚构，不对应任何真实主体。请替换为你自己的询盘数据后再使用。",
+    "disclaimer": "本报告基于核验基准日可公开获取的信息编制，仅为交易前核验的辅助材料，不构成法律尽调、资信评级或对交易对手的定性结论。所有\"未核实\"项目须以对方提供的证照、银行资料或第三方核验为准。",
+    "as_of": "2026-01-01",
+    "inquiry_id": "INQ-YYYY-NNNN",
+    "client_slug": "inquiry",
+    "product": "【产品名称】",
+    "product_spec": "【规格】",
+    "quantity": "【数量】",
+    "incoterm": "【贸易术语 + 目的港】",
+    "packaging": "【包装】",
+    "hs_code": "【HS 编码】",
+    "prepared_by": "外贸销售部 · 询盘核验"
+  },
+  "inquiry": {
+    "subject": "Inquiry for 【产品】",
+    "from": "Contact Name <contact@example.com>",
+    "from_name": "Contact Name · 【职位】",
+    "to": "我方销售邮箱",
+    "date": "【YYYY-MM-DD】",
+    "reply_to": "contact@example.com",
+    "body_lines": [
+      "Dear Sir/Madam,",
+      "",
+      "We are 【公司自我介绍，一句话】.",
+      "",
+      "We are interested in 【产品 + 规格】, quantity 【数量】, delivery to 【目的港】.",
+      "",
+      "Please send us your quotation and product specification.",
+      "",
+      "Best regards,",
+      "Contact Name",
+      "【职位】 | 【公司名】",
+      "【地址】",
+      "M: 【电话】 | E: contact@example.com | W: www.example.com"
+    ],
+    "attachments": [
+      { "name": "example-inquiry.pdf", "note": "对方发来的询价单（D 级自述，仅用于提取字段）" }
+    ],
+    "notes": [
+      "此处写提取阶段的观察，不是结论。例如：邮件同时提到工厂与贸易两种身份，需要在后续核验中澄清。"
+    ]
+  },
+  "extraction": [
+    { "field": "公司名称", "value": "【公司全称】", "evidence": "邮件签名栏", "confidence": "high", "note": "含贸易称谓需逐字比对" },
+    { "field": "公司地址", "value": "【地址】", "evidence": "邮件签名栏", "confidence": "high", "note": "需区分注册地/办公地/工厂" },
+    { "field": "网站", "value": "www.example.com", "evidence": "邮件签名栏", "confidence": "high", "note": "" },
+    { "field": "域名", "value": "example.com", "evidence": "由邮箱与网址推导", "confidence": "high", "note": "" },
+    { "field": "邮箱", "value": "contact@example.com", "evidence": "From 与签名", "confidence": "high", "note": "核对 Reply-To" },
+    { "field": "联系人", "value": "Contact Name", "evidence": "邮件签名栏", "confidence": "high", "note": "" },
+    { "field": "职位", "value": "【职位】", "evidence": "邮件签名栏", "confidence": "medium", "note": "" },
+    { "field": "电话", "value": "【电话】", "evidence": "邮件签名栏", "confidence": "high", "note": "仅手机时需索取总机" },
+    { "field": "询价产品", "value": "【产品】", "evidence": "邮件正文", "confidence": "high", "note": "" },
+    { "field": "数量", "value": "【数量】", "evidence": "邮件正文", "confidence": "high", "note": "年度用量还是单批需确认" },
+    { "field": "交付条款", "value": "【贸易术语】", "evidence": "邮件正文", "confidence": "medium", "note": "" }
+  ],
+  "subject": {
+    "name_extracted": "【公司全称】",
+    "name_normalized": "【去贸易称谓后的名称】",
+    "registry_check": {
+      "portal": "【登记入口名称与网址】",
+      "search_terms": ["【全称】", "【简称】", "【缩写】"],
+      "result": "【检索结果：命中/未命中/入口已知未付费】",
+      "result_note": "说明为什么这个结果不能直接当结论。",
+      "status": "unverified"
+    },
+    "summary_rows": [
+      { "k": "询盘中的名称", "v": "【公司全称】", "verified": false },
+      { "k": "登记全称", "v": "未取得", "verified": false },
+      { "k": "登记号 / 唯一标识", "v": "未取得", "verified": false },
+      { "k": "成立日期", "v": "未取得", "verified": false },
+      { "k": "业务分类码", "v": "未取得", "verified": false }
+    ]
+  },
+  "domains": [
+    {
+      "domain": "example.com",
+      "tld": ".com",
+      "resolve": "【可解析/不可解析】",
+      "whois": "【注册商、注册日期、注册人可见性】",
+      "website": "【是否可访问、是否为企业站】",
+      "ssl": "【有/无】",
+      "mx": "【邮件服务商】",
+      "note": "WHOIS 注册人常为代理商或隐私保护，不作为判据。"
+    }
+  ],
+  "email_auth": [
+    { "item": "发件域名", "observed": "example.com", "expected": "与官网域名一致", "mismatch": "same", "note": "" },
+    { "item": "Reply-To", "observed": "example.com", "expected": "不跳转到免费邮箱", "mismatch": "same", "note": "" },
+    { "item": "SPF", "observed": "【有/无】", "expected": "存在且覆盖实际发信服务", "mismatch": "unknown", "note": "缺失不单独构成造假" },
+    { "item": "DKIM / DMARC", "observed": "【有/无】", "expected": "至少一项", "mismatch": "unknown", "note": "" },
+    { "item": "Received 链", "observed": "【首跳来源】", "expected": "与对方所在国相符", "mismatch": "unknown", "note": "" },
+    { "item": "签名抬头", "observed": "【签名中的公司名】", "expected": "与正文/附件一致", "mismatch": "unknown", "note": "" }
+  ],
+  "matrix": [
+    { "item": "公司名称", "claimed": "【名称（邮件）】", "other": "【名称（官网/登记）】", "mismatch": "unknown", "note": "" },
+    { "item": "地址", "claimed": "【地址（签名）】", "other": "【地址（官网/登记）】", "mismatch": "unknown", "note": "注册地/办公地/工厂/仓库需分开记录" },
+    { "item": "电话", "claimed": "【电话】", "other": "【官网电话】", "mismatch": "unknown", "note": "" },
+    { "item": "邮箱", "claimed": "【邮箱】", "other": "【官网 Contact 邮箱】", "mismatch": "unknown", "note": "" },
+    { "item": "域名", "claimed": "【域名】", "other": "【公司名】", "mismatch": "unknown", "note": "缩写不影响判定，但需确认" }
+  ],
+  "business_fit": {
+    "headline": "产品与行业逻辑【成立/待核实/不成立】，需进一步确认【X】",
+    "product_use": "【该产品在对方行业里的角色，一句话】",
+    "demand_math": [
+      { "label": "对方自述用量", "value": "【数量】", "note": "" },
+      { "label": "行业单耗口径", "value": "【数值范围 + 出处】", "note": "" },
+      { "label": "反算结果", "value": "【结论】", "note": "算不通时写\"口径待澄清\"，不写\"造假\"" }
+    ],
+    "keywords": [
+      { "kode": "【业务分类码】", "label": "【分类名称】", "why": "【为什么相关】", "status": "unverified", "note": "" }
+    ],
+    "signals": [
+      { "signal": "【产品形态/规格是否匹配】", "status": "unverified", "strength": "medium", "note": "" },
+      { "signal": "【规模是否可被产能解释】", "status": "unverified", "strength": "medium", "note": "" },
+      { "signal": "【物流与包装是否匹配】", "status": "unverified", "strength": "low", "note": "" }
+    ]
+  },
+  "checks": [
+    {
+      "id": "K01",
+      "section": "A",
+      "title": "企业是否真实存在（登记检索）",
+      "question": "在官方登记入口上，能否检索到与询盘名称完全一致的主体？",
+      "status": "unverified",
+      "finding": "本次未取得唯一登记号，无法完成登记册比对。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["登记全称", "登记号 / 唯一标识", "成立日期"],
+      "boundary": "公开渠道未覆盖或需付费查询，属信息缺失，不构成企业虚假的证据。",
+      "source_ids": ["SRC01"],
+      "next_ids": ["Q01"],
+      "action": "索取登记号后复核。"
+    },
+    {
+      "id": "K02",
+      "section": "A",
+      "title": "名称与登记名称是否一致",
+      "question": "邮件中的名称与登记名称是否逐字一致？",
+      "status": "unverified",
+      "finding": "缺少登记证书，无法比对。",
+      "verified_facts": ["名称在邮件签名、正文、附件抬头的表述一致。"],
+      "doubts": [],
+      "unknowns": ["登记证书上的全称"],
+      "boundary": "内部一致只说明自述自洽，不能替代与登记册的比对。",
+      "source_ids": [],
+      "next_ids": ["Q01"],
+      "action": "取得证照后逐字比对，注意贸易称谓与缩写。"
+    },
+    {
+      "id": "K03",
+      "section": "A",
+      "title": "是否存在同名或近似名企业",
+      "question": "公开渠道是否存在同名/近似名主体，可能被误关联？",
+      "status": "unverified",
+      "finding": "本次未完成同名主体排查。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["同名主体清单"],
+      "boundary": "未排查不等于无同名主体，只是本轮未覆盖。",
+      "source_ids": ["SRC01"],
+      "next_ids": ["Q01"],
+      "action": "按名称在登记入口与搜索引擎各排查一轮。"
+    },
+    {
+      "id": "K04",
+      "section": "B",
+      "title": "产品与行业是否相关",
+      "question": "该产品是否属于对方行业的常规原料？",
+      "status": "unverified",
+      "finding": "需先确认对方行业与实际用途。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["对方行业", "产品用途"],
+      "boundary": "行业相关不等于主体真实，也不等于规模属实。",
+      "source_ids": [],
+      "next_ids": ["Q07"],
+      "action": "询问用途与应用场景。"
+    },
+    {
+      "id": "K05",
+      "section": "B",
+      "title": "业务分类码是否覆盖该业务",
+      "question": "对方登记的业务分类是否包含该产品的生产或批发？",
+      "status": "unverified",
+      "finding": "尚未取得业务分类明细。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["业务分类码清单"],
+      "boundary": "分类码只证明许可范围，不证明正在经营。",
+      "source_ids": [],
+      "next_ids": ["Q02"],
+      "action": "取得分类明细后与询价产品对照。"
+    },
+    {
+      "id": "K06",
+      "section": "B",
+      "title": "规模口径能否算通",
+      "question": "对方自述的产能与采购量是否在数量级上互相解释得通？",
+      "status": "unverified",
+      "finding": "需取得产能数据后反算。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["产能", "单耗"],
+      "boundary": "算不通常见原因是口径不同，不直接推断虚报。",
+      "source_ids": [],
+      "next_ids": ["Q05"],
+      "action": "索取产能与主要设备参数。"
+    },
+    {
+      "id": "K07",
+      "section": "C",
+      "title": "域名与公司主体是否对应",
+      "question": "发信域名与官网域名是否一致，且与公司名称有可解释的关系？",
+      "status": "unverified",
+      "finding": "待核。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["官网域名", "域名归属"],
+      "boundary": "域名与名称缩写不对应是常见现象，不单独构成疑点。",
+      "source_ids": [],
+      "next_ids": ["Q03"],
+      "action": "核对官网 Footer 与 Contact 页域名。"
+    },
+    {
+      "id": "K08",
+      "section": "C",
+      "title": "邮箱渠道是否单一",
+      "question": "询盘渠道是否只有单一邮箱，缺少可回拨的总机或第二渠道？",
+      "status": "unverified",
+      "finding": "待核。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["公司总机", "采购部公共邮箱"],
+      "boundary": "只给手机在中小企业常见，关键是关键节点能否双通道确认。",
+      "source_ids": [],
+      "next_ids": ["Q03"],
+      "action": "索取总机与公共邮箱。"
+    },
+    {
+      "id": "K09",
+      "section": "C",
+      "title": "地址口径是否自洽",
+      "question": "签名地址、官网地址、注册地址、工厂地址之间是否自洽？",
+      "status": "unverified",
+      "finding": "待核。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["注册地址", "工厂地址"],
+      "boundary": "注册地、办公地、厂区、仓库本来就常不同，需分别记录。",
+      "source_ids": [],
+      "next_ids": ["Q03"],
+      "action": "分别取得四类地址并核对行政区与邮编。"
+    },
+    {
+      "id": "K10",
+      "section": "D",
+      "title": "经营异常与诉讼",
+      "question": "公开渠道是否存在经营异常、诉讼、破产或执行记录？",
+      "status": "unverified",
+      "finding": "本轮未完成负面检索。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["负面记录清单"],
+      "boundary": "未检索不等于无记录。",
+      "source_ids": [],
+      "next_ids": ["Q01"],
+      "action": "按本币语言关键词检索负面信息。"
+    },
+    {
+      "id": "K11",
+      "section": "D",
+      "title": "制裁与出口管制名单",
+      "question": "是否命中任何适用的制裁或出口管制名单？",
+      "status": "unverified",
+      "finding": "本轮未完成名单检索。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["名单检索结果"],
+      "boundary": "模糊命中需人工复核，不能直接判定。",
+      "source_ids": ["SRC05"],
+      "next_ids": ["Q01"],
+      "action": "在主要制裁名单上按名称与地址检索。"
+    },
+    {
+      "id": "K12",
+      "section": "D",
+      "title": "收款路径与合同主体",
+      "question": "收款账户户名、合同签约主体、发票抬头是否同一主体？",
+      "status": "unverified",
+      "finding": "尚未进入合同与付款阶段。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["收款账户户名", "签约主体"],
+      "boundary": "第三方代收在部分市场常见但风险高，必须书面确认。",
+      "source_ids": [],
+      "next_ids": ["Q06"],
+      "action": "签约前取得账户户名与登记主体一致的证明。"
+    },
+    {
+      "id": "K13",
+      "section": "E",
+      "title": "现有资料能否支撑正式报价",
+      "question": "在现有资料下，是否可以发出正式报价与 PI？",
+      "status": "unverified",
+      "finding": "P0 资料未闭合，建议先发非约束性意向报价。",
+      "verified_facts": [],
+      "doubts": [],
+      "unknowns": ["P0 资料全部未取得"],
+      "boundary": "本结论只针对资料完整性，不针对交易意愿。",
+      "source_ids": [],
+      "next_ids": ["Q01", "Q02"],
+      "action": "完成 P0 后再发正式报价。"
+    }
+  ],
+  "linkage": [
+    {
+      "name": "【同名/近似名主体】",
+      "relation": "name_collision",
+      "detail": "待排查是否存在同名但不同登记号的主体。",
+      "rule": "只有唯一标识（登记号 / 税号 / LEI）相同才允许合并信息。"
+    },
+    {
+      "name": "【可能的关联方：代理/子公司/办事处】",
+      "relation": "role_ambiguity",
+      "detail": "同一封询盘里可能出现制造商与贸易商两种身份。",
+      "rule": "身份不清时以合同签约主体为准，并确认收货人与付款人是否同一主体。"
+    }
+  ],
+  "risks": [
+    {
+      "category": "主体身份",
+      "severity": "medium",
+      "status": "unverified",
+      "fact": "登记号、业务分类、产能数据均未取得。",
+      "impact": "无法判断能否作为正式合同主体报价。",
+      "action": "按 P0 清单索取并复核。",
+      "source_ids": ["SRC01"]
+    },
+    {
+      "category": "付款与合同",
+      "severity": "medium",
+      "status": "unverified",
+      "fact": "收款账户与签约主体尚未确认。",
+      "impact": "存在合同主体与付款主体不一致的风险。",
+      "action": "签约前核对账户户名；首单采用信用证或高比例预付。",
+      "source_ids": []
+    },
+    {
+      "category": "制裁与合规",
+      "severity": "medium",
+      "status": "unverified",
+      "fact": "制裁名单检索尚未完成。",
+      "impact": "若命中将影响我方合规与收汇。",
+      "action": "在下单前完成名单检索并留存截图。",
+      "source_ids": ["SRC05"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "SRC01",
+      "name": "【官方登记入口】",
+      "org": "【主管机构】",
+      "url": "https://example.gov/registry",
+      "grade": "A",
+      "kind": "registry",
+      "date": "",
+      "retrieved": "2026-01-01",
+      "note": "官方商事登记检索入口。注意：完整档案可能需付费或需当事人授权。"
+    },
+    {
+      "id": "SRC02",
+      "name": "【营业许可 / 唯一识别号平台】",
+      "org": "【主管机构】",
+      "url": "https://example.gov/license",
+      "grade": "A",
+      "kind": "registry",
+      "date": "",
+      "retrieved": "2026-01-01",
+      "note": "按唯一识别号反查业务分类与许可状态。"
+    },
+    {
+      "id": "SRC05",
+      "name": "【制裁名单】",
+      "org": "【发布机构】",
+      "url": "https://example.gov/sanctions",
+      "grade": "A",
+      "kind": "sanctions",
+      "date": "",
+      "retrieved": "2026-01-01",
+      "note": "制裁名单检索。模糊命中需人工复核。"
+    },
+    {
+      "id": "SRC06",
+      "name": "对方询盘邮件与签名档",
+      "org": "询盘方",
+      "url": "",
+      "grade": "D",
+      "kind": "counterparty_document",
+      "date": "",
+      "retrieved": "2026-01-01",
+      "note": "对方自述，仅用于提取字段，不作为结论依据。"
+    }
+  ],
+  "requests": [
+    { "id": "Q01", "priority": "P0", "category": "主体", "zh": "商事登记证明（含登记号、成立日期、注册地址）", "en": "Company registration certificate showing the registration number, incorporation date and registered address.", "why": "唯一标识是合并信息的唯一依据。", "source_ids": ["SRC01"] },
+    { "id": "Q02", "priority": "P0", "category": "业务", "zh": "营业许可识别号与业务分类明细", "en": "Business identification number and the full list of registered business classification codes.", "why": "判断其经营范围是否覆盖该产品。", "source_ids": ["SRC02"] },
+    { "id": "Q03", "priority": "P0", "category": "渠道", "zh": "官网 Contact 页链接与公司总机", "en": "Link to the Contact page of your official website, plus the company landline number.", "why": "建立第二核验通道，避免单一邮箱渠道。", "source_ids": [] },
+    { "id": "Q04", "priority": "P1", "category": "地址", "zh": "注册地址、办公地址、收货/工厂地址（如不同请分别提供）", "en": "Registered address, office address and delivery/plant address (please list separately if different).", "why": "四类地址本来就常不同，需分别记录。", "source_ids": [] },
+    { "id": "Q05", "priority": "P1", "category": "产能", "zh": "主要生产设备与年产能（或年采购量依据）", "en": "Main production equipment and annual capacity (or the basis for your stated annual purchase volume).", "why": "用于量化反算，确认规模口径。", "source_ids": [] },
+    { "id": "Q06", "priority": "P1", "category": "合同", "zh": "合同签约主体、收货人与付款人是否同一主体", "en": "Please confirm whether the contracting party, consignee and payer are the same legal entity.", "why": "避免主体不一致导致收汇问题。", "source_ids": [] },
+    { "id": "Q07", "priority": "P2", "category": "技术", "zh": "技术规格要求与检测方法", "en": "Technical specification requirements and the test methods you apply.", "why": "确定牌号与包装。", "source_ids": [] },
+    { "id": "Q08", "priority": "P2", "category": "付款", "zh": "收款账户户名与开户行", "en": "Account holder name and the bank name for payment.", "why": "签约前核对户名与登记主体。", "source_ids": [] }
+  ],
+  "actions": [
+    { "phase": "T+0", "action": "发首次回信索取 P0 资料", "detail": "使用 MSG01 模板，附公司简介与产品规格书。", "owner": "销售", "priority": "P0", "status": "open" },
+    { "phase": "T+1", "action": "完成官方登记入口检索", "detail": "全称 + 简称 + 缩写各检索一轮，留存截图。", "owner": "销售/助理", "priority": "P0", "status": "open" },
+    { "phase": "T+2", "action": "官网与域名核验", "detail": "Contact 页、Footer、WHOIS、SSL、邮件认证头。", "owner": "销售/助理", "priority": "P1", "status": "open" },
+    { "phase": "T+3", "action": "负面与制裁检索", "detail": "本币语言关键词 + 主要制裁名单。", "owner": "销售/助理", "priority": "P1", "status": "open" },
+    { "phase": "T+5", "action": "复检并更新报告", "detail": "把新取得的资料回填，重跑 build_all 与 selfcheck。", "owner": "销售", "priority": "P1", "status": "open" }
+  ],
+  "messages": [
+    {
+      "title": "首次回信 · 索取 P0 注册资料",
+      "channel": "邮件",
+      "purpose": "在不冒犯对方的前提下，拿到能独立证明主体的三份材料。",
+      "body_en": "Subject: Re: Your inquiry — next steps and a short vendor-registration set\n\nDear [Name],\n\nThank you for your inquiry. We are preparing the specification and price indication for [product].\n\nTo open the price file in our system, our compliance team asks for a short set of company documents. These are standard for all new customers, and sensitive numbers may be redacted:\n\n1. Company registration certificate (registration number, incorporation date, registered address)\n2. Business identification number and the full list of registered business classification codes\n3. Link to the Contact page of your official website, plus the company landline number\n\nMay I also suggest a quick call so that we can confirm the delivery point and the contracting entity at the same time?\n\nOnce these are on file, we will send the formal quotation within [N] working days.\n\nBest regards,\n[Your name]",
+      "notes": ["把要求写成“所有新客户的标准流程”，避免让对方觉得被怀疑", "明确说明敏感字段可以打码", "承诺拿到后的出报价时限"]
+    },
+    {
+      "title": "追问业务规模（用途导向）",
+      "channel": "邮件",
+      "purpose": "用“匹配合适等级与包装”为由，拿到产能与单耗数据。",
+      "body_en": "Subject: Re: Your inquiry — matching grade and packaging to your process\n\nDear [Name],\n\nTo match the right grade and packaging to your process, could you kindly share:\n\n1. The annual consumption and the typical order size per shipment\n2. Your main production equipment and annual capacity (or the basis for your stated volume)\n3. The receiving address and preferred port\n\nWith these three points we can recommend the most suitable specification and avoid over- or under-specifying the product.\n\nBest regards,\n[Your name]",
+      "notes": ["不要直接质疑“你的数字不对”，而是说“为了匹配合适规格”", "把收货地址与港口一并问，减少往返"]
+    },
+    {
+      "title": "NDA 前置的回应",
+      "channel": "邮件",
+      "purpose": "不拒绝 NDA，把公开信息与商业机密拆开，同时推进。",
+      "body_en": "Subject: Re: NDA and vendor documents — a practical way forward\n\nDear [Name],\n\nWe fully respect your NDA requirement and are happy to sign it; our legal team can review your template within two working days.\n\nIn our experience, an NDA is best used for technical formulas, customer lists and price terms, while the registration documents are normally shared without it. May I suggest that we run two tracks in parallel:\n\n- Track A: we sign the NDA today.\n- Track B: in the meantime you send the registration certificate and business identification number, with the sensitive numbers redacted.\n\nThis way neither of us loses time on the quotation.\n\nBest regards,\n[Your name]",
+      "notes": ["先明确“我们愿意签”，把对抗性降到最低", "区分两类信息：需要 NDA 的 vs 不需要 NDA 的", "给出并行方案，而不是让对方二选一"]
+    },
+    {
+      "title": "资料收到后的闭环确认",
+      "channel": "邮件",
+      "purpose": "告诉对方我们核对完了什么、还差什么，维持推进感。",
+      "body_en": "Subject: Re: Documents received — two items still open\n\nDear [Name],\n\nThank you for the documents. We have checked the following:\n\n- Company name and registration number: matched\n- Business classification covering [product]: confirmed\n- Registered address: consistent with your signature block\n\nTwo items are still open on our side:\n\n1. The delivery address differs from the registered address — could you confirm whether this is your plant or a third-party warehouse?\n2. The landline number is still pending.\n\nOnce these two are clear, we will issue the formal quotation.\n\nBest regards,\n[Your name]",
+      "notes": ["先说核对完毕的项目，再说未闭合项，语气更合作", "未闭合项要具体、可回答"]
+    }
+  ],
+  "boundaries": [
+    "本报告只覆盖核验基准日可公开获取的信息，不包含付费档案、银行征信与现场核查。",
+    "“未核实”表示本轮未取得可用来源，不表示企业不存在或不真实。",
+    "同名或近似名企业的信息不与本主体合并，除非唯一标识相同。",
+    "报告不给出任何概率性判断，也不推断对方动机。",
+    "最终是否交易、是否给予账期，由业务与风控决策，不由本报告决定。"
+  ]
+}

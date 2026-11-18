@@ -1,0 +1,123 @@
+{
+  "chain_id": "SBS",
+  "product_name": "SBS 热塑性弹性体",
+  "product_full_name": "苯乙烯-丁二烯-苯乙烯嵌段共聚物（TPE-S/TPS/SBC 族中的 SBS 型）",
+  "focus_question": "以 SBS 为中心，向上展开苯乙烯/丁二烯及主要原料路线（2 层），向下展开改性沥青、防水卷材、鞋材、热熔胶、聚合物改性等主要应用方向（2 层）。",
+  "user_params": {
+    "up_depth": 2,
+    "down_depth": 2,
+    "branches": [
+      "道路改性沥青",
+      "建筑防水卷材",
+      "鞋材 TPR",
+      "热熔胶",
+      "聚合物改性"
+    ],
+    "show_price": true,
+    "show_enterprises": true,
+    "show_projects": true,
+    "show_events": true,
+    "region": "中国大陆",
+    "price_window": "2026-09-20 ~ 2026-10-20（公开可核验窗口，密度不足处按缺口处理）"
+  },
+  "price_basis": {
+    "default": "出厂价/现货市场价（含税，人民币）",
+    "note": "不同节点口径不同（出厂价 vs 送到价 vs 市场评估价；含税/不含税；干胶/油胶；吨/平方米/双）。画价格联动图前必须把口径列出来，跨口径不得直接算价差。"
+  },
+  "market_snapshot": [
+    {
+      "metric": "中国 SBS 产能",
+      "value": "197.5",
+      "unit": "万吨/年",
+      "as_of": "2026-07",
+      "source": "S01",
+      "note": "截至 2026 年 7 月"
+    },
+    {
+      "metric": "中国 SBS 产量",
+      "value": "81.7",
+      "unit": "万吨",
+      "as_of": "2024",
+      "source": "S03",
+      "note": "2024 年，产能利用率 50.6%"
+    },
+    {
+      "metric": "中国 SBS 表观消费量",
+      "value": "102.41",
+      "unit": "万吨",
+      "as_of": "2025",
+      "source": "S01",
+      "note": "同比 +24.37%，自给率 105.45%"
+    },
+    {
+      "metric": "中国 SBS 出口量",
+      "value": "12.62",
+      "unit": "万吨",
+      "as_of": "2025",
+      "source": "S01",
+      "note": "同比 +27.73%"
+    },
+    {
+      "metric": "中国 SBS 进口量",
+      "value": "6.60（前三来源合计）",
+      "unit": "万吨",
+      "as_of": "2025",
+      "source": "S01",
+      "note": "俄罗斯 5.31 万吨占 75.53%"
+    },
+    {
+      "metric": "SBS 第一大下游（道路沥青改性）占比",
+      "value": "44.2",
+      "unit": "%",
+      "as_of": "2025",
+      "source": "S01",
+      "note": null
+    },
+    {
+      "metric": "SBS 消费结构-胶黏剂",
+      "value": "14.2",
+      "unit": "%",
+      "as_of": "2025",
+      "source": "S01",
+      "note": "唯一增速高于整体的传统下游"
+    },
+    {
+      "metric": "SBS 消费结构-防水卷材",
+      "value": "12.0",
+      "unit": "%",
+      "as_of": "2025",
+      "source": "S01",
+      "note": "收缩趋势"
+    },
+    {
+      "metric": "SBS 消费结构-TPR 鞋材",
+      "value": "17.8",
+      "unit": "%",
+      "as_of": "2025",
+      "source": "S01",
+      "note": "被 SEBS/TPU/POE/EVA 替代"
+    },
+    {
+      "metric": "SBS 消费结构-聚合物改性",
+      "value": "10.1",
+      "unit": "%",
+      "as_of": "2025",
+      "source": "S01",
+      "note": "稳定增长"
+    }
+  ],
+  "scenario_boundary": {
+    "covered": "SBS 直接原料（苯乙烯、丁二烯）及其 2 层主路线；5 类主要下游应用骨架；主要替代品（SIS/SEBS/TPU/EVA/POE/SBR）。",
+    "not_covered": "地缘/关税与贸易流；全部新兴应用（医用手套、锂电缓冲、光伏密封、可降解共混）；非主流路线（生物基丁二烯、甲苯甲醇烷基化产业化）；SBS 牌号级完整清单。",
+    "disclaimer": "本图谱覆盖的是『预先冻结的核心节点与关系清单』，不代表 SBS 产业链的全部可能节点。覆盖率数字只对本清单有效。"
+  },
+  "critical_gaps_policy": "任何缺价、缺产能、缺工艺参数的节点/关系都必须同时出现在缺口清单（Sheet『缺口清单』）与图谱节点的 ⚠ 标记中，不得静默省略。",
+  "capacity_fields": [
+    "capacity_sbs",
+    "capacity_sbc"
+  ],
+  "capacity_field_names": {
+    "capacity_sbs": "SBS 专有产能(万吨/年)",
+    "capacity_sbc": "SBC 总产能(万吨/年)"
+  }
+}

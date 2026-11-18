@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/inquiry-to-quotation/quote.schema.json",
+  "title": "Quotation draft",
+  "type": "object",
+  "required": ["quote_no", "quote_date", "valid_until", "customer", "seller", "line_items", "totals", "terms"],
+  "additionalProperties": true,
+  "properties": {
+    "quote_no": {"type": "string"},
+    "quote_date": {"type": "string", "format": "date"},
+    "valid_until": {"type": "string", "format": "date"},
+    "validity_days": {"type": "integer", "minimum": 1},
+    "customer": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "contact": {"type": "string"},
+        "tax_id": {"type": "string"}
+      }
+    },
+    "seller": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "contact": {"type": "string"}
+      }
+    },
+    "line_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["product", "spec", "quantity", "unit", "unit_price", "amount"],
+        "properties": {
+          "product": {"type": "string"},
+          "spec": {"type": "string"},
+          "quantity": {"type": "number", "minimum": 0},
+          "unit": {"type": "string"},
+          "unit_price": {"type": "number", "minimum": 0},
+          "amount": {"type": "number", "minimum": 0},
+          "tax_included": {"type": "boolean"}
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": ["net", "tax", "amount"],
+      "properties": {
+        "net": {"type": "number", "minimum": 0},
+        "tax": {"type": "number", "minimum": 0},
+        "amount": {"type": "number", "minimum": 0},
+        "tax_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "currency": {"type": "string"}
+      }
+    },
+    "terms": {
+      "type": "object",
+      "required": ["tax_mode", "freight_mode", "payment", "delivery", "packaging"],
+      "properties": {
+        "tax_mode": {"type": "string"},
+        "freight_mode": {"type": "string"},
+        "payment": {"type": "string"},
+        "delivery": {"type": "string"},
+        "packaging": {"type": "string"},
+        "acceptance": {"type": "string"},
+        "validity": {"type": "string"}
+      }
+    },
+    "pending_customer_confirmation": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["draft", "reviewed", "sent", "expired"]},
+    "generated_by": {"type": "string"}
+  }
+}

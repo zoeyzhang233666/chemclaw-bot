@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<style>
+:root{
+  --bg:#f4f6fa; --card:#ffffff; --ink:#17202e; --ink2:#4b5665; --ink3:#7d8797;
+  --line:#e4e8ef; --line2:#d3d9e3;
+  --brand:#1f4e79; --brand2:#2f6fa8; --brand-lt:#eaf1f8;
+  --hi:#c0392b; --hi-bg:#fdf0ee; --lo:#1e7a56; --lo-bg:#eaf6f0;
+  --mid:#b7791f; --mid-bg:#fdf6e7; --unk:#5b6472; --unk-bg:#f0f2f5;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 6px 20px rgba(16,24,40,.06);
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--brand2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1220px;margin:0 auto;padding:0 20px 80px}
+
+/* ---------- 顶部 ---------- */
+.top{background:linear-gradient(135deg,#16344f 0%,#1f4e79 45%,#2a6ea6 100%);color:#fff;padding:26px 0 22px;margin-bottom:22px}
+.top .wrap{padding-bottom:0}
+.top h1{margin:0 0 6px;font-size:23px;font-weight:700;letter-spacing:.3px}
+.top .sub{color:#c7dcee;font-size:13px}
+.top .chips{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.24);border-radius:999px;padding:4px 12px;font-size:12px;color:#eaf4fb}
+.chip.warn{background:rgba(255,196,80,.18);border-color:rgba(255,196,80,.5);color:#ffe2a8}
+
+/* ---------- 卡片 ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px}
+.card h2{margin:0 0 4px;font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:9px}
+.card h2 .num{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:7px;background:var(--brand-lt);color:var(--brand);font-size:12.5px;font-weight:700;flex:none}
+.card .desc{color:var(--ink3);font-size:12.5px;margin:0 0 16px}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+/* ---------- 徽标 ---------- */
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:8px;padding:5px 11px;font-size:12.5px;font-weight:700;line-height:1.3}
+.b-high{background:var(--hi-bg);color:var(--hi);border:1px solid #f3c9c2}
+.b-low{background:var(--lo-bg);color:var(--lo);border:1px solid #bfe3d3}
+.b-match{background:var(--mid-bg);color:var(--mid);border:1px solid #f0dcae}
+.b-unknown{background:var(--unk-bg);color:var(--unk);border:1px solid #dcdfe5}
+
+/* ---------- 首屏 ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px}
+.hero-main{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:22px 24px 12px}
+.hero-side{display:flex;flex-direction:column;gap:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:15px 17px}
+.kpi .k{font-size:12px;color:var(--ink3);margin-bottom:3px}
+.kpi .v{font-size:25px;font-weight:700;letter-spacing:-.4px;line-height:1.15}
+.kpi .v small{font-size:13px;font-weight:500;color:var(--ink3);letter-spacing:0}
+.kpi .n{font-size:11.5px;color:var(--ink3);margin-top:3px}
+.kpi.hi .v{color:var(--hi)} .kpi.lo .v{color:var(--lo)}
+
+/* 价格带 */
+.bandwrap{margin:6px 0 4px}
+.band-title{font-size:12.5px;color:var(--ink3);margin-bottom:8px;display:flex;justify-content:space-between}
+.band{position:relative;height:46px;margin:34px 0 10px}
+.band-track{position:absolute;left:0;right:0;top:16px;height:14px;background:linear-gradient(90deg,#eef2f7,#e4eaf2);border-radius:7px}
+.band-range{position:absolute;top:12px;height:22px;border-radius:6px;background:linear-gradient(90deg,#2f6fa8,#4f92c9);box-shadow:0 2px 8px rgba(47,111,168,.35)}
+.band-range .lbl{position:absolute;top:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:700;color:var(--brand)}
+.band-mark{position:absolute;top:0;width:3px;height:46px;border-radius:2px;background:#2b3444}
+.band-mark .pin{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:11px;height:11px;background:#2b3444;rotate:45deg}
+.band-cust{position:absolute;top:-8px;width:4px;height:62px;border-radius:2px;background:var(--hi);box-shadow:0 0 0 3px rgba(192,57,43,.14)}
+.band-cust .tag{position:absolute;left:50%;transform:translateX(-50%);top:-30px;white-space:nowrap;background:var(--hi);color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:7px}
+.band-cust .tag:after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--hi)}
+.band-ticks{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.band-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin-top:6px}
+.band-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+.hero-foot{border-top:1px dashed var(--line2);margin-top:14px;padding:12px 0 8px;display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--ink2)}
+.hero-foot b{color:var(--ink)}
+
+/* 结论条 */
+.verdict{display:flex;gap:14px;align-items:flex-start;border-radius:12px;padding:14px 16px;margin-top:6px}
+.verdict.high{background:var(--hi-bg);border:1px solid #f3c9c2}
+.verdict.low{background:var(--lo-bg);border:1px solid #bfe3d3}
+.verdict.match{background:var(--mid-bg);border:1px solid #f0dcae}
+.verdict.unknown{background:var(--unk-bg);border:1px solid #dcdfe5}
+.verdict .vt{font-size:15px;font-weight:700}
+.verdict ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink2)}
+.verdict li{margin:2px 0}
+
+/* ---------- 控制条 ---------- */
+.ctrl{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:18px}
+.ctrl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}
+.ctrl-head h3{margin:0;font-size:14.5px;font-weight:700}
+.ctrl-head .hint{font-size:12px;color:var(--ink3)}
+.form{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fld label{font-size:11.5px;color:var(--ink3);font-weight:600}
+.fld input,.fld select{
+  width:100%;padding:8px 10px;border:1px solid var(--line2);border-radius:9px;background:#fff;
+  font:inherit;font-size:13px;color:var(--ink);outline:none;transition:border .15s, box-shadow .15s
+}
+.fld input:focus,.fld select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(47,111,168,.13)}
+.fld .unit{font-size:11px;color:var(--ink3);margin-top:-2px}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:9px;padding:8px 14px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand2);color:var(--brand2)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:#1a4368}
+.flag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mid);background:var(--mid-bg);border:1px solid #f0dcae;border-radius:999px;padding:3px 10px}
+
+/* 价格带图 */
+#bandChart{width:100%;height:250px}
+
+/* ---------- 表格 ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:11px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px;background:#fff;min-width:620px}
+thead th{background:#f7f9fc;color:var(--ink2);font-weight:700;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:12px}
+tbody td{padding:9px 12px;border-bottom:1px solid #f0f2f6;vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafcff}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:5px;background:#eef2f7;color:var(--ink2);white-space:nowrap;border:1px solid #e2e8f0}
+.tag.ok{background:var(--lo-bg);color:var(--lo);border-color:#bfe3d3}
+.tag.bad{background:var(--hi-bg);color:var(--hi);border-color:#f3c9c2}
+.tag.miss{background:var(--unk-bg);color:var(--unk);border-color:#dcdfe5}
+.tag.mid{background:var(--mid-bg);color:var(--mid);border-color:#f0dcae}
+.src{font-size:11.5px;color:var(--ink3)}
+.src a{font-size:11.5px}
+.sim{background:repeating-linear-gradient(45deg,#fff8e6,#fff8e6 9px,#fffdf6 9px,#fffdf6 18px);border:1px dashed #e8c46a;border-radius:10px;padding:12px 15px;font-size:12.5px;color:#7a5c14;margin-bottom:14px}
+.sim b{color:#5f4708}
+
+/* ---------- 历史 / 缺口 ---------- */
+.chart{width:100%;height:320px}
+.gapcard{border:1px solid #e3e7ee;border-radius:11px;padding:12px 15px;background:#fbfcfe}
+.gapcard .gi{font-weight:700;font-size:13px;color:var(--ink);display:flex;gap:8px;align-items:center}
+.gapcard .gx{font-size:12px;color:var(--ink3);margin-top:5px}
+.gapcard .gx b{color:var(--ink2);font-weight:600}
+
+/* ---------- 沟通 ---------- */
+.talk{display:flex;flex-direction:column;gap:10px}
+.talkitem{display:flex;gap:12px;border:1px solid var(--line);border-radius:11px;padding:11px 14px;background:#fff;cursor:pointer;transition:.15s}
+.talkitem:hover{border-color:#c5d4e6;background:#fbfdff}
+.talkitem .box{flex:none;width:17px;height:17px;border:1.5px solid var(--line2);border-radius:5px;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent}
+.talkitem.on .box{background:var(--brand);border-color:var(--brand);color:#fff}
+.talkitem .tx{flex:1;min-width:0}
+.talkitem .tt{font-size:13px;color:var(--ink);line-height:1.55}
+.talkitem .sm{font-size:11.5px;color:var(--ink3);margin-top:4px}
+textarea{width:100%;min-height:210px;padding:13px 15px;border:1px solid var(--line2);border-radius:11px;font:13px/1.7 "SF Mono",Menlo,Consolas,"Microsoft YaHei",monospace;color:var(--ink);resize:vertical;outline:none;background:#fff}
+textarea:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(47,111,168,.13)}
+
+/* ---------- 页脚 ---------- */
+.foot{border-top:1px solid var(--line);margin-top:26px;padding-top:18px;font-size:11.5px;color:var(--ink3);line-height:1.8}
+.note{font-size:11.5px;color:var(--ink3);margin-top:10px;line-height:1.7}
+.err{background:#fdf0ee;border:1px solid #f3c9c2;color:#8c2d1f;padding:10px 14px;border-radius:10px;font-size:12.5px;margin:10px 0}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:1080px){
+  .form{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hero{grid-template-columns:1fr}
+  .hero-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .wrap{padding:0 12px 60px}
+  .card{padding:16px 14px}
+  .form{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero-side{grid-template-columns:1fr}
+  .g2,.g3{grid-template-columns:1fr}
+  .top h1{font-size:19px}
+  .band-cust .tag{font-size:11px}
+}
+@media print{
+  body{background:#fff}
+  .ctrl,.btn{display:none}
+  .card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="wrap">
+    <h1>{{TITLE}}</h1>
+    <div class="sub">{{SUBTITLE}}</div>
+    <div class="chips">{{TOPBAR_CHIPS}}</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="ssrBanner"></div>
+  <!-- 首屏：客户所述价格 vs 当前市场参考区间 -->
+  <div class="hero" id="hero">
+    <div class="hero-main">
+      <div class="band-title">
+        <span><b>客户所述价格</b> vs <b>当前市场参考区间</b>　{{META_UNIT_SHORT}}</span>
+        <span id="bandAsOf">{{META_ASOF}}</span>
+      </div>
+      <div class="bandwrap" id="bandWrap">
+        <div class="band">
+          <div class="band-track"></div>
+          <div class="band-range" id="bandRange" style="left:30%;right:30%"><span class="lbl" id="bandRangeLbl"></span></div>
+          <div class="band-mark" id="bandMid" style="left:50%"><span class="pin"></span></div>
+          <div class="band-cust" id="bandCust" style="left:80%"><span class="tag" id="bandCustTag"></span></div>
+        </div>
+        <div class="band-ticks" id="bandTicks"></div>
+        <div class="band-legend">
+          <span><i style="background:linear-gradient(90deg,#2f6fa8,#4f92c9)"></i>市场参考区间（同规格·同地区·同税费·同交付）</span>
+          <span><i style="background:#2b3444"></i>区间中值（比较基准）</span>
+          <span><i style="background:#c0392b"></i>客户所述价格{{CUSTOMER_TAG_SUFFIX}}</span>
+        </div>
+      </div>
+      <div class="hero-foot">
+        <span>市场区间：<b id="fMkt"></b></span>
+        <span>报价日期：<b id="fDate"></b></span>
+        <span>数据来源：<b id="fSrc"></b></span>
+        <span>口径：<b id="fCal"></b></span>
+      </div>
+      <div class="verdict" id="verdictBox"></div>
+    </div>
+
+    <div class="hero-side">
+      <div class="kpi" id="kpiDev"><div class="k">客户价 − 市场区间中值</div><div class="v" id="k1">—</div><div class="n" id="k1n"></div></div>
+      <div class="kpi" id="kpiPct"><div class="k">相对区间中值的偏离比例</div><div class="v" id="k2">—</div><div class="n" id="k2n"></div></div>
+      <div class="kpi"><div class="k">当日市场参考区间</div><div class="v" id="k3">—</div><div class="n" id="k3n"></div></div>
+      <div class="kpi"><div class="k">近3个月同口径价格带</div><div class="v" id="k4">—</div><div class="n" id="k4n"></div></div>
+    </div>
+  </div>
+
+  <!-- 口径控制 & 即时重算 -->
+  <div class="ctrl">
+    <div class="ctrl-head">
+      <h3>口径与参数调整（改动后首屏与图表即时重算）</h3>
+      <div class="hint" id="recalcHint">数据源：已核实的公开市场报价；实际成交价以一单一议为准</div>
+    </div>
+    <div class="form">
+      <div class="fld"><label>客户所述价格</label><input type="number" id="inCust" value="{{CUSTOMER_PRICE}}" step="10" min="0"><span class="unit">元/吨</span></div>
+      <div class="fld"><label>客户所述地区</label><select id="inRegion">{{REGION_OPTIONS}}</select></div>
+      <div class="fld"><label>客户税费口径</label><select id="inTax">{{TAX_OPTIONS}}</select></div>
+      <div class="fld"><label>客户交付口径</label><select id="inDelivery">{{DELIVERY_OPTIONS}}</select></div>
+      <div class="fld"><label>客户付款方式</label><select id="inPayment">{{PAYMENT_OPTIONS}}</select></div>
+      <div class="fld"><label>市场参考口径（税费）</label><select id="inMTax">{{MTAX_OPTIONS}}</select></div>
+      <div class="fld"><label>市场参考口径（交付）</label><select id="inMDelivery">{{MDELIVERY_OPTIONS}}</select></div>
+      <div class="fld"><label>已知运费（元/吨）</label><input type="number" id="inFreight" placeholder="未提供则不折算" step="5" min="0"><span class="unit">仅当客户价为出厂时使用</span></div>
+      <div class="fld"><label>我方历史报价（元/吨）</label><input type="number" id="inOurs" placeholder="选填" step="10" min="0"><span class="unit">选填，用于算我方 vs 客户</span></div>
+      <div class="fld"><label>操作</label><div style="display:flex;gap:8px"><button class="btn primary" id="btnReset">恢复默认</button><button class="btn" id="btnPrint">打印/存PDF</button></div></div>
+    </div>
+    <div id="flagRow" style="margin-top:11px;display:flex;gap:8px;flex-wrap:wrap"></div>
+  </div>
+
+  <div id="bandChartCard" class="card">
+    <h2><span class="num">1</span>价格带图：客户价落在市场的什么位置</h2>
+    <p class="desc">灰带为近3个月同口径市场的价格分布范围；蓝带为当日市场参考区间；红点为客户所述价格，竖线为市场区间中值。拖动上方参数可实时切换口径。</p>
+    <div id="bandChart"></div>
+    <div class="note" id="bandChartNote"></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h2><span class="num">2</span>近7天 / 30天 / 3个月价格走势</h2>
+      <p class="desc">同规格·同地区·同含税·同送到口径的历史报价。点线为「主流价单点」来源，实线为「区间中值」来源。</p>
+      <div id="trendChart" class="chart"></div>
+      <div id="trendNote" class="note"></div>
+    </div>
+    <div class="card">
+      <h2><span class="num">3</span>相邻地区价格比较</h2>
+      <p class="desc">同为含税·送到口径的区域对比；差异主要来自运距，不能解读为「某地市场更贵」。</p>
+      <div id="regionChart" class="chart"></div>
+      <div id="regionNote" class="note"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">4</span>规格与交易口径差异表</h2>
+    <p class="desc">客户口中那个价，和我手里这个价，差在哪一栏。「信息缺失」表示客户尚未说明，需先确认才能下口径结论。</p>
+    <div class="tw"><table id="calTable"><thead><tr>
+      <th style="width:90px">维度</th><th>客户所述</th><th>市场口径</th><th style="width:80px">是否一致</th><th>对价格的影响</th><th>需确认 / 动作</th>
+    </tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">5</span>市场报价明细与来源（可逐条追溯）</h2>
+    <p class="desc">每条报价都给出数值·规格·地区·税费·交付·日期·来源。标有「不可直接比较」的条目已说明原因，不计入市场参考区间。</p>
+    <div class="tw"><table id="spotTable"><thead><tr>
+      <th>报价（元/吨）</th><th>规格</th><th>地区</th><th>税费</th><th>交付</th><th>日期</th><th>来源 / 类型</th><th>置信</th>
+    </tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">6</span>计算过程（可复核）</h2>
+    <p class="desc">每个数字都写出公式、输入与结果，任何人可用同一来源复现。</p>
+    <div class="tw"><table id="stepTable"><thead><tr>
+      <th style="width:52px">#</th><th style="width:190px">步骤</th><th>公式</th><th>输入</th><th>结果</th>
+    </tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h2><span class="num">7</span>可能导致价格差异的因素</h2>
+      <p class="desc">这些是双方价格不同的正当解释。凡涉及金额的，必须用实际数据折算，不得默认。</p>
+      <div class="tw"><table id="factorTable"><thead><tr><th style="width:120px">因素</th><th>说明</th><th style="width:210px">对价格的影响</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="card">
+      <h2><span class="num">8</span>客户价格核验清单</h2>
+      <p class="desc">向客户确认的问题，按优先级排序；每一条都对应一个具体口径缺口。</p>
+      <div class="tw"><table id="qTable"><thead><tr><th style="width:46px">序号</th><th>需要向客户确认的问题</th><th style="width:190px">为什么要问</th></tr></thead><tbody></tbody></table></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">9</span>与客户沟通的事实要点</h2>
+    <p class="desc">勾选要点 → 一键整理成事实简报 → 一键生成客观口径的微信/邮件稿。生成内容只含已核实事实，不添加价格承诺或优惠。</p>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <div class="talk" id="talkList"></div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn primary" id="btnBrief">① 整理事实要点</button>
+          <button class="btn primary" id="btnWx">② 润色为微信消息</button>
+          <button class="btn" id="btnMail">③ 润色为邮件</button>
+          <button class="btn" id="btnCopy">复制</button>
+          <button class="btn" id="btnClear">清空</button>
+        </div>
+        <div id="talkWarn" class="note"></div>
+      </div>
+      <div>
+        <textarea id="talkOut" placeholder="点击「整理事实要点」生成内容。生成内容可编辑后再发给客户。"></textarea>
+        <div class="note">生成内容为草稿：涉及我方价格、数量、账期等商务条件时，需由销售人员按公司政策补全并审核。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">10</span>数据缺口与研究边界</h2>
+    <p class="desc">下面是本次核验中「拿不到就被列为缺口」的项——它们的数量决定这份报告能走多远。</p>
+    <div class="grid g2" id="gapList"></div>
+    <div class="note" id="methodNotes"></div>
+  </div>
+
+  <div class="foot">
+    <div><b>使用方法：</b>本文件单文件离线可用（ECharts 已内联，无外链、无 CDN、无追踪）。双击打开即可；可直接发微信/邮件给同事。</div>
+    <div><b>数据声明：</b>价格来自公开产业资讯与行情终端的可核查页面，已注明日期、规格、地区、税费与交付口径。市场报价区间反映市场主流报价，实际成交以「一单一议」为准；本报告不构成任何报价建议或谈判策略建议。</div>
+    <div><b>生成信息：</b>{{FOOTER}}</div>
+  </div>
+</div>
+
+<!-- ======================= 数据（由 build_html.py 注入） ======================= -->
+<script id="DATA" type="application/json">{{DATA_JSON}}</script>
+<script>window.__DATA__ = JSON.parse(document.getElementById('DATA').textContent);</script>
+<script>{{ECHARTS}}</script>
+<script>
+window.__ERR__ = [];
+window.addEventListener('error', function(e){
+  window.__ERR__.push((e.message||'error') + ' @' + (e.filename||'') + ':' + (e.lineno||''));
+  var b = document.getElementById('ssrBanner');
+  if(b){ b.innerHTML = '<div class="err">脚本错误：' + (e.message||'') + '</div>'; }
+});
+(function(){
+"use strict";
+var D = window.__DATA__;
+var $ = function(s){ return document.querySelector(s); };
+var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function nf(v,nd){ if(v==null||isNaN(v)) return "—"; var s = Number(v).toFixed(nd==null?0:nd); var p = s.split("."); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,","); return p.join("."); }
+function pf(v,nd){ if(v==null||isNaN(v)) return "—"; return (v>0?"+":"") + (v*100).toFixed(nd==null?1:nd) + "%"; }
+function pfAbs(v,nd){ if(v==null||isNaN(v)) return "—"; return Math.abs(v*100).toFixed(nd==null?1:nd) + "%"; }
+function sf(v){ if(v==null||isNaN(v)) return "—"; return (v>0?"+":"") + nf(v); }
+/* 单位标签：返回真实 DOM 元素（不是 HTML 字符串），避免 textContent 把标签当文字显示 */
+function UNIT(txt){
+  var s = document.createElement("small");
+  s.textContent = txt || (S.meta && S.meta.unit) || "元/吨";
+  return s;
+}
+var STATUS = {
+  high:{label:"明显偏高", cls:"high", badge:"b-high"},
+  low:{label:"明显偏低", cls:"low", badge:"b-low"},
+  match:{label:"接近市场参考区间", cls:"match", badge:"b-match"},
+  above_slight:{label:"略高于市场参考区间", cls:"high", badge:"b-high"},
+  below_slight:{label:"略低于市场参考区间", cls:"low", badge:"b-low"},
+  caliber:{label:"口径不一致，暂时无法直接比较", cls:"unknown", badge:"b-unknown"},
+  unknown:{label:"无可靠市场数据，无法验证", cls:"unknown", badge:"b-unknown"}
+};
+var S = JSON.parse(JSON.stringify(D));   // 当前计算状态
+var TALK = {}; RENDER_TALK_LIST();
+
+/* ---------------- 口径归一 ---------------- */
+function nTax(v){ if(!v) return "未注明"; if(v.indexOf("不含税")>=0||v.indexOf("未税")>=0) return "不含税"; if(v.indexOf("含税")>=0) return "含税"; return "未注明"; }
+function nDel(v){ if(!v) return "未注明"; if(v.indexOf("送到")>=0||v.indexOf("到厂")>=0) return "送到"; if(v.indexOf("出厂")>=0||v.indexOf("自提")>=0) return "出厂"; return "未注明"; }
+var VAT = 0.13;
+
+/* ---------------- 重算（与 scripts/common.py 同一套规则） ---------------- */
+function recalc(){
+  var cust = num($("#inCust").value);
+  var region = $("#inRegion").value;
+  var cTax = $("#inTax").value, cDel = $("#inDelivery").value, cPay = $("#inPayment").value;
+  var mTax = $("#inMTax").value, mDel = $("#inMDelivery").value;
+  var freight = num($("#inFreight").value);
+  S.customer.stated_price = cust;
+  S.customer.stated_region = region;
+  S.customer.stated_tax = cTax;
+  S.customer.stated_delivery = cDel;
+  S.customer.stated_payment = cPay;
+
+  /* 1) 选市场区间：找同地区 + 同税费 + 同交付 + 日期最新 */
+  var pool = (S.spot_all||[]).filter(function(s){ return !s.exclude_reason && s.region===region; });
+  var exact = pool.filter(function(s){ return nTax(s.tax)===mTax && nDel(s.delivery)===mDel; });
+  var pick = exact[0] || null;
+  if(!pick && pool.length){
+    /* 无完全同口径：找同交付不同税费（可用税率确定性换算），标「折算」 */
+    var near = pool.filter(function(s){ return nDel(s.delivery)===mDel; });
+    if(near.length) pick = near[0];
+  }
+  if(!pick && pool.length) pick = pool[0];
+
+  var mkt = {low:null, high:null, tax:null, delivery:null, date:null, source:null, url:null, conf:null, label:null, converted:false, note:""};
+  if(pick){
+    var lo = pick.low, hi = pick.high;
+    if(lo==null && hi==null) lo = hi = pick.point;
+    var pt = pick.tax;
+    /* 税费换算：含税<->不含税，税率法定，属确定性换算 */
+    if(nTax(pt)!==mTax){
+      if(nTax(pt)==="含税" && mTax==="不含税"){ lo = lo==null?null:lo/(1+VAT); hi = hi==null?null:hi/(1+VAT); }
+      else if(nTax(pt)==="不含税" && mTax==="含税"){ lo = lo==null?null:lo*(1+VAT); hi = hi==null?null:hi*(1+VAT); }
+      else { mkt.converted = false; mkt.note = "原报价税费口径为「"+nTax(pt)+"」，无税率可换算"; }
+      if(mkt.note==="") mkt.converted = true;
+    }
+    if(lo!=null) lo = Math.round(lo*100)/100;
+    if(hi!=null) hi = Math.round(hi*100)/100;
+    mkt.low=lo; mkt.high=hi; mkt.tax=mTax; mkt.delivery=nDel(pick.delivery);
+    mkt.date=pick.date; mkt.source=pick.source; mkt.url=pick.url; mkt.conf=pick.conf;
+    mkt.label = (pick.quote_type||"市场报价") + (pick.tax_label? "（"+pick.tax_label+"）":"");
+  }
+  /* 2) 客户价按税费口径换算到市场口径（确定性） */
+  var custAdj = cust, custAdjNote = "";
+  if(cust!=null && mkt.tax){
+    if(nTax(cTax)==="含税" && mkt.tax==="不含税"){ custAdj = cust/(1+VAT); custAdjNote="客户含税价 ÷1.13"; }
+    if(nTax(cTax)==="不含税" && mkt.tax==="含税"){ custAdj = cust*(1+VAT); custAdjNote="客户不含税价 ×1.13"; }
+  }
+  /* 3) 交付口径：出厂→送到 需运费；无运费则「无法直接折算」 */
+  var freightNote = "";
+  var custForCmp = custAdj, undecidable = false;
+  if(mkt.delivery==="送到" && nDel(cDel)==="出厂"){
+    if(freight!=null && freight>0){ custForCmp = custAdj + freight; freightNote="客户出厂价 + 已知运费 " + nf(freight) + " 元/吨"; }
+    else { undecidable = true; freightNote = "客户为出厂价、市场为送到价，未提供运距运价 → 无法直接折算"; }
+  } else if(mkt.delivery==="出厂" && nDel(cDel)==="送到"){
+    if(freight!=null && freight>0){ custForCmp = custAdj - freight; freightNote="客户送到价 − 已知运费 " + nf(freight) + " 元/吨"; }
+    else { undecidable = true; freightNote = "客户为送到价、市场为出厂价，未提供运距运价 → 无法直接折算"; }
+  }
+  S.market = Object.assign(S.market, mkt);
+  S.calc = {customerInput:cust, customerAdj:custAdj, custForCmp:custForCmp, undecidable:undecidable,
+            freight:freight, notes:[custAdjNote, freightNote].filter(Boolean)};
+
+  /* 4) 偏离 */
+  var cmp = {pos:"undecidable", inside:null};
+  if(!undecidable && custForCmp!=null && mkt.low!=null){
+    var lo2=mkt.low, hi2=mkt.high==null?mkt.low:mkt.high;
+    if(lo2>hi2){ var t=lo2; lo2=hi2; hi2=t; }
+    var dot = Math.round(((lo2+hi2)/2)*100)/100;
+    cmp.low=lo2; cmp.high=hi2; cmp.reference=dot;
+    cmp.delta_to_dot = Math.round((custForCmp-dot)*100)/100;
+    cmp.pct_to_dot = (custForCmp-dot)/dot;
+    cmp.delta_to_low = Math.round((custForCmp-lo2)*100)/100;
+    cmp.delta_to_high = Math.round((custForCmp-hi2)*100)/100;
+    cmp.pct_to_low = (custForCmp-lo2)/lo2;
+    cmp.pct_to_high = (custForCmp-hi2)/hi2;
+    if(custForCmp<lo2){ cmp.pos="below"; cmp.inside=false; }
+    else if(custForCmp>hi2){ cmp.pos="above"; cmp.inside=false; }
+    else { cmp.pos="inside"; cmp.inside=true; }
+  }
+  S.comparison = cmp;
+
+  /* 5) 口径缺失检查 */
+  var missing = [];
+  if(nTax(cTax)==="未注明") missing.push("客户未说明含税/不含税");
+  if(nDel(cDel)==="未注明") missing.push("客户未说明出厂/送到");
+  if(nTax(cPay)==="未注明" || cPay==="未注明") missing.push("客户未说明付款方式/账期");
+  S.verdict.caliber_missing = missing;
+
+  /* 6) 判定：区间内=接近；≤半宽=略；>半宽 且 超近3月带=明显 */
+  var v = {code:"unknown", label:STATUS.unknown.label, reasons:[]};
+  if(cmp.pos==="undecidable"){ v.code="unknown"; v.label=STATUS.unknown.label;
+    v.reasons = [undecidable ? freightNote : "同口径市场报价缺失，不能给出近似市场价。"];
+  } else if(cmp.pos==="inside"){
+    v.code="match"; v.label=STATUS.match.label;
+    v.reasons=["客户价落在同口径市场区间 ["+nf(cmp.low)+", "+nf(cmp.high)+"] 元/吨 内，与该口径市场报价一致。"];
+  } else {
+    var width = cmp.high-cmp.low, half = width/2;
+    var dist = cmp.pos==="above" ? cmp.delta_to_high : Math.abs(cmp.delta_to_low);
+    var side = cmp.pos==="above" ? "高于区间上沿" : "低于区间下沿";
+    v.reasons.push("客户价"+side+" "+nf(dist)+" 元/吨（区间半宽 "+nf(half)+" 元/吨）。");
+    var bandHi = (S.band_3m||{}).max, bandLo=(S.band_3m||{}).min;
+    if(dist > half){
+      if(cmp.pos==="above"){ if(bandHi!=null && cmp.reference>bandHi) v.reasons.push("且高于近3个月同口径价格带上沿 "+nf(bandHi)+" 元/吨。"); v.code="high"; v.label=STATUS.high.label; }
+      else { if(bandLo!=null && cmp.reference<bandLo) v.reasons.push("且低于近3个月同口径价格带下沿 "+nf(bandLo)+" 元/吨。"); v.code="low"; v.label=STATUS.low.label; }
+    } else {
+      if(cmp.pos==="above"){ v.code="above_slight"; v.label=STATUS.above_slight.label; }
+      else { v.code="below_slight"; v.label=STATUS.below_slight.label; }
+    }
+  }
+  if(missing.length && v.code!=="unknown") v.reasons.push("口径提示：" + missing.join("；") + "。以上判断按市场默认含税·送到口径进行，结论需在客户确认口径后复核。");
+  S.verdict.code=v.code; S.verdict.label=v.label; S.verdict.reasons=v.reasons;
+
+  /* 7) 我方报价 vs 客户价 */
+  var ours = num($("#inOurs").value);
+  S.our_quote_compare = (ours && cust) ? {our_quote:ours, customer_price:cust, delta:ours-cust, pct:(ours-cust)/cust} : null;
+
+  PAINT();
+}
+
+function num(v){ if(v===""||v==null) return null; var n = Number(v); return isNaN(n)?null:n; }
+
+/* ---------------- 渲染 ---------------- */
+function PAINT(){
+  paintHero(); paintFlags(); paintBandChart(); paintTrendChart(); paintRegionChart();
+  paintCalTable(); paintSpotTable(); paintSteps(); paintFactors(); paintQuestions(); paintGaps();
+  RENDER_TALK_LIST();
+}
+
+function paintHero(){
+  var m = S.market, c = S.comparison, v = S.verdict;
+  $("#fMkt").textContent = (m.low!=null ? nf(m.low)+" – "+nf(m.high)+" 元/吨" : "无同口径报价");
+  $("#fDate").textContent = m.date || "—";
+  $("#fSrc").textContent = (m.source||"—") + (m.converted ? "（已按 13% 税率折算）" : "");
+  $("#fCal").textContent = (m.tax||"—") + " · " + (m.delivery||"—") + (m.conf? " · 置信度"+m.conf : "");
+  $("#bandAsOf").textContent = "报价日期 " + (m.date||"—");
+
+  var cust = S.calc ? S.calc.customerInput : null;
+  var custShown = (S.calc && S.calc.custForCmp!=null) ? S.calc.custForCmp : cust;
+  $("#bandCustTag").textContent = "客户 " + nf(cust) + (S.calc && S.calc.notes.length ? " → "+nf(custShown) : "") + " 元/吨";
+
+  /* 色带定位 */
+  var lo = m.low, hi = m.high;
+  if(lo!=null && hi!=null){
+    var vals = [lo, hi, custShown!=null?custShown:lo].concat((S.band_3m? [S.band_3m.min,S.band_3m.max]:[]));
+    var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+    var pad = Math.max((max-min)*0.22, 40); min -= pad; max += pad;
+    var p = function(x){ return Math.max(0, Math.min(100, (x-min)/(max-min)*100)); };
+    $("#bandRange").style.left = p(lo)+"%";
+    $("#bandRange").style.right = (100-p(hi))+"%";
+    $("#bandRangeLbl").textContent = nf(lo)+" – "+nf(hi)+" 元/吨";
+    $("#bandMid").style.left = p((lo+hi)/2)+"%";
+    $("#bandCust").style.left = p(custShown!=null?custShown:lo)+"%";
+    $("#bandTicks").innerHTML = [0,25,50,75,100].map(function(q){ return "<span>"+nf(Math.round(min+(max-min)*q/100))+"</span>"; }).join("");
+  }
+
+  /* KPI —— 数值用 textContent，单位用独立 <span>，绝不用 textContent 塞标签 */
+  if(c.pos!=="undecidable"){
+    var dev = c.delta_to_dot;
+    $("#k1").textContent = (dev>0?"+":"") + nf(dev);
+    $("#k1").appendChild(UNIT());
+    $("#k1n").textContent = "相对区间下沿 "+sf(c.delta_to_low)+" 元/吨；相对上沿 "+sf(c.delta_to_high)+" 元/吨";
+    $("#k2").textContent = pf(c.pct_to_dot);
+    $("#k2n").textContent = "区间中值 "+nf(c.reference)+" 元/吨（相对下沿 "+pf(c.pct_to_low)+"，相对上沿 "+pf(c.pct_to_high)+"）";
+    var cls = (c.pos==="above") ? "hi" : (c.pos==="below" ? "lo" : "");
+    $("#kpiDev").className = "kpi "+cls; $("#kpiPct").className = "kpi "+cls;
+  } else {
+    $("#k1").textContent="无法直接折算"; $("#k1n").textContent = S.calc && S.calc.notes.join("；") || "口径不一致";
+    $("#k2").textContent="—"; $("#k2n").textContent="需先补齐运费或税费口径";
+    $("#kpiDev").className="kpi"; $("#kpiPct").className="kpi";
+  }
+  $("#k3").textContent = (m.low!=null? nf(m.low)+"–"+nf(m.high) : "—");
+  if(m.low!=null) $("#k3").appendChild(UNIT());
+  $("#k3n").textContent = (m.tax||"") + " · " + (m.delivery||"") + " · " + (m.date||"");
+  var b = S.band_3m;
+  $("#k4").textContent = b ? (nf(b.min)+"–"+nf(b.max)) : "样本不足";
+  if(b) $("#k4").appendChild(UNIT());
+  $("#k4n").textContent = b ? ("n="+b.n+" 个同口径报价点，中值 "+nf(b.median)+" 元/吨，最大波动 "+nf(b.max-b.min)+" 元/吨") : "近3个月内无同口径报价点";
+
+  /* 判定 */
+  var st = STATUS[v.code] || STATUS.unknown;
+  var box = $("#verdictBox");
+  box.className = "verdict "+st.cls;
+  box.innerHTML = '<div><span class="badge '+st.badge+'">'+esc(v.label)+'</span></div>'+
+    '<div style="flex:1"><ul>'+ (v.reasons||[]).map(function(r){ return "<li>"+esc(r)+"</li>"; }).join("") +
+    (S.our_quote_compare? "<li>我方报价 "+nf(S.our_quote_compare.our_quote)+" 元/吨，较客户所述价格 "+sf(S.our_quote_compare.delta)+" 元/吨（"+pf(S.our_quote_compare.pct)+"）。</li>":"") +
+    '</ul></div>';
+}
+
+function paintFlags(){
+  var out = [];
+  var m = S.market;
+  if(m.converted) out.push('<span class="flag">税费口径已按 13% 确定性换算</span>');
+  if(m.delivery && S.customer && nDel(S.customer.stated_delivery)!==m.delivery)
+    out.push('<span class="flag">客户交付口径「'+esc(nDel(S.customer.stated_delivery))+'」≠ 市场「'+esc(m.delivery)+'」</span>');
+  if(S.verdict.caliber_missing && S.verdict.caliber_missing.length)
+    out.push('<span class="flag">'+esc(S.verdict.caliber_missing.join("；"))+'</span>');
+  if(S.calc && S.calc.undecidable) out.push('<span class="flag">缺运费 → 无法直接折算</span>');
+  if(!out.length) out.push('<span class="flag" style="background:#f0f7f3;border-color:#bfe3d3;color:#1e7a56">当前为客户所述口径与市场口径一致</span>');
+  $("#flagRow").innerHTML = out.join("");
+}
+
+/* ---- 价格带图 ---- */
+var CH = {};
+function ensure(id, opt){ var el = document.getElementById(id); if(!el) return null;
+  var c = echarts.getInstanceByDom(el) || echarts.init(el); c.setOption(opt, true); CH[id]=c; return c; }
+
+function paintBandChart(){
+  var m = S.market, c = S.comparison;
+  if(m.low==null){ $("#bandChart").innerHTML = '<div class="err">缺同口径市场报价，无法绘制价格带。</div>'; return; }
+  var cust = (S.calc && S.calc.custForCmp!=null) ? S.calc.custForCmp : S.customer.stated_price;
+  var b = S.band_3m || {};
+  var lo = m.low, hi = m.high;
+  var vals = [lo,hi,cust||lo]; if(b.min!=null) vals.push(b.min,b.max);
+  var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+  var pad = Math.max((mx-mn)*0.18, 40); mn=Math.max(0,mn-pad); mx=mx+pad;
+
+  var series = [];
+  if(b.min!=null){
+    series.push({ name:"近3个月价格带", type:"bar", barWidth:26, stack:"bg", itemStyle:{color:"#eef2f7"},
+      data:[{value:b.min, itemStyle:{color:"transparent"}}, {value:b.max-b.min, itemStyle:{color:"#e8eef6", borderRadius:5}, label:{show:true,position:"insideTop",formatter:"近3月 "+nf(b.min)+"–"+nf(b.max),color:"#7d8797",fontSize:11}}],
+      barGap:"-100%", silent:true, z:1 });
+  }
+  series.push({ name:"市场参考区间", type:"bar", barWidth:14, itemStyle:{color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:"#2f6fa8"},{offset:1,color:"#5ea0d4"}]), borderRadius:4},
+    data:[{value:lo, itemStyle:{color:"transparent"}}, hi-lo], barGap:"-100%", silent:true, z:2,
+    label:{show:false} });
+  if(cust!=null){
+    series.push({ name:"客户所述价格", type:"scatter", symbolSize:15, z:6,
+      data:[[0,cust]], itemStyle:{color:"#c0392b", borderColor:"#fff", borderWidth:2, shadowBlur:8, shadowColor:"rgba(192,57,43,.45)"},
+      label:{show:true, position:"top", formatter:function(p){ return "客户 "+nf(p.value[1]); }, color:"#c0392b", fontWeight:"bold", fontSize:12} });
+  }
+  series.push({ name:"区间中值", type:"line", z:5, symbol:"diamond", symbolSize:12, 
+    data:[[0,(lo+hi)/2]], lineStyle:{opacity:0}, itemStyle:{color:"#2b3444"},
+    label:{show:true, position:"bottom", formatter:"中值 "+nf((lo+hi)/2), color:"#2b3444", fontSize:11, fontWeight:"bold"} });
+
+  var yMin = Math.max(0, mn);
+  ensure("bandChart", {
+    animationDuration:500,
+    grid:{left:64, right:34, top:44, bottom:26},
+    tooltip:{trigger:"item", formatter:function(p){
+      if(p.seriesName==="客户所述价格") return "客户所述价格<br/><b>"+nf(p.value[1])+" 元/吨</b>";
+      if(p.seriesName==="区间中值") return "市场区间中值<br/><b>"+nf((lo+hi)/2)+" 元/吨</b>";
+      return "";} },
+    xAxis:{type:"value", show:false, min:yMin, max:mx},
+    yAxis:{type:"value", name:"元/吨", nameTextStyle:{color:"#7d8797",fontSize:11}, min:yMin, max:mx,
+      axisLabel:{color:"#7d8797",fontSize:11}, splitLine:{lineStyle:{color:"#f0f2f6"}}},
+    series: series
+  });
+  $("#bandChartNote").innerHTML = "口径：" + esc(m.source||"") + "（" + esc(m.date||"") + "，"+esc(m.tax||"")+"·"+esc(m.delivery||"")+"）；" +
+    (b.min!=null ? "近3个月同口径样本 "+b.n+" 个，范围 "+nf(b.min)+"–"+nf(b.max)+" 元/吨。" : "") +
+    (S.calc && S.calc.notes.length ? " 调整说明："+esc(S.calc.notes.join("；"))+"。" : "");
+}
+
+/* ---- 走势 ---- */
+function paintTrendChart(){
+  var h = (S.history||[]).filter(function(x){ return x.region===S.market.region || !S.market.region || x.region===(S.customer.stated_region||x.region); });
+  h = (S.history||[]);
+  if(!h.length){ $("#trendChart").innerHTML='<div class="err">无历史序列。</div>'; return; }
+  var dates = h.map(function(x){ return x.date; });
+  var pts = h.map(function(x){ return x.point; });
+  var lo = h.map(function(x){ return x.low!=null?x.low:null; });
+  var hi = h.map(function(x){ return x.high!=null?x.high:null; });
+  var band = h.map(function(x){ return (x.low!=null&&x.high!=null)? x.low : null; });
+  var bandw = h.map(function(x){ return (x.low!=null&&x.high!=null)? (x.high-x.low) : null; });
+  var cust = (S.calc && S.calc.custForCmp!=null) ? S.calc.custForCmp : S.customer.stated_price;
+  var marks = {};
+  if(cust!=null){ marks.customer = {label:"客户价 "+nf(cust), value:cust}; }
+  ["7d","30d","90d"].forEach(function(k){ var w = (S.windows||{})[k]; if(w) marks[k] = {label:k.replace("d","天"), value:w.from_value}; });
+
+  ensure("trendChart", {
+    animationDuration:500,
+    grid:{left:58, right:22, top:44, bottom:34},
+    legend:{top:0, right:0, itemWidth:12, itemHeight:8, textStyle:{fontSize:11,color:"#4b5665"}},
+    tooltip:{trigger:"axis", axisPointer:{type:"cross"}, formatter:function(ps){
+      var i = ps[0].dataIndex, x = h[i];
+      return "<b>"+x.date+"</b><br/>"+esc(x.spec)+" · "+esc(x.tax)+" · "+esc(x.delivery)+"<br/>"+
+        (x.low!=null&&x.high!=null&&x.low!==x.high ? "区间 "+nf(x.low)+"–"+nf(x.high)+" 元/吨<br/>" : "")+
+        "区间中值/主流价 <b>"+nf(x.point)+" 元/吨</b><br/><span style='color:#7d8797'>"+esc(x.source)+"</span>";
+    }},
+    xAxis:{type:"category", data:dates, axisLabel:{color:"#7d8797",fontSize:11,formatter:function(v){ return v.slice(5); }},
+      axisLine:{lineStyle:{color:"#e4e8ef"}}, axisTick:{show:false}},
+    yAxis:{type:"value", name:"元/吨", scale:true, nameTextStyle:{color:"#7d8797",fontSize:11},
+      axisLabel:{color:"#7d8797",fontSize:11}, splitLine:{lineStyle:{color:"#f0f2f6"}}},
+    series:[
+      { name:"区间下沿", type:"line", data:lo, lineStyle:{opacity:0}, symbol:"none", stack:"none", areaStyle:{opacity:0}, silent:true, showSymbol:false },
+      { name:"报价区间", type:"line", data:hi, lineStyle:{opacity:.85,width:1.6,type:"dashed",color:"#7fb0da"}, itemStyle:{color:"#7fb0da"}, symbol:"none",
+        areaStyle:{color:"rgba(47,111,168,.10)"}, showSymbol:false, z:2 },
+      { name:"区间中值 / 主流价", type:"line", data:pts, smooth:.15, symbol:"circle", symbolSize:6,
+        lineStyle:{width:2.6,color:"#1f4e79"}, itemStyle:{color:"#1f4e79",borderColor:"#fff",borderWidth:1.5}, z:4,
+        markLine:{silent:true, symbol:"none", lineStyle:{type:"dashed"},
+          data:[
+            cust!=null?{yAxis:cust, lineStyle:{color:"#c0392b",width:1.4}, label:{formatter:"客户 "+nf(cust), color:"#c0392b", fontSize:11}}:null
+          ].filter(Boolean)} },
+      { name:"近7天", type:"scatter", data:[], symbolSize:12, itemStyle:{color:"#e67e22"}, z:6, tooltip:{formatter:"7天窗口起点"}},
+    ]
+  });
+  var wn = ["7d","30d","90d"].map(function(k){
+    var w=(S.windows||{})[k]; if(!w) return k+"：无该窗口可用数据";
+    var days = (k==="7d"?7:k==="30d"?30:90);
+    return k.replace("d","天")+"：起点 "+w.from_date+" "+nf(w.from_value)+" → 最新 "+w.to_date+" "+nf(w.to_value)+
+      "（"+sf(w.abs_change)+" 元/吨，"+(w.change==null?"—":(w.change>0?"+":"")+(w.change*100).toFixed(1)+"%")+"）";
+  }).join("； ");
+  $("#trendNote").innerHTML = esc(wn) + "。<br>说明：点线为区间上下沿，实线为区间中值；不同来源（隆众区间 vs 同花顺主流价）口径不同，未做平均合并。";
+}
+
+/* ---- 区域 ---- */
+function paintRegionChart(){
+  var regs = [];
+  var pm = S.market;
+  regs.push({name:(S.customer.stated_region||"本区")+"（基准）", point:(pm.low!=null?((pm.low+pm.high)/2):null), low:pm.low, high:pm.high, primary:true});
+  (S.region_compare||[]).forEach(function(r){ regs.push({name:r.region, point:r.point, low:r.low, high:r.high, delta:r.delta_to_primary_point, pct:r.pct_to_primary_point, primary:false}); });
+  regs = regs.filter(function(r){ return r.point!=null; });
+  if(!regs.length){ $("#regionChart").innerHTML='<div class="err">无区域数据。</div>'; return; }
+  regs.sort(function(a,b){ return a.point-b.point; });
+  ensure("regionChart", {
+    animationDuration:500,
+    grid:{left:76, right:52, top:14, bottom:30},
+    tooltip:{trigger:"item", formatter:function(p){
+      var r = regs[p.dataIndex];
+      return "<b>"+esc(r.name)+"</b><br/>"+(r.low!=null&&r.low!==r.high? "报价区间 "+nf(r.low)+"–"+nf(r.high)+" 元/吨<br/>":"")+
+        "区间中值 <b>"+nf(r.point)+" 元/吨</b>"+(r.delta!=null? "<br/>较基准 "+sf(r.delta)+" 元/吨（"+pf(r.pct)+"）":""); }},
+    xAxis:{type:"value", name:"元/吨", nameTextStyle:{color:"#7d8797",fontSize:11}, scale:true,
+      axisLabel:{color:"#7d8797",fontSize:11}, splitLine:{lineStyle:{color:"#f0f2f6"}}},
+    yAxis:{type:"category", data:regs.map(function(r){return r.name;}), axisLabel:{color:"#4b5665",fontSize:11.5},
+      axisLine:{lineStyle:{color:"#e4e8ef"}}, axisTick:{show:false}},
+    series:[
+      { name:"报价区间", type:"custom", renderItem:function(params, api){
+          var y = api.value(0), lo = api.value(1), hi = api.value(2), pt = api.value(3), pr = api.value(4);
+          var start = api.coord([lo,y]), end = api.coord([hi,y]), c = api.coord([pt,y]);
+          var h = 9;
+          var col = pr? "#1f4e79":"#6f9fc4";
+          return {type:"group", children:[
+            {type:"rect", shape:{x:start[0],y:start[1]-h/2,width:Math.max(end[0]-start[0],1),height:h,r:4}, style:{fill:pr?"#2f6fa8":"#cfe0ee"}},
+            {type:"circle", shape:{cx:c[0],cy:c[1],r:pr?6:5}, style:{fill:pr?"#17324b":"#4a7fa8", stroke:"#fff", lineWidth:2}},
+            {type:"text", style:{x:end[0]+10,y:c[1],text:nf(pt),fill:pr?"#1f4e79":"#4b5665",fontSize:11.5,fontWeight:pr?"bold":"normal",verticalAlign:"middle"}}
+          ]};
+        }, data:regs.map(function(r,i){ return [i, r.low!=null?r.low:r.point, r.high!=null?r.high:r.point, r.point, r.primary?1:0]; }), z:3 }
+    ]
+  });
+  var base = regs.filter(function(r){return r.primary;})[0];
+  var note = regs.filter(function(r){return !r.primary;}).map(function(r){
+    return esc(r.name)+" "+nf(r.point)+" 元/吨（较基准 "+sf(r.delta)+"，"+pf(r.pct)+"）"; }).join("； ");
+  $("#regionNote").innerHTML = (base? "基准："+esc(base.name)+" 中值 "+nf(base.point)+" 元/吨。":"") + (note? " 各区域："+note+"。":"") +
+    "<br>区域价差主要来自运距与供需结构，属正常市场现象；不同区域价格不可直接当作同客户同条件的报价依据。";
+}
+
+/* ---- 表格 ---- */
+function paintCalTable(){
+  var rows = (S.calibers||[]).map(function(c){
+    var flag = c.diff_flag==="一致" ? '<span class="tag ok">一致</span>' : (c.diff_flag==="信息缺失" ? '<span class="tag miss">信息缺失</span>' : '<span class="tag bad">不一致</span>');
+    return "<tr><td><b>"+esc(c.dim)+"</b></td><td>"+esc(c.customer)+"</td><td>"+esc(c.market)+"</td><td>"+flag+"</td><td>"+esc(c.impact)+"</td><td>"+esc(c.action)+"</td></tr>";
+  });
+  $("#calTable").querySelector("tbody").innerHTML = rows.join("");
+}
+
+function paintSpotTable(){
+  var list = (S.spot_all||[]).slice().sort(function(a,b){ return (b.date||"").localeCompare(a.date||""); });
+  var rows = list.map(function(s){
+    var price = (s.low!=null&&s.high!=null&&s.low!==s.high) ? (nf(s.low)+" – "+nf(s.high)) : nf(s.point!=null?s.point:s.low);
+    var conf = s.conf==="高"?'<span class="tag ok">高</span>':(s.conf==="中"?'<span class="tag mid">中</span>':'<span class="tag miss">低</span>');
+    var exc = s.exclude_reason ? '<div class="src" style="color:#b7791f;margin-top:4px">⚠ 不可直接比较：'+esc(s.exclude_reason)+'</div>' : "";
+    return "<tr><td class='num'><b>"+price+"</b></td><td>"+esc(s.spec)+"</td><td>"+esc(s.region)+"</td><td>"+esc(s.tax_label||s.tax)+"</td><td>"+esc(s.delivery)+"</td><td>"+esc(s.date)+"</td>"+
+      "<td>"+esc(s.source)+"<div class='src'>"+esc(s.quote_type||"")+" · <a href='"+esc(s.url)+"' target='_blank' rel='noopener'>查看原始口径 ↗</a></div>"+exc+"</td><td>"+conf+"</td></tr>";
+  });
+  $("#spotTable").querySelector("tbody").innerHTML = rows.join("");
+}
+
+function paintSteps(){
+  var rows = (S.steps||[]).map(function(st){
+    var inputs = Object.keys(st.inputs||{}).map(function(k){ return esc(k)+"："+esc(typeof st.inputs[k]==="object"? JSON.stringify(st.inputs[k]) : st.inputs[k]); }).join("<br>");
+    var res = Object.keys(st.result||{}).map(function(k){ var v=st.result[k]; return esc(k)+"："+esc(typeof v==="object"&&v!=null? JSON.stringify(v) : v); }).join("<br>");
+    return "<tr><td>"+esc(st.id)+"</td><td><b>"+esc(st.name)+"</b></td><td style='font-size:12px'>"+esc(st.formula)+"</td><td class='src'>"+inputs+"</td><td class='src'>"+res+"</td></tr>";
+  });
+  $("#stepTable").querySelector("tbody").innerHTML = rows.join("");
+}
+
+function paintFactors(){
+  $("#factorTable").querySelector("tbody").innerHTML = (S.factors||[]).map(function(f){
+    return "<tr><td><b>"+esc(f.k)+"</b></td><td>"+esc(f.v)+"</td><td>"+esc(f.affects)+"</td></tr>";
+  }).join("");
+}
+
+function paintQuestions(){
+  var pc = {"高":'<span class="tag bad">高</span>',"中":'<span class="tag mid">中</span>',"低":'<span class="tag">低</span>'};
+  $("#qTable").querySelector("tbody").innerHTML = (S.questions||[]).map(function(q,i){
+    return "<tr><td class='num'>"+(i+1)+" "+(pc[q.priority]||"")+"</td><td>"+esc(q.q)+"</td><td class='src'>"+esc(q.why)+"</td></tr>";
+  }).join("");
+}
+
+function paintGaps(){
+  $("#gapList").innerHTML = (S.gaps||[]).map(function(g){
+    return '<div class="gapcard"><div class="gi"><span class="tag miss">缺口</span>'+esc(g.item)+'</div>'+
+      '<div class="gx"><b>影响：</b>'+esc(g.impact)+'</div><div class="gx"><b>补法：</b>'+esc(g.fix)+'</div></div>';
+  }).join("");
+  $("#methodNotes").innerHTML = (S.method_notes||[]).map(function(m){ return "• "+esc(m); }).join("<br>");
+}
+
+/* ---- 沟通事实 ---- */
+function RENDER_TALK_LIST(){
+  var box = $("#talkList"); if(!box) return;
+  // 默认全选：销售点开就能直接生成要点；不想用的取消勾选即可。
+  (S.facts||[]).forEach(function(f,i){ if(TALK[i]===undefined) TALK[i] = true; });
+  box.innerHTML = (S.facts||[]).map(function(f,i){
+    var on = TALK[i] ? " on":"";
+    var conf = f.conf==="高"?'<span class="tag ok">高</span>':(f.conf==="中"?'<span class="tag mid">中</span>':'<span class="tag miss">低</span>');
+    return '<div class="talkitem'+on+'" data-i="'+i+'"><div class="box">✓</div><div class="tx"><div class="tt">'+esc(f.text)+'</div>'+
+      '<div class="sm">'+conf+' '+esc(f.src)+' · '+esc(f.date)+' <a href="'+esc(f.url)+'" target="_blank" rel="noopener">原文 ↗</a>'+(f.note? ' · '+esc(f.note):'')+'</div></div></div>';
+  }).join("");
+  $$("#talkList .talkitem").forEach(function(el){
+    el.addEventListener("click", function(){ var i=el.getAttribute("data-i"); TALK[i] = !TALK[i]; el.classList.toggle("on"); });
+  });
+}
+function picked(){ return (S.facts||[]).map(function(f,i){ return TALK[i]? f : null; }).filter(Boolean); }
+
+function buildBrief(){
+  var arr = picked();
+  var m = S.market, c = S.comparison, v = S.verdict;
+  var L = [];
+  L.push("【市场价核验事实简报】");
+  L.push("产品/规格："+(S.meta.product||"")+ " — "+(S.meta.spec||""));
+  L.push("地区口径："+(S.meta.region_scope||S.meta.region||""));
+  L.push("客户所述价格："+(S.customer.stated_price!=null? nf(S.customer.stated_price)+" 元/吨":"未提供")+
+    "（税费："+nTax(S.customer.stated_tax)+"；交付："+nDel(S.customer.stated_delivery)+"）");
+  L.push("市场参考区间："+(m.low!=null? nf(m.low)+"–"+nf(m.high)+" 元/吨":"无同口径报价")+"（"+(m.tax||"")+"·"+(m.delivery||"")+"，报价日期 "+(m.date||"")+"）");
+  L.push("数据来源："+(m.source||"")+(m.url? "  "+m.url : ""));
+  if(c.pos!=="undecidable"){
+    L.push("偏离计算：客户价 − 区间中值 = "+sf(c.delta_to_dot)+" 元/吨（"+pf(c.pct_to_dot)+"）；相对上沿 "+sf(c.delta_to_high)+" 元/吨；相对下沿 "+sf(c.delta_to_low)+" 元/吨。");
+  } else {
+    L.push("偏离计算：口径不一致（"+((S.calc&&S.calc.notes)||[]).join("；")+"），无法直接折算。");
+  }
+  L.push("核验结论："+v.label);
+  L.push("");
+  L.push("可引用的客观事实：");
+  arr.forEach(function(f,k){ L.push((k+1)+". "+f.text+"（"+f.src+"，"+f.date+"）"); });
+  L.push("");
+  L.push("需要请客户确认：");
+  (S.questions||[]).filter(function(q){ return q.priority!=="低"; }).slice(0,4).forEach(function(q,k){ L.push((k+1)+". "+q.q); });
+  return L.join("\n");
+}
+
+function buildWx(){
+  var arr = picked();
+  var m = S.market, c = S.comparison;
+  var who = (S.customer && S.customer.channel==="微信") ? "" : "";
+  var L = [];
+  L.push("您好，" + who + "关于" + (S.meta.product||"") + "的价格，我把这两天查到的市场行情跟您同步一下，方便我们对齐口径：");
+  L.push("");
+  L.push("1. " + (m.date||"") + " " + (S.meta.region||"") + "市场" + (S.meta.product||"") + "报价为 " + (m.low!=null? nf(m.low)+"–"+nf(m.high):"—") + " 元/吨（" + (m.tax||"") + "、" + (m.delivery||"") + "），来源：" + (m.source||"") + "。");
+  if(c.pos!=="undecidable"){
+    L.push("2. 您提到的价格与这个口径相比，差 " + sf(c.delta_to_dot) + " 元/吨左右（约 " + pfAbs(c.pct_to_dot) + "，以区间中值 " + nf(c.reference) + " 元/吨计）。");
+  } else {
+    L.push("2. 您提到的价格暂时还没法直接对比，需要先确认一下税费和是出厂还是送到。");
+  }
+  arr.slice(0,4).forEach(function(f,k){ L.push((k+3)+". "+f.text); });
+  L.push("");
+  L.push("想跟您确认几个信息，有了这些我就能按您的实际口径重新对一遍：");
+  (S.questions||[]).filter(function(q){ return q.priority==="高"; }).slice(0,4).forEach(function(q,k){ L.push("· "+q.q); });
+  L.push("");
+  L.push("这些数据都是公开可查的，我把链接也可以一并发您核对。供您参考。");
+  return L.join("\n");
+}
+
+function buildMail(){
+  var arr = picked();
+  var m = S.market, c = S.comparison, v = S.verdict;
+  var L = [];
+  L.push("主题：" + (S.meta.product||"") + " " + (S.meta.region||"") + " 市场价格口径核对说明（" + (m.date||"") + "）");
+  L.push("");
+  L.push("尊敬的客户：");
+  L.push("");
+  L.push("您好。就您提到的" + (S.meta.product||"") + "市场价格，我按公开报价做了核对，现将口径与数据说明如下，供您参考。");
+  L.push("");
+  L.push("一、市场参考价格");
+  L.push("· 报价：" + (m.low!=null? nf(m.low)+"–"+nf(m.high)+" 元/吨":"暂无同口径报价"));
+  L.push("· 口径：" + (m.tax||"") + "、" + (m.delivery||"") + "，" + ((S.meta.region_scope)||""));
+  L.push("· 日期：" + (m.date||"") + "；来源：" + (m.source||"") );
+  L.push("· 说明：市场报价为区间参考，实际成交以一单一议为准。");
+  L.push("");
+  L.push("二、与您所述价格的比较");
+  if(c.pos!=="undecidable"){
+    L.push("以同期同口径区间中值 " + nf(c.reference) + " 元/吨为基准，您所述价格高出 " + sf(c.delta_to_dot) + " 元/吨，约 " + pfAbs(c.pct_to_dot) + "；相对区间上沿差 " + sf(c.delta_to_high) + " 元/吨。");
+  } else {
+    L.push("由于您所述价格的税费与交付口径尚未明确，暂无法直接比较。");
+  }
+  L.push("");
+  L.push("三、可能造成差异的口径因素");
+  (S.calibers||[]).filter(function(x){ return x.diff_flag!=="一致"; }).slice(0,5).forEach(function(x,i){
+    L.push((i+1)+". "+x.dim+"："+x.impact);
+  });
+  L.push("");
+  L.push("四、需要请您确认的信息");
+  (S.questions||[]).filter(function(q){return q.priority==="高";}).forEach(function(q,i){ L.push((i+1)+". "+q.q); });
+  L.push("");
+  L.push("五、可核查的数据来源");
+  arr.slice(0,5).forEach(function(f,i){ L.push((i+1)+". "+f.text+"（"+f.src+" "+f.date+"）"); });
+  L.push("");
+  L.push("以上数据均来自公开市场报价，可随邮件附上原始链接供核对。如您的价格另有口径说明，也欢迎发我，我再按同一口径复核一遍。");
+  L.push("");
+  L.push("此致");
+  L.push("（发件人信息请补充）");
+  return L.join("\n");
+}
+
+function scanForbidden(t){
+  var bad = ["保证","最低价","优惠","返点","承诺","一定","最低","底价","包您","独家","下单即"];
+  return bad.filter(function(w){ return t.indexOf(w)>=0; });
+}
+
+/* ---------------- 事件绑定 ---------------- */
+["inCust","inRegion","inTax","inDelivery","inPayment","inMTax","inMDelivery","inFreight","inOurs"].forEach(function(id){
+  var el = $("#"+id); if(!el) return;
+  el.addEventListener("input", recalc); el.addEventListener("change", recalc);
+});
+$("#btnReset").addEventListener("click", function(){
+  $("#inCust").value = S.customer.stated_price; $("#inTax").value = S.origTax||"未注明"; $("#inDelivery").value = S.origDel||"未注明";
+  $("#inMTax").value="含税"; $("#inMDelivery").value="送到"; $("#inFreight").value=""; $("#inOurs").value=""; recalc();
+});
+$("#btnPrint").addEventListener("click", function(){ window.print(); });
+$("#btnBrief").addEventListener("click", function(){
+  if(!picked().length){ $("#talkWarn").innerHTML = '<span style="color:#c0392b">请先勾选至少 1 条事实要点。</span>'; return; }
+  $("#talkOut").value = buildBrief(); $("#talkWarn").textContent = "";
+});
+$("#btnWx").addEventListener("click", function(){
+  var t = (!picked().length) ? buildWx() : buildWx();
+  var bad = scanForbidden(t);
+  $("#talkOut").value = t;
+  $("#talkWarn").innerHTML = bad.length? '<span style="color:#b7791f">提示：文本中出现疑似承诺性措辞（'+esc(bad.join("、"))+'），请人工确认后再发送。</span>' :
+    '已生成微信稿。内容仅含已核实的市场事实，未添加价格优惠或承诺；涉及我方报价的条件请按公司政策补充。';
+});
+$("#btnMail").addEventListener("click", function(){
+  var t = buildMail(); var bad = scanForbidden(t);
+  $("#talkOut").value = t;
+  $("#talkWarn").innerHTML = bad.length? '<span style="color:#b7791f">提示：文本中出现疑似承诺性措辞（'+esc(bad.join("、"))+'），请人工确认后再发送。</span>' :
+    '已生成邮件稿。发送前请补充发件人信息与落款。';
+});
+$("#btnCopy").addEventListener("click", function(){
+  var ta = $("#talkOut"); ta.select(); document.execCommand("copy");
+  $("#talkWarn").innerHTML = '已复制到剪贴板。';
+});
+$("#btnClear").addEventListener("click", function(){ $("#talkOut").value=""; $("#talkWarn").textContent=""; });
+
+/* 缺省口径 */
+S.origTax = S.customer.stated_tax; S.origDel = S.customer.stated_delivery;
+
+/* 初始渲染 */
+try{
+  recalc();
+  window.addEventListener("resize", function(){ Object.keys(CH).forEach(function(k){ try{ CH[k].resize(); }catch(e){} }); });
+}catch(e){
+  $("#ssrBanner").innerHTML = '<div class="err">脚本初始化失败：'+esc(e.message)+'</div>';
+  console.error(e);
+}
+window.__S__ = S;
+})();
+</script>
+</body>
+</html>

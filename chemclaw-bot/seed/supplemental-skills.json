@@ -1,0 +1,27 @@
+[
+  {
+    "id": "aux-networkx",
+    "name": "networkx",
+    "sourcePath": "skills/supplemental/networkx/SKILL.md"
+  },
+  {
+    "id": "aux-rdkit",
+    "name": "rdkit",
+    "sourcePath": "skills/supplemental/rdkit/SKILL.md"
+  },
+  {
+    "id": "aux-scientific-visualization",
+    "name": "scientific-visualization",
+    "sourcePath": "skills/supplemental/scientific-visualization/SKILL.md"
+  },
+  {
+    "id": "aux-statistical-analysis",
+    "name": "statistical-analysis",
+    "sourcePath": "skills/supplemental/statistical-analysis/SKILL.md"
+  },
+  {
+    "id": "aux-sympy",
+    "name": "sympy",
+    "sourcePath": "skills/supplemental/sympy/SKILL.md"
+  }
+]

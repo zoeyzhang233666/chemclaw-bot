@@ -1,0 +1,212 @@
+{
+  "version": 1,
+  "qualityPolicy": [
+    "L1 domain skills from chemclaw/skills/domain define workflow, fields, and provenance.",
+    "Follow process, not pixels: examples/ are reference-only; fix bad maps/occlusion.",
+    "Stronger models may surpass Flash-era example layouts within L1 contracts.",
+    "L2 community skills assist delivery/grilling/planning; never invent business facts.",
+    "Never fabricate prices or company claims; mark gaps explicitly."
+  ],
+  "bots": [
+    {
+      "id": "chemclaw",
+      "name": "ChemClaw",
+      "role": "主控",
+      "main": true,
+      "color": "deepseek",
+      "packs": ["pack-mcp-core", "pack-process"],
+      "line": "main"
+    },
+    {
+      "id": "lead-hunter",
+      "name": "潜客猎手",
+      "role": "潜客",
+      "line": "sales",
+      "packs": ["pack-sales-leads", "pack-mcp-core"]
+    },
+    {
+      "id": "visit-advisor",
+      "name": "拜访顾问",
+      "role": "拜访",
+      "line": "sales",
+      "packs": ["pack-sales-visit", "pack-mcp-core"]
+    },
+    {
+      "id": "export-sales",
+      "name": "外贸销售",
+      "role": "外贸销",
+      "line": "sales",
+      "packs": ["pack-export-sales", "pack-mcp-core"]
+    },
+    {
+      "id": "supplier-source",
+      "name": "供应商寻源",
+      "role": "寻源",
+      "line": "buy",
+      "packs": ["pack-buy-source", "pack-mcp-core"]
+    },
+    {
+      "id": "due-diligence",
+      "name": "准入尽调",
+      "role": "尽调",
+      "line": "buy",
+      "packs": ["pack-due-diligence", "pack-mcp-core"]
+    },
+    {
+      "id": "import-buy",
+      "name": "外贸采购",
+      "role": "外贸采",
+      "line": "buy",
+      "packs": ["pack-import-buy", "pack-mcp-core"]
+    },
+    {
+      "id": "price-quote",
+      "name": "行情报价",
+      "role": "行情",
+      "line": "market",
+      "packs": ["pack-price", "pack-mcp-core"]
+    },
+    {
+      "id": "fundamentals",
+      "name": "产业基本面",
+      "role": "基本面",
+      "line": "market",
+      "packs": ["pack-fundamentals", "pack-mcp-core"]
+    },
+    {
+      "id": "spreads-quant",
+      "name": "价差量化",
+      "role": "价差",
+      "line": "market",
+      "packs": ["pack-spreads", "pack-mcp-core"]
+    },
+    {
+      "id": "product-intel",
+      "name": "产品情报",
+      "role": "产品",
+      "line": "shared",
+      "packs": ["pack-product", "pack-mcp-core"]
+    },
+    {
+      "id": "ppt-designer",
+      "name": "PPT设计师",
+      "role": "PPT",
+      "line": "delivery",
+      "packs": ["pack-ppt"]
+    },
+    {
+      "id": "sheet-expert",
+      "name": "表格专家",
+      "role": "表格",
+      "line": "delivery",
+      "packs": ["pack-sheets"]
+    },
+    {
+      "id": "doc-writer",
+      "name": "文档撰稿",
+      "role": "文档",
+      "line": "delivery",
+      "packs": ["pack-docs"]
+    },
+    {
+      "id": "pdf-helper",
+      "name": "PDF助手",
+      "role": "PDF",
+      "line": "delivery",
+      "packs": ["pack-pdf"]
+    },
+    {
+      "id": "chain-mapper",
+      "name": "产业链制图",
+      "role": "制图",
+      "line": "delivery",
+      "packs": ["pack-diagrams"]
+    },
+    {
+      "id": "deep-researcher",
+      "name": "深度研究员",
+      "role": "深研",
+      "line": "delivery",
+      "packs": ["pack-research", "pack-mcp-core"]
+    },
+    {
+      "id": "news-radar",
+      "name": "舆情雷达",
+      "role": "舆情",
+      "line": "delivery",
+      "packs": ["pack-news"]
+    },
+    {
+      "id": "meeting-notes",
+      "name": "会议纪要",
+      "role": "纪要",
+      "line": "delivery",
+      "packs": ["pack-meeting"]
+    },
+    {
+      "id": "bilingual",
+      "name": "中英译审",
+      "role": "译审",
+      "line": "delivery",
+      "packs": ["pack-translate"]
+    },
+    {
+      "id": "market-report",
+      "name": "市场研报",
+      "role": "研报",
+      "line": "delivery",
+      "packs": ["pack-market-report", "pack-mcp-core"]
+    },
+    {
+      "id": "griller",
+      "name": "质询官",
+      "role": "质询",
+      "line": "process",
+      "packs": ["pack-grill"]
+    },
+    {
+      "id": "process-aide",
+      "name": "流程参谋",
+      "role": "流程",
+      "line": "process",
+      "packs": ["pack-process"]
+    }
+  ],
+  "rooms": [
+    {
+      "id": "room-lead",
+      "name": "客户开发作战室",
+      "admin": "ChemClaw",
+      "members": ["ChemClaw", "潜客猎手", "拜访顾问", "行情报价", "准入尽调", "产品情报", "表格专家", "文档撰稿", "会议纪要", "质询官"],
+      "notice": "默认 ChemClaw 接话并拆单。线索找潜客猎手；拜访包找拜访顾问；背调找准入尽调；价找行情报价；名单表找表格专家。重要交付前可 @质询官。禁止编造无来源价格与企业事实。版式可优于 skill 示例，字段与溯源必须满足 domain skill 契约。"
+    },
+    {
+      "id": "room-buy",
+      "name": "采购寻源台",
+      "admin": "ChemClaw",
+      "members": ["ChemClaw", "供应商寻源", "准入尽调", "行情报价", "产品情报", "表格专家", "PDF助手", "质询官"],
+      "notice": "找真厂家→供应商寻源；准入/证照→准入尽调；比价→行情报价；PDF 抽取→PDF助手。事实不足标 gap。定稿前可 @质询官。"
+    },
+    {
+      "id": "room-futures",
+      "name": "期现研究台",
+      "admin": "ChemClaw",
+      "members": ["ChemClaw", "产业基本面", "价差量化", "行情报价", "产品情报", "PPT设计师", "表格专家", "产业链制图", "市场研报", "质询官"],
+      "notice": "归因/供需→产业基本面；基差价差→价差量化；现货价→行情报价；汇报→PPT设计师。不做买卖建议。价格必带日期规格税基来源。"
+    },
+    {
+      "id": "room-trade",
+      "name": "进出口协作",
+      "admin": "ChemClaw",
+      "members": ["ChemClaw", "外贸销售", "外贸采购", "行情报价", "准入尽调", "中英译审", "文档撰稿"],
+      "notice": "出口询盘→外贸销售；进口窗口成本→外贸采购；英文润色→中英译审。"
+    },
+    {
+      "id": "room-delivery",
+      "name": "交付工坊",
+      "admin": "ChemClaw",
+      "members": ["ChemClaw", "PPT设计师", "表格专家", "文档撰稿", "PDF助手", "产业链制图", "深度研究员", "舆情雷达", "市场研报", "质询官", "流程参谋"],
+      "notice": "业务结论须来自上游业务岗或已核实材料。PPT 未指定格式默认可编辑 pptx 并确认。定稿前可 @质询官；大单先 @流程参谋。"
+    }
+  ]
+}

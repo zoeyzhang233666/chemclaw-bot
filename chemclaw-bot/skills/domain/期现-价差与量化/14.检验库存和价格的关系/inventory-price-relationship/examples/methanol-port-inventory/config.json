@@ -1,0 +1,38 @@
+{
+  "study": "甲醇港口库存 → 未来价格/基差变化",
+  "inventory_csv": "data/inventory_weekly.csv",
+  "value_col": "value",
+  "price_csv": "data/prices_daily.csv",
+  "out_dir": "output",
+  "horizons": [1, 2, 4],
+  "targets": [
+    ["fwd_spot", "现货价格变化", 100.0],
+    ["fwd_fut", "期货收益率", 100.0],
+    ["fwd_basis", "基差变化", 1.0]
+  ],
+  "factors": [
+    ["lvl_pct", "F1 库存水平（时点分位）"],
+    ["total", "F2 库存绝对量（万吨）"],
+    ["wow_chg", "F3 周度变化（万吨）"],
+    ["wow_pct", "F4 周度变化率（%）"],
+    ["yoy", "F5 库存同比（%）"],
+    ["w4_chg", "F6 四周累计变化（万吨）"]
+  ],
+  "level_edges": [0.2, 0.5, 0.8],
+  "wow_threshold": 3.0,
+  "min_obs": 26,
+  "value_range": [5.0, 260.0],
+  "placebo_runs": 2000,
+  "is_end": "2024-12-31",
+  "notes": {
+    "inventory_source": "隆众资讯《中国甲醇样本港口库存周数据统计》，经 mysteel 能化频道转载原文核验",
+    "inventory_def": "40家库区实时甲醇物理库存，覆盖率98%，含保税区内库存；万吨",
+    "asof": "每周三（统计截止日）",
+    "pub_ts": "每周三 14:00 前后；2026-10-07 国庆假期该周顺延至 2026-10-08",
+    "price_source": "生意社(100ppi) 甲醇 MA 基准价（华东，元/吨）+ 主力合约价（郑商所 MA 主连）",
+    "price_pub": "每日 16:30 后公布",
+    "basis_def": "现货 − 主力期货；基差率 = 基差 / 期货价",
+    "base_rule": "基期 = 公布时点之后第一个交易日收盘",
+    "data_gap": "2019–2023 初无可获得连续公开周报，未做推断"
+  }
+}

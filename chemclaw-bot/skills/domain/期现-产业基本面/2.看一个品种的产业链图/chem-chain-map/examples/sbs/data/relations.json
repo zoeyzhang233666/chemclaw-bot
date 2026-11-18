@@ -1,0 +1,1167 @@
+{
+  "meta": {
+    "relation_type_taxonomy": {
+      "conversion": "原料转化：上游化学品通过化学反应成为下游化学品的主要组分（通常有化学计量/收率），在本库中占骨架层",
+      "coproduction": "联产：同一装置/工艺同时产出两种及以上主要商品（如 PO/SM 联产），产出结构不是副产",
+      "byproduct": "副产：裂解、重整等主工艺的伴随产物（量随主产品走，不随自身需求调整）",
+      "substitution": "替代：同一用途下两种产品可互相替换，双向边（A→B 与 B→A 可各写一条，说明替代强度和替代约束）",
+      "blend": "配方共混：物理共混/分散/溶胀，无化学反应，下游多为 material 节点；参数用配方比而非化学单耗",
+      "application": "终端应用：material 或 commodity 进入终端场景，通常无数值单耗，只能给用量强度或占比口径",
+      "route_option": "路线可选：同一目标产品存在多条不同工艺路线，只允许作为 route 节点并入，禁止并成一条链",
+      "packaging": "包装与储存形态变化（如充油、造粒），不改变化学身份",
+      "processing": "成型加工（注塑、压延、涂布），材料→制品"
+    },
+    "direction_note": "表格中的 from/to 表示『物质流向』，与图谱左侧(上游)→右侧(下游)一致；substitution 边物质流为双向，图谱中以虚线+双向箭头呈现，不参与层数/上下游高亮计算。",
+    "quant_formula_contract": "quant 只允许三种口径：(1) stoichiometric 以目标产品 1 t 计的化学计量/换算单耗；(2) commercial_grade 以商业品规格基计（注明基准，如 99.5% 聚合级、干基/湿基）；(3) formulation 以 100 份配方总量计。缺失一律写 null 并给出 missing_flags，不得留空或估算。",
+    "flow_note": "flow=mass 表示物质流方向可用于上下游高亮；flow=none（替代）不参与层数计算与血缘推进。",
+    "edge_style_note": "solid 物质流主路线 / shortdash 副产 / dotted 配方共混与成型加工 / dashed 替代（双向）。"
+  },
+  "relations": [
+    {
+      "id": "R01",
+      "from": "N_BZ",
+      "to": "N_EB",
+      "relation_type": "conversion",
+      "process": "烷基化制乙苯（部分未进入主图谱说明）",
+      "family": "烃化",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.758,
+        "from_unit": "t 纯苯 / t 乙苯",
+        "yield": 0.97,
+        "basis": "化学计量：苯(78.11)+乙烯(28.05)→乙苯(106.17)，理论苯单耗 78.11/106.17=0.7357；按烷基化选择性/苯回收率 97% 折算 0.7357/0.97≈0.758，取 0.762。行业口径 0.75~0.78 落在同一区间，交叉印证。",
+        "basis_grade": "石油苯 545 → 工业级乙苯"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S06",
+        "S07"
+      ],
+      "notes": "与 R03（乙苯→苯乙烯）分段：R01 是苯烷基化段，R03 是脱氢段。市面常直接给『苯→苯乙烯 0.79 t/t』，那是两段合并口径，本库拆开以避免把两段损耗混算。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R02",
+      "from": "N_ETH",
+      "to": "N_EB",
+      "relation_type": "conversion",
+      "process": "烷基化制乙苯（另一原料侧）",
+      "family": "烃化",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.272,
+        "from_unit": "t 乙烯 / t 乙苯",
+        "yield": 0.97,
+        "basis": "化学计量：28.05/106.17=0.2642；按 97% 收率折算 0.272。",
+        "basis_grade": "聚合级乙烯 → 工业级乙苯"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S06",
+        "S07"
+      ],
+      "notes": "与 R01 合起来对应『苯 0.79 + 乙烯 0.29 → 苯乙烯 1.0』的行业成本公式；乙烯的工业值与理论值差异来自烷基化副反应与回收率。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R03",
+      "from": "N_EB",
+      "to": "N_SM",
+      "relation_type": "conversion",
+      "process": "乙苯脱氢（主路线）",
+      "family": "脱氢",
+      "typical": true,
+      "quant": {
+        "from_per_to": 1.04,
+        "from_unit": "t 乙苯 / t 苯乙烯",
+        "yield": 0.96,
+        "basis": "化学计量：乙苯 106.17 → 苯乙烯 104.15，理论单耗 1.0194 t/t；乙苯脱氢为可逆反应、单程转化率约 60~70% 需循环，综合收率约 96%，折算 1.0194/0.96≈1.062，取 1.04（脱氢段行业口径约 1.02~1.07）。交叉验证：苯 0.762 × 乙苯 1.04 = 0.79，与期货/资讯行业模型『0.79 t 苯 + 0.29 t 乙烯 / t 苯乙烯』(S07) 一致。",
+        "basis_grade": "工业级乙苯 → 聚合级苯乙烯"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S06",
+        "S07"
+      ],
+      "notes": "交叉验证已通过：R01(0.762) × R03(1.04) = 0.79，与 S07 的独立行业口径一致；乙烯侧 0.272×1.04=0.283 ≈ S07 的 0.29。这说明分段拆分未引入口径漂移。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R05",
+      "from": "N_NAPHTHA",
+      "to": "N_ETH",
+      "relation_type": "conversion",
+      "process": "蒸汽裂解制乙烯",
+      "family": "蒸汽裂解",
+      "typical": true,
+      "quant": {
+        "from_per_to": 3.0,
+        "from_unit": "t 石脑油 / t 乙烯",
+        "yield": 0.33,
+        "basis": "石脑油裂解乙烯收率约 28%~33%，单耗约 3.0~3.6 t 石脑油/t 乙烯（不含乙烯之外的联产品分摊）",
+        "basis_grade": "石脑油（重整料/裂解料）"
+      },
+      "quant_status": "industrial_range_literature",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S06",
+        "S07"
+      ],
+      "notes": "裂解同时产出丙烯、C4、裂解汽油等，严格口径应按联产品分摊；本处给出的是行业常用简化值，并已在 cost_basis 中提示需分摊。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R06",
+      "from": "N_BTX",
+      "to": "N_BZ",
+      "relation_type": "conversion",
+      "process": "芳烃联合装置：重整段 → BTX → 抽提得纯苯",
+      "family": "催化重整",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 石脑油 / t C8 芳烃",
+        "yield": null,
+        "basis": "重整仅表述进料，产出为 BTX 全族，需按装置物料平衡拆分，无单一单耗",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S20",
+        "S25"
+      ],
+      "notes": "标记为参数缺失：该类多产品装置的『单耗』在研究上应改用芳烃装置物料平衡表。（原 R06b 为同一对端点的重复登记，已合并至本条，避免 find_rel 命中无证据的重复边） ｜【v2 修正】重整芳烃抽提（原 R06 方向与端点均有误，已拆分修正）",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R07",
+      "from": "N_CRUDE",
+      "to": "N_NAPHTHA",
+      "relation_type": "conversion",
+      "process": "常减压蒸馏（原油 → 石脑油）",
+      "family": "蒸馏",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 原油 / t 石脑油",
+        "yield": null,
+        "basis": "受原油品种（轻/重质）影响，收率区间宽，必须按具体炼厂配置给出，不可通用",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": "图中保留该边用于成本源头传导，但明确标注『无数值单耗』。",
+      "flow": "mass",
+      "edge_style": "solid",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R08",
+      "from": "N_LPG",
+      "to": "N_ETH",
+      "relation_type": "route_option",
+      "process": "轻烃裂解（LPG/乙烷为原料的替代裂解路线）",
+      "family": "蒸汽裂解",
+      "typical": false,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t LPG / t 乙烯",
+        "yield": null,
+        "basis": "丙烷裂解的乙烯收率显著高于石脑油，且 C4 收率极低（对丁二烯供给为负向影响）",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": "轻烃裂解（LPG/乙烷）与石脑油裂解是乙烯装置的并列原料路线；轻质化会显著降低副产 C4，是 SBS 成本端的重要结构性变量。数值依赖装置原料结构，标缺失",
+      "flow": "mass",
+      "edge_style": "solid",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R09",
+      "from": "N_CRUDE",
+      "to": "N_LPG",
+      "relation_type": "conversion",
+      "process": "炼厂气与轻烃分离",
+      "family": "分馏",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 原油 / t LPG",
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": "仅作成本源头的结构占位。",
+      "flow": "mass",
+      "edge_style": "solid",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R10",
+      "from": "N_NAPHTHA",
+      "to": "N_C4BE",
+      "relation_type": "byproduct",
+      "process": "石脑油蒸汽裂解副产 C4 馏分",
+      "family": "蒸汽裂解",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t C4 / t 原油当量",
+        "yield": 0.09,
+        "basis": "石脑油裂解 C4 馏分收率约 9%~11%（含丁二烯 4.5%~5.0%），随裂解深度与原料变化",
+        "basis_grade": "石脑油裂解"
+      },
+      "quant_status": "byproduct_yield_range",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S08",
+        "S15"
+      ],
+      "notes": "副产关系的核心含义：C4 的可供量由乙烯装置负荷与裂解原料结构决定，不由丁二烯自身需求决定。",
+      "flow": "mass",
+      "edge_style": "shortdash"
+    },
+    {
+      "id": "R11",
+      "from": "N_NAPHTHA",
+      "to": "N_PYREXTRACT",
+      "relation_type": "byproduct",
+      "process": "石脑油蒸汽裂解副产裂解汽油",
+      "family": "蒸汽裂解",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 裂解汽油 / t 乙烯",
+        "yield": null,
+        "basis": "裂解汽油收率随裂解深度变化（约 18%~24% 对石脑油进料）",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": "标缺失：需按裂解深度与装置物料平衡取值。",
+      "flow": "mass",
+      "edge_style": "shortdash",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R12",
+      "from": "N_C4BE",
+      "to": "N_BD",
+      "relation_type": "conversion",
+      "process": "C4 抽提（ACN/DMF/NMP 三种溶剂路线，属同一工艺族的可选项）",
+      "family": "萃取精馏",
+      "typical": true,
+      "quant": {
+        "from_per_to": 2.1,
+        "from_unit": "t 裂解C4（含丁二烯约 45%）/ t 聚合级丁二烯",
+        "yield": 0.95,
+        "basis": "抽提收率约 95%~97%；提按进料 C4 丁二烯含量 43%~48% 折算，为典型值而非某套装置实测",
+        "basis_grade": "聚合级 99.5%"
+      },
+      "quant_status": "industrial_estimate_range",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S08",
+        "S09"
+      ],
+      "notes": "不同溶剂（ACN/DMF/NMP）的差别在能耗与回收率，不在化学计量；抽余 C4 另有流向（MTBE、1-丁烯、烷基化），因此不得把 2.1 当作经济单耗的『全部归属』。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R13",
+      "from": "N_BD",
+      "to": "N_PRIMARY",
+      "relation_type": "conversion",
+      "process": "阴离子溶液聚合（三步法/两步法/偶联法）",
+      "family": "阴离子聚合",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.7,
+        "from_unit": "t 丁二烯 / t SBS 干胶",
+        "yield": 0.97,
+        "basis": "以 S/B = 30/70（质量比）的商业牌号计；单耗 = 聚合段单体转化率(≈97%)与后处理损失(≈1%~2%)折算后的值，胶液回收单体计入。若牌号为 40/60，则丁二烯单耗升至约 0.80 t/t",
+        "basis_grade": "SBS 干胶（非充油）"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S01",
+        "S03"
+      ],
+      "notes": "本边为『按牌号比例推算』的口径，必须随关系一并展示 S/B 假设；油胶（充油）应改用 R42 的充油口径，不得直接用 0.70。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R14",
+      "from": "N_SM",
+      "to": "N_PRIMARY",
+      "relation_type": "conversion",
+      "process": "阴离子溶液聚合（三步法/两步法/偶联法）",
+      "family": "阴离子聚合",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.3,
+        "from_unit": "t 苯乙烯 / t SBS 干胶",
+        "yield": 0.97,
+        "basis": "以 S/B = 30/70 牌号计；单耗 = 30% ÷ 聚合与后处理综合收率 ≈97%",
+        "basis_grade": "SBS 干胶（非充油）"
+      },
+      "quant_status": "stoichiometric_derived",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S01",
+        "S03"
+      ],
+      "notes": "与 R13 必须成对出现，二者之和约 1.0（计入溶剂回收与损失后略高）；研究时二者口径必须一致。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R15",
+      "from": "N_PRIMARY",
+      "to": "N_SEBS",
+      "relation_type": "conversion",
+      "process": "SBS 胶液催化加氢",
+      "family": "加氢",
+      "typical": true,
+      "quant": {
+        "from_per_to": 1.0,
+        "from_unit": "t SBS / t SEBS（干基）",
+        "yield": null,
+        "basis": "加氢只饱和丁二烯段双键，碳骨架不变；理论质量守恒 1.0 + 2H/丁二烯段 ≈ 1.01（质量增量极小），实际按装置回收与损耗另计",
+        "basis_grade": "氢化度 ≥97% 的商品 SEBS"
+      },
+      "quant_status": "stoichiometric",
+      "quant_confidence": "high",
+      "evidence": [
+        "S16"
+      ],
+      "notes": "这是本链唯一一条『以 SBS 为原料再生产品』的化学转化边，不可与『SBS 被 SEBS 替代』混为一谈。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R42",
+      "from": "N_IPP_SSBR",
+      "to": "N_PRIMARY",
+      "relation_type": "blend",
+      "process": "充油（油胶）配制：SBS 胶液中加入橡胶油至充油量 30%~50%",
+      "family": "充油配制",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.3,
+        "from_unit": "t 橡胶油 / t 油胶（充油 30% 规格）",
+        "yield": 1.0,
+        "basis": "配方口径：充油 30% 时，100 t 油胶 = 干胶(SBS) 70 t + 橡胶油 30 t，故每 t 油胶耗油 0.30 t（每 t 油胶耗干胶 0.70 t 记在 note）；充油 50% 规格则为 0.50 t",
+        "basis_grade": "油胶（充油型 SBS）"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S17"
+      ],
+      "notes": "充油是把填充油配入 SBS 形成油胶牌号的配方关系，方向为『油→油胶』；图中从油品列指向目标品种列以表达配方归属，不参与上下游层数判断。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R16",
+      "from": "N_PRIMARY",
+      "to": "N_MODIFIED_ASPH",
+      "relation_type": "blend",
+      "process": "沥青改性：剪切/胶体磨分散 + 溶胀发育 + 稳定剂交联",
+      "family": "改性",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.042,
+        "from_unit": "t SBS / t 改性沥青（I-C/I-D）",
+        "yield": 1.0,
+        "basis": "配方口径：道改 SBS 掺量 3.5%~5.5%，取 4.2% 作为典型值；SBS 道改料品质、沥青标号与气候分区决定具体掺量",
+        "basis_grade": "I-C/I-D 改性沥青",
+        "from_per_to_range": [
+          0.035,
+          0.055
+        ],
+        "range_note": "道改 SBS 掺量 3.5%~5.5%，随气候分区与沥青配伍变化"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S11",
+        "S12",
+        "S13"
+      ],
+      "notes": "这不是化学计量单耗，而是配方掺量；不同厂配方差异大，必须展示区间。稳定剂另行添加约 0.1%。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R17",
+      "from": "N_ASPHALT",
+      "to": "N_MODIFIED_ASPH",
+      "relation_type": "blend",
+      "process": "基质沥青作为改性沥青的连续相",
+      "family": "改性",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.95,
+        "from_unit": "t 基质沥青 / t 改性沥青",
+        "yield": 1.0,
+        "basis": "配方口径：100 份 = 基质沥青 94~96 + SBS 3.5~5.5 + 稳定剂 0.1 + 少量助剂；以 95% 计",
+        "basis_grade": "90#/70# A 级"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S11",
+        "S13"
+      ],
+      "notes": "与 R16 相加约 100%（另计助剂），构成改性沥青的配方平衡。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R18",
+      "from": "N_PRIMARY",
+      "to": "N_WP_MEMBRANE",
+      "relation_type": "blend",
+      "process": "防水卷材涂盖料改性（SBS 改性沥青涂盖 + 胎基浸涂）",
+      "family": "改性",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.075,
+        "from_unit": "t SBS / t 涂盖料",
+        "yield": null,
+        "basis": "配方口径：防水卷材涂盖料 SBS 掺量约 5%~10%，取 7.5%；需注意口径是『对涂盖料』而非『对成品卷材』——成品还要加计胎基与面层材料",
+        "basis_grade": "II 型聚酯胎卷材",
+        "from_per_to_range": [
+          0.05,
+          0.1
+        ],
+        "range_note": "卷材涂盖料 SBS 掺量 5%~10%（对涂盖料，非对成品卷材）"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "low",
+      "evidence": [
+        "S01"
+      ],
+      "notes": "标 low：本轮证据只支持『防水卷材是 SBS 第二大应用(12.0%)』，未取得一手配方文献；掺量为行业通行区间，须在使用前以企业配方或地方标准复核。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R19",
+      "from": "N_MODIFIED_ASPH",
+      "to": "N_WP_MEMBRANE",
+      "relation_type": "processing",
+      "process": "涂覆-撒砂-冷却成型",
+      "family": "涂布成型",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 改性沥青 / 万 m²",
+        "yield": null,
+        "basis": "卷材按面积计价，改用『单位面积涂盖料耗量（kg/m²）』口径更合理，该参数需按胎基与厚度取值",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S22"
+      ],
+      "notes": "跨单位（吨→平方米）的参数缺失，属必须标注的缺口。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R20",
+      "from": "N_MODIFIED_ASPH",
+      "to": "N_PAVEMENT_DECK",
+      "relation_type": "processing",
+      "process": "沥青混合料拌和与摊铺压实",
+      "family": "拌和摊铺",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 改性沥青 / t 混合料",
+        "yield": null,
+        "basis": "油石比 4.5%~6.0%（SMA 更高），随级配变化；建议以『每 km 单车道用量』而不是吨/吨口径研究",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S21"
+      ],
+      "notes": "标缺失：油石比属道路设计参数，不应作为产业链固定单耗。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R21",
+      "from": "N_WP_MEMBRANE",
+      "to": "N_WATERPROOF_MAT",
+      "relation_type": "processing",
+      "process": "自粘层复合与隔离膜覆合",
+      "family": "复合",
+      "typical": false,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 卷材 / t 自粘类材料",
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S22"
+      ],
+      "notes": "自粘体系并非全部由 SBS 卷材衍生（也可直接用改性沥青），此边为『部分产品形态』的加工关系，标 typical=false。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R22",
+      "from": "N_PRIMARY",
+      "to": "N_HMPSA",
+      "relation_type": "blend",
+      "process": "热熔胶配方：熔融共混（主体弹性体 + 增粘树脂 + 油）",
+      "family": "熔融共混",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.32,
+        "from_unit": "t SBS / t 热熔胶",
+        "yield": 1.0,
+        "basis": "配方口径：SBS/SIS 类弹性体占热熔胶 25%~40%，SBS 路线取 32%；若与 SIS 复配则各自占比更小",
+        "basis_grade": "包装类 SBS 基热熔胶",
+        "from_per_to_range": [
+          0.25,
+          0.4
+        ],
+        "range_note": "热熔胶中弹性体占比 25%~40%"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S18"
+      ],
+      "notes": "标 medium：仅有定性报道证明 SBS 是热熔胶主体之一，具体占比为配方区间。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R23",
+      "from": "N_SIS",
+      "to": "N_HMPSA",
+      "relation_type": "blend",
+      "process": "热熔压敏胶配方（SIS 为主体的高流动体系）",
+      "family": "熔融共混",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.3,
+        "from_unit": "t SIS / t 热熔压敏胶",
+        "yield": 1.0,
+        "basis": "配方口径：SIS 25%~35%，取 30%",
+        "basis_grade": "标签/卫材用 HMPSA",
+        "from_per_to_range": [
+          0.25,
+          0.35
+        ],
+        "range_note": "HMPSA 中 SIS 占比 25%~35%"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S18"
+      ],
+      "notes": "SIS 与 SBS 可复配进入同一胶配方，因此 R22 与 R23 不是互斥的单耗。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R24",
+      "from": "N_PRIMARY",
+      "to": "N_MUSTICK",
+      "relation_type": "blend",
+      "process": "溶剂型胶黏剂配制（SBS 溶解 + 增粘 + 助剂）",
+      "family": "溶液配制",
+      "typical": false,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t SBS / t 胶液",
+        "yield": null,
+        "basis": "胶液固含量通常 <40%，但由配方与溶剂比决定；且该品类受 VOCs 政策压制，长期或被热熔胶替代",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": "占消费结构『胶黏剂 14.2%』中的次要部分，配方差异极大，故不虚构单耗。",
+      "flow": "mass",
+      "edge_style": "dotted",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R25",
+      "from": "N_PRIMARY",
+      "to": "N_TPR",
+      "relation_type": "blend",
+      "process": "TPR 鞋底料造粒：SBS 充油 + PS/填料共混 + 双螺杆造粒",
+      "family": "配方共混",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.65,
+        "from_unit": "t SBS / t TPR 料",
+        "yield": 1.0,
+        "basis": "配方口径：以 100 份计 SBS 60~70 份（取 65）、环烷油 10~25、PS/PP 5~20、碳酸钙 5~15、助剂少量",
+        "basis_grade": "注塑级 TPR 鞋底料",
+        "from_per_to_range": [
+          0.6,
+          0.7
+        ],
+        "range_note": "TPR 料中 SBS 占 60~70 份（另含油/树脂/填料）"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "medium",
+      "evidence": [
+        "S01"
+      ],
+      "notes": "TPR 料已是充油体系，因此该边的 SBS 消耗应使用『不含油干胶』口径，与 R42 的充油口径互为外延关系。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R26",
+      "from": "N_TPR",
+      "to": "N_FOOTWEAR_OUTSOLE",
+      "relation_type": "processing",
+      "process": "注塑/模压成型鞋底",
+      "family": "成型加工",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t TPR 料 / 万双",
+        "yield": null,
+        "basis": "按鞋底体积×密度估算（TPR 密度约 0.95 g/cm³），每双 0.15~0.30 kg 属工程估值，无公开统计口径",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S23"
+      ],
+      "notes": "不虚构：以『万双/吨』换算需要企业级数据，标缺失。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R27",
+      "from": "N_FOOTWEAR_OUTSOLE",
+      "to": "N_APP_FOOTWEAR",
+      "relation_type": "application",
+      "process": "鞋类整鞋组装",
+      "family": "组装",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": "终端应用，无数值单耗；只能引用『2024 年国内鞋产量 133.57 亿双』作为需求侧规模指标",
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S03"
+      ],
+      "notes": "终端应用关系按定义不设单耗，禁止为凑图形而填数。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R28",
+      "from": "N_PAVEMENT_DECK",
+      "to": "N_APP_ROAD",
+      "relation_type": "application",
+      "process": "公路/市政道路建设与养护工程",
+      "family": "工程应用",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": "终端应用；需求观测用交通固定资产投资与公路里程/养护里程",
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R29",
+      "from": "N_WP_MEMBRANE",
+      "to": "N_APP_CONSTRUCTION",
+      "relation_type": "application",
+      "process": "建筑与地下工程防水",
+      "family": "工程应用",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": "终端应用；需求观测用房屋竣工面积与防水材料产量",
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": "2025 年防水卷材占 SBS 消费 12.0%，且被明确描述为收缩趋势（S01）。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R30",
+      "from": "N_WATERPROOF_MAT",
+      "to": "N_APP_CONSTRUCTION",
+      "relation_type": "application",
+      "process": "自粘/预铺反粘体系用于地下与屋面防水",
+      "family": "工程应用",
+      "typical": false,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": null,
+      "flow": "mass",
+      "edge_style": "solid",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R31",
+      "from": "N_PRIMARY",
+      "to": "N_PP_MODIF",
+      "relation_type": "blend",
+      "process": "改性聚烯烃造粒（SBS 作增韧剂）",
+      "family": "配方共混",
+      "typical": true,
+      "quant": {
+        "from_per_to": 0.06,
+        "from_unit": "t SBS / t 改性料",
+        "yield": 1.0,
+        "basis": "配方口径：SBS 5%~15% 区间中值取 8% 时，每 t 改性料耗 0.08 t；本处取 6% 偏低值代表以 SEBS 为主、SBS 为辅的通用体系，须随牌号复核",
+        "basis_grade": "PP 增韧改性料",
+        "from_per_to_range": [
+          0.05,
+          0.15
+        ],
+        "range_note": "改性塑料中 SBS/SEBS 类增韧剂 5%~15%"
+      },
+      "quant_status": "formulation",
+      "quant_confidence": "low",
+      "evidence": [
+        "S19"
+      ],
+      "notes": "标 low 且给出区间：SBS 在塑料改性中是『与 SEBS/POE 竞争的位置』，占比高度依赖配方，不得当作固定单耗。",
+      "flow": "mass",
+      "edge_style": "dotted"
+    },
+    {
+      "id": "R32",
+      "from": "N_SEBS",
+      "to": "N_PP_MODIF",
+      "relation_type": "blend",
+      "process": "改性聚烯烃造粒（SEBS 作增韧/相容剂）",
+      "family": "配方共混",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t SEBS / t 改性料",
+        "yield": null,
+        "basis": "与 R31 同一位置，配方可替代；未取得专门文献，故不填数",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": "SEBS 与 SBS 在改性塑料中处于同一功能位（增韧），本边为配方共混，跨同层绘制，不参与层数判断。",
+      "flow": "mass",
+      "edge_style": "dotted",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R33",
+      "from": "N_PP_MODIF",
+      "to": "N_APP_HOMEAPPL",
+      "relation_type": "application",
+      "process": "家电外壳/内饰件注塑",
+      "family": "终端应用",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R34",
+      "from": "N_HMPSA",
+      "to": "N_BOPP_TAPE",
+      "relation_type": "processing",
+      "process": "涂布-干燥-分切成卷",
+      "family": "涂布",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 胶 / 万 m² 胶带",
+        "yield": null,
+        "basis": "胶层厚度 20~30 μm 决定单位面积胶耗，属工艺参数而非链级单耗",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": null,
+      "flow": "mass",
+      "edge_style": "dotted",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R35",
+      "from": "N_BOPP_TAPE",
+      "to": "N_APP_PACKAGING",
+      "relation_type": "application",
+      "process": "快递电商封箱与包装",
+      "family": "终端应用",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [],
+      "notes": null,
+      "flow": "mass",
+      "edge_style": "solid",
+      "gap_note": "未挂证据：该关系的方向与工艺来自通用化工常识，需补齐 A~C 级来源后才能用于结论"
+    },
+    {
+      "id": "R36",
+      "from": "N_HMPSA",
+      "to": "N_APP_PACKAGING",
+      "relation_type": "application",
+      "process": "纸箱封箱、标签与软包装复合用热熔胶",
+      "family": "终端应用",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": null,
+        "yield": null,
+        "basis": null,
+        "basis_grade": null
+      },
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": "S01 明确：VOCs 政策推动热熔胶替代溶剂型胶，快递电商包装扩容——胶黏剂是 SBS 唯一增速高于整体的传统下游。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R37",
+      "from": "N_SIS",
+      "to": "N_PRIMARY",
+      "relation_type": "substitution",
+      "process": "热熔压敏胶弹性体替代（同产线可切换）",
+      "family": "市场替代",
+      "typical": true,
+      "quant": null,
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S02"
+      ],
+      "notes": "SIS 与 SBS 可在同一套 SBC 装置上切换生产（S02 金山巴陵一套装置内 SBS 14 / SEBS 5 / SIS 6 万吨），因此替代是『供给端可切换 + 需求端可替换』双重关系；替代强度应引用热熔胶品类份额而非单耗。",
+      "flow": "none",
+      "edge_style": "dashed"
+    },
+    {
+      "id": "R38",
+      "from": "N_TPU",
+      "to": "N_PRIMARY",
+      "relation_type": "substitution",
+      "process": "鞋底材料替代（TPU/EVA/POE/SEBS vs TPR）",
+      "family": "市场替代",
+      "typical": true,
+      "quant": null,
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": "S01 原文点名：TPR 鞋材受 SEBS、TPU、POE、EVA 及『轻量化』替代；本库据此建 TPU/EVA/POE/SEBS 四条替代边，均无单耗。",
+      "flow": "none",
+      "edge_style": "dashed"
+    },
+    {
+      "id": "R39",
+      "from": "N_EVA",
+      "to": "N_PRIMARY",
+      "relation_type": "substitution",
+      "process": "鞋材替代（EVA 发泡中底替代 TPR 实心鞋底）",
+      "family": "市场替代",
+      "typical": true,
+      "quant": null,
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "flow": "none",
+      "edge_style": "dashed"
+    },
+    {
+      "id": "R40",
+      "from": "N_POE",
+      "to": "N_PRIMARY",
+      "relation_type": "substitution",
+      "process": "鞋材/改性替代（POE 弹性体）",
+      "family": "市场替代",
+      "typical": true,
+      "quant": null,
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": null,
+      "flow": "none",
+      "edge_style": "dashed"
+    },
+    {
+      "id": "R41",
+      "from": "N_SEBS",
+      "to": "N_PRIMARY",
+      "relation_type": "substitution",
+      "process": "鞋材与卫材弹性体替代（氢化型更耐候耐油）",
+      "family": "市场替代",
+      "typical": true,
+      "quant": null,
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S01"
+      ],
+      "notes": "与 R15（SBS→SEBS 加氢转化）构成一对易混淆关系：R15 是化学转化，R41 是市场替代；二者方向相同、性质完全不同。",
+      "flow": "none",
+      "edge_style": "dashed"
+    },
+    {
+      "id": "R43",
+      "from": "N_SBR",
+      "to": "N_TPR",
+      "relation_type": "substitution",
+      "process": "鞋底体系替代（传统硫化橡胶/丁苯橡胶 vs 热塑性 TPR）",
+      "family": "市场替代",
+      "typical": true,
+      "quant": null,
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S03"
+      ],
+      "notes": "S03 原文：SBS『成为替代传统硫化橡胶和聚氯乙烯制作鞋底的核心材料』。",
+      "flow": "none",
+      "edge_style": "dashed"
+    },
+    {
+      "id": "R44",
+      "from": "N_SIS",
+      "to": "N_PRIMARY",
+      "relation_type": "substitution",
+      "process": "共享装置产能（多产品切换排产）",
+      "family": "产能替代",
+      "typical": false,
+      "quant": null,
+      "quant_status": "not_applicable",
+      "quant_confidence": null,
+      "evidence": [
+        "S02"
+      ],
+      "notes": "与 R37 区分：R37 面向热熔胶市场替代，R44 面向供给端排产替代（SBS 产能可让位于 SIS/SEBS）。研究装置负荷时用 R44，研究需求结构时用 R37。",
+      "flow": "none",
+      "edge_style": "dashed"
+    },
+    {
+      "id": "R45",
+      "from": "N_PYREXTRACT",
+      "to": "N_SM",
+      "relation_type": "route_option",
+      "process": "裂解汽油 C8 抽提苯乙烯（小众路线）",
+      "family": "抽提",
+      "typical": false,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 裂解汽油 / t 苯乙烯",
+        "yield": null,
+        "basis": "裂解汽油含苯乙烯约 4%~6%（S10），抽提法可分离；国内规模极小",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S10"
+      ],
+      "notes": "必须作为独立路线呈现：把 C8 抽提与乙苯脱氢画成同一条线会造成工艺混淆（本 Skill 的硬性约束）。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R47",
+      "from": "N_NAPHTHA",
+      "to": "N_BTX",
+      "relation_type": "conversion",
+      "process": "催化重整 / 裂解汽油两段加氢（石脑油 → 重整生成油 / 加氢裂解汽油）",
+      "family": "催化重整",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 石脑油 / t 混合芳烃",
+        "yield": null,
+        "basis": "重整为多产品同时产出的过程，只有 BTX 合计收率口径；单一组分的『单耗』需装置物料平衡表",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S25",
+        "S20"
+      ],
+      "route_ids": [],
+      "notes": "芳烃联合装置的『原料去向』关系：石脑油在重整段生成含 BTX 的生成油，属多产品产出而非单一化学品转化，故按原料去向绘制，不参与层数单调性判断。",
+      "flow": "mass",
+      "edge_style": "solid"
+    },
+    {
+      "from": "N_BTX",
+      "to": "N_BZ",
+      "relation_type": "conversion",
+      "process": "重整生成油加氢后芳烃抽提（环丁砜等溶剂抽提 + 精馏）",
+      "family": "芳烃抽提",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 重整生成油 / t 纯苯",
+        "yield": null,
+        "basis": "重整生成油中苯含量随重整苛刻度与原料变化；纯苯收率须按装置物料平衡核定，本库不提供通用单耗",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S25"
+      ],
+      "flow": "mass",
+      "id": "R48",
+      "edge_style": "solid"
+    },
+    {
+      "from": "N_BTX",
+      "to": "N_C8A",
+      "relation_type": "conversion",
+      "process": "重整生成油分馏切出 C8 芳烃馏分（二甲苯塔）",
+      "family": "分馏",
+      "typical": true,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 重整生成油 / t C8 芳烃",
+        "yield": null,
+        "basis": "多产品分馏体系，单组分收率取决于装置配置与重整苛刻度",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S25"
+      ],
+      "flow": "mass",
+      "id": "R49",
+      "edge_style": "solid"
+    },
+    {
+      "id": "R04",
+      "from": "N_BTX",
+      "to": "N_BZ",
+      "relation_type": "route_option",
+      "process": "甲苯歧化与烷基转移（TDA）：甲苯 + C9 芳烃 → 苯 + 二甲苯（芳烃联合装置内部，不进入主链单耗）",
+      "family": "芳烃装置内部转化",
+      "typical": false,
+      "quant": {
+        "from_per_to": null,
+        "from_unit": "t 甲苯 / t 纯苯",
+        "yield": null,
+        "basis": "多产物平衡体系，进料为甲苯与 C9 芳烃而非 C8；本库不提供换算，属量化缺口",
+        "basis_grade": null
+      },
+      "quant_status": "missing",
+      "quant_confidence": null,
+      "evidence": [
+        "S20"
+      ],
+      "notes": "【旁支说明，非主链】TDA 是芳烃装置内部的苯增产手段，原料是甲苯与 C9 芳烃。本库未建立甲苯/C9 节点，故以自环 route_option 登记，仅作研究提示：① 不得据此计算 SBS 上游单耗；② 不得把 C8 芳烃画成苯的原料（见 forbidden F10）。",
+      "flow": "none",
+      "edge_style": "dotted",
+      "route_ids": [
+        "RT_TDA"
+      ]
+    }
+  ]
+}

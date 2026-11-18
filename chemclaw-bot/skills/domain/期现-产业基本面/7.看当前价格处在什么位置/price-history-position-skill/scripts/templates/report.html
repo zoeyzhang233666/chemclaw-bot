@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --ink:#0F1720; --ink2:#1B2733; --navy:#12304F; --navy2:#1E4A73;
+  --amber:#C8892B; --amber-l:#FBF2E1; --amber-edge:#E8C88A;
+  --green:#17785A; --green-l:#E7F4EF; --red:#B0303F; --red-l:#FBEAEC;
+  --grey:#6B7A8C; --grey-l:#F2F5F8; --line:#DCE3EB; --line2:#C6D0DA;
+  --white:#fff; --bg:#F6F8FA;
+  --sh:0 1px 2px rgba(16,24,40,.05),0 8px 24px -12px rgba(16,24,40,.16);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",system-ui,-apple-system,sans-serif;
+  font-size:14px; line-height:1.62; -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"SF Mono",Consolas,"Roboto Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px 72px}
+
+/* ---------- 顶栏 ---------- */
+.top{
+  background:linear-gradient(135deg,#0E2740 0%,#12304F 45%,#1B4162 100%);
+  color:#fff;padding:26px 0 22px;position:relative;overflow:hidden
+}
+.top::after{content:"";position:absolute;right:-90px;top:-90px;width:320px;height:320px;
+  background:radial-gradient(circle,rgba(200,137,43,.22),transparent 68%);border-radius:50%}
+.top .wrap{padding-bottom:0}
+.crumb{font-size:12px;letter-spacing:.14em;color:#9DB4CB;text-transform:uppercase;margin-bottom:9px}
+h1{font-size:27px;line-height:1.28;margin:0 0 9px;font-weight:700;letter-spacing:.01em}
+.subline{color:#B9CBDD;font-size:13.5px;margin:0}
+.subline b{color:#fff;font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+.tag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  padding:3px 10px;border-radius:100px;font-size:12px;color:#D6E3EF}
+.tag.warn{background:rgba(200,137,43,.2);border-color:rgba(232,200,138,.5);color:#F5DCB2}
+
+/* ---------- 区块 ---------- */
+section{margin-top:26px}
+.sec-h{display:flex;align-items:baseline;gap:11px;margin:0 0 13px}
+.sec-h h2{font-size:17.5px;margin:0;font-weight:700;letter-spacing:.01em}
+.sec-h .n{font-size:12px;color:var(--amber);font-weight:700;letter-spacing:.1em}
+.sec-h .hint{margin-left:auto;font-size:12.5px;color:var(--grey)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh)}
+.pad{padding:18px 20px}
+
+/* ---------- 首屏 KPI ---------- */
+.hero{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-top:-30px;position:relative;z-index:2}
+.hero-main{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);padding:22px 24px}
+.hl{font-size:12.5px;color:var(--grey);letter-spacing:.04em}
+.price{font-size:46px;font-weight:700;line-height:1.08;letter-spacing:-.02em;margin:5px 0 2px}
+.price small{font-size:19px;font-weight:600;color:var(--grey);letter-spacing:0}
+.chg{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:7px;
+  font-size:13px;font-weight:600;margin-top:7px}
+.chg.dn{background:var(--red-l);color:var(--red)}
+.chg.up{background:var(--green-l);color:var(--green)}
+.chg.flat{background:var(--grey-l);color:var(--grey)}
+.hero-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-top:16px;
+  padding-top:15px;border-top:1px dashed var(--line2);font-size:12.8px}
+.hero-meta div span{color:var(--grey)}
+.hero-meta div b{font-weight:600}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--sh)}
+.kpi .t{font-size:12px;color:var(--grey);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.kpi .v{font-size:25px;font-weight:700;line-height:1.16;letter-spacing:-.01em}
+.kpi .v i{font-size:13px;font-style:normal;font-weight:600;color:var(--grey);margin-left:2px}
+.kpi .d{font-size:11.5px;color:var(--grey);margin-top:3px}
+.kpi.hot{border-color:var(--amber-edge);background:linear-gradient(180deg,#FFFDF8,#fff)}
+
+/* ---------- 分位条 ---------- */
+.pbar{margin:10px 0 2px;position:relative;height:30px}
+.pbar .track{position:absolute;inset:11px 0 auto 0;height:8px;border-radius:5px;
+  background:linear-gradient(90deg,#2E6F9E 0%,#6FA8C9 25%,#C9D6DE 50%,#E5C08A 75%,#C8892B 100%)}
+.pbar .mk{position:absolute;top:2px;width:2px;height:26px;background:var(--ink);border-radius:1px}
+.pbar .mk::after{content:attr(data-l);position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+  font-size:10.5px;color:var(--ink);white-space:nowrap;font-weight:700}
+.pbar .sc{display:flex;justify-content:space-between;font-size:10.5px;color:var(--grey);margin-top:2px}
+
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--grey-l);font-weight:600;font-size:12.2px;color:var(--ink2);
+  position:sticky;top:0;z-index:1;white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:hover{background:#FAFCFD}
+.badge{display:inline-block;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:600}
+.badge.g{background:var(--green-l);color:var(--green)}
+.badge.r{background:var(--red-l);color:var(--red)}
+.badge.a{background:var(--amber-l);color:#8A5C14}
+.badge.n{background:var(--grey-l);color:var(--grey)}
+
+/* ---------- 图 ---------- */
+.chart{width:100%;height:430px}
+.chart.sm{height:300px}
+/* 宽表格必须自带横向滚动容器，否则会把整页撑出横向溢出 */
+.tscroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+  max-width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--sh)}
+.tscroll table{min-width:620px}
+.ctrl{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:13px}
+.seg{display:inline-flex;background:var(--grey-l);border:1px solid var(--line);border-radius:9px;padding:2px}
+.seg button{border:0;background:transparent;padding:6px 15px;border-radius:7px;font-size:13px;
+  cursor:pointer;color:var(--ink2);font-family:inherit;font-weight:500;transition:.14s}
+.seg button.on{background:#fff;color:var(--navy);font-weight:700;box-shadow:0 1px 3px rgba(16,24,40,.13)}
+.seg button:hover:not(.on){color:var(--navy2)}
+.btn{border:1px solid var(--line2);background:#fff;padding:6px 13px;border-radius:8px;font-size:12.5px;
+  cursor:pointer;color:var(--ink2);font-family:inherit;transition:.14s}
+.btn:hover{border-color:var(--navy2);color:var(--navy)}
+.btn.pri{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.pri:hover{background:var(--navy2);color:#fff}
+
+/* ---------- 提示 / 缺口 ---------- */
+.note{border-left:3px solid var(--amber);background:var(--amber-l);padding:11px 14px;
+  border-radius:0 8px 8px 0;font-size:12.8px;color:#6B4A12;margin:12px 0}
+.note b{color:#5A3C0C}
+.note.info{border-color:var(--navy2);background:#EEF4FA;color:#22415E}
+.note.info b{color:#122F4A}
+.note.bad{border-color:var(--red);background:var(--red-l);color:#7C2531}
+.note.bad b{color:#6A1E29}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+/* 网格子项默认为 min-width:auto，会被内部 canvas 撑破；强制可收缩 */
+.grid2>*,.grid3>*,.hero>*,.kpis>*{min-width:0}
+
+/* ---------- 事件 ---------- */
+.ev{display:flex;gap:13px;padding:12px 0;border-bottom:1px dashed var(--line2)}
+.ev:last-child{border-bottom:0}
+.ev .dt{flex:0 0 88px;font-size:12.3px;color:var(--grey);font-family:Consolas,monospace;padding-top:1px}
+.ev .bd{flex:1}
+.ev .bd .h{font-weight:600;margin-bottom:2px}
+.ev .bd .x{font-size:12.6px;color:var(--grey)}
+.ev .v{flex:0 0 84px;text-align:right;font-family:Consolas,monospace;font-size:12.6px}
+
+/* ---------- 折叠 ---------- */
+details{border:1px solid var(--line);border-radius:10px;background:#fff;margin-top:10px}
+details summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:13.5px;
+  list-style:none;display:flex;align-items:center;gap:8px}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸";color:var(--grey);transition:.15s;display:inline-block}
+details[open] summary::before{transform:rotate(90deg)}
+details .dc{padding:0 16px 16px}
+
+.foot{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12.2px;color:var(--grey)}
+.foot a{color:var(--navy2)}
+.src{font-size:12px;color:var(--grey);word-break:break-all}
+.dl{display:inline-flex;align-items:center;gap:6px}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  h1{font-size:22px}
+  .price{font-size:36px}
+  .chart{height:340px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="crumb">期现及产业基本面研究 · 价格历史位置</div>
+    <h1>__TITLE__</h1>
+    <p class="subline">__SUBLINE__</p>
+    <div class="tags">__TAGS__</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ======================= 首屏 ======================= -->
+<section class="hero">
+  <div class="hero-main">
+    <div class="hl">最新可靠报价（基准日 __ASOF__）</div>
+    <div class="price mono">__PRICE__<small>元/吨</small></div>
+    <div>__CHG__</div>
+    <div class="hero-meta">
+      <div><span>规格</span><br><b>__SPEC__</b></div>
+      <div><span>地区</span><br><b>__REGION__</b></div>
+      <div><span>含税 / 交付</span><br><b>__TAX__</b></div>
+      <div><span>数据日期</span><br><b class="mono">__DATA_DATE__</b></div>
+      <div><span>来源</span><br><b>__SOURCE__</b></div>
+      <div><span>报价区间</span><br><b class="mono">__RANGE__</b></div>
+    </div>
+  </div>
+  <div class="kpis">__KPIS__</div>
+</section>
+
+<!-- ======================= 1 历史位置总览 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">01</span><h2>当前价格在历史中的位置</h2>
+    <span class="hint">分位＝经验分位（真实观测计数），非区间位置</span></div>
+  __PERCENTILE_CARD__
+</section>
+
+<!-- ======================= 2 价格曲线 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">02</span><h2>历史价格曲线 · 分位带</h2>
+    <span class="hint">可缩放 · 悬浮看日期/价格/来源 · 点击异常点看同期事件</span></div>
+  <div class="card pad">
+    <div class="ctrl">
+      <div class="seg" id="winSeg">
+        <button data-w="365" class="on">近 1 年</button>
+        <button data-w="1095">近 3 年</button>
+        <button data-w="1826">近 5 年</button>
+        <button data-w="0">全部</button>
+      </div>
+      <div class="seg" id="serSeg">
+        <button data-s="S1" class="on">华东重质</button>
+        <button data-s="S2">华东轻质</button>
+        <button data-s="S3">全国基准</button>
+        <button data-s="ALL">三者对比</button>
+      </div>
+      <button class="btn" id="btnBand">显示分位带</button>
+      <button class="btn" id="btnAnom">标出异常点</button>
+      <button class="btn pri dl" id="btnCsv">导出原始序列 CSV</button>
+    </div>
+    <div id="priceChart" class="chart"></div>
+    <div class="src" id="chartNote"></div>
+  </div>
+</section>
+
+<!-- ======================= 3 分窗口统计 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">03</span><h2>分窗口统计与经验分位</h2>
+    <span class="hint">30 天 / 3 个月 / 1 年 / 3 年 / 5 年</span></div>
+  <div class="tscroll" id="winTableHost">__WINDOW_TABLE__</div>
+  <div class="note info"><b>怎么读这张表：</b>「经验分位（含并列）」= 历史上 ≤ 当前价的观测占比；
+    「经验分位（中位秩）」把与当前价相等的观测按半数计入，用于抵消现货价格锯齿状并列值的影响；
+    「区间位置」= (当前价−最低)/(最高−最低)，<b>它只是区间位置，不是统计分位</b>，
+    在最值恰为当日时会出现 0% 或 100% 的极端值，故两列并列展示、互不替代。</div>
+</section>
+
+<!-- ======================= 4 同期对比 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">04</span><h2>同期对比与季节性</h2>
+    <span class="hint">同年同月对比 · 只呈现有真实观测的格子</span></div>
+  <div class="grid2">
+    <div class="card pad"><div class="hl" style="margin-bottom:6px">逐年同月均价对比</div>
+      <div id="seasonChart" class="chart sm"></div></div>
+    <div class="card pad"><div class="hl" style="margin-bottom:6px">各月季节性指数（100＝全期月均）</div>
+      <div id="seasonIdxChart" class="chart sm"></div></div>
+  </div>
+  <div class="card" style="overflow:hidden;margin-top:14px">__SEASON_TABLE__</div>
+</section>
+
+<!-- ======================= 5 波动 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">05</span><h2>近期变化与波动幅度</h2>
+    <span class="hint">按真实自然日间隔折算，不假设等距报价</span></div>
+  __VOL_CARDS__
+</section>
+
+<!-- ======================= 6 异常与事件 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">06</span><h2>历史异常点与可核验事件</h2>
+    <span class="hint">三条独立判据分别标注，不合并成一句「异常」</span></div>
+  <div class="grid2">
+    <div class="card pad">
+      <div class="hl" style="margin-bottom:8px">异常观测（华东重质）</div>
+      <div style="max-height:400px;overflow:auto">__ANOMALY_LIST__</div>
+    </div>
+    <div class="card pad">
+      <div class="hl" style="margin-bottom:8px">同期可核验事件</div>
+      <div style="max-height:400px;overflow:auto">__EVENT_LIST__</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 7 口径与缺口 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">07</span><h2>口径变更、数据缺口与可比性</h2>
+    <span class="hint">这一节决定上面的数字能不能用</span></div>
+  __CAVEAT_CARD__
+</section>
+
+<!-- ======================= 8 来源 ======================= -->
+<section>
+  <div class="sec-h"><span class="n">08</span><h2>数据来源与方法</h2></div>
+  __SOURCE_TABLE__
+</section>
+
+<div class="foot">__FOOTER__</div>
+</div>
+
+<script>__ECHARTS__</script>
+<script>
+window.__DATA__ = __DATA_JSON__;
+</script>
+<script>
+__APP_JS__
+</script>
+</body>
+</html>

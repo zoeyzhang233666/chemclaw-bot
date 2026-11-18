@@ -1,0 +1,524 @@
+{
+  "fetched_at": "2026-10-20 14:41:23",
+  "series": [
+    {
+      "id": "PR_ETH",
+      "node_id": "N_ETH",
+      "product": "乙烯",
+      "source": "oilchem_seo",
+      "seo_id": "128",
+      "basis": "全国主流市场均价",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "fetched_at": "2026-10-20 14:41:08",
+      "url": "https://www.oilchem.net/seo-128-7.html",
+      "point_name": "乙烯全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "8912.5",
+          "chg": "50",
+          "chg_rate": "0.56"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "8862.5",
+          "chg": "0",
+          "chg_rate": "0"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "8862.5",
+          "chg": "25",
+          "chg_rate": "0.28"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "8837.5",
+          "chg": "37.5",
+          "chg_rate": "0.43"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "8800",
+          "chg": "-175",
+          "chg_rate": "-1.95"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "8975",
+          "chg": "0",
+          "chg_rate": "0"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "8975",
+          "chg": "0",
+          "chg_rate": "0"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_BD",
+      "node_id": "N_BD",
+      "product": "丁二烯",
+      "source": "oilchem_seo",
+      "seo_id": "129",
+      "basis": "全国主流市场均价",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "fetched_at": "2026-10-20 14:41:10",
+      "url": "https://www.oilchem.net/seo-129-7.html",
+      "point_name": "丁二烯全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "13365",
+          "chg": "58",
+          "chg_rate": "0.44"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "13307",
+          "chg": "197",
+          "chg_rate": "1.5"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "13110",
+          "chg": "-327",
+          "chg_rate": "-2.43"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "13437",
+          "chg": "36",
+          "chg_rate": "0.27"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "13401",
+          "chg": "-132",
+          "chg_rate": "-0.98"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "13533",
+          "chg": "-407",
+          "chg_rate": "-2.92"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "13940",
+          "chg": "-58",
+          "chg_rate": "-0.41"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_BZ",
+      "node_id": "N_BZ",
+      "product": "纯苯",
+      "source": "oilchem_seo",
+      "seo_id": "132",
+      "basis": "全国主流市场均价",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "fetched_at": "2026-10-20 14:41:12",
+      "url": "https://www.oilchem.net/seo-132-7.html",
+      "point_name": "纯苯全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "10128.15",
+          "chg": "-62.08",
+          "chg_rate": "-0.61"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "10190.23",
+          "chg": "-171.85",
+          "chg_rate": "-1.66"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "10362.08",
+          "chg": "-173.08",
+          "chg_rate": "-1.64"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "10535.15",
+          "chg": "161.31",
+          "chg_rate": "1.55"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "10373.85",
+          "chg": "157.62",
+          "chg_rate": "1.54"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "10216.23",
+          "chg": "-161.85",
+          "chg_rate": "-1.56"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "10378.08",
+          "chg": "-63.15",
+          "chg_rate": "-0.6"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_C8A",
+      "node_id": "N_C8A",
+      "product": "二甲苯（混合）",
+      "source": "oilchem_seo",
+      "seo_id": "134",
+      "basis": "全国主流市场均价",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "caveat": "混合二甲苯≠单一异构体，作为 C8 芳烃价格锚点使用",
+      "fetched_at": "2026-10-20 14:41:14",
+      "url": "https://www.oilchem.net/seo-134-7.html",
+      "point_name": "二甲苯全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "9028.88",
+          "chg": "0.63",
+          "chg_rate": "0.01"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "9028.25",
+          "chg": "-46.25",
+          "chg_rate": "-0.51"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "9074.5",
+          "chg": "-31.88",
+          "chg_rate": "-0.35"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "9106.38",
+          "chg": "19.38",
+          "chg_rate": "0.21"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "9087",
+          "chg": "-1.25",
+          "chg_rate": "-0.01"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "9088.25",
+          "chg": "-34.38",
+          "chg_rate": "-0.38"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "9122.63",
+          "chg": "33.88",
+          "chg_rate": "0.37"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_SM",
+      "node_id": "N_SM",
+      "product": "苯乙烯",
+      "source": "oilchem_seo",
+      "seo_id": "135",
+      "basis": "全国主流市场均价",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "fetched_at": "2026-10-20 14:41:16",
+      "url": "https://www.oilchem.net/seo-135-7.html",
+      "point_name": "苯乙烯全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "10934.58",
+          "chg": "50.83",
+          "chg_rate": "0.47"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "10883.75",
+          "chg": "-212.92",
+          "chg_rate": "-1.92"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "11096.67",
+          "chg": "-234.58",
+          "chg_rate": "-2.07"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "11331.25",
+          "chg": "202.5",
+          "chg_rate": "1.82"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "11128.75",
+          "chg": "128.75",
+          "chg_rate": "1.17"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "11000",
+          "chg": "-334.17",
+          "chg_rate": "-2.95"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "11334.17",
+          "chg": "-24.58",
+          "chg_rate": "-0.22"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_EB",
+      "node_id": "N_EB",
+      "product": "乙苯",
+      "source": "oilchem_seo",
+      "seo_id": "262",
+      "basis": "乙苯市场均价（品种页存在）",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "caveat": "乙苯商品量小、样本少，价格代表性弱于苯乙烯；适合做『乙苯-苯乙烯价差』而非绝对成本",
+      "fetched_at": "2026-10-20 14:41:20",
+      "url": "https://www.oilchem.net/seo-262-7.html",
+      "point_name": "乙苯全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "10350",
+          "chg": "-150",
+          "chg_rate": "-1.43"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "10500",
+          "chg": "0",
+          "chg_rate": "0"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "10500",
+          "chg": "0",
+          "chg_rate": "0"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "10500",
+          "chg": "0",
+          "chg_rate": "0"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "10500",
+          "chg": "0",
+          "chg_rate": "0"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "10500",
+          "chg": "0",
+          "chg_rate": "0"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "10500",
+          "chg": "250",
+          "chg_rate": "2.44"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_LPG",
+      "node_id": "N_LPG",
+      "product": "液化石油气/丙烷",
+      "source": "oilchem_seo",
+      "seo_id": "265",
+      "basis": "丙烷市场价（替代 LPG 观察点）",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "caveat": "以丙烷代 LPG 观察轻质裂解原料成本，不是同一品种",
+      "fetched_at": "2026-10-20 14:41:22",
+      "url": "https://www.oilchem.net/seo-265-7.html",
+      "point_name": "丙烷全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "8057.76",
+          "chg": "19.18",
+          "chg_rate": "0.24"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "8038.59",
+          "chg": "-5.88",
+          "chg_rate": "-0.07"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "8044.47",
+          "chg": "0.71",
+          "chg_rate": "0.01"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "8043.76",
+          "chg": "0.59",
+          "chg_rate": "0.01"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "8043.18",
+          "chg": "8.24",
+          "chg_rate": "0.1"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "8034.94",
+          "chg": "9.06",
+          "chg_rate": "0.11"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "8025.88",
+          "chg": "27.47",
+          "chg_rate": "0.34"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_CRUDE",
+      "node_id": "N_CRUDE",
+      "product": "原油",
+      "source": "oilchem_seo",
+      "seo_id": "111",
+      "basis": "原油综合现货均价",
+      "region": "全国/进口",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": false,
+      "gap": "页面可访问但未解析到日度表格（可能需登录或该品种无均价表）",
+      "fetched_at": "2026-10-20 14:44:44",
+      "url": "https://www.oilchem.net/seo-111-7.html",
+      "point_name": "",
+      "points": [],
+      "status": "empty"
+    },
+    {
+      "id": "PR_ASPHALT",
+      "node_id": "N_ASPHALT",
+      "product": "重交沥青/道路沥青",
+      "source": "oilchem_seo",
+      "seo_id": "280",
+      "basis": "重交沥青市场均价",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "fetched_at": "2026-10-20 14:44:46",
+      "url": "https://www.oilchem.net/seo-280-7.html",
+      "point_name": "重交沥青全国主流市场均价",
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": "6119.61",
+          "chg": "-64.29",
+          "chg_rate": "-1.04"
+        },
+        {
+          "date": "2026-10-16",
+          "price": "6183.9",
+          "chg": "-23.36",
+          "chg_rate": "-0.38"
+        },
+        {
+          "date": "2026-10-15",
+          "price": "6207.26",
+          "chg": "-19.35",
+          "chg_rate": "-0.31"
+        },
+        {
+          "date": "2026-10-14",
+          "price": "6226.61",
+          "chg": "-14.25",
+          "chg_rate": "-0.23"
+        },
+        {
+          "date": "2026-10-13",
+          "price": "6240.86",
+          "chg": "-8.26",
+          "chg_rate": "-0.13"
+        },
+        {
+          "date": "2026-10-12",
+          "price": "6249.12",
+          "chg": "-1.01",
+          "chg_rate": "-0.02"
+        },
+        {
+          "date": "2026-10-10",
+          "price": "6250.13",
+          "chg": "0.58",
+          "chg_rate": "0.01"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "id": "PR_RUBBER_OIL",
+      "node_id": "N_IPP_SSBR",
+      "product": "橡胶油",
+      "source": "oilchem_seo",
+      "seo_id": "272",
+      "basis": "橡胶油市场均价",
+      "region": "全国",
+      "unit": "元/吨",
+      "tax": "含税",
+      "available": true,
+      "fetched_at": "2026-10-20 14:44:48",
+      "url": "https://www.oilchem.net/seo-272-7.html",
+      "point_name": "",
+      "points": [],
+      "status": "empty",
+      "gap": "页面可访问但未解析到日度表格（可能需登录或该品种无均价表）"
+    }
+  ]
+}

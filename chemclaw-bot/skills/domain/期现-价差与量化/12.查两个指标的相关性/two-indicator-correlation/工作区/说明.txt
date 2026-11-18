@@ -1,0 +1,48 @@
+说明
+=================
+
+本文件夹是「两指标相关性研究」的输入/输出工作区，目录约定如下。
+
+目录结构
+-----------------
+  csv/          原始数据（每个指标一个 CSV，或合并后的对齐数据）
+  out/          analyze.py / build_html.py / build_excel.py 的输出
+  events/       行业事件与口径变更记录（可选，用于解释异常区间）
+
+输入数据要求（CSV，UTF-8 带 BOM，首行为表头）
+-----------------
+  必须列：date（观测日）、x（指标 X 数值）、y（指标 Y 数值）
+  可选列：price_date（价格实际锚定日）、coal / op_rate / arrival 等控制变量
+  缺失：留空即可，工具会按缺失处理，绝不插值补数。
+
+  示例（周度库存 + 周度价格）：
+    date,inventory,price,coal
+    2024-01-03,62.5,2480,780
+    2024-01-10,64.1,2455,
+  ↑ 最后一行的 coal 缺失：参与库存-价格计算，但不参与偏相关计算。
+
+命名建议
+-----------------
+  csv/{产品}_{指标名}_{频率}.csv        例：csv/methanol_port_inventory_weekly.csv
+  out/{产品}_{分析名}_{日期}.json / .html / .xlsx
+
+三条命令
+-----------------
+  1) 质检
+     python scripts/data_quality.py --csv csv/methanol_weekly.csv --date-col date \
+         --x-col inventory --y-col price --x-name 港口库存 --y-name 太仓现货价 --out out/qc.json
+
+  2) 分析（主口径：库存差分 × 价格环比%）
+     python scripts/analyze.py --csv csv/methanol_weekly.csv --date-col date \
+         --x-col inventory --y-col price --x-form change --y-form pct \
+         --windows 12,26,52 --control-col coal --out out/result.json
+
+  3) 出图出表
+     python scripts/build_excel.py --csv csv/methanol_weekly.csv --x-col inventory --y-col price --out out/workbook.xlsx
+     python scripts/build_html.py --csv csv/methanol_weekly.csv --x-col inventory --y-col price --out out/report.html
+
+注意事项
+-----------------
+  - 不要修改本目录下的 说明.txt 之外的模板文件，模板在 assets/templates/ 下。
+  - 每次分析都保留 out/ 下的 JSON：结论里的每个数字都应能追溯到某一次运行的输出。
+  - 事件记录（events/）只写可公开核对的行业事件与口径变更，不写因果判断、不写交易建议。

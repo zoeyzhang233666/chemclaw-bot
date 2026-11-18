@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "overseas-inquiry-triage · fields.json",
+  "description": "询盘标准化字段文档。fields 为 64 个固定键；每个值三态（stated/missing/ambiguous）+ 我方假设（assumed）与我方内部待定（internal）。",
+  "type": "object",
+  "required": ["meta", "fields", "summary", "blocking_fields", "can_quote", "snippets"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["inquiry_no", "as_of"],
+      "properties": {
+        "inquiry_no": { "type": "string", "description": "询盘编号，如 INQ-20261019-01" },
+        "as_of": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "customer": { "type": "string" },
+        "customer_country": { "type": "string" },
+        "customer_contact": { "type": "string" },
+        "subject": { "type": "string" },
+        "inquiry_date": { "type": "string", "description": "邮件 Date 头原样" },
+        "chars": { "type": "integer" },
+        "simulation": { "type": "boolean", "description": "true 时三处产物都必须标注「模拟」" },
+        "simulation_notice": { "type": "string" },
+        "disclaimer": { "type": "string", "description": "必须含「不评估询盘真实性 / 成交可能性」声明" }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["key", "label_cn", "cat", "bucket", "value", "status"],
+        "properties": {
+          "key": { "type": "string" },
+          "label_cn": { "type": "string" },
+          "label_en": { "type": "string" },
+          "cat": { "enum": ["A", "B", "C", "D", "E", "F", "G", "H"] },
+          "bucket": {
+            "enum": ["A", "B", "C"],
+            "description": "A=报价前必须确认；B=可带我方假设；C=我方内部先定"
+          },
+          "affects_quote": { "type": "boolean", "description": "true 时若未 stated 且未人工放行，则 can_quote=false" },
+          "value": { "type": "string", "description": "标准化值；缺失时为空字符串，不得填「待确认」类文字" },
+          "raw": { "type": "string", "description": "客户原文写法（未标准化）" },
+          "unit": { "type": "string" },
+          "status": { "enum": ["stated", "missing", "ambiguous", "assumed", "internal"] },
+          "confidence": {
+            "enum": ["high", "medium", "low"],
+            "description": "只表示「我读得准不准」，不表示任何商业价值"
+          },
+          "lang": { "type": "string", "description": "原句语言代码" },
+          "source_id": { "type": "string", "description": "素材编号，如 S01" },
+          "quote": { "type": "string", "description": "原句（原语言，不改写）" },
+          "locator": { "type": "string", "description": "位置，如 S01:L6" },
+          "note": { "type": "string" },
+          "assume": { "type": "string", "description": "B 类假设值；渲染时必须带 (our assumption – to be confirmed)" },
+          "vs": { "type": "string", "description": "假设值与客户需求的差异说明" },
+          "confirmed_by": { "type": "string", "description": "人工放行留痕：姓名 + 日期" },
+          "source_type": {
+            "enum": ["customer", "profile", "authority", "derived"],
+            "description": "CAS 等派生字段的来源类型；customer 以外的必须在 note 写明查证库与日期"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["stated", "missing", "ambiguous", "assumed"],
+      "properties": {
+        "stated": { "type": "integer" },
+        "missing": { "type": "integer" },
+        "ambiguous": { "type": "integer" },
+        "assumed": { "type": "integer" }
+      }
+    },
+    "blocking_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "A 类 affects_quote 且未 stated 且未人工放行的字段键"
+    },
+    "can_quote": { "type": "boolean" },
+    "snippets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "lines"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S\\d{2}$" },
+          "title": { "type": "string" },
+          "date": { "type": "string" },
+          "lines": { "type": "array", "items": { "type": "string" } },
+          "text": { "type": "string" }
+        }
+      }
+    }
+  }
+}

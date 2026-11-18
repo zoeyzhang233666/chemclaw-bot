@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://example.local/inquiry-to-quotation/inquiry.schema.json",
+  "title": "Inquiry fields",
+  "type": "object",
+  "required": ["meta", "fields", "gate", "price"],
+  "additionalProperties": true,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["inquiry_no", "as_of", "customer", "sources"],
+      "properties": {
+        "inquiry_no": {"type": "string"},
+        "as_of": {"type": "string", "format": "date"},
+        "customer": {"type": "string"},
+        "customer_contact": {"type": "string"},
+        "customer_email": {"type": "string"},
+        "industry": {"type": "string"},
+        "currency": {"type": "string", "default": "CNY"},
+        "unit": {"type": "string", "default": "吨"},
+        "case_disclaimer": {"type": "string"},
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "file"],
+            "properties": {
+              "id": {"type": "string"},
+              "type": {"type": "string"},
+              "file": {"type": "string"},
+              "chars": {"type": "integer"}
+            }
+          }
+        }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "required": ["product", "grade", "quantity", "place", "customer", "packaging", "delivery_date", "payment", "incoterm", "validity"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["key", "label", "bucket", "value", "status"],
+        "properties": {
+          "key": {"type": "string"},
+          "label": {"type": "string"},
+          "bucket": {"enum": ["must", "assume"]},
+          "value": {"type": "string"},
+          "status": {"enum": ["extracted", "missing", "assumed", "tbc", "user"]},
+          "confidence": {"enum": ["高", "中", "低", ""]},
+          "source": {"type": "string"},
+          "note": {"type": "string"},
+          "assume_default": {"type": "string"}
+        }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "required": ["tax_mode", "freight_mode"],
+      "properties": {
+        "tax_mode": {
+          "type": "object",
+          "required": ["value", "status"],
+          "properties": {
+            "value": {"type": "string"},
+            "status": {"enum": ["user", "confirmed"]},
+            "hint": {"type": "string"}
+          }
+        },
+        "freight_mode": {
+          "type": "object",
+          "required": ["value", "status"],
+          "properties": {
+            "value": {"type": "string"},
+            "status": {"enum": ["user", "confirmed"]},
+            "hint": {"type": "string"}
+          }
+        }
+      }
+    },
+    "price": {
+      "type": "object",
+      "required": ["unit_price", "quote_quantity", "validity_days", "ack"],
+      "properties": {
+        "unit_price": {"type": ["number", "null"], "minimum": 0},
+        "quote_quantity": {"type": "number", "minimum": 0},
+        "quote_quantity_unit": {"type": "string"},
+        "validity_days": {"type": "integer", "minimum": 1},
+        "company": {"type": "string"},
+        "contact": {"type": "string"},
+        "quote_no": {"type": "string"},
+        "ack": {"type": "string"},
+        "confirmed_at": {"type": "string"},
+        "currency": {"type": "string"}
+      }
+    },
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "unreadable": {"type": "array", "items": {"type": "string"}}
+  }
+}

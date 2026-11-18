@@ -1,0 +1,437 @@
+{
+  "meta": {
+    "product": "示例化工品",
+    "product_short": "示例品",
+    "unit": "万吨/年",
+    "asof": "2026-01-01",
+    "output_year": "2025",
+    "distance_label": "直线距离",
+    "target_demand": 12,
+    "target_demand_label": "示例区域需求",
+    "target_note": "* 示例需求为虚构；距离为直线距离，不是铁路/水运运距。",
+    "dose_label": "用量级",
+    "use_label": "使用场景",
+    "label_province": "示例省",
+    "label_capacity_min": 20,
+    "project_labels": [
+      "pr_c"
+    ],
+    "map_center": [
+      107.5,
+      35.2
+    ],
+    "map_zoom": 1.08,
+    "processes": [
+      {
+        "name": "工艺甲",
+        "color": "#2F6F8F"
+      },
+      {
+        "name": "工艺乙",
+        "color": "#B4642D"
+      }
+    ],
+    "coverage": null,
+    "grade_note": "示例：A 公司定期报告/政府文件；B 公司 IR/行业统计；C 企业公开业务信息；D 推断。",
+    "brand_name": "化图 · SUPPLY MAP",
+    "brand_sub": "STRUCTURE EXAMPLE · 结构示例",
+    "brand_mark": "例",
+    "is_synthetic": true,
+    "disclaimer": "结构示例，不是研究结论；企业、数字、链接均为虚构，禁止用于真实业务判断。"
+  },
+  "target": {
+    "province": "示例省",
+    "city": "示例市",
+    "region": "示例省 · 示例市",
+    "lon": 113.0,
+    "lat": 23.0,
+    "customer": "示例玻璃有限公司（虚构）",
+    "customer_short": "示例玻璃"
+  },
+  "companies": [
+    {
+      "id": "co_a",
+      "name": "示例甲化工有限公司",
+      "short": "示例甲",
+      "hq": "示例省·示例市",
+      "process": "工艺甲",
+      "capacity": 100,
+      "output": 80,
+      "cap_year": "2025",
+      "grade": "B",
+      "products": "示例品",
+      "coverage": "示例省本地及邻省",
+      "new": "2027 技改 20 万吨",
+      "source_ids": [
+        "S1"
+      ],
+      "projects": [
+        "pr_a"
+      ],
+      "ticker": "非上市"
+    },
+    {
+      "id": "co_b",
+      "name": "示例乙材料有限公司",
+      "short": "示例乙",
+      "hq": "示例省·示例市",
+      "process": "工艺乙",
+      "capacity": 60,
+      "output": 55,
+      "cap_year": "2025",
+      "grade": "B",
+      "products": "示例品",
+      "coverage": "示例省本地",
+      "new": "",
+      "source_ids": [
+        "S2"
+      ],
+      "projects": [],
+      "ticker": "非上市"
+    },
+    {
+      "id": "co_c",
+      "name": "示例丙集团有限公司",
+      "short": "示例丙",
+      "hq": "邻省·邻市",
+      "process": "工艺甲",
+      "capacity": 180,
+      "output": 150,
+      "cap_year": "2025",
+      "grade": "A",
+      "products": "示例品",
+      "coverage": "全国/出口",
+      "new": "2028 新建 40 万吨",
+      "source_ids": [
+        "S3"
+      ],
+      "projects": [
+        "pr_c"
+      ],
+      "ticker": "000000（示例）"
+    }
+  ],
+  "plants": [
+    {
+      "id": "pl_a",
+      "company_id": "co_a",
+      "province": "示例省",
+      "city": "示例市",
+      "lon": 113.2,
+      "lat": 22.9,
+      "process": "工艺甲",
+      "capacity": 100,
+      "cap_year": "2025",
+      "products": "示例品",
+      "note": "示例工厂 A；数据虚构。",
+      "grade": "B",
+      "source_ids": [
+        "S1"
+      ],
+      "name": "示例甲示例工厂"
+    },
+    {
+      "id": "pl_b",
+      "company_id": "co_b",
+      "province": "示例省",
+      "city": "示例市",
+      "lon": 113.5,
+      "lat": 23.1,
+      "process": "工艺乙",
+      "capacity": 60,
+      "cap_year": "2025",
+      "products": "示例品",
+      "note": "示例工厂 B；数据虚构。",
+      "grade": "B",
+      "source_ids": [
+        "S2"
+      ],
+      "name": "示例乙示例工厂"
+    },
+    {
+      "id": "pl_c",
+      "company_id": "co_c",
+      "province": "邻省",
+      "city": "邻市",
+      "lon": 112.0,
+      "lat": 24.2,
+      "process": "工艺甲",
+      "capacity": 180,
+      "cap_year": "2025",
+      "products": "示例品",
+      "note": "示例工厂 C；数据虚构。",
+      "grade": "A",
+      "source_ids": [
+        "S3"
+      ],
+      "name": "示例丙示例工厂"
+    }
+  ],
+  "projects": [
+    {
+      "id": "pr_a",
+      "company_id": "co_a",
+      "name": "示例甲 20 万吨技改",
+      "location": "示例省·示例市",
+      "process": "工艺甲",
+      "capacity": 20,
+      "kind": "技改",
+      "status": "前期",
+      "year": 2027,
+      "timing": "2027E（示例）",
+      "net": "净增 20（假设旧线不退出）",
+      "impact": "本地供给增加，需与客户认证进度匹配。",
+      "grade": "C",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "pr_c",
+      "company_id": "co_c",
+      "name": "示例丙 40 万吨新建",
+      "location": "邻省·邻市",
+      "process": "工艺甲",
+      "capacity": 40,
+      "kind": "新建",
+      "status": "已备案",
+      "year": 2028,
+      "timing": "2028E（示例）",
+      "net": "净增 40（假设无置换）",
+      "impact": "邻省供给增强，可能压低区域价格。",
+      "grade": "B",
+      "source_ids": [
+        "S3"
+      ]
+    }
+  ],
+  "prospects": [
+    {
+      "id": "cu_1",
+      "name": "示例玻璃一厂（虚构）",
+      "short": "示例玻璃一厂",
+      "city": "示例市",
+      "province": "示例省",
+      "segment": "玻璃",
+      "scale": "2×600t/d（示例）",
+      "ash": "0.5–1.0 万吨/年*",
+      "scene": "重碱/玻璃窑炉",
+      "priority": "S",
+      "why": "本地龙头，示例用量大；可做双源标杆。",
+      "next": "先约技术交流，确认指标与月度用量。",
+      "grade": "C",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "cu_2",
+      "name": "示例玻璃二厂（虚构）",
+      "short": "示例玻璃二厂",
+      "city": "示例市",
+      "province": "示例省",
+      "segment": "玻璃",
+      "scale": "1×900t/d（示例）",
+      "ash": "0.7–1.2 万吨/年*",
+      "scene": "重碱/玻璃窑炉",
+      "priority": "A",
+      "why": "同城第二家，物流半径短。",
+      "next": "带样试单，锁定 3 个月框架。",
+      "grade": "C",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "cu_3",
+      "name": "示例日化公司（虚构）",
+      "short": "示例日化",
+      "city": "示例市",
+      "province": "示例省",
+      "segment": "日化",
+      "scale": "10 万吨/年洗涤剂（示例）",
+      "ash": "0.2–0.4 万吨/年*",
+      "scene": "轻碱/洗涤剂",
+      "priority": "B",
+      "why": "轻碱走量补充，价格敏感。",
+      "next": "先报价，观察竞品价差。",
+      "grade": "C",
+      "source_ids": [
+        "S2"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "org": "示例省工信厅（虚构）",
+      "title": "示例省化工产业运行情况",
+      "date": "2026-01-10",
+      "url": "https://example.com/s1",
+      "used": "示例企业产能、潜客规模",
+      "type": "B"
+    },
+    {
+      "id": "S2",
+      "org": "示例乙材料官网（虚构）",
+      "title": "公司简介与产品页",
+      "date": "2025-12-20",
+      "url": "https://example.com/s2",
+      "used": "示例乙产能、日化客户线索",
+      "type": "C"
+    },
+    {
+      "id": "S3",
+      "org": "示例丙集团年报（虚构）",
+      "title": "2025 年年度报告",
+      "date": "2026-03-15",
+      "url": "https://example.com/s3",
+      "used": "示例丙产能、新建项目",
+      "type": "A"
+    },
+    {
+      "id": "S4",
+      "org": "示例省生态环境厅（虚构）",
+      "title": "示例甲技改项目环评公示",
+      "date": "2026-02-01",
+      "url": "https://example.com/s4",
+      "used": "技改规模与时间",
+      "type": "B"
+    }
+  ],
+  "conflicts": [
+    {
+      "item": "示例甲示例品产能",
+      "a": "公司简介：100 万吨/年",
+      "b": "行业报道：80 万吨/年",
+      "adopt": "100 万吨/年（示例）",
+      "why": "简介较新且为示例主口径；仍需年报复核。",
+      "impact": "若为 80，本地供给更薄，“空白”结论更强。"
+    }
+  ],
+  "gaps": [
+    {
+      "title": "样本只有 3 家",
+      "body": "示例只放 3 家，未穷尽行业；不能把样本当全行业。"
+    },
+    {
+      "title": "负增量未收集",
+      "body": "冷修、停产、限产未纳入项目表；只加正向项目会高估净增。"
+    }
+  ],
+  "boundaries": [
+    {
+      "title": "不推算市场份额",
+      "body": "本示例只展示样本覆盖，不计算企业份额。"
+    },
+    {
+      "title": "用量为假设",
+      "body": "潜客用量按示例吨耗推算，不是企业披露。"
+    }
+  ],
+  "demand_by_prov": {
+    "示例省": "示例需求 12 万吨/年（虚构）；仅用于展示字段。",
+    "邻省": "需求线索待补。"
+  },
+  "narrative": {
+    "hero_lede": "这是一个结构示例：所有企业、数字、链接均为虚构，只用来展示“竞争供给地图”的输出结构与研究思路，不是研究结论。",
+    "national_note": "示例样本只有 3 家；先看结构，不要看绝对值。",
+    "map_sub": "示例图层只用于演示；真实项目请替换为你的产品、目标区域和企业名单。",
+    "how_to_read": "先看目标区域本地供给，再看 300–800km 是否有货，最后看新增项目。",
+    "density_sub": "示例省级/距离带/工艺结构三个角度；真实项目需替换为你的样本。",
+    "pipeline_intro": "示例只放 2 个项目；真实项目需逐条核实备案/环评/开工/投产。",
+    "pipeline_foot": "示例判断：先锁客户框架，再等新增产能投产。",
+    "prospect_intro": "示例只放 3 家潜客，展示“区域→客户→动作”的路径。",
+    "prospect_note": "潜客为虚构样本；同行不列入。",
+    "prospect_scope_note": "结构示例：只展示目标省 3 家虚构潜客；真实项目接入潜客库后按省展开。",
+    "anchor_note": "示例客户与用量均为虚构；仅展示锚点客户卡片结构。",
+    "anchor_facts": [
+      {
+        "label": "示例规模",
+        "value": "2×600t/d"
+      },
+      {
+        "label": "示例用量",
+        "value": "0.5–1.0 万吨/年*"
+      },
+      {
+        "label": "本地在产",
+        "value": "160 万吨/年"
+      }
+    ],
+    "anchor_use_value": 1.0,
+    "anchor_use_label": "万吨/年*",
+    "conclusions": [
+      {
+        "no": "1",
+        "tag": "结构示例",
+        "title": "样本集中在示例省与邻省",
+        "body": "示例 3 家企业、3 座工厂；示例省本地 160 万吨/年，邻省 180 万吨/年。",
+        "foot": "判断：先看本地+邻省",
+        "big": "3 家"
+      },
+      {
+        "no": "2",
+        "tag": "空白 / 远距",
+        "title": "示例市本地有供给但不够厚",
+        "body": "示例市 2 家工厂、160 万吨/年；300–800km 无在产样本。",
+        "foot": "判断：近距有窗口",
+        "big": "GAP"
+      },
+      {
+        "no": "3",
+        "tag": "未来变量",
+        "title": "2027–2028 有新增",
+        "body": "2 个项目合计 60 万吨/年；技改与新建混在一起，净增需逐项核。",
+        "foot": "判断：先锁框架",
+        "big": "60"
+      }
+    ],
+    "prospect_conclusions": [
+      {
+        "no": "1",
+        "tag": "锚点",
+        "title": "先把示例玻璃做成双源标杆",
+        "body": "本地供给+邻省补充，先证明指标稳定性。",
+        "foot": "目标：进入合格供应商",
+        "big": "S"
+      },
+      {
+        "no": "2",
+        "tag": "复制",
+        "title": "按玻璃/日化两条线复制",
+        "body": "玻璃做重碱认证，日化做轻碱走量。",
+        "foot": "目标：3 个月 2 家试单",
+        "big": "A"
+      },
+      {
+        "no": "3",
+        "tag": "防守",
+        "title": "新增投产前锁年度框架",
+        "body": "2027–2028 新增前锁运费/框架。",
+        "foot": "目标：12 个月框架",
+        "big": "B"
+      }
+    ],
+    "method_conclusions": [
+      {
+        "no": "1",
+        "tag": "方法",
+        "title": "先证据，后结论",
+        "body": "每家产能至少一条来源；冲突并列，不抹平。"
+      },
+      {
+        "no": "2",
+        "tag": "边界",
+        "title": "样本不是全行业",
+        "body": "只报样本覆盖，不推算市场份额。"
+      },
+      {
+        "no": "3",
+        "tag": "下一步",
+        "title": "把缺口变成取证清单",
+        "body": "补负增量、运费、非上市披露与潜客库。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "_说明": "复制本文件到新品类目录，改 product / metric_name / asof / run_date / breakpoints 即可复用；指标与地区定义按实际数据源调整。",
+  "case_id": "TEMPLATE-PORT-INVENTORY",
+  "product": "【品种】",
+  "metric_name": "【地区】港口库存",
+  "asof": "YYYY-MM-DD",
+  "run_date": "YYYY-MM-DD",
+  "primary_metric": "east",
+  "metrics": {
+    "east": {"label": "【主口径，如 华东=江苏+浙江】", "unit": "万吨"},
+    "port_total": {"label": "【对照口径，如 全国港口=华东+华南】", "unit": "万吨"}
+  },
+  "regions": {
+    "【省份1】": "【省份1】",
+    "【省份2】": "【省份2】"
+  },
+  "samples": {
+    "A": {"name": "现行样本", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD", "note": "逐地区表格可得"},
+    "B": {"name": "早期样本", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD", "note": "口径不同，不可拼接"}
+  },
+  "breakpoints": [
+    {"date": "YYYY-MM-DD", "kind": "数据中继", "effect": "早期序列到此结束，与现行样本不可拼接"},
+    {"date": "YYYY-MM-DD", "kind": "统计范围变更", "effect": "现行样本起点"},
+    {"date": "YYYY-MM-DD", "kind": "披露变更", "effect": "正文改为只给总量与分区增减额"},
+    {"date": "YYYY-MM-DD", "kind": "披露断档", "effect": "逐地区水平停更，水平分位止于最后可核验期"}
+  ],
+  "exception_windows": [
+    {"name": "【极端段名称】", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD", "note": "【为何异常，如何影响结论】"}
+  ],
+  "guardrails": {
+    "min_sample_years": 4,
+    "min_r2_seasonal": 0.6,
+    "low_sample_years_flag": 5,
+    "default_sample_years": 5
+  }
+}

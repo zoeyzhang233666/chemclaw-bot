@@ -1,0 +1,803 @@
+{
+  "generated": "2026-10-22T03:42:08.190Z",
+  "routings": {
+    "chemclaw": [
+      {
+        "triggers": [
+          "找客户",
+          "下游",
+          "潜客",
+          "标杆复制",
+          "区域客户"
+        ],
+        "scene": "orch-lead",
+        "assign": [
+          "潜客猎手"
+        ],
+        "optional": [
+          "准入尽调",
+          "拜访顾问",
+          "表格专家",
+          "质询官"
+        ]
+      },
+      {
+        "triggers": [
+          "拜访",
+          "跟进",
+          "话术",
+          "纪要"
+        ],
+        "scene": "orch-visit",
+        "assign": [
+          "拜访顾问"
+        ],
+        "optional": [
+          "会议纪要",
+          "文档撰稿"
+        ]
+      },
+      {
+        "triggers": [
+          "找厂家",
+          "供应商",
+          "寻源",
+          "是不是贸易商"
+        ],
+        "scene": "orch-source",
+        "assign": [
+          "供应商寻源"
+        ],
+        "optional": [
+          "准入尽调",
+          "行情报价",
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "尽调",
+          "风险",
+          "失信",
+          "证照"
+        ],
+        "scene": "orch-dd",
+        "assign": [
+          "准入尽调"
+        ],
+        "optional": [
+          "质询官"
+        ]
+      },
+      {
+        "triggers": [
+          "现在什么价",
+          "行情",
+          "报价",
+          "比价",
+          "贵不贵"
+        ],
+        "scene": "orch-price",
+        "assign": [
+          "行情报价"
+        ],
+        "optional": [
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "为什么涨",
+          "归因",
+          "产业链",
+          "供需",
+          "基本面"
+        ],
+        "scene": "orch-fund",
+        "assign": [
+          "产业基本面"
+        ],
+        "optional": [
+          "价差量化",
+          "PPT设计师"
+        ]
+      },
+      {
+        "triggers": [
+          "基差",
+          "月差",
+          "价差",
+          "季节性",
+          "回测"
+        ],
+        "scene": "orch-spread",
+        "assign": [
+          "价差量化"
+        ],
+        "optional": [
+          "行情报价",
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "出口",
+          "询盘",
+          "海外买家"
+        ],
+        "scene": "orch-export",
+        "assign": [
+          "外贸销售"
+        ],
+        "optional": [
+          "中英译审",
+          "文档撰稿"
+        ]
+      },
+      {
+        "triggers": [
+          "进口",
+          "海外货源",
+          "进口成本"
+        ],
+        "scene": "orch-import",
+        "assign": [
+          "外贸采购"
+        ],
+        "optional": [
+          "行情报价"
+        ]
+      },
+      {
+        "triggers": [
+          "PPT",
+          "幻灯片",
+          "汇报稿"
+        ],
+        "scene": "orch-ppt",
+        "assign": [
+          "PPT设计师"
+        ],
+        "optional": [
+          "质询官"
+        ]
+      },
+      {
+        "triggers": [
+          "Excel",
+          "名单表",
+          "表格"
+        ],
+        "scene": "orch-sheet",
+        "assign": [
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "挑刺",
+          "压测",
+          "站得住"
+        ],
+        "scene": "orch-grill",
+        "assign": [
+          "质询官"
+        ]
+      },
+      {
+        "triggers": [
+          "先理清",
+          "做计划",
+          "怎么拆"
+        ],
+        "scene": "orch-plan",
+        "assign": [
+          "流程参谋"
+        ]
+      }
+    ],
+    "lead-hunter": [
+      {
+        "triggers": [
+          "找下游",
+          "谁在用",
+          "按产品找客户"
+        ],
+        "scene": "lead-by-product",
+        "skill": "chemical-downstream-leads",
+        "handoff": [
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "标杆",
+          "像某某一样",
+          "复制成功客户"
+        ],
+        "scene": "lead-benchmark",
+        "skill": "benchmark-lead-sourcing",
+        "handoff": [
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "区域",
+          "园区",
+          "先跑哪"
+        ],
+        "scene": "lead-region-map",
+        "skill": "chemical-region-market-map",
+        "handoff": [
+          "拜访顾问"
+        ]
+      },
+      {
+        "triggers": [
+          "项目",
+          "新建",
+          "扩建",
+          "环评"
+        ],
+        "scene": "lead-projects",
+        "skill": "project-lead-sourcing",
+        "handoff": [
+          "表格专家"
+        ]
+      }
+    ],
+    "visit-advisor": [
+      {
+        "triggers": [
+          "研究客户",
+          "准备拜访",
+          "对接谁"
+        ],
+        "scene": "visit-prep",
+        "skill": "chem-customer-research",
+        "handoff": [
+          "文档撰稿"
+        ]
+      },
+      {
+        "triggers": [
+          "跟进",
+          "纪要",
+          "下次动作"
+        ],
+        "scene": "visit-followup",
+        "skill": "chem-customer-followup",
+        "handoff": [
+          "会议纪要"
+        ]
+      }
+    ],
+    "supplier-source": [
+      {
+        "triggers": [
+          "找生产厂",
+          "真厂家",
+          "核验生产"
+        ],
+        "scene": "source-verify",
+        "skill": "chemical-supplier-verification",
+        "handoff": [
+          "准入尽调",
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "采购清单",
+          "批量寻源"
+        ],
+        "scene": "source-batch",
+        "skill": "batch-supplier-sourcing",
+        "handoff": [
+          "表格专家"
+        ]
+      }
+    ],
+    "due-diligence": [
+      {
+        "triggers": [
+          "准入",
+          "尽调",
+          "风险扫描"
+        ],
+        "scene": "dd-scan",
+        "skill": "supplier-due-diligence",
+        "mcp": [
+          "qcc-company",
+          "qcc-risk"
+        ],
+        "handoff": [
+          "质询官"
+        ]
+      },
+      {
+        "triggers": [
+          "证照",
+          "危化许可"
+        ],
+        "scene": "dd-certs",
+        "skill": "qualification-check",
+        "handoff": [
+          "PDF助手"
+        ]
+      }
+    ],
+    "price-quote": [
+      {
+        "triggers": [
+          "现货",
+          "现在什么价"
+        ],
+        "scene": "price-spot",
+        "skill": "chem-market-brief",
+        "mcp": [
+          "chem-data-hub"
+        ],
+        "handoff": [
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "采购行情",
+          "能不能下单",
+          "贵不贵"
+        ],
+        "scene": "price-procure",
+        "skill": "chem-procure-brief",
+        "mcp": [
+          "chem-data-hub"
+        ]
+      },
+      {
+        "triggers": [
+          "区域成本",
+          "哪个地方买"
+        ],
+        "scene": "price-region",
+        "skill": "regional-procurement-cost"
+      }
+    ],
+    "fundamentals": [
+      {
+        "triggers": [
+          "为什么涨跌",
+          "归因"
+        ],
+        "scene": "fund-attribution",
+        "skill": "chem-price-attribution",
+        "handoff": [
+          "PPT设计师"
+        ]
+      },
+      {
+        "triggers": [
+          "产业链",
+          "上下游"
+        ],
+        "scene": "fund-chain",
+        "skill": "chem-chain-map",
+        "handoff": [
+          "产业链制图"
+        ]
+      }
+    ],
+    "spreads-quant": [
+      {
+        "triggers": [
+          "基差",
+          "强势弱势"
+        ],
+        "scene": "spread-basis",
+        "skill": "basis-strength",
+        "handoff": [
+          "表格专家"
+        ]
+      },
+      {
+        "triggers": [
+          "季节性"
+        ],
+        "scene": "spread-seasonal",
+        "skill": "seasonality-check"
+      }
+    ],
+    "product-intel": [
+      {
+        "triggers": [
+          "CAS",
+          "物性",
+          "分子"
+        ],
+        "scene": "product-cas",
+        "tool": "pubchem"
+      },
+      {
+        "triggers": [
+          "百科",
+          "是什么产品"
+        ],
+        "scene": "product-wiki",
+        "tool": "wikipedia"
+      }
+    ],
+    "ppt-designer": [
+      {
+        "triggers": [
+          "网页PPT",
+          "杂志风",
+          "瑞士风"
+        ],
+        "scene": "ppt-html-magazine",
+        "skill": "guizang-ppt-skill"
+      },
+      {
+        "triggers": [
+          "pptx",
+          "可编辑",
+          "发给客户"
+        ],
+        "scene": "ppt-editable-pptx",
+        "skill": "pptx-delivery"
+      },
+      {
+        "triggers": [
+          "文档转PPT",
+          "研报转幻灯片"
+        ],
+        "scene": "ppt-from-doc",
+        "skill": "ppt-master"
+      }
+    ],
+    "griller": [
+      {
+        "triggers": [
+          "挑刺",
+          "压测",
+          "grill"
+        ],
+        "scene": "grill-open",
+        "skill": "grilling"
+      },
+      {
+        "triggers": [
+          "对着文档烤",
+          "按报告质疑"
+        ],
+        "scene": "grill-docs",
+        "skill": "grill-with-docs"
+      }
+    ],
+    "process-aide": [
+      {
+        "triggers": [
+          "先理清",
+          "brainstorm",
+          "目标不清"
+        ],
+        "scene": "plan-brainstorm",
+        "skill": "brainstorming"
+      },
+      {
+        "triggers": [
+          "写计划",
+          "拆步骤"
+        ],
+        "scene": "plan-write",
+        "skill": "writing-plans"
+      },
+      {
+        "triggers": [
+          "做完了吗",
+          "验收"
+        ],
+        "scene": "plan-verify",
+        "skill": "verification-before-completion"
+      }
+    ]
+  },
+  "locks": {
+    "chemclaw": {
+      "botId": "chemclaw",
+      "primary": [],
+      "auxiliary": [
+        "pack-mcp-core",
+        "pack-process"
+      ],
+      "packs": [
+        "pack-mcp-core",
+        "pack-process"
+      ]
+    },
+    "lead-hunter": {
+      "botId": "lead-hunter",
+      "primary": [
+        "chemical-downstream-leads",
+        "benchmark-lead-sourcing",
+        "chemical-region-market-map",
+        "project-lead-sourcing"
+      ],
+      "auxiliary": [
+        "pack-sales-leads",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-sales-leads",
+        "pack-mcp-core"
+      ]
+    },
+    "visit-advisor": {
+      "botId": "visit-advisor",
+      "primary": [
+        "chem-customer-research",
+        "chem-customer-followup"
+      ],
+      "auxiliary": [
+        "pack-sales-visit",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-sales-visit",
+        "pack-mcp-core"
+      ]
+    },
+    "export-sales": {
+      "botId": "export-sales",
+      "primary": [],
+      "auxiliary": [
+        "pack-export-sales",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-export-sales",
+        "pack-mcp-core"
+      ]
+    },
+    "supplier-source": {
+      "botId": "supplier-source",
+      "primary": [
+        "chemical-supplier-verification",
+        "batch-supplier-sourcing"
+      ],
+      "auxiliary": [
+        "pack-buy-source",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-buy-source",
+        "pack-mcp-core"
+      ]
+    },
+    "due-diligence": {
+      "botId": "due-diligence",
+      "primary": [
+        "supplier-due-diligence",
+        "qualification-check"
+      ],
+      "auxiliary": [
+        "pack-due-diligence",
+        "pack-mcp-core",
+        "pack-mcp-qcc"
+      ],
+      "packs": [
+        "pack-due-diligence",
+        "pack-mcp-core",
+        "pack-mcp-qcc"
+      ]
+    },
+    "import-buy": {
+      "botId": "import-buy",
+      "primary": [],
+      "auxiliary": [
+        "pack-import-buy",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-import-buy",
+        "pack-mcp-core"
+      ]
+    },
+    "price-quote": {
+      "botId": "price-quote",
+      "primary": [
+        "chem-market-brief",
+        "chem-procure-brief",
+        "regional-procurement-cost"
+      ],
+      "auxiliary": [
+        "pack-price",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-price",
+        "pack-mcp-core"
+      ]
+    },
+    "fundamentals": {
+      "botId": "fundamentals",
+      "primary": [
+        "chem-price-attribution",
+        "chem-chain-map"
+      ],
+      "auxiliary": [
+        "pack-fundamentals",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-fundamentals",
+        "pack-mcp-core"
+      ]
+    },
+    "spreads-quant": {
+      "botId": "spreads-quant",
+      "primary": [
+        "basis-strength",
+        "seasonality-check"
+      ],
+      "auxiliary": [
+        "pack-spreads",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-spreads",
+        "pack-mcp-core"
+      ]
+    },
+    "product-intel": {
+      "botId": "product-intel",
+      "primary": [
+        "pubchem",
+        "wikipedia"
+      ],
+      "auxiliary": [
+        "pack-product",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-product",
+        "pack-mcp-core"
+      ]
+    },
+    "ppt-designer": {
+      "botId": "ppt-designer",
+      "primary": [
+        "guizang-ppt-skill",
+        "pptx-delivery",
+        "ppt-master"
+      ],
+      "auxiliary": [
+        "pack-ppt"
+      ],
+      "packs": [
+        "pack-ppt"
+      ]
+    },
+    "sheet-expert": {
+      "botId": "sheet-expert",
+      "primary": [],
+      "auxiliary": [
+        "pack-sheets"
+      ],
+      "packs": [
+        "pack-sheets"
+      ]
+    },
+    "doc-writer": {
+      "botId": "doc-writer",
+      "primary": [],
+      "auxiliary": [
+        "pack-docs"
+      ],
+      "packs": [
+        "pack-docs"
+      ]
+    },
+    "pdf-helper": {
+      "botId": "pdf-helper",
+      "primary": [],
+      "auxiliary": [
+        "pack-pdf"
+      ],
+      "packs": [
+        "pack-pdf"
+      ]
+    },
+    "chain-mapper": {
+      "botId": "chain-mapper",
+      "primary": [],
+      "auxiliary": [
+        "pack-diagrams"
+      ],
+      "packs": [
+        "pack-diagrams"
+      ]
+    },
+    "deep-researcher": {
+      "botId": "deep-researcher",
+      "primary": [],
+      "auxiliary": [
+        "pack-research",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-research",
+        "pack-mcp-core"
+      ]
+    },
+    "news-radar": {
+      "botId": "news-radar",
+      "primary": [],
+      "auxiliary": [
+        "pack-news"
+      ],
+      "packs": [
+        "pack-news"
+      ]
+    },
+    "meeting-notes": {
+      "botId": "meeting-notes",
+      "primary": [],
+      "auxiliary": [
+        "pack-meeting"
+      ],
+      "packs": [
+        "pack-meeting"
+      ]
+    },
+    "bilingual": {
+      "botId": "bilingual",
+      "primary": [],
+      "auxiliary": [
+        "pack-translate"
+      ],
+      "packs": [
+        "pack-translate"
+      ]
+    },
+    "market-report": {
+      "botId": "market-report",
+      "primary": [],
+      "auxiliary": [
+        "pack-market-report",
+        "pack-mcp-core"
+      ],
+      "packs": [
+        "pack-market-report",
+        "pack-mcp-core"
+      ]
+    },
+    "griller": {
+      "botId": "griller",
+      "primary": [
+        "grilling",
+        "grill-with-docs"
+      ],
+      "auxiliary": [
+        "pack-grill"
+      ],
+      "packs": [
+        "pack-grill"
+      ]
+    },
+    "process-aide": {
+      "botId": "process-aide",
+      "primary": [
+        "brainstorming",
+        "writing-plans",
+        "verification-before-completion"
+      ],
+      "auxiliary": [
+        "pack-process"
+      ],
+      "packs": [
+        "pack-process"
+      ]
+    }
+  }
+}

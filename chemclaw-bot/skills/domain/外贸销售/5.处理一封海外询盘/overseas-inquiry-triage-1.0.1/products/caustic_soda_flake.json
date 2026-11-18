@@ -1,0 +1,46 @@
+{
+  "id": "caustic_soda_flake",
+  "name_cn": "片碱（氢氧化钠）",
+  "name_en": "Caustic Soda Flakes",
+  "synonyms": ["sodium hydroxide flakes", "caustic soda flake 99%", "NAOH flakes", "固碱", "氢氧化钠片碱"],
+  "other_languages": {
+    "vi": ["xút vảy", "xút flake", "natri hydroxit"],
+    "id": ["soda api", "natrium hidroksida"],
+    "es": ["soda cáustica en escamas", "hidróxido de sodio"],
+    "pt": ["soda cáustica em escamas"],
+    "ar": ["هيدروكسيد الصوديوم", "صودا كاوية"]
+  },
+  "cas": "1310-73-2",
+  "ec": "215-185-5",
+  "un": "1823",
+  "hs_candidates": ["28151100"],
+  "hs_note": "2815.11（固体氢氧化钠）为常见候选；危险品运输与出口监管另需核实，本技能不出结论。",
+  "hazard": {
+    "class": "8 (corrosive)",
+    "packing_group": "II",
+    "gd": "UN1823, Class 8, PG II",
+    "note": "危险品：订舱、MSDS、危包证、目的港接受条件均需单独核实；报价前须确认客户能否接危险品。"
+  },
+  "grades": [
+    {"code": "flake_99", "cn": "99% 片碱", "typical": {"NaOH": "≥99.0%", "Na2CO3": "≤0.5%", "NaCl": "≤0.03%"}},
+    {"code": "flake_98", "cn": "98% 片碱", "typical": {"NaOH": "≥98.0%"}}
+  ],
+  "typical_specs": {
+    "NaOH": {"unit": "%", "value": "≥99.0"},
+    "Na2CO3": {"unit": "%", "value": "≤0.5"},
+    "NaCl": {"unit": "%", "value": "≤0.03"},
+    "Fe2O3": {"unit": "%", "value": "≤0.005"}
+  },
+  "applications": ["pulp and paper", "water treatment", "soap and detergent", "alumina", "textile"],
+  "packing_options": ["25 kg PP bag + PE liner", "1000 kg jumbo bag (UN certified)"],
+  "sales_notes": [
+    "越南/印尼客户常写「xút vảy 99%」，要确认是片碱还是粒碱。",
+    "危险品：包装必须是 UN 认证包装，客户若要求 25 kg 与 1000 kg 混装需确认。",
+    "kg 与 MT 混用极常见（25kg×40袋/托 vs 按吨报价），必须统一计量口径。"
+  ],
+  "do_not_assume": [
+    "不能默认客户能接危险品",
+    "不能默认包装是 UN 认证袋",
+    "不能默认买方负责危包证"
+  ]
+}

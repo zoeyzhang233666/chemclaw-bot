@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "scope": "只登记公开可查的产能数字；每一行给出容量口径（万吨/年 SBS 本体或 SBC 合并）、投产年份（如可查）与来源。无法核验的产能写 null 并标 gap，不得按『行业印象』补数。",
+    "capacity_basis_note": "SBS 装置常与 SEBS/SIS 共用或可切换，故区分『SBS 专有产能』与『SBC 合计产能』两个字段，混用会导致总产能重复计算。"
+  },
+  "enterprises": [
+    {"id": "E01", "name": "中石化湖南石油化工有限公司（原巴陵石化，湖南岳阳）", "node_id": "N_PRIMARY", "province": "湖南", "capacity_sbs": 20.0, "capacity_sbc": 38.0, "capacity_unit": "万吨/年", "year": "1980s 首套万吨级；SEBS 2006；SEPS 2017", "evidence": ["S01", "S02"], "capacity_status": "verified_sbs", "note": "国内最早工业化生产 SBS；本部 SBC 合计 38 万吨/年（含 SEBS/SEPS 等）"},
+    {"id": "E02", "name": "海南巴陵化工新材料有限公司（中国石化×海南炼化，洋浦）", "node_id": "N_PRIMARY", "province": "海南", "capacity_sbs": 12.0, "capacity_sbc": 17.0, "capacity_unit": "万吨/年", "year": "2023-04", "evidence": ["S01", "S02"], "capacity_status": "verified", "note": "17 万吨/年装置 = SBS 12 + SEBS 5；总投资 19.24 亿元"},
+    {"id": "E03", "name": "上海金山巴陵新材料有限公司（湖南石化×上海石化）", "node_id": "N_PRIMARY", "province": "上海", "capacity_sbs": 14.0, "capacity_sbc": 25.0, "capacity_unit": "万吨/年", "year": "2025-11 全面投产", "evidence": ["S01", "S02"], "capacity_status": "verified", "note": "25 万吨 SBC = SBS 14 + SEBS 5 + SIS 6；一套装置多产品可切换"},
+    {"id": "E04", "name": "中国石化茂名石化", "node_id": "N_PRIMARY", "province": "广东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03", "S05"], "capacity_status": "gap", "note": "在产（隆众每日装置动态与排产计划可查），但本轮公开证据未给出单独 SBS 产能数字，按缺口登记，不用『约数』填补"},
+    {"id": "E05", "name": "中国石化北京燕山石化", "node_id": "N_PRIMARY", "province": "北京", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": "1993 年 10 万吨级（历史）", "evidence": ["S03"], "capacity_status": "gap", "note": "S03 将其归入『中石化系 46 万吨』合计口径，未拆分单厂"},
+    {"id": "E06", "name": "惠州李长荣橡胶有限公司（台资独资）", "node_id": "N_PRIMARY", "province": "广东", "capacity_sbs": 40.0, "capacity_sbc": 40.0, "capacity_unit": "万吨/年", "year": null, "evidence": ["S01", "S03"], "capacity_status": "verified", "note": "国内第二大、最大独资 SBS 企业，占国内总产能约 20.25%"},
+    {"id": "E07", "name": "福建古雷石化有限公司", "node_id": "N_PRIMARY", "province": "福建", "capacity_sbs": 10.0, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": "十四五新增", "evidence": ["S01", "S03", "S05"], "capacity_status": "verified", "note": "『十四五』新增 10 万吨/年；S03 称其单厂产能多在 15 万 t 以下"},
+    {"id": "E08", "name": "中国石油广西石化", "node_id": "N_PRIMARY", "province": "广西", "capacity_sbs": 8.0, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": "2025", "evidence": ["S01", "S05"], "capacity_status": "verified", "note": "百万吨乙烯炼化一体化项目的一部分，弥补中石油西南/华南空白"},
+    {"id": "E09", "name": "中国石油独山子石化", "node_id": "N_PRIMARY", "province": "新疆", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S05", "S14"], "capacity_status": "gap", "note": "在产（中石油西北/西南/东北多地调价、月度排产计划可查），但未取得公开产能数字"},
+    {"id": "E10", "name": "宁波长鸿高分子科技股份有限公司（长鸿高科，605008.SH）", "node_id": "N_PRIMARY", "province": "浙江", "capacity_sbs": null, "capacity_sbc": 15.0, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "partial", "note": "上市公司，产能居全国第三（按 TPES 口径）；S03 称单厂『多在 15 万 t 以下』，故以 ≤15 登记并标 partial"},
+    {"id": "E11", "name": "宁波金海晨光化学股份有限公司", "node_id": "N_PRIMARY", "province": "浙江", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03", "S05"], "capacity_status": "gap", "note": "在产 SIS/SBS（隆众装置动态），产能未公开"},
+    {"id": "E12", "name": "山东聚圣（山东聚圣科技）", "node_id": "N_PRIMARY", "province": "山东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "gap", "note": "S03：『山东聚圣等企业产能不足 5 万 t』——按 <5 万吨理解，不取具体值"},
+    {"id": "E13", "name": "浙江众立合成材料科技股份有限公司", "node_id": "N_PRIMARY", "province": "浙江", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "gap", "note": "S03 列名，未给产能"},
+    {"id": "E14", "name": "山东盛玉化工有限公司", "node_id": "N_PRIMARY", "province": "山东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S03"], "capacity_status": "gap", "note": "S03 列名，未给产能"},
+    {"id": "E15", "name": "广东众和（SBS/SIS 装置）", "node_id": "N_PRIMARY", "province": "广东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S05"], "capacity_status": "gap", "note": "隆众装置动态可查，产能未公开"},
+    {"id": "E16", "name": "北方华锦合成橡胶（辽宁）", "node_id": "N_PRIMARY", "province": "辽宁", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S14"], "capacity_status": "gap", "note": "卓创装置动态显示装置停车状态"},
+    {"id": "E17", "name": "菏泽科信（SBS 装置）", "node_id": "N_PRIMARY", "province": "山东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S14"], "capacity_status": "gap", "note": "装置动态可查"},
+    {"id": "E18", "name": "韩国锦湖（进口货主）", "node_id": "N_PRIMARY", "province": "进口", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S05"], "capacity_status": "gap", "note": "中国市场韩国锦湖进口 SBS 市场资讯可查；属进口供应而非国内产能"},
+    {"id": "E19", "name": "中石化湖南石化（苯乙烯/SBS 一体化配套）", "node_id": "N_SM", "province": "湖南", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": ["S01"], "capacity_status": "gap", "note": "SBS 单体的自有配套情况未在证据中量化"},
+    {"id": "E20", "name": "惠州李长荣（配套上游）", "node_id": "N_BD", "province": "广东", "capacity_sbs": null, "capacity_sbc": null, "capacity_unit": "万吨/年", "year": null, "evidence": [], "capacity_status": "gap", "note": "无证据，仅作为『需补查』占位，不可写数字"}
+  ],
+  "summary": {
+    "verified_sbs_capacity_sum": 94.0,
+    "note": "仅统计 capacity_status=verified/verified_sbs 的 SBS 专有产能：E01 20 + E02 12 + E03 14 + E06 40 + E07 10 + E08 8 = 94 万吨，占官方总产能 197.5 万吨的 47.6%。其余 103.5 万吨属『未拆分到企业』的缺口（含中石化系其他装置、地炼与中小装置），必须在缺口表中列明，不得用估算补齐。"
+  }
+}

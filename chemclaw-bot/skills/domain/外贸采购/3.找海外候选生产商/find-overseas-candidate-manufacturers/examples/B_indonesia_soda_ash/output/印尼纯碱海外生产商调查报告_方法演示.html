@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>印度尼西亚 纯碱（碳酸钠） 实际生产企业核验调查报告</title>
+<style>
+:root{
+  --a:#0f766e; --a2:#0d9488; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+  --bg:#f6f8fb; --card:#ffffff; --ok:#059669; --warn:#d97706; --bad:#dc2626; --info:#2563eb;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.62;font-size:14.5px}
+a{color:var(--a2);text-decoration:none} a:hover{text-decoration:underline}
+.wrap{max-width:1280px;margin:0 auto;padding:0 22px 80px}
+
+/* hero */
+.hero{background:linear-gradient(135deg,#042f2e 0%,#0f766e 55%,#0d9488 100%);color:#fff;padding:42px 0 34px;margin-bottom:22px;
+  box-shadow:0 10px 30px rgba(4,47,46,.18)}
+.hero .wrap{padding-bottom:0}
+.eyebrow{letter-spacing:.22em;font-size:11.5px;opacity:.85;font-weight:600;text-transform:uppercase}
+.hero h1{font-size:30px;margin:10px 0 8px;font-weight:700;letter-spacing:.01em}
+.hero .lede{opacity:.92;max-width:900px;font-size:14.5px}
+.hero-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:24px}
+.stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:12px 14px;backdrop-filter:blur(6px)}
+.stat b{display:block;font-size:24px;line-height:1.2}
+.stat span{font-size:11.5px;opacity:.88}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;font-size:12px}
+.chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:3px 10px;border-radius:99px}
+
+/* section */
+section.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin:18px 0;
+  box-shadow:0 1px 2px rgba(15,23,42,.04)}
+h2{font-size:19px;margin:0 0 4px;letter-spacing:.01em}
+h2 .num{color:var(--a2);font-weight:800;margin-right:8px}
+.sec-sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+h3{font-size:16px;margin:22px 0 8px}
+h4{font-size:13.5px;margin:16px 0 8px;color:#334155;letter-spacing:.02em;border-left:3px solid var(--a2);padding-left:8px}
+
+/* product card */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.prod-grid div{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.prod-grid .k{display:block;color:var(--muted);font-size:11.5px;margin-bottom:2px}
+.prod-grid .v{font-weight:600;font-size:13.5px}
+
+/* legend */
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.lg-item{display:flex;gap:11px;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px}
+.lg-g{flex:0 0 34px;height:34px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px}
+.lg-g.gA{background:var(--ok)} .lg-g.gB{background:var(--warn)} .lg-g.gC{background:#64748b} .lg-g.gD{background:var(--bad)}
+.lg-item p{margin:3px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
+
+/* funnel */
+.funnel{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.fstep{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;position:relative}
+.fstep .t{font-size:12px;color:var(--muted)}
+.fstep .n{font-size:26px;font-weight:800;color:var(--a)}
+.fstep .d{font-size:12px;color:#475569}
+.fstep::after{content:"";position:absolute;right:-9px;top:50%;width:8px;height:8px;border-top:2px solid var(--line);border-right:2px solid var(--line);transform:translateY(-50%) rotate(45deg)}
+
+/* graph */
+.graph{width:100%;height:auto;background:linear-gradient(180deg,#fbfdff,#f1f7f6);border:1px solid var(--line);border-radius:14px}
+.gnode rect{fill:#fff;stroke:#cbd5e1}
+.gnode.alt rect{fill:#fef6e7;stroke:#f0c674}
+.mnode rect{fill:#ecfdf5;stroke:#34d399}
+.tnode rect{fill:#fef2f2;stroke:#fca5a5}
+.graph text{text-anchor:middle;font-family:inherit}
+.graph .n1{font-size:13.5px;font-weight:700;fill:#0f172a}
+.graph .n2{font-size:10.5px;fill:#64748b}
+.graph .n3{font-size:10.5px;fill:#0f766e;font-weight:600}
+.graph .lg{text-anchor:start;font-size:11px;fill:#64748b}
+
+/* toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:12px 14px;position:sticky;top:0;z-index:30;box-shadow:0 2px 10px rgba(15,23,42,.06);margin-bottom:14px}
+.toolbar label{font-size:12px;color:var(--muted);font-weight:600}
+select,input[type=search]{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+input[type=search]{min-width:210px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer;color:#475569}
+.seg button.on{background:var(--a);color:#fff;font-weight:600}
+.count{margin-left:auto;font-size:12px;color:var(--muted)}
+
+/* columns */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1000px){.cols{grid-template-columns:1fr}}
+.col-head{display:flex;align-items:center;gap:8px;margin:6px 0 10px;padding:8px 12px;border-radius:10px;font-weight:700;font-size:14px}
+.col-head.manu{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+.col-head.trade{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+.col-head .c{margin-left:auto;font-weight:600;font-size:12px;opacity:.8}
+.col-explain{font-size:11.8px;color:#7c2d12;background:#fffbeb;border:1px dashed #fcd34d;border-radius:10px;padding:9px 11px;margin-bottom:10px;line-height:1.55}
+
+/* company card */
+.co-card{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden;
+  border-left:5px solid #64748b;transition:box-shadow .18s}
+.co-card.gA{border-left-color:var(--ok)} .co-card.gB{border-left-color:var(--warn)}
+.co-card.gC{border-left-color:#64748b} .co-card.gD{border-left-color:var(--bad)}
+.co-card:hover{box-shadow:0 6px 18px rgba(15,23,42,.08)}
+.co-head{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer}
+.rank{font-weight:800;color:#94a3b8;font-size:13px;width:28px}
+.co-title h3{margin:0;font-size:15px} .co-title .sub{margin:1px 0 0;font-size:11.5px;color:var(--muted)}
+.badges{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.badge{font-size:11px;padding:3px 9px;border-radius:99px;background:#f1f5f9;color:#334155;border:1px solid var(--line);white-space:nowrap}
+.grade-badge{background:#0f766e;color:#fff;border-color:#0f766e;font-weight:700}
+.gA .grade-badge{background:var(--ok);border-color:var(--ok)} .gB .grade-badge{background:var(--warn);border-color:var(--warn)}
+.gC .grade-badge{background:#64748b;border-color:#64748b} .gD .grade-badge{background:var(--bad);border-color:var(--bad)}
+.chev{color:#94a3b8;transition:transform .2s}
+.co-card.open .chev{transform:rotate(180deg)}
+.co-body{display:none;padding:0 15px 16px;border-top:1px dashed var(--line)}
+.co-card.open .co-body{display:block}
+
+.kv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.kv-grid>div{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.kv-grid .k{display:block;font-size:11px;color:var(--muted)}
+.kv-grid .v{font-size:12.5px;font-weight:500}
+.verdict{border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.6}
+.verdict.ok{background:#ecfdf5;border:1px solid #a7f3d0}
+.verdict.warn{background:#fffbeb;border:1px solid #fde68a}
+.verdict.bad{background:#fef2f2;border:1px solid #fecaca}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:820px){.two-col{grid-template-columns:1fr}}
+table.mini{width:100%;border-collapse:collapse;font-size:12px}
+table.mini th,table.mini td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+table.mini th{background:#f1f5f9;font-weight:600;color:#334155}
+table.ev-table{width:100%;border-collapse:collapse;font-size:11.8px;margin-top:6px}
+table.ev-table th,table.ev-table td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.ev-table th{background:#f1f5f9;font-weight:600}
+.ev-id{font-family:ui-monospace,Consolas,monospace;color:var(--a);font-weight:700;white-space:nowrap}
+.src-line{font-size:11px;color:var(--muted);margin-top:3px}
+.conf{font-size:10.5px;padding:1px 7px;border-radius:99px;white-space:nowrap}
+.conf-hi{background:#dcfce7;color:#166534} .conf-mid{background:#fef3c7;color:#92400e}
+.cap-note{font-size:12px;color:#475569;margin:4px 0}
+.warn-note{font-size:12px;color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:7px 9px}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:11.5px}
+.risk-list,.q-list{margin:6px 0 0 18px;padding:0;font-size:12.3px}
+.risk-list li,.q-list li{margin-bottom:5px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.btn{font:inherit;font-size:12.5px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;color:#334155;font-weight:600}
+.btn:hover{border-color:var(--a2);color:var(--a)}
+.btn.primary{background:var(--a);border-color:var(--a);color:#fff}
+.btn.primary:hover{background:#115e59;color:#fff}
+.btn.ghost{background:#f8fafc}
+.empty{padding:30px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--line);border-radius:12px}
+
+/* sources & questions */
+table.src{width:100%;border-collapse:collapse;font-size:12px}
+table.src th,table.src td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+table.src th{background:#f1f5f9;position:sticky;top:0}
+.tbl-wrap{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.note{background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:12px 14px;font-size:12.5px}
+.danger{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:12px 14px;font-size:12.5px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;place-items:center;z-index:100;padding:20px}
+.modal.on{display:grid}
+.modal-box{background:#fff;border-radius:16px;max-width:840px;width:100%;max-height:86vh;overflow:auto;padding:22px 24px;box-shadow:0 24px 60px rgba(2,6,23,.4)}
+.modal-box h3{margin-top:0}
+.modal-close{float:right;border:0;background:#f1f5f9;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px}
+.modal-box textarea{width:100%;min-height:240px;font-family:ui-monospace,Consolas,monospace;font-size:12px;padding:12px;border:1px solid var(--line);border-radius:10px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0f172a;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;z-index:200;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:26px 0 10px}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Overseas Manufacturer Survey · Evidence-Graded</div>
+    <h1>印度尼西亚 纯碱（碳酸钠） 实际生产企业核验调查报告</h1>
+    <p class="lede">从「国家 + 产品」出发，逐家核验企业是否<b>真正拥有目标产品生产装置</b>，并把集团主体、制造主体、销售主体与贸易中间商分离。公开设计产能 <b>不等于</b> 当前可售供货能力；证据不足的字段一律保留待核验。</p>
+    <div class="hero-stats">
+      <div class="stat"><b>4</b><span>纳入评估企业/主体</span></div>
+      <div class="stat"><b>0</b><span>有直接公开制造证据</span></div>
+      <div class="stat"><b>2</b><span>关联待核验</span></div>
+      <div class="stat"><b>1</b><span>仅行业相关（非目标品）</span></div>
+      <div class="stat"><b>6</b><span>后续核验问题</span></div>
+    </div>
+    <div class="meta-row">
+      <span class="chip">报告编号 OSM-SODA-ID-DEMO</span>
+      <span class="chip">产品：纯碱（碳酸钠） · CAS 497-19-8 · HS 2836.20.00.00</span>
+      <span class="chip">来源国：印度尼西亚 → 中国</span>
+      <span class="chip">调查日期：2026-10-20</span>
+      <span class="chip">引用来源 4 项</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section class="panel">
+  <h2><span class="num">01</span>目标产品与采购口径</h2>
+  <p class="sec-sub">先锁死“买什么”，再判断“谁能造”。规格口径不清时，任何厂商名单都无法转化为可执行的询盘。</p>
+  <div class="prod-grid">
+    <div><span class="k">产品（中/英）</span><span class="v">纯碱（碳酸钠） / Soda ash (sodium carbonate)</span></div>
+    <div><span class="k">CAS / HS</span><span class="v">497-19-8 / 2836.20.00.00</span></div>
+    <div><span class="k">典型规格</span><span class="v">重质纯碱 Na₂CO₃ ≥ 99.2%；轻质 ≥ 99.0%（演示值，需以采购规格书为准）</span></div>
+    <div><span class="k">工艺路线</span><span class="v">盐（或地下卤水）+ 氨/CO₂ → 氨碱法；或联碱法；或天然碱矿（trona）加工</span></div>
+    <div><span class="k">包装形式</span><span class="v">50 kg 袋 / 1000 kg 吨袋 / 散装</span></div>
+    <div><span class="k">采购批量</span><span class="v">未提供 — 需采购方补充</span></div>
+    <div><span class="k">认证要求</span><span class="v">未指定 — 建议至少 ISO 9001/14001/45001、SDS、COA</span></div>
+    <div><span class="k">是否仅接受实际厂家</span><span class="v">是</span></div>
+  </div>
+  <h4>本次调查的关键判断规则</h4>
+  <div class="note">
+    <b>只有满足以下任一条，才计入“有直接公开制造证据（A）”</b>：① 企业官网以自身名义列出该产品的<u>装置产能表</u>；② 企业官网产品页声明“本企业生产 X KTA”；③ 官方新闻稿/交易所文件披露该<u>具体工厂</u>的投产或商业运营；④ 独立 EPC 承包方项目页载明客户为该企业且产能为 700–1,000 t/d 级 EO/EG；⑤ 装置级公开数据（数据商/行业协会）记载该企业单线产能与运行事件。<br/>
+    <b>以下一律不构成制造证据</b>：第三方供应商名录挂名、经营范围含“石化产品”、B2B 平台“Trading Company”标签、集团口径提及、产品关键词命中、贸易救济名单被列名（名单口径常把集团关联方混杂）。
+  </div>
+</section>
+
+<section class="panel">
+  <h2><span class="num">02</span>制造证据等级定义</h2>
+  <p class="sec-sub">证据等级回答的是“能不能确认它自己有装置”，不是“这家公司大不大”。</p>
+  <div class="legend"><div class="lg-item"><span class="lg-g gA">A</span><div><b>有直接公开制造证据</b><p>官网产品页/产能表、年报、EPC 合同、官方投产公告、装置级公开产能数据</p></div></div><div class="lg-item"><span class="lg-g gB">B</span><div><b>有产品业务关联但制造身份待核验</b><p>有产品级公开记载但缺装置级证据，或证据链存在矛盾/缺口</p></div></div><div class="lg-item"><span class="lg-g gC">C</span><div><b>仅存在行业相关性</b><p>属化工集团或附属，但无该产品制造证据，或明确生产的是近似品</p></div></div><div class="lg-item"><span class="lg-g gD">D</span><div><b>贸易/代理/身份不明</b><p>贸易商、代理、经销、平台卖家或无法确认经营实体</p></div></div></div>
+</section>
+
+<section class="panel">
+  <h2><span class="num">03</span>筛选漏斗：从“名字很多”到“能下询盘”</h2>
+  <p class="sec-sub">本报告的可信度来自减法，而不是加法。</p>
+  <div class="funnel">
+    <div class="fstep"><div class="t">Step 1 · 初始候选</div><div class="n">6</div><div class="d">按盐化工/天然碱工艺链条 + 印尼化工产业带建立示意候选池</div></div>
+    <div class="fstep"><div class="t">Step 2 · 取得产品级线索</div><div class="n">4</div><div class="d">出现纯碱相关公开记载的候选（本示例均未完成取证）</div></div>
+    <div class="fstep"><div class="t">Step 3 · 装置/产能级证据</div><div class="n">0</div><div class="d">官网产能表、EPC 项目页、官方投产公告、交易所文件、装置级运行数据</div></div>
+    <div class="fstep"><div class="t">Step 4 · 可询盘主体</div><div class="n">6</div><div class="d">A 级中排除销售主体后，可直接发询盘的工厂（经 SABIC/自营渠道）</div></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2><span class="num">04</span>股权 · 工厂 · 销售关系图谱</h2>
+  <p class="sec-sub">关键坑：集团写“我们是全球最大 EG 生产商”≠ 集团法人有工厂；营销方（SPDC）不拥有装置，但可能是対华的实际签约窗口。</p>
+  <svg viewBox="0 0 1200 460" class="graph" role="img" aria-label="集团与工厂关系图谱">
+<defs>
+<marker id="arw" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/></marker>
+<marker id="arwd" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#f59e0b"/></marker>
+</defs>
+<g stroke="#94a3b8" stroke-width="1.6" fill="none" marker-end="url(#arw)"><path d="M478,84 C478,127.0 356,127.0 356,170" stroke-dasharray="5 4"/><path d="M722,84 C722,127.0 600,127.0 600,170" stroke-dasharray="5 4"/><path d="M478,84 C478,127.0 844,127.0 844,170"/></g>
+<g class="nodes">
+<g class="gnode"><rect x="363" y="30" width="230" height="54" rx="10"/><text x="478" y="52" class="n1">某盐化工集团（示意）</text><text x="478" y="70" class="n2">盐化工/氯碱集团</text></g>
+<g class="gnode"><rect x="607" y="30" width="230" height="54" rx="10"/><text x="722" y="52" class="n1">某矿业公司（示意）</text><text x="722" y="70" class="n2">矿产公司</text></g>
+<g class="mnode"><rect x="241" y="170" width="230" height="64" rx="10"/><text x="356" y="192" class="n1">【示意】某盐化工集团附属碱厂</text><text x="356" y="210" class="n2">东爪哇（示意，待核验）</text><text x="356" y="226" class="n3">待核验</text></g>
+<g class="mnode"><rect x="485" y="170" width="230" height="64" rx="10"/><text x="600" y="192" class="n1">【示意】某矿业公司</text><text x="600" y="210" class="n2">加里曼丹（示意，待核验）</text><text x="600" y="226" class="n3">待核验</text></g>
+<g class="mnode"><rect x="729" y="170" width="230" height="64" rx="10"/><text x="844" y="192" class="n1">【示意】某烧碱企业</text><text x="844" y="210" class="n2">西爪哇（示意）</text><text x="844" y="226" class="n3">0（非目标品）</text></g>
+<g class="tnode"><rect x="485" y="320" width="230" height="60" rx="10"/><text x="600" y="342" class="n1">【示意】某贸易分销公司</text><text x="600" y="360" class="n2">一般贸易商</text></g>
+</g>
+<g><text x="30" y="440" class="lg">实线=控股/合资；虚线=待核验或营销授权；绿色=含 A/B 级制造主体；橙色=销售/贸易/非目标品</text></g>
+</svg>
+</section>
+
+<section class="panel" id="companyPanel">
+  <h2><span class="num">05</span>企业清单：生产商 / 贸易商分栏</h2>
+  <p class="sec-sub">按制造证据、工厂所在地、产品规格、公开产能与企业类型筛选；点开企业卡片可查看工厂、产品目录、官网、公开认证与证据来源。</p>
+
+  <div class="toolbar">
+    <div class="seg" id="kindSeg">
+      <button class="on" data-kind="all">全部</button>
+      <button data-kind="manu">生产商</button>
+      <button data-kind="trade">贸易/销售主体</button>
+    </div>
+    <label>证据等级</label>
+    <select id="fGrade"><option value="">全部</option><option value="A">A · 直接制造证据</option><option value="B">B · 关联待核验</option><option value="C">C · 仅行业相关</option><option value="D">D · 贸易/身份不明</option></select>
+    <label>工厂所在地</label>
+    <select id="fSite"><option value="">全部</option><option value="东爪哇（示意，待核验）">东爪哇（示意，待核验）</option><option value="加里曼丹（示意，待核验）">加里曼丹（示意，待核验）</option><option value="无自有工厂">无自有工厂</option><option value="西爪哇（示意）">西爪哇（示意）</option><option value="none">未获取</option></select>
+    <label>企业类型</label>
+    <select id="fType"><option value="">全部</option><option value="MANUFACTURER">制造企业</option><option value="JV_MANUFACTURER">合资制造企业</option><option value="AFFILIATE_SALES">附属销售主体</option><option value="TRADER">一般贸易商</option><option value="AGENT">代理/经销</option><option value="UNKNOWN">身份不明</option></select>
+    <label>公开产能</label>
+    <select id="fCap"><option value="">全部</option><option value="ge500">≥ 500 kt/a</option><option value="none">未获证/0</option></select>
+    <input type="search" id="fText" placeholder="搜索企业名 / 产品 / 关键词…"/>
+    <span class="count" id="countLbl"></span>
+  </div>
+
+  <div class="cols">
+    <div>
+      <div class="col-head manu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V9l5 3V9l5 3V7l4 2v12"/><path d="M9 21v-4h3v4"/></svg>
+        生产商 · 拥有/运营目标产品装置的工厂主体<span class="c" id="cntManu"></span></div>
+      <div id="listManu">
+<article class="co-card gB" id="D-1"
+  data-grade="B" data-type="JV_MANUFACTURER" data-kind="manu"
+  data-site="东爪哇（示意，待核验）" data-name="【示意】某盐化工集团附属碱厂 示意：盐化工附属碱厂">
+  <header class="co-head" onclick="toggleCard(this)">
+    <div class="rank">#1</div>
+    <div class="co-title">
+      <h3>【示意】某盐化工集团附属碱厂</h3>
+      <p class="sub">示意：盐化工附属碱厂 · </p>
+    </div>
+    <div class="badges">
+      <span class="badge grade-badge">证据等级 B</span>
+      <span class="badge type-badge">合资制造企业（待核验）</span>
+    </div>
+    <div class="chev">▾</div>
+  </header>
+  <div class="co-body">
+    <div class="kv-grid">
+      <div><span class="k">所属集团</span><span class="v">某盐化工集团（示意）</span></div>
+      <div><span class="k">股权/归属</span><span class="v">示意：集团 + 外资合资</span></div>
+      <div><span class="k">工厂所在地</span><span class="v">东爪哇（示意，待核验）</span></div>
+      <div><span class="k">成立/投产</span><span class="v">待核验</span></div>
+      <div><span class="k">公开产能</span><span class="v"><b>待核验</b> kt/a</span></div>
+      <div><span class="k">生产工艺</span><span class="v">示意：氨碱法（待核验）</span></div>
+    </div>
+
+    <div class="verdict warn">
+      <b>判定理由：</b>行业资料提及该集团在东爪哇有氨碱装置，但本次未取得官网产品页、产能表或 EPC 项目记录，装置级证据缺失，故只能判 B。
+    </div>
+
+    <div class="two-col">
+      <section>
+        <h4>产品与规格</h4>
+        <table class="mini"><thead><tr><th>产品</th><th>牌号/用途</th><th>公开规格</th></tr></thead><tbody><tr><td>纯碱（重质/轻质）</td><td>工业级</td><td>待核验</td></tr></tbody></table>
+        <h4>产能口径与注意事项</h4>
+        <p class="cap-note">暂无可靠公开装置级数据</p>
+        <p class="warn-note">⚠ 无法判断当前可供货能力</p>
+      </section>
+      <section>
+        <h4>官方公开联系渠道</h4>
+        <table class="mini"><thead><tr><th>渠道</th><th>信息</th><th>核验状态</th></tr></thead><tbody><tr><td>官网联系页</td><td class="mono">待核验</td><td>待核验</td></tr></tbody></table>
+        <h4>认证与质量文件</h4>
+        <table class="mini"><thead><tr><th>认证</th><th>状态</th></tr></thead><tbody><tr><td>ISO 9001</td><td>待核验</td></tr></tbody></table>
+      </section>
+    </div>
+
+    <h4>制造证据链</h4>
+    <table class="ev-table"><thead><tr><th>ID</th><th>证据类型</th><th>置信</th><th>证据内容与来源</th></tr></thead><tbody><tr><td class="ev-id">E1</td><td>第三方转述（行业资料）</td><td><span class="conf conf-mid">低</span></td><td>行业资料提及氨碱装置（示意，未核验）<div class="src-line">来源：<a href="https://example.com/illustrative-1" target="_blank" rel="noopener">S-D1</a></div></td></tr></tbody></table>
+
+    <div class="two-col">
+      <section><h4>出口与贸易信息</h4><p>待核验</p></section>
+      <section><h4>风险提示</h4><ul class="risk-list"><li>无装置级证据</li><li>可能仅为集团层面表述</li></ul></section>
+    </div>
+
+    <h4>需向该企业核实的询证问题</h4>
+    <ol class="q-list"><li><b>QS-D01</b> 贵司是否拥有并运营纯碱（氨碱/联碱）装置？装置名称、许可号、地址？</li><li><b>QS-D02</b> 请提供工厂级 ISO 证书编号与近 12 个月 COA 样本。</li></ol>
+
+    <div class="actions">
+      <button class="btn primary" onclick="verifySupplier('D-1')">核验该海外供应商 →</button>
+      <button class="btn" onclick="genQuestions('D-1')">生成询证问题清单</button>
+      <button class="btn ghost" onclick="copyInquiry('D-1')">复制询盘要点</button>
+    </div>
+  </div>
+</article>
+<article class="co-card gB" id="D-2"
+  data-grade="B" data-type="MANUFACTURER" data-kind="manu"
+  data-site="加里曼丹（示意，待核验）" data-name="【示意】某矿业公司 ">
+  <header class="co-head" onclick="toggleCard(this)">
+    <div class="rank">#2</div>
+    <div class="co-title">
+      <h3>【示意】某矿业公司</h3>
+      <p class="sub"> · </p>
+    </div>
+    <div class="badges">
+      <span class="badge grade-badge">证据等级 B</span>
+      <span class="badge type-badge">制造企业（待核验）</span>
+    </div>
+    <div class="chev">▾</div>
+  </header>
+  <div class="co-body">
+    <div class="kv-grid">
+      <div><span class="k">所属集团</span><span class="v">某矿业公司（示意）</span></div>
+      <div><span class="k">股权/归属</span><span class="v">示意</span></div>
+      <div><span class="k">工厂所在地</span><span class="v">加里曼丹（示意，待核验）</span></div>
+      <div><span class="k">成立/投产</span><span class="v">待核验</span></div>
+      <div><span class="k">公开产能</span><span class="v"><b>待核验</b> kt/a</span></div>
+      <div><span class="k">生产工艺</span><span class="v">示意：天然碱矿加工（待核验）</span></div>
+    </div>
+
+    <div class="verdict warn">
+      <b>判定理由：</b>天然碱矿权公开可查，但未见成品纯碱加工厂的公开资料，无法区分“只出矿”与“加工为成品碱”，故判 B。
+    </div>
+
+    <div class="two-col">
+      <section>
+        <h4>产品与规格</h4>
+        <table class="mini"><thead><tr><th>产品</th><th>牌号/用途</th><th>公开规格</th></tr></thead><tbody><tr><td>天然碱 / 纯碱</td><td>待核验</td><td>待核验</td></tr></tbody></table>
+        <h4>产能口径与注意事项</h4>
+        <p class="cap-note">矿权与选矿/加工能力需分别核验</p>
+        <p class="warn-note">⚠ 无法判断当前可供货能力</p>
+      </section>
+      <section>
+        <h4>官方公开联系渠道</h4>
+        <table class="mini"><thead><tr><th>渠道</th><th>信息</th><th>核验状态</th></tr></thead><tbody><tr><td>官网</td><td class="mono">待核验</td><td>待核验</td></tr></tbody></table>
+        <h4>认证与质量文件</h4>
+        <table class="mini"><thead><tr><th>认证</th><th>状态</th></tr></thead><tbody><tr><td colspan=2>待核验</td></tr></tbody></table>
+      </section>
+    </div>
+
+    <h4>制造证据链</h4>
+    <table class="ev-table"><thead><tr><th>ID</th><th>证据类型</th><th>置信</th><th>证据内容与来源</th></tr></thead><tbody><tr><td class="ev-id">E2</td><td>第三方转述（矿业资料）</td><td><span class="conf conf-mid">低</span></td><td>矿权信息（示意，未核验）<div class="src-line">来源：<a href="https://example.com/illustrative-2" target="_blank" rel="noopener">S-D2</a></div></td></tr></tbody></table>
+
+    <div class="two-col">
+      <section><h4>出口与贸易信息</h4><p>待核验</p></section>
+      <section><h4>风险提示</h4><ul class="risk-list"><li>是否加工为成品碱不明</li></ul></section>
+    </div>
+
+    <h4>需向该企业核实的询证问题</h4>
+    <ol class="q-list"><li><b>QS-D03</b> 贵司是仅出矿还是具备成品纯碱加工能力？请提供加工厂产能与产品规格。</li></ol>
+
+    <div class="actions">
+      <button class="btn primary" onclick="verifySupplier('D-2')">核验该海外供应商 →</button>
+      <button class="btn" onclick="genQuestions('D-2')">生成询证问题清单</button>
+      <button class="btn ghost" onclick="copyInquiry('D-2')">复制询盘要点</button>
+    </div>
+  </div>
+</article>
+<article class="co-card gC" id="D-3"
+  data-grade="C" data-type="MANUFACTURER" data-kind="trade"
+  data-site="西爪哇（示意）" data-name="【示意】某烧碱企业 ">
+  <header class="co-head" onclick="toggleCard(this)">
+    <div class="rank">#3</div>
+    <div class="co-title">
+      <h3>【示意】某烧碱企业</h3>
+      <p class="sub"> · </p>
+    </div>
+    <div class="badges">
+      <span class="badge grade-badge">证据等级 C</span>
+      <span class="badge type-badge">制造企业（非目标产品）</span>
+    </div>
+    <div class="chev">▾</div>
+  </header>
+  <div class="co-body">
+    <div class="kv-grid">
+      <div><span class="k">所属集团</span><span class="v">某盐化工集团（示意）</span></div>
+      <div><span class="k">股权/归属</span><span class="v">示意</span></div>
+      <div><span class="k">工厂所在地</span><span class="v">西爪哇（示意）</span></div>
+      <div><span class="k">成立/投产</span><span class="v">待核验</span></div>
+      <div><span class="k">公开产能</span><span class="v"><b>0（非目标品）</b> —</span></div>
+      <div><span class="k">生产工艺</span><span class="v">离子膜电解（示意）</span></div>
+    </div>
+
+    <div class="verdict bad">
+      <b>判定理由：</b>生产烧碱（NaOH），与纯碱（Na₂CO₃）是不同产品，仅因“碱”字关键词被检索命中。属易混淆的近似品。
+    </div>
+
+    <div class="two-col">
+      <section>
+        <h4>产品与规格</h4>
+        <table class="mini"><thead><tr><th>产品</th><th>牌号/用途</th><th>公开规格</th></tr></thead><tbody><tr><td>烧碱 NaOH（非目标品）</td><td>工业级</td><td>—</td></tr></tbody></table>
+        <h4>产能口径与注意事项</h4>
+        <p class="cap-note">—</p>
+        <p class="warn-note">⚠ —</p>
+      </section>
+      <section>
+        <h4>官方公开联系渠道</h4>
+        <table class="mini"><thead><tr><th>渠道</th><th>信息</th><th>核验状态</th></tr></thead><tbody><tr><td>官网</td><td class="mono">待核验</td><td>待核验</td></tr></tbody></table>
+        <h4>认证与质量文件</h4>
+        <table class="mini"><thead><tr><th>认证</th><th>状态</th></tr></thead><tbody><tr><td colspan=2>待核验</td></tr></tbody></table>
+      </section>
+    </div>
+
+    <h4>制造证据链</h4>
+    <table class="ev-table"><thead><tr><th>ID</th><th>证据类型</th><th>置信</th><th>证据内容与来源</th></tr></thead><tbody><tr><td class="ev-id">E3</td><td>第三方转述（行业名录）</td><td><span class="conf conf-mid">低</span></td><td>生产烧碱（示意）<div class="src-line">来源：<a href="https://example.com/illustrative-3" target="_blank" rel="noopener">S-D3</a></div></td></tr></tbody></table>
+
+    <div class="two-col">
+      <section><h4>出口与贸易信息</h4><p>—</p></section>
+      <section><h4>风险提示</h4><ul class="risk-list"><li>关键词误判</li></ul></section>
+    </div>
+
+    <h4>需向该企业核实的询证问题</h4>
+    <ol class="q-list"><li><b>QS-D04</b> 请确认贵司是否同时生产碳酸钠（Na₂CO₃）？若无，本清单不再保留。</li></ol>
+
+    <div class="actions">
+      <button class="btn primary" onclick="verifySupplier('D-3')">核验该海外供应商 →</button>
+      <button class="btn" onclick="genQuestions('D-3')">生成询证问题清单</button>
+      <button class="btn ghost" onclick="copyInquiry('D-3')">复制询盘要点</button>
+    </div>
+  </div>
+</article>
+<article class="co-card gD" id="D-4"
+  data-grade="D" data-type="TRADER" data-kind="trade"
+  data-site="无自有工厂" data-name="【示意】某贸易分销公司 ">
+  <header class="co-head" onclick="toggleCard(this)">
+    <div class="rank">#4</div>
+    <div class="co-title">
+      <h3>【示意】某贸易分销公司</h3>
+      <p class="sub"> · </p>
+    </div>
+    <div class="badges">
+      <span class="badge grade-badge">证据等级 D</span>
+      <span class="badge type-badge">一般贸易商</span>
+    </div>
+    <div class="chev">▾</div>
+  </header>
+  <div class="co-body">
+    <div class="kv-grid">
+      <div><span class="k">所属集团</span><span class="v">—</span></div>
+      <div><span class="k">股权/归属</span><span class="v">示意</span></div>
+      <div><span class="k">工厂所在地</span><span class="v">无自有工厂</span></div>
+      <div><span class="k">成立/投产</span><span class="v">待核验</span></div>
+      <div><span class="k">公开产能</span><span class="v"><b>0（自身无装置）</b> —</span></div>
+      <div><span class="k">生产工艺</span><span class="v">—</span></div>
+    </div>
+
+    <div class="verdict bad">
+      <b>判定理由：</b>无生产装置，仅从事分销与代理。不能作为制造证据。
+    </div>
+
+    <div class="two-col">
+      <section>
+        <h4>产品与规格</h4>
+        <table class="mini"><thead><tr><th>产品</th><th>牌号/用途</th><th>公开规格</th></tr></thead><tbody><tr><td>纯碱（转售）</td><td>—</td><td>—</td></tr></tbody></table>
+        <h4>产能口径与注意事项</h4>
+        <p class="cap-note">—</p>
+        <p class="warn-note">⚠ —</p>
+      </section>
+      <section>
+        <h4>官方公开联系渠道</h4>
+        <table class="mini"><thead><tr><th>渠道</th><th>信息</th><th>核验状态</th></tr></thead><tbody><tr><td>官网</td><td class="mono">待核验</td><td>待核验</td></tr></tbody></table>
+        <h4>认证与质量文件</h4>
+        <table class="mini"><thead><tr><th>认证</th><th>状态</th></tr></thead><tbody><tr><td colspan=2>待核验</td></tr></tbody></table>
+      </section>
+    </div>
+
+    <h4>制造证据链</h4>
+    <table class="ev-table"><thead><tr><th>ID</th><th>证据类型</th><th>置信</th><th>证据内容与来源</th></tr></thead><tbody><tr><td class="ev-id">E4</td><td>平台挂牌</td><td><span class="conf conf-mid">低</span></td><td>贸易公司挂牌（示意）<div class="src-line">来源：<a href="https://example.com/illustrative-4" target="_blank" rel="noopener">S-D4</a></div></td></tr></tbody></table>
+
+    <div class="two-col">
+      <section><h4>出口与贸易信息</h4><p>待核验</p></section>
+      <section><h4>风险提示</h4><ul class="risk-list"><li>中间商加价与货源真实性</li></ul></section>
+    </div>
+
+    <h4>需向该企业核实的询证问题</h4>
+    <ol class="q-list"><li><b>QS-D05</b> 若贵司为贸易商，请提供上游工厂名称及销售授权。</li></ol>
+
+    <div class="actions">
+      <button class="btn primary" onclick="verifySupplier('D-4')">核验该海外供应商 →</button>
+      <button class="btn" onclick="genQuestions('D-4')">生成询证问题清单</button>
+      <button class="btn ghost" onclick="copyInquiry('D-4')">复制询盘要点</button>
+    </div>
+  </div>
+</article></div>
+      <div class="empty hidden" id="emptyManu">当前筛选条件下无匹配的生产主体</div>
+    </div>
+    <div>
+      <div class="col-head trade">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 6h18"/><path d="M7 22l-4-4 4-4"/><path d="M21 18H3"/></svg>
+        销售主体 / 贸易中间商 / 非目标品（不作制造证据）<span class="c" id="cntTrade"></span></div>
+      <div class="col-explain">此栏收录：① 集团销售或附属营销主体（如 SPDC，自身无装置但可能是对华签约窗口）；② 仅是“行业相关”的公司（生产其他 glycol 或石化品，易被关键词误判）；③ 贸易商与平台挂牌卖家。列出它们的目的，是<b>防止把销售主体当成工厂</b>。</div>
+      <div id="listTrade"></div>
+      <div class="empty hidden" id="emptyTrade">当前筛选条件下无匹配主体</div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2><span class="num">06</span>产品规格与产能口径对照（公开数据）</h2>
+  <p class="sec-sub">公开设计产能 ≠ 当前实际供货能力。下表只记录“公开说了什么”，并列明口径冲突。</p>
+  <div class="tbl-wrap">
+    <table class="src">
+      <thead><tr><th>企业</th><th>公开产能</th><th>口径明细与冲突</th><th>当前供货能力判断</th></tr></thead>
+      <tbody>
+        <tr><td><b>【示意】某盐化工集团附属碱厂</b></td><td>待核验 kt/a</td><td>暂无可靠公开装置级数据</td><td>无法判断当前可供货能力</td></tr><tr><td><b>【示意】某矿业公司</b></td><td>待核验 kt/a</td><td>矿权与选矿/加工能力需分别核验</td><td>无法判断当前可供货能力</td></tr><tr><td><b>【示意】某烧碱企业</b></td><td>0（非目标品） —</td><td>—</td><td>—</td></tr><tr><td><b>【示意】某贸易分销公司</b></td><td>0（自身无装置） —</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2><span class="num">07</span>市场背景（用于解释为何要找到工厂本身）</h2>
+  <div class="grid2">
+    <div class="note"><b>本案例不含真实市场数据：仅演示结构。</b><div style="margin-top:6px;color:#64748b;font-size:12px">来源：<a href="https://example.com/illustrative-1" target="_blank" rel="noopener">S-D1</a> · 置信度 —</div></div>
+  </div>
+  <h4>这对采购意味着什么</h4>
+  <p>本案例的用途是证明：换国家、换品类后，证据分级、主体分离与产能口径规则完全不变；而在未取证时，正确的结果是“全部待核验”，而不是凑出一份“已核验厂家”名单。</p>
+</section>
+
+<section class="panel">
+  <h2><span class="num">08</span>后续核验问题清单</h2>
+  <p class="sec-sub">证据不足的企业与字段，统一转成可发出的问询，避免用“看起来像生产商”替代核实。</p>
+  <div class="tbl-wrap">
+    <table class="src">
+      <thead><tr><th>编号</th><th>相关企业</th><th>需核实的问题</th></tr></thead>
+      <tbody><tr><td class="ev-id">QS-00</td><td>通用</td><td>本次采购的产品、规格、数量、到岸港、结算方式与认证要求，请先确认，以便统一询盘口径。</td></tr><tr><td class="ev-id">QS-D01</td><td>【示意】某盐化工集团附属碱厂</td><td>贵司是否拥有并运营纯碱（氨碱/联碱）装置？装置名称、许可号、地址？</td></tr><tr><td class="ev-id">QS-D02</td><td>【示意】某盐化工集团附属碱厂</td><td>请提供工厂级 ISO 证书编号与近 12 个月 COA 样本。</td></tr><tr><td class="ev-id">QS-D03</td><td>【示意】某矿业公司</td><td>贵司是仅出矿还是具备成品纯碱加工能力？请提供加工厂产能与产品规格。</td></tr><tr><td class="ev-id">QS-D04</td><td>【示意】某烧碱企业</td><td>请确认贵司是否同时生产碳酸钠（Na₂CO₃）？若无，本清单不再保留。</td></tr><tr><td class="ev-id">QS-D05</td><td>【示意】某贸易分销公司</td><td>若贵司为贸易商，请提供上游工厂名称及销售授权。</td></tr></tbody>
+    </table>
+  </div>
+  <div class="actions" style="border:0">
+    <button class="btn primary" onclick="genQuestions('ALL')">生成全部询证问题清单</button>
+    <button class="btn" onclick="window.print()">打印 / 导出 PDF</button>
+  </div>
+</section>
+
+<section class="panel">
+  <h2><span class="num">09</span>证据来源清单</h2>
+  <p class="sec-sub">每条证据都可回溯到下列公开来源；标注“待下载/直连失败”者不作为最终结论依据，仅作线索。</p>
+  <div class="tbl-wrap">
+    <table class="src">
+      <thead><tr><th>ID</th><th>来源与标题</th><th>日期</th><th>收录状态</th></tr></thead>
+      <tbody><tr><td class="ev-id">S-D1</td><td><a href="https://example.com/illustrative-1" target="_blank" rel="noopener">【示意来源】行业资料（未核验）</a></td><td>—</td><td>待下载</td></tr><tr><td class="ev-id">S-D2</td><td><a href="https://example.com/illustrative-2" target="_blank" rel="noopener">【示意来源】矿业资料（未核验）</a></td><td>—</td><td>待下载</td></tr><tr><td class="ev-id">S-D3</td><td><a href="https://example.com/illustrative-3" target="_blank" rel="noopener">【示意来源】行业名录（未核验）</a></td><td>—</td><td>待下载</td></tr><tr><td class="ev-id">S-D4</td><td><a href="https://example.com/illustrative-4" target="_blank" rel="noopener">【示意来源】平台挂牌（未核验）</a></td><td>—</td><td>待下载</td></tr></tbody>
+    </table>
+  </div>
+  <div class="danger" style="margin-top:14px"><b>合规与免责：</b>本案例为方法演示，企业名称、产能、认证与联系方式均未核验，不得作为真实采购依据。</div>
+</section>
+
+<footer>本报告由「找海外候选生产商」方法生成 · OSM-SODA-ID-DEMO · 生成工具：通用寻源调查 Skill</footer>
+</div>
+
+<div class="modal" id="modal"><div class="modal-box">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <h3 id="mTitle">标题</h3>
+  <div id="mBody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {"companies": [{"id": "D-1", "name": "【示意】某盐化工集团附属碱厂", "grade": "B", "type": "合资制造企业（待核验）", "site": "东爪哇（示意，待核验）", "cap": "待核验", "qs": ["贵司是否拥有并运营纯碱（氨碱/联碱）装置？装置名称、许可号、地址？", "请提供工厂级 ISO 证书编号与近 12 个月 COA 样本。"]}, {"id": "D-2", "name": "【示意】某矿业公司", "grade": "B", "type": "制造企业（待核验）", "site": "加里曼丹（示意，待核验）", "cap": "待核验", "qs": ["贵司是仅出矿还是具备成品纯碱加工能力？请提供加工厂产能与产品规格。"]}, {"id": "D-3", "name": "【示意】某烧碱企业", "grade": "C", "type": "制造企业（非目标产品）", "site": "西爪哇（示意）", "cap": "0（非目标品）", "qs": ["请确认贵司是否同时生产碳酸钠（Na₂CO₃）？若无，本清单不再保留。"]}, {"id": "D-4", "name": "【示意】某贸易分销公司", "grade": "D", "type": "一般贸易商", "site": "无自有工厂", "cap": "0（自身无装置）", "qs": ["若贵司为贸易商，请提供上游工厂名称及销售授权。"]}], "Q": {"QS-00": {"q": "本次采购的产品、规格、数量、到岸港、结算方式与认证要求，请先确认，以便统一询盘口径。", "company": "通用"}, "QS-D01": {"q": "贵司是否拥有并运营纯碱（氨碱/联碱）装置？装置名称、许可号、地址？", "company": "D-1"}, "QS-D02": {"q": "请提供工厂级 ISO 证书编号与近 12 个月 COA 样本。", "company": "D-1"}, "QS-D03": {"q": "贵司是仅出矿还是具备成品纯碱加工能力？请提供加工厂产能与产品规格。", "company": "D-2"}, "QS-D04": {"q": "请确认贵司是否同时生产碳酸钠（Na₂CO₃）？若无，本清单不再保留。", "company": "D-3"}, "QS-D05": {"q": "若贵司为贸易商，请提供上游工厂名称及销售授权。", "company": "D-4"}}};
+const PRODJS = "纯碱（碳酸钠）";
+const PRODENJS = "Soda ash (sodium carbonate)";
+const CASJS = "497-19-8";
+const HSJS = "2836.20.00.00";
+const DESPORTJS = "China";
+
+function toggleCard(h){ h.parentElement.classList.toggle('open'); }
+
+function filterCards(){
+  const kind = document.querySelector('#kindSeg button.on').dataset.kind;
+  const grade = document.getElementById('fGrade').value;
+  const site = document.getElementById('fSite').value;
+  const type = document.getElementById('fType').value;
+  const cap = document.getElementById('fCap').value;
+  const text = document.getElementById('fText').value.trim().toLowerCase();
+  const cards = [...document.querySelectorAll('.co-card')];
+  const fragM = document.createDocumentFragment(), fragT = document.createDocumentFragment();
+  let nm=0, nt=0;
+  cards.forEach(card=>{
+    let ok = true;
+    if (grade && card.dataset.grade !== grade) ok = false;
+    if (site) { const s = card.dataset.site || 'none'; if (site==='none' ? !!card.dataset.site : s !== site) ok=false; }
+    if (type && card.dataset.type !== type) ok = false;
+    if (cap) {
+      const cid = card.id;
+      const co = DATA.companies.find(x=>x.id===cid);
+      const num = parseFloat(String(co? co.cap : '').replace(/[^0-9.]/g,'')) || 0;
+      const mtpa = num > 20 ? num/1000 : num; // rough normalize
+      if (cap==='ge500' && !(mtpa>=0.5)) ok=false;
+      if (cap==='none' && mtpa>0) ok=false;
+    }
+    if (text && !card.textContent.toLowerCase().includes(text)) ok = false;
+    if (kind!=='all' && card.dataset.kind !== kind) ok = false;
+    if (!ok) { return; }
+    if (card.dataset.kind==='manu') { nm++; fragM.appendChild(card); } else { nt++; fragT.appendChild(card); }
+  });
+  document.getElementById('listManu').appendChild(fragM);
+  document.getElementById('listTrade').appendChild(fragT);
+  document.getElementById('cntManu').textContent = nm + ' 家';
+  document.getElementById('cntTrade').textContent = nt + ' 家';
+  document.getElementById('emptyManu').classList.toggle('hidden', nm>0);
+  document.getElementById('emptyTrade').classList.toggle('hidden', nt>0);
+  document.getElementById('countLbl').textContent = `共匹配 ${nm+nt} / 4 家`;
+}
+document.querySelectorAll('#kindSeg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#kindSeg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); filterCards();
+});
+['fGrade','fSite','fType','fCap','fText'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener(el.tagName==='INPUT'?'input':'change', filterCards);
+});
+filterCards();
+
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); }
+function closeModal(){ document.getElementById('modal').classList.remove('on'); }
+
+function verifySupplier(id){
+  const co = DATA.companies.find(c=>c.id===id);
+  document.getElementById('mTitle').textContent = '核验该海外供应商：' + co.name;
+  document.getElementById('mBody').innerHTML = `
+    <p class="cap-note">下一步应交给「核验海外供应商」流程，逐项取证。当前状态：证据等级 <b>${co.grade}</b>，主体类型 <b>${co.type}</b>。</p>
+    <h4>建议核验顺序</h4>
+    <ol class="q-list">
+      <li>主体一致性：签约主体名称、注册号（Saudi CR No.）、地址与工厂地址是否一致。</li>
+      <li>制造一致性：索取产品规格书 + COA + 工厂实拍/装置铭牌 + 出口发票（Consignor 应为该工厂或其集团销售主体）。</li>
+      <li>资质文件：工厂级 ISO 9001/14001/45001 证书编号与有效期；SDS（GHS 中文版）。</li>
+      <li>供货能力：近 12 个月对华发运记录/提单样本、最小起订量、FOB/CFR 贸易术语。</li>
+      <li>合规：反倾销/贸易救济现状、装运前检验、危化品运输文件（若按 UN3082 或作为非危品需确认）。</li>
+    </ol>
+    <h4>该企业待核实问题</h4>
+    <ol class="q-list">${(co.qs||[]).map(q=>'<li>'+q+'</li>').join('') || '<li>—</li>'}</ol>
+    <p class="warn-note">未取得书面回复前，不得将其列为“已核验厂家”。</p>`;
+  document.getElementById('modal').classList.add('on');
+}
+
+function buildQuestionsHTML(ids){
+  let rows = [];
+  ids.forEach(id=>{ const co = DATA.companies.find(c=>c.id===id); if(!co) return;
+    (co.qs||[]).forEach((q,i)=>rows.push(`<li><b>${co.name}</b> — ${q}</li>`)); });
+  return rows.join('');
+}
+function genQuestions(id){
+  let title, body, ids;
+  if (id==='ALL') {
+    title='全部询证问题清单'; ids = DATA.companies.map(c=>c.id);
+    const lines = [];
+    lines.push('【通用前置问题】'+DATA.Q['QS-00'].q);
+    DATA.companies.forEach(c=>{ (c.qs||[]).forEach(q=>lines.push('· '+c.name+'：'+q)); });
+    body = `<textarea id="qText" readonly>${lines.join('\n')}</textarea>
+      <div class="actions"><button class="btn primary" onclick="copyText()">复制全部</button><button class="btn" onclick="downloadTxt()">下载 .txt</button></div>`;
+    window.__QALL = lines.join('\n');
+  } else {
+    const co = DATA.companies.find(c=>c.id===id);
+    title = '询证问题清单：' + co.name;
+    const lines = ['致：'+co.name, '主题：'.concat(PRODJS,' 供应商资质与制造能力核实（请逐项书面回复）'),''] ;
+    (co.qs||[]).forEach((q,i)=>lines.push((i+1)+'. '+q));
+    lines.push('','请随附：产品规格书、近12个月COA样本、工厂级ISO证书编号、对华出口提单样本（可脱敏）。');
+    body = `<textarea id="qText" readonly>${lines.join('\n')}</textarea>
+      <div class="actions"><button class="btn primary" onclick="copyText()">复制</button><button class="btn" onclick="downloadTxt()">下载 .txt</button></div>`;
+  }
+  document.getElementById('mTitle').textContent = title;
+  document.getElementById('mBody').innerHTML = body;
+  document.getElementById('modal').classList.add('on');
+}
+function copyText(){
+  const ta=document.getElementById('qText'); ta.select();
+  navigator.clipboard.writeText(ta.value).then(()=>toast('已复制到剪贴板'),()=>{document.execCommand('copy');toast('已复制')});
+}
+function downloadTxt(){
+  const v=document.getElementById('qText').value;
+  const blob=new Blob([v],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=PRODJS+'询证问题清单.txt'; a.click();
+  toast('已下载');
+}
+function copyInquiry(id){
+  const co = DATA.companies.find(c=>c.id===id);
+  const txt = `Dear Sir/Madam,\n\nWe are a Chinese buyer looking to source ${PRODENJS} (CAS ${CASJS}, HS ${HSJS}).\n\nSupplier entity: ${co.name}\nPlant location: ${co.site || 'to be confirmed'}\nPublicly stated capacity: ${co.cap || 'to be confirmed'}\n\nPlease confirm:\n1) Whether the above entity owns/operates the production plant for this product (and the plant name / permit reference);\n2) Current available volume and loading port;\n3) Typical specification (key quality parameters) and last 12 months COA samples;\n4) Contracting entity for export to China (manufacturer or group sales company);\n5) Quotation basis (FOB / CFR ${DESPORTJS}, etc.).\n\nThank you.`;
+  navigator.clipboard.writeText(txt).then(()=>toast('英文询盘要点已复制'),()=>toast('复制失败，请手动复制'));
+}
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>

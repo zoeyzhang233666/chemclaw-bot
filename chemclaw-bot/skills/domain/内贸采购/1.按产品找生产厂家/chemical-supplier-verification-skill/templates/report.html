@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="__META_DESCRIPTION__">
+<title>__TITLE__ · __BRAND__</title>
+<style>
+:root{
+  --brand-teal:#0f766e;
+  --brand-teal-2:#14b8a6;
+  --brand-teal-3:#99f6e4;
+  --brand-amber:#d97706;
+  --brand-ink:#0b1726;
+  --brand-paper:#f4f1e8;
+  --brand-serif:"Source Han Serif SC","Noto Serif SC","Songti SC","SimSun",serif;
+  --brand-accent:#0f766e;
+  --brand-accent-soft:#e6f4f1;
+}
+/*__CSS__*/
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#top" aria-label="__BRAND__">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.6 20.2 7v10L12 21.4 3.8 17V7L12 2.6Z" stroke="#99f6e4" stroke-width="1.2"/><path d="M8 10.2h8M8 13.8h8M10 7.6v8.8M14 7.6v8.8" stroke="#14b8a6" stroke-width="1"/></svg>
+      </span>
+      <span>
+        <span class="brand-name">__BRAND__</span>
+        <span class="brand-sub">__BRAND_SUB__</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="页面导航">
+      <a href="#rfq">需求卡</a>
+      <a href="#pool">候选池</a>
+      <a href="#evidence">证据分级</a>
+      <a href="#traders">贸易商排除</a>
+      <a href="#method">方法与边界</a>
+      <a href="#sources">来源库</a>
+    </nav>
+    <div class="top-right">
+      <span class="asof"><i></i>数据截止 __ASOF__</span>
+      <a class="btn btn-white btn-sm" href="__EXCEL_FILENAME__" download>下载 Excel</a>
+      <a class="btn btn-primary btn-sm" href="#pool">进入候选池</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">按产品找生产厂家 · 内贸采购</div>
+          <h1>谁在真正生产<em>__PRODUCT_SHORT__</em>，<br>而不是“经营范围里写了__PRODUCT_SHORT__”。</h1>
+          <p class="lede">__LEDE__</p>
+          <div class="hero-chips">__HERO_CHIPS__</div>
+        </div>
+        <aside class="hero-card" aria-label="采购需求摘要">__HERO_CARD__</aside>
+      </div>
+    </section>
+
+    <section class="kpis" aria-label="关键指标">
+      __KPI_HTML__
+    </section>
+
+    <section class="section" id="rfq">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">01 / Purchase request</div>
+          <h2 class="section-title">先把需求说清楚，再让供应商对号入座</h2>
+          <p class="section-desc">__RFQ_DESC__</p>
+        </div>
+        <div class="section-tools">
+          <span class="pill amber"><i></i>示例需求，可替换</span>
+          <span class="pill"><i></i>月需 __QTY_MONTH_FMT__ __QTY_UNIT__</span>
+        </div>
+      </div>
+
+      <div class="rfq-grid">
+        <div class="card rfq-card">
+          <h3>采购需求卡</h3>
+          <div class="sub">填写后点击“应用需求”，页面会更新需求摘要；筛选与排序不受影响。</div>
+          <div class="field">
+            <label for="rfqProduct">产品 / 规格</label>
+            <input id="rfqProduct" value="__RFQ_PRODUCT_VALUE__">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="rfqQty">月需数量（__QTY_UNIT__）</label>
+              <input id="rfqQty" type="number" min="1" value="__QTY_MONTH__">
+            </div>
+            <div class="field">
+              <label for="rfqDest">收货地</label>
+              <input id="rfqDest" value="__DESTINATION__">
+            </div>
+          </div>
+          <div class="field">
+            <label for="rfqRegion">希望供应商位于</label>
+            <select id="rfqRegion">__RFQ_REGION_OPTIONS__</select>
+          </div>
+          <div class="rfq-actions">
+            <button class="btn btn-primary btn-sm" id="applyRfq">应用需求</button>
+            <button class="btn btn-ghost btn-sm" id="resetRfq">恢复示例</button>
+          </div>
+          <label class="upload-zone" for="specFile">
+            <span class="up-ic" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0 4.5 4.5M12 4 7.5 8.5M5 15v3.2A1.8 1.8 0 0 0 6.8 20h10.4a1.8 1.8 0 0 0 1.8-1.8V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span><b>上传规格书 / 物料清单（演示）</b><span>支持 .txt / .csv / .md；PDF 请粘贴文本</span></span>
+            <input type="file" id="specFile" accept=".txt,.csv,.md,.json" hidden>
+          </label>
+          <div class="parsed" id="parsedSpecs"></div>
+        </div>
+
+        <div class="rfq-right">
+          <div class="card method-card">
+            <div>
+              <h3>核验流程</h3>
+              <p>不是“搜到公司名”就结束，而是把生产身份拆成可验证的证据链。</p>
+            </div>
+            <div class="steps">
+              <div class="step"><span class="no">01</span><div><b>先证生产</b><span>装置、产能、产量、环评、政府项目、官网产品页；至少两条独立来源。</span></div></div>
+              <div class="step"><span class="no">02</span><div><b>再分身份</b><span>生产厂家 / 贸易商 / 代理 / 仅工商；贸易商单独标识，不混入厂家池。</span></div></div>
+              <div class="step"><span class="no">03</span><div><b>逐项对规格</b><span>__SPEC_COUNT__ 项指标逐项标注“公开可对标 / 未公开 / 待验证”，不拿标准值冒充实测值。</span></div></div>
+              <div class="step"><span class="no">04</span><div><b>按四因子排序</b><span>生产确定性 35% + 规格 30% + 规模 20% + 距离 15%。</span></div></div>
+              <div class="step"><span class="no">05</span><div><b>把缺口变成动作</b><span>COA、粒度、外销量、运费、现场审核，逐项落到 RFQ 与 30 天清单。</span></div></div>
+            </div>
+          </div>
+          <div class="card legend-card">
+            <h3>证据分级</h3>
+            <div class="legend-list">
+              <div class="legend-item"><span class="lv lv-a">直接-A</span><div><b>定期报告 / 政府 / 环评</b><span>产能、产量、项目、基地；最强证据。</span></div></div>
+              <div class="legend-item"><span class="lv lv-b">直接-B</span><div><b>官网 / IR / 招聘</b><span>产品页、产能、基地地址；需与 A 级交叉。</span></div></div>
+              <div class="legend-item"><span class="lv lv-c">间接-C</span><div><b>新闻 / 行业 / 采购</b><span>项目进度、原料采购、招聘；只能做旁证。</span></div></div>
+              <div class="legend-item"><span class="lv lv-d">仅工商-D</span><div><b>营业执照 / 店铺 SKU</b><span>单独标红，不可信；不进入候选池。</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card chart-card" style="margin-top:14px">
+        <div class="chart-head">
+          <div><h3>关键规格逐项对照 · 先看“能不能对上”</h3><p>公开标准/官网宣称只写“可对标”，不等于批次合格；没有 COA 的指标单独标缺口。</p></div>
+          <span class="chart-tag">__SPEC_COUNT__ 项</span>
+        </div>
+        <div class="table-wrap">
+          <table class="pool" aria-label="关键规格">
+            <thead><tr><th>指标</th><th>采购要求</th><th>单位</th><th>检测方法</th><th>为什么关键</th></tr></thead>
+            <tbody>__SPEC_TABLE_ROWS__</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="charts">
+        <div class="card chart-card">
+          <div class="chart-head">
+            <div><h3>__PROVINCE_TITLE__</h3><p>__PROVINCE_DESC__</p></div>
+            <span class="chart-tag">样本口径</span>
+          </div>
+          <div class="prov-bars">__PROVINCE_BARS__</div>
+        </div>
+        <div class="card chart-card">
+          <div class="chart-head">
+            <div><h3>__PROCESS_TITLE__</h3><p>__PROCESS_DESC__</p></div>
+            <span class="chart-tag">按产能</span>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut" style="background:__DONUT_STYLE__"><div class="donut-center"><b>__CAPACITY_FMT__</b><span>__CAP_UNIT__</span></div></div>
+            <div class="donut-legend">__DONUT_LEGEND__</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card corridor">
+        <div class="corridor-head">
+          <div><h3>供给走廊：从西北/华北到华东的“到厂距离”</h3><p>圆点大小不代表产能；数字为该区域样本产能。实际运费还取决于运输方式与批量。</p></div>
+          <span class="chart-tag">直线距离 ≠ 运费</span>
+        </div>
+        <div class="corridor-line">__CORRIDOR__</div>
+      </div>
+    </section>
+
+    <section class="section" id="pool">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">02 / Verified pool</div>
+          <h2 class="section-title">候选供应商池：先厂家，后贸易商</h2>
+          <p class="section-desc">默认按综合评分降序，可按地区、规模、距离、证据等级筛选。点击任意一行打开“生产证据 / 规格匹配 / 准入尽调”抽屉；勾选“对比”最多 3 家。</p>
+        </div>
+        <div class="section-tools">
+          <span class="pill"><i></i>厂家优先</span>
+          <span class="pill red"><i></i>贸易商单独标识</span>
+          <button class="btn btn-ghost btn-sm" id="openCompareTop">比较已选</button>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <aside class="card filters" aria-label="筛选">
+          <div class="filter-head"><h3>筛选</h3><button class="filter-reset" id="resetFilters">重置</button></div>
+          <div class="fgroup">
+            <label>身份</label>
+            <div class="chips" data-filter="identity">
+              <button class="chip-filter active" data-value="all">全部</button>
+              <button class="chip-filter" data-value="producer">生产厂家</button>
+              <button class="chip-filter" data-value="trader">贸易商（见 04）</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>地区</label>
+            <div class="chips" data-filter="region">
+              <button class="chip-filter active" data-value="all">全部</button>
+              <button class="chip-filter" data-value="华东">华东</button>
+              <button class="chip-filter" data-value="华北">华北</button>
+              <button class="chip-filter" data-value="华中">华中</button>
+              <button class="chip-filter" data-value="西北">西北</button>
+              <button class="chip-filter" data-value="西南">西南</button>
+              <button class="chip-filter" data-value="华南">华南</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>规模（__CAP_UNIT__）</label>
+            <div class="chips" data-filter="scale">
+              <button class="chip-filter active" data-value="all">全部</button>
+              <button class="chip-filter" data-value="xl">≥300</button>
+              <button class="chip-filter" data-value="lg">100–299</button>
+              <button class="chip-filter" data-value="md">50–99</button>
+              <button class="chip-filter" data-value="sm">&lt;50</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>到__DEST_SHORT__直线距离</label>
+            <div class="chips" data-filter="distance">
+              <button class="chip-filter active" data-value="all">全部</button>
+              <button class="chip-filter" data-value="near">≤300km</button>
+              <button class="chip-filter" data-value="mid">300–800</button>
+              <button class="chip-filter" data-value="far">800–1500</button>
+              <button class="chip-filter" data-value="xfar">&gt;1500</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>证据等级</label>
+            <div class="chips" data-filter="evidence">
+              <button class="chip-filter active" data-value="all">全部</button>
+              <button class="chip-filter" data-value="a">含直接-A</button>
+              <button class="chip-filter" data-value="b">含直接-B</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>搜索</label>
+            <input class="search" id="searchInput" placeholder="企业 / 基地 / 工艺 / 产品">
+          </div>
+          <div class="filter-note">数据缺口会直接显示在表中：产量“未披露”、规格“__SPEC_OPEN_EXAMPLE__/__SPEC_COUNT__ 公开”、证据等级 B。缺口不是扣分项，而是下一步要补的动作。</div>
+        </aside>
+
+        <div class="results">
+          <div class="toolbar">
+            <div class="toolbar-left"><b>生产厂家</b><span id="resultCount">__POOL_COUNT__ 家 · __PLANT_COUNT__ 个基地</span></div>
+            <div class="toolbar-right">
+              <select class="sort-select" id="sortSelect" aria-label="排序">
+                <option value="composite">综合排序</option>
+                <option value="certainty">生产确定性</option>
+                <option value="spec">规格匹配</option>
+                <option value="capacity">规模</option>
+                <option value="distance">距离</option>
+              </select>
+              <div class="view-toggle" aria-label="视图">
+                <button class="active" data-view="table">表格</button>
+                <button data-view="card">卡片</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap" id="tableView">
+            <table class="pool" aria-label="候选供应商池">
+              <thead>
+                <tr>
+                  <th>#</th><th>供应商</th><th>身份</th><th>最近基地</th><th>产能</th><th>距离</th><th>规格</th><th>证据</th><th>综合</th><th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="poolBody"></tbody>
+            </table>
+            <div class="empty" id="emptyState"><b>没有匹配结果</b>放宽筛选或清空搜索词再试。</div>
+            <div class="table-foot"><span>排序依据：综合 = __WEIGHT_SUMMARY__</span><span>点击行查看证据链与规格缺口</span></div>
+          </div>
+
+          <div id="cardView" style="display:none"></div>
+
+          <div class="card chart-card" style="margin-top:14px">
+            <div class="chart-head">
+              <div><h3>距离 × 综合评分：谁值得先谈</h3><p>点越大产能越大；颜色越深越优先。右上角是“近且确定性高”，左上角是“远但规模/证据强”。</p></div>
+              <span class="chart-tag">交互图</span>
+            </div>
+            <div class="scatter-wrap"><svg class="scatter" id="scatter" viewBox="0 0 760 380" role="img" aria-label="距离与综合评分散点图"></svg></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="evidence">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">03 / Evidence</div>
+          <h2 class="section-title">证据分级：直接证据、间接证据、仅工商</h2>
+          <p class="section-desc">“有产能”与“有产能证明”是两件事。本页把每条证据标成 A/B/C/D，并在企业抽屉里给出原文、日期、来源与链接；只有经营范围或店铺 SKU 的，单独标红。</p>
+        </div>
+        <div class="section-tools"><span class="pill"><i></i>__EVIDENCE_COUNT__ 条证据</span><span class="pill amber"><i></i>D 级不进入候选池</span></div>
+      </div>
+      <div class="evidence-grid">
+        __EVIDENCE_CARDS__
+      </div>
+      <div class="note-box amber" style="margin-top:14px"><b>判定规则：</b>同一事实至少两条独立来源交叉，生产确定性才打到 90+；只有官网/招聘一条来源的，最高按 B 级处理；只有营业执照/店铺 SKU 的，按 D 级处理，不进入厂家池。贸易商可以合作，但不能被当作“生产厂家”核验。</div>
+    </section>
+
+    <section class="section" id="traders">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">04 / Traders excluded</div>
+          <h2 class="section-title">贸易商与代理：单独标识，不混入厂家池</h2>
+          <p class="section-desc">以下 __TRADER_COUNT__ 个样本不是“黑名单”，而是“生产身份未证实”名单。它们可能有真实货源，也可能拿到授权；但在补足生产厂授权链、出厂 COA、发货地址与产能证明之前，不能作为生产厂家进入候选池。</p>
+        </div>
+        <div class="section-tools"><span class="pill red"><i></i>__TRADER_COUNT__ 个样本</span></div>
+      </div>
+      <div class="traders">__TRADERS__</div>
+    </section>
+
+    <section class="section" id="method">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">05 / Method & gaps</div>
+          <h2 class="section-title">排序逻辑、口径冲突与数据缺口</h2>
+          <p class="section-desc">排序不是“谁最大谁第一”，而是“谁最可能稳定供、且规格最接近”。所有缺口都明确写出，不猜测填充；同一企业不同来源口径不一致时并列保留。</p>
+        </div>
+        <div class="section-tools"><span class="pill"><i></i>权重可解释</span><span class="pill amber"><i></i>__GAP_COUNT__ 项缺口</span></div>
+      </div>
+
+      <div class="method-grid">
+        <div class="card method-box">
+          <h3>评分公式</h3>
+          <p>综合评分 = __WEIGHT_SUMMARY_LONG__。外销可得性不进入分数，但在“主供/备供”建议中单独考虑。</p>
+          __WEIGHT_ROWS__
+          <div class="note-box"><b>敏感性：</b>__SENSITIVITY__</div>
+        </div>
+
+        <div class="card method-box">
+          <h3>数据缺口（Top __GAP_COUNT__）</h3>
+          <table class="gap-table">
+            <thead><tr><th>优先级</th><th>缺口</th><th>影响</th><th>怎么补</th></tr></thead>
+            <tbody>__GAP_ROWS__</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="conflict-grid">__CONFLICTS__</div>
+
+      <div class="card method-box" style="margin-top:14px">
+        <h3>30 天行动清单</h3>
+        <p>__ACTION_INTRO__</p>
+        <div class="action-list">__ACTIONS__</div>
+      </div>
+    </section>
+
+    <section class="section" id="sources">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">06 / Sources</div>
+          <h2 class="section-title">来源库：每条产能/产量都能回到原文</h2>
+          <p class="section-desc">A 级为定期报告/政府/环评；B 级为官网/IR/招聘/行业；C 级为新闻与间接线索。访问日 __ASOF__。链接保留原始地址；失效链接以标题/日期追溯。</p>
+        </div>
+        <div class="section-tools"><span class="pill"><i></i>__SOURCE_COUNT__ 个来源</span></div>
+      </div>
+      <div class="sources-wrap">
+        <table class="sources-table">
+          <thead><tr><th>ID</th><th>机构</th><th>标题</th><th>日期</th><th>等级</th><th>链接</th></tr></thead>
+          <tbody>__SOURCES__</tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div><b>__BRAND__ · __TITLE__</b><br>__FOOTER_META__</div>
+      <div style="max-width:560px">__DISCLAIMER__</div>
+    </footer>
+  </div>
+</main>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="供应商详情">
+  <div class="drawer-head">
+    <button class="drawer-close" id="drawerClose" aria-label="关闭">×</button>
+    <div class="drawer-top">
+      <div class="drawer-title">
+        <div class="rankline" id="drawerRank"></div>
+        <h2 id="drawerName"></h2>
+        <div class="full" id="drawerFull"></div>
+      </div>
+      <div class="drawer-score"><b id="drawerScore"></b><span>综合评分 / 100</span></div>
+    </div>
+    <div class="drawer-badges" id="drawerBadges"></div>
+    <div class="drawer-tabs" id="drawerTabs">
+      <button class="drawer-tab active" data-tab="overview">总览</button>
+      <button class="drawer-tab" data-tab="evidence">生产证据</button>
+      <button class="drawer-tab" data-tab="spec">规格匹配</button>
+      <button class="drawer-tab" data-tab="action">准入尽调</button>
+    </div>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<div class="compare-bar" id="compareBar">
+  <span class="cnt" id="compareCount">0 / 3</span>
+  <div class="names" id="compareNames"></div>
+  <button class="btn btn-primary btn-sm" id="openCompare">对比</button>
+  <button class="btn btn-ghost btn-sm" id="clearCompare" style="color:#fff;border-color:rgba(255,255,255,.2)">清空</button>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div style="flex:1"><h3 id="modalTitle">对比</h3><p id="modalSub"></p></div>
+      <button class="modal-close" id="modalClose" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = __DATA__;
+/*__JS__*/
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+"""跨源对照素材：把联网检索到的“具体周值”逐条登记为 claim，用于与方法论主口径交叉校验。
+
+原则：
+1. 只登记**公开发布、给出明确周/日期与数值**的他人引用，不登记评论性描述。
+2. 每条 claim 必须带 URL 与出处，不得为补洞而编造。
+3. 口径不一致的（如卓创“开工负荷率”）单独标注为不同口径，不混入主样本统计。
+"""
+import csv
+import os
+
+ROWS = [
+    # (source_id, provider, week_end, metric, value, c2c, yoy, url, body_quote, caliber)
+    ("M1", "隆众资讯（转载于 myteel.com）", "20261015", "整体产能利用率", 64.59, -1.67, -12.10,
+     "https://www.mysteel.com/oilchem/a/26101608/87AD42ED0F95C49B.html",
+     "本周PVC生产企业产能利用率在64.59%，环比减少1.67%，同比减少12.10%；其中电石法在69.66%，环比减少2.62%，同比减少5.05%，乙烯法在52.78%，环比增加0.57%，同比减少28.48%",
+     "隆众口径·71家样本·周度"),
+    ("M2", "隆众资讯（转载于 myteel.com）", "20261015", "电石法产能利用率", 69.66, -2.62, -5.05,
+     "https://www.mysteel.com/oilchem/a/26101608/87AD42ED0F95C49B.html",
+     "电石法在69.66%，环比减少2.62%，同比减少5.05%", "隆众口径·分工艺"),
+    ("M3", "隆众资讯（转载于 myteel.com）", "20261015", "乙烯法产能利用率", 52.78, 0.57, -28.48,
+     "https://www.mysteel.com/oilchem/a/26101608/87AD42ED0F95C49B.html",
+     "乙烯法在52.78%，环比增加0.57%，同比减少28.48%", "隆众口径·分工艺"),
+    ("M4", "隆众资讯图表接口（mysteel.com/pvczq 数据可视化组件 ID01230780）", "20260807", "整体产能利用率", 73.76, None, None,
+     "https://api.mysteel.com/publishd/page/pageListIndexCharts?pageListIds=6466",
+     "xaxis 2026-08-07 -> yaxis 73.76（PVC周度产能利用率）", "隆众口径·图表接口13周窗口"),
+    ("M5", "同 M4（ID01037485）", "20260807", "电石法产能利用率", 75.89, None, None,
+     "https://api.mysteel.com/publishd/page/pageListIndexCharts?pageListIds=6466",
+     "xaxis 2026-08-07 -> yaxis 75.89（电石法PVC周度产能利用率）", "隆众口径·分工艺"),
+    ("M6", "同 M4（ID01037486）", "20260807", "乙烯法产能利用率", 68.78, None, None,
+     "https://api.mysteel.com/publishd/page/pageListIndexCharts?pageListIds=6466",
+     "xaxis 2026-08-07 -> yaxis 68.78（乙烯法PVC周度产能利用率）", "隆众口径·分工艺"),
+    ("Z1", "卓创资讯开工负荷率（媒体转引，期货公司或财经媒体）", "20260618", "PVC粉整体开工负荷率", 65.83, 0.91, None,
+     "https://www.18qh.com/zixun/c-2026-06-16-4458608.html",
+     "本期PVC粉整体开工负荷率为65.83%，环比上期+0.91%；其中电石法PVC粉开工负荷率为76.03%，乙烯法PVC粉开工负荷率为43.01%",
+     "卓创口径·开工负荷率（与隆众不可直接相减）"),
+    ("Z2", "卓创资讯开工负荷率（媒体转引）", "20260827", "PVC粉整体产能利用率", 66.69, -1.68, None,
+     "https://qhweb.eastmoney.com/news/202608313859559837.html",
+     "截至8月27日当周，国内PVC粉整体产能利用率回落至66.69%，环比下降1.68个百分点；电石法开工率为68.42%，乙烯法开工率为62.81%",
+     "卓创口径（同文交替使用“开工率/产能利用率”两词，口径需注意）"),
+    ("Z3", "卓创资讯（转引，中国经营报系）", "20260930", "乙烯法产能利用率", 54.48, None, -25.27,
+     "https://www.sohu.com/a/1087271906_121123900",
+     "9月PVC检修企业产能规模在1119万吨，同比增加40.75%；截止9月底乙烯法产能利用率降至54.48%，同比减少25.27%",
+     "卓创口径·月末值（非严格周度）"),
+    ("B1", "钢联/卓创混合引用（搜狐期货评述）", "20261016", "PVC整体开工负荷", 61.5, -2.99, None,
+     "https://m.sohu.com/a/1089270473_122014422",
+     "钢联数据显示本周PVC整体开工负荷率61.5%，环比-2.99%",
+     "钢联口径·开工负荷率（与隆众不可直接相减，仅作方向性对照）"),
+]
+
+
+def main():
+    out = os.path.join('raw', 'external_claims.csv')
+    os.makedirs('raw', exist_ok=True)
+    keys = ["claim_id", "provider", "week_end", "metric", "value", "c2c", "yoy", "url", "body_quote", "caliber"]
+    with open(out, 'w', encoding='utf-8-sig', newline='') as f:
+        w = csv.writer(f)
+        w.writerow(keys)
+        for r in ROWS:
+            w.writerow(list(r))
+    print('wrote', out, len(ROWS))
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,214 @@
+{
+  "meta": {
+    "rule_id": "MA-1-5-9-basis80-inv2w-down-hold10",
+    "title": "甲醇港口库存连续两周下降 且 基差高于过去3年滚动80%分位 → 下一交易日建多，持有10个交易日",
+    "product": "甲醇 (Methanol, CZCE MA)",
+    "author": "research desk",
+    "created": "2026-10-20",
+    "version": "1.0.0",
+    "nl_rule": "甲醇港口库存连续两周下降，且甲醇基差高于过去3年滚动80%分位时，在信号可获得后的下一交易日建立甲醇期货多头，持有10个交易日。",
+    "research_question": "Does a bullish inventory+basis setup on methanol port inventory have historical predictive content for a 10-session long, after realistic contract, roll and cost modelling?",
+    "declared_before_running": true,
+    "notes": "此规格在任何回测运行之前固定；敏感性网格在 analysis.sensitivity 中预先声明，事后不得以收益最高的一组替换基准。"
+  },
+  "provenance": {
+    "contract_spec": {
+      "basis": "assumed_czce_standard",
+      "note": "郑商所甲醇期货合约（2013上市）：10吨/手，最小变动价位1元/吨，涨跌停±6%（长假前调整）。执行前请以交易所最新合约规则核对。",
+      "multiplier": 10,
+      "tick_size": 1,
+      "source": "CZCE contract specification (general knowledge; verify against exchange announcement)"
+    },
+    "margin_rate": {
+      "basis": "assumed",
+      "value": 0.1,
+      "note": "交易所最低保证金约7%-8%，期货公司通常加收至10%-13%；此处取10%，用户可在 config 中替换为实际保证金率。",
+      "source": "assumed brokerage level"
+    },
+    "fee_per_lot": {
+      "basis": "assumed",
+      "value": 2.0,
+      "note": "按每手2元开+平各计一次（交易所+期货公司合计约1-3元/手，激进投机品种可能按手数固定收取）。请替换为实际成交单费率。",
+      "source": "assumed"
+    },
+    "slippage_ticks": {
+      "basis": "assumed",
+      "value": 0.5,
+      "note": "以半个最小变动价位作为市价单滑点（每边）。甲醇主力日成交量大，但开盘集合竞价与夜盘跳空可能更大；敏感性测试中会放大。",
+      "source": "assumed"
+    },
+    "tick_size": {
+      "basis": "assumed_czce_standard",
+      "value": 1,
+      "source": "CZCE"
+    },
+    "multiplier": {
+      "basis": "assumed_czce_standard",
+      "value": 10,
+      "source": "CZCE"
+    },
+    "indicator_publication": {
+      "basis": "partially_verified",
+      "note": "2022-04至2024-07的 Mysteel 数据为2024-07回填发布，原始发布时刻无法从公开页面核验；2024-10起隆众原文发布时刻可核验（多为as-of日13:00-14:33）。strict 模式仅用可核验样本，backfill_assumed 模式对未核验周使用 as-of 14:00 假设。",
+      "source": "Mysteel mobile re-post pages + OILCHEM original articles"
+    },
+    "spot_price": {
+      "basis": "provenance_unverified",
+      "note": "spot 序列来自历史整理文件（华东现货/元吨），未标注采集商与发布时间；回测按收盘后才可用处理（next_session）。",
+      "source": "meoh-inv/ppi_ma_prices.csv"
+    }
+  },
+  "universe": {
+    "exchange": "CZCE",
+    "product_code": "MA",
+    "instrument_name": "甲醇期货",
+    "direction_mode": "long",
+    "currency": "CNY"
+  },
+  "contract": {
+    "selection": "kth_by_open_interest",
+    "k": 1,
+    "roll_rule": "open_interest_kth",
+    "no_trade_window_days_before_delivery": 10,
+    "roll_lead_days": 2,
+    "fixed_contract": null,
+    "notes": "仅使用当月真实挂牌合约；按前一交易日收盘持仓量排序取第k名作为当日持有合约，不晚于交割月前10个自然日移出可交易范围。不构造任何后复权连续价格。"
+  },
+  "timing": {
+    "signal_cutoff_same_day": "15:00",
+    "indicator_lag_sessions_min": 1,
+    "entry_lag_sessions": 1,
+    "prices": "open",
+    "same_day_release_price": null,
+    "spot_availability": "next_session",
+    "notes": "可用日 = 发布日之后第一个交易日（周度数据多为周三13:00-14:33发布，收盘后可知）。入场价取该交易日开盘价，出场价取第N个交易日收盘价。"
+  },
+  "signal": {
+    "indicator": "methanol_port_inventory_wan_ton",
+    "indicator_unit": "万吨",
+    "source": "Mysteel 周度港口库存（lz_weekly.json）",
+    "frequency": "weekly",
+    "combine": "and",
+    "min_history": 8,
+    "ops": [
+      {
+        "type": "channel_change",
+        "n": 2,
+        "threshold": 0.0,
+        "channel_mode": "low",
+        "min_history": 8,
+        "label": "当前库存距近2期通道上沿回落≥0（通道=最近2期周度值，落于通道下沿）"
+      },
+      {
+        "type": "change_run",
+        "weeks": 2,
+        "direction": "down",
+        "label": "最近两次周度变化均为负（连续两周下降，严格口径）"
+      }
+    ]
+  },
+  "price_filter": {
+    "enabled": true,
+    "type": "pct_quantile",
+    "side": "above",
+    "threshold": 0.8,
+    "lookback_points": 756,
+    "lookback_note": "3年≈756个交易日（244*3），使用严格早于当日的基差历史计算分位，不使用未来数据",
+    "basis_mapping": "spot_minus_fut",
+    "warmup_min_points": 120
+  },
+  "entry": {
+    "order_type": "market_next_open",
+    "reentry_while_holding": "ignore",
+    "max_concurrent_positions": 1
+  },
+  "exit": {
+    "exit_on_max_hold": true,
+    "max_hold_sessions": 10,
+    "take_profit_pct": null,
+    "stop_loss_pct": null,
+    "exit_on_roll_when_contract_changes": true
+  },
+  "position": {
+    "sizing": "fixed_lots",
+    "lots": 1,
+    "capital": 200000,
+    "max_lots": 1,
+    "max_margin_utilisation": 0.5,
+    "risk_notes": "默认1手/200,000元（约13%名义敞口、约1.3%保证金占用），便于看清每笔交易的单位收益；实际资金规模请修改 capital 与 lots。"
+  },
+  "costs": {
+    "fee_mode": "per_lot",
+    "fee_value": 2.0,
+    "commission_min_per_lot": 0.0,
+    "slippage_ticks": 0.5,
+    "tick_size": 1,
+    "multiplier": 10,
+    "margin_rate": 0.1,
+    "cost_sensitivity": {
+      "fee_multiple": [
+        1,
+        2,
+        3
+      ],
+      "slippage_ticks": [
+        0.5,
+        1.0,
+        2.0,
+        4.0
+      ]
+    }
+  },
+  "data": {
+    "indicator_file": "data/inventory_weekly.csv",
+    "contracts_file": "data/contracts_daily.csv",
+    "calendar_file": "data/calendar.csv",
+    "spot_file": "data/spot_daily.csv",
+    "publication_mode": "strict",
+    "strict_from": "2024-10-23",
+    "strict_to": "2026-10-14",
+    "assumed_publish_time": "14:00",
+    "backfill_alternative_mode": "backfill_assumed",
+    "notes": "publication_mode=strict 只使用已核验原始发布会话；backfill_assumed 为敏感性对照（使用 as-of 14:00 假设），不作为主结论。"
+  },
+  "window": {
+    "start": null,
+    "end": null
+  },
+  "analysis": {
+    "metrics": {
+      "rf_annual": 0.0,
+      "sessions_per_year": 244
+    },
+    "sensitivity": {
+      "drawdown_n": [
+        2,
+        3,
+        4
+      ],
+      "channel_threshold_units": [
+        0.0,
+        0.25,
+        0.5
+      ],
+      "change_run_weeks": [
+        2,
+        3
+      ],
+      "hold_sessions": [
+        5,
+        10,
+        15
+      ],
+      "basis_quantile": [
+        0.7,
+        0.8,
+        0.9
+      ]
+    },
+    "oos": {
+      "split_date": "2025-07-01",
+      "note": "split_date 在任何单次回测结果生成前声明：样本内 = 开始至2025-06-30，样本外 = 2025-07-01以后。2024-10~2025-06 按周约34个可核验观测，2025-07~2026-10 约65个。"
+    }
+  }
+}

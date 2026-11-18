@@ -1,0 +1,133 @@
+{
+  "chain_id": "DEMO",
+  "counts": {
+    "nodes": 8,
+    "relations": 7,
+    "sources": 1,
+    "graph_nodes": 8,
+    "graph_relations": 7,
+    "layout": {
+      "nodes": 8,
+      "edges": 7,
+      "overlap": 0,
+      "outside": 0,
+      "edge_through_node": 0,
+      "edge_collinear": 0,
+      "diagonal": 0,
+      "detour": 0
+    }
+  },
+  "coverage": {
+    "definition": "覆盖率 = 逐项判定通过的核心清单条目 / 预先冻结的核心清单条目；节点与关系合计计入，不按条数加权。",
+    "scenario": "演示清单：演示覆盖率机制，范围故意设得很小。",
+    "nodes": {
+      "passed": 4,
+      "total": 4,
+      "rate": 100.0,
+      "by_priority": {
+        "P0": {
+          "passed": 2,
+          "total": 2
+        },
+        "P1": {
+          "passed": 1,
+          "total": 1
+        },
+        "P2": {
+          "passed": 1,
+          "total": 1
+        }
+      },
+      "detail": [
+        {
+          "core_id": "core_node_01",
+          "label": "目标品种",
+          "node_id": "N_PRIMARY",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_02",
+          "label": "原料 A",
+          "node_id": "N_RA",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_03",
+          "label": "下游 P2",
+          "node_id": "N_P2",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_node_04",
+          "label": "终端 E",
+          "node_id": "N_APP",
+          "priority": "P2",
+          "pass": true,
+          "failed": []
+        }
+      ]
+    },
+    "relations": {
+      "passed": 3,
+      "total": 3,
+      "rate": 100.0,
+      "by_priority": {
+        "P0": {
+          "passed": 2,
+          "total": 2
+        },
+        "P1": {
+          "passed": 1,
+          "total": 1
+        }
+      },
+      "detail": [
+        {
+          "core_id": "core_rel_01",
+          "label": "原料A→B",
+          "from": "N_RA",
+          "to": "N_PRIMARY",
+          "rel_id": "R02",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_02",
+          "label": "B→P2",
+          "from": "N_PRIMARY",
+          "to": "N_P2",
+          "rel_id": "R05",
+          "priority": "P0",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "core_id": "core_rel_03",
+          "label": "B→P1(配方)",
+          "from": "N_PRIMARY",
+          "to": "N_P1",
+          "rel_id": "R04",
+          "priority": "P1",
+          "pass": true,
+          "failed": []
+        }
+      ]
+    },
+    "overall": {
+      "passed": 7,
+      "total": 7,
+      "rate": 100.0
+    }
+  },
+  "fatal": [],
+  "warn": [],
+  "info": [],
+  "ok": true
+}

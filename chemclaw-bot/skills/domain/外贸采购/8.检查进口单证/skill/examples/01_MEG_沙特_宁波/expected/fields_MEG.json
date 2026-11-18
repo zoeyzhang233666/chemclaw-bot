@@ -1,0 +1,840 @@
+{
+ "batch": {
+  "case_no": "SIM-MEG-2026-0518",
+  "product": "乙二醇（工业级）/ ETHYLENE GLYCOL (MEG)",
+  "route": "沙特阿拉伯 朱拜勒 → 中国 宁波",
+  "label": "【模拟】仅供流程测试"
+ },
+ "documents": [
+  {
+   "file": "01_采购合同_Purchase_Contract.docx",
+   "type": "CONTRACT",
+   "fields": {
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 5,
+     "snippet": "Contract No. 合同号：HYNM-2026-0518-MEG     Date 日期：2026-03-18     Place 签订地：Ningbo, China"
+    },
+    "seller": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "page": 1,
+     "line": 9,
+     "snippet": "Name 名称AL-NOOR PETROCHEMICAL TRADING COMPANYNINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "buyer": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "Name 名称AL-NOOR PETROCHEMICAL TRADING COMPANYNINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 21,
+     "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+    },
+    "product_cn": {
+     "value": "乙二醇（工业级）",
+     "page": 1,
+     "line": 21,
+     "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "spec": {
+     "value": "≥99.9%",
+     "page": 1,
+     "line": 21,
+     "snippet": "GRADE；乙二醇（工业级）；含量 ≥99.9%"
+    },
+    "quantity": {
+     "value": "200.000 MT",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "unit": {
+     "value": "MT",
+     "page": 1,
+     "line": 19,
+     "snippet": "USD/MT"
+    },
+    "unit_price": {
+     "value": "612.00",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "amount": {
+     "value": "122,400.00",
+     "page": 1,
+     "line": 20,
+     "snippet": "1ETHYLENE GLYCOL (MEG), INDUSTRIAL107-21-12905310000200.000MT612.00122,400.00"
+    },
+    "currency": {
+     "value": "USD",
+     "page": 1,
+     "line": 18,
+     "snippet": "ItemDescription of Goods / 商品描述CAS No.HS CodeQuantityUnitUnit PriceAmount USD"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 30,
+     "snippet": "CFR NINGBOUnit price per MT, CFRKING ABDULLAH PORT,NINGBO PORT, CHINAT/T 30% advance + 70%"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL",
+     "page": 1,
+     "line": 0,
+     "snippet": "Port of Loading 装运港：KING ABDULLAH PORT, JUBAIL (SAJUB), SAUDI ARABIA"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA",
+     "page": 1,
+     "line": 0,
+     "snippet": "Port of Discharge 目的港：NINGBO PORT, CHINA (CNNGB)"
+    },
+    "payment": {
+     "value": "T/T 30% advance + 70% against B/L copy",
+     "page": 1,
+     "line": 30,
+     "snippet": "第 1 页第 30 行（贸易条款表第 2 行）：T/T 30% advance + 70% against B/L copy"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 11,
+     "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951,Room 1806, Building A, Yinzhou Trade Center, 1188"
+    },
+    "pack_type": {
+     "value": "ISO TANK CONTAINERS",
+     "page": 1,
+     "line": 27,
+     "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 27,
+     "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 27,
+     "snippet": "Bulk in ISO Tank Containers (ISOTANK) / 散装 ISO 罐9 ISO TANKS180,000 KGS180,180 KGS"
+    }
+   }
+  },
+  {
+   "file": "02_形式发票_Proforma_Invoice.docx",
+   "type": "PROFORMA_INVOICE",
+   "fields": {
+    "pi_no": {
+     "value": "PI-ALN-26-0312",
+     "page": 1,
+     "line": 5,
+     "snippet": "No. PI-ALN-26-0312          Date 2026-03-12          Validity: 30 days from date"
+    },
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 11,
+     "snippet": "ReferenceBuyer PO PO-HYNM-2603-011 / Contract Ref. HYNM-2026-0518-MEG"
+    },
+    "po_no": {
+     "value": "PO-HYNM-2603-011",
+     "page": 1,
+     "line": 11,
+     "snippet": "ReferenceBuyer PO PO-HYNM-2603-011 / Contract Ref. HYNM-2026-0518-MEG"
+    },
+    "seller": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "page": 1,
+     "line": 6,
+     "snippet": "SELLER / EXPORTER 卖方AL-NOOR PETROCHEMICAL TRADING COMPANY"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 8,
+     "snippet": "Consignee 收货人NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "Notify Party 通知方NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "origin": {
+     "value": "SAUDI ARABIA",
+     "page": 1,
+     "line": 7,
+     "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG)",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "product_cn": {
+     "value": "乙二醇",
+     "page": 1,
+     "line": 21,
+     "snippet": "乙二醇（工业级）"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "spec": {
+     "value": "≥99.9% wt",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "quantity": {
+     "value": "200.000 MT",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "unit_price": {
+     "value": "612.00",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "amount": {
+     "value": "122,400.00",
+     "page": 1,
+     "line": 19,
+     "snippet": "1ETHYLENE GLYCOL (MEG),107-21-12905310000≥99.9% wt (Purity)200.000 MT612.00122,400.00"
+    },
+    "currency": {
+     "value": "USD",
+     "page": 1,
+     "line": 14,
+     "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 14,
+     "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 14,
+     "snippet": "第 1 页第 14 行（贸易条款表第 1 行）：KING ABDULLAH PORT, / JUBAIL (SAJUB)"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA",
+     "page": 1,
+     "line": 0,
+     "snippet": "POL: KING ABDULLAH PORT, JUBAIL (SAJUB)  ·  POD: NINGBO PORT, CHINA (CNNGB)"
+    },
+    "payment": {
+     "value": "L/C at sight (to be advised)",
+     "page": 1,
+     "line": 14,
+     "snippet": "CFR NINGBOKING ABDULLAH PORT,NINGBO PORT, CHINAL/C at sight (to be advised)USD"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 7,
+     "snippet": "Address 地址P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 26,
+     "snippet": "Bulk in ISO tank containers180,000 KGS180,180 KGS9"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 26,
+     "snippet": "Bulk in ISO tank containers180,000 KGS180,180 KGS9"
+    }
+   }
+  },
+  {
+   "file": "03_商业发票_Commercial_Invoice.docx",
+   "type": "COMMERCIAL_INVOICE",
+   "fields": {
+    "invoice_no": {
+     "value": "ALN-INV-26-0518",
+     "page": 1,
+     "line": 6,
+     "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+    },
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 7,
+     "snippet": "Contract No. 合同号HYNM-2026-0518-MEGPO No. 订单号PO-HYNM-2603-011"
+    },
+    "po_no": {
+     "value": "PO-HYNM-2603-011",
+     "page": 1,
+     "line": 7,
+     "snippet": "Contract No. 合同号HYNM-2026-0518-MEGPO No. 订单号PO-HYNM-2603-011"
+    },
+    "bl_no": {
+     "value": "MEDUHUB0618825",
+     "page": 1,
+     "line": 8,
+     "snippet": "B/L No. 提单号MEDUHUB0618825Incoterm 贸易术语CFR NINGBO"
+    },
+    "seller": {
+     "value": "AL-NOOR PETROCHEMICAL TRADING COMPANY",
+     "page": 1,
+     "line": 3,
+     "snippet": "AL-NOOR PETROCHEMICAL TRADING COMPANY"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 12,
+     "snippet": "Consignee 收货人NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 15,
+     "snippet": "Notify Party 通知方NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD. / Floor 9, Port Railway Building, 266"
+    },
+    "origin": {
+     "value": "SAUDI ARABIA",
+     "page": 1,
+     "line": 4,
+     "snippet": "P.O. Box 7431, Prince Sultan Road, Al Jubail 31951, Eastern Province, Kingdom of Saudi Arabia"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (INDUSTRIAL GRADE)",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "product_cn": {
+     "value": "乙二醇",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 28,
+     "snippet": "8 TANKSPacking in ISO tank containers2905310000"
+    },
+    "quantity": {
+     "value": "160.000 MT",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "unit_price": {
+     "value": "612.00",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "amount": {
+     "value": "117,000.00",
+     "page": 1,
+     "line": 27,
+     "snippet": "ALN-26-0518ETHYLENE GLYCOL (INDUSTRIAL GRADE) 乙二醇107-21-1160.000 MT612.00117,000.00"
+    },
+    "currency": {
+     "value": "USD",
+     "page": 1,
+     "line": 26,
+     "snippet": "USD/MTUSD"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 8,
+     "snippet": "B/L No. 提单号MEDUHUB0618825Incoterm 贸易术语CFR NINGBO"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 17,
+     "snippet": "Port of Loading 起运港KING ABDULLAH PORT, JUBAIL (SAJUB)"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA (CNNGB)",
+     "page": 1,
+     "line": 18,
+     "snippet": "Port of Discharge 卸货港NINGBO PORT, CHINA (CNNGB)"
+    },
+    "vessel": {
+     "value": "MSC ISABELLA",
+     "page": 1,
+     "line": 19,
+     "snippet": "Vessel / Voyage 船名航次MSC ISABELLA  V. 2618W"
+    },
+    "voyage": {
+     "value": "V. 2618W",
+     "page": 1,
+     "line": 19,
+     "snippet": "Vessel / Voyage 船名航次MSC ISABELLA  V. 2618W"
+    },
+    "packages": {
+     "value": "8",
+     "page": 1,
+     "line": 6,
+     "snippet": "Invoice No. 发票号ALN-INV-26-0518Invoice Date 开票日期2026-05-15"
+    },
+    "pack_type": {
+     "value": "ISOTANK",
+     "page": 1,
+     "line": 21,
+     "snippet": "Packing 包装ISOTANK, 8 TANKS"
+    },
+    "net_weight": {
+     "value": "160,000",
+     "page": 1,
+     "line": 22,
+     "snippet": "Gross / Net Weight 毛重/净重160,160 KGS  /  160,000 KGS"
+    },
+    "gross_weight": {
+     "value": "160,160",
+     "page": 1,
+     "line": 22,
+     "snippet": "Gross / Net Weight 毛重/净重160,160 KGS  /  160,000 KGS"
+    },
+    "payment": {
+     "value": "L/C NO. LC2605NB0088 AT SIGHT",
+     "page": 1,
+     "line": 3,
+     "snippet": "AL-NOOR PETROCHEMICAL TRADING COMPANY"
+    },
+    "lc_no": {
+     "value": "LC2605NB0088",
+     "page": 1,
+     "line": 39,
+     "snippet": "Payment Terms 付款方式L/C NO. LC2605NB0088 AT SIGHT, BENEFICIARY: AL-NOOR PETROCHEMICAL TRADING"
+    },
+    "marks": {
+     "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "page": 1,
+     "line": 23,
+     "snippet": "Shipping Marks 唛头ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA"
+    }
+   }
+  },
+  {
+   "file": "04_装箱单_Packing_List.xlsx",
+   "type": "PACKING_LIST",
+   "fields": {
+    "packing_no": {
+     "value": "ALN-PL-26-0518",
+     "page": 1,
+     "line": 5,
+     "snippet": "A=Packing List No. 装箱单号 | B=ALN-PL-26-0518 | E=Date 日期 | F=2026-05-15"
+    },
+    "invoice_no": {
+     "value": "ALN-INV-26-0518",
+     "page": 1,
+     "line": 6,
+     "snippet": "A=Invoice No. 发票号 | B=ALN-INV-26-0518 | E=Contract No. 合同号 | F=HYNM-2026-0518-MEG"
+    },
+    "contract_no": {
+     "value": "HYNM-2026-0518-MEG",
+     "page": 1,
+     "line": 6,
+     "snippet": "A=Invoice No. 发票号 | B=ALN-INV-26-0518 | E=Contract No. 合同号 | F=HYNM-2026-0518-MEG"
+    },
+    "bl_no": {
+     "value": "MEDUHUB0618825",
+     "page": 1,
+     "line": 7,
+     "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+    },
+    "vessel": {
+     "value": "MSC ISABELLA",
+     "page": 1,
+     "line": 7,
+     "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+    },
+    "voyage": {
+     "value": "V. 2618W",
+     "page": 1,
+     "line": 7,
+     "snippet": "A=B/L No. 提单号 | B=MEDUHUB0618825 | E=Vessel / Voyage 船名航次 | F=MSC ISABELLA V. 2618W"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 8,
+     "snippet": "A=Port of Loading 起运港 | B=KING ABDULLAH PORT, JUBAIL (SAJUB) | E=Port of Discharge 卸货港 | F=NINGBO PORT, CHINA (CNNGB)"
+    },
+    "port_disch": {
+     "value": "NINGBO PORT, CHINA (CNNGB)",
+     "page": 1,
+     "line": 8,
+     "snippet": "A=Port of Loading 起运港 | B=KING ABDULLAH PORT, JUBAIL (SAJUB) | E=Port of Discharge 卸货港 | F=NINGBO PORT, CHINA (CNNGB)"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "A=Receiver 收货人 | B=NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD. | F=Notify 通知方 | G=NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 9,
+     "snippet": "A=Receiver 收货人 | B=NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD. | F=Notify 通知方 | G=NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "product_en": {
+     "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "page": 1,
+     "line": 11,
+     "snippet": "A11 唛头/包装行：… PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)；品名见电子表格罐明细表"
+    },
+    "pack_type": {
+     "value": "BULK IN ISO TANK CONTAINERS (ISOTANK)",
+     "page": 1,
+     "line": 11,
+     "snippet": "A=SHIPPING MARKS 唛头：ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA   |   PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 23,
+     "snippet": "A23=TOTAL  B23=9 ISO TANKS  D23#=SUM(D14:D22)；D25#=D23"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 23,
+     "snippet": "G23# = SUM(G14:G22)；单罐净重 E14:E22 = 20,000 KGS，G 列 = D×E",
+     "extra": "G14:G22 = 20,000 ×9"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 23,
+     "snippet": "H23# = SUM(H14:H22)；单罐毛重 F14:F22 = 20,020 KGS，H 列 = D×F",
+     "extra": "F14:F22 = 20,020 ×9"
+    },
+    "batch": {
+     "value": "MEG2605-B12",
+     "page": 1,
+     "line": 14,
+     "snippet": "A=1 | B=TIFU 238137 3 | C=20FT ISOTANK | D=1 | E=20000 | F=20020 | I=MEG2605-B12 | J=MSK-092151 | G#=D14*E14 | H#=D14*F14"
+    },
+    "marks": {
+     "value": "ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA",
+     "page": 1,
+     "line": 11,
+     "snippet": "A=SHIPPING MARKS 唛头：ALN-26-0518 / MEG / JUBAIL TO NINGBO / MADE IN SAUDI ARABIA   |   PACKING 包装：BULK IN ISO TANK CONTAINERS (ISOTANK)"
+    }
+   }
+  },
+  {
+   "file": "05_提单_Bill_of_Lading.png",
+   "type": "BILL_OF_LADING",
+   "fields": {
+    "bl_no": {
+     "value": "MEDUHUB0618825",
+     "page": 1,
+     "line": 3,
+     "snippet": "B/L No. MEDUHUB0618825        Booking No. 2451-8817263"
+    },
+    "shipper": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "page": 1,
+     "line": 4,
+     "snippet": "Shipper 发货人: AL-NOOR PETROCHEMICAL COMPANY"
+    },
+    "consignee": {
+     "value": "NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD.",
+     "page": 1,
+     "line": 6,
+     "snippet": "Consignee 收货人: NINGBO HAIYUAN NEW MATERIAL TRADING CO., LTD."
+    },
+    "notify": {
+     "value": "NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD.",
+     "page": 1,
+     "line": 8,
+     "snippet": "Notify Party 通知方: NINGBO DONGHAI INTERNATIONAL LOGISTICS CO., LTD."
+    },
+    "vessel": {
+     "value": "MSC ISABELLA",
+     "page": 1,
+     "line": 11,
+     "snippet": "Vessel / Voyage 船名航次: MSC ISABELLA   V. 2618W"
+    },
+    "voyage": {
+     "value": "V. 2618W",
+     "page": 1,
+     "line": 11,
+     "snippet": "Vessel / Voyage 船名航次: MSC ISABELLA   V. 2618W"
+    },
+    "port_load": {
+     "value": "KING ABDULLAH PORT, JUBAIL (SAJUB)",
+     "page": 1,
+     "line": 12,
+     "snippet": "Port of Loading 起运港: KING ABDULLAH PORT, JUBAIL (SAJUB)"
+    },
+    "port_disch": {
+     "value": "NINGBO, CHINA (CNNGB)",
+     "page": 1,
+     "line": 13,
+     "snippet": "Port of Discharge 卸货港: NINGBO, CHINA (CNNGB)   Place of Delivery: NINGBO, CHINA"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 16,
+     "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 16,
+     "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 16,
+     "snippet": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE   HS CODE 2905310000"
+    },
+    "pack_type": {
+     "value": "ISO TANKS",
+     "page": 1,
+     "line": 14,
+     "snippet": "Container No. / Seal 箱号封号: TIFU 238137 3 / MSK-092151   No. of Packages 件数: 9 ISO TANKS"
+    },
+    "net_weight": {
+     "value": "180,000",
+     "page": 1,
+     "line": 17,
+     "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+    },
+    "gross_weight": {
+     "value": "180,180",
+     "page": 1,
+     "line": 17,
+     "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+    },
+    "batch": {
+     "value": "MEG2605-B11",
+     "page": 1,
+     "line": 17,
+     "snippet": "BATCH NO. MEG2605-B11   NET WT 180,000 KGS   GROSS WT 180,180 KGS   MEASUREMENT 216.000 CBM"
+    },
+    "bl_date": {
+     "value": "2026-05-12",
+     "page": 1,
+     "line": 19,
+     "snippet": "No. of Original B/L 正本份数: THREE (3)   Date of Issue 签发日期: 2026-05-12   Place of Issue: JUBAIL, SAUDI ARABIA"
+    },
+    "incoterm": {
+     "value": "CFR NINGBO",
+     "page": 1,
+     "line": 17,
+     "snippet": "Freight & Charges 运费：FREIGHT PREPAID   CFR NINGBO"
+    }
+   }
+  },
+  {
+   "file": "06_分析证书_COA.docx",
+   "type": "COA",
+   "fields": {
+    "coa_no": {
+     "value": "COA-MEG-260512",
+     "page": 1,
+     "line": 6,
+     "snippet": "Certificate No. 证书编号COA-MEG-260512Date of Analysis 分析日2026-05-10"
+    },
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 9,
+     "snippet": "GRADE"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 8,
+     "snippet": "Product 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIALCAS No.107-21-1"
+    },
+    "batch": {
+     "value": "MEG2605-B12",
+     "page": 1,
+     "line": 10,
+     "snippet": "Batch No. 批号MEG2605-B12Date of Mfg. 生产日期2026-05-10"
+    },
+    "packages": {
+     "value": "9",
+     "page": 1,
+     "line": 11,
+     "snippet": "Quantity 代表数量180,000 kg (9 × 20 MT)Packages 包装件数9 ISO TANKS"
+    },
+    "manufacturer": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "page": 1,
+     "line": 3,
+     "snippet": "AL-NOOR PETROCHEMICAL COMPANY"
+    },
+    "po_no": {
+     "value": "PO-HYNM-2603-011",
+     "page": 1,
+     "line": 14,
+     "snippet": "Customer 客户NINGBO HAIYUAN NEW MATERIALOrder / PO No.PO-HYNM-2603-011"
+    },
+    "spec": {
+     "value": "≥99.99",
+     "page": 1,
+     "line": 18,
+     "snippet": "1Ethylene Glycol content (Purity), wt%≥ 99.99ASTM E231399.97Pass"
+    },
+    "quantity": {
+     "value": "180,000 kg",
+     "page": 1,
+     "line": 11,
+     "snippet": "Quantity 代表数量180,000 kg (9 × 20 MT)Packages 包装件数9 ISO TANKS"
+    }
+   }
+  },
+  {
+   "file": "07_化学品安全技术说明书_SDS.docx",
+   "type": "SDS",
+   "fields": {
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 7,
+     "snippet": "Product name 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE 乙二醇（工业级）"
+    },
+    "product_cn": {
+     "value": "乙二醇（工业级）",
+     "page": 1,
+     "line": 7,
+     "snippet": "Product name 产品名称ETHYLENE GLYCOL (MEG), INDUSTRIAL GRADE 乙二醇（工业级）"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 9,
+     "snippet": "CAS No.107-21-1"
+    },
+    "un_no": {
+     "value": "UN 3082",
+     "page": 1,
+     "line": 11,
+     "snippet": "UN No. / Proper ShippingUN 3082 / ENVIRONMENTALLY HAZARDOUS SUBSTANCE, LIQUID, N.O.S. (ETHYLENE GLYCOL)"
+    },
+    "hazard_class": {
+     "value": "9",
+     "page": 2,
+     "line": 0,
+     "snippet": "Hazard class 危险类别 9 (Class 9)；Packing group 包装类别 III；Marine pollutant YES"
+    },
+    "packages": {
+     "value": "8",
+     "page": 1,
+     "line": 4,
+     "snippet": "according to GHS (Globally Harmonized System), UN Model Regulations Rev. 8 / 依据 GHS 编制"
+    },
+    "net_weight": {
+     "value": "160,000",
+     "page": 2,
+     "line": 5,
+     "snippet": "Net weight per shipment160,000 KGSGross weight per shipment160,160 KGS"
+    },
+    "gross_weight": {
+     "value": "160,160",
+     "page": 2,
+     "line": 5,
+     "snippet": "Net weight per shipment160,000 KGSGross weight per shipment160,160 KGS"
+    },
+    "manufacturer": {
+     "value": "AL-NOOR PETROCHEMICAL COMPANY",
+     "page": 1,
+     "line": 5,
+     "snippet": "AL-NOOR PETROCHEMICAL COMPANY  |  Revision Rev 4.0 / 2024-02  |  语言：English（中文要点见各节括注）"
+    }
+   }
+  },
+  {
+   "file": "08_产品规格书_Product_Spec_Sheet.png",
+   "type": "SPEC_SHEET",
+   "fields": {
+    "product_en": {
+     "value": "ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE",
+     "page": 1,
+     "line": 3,
+     "snippet": "Product 产品: ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE / 乙二醇（工业级）"
+    },
+    "cas": {
+     "value": "107-21-1",
+     "page": 1,
+     "line": 4,
+     "snippet": "CAS No.: 107-21-1   HS Code: 2905310000"
+    },
+    "hs": {
+     "value": "2905310000",
+     "page": 1,
+     "line": 4,
+     "snippet": "CAS No.: 107-21-1   HS Code: 2905310000"
+    },
+    "spec": {
+     "value": "≥99.9%",
+     "page": 1,
+     "line": 6,
+     "snippet": "Standard Grade 标准等级: Industrial Grade; Purity (wt) ≥ 99.9%"
+    },
+    "pack_type": {
+     "value": "BULK IN ISO TANK CONTAINERS",
+     "page": 1,
+     "line": 11,
+     "snippet": "Packing 包装形式: BULK IN ISO TANK CONTAINERS (ISOTANK) / 散装 ISO 罐"
+    },
+    "packages": {
+     "value": "8",
+     "page": 1,
+     "line": 13,
+     "snippet": "Reference packages 参考件数: 8 ISO TANKS"
+    }
+   }
+  }
+ ]
+}

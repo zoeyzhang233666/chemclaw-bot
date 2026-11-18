@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "doc_no": "OSV-SA-PG-2026-002",
+    "title": "海外供应商核验报告（公开信息版 · 反例示范）",
+    "subject_short": "自称沙特 MEG 生产商的贸易公司（示例模型）",
+    "subject_full": "Gulf Horizon Petrochemical Trading LLC（虚构示例实体）",
+    "chain_owner": "—",
+    "country": "沙特阿拉伯 / Kingdom of Saudi Arabia",
+    "product": "单乙二醇（MEG / Monoethylene Glycol）",
+    "product_spec": "纤维级，≥99.9 wt%，DEG ≤0.08 wt%",
+    "incoterm": "CFR 上海（示例）",
+    "as_of": "2026-10-20",
+    "author": "海外采购核验（OSV Skill 演示）",
+    "reviewer": "待人工复核",
+    "version": "v1.0.0",
+    "page_title": "海外供应商核验报告 · 贸易商冒充生产商反例（虚构示例）",
+    "export_prefix": "海外供应商核验报告_沙特MEG反例_贸易商冒充生产商_20261020",
+    "disclaimer": "本报告使用一个虚构示例实体，演示「贸易商自称生产商」时核验方法如何识别。示例实体不对应任何真实企业；所引公开证据（SABIC / Yansab / Petrokemya 等）均来自真实来源，用于对照说明「真生产商的证据长什么样」。报告中不含任何风险评分。"
+  },
+  "ids": { "report": "OSV-SA-PG-2026-002", "dossier": "SUP-2026-SA-0002" },
+  "summary": {
+    "verdict": "hold",
+    "headline": "自称「自有装置」的供应商，公开资料中查不到任何装置；建议暂停并索证",
+    "text": "该示例供应商宣称在朱拜勒拥有自有 MEG 装置，并以「厂价直供」报价。核验发现：①没有任何官方或第三方来源显示其拥有生产设施；②其宣称的产能数字与沙特已公开装置均无法对应；③其提供的「工厂照片」为通用图库风格，无法定位到具体装置。对照真实沙特 MEG 生产商（Petrokemya / Yansab / Petro Rabigh / Jubail United），可核验生产商至少能提供装置所在工业区、集团归属与可查的产能披露。因此本例判定为「暂停推进」，并要求其以文件证明制造关系或明确改为经销商身份。",
+    "key_findings": [
+      "示例实体无可查的生产设施证据，其「自有工厂」主张仅存在于自述材料中（F04）。",
+      "真实沙特 MEG 生产商的证据形态：上市公司官网逐条披露 CR 号与工业许可证（E01）、集团产品页列明等级（E02）、官网披露具体产能数字（E16）。",
+      "「厂价直供」不等于制造能力：贸易商同样可以按厂价转售，区别在于是否有制造关系文件。"
+    ],
+    "not_concluded": [
+      "不认定该示例主体从事欺诈；无法核实的部分一律标「未知」。",
+      "不认定其真实产能、库存或履约能力。",
+      "不给出任何风险分数。"
+    ]
+  },
+  "sections": [
+    {
+      "id": "s00", "no": "00", "title": "交易概览与核验边界", "sub": "反例示范：如何识别「自称生产商」",
+      "blocks": [
+        { "type": "verdict", "kicker": "总体结论", "headline": "制造关系无法证实 · 交易层面不具备推进条件",
+          "text": "本例用于演示：当供应商自述与公开记录不符时，核验应当如何表述结论——只陈述「查到了什么」与「查不到什么」，不推断动机。",
+          "rows": [
+            { "k": "核验结论", "v": "暂停推进（HOLD）——需先证明制造关系" },
+            { "k": "证据状态", "v": "无任何生产设施证据；仅有自述与通用图片" },
+            { "k": "风险评分", "v": "本报告不提供。" }
+          ] },
+        { "type": "boundary", "items": [
+          { "t": "已核实", "d": "官方或监管来源，或 ≥2 独立来源交叉印证" },
+          { "t": "未核实", "d": "仅单一来源或企业自述" },
+          { "t": "存在疑点", "d": "来源互相矛盾" },
+          { "t": "未知", "d": "检索后无任何可引用来源" },
+          { "t": "不适用", "d": "不存在对应制度" }
+        ], "foot": "「查不到」与「不存在」不是一回事：前者是状态，后者是判断。本报告只记录状态。" }
+      ]
+    },
+    {
+      "id": "s01", "no": "01", "title": "企业身份", "sub": "注册主体是否存在、是否可核",
+      "blocks": [
+        { "type": "table", "name": "identity", "title": "身份要素逐项核验",
+          "columns": [{ "h": "要素", "width": "130px" }, { "h": "核验结果" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "90px" }],
+          "rows": [
+            ["法定名称", "Gulf Horizon Petrochemical Trading LLC（虚构示例）", "未核实", "F01"],
+            ["名称中的 LLC", "沙特有限责任公司（LLC）为常见形式；但名称含 Trading 一词，与「生产商」定位存在语义张力", "未核实", "F04"],
+            ["注册国家 / 城市", "自述为沙特阿拉伯朱拜勒", "未核实", "F04"],
+            ["商业登记号 CR", "未提供；公开检索亦无对应记录", "未知", "—"],
+            ["可查的经营地址", "仅有邮箱与手机号，无街道级地址", "未知", "—"],
+            ["母公司 / 集团归属", "自述「无集团，独立运营」——与沙特大型 MEG 产能集中于少数集团的公开格局不符", "存在疑点", "E04,E16"]
+          ],
+          "pill_cols": { "2": true }, "evid_cols": [3],
+          "foot": "对照真实格局：沙特 MEG 装置集中于 SABIC 体系（Petrokemya、Jubail United、Yansab、SHARQ）与 Petro Rabigh 等少数几家企业（E04/E06/E15/E16）。" }
+      ]
+    },
+    {
+      "id": "s02", "no": "02", "title": "产品能力与匹配度", "sub": "产品清单是否可核、规格是否闭合",
+      "blocks": [
+        { "type": "table", "name": "product", "title": "产品能力逐项比对",
+          "columns": [{ "h": "核验项", "width": "150px" }, { "h": "公开信息" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+          "rows": [
+            ["是否列有 MEG", "自述目录列有 MEG Fiber Grade 99.9%", "未核实", "F05"],
+            ["等级名称与批号规则", "未提供；无法与任何生产商等级对应", "未知", "—"],
+            ["规格指标来源", "无 TDS，无生产商名称", "未知", "—"],
+            ["可对应的生产商", "未指明货源来自哪家装置", "未知", "—"]
+          ],
+          "pill_cols": { "2": true }, "evid_cols": [3] }
+      ]
+    },
+    {
+      "id": "s03", "no": "03", "title": "工厂与生产证据", "sub": "「自有装置」这句话的证据够不够",
+      "blocks": [
+        { "type": "table", "name": "plant", "title": "生产设施与制造关系",
+          "columns": [{ "h": "核查项", "width": "150px" }, { "h": "公开信息" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+          "rows": [
+            ["工厂位置", "自述「朱拜勒工业城 3 号地块」，无许可证号", "未核实", "F04"],
+            ["装置名称 / 编号", "未提供", "未知", "—"],
+            ["产能数字", "自述「1.2 million MT/year」——在沙特公开装置清单中找不到对应装置", "存在疑点", "E04,E14"],
+            ["工业许可证", "未提供", "未知", "—"],
+            ["工厂照片", "通用图库风格，无时间水印、无门牌、无可识别装置标识", "存在疑点", "F04"],
+            ["制造关系文件", "无供货证明、无授权书、无生产商 COA", "未知", "—"]
+          ],
+          "pill_cols": { "2": true }, "evid_cols": [3],
+          "foot": "判断要点：产能数字若无法对应到任一公开装置，只能记为「存在疑点」并要求补证，不能直接认定为虚假；同样地，也不能接受为事实。" },
+        { "type": "note", "tone": "warn",
+          "text": "对照示例（真实可核生产商的做法）：SABIC 官网产品页可查到具体产品与等级（E02）；Yansab 在官网披露 CR 号与工业许可证号（E01）；Petro Rabigh 在官网写明 600 KTA 产能（E16）；Jubail United 的 700 kt/y 装置被行业媒体记录投料时间（E14）。一个真实生产商通常至少有其中一项。" }
+      ]
+    },
+    {
+      "id": "s04", "no": "04", "title": "官网与联系信息", "sub": "域名与联系方式是否指向同一主体",
+      "blocks": [
+        { "type": "table", "name": "web", "title": "联系要素核验",
+          "columns": [{ "h": "要素", "width": "130px" }, { "h": "内容" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+          "rows": [
+            ["官网", "提供网站地址，但页面无公司注册信息、无实体地址、无团队信息", "存在疑点", "F04"],
+            ["邮件域名", "使用免费邮箱域，而非企业自有域名", "存在疑点", "F03"],
+            ["电话", "仅手机号，无固定电话或区号", "存在疑点", "F03"],
+            ["地址一致性", "网页地址与自述地址表述不一", "存在疑点", "F04"]
+          ],
+          "pill_cols": { "2": true }, "evid_cols": [3] }
+      ]
+    },
+    {
+      "id": "s05", "no": "05", "title": "交易主体一致性", "sub": "厂价直供的说法能否在单据上成立",
+      "blocks": [
+        { "type": "matrix_map", "title": "一致性核对矩阵（模拟件）",
+          "rows": [
+            { "item": "合同/卖方主体", "a": "Gulf Horizon Petrochemical Trading LLC（模拟）", "b": "无公开登记信息可对照", "c": "无法比对", "state": "未知", "evid": "F01", "note": "缺 CR 号，无法唯一识别" },
+            { "item": "货物来源主体", "a": "自述「自有工厂」", "b": "公开装置清单无对应", "c": "矛盾", "state": "存在疑点", "evid": "F04,E04", "note": "需生产商 COA / 授权 / 原产地证证明来源" },
+            { "item": "收款主体", "a": "与卖方同名（模拟）", "b": "无银行确认函", "c": "名义一致、无法验证", "state": "未核实", "evid": "F02", "note": "同名不代表账户真实" },
+            { "item": "联系邮箱", "a": "免费邮箱域（模拟）", "b": "无官方域名可对照", "c": "无法验证", "state": "存在疑点", "evid": "F03", "note": "要求企业域名邮箱回函" }
+          ],
+          "foot": "本例的阻断点不是「收款不一致」，而是「制造关系无法证明」。前者可补授权解决，后者需要换供应商或改签为经销身份并披露真实货源。" },
+        { "type": "chain", "title": "单据链条应当在哪些环节暴露货源",
+          "items": [
+            { "code": "①", "name": "PI/合同", "role": "标明卖方与货物来源", "self": true },
+            { "code": "②", "name": "生产商 COA", "role": "揭示真实生产商名称", "self": false },
+            { "code": "③", "name": "原产地证 CO", "role": "证明生产国", "self": false },
+            { "code": "④", "name": "提单 B/L", "role": "发货人是否即卖方", "self": false },
+            { "code": "⑤", "name": "生产商授权/供货函", "role": "把贸易商与生产商连起来", "self": false }
+          ] }
+      ]
+    },
+    {
+      "id": "s06", "no": "06", "title": "公开风险与合规", "sub": "可查到的公开记录",
+      "blocks": [
+        { "type": "table", "name": "risk_scan", "title": "公开风险扫描（不评级）",
+          "columns": [{ "h": "议题", "width": "160px" }, { "h": "查得的事实" }, { "h": "状态", "align": "c", "width": "96px" }, { "h": "证据", "align": "c", "width": "80px" }],
+          "rows": [
+            ["负面报道", "未检索到该示例实体的公开报道（示例实体本不存在，属预期结果）", "不适用", "—"],
+            ["制裁名单", "无可匹配的英文全称 + 注册号，无法筛查", "未知", "—"],
+            ["行业背景（真实）", "沙特 MEG 出口在 2026 年 3 月因霍尔木兹受阻出现不可抗力，10 月已开始恢复（E08/E10）", "未核实", "E08,E10"]
+          ],
+          "pill_cols": { "2": true }, "evid_cols": [3] }
+      ]
+    },
+    {
+      "id": "s07", "no": "07", "title": "文件交叉核验", "sub": "自述材料能支撑到哪一步",
+      "blocks": [
+        { "type": "table", "name": "docs", "title": "已提交（模拟）文件逐件核验",
+          "columns": [{ "h": "编号", "width": "56px" }, { "h": "文件", "width": "150px" }, { "h": "核验要点" }, { "h": "状态", "align": "c", "width": "92px" }, { "h": "证据", "align": "c", "width": "70px" }],
+          "rows": [
+            ["F01", "形式发票 PI（模拟）", "无 CR 号、无签字人；卖方名称为贸易公司", "存在疑点", "F01"],
+            ["F02", "银行信息（模拟）", "有户名但无银行确认函", "未核实", "F02"],
+            ["F03", "联系方式（模拟）", "免费邮箱域 + 手机号", "存在疑点", "F03"],
+            ["F04", "企业与工厂介绍（模拟）", "「自有装置 120 万吨」无任何可核要素", "存在疑点", "F04"],
+            ["F05", "产品目录（模拟）", "无等级名、无生产商名称", "未核实", "F05"]
+          ],
+          "pill_cols": { "3": true }, "evid_cols": [4] },
+        { "type": "note", "tone": "warn", "text": "本页全部为虚构样本，用于演示「自述材料」在核验中的定位：它们只能触发索证，不能作为结论依据。" }
+      ]
+    },
+    {
+      "id": "s08", "no": "08", "title": "待索取材料与下一步", "sub": "要么补制造关系，要么改签经销身份",
+      "blocks": [
+        { "type": "table", "name": "todo", "title": "补件清单",
+          "columns": [{ "h": "编号", "width": "60px" }, { "h": "材料", "width": "210px" }, { "h": "用途" }, { "h": "优先级", "align": "c", "width": "80px" }],
+          "rows": [
+            ["M01", "商业登记证书 CR（含 QR）", "确认主体是否真实存在", "高"],
+            ["M02", "工业许可证 与 环保许可", "证明其是否具备生产资格", "高"],
+            ["M03", "生产商 COA（批号级，生产商抬头）", "揭示真实货源", "高"],
+            ["M04", "生产商出具的经销授权书", "如为经销商，需合法授权链", "高"],
+            ["M05", "近 12 个月出口提单（脱敏）", "验证真实出口记录", "中"],
+            ["M06", "工厂实地影像（含门牌/装置铭牌/时间水印）", "验证装置存在", "中"]
+          ],
+          "pill_cols": { "3": true } },
+        { "type": "steps", "items": [
+          { "n": "1", "t": "先定性身份", "d": "请对方书面确认：是生产商还是经销商。若是经销商，改签经销条款并披露生产商。" },
+          { "n": "2", "t": "换真实货源路径", "d": "若确需该产品，优先对接可核的生产商或其授权渠道。" },
+          { "n": "3", "t": "不出预付款", "d": "在制造关系与主体一致性未闭环前，不安排任何预付款。" }
+        ] }
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "E01", "claim": "Yansab 官网披露 CR 号 4700009432 与工业许可证号 S/1367（对照：真实生产商的做法）", "publisher": "Yanbu National Petrochemical Company（SABIC 旗下）", "type": "official", "grade": "primary", "stance": "context", "url": "https://www.yansab.com.sa/en/our-company", "published": "官网当前版本", "accessed": "2026-10-20", "quote": "registered in the Kingdom of Saudi Arabia under Commercial Registration number 4700009432 ... Industrial License number S/1367", "used_for": "对照示例", "note": "" },
+    { "id": "E02", "claim": "SABIC 官网列有 SABIC® Monoethylene Glycol，2 个等级（对照）", "publisher": "SABIC", "type": "official", "grade": "primary", "stance": "context", "url": "https://www.sabic.com/en/products/chemicals/glycols/sabic-monoethylene-glycol", "published": "官网当前版本", "accessed": "2026-10-20", "quote": "SABIC® Monoethylene Glycol - Grades Available: 2", "used_for": "对照示例", "note": "" },
+    { "id": "E04", "claim": "PETROKEMYA 为 SABIC 全资子公司，朱拜勒综合体（对照：沙特 MEG 产能集中格局）", "publisher": "saudiindustri.com 工业名录", "type": "directory", "grade": "secondary", "stance": "context", "url": "https://www.saudiindustri.com/industry/arabian-petrochemical-company-petrokemya/", "published": "未知", "accessed": "2026-10-20", "quote": "PETROKEMYA, which is entirely owned by SABIC, was established in May 1981", "used_for": "行业格局对照", "note": "二手" },
+    { "id": "E06", "claim": "欧盟反倾销调查点名沙特 MEG 生产商清单（对照：可核生产商是可穷举的）", "publisher": "Argaam", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.argaam.com/en/article/articledetail/id/1490717", "published": "2021-08-20", "accessed": "2026-10-20", "quote": "including Yanbu National Petrochemical Co. (Yansab), Saudi Kayan Petrochemical Co., Al Sharqiyah Petrochemicals Co. (Sharq), Saudi Yanbu Petrochemical Co. (YANPET), Arabian Petrochemical Co. (Petrokemya) and Jubail United Petrochemical Co.", "used_for": "行业格局对照", "note": "" },
+    { "id": "E08", "claim": "SABIC 2026-03-26 就 EG 等宣布不可抗力（行业背景）", "publisher": "ICIS", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.icis.com/explore/resources/news/2026/03/30/11193220/insight-saudi-sabic-force-majeure-aggravates-global-chemicals-shortage/", "published": "2026-03-30", "accessed": "2026-10-20", "quote": "SABIC declared on 26 March a force majeure on several products ... SM, EG, ethanolamines supply to Asia affected", "used_for": "行业背景", "note": "" },
+    { "id": "E10", "claim": "2026 年 10 月沙特方向 MEG 到港回升至约 12 万吨（行业背景）", "publisher": "ChinaTexnet（转引 CCFGroup）", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.chinatexnet.com/textile-news/2026-10-19/1086796.html", "published": "2026-10-19", "accessed": "2026-10-20", "quote": "Saudi cargoes should rise month on month to around 120 kt", "used_for": "行业背景", "note": "" },
+    { "id": "E14", "claim": "Jubail United 700 kt/y MEG 装置 2022-10 投料（对照：真实装置可被第三方记录）", "publisher": "MEES", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.mees.com/2022/10/21/refining-petrochemicals/sabic-jubail-meg-start-up/9026f600-5130-11ed-9c64-736c27d572dc", "published": "2022-10-21", "accessed": "2026-10-20", "quote": "operations have started at a new 700,000 t/y monoethylene glycol (MEG) plant", "used_for": "对照示例", "note": "" },
+    { "id": "E15", "claim": "Yansab 有 EG 装置并于 2026-01 检修（对照）", "publisher": "Argaam", "type": "media", "grade": "secondary", "stance": "context", "url": "https://www.argaam.com/en/article/articledetail/id/1874631", "published": "2026-01-22", "accessed": "2026-10-20", "quote": "plans to shut its ethylene glycol plant for 25 days starting Jan. 25", "used_for": "对照示例", "note": "" },
+    { "id": "E16", "claim": "Petro Rabigh 官网写明生产 600 KTA MEG（对照：真实生产商公布数字）", "publisher": "Petro Rabigh 官网", "type": "official", "grade": "primary", "stance": "context", "url": "https://www.petrorabigh.com/en/OurProducts/Monomer/Pages/MonoEthyleneGlycolMEG.aspx", "published": "官网当前版本", "accessed": "2026-10-20", "quote": "Petro Rabigh produces 600 KTA of Mono Ethylene Glycol (MEG)", "used_for": "对照示例", "note": "" },
+    { "id": "F01", "claim": "【模拟】示例贸易商 PI：无 CR 号、无签字人", "publisher": "本案例制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-02-saudi-tradeco-mock/mock-docs/01_PI_SIMULATED.md", "published": "2026-10-15（模拟）", "accessed": "2026-10-20", "quote": "SELLER: GULF HORIZON PETROCHEMICAL TRADING LLC", "used_for": "演示", "note": "虚构样本" },
+    { "id": "F02", "claim": "【模拟】银行信息：有户名，无银行确认函", "publisher": "本案例制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-02-saudi-tradeco-mock/mock-docs/02_BANK_SIMULATED.md", "published": "2026-10-15（模拟）", "accessed": "2026-10-20", "quote": "Beneficiary: GULF HORIZON PETROCHEMICAL TRADING LLC", "used_for": "演示", "note": "虚构样本" },
+    { "id": "F03", "claim": "【模拟】联系方式：免费邮箱域 + 手机号", "publisher": "本案例制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-02-saudi-tradeco-mock/mock-docs/03_CONTACT_SIMULATED.md", "published": "2026-10-15（模拟）", "accessed": "2026-10-20", "quote": "E: gulfhorizon.meg@mailprovider.example", "used_for": "演示", "note": "虚构样本" },
+    { "id": "F04", "claim": "【模拟】介绍材料：「自有装置 120 万吨」，无可核要素", "publisher": "本案例制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-02-saudi-tradeco-mock/mock-docs/04_PROFILE_SIMULATED.md", "published": "2026-10-15（模拟）", "accessed": "2026-10-20", "quote": "our own MEG plant in Jubail with a capacity of 1.2 million MT per year", "used_for": "演示", "note": "虚构样本" },
+    { "id": "F05", "claim": "【模拟】产品目录：无等级名、无生产商名称", "publisher": "本案例制作的模拟样本", "type": "mock", "grade": "mock", "stance": "note", "url": "examples/example-02-saudi-tradeco-mock/mock-docs/05_CATALOGUE_SIMULATED.md", "published": "2026-10-15（模拟）", "accessed": "2026-10-20", "quote": "MEG 99.9% - factory price - prompt shipment", "used_for": "演示", "note": "虚构样本" }
+  ],
+  "documents": [
+    { "id": "F01", "name": "形式发票 PI（模拟）", "type": "PI", "holder": "GULF HORIZON PETROCHEMICAL TRADING LLC", "issuer": "示例供应商（模拟）", "pages": "1 页", "provided": true, "mock": true,
+      "checks": [{ "k": "CR 号载明", "ok": false, "v": "未载" }, { "k": "签字人姓名/职务", "ok": false, "v": "无" }, { "k": "货物来源声明", "ok": false, "v": "仅称 factory supply" }], "note": "模拟件" },
+    { "id": "F02", "name": "银行信息（模拟）", "type": "BANK", "holder": "与卖方同名", "issuer": "示例供应商（模拟）", "pages": "1 页", "provided": true, "mock": true,
+      "checks": [{ "k": "附银行确认函", "ok": false, "v": "无" }, { "k": "开户行地址", "ok": false, "v": "缺失" }], "note": "模拟件" },
+    { "id": "F03", "name": "联系方式（模拟）", "type": "CONTACT", "holder": "示例联系人", "issuer": "示例供应商（模拟）", "pages": "—", "provided": true, "mock": true,
+      "checks": [{ "k": "企业域名邮箱", "ok": false, "v": "免费邮箱域" }, { "k": "固定电话", "ok": false, "v": "仅手机" }], "note": "模拟件" },
+    { "id": "F04", "name": "企业与工厂介绍（模拟）", "type": "PROFILE", "holder": "示例供应商", "issuer": "示例供应商（模拟）", "pages": "3 页", "provided": true, "mock": true,
+      "checks": [{ "k": "装置编号", "ok": false, "v": "无" }, { "k": "工业许可证", "ok": false, "v": "无" }, { "k": "可定位影像", "ok": false, "v": "通用图库风格" }], "note": "模拟件" },
+    { "id": "F05", "name": "产品目录（模拟）", "type": "CATALOGUE", "holder": "示例供应商", "issuer": "示例供应商（模拟）", "pages": "2 页", "provided": true, "mock": true,
+      "checks": [{ "k": "等级名称", "ok": false, "v": "无" }, { "k": "生产商名称", "ok": false, "v": "无" }], "note": "模拟件" },
+    { "id": "F06", "name": "SDS", "type": "SDS", "holder": "—", "issuer": "—", "pages": "—", "provided": false, "mock": false, "checks": [], "note": "待索取" },
+    { "id": "F07", "name": "COA", "type": "COA", "holder": "—", "issuer": "—", "pages": "—", "provided": false, "mock": false, "checks": [], "note": "待索取（须为生产商抬头）" },
+    { "id": "F08", "name": "商业登记证书 CR", "type": "CR", "holder": "—", "issuer": "—", "pages": "—", "provided": false, "mock": false, "checks": [], "note": "待索取" }
+  ],
+  "entity_map": [
+    { "layer": "交易层", "entity": "GULF HORIZON PETROCHEMICAL TRADING LLC（虚构示例）", "kind": "contract_party", "jurisdiction": "沙特（自述）", "evidence": "F01,F04", "state": "未核实", "note": "无公开登记信息可对照" },
+    { "layer": "生产层", "entity": "（自述）Gulf Horizon 自有 MEG 装置", "kind": "manufacturer", "jurisdiction": "沙特 / 朱拜勒（自述）", "evidence": "F04", "state": "存在疑点", "note": "公开装置清单无对应" },
+    { "layer": "生产层", "entity": "（真实对照）Petrokemya / Yansab / Petro Rabigh / Jubail United", "kind": "manufacturer", "jurisdiction": "沙特", "evidence": "E04,E16,E14,E15", "state": "已核实", "note": "可核的沙特 MEG 生产商" },
+    { "layer": "交易层", "entity": "收款方（与卖方同名，模拟）", "kind": "beneficiary", "jurisdiction": "沙特（自述）", "evidence": "F02", "state": "未核实", "note": "无银行确认函" }
+  ],
+  "subject_master": {
+    "legal_name": "Gulf Horizon Petrochemical Trading LLC（虚构示例实体）",
+    "legal_name_en": "Gulf Horizon Petrochemical Trading LLC",
+    "short_name": "Gulf Horizon（示例）", "country": "Saudi Arabia（自述）",
+    "address": "Jubail Industrial City（自述，无街道级地址）", "cr_no": "未提供",
+    "parent": "自述无集团", "ownership": "自述独立运营",
+    "website": "无可靠官网", "products_claimed": "MEG Fiber Grade 99.9%",
+    "contact": "仅手机号（模拟）", "email_official": "免费邮箱域（模拟）",
+    "contract_party": "Gulf Horizon Petrochemical Trading LLC", "beneficiary": "同名（模拟）",
+    "incoterm": "CFR 上海（示例）", "payment_terms": "待确认"
+  },
+  "gaps": [
+    { "id": "G01", "area": "企业身份", "gap": "无 CR 号，无公开登记信息", "impact": "主体是否存在无法确认", "action": "索取 CR 证书并在官方渠道核验", "owner": "采购", "priority": "高" },
+    { "id": "G02", "area": "制造关系", "gap": "「自有装置」无任何可核证据", "impact": "可能误买经销货却按厂价付款", "action": "索取工业许可证、装置编号、生产商 COA 或经销授权", "owner": "采购", "priority": "高" },
+    { "id": "G03", "area": "产品能力", "gap": "无 TDS、无等级名、无生产商", "impact": "规格无法闭合", "action": "索取 TDS + 生产商 COA", "owner": "质检", "priority": "高" },
+    { "id": "G04", "area": "联系信息", "gap": "免费邮箱 + 仅手机", "impact": "沟通对手方身份不明", "action": "要求企业域名邮箱回函", "owner": "采购", "priority": "中" },
+    { "id": "G05", "area": "合规筛查", "gap": "无可匹配标识，无法做制裁筛查", "impact": "合规敞口未知", "action": "补齐英文全称 + CR 号后筛查", "owner": "合规", "priority": "高" }
+  ],
+  "timeline": [
+    { "date": "2026-03-26", "event": "沙特 MEG 出口受阻，SABIC 宣布不可抗力（本例供应商借此以「缺货抢单」话术推销）", "evid": "E08", "tag": "supply" },
+    { "date": "2026-10-15", "event": "示例供应商发出模拟 PI（本例样本）", "evid": "F01", "tag": "entity" },
+    { "date": "2026-10-19", "event": "沙特方向到港恢复至约 12 万吨——「缺货」话术的时间窗口已过", "evid": "E10", "tag": "supply" },
+    { "date": "2026-10-20", "event": "本报告核验基准日", "evid": "—", "tag": "meta" }
+  ],
+  "rfi": {
+    "title": "Supplier Due-Diligence Enquiry — Monoethylene Glycol (MEG)",
+    "to": "The Authorised Representative of Gulf Horizon Petrochemical Trading LLC",
+    "from": "[Your Company / Procurement Department]",
+    "date": "2026-10-20",
+    "ref": "ChineseBuyer-DDQ-MEG-2026-002",
+    "intro": "We are conducting pre-qualification checks ahead of a prospective purchase of fibre-grade monoethylene glycol. Please answer each item in writing on company letterhead, signed by an officer with authority to bind the company. Please state clearly whether you are the producer of the goods or a reseller, and if a reseller, name the producing entity.",
+    "clauses": [
+      { "id": "A1", "text": "State whether you are the manufacturer of the goods offered or a reseller/trader, and support your answer with documents." },
+      { "id": "A2", "text": "Confirm the full legal name, commercial registration (CR) number, registered address and legal form of the contracting entity, and attach the CR certificate." },
+      { "id": "A3", "text": "If you operate a production plant, provide the plant name, city, licence number, product slate and nameplate capacity of the MEG line, together with the industrial licence." },
+      { "id": "A4", "text": "Name the entity that will appear as producer on the COA and SDS for the goods supplied, and the entity that will appear as shipper on the bill of lading." },
+      { "id": "A5", "text": "If you are a reseller, provide the producer's written authorisation for you to sell the goods in our market, or the producer's supply confirmation for this order." },
+      { "id": "A6", "text": "Provide the TDS for the exact grade offered, including purity, diethylene glycol, colour and water content limits." },
+      { "id": "A7", "text": "Provide a batch-level COA on the producer's letterhead for the offered grade, together with the batch number that will appear on the shipping documents." },
+      { "id": "A8", "text": "Provide an official corporate e-mail address on your registered domain; replies from free webmail accounts cannot be treated as binding." },
+      { "id": "A9", "text": "Provide a signed payment instruction on letterhead plus a bank confirmation letter from the receiving bank for the account to be credited." },
+      { "id": "A10", "text": "Provide two recent bills of lading (redacted) for the same product evidencing your export performance and the shipper identity." },
+      { "id": "A11", "text": "Provide the annual report or audited financial summary for the last financial year." },
+      { "id": "A12", "text": "Provide an ultimate beneficial owner declaration and a group structure chart." },
+      { "id": "A13", "text": "Confirm whether any sanctions, export controls or force majeure events currently affect your ability to supply, with dates." },
+      { "id": "A14", "text": "Confirm the validity period of your offer, the delivery terms, and the governing law and dispute resolution venue proposed for the contract." }
+    ]
+  },
+  "lessons": {
+    "dos": [
+      "先问「你是生产商还是经销商」，再要文件；身份问题答不清，后面全是空转。",
+      "用公开装置清单/行业清单反向校验「自有产能」主张（本行业的可核生产商是可穷举的）。",
+      "把「查不到」写成状态，而不是写成「造假」。"
+    ],
+    "donts": [
+      "不要因为对方说「factory price / factory direct」就认定是制造商。",
+      "不要把通用图库照片当作工厂证据。",
+      "不要在身份未定性前支付预付款。"
+    ]
+  }
+}

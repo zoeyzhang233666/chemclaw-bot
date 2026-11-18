@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>化工期货异常月差扫描看板</title>
+<style>
+:root{
+  --bg:#0e1116; --panel:#161b23; --panel2:#1b2230; --line:#26303f; --txt:#e6ebf2; --dim:#93a1b5;
+  --acc:#4da3ff; --acc2:#7ee0c0; --neg:#ff6b81; --pos:#3ddc97; --warn:#ffc857; --ext:#ff5e8a;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0b0e13,#0e1116 260px);color:var(--txt);
+  font:14px/1.6 "Segoe UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}
+.wrap{max-width:1500px;margin:0 auto;padding:0 22px 64px}
+header{padding:26px 0 14px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.h1{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:24px;margin:0;letter-spacing:.5px;font-weight:650}
+.sub{color:var(--dim);font-size:13px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;font-size:12px;
+  border:1px solid var(--line);background:var(--panel2);color:var(--dim)}
+.badge.live{color:#04121f;background:var(--acc2);border-color:var(--acc2);font-weight:700}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.panel h2{font-size:15px;margin:0 0 10px;font-weight:650;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.panel h2 .tag{font-size:11px;color:var(--dim);font-weight:500;border:1px solid var(--line);padding:1px 7px;border-radius:999px}
+.grid{display:grid;gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 15px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc)}
+.kpi.ext:before{background:var(--ext)} .kpi.pos:before{background:var(--pos)} .kpi.neg:before{background:var(--neg)}
+.kpi .k{color:var(--dim);font-size:12px} .kpi .v{font-size:23px;font-weight:680;margin-top:2px}
+.kpi .s{color:var(--dim);font-size:12px;margin-top:2px}
+.mono{font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.ctrl{display:flex;flex-direction:column;gap:5px;min-width:150px}
+.ctrl label{font-size:12px;color:var(--dim)}
+select,input{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:9px;padding:7px 9px;font-size:13px;outline:none}
+select:focus,input:focus{border-color:var(--acc)}
+button{background:var(--acc);color:#04121f;border:0;border-radius:9px;padding:8px 14px;font-weight:650;cursor:pointer;font-size:13px}
+button.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);font-weight:500}
+button:hover{filter:brightness(1.08)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:12px;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--dim);cursor:pointer;user-select:none}
+.chip.on{background:rgba(77,163,255,.15);border-color:var(--acc);color:#cfe6ff}
+canvas{width:100%;display:block}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin:6px 0 2px}
+.legend i{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{color:var(--dim);font-weight:600;font-size:12px}
+td.l,th.l{text-align:left}
+tr.rowlink{cursor:pointer} tr.rowlink:hover td{background:rgba(77,163,255,.07)}
+tr.sel td{background:rgba(77,163,255,.13)}
+.scroll{max-height:430px;overflow:auto;border-radius:10px}
+.pill{font-size:11px;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+.pill.ok{color:var(--pos);border-color:rgba(61,220,151,.45)}
+.pill.no{color:var(--neg);border-color:rgba(255,107,129,.45)}
+.pill.ext{color:var(--ext);border-color:rgba(255,94,138,.5);background:rgba(255,94,138,.1)}
+.pill.warn{color:var(--warn);border-color:rgba(255,200,87,.45)}
+.pos{color:var(--pos)} .neg{color:var(--neg)} .dim{color:var(--dim)}
+.note{font-size:12px;color:var(--dim);background:rgba(255,200,87,.06);border:1px solid rgba(255,200,87,.25);
+  border-radius:10px;padding:10px 12px;margin-top:10px}
+.disc{font-size:12px;color:var(--dim);border-left:3px solid var(--neg);padding:8px 12px;background:rgba(255,107,129,.06);border-radius:0 10px 10px 0;margin-top:14px}
+.ev{border-left:2px solid var(--line);padding:6px 0 6px 12px;margin:8px 0;position:relative}
+.ev:before{content:"";position:absolute;left:-5px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.ev.bullish:before{background:var(--pos)} .ev.bearish:before{background:var(--neg)}
+.ev.bearish_near:before{background:#ff9f5e} .ev.bearish_far:before{background:#c86bff}
+.ev.bullish_near:before{background:#3ddc97} .ev.bullish_cost:before{background:#7ee0c0}
+.ev .d{font-size:11px;color:var(--dim)} .ev .t{font-size:13px}
+.src{font-size:11px;color:#5d7492;word-break:break-all}
+.empty{color:var(--dim);font-size:13px;padding:18px;text-align:center}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1000px){.two{grid-template-columns:1fr}}
+.heat{display:inline-block;width:100%;height:8px;border-radius:4px;background:var(--panel2);position:relative;min-width:70px}
+.heat span{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:linear-gradient(90deg,#3ddc97,#ffc857,#ff5e8a)}
+</style><div class="wrap">
+<header>
+  <div class="h1">
+    <h1>化工期货｜异常月差（近远月价差）扫描看板</h1>
+    <span class="badge live">真实数据</span>
+    <span class="badge">数据日 2026-10-20</span>
+    <span class="badge" id="basisBadge"></span>
+    <span class="badge">口径：近月 − 远月</span>
+  </div>
+  <div class="sub">品种池：甲醇 MA · 纯碱 SA · 聚丙烯 PP · PTA TA　|　价格源：郑商所官方日报 + 东方财富(DCE)　|　历史样本：逐合约日线，同品种同组合同剩余期限周对齐</div>
+</header>
+<div class="wrap">
+<header>
+  <div class="h1">
+    <h1>化工期货｜异常月差（近远月价差）扫描看板</h1>
+    <span class="badge live">真实数据</span>
+    <span class="badge">数据日 {as_of}</span>
+    <span class="badge" id="basisBadge"></span>
+    <span class="badge">口径：近月 − 远月</span>
+  </div>
+  <div class="sub">品种池：甲醇 MA · 纯碱 SA · 聚丙烯 PP · PTA TA　|　价格源：郑商所官方日报 + 东方财富(DCE)　|　历史样本：逐合约日线，同品种同组合同剩余期限周对齐</div>
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="panel" style="margin-bottom:16px">
+  <h2>筛选 <span class="tag">改动任一项即重算</span></h2>
+  <div class="controls">
+    <div class="ctrl"><label>品种池</label>
+      <select id="fProduct" multiple size="4"></select></div>
+    <div class="ctrl"><label>月差口径（近月 = 主力后第 N 档）</label>
+      <select id="fScenario">
+        <option value="0">主力 − 下一档</option>
+        <option value="1" selected>主力 − 次二档（主推）</option>
+        <option value="2">主力 − 次三档</option>
+        <option value="3">主力 − 次四档</option>
+      </select></div>
+    <div class="ctrl"><label>极端分位阈值（%）</label>
+      <select id="fThr">
+        <option value="5">5% / 95%（严格）</option>
+        <option value="10" selected>10% / 90%（标准）</option>
+        <option value="20">20% / 80%（宽松）</option>
+      </select></div>
+    <div class="ctrl"><label>最少历史样本 N</label>
+      <select id="fMinN"><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select></div>
+    <div class="ctrl"><label>排序</label>
+      <select id="fSort"><option value="ext" selected>极端程度</option><option value="pct_hi">分位从高到低</option><option value="pct_lo">分位从低到高</option><option value="chg">近1月变化</option></select></div>
+    <div class="ctrl"><label>仅看可交易组合</label>
+      <select id="fTrad"><option value="0" selected>否（全部展示）</option><option value="1">是</option></select></div>
+    <div class="ctrl"><label>显示样本不足的候选</label>
+      <select id="fShowIns"><option value="1" selected>显示</option><option value="0">隐藏</option></select></div>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="note" id="scanNote"></div>
+</div>
+
+<div class="panel" style="margin-bottom:16px">
+  <h2>异常月差榜单 <span class="tag" id="rankInfo"></span></h2>
+  <div class="scroll" style="max-height:520px"><table id="rankTable">
+    <thead><tr>
+      <th class="l">#</th><th class="l">品种</th><th class="l">近月 − 远月</th>
+      <th>当前月差</th><th>历史分位</th><th>极端度</th><th>Z</th>
+      <th>近1月变化</th><th>历史均值</th><th>N</th><th class="l">评级</th><th class="l">可交易</th>
+    </tr></thead><tbody></tbody>
+  </table></div>
+  <div class="disc">排名只表示"当前月差在自身可比历史中的位置"，<b>不构成跨期套利或交易建议</b>。分位高（靠近100%）＝近月相对远月比历史更贵；分位低（靠近0%）＝近月相对更便宜。样本不足的组合不给分位。</div>
+</div>
+
+<div class="panel" style="margin-bottom:16px" id="detailPanel">
+  <h2>品种明细 <span class="tag">点击榜单任一行切换</span></h2>
+  <div class="kpis" id="detailKpis"></div>
+  <div class="two">
+    <div>
+      <h2 style="font-size:13px;color:var(--dim);margin:6px 0 2px">期限结构（当日全部挂牌合约结算价）</h2>
+      <div class="legend"><span><i style="background:var(--acc)"></i>挂牌合约曲线</span><span><i style="background:var(--ext)"></i>当前所选组合两腿</span></div>
+      <canvas id="cvCurve" height="300"></canvas>
+      <div id="curveNote" class="note" style="display:none"></div>
+    </div>
+    <div>
+      <h2 style="font-size:13px;color:var(--dim);margin:6px 0 2px">历史可比样本（同组合、同剩余期限）</h2>
+      <div class="legend"><span><i style="background:var(--acc2)"></i>历年同期月差</span><span><i style="background:var(--ext)"></i>当前月差</span></div>
+      <canvas id="cvHist" height="300"></canvas>
+      <div id="histNote" class="note" style="display:none"></div>
+    </div>
+  </div>
+  <div class="two" style="margin-top:16px">
+    <div>
+      <h2 style="font-size:13px;color:var(--dim);margin:6px 0 2px">该组合近 45 个交易日</h2>
+      <canvas id="cvSeries" height="220"></canvas>
+    </div>
+    <div>
+      <h2 style="font-size:13px;color:var(--dim);margin:6px 0 2px">合约明细</h2>
+      <div class="scroll" style="max-height:230px"><table id="legTable"><thead><tr>
+        <th class="l">合约</th><th>结算价</th><th>收盘价</th><th>持仓</th><th>距交割</th><th class="l">角色</th></tr></thead><tbody></tbody></table></div>
+    </div>
+  </div>
+  <div class="two" style="margin-top:16px">
+    <div>
+      <h2 style="font-size:13px;color:var(--dim);margin:6px 0 2px">该品种全部月差组合（扫描结果）</h2>
+      <div class="scroll" style="max-height:300px"><table id="pairTable"><thead><tr>
+        <th class="l">组合</th><th>月差</th><th>分位</th><th>Z</th><th>近1月</th><th>N</th><th class="l">评级</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div>
+      <h2 style="font-size:13px;color:var(--dim);margin:6px 0 2px">库存 / 仓单 / 现货 <span class="tag">产业面</span></h2>
+      <div class="scroll" style="max-height:300px"><table id="indTable"><thead><tr>
+        <th class="l">指标</th><th>数值</th><th class="l">单位</th><th>变化</th><th class="l">日期</th><th class="l">可信度</th></tr></thead><tbody></tbody></table></div>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <h2 style="font-size:13px;color:var(--dim);margin:6px 0 2px">供需事件时间线 <span class="tag">仅用于解释位置，不构成方向判断</span></h2>
+    <div id="events"></div>
+  </div>
+</div>
+
+<div class="panel" style="margin-bottom:16px">
+  <h2>合约规则匹配 <span class="tag">交易所规则 vs 实测挂牌</span></h2>
+  <div class="scroll" style="max-height:400px"><table id="ruleTable"><thead><tr>
+    <th class="l">品种</th><th class="l">交易所</th><th class="l">合约月份</th><th>交易单位</th><th>最小变动</th>
+    <th>最低保证金</th><th class="l">最后交易日</th><th class="l">主力锚点</th><th>当日挂牌</th></tr></thead><tbody></tbody></table></div>
+  <div class="note">合约月份"1–12月全挂牌"经 <b>276 个逐合约日线实测</b>：各合约上市首日均在交割月前 12 个月，四品种无跳月设计。MA/SA/TA 价格取<b>交易所结算价</b>；PP 因大商所官网对脚本返回 412，当日行情取自东方财富，为<b>最新价</b>口径 —— 两套口径分列，不混算。</div>
+</div>
+
+<div class="panel">
+  <h2>数据与口径说明 <span class="tag">可追溯</span></h2>
+  <div id="dataNotes"></div>
+</div>
+</div>
+<script>
+const DATA = {"scan": {"as_of": "2026-10-20", "basis": "settle", "settings": {"products": ["MA", "SA", "PP", "TA"], "unit_near": 1, "unit_far": 3, "unit_str": "qoq", "min_n": 3, "thresholds": {"low": 20, "high": 80, "ext_low": 5, "ext_high": 95, "z_alert": 2, "min_n": 3, "min_n_scan": 30}, "min_oi": 500, "max_gap": 6}, "products": {"MA": {"name_cn": "甲醇", "exchange": "CZCE", "exchange_cn": "郑州商品交易所", "rule": {"listed_months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "contract_unit_t": 10, "tick": 1, "min_margin_pct": 5, "price_limit_pct": 4, "last_trading_day_rule": "合约交割月份的第10个交易日", "main_months": [1, 5, 9]}, "term_structure": [{"symbol": "MA2611", "y": 2026, "m": 11, "settle": 3347.0, "close": 3384.0, "volume": 382266.0, "oi": 155303.0, "is_main": false, "months_out": 1}, {"symbol": "MA2612", "y": 2026, "m": 12, "settle": 3204.0, "close": 3231.0, "volume": 455161.0, "oi": 293034.0, "is_main": false, "months_out": 2}, {"symbol": "MA2701", "y": 2027, "m": 1, "settle": 3137.0, "close": 3157.0, "volume": 2146072.0, "oi": 860774.0, "is_main": true, "months_out": 3}, {"symbol": "MA2702", "y": 2027, "m": 2, "settle": 3080.0, "close": 3093.0, "volume": 224848.0, "oi": 134219.0, "is_main": false, "months_out": 4}, {"symbol": "MA2703", "y": 2027, "m": 3, "settle": 3028.0, "close": 3040.0, "volume": 197246.0, "oi": 229089.0, "is_main": false, "months_out": 5}, {"symbol": "MA2704", "y": 2027, "m": 4, "settle": 2976.0, "close": 2992.0, "volume": 1813.0, "oi": 2086.0, "is_main": false, "months_out": 6}, {"symbol": "MA2705", "y": 2027, "m": 5, "settle": 2931.0, "close": 2941.0, "volume": 64668.0, "oi": 149821.0, "is_main": false, "months_out": 7}, {"symbol": "MA2706", "y": 2027, "m": 6, "settle": 2907.0, "close": 2923.0, "volume": 394.0, "oi": 860.0, "is_main": false, "months_out": 8}, {"symbol": "MA2707", "y": 2027, "m": 7, "settle": 2883.0, "close": 2895.0, "volume": 375.0, "oi": 1202.0, "is_main": false, "months_out": 9}, {"symbol": "MA2708", "y": 2027, "m": 8, "settle": 2863.0, "close": 2876.0, "volume": 143.0, "oi": 828.0, "is_main": false, "months_out": 10}, {"symbol": "MA2709", "y": 2027, "m": 9, "settle": 2844.0, "close": 2853.0, "volume": 1924.0, "oi": 3759.0, "is_main": false, "months_out": 11}], "shape": {"type": "正向市场(contango)", "slope_per_month": -46.22, "monotonicity_r": -0.96, "biggest_step": {"from_m": 1, "to_m": 2, "near_sym": "MA2611", "far_sym": "MA2612", "diff": -143.0}, "points": [[1, 3347.0], [2, 3204.0], [3, 3137.0], [4, 3080.0], [5, 3028.0], [6, 2976.0], [7, 2931.0], [8, 2907.0], [9, 2883.0], [10, 2863.0], [11, 2844.0]]}, "pairs": [{"product": "MA", "near": "MA2701", "far": "MA2704", "label": "MA2701-MA2704", "gap_months": 3, "near_settle": 3137.0, "far_settle": 2976.0, "near_close": 3157.0, "far_close": 2992.0, "near_oi": 860774.0, "far_oi": 2086.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": true, "block_reasons": [], "computable": true, "spread": 161.0, "spread_1m_ago": 265.0, "date_1m_ago": "2026-09-18", "change_1m": -104.0, "change_1m_pct": -39.2, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 325.0, "year": 2022, "week_to_near": 13.14, "near": 3563.0, "far": 3238.0, "near_sym": "MA2201", "far_sym": "MA2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 141.0, "year": 2023, "week_to_near": 13.14, "near": 2693.0, "far": 2552.0, "near_sym": "MA2301", "far_sym": "MA2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 46.0, "year": 2024, "week_to_near": 13.14, "near": 2428.0, "far": 2382.0, "near_sym": "MA2401", "far_sym": "MA2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -18.0, "year": 2025, "week_to_near": 13.0, "near": 2400.0, "far": 2418.0, "near_sym": "MA2501", "far_sym": "MA2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -34.0, "year": 2026, "week_to_near": 13.14, "near": 2280.0, "far": 2314.0, "near_sym": "MA2601", "far_sym": "MA2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": 138.0}, {"date": "2026-09-08", "spread": 159.0}, {"date": "2026-09-09", "spread": 187.0}, {"date": "2026-09-10", "spread": 242.0}, {"date": "2026-09-11", "spread": 228.0}, {"date": "2026-09-14", "spread": 247.0}, {"date": "2026-09-15", "spread": 246.0}, {"date": "2026-09-16", "spread": 260.0}, {"date": "2026-09-17", "spread": 279.0}, {"date": "2026-09-18", "spread": 265.0}, {"date": "2026-09-21", "spread": 263.0}, {"date": "2026-09-22", "spread": 241.0}, {"date": "2026-09-23", "spread": 193.0}, {"date": "2026-09-24", "spread": 195.0}, {"date": "2026-09-28", "spread": 238.0}, {"date": "2026-09-29", "spread": 243.0}, {"date": "2026-09-30", "spread": 230.0}, {"date": "2026-10-08", "spread": 276.0}, {"date": "2026-10-09", "spread": 349.0}, {"date": "2026-10-12", "spread": 289.0}, {"date": "2026-10-13", "spread": 209.0}, {"date": "2026-10-14", "spread": 213.0}, {"date": "2026-10-15", "spread": 193.0}, {"date": "2026-10-16", "spread": 172.0}, {"date": "2026-10-19", "spread": 171.0}, {"date": "2026-10-20", "spread": 161.0}], "percentile": 80.0, "z": 0.47, "mean_hist": 92.0, "q05": -30.8, "q25": -18.0, "q50": 46.0, "q75": 141.0, "q95": 288.19999999999993, "min_hist": -34.0, "max_hist": 325.0, "grade": "偏高(近月升水)", "direction": "near_far_premium", "sample_status": "不足(仅5年)", "extremeness": 60.0}]}, "SA": {"name_cn": "纯碱", "exchange": "CZCE", "exchange_cn": "郑州商品交易所", "rule": {"listed_months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "contract_unit_t": 20, "tick": 1, "min_margin_pct": 5, "price_limit_pct": 4, "last_trading_day_rule": "合约交割月份的第10个交易日", "main_months": [1, 5, 9]}, "term_structure": [{"symbol": "SA2611", "y": 2026, "m": 11, "settle": 918.0, "close": 910.0, "volume": 10663.0, "oi": 36399.0, "is_main": false, "months_out": 1}, {"symbol": "SA2612", "y": 2026, "m": 12, "settle": 941.0, "close": 934.0, "volume": 92520.0, "oi": 142710.0, "is_main": false, "months_out": 2}, {"symbol": "SA2701", "y": 2027, "m": 1, "settle": 946.0, "close": 938.0, "volume": 868888.0, "oi": 1317795.0, "is_main": true, "months_out": 3}, {"symbol": "SA2702", "y": 2027, "m": 2, "settle": 981.0, "close": 974.0, "volume": 42417.0, "oi": 136429.0, "is_main": false, "months_out": 4}, {"symbol": "SA2703", "y": 2027, "m": 3, "settle": 979.0, "close": 972.0, "volume": 137913.0, "oi": 251446.0, "is_main": false, "months_out": 5}, {"symbol": "SA2704", "y": 2027, "m": 4, "settle": 1010.0, "close": 1001.0, "volume": 966.0, "oi": 5097.0, "is_main": false, "months_out": 6}, {"symbol": "SA2705", "y": 2027, "m": 5, "settle": 1008.0, "close": 1002.0, "volume": 29659.0, "oi": 156478.0, "is_main": false, "months_out": 7}, {"symbol": "SA2706", "y": 2027, "m": 6, "settle": 1033.0, "close": 1026.0, "volume": 294.0, "oi": 3769.0, "is_main": false, "months_out": 8}, {"symbol": "SA2707", "y": 2027, "m": 7, "settle": 1031.0, "close": 1025.0, "volume": 627.0, "oi": 8887.0, "is_main": false, "months_out": 9}, {"symbol": "SA2708", "y": 2027, "m": 8, "settle": 1061.0, "close": 1053.0, "volume": 282.0, "oi": 2201.0, "is_main": false, "months_out": 10}, {"symbol": "SA2709", "y": 2027, "m": 9, "settle": 1060.0, "close": 1054.0, "volume": 1529.0, "oi": 5714.0, "is_main": false, "months_out": 11}], "shape": {"type": "反向市场(backwardation)", "slope_per_month": 14.35, "monotonicity_r": 0.984, "biggest_step": {"from_m": 3, "to_m": 4, "near_sym": "SA2701", "far_sym": "SA2702", "diff": 35.0}, "points": [[1, 918.0], [2, 941.0], [3, 946.0], [4, 981.0], [5, 979.0], [6, 1010.0], [7, 1008.0], [8, 1033.0], [9, 1031.0], [10, 1061.0], [11, 1060.0]]}, "pairs": [{"product": "SA", "near": "SA2701", "far": "SA2704", "label": "SA2701-SA2704", "gap_months": 3, "near_settle": 946.0, "far_settle": 1010.0, "near_close": 938.0, "far_close": 1001.0, "near_oi": 1317795.0, "far_oi": 5097.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": true, "block_reasons": [], "computable": true, "spread": -64.0, "spread_1m_ago": -57.0, "date_1m_ago": "2026-09-18", "change_1m": -7.0, "change_1m_pct": -12.3, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 137.0, "year": 2022, "week_to_near": 13.14, "near": 3301.0, "far": 3164.0, "near_sym": "SA2201", "far_sym": "SA2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 194.0, "year": 2023, "week_to_near": 13.14, "near": 2445.0, "far": 2251.0, "near_sym": "SA2301", "far_sym": "SA2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 69.0, "year": 2024, "week_to_near": 13.14, "near": 1719.0, "far": 1650.0, "near_sym": "SA2401", "far_sym": "SA2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -103.0, "year": 2025, "week_to_near": 13.0, "near": 1446.0, "far": 1549.0, "near_sym": "SA2501", "far_sym": "SA2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -82.0, "year": 2026, "week_to_near": 13.14, "near": 1228.0, "far": 1310.0, "near_sym": "SA2601", "far_sym": "SA2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": -49.0}, {"date": "2026-09-08", "spread": -59.0}, {"date": "2026-09-09", "spread": -53.0}, {"date": "2026-09-10", "spread": -53.0}, {"date": "2026-09-11", "spread": -60.0}, {"date": "2026-09-14", "spread": -51.0}, {"date": "2026-09-15", "spread": -58.0}, {"date": "2026-09-16", "spread": -57.0}, {"date": "2026-09-17", "spread": -59.0}, {"date": "2026-09-18", "spread": -57.0}, {"date": "2026-09-21", "spread": -57.0}, {"date": "2026-09-22", "spread": -58.0}, {"date": "2026-09-23", "spread": -55.0}, {"date": "2026-09-24", "spread": -56.0}, {"date": "2026-09-28", "spread": -58.0}, {"date": "2026-09-29", "spread": -58.0}, {"date": "2026-09-30", "spread": -55.0}, {"date": "2026-10-08", "spread": -56.0}, {"date": "2026-10-09", "spread": -60.0}, {"date": "2026-10-12", "spread": -59.0}, {"date": "2026-10-13", "spread": -59.0}, {"date": "2026-10-14", "spread": -57.0}, {"date": "2026-10-15", "spread": -63.0}, {"date": "2026-10-16", "spread": -65.0}, {"date": "2026-10-19", "spread": -66.0}, {"date": "2026-10-20", "spread": -64.0}], "percentile": 40.0, "z": -0.81, "mean_hist": 43.0, "q05": -98.8, "q25": -82.0, "q50": 69.0, "q75": 137.0, "q95": 182.6, "min_hist": -103.0, "max_hist": 194.0, "grade": "正常", "direction": "normal", "sample_status": "不足(仅5年)", "extremeness": 20.0}]}, "PP": {"name_cn": "聚丙烯", "exchange": "DCE", "exchange_cn": "大连商品交易所", "rule": {"listed_months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "contract_unit_t": 5, "tick": 1, "min_margin_pct": 5, "price_limit_pct": 4, "last_trading_day_rule": "合约月份的第10个交易日", "main_months": [1, 5, 9]}, "term_structure": [{"symbol": "PP2610", "y": 2026, "m": 10, "settle": 10401.0, "close": 10450.0, "volume": 71.0, "oi": 5504.0, "is_main": false, "months_out": 0}, {"symbol": "PP2611", "y": 2026, "m": 11, "settle": 10144.0, "close": 10184.0, "volume": 51316.0, "oi": 99417.0, "is_main": false, "months_out": 1}, {"symbol": "PP2612", "y": 2026, "m": 12, "settle": 9685.0, "close": 9734.0, "volume": 61771.0, "oi": 133078.0, "is_main": false, "months_out": 2}, {"symbol": "PP2701", "y": 2027, "m": 1, "settle": 9331.0, "close": 9376.0, "volume": 869012.0, "oi": 672680.0, "is_main": true, "months_out": 3}, {"symbol": "PP2702", "y": 2027, "m": 2, "settle": 9028.0, "close": 9068.0, "volume": 7508.0, "oi": 57974.0, "is_main": false, "months_out": 4}, {"symbol": "PP2703", "y": 2027, "m": 3, "settle": 8819.0, "close": 8864.0, "volume": 3986.0, "oi": 17823.0, "is_main": false, "months_out": 5}, {"symbol": "PP2704", "y": 2027, "m": 4, "settle": 8800.0, "close": 8814.0, "volume": 297.0, "oi": 560.0, "is_main": false, "months_out": 6}, {"symbol": "PP2705", "y": 2027, "m": 5, "settle": 8690.0, "close": 8695.0, "volume": 31910.0, "oi": 84791.0, "is_main": false, "months_out": 7}, {"symbol": "PP2706", "y": 2027, "m": 6, "settle": 8511.0, "close": 8586.0, "volume": 14.0, "oi": 247.0, "is_main": false, "months_out": 8}, {"symbol": "PP2707", "y": 2027, "m": 7, "settle": 8456.0, "close": 8400.0, "volume": 9.0, "oi": 656.0, "is_main": false, "months_out": 9}, {"symbol": "PP2708", "y": 2027, "m": 8, "settle": 8440.0, "close": 8500.0, "volume": 26.0, "oi": 399.0, "is_main": false, "months_out": 10}, {"symbol": "PP2709", "y": 2027, "m": 9, "settle": 8400.0, "close": 8384.0, "volume": 246.0, "oi": 904.0, "is_main": false, "months_out": 11}], "shape": {"type": "正向市场(contango)", "slope_per_month": -178.61, "monotonicity_r": -0.938, "biggest_step": {"from_m": 1, "to_m": 2, "near_sym": "PP2611", "far_sym": "PP2612", "diff": -459.0}, "points": [[0, 10401.0], [1, 10144.0], [2, 9685.0], [3, 9331.0], [4, 9028.0], [5, 8819.0], [6, 8800.0], [7, 8690.0], [8, 8511.0], [9, 8456.0], [10, 8440.0], [11, 8400.0]]}, "pairs": [{"product": "PP", "near": "PP2701", "far": "PP2704", "label": "PP2701-PP2704", "gap_months": 3, "near_settle": 9331.0, "far_settle": 8800.0, "near_close": 9376.0, "far_close": 8814.0, "near_oi": 672680.0, "far_oi": 560.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": true, "block_reasons": [], "computable": true, "spread": 531.0, "spread_1m_ago": 517.0, "date_1m_ago": "2026-09-18", "change_1m": 14.0, "change_1m_pct": 2.7, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 118.0, "year": 2022, "week_to_near": 13.14, "near": 9332.0, "far": 9214.0, "near_sym": "PP2201", "far_sym": "PP2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 52.0, "year": 2023, "week_to_near": 13.14, "near": 7622.0, "far": 7570.0, "near_sym": "PP2301", "far_sym": "PP2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 19.0, "year": 2024, "week_to_near": 13.14, "near": 7466.0, "far": 7447.0, "near_sym": "PP2401", "far_sym": "PP2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -44.0, "year": 2025, "week_to_near": 13.0, "near": 7456.0, "far": 7500.0, "near_sym": "PP2501", "far_sym": "PP2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -31.0, "year": 2026, "week_to_near": 13.14, "near": 6594.0, "far": 6625.0, "near_sym": "PP2601", "far_sym": "PP2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": 442.0}, {"date": "2026-09-08", "spread": 449.0}, {"date": "2026-09-09", "spread": 452.0}, {"date": "2026-09-10", "spread": 489.0}, {"date": "2026-09-11", "spread": 455.0}, {"date": "2026-09-14", "spread": 411.0}, {"date": "2026-09-15", "spread": 536.0}, {"date": "2026-09-16", "spread": 583.0}, {"date": "2026-09-17", "spread": 591.0}, {"date": "2026-09-18", "spread": 517.0}, {"date": "2026-09-21", "spread": 535.0}, {"date": "2026-09-22", "spread": 551.0}, {"date": "2026-09-23", "spread": 507.0}, {"date": "2026-09-24", "spread": 497.0}, {"date": "2026-09-28", "spread": 511.0}, {"date": "2026-09-29", "spread": 555.0}, {"date": "2026-09-30", "spread": 538.0}, {"date": "2026-10-08", "spread": 642.0}, {"date": "2026-10-09", "spread": 707.0}, {"date": "2026-10-12", "spread": 689.0}, {"date": "2026-10-13", "spread": 630.0}, {"date": "2026-10-14", "spread": 585.0}, {"date": "2026-10-15", "spread": 611.0}, {"date": "2026-10-16", "spread": 526.0}, {"date": "2026-10-19", "spread": 551.0}, {"date": "2026-10-20", "spread": 531.0}], "percentile": 100.0, "z": 7.73, "mean_hist": 22.8, "q05": -41.4, "q25": -31.0, "q50": 19.0, "q75": 52.0, "q95": 104.79999999999998, "min_hist": -44.0, "max_hist": 118.0, "grade": "极端(近月升水)", "direction": "near_far_premium", "sample_status": "不足(仅5年)", "extremeness": 100.0}]}, "TA": {"name_cn": "PTA", "exchange": "CZCE", "exchange_cn": "郑州商品交易所", "rule": {"listed_months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "contract_unit_t": 5, "tick": 2, "min_margin_pct": 5, "price_limit_pct": 4, "last_trading_day_rule": "合约交割月份的第10个交易日", "main_months": [1, 5, 9]}, "term_structure": [{"symbol": "TA2610", "y": 2026, "m": 10, "settle": 6928.0, "close": 6994.0, "volume": 869.0, "oi": 33756.0, "is_main": false, "months_out": 0}, {"symbol": "TA2611", "y": 2026, "m": 11, "settle": 6696.0, "close": 6758.0, "volume": 81306.0, "oi": 147051.0, "is_main": false, "months_out": 1}, {"symbol": "TA2612", "y": 2026, "m": 12, "settle": 6604.0, "close": 6644.0, "volume": 170689.0, "oi": 220816.0, "is_main": false, "months_out": 2}, {"symbol": "TA2701", "y": 2027, "m": 1, "settle": 6450.0, "close": 6488.0, "volume": 888377.0, "oi": 1102618.0, "is_main": true, "months_out": 3}, {"symbol": "TA2702", "y": 2027, "m": 2, "settle": 6332.0, "close": 6372.0, "volume": 82991.0, "oi": 115699.0, "is_main": false, "months_out": 4}, {"symbol": "TA2703", "y": 2027, "m": 3, "settle": 6248.0, "close": 6290.0, "volume": 79909.0, "oi": 269507.0, "is_main": false, "months_out": 5}, {"symbol": "TA2704", "y": 2027, "m": 4, "settle": 6192.0, "close": 6230.0, "volume": 48.0, "oi": 402.0, "is_main": false, "months_out": 6}, {"symbol": "TA2705", "y": 2027, "m": 5, "settle": 6146.0, "close": 6170.0, "volume": 32143.0, "oi": 121879.0, "is_main": false, "months_out": 7}, {"symbol": "TA2706", "y": 2027, "m": 6, "settle": 6094.0, "close": 6114.0, "volume": 5.0, "oi": 526.0, "is_main": false, "months_out": 8}, {"symbol": "TA2707", "y": 2027, "m": 7, "settle": 6040.0, "close": 6092.0, "volume": 4.0, "oi": 60.0, "is_main": false, "months_out": 9}, {"symbol": "TA2708", "y": 2027, "m": 8, "settle": 5978.0, "close": 5998.0, "volume": 17.0, "oi": 116.0, "is_main": false, "months_out": 10}, {"symbol": "TA2709", "y": 2027, "m": 9, "settle": 5942.0, "close": 5970.0, "volume": 257.0, "oi": 1054.0, "is_main": false, "months_out": 11}], "shape": {"type": "正向市场(contango)", "slope_per_month": -82.69, "monotonicity_r": -0.966, "biggest_step": {"from_m": 0, "to_m": 1, "near_sym": "TA2610", "far_sym": "TA2611", "diff": -232.0}, "points": [[0, 6928.0], [1, 6696.0], [2, 6604.0], [3, 6450.0], [4, 6332.0], [5, 6248.0], [6, 6192.0], [7, 6146.0], [8, 6094.0], [9, 6040.0], [10, 5978.0], [11, 5942.0]]}, "pairs": [{"product": "TA", "near": "TA2701", "far": "TA2704", "label": "TA2701-TA2704", "gap_months": 3, "near_settle": 6450.0, "far_settle": 6192.0, "near_close": 6488.0, "far_close": 6230.0, "near_oi": 1102618.0, "far_oi": 402.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": false, "block_reasons": ["流动性不足"], "computable": true, "spread": 258.0, "spread_1m_ago": 286.0, "date_1m_ago": "2026-09-18", "change_1m": -28.0, "change_1m_pct": -9.8, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 2.0, "year": 2022, "week_to_near": 13.14, "near": 5410.0, "far": 5408.0, "near_sym": "TA2201", "far_sym": "TA2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 116.0, "year": 2023, "week_to_near": 13.14, "near": 5400.0, "far": 5284.0, "near_sym": "TA2301", "far_sym": "TA2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 52.0, "year": 2024, "week_to_near": 13.14, "near": 5794.0, "far": 5742.0, "near_sym": "TA2401", "far_sym": "TA2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -70.0, "year": 2025, "week_to_near": 13.0, "near": 4944.0, "far": 5014.0, "near_sym": "TA2501", "far_sym": "TA2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -32.0, "year": 2026, "week_to_near": 13.14, "near": 4414.0, "far": 4446.0, "near_sym": "TA2601", "far_sym": "TA2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": 142.0}, {"date": "2026-09-08", "spread": 90.0}, {"date": "2026-09-09", "spread": 200.0}, {"date": "2026-09-10", "spread": 252.0}, {"date": "2026-09-11", "spread": 208.0}, {"date": "2026-09-14", "spread": 290.0}, {"date": "2026-09-15", "spread": 284.0}, {"date": "2026-09-16", "spread": 396.0}, {"date": "2026-09-17", "spread": 428.0}, {"date": "2026-09-18", "spread": 286.0}, {"date": "2026-09-21", "spread": 286.0}, {"date": "2026-09-22", "spread": 282.0}, {"date": "2026-09-23", "spread": 256.0}, {"date": "2026-09-24", "spread": 304.0}, {"date": "2026-09-28", "spread": 298.0}, {"date": "2026-09-29", "spread": 302.0}, {"date": "2026-09-30", "spread": 298.0}, {"date": "2026-10-08", "spread": 370.0}, {"date": "2026-10-09", "spread": 378.0}, {"date": "2026-10-12", "spread": 290.0}, {"date": "2026-10-13", "spread": 288.0}, {"date": "2026-10-14", "spread": 274.0}, {"date": "2026-10-15", "spread": 236.0}, {"date": "2026-10-16", "spread": 226.0}, {"date": "2026-10-19", "spread": 200.0}, {"date": "2026-10-20", "spread": 258.0}], "percentile": 100.0, "z": 3.36, "mean_hist": 13.6, "q05": -62.4, "q25": -32.0, "q50": 2.0, "q75": 52.0, "q95": 103.19999999999999, "min_hist": -70.0, "max_hist": 116.0, "grade": "极端(近月升水)", "direction": "near_far_premium", "sample_status": "不足(仅5年)", "extremeness": 100.0}]}}, "ranking": [{"product": "PP", "near": "PP2701", "far": "PP2704", "label": "PP2701-PP2704", "gap_months": 3, "near_settle": 9331.0, "far_settle": 8800.0, "near_close": 9376.0, "far_close": 8814.0, "near_oi": 672680.0, "far_oi": 560.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": true, "block_reasons": [], "computable": true, "spread": 531.0, "spread_1m_ago": 517.0, "date_1m_ago": "2026-09-18", "change_1m": 14.0, "change_1m_pct": 2.7, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 118.0, "year": 2022, "week_to_near": 13.14, "near": 9332.0, "far": 9214.0, "near_sym": "PP2201", "far_sym": "PP2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 52.0, "year": 2023, "week_to_near": 13.14, "near": 7622.0, "far": 7570.0, "near_sym": "PP2301", "far_sym": "PP2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 19.0, "year": 2024, "week_to_near": 13.14, "near": 7466.0, "far": 7447.0, "near_sym": "PP2401", "far_sym": "PP2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -44.0, "year": 2025, "week_to_near": 13.0, "near": 7456.0, "far": 7500.0, "near_sym": "PP2501", "far_sym": "PP2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -31.0, "year": 2026, "week_to_near": 13.14, "near": 6594.0, "far": 6625.0, "near_sym": "PP2601", "far_sym": "PP2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": 442.0}, {"date": "2026-09-08", "spread": 449.0}, {"date": "2026-09-09", "spread": 452.0}, {"date": "2026-09-10", "spread": 489.0}, {"date": "2026-09-11", "spread": 455.0}, {"date": "2026-09-14", "spread": 411.0}, {"date": "2026-09-15", "spread": 536.0}, {"date": "2026-09-16", "spread": 583.0}, {"date": "2026-09-17", "spread": 591.0}, {"date": "2026-09-18", "spread": 517.0}, {"date": "2026-09-21", "spread": 535.0}, {"date": "2026-09-22", "spread": 551.0}, {"date": "2026-09-23", "spread": 507.0}, {"date": "2026-09-24", "spread": 497.0}, {"date": "2026-09-28", "spread": 511.0}, {"date": "2026-09-29", "spread": 555.0}, {"date": "2026-09-30", "spread": 538.0}, {"date": "2026-10-08", "spread": 642.0}, {"date": "2026-10-09", "spread": 707.0}, {"date": "2026-10-12", "spread": 689.0}, {"date": "2026-10-13", "spread": 630.0}, {"date": "2026-10-14", "spread": 585.0}, {"date": "2026-10-15", "spread": 611.0}, {"date": "2026-10-16", "spread": 526.0}, {"date": "2026-10-19", "spread": 551.0}, {"date": "2026-10-20", "spread": 531.0}], "percentile": 100.0, "z": 7.73, "mean_hist": 22.8, "q05": -41.4, "q25": -31.0, "q50": 19.0, "q75": 52.0, "q95": 104.79999999999998, "min_hist": -44.0, "max_hist": 118.0, "grade": "极端(近月升水)", "direction": "near_far_premium", "sample_status": "不足(仅5年)", "extremeness": 100.0}, {"product": "TA", "near": "TA2701", "far": "TA2704", "label": "TA2701-TA2704", "gap_months": 3, "near_settle": 6450.0, "far_settle": 6192.0, "near_close": 6488.0, "far_close": 6230.0, "near_oi": 1102618.0, "far_oi": 402.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": false, "block_reasons": ["流动性不足"], "computable": true, "spread": 258.0, "spread_1m_ago": 286.0, "date_1m_ago": "2026-09-18", "change_1m": -28.0, "change_1m_pct": -9.8, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 2.0, "year": 2022, "week_to_near": 13.14, "near": 5410.0, "far": 5408.0, "near_sym": "TA2201", "far_sym": "TA2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 116.0, "year": 2023, "week_to_near": 13.14, "near": 5400.0, "far": 5284.0, "near_sym": "TA2301", "far_sym": "TA2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 52.0, "year": 2024, "week_to_near": 13.14, "near": 5794.0, "far": 5742.0, "near_sym": "TA2401", "far_sym": "TA2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -70.0, "year": 2025, "week_to_near": 13.0, "near": 4944.0, "far": 5014.0, "near_sym": "TA2501", "far_sym": "TA2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -32.0, "year": 2026, "week_to_near": 13.14, "near": 4414.0, "far": 4446.0, "near_sym": "TA2601", "far_sym": "TA2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": 142.0}, {"date": "2026-09-08", "spread": 90.0}, {"date": "2026-09-09", "spread": 200.0}, {"date": "2026-09-10", "spread": 252.0}, {"date": "2026-09-11", "spread": 208.0}, {"date": "2026-09-14", "spread": 290.0}, {"date": "2026-09-15", "spread": 284.0}, {"date": "2026-09-16", "spread": 396.0}, {"date": "2026-09-17", "spread": 428.0}, {"date": "2026-09-18", "spread": 286.0}, {"date": "2026-09-21", "spread": 286.0}, {"date": "2026-09-22", "spread": 282.0}, {"date": "2026-09-23", "spread": 256.0}, {"date": "2026-09-24", "spread": 304.0}, {"date": "2026-09-28", "spread": 298.0}, {"date": "2026-09-29", "spread": 302.0}, {"date": "2026-09-30", "spread": 298.0}, {"date": "2026-10-08", "spread": 370.0}, {"date": "2026-10-09", "spread": 378.0}, {"date": "2026-10-12", "spread": 290.0}, {"date": "2026-10-13", "spread": 288.0}, {"date": "2026-10-14", "spread": 274.0}, {"date": "2026-10-15", "spread": 236.0}, {"date": "2026-10-16", "spread": 226.0}, {"date": "2026-10-19", "spread": 200.0}, {"date": "2026-10-20", "spread": 258.0}], "percentile": 100.0, "z": 3.36, "mean_hist": 13.6, "q05": -62.4, "q25": -32.0, "q50": 2.0, "q75": 52.0, "q95": 103.19999999999999, "min_hist": -70.0, "max_hist": 116.0, "grade": "极端(近月升水)", "direction": "near_far_premium", "sample_status": "不足(仅5年)", "extremeness": 100.0}, {"product": "MA", "near": "MA2701", "far": "MA2704", "label": "MA2701-MA2704", "gap_months": 3, "near_settle": 3137.0, "far_settle": 2976.0, "near_close": 3157.0, "far_close": 2992.0, "near_oi": 860774.0, "far_oi": 2086.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": true, "block_reasons": [], "computable": true, "spread": 161.0, "spread_1m_ago": 265.0, "date_1m_ago": "2026-09-18", "change_1m": -104.0, "change_1m_pct": -39.2, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 325.0, "year": 2022, "week_to_near": 13.14, "near": 3563.0, "far": 3238.0, "near_sym": "MA2201", "far_sym": "MA2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 141.0, "year": 2023, "week_to_near": 13.14, "near": 2693.0, "far": 2552.0, "near_sym": "MA2301", "far_sym": "MA2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 46.0, "year": 2024, "week_to_near": 13.14, "near": 2428.0, "far": 2382.0, "near_sym": "MA2401", "far_sym": "MA2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -18.0, "year": 2025, "week_to_near": 13.0, "near": 2400.0, "far": 2418.0, "near_sym": "MA2501", "far_sym": "MA2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -34.0, "year": 2026, "week_to_near": 13.14, "near": 2280.0, "far": 2314.0, "near_sym": "MA2601", "far_sym": "MA2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": 138.0}, {"date": "2026-09-08", "spread": 159.0}, {"date": "2026-09-09", "spread": 187.0}, {"date": "2026-09-10", "spread": 242.0}, {"date": "2026-09-11", "spread": 228.0}, {"date": "2026-09-14", "spread": 247.0}, {"date": "2026-09-15", "spread": 246.0}, {"date": "2026-09-16", "spread": 260.0}, {"date": "2026-09-17", "spread": 279.0}, {"date": "2026-09-18", "spread": 265.0}, {"date": "2026-09-21", "spread": 263.0}, {"date": "2026-09-22", "spread": 241.0}, {"date": "2026-09-23", "spread": 193.0}, {"date": "2026-09-24", "spread": 195.0}, {"date": "2026-09-28", "spread": 238.0}, {"date": "2026-09-29", "spread": 243.0}, {"date": "2026-09-30", "spread": 230.0}, {"date": "2026-10-08", "spread": 276.0}, {"date": "2026-10-09", "spread": 349.0}, {"date": "2026-10-12", "spread": 289.0}, {"date": "2026-10-13", "spread": 209.0}, {"date": "2026-10-14", "spread": 213.0}, {"date": "2026-10-15", "spread": 193.0}, {"date": "2026-10-16", "spread": 172.0}, {"date": "2026-10-19", "spread": 171.0}, {"date": "2026-10-20", "spread": 161.0}], "percentile": 80.0, "z": 0.47, "mean_hist": 92.0, "q05": -30.8, "q25": -18.0, "q50": 46.0, "q75": 141.0, "q95": 288.19999999999993, "min_hist": -34.0, "max_hist": 325.0, "grade": "偏高(近月升水)", "direction": "near_far_premium", "sample_status": "不足(仅5年)", "extremeness": 60.0}, {"product": "SA", "near": "SA2701", "far": "SA2704", "label": "SA2701-SA2704", "gap_months": 3, "near_settle": 946.0, "far_settle": 1010.0, "near_close": 938.0, "far_close": 1001.0, "near_oi": 1317795.0, "far_oi": 5097.0, "near_months_out": 3, "far_months_out": 6, "weeks_to_near": 13.1, "is_main_edge": false, "tradable": true, "block_reasons": [], "computable": true, "spread": -64.0, "spread_1m_ago": -57.0, "date_1m_ago": "2026-09-18", "change_1m": -7.0, "change_1m_pct": -12.3, "n_history": 5, "history_years": [2022, 2023, 2024, 2025, 2026], "history": [{"date": "2021-10-20", "spread": 137.0, "year": 2022, "week_to_near": 13.14, "near": 3301.0, "far": 3164.0, "near_sym": "SA2201", "far_sym": "SA2204", "week_aligned_exact": true}, {"date": "2022-10-20", "spread": 194.0, "year": 2023, "week_to_near": 13.14, "near": 2445.0, "far": 2251.0, "near_sym": "SA2301", "far_sym": "SA2304", "week_aligned_exact": true}, {"date": "2023-10-20", "spread": 69.0, "year": 2024, "week_to_near": 13.14, "near": 1719.0, "far": 1650.0, "near_sym": "SA2401", "far_sym": "SA2404", "week_aligned_exact": true}, {"date": "2024-10-21", "spread": -103.0, "year": 2025, "week_to_near": 13.0, "near": 1446.0, "far": 1549.0, "near_sym": "SA2501", "far_sym": "SA2504", "week_aligned_exact": true}, {"date": "2025-10-20", "spread": -82.0, "year": 2026, "week_to_near": 13.14, "near": 1228.0, "far": 1310.0, "near_sym": "SA2601", "far_sym": "SA2604", "week_aligned_exact": true}], "as_of": "2026-10-20", "series_30d": [{"date": "2026-09-07", "spread": -49.0}, {"date": "2026-09-08", "spread": -59.0}, {"date": "2026-09-09", "spread": -53.0}, {"date": "2026-09-10", "spread": -53.0}, {"date": "2026-09-11", "spread": -60.0}, {"date": "2026-09-14", "spread": -51.0}, {"date": "2026-09-15", "spread": -58.0}, {"date": "2026-09-16", "spread": -57.0}, {"date": "2026-09-17", "spread": -59.0}, {"date": "2026-09-18", "spread": -57.0}, {"date": "2026-09-21", "spread": -57.0}, {"date": "2026-09-22", "spread": -58.0}, {"date": "2026-09-23", "spread": -55.0}, {"date": "2026-09-24", "spread": -56.0}, {"date": "2026-09-28", "spread": -58.0}, {"date": "2026-09-29", "spread": -58.0}, {"date": "2026-09-30", "spread": -55.0}, {"date": "2026-10-08", "spread": -56.0}, {"date": "2026-10-09", "spread": -60.0}, {"date": "2026-10-12", "spread": -59.0}, {"date": "2026-10-13", "spread": -59.0}, {"date": "2026-10-14", "spread": -57.0}, {"date": "2026-10-15", "spread": -63.0}, {"date": "2026-10-16", "spread": -65.0}, {"date": "2026-10-19", "spread": -66.0}, {"date": "2026-10-20", "spread": -64.0}], "percentile": 40.0, "z": -0.81, "mean_hist": 43.0, "q05": -98.8, "q25": -82.0, "q50": 69.0, "q75": 137.0, "q95": 182.6, "min_hist": -103.0, "max_hist": 194.0, "grade": "正常", "direction": "normal", "sample_status": "不足(仅5年)", "extremeness": 20.0}], "excluded": [], "notes": ["MA: 扫描范围为第3个及以后交割月（MA2701 起），最前两个交割月因临近交割不纳入分位扫描", "SA: 扫描范围为第3个及以后交割月（SA2701 起），最前两个交割月因临近交割不纳入分位扫描", "PP: 扫描范围为第3个及以后交割月（PP2612 起），最前两个交割月因临近交割不纳入分位扫描", "TA: 扫描范围为第3个及以后交割月（TA2612 起），最前两个交割月因临近交割不纳入分位扫描"]}, "industry": {"_meta": {"as_of": "2026-10-20", "说明": "产业面数据包：库存、仓单、现货、基差与供需事件。每条数据都带 date/unit/source/confidence；未取到的写 null 并注明，绝不估算。", "confidence_legend": {"A": "抓取正文 + 明确日期 + 明确发布方，且数值自洽", "B": "研报/媒体转述第三方机构数据（如隆众、卓创）", "C": "口径不明或单一来源，仅作参考", "D": "未获取"}, "warrant_source_note": "仓单主口径为郑商所官方仓单日报表（本轮已直接抓取 FutureDataWhsheet.txt，2026-10-20）；DCE 聚丙烯仓单因官网反爬未取得原始文件，采用媒体转述的 2026-10-19 数值并标注 B 级。"}, "products": {"MA": {"name_cn": "甲醇", "warrant": {"value": 6633, "unit": "张", "unit_t_per_warrant": 10, "tons": 66330, "date": "2026-10-20", "source": "郑商所仓单日报 FutureDataWhsheet.txt", "url": "http://www.czce.com.cn/cn/DFSStaticFiles/Future/2026/20261020/FutureDataWhsheet.txt", "confidence": "A", "note": "10-19 媒体转述为 6,820 张（含有效预报），与官方年报口径略有差异，以官方 6,633 张为准"}, "inventory": [{"name": "中国沿海港口库存(隆众口径)", "value": 30.51, "unit": "万吨", "date": "2026-10-08", "chg": -8.84, "chg_pct": -22.47, "confidence": "B", "source": "新浪财经转隆众", "url": "https://finance.sina.com.cn/money/bond/2026-10-12/doc-iniuxrzr8524973.shtml"}, {"name": "港口社会库存(金联创口径)", "value": 30.44, "unit": "万吨", "date": "2026-10-15", "chg": 5.62, "chg_pct": null, "confidence": "B", "source": "东方财富转金联创", "url": "https://finance.eastmoney.com/a/202610193899284051.html", "note": "同口径转为累库，方向与隆众口径相反，不可混算"}], "spot": {"value": 3965, "unit": "元/吨", "region": "太仓", "date": "2026-10-19", "confidence": "A", "source": "新浪财经期货晨报", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-20/doc-inivvsvt5846953.shtml"}, "spot_alt": {"value": 3085, "unit": "元/吨", "region": "内蒙北线", "date": "2026-10-19", "confidence": "A"}, "events": [{"date": "2026-06底", "event": "伊朗封锁霍尔木兹海峡，甲醇进口通道受阻", "impact": "供应中断预期", "direction": "bullish"}, {"date": "2026-09-22", "event": "多数伊朗装置重启，仅约660万吨仍停车；9月伊朗装港15.4万吨，9月进口降至约40万吨（8月约70万吨）", "impact": "进口量腰斩，沿海可流通货源紧张", "direction": "bullish"}, {"date": "2026-10-07", "event": "伊朗革命卫队称海峡已关闭", "impact": "10-08 MA2611 封涨停（+9.02%）", "direction": "bullish"}, {"date": "2026-10-09", "event": "主力盘中最高3,959；当周外采MTO利润恶化至−4,000元/吨以上，江浙外采MTO开工降至20.06%", "impact": "需求端负反馈启动", "direction": "bearish"}, {"date": "2026-10-10前后", "event": "天津渤化、联泓、南京诚志、宁波富德、山东恒通MTO停车或降负；诚志二期10-18停车", "impact": "沿海MTO基本全停，甲醇需求塌陷", "direction": "bearish_near"}, {"date": "2026-10-10", "event": "产区降价200元起拍仍流拍，太仓小单最低成交4,400（较前一日最高价−550）", "impact": "现货强转弱", "direction": "bearish_near"}, {"date": "2026-10底(计划)", "event": "宁夏宝丰4期280万吨甲醇投产", "impact": "国内新增产能", "direction": "bearish"}, {"date": "2026-10下旬", "event": "南京MTO计划停车；塞拉尼斯冰醋酸检修", "impact": "沿海需求继续走弱", "direction": "bearish"}]}, "SA": {"name_cn": "纯碱", "warrant": {"value": 3214, "unit": "张", "unit_t_per_warrant": 20, "tons": 64280, "date": "2026-10-20", "source": "郑商所仓单日报 FutureDataWhsheet.txt", "url": "http://www.czce.com.cn/cn/DFSStaticFiles/Future/2026/20261020/FutureDataWhsheet.txt", "confidence": "A", "effective_forecast": 51, "chg": 297}, "inventory": [{"name": "纯碱厂家总库存", "value": 153.96, "unit": "万吨", "date": "2026-10-19", "chg": -8.93, "chg_pct": -5.48, "confidence": "A", "source": "新浪财经转期货日报", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-20/doc-inivvxcp7623329.shtml"}, {"name": "轻碱", "value": 82.23, "unit": "万吨", "date": "2026-10-19", "chg": -3.15, "confidence": "A"}, {"name": "重碱", "value": 71.73, "unit": "万吨", "date": "2026-10-19", "chg": -5.78, "confidence": "A"}, {"name": "上一期厂家库存", "value": 162.89, "unit": "万吨", "date": "2026-10-15", "chg": -8.13, "confidence": "A", "source": "金十数据", "url": "https://xnews.jin10.com/details/232607"}, {"name": "节后库存", "value": 177.87, "unit": "万吨", "date": "2026-10-08", "chg": 1.94, "confidence": "B", "note": "同比+11.2%"}], "spot": {"value": 951, "unit": "元/吨", "region": "沙河重碱自提", "date": "2026-10-19", "confidence": "A", "source": "新浪财经期货晨报", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-20/doc-inivvsvt5846953.shtml"}, "spot_alt": {"value": 1180, "unit": "元/吨", "region": "华东重碱(区间1130-1230中值)", "date": "2026-10-19", "confidence": "B"}, "events": [{"date": "2026-10-08", "event": "节后产量回升至约70.32万吨(+3.4)，库存177.87万吨累库", "impact": "供应压力", "direction": "bearish"}, {"date": "2026-10-12", "event": "秦皇岛5500大卡动力煤1,008元/吨，创近2年新高", "impact": "氨碱成本抬升，碱厂亏损加剧", "direction": "bullish_cost"}, {"date": "2026-10-15至19", "event": "内蒙/河南/青海大厂集中检修，开工降至63.76%，周产60.56万吨(环比−15.17%)", "impact": "供应收缩，两周去库24万吨", "direction": "bullish_near"}, {"date": "2026-10-09", "event": "氨碱/联碱毛利分别为 −177.25 / −196 元/吨", "impact": "行业深度亏损", "direction": "bullish_cost"}, {"date": "下游", "event": "浮法玻璃日熔量14.13–14.32万吨/日(同比−11.8%)，光伏玻璃6.68万吨/日且存冷修计划", "impact": "重碱刚需走弱", "direction": "bearish"}, {"date": "2026-10", "event": "氯化铵连续涨价，联碱亏损有所好转", "impact": "联碱开工意愿回升", "direction": "bearish"}]}, "PP": {"name_cn": "聚丙烯", "warrant": {"value": 26390, "unit": "手", "unit_t_per_warrant": 5, "tons": 131950, "date": "2026-10-19", "source": "新浪财经转DCE日度仓单（DCE官网对脚本返回412，未取得原始文件）", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-20/doc-inivvxcp7623329.shtml", "confidence": "B", "note": "10-08 为 26,857 手，本期小幅下降约467手"}, "inventory": [{"name": "PP商业库存(隆众)", "value": 62.08, "unit": "万吨", "date": "2026-10-14", "chg": -6.69, "chg_pct": -9.73, "confidence": "B", "source": "新浪财经转隆众", "url": "https://finance.sina.com.cn/money/future/roll/2026-10-17/doc-inivnvku1480435.shtml", "note": "生产企业−11.34%、贸易商−8.02%、港口−1.73%；同比−28.97%"}, {"name": "两油石化库存", "value": 79, "unit": "万吨", "date": "2026-10-15", "chg": null, "confidence": "B", "source": "新浪财经", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-15/doc-inivhiew1357592.shtml", "note": "高于五年同期均值"}], "spot": {"value": 10775, "unit": "元/吨", "region": "华东拉丝", "date": "2026-10-19", "confidence": "B", "source": "光大期货日报(东方财富转)", "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-20/doc-inivvsvt5846953.shtml"}, "basis": {"value": 1436, "unit": "元/吨", "note": "现货10,756.67 − 期货9,320 = +1,436 (13.35%)", "date": "2026-10-19", "confidence": "C", "source": "金投网"}, "events": [{"date": "2026-10-07", "event": "伊朗称海峡关闭", "impact": "10-08 PP主力收9,242(+611,+7.08%)，持仓增逾6万手", "direction": "bullish"}, {"date": "2026-10上旬", "event": "神华榆林、浙江石化、金能化学、天津渤化新增停车，停车比例升至28%；延长中煤二线、浙石化四线、金能2PP集中停车", "impact": "供应大幅收缩", "direction": "bullish_near"}, {"date": "2026-10-09至15", "event": "周产量67.96万吨(环比−1.98%，同比−15.16%)；产能利用率64.97%(环比−1.31pct)；检修损失36.32万吨", "impact": "低供应格局延续", "direction": "bullish_near"}, {"date": "2026-10-09至15", "event": "节后下游开工率回升6.55pct至42.88%，双十一前置备货带动膜企、注塑复工", "impact": "近端需求边际改善", "direction": "bullish_near"}, {"date": "2026-10底至11月初", "event": "中煤榆林60万吨/年新产能投放", "impact": "远端供应增量，压制远月", "direction": "bearish_far"}, {"date": "2026-10下旬", "event": "广州石化2PP、独山子四线、兰州石化新线计划检修", "impact": "供应继续偏紧", "direction": "bullish_near"}, {"date": "持续", "event": "停PP卖丙烯（丙烯价格强于PP，转产分流PP供应）", "impact": "供应端持续偏紧", "direction": "bullish"}]}, "TA": {"name_cn": "PTA", "warrant": {"value": 34728, "unit": "张(完税)", "unit_t_per_warrant": 5, "tons": 173640, "date": "2026-10-20", "source": "郑商所仓单日报 FutureDataWhsheet.txt", "url": "http://www.czce.com.cn/cn/DFSStaticFiles/Future/2026/20261020/FutureDataWhsheet.txt", "confidence": "A", "bonded": 0, "chg": 168, "effective_forecast": 601, "note": "10-08 仅1,002张 → 10-09 骤增至约36,187张（约35倍），已抓取页面均未解释原因，仅作事实记录，不作累库结论"}, "inventory": [{"name": "PTA社会库存", "value": 140, "unit": "万吨", "date": "2026-10中旬", "chg": null, "confidence": "B", "source": "期货日报(新浪转)", "url": "https://finance.sina.com.cn/money/bond/2026-10-20/doc-inivvnps0829573.shtml", "note": "历史低位"}, {"name": "PTA社会库存(09-30)", "value": 122.75, "unit": "万吨", "date": "2026-09-30", "chg": 11.2, "chg_pct": 9.12, "confidence": "B", "source": "新浪财经", "url": "https://finance.sina.com.cn/money/bond/2026-10-09/doc-iniuquqf7191797.shtml", "note": "同比−205.76万吨(−62.63%)"}], "spot": {"value": 7054.5, "unit": "元/吨", "region": "华东", "date": "2026-10-19", "confidence": "C", "source": "金投网"}, "basis": {"value": 670, "unit": "元/吨", "note": "升水TA01约450（另一口径），现货10,756.67口径参见PP", "date": "2026-10-19", "confidence": "C"}, "events": [{"date": "2026-06底", "event": "海峡封锁推动成本重心上移", "impact": "PX成本抬升", "direction": "bullish"}, {"date": "2026-10初", "event": "TA2701 触及6,848创年内新高，华东现货最高7,660，基差走强", "impact": "价格处于年内高位", "direction": "bullish"}, {"date": "2026-10-06", "event": "嘉兴石化150万吨停车", "impact": "供应收缩", "direction": "bullish_near"}, {"date": "2026-10-14", "event": "华东一套300万吨PTA(占全国3.3%)停车检修，预计12天", "impact": "供应收紧", "direction": "bullish_near"}, {"date": "2026-10", "event": "计划检修：嘉通能源550万吨、嘉兴石化150万吨、福建百宏250万吨；10月产量预计570–590万吨", "impact": "供应端偏紧", "direction": "bullish_near"}, {"date": "2026-10", "event": "聚酯大面积亏损(短纤亏约800元/吨)，长丝/短纤/瓶片主动降负；聚酯负荷74.4%", "impact": "需求端负反馈", "direction": "bearish"}, {"date": "2026-10", "event": "终端旺季不旺，订单天数缩短，暖冬预期压制服装消费", "impact": "需求偏弱", "direction": "bearish"}, {"date": "2026-09", "event": "我国纺织品服装出口同比+21.5%（低基数+单价抬升+关税改善）", "impact": "外需阶段性支撑", "direction": "bullish"}, {"date": "产能", "event": "据券商研究，PTA 至2026年无新增产能投放", "impact": "供给端约束", "direction": "bullish"}]}}}, "quotes": {"date": "2026-10-20", "sources": {}, "warrants": null, "price_basis_by_product": null, "cross_check": {"n": null, "mismatch": null, "note": null}, "contracts": {}}};
+const S = DATA.scan, IND = DATA.industry, Q = DATA.quotes;
+
+/* ---------- 工具 ---------- */
+const fmt = (v,d=0)=> v===null||v===undefined||v==='' ? '—' : (typeof v==='number'? v.toFixed(d) : v);
+const sgn = v => v===null||v===undefined ? 'dim' : (v>0?'pos':(v<0?'neg':'dim'));
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- 场景：从主力位置推组合 ---------- */
+function scenarioPairs(prod, k){
+  const b = S.products[prod]; if(!b || !b.term_structure) return [];
+  const ts = b.term_structure;
+  const mainIdx = ts.findIndex(r=>r.is_main);
+  if(mainIdx<0) return [];
+  const near = ts[mainIdx], far = ts[mainIdx+1+k];
+  if(!near || !far) return null;
+  return [near.symbol, far.symbol];
+}
+/* 在扫描结果里找组合；找不到就用曲线现算（无历史分位） */
+function findPair(prod, label){
+  const b = S.products[prod]; if(!b) return null;
+  return (b.pairs||[]).find(p=>p.label===label) || null;
+}
+function quickPair(prod, near, far){
+  const b = S.products[prod];
+  const a = b.term_structure.find(r=>r.symbol===near), c = b.term_structure.find(r=>r.symbol===far);
+  if(!a||!c) return null;
+  const pa = a.settle??a.close, pc = c.settle??c.close;
+  return {product:prod, near, far, label:`${near}-${far}`, spread: pa!==null&&pc!==null? +(pa-pc).toFixed(2):null,
+    percentile:null, z:null, n_history:0, grade:'未计算', block_reasons:[], tradable:true,
+    near_settle:pa, far_settle:pc, near_oi:a.oi, far_oi:c.oi, change_1m:null, mean_hist:null, history:[], series_30d:[]};
+}
+
+/* ---------- 状态 ---------- */
+const state = {products:new Set(Object.keys(S.products)), k:1, thr:10, minN:3, sort:'ext', trad:false, showIns:true, selected:null, histRange:'all'};
+
+/* ---------- 初始化控件 ---------- */
+const fProd=document.getElementById('fProduct');
+Object.entries(S.products).forEach(([p,b])=>{
+  const o=document.createElement('option'); o.value=p; o.textContent=`${b.name_cn} ${p}`; o.selected=true; fProd.appendChild(o);
+});
+fProd.onchange = ()=>{ state.products=new Set([...fProd.selectedOptions].map(o=>o.value)); render(); };
+document.getElementById('fScenario').onchange=e=>{state.k=+e.target.value; render();};
+document.getElementById('fThr').onchange=e=>{state.thr=+e.target.value; render();};
+document.getElementById('fMinN').onchange=e=>{state.minN=+e.target.value; render();};
+document.getElementById('fSort').onchange=e=>{state.sort=e.target.value; render();};
+document.getElementById('fTrad').onchange=e=>{state.trad=e.target.value==='1'; render();};
+document.getElementById('fShowIns').onchange=e=>{state.showIns=e.target.value==='1'; render();};
+
+/* ---------- 组装候选组合 ---------- */
+function candidates(){
+  const out=[];
+  for(const p of state.products){
+    const b=S.products[p]; if(!b||!b.term_structure) continue;
+    const sc=scenarioPairs(p,state.k);
+    if(sc){ const rec=findPair(p, sc.join('-')) || quickPair(p, sc[0], sc[1]); if(rec){rec._scenario=true; out.push(rec);} }
+    for(const pr of (b.pairs||[])) if(!pr._scenario) out.push(pr);
+  }
+  // 去重
+  const seen=new Set();
+  return out.filter(r=>{const k=r.label; if(seen.has(k))return false; seen.add(k); return true;});
+}
+function hasPct(r){ return r.percentile!==null && r.percentile!==undefined && (r.n_history||0)>=state.minN; }
+function isExtreme(r){ if(!hasPct(r)) return false; const t=state.thr; return r.percentile<=t || r.percentile>=100-t; }
+
+/* ---------- 渲染 KPI ---------- */
+function renderKpis(list){
+  const withPct=list.filter(hasPct), ext=list.filter(isExtreme);
+  const nHist=withPct.map(r=>r.n_history||0);
+  const basis=B=>B==='last'?'PP为最新价口径':'结算价口径';
+  const html=[
+    {k:'扫描组合数', v:list.length, s:`覆盖 ${state.products.size} 个品种`},
+    {k:'有可比分位的组合', v:withPct.length, s:`样本 N≥${state.minN}`},
+    {k:'极端组合（≤${state.thr}% 或 ≥${100-state.thr}%）', v:ext.length, s:ext.length?'已标红':'当前阈值下无', cls:'neg'},
+    {k:'极端度最高的组合', v:ext.length?ext[0].label:'—', s:ext.length?`极端度 ${fmt(ext[0].extremeness??Math.abs((ext[0].percentile??50)-50)*2,0)}`:'—', cls:'ext', small:true},
+    {k:'历史样本年数', v:'2022–2026', s:'同组合同剩余期限周对齐'},
+    {k:'行情交叉核对', v:Q.cross_check.mismatch===0?'通过':'有差异', s:`${Q.cross_check.n||0} 合约，不一致 ${Q.cross_check.mismatch}`},
+  ].map(x=>`<div class="kpi ${x.cls||''}"><div class="k">${x.k}</div><div class="v ${x.small?'':''}" style="${x.small?'font-size:16px':''}">${esc(x.v)}</div><div class="s">${esc(x.s)}</div></div>`).join('');
+  document.getElementById('kpis').innerHTML=html;
+  document.getElementById('basisBadge').textContent=`${Q.date} 行情｜结算价(MA/SA/TA) + 最新价(PP)`;
+}
+
+/* ---------- 渲染榜单 ---------- */
+function renderRank(list){
+  let rows=list.slice();
+  if(state.trad) rows=rows.filter(r=>r.tradable!==false && !(r.block_reasons||[]).length);
+  if(!state.showIns) rows=rows.filter(hasPct);
+  const t=state.thr;
+  const ext=r=>hasPct(r)&&(r.percentile<=t||r.percentile>=100-t);
+  const sorters={
+    ext:(a,b)=>((b.extremeness??(hasPct(b)?Math.abs(b.percentile-50)*2:-1))-(a.extremeness??(hasPct(a)?Math.abs(a.percentile-50)*2:-1))),
+    pct_hi:(a,b)=>((b.percentile??-1)-(a.percentile??-1)),
+    pct_lo:(a,b)=>((a.percentile??999)-(b.percentile??999)),
+    chg:(a,b)=>Math.abs(b.change_1m??0)-Math.abs(a.change_1m??0)
+  };
+  rows.sort(sorters[state.sort]);
+  const tb=document.querySelector('#rankTable tbody');
+  if(!rows.length){ tb.innerHTML='<tr><td colspan="12" class="empty">当前筛选下没有组合</td></tr>'; }
+  else tb.innerHTML=rows.map((r,i)=>{
+    const pct=r.percentile, ex=ext(r);
+    const pill = ex?'pill ext':(hasPct(r)? (Math.abs(pct-50)>(50-t)?'pill warn':'pill') : 'pill');
+    const block=(r.block_reasons||[]).filter(x=>x).join('、');
+    const trad=r.tradable===false? `<span class="pill no">${esc(block||'不可交易')}</span>`:
+      (block? `<span class="pill warn">${esc(block)}</span>` : '<span class="pill ok">✓</span>');
+    return `<tr class="rowlink ${state.selected===r.product+'|'+r.label?'sel':''}" data-p="${r.product}" data-l="${r.label}">
+      <td class="l dim">${i+1}</td>
+      <td class="l">${r.product}<span class="dim"> ${S.products[r.product]?.name_cn||''}</span></td>
+      <td class="l mono">${r.label}</td>
+      <td class="mono ${sgn(r.spread)}">${fmt(r.spread,0)}</td>
+      <td class="mono">${pct===null||pct===undefined?'<span class="dim">样本不足</span>':fmt(pct,1)+'%'}</td>
+      <td><span class="heat"><span style="width:${hasPct(r)?Math.min(100,Math.abs(pct-50)*2):0}%"></span></span></td>
+      <td class="mono">${r.z===null||r.z===undefined?'—':fmt(r.z,2)}</td>
+      <td class="mono ${sgn(r.change_1m)}">${r.change_1m===null||r.change_1m===undefined?'—':(r.change_1m>0?'+':'')+fmt(r.change_1m,0)}</td>
+      <td class="mono dim">${r.mean_hist===null||r.mean_hist===undefined?'—':fmt(r.mean_hist,0)}</td>
+      <td class="mono dim">${r.n_history??0}</td>
+      <td class="l"><span class="${pill}">${esc(r.grade)}</span></td>
+      <td class="l">${trad}</td></tr>`;
+  }).join('');
+  tb.querySelectorAll('tr.rowlink').forEach(tr=>tr.onclick=()=>{
+    state.selected=tr.dataset.p+'|'+tr.dataset.l; renderDetail(); renderRank(candidates());
+  });
+  document.getElementById('rankInfo').textContent=`${rows.length} 个组合 · 排序：${document.getElementById('fSort').selectedOptions?.[0]?.text || state.sort}`;
+}
+
+/* ---------- 渲染明细 ---------- */
+function pickInitial(list){
+  if(state.selected){
+    const [p,l]=state.selected.split('|'); const r=list.find(x=>x.product===p&&x.label===l); if(r) return r;
+  }
+  const sc=list.filter(r=>r._scenario);
+  const best=sc.filter(hasPct).sort((a,b)=>Math.abs(b.percentile-50)-Math.abs(a.percentile-50))[0];
+  return best || sc[0] || list.find(hasPct) || list[0] || null;
+}
+function renderDetail(){
+  const list=candidates(); const r=pickInitial(list);
+  if(!r){ document.getElementById('detailPanel').style.display='none'; return; }
+  const p=r.product, b=S.products[p];
+  state.selected=p+'|'+r.label;
+  const ind=IND.products[p]||{};
+  // KPI
+  const basis=b.rule? null:null;
+  const kp=[
+    {k:'品种/组合', v:`${b.name_cn} ${p}`, s:r.label, small:true},
+    {k:'当前月差（近−远）', v:fmt(r.spread,0), s:'元/吨', cls:(r.spread??0)>0?'pos':'neg'},
+    {k:'历史分位', v:hasPct(r)?fmt(r.percentile,1)+'%':'样本不足', s:hasPct(r)?`N=${r.n_history} 年可比样本`:'不给分位', cls:hasPct(r)&&Math.abs(r.percentile-50)>50-state.thr?'ext':''},
+    {k:'Z 分数', v:r.z===null||r.z===undefined?'—':fmt(r.z,2), s:'相对历史均值'},
+    {k:'近1月变化', v:r.change_1m===null||r.change_1m===undefined?'—':((r.change_1m>0?'+':'')+fmt(r.change_1m,0)), s:'元/吨', cls:sgn(r.change_1m)},
+    {k:'历史均值 / 区间', v:r.mean_hist===null||r.mean_hist===undefined?'—':fmt(r.mean_hist,0), s:hasPct(r)?`${fmt(r.min_hist,0)} ~ ${fmt(r.max_hist,0)} (5–95%: ${fmt(r.q05,0)}~${fmt(r.q95,0)})`:''},
+    {k:'评级', v:r.grade, s:r.direction==='insufficient'?'样本不足，不评级':'基于自身分布', cls:hasPct(r)&&Math.abs(r.percentile-50)>50-state.thr?'ext':''},
+  ];
+  document.getElementById('detailKpis').innerHTML=kp.map(x=>`<div class="kpi ${x.cls||''}"><div class="k">${x.k}</div>
+      <div class="v" style="${x.small?'font-size:16px':'font-size:21px'}">${esc(x.v)}</div><div class="s">${esc(x.s)}</div></div>`).join('');
+
+  // 期限结构
+  const ts=b.term_structure||[];
+  drawCurve(document.getElementById('cvCurve'), ts, [r.near, r.far]);
+  document.getElementById('curveNote').innerHTML =
+    `形态：<b>${esc(b.shape.type)}</b>　斜率 ${b.shape.slope_per_month} 元/月　单调性 r=${b.shape.monotonicity_r}` +
+    (b.shape.biggest_step?`　最大单步跳变：${esc(b.shape.biggest_step.near_sym)}→${esc(b.shape.biggest_step.far_sym)} ${b.shape.biggest_step.diff} 元`:'');
+  document.getElementById('curveNote').style.display='block';
+
+  // 历史样本
+  drawHist(document.getElementById('cvHist'), r);
+  const hn=document.getElementById('histNote');
+  if(!hasPct(r)) { hn.innerHTML=`该组合仅有 <b>${r.n_history||0}</b> 个可比历史年份，低于阈值 N=${state.minN}，<b>样本不足，不计算分位</b>。（如需提高覆盖，可放宽"同剩余期限周对齐"，但会降低可比性 —— 不建议以此换样本量。）`; hn.style.display='block'; }
+  else { hn.innerHTML=`可比样本：${(r.history||[]).map(h=>`${h.year}: ${fmt(h.spread,0)}（${esc(h.date)}）`).join('　|　')}`; hn.style.display='block'; }
+
+  // 45日序列
+  drawSeries(document.getElementById('cvSeries'), r.series_30d||[]);
+
+  // 合约明细
+  const basisText = Q.price_basis_by_product?.[p]==='last' ? '(东方财富最新价)' : '(郑商所结算价)';
+  const legRows=[r.near,r.far].map((s,i)=>{
+    const c=(b.term_structure||[]).find(x=>x.symbol===s); if(!c) return '';
+    const q=Q.contracts?.[s];
+    const px=c.settle??c.close;
+    return `<tr><td class="l mono">${s}</td><td class="mono">${fmt(px,0)}</td><td class="mono dim">${fmt(q?.close??c.close,0)}</td>
+      <td class="mono">${fmt(c.oi,0)}</td><td class="mono">${c.months_out} 个月</td>
+      <td class="l">${i===0?'近月':'远月'}${c.is_main?' · 主力':''}</td></tr>`;
+  }).join('');
+  document.querySelector('#legTable tbody').innerHTML=legRows+
+    `<tr><td class="l" colspan="6" class="dim" style="color:var(--dim);font-size:12px">价差口径：${esc(Q.price_basis_by_product?.[p]||'settle')}${basisText}；合约乘数 ${b.rule.contract_unit_t} 吨/手，最小变动 ${b.rule.tick} 元/吨</td></tr>`;
+
+  // 品种全部组合
+  document.querySelector('#pairTable tbody').innerHTML=(b.pairs||[]).filter(x=>x.computable).map(x=>
+    `<tr class="rowlink" data-l="${x.label}"><td class="l mono">${x.label}</td><td class="mono ${sgn(x.spread)}">${fmt(x.spread,0)}</td>
+     <td class="mono">${x.percentile==null?'<span class="dim">样本不足</span>':fmt(x.percentile,1)+'%'}</td>
+     <td class="mono">${x.z==null?'—':fmt(x.z,2)}</td><td class="mono ${sgn(x.change_1m)}">${x.change_1m==null?'—':fmt(x.change_1m,0)}</td>
+     <td class="mono dim">${x.n_history??0}</td>
+     <td class="l"><span class="pill ${hasPct(x)&&Math.abs(x.percentile-50)>50-state.thr?'ext':''}">${esc(x.grade)}</span></td></tr>`).join('')
+     || '<tr><td colspan="7" class="empty">该品种在当前口径下无可计算组合</td></tr>';
+  document.querySelectorAll('#pairTable tr.rowlink').forEach(tr=>tr.onclick=()=>{
+    state.selected=p+'|'+tr.dataset.l; renderDetail(); renderRank(candidates());
+  });
+
+  // 产业面
+  const ir=[];
+  const w=ind.warrant;
+  if(w) ir.push([`仓单（${w.source.includes('郑商所')?'交易所官方':'媒体转述'}）`, fmt(w.value,0), w.unit, '', w.date, w.confidence]);
+  (ind.inventory||[]).forEach(x=>ir.push([x.name, fmt(x.value,2), x.unit, x.chg==null?'':`${x.chg>0?'+':''}${fmt(x.chg,2)}`, x.date, x.confidence]));
+  if(ind.spot) ir.push([`现货 ${ind.spot.region||''}`, fmt(ind.spot.value,0), ind.spot.unit, '', ind.spot.date, ind.spot.confidence]);
+  if(ind.spot_alt) ir.push([`现货 ${ind.spot_alt.region||''}`, fmt(ind.spot_alt.value,0), ind.spot_alt.unit, '', ind.spot_alt.date, ind.spot_alt.confidence]);
+  if(ind.basis) ir.push(['基差（参考）', fmt(ind.basis.value,0), '元/吨', '', ind.basis.date||'', ind.basis.confidence]);
+  document.querySelector('#indTable tbody').innerHTML=ir.map(x=>
+    `<tr><td class="l">${esc(x[0])}</td><td class="mono">${esc(x[1])}</td><td class="l dim">${esc(x[2])}</td>
+     <td class="mono ${sgn(parseFloat(x[3]))}">${esc(x[3])}</td><td class="l dim">${esc(x[4])}</td>
+     <td class="l"><span class="pill ${x[5]==='A'?'ok':(x[5]==='D'?'no':'warn')}">${esc(x[5])}</span></td></tr>`).join('')
+     || '<tr><td colspan="6" class="empty">该品种暂无产业面数据</td></tr>';
+
+  // 事件
+  const evs=(ind.events||[]).slice().sort((a,c)=>String(a.date).localeCompare(String(c.date)));
+  document.getElementById('events').innerHTML=evs.map(e=>
+    `<div class="ev ${esc(e.direction||'')}"><div class="d">${esc(e.date)}</div>
+     <div class="t">${esc(e.event)}</div>
+     <div class="dim" style="font-size:12px">影响：${esc(e.impact||'')}</div></div>`).join('')
+     || '<div class="empty">该品种暂无事件记录</div>';
+
+  renderRules();
+  renderDataNotes();
+}
+
+/* ---------- 图表（Canvas 手绘，无外部库） ---------- */
+function setup(cv){
+  const dpr=window.devicePixelRatio||1; const w=cv.clientWidth||600; const h=cv.height||300;
+  cv.width=w*dpr; cv.height=h*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h); return {ctx,w,h};
+}
+function axes(ctx,w,h,pad,xlab,ylab){
+  ctx.strokeStyle='#26303f'; ctx.lineWidth=1; ctx.beginPath();
+  ctx.moveTo(pad.l,h-pad.b); ctx.lineTo(w-pad.r,h-pad.b); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,h-pad.b); ctx.stroke();
+}
+function drawCurve(cv, ts, marks){
+  const {ctx,w,h}=setup(cv); const pad={l:56,r:16,t:16,b:34};
+  const pts=ts.filter(r=>(r.settle??r.close));
+  if(!pts.length){ ctx.fillStyle='#93a1b5'; ctx.fillText('无有效价格',20,40); return; }
+  const ys=pts.map(r=>r.settle??r.close);
+  const ymin=Math.min(...ys), ymax=Math.max(...ys); const sp=(ymax-ymin)||1;
+  const X=i=> pad.l+(w-pad.l-pad.r)*(i/(Math.max(1,pts.length-1)));
+  const Y=v=> pad.t+(h-pad.t-pad.b)*(1-(v-ymin)/sp);
+  axes(ctx,w,h,pad);
+  ctx.fillStyle='#93a1b5'; ctx.font='11px ui-monospace,Consolas,monospace';
+  for(let g=0;g<=4;g++){ const v=ymin+sp*g/4; const y=Y(v); ctx.strokeStyle='rgba(38,48,63,.6)'; ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(w-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#93a1b5'; ctx.fillText(v.toFixed(0),6,y+4); }
+  // 线
+  ctx.strokeStyle='#4da3ff'; ctx.lineWidth=2; ctx.beginPath();
+  pts.forEach((r,i)=>{ const x=X(i), y=Y(r.settle??r.close); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke();
+  // 点 + 标签
+  pts.forEach((r,i)=>{ const x=X(i), y=Y(r.settle??r.close);
+    const hl=marks.includes(r.symbol);
+    ctx.fillStyle=hl?'#ff5e8a':'#4da3ff'; ctx.beginPath(); ctx.arc(x,y,hl?5:3.2,0,7); ctx.fill();
+    ctx.save(); ctx.translate(x,y-10); ctx.rotate(-Math.PI/4); ctx.fillStyle=hl?'#ff9db6':'#7f8fa5'; ctx.font='10px ui-monospace'; 
+    ctx.textAlign='left'; ctx.fillText(r.symbol.replace(/^[A-Z]+/,''),0,0); ctx.restore();
+    if(hl){ ctx.fillStyle='#ff9db6'; ctx.font='11px ui-monospace'; ctx.textAlign='center'; ctx.fillText((r.settle??r.close).toFixed(0),x,y-22); }
+  });
+  // x 轴月份
+  ctx.fillStyle='#93a1b5'; ctx.font='11px ui-monospace'; ctx.textAlign='center';
+  pts.forEach((r,i)=>{ if(i%2===0) ctx.fillText(r.m+'月',X(i),h-pad.b+16); });
+  ctx.textAlign='left';
+}
+function drawHist(cv, r){
+  const {ctx,w,h}=setup(cv); const pad={l:56,r:16,t:16,b:40};
+  const hs=r.history||[];
+  if(!hs.length){ ctx.fillStyle='#93a1b5'; ctx.font='12px sans-serif'; ctx.fillText('无可比历史样本（该组合在各历史年份均无同剩余期限的双边报价）',20,50); return; }
+  const cur=r.spread; const vals=[...hs.map(x=>x.spread), ...(cur==null?[]:[cur])];
+  let ymin=Math.min(...vals), ymax=Math.max(...vals); if(ymin===ymax){ymin-=10;ymax+=10;}
+  const sp=ymax-ymin; ymin-=sp*0.12; ymax+=sp*0.12;
+  const Y=v=> pad.t+(h-pad.t-pad.b)*(1-(v-ymin)/(ymax-ymin));
+  axes(ctx,w,h,pad);
+  const bw=(w-pad.l-pad.r)/Math.max(1,hs.length+1);
+  // 零线
+  const y0=Y(0); if(0>ymin&&0<ymax){ ctx.strokeStyle='#3a4a5f'; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(pad.l,y0); ctx.lineTo(w-pad.r,y0); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#5d7492'; ctx.font='10px ui-monospace'; ctx.fillText('0',pad.l-18,y0+3); }
+  ctx.font='11px ui-monospace'; ctx.textAlign='center';
+  hs.forEach((x,i)=>{ const cx=pad.l+bw*(i+0.5); const y=Y(x.spread); const ytop=Math.min(y,Y(0)), hh=Math.abs(Y(0)-y)||1;
+    ctx.fillStyle='rgba(126,224,192,.75)'; ctx.fillRect(cx-bw*0.28,ytop,bw*0.56,Math.max(1,hh));
+    ctx.fillStyle='#e6ebf2'; ctx.fillText(x.spread.toFixed(0),cx,ytop-5);
+    ctx.fillStyle='#93a1b5'; ctx.fillText(String(x.year),cx,h-pad.b+16);
+    ctx.fillStyle='#5d7492'; ctx.font='9px ui-monospace'; ctx.fillText(x.date.slice(5),cx,h-pad.b+28); ctx.font='11px ui-monospace';
+  });
+  if(cur!=null){
+    const cx=pad.l+bw*(hs.length+0.5); const y=Y(cur);
+    ctx.fillStyle='#ff5e8a'; ctx.fillRect(cx-bw*0.28,Math.min(y,Y(0)),bw*0.56,Math.max(1,Math.abs(Y(0)-y)));
+    ctx.fillStyle='#ff8fab'; ctx.fillText(cur.toFixed(0),cx,y-5);
+    ctx.fillStyle='#ff9db6'; ctx.fillText('当前',cx,h-pad.b+16);
+    ctx.fillStyle='#5d7492'; ctx.fillText(r.as_of||'',cx,h-pad.b+28);
+  }
+  ctx.textAlign='left';
+  // 均值线
+  if(r.mean_hist!=null){ const y=Y(r.mean_hist); ctx.strokeStyle='#ffc857'; ctx.setLineDash([5,4]); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(w-pad.r,y); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#ffc857'; ctx.fillText('均值 '+r.mean_hist.toFixed(0), w-pad.r-70, y-4); }
+}
+function drawSeries(cv, s){
+  const {ctx,w,h}=setup(cv); const pad={l:56,r:16,t:14,b:32};
+  if(!s.length){ ctx.fillStyle='#93a1b5'; ctx.font='12px sans-serif'; ctx.fillText('无近 45 日序列',20,50); return; }
+  const ys=s.map(x=>x.spread); let ymin=Math.min(...ys), ymax=Math.max(...ys); if(ymin===ymax){ymin-=5;ymax+=5;}
+  const pd=(ymax-ymin)*0.15; ymin-=pd; ymax+=pd;
+  const X=i=> pad.l+(w-pad.l-pad.r)*(i/Math.max(1,s.length-1));
+  const Y=v=> pad.t+(h-pad.t-pad.b)*(1-(v-ymin)/(ymax-ymin));
+  axes(ctx,w,h,pad);
+  ctx.fillStyle='#93a1b5'; ctx.font='10px ui-monospace';
+  for(let g=0;g<=3;g++){ const v=ymin+(ymax-ymin)*g/3, y=Y(v); ctx.strokeStyle='rgba(38,48,63,.6)'; ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(w-pad.r,y); ctx.stroke(); ctx.fillText(v.toFixed(0),6,y+3); }
+  ctx.strokeStyle='#7ee0c0'; ctx.lineWidth=2; ctx.beginPath();
+  s.forEach((x,i)=>{ const px=X(i),py=Y(x.spread); i?ctx.lineTo(px,py):ctx.moveTo(px,py); }); ctx.stroke();
+  ctx.fillStyle='#7ee0c0'; const lx=X(s.length-1), ly=Y(s[s.length-1].spread);
+  ctx.beginPath(); ctx.arc(lx,ly,3.5,0,7); ctx.fill();
+  ctx.font='11px ui-monospace'; ctx.textAlign='right'; ctx.fillText(s[s.length-1].spread.toFixed(0),lx-6,ly-8);
+  ctx.textAlign='left'; ctx.fillStyle='#93a1b5'; ctx.fillText(s[0].date.slice(5),pad.l,h-pad.b+16);
+  ctx.textAlign='right'; ctx.fillText(s[s.length-1].date.slice(5),w-pad.r,h-pad.b+16); ctx.textAlign='left';
+}
+
+/* ---------- 规则表 ---------- */
+function renderRules(){
+  document.querySelector('#ruleTable tbody').innerHTML=Object.entries(S.products).map(([p,b])=>{
+    const mo=(b.rule.listed_months||[]).join(',');
+    return `<tr><td class="l">${p} ${b.name_cn}</td><td class="l">${esc(b.exchange_cn)} (${b.exchange})</td>
+      <td class="l mono">${mo==='1,2,3,4,5,6,7,8,9,10,11,12'?'1–12 全月':mo}</td>
+      <td class="mono">${b.rule.contract_unit_t} 吨/手</td><td class="mono">${b.rule.tick} 元/吨</td>
+      <td class="mono">${b.rule.min_margin_pct}%</td><td class="l dim">${esc(b.rule.last_trading_day_rule)}</td>
+      <td class="l mono">${(b.rule.main_months||[]).map(m=>m+'月').join('/')}</td>
+      <td class="mono">${(b.term_structure||[]).length} 个</td></tr>`;
+  }).join('');
+}
+function renderDataNotes(){
+  const src=Q.sources||{};
+  const rows=[
+    ['郑商所日行情', src.czce_daily?.ok?'✓ 已抓取':'✗ 失败', src.czce_daily?.url||''],
+    ['郑商所仓单日报', src.czce_warrant?.ok?'✓ 已抓取':'✗ 失败', src.czce_warrant?.url||''],
+    ['大商所PP行情(东财)', src.em_dce?.ok?('✓ 已抓取('+(src.em_dce.n||0)+'合约)'):'✗ 失败', src.em_dce?.url||'大商所官网对脚本返回412'],
+    ['逐合约历史日线', '✓ 276 个合约（2021-01 ~ 2026-10）', '新浪财经 InnerFuturesNewService.getDailyKLine'],
+  ];
+  document.getElementById('dataNotes').innerHTML=`<table><thead><tr><th class="l">数据源</th><th class="l">状态</th><th class="l">地址/说明</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td class="l">${esc(r[0])}</td><td class="l">${esc(r[1])}</td><td class="l src">${esc(r[2])}</td></tr>`).join('')}</tbody></table>
+    <div class="note" style="margin-top:12px">
+      <b>月差定义：</b>近月 − 远月（元/吨）。正值＝正向市场（近月升水，contango）；负值＝反向市场（近月贴水）。<br>
+      <b>可比样本：</b>同一品种、同一(近月,远月)月份组合、同一"剩余期限整周数"，每年取 1 个样本（2022–2026）。不同月份组合<b>分别统计</b>，绝不合并为一个分布。<br>
+      <b>缺失处理：</b>结算价为空/为0、或成交量与持仓量同时为0 的交易日视为无效，直接跳过；不插值、不前向填充、不用主力连续合约（换月会制造假跳变）。
+    </div>
+    <div class="disc"><b>重要声明：</b>本页给出的是"期限结构在自身历史中的位置"，用于为基本面研究提供线索。<b>异常月差本身不等于套利机会</b>，未扣除仓储费、资金成本、交割成本、品级与地区升贴水，也未考虑流动性。不构成任何交易建议。</div>`;
+}
+
+/* ---------- 主渲染 ---------- */
+function render(){
+  const list=candidates();
+  renderKpis(list);
+  state.selected=null;
+  renderDetail();
+  renderRank(list);
+  const notes=(S.notes||[]).slice(0,1).join(' ');
+  document.getElementById('scanNote').innerHTML=`扫描口径：所选品种，<b>${document.getElementById('fScenario').selectedOptions?.[0]?.text || '默认口径'}</b>；
+    排除最前两个交割月（临近交割，报价受单边交割逻辑扭曲）。${esc(notes)}`;
+}
+document.querySelectorAll('.chip').forEach(c=>c.remove());
+window.addEventListener('resize',()=>{renderDetail();});
+render();
+</script>
+</body>
+</html>

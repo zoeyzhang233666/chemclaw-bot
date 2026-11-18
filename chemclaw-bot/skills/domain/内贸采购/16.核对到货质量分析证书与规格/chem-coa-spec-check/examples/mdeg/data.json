@@ -1,0 +1,959 @@
+{
+ "meta": {
+  "title": "工业级乙二醇 到货 COA 与采购质量规格书核对",
+  "as_of": "2026-06-08",
+  "buyer_name": "采购部 林工",
+  "buyer_contact": "采购部 / lin.mm@example-buyer.cn（模拟邮箱）",
+  "spec_ref": "CMSY-QS-MEG-2026-03 Rev.C / CMSY-HT-2026-0417 附件2",
+  "target_coa_batch": "DY-EG-260603B",
+  "tone": "formal",
+  "simulated": true,
+  "sim_note": "本文档所有企业名称、批号、数值均为模拟构造，仅用于演示 COA 核对流程，不得作为真实质量记录或索赔依据。",
+  "export_base": "乙二醇到货COA核对报告_20260608"
+ },
+ "product": {
+  "name": "工业用乙二醇",
+  "en_name": "Ethylene Glycol, Industrial Grade",
+  "grade": "优等品",
+  "cas": "107-21-1",
+  "un": "3082",
+  "hs": "2905310000",
+  "basis": "as_received",
+  "use": "聚酯原料（PET 切片）/ 防冻液调和",
+  "indicator_aliases": [
+   {
+    "canonical": "乙二醇含量",
+    "aliases": [
+     "纯度",
+     "含量",
+     "纯度(质量分数)",
+     "Purity",
+     "含量(质量分数)",
+     "乙二醇纯度"
+    ],
+    "category": "含量",
+    "basis": "mandatory",
+    "critical": true,
+    "method_note": "面积归一化法受响应因子影响；与滴定法结果不可直接比较"
+   },
+   {
+    "canonical": "水分",
+    "aliases": [
+     "水含量",
+     "水",
+     "含水量",
+     "Water",
+     "水分(质量分数)",
+     "H2O"
+    ],
+    "category": "水分",
+    "basis": "mandatory",
+    "critical": true,
+    "method_note": "卡尔费休淬灭严格，红外法在含羟基基体中读数偏高，两法不可直接等效"
+   },
+   {
+    "canonical": "酸度",
+    "aliases": [
+     "酸度(以乙酸计)",
+     "总酸度",
+     "Acidity"
+    ],
+    "category": "杂质",
+    "basis": "mandatory",
+    "critical": false,
+    "method_note": "滴定法下限受终点判断影响，接近方法检出下限时宜用离子色谱复核"
+   },
+   {
+    "canonical": "铁",
+    "aliases": [
+     "铁含量",
+     "Fe",
+     "铁(Fe)"
+    ],
+    "category": "杂质",
+    "basis": "mandatory",
+    "critical": false,
+    "method_note": "AAS 与 ICP-OES 在所给限值水平上可视为等效（须注明）"
+   },
+   {
+    "canonical": "灰分",
+    "aliases": [
+     "灼烧残渣",
+     "灰份",
+     "Ash"
+    ],
+    "category": "杂质",
+    "basis": "mandatory",
+    "critical": false,
+    "method_note": "灼烧温度 800℃/850℃ 差异会影响残渣量，须同条件比较"
+   },
+   {
+    "canonical": "色度",
+    "aliases": [
+     "铂钴色度",
+     "色度(铂钴)",
+     "Color",
+     "APHA"
+    ],
+    "category": "物性",
+    "basis": "customer",
+    "critical": false,
+    "method_note": "铂钴比色，须注明光照与观察条件"
+   },
+   {
+    "canonical": "密度",
+    "aliases": [
+     "密度(20℃)",
+     "相对密度",
+     "Density"
+    ],
+    "category": "物性",
+    "basis": "customer",
+    "critical": false,
+    "method_note": "温度敏感，测定温度须为 20℃；15℃/25℃ 数据不可直接比较"
+   },
+   {
+    "canonical": "醛(以乙醛计)",
+    "aliases": [
+     "醛含量",
+     "醛类(以乙醛计)",
+     "Aldehydes"
+    ],
+    "category": "杂质",
+    "basis": "customer",
+    "critical": true,
+    "method_note": "分光光度法测的是'以乙醛计'的总醛，与乙醛/甲醛分项浓度不可直接换算"
+   },
+   {
+    "canonical": "外观",
+    "aliases": [
+     "Appearance",
+     "外观与状态"
+    ],
+    "category": "外观",
+    "basis": "mandatory",
+    "critical": false,
+    "method_note": "目视法：无色透明、无可见机械杂质，需描述观察条件"
+   },
+   {
+    "canonical": "二乙二醇(DEG)",
+    "aliases": [
+     "DEG",
+     "二甘醇",
+     "二乙二醇"
+    ],
+    "category": "杂质",
+    "basis": "customer",
+    "critical": true,
+    "method_note": "气相色谱外标法受分流比影响；部分厂家 COA 不列该指标"
+   },
+   {
+    "canonical": "蒸发残渣",
+    "aliases": [
+     "残渣",
+     "不挥发物"
+    ],
+    "category": "杂质",
+    "basis": "customer",
+    "critical": false,
+    "method_note": "烘干温度与恒重方式须一致，影响残渣称量结果"
+   }
+  ],
+  "equivalent_methods": [
+   [
+    "GB/T 14571.2-2018",
+    "ASTM E203-16",
+    "JIS K 0068"
+   ],
+   [
+    "GB/T 14571.2",
+    "GB/T 6283"
+   ]
+  ]
+ },
+ "supplier": {
+  "name": "浙江东越石化有限公司（模拟）",
+  "short": "东越石化(模拟)",
+  "contact_name": "周敏",
+  "contact": "质量部 / qa@example-supplier.cn（模拟邮箱）",
+  "addr": "浙江省宁波市北仑区（模拟地址）",
+  "role": "生产厂家"
+ },
+ "contract": {
+  "no": "CMSY-HT-2026-0417",
+  "attach": "附件2 技术附件",
+  "price_terms": "详见商务附件（本核对不涉及价格）",
+  "quality_clause": "§7.2 到货检验以本合同技术附件为准；买方有权按约定方法复检，复检不合格批次按 §7.5 处理",
+  "qty": "框架 12,000 t/年；单批 1×31.5 t 槽车"
+ },
+ "specs": [
+  {
+   "doc_type": "采购规格书",
+   "spec_no": "CMSY-QS-MEG-2026-03",
+   "title": "工业用乙二醇 采购质量规格书",
+   "rev": "Rev.C",
+   "effective": "2026-03-01",
+   "standard_ref": "GB/T 4649-2018",
+   "buyer": "中化明阳新材料有限公司（模拟）",
+   "loc": "规格书 P1-P2 · 表1 技术要求",
+   "items": [
+    {
+     "name": "纯度",
+     "name_key": "乙二醇含量",
+     "unit": "%",
+     "limit": "≥99.9",
+     "method": "GB/T 14571.1",
+     "basis": "as_received",
+     "category": "含量",
+     "critical": true,
+     "loc": "规格书 §4.1 表1 第1行"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "unit": "%",
+     "limit": "≤0.08",
+     "method": "GB/T 6283",
+     "basis": "as_received",
+     "category": "水分",
+     "critical": true,
+     "loc": "规格书 §4.1 表1 第2行"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "unit": "Hazen",
+     "limit": "≤10",
+     "method": "GB/T 3143",
+     "basis": "as_received",
+     "category": "物性",
+     "critical": false,
+     "loc": "规格书 §4.1 表1 第3行"
+    },
+    {
+     "name": "酸度(以乙酸计)",
+     "name_key": "酸度",
+     "unit": "%",
+     "limit": "≤0.001",
+     "method": "GB/T 14571.4",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": false,
+     "loc": "规格书 §4.1 表1 第4行"
+    },
+    {
+     "name": "铁",
+     "name_key": "铁",
+     "unit": "ppm",
+     "limit": "≤0.5",
+     "method": "GB/T 14571.3",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": false,
+     "loc": "规格书 §4.1 表1 第5行（注1：铁以 Fe 计，ppb 表示时须换算）"
+    },
+    {
+     "name": "灰分",
+     "name_key": "灰分",
+     "unit": "%",
+     "limit": "≤0.002",
+     "method": "GB/T 14571.5",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": false,
+     "loc": "规格书 §4.1 表1 第6行"
+    },
+    {
+     "name": "醛(以乙醛计)",
+     "name_key": "醛(以乙醛计)",
+     "unit": "ppm",
+     "limit": "≤5",
+     "method": "GB/T 14571.6",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": true,
+     "loc": "规格书 §4.1 表1 第7行"
+    },
+    {
+     "name": "密度(20℃)",
+     "name_key": "密度",
+     "unit": "g/cm³",
+     "limit": "≥1.112",
+     "method": "GB/T 4472",
+     "basis": "as_received",
+     "category": "物性",
+     "critical": false,
+     "loc": "规格书 §4.1 表1 第8行"
+    },
+    {
+     "name": "外观",
+     "name_key": "外观",
+     "unit": "—",
+     "limit": "无色透明、无可见机械杂质",
+     "method": "目视法",
+     "basis": "as_received",
+     "category": "外观",
+     "critical": false,
+     "loc": "规格书 §4.1 表1 第9行"
+    },
+    {
+     "name": "蒸发残渣",
+     "name_key": "蒸发残渣",
+     "unit": "%",
+     "limit": "≤0.002",
+     "method": "GB/T 6324.2",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": false,
+     "loc": "规格书 §4.1 表1 第10行"
+    }
+   ]
+  },
+  {
+   "doc_type": "合同技术附件",
+   "spec_no": "CMSY-HT-2026-0417-附件2",
+   "title": "年度采购框架合同 · 技术附件（质量条款）",
+   "rev": "第1版",
+   "effective": "2026-04-20",
+   "standard_ref": "GB/T 4649-2018",
+   "buyer": "中化明阳新材料有限公司（模拟）",
+   "loc": "技术附件 §3 表3-1",
+   "items": [
+    {
+     "name": "乙二醇含量",
+     "name_key": "乙二醇含量",
+     "unit": "%",
+     "limit": "≥99.85",
+     "method": "GB/T 14571.1",
+     "basis": "as_received",
+     "category": "含量",
+     "critical": true,
+     "loc": "技术附件 §3.2 表3-1 第1行（低于国标优等品 99.90%，按合同优先原则执行 ≥99.85%）"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "unit": "%",
+     "limit": "≤0.08",
+     "method": "GB/T 6283",
+     "basis": "as_received",
+     "category": "水分",
+     "critical": true,
+     "loc": "技术附件 §3.2 表3-1 第2行"
+    },
+    {
+     "name": "醛(以乙醛计)",
+     "name_key": "醛(以乙醛计)",
+     "unit": "ppm",
+     "limit": "≤5",
+     "method": "GB/T 14571.6",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": true,
+     "loc": "技术附件 §3.3 特殊质量条款"
+    },
+    {
+     "name": "外观",
+     "name_key": "外观",
+     "unit": "—",
+     "limit": "无色透明、无可见机械杂质",
+     "method": "目视法",
+     "basis": "as_received",
+     "category": "外观",
+     "critical": false,
+     "loc": "技术附件 §3.2 表3-1 第9行"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "unit": "Hazen",
+     "limit": "≤10",
+     "method": "GB/T 3143",
+     "basis": "as_received",
+     "category": "物性",
+     "critical": false,
+     "loc": "技术附件 §3.2 表3-1 第3行"
+    },
+    {
+     "name": "灰分",
+     "name_key": "灰分",
+     "unit": "%",
+     "limit": "≤0.002",
+     "method": "GB/T 14571.5",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": false,
+     "loc": "技术附件 §3.2 表3-1 第6行"
+    },
+    {
+     "name": "二乙二醇(DEG)",
+     "name_key": "二乙二醇(DEG)",
+     "unit": "%",
+     "limit": "≤0.01",
+     "method": "GB/T 14571.7",
+     "basis": "as_received",
+     "category": "杂质",
+     "critical": true,
+     "loc": "技术附件 §3.3 特殊质量条款（合同新增，规格书未约定）"
+    }
+   ]
+  }
+ ],
+ "standards": [
+  {
+   "code": "GB/T 4649-2018",
+   "title": "工业用乙二醇（非合同引用，仅供参照；合同/规格书限值与国标不一致时以合同为准）",
+   "loc": "参照：GB/T 4649-2018 表1 优等品",
+   "items": [
+    {
+     "name": "乙二醇含量",
+     "name_key": "乙二醇含量",
+     "unit": "%",
+     "limit": "≥99.9",
+     "method": "GB/T 14571.1",
+     "category": "含量"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "unit": "%",
+     "limit": "≤0.08",
+     "method": "GB/T 6283",
+     "category": "水分"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "unit": "Hazen",
+     "limit": "≤10",
+     "method": "GB/T 3143",
+     "category": "物性"
+    },
+    {
+     "name": "酸度",
+     "name_key": "酸度",
+     "unit": "%",
+     "limit": "≤0.001",
+     "method": "GB/T 14571.4",
+     "category": "杂质"
+    },
+    {
+     "name": "铁",
+     "name_key": "铁",
+     "unit": "ppm",
+     "limit": "≤0.5",
+     "method": "GB/T 14571.3",
+     "category": "杂质"
+    },
+    {
+     "name": "灰分",
+     "name_key": "灰分",
+     "unit": "%",
+     "limit": "≤0.002",
+     "method": "GB/T 14571.5",
+     "category": "杂质"
+    },
+    {
+     "name": "醛",
+     "name_key": "醛(以乙醛计)",
+     "unit": "ppm",
+     "limit": "≤5",
+     "method": "GB/T 14571.6",
+     "category": "杂质"
+    },
+    {
+     "name": "密度(20℃)",
+     "name_key": "密度",
+     "unit": "g/cm³",
+     "limit": "≈1.113",
+     "method": "GB/T 4472",
+     "category": "物性"
+    },
+    {
+     "name": "外观",
+     "name_key": "外观",
+     "unit": "—",
+     "limit": "无色透明、无可见机械杂质",
+     "method": "目视法",
+     "category": "外观"
+    },
+    {
+     "name": "蒸发残渣",
+     "name_key": "蒸发残渣",
+     "unit": "%",
+     "limit": "≤0.002",
+     "method": "GB/T 6324.2",
+     "category": "杂质"
+    },
+    {
+     "name": "二乙二醇",
+     "name_key": "二乙二醇(DEG)",
+     "unit": "%",
+     "limit": "≤0.01",
+     "method": "GB/T 14571.7",
+     "category": "杂质"
+    }
+   ]
+  }
+ ],
+ "coas": [
+  {
+   "batch_no": "DY-EG-260512A",
+   "file": "COA_A_东越石化_DY-EG-260512A（模拟）.html",
+   "label": "批 A · DY-EG-260512A",
+   "collect_date": "2026-05-16",
+   "linked_delivery_batch": "DY-EG-260512A",
+   "tank": "T-207",
+   "header": {
+    "product_name": "乙二醇（工业用）",
+    "grade": "优等品",
+    "producer": "浙江东越石化有限公司",
+    "batch_no": "DY-EG-260512A",
+    "report_no": "COA-DY-2605-1182",
+    "mfg_date": "2026-05-12",
+    "test_date": "2026-05-13",
+    "retest_date": "2026-08-12",
+    "test_standard": "GB/T 4649-2018",
+    "conclusion": "检验合格",
+    "packing": "槽车散装 / 31.6 t"
+   },
+   "signoff": {
+    "cert_code": "Q7XK-9D2M-4TLP-81AA",
+    "inspector": "李工",
+    "reviewer": "王工",
+    "issuer": "质量部（红章位置）"
+   },
+   "items": [
+    {
+     "name": "乙二醇纯度（质量分数）",
+     "name_key": "乙二醇含量",
+     "value": "99.92",
+     "unit": "%",
+     "method": "GB/T 14571.1-2018",
+     "loc": "COA 表 §1 第1行",
+     "basis": "as_received"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "value": "0.075",
+     "unit": "%",
+     "method": "GB/T 6283-2008",
+     "loc": "COA 表 §1 第2行",
+     "basis": "as_received"
+    },
+    {
+     "name": "色度（铂钴）",
+     "name_key": "色度",
+     "value": "5",
+     "unit": "Hazen",
+     "method": "GB/T 3143-1982",
+     "loc": "COA 表 §1 第3行",
+     "basis": "as_received"
+    },
+    {
+     "name": "酸度（以乙酸计）",
+     "name_key": "酸度",
+     "value": "0.0001",
+     "unit": "%",
+     "method": "GB/T 14571.4-2018",
+     "loc": "COA 表 §1 第4行",
+     "basis": "as_received"
+    },
+    {
+     "name": "铁（Fe）",
+     "name_key": "铁",
+     "value": "0.32",
+     "unit": "ppm",
+     "method": "GB/T 14571.3-2018",
+     "loc": "COA 表 §1 第5行",
+     "basis": "as_received",
+     "lod": "0.05 ppm"
+    },
+    {
+     "name": "灰分（灼烧残渣）",
+     "name_key": "灰分",
+     "value": "0.0015",
+     "unit": "%",
+     "method": "GB/T 14571.5-2018",
+     "loc": "COA 表 §1 第6行",
+     "basis": "as_received"
+    },
+    {
+     "name": "醛（以乙醛计）",
+     "name_key": "醛(以乙醛计)",
+     "value": "3.1",
+     "unit": "ppm",
+     "method": "GB/T 14571.6-2018",
+     "loc": "COA 表 §1 第7行",
+     "basis": "as_received",
+     "lod": "0.5 ppm"
+    },
+    {
+     "name": "密度（20℃）",
+     "name_key": "密度",
+     "value": "1.1132",
+     "unit": "g/cm³",
+     "method": "GB/T 4472-2011",
+     "loc": "COA 表 §1 第8行",
+     "basis": "as_received"
+    },
+    {
+     "name": "外观",
+     "name_key": "外观",
+     "value": "无色透明液体，无可见机械杂质",
+     "unit": "—",
+     "method": "目视法",
+     "loc": "COA 表 §1 第9行",
+     "basis": "as_received"
+    },
+    {
+     "name": "蒸发残渣",
+     "name_key": "蒸发残渣",
+     "value": "0.0012",
+     "unit": "%",
+     "method": "GB/T 6324.2-2004",
+     "loc": "COA 表 §1 第10行",
+     "basis": "as_received"
+    },
+    {
+     "name": "二乙二醇（DEG）",
+     "name_key": "二乙二醇(DEG)",
+     "value": "0.006",
+     "unit": "%",
+     "method": "GB/T 14571.7-2018",
+     "loc": "COA 表 §1 第11行",
+     "basis": "as_received"
+    }
+   ]
+  },
+  {
+   "batch_no": "DY-EG-260603B",
+   "file": "COA_B_东越石化_DY-EG-260603B（模拟）.html",
+   "label": "批 B · DY-EG-260603B",
+   "collect_date": "2026-06-06",
+   "linked_delivery_batch": "DY-EG-260603B",
+   "tank": "T-208",
+   "header": {
+    "product_name": "乙二醇",
+    "grade": "—",
+    "producer": "东越石化有限公司",
+    "batch_no": "DY260603B",
+    "report_no": "DY-QC-26-0603",
+    "mfg_date": "2026-06-03",
+    "test_date": "2026-06-04",
+    "retest_date": "",
+    "test_standard": "GB/T 4649-2018",
+    "conclusion": "符合优等品要求",
+    "packing": "槽车散装 / 31.4 t"
+   },
+   "signoff": {
+    "cert_code": "",
+    "inspector": "张",
+    "reviewer": "",
+    "issuer": ""
+   },
+   "items": [
+    {
+     "name": "纯度",
+     "name_key": "乙二醇含量",
+     "value": "99.86",
+     "unit": "%",
+     "method": "GB/T 14571.1-2018",
+     "loc": "COA-B 表 第1行",
+     "basis": "as_received"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "value": "865",
+     "unit": "ppm",
+     "method": "GB/T 6283-2008",
+     "loc": "COA-B 表 第2行",
+     "basis": "as_received"
+    },
+    {
+     "name": "铁含量",
+     "name_key": "铁",
+     "value": "580",
+     "unit": "ppb",
+     "method": "GB/T 14571.3-2018",
+     "loc": "COA-B 表 第3行",
+     "basis": "as_received",
+     "lod": "检出限 8 ppb"
+    },
+    {
+     "name": "醛类（以乙醛计）",
+     "name_key": "醛(以乙醛计)",
+     "value": "7.2",
+     "unit": "ppm",
+     "method": "GB/T 14571.6-2018",
+     "loc": "COA-B 表 第4行",
+     "basis": "as_received"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "value": "12",
+     "unit": "Hazen",
+     "method": "GB/T 3143-1982",
+     "loc": "COA-B 表 第5行",
+     "basis": "as_received"
+    },
+    {
+     "name": "酸度",
+     "name_key": "酸度",
+     "value": "未检测",
+     "unit": "%",
+     "method": "—",
+     "loc": "COA-B 表 第6行",
+     "basis": "as_received",
+     "comment": "标注'本批未检'"
+    },
+    {
+     "name": "外观",
+     "name_key": "外观",
+     "value": "微带浅黄色，透明度略差",
+     "unit": "—",
+     "method": "目视法",
+     "loc": "COA-B 表 第7行",
+     "basis": "as_received"
+    },
+    {
+     "name": "密度（15℃）",
+     "name_key": "密度",
+     "value": "1.1171",
+     "unit": "g/cm³",
+     "method": "GB/T 4472-2011",
+     "loc": "COA-B 表 第8行",
+     "basis": "as_received",
+     "comment": "测定温度为 15℃，与规格约定的 20℃ 不同"
+    }
+   ]
+  }
+ ],
+ "historical_batches": [
+  {
+   "batch_no": "DY-EG-251120H",
+   "mfg_date": "2025-11-20",
+   "items": [
+    {
+     "name": "纯度",
+     "name_key": "乙二醇含量",
+     "value": "99.93",
+     "unit": "%",
+     "method": "GB/T 14571.1-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "value": "0.062",
+     "unit": "%",
+     "method": "GB/T 6283-2008",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "铁",
+     "name_key": "铁",
+     "value": "0.21",
+     "unit": "ppm",
+     "method": "GB/T 14571.3-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "醛类",
+     "name_key": "醛(以乙醛计)",
+     "value": "2.4",
+     "unit": "ppm",
+     "method": "GB/T 14571.6-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "value": "4",
+     "unit": "Hazen",
+     "method": "GB/T 3143-1982",
+     "loc": "历史台账",
+     "basis": "as_received"
+    }
+   ]
+  },
+  {
+   "batch_no": "DY-EG-260120J",
+   "mfg_date": "2026-01-20",
+   "items": [
+    {
+     "name": "纯度",
+     "name_key": "乙二醇含量",
+     "value": "99.94",
+     "unit": "%",
+     "method": "GB/T 14571.1-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "value": "0.058",
+     "unit": "%",
+     "method": "GB/T 6283-2008",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "铁",
+     "name_key": "铁",
+     "value": "0.19",
+     "unit": "ppm",
+     "method": "GB/T 14571.3-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "醛类",
+     "name_key": "醛(以乙醛计)",
+     "value": "2.1",
+     "unit": "ppm",
+     "method": "GB/T 14571.6-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "value": "3",
+     "unit": "Hazen",
+     "method": "GB/T 3143-1982",
+     "loc": "历史台账",
+     "basis": "as_received"
+    }
+   ]
+  },
+  {
+   "batch_no": "DY-EG-260310K",
+   "mfg_date": "2026-03-10",
+   "items": [
+    {
+     "name": "纯度",
+     "name_key": "乙二醇含量",
+     "value": "99.93",
+     "unit": "%",
+     "method": "GB/T 14571.1-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "value": "0.069",
+     "unit": "%",
+     "method": "GB/T 6283-2008",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "铁",
+     "name_key": "铁",
+     "value": "0.25",
+     "unit": "ppm",
+     "method": "GB/T 14571.3-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "醛类",
+     "name_key": "醛(以乙醛计)",
+     "value": "2.8",
+     "unit": "ppm",
+     "method": "GB/T 14571.6-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "value": "5",
+     "unit": "Hazen",
+     "method": "GB/T 3143-1982",
+     "loc": "历史台账",
+     "basis": "as_received"
+    }
+   ]
+  },
+  {
+   "batch_no": "DY-EG-260418L",
+   "mfg_date": "2026-04-18",
+   "items": [
+    {
+     "name": "纯度",
+     "name_key": "乙二醇含量",
+     "value": "99.91",
+     "unit": "%",
+     "method": "GB/T 14571.1-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "水分",
+     "name_key": "水分",
+     "value": "0.073",
+     "unit": "%",
+     "method": "GB/T 6283-2008",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "铁",
+     "name_key": "铁",
+     "value": "0.28",
+     "unit": "ppm",
+     "method": "GB/T 14571.3-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "醛类",
+     "name_key": "醛(以乙醛计)",
+     "value": "3.0",
+     "unit": "ppm",
+     "method": "GB/T 14571.6-2018",
+     "loc": "历史台账",
+     "basis": "as_received"
+    },
+    {
+     "name": "色度",
+     "name_key": "色度",
+     "value": "6",
+     "unit": "Hazen",
+     "method": "GB/T 3143-1982",
+     "loc": "历史台账",
+     "basis": "as_received"
+    }
+   ]
+  }
+ ],
+ "alerts": [
+  {
+   "level": "高",
+   "text": "批 B 的 COA 结论文本为「符合优等品要求」，但水分、铁、醛、色度 4 项实测已越过合同限值——结论与数据矛盾，须作为异议核心证据。"
+  },
+  {
+   "level": "中",
+   "text": "批 A 与批 B 的水分单位分别为 % 与 ppm、铁分别为 ppm 与 ppb，须换算后才能比较；ppm↔% 为 1e-4 量级，换算误差不影响结论。"
+  },
+  {
+   "level": "中",
+   "text": "本合同技术附件的乙二醇含量限值 ≥99.85% 低于规格书与国标优等品 99.90%，按'合同优先'原则判定；该差异本身须在合同中书面固化。"
+  },
+  {
+   "level": "低",
+   "text": "所有文件均为模拟数据，任何结论不得用于真实索赔或收货决策。"
+  }
+ ]
+}

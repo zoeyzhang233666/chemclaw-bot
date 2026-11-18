@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+@@HEAD@@
+<style>@@CSS@@</style>
+</head>
+<body>
+@@MASTHEAD@@
+
+<nav class="tabs-wrap" aria-label="报告导航">
+  <div class="wrap tabs" role="tablist">
+    <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true">全景 <span class="n">01</span></button>
+    <button class="tab-btn" data-tab="table" role="tab" aria-selected="false">企业表 <span class="n">02</span></button>
+    <button class="tab-btn" data-tab="projects" role="tab" aria-selected="false">项目时间线 <span class="n">03</span></button>
+    <button class="tab-btn" data-tab="price" role="tab" aria-selected="false">价格 <span class="n">04</span></button>
+    <button class="tab-btn" data-tab="procurement" role="tab" aria-selected="false">采购关注 <span class="n">05</span></button>
+    <button class="tab-btn" data-tab="method" role="tab" aria-selected="false">数据与来源 <span class="n">06</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <noscript><div class="noscript">本页的筛选与下钻依赖 JavaScript。请在浏览器中启用 JavaScript 后查看；Excel 数据包不受影响。</div></noscript>
+
+  <!-- ============================================================ 01 全景 -->
+  <section id="tab-overview" class="tab-panel active" role="tabpanel">
+@@OVERVIEW@@
+  </section>
+
+  <!-- ============================================================ 02 企业表 -->
+  <section id="tab-table" class="tab-panel" role="tabpanel">
+@@COMPANY_TABLE@@
+  </section>
+
+  <!-- ============================================================ 03 项目 -->
+  <section id="tab-projects" class="tab-panel" role="tabpanel">
+@@PROJECTS@@
+  </section>
+
+  <!-- ============================================================ 04 价格 -->
+  <section id="tab-price" class="tab-panel" role="tabpanel">
+@@PRICE@@
+  </section>
+
+  <!-- ============================================================ 05 采购关注 -->
+  <section id="tab-procurement" class="tab-panel" role="tabpanel">
+@@PROCUREMENT@@
+  </section>
+
+  <!-- ============================================================ 06 数据与来源 -->
+  <section id="tab-method" class="tab-panel" role="tabpanel">
+@@METHOD@@
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fleft">
+@@FOOTER@@
+      <div class="tiny" style="margin-top:8px">本报告基于公开年报、协会/机构数据与公开报道整理；产能与价格存在多口径差异，正文已逐项标注。报告不构成投资建议，采购决策请结合现场审核、样品检测与合同条款。</div>
+    </div>
+  </div>
+</footer>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="详情">
+  <div class="drawer-head">
+    <div><div class="eyebrow" id="drawerEyebrow">COMPANY DUE DILIGENCE</div><h2 id="drawerTitle">—</h2><div class="sub" id="drawerSub">—</div></div>
+    <button class="drawer-close" id="drawerClose" aria-label="关闭">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody">
+@@DRAWERS@@
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+window.DATA = @@DATA_JSON@@;
+</script>
+<script>
+@@APP_JS@@
+</script>
+</body>
+</html>

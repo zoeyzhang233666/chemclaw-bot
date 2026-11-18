@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-map/schemas/forbidden_links.schema.json",
+  "title": "forbidden_links.json",
+  "description": "反例登记：明确禁止建立的关系。作用有三：(1) 防止后续补充时误建；(2) 让读者知道『为什么图上没有这条边』；(3) 让校验器自动拦截。wrong_types 里出现的关系类型会触发 FATAL；wrong_types 为 [\"copy\"] 是特殊约定，表示方向/口径存疑，只告警（FORBIDDEN_SUSPECT）。",
+  "type": "object",
+  "required": ["forbidden"],
+  "properties": {
+    "forbidden": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to", "wrong_types", "why"],
+        "properties": {
+          "id": { "type": "string" },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "wrong_types": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": ["conversion", "coproduction", "byproduct", "substitution",
+                       "blend", "processing", "application", "route_option", "packaging", "copy"]
+            }
+          },
+          "why": { "type": "string", "description": "为什么不能这样建这条关系" },
+          "worksheet": { "type": "string", "description": "正确做法 / 应该怎么画" },
+          "forbidden_types": {
+            "type": "array",
+            "description": "旧字段别名，等价于 wrong_types",
+            "items": { "type": "string" }
+          },
+          "reason": { "type": "string", "description": "旧字段别名，等价于 why" },
+          "correct_path": {
+            "type": ["array", "null"],
+            "items": { "type": "string" },
+            "description": "正确的节点路径（若存在）"
+          }
+        }
+      }
+    }
+  }
+}

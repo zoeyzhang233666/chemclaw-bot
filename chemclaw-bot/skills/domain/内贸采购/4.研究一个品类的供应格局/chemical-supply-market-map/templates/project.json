@@ -1,0 +1,186 @@
+{
+  "_comment": "空模板：复制成 <项目>/project.json 再填。字段说明见 references/data-model.md。标 TODO 的必须改。",
+  "schema_version": 3,
+  "project_id": "TODO-product-region-year",
+
+  "product": {
+    "name": "TODO 全名（化学名，分子式）",
+    "short": "TODO 简称",
+    "aliases": [],
+    "grades": "TODO 规格/等级",
+    "cas": "TODO CAS",
+    "unit": "万吨/年",
+    "price_unit": "元/吨（含税）",
+    "hs_code": ""
+  },
+
+  "scope": {
+    "geography": "中国大陆",
+    "boundary": "TODO 统计边界：含什么、不含什么",
+    "base_year": 2025,
+    "forward_years": [2026, 2027],
+    "report_date": "TODO YYYY-MM-DD",
+    "data_cutoff": "TODO YYYY-MM-DD",
+    "basis_notes": [
+      "TODO 口径差异 1：同一指标有几个公开数字，来源分别是……本报告采用……，其余并列",
+      "TODO 口径差异 2：名义产能 vs 有效产能 / 折百 vs 实物 / 集团 vs 基地",
+      "样本说明：本报告收录 N 家集团 M 个基地，合计 X，占全国 Y%；差额为未披露企业"
+    ]
+  },
+
+  "buyer": {
+    "applies": true,
+    "volume_10kt": 5,
+    "landed_price": 0,
+    "freight": 150,
+    "stock_days": 30,
+    "grade": "TODO 采购规格",
+    "delivery": "到厂价，含税",
+    "note": "默认模拟值，可按实际采购量覆盖"
+  },
+
+  "metrics": {
+    "capacity_total": null,
+    "capacity_total_label": "全国产能",
+    "capacity_total_source": "S1",
+    "capacity_total_note": "TODO 其他公开口径：…",
+    "capacity_forward": null,
+    "capacity_forward_label": "预测年名义产能",
+    "capacity_forward_alt": {"value": null, "label": "有效产能", "source": ""},
+    "output": null,
+    "output_alt": [],
+    "utilization": null,
+    "producers": null,
+    "cr5": null,
+    "cr5_forward": {"low": null, "high": null, "note": ""},
+    "sample_capacity": null,
+    "sample_coverage": null,
+    "price_now": null,
+    "price_now_label": "TODO 报价口径与日期",
+    "drawdown": null,
+    "export": null,
+    "inventory": null
+  },
+
+  "verdicts": [
+    {"id": "V1", "title": "TODO 一句话结论", "evidence": "TODO 数字 + 口径 + 来源",
+     "implication": "TODO 对采购意味着什么（可执行）", "confidence": "高", "sources": ["S1"], "memo": ""},
+    {"id": "V2", "title": "TODO", "evidence": "TODO", "implication": "TODO",
+     "confidence": "中高", "sources": [], "memo": ""}
+  ],
+
+  "routes": [
+    {"name": "TODO 工艺名", "cap": null, "share": null, "color": "#1d4ed8",
+     "producers": "TODO", "raw": "TODO 主要原料", "unit": "TODO 单耗与副产",
+     "energy": "TODO 能耗", "byproduct": "TODO",
+     "cost_low": null, "cost_high": null,
+     "advantage": "TODO", "risk": "TODO", "source": "S1"}
+  ],
+  "routes_note": "TODO 未单列的小路线说明（防止重复计数）",
+
+  "markets": [
+    {"region": "华东", "price": null, "note": "TODO", "source": "S1"}
+  ],
+
+  "region_meta": {
+    "TODO省": {"activity": "A", "downstream": "TODO 主要下游/流向", "hub": "TODO 代表园区"}
+  },
+  "activity_legend": {"A": "交易活跃 / 贸易商密集", "B": "中等活跃", "C": "低活跃 / 直供为主"},
+
+  "prices": {
+    "lines": [{"name": "TODO 主规格", "color": "#0f766e"}],
+    "annual": [
+      {"year": 2022, "avg": null, "low": null, "high": null, "note": "TODO", "source": "S1"},
+      {"year": 2023, "avg": null, "low": null, "high": null, "note": "TODO", "source": "S1"},
+      {"year": 2024, "avg": null, "low": null, "high": null, "note": "TODO", "source": "S1"},
+      {"year": 2025, "avg": null, "low": null, "high": null, "note": "TODO", "source": "S1"}
+    ],
+    "periods": [
+      {"period": "TODO 阶段", "time": "TODO", "light": "TODO", "heavy": "TODO", "avg": "TODO",
+       "change": "TODO", "driver": "TODO", "source": "S1"}
+    ],
+    "current": [
+      {"label": "TODO 报价口径", "value": null, "date": "TODO", "source": "S1"}
+    ],
+    "outlook": {"base": "TODO 基准情景", "up": "TODO 上行条件", "down": "TODO 下行风险",
+                "procurement": "TODO 采购含义"},
+    "caveat": "价格为公开报价；年度均值用于理解周期位置，不作为结算依据。"
+  },
+
+  "strategies": [
+    {"title": "双源，但不平均", "how": "主供 55%–65%，第二源 25%–35%，现货 5%–15%",
+     "terms": "主供封顶比例、备供试单与审计、断供赔付、30 天切换", "kpi": "单源依赖度 ≤65%；备供覆盖率 100%"},
+    {"title": "指数定价 + 上下限", "how": "以第三方指数为基准，月度调价，年度 ±10%–15%",
+     "terms": "指数名/规格/地区/税则、调价频率、异常波动重谈", "kpi": "价格偏离市场 ≤5%"},
+    {"title": "安全库存", "how": "常规 20–30 天，长距离或单源额外 +7–10 天",
+     "terms": "库存责任、仓储费、损耗、补货触发点", "kpi": "断供天数 0"},
+    {"title": "封样 + 首批全检", "how": "切换来源前小试，COA 每批留存",
+     "terms": "执行标准、关键指标、质量赔付、退换货", "kpi": "批次合格率 ≥99%"}
+  ],
+
+  "supplier_mix": [
+    {"type": "低成本主供", "share": 0.55, "candidates": "TODO", "role": "成本锚", "color": "#0f766e"},
+    {"type": "区域第二源", "share": 0.30, "candidates": "TODO", "role": "交付保险", "color": "#1d4ed8"},
+    {"type": "现货贸易", "share": 0.15, "candidates": "TODO", "role": "弹性", "color": "#94a3b8"}
+  ],
+
+  "risks": [
+    {"risk": "TODO 供给集中", "likelihood": "高", "impact": "高", "level": "高",
+     "evidence": "TODO 可查数字", "action": "TODO 动词开头 + 上限/时限"},
+    {"risk": "TODO 区域集中 + 物流", "likelihood": "高", "impact": "高", "level": "高",
+     "evidence": "TODO", "action": "TODO"},
+    {"risk": "TODO 原料/工艺单一", "likelihood": "中", "impact": "高", "level": "高",
+     "evidence": "TODO", "action": "TODO"},
+    {"risk": "TODO 项目延期/置换不实", "likelihood": "高", "impact": "中", "level": "中高",
+     "evidence": "TODO", "action": "TODO"},
+    {"risk": "TODO 价格波动", "likelihood": "中", "impact": "中", "level": "中",
+     "evidence": "TODO", "action": "TODO"}
+  ],
+
+  "gaps": [
+    {"gap": "按省贸易商数量", "impact": "渠道选择与议价", "status": "公开统计缺失",
+     "fill": "企查查/天眼查检索；协会名录；港口访谈", "priority": "高"},
+    {"gap": "项目净增 vs 置换", "impact": "未来 1–2 年供给预测", "status": "部分仅披露名义产能",
+     "fill": "产能置换公示、环评报告、老装置关停公告", "priority": "高"},
+    {"gap": "企业级现金成本", "impact": "价格底部判断与议价", "status": "非公开",
+     "fill": "年报分产品成本、能耗核查、成本拆解问卷", "priority": "中高"}
+  ],
+
+  "dd": [
+    ["供应能力", "现有产能、产线数量、实际产量与开工率？"],
+    ["供应能力", "未来 12 个月检修计划、最长单次停车天数？"],
+    ["供应能力", "可签年度量、月均可提量、最小批量？"],
+    ["供应能力", "前五大客户与行业分布？"],
+    ["供应能力", "新建/搬迁项目的产能置换关系、老装置关停时点？"],
+    ["质量", "执行标准、优等品率、COA 全项数据？"],
+    ["质量", "关键指标典型值与批次波动？"],
+    ["质量", "是否接受封样、首批全检、第三方检测？"],
+    ["成本", "主要原料自给率与采购结构？"],
+    ["成本", "现金成本、完全成本、当前价格下盈亏？"],
+    ["成本", "能耗水平与碳成本？"],
+    ["物流", "铁路/水运能力、请车满足率、到厂运费时效？"],
+    ["物流", "包装、装卸与破损率？"],
+    ["商务", "定价公式、调价频率？"],
+    ["商务", "账期、承兑、保证金、履约保函？"],
+    ["商务", "年度框架量的弹性与断供赔付？"],
+    ["合规", "排污许可、能耗指标、安全许可？"],
+    ["合规", "近三年处罚、诉讼、失信记录？"],
+    ["财务", "近三年营收/利润/现金流/负债率？"],
+    ["ESG", "碳核算、绿电比例、社区投诉？"]
+  ],
+
+  "scorecard": [
+    ["供应能力", 20, "产能规模、开工稳定性、可签年度量、检修保障"],
+    ["质量与一致性", 20, "关键指标、批次波动、认证与检测"],
+    ["成本竞争力", 15, "现金成本、原料自给率、成本曲线位置"],
+    ["物流与交付", 15, "铁路/水运、到厂运费、时效、包装"],
+    ["商务条件", 10, "价格公式、账期、量的弹性、赔付"],
+    ["财务与信用", 10, "现金流、负债、授信、履约记录"],
+    ["合规与ESG", 10, "排污/能耗/安全、处罚、碳成本"]
+  ],
+
+  "sources": [
+    {"id": "S1", "name": "TODO 来源名称", "publisher": "TODO 发布方", "date": "YYYY-MM-DD",
+     "url": "https://…", "used": "TODO 支撑了哪些数字", "confidence": "高"}
+  ]
+}

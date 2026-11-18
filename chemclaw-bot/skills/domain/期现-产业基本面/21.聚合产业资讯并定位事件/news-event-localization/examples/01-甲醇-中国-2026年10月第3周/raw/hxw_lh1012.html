@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-transform"/>
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <meta name="description" content="10月12日联泓新科MTO装置快讯 - 化销网">
+  <meta name="keywords" content="10月12日联泓新科MTO装置快讯 - 化销网">
+  <title>10月12日联泓新科MTO装置快讯 - 化销网</title>
+  <link rel="stylesheet" type="text/css" href="https://www.huaxiaowang.com/static/iconfont/iconfont.css">
+  <link rel="stylesheet" type="text/css" href="https://www.huaxiaowang.com/static/css/style.css?v=1.0.68">
+</head>
+<body>
+<div class="container bk-whitesmoke">
+  <div class="bk-white">
+    <div class="topbar w1200 lightgrey">
+      <div class="fr">
+        <a href="https://www.huaxiaowang.com/index/member/index">会员中心</a>
+        <a href="https://www.huaxiaowang.com/index/shop/my">我的商城</a>
+        <a href="javascript:;" class="pulldown_trigger">我的业务<i class="v-icon v-icon-xiala"></i>
+        <div class="pulldown">
+          <p onclick="javascript:location.href='https://www.huaxiaowang.com/index/business/index'">销售求购</p>
+          <p onclick="javascript:location.href='https://www.huaxiaowang.com/index/compete/index'">竞价招标</p>
+          <p onclick="javascript:location.href='https://www.huaxiaowang.com/index/groupbuy/index'">团购中心</p>
+          <p onclick="javascript:location.href='https://www.huaxiaowang.com/index/papergoods/index'">纸货交易</p>
+          <p onclick="javascript:location.href='https://www.huaxiaowang.com/index/logistics/index'">物流信息</p>
+        </div>
+                </a>
+        <a href="https://www.huaxiaowang.com/index/member/message">我的消息</a>
+        <a href="https://www.huaxiaowang.com/index/member/guestbook">投诉建议</a>
+      </div>
+      <div class="fl">
+        <span>您好，化销网欢迎您！</span>
+                <a href="javascript:hx_modal(494, 540, 'https://www.huaxiaowang.com/index/user/login')">[立即登录]</a>
+        <a href="javascript:hx_modal(494, 636, 'https://www.huaxiaowang.com/index/user/register');">[注册账号]</a>
+              </div>
+    </div>
+  </div>
+    <div class="header w1200">
+    <a href="https://www.huaxiaowang.com/" class="logo fl" style="background-image:url(https://www.huaxiaowang.com/static/images/logo.png)"></a>
+    <div class="search fl">
+      <p>
+        <span class="actived" data-type="product">产品</span> 
+        <span  data-type="region">区域</span>
+        <span  data-type="company">公司</span>
+      </p>
+      <input type="text" name="kw" value="" placeholder="请输入关键词产品/地区/公司">
+      <button type="button" id="btn_search">搜索</button>
+    </div>
+    <div class="quickbtns fr">
+      <a href="https://www.huaxiaowang.com/index/business/addgoods"><i class="v-icon v-icon-fabu"></i>&nbsp;快速采销</a>
+      <a href="https://www.huaxiaowang.com/index/map/depot" class="actived">化销网合作库</a>
+    </div>
+  </div>
+  <div class="clear"></div>
+      <div class="w1200 nav">
+    <ul>
+                  <li><a href="https://www.huaxiaowang.com/"><i class="v-icon v-icon-homepage"></i>&nbsp;首页</a></li>
+                        <li><a href="https://www.huaxiaowang.com/index/goods/lists"><i class="v-icon v-icon-caigou"></i>&nbsp;交易大厅</a></li>
+                        <li><a href="https://www.huaxiaowang.com/index/match/lists"><i class="v-icon v-icon-agency"></i>&nbsp;撮合</a></li>
+                        <li class="actived"><a href="https://www.huaxiaowang.com/index/quote/index"><i class="v-icon v-icon-chart"></i>&nbsp;行情</a></li>
+                        <li><a href="https://www.huaxiaowang.com/index/bidding/lists"><i class="v-icon v-icon-bidding"></i>&nbsp;竞价商城<span class="badge" id="bidding_badge" style="display:none;">0</span></a></li>
+                        <li><a href="https://www.huaxiaowang.com/index/shop/lists"><i class="v-icon v-icon-shop"></i>&nbsp;品牌商城</a></li>
+                        <li><a href="https://www.huaxiaowang.com/index/tuan/lists"><i class="v-icon v-icon-business"></i>&nbsp;团购<span class="badge" id="tuan_badge" style="display:none;">0</span></a></li>
+                        <li><a href="https://www.huaxiaowang.com/index/trucking/index"><i class="v-icon v-icon-wuliu1"></i>&nbsp;物流</a></li>
+                        <li><a href="https://www.huaxiaowang.com/index/paper/lists"><i class="v-icon v-icon-hetong"></i>&nbsp;纸货</a></li>
+                </ul>
+  </div>
+    <div class="clear">&nbsp;</div><style>
+  .info-header{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .info-title{
+    font-size: 18px;
+  }
+  .info-header a{
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    background-color: #fd6400;
+    padding: 0 10px;
+    border-radius: 4px;
+  }
+  .side_title{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10px 20px;
+  }
+  .side_title h3{
+    display: inline-block;
+    padding: 0 5px;
+    font-size: 16px;
+    border-bottom: 2px solid #fd6400;
+  }
+  .side_title a{
+    color:#fd6400;
+  }
+  .artlist ul li{
+    position: relative;
+    list-style: none;
+    font-size: 14px;
+    line-height: 30px;
+    padding: 0 10px;
+    width: 280px;
+  }
+  .artlist ul li a{
+    display: inline-block;
+    width: 230px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .artlist ul li span{
+    position: absolute;
+    right: 10px;
+  }
+  .artlist ul li:nth-child(2n+1){
+    border-right: none;
+  }
+  .cs{
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .cs img{
+    width: 80%;
+    border: 1px solid #eee;
+  }
+</style>
+<div class="w1200">
+  <div class="info-header">
+    <span class="info-title"><span class="orange">●&nbsp;</span>甲醇行情资讯</span>
+    <a href="https://www.huaxiaowang.com/index/quote/index?pid=60#infos">返回上级&gt;&gt;</a>
+  </div>
+  <div style="margin-top: 20px; display: flex; justify-content:space-between;">
+    <div class="article" style="width: 880px; box-sizing: border-box; margin-top:0;">
+      <h3>10月12日联泓新科MTO装置快讯</h3>
+      <p style="text-align:center; font-size: 16px;">发布时间：2026年10月12日</p>
+      <div class="content"><span style="font-family:simsun;font-size:16px;"><span style="font-family:simsun;font-size:16px;">联泓新科36万吨/年DMTO装置停车中；联泓格润36万吨/年DMTO装置运行暂稳。</span></span></div>
+      <div style="display:flex; width:100%; align-items:center; flex-direction:row; justify-content:center; margin:20px 0;">
+        <div class="cs" style="width: 20%;">
+          <img src="https://www.huaxiaowang.com/static/images/qrcode_zx.jpg">
+          <spa >化销网资讯</span>
+        </div>
+        <div class="cs" style="width: 20%;">
+          <img src="https://www.huaxiaowang.com/static/images/miniapp.jpg">
+          <span>微信小程序</span>
+        </div>
+      </div>
+      <p style="font-family: simhei; color:#cd3825; font-weight:bold; margin-bottom: 5px;">扫描上方>>“化销网资讯”公众号及“化销网”小程序二维码，了解更多化工品资讯信息。</p>
+      <div style="border-top: 1px dashed #999;"></div>
+      <p style="font-size:16px; color:#fd6400; margin: 20px 0 10px;">金牌撮合客服</p>
+      <div style="display: flex; margin-bottom: 20px;">
+                <div class="cs">
+          <img src="https://www.huaxiaowang.com/uploads/admin/16218189431798870014.jpg">
+          <p>16688089816</p>
+          <p>朵朵</p>
+        </div>
+                <div class="cs">
+          <img src="https://www.huaxiaowang.com/uploads/admin/16218462422351030098.jpg">
+          <p>13475193994</p>
+          <p>朱子超</p>
+        </div>
+                <div class="cs">
+          <img src="https://www.huaxiaowang.com/uploads/admin/16653925950172080069.jpg">
+          <p>15624441002</p>
+          <p>化销网~雪儿</p>
+        </div>
+                <div class="cs">
+          <img src="https://www.huaxiaowang.com/uploads/admin/16655617400019390084.jpg">
+          <p>15624441003</p>
+          <p>张敏</p>
+        </div>
+                <div class="cs">
+          <img src="https://www.huaxiaowang.com/uploads/admin/16444533030284860017.jpg">
+          <p>13336271566</p>
+          <p>宫晓磊</p>
+        </div>
+              </div>
+      <div style="border-top: 1px dashed #999;"></div>
+      <p class="announce" style="font-size: 14px;">特别提示：本信息由相关企业自行提供，真实性未经证实，仅供参考，请谨慎采用，风险自负。</p> 
+    </div>
+    <div class="artlist" style="margin-top:0px; width: 300px;">
+      <div class="side_title">
+      <h3>最新资讯</h3><a href="https://www.huaxiaowang.com/index/quote/infolist?catid=14">查看更多</a>
+      </div>
+      <ul>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191741"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月19日河南龙宇醋酸价格</a>
+          <span>[10-19]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191740"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月19日河南龙宇醋酸价格</a>
+          <span>[10-19]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191727"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月19日南京诚志甲醇及MTO装置快讯</a>
+          <span>[10-19]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191709"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月16日山东利华益甲醇招标动态</a>
+          <span>[10-16]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191706"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月16日山东利华益甲醇招标动态</a>
+          <span>[10-16]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191678"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月15日河北凯意甲醇采购动态</a>
+          <span>[10-15]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191676"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月15日山东MTBE价格动态</a>
+          <span>[10-15]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191657"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月14日河北凯意甲醇采购动态</a>
+          <span>[10-14]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191656"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月14日河北凯意甲醇采购动态</a>
+          <span>[10-14]</span>
+        </li>
+                <li>
+          <a href="https://www.huaxiaowang.com/index/quote/infoshow?id=191620"><i class="v-icon v-icon-arr-left orange"></i>&nbsp;10月13日山东鲁清甲醇招标动态</a>
+          <span>[10-13]</span>
+        </li>
+              </ul>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <div class="clear">&nbsp;</div>
+</div>
+  </div>
+  <div class="footer">
+    <div class="help text-center lightgrey">
+      <div class="col1" style="margin-top:-8px;">
+        <img src="https://www.huaxiaowang.com/static/images/logo.png" width="141px">
+        <p>客服热线：13475193994</p>
+        <p>投诉专线：18905341053</p>
+        <p>周一到周五8:30 - 17:00</p>
+      </div>
+                  <div class="col1">
+        <h3>平台123</h3>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=21" target="_blank">关于我们</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=22" target="_blank">服务协议</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=23" target="_blank">法律声明</a></p>
+              </div>
+            <div class="col1">
+        <h3>入驻开店</h3>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=24" target="_blank">资质审验</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=25" target="_blank">我要销售</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=26" target="_blank">我要采购</a></p>
+              </div>
+            <div class="col1">
+        <h3>会员交易</h3>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=27" target="_blank">免费注册</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=28" target="_blank">我要买</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=29" target="_blank">我要卖</a></p>
+              </div>
+            <div class="col1">
+        <h3>常见问题</h3>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=31" target="_blank">密码找回</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=32" target="_blank">我的建议</a></p>
+                <p><a href="https://www.huaxiaowang.com/index/article/help?id=33" target="_blank">申请帮助</a></p>
+              </div>
+                  <div class="col1" style="line-height:0px;">
+        <p style="line-height: 20px;"><a class="ladder">找货扫一扫<span class="triangle">&nbsp;</span></a></p>
+        <img src="https://www.huaxiaowang.com/static/images/qrcode_zx.jpg" width="112px">
+        <p style="line-height: 14px;">关注化销网</p>
+      </div>
+    </div>
+    <div class="copyright text-center">
+      <p>
+                          <a href="https://www.huaxiaowang.com/index/article/about?id=35" target="_blank">关于我们</a> |
+                  <a href="https://www.huaxiaowang.com/index/article/about?id=36" target="_blank">法律声明</a> |
+                  <a href="https://www.huaxiaowang.com/index/article/about?id=37" target="_blank">诚聘英才</a> |
+                  <a href="https://www.huaxiaowang.com/index/article/about?id=38" target="_blank">联系我们</a> |
+                  <a href="https://www.huaxiaowang.com/index/article/about?id=39" target="_blank">广告服务</a> |
+                        <a href="https://www.huaxiaowang.com/index/member/guestbook" target="_blank">投诉建议</a> |
+        <a href="https://www.huaxiaowang.com/index/index/tojoin" target="_blank">开通旺铺</a>
+      </p>
+      <p>COPYRIGHT © 化销网 www.huaxiaowang.com <a href="https://beian.miit.gov.cn" target="_blank">鲁ICP备20032288号-2</a> <!-- 增值电信业务经营许可证 鲁B2-22222222 --></p>
+    </div>
+  </div>
+  <div id="hx-mask"></div>
+  <div id="hx-modal">
+    <a id="modal-close"><i class="v-icon v-icon-close"></i></a>
+    <iframe id="hx-frame"></iframe>
+  </div>
+  <script src="https://www.huaxiaowang.com/static/js/jquery.min.js"></script>
+  <script src="https://www.huaxiaowang.com/static/js/sweetalert.min.js"></script>
+  <script src="https://www.huaxiaowang.com/static/js/common.js?v=1.0.68"></script>
+      <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c12fc97c82a9cb1cc665e23e2ebe95f3";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  </body>
+  </html>

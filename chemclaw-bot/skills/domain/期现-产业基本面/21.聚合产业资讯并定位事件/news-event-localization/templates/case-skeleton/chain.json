@@ -1,0 +1,17 @@
+{
+ "nodes": [
+  {
+   "node_id": "CHAIN-X01",
+   "name": "【示例】某产业链节点",
+   "layer": "上游原料",
+   "product": "【示例】产品名",
+   "region": "【示例】区域",
+   "capacity_note": "【示例】规模提示（无则留空）",
+   "desc": "【示例】节点说明：这条链上这个节点承担什么",
+   "data_ref": "【示例】对应数据指标名",
+   "related_nodes": []
+  }
+ ],
+ "edges": [],
+ "indicators": []
+}

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#0d1117; --bg2:#141b24; --bg3:#1b2431; --line:#27313f; --line2:#334054;
+  --fg:#e6edf3; --fg2:#9fb0c3; --fg3:#6b7d92;
+  --acc:#f0a04b; --acc2:#4ec9b0; --blue:#58a6ff; --violet:#bc8cff;
+  --red:#f85149; --amber:#e3b341; --green:#3fb950;
+  --e1:#3fb950; --e2:#4ec9b0; --e3:#e3b341; --e4:#f0883e; --e5:#f85149;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font:14px/1.65 "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+code,.mono{font-family:"JetBrains Mono","Cascadia Code",Consolas,monospace}
+h1,h2,h3,h4{margin:0;font-weight:650;letter-spacing:.2px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 22px}
+
+/* ---------- 顶部 ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(13,17,23,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:54px}
+.brand{font-weight:700;font-size:15px;color:var(--fg);white-space:nowrap}
+.brand span{color:var(--acc)}
+.nav{display:flex;gap:4px;overflow:auto;flex:1;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{color:var(--fg2);padding:6px 10px;border-radius:6px;font-size:13px;white-space:nowrap}
+.nav a:hover{background:var(--bg3);color:var(--fg);text-decoration:none}
+.nav a.on{background:var(--acc);color:#1a1206;font-weight:650}
+.topmeta{color:var(--fg3);font-size:12px;white-space:nowrap}
+
+/* ---------- 模拟横幅 ---------- */
+.simbanner{background:linear-gradient(90deg,#5c2d0c,#7a3b12 45%,#5c2d0c);border-bottom:1px solid #a35a1e}
+.simbanner .wrap{display:flex;gap:12px;align-items:flex-start;padding:11px 22px}
+.simbanner .tag{background:#f0a04b;color:#1a1206;font-weight:800;font-size:11px;padding:3px 8px;border-radius:4px;white-space:nowrap;margin-top:2px}
+.simbanner p{margin:0;font-size:12.5px;color:#ffe6cc;line-height:1.65}
+
+/* ---------- Hero ---------- */
+.hero{padding:38px 0 10px}
+.hero .kicker{color:var(--acc);font-size:12.5px;letter-spacing:2px;font-weight:650;text-transform:uppercase}
+.hero h1{font-size:31px;line-height:1.28;margin:12px 0 14px;max-width:960px}
+.hero .lede{color:var(--fg2);max-width:900px;font-size:14.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{background:var(--bg3);border:1px solid var(--line2);border-radius:999px;padding:5px 13px;font-size:12.5px;color:var(--fg2)}
+.chip b{color:var(--fg);font-weight:650}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:26px 0 8px}
+.kpi{background:linear-gradient(160deg,var(--bg2),var(--bg3));border:1px solid var(--line2);border-radius:var(--radius);padding:15px 15px 13px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--acc)}
+.kpi.k2::after{background:var(--acc2)} .kpi.k3::after{background:var(--blue)}
+.kpi.k4::after{background:var(--violet)} .kpi.k5::after{background:var(--amber)}
+.kpi.k6::after{background:var(--red)}
+.kpi .lbl{font-size:11.5px;color:var(--fg3);letter-spacing:.4px}
+.kpi .val{font-size:25px;font-weight:750;margin:5px 0 1px;letter-spacing:-.5px}
+.kpi .val small{font-size:13px;font-weight:600;color:var(--fg2);margin-left:3px}
+.kpi .sub{font-size:11.5px;color:var(--fg2);line-height:1.45}
+.kpi .sub .tier{display:inline-block;padding:1px 7px;border-radius:4px;font-weight:700;font-size:11px;margin-right:4px}
+
+/* ---------- Section ---------- */
+section{padding:34px 0 8px;border-top:1px solid var(--line);margin-top:26px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;flex-wrap:wrap}
+.sec-no{color:var(--acc);font-weight:800;font-size:13px;letter-spacing:2px}
+.sec-head h2{font-size:22px}
+.sec-sub{color:var(--fg2);font-size:13.5px;max-width:980px;margin-bottom:18px}
+.card{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--radius);padding:18px 20px}
+.card.pad0{padding:0;overflow:hidden}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.muted{color:var(--fg3);font-size:12px}
+.note{font-size:12px;color:var(--fg3);margin-top:10px;line-height:1.6}
+
+/* ---------- 证据徽标 ---------- */
+.ev{display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:750;letter-spacing:.3px}
+.ev-E1{background:rgba(63,185,80,.16);color:var(--e1);border:1px solid rgba(63,185,80,.4)}
+.ev-E2{background:rgba(78,201,176,.14);color:var(--e2);border:1px solid rgba(78,201,176,.4)}
+.ev-E3{background:rgba(227,179,65,.14);color:var(--e3);border:1px solid rgba(227,179,65,.4)}
+.ev-E4{background:rgba(240,136,62,.14);color:var(--e4);border:1px solid rgba(240,136,62,.4)}
+.ev-E5{background:rgba(248,81,73,.16);color:var(--e5);border:1px solid rgba(248,81,73,.45)}
+.b-事实{background:rgba(63,185,80,.14);color:var(--e1);border:1px solid rgba(63,185,80,.35)}
+.b-计算{background:rgba(88,166,255,.14);color:var(--blue);border:1px solid rgba(88,166,255,.35)}
+.b-情景{background:rgba(240,160,75,.15);color:var(--acc);border:1px solid rgba(240,160,75,.4)}
+.b-假设{background:rgba(188,140,255,.14);color:var(--violet);border:1px solid rgba(188,140,255,.38)}
+
+/* ---------- 事实核验卡 ---------- */
+.vcard{display:grid;grid-template-columns:270px 1fr;gap:0;border:1px solid var(--line2);border-radius:var(--radius);overflow:hidden;background:var(--bg2)}
+.vcard-side{background:linear-gradient(170deg,#1c2532,#151c26);border-right:1px solid var(--line2);padding:20px}
+.vcard-side .pname{font-size:15px;font-weight:700;line-height:1.4}
+.vcard-side .powner{color:var(--fg2);font-size:12.5px;margin-top:8px}
+.vbadge{display:inline-block;margin-top:14px;padding:5px 11px;border-radius:6px;font-size:12px;font-weight:700;background:rgba(248,81,73,.14);color:var(--e5);border:1px solid rgba(248,81,73,.4)}
+.vcard-main{padding:6px 0}
+.vrow{display:grid;grid-template-columns:132px 1fr;gap:14px;padding:11px 20px;border-bottom:1px solid var(--line)}
+.vrow:last-child{border-bottom:0}
+.vrow .k{color:var(--fg3);font-size:12.5px}
+.vrow .v{font-size:13.5px;line-height:1.55}
+.vrow .v .src{display:block;font-size:11.5px;color:var(--fg3);margin-top:4px}
+.vrow .v .src a{color:var(--fg3);text-decoration:underline dotted}
+
+/* ---------- 占比条 ---------- */
+.share-row{display:grid;grid-template-columns:190px 1fr 92px;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.share-row:last-child{border-bottom:0}
+.share-row .nm{font-size:13px}
+.share-row .nm small{display:block;color:var(--fg3);font-size:11.5px;margin-top:2px}
+.bar{height:22px;background:var(--bg3);border-radius:5px;overflow:hidden;position:relative}
+.bar .fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.2,.8,.2,1);background:linear-gradient(90deg,#f0a04b,#e3b341)}
+.bar .fill.sig{background:linear-gradient(90deg,#4ec9b0,#58a6ff)}
+.bar .fill.big{background:linear-gradient(90deg,#f0883e,#f85149)}
+.bar .pct{position:absolute;right:8px;top:0;line-height:22px;font-size:11.5px;font-weight:700;color:#fff;text-shadow:0 1px 3px #000}
+
+/* ---------- 表格 ---------- */
+.tw{overflow:auto;border:1px solid var(--line2);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;font-size:12.8px;min-width:640px}
+th{background:var(--bg3);color:var(--fg2);font-weight:650;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2);white-space:nowrap;font-size:12px;position:sticky;top:0}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tr.hl td{background:rgba(88,166,255,.07)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.up{color:var(--e1)} .dn{color:var(--e5)}
+
+/* ---------- 计算器 ---------- */
+.calc{display:grid;grid-template-columns:340px 1fr;gap:18px}
+.ctrl{margin-bottom:16px}
+.ctrl .lab{display:flex;justify-content:space-between;font-size:12.5px;color:var(--fg2);margin-bottom:7px}
+.ctrl .lab b{color:var(--fg)}
+input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--line2);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--acc);cursor:pointer;border:3px solid var(--bg2);box-shadow:0 0 0 1px var(--acc)}
+select{background:var(--bg3);color:var(--fg);border:1px solid var(--line2);border-radius:6px;padding:7px 9px;font-size:12.5px;width:100%}
+.outgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.out{background:var(--bg3);border:1px solid var(--line2);border-radius:8px;padding:12px 13px}
+.out .l{font-size:11.5px;color:var(--fg3)}
+.out .v{font-size:22px;font-weight:750;margin-top:3px;font-variant-numeric:tabular-nums}
+.out .v small{font-size:12px;color:var(--fg2);font-weight:600;margin-left:3px}
+.out .d{font-size:11.5px;color:var(--acc2);margin-top:2px}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;background:rgba(88,166,255,.13);color:var(--blue);border:1px solid rgba(88,166,255,.3)}
+
+/* ---------- 产业链图 ---------- */
+#chainwrap{position:relative;background:radial-gradient(circle at 50% 40%,#16202c,#0f151d);border:1px solid var(--line2);border-radius:var(--radius);overflow:hidden}
+#chainsvg{display:block;width:100%;height:auto}
+.node-rect{cursor:pointer;transition:filter .18s,opacity .18s}
+.node-rect:hover{filter:brightness(1.35)}
+.node-t{font-size:12px;fill:#e6edf3;pointer-events:none;font-weight:600}
+.node-s{font-size:10px;fill:#8b9bb0;pointer-events:none}
+.edge{stroke:#3a4759;stroke-width:1.6;fill:none}
+.edge.hi{stroke:#f0a04b;stroke-width:2.6}
+.edge-l{font-size:10px;fill:#8b9bb0}
+.legendbar{display:flex;gap:14px;flex-wrap:wrap;padding:11px 14px;border-top:1px solid var(--line2);font-size:11.5px;color:var(--fg2)}
+.legendbar i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+/* ---------- 抽屉 ---------- */
+.drawer-mask{position:fixed;inset:0;background:rgba(5,8,12,.62);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .22s;z-index:80}
+.drawer-mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:520px;max-width:94vw;background:var(--bg2);border-left:1px solid var(--line2);transform:translateX(102%);transition:transform .26s cubic-bezier(.2,.8,.2,1);z-index:81;display:flex;flex-direction:column;box-shadow:-24px 0 60px rgba(0,0,0,.5)}
+.drawer.on{transform:none}
+.drawer-h{padding:18px 20px;border-bottom:1px solid var(--line2);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.drawer-b{padding:18px 20px;overflow:auto;flex:1}
+.drawer-b h4{font-size:13px;color:var(--acc);margin:16px 0 8px;letter-spacing:.5px}
+.drawer-b h4:first-child{margin-top:0}
+.drawer-b p{margin:0 0 10px;font-size:13px;color:var(--fg2);line-height:1.7}
+.drawer-b ul{margin:0 0 10px;padding-left:18px;font-size:13px;color:var(--fg2)}
+.drawer-b li{margin-bottom:6px}
+.xbtn{background:var(--bg3);border:1px solid var(--line2);color:var(--fg2);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:16px;line-height:1}
+.statline{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 4px}
+.statline div{font-size:11.5px;color:var(--fg3)}
+.statline div b{display:block;font-size:19px;color:var(--fg);margin-top:1px}
+.alert{background:rgba(248,81,73,.09);border:1px solid rgba(248,81,73,.34);border-radius:8px;padding:12px 14px;font-size:12.5px;color:#ffb4ae;margin:14px 0}
+.alert.blue{background:rgba(88,166,255,.08);border-color:rgba(88,166,255,.3);color:#b8d4ff}
+.alert.amber{background:rgba(227,179,65,.09);border-color:rgba(227,179,65,.32);color:#f0d79a}
+
+/* ---------- 三类结论 ---------- */
+.conc3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.conc h4{font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.conc .item{padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.6px;color:var(--fg2);line-height:1.6}
+.conc .item:last-child{border-bottom:0}
+.conc .item .m{font-size:11px;color:var(--fg3);margin-top:3px}
+
+/* ---------- 页脚 ---------- */
+footer{margin-top:40px;border-top:1px solid var(--line);padding:26px 0 60px;color:var(--fg3);font-size:12px;line-height:1.8}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:1080px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .calc{grid-template-columns:1fr}
+  .conc3{grid-template-columns:1fr}
+  .vcard{grid-template-columns:1fr}
+  .vcard-side{border-right:0;border-bottom:1px solid var(--line2)}
+}
+@media(max-width:720px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .hero h1{font-size:23px}
+  .share-row{grid-template-columns:1fr;gap:6px}
+  .vrow{grid-template-columns:1fr;gap:2px}
+  .topmeta{display:none}
+}
+@media print{
+  body{background:#fff;color:#000}
+  .topbar,.drawer,.drawer-mask{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">产能影响<span>·</span>研究</div>
+    <div class="nav" id="nav">
+      <a href="#s1">① 事实核验</a>
+      <a href="#s2">② 相对规模</a>
+      <a href="#s3">③ 原料需求</a>
+      <a href="#s4">④ 产量情景</a>
+      <a href="#s5">⑤ 计算器</a>
+      <a href="#s6">⑥ 影响路径</a>
+      <a href="#s7">⑦ 区域格局</a>
+      <a href="#s8">⑧ 三类结论</a>
+      <a href="#s9">⑨ 待核实</a>
+    </div>
+    <div class="topmeta">数据截止 <b id="asof"></b></div>
+  </div>
+</div>
+
+<div id="simbanner"></div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="kicker">新增产能 · 产业链影响研究</div>
+    <h1 id="h1"></h1>
+    <p class="lede" id="lede"></p>
+    <div class="chips" id="chips"></div>
+    <div class="kpis" id="kpis"></div>
+  </div>
+
+  <!-- ① 事实核验 -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-no">STEP 01</span><h2>项目事实核验卡</h2></div>
+    <p class="sec-sub">先核事实，再算影响。七项必核字段逐条给出证据等级：<span class="ev ev-E1">E1 一手官方</span> <span class="ev ev-E2">E2 行业权威</span> <span class="ev ev-E3">E3 综合媒体</span> <span class="ev ev-E4">E4 机构口径</span> <span class="ev ev-E5">E5 待确认</span>。任一关键字段为 E5 时，全部结论降级为“情景测算”。</p>
+    <div class="vcard">
+      <div class="vcard-side">
+        <div class="pname" id="v-name"></div>
+        <div class="powner" id="v-owner"></div>
+        <div id="v-badge"></div>
+        <div class="note" id="v-scope"></div>
+      </div>
+      <div class="vcard-main" id="v-rows"></div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card">
+        <h4 style="font-size:13px;color:var(--acc);margin-bottom:10px">核验结论</h4>
+        <div id="v-verdict"></div>
+      </div>
+      <div class="card">
+        <h4 style="font-size:13px;color:var(--acc);margin-bottom:10px">补充信息</h4>
+        <div id="v-supplement"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 相对规模 -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-no">STEP 02</span><h2>新增产能的相对规模</h2></div>
+    <p class="sec-sub">同一 40 万吨，分母不同结论完全不同：占全国可能“可以忽略”，占竞争半径却可能“明显”。六组分母全部列出，<b>每项给档位与含义，而不是只给一个百分比</b>。分母口径冲突处并列替代口径。</p>
+    <div class="card">
+      <div id="shares"></div>
+      <div class="note" id="share-note"></div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card">
+        <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">竞争半径产能梯度</h4>
+        <div id="radiusbands"></div>
+      </div>
+      <div class="card">
+        <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">口径冲突与替代分母</h4>
+        <div id="altshares"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 原料需求 -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-no">STEP 03</span><h2>上游原料需求测算</h2></div>
+    <p class="sec-sub">单耗必须带依据等级：C1 工程值（环评/可研）＞ C2 区间中值 ＞ C3 化学计量下限 ＞ C4 情景假设。原料需求 = 产量 × Π(单耗 / 纯度)，按工艺链顺序连乘。</p>
+    <div class="grid3" id="uccards"></div>
+    <div class="card" style="margin-top:16px">
+      <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">连乘结果与三档原料需求（中性情景）</h4>
+      <div class="tw"><table id="mat-table"></table></div>
+      <div class="note" id="mat-note"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">副产物与外售（正外部性，不冲减原料需求）</h4>
+      <div id="byproducts"></div>
+    </div>
+  </section>
+
+  <!-- ④ 产量情景 -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-no">STEP 04</span><h2>投产情景与产能爬坡</h2></div>
+    <p class="sec-sub"><b>本技能最关键的一条纪律：全年设计产能 ≠ 投产首年实际增量。</b>首年产量 = Σ月度(设计产能/12 × 稳定开工率 × 爬坡负荷)。下面五个情景中，「上限」情景就是“把设计产能直接当首年产量”——现实中不会出现。</p>
+    <div class="alert amber" id="ramp-alert"></div>
+    <div class="card pad0">
+      <div class="tw"><table id="scn-table"></table></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h4 style="font-size:13px;color:var(--acc);margin-bottom:6px">逐月负荷与累计产量（自开车月起）</h4>
+      <div id="chart-ramp" style="height:330px"></div>
+    </div>
+  </section>
+
+  <!-- ⑤ 计算器 -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-no">STEP 05</span><h2>参数计算器 · 实时情景</h2></div>
+    <p class="sec-sub">拖动任意参数，理论产量与原料需求即时重算。所有输出都是<b>情景值</b>（取决于你设的假设），不是事实值。</p>
+    <div class="card">
+      <div class="calc">
+        <div>
+          <div class="ctrl">
+            <div class="lab"><span>开车月份</span><b id="c-month-v">6 月</b></div>
+            <input type="range" id="c-month" min="1" max="12" value="6" step="1">
+          </div>
+          <div class="ctrl">
+            <div class="lab"><span>稳定期开工率</span><b id="c-lf-v">90%</b></div>
+            <input type="range" id="c-lf" min="50" max="100" value="90" step="1">
+          </div>
+          <div class="ctrl">
+            <div class="lab"><span>爬坡期（月）</span><b id="c-rm-v">12</b></div>
+            <input type="range" id="c-rm" min="0" max="24" value="12" step="1">
+          </div>
+          <div class="ctrl">
+            <div class="lab"><span>爬坡模型</span><b></b></div>
+            <select id="c-model">
+              <option value="s_curve">S 曲线（前慢中快后慢）</option>
+              <option value="linear">线性爬坡</option>
+              <option value="exponential">指数（前快后慢）</option>
+              <option value="none">无爬坡（立即满负荷）</option>
+            </select>
+          </div>
+          <div class="ctrl" id="c-uc-wrap">
+            <div class="lab"><span>原料单耗调整</span><b id="c-uc-v">×1.000</b></div>
+            <input type="range" id="c-uc" min="70" max="130" value="100" step="1">
+          </div>
+          <button id="c-reset" style="width:100%;margin-top:4px;background:var(--bg3);border:1px solid var(--line2);color:var(--fg2);padding:8px;border-radius:7px;cursor:pointer;font-size:12.5px">恢复基准情景</button>
+        </div>
+        <div>
+          <div class="outgrid" id="calc-out"></div>
+          <div id="chart-calc" style="height:210px;margin-top:14px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑥ 影响路径 -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-no">STEP 06</span><h2>产业链影响图</h2></div>
+    <p class="sec-sub">点击任意节点查看具名企业、产能、证据与影响机制。影响强度 = 100 × (0.35·体量 + 0.25·传导 + 0.20·时滞 + 0.20·证据确定性)。<b>只描述机制与量级，不输出涨跌方向。</b></p>
+    <div id="chainwrap">
+      <svg id="chainsvg" viewBox="0 0 1180 520" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="legendbar">
+        <span><i style="background:#58a6ff"></i>上游原料</span>
+        <span><i style="background:#f85149"></i>同区域同行</span>
+        <span><i style="background:#4ec9b0"></i>下游用户</span>
+        <span><i style="background:#bc8cff"></i>物流仓储</span>
+        <span><i style="background:#e3b341"></i>副产物</span>
+        <span style="margin-left:auto;color:var(--fg3)">线宽 ∝ 影响强度</span>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">受影响对象排序（按影响强度）</h4>
+      <div class="tw"><table id="st-table"></table></div>
+    </div>
+  </section>
+
+  <!-- ⑦ 区域格局 -->
+  <section id="s7">
+    <div class="sec-head"><span class="sec-no">STEP 07</span><h2>区域供应格局中的位置</h2></div>
+    <p class="sec-sub">自给率 = 区域产能 ÷ 区域需求。只描述“如果……机制是……”的可观测指标变化（跨区流入量、外发运量、价差），<b>不预测价格方向</b>。</p>
+    <div class="grid2">
+      <div class="card">
+        <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">区域关键指标</h4>
+        <div id="reg-stats"></div>
+      </div>
+      <div class="card">
+        <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">自给率变化与机制</h4>
+        <div id="reg-flow"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">竞争半径内同行（按距离）</h4>
+      <div class="tw"><table id="nb-table"></table></div>
+      <div class="note">距离由厂址经纬度 haversine 计算，未给坐标者采用来源原文距离。半径分母只统计已核实企业，实际应更大——<b>半径占比存在低估</b>。</div>
+    </div>
+  </section>
+
+  <!-- ⑧ 三类结论 -->
+  <section id="s8">
+    <div class="sec-head"><span class="sec-no">STEP 08</span><h2>三类结论：事实 / 计算 / 情景</h2></div>
+    <p class="sec-sub">三类结论必须物理分离。任何“情景”不得写进“事实”栏。</p>
+    <div class="conc3">
+      <div class="card conc"><h4><span class="ev b-事实">事实</span> 已确认事实</h4><div id="c-facts"></div></div>
+      <div class="card conc"><h4><span class="ev b-计算">计算</span> 有依据的计算</h4><div id="c-calc"></div></div>
+      <div class="card conc"><h4><span class="ev b-情景">情景</span> 基于假设的情景</h4><div id="c-scen"></div></div>
+    </div>
+  </section>
+
+  <!-- ⑨ 待核实 -->
+  <section id="s9">
+    <div class="sec-head"><span class="sec-no">STEP 09</span><h2>还需核实的事项</h2></div>
+    <p class="sec-sub">缺口不影响“已确认事实”，但直接决定情景参数的置信度。每项写明影响哪一步计算、补齐路径与优先级。</p>
+    <div class="tw"><table id="gap-table"></table></div>
+    <div class="card" style="margin-top:16px">
+      <h4 style="font-size:13px;color:var(--acc);margin-bottom:12px">来源清单</h4>
+      <div class="tw" style="max-height:420px"><table id="src-table"></table></div>
+    </div>
+  </section>
+
+  <footer>
+    <div id="disclaimer"></div>
+    <div style="margin-top:10px">本页由 <code>chem-capacity-impact</code> 模板生成，与同名 Excel 工作簿共用同一份 <code>data.json</code>（单一数据源，脚本一次算出）。所有数字均为脚本计算或来源原文，无手填。</div>
+  </footer>
+</div>
+
+<div class="drawer-mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-h">
+    <div><div class="muted" id="d-type"></div><h3 id="d-title" style="font-size:16px;margin-top:4px"></h3></div>
+    <button class="xbtn" id="d-close">×</button>
+  </div>
+  <div class="drawer-b" id="d-body"></div>
+</div>
+
+<script>
+const DATA = __DATA__;
+</script>
+<script>
+/* ================= 工具 ================= */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const n1 = v => (v==null||isNaN(v)) ? '—' : Number(v).toLocaleString('zh-CN',{maximumFractionDigits:1,minimumFractionDigits:1});
+const n0 = v => (v==null||isNaN(v)) ? '—' : Number(v).toLocaleString('zh-CN',{maximumFractionDigits:0});
+const n2 = v => (v==null||isNaN(v)) ? '—' : Number(v).toLocaleString('zh-CN',{maximumFractionDigits:2,minimumFractionDigits:2});
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl = u => /^https?:\/\//i.test(u||'') ? u : '';
+const MONTHS = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+const TYPE_CN = {upstream:'上游原料',competitor:'同区域同行',downstream:'下游用户',logistics:'物流仓储',byproduct:'副产物市场',policy:'政策准入'};
+const TYPE_COLOR = {upstream:'#58a6ff',competitor:'#f85149',downstream:'#4ec9b0',logistics:'#bc8cff',byproduct:'#e3b341',policy:'#8b949e'};
+const EV_CN = {E1:'一手官方',E2:'行业权威',E3:'综合媒体',E4:'机构口径',E5:'待确认'};
+
+const input = DATA.inputs||{}, proj = DATA.project||{}, meta = DATA.meta||{};
+
+/* ================= 顶部 ================= */
+$('#asof').textContent = meta.asof||'—';
+if(meta.simulated){
+  $('#simbanner').innerHTML = `<div class="simbanner"><div class="wrap">
+    <div class="tag">模拟输入</div>
+    <p>${esc(meta.simulated_note||'本项目主体、存在性与进度为研究用模拟输入，非真实项目。背景数据取自公开来源并已逐条标注。')}</p>
+  </div></div>`;
+}
+$('#h1').textContent = meta.title||'新增产能影响研究';
+$('#lede').innerHTML = `以 <b>${esc(meta.product||'')} ${esc(input.capacity_10kt||'')} 万吨/年</b> 为对象，先核项目事实，再算相对规模、上游原料需求与投产情景，最后落到<b>区域供应格局与受影响企业</b>。全程区分事实 / 计算 / 情景，不输出价格涨跌判断。`;
+$('#disclaimer').textContent = meta.disclaimer||'';
+
+const chips = [
+  ['产品', (meta.product||'')+(meta.product_en?` (${meta.product_en})`:'')],
+  ['工艺', meta.process||'—'],
+  ['设计产能', (input.capacity_10kt||0)+' 万吨/年'],
+  ['项目阶段', proj.stage||'—'],
+  ['计划投产', `${input.start_year} 年 ${input.start_month} 月`],
+  ['数据截止', meta.asof||'—'],
+];
+$('#chips').innerHTML = chips.map(([k,v])=>`<div class="chip">${esc(k)} <b>${esc(v)}</b></div>`).join('');
+
+/* ================= KPI ================= */
+function tierColor(t){return {'可以忽略':'#6b7d92','边际':'#e3b341','温和':'#e3b341','显著':'#f0883e','明显':'#f0883e','重大':'#f85149','结构性':'#f85149','洗牌级':'#f85149'}[t]||'#6b7d92';}
+(function renderKPI(){
+  const sh = DATA.shares||[];
+  const nat = sh.find(s=>s.key==='national'), reg = sh.find(s=>s.key==='regional'), rad = sh.find(s=>s.key==='radius');
+  const base = (DATA.scenarios||[]).find(s=>s.kind==='基准') || (DATA.scenarios||[])[0] || {};
+  const up = (DATA.scenarios||[]).find(s=>s.kind==='上限') || {};
+  const coal = Object.entries(DATA.coefficients||{}).find(([k,v])=>v.on_site!==false);
+  const upName = coal?coal[0]:'上游原料';
+  const p = base.production||{};
+  const firstY = p.first_year_output_t? (p.first_year_output_t/1e4):0;
+  const steady = p.steady_output_t? (p.steady_output_t/1e4):0;
+  const gapHi = (DATA.gaps||[]).filter(g=>g.priority==='高').length;
+  const cards = [
+    ['设计产能', `${n1(input.capacity_10kt)}<small>万吨/年</small>`, `${esc(proj.capacity_scope||'公称能力口径').slice(0,28)}`, ''],
+    ['占全国产能', nat&&nat.share_pct!=null?`${n2(nat.share_pct)}<small>%</small>`:'—',
+      nat?`<span class="tier" style="background:${tierColor(nat.tier)}22;color:${tierColor(nat.tier)}">${nat.tier}</span>${esc(nat.label)}`:'—','k2'],
+    ['占区域产能', reg&&reg.share_pct!=null?`${n2(reg.share_pct)}<small>%</small>`:'—',
+      reg?`<span class="tier" style="background:${tierColor(reg.tier)}22;color:${tierColor(reg.tier)}">${reg.tier}</span>${esc(reg.label)}`:'—','k3'],
+    ['占竞争半径', rad&&rad.share_pct!=null?`${n2(rad.share_pct)}<small>%</small>`:'—',
+      rad?`<span class="tier" style="background:${tierColor(rad.tier)}22;color:${tierColor(rad.tier)}">${rad.tier}</span>500 km 内同行`:'—','k4'],
+    ['投产首年产量（基准）', `${n1(firstY)}<small>万吨</small>`, `≈ 设计产能的 ${p.first_year_ratio!=null?(p.first_year_ratio*100).toFixed(1):'—'}%；上限情景 ${n1(up.production?up.production.first_year_output_t/1e4:0)} 万吨`,'k5'],
+    ['达产后上游需求', `${n1(steady*(coal?coal[1].coefficient:0))}<small>万吨/年</small>`, `${esc(upName)} · 稳态产量 ${n1(steady)} 万吨`,'k6'],
+  ];
+  $('#kpis').innerHTML = cards.map(([l,v,s,cls])=>`<div class="kpi ${cls}"><div class="lbl">${esc(l)}</div><div class="val">${v}</div><div class="sub">${s}</div></div>`).join('');
+})();
+
+/* ================= ① 事实核验卡 ================= */
+(function renderVerify(){
+  const loc = proj.location||{}, sp = proj.startup_plan||{}, conf = proj.phase_confidence||{};
+  $('#v-name').textContent = proj.name||'—';
+  $('#v-owner').innerHTML = `业主：${esc(proj.owner||'未核实')}`;
+  const lows = ['design_capacity','process','stage','startup'].filter(k=>(conf[k]||'E5')==='E5'||(conf[k]||'E5')==='E4');
+  const verdict = lows.length ? `关键字段 ${lows.length} 项为 E4/E5 → 结论降级为「情景测算」` : '关键字段均 ≥ E3 → 可作事实测算';
+  const badge = document.createElement('div');
+  badge.className='vbadge';
+  badge.style.cssText = lows.length? '' : 'background:rgba(63,185,80,.14);color:var(--e1);border-color:rgba(63,185,80,.4)';
+  badge.textContent = verdict;
+  $('#v-badge').appendChild(badge);
+  $('#v-scope').textContent = `阶段：${proj.stage||'—'}　|　${proj.stage_note||''}`;
+
+  const rows = [
+    ['项目业主', proj.owner||'未核实', conf.owner||'E5', proj.owner_note||''],
+    ['建设地点', [loc.province,loc.city,loc.district,loc.park].filter(Boolean).join(' / ')||'未核实', conf.location||'E5',''],
+    ['产品与牌号', proj.product_spec||'—', conf.product||'E5',''],
+    ['设计产能', `${n1((proj.design_capacity_t||0)/1e4)} 万吨/年　（${proj.capacity_scope||''}）`, conf.design_capacity||'E5', proj.capacity_source||''],
+    ['工艺路线', proj.process_route||'—', conf.process||'E5',''],
+    ['项目阶段', proj.stage||'—', conf.stage||'E5', proj.stage_note||''],
+    ['预计投产', `${input.start_year} 年 ${input.start_month} 月　${sp.text||''}`, conf.startup||'E5', sp.announce_date?`公告日 ${sp.announce_date}`:''],
+  ];
+  $('#v-rows').innerHTML = rows.map(([k,v,lv,note])=>`<div class="vrow">
+    <div class="k">${esc(k)}</div>
+    <div class="v"><span class="ev ev-${lv}">${lv} ${EV_CN[lv]||''}</span> ${esc(v)}${note?`<span class="src">${esc(note)}</span>`:''}</div>
+  </div>`).join('');
+
+  $('#v-verdict').innerHTML = (proj.verdict||[]).map(t=>`<p style="font-size:12.6px;color:var(--fg2);line-height:1.72;margin:0 0 9px">${esc(t)}</p>`).join('') || '<p class="muted">未填写核验结论。</p>';
+  const sup = proj.supplement||{};
+  $('#v-supplement').innerHTML = Object.keys(sup).length
+    ? Object.entries(sup).map(([k,v])=>`<div style="font-size:12.4px;color:var(--fg2);margin-bottom:8px;line-height:1.65"><b style="color:var(--fg)">${esc(k)}：</b>${esc(v)}</div>`).join('')
+    : '<p class="muted">无补充信息。</p>';
+})();
+
+/* ================= ② 相对规模 ================= */
+(function renderShares(){
+  const sh = DATA.shares||[];
+  const max = Math.max(...sh.map(s=>s.share_pct||0),1);
+  $('#shares').innerHTML = sh.map(s=>{
+    const pct = s.share_pct;
+    const w = pct==null?0:Math.min(100, pct/max*100);
+    const cls = pct==null?'':(pct>=15?'big':(pct>=5?'sig':''));
+    const meaning = {
+      national:'对全国供需平衡的边际影响', regional:'区域一次性冲击强度',
+      radius:'与半径内同行的直接竞争强度', grade:'牌号局部过剩风险',
+      consumption:'相对全国需求量的边际影响', pipeline:'区域供给增量中的占比'
+    }[s.key]||'补充口径';
+    return `<div class="share-row">
+      <div class="nm">${esc(s.label)}<small>${esc(s.year||'—')} 年 · ${esc(s.scope||'口径未注明').slice(0,34)}</small></div>
+      <div class="bar"><div class="fill ${cls}" style="width:${w}%"></div>
+        ${pct!=null?`<span class="pct">${pct.toFixed(2)}%</span>`:'<span class="pct" style="right:auto;left:8px;color:var(--fg3)">分母缺失，无法计算</span>'}</div>
+      <div style="text-align:right"><span class="tier" style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:${tierColor(s.tier)}22;color:${tierColor(s.tier)}">${esc(s.tier)}</span>
+        <div class="muted" style="font-size:10.5px;margin-top:3px">${meaning}</div></div>
+    </div>`;
+  }).join('');
+  const hasAlt = sh.some(s=>s.share_alt_pct!=null);
+  $('#share-note').innerHTML = `分子统一为设计产能 <b>${n1(input.capacity_10kt)} 万吨/年</b>（公称能力），分母为各口径<b>现有产能</b>（非产量）。`+
+    (hasAlt?'存在口径冲突的分母已在下方并列替代口径。':'<span style="color:var(--e4)">⚠ 数据中未提供替代口径，若来源冲突建议补充后重出。</span>');
+
+  // 半径梯度
+  const bands = (DATA.regional&&DATA.regional.radius_bands)||[];
+  $('#radiusbands').innerHTML = bands.length ? bands.map(b=>{
+    const w = b.share_pct?Math.min(100,b.share_pct*2):0;
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12.3px"><span>${esc(b.band)}　<span class="muted">${b.count} 家 / ${n1(b.capacity_t/1e4)} 万吨</span></span>
+      <b style="color:var(--acc2)">${b.share_pct!=null?b.share_pct.toFixed(1)+'%':'—'}</b></div>
+      <div class="bar" style="height:7px;margin-top:5px"><div class="fill sig" style="width:${w}%"></div></div>
+      <div class="muted" style="font-size:10.8px;margin-top:3px">${esc((b.members||[]).join('、'))}</div>
+    </div>`;
+  }).join('') : '<p class="muted">未提供邻居坐标，无法计算半径梯度。</p>';
+
+  // 替代分母
+  const alts = sh.filter(s=>s.share_alt_pct!=null);
+  $('#altshares').innerHTML = alts.length ? `<div class="tw"><table>
+    <thead><tr><th>分母</th><th>替代口径</th><th class="num">替代占比</th><th class="num">差异</th></tr></thead>
+    <tbody>${alts.map(s=>{
+      const d = (s.share_alt_pct - s.share_pct);
+      return `<tr><td>${esc(s.label)}</td><td style="font-size:11.8px">${esc(s.alt_label)}</td>
+      <td class="num"><b>${s.share_alt_pct.toFixed(2)}%</b></td>
+      <td class="num ${d>=0?'up':'dn'}">${d>=0?'+':''}${d.toFixed(2)} pct</td></tr>`;
+    }).join('')}</tbody></table></div>` : '<p class="muted">本数据集无替代口径。</p>';
+})();
+
+/* ================= ③ 原料需求 ================= */
+(function renderMaterials(){
+  const ucs = DATA.unit_consumption||[];
+  const coef = DATA.coefficients||{}, rng = DATA.coefficients_range||{};
+  const base = (DATA.scenarios||[]).find(s=>s.kind==='基准')||(DATA.scenarios||[])[0]||{};
+  const p = base.production||{};
+
+  $('#uccards').innerHTML = ucs.map(u=>{
+    const ev = (u.evidence||{}).level||u.evidence_level||'E5';
+    const basis = (u.basis||'').split(' ')[0]||'—';
+    const r = u.range||[];
+    return `<div class="card" style="border-left:3px solid ${ev==='E1'?'var(--e1)':ev==='E2'?'var(--e2)':'var(--e3)'}">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+        <div><div style="font-size:12.5px;color:var(--fg2)">${esc(u.from||'')} → ${esc(u.to||'')}</div>
+        <div style="font-size:26px;font-weight:750;margin-top:4px;font-variant-numeric:tabular-nums">${Number(u.value).toFixed(4)}<small style="font-size:12px;color:var(--fg2);font-weight:600;margin-left:4px">${esc(u.unit||'t/t')}</small></div></div>
+        <div style="text-align:right"><span class="ev ev-${ev}">${ev}</span><div class="pill" style="margin-top:6px">${esc(basis)}</div></div>
+      </div>
+      <div class="muted" style="font-size:11.5px;margin-top:8px;line-height:1.6">
+        ${r.length===2?`区间 ${r[0]} – ${r[1]} t/t　` : ''}纯度 ${(u.purity??1).toFixed(2)}　${u.on_site===false?'<b style="color:var(--e4)">外购</b>':'本项目自建'}
+      </div>
+      <div class="muted" style="font-size:11.3px;margin-top:6px;line-height:1.6;border-top:1px dashed var(--line);padding-top:7px">${esc((u.evidence||{}).source||'—')}</div>
+      ${safeUrl((u.evidence||{}).url)?`<a href="${safeUrl(u.evidence.url)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--fg3)">查看原文 ↗</a>`:''}
+    </div>`;
+  }).join('');
+
+  // 连乘表
+  const firstY = (p.first_year_output_t||0)/1e4, steady = (p.steady_output_t||0)/1e4, full = (p.full_output_t||0)/1e4;
+  let rows='';
+  Object.entries(coef).forEach(([name,c])=>{
+    const rg = rng[name]||{};
+    rows += `<tr>
+      <td><b>${esc(name)}</b><div class="muted" style="font-size:11px">${c.on_site===false?'外购中间体，不新增上游采购':'本项目自建'}</div></td>
+      <td class="num"><b>${c.coefficient.toFixed(4)}</b></td>
+      <td class="num muted">${rg.low!=null?rg.low.toFixed(4):'—'} – ${rg.high!=null?rg.high.toFixed(4):'—'}</td>
+      <td class="num">${n1(firstY*c.coefficient)}</td>
+      <td class="num"><b style="color:var(--acc)">${n1(steady*c.coefficient)}</b></td>
+      <td class="num">${n1(full*c.coefficient)}</td>
+      <td style="font-size:11.4px">${(c.parts||[]).map(x=>`${esc(x.key)}=${x.value}/${x.purity}`).join(' × ')||'—'}</td>
+    </tr>`;
+  });
+  $('#mat-table').innerHTML = `<thead><tr><th>原料 / 节点</th><th class="num">连乘系数 t/t</th><th class="num">区间</th>
+    <th class="num">首年需求（万吨）</th><th class="num">稳态需求（万吨）</th><th class="num">满负荷上限（万吨）</th><th>链上构成</th></tr></thead>
+    <tbody>${rows}</tbody>`;
+  $('#mat-note').innerHTML = `口径：基准情景（S2 中性）首年产量 ${n1(firstY)} 万吨、稳态 ${n1(steady)} 万吨、满负荷上限 ${n1(full)} 万吨。
+    <b style="color:var(--acc)">首年需求才是真正冲击市场的量</b>；满负荷上限仅供校验，不代表预测。`;
+
+  // 副产物
+  const bps = base.byproducts_steady||[];
+  $('#byproducts').innerHTML = bps.length ? `<div class="tw"><table>
+    <thead><tr><th>副产物</th><th class="num">单位产比</th><th class="num">稳态年产出（吨）</th><th>说明</th></tr></thead>
+    <tbody>${bps.map(b=>`<tr><td><b>${esc(b.name)}</b></td><td class="num">${b.ratio} ${esc(b.unit)}</td>
+      <td class="num">${n0(b.output_t)}</td><td style="font-size:11.6px">${esc(b.note)}</td></tr>`).join('')}</tbody></table></div>`
+    : '<p class="muted">数据未声明副产物的单位产比。真实项目应以环评“产品方案”章节为准。</p>';
+})();
+
+/* ================= ④ 产量情景 ================= */
+function rampLoad(k,model,n){
+  if(k<1) return 0;
+  if(model==='none') return 1;
+  if(model==='linear') return Math.min(1,k/n);
+  if(model==='exponential') return Math.min(1,1-Math.exp(-3*k/n));
+  if(n<=1) return 1;
+  const x1=Math.log(0.16/0.84), xn=Math.log(0.95/0.05);
+  const x=x1+(k-1)*(xn-x1)/(n-1);
+  return Math.max(0,Math.min(1,1/(1+Math.exp(-x))));
+}
+(function renderScenarios(){
+  const scn = DATA.scenarios||[];
+  const cap = input.capacity_t||0;
+  let rows='';
+  scn.forEach(s=>{
+    const p = s.production||{};
+    const hl = s.kind==='基准'?'class="hl"':'';
+    const fy = (p.first_year_output_t||0)/1e4;
+    rows += `<tr ${hl}>
+      <td><b>${esc(s.id)}</b><div class="muted" style="font-size:11px">${esc(s.label)}</div></td>
+      <td><span class="pill">${esc(s.kind)}</span></td>
+      <td class="num">${s.start_year}‑${String(s.start_month).padStart(2,'0')}</td>
+      <td class="num">${(s.steady_lf*100).toFixed(0)}%</td>
+      <td>${esc(s.ramp_model)}${s.ramp_model==='none'?'':` / ${s.ramp_months}月`}</td>
+      <td class="num"><b>${n1(fy)}</b></td>
+      <td class="num">${p.first_year_ratio!=null?(p.first_year_ratio*100).toFixed(1)+'%':'—'}</td>
+      <td class="num">${n1((p.steady_output_t||0)/1e4)}</td>
+      <td style="font-size:11.5px;max-width:280px">${esc(s.note)}</td>
+    </tr>`;
+  });
+  $('#scn-table').innerHTML = `<thead><tr><th>情景</th><th>类型</th><th class="num">开车</th><th class="num">开工率</th><th>爬坡</th>
+    <th class="num">首年产量（万吨）</th><th class="num">占设计产能</th><th class="num">稳态年产量（万吨）</th><th>说明</th></tr></thead><tbody>${rows}</tbody>`;
+
+  const base = scn.find(s=>s.kind==='基准')||scn[0]||{};
+  const up = scn.find(s=>s.kind==='上限')||{};
+  const fy=(base.production||{}).first_year_output_t/1e4||0, uy=(up.production||{}).first_year_output_t/1e4||0;
+  $('#ramp-alert').innerHTML = uy>0 && fy>0
+    ? `若把设计产能 <b>${n1(input.capacity_10kt)} 万吨</b> 直接当作投产首年增量（「上限」情景），会比基准情景的 <b>${n1(fy)} 万吨</b> 高估约 <b>${(uy/fy).toFixed(1)} 倍</b>。这就是为什么首年产量必须按投产月份与爬坡曲线积分。`
+    : '请为基准情景与上限情景同时提供数据。';
+})();
+
+/* ================= 图表：爬坡曲线 ================= */
+let rampChart=null;
+function drawRamp(){
+  const el = document.getElementById('chart-ramp'); if(!el||!window.echarts) return;
+  const scn = DATA.scenarios||[];
+  const colors = ['#f85149','#f0a04b','#4ec9b0','#bc8cff','#58a6ff'];
+  const series=[];
+  scn.forEach((s,i)=>{
+    const p=s.production||{}; const sm=s.start_month||1;
+    const pts=[];
+    for(let k=1;k<=36;k++){
+      const load = rampLoad(k,s.ramp_model,s.ramp_months)*(s.steady_lf||0.9);
+      pts.push([k, +(s.ramp_model==='none'? (s.steady_lf*100):load*100).toFixed(1)]);
+    }
+    series.push({
+      name:`${s.id} ${s.label}`, type:'line', smooth:true, showSymbol:false,
+      lineStyle:{width: s.kind==='基准'?3:1.6, color:colors[i%colors.length]},
+      itemStyle:{color:colors[i%colors.length]},
+      data:pts, emphasis:{focus:'series'}
+    });
+  });
+  rampChart = echarts.init(el,null,{renderer:'canvas'});
+  rampChart.setOption({
+    backgroundColor:'transparent',
+    grid:{left:52,right:24,top:34,bottom:56},
+    legend:{top:0,textStyle:{color:'#9fb0c3',fontSize:11},itemWidth:14,itemHeight:8,type:'scroll'},
+    tooltip:{trigger:'axis',backgroundColor:'#1b2431',borderColor:'#334054',textStyle:{color:'#e6edf3',fontSize:12},
+      formatter:p=>`自开车月起第 ${p[0].axisValue} 月<br/>`+p.map(x=>`${x.marker}${x.seriesName}：<b>${x.value[1]}%</b>`).join('<br/>')},
+    xAxis:{type:'value',min:1,max:36,name:'自开车月起（月）',nameTextStyle:{color:'#6b7d92',fontSize:11},
+      axisLine:{lineStyle:{color:'#334054'}},axisLabel:{color:'#8b9bb0',fontSize:11},splitLine:{lineStyle:{color:'#1e2836'}}},
+    yAxis:{type:'value',min:0,max:100,name:'负荷率 %',nameTextStyle:{color:'#6b7d92',fontSize:11},
+      axisLine:{lineStyle:{color:'#334054'}},axisLabel:{color:'#8b9bb0',fontSize:11},splitLine:{lineStyle:{color:'#1e2836'}}},
+    series
+  });
+}
+
+/* ================= ⑤ 计算器 ================= */
+let calcChart=null;
+function calcNow(){
+  const cap = input.capacity_t||0;
+  const m = +$('#c-month').value, lf = +$('#c-lf').value/100, rm = +$('#c-rm').value;
+  const model = $('#c-model').value, ucMul = +$('#c-uc').value/100;
+  $('#c-month-v').textContent = m+' 月';
+  $('#c-lf-v').textContent = Math.round(lf*100)+'%';
+  $('#c-rm-v').textContent = model==='none'?'—':rm;
+  $('#c-uc-v').textContent = '×'+ucMul.toFixed(3);
+
+  let y1=0, monthly=[];
+  for(let k=1;k<=12-m+1;k++){
+    const load = (model==='none'?1:rampLoad(k,model,rm))*lf;
+    const out = cap/12*load;
+    y1+=out; monthly.push(+(load*100).toFixed(1));
+  }
+  const steady = cap*lf;
+  const coef = DATA.coefficients||{};
+  const main = Object.entries(coef).find(([k,v])=>v.on_site!==false)||Object.entries(coef)[0]||['原料',{coefficient:0}];
+  const cEff = main[1].coefficient*ucMul;
+  const mat1 = y1*cEff/1e4, matS = steady*cEff/1e4;
+
+  const base = (DATA.scenarios||[]).find(s=>s.kind==='基准')||{};
+  const baseFy = (base.production||{}).first_year_output_t||0;
+  const diffPct = baseFy? ((y1-baseFy)/baseFy*100):0;
+
+  const out = [
+    ['投产首年产量', n1(y1/1e4), '万吨', `占设计产能 ${(y1/cap*100).toFixed(1)}%${baseFy?`　较基准 ${diffPct>=0?'+':''}${diffPct.toFixed(1)}%`:''}`],
+    ['稳态年产量', n1(steady/1e4), '万吨', '设计产能 × 开工率'],
+    ['首年原料需求', n1(mat1), '万吨', esc(main[0])+' · 系数 '+cEff.toFixed(4)],
+    ['稳态原料需求', n1(matS), '万吨/年', '达产后每年'],
+    ['满负荷上限', n1(cap/1e4), '万吨', '设计产能本身（现实中不出现）'],
+    ['首年可产月数', String(12-m+1), '个月', '自开车月至当年 12 月'],
+  ];
+  $('#calc-out').innerHTML = out.map(([l,v,u,d])=>`<div class="out"><div class="l">${esc(l)}</div>
+    <div class="v">${v}<small>${esc(u)}</small></div><div class="d">${d}</div></div>`).join('');
+
+  const el=document.getElementById('chart-calc');
+  if(el && window.echarts){
+    if(!calcChart) calcChart = echarts.init(el,null,{renderer:'canvas'});
+    calcChart.setOption({
+      backgroundColor:'transparent', grid:{left:44,right:16,top:26,bottom:26},
+      title:{text:'首年逐月产量（万吨）',left:0,top:0,textStyle:{color:'#9fb0c3',fontSize:11.5,fontWeight:'normal'}},
+      tooltip:{trigger:'axis',backgroundColor:'#1b2431',borderColor:'#334054',textStyle:{color:'#e6edf3',fontSize:12}},
+      xAxis:{type:'category',data:monthly.map((_,i)=>m+i>12?`${m+i-12}`:`${m+i}月`),
+        axisLine:{lineStyle:{color:'#334054'}},axisLabel:{color:'#8b9bb0',fontSize:10}},
+      yAxis:{type:'value',name:'万吨',nameTextStyle:{color:'#6b7d92',fontSize:10},
+        axisLine:{lineStyle:{color:'#334054'}},axisLabel:{color:'#8b9bb0',fontSize:10},splitLine:{lineStyle:{color:'#1e2836'}}},
+      series:[{type:'bar',data:monthly.map((v,i)=>+((cap/12*(v/100))/1e4).toFixed(2)),
+        itemStyle:{borderRadius:[4,4,0,0],color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#f0a04b'},{offset:1,color:'#b3702a'}])},
+        label:{show:true,position:'top',color:'#9fb0c3',fontSize:10,formatter:'{c}'}}]
+    });
+  }
+}
+$('#c-month').oninput=$('#c-lf').oninput=$('#c-rm').oninput=$('#c-uc').oninput=calcNow;
+$('#c-model').onchange=calcNow;
+$('#c-reset').onclick=()=>{
+  const b=(DATA.scenarios||[]).find(s=>s.kind==='基准')||{};
+  $('#c-month').value=b.start_month||6; $('#c-lf').value=Math.round((b.steady_lf||0.9)*100);
+  $('#c-rm').value=b.ramp_months||12; $('#c-model').value=b.ramp_model||'s_curve'; $('#c-uc').value=100;
+  calcNow();
+};
+
+/* ================= ⑥ 产业链图 ================= */
+(function renderChain(){
+  const svg = $('#chainsvg');
+  const cap = input.capacity_t||0;
+  const coal = Object.entries(DATA.coefficients||{})[0];
+  const sts = DATA.stakeholders||[];
+  const pick = t => sts.filter(s=>s.type===t);
+
+  // 手工布局：左上游 → 中装置 → 右下游，下副产
+  const boxes = [];
+  const add=(x,y,w,h,label,sub,color,key,type)=>{boxes.push({x,y,w,h,label,sub,color,key,type});};
+  add(60,120,190,64,'进口丙烷 / LPG','上游原料 · 冷冻船货','#58a6ff','upstream','upstream');
+  add(60,300,190,56,'乙烯（共聚单体）','外购 · 无规共聚用','#58a6ff','up-ethylene','upstream');
+  add(330,196,180,62,'PDH 丙烷脱氢','Oleflex · 中间体丙烯','#8b949e','process','process');
+  add(590,196,180,62,'PP 聚合 / 造粒','本项目 40 万吨/年','#f0a04b','product','product');
+  add(850,60,250,58,'BOPP / CPP 薄膜','下游 · 薄膜级','#4ec9b0','down-bopp','downstream');
+  add(850,150,250,58,'改性塑料 / 注塑','下游 · 注塑级','#4ec9b0','down-inj','downstream');
+  add(850,240,250,58,'拉丝 / 编织袋','下游 · 拉丝级','#4ec9b0','down-draw','downstream');
+  add(850,330,250,58,'区域同行（浙石化等）','同区域竞争','#f85149','competitor','competitor');
+  add(850,420,250,58,'宁波港 / 交割库','物流仓储','#bc8cff','log-port','logistics');
+  add(330,330,180,54,'副产氢气 PSA','副产物市场','#e3b341','by-h2','byproduct');
+
+  const edges = [
+    ['upstream','process','1.18 t/t'],['up-ethylene','process','0.03 t/t'],
+    ['process','product','丙烯自用'],['product','down-bopp',''],['product','down-inj',''],
+    ['product','down-draw',''],['process','by-h2','副产'],['product','competitor','份额稀释'],
+    ['product','log-port','运量/仓单'],
+  ];
+  const byKey = Object.fromEntries(boxes.map(b=>[b.key,b]));
+  let html='';
+  // 边
+  edges.forEach(([a,b,lab])=>{
+    const A=byKey[a],B=byKey[b]; if(!A||!B) return;
+    const x1=A.x+A.w, y1=A.y+A.h/2, x2=B.x, y2=B.y+B.h/2;
+    const mx=(x1+x2)/2;
+    const ctrl = a==='process'&&b==='product' ? `C ${mx} ${y1}, ${mx} ${y2}` : `C ${mx} ${y1}, ${mx} ${y2}`;
+    const dash = (b==='competitor'||b==='log-port')?'stroke-dasharray="5 4"':'';
+    html+=`<path d="M${x1} ${y1} ${ctrl} ${x2} ${y2}" class="edge" ${dash} marker-end="url(#arw)"/>`;
+    if(lab&&lab!=='') html+=`<text x="${mx}" y="${(y1+y2)/2-6}" text-anchor="middle" class="edge-l">${esc(lab)}</text>`;
+  });
+  // 节点
+  boxes.forEach(b=>{
+    const isSt = sts.some(s=>s.id===b.key);
+    html+=`<g class="node-rect" data-key="${esc(b.key)}" data-type="${esc(b.type)}">
+      <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="9" fill="#1b2431" stroke="${b.color}" stroke-width="${isSt?'1.8':'1.2'}" opacity="${isSt?1:.92}"/>
+      <rect x="${b.x}" y="${b.y}" width="4" height="${b.h}" rx="2" fill="${b.color}"/>
+      <text x="${b.x+14}" y="${b.y+25}" class="node-t">${esc(b.label)}</text>
+      <text x="${b.x+14}" y="${b.y+42}" class="node-s">${esc(b.sub)}</text>
+      ${isSt?'<circle cx="'+(b.x+b.w-13)+'" cy="'+(b.y+13)+'" r="4" fill="'+b.color+'" opacity=".85"><animate attributeName="opacity" values=".85;.25;.85" dur="2.4s" repeatCount="indefinite"/></circle>':''}
+    </g>`;
+  });
+  svg.innerHTML = `<defs><marker id="arw" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#3a4759"/></marker></defs>` + html;
+
+  $$('.node-rect',svg).forEach(g=>{
+    g.addEventListener('click',()=>openDrawer(g.dataset.key, g.dataset.type));
+  });
+
+  // 受影响对象表
+  let rows = sts.map(s=>{
+    const imp=s.impact||{}, sc=imp.score||0;
+    const col = sc>=70?'var(--e5)':(sc>=45?'var(--acc)':'var(--fg3)');
+    return `<tr data-key="${esc(s.id)}" style="cursor:pointer">
+      <td><span class="pill" style="border-color:${TYPE_COLOR[s.type]}55;color:${TYPE_COLOR[s.type]};background:${TYPE_COLOR[s.type]}18">${TYPE_CN[s.type]||s.type}</span></td>
+      <td><b>${esc(s.name)}</b><div class="muted" style="font-size:11px">${esc(s.region||'')}</div></td>
+      <td class="num">${s.capacity_t?n1(s.capacity_t/1e4):'—'}</td>
+      <td class="num">${s.volume_basis_t?n1(s.volume_basis_t/1e4):'—'}</td>
+      <td class="num">${s.market_t?n1(s.market_t/1e4):'—'}</td>
+      <td style="min-width:120px"><div class="bar" style="height:8px"><div class="fill" style="width:${Math.min(100,sc)}%;background:${col}"></div></div></td>
+      <td class="num"><b style="color:${col}">${sc.toFixed(1)}</b> <span class="muted">${esc(imp.tier||'')}</span></td>
+      <td><span class="ev ev-${(s.evidence||{}).level||'E5'}">${(s.evidence||{}).level||'E5'}</span></td>
+    </tr>`;
+  }).join('');
+  $('#st-table').innerHTML = `<thead><tr><th>类型</th><th>企业 / 节点</th><th class="num">产能（万吨）</th><th class="num">相关量（万吨）</th>
+    <th class="num">市场分母（万吨）</th><th>影响强度</th><th class="num">分值</th><th>证据</th></tr></thead><tbody>${rows}</tbody>`;
+  $$('#st-table tbody tr').forEach(tr=>tr.onclick=()=>openDrawer(tr.dataset.key,null));
+})();
+
+/* ================= 抽屉 ================= */
+function openDrawer(key,type){
+  const sts = DATA.stakeholders||[];
+  const s = sts.find(x=>x.id===key);
+  const reg = DATA.regional||{};
+  const loc = proj.location||{};
+  $('#mask').classList.add('on'); $('#drawer').classList.add('on');
+  if(!s){
+    // 未参与打分的结构节点（上游原料 / 本产品 / 副产）
+    const titleMap = {upstream:'进口丙烷 / LPG（上游原料）', 'up-ethylene':'乙烯（共聚单体）', process:'PDH 丙烷脱氢（本项目装置）',
+      product:'聚丙烯粒料（本项目产品）', byproduct:'副产物'};
+    $('#d-type').textContent = '产业链节点';
+    $('#d-title').textContent = titleMap[key]||key;
+    const coal = Object.entries(DATA.coefficients||{})[0];
+    const base = (DATA.scenarios||[]).find(x=>x.kind==='基准')||{};
+    const p=base.production||{};
+    let body='';
+    if(key==='upstream'||key==='up-ethylene'){
+      const mat = sts.find(x=>x.type==='upstream');
+      body = `<h4>需求量（基准情景）</h4>
+        <div class="statline">
+          <div>首年<b>${n1((p.first_year_output_t||0)*(coal?coal[1].coefficient:0)/1e4)} 万吨</b></div>
+          <div>稳态<b>${n1((p.steady_output_t||0)*(coal?coal[1].coefficient:0)/1e4)} 万吨/年</b></div>
+          <div>满负荷<b>${n1((p.full_output_t||0)*(coal?coal[1].coefficient:0)/1e4)} 万吨</b></div>
+        </div>
+        <h4>受影响的上游主体</h4>
+        <ul>${sts.filter(x=>x.type==='upstream').map(x=>`<li><b>${esc(x.name)}</b>（${esc(x.region)}）<br/>${esc(x.note)}</li>`).join('')||'<li>未识别</li>'}</ul>
+        <div class="alert blue">上游需求是“量”的变化，不构成对上游价格的判断。判断能否兑现要看采购合约能否落地。</div>`;
+    } else if(key==='process'){
+      body = `<h4>本项目装置</h4>
+        <p>${esc(proj.process_route||'')}</p>
+        <h4>关键参数</h4>
+        <ul><li>设计产能：${n1(input.capacity_10kt)} 万吨/年（${esc(proj.capacity_scope||'')}）</li>
+        <li>项目阶段：${esc(proj.stage||'')}</li>
+        <li>计划投产：${input.start_year} 年 ${input.start_month} 月</li>
+        <li>稳定开工率：${((DATA.assumptions||{}).steady_lf*100||0).toFixed(0)}%（假设）</li></ul>`;
+    } else if(key==='product'){
+      body = `<h4>产品与相对规模</h4>
+        <div class="statline">
+          <div>占全国<b>${(DATA.shares.find(x=>x.key==='national')||{}).share_pct?.toFixed(2)||'—'}%</b></div>
+          <div>占区域<b>${(DATA.shares.find(x=>x.key==='regional')||{}).share_pct?.toFixed(2)||'—'}%</b></div>
+          <div>占半径<b>${(DATA.shares.find(x=>x.key==='radius')||{}).share_pct?.toFixed(2)||'—'}%</b></div>
+        </div>
+        <h4>受影响的下游</h4>
+        <ul>${sts.filter(x=>x.type==='downstream').map(x=>`<li><b>${esc(x.name)}</b><br/>${esc(x.note)}</li>`).join('')}</ul>`;
+    } else {
+      body = `<p>该节点为结构节点，未单独打分。请点击带闪烁圆点的受影响企业节点查看详情。</p>`;
+    }
+    $('#d-body').innerHTML = body;
+    return;
+  }
+  const imp = s.impact||{};
+  const parts = imp.parts||{};
+  $('#d-type').innerHTML = `<span class="pill" style="border-color:${(TYPE_COLOR[s.type]||'#8b949e')}55;color:${TYPE_COLOR[s.type]||'#8b949e'};background:${(TYPE_COLOR[s.type]||'#8b949e')}18">${TYPE_CN[s.type]||s.type}</span>`;
+  $('#d-title').textContent = s.name;
+  const ev = (s.evidence||{}).level||'E5';
+  const dist = s.distance_km;
+  $('#d-body').innerHTML = `
+    <div class="statline">
+      <div>产能<b>${s.capacity_t?n1(s.capacity_t/1e4)+' 万吨':'—'}</b></div>
+      <div>相关量<b>${s.volume_basis_t?n1(s.volume_basis_t/1e4)+' 万吨':'—'}</b></div>
+      <div>市场分母<b>${s.market_t?n1(s.market_t/1e4)+' 万吨':'—'}</b></div>
+      <div>距离<b>${dist!=null?n0(dist)+' km':'—'}</b></div>
+    </div>
+    <h4>影响强度构成</h4>
+    <p>综合 <b style="color:var(--acc);font-size:18px">${(imp.score||0).toFixed(1)}</b> / 100　档位 <b>${esc(imp.tier||'—')}</b></p>
+    <ul>
+      <li>体量占比 ${((parts.volume_share||0)*100).toFixed(3)}%（对数压缩后 ${(parts.volume_hat||0).toFixed(3)}，权重 0.35）</li>
+      <li>传导确定性 ${(parts.transmission||0).toFixed(2)}（权重 0.25）</li>
+      <li>时滞系数 ${(parts.lag||0).toFixed(2)}（权重 0.20）</li>
+      <li>证据确定性 ${(parts.certainty||0).toFixed(2)}（权重 0.20）</li>
+    </ul>
+    <h4>影响机制</h4>
+    <p>${esc(s.note||'—')}</p>
+    <h4>证据</h4>
+    <p><span class="ev ev-${ev}">${ev} ${EV_CN[ev]||''}</span> ${esc((s.evidence||{}).source||'未核实')}<br/>
+      <span class="muted">日期 ${esc((s.evidence||{}).date||'—')}</span></p>
+    ${safeUrl((s.evidence||{}).url)?`<p><a href="${safeUrl(s.evidence.url)}" target="_blank" rel="noopener">查看来源原文 ↗</a></p>`:'<p class="muted">无可点开来源。</p>'}
+    <div class="alert blue" style="margin-top:16px">影响强度只量化“量级与传导确定性”，不代表价格方向。价格如何反映取决于库存、开工与合约结构，本报告不作判断。</div>`;
+}
+$('#d-close').onclick=()=>{$('#mask').classList.remove('on');$('#drawer').classList.remove('on');};
+$('#mask').onclick=()=>{$('#mask').classList.remove('on');$('#drawer').classList.remove('on');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#mask').classList.remove('on');$('#drawer').classList.remove('on');}});
+
+/* ================= ⑦ 区域 ================= */
+(function renderRegional(){
+  const r = DATA.regional||{};
+  const ss = v=>v==null?'—':v.toFixed(3);
+  $('#reg-stats').innerHTML = `
+    <div class="statline">
+      <div>区域产能<b>${n1((r.regional_capacity_t||0)/1e4)} 万吨</b></div>
+      <div>区域需求<b>${r.regional_demand_t?n1(r.regional_demand_t/1e4)+' 万吨':'—'}</b></div>
+      <div>本项目<b>${n1((r.new_capacity_t||0)/1e4)} 万吨</b></div>
+      <div>区域供给增量<b>${n1((r.regional_supply_increase_t||0)/1e4)} 万吨</b></div>
+    </div>
+    <table style="min-width:0;margin-top:8px">
+      <tr><td>本项目占区域产能</td><td class="num"><b>${r.new_capacity_share_pct!=null?r.new_capacity_share_pct.toFixed(2)+'%':'—'}</b></td></tr>
+      <tr><td>供给增量率（含在建）</td><td class="num"><b>${r.regional_supply_increase_pct!=null?r.regional_supply_increase_pct.toFixed(2)+'%':'—'}</b></td></tr>
+      <tr><td>区域边界</td><td>${esc((r.provinces||[]).join('、')||'未注明')}</td></tr>
+    </table>
+    <div class="note">${esc(r.supply_increase_note||'')}</div>`;
+
+  const flowTag = f=>`<span class="pill" style="border-color:${f==='净输入'?'#e3b341':f==='净输出'?'#4ec9b0':'#8b949e'}55;color:${f==='净输入'?'#e3b341':f==='净输出'?'#4ec9b0':'#8b949e'}">${esc(f)}</span>`;
+  $('#reg-flow').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin:8px 0 14px">
+      <div style="text-align:center;flex:1"><div class="muted" style="font-size:11.5px">投前自给率</div>
+        <div style="font-size:27px;font-weight:750">${ss(r.self_sufficiency_before)}</div>${flowTag(r.flow_before||'—')}</div>
+      <div style="font-size:22px;color:var(--fg3)">→</div>
+      <div style="text-align:center;flex:1"><div class="muted" style="font-size:11.5px">投后自给率</div>
+        <div style="font-size:27px;font-weight:750;color:var(--acc)">${ss(r.self_sufficiency_after)}</div>${flowTag(r.flow_after||'—')}</div>
+      <div style="text-align:center;flex:1"><div class="muted" style="font-size:11.5px">变化</div>
+        <div style="font-size:20px;font-weight:750;color:var(--acc2)">${r.ss_delta_pct!=null?(r.ss_delta_pct>=0?'+':'')+r.ss_delta_pct.toFixed(2):'—'}</div><div class="muted" style="font-size:11px">个百分点</div></div>
+    </div>
+    <div class="alert blue" style="margin:0">${esc(r.mechanism||'')}</div>
+    <div class="note">这是“机制描述”，可观测指标是跨区流入量、区域外发运量与价差，<b>不是价格方向</b>。</div>`;
+
+  const nb = r.neighbors||[];
+  $('#nb-table').innerHTML = `<thead><tr><th>企业</th><th>省份</th><th class="num">距离 km</th><th class="num">产能（万吨）</th><th>距离分档</th><th>证据</th><th>来源</th></tr></thead>
+    <tbody>${nb.map(x=>{
+      const d=x.distance_km||0;
+      const band = d<=100?'≤100':d<=300?'100–300':d<=500?'300–500':d<=1000?'500–1000':'>1000';
+      return `<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.province||'')}</td><td class="num">${n0(d)}</td>
+      <td class="num">${n1((x.capacity_t||0)/1e4)}</td><td><span class="pill">${band} km</span></td>
+      <td><span class="ev ev-${x.level||'E5'}">${x.level||'E5'}</span></td><td style="font-size:11.4px;max-width:260px">${esc(x.source||'')}</td></tr>`;
+    }).join('')}</tbody>`;
+})();
+
+/* ================= ⑧ 三类结论 ================= */
+(function renderConclusions(){
+  const c = DATA.conclusions||{};
+  const facts=(c.facts||[]), calc=(c.calc||[]), scen=(c.scenarios||[]);
+  $('#c-facts').innerHTML = facts.length? facts.map(f=>`<div class="item">${esc(f.text)}
+    <div class="m"><span class="ev ev-${f.level||'E5'}">${f.level||'E5'}</span> ${esc(f.source||'')} · ${esc(f.date||'')}</div></div>`).join('')
+    : '<p class="muted">未填写已确认事实。</p>';
+  $('#c-calc').innerHTML = calc.length? calc.map(x=>`<div class="item">${esc(x.text)}
+    <div class="m">依据：${esc(x.basis||'')}　<span class="ev ev-${x.level||'E5'}">${x.level||'E5'}</span></div></div>`).join('')
+    : '<p class="muted">无计算类结论。</p>';
+  $('#c-scen').innerHTML = scen.length? scen.map(x=>`<div class="item"><b>${esc(x.scenario)}</b> ${esc(x.text)}</div>`).join('')
+    : '<p class="muted">无情景结论。</p>';
+})();
+
+/* ================= ⑨ 待核实与来源 ================= */
+(function renderGaps(){
+  const gaps = DATA.gaps||[];
+  $('#gap-table').innerHTML = `<thead><tr><th>类别</th><th>待核实事项</th><th>影响哪一步计算</th><th>补齐路径</th><th>优先级</th><th>状态</th></tr></thead>
+    <tbody>${gaps.map(g=>{
+      const pr=g.priority||'中';
+      const col = pr==='高'?'var(--e5)':pr==='中'?'var(--acc)':'var(--fg3)';
+      return `<tr><td>${esc(g.category||'')}</td><td><b>${esc(g.item||'')}</b></td>
+      <td style="font-size:11.8px">${esc(g.impact||'')}</td><td style="font-size:11.8px">${esc(g.plan||'')}</td>
+      <td><span class="pill" style="border-color:${col}55;color:${col};background:${col}18">${pr}</span></td>
+      <td class="muted" style="font-size:11.5px">${esc(g.status||'未核实')}</td></tr>`;
+    }).join('')}</tbody>`;
+
+  const src = DATA.sources||[];
+  $('#src-table').innerHTML = `<thead><tr><th>#</th><th>来源</th><th>类型</th><th>日期</th><th>用于</th><th>链接</th></tr></thead>
+    <tbody>${src.map((s,i)=>`<tr><td class="num">${i+1}</td><td><b>${esc(s.name||'')}</b></td>
+      <td><span class="pill">${esc(s.type||'')}</span></td><td class="muted">${esc(s.date||'')}</td>
+      <td style="font-size:11.6px">${esc(s.used_for||'')}</td>
+      <td>${safeUrl(s.url)?`<a href="${safeUrl(s.url)}" target="_blank" rel="noopener">打开 ↗</a>`:'<span class="muted">未核实</span>'}</td></tr>`).join('')}</tbody>`;
+})();
+
+/* ================= 导航高亮 ================= */
+(function navSpy(){
+  const links = $$('#nav a');
+  const secs = links.map(a=>document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.toggle('on', l.getAttribute('href')==='#'+e.target.id));
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  secs.forEach(s=>s&&io.observe(s));
+})();
+
+/* ================= 初始化 ================= */
+window.addEventListener('load',()=>{
+  drawRamp(); calcNow();
+});
+window.addEventListener('resize',()=>{
+  if(rampChart) rampChart.resize();
+  if(calcChart) calcChart.resize();
+});
+</script>
+</body>
+</html>

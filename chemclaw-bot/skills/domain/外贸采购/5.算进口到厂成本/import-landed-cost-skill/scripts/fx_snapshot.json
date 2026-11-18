@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-10-20T09:51:49",
+  "declaration_date": "2026-10-20",
+  "customs_rate_fetch_date": "2026-09-16",
+  "market": {
+    "type": "市场参考汇率（公开牌价）",
+    "source": "exchangerate-api.com v4 公开牌价",
+    "url": "https://api.exchangerate-api.com/v4/latest/USD",
+    "date": "2026-10-20",
+    "pair": "USD/CNY",
+    "rate": 6.69,
+    "note": "仅为公开市场参考价，不含银行买卖点差、手续费与锁汇成本；实际购汇成本以银行成交价为准。"
+  },
+  "market_cross": {
+    "type": "市场参考汇率（ECB 参考汇率交叉）",
+    "source": "European Central Bank via frankfurter.app",
+    "url": "https://api.frankfurter.app/latest?from=USD&to=CNY",
+    "date": "2026-10-19",
+    "pair": "USD/CNY",
+    "rate": 6.6807,
+    "note": "ECB 每日参考汇率（非实时），仅作市场参考。"
+  },
+  "customs": {
+    "type": "海关计征汇率口径（PBOC 人民币汇率中间价）",
+    "source": "中国外汇交易中心受权公布的人民币汇率中间价（中国人民银行）",
+    "url": "https://www.chinamoney.com.cn/chinese/bkccpr/",
+    "query_date": "2026-09-16",
+    "pair": "USD/CNY",
+    "rate": null,
+    "is_latest_only": true,
+    "note": "站点 JSON 接口仅返回最新一次中间价，不提供任意历史日期；海关计征汇率必须取「申报之日对应日期的上一个月第三个星期三」中间价，故此处不填值，标记待确认，请人工查询后录入且不得以最新价代替。",
+    "latest_published_midrate": "6.7200",
+    "status": "待确认"
+  },
+  "customs_hint": "申报日 2026-10-20 → 计征汇率取数日 2026-09-16（遇法定节假日顺延至第四个星期三）。请在 chinamoney 历史牌价页 / 海关总署公布的计征汇率表核取。",
+  "reminder": "海关计税汇率不等于市场汇率；两者必须分别列示，不得互相替代。"
+}

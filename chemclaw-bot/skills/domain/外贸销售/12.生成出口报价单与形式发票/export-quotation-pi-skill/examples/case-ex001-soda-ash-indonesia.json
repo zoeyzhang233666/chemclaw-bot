@@ -1,0 +1,211 @@
+{
+ "meta": {
+  "skillVersion": "1.0.0",
+  "dataClass": "SIMULATED — DEMO DATA / 模拟演示数据",
+  "dataClassNote": "All company names, contacts, prices, terms and bank details in this file are SIMULATED for demonstration only. Company names are invented and carry the marker '(SIMULATED DEMO)'. No real company, person, account or agreement is represented. Replace every field with user-confirmed commercial data before any real use.",
+  "caseId": "EX-001-SODA-ASH-IDN",
+  "product": "Heavy Soda Ash",
+  "destination": "Indonesia",
+  "preparedAt": "2026-10-19",
+  "preparedBy": "export-quotation-pi skill demo build",
+  "scenario": "Chinese soda-ash producer (Guangdong / Hong Kong origin) quoting heavy soda ash CIF Jakarta to an Indonesian glass/flat-glass customer."
+ },
+ "docType": "QUOTATION",
+ "state": {
+  "stage": "READY_FOR_REVIEW",
+  "reviewConfirmed": false
+ },
+ "reference": {
+  "text": "QT-SIM-2610-001",
+  "quoteNo": "QT-SIM-2610-001",
+  "quotationRef": "QT-SIM-2610-001 Rev.0",
+  "buyerInquiryRef": "INQ-SIM-1002 (2026-10-12)",
+  "supplierQuoteRef": "(awaiting supplier update)",
+  "exporterReference": "EXPORT INV. REF: TO BE ALLOCATED BEFORE SHIPMENT",
+  "buyerPoNo": "",
+  "sellerFile": "OPP-SIM-2026-1044"
+ },
+ "seller": {
+  "name": "Hua Bin Chemical Trading Co., Ltd. (SIMULATED DEMO)",
+  "shortName": "SIMULATED CO., LTD.",
+  "logoText": "SIMULATED",
+  "address": "Unit 2108, 21/F, Harbor Commerce Tower, Nanshan District, Shenzhen, Guangdong 518000, China",
+  "country": "China",
+  "contact": "[Simulated Contact Person]",
+  "phone": "+86 000 0000 0000 (Simulated)",
+  "email": "export@example-demo.invalid",
+  "taxId": "USCI SIMULATED-0000000000"
+ },
+ "buyer": {
+  "name": "PT Nusantara Kaca Sejahtera (SIMULATED DEMO)",
+  "address": "Jl. Raya Demo Industrial Estate No. 88, Kawasan Industri Delta, Cikarang, Bekasi 17530, West Java, Indonesia",
+  "country": "Indonesia",
+  "contact": "[Simulated Buyer Contact]",
+  "position": "Procurement Manager",
+  "phone": "+62 00 0000 0000 (Simulated)",
+  "email": "purchasing@example-demo.invalid",
+  "npwp": "NPWP SIMULATED-00.000.000.0-000.000"
+ },
+ "currency": {
+  "code": "USD",
+  "name": "US Dollar",
+  "symbol": "US$",
+  "decimals": 2,
+  "exchangeRate": {
+   "base": "CNY",
+   "rate": 6.6862,
+   "asOf": "2026-10-16",
+   "source": "ECB reference rate via Frankfurter API",
+   "state": "reference",
+   "display": "footnote",
+   "label": "Reference rate at quotation date"
+  }
+ },
+ "tradeTerm": {
+  "code": "CIF",
+  "version": "2020",
+  "namedPlace": "Jakarta (Tanjung Priok), Indonesia",
+  "namedPlaceKind": "port",
+  "transportMode": "SEA",
+  "insuranceBasis": "All Risks (Institute Cargo Clauses A), 110% of the CIF value, subject to policy terms",
+  "costAllocation": {
+   "exportPacking": "Seller",
+   "loadingCharges": "Seller",
+   "exportCustoms": "Seller",
+   "originCharges": "Seller",
+   "mainFreight": "Seller",
+   "insurance": "Seller",
+   "destinationCharges": "Buyer",
+   "importCustoms": "Buyer",
+   "unloading": "Buyer"
+  }
+ },
+ "items": [
+  {
+   "id": "L1",
+   "name": "SODA ASH (HEAVY), Sodium Carbonate",
+   "cas": "497-19-8",
+   "spec": "Na2CO3 99.2% min. (heavy/dense grade); Fe2O3 0.003% max.; chloride 0.40% max.; sieve retention on 180 um mesh 75% min.; moisture 0.20% max.",
+   "grade": "Heavy (Dense) Grade —glass making",
+   "hsCode": "283620",
+   "origin": "China",
+   "unit": "MT",
+   "quantity": 1000,
+   "unitPrice": 217,
+   "discountPct": 0,
+   "packageCount": 40000,
+   "packageWeight": {
+    "value": 25.2,
+    "unit": "KG",
+    "net": 25,
+    "basis": "simulated manufacturer declaration —to be verified against packing list"
+   },
+   "grossWeightBasis": "package count 脳 simulated gross weight per bag",
+   "amountState": "confirmed",
+   "amountConfirmedValue": 217000,
+   "moisturePct": 0,
+   "dangerousGoods": {
+    "status": "NOT_REGULATED",
+    "basis": "Supplier SDS: not classified as dangerous goods for transport",
+    "ghsSummary": "GHS: Warning — H319 Causes serious eye irritation"
+   }
+  }
+ ],
+ "amountState": "confirmed",
+ "amountConfirmedValue": 217000,
+ "charges": [
+  {
+   "name": "Ocean Freight (Tanjung Priok, Jakarta)",
+   "amount": "",
+   "basis": "Reference",
+   "addToTotal": false,
+   "note": "SIMULATED INDICATIVE - 40,000 bags x 25.2 kg = 1,008 MT gross; a 20'FCL carries approx. 15-17 MT of bagged soda ash, so approx. 60-67 x 20'FCL or approx. 19-20 x 40'HQ. Freight must be quoted by the forwarder and confirmed before the CIF unit price can be validated."
+  },
+  {
+   "name": "Marine Cargo Insurance (ICC(A), 110% of CIF value)",
+   "amount": "",
+   "basis": "Reference",
+   "addToTotal": false,
+   "note": "SIMULATED INDICATIVE —typical cargo-commodity premium range only. Confirm with the insurer."
+  }
+ ],
+ "packing": {
+  "summary": "40,000 bags x 25 kg net in laminated woven PP bags with PE inner liner, palletised and containerised",
+  "terms": "New standard export packing; outer bags marked with product name, net weight, batch No., 'Made in China' and the seller's mark",
+  "bagNetKg": 25,
+  "shippingUnits": "60-67 x 20'FCL or 19-20 x 40'HQ (indicative, subject to forwarder stowage)"
+ },
+ "totalPackageCount": 40000,
+ "totalGrossWeight": "1,008,000 kg (1,008.00 MT)",
+ "totalVolume": "",
+ "freight": {
+  "estimatedPol": "Shekou / Nanshan, Shenzhen, China (to be confirmed with forwarder)",
+  "estimatedPod": "Tanjung Priok, Jakarta, Indonesia",
+  "volumeCheck": null,
+  "quotedVolume": null
+ },
+ "delivery": {
+  "leadTime": "Approx. 30-40 calendar days after receipt of the confirmed purchase order and of the advance payment, subject to vessel schedule",
+  "basis": "TIMING FROM RECEIPT OF CONFIRMED PURCHASE ORDER —not from document date",
+  "readyDateMode": "relative",
+  "daysAfterReceipt": 30,
+  "partialShipment": "Not allowed",
+  "transhipment": "Allowed"
+ },
+ "payment": {
+  "code": "PREPAY",
+  "terms": "100% T/T in advance prior to shipment; only actual inward bank charges are for the beneficiary account.",
+  "amountPct": 100,
+  "documentaryPayment": "PREPAY",
+  "beneficiary": "TO BE CONFIRMED —bank details intentionally omitted",
+  "beneficiaryNote": "[BANK DETAILS TO BE CONFIRMED BY SELLER - A/C No. / SWIFT INTENTIONALLY NOT GENERATED]"
+ },
+ "validity": {
+  "type": "date",
+  "validUntil": "2026-11-18",
+  "days": null
+ },
+ "documents": [
+  {
+   "name": "Bill of Lading (3 originals + 3 copies, consignee as per payment terms)"
+  },
+  {
+   "name": "Commercial Invoice (1 original + 5 copies)"
+  },
+  {
+   "name": "Packing List (1 original + 3 copies)"
+  },
+  {
+   "name": "Certificate of Origin (Form E, if the buyer requires China-ASEAN preferential treatment)"
+  },
+  {
+   "name": "Certificate of Analysis (per shipment)"
+  },
+  {
+   "name": "Manufacturer's SDS (current revision)"
+  },
+  {
+   "name": "Insurance Policy / Certificate (CIF)"
+  }
+ ],
+ "bank": {
+  "display": false,
+  "sanitized": true,
+  "detailsConfirmed": false,
+  "bankName": "",
+  "accountName": "",
+  "accountNumber": "",
+  "swift": "",
+  "note": "[BANK DETAILS TO BE CONFIRMED BY SELLER - A/C No. / SWIFT INTENTIONALLY NOT GENERATED]"
+ },
+ "view": {
+  "logo": true,
+  "signature": true,
+  "watermark": true,
+  "accentColor": "#1B3A5B"
+ },
+ "preparation": {
+  "issuedBy": "export-quotation-pi skill v1.0.0",
+  "notice": "SIMULATED DEMO DATA —NOT FOR TRADE USE. All prices must be confirmed by the seller before any document is issued as formal."
+ }
+}

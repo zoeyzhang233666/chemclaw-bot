@@ -1,0 +1,600 @@
+{
+ "meta": {
+  "product": "甲醇",
+  "futures_contract": "MA2701（2027年1月）；10月16日之前主力为 MA2611",
+  "question": "甲醇港口库存下降，为什么甲醇价格仍然可能下跌？",
+  "data_cutoff": "2026-10-19（期货日线）/ 2026-10-20（部分现货快讯）",
+  "note": "本文件是 check_formulas.js 的最小示例数据集，字段与 SKILL 的 data.json 一致；正式项目请用完整 data.json。"
+ },
+ "sources": {
+  "S1": {
+   "title": "【库存】10月14日甲醇港口库存录得36.72万吨（曲合网，原始数据源：隆众资讯）",
+   "url": "https://www.quheqihuo.com/news/202610144496175.html",
+   "date": "2026-10-14"
+  },
+  "S2": {
+   "title": "甲醇港口库存10月14日36.72万吨：华东去库3.16万吨、华南累库9.37万吨（金十期货转隆众）",
+   "url": "https://caifuhao.eastmoney.com/news/20261015113013085646790",
+   "date": "2026-10-15"
+  },
+  "S3": {
+   "title": "中国甲醇样本到港量周数据分析（20261009-20261014，隆众资讯）",
+   "url": "https://nenghua.mysteel.com/a/26101417/7F1D90E9FC389FAD.html",
+   "date": "2026-10-14"
+  },
+  "S4": {
+   "title": "【期股联动】甲醇主力盘中涨超6% 霍尔木兹海峡封锁叠加港口库存骤降（10月8日库存30.51万吨）",
+   "url": "https://news.10jqka.com.cn/20261009/c680502860.shtml",
+   "date": "2026-10-09"
+  },
+  "S5": {
+   "title": "甲醇市场午间评述（20261012），隆众资讯",
+   "url": "https://nenghua.mysteel.com/a/26101212/21E0CE2EF1E7E2C1.html",
+   "date": "2026-10-12"
+  },
+  "S6": {
+   "title": "甲醇市场午间评述（20261016），隆众资讯（太仓纸货基差走弱）",
+   "url": "https://www.mysteel.com/hot/1596718.html",
+   "date": "2026-10-16"
+  },
+  "S7": {
+   "title": "甲醇周评：本周国内甲醇市场涨跌互现（20261009-20261015），隆众资讯",
+   "url": "https://nenghua.mysteel.com/a/26101516/76D39EFE84DF34F1.html",
+   "date": "2026-10-15"
+  },
+  "S8": {
+   "title": "隆众聚焦：下游负反馈影响下 周内甲醇价格快速冷静（2026-10-16）",
+   "url": "https://nenghua.mysteel.com/a/26101616/F4B5B0ED719820FF.html",
+   "date": "2026-10-16"
+  },
+  "S9": {
+   "title": "隆众聚焦：烯烃负反馈落地 11月非伊甲醇供应回升或助力甲醇回调空间（2026-10-10）",
+   "url": "https://nenghua.mysteel.com/a/26101018/50A20C317451E09A.html",
+   "date": "2026-10-10"
+  },
+  "S10": {
+   "title": "甲醇早间提示（20261016）：太仓 10/14 4025 → 10/15 3983 元/吨",
+   "url": "https://nenghua.mysteel.com/a/26101608/1F97C66214371B95.html",
+   "date": "2026-10-16"
+  },
+  "S11": {
+   "title": "甲醇早间提示（20261014）：太仓 10/12 4075 → 10/13 3845 元/吨",
+   "url": "https://nenghua.mysteel.com/a/26101411/E966DD36BC392621.html",
+   "date": "2026-10-14"
+  },
+  "S12": {
+   "title": "太仓甲醇价格表：日内现货成交区间 3730-3960 / 3950-4100 / 3885-4080 / 3890-4030 元/吨出库现汇",
+   "url": "https://www.mysteel.com/hot/1596718.html",
+   "date": "2026-10-19"
+  },
+  "S13": {
+   "title": "2026年甲醇期货：MA2701 日盘收盘 3235 / 3262 / 3170 / 3192 元/吨（隆众资讯转引）",
+   "url": "https://www.mysteel.com/hot/1621911.html",
+   "date": "2026-10-19"
+  },
+  "S14": {
+   "title": "新浪财经 郑商所甲醇合约日线行情（MA0 / MA2701 / MA2611 / MA2609 / MA2605 / MA2601）",
+   "url": "https://finance.sina.com.cn/futures/quotes/MA0.shtml",
+   "date": "2026-10-19"
+  },
+  "S15": {
+   "title": "10月19日中国主港甲醇远期现货价格：CFR中国 444 美元/吨（隆众资讯）",
+   "url": "https://nenghua.mysteel.com/a/26101917/746DCCBEB3D25B28.html",
+   "date": "2026-10-19"
+  },
+  "S16": {
+   "title": "甲醇日评：现货指数回落 交投先强后弱（20261016），隆众资讯",
+   "url": "https://nenghua.mysteel.com/a/26101617/3ABCF1795C2B967B.html",
+   "date": "2026-10-16"
+  },
+  "S17": {
+   "title": "热门资讯：烯烃负反馈正式落地 甲醇开盘跳水（2026-10-12）",
+   "url": "https://finance.eastmoney.com/a/202610123892446898.html",
+   "date": "2026-10-12"
+  },
+  "S18": {
+   "title": "能化日报：甲醇港口库存持续去库，但MTO下游逐步负反馈（中财期货，2026-10-15）",
+   "url": "https://finance.eastmoney.com/a/202610153896108971.html",
+   "date": "2026-10-15"
+  },
+  "S19": {
+   "title": "甲醇：伊朗甲醇供应仍处低位 港口基差再度回升；主力MA611→MA701换月（曲合网，2026-10-19）",
+   "url": "https://www.quheqihuo.com/jiachun/",
+   "date": "2026-10-19"
+  },
+  "S20": {
+   "title": "甲醇期货跌超2%，换月后连跌两日（曲合网，2026-10-20）",
+   "url": "https://www.quheqihuo.com/jiachun/",
+   "date": "2026-10-20"
+  },
+  "S21": {
+   "title": "【收评】甲醇日内下跌1.24% 机构称港口库存或逐步企稳回升（7月21日；7月20日太仓2780元/吨）",
+   "url": "https://news.10jqka.com.cn/20260721/c678318722.shtml",
+   "date": "2026-07-21"
+  },
+  "S22": {
+   "title": "华泰期货：甲醇港口库存继续下降至历史低位（2026-07-16）：太仓2690元/吨、太仓基差42元/吨、港口总库存40.15万吨、MTO开工81.78%",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-07-16/doc-inihycsn1248836.shtml",
+   "date": "2026-07-16"
+  },
+  "S23": {
+   "title": "中国甲醇港口库存总量60.00万吨 较上期减少9.26万吨（2026-08-12，隆众资讯）",
+   "url": "https://goodsfu.10jqka.com.cn/20260812/c678891712.shtml",
+   "date": "2026-08-12"
+  },
+  "S24": {
+   "title": "中国甲醇港口库存总量41.20万吨 较上周减少1.19万吨（2026-09-23；浙江两套烯烃装置已全部停车）",
+   "url": "https://news.10jqka.com.cn/20260923/c680208424.shtml",
+   "date": "2026-09-23"
+  },
+  "S25": {
+   "title": "截至2025年10月15日 中国甲醇港口库存149.14万吨 较上期减少5.18万吨（隆众资讯）",
+   "url": "https://goodsfu.10jqka.com.cn/20251015/c671747946.shtml",
+   "date": "2025-10-15"
+  },
+  "S26": {
+   "title": "装置检修损失量：中国甲醇装置检修数据统计（20261019），隆众资讯",
+   "url": "https://nenghua.mysteel.com/a/26101916/6D7CFE60FA75835A.html",
+   "date": "2026-10-19"
+  },
+  "S27": {
+   "title": "甲醇日评：先弱后强 竞拍分化 MTO需求压制下维持窄幅震荡（20261019），隆众资讯",
+   "url": "https://nenghua.mysteel.com/a/26101917/1765F07239FA035B.html",
+   "date": "2026-10-19"
+  },
+  "S28": {
+   "title": "中国甲醇港口库存总量66.70万吨，较上周增加6.70万吨（2026-08-19，隆众资讯）",
+   "url": "https://news.10jqka.com.cn/20260819/c679081417.shtml",
+   "date": "2026-08-19"
+  },
+  "S29": {
+   "title": "甲醇市场午间评述（20261015）：期货震荡走弱，港口近月基差偏强（隆众资讯）",
+   "url": "https://nenghua.mysteel.com/a/26101512/BBD9142D8BCD3F0F.html",
+   "date": "2026-10-15"
+  },
+  "S31": {
+   "title": "中国甲醇样本到港量周数据分析（20260924-20260930）：周期内到港10.56万吨、外轮7.5万吨、内贸船3.06万吨（隆众资讯）",
+   "url": "https://nenghua.mysteel.com/a/26093016/EDA6E9BDB3DC3D32.html",
+   "date": "2026-09-30"
+  },
+  "S32": {
+   "title": "证监会批准郑商所开展甲醇期货交易（2011-10-12，20吨/手）",
+   "url": "https://www.gov.cn/gzdt/2011-10/12/content_1967043.htm",
+   "date": "2011-10-12"
+  }
+ },
+ "inventory": {
+  "unit": "万吨",
+  "series": [
+   {
+    "date": "2026-07-08",
+    "value": 44.67,
+    "change": -4.65
+   },
+   {
+    "date": "2026-07-15",
+    "value": 40.15,
+    "change": -4.52
+   },
+   {
+    "date": "2026-07-22",
+    "value": 54.87,
+    "change": 14.72
+   },
+   {
+    "date": "2026-07-29",
+    "value": 68.68,
+    "change": 13.81
+   },
+   {
+    "date": "2026-08-05",
+    "value": 69.26,
+    "change": 0.58
+   },
+   {
+    "date": "2026-08-12",
+    "value": 60.0,
+    "change": -9.26
+   },
+   {
+    "date": "2026-08-19",
+    "value": 66.7,
+    "change": 6.7
+   },
+   {
+    "date": "2026-08-26",
+    "value": 68.56,
+    "change": 1.86
+   },
+   {
+    "date": "2026-09-02",
+    "value": 64.15,
+    "change": -4.41
+   },
+   {
+    "date": "2026-09-09",
+    "value": 55.15,
+    "change": -9.0
+   },
+   {
+    "date": "2026-09-16",
+    "value": 42.39,
+    "change": -12.76
+   },
+   {
+    "date": "2026-09-23",
+    "value": 41.2,
+    "change": -1.19
+   },
+   {
+    "date": "2026-09-30",
+    "value": 39.35,
+    "change": -1.85
+   },
+   {
+    "date": "2026-10-08",
+    "value": 30.51,
+    "change": -8.84
+   },
+   {
+    "date": "2026-10-14",
+    "value": 36.72,
+    "change": 6.21
+   }
+  ],
+  "latest": 36.72
+ },
+ "basis": {
+  "rows": [
+   {
+    "date": "2026-10-12",
+    "spot": 4075,
+    "fut_close": 3229.0,
+    "fut_settle": 3257.0,
+    "basis_close": 846.0,
+    "basis_settle": 818.0,
+    "basis_pct": 26.2
+   },
+   {
+    "date": "2026-10-13",
+    "spot": 3845,
+    "fut_close": 3235.0,
+    "fut_settle": 3233.0,
+    "basis_close": 610.0,
+    "basis_settle": 612.0,
+    "basis_pct": 18.86
+   },
+   {
+    "date": "2026-10-14",
+    "spot": 4025,
+    "fut_close": 3262.0,
+    "fut_settle": 3275.0,
+    "basis_close": 763.0,
+    "basis_settle": 750.0,
+    "basis_pct": 23.39
+   },
+   {
+    "date": "2026-10-15",
+    "spot": 3983,
+    "fut_close": 3170.0,
+    "fut_settle": 3231.0,
+    "basis_close": 813.0,
+    "basis_settle": 752.0,
+    "basis_pct": 25.65
+   },
+   {
+    "date": "2026-10-16",
+    "spot": 3940,
+    "fut_close": 3192.0,
+    "fut_settle": 3187.0,
+    "basis_close": 748.0,
+    "basis_settle": 753.0,
+    "basis_pct": 23.43
+   },
+   {
+    "date": "2026-10-19",
+    "spot": null,
+    "fut_close": 3143.0,
+    "fut_settle": 3179.0,
+    "basis_close": null,
+    "basis_settle": null,
+    "basis_pct": null
+   }
+  ]
+ },
+ "month_spread": {
+  "defn": "MC = F(远月) − F(近月)。MC>0 = contango（近月贴水/期货升水）；MC<0 = backwardation（近月升水/期货贴水）。注意与'近月−远月'定义相反。",
+  "points": [
+   {
+    "date": "2026-09-30",
+    "near_close": 3384.0,
+    "far_close": 2972.0,
+    "mc": -412.0
+   },
+   {
+    "date": "2026-10-08",
+    "near_close": 3625.0,
+    "far_close": 3200.0,
+    "mc": -425.0
+   },
+   {
+    "date": "2026-10-09",
+    "near_close": 3835.0,
+    "far_close": 3338.0,
+    "mc": -497.0
+   },
+   {
+    "date": "2026-10-12",
+    "near_close": 3536.0,
+    "far_close": 3229.0,
+    "mc": -307.0
+   },
+   {
+    "date": "2026-10-13",
+    "near_close": 3453.0,
+    "far_close": 3235.0,
+    "mc": -218.0
+   },
+   {
+    "date": "2026-10-14",
+    "near_close": 3473.0,
+    "far_close": 3262.0,
+    "mc": -211.0
+   },
+   {
+    "date": "2026-10-15",
+    "near_close": 3354.0,
+    "far_close": 3170.0,
+    "mc": -184.0
+   },
+   {
+    "date": "2026-10-16",
+    "near_close": 3366.0,
+    "far_close": 3192.0,
+    "mc": -174.0
+   },
+   {
+    "date": "2026-10-19",
+    "near_close": 3335.0,
+    "far_close": 3143.0,
+    "mc": -192.0
+   }
+  ]
+ },
+ "longshort": {
+  "start_date": "2026-10-09",
+  "start_close": 3338.0,
+  "start_close_other": 3835,
+  "end_date": "2026-10-19",
+  "end_close": 3143.0,
+  "change_pct": -5.84
+ },
+ "import_parity": {
+  "cif_rmb": 3132.86,
+  "delivered_ex_vat": 3257.86,
+  "delivered_incl_vat": 3681.39,
+  "cfr": 444,
+  "fx": 6.72,
+  "vs_taicang_mid": 258.61,
+  "vs_ma2701": -538.39
+ },
+ "import_cost": {
+  "freight_insurance_rmb_per_t": {
+   "v": 75,
+   "status": "estimation"
+  },
+  "port_fees_rmb_per_t": {
+   "v": 50,
+   "status": "convention"
+  },
+  "duty_pct": {
+   "v": 0.05,
+   "status": "verified"
+  },
+  "vat_pct": {
+   "v": 0.13,
+   "status": "verified"
+  }
+ },
+ "flow": {
+  "arrivals": 15.9,
+  "d_inv": 6.21,
+  "implied_withdrawal": 9.69
+ },
+ "checks": [
+  {
+   "id": "C1-1",
+   "desc": "10/14港口库存较上期变化",
+   "formula": "36.72-30.51",
+   "got": 6.21,
+   "expect": 6.21,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C1-2",
+   "desc": "10/14库存环比(%)",
+   "formula": "(36.72-30.51)/30.51*100",
+   "got": 20.354,
+   "expect": 20.3523,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C1-3",
+   "desc": "9月-10/8累计去库",
+   "formula": "64.15-30.51",
+   "got": 33.64,
+   "expect": 33.64,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C2-1",
+   "desc": "MA2701(10/09→10/19)涨跌幅(%)",
+   "formula": "(3143-3338)/3338*100",
+   "got": -5.8418,
+   "expect": -5.8424,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C2-2",
+   "desc": "换月口径对照：MA2611(10/09)→MA2701(10/19)(%)",
+   "formula": "(3143-3835)/3835*100",
+   "got": -18.0443,
+   "expect": -18.0443,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C2-3",
+   "desc": "MA2701结算价跌幅(%)",
+   "formula": "(3179-3321)/3321*100",
+   "got": -4.2758,
+   "expect": -4.2764,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C3-1",
+   "desc": "10/13太仓基差(现货-收盘)",
+   "formula": "3845-3235",
+   "got": 610,
+   "expect": 610,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C3-2",
+   "desc": "10/15太仓基差(现货-收盘)",
+   "formula": "3983-3170",
+   "got": 813,
+   "expect": 813,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C3-3",
+   "desc": "10/15基差较10/14变动",
+   "formula": "813-(4025-3262)",
+   "got": 50,
+   "expect": 50,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C3-4",
+   "desc": "10/16基差(区间中值-收盘)",
+   "formula": "3940-3192",
+   "got": 748,
+   "expect": 748,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C4-1",
+   "desc": "月差MC(10/09)=MA2701-MA2611",
+   "formula": "3338-3835",
+   "got": -497.0,
+   "expect": -497,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C4-2",
+   "desc": "月差MC(10/19)",
+   "formula": "3143-3335",
+   "got": -192.0,
+   "expect": -192,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C4-3",
+   "desc": "月差变化(10/09→10/19)",
+   "formula": "-192-(-497)",
+   "got": 305,
+   "expect": 305,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C5-1",
+   "desc": "CFR折CIF(人民币,含5%关税)",
+   "formula": "444*6.72*1.05",
+   "got": 3132.864,
+   "expect": 3132.864,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C5-2",
+   "desc": "到岸含税成本",
+   "formula": "(3132.864+75+50)*1.13",
+   "got": 3681.3863,
+   "expect": 3681.3863,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C6-1",
+   "desc": "表观提货量",
+   "formula": "15.90-6.21",
+   "got": 9.69,
+   "expect": 9.69,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C7-1",
+   "desc": "港口库存量级合理性(0<INV<300)",
+   "formula": "1 if 0<36.72<300 else 0",
+   "got": 1.0,
+   "expect": 1.0,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C7-2",
+   "desc": "基差率合理性(|813/3170|<100%)",
+   "formula": "813/3170*100",
+   "got": 25.6467,
+   "expect": 25.6467,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C8-1",
+   "desc": "同周期方向背离判定",
+   "formula": "sign(d_inv*d_px)=-1 ? 1 : 0",
+   "got": 1.0,
+   "expect": 1.0,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C9-1",
+   "desc": "月差符号一致性：MC<0 即 near>far",
+   "formula": "1 if (MC<0 and near>far) or (MC>=0 and near<=far) else 0",
+   "got": 1.0,
+   "expect": 1.0,
+   "tol": 0.011,
+   "status": "pass"
+  },
+  {
+   "id": "C9-2",
+   "desc": "基差符号一致性：(现货-期货)与符号方向一致",
+   "formula": "1 if basis_close>0 iff spot>fut_close else 0",
+   "got": 1.0,
+   "expect": 1.0,
+   "tol": 0.011,
+   "status": "pass"
+  }
+ ],
+ "verdict": {
+  "coexistence_found": {
+   "status": "NOT FOUND（同一周内'库存下降+价格下跌'未出现）"
+  }
+ }
+}

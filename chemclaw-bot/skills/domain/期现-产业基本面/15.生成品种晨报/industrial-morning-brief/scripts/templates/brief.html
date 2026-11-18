@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>__TITLE__ · __REPORT_DATE__</title>
+<style>
+:root{
+  --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b; --ink-4:#94a3b8;
+  --line:#e2e8f0; --line-2:#eef2f7; --bg:#f6f8fb; --card:#ffffff;
+  --up:#dc2626; --down:#059669; --flat:#94a3b8;
+  --a:#b91c1c; --a-bg:#fef2f2; --b:#1d4ed8; --b-bg:#eff6ff; --c:#64748b; --c-bg:#f1f5f9;
+  --accent:#0f766e; --accent-2:#115e59;
+  --shadow:0 1px 2px rgba(15,23,42,.04),0 4px 16px rgba(15,23,42,.06);
+  --shadow-lg:0 12px 40px rgba(15,23,42,.16);
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg); color:var(--ink); font-size:14px; line-height:1.6;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1280px;margin:0 auto;padding:0 20px 80px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.up{color:var(--up);font-weight:600}
+.down{color:var(--down);font-weight:600}
+.flat{color:var(--flat);font-weight:600}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+
+/* ---------- 顶部 ---------- */
+.hero{
+  background:linear-gradient(135deg,#0b1220 0%,#132b3a 46%,#0f3d3a 100%);
+  color:#e6edf3;padding:34px 0 26px;margin-bottom:22px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(45,212,191,.16),transparent 68%);
+}
+.hero .wrap{padding-bottom:0;position:relative;z-index:1}
+.kicker{font-size:12px;letter-spacing:2.6px;color:#5eead4;font-weight:700;text-transform:uppercase}
+h1{font-size:27px;line-height:1.32;margin:8px 0 12px;font-weight:750;letter-spacing:-.4px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:#a8bccb}
+.meta b{color:#e6edf3;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);padding:3px 10px;border-radius:999px;font-size:12px}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:#5eead4}
+
+/* ---------- 摘要卡 ---------- */
+.section-title{display:flex;align-items:center;gap:10px;margin:26px 0 14px;font-size:16px;font-weight:750}
+.section-title .bar{width:4px;height:17px;border-radius:2px;background:var(--accent)}
+.section-title small{font-weight:500;color:var(--ink-3);font-size:12.5px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 18px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(15,23,42,.11);border-color:#cbd5e1}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.card.p-methanol::before{background:#0e7490}
+.card.p-pp::before{background:#7c3aed}
+.card.p-pvc::before{background:#c2410c}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.card-head h3{font-size:16.5px;font-weight:750;letter-spacing:-.2px}
+.card-head .sub{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.badge.up-b{background:#fef2f2;color:#b91c1c}
+.badge.down-b{background:#ecfdf5;color:#047857}
+.badge.flat-b{background:#f1f5f9;color:#475569}
+.kv{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--line-2);font-size:13px}
+.kv:last-of-type{border-bottom:0}
+.kv .k{color:var(--ink-3);font-size:12.5px}
+.kv .v{font-weight:650}
+.card .note{font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.55;
+  border-top:1px solid var(--line-2);padding-top:9px}
+.card .jump{font-size:11.5px;color:var(--accent);font-weight:650;margin-top:9px;display:inline-block}
+
+/* ---------- 工具条 ---------- */
+.toolbar{
+  position:sticky;top:0;z-index:30;background:rgba(246,248,251,.93);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:18px;
+}
+.toolbar .wrap{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-bottom:0}
+.tgroup{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3)}
+.tgroup .lbl{font-weight:650;color:var(--ink-2)}
+.chip{
+  padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;
+  cursor:pointer;font-size:12.5px;color:var(--ink-2);transition:.15s;user-select:none;font-weight:550;
+}
+.chip:hover{border-color:#94a3b8}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
+.chip.on.t-a{background:var(--a);border-color:var(--a)}
+.chip.on.t-b{background:var(--b);border-color:var(--b)}
+.chip.on.t-c{background:var(--c);border-color:var(--c)}
+.count{margin-left:auto;font-size:12.5px;color:var(--ink-3)}
+.count b{color:var(--accent);font-weight:750}
+
+/* ---------- 面板 ---------- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:18px;box-shadow:var(--shadow);overflow:hidden}
+.panel-head{display:flex;align-items:center;gap:12px;padding:15px 20px;cursor:pointer;
+  border-bottom:1px solid transparent;transition:.15s}
+.panel-head:hover{background:#fafcfe}
+.panel.open .panel-head{border-bottom-color:var(--line-2)}
+.panel-head .pt{font-size:15.5px;font-weight:750;letter-spacing:-.2px}
+.panel-head .pd{font-size:12px;color:var(--ink-3)}
+.panel-head .arrow-ico{margin-left:auto;color:var(--ink-4);transition:transform .2s;font-size:12px}
+.panel.open .arrow-ico{transform:rotate(90deg)}
+.panel-body{display:none;padding:4px 20px 18px}
+.panel.open .panel-body{display:block}
+
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{
+  text-align:left;font-size:11.5px;color:var(--ink-3);font-weight:650;letter-spacing:.3px;
+  padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:#fbfdff;
+}
+tbody td{padding:10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+tbody tr{transition:background .12s}
+tbody tr.clickable{cursor:pointer}
+tbody tr.clickable:hover{background:#f8fbfd}
+tbody tr:last-child td{border-bottom:0}
+.tname{font-weight:650;color:var(--ink)}
+.tspec{font-size:11px;color:var(--ink-4);display:block;margin-top:1px;font-weight:400}
+.tier-pill{font-size:10.5px;font-weight:750;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.tier-a{background:var(--a-bg);color:var(--a)}
+.tier-b{background:var(--b-bg);color:var(--b)}
+.tier-c{background:var(--c-bg);color:var(--c)}
+.stale{font-size:10px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;
+  padding:1px 5px;border-radius:4px;margin-left:5px;white-space:nowrap}
+.newtag{font-size:10px;color:#0f766e;background:#f0fdfa;border:1px solid #99f6e4;
+  padding:1px 5px;border-radius:4px;margin-left:5px;font-weight:700}
+.dash{color:var(--ink-4)}
+.hint{font-size:11.5px;color:var(--ink-4);padding:12px 2px 2px}
+.empty{padding:26px;text-align:center;color:var(--ink-4);font-size:13px}
+
+/* ---------- 图表 ---------- */
+.chart{width:100%;height:300px;margin-top:6px}
+.chart-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+.chart-box{border:1px solid var(--line-2);border-radius:10px;padding:8px 6px 2px;background:#fff}
+.chart-box .ct{font-size:12.5px;font-weight:650;color:var(--ink-2);padding:4px 10px}
+.chart-box .cs{font-size:11px;color:var(--ink-4);padding:0 10px 4px}
+
+/* ---------- 事件卡 ---------- */
+.evt{border:1px solid var(--line-2);border-radius:11px;padding:13px 15px;margin-bottom:10px;
+  cursor:pointer;transition:.15s;background:#fff}
+.evt:hover{border-color:#cbd5e1;box-shadow:0 4px 14px rgba(15,23,42,.06)}
+.evt-h{display:flex;gap:9px;align-items:flex-start;margin-bottom:5px}
+.evt-h .et{font-size:13.5px;font-weight:700;line-height:1.45;flex:1}
+.evt-m{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11.5px;color:var(--ink-3)}
+.evt-m .tag{background:#f1f5f9;padding:1px 7px;border-radius:4px;color:var(--ink-2);font-weight:600}
+.evt-path{font-size:12px;color:var(--ink-2);margin-top:7px;padding-top:7px;
+  border-top:1px dashed var(--line-2);line-height:1.55}
+.evt-path b{color:var(--accent);font-weight:700}
+
+/* ---------- 抽屉 ---------- */
+.mask{position:fixed;inset:0;background:rgba(15,23,42,.42);opacity:0;pointer-events:none;
+  transition:opacity .22s;z-index:60;backdrop-filter:blur(2px)}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(560px,94vw);background:#fff;z-index:70;
+  transform:translateX(102%);transition:transform .26s cubic-bezier(.4,0,.2,1);
+  box-shadow:var(--shadow-lg);display:flex;flex-direction:column;
+}
+.drawer.on{transform:translateX(0)}
+.dr-head{padding:20px 22px 14px;border-bottom:1px solid var(--line);position:relative}
+.dr-head .dt{font-size:17px;font-weight:750;line-height:1.4;padding-right:34px}
+.dr-head .ds{font-size:12px;color:var(--ink-3);margin-top:6px}
+.dr-close{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:8px;
+  border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink-3);font-size:15px;line-height:1}
+.dr-close:hover{background:#f1f5f9}
+.dr-body{padding:18px 22px 34px;overflow-y:auto;flex:1}
+.block{margin-bottom:20px}
+.block .bh{font-size:11.5px;font-weight:750;color:var(--ink-3);letter-spacing:1.1px;
+  margin-bottom:8px;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.block .bh::before{content:"";width:3px;height:11px;border-radius:2px;background:var(--accent)}
+.block p{font-size:13px;line-height:1.72;color:var(--ink-2)}
+.datatbl{width:100%;font-size:12.5px;border-collapse:collapse}
+.datatbl td{padding:6px 0;border-bottom:1px dashed var(--line-2);vertical-align:top}
+.datatbl td:first-child{color:var(--ink-3);width:88px;padding-right:10px;white-space:nowrap}
+.datatbl td:last-child{font-weight:600;word-break:break-word}
+.hist{list-style:none;position:relative;padding-left:16px}
+.hist::before{content:"";position:absolute;left:4px;top:5px;bottom:5px;width:1px;background:var(--line)}
+.hist li{position:relative;padding:4px 0 4px 6px;font-size:12.5px;color:var(--ink-2);display:flex;gap:10px}
+.hist li::before{content:"";position:absolute;left:-15px;top:11px;width:7px;height:7px;border-radius:50%;
+  background:#fff;border:2px solid var(--accent)}
+.hist li .hd{color:var(--ink-3);min-width:78px;font-variant-numeric:tabular-nums}
+.hist li .hv{font-weight:700}
+.verify{background:#f0fdfa;border:1px solid #99f6e4;border-radius:9px;padding:11px 13px;font-size:12.5px;
+  color:#0f766e;line-height:1.65}
+.verify b{color:#115e59}
+.src{font-size:12px;color:var(--ink-3);line-height:1.6;word-break:break-all}
+.src a{color:var(--accent)}
+
+/* ---------- 其它 ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mini{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.mini h4{font-size:13.5px;font-weight:750;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.mini h4 .n{background:var(--c-bg);color:var(--ink-2);font-size:11px;padding:1px 7px;border-radius:5px}
+.mini ul{list-style:none;font-size:12.5px;color:var(--ink-2)}
+.mini li{padding:7px 0;border-bottom:1px dashed var(--line-2);line-height:1.6}
+.mini li:last-child{border-bottom:0}
+.mini li .why{color:var(--ink-3);font-size:11.5px}
+.foot{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-4);line-height:1.8}
+.foot b{color:var(--ink-3)}
+.rule{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 15px;
+  font-size:12.5px;color:#92400e;line-height:1.7;margin-bottom:18px}
+.rule b{color:#78350f}
+.gap-tbl{width:100%;font-size:12.5px;border-collapse:collapse}
+.gap-tbl th{text-align:left;font-size:11.5px;color:var(--ink-3);padding:8px;border-bottom:1px solid var(--line)}
+.gap-tbl td{padding:8px;border-bottom:1px dashed var(--line-2);vertical-align:top;font-size:12.5px}
+.gap-tbl td:first-child{font-weight:650;width:26%}
+.gap-tbl td:nth-child(2){color:var(--ink-2);width:47%}
+.gap-tbl td:nth-child(3){color:var(--ink-3);width:27%;font-size:11.5px}
+.hidden{display:none !important}
+@media(max-width:1000px){
+  .cards{grid-template-columns:1fr}
+  .chart-grid{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  h1{font-size:21px}
+  .wrap{padding:0 14px 60px}
+}
+@media(max-width:640px){
+  body{font-size:13.5px}
+  .hero{padding:24px 0 20px}
+  table{font-size:12px}
+  thead th,tbody td{padding:8px 6px}
+  .drawer{width:100vw}
+  .toolbar{position:static}
+}
+@media print{
+  .toolbar,.drawer,.mask{display:none !important}
+  .panel-body{display:block !important}
+  body{background:#fff}
+  .panel,.card,.mini{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">INDUSTRIAL MORNING BRIEF · 期现与产业基本面</div>
+    <h1>__TITLE__</h1>
+    <div class="meta" id="heroMeta"></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="rule" id="ruleBox"></div>
+
+  <div class="section-title"><span class="bar"></span>各品种重要变化摘要
+    <small id="sumNote"></small></div>
+  <div class="cards" id="cards"></div>
+
+  <div class="toolbar">
+    <div class="wrap">
+      <div class="tgroup"><span class="lbl">品种</span>
+        <span class="chip on" data-filter="product" data-value="all">全部</span>
+      </div>
+      <div class="tgroup"><span class="lbl">重要性</span>
+        <span class="chip on" data-filter="tier" data-value="all">全部</span>
+        <span class="chip t-a" data-filter="tier" data-value="A">A 必看</span>
+        <span class="chip t-b" data-filter="tier" data-value="B">B 记录</span>
+        <span class="chip t-c" data-filter="tier" data-value="C">C 噪声</span>
+      </div>
+      <div class="tgroup"><span class="lbl">视图</span>
+        <span class="chip on" data-filter="view" data-value="change">只看有变化</span>
+        <span class="chip" data-filter="view" data-value="all">含无变化</span>
+      </div>
+      <div class="count"><b id="shownN">0</b> 条符合条件</div>
+    </div>
+  </div>
+
+  <div id="panels"></div>
+
+  <div class="section-title"><span class="bar"></span>被排除的资讯
+    <small>为什么它们没有进入晨报</small></div>
+  <div class="mini"><h4>筛选记录 <span class="n" id="exN"></span></h4><ul id="exList"></ul></div>
+
+  <div class="section-title"><span class="bar"></span>数据缺口
+    <small>没有拿到就写缺口，不用估算值填充</small></div>
+  <div class="mini"><table class="gap-tbl" id="gapTbl"></table></div>
+
+  <div class="section-title"><span class="bar"></span>数据来源与口径
+    <small>每个数字都能回到这里</small></div>
+  <div class="mini"><table class="gap-tbl" id="srcTbl"></table></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<div class="mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <div class="dr-head">
+    <button class="dr-close" id="drClose">✕</button>
+    <div class="dt" id="drTitle"></div>
+    <div class="ds" id="drSub"></div>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</div>
+
+<script>/*__ECHARTS__*/</script>
+<script>
+const D = __PAYLOAD__;
+const BUILT = "__BUILD_TIME__";
+
+/* ---------------- 工具 ---------------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const nf = (v,d=2) => v===null||v===undefined ? '—' : Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const nf0 = v => v===null||v===undefined ? '—' : Math.round(v).toLocaleString('zh-CN');
+const sg = (v,d=2) => v===null||v===undefined ? '—' : (v>0?'+':'') + nf(v,d);
+const cls = v => v===null||v===undefined ? 'flat' : (v>0?'up':(v<0?'down':'flat'));
+const arr = v => v===null||v===undefined ? '—' : (v>0?'▲':(v<0?'▼':'■'));
+const esc = s => String(s===null||s===undefined?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const prodCls = p => p==='甲醇'?'p-methanol':(p==='PP'?'p-pp':(p==='PVC'?'p-pvc':''));
+const TIER = {A:'A 必看',B:'B 记录',C:'C 噪声'};
+
+const PRODUCTS = ['甲醇','PP','PVC'];
+const MODULES = [
+  ['price','价格与价差','最新现货/期货价格、日内涨跌幅、区域价差'],
+  ['basis','基差与月差','期现结构与合约间结构（含重要合约）'],
+  ['plant','装置与产能','停车、检修、复产、投产与开工负荷'],
+  ['inventory','库存与需求','库存、产量、下游需求数据'],
+  ['event','政策与事件','有明确产业影响路径的事件']
+];
+
+/* ---------------- 状态 ---------------- */
+let F = {product:'all', tier:'all', view:'change'};
+
+/* ---------------- 头部 ---------------- */
+(function hero(){
+  const r = D.report, b = D.baseline, s = D.summary;
+  $('#heroMeta').innerHTML = [
+    `<span class="pill"><span class="dot"></span>报告日 <b>${esc(r.report_date)}</b></span>`,
+    `<span class="pill">对比基线 <b>${esc(b.date)}</b></span>`,
+    `<span>截止：${esc(r.cutoff||'')}</span>`,
+    `<span>品种：<b>${esc((r.products||[]).join(' / '))}</b></span>`,
+    `<span>指标 <b>${s.indicators_total}</b> 条 · 事件 <b>${s.events_total}</b> 条</span>`
+  ].join('');
+  $('#ruleBox').innerHTML =
+    `<b>本期怎么读：</b>${esc(r.session_note||'')}<br>`+
+    `<b>基线口径：</b>本报告所有「变动」均相对 ${esc(b.date)}（${esc(b.prev_label||b.label)}）同一口径计算；`+
+    `数据日期早于报告日的指标标 <span class="stale">未更新</span>，不会被称为「当天变化」。`;
+  $('#sumNote').textContent = `A 级 ${s.tier_A} 条必须点名 · B 级 ${s.tier_B} 条 · C 级 ${s.tier_C} 条已降级`;
+})();
+
+/* ---------------- 摘要卡 ---------------- */
+(function cards(){
+  const host = $('#cards');
+  host.innerHTML = PRODUCTS.map(p=>{
+    const inds = D.indicators.filter(i=>i.product===p);
+    const fut = D.futures[p];
+    // 摘要卡与指标表必须同口径：一律用「报告日收盘 vs 上一期基线」，
+    // 盘中价（10-20 当天）只放在卡脚做「盘中参考」，不与收盘混算涨跌。
+    const futInd = inds.find(i=>i.module==='price' && /主力/.test(i.name));
+    const dayPct = futInd ? futInd.pct : null;
+    const trend = dayPct===null?'flat':(dayPct>0?'up':(dayPct<0?'down':'flat'));
+    const trendTxt = dayPct===null?'—':(dayPct>0?'偏强':(dayPct<0?'偏弱':'持平'));
+    const evs = D.events.filter(e=>(e.products||[]).includes(p) && e.tier!=='C');
+    const aInd = inds.filter(i=>i.tier==='A').length;
+    const aEvt = evs.filter(e=>e.tier==='A').length;
+    const rows = [];
+    if (futInd) rows.push(['主力收盘',
+      `<span class="v num">${nf0(futInd.current)}</span>
+       <span class="num ${cls(futInd.pct)}">${arr(futInd.pct)} ${sg(futInd.pct)}%</span>`]);
+    inds.filter(i=>i.module==='basis').forEach(i=>{
+      rows.push(['主力基差',
+        `<span class="v num">${sg(i.current)}</span>
+         <span class="num ${cls(i.abs)}">${arr(i.abs)} ${sg(i.abs)}</span>`]);
+    });
+    inds.filter(i=>i.module==='spread' && /1-5/.test(i.name)).forEach(i=>{
+      rows.push(['1-5 价差',
+        `<span class="v num">${nf0(i.current)}</span>
+         <span class="num ${cls(i.abs)}">${arr(i.abs)} ${sg(i.abs)}</span>`]);
+    });
+    const topA = inds.filter(i=>i.tier==='A')
+        .sort((x,y)=>Math.abs(y.pct||0)-Math.abs(x.pct||0))
+        .slice(0,2)
+        .map(i=>`${i.name} ${sg(i.abs)}${i.unit==='元/吨'?'':(i.unit||'')}`);
+    const line = topA.length ? '关键变化：'+topA.join('；')
+      : (evs.filter(e=>e.tier==='A')[0]||{}).title || '本期无 A 级变化';
+    const intraday = fut && fut.date > (futInd ? futInd.current_date : '')
+      ? `<br>盘中参考（${esc(fut.date)}）：${nf0(fut.close)} ${sg(fut.pct_day)}%` : '';
+    return `<div class="card ${prodCls(p)}" data-goto="${esc(p)}">
+      <div class="card-head">
+        <div><h3>${esc(p)}</h3>
+          <div class="sub">${futInd?esc(futInd.spec)+' · '+esc(futInd.current_date):''}</div></div>
+        <span class="badge ${trend}-b">${trendTxt} ${dayPct!==null?sg(dayPct)+'%':''}</span>
+      </div>
+      ${rows.map(r=>`<div class="kv"><span class="k">${r[0]}</span><span class="num">${r[1]}</span></div>`).join('')}
+      <div class="note">${esc(line)}
+        <br><span style="color:var(--a);font-weight:700">A 级 ${aInd+aEvt}</span>
+        <span style="color:var(--ink-3)">（指标 ${aInd} · 事件 ${aEvt}）</span>
+        · 非噪声事件 ${evs.length} 条${intraday}</div>
+      <span class="jump">展开该品种全部模块 →</span>
+    </div>`;
+  }).join('');
+})();
+
+/* ---------------- 渲染面板 ---------------- */
+function matchTier(t){ return F.tier==='all' || F.tier===t; }
+function matchProd(p){ return F.product==='all' || F.product===p; }
+function hasChange(i){
+  if (i.is_new) return true;
+  return i.abs!==null && Math.abs(i.abs)>1e-9;
+}
+
+function priceTable(inds){
+  const show = inds.filter(i=>F.view==='all' || hasChange(i) || i.tier==='A');
+  if(!show.length) return '<div class="empty">本期该模块无符合筛选条件的变化</div>';
+  return `<table><thead><tr>
+    <th style="width:26%">指标</th><th>上期 (${esc(D.baseline.date)})</th><th>本期</th>
+    <th>变动</th><th>幅度</th><th>数据日</th><th>级别</th></tr></thead><tbody>`+
+    show.map(i=>`<tr class="clickable" data-ind="${esc(i.id)}">
+      <td><span class="tname">${esc(i.name)}</span><span class="tspec">${esc(i.spec)}${i.region?' · '+esc(i.region):''}${i.unit?' · '+esc(i.unit):''}${i.tax?' · '+esc(i.tax):''}</span></td>
+      <td class="num">${i.base===null?'—':nf(i.base,i.unit==='元/吨'&&Math.abs(i.base)>=100?0:2)}</td>
+      <td class="num" style="font-weight:700">${i.current===null?'—':nf(i.current,i.unit==='元/吨'&&Math.abs(i.current)>=100?0:2)}
+        ${i.is_new?'<span class="newtag">新增</span>':''}${(i.stale_days||0)>1?'<span class="stale">未更新</span>':''}</td>
+      <td class="num ${cls(i.abs)}">${arr(i.abs)} ${sg(i.abs,i.unit==='元/吨'?0:2)}</td>
+      <td class="num ${cls(i.pct)}">${i.pct===null?'—':sg(i.pct)+'%'}</td>
+      <td class="num" style="color:var(--ink-3);font-size:12px">${esc(i.current_date||'')}</td>
+      <td><span class="tier-pill tier-${i.tier.toLowerCase()}">${esc(TIER[i.tier])}</span></td>
+    </tr>`).join('')+'</tbody></table>';
+}
+
+function eventList(evs){
+  const show = evs.filter(e=>matchTier(e.tier));
+  if(!show.length) return '<div class="empty">本期该模块无符合筛选条件的事件</div>';
+  return show.map(e=>`<div class="evt" data-evt="${esc(e.id)}">
+    <div class="evt-h">
+      <span class="tier-pill tier-${esc(e.tier.toLowerCase())}">${esc(TIER[e.tier])}</span>
+      <span class="et">${esc(e.title)}</span>
+    </div>
+    <div class="evt-m">
+      <span class="tag">${esc(e.event_date||'')}</span>
+      ${e.quant?`<span>量化：${esc(e.quant)}</span>`:''}
+      ${e.dup_count?`<span>已合并 ${e.dup_count} 条转载</span>`:''}
+      ${e.status==='repeat'?'<span style="color:#b45309">旧闻·仅进展更新</span>':''}
+      ${e.status==='plan'?'<span style="color:#1d4ed8">计划中·未兑现</span>':''}
+    </div>
+    ${e.impact_path?`<div class="evt-path"><b>影响路径：</b>${esc(e.impact_path)}</div>`:''}
+  </div>`).join('');
+}
+
+function moduleBody(p, mod, inds, evs){
+  if(mod==='event'){
+    const ev = evs.filter(e=>(e.products||[]).includes(p) || (p==='甲醇' && (e.products||[]).includes('甲醇')));
+    return eventList(ev);
+  }
+  if(mod==='plant'){
+    // 装置信息来自事件，补一张开工负荷表
+    const run = inds.filter(i=>i.module==='runrate'||i.module==='demand');
+    const ev = evs.filter(e=>(e.products||[]).includes(p) && (e.type==='plant'||e.type==='capacity'));
+    return (run.length?priceTable(run):'') + (ev.length?eventList(ev):'');
+  }
+  if(mod==='inventory'){
+    const iv = inds.filter(i=>i.module==='inventory'||i.module==='runrate'||i.module==='demand');
+    return iv.length?priceTable(iv):'<div class="empty">本期该品种库存/开工数据未更新</div>';
+  }
+  return priceTable(inds.filter(i=>i.module===mod || (mod==='price'&&i.module==='cost')));
+}
+
+function buildPanels(){
+  const host = $('#panels');
+  host.innerHTML = PRODUCTS.map(p=>{
+    if(!matchProd(p)) return '';
+    const inds = D.indicators.filter(i=>i.product===p);
+    const evs = D.events;
+    const aN = inds.filter(i=>i.tier==='A').length;
+    const fut = D.futures[p];
+    const futInd = inds.find(i=>i.module==='price' && /主力/.test(i.name));
+    // 面板头的价格口径必须写明：表格用的是「指标数据日」，图与盘中价另注
+    const headLine = futInd
+      ? `${esc(futInd.spec)} 收 ${nf0(futInd.current)}（${esc(futInd.current_date)}）`
+        + (fut && fut.date > futInd.current_date ? ` · 盘中 ${nf0(fut.close)}（${esc(fut.date)}）` : '')
+      : '';
+    return `<div class="panel open" data-product="${esc(p)}" id="panel-${esc(p)}">
+      <div class="panel-head">
+        <span class="pt">${esc(p)}</span>
+        <span class="pd">${headLine} · A 级 ${aN} 条</span>
+        <span class="arrow-ico">▶</span>
+      </div>
+      <div class="panel-body">
+        <div class="hint" style="padding:2px 0 0">下表「本期」列均为 <b>${esc(futInd?futInd.current_date:'')}</b> 收盘/报价口径，
+          与上一期 ${esc(D.baseline.date)} 同口径对比；标「未更新」的指标数据日期更早，不代表当天变化。</div>
+        ${fut?`<div class="chart-grid">
+          <div class="chart-box"><div class="ct">${esc(p)} 主连日K（近 8 个月）</div>
+            <div class="cs">数据源：东方财富行情 · 不含税</div>
+            <div class="chart" id="ch-${esc(p)}-k"></div></div>
+          <div class="chart-box"><div class="ct">${esc(p)} 基差走势（近 1 年，若可得）</div>
+            <div class="cs">现货含税 − 期货不含税，口径见抽屉</div>
+            <div class="chart" id="ch-${esc(p)}-b"></div></div>
+        </div>`:''}
+        ${MODULES.map(([k,t,d])=>{
+          const body = moduleBody(p,k,inds,evs);
+          return `<div class="panel" style="margin-top:14px;margin-bottom:0">
+            <div class="panel-head" style="padding:12px 0">
+              <span class="pt" style="font-size:14px">${t}</span>
+              <span class="pd">${d}</span><span class="arrow-ico">▶</span>
+            </div>
+            <div class="panel-body" style="padding:6px 0 4px">${body}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  // 折叠交互
+  $$('.panel-head').forEach(h=>{
+    h.addEventListener('click',ev=>{
+      if(ev.target.closest('.evt')||ev.target.closest('tr')) return;
+      h.parentElement.classList.toggle('open');
+    });
+  });
+  $$('tr.clickable').forEach(tr=>tr.addEventListener('click',()=>openInd(tr.dataset.ind)));
+  $$('.evt').forEach(e=>e.addEventListener('click',()=>openEvt(e.dataset.evt)));
+  drawCharts();
+  applyFilterCount();
+}
+
+/* ---------------- 图表 ---------------- */
+let charts = [];
+function drawCharts(){
+  charts.forEach(c=>{try{c.dispose()}catch(e){}});
+  charts = [];
+  if(typeof echarts==='undefined') return;
+  PRODUCTS.forEach(p=>{
+    const f = D.futures[p]; if(!f) return;
+    const el = document.getElementById('ch-'+p+'-k');
+    if(el && f.candles_250 && f.candles_250.length){
+      const c = echarts.init(el);
+      const k = f.candles_250.map(x=>[x[1],x[2],x[3],x[4]]);
+      const dates = f.candles_250.map(x=>x[0]);
+      c.setOption({
+        animation:false, grid:{left:52,right:12,top:16,bottom:28},
+        tooltip:{trigger:'axis',axisPointer:{type:'cross'},confine:true,
+          formatter:ps=>{const i=ps[0].dataIndex;const d=f.candles_250[i];
+            return `<b>${d[0]}</b><br>开 ${d[1]}<br>收 ${d[2]}<br>低 ${d[3]}<br>高 ${d[4]}`}},
+        xAxis:{type:'category',data:dates,axisLine:{lineStyle:{color:'#cbd5e1'}},
+          axisLabel:{color:'#94a3b8',fontSize:10,formatter:v=>v.slice(5)},axisTick:{show:false}},
+        yAxis:{scale:true,axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'#eef2f7'}},
+          axisLabel:{color:'#94a3b8',fontSize:10}},
+        series:[{type:'candlestick',data:k,
+          itemStyle:{color:'#dc2626',color0:'#059669',borderColor:'#dc2626',borderColor0:'#059669'}}]
+      });
+      charts.push(c);
+    }
+    const el2 = document.getElementById('ch-'+p+'-b');
+    if(el2){
+      const basis = D.indicators.filter(i=>i.product===p && i.module==='basis' && (i.history||[]).length);
+      if(basis.length){
+        const h = basis[0].history;
+        const c2 = echarts.init(el2);
+        const vals = h.map(x=>x.v);
+        c2.setOption({
+          animation:false, grid:{left:56,right:14,top:18,bottom:30},
+          tooltip:{trigger:'axis',confine:true},
+          xAxis:{type:'category',data:h.map(x=>x.date.slice(5)),axisLine:{lineStyle:{color:'#cbd5e1'}},
+            axisLabel:{color:'#94a3b8',fontSize:10},axisTick:{show:false}},
+          yAxis:{scale:true,axisLine:{show:false},axisTick:{show:false},
+            splitLine:{lineStyle:{color:'#eef2f7'}},axisLabel:{color:'#94a3b8',fontSize:10}},
+          series:[{type:'line',data:vals,smooth:true,symbolSize:6,
+            lineStyle:{width:2.4,color:'#0f766e'},itemStyle:{color:'#0f766e'},
+            areaStyle:{color:'rgba(15,118,110,.10)'},
+            markLine:{silent:true,symbol:'none',
+              lineStyle:{color:'#94a3b8',type:'dashed'},
+              data:[{yAxis:0}]}}]
+        });
+        charts.push(c2);
+      } else {
+        el2.innerHTML = '<div class="empty" style="padding-top:80px">该品种基差历史序列未采集</div>';
+      }
+    }
+  });
+}
+
+/* ---------------- 抽屉 ---------------- */
+function openDrawer(title, sub, html){
+  $('#drTitle').textContent = title;
+  $('#drSub').innerHTML = sub;
+  $('#drBody').innerHTML = html;
+  $('#drawer').classList.add('on'); $('#mask').classList.add('on');
+  $('#drBody').scrollTop = 0;
+}
+function closeDrawer(){ $('#drawer').classList.remove('on'); $('#mask').classList.remove('on'); }
+$('#drClose').addEventListener('click',closeDrawer);
+$('#mask').addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+
+function openInd(id){
+  const i = D.indicators.find(x=>x.id===id); if(!i) return;
+  const hist = (i.history||[]).map(h=>`<li><span class="hd">${esc(h.date)}</span>
+      <span class="hv num">${nf0(h.v)}</span><span style="color:var(--ink-3);font-size:11.5px">${esc(h.tag||'')}</span></li>`).join('');
+  openDrawer(i.name,
+    `${esc(i.spec||'')} · ${esc(i.region||'')} · ${esc(i.unit||'')} · ${esc(i.tax||'')}
+     <span class="tier-pill tier-${i.tier.toLowerCase()}" style="margin-left:6px">${esc(TIER[i.tier])}</span>`,
+    `<div class="block"><div class="bh">发生了什么</div><p>${esc(i.what||'—')}</p></div>
+     <div class="block"><div class="bh">数据如何变化</div>
+       <table class="datatbl">
+         <tr><td>上一期</td><td class="num">${i.base===null?'未覆盖（新增指标）':nf(i.base)} ${esc(i.unit||'')}
+             <span style="color:var(--ink-3);font-weight:400"> · ${esc(i.base_date||'')}</span></td></tr>
+         <tr><td>本期</td><td class="num" style="color:var(--accent)">${nf(i.current)} ${esc(i.unit||'')}
+             <span style="color:var(--ink-3);font-weight:400"> · ${esc(i.current_date||'')}</span></td></tr>
+         <tr><td>变动</td><td class="num ${cls(i.abs)}">${arr(i.abs)} ${sg(i.abs,2)} ${esc(i.unit||'')}
+             ${i.pct===null?'':'（'+sg(i.pct)+'%）'}</td></tr>
+         <tr><td>基线来源</td><td style="font-weight:400">${esc(i.base_source||'')}</td></tr>
+         ${i.formula?`<tr><td>算法</td><td style="font-weight:400">${esc(i.formula)}</td></tr>`:''}
+         ${(i.stale_days||0)>1?`<tr><td>数据新鲜度</td><td style="color:#b45309">该数据发布于 ${esc(i.current_date)}，距报告日 ${i.stale_days} 天，<b>不是当天新数据</b>，仅代表最新有效值</td></tr>`:''}
+       </table>
+     </div>
+     <div class="block"><div class="bh">为什么值得关注</div><p>${esc(i.why||'—')}</p></div>
+     ${hist?`<div class="block"><div class="bh">历史记录</div><ul class="hist">${hist}</ul></div>`:''}
+     <div class="block"><div class="bh">今天继续验证什么</div>
+       <div class="verify"><b>待验证：</b>${esc(i.verify||'—')}</div></div>
+     <div class="block"><div class="bh">来源</div>
+       <div class="src">${esc(i.source||'')}${i.source_url?`<br><a href="${esc(i.source_url)}" target="_blank" rel="noopener">${esc(i.source_url)}</a>`:''}</div></div>`);
+}
+
+function openEvt(id){
+  const e = D.events.find(x=>x.id===id); if(!e) return;
+  openDrawer(e.title,
+    `${esc(e.event_date||'')} 发生 · 级别 ${esc(TIER[e.tier])} · 重要性评分 ${e.score||'-'}
+     <span class="tier-pill tier-${e.tier.toLowerCase()}" style="margin-left:6px">${esc((e.products||[]).join(' / '))}</span>`,
+    `<div class="block"><div class="bh">发生了什么</div><p>${esc(e.detail||e.title)}</p></div>
+     ${e.quant?`<div class="block"><div class="bh">量化影响</div><p>${esc(e.quant)}</p></div>`:''}
+     ${e.impact_path?`<div class="block"><div class="bh">产业影响路径</div><p>${esc(e.impact_path)}</p></div>`:''}
+     <div class="block"><div class="bh">事件状态与时间</div>
+       <table class="datatbl">
+         <tr><td>发生日</td><td>${esc(e.event_date||'—')}</td></tr>
+         <tr><td>至报告日</td><td>${e.stale_days===null||e.stale_days===undefined?'—':e.stale_days+' 天'}</td></tr>
+         <tr><td>状态</td><td>${{done:'已兑现',ongoing:'持续推进中',plan:'计划中·未兑现',repeat:'旧闻·仅进展更新',comment:'观点类'}[e.status]||esc(e.status||'—')}</td></tr>
+         ${e.dup_count?`<tr><td>去重</td><td>已合并 ${e.dup_count} 条转载：${esc((e.dup_sources||[]).join('、'))}</td></tr>`:''}
+         ${e.repeat_note?`<tr><td>时效提示</td><td style="color:#b45309">${esc(e.repeat_note)}</td></tr>`:''}
+       </table>
+     </div>
+     <div class="block"><div class="bh">今天继续验证什么</div>
+       <div class="verify"><b>建议核对：</b>${esc(verifyFor(e))}</div></div>
+     <div class="block"><div class="bh">来源</div>
+       <div class="src">${esc(e.source||'')}${e.source_url?`<br><a href="${esc(e.source_url)}" target="_blank" rel="noopener">${esc(e.source_url)}</a>`:''}</div></div>`);
+}
+
+function verifyFor(e){
+  const t = (e.title||'');
+  if(/MTO|诚志/.test(t)) return '沿海 MTO 重启条件（单体亏损幅度）、上游甲醇是否因需求消失而降负、下周港口库存是否延续回升。';
+  if(/霍尔木兹|海峡/.test(t)) return '海峡日均通航量、保险公司战争险费率、伊朗装船与中国到港预报。';
+  if(/伊朗/.test(t) && /装置/.test(t)) return '伊朗装置日产量与开工率、10月/11月中国自伊朗进口量。';
+  if(/进口/.test(t)) return '海关月度数据的口径与下月预估值差异（隆众预估 70 万吨 vs 9月 46 万吨）。';
+  if(/开工|检修|停车/.test(t)) return '下一周开工数据的环比方向、检修装置复产时间表、检修损失量变化。';
+  if(/出口/.test(t)) return '出口签单的可持续性（是否单笔大单）、印度与东南亚需求与报价差。';
+  if(/煤|兰炭|电石/.test(t)) return '电石采购价与兰炭价格、煤矿复产进度、大秦线检修结束时间。';
+  if(/下游|塑编|BOPP/.test(t)) return '下游开工率与原料库存天数、订单天数、成品库存去化速度。';
+  if(/新增产能|投产/.test(t)) return '华锦阿美与宝丰四期的实际投产时间、试车负荷与合格品产出。';
+  if(/报价|行情/.test(t)) return '当日其余企业出厂价是否跟随、区域价差是否扩大。';
+  return '原始公告/数据源是否有更新版本，以及是否出现反向的同量级变化。';
+}
+
+/* ---------------- 筛选 ---------------- */
+$$('.chip').forEach(c=>c.addEventListener('click',()=>{
+  const f = c.dataset.filter;
+  $$(`.chip[data-filter="${f}"]`).forEach(x=>x.classList.remove('on'));
+  c.classList.add('on');
+  F[f] = c.dataset.value;
+  buildPanels();
+}));
+
+function applyFilterCount(){
+  let n = 0;
+  D.indicators.forEach(i=>{
+    if(F.product!=='all' && i.product!==F.product) return;
+    if(F.tier!=='all' && i.tier!==F.tier) return;
+    if(F.view==='change' && !(hasChange(i))) return;
+    n++;
+  });
+  D.events.forEach(e=>{
+    if(F.tier!=='all' && e.tier!==F.tier) return;
+    if(F.product!=='all' && !(e.products||[]).includes(F.product)) return;
+    n++;
+  });
+  $('#shownN').textContent = n;
+}
+
+/* ---------------- 卡点击跳转 ---------------- */
+document.addEventListener('click',ev=>{
+  const card = ev.target.closest('.card');
+  if(card){
+    const p = card.dataset.goto;
+    const el = document.getElementById('panel-'+p);
+    if(el){ el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+  }
+});
+
+/* ---------------- 排除 / 缺口 / 来源 ---------------- */
+(function tables(){
+  $('#exN').textContent = D.excluded.length + ' 条';
+  $('#exList').innerHTML = D.excluded.map(x=>`<li><b>${esc(x.title)}</b>
+    <div class="why">${esc(x.reason)}${x.check?'　·　核对方式：'+esc(x.check):''}</div></li>`).join('')
+    || '<li class="dash">无</li>';
+  $('#gapTbl').innerHTML = `<thead><tr><th>缺口项</th><th>为什么没有</th><th>怎么补</th></tr></thead><tbody>`+
+    D.gaps.map(g=>`<tr><td>${esc(g.item)}</td><td>${esc(g.why)}</td><td>${esc(g.how)}</td></tr>`).join('')+
+    '</tbody>';
+  $('#srcTbl').innerHTML = `<thead><tr><th>来源</th><th>类型</th><th>用于</th></tr></thead><tbody>`+
+    D.sources.map(s=>`<tr><td><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a></td>
+      <td>${esc(s.type)}</td><td>${esc(s.used)}</td></tr>`).join('')+'</tbody>';
+  $('#foot').innerHTML = `<b>生成方式</b>：industrial-morning-brief 技能自动生成（增量变化检测 + 事件去重 + 重要性筛选），构建于 ${esc(BUILT)}。<br>
+    <b>口径声明</b>：期货价格为不含税、含交割成本的交易所行情；现货为含税报价，基差 = 现货 − 期货，不同税基不可直接比较。<br>
+    <b>不做预测</b>：本报告只陈述已发生事实与可核对的数字，不包含方向性判断或投资建议。`;
+})();
+
+buildPanels();
+</script>
+</body>
+</html>

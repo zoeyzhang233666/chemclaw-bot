@@ -1,0 +1,8519 @@
+{
+ "meta": {
+  "product": "纯碱（碳酸钠 Na₂CO₃）",
+  "spec": "重质纯碱（重碱）+ 轻质纯碱（轻碱），现货为含税送到/自提价",
+  "region": "全国（重点：沙河/华北、华东、西北天然碱产区、华中）",
+  "window": "近3个月：2026-07-15 至 2026-10-16",
+  "asof": "2026-10-20",
+  "futures": "纯碱 SA（郑商所）主连 SA0；对照 玻璃 FG0",
+  "builder": "DSH · 期现产业基本面研究",
+  "version": "v1.0"
+ },
+ "headline": {
+  "one_line": "两玻（浮法+光伏）日熔量在 3 个月内继续下行，重碱“产量级刚需”是收缩的；轻碱端因碳酸锂产量回升与厂库大幅去化呈现韧性。纯碱自身库存走低主要是碱厂检修降负荷叠加下游阶段性补库，不能据此认定终端消费增长。",
+  "facts": [
+   "浮法玻璃在产日熔量：7-15 为 14.60 万吨/日 → 10-13 为 14.23 万吨/日（-2.5%），同比 -11.8%；开工率 68.37%→67.24% [F01/F23/F54]",
+   "浮法深加工订单天数：9.4 天（7月底）→ 9.5（8月中）→ 10.1（9月中）→ 10.0 天（10月中），环比回升但同比 -9.1%~-9.2%，仍是近5年同期最低 [F43/F41/F20/F55]",
+   "浮法企业库存 7318.6 万重箱（10-08），同比 +16.49%，处近5年同期高位；国庆后累库 268.9 万重箱 [F52/F32]",
+   "光伏玻璃在产日熔量（卓创同口径）8.30 → 7.10 万吨/日；9月产量 164 万吨环比 -8%，表观消费 129 万吨环比 -13%，产能利用率 50.27%（10月预计 48.00%）[P01/P11/P13/P14/P15]",
+   "光伏玻璃 2.0mm 镀膜价格由 8.5（7月初）升至 10.0-10.25 元/㎡，但同期产量与表观消费继续下降——价格上涨来自减产与报价修复，不等于原料消费增长 [P06/P09/P13/P14]",
+   "重碱厂库 86.48（8-31）→ 84.65（10-09）万吨；轻碱厂库 104.36 → 82.23（10-19）万吨，轻碱去库幅度远大于重碱 [L04/L11/L09]",
+   "期货：SA 主连 90 日 -9.51%，处 1 年区间 4.5 分位、3 年 1.5 分位；FG 主连 90 日 -9.48% [derived]"
+  ],
+  "signals": [
+   [
+    "浮法玻璃",
+    "走弱：日熔量、开工率、订单同比、利润全线转差，库存高位",
+    "float",
+    "weak"
+   ],
+   [
+    "光伏玻璃",
+    "明显走弱：日熔量、产量、表观消费、产能利用率同步下行；仅价格因减产修复",
+    "pv",
+    "fall"
+   ],
+   [
+    "轻碱（日用玻璃/锂电/洗涤等）",
+    "企稳偏韧：轻碱厂库大幅去化、碳酸锂产量高于7月，但传统下游平淡",
+    "light",
+    "stable"
+   ],
+   [
+    "终端·房地产",
+    "拖累未止：竣工累计同比 -23.7%，30城成交同比持平于低位",
+    "end_re",
+    "fall"
+   ],
+   [
+    "终端·光伏装机",
+    "拖累：上半年国内新增装机同比 -66.04%",
+    "end_pv",
+    "fall"
+   ]
+  ]
+ },
+ "segments": [
+  {
+   "key": "float",
+   "name": "浮法玻璃",
+   "share": 46.0,
+   "share_year": 2024,
+   "share_src": "卓创/协会口径（研报引用，表观消费3596万吨）",
+   "role": "重碱第一大下游",
+   "tone": "weak",
+   "color": "#f0553f"
+  },
+  {
+   "key": "pv",
+   "name": "光伏玻璃",
+   "share": 21.0,
+   "share_year": 2024,
+   "share_src": "卓创/协会口径（同上）",
+   "role": "重碱第二大下游",
+   "tone": "fall",
+   "color": "#9d8bf0"
+  },
+  {
+   "key": "light",
+   "name": "轻碱综合",
+   "share": 33.0,
+   "share_year": 2024,
+   "share_src": "日用玻璃12%（卓创）+ 其他中的轻碱部分",
+   "role": "日用玻璃·锂电·洗涤剂·硅酸钠",
+   "tone": "stable",
+   "color": "#4cc3e8"
+  },
+  {
+   "key": "end_re",
+   "name": "终端·房地产",
+   "share": null,
+   "share_year": 2026,
+   "share_src": "国家统计局",
+   "role": "浮法的终端驱动（不计入需求权重）",
+   "tone": "fall",
+   "color": "#e6b45a"
+  },
+  {
+   "key": "end_pv",
+   "name": "终端·光伏装机",
+   "share": null,
+   "share_year": 2026,
+   "share_src": "国家能源局",
+   "role": "光伏玻璃的终端驱动（不计入需求权重）",
+   "tone": "fall",
+   "color": "#26b57e"
+  }
+ ],
+ "structure": [
+  {
+   "src_key": "zhuochuang2025",
+   "org": "中国纯碱工业协会/卓创（券商研报引用）",
+   "year": 2024,
+   "basis": "纯碱表观消费量 3596 万吨",
+   "url": "https://pdf.dfcfw.com/pdf/H3_AP202509111741655492_1.pdf",
+   "items": [
+    [
+     "平板玻璃",
+     46,
+     1639
+    ],
+    [
+     "光伏玻璃",
+     21,
+     752
+    ],
+    [
+     "日用玻璃",
+     12,
+     431
+    ],
+    [
+     "其他（含出口、洗涤剂、硅酸钠、氧化铝等）",
+     21,
+     774
+    ]
+   ],
+   "note": "总量=3596万吨表观消费；平板玻璃46%含浮法与压延中平板口径"
+  },
+  {
+   "src_key": "hangyan2026",
+   "org": "小牛行研（行业研究数据）",
+   "year": 2024,
+   "basis": "纯碱下游需求结构",
+   "url": "https://www.hangyan.co/charts/3884378491189200836",
+   "items": [
+    [
+     "平板玻璃",
+     44,
+     null
+    ],
+    [
+     "光伏玻璃",
+     21,
+     null
+    ],
+    [
+     "日用玻璃",
+     10,
+     null
+    ],
+    [
+     "其他",
+     25,
+     null
+    ]
+   ],
+   "note": "三者合计75%；与同口径研报的差异源于分母（内需 vs 表观含出口）"
+  },
+  {
+   "src_key": "huaon2026",
+   "org": "华经产业研究院",
+   "year": 2024,
+   "basis": "纯碱下游应用占比",
+   "url": "https://www.huaon.com/channel/trend/1154783.html",
+   "items": [
+    [
+     "平板玻璃",
+     32,
+     null
+    ],
+    [
+     "光伏玻璃",
+     18,
+     null
+    ],
+    [
+     "日用玻璃及玻璃包装容器",
+     14,
+     null
+    ],
+    [
+     "泡花碱",
+     5,
+     null
+    ],
+    [
+     "其他",
+     31,
+     null
+    ]
+   ],
+   "note": "以全部下游应用为分母，含出口与损耗，故玻璃类合计偏低"
+  },
+  {
+   "src_key": "czce2021",
+   "org": "郑商所·纯碱期货投教材料",
+   "year": 2020,
+   "basis": "分地域分行业需求表",
+   "url": "https://www.czce.com.cn/cn/rootfiles/2021/09/03/1605597062097884-1605597062128743.pdf",
+   "items": [
+    [
+     "浮法玻璃",
+     null,
+     null
+    ],
+    [
+     "光伏玻璃",
+     null,
+     null
+    ],
+    [
+     "日用玻璃",
+     null,
+     null
+    ],
+    [
+     "合成洗衣粉",
+     null,
+     null
+    ],
+    [
+     "其他",
+     null,
+     null
+    ]
+   ],
+   "note": "提供“1吨平板玻璃耗0.2吨重碱”官方法定系数；分省表见原文"
+  }
+ ],
+ "evidence": [
+  {
+   "id": "F01",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃在产日熔量",
+   "value": 14.6,
+   "unit": "万吨/日",
+   "date": "2026-07-15",
+   "period": "2026-07-15",
+   "caliber": "全国在产产线日熔化量（剔僵尸线）",
+   "src": "sina0715",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-07-15/doc-inihwmii7897733.shtml",
+   "quote": "浮法玻璃在产日熔量为14.6万吨，环比-0.0%。浮法玻璃周产量102.21万吨，环比-0.9%。",
+   "grade": "A"
+  },
+  {
+   "id": "F02",
+   "seg": "float",
+   "kpi": "开工率",
+   "metric": "浮法玻璃开工率",
+   "value": 68.37,
+   "unit": "%",
+   "date": "2026-07-15",
+   "period": "2026-07-15",
+   "caliber": "在产产线数/有效产线数",
+   "src": "sina0715",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-07-15/doc-inihwmii7897733.shtml",
+   "quote": "浮法玻璃开工率为68.37%，环比-0.34%，产能利用率为72.63%，环比-0.66%。",
+   "grade": "A"
+  },
+  {
+   "id": "F03",
+   "seg": "float",
+   "kpi": "产能利用率",
+   "metric": "浮法玻璃产能利用率",
+   "value": 72.63,
+   "unit": "%",
+   "date": "2026-07-15",
+   "period": "2026-07-15",
+   "caliber": "在产日熔量/名义产能",
+   "src": "sina0715",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-07-15/doc-inihwmii7897733.shtml",
+   "quote": "产能利用率为72.63%，环比-0.66%。",
+   "grade": "A"
+  },
+  {
+   "id": "F04",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃日熔量（7月中，过程跟踪）",
+   "value": 14.55,
+   "unit": "万吨/日",
+   "date": "2026-07-21",
+   "period": "2026-07-21",
+   "caliber": "全国在产日熔量",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "周内日熔量由14.60万吨震荡下行至14.55万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F05",
+   "seg": "float",
+   "kpi": "产线数",
+   "metric": "浮法玻璃在产产线",
+   "value": 199,
+   "unit": "条",
+   "date": "2026-07-16",
+   "period": "2026-07-16",
+   "caliber": "剔除僵尸产线后293条中在产条数；冷修停产94条",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "国内玻璃生产线在剔除僵尸产线后共计293条，其中在产199条，冷修停产94条。",
+   "grade": "A"
+  },
+  {
+   "id": "F06",
+   "seg": "float",
+   "kpi": "开工率",
+   "metric": "浮法玻璃开工率（7月中）",
+   "value": 67.92,
+   "unit": "%",
+   "date": "2026-07-16",
+   "period": "2026-07-16",
+   "caliber": "隆众口径",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "截至7月16日，浮法玻璃行业开工率67.92%，较7月10日减少0.68%。",
+   "grade": "A"
+  },
+  {
+   "id": "F07",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃煤制气毛利",
+   "value": -40.42,
+   "unit": "元/吨",
+   "date": "2026-07-09",
+   "period": "2026-07-09",
+   "caliber": "隆众成本模型·煤制气路线周均",
+   "src": "lz0714",
+   "url": "https://www.oilchem.net/26-0714-16-137be2eb0cc7850d.html",
+   "quote": "煤制产线亏损也达到约40.42元/吨；天然气燃料产线周均亏损约173.8元/吨，石油焦制产线亏损约190.33元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F08",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃天然气毛利",
+   "value": -173.8,
+   "unit": "元/吨",
+   "date": "2026-07-09",
+   "period": "2026-07-09",
+   "caliber": "隆众成本模型·天然气路线周均",
+   "src": "lz0714",
+   "url": "https://www.oilchem.net/26-0714-16-137be2eb0cc7850d.html",
+   "quote": "以天然气为燃料的产线周均亏损约173.8元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F09",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃石油焦毛利",
+   "value": -190.33,
+   "unit": "元/吨",
+   "date": "2026-07-09",
+   "period": "2026-07-09",
+   "caliber": "隆众成本模型·石油焦路线周均",
+   "src": "lz0714",
+   "url": "https://www.oilchem.net/26-0714-16-137be2eb0cc7850d.html",
+   "quote": "石油焦制产线亏损约190.33元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F10",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃样本企业总库存",
+   "value": 7600,
+   "unit": "万重箱",
+   "date": "2026-07-09",
+   "period": "2026-07-09",
+   "caliber": "隆众样本企业厂库（全国）",
+   "src": "lz0714",
+   "url": "https://www.oilchem.net/26-0714-16-137be2eb0cc7850d.html",
+   "quote": "截止20260709全国浮法玻璃企业库存高达7600万重箱，同比增加超13.36%。",
+   "grade": "A"
+  },
+  {
+   "id": "F11",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃日熔量",
+   "value": 14.3,
+   "unit": "万吨/日",
+   "date": "2026-09-17",
+   "period": "2026-09-17",
+   "caliber": "全国在产日产量",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "截至2026年9月17日，全国浮法玻璃日产量为14.3万吨，比9月10日+0.39%。",
+   "grade": "A"
+  },
+  {
+   "id": "F12",
+   "seg": "float",
+   "kpi": "产量",
+   "metric": "浮法玻璃周产量",
+   "value": 100.06,
+   "unit": "万吨",
+   "date": "2026-09-17",
+   "period": "2026-09-11~09-17",
+   "caliber": "全国周产量",
+   "yoy": -10.86,
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "本周（20260911-0917）全国浮法玻璃产量100.06万吨，环比+1.03%，同比-10.86%。",
+   "grade": "A"
+  },
+  {
+   "id": "F13",
+   "seg": "float",
+   "kpi": "开工率",
+   "metric": "浮法玻璃开工率",
+   "value": 67.24,
+   "unit": "%",
+   "date": "2026-09-17",
+   "period": "2026-09-17",
+   "caliber": "行业开工率（在产条数口径）",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "截至2026年9月17日，浮法玻璃行业开工率为67.24%，比9月10日+0.35个百分点。",
+   "grade": "A"
+  },
+  {
+   "id": "F14",
+   "seg": "float",
+   "kpi": "产能利用率",
+   "metric": "浮法玻璃产能利用率",
+   "value": 71.34,
+   "unit": "%",
+   "date": "2026-09-17",
+   "period": "2026-09-17",
+   "caliber": "在产日熔量/名义产能",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "浮法玻璃行业产能利用率为71.34%，比9月10日+0.28个百分点。",
+   "grade": "A"
+  },
+  {
+   "id": "F15",
+   "seg": "float",
+   "kpi": "价格",
+   "metric": "浮法玻璃全国周均价",
+   "value": 1082,
+   "unit": "元/吨",
+   "date": "2026-09-17",
+   "period": "2026-09-11~09-17",
+   "caliber": "全国现货周均价（含税，出厂/市场价）",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "整体价格窄幅震荡为主，周内均价1082元/吨，环比上期+14.29元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F16",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃天然气毛利",
+   "value": -151.88,
+   "unit": "元/吨",
+   "date": "2026-09-17",
+   "period": "2026-09-11~09-17",
+   "caliber": "隆众成本模型·天然气路线周均",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "以天然气为燃料的浮法玻璃周均利润-151.88元/吨，环比+16.43元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F17",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃煤制气毛利",
+   "value": -86.74,
+   "unit": "元/吨",
+   "date": "2026-09-17",
+   "period": "2026-09-11~09-17",
+   "caliber": "隆众成本模型·煤炭路线周均",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "以煤炭为燃料的浮法玻璃周均利润-86.74元/吨，环比+110.08元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F18",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃石油焦毛利",
+   "value": -149.12,
+   "unit": "元/吨",
+   "date": "2026-09-17",
+   "period": "2026-09-11~09-17",
+   "caliber": "隆众成本模型·石油焦路线周均",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "以石油焦为燃料的浮法玻璃周均利润-149.12元/吨，环比+32.86元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F19",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃样本企业总库存",
+   "value": 6985.7,
+   "unit": "万重箱",
+   "date": "2026-09-17",
+   "period": "2026-09-17",
+   "caliber": "隆众样本企业厂库（全国）",
+   "yoy": 14.69,
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "截止到20260917，全国浮法玻璃样本企业总库存6985.7万重箱，环比-1.3%，同比+14.69%。折库存天数32天。",
+   "grade": "A"
+  },
+  {
+   "id": "F20",
+   "seg": "float",
+   "kpi": "订单",
+   "metric": "深加工样本企业订单天数",
+   "value": 10.1,
+   "unit": "天",
+   "date": "2026-09-15",
+   "period": "2026-09-15",
+   "caliber": "隆众深加工样本企业平均在手订单天数",
+   "yoy": -3.93,
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "截至20260915，深加工样本企业订单天数均值10.1天，环比-2.11%，同比-3.93%。",
+   "grade": "A"
+  },
+  {
+   "id": "F21",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃在产日熔量",
+   "value": 14.23,
+   "unit": "万吨/日",
+   "date": "2026-09-30",
+   "period": "2026-09-30",
+   "caliber": "隆众月末口径，全行业在产日熔量",
+   "src": "lz0930",
+   "url": "https://www.mysteel.com/oilchem/a/26093017/CB1B512930D98C45.html",
+   "quote": "9月国内浮法玻璃市场重心上扬…全行业在产日熔量降至14.23万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F22",
+   "seg": "float",
+   "kpi": "价格",
+   "metric": "浮法玻璃全国均价",
+   "value": 1079,
+   "unit": "元/吨",
+   "date": "2026-09-30",
+   "period": "2026-09-30",
+   "caliber": "隆众全国均价（含税）",
+   "yoy": -13.81,
+   "src": "lz0930",
+   "url": "https://www.mysteel.com/oilchem/a/26093017/CB1B512930D98C45.html",
+   "quote": "截止20260930浮法玻璃全国均价在1079元/吨，同比-13.81%。",
+   "grade": "A"
+  },
+  {
+   "id": "F23",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃日熔量",
+   "value": 14.23,
+   "unit": "万吨/日",
+   "date": "2026-10-13",
+   "period": "2026-10-13",
+   "caliber": "钢联/卓创口径，全国在产日熔量",
+   "yoy": -11.8,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "截至10月13日，浮法玻璃日熔量维持在14.23万吨/日，同比下降11.8%；产能利用率维持在70.99%，同比下降12%。",
+   "grade": "A"
+  },
+  {
+   "id": "F24",
+   "seg": "float",
+   "kpi": "产能利用率",
+   "metric": "浮法玻璃产能利用率",
+   "value": 70.99,
+   "unit": "%",
+   "date": "2026-10-13",
+   "period": "2026-10-13",
+   "caliber": "在产日熔量/名义产能",
+   "yoy": -12.0,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "产能利用率维持在70.99%，同比下降12%。",
+   "grade": "A"
+  },
+  {
+   "id": "F25",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃厂内库存",
+   "value": 7319,
+   "unit": "万重量箱",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "浮法厂内库存（钢联口径，万重量箱）",
+   "qoq": 3.8,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "截至10月9日，浮法玻璃厂内库存7319万重量箱，环比+3.8%；沙河贸易商库存484万重量箱，环比持平。",
+   "grade": "A"
+  },
+  {
+   "id": "F26",
+   "seg": "float",
+   "kpi": "订单",
+   "metric": "深加工订单天数",
+   "value": null,
+   "unit": "天",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "深加工订单天数",
+   "yoy": -9.1,
+   "mom": -1.0,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "深加工订单天数环比微降1%，同比下降9.1%。下游开工虽高于去年同期，但订单表现仍偏弱。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "F27",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃天然气毛利",
+   "value": -151.9,
+   "unit": "元/吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "天然气路线周均利润",
+   "mom": -7.14,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "以天然气为燃料的浮法玻璃生产利润为-151.9元/吨，环比下降7.14元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F28",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃煤制气毛利",
+   "value": -148.2,
+   "unit": "元/吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "煤炭路线周均利润",
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "以煤炭为燃料的生产利润为-148.2元/吨，环比持平。",
+   "grade": "A"
+  },
+  {
+   "id": "F29",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃石油焦毛利",
+   "value": -169.1,
+   "unit": "元/吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "石油焦路线周均利润",
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "以石油焦为燃料的生产利润为-169.1元/吨，环比持平。",
+   "grade": "A"
+  },
+  {
+   "id": "F30",
+   "seg": "float",
+   "kpi": "价格",
+   "metric": "沙河5mm大板市场价",
+   "value": 913,
+   "unit": "元/吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "沙河出厂/市场价（含税，5mm大板）",
+   "mom": -2.35,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "沙河5mm大板市场价一周内两度调降，由节前的935元/吨先后下调至917元/吨、913元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F31",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃在产日熔量",
+   "value": 14.2,
+   "unit": "万吨/日",
+   "date": "2026-10-13",
+   "period": "2026-10-13",
+   "caliber": "隆众口径，在产产线197条",
+   "src": "lz1013",
+   "url": "https://www.oilchem.net/26-1013-16-449b83906fc1dcf1.html",
+   "quote": "当前在产产线197条，日熔量14.2万吨左右，处于近年偏低水平。",
+   "grade": "A"
+  },
+  {
+   "id": "F32",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃样本企业总库存",
+   "value": 7318.6,
+   "unit": "万重箱",
+   "date": "2026-10-08",
+   "period": "2026-10-08",
+   "caliber": "隆众样本企业总库存",
+   "mom": 268.9,
+   "src": "lz1013",
+   "url": "https://www.oilchem.net/26-1013-16-449b83906fc1dcf1.html",
+   "quote": "国庆节后，全国样本企业总库存升至7318.6万重箱，环比节前增加268.9万重箱，库存天数约33.7天。",
+   "grade": "A"
+  },
+  {
+   "id": "F33",
+   "seg": "float",
+   "kpi": "价格",
+   "metric": "浮法玻璃全国均价",
+   "value": 1075,
+   "unit": "元/吨",
+   "date": "2026-10-13",
+   "period": "2026-10-13",
+   "caliber": "全国均价（含税）",
+   "src": "lz1013",
+   "url": "https://www.oilchem.net/26-1013-16-449b83906fc1dcf1.html",
+   "quote": "全国均价在1075元/吨附近徘徊，期货主力围绕860元/吨反复震荡。",
+   "grade": "A"
+  },
+  {
+   "id": "F34",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃煤制气毛利",
+   "value": -148.2,
+   "unit": "元/吨",
+   "date": "2026-10-13",
+   "period": "2026-10-13",
+   "caliber": "煤制气路线单吨利润",
+   "src": "lz1013",
+   "url": "https://www.oilchem.net/26-1013-16-449b83906fc1dcf1.html",
+   "quote": "煤制气、天然气和石油焦三条燃料路线目前均处于亏损状态，单吨利润分别约为-148.2、-151.88、-169.12元。",
+   "grade": "A"
+  },
+  {
+   "id": "F35",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃日熔量",
+   "value": 14.22,
+   "unit": "万吨/日",
+   "date": "2026-08-27",
+   "period": "2026-08-27",
+   "caliber": "隆众全国日产量",
+   "yoy_yue": null,
+   "src": "cnfin0827",
+   "url": "https://www.cnfin.com/kx/detail/20260827/4461250_1.html",
+   "quote": "截至2026年8月27日，全国浮法玻璃日产量为14.22万吨，与8月20日持平。本周全国浮法玻璃产量99.55万吨，同比减10.84%。",
+   "grade": "A"
+  },
+  {
+   "id": "F36",
+   "seg": "float",
+   "kpi": "开工率",
+   "metric": "浮法玻璃开工率",
+   "value": 67.24,
+   "unit": "%",
+   "date": "2026-08-27",
+   "period": "2026-08-27",
+   "caliber": "行业开工率",
+   "src": "cnfin0827b",
+   "url": "https://www.cnfin.com/kx/detail/20260827/4461251_1.html",
+   "quote": "截至2026年8月27日，浮法玻璃行业开工率为67.24%，产能利用率为70.94%。",
+   "grade": "A"
+  },
+  {
+   "id": "F37",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃样本企业总库存",
+   "value": 7441.4,
+   "unit": "万重箱",
+   "date": "2026-08-20",
+   "period": "2026-08-20",
+   "caliber": "隆众样本企业总库存",
+   "yoy": 17.41,
+   "src": "cnfin0820",
+   "url": "https://www.cnfin.com/kx/detail/20260820/4457847_1.html",
+   "quote": "截至8月20日，全国浮法玻璃样本企业总库存7441.4万重箱，环比减少5.6万重箱，同比增幅17.41%。折库存天数34.1天。",
+   "grade": "A"
+  },
+  {
+   "id": "F38",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃日熔量",
+   "value": 14.22,
+   "unit": "万吨/日",
+   "date": "2026-08-18",
+   "period": "2026-08-18",
+   "caliber": "隆众口径，在产产能创历史新低",
+   "src": "lz0818",
+   "url": "https://www.oilchem.net/26-0818-16-15e07a0846a6fe6c.html",
+   "quote": "截至20260818，全国浮法玻璃日熔量降至14.22万吨，明显位于同期低位。",
+   "grade": "A"
+  },
+  {
+   "id": "F39",
+   "seg": "float",
+   "kpi": "开工率",
+   "metric": "浮法玻璃开工率",
+   "value": 67.24,
+   "unit": "%",
+   "date": "2026-08-18",
+   "period": "2026-08-18",
+   "caliber": "行业开工率",
+   "src": "lz0818",
+   "url": "https://www.oilchem.net/26-0818-16-15e07a0846a6fe6c.html",
+   "quote": "尽管当前开工率仅67.24%，但进入8月份，浙江、山西、天津各一条产线复产点火。",
+   "grade": "A"
+  },
+  {
+   "id": "F40",
+   "seg": "float",
+   "kpi": "价格",
+   "metric": "浮法玻璃现货均价",
+   "value": 1070,
+   "unit": "元/吨",
+   "date": "2026-08-18",
+   "period": "2026-08-18",
+   "caliber": "全国现货均价（含税）",
+   "src": "lz0818",
+   "url": "https://www.oilchem.net/26-0818-16-15e07a0846a6fe6c.html",
+   "quote": "截至2026年8月中旬，浮法玻璃现货均价1070元/吨，期货主力合约则逼近867元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F41",
+   "seg": "float",
+   "kpi": "订单",
+   "metric": "深加工企业平均在手订单",
+   "value": 9.5,
+   "unit": "天",
+   "date": "2026-08-18",
+   "period": "2026-08-18",
+   "caliber": "隆众深加工样本企业订单天数",
+   "yoy": -1.6,
+   "src": "lz0818",
+   "url": "https://www.oilchem.net/26-0818-16-15e07a0846a6fe6c.html",
+   "quote": "隆众资讯深加工样本企业订单天数仅维持在9.5天左右，同比-1.60%，中下游维持刚需采买。",
+   "grade": "A"
+  },
+  {
+   "id": "F42",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃样本企业总库存",
+   "value": 7535.3,
+   "unit": "万重箱",
+   "date": "2026-07-31",
+   "period": "2026-07-31",
+   "caliber": "隆众样本企业总库存（7月底）",
+   "yoy": 26.65,
+   "src": "lz0803",
+   "url": "https://www.oilchem.net/26-0803-17-c9bf66d5c1b238fc.html",
+   "quote": "截至7月底，全国浮法玻璃样本企业总库存在7535.3万重箱附近，同比+26.65%，折库存天数34.4天。",
+   "grade": "A"
+  },
+  {
+   "id": "F43",
+   "seg": "float",
+   "kpi": "订单",
+   "metric": "深加工企业平均在手订单",
+   "value": 9.4,
+   "unit": "天",
+   "date": "2026-07-31",
+   "period": "2026-07-31",
+   "caliber": "隆众深加工样本订单天数（近5年同期新低）",
+   "src": "lz0803",
+   "url": "https://www.oilchem.net/26-0803-17-c9bf66d5c1b238fc.html",
+   "quote": "当前深加工企业平均在手订单在9.4天左右，且创下近5年同期新低。",
+   "grade": "A"
+  },
+  {
+   "id": "F44",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃在产日熔量",
+   "value": 15.11,
+   "unit": "万吨/日",
+   "date": "2026-01-02",
+   "period": "2026-01-02",
+   "caliber": "年初基准（隆众）",
+   "src": "lz0803",
+   "url": "https://www.oilchem.net/26-0803-17-c9bf66d5c1b238fc.html",
+   "quote": "浮法玻璃全国日熔量从年初的15.11万吨降至14.22万吨，供应端日熔量收窄0.89万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F45",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃生产企业库存",
+   "value": 7078.04,
+   "unit": "万重箱",
+   "date": "2026-09-15",
+   "period": "2026-09-15",
+   "caliber": "隆众样本生产企业库存",
+   "yoy_note": "年初5551.76→9月中7078.04，增幅约27.5%",
+   "src": "lz0916",
+   "url": "https://www.oilchem.net/26-0916-16-9898aa47ce5303c0.html",
+   "quote": "隆众资讯中国浮法玻璃样本生产企业库存量统计从年初5551.76万重箱升至7078.04万重箱，增幅在27.5%附近。",
+   "grade": "A"
+  },
+  {
+   "id": "F46",
+   "seg": "float",
+   "kpi": "产线变动",
+   "metric": "年初至今产线变动",
+   "value": null,
+   "unit": "条",
+   "date": "2026-09-16",
+   "period": "2026-01-01~09-16",
+   "caliber": "放水32条、点火16条，日产量净减9242吨",
+   "src": "lz0916",
+   "url": "https://www.oilchem.net/26-0916-16-9898aa47ce5303c0.html",
+   "quote": "年初至今，国内浮法玻璃产线放水32条，点火16条，日产量净减少9242吨，但库存依旧处于同期高位水平。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "F47",
+   "seg": "float",
+   "kpi": "销量",
+   "metric": "浮法玻璃1-6月销量",
+   "value": 44865,
+   "unit": "万重量箱",
+   "date": "2026-06-30",
+   "period": "2026-01-01~06-30",
+   "caliber": "卓创监测销量（表观需求侧）",
+   "yoy": -7.38,
+   "src": "sci99_0709",
+   "url": "https://www.sci99.com/mobile/info/3_1000008_45021915.html",
+   "quote": "据卓创资讯监测数据，1-6月份总计销量约44865万重量箱，同比去年下滑7.38%。",
+   "grade": "A"
+  },
+  {
+   "id": "F48",
+   "seg": "float",
+   "kpi": "日熔量",
+   "metric": "浮法玻璃在产日熔量",
+   "value": 144545,
+   "unit": "吨/日",
+   "date": "2026-06-30",
+   "period": "2026-06-30",
+   "caliber": "卓创监测全国在产日熔，较2025年底-5910吨",
+   "src": "sci99_0709",
+   "url": "https://www.sci99.com/mobile/info/3_1000008_45021915.html",
+   "quote": "截至6月底，卓创资讯监测全国在产日熔144545吨，较2025年底减少5910吨，降幅3.93%。",
+   "grade": "A"
+  },
+  {
+   "id": "F49",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃13省样本企业库存",
+   "value": 6934,
+   "unit": "万重箱",
+   "date": "2026-07-04",
+   "period": "2026-07-04",
+   "caliber": "卓创13省样本口径（与隆众全国样本不同口径）",
+   "src": "sci99_0709",
+   "url": "https://www.sci99.com/mobile/info/3_1000008_45021915.html",
+   "quote": "截至7月4日，13省样本企业库存6934万重箱，处于年内高位。",
+   "grade": "A"
+  },
+  {
+   "id": "F50",
+   "seg": "float",
+   "kpi": "产销率",
+   "metric": "浮法玻璃周度平均产销率",
+   "value": 97.8,
+   "unit": "%",
+   "date": "2026-07-17",
+   "period": "2026-07-11~07-17",
+   "caliber": "周度平均产销率（<100%为累库）",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "截至7月17日，浮法玻璃周度平均产销率97.8%，较前值95%环比改善2.8个百分点，但仍处于100%荣枯线以下。",
+   "grade": "A"
+  },
+  {
+   "id": "F51",
+   "seg": "float",
+   "kpi": "产销率",
+   "metric": "沙河主流产销率",
+   "value": 149,
+   "unit": "%",
+   "date": "2026-10-08",
+   "period": "2026-10-08",
+   "caliber": "节后首日沙河主流产销率",
+   "note": "单日值，不代表周度",
+   "src": "qhrb1013",
+   "url": "https://finance.eastmoney.com/a/202610133893315363.html",
+   "quote": "国庆长假后询盘及补库需求有所回升，截至10月8日，沙河主流产销率约为149%。",
+   "grade": "A"
+  },
+  {
+   "id": "F52",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃样本企业总库存",
+   "value": 7318.6,
+   "unit": "万重箱",
+   "date": "2026-10-08",
+   "period": "2026-10-08",
+   "caliber": "周度样本库存",
+   "qoq": 3.81,
+   "yoy": 16.49,
+   "src": "qhrb1013",
+   "url": "https://finance.eastmoney.com/a/202610133893315363.html",
+   "quote": "截至10月8日当周，样本企业总库存为7318.6万重箱，环比增加3.81%，同比增加16.49%。",
+   "grade": "A"
+  },
+  {
+   "id": "F53",
+   "seg": "float",
+   "kpi": "利润",
+   "metric": "浮法玻璃煤制气毛利",
+   "value": -148,
+   "unit": "元/吨",
+   "date": "2026-10-08",
+   "period": "2026-10-08",
+   "caliber": "煤制气路线毛利（期货日报引用隆众模型）",
+   "src": "qhrb1013",
+   "url": "https://finance.eastmoney.com/a/202610133893315363.html",
+   "quote": "目前煤制气产线毛利约为-148元/吨，天然气产线毛利约为-152元/吨，石油焦产线毛利约为-169元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "F54",
+   "seg": "float",
+   "kpi": "开工率",
+   "metric": "浮法玻璃行业开工率",
+   "value": 67.24,
+   "unit": "%",
+   "date": "2026-10-15",
+   "period": "2026-10-15",
+   "caliber": "行业开工率",
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "截至10月中旬，国内浮法玻璃行业开工率维持在67.24%，日熔量为14.23万吨，处于偏低水平。",
+   "grade": "A"
+  },
+  {
+   "id": "F55",
+   "seg": "float",
+   "kpi": "订单",
+   "metric": "深加工样本企业订单天数",
+   "value": 10.0,
+   "unit": "天",
+   "date": "2026-10-15",
+   "period": "2026-10-15",
+   "caliber": "隆众深加工样本订单天数",
+   "yoy": -9.2,
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "玻璃深加工样本企业订单天数均值为10天，同比下降9.20%，在手订单仍低于历年同期。",
+   "grade": "A"
+  },
+  {
+   "id": "F56",
+   "seg": "float",
+   "kpi": "开工率",
+   "metric": "浮法玻璃开工率",
+   "value": 66.89,
+   "unit": "%",
+   "date": "2026-09-03",
+   "period": "2026-09-03",
+   "caliber": "行业开工率",
+   "src": "cnfin0831",
+   "url": "https://www.cnfin.com/kx/detail/20260903/4464704_1.html",
+   "quote": "截至9月3日，浮法玻璃行业开工率为66.89%，比8月27日下降0.35个百分点；产能利用率70.49%。",
+   "grade": "A"
+  },
+  {
+   "id": "F57",
+   "seg": "float",
+   "kpi": "价格",
+   "metric": "浮法玻璃全国均价",
+   "value": 1082,
+   "unit": "元/吨",
+   "date": "2026-09-19",
+   "period": "2026-09-12~09-18",
+   "caliber": "全国周均价（含税）",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "周内均价1082元/吨，环比上期+14.29元/吨（20260911-0917）。",
+   "grade": "A"
+  },
+  {
+   "id": "F58",
+   "seg": "float",
+   "kpi": "库存",
+   "metric": "浮法玻璃样本企业总库存",
+   "value": 6985.7,
+   "unit": "万重箱",
+   "date": "2026-09-17",
+   "period": "2026-09-17",
+   "caliber": "隆众样本企业总库存（含区域）",
+   "note": "折库存天数32天",
+   "src": "lz0919",
+   "url": "https://finance.sina.com.cn/money/future/roll/2026-09-19/doc-inisinhk7814915.shtml",
+   "quote": "全国浮法玻璃样本企业总库存6985.7万重箱，环比-92.4万重箱，环比-1.3%，同比+14.69%，折库存天数32天。",
+   "grade": "A"
+  },
+  {
+   "id": "P01",
+   "seg": "pv",
+   "kpi": "日熔量",
+   "metric": "光伏玻璃在产日熔量",
+   "value": 8.3,
+   "unit": "万吨/日",
+   "date": "2026-05-31",
+   "period": "2026-05-31",
+   "caliber": "卓创统计，5月末口径",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "据卓创资讯统计，2026年5月至今光伏玻璃行业在产日熔量从8.3万吨降至7.1万吨，近3个月供应收缩约12%。",
+   "grade": "A"
+  },
+  {
+   "id": "P02",
+   "seg": "pv",
+   "kpi": "库存天数",
+   "metric": "光伏玻璃库存可用天数",
+   "value": 54,
+   "unit": "天",
+   "date": "2026-05-31",
+   "period": "2026-05-31",
+   "caliber": "库存可用天数（峰值）",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "库存可用天数自54天回落至45天，去库幅度接近18%。",
+   "grade": "A"
+  },
+  {
+   "id": "P03",
+   "seg": "pv",
+   "kpi": "日熔量",
+   "metric": "光伏玻璃实际运行日熔量",
+   "value": 7.6,
+   "unit": "万吨/日",
+   "date": "2026-07-15",
+   "period": "2026-07-15",
+   "caliber": "SMM：理论总日熔超12万吨，实际运行仅7.6万吨（含堵窑）",
+   "src": "smmsight",
+   "url": "https://finance.sina.com.cn/wm/2026-07-20/doc-iniimuyc3008177.shtml",
+   "quote": "截至7月中旬，国内光伏玻璃理论总日熔量超12万吨，实际运行日熔量仅7.6万吨，全行业累计冷修+堵窑产能超5万吨/天。",
+   "grade": "A"
+  },
+  {
+   "id": "P04",
+   "seg": "pv",
+   "kpi": "日熔量",
+   "metric": "光伏玻璃日度有效产能",
+   "value": 7.35,
+   "unit": "万吨/日",
+   "date": "2026-07-17",
+   "period": "2026-07-17",
+   "caliber": "钢联/卓创：日度有效产能区间7.30-7.40万吨",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "光伏玻璃方面，上周产线冷修两条、复产点火一条，日度有效产能在7.30-7.40万吨区间窄幅波动。",
+   "grade": "A"
+  },
+  {
+   "id": "P05",
+   "seg": "pv",
+   "kpi": "开工率",
+   "metric": "光伏玻璃行业开工率",
+   "value": 51.37,
+   "unit": "%",
+   "date": "2026-07-17",
+   "period": "2026-07-17",
+   "caliber": "行业开工率",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "截至7月17日，光伏玻璃行业开工率51.37%，与上周基本持平。",
+   "grade": "A"
+  },
+  {
+   "id": "P06",
+   "seg": "pv",
+   "kpi": "价格",
+   "metric": "光伏玻璃2.0mm单层镀膜主流成交",
+   "value": 8.5,
+   "unit": "元/平方米",
+   "date": "2026-07-05",
+   "period": "2026-07-05",
+   "caliber": "2.0mm单层镀膜主流成交价（含税）",
+   "src": "smmsight",
+   "url": "https://finance.sina.com.cn/wm/2026-07-20/doc-iniimuyc3008177.shtml",
+   "quote": "7月初主流国内2.0mm单层镀膜主流成交8.5元/平米，单平亏损接近2元，同比去年高点跌幅超30%。",
+   "grade": "A"
+  },
+  {
+   "id": "P07",
+   "seg": "pv",
+   "kpi": "利润",
+   "metric": "光伏玻璃2.0mm单平亏损",
+   "value": -2,
+   "unit": "元/平方米",
+   "date": "2026-07-05",
+   "period": "2026-07-05",
+   "caliber": "SMM估算单平毛利",
+   "src": "smmsight",
+   "url": "https://finance.sina.com.cn/wm/2026-07-20/doc-iniimuyc3008177.shtml",
+   "quote": "单平亏损接近2元。",
+   "grade": "A"
+  },
+  {
+   "id": "P08",
+   "seg": "pv",
+   "kpi": "库存天数",
+   "metric": "光伏玻璃库存天数",
+   "value": 40,
+   "unit": "天",
+   "date": "2026-07-20",
+   "period": "2026-07-20",
+   "caliber": "SMM：行业库存天数由高位降至40天+",
+   "src": "smmsight",
+   "url": "https://finance.sina.com.cn/wm/2026-07-20/doc-iniimuyc3008177.shtml",
+   "quote": "行业库存天数开始下降，目前已下降至40天+水平，但目前水位仍旧较高。",
+   "grade": "A"
+  },
+  {
+   "id": "P09",
+   "seg": "pv",
+   "kpi": "价格",
+   "metric": "光伏玻璃2.0mm镀膜",
+   "value": 10.25,
+   "unit": "元/平方米",
+   "date": "2026-09-30",
+   "period": "2026-09-30",
+   "caliber": "2.0mm镀膜（卓创），较低点8.25上涨24%",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "7月中旬、8月初、9月初，光伏玻璃价格连续三次上涨，2.0mm玻璃修复至10.25元/平方米，较前期低点8.25元/平方米上涨24%。",
+   "grade": "A"
+  },
+  {
+   "id": "P10",
+   "seg": "pv",
+   "kpi": "库存天数",
+   "metric": "光伏玻璃行业库存天数",
+   "value": 44.69,
+   "unit": "天",
+   "date": "2026-09-25",
+   "period": "2026-09-25",
+   "caliber": "较前期高点下降16%",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "行业库存天数回落至44.69天，较前期高点下降16%。",
+   "grade": "A"
+  },
+  {
+   "id": "P11",
+   "seg": "pv",
+   "kpi": "日熔量",
+   "metric": "光伏玻璃在产日熔量",
+   "value": 7.1,
+   "unit": "万吨/日",
+   "date": "2026-09-25",
+   "period": "2026-09-25",
+   "caliber": "卓创统计，较5月末-12%",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "2026年5月至今光伏玻璃行业在产日熔量从8.3万吨降至7.1万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "P12",
+   "seg": "pv",
+   "kpi": "日熔量",
+   "metric": "光伏玻璃日熔量",
+   "value": 6.68,
+   "unit": "万吨/日",
+   "date": "2026-10-12",
+   "period": "2026-10-12",
+   "caliber": "钢联口径日熔量（与卓创口径不同，不可直接续接）",
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "截至10月12日，浮法玻璃日熔量14.13万吨/日，光伏玻璃日熔量6.68万吨/日。",
+   "grade": "A"
+  },
+  {
+   "id": "P13",
+   "seg": "pv",
+   "kpi": "产量",
+   "metric": "光伏玻璃月产量",
+   "value": 164,
+   "unit": "万吨",
+   "date": "2026-09-30",
+   "period": "2026-09",
+   "caliber": "隆众月产量",
+   "mom": -8.0,
+   "src": "caifuhao1009",
+   "url": "https://caifuhao.eastmoney.com/news/20261009085454096435370",
+   "quote": "隆众数据：9月国内光伏玻璃产量164万吨，环比-8%；表观消费量129万吨，环比-13%。",
+   "grade": "A"
+  },
+  {
+   "id": "P14",
+   "seg": "pv",
+   "kpi": "表观消费",
+   "metric": "光伏玻璃月度表观消费量",
+   "value": 129,
+   "unit": "万吨",
+   "date": "2026-09-30",
+   "period": "2026-09",
+   "caliber": "产量+进口-出口（隆众）",
+   "mom": -13.0,
+   "src": "caifuhao1009",
+   "url": "https://caifuhao.eastmoney.com/news/20261009085454096435370",
+   "quote": "表观消费量129万吨，环比-13%。",
+   "grade": "A"
+  },
+  {
+   "id": "P15",
+   "seg": "pv",
+   "kpi": "产能利用率",
+   "metric": "光伏玻璃产能利用率",
+   "value": 50.27,
+   "unit": "%",
+   "date": "2026-09-30",
+   "period": "2026-09",
+   "caliber": "隆众：8月52.98%→9月50.27%→10月预计48.00%",
+   "src": "caifuhao1009",
+   "url": "https://caifuhao.eastmoney.com/news/20261009085454096435370",
+   "quote": "产能利用率由8月的52.98%降至9月的50.27%，10月预计进一步降至48.00%。",
+   "grade": "A"
+  },
+  {
+   "id": "P16",
+   "seg": "pv",
+   "kpi": "成本",
+   "metric": "光伏玻璃头部现金成本",
+   "value": 8.5,
+   "unit": "元/平方米",
+   "date": "2026-09-27",
+   "period": "2026-09-27",
+   "caliber": "头部企业现金成本区间8.5-9.0元/平方米",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "当前光伏玻璃成本曲线陡峭，头部企业现金成本约8.5元-9元/平方米，二三线企业在11元-12元/平方米。",
+   "grade": "A"
+  },
+  {
+   "id": "P17",
+   "seg": "pv",
+   "kpi": "产能",
+   "metric": "建好可点产能（待复产）",
+   "value": 0.8,
+   "unit": "万吨/日",
+   "date": "2026-09-27",
+   "period": "2026-09-27",
+   "caliber": "头部企业掌握的已建成未点火产能约8000吨/日",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "目前有约8000吨建好可点产线掌握在头部企业手中，且堵窑、保窑产能恢复速度远快于冷修产线。",
+   "grade": "A"
+  },
+  {
+   "id": "P18",
+   "seg": "pv",
+   "kpi": "产能",
+   "metric": "可实质性出清产能",
+   "value": 3.3,
+   "unit": "万吨",
+   "date": "2026-09-17",
+   "period": "2026-09-17",
+   "caliber": "国金证券：约3.3万吨可视作实质性出清",
+   "src": "bnp0917",
+   "url": "https://www.guandian.cn/article/20260917/602873.html",
+   "quote": "国金证券发布研报称…约3.3万吨产能可视作实质性出清。",
+   "grade": "A"
+  },
+  {
+   "id": "P19",
+   "seg": "pv",
+   "kpi": "价格",
+   "metric": "光伏玻璃2.0mm镀膜",
+   "value": 10.0,
+   "unit": "元/平方米",
+   "date": "2026-09-30",
+   "period": "2026-09",
+   "caliber": "9月2mm镀膜价格区间10-10.5元/平方米",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "9月，2mm镀膜玻璃价格进一步在10—10.5元/㎡区间。",
+   "grade": "A"
+  },
+  {
+   "id": "P20",
+   "seg": "pv",
+   "kpi": "库存天数",
+   "metric": "光伏玻璃库存天数（历史高点）",
+   "value": 53.4,
+   "unit": "天",
+   "date": "2026-06-30",
+   "period": "2026-06",
+   "caliber": "2026年上半年库存天数历史高位",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "光伏玻璃行业库存天数一度升至53.4天的历史高位。",
+   "grade": "A"
+  },
+  {
+   "id": "L01",
+   "seg": "light",
+   "kpi": "表观消费",
+   "metric": "纯碱周度表观消费量",
+   "value": 69.45,
+   "unit": "万吨",
+   "date": "2026-10-08",
+   "period": "2026-10-02~10-08",
+   "caliber": "按产量+进口-出口估算的周度表观消费（全口径）",
+   "mom": -9.23,
+   "src": "sina1012",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-12/doc-iniuxwim7300925.shtml",
+   "quote": "截至10月8日的一周纯碱表观消费量69.45万吨，周环比下降9.23%。",
+   "grade": "A"
+  },
+  {
+   "id": "L02",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱生产企业总库存",
+   "value": 177.87,
+   "unit": "万吨",
+   "date": "2026-10-08",
+   "period": "2026-10-08",
+   "caliber": "隆众样本企业厂库（纯碱口径）",
+   "mom": 1.1,
+   "src": "sina1012",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-12/doc-iniuxwim7300925.shtml",
+   "quote": "截至10月8日纯碱企业库存177.87万吨，较节前提升1.1%。",
+   "grade": "A"
+  },
+  {
+   "id": "L03",
+   "seg": "light",
+   "kpi": "开工率",
+   "metric": "纯碱综合开工率",
+   "value": 76.15,
+   "unit": "%",
+   "date": "2026-10-08",
+   "period": "2026-10-08",
+   "caliber": "综合产能利用率",
+   "src": "sina1012",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-12/doc-iniuxwim7300925.shtml",
+   "quote": "本周开工率76.15%环比小幅回升。",
+   "grade": "A"
+  },
+  {
+   "id": "L04",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱生产企业总库存",
+   "value": 190.84,
+   "unit": "万吨",
+   "date": "2026-08-31",
+   "period": "2026-08-31",
+   "caliber": "隆众：轻碱104.36 + 重碱86.48",
+   "mom": 1.91,
+   "src": "cnfin0831",
+   "url": "https://www.cnfin.com/kx/detail/20260831/4462682_1.html",
+   "quote": "截至8月31日当周，国内纯碱厂家总库存190.84万吨，较上周四增加3.57万吨，涨幅1.91%。其中轻质纯碱104.36万吨，重质纯碱86.48万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L05",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱生产企业总库存",
+   "value": 186.27,
+   "unit": "万吨",
+   "date": "2026-08-10",
+   "period": "2026-08-10",
+   "caliber": "隆众：轻碱105.12 + 重碱81.15",
+   "mom": 0.71,
+   "src": "cnfin0810",
+   "url": "https://www.cnfin.com/kx/detail/20260810/4453245_1.html",
+   "quote": "截至8月10日当周，国内纯碱厂家总库存186.27万吨，较上周四增加1.32万吨，涨幅0.71%。其中轻质纯碱105.12万吨，重质纯碱81.15万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L06",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱生产企业总库存",
+   "value": 173.0,
+   "unit": "万吨",
+   "date": "2026-07-02",
+   "period": "2026-07-02",
+   "caliber": "隆众：轻碱104.11 + 重碱68.89",
+   "mom": 0.32,
+   "src": "cnfin0702",
+   "url": "https://www.cnfin.com/kx/detail/20260702/4434565_1.html",
+   "quote": "截至7月2日当周，国内纯碱厂家总库存173万吨，较周一增加0.56万吨，涨幅0.32%。其中轻质纯碱104.11万吨，重质纯碱68.89万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L07",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱生产企业总库存",
+   "value": 180.07,
+   "unit": "万吨",
+   "date": "2026-07-30",
+   "period": "2026-07-30",
+   "caliber": "隆众总库存",
+   "mom": 1.09,
+   "src": "cnfin0730",
+   "url": "https://www.cnfin.com/yw-lb/detail/20260730/4448430_1.html",
+   "quote": "截至7月30日，国内纯碱厂家总库存180.07万吨，较上周四增加1.94万吨，涨幅1.09%。当周产量76.85万吨，综合产能利用率80.68%。",
+   "grade": "A"
+  },
+  {
+   "id": "L08",
+   "seg": "light",
+   "kpi": "开工率",
+   "metric": "纯碱综合产能利用率",
+   "value": 80.68,
+   "unit": "%",
+   "date": "2026-07-30",
+   "period": "2026-07-30",
+   "caliber": "综合产能利用率",
+   "src": "cnfin0730",
+   "url": "https://www.cnfin.com/yw-lb/detail/20260730/4448430_1.html",
+   "quote": "纯碱综合产能利用率80.68%，上周为79.95%。",
+   "grade": "A"
+  },
+  {
+   "id": "L09",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱生产企业总库存",
+   "value": 153.96,
+   "unit": "万吨",
+   "date": "2026-10-19",
+   "period": "2026-10-19",
+   "caliber": "隆众：轻碱82.23 + 重碱71.73",
+   "mom": -5.48,
+   "src": "em1020",
+   "url": "https://wap.eastmoney.com/a/202610193900177239.html",
+   "quote": "截止2026年10月19日，国内纯碱厂家总库存153.96万吨，较周一减少8.93万吨，跌幅5.48%。其中轻质纯碱82.23万吨，重质纯碱71.73万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L10",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱生产企业总库存",
+   "value": 172.44,
+   "unit": "万吨",
+   "date": "2026-06-29",
+   "period": "2026-06-29",
+   "caliber": "隆众：轻碱105.03 + 重碱67.41",
+   "src": "cnfin0702",
+   "url": "https://www.cnfin.com/kx/detail/20260629/4433015_1.html",
+   "quote": "截至6月29日当周，国内纯碱厂家总库存172.44万吨，其中轻质纯碱105.03万吨，重质纯碱67.41万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L11",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "重碱生产企业库存",
+   "value": 84.65,
+   "unit": "万吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "钢联/卓创重碱厂库",
+   "mom": 2.1,
+   "yoy": -6.3,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "截至10月9日，重碱生产企业库存84.65万吨，环比+2.1%，同比-6.3%；轻碱生产企业库存93.22万吨，环比+0.2%，同比+33.8%。",
+   "grade": "A"
+  },
+  {
+   "id": "L12",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "轻碱生产企业库存",
+   "value": 93.22,
+   "unit": "万吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "钢联/卓创轻碱厂库",
+   "mom": 0.2,
+   "yoy": 33.8,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "轻碱生产企业库存93.22万吨，环比+0.2%，同比+33.8%。",
+   "grade": "A"
+  },
+  {
+   "id": "L13",
+   "seg": "light",
+   "kpi": "产量",
+   "metric": "纯碱周度总产量",
+   "value": 74.98,
+   "unit": "万吨",
+   "date": "2026-07-17",
+   "period": "2026-07-11~07-17",
+   "caliber": "全国周产量",
+   "mom": -0.7,
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "上周纯碱供给端有所收缩，总产量74.98万吨，整体产能利用率78.73%，总产量环比下降0.7%。",
+   "grade": "A"
+  },
+  {
+   "id": "L14",
+   "seg": "light",
+   "kpi": "产量",
+   "metric": "重碱周度产量",
+   "value": 40.96,
+   "unit": "万吨",
+   "date": "2026-07-17",
+   "period": "2026-07-11~07-17",
+   "caliber": "重碱周产量（供给端，非需求）",
+   "mom": -4.3,
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "重质纯碱产量40.96万吨，环比减少4.3%；轻质纯碱产量34.02万吨，环比增长3.9%。",
+   "grade": "A"
+  },
+  {
+   "id": "L15",
+   "seg": "light",
+   "kpi": "产量",
+   "metric": "轻碱周度产量",
+   "value": 34.02,
+   "unit": "万吨",
+   "date": "2026-07-17",
+   "period": "2026-07-11~07-17",
+   "caliber": "轻碱周产量（供给端，非需求）",
+   "mom": 3.9,
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "轻质纯碱产量34.02万吨，环比增长3.9%，逆势创下历史同期最高纪录。",
+   "grade": "A"
+  },
+  {
+   "id": "L16",
+   "seg": "light",
+   "kpi": "产量",
+   "metric": "重碱周度产量",
+   "value": 38.58,
+   "unit": "万吨",
+   "date": "2026-10-09",
+   "period": "2026-10-03~10-09",
+   "caliber": "重碱周产量",
+   "mom": -4.2,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "截至10月9日，重碱周度产量38.58万吨，环比-4.2%；轻碱周度产量32.81万吨，环比+3.8%。",
+   "grade": "A"
+  },
+  {
+   "id": "L17",
+   "seg": "light",
+   "kpi": "产量",
+   "metric": "轻碱周度产量",
+   "value": 32.81,
+   "unit": "万吨",
+   "date": "2026-10-09",
+   "period": "2026-10-03~10-09",
+   "caliber": "轻碱周产量",
+   "mom": 3.8,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "轻碱周度产量32.81万吨，环比+3.8%。",
+   "grade": "A"
+  },
+  {
+   "id": "L18",
+   "seg": "light",
+   "kpi": "开工率",
+   "metric": "纯碱综合开工率",
+   "value": 76.2,
+   "unit": "%",
+   "date": "2026-10-14",
+   "period": "2026-10-14",
+   "caliber": "综合开工率",
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "截至10月14日，国内纯碱行业综合开工率回升至76.2%。行业周度产量回升至75.16万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L19",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "纯碱样本企业总厂库",
+   "value": 179.26,
+   "unit": "万吨",
+   "date": "2026-10-14",
+   "period": "2026-10-14",
+   "caliber": "期货日报口径（与隆众周报口径有差异）",
+   "yoy": 8.62,
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "截至10月14日，国内纯碱样本企业总厂库为179.26万吨，同比上升8.62%。",
+   "grade": "A"
+  },
+  {
+   "id": "L20",
+   "seg": "light",
+   "kpi": "利润",
+   "metric": "氨碱法毛利",
+   "value": -202,
+   "unit": "元/吨",
+   "date": "2026-10-14",
+   "period": "2026-10-14",
+   "caliber": "氨碱法单吨毛利",
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "联碱产线双吨毛利约为-184元/吨；氨碱产线毛利为-202元/吨；天然碱路线毛利维持在108元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L21",
+   "seg": "light",
+   "kpi": "利润",
+   "metric": "联碱法双吨毛利",
+   "value": -184,
+   "unit": "元/吨",
+   "date": "2026-10-14",
+   "period": "2026-10-14",
+   "caliber": "联碱法双吨毛利",
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "当前联碱产线双吨毛利约为-184元／吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L22",
+   "seg": "light",
+   "kpi": "利润",
+   "metric": "天然碱毛利",
+   "value": 108,
+   "unit": "元/吨",
+   "date": "2026-10-14",
+   "period": "2026-10-14",
+   "caliber": "天然碱单吨毛利",
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "天然碱路线凭借资源优势，毛利维持在108元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L23",
+   "seg": "light",
+   "kpi": "利润",
+   "metric": "联碱法（双吨）理论利润",
+   "value": -18.5,
+   "unit": "元/吨",
+   "date": "2026-07-16",
+   "period": "2026-07-16",
+   "caliber": "紫金天风口径（与期货日报口径不同，不可直接比较）",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "截至7月16日，联碱法（双吨）理论利润为-18.50元/吨，环比下降23.33%；氨碱法理论利润为-105.05元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L24",
+   "seg": "light",
+   "kpi": "利润",
+   "metric": "氨碱法理论利润",
+   "value": -105.05,
+   "unit": "元/吨",
+   "date": "2026-07-16",
+   "period": "2026-07-16",
+   "caliber": "紫金天风成本模型",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "氨碱法理论利润为-105.05元/吨，环比微降0.67%。",
+   "grade": "A"
+  },
+  {
+   "id": "L25",
+   "seg": "light",
+   "kpi": "库存",
+   "metric": "重碱下游原料库存天数",
+   "value": 24.4,
+   "unit": "天",
+   "date": "2026-09-30",
+   "period": "2026-09-30",
+   "caliber": "重碱下游（玻璃厂）原料库存天数",
+   "mom": 4.7,
+   "yoy": 6.6,
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "截至9月30日，重碱下游原料库存天数24.4天，环比+4.7%，同比+6.6%。库存天数控制在30天以内。",
+   "grade": "A"
+  },
+  {
+   "id": "L26",
+   "seg": "light",
+   "kpi": "价格",
+   "metric": "沙河重碱市场价",
+   "value": 942,
+   "unit": "元/吨",
+   "date": "2026-10-15",
+   "period": "2026-10-15",
+   "caliber": "沙河重碱市场价（含税，自提）",
+   "mom": -2,
+   "src": "gg1016",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-10-16/doc-inivmazi7720010.shtml",
+   "quote": "10月15日…沙河重质纯碱市场价942元/吨，环比下跌2元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L27",
+   "seg": "light",
+   "kpi": "价格",
+   "metric": "沙河重碱市场低端价",
+   "value": 950,
+   "unit": "元/吨",
+   "date": "2026-10-12",
+   "period": "2026-10-12",
+   "caliber": "沙河重碱市场低端价区间950-980元/吨",
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "沙河重碱市场低端价在950-980元/吨低位波动，西北地区市场成交价下调20元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L28",
+   "seg": "light",
+   "kpi": "价格",
+   "metric": "华北氨碱法生产成本",
+   "value": 1295,
+   "unit": "元/吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "华北氨碱法完全成本（紫金天风/钢联）",
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "截至10月9日，华北氨碱法纯碱生产成本1295元/吨，生产毛利-177.25元/吨；华东联碱法生产成本1788元/吨，毛利-196元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L29",
+   "seg": "light",
+   "kpi": "产量",
+   "metric": "纯碱周度总产量",
+   "value": 75.16,
+   "unit": "万吨",
+   "date": "2026-10-14",
+   "period": "2026-10-08~10-14",
+   "caliber": "全国周产量",
+   "src": "hf1015",
+   "url": "https://finance.eastmoney.com/a/202610153896859175.html",
+   "quote": "行业周度产量回升至75.16万吨，较国庆假期低点明显抬升。",
+   "grade": "A"
+  },
+  {
+   "id": "L30",
+   "seg": "light",
+   "kpi": "开工率",
+   "metric": "纯碱行业开工率",
+   "value": 64.19,
+   "unit": "%",
+   "date": "2026-10-14",
+   "period": "2026-10-14",
+   "caliber": "光大期货口径（与期货日报/隆众不同口径）",
+   "src": "gg1015",
+   "url": "https://finance.sina.cn/futuremarket/qsyw/2026-10-15/detail-inivhiep7453390.d.html",
+   "quote": "昨日行业开工率64.19%，与前一工作日持平，内蒙、河南大厂检修落地后供应端边际下降速度减缓。",
+   "grade": "A"
+  },
+  {
+   "id": "L31",
+   "seg": "li",
+   "kpi": "产量",
+   "metric": "碳酸锂周度产量",
+   "value": 2.45,
+   "unit": "万吨",
+   "date": "2026-07-17",
+   "period": "2026-07-11~07-17",
+   "caliber": "SMM周度产量",
+   "mom": -1.2,
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "上周碳酸锂产量2.45万吨，环比减少1.2%，产量自前期高点连续三周回落。",
+   "grade": "A"
+  },
+  {
+   "id": "L32",
+   "seg": "li",
+   "kpi": "产量",
+   "metric": "碳酸锂周度产量",
+   "value": 2.6671,
+   "unit": "万吨",
+   "date": "2026-09-27",
+   "period": "2026-09-21~09-27",
+   "caliber": "东海期货/SMM周度产量",
+   "mom": -4.4,
+   "src": "sina0928",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-09-28/doc-initkhxf9674834.shtml",
+   "quote": "碳酸锂周度产量录得26671吨，周环比减少4.4%(-1218吨)。",
+   "grade": "A"
+  },
+  {
+   "id": "L33",
+   "seg": "li",
+   "kpi": "产量",
+   "metric": "碳酸锂月度产量",
+   "value": 12.8517,
+   "unit": "万吨",
+   "date": "2026-09-30",
+   "period": "2026-09",
+   "caliber": "机构统计9月国内碳酸锂产量（含新增统计来源）",
+   "mom": 10.0,
+   "src": "tx1014",
+   "url": "https://www.cnfin.com/yw-lb/detail/20261014/4480424_1.html",
+   "quote": "有机构统计显示，9月国内碳酸锂产量预计环比增加约10%至128517吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L34",
+   "seg": "li",
+   "kpi": "库存",
+   "metric": "碳酸锂周度库存（新口径）",
+   "value": 15.3041,
+   "unit": "万吨",
+   "date": "2026-09-24",
+   "period": "2026-09-24",
+   "caliber": "SMM 9月4日起新口径（含贸易商/电芯厂），与旧口径不可比",
+   "mom": -5239,
+   "src": "sina0928",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-09-28/doc-initkhxf9674834.shtml",
+   "quote": "SMM社会库存去库5239吨至153041吨。SMM自9月4日起启用新版库存统计口径…一次性上修至16.93万吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L35",
+   "seg": "li",
+   "kpi": "价格",
+   "metric": "电池级碳酸锂现货均价",
+   "value": 13.3,
+   "unit": "万元/吨",
+   "date": "2026-09-24",
+   "period": "2026-09-24",
+   "caliber": "SMM电池级碳酸锂",
+   "mom": 0.0,
+   "src": "sina0928",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-09-28/doc-initkhxf9674834.shtml",
+   "quote": "SMM电池级碳酸锂13.3万元/吨，周环比0%；锂辉石精矿（CIF中国）1900美元/吨。",
+   "grade": "A"
+  },
+  {
+   "id": "L36",
+   "seg": "li_soda",
+   "kpi": "产量",
+   "metric": "平板玻璃产量（国家统计局）",
+   "value": 7654,
+   "unit": "万重量箱",
+   "date": "2026-06-30",
+   "period": "2026-06",
+   "caliber": "规模以上工业企业平板玻璃产量（含浮法与压延）",
+   "yoy": -5.3,
+   "src": "sina0715",
+   "url": "https://finance.sina.com.cn/money/future/fmnews/2026-07-15/doc-inihwmii7897733.shtml",
+   "quote": "国家统计局：2026年6月平板玻璃产量7654万重量箱，同比下降5.3%；1—6月累计产量44683万重量箱，同比下降5.7%。",
+   "grade": "A"
+  },
+  {
+   "id": "R01",
+   "seg": "end_re",
+   "kpi": "竣工",
+   "metric": "房屋竣工面积（累计）",
+   "value": 21097,
+   "unit": "万平方米",
+   "date": "2026-08-31",
+   "period": "2026-01~08",
+   "caliber": "房地产开发企业房屋竣工面积，累计同比",
+   "yoy": -23.7,
+   "src": "lz0916",
+   "url": "https://www.oilchem.net/26-0916-16-9898aa47ce5303c0.html",
+   "quote": "1—8月份，房地产开发企业房屋施工面积560770万平方米，同比下降12.8%。房屋新开工面积29894万平方米，下降24.8%。房屋竣工面积21097万平方米，下降23.7%。",
+   "grade": "A"
+  },
+  {
+   "id": "R02",
+   "seg": "end_re",
+   "kpi": "新开工",
+   "metric": "房屋新开工面积（累计）",
+   "value": 29894,
+   "unit": "万平方米",
+   "date": "2026-08-31",
+   "period": "2026-01~08",
+   "caliber": "新开工面积，累计同比",
+   "yoy": -24.8,
+   "src": "lz0916",
+   "url": "https://www.oilchem.net/26-0916-16-9898aa47ce5303c0.html",
+   "quote": "房屋新开工面积29894万平方米，下降24.8%。",
+   "grade": "A"
+  },
+  {
+   "id": "R03",
+   "seg": "end_re",
+   "kpi": "销量",
+   "metric": "30大中城市商品房成交面积（7日均）",
+   "value": 19.17,
+   "unit": "万平方米",
+   "date": "2026-07-22",
+   "period": "2026-07-22",
+   "caliber": "30城成交面积7日移动平均",
+   "yoy": 1.0,
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "截至7月22日，30大中城市商品房成交面积（7日移动平均值）录得19.17万平米，同比转正至增长1%。",
+   "grade": "A"
+  },
+  {
+   "id": "R04",
+   "seg": "end_re",
+   "kpi": "销量",
+   "metric": "30大中城市商品房成交面积同比",
+   "value": null,
+   "unit": "%",
+   "date": "2026-10-12",
+   "period": "2026-10-12",
+   "caliber": "节后30城成交季节性回升，同比基本持平",
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "节后30大中城市商品房成交面积季节性回升，但同比基本持平，仍处于历史同期低位。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "S01",
+   "seg": "end_pv",
+   "kpi": "装机",
+   "metric": "国内光伏新增装机（同比）",
+   "value": null,
+   "unit": "%",
+   "date": "2026-06-30",
+   "period": "2026-01~06",
+   "caliber": "国家能源局口径，同比",
+   "yoy": -66.04,
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "需求端2026年上半年继续走弱，国内光伏新增装机同比大幅下滑66.04%，组件企业排产下降。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C01",
+   "seg": "policy",
+   "kpi": "政策",
+   "metric": "光伏等产品取消增值税出口退税",
+   "value": null,
+   "unit": "",
+   "date": "2026-04-01",
+   "period": "2026-04-01",
+   "caliber": "自2026年4月1日起取消光伏等产品（含光伏玻璃）出口退税",
+   "src": "tax0109",
+   "url": "https://www.news.cn/fortune/20260109/236ecfbdf0084a8aa5aef9e74fab60e7/c.html",
+   "quote": "一、自2026年4月1日起，取消光伏等产品增值税出口退税。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C02",
+   "seg": "policy",
+   "kpi": "政策",
+   "metric": "光伏玻璃行业自律减产",
+   "value": null,
+   "unit": "",
+   "date": "2026-05-31",
+   "period": "2026-05-31",
+   "caliber": "5月底玻璃企业协商达成自律共识，冷修、堵窑、限产",
+   "src": "smmsight",
+   "url": "https://finance.sina.com.cn/wm/2026-07-20/doc-iniimuyc3008177.shtml",
+   "quote": "5月底国内玻璃企业协商达成自律共识，同步推进冷修、堵窑、限产，减产动作从5月底集中落地。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C03",
+   "seg": "policy",
+   "kpi": "政策",
+   "metric": "光伏行业产能限制闭门会",
+   "value": null,
+   "unit": "",
+   "date": "2026-10-13",
+   "period": "2026-10-13",
+   "caliber": "光伏企业杭州举行反内卷闭门会议",
+   "src": "em1022",
+   "url": "https://finance.eastmoney.com/a/202610103891780924.html",
+   "quote": "光伏企业杭州举行反内卷闭门会议，进一步形成产能限制的落地计划。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C04",
+   "seg": "policy",
+   "kpi": "政策",
+   "metric": "郑商所完善纯碱规则（服务光伏玻璃）",
+   "value": null,
+   "unit": "",
+   "date": "2026-07-09",
+   "period": "2026-07-09",
+   "caliber": "郑商所纯碱交割/规则调整",
+   "src": "em1022",
+   "url": "https://finance.eastmoney.com/a/202607093800400551.html",
+   "quote": "郑商所完善纯碱规则 赋能光伏玻璃企业。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C05",
+   "seg": "policy",
+   "kpi": "政策",
+   "metric": "玻璃清洁燃料改造（湖北等）",
+   "value": null,
+   "unit": "",
+   "date": "2026-09-16",
+   "period": "2026-09-16",
+   "caliber": "部分地区要求产线完成清洁燃料改造，抬升区域成本",
+   "src": "lz0916",
+   "url": "https://www.oilchem.net/26-0916-16-9898aa47ce5303c0.html",
+   "quote": "政策层面，部分地区对产线要求完成清洁燃料改造的建议，也有望加速落后产能出清。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C06",
+   "seg": "policy",
+   "kpi": "事件",
+   "metric": "德力股份解除55亿元光伏玻璃大单",
+   "value": null,
+   "unit": "",
+   "date": "2026-05-31",
+   "period": "2026-05",
+   "caliber": "2021年签订，五年内未实际履行，2026年5月解除",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "2026年5月，德力股份解除了与隆基绿能一笔价值55亿元的光伏玻璃大单…原合同五年内并未实际履行。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C07",
+   "seg": "policy",
+   "kpi": "事件",
+   "metric": "浮法玻璃9月点火2条产线",
+   "value": null,
+   "unit": "",
+   "date": "2026-09-30",
+   "period": "2026-09",
+   "caliber": "9月点火产线2条，10月仍有前期点火产线产出",
+   "src": "qhrb1013",
+   "url": "https://finance.eastmoney.com/a/202610133893315363.html",
+   "quote": "9月点火产线有2条，前期点火产线也已集中引板，10月仍有数条前期点火的产线即将产出玻璃。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C08",
+   "seg": "policy",
+   "kpi": "事件",
+   "metric": "浮法玻璃7月冷修两线（1500吨/日）",
+   "value": -1500,
+   "unit": "吨/日",
+   "date": "2026-07-16",
+   "period": "2026-07-16",
+   "caliber": "湖南雁翔湘1000吨/日 + 威海中玻三线500吨/日",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "湖南雁翔湘（1000吨/日）停产，威海中玻三线（500吨/日）放水，合计1500吨/日产能退出。",
+   "grade": "A"
+  },
+  {
+   "id": "C09",
+   "seg": "policy",
+   "kpi": "事件",
+   "metric": "光伏玻璃企业资产出清",
+   "value": null,
+   "unit": "",
+   "date": "2026-09-22",
+   "period": "2026-09-22",
+   "caliber": "海控三鑫7条光伏玻璃深加工线公开拍卖；安彩高科出售非核心资产",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "9月22日，海南发展旗下的海控三鑫将7条光伏玻璃深加工线在京东资产交易平台公开拍卖。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "C10",
+   "seg": "policy",
+   "kpi": "政策",
+   "metric": "强制国标与成本核算通则实施",
+   "value": null,
+   "unit": "",
+   "date": "2026-09-17",
+   "period": "2026-09-17",
+   "caliber": "光伏行业强制国标、成本核算通则等实施，加速尾部产能出清",
+   "src": "bnp0917",
+   "url": "https://www.guandian.cn/article/20260917/602873.html",
+   "quote": "叠加强制国标、成本核算通则等实施…约3.3万吨产能可视作实质性出清。",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "Q01",
+   "seg": "float",
+   "kpi": "定性",
+   "metric": "深加工企业人员与设备开工率",
+   "value": null,
+   "unit": "定性",
+   "date": "2026-07-09",
+   "period": "2026-07-09",
+   "caliber": "卓创资讯机构调研定性结论（无量化值）",
+   "grade": "D",
+   "src": "sci99_0709",
+   "url": "https://www.sci99.com/mobile/info/3_1000008_45021915.html",
+   "quote": "浮法玻璃深加工企业人员与设备开工率同比大幅下降。",
+   "qualitative": true
+  },
+  {
+   "id": "Q02",
+   "seg": "light",
+   "kpi": "价格",
+   "metric": "重轻碱价差（华北）",
+   "value": 0,
+   "unit": "元/吨",
+   "date": "2026-07-20",
+   "period": "2026-07-20",
+   "caliber": "重碱市场价-轻碱市场价（华北），西北0，华东/华中70",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "上周华北地区重轻碱价差缩减至0元/吨，西北地区继续维持0元/吨，华东与华中地区暂时维持在70元/吨。",
+   "grade": "D"
+  },
+  {
+   "id": "Q03",
+   "seg": "light",
+   "kpi": "价格",
+   "metric": "轻碱市场价（华北）",
+   "value": 1250,
+   "unit": "元/吨",
+   "date": "2026-10-09",
+   "period": "2026-10-09",
+   "caliber": "华北轻碱市场价（含税）",
+   "src": "zjtk1014",
+   "url": "https://www.163.com/dy/article/L97IG8PT05568W0A.html",
+   "quote": "上周，轻碱价格整体稳定，华北地区市场价在1250元/吨高位持稳，西北地区市场价缓慢降至800元吨低位。",
+   "grade": "D"
+  },
+  {
+   "id": "Q04",
+   "seg": "parent",
+   "kpi": "价格",
+   "metric": "沙河重碱市场价",
+   "value": 1025,
+   "unit": "元/吨",
+   "date": "2026-07-20",
+   "period": "2026-07-20",
+   "caliber": "沙河重碱市场低端价",
+   "src": "zjtk0722",
+   "url": "https://finance.sina.com.cn/wm/2026-07-22/doc-iniispna8005399.shtml",
+   "quote": "截至7月20日，沙河重碱市场低端价1025元/吨，周环比下跌30元/吨；西北地区重碱市场成交价870元/吨。",
+   "grade": "D"
+  },
+  {
+   "id": "Q05",
+   "seg": "parent",
+   "kpi": "价格",
+   "metric": "沙河重碱市场价",
+   "value": 944,
+   "unit": "元/吨",
+   "date": "2026-10-14",
+   "period": "2026-10-14",
+   "caliber": "沙河重碱自提价",
+   "src": "gg1015",
+   "url": "https://finance.sina.cn/futuremarket/qsyw/2026-10-15/detail-inivhiep7453390.d.html",
+   "quote": "昨日沙河地区重碱自提价格944元/吨，日环比下跌17元/吨。",
+   "grade": "D"
+  },
+  {
+   "id": "Q06",
+   "seg": "pv",
+   "kpi": "事件",
+   "metric": "光伏玻璃金九银十预期降温",
+   "value": null,
+   "unit": "",
+   "date": "2026-09-27",
+   "period": "2026-09",
+   "caliber": "行业媒体与从业者调研",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "金九银十已不再被市场寄予厚望，节后光伏玻璃市场需求可能进一步缩量。",
+   "grade": "D",
+   "qualitative": true
+  },
+  {
+   "id": "Q07",
+   "seg": "pv",
+   "kpi": "终端",
+   "metric": "组件排产对光伏玻璃采购",
+   "value": null,
+   "unit": "",
+   "date": "2026-09-27",
+   "period": "2026-09",
+   "caliber": "头部组件企业 9 月排产环比小幅增加、同比下滑",
+   "src": "gsn0927",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "quote": "9月头部组件企业排产环比小幅增加、同比下滑，二三线组件企业开工率更低。",
+   "grade": "D",
+   "qualitative": true
+  },
+  {
+   "id": "Q08",
+   "seg": "float",
+   "kpi": "产线",
+   "metric": "浮法玻璃湖北清洁能源技改",
+   "value": null,
+   "unit": "",
+   "date": "2026-10-13",
+   "period": "2026-10",
+   "caliber": "推进中，抬升区域成本",
+   "src": "qhrb1013",
+   "url": "https://finance.eastmoney.com/a/202610133893315363.html",
+   "quote": "湖北清洁能源置换技改也在持续推进。",
+   "grade": "D",
+   "qualitative": true
+  }
+ ],
+ "series": {
+  "SA": [
+   {
+    "d": "2025-09-30",
+    "c": 1255.0
+   },
+   {
+    "d": "2025-10-09",
+    "c": 1250.0
+   },
+   {
+    "d": "2025-10-10",
+    "c": 1240.0
+   },
+   {
+    "d": "2025-10-13",
+    "c": 1247.0
+   },
+   {
+    "d": "2025-10-14",
+    "c": 1234.0
+   },
+   {
+    "d": "2025-10-15",
+    "c": 1232.0
+   },
+   {
+    "d": "2025-10-16",
+    "c": 1235.0
+   },
+   {
+    "d": "2025-10-17",
+    "c": 1209.0
+   },
+   {
+    "d": "2025-10-20",
+    "c": 1219.0
+   },
+   {
+    "d": "2025-10-21",
+    "c": 1210.0
+   },
+   {
+    "d": "2025-10-22",
+    "c": 1223.0
+   },
+   {
+    "d": "2025-10-23",
+    "c": 1235.0
+   },
+   {
+    "d": "2025-10-24",
+    "c": 1229.0
+   },
+   {
+    "d": "2025-10-27",
+    "c": 1246.0
+   },
+   {
+    "d": "2025-10-28",
+    "c": 1239.0
+   },
+   {
+    "d": "2025-10-29",
+    "c": 1259.0
+   },
+   {
+    "d": "2025-10-30",
+    "c": 1235.0
+   },
+   {
+    "d": "2025-10-31",
+    "c": 1225.0
+   },
+   {
+    "d": "2025-11-03",
+    "c": 1202.0
+   },
+   {
+    "d": "2025-11-04",
+    "c": 1189.0
+   },
+   {
+    "d": "2025-11-05",
+    "c": 1195.0
+   },
+   {
+    "d": "2025-11-06",
+    "c": 1207.0
+   },
+   {
+    "d": "2025-11-07",
+    "c": 1210.0
+   },
+   {
+    "d": "2025-11-10",
+    "c": 1226.0
+   },
+   {
+    "d": "2025-11-11",
+    "c": 1215.0
+   },
+   {
+    "d": "2025-11-12",
+    "c": 1214.0
+   },
+   {
+    "d": "2025-11-13",
+    "c": 1239.0
+   },
+   {
+    "d": "2025-11-14",
+    "c": 1226.0
+   },
+   {
+    "d": "2025-11-17",
+    "c": 1231.0
+   },
+   {
+    "d": "2025-11-18",
+    "c": 1214.0
+   },
+   {
+    "d": "2025-11-19",
+    "c": 1182.0
+   },
+   {
+    "d": "2025-11-20",
+    "c": 1158.0
+   },
+   {
+    "d": "2025-11-21",
+    "c": 1170.0
+   },
+   {
+    "d": "2025-11-24",
+    "c": 1183.0
+   },
+   {
+    "d": "2025-11-25",
+    "c": 1173.0
+   },
+   {
+    "d": "2025-11-26",
+    "c": 1175.0
+   },
+   {
+    "d": "2025-11-27",
+    "c": 1176.0
+   },
+   {
+    "d": "2025-11-28",
+    "c": 1177.0
+   },
+   {
+    "d": "2025-12-01",
+    "c": 1176.0
+   },
+   {
+    "d": "2025-12-02",
+    "c": 1183.0
+   },
+   {
+    "d": "2025-12-03",
+    "c": 1165.0
+   },
+   {
+    "d": "2025-12-04",
+    "c": 1162.0
+   },
+   {
+    "d": "2025-12-05",
+    "c": 1137.0
+   },
+   {
+    "d": "2025-12-08",
+    "c": 1133.0
+   },
+   {
+    "d": "2025-12-09",
+    "c": 1125.0
+   },
+   {
+    "d": "2025-12-10",
+    "c": 1094.0
+   },
+   {
+    "d": "2025-12-11",
+    "c": 1103.0
+   },
+   {
+    "d": "2025-12-12",
+    "c": 1126.0
+   },
+   {
+    "d": "2025-12-15",
+    "c": 1156.0
+   },
+   {
+    "d": "2025-12-16",
+    "c": 1170.0
+   },
+   {
+    "d": "2025-12-17",
+    "c": 1170.0
+   },
+   {
+    "d": "2025-12-18",
+    "c": 1193.0
+   },
+   {
+    "d": "2025-12-19",
+    "c": 1176.0
+   },
+   {
+    "d": "2025-12-22",
+    "c": 1169.0
+   },
+   {
+    "d": "2025-12-23",
+    "c": 1175.0
+   },
+   {
+    "d": "2025-12-24",
+    "c": 1184.0
+   },
+   {
+    "d": "2025-12-25",
+    "c": 1184.0
+   },
+   {
+    "d": "2025-12-26",
+    "c": 1200.0
+   },
+   {
+    "d": "2025-12-29",
+    "c": 1181.0
+   },
+   {
+    "d": "2025-12-30",
+    "c": 1213.0
+   },
+   {
+    "d": "2025-12-31",
+    "c": 1209.0
+   },
+   {
+    "d": "2026-01-05",
+    "c": 1177.0
+   },
+   {
+    "d": "2026-01-06",
+    "c": 1190.0
+   },
+   {
+    "d": "2026-01-07",
+    "c": 1271.0
+   },
+   {
+    "d": "2026-01-08",
+    "c": 1239.0
+   },
+   {
+    "d": "2026-01-09",
+    "c": 1228.0
+   },
+   {
+    "d": "2026-01-12",
+    "c": 1239.0
+   },
+   {
+    "d": "2026-01-13",
+    "c": 1212.0
+   },
+   {
+    "d": "2026-01-14",
+    "c": 1222.0
+   },
+   {
+    "d": "2026-01-15",
+    "c": 1193.0
+   },
+   {
+    "d": "2026-01-16",
+    "c": 1192.0
+   },
+   {
+    "d": "2026-01-19",
+    "c": 1192.0
+   },
+   {
+    "d": "2026-01-20",
+    "c": 1177.0
+   },
+   {
+    "d": "2026-01-21",
+    "c": 1163.0
+   },
+   {
+    "d": "2026-01-22",
+    "c": 1185.0
+   },
+   {
+    "d": "2026-01-23",
+    "c": 1198.0
+   },
+   {
+    "d": "2026-01-26",
+    "c": 1205.0
+   },
+   {
+    "d": "2026-01-27",
+    "c": 1194.0
+   },
+   {
+    "d": "2026-01-28",
+    "c": 1198.0
+   },
+   {
+    "d": "2026-01-29",
+    "c": 1224.0
+   },
+   {
+    "d": "2026-01-30",
+    "c": 1204.0
+   },
+   {
+    "d": "2026-02-02",
+    "c": 1203.0
+   },
+   {
+    "d": "2026-02-03",
+    "c": 1201.0
+   },
+   {
+    "d": "2026-02-04",
+    "c": 1229.0
+   },
+   {
+    "d": "2026-02-05",
+    "c": 1209.0
+   },
+   {
+    "d": "2026-02-06",
+    "c": 1190.0
+   },
+   {
+    "d": "2026-02-09",
+    "c": 1181.0
+   },
+   {
+    "d": "2026-02-10",
+    "c": 1171.0
+   },
+   {
+    "d": "2026-02-11",
+    "c": 1178.0
+   },
+   {
+    "d": "2026-02-12",
+    "c": 1162.0
+   },
+   {
+    "d": "2026-02-13",
+    "c": 1150.0
+   },
+   {
+    "d": "2026-02-24",
+    "c": 1169.0
+   },
+   {
+    "d": "2026-02-25",
+    "c": 1191.0
+   },
+   {
+    "d": "2026-02-26",
+    "c": 1191.0
+   },
+   {
+    "d": "2026-02-27",
+    "c": 1194.0
+   },
+   {
+    "d": "2026-03-02",
+    "c": 1188.0
+   },
+   {
+    "d": "2026-03-03",
+    "c": 1218.0
+   },
+   {
+    "d": "2026-03-04",
+    "c": 1203.0
+   },
+   {
+    "d": "2026-03-05",
+    "c": 1225.0
+   },
+   {
+    "d": "2026-03-06",
+    "c": 1242.0
+   },
+   {
+    "d": "2026-03-09",
+    "c": 1276.0
+   },
+   {
+    "d": "2026-03-10",
+    "c": 1235.0
+   },
+   {
+    "d": "2026-03-11",
+    "c": 1255.0
+   },
+   {
+    "d": "2026-03-12",
+    "c": 1256.0
+   },
+   {
+    "d": "2026-03-13",
+    "c": 1277.0
+   },
+   {
+    "d": "2026-03-16",
+    "c": 1256.0
+   },
+   {
+    "d": "2026-03-17",
+    "c": 1243.0
+   },
+   {
+    "d": "2026-03-18",
+    "c": 1211.0
+   },
+   {
+    "d": "2026-03-19",
+    "c": 1217.0
+   },
+   {
+    "d": "2026-03-20",
+    "c": 1202.0
+   },
+   {
+    "d": "2026-03-23",
+    "c": 1256.0
+   },
+   {
+    "d": "2026-03-24",
+    "c": 1240.0
+   },
+   {
+    "d": "2026-03-25",
+    "c": 1244.0
+   },
+   {
+    "d": "2026-03-26",
+    "c": 1225.0
+   },
+   {
+    "d": "2026-03-27",
+    "c": 1229.0
+   },
+   {
+    "d": "2026-03-30",
+    "c": 1207.0
+   },
+   {
+    "d": "2026-03-31",
+    "c": 1177.0
+   },
+   {
+    "d": "2026-04-01",
+    "c": 1167.0
+   },
+   {
+    "d": "2026-04-02",
+    "c": 1172.0
+   },
+   {
+    "d": "2026-04-03",
+    "c": 1155.0
+   },
+   {
+    "d": "2026-04-07",
+    "c": 1145.0
+   },
+   {
+    "d": "2026-04-08",
+    "c": 1149.0
+   },
+   {
+    "d": "2026-04-09",
+    "c": 1136.0
+   },
+   {
+    "d": "2026-04-10",
+    "c": 1146.0
+   },
+   {
+    "d": "2026-04-13",
+    "c": 1143.0
+   },
+   {
+    "d": "2026-04-14",
+    "c": 1220.0
+   },
+   {
+    "d": "2026-04-15",
+    "c": 1226.0
+   },
+   {
+    "d": "2026-04-16",
+    "c": 1241.0
+   },
+   {
+    "d": "2026-04-17",
+    "c": 1238.0
+   },
+   {
+    "d": "2026-04-20",
+    "c": 1247.0
+   },
+   {
+    "d": "2026-04-21",
+    "c": 1247.0
+   },
+   {
+    "d": "2026-04-22",
+    "c": 1266.0
+   },
+   {
+    "d": "2026-04-23",
+    "c": 1254.0
+   },
+   {
+    "d": "2026-04-24",
+    "c": 1247.0
+   },
+   {
+    "d": "2026-04-27",
+    "c": 1259.0
+   },
+   {
+    "d": "2026-04-28",
+    "c": 1237.0
+   },
+   {
+    "d": "2026-04-29",
+    "c": 1238.0
+   },
+   {
+    "d": "2026-04-30",
+    "c": 1239.0
+   },
+   {
+    "d": "2026-05-06",
+    "c": 1267.0
+   },
+   {
+    "d": "2026-05-07",
+    "c": 1266.0
+   },
+   {
+    "d": "2026-05-08",
+    "c": 1228.0
+   },
+   {
+    "d": "2026-05-11",
+    "c": 1227.0
+   },
+   {
+    "d": "2026-05-12",
+    "c": 1221.0
+   },
+   {
+    "d": "2026-05-13",
+    "c": 1222.0
+   },
+   {
+    "d": "2026-05-14",
+    "c": 1208.0
+   },
+   {
+    "d": "2026-05-15",
+    "c": 1190.0
+   },
+   {
+    "d": "2026-05-18",
+    "c": 1198.0
+   },
+   {
+    "d": "2026-05-19",
+    "c": 1193.0
+   },
+   {
+    "d": "2026-05-20",
+    "c": 1178.0
+   },
+   {
+    "d": "2026-05-21",
+    "c": 1182.0
+   },
+   {
+    "d": "2026-05-22",
+    "c": 1181.0
+   },
+   {
+    "d": "2026-05-25",
+    "c": 1218.0
+   },
+   {
+    "d": "2026-05-26",
+    "c": 1198.0
+   },
+   {
+    "d": "2026-05-27",
+    "c": 1202.0
+   },
+   {
+    "d": "2026-05-28",
+    "c": 1204.0
+   },
+   {
+    "d": "2026-05-29",
+    "c": 1215.0
+   },
+   {
+    "d": "2026-06-01",
+    "c": 1221.0
+   },
+   {
+    "d": "2026-06-02",
+    "c": 1206.0
+   },
+   {
+    "d": "2026-06-03",
+    "c": 1200.0
+   },
+   {
+    "d": "2026-06-04",
+    "c": 1182.0
+   },
+   {
+    "d": "2026-06-05",
+    "c": 1162.0
+   },
+   {
+    "d": "2026-06-08",
+    "c": 1157.0
+   },
+   {
+    "d": "2026-06-09",
+    "c": 1152.0
+   },
+   {
+    "d": "2026-06-10",
+    "c": 1152.0
+   },
+   {
+    "d": "2026-06-11",
+    "c": 1158.0
+   },
+   {
+    "d": "2026-06-12",
+    "c": 1150.0
+   },
+   {
+    "d": "2026-06-15",
+    "c": 1168.0
+   },
+   {
+    "d": "2026-06-16",
+    "c": 1163.0
+   },
+   {
+    "d": "2026-06-17",
+    "c": 1150.0
+   },
+   {
+    "d": "2026-06-18",
+    "c": 1127.0
+   },
+   {
+    "d": "2026-06-22",
+    "c": 1128.0
+   },
+   {
+    "d": "2026-06-23",
+    "c": 1132.0
+   },
+   {
+    "d": "2026-06-24",
+    "c": 1118.0
+   },
+   {
+    "d": "2026-06-25",
+    "c": 1111.0
+   },
+   {
+    "d": "2026-06-26",
+    "c": 1096.0
+   },
+   {
+    "d": "2026-06-29",
+    "c": 1103.0
+   },
+   {
+    "d": "2026-06-30",
+    "c": 1086.0
+   },
+   {
+    "d": "2026-07-01",
+    "c": 1089.0
+   },
+   {
+    "d": "2026-07-02",
+    "c": 1103.0
+   },
+   {
+    "d": "2026-07-03",
+    "c": 1103.0
+   },
+   {
+    "d": "2026-07-06",
+    "c": 1101.0
+   },
+   {
+    "d": "2026-07-07",
+    "c": 1070.0
+   },
+   {
+    "d": "2026-07-08",
+    "c": 1080.0
+   },
+   {
+    "d": "2026-07-09",
+    "c": 1078.0
+   },
+   {
+    "d": "2026-07-10",
+    "c": 1084.0
+   },
+   {
+    "d": "2026-07-13",
+    "c": 1063.0
+   },
+   {
+    "d": "2026-07-14",
+    "c": 1064.0
+   },
+   {
+    "d": "2026-07-15",
+    "c": 1051.0
+   },
+   {
+    "d": "2026-07-16",
+    "c": 1034.0
+   },
+   {
+    "d": "2026-07-17",
+    "c": 1007.0
+   },
+   {
+    "d": "2026-07-20",
+    "c": 1006.0
+   },
+   {
+    "d": "2026-07-21",
+    "c": 1009.0
+   },
+   {
+    "d": "2026-07-22",
+    "c": 1013.0
+   },
+   {
+    "d": "2026-07-23",
+    "c": 1007.0
+   },
+   {
+    "d": "2026-07-24",
+    "c": 1004.0
+   },
+   {
+    "d": "2026-07-27",
+    "c": 995.0
+   },
+   {
+    "d": "2026-07-28",
+    "c": 972.0
+   },
+   {
+    "d": "2026-07-29",
+    "c": 960.0
+   },
+   {
+    "d": "2026-07-30",
+    "c": 944.0
+   },
+   {
+    "d": "2026-07-31",
+    "c": 935.0
+   },
+   {
+    "d": "2026-08-03",
+    "c": 919.0
+   },
+   {
+    "d": "2026-08-04",
+    "c": 922.0
+   },
+   {
+    "d": "2026-08-05",
+    "c": 937.0
+   },
+   {
+    "d": "2026-08-06",
+    "c": 937.0
+   },
+   {
+    "d": "2026-08-07",
+    "c": 939.0
+   },
+   {
+    "d": "2026-08-10",
+    "c": 966.0
+   },
+   {
+    "d": "2026-08-11",
+    "c": 996.0
+   },
+   {
+    "d": "2026-08-12",
+    "c": 987.0
+   },
+   {
+    "d": "2026-08-13",
+    "c": 975.0
+   },
+   {
+    "d": "2026-08-14",
+    "c": 1023.0
+   },
+   {
+    "d": "2026-08-17",
+    "c": 1031.0
+   },
+   {
+    "d": "2026-08-18",
+    "c": 1043.0
+   },
+   {
+    "d": "2026-08-19",
+    "c": 1012.0
+   },
+   {
+    "d": "2026-08-20",
+    "c": 1033.0
+   },
+   {
+    "d": "2026-08-21",
+    "c": 1039.0
+   },
+   {
+    "d": "2026-08-24",
+    "c": 1054.0
+   },
+   {
+    "d": "2026-08-25",
+    "c": 1045.0
+   },
+   {
+    "d": "2026-08-26",
+    "c": 1035.0
+   },
+   {
+    "d": "2026-08-27",
+    "c": 1011.0
+   },
+   {
+    "d": "2026-08-28",
+    "c": 1047.0
+   },
+   {
+    "d": "2026-08-31",
+    "c": 1061.0
+   },
+   {
+    "d": "2026-09-01",
+    "c": 1070.0
+   },
+   {
+    "d": "2026-09-02",
+    "c": 1056.0
+   },
+   {
+    "d": "2026-09-03",
+    "c": 1056.0
+   },
+   {
+    "d": "2026-09-04",
+    "c": 1093.0
+   },
+   {
+    "d": "2026-09-07",
+    "c": 1079.0
+   },
+   {
+    "d": "2026-09-08",
+    "c": 1083.0
+   },
+   {
+    "d": "2026-09-09",
+    "c": 1077.0
+   },
+   {
+    "d": "2026-09-10",
+    "c": 1075.0
+   },
+   {
+    "d": "2026-09-11",
+    "c": 1065.0
+   },
+   {
+    "d": "2026-09-14",
+    "c": 1019.0
+   },
+   {
+    "d": "2026-09-15",
+    "c": 1009.0
+   },
+   {
+    "d": "2026-09-16",
+    "c": 1011.0
+   },
+   {
+    "d": "2026-09-17",
+    "c": 1006.0
+   },
+   {
+    "d": "2026-09-18",
+    "c": 1007.0
+   },
+   {
+    "d": "2026-09-21",
+    "c": 1018.0
+   },
+   {
+    "d": "2026-09-22",
+    "c": 1017.0
+   },
+   {
+    "d": "2026-09-23",
+    "c": 1011.0
+   },
+   {
+    "d": "2026-09-24",
+    "c": 1004.0
+   },
+   {
+    "d": "2026-09-28",
+    "c": 1014.0
+   },
+   {
+    "d": "2026-09-29",
+    "c": 1012.0
+   },
+   {
+    "d": "2026-09-30",
+    "c": 1006.0
+   },
+   {
+    "d": "2026-10-08",
+    "c": 983.0
+   },
+   {
+    "d": "2026-10-09",
+    "c": 1010.0
+   },
+   {
+    "d": "2026-10-12",
+    "c": 985.0
+   },
+   {
+    "d": "2026-10-13",
+    "c": 961.0
+   },
+   {
+    "d": "2026-10-14",
+    "c": 944.0
+   },
+   {
+    "d": "2026-10-15",
+    "c": 932.0
+   },
+   {
+    "d": "2026-10-16",
+    "c": 939.0
+   },
+   {
+    "d": "2026-10-19",
+    "c": 951.0
+   }
+  ],
+  "FG": [
+   {
+    "d": "2025-09-30",
+    "c": 1210.0
+   },
+   {
+    "d": "2025-10-09",
+    "c": 1218.0
+   },
+   {
+    "d": "2025-10-10",
+    "c": 1207.0
+   },
+   {
+    "d": "2025-10-13",
+    "c": 1179.0
+   },
+   {
+    "d": "2025-10-14",
+    "c": 1138.0
+   },
+   {
+    "d": "2025-10-15",
+    "c": 1129.0
+   },
+   {
+    "d": "2025-10-16",
+    "c": 1147.0
+   },
+   {
+    "d": "2025-10-17",
+    "c": 1095.0
+   },
+   {
+    "d": "2025-10-20",
+    "c": 1091.0
+   },
+   {
+    "d": "2025-10-21",
+    "c": 1087.0
+   },
+   {
+    "d": "2025-10-22",
+    "c": 1094.0
+   },
+   {
+    "d": "2025-10-23",
+    "c": 1108.0
+   },
+   {
+    "d": "2025-10-24",
+    "c": 1092.0
+   },
+   {
+    "d": "2025-10-27",
+    "c": 1095.0
+   },
+   {
+    "d": "2025-10-28",
+    "c": 1113.0
+   },
+   {
+    "d": "2025-10-29",
+    "c": 1127.0
+   },
+   {
+    "d": "2025-10-30",
+    "c": 1091.0
+   },
+   {
+    "d": "2025-10-31",
+    "c": 1083.0
+   },
+   {
+    "d": "2025-11-03",
+    "c": 1093.0
+   },
+   {
+    "d": "2025-11-04",
+    "c": 1105.0
+   },
+   {
+    "d": "2025-11-05",
+    "c": 1097.0
+   },
+   {
+    "d": "2025-11-06",
+    "c": 1101.0
+   },
+   {
+    "d": "2025-11-07",
+    "c": 1091.0
+   },
+   {
+    "d": "2025-11-10",
+    "c": 1069.0
+   },
+   {
+    "d": "2025-11-11",
+    "c": 1053.0
+   },
+   {
+    "d": "2025-11-12",
+    "c": 1049.0
+   },
+   {
+    "d": "2025-11-13",
+    "c": 1056.0
+   },
+   {
+    "d": "2025-11-14",
+    "c": 1032.0
+   },
+   {
+    "d": "2025-11-17",
+    "c": 1029.0
+   },
+   {
+    "d": "2025-11-18",
+    "c": 1017.0
+   },
+   {
+    "d": "2025-11-19",
+    "c": 1009.0
+   },
+   {
+    "d": "2025-11-20",
+    "c": 989.0
+   },
+   {
+    "d": "2025-11-21",
+    "c": 987.0
+   },
+   {
+    "d": "2025-11-24",
+    "c": 1013.0
+   },
+   {
+    "d": "2025-11-25",
+    "c": 1014.0
+   },
+   {
+    "d": "2025-11-26",
+    "c": 1037.0
+   },
+   {
+    "d": "2025-11-27",
+    "c": 1041.0
+   },
+   {
+    "d": "2025-11-28",
+    "c": 1053.0
+   },
+   {
+    "d": "2025-12-01",
+    "c": 1036.0
+   },
+   {
+    "d": "2025-12-02",
+    "c": 1034.0
+   },
+   {
+    "d": "2025-12-03",
+    "c": 1020.0
+   },
+   {
+    "d": "2025-12-04",
+    "c": 1010.0
+   },
+   {
+    "d": "2025-12-05",
+    "c": 994.0
+   },
+   {
+    "d": "2025-12-08",
+    "c": 1002.0
+   },
+   {
+    "d": "2025-12-09",
+    "c": 984.0
+   },
+   {
+    "d": "2025-12-10",
+    "c": 964.0
+   },
+   {
+    "d": "2025-12-11",
+    "c": 956.0
+   },
+   {
+    "d": "2025-12-12",
+    "c": 935.0
+   },
+   {
+    "d": "2025-12-15",
+    "c": 950.0
+   },
+   {
+    "d": "2025-12-16",
+    "c": 1038.0
+   },
+   {
+    "d": "2025-12-17",
+    "c": 1038.0
+   },
+   {
+    "d": "2025-12-18",
+    "c": 1062.0
+   },
+   {
+    "d": "2025-12-19",
+    "c": 1041.0
+   },
+   {
+    "d": "2025-12-22",
+    "c": 1031.0
+   },
+   {
+    "d": "2025-12-23",
+    "c": 1028.0
+   },
+   {
+    "d": "2025-12-24",
+    "c": 1048.0
+   },
+   {
+    "d": "2025-12-25",
+    "c": 1047.0
+   },
+   {
+    "d": "2025-12-26",
+    "c": 1057.0
+   },
+   {
+    "d": "2025-12-29",
+    "c": 1051.0
+   },
+   {
+    "d": "2025-12-30",
+    "c": 1087.0
+   },
+   {
+    "d": "2025-12-31",
+    "c": 1087.0
+   },
+   {
+    "d": "2026-01-05",
+    "c": 1081.0
+   },
+   {
+    "d": "2026-01-06",
+    "c": 1092.0
+   },
+   {
+    "d": "2026-01-07",
+    "c": 1148.0
+   },
+   {
+    "d": "2026-01-08",
+    "c": 1163.0
+   },
+   {
+    "d": "2026-01-09",
+    "c": 1144.0
+   },
+   {
+    "d": "2026-01-12",
+    "c": 1143.0
+   },
+   {
+    "d": "2026-01-13",
+    "c": 1096.0
+   },
+   {
+    "d": "2026-01-14",
+    "c": 1096.0
+   },
+   {
+    "d": "2026-01-15",
+    "c": 1086.0
+   },
+   {
+    "d": "2026-01-16",
+    "c": 1103.0
+   },
+   {
+    "d": "2026-01-19",
+    "c": 1070.0
+   },
+   {
+    "d": "2026-01-20",
+    "c": 1056.0
+   },
+   {
+    "d": "2026-01-21",
+    "c": 1039.0
+   },
+   {
+    "d": "2026-01-22",
+    "c": 1057.0
+   },
+   {
+    "d": "2026-01-23",
+    "c": 1064.0
+   },
+   {
+    "d": "2026-01-26",
+    "c": 1087.0
+   },
+   {
+    "d": "2026-01-27",
+    "c": 1066.0
+   },
+   {
+    "d": "2026-01-28",
+    "c": 1067.0
+   },
+   {
+    "d": "2026-01-29",
+    "c": 1087.0
+   },
+   {
+    "d": "2026-01-30",
+    "c": 1056.0
+   },
+   {
+    "d": "2026-02-02",
+    "c": 1056.0
+   },
+   {
+    "d": "2026-02-03",
+    "c": 1072.0
+   },
+   {
+    "d": "2026-02-04",
+    "c": 1109.0
+   },
+   {
+    "d": "2026-02-05",
+    "c": 1088.0
+   },
+   {
+    "d": "2026-02-06",
+    "c": 1072.0
+   },
+   {
+    "d": "2026-02-09",
+    "c": 1078.0
+   },
+   {
+    "d": "2026-02-10",
+    "c": 1070.0
+   },
+   {
+    "d": "2026-02-11",
+    "c": 1071.0
+   },
+   {
+    "d": "2026-02-12",
+    "c": 1065.0
+   },
+   {
+    "d": "2026-02-13",
+    "c": 1041.0
+   },
+   {
+    "d": "2026-02-24",
+    "c": 1050.0
+   },
+   {
+    "d": "2026-02-25",
+    "c": 1064.0
+   },
+   {
+    "d": "2026-02-26",
+    "c": 1058.0
+   },
+   {
+    "d": "2026-02-27",
+    "c": 1062.0
+   },
+   {
+    "d": "2026-03-02",
+    "c": 1043.0
+   },
+   {
+    "d": "2026-03-03",
+    "c": 1054.0
+   },
+   {
+    "d": "2026-03-04",
+    "c": 1038.0
+   },
+   {
+    "d": "2026-03-05",
+    "c": 1055.0
+   },
+   {
+    "d": "2026-03-06",
+    "c": 1087.0
+   },
+   {
+    "d": "2026-03-09",
+    "c": 1104.0
+   },
+   {
+    "d": "2026-03-10",
+    "c": 1076.0
+   },
+   {
+    "d": "2026-03-11",
+    "c": 1112.0
+   },
+   {
+    "d": "2026-03-12",
+    "c": 1113.0
+   },
+   {
+    "d": "2026-03-13",
+    "c": 1135.0
+   },
+   {
+    "d": "2026-03-16",
+    "c": 1102.0
+   },
+   {
+    "d": "2026-03-17",
+    "c": 1094.0
+   },
+   {
+    "d": "2026-03-18",
+    "c": 1066.0
+   },
+   {
+    "d": "2026-03-19",
+    "c": 1065.0
+   },
+   {
+    "d": "2026-03-20",
+    "c": 1054.0
+   },
+   {
+    "d": "2026-03-23",
+    "c": 1082.0
+   },
+   {
+    "d": "2026-03-24",
+    "c": 1064.0
+   },
+   {
+    "d": "2026-03-25",
+    "c": 1057.0
+   },
+   {
+    "d": "2026-03-26",
+    "c": 1036.0
+   },
+   {
+    "d": "2026-03-27",
+    "c": 1041.0
+   },
+   {
+    "d": "2026-03-30",
+    "c": 1040.0
+   },
+   {
+    "d": "2026-03-31",
+    "c": 1019.0
+   },
+   {
+    "d": "2026-04-01",
+    "c": 999.0
+   },
+   {
+    "d": "2026-04-02",
+    "c": 1002.0
+   },
+   {
+    "d": "2026-04-03",
+    "c": 977.0
+   },
+   {
+    "d": "2026-04-07",
+    "c": 969.0
+   },
+   {
+    "d": "2026-04-08",
+    "c": 978.0
+   },
+   {
+    "d": "2026-04-09",
+    "c": 970.0
+   },
+   {
+    "d": "2026-04-10",
+    "c": 963.0
+   },
+   {
+    "d": "2026-04-13",
+    "c": 957.0
+   },
+   {
+    "d": "2026-04-14",
+    "c": 963.0
+   },
+   {
+    "d": "2026-04-15",
+    "c": 971.0
+   },
+   {
+    "d": "2026-04-16",
+    "c": 1062.0
+   },
+   {
+    "d": "2026-04-17",
+    "c": 1078.0
+   },
+   {
+    "d": "2026-04-20",
+    "c": 1091.0
+   },
+   {
+    "d": "2026-04-21",
+    "c": 1077.0
+   },
+   {
+    "d": "2026-04-22",
+    "c": 1088.0
+   },
+   {
+    "d": "2026-04-23",
+    "c": 1084.0
+   },
+   {
+    "d": "2026-04-24",
+    "c": 1079.0
+   },
+   {
+    "d": "2026-04-27",
+    "c": 1073.0
+   },
+   {
+    "d": "2026-04-28",
+    "c": 1042.0
+   },
+   {
+    "d": "2026-04-29",
+    "c": 1036.0
+   },
+   {
+    "d": "2026-04-30",
+    "c": 1057.0
+   },
+   {
+    "d": "2026-05-06",
+    "c": 1067.0
+   },
+   {
+    "d": "2026-05-07",
+    "c": 1078.0
+   },
+   {
+    "d": "2026-05-08",
+    "c": 1055.0
+   },
+   {
+    "d": "2026-05-11",
+    "c": 1070.0
+   },
+   {
+    "d": "2026-05-12",
+    "c": 1056.0
+   },
+   {
+    "d": "2026-05-13",
+    "c": 1066.0
+   },
+   {
+    "d": "2026-05-14",
+    "c": 1051.0
+   },
+   {
+    "d": "2026-05-15",
+    "c": 1037.0
+   },
+   {
+    "d": "2026-05-18",
+    "c": 1038.0
+   },
+   {
+    "d": "2026-05-19",
+    "c": 1021.0
+   },
+   {
+    "d": "2026-05-20",
+    "c": 1013.0
+   },
+   {
+    "d": "2026-05-21",
+    "c": 1028.0
+   },
+   {
+    "d": "2026-05-22",
+    "c": 1020.0
+   },
+   {
+    "d": "2026-05-25",
+    "c": 1044.0
+   },
+   {
+    "d": "2026-05-26",
+    "c": 1023.0
+   },
+   {
+    "d": "2026-05-27",
+    "c": 1037.0
+   },
+   {
+    "d": "2026-05-28",
+    "c": 1038.0
+   },
+   {
+    "d": "2026-05-29",
+    "c": 1057.0
+   },
+   {
+    "d": "2026-06-01",
+    "c": 1056.0
+   },
+   {
+    "d": "2026-06-02",
+    "c": 1043.0
+   },
+   {
+    "d": "2026-06-03",
+    "c": 1049.0
+   },
+   {
+    "d": "2026-06-04",
+    "c": 1031.0
+   },
+   {
+    "d": "2026-06-05",
+    "c": 1010.0
+   },
+   {
+    "d": "2026-06-08",
+    "c": 1004.0
+   },
+   {
+    "d": "2026-06-09",
+    "c": 995.0
+   },
+   {
+    "d": "2026-06-10",
+    "c": 989.0
+   },
+   {
+    "d": "2026-06-11",
+    "c": 991.0
+   },
+   {
+    "d": "2026-06-12",
+    "c": 987.0
+   },
+   {
+    "d": "2026-06-15",
+    "c": 1014.0
+   },
+   {
+    "d": "2026-06-16",
+    "c": 1004.0
+   },
+   {
+    "d": "2026-06-17",
+    "c": 996.0
+   },
+   {
+    "d": "2026-06-18",
+    "c": 978.0
+   },
+   {
+    "d": "2026-06-22",
+    "c": 977.0
+   },
+   {
+    "d": "2026-06-23",
+    "c": 967.0
+   },
+   {
+    "d": "2026-06-24",
+    "c": 973.0
+   },
+   {
+    "d": "2026-06-25",
+    "c": 975.0
+   },
+   {
+    "d": "2026-06-26",
+    "c": 968.0
+   },
+   {
+    "d": "2026-06-29",
+    "c": 978.0
+   },
+   {
+    "d": "2026-06-30",
+    "c": 975.0
+   },
+   {
+    "d": "2026-07-01",
+    "c": 961.0
+   },
+   {
+    "d": "2026-07-02",
+    "c": 966.0
+   },
+   {
+    "d": "2026-07-03",
+    "c": 973.0
+   },
+   {
+    "d": "2026-07-06",
+    "c": 967.0
+   },
+   {
+    "d": "2026-07-07",
+    "c": 952.0
+   },
+   {
+    "d": "2026-07-08",
+    "c": 962.0
+   },
+   {
+    "d": "2026-07-09",
+    "c": 957.0
+   },
+   {
+    "d": "2026-07-10",
+    "c": 965.0
+   },
+   {
+    "d": "2026-07-13",
+    "c": 952.0
+   },
+   {
+    "d": "2026-07-14",
+    "c": 951.0
+   },
+   {
+    "d": "2026-07-15",
+    "c": 949.0
+   },
+   {
+    "d": "2026-07-16",
+    "c": 929.0
+   },
+   {
+    "d": "2026-07-17",
+    "c": 900.0
+   },
+   {
+    "d": "2026-07-20",
+    "c": 890.0
+   },
+   {
+    "d": "2026-07-21",
+    "c": 904.0
+   },
+   {
+    "d": "2026-07-22",
+    "c": 913.0
+   },
+   {
+    "d": "2026-07-23",
+    "c": 899.0
+   },
+   {
+    "d": "2026-07-24",
+    "c": 908.0
+   },
+   {
+    "d": "2026-07-27",
+    "c": 900.0
+   },
+   {
+    "d": "2026-07-28",
+    "c": 888.0
+   },
+   {
+    "d": "2026-07-29",
+    "c": 884.0
+   },
+   {
+    "d": "2026-07-30",
+    "c": 870.0
+   },
+   {
+    "d": "2026-07-31",
+    "c": 875.0
+   },
+   {
+    "d": "2026-08-03",
+    "c": 868.0
+   },
+   {
+    "d": "2026-08-04",
+    "c": 885.0
+   },
+   {
+    "d": "2026-08-05",
+    "c": 885.0
+   },
+   {
+    "d": "2026-08-06",
+    "c": 891.0
+   },
+   {
+    "d": "2026-08-07",
+    "c": 885.0
+   },
+   {
+    "d": "2026-08-10",
+    "c": 889.0
+   },
+   {
+    "d": "2026-08-11",
+    "c": 901.0
+   },
+   {
+    "d": "2026-08-12",
+    "c": 878.0
+   },
+   {
+    "d": "2026-08-13",
+    "c": 871.0
+   },
+   {
+    "d": "2026-08-14",
+    "c": 867.0
+   },
+   {
+    "d": "2026-08-17",
+    "c": 923.0
+   },
+   {
+    "d": "2026-08-18",
+    "c": 917.0
+   },
+   {
+    "d": "2026-08-19",
+    "c": 902.0
+   },
+   {
+    "d": "2026-08-20",
+    "c": 917.0
+   },
+   {
+    "d": "2026-08-21",
+    "c": 907.0
+   },
+   {
+    "d": "2026-08-24",
+    "c": 922.0
+   },
+   {
+    "d": "2026-08-25",
+    "c": 913.0
+   },
+   {
+    "d": "2026-08-26",
+    "c": 898.0
+   },
+   {
+    "d": "2026-08-27",
+    "c": 909.0
+   },
+   {
+    "d": "2026-08-28",
+    "c": 927.0
+   },
+   {
+    "d": "2026-08-31",
+    "c": 941.0
+   },
+   {
+    "d": "2026-09-01",
+    "c": 969.0
+   },
+   {
+    "d": "2026-09-02",
+    "c": 961.0
+   },
+   {
+    "d": "2026-09-03",
+    "c": 962.0
+   },
+   {
+    "d": "2026-09-04",
+    "c": 978.0
+   },
+   {
+    "d": "2026-09-07",
+    "c": 976.0
+   },
+   {
+    "d": "2026-09-08",
+    "c": 977.0
+   },
+   {
+    "d": "2026-09-09",
+    "c": 969.0
+   },
+   {
+    "d": "2026-09-10",
+    "c": 964.0
+   },
+   {
+    "d": "2026-09-11",
+    "c": 973.0
+   },
+   {
+    "d": "2026-09-14",
+    "c": 927.0
+   },
+   {
+    "d": "2026-09-15",
+    "c": 909.0
+   },
+   {
+    "d": "2026-09-16",
+    "c": 910.0
+   },
+   {
+    "d": "2026-09-17",
+    "c": 905.0
+   },
+   {
+    "d": "2026-09-18",
+    "c": 907.0
+   },
+   {
+    "d": "2026-09-21",
+    "c": 923.0
+   },
+   {
+    "d": "2026-09-22",
+    "c": 932.0
+   },
+   {
+    "d": "2026-09-23",
+    "c": 925.0
+   },
+   {
+    "d": "2026-09-24",
+    "c": 914.0
+   },
+   {
+    "d": "2026-09-28",
+    "c": 893.0
+   },
+   {
+    "d": "2026-09-29",
+    "c": 891.0
+   },
+   {
+    "d": "2026-09-30",
+    "c": 896.0
+   },
+   {
+    "d": "2026-10-08",
+    "c": 868.0
+   },
+   {
+    "d": "2026-10-09",
+    "c": 872.0
+   },
+   {
+    "d": "2026-10-12",
+    "c": 863.0
+   },
+   {
+    "d": "2026-10-13",
+    "c": 853.0
+   },
+   {
+    "d": "2026-10-14",
+    "c": 856.0
+   },
+   {
+    "d": "2026-10-15",
+    "c": 853.0
+   },
+   {
+    "d": "2026-10-16",
+    "c": 859.0
+   },
+   {
+    "d": "2026-10-19",
+    "c": 859.0
+   }
+  ]
+ },
+ "derived": {
+  "float": {
+   "日熔量(万吨/日)": {
+    "name": "日熔量(万吨/日)",
+    "grade": "A",
+    "points": [
+     {
+      "date": "2026-01-02",
+      "value": 15.11,
+      "ev": "F44"
+     },
+     {
+      "date": "2026-07-15",
+      "value": 14.6,
+      "ev": "F01",
+      "mom": -0.51,
+      "mom_pct": -3.38
+     },
+     {
+      "date": "2026-08-18",
+      "value": 14.22,
+      "ev": "F38",
+      "mom": -0.38,
+      "mom_pct": -2.6
+     },
+     {
+      "date": "2026-08-27",
+      "value": 14.22,
+      "ev": "F35",
+      "mom": 0.0,
+      "mom_pct": 0.0
+     },
+     {
+      "date": "2026-09-17",
+      "value": 14.3,
+      "ev": "F11",
+      "mom": 0.08,
+      "mom_pct": 0.56
+     },
+     {
+      "date": "2026-09-30",
+      "value": 14.23,
+      "ev": "F21",
+      "mom": -0.07,
+      "mom_pct": -0.49
+     },
+     {
+      "date": "2026-10-13",
+      "value": 14.23,
+      "ev": "F23",
+      "mom": 0.0,
+      "mom_pct": 0.0
+     }
+    ],
+    "span": {
+     "from": "2026-01-02",
+     "to": "2026-10-13",
+     "v0": 15.11,
+     "v1": 14.23,
+     "chg": -0.88,
+     "chg_pct": -5.82
+    },
+    "min": 14.22,
+    "max": 15.11
+   },
+   "开工率(%)": {
+    "name": "开工率(%)",
+    "grade": "A-",
+    "points": [
+     {
+      "date": "2026-07-15",
+      "value": 68.37,
+      "ev": "F02"
+     },
+     {
+      "date": "2026-08-18",
+      "value": 67.24,
+      "ev": "F39",
+      "mom": -1.13,
+      "mom_pct": -1.65
+     },
+     {
+      "date": "2026-09-03",
+      "value": 66.89,
+      "ev": "F56",
+      "mom": -0.35,
+      "mom_pct": -0.52
+     },
+     {
+      "date": "2026-09-17",
+      "value": 67.24,
+      "ev": "F13",
+      "mom": 0.35,
+      "mom_pct": 0.52
+     },
+     {
+      "date": "2026-10-15",
+      "value": 67.24,
+      "ev": "F54",
+      "mom": 0.0,
+      "mom_pct": 0.0
+     }
+    ],
+    "span": {
+     "from": "2026-07-15",
+     "to": "2026-10-15",
+     "v0": 68.37,
+     "v1": 67.24,
+     "chg": -1.13,
+     "chg_pct": -1.65
+    },
+    "min": 66.89,
+    "max": 68.37
+   },
+   "产能利用率(%)": {
+    "name": "产能利用率(%)",
+    "grade": "A",
+    "points": [
+     {
+      "date": "2026-07-15",
+      "value": 72.63,
+      "ev": "F03"
+     },
+     {
+      "date": "2026-09-03",
+      "value": 70.49,
+      "ev": "F56",
+      "mom": -2.14,
+      "mom_pct": -2.95
+     },
+     {
+      "date": "2026-09-17",
+      "value": 71.34,
+      "ev": "F14",
+      "mom": 0.85,
+      "mom_pct": 1.21
+     },
+     {
+      "date": "2026-10-13",
+      "value": 70.99,
+      "ev": "F24",
+      "mom": -0.35,
+      "mom_pct": -0.49
+     }
+    ],
+    "span": {
+     "from": "2026-07-15",
+     "to": "2026-10-13",
+     "v0": 72.63,
+     "v1": 70.99,
+     "chg": -1.64,
+     "chg_pct": -2.26
+    },
+    "min": 70.49,
+    "max": 72.63
+   },
+   "企业库存(万重箱)": {
+    "name": "企业库存(万重箱)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-07-31",
+      "value": 7535.3,
+      "ev": "F42"
+     },
+     {
+      "date": "2026-08-20",
+      "value": 7441.4,
+      "ev": "F37",
+      "mom": -93.9,
+      "mom_pct": -1.25
+     },
+     {
+      "date": "2026-09-17",
+      "value": 6985.7,
+      "ev": "F58",
+      "mom": -455.7,
+      "mom_pct": -6.12
+     },
+     {
+      "date": "2026-10-08",
+      "value": 7318.6,
+      "ev": "F52",
+      "mom": 332.9,
+      "mom_pct": 4.77
+     }
+    ],
+    "span": {
+     "from": "2026-07-31",
+     "to": "2026-10-08",
+     "v0": 7535.3,
+     "v1": 7318.6,
+     "chg": -216.7,
+     "chg_pct": -2.88
+    },
+    "min": 6985.7,
+    "max": 7535.3
+   },
+   "深加工订单(天)": {
+    "name": "深加工订单(天)",
+    "grade": "A",
+    "points": [
+     {
+      "date": "2026-07-31",
+      "value": 9.4,
+      "ev": "F43"
+     },
+     {
+      "date": "2026-08-18",
+      "value": 9.5,
+      "ev": "F41",
+      "mom": 0.1,
+      "mom_pct": 1.06
+     },
+     {
+      "date": "2026-09-15",
+      "value": 10.1,
+      "ev": "F20",
+      "mom": 0.6,
+      "mom_pct": 6.32
+     },
+     {
+      "date": "2026-10-15",
+      "value": 10.0,
+      "ev": "F55",
+      "mom": -0.1,
+      "mom_pct": -0.99
+     }
+    ],
+    "span": {
+     "from": "2026-07-31",
+     "to": "2026-10-15",
+     "v0": 9.4,
+     "v1": 10.0,
+     "chg": 0.6,
+     "chg_pct": 6.38
+    },
+    "min": 9.4,
+    "max": 10.1
+   },
+   "价格(元/吨,全国均价)": {
+    "name": "价格(元/吨,全国均价)",
+    "grade": "C",
+    "points": [
+     {
+      "date": "2026-08-18",
+      "value": 1070,
+      "ev": "F40"
+     },
+     {
+      "date": "2026-09-17",
+      "value": 1082,
+      "ev": "F15",
+      "mom": 12,
+      "mom_pct": 1.12
+     },
+     {
+      "date": "2026-09-30",
+      "value": 1079,
+      "ev": "F22",
+      "mom": -3,
+      "mom_pct": -0.28
+     },
+     {
+      "date": "2026-10-13",
+      "value": 1075,
+      "ev": "F33",
+      "mom": -4,
+      "mom_pct": -0.37
+     }
+    ],
+    "span": {
+     "from": "2026-08-18",
+     "to": "2026-10-13",
+     "v0": 1070,
+     "v1": 1075,
+     "chg": 5,
+     "chg_pct": 0.47
+    },
+    "min": 1070,
+    "max": 1082
+   },
+   "煤制气毛利(元/吨)": {
+    "name": "煤制气毛利(元/吨)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-07-09",
+      "value": -40.42,
+      "ev": "F07"
+     },
+     {
+      "date": "2026-09-17",
+      "value": -86.74,
+      "ev": "F17",
+      "mom": -46.32,
+      "mom_pct": -114.6
+     },
+     {
+      "date": "2026-10-09",
+      "value": -148.2,
+      "ev": "F28",
+      "mom": -61.46,
+      "mom_pct": -70.86
+     }
+    ],
+    "span": {
+     "from": "2026-07-09",
+     "to": "2026-10-09",
+     "v0": -40.42,
+     "v1": -148.2,
+     "chg": -107.78,
+     "chg_pct": -266.65
+    },
+    "min": -148.2,
+    "max": -40.42
+   },
+   "天然气毛利(元/吨)": {
+    "name": "天然气毛利(元/吨)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-07-09",
+      "value": -173.8,
+      "ev": "F08"
+     },
+     {
+      "date": "2026-09-17",
+      "value": -151.88,
+      "ev": "F16",
+      "mom": 21.92,
+      "mom_pct": 12.61
+     },
+     {
+      "date": "2026-10-09",
+      "value": -151.9,
+      "ev": "F27",
+      "mom": -0.02,
+      "mom_pct": -0.01
+     }
+    ],
+    "span": {
+     "from": "2026-07-09",
+     "to": "2026-10-09",
+     "v0": -173.8,
+     "v1": -151.9,
+     "chg": 21.9,
+     "chg_pct": 12.6
+    },
+    "min": -173.8,
+    "max": -151.88
+   },
+   "石油焦毛利(元/吨)": {
+    "name": "石油焦毛利(元/吨)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-07-09",
+      "value": -190.33,
+      "ev": "F09"
+     },
+     {
+      "date": "2026-09-17",
+      "value": -149.12,
+      "ev": "F18",
+      "mom": 41.21,
+      "mom_pct": 21.65
+     },
+     {
+      "date": "2026-10-09",
+      "value": -169.1,
+      "ev": "F29",
+      "mom": -19.98,
+      "mom_pct": -13.4
+     }
+    ],
+    "span": {
+     "from": "2026-07-09",
+     "to": "2026-10-09",
+     "v0": -190.33,
+     "v1": -169.1,
+     "chg": 21.23,
+     "chg_pct": 11.15
+    },
+    "min": -190.33,
+    "max": -149.12
+   }
+  },
+  "pv": {
+   "在产日熔量(万吨/日)": {
+    "name": "在产日熔量(万吨/日)",
+    "grade": "A",
+    "points": [
+     {
+      "date": "2026-05-31",
+      "value": 8.3,
+      "ev": "P01"
+     },
+     {
+      "date": "2026-07-15",
+      "value": 7.6,
+      "ev": "P03",
+      "mom": -0.7,
+      "mom_pct": -8.43
+     },
+     {
+      "date": "2026-07-17",
+      "value": 7.35,
+      "ev": "P04",
+      "mom": -0.25,
+      "mom_pct": -3.29
+     },
+     {
+      "date": "2026-09-25",
+      "value": 7.1,
+      "ev": "P11",
+      "mom": -0.25,
+      "mom_pct": -3.4
+     },
+     {
+      "date": "2026-10-12",
+      "value": 6.68,
+      "ev": "P12",
+      "mom": -0.42,
+      "mom_pct": -5.92
+     }
+    ],
+    "span": {
+     "from": "2026-05-31",
+     "to": "2026-10-12",
+     "v0": 8.3,
+     "v1": 6.68,
+     "chg": -1.62,
+     "chg_pct": -19.52
+    },
+    "min": 6.68,
+    "max": 8.3
+   },
+   "库存天数(天)": {
+    "name": "库存天数(天)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-05-31",
+      "value": 54.0,
+      "ev": "P02"
+     },
+     {
+      "date": "2026-06-30",
+      "value": 53.4,
+      "ev": "P20",
+      "mom": -0.6,
+      "mom_pct": -1.11
+     },
+     {
+      "date": "2026-07-20",
+      "value": 40.0,
+      "ev": "P08",
+      "mom": -13.4,
+      "mom_pct": -25.09
+     },
+     {
+      "date": "2026-09-25",
+      "value": 44.69,
+      "ev": "P10",
+      "mom": 4.69,
+      "mom_pct": 11.72
+     }
+    ],
+    "span": {
+     "from": "2026-05-31",
+     "to": "2026-09-25",
+     "v0": 54.0,
+     "v1": 44.69,
+     "chg": -9.31,
+     "chg_pct": -17.24
+    },
+    "min": 40.0,
+    "max": 54.0
+   },
+   "产能利用率(%)": {
+    "name": "产能利用率(%)",
+    "grade": "A",
+    "points": [
+     {
+      "date": "2026-07-17",
+      "value": 51.37,
+      "ev": "P05"
+     },
+     {
+      "date": "2026-08-31",
+      "value": 52.98,
+      "ev": "P15",
+      "mom": 1.61,
+      "mom_pct": 3.13
+     },
+     {
+      "date": "2026-09-30",
+      "value": 50.27,
+      "ev": "P15",
+      "mom": -2.71,
+      "mom_pct": -5.12
+     }
+    ],
+    "span": {
+     "from": "2026-07-17",
+     "to": "2026-09-30",
+     "v0": 51.37,
+     "v1": 50.27,
+     "chg": -1.1,
+     "chg_pct": -2.14
+    },
+    "min": 50.27,
+    "max": 52.98
+   },
+   "价格 2.0mm镀膜(元/㎡)": {
+    "name": "价格 2.0mm镀膜(元/㎡)",
+    "grade": "C",
+    "points": [
+     {
+      "date": "2026-07-05",
+      "value": 8.5,
+      "ev": "P06"
+     },
+     {
+      "date": "2026-09-30",
+      "value": 10.25,
+      "ev": "P09",
+      "mom": 1.75,
+      "mom_pct": 20.59
+     },
+     {
+      "date": "2026-09-30",
+      "value": 10.0,
+      "ev": "P19",
+      "mom": -0.25,
+      "mom_pct": -2.44
+     }
+    ],
+    "span": {
+     "from": "2026-07-05",
+     "to": "2026-09-30",
+     "v0": 8.5,
+     "v1": 10.0,
+     "chg": 1.5,
+     "chg_pct": 17.65
+    },
+    "min": 8.5,
+    "max": 10.25
+   }
+  },
+  "light": {
+   "碳酸锂周产量(万吨)": {
+    "name": "碳酸锂周产量(万吨)",
+    "grade": "A",
+    "points": [
+     {
+      "date": "2026-07-17",
+      "value": 2.45,
+      "ev": "L31"
+     },
+     {
+      "date": "2026-09-27",
+      "value": 2.6671,
+      "ev": "L32",
+      "mom": 0.2171,
+      "mom_pct": 8.86
+     }
+    ],
+    "span": {
+     "from": "2026-07-17",
+     "to": "2026-09-27",
+     "v0": 2.45,
+     "v1": 2.6671,
+     "chg": 0.2171,
+     "chg_pct": 8.86
+    },
+    "min": 2.45,
+    "max": 2.6671
+   },
+   "生产企业总库存(万吨)": {
+    "name": "生产企业总库存(万吨)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-06-29",
+      "value": 172.44,
+      "ev": "L10"
+     },
+     {
+      "date": "2026-07-02",
+      "value": 173.0,
+      "ev": "L06",
+      "mom": 0.56,
+      "mom_pct": 0.32
+     },
+     {
+      "date": "2026-07-30",
+      "value": 180.07,
+      "ev": "L07",
+      "mom": 7.07,
+      "mom_pct": 4.09
+     },
+     {
+      "date": "2026-08-10",
+      "value": 186.27,
+      "ev": "L05",
+      "mom": 6.2,
+      "mom_pct": 3.44
+     },
+     {
+      "date": "2026-08-31",
+      "value": 190.84,
+      "ev": "L04",
+      "mom": 4.57,
+      "mom_pct": 2.45
+     },
+     {
+      "date": "2026-10-08",
+      "value": 177.87,
+      "ev": "L02",
+      "mom": -12.97,
+      "mom_pct": -6.8
+     },
+     {
+      "date": "2026-10-14",
+      "value": 179.26,
+      "ev": "L19",
+      "mom": 1.39,
+      "mom_pct": 0.78
+     },
+     {
+      "date": "2026-10-19",
+      "value": 153.96,
+      "ev": "L09",
+      "mom": -25.3,
+      "mom_pct": -14.11
+     }
+    ],
+    "span": {
+     "from": "2026-06-29",
+     "to": "2026-10-19",
+     "v0": 172.44,
+     "v1": 153.96,
+     "chg": -18.48,
+     "chg_pct": -10.72
+    },
+    "min": 153.96,
+    "max": 190.84
+   },
+   "重碱厂库(万吨)": {
+    "name": "重碱厂库(万吨)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-06-29",
+      "value": 67.41,
+      "ev": "L10"
+     },
+     {
+      "date": "2026-07-02",
+      "value": 68.89,
+      "ev": "L06",
+      "mom": 1.48,
+      "mom_pct": 2.2
+     },
+     {
+      "date": "2026-08-10",
+      "value": 81.15,
+      "ev": "L05",
+      "mom": 12.26,
+      "mom_pct": 17.8
+     },
+     {
+      "date": "2026-08-31",
+      "value": 86.48,
+      "ev": "L04",
+      "mom": 5.33,
+      "mom_pct": 6.57
+     },
+     {
+      "date": "2026-10-09",
+      "value": 84.65,
+      "ev": "L11",
+      "mom": -1.83,
+      "mom_pct": -2.12
+     },
+     {
+      "date": "2026-10-19",
+      "value": 71.73,
+      "ev": "L09",
+      "mom": -12.92,
+      "mom_pct": -15.26
+     }
+    ],
+    "span": {
+     "from": "2026-06-29",
+     "to": "2026-10-19",
+     "v0": 67.41,
+     "v1": 71.73,
+     "chg": 4.32,
+     "chg_pct": 6.41
+    },
+    "min": 67.41,
+    "max": 86.48
+   },
+   "轻碱厂库(万吨)": {
+    "name": "轻碱厂库(万吨)",
+    "grade": "B",
+    "points": [
+     {
+      "date": "2026-06-29",
+      "value": 105.03,
+      "ev": "L10"
+     },
+     {
+      "date": "2026-07-02",
+      "value": 104.11,
+      "ev": "L06",
+      "mom": -0.92,
+      "mom_pct": -0.88
+     },
+     {
+      "date": "2026-08-10",
+      "value": 105.12,
+      "ev": "L05",
+      "mom": 1.01,
+      "mom_pct": 0.97
+     },
+     {
+      "date": "2026-08-31",
+      "value": 104.36,
+      "ev": "L04",
+      "mom": -0.76,
+      "mom_pct": -0.72
+     },
+     {
+      "date": "2026-10-09",
+      "value": 93.22,
+      "ev": "L12",
+      "mom": -11.14,
+      "mom_pct": -10.67
+     },
+     {
+      "date": "2026-10-19",
+      "value": 82.23,
+      "ev": "L09",
+      "mom": -10.99,
+      "mom_pct": -11.79
+     }
+    ],
+    "span": {
+     "from": "2026-06-29",
+     "to": "2026-10-19",
+     "v0": 105.03,
+     "v1": 82.23,
+     "chg": -22.8,
+     "chg_pct": -21.71
+    },
+    "min": 82.23,
+    "max": 105.12
+   },
+   "综合开工率(%)": {
+    "name": "综合开工率(%)",
+    "grade": "A-",
+    "points": [
+     {
+      "date": "2026-07-30",
+      "value": 80.68,
+      "ev": "L08"
+     },
+     {
+      "date": "2026-10-08",
+      "value": 76.15,
+      "ev": "L03",
+      "mom": -4.53,
+      "mom_pct": -5.61
+     },
+     {
+      "date": "2026-10-14",
+      "value": 76.2,
+      "ev": "L18",
+      "mom": 0.05,
+      "mom_pct": 0.07
+     }
+    ],
+    "span": {
+     "from": "2026-07-30",
+     "to": "2026-10-14",
+     "v0": 80.68,
+     "v1": 76.2,
+     "chg": -4.48,
+     "chg_pct": -5.55
+    },
+    "min": 76.15,
+    "max": 80.68
+   },
+   "周产量(万吨)": {
+    "name": "周产量(万吨)",
+    "grade": "A",
+    "points": [
+     {
+      "date": "2026-07-17",
+      "value": 74.98,
+      "ev": "L13"
+     },
+     {
+      "date": "2026-07-30",
+      "value": 76.85,
+      "ev": "L07",
+      "mom": 1.87,
+      "mom_pct": 2.49
+     },
+     {
+      "date": "2026-10-14",
+      "value": 75.16,
+      "ev": "L29",
+      "mom": -1.69,
+      "mom_pct": -2.2
+     }
+    ],
+    "span": {
+     "from": "2026-07-17",
+     "to": "2026-10-14",
+     "v0": 74.98,
+     "v1": 75.16,
+     "chg": 0.18,
+     "chg_pct": 0.24
+    },
+    "min": 74.98,
+    "max": 76.85
+   }
+  },
+  "sentiment": [
+   {
+    "seg": "float",
+    "indicator": "日熔量（产量级刚需）",
+    "score": 0,
+    "basis": "7月中14.60 → 10月13日14.23 万吨/日，区间-2.5%，处于年初15.11以下的低位但月内基本横盘",
+    "ev": [
+     "F01",
+     "F23"
+    ]
+   },
+   {
+    "seg": "float",
+    "indicator": "开工率",
+    "score": -1,
+    "basis": "68.37%（7/15）→ 66.89%（9/3）→ 67.24%（10/15），区间下降1.13个百分点，创年内偏低",
+    "ev": [
+     "F02",
+     "F56",
+     "F54"
+    ]
+   },
+   {
+    "seg": "float",
+    "indicator": "产能利用率",
+    "score": -1,
+    "basis": "72.63% → 70.49% → 70.99%，同比-12%",
+    "ev": [
+     "F03",
+     "F56",
+     "F24"
+    ]
+   },
+   {
+    "seg": "float",
+    "indicator": "企业库存（反向）",
+    "score": -1,
+    "basis": "7535.3（7/31）→ 7441.4（8/20）→ 6985.7（9/17）→ 7318.6（10/8）万重箱；同比+16.49%，近5年同期高位",
+    "ev": [
+     "F42",
+     "F37",
+     "F58",
+     "F52"
+    ]
+   },
+   {
+    "seg": "float",
+    "indicator": "深加工订单（真实需求）",
+    "score": 0,
+    "basis": "9.4天（7/31）→ 10.1天（9/15）→ 10.0天（10/15）；环比微升但同比-9.1%~-9.2%，仍为近5年同期最低",
+    "ev": [
+     "F43",
+     "F20",
+     "F55"
+    ]
+   },
+   {
+    "seg": "float",
+    "indicator": "利润（反向）",
+    "score": -1,
+    "basis": "煤制气 -40.42（7/9）→ -86.74（9/17）→ -148.2（10/9）元/吨，三条路线全线亏损",
+    "ev": [
+     "F07",
+     "F17",
+     "F28"
+    ]
+   },
+   {
+    "seg": "float",
+    "indicator": "价格（仅价格，不外推需求）",
+    "score": 0,
+    "basis": "全国均价 1070（8/18）→ 1082（9/17）→ 1075（10/13）元/吨，区间+0.5%但同比-13.81%",
+    "ev": [
+     "F40",
+     "F15",
+     "F33"
+    ]
+   },
+   {
+    "seg": "pv",
+    "indicator": "日熔量（产量级刚需）",
+    "score": -2,
+    "basis": "卓创5月末8.30→9月7.10 万吨/日（同口径-14.5%）；SMM 7.60（实际运行）；钢联10/12为6.68，三口径不可直接相减",
+    "ev": [
+     "P01",
+     "P11",
+     "P12"
+    ]
+   },
+   {
+    "seg": "pv",
+    "indicator": "产能利用率",
+    "score": -2,
+    "basis": "产能利用率 52.98%（8月）→ 50.27%（9月），10月预计48.00%",
+    "ev": [
+     "P15"
+    ]
+   },
+   {
+    "seg": "pv",
+    "indicator": "月产量",
+    "score": -2,
+    "basis": "9月产量164万吨，环比-8%",
+    "ev": [
+     "P13"
+    ]
+   },
+   {
+    "seg": "pv",
+    "indicator": "表观消费",
+    "score": -2,
+    "basis": "9月表观消费129万吨，环比-13%",
+    "ev": [
+     "P14"
+    ]
+   },
+   {
+    "seg": "pv",
+    "indicator": "库存天数（反向）",
+    "score": 0,
+    "basis": "54（5月末）→ 40（7月）→ 44.69（9月末）天，较高点-16%但仍在高位，9月再度回升",
+    "ev": [
+     "P02",
+     "P08",
+     "P10"
+    ]
+   },
+   {
+    "seg": "pv",
+    "indicator": "价格（仅价格，不外推需求）",
+    "score": 1,
+    "basis": "2.0mm镀膜 8.5（7月初）→ 10.0-10.25（9月）元/㎡，较8.25低点+24%",
+    "ev": [
+     "P06",
+     "P09",
+     "P19"
+    ]
+   },
+   {
+    "seg": "pv",
+    "indicator": "利润（反向）",
+    "score": -1,
+    "basis": "7月初单平亏损近2元；头部现金成本8.5-9.0，二三线11-12 元/㎡",
+    "ev": [
+     "P07",
+     "P16"
+    ]
+   },
+   {
+    "seg": "light",
+    "indicator": "碳酸锂产量",
+    "score": 0,
+    "basis": "周产 2.45万吨（7/17）→ 2.6671万吨（9/27），-4.4%环比回落但绝对水平高于7月；9月月产12.85万吨环比+10%",
+    "ev": [
+     "L31",
+     "L32",
+     "L33"
+    ]
+   },
+   {
+    "seg": "light",
+    "indicator": "碳酸锂库存口径变动",
+    "score": 0,
+    "basis": "SMM 9/4 起换口径，库存一次性上修9-10万吨，旧口径序列不可直接比较",
+    "ev": [
+     "L34"
+    ]
+   },
+   {
+    "seg": "light",
+    "indicator": "轻碱厂库（反向）",
+    "score": 1,
+    "basis": "104.36（8/31）→ 93.22（10/9）→ 82.23（10/19）万吨，显著去库",
+    "ev": [
+     "L04",
+     "L12",
+     "L09"
+    ]
+   },
+   {
+    "seg": "light",
+    "indicator": "轻碱需求定性",
+    "score": 0,
+    "basis": "传统下游（洗涤剂、印染、造纸）刚需平稳；节日期间开工下滑",
+    "ev": [
+     "L01"
+    ]
+   },
+   {
+    "seg": "end_re",
+    "indicator": "房屋竣工",
+    "score": -2,
+    "basis": "1-8月累计同比-23.7%（新开工-24.8%）",
+    "ev": [
+     "R01",
+     "R02"
+    ]
+   },
+   {
+    "seg": "end_re",
+    "indicator": "30城商品房成交",
+    "score": 0,
+    "basis": "7/22 7日均19.17万㎡同比+1%；节后同比基本持平，处历史同期低位",
+    "ev": [
+     "R03",
+     "R04"
+    ]
+   },
+   {
+    "seg": "end_pv",
+    "indicator": "国内光伏新增装机",
+    "score": -2,
+    "basis": "2026年上半年同比-66.04%",
+    "ev": [
+     "S01"
+    ]
+   }
+  ],
+  "transmission": {
+   "weights_domestic": {
+    "float": 46.0,
+    "pv": 21.0,
+    "light": 33.0
+   },
+   "seg_index": {
+    "float": -0.4,
+    "pv": -1.75,
+    "light": 0.4
+   },
+   "detail": {
+    "float": [
+     {
+      "indicator": "日熔量（产量级刚需）",
+      "score": 0,
+      "w": 0.4
+     },
+     {
+      "indicator": "开工率",
+      "score": -1,
+      "w": 0.1
+     },
+     {
+      "indicator": "产能利用率",
+      "score": -1,
+      "w": 0.1
+     },
+     {
+      "indicator": "企业库存（反向）",
+      "score": -1,
+      "w": 0.15
+     },
+     {
+      "indicator": "深加工订单（真实需求）",
+      "score": 0,
+      "w": 0.2
+     },
+     {
+      "indicator": "利润（反向）",
+      "score": -1,
+      "w": 0.05
+     }
+    ],
+    "pv": [
+     {
+      "indicator": "日熔量（产量级刚需）",
+      "score": -2,
+      "w": 0.35
+     },
+     {
+      "indicator": "产能利用率",
+      "score": -2,
+      "w": 0.1
+     },
+     {
+      "indicator": "月产量",
+      "score": -2,
+      "w": 0.2
+     },
+     {
+      "indicator": "表观消费",
+      "score": -2,
+      "w": 0.2
+     },
+     {
+      "indicator": "库存天数（反向）",
+      "score": 0,
+      "w": 0.1
+     },
+     {
+      "indicator": "利润（反向）",
+      "score": -1,
+      "w": 0.05
+     }
+    ],
+    "light": [
+     {
+      "indicator": "碳酸锂产量",
+      "score": 0,
+      "w": 0.35
+     },
+     {
+      "indicator": "轻碱厂库（反向）",
+      "score": 1,
+      "w": 0.4
+     },
+     {
+      "indicator": "轻碱需求定性",
+      "score": 0,
+      "w": 0.25
+     }
+    ]
+   },
+   "contribution": {
+    "float": -0.184,
+    "pv": -0.367,
+    "light": 0.132
+   },
+   "weighted_total": -0.419,
+   "explain": "加权总指数 = Σ(分项指数 × 消费占比)。分项指数为该下游内部指标的加权均分（-2~+2）。该数是“景气度传导指数”，不是纯碱消费量增速，也不能反推吨数。",
+   "sensitivity": [
+    {
+     "case": "基准：平板46/光伏21/轻碱33",
+     "sig": -0.419
+    },
+    {
+     "case": "若按华经口径 平板32/光伏18/轻碱50",
+     "sig": -0.243
+    },
+    {
+     "case": "若按小牛45/21/轻碱34",
+     "sig": -0.411
+    },
+    {
+     "case": "若只算两玻（平板69/光伏31）",
+     "sig": -0.819
+    }
+   ]
+  }
+ },
+ "sentiment": [
+  {
+   "seg": "float",
+   "indicator": "日熔量（产量级刚需）",
+   "score": 0,
+   "basis": "7月中14.60 → 10月13日14.23 万吨/日，区间-2.5%，处于年初15.11以下的低位但月内基本横盘",
+   "ev": [
+    "F01",
+    "F23"
+   ]
+  },
+  {
+   "seg": "float",
+   "indicator": "开工率",
+   "score": -1,
+   "basis": "68.37%（7/15）→ 66.89%（9/3）→ 67.24%（10/15），区间下降1.13个百分点，创年内偏低",
+   "ev": [
+    "F02",
+    "F56",
+    "F54"
+   ]
+  },
+  {
+   "seg": "float",
+   "indicator": "产能利用率",
+   "score": -1,
+   "basis": "72.63% → 70.49% → 70.99%，同比-12%",
+   "ev": [
+    "F03",
+    "F56",
+    "F24"
+   ]
+  },
+  {
+   "seg": "float",
+   "indicator": "企业库存（反向）",
+   "score": -1,
+   "basis": "7535.3（7/31）→ 7441.4（8/20）→ 6985.7（9/17）→ 7318.6（10/8）万重箱；同比+16.49%，近5年同期高位",
+   "ev": [
+    "F42",
+    "F37",
+    "F58",
+    "F52"
+   ]
+  },
+  {
+   "seg": "float",
+   "indicator": "深加工订单（真实需求）",
+   "score": 0,
+   "basis": "9.4天（7/31）→ 10.1天（9/15）→ 10.0天（10/15）；环比微升但同比-9.1%~-9.2%，仍为近5年同期最低",
+   "ev": [
+    "F43",
+    "F20",
+    "F55"
+   ]
+  },
+  {
+   "seg": "float",
+   "indicator": "利润（反向）",
+   "score": -1,
+   "basis": "煤制气 -40.42（7/9）→ -86.74（9/17）→ -148.2（10/9）元/吨，三条路线全线亏损",
+   "ev": [
+    "F07",
+    "F17",
+    "F28"
+   ]
+  },
+  {
+   "seg": "float",
+   "indicator": "价格（仅价格，不外推需求）",
+   "score": 0,
+   "basis": "全国均价 1070（8/18）→ 1082（9/17）→ 1075（10/13）元/吨，区间+0.5%但同比-13.81%",
+   "ev": [
+    "F40",
+    "F15",
+    "F33"
+   ]
+  },
+  {
+   "seg": "pv",
+   "indicator": "日熔量（产量级刚需）",
+   "score": -2,
+   "basis": "卓创5月末8.30→9月7.10 万吨/日（同口径-14.5%）；SMM 7.60（实际运行）；钢联10/12为6.68，三口径不可直接相减",
+   "ev": [
+    "P01",
+    "P11",
+    "P12"
+   ]
+  },
+  {
+   "seg": "pv",
+   "indicator": "产能利用率",
+   "score": -2,
+   "basis": "产能利用率 52.98%（8月）→ 50.27%（9月），10月预计48.00%",
+   "ev": [
+    "P15"
+   ]
+  },
+  {
+   "seg": "pv",
+   "indicator": "月产量",
+   "score": -2,
+   "basis": "9月产量164万吨，环比-8%",
+   "ev": [
+    "P13"
+   ]
+  },
+  {
+   "seg": "pv",
+   "indicator": "表观消费",
+   "score": -2,
+   "basis": "9月表观消费129万吨，环比-13%",
+   "ev": [
+    "P14"
+   ]
+  },
+  {
+   "seg": "pv",
+   "indicator": "库存天数（反向）",
+   "score": 0,
+   "basis": "54（5月末）→ 40（7月）→ 44.69（9月末）天，较高点-16%但仍在高位，9月再度回升",
+   "ev": [
+    "P02",
+    "P08",
+    "P10"
+   ]
+  },
+  {
+   "seg": "pv",
+   "indicator": "价格（仅价格，不外推需求）",
+   "score": 1,
+   "basis": "2.0mm镀膜 8.5（7月初）→ 10.0-10.25（9月）元/㎡，较8.25低点+24%",
+   "ev": [
+    "P06",
+    "P09",
+    "P19"
+   ]
+  },
+  {
+   "seg": "pv",
+   "indicator": "利润（反向）",
+   "score": -1,
+   "basis": "7月初单平亏损近2元；头部现金成本8.5-9.0，二三线11-12 元/㎡",
+   "ev": [
+    "P07",
+    "P16"
+   ]
+  },
+  {
+   "seg": "light",
+   "indicator": "碳酸锂产量",
+   "score": 0,
+   "basis": "周产 2.45万吨（7/17）→ 2.6671万吨（9/27），-4.4%环比回落但绝对水平高于7月；9月月产12.85万吨环比+10%",
+   "ev": [
+    "L31",
+    "L32",
+    "L33"
+   ]
+  },
+  {
+   "seg": "light",
+   "indicator": "碳酸锂库存口径变动",
+   "score": 0,
+   "basis": "SMM 9/4 起换口径，库存一次性上修9-10万吨，旧口径序列不可直接比较",
+   "ev": [
+    "L34"
+   ]
+  },
+  {
+   "seg": "light",
+   "indicator": "轻碱厂库（反向）",
+   "score": 1,
+   "basis": "104.36（8/31）→ 93.22（10/9）→ 82.23（10/19）万吨，显著去库",
+   "ev": [
+    "L04",
+    "L12",
+    "L09"
+   ]
+  },
+  {
+   "seg": "light",
+   "indicator": "轻碱需求定性",
+   "score": 0,
+   "basis": "传统下游（洗涤剂、印染、造纸）刚需平稳；节日期间开工下滑",
+   "ev": [
+    "L01"
+   ]
+  },
+  {
+   "seg": "end_re",
+   "indicator": "房屋竣工",
+   "score": -2,
+   "basis": "1-8月累计同比-23.7%（新开工-24.8%）",
+   "ev": [
+    "R01",
+    "R02"
+   ]
+  },
+  {
+   "seg": "end_re",
+   "indicator": "30城商品房成交",
+   "score": 0,
+   "basis": "7/22 7日均19.17万㎡同比+1%；节后同比基本持平，处历史同期低位",
+   "ev": [
+    "R03",
+    "R04"
+   ]
+  },
+  {
+   "seg": "end_pv",
+   "indicator": "国内光伏新增装机",
+   "score": -2,
+   "basis": "2026年上半年同比-66.04%",
+   "ev": [
+    "S01"
+   ]
+  }
+ ],
+ "weights": {
+  "float": {
+   "日熔量": 0.4,
+   "深加工订单": 0.2,
+   "企业库存": 0.15,
+   "开工率": 0.1,
+   "产能利用率": 0.1,
+   "煤制气毛利": 0.05
+  },
+  "pv": {
+   "在产日熔量": 0.35,
+   "月产量": 0.2,
+   "表观消费": 0.2,
+   "产能利用率": 0.1,
+   "库存天数": 0.1
+  },
+  "light": {
+   "轻碱厂库": 0.4,
+   "碳酸锂产量": 0.35,
+   "轻碱需求定性": 0.25
+  }
+ },
+ "dominance_weights": {
+  "float": 46.0,
+  "pv": 21.0,
+  "light": 33.0
+ },
+ "transmission": [
+  {
+   "from": "房屋竣工面积",
+   "to": "浮法玻璃深加工订单",
+   "chan": "竣工带动门窗/幕墙安装 → 加工厂排单",
+   "lag": "1-3个月",
+   "evidence": "竣工 -23.7% 同期订单天数同比 -9.2%",
+   "strength": "强"
+  },
+  {
+   "from": "深加工订单天数",
+   "to": "浮法产销率/库存",
+   "chan": "订单不足 → 随用随采 → 厂库累积",
+   "lag": "即时-2周",
+   "evidence": "订单 10 天低位 + 库存同比 +16.49%",
+   "strength": "强"
+  },
+  {
+   "from": "浮法日熔量/开工率",
+   "to": "重碱刚需",
+   "chan": "1吨玻璃耗约0.2吨重碱",
+   "lag": "日度",
+   "evidence": "日熔 14.60→14.23，折算 2.92→2.846 万吨/日",
+   "strength": "强（有系数）"
+  },
+  {
+   "from": "玻璃厂重碱原料库存天数",
+   "to": "重碱实际采购",
+   "chan": "降库存 → 少采购（需求“二次衰减”）",
+   "lag": "即时",
+   "evidence": "9-30 为 24.4 天，环比 +4.7%、同比 +6.6%",
+   "strength": "中"
+  },
+  {
+   "from": "光伏新增装机/组件排产",
+   "to": "光伏玻璃日熔量",
+   "chan": "组件减产 → 玻璃订单下滑 → 冷修/堵窑",
+   "lag": "1-2个月",
+   "evidence": "装机 -66.04% → 日熔同口径 8.30→7.10",
+   "strength": "强"
+  },
+  {
+   "from": "浮法/光伏玻璃价格",
+   "to": "重碱需求",
+   "chan": "无直接机械联系，仅通过利润→冷修/复产间接影响",
+   "lag": "1-3个月（经冷修）",
+   "evidence": "光伏玻璃价格 +24% 同时表观消费 -13%",
+   "strength": "弱（禁止直接等同）"
+  }
+ ],
+ "policy": [
+  {
+   "date": "2026-04-01",
+   "title": "取消光伏等产品增值税出口退税",
+   "seg": "光伏玻璃",
+   "what": "自 2026-04-01 起取消光伏玻璃等产品出口退税（原 9%）。1-3 月出现“抢出口”，4 月后出口成本抬升。",
+   "impact": "对纯碱：短期（抢出口）边际正、中期负；本区间内主要体现为光伏玻璃出口竞争力下降与减产延续。",
+   "ev": "C01",
+   "url": "https://www.news.cn/fortune/20260109/236ecfbdf0084a8aa5aef9e74fab60e7/c.html",
+   "verify": "财政部/税务总局公告原文"
+  },
+  {
+   "date": "2026-05-31",
+   "title": "光伏玻璃企业自律减产（冷修+堵窑+限产）",
+   "seg": "光伏玻璃",
+   "what": "5 月底头部企业达成自律共识，同步推进冷修、堵窑、限产；6 月减产节奏不及预期，7 月加快。",
+   "impact": "供给收缩→日熔量下降→重碱刚需下降；同时推升玻璃价格。两者对纯碱的方向相反。",
+   "ev": "C02",
+   "url": "https://finance.sina.com.cn/wm/2026-07-20/doc-iniimuyc3008177.shtml",
+   "verify": "SMM 光伏视界（行业机构）"
+  },
+  {
+   "date": "2026-09",
+   "title": "浮法玻璃点火与冷修并行",
+   "seg": "浮法玻璃",
+   "what": "9 月点火 2 条、前期点火产线集中引板；湖北等地推进清洁能源置换技改，抬升区域成本。",
+   "impact": "复产对冲冷修，日熔量“净收缩不及预期”，削弱了“冷修→纯碱需求下降”的幅度。",
+   "ev": "C07",
+   "url": "https://finance.eastmoney.com/a/202610133893315363.html",
+   "verify": "期货日报"
+  },
+  {
+   "date": "2026-09-22",
+   "title": "光伏玻璃企业资产出清（卖资产/拍卖产线）",
+   "seg": "光伏玻璃",
+   "what": "海南发展旗下海控三鑫 7 条光伏玻璃深加工线公开拍卖；安彩高科筹划出售浮法玻璃、药用玻璃等非核心资产。",
+   "impact": "产能永久退出多于冷修，对纯碱偏空但更持久；需与“可随时点火”的 8000 吨/日对冲看待。",
+   "ev": "C09",
+   "url": "https://news.qq.com/rain/a/20260927A0643K00",
+   "verify": "华夏能源网"
+  },
+  {
+   "date": "2026-09-17",
+   "title": "光伏强制国标与成本核算通则实施",
+   "seg": "光伏玻璃/组件",
+   "what": "强制国标、成本核算通则等实施，加速尾部产能出清；约 3.3 万吨产能可视作实质性出清。",
+   "impact": "中期偏空的供给出清；对纯碱的短期影响取决于出清速度与复产弹性。",
+   "ev": "C10",
+   "url": "https://www.guandian.cn/article/20260917/602873.html",
+   "verify": "国金证券（券商公开观点）"
+  },
+  {
+   "date": "2026-10-13",
+   "title": "光伏企业反内卷闭门会议形成产能限制落地计划",
+   "seg": "光伏玻璃/组件",
+   "what": "杭州闭门会议形成产能限制的落地计划（尚未公布量化细则）。",
+   "impact": "若落地为强制限产，将进一步压制光伏玻璃日熔量与重碱刚需；属待验证事件。",
+   "ev": "C03",
+   "url": "https://finance.eastmoney.com/a/202610133894096717.html",
+   "verify": "媒体报道（未立法）"
+  }
+ ],
+ "seasonal": [
+  {
+   "seg": "浮法玻璃",
+   "text": "“金九银十”为传统旺季，但 2026 年旺季成色不足：9月中深加工订单仅 10.1 天、同比 -3.93%，节后产销率冲高后迅速回落至 100% 以下。“旺季不旺”减弱了季节性对纯碱重碱的拉动。"
+  },
+  {
+   "seg": "光伏玻璃",
+   "text": "9-11 月为国内抢装与海外旺季备货期；但 2026 年因装机同比 -66.04% 与出口退税取消，旺季被“组件排产低位”抵消。"
+  },
+  {
+   "seg": "轻碱",
+   "text": "7-8 月为轻碱传统消费淡季（印染、造纸、日化开工偏低）；四季度洗涤剂备货通常带来环比修复，但缺少可核验的周度数据。"
+  }
+ ],
+ "proxy": [
+  {
+   "ind": "浮法玻璃日熔量",
+   "grade": "A",
+   "type": "真实需求（产量级刚需）",
+   "why": "玻璃日熔 × 0.2 ≈ 重碱日耗，直接决定单位时间内的原料消耗上限",
+   "limit": "只代表“潜在刚需”，不等于实际采购；须扣玻璃厂重碱库存天数变化",
+   "freq": "日/周",
+   "src": "隆众/钢联/卓创"
+  },
+  {
+   "ind": "浮法玻璃开工率",
+   "grade": "A-",
+   "type": "真实需求（结构代理）",
+   "why": "在产条数占比，反映有效产能参与度",
+   "limit": "受产线大小差异影响（小线多则条数开工率高估产能），须与日熔量交叉验证",
+   "freq": "周",
+   "src": "隆众"
+  },
+  {
+   "ind": "深加工订单天数",
+   "grade": "A",
+   "type": "真实需求（订单侧）",
+   "why": "加工厂在手订单直接对应未来 1-2 周的原片消耗",
+   "limit": "样本企业口径、区域差异大；华南与华北可差 4 天以上",
+   "freq": "半月",
+   "src": "隆众"
+  },
+  {
+   "ind": "浮法企业库存 / 库存天数",
+   "grade": "B",
+   "type": "间接指标（库存—购销差）",
+   "why": "厂库=产量-出货；持续累库说明出货<产量",
+   "limit": "含中游/贸易商转移的库存变化；期现套保入库会短暂“去厂库”",
+   "freq": "周",
+   "src": "隆众/卓创/Mysteel"
+  },
+  {
+   "ind": "光伏玻璃日熔量",
+   "grade": "A",
+   "type": "真实需求（产量级刚需）",
+   "why": "压延玻璃熔窑同样按物量耗碱",
+   "limit": "三家口径（在产/有效/实际运行）差异可达 0.6 万吨/日以上，禁止跨源相减",
+   "freq": "日/周",
+   "src": "卓创/SMM/Mysteel"
+  },
+  {
+   "ind": "光伏玻璃表观消费量",
+   "grade": "A",
+   "type": "真实需求（表观）",
+   "why": "产量+进口-出口，最接近实际流通量",
+   "limit": "月度发布，滞后约 10-15 天；出口退税取消后出口项波动大",
+   "freq": "月",
+   "src": "隆众"
+  },
+  {
+   "ind": "光伏玻璃库存天数",
+   "grade": "B",
+   "type": "间接指标（库存—购销差）",
+   "why": "库存天数上行=组件采购慢于产出",
+   "limit": "存在堵窑产能，库存天数分母口径不一",
+   "freq": "周",
+   "src": "卓创/SMM"
+  },
+  {
+   "ind": "光伏玻璃价格",
+   "grade": "C",
+   "type": "间接指标（景气/报价）",
+   "why": "反映供需紧张度与成本传导",
+   "limit": "本区间价格 +24% 与消费 -13% 同时出现，说明价格由减产推动；禁止用价格涨跌推断消费量",
+   "freq": "日",
+   "src": "卓创/隆众"
+  },
+  {
+   "ind": "浮法玻璃价格",
+   "grade": "C",
+   "type": "间接指标（景气/报价）",
+   "why": "利润→冷修决策的先行变量",
+   "limit": "与重碱消费无机械关系；期现套利会放大价格波动",
+   "freq": "日",
+   "src": "隆众"
+  },
+  {
+   "ind": "浮法/光伏玻璃利润",
+   "grade": "B",
+   "type": "间接指标（产能弹性）",
+   "why": "亏损→冷修→日熔量下降",
+   "limit": "亏损到冷修有 3-6 个月滞后，且冷修成本高；亏损不等于立即减产",
+   "freq": "周",
+   "src": "隆众成本模型"
+  },
+  {
+   "ind": "玻璃厂重碱原料库存天数",
+   "grade": "A",
+   "type": "真实需求（二次衰减项）",
+   "why": "决定同样的玻璃产量会消耗多少新的纯碱",
+   "limit": "样本口径，月度发布；节日前后失真",
+   "freq": "周/月",
+   "src": "钢联/卓创"
+  },
+  {
+   "ind": "纯碱企业厂库（轻/重）",
+   "grade": "B",
+   "type": "间接指标（供需差）",
+   "why": "厂库=产量-出货，重碱厂库最贴近玻璃需求",
+   "limit": "去库可能是“碱厂减产”而非“需求好”；须同时看产量与下游库存天数",
+   "freq": "周",
+   "src": "隆众"
+  },
+  {
+   "ind": "纯碱表观消费量",
+   "grade": "B",
+   "type": "间接指标（表观）",
+   "why": "产量+进口-出口-库存变化",
+   "limit": "周度估算，含库存口径误差；不是终端消费",
+   "freq": "周",
+   "src": "期货机构估算"
+  },
+  {
+   "ind": "碳酸锂产量",
+   "grade": "A",
+   "type": "真实需求（轻碱细分的产量代理）",
+   "why": "碳酸锂工艺大量耗用轻碱",
+   "limit": "轻碱在碳酸锂成本占比仅个位数，产量对轻碱需求的边际影响小于表面弹性",
+   "freq": "周/月",
+   "src": "SMM"
+  },
+  {
+   "ind": "房屋竣工面积",
+   "grade": "A",
+   "type": "终端需求（上游驱动）",
+   "why": "决定建筑玻璃天花板",
+   "limit": "月度累计值、滞后；保交楼/装饰性需求可短期偏离",
+   "freq": "月",
+   "src": "国家统计局"
+  },
+  {
+   "ind": "30城商品房成交面积",
+   "grade": "C",
+   "type": "间接指标（地产景气）",
+   "why": "销售→开工→竣工的远期链条",
+   "limit": "领先竣工 2-3 年，对本区间需求几乎无即期解释力",
+   "freq": "日/周",
+   "src": "Wind/机构"
+  },
+  {
+   "ind": "国内光伏新增装机",
+   "grade": "A",
+   "type": "终端需求（上游驱动）",
+   "why": "组件排产→玻璃采购",
+   "limit": "抢装/政策窗口导致月度波动极大（上半年 -66.04%）",
+   "freq": "月",
+   "src": "国家能源局"
+  },
+  {
+   "ind": "纯碱期货价格/基差",
+   "grade": "C",
+   "type": "间接指标（预期）",
+   "why": "含预期与资金，反映 market 对供需的定价",
+   "limit": "升贴水、交割规则会让期货与现货偏离；不可当消费指标",
+   "freq": "日",
+   "src": "郑商所"
+  }
+ ],
+ "gaps": [
+  {
+   "item": "光伏玻璃日熔量的单一口径时间序列",
+   "why": "卓创/SMM/Mysteel 三源口径不同，公开报道只给当前值",
+   "plan": "订阅卓创《光伏玻璃周报》或隆众数据终端，取同源周度序列",
+   "impact": "日熔量的区间变化幅度只能给方向，不能给精确百分比"
+  },
+  {
+   "item": "轻碱下游（洗涤剂、印染、造纸、硅酸钠）周度开工率与订单",
+   "why": "公开免费源不提供，生意社/隆众均需会员",
+   "plan": "购买隆众或卓创轻碱下游数据包；或改用下游企业公告产能利用率",
+   "impact": "轻碱景气度只能定性判断，权重敏感性大"
+  },
+  {
+   "item": "浮法玻璃日熔量的“历史同期”精确分位",
+   "why": "只有近 3 年走势图，缺 5 年以上数值序列",
+   "plan": "从钢联/卓创下载日度序列，按年份还原",
+   "impact": "“历史低位”只能引用机构定性表述"
+  },
+  {
+   "item": "纯碱出口月度数据（含重碱/轻碱拆分）",
+   "why": "海关总署月报有滞后，公开报道零散",
+   "plan": "取海关数据（HS 28362000）月报，与出口退税政策时点对齐",
+   "impact": "出口对纯碱需求的托底作用无法量化"
+  },
+  {
+   "item": "玻璃厂重碱原料库存的周度完整序列",
+   "why": "只拿到 9-30 一个点（24.4 天）",
+   "plan": "钢联数据终端导出",
+   "impact": "“二次衰减”项只能单点说明"
+  },
+  {
+   "item": "2026 年 10 月完整的浮法/光伏日熔量",
+   "why": "月度未结束，10-13 之后仅有个别机构值",
+   "plan": "10 月末补齐 10 月最后一周",
+   "impact": "端点为月中值，需注明"
+  }
+ ],
+ "sources": {
+  "longzhong": [
+   "隆众资讯",
+   "行业数据机构（一手监测）"
+  ],
+  "mysteel": [
+   "上海钢联 / Mysteel",
+   "行业数据机构（一手监测）"
+  ],
+  "zhuochuang": [
+   "卓创资讯",
+   "行业数据机构（一手监测）"
+  ],
+  "zjtk": [
+   "紫金天风期货研究所",
+   "期货公司研究（引用钢联/卓创/SMM）"
+  ],
+  "smm": [
+   "SMM 上海有色网",
+   "行业数据机构"
+  ],
+  "nbs": [
+   "国家统计局",
+   "官方统计"
+  ],
+  "cnfin": [
+   "新华财经（新华社）",
+   "国家级金融信息平台"
+  ],
+  "qhrb": [
+   "期货日报",
+   "行业媒体（引用产业数据）"
+  ],
+  "sina": [
+   "新浪财经（转载）",
+   "门户转载"
+  ],
+  "gg": [
+   "光大期货",
+   "期货公司研究"
+  ],
+  "hf": [
+   "徽商期货",
+   "期货公司研究"
+  ],
+  "sunsirs": [
+   "生意社",
+   "行业数据机构"
+  ],
+  "tax": [
+   "财政部/税务总局",
+   "官方政策原文"
+  ],
+  "czce": [
+   "郑州商品交易所",
+   "交易规则原文"
+  ],
+  "gjzq": [
+   "国金证券",
+   "券商研究"
+  ],
+  "gsnengyuan": [
+   "华夏能源网",
+   "行业媒体"
+  ],
+  "kj": [
+   "36氪·预见能源",
+   "行业媒体"
+  ],
+  "smmsight": [
+   "SMM 光伏视界",
+   "行业机构公众号"
+  ]
+ },
+ "grade_of": {
+  "日熔量(万吨/日)": "A",
+  "开工率(%)": "A-",
+  "产能利用率(%)": "A",
+  "企业库存(万重箱)": "B",
+  "深加工订单(天)": "A",
+  "价格(元/吨,全国均价)": "C",
+  "煤制气毛利(元/吨)": "B",
+  "天然气毛利(元/吨)": "B",
+  "石油焦毛利(元/吨)": "B",
+  "在产日熔量(万吨/日)": "A",
+  "库存天数(天)": "B",
+  "价格 2.0mm镀膜(元/㎡)": "C",
+  "月产量(万吨)": "A",
+  "表观消费(万吨/月)": "A",
+  "碳酸锂周产量(万吨)": "A",
+  "生产企业总库存(万吨)": "B",
+  "重碱厂库(万吨)": "B",
+  "轻碱厂库(万吨)": "B",
+  "综合开工率(%)": "A-",
+  "周产量(万吨)": "A"
+ },
+ "sections": [
+  {
+   "id": "structure",
+   "no": "01",
+   "title": "纯碱下游消费结构（多口径并列）",
+   "lead": "不同机构对纯碱下游占比的口径差异很大，差异来自“分母”（内需 / 表观含出口 / 全部应用），不是谁算错了。本研究并列三套结构，并在所有下游卡片上标注所采用的年份与来源。",
+   "points": [
+    "采用结构：以 2024 年“平板玻璃46% / 光伏玻璃21% / 日用玻璃12% / 其他21%”（卓创-协会口径，表观消费3596万吨）作为基准权重；",
+    "敏感性：同时列出华经（平板32/光伏18/日用玻璃14/泡花碱5/其他31）与小牛行研（44/21/10/25）口径下的加权结果，避免结论被单一权重绑架；",
+    "重碱 vs 轻碱：重碱几乎全部进入两玻，因此“平板46%+光伏21%=67%”可视为重碱总权重；轻碱权重约 33%（日用玻璃12%+锂电/洗涤/硅酸钠等）。"
+   ],
+   "caveat": "占比数据为第三方研究机构统计，非海关/统计局原始发布；各机构样本与年份不同，禁止跨口径相加。"
+  },
+  {
+   "id": "float",
+   "no": "02",
+   "title": "浮法玻璃：真实需求走弱，但价格与需求已“脱钩”",
+   "lead": "浮法玻璃是重碱第一大下游（46%）。三个月内其产量级指标（日熔量、开工率）小幅下行，真实需求指标（深加工订单天数）环比略升但同比仍负，库存处于近5年同期高位。",
+   "points": [
+    "产量级刚需（A级）：日熔量 14.60→14.23 万吨/日，同比 -11.8%；在产产线 197 条，年初放水 32 条、点火 16 条，日产量净减 9242 吨 [F01/F23/F31/F46]",
+    "真实需求（A级）：深加工订单天数 9.4→10.1→10.0 天，同比 -9.1%~-9.2%，为近5年同期最低；机构调研口径称加工厂“人员与设备开工率同比大幅下降”，属定性描述 [F43/F20/F55/lz0916]",
+    "库存（A级）：企业库存 7535.3（7月底）→6985.7（9-17）→7318.6 万重箱（10-08），同比 +16.49%~+26.65%，属被动累库 [F42/F58/F52]",
+    "利润（B级）：煤制气 -40.42 → -148.2 元/吨，天然气 -173.8 → -151.9，石油焦 -190.33 → -169.1，全线亏损且煤制气亏损快速扩大 [F07/F08/F09/F17/F16/F18/F28/F27/F29]",
+    "价格（C级，仅价格）：全国均价 1070→1082→1075 元/吨，区间 +0.47%，但同比 -13.81%；沙河 5mm 大板一周两降至 913 元/吨 [F40/F15/F33/F30/F22]",
+    "结论：浮法端对纯碱的“潜在刚需”按 0.2 吨/吨玻璃折算为 2.92→2.846 万吨/日（推算值，非统计值），三个月下降约 2.5%；实际采购还要扣掉玻璃厂自身的重碱库存天数变化。"
+   ],
+   "caveat": "价格反弹（若发生）主要反映成本 / 情绪 / 期现套利，不能作为纯碱消费增长的证据；本研究不将玻璃价格纳入需求强度打分。"
+  },
+  {
+   "id": "pv",
+   "no": "03",
+   "title": "光伏玻璃：减产与报表消费双降，价格修复≠需求修复",
+   "lead": "光伏玻璃是重碱第二大下游（21%）。三个月内该行业在“价格连涨三次”的同时，日熔量、产量、表观消费全部下行——这是本次研究最典型的“价格与消费背离”案例。",
+   "points": [
+    "日熔量（A级，跨口径谨慎）：卓创同口径 8.30（5月末）→7.10（9月末）万吨/日；SMM 7.60（7月中“实际运行”，已扣堵窑）；钢联 6.68（10-12）。三个口径不可直接相减 [P01/P03/P04/P11/P12]",
+    "产量与消费（A级）：9月产量 164 万吨（环比 -8%），表观消费 129 万吨（环比 -13%）[P13/P14]",
+    "产能利用率（A级）：52.98%（8月）→50.27%（9月），10月预计 48.00% [P15]",
+    "库存天数（B级）：54（5月末）→40+（7月中）→44.69（9月末），较高点 -16% 但仍在高位，9月再度回升 [P02/P08/P10]",
+    "价格（C级）：2.0mm 镀膜 8.5 → 10.0-10.25 元/㎡（+17.6%~+20.6%），较前期低点 8.25 上涨 24% [P06/P09/P19]",
+    "供给弹性（B级）：约 8000 吨/日“建好可点”产能掌握在头部手中，堵窑/保窑产能恢复快于冷修；行业约 3.3 万吨产能可视为实质性出清 [P17/P18]"
+   ],
+   "caveat": "光伏玻璃表观消费（129万吨）与日熔量（6.68-7.10万吨/日）分属不同来源、不同月份，只用于方向判断，不做吨数勾稽。"
+  },
+  {
+   "id": "light",
+   "no": "04",
+   "title": "轻碱与其他下游：结构分化，韧性来自锂电与去库",
+   "lead": "轻碱约占纯碱需求的三分之一，但统计最分散。三个月内可见的线索：轻碱厂库大幅去化、碳酸锂产量较 7 月回升但周度波动，传统下游（洗涤、印染、造纸）刚需平稳。",
+   "points": [
+    "轻碱厂库（A级）：104.36（8-31）→93.22（10-09）→82.23 万吨（10-19），区间 -21.7%，去库幅度远大于重碱（86.48→71.73 万吨）[L04/L12/L09]",
+    "碳酸锂（B级）：周产 2.45（7-17）→2.6671 万吨（9-27，环比 -4.4%）；9 月月产 12.85 万吨、环比 +10%（含新增统计来源）[L31/L32/L33]",
+    "碳酸锂口径断点（关键）：SMM 自 9-4 起启用新库存口径，库存一次性上修 9-10 万吨，新旧序列不可直接比较 [L34]",
+    "表观消费（B级）：截至 10-08 当周纯碱表观消费 69.45 万吨，环比 -9.23%（受假期与下游放假影响）[L01]",
+    "轻碱价格：华北市场价 1250 元/吨高位持稳，西北降至 800 元/吨低位；重轻碱价差收窄至 0-70 元/吨（7月中）→ 需求分化印证 [zor0722]"
+   ],
+   "caveat": "轻碱下游缺少周度开工率与订单数据，低置信：轻碱去库更可能是“碱厂减产+下游补库”共同作用，不能直接读作轻碱消费增长。"
+  },
+  {
+   "id": "end",
+   "no": "05",
+   "title": "终端需求：房地产竣工是浮法的天花板，光伏装机是压延的先行指标",
+   "lead": "下游产品的景气最终由终端决定。两玻的终端指标在本区间内均为“深负”：竣工累计同比 -23.7%，上半年国内光伏新增装机同比 -66.04%。",
+   "points": [
+    "房屋竣工面积 1-8月 21097 万㎡，累计同比 -23.7%；新开工 29894 万㎡，同比 -24.8% [R01/R02]",
+    "30 大中城市商品房成交（7日均）19.17 万㎡，同比 +1%（7-22）；节后同比基本持平，处历史同期低位 [R03/R04]",
+    "国内光伏新增装机 2026 上半年同比 -66.04% [S01]",
+    "传导链条：竣工 → 深加工订单 → 深加工开工 → 浮法产销 → 浮法库存/日熔量 → 玻璃厂重碱采购 → 纯碱重碱需求；每级有 1-3 个月的滞后，节后“产销率冲高至近120%后回落”即为脉冲式补库的例证 [zjtk1014]"
+   ],
+   "caveat": "终端指标（统计局/能源局）为月度发布且多为累计值，与研究区间的周度指标频率不一致，只能定方向。"
+  }
+ ],
+ "futures": {
+  "SA": {
+   "sym": "SA0",
+   "label": "纯碱主连 SA0（郑商所，日盘收盘）",
+   "asof": "2026-10-19",
+   "close": 951.0,
+   "points": 1662,
+   "first": "2019-12-06",
+   "7d": {
+    "base_date": "2026-09-30",
+    "base": 1006.0,
+    "chg": -55.0,
+    "pct": -5.47
+   },
+   "30d": {
+    "base_date": "2026-09-11",
+    "base": 1065.0,
+    "chg": -114.0,
+    "pct": -10.7
+   },
+   "90d": {
+    "base_date": "2026-07-15",
+    "base": 1051.0,
+    "chg": -100.0,
+    "pct": -9.51
+   },
+   "180d": {
+    "base_date": "2026-04-15",
+    "base": 1226.0,
+    "chg": -275.0,
+    "pct": -22.43
+   },
+   "365d": {
+    "base_date": "2025-10-13",
+    "base": 1247.0,
+    "chg": -296.0,
+    "pct": -23.74
+   },
+   "p1": 4.5,
+   "min1": 919.0,
+   "max1": 1277.0,
+   "p3": 1.5,
+   "min3": 919.0,
+   "max3": 2637.0,
+   "series_1y": [
+    {
+     "d": "2025-09-30",
+     "c": 1255.0
+    },
+    {
+     "d": "2025-10-09",
+     "c": 1250.0
+    },
+    {
+     "d": "2025-10-10",
+     "c": 1240.0
+    },
+    {
+     "d": "2025-10-13",
+     "c": 1247.0
+    },
+    {
+     "d": "2025-10-14",
+     "c": 1234.0
+    },
+    {
+     "d": "2025-10-15",
+     "c": 1232.0
+    },
+    {
+     "d": "2025-10-16",
+     "c": 1235.0
+    },
+    {
+     "d": "2025-10-17",
+     "c": 1209.0
+    },
+    {
+     "d": "2025-10-20",
+     "c": 1219.0
+    },
+    {
+     "d": "2025-10-21",
+     "c": 1210.0
+    },
+    {
+     "d": "2025-10-22",
+     "c": 1223.0
+    },
+    {
+     "d": "2025-10-23",
+     "c": 1235.0
+    },
+    {
+     "d": "2025-10-24",
+     "c": 1229.0
+    },
+    {
+     "d": "2025-10-27",
+     "c": 1246.0
+    },
+    {
+     "d": "2025-10-28",
+     "c": 1239.0
+    },
+    {
+     "d": "2025-10-29",
+     "c": 1259.0
+    },
+    {
+     "d": "2025-10-30",
+     "c": 1235.0
+    },
+    {
+     "d": "2025-10-31",
+     "c": 1225.0
+    },
+    {
+     "d": "2025-11-03",
+     "c": 1202.0
+    },
+    {
+     "d": "2025-11-04",
+     "c": 1189.0
+    },
+    {
+     "d": "2025-11-05",
+     "c": 1195.0
+    },
+    {
+     "d": "2025-11-06",
+     "c": 1207.0
+    },
+    {
+     "d": "2025-11-07",
+     "c": 1210.0
+    },
+    {
+     "d": "2025-11-10",
+     "c": 1226.0
+    },
+    {
+     "d": "2025-11-11",
+     "c": 1215.0
+    },
+    {
+     "d": "2025-11-12",
+     "c": 1214.0
+    },
+    {
+     "d": "2025-11-13",
+     "c": 1239.0
+    },
+    {
+     "d": "2025-11-14",
+     "c": 1226.0
+    },
+    {
+     "d": "2025-11-17",
+     "c": 1231.0
+    },
+    {
+     "d": "2025-11-18",
+     "c": 1214.0
+    },
+    {
+     "d": "2025-11-19",
+     "c": 1182.0
+    },
+    {
+     "d": "2025-11-20",
+     "c": 1158.0
+    },
+    {
+     "d": "2025-11-21",
+     "c": 1170.0
+    },
+    {
+     "d": "2025-11-24",
+     "c": 1183.0
+    },
+    {
+     "d": "2025-11-25",
+     "c": 1173.0
+    },
+    {
+     "d": "2025-11-26",
+     "c": 1175.0
+    },
+    {
+     "d": "2025-11-27",
+     "c": 1176.0
+    },
+    {
+     "d": "2025-11-28",
+     "c": 1177.0
+    },
+    {
+     "d": "2025-12-01",
+     "c": 1176.0
+    },
+    {
+     "d": "2025-12-02",
+     "c": 1183.0
+    },
+    {
+     "d": "2025-12-03",
+     "c": 1165.0
+    },
+    {
+     "d": "2025-12-04",
+     "c": 1162.0
+    },
+    {
+     "d": "2025-12-05",
+     "c": 1137.0
+    },
+    {
+     "d": "2025-12-08",
+     "c": 1133.0
+    },
+    {
+     "d": "2025-12-09",
+     "c": 1125.0
+    },
+    {
+     "d": "2025-12-10",
+     "c": 1094.0
+    },
+    {
+     "d": "2025-12-11",
+     "c": 1103.0
+    },
+    {
+     "d": "2025-12-12",
+     "c": 1126.0
+    },
+    {
+     "d": "2025-12-15",
+     "c": 1156.0
+    },
+    {
+     "d": "2025-12-16",
+     "c": 1170.0
+    },
+    {
+     "d": "2025-12-17",
+     "c": 1170.0
+    },
+    {
+     "d": "2025-12-18",
+     "c": 1193.0
+    },
+    {
+     "d": "2025-12-19",
+     "c": 1176.0
+    },
+    {
+     "d": "2025-12-22",
+     "c": 1169.0
+    },
+    {
+     "d": "2025-12-23",
+     "c": 1175.0
+    },
+    {
+     "d": "2025-12-24",
+     "c": 1184.0
+    },
+    {
+     "d": "2025-12-25",
+     "c": 1184.0
+    },
+    {
+     "d": "2025-12-26",
+     "c": 1200.0
+    },
+    {
+     "d": "2025-12-29",
+     "c": 1181.0
+    },
+    {
+     "d": "2025-12-30",
+     "c": 1213.0
+    },
+    {
+     "d": "2025-12-31",
+     "c": 1209.0
+    },
+    {
+     "d": "2026-01-05",
+     "c": 1177.0
+    },
+    {
+     "d": "2026-01-06",
+     "c": 1190.0
+    },
+    {
+     "d": "2026-01-07",
+     "c": 1271.0
+    },
+    {
+     "d": "2026-01-08",
+     "c": 1239.0
+    },
+    {
+     "d": "2026-01-09",
+     "c": 1228.0
+    },
+    {
+     "d": "2026-01-12",
+     "c": 1239.0
+    },
+    {
+     "d": "2026-01-13",
+     "c": 1212.0
+    },
+    {
+     "d": "2026-01-14",
+     "c": 1222.0
+    },
+    {
+     "d": "2026-01-15",
+     "c": 1193.0
+    },
+    {
+     "d": "2026-01-16",
+     "c": 1192.0
+    },
+    {
+     "d": "2026-01-19",
+     "c": 1192.0
+    },
+    {
+     "d": "2026-01-20",
+     "c": 1177.0
+    },
+    {
+     "d": "2026-01-21",
+     "c": 1163.0
+    },
+    {
+     "d": "2026-01-22",
+     "c": 1185.0
+    },
+    {
+     "d": "2026-01-23",
+     "c": 1198.0
+    },
+    {
+     "d": "2026-01-26",
+     "c": 1205.0
+    },
+    {
+     "d": "2026-01-27",
+     "c": 1194.0
+    },
+    {
+     "d": "2026-01-28",
+     "c": 1198.0
+    },
+    {
+     "d": "2026-01-29",
+     "c": 1224.0
+    },
+    {
+     "d": "2026-01-30",
+     "c": 1204.0
+    },
+    {
+     "d": "2026-02-02",
+     "c": 1203.0
+    },
+    {
+     "d": "2026-02-03",
+     "c": 1201.0
+    },
+    {
+     "d": "2026-02-04",
+     "c": 1229.0
+    },
+    {
+     "d": "2026-02-05",
+     "c": 1209.0
+    },
+    {
+     "d": "2026-02-06",
+     "c": 1190.0
+    },
+    {
+     "d": "2026-02-09",
+     "c": 1181.0
+    },
+    {
+     "d": "2026-02-10",
+     "c": 1171.0
+    },
+    {
+     "d": "2026-02-11",
+     "c": 1178.0
+    },
+    {
+     "d": "2026-02-12",
+     "c": 1162.0
+    },
+    {
+     "d": "2026-02-13",
+     "c": 1150.0
+    },
+    {
+     "d": "2026-02-24",
+     "c": 1169.0
+    },
+    {
+     "d": "2026-02-25",
+     "c": 1191.0
+    },
+    {
+     "d": "2026-02-26",
+     "c": 1191.0
+    },
+    {
+     "d": "2026-02-27",
+     "c": 1194.0
+    },
+    {
+     "d": "2026-03-02",
+     "c": 1188.0
+    },
+    {
+     "d": "2026-03-03",
+     "c": 1218.0
+    },
+    {
+     "d": "2026-03-04",
+     "c": 1203.0
+    },
+    {
+     "d": "2026-03-05",
+     "c": 1225.0
+    },
+    {
+     "d": "2026-03-06",
+     "c": 1242.0
+    },
+    {
+     "d": "2026-03-09",
+     "c": 1276.0
+    },
+    {
+     "d": "2026-03-10",
+     "c": 1235.0
+    },
+    {
+     "d": "2026-03-11",
+     "c": 1255.0
+    },
+    {
+     "d": "2026-03-12",
+     "c": 1256.0
+    },
+    {
+     "d": "2026-03-13",
+     "c": 1277.0
+    },
+    {
+     "d": "2026-03-16",
+     "c": 1256.0
+    },
+    {
+     "d": "2026-03-17",
+     "c": 1243.0
+    },
+    {
+     "d": "2026-03-18",
+     "c": 1211.0
+    },
+    {
+     "d": "2026-03-19",
+     "c": 1217.0
+    },
+    {
+     "d": "2026-03-20",
+     "c": 1202.0
+    },
+    {
+     "d": "2026-03-23",
+     "c": 1256.0
+    },
+    {
+     "d": "2026-03-24",
+     "c": 1240.0
+    },
+    {
+     "d": "2026-03-25",
+     "c": 1244.0
+    },
+    {
+     "d": "2026-03-26",
+     "c": 1225.0
+    },
+    {
+     "d": "2026-03-27",
+     "c": 1229.0
+    },
+    {
+     "d": "2026-03-30",
+     "c": 1207.0
+    },
+    {
+     "d": "2026-03-31",
+     "c": 1177.0
+    },
+    {
+     "d": "2026-04-01",
+     "c": 1167.0
+    },
+    {
+     "d": "2026-04-02",
+     "c": 1172.0
+    },
+    {
+     "d": "2026-04-03",
+     "c": 1155.0
+    },
+    {
+     "d": "2026-04-07",
+     "c": 1145.0
+    },
+    {
+     "d": "2026-04-08",
+     "c": 1149.0
+    },
+    {
+     "d": "2026-04-09",
+     "c": 1136.0
+    },
+    {
+     "d": "2026-04-10",
+     "c": 1146.0
+    },
+    {
+     "d": "2026-04-13",
+     "c": 1143.0
+    },
+    {
+     "d": "2026-04-14",
+     "c": 1220.0
+    },
+    {
+     "d": "2026-04-15",
+     "c": 1226.0
+    },
+    {
+     "d": "2026-04-16",
+     "c": 1241.0
+    },
+    {
+     "d": "2026-04-17",
+     "c": 1238.0
+    },
+    {
+     "d": "2026-04-20",
+     "c": 1247.0
+    },
+    {
+     "d": "2026-04-21",
+     "c": 1247.0
+    },
+    {
+     "d": "2026-04-22",
+     "c": 1266.0
+    },
+    {
+     "d": "2026-04-23",
+     "c": 1254.0
+    },
+    {
+     "d": "2026-04-24",
+     "c": 1247.0
+    },
+    {
+     "d": "2026-04-27",
+     "c": 1259.0
+    },
+    {
+     "d": "2026-04-28",
+     "c": 1237.0
+    },
+    {
+     "d": "2026-04-29",
+     "c": 1238.0
+    },
+    {
+     "d": "2026-04-30",
+     "c": 1239.0
+    },
+    {
+     "d": "2026-05-06",
+     "c": 1267.0
+    },
+    {
+     "d": "2026-05-07",
+     "c": 1266.0
+    },
+    {
+     "d": "2026-05-08",
+     "c": 1228.0
+    },
+    {
+     "d": "2026-05-11",
+     "c": 1227.0
+    },
+    {
+     "d": "2026-05-12",
+     "c": 1221.0
+    },
+    {
+     "d": "2026-05-13",
+     "c": 1222.0
+    },
+    {
+     "d": "2026-05-14",
+     "c": 1208.0
+    },
+    {
+     "d": "2026-05-15",
+     "c": 1190.0
+    },
+    {
+     "d": "2026-05-18",
+     "c": 1198.0
+    },
+    {
+     "d": "2026-05-19",
+     "c": 1193.0
+    },
+    {
+     "d": "2026-05-20",
+     "c": 1178.0
+    },
+    {
+     "d": "2026-05-21",
+     "c": 1182.0
+    },
+    {
+     "d": "2026-05-22",
+     "c": 1181.0
+    },
+    {
+     "d": "2026-05-25",
+     "c": 1218.0
+    },
+    {
+     "d": "2026-05-26",
+     "c": 1198.0
+    },
+    {
+     "d": "2026-05-27",
+     "c": 1202.0
+    },
+    {
+     "d": "2026-05-28",
+     "c": 1204.0
+    },
+    {
+     "d": "2026-05-29",
+     "c": 1215.0
+    },
+    {
+     "d": "2026-06-01",
+     "c": 1221.0
+    },
+    {
+     "d": "2026-06-02",
+     "c": 1206.0
+    },
+    {
+     "d": "2026-06-03",
+     "c": 1200.0
+    },
+    {
+     "d": "2026-06-04",
+     "c": 1182.0
+    },
+    {
+     "d": "2026-06-05",
+     "c": 1162.0
+    },
+    {
+     "d": "2026-06-08",
+     "c": 1157.0
+    },
+    {
+     "d": "2026-06-09",
+     "c": 1152.0
+    },
+    {
+     "d": "2026-06-10",
+     "c": 1152.0
+    },
+    {
+     "d": "2026-06-11",
+     "c": 1158.0
+    },
+    {
+     "d": "2026-06-12",
+     "c": 1150.0
+    },
+    {
+     "d": "2026-06-15",
+     "c": 1168.0
+    },
+    {
+     "d": "2026-06-16",
+     "c": 1163.0
+    },
+    {
+     "d": "2026-06-17",
+     "c": 1150.0
+    },
+    {
+     "d": "2026-06-18",
+     "c": 1127.0
+    },
+    {
+     "d": "2026-06-22",
+     "c": 1128.0
+    },
+    {
+     "d": "2026-06-23",
+     "c": 1132.0
+    },
+    {
+     "d": "2026-06-24",
+     "c": 1118.0
+    },
+    {
+     "d": "2026-06-25",
+     "c": 1111.0
+    },
+    {
+     "d": "2026-06-26",
+     "c": 1096.0
+    },
+    {
+     "d": "2026-06-29",
+     "c": 1103.0
+    },
+    {
+     "d": "2026-06-30",
+     "c": 1086.0
+    },
+    {
+     "d": "2026-07-01",
+     "c": 1089.0
+    },
+    {
+     "d": "2026-07-02",
+     "c": 1103.0
+    },
+    {
+     "d": "2026-07-03",
+     "c": 1103.0
+    },
+    {
+     "d": "2026-07-06",
+     "c": 1101.0
+    },
+    {
+     "d": "2026-07-07",
+     "c": 1070.0
+    },
+    {
+     "d": "2026-07-08",
+     "c": 1080.0
+    },
+    {
+     "d": "2026-07-09",
+     "c": 1078.0
+    },
+    {
+     "d": "2026-07-10",
+     "c": 1084.0
+    },
+    {
+     "d": "2026-07-13",
+     "c": 1063.0
+    },
+    {
+     "d": "2026-07-14",
+     "c": 1064.0
+    },
+    {
+     "d": "2026-07-15",
+     "c": 1051.0
+    },
+    {
+     "d": "2026-07-16",
+     "c": 1034.0
+    },
+    {
+     "d": "2026-07-17",
+     "c": 1007.0
+    },
+    {
+     "d": "2026-07-20",
+     "c": 1006.0
+    },
+    {
+     "d": "2026-07-21",
+     "c": 1009.0
+    },
+    {
+     "d": "2026-07-22",
+     "c": 1013.0
+    },
+    {
+     "d": "2026-07-23",
+     "c": 1007.0
+    },
+    {
+     "d": "2026-07-24",
+     "c": 1004.0
+    },
+    {
+     "d": "2026-07-27",
+     "c": 995.0
+    },
+    {
+     "d": "2026-07-28",
+     "c": 972.0
+    },
+    {
+     "d": "2026-07-29",
+     "c": 960.0
+    },
+    {
+     "d": "2026-07-30",
+     "c": 944.0
+    },
+    {
+     "d": "2026-07-31",
+     "c": 935.0
+    },
+    {
+     "d": "2026-08-03",
+     "c": 919.0
+    },
+    {
+     "d": "2026-08-04",
+     "c": 922.0
+    },
+    {
+     "d": "2026-08-05",
+     "c": 937.0
+    },
+    {
+     "d": "2026-08-06",
+     "c": 937.0
+    },
+    {
+     "d": "2026-08-07",
+     "c": 939.0
+    },
+    {
+     "d": "2026-08-10",
+     "c": 966.0
+    },
+    {
+     "d": "2026-08-11",
+     "c": 996.0
+    },
+    {
+     "d": "2026-08-12",
+     "c": 987.0
+    },
+    {
+     "d": "2026-08-13",
+     "c": 975.0
+    },
+    {
+     "d": "2026-08-14",
+     "c": 1023.0
+    },
+    {
+     "d": "2026-08-17",
+     "c": 1031.0
+    },
+    {
+     "d": "2026-08-18",
+     "c": 1043.0
+    },
+    {
+     "d": "2026-08-19",
+     "c": 1012.0
+    },
+    {
+     "d": "2026-08-20",
+     "c": 1033.0
+    },
+    {
+     "d": "2026-08-21",
+     "c": 1039.0
+    },
+    {
+     "d": "2026-08-24",
+     "c": 1054.0
+    },
+    {
+     "d": "2026-08-25",
+     "c": 1045.0
+    },
+    {
+     "d": "2026-08-26",
+     "c": 1035.0
+    },
+    {
+     "d": "2026-08-27",
+     "c": 1011.0
+    },
+    {
+     "d": "2026-08-28",
+     "c": 1047.0
+    },
+    {
+     "d": "2026-08-31",
+     "c": 1061.0
+    },
+    {
+     "d": "2026-09-01",
+     "c": 1070.0
+    },
+    {
+     "d": "2026-09-02",
+     "c": 1056.0
+    },
+    {
+     "d": "2026-09-03",
+     "c": 1056.0
+    },
+    {
+     "d": "2026-09-04",
+     "c": 1093.0
+    },
+    {
+     "d": "2026-09-07",
+     "c": 1079.0
+    },
+    {
+     "d": "2026-09-08",
+     "c": 1083.0
+    },
+    {
+     "d": "2026-09-09",
+     "c": 1077.0
+    },
+    {
+     "d": "2026-09-10",
+     "c": 1075.0
+    },
+    {
+     "d": "2026-09-11",
+     "c": 1065.0
+    },
+    {
+     "d": "2026-09-14",
+     "c": 1019.0
+    },
+    {
+     "d": "2026-09-15",
+     "c": 1009.0
+    },
+    {
+     "d": "2026-09-16",
+     "c": 1011.0
+    },
+    {
+     "d": "2026-09-17",
+     "c": 1006.0
+    },
+    {
+     "d": "2026-09-18",
+     "c": 1007.0
+    },
+    {
+     "d": "2026-09-21",
+     "c": 1018.0
+    },
+    {
+     "d": "2026-09-22",
+     "c": 1017.0
+    },
+    {
+     "d": "2026-09-23",
+     "c": 1011.0
+    },
+    {
+     "d": "2026-09-24",
+     "c": 1004.0
+    },
+    {
+     "d": "2026-09-28",
+     "c": 1014.0
+    },
+    {
+     "d": "2026-09-29",
+     "c": 1012.0
+    },
+    {
+     "d": "2026-09-30",
+     "c": 1006.0
+    },
+    {
+     "d": "2026-10-08",
+     "c": 983.0
+    },
+    {
+     "d": "2026-10-09",
+     "c": 1010.0
+    },
+    {
+     "d": "2026-10-12",
+     "c": 985.0
+    },
+    {
+     "d": "2026-10-13",
+     "c": 961.0
+    },
+    {
+     "d": "2026-10-14",
+     "c": 944.0
+    },
+    {
+     "d": "2026-10-15",
+     "c": 932.0
+    },
+    {
+     "d": "2026-10-16",
+     "c": 939.0
+    },
+    {
+     "d": "2026-10-19",
+     "c": 951.0
+    }
+   ]
+  },
+  "FG": {
+   "sym": "FG0",
+   "label": "玻璃主连 FG0（郑商所，日盘收盘）",
+   "asof": "2026-10-19",
+   "close": 859.0,
+   "points": 3358,
+   "first": "2012-12-03",
+   "7d": {
+    "base_date": "2026-09-30",
+    "base": 896.0,
+    "chg": -37.0,
+    "pct": -4.13
+   },
+   "30d": {
+    "base_date": "2026-09-11",
+    "base": 973.0,
+    "chg": -114.0,
+    "pct": -11.72
+   },
+   "90d": {
+    "base_date": "2026-07-15",
+    "base": 949.0,
+    "chg": -90.0,
+    "pct": -9.48
+   },
+   "180d": {
+    "base_date": "2026-04-15",
+    "base": 971.0,
+    "chg": -112.0,
+    "pct": -11.53
+   },
+   "365d": {
+    "base_date": "2025-10-13",
+    "base": 1179.0,
+    "chg": -320.0,
+    "pct": -27.14
+   },
+   "p1": 2.1,
+   "min1": 853.0,
+   "max1": 1163.0,
+   "p3": 0.7,
+   "min3": 853.0,
+   "max3": 1965.0,
+   "series_1y": [
+    {
+     "d": "2025-09-30",
+     "c": 1210.0
+    },
+    {
+     "d": "2025-10-09",
+     "c": 1218.0
+    },
+    {
+     "d": "2025-10-10",
+     "c": 1207.0
+    },
+    {
+     "d": "2025-10-13",
+     "c": 1179.0
+    },
+    {
+     "d": "2025-10-14",
+     "c": 1138.0
+    },
+    {
+     "d": "2025-10-15",
+     "c": 1129.0
+    },
+    {
+     "d": "2025-10-16",
+     "c": 1147.0
+    },
+    {
+     "d": "2025-10-17",
+     "c": 1095.0
+    },
+    {
+     "d": "2025-10-20",
+     "c": 1091.0
+    },
+    {
+     "d": "2025-10-21",
+     "c": 1087.0
+    },
+    {
+     "d": "2025-10-22",
+     "c": 1094.0
+    },
+    {
+     "d": "2025-10-23",
+     "c": 1108.0
+    },
+    {
+     "d": "2025-10-24",
+     "c": 1092.0
+    },
+    {
+     "d": "2025-10-27",
+     "c": 1095.0
+    },
+    {
+     "d": "2025-10-28",
+     "c": 1113.0
+    },
+    {
+     "d": "2025-10-29",
+     "c": 1127.0
+    },
+    {
+     "d": "2025-10-30",
+     "c": 1091.0
+    },
+    {
+     "d": "2025-10-31",
+     "c": 1083.0
+    },
+    {
+     "d": "2025-11-03",
+     "c": 1093.0
+    },
+    {
+     "d": "2025-11-04",
+     "c": 1105.0
+    },
+    {
+     "d": "2025-11-05",
+     "c": 1097.0
+    },
+    {
+     "d": "2025-11-06",
+     "c": 1101.0
+    },
+    {
+     "d": "2025-11-07",
+     "c": 1091.0
+    },
+    {
+     "d": "2025-11-10",
+     "c": 1069.0
+    },
+    {
+     "d": "2025-11-11",
+     "c": 1053.0
+    },
+    {
+     "d": "2025-11-12",
+     "c": 1049.0
+    },
+    {
+     "d": "2025-11-13",
+     "c": 1056.0
+    },
+    {
+     "d": "2025-11-14",
+     "c": 1032.0
+    },
+    {
+     "d": "2025-11-17",
+     "c": 1029.0
+    },
+    {
+     "d": "2025-11-18",
+     "c": 1017.0
+    },
+    {
+     "d": "2025-11-19",
+     "c": 1009.0
+    },
+    {
+     "d": "2025-11-20",
+     "c": 989.0
+    },
+    {
+     "d": "2025-11-21",
+     "c": 987.0
+    },
+    {
+     "d": "2025-11-24",
+     "c": 1013.0
+    },
+    {
+     "d": "2025-11-25",
+     "c": 1014.0
+    },
+    {
+     "d": "2025-11-26",
+     "c": 1037.0
+    },
+    {
+     "d": "2025-11-27",
+     "c": 1041.0
+    },
+    {
+     "d": "2025-11-28",
+     "c": 1053.0
+    },
+    {
+     "d": "2025-12-01",
+     "c": 1036.0
+    },
+    {
+     "d": "2025-12-02",
+     "c": 1034.0
+    },
+    {
+     "d": "2025-12-03",
+     "c": 1020.0
+    },
+    {
+     "d": "2025-12-04",
+     "c": 1010.0
+    },
+    {
+     "d": "2025-12-05",
+     "c": 994.0
+    },
+    {
+     "d": "2025-12-08",
+     "c": 1002.0
+    },
+    {
+     "d": "2025-12-09",
+     "c": 984.0
+    },
+    {
+     "d": "2025-12-10",
+     "c": 964.0
+    },
+    {
+     "d": "2025-12-11",
+     "c": 956.0
+    },
+    {
+     "d": "2025-12-12",
+     "c": 935.0
+    },
+    {
+     "d": "2025-12-15",
+     "c": 950.0
+    },
+    {
+     "d": "2025-12-16",
+     "c": 1038.0
+    },
+    {
+     "d": "2025-12-17",
+     "c": 1038.0
+    },
+    {
+     "d": "2025-12-18",
+     "c": 1062.0
+    },
+    {
+     "d": "2025-12-19",
+     "c": 1041.0
+    },
+    {
+     "d": "2025-12-22",
+     "c": 1031.0
+    },
+    {
+     "d": "2025-12-23",
+     "c": 1028.0
+    },
+    {
+     "d": "2025-12-24",
+     "c": 1048.0
+    },
+    {
+     "d": "2025-12-25",
+     "c": 1047.0
+    },
+    {
+     "d": "2025-12-26",
+     "c": 1057.0
+    },
+    {
+     "d": "2025-12-29",
+     "c": 1051.0
+    },
+    {
+     "d": "2025-12-30",
+     "c": 1087.0
+    },
+    {
+     "d": "2025-12-31",
+     "c": 1087.0
+    },
+    {
+     "d": "2026-01-05",
+     "c": 1081.0
+    },
+    {
+     "d": "2026-01-06",
+     "c": 1092.0
+    },
+    {
+     "d": "2026-01-07",
+     "c": 1148.0
+    },
+    {
+     "d": "2026-01-08",
+     "c": 1163.0
+    },
+    {
+     "d": "2026-01-09",
+     "c": 1144.0
+    },
+    {
+     "d": "2026-01-12",
+     "c": 1143.0
+    },
+    {
+     "d": "2026-01-13",
+     "c": 1096.0
+    },
+    {
+     "d": "2026-01-14",
+     "c": 1096.0
+    },
+    {
+     "d": "2026-01-15",
+     "c": 1086.0
+    },
+    {
+     "d": "2026-01-16",
+     "c": 1103.0
+    },
+    {
+     "d": "2026-01-19",
+     "c": 1070.0
+    },
+    {
+     "d": "2026-01-20",
+     "c": 1056.0
+    },
+    {
+     "d": "2026-01-21",
+     "c": 1039.0
+    },
+    {
+     "d": "2026-01-22",
+     "c": 1057.0
+    },
+    {
+     "d": "2026-01-23",
+     "c": 1064.0
+    },
+    {
+     "d": "2026-01-26",
+     "c": 1087.0
+    },
+    {
+     "d": "2026-01-27",
+     "c": 1066.0
+    },
+    {
+     "d": "2026-01-28",
+     "c": 1067.0
+    },
+    {
+     "d": "2026-01-29",
+     "c": 1087.0
+    },
+    {
+     "d": "2026-01-30",
+     "c": 1056.0
+    },
+    {
+     "d": "2026-02-02",
+     "c": 1056.0
+    },
+    {
+     "d": "2026-02-03",
+     "c": 1072.0
+    },
+    {
+     "d": "2026-02-04",
+     "c": 1109.0
+    },
+    {
+     "d": "2026-02-05",
+     "c": 1088.0
+    },
+    {
+     "d": "2026-02-06",
+     "c": 1072.0
+    },
+    {
+     "d": "2026-02-09",
+     "c": 1078.0
+    },
+    {
+     "d": "2026-02-10",
+     "c": 1070.0
+    },
+    {
+     "d": "2026-02-11",
+     "c": 1071.0
+    },
+    {
+     "d": "2026-02-12",
+     "c": 1065.0
+    },
+    {
+     "d": "2026-02-13",
+     "c": 1041.0
+    },
+    {
+     "d": "2026-02-24",
+     "c": 1050.0
+    },
+    {
+     "d": "2026-02-25",
+     "c": 1064.0
+    },
+    {
+     "d": "2026-02-26",
+     "c": 1058.0
+    },
+    {
+     "d": "2026-02-27",
+     "c": 1062.0
+    },
+    {
+     "d": "2026-03-02",
+     "c": 1043.0
+    },
+    {
+     "d": "2026-03-03",
+     "c": 1054.0
+    },
+    {
+     "d": "2026-03-04",
+     "c": 1038.0
+    },
+    {
+     "d": "2026-03-05",
+     "c": 1055.0
+    },
+    {
+     "d": "2026-03-06",
+     "c": 1087.0
+    },
+    {
+     "d": "2026-03-09",
+     "c": 1104.0
+    },
+    {
+     "d": "2026-03-10",
+     "c": 1076.0
+    },
+    {
+     "d": "2026-03-11",
+     "c": 1112.0
+    },
+    {
+     "d": "2026-03-12",
+     "c": 1113.0
+    },
+    {
+     "d": "2026-03-13",
+     "c": 1135.0
+    },
+    {
+     "d": "2026-03-16",
+     "c": 1102.0
+    },
+    {
+     "d": "2026-03-17",
+     "c": 1094.0
+    },
+    {
+     "d": "2026-03-18",
+     "c": 1066.0
+    },
+    {
+     "d": "2026-03-19",
+     "c": 1065.0
+    },
+    {
+     "d": "2026-03-20",
+     "c": 1054.0
+    },
+    {
+     "d": "2026-03-23",
+     "c": 1082.0
+    },
+    {
+     "d": "2026-03-24",
+     "c": 1064.0
+    },
+    {
+     "d": "2026-03-25",
+     "c": 1057.0
+    },
+    {
+     "d": "2026-03-26",
+     "c": 1036.0
+    },
+    {
+     "d": "2026-03-27",
+     "c": 1041.0
+    },
+    {
+     "d": "2026-03-30",
+     "c": 1040.0
+    },
+    {
+     "d": "2026-03-31",
+     "c": 1019.0
+    },
+    {
+     "d": "2026-04-01",
+     "c": 999.0
+    },
+    {
+     "d": "2026-04-02",
+     "c": 1002.0
+    },
+    {
+     "d": "2026-04-03",
+     "c": 977.0
+    },
+    {
+     "d": "2026-04-07",
+     "c": 969.0
+    },
+    {
+     "d": "2026-04-08",
+     "c": 978.0
+    },
+    {
+     "d": "2026-04-09",
+     "c": 970.0
+    },
+    {
+     "d": "2026-04-10",
+     "c": 963.0
+    },
+    {
+     "d": "2026-04-13",
+     "c": 957.0
+    },
+    {
+     "d": "2026-04-14",
+     "c": 963.0
+    },
+    {
+     "d": "2026-04-15",
+     "c": 971.0
+    },
+    {
+     "d": "2026-04-16",
+     "c": 1062.0
+    },
+    {
+     "d": "2026-04-17",
+     "c": 1078.0
+    },
+    {
+     "d": "2026-04-20",
+     "c": 1091.0
+    },
+    {
+     "d": "2026-04-21",
+     "c": 1077.0
+    },
+    {
+     "d": "2026-04-22",
+     "c": 1088.0
+    },
+    {
+     "d": "2026-04-23",
+     "c": 1084.0
+    },
+    {
+     "d": "2026-04-24",
+     "c": 1079.0
+    },
+    {
+     "d": "2026-04-27",
+     "c": 1073.0
+    },
+    {
+     "d": "2026-04-28",
+     "c": 1042.0
+    },
+    {
+     "d": "2026-04-29",
+     "c": 1036.0
+    },
+    {
+     "d": "2026-04-30",
+     "c": 1057.0
+    },
+    {
+     "d": "2026-05-06",
+     "c": 1067.0
+    },
+    {
+     "d": "2026-05-07",
+     "c": 1078.0
+    },
+    {
+     "d": "2026-05-08",
+     "c": 1055.0
+    },
+    {
+     "d": "2026-05-11",
+     "c": 1070.0
+    },
+    {
+     "d": "2026-05-12",
+     "c": 1056.0
+    },
+    {
+     "d": "2026-05-13",
+     "c": 1066.0
+    },
+    {
+     "d": "2026-05-14",
+     "c": 1051.0
+    },
+    {
+     "d": "2026-05-15",
+     "c": 1037.0
+    },
+    {
+     "d": "2026-05-18",
+     "c": 1038.0
+    },
+    {
+     "d": "2026-05-19",
+     "c": 1021.0
+    },
+    {
+     "d": "2026-05-20",
+     "c": 1013.0
+    },
+    {
+     "d": "2026-05-21",
+     "c": 1028.0
+    },
+    {
+     "d": "2026-05-22",
+     "c": 1020.0
+    },
+    {
+     "d": "2026-05-25",
+     "c": 1044.0
+    },
+    {
+     "d": "2026-05-26",
+     "c": 1023.0
+    },
+    {
+     "d": "2026-05-27",
+     "c": 1037.0
+    },
+    {
+     "d": "2026-05-28",
+     "c": 1038.0
+    },
+    {
+     "d": "2026-05-29",
+     "c": 1057.0
+    },
+    {
+     "d": "2026-06-01",
+     "c": 1056.0
+    },
+    {
+     "d": "2026-06-02",
+     "c": 1043.0
+    },
+    {
+     "d": "2026-06-03",
+     "c": 1049.0
+    },
+    {
+     "d": "2026-06-04",
+     "c": 1031.0
+    },
+    {
+     "d": "2026-06-05",
+     "c": 1010.0
+    },
+    {
+     "d": "2026-06-08",
+     "c": 1004.0
+    },
+    {
+     "d": "2026-06-09",
+     "c": 995.0
+    },
+    {
+     "d": "2026-06-10",
+     "c": 989.0
+    },
+    {
+     "d": "2026-06-11",
+     "c": 991.0
+    },
+    {
+     "d": "2026-06-12",
+     "c": 987.0
+    },
+    {
+     "d": "2026-06-15",
+     "c": 1014.0
+    },
+    {
+     "d": "2026-06-16",
+     "c": 1004.0
+    },
+    {
+     "d": "2026-06-17",
+     "c": 996.0
+    },
+    {
+     "d": "2026-06-18",
+     "c": 978.0
+    },
+    {
+     "d": "2026-06-22",
+     "c": 977.0
+    },
+    {
+     "d": "2026-06-23",
+     "c": 967.0
+    },
+    {
+     "d": "2026-06-24",
+     "c": 973.0
+    },
+    {
+     "d": "2026-06-25",
+     "c": 975.0
+    },
+    {
+     "d": "2026-06-26",
+     "c": 968.0
+    },
+    {
+     "d": "2026-06-29",
+     "c": 978.0
+    },
+    {
+     "d": "2026-06-30",
+     "c": 975.0
+    },
+    {
+     "d": "2026-07-01",
+     "c": 961.0
+    },
+    {
+     "d": "2026-07-02",
+     "c": 966.0
+    },
+    {
+     "d": "2026-07-03",
+     "c": 973.0
+    },
+    {
+     "d": "2026-07-06",
+     "c": 967.0
+    },
+    {
+     "d": "2026-07-07",
+     "c": 952.0
+    },
+    {
+     "d": "2026-07-08",
+     "c": 962.0
+    },
+    {
+     "d": "2026-07-09",
+     "c": 957.0
+    },
+    {
+     "d": "2026-07-10",
+     "c": 965.0
+    },
+    {
+     "d": "2026-07-13",
+     "c": 952.0
+    },
+    {
+     "d": "2026-07-14",
+     "c": 951.0
+    },
+    {
+     "d": "2026-07-15",
+     "c": 949.0
+    },
+    {
+     "d": "2026-07-16",
+     "c": 929.0
+    },
+    {
+     "d": "2026-07-17",
+     "c": 900.0
+    },
+    {
+     "d": "2026-07-20",
+     "c": 890.0
+    },
+    {
+     "d": "2026-07-21",
+     "c": 904.0
+    },
+    {
+     "d": "2026-07-22",
+     "c": 913.0
+    },
+    {
+     "d": "2026-07-23",
+     "c": 899.0
+    },
+    {
+     "d": "2026-07-24",
+     "c": 908.0
+    },
+    {
+     "d": "2026-07-27",
+     "c": 900.0
+    },
+    {
+     "d": "2026-07-28",
+     "c": 888.0
+    },
+    {
+     "d": "2026-07-29",
+     "c": 884.0
+    },
+    {
+     "d": "2026-07-30",
+     "c": 870.0
+    },
+    {
+     "d": "2026-07-31",
+     "c": 875.0
+    },
+    {
+     "d": "2026-08-03",
+     "c": 868.0
+    },
+    {
+     "d": "2026-08-04",
+     "c": 885.0
+    },
+    {
+     "d": "2026-08-05",
+     "c": 885.0
+    },
+    {
+     "d": "2026-08-06",
+     "c": 891.0
+    },
+    {
+     "d": "2026-08-07",
+     "c": 885.0
+    },
+    {
+     "d": "2026-08-10",
+     "c": 889.0
+    },
+    {
+     "d": "2026-08-11",
+     "c": 901.0
+    },
+    {
+     "d": "2026-08-12",
+     "c": 878.0
+    },
+    {
+     "d": "2026-08-13",
+     "c": 871.0
+    },
+    {
+     "d": "2026-08-14",
+     "c": 867.0
+    },
+    {
+     "d": "2026-08-17",
+     "c": 923.0
+    },
+    {
+     "d": "2026-08-18",
+     "c": 917.0
+    },
+    {
+     "d": "2026-08-19",
+     "c": 902.0
+    },
+    {
+     "d": "2026-08-20",
+     "c": 917.0
+    },
+    {
+     "d": "2026-08-21",
+     "c": 907.0
+    },
+    {
+     "d": "2026-08-24",
+     "c": 922.0
+    },
+    {
+     "d": "2026-08-25",
+     "c": 913.0
+    },
+    {
+     "d": "2026-08-26",
+     "c": 898.0
+    },
+    {
+     "d": "2026-08-27",
+     "c": 909.0
+    },
+    {
+     "d": "2026-08-28",
+     "c": 927.0
+    },
+    {
+     "d": "2026-08-31",
+     "c": 941.0
+    },
+    {
+     "d": "2026-09-01",
+     "c": 969.0
+    },
+    {
+     "d": "2026-09-02",
+     "c": 961.0
+    },
+    {
+     "d": "2026-09-03",
+     "c": 962.0
+    },
+    {
+     "d": "2026-09-04",
+     "c": 978.0
+    },
+    {
+     "d": "2026-09-07",
+     "c": 976.0
+    },
+    {
+     "d": "2026-09-08",
+     "c": 977.0
+    },
+    {
+     "d": "2026-09-09",
+     "c": 969.0
+    },
+    {
+     "d": "2026-09-10",
+     "c": 964.0
+    },
+    {
+     "d": "2026-09-11",
+     "c": 973.0
+    },
+    {
+     "d": "2026-09-14",
+     "c": 927.0
+    },
+    {
+     "d": "2026-09-15",
+     "c": 909.0
+    },
+    {
+     "d": "2026-09-16",
+     "c": 910.0
+    },
+    {
+     "d": "2026-09-17",
+     "c": 905.0
+    },
+    {
+     "d": "2026-09-18",
+     "c": 907.0
+    },
+    {
+     "d": "2026-09-21",
+     "c": 923.0
+    },
+    {
+     "d": "2026-09-22",
+     "c": 932.0
+    },
+    {
+     "d": "2026-09-23",
+     "c": 925.0
+    },
+    {
+     "d": "2026-09-24",
+     "c": 914.0
+    },
+    {
+     "d": "2026-09-28",
+     "c": 893.0
+    },
+    {
+     "d": "2026-09-29",
+     "c": 891.0
+    },
+    {
+     "d": "2026-09-30",
+     "c": 896.0
+    },
+    {
+     "d": "2026-10-08",
+     "c": 868.0
+    },
+    {
+     "d": "2026-10-09",
+     "c": 872.0
+    },
+    {
+     "d": "2026-10-12",
+     "c": 863.0
+    },
+    {
+     "d": "2026-10-13",
+     "c": 853.0
+    },
+    {
+     "d": "2026-10-14",
+     "c": 856.0
+    },
+    {
+     "d": "2026-10-15",
+     "c": 853.0
+    },
+    {
+     "d": "2026-10-16",
+     "c": 859.0
+    },
+    {
+     "d": "2026-10-19",
+     "c": 859.0
+    }
+   ]
+  }
+ },
+ "structured_futures": {
+  "SA": {
+   "sym": "SA0",
+   "label": "纯碱主连 SA0（郑商所，日盘收盘）",
+   "asof": "2026-10-19",
+   "close": 951.0,
+   "points": 1662,
+   "first": "2019-12-06",
+   "7d": {
+    "base_date": "2026-09-30",
+    "base": 1006.0,
+    "chg": -55.0,
+    "pct": -5.47
+   },
+   "30d": {
+    "base_date": "2026-09-11",
+    "base": 1065.0,
+    "chg": -114.0,
+    "pct": -10.7
+   },
+   "90d": {
+    "base_date": "2026-07-15",
+    "base": 1051.0,
+    "chg": -100.0,
+    "pct": -9.51
+   },
+   "180d": {
+    "base_date": "2026-04-15",
+    "base": 1226.0,
+    "chg": -275.0,
+    "pct": -22.43
+   },
+   "365d": {
+    "base_date": "2025-10-13",
+    "base": 1247.0,
+    "chg": -296.0,
+    "pct": -23.74
+   },
+   "p1": 4.5,
+   "min1": 919.0,
+   "max1": 1277.0,
+   "p3": 1.5,
+   "min3": 919.0,
+   "max3": 2637.0
+  },
+  "FG": {
+   "sym": "FG0",
+   "label": "玻璃主连 FG0（郑商所，日盘收盘）",
+   "asof": "2026-10-19",
+   "close": 859.0,
+   "points": 3358,
+   "first": "2012-12-03",
+   "7d": {
+    "base_date": "2026-09-30",
+    "base": 896.0,
+    "chg": -37.0,
+    "pct": -4.13
+   },
+   "30d": {
+    "base_date": "2026-09-11",
+    "base": 973.0,
+    "chg": -114.0,
+    "pct": -11.72
+   },
+   "90d": {
+    "base_date": "2026-07-15",
+    "base": 949.0,
+    "chg": -90.0,
+    "pct": -9.48
+   },
+   "180d": {
+    "base_date": "2026-04-15",
+    "base": 971.0,
+    "chg": -112.0,
+    "pct": -11.53
+   },
+   "365d": {
+    "base_date": "2025-10-13",
+    "base": 1179.0,
+    "chg": -320.0,
+    "pct": -27.14
+   },
+   "p1": 2.1,
+   "min1": 853.0,
+   "max1": 1163.0,
+   "p3": 0.7,
+   "min3": 853.0,
+   "max3": 1965.0
+  }
+ },
+ "marks": [
+  "2026-04-01"
+ ],
+ "kpis": [
+  {
+   "k": "浮法日熔量",
+   "v": 14.23,
+   "u": "万吨/日",
+   "s": "7-15 14.60 → 10-13",
+   "d": -2.53
+  },
+  {
+   "k": "光伏玻璃日熔量",
+   "v": 7.1,
+   "u": "万吨/日",
+   "s": "卓创 9 月末；5 月末 8.30",
+   "d": -14.46
+  },
+  {
+   "k": "浮法深加工订单",
+   "v": 10.0,
+   "u": "天",
+   "s": "同比 -9.2%，近5年同期低位",
+   "d": -9.2
+  },
+  {
+   "k": "纯碱厂库",
+   "v": 153.96,
+   "u": "万吨",
+   "s": "10-19；8 月末 190.84",
+   "d": -19.32
+  },
+  {
+   "k": "SA 主连",
+   "v": 951.0,
+   "u": "元/吨",
+   "s": "90日 -9.51%｜1年分位 4.5",
+   "d": -9.51
+  },
+  {
+   "k": "FG 主连",
+   "v": 859.0,
+   "u": "元/吨",
+   "s": "90日 -9.48%｜1年分位 -",
+   "d": -9.48
+  }
+ ],
+ "caliber_spec": null
+}

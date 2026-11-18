@@ -1,0 +1,29 @@
+{
+  "built_at": "2026-10-19T14:56:22",
+  "data": "./skills\\chemical-second-source\\examples\\01-soda-ash\\data.json",
+  "asof": "2026-10-19",
+  "product": "重质纯碱（碳酸钠）",
+  "counts": {
+    "candidates": 12,
+    "near": 5,
+    "qualified": 7,
+    "new_plants": 3,
+    "same_groups": 6,
+    "risks": 18,
+    "sources": 45,
+    "spec_items": 9
+  },
+  "outputs": [
+    {
+      "file": "纯碱_第二供应源备选池_对比工作台_2026-10-19.html",
+      "bytes": 120430,
+      "sha256": "f9160a9786a18dc1014cb0169f3934c24158d738de0350d14c84e8b364aed981"
+    },
+    {
+      "file": "纯碱_第二供应源备选池_对比工作簿_2026-10-19.xlsx",
+      "bytes": 59506,
+      "sha256": "1950fa580bfa1777210d169627827936bc588bc283f9b341dd18ab24121785e7"
+    }
+  ],
+  "warnings": []
+}

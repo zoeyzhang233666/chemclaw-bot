@@ -1,0 +1,40 @@
+{
+  "id": "urea_46",
+  "name_cn": "尿素 46%",
+  "name_en": "Urea 46% N (Granular / Prilled)",
+  "synonyms": ["urea 46", "prilled urea", "granular urea", "尿素颗粒", "uréia"],
+  "other_languages": {
+    "vi": ["phân urê", "urê hạt"],
+    "id": ["urea pupuk"],
+    "es": ["urea granulada"],
+    "pt": ["ureia granulado"],
+    "ar": ["يوريا"]
+  },
+  "cas": "57-13-6",
+  "ec": "200-315-5",
+  "un": null,
+  "hs_candidates": ["31021000"],
+  "hs_note": "3102.10（尿素）为常见候选；化肥类出口有额外监管与商检要求，需另行核实。",
+  "grades": [
+    {"code": "granular", "cn": "大颗粒/颗粒尿素", "typical": {"N": "≥46.0%", "biuret": "≤1.0%", "moisture": "≤0.5%"}},
+    {"code": "prilled", "cn": "小颗粒/造粒尿素", "typical": {"N": "≥46.3%", "biuret": "≤0.9%"}}
+  ],
+  "typical_specs": {
+    "N": {"unit": "%", "value": "≥46.0"},
+    "biuret": {"unit": "%", "value": "≤1.0"},
+    "moisture": {"unit": "%", "value": "≤0.5"},
+    "particle": {"unit": "mm", "value": "2–4 (granular)"}
+  },
+  "applications": ["fertilizer", "adblue / DEF", "resin (UF/MF)", "animal feed additive"],
+  "packing_options": ["50 kg PP woven bag", "1000 kg jumbo bag", "bulk vessel"],
+  "sales_notes": [
+    "农用与工业用（车用尿素/树脂）要求不同，先确认用途。",
+    "「granular」与「prilled」客户常混用，粒度和堆密度差异大。",
+    "化肥出口涉及法定检验与配额管理，需单独核实。"
+  ],
+  "do_not_assume": [
+    "不能默认农用",
+    "不能默认颗粒型",
+    "不能承诺化肥出口监管条件"
+  ]
+}

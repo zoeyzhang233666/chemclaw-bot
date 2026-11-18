@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "purpose": "公开项目与新增产能清单，作为产业链图的『项目入口』。只收可核验来源；未公开产能/投资额的项目写 null 并标 gap。",
+    "fields": {"stage": "在建/已投产/规划/前期（环评、备案）", "capacity": "万吨/年（写明产品口径）"}
+  },
+  "projects": [
+    {"id": "PJ01", "name": "上海金山巴陵 SBC 弹性体装置（25 万吨/年）", "node_id": "N_PRIMARY", "company": "上海金山巴陵新材料（湖南石化 60%×上海石化 40%）", "province": "上海", "stage": "已投产", "capacity": 25.0, "capacity_basis": "SBC 合计：SBS 14 + SEBS 5 + SIS 6", "investment": "未公开拆分", "start_time": "2025-11 全面建成投产", "evidence": ["S01", "S02"], "note": "一次开车成功，产品经检测全部合格"},
+    {"id": "PJ02", "name": "海南巴陵 SBC 弹性体装置（17 万吨/年）", "node_id": "N_PRIMARY", "company": "海南巴陵化工新材料（中国石化×海南炼化）", "province": "海南", "stage": "已投产", "capacity": 17.0, "capacity_basis": "SBS 12 + SEBS 5", "investment": "19.24 亿元", "start_time": "2023-04", "evidence": ["S02"], "note": "含精制、聚合、凝聚、回收、后处理等 13 个单元"},
+    {"id": "PJ03", "name": "福建古雷石化 SBS 装置（10 万吨/年）", "node_id": "N_PRIMARY", "company": "福建古雷石化", "province": "福建", "stage": "已投产", "capacity": 10.0, "capacity_basis": "SBS", "investment": null, "start_time": "十四五期间", "evidence": ["S01"], "note": "中国石化系新增产能之一"},
+    {"id": "PJ04", "name": "中国石油广西石化 SBS 装置（8 万吨/年）", "node_id": "N_PRIMARY", "company": "中国石油广西石化", "province": "广西", "stage": "已投产", "capacity": 8.0, "capacity_basis": "SBS", "investment": null, "start_time": "2025", "evidence": ["S01"], "note": "百万吨乙烯炼化一体化项目组成部分，『减油增化』战略"},
+    {"id": "PJ05", "name": "湖南石化本部 SBC 弹性体（38 万吨/年）", "node_id": "N_PRIMARY", "company": "中石化湖南石化（原巴陵石化）", "province": "湖南", "stage": "在产（含技改）", "capacity": 38.0, "capacity_basis": "SBC 合计（含 SBS/SEBS/SEPS），其中 SBS 20", "investment": null, "start_time": "1980s 起陆续建设", "evidence": ["S01", "S02"], "note": "2026 年在实施智慧物流技改；1—10 月 SBC 累计产量近 27 万吨"},
+    {"id": "PJ06", "name": "中石化 SBS 新增产能合计（十四五）", "node_id": "N_PRIMARY", "company": "中国石化系", "province": "跨省", "stage": "已投产", "capacity": 36.0, "capacity_basis": "上海金山 14 + 海南 12 + 古雷 10", "investment": null, "start_time": "2021—2025", "evidence": ["S01"], "note": "占全国新增产能 59.02%"},
+    {"id": "PJ07", "name": "全国 SBS 新增产能合计（十四五）", "node_id": "N_PRIMARY", "company": "全行业", "province": "跨省", "stage": "已投产", "capacity": 61.0, "capacity_basis": "SBS", "investment": null, "start_time": "2021—2025", "evidence": ["S01"], "note": "华南 42.0（68.85%）、华东 19.0（31.15%）；福建 19.0、上海 14.0、海南 12.0"},
+    {"id": "PJ08", "name": "海南巴陵出口市场拓展（17 国）", "node_id": "N_PRIMARY", "company": "海南巴陵", "province": "海南", "stage": "在执行", "capacity": null, "capacity_basis": null, "investment": null, "start_time": "2025 年内", "evidence": ["S02"], "note": "出口东南亚、欧洲、南美、大洋洲 17 个国家和地区；前 10 月产量 15 万余吨、同比 +93%"}
+  ],
+  "gaps": [
+    "巴陵/中石化系以外企业的具体扩产项目（如长鸿高科、金海晨光、古雷二期）本轮未取得可核验的一手公示，故不列项目。",
+    "山东、浙江中小装置的技改与关停信息未纳入（需要逐省环评/备案公示检索）。"
+  ]
+}

@@ -1,0 +1,43 @@
+Subject: Inquiry - Caustic Soda Flakes - <Your Company> - CIF <Port>
+
+From: <Contact Name> <contact@<customer-domain>>
+Date: <Weekday>, <DD Mon YYYY> <HH:MM:SS> <+ZZZZ>
+
+Dear Sir or Madam,
+
+[1) 一句话说明你是谁 + 为什么来信]
+We are a <distributor / manufacturer> of <industry> based in <City, Country>, and we are
+currently looking for a reliable supplier of <product>.
+
+[2) 规格：客户给了哪些数字就抄哪些数字，没给的别写]
+Product   : <product name as the customer writes it>
+Quality   : <e.g. NaOH 99% min; Fe 0.0005% max; ...>
+Quantity  : <first order quantity + unit>  (and <annual volume> per year, if stated)
+Packing   : <bag weight / type, and say if you need our recommendation>
+Delivery  : <Incoterms 2020 term + place>
+Payment   : <payment method as the customer states it - do not elaborate on their behalf>
+Documents : <what the customer asks for; if asking whether we can provide something, phrase it as a question>
+
+[3) 可选：应用场景、现有供应商、时间要求、样品需求]
+We use this material for <application>.
+
+[4) 收口]
+Could you please send us your best offer and the relevant technical documents?
+Looking forward to hearing from you.
+
+Best regards,
+
+<Full Name>
+<Title> | <Company Legal Name>
+Tel: <phone> | Mobile: <mobile>
+<Street address, District, City, Country>
+```
+
+> **填写提示（给写信的人看，用完删掉）**
+>
+> - 想演示"缺关键参数"的效果，就**故意**不写：报价有效期、样品要求、L/C 类型、
+>   装运港、包装细节、公司注册全称——脚本会把它们标成缺失或歧义，并生成追问句。
+> - 想演示"术语冲突"的效果，写 `FOB <买方港口>` 而不是 `FOB Shanghai`。
+> - 想演示"能力问句"，把单证需求写成 `Can you provide C/O Form E?` 而不是 `We need Form E.`。
+> - 真实的客户询盘**不要**加 `X-Demo-Notice: SIMULATED`；模拟件要加。
+> - 公司名、联系人、电话、数量一律虚构，别用真实客户信息做演示。

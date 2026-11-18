@@ -1,0 +1,55 @@
+name: chem-product-quicklook
+version: 1.0.0
+summary: 快速看懂一个化工品种——数据驱动的品种研究入口（交互 HTML + 12 表 Excel）
+triggers:
+  - 快速看懂一个品种
+  - 品种研究入口
+  - 品种入门
+  - 品种画像
+  - 产业链梳理
+  - 新品种怎么研究
+  - 建品种档案
+  - product onboarding
+entry: SKILL.md
+workflow:
+  1_scope: 确认品种（CAS 唯一）、是否有期货、研究目的、是否分区域
+  2_research: 按 references/question-framework.md 的 8 问收集事实，用 scripts/fetch_source.py 落盘原文
+  3_data: 写 research.json（模板 assets/research.template.json，字段见 references/data-contract.md）
+  4_anchors: scripts/fetch_futures_series.py + scripts/build_anchors.py 从原始序列算价格锚点（禁止手写价格）
+  5_validate: scripts/validate.py 必须 error=0
+  6_build: scripts/build_html.py + scripts/build_xlsx.py
+  7_qa: scripts/qa_render.py 必须 0 失败；scripts/check_xlsx.py 必须 error=0
+  8_deliver: 交付路径 + 关键数字来源与日期 + 缺口清单
+references:
+  - question-framework.md
+  - data-contract.md
+  - chain-graph-method.md
+  - caliber-and-conflict.md
+  - capacity-survey.md
+  - futures-rules.md
+  - indicator-library.md
+  - route-library.md
+  - qa-checklist.md
+examples:
+  - examples/methanol          # 甲醇完整案例（含 21 节点、17 来源、8 缺口）
+  - examples/no-futures-example # 无期货品种降级路径
+scripts:
+  - build_html.py
+  - build_xlsx.py
+  - validate.py
+  - qa_render.py
+  - check_xlsx.py
+  - build_anchors.py
+  - fetch_futures_series.py
+  - fetch_source.py
+templates:
+  - templates/shell.html
+  - templates/styles.css
+  - templates/engine.js
+design_principles:
+  - 每个数字带来源与日期，拿不到就标缺口，不以行业均值填充
+  - 口径冲突并列展示，不取平均、不择一
+  - 产业链事实 / 工艺典型参数 / 公开统计 / 研究判断 四类信息分开标注
+  - 价格必须由序列计算，禁止手写"约 XXX"
+  - 品种入口页不做方向判断（无看涨/看跌）
+  - 模板不含任何品种事实，品种知识只存在于 examples 的数据里

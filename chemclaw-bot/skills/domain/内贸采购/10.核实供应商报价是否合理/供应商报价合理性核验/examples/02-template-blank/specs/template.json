@@ -1,0 +1,38 @@
+{
+  "family": "<品种族>（模板示例，请替换）",
+  "family_code": "template",
+  "scope_note": "这是空白模板自带的示例规格文件，仅用于让模板跑通。真实品种必须新建 specs/<品种代码>.json 并按 references/product-family-specs.md 填写；不得把本文件的任何数值当成通用规则。",
+  "product": {
+    "cn_name": "<品种中文名>",
+    "aliases": [],
+    "cas": "",
+    "hs": "",
+    "unit_canonical": "元/吨",
+    "exchange_traded": false,
+    "futures": null
+  },
+  "vat_rate": 0.13,
+  "spec_terms": {
+    "<规格词>": {"grade": "<等级>", "purity": "<含量>", "premium": "<须有依据，否则写 adj_gap>"}
+  },
+  "regions": {
+    "华东": {"primary": "<基准点>", "sub": [], "basis": "<价格口径>"}
+  },
+  "delivery_bases": {
+    "出厂": "工厂车板交货",
+    "到厂": "含运至买方工厂",
+    "库提": "仓库/罐区提货",
+    "到港": "CFR/CIF 到港"
+  },
+  "packing": {
+    "散水": {"unit": "槽车", "adj": 0},
+    "吨桶": {"unit": "IBC 1000L", "adj_gap": "需供应商确认"}
+  },
+  "annual_anchors": [],
+  "events": [],
+  "gaps_declared": ["<该品种拿不到哪些数据>"],
+  "comparability_notes": {
+    "purity": "<该品种含量差异如何影响价格>",
+    "region": "<区域口径差异>"
+  }
+}

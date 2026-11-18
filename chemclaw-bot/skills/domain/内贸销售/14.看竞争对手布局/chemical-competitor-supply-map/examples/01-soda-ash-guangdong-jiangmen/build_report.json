@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-10-19T13:57:39",
+  "data": "data.json",
+  "product": "纯碱（碳酸钠，轻质/重质，含食品级）",
+  "region": "广东 · 江门",
+  "asof": "2026-10-19",
+  "companies": 17,
+  "plants": 22,
+  "sample_capacity": 3070.0,
+  "sample_output": 2160.78,
+  "sources": 37,
+  "conflicts": 9,
+  "gaps": 6,
+  "boundaries": 5,
+  "projects": 8,
+  "prospects": 8,
+  "warnings": [],
+  "html": {
+    "path": "纯碱_广东江门_竞争供给地图.html",
+    "bytes": 1864078,
+    "sha256": "c32891819df742baa58d74d02090f91e055fa2574e84afb7ca19bc77e119db67"
+  },
+  "xlsx": {
+    "path": "纯碱_广东江门_竞争供给地图.xlsx",
+    "bytes": 52652,
+    "sha256": "d30f34a7aea6509e8fbdcae39e7df25e39eca5840b63140e8cbbaeb78cc43abf"
+  }
+}

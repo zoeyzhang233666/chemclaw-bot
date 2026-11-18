@@ -1,0 +1,251 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "case_id": "00-template",
+    "title": "进口<商品> · 海外报价 vs <国内区域>现货（模板）",
+    "subtitle": "把尖括号里的内容换成你的品种、海外市场与国内区域即可运行；所有价格为占位示例，不可用于任何实际判断。",
+    "generated_at": "2026-01-01",
+    "currency_quote": "USD",
+    "currency_local": "CNY",
+    "unit": "元/吨",
+    "unit_usd": "美元/吨",
+    "analyst": "chem-import-window template",
+    "disclaimer": "本模板为结构示例，价格与税率为占位值。只做同一口径下的折算与比较，不构成进口交易指令，不预测价格走势。",
+    "demo_note": "TEMPLATE — 请逐项替换占位数据并补齐来源（source_id 必须在 sources 中存在）。"
+  },
+  "asof": {
+    "date": "2026-01-01",
+    "label": "基准日：海外报价与国内现货必须同一天",
+    "today": "2026-01-01",
+    "note": "若凑不到同一天，请在 compatibility_manual 写明错配天数，价差会自动降级为近似。"
+  },
+  "product": {
+    "name_cn": "示例商品",
+    "alias": "EXAMPLE",
+    "name_en": "Example Chemical",
+    "cas": "000-00-0",
+    "hs_code_cn": "29100000",
+    "spec": "请写完整规格（含量/等级/关键指标）",
+    "spec_note": "海外与国内的规格字符串必须完全一致，否则 validate.js 会报「规格不一致」。",
+    "unit_note": "统一用 元/吨 与 美元/吨。"
+  },
+  "request": {
+    "origin": "海外市场（填写具体国家/港口）",
+    "origin_detail": "该商品的主要进口来源国及占比（有助于说明为何选这个海外基准）",
+    "destination": "中国<区域> · <具体港口/罐区>",
+    "volume_ton": 1000,
+    "volume_note": "单批数量，影响运费与议价",
+    "incoterm": "CFR 中国主港",
+    "delivery_compare": "海外：CFR 中国主港（到岸）｜国内：<罐区自提 / 出厂 / 送到>",
+    "transit_days": 10
+  },
+  "quote": {
+    "id": "Q-1",
+    "date": "2026-01-01",
+    "price_usd": 800,
+    "premium_usd": 0,
+    "term": "CFR",
+    "port": "CFR China Main Port",
+    "spec": "请写完整规格（含量/等级/关键指标）",
+    "quantity": "1,000 t/船批",
+    "freight_usd": null,
+    "source_id": "S-QUOTE",
+    "source_note": "写清楚：哪个机构、哪一天、什么口径（指数评估价 / 供应商报盘）。",
+    "quote_type": "指数评估价"
+  },
+  "domestic": {
+    "id": "D-1",
+    "date": "2026-01-01",
+    "price_cny": 6500,
+    "region": "中国<区域>",
+    "market": "填写具体市场与统计口径（均价 / 出厂价 / 库提价）",
+    "delivery": "罐区自提（ex-tank）",
+    "tax_included": true,
+    "spec": "请写完整规格（含量/等级/关键指标）",
+    "quantity": "罐内零单",
+    "source_id": "S-DOMESTIC",
+    "source_note": "注明「全国均价」还是「区域单点价」，两者可差 100-200 元/吨。",
+    "tax_basis_note": "国内现货为含增值税价。"
+  },
+  "fx": {
+    "date": "2026-01-01",
+    "rate": 7.0,
+    "source_id": "S-FX",
+    "series_note": "历史回算需要与每个报价日匹配的汇率，请把 rows 补全。",
+    "rows": [
+      { "date": "2026-01-01", "rate": 7.0, "source_id": "S-FX" }
+    ]
+  },
+  "freight": {
+    "source": "none",
+    "usd_per_ton": null,
+    "date": null,
+    "basis": "未取得",
+    "quality": "missing",
+    "route": "<起运港> → <目的港>（船型）",
+    "why_missing": "若报价术语为 CFR/CIF，运费已含，可保持 none；若为 FOB，必须补上实盘运价，否则引擎拒绝折算。"
+  },
+  "insurance": {
+    "rate": null,
+    "basis": "CIF × 110%",
+    "note": "保险费率约 0.05%–0.3%，无保单则按 0 计并登记缺口。"
+  },
+  "tax": {
+    "hs_code": "29100000",
+    "note": "必须逐条核验：当年《进口商品暂定税率表》是否含该税号；是否适用协定税率；是否有反倾销税。",
+    "profiles": [
+      {
+        "id": "T-1",
+        "effective_from": "2026-01-01",
+        "duty_rate": 5.5,
+        "duty_basis": "关税 = 关税完税价格 × 关税税率",
+        "duty_hs": "29100000",
+        "vat_rate": 13,
+        "vat_basis": "进口环节增值税 =（关税完税价格 + 关税）× 13%",
+        "provisional": true,
+        "exact": false,
+        "source_id": "S-TARIFF",
+        "source_note": "税率未逐字核验时必须 provisional=true，页面会自动降级口径等级。"
+      }
+    ]
+  },
+  "params": {
+    "vat_recoverable": true,
+    "vat_rec_note": "一般纳税人取得海关进口增值税专用缴款书可抵扣 → 用「含税净成本」口径比较。",
+    "inland_cost_cny": null,
+    "inland_note": "港杂/报关/商检/仓储/短驳。没有实票就填 null 并登记缺口，不要填 0。",
+    "other_cost_cny": 0,
+    "dutiable_adjust_rate": 0,
+    "import_finance_rate": null
+  },
+  "compatibility_manual": [
+    {
+      "id": "M1",
+      "title": "规格一致",
+      "status": "pass",
+      "detail": "海外与国内为同一牌号/等级。"
+    },
+    {
+      "id": "M2",
+      "title": "价格日期一致",
+      "status": "pass",
+      "detail": "两边同为 2026-01-01。"
+    },
+    {
+      "id": "M3",
+      "title": "交货方式对齐",
+      "status": "warn",
+      "detail": "海外到岸 vs 国内罐区自提，均不含内陆配送。"
+    }
+  ],
+  "quotes_hist": [
+    { "date": "2026-01-01", "price_usd": 800, "term": "CFR", "spec": "请写完整规格（含量/等级/关键指标）", "port": "CFR China Main Port", "source_id": "S-QUOTE" }
+  ],
+  "domestic_hist": {
+    "series_id": "DOM-TPL",
+    "region": "中国<区域>",
+    "unit": "元/吨",
+    "tax_included": true,
+    "delivery": "罐区自提（ex-tank）",
+    "spec": "请写完整规格（含量/等级/关键指标）",
+    "rows": [
+      { "date": "2026-01-01", "price_cny": 6500 }
+    ]
+  },
+  "history_gaps": [
+    {
+      "id": "H1",
+      "date": "2026-01-01",
+      "kind": "短序列",
+      "text": "模板只有 1 个可配对点；补齐 quotes_hist / domestic_hist / fx.rows 后曲线会自动延长。"
+    }
+  ],
+  "events": [],
+  "sim_scenarios": [
+    {
+      "id": "S-SIM",
+      "label": "模拟情景（仅验证交互，不代表市场）",
+      "is_simulated": true,
+      "note": "以下为人为设定的模拟值，仅用于演示计算器在 FOB + 运费 + 保险 结构下的行为，不是报价或报价单。",
+      "overrides": {
+        "freight_usd": 60,
+        "freight_term": "FOB",
+        "fob_price_usd": 700,
+        "inland_cost_cny": 80,
+        "insurance_rate": 0.2
+      },
+      "why": "验证 FOB 口径下运费与保险能否正确进入完税价格。"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G1",
+      "severity": "high",
+      "item": "国际运费（若为 FOB）",
+      "impact": "缺运费则 FOB 报价无法折算到到岸成本，价差不可计算。",
+      "fix": "向货代/船东询同航线、同船型、同批量的实盘运价（美元/吨），记录询价日。",
+      "affects": ["进口成本", "价差"]
+    },
+    {
+      "id": "G2",
+      "severity": "high",
+      "item": "关税税率未逐字核验",
+      "impact": "税率每差 1 个百分点，进口成本相差约 40–60 元/吨。",
+      "fix": "查当年《关税调整方案》附件 1 暂定税率表，确认该 HS 编码是否在列；再查反倾销名单。",
+      "affects": ["进口成本", "价差"]
+    },
+    {
+      "id": "G3",
+      "severity": "medium",
+      "item": "境内费用未取得实票",
+      "impact": "港杂/报关/仓储/短驳通常 50–120 元/吨，缺失会高估价差。",
+      "fix": "取最近一次报关的费用结算单，按吨折算。",
+      "affects": ["进口成本"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "S-QUOTE",
+      "publisher": "占位：海外报价来源机构",
+      "title": "占位：报价标题",
+      "date": "2026-01-01",
+      "url": "https://example.com/quote",
+      "excerpt": "占位：请粘贴含数字的原文关键句，例如「亚洲 CFR 中国报价 800 美元/吨」。",
+      "tier": "B"
+    },
+    {
+      "id": "S-DOMESTIC",
+      "publisher": "占位：国内现货来源",
+      "title": "占位：国内行情标题",
+      "date": "2026-01-01",
+      "url": "https://example.com/domestic",
+      "excerpt": "占位：请粘贴含数字的原文关键句，例如「华东现货 6,500 元/吨，含税，罐区自提」。",
+      "tier": "B"
+    },
+    {
+      "id": "S-FX",
+      "publisher": "中国外汇交易中心（CFETS）",
+      "title": "人民币汇率中间价",
+      "date": "2026-01-01",
+      "url": "https://www.chinamoney.com.cn/chinese/bkccpr/",
+      "excerpt": "占位：请粘贴当日 USD/CNY 中间价数值，例如 7.0000。",
+      "tier": "A"
+    },
+    {
+      "id": "S-TARIFF",
+      "publisher": "财政部 / 国务院关税税则委员会",
+      "title": "2026 年关税调整方案（进口商品暂定税率表）",
+      "date": "2025-12-01",
+      "url": "https://gss.mof.gov.cn/",
+      "excerpt": "占位：请粘贴该 HS 编码在暂定税率表中的行，或说明「未列入暂定税率表」。",
+      "tier": "A"
+    }
+  ],
+  "data_integrity": {
+    "history_anchors_offshore": 1,
+    "history_anchors_domestic": 1,
+    "history_anchors_paired": 1,
+    "one_year_series_available": false,
+    "statement": "模板仅有 1 个可配对点；不生成任何插值点、不生成 1 年曲线。"
+  }
+}

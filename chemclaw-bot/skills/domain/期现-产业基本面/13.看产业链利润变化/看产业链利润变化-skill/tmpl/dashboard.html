@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PVC 电石法 · 产业链利润研究与成本计算器</title>
+<style>
+:root{
+  --bg:#0b1220; --bg2:#0f172a; --panel:#111c30; --panel2:#152238;
+  --line:#1f3049; --line2:#2a405e;
+  --tx:#e6edf7; --tx2:#9fb0c8; --tx3:#64778f;
+  --accent:#4cc9f0; --accent2:#7c3aed;
+  --up:#ef4444; --down:#22c55e; --warn:#f59e0b; --pvc:#4cc9f0; --cac2:#f59e0b;
+  --naoh:#a78bfa; --profitGood:#10b981; --profitBad:#f43f5e; --proxy:#64748b;
+  --r:14px; --sh:0 8px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:radial-gradient(1200px 600px at 15% -10%,#12213b 0,#0b1220 55%) fixed;color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,sans-serif;
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace}
+
+/* ---------- 顶栏 ---------- */
+header.top{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:linear-gradient(180deg,rgba(11,18,32,.96),rgba(11,18,32,.86));border-bottom:1px solid var(--line)}
+.top-in{max-width:1560px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#4cc9f0,#7c3aed);
+  display:grid;place-items:center;font-weight:800;font-size:13px;color:#04101f;letter-spacing:-.5px}
+.brand h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.2px}
+.brand .sub{font-size:11.5px;color:var(--tx3);margin-top:1px}
+.pill{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--tx2);white-space:nowrap}
+.pill.b{background:rgba(76,201,240,.1);border-color:rgba(76,201,240,.35);color:#9be3f7}
+.pill.w{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.35);color:#fcd34d}
+.pill.g{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.35);color:#6ee7b7}
+nav.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+nav.tabs button{background:transparent;border:0;color:var(--tx2);padding:8px 13px;border-radius:9px;cursor:pointer;
+  font-size:13px;font-weight:500;transition:.15s;white-space:nowrap}
+nav.tabs button:hover{background:rgba(255,255,255,.05);color:var(--tx)}
+nav.tabs button.on{background:linear-gradient(135deg,rgba(76,201,240,.18),rgba(124,58,237,.18));color:#fff;
+  box-shadow:inset 0 0 0 1px rgba(76,201,240,.35)}
+
+main{max-width:1560px;margin:0 auto;padding:20px 22px 80px}
+section.view{display:none;animation:fade .25s ease}
+section.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- 通用卡片 ---------- */
+.card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;box-shadow:var(--sh)}
+.card h3{margin:0 0 4px;font-size:14.5px;font-weight:650;display:flex;align-items:center;gap:8px}
+.card h3 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.card .desc{color:var(--tx3);font-size:12px;margin:0 0 12px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1180px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}}
+@media(max-width:760px){.g2,.g4{grid-template-columns:1fr}}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:1400px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:13px;
+  padding:13px 15px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:.75}
+.kpi.a::after{background:var(--cac2)}.kpi.b::after{background:var(--accent)}
+.kpi.c::after{background:var(--profitGood)}.kpi.d::after{background:var(--naoh)}
+.kpi .k{font-size:11.5px;color:var(--tx3);letter-spacing:.3px}
+.kpi .v{font-size:23px;font-weight:700;margin-top:3px;letter-spacing:-.5px}
+.kpi .s{font-size:11px;color:var(--tx3);margin-top:2px}
+.kpi .v.neg{color:var(--profitBad)}.kpi .v.pos{color:var(--profitGood)}
+.up{color:var(--up)}.down{color:var(--down)}.mut{color:var(--tx3)}
+
+/* ---------- 图表容器 ---------- */
+.chart{width:100%;height:330px}
+.chart.sm{height:260px}.chart.lg{height:400px}
+
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:right;color:var(--tx3);font-weight:600;padding:8px 9px;border-bottom:1px solid var(--line2);
+  font-size:11.5px;white-space:nowrap;background:rgba(255,255,255,.02)}
+thead th:first-child,td:first-child{text-align:left}
+tbody td{padding:8px 9px;border-bottom:1px solid rgba(31,48,73,.5);text-align:right;white-space:nowrap}
+tbody tr:hover{background:rgba(76,201,240,.05)}
+tfoot td{padding:9px;font-weight:700;border-top:1px solid var(--line2);text-align:right}
+tfoot td:first-child{text-align:left}
+.tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:6px;border:1px solid var(--line2);
+  color:var(--tx2);margin-left:5px}
+.tag.raw{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:#fcd34d}
+.tag.energy{background:rgba(76,201,240,.12);border-color:rgba(76,201,240,.3);color:#9be3f7}
+.tag.aux{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.3);color:#c4b5fd}
+.tag.byp{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3);color:#86efac}
+.tag.est{background:rgba(244,63,94,.12);border-color:rgba(244,63,94,.3);color:#fda4af}
+.tag.proxy{background:rgba(100,116,139,.16);border-color:rgba(100,116,139,.35);color:#cbd5e1}
+
+/* ---------- 输入控件 ---------- */
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-size:11.5px;color:var(--tx3);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.ctl label .q{font-size:10px;color:var(--warn);cursor:help;border:1px solid rgba(245,158,11,.4);
+  border-radius:5px;padding:0 4px}
+.ctl input,select{background:#0a1424;border:1px solid var(--line2);border-radius:9px;color:var(--tx);
+  padding:8px 10px;font-size:13.5px;width:100%;outline:none;transition:.15s;font-variant-numeric:tabular-nums}
+.ctl input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(76,201,240,.13)}
+.ctl input.chg{border-color:var(--warn);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
+.switch{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:var(--tx2);
+  padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:#0a1424}
+.switch input{width:auto;margin:0;accent-color:var(--accent)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button.btn{background:#16263d;border:1px solid var(--line2);color:var(--tx);padding:8px 14px;border-radius:9px;
+  cursor:pointer;font-size:12.5px;transition:.15s;font-weight:500}
+button.btn:hover{border-color:var(--accent);color:#fff;background:#1b3049}
+button.btn.pri{background:linear-gradient(135deg,#0ea5e9,#7c3aed);border:0;color:#fff;font-weight:600}
+button.btn.pri:hover{filter:brightness(1.1)}
+
+/* ---------- 结果条 ---------- */
+.stack{display:flex;flex-direction:column;gap:10px}
+.resrow{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-radius:11px;
+  background:#0c1729;border:1px solid var(--line)}
+.resrow .l{font-size:12px;color:var(--tx2)}
+.resrow .l b{display:block;color:var(--tx);font-size:13px;font-weight:600}
+.resrow .v{font-size:19px;font-weight:700;letter-spacing:-.4px}
+.resrow.hi{border-color:rgba(76,201,240,.4);background:linear-gradient(90deg,rgba(76,201,240,.1),transparent)}
+.formula{font-family:"SF Mono",ui-monospace,monospace;font-size:11.5px;color:var(--tx3);margin-top:2px}
+
+/* ---------- 抽屉 ---------- */
+#drawer{position:fixed;inset:0;z-index:100;display:none}
+#drawer.on{display:block}
+#drawer .mask{position:absolute;inset:0;background:rgba(3,8,18,.7);backdrop-filter:blur(3px)}
+#drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(560px,94vw);background:var(--panel);
+  border-left:1px solid var(--line2);box-shadow:-20px 0 60px rgba(0,0,0,.5);overflow-y:auto;padding:22px;
+  animation:slide .2s ease}
+@keyframes slide{from{transform:translateX(30px);opacity:.4}to{transform:none;opacity:1}}
+#drawer h4{margin:0 0 4px;font-size:16px}
+#drawer .x{position:absolute;top:14px;right:16px;background:none;border:0;color:var(--tx3);font-size:22px;cursor:pointer}
+.kv{display:grid;grid-template-columns:104px 1fr;gap:6px 12px;font-size:12.5px;margin:12px 0}
+.kv .k{color:var(--tx3)}
+.note{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 12px;
+  font-size:12px;color:#fde68a;line-height:1.6}
+.note.info{background:rgba(76,201,240,.07);border-color:rgba(76,201,240,.25);color:#bae6fd}
+.note.bad{background:rgba(244,63,94,.08);border-color:rgba(244,63,94,.25);color:#fecdd3}
+
+/* ---------- 流程 ---------- */
+.flow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:6px 0 10px}
+.fnode{min-width:150px;flex:1;background:#0c1729;border:1px solid var(--line);border-radius:12px;padding:12px;
+  position:relative}
+.fnode .t{font-size:11px;color:var(--tx3)}
+.fnode .n{font-size:13.5px;font-weight:650;margin:2px 0 6px}
+.fnode .p{font-size:17px;font-weight:700;color:var(--accent)}
+.farrow{display:grid;place-items:center;width:34px;color:var(--tx3);font-size:18px;flex:0 0 34px}
+
+/* ---------- 页脚 ---------- */
+footer{max-width:1560px;margin:0 auto;padding:26px 22px 50px;color:var(--tx3);font-size:11.5px;line-height:1.8;
+  border-top:1px solid var(--line)}
+ul.clean{margin:8px 0 0;padding-left:18px;color:var(--tx2);font-size:12.5px;line-height:1.85}
+ul.clean li::marker{color:var(--accent)}
+.lgnd{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--tx3);margin-top:8px}
+.lgnd i{display:inline-block;width:18px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.hl{background:linear-gradient(transparent 62%,rgba(76,201,240,.35) 0)}
+.small{font-size:11.5px;color:var(--tx3)}
+.hr{height:1px;background:var(--line);margin:16px 0}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="logo">PVC</div>
+      <div>
+        <h1>中国电石法 PVC · 产业链利润研究与成本计算器</h1>
+        <div class="sub" id="subline">理论加工价差 · 理论制造利润 · 口径可溯 · 数据冻结于 2026-10-20</div>
+      </div>
+    </div>
+    <span class="pill b" id="pillRoute">电石乙炔法</span>
+    <span class="pill w" id="pillData">数据口径混合，详见“数据口径”</span>
+    <nav class="tabs" id="tabs">
+      <button data-v="calc" class="on">成本计算器</button>
+      <button data-v="history">历史价差与利润</button>
+      <button data-v="cost">成本结构与单耗</button>
+      <button data-v="sens">敏感性分析</button>
+      <button data-v="route">工艺路线对比</button>
+      <button data-v="data">数据口径与来源</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ============ 1. 计算器 ============ -->
+  <section class="view on" id="v-calc">
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid" style="grid-template-columns:400px 1fr;align-items:start" id="calcGrid">
+      <div class="stack">
+        <div class="card">
+          <h3><span class="dot"></span>产品售价</h3>
+          <p class="desc">SG-5 型 PVC 树脂粉，含 13% 增值税</p>
+          <div class="grid g2" style="gap:10px">
+            <div class="ctl"><label>现货价 <span class="mono">元/吨</span></label>
+              <input type="number" id="in_prod" step="10"></div>
+            <div class="ctl"><label>生效日期</label><input type="text" id="in_prod_date" readonly></div>
+          </div>
+          <div class="btns" style="margin-top:10px">
+            <button class="btn" data-preset="spot">重置为 10-20 现货</button>
+            <button class="btn" data-preset="fut">用期货主力收盘</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot"></span>工艺选择</h3>
+          <p class="desc">路线不同，单耗口径完全不同，不得混用</p>
+          <select id="in_route" style="width:100%">
+            <option value="carbide">电石乙炔法（外购电石，主流 72%）</option>
+            <option value="carbide_int">电石乙炔法（电石自产一体化）</option>
+            <option value="ethylene">乙烯氧氯化法（对照）</option>
+          </select>
+          <div class="hr"></div>
+          <div class="grid g2" style="gap:10px">
+            <div class="ctl"><label>综合收率（CaC₂→PVC）</label><input type="number" id="in_yield" step="0.005" min="0.5" max="1"></div>
+            <div class="ctl"><label>增值税率</label><input type="number" id="in_vat" step="0.01" disabled></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot"></span>原料与辅料单耗 <span class="pill" id="ctlCount">11 项</span></h3>
+          <p class="desc">可直接改成你企业的真实单耗与采购价（优先于行业典型值）</p>
+          <div id="inputs"></div>
+          <div class="hr"></div>
+          <div class="btns">
+            <button class="btn" id="btnReset">恢复行业典型值</button>
+            <button class="btn" id="btnExport">导出本参数集</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot"></span>可纳入的成本项</h3>
+          <p class="desc">勾选后进入“理论制造利润”，未勾选的将列入“无法计入的成本”</p>
+          <div class="stack" style="gap:8px">
+            <label class="switch"><input type="checkbox" id="t_mfg"> 制造费用（折旧+人工+包装+其他）</label>
+            <label class="switch"><input type="checkbox" id="t_byp"> 联产烧碱收益抵减（氯碱一体化口径）</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <h3><span class="dot"></span>计算结果 <span class="pill" id="calcTag">单位：元/吨 PVC</span></h3>
+          <p class="desc">三层指标严格分离，避免把加工价差当成企业净利润</p>
+          <div class="stack" id="results"></div>
+        </div>
+
+        <div class="grid g2">
+          <div class="card">
+            <h3><span class="dot"></span>成本构成占比</h3>
+            <p class="desc">按计入口径占“总制成成本”的比例</p>
+            <div class="chart sm" id="ch_share"></div>
+          </div>
+          <div class="card">
+            <h3><span class="dot"></span>价差瀑布：从售价到理论利润</h3>
+            <p class="desc">每一段都可展开查看参数与来源</p>
+            <div class="chart sm" id="ch_waterfall"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot"></span>单耗明细与成本占比</h3>
+          <p class="desc">点击任意行 → 查看该物料的口径、来源与敏感性；标 <span class="tag est">估算</span> 的项可核实性较低</p>
+          <div style="overflow-x:auto"><table id="tbl_breakdown"></table></div>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot"></span>无法计入的成本（必须显式声明）</h3>
+          <p class="desc">这些费用缺少可核实单价，因此不进入任何利润数字，只列为缺口</p>
+          <div id="excluded" class="lgnd" style="gap:8px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. 历史 ============ -->
+  <section class="view" id="v-history">
+    <div class="kpis" id="hkpis" style="grid-template-columns:repeat(5,1fr)"></div>
+    <div class="card" style="margin-bottom:14px">
+      <h3><span class="dot"></span>近 1 年：PVC 售价、电石成本与理论加工价差</h3>
+      <p class="desc">实线=有当日实际报价；虚线=月度锚点插值 / 期货代理。灰色区域为“无可靠电石价格”，不做外推。</p>
+      <div class="chart lg" id="ch_hist"></div>
+      <div class="lgnd">
+        <span><i style="background:var(--pvc)"></i>PVC 现货价</span>
+        <span><i style="background:var(--proxy)"></i>PVC 期货代理</span>
+        <span><i style="background:var(--cac2)"></i>电石到厂价</span>
+        <span><i style="background:#22c55e"></i>理论加工价差</span>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="dot"></span>理论加工价差 vs 隆众（第三方）毛利</h3>
+        <p class="desc">口径不同：前者只扣原料，后者扣全部制造成本 —— 两者之差≈可核实成本段</p>
+        <div class="chart" id="ch_vs"></div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>周度校验偏差（理论利润 − 隆众毛利）</h3>
+        <p class="desc">偏差≈联产烧碱/电耗口径/区域价差等系统性因素；同号率是模型可用性的核心指标</p>
+        <div class="chart" id="ch_dev"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3><span class="dot"></span>月度总表</h3>
+      <p class="desc">无电石价格的月份只展示“有据可查”的第三方成本/毛利，不填充自造数字</p>
+      <div style="overflow-x:auto"><table id="tbl_month"></table></div>
+    </div>
+  </section>
+
+  <!-- ============ 3. 成本结构 ============ -->
+  <section class="view" id="v-cost">
+    <div class="card" style="margin-bottom:14px">
+      <h3><span class="dot"></span>电石法 PVC 物料平衡链路</h3>
+      <p class="desc">每 1 吨 PVC 的单耗口径；括号内为该环节的数据来源等级</p>
+      <div class="flow" id="flow"></div>
+      <div class="note info">⚠ 关键区分：<b>电石 1.45 t/t</b> 是“把电石买进来”的外购口径；<b>综合电耗≈8500 kWh/t</b> 是“从石灰到 PVC 全链”的耗电口径，
+        其中包括了生产电石的约 3400–3600 kWh/t 电耗。<b>两者不能相加</b>，否则会重复计算近 5000 度电。</div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="dot"></span>单耗口径对照（不同来源，不得混用）</h3>
+        <p class="desc">同一指标在不同资料中差异可达 20%，必须标注适用范围</p>
+        <div style="overflow-x:auto"><table id="tbl_dose"></table></div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>成本占比：本模型 vs 行业文献</h3>
+        <p class="desc">电石占比是检验模型是否跑偏的第一道标尺（行业 65–75%）</p>
+        <div class="chart" id="ch_struct"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3><span class="dot"></span>收率与单耗的换算关系</h3>
+      <p class="desc">收率下降会等比例抬高全部原料单耗，这是很多模型漏掉的环节</p>
+      <div class="chart" id="ch_yield"></div>
+    </div>
+  </section>
+
+  <!-- ============ 4. 敏感性 ============ -->
+  <section class="view" id="v-sens">
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="dot"></span>双因素敏感性：理论加工价差（元/吨）</h3>
+        <p class="desc">行=电石价格变动，列=产品价格变动；颜色越红越差</p>
+        <div style="overflow-x:auto"><table id="tbl_sm_spread"></table></div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>双因素敏感性：理论制造利润（元/吨）</h3>
+        <p class="desc">在“已计入成本项”之后的结果，注意与价差量级差</p>
+        <div style="overflow-x:auto"><table id="tbl_sm_profit"></table></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h3><span class="dot"></span>单因素弹性（±5% / ±10%）</h3>
+        <p class="desc">每项物料价格变动对利润的影响（元/吨），按影响大小排序</p>
+        <div class="chart lg" id="ch_tornado"></div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>盈亏平衡：PVC 售价需要多少元/吨？</h3>
+        <p class="desc">在原料±10%区间内，使“理论制造利润=0”的产品售价</p>
+        <div class="chart" id="ch_be"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. 工艺对比 ============ -->
+  <section class="view" id="v-route">
+    <div class="card" style="margin-bottom:14px">
+      <h3><span class="dot"></span>三条工艺路线：成本指标对比</h3>
+      <p class="desc">⚠ 只能用“同口径”指标横向比较：电石法用加工价差，乙烯法用原料成本+加工费，一体化要考虑电石自产</p>
+      <div style="overflow-x:auto"><table id="tbl_route"></table></div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="dot"></span>单吨成本结构对比</h3>
+        <p class="desc">同一 1 吨 PVC 的口径下分解</p>
+        <div class="chart" id="ch_route"></div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>关键结论</h3>
+        <div id="routeNotes" class="stack" style="gap:10px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. 数据口径 ============ -->
+  <section class="view" id="v-data">
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="dot"></span>数据来源与口径登记</h3>
+        <p class="desc">每一条序列都登记：品种/地区/规格/税费/频率/起止/原始链接</p>
+        <div style="overflow-x:auto"><table id="tbl_sources"></table></div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>电石价格锚点（用于早于 93 天的插值）</h3>
+        <p class="desc">仅使用文章明确披露的报价，锚点之间线性插值，并全程标记 interp</p>
+        <div style="overflow-x:auto"><table id="tbl_anchors"></table></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3><span class="dot"></span>验证结论与已知局限</h3>
+      <div class="grid g3" style="margin-top:8px">
+        <div>
+          <div class="small" style="color:var(--tx2);font-weight:600;margin-bottom:4px">✅ 已通过的校验</div>
+          <ul class="clean" id="val_ok"></ul>
+        </div>
+        <div>
+          <div class="small" style="color:var(--tx2);font-weight:600;margin-bottom:4px">⚠ 已知局限</div>
+          <ul class="clean" id="val_lim"></ul>
+        </div>
+        <div>
+          <div class="small" style="color:var(--tx2);font-weight:600;margin-bottom:4px">🚫 明确不做什么</div>
+          <ul class="clean" id="val_no"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div><b>口径声明：</b>“理论加工价差”= 产品含税价 − 原料（含收率修正）成本；“理论制造利润”= 加工价差 − 已核实能源/辅料/制造费用。
+  两者均<b>不是</b>企业净利润，也不含财务、销售、税收与环保等费用。</div>
+  <div style="margin-top:6px"><b>数据：</b>期货=新浪财经主力连续（2025-10→2026-10）；现货=生意社基准价（近 93 天）；第三方成本/毛利=隆众资讯周报（2026 年 40 期）。
+  单耗与工艺=国家标准口径 + 隆众/前瞻/中国化工报/专利文献。所有原始数值见 Excel 模型与 references 目录。</div>
+  <div style="margin-top:6px">本页面为研究工具，不构成投资建议。数值可随参数变化，任何结果都应在你企业的真实单耗下重算。</div>
+</footer>
+
+<div id="drawer"><div class="mask" onclick="closeDrawer()"></div><div class="panel" id="drawerBody"></div></div>
+
+<script>
+/*__ECHARTS__*/
+</script>
+<script>
+const PAYLOAD = /*__PAYLOAD__*/;
+</script>
+<script id="appjs">
+/*__APP__*/
+</script>
+</body>
+</html>

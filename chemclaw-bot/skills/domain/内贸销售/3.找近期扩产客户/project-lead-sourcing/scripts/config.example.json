@@ -1,0 +1,39 @@
+{
+  "_comment": "chem-lead-sourcing 项目配置。复制为 config.json 后按产品填写。所有脚本都只读这个文件，不硬编码任何产品。",
+  "product": {
+    "name": "纯碱",
+    "formula": "Na2CO3",
+    "aliases": ["碳酸钠", "苏打", "soda ash", "sodium carbonate"],
+    "grades": ["轻质", "重质", "食用纯碱"],
+    "roles_vocab": ["主原料", "辅料", "助剂"]
+  },
+  "region": {
+    "name": "华东",
+    "provinces": ["山东", "江苏", "浙江", "安徽", "上海", "福建", "江西"],
+    "cities": []
+  },
+  "window_months": 6,
+  "today": "2026-10-13",
+  "peer_keywords": [
+    "山东海化", "海天生物化工", "连云港碱业", "江苏德邦", "中盐昆山", "华昌化工",
+    "中盐红四方", "安徽红四方", "井神盐化", "肥城胜利化工", "三友化工", "中盐化工",
+    "远兴能源", "唐山三友", "湖北双环", "河南金山", "四川和邦", "青海盐湖",
+    "冷水江金富源", "江苏华昌", "潍坊海化", "山东默锐", "中盐吉兰泰", "湘渝盐化",
+    "金晶科技", "世龙实业", "湖北宜化", "新疆天业", "博源化工"
+  ],
+  "stages_vocab": ["拟建", "备案", "在建", "试车", "已投产"],
+  "source_types_vocab": ["备案", "环评", "招标", "公告", "新闻"],
+  "outputs": { "xlsx": true, "html": true, "md": true, "csv": false },
+  "paths": {
+    "lanes": "lanes.json",
+    "raw_dir": "leads_raw",
+    "leads": "leads.json",
+    "stats": "merge_stats.json",
+    "qa_report": "leads_raw/_qa_report.json",
+    "channels": "channels.json",
+    "workplan": "workplan.md",
+    "out_stem": "{product}{region}未来{months}个月项目级潜客表"
+  },
+  "qa": { "min_sample": 40, "max_total": 70 },
+  "lane_fanout": { "max_concurrency": 8, "min_records_per_lane": 8, "max_records_per_lane": 15 }
+}

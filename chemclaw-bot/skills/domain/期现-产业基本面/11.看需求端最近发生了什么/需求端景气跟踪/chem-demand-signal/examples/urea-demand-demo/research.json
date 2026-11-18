@@ -1,0 +1,513 @@
+{
+ "_comment": "跨品种演示：尿素（UR）近 3 个月需求端框架。本示例只演示结构与方法，不承载完整证据链（evidence 为方法示意，value 均为 null 并标注 qualitative）。真实研究须按 SKILL.md 补全数据。",
+ "meta": {
+  "product": "尿素（CO(NH₂)₂）",
+  "glyph": "尿",
+  "spec": "小颗粒/中颗粒尿素，出厂含税；期货为郑商所 UR 主连",
+  "window": "近3个月：2025-07-15 至 2025-10-15（示例区间）",
+  "asof": "2025-10-16",
+  "region": "全国（重点：华北、华东、西北煤头产区）",
+  "futures": "UR0",
+  "builder": "chem-demand-signal（演示）",
+  "version": "v1.0-demo"
+ },
+ "headline": {
+  "headline": "尿素下游需求：农业直施是基本盘，<em>工业需求（三聚氰胺/脲醛）</em>才是边际变量",
+  "one_line": "尿素约七成用于农业直接施用、约两成半进入工业（三聚氰胺、脲醛树脂、车用尿素等）。农业需求看种植面积与施肥季，工业需求看胶合板与板材开工，二者节奏完全不同，不能合并看。",
+  "facts": [
+   "农业直施占比最高，季节性极强：用肥集中在春耕与夏管，秋季为淡储而非消费",
+   "工业需求中三聚氰胺与脲醛树脂直接绑定房地产竣工与家具出口",
+   "车用尿素随柴油车保有量与国六标准执行增长，是结构性增量但占比小",
+   "示例数据：本演示不填具体数值，真实研究须补 evidence 的 value 与 caliber"
+  ],
+  "signals": [
+   [
+    "农业直施",
+    "基本盘：季节性决定节奏，淡季需求真空",
+    "agri",
+    "stable"
+   ],
+   [
+    "三聚氰胺",
+    "走弱候选：绑定竣工与板材，需查开工率与出口",
+    "melamine",
+    "weak"
+   ],
+   [
+    "脲醛树脂/胶黏剂",
+    "走弱候选：与地产竣工同步",
+    "uf",
+    "weak"
+   ],
+   [
+    "车用尿素",
+    "结构性增量：随保有量增长，但权重小",
+    "adblue",
+    "improve"
+   ]
+  ]
+ },
+ "segments": [
+  {
+   "key": "agri",
+   "name": "农业直施",
+   "share": 70,
+   "share_year": 2023,
+   "share_src": "行业公开资料口径（演示用，须替换为可核验来源）",
+   "role": "尿素第一下游",
+   "tone": "stable",
+   "color": "#26b57e"
+  },
+  {
+   "key": "melamine",
+   "name": "三聚氰胺",
+   "share": 12,
+   "share_year": 2023,
+   "share_src": "行业公开资料口径（演示用）",
+   "role": "工业需求主力，绑定地产与板材出口",
+   "tone": "weak",
+   "color": "#f0553f"
+  },
+  {
+   "key": "uf",
+   "name": "脲醛树脂/胶黏剂",
+   "share": 10,
+   "share_year": 2023,
+   "share_src": "行业公开资料口径（演示用）",
+   "role": "板材与家具，与竣工同步",
+   "tone": "weak",
+   "color": "#9d8bf0"
+  },
+  {
+   "key": "adblue",
+   "name": "车用尿素",
+   "share": 4,
+   "share_year": 2023,
+   "share_src": "行业公开资料口径（演示用）",
+   "role": "柴油车尾气处理，结构性增量",
+   "tone": "improve",
+   "color": "#4cc3e8"
+  },
+  {
+   "key": "other",
+   "name": "其他工业",
+   "share": 4,
+   "share_year": 2023,
+   "share_src": "行业公开资料口径（演示用）",
+   "role": "医药、饲料等",
+   "tone": "stable",
+   "color": "#8fa3b8"
+  }
+ ],
+ "structure": [
+  {
+   "org": "口径A（分母=内需）",
+   "year": 2023,
+   "basis": "国内消费结构，剔除出口",
+   "url": "https://example.com",
+   "items": [
+    [
+     "农业直施",
+     70,
+     null
+    ],
+    [
+     "三聚氰胺",
+     12,
+     null
+    ],
+    [
+     "脲醛树脂/胶黏剂",
+     10,
+     null
+    ],
+    [
+     "车用尿素",
+     4,
+     null
+    ],
+    [
+     "其他",
+     4,
+     null
+    ]
+   ],
+   "note": "演示口径，实际须替换为可核验来源"
+  },
+  {
+   "org": "口径B（含出口）",
+   "year": 2023,
+   "basis": "表观消费+出口，出口占比按年波动 5-15%",
+   "url": "https://example.com",
+   "items": [
+    [
+     "农业直施",
+     62,
+     null
+    ],
+    [
+     "三聚氰胺",
+     11,
+     null
+    ],
+    [
+     "脲醛树脂/胶黏剂",
+     9,
+     null
+    ],
+    [
+     "车用尿素",
+     4,
+     null
+    ],
+    [
+     "其他+出口",
+     14,
+     null
+    ]
+   ],
+   "note": "含出口后农业占比下降——这就是为什么必须并列多套口径"
+  }
+ ],
+ "evidence": [
+  {
+   "id": "A01",
+   "seg": "agri",
+   "kpi": "定性",
+   "metric": "用肥季节性（春耕/夏管为主，秋季为淡储）",
+   "value": null,
+   "unit": "",
+   "date": "2025-10-15",
+   "period": "2025-10",
+   "caliber": "行业定性认识",
+   "src": "demo",
+   "url": "https://example.com",
+   "quote": "演示条目：须替换为真实报道原文与链接",
+   "grade": "D",
+   "qualitative": true
+  },
+  {
+   "id": "A02",
+   "seg": "agri",
+   "kpi": "产量",
+   "metric": "化肥施用折纯量（国家统计局年度）",
+   "value": null,
+   "unit": "万吨",
+   "date": "2024-12-31",
+   "period": "2024",
+   "caliber": "统计局年度，滞后长",
+   "src": "demo",
+   "url": "https://example.com",
+   "quote": "演示条目",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "M01",
+   "seg": "melamine",
+   "kpi": "开工率",
+   "metric": "三聚氰胺行业开工率",
+   "value": null,
+   "unit": "%",
+   "date": "2025-10-10",
+   "period": "2025-10",
+   "caliber": "行业监测周度",
+   "src": "demo",
+   "url": "https://example.com",
+   "quote": "演示条目：真实研究须填数值与原文",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "M02",
+   "seg": "melamine",
+   "kpi": "利润",
+   "metric": "三聚氰胺单吨毛利",
+   "value": null,
+   "unit": "元/吨",
+   "date": "2025-10-10",
+   "period": "2025-10",
+   "caliber": "成本模型测算",
+   "src": "demo",
+   "url": "https://example.com",
+   "quote": "演示条目",
+   "grade": "B",
+   "qualitative": true
+  },
+  {
+   "id": "U01",
+   "seg": "uf",
+   "kpi": "开工率",
+   "metric": "胶合板/纤维板企业开工率",
+   "value": null,
+   "unit": "%",
+   "date": "2025-10-10",
+   "period": "2025-10",
+   "caliber": "木材加工行业监测",
+   "src": "demo",
+   "url": "https://example.com",
+   "quote": "演示条目",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "B01",
+   "seg": "adblue",
+   "kpi": "产量",
+   "metric": "车用尿素产量",
+   "value": null,
+   "unit": "万吨",
+   "date": "2025-09-30",
+   "period": "2025-09",
+   "caliber": "月度",
+   "src": "demo",
+   "url": "https://example.com",
+   "quote": "演示条目",
+   "grade": "A",
+   "qualitative": true
+  },
+  {
+   "id": "R01",
+   "seg": "end_re",
+   "kpi": "竣工",
+   "metric": "房屋竣工面积（累计同比）",
+   "value": null,
+   "unit": "%",
+   "date": "2025-08-31",
+   "period": "2025-01~08",
+   "caliber": "国家统计局",
+   "src": "demo",
+   "url": "https://example.com",
+   "quote": "演示条目：真实研究须填具体数值",
+   "grade": "A",
+   "qualitative": true
+  }
+ ],
+ "series": {},
+ "sentiment": [
+  {
+   "seg": "agri",
+   "indicator": "用肥季节性与种植面积",
+   "score": 0,
+   "basis": "淡季真空，无量化变化",
+   "ev": [
+    "A01"
+   ]
+  },
+  {
+   "seg": "melamine",
+   "indicator": "三聚氰胺开工率",
+   "score": -1,
+   "basis": "演示：假设环比走弱，需填真实数值",
+   "ev": [
+    "M01"
+   ]
+  },
+  {
+   "seg": "melamine",
+   "indicator": "三聚氰胺利润（反向）",
+   "score": -1,
+   "basis": "演示：假设亏损扩大",
+   "ev": [
+    "M02"
+   ]
+  },
+  {
+   "seg": "uf",
+   "indicator": "板材开工率",
+   "score": -1,
+   "basis": "演示：与竣工同步走弱",
+   "ev": [
+    "U01"
+   ]
+  },
+  {
+   "seg": "adblue",
+   "indicator": "车用尿素产量",
+   "score": 1,
+   "basis": "演示：保有量驱动增长",
+   "ev": [
+    "B01"
+   ]
+  }
+ ],
+ "weights": {
+  "agri": {
+   "用肥季节性与种植面积": 0.6,
+   "化肥施用折纯量": 0.4
+  },
+  "melamine": {
+   "三聚氰胺开工率": 0.7,
+   "三聚氰胺利润（反向）": 0.3
+  },
+  "uf": {
+   "板材开工率": 1.0
+  },
+  "adblue": {
+   "车用尿素产量": 1.0
+  }
+ },
+ "dominance_weights": {
+  "agri": 70,
+  "melamine": 12,
+  "uf": 10,
+  "adblue": 4
+ },
+ "transmission": [
+  {
+   "from": "种植面积与施肥季",
+   "to": "农业直施量",
+   "chan": "用肥节奏由农时决定，价格只影响延后/提前采购",
+   "lag": "季节性",
+   "strength": "强",
+   "evidence": "春耕、夏管为集中用肥期"
+  },
+  {
+   "from": "房屋竣工",
+   "to": "胶合板/家具用脲醛树脂",
+   "chan": "竣工→板材→胶黏剂→尿素",
+   "lag": "1-3个月",
+   "strength": "强",
+   "evidence": "R01"
+  },
+  {
+   "from": "三聚氰胺开工率",
+   "to": "尿素工业需求",
+   "chan": "三聚氰胺单耗尿素约 3 吨/吨",
+   "lag": "周度",
+   "strength": "强",
+   "evidence": "M01"
+  },
+  {
+   "from": "尿素价格",
+   "to": "农业需求",
+   "chan": "价格只改变采购时点（淡储/延后），不改变总用量",
+   "lag": "—",
+   "strength": "弱",
+   "evidence": "价格与用量无机械关系"
+  }
+ ],
+ "policy": [
+  {
+   "date": "2025-09-01",
+   "title": "出口法检/配额政策（演示条目）",
+   "seg": "全品种",
+   "what": "演示：须替换为真实政策原文",
+   "impact": "出口受限时内贸供给压力上升，需求端承压",
+   "ev": "",
+   "url": "https://example.com",
+   "verify": "演示条目，不可引用"
+  }
+ ],
+ "seasonal": [
+  {
+   "seg": "农业直施",
+   "text": "春耕（3-4月）与夏管（6-7月）为集中用肥期，秋季（9-11月）以淡储为主、实际消费少；因此四季度农业需求真空是常态，不是走弱信号。"
+  }
+ ],
+ "proxy": [
+  {
+   "ind": "下游开工率",
+   "grade": "A",
+   "type": "真实需求（产量级代理）",
+   "why": "开工率×产能×单耗≈尿素消耗",
+   "limit": "条数口径受装置大小影响，须与产量交叉",
+   "freq": "周",
+   "src": "行业监测"
+  },
+  {
+   "ind": "下游产品利润",
+   "grade": "B",
+   "type": "间接（产能弹性）",
+   "why": "亏损→减产→尿素需求下降",
+   "limit": "滞后 1-3 个月",
+   "freq": "周",
+   "src": "成本模型"
+  },
+  {
+   "ind": "尿素价格",
+   "grade": "C",
+   "type": "景气/预期",
+   "why": "农业用肥对价格不敏感（刚需），价格更多反映供给与储备行为",
+   "limit": "禁止用价格推断用量",
+   "freq": "日",
+   "src": "现货/期货"
+  }
+ ],
+ "gaps": [
+  {
+   "item": "农业直施的月度实际用量",
+   "why": "无公开月度消费统计，只有年度化肥折纯量",
+   "plan": "用种植面积×施肥强度估算（须标注为推算）",
+   "impact": "农业需求只能定性"
+  },
+  {
+   "item": "三聚氰胺/胶合板周度开工率",
+   "why": "需订阅行业数据库",
+   "plan": "订阅隆众/卓创尿素产业链数据包",
+   "impact": "工业需求强度无法量化"
+  }
+ ],
+ "sources": {
+  "demo": [
+   "演示来源",
+   "占位，须替换"
+  ]
+ },
+ "sections": [
+  {
+   "id": "agri",
+   "no": "A",
+   "title": "农业直施：季节性 > 价格",
+   "lead": "农业用肥是刚需，农户对价格不敏感，价格主要影响经销商储备时点。",
+   "points": [
+    "春耕、夏管为集中期，秋季为淡储",
+    "判断需求强弱应看种植面积与天气，而非价格"
+   ],
+   "caveat": "无月度用量统计，只能定性。"
+  },
+  {
+   "id": "melamine",
+   "no": "B",
+   "title": "三聚氰胺：绑定竣工与板材出口",
+   "lead": "工业需求中权重最大，单耗尿素约 3 吨/吨。",
+   "points": [
+    "开工率是 A 级指标",
+    "利润为 B 级，存在 1-3 个月滞后"
+   ],
+   "caveat": "示例未填真实数值。"
+  },
+  {
+   "id": "uf",
+   "no": "C",
+   "title": "脲醛树脂/胶黏剂：地产链条末端",
+   "lead": "与竣工同步，滞后 1-3 个月。",
+   "points": [
+    "板材开工率为 A 级",
+    "竣工数据月度、滞后"
+   ],
+   "caveat": "示例未填真实数值。"
+  },
+  {
+   "id": "adblue",
+   "no": "D",
+   "title": "车用尿素：结构性增量",
+   "lead": "随柴油车保有量与排放标准升级增长，占比小但方向确定。",
+   "points": [
+    "产量为 A 级",
+    "受物流景气影响短期波动"
+   ],
+   "caveat": "示例未填真实数值。"
+  }
+ ],
+ "grade_of": {
+  "下游开工率": "A",
+  "下游产品利润": "B",
+  "尿素价格": "C"
+ },
+ "futures": {},
+ "series_futures": {},
+ "marks": [],
+ "kpis": [],
+ "caliber_spec": null
+}

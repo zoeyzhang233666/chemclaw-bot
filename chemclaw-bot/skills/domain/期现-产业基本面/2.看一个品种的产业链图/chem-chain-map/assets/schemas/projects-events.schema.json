@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chem-chain-atlas/schemas/projects-events.schema.json",
+  "title": "projects.json / events.json",
+  "description": "两个文件共用本 schema 的约定，但分别校验。",
+  "$defs": {
+    "project": {
+      "type": "object",
+      "required": ["id", "name", "company", "province", "stage"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "company": { "type": "string" },
+        "province": { "type": "string" },
+        "stage": { "enum": ["已投产", "在建", "拟建", "在执行"] },
+        "capacity": { "type": ["number", "null"] },
+        "capacity_basis": { "type": ["string", "null"] },
+        "investment": { "type": ["string", "number", "null"] },
+        "start_time": { "type": ["string", "null"] },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "note": { "type": ["string", "null"] }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": ["id", "date", "title", "affects", "direction"],
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "title": { "type": "string" },
+        "detail": { "type": "string" },
+        "affects": { "type": "array", "items": { "type": "string" } },
+        "direction": {
+          "enum": ["supply_+", "supply_-", "demand_+", "demand_-", "cost_+", "structural"]
+        },
+        "strength": { "enum": ["高", "中", "低"] },
+        "evidence": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "projects": { "type": "array", "items": { "$ref": "#/$defs/project" } },
+    "events": { "type": "array", "items": { "$ref": "#/$defs/event" } }
+  }
+}

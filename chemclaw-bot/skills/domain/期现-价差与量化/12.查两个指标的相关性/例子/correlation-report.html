@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>两指标相关性研究｜甲醇港口库存 × 太仓现货价</title>
+<style>
+:root{
+  --bg:#0e1116; --panel:#161b23; --panel2:#1b2230; --line:#26303f; --txt:#e6ebf2; --dim:#93a1b5;
+  --acc:#4da3ff; --acc2:#7ee0c0; --neg:#ff6b81; --pos:#3ddc97; --warn:#ffc857; --demo:#f0a35e;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0b0e13,#0e1116 260px);color:var(--txt);
+  font:14px/1.6 "Segoe UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}
+.wrap{max-width:1440px;margin:0 auto;padding:0 22px 64px}
+header{padding:26px 0 14px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.h1{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:25px;margin:0;letter-spacing:.5px;font-weight:650}
+.sub{color:var(--dim);font-size:13px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;font-size:12px;
+  border:1px solid var(--line);background:var(--panel2);color:var(--dim)}
+.badge.demo{color:#2a1a08;background:var(--demo);border-color:var(--demo);font-weight:700}
+.grid{display:grid;gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.panel h2{font-size:15px;margin:0 0 10px;font-weight:650;letter-spacing:.3px;display:flex;gap:8px;align-items:center}
+.panel h2 .tag{font-size:11px;color:var(--dim);font-weight:500;border:1px solid var(--line);padding:1px 7px;border-radius:999px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 15px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc);opacity:.9}
+.kpi.neg:before{background:var(--neg)} .kpi.pos:before{background:var(--pos)}
+.kpi .k{color:var(--dim);font-size:12px} .kpi .v{font-size:24px;font-weight:680;letter-spacing:.4px;margin-top:2px}
+.kpi .s{color:var(--dim);font-size:12px;margin-top:2px}
+.mono{font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.ctrl{display:flex;flex-direction:column;gap:5px;min-width:132px}
+.ctrl label{font-size:12px;color:var(--dim)}
+select,input[type=number],input[type=date]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+  border-radius:9px;padding:7px 9px;font-size:13px;outline:none}
+select:focus,input:focus{border-color:var(--acc)}
+button{background:var(--acc);color:#04121f;border:0;border-radius:9px;padding:8px 14px;font-weight:650;cursor:pointer;font-size:13px}
+button.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);font-weight:500}
+button:hover{filter:brightness(1.08)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim);cursor:pointer;user-select:none}
+.chip.on{background:rgba(77,163,255,.15);border-color:var(--acc);color:#cfe6ff}
+canvas{width:100%;display:block}
+.chartbox{position:relative}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin:6px 0 2px}
+.legend i{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{color:var(--dim);font-weight:600;font-size:12px;text-align:right;position:sticky;top:0;background:var(--panel)}
+td.l,th.l{text-align:left}
+tr:hover td{background:rgba(255,255,255,.02)}
+.scroll{max-height:340px;overflow:auto;border-radius:10px}
+.pill{font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+.pill.ok{color:var(--pos);border-color:rgba(61,220,151,.4)}
+.pill.no{color:var(--neg);border-color:rgba(255,107,129,.4)}
+.pill.mid{color:var(--warn);border-color:rgba(255,200,87,.4)}
+.note{font-size:12.5px;color:var(--dim);line-height:1.75}
+.note b{color:#cbd6e6;font-weight:600}
+.warnbox{border-left:3px solid var(--warn);background:rgba(255,200,87,.07);padding:10px 14px;border-radius:0 10px 10px 0;font-size:13px}
+.errbox{border-left:3px solid var(--neg);background:rgba(255,107,129,.08);padding:10px 14px;border-radius:0 10px 10px 0;font-size:13px}
+.demobox{border-left:3px solid var(--demo);background:rgba(240,163,94,.08);padding:10px 14px;border-radius:0 10px 10px 0;font-size:13px}
+.two{grid-template-columns:1fr 1fr}
+.three{grid-template-columns:1.35fr 1fr}
+@media(max-width:1100px){.two,.three{grid-template-columns:1fr}}
+.eventlist{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto}
+.ev{border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--panel2)}
+.ev .t{font-weight:600;font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ev .d{color:var(--dim);font-size:11.5px} .ev .n{color:#c2ccdb;font-size:12.5px;margin-top:4px;line-height:1.65}
+.kind{font-size:11px;padding:1px 7px;border-radius:999px;background:rgba(77,163,255,.16);color:#9fc9ff;border:1px solid rgba(77,163,255,.3)}
+footer{color:var(--dim);font-size:12px;margin-top:26px;border-top:1px solid var(--line);padding-top:14px;line-height:1.8}
+.tooltip{position:fixed;pointer-events:none;background:#0a0f16ee;border:1px solid var(--line);border-radius:9px;
+  padding:8px 11px;font-size:12px;line-height:1.55;color:var(--txt);z-index:99;display:none;box-shadow:var(--shadow);white-space:nowrap}
+.hint{font-size:12px;color:var(--dim);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="h1">
+    <h1>两指标相关性研究：甲醇港口库存 × 太仓现货价</h1>
+    <span class="badge demo" id="demoBadge">示例数据 · DEMO</span>
+    <span class="badge">周度 · 156 期 · 2023-10-11 ~ 2026-09-30</span>
+    <span class="badge">Pearson / Spearman · 滚动 12/26/52 周</span>
+  </div>
+  <div class="sub" style="margin-top:8px">
+    本页回答一个问题：<b>港口库存与现货价格，到底在什么时候、以什么形态相关？</b>
+    库存与价格各有“水平”和“变化”两种形态，必须分开算；相关性强弱会随市场阶段变化，因此要给出滚动曲线与分阶段结果，并对趋势、自相关、共同外部因素做伪相关排查。
+  </div>
+</header>
+
+<div class="grid kpis" id="kpis"></div>
+
+<section class="panel" style="margin-bottom:16px">
+  <h2>① 交互控制 <span class="tag">改动任一参数后全页指标、图表、表格实时重算</span></h2>
+  <div class="controls">
+    <div class="ctrl"><label>指标 X（库存口径）</label>
+      <select id="xsel">
+        <option value="inventory_total">港口库存（总）</option>
+        <option value="inventory_ec">港口库存（华东）</option>
+        <option value="inventory_sc">港口库存（华南）</option>
+      </select></div>
+    <div class="ctrl"><label>X 的数据形态</label>
+      <select id="xform">
+        <option value="level">原值（水平）</option>
+        <option value="change">一阶差分（周变化）</option>
+        <option value="pct">环比变化率 %</option>
+      </select></div>
+    <div class="ctrl"><label>指标 Y（价格口径）</label>
+      <select id="ysel">
+        <option value="spot_taicang">江苏太仓出罐现货价</option>
+        <option value="coal_5500">动力煤 5500（成本参照）</option>
+        <option value="op_rate">下游加权开工率</option>
+      </select></div>
+    <div class="ctrl"><label>Y 的数据形态</label>
+      <select id="yform">
+        <option value="pct">环比变化率 %</option>
+        <option value="change">一阶差分</option>
+        <option value="level">原值（水平）</option>
+      </select></div>
+    <div class="ctrl"><label>滚动窗口（周）</label>
+      <select id="win"><option>12</option><option selected>26</option><option>52</option></select></div>
+    <div class="ctrl"><label>窗口最小有效配对数</label><input id="minp" type="number" value="21" min="5" max="60" step="1"></div>
+    <div class="ctrl"><label>起始日期</label><input id="d1" type="date" value="2023-10-11"></div>
+    <div class="ctrl"><label>结束日期</label><input id="d2" type="date" value="2026-09-30"></div>
+    <div class="ctrl"><label>离群处理</label>
+      <select id="outl">
+        <option value="none">保留全部</option>
+        <option value="winsor">Winsorize 5%/95%</option>
+        <option value="drop">剔除极值（5%/95%，任一侧）</option>
+      </select></div>
+    <button id="reset" class="ghost">恢复默认</button>
+  </div>
+  <div class="hint" id="ctrlHint"></div>
+</section>
+
+<div class="grid three" style="margin-bottom:16px">
+  <section class="panel">
+    <h2>② 双序列对照 <span class="tag" id="tagA"></span></h2>
+    <div class="legend"><span><i style="background:var(--acc)"></i><span id="lgA"></span></span>
+      <span><i style="background:var(--acc2)"></i><span id="lgB"></span></span></div>
+    <div class="chartbox"><canvas id="cvSeries" height="300"></canvas></div>
+    <div class="hint">库存与价格各自标准化（z 分数）显示，便于同时观察形态与转折；悬停查看原始值。</div>
+  </section>
+  <section class="panel">
+    <h2>③ 散点与趋势拟合 <span class="tag" id="tagB"></span></h2>
+    <div class="chartbox"><canvas id="cvScatter" height="300"></canvas></div>
+    <div class="hint" id="fitHint"></div>
+  </section>
+</div>
+
+<section class="panel" style="margin-bottom:16px">
+  <h2>④ 滚动相关系数 <span class="tag" id="tagC">窗口 26 周 · 点击异常区间查看对应区间明细</span></h2>
+  <div class="legend">
+    <span><i style="background:var(--acc)"></i>滚动 Pearson r</span>
+    <span><i style="background:rgba(147,161,181,.55)"></i>±0.2 / ±0.5 参考带</span>
+    <span><i style="background:var(--warn)"></i>符号反转区间</span>
+    <span><i style="background:var(--neg)"></i>|r| 骤降（脱钩）</span>
+  </div>
+  <div class="chartbox"><canvas id="cvRoll" height="290"></canvas></div>
+  <div class="hint">灰色虚线为窗口有效配对数不足的区间：<b>不计算</b>，不插值。</div>
+</section>
+
+<div class="grid two" style="margin-bottom:16px">
+  <section class="panel">
+    <h2>⑤ 选中区间明细 <span class="tag" id="selTag">未选择</span></h2>
+    <div id="selDetail" class="note">在上图点击任意一点或异常区间，这里显示该窗口覆盖的库存/价格走势、期间统计量与区间内行业事件。</div>
+  </section>
+  <section class="panel">
+    <h2>⑥ 行业事件与口径提示 <span class="tag">仅作解释背景，不构成因果或交易结论</span></h2>
+    <div class="eventlist" id="events"></div>
+  </section>
+</div>
+
+<div class="grid two" style="margin-bottom:16px">
+  <section class="panel">
+    <h2>⑦ 分阶段结果 <span class="tag">按业务阶段切分后重算</span></h2>
+    <div class="scroll"><table id="phaseTbl"></table></div>
+    <div class="hint">阶段断点可在脚本参数 <span class="mono">--breaks</span> 中调整，示例断点为季度/年度边界。</div>
+  </section>
+  <section class="panel">
+    <h2>⑧ 形态组合矩阵 <span class="tag">水平对水平 ≠ 变化对变化</span></h2>
+    <div class="scroll"><table id="matrixTbl"></table></div>
+    <div class="hint">同一对指标的四种组合相关系数可以完全不同；引用结论时必须说明用的是哪一种。</div>
+  </section>
+</div>
+
+<div class="grid two" style="margin-bottom:16px">
+  <section class="panel">
+    <h2>⑨ 滞后相关 <span class="tag">正值 = X 领先 Y</span></h2>
+    <div class="chartbox"><canvas id="cvLag" height="220"></canvas></div>
+    <div class="hint">相关不区分方向；滞后结构只能提示“先后顺序”,不能单独证明因果。</div>
+  </section>
+  <section class="panel">
+    <h2>⑩ 统计稳健性与伪相关诊断</h2>
+    <div class="scroll"><table id="robustTbl"></table></div>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>⑪ 结论与使用限制</h2>
+  <div id="concl" class="note"></div>
+</section>
+
+<footer>
+  <div><b>数据状态：</b><span id="footDemo"></span></div>
+  <div><b>方法：</b>Pearson（线性）、Spearman（单调）、Fisher-z 95% 置信区间、Newey-West HAC 标准误、考虑自相关的有效样本量、去趋势与一阶差分检验、偏相关（控制共同外部因素）、滞后 0–4 期相关。</div>
+  <div><b>声明：</b>相关性不等于因果关系。本页不给交易建议、不做价格预测。滚动窗口在有效样本不足时留空而不外推。</div>
+</footer>
+</div>
+<div class="tooltip" id="tip"></div>
+
+<script>
+const PAYLOAD = {"rows": [{"week_ending": "2023-10-11", "price_date": "2023-10-11", "inventory_total": "57.54", "inventory_ec": "38.52", "inventory_sc": "19.02", "arrival": "7.03", "demand": "13.19", "spot_taicang": "2640.0", "coal_5500": "799.0", "op_rate": "70.0", "lam_used": "1.0"}, {"week_ending": "2023-10-18", "price_date": "2023-10-18", "inventory_total": "60.29", "inventory_ec": "37.3", "inventory_sc": "22.99", "arrival": "10.42", "demand": "11.88", "spot_taicang": "2444.0", "coal_5500": "815.0", "op_rate": "70.3", "lam_used": "1.0"}, {"week_ending": "2023-10-25", "price_date": "2023-10-25", "inventory_total": "55.24", "inventory_ec": "37.12", "inventory_sc": "18.12", "arrival": "8.14", "demand": "11.28", "spot_taicang": "2938.0", "coal_5500": "811.0", "op_rate": "68.7", "lam_used": "1.0"}, {"week_ending": "2023-11-01", "price_date": "2023-11-01", "inventory_total": "57.64", "inventory_ec": "38.53", "inventory_sc": "19.11", "arrival": "13.42", "demand": "11.99", "spot_taicang": "2726.0", "coal_5500": "808.0", "op_rate": "71.4", "lam_used": "1.0"}, {"week_ending": "2023-11-08", "price_date": "2023-11-08", "inventory_total": "67.02", "inventory_ec": "43.43", "inventory_sc": "23.59", "arrival": "16.04", "demand": "11.28", "spot_taicang": "2069.0", "coal_5500": "808.0", "op_rate": "71.4", "lam_used": "1.0"}, {"week_ending": "2023-11-15", "price_date": "2023-11-15", "inventory_total": "67.23", "inventory_ec": "45.81", "inventory_sc": "21.42", "arrival": "12.18", "demand": "12.52", "spot_taicang": "2050.0", "coal_5500": "818.0", "op_rate": "72.8", "lam_used": "1.0"}, {"week_ending": "2023-11-22", "price_date": "2023-11-22", "inventory_total": "64.21", "inventory_ec": "42.73", "inventory_sc": "21.48", "arrival": "9.36", "demand": "13.79", "spot_taicang": "2155.0", "coal_5500": "821.0", "op_rate": "70.8", "lam_used": "1.0"}, {"week_ending": "2023-11-29", "price_date": "2023-11-29", "inventory_total": "67.39", "inventory_ec": "43.85", "inventory_sc": "23.54", "arrival": "15.03", "demand": "11.68", "spot_taicang": "2087.0", "coal_5500": "812.0", "op_rate": "71.7", "lam_used": "1.0"}, {"week_ending": "2023-12-06", "price_date": "2023-12-06", "inventory_total": "65.95", "inventory_ec": "43.43", "inventory_sc": "22.52", "arrival": "11.34", "demand": "12.44", "spot_taicang": "2181.0", "coal_5500": "814.0", "op_rate": "72.4", "lam_used": "1.0"}, {"week_ending": "2023-12-13", "price_date": "2023-12-13", "inventory_total": "58.84", "inventory_ec": "38.1", "inventory_sc": "20.74", "arrival": "8.49", "demand": "12.2", "spot_taicang": "2675.0", "coal_5500": "822.0", "op_rate": "72.7", "lam_used": "1.0"}, {"week_ending": "2023-12-20", "price_date": "2023-12-20", "inventory_total": "54.79", "inventory_ec": "35.39", "inventory_sc": "19.4", "arrival": "9.22", "demand": "13.38", "spot_taicang": "2940.0", "coal_5500": "818.0", "op_rate": "73.6", "lam_used": "1.0"}, {"week_ending": "2023-12-27", "price_date": "2023-12-27", "inventory_total": "52.11", "inventory_ec": "33.63", "inventory_sc": "18.48", "arrival": "9.71", "demand": "11.82", "spot_taicang": "3228.0", "coal_5500": "810.0", "op_rate": "74.9", "lam_used": "1.0"}, {"week_ending": "2024-01-03", "price_date": "2024-01-03", "inventory_total": "50.68", "inventory_ec": "33.78", "inventory_sc": "16.9", "arrival": "6.56", "demand": "12.02", "spot_taicang": "2983.0", "coal_5500": "807.0", "op_rate": "74.1", "lam_used": "1.0"}, {"week_ending": "2024-01-10", "price_date": "2024-01-10", "inventory_total": "50.17", "inventory_ec": "31.9", "inventory_sc": "18.27", "arrival": "3.68", "demand": "10.18", "spot_taicang": "3225.0", "coal_5500": "805.0", "op_rate": "74.2", "lam_used": "1.0"}, {"week_ending": "2024-01-17", "price_date": "2024-01-17", "inventory_total": "52.38", "inventory_ec": "35.91", "inventory_sc": "16.47", "arrival": "7.52", "demand": "10.59", "spot_taicang": "3208.0", "coal_5500": "803.0", "op_rate": "73.4", "lam_used": "1.0"}, {"week_ending": "2024-01-24", "price_date": "2024-01-24", "inventory_total": "61.48", "inventory_ec": "40.43", "inventory_sc": "21.05", "arrival": "16.95", "demand": "12.55", "spot_taicang": "2313.0", "coal_5500": "791.0", "op_rate": "73.5", "lam_used": "1.0"}, {"week_ending": "2024-01-31", "price_date": "2024-01-31", "inventory_total": "60.35", "inventory_ec": "37.44", "inventory_sc": "22.91", "arrival": "9.77", "demand": "12.25", "spot_taicang": "2505.0", "coal_5500": "797.0", "op_rate": "74.7", "lam_used": "1.0"}, {"week_ending": "2024-02-07", "price_date": "2024-02-07", "inventory_total": "61.99", "inventory_ec": "40.94", "inventory_sc": "21.05", "arrival": "12.6", "demand": "11.52", "spot_taicang": "2505.0", "coal_5500": "782.0", "op_rate": "73.7", "lam_used": "1.0"}, {"week_ending": "2024-02-14", "price_date": "2024-02-19", "inventory_total": "64.95", "inventory_ec": "40.92", "inventory_sc": "24.03", "arrival": "12.92", "demand": "12.06", "spot_taicang": "2245.0", "coal_5500": "781.0", "op_rate": "73.6", "lam_used": "1.0"}, {"week_ending": "2024-02-21", "price_date": "2024-02-21", "inventory_total": "67.47", "inventory_ec": "44.99", "inventory_sc": "22.48", "arrival": "13.69", "demand": "10.58", "spot_taicang": "2193.0", "coal_5500": "784.0", "op_rate": "73.4", "lam_used": "1.0"}, {"week_ending": "2024-02-28", "price_date": "2024-02-28", "inventory_total": "69.29", "inventory_ec": "45.21", "inventory_sc": "24.08", "arrival": "13.25", "demand": "10.39", "spot_taicang": "1902.0", "coal_5500": "780.0", "op_rate": "73.5", "lam_used": "1.0"}, {"week_ending": "2024-03-06", "price_date": "2024-03-06", "inventory_total": "67.23", "inventory_ec": "44.52", "inventory_sc": "22.71", "arrival": "10.8", "demand": "11.16", "spot_taicang": "1998.0", "coal_5500": "762.0", "op_rate": "73.6", "lam_used": "1.0"}, {"week_ending": "2024-03-13", "price_date": "2024-03-13", "inventory_total": "70.42", "inventory_ec": "47.26", "inventory_sc": "23.16", "arrival": "14.34", "demand": "11.44", "spot_taicang": "1749.0", "coal_5500": "765.0", "op_rate": "72.5", "lam_used": "1.0"}, {"week_ending": "2024-03-20", "price_date": "2024-03-20", "inventory_total": "69.94", "inventory_ec": "47.81", "inventory_sc": "22.13", "arrival": "13.04", "demand": "12.23", "spot_taicang": "1943.0", "coal_5500": "757.0", "op_rate": "73.6", "lam_used": "1.0"}, {"week_ending": "2024-03-27", "price_date": "2024-03-27", "inventory_total": "65.79", "inventory_ec": "43.54", "inventory_sc": "22.25", "arrival": "11.06", "demand": "11.77", "spot_taicang": "1992.0", "coal_5500": "759.0", "op_rate": "74.1", "lam_used": "1.0"}, {"week_ending": "2024-04-03", "price_date": "2024-04-03", "inventory_total": "63.81", "inventory_ec": "41.19", "inventory_sc": "22.62", "arrival": "10.12", "demand": "12.85", "spot_taicang": "2173.0", "coal_5500": "755.0", "op_rate": "73.8", "lam_used": "1.0"}, {"week_ending": "2024-04-10", "price_date": "2024-04-10", "inventory_total": "61.93", "inventory_ec": "40.93", "inventory_sc": "21.0", "arrival": "11.16", "demand": "13.11", "spot_taicang": "2356.0", "coal_5500": "752.0", "op_rate": "74.2", "lam_used": "1.0"}, {"week_ending": "2024-04-17", "price_date": "2024-04-17", "inventory_total": "60.27", "inventory_ec": "39.8", "inventory_sc": "20.47", "arrival": "10.01", "demand": "11.42", "spot_taicang": "2420.0", "coal_5500": "738.0", "op_rate": "71.8", "lam_used": "1.0"}, {"week_ending": "2024-04-24", "price_date": "2024-04-24", "inventory_total": "61.24", "inventory_ec": "41.64", "inventory_sc": "19.6", "arrival": "14.38", "demand": "12.04", "spot_taicang": "2324.0", "coal_5500": "741.0", "op_rate": "72.2", "lam_used": "1.0"}, {"week_ending": "2024-05-01", "price_date": "2024-05-06", "inventory_total": "63.36", "inventory_ec": "40.96", "inventory_sc": "22.4", "arrival": "16.57", "demand": "12.77", "spot_taicang": "2094.0", "coal_5500": "737.0", "op_rate": "73.9", "lam_used": "1.0"}, {"week_ending": "2024-05-08", "price_date": "2024-05-08", "inventory_total": "66.08", "inventory_ec": "43.38", "inventory_sc": "22.7", "arrival": "18.82", "demand": "13.23", "spot_taicang": "2067.0", "coal_5500": "739.0", "op_rate": "73.4", "lam_used": "1.0"}, {"week_ending": "2024-05-15", "price_date": "2024-05-15", "inventory_total": "63.93", "inventory_ec": "43.84", "inventory_sc": "20.09", "arrival": "14.01", "demand": "13.4", "spot_taicang": "2156.0", "coal_5500": "743.0", "op_rate": "70.1", "lam_used": "1.0"}, {"week_ending": "2024-05-22", "price_date": "2024-05-22", "inventory_total": "58.95", "inventory_ec": "39.13", "inventory_sc": "19.82", "arrival": "9.36", "demand": "12.93", "spot_taicang": "2548.0", "coal_5500": "753.0", "op_rate": "69.2", "lam_used": "1.0"}, {"week_ending": "2024-05-29", "price_date": "2024-05-29", "inventory_total": "54.13", "inventory_ec": "35.41", "inventory_sc": "18.72", "arrival": "8.09", "demand": "12.72", "spot_taicang": "2800.0", "coal_5500": "745.0", "op_rate": "69.4", "lam_used": "1.0"}, {"week_ending": "2024-06-05", "price_date": "2024-06-05", "inventory_total": "51.55", "inventory_ec": "34.0", "inventory_sc": "17.55", "arrival": "12.46", "demand": "12.92", "spot_taicang": "2877.0", "coal_5500": "743.0", "op_rate": "69.4", "lam_used": "1.0"}, {"week_ending": "2024-06-12", "price_date": "2024-06-12", "inventory_total": "54.38", "inventory_ec": "38.09", "inventory_sc": "16.29", "arrival": "12.41", "demand": "11.61", "spot_taicang": "2684.0", "coal_5500": "750.0", "op_rate": "67.9", "lam_used": "1.0"}, {"week_ending": "2024-06-19", "price_date": "2024-06-19", "inventory_total": "54.54", "inventory_ec": "35.37", "inventory_sc": "19.17", "arrival": "11.74", "demand": "11.86", "spot_taicang": "2837.0", "coal_5500": "751.0", "op_rate": "70.9", "lam_used": "1.0"}, {"week_ending": "2024-06-26", "price_date": "2024-06-26", "inventory_total": "53.3", "inventory_ec": "35.25", "inventory_sc": "18.05", "arrival": "10.8", "demand": "12.67", "spot_taicang": "2814.0", "coal_5500": "762.0", "op_rate": "69.0", "lam_used": "1.0"}, {"week_ending": "2024-07-03", "price_date": "2024-07-03", "inventory_total": "57.87", "inventory_ec": "36.92", "inventory_sc": "20.95", "arrival": "12.87", "demand": "11.29", "spot_taicang": "2597.0", "coal_5500": "763.0", "op_rate": "68.2", "lam_used": "1.0"}, {"week_ending": "2024-07-10", "price_date": "2024-07-10", "inventory_total": "65.0", "inventory_ec": "42.79", "inventory_sc": "22.21", "arrival": "15.6", "demand": "11.48", "spot_taicang": "2055.0", "coal_5500": "773.0", "op_rate": "67.7", "lam_used": "1.0"}, {"week_ending": "2024-07-17", "price_date": "2024-07-17", "inventory_total": "69.7", "inventory_ec": "45.64", "inventory_sc": "24.06", "arrival": "14.76", "demand": "10.64", "spot_taicang": "2039.0", "coal_5500": "773.0", "op_rate": "68.0", "lam_used": "0.35"}, {"week_ending": "2024-07-24", "price_date": "2024-07-24", "inventory_total": "71.14", "inventory_ec": "47.46", "inventory_sc": "23.68", "arrival": "16.67", "demand": "10.34", "spot_taicang": "2107.0", "coal_5500": "771.0", "op_rate": "67.5", "lam_used": "0.35"}, {"week_ending": "2024-07-31", "price_date": "2024-07-31", "inventory_total": "70.87", "inventory_ec": "46.34", "inventory_sc": "24.53", "arrival": "14.45", "demand": "11.29", "spot_taicang": "2124.0", "coal_5500": "785.0", "op_rate": "66.5", "lam_used": "0.35"}, {"week_ending": "2024-08-07", "price_date": "2024-08-07", "inventory_total": "71.69", "inventory_ec": "46.55", "inventory_sc": "25.14", "arrival": "14.17", "demand": "11.51", "spot_taicang": "1963.0", "coal_5500": "789.0", "op_rate": "68.2", "lam_used": "0.35"}, {"week_ending": "2024-08-14", "price_date": "2024-08-14", "inventory_total": "73.92", "inventory_ec": "50.05", "inventory_sc": "23.87", "arrival": "12.83", "demand": "10.85", "spot_taicang": "1994.0", "coal_5500": "793.0", "op_rate": "64.4", "lam_used": "0.35"}, {"week_ending": "2024-08-21", "price_date": "2024-08-21", "inventory_total": "76.15", "inventory_ec": "49.25", "inventory_sc": "26.9", "arrival": "15.47", "demand": "11.81", "spot_taicang": "2195.0", "coal_5500": "798.0", "op_rate": "66.6", "lam_used": "0.35"}, {"week_ending": "2024-08-28", "price_date": "2024-08-28", "inventory_total": "75.2", "inventory_ec": "51.5", "inventory_sc": "23.7", "arrival": "12.7", "demand": "10.07", "spot_taicang": "1844.0", "coal_5500": "807.0", "op_rate": "66.5", "lam_used": "0.35"}, {"week_ending": "2024-09-04", "price_date": "2024-09-04", "inventory_total": "74.76", "inventory_ec": "49.8", "inventory_sc": "24.96", "arrival": "12.97", "demand": "11.46", "spot_taicang": "2191.0", "coal_5500": "812.0", "op_rate": "65.3", "lam_used": "0.35"}, {"week_ending": "2024-09-11", "price_date": "2024-09-11", "inventory_total": "75.56", "inventory_ec": "51.03", "inventory_sc": "24.53", "arrival": "17.56", "demand": "11.32", "spot_taicang": "2143.0", "coal_5500": "808.0", "op_rate": "66.1", "lam_used": "0.35"}, {"week_ending": "2024-09-18", "price_date": "2024-09-18", "inventory_total": "70.57", "inventory_ec": "45.78", "inventory_sc": "24.79", "arrival": "8.54", "demand": "11.58", "spot_taicang": "2365.0", "coal_5500": "819.0", "op_rate": "64.9", "lam_used": "0.35"}, {"week_ending": "2024-09-25", "price_date": "2024-09-25", "inventory_total": "68.54", "inventory_ec": "45.62", "inventory_sc": "22.92", "arrival": "12.72", "demand": "11.98", "spot_taicang": "2329.0", "coal_5500": "815.0", "op_rate": "67.5", "lam_used": "0.35"}, {"week_ending": "2024-10-02", "price_date": "2024-10-02", "inventory_total": "71.98", "inventory_ec": "47.7", "inventory_sc": "24.28", "arrival": "15.21", "demand": "9.75", "spot_taicang": "2373.0", "coal_5500": "822.0", "op_rate": "66.9", "lam_used": "0.35"}, {"week_ending": "2024-10-09", "price_date": "2024-10-09", "inventory_total": "76.67", "inventory_ec": "51.36", "inventory_sc": "25.31", "arrival": "18.43", "demand": "10.34", "spot_taicang": "2067.0", "coal_5500": "808.0", "op_rate": "65.3", "lam_used": "0.35"}, {"week_ending": "2024-10-16", "price_date": "2024-10-16", "inventory_total": "78.86", "inventory_ec": "51.02", "inventory_sc": "27.84", "arrival": "20.61", "demand": "10.97", "spot_taicang": "2007.0", "coal_5500": "818.0", "op_rate": "65.9", "lam_used": "0.35"}, {"week_ending": "2024-10-23", "price_date": "2024-10-23", "inventory_total": "75.79", "inventory_ec": "49.06", "inventory_sc": "26.73", "arrival": "15.9", "demand": "10.89", "spot_taicang": "2078.0", "coal_5500": "821.0", "op_rate": "64.4", "lam_used": "0.35"}, {"week_ending": "2024-10-30", "price_date": "2024-10-30", "inventory_total": "76.32", "inventory_ec": "49.7", "inventory_sc": "26.62", "arrival": "13.52", "demand": "10.49", "spot_taicang": "1990.0", "coal_5500": "820.0", "op_rate": "65.6", "lam_used": "0.35"}, {"week_ending": "2024-11-06", "price_date": "2024-11-06", "inventory_total": "74.35", "inventory_ec": "49.3", "inventory_sc": "25.05", "arrival": "12.1", "demand": "12.42", "spot_taicang": "2247.0", "coal_5500": "806.0", "op_rate": "68.0", "lam_used": "0.35"}, {"week_ending": "2024-11-13", "price_date": "2024-11-13", "inventory_total": "72.49", "inventory_ec": "48.66", "inventory_sc": "23.83", "arrival": "16.83", "demand": "12.15", "spot_taicang": "2000.0", "coal_5500": "803.0", "op_rate": "66.2", "lam_used": "0.35"}, {"week_ending": "2024-11-20", "price_date": "2024-11-20", "inventory_total": "72.62", "inventory_ec": "47.42", "inventory_sc": "25.2", "arrival": "16.15", "demand": "12.0", "spot_taicang": "2016.0", "coal_5500": "800.0", "op_rate": "67.2", "lam_used": "0.35"}, {"week_ending": "2024-11-27", "price_date": "2024-11-27", "inventory_total": "74.72", "inventory_ec": "48.7", "inventory_sc": "26.02", "arrival": "16.76", "demand": "12.18", "spot_taicang": "2036.0", "coal_5500": "809.0", "op_rate": "68.2", "lam_used": "0.35"}, {"week_ending": "2024-12-04", "price_date": "2024-12-04", "inventory_total": "73.46", "inventory_ec": "48.12", "inventory_sc": "25.34", "arrival": "15.21", "demand": "10.21", "spot_taicang": "2221.0", "coal_5500": "804.0", "op_rate": "68.0", "lam_used": "0.35"}, {"week_ending": "2024-12-11", "price_date": "2024-12-11", "inventory_total": "69.96", "inventory_ec": "47.07", "inventory_sc": "22.89", "arrival": "13.69", "demand": "12.2", "spot_taicang": "2245.0", "coal_5500": "797.0", "op_rate": "66.6", "lam_used": "0.35"}, {"week_ending": "2024-12-18", "price_date": "2024-12-18", "inventory_total": "66.58", "inventory_ec": "44.52", "inventory_sc": "22.06", "arrival": "10.11", "demand": "13.05", "spot_taicang": "2323.0", "coal_5500": "796.0", "op_rate": "67.1", "lam_used": "0.35"}, {"week_ending": "2024-12-25", "price_date": "2024-12-25", "inventory_total": "58.6", "inventory_ec": "37.2", "inventory_sc": "21.4", "arrival": "3.87", "demand": "13.09", "spot_taicang": "2373.0", "coal_5500": "787.0", "op_rate": "69.0", "lam_used": "0.35"}, {"week_ending": "2025-01-01", "price_date": "2025-01-02", "inventory_total": "55.28", "inventory_ec": "37.47", "inventory_sc": "17.81", "arrival": "8.44", "demand": "11.16", "spot_taicang": "2384.0", "coal_5500": "790.0", "op_rate": "67.3", "lam_used": "0.35"}, {"week_ending": "2025-01-08", "price_date": "2025-01-08", "inventory_total": "53.23", "inventory_ec": "35.84", "inventory_sc": "17.39", "arrival": "7.8", "demand": "12.0", "spot_taicang": "2546.0", "coal_5500": "773.0", "op_rate": "69.4", "lam_used": "0.35"}, {"week_ending": "2025-01-15", "price_date": "2025-01-15", "inventory_total": "53.11", "inventory_ec": "34.13", "inventory_sc": "18.98", "arrival": "11.97", "demand": "12.29", "spot_taicang": "2462.0", "coal_5500": "766.0", "op_rate": "69.6", "lam_used": "0.35"}, {"week_ending": "2025-01-22", "price_date": "2025-01-22", "inventory_total": "53.56", "inventory_ec": "35.51", "inventory_sc": "18.05", "arrival": "11.24", "demand": "11.12", "spot_taicang": "2483.0", "coal_5500": "763.0", "op_rate": "67.6", "lam_used": "0.35"}, {"week_ending": "2025-01-29", "price_date": "2025-01-29", "inventory_total": "55.1", "inventory_ec": "36.5", "inventory_sc": "18.6", "arrival": "12.49", "demand": "13.24", "spot_taicang": "2382.0", "coal_5500": "765.0", "op_rate": "69.7", "lam_used": "0.35"}, {"week_ending": "2025-02-05", "price_date": "2025-02-05", "inventory_total": "58.99", "inventory_ec": "40.68", "inventory_sc": "18.31", "arrival": "9.89", "demand": "11.63", "spot_taicang": "2336.0", "coal_5500": "759.0", "op_rate": "71.8", "lam_used": "0.35"}, {"week_ending": "2025-02-12", "price_date": "2025-02-12", "inventory_total": "57.89", "inventory_ec": "37.8", "inventory_sc": "20.09", "arrival": "9.96", "demand": "12.43", "spot_taicang": "2394.0", "coal_5500": "751.0", "op_rate": "67.4", "lam_used": "0.35"}, {"week_ending": "2025-02-19", "price_date": "2025-02-19", "inventory_total": "55.17", "inventory_ec": "35.93", "inventory_sc": "19.24", "arrival": "7.01", "demand": "10.86", "spot_taicang": "2602.0", "coal_5500": "752.0", "op_rate": "71.5", "lam_used": "0.35"}, {"week_ending": "2025-02-26", "price_date": "2025-02-26", "inventory_total": "51.9", "inventory_ec": "33.34", "inventory_sc": "18.56", "arrival": "7.65", "demand": "11.29", "spot_taicang": "2511.0", "coal_5500": "744.0", "op_rate": "71.4", "lam_used": "0.35"}, {"week_ending": "2025-03-05", "price_date": "2025-03-05", "inventory_total": "47.88", "inventory_ec": "31.01", "inventory_sc": "16.87", "arrival": "9.6", "demand": "13.72", "spot_taicang": "2397.0", "coal_5500": "749.0", "op_rate": "72.4", "lam_used": "0.35"}, {"week_ending": "2025-03-12", "price_date": "2025-03-12", "inventory_total": "52.46", "inventory_ec": "34.54", "inventory_sc": "17.92", "arrival": "11.74", "demand": "11.23", "spot_taicang": "2446.0", "coal_5500": "734.0", "op_rate": "70.1", "lam_used": "0.35"}, {"week_ending": "2025-03-19", "price_date": "2025-03-19", "inventory_total": "48.89", "inventory_ec": "31.56", "inventory_sc": "17.33", "arrival": "8.24", "demand": "13.7", "spot_taicang": "2597.0", "coal_5500": "746.0", "op_rate": "74.0", "lam_used": "0.35"}, {"week_ending": "2025-03-26", "price_date": "2025-03-26", "inventory_total": "44.29", "inventory_ec": "28.67", "inventory_sc": "15.62", "arrival": "5.84", "demand": "11.71", "spot_taicang": "2509.0", "coal_5500": "738.0", "op_rate": "74.7", "lam_used": "0.35"}, {"week_ending": "2025-04-02", "price_date": "2025-04-02", "inventory_total": "41.31", "inventory_ec": "28.61", "inventory_sc": "12.7", "arrival": "5.7", "demand": "13.29", "spot_taicang": "2548.0", "coal_5500": "739.0", "op_rate": "72.2", "lam_used": "0.35"}, {"week_ending": "2025-04-09", "price_date": "2025-04-09", "inventory_total": "46.21", "inventory_ec": "30.51", "inventory_sc": "15.7", "arrival": "11.14", "demand": "11.98", "spot_taicang": "2752.0", "coal_5500": "746.0", "op_rate": "74.6", "lam_used": "0.35"}, {"week_ending": "2025-04-16", "price_date": "2025-04-16", "inventory_total": "48.7", "inventory_ec": "33.08", "inventory_sc": "15.62", "arrival": "11.57", "demand": "14.36", "spot_taicang": "2580.0", "coal_5500": "739.0", "op_rate": "74.5", "lam_used": "0.35"}, {"week_ending": "2025-04-23", "price_date": "2025-04-23", "inventory_total": "50.68", "inventory_ec": "33.02", "inventory_sc": "17.66", "arrival": "9.21", "demand": "12.24", "spot_taicang": "2446.0", "coal_5500": "745.0", "op_rate": "73.4", "lam_used": "0.35"}, {"week_ending": "2025-04-30", "price_date": "2025-04-30", "inventory_total": "55.09", "inventory_ec": "37.24", "inventory_sc": "17.85", "arrival": "14.97", "demand": "13.47", "spot_taicang": "2453.0", "coal_5500": "757.0", "op_rate": "74.4", "lam_used": "0.35"}, {"week_ending": "2025-05-07", "price_date": "2025-05-07", "inventory_total": "51.01", "inventory_ec": "34.91", "inventory_sc": "16.1", "arrival": "7.52", "demand": "13.22", "spot_taicang": "2557.0", "coal_5500": "748.0", "op_rate": "72.9", "lam_used": "0.35"}, {"week_ending": "2025-05-14", "price_date": "2025-05-14", "inventory_total": "53.81", "inventory_ec": "35.2", "inventory_sc": "18.61", "arrival": "14.59", "demand": "15.65", "spot_taicang": "2521.0", "coal_5500": "757.0", "op_rate": "75.6", "lam_used": "0.35"}, {"week_ending": "2025-05-21", "price_date": "2025-05-21", "inventory_total": "58.82", "inventory_ec": "38.81", "inventory_sc": "20.01", "arrival": "14.55", "demand": "13.11", "spot_taicang": "2328.0", "coal_5500": "763.0", "op_rate": "74.3", "lam_used": "0.04"}, {"week_ending": "2025-05-28", "price_date": "2025-05-28", "inventory_total": "63.34", "inventory_ec": "41.57", "inventory_sc": "21.77", "arrival": "15.92", "demand": "11.86", "spot_taicang": "2499.0", "coal_5500": "774.0", "op_rate": "76.2", "lam_used": "0.04"}, {"week_ending": "2025-06-04", "price_date": "2025-06-04", "inventory_total": "63.35", "inventory_ec": "43.43", "inventory_sc": "19.92", "arrival": "12.2", "demand": "11.46", "spot_taicang": "2475.0", "coal_5500": "778.0", "op_rate": "75.9", "lam_used": "0.04"}, {"week_ending": "2025-06-11", "price_date": "2025-06-11", "inventory_total": "67.15", "inventory_ec": "44.22", "inventory_sc": "22.93", "arrival": "15.62", "demand": "12.71", "spot_taicang": "2341.0", "coal_5500": "781.0", "op_rate": "72.8", "lam_used": "0.04"}, {"week_ending": "2025-06-18", "price_date": "2025-06-18", "inventory_total": "63.96", "inventory_ec": "41.36", "inventory_sc": "22.6", "arrival": "12.2", "demand": "13.64", "spot_taicang": "2339.0", "coal_5500": "781.0", "op_rate": "73.4", "lam_used": "0.04"}, {"week_ending": "2025-06-25", "price_date": "2025-06-25", "inventory_total": "59.12", "inventory_ec": "39.98", "inventory_sc": "19.14", "arrival": "7.89", "demand": "13.29", "spot_taicang": "2378.0", "coal_5500": "778.0", "op_rate": "73.2", "lam_used": "0.04"}, {"week_ending": "2025-07-02", "price_date": "2025-07-02", "inventory_total": "55.85", "inventory_ec": "37.8", "inventory_sc": "18.05", "arrival": "8.71", "demand": "10.74", "spot_taicang": "2585.0", "coal_5500": "791.0", "op_rate": "75.4", "lam_used": "0.04"}, {"week_ending": "2025-07-09", "price_date": "2025-07-09", "inventory_total": "53.34", "inventory_ec": "36.06", "inventory_sc": "17.28", "arrival": "9.36", "demand": "11.62", "spot_taicang": "2444.0", "coal_5500": "792.0", "op_rate": "75.6", "lam_used": "0.04"}, {"week_ending": "2025-07-16", "price_date": "2025-07-16", "inventory_total": "57.39", "inventory_ec": "37.68", "inventory_sc": "19.71", "arrival": "10.14", "demand": "12.34", "spot_taicang": "2403.0", "coal_5500": "799.0", "op_rate": "75.0", "lam_used": "0.04"}, {"week_ending": "2025-07-23", "price_date": "2025-07-23", "inventory_total": "59.1", "inventory_ec": "39.17", "inventory_sc": "19.93", "arrival": "9.88", "demand": "10.75", "spot_taicang": "2330.0", "coal_5500": "810.0", "op_rate": "73.3", "lam_used": "0.04"}, {"week_ending": "2025-07-30", "price_date": "2025-07-30", "inventory_total": "63.23", "inventory_ec": "41.47", "inventory_sc": "21.76", "arrival": "11.1", "demand": "11.34", "spot_taicang": "2399.0", "coal_5500": "819.0", "op_rate": "72.1", "lam_used": "0.04"}, {"week_ending": "2025-08-06", "price_date": "2025-08-06", "inventory_total": "67.28", "inventory_ec": "44.18", "inventory_sc": "23.1", "arrival": "14.11", "demand": "9.73", "spot_taicang": "2574.0", "coal_5500": "808.0", "op_rate": "72.9", "lam_used": "0.04"}, {"week_ending": "2025-08-13", "price_date": "2025-08-13", "inventory_total": "69.61", "inventory_ec": "46.03", "inventory_sc": "23.58", "arrival": "14.19", "demand": "10.93", "spot_taicang": "2288.0", "coal_5500": "815.0", "op_rate": "71.1", "lam_used": "0.04"}, {"week_ending": "2025-08-20", "price_date": "2025-08-20", "inventory_total": "76.12", "inventory_ec": "48.9", "inventory_sc": "27.22", "arrival": "17.76", "demand": "10.44", "spot_taicang": "2166.0", "coal_5500": "815.0", "op_rate": "72.7", "lam_used": "0.04"}, {"week_ending": "2025-08-27", "price_date": "2025-08-27", "inventory_total": "70.36", "inventory_ec": "46.96", "inventory_sc": "23.4", "arrival": "11.25", "demand": "11.07", "spot_taicang": "2492.0", "coal_5500": "813.0", "op_rate": "73.0", "lam_used": "0.04"}, {"week_ending": "2025-09-03", "price_date": "2025-09-03", "inventory_total": "72.39", "inventory_ec": "49.41", "inventory_sc": "22.98", "arrival": "12.81", "demand": "10.8", "spot_taicang": "2564.0", "coal_5500": "815.0", "op_rate": "70.7", "lam_used": "0.04"}, {"week_ending": "2025-09-10", "price_date": "2025-09-10", "inventory_total": "71.86", "inventory_ec": "46.81", "inventory_sc": "25.05", "arrival": "13.13", "demand": "10.59", "spot_taicang": "2488.0", "coal_5500": "820.0", "op_rate": "70.8", "lam_used": "0.04"}, {"week_ending": "2025-09-17", "price_date": "2025-09-17", "inventory_total": "74.59", "inventory_ec": "48.07", "inventory_sc": "26.52", "arrival": "13.36", "demand": "9.95", "spot_taicang": "2393.0", "coal_5500": "820.0", "op_rate": "73.5", "lam_used": "0.04"}, {"week_ending": "2025-09-24", "price_date": "2025-09-24", "inventory_total": "82.91", "inventory_ec": "53.91", "inventory_sc": "29.0", "arrival": "18.52", "demand": "9.45", "spot_taicang": "2477.0", "coal_5500": "809.0", "op_rate": "70.8", "lam_used": "0.04"}, {"week_ending": "2025-10-01", "price_date": "2025-10-01", "inventory_total": "83.25", "inventory_ec": "54.8", "inventory_sc": "28.45", "arrival": "14.63", "demand": "9.51", "spot_taicang": "2380.0", "coal_5500": "816.0", "op_rate": "70.6", "lam_used": "0.04"}, {"week_ending": "2025-10-08", "price_date": "2025-10-09", "inventory_total": "78.45", "inventory_ec": "51.25", "inventory_sc": "27.2", "arrival": "13.0", "demand": "10.5", "spot_taicang": "2386.0", "coal_5500": "803.0", "op_rate": "68.6", "lam_used": "0.04"}, {"week_ending": "2025-10-15", "price_date": "2025-10-15", "inventory_total": "77.97", "inventory_ec": "52.68", "inventory_sc": "25.29", "arrival": "12.22", "demand": "12.36", "spot_taicang": "2395.0", "coal_5500": "799.0", "op_rate": "69.4", "lam_used": "0.04"}, {"week_ending": "2025-10-22", "price_date": "2025-10-22", "inventory_total": "72.9", "inventory_ec": "49.0", "inventory_sc": "23.9", "arrival": "9.82", "demand": "9.87", "spot_taicang": "2392.0", "coal_5500": "799.0", "op_rate": "69.4", "lam_used": "0.04"}, {"week_ending": "2025-10-29", "price_date": "2025-10-29", "inventory_total": "63.57", "inventory_ec": "43.1", "inventory_sc": "20.47", "arrival": "4.69", "demand": "10.69", "spot_taicang": "2398.0", "coal_5500": "796.0", "op_rate": "69.7", "lam_used": "0.04"}, {"week_ending": "2025-11-05", "price_date": "2025-11-05", "inventory_total": "54.31", "inventory_ec": "35.79", "inventory_sc": "18.52", "arrival": "1.69", "demand": "11.45", "spot_taicang": "2586.0", "coal_5500": "791.0", "op_rate": "68.8", "lam_used": "0.04"}, {"week_ending": "2025-11-12", "price_date": "2025-11-12", "inventory_total": "55.56", "inventory_ec": "36.27", "inventory_sc": "19.29", "arrival": "8.49", "demand": "10.71", "spot_taicang": "2466.0", "coal_5500": "779.0", "op_rate": "68.4", "lam_used": "0.04"}, {"week_ending": "2025-11-19", "price_date": "2025-11-19", "inventory_total": "50.39", "inventory_ec": "34.0", "inventory_sc": "16.39", "arrival": "5.72", "demand": "12.56", "spot_taicang": "2340.0", "coal_5500": "784.0", "op_rate": "69.1", "lam_used": "0.04"}, {"week_ending": "2025-11-26", "price_date": "2025-11-26", "inventory_total": "56.41", "inventory_ec": "37.39", "inventory_sc": "19.02", "arrival": "13.45", "demand": "11.73", "spot_taicang": "2568.0", "coal_5500": "776.0", "op_rate": "70.0", "lam_used": "0.04"}, {"week_ending": "2025-12-03", "price_date": "2025-12-03", "inventory_total": "57.14", "inventory_ec": "38.51", "inventory_sc": "18.63", "arrival": "8.69", "demand": "10.75", "spot_taicang": "2280.0", "coal_5500": "781.0", "op_rate": "64.7", "lam_used": "0.04"}, {"week_ending": "2025-12-10", "price_date": "2025-12-10", "inventory_total": "61.64", "inventory_ec": "39.44", "inventory_sc": "22.2", "arrival": "11.73", "demand": "10.0", "spot_taicang": "2271.0", "coal_5500": "763.0", "op_rate": "67.6", "lam_used": "0.04"}, {"week_ending": "2025-12-17", "price_date": "2025-12-17", "inventory_total": "60.75", "inventory_ec": "39.35", "inventory_sc": "21.4", "arrival": "8.66", "demand": "10.55", "spot_taicang": "2356.0", "coal_5500": "759.0", "op_rate": "65.0", "lam_used": "0.04"}, {"week_ending": "2025-12-24", "price_date": "2025-12-24", "inventory_total": "64.09", "inventory_ec": "42.22", "inventory_sc": "21.87", "arrival": "11.13", "demand": "11.08", "spot_taicang": "2277.0", "coal_5500": "760.0", "op_rate": "65.6", "lam_used": "0.04"}, {"week_ending": "2025-12-31", "price_date": "2025-12-31", "inventory_total": "69.27", "inventory_ec": "46.7", "inventory_sc": "22.57", "arrival": "11.91", "demand": "12.26", "spot_taicang": "2412.0", "coal_5500": "762.0", "op_rate": "65.4", "lam_used": "0.04"}, {"week_ending": "2026-01-07", "price_date": "2026-01-07", "inventory_total": "67.38", "inventory_ec": "44.81", "inventory_sc": "22.57", "arrival": "7.1", "demand": "10.89", "spot_taicang": "2277.0", "coal_5500": "749.0", "op_rate": "65.6", "lam_used": "0.04"}, {"week_ending": "2026-01-14", "price_date": "2026-01-14", "inventory_total": "68.07", "inventory_ec": "45.67", "inventory_sc": "22.4", "arrival": "9.34", "demand": "10.65", "spot_taicang": "2379.0", "coal_5500": "729.0", "op_rate": "64.5", "lam_used": "0.04"}, {"week_ending": "2026-01-21", "price_date": "2026-01-21", "inventory_total": "67.02", "inventory_ec": "44.29", "inventory_sc": "22.73", "arrival": "7.21", "demand": "10.66", "spot_taicang": "2229.0", "coal_5500": "741.0", "op_rate": "65.5", "lam_used": "0.04"}, {"week_ending": "2026-01-28", "price_date": "2026-01-28", "inventory_total": "68.24", "inventory_ec": "45.19", "inventory_sc": "23.05", "arrival": "11.19", "demand": "12.71", "spot_taicang": "2011.0", "coal_5500": "745.0", "op_rate": "65.3", "lam_used": "0.7"}, {"week_ending": "2026-02-04", "price_date": "2026-02-04", "inventory_total": "70.4", "inventory_ec": "46.5", "inventory_sc": "23.9", "arrival": "11.97", "demand": "12.32", "spot_taicang": "1986.0", "coal_5500": "746.0", "op_rate": "68.6", "lam_used": "0.7"}, {"week_ending": "2026-02-11", "price_date": "2026-02-11", "inventory_total": "71.52", "inventory_ec": "47.39", "inventory_sc": "24.13", "arrival": "12.78", "demand": "11.59", "spot_taicang": "1999.0", "coal_5500": "739.0", "op_rate": "67.2", "lam_used": "0.7"}, {"week_ending": "2026-02-18", "price_date": "2026-02-18", "inventory_total": "77.66", "inventory_ec": "51.49", "inventory_sc": "26.17", "arrival": "12.68", "demand": "9.63", "spot_taicang": "1687.0", "coal_5500": "740.0", "op_rate": "67.0", "lam_used": "0.7"}, {"week_ending": "2026-02-25", "price_date": "2026-02-25", "inventory_total": "74.65", "inventory_ec": "49.36", "inventory_sc": "25.29", "arrival": "8.67", "demand": "11.26", "spot_taicang": "1743.0", "coal_5500": "742.0", "op_rate": "65.5", "lam_used": "0.7"}, {"week_ending": "2026-03-04", "price_date": "2026-03-04", "inventory_total": "68.86", "inventory_ec": "45.01", "inventory_sc": "23.85", "arrival": "10.51", "demand": "11.08", "spot_taicang": "2043.0", "coal_5500": "741.0", "op_rate": "66.0", "lam_used": "0.7"}, {"week_ending": "2026-03-11", "price_date": "2026-03-11", "inventory_total": "66.69", "inventory_ec": "45.62", "inventory_sc": "21.07", "arrival": "10.05", "demand": "11.59", "spot_taicang": "2212.0", "coal_5500": "748.0", "op_rate": "66.9", "lam_used": "0.7"}, {"week_ending": "2026-03-18", "price_date": "2026-03-18", "inventory_total": "56.86", "inventory_ec": "36.73", "inventory_sc": "20.13", "arrival": "4.94", "demand": "13.79", "spot_taicang": "2614.0", "coal_5500": "753.0", "op_rate": "67.3", "lam_used": "0.7"}, {"week_ending": "2026-03-25", "price_date": "2026-03-25", "inventory_total": "50.51", "inventory_ec": "33.82", "inventory_sc": "16.69", "arrival": "5.73", "demand": "11.54", "spot_taicang": "2868.0", "coal_5500": "753.0", "op_rate": "66.0", "lam_used": "0.7"}, {"week_ending": "2026-04-01", "price_date": "2026-04-01", "inventory_total": "48.62", "inventory_ec": "31.26", "inventory_sc": "17.36", "arrival": "8.49", "demand": "12.71", "spot_taicang": "2705.0", "coal_5500": "760.0", "op_rate": "66.6", "lam_used": "0.7"}, {"week_ending": "2026-04-08", "price_date": "2026-04-08", "inventory_total": "48.04", "inventory_ec": "32.72", "inventory_sc": "15.32", "arrival": "8.93", "demand": "11.86", "spot_taicang": "2916.0", "coal_5500": "766.0", "op_rate": "67.9", "lam_used": "0.7"}, {"week_ending": "2026-04-15", "price_date": "2026-04-15", "inventory_total": "51.67", "inventory_ec": "35.35", "inventory_sc": "16.32", "arrival": "11.46", "demand": "12.37", "spot_taicang": "2765.0", "coal_5500": "769.0", "op_rate": "68.2", "lam_used": "0.7"}, {"week_ending": "2026-04-22", "price_date": "2026-04-22", "inventory_total": "56.36", "inventory_ec": "37.02", "inventory_sc": "19.34", "arrival": "12.18", "demand": "14.07", "spot_taicang": "2526.0", "coal_5500": "776.0", "op_rate": "68.1", "lam_used": "0.7"}, {"week_ending": "2026-04-29", "price_date": "2026-04-29", "inventory_total": "60.94", "inventory_ec": "40.53", "inventory_sc": "20.41", "arrival": "14.99", "demand": "11.49", "spot_taicang": "2377.0", "coal_5500": "771.0", "op_rate": "68.5", "lam_used": "0.7"}, {"week_ending": "2026-05-06", "price_date": "2026-05-06", "inventory_total": "60.89", "inventory_ec": "40.0", "inventory_sc": "20.89", "arrival": "14.5", "demand": "14.31", "spot_taicang": "2535.0", "coal_5500": "790.0", "op_rate": "69.3", "lam_used": "0.7"}, {"week_ending": "2026-05-13", "price_date": "2026-05-13", "inventory_total": "54.86", "inventory_ec": "36.81", "inventory_sc": "18.05", "arrival": "11.37", "demand": "14.35", "spot_taicang": "2879.0", "coal_5500": "787.0", "op_rate": "68.2", "lam_used": "0.7"}, {"week_ending": "2026-05-20", "price_date": "2026-05-20", "inventory_total": "56.67", "inventory_ec": "38.21", "inventory_sc": "18.46", "arrival": "15.47", "demand": "11.91", "spot_taicang": "2575.0", "coal_5500": "793.0", "op_rate": "69.5", "lam_used": "0.7"}, {"week_ending": "2026-05-27", "price_date": "2026-05-27", "inventory_total": "59.69", "inventory_ec": "38.86", "inventory_sc": "20.83", "arrival": "15.42", "demand": "12.53", "spot_taicang": "2246.0", "coal_5500": "808.0", "op_rate": "68.5", "lam_used": "0.7"}, {"week_ending": "2026-06-03", "price_date": "2026-06-03", "inventory_total": "58.9", "inventory_ec": "39.89", "inventory_sc": "19.01", "arrival": "14.75", "demand": "12.46", "spot_taicang": "2341.0", "coal_5500": "806.0", "op_rate": "70.0", "lam_used": "0.7"}, {"week_ending": "2026-06-10", "price_date": "2026-06-10", "inventory_total": "56.81", "inventory_ec": "35.39", "inventory_sc": "21.42", "arrival": "11.67", "demand": "11.14", "spot_taicang": "2797.0", "coal_5500": "813.0", "op_rate": "71.1", "lam_used": "0.7"}, {"week_ending": "2026-06-17", "price_date": "2026-06-17", "inventory_total": "63.12", "inventory_ec": "41.79", "inventory_sc": "21.33", "arrival": "16.97", "demand": "12.08", "spot_taicang": "2305.0", "coal_5500": "810.0", "op_rate": "72.2", "lam_used": "0.7"}, {"week_ending": "2026-06-24", "price_date": "2026-06-24", "inventory_total": "60.56", "inventory_ec": "40.17", "inventory_sc": "20.39", "arrival": "13.43", "demand": "13.94", "spot_taicang": "2443.0", "coal_5500": "809.0", "op_rate": "73.6", "lam_used": "0.7"}, {"week_ending": "2026-07-01", "price_date": "2026-07-01", "inventory_total": "63.77", "inventory_ec": "41.96", "inventory_sc": "21.81", "arrival": "18.82", "demand": "11.25", "spot_taicang": "2250.0", "coal_5500": "815.0", "op_rate": "69.8", "lam_used": "0.7"}, {"week_ending": "2026-07-08", "price_date": "2026-07-08", "inventory_total": "68.73", "inventory_ec": "46.02", "inventory_sc": "22.71", "arrival": "19.0", "demand": "11.18", "spot_taicang": "2103.0", "coal_5500": "827.0", "op_rate": "70.7", "lam_used": "0.7"}, {"week_ending": "2026-07-15", "price_date": "2026-07-15", "inventory_total": "74.03", "inventory_ec": "50.68", "inventory_sc": "23.35", "arrival": "17.94", "demand": "11.17", "spot_taicang": "1841.0", "coal_5500": "812.0", "op_rate": "71.5", "lam_used": "0.7"}, {"week_ending": "2026-07-22", "price_date": "2026-07-22", "inventory_total": "71.75", "inventory_ec": "48.08", "inventory_sc": "23.67", "arrival": "15.75", "demand": "11.92", "spot_taicang": "1863.0", "coal_5500": "819.0", "op_rate": "73.6", "lam_used": "0.7"}, {"week_ending": "2026-07-29", "price_date": "2026-07-29", "inventory_total": "71.64", "inventory_ec": "46.08", "inventory_sc": "25.56", "arrival": "14.07", "demand": "7.86", "spot_taicang": "1916.0", "coal_5500": "818.0", "op_rate": "73.7", "lam_used": "0.7"}, {"week_ending": "2026-08-05", "price_date": "2026-08-05", "inventory_total": "64.6", "inventory_ec": "41.79", "inventory_sc": "22.81", "arrival": "10.25", "demand": "11.05", "spot_taicang": "2012.0", "coal_5500": "814.0", "op_rate": "71.6", "lam_used": "0.7"}, {"week_ending": "2026-08-12", "price_date": "2026-08-12", "inventory_total": "60.54", "inventory_ec": "39.27", "inventory_sc": "21.27", "arrival": "9.67", "demand": "11.42", "spot_taicang": "2397.0", "coal_5500": "811.0", "op_rate": "72.1", "lam_used": "0.7"}, {"week_ending": "2026-08-19", "price_date": "2026-08-19", "inventory_total": "55.36", "inventory_ec": "36.18", "inventory_sc": "19.18", "arrival": "7.22", "demand": "12.17", "spot_taicang": "2623.0", "coal_5500": "812.0", "op_rate": "73.7", "lam_used": "0.7"}, {"week_ending": "2026-08-26", "price_date": "2026-08-26", "inventory_total": "54.57", "inventory_ec": "37.3", "inventory_sc": "17.27", "arrival": "7.13", "demand": "10.68", "spot_taicang": "2667.0", "coal_5500": "809.0", "op_rate": "72.7", "lam_used": "0.7"}, {"week_ending": "2026-09-02", "price_date": "2026-09-02", "inventory_total": "56.0", "inventory_ec": "36.7", "inventory_sc": "19.3", "arrival": "13.47", "demand": "9.85", "spot_taicang": "2692.0", "coal_5500": "799.0", "op_rate": "73.4", "lam_used": "0.7"}, {"week_ending": "2026-09-09", "price_date": "2026-09-09", "inventory_total": "56.97", "inventory_ec": "36.32", "inventory_sc": "20.65", "arrival": "11.94", "demand": "10.39", "spot_taicang": "2500.0", "coal_5500": "803.0", "op_rate": "73.6", "lam_used": "0.7"}, {"week_ending": "2026-09-16", "price_date": "2026-09-16", "inventory_total": "65.47", "inventory_ec": "43.34", "inventory_sc": "22.13", "arrival": "17.87", "demand": "11.05", "spot_taicang": "2210.0", "coal_5500": "800.0", "op_rate": "75.3", "lam_used": "0.7"}, {"week_ending": "2026-09-23", "price_date": "2026-09-23", "inventory_total": "70.79", "inventory_ec": "45.55", "inventory_sc": "25.24", "arrival": "19.91", "demand": "9.14", "spot_taicang": "2056.0", "coal_5500": "788.0", "op_rate": "75.7", "lam_used": "0.7"}, {"week_ending": "2026-09-30", "price_date": "2026-09-30", "inventory_total": "78.39", "inventory_ec": "49.73", "inventory_sc": "28.66", "arrival": "22.5", "demand": "11.52", "spot_taicang": "1668.0", "coal_5500": "777.0", "op_rate": "74.9", "lam_used": "0.7"}], "meta": {"demo": {"status": "DEMO_SIMULATED", "product": "甲醇（工业级，江苏太仓港口出罐）", "inventory": {"name": "中国甲醇样本港口库存（总）", "unit": "万吨", "freq": "周度（调查日=周三）", "region": "华东（江苏/浙江各港口）+ 华南", "source": "DEMO：按隆众资讯周度口径拟真，非真实市场数据", "release_lag_days": 0}, "price": {"name": "江苏太仓甲醇出罐现货价（现汇）", "unit": "元/吨", "freq": "周度（取当周价格锚日收盘）", "region": "江苏太仓", "source": "DEMO：按隆众/我的钢铁日报口径拟真，非真实市场数据", "release_lag_days": 0}, "weeks": 156, "first": "2023-10-11", "last": "2026-09-30", "seed": 20261020, "caveat": "本文件所有数值为教学/演示用拟真数据（机制见 scripts/make_data.py），不得作为真实行情或研究结论引用。"}, "real": {"MA0": {"name": "郑商所甲醇期货主力连续（收盘价/结算价）", "unit": "元/吨", "freq": "日度交易日", "source": "新浪财经公开 K 线接口 InnerFuturesNewService.getDailyKLine，symbol=MA0", "coverage": ["2014-12-24", "2026-10-19"], "rows": 2862}}}, "dates": ["2023-10-11", "2023-10-18", "2023-10-25", "2023-11-01", "2023-11-08", "2023-11-15", "2023-11-22", "2023-11-29", "2023-12-06", "2023-12-13", "2023-12-20", "2023-12-27", "2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24", "2024-01-31", "2024-02-07", "2024-02-14", "2024-02-21", "2024-02-28", "2024-03-06", "2024-03-13", "2024-03-20", "2024-03-27", "2024-04-03", "2024-04-10", "2024-04-17", "2024-04-24", "2024-05-01", "2024-05-08", "2024-05-15", "2024-05-22", "2024-05-29", "2024-06-05", "2024-06-12", "2024-06-19", "2024-06-26", "2024-07-03", "2024-07-10", "2024-07-17", "2024-07-24", "2024-07-31", "2024-08-07", "2024-08-14", "2024-08-21", "2024-08-28", "2024-09-04", "2024-09-11", "2024-09-18", "2024-09-25", "2024-10-02", "2024-10-09", "2024-10-16", "2024-10-23", "2024-10-30", "2024-11-06", "2024-11-13", "2024-11-20", "2024-11-27", "2024-12-04", "2024-12-11", "2024-12-18", "2024-12-25", "2025-01-01", "2025-01-08", "2025-01-15", "2025-01-22", "2025-01-29", "2025-02-05", "2025-02-12", "2025-02-19", "2025-02-26", "2025-03-05", "2025-03-12", "2025-03-19", "2025-03-26", "2025-04-02", "2025-04-09", "2025-04-16", "2025-04-23", "2025-04-30", "2025-05-07", "2025-05-14", "2025-05-21", "2025-05-28", "2025-06-04", "2025-06-11", "2025-06-18", "2025-06-25", "2025-07-02", "2025-07-09", "2025-07-16", "2025-07-23", "2025-07-30", "2025-08-06", "2025-08-13", "2025-08-20", "2025-08-27", "2025-09-03", "2025-09-10", "2025-09-17", "2025-09-24", "2025-10-01", "2025-10-08", "2025-10-15", "2025-10-22", "2025-10-29", "2025-11-05", "2025-11-12", "2025-11-19", "2025-11-26", "2025-12-03", "2025-12-10", "2025-12-17", "2025-12-24", "2025-12-31", "2026-01-07", "2026-01-14", "2026-01-21", "2026-01-28", "2026-02-04", "2026-02-11", "2026-02-18", "2026-02-25", "2026-03-04", "2026-03-11", "2026-03-18", "2026-03-25", "2026-04-01", "2026-04-08", "2026-04-15", "2026-04-22", "2026-04-29", "2026-05-06", "2026-05-13", "2026-05-20", "2026-05-27", "2026-06-03", "2026-06-10", "2026-06-17", "2026-06-24", "2026-07-01", "2026-07-08", "2026-07-15", "2026-07-22", "2026-07-29", "2026-08-05", "2026-08-12", "2026-08-19", "2026-08-26", "2026-09-02", "2026-09-09", "2026-09-16", "2026-09-23", "2026-09-30"], "series": {"inventory_total": [57.54, 60.29, 55.24, 57.64, 67.02, 67.23, 64.21, 67.39, 65.95, 58.84, 54.79, 52.11, 50.68, 50.17, 52.38, 61.48, 60.35, 61.99, 64.95, 67.47, 69.29, 67.23, 70.42, 69.94, 65.79, 63.81, 61.93, 60.27, 61.24, 63.36, 66.08, 63.93, 58.95, 54.13, 51.55, 54.38, 54.54, 53.3, 57.87, 65.0, 69.7, 71.14, 70.87, 71.69, 73.92, 76.15, 75.2, 74.76, 75.56, 70.57, 68.54, 71.98, 76.67, 78.86, 75.79, 76.32, 74.35, 72.49, 72.62, 74.72, 73.46, 69.96, 66.58, 58.6, 55.28, 53.23, 53.11, 53.56, 55.1, 58.99, 57.89, 55.17, 51.9, 47.88, 52.46, 48.89, 44.29, 41.31, 46.21, 48.7, 50.68, 55.09, 51.01, 53.81, 58.82, 63.34, 63.35, 67.15, 63.96, 59.12, 55.85, 53.34, 57.39, 59.1, 63.23, 67.28, 69.61, 76.12, 70.36, 72.39, 71.86, 74.59, 82.91, 83.25, 78.45, 77.97, 72.9, 63.57, 54.31, 55.56, 50.39, 56.41, 57.14, 61.64, 60.75, 64.09, 69.27, 67.38, 68.07, 67.02, 68.24, 70.4, 71.52, 77.66, 74.65, 68.86, 66.69, 56.86, 50.51, 48.62, 48.04, 51.67, 56.36, 60.94, 60.89, 54.86, 56.67, 59.69, 58.9, 56.81, 63.12, 60.56, 63.77, 68.73, 74.03, 71.75, 71.64, 64.6, 60.54, 55.36, 54.57, 56.0, 56.97, 65.47, 70.79, 78.39], "inventory_ec": [38.52, 37.3, 37.12, 38.53, 43.43, 45.81, 42.73, 43.85, 43.43, 38.1, 35.39, 33.63, 33.78, 31.9, 35.91, 40.43, 37.44, 40.94, 40.92, 44.99, 45.21, 44.52, 47.26, 47.81, 43.54, 41.19, 40.93, 39.8, 41.64, 40.96, 43.38, 43.84, 39.13, 35.41, 34.0, 38.09, 35.37, 35.25, 36.92, 42.79, 45.64, 47.46, 46.34, 46.55, 50.05, 49.25, 51.5, 49.8, 51.03, 45.78, 45.62, 47.7, 51.36, 51.02, 49.06, 49.7, 49.3, 48.66, 47.42, 48.7, 48.12, 47.07, 44.52, 37.2, 37.47, 35.84, 34.13, 35.51, 36.5, 40.68, 37.8, 35.93, 33.34, 31.01, 34.54, 31.56, 28.67, 28.61, 30.51, 33.08, 33.02, 37.24, 34.91, 35.2, 38.81, 41.57, 43.43, 44.22, 41.36, 39.98, 37.8, 36.06, 37.68, 39.17, 41.47, 44.18, 46.03, 48.9, 46.96, 49.41, 46.81, 48.07, 53.91, 54.8, 51.25, 52.68, 49.0, 43.1, 35.79, 36.27, 34.0, 37.39, 38.51, 39.44, 39.35, 42.22, 46.7, 44.81, 45.67, 44.29, 45.19, 46.5, 47.39, 51.49, 49.36, 45.01, 45.62, 36.73, 33.82, 31.26, 32.72, 35.35, 37.02, 40.53, 40.0, 36.81, 38.21, 38.86, 39.89, 35.39, 41.79, 40.17, 41.96, 46.02, 50.68, 48.08, 46.08, 41.79, 39.27, 36.18, 37.3, 36.7, 36.32, 43.34, 45.55, 49.73], "inventory_sc": [19.02, 22.99, 18.12, 19.11, 23.59, 21.42, 21.48, 23.54, 22.52, 20.74, 19.4, 18.48, 16.9, 18.27, 16.47, 21.05, 22.91, 21.05, 24.03, 22.48, 24.08, 22.71, 23.16, 22.13, 22.25, 22.62, 21.0, 20.47, 19.6, 22.4, 22.7, 20.09, 19.82, 18.72, 17.55, 16.29, 19.17, 18.05, 20.95, 22.21, 24.06, 23.68, 24.53, 25.14, 23.87, 26.9, 23.7, 24.96, 24.53, 24.79, 22.92, 24.28, 25.31, 27.84, 26.73, 26.62, 25.05, 23.83, 25.2, 26.02, 25.34, 22.89, 22.06, 21.4, 17.81, 17.39, 18.98, 18.05, 18.6, 18.31, 20.09, 19.24, 18.56, 16.87, 17.92, 17.33, 15.62, 12.7, 15.7, 15.62, 17.66, 17.85, 16.1, 18.61, 20.01, 21.77, 19.92, 22.93, 22.6, 19.14, 18.05, 17.28, 19.71, 19.93, 21.76, 23.1, 23.58, 27.22, 23.4, 22.98, 25.05, 26.52, 29.0, 28.45, 27.2, 25.29, 23.9, 20.47, 18.52, 19.29, 16.39, 19.02, 18.63, 22.2, 21.4, 21.87, 22.57, 22.57, 22.4, 22.73, 23.05, 23.9, 24.13, 26.17, 25.29, 23.85, 21.07, 20.13, 16.69, 17.36, 15.32, 16.32, 19.34, 20.41, 20.89, 18.05, 18.46, 20.83, 19.01, 21.42, 21.33, 20.39, 21.81, 22.71, 23.35, 23.67, 25.56, 22.81, 21.27, 19.18, 17.27, 19.3, 20.65, 22.13, 25.24, 28.66], "spot_taicang": [2640.0, 2444.0, 2938.0, 2726.0, 2069.0, 2050.0, 2155.0, 2087.0, 2181.0, 2675.0, 2940.0, 3228.0, 2983.0, 3225.0, 3208.0, 2313.0, 2505.0, 2505.0, 2245.0, 2193.0, 1902.0, 1998.0, 1749.0, 1943.0, 1992.0, 2173.0, 2356.0, 2420.0, 2324.0, 2094.0, 2067.0, 2156.0, 2548.0, 2800.0, 2877.0, 2684.0, 2837.0, 2814.0, 2597.0, 2055.0, 2039.0, 2107.0, 2124.0, 1963.0, 1994.0, 2195.0, 1844.0, 2191.0, 2143.0, 2365.0, 2329.0, 2373.0, 2067.0, 2007.0, 2078.0, 1990.0, 2247.0, 2000.0, 2016.0, 2036.0, 2221.0, 2245.0, 2323.0, 2373.0, 2384.0, 2546.0, 2462.0, 2483.0, 2382.0, 2336.0, 2394.0, 2602.0, 2511.0, 2397.0, 2446.0, 2597.0, 2509.0, 2548.0, 2752.0, 2580.0, 2446.0, 2453.0, 2557.0, 2521.0, 2328.0, 2499.0, 2475.0, 2341.0, 2339.0, 2378.0, 2585.0, 2444.0, 2403.0, 2330.0, 2399.0, 2574.0, 2288.0, 2166.0, 2492.0, 2564.0, 2488.0, 2393.0, 2477.0, 2380.0, 2386.0, 2395.0, 2392.0, 2398.0, 2586.0, 2466.0, 2340.0, 2568.0, 2280.0, 2271.0, 2356.0, 2277.0, 2412.0, 2277.0, 2379.0, 2229.0, 2011.0, 1986.0, 1999.0, 1687.0, 1743.0, 2043.0, 2212.0, 2614.0, 2868.0, 2705.0, 2916.0, 2765.0, 2526.0, 2377.0, 2535.0, 2879.0, 2575.0, 2246.0, 2341.0, 2797.0, 2305.0, 2443.0, 2250.0, 2103.0, 1841.0, 1863.0, 1916.0, 2012.0, 2397.0, 2623.0, 2667.0, 2692.0, 2500.0, 2210.0, 2056.0, 1668.0], "coal_5500": [799.0, 815.0, 811.0, 808.0, 808.0, 818.0, 821.0, 812.0, 814.0, 822.0, 818.0, 810.0, 807.0, 805.0, 803.0, 791.0, 797.0, 782.0, 781.0, 784.0, 780.0, 762.0, 765.0, 757.0, 759.0, 755.0, 752.0, 738.0, 741.0, 737.0, 739.0, 743.0, 753.0, 745.0, 743.0, 750.0, 751.0, 762.0, 763.0, 773.0, 773.0, 771.0, 785.0, 789.0, 793.0, 798.0, 807.0, 812.0, 808.0, 819.0, 815.0, 822.0, 808.0, 818.0, 821.0, 820.0, 806.0, 803.0, 800.0, 809.0, 804.0, 797.0, 796.0, 787.0, 790.0, 773.0, 766.0, 763.0, 765.0, 759.0, 751.0, 752.0, 744.0, 749.0, 734.0, 746.0, 738.0, 739.0, 746.0, 739.0, 745.0, 757.0, 748.0, 757.0, 763.0, 774.0, 778.0, 781.0, 781.0, 778.0, 791.0, 792.0, 799.0, 810.0, 819.0, 808.0, 815.0, 815.0, 813.0, 815.0, 820.0, 820.0, 809.0, 816.0, 803.0, 799.0, 799.0, 796.0, 791.0, 779.0, 784.0, 776.0, 781.0, 763.0, 759.0, 760.0, 762.0, 749.0, 729.0, 741.0, 745.0, 746.0, 739.0, 740.0, 742.0, 741.0, 748.0, 753.0, 753.0, 760.0, 766.0, 769.0, 776.0, 771.0, 790.0, 787.0, 793.0, 808.0, 806.0, 813.0, 810.0, 809.0, 815.0, 827.0, 812.0, 819.0, 818.0, 814.0, 811.0, 812.0, 809.0, 799.0, 803.0, 800.0, 788.0, 777.0], "op_rate": [70.0, 70.3, 68.7, 71.4, 71.4, 72.8, 70.8, 71.7, 72.4, 72.7, 73.6, 74.9, 74.1, 74.2, 73.4, 73.5, 74.7, 73.7, 73.6, 73.4, 73.5, 73.6, 72.5, 73.6, 74.1, 73.8, 74.2, 71.8, 72.2, 73.9, 73.4, 70.1, 69.2, 69.4, 69.4, 67.9, 70.9, 69.0, 68.2, 67.7, 68.0, 67.5, 66.5, 68.2, 64.4, 66.6, 66.5, 65.3, 66.1, 64.9, 67.5, 66.9, 65.3, 65.9, 64.4, 65.6, 68.0, 66.2, 67.2, 68.2, 68.0, 66.6, 67.1, 69.0, 67.3, 69.4, 69.6, 67.6, 69.7, 71.8, 67.4, 71.5, 71.4, 72.4, 70.1, 74.0, 74.7, 72.2, 74.6, 74.5, 73.4, 74.4, 72.9, 75.6, 74.3, 76.2, 75.9, 72.8, 73.4, 73.2, 75.4, 75.6, 75.0, 73.3, 72.1, 72.9, 71.1, 72.7, 73.0, 70.7, 70.8, 73.5, 70.8, 70.6, 68.6, 69.4, 69.4, 69.7, 68.8, 68.4, 69.1, 70.0, 64.7, 67.6, 65.0, 65.6, 65.4, 65.6, 64.5, 65.5, 65.3, 68.6, 67.2, 67.0, 65.5, 66.0, 66.9, 67.3, 66.0, 66.6, 67.9, 68.2, 68.1, 68.5, 69.3, 68.2, 69.5, 68.5, 70.0, 71.1, 72.2, 73.6, 69.8, 70.7, 71.5, 73.6, 73.7, 71.6, 72.1, 73.7, 72.7, 73.4, 73.6, 75.3, 75.7, 74.9], "arrival": [7.03, 10.42, 8.14, 13.42, 16.04, 12.18, 9.36, 15.03, 11.34, 8.49, 9.22, 9.71, 6.56, 3.68, 7.52, 16.95, 9.77, 12.6, 12.92, 13.69, 13.25, 10.8, 14.34, 13.04, 11.06, 10.12, 11.16, 10.01, 14.38, 16.57, 18.82, 14.01, 9.36, 8.09, 12.46, 12.41, 11.74, 10.8, 12.87, 15.6, 14.76, 16.67, 14.45, 14.17, 12.83, 15.47, 12.7, 12.97, 17.56, 8.54, 12.72, 15.21, 18.43, 20.61, 15.9, 13.52, 12.1, 16.83, 16.15, 16.76, 15.21, 13.69, 10.11, 3.87, 8.44, 7.8, 11.97, 11.24, 12.49, 9.89, 9.96, 7.01, 7.65, 9.6, 11.74, 8.24, 5.84, 5.7, 11.14, 11.57, 9.21, 14.97, 7.52, 14.59, 14.55, 15.92, 12.2, 15.62, 12.2, 7.89, 8.71, 9.36, 10.14, 9.88, 11.1, 14.11, 14.19, 17.76, 11.25, 12.81, 13.13, 13.36, 18.52, 14.63, 13.0, 12.22, 9.82, 4.69, 1.69, 8.49, 5.72, 13.45, 8.69, 11.73, 8.66, 11.13, 11.91, 7.1, 9.34, 7.21, 11.19, 11.97, 12.78, 12.68, 8.67, 10.51, 10.05, 4.94, 5.73, 8.49, 8.93, 11.46, 12.18, 14.99, 14.5, 11.37, 15.47, 15.42, 14.75, 11.67, 16.97, 13.43, 18.82, 19.0, 17.94, 15.75, 14.07, 10.25, 9.67, 7.22, 7.13, 13.47, 11.94, 17.87, 19.91, 22.5], "demand": [13.19, 11.88, 11.28, 11.99, 11.28, 12.52, 13.79, 11.68, 12.44, 12.2, 13.38, 11.82, 12.02, 10.18, 10.59, 12.55, 12.25, 11.52, 12.06, 10.58, 10.39, 11.16, 11.44, 12.23, 11.77, 12.85, 13.11, 11.42, 12.04, 12.77, 13.23, 13.4, 12.93, 12.72, 12.92, 11.61, 11.86, 12.67, 11.29, 11.48, 10.64, 10.34, 11.29, 11.51, 10.85, 11.81, 10.07, 11.46, 11.32, 11.58, 11.98, 9.75, 10.34, 10.97, 10.89, 10.49, 12.42, 12.15, 12.0, 12.18, 10.21, 12.2, 13.05, 13.09, 11.16, 12.0, 12.29, 11.12, 13.24, 11.63, 12.43, 10.86, 11.29, 13.72, 11.23, 13.7, 11.71, 13.29, 11.98, 14.36, 12.24, 13.47, 13.22, 15.65, 13.11, 11.86, 11.46, 12.71, 13.64, 13.29, 10.74, 11.62, 12.34, 10.75, 11.34, 9.73, 10.93, 10.44, 11.07, 10.8, 10.59, 9.95, 9.45, 9.51, 10.5, 12.36, 9.87, 10.69, 11.45, 10.71, 12.56, 11.73, 10.75, 10.0, 10.55, 11.08, 12.26, 10.89, 10.65, 10.66, 12.71, 12.32, 11.59, 9.63, 11.26, 11.08, 11.59, 13.79, 11.54, 12.71, 11.86, 12.37, 14.07, 11.49, 14.31, 14.35, 11.91, 12.53, 12.46, 11.14, 12.08, 13.94, 11.25, 11.18, 11.17, 11.92, 7.86, 11.05, 11.42, 12.17, 10.68, 9.85, 10.39, 11.05, 9.14, 11.52]}, "labels": {"inventory_total": ["港口库存（总）", "万吨"], "inventory_ec": ["港口库存（华东）", "万吨"], "inventory_sc": ["港口库存（华南）", "万吨"], "spot_taicang": ["江苏太仓出罐现货价", "元/吨"], "coal_5500": ["动力煤 5500 现货（成本参照）", "元/吨"], "op_rate": ["下游加权开工率", "%"], "arrival": ["周度到港量", "万吨"], "demand": ["周度下游提货量", "万吨"]}, "events": [{"start": "2024-01-01", "end": "2024-02-29", "kind": "季节性", "title": "春节前后累库窗口", "note": "国产与进口到港集中在节前，下游停工，港口库存通常季节性抬升；此阶段库存与价格的相关性往往被季节性主导。"}, {"start": "2024-03-15", "end": "2024-05-31", "kind": "供给", "title": "春季装置检修与进口到港节奏", "note": "内地装置春季检修、进口船期后移，港口去库与到港断档并存，价格对库存的敏感度上升。"}, {"start": "2024-06-01", "end": "2024-08-31", "kind": "需求", "title": "传统需求淡季（甲醛/板材、MTO 利润承压）", "note": "淡季下游提货走弱，库存变动更多由到港驱动而非需求驱动，需分开看“到港冲击”和“需求变化”。"}, {"start": "2024-09-01", "end": "2024-10-31", "kind": "成本", "title": "冬季前能源成本与运费抬升预期", "note": "煤价/运费预期上行时，成本项对价格的解释力上升，会稀释库存与现货价的相关强度。"}, {"start": "2024-11-01", "end": "2025-03-31", "kind": "季节性", "title": "冬季天然气限气与进口节奏切换", "note": "气头装置降负荷、进口长约执行节奏变化，库存与价格的关系容易出现阶段性失效。"}, {"start": "2025-04-01", "end": "2025-08-31", "kind": "供给", "title": "新增产能投放与进口到港回升", "note": "供给端增量使库存中枢抬升，价格对库存水平的弹性可能改变，需要按阶段重算相关系数。"}, {"start": "2025-09-01", "end": "2026-01-31", "kind": "需求", "title": "下游利润压缩、需求转弱阶段", "note": "需求走弱时，价格由“成本+预期”主导的成分上升，库存与价格的相关性常出现弱化/脱钩。"}, {"start": "2026-02-01", "end": "2026-03-31", "kind": "季节性", "title": "春节后复工节奏与船期错配", "note": "复工慢于往年时，库存堆积但价格不跌，二者短期脱钩。"}, {"start": "2026-04-01", "end": "2026-09-30", "kind": "统计口径", "title": "港口样本口径与统计周期提示", "note": "港口样本库存为企业/第三方机构抽样口径，调查日、发布时点（通常周三下午）与价格报价时点（当日午评）不一致时，需按同一时点对齐。"}], "eventMeta": {"disclaimer": "事件仅用于解释相关系数的阶段性变化及口径风险，不构成因果结论，也不构成任何交易建议。", "usage": "在 HTML 中点击滚动相关性曲线的异常区间，会联动显示该区间覆盖的库存/价格走势与该区间内的事件。"}};
+const S = PAYLOAD.series, D = PAYLOAD.dates, R = PAYLOAD.rows, EV = PAYLOAD.events, L = PAYLOAD.labels;
+
+/* ---------------- 统计工具（与 Python 端同算法） ---------------- */
+const num = v => (v === null || v === undefined || v === '' || isNaN(v)) ? null : +v;
+function mean(a){let s=0,n=0;for(const v of a){if(v!==null){s+=v;n++;}}return n?s/n:null;}
+function pearson(x,y){const p=[];for(let i=0;i<x.length;i++){if(x[i]!==null&&y[i]!==null)p.push([x[i],y[i]]);}
+  const n=p.length; if(n<3)return null;
+  const mx=mean(p.map(v=>v[0])), my=mean(p.map(v=>v[1]));
+  let sxy=0,sxx=0,syy=0; for(const [a,b] of p){sxy+=(a-mx)*(b-my);sxx+=(a-mx)**2;syy+=(b-my)**2;}
+  if(sxx<=1e-12||syy<=1e-12)return null; return sxy/Math.sqrt(sxx*syy);}
+function rank(xs){const n=xs.length,idx=[...Array(n).keys()].sort((i,j)=>xs[i]-xs[j]);const r=new Array(n);let i=0;
+  while(i<n){let j=i;while(j+1<n&&xs[idx[j+1]]===xs[idx[i]])j++;const av=(i+j)/2+1;for(let k=i;k<=j;k++)r[idx[k]]=av;i=j+1;}return r;}
+function spearman(x,y){const p=[];for(let i=0;i<x.length;i++){if(x[i]!==null&&y[i]!==null)p.push([x[i],y[i]]);}
+  if(p.length<3)return null; return pearson(rank(p.map(v=>v[0])),rank(p.map(v=>v[1])));}
+function erf(x){const s=Math.sign(x);x=Math.abs(x);const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;
+  const t=1/(1+p*x);const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);return s*y;}
+function tPval(t,df){if(t===null||df<=0)return null;t=Math.abs(t);
+  // 用不完全beta的级数近似（只需p值量级）
+  const x=df/(df+t*t); return betainc(df/2,0.5,x);}
+function betainc(a,b,x){if(x<=0)return 0;if(x>=1)return 1;
+  const lb=Math.log(gamma(a))+Math.log(gamma(b))-Math.log(gamma(a+b));
+  const front=Math.exp(Math.log(x)*a+Math.log(1-x)*b-lb)/a;
+  return x<(a+1)/(a+b+2)?front*betacf(a,b,x):1-Math.exp(Math.log(1-x)*b+Math.log(x)*a-lb)/b*betacf(b,a,1-x);}
+function betacf(a,b,x){let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;if(Math.abs(d)<1e-300)d=1e-300;d=1/d;let h=d;
+  for(let m=1;m<=300;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<1e-300)d=1e-300;c=1+aa/c;
+    if(Math.abs(c)<1e-300)c=1e-300;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;
+    if(Math.abs(d)<1e-300)d=1e-300;c=1+aa/c;if(Math.abs(c)<1e-300)c=1e-300;d=1/d;const de=d*c;h*=de;if(Math.abs(de-1)<1e-12)break;}
+  return h;}
+function gamma(z){const g=7,C=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  if(z<0.5)return Math.PI/(Math.sin(Math.PI*z)*gamma(1-z));z-=1;let x=C[0];for(let i=1;i<g+2;i++)x+=C[i]/(z+i);
+  const t=z+g+0.5;return Math.sqrt(2*Math.PI)*Math.pow(t,z+0.5)*Math.exp(-t)*x;}
+function corrStats(x,y){const r=pearson(x,y);if(r===null)return {r:null,n:0};
+  const p=[];for(let i=0;i<x.length;i++)if(x[i]!==null&&y[i]!==null)p.push(1);const n=p.length;
+  const out={r,n}; if(n>2&&Math.abs(r)<1){const t=r*Math.sqrt((n-2)/(1-r*r));out.t=t;out.p=tPval(t,n-2);}
+  else if(Math.abs(r)>=1){out.t=Infinity;out.p=0;}
+  if(n>3){const z=Math.atanh(Math.max(-0.999999,Math.min(0.999999,r)));const se=1/Math.sqrt(n-3);
+    out.ci_lo=Math.tanh(z-1.959964*se);out.ci_hi=Math.tanh(z+1.959964*se);}
+  return out;}
+function autocorr(x,lag=1){const n=x.length;if(n<=lag+2)return null;const m=mean(x);
+  let v=0;for(const a of x)v+=(a-m)**2;if(v<=0)return null;let c=0;for(let i=lag;i<n;i++)c+=(x[i]-m)*(x[i-lag]-m);return c/v;}
+function transform(arr,kind){const n=arr.length;const out=new Array(n).fill(null);
+  if(kind==='level')return arr.slice();
+  for(let i=1;i<n;i++){const a=arr[i],b=arr[i-1];if(a===null||b===null||b===undefined)continue;
+    if(kind==='change')out[i]=a-b; else if(kind==='pct')out[i]=(a-b)/Math.abs(b)*100;}
+  return out;}
+function linreg(x,y){const p=[];for(let i=0;i<x.length;i++)if(x[i]!==null&&y[i]!==null)p.push([x[i],y[i]]);
+  const n=p.length;if(n<3)return null;const mx=mean(p.map(v=>v[0])),my=mean(p.map(v=>v[1]));
+  let sxx=0,sxy=0,syy=0;for(const [a,b] of p){sxx+=(a-mx)**2;sxy+=(a-mx)*(b-my);syy+=(b-my)**2;}
+  if(sxx<=1e-12)return null;const b=sxy/sxx,a=my-b*mx;const r2=syy>0?(sxy*sxy)/(sxx*syy):null;
+  return {a,b,r2,pts:p};}
+function detrendSeries(y){const t=[...Array(y.length).keys()];const f=linreg(t,y);if(!f)return null;
+  const out=new Array(y.length).fill(null);
+  for(let i=0;i<y.length;i++){let v=0,c=0;for(const [tt,yy] of f.pts){v+=yy-(f.a+f.b*tt);c++;}
+    out[i]=y[i]==null?null:null;}
+  // 直接用拟合残差
+  const res=y.map((v,i)=>v==null?null:v-(f.a+f.b*i)); return res;}
+function partial(x,y,z){const p=[];for(let i=0;i<x.length;i++)if(x[i]!==null&&y[i]!==null&&z[i]!==null)p.push([x[i],y[i],z[i]]);
+  if(p.length<6)return null;
+  const rx=linreg(p.map(v=>v[2]),p.map(v=>v[0])),ry=linreg(p.map(v=>v[2]),p.map(v=>v[1]));
+  const ex=p.map((v,i)=>v[0]-(rx.a+rx.b*v[2])),ey=p.map((v,i)=>v[1]-(ry.a+ry.b*v[2]));
+  return pearson(ex,ey);}
+function winsor(arr,p=0.05){const idx=arr.map((v,i)=>[v,i]).filter(v=>v[0]!==null).sort((a,b)=>a[0]-b[0]);
+  if(idx.length<10)return arr.slice();const k=Math.max(1,Math.round(idx.length*p));
+  const lo=idx[k][0],hi=idx[idx.length-1-k][0];
+  return arr.map(v=>v===null?null:Math.min(hi,Math.max(lo,v)));}
+function dropExtreme(x,y,p=0.05){const n=x.length,k=Math.max(1,Math.round(n*p));
+  const ix=[...Array(n).keys()].sort((i,j)=>x[i]-x[j]);const iy=[...Array(n).keys()].sort((i,j)=>y[i]-y[j]);
+  const ex=new Set([...ix.slice(0,k),...ix.slice(-k),...iy.slice(0,k),...iy.slice(-k)]);
+  const a=new Array(n).fill(null),b=new Array(n).fill(null);
+  for(let i=0;i<n;i++)if(!ex.has(i)){a[i]=x[i];b[i]=y[i];}
+  return [a,b];}
+const fmt=(v,d=3)=>v===null||v===undefined||isNaN(v)?'—':(+v).toFixed(d);
+const pfmt=p=>p===null||p===undefined?'—':(p<1e-4?'<1e-4':(p<0.001?p.toExponential(1):p.toFixed(3)));
+const sig=p=>p===null?'':p<0.01?'***':p<0.05?'**':p<0.1?'*':'';
+const clampR=v=>Math.max(-1,Math.min(1,v));
+
+/* ---------------- 状态 ---------------- */
+const DEF = {x:'inventory_total',xf:'level',y:'spot_taicang',yf:'pct',win:26,minp:21,d1:D[0],d2:D[D.length-1],outl:'none'};
+let ST = {...DEF};
+let SEL = null;
+
+function sliceRange(){
+  const i0=Math.max(0,D.indexOf(ST.d1)), i1=D.indexOf(ST.d2);
+  const a = i0<0?0:i0, b = i1<0?D.length-1:i1;
+  return [Math.min(a,b), Math.max(a,b)];
+}
+function compute(){
+  const xRaw=S[ST.x], yRaw=S[ST.y];
+  let x=transform(xRaw,ST.xf), y=transform(yRaw,ST.yf);
+  const [a,b]=sliceRange();
+  const dates=D.slice(a,b+1), xr=x.slice(a,b+1), yr=y.slice(a,b+1);
+  if(ST.outl==='winsor'){x=winsor(xr);y=winsor(yr);} else if(ST.outl==='drop'){const r=dropExtreme(xr,yr);x=r[0];y=r[1];}
+  else {x=xr;y=yr;}
+  const pairs=[];for(let i=0;i<x.length;i++)if(x[i]!==null&&y[i]!==null)pairs.push(i);
+  const st=corrStats(x,y);
+  const sp=spearman(x,y);
+  const tIdx=[...Array(x.length).keys()];
+  const dtX=detrendSeries(x), dtY=detrendSeries(y);
+  const detR=(dtX&&dtY)?pearson(dtX,dtY):null;
+  const diffX=transform(x,'change'), diffY=transform(y,'change');
+  const diffR=pearson(diffX,diffY);
+  const r1x=autocorr(pairs.map(i=>x[i])), r1y=autocorr(pairs.map(i=>y[i]));
+  let neff=pairs.length;
+  if(r1x!==null&&r1y!==null&&(1+r1x*r1y)>1e-6){neff=pairs.length*(1-r1x*r1y)/(1+r1x*r1y);neff=Math.max(3,Math.min(pairs.length,neff));}
+  const pEff=(st.r!==null&&Math.abs(st.r)<1)?tPval(st.r*Math.sqrt((neff-2)/(1-st.r**2)),neff-2):null;
+  const pr=partial(x,y,S.coal_5500.slice(a,b+1));
+  // 滚动
+  const W=ST.win, need=ST.minp;
+  const roll=[],pairsCnt=[];
+  for(let t=0;t<x.length;t++){const lo=t-W+1;if(lo<0){roll.push(null);pairsCnt.push(0);continue;}
+    let c=0;for(let i=lo;i<=t;i++)if(x[i]!==null&&y[i]!==null)c++;pairsCnt.push(c);
+    roll.push(c<need?null:pearson(x.slice(lo,t+1),y.slice(lo,t+1)));}
+  // 异常区间：符号反转 或 |r| 相对前段骤降 / 进入 |r|<0.2
+  const anomalies=[];
+  for(let t=1;t<roll.length;t++){
+    const p=roll[t-1],c=roll[t];if(p===null||c===null)continue;
+    if(p*c<0&&Math.abs(c-p)>0.12) anomalies.push({t,kind:'reversal',msg:'符号反转'});
+    else if(Math.abs(c)<0.2&&Math.abs(p)>=0.45) anomalies.push({t,kind:'decouple',msg:'相关性脱钩（|r|<0.2）'});
+  }
+  // 滞后
+  const lagMax=4, lags=[];
+  for(let Lg=-lagMax;Lg<=lagMax;Lg++){
+    let xx,yy;
+    if(Lg===0){xx=x;yy=y;}
+    else if(Lg>0){xx=x.slice(0,x.length-Lg);yy=y.slice(Lg);}
+    else{xx=x.slice(-Lg);yy=y.slice(0,y.length+Lg);}
+    lags.push({lag:Lg,r:pearson(xx,yy)});
+  }
+  return {dates,x,y,xRaw:xRaw.slice(a,b+1),yRaw:yRaw.slice(a,b+1),a,b,st,sp,detR,diffR,r1x,r1y,neff,pEff,pr,roll,pairsCnt,anomalies,lags,st_pts:pairs.length};
+}
+
+/* ---------------- 绘图 ---------------- */
+function setupCanvas(cv,H){const dpr=window.devicePixelRatio||1;const w=cv.clientWidth;
+  cv.width=w*dpr;cv.height=H*dpr;cv.style.height=H+'px';const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,H);return {ctx,w,H};}
+function niceTicks(min,max,n=5){const span=max-min||1;const step0=span/n;const mag=Math.pow(10,Math.floor(Math.log10(step0)));
+  const norm=step0/mag;const step=(norm<1.5?1:norm<3?2:norm<7?5:10)*mag;const t=[];for(let v=Math.ceil(min/step)*step;v<=max+1e-9;v+=step)t.push(+v.toFixed(10));return t;}
+
+function drawSeries(res){
+  const cv=document.getElementById('cvSeries');const {ctx,w,H}=setupCanvas(cv,300);
+  const pl=44,pr=44,pt=14,pb=26;const iw=w-pl-pr, ih=H-pt-pb;
+  const zs=arr=>{const v=arr.filter(x=>x!==null);const m=mean(v);const s=Math.sqrt(v.reduce((a,b)=>a+(b-m)**2,0)/(v.length-1));return arr.map(x=>x===null?null:(x-m)/s);};
+  const zx=zs(res.x), zy=zs(res.y);
+  const X=i=>pl+iw*(res.x.length<2?0:i/(res.x.length-1));
+  const Y=v=>pt+ih*(1-(v+3)/6);
+  ctx.strokeStyle='#26303f';ctx.lineWidth=1;
+  for(const v of [-3,-2,-1,0,1,2,3]){const y=Y(v);ctx.beginPath();ctx.moveTo(pl,y);ctx.lineTo(pl+iw,y);
+    ctx.strokeStyle=v===0?'#3a4757':'#1f2733';ctx.stroke();ctx.fillStyle='#7d8b9e';ctx.font='11px ui-monospace';ctx.fillText(v.toFixed(0),pl-26,y+4);}
+  // 日期刻度
+  ctx.fillStyle='#7d8b9e';ctx.font='11px ui-monospace';
+  const nT=6;for(let k=0;k<nT;k++){const i=Math.round(k*(res.x.length-1)/(nT-1));ctx.fillText(res.dates[i].slice(2),X(i)-20,H-8);}
+  const line=(arr,color)=>{ctx.beginPath();let started=false;
+    for(let i=0;i<arr.length;i++){const v=arr[i];if(v===null){started=false;continue;}
+      const px=X(i),py=Y(Math.max(-3,Math.min(3,v)));if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);}
+    ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.stroke();};
+  line(zx,'#4da3ff');line(zy,'#7ee0c0');
+  cv._hit={X,Y,pl,iw,n:res.x.length,res};
+  cv.onmousemove=e=>{const r=cv.getBoundingClientRect();const mx=e.clientX-r.left;
+    const i=Math.round((mx-pl)/iw*(res.x.length-1));if(i<0||i>=res.x.length)return;
+    tipShow(e,`<b>${res.dates[i]}</b><br>${L[ST.x][0]}：${fmt(res.xRaw[i],2)} ${L[ST.x][1]}<br>${L[ST.y][0]}：${fmt(res.yRaw[i],2)} ${L[ST.y][1]}`);};
+  cv.onmouseleave=tipHide;
+}
+
+function drawScatter(res){
+  const cv=document.getElementById('cvScatter');const {ctx,w,H}=setupCanvas(cv,300);
+  const pl=52,pr=16,pt=14,pb=34,iw=w-pl-pr,ih=H-pt-pb;
+  const xs=res.x.filter(v=>v!==null),ys=res.y.filter(v=>v!==null);
+  if(xs.length<3){ctx.fillStyle='#93a1b5';ctx.fillText('有效样本不足',pl,pt+20);return;}
+  const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+  const padx=(xmax-xmin)*0.08||1,pady=(ymax-ymin)*0.08||1;
+  const X=v=>pl+iw*(v-(xmin-padx))/((xmax+padx)-(xmin-padx));
+  const Y=v=>pt+ih*(1-(v-(ymin-pady))/((ymax+pady)-(ymin-pady)));
+  ctx.strokeStyle='#1f2733';ctx.font='11px ui-monospace';ctx.fillStyle='#7d8b9e';
+  for(const t of niceTicks(xmin-padx,xmax+padx,5)){const x=X(t);ctx.beginPath();ctx.moveTo(x,pt);ctx.lineTo(x,pt+ih);ctx.stroke();
+    ctx.fillText(t.toFixed(Math.abs(t)<10?2:0),x-14,H-14);}
+  for(const t of niceTicks(ymin-pady,ymax+pady,5)){const y=Y(t);ctx.beginPath();ctx.moveTo(pl,y);ctx.lineTo(pl+iw,y);ctx.stroke();
+    ctx.fillText(t.toFixed(Math.abs(t)<10?2:0),6,y+4);}
+  for(let i=0;i<res.x.length;i++){if(res.x[i]===null||res.y[i]===null)continue;
+    ctx.beginPath();ctx.arc(X(res.x[i]),Y(res.y[i]),3.1,0,7);ctx.fillStyle='rgba(77,163,255,.55)';ctx.fill();}
+  const f=linreg(res.x,res.y);
+  if(f){ctx.beginPath();ctx.moveTo(X(xmin-padx),Y(f.a+f.b*(xmin-padx)));ctx.lineTo(X(xmax+padx),Y(f.a+f.b*(xmax+padx)));
+    ctx.strokeStyle='#ffc857';ctx.lineWidth=2;ctx.stroke();}
+  document.getElementById('fitHint').innerHTML = f
+    ? `拟合：ŷ = ${fmt(f.a,2)} + ${fmt(f.b,4)}·x，R² = ${fmt(f.r2,3)}（n=${res.st_pts}）。散点形态与离群点请结合“统计稳健性”区块判读。`
+    : '有效样本不足，无法拟合。';
+}
+
+function drawRoll(res){
+  const cv=document.getElementById('cvRoll');const {ctx,w,H}=setupCanvas(cv,290);
+  const pl=46,pr=14,pt=16,pb=26,iw=w-pl-pr,ih=H-pt-pb;
+  const X=i=>pl+iw*(res.roll.length<2?0:i/(res.roll.length-1));
+  const Y=v=>pt+ih*(1-(v+1)/2);
+  ctx.strokeStyle='#1f2733';
+  for(const v of [-1,-0.5,-0.2,0,0.2,0.5,1]){const y=Y(v);ctx.beginPath();ctx.moveTo(pl,y);ctx.lineTo(pl+iw,y);ctx.stroke();
+    ctx.fillStyle='#7d8b9e';ctx.font='11px ui-monospace';ctx.fillText(v.toFixed(1),16,y+4);}
+  // 参考带
+  ctx.fillStyle='rgba(147,161,181,.10)';ctx.fillRect(pl,Y(0.2),iw,Y(-0.2)-Y(0.2));
+  // 样本不足区
+  ctx.fillStyle='rgba(120,130,145,.10)';
+  for(let i=0;i<res.roll.length;i++)if(res.roll[i]===null){const x=X(i);ctx.fillRect(x-1,pt,2.5,ih);}
+  // 主曲线
+  ctx.beginPath();let started=false;
+  for(let i=0;i<res.roll.length;i++){const v=res.roll[i];if(v===null){started=false;continue;}
+    const px=X(i),py=Y(v);if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);}
+  ctx.strokeStyle='#4da3ff';ctx.lineWidth=2;ctx.stroke();
+  // 零线
+  ctx.beginPath();ctx.moveTo(pl,Y(0));ctx.lineTo(pl+iw,Y(0));ctx.strokeStyle='#4a5a6e';ctx.lineWidth=1;ctx.stroke();
+  // 异常点
+  for(const an of res.anomalies){ctx.beginPath();ctx.arc(X(an.t),Y(res.roll[an.t]),4.4,0,7);
+    ctx.fillStyle=an.kind==='reversal'?'#ffc857':'#ff6b81';ctx.fill();}
+  // 选中
+  if(SEL!==null&&SEL<res.roll.length&&res.roll[SEL]!==null){const x=X(SEL);ctx.strokeStyle='#ffffff55';ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(x,pt);ctx.lineTo(x,pt+ih);ctx.stroke();ctx.setLineDash([]);}
+  ctx.fillStyle='#7d8b9e';ctx.font='11px ui-monospace';
+  const nT=6;for(let k=0;k<nT;k++){const i=Math.round(k*(res.roll.length-1)/(nT-1));ctx.fillText(res.dates[i].slice(2),X(i)-18,H-8);}
+  cv.onclick=e=>{const r=cv.getBoundingClientRect();const mx=e.clientX-r.left;
+    const i=Math.round((mx-pl)/iw*(res.roll.length-1));
+    if(i>=0&&i<res.roll.length){SEL=i;renderSel(res);drawRoll(res);}};
+  cv.onmousemove=e=>{const r=cv.getBoundingClientRect();const mx=e.clientX-r.left;
+    const i=Math.round((mx-pl)/iw*(res.roll.length-1));if(i<0||i>=res.roll.length)return;
+    const v=res.roll[i];
+    tipShow(e,`<b>${res.dates[i]}</b><br>窗口 ${ST.win} 周滚动 r：${v===null?'样本不足，不计算':fmt(v,3)}<br>窗口有效配对：${res.pairsCnt[i]}/${ST.win}（下限 ${ST.minp}）`);};
+  cv.onmouseleave=tipHide;
+}
+
+function drawLag(res){
+  const cv=document.getElementById('cvLag');const {ctx,w,H}=setupCanvas(cv,220);
+  const pl=44,pr=14,pt=14,pb=30,iw=w-pl-pr,ih=H-pt-pb;
+  const n=res.lags.length, bw=iw/n*0.6;
+  const X=i=>pl+iw*(i+0.5)/n;
+  const Y=v=>pt+ih*(1-(v+1)/2);
+  ctx.strokeStyle='#1f2733';for(const v of [-1,-0.5,0,0.5,1]){const y=Y(v);ctx.beginPath();ctx.moveTo(pl,y);ctx.lineTo(pl+iw,y);ctx.stroke();
+    ctx.fillStyle='#7d8b9e';ctx.font='11px ui-monospace';ctx.fillText(v.toFixed(1),16,y+4);}
+  res.lags.forEach((p,i)=>{if(p.r===null)return;const x=X(i),y=Y(Math.max(0,p.r)),h=Y(p.r)-Y(0);
+    ctx.fillStyle=p.r>0?'rgba(61,220,151,.75)':'rgba(255,107,129,.75)';ctx.fillRect(x-bw/2,Math.min(y,Y(0)),bw,Math.abs(h));
+    ctx.fillStyle='#7d8b9e';ctx.font='11px ui-monospace';ctx.fillText(p.lag===0?'0':(p.lag>0?'+':'')+p.lag,x-6,H-10);});
+  ctx.fillStyle='#93a1b5';ctx.font='11px ui-monospace';ctx.fillText('X 领先 →',w-96,pt+12);
+}
+
+/* ---------------- KPI / 表格 ---------------- */
+function kpiCard(k,v,s,cls){return `<div class="kpi ${cls||''}"><div class="k">${k}</div><div class="v mono">${v}</div><div class="s">${s}</div></div>`;}
+function renderKpis(res){
+  const st=res.st;
+  const sign=st.r===null?'':(st.r<0?'neg':'pos');
+  const strength=st.r===null?'—':Math.abs(st.r)>=0.7?'强':Math.abs(st.r)>=0.4?'中等':'弱';
+  document.getElementById('kpis').innerHTML =
+    kpiCard('Pearson r（当前设定）',fmt(st.r),`${L[ST.x][0]}(${formLabel(ST.xf)}) × ${L[ST.y][0]}(${formLabel(ST.yf)})`,sign)+
+    kpiCard('有效配对 N',st.n,`区间 ${ST.d1} ~ ${ST.d2}`)+
+    kpiCard('p 值（双侧）',pfmt(st.p),`t=${fmt(st.t,2)}；显著性 ${sig(st.p)||'不显著'}`)+
+    kpiCard('95% 置信区间',st.ci_lo===undefined?'—':`${fmt(st.ci_lo,2)} ~ ${fmt(st.ci_hi,2)}`,'Fisher-z 变换')+
+    kpiCard('Spearman ρ',fmt(res.sp),'单调关系（抗离群）')+
+    kpiCard('相关强度',strength,`|r| = ${fmt(st.r===null?null:Math.abs(st.r),2)}；R² = ${fmt(st.r===null?null:st.r*st.r,2)}`)+
+    kpiCard('考虑自相关后 N_eff',fmt(res.neff,1),`修正 p ≈ ${pfmt(res.pEff)}`)+
+    kpiCard('当前滚动 r（末点）',fmt(res.roll[res.roll.length-1]),`${ST.win} 周窗口`);
+}
+function formLabel(f){return {level:'水平',change:'一阶差分',pct:'环比%'}[f]||f;}
+function renderPhases(res){
+  const ix=res.dates.map((d,i)=>i);
+  const phases=[[res.dates[0],res.dates[Math.floor(res.dates.length/3)],'阶段一'],
+                [res.dates[Math.floor(res.dates.length/3)],res.dates[Math.floor(res.dates.length*2/3)],'阶段二'],
+                [res.dates[Math.floor(res.dates.length*2/3)],res.dates[res.dates.length-1]+'~','阶段三']];
+  let html='<tr><th class="l">阶段</th><th>N</th><th>Pearson r</th><th>p</th><th>Spearman</th><th>判定</th></tr>';
+  for(const [a,b,name] of phases){
+    const idx=res.dates.map((d,i)=>i).filter(i=>res.dates[i]>=a&&(b.endsWith('~')||res.dates[i]<b));
+    const x=idx.map(i=>res.x[i]),y=idx.map(i=>res.y[i]);
+    const st=corrStats(x,y),sp=spearman(x,y);
+    html+=`<tr><td class="l">${name}<div class="d" style="color:var(--dim);font-size:11px">${a} ~ ${b.replace('~','')}</div></td>
+      <td class="mono">${st.n}</td><td class="mono">${fmt(st.r)}</td><td class="mono">${pfmt(st.p)}</td><td class="mono">${fmt(sp)}</td>
+      <td>${st.r===null?'—':(Math.abs(st.r)>=0.7?'强':Math.abs(st.r)>=0.4?'中等':'弱')+ (st.r<0?'负':'正')}</td></tr>`;
+  }
+  document.getElementById('phaseTbl').innerHTML=html;
+}
+function renderMatrix(){
+  const xs=['level','change','pct'], ys=['level','change','pct'];
+  const xraw=S[ST.x], yraw=S[ST.y];
+  const [a,b]=sliceRange();
+  let html='<tr><th class="l">库存 \\\\ 价格</th>'+ys.map(f=>`<th>${formLabel(f)}</th>`).join('')+'</tr>';
+  for(const xf of xs){
+    html+=`<tr><td class="l">${formLabel(xf)}</td>`;
+    for(const yf of ys){
+      const x=transform(xraw,xf).slice(a,b+1), y=transform(yraw,yf).slice(a,b+1);
+      const st=corrStats(x,y);
+      const cur=(xf===ST.xf&&yf===ST.yf)?'style="background:rgba(77,163,255,.13)"':'';
+      html+=`<td class="mono" ${cur}>${fmt(st.r)}<span style="color:var(--dim);font-size:11px"> ${sig(st.p)}</span></td>`;
+    }
+    html+='</tr>';
+  }
+  html+=`<tr><td class="l" colspan="4" style="color:var(--dim);font-size:11.5px">N 随形态变化（差分/环比损失首期）：水平对水平 N=${corrStats(transform(xraw,'level').slice(a,b+1),transform(yraw,'level').slice(a,b+1)).n}，差分对差分 N=${corrStats(transform(xraw,'change').slice(a,b+1),transform(yraw,'change').slice(a,b+1)).n}</td></tr>`;
+  document.getElementById('matrixTbl').innerHTML=html;
+}
+function renderRobust(res){
+  const [a,b]=sliceRange();
+  const xr=S[ST.x].slice(a,b+1), yr=S[ST.y].slice(a,b+1);
+  const half=Math.floor((b-a)/2);
+  const s1=corrStats(transform(xr.slice(0,half+1),ST.xf),transform(yr.slice(0,half+1),ST.yf));
+  const s2=corrStats(transform(xr.slice(half),ST.xf),transform(yr.slice(half),ST.yf));
+  const rd=dropExtreme(res.x,res.y), sDrop=corrStats(rd[0],rd[1]);
+  const w=winsor(res.x),w2=winsor(res.y), sWin=corrStats(w,w2);
+  const rows=[
+    ['Pearson r（全部样本）',res.st.r,res.st.p,'基准'],
+    ['Spearman ρ',res.sp,null,'秩相关，对离群点更稳健'],
+    ['去趋势后 r（控制时间趋势）',res.detR,null,'若显著低于基准 → 存在趋势共同移动的伪相关风险'],
+    ['一阶差分后 r（去除单位根）',res.diffR,null,'检验“水平相关是否只来自共同趋势”'],
+    ['剔除极值 5%（双侧）后 r',sDrop.r,sDrop.p,'离群点敏感性'],
+    ['Winsorize 5%/95% 后 r',sWin.r,sWin.p,'缩尾处理的稳健性'],
+    ['前半段 r',s1.r,s1.p,`N=${s1.n}`],
+    ['后半段 r',s2.r,s2.p,`N=${s2.n}`],
+    ['偏相关（控制煤价）',res.pr,null,'共同外部因素（成本）检验'],
+    ['X 一阶自相关',res.r1x,null,'高自相关会夸大显著性'],
+    ['Y 一阶自相关',res.r1y,null,'同上'],
+    ['有效样本量 N_eff',res.neff,null,'按自相关修正后的等效独立样本'],
+    ['修正后 p（N_eff）',null,res.pEff,'更保守的显著性判断'],
+  ];
+  let html='<tr><th class="l">诊断项</th><th>数值</th><th>p</th><th class="l">解读</th></tr>';
+  for(const [k,v,p,note] of rows){
+    const val = v===null||v===undefined?'—':(Math.abs(v)>100?fmt(v,1):fmt(v,3));
+    html+=`<tr><td class="l">${k}</td><td class="mono">${val}</td><td class="mono">${pfmt(p)}</td>
+      <td class="l" style="white-space:normal;color:var(--dim);font-size:12px">${note}</td></tr>`;
+  }
+  document.getElementById('robustTbl').innerHTML=html;
+}
+function renderSel(res){
+  const box=document.getElementById('selDetail'), tag=document.getElementById('selTag');
+  if(SEL===null||SEL<0||SEL>=res.roll.length){box.textContent='在上图点击任意一点或异常区间，这里显示该窗口覆盖的库存/价格走势、期间统计量与区间内行业事件。';tag.textContent='未选择';return;}
+  const W=ST.win, lo=Math.max(0,SEL-W+1), hi=SEL;
+  const d0=res.dates[lo], d1=res.dates[hi], r=res.roll[SEL];
+  tag.textContent=`${d0} ~ ${d1} · r=${r===null?'不足':fmt(r,2)}`;
+  const idx=[];for(let i=lo;i<=hi;i++)idx.push(i);
+  const x=idx.map(i=>res.x[i]),y=idx.map(i=>res.y[i]);
+  const st=corrStats(x,y), sp=spearman(x,y);
+  const xs=idx.map(i=>res.xRaw[i]).filter(v=>v!==null), ys=idx.map(i=>res.yRaw[i]).filter(v=>v!==null);
+  const evs=EV.filter(e=>e.end>=d0&&e.start<=d1);
+  box.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px">
+      <div><div class="k" style="color:var(--dim);font-size:12px">窗口 r</div><div class="mono" style="font-size:20px">${r===null?'—':fmt(r,3)}</div></div>
+      <div><div class="k" style="color:var(--dim);font-size:12px">有效配对</div><div class="mono" style="font-size:20px">${res.pairsCnt[SEL]}/${W}</div></div>
+      <div><div class="k" style="color:var(--dim);font-size:12px">窗口 p</div><div class="mono" style="font-size:20px">${pfmt(st.p)}</div></div>
+      <div><div class="k" style="color:var(--dim);font-size:12px">Spearman</div><div class="mono" style="font-size:20px">${fmt(sp)}</div></div>
+    </div>
+    <div>库存区间：${fmt(Math.min(...xs),2)} ~ ${fmt(Math.max(...xs),2)} ${L[ST.x][1]}（变化 ${fmt(xs[xs.length-1]-xs[0],2)}，首末差）</div>
+    <div>价格区间：${fmt(Math.min(...ys),0)} ~ ${fmt(Math.max(...ys),0)} ${L[ST.y][1]}（变化 ${fmt(ys[ys.length-1]-ys[0],0)}，首末差）</div>
+    <div style="margin-top:8px"><b>区间内行业事件（${evs.length}）</b></div>
+    ${evs.length?evs.map(e=>`<div class="ev" style="margin-top:6px"><div class="t">${e.title}<span class="kind">${e.kind}</span></div><div class="d">${e.start} ~ ${e.end}</div><div class="n">${e.note}</div></div>`).join(''):'<div style="color:var(--dim)">该窗口内无记录事件；请看前后相邻窗口。</div>'}
+    <div class="hint" style="margin-top:8px">提示：事件用于解释“相关性为何变化”，不能据此把相关性升级为因果关系。</div>`;
+}
+function renderEvents(){
+  document.getElementById('events').innerHTML = EV.map(e=>
+    `<div class="ev"><div class="t">${e.title}<span class="kind">${e.kind}</span></div>
+     <div class="d">${e.start} ~ ${e.end}</div><div class="n">${e.note}</div></div>`).join('');
+}
+function renderConclusion(res){
+  const st=res.st;
+  const rl=res.roll.filter(v=>v!==null);
+  const rmin=rl.length?Math.min(...rl):null, rmax=rl.length?Math.max(...rl):null;
+  const signFlips=res.anomalies.filter(a=>a.kind==='reversal').length;
+  const decouples=res.anomalies.filter(a=>a.kind==='decouple').length;
+  const strong=st.r!==null&&Math.abs(st.r)>=0.7;
+  const horiz=(ST.xf==='level'&&ST.yf==='level');
+  document.getElementById('concl').innerHTML=`
+   <p><b>1) 全样本（${ST.d1} ~ ${ST.d2}，N=${st.n}）：</b>
+   库存[${formLabel(ST.xf)}] 与 价格[${formLabel(ST.yf)}] 的 Pearson r = <span class="mono">${fmt(st.r)}</span>
+   （p ${pfmt(st.p)}${sig(st.p)?'，显著'+sig(st.p):'，不显著'}），Spearman ρ = <span class="mono">${fmt(res.sp)}</span>。
+   按 |r| 判定为<b>${strong?'较强的':'偏弱/中等的'}</b>${st.r===null?'':(st.r<0?'负':'正')}相关。</p>
+   <p><b>2) 相关强度随阶段变化：</b>${ST.win} 周滚动 r 在 [${fmt(rmin,2)}, ${fmt(rmax,2)}] 间波动，
+   期间出现 <b>${signFlips}</b> 次符号反转、<b>${decouples}</b> 次脱钩（|r| 掉入 0.2 以内）。
+   引用“库存与价格相关”时，必须同时说明<b>用的是哪段时间、哪种形态、哪个窗口</b>。</p>
+   <p><b>3) 形态敏感性：</b>见“形态组合矩阵”。${horiz?'当前使用“水平对水平”，这类相关最容易被共同趋势抬升；请对照差分/环比口径的结果。':''}
+   ${ST.yf==='level'?'注意：价格用“水平”形态时，价格与库存各自的时间趋势会贡献相当一部分相关。':''}</p>
+   <p><b>4) 伪相关排查：</b>去趋势后 r=${fmt(res.detR)}、一阶差分后 r=${fmt(res.diffR)}、控制煤价后偏相关=${fmt(res.pr)}；
+   库存自相关 ${fmt(res.r1x,2)}、价格自相关 ${fmt(res.r1y,2)}，按自相关修正后有效样本 N_eff≈${fmt(res.neff,1)}，修正 p≈${pfmt(res.pEff)}。
+   ${(res.detR!==null&&st.r!==null&&Math.abs(res.detR)<Math.abs(st.r)*0.5)?'<span style="color:var(--warn)">去趋势后相关大幅下降，提示“水平相关”可能主要由共同趋势驱动，需要以变化口径为准。</span>':''}</p>
+   <p><b>5) 限制与声明：</b>相关性不等于因果关系：库存与价格可能同时被供给、需求、成本、预期驱动，也可能互为因果；
+   本页不给交易建议、不做价格预测。滞后相关只能提示先后顺序，不能单独证明方向。
+   数据口径、频率、调查日与发布时点必须在报告正文中标明（见页脚与 Excel“口径与来源”表）。</p>
+   <div class="demobox">${(PAYLOAD.meta.demo||{}).caveat||''}</div>`;
+}
+
+/* ---------------- 交互 ---------------- */
+function tipShow(e,html){const t=document.getElementById('tip');t.innerHTML=html;t.style.display='block';
+  t.style.left=Math.min(window.innerWidth-260,e.clientX+14)+'px';t.style.top=(e.clientY+14)+'px';}
+function tipHide(){document.getElementById('tip').style.display='none';}
+function syncControls(){
+  document.getElementById('xsel').value=ST.x;document.getElementById('xform').value=ST.xf;
+  document.getElementById('ysel').value=ST.y;document.getElementById('yform').value=ST.yf;
+  document.getElementById('win').value=ST.win;document.getElementById('minp').value=ST.minp;
+  document.getElementById('d1').value=ST.d1;document.getElementById('d2').value=ST.d2;
+  document.getElementById('outl').value=ST.outl;
+}
+function readControls(){
+  ST.x=document.getElementById('xsel').value;ST.xf=document.getElementById('xform').value;
+  ST.y=document.getElementById('ysel').value;ST.yf=document.getElementById('yform').value;
+  ST.win=+document.getElementById('win').value;ST.minp=+document.getElementById('minp').value;
+  ST.d1=document.getElementById('d1').value;ST.d2=document.getElementById('d2').value;
+  ST.outl=document.getElementById('outl').value;
+}
+let RES=null;
+function render(){
+  readControls();SEL=null;
+  RES=compute();
+  document.getElementById('tagA').textContent=`${L[ST.x][0]}(${formLabel(ST.xf)}) vs ${L[ST.y][0]}(${formLabel(ST.yf)})`;
+  document.getElementById('lgA').textContent=`${L[ST.x][0]}（z 分数，${L[ST.x][1]}）`;
+  document.getElementById('lgB').textContent=`${L[ST.y][0]}（z 分数，${L[ST.y][1]}）`;
+  document.getElementById('tagB').textContent=`${formLabel(ST.xf)} × ${formLabel(ST.yf)}`;
+  document.getElementById('tagC').textContent=`窗口 ${ST.win} 周 · 最小有效配对 ${ST.minp} · 点击查看明细`;
+  document.getElementById('ctrlHint').innerHTML =
+    `当前：X=${L[ST.x][0]}（${formLabel(ST.xf)}），Y=${L[ST.y][0]}（${formLabel(ST.yf)}），
+     区间 ${ST.d1}~${ST.d2}，离群处理=${({none:'保留全部',winsor:'Winsorize',drop:'剔除极值'})[ST.outl]}。
+     改变任一控件，页面所有数字、曲线与结论都会实时重算；窗口有效配对不足时不输出结果。`;
+  renderKpis(RES);renderPhases(RES);renderMatrix();renderRobust(RES);
+  drawSeries(RES);drawScatter(RES);drawRoll(RES);drawLag(RES);renderSel(RES);renderConclusion(RES);
+}
+window.addEventListener('resize',()=>{if(RES){drawSeries(RES);drawScatter(RES);drawRoll(RES);drawLag(RES);}});
+document.querySelectorAll('#xsel,#xform,#ysel,#yform,#win,#minp,#d1,#d2,#outl').forEach(el=>{
+  el.addEventListener('change',render);});
+document.getElementById('reset').onclick=()=>{ST={...DEF};syncControls();render();};
+(function init(){
+  const meta=PAYLOAD.meta;
+  document.getElementById('footDemo').textContent=(meta.demo||{}).caveat||'';
+  const xsel=document.getElementById('xsel'),ysel=document.getElementById('ysel');
+  renderEvents();syncControls();
+  document.getElementById('minp').value=Math.max(5,Math.round(DEF.win*0.8));
+  render();
+})();
+</script>
+</body>
+</html>

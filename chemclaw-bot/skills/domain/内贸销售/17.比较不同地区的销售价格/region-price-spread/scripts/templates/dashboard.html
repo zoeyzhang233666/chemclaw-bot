@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>%%TITLE%%</title>
+<style>
+:root{
+  --navy:#0b2136; --navy2:#12314b; --ink:#101c2c; --ink2:#31485f; --muted:#6b7f93;
+  --line:#e3e9f0; --line2:#eef3f8; --bg:#f4f7fa; --card:#ffffff;
+  --amber:#b8791a; --red:#b42318; --green:#0d7a63; --blue:#1d4ed8;
+  --east:#1d4ed8; --south:#be123c; --north:#0e7490; --central:#b45309; --southwest:#047857;
+  --shadow:0 1px 2px rgba(16,28,44,.04),0 8px 24px -12px rgba(16,28,44,.18);
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+a{color:inherit}
+.wrap{max-width:1460px;margin:0 auto;padding:0 22px}
+/* ---------- topbar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:60;
+  background:linear-gradient(180deg,#0b2136 0%,#0e2a44 100%);
+  color:#eaf2fb; border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:0 10px 30px -18px rgba(0,0,0,.6);
+}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:64px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#d8a13a,#b8791a);display:grid;place-items:center;font-weight:800;color:#1a1205;font-size:13px;letter-spacing:.5px}
+.brand b{font-size:15px;letter-spacing:.3px;white-space:nowrap}
+.brand span{font-size:12px;color:#9fb4c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbchips{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.tbchip{font-size:12px;color:#c6d6e6;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.tbchip b{color:#fff;font-weight:600}
+.tbchip.warn{background:rgba(216,161,58,.15);border-color:rgba(216,161,58,.4);color:#f0cf94}
+/* ---------- hero ---------- */
+.hero{padding:26px 0 4px}
+.htitle{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.htitle h1{margin:0;font-size:25px;letter-spacing:-.3px;font-weight:750}
+.htitle .asof{font-size:12.5px;color:var(--muted);padding-bottom:4px}
+.hsub{margin:8px 0 0;color:var(--ink2);font-size:14px;max-width:1000px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tag{font-size:12px;color:#3c556d;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 10px;box-shadow:0 1px 0 rgba(16,28,44,.02)}
+/* ---------- kpi ---------- */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:18px 0 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--kc,var(--blue));opacity:.85}
+.kpi .k{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;letter-spacing:.2px}
+.kpi .v{font-size:24px;font-weight:750;letter-spacing:-.6px;margin-top:5px;line-height:1.15}
+.kpi .v small{font-size:12px;font-weight:600;color:var(--muted);margin-left:3px;letter-spacing:0}
+.kpi .s{font-size:11.5px;color:var(--muted);margin-top:3px}
+.up{color:var(--red)} .down{color:var(--green)}
+/* ---------- console ---------- */
+.console{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px 15px;margin:16px 0 0;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.cgroup{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.clabel{font-size:11.5px;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+  border:1px solid var(--line);background:#fbfdff;border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink2);
+  transition:.15s
+}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.chip.on{background:#0f2a42;border-color:#0f2a42;color:#fff}
+.chip.on .dot{box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+.chip:hover{border-color:#b9c9d8}
+select,input[type=number]{
+  font:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);
+  border-radius:9px;padding:7px 10px;outline:none
+}
+select:focus,input:focus{border-color:#7ea8d8;box-shadow:0 0 0 3px rgba(29,78,216,.10)}
+input[type=number]{width:86px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 11px;font-size:12.5px;cursor:pointer;color:var(--ink2)}
+.btn:hover{border-color:#b9c9d8;background:#f8fbff}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:7px 11px;font-size:12.5px;cursor:pointer;color:var(--ink2);border-right:1px solid var(--line2)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#0f2a42;color:#fff}
+/* ---------- layout ---------- */
+.grid2{display:grid;grid-template-columns:1.62fr 1fr;gap:16px;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.card .hd{display:flex;align-items:center;gap:10px;padding:14px 16px 0}
+.card .hd h3{margin:0;font-size:15px;font-weight:700;letter-spacing:.1px}
+.card .hd .sub{font-size:12px;color:var(--muted);margin-left:auto;text-align:right}
+.card .bd{padding:10px 14px 14px}
+.chart{width:100%}
+.hr{height:1px;background:var(--line2);margin:0 16px}
+/* ---------- table ---------- */
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+.tbl th{
+  font-size:11.5px;font-weight:600;color:var(--muted);text-align:right;padding:9px 10px;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:#fbfdff
+}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl td{padding:10px;border-bottom:1px solid var(--line2);text-align:right;vertical-align:middle}
+.tbl tbody tr:hover td{background:#f8fbff}
+.tbl tr:last-child td{border-bottom:0}
+.reg{display:flex;align-items:center;gap:8px;font-weight:600}
+.reg .dot{width:9px;height:9px;border-radius:3px;background:var(--c)}
+.badge{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;border:1px solid transparent;white-space:nowrap}
+.b-ok{background:#ecfdf5;color:#06614e;border-color:#b7ebd9}
+.b-warn{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.b-bad{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+.b-mut{background:#f1f5f9;color:#475569;border-color:#e2e8f0}
+.b-blue{background:#eff6ff;color:#1e40af;border-color:#bfdbfe}
+.bar{height:6px;border-radius:999px;background:#eef3f8;overflow:hidden;display:block;min-width:52px}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--blue)}
+/* ---------- matrix ---------- */
+.mtx{width:100%;border-collapse:separate;border-spacing:2px;font-size:12.5px}
+.mtx th{font-size:11.5px;color:var(--muted);font-weight:600;padding:6px 4px}
+.mtx td{padding:9px 4px;text-align:center;border-radius:7px;font-weight:650;color:#0b2136}
+.mtx td.diag{background:#f1f5f9;color:#94a3b8;font-weight:500}
+/* ---------- region cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;cursor:pointer;position:relative;transition:.16s;overflow:hidden}
+.rc:hover{transform:translateY(-2px);box-shadow:0 12px 28px -16px rgba(16,28,44,.35);border-color:#c7d6e4}
+.rc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c)}
+.rc .n{display:flex;align-items:center;gap:8px;font-weight:700}
+.rc .n .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.rc .p{font-size:26px;font-weight:750;letter-spacing:-.8px;margin-top:8px}
+.rc .p small{font-size:12px;color:var(--muted);font-weight:600;margin-left:4px}
+.rc .d{font-size:12px;margin-top:1px;color:var(--muted)}
+.rc .m{display:flex;gap:10px;margin-top:10px;font-size:11.5px;color:var(--ink2);flex-wrap:wrap}
+.rc .m b{display:block;font-size:13px;color:var(--ink)}
+.rc .j{margin-top:9px;font-size:11.5px;color:var(--muted);line-height:1.5;height:34px;overflow:hidden}
+.rc .go{margin-top:8px;font-size:11.5px;color:var(--blue);font-weight:600}
+/* ---------- notes ---------- */
+.notes{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin:16px 0 40px}
+.nlist{margin:0;padding-left:18px;color:var(--ink2);font-size:13px}
+.nlist li{margin:6px 0}
+.kgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kv{background:#fbfdff;border:1px solid var(--line2);border-radius:10px;padding:9px 11px}
+.kv .k{font-size:11.5px;color:var(--muted)}
+.kv .v{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.foot{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding:16px 0 34px;margin-top:8px}
+.foot b{color:var(--ink2)}
+/* ---------- drawer ---------- */
+.mask{position:fixed;inset:0;background:rgba(8,20,34,.38);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(560px,94vw);background:#fff;z-index:90;
+  transform:translateX(102%);transition:transform .26s cubic-bezier(.22,.8,.3,1);
+  box-shadow:-24px 0 60px -30px rgba(0,0,0,.5);display:flex;flex-direction:column
+}
+.drawer.on{transform:none}
+.dhd{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px}
+.dhd .n{font-size:18px;font-weight:750;display:flex;align-items:center;gap:9px}
+.dhd .n .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.dhd .s{font-size:12px;color:var(--muted);margin-top:3px}
+.dclose{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:9px;width:30px;height:30px;cursor:pointer;color:var(--muted);font-size:16px;line-height:1}
+.dbd{overflow:auto;padding:16px 20px 30px}
+.dsec{margin:16px 0 0}
+.dsec h4{margin:0 0 8px;font-size:12.5px;color:var(--muted);font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.tile{background:#fbfdff;border:1px solid var(--line2);border-radius:11px;padding:10px}
+.tile .k{font-size:11px;color:var(--muted)}
+.tile .v{font-size:17px;font-weight:750;margin-top:2px}
+.rowlist{display:flex;flex-direction:column;gap:7px}
+.rowit{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.rowit .nm{flex:1;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rowit .vl{width:52px;text-align:right;color:var(--muted);font-size:11.5px}
+.gap{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--ink2);padding:7px 0;border-bottom:1px dashed var(--line2)}
+.gap:last-child{border-bottom:0}
+.judge{background:linear-gradient(180deg,#f8fbff,#fff);border:1px solid var(--line);border-left:3px solid var(--c);border-radius:11px;padding:11px 13px;font-size:12.5px;color:var(--ink2)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#0b2136;color:#fff;padding:9px 16px;border-radius:999px;font-size:12.5px;opacity:0;pointer-events:none;transition:.2s;z-index:120}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:1180px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .notes{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:1fr}
+  .htitle h1{font-size:20px}
+  .topbar .wrap{height:auto;padding:10px 0;flex-wrap:wrap}
+  .tbchips{display:none}
+}
+@media print{
+  .console,.mask,.drawer{display:none!important}
+  body{background:#fff}
+  .card,.kpi,.rc{box-shadow:none}
+  .topbar{position:static}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <div class="mark">Σ</div>
+      <div>
+        <b>区域价差对比台</b>
+        <span>%%PRODUCT%% · %%ASOF%%</span>
+      </div>
+    </div>
+    <div class="tbchips" id="tbchips"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="htitle">
+      <h1 id="h1">%%TITLE%%</h1>
+      <div class="asof" id="asof"></div>
+    </div>
+    <p class="hsub" id="hsub"></p>
+    <div class="tags" id="tags"></div>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="console">
+    <div class="cgroup">
+      <span class="clabel">对比区域 <em style="font-style:normal;color:#b42318" id="selnote"></em></span>
+      <div class="chips" id="regionchips"></div>
+    </div>
+    <div class="cgroup">
+      <span class="clabel">基准</span>
+      <select id="bench"></select>
+    </div>
+    <div class="cgroup">
+      <span class="clabel">区间</span>
+      <div class="seg" id="segdays">
+        <button data-d="0" class="on">全部</button>
+        <button data-d="60">近 60 天</button>
+        <button data-d="30">近 30 天</button>
+      </div>
+    </div>
+    <div class="cgroup">
+      <span class="clabel">发货地</span>
+      <select id="origin"></select>
+    </div>
+    <div class="cgroup">
+      <span class="clabel">方式</span>
+      <select id="mode"></select>
+    </div>
+    <div class="cgroup">
+      <span class="clabel">费率</span>
+      <input type="number" id="rate" step="0.01" min="0">
+      <button class="btn" id="resetrate">重置</button>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <div class="hd">
+        <h3>区域主流价走势</h3>
+        <div class="sub" id="pricesub"></div>
+      </div>
+      <div class="bd"><div id="priceChart" class="chart" style="height:330px"></div></div>
+      <div class="hr"></div>
+      <div class="hd">
+        <h3>相对基准的裸价差</h3>
+        <div class="sub">ΔP = 该区域价 − 基准区价，单位元/吨</div>
+      </div>
+      <div class="bd"><div id="spreadChart" class="chart" style="height:210px"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <h3>价差分解</h3>
+        <div class="sub" id="decsub"></div>
+      </div>
+      <div class="bd"><div id="decompChart" class="chart" style="height:300px"></div></div>
+      <div class="hr"></div>
+      <div class="hd"><h3>口径提示</h3></div>
+      <div class="bd" style="padding-top:4px">
+        <div id="caliber" style="font-size:12.5px;color:var(--ink2);line-height:1.65"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <div class="hd">
+      <h3>当前价格与价差分解表</h3>
+      <div class="sub">运费按所选发货地与方式实时重算；残差 = 裸价差 − 运费</div>
+    </div>
+    <div class="bd" style="padding:6px 6px 6px">
+      <table class="tbl" id="ptable">
+        <thead>
+          <tr>
+            <th>区域</th><th>主流价</th><th>裸价差</th><th>运距</th><th>运费（估）</th>
+            <th>运费/价差</th><th>残差</th><th style="text-align:left">判读</th><th>价信度</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <div class="hd">
+        <h3>裸价差矩阵</h3>
+        <div class="sub">行 − 列，单位元/吨；红=行更贵</div>
+      </div>
+      <div class="bd"><div id="matrix"></div></div>
+    </div>
+    <div class="card">
+      <div class="hd">
+        <h3>价差历史统计</h3>
+        <div class="sub" id="statsub"></div>
+      </div>
+      <div class="bd" style="padding:6px 6px 6px">
+        <table class="tbl" id="stable">
+          <thead><tr><th>区域</th><th>当前</th><th>均值</th><th>最小</th><th>最大</th><th>区间</th><th>分位</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="cards" id="cards"></section>
+
+  <section class="notes">
+    <div class="card">
+      <div class="hd"><h3>结论与判读</h3><div class="sub">先看价差结构，再谈市场动作</div></div>
+      <div class="bd"><ol class="nlist" id="concl"></ol></div>
+    </div>
+    <div class="card">
+      <div class="hd"><h3>口径 · 缺口 · 免责</h3></div>
+      <div class="bd">
+        <div class="kgrid" id="method"></div>
+        <div style="margin-top:12px" id="gaps"></div>
+        <div class="judge" style="margin-top:12px;--c:var(--amber)" id="disc"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <b>数据来源：</b><span id="srcnote"></span><br>
+    <b>生成方式：</b>region-price-spread 技能 · 同一份 data.json 生成 HTML 与 Excel，数字天然一致。<b>口径：</b><span id="basistxt"></span>
+  </div>
+</main>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <div class="dhd">
+    <div>
+      <div class="n"><span class="dot" id="d-dot"></span><span id="d-name"></span></div>
+      <div class="s" id="d-sub"></div>
+    </div>
+    <button class="dclose" id="dclose">×</button>
+  </div>
+  <div class="dbd">
+    <div id="d-chart" style="height:170px"></div>
+    <div class="dsec">
+      <h4>供需与结构</h4>
+      <div class="tiles" id="d-tiles"></div>
+    </div>
+    <div class="dsec">
+      <h4>主要生产企业（产能，万吨/年）</h4>
+      <div class="rowlist" id="d-prod"></div>
+    </div>
+    <div class="dsec">
+      <h4>下游与客户格局</h4>
+      <div id="d-cust"></div>
+    </div>
+    <div class="dsec">
+      <h4>当地报价环境</h4>
+      <div class="judge" id="d-judge" style="--c:var(--blue)"></div>
+    </div>
+    <div class="dsec">
+      <h4>该区域数据缺口</h4>
+      <div id="d-gaps"></div>
+    </div>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>window.__DATA__ = %%DATA%%;</script>
+<script>%%ECHARTS%%</script>
+<script>
+(function(){
+  const D = window.__DATA__;
+  const REG = D.regions;
+  const RM = Object.fromEntries(REG.map(r => [r.id, r]));
+  const COLOR = {east:'#1d4ed8',south:'#be123c',north:'#0e7490',central:'#b45309',southwest:'#047857'};
+  const MODES = Object.fromEntries(D.modes.map(m => [m.id, m]));
+  const fmt = (n,d=0)=> (n==null||isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const sgn = n => n==null?'—':(n>0?'+':'')+fmt(n,0);
+  const pct = (a,b)=> (b==null||b===0)?'—':Math.round(a/b*100)+'%';
+
+  const state = {
+    sel: REG.map(r=>r.id),
+    bench: D.benchmark || REG[0].id,
+    mode: (D.meta.default_mode||'water'),
+    origin: (D.meta.default_origin||D.benchmark||REG[0].id),
+    rate: null,
+    days: 0
+  };
+
+  /* ---------- helpers ---------- */
+  function datesFiltered(){
+    const all = D.series.dates;
+    if(!state.days) return all.map((d,i)=>i);
+    const end = new Date(D.meta.asof+'T00:00:00');
+    return all.map((d,i)=>i).filter(i=> (end - new Date(all[i]+'T00:00:00'))/86400000 <= state.days);
+  }
+  function km(a,b,mode){
+    if(a===b) return 0;
+    const e = D.matrix[a+'>'+b]; if(!e) return null;
+    return e.km[mode];
+  }
+  function cost(a,b,modeId){
+    if(a===b) return 0;
+    const e = D.matrix[a+'>'+b]; if(!e) return null;
+    if(modeId==='water'){
+      if(e.km.water==null) return null;
+      const rate = state.rate!=null ? state.rate : MODES.water.rate;
+      const sur = Math.max(RM[a].water_surcharge||0, RM[b].water_surcharge||0);
+      return Math.round((e.km.water*rate + MODES.water.base + sur)*10)/10;
+    }
+    const m = MODES[modeId];
+    const rate = state.rate!=null ? state.rate : m.rate;
+    return Math.round((e.km[modeId]*rate + (m.base||0))*10)/10;
+  }
+  function latest(id){
+    const arr = D.series.values[id]; const ds = D.series.dates;
+    for(let i=arr.length-1;i>=0;i--){ if(arr[i]!=null) return {v:arr[i], d:ds[i]}; }
+    return {v:null,d:null};
+  }
+  function rows(){
+    const b = state.bench, bv = latest(b).v;
+    return state.sel.map(id=>{
+      const L = latest(id), p = L.v;
+      const dp = (p==null||bv==null) ? null : (p-bv);
+      const k = km(state.origin, id, state.mode);
+      const f = cost(state.origin, id, state.mode);
+      const res = (dp==null||f==null) ? null : Math.round(dp - f);
+      return {id, name:RM[id].name, price:p, date:L.d, dp, km:k, freight:f, residual:res,
+              share:(dp&&f!=null)? f/dp : null, conf:RM[id].price_conf, water_ok:RM[id].water_ok};
+    });
+  }
+  function verdict(r){
+    if(r.id===state.bench) return {t:'基准区', c:'b-mut'};
+    if(r.dp==null) return {t:'缺价', c:'b-mut'};
+    if(r.freight==null) return {t:'需铁水联运，无法直达', c:'b-warn'};
+    if(Math.abs(r.dp)<30) return {t:'价格趋同（运费反超）', c:'b-mut'};
+    if(r.residual>=60) return {t:'残差为正，本地偏紧', c:'b-ok'};
+    if(r.residual<=-60) return {t:'运费反超，无覆盖空间', c:'b-bad'};
+    return {t:'运费基本解释', c:'b-blue'};
+  }
+
+  /* ---------- header ---------- */
+  document.title = D.meta.title;
+  document.getElementById('h1').textContent = D.meta.title;
+  document.getElementById('asof').textContent = '数据截止 '+D.meta.asof+' · '+D.meta.window.label;
+  document.getElementById('hsub').textContent = D.meta.subtitle;
+  document.getElementById('tags').innerHTML = (D.meta.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('tbchips').innerHTML = [
+    `<span class="tbchip">口径 <b>${D.meta.spec}</b></span>`,
+    `<span class="tbchip">基准 <b>${RM[state.bench].name}</b></span>`,
+    `<span class="tbchip">样本 <b>${D.series.dates.length}</b> 个</span>`,
+    `<span class="tbchip warn">运费为估算，需询价校准</span>`
+  ].join('');
+
+  /* ---------- console ---------- */
+  function renderChips(){
+    const box = document.getElementById('regionchips');
+    box.innerHTML = REG.map(r=>`
+      <span class="chip ${state.sel.includes(r.id)?'on':''}" data-id="${r.id}" style="--c:${COLOR[r.id]}">
+        <span class="dot"></span>${r.name}
+      </span>`).join('');
+    box.querySelectorAll('.chip').forEach(el=>{
+      el.onclick = ()=>{
+        const id = el.dataset.id;
+        if(state.sel.includes(id)){
+          if(state.sel.length<=2) return toast('至少保留 2 个区域');
+          state.sel = state.sel.filter(x=>x!==id);
+          if(state.bench===id) state.bench = state.sel[0];
+        }else{
+          if(state.sel.length>=5) return toast('最多对比 5 个区域');
+          state.sel.push(id);
+          state.sel.sort((a,b)=>REG.findIndex(r=>r.id===a)-REG.findIndex(r=>r.id===b));
+        }
+        renderAll();
+      };
+    });
+    document.getElementById('selnote').textContent = state.sel.length>=5?'（已满 5）':'';
+  }
+  function fillSelects(){
+    const benches = REG.filter(r=>state.sel.includes(r.id));
+    document.getElementById('bench').innerHTML = benches.map(r=>`<option value="${r.id}" ${r.id===state.bench?'selected':''}>${r.name}（基准）</option>`).join('');
+    document.getElementById('origin').innerHTML = REG.filter(r=>state.sel.includes(r.id)).map(r=>`<option value="${r.id}" ${r.id===state.origin?'selected':''}>${r.name} · ${r.hub}</option>`).join('');
+    document.getElementById('mode').innerHTML = D.modes.map(m=>`<option value="${m.id}" ${m.id===state.mode?'selected':''}>${m.label}</option>`).join('');
+    const r = document.getElementById('rate');
+    r.value = state.rate!=null ? state.rate : MODES[state.mode].rate;
+    r.step = state.mode==='water'?0.005:0.01;
+  }
+  document.getElementById('bench').onchange = e=>{ state.bench=e.target.value; renderAll(); };
+  document.getElementById('origin').onchange = e=>{ state.origin=e.target.value; renderAll(); };
+  document.getElementById('mode').onchange = e=>{ state.mode=e.target.value; state.rate=null; renderAll(); };
+  document.getElementById('rate').oninput = e=>{ const v=parseFloat(e.target.value); state.rate = isNaN(v)?null:v; renderAll(); };
+  document.getElementById('resetrate').onclick = ()=>{ state.rate=null; fillSelects(); renderAll(); };
+  document.getElementById('segdays').onclick = e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    state.days = parseInt(b.dataset.d,10);
+    [...e.currentTarget.children].forEach(x=>x.classList.toggle('on', x===b));
+    renderAll();
+  };
+
+  /* ---------- kpis ---------- */
+  function renderKpis(){
+    const rs = rows().filter(r=>r.price!=null);
+    const b = rs.find(r=>r.id===state.bench) || rs[0];
+    const hi = rs.reduce((a,c)=> c.price>a.price?c:a, rs[0]);
+    const lo = rs.reduce((a,c)=> c.price<a.price?c:a, rs[0]);
+    const maxSpread = hi.price - lo.price;
+    const pairCost = cost(lo.id, hi.id, state.mode);
+    const cover = pairCost!=null ? pairCost/maxSpread : null;
+    const gapCount = state.sel.reduce((n,id)=> n + ((RM[id].gaps||[]).length), 0);
+
+    const k = [
+      {k:'基准区价', v:fmt(b.price), u:'元/吨', s:`${b.name} · ${b.date}`, c:COLOR[b.id]},
+      {k:'最高区价', v:fmt(hi.price), u:'元/吨', s:`${hi.name} · 溢价 ${sgn(hi.price-b.price)}`, c:COLOR[hi.id]},
+      {k:'最低区价', v:fmt(lo.price), u:'元/吨', s:`${lo.name} · 折价 ${sgn(lo.price-b.price)}`, c:COLOR[lo.id]},
+      {k:'最大价差', v:fmt(maxSpread), u:'元/吨', s:`${hi.name} − ${lo.name}`, c:'#0b2136'},
+      {k:'运费/价差', v: cover==null?'—':Math.round(cover*100)+'%', u:'', s:`${RM[lo.id].name}→${RM[hi.id].name} · ${MODES[state.mode].label.split('（')[0]} ${pairCost==null?'不可达':fmt(pairCost)+' 元'}`, c: cover>1?'#b42318':'#0d7a63'},
+      {k:'数据缺口', v:fmt(gapCount), u:'项', s:`选中区域合计 · 已标注`, c:'#b8791a'}
+    ];
+    document.getElementById('kpis').innerHTML = k.map(x=>`
+      <div class="kpi" style="--kc:${x.c}">
+        <div class="k">${x.k}</div>
+        <div class="v num">${x.v}<small>${x.u}</small></div>
+        <div class="s">${x.s}</div>
+      </div>`).join('');
+  }
+
+  /* ---------- charts ---------- */
+  let priceChart=null, spreadChart=null, decompChart=null, drawerChart=null;
+  const baseOpt = {
+    animationDuration:520,
+    textStyle:{fontFamily:'-apple-system,"PingFang SC","Microsoft YaHei",sans-serif'},
+    grid:{left:8,right:16,top:26,bottom:6,containLabel:true},
+    tooltip:{trigger:'axis',backgroundColor:'#0b2136',borderWidth:0,padding:[9,12],
+      textStyle:{color:'#eaf2fb',fontSize:12},
+      axisPointer:{type:'line',lineStyle:{color:'#9db2c6',type:'dashed'}}}
+  };
+  function renderCharts(){
+    const idx = datesFiltered();
+    const dates = idx.map(i=>D.series.dates[i]);
+    const rs = rows();
+
+    // price chart
+    const series = state.sel.map(id=>({
+      name:RM[id].name, type:'line', smooth:false, symbol:'circle', symbolSize:6,
+      showSymbol:true, connectNulls:false,
+      itemStyle:{color:COLOR[id]}, lineStyle:{width:2.2,color:COLOR[id]},
+      emphasis:{focus:'series'},
+      data: idx.map(i=>D.series.values[id][i])
+    }));
+    series[0] = Object.assign(series[0], state.days===0 ? {
+      markArea:{ silent:true, itemStyle:{color:'rgba(184,121,26,.07)'},
+        label:{show:true,position:'insideTop',color:'#9a6a12',fontSize:11,formatter:'8 月无逐日样本'},
+        data:[[{xAxis:dates[0]},{xAxis:dates[Math.min(1,dates.length-1)]}]] }
+    } : {});
+    priceChart = priceChart || echarts.init(document.getElementById('priceChart'));
+    priceChart.setOption(Object.assign({},baseOpt,{
+      legend:{top:0,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11.5,color:'#31485f'}},
+      grid:{left:8,right:18,top:30,bottom:6,containLabel:true},
+      xAxis:{type:'category',data:dates,boundaryGap:false,
+        axisLine:{lineStyle:{color:'#dbe4ee'}},axisTick:{show:false},
+        axisLabel:{color:'#6b7f93',fontSize:11}},
+      yAxis:{type:'value',scale:true,splitLine:{lineStyle:{color:'#eef3f8'}},
+        axisLabel:{color:'#6b7f93',fontSize:11}},
+      series
+    }), true);
+    document.getElementById('pricesub').textContent = `${dates.length} 个样本 · ${D.meta.unit} · 含税`;
+
+    // spread chart
+    const b = state.bench;
+    const sp = state.sel.filter(id=>id!==b).map(id=>({
+      name:RM[id].name, type:'line', symbol:'circle', symbolSize:5,
+      itemStyle:{color:COLOR[id]}, lineStyle:{width:2,color:COLOR[id]},
+      areaStyle: state.sel.length===2?{opacity:.06,color:COLOR[id]}:null,
+      data: idx.map(i=>{
+        const a = D.series.values[id][i], bb = D.series.values[b][i];
+        return (a==null||bb==null)?null:+(a-bb).toFixed(1);
+      })
+    }));
+    spreadChart = spreadChart || echarts.init(document.getElementById('spreadChart'));
+    spreadChart.setOption(Object.assign({},baseOpt,{
+      legend:{top:0,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11.5,color:'#31485f'}},
+      grid:{left:8,right:18,top:26,bottom:6,containLabel:true},
+      xAxis:{type:'category',data:dates,boundaryGap:false,
+        axisLine:{lineStyle:{color:'#dbe4ee'}},axisTick:{show:false},
+        axisLabel:{color:'#6b7f93',fontSize:11}},
+      yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef3f8'}},
+        axisLabel:{color:'#6b7f93',fontSize:11,formatter:v=>v+' 元'}},
+      series: sp.length?sp:[{name:'—',type:'line',data:[]}]
+    }), true);
+
+    // decomp chart: ΔP vs freight
+    const list = rs.filter(r=>r.id!==b);
+    decompChart = decompChart || echarts.init(document.getElementById('decompChart'));
+    decompChart.setOption(Object.assign({},baseOpt,{
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0b2136',borderWidth:0,
+        textStyle:{color:'#eaf2fb',fontSize:12}},
+      legend:{top:0,right:0,itemWidth:12,itemHeight:8,textStyle:{fontSize:11.5,color:'#31485f'}},
+      grid:{left:8,right:46,top:30,bottom:6,containLabel:true},
+      xAxis:{type:'value',splitLine:{lineStyle:{color:'#eef3f8'}},
+        axisLabel:{color:'#6b7f93',fontSize:11,formatter:v=>v+' 元'}},
+      yAxis:{type:'category',data:list.map(r=>r.name).reverse(),
+        axisLine:{show:false},axisTick:{show:false},
+        axisLabel:{color:'#31485f',fontSize:12}},
+      series:[
+        {name:'裸价差 ΔP',type:'bar',barWidth:11,itemStyle:{color:'#1d4ed8',borderRadius:[0,3,3,0]},
+         data:list.map(r=>r.dp).reverse()},
+        {name:'运费（估）',type:'bar',barWidth:11,itemStyle:{color:'#94a3b8',borderRadius:[0,3,3,0]},
+         data:list.map(r=>r.freight).reverse()},
+        {name:'残差',type:'scatter',symbol:'diamond',symbolSize:11,
+         itemStyle:{color:'#b8791a'},data:list.map(r=>r.residual).reverse()}
+      ]
+    }), true);
+    document.getElementById('decsub').textContent = `发货地 ${RM[state.origin].name} → 各区域`;
+  }
+
+  /* ---------- table ---------- */
+  function renderTable(){
+    const rs = rows();
+    const tb = document.querySelector('#ptable tbody');
+    tb.innerHTML = rs.map(r=>{
+      const v = verdict(r);
+      const dc = r.dp>0?'up':(r.dp<0?'down':'');
+      const kms = r.km==null?'—':fmt(r.km)+' km';
+      return `<tr>
+        <td><span class="reg" style="--c:${COLOR[r.id]}"><span class="dot"></span>${r.name}</span></td>
+        <td class="num"><b>${fmt(r.price)}</b></td>
+        <td class="num ${r.id===state.bench?'':dc}">${r.id===state.bench?'—':sgn(r.dp)}</td>
+        <td class="num">${kms}</td>
+        <td class="num">${r.freight==null?'<span class="badge b-warn">不可达</span>':fmt(r.freight)}</td>
+        <td class="num">${r.share==null?'—':Math.round(r.share*100)+'%'}</td>
+        <td class="num"><b>${r.residual==null?'—':sgn(r.residual)}</b></td>
+        <td style="text-align:left"><span class="badge ${v.c}">${v.t}</span></td>
+        <td><span class="badge ${r.conf==='高'?'b-ok':(r.conf==='中'?'b-blue':'b-warn')}">${r.conf}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ---------- matrix ---------- */
+  function renderMatrix(){
+    const ids = state.sel.slice();
+    let h = '<table class="mtx"><thead><tr><th></th>' + ids.map(id=>`<th>${RM[id].name}</th>`).join('') + '</tr></thead><tbody>';
+    ids.forEach(a=>{
+      h += `<tr><th>${RM[a].name}</th>`;
+      ids.forEach(b=>{
+        if(a===b){ h += '<td class="diag">·</td>'; return; }
+        const pa = latest(a).v, pb = latest(b).v;
+        const d = (pa==null||pb==null)?null:(pa-pb);
+        const mx = 160;
+        const t = d==null?0:Math.min(1,Math.abs(d)/mx);
+        const bg = d==null?'#f8fafc':(d>0?`rgba(190,18,60,${0.06+t*0.42})`:`rgba(29,78,216,${0.05+t*0.38})`);
+        h += `<td style="background:${bg}">${d==null?'—':sgn(d)}</td>`;
+      });
+      h += '</tr>';
+    });
+    h += '</tbody></table>';
+    document.getElementById('matrix').innerHTML = h;
+  }
+
+  /* ---------- stats ---------- */
+  function renderStats(){
+    const idx = datesFiltered();
+    const b = state.bench;
+    const tb = document.querySelector('#stable tbody');
+    tb.innerHTML = state.sel.map(id=>{
+      const arr = idx.map(i=>{
+        const a = D.series.values[id][i], bb = D.series.values[b][i];
+        return (a==null||bb==null)?null:+(a-bb).toFixed(1);
+      });
+      const xs = arr.filter(v=>v!=null);
+      if(!xs.length) return '';
+      const cur = xs[xs.length-1];
+      const mean = xs.reduce((s,x)=>s+x,0)/xs.length;
+      const mn = Math.min(...xs), mx = Math.max(...xs);
+      const pctl = Math.round(100*xs.filter(x=>x<=cur).length/xs.length);
+      return `<tr>
+        <td><span class="reg" style="--c:${COLOR[id]}"><span class="dot"></span>${RM[id].name}</span></td>
+        <td class="num"><b>${id===b?'0':sgn(cur)}</b></td>
+        <td class="num">${id===b?'0':sgn(mean)}</td>
+        <td class="num">${id===b?'0':sgn(mn)}</td>
+        <td class="num">${id===b?'0':sgn(mx)}</td>
+        <td class="num">${fmt(mx-mn)}</td>
+        <td class="num">${pctl}%</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('statsub').textContent = `${idx.length} 个样本 · 相对 ${RM[b].name}`;
+  }
+
+  /* ---------- cards ---------- */
+  function renderCards(){
+    const rs = rows();
+    document.getElementById('cards').innerHTML = rs.map(r=>{
+      const s = RM[r.id].supply, dm = RM[r.id].demand;
+      return `<div class="rc" data-id="${r.id}" style="--c:${COLOR[r.id]}">
+        <div class="n"><span class="dot"></span>${r.name}<span style="margin-left:auto;font-size:11px;color:#94a3b8">${RM[r.id].hub}</span></div>
+        <div class="p num">${fmt(r.price)}<small>元/吨</small></div>
+        <div class="d">${r.id===state.bench?'基准区':(r.dp==null?'缺价':'较基准 '+sgn(r.dp)+' 元/吨')}</div>
+        <div class="m">
+          <div>产能<b class="num">${fmt(s.capacity)}</b></div>
+          <div>需求<b class="num">${fmt(dm.total)}</b></div>
+          <div>净平衡<b class="num">${s.net>0?'+':''}${fmt(s.net)}</b></div>
+        </div>
+        <div class="j">${RM[r.id].judge}</div>
+        <div class="go">查看客户与供应格局 →</div>
+      </div>`;
+    }).join('');
+    document.querySelectorAll('.rc').forEach(el=>el.onclick=()=>openDrawer(el.dataset.id));
+  }
+
+  /* ---------- notes ---------- */
+  function renderNotes(){
+    document.getElementById('concl').innerHTML = (D.narrative.conclusions||[]).map(t=>`<li>${t}</li>`).join('');
+    document.getElementById('method').innerHTML = (D.narrative.method||[]).map(m=>
+      `<div class="kv"><div class="k">${m.k}</div><div class="v">${m.v}</div></div>`).join('');
+    document.getElementById('gaps').innerHTML = `<div style="font-size:12px;color:var(--muted);margin-bottom:6px">数据缺口（必须先说明，再谈结论）</div>` +
+      (D.narrative.gaps||[]).map(t=>`<div class="gap"><span class="badge b-warn">缺</span><div>${t}</div></div>`).join('');
+    document.getElementById('disc').textContent = D.narrative.disclaimer;
+    document.getElementById('srcnote').textContent = (D.series.sources||[]).slice(-1)[0]
+      ? `同花顺 iFinD『各地区纯碱现货价格』逐日 ${D.series.dates.length} 期（${D.series.dates[0]} 至 ${D.series.dates[D.series.dates.length-1]}）；供需与产能为公开年报/协会口径估算。` : '';
+    document.getElementById('basistxt').textContent = D.meta.basis;
+    document.getElementById('caliber').innerHTML = `
+      <div style="margin-bottom:6px">${D.meta.basis_note}</div>
+      <div style="color:var(--muted)">${D.freight.note}</div>
+      <div style="margin-top:8px;color:var(--muted)">${D.meta.est_note}</div>`;
+  }
+
+  /* ---------- drawer ---------- */
+  function openDrawer(id){
+    const r = RM[id], L = latest(id), b = state.bench;
+    document.getElementById('d-dot').style.background = COLOR[id];
+    document.getElementById('d-name').textContent = r.name + ' · ' + r.hub;
+    document.getElementById('d-sub').textContent = `${D.meta.spec} · 主流价 ${fmt(L.v)} 元/吨（${L.d}）· 单区视角`;
+    document.getElementById('d-tiles').innerHTML = `
+      <div class="tile"><div class="k">产能（万吨/年）</div><div class="v num">${fmt(r.supply.capacity)}</div></div>
+      <div class="tile"><div class="k">需求（万吨/年）</div><div class="v num">${fmt(r.demand.total)}</div></div>
+      <div class="tile"><div class="k">净平衡</div><div class="v num" style="color:${r.supply.net<0?'#b42318':'#0d7a63'}">${r.supply.net>0?'+':''}${fmt(r.supply.net)}</div></div>
+      <div class="tile"><div class="k">CR3</div><div class="v num">${r.supply.cr3}%</div></div>
+      <div class="tile"><div class="k">浮法+光伏用碱</div><div class="v num">${fmt((r.demand.float||0)+(r.demand.pv||0))}</div></div>
+      <div class="tile"><div class="k">轻碱用量</div><div class="v num">${fmt(r.demand.light||0)}</div></div>`;
+    document.getElementById('d-prod').innerHTML = (r.supply.producers||[]).map(p=>{
+      const w = Math.max(6, Math.round(p.c/ (r.supply.capacity||1) *100));
+      return `<div class="rowit"><span class="nm">${p.n}<span style="color:#94a3b8"> · ${p.t||''}</span></span>
+        <span class="bar" style="width:120px"><i style="width:${w}%;background:${COLOR[id]}"></i></span>
+        <span class="vl num">${p.c}</span></div>`;
+    }).join('');
+    document.getElementById('d-cust').innerHTML = (r.customers||[]).map(c=>
+      `<div class="gap"><span class="badge b-blue">${c.t}</span><div><b>${c.n}</b><div style="color:#6b7f93;font-size:11.5px">${c.note||''}</div></div></div>`).join('');
+    document.getElementById('d-judge').textContent = r.judge;
+    document.getElementById('d-judge').style.setProperty('--c', COLOR[id]);
+    document.getElementById('d-gaps').innerHTML = (r.gaps||[]).map(g=>
+      `<div class="gap"><span class="badge ${g.lvl==='高'?'b-bad':(g.lvl==='中'?'b-warn':'b-mut')}">${g.lvl}</span>
+       <div><b>${g.k}</b> — <span style="color:#6b7f93">${g.t}</span></div></div>`).join('') ||
+      '<div style="color:var(--muted);font-size:12.5px">暂无单列缺口</div>';
+
+    // drawer chart
+    const idx = datesFiltered();
+    const ds = idx.map(i=>D.series.dates[i]);
+    drawerChart = drawerChart || echarts.init(document.getElementById('d-chart'));
+    const ser = [{name:r.name,type:'line',data:idx.map(i=>D.series.values[id][i]),symbolSize:5,
+      itemStyle:{color:COLOR[id]},lineStyle:{width:2.4,color:COLOR[id]},
+      areaStyle:{opacity:.08,color:COLOR[id]}}];
+    if(id!==b) ser.push({name:RM[b].name+'（基准）',type:'line',data:idx.map(i=>D.series.values[b][i]),
+      symbolSize:4,itemStyle:{color:'#94a3b8'},lineStyle:{width:1.6,color:'#94a3b8',type:'dashed'}});
+    drawerChart.setOption(Object.assign({},baseOpt,{
+      grid:{left:6,right:10,top:24,bottom:4,containLabel:true},
+      legend:{top:0,right:0,itemWidth:10,itemHeight:7,textStyle:{fontSize:11,color:'#31485f'}},
+      xAxis:{type:'category',data:ds,boundaryGap:false,axisLine:{lineStyle:{color:'#dbe4ee'}},axisTick:{show:false},axisLabel:{fontSize:10,color:'#6b7f93'}},
+      yAxis:{type:'value',scale:true,splitLine:{lineStyle:{color:'#eef3f8'}},axisLabel:{fontSize:10,color:'#6b7f93'}},
+      series:ser
+    }),true); drawerChart.resize();
+
+    document.getElementById('drawer').classList.add('on');
+    document.getElementById('mask').classList.add('on');
+  }
+  function closeDrawer(){
+    document.getElementById('drawer').classList.remove('on');
+    document.getElementById('mask').classList.remove('on');
+  }
+  document.getElementById('dclose').onclick = closeDrawer;
+  document.getElementById('mask').onclick = closeDrawer;
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDrawer(); });
+
+  /* ---------- toast ---------- */
+  let tt=null;
+  function toast(msg){
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('on');
+    clearTimeout(tt); tt = setTimeout(()=>el.classList.remove('on'),1800);
+  }
+
+  /* ---------- render ---------- */
+  function renderAll(){
+    if(!state.sel.includes(state.bench)) state.bench = state.sel[0];
+    if(!state.sel.includes(state.origin)) state.origin = state.bench;
+    renderChips(); fillSelects();
+    renderKpis(); renderCharts(); renderTable(); renderMatrix(); renderStats(); renderCards();
+    document.getElementById('tbchips').querySelectorAll('.tbchip')[1].innerHTML = '基准 <b>'+RM[state.bench].name+'</b>';
+  }
+  renderNotes();
+  renderAll();
+  window.addEventListener('resize', ()=>{
+    [priceChart,spreadChart,decompChart,drawerChart].forEach(c=>c&&c.resize());
+  });
+})();
+</script>
+</body>
+</html>

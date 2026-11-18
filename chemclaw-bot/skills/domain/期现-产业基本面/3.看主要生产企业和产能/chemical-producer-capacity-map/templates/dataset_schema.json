@@ -1,0 +1,185 @@
+{
+  "_schema_note": "化工品生产企业与产能分布 —— 数据集模板。复制此文件到 data/final.json 后按需填充。所有 capacity 单位为【万吨/年】。未知一律用 null，不得填 0 或估算值。",
+  "_enums": {
+    "basis": ["design", "effective", "approved", "actual"],
+    "route": ["carbide", "ethylene", "mixed", "unknown"],
+    "status": ["running", "maintenance", "idle", "shutdown", "unknown"],
+    "confidence": ["A", "B", "C", "D"],
+    "stage": ["planned", "filed", "eia", "construction", "commissioning", "rampup", "operating", "suspended", "cancelled"],
+    "coord_precision": ["plant", "city", "province"],
+    "severity": ["ERROR", "WARN", "INFO"]
+  },
+
+  "meta": {
+    "title": "【产品名】生产企业与产能分布研究报告",
+    "generated": "YYYY-MM-DD",
+    "cutoff": "YYYY-MM-DD（数据年度说明）",
+    "sample_scope": "【样本范围：覆盖哪些企业类型、含不含境外/在建/停产】",
+    "coverage": "XX.X%",
+    "coverage_note": "样本 X 万吨 / 全国 Y 万吨（来源机构口径）",
+    "coverage_warning": "样本合计不等于全国总产能，不得称为全国总产能。",
+    "basis_disclaimer": "【列出所有全国口径及其来源，说明并列展示、不取平均】"
+  },
+
+  "product": {
+    "name": "【中文名】",
+    "short": "【简称】",
+    "cas": "【CAS号】",
+    "formula": "【分子式】",
+    "base_year": 2025,
+    "definition": "【产品定义与等级划分】",
+    "routes": {
+      "carbide": "【工艺路线说明】",
+      "ethylene": "【工艺路线说明】"
+    }
+  },
+
+  "groups": [
+    {
+      "group_id": "G01",
+      "name": "【集团法定全称】",
+      "short_name": "【简称】",
+      "ultimate_controller": "【实际控制人】",
+      "group_type": "【央企/省属国企/地方国企/民营/外资/混合所有制】",
+      "note": "【集团与上市主体关系、是否含非上市主体等关键说明】",
+      "source_id": "S01"
+    }
+  ],
+
+  "entities": [
+    {
+      "entity_id": "E001",
+      "name": "【法定主体全称】",
+      "short_name": "【简称】",
+      "group_id": "G01",
+      "stock_code": "【000000.SZ 或留空】",
+      "unified_code": "【统一社会信用代码或留空】",
+      "registered_address": "【注册地址】",
+      "entity_type": "【生产型/控股型/已注销/非目标产品】",
+      "ownership": "【持股关系】",
+      "verified_by": "【核验依据：哪份文件哪一页】",
+      "source_id": "S01"
+    }
+  ],
+
+  "plants": [
+    {
+      "plant_id": "P001",
+      "name": "【基地简称】",
+      "name_full": "【基地全称】",
+      "entity_id": "E001",
+      "province": "【省/自治区/直辖市】",
+      "city": "【市】",
+      "district": "【区县】",
+      "park": "【园区名】",
+      "lat": null,
+      "lon": null,
+      "coord_precision": "city",
+      "registered_address": "【地址】"
+    }
+  ],
+
+  "units": [
+    {
+      "uid": "U-P001-01",
+      "plant_id": "P001",
+      "entity_id": "E001",
+      "product": "【产品名/牌号】",
+      "grade_class": "【产品等级：通用/专用料/糊树脂/特种】",
+      "basis": "design",
+      "capacity": null,
+      "capacity_note": "【原文表述照录，含「约」「超」「预计」等限定词；未披露原因也写这里】",
+      "capacity_year": 2025,
+      "route": "unknown",
+      "route_note": "【工艺判断依据】",
+      "start_year": null,
+      "status": "running",
+      "status_note": "【状态依据：利用率/停产公告等】",
+      "integrated_calcium_carbide": null,
+      "source_id": "S01",
+      "confidence": "A"
+    }
+  ],
+
+  "projects": [
+    {
+      "project_id": "PR01",
+      "name": "【项目名称】",
+      "entity_id": "E001",
+      "plant_id": "P001",
+      "province": "【省】",
+      "city": "【市】",
+      "capacity": null,
+      "capacity_note": "【原文规模表述】",
+      "route": "unknown",
+      "stage": "construction",
+      "expected_year": null,
+      "expected_period": "【预计投产时间描述】",
+      "retired_capacity": null,
+      "replacement_note": "【置换情况：净新增 / 未查到置换方案 / 方案未披露】",
+      "capex": "【投资额】",
+      "timeline": [
+        {"date": "YYYY-MM-DD", "event": "【事件】", "note": "【备注】"}
+      ],
+      "source_ids": ["S01"],
+      "confidence": "B",
+      "note": "【项目说明、合规风险、常见误引纠正】"
+    }
+  ],
+
+  "sources": [
+    {
+      "source_id": "S01",
+      "pub_type": "【年报/公告/评级报告/环评公示/协会统计/官网/媒体/行业资料】",
+      "title": "【标题】",
+      "org": "【发布机构】",
+      "date": "YYYY-MM-DD",
+      "url": "【URL】",
+      "confidence": "A",
+      "note": "【关键信息在第几页、原文关键句】"
+    }
+  ],
+
+  "benchmarks": [
+    {
+      "id": "BM01",
+      "metric": "【指标名，如：全国XX产能】",
+      "value": null,
+      "unit": "万吨/年",
+      "year": 2025,
+      "source_id": "S01",
+      "source_org": "【机构名】",
+      "confidence": "A",
+      "definition": "【该口径的准确定义：含不含某等级、统计时点等】",
+      "note": "【与其他口径的差异说明】"
+    }
+  ],
+
+  "gaps": [
+    {
+      "id": "G-01",
+      "item": "【缺口项：缺什么数据】",
+      "affects": "【影响哪些表/图】",
+      "status": "【当前状态：为什么没拿到】",
+      "how_to_fill": "【补齐路径：查什么文件、找哪个部门】",
+      "priority": "【高/中/低】"
+    }
+  ],
+
+  "notes": {
+    "basis_rules": [
+      "【联产：说明该产品是否与其它产品联产，产能如何分列】",
+      "【副产：说明副产物的处理】",
+      "【不同产品等级：说明各等级的产能口径差异与量级】",
+      "【长期停产：说明在册产能与有效产能的差异】",
+      "【已退出/注销：说明处理方式】",
+      "【集团 vs 上市公司：说明口径差异】"
+    ],
+    "route_notes": [
+      "【各工艺路线的技术说明、成本锚定、典型规模】"
+    ],
+    "policy_notes": [
+      "【产业政策：准入目录、产能置换要求、能效/环保约束】"
+    ]
+  }
+}

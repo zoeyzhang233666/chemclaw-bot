@@ -1,0 +1,25 @@
+示例：example-1-id-soda-ash-dense
+参数：tone=friendly-professional template=reply_A_confirm
+
+[ok] ./_intl_inquiry_soda\build\overseas-inquiry-triage\examples\example-1-id-soda-ash-dense/fields.json  → 已明确 28 · 缺失 30 · 歧义 6
+[gate] 可直接报价：否 · 阻塞字段 5 个
+[q] 客户问题 4 条 · 内部先确认 9 条
+[ok] ./_intl_inquiry_soda\build\overseas-inquiry-triage\examples\example-1-id-soda-ash-dense\03_英文回复草稿.md (3388 chars)
+[ok] ./_intl_inquiry_soda\build\overseas-inquiry-triage\examples\example-1-id-soda-ash-dense\06_中文缺口简报.md (1452 chars)
+[ok] ./_intl_inquiry_soda\build\overseas-inquiry-triage\examples\example-1-id-soda-ash-dense\04_询盘审阅板.html (94 KB · 字段 64 · 素材 2 · 问题 4)
+[ok] ./_intl_inquiry_soda\build\overseas-inquiry-triage\examples\example-1-id-soda-ash-dense\05_询盘处理工作簿.xlsx （8 张表）
+== 示例：example-1-id-soda-ash-dense
+PASS  产物齐全  · 6 个产物
+PASS  字段覆盖 8 类  · 实有：ABCDEFGH
+PASS  已明确字段都有原文依据  · 28 项均有依据
+PASS  回复无商务承诺
+PASS  占位符均已登记  · 8 个
+PASS  回复无价格数字
+PASS  HTML 有模拟声明
+PASS  HTML 单文件无外链  · 无外部资源引用
+PASS  HTML 无真实性评分字样
+PASS  MD 有模拟声明
+PASS  MD 占位符可见
+PASS  XLSX 结构完整  · 16 个部件
+
+12/12 通过

@@ -1,0 +1,33 @@
+{
+  "audit": {
+    "overlap": [],
+    "clipped": [],
+    "contrast": [],
+    "tiny": [],
+    "emptyChart": [],
+    "kpiHeights": [
+      119,
+      119,
+      119,
+      119,
+      119,
+      119
+    ],
+    "unaligned": []
+  },
+  "findings": [],
+  "typo": {
+    "kpi_v": null,
+    "kpi_l": null,
+    "body": {
+      "fs": "14px",
+      "fw": "400",
+      "ff": "\"Segoe UI\""
+    },
+    "h2": {
+      "fs": "15px",
+      "fw": "700",
+      "ff": "\"Segoe UI\""
+    }
+  }
+}

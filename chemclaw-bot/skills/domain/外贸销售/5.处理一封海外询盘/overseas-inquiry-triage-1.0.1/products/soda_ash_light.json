@@ -1,0 +1,39 @@
+{
+  "id": "soda_ash_light",
+  "name_cn": "轻质纯碱",
+  "name_en": "Soda Ash Light",
+  "synonyms": ["light soda ash", "sodium carbonate light", "轻灰", "轻质碳酸钠"],
+  "other_languages": {
+    "id": ["natrium karbonat ringan"],
+    "vi": ["soda ash nhẹ", "natri cacbonat nhẹ"],
+    "es": ["carbonato de sodio ligero"],
+    "pt": ["carbonato de sódio leve"],
+    "ar": ["رماد الصودا الخفيف"]
+  },
+  "cas": "497-19-8",
+  "ec": "207-838-8",
+  "un": null,
+  "hs_candidates": ["28362000"],
+  "hs_note": "与重质纯碱同归 2836.20；轻重之分不影响 HS，但影响包装与运费。",
+  "grades": [
+    {"code": "detergent", "cn": "洗涤级", "typical": {"Na2CO3": "≥99.0%", "bulk_density": "0.5–0.6 g/cm3"}},
+    {"code": "technical", "cn": "工业级", "typical": {"Na2CO3": "≥99.0%"}}
+  ],
+  "typical_specs": {
+    "Na2CO3": {"unit": "%", "value": "≥99.0"},
+    "Fe": {"unit": "%", "value": "≤0.005"},
+    "chloride_NaCl": {"unit": "%", "value": "≤0.5"},
+    "bulk_density": {"unit": "g/cm3", "value": "0.5–0.6"},
+    "particle_180um": {"unit": "%", "value": "≥75"}
+  },
+  "applications": ["detergent", "sodium silicate", "water treatment", "dyestuff"],
+  "packing_options": ["25 kg PP woven bag + PE liner", "750 kg jumbo bag"],
+  "sales_notes": [
+    "轻质堆密度约为重质的一半，同体积装货量差一倍，报价必须绑定包装与吨位。",
+    "玻璃厂通常不用轻质，客户要轻质多半是洗涤/硅酸钠方向，可顺势确认用途。"
+  ],
+  "do_not_assume": [
+    "不能默认客户说的纯碱就是重质",
+    "不能把轻质的堆密度当成重质的"
+  ]
+}

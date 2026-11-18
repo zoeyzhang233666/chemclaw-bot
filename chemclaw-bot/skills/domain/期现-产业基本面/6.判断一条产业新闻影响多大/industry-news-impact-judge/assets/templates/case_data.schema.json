@@ -1,0 +1,507 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://industry-news-impact-judge/schemas/case_data.schema.json",
+  "title": "产业新闻影响分析 · 案例数据契约",
+  "description": "单一数据源。HTML 报告与 Excel 工作簿都由本文件生成。字段缺失时保留缺口，不得编造。",
+  "type": "object",
+  "required": ["meta", "verification_card", "sources", "event", "chain", "capacity_basis", "calculations", "three_way", "observables", "market_snapshot", "gaps"],
+  "additionalProperties": true,
+  "definitions": {
+    "date_str": {
+      "type": "string",
+      "description": "ISO 日期 YYYY-MM-DD；不确定时用 YYYY-MM 或 YYYY，并在对应 note 字段说明精度。"
+    },
+    "grade": {
+      "type": "string",
+      "enum": ["A1", "A2", "A3", "B1", "B2", "B3", "C", "D"],
+      "description": "证据等级。A1=监管/官方认定；A2=上市公司公告/年报；A3=行业协会或权威机构统计；B1=头部资讯商；B2=券商研报；B3=行业媒体；C=一般媒体转述；D=未经证实网络信息。"
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["T1", "T2", "T3", "T4", "T5", "T6"],
+      "description": "来源层级。T1=政府/监管；T2=上市公司法定披露；T3=行业协会/交易所；T4=专业资讯商与研报；T5=行业媒体；T6=社交/自媒体。"
+    },
+    "event_type_code": {
+      "type": "string",
+      "enum": ["ACCIDENT", "UNPLANNED_STOP", "MAINTENANCE", "RESTART", "CAPACITY_UTIL", "NEW_CAPACITY", "SHUTDOWN", "POLICY", "RAW_MATERIAL", "DEMAND", "LOGISTICS", "TRADE"]
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "title", "publisher", "tier", "grade"],
+      "properties": {
+        "id": { "type": "string", "description": "S1、S2…，正文引用时用 [S1]。" },
+        "title": { "type": "string" },
+        "publisher": { "type": "string" },
+        "url": { "type": "string" },
+        "published": { "type": "string", "description": "发布日期（含精度说明）。" },
+        "tier": { "$ref": "#/definitions/tier" },
+        "grade": { "$ref": "#/definitions/grade" },
+        "accessed": { "type": "string" },
+        "note": { "type": "string", "description": "该来源能证明什么、不能证明什么。" },
+        "is_primary": { "type": "boolean", "description": "是否为原始来源（非转载）。" },
+        "is_confirmation": { "type": "boolean", "description": "是否构成对事件事实的独立确认源。" }
+      }
+    }
+  },
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["case_id", "product", "title", "analyst_baseline_date", "disclaimer"],
+      "properties": {
+        "case_id": { "type": "string", "description": "如 CASE-MEOH-2023-0508。" },
+        "product": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "analyst_baseline_date": { "$ref": "#/definitions/date_str" },
+        "disclaimer": { "type": "string", "description": "必须写明不提供价格涨跌结论、不构成投资建议。" },
+        "scope_note": { "type": "string" }
+      }
+    },
+
+    "verification_card": {
+      "type": "object",
+      "description": "首屏消息核验卡。8 个必填要素缺一不可。",
+      "required": ["headline", "event_date", "first_public_authority", "first_public_date", "fact_status", "old_news_verdict", "freshness_score", "overall_grade"],
+      "properties": {
+        "headline": { "type": "string", "description": "一句话事实陈述，不含判断。" },
+        "event_date": { "type": "string", "description": "事件发生时间，精确到分钟时可写 YYYY-MM-DD HH:MM。" },
+        "first_public_authority": { "type": "string", "description": "最早公开确认主体（政府/交易所/公司公告）。" },
+        "first_public_date": { "type": "string", "description": "该主体首次公开发布日期。" },
+        "earliest_dated_public_record": { "type": "string", "description": "可检索到的最早有明确日期的公开记录（可能是事后报道，不等于首发）。" },
+        "circulation_first_date": { "type": "string", "description": "媒体开始转载的日期。" },
+        "fact_status": { "type": "string", "description": "如「政府确认（A1）」。必须与 overall_grade 自洽。" },
+        "fact_status_detail": { "type": "string", "description": "哪些要素被确认、由谁确认。" },
+        "old_news_verdict": {
+          "type": "string",
+          "description": "旧闻判定结论：旧闻重发 / 旧闻+新进展 / 新消息 / 待定。",
+          "enum": ["旧闻重发", "旧闻+新进展", "新消息", "待定"]
+        },
+        "old_news_evidence": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "6 类旧闻信号中命中的项，逐条陈述命中/未命中及依据。"
+        },
+        "freshness_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "时效评分 0–5。5=事件未发生（预期）；4=当日；3=3 日内；2=2 周内；1=3 个月内；0=3 个月以上。"
+        },
+        "freshness_label": { "type": "string", "description": "如「已充分定价 / 部分定价 / 可能仍有预期差 / 市场已遗忘」。" },
+        "freshness_note": { "type": "string", "description": "评分理由。" },
+        "confirmation_sources_count": { "type": "integer", "minimum": 0 },
+        "media_reprint_count": { "type": "integer", "minimum": 0 },
+        "reprints_note": { "type": "string" },
+        "market_awareness": { "type": "string", "description": "如「已被广泛知悉」。" },
+        "market_awareness_evidence": { "type": "string" },
+        "key_correction": { "type": "string", "description": "若新闻中有与原件冲突或被媒体夸大的表述，在此纠正；无则写「无」。" },
+        "overall_grade": { "$ref": "#/definitions/grade" }
+      }
+    },
+
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/source" }
+    },
+
+    "event": {
+      "type": "object",
+      "required": ["event_type_code", "event_type_cn", "company_full", "location", "plant", "unit_detail", "timeline", "consequences_confirmed"],
+      "properties": {
+        "event_id": { "type": "string" },
+        "event_type_code": { "$ref": "#/definitions/event_type_code" },
+        "event_type_cn": { "type": "string" },
+        "company_full": { "type": "string", "description": "完整法定名称。" },
+        "company_credit_code": { "type": "string", "description": "统一社会信用代码，用于与国家企业信用信息公示系统核对。" },
+        "company_legal_rep": { "type": "string" },
+        "company_established": { "type": "string" },
+        "company_registered_capital": { "type": "string" },
+        "listed_entity": { "type": "string", "description": "上市主体及代码；非上市写「无」。" },
+        "listed_relationship": { "type": "string", "description": "涉事企业与上市主体的股权关系。" },
+        "location": {
+          "type": "object",
+          "required": ["province"],
+          "properties": {
+            "province": { "type": "string" },
+            "city": { "type": "string" },
+            "county": { "type": "string" },
+            "town": { "type": "string" },
+            "address": { "type": "string" },
+            "park": { "type": "string", "description": "化工园区；影响是否属于重点监管区域。" }
+          }
+        },
+        "plant": {
+          "type": "object",
+          "required": ["plant_id", "plant_name", "product_main", "capacity_design_methanol_tpa"],
+          "properties": {
+            "plant_id": { "type": "string" },
+            "plant_name": { "type": "string" },
+            "plant_full_name": { "type": "string" },
+            "product_main": { "type": "string" },
+            "products_co": { "type": "array", "items": { "type": "string" } },
+            "process_route": { "type": "string", "description": "工艺路线，决定装置可比口径。" },
+            "feedstock": { "type": "string" },
+            "gasifiers": { "type": "string", "description": "气化炉/核心反应器配置与台数。" },
+            "capacity_design_methanol_tpa": { "type": "number", "description": "设计产能（吨/年）。必须来自公告/年报/能评等书面来源。" },
+            "capacity_design_lng_nm3": { "type": "number" },
+            "production_actual_t": {
+              "type": "object",
+              "description": "历史实际产量，键为年份。用于计算实际开工率 r。",
+              "additionalProperties": { "type": "number" }
+            },
+            "production_source": { "type": "string" },
+            "commissioned": { "type": "string" },
+            "historical_incidents": { "type": "array", "items": { "type": "string" }, "description": "该厂历史事故/非计划停车，用于判断重复性问题。" }
+          }
+        },
+        "unit_detail": {
+          "type": "object",
+          "required": ["unit", "unit_share_of_plant", "whether_whole_plant_stopped"],
+          "properties": {
+            "unit": { "type": "string", "description": "事件发生的具体单元（设备级）。" },
+            "unit_system": { "type": "string" },
+            "unit_count_in_series": { "type": "integer" },
+            "unit_share_of_plant": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "该单元占全厂产能份额，用于测算系数 k。"
+            },
+            "operating_context": { "type": "string", "description": "事件当时的生产工况。" },
+            "whether_whole_plant_stopped": {
+              "type": "string",
+              "description": "是否全厂停产。必须明确写「已确认」「未确认」或「部分确认（仅…）」，不得含糊。"
+            }
+          }
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["t", "text"],
+            "properties": {
+              "t": { "type": "string", "description": "时间点。" },
+              "text": { "type": "string" },
+              "grade": { "$ref": "#/definitions/grade" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "consequences_confirmed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["item", "grade", "source"],
+            "properties": {
+              "item": { "type": "string" },
+              "severity": { "type": "string", "description": "S1–S5。" },
+              "grade": { "$ref": "#/definitions/grade" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "consequences_unconfirmed": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "chain": {
+      "type": "object",
+      "required": ["product", "nodes", "impact_paths"],
+      "properties": {
+        "product": { "type": "string" },
+        "nodes": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "layer", "relation", "strength", "impacted"],
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "layer": { "type": "string", "enum": ["原料", "生产", "流通", "下游", "替代"] },
+              "relation": { "type": "string" },
+              "strength": { "type": "string", "enum": ["强", "中", "弱"] },
+              "impacted": { "type": "boolean", "description": "本次事件是否直接涉及该节点。" },
+              "note": { "type": "string" }
+            }
+          }
+        },
+        "impact_paths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "strength", "evidence", "quantifiable"],
+            "properties": {
+              "path": { "type": "string", "description": "A → B → C 形式的传导链。" },
+              "strength": { "type": "string", "enum": ["强", "中", "弱"] },
+              "evidence": { "type": "string" },
+              "quantifiable": { "type": "string", "description": "可量化 / 需数据 / 不可量化，并说明卡在哪。" }
+            }
+          }
+        }
+      }
+    },
+
+    "capacity_basis": {
+      "type": "array",
+      "description": "产能分母基准表。每条都要能追到来源，否者不写进表。",
+      "items": {
+        "type": "object",
+        "required": ["id", "metric", "value", "unit", "grade", "source"],
+        "properties": {
+          "id": { "type": "string" },
+          "metric": { "type": "string" },
+          "value": { "type": "number" },
+          "unit": { "type": "string" },
+          "grade": { "$ref": "#/definitions/grade" },
+          "source": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+
+    "calculations": {
+      "type": "object",
+      "description": "全部分子分母与公式集中在此，Excel 与 HTML 共用一套数。",
+      "required": ["rate_assumption", "ratios", "scenario_matrix"],
+      "properties": {
+        "rate_assumption": {
+          "type": "object",
+          "required": ["formula", "source", "grade"],
+          "properties": {
+            "r_actual_2021_2023": { "type": "number", "minimum": 0, "maximum": 1.5, "description": "按历史产量/设计产能得到的实际开工率。" },
+            "formula": { "type": "string" },
+            "source": { "type": "string" },
+            "grade": { "$ref": "#/definitions/grade" },
+            "alternative_r": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["label", "value", "basis"],
+                "properties": {
+                  "label": { "type": "string" },
+                  "value": { "type": "number" },
+                  "basis": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "daily_capacity_t": { "type": "number", "description": "D = Q/365。" },
+        "daily_actual_output_3yavg_t": { "type": "number" },
+        "ratios": {
+          "type": "array",
+          "description": "同一装置、多种分母。必须同时给出，避免单一口径误导。",
+          "items": {
+            "type": "object",
+            "required": ["name", "value_pct", "numerator", "denominator", "formula", "note"],
+            "properties": {
+              "name": { "type": "string" },
+              "value_pct": { "type": "number" },
+              "numerator": { "type": "number" },
+              "denominator": { "type": "number" },
+              "formula": { "type": "string" },
+              "note": { "type": "string" }
+            }
+          }
+        },
+        "scenario_scenarios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["k", "label", "basis"],
+            "properties": {
+              "k": { "type": "number", "description": "影响系数：涉事单元占全厂产能份额。" },
+              "label": { "type": "string" },
+              "basis": { "type": "string", "description": "k 的取值依据；若为假设必须写明「假设」。" }
+            }
+          }
+        },
+        "scenario_matrix": {
+          "type": "object",
+          "required": ["days", "ks", "rate"],
+          "properties": {
+            "days": { "type": "array", "items": { "type": "number" }, "description": "情景停产天数，必须标注为假设。" },
+            "ks": { "type": "array", "items": { "type": "number" } },
+            "rate": { "type": "number" },
+            "base_output_3yavg_t": { "type": "number", "description": "近 3 年平均实际产量，作为实际产量口径基数。" }
+          }
+        },
+        "annual_observed": {
+          "type": "object",
+          "properties": {
+            "y2022": { "type": "number" },
+            "y2023": { "type": "number" },
+            "delta_t": { "type": "number" },
+            "delta_pct": { "type": "number" },
+            "note": { "type": "string" }
+          }
+        },
+        "annual_decomposition": {
+          "type": "object",
+          "description": "年度产量缺口分解。事故可归因份额若无法确证，必须留 null 并说明。",
+          "properties": {
+            "method": { "type": "string" },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item", "value_t", "nature", "source"],
+                "properties": {
+                  "item": { "type": "string" },
+                  "value_t": { "type": ["number", "null"] },
+                  "nature": { "type": "string", "description": "已确认 / 客观计算 / 缺口。" },
+                  "source": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "coverage_days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "days": { "type": "number" },
+              "formula": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "three_way": {
+      "type": "object",
+      "description": "三分法：已发生 / 不确定 / 未确认。未确认项不得计入确认影响汇总。",
+      "required": ["confirmed", "uncertain", "unconfirmed", "to_verify"],
+      "properties": {
+        "confirmed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["item", "detail", "grade"],
+            "properties": {
+              "item": { "type": "string" },
+              "detail": { "type": "string" },
+              "grade": { "$ref": "#/definitions/grade" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "uncertain": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["item", "detail"],
+            "properties": {
+              "item": { "type": "string" },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "unconfirmed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["item", "detail", "grade"],
+            "properties": {
+              "item": { "type": "string" },
+              "detail": { "type": "string" },
+              "grade": { "$ref": "#/definitions/grade" }
+            }
+          }
+        },
+        "to_verify": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["priority", "what", "how"],
+            "properties": {
+              "priority": { "type": "string", "description": "P0 / P1 / P2。" },
+              "what": { "type": "string" },
+              "how": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "observables": {
+      "type": "array",
+      "minItems": 3,
+      "description": "可观察指标。只列能真看到的，不推导方向。",
+      "items": {
+        "type": "object",
+        "required": ["priority", "category", "indicator", "where", "freq", "abnormal"],
+        "properties": {
+          "priority": { "type": "string", "description": "首选 / 次选 / 参考。" },
+          "category": { "type": "string", "description": "现货 / 期货 / 库存 / 开工 / 物流 / 成本 / 下游。" },
+          "indicator": { "type": "string" },
+          "where": { "type": "string" },
+          "freq": { "type": "string" },
+          "abnormal": { "type": "string", "description": "什么数值/形态算异常。" }
+        }
+      }
+    },
+
+    "market_snapshot": {
+      "type": "object",
+      "required": ["note", "facts", "gaps"],
+      "properties": {
+        "note": { "type": "string", "description": "必须写明只描述状态、不推导方向。" },
+        "facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["period", "fact", "grade", "source"],
+            "properties": {
+              "period": { "type": "string" },
+              "fact": { "type": "string" },
+              "grade": { "$ref": "#/definitions/grade" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "gaps": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "peers": {
+      "type": "array",
+      "description": "同区域/同工艺可比企业。用于回答「别人能不能补上」。",
+      "items": {
+        "type": "object",
+        "required": ["name", "capacity_tpa", "grade", "source"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "location": { "type": "string" },
+          "process_route": { "type": "string" },
+          "capacity_tpa": { "type": "number" },
+          "capacity_note": { "type": "string" },
+          "grade": { "$ref": "#/definitions/grade" },
+          "source": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+
+    "gaps": {
+      "type": "array",
+      "minItems": 0,
+      "description": "数据缺口登记。每条必须写：缺什么、卡住哪个结论、本报告如何处理。不得用估算填补。",
+      "items": {
+        "type": "object",
+        "required": ["id", "missing", "blocks", "handling"],
+        "properties": {
+          "id": { "type": "string", "description": "G1、G2…" },
+          "missing": { "type": "string" },
+          "blocks": { "type": "string", "description": "影响哪个结论。" },
+          "handling": { "type": "string", "description": "本报告如何处理（保留缺口 / 情景化 / 用区间替代）。" }
+        }
+      }
+    }
+  }
+}

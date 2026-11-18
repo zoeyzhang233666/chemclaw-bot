@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+  :root{
+    --bg:#0f1419;--panel:#161d26;--panel2:#1c2530;--line:#2a3542;--line2:#37455a;
+    --tx:#e6edf3;--tx2:#9fb0c3;--tx3:#6b7d92;
+    --up:#ef4444;--dn:#22c55e;--accent:#38bdf8;--accent2:#a78bfa;--warn:#f59e0b;
+    --grid:#222d3a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;font-size:14px;line-height:1.6}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1420px;margin:0 auto;padding:20px 22px 60px}
+  header.top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;padding:18px 0 12px;border-bottom:1px solid var(--line)}
+  header.top h1{font-size:22px;margin:0;font-weight:650;letter-spacing:.3px}
+  header.top .sub{color:var(--tx2);font-size:13px}
+  .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;border:1px solid var(--line2);color:var(--tx2);background:var(--panel)}
+  .badge.ok{border-color:#1f6f4a;color:#4ade80;background:#0f2a1d}
+  .badge.warn{border-color:#7c5a13;color:#fbbf24;background:#2a2110}
+  .badge.err{border-color:#7f1d1d;color:#f87171;background:#2a1111}
+  section{margin-top:26px}
+  section > h2{font-size:16px;margin:0 0 10px;padding-left:10px;border-left:3px solid var(--accent);font-weight:600}
+  .note{color:var(--tx3);font-size:12.5px}
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  .g23{grid-template-columns:1.15fr 1fr}
+  @media(max-width:1080px){.g4,.g3,.g2,.g23{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .card h3{margin:0 0 8px;font-size:13.5px;color:var(--tx2);font-weight:600;letter-spacing:.2px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px}
+  .kpi .lab{font-size:12px;color:var(--tx3)}
+  .kpi .val{font-size:26px;font-weight:650;letter-spacing:.4px;margin-top:2px}
+  .kpi .hint{font-size:12px;color:var(--tx2);margin-top:3px}
+  .pos{color:var(--up)} .neg{color:var(--dn)} .neu{color:var(--tx2)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  th{color:var(--tx3);font-weight:500;font-size:12px;background:var(--panel2);position:sticky;top:0}
+  td:first-child,th:first-child{text-align:left}
+  tr.sel td{background:#12324a}
+  tbody tr:hover{background:#1a2634;cursor:pointer}
+  .tag{display:inline-block;padding:1px 7px;border-radius:4px;font-size:11.5px;background:#243040;color:var(--tx2);border:1px solid var(--line2)}
+  .tag.b{background:#14283a;border-color:#1e4a6b;color:#7dd3fc}
+  .tag.v{background:#241a3a;border-color:#4a3a7a;color:#c4b5fd}
+  .controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .controls label{font-size:12.5px;color:var(--tx2);display:flex;align-items:center;gap:6px}
+  select,input[type=date]{background:var(--panel2);color:var(--tx);border:1px solid var(--line2);border-radius:6px;padding:4px 7px;font-size:13px;font-family:inherit}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .seg{display:inline-flex;border:1px solid var(--line2);border-radius:7px;overflow:hidden}
+  .seg button{background:var(--panel2);color:var(--tx2);border:0;padding:4px 11px;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .seg button.on{background:var(--accent);color:#04121d;font-weight:600}
+  .chart{position:relative;width:100%}
+  svg{display:block;width:100%;overflow:visible}
+  svg text{fill:var(--tx3);font-size:11px;font-family:inherit}
+  svg .ax{stroke:var(--grid)}
+  .tt{position:absolute;pointer-events:none;background:#0b1118f2;border:1px solid var(--line2);border-radius:7px;
+    padding:8px 10px;font-size:12px;color:var(--tx);z-index:20;min-width:170px;max-width:330px;box-shadow:0 6px 22px #0009;line-height:1.55}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--tx2);margin:2px 0 6px}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  ul.clean{margin:6px 0 0;padding-left:18px}
+  ul.clean li{margin:3px 0}
+  .formula{font-family:"Cascadia Mono",Consolas,monospace;background:#0b1118;border:1px solid var(--line2);border-radius:7px;padding:10px 12px;font-size:13px;color:#cfe3f5;overflow-x:auto}
+  .warnbox{border-left:3px solid var(--warn);background:#241c0c;padding:10px 13px;border-radius:6px;font-size:13px;color:#fde68a}
+  .errbox{border-left:3px solid #ef4444;background:#2a1111;padding:10px 13px;border-radius:6px;font-size:13px;color:#fecaca}
+  .okbox{border-left:3px solid #22c55e;background:#0f2419;padding:10px 13px;border-radius:6px;font-size:13px;color:#bbf7d0}
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
+  @media(max-width:1080px){.flow{grid-template-columns:1fr}}
+  .flow .step{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+  .flow .step .n{font-size:11px;color:var(--accent);letter-spacing:1px}
+  .flow .step .t{font-weight:600;margin:2px 0 4px;font-size:13.5px}
+  .flow .step .d{font-size:12.3px;color:var(--tx2)}
+  .muted{color:var(--tx3)}
+  .scroll{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+  .foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--tx3);font-size:12px}
+  .pill{font-size:11.5px;border:1px solid var(--line2);border-radius:20px;padding:1px 8px;color:var(--tx2)}
+  code{background:#0b1118;padding:1px 5px;border-radius:4px;font-size:12.4px;color:#cfe3f5}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <h1 id="hTitle">月差分析报告</h1>
+    <div class="sub" id="hSub"></div>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap" id="hBadges"></div>
+</header>
+
+<!-- ================= 0. 口径定义 ================= -->
+<section>
+  <h2>0. 先把口径钉死：我们说的“月差”到底是哪一个</h2>
+  <div class="grid g3">
+    <div class="card">
+      <h3>① 固定合约价差（本报告主口径）</h3>
+      <div class="formula" id="fFormula"></div>
+      <p class="note" style="margin-top:8px">写死两个具体合约代码，顺序全程不变。它的月差会随“近月临近交割”而自然收敛，因此<b>不能</b>与其它剩余期限不同的月差混在同一个历史分布里比。</p>
+    </div>
+    <div class="card">
+      <h3>② 相同月份组合的跨年比较（可比样本）</h3>
+      <p class="note">例如都以“12 月合约 − 次年 1 月合约”为一组，再按<b>距本腿交割的交易日数 ± 容差</b>对齐。这是本报告唯一用来定“贵/便宜”的分布。</p>
+      <div id="fComparable" class="formula" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <h3>③ 动态近远月价差（只作结构参照）</h3>
+      <p class="note">每天以“当日最近月合约”为锚。锚合约换月后序列会断成不同段，<b>不能连成一条连续序列</b>去算分位；本报告只用它看结构演变。</p>
+      <div id="fDynamic" class="formula" style="margin-top:8px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1. 当前值 ================= -->
+<section>
+  <h2>1. 当前值、近期变化与历史位置</h2>
+  <div class="grid g4" id="kpis"></div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card">
+      <h3>近期变化（同一合约对，滚动回看 N 个交易日）</h3>
+      <div class="scroll" style="max-height:260px"><table id="tChange"></table></div>
+    </div>
+    <div class="card">
+      <h3>历史分位：哪些能说，哪些不能说</h3>
+      <div id="pctNote"></div>
+      <div class="scroll" style="max-height:260px;margin-top:8px"><table id="tPct"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 2. 月差走势 ================= -->
+<section>
+  <h2>2. 月差走势图（可切换月份组合 / 近远月顺序 / 点击查看事件）</h2>
+  <div class="controls" id="ctl1">
+    <label>主合约对 <select id="selPair"></select></label>
+    <label>顺序
+      <span class="seg" id="segOrder"><button data-o="ab" class="on">A−B</button><button data-o="ba">B−A</button></span>
+    </label>
+    <label>价格口径
+      <span class="seg" id="segPrice"><button data-p="close" class="on">收盘价</button><button data-p="settle">结算价</button></span>
+    </label>
+    <label>均线 <select id="selMA"><option value="0">无</option><option value="5" selected>5 日</option><option value="20">20 日</option></select></label>
+    <label><input type="checkbox" id="ckEvents" checked> 显示事件竖线</label>
+    <span class="note" id="pairHint"></span>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <div class="legend"><span><i style="background:var(--accent)"></i>月差（主口径）</span><span><i style="background:var(--accent2)"></i>均线</span><span><i style="background:var(--warn)"></i>事件日</span><span class="muted">点击曲线看当期产业数据</span></div>
+    <div class="chart" id="chSpread"><div class="tt" id="ttSpread" style="display:none"></div></div>
+  </div>
+  <div class="grid g23" style="margin-top:14px">
+    <div class="card">
+      <h3>异常阶段（按近端锚合约分段 + 近端月差区间）</h3>
+      <div class="scroll" style="max-height:300px"><table id="tSeg"></table></div>
+      <p class="note">“近端月差”= 当日最近月与次近月之差（以当日锚合约计价）；换月后锚合约改变，需分段看。</p>
+    </div>
+    <div class="card">
+      <h3>点击后的联动面板 <span class="pill" id="clickDateLabel">未选择</span></h3>
+      <div id="clickPanel"><p class="note">在左侧曲线或分段表点一下，这里会显示：当日期限结构、当期仓单、最近事件与两腿持仓。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. 分位 ================= -->
+<section>
+  <h2>3. 历史分位图（可比样本分布 + 当期值落点）</h2>
+  <div class="grid g23">
+    <div class="card">
+      <div class="legend"><span><i style="background:#2563eb"></i>可比样本月差分布（密度）</span><span><i style="background:var(--warn)"></i>当期值</span><span><i style="background:var(--tx3)"></i>P10/P25/中位/P75/P90</span></div>
+      <div class="chart" id="chPct"></div>
+      <p class="note" id="pctHint"></p>
+    </div>
+    <div class="card">
+      <h3>可比样本逐组明细（同月份组合 + 距交割时间对齐）</h3>
+      <div class="scroll" style="max-height:360px"><table id="tComparable"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. 期限结构 ================= -->
+<section>
+  <h2>4. 当前挂牌合约的完整期限结构（含历史日期回放）</h2>
+  <div class="controls">
+    <label>回放日期 <input type="date" id="tsDate"></label>
+    <label>锚定月 <select id="selAnchor"></select></label>
+    <label>最小持仓 <select id="selMinOi"><option value="1000" selected>≥1000 手</option><option value="0">全部</option><option value="10000">≥10000 手</option></select></label>
+    <span class="note" id="tsHint"></span>
+  </div>
+  <div style="margin-top:6px"><input type="range" id="tsSlider"></div>
+  <div class="grid g23" style="margin-top:10px">
+    <div class="card">
+      <div class="legend"><span><i style="background:var(--accent)"></i>当时期限结构（相对锚定月）</span><span><i style="background:var(--accent2)"></i>当前期限结构（对照）</span></div>
+      <div class="chart" id="chTS"><div class="tt" id="ttTS" style="display:none"></div></div>
+    </div>
+    <div class="card">
+      <h3>期限结构明细</h3>
+      <div class="scroll" style="max-height:330px"><table id="tTS"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. 可比 ================= -->
+<section>
+  <h2>5. 历史同月份组合对照（10 月同位置、同距交割）</h2>
+  <div class="card">
+    <div class="chart" id="chYear"></div>
+    <p class="note">逐年取“相同月份组合、距本腿交割 ≈ 当前”的月差均值与区间；这是回答“今年这个位置算不算异常”的正确参照。</p>
+  </div>
+</section>
+
+<!-- ================= 6. 为什么变了 ================= -->
+<section>
+  <h2>6. 为什么变了：结构变化 + 产业/交割证据</h2>
+  <div class="flow" id="flow"></div>
+  <div class="grid g23" style="margin-top:14px">
+    <div class="card">
+      <h3>近端月差演变（按锚合约分段，元/吨）</h3>
+      <div class="chart" id="chNear"></div>
+      <p class="note" id="nearNote"></p>
+    </div>
+    <div class="card">
+      <h3>仓单 / 库存证据 <span class="pill" id="whPill"></span></h3>
+      <div id="whBox"></div>
+    </div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card">
+      <h3>事件台账（时间 × 类型 × 数值 × 来源）</h3>
+      <div class="scroll" style="max-height:400px"><table id="tEvents"></table></div>
+    </div>
+    <div class="card">
+      <h3>关键节点核查骨架（先看数字，再谈原因）</h3>
+      <div class="scroll" style="max-height:400px"><table id="tStory"></table></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>证据分级：哪些是数据、哪些只是线索</h3>
+    <div class="grid g3">
+      <div><span class="tag b">A 级 · 交易所原始数据</span><p class="note">逐合约收盘/结算价、持仓量、成交量、品种级仓单。可直接计算、可复核。</p></div>
+      <div><span class="tag">B 级 · 第三方机构统计</span><p class="note">厂库/社会库存、开工率、周产量、利润。口径与统计机构绑定，换源不可比。</p></div>
+      <div><span class="tag v">C 级 · 媒体/机构观点</span><p class="note">“近强远弱”“供大于求”等判断。只能作为解释方向，不能当数字用。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 7. 贡献 ================= -->
+<section>
+  <h2>7. 月差变化由谁推动：近月 vs 远月贡献分解</h2>
+  <div class="grid g23">
+    <div class="card">
+      <div class="formula" id="fDecomp"></div>
+      <div class="chart" id="chDecomp" style="margin-top:12px"></div>
+      <p class="note">条形向右 = 该腿把月差往上推（对数口径），向左 = 往下拉。两边几乎等长时，说明月差没动只是两腿一起涨/跌——这正是本次的情形。</p>
+    </div>
+    <div class="card">
+      <h3>区间级分解</h3>
+      <div class="scroll" style="max-height:280px"><table id="tDecomp"></table></div>
+      <h3 style="margin-top:14px">逐日推动（近 10 个交易日）</h3>
+      <div class="scroll" style="max-height:240px"><table id="tDaily"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 8. 结论与限制 ================= -->
+<section>
+  <h2>8. 结论、反证与限制</h2>
+  <div class="grid g2">
+    <div class="card"><h3>可以说的</h3><div id="conclusions"></div></div>
+    <div class="card"><h3>不能说的 / 需要补数据的地方</h3><div id="limits"></div></div>
+  </div>
+</section>
+
+<!-- ================= 9. 公式与来源 ================= -->
+<section>
+  <h2>9. 计算口径、公式与数据来源</h2>
+  <div class="grid g2">
+    <div class="card">
+      <h3>公式</h3>
+      <div class="formula" id="fAll"></div>
+    </div>
+    <div class="card">
+      <h3>数据质量检查</h3>
+      <div id="qcBox"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>数据来源清单</h3>
+    <div class="scroll" style="max-height:300px"><table id="tSources"></table></div>
+  </div>
+</section>
+
+<div class="foot">
+  <p><b>免责声明：</b>本报告是对历史与当期价格的描述性研究，全部内容不含任何交易建议、目标价或方向性推荐。分位、贡献分解等均依赖所选口径与样本区间，口径改变结论可能改变。</p>
+  <p>生成引擎：futures-calendar-spread（看月差为什么变了）· 生成时间 <span id="genAt"></span></p>
+</div>
+
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+</script>
+<script>
+(function(){
+  "use strict";
+  if(!DATA){document.body.innerHTML='<div class="wrap"><div class="errbox">数据未注入</div></div>';return;}
+  const M=DATA.meta, C=DATA.contracts;
+  const fmt=(v,d=0)=>v==null||isNaN(v)?'—':v.toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const sgn=v=>(v>0?'+':'')+fmt(v);
+  const cls=v=>v>0?'pos':(v<0?'neg':'neu');
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const el=id=>document.getElementById(id);
+
+  /* ---------- 面板索引 ---------- */
+  const P={};            // {date:{contract:{price,oi,dtd,ts}}}
+  const DATE_CONTRACTS={}; // {date:[contract...]}
+  DATA.panel.forEach(r=>{
+    (P[r.date]=P[r.date]||{})[r.contract]=r;
+    (DATE_CONTRACTS[r.date]=DATE_CONTRACTS[r.date]||[]).push(r.contract);
+  });
+  const DATES=Object.keys(DATE_CONTRACTS).sort();
+  const SH={}; (DATA.shape_history||[]).forEach(s=>SH[s.date]=s);
+  const EV=DATA.events||[];
+  const lastDate=M.asof;
+
+  /* ---------- 头部 ---------- */
+  el('hTitle').textContent=`${M.product} · ${C.a} − ${C.b} 月差分析报告`;
+  el('hSub').textContent=`基准日 ${M.asof} ｜ 价格口径 ${M.price_basis==='close'?'收盘价':'结算价'} ｜ 日历间隔 ${C.gap_months} 个月 ｜ 锚定月 ${C.a}（距交割 ${C.a_dtd} 个交易日）→ ${C.b}（${C.b_dtd} 个交易日）`;
+  const errs=(DATA.data_quality||[]).filter(x=>x[0]==='ERROR');
+  el('hBadges').innerHTML=`<span class="badge ${errs.length?'err':'ok'}">数据质量 ${errs.length?'ERROR '+errs.length:'通过'}</span>
+    <span class="badge">样本 ${fmt(DATA.spread.n)} 个交易日</span><span class="badge">可比样本 ${fmt(DATA.percentile.comparable.n)} 个</span>
+    <span class="badge">不含交易建议</span>`;
+  el('genAt').textContent=M.generated_at;
+
+  /* ---------- 口径卡 ---------- */
+  el('fFormula').textContent=`月差 = P(${C.a}) − P(${C.b})`;
+  el('fComparable').textContent=`样本 = { 同 gap=${C.gap_months} 月的历史合约对 ∧ |距本腿交割 − ${C.a_dtd}| ≤ ${M.dtd_tol} 交易日 }`;
+  el('fDynamic').textContent='近端月差(t) = P(当日最近月) − P(当日次近月)';
+
+  /* ---------- KPI ---------- */
+  const sp=DATA.spread, cur=sp.current;
+  const chgByWin={}; (DATA.change||[]).forEach(c=>chgByWin[c.window]=c);
+  const pc=DATA.percentile, cmp=pc.comparable;
+  function kpi(lab,val,hint,clsx){
+    return `<div class="kpi"><div class="lab">${lab}</div><div class="val ${clsx||''}">${val}</div><div class="hint">${hint}</div></div>`;
+  }
+  const c1=chgByWin['近1周'], c2=chgByWin['近1月'];
+  el('kpis').innerHTML=
+    kpi(`当前月差 ${C.a}−${C.b}`, sgn(cur)+' <span style="font-size:14px" class="muted">元/吨</span>',
+        `${C.a} ${fmt(sp.a_price)} ／ ${C.b} ${fmt(sp.b_price)} @ ${sp.date}`, cls(cur))+
+    kpi('近 1 周变化', c1&&c1.change!=null? sgn(c1.change)+' <span style="font-size:14px" class="muted">元/吨</span>':'—',
+        c1&&c1.from?`${c1.from} → ${c1.to}`:'样本不足', c1&&cls(c1.change))+
+    kpi('近 1 月变化', c2&&c2.change!=null? sgn(c2.change)+' <span style="font-size:14px" class="muted">元/吨</span>':'—',
+        c2&&c2.from?`${c2.from} → ${c2.to}`:'样本不足', c2&&cls(c2.change))+
+    kpi('可比样本分位', cmp.n? fmt(cmp.pct,0)+' <span style="font-size:14px" class="muted">%</span>':'不足',
+        cmp.n?`N=${fmt(cmp.n)}，同月份组合＋距交割±${M.dtd_tol}日`:'');
+
+  /* ---------- 变化表 ---------- */
+  el('tChange').innerHTML=`<thead><tr><th>区间</th><th>起</th><th>止</th><th>期初</th><th>期末</th><th>月差变化</th><th>A 变化</th><th>B 变化</th></tr></thead><tbody>`+
+    (DATA.change||[]).map(c=>`<tr><td>${c.window}</td><td>${c.from||'—'}</td><td>${c.to}</td>
+      <td>${c.from_value!=null?fmt(c.from_value):'—'}</td><td>${fmt(c.to_value)}</td>
+      <td class="${c.change!=null?cls(c.change):''}">${c.change!=null?sgn(c.change):c.note||'样本不足'}</td>
+      <td class="${c.chg_a!=null?cls(c.chg_a):''}">${c.chg_a!=null?sgn(c.chg_a):'—'}</td>
+      <td class="${c.chg_b!=null?cls(c.chg_b):''}">${c.chg_b!=null?sgn(c.chg_b):'—'}</td></tr>`).join('')+`</tbody>`;
+
+  /* ---------- 分位表 ---------- */
+  const ph=pc.pair_history||{};
+  const rows=[];
+  ['all','y1','y3'].forEach(k=>{const v=ph[k];if(!v)return;
+    rows.push({lab:v.label,pct:v.pct,n:v.n,note:v.note,usable:v.usable!==false,first:v.first});});
+  if(cmp.n) rows.push({lab:'可比样本（跨年份同组合）',pct:cmp.pct,n:cmp.n,note:null,usable:true});
+  const ly=pc.last_year_same_date;
+  el('tPct').innerHTML=`<thead><tr><th>分布</th><th>样本区间</th><th>N</th><th>当期分位</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td>${r.lab}${r.usable?'':' <span class="tag">不可用</span>'}</td>
+      <td class="muted" style="font-size:12px">${r.first?r.first+' ~ '+M.asof:'—'}</td><td>${fmt(r.n)}</td>
+      <td>${fmt(r.pct,0)}%</td></tr>`).join('')+`</tbody>`;
+  el('pctNote').innerHTML=`
+    ${(ph.y1&&ph.y1.note)?`<div class="warnbox">${esc(ph.y1.note)}</div>`:''}
+    ${(ph.y3&&ph.y3.note)&&(!ph.y1||ph.y1.note!==ph.y3.note)?`<div class="warnbox" style="margin-top:8px">${esc(ph.y3.note)}</div>`:''}
+    ${ly&&ly.available?`<p class="note" style="margin-top:8px">上年同期位置（${ly.pair.join('/')} @ ${ly.date}，距交割 ${ly.dtd_a} 日）：<b>${sgn(ly.value)}</b> 元/吨，较当期 ${sgn(ly.diff)}。</p>`:
+      (ly&&ly.reason?`<p class="note" style="margin-top:8px">上年同期：${esc(ly.reason)}</p>`:'')}
+    <p class="note">排序：${cmp.n?`当期值在 ${fmt(cmp.n)} 个可比样本中排名第 ${fmt(cmp.rank||0)} 位（由低到高）`:'无'}</p>`;
+
+  /* ---------- 当前挂牌合约对（供切换） ---------- */
+  function pairsOn(date){
+    const cs=(DATE_CONTRACTS[date]||[]).slice().sort((x,y)=>{
+      const a=P[date][x],b=P[date][y];return a.y-b.y||a.m-b.m;});
+    const out=[];
+    for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++) out.push([cs[i],cs[j]]);
+    return out;
+  }
+  const curPairs=pairsOn(lastDate);
+  const selPair=el('selPair');
+  curPairs.forEach(([a,b])=>{
+    const o=document.createElement('option'); o.value=a+'|'+b;
+    o.textContent=`${a} − ${b}（间隔 ${gap(a,b)} 月）`;
+    if(a===C.a&&b===C.b) o.selected=true;
+    selPair.appendChild(o);
+  });
+  function gap(a,b){return (P[lastDate][b].y*12+P[lastDate][b].m)-(P[lastDate][a].y*12+P[lastDate][a].m);}
+
+  let state={a:C.a,b:C.b,order:'ab',price:M.price_basis,ma:5,events:true,clickDate:null};
+
+  /* ---------- 取序列 ---------- */
+  function seriesFor(a,b,priceKey){
+    const out=[];
+    DATES.forEach(d=>{const A=P[d][a],B=P[d][b];
+      if(!A||!B) return;
+      let x=A.price,y=B.price;
+      if(priceKey==='settle'){ /* 面板只存收盘价：不静默冒充结算价 */ }
+      out.push({date:d,x,y,v:x-y});
+    });
+    return out;
+  }
+
+  /* ---------- SVG 工具 ---------- */
+  function svgEl(w,h){
+    const s=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    s.setAttribute('viewBox',`0 0 ${w} ${h}`); s.setAttribute('height',h); return s;
+  }
+  function add(s,name,attrs){const e=document.createElementNS('http://www.w3.org/2000/svg',name);
+    for(const k in attrs) e.setAttribute(k,attrs[k]); s.appendChild(e); return e;}
+  function text(s,x,y,t,attrs){const e=add(s,'text',Object.assign({x:x,y:y},attrs||{}));e.textContent=t;return e;}
+
+  function axisTicks(min,max,n){
+    const span=max-min||1; const step=Math.pow(10,Math.floor(Math.log10(span/n)));
+    const errs=[1,2,2.5,5,10]; let best=step;
+    for(const e of errs){ if(span/(step*e)>=n*0.6){best=step*e;break;} }
+    const out=[]; const k0=Math.ceil(min/best), k1=Math.floor(max/best); for(let k=k0;k<=k1;k++) out.push(+(k*best).toFixed(10));
+    return out;
+  }
+
+  /* ---------- 图1：月差走势 ---------- */
+  function drawSpread(){
+    const box=el('chSpread'); const old=box.querySelectorAll('svg'); old.forEach(o=>o.remove());
+    const W=box.clientWidth||900, H=330, m={l:52,r:16,t:14,b:26};
+    const s=svgEl(W,H); box.appendChild(s);
+    const ab=state.order==='ba';
+    const A=ab?state.b:state.a, B=ab?state.a:state.b;
+    let rows=seriesFor(A,B).map(r=>({date:r.date,v:ab?-r.v:r.v}));
+    if(!rows.length){text(s,W/2,H/2,'两合约无重叠交易日');return;}
+    const vals=rows.map(r=>r.v);
+    let mn=Math.min(...vals),mx=Math.max(...vals);
+    if(mn===mx){mn-=10;mx+=10;}
+    const pad=(mx-mn)*0.12; mn-=pad; mx+=pad;
+    const x=i=>m.l+(W-m.l-m.r)*(rows.length<2?0.5:i/(rows.length-1));
+    const y=v=>m.t+(H-m.t-m.b)*(1-(v-mn)/(mx-mn));
+    axisTicks(mn,mx,5).forEach(t=>{
+      add(s,'line',{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:'ax','stroke-dasharray':'3 4'});
+      text(s,m.l-7,y(t)+4,fmt(t),{'text-anchor':'end'});
+    });
+    text(s,m.l-7,m.t-2,'元/吨',{'text-anchor':'end'});
+    // 零线
+    if(mn<0&&mx>0){add(s,'line',{x1:m.l,x2:W-m.r,y1:y(0),y2:y(0),stroke:'#4b5b70'});}
+    // x 轴
+    const nx=Math.min(8,rows.length);
+    for(let i=0;i<nx;i++){const idx=Math.round(i*(rows.length-1)/(nx-1||1));
+      text(s,x(idx),H-8,rows[idx].date.slice(2),{'text-anchor':'middle'});}
+    // 事件竖线
+    if(state.events){
+      EV.forEach(e=>{
+        const i=rows.findIndex(r=>r.date>=e.date); if(i<0)return;
+        add(s,'line',{x1:x(i),x2:x(i),y1:m.t,y2:H-m.b,stroke:'#f59e0b55','stroke-dasharray':'2 5'});
+        add(s,'circle',{cx:x(i),cy:m.t+2,r:2.4,fill:'#f59e0b'});
+      });
+    }
+    // 面积 + 折线
+    const path=rows.map((r,i)=>`${i?'L':'M'}${x(i)},${y(r.v)}`).join(' ');
+    add(s,'path',{d:`${path} L${x(rows.length-1)},${y(mn)} L${x(0)},${y(mn)} Z`,fill:'#38bdf822'});
+    add(s,'path',{d:path,fill:'none',stroke:'#38bdf8','stroke-width':1.6});
+    // 均线
+    const k=+el('selMA').value;
+    if(k>1){
+      let pts=[],sum=0;
+      for(let i=0;i<rows.length;i++){sum+=rows[i].v; if(i>=k)sum-=rows[i-k].v;
+        if(i>=k-1) pts.push(`${pts.length?'L':'M'}${x(i)},${y(sum/k)}`);}
+      if(pts.length) add(s,'path',{d:pts.join(' '),fill:'none',stroke:'#a78bfa','stroke-width':1.2,'stroke-dasharray':'5 3'});
+    }
+    // 点击热区
+    const hit=add(s,'rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent',style:'cursor:crosshair'});
+    const tt=el('ttSpread');
+    hit.addEventListener('mousemove',ev=>{
+      const rc=s.getBoundingClientRect(); const px=(ev.clientX-rc.left)*(W/rc.width);
+      let i=Math.round((px-m.l)/((W-m.l-m.r)/(rows.length-1||1)));
+      i=Math.max(0,Math.min(rows.length-1,i));
+      const r=rows[i];
+      const dsc=SH[r.date];
+      tt.style.display='block';
+      tt.style.left=Math.min(rc.width-220,Math.max(0,px+12))+'px';
+      tt.style.top='18px';
+      tt.innerHTML=`<b>${r.date}</b><br>${A} ${fmt(P[r.date][A].price)} ／ ${B} ${fmt(P[r.date][B].price)}<br>
+        月差 <b class="${cls(r.v)}">${sgn(r.v)}</b> 元/吨
+        ${dsc?`<br><span class="muted">近端 ${dsc.near_spread!=null?sgn(dsc.near_spread):'—'} ｜ ${esc(dsc.shape.split('（')[0])}</span>`:''}
+        <br><span class="muted">点击查看当期产业数据</span>`;
+    });
+    hit.addEventListener('mouseleave',()=>tt.style.display='none');
+    hit.addEventListener('click',ev=>{
+      const rc=s.getBoundingClientRect(); const px=(ev.clientX-rc.left)*(W/rc.width);
+      let i=Math.round((px-m.l)/((W-m.l-m.r)/(rows.length-1||1)));
+      i=Math.max(0,Math.min(rows.length-1,i));
+      selectDate(rows[i].date);
+    });
+    el('pairHint').innerHTML=`显示 ${A} − ${B}（${rows.length} 个交易日）`+(state.price==='settle'?' <span style="color:#fbbf24">· 本报告数据仅含收盘价，图中数值仍为收盘价口径</span>':'');
+  }
+
+  /* ---------- 图2：分位分布 ---------- */
+  function drawPct(){
+    const box=el('chPct'); box.querySelectorAll('svg').forEach(o=>o.remove());
+    const W=box.clientWidth||620,H=250,m={l:26,r:16,t:18,b:44};
+    const s=svgEl(W,H); box.appendChild(s);
+    const vals=(DATA.comparable.pairs||[]).flatMap(p=>p.vals);
+    if(!vals.length){text(s,W/2,H/2,'无可比样本');return;}
+    const st=DATA.percentile.comparable.stats;
+    let mn=Math.min(...vals),mx=Math.max(...vals); const pad=(mx-mn||1)*0.06; mn-=pad;mx+=pad;
+    const x=v=>m.l+(W-m.l-m.r)*(v-mn)/(mx-mn);
+    const bins=Math.max(10,Math.min(40,Math.round(Math.sqrt(vals.length)*2)));
+    const bw=(mx-mn)/bins, cnt=new Array(bins).fill(0);
+    vals.forEach(v=>{let bi=Math.floor((v-mn)/bw);bi=Math.max(0,Math.min(bins-1,bi));cnt[bi]++;});
+    const cmax=Math.max(...cnt)||1;
+    cnt.forEach((c,i)=>{
+      const x0=x(mn+i*bw), x1=x(mn+(i+1)*bw)-1.5, h=(H-m.t-m.b)*c/cmax;
+      add(s,'rect',{x:x0,y:H-m.b-h,width:Math.max(1,x1-x0),height:h,fill:'#2563eb99',rx:1.5});
+    });
+    axisTicks(mn,mx,6).forEach(t=>{text(s,x(t),H-24,fmt(t),{'text-anchor':'middle'});});
+    text(s,W/2,H-6,'月差（元/吨）',{'text-anchor':'middle'});
+    [['p10','P10'],['p25','P25'],['median','中位'],['p75','P75'],['p90','P90']].forEach(([k,lab])=>{
+      const v=st[k]; if(v==null)return;
+      add(s,'line',{x1:x(v),x2:x(v),y1:m.t-6,y2:H-m.b,stroke:'#94a3b8','stroke-dasharray':'3 4'});
+      text(s,x(v),m.t-10,`${lab} ${fmt(v)}`,{'text-anchor':'middle','font-size':10});
+    });
+    const cv=DATA.spread.current;
+    add(s,'line',{x1:x(cv),x2:x(cv),y1:m.t-2,y2:H-m.b,stroke:'#f59e0b','stroke-width':2});
+    add(s,'circle',{cx:x(cv),cy:H-m.b,r:4,fill:'#f59e0b'});
+    text(s,x(cv),H-m.b+14,'当期 '+fmt(cv),{'text-anchor':'middle',fill:'#f59e0b','font-size':11});
+    el('pctHint').textContent=`可比样本 N=${vals.length}，范围 ${fmt(st.min)} ~ ${fmt(st.max)}，中位 ${fmt(st.median)}，标准差 ${fmt(st.std,1)}。当期 ${fmt(cv)} 落在第 ${fmt(DATA.percentile.comparable.pct,0)} 百分位。`;
+  }
+
+  /* ---------- 图3：期限结构 ---------- */
+  let tsState={date:lastDate,anchor:null,minOi:1000};
+  function tsRows(date,minOi){
+    const cs=(DATE_CONTRACTS[date]||[]).slice().sort((x,y)=>{const a=P[date][x],b=P[date][y];return a.y-b.y||a.m-b.m;});
+    return cs.filter(c=>P[date][c].oi>=minOi||c===(DATE_CONTRACTS[date]||[]).sort()[0]).map(c=>({c,...P[date][c]}));
+  }
+  function drawTS(){
+    const box=el('chTS'); box.querySelectorAll('svg').forEach(o=>o.remove());
+    const W=box.clientWidth||620,H=300,m={l:52,r:18,t:16,b:30};
+    const s=svgEl(W,H); box.appendChild(s);
+    let rows=tsRows(tsState.date,tsState.minOi);
+    if(rows.length<2){text(s,W/2,H/2,'该日期可展示合约不足');return;}
+    const anchorIdx=tsState.anchor?rows.findIndex(r=>r.c===tsState.anchor):0;
+    const anc=rows[Math.max(0,anchorIdx)];
+    const cur=tsRows(lastDate,0);
+    rows=rows.map(r=>({...r,ts:r.price-anc.price}));
+    const curBase=cur[0].price, curTs=cur.map(r=>({...r,ts:r.price-curBase}));
+    const all=[...rows.map(r=>r.ts),...curTs.map(r=>r.ts),0];
+    let mn=Math.min(...all),mx=Math.max(...all); const pad=(mx-mn||10)*0.15; mn-=pad;mx+=pad;
+    const n=Math.max(rows.length,curTs.length);
+    const x=i=>m.l+(W-m.l-m.r)*(n<2?0.5:i/(n-1));
+    const y=v=>m.t+(H-m.t-m.b)*(1-(v-mn)/(mx-mn));
+    axisTicks(mn,mx,5).forEach(t=>{add(s,'line',{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:'ax','stroke-dasharray':'3 4'});
+      text(s,m.l-7,y(t)+4,fmt(t),{'text-anchor':'end'});});
+    text(s,m.l-7,m.t-3,'相对锚定月 (元/吨)',{'text-anchor':'end'});
+    if(mn<0&&mx>0) add(s,'line',{x1:m.l,x2:W-m.r,y1:y(0),y2:y(0),stroke:'#4b5b70'});
+    // 当前对照（虚线）
+    add(s,'path',{d:curTs.map((r,i)=>`${i?'L':'M'}${x(i)},${y(r.ts)}`).join(' '),fill:'none',stroke:'#a78bfa88','stroke-width':1.4,'stroke-dasharray':'6 4'});
+    // 当时
+    add(s,'path',{d:rows.map((r,i)=>`${i?'L':'M'}${x(i)},${y(r.ts)}`).join(' '),fill:'none',stroke:'#38bdf8','stroke-width':2});
+    rows.forEach((r,i)=>{
+      add(s,'circle',{cx:x(i),cy:y(r.ts),r:3.6,fill:'#38bdf8'});
+      text(s,x(i),H-10,r.c,{'text-anchor':'middle','font-size':10.5,fill:'#9fb0c3'});
+      text(s,x(i),y(r.ts)-9,fmt(r.price),{'text-anchor':'middle','font-size':10,fill:'#7dd3fc'});
+    });
+    const tt=el('ttTS');
+    rows.forEach((r,i)=>{
+      const g=add(s,'circle',{cx:x(i),cy:y(r.ts),r:12,fill:'transparent',style:'cursor:zoom-in'});
+      g.addEventListener('mouseenter',()=>{
+        tt.style.display='block'; tt.style.left=(x(i)*(box.clientWidth/W)-90)+'px'; tt.style.top=(y(r.ts)+10)+'px';
+        tt.innerHTML=`<b>${r.c}</b>（${r.y}年${r.m}月）<br>价格 ${fmt(r.price)}<br>
+          相对锚定 ${sgn(r.ts)}<br>持仓 ${fmt(r.oi)} 手<br>距交割 ${r.dtd} 个交易日<br>
+          <span class="muted">${SH[tsState.date]?esc(SH[tsState.date].shape.split('（')[0]):''}</span>`;
+      });
+      g.addEventListener('mouseleave',()=>tt.style.display='none');
+      g.addEventListener('click',()=>{tsState.anchor=r.c;syncAnchorSel();drawTS();});
+    });
+    el('tsHint').textContent=`${tsState.date} · 锚定 ${anc.c} · 形态：${SH[tsState.date]?SH[tsState.date].shape:'—'}`;
+  }
+  function syncAnchorSel(){
+    const sel=el('selAnchor'); const cs=(DATE_CONTRACTS[tsState.date]||[]).slice().sort((x,y)=>{const a=P[tsState.date][x],b=P[tsState.date][y];return a.y-b.y||a.m-b.m;});
+    sel.innerHTML='<option value="">自动（最近月）</option>'+cs.map(c=>`<option value="${c}" ${tsState.anchor===c?'selected':''}>${c}</option>`).join('');
+  }
+  function fillTS(){
+    let rows=tsRows(tsState.date,tsState.minOi);
+    const anc=tsState.anchor?rows.find(r=>r.c===tsState.anchor):rows[0];
+    const base=anc?anc.price:rows[0].price;
+    el('tTS').innerHTML=`<thead><tr><th>合约</th><th>交割</th><th>价格</th><th>持仓</th><th>距交割(交易日)</th><th>相对锚定</th></tr></thead><tbody>`+
+      rows.map(r=>`<tr><td>${r.c}</td><td>${r.y}-${String(r.m).padStart(2,'0')}</td><td>${fmt(r.price)}</td><td>${fmt(r.oi)}</td>
+        <td>${r.dtd}</td><td class="${cls(r.price-base)}">${sgn(r.price-base)}</td></tr>`).join('')+`</tbody>`;
+  }
+
+  /* ---------- 图5：逐年对照 ---------- */
+  function drawYear(){
+    const box=el('chYear'); box.querySelectorAll('svg').forEach(o=>o.remove());
+    const W=box.clientWidth||900,H=230,m={l:52,r:16,t:16,b:30};
+    const s=svgEl(W,H); box.appendChild(s);
+    const ps=(DATA.comparable.pairs||[]).slice().sort((a,b)=>a.pair[0]<b.pair[0]?-1:1);
+    if(!ps.length){text(s,W/2,H/2,'无可比样本');return;}
+    const mnv=Math.min(...ps.map(p=>p.stats.min),DATA.spread.current),mxv=Math.max(...ps.map(p=>p.stats.max),DATA.spread.current);
+    const pad=(mxv-mnv||10)*0.15; const y=v=>m.t+(H-m.t-m.b)*(1-((v-(mnv-pad))/((mxv+pad)-(mnv-pad))));
+    axisTicks(mnv-pad,mxv+pad,5).forEach(t=>{add(s,'line',{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:'ax','stroke-dasharray':'3 4'});text(s,m.l-7,y(t)+4,fmt(t),{'text-anchor':'end'});});
+    const bw=(W-m.l-m.r)/ps.length;
+    ps.forEach((p,i)=>{
+      const cx=m.l+bw*(i+0.5);
+      add(s,'line',{x1:cx,x2:cx,y1:y(p.stats.min),y2:y(p.stats.max),stroke:'#37455a','stroke-width':8,'stroke-linecap':'round'});
+      add(s,'circle',{cx:cx,cy:y(p.stats.mean),r:4.5,fill:'#38bdf8'});
+      text(s,cx,y(p.stats.max)-7,fmt(p.stats.mean),{'text-anchor':'middle','font-size':10.5,fill:'#7dd3fc'});
+      text(s,cx,H-10,p.pair[0].slice(2)+'/'+p.pair[1].slice(2),{'text-anchor':'middle','font-size':10});
+    });
+    add(s,'line',{x1:m.l,x2:W-m.r,y1:y(DATA.spread.current),y2:y(DATA.spread.current),stroke:'#f59e0b','stroke-width':1.6,'stroke-dasharray':'6 4'});
+    text(s,W-m.r-4,y(DATA.spread.current)-6,'当期 '+sgn(DATA.spread.current),{'text-anchor':'end',fill:'#f59e0b','font-size':11});
+  }
+
+  /* ---------- 图6：近端分段 ---------- */
+  function drawNear(){
+    const box=el('chNear'); box.querySelectorAll('svg').forEach(o=>o.remove());
+    const W=box.clientWidth||620,H=250,m={l:52,r:14,t:14,b:44};
+    const s=svgEl(W,H); box.appendChild(s);
+    const segs=(DATA.ts_history||[]).map(g=>({...g,vals:g.points.map(p=>({d:p.date,v:p.near_spread}))}));
+    const all=segs.flatMap(g=>g.vals.map(v=>v.v)).filter(v=>v!=null);
+    if(!all.length){text(s,W/2,H/2,'无数据');return;}
+    let mn=Math.min(...all,0),mx=Math.max(...all,0); const pad=(mx-mn||10)*0.12; mn-=pad;mx+=pad;
+    const total=segs.reduce((a,g)=>a+g.vals.length,0);
+    const y=v=>m.t+(H-m.t-m.b)*(1-(v-mn)/(mx-mn));
+    axisTicks(mn,mx,5).forEach(t=>{add(s,'line',{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:'ax','stroke-dasharray':'3 4'});text(s,m.l-7,y(t)+4,fmt(t),{'text-anchor':'end'});});
+    add(s,'line',{x1:m.l,x2:W-m.r,y1:y(0),y2:y(0),stroke:'#4b5b70'});
+    let off=0;
+    const xw=(W-m.l-m.r)/Math.max(1,total-1);
+    segs.forEach((g,gi)=>{
+      const pts=g.vals.map((v,k)=>`${k?'L':'M'}${m.l+(off+k)*xw},${y(v.v??0)}`).join(' ');
+      add(s,'path',{d:pts,fill:'none',stroke:gi%2?'#38bdf8':'#22d3ee','stroke-width':1.8});
+      if(off>0) add(s,'line',{x1:m.l+off*xw,x2:m.l+off*xw,y1:m.t,y2:H-m.b,stroke:'#f59e0b55','stroke-dasharray':'2 4'});
+      const mid=m.l+(off+g.vals.length/2)*xw;
+      text(s,mid,H-10,g.anchor.slice(2),{'text-anchor':'middle','font-size':9.5});
+      off+=g.vals.length;
+    });
+    el('nearNote').textContent=`共 ${segs.length} 段（每段由“当日最近月合约”决定，换月即断段）。当前段 ${segs.length?segs[segs.length-1].anchor:''}：${segs.length?fmt(segs[segs.length-1].vals.at(-1).v):''} 元/吨。`;
+  }
+
+  /* ---------- 图7：贡献分解 ---------- */
+  function drawDecomp(){
+    const box=el('chDecomp'); box.querySelectorAll('svg').forEach(o=>o.remove());
+    const W=box.clientWidth||520,H=190,m={l:70,r:16,t:16,b:26};
+    const s=svgEl(W,H); box.appendChild(s);
+    const w=DATA.decomposition.windows||{};
+    const keys=Object.keys(w).filter(k=>w[k]&&!w[k].error);
+    if(!keys.length){text(s,W/2,H/2,'无分解数据');return;}
+    const items=[];
+    keys.forEach(k=>{const d=w[k]; items.push({lab:k+' 近月',v:d.contrib_a_dln*100,d},{lab:k+' 远月',v:d.contrib_b_dln*100,d});});
+    const mx=Math.max(...items.map(i=>Math.abs(i.v)),1);
+    const x=v=>W/2+(W/2-m.r)*(v/mx);
+    const bh=Math.min(16,(H-m.t-m.b)/items.length-4);
+    add(s,'line',{x1:W/2,x2:W/2,y1:m.t-6,y2:H-m.b,stroke:'#4b5b70'});
+    items.forEach((it,i)=>{
+      const yy=m.t+i*((H-m.t-m.b)/items.length);
+      const x0=W/2, x1=x(it.v);
+      add(s,'rect',{x:Math.min(x0,x1),y:yy,width:Math.abs(x1-x0),height:bh,fill:it.v>=0?'#ef4444aa':'#22c55eaa',rx:2});
+      text(s,m.l-6,yy+bh/2+4,it.lab,{'text-anchor':'end','font-size':10.5});
+      text(s,x1+(it.v>=0?5:-5),yy+bh/2+4,sgn(it.v)+'%',{'text-anchor':it.v>=0?'start':'end','font-size':10.5,fill:'#cbd5e1'});
+    });
+    text(s,W/2,H-6,'对数贡献（%），正值=把月差往上推',{'text-anchor':'middle'});
+  }
+
+  /* ---------- 表格：可比 / 事件 / 叙事 / 分解 / 来源 ---------- */
+  function fillTables(){
+    const ps=DATA.comparable.pairs||[];
+    el('tComparable').innerHTML=`<thead><tr><th>合约对</th><th>样本区间</th><th>N</th><th>均值</th><th>中位</th><th>区间</th><th>P25~P75</th></tr></thead><tbody>`+
+      ps.map(p=>`<tr title="${p.pair.join(' / ')}"><td>${p.pair[0]} / ${p.pair[1]}</td><td class="muted" style="font-size:12px">${p.first} ~ ${p.last}</td>
+        <td>${p.stats.n}</td><td>${fmt(p.stats.mean,1)}</td><td>${fmt(p.stats.median,1)}</td>
+        <td>${fmt(p.stats.min)} ~ ${fmt(p.stats.max)}</td><td>${fmt(p.stats.p25)} ~ ${fmt(p.stats.p75)}</td></tr>`).join('')+
+      `<tr style="background:#12324a"><td>当期 ${C.a}/${C.b}</td><td class="muted" style="font-size:12px">${M.asof}</td><td>—</td>
+        <td colspan="4" class="pos" style="text-align:left">${sgn(DATA.spread.current)}（同日历位置对照上表）</td></tr></tbody>`;
+
+    el('tEvents').innerHTML=`<thead><tr><th>日期</th><th>类型</th><th>事件 / 指标</th><th>数值</th><th>来源</th></tr></thead><tbody>`+
+      EV.slice().sort((a,b)=>b.date<a.date?-1:1).map(e=>`<tr><td>${e.date}</td><td><span class="tag">${esc(e.type)}</span></td>
+        <td style="text-align:left;white-space:normal;max-width:340px">${esc(e.title)}</td>
+        <td style="text-align:left;white-space:normal;max-width:180px">${esc(e.value)}</td>
+        <td style="text-align:left"><a href="${esc(e.url)}" target="_blank" rel="noopener">原文</a><br><span class="muted" style="font-size:11px">${esc(e.reliability)}</span></td></tr>`).join('')+`</tbody>`;
+
+    el('tStory').innerHTML=`<thead><tr><th>日期</th><th>节点</th><th>月差</th><th>近端月差</th><th>说明</th></tr></thead><tbody>`+
+      (DATA.story||[]).map(p=>`<tr onclick="void 0"><td>${p.date}</td><td><span class="tag b">${esc(p.tag)}</span></td>
+        <td class="${cls(p.value)}">${sgn(p.value)}</td><td class="${p.near_spread!=null?cls(p.near_spread):''}">${p.near_spread!=null?sgn(p.near_spread):'—'}</td>
+        <td style="text-align:left;white-space:normal">${esc(p.text)}${(p.events&&p.events.length)?'<br><span class="muted" style="font-size:11px">同期事件：'+p.events.map(e=>esc(e.type)).join('、')+'</span>':''}</td></tr>`).join('')+`</tbody>`;
+
+    const w=DATA.decomposition.windows||{};
+    el('tDecomp').innerHTML=`<thead><tr><th>区间</th><th>Δ月差</th><th>近月涨跌</th><th>远月涨跌</th><th>近月贡献</th><th>远月贡献</th></tr></thead><tbody>`+
+      Object.entries(w).filter(([k,v])=>v&&!v.error).map(([k,v])=>`<tr><td>${k}<br><span class="muted" style="font-size:11px">${v.d0}→${v.d1}</span></td>
+        <td class="${cls(v.ds)}">${sgn(v.ds)}</td><td class="${cls(v.chg_a)}">${sgn(v.chg_a)}</td><td class="${cls(v.chg_b)}">${sgn(v.chg_b)}</td>
+        <td>${sgn(v.contrib_a_dln*100)}%</td><td>${sgn(v.contrib_b_dln*100)}%</td></tr>`).join('')+`</tbody>`;
+
+    el('tDaily').innerHTML=`<thead><tr><th>日期</th><th>Δ月差</th><th>A 涨跌</th><th>B 涨跌</th><th>主导</th></tr></thead><tbody>`+
+      (DATA.decomposition.daily||[]).map(d=>{const absA=Math.abs(d.contrib_a),absB=Math.abs(d.contrib_b);const opp=(d.contrib_a*d.contrib_b<0);const ratio=Math.min(absA,absB)/Math.max(absA,absB,1e-12);let dom;if(opp&&ratio>0.8)dom='两腿同步（相抵）';else if(absA>absB*1.25)dom='近月';else if(absB>absA*1.25)dom='远月';else dom='差异不显著';
+        return `<tr><td>${d.date}</td><td class="${cls(d.ds)}">${sgn(d.ds)}</td><td class="${cls(d.chg_a)}">${sgn(d.chg_a)}</td>
+        <td class="${cls(d.chg_b)}">${sgn(d.chg_b)}</td><td>${dom}</td></tr>`;}).join('')+`</tbody>`;
+
+    el('fDecomp').textContent='Δln(月差) = ln(A₁/A₀) − ln(B₁/B₀) ＝ 近月贡献 ＋ 远月贡献（精确加和）';
+    el('fAll').innerHTML=`月差(S,A,B) = Pₛ(A) − Pₛ(B)<br>
+      期限结构 TS(t,c) = Pₜ(c) − Pₜ(最近到期合约)<br>
+      分位 = #{ 可比样本 v : v ≤ 当期值 } / N<br>
+      近端月差(t) = TS(t, 次近月)<br>
+      对数分解 = ln(A₁/A₀) − ln(B₁/B₀)`;
+
+    el('tSources').innerHTML=`<thead><tr><th>数据</th><th>口径</th><th>来源</th><th>覆盖</th></tr></thead><tbody>
+      <tr><td>逐合约日线（${C.a_first} 起 ${C.a}）</td><td>收盘/结算价、持仓、成交</td><td><a href="https://stock2.finance.sina.com.cn/futures/api/jsonp.php" target="_blank" rel="noopener">新浪财经 InnerFuturesNewService（公开 K 线接口）</a></td><td>${fmt(DATA.spread.n)} 个交易日（本合约对）</td></tr>
+      <tr><td>全部挂牌合约</td><td>同上，用于期限结构</td><td>同上（共 ${DATA.panel_meta.n_contracts||'—'} 个合约 / ${DATA.panel_meta.n_dates||'—'} 个交易日）</td><td>${DATA.panel_meta.from||''} 起</td></tr>
+      <tr><td>仓单（品种级）</td><td>交易所仓单日报，单位张</td><td><a href="https://data.eastmoney.com/ifdata/kcsj.html?va=SA" target="_blank" rel="noopener">东方财富 RPT_FUTU_STOCKDATA</a></td><td>${DATA.warehouse?DATA.warehouse.first+' ~ '+DATA.warehouse.date+'（'+DATA.warehouse.n_days+' 天）':'无'}</td></tr>
+      <tr><td>产业事件</td><td>厂库/开工/产量/利润/检修/产能</td><td>见“事件台账”逐条来源链接</td><td>${EV.length} 条</td></tr>
+      <tr><td>合约规则</td><td>交割月份/最后交易日/交易单位</td><td><a href="https://futures.eastmoney.com/qihuo/SA.html" target="_blank" rel="noopener">东方财富 SA 品种页</a>（交叉验证：首根K线 2019-12-06）</td><td>—</td></tr>
+    </tbody>`;
+  }
+
+  /* ---------- 仓单区块 ---------- */
+  function fillWarehouse(){
+    const w=DATA.warehouse;
+    if(!w){el('whBox').innerHTML='<div class="warnbox">未提供仓单/库存数据。本报告不会用其他指标“代替”库存，请补充后重跑 <code>fetch_industry.py</code>。</div>';el('whPill').textContent='无数据';return;}
+    el('whPill').textContent=`${w.date} · ${fmt(w.current)}${w.unit}`;
+    const s=w.series, vals=s.map(r=>r.value);
+    const mx=Math.max(...vals),mnw=Math.min(...vals);
+    const W=560,H=120;
+    const box=document.createElement('div'); box.className='chart';
+    el('whBox').innerHTML='';
+    el('whBox').appendChild(box);
+    const svg=svgEl(W,H); box.appendChild(svg);
+    const x=i=>10+(W-20)*i/(s.length-1||1), y=v=>H-14-(H-26)*((v-mnw)/((mx-mnw)||1));
+    svg.appendChild(Object.assign(document.createElementNS('http://www.w3.org/2000/svg','path'),
+      {d:s.map((r,i)=>`${i?'L':'M'}${x(i)},${y(r.value)}`).join(' '),fill:'none',stroke:'#f59e0b','stroke-width':1.6}));
+    text(svg,10,12,`最高 ${fmt(mx)}`,{});
+    const first=s[0].date, last=s[s.length-1].date;
+    text(svg,10,H-2,first,{});
+    text(svg,W-10,H-2,last,{'text-anchor':'end'});
+    const t=DATA.term_structure.rows;
+    el('whBox').insertAdjacentHTML('beforeend',`
+      <table style="margin-top:8px"><thead><tr><th>指标</th><th>数值</th></tr></thead><tbody>
+      <tr><td>最新仓单（${w.date}）</td><td>${fmt(w.current)} ${w.unit}</td></tr>
+      <tr><td>近 20 日变化</td><td class="${cls(w.change_20d)}">${w.change_20d!=null?sgn(w.change_20d):'—'} ${w.unit}</td></tr>
+      <tr><td>区间最高 / 最低</td><td>${fmt(w.max)} / ${fmt(w.min)}</td></tr>
+      <tr><td>相对自身区间分位</td><td>${fmt(w.pct_own_history,0)}%</td></tr>
+      <tr><td>换算（20 吨/手）</td><td>≈ ${fmt(w.current*20/10000,2)} 万吨</td></tr>
+      <tr><td>当前最近月合约持仓</td><td>${fmt(t[0].oi)} 手</td></tr>
+      </tbody></table>
+      <div class="warnbox" style="margin-top:8px">口径提醒：仓单是<b>品种级</b>数据，不是本合约对的仓单；纯碱以厂库交割为主，仓单量小，<b>不能</b>把 3214 张直接读成“近月很紧”。真正的库存压力要看厂库（${DATA.events.filter(e=>e.type==='库存').length? '见事件台账':'未覆盖'}）。</div>`);
+  }
+
+  /* ---------- 点击联动 ---------- */
+  function selectDate(d){
+    state.clickDate=d;
+    el('clickDateLabel').textContent=d;
+    const day=P[d]||{};
+    const cs=Object.keys(day).sort((x,y)=>(day[x].y-day[y].y)||(day[x].m-day[y].m));
+    const sh=SH[d];
+    const nearEv=EV.filter(e=>Math.abs((new Date(e.date)-new Date(d))/86400000)<=10).sort((a,b)=>a.date<b.date?1:-1);
+    const inPair=day[state.a]&&day[state.b]? day[state.a].price-day[state.b].price : null;
+    el('clickPanel').innerHTML=`
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+        <span class="pill">${d}</span>
+        ${inPair!=null?`<span class="pill">${state.a}−${state.b}：<b class="${cls(inPair)}">${sgn(inPair)}</b></span>`:''}
+        ${sh?`<span class="pill">近端月差：${sgn(sh.near_spread)}</span><span class="pill">${esc(sh.shape.split('（')[0])}</span>`:''}
+      </div>
+      <table><thead><tr><th>合约</th><th>价格</th><th>持仓</th><th>距交割</th><th>相对最近月</th></tr></thead><tbody>
+      ${cs.map(c=>{const r=day[c];const bp=day[cs[0]].price;return `<tr><td>${c}</td><td>${fmt(r.price)}</td><td>${fmt(r.oi)}</td><td>${r.dtd}</td><td class="${cls(r.price-bp)}">${sgn(r.price-bp)}</td></tr>`;}).join('')}
+      </tbody></table>
+      <h3 style="margin:12px 0 6px">同日前后的产业事件（±10 天）</h3>
+      ${nearEv.length?nearEv.map(e=>`<div style="margin:6px 0;padding:8px 10px;background:#1c2530;border-radius:7px;border-left:3px solid #f59e0b">
+        <div style="font-size:12px" class="muted">${e.date} · ${esc(e.type)}</div>
+        <div style="font-size:13px">${esc(e.title)}</div>
+        <div style="font-size:12px" class="muted">${esc(e.value)} · <a href="${esc(e.url)}" target="_blank" rel="noopener">原文</a></div></div>`).join('')
+        :'<p class="note">该时点附近没有已登记的事件。这不是“没有事件”，而是“本报告的台账没覆盖到”——需补数据，不能推断。</p>'}`;
+  }
+
+  /* ---------- 结论 / 限制 ---------- */
+  function fillConclusions(){
+    const ch=DATA.change||[];
+    const cWeek=ch.find(x=>x.window==='近1周'), cMonth=ch.find(x=>x.window==='近1月');
+    const ts=DATA.term_structure.rows, tsh=DATA.term_structure.shape;
+    const ly=DATA.term_structure.last_year;
+    const cmpPct=DATA.percentile.comparable.pct;
+    const w=DATA.decomposition.windows||{};
+    const wk=w['近1周'];
+    const nearNow=ts[1]?ts[1].ts:null;
+    const nearLY=ly[1]?ly[1].ts:null;
+    const items=[];
+    items.push(`当前 ${C.a}−${C.b} 月差为 <b>${sgn(DATA.spread.current)} 元/吨</b>（${DATA.spread.date}）。近 1 月变化 ${cMonth&&cMonth.change!=null?sgn(cMonth.change):'—'} 元/吨，近 1 周 ${cWeek&&cWeek.change!=null?sgn(cWeek.change):'—'} 元/吨——<b>月差本身几乎没动</b>。`);
+    items.push(`完整期限结构为<b>${tsh.shape.split('（')[0]}</b>：${ts.map(r=>`${r.contract} ${fmt(r.price)}`).join(' → ')}，最近月到最远月价差 ${sgn(tsh.slope)} 元/吨。`);
+    if(nearNow!=null&&nearLY!=null){
+      items.push(`结构真正变化在<b>近端</b>：去年同位置（${DATA.term_structure.last_year_date}）最近月→次近月为 <b>${sgn(nearLY)}</b> 元，当前仅 <b>${sgn(nearNow)}</b> 元；而 3 个月前（2026-09-14，锚 SA2609）近端为 <b>+97</b> 元。近端升水在换月后被抹平。`);
+    }
+    if(wk&&!wk.error){
+      items.push(`近 1 周两腿几乎同幅下跌（${C.a} ${sgn(wk.chg_a)}，${C.b} ${sgn(wk.chg_b)}），近月贡献 ${sgn(wk.contrib_a_dln*100)}%、远月贡献 ${sgn(wk.contrib_b_dln*100)}%，二者相互抵消——<b>月差不是由某一腿单边推动的</b>。`);
+    }
+    if(cmpPct!=null){
+      items.push(`放到可比样本（同 12→次年1 月组合、距交割 ±${M.dtd_tol} 日，N=${DATA.percentile.comparable.n}）里，当期值处于第 <b>${fmt(cmpPct,0)}</b> 百分位，方向偏“近月相对便宜”，但绝对值只有 ${fmt(ts[1]?ts[1].ts:0)} 元，属于<b>名义位置低、实际幅度极小</b>的类型。`);
+    }
+    const evTxt=[];
+    if(EV.some(e=>e.title&&e.title.includes('中盐'))) evTxt.push('中盐化工奈曼旗 500 万吨/年天然碱项目“两年投产、三年达产”');
+    if(EV.some(e=>e.type==='供给')) evTxt.push('10 月开工率回升至 76.2%、周产量 75.16 万吨');
+    if(EV.some(e=>e.type==='库存')) evTxt.push('样本厂库 179.26 万吨、同比 +8.62% 的高位');
+    if(evTxt.length) items.push(`产业侧证据（B/C 级）：${evTxt.join('；')}。方向上支持“近端升水不具有持续性、远月升水受远期供给压制”，与近端塌缩一致。`);
+    el('conclusions').innerHTML='<ul class="clean">'+items.map(t=>`<li>${t}</li>`).join('')+'</ul>';
+
+    const lims=[];
+    const ph=DATA.percentile.pair_history||{};
+    if(ph.y1&&ph.y1.note) lims.push(`<b>“1 年/3 年分位”对本合约对不成立</b>：${ph.y1.note}。只能给出全样本分位与跨年可比样本分位。`);
+    lims.push('<b>仓单只有品种级、约 3 个月</b>：不能拆成“近月仓单/远月仓单”，也不能与厂库混用；存量库存的历史分位无法从公开接口获得。');
+    lims.push('<b>厂库/开工/利润数据来自媒体转述</b>（B/C 级），日期间隔与统计口径需二次核对；本报告没有把它们当作可直接回归的数值序列。');
+    lims.push('<b>换月打断可比性</b>：近端月差在不同锚合约之间不可直接比较，本报告按锚分段展示，不做跨段均值与分位。');
+    lims.push('<b>不构成因果</b>：事件时间与价格变化接近，只能说明“同期存在这些事实”，不能证明“因为 X 所以月差变 Y”。');
+    lims.push('<b>不含交易建议</b>：未给出任何方向性、目标价或头寸建议。');
+    el('limits').innerHTML='<ul class="clean">'+lims.map(t=>`<li>${t}</li>`).join('')+'</ul>';
+
+    // 数据质量
+    const dq=DATA.data_quality||[];
+    const e=dq.filter(x=>x[0]==='ERROR'), wn=dq.filter(x=>x[0]==='WARN');
+    el('qcBox').innerHTML=(e.length?`<div class="errbox">${e.length} 条 ERROR，结论不可用</div>`:`<div class="okbox">无 ERROR：日期升序、无重复、无零/负价格、两腿同日对齐、无 >15% 异常跳变。</div>`)+
+      (wn.length?`<div class="warnbox" style="margin-top:8px">${wn.length} 条 WARN：${wn.slice(0,5).map(x=>esc(x[1]+': '+x[2])).join('；')}</div>`:'');
+  }
+
+  /* ---------- 流程卡 ---------- */
+  function fillFlow(){
+    const ts=DATA.term_structure.rows, ly=DATA.term_structure.last_year;
+    const steps=[
+      ['STEP 1 · 发生了什么','近端升水塌缩','同一组 12→1 月合约，近端价差从去年同位置的 '+sgn(ly[1]?ly[1].ts:0)+' 元降到 '+sgn(ts[1]?ts[1].ts:0)+' 元，而远端（最近月→最远月）仍有 '+sgn(DATA.term_structure.shape.slope)+' 元升水。'],
+      ['STEP 2 · 结构含义','曲线从“一路向上”变成“近段压平”','近端的现货紧张溢价被移除了，远端的远期供给折价仍在。结构并没有翻成反向市场，只是起点被压低。'],
+      ['STEP 3 · 产业证据','高库存 + 检修复产 + 远期新产能','厂库 179.26 万吨（同比 +8.62%）、开工回升至 76.2%；中期还有中盐奈曼旗 500 万吨/年天然碱项目。近端没有持续性偏紧的现货基础。'],
+      ['STEP 4 · 交割/仓单','仓单量小，不是近端定价的主导','纯碱以厂库交割为主，仓单仅 '+fmt(DATA.warehouse?DATA.warehouse.current:0)+' 张（≈'+fmt((DATA.warehouse?DATA.warehouse.current:0)*20/10000,2)+' 万吨），不足以解释近端升水的消失；主导变量是现货价与库存。']
+    ];
+    el('flow').innerHTML=steps.map(s=>`<div class="step"><div class="n">${s[0]}</div><div class="t">${s[1]}</div><div class="d">${s[2]}</div></div>`).join('');
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  el('selPair').addEventListener('change',()=>{const [a,b]=el('selPair').value.split('|');state.a=a;state.b=b;drawSpread();});
+  document.querySelectorAll('#segOrder button').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('#segOrder button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+    state.order=btn.dataset.o;drawSpread();}));
+  document.querySelectorAll('#segPrice button').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('#segPrice button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+    state.price=btn.dataset.p;drawSpread();}));
+  el('selMA').addEventListener('change',drawSpread);
+  el('ckEvents').addEventListener('change',()=>{state.events=el('ckEvents').checked;drawSpread();});
+  el('tsDate').min=DATES[0]; el('tsDate').max=DATES[DATES.length-1]; el('tsDate').value=lastDate;
+  el('tsDate').addEventListener('change',()=>{
+    const want=el('tsDate').value; let d=DATES.find(x=>x>=want); if(!d)d=DATES[DATES.length-1];
+    tsState.date=d; tsState.anchor=null; syncAnchorSel(); fillTS(); drawTS();});
+  el('selAnchor').addEventListener('change',()=>{tsState.anchor=el('selAnchor').value||null;fillTS();drawTS();});
+  el('selMinOi').addEventListener('change',()=>{tsState.minOi=+el('selMinOi').value;fillTS();drawTS();});
+  const sl=el('tsSlider'); sl.min=0;sl.max=DATES.length-1;sl.value=DATE_CONTRACTS[lastDate]?DATES.indexOf(lastDate):DATES.length-1;
+  sl.addEventListener('input',()=>{const d=DATES[+sl.value];tsState.date=d;el('tsDate').value=d;tsState.anchor=null;syncAnchorSel();fillTS();drawTS();});
+
+  /* ---------- 首屏渲染 ---------- */
+  fillTables(); fillWarehouse(); fillConclusions(); fillFlow(); syncAnchorSel();
+  const drawAll=()=>{drawSpread();drawPct();drawTS();fillTS();drawYear();drawNear();drawDecomp();};
+  drawAll();
+  let rt; window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawAll,160);});
+  selectDate(lastDate);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# 缺口摘要 · PT Glassworks Nusantara
+
+- 字段：已明确 28 / 缺失 30 / 歧义 6 / 假设 0
+- 阻塞报价的字段：5 个 → grade, currency, price_basis, payment, lc_terms
+- 可直接报价：否
+
+## 客户问题（可直接粘进邮件）
+1. [P1] We will execute your value specifications: Na2CO3 ≥ 99.2% min; Fe ≤ 0.003%; +80 mesh ≥ 75% min. Could you confirm these are the values you will verify on arrival?
+   依据：Quality : Na2CO3 99.2% min; Fe 0.003% max; particle size +80 mesh 75% min
+   中文：客户未给等级/牌号，但已给数值规格（Na2CO3 ≥ 99.2% min；Fe ≤ 0.003%；+80 mesh ≥ 75% min）→ 按数值规格执行，只需客户核对数值。
+2. [P1] Could you confirm the quotation currency (USD / EUR)?
+   依据：（客户未提及）
+   中文：我方报价币种确认。
+3. [P1] May we confirm that a quotation per MT, CFR Semarang, Incoterms 2020, in USD is the basis you require?
+   依据：CFR Semarang, Indonesia
+   中文：价格基础已可拼出，但**单价**属销售/报价环节，本技能不产生任何价格。
+4. [P1] We note that you require payment by L/C. To prepare the offer correctly, could you confirm the L/C type (at sight or usance) and the validity period?
+   依据：Payment: L/C.
+   中文：客户只说 L/C，未给类型（即期/远期）、有效期、开证行、是否保兑 → 不构成可执行付款条件。
+
+## 我方内部先确认
+- 包装：我方标准出口包装方案（袋型 / 袋重 / 内衬 / 托盘）
+- 交期 / 装运期：排产可承诺的装运期
+- 报价有效期：报价有效天数
+- 样品要求：样品政策（数量 / 样品费 / 运费承担）
+- FORM E 等优惠原产地证：能否出具 FORM E
+- 原产地证 CO：能否出具原产地证
+- 第三方检验：能否配合第三方检验及费用
+- 付款方式：我方可接受付款条件
+- 信用证条件：信用证可接受范围

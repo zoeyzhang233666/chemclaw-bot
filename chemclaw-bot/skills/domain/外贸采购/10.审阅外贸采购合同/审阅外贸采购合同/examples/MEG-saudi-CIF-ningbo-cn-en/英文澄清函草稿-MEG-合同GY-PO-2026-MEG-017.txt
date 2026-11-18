@@ -1,0 +1,429 @@
+==============================================================================
+[DRAFT — INTERNAL USE ONLY — to be reviewed by Procurement and Legal before sending]
+==============================================================================
+
+ZHEJIANG HONYU NEW MATERIALS CO., LTD. (fictitious)
+Attention: GULF PETROCHEMICAL TRADING FZE (fictitious)
+
+Subject: Requests for Clarification and Proposed Amendments to Purchase Contract No. GY-PO-2026-MEG-017
+         (Monoethylene Glycol / MEG — CIF Ningbo, Incoterms 2020)
+Reference: GY-PO-2026-MEG-017
+Date: 2026-10-20
+
+Dear Sirs,
+
+Thank you for your efforts in preparing the captioned Purchase Contract. Having reviewed the
+Contract against our procurement requirements, we set out below the points on which we would
+be grateful for your clarification and, where indicated, for your agreement to the proposed
+amendments. The points are grouped by subject and each is cross-referenced to the relevant
+clause of the Contract and to our internal issue reference.
+
+We would appreciate your written response to each numbered item separately. Unless otherwise
+stated, please reply by 2026-11-05. Items marked [AGREEMENT REQUIRED] call for your express
+agreement in writing; items marked [INFORMATION] require factual information, documents or
+confirmations only. Nothing in this letter is intended as a legal opinion or as a waiver of
+any right of the Buyer.
+
+------------------------------------------------------------------------------
+PAYMENT & LETTER OF CREDIT
+------------------------------------------------------------------------------
+
+1. [R01 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 8. Payment, Section 3, p.3; 11. Liability and Liquidated Damages, Section 1, p.5
+   Issue: 30% advance payment (USD 768,000) is unsecured and expressly non-refundable
+   Can you provide an advance payment guarantee issued by a bank, covering at least the advance
+      amount and valid until 60 days after shipment?
+   Contract wording referred to (verbatim):
+      " 8.1 Advance payment: 30% of contract value, i.e. USD 768,000.00, shall be paid by T/T
+       within 5 banking days after the Buyer's receipt of a proforma invoice. The advance
+       payment shall be non-refundable except as expressly provided in this Contract."
+   Supplier response: _______________________________________________________
+
+2. [R02 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 8. Payment, Section 4, p.3
+   Issue: The L/C is to be issued "at the Seller's bank" — the issuing bank direction is reversed
+   Please confirm that the issuing bank will be our account bank (e.g. Bank of China, Zhejiang
+      Branch), and provide the SWIFT code and address of your advising bank.
+   Contract wording referred to (verbatim):
+      " 8.2 Balance payment: 70% of contract value, i.e. USD 1,792,000.00, by irrevocable L/C at
+       sight in favour of the Seller, opened by the Buyer 10 days before the shipment period.
+       The L/C shall be issued at the Seller's bank and shall be subject to UCP 600."
+   Supplier response: _______________________________________________________
+
+3. [R03 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 8. Payment, Section 4, p.3; 8. Payment, Section 6, p.3; 8. Payment, Section 5, p.3
+   Issue: The balance payment has three mutually inconsistent triggers
+   Please confirm which provision governs payment of the balance: the documentary credit under
+      Clause 8.2 or payment on arrival under Clause 8.4.
+   Contract wording referred to (verbatim):
+      " 8.2 Balance payment: 70% of contract value, i.e. USD 1,792,000.00, by irrevocable L/C at
+       sight in favour of the Seller, opened by the Buyer 10 days before the shipment period.
+       The L/C shall be issued at the Seller's bank and shall be subject to UCP 600."
+      " 8.4 The Buyer shall pay the balance within 10 days after the vessel's arrival at Ningbo
+       Port and after the discharge has been completed and the cargo has been accepted at the
+       Buyer's plant."
+   Supplier response: _______________________________________________________
+
+4. [R04 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 8. Payment, Section 5, p.3; ANNEX 2, p.7 (heading); A2-T7, p.7 (Table 2 row)
+   Issue: Payment documents include an open-ended catch-all: "(g) such other documents as the Seller may reasonably require"
+   Do you agree to delete item (g) "such other documents as the Seller may reasonably require"
+      from Clause 8.3?
+   Contract wording referred to (verbatim):
+      " 8.3 The L/C shall be payable against the following documents: (a) commercial invoice in
+       3 copies; (b) full set of clean on board ocean bill of lading; (c) certificate of origin;
+       (d) certificate of analysis; (e) insurance policy; (f) packing list; (g) such other
+       documents as the Seller may [...]"
+   Supplier response: _______________________________________________________
+
+5. [R05 · Low priority] [INFORMATION]
+   Contract provision: 8. Payment, Section 4, p.3; 8. Payment, Section 5, p.3; 8. Payment, Section 6, p.3
+   Issue: No provision on L/C amendment delay, discrepancies, or allocation of bank charges
+   How are L/C amendment and extension charges, and bank charges in each country, to be
+      allocated?
+   Supplier response: _______________________________________________________
+
+------------------------------------------------------------------------------
+DELIVERY & SHIPMENT
+------------------------------------------------------------------------------
+
+6. [R17 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 6. Delivery and Shipment, Section 5, p.2; 8. Payment, Section 3, p.3; 11. Liability and Liquidated Damages, Section 6, p.4
+   Issue: Shipment period runs from the Seller's receipt of the advance, with no fixed shipment window or latest shipment date
+   Can the shipment period be replaced by a fixed window (e.g. 1 to 25 November 2026) together
+      with a latest shipment date?
+   Contract wording referred to (verbatim):
+      " 6.1 Shipment period: within 45 days after the Seller's receipt of the advance payment.
+       The Seller shall notify the Buyer of the estimated loading date 10 days in advance."
+   Supplier response: _______________________________________________________
+
+7. [R18 · Low priority] [INFORMATION]
+   Contract provision: 6. Delivery and Shipment, Section 6, p.2; 6. Delivery and Shipment, Section 7, p.2; 8. Payment, Section 5, p.3
+   Issue: Transhipment is "at the carrier's option"; no restriction on charter party or house bills of lading
+   Is transhipment subject to our prior written consent, and how many transhipments are
+      permitted?
+   Contract wording referred to (verbatim):
+      " 6.2 Port of loading: Jubail Commercial Port, Saudi Arabia. Port of destination: Ningbo
+       Port, People's Republic of China. Partial shipments are not allowed. Transhipment is
+       allowed at the carrier's option."
+   Supplier response: _______________________________________________________
+
+------------------------------------------------------------------------------
+QUALITY & SPECIFICATION
+------------------------------------------------------------------------------
+
+8. [R06 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 2. Quality, Section 3, p.1; 4. Technical Specification (Annex 1), Section 1, p.2; Note, p.7 (Table 1 note); Note, p.7 (Table 1 note)
+   Issue: Quality is benchmarked to the Seller's own standard specification, which the Seller may update at any time
+   Can the quality benchmark be a fixed specification agreed by both parties, rather than the
+      Seller's standard specification?
+   Contract wording referred to (verbatim):
+      " 2.1 The Goods shall be fibre grade ethylene glycol conforming to the Seller's standard
+       specification for "Fiber Grade MEG" in force on the date of this Contract, a copy of
+       which was provided to the Buyer by email on 2 October 2026. The Seller may update its
+       standard specification from time to time [...]"
+   Supplier response: _______________________________________________________
+
+9. [R07 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: A1-T2, p.7 (Table 1 row); A1-T8, p.7 (Table 1 row); Note, p.7 (Table 1 note); A1-T1, p.7 (Table 1 row)
+   Issue: Annex 1 omits test methods for water, leaves haze/colour blank, and cites ASTM standards without edition years
+   Which method applies to the water content figure (e.g. Karl Fischer or GC), and under which
+      standard and edition?
+   Contract wording referred to (verbatim):
+      " Water content, % m/m: 0.05 max (METHOD NOT SPECIFIED)"
+      " Note 1: Test methods: ASTM E202 and ASTM D7844 unless otherwise stated. GB/T standards
+       are NOT applicable to this Contract."
+   Supplier response: _______________________________________________________
+
+10. [R08 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 3. Specifications (INCORRECT — INTENTIONAL ERROR), Section 5, p.1; A1-T1, p.7 (Table 1 row); 7. Packing and Marking, Section 1, p.3
+   Issue: Clause 3.1 states the CAS number of MEG as 7732-18-5 (the CAS of water) and mixes molar and mass bases
+   Please confirm in writing the CAS Registry Number of the Goods is 107-21-1, and correct the
+      COA, SDS and shipping documents accordingly.
+   Contract wording referred to (verbatim):
+      " 3.1 Ethylene glycol (CAS 7732-18-5), purity 99.9% min, ethylene glycol content expressed
+       on a molar basis; the CAS Registry Number of the Goods shall be recorded in the COA and
+       on the shipping documents as CAS No. 7732-18-5."
+   Supplier response: _______________________________________________________
+
+------------------------------------------------------------------------------
+INSPECTION, CLAIMS & REMEDIES
+------------------------------------------------------------------------------
+
+11. [R09 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 9. Inspection and Claims, Section 7, p.3; Note, p.7 (Table 1 note)
+   Issue: Quality claims must be filed within 7 days of vessel arrival — shorter than discharge, sampling and testing
+   Can the claim period be extended from 7 days after arrival to 30 days after completion of
+      discharge and joint sampling?
+   Contract wording referred to (verbatim):
+      " 9.1 The Buyer shall have the right to inspect the Goods within 3 days after the vessel's
+       arrival at the port of destination. Any claim for quality or quantity shall be submitted
+       by the Buyer to the Seller in writing within 7 days after the arrival of the vessel,
+       failing which the Buyer shall be [...]"
+   Supplier response: _______________________________________________________
+
+12. [R10 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 2. Quality, Section 4, p.1; 9. Inspection and Claims, Section 7, p.3; 9. Inspection and Claims, Section 2, p.4
+   Issue: Quality is final per the Seller's own COA; the third-party inspector is also appointed by the Seller
+   May the Buyer take independent samples at the loading port and at the port of destination,
+      with samples jointly sealed and a documented chain of custody?
+   Contract wording referred to (verbatim):
+      " 2.2 Quality shall be determined by the Seller's laboratory at Jubail, Saudi Arabia, on
+       composite samples drawn from the shore tanks before loading. A certificate of analysis
+       (COA) issued by the Seller's laboratory shall be final and conclusive as to the quality
+       of the Goods."
+      " 9.3 Third party inspection by SGS or an equivalent independent inspection agency as
+       nominated by the Seller shall be final and binding on both parties."
+   Supplier response: _______________________________________________________
+
+13. [R20 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 11. Liability and Liquidated Damages, Section 1, p.5; 8. Payment, Section 3, p.3; 9. Inspection and Claims, Section 1, p.4
+   Issue: The Seller's entire liability is capped at the advance payment received (USD 768,000), excluding indirect loss
+   Can the liability cap be increased to the contract value, or at least to 100% of amounts
+      paid?
+   Contract wording referred to (verbatim):
+      " 11.2 The Seller's aggregate liability for delay, quality deviation, quantity shortage
+       and any other breach, whether in contract, tort or otherwise, shall not exceed the
+       advance payment received under Clause 8.1. The Seller shall not be liable for loss of
+       profit, loss of use, loss of market, [...]"
+   Supplier response: _______________________________________________________
+
+14. [R11 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 1. Goods and Quantity, Section 2, p.1; 9. Inspection and Claims, Section 7, p.3; 10. Title, Risk and Insurance, Section 3, p.4
+   Issue: No provision on quantity shortage, breakage, leakage or discharge loss, or on related claims
+   What tolerance applies at the port of destination between the B/L quantity and the landed
+      quantity (e.g. 0.5%)?
+   Contract wording referred to (verbatim):
+      " 1.1 The Seller agrees to sell and the Buyer agrees to buy 5,000 MT (+/-3%) of
+       MONOETHYLENE GLYCOL, technical grade, hereinafter "the Goods", of Saudi Arabian origin.
+       The quantity shall be measured at the loading port by shore-tank gauge and the Seller's
+       certificate of quantity shall be final and [...]"
+   Supplier response: _______________________________________________________
+
+15. [R12 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 9. Inspection and Claims, Section 1, p.4; 11. Liability and Liquidated Damages, Section 6, p.4; 11. Liability and Liquidated Damages, Section 1, p.5
+   Issue: Replacement is the only remedy for non-conformity; no price reduction, return or termination mechanism
+   Would you accept a price-reduction option based on the extent of any deviation from
+      specification?
+   Contract wording referred to (verbatim):
+      " 9.2 If the Goods fail to meet the agreed specification, the Buyer may reject the Goods,
+       and the Seller shall replace the rejected Goods within 60 days. Any loss or damage caused
+       by such failure shall be borne by the Seller in accordance with Clause 11."
+   Supplier response: _______________________________________________________
+
+16. [R13 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 9. Inspection and Claims, Section 7, p.3; 9. Inspection and Claims, Section 2, p.4; Note, p.7 (Table 1 note)
+   Issue: No mechanism for sampling, sample retention, laboratory selection or cost-sharing for testing at destination
+   Who takes samples at the port of destination, when, and are samples to be jointly sealed and
+      signed?
+   Supplier response: _______________________________________________________
+
+17. [R19 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 11. Liability and Liquidated Damages, Section 6, p.4; 6. Delivery and Shipment, Section 5, p.2
+   Issue: Liquidated damages for delay are only 0.05%/day capped at 5%, with no termination right
+   Can liquidated damages be increased to 0.1% per day with a 10% cap?
+   Contract wording referred to (verbatim):
+      " 11.1 In the event of delay in shipment, the Seller shall pay liquidated damages at the
+       rate of 0.05% of the value of the delayed goods for each day of delay, up to a maximum of
+       5% of the contract value."
+   Supplier response: _______________________________________________________
+
+18. [R21 · Low priority] [INFORMATION]
+   Contract provision: 11. Liability and Liquidated Damages, Section 2, p.5
+   Issue: One-sided, perpetual confidentiality obligation on the Buyer
+   Can the confidentiality obligation be limited to a defined period, e.g. three years after
+      termination?
+   Contract wording referred to (verbatim):
+      " 11.3 The Buyer shall keep confidential the contract price and all terms of this Contract
+       and shall not disclose them to any third party, including any other supplier or customer,
+       at any time."
+   Supplier response: _______________________________________________________
+
+------------------------------------------------------------------------------
+TRANSPORT, RISK & INSURANCE
+------------------------------------------------------------------------------
+
+19. [R14 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 10. Title, Risk and Insurance, Section 3, p.4; 5. Price and Incoterms, Section 2, p.2; 8. Payment, Section 4, p.3
+   Issue: Clause 10.1 transfers risk on receipt of the original B/L, which conflicts with CIF Incoterms 2020 (on board)
+   Do you agree that risk passes in accordance with CIF Incoterms 2020, when the Goods are
+      placed on board at the port of shipment?
+   Contract wording referred to (verbatim):
+      " 10.1 All risk of loss of or damage to the Goods shall pass from the Seller to the Buyer
+       upon the Buyer's receipt of the full set of original bills of lading. Until that time the
+       Seller shall bear all risk and the Buyer shall have no obligation to accept the Goods."
+   Supplier response: _______________________________________________________
+
+20. [R16 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 10. Title, Risk and Insurance, Section 5, p.4; 10. Title, Risk and Insurance, Section 3, p.4
+   Issue: Insurance is for the Seller's benefit, ICC (C) only, with no agreed insured party/protection term
+   Can the insurance be effected for the benefit of the Buyer as insured party?
+   Contract wording referred to (verbatim):
+      " 10.3 The Seller shall insure the Goods with the Seller's group insurer for the benefit
+       of the Seller, in the currency of the Contract, for minimum 110% of the invoice value, on
+       the terms of the Institute Cargo Clauses (C)."
+   Supplier response: _______________________________________________________
+
+21. [R15 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 10. Title, Risk and Insurance, Section 4, p.4; 10. Title, Risk and Insurance, Section 3, p.4; 11. Liability and Liquidated Damages, Section 1, p.5
+   Issue: Title passes only on discharge and acceptance at destination, and destination port charges are shifted to the Buyer
+   Is the CIF price under Clause 5.1 inclusive of destination port charges and terminal handling
+      charges?
+   Contract wording referred to (verbatim):
+      " 10.2 Title in the Goods shall pass to the Buyer at the port of destination when the
+       Goods have been fully discharged and accepted by the Buyer. The Buyer shall pay all port
+       charges and terminal handling charges at the port of destination."
+   Supplier response: _______________________________________________________
+
+------------------------------------------------------------------------------
+DISPUTE RESOLUTION, GOVERNING LAW & LANGUAGE
+------------------------------------------------------------------------------
+
+22. [R23 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 13. Governing Law and Dispute Resolution, Section 4, p.5; 14. Language and Entire Agreement, Section 6, p.5
+   Issue: Arbitration clause is internally inconsistent: SIAC Rules "in Singapore" with the seat stated as the DIFC
+   Please confirm the seat of arbitration: Singapore or the DIFC.
+   Contract wording referred to (verbatim):
+      " 13.1 This Contract shall be governed by the laws of England and Wales. In the event of
+       any dispute, the parties shall first attempt to resolve it through friendly negotiation
+       within 30 days. Failing such resolution, the dispute shall be finally settled by
+       arbitration. The arbitration shall be [...]"
+   Supplier response: _______________________________________________________
+
+23. [R26 · High priority] [AGREEMENT REQUIRED]
+   Contract provision: 14. Language and Entire Agreement, Section 6, p.5; 13. Governing Law and Dispute Resolution, Section 4, p.5
+   Issue: Both language versions are "equally authentic" but English prevails, while the arbitration agreement is to be construed in Chinese
+   Do you agree that the Chinese version prevails in case of inconsistency?
+   Contract wording referred to (verbatim):
+      " 14.1 This Contract is made in the English and Chinese languages, both versions being
+       equally authentic. In case of any discrepancy, the English version shall prevail.
+       Notwithstanding the foregoing, the arbitration agreement shall be interpreted in favour
+       of the Chinese version."
+   Supplier response: _______________________________________________________
+
+24. [R24 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 13. Governing Law and Dispute Resolution, Section 5, p.5; 13. Governing Law and Dispute Resolution, Section 4, p.5
+   Issue: The Seller reserves the right to sue in "any competent court" for the advance and the balance
+   Do you agree to delete this carve-out?
+   Contract wording referred to (verbatim):
+      " 13.2 Nothing in this Clause 13 shall affect the Seller's right to pursue the payment of
+       the advance payment and the balance in any competent court."
+   Supplier response: _______________________________________________________
+
+25. [R27 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 14. Language and Entire Agreement, Section 7, p.5; 4. Technical Specification (Annex 1), Section 1, p.2; 2. Quality, Section 3, p.1
+   Issue: Entire agreement clause excludes the proforma invoice and prior exchanges, leaving the referenced specification outside the contract
+   Can the "Fiber Grade MEG" standard specification referred to in Clause 2.1 be annexed to the
+      Contract, with a locked version and date?
+   Contract wording referred to (verbatim):
+      " 14.2 This Contract, together with the Annexes, constitutes the entire agreement between
+       the parties and supersedes all prior communications, including the Seller's proforma
+       invoice dated 2 October 2026."
+   Supplier response: _______________________________________________________
+
+------------------------------------------------------------------------------
+DOCUMENTS, PACKAGING & REGULATORY COMPLIANCE
+------------------------------------------------------------------------------
+
+26. [R22 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 12. Force Majeure, Section 3, p.5; 6. Delivery and Shipment, Section 5, p.2
+   Issue: Force majeure is over-broad (market price changes, equipment breakdown) and has no notice, proof or termination mechanism
+   Do you agree to remove market price changes, equipment breakdown and shortage of raw
+      materials from the force majeure definition?
+   Contract wording referred to (verbatim):
+      " 12.1 Force majeure means an event which the affected party could not reasonably predict,
+       avoid or overcome, including war, strike, epidemic, government act, cancellation of
+       export permit, plant shutdown, breakdown of equipment, changes in market price, and
+       shortage or delay of raw materials or [...]"
+   Supplier response: _______________________________________________________
+
+27. [R28 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 7. Packing and Marking, Section 1, p.3; 7. Packing and Marking, Section 2, p.3; A2-T7, p.7 (Table 2 row)
+   Issue: SDS/Chinese labelling: SDS only "after shipment", Chinese safety labels allocated to the Buyer, no GHS edition or version
+   When will the SDS be provided (before booking, before shipment, or with the goods), and in
+      which languages (English and Chinese)?
+   Contract wording referred to (verbatim):
+      " 7.1 The Goods shall be shipped in bulk in vessel's tanks. The Seller shall provide a
+       Safety Data Sheet (SDS) in English complying with GHS, a certificate of analysis (COA), a
+       certificate of origin issued by the Saudi Chamber of Commerce, and a non-wood packing
+       declaration, each in original and copy [...]"
+      " 7.2 The Buyer shall be responsible for obtaining, at its own cost and risk, all import
+       licences, automatic import licences, customs clearance and quarantine requirements of the
+       People's Republic of China, and for any Chinese language labelling or safety labels
+       required for the Goods upon import."
+   Supplier response: _______________________________________________________
+
+28. [R28 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 7. Packing and Marking, Section 1, p.3; 7. Packing and Marking, Section 2, p.3; A2-T7, p.7 (Table 2 row)
+   Issue: SDS/Chinese labelling: SDS only "after shipment", Chinese safety labels allocated to the Buyer, no GHS edition or version
+   Which edition of GHS applies to the SDS?
+   Contract wording referred to (verbatim):
+      " 7.1 The Goods shall be shipped in bulk in vessel's tanks. The Seller shall provide a
+       Safety Data Sheet (SDS) in English complying with GHS, a certificate of analysis (COA), a
+       certificate of origin issued by the Saudi Chamber of Commerce, and a non-wood packing
+       declaration, each in original and copy [...]"
+      " 7.2 The Buyer shall be responsible for obtaining, at its own cost and risk, all import
+       licences, automatic import licences, customs clearance and quarantine requirements of the
+       People's Republic of China, and for any Chinese language labelling or safety labels
+       required for the Goods upon import."
+   Supplier response: _______________________________________________________
+
+29. [R29 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: 7. Packing and Marking, Section 2, p.3; 7. Packing and Marking, Section 1, p.3; 6. Delivery and Shipment, Section 6, p.2
+   Issue: All import licensing risk is allocated to the Buyer, with no cooperation obligation on the Seller
+   Will you undertake to provide, within five working days, the materials we need to apply for
+      an automatic import licence (certificate of origin, composition and use description)?
+   Contract wording referred to (verbatim):
+      " 7.2 The Buyer shall be responsible for obtaining, at its own cost and risk, all import
+       licences, automatic import licences, customs clearance and quarantine requirements of the
+       People's Republic of China, and for any Chinese language labelling or safety labels
+       required for the Goods upon import."
+   Supplier response: _______________________________________________________
+
+30. [R30 · Medium priority] [AGREEMENT PREFERRED]
+   Contract provision: Parties, Section 1, p.1; 7. Packing and Marking, Section 1, p.3; 10. Title, Risk and Insurance, Section 4, p.4
+   Issue: The Seller is a free-zone trading entity; the actual producer, export-control and sanctions provisions are not addressed
+   Please provide the name of the actual producer of the Goods and its relationship with the
+      Seller.
+   Contract wording referred to (verbatim):
+      " This Purchase Contract (the "Contract") is made on 8 October 2026 between GULF
+       PETROCHEMICAL TRADING FZE, a free zone establishment organised under the laws of the
+       United Arab Emirates and having its registered office at Office 1203, Tower B, Jebel Ali
+       Free Zone, Dubai, U.A.E. ("Seller", [...]"
+      " 7.1 The Goods shall be shipped in bulk in vessel's tanks. The Seller shall provide a
+       Safety Data Sheet (SDS) in English complying with GHS, a certificate of analysis (COA), a
+       certificate of origin issued by the Saudi Chamber of Commerce, and a non-wood packing
+       declaration, each in original and copy [...]"
+   Supplier response: _______________________________________________________
+
+------------------------------------------------------------------------------
+GENERAL OBSERVATIONS
+------------------------------------------------------------------------------
+
+31. [CONTRACT ADMINISTRATION] Please confirm the name, telephone number and e-mail address
+   of the person within your organisation who will be responsible for contract execution,
+   shipping documents and claims handling.
+
+32. [DOCUMENTS] Please provide, for our file, the following items not attached to the
+   Contract: (a) the full text of your "Fiber Grade MEG" standard specification in force on
+   the date of signature; (b) the current GHS safety data sheet (SDS); (c) your trade licence;
+   and (d) the name of the actual producer of the Goods.
+
+33. [LANGUAGE] The Contract is executed in English and Chinese. Please confirm which
+   version will be used for day-to-day administration and whether you are prepared to accept
+   the Chinese version as the prevailing text.
+
+We propose to arrange a short call to go through the above items once we have your written
+response, so that any resulting revisions can be incorporated before shipment planning
+commences. In the meantime, the Contract remains subject to our internal approval and to the
+outcome of due diligence on your organisation and on the producer of the Goods.
+
+We look forward to hearing from you.
+
+Yours faithfully,
+
+_________________________________
+ZHEJIANG HONYU NEW MATERIALS CO., LTD. (fictitious)
+Procurement Department
+
+[-- this document is a draft generated from a simulated contract review and is not legal advice --]

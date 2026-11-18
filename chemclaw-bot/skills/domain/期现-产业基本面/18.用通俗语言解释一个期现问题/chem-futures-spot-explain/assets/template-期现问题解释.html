@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESCRIPTION}}" />
+<!--
+  期现问题解释页模板（v1.0）
+  规则：
+  1. 单文件、零外部依赖（无 CDN、无外链字体/图片），双击可开，可打印。
+  2. 所有数字来自下方 id="DATA" 的 JSON（build 脚本注入），页面内的一切指标由 JS 现算，不手填结果。
+  3. 所有双花括号占位符必须被替换；交付前占位符出现次数必须为 0。
+  4. 只允许修改 DATA / TOKENS 两个脚本块，以及页面内的占位文本；结构、CSS、JS 逻辑不得改动，除非同步更新 template-guide.md。
+-->
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#14181f; --ink2:#4a5568; --ink3:#8a94a6;
+  --line:#e3e7ee; --brand:#1554d1; --brand2:#0a2f6e; --warn:#b45309; --warnbg:#fff7ed;
+  --ok:#0f7a4a; --okbg:#ecfdf3; --bad:#b91c1c; --badbg:#fef2f2; --theory:#6d28d9; --theorybg:#f5f3ff;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px -12px rgba(16,24,40,.18);
+  --radius:14px;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-decoration:none;border-bottom:1px dotted var(--brand)}
+a:hover{border-bottom-style:solid}
+.wrap{max-width:1240px;margin:0 auto;padding:22px 20px 80px}
+header.hero{position:relative;overflow:hidden;border-radius:20px;padding:30px 32px 26px;
+  background:linear-gradient(135deg,#0a2f6e 0%,#1554d1 55%,#2f7bf0 100%);color:#fff;box-shadow:var(--shadow)}
+header.hero::after{content:"";position:absolute;right:-90px;top:-120px;width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 62%)}
+.hero .kicker{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.82}
+.hero h1{margin:8px 0 10px;font-size:27px;line-height:1.35;font-weight:800;letter-spacing:.01em}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;opacity:.92}
+.hero .chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:3px 11px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 6px}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:var(--shadow)}
+.seg button{border:0;background:transparent;padding:7px 16px;border-radius:999px;font-size:14px;font-weight:600;
+  color:var(--ink2);cursor:pointer;transition:.18s}
+.seg button[aria-pressed="true"]{background:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(21,84,209,.35)}
+.seg button:focus-visible{outline:2px solid var(--brand2);outline-offset:2px}
+.ctrl{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);
+  border-radius:10px;padding:6px 10px;font-size:13px;box-shadow:var(--shadow)}
+.ctrl label{color:var(--ink3)}
+.ctrl select,.ctrl input{border:1px solid var(--line);border-radius:8px;padding:4px 7px;font:inherit;font-size:13px;color:var(--ink);background:#fff}
+.ctrl input[type=date]{width:132px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 13px;font:inherit;font-size:13px;
+  font-weight:600;color:var(--ink2);cursor:pointer;box-shadow:var(--shadow)}
+.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn:hover{transform:translateY(-1px)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1000px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:680px){.g2,.g3,.g4{grid-template-columns:1fr}.hero h1{font-size:22px}.wrap{padding:14px 12px 60px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 4px;font-size:18px;letter-spacing:.01em}
+.card h3{margin:18px 0 8px;font-size:15px}
+.card .sub{color:var(--ink3);font-size:12.5px;margin:0 0 14px}
+section.block{margin-top:22px}
+section.block > .head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
+section.block > .head .no{font-size:12px;font-weight:800;color:#fff;background:var(--brand2);border-radius:7px;padding:2px 8px}
+section.block > .head h2{margin:0;font-size:20px}
+section.block > .head .hint{color:var(--ink3);font-size:12.5px}
+.answer{border-left:5px solid var(--brand);background:linear-gradient(180deg,#f8fbff,#fff)}
+.answer .lead{font-size:17px;font-weight:700;line-height:1.7;margin:6px 0 10px}
+.answer .body{color:var(--ink2);font-size:14.5px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid}
+.b-ok{color:var(--ok);background:var(--okbg);border-color:#b7e4c7}
+.b-warn{color:var(--warn);background:var(--warnbg);border-color:#fbd38d}
+.b-bad{color:var(--bad);background:var(--badbg);border-color:#feb2b2}
+.b-theory{color:var(--theory);background:var(--theorybg);border-color:#ddd6fe}
+.b-info{color:var(--brand);background:#eff6ff;border-color:#bfdbfe}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi .k{font-size:12.5px;color:var(--ink3);display:flex;justify-content:space-between;gap:6px;cursor:help}
+.kpi .v{font-size:23px;font-weight:800;letter-spacing:-.01em;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12.5px;color:var(--ink2);margin-top:3px}
+.up{color:var(--bad)}.down{color:var(--ok)}
+table{width:100%;border-collapse:collapse;font-size:13.3px}
+th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12.3px;color:var(--ink3);font-weight:700;background:#fafbfd}
+tbody tr:hover{background:#f7f9fd}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.term{color:var(--brand);font-weight:600;border-bottom:1px dashed var(--brand);cursor:pointer;font-size:inherit}
+.term:focus{outline:2px solid #bfdbfe;border-radius:4px}
+.formula{font-family:ui-monospace,SFMono-Regular,"Cascadia Mono",Consolas,monospace;font-size:13px;
+  background:#0d1b34;color:#dbeafe;border-radius:10px;padding:11px 13px;overflow-x:auto;white-space:pre-wrap;line-height:1.7}
+.formula .v{color:#7dd3fc;font-weight:700}
+.formula .c{color:#94a3b8}
+svg{display:block;max-width:100%;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.3px;color:var(--ink2);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.legend i.dot{width:9px;height:9px;border-radius:50%}
+.src{color:var(--ink3);font-size:11.5px}
+.srclink{font-size:11.5px;color:var(--ink3);border-bottom:1px dotted var(--ink3)}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 13px;background:#fbfcfe;margin:8px 0}
+details summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--brand2)}
+details[open] summary{margin-bottom:8px}
+.note{font-size:12.8px;color:var(--ink2);background:#fafbfd;border:1px dashed var(--line);border-radius:10px;padding:10px 12px}
+.warnbox{background:var(--warnbg);border:1px solid #fcd9a3;border-radius:12px;padding:12px 14px;font-size:13.4px;color:#7c4a03}
+.theorybox{background:var(--theorybg);border:1px solid #e4dcff;border-radius:12px;padding:12px 14px;font-size:13.4px;color:#4c1d95}
+.okbox{background:var(--okbg);border:1px solid #c6f0d9;border-radius:12px;padding:12px 14px;font-size:13.4px;color:#065f46}
+.badbox{background:var(--badbg);border:1px solid #fbd5d5;border-radius:12px;padding:12px 14px;font-size:13.4px;color:#7f1d1d}
+ul.tight{margin:6px 0 6px 18px;padding:0}
+ul.tight li{margin:4px 0}
+.stepper{display:flex;gap:0;flex-wrap:wrap;margin:6px 0 14px}
+.step{flex:1 1 120px;position:relative;padding:10px 12px 10px 26px;border-left:3px solid var(--brand);background:#f5f8ff;margin-right:6px;border-radius:0 10px 10px 0;font-size:12.3px}
+.step b{display:block;font-size:13px;color:var(--brand2)}
+.step span{color:var(--ink3)}
+.tooltip{position:fixed;z-index:99;max-width:330px;background:#0d1b34;color:#e5edff;border-radius:10px;
+  padding:10px 12px;font-size:12.6px;line-height:1.6;box-shadow:0 16px 40px -18px rgba(0,0,0,.7);display:none;pointer-events:none}
+.tooltip b{color:#7dd3fc;display:block;margin-bottom:3px;font-size:13px}
+.tooltip .sign{color:#fca5a5;display:block;margin-top:5px;font-size:12px}
+.hit{cursor:crosshair}
+.footer{margin-top:30px;color:var(--ink3);font-size:12.3px;text-align:center;line-height:1.9}
+[data-mode="beginner"] .pro-only{display:none !important}
+[data-mode="pro"] .beginner-only{display:none !important}
+.tag{font-size:11px;padding:1px 7px;border-radius:6px;border:1px solid var(--line);color:var(--ink2);background:#fff;white-space:nowrap}
+.t-fact{color:var(--ok);border-color:#b7e4c7;background:var(--okbg)}
+.t-interp{color:var(--warn);border-color:#fbd38d;background:var(--warnbg)}
+.t-gap{color:var(--bad);border-color:#feb2b2;background:var(--badbg)}
+.t-est{color:var(--theory);border-color:#ddd6fe;background:var(--theorybg)}
+@media print{
+  body{background:#fff}
+  .toolbar,.seg{display:none!important}
+  .card{box-shadow:none;break-inside:avoid}
+  section.block{break-inside:avoid}
+  a{color:#000;border:0}
+}
+</style>
+</head>
+<body data-mode="beginner">
+{{BODY}}
+<div class="tooltip" id="tip" role="tooltip"></div>
+<script id="DATA" type="application/json">{{DATA_JSON}}</script>
+<script id="TOKENS" type="application/json">{{TOKENS_JSON}}</script>
+<script>
+/* 期现问题解释页 · 交互逻辑（v1.0，仅依赖 DATA / TOKENS 两个 JSON） */
+(function(){
+"use strict";
+var DATA = JSON.parse(document.getElementById('DATA').textContent || '{}');
+var TOKENS = JSON.parse(document.getElementById('TOKENS').textContent || '{}');
+var $ = function(s,r){ return (r||document).querySelector(s); };
+var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+var fmt = function(x,d){ if(x===null||x===undefined||isNaN(x)) return '—';
+  var n = Number(x); return n.toLocaleString('zh-CN',{minimumFractionDigits:d===undefined?0:d, maximumFractionDigits:d===undefined?2:d}); };
+var signCls = function(x){ return x>0?'up':(x<0?'down':''); };
+
+/* ---------- 1. 模式切换（入门/专业） ---------- */
+function setMode(m){
+  document.body.setAttribute('data-mode', m);
+  $$('.seg button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode===m)); });
+  try{ localStorage.setItem(TOKENS.storageKey + ':mode', m); }catch(e){}
+  window.dispatchEvent(new Event('resize'));
+}
+$$('.seg button').forEach(function(b){ b.addEventListener('click', function(){ setMode(b.dataset.mode); }); });
+try{ var saved = localStorage.getItem(TOKENS.storageKey + ':mode'); if(saved) setMode(saved); }catch(e){}
+
+/* ---------- 2. 术语气泡 ---------- */
+var tip = $('#tip');
+function showTip(el){
+  var key = el.dataset.term;
+  var t = (DATA.terms||[]).filter(function(x){ return x.k.indexOf(key)===0; })[0];
+  if(!t) return;
+  tip.innerHTML = '<b>'+esc(t.k)+'</b>'+esc(t.short)+'<span class="sign">符号：'+esc(t.sign)+'</span>'+
+                  '<div style="margin-top:6px;color:#cbd5e1">'+esc(t.detail)+'</div>';
+  tip.style.display='block';
+  var r = el.getBoundingClientRect();
+  var x = Math.min(window.innerWidth - 345, Math.max(8, r.left));
+  var y = r.bottom + 8;
+  if(y + 180 > window.innerHeight) y = Math.max(8, r.top - 190);
+  tip.style.left = x+'px'; tip.style.top = y+'px';
+}
+function hideTip(){ tip.style.display='none'; }
+$$('[data-term]').forEach(function(el){
+  el.addEventListener('mouseenter', function(){ showTip(el); });
+  el.addEventListener('focus', function(){ showTip(el); });
+  el.addEventListener('mouseleave', hideTip);
+  el.addEventListener('blur', hideTip);
+  el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showTip(el); } });
+  if(!el.hasAttribute('tabindex')) el.setAttribute('tabindex','0');
+});
+document.addEventListener('scroll', hideTip, {passive:true});
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+window.__esc = esc;
+
+/* ---------- 3. SVG 小工具 ---------- */
+function scale(d0,d1,r0,r1){ var k=(r1-r0)/((d1-d0)||1); return function(v){ return r0+(v-d0)*k; }; }
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+','+p[1].toFixed(2); }).join(' '); }
+
+/* 折线图：series=[{name,color,unit,axis:'L'|'R',data:[{x:Date,label,y}]}] */
+function lineChart(el, opt){
+  if(!el) return;
+  var W = opt.w||760, H = opt.h||300, m = {t:16,r:56,b:34,l:52};
+  var iw = W-m.l-m.r, ih = H-m.t-m.b;
+  var all = [];
+  opt.series.forEach(function(s){ s.data.forEach(function(d){ all.push(d.x); }); });
+  var xs = all.map(function(d){ return +d; });
+  var x0 = Math.min.apply(null,xs), x1 = Math.max.apply(null,xs);
+  var sx = scale(x0, x1, m.l, m.l+iw);
+  var left = opt.series.filter(function(s){ return s.axis!=='R'; });
+  var right = opt.series.filter(function(s){ return s.axis==='R'; });
+  function range(ss, pad){
+    var vs=[]; ss.forEach(function(s){ s.data.forEach(function(d){ if(d.y!=null) vs.push(d.y); }); });
+    if(!vs.length) return [0,1];
+    var lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs), p=(hi-lo)*(pad||0.12)||1;
+    return [lo-p, hi+p];
+  }
+  var rl = range(left), rr = range(right);
+  var syL = scale(rl[0], rl[1], m.t+ih, m.t);
+  var syR = scale(rr[0], rr[1], m.t+ih, m.t);
+  var out = [];
+  /* 网格 */
+  for(var i=0;i<=4;i++){
+    var y = m.t + ih*i/4;
+    out.push('<line x1="'+m.l+'" x2="'+(m.l+iw)+'" y1="'+y+'" y2="'+y+'" stroke="#eef1f6"/>');
+    if(left.length) out.push('<text x="'+(m.l-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="10.5" fill="#8a94a6">'+fmt(rl[1]-(rl[1]-rl[0])*i/4, (rl[1]-rl[0])<10?2:0)+'</text>');
+    if(right.length) out.push('<text x="'+(m.l+iw+8)+'" y="'+(y+4)+'" font-size="10.5" fill="#8a94a6">'+fmt(rr[1]-(rr[1]-rr[0])*i/4, (rr[1]-rr[0])<10?2:0)+'</text>');
+  }
+  /* x 轴标签（最多 7 个） */
+  var labels = [];
+  var uniq = {}; all.forEach(function(d){ uniq[+d]=d; });
+  var keys = Object.keys(uniq).map(Number).sort(function(a,b){return a-b;});
+  var stepL = Math.ceil(keys.length/7);
+  keys.forEach(function(k,i){ if(i%stepL===0 || i===keys.length-1){ labels.push(k); } });
+  labels.forEach(function(k){
+    out.push('<text x="'+sx(k)+'" y="'+(m.t+ih+18)+'" text-anchor="middle" font-size="10.5" fill="#8a94a6">'+fmtShort(new Date(k))+'</text>');
+  });
+  /* 序列 */
+  opt.series.forEach(function(s){
+    var sy = s.axis==='R'? syR : syL;
+    var pts = s.data.filter(function(d){ return d.y!=null; }).map(function(d){ return [sx(+d.x), sy(d.y)]; });
+    if(s.type==='area'){
+      out.push('<path d="'+pathFrom(pts)+' L'+pts[pts.length-1][0]+','+(m.t+ih)+' L'+pts[0][0]+','+(m.t+ih)+' Z" fill="'+s.color+'" opacity=".10"/>');
+    }
+    out.push('<path d="'+pathFrom(pts)+'" fill="none" stroke="'+s.color+'" stroke-width="'+(s.width||2)+'"'+(s.dash?' stroke-dasharray="'+s.dash+'"':'')+' stroke-linejoin="round" stroke-linecap="round"/>');
+    s.data.forEach(function(d){
+      if(d.y==null) return;
+      var tipTxt = (s.name||'')+'：'+(d.label||fmtShort(new Date(+d.x)))+'  '+fmt(d.y, s.dec)+' '+(s.unit||'');
+      out.push('<circle class="hit" cx="'+sx(+d.x)+'" cy="'+sy(d.y)+'" r="'+(s.r||3.4)+'" fill="#fff" stroke="'+s.color+'" stroke-width="2" data-tip="'+esc(tipTxt)+'"/>');
+    });
+  });
+  el.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(opt.aria||'折线图')+'">'+out.join('')+'</svg>'+
+    '<div class="legend">'+opt.series.map(function(s){ return '<span><i style="background:'+s.color+'"></i>'+esc(s.name)+(s.axis==='R'?'（右轴）':'')+'</span>'; }).join('')+'</div>';
+  bindHit(el);
+}
+function fmtShort(d){
+  var p = function(n){ return (n<10?'0':'')+n; };
+  return (d.getMonth()+1)+'-'+p(d.getDate());
+}
+
+/* 柱状图 */
+function barChart(el, opt){
+  if(!el) return;
+  var W=opt.w||760, H=opt.h||280, m={t:16,r:16,b:38,l:52};
+  var iw=W-m.l-m.r, ih=H-m.t-m.b;
+  var vs = opt.data.map(function(d){ return d.v; });
+  var lo = Math.min(0, Math.min.apply(null,vs)), hi = Math.max(0, Math.max.apply(null,vs));
+  var pad=(hi-lo)*0.12||1; lo-=pad*(lo<0?1:0); hi+=pad;
+  var sy = scale(lo,hi,m.t+ih,m.t);
+  var bw = iw/opt.data.length;
+  var out=[];
+  for(var i=0;i<=4;i++){ var y=m.t+ih*i/4;
+    out.push('<line x1="'+m.l+'" x2="'+(m.l+iw)+'" y1="'+y+'" y2="'+y+'" stroke="#eef1f6"/>');
+    out.push('<text x="'+(m.l-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="10.5" fill="#8a94a6">'+fmt(hi-(hi-lo)*i/4,0)+'</text>'); }
+  out.push('<line x1="'+m.l+'" x2="'+(m.l+iw)+'" y1="'+sy(0)+'" y2="'+sy(0)+'" stroke="#cbd5e1"/>');
+  opt.data.forEach(function(d,i){
+    var x=m.l+bw*i+bw*0.18, w=bw*0.64;
+    var y0=sy(0), y1=sy(d.v);
+    var top=Math.min(y0,y1), h=Math.max(1.5,Math.abs(y1-y0));
+    out.push('<rect class="hit" x="'+x+'" y="'+top+'" width="'+w+'" height="'+h+'" rx="3" fill="'+(d.color||'#1554d1')+'" data-tip="'+esc(d.label+'：'+fmt(d.v,1)+(opt.unit||''))+'"/>');
+    if(opt.showVal!==false) out.push('<text x="'+(x+w/2)+'" y="'+(d.v>=0? top-5 : top+h+13)+'" text-anchor="middle" font-size="10.5" fill="#4a5568">'+fmt(d.v,1)+'</text>');
+    out.push('<text x="'+(x+w/2)+'" y="'+(m.t+ih+16)+'" text-anchor="middle" font-size="10" fill="#8a94a6">'+esc(d.label)+'</text>');
+  });
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img">'+out.join('')+'</svg>';
+  bindHit(el);
+}
+
+/* 双轴散点（仅当样本足够时展示） */
+function scatterChart(el, opt){
+  if(!el) return;
+  var W=opt.w||420,H=opt.h||280,m={t:16,r:16,b:42,l:52};
+  var iw=W-m.l-m.r, ih=H-m.t-m.b;
+  var xs=opt.points.map(function(p){return p.x;}), ys=opt.points.map(function(p){return p.y;});
+  var sx=scale(Math.min.apply(null,xs),Math.max.apply(null,xs),m.l,m.l+iw);
+  var sy=scale(Math.min.apply(null,ys),Math.max.apply(null,ys),m.t+ih,m.t);
+  var out=['<line x1="'+m.l+'" x2="'+(m.l+iw)+'" y1="'+sy(0)+'" y2="'+sy(0)+'" stroke="#cbd5e1"/>',
+           '<line x1="'+sx(0)+'" x2="'+sx(0)+'" y1="'+m.t+'" y2="'+(m.t+ih)+'" stroke="#cbd5e1"/>',
+           '<text x="'+(m.l+iw)+'" y="'+(m.t+ih+16)+'" text-anchor="end" font-size="10.5" fill="#8a94a6">'+esc(opt.xLabel||'')+'</text>',
+           '<text x="'+m.l+'" y="'+(m.t-4)+'" font-size="10.5" fill="#8a94a6">'+esc(opt.yLabel||'')+'</text>'];
+  opt.points.forEach(function(p){
+    out.push('<circle class="hit" cx="'+sx(p.x)+'" cy="'+sy(p.y)+'" r="5" fill="'+(p.y>=0?'#0f7a4a':'#b91c1c')+'" opacity=".85" data-tip="'+esc(p.label)+'"/>');
+  });
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'">'+out.join('')+'</svg>';
+  bindHit(el);
+}
+
+function bindHit(el){
+  $$('.hit',el).forEach(function(n){
+    n.addEventListener('mouseenter', function(){
+      tip.innerHTML='<b>'+esc(n.dataset.tip)+'</b>';
+      tip.style.display='block';
+      var r=n.getBoundingClientRect();
+      tip.style.left=Math.min(window.innerWidth-345,Math.max(8,r.left))+'px';
+      tip.style.top=(r.bottom+8)+'px';
+    });
+    n.addEventListener('mouseleave', hideTip);
+  });
+}
+
+/* ---------- 4. 指标现算 ---------- */
+function compute(){
+  var f = DATA.futures.series, b = DATA.basis.rows;
+  var basis = b.filter(function(r){ return r.basis_close!=null; }).map(function(r){
+    return {x:new Date(r.date), label:r.date+' 基差', y:r.basis_close}; });
+  var basisSettle = b.filter(function(r){ return r.basis_settle!=null; }).map(function(r){
+    return {x:new Date(r.date), label:r.date+' 基差(结算价口径)', y:r.basis_settle}; });
+  var basisPct = b.filter(function(r){ return r.basis_pct!=null; }).map(function(r){
+    return {x:new Date(r.date), label:r.date+' 基差率%', y:r.basis_pct}; });
+  var spot = b.filter(function(r){ return r.spot!=null; }).map(function(r){
+    return {x:new Date(r.date), label:r.date+' 太仓现货', y:r.spot}; });
+  var fut = f.map(function(r){ return {x:new Date(r.date), label:r.date+' MA2701', y:r.close}; });
+  var fut11 = DATA.futures.series_2611.map(function(r){ return {x:new Date(r.date), label:r.date+' MA2611', y:r.close}; });
+  var inv = DATA.inventory.series.map(function(r){ return {x:new Date(r.date), label:r.date+' 港口库存', y:r.value}; });
+  var mc = DATA.month_spread.points.map(function(r){ return {x:new Date(r.date), label:r.date+' MC(2701-2611)', y:r.mc}; });
+  return {basis:basis, basisSettle:basisSettle, basisPct:basisPct, spot:spot, fut:fut, fut11:fut11, inv:inv, mc:mc};
+}
+var C = compute();
+
+/* ---------- 5. 渲染图表 ---------- */
+function renderCharts(){
+  var invEl = $('#chart-inv-price');
+  if(invEl) lineChart(invEl, {aria:'港口库存与期货价格', series:[
+    {name:'港口样本库存（万吨，左轴）', color:'#1554d1', unit:'万吨', dec:2, data:C.inv, type:'area'},
+    {name:'MA2701 收盘（元/吨，右轴）', color:'#e07a1f', unit:'元/吨', dec:0, axis:'R', data:C.fut}
+  ]});
+  var bEl = $('#chart-basis');
+  if(bEl) lineChart(bEl, {aria:'太仓现货、期货与基差', series:[
+    {name:'太仓现货（元/吨）', color:'#1554d1', unit:'元/吨', dec:0, data:C.spot},
+    {name:'MA2701 期货收盘（元/吨）', color:'#e07a1f', unit:'元/吨', dec:0, data:C.fut},
+    {name:'基差=现货-期货（元/吨，右轴）', color:'#0f7a4a', unit:'元/吨', dec:0, axis:'R', data:C.basis}
+  ]});
+  var b2 = $('#chart-basis-defs');
+  if(b2) lineChart(b2, {h:260, aria:'两种基差口径对比', series:[
+    {name:'基差(现货-收盘)', color:'#0f7a4a', unit:'元/吨', dec:0, data:C.basis},
+    {name:'基差(现货-结算价)', color:'#b91c1c', unit:'元/吨', dec:0, data:C.basisSettle, dash:'5 4'}
+  ]});
+  var mcEl = $('#chart-mc');
+  if(mcEl) barChart(mcEl, {aria:'月差 MC', unit:'元/吨', data:DATA.month_spread.points.map(function(r){
+    return {label:r.date.slice(5), v:r.mc, color: r.mc<0? '#b91c1c':'#0f7a4a'}; })});
+  var c11 = $('#chart-roll');
+  if(c11) lineChart(c11, {h:260, aria:'换月与合约差异', series:[
+    {name:'MA2611 收盘', color:'#8a94a6', unit:'元/吨', dec:0, data:C.fut11, dash:'6 4'},
+    {name:'MA2701 收盘', color:'#1554d1', unit:'元/吨', dec:0, data:C.fut}
+  ]});
+  var ss = $('#chart-scatter');
+  if(ss && DATA.correlation && DATA.correlation.raw && DATA.correlation.raw.length){
+    scatterChart(ss,{ xLabel:'库存周变化（万吨）', yLabel:'期货周变化（元/吨）',
+      points: DATA.correlation.raw.map(function(p){ return {x:p.d_inv, y:p.d_px, label:p.period+'  库存'+fmt(p.d_inv,2)+'万吨 / 期货'+fmt(p.d_px,0)+'元/吨'}; })});
+  }
+}
+renderCharts();
+window.addEventListener('resize', function(){ /* viewBox 自适应，无需重绘 */ });
+
+/* ---------- 6. 交互重算（换日期/换合约） ---------- */
+var selContract = $('#sel-contract'), inpFrom = $('#inp-from'), inpTo = $('#inp-to'), calcOut = $('#calc-out');
+function recalc(){
+  if(!calcOut) return;
+  var sym = selContract ? selContract.value : 'MA2701';
+  var series = (sym==='MA2611') ? DATA.futures.series_2611 : DATA.futures.series;
+  var rows = series.slice().sort(function(a,b){ return a.date<b.date?-1:1; });
+  var from = inpFrom && inpFrom.value ? inpFrom.value : rows[0].date;
+  var to = inpTo && inpTo.value ? inpTo.value : rows[rows.length-1].date;
+  var pick = function(d){ return rows.filter(function(r){ return r.date===d; })[0]; };
+  var a = pick(from), z = pick(to);
+  var bRows = DATA.basis.rows.filter(function(r){ return r.spot!=null; });
+  var spotA = bRows.filter(function(r){ return r.date===from; })[0];
+  var spotZ = bRows.filter(function(r){ return r.date===to; })[0];
+  var html = [];
+  if(!a || !z){ html.push('<div class="warnbox">所选取的日期不在已有数据区间内（可用区间：'+rows[0].date+' 至 '+rows[rows.length-1].date+'）。</div>'); calcOut.innerHTML=html.join(''); return; }
+  var dClose = z.close - a.close, dPct = dClose / a.close * 100;
+  html.push('<table><thead><tr><th>项目</th><th>'+from+'</th><th>'+to+'</th><th class="num">变化</th></tr></thead><tbody>');
+  html.push('<tr><td>'+sym+' 收盘价（元/吨）</td><td class="num">'+fmt(a.close,0)+'</td><td class="num">'+fmt(z.close,0)+'</td><td class="num '+signCls(dClose)+'">'+fmt(dClose,0)+'（'+fmt(dPct,2)+'%）</td></tr>');
+  html.push('<tr><td>'+sym+' 结算价（元/吨）</td><td class="num">'+fmt(a.settle,0)+'</td><td class="num">'+fmt(z.settle,0)+'</td><td class="num '+signCls(z.settle-a.settle)+'">'+fmt(z.settle-a.settle,0)+'</td></tr>');
+  html.push('<tr><td>持仓量（手）</td><td class="num">'+fmt(a.oi,0)+'</td><td class="num">'+fmt(z.oi,0)+'</td><td class="num '+signCls(z.oi-a.oi)+'">'+fmt(z.oi-a.oi,0)+'</td></tr>');
+  if(spotA && spotZ){
+    html.push('<tr><td>太仓现货（元/吨）</td><td class="num">'+fmt(spotA.spot,0)+'</td><td class="num">'+fmt(spotZ.spot,0)+'</td><td class="num '+signCls(spotZ.spot-spotA.spot)+'">'+fmt(spotZ.spot-spotA.spot,0)+'</td></tr>');
+    html.push('<tr><td>基差 = 现货 − 期货</td><td class="num">'+fmt(spotA.basis_close,0)+'</td><td class="num">'+fmt(spotZ.basis_close,0)+'</td><td class="num '+signCls(spotZ.basis_close-spotA.basis_close)+'">'+fmt(spotZ.basis_close-spotA.basis_close,0)+'</td></tr>');
+    html.push('<tr><td>基差率 = 基差 / 期货</td><td class="num">'+fmt(spotA.basis_pct,2)+'%</td><td class="num">'+fmt(spotZ.basis_pct,2)+'%</td><td class="num '+signCls(spotZ.basis_pct-spotA.basis_pct)+'">'+fmt(spotZ.basis_pct-spotA.basis_pct,2)+'pp</td></tr>');
+  } else {
+    html.push('<tr><td>基差</td><td colspan="3" class="src">所选取的'+from+'/或'+to+'没有公开单一现货订价 → 该格留空（GAP），不用区间中值冒充收盘价。</td></tr>');
+  }
+  var kSettle = (z.settle - a.settle) !== 0;
+  html.push('</tbody></table>');
+  html.push('<div class="note" style="margin-top:10px">换月提示：'+
+    (sym==='MA2611' && to==='2026-10-19' ? '2026-10-19 起主力已换月至 MA2701，MA2611 当日成交萎缩（持仓约18万手），价格不再代表主力。' : '所选合约在区间内是否为主力，需结合“主力换月日历”核对。')+
+    '</div>');
+  calcOut.innerHTML = html.join('');
+}
+if(selContract){ recalc(); selContract.addEventListener('change', recalc); }
+if(inpFrom){ inpFrom.addEventListener('change', recalc); }
+if(inpTo){ inpTo.addEventListener('change', recalc); }
+
+/* ---------- 7. 指标卡小动画 ---------- */
+$$('.kpi .v').forEach(function(el){
+  var txt = el.textContent; el.style.opacity = '0';
+  requestAnimationFrame(function(){ el.style.transition='opacity .4s'; el.style.opacity='1'; });
+});
+
+/* ---------- 8. 打印 ---------- */
+var pr = $('#btn-print');
+if(pr) pr.addEventListener('click', function(){ window.print(); });
+
+/* ---------- 9. 自检（缺数据时在页面上显式告警，而不是静默留空） ---------- */
+(function selfCheck(){
+  var missing = [];
+  if(!C.inv.length) missing.push('库存序列');
+  if(!C.basis.length) missing.push('基差序列');
+  if(!DATA.month_spread || !DATA.month_spread.points.length) missing.push('月差');
+  if(!DATA.sources || !Object.keys(DATA.sources).length) missing.push('来源表');
+  if(missing.length){
+    var w = document.createElement('div');
+    w.className='warnbox'; w.style.margin='16px 0';
+    w.innerHTML='<b>数据自检：</b>以下模块缺少数据，页面已留空而不做估算：'+esc(missing.join('、'));
+    var h = document.querySelector('.wrap'); if(h) h.insertBefore(w, h.children[1]||null);
+  }
+})();
+})();
+</script>
+</body>
+</html>

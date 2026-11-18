@@ -1,0 +1,217 @@
+{
+  "meta": {
+    "inquiry_no": "INQ-20261019-01",
+    "as_of": "2026-10-19",
+    "customer": "江苏盐城华宇玻璃",
+    "currency": "CNY",
+    "unit": "吨",
+    "sources": [
+      {
+        "id": "素材01",
+        "type": "微信截图 OCR · 2026-10-18 至 10-19",
+        "file": "input/微信截图_华宇玻璃.png",
+        "chars": 286
+      },
+      {
+        "id": "素材02",
+        "type": "邮件 · 2026-10-19 14:32",
+        "file": "input/询盘邮件_华宇玻璃.eml",
+        "chars": 610
+      },
+      {
+        "id": "素材03",
+        "type": "客户需求表 · Excel / PDF 扫描件",
+        "file": "input/客户需求表_华宇玻璃.xlsx",
+        "chars": 420
+      }
+    ],
+    "customer_contact": "王经理",
+    "customer_email": "wangjian@huayuglass.com",
+    "industry": "浮法玻璃",
+    "case_disclaimer": "教学演示案例：客户、联系人、公司与交易均为虚构。"
+  },
+  "fields": {
+    "product": {
+      "key": "product",
+      "label": "产品名称",
+      "bucket": "must",
+      "bucket_label": "必须补充后才能报价",
+      "side": "customer",
+      "unit": "",
+      "hint": "重质纯碱 / 轻质纯碱 / SBS / 钛白粉…",
+      "value": "重质纯碱",
+      "status": "extracted",
+      "confidence": "高",
+      "source": "素材02 · 主题：重质纯碱询价（华宇玻璃）——补充几点",
+      "note": "",
+      "assume_default": ""
+    },
+    "grade": {
+      "key": "grade",
+      "label": "规格 / 牌号",
+      "bucket": "must",
+      "bucket_label": "必须补充后才能报价",
+      "side": "customer",
+      "unit": "",
+      "hint": "纯度、杂质、粒度、白度、熔指等内控指标",
+      "value": "Na2CO3 ≥ 99.2%；Fe2O3 ≤ 0.003%；烧失量 ≤ 0.5%；180 目筛余 ≤ 5%",
+      "status": "extracted",
+      "confidence": "高",
+      "source": "素材01 · 王经理：指标要求：Na2CO3 ≥ 99.2%，Fe2O3 ≤ 0.003%，烧失量 ≤ 0.5%，粒度 180 目筛余 ≤ 5%。",
+      "note": "",
+      "assume_default": ""
+    },
+    "quantity": {
+      "key": "quantity",
+      "label": "数量",
+      "bucket": "must",
+      "bucket_label": "必须补充后才能报价",
+      "side": "customer",
+      "unit": "吨",
+      "hint": "必须分清试单量 / 月用量 / 年用量",
+      "value": "试单 200 吨；月用量约 800 吨",
+      "status": "extracted",
+      "confidence": "高",
+      "source": "素材01 · 月用量大概 800 吨，先试单 200 吨看看稳定性。",
+      "note": "",
+      "assume_default": ""
+    },
+    "place": {
+      "key": "place",
+      "label": "交货地点",
+      "bucket": "must",
+      "bucket_label": "必须补充后才能报价",
+      "side": "customer",
+      "unit": "",
+      "hint": "省市 + 厂区或仓库；“你们送过来”不算",
+      "value": "江苏省盐城市亭湖区 华宇玻璃一期厂区",
+      "status": "extracted",
+      "confidence": "高",
+      "source": "素材02 · 交货地点：江苏省盐城市亭湖区 华宇玻璃一期厂区（需提前一天预约卸车，厂区有地磅）。",
+      "note": "",
+      "assume_default": ""
+    },
+    "customer": {
+      "key": "customer",
+      "label": "客户名称",
+      "bucket": "must",
+      "bucket_label": "必须补充后才能报价",
+      "side": "customer",
+      "unit": "",
+      "hint": "报价单抬头的开票主体全称",
+      "value": "江苏盐城华宇玻璃",
+      "status": "tbc",
+      "confidence": "低",
+      "source": "素材02 · 江苏盐城华宇玻璃 采购部 王经理；开票抬头我让财务整理好发您。",
+      "note": "简称；开票主体全称、统一社会信用代码待客户提供营业执照/开票信息",
+      "assume_default": ""
+    },
+    "packaging": {
+      "key": "packaging",
+      "label": "包装",
+      "bucket": "assume",
+      "bucket_label": "可先按假设准备",
+      "side": "customer",
+      "unit": "",
+      "hint": "吨包 / 25kg 袋 / 槽车 / 散装",
+      "value": "1000kg 吨包；栈板 + 缠膜",
+      "status": "extracted",
+      "confidence": "高",
+      "source": "素材02 · 包装请用 1000kg 吨包，栈板+缠膜，方便叉车卸货。",
+      "note": "",
+      "assume_default": "1000kg 吨包，栈板+缠膜"
+    },
+    "delivery_date": {
+      "key": "delivery_date",
+      "label": "交期",
+      "bucket": "assume",
+      "bucket_label": "可先按假设准备",
+      "side": "customer",
+      "unit": "",
+      "hint": "到厂日期，或款到后工作日",
+      "value": "2026-10-31 前",
+      "status": "extracted",
+      "confidence": "中",
+      "source": "素材02 · 试单希望 10 月底前到货；后续按月度计划滚动下单。",
+      "note": "客户原话“10 月底前”，按 10 月 31 日前理解；具体到货日需结合排产确认",
+      "assume_default": "款到后 5~7 个工作日到厂"
+    },
+    "payment": {
+      "key": "payment",
+      "label": "付款条件",
+      "bucket": "assume",
+      "bucket_label": "可先按假设准备",
+      "side": "customer",
+      "unit": "",
+      "hint": "款到发货 / 月结 30 天 / 预付比例",
+      "value": "",
+      "status": "assumed",
+      "confidence": "",
+      "source": "",
+      "note": "询盘只要求“注明付款条件”，未给出客户条件；按我方默认假设，报价中须标“我方假设”",
+      "assume_default": "款到发货（电汇）"
+    },
+    "incoterm": {
+      "key": "incoterm",
+      "label": "运输方式",
+      "bucket": "assume",
+      "bucket_label": "可先按假设准备",
+      "side": "customer",
+      "unit": "",
+      "hint": "汽运整车 / 铁路 / 水运 / 槽车",
+      "value": "",
+      "status": "assumed",
+      "confidence": "",
+      "source": "",
+      "note": "客户要求送到厂区；运输组织方式未明确，按汽运整车假设",
+      "assume_default": "汽运整车"
+    },
+    "validity": {
+      "key": "validity",
+      "label": "报价有效期",
+      "bucket": "assume",
+      "bucket_label": "可先按假设准备",
+      "side": "user",
+      "unit": "天",
+      "hint": "默认 7 天；大宗随行就市可缩到 3 天",
+      "value": "",
+      "status": "assumed",
+      "confidence": "",
+      "source": "",
+      "note": "客户要求注明有效期；纯碱随行就市，按 7 天假设",
+      "assume_default": "7 天"
+    }
+  },
+  "gate": {
+    "tax_mode": {
+      "value": "",
+      "status": "user",
+      "hint": "素材02：一般纳税人，需 13% 增值税专用发票 → 仅供提示，必须由我方点选确认"
+    },
+    "freight_mode": {
+      "value": "",
+      "status": "user",
+      "hint": "素材01/02：送到盐城厂区、预约卸车 → 倾向到厂价，但必须由我方点选确认"
+    }
+  },
+  "price": {
+    "unit_price": null,
+    "quote_quantity": 200.0,
+    "quote_quantity_unit": "吨",
+    "validity_days": 7,
+    "company": "",
+    "contact": "",
+    "quote_no": "QT-20261019-01",
+    "ack": "",
+    "confirmed_at": "",
+    "currency": "CNY"
+  },
+  "notes": [
+    "客户提到上轮比价记录，最后一行“1?30”字迹不清；只作为客户价格敏感度线索，不进入我方单价。",
+    "货币单位：人民币；数量单位：吨；价格口径：元/吨。",
+    "本案例为教学演示，客户、联系人、公司与交易均为虚构。"
+  ],
+  "unreadable": [
+    "素材01：手写比价表最后一行“1?30”被涂改/遮挡，无法确认是 1,130、1,230 还是 1,630；不猜，请客户补录或忽略。"
+  ]
+}

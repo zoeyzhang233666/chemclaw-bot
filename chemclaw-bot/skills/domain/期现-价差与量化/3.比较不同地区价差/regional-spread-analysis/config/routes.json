@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "disclaimer": "运价字段分三类：real_quote（用户/委托方提供的真实报价）、default_ref（默认展示用的行业参考值，非真实报价）、not_available（未获得，不得计算）。未提供真实运费时，任何『覆盖运费』的结论只能作为敏感性参考，不得写成套利机会。",
+    "distance_note": "距离为公路典型里程（km）。已核实的只有两条：阿拉善—石家庄 1500 km（汽运 300 元/吨）、沙河—石家庄 130 km。潍坊—沙河、潍坊—连云港、三友—沙河、连云港—沙河 为【估算】，需用高德/百度地图 API 复核。",
+    "freight_unit": "元/吨（整车/散装罐车/吨包汽运，含税，含路桥费）",
+    "freight_basis": "整车直送、含一次装卸；不含卸货地短驳与仓储",
+    "mode_rule": "纯碱运输一般以 300 公里为界：300 公里以内以汽运为主，300 公里以外以铁运为主；水运成本最低（30—120 元/吨），铁路次之，汽运最高。来源：期货日报 2019-12-01。",
+    "tonkm_anchor": "已核实反推：阿拉善→石家庄汽运 300 元 / 1500 km ≈ 0.20 元/吨·公里。行业经验区间 0.2—0.4 元/吨·公里（经验值，非纯碱专属权威报价）。",
+    "delivered_caliber_note": "⚠️ 主口径为『送到价』时，运费已含在报价里。本文件的距离/运费用于：①运费调整模块（出厂价口径、跨区到货比对）；②物流可行性判断。不要用整段运费从送到价里再扣一次。"
+  },
+  "cost_params": {
+    "loading_fee": 8.0,
+    "unloading_fee": 10.0,
+    "short_haul_per_km": 1.2,
+    "short_haul": 0.0,
+    "handler": 2.0,
+    "notes": "默认参数，可在 HTML 与 Excel『07 运费参数』逐项修改。加载费 8 元/吨、卸车费 10 元/吨为本 Skill 的默认假设（请在交付时替换为真实装卸报价）；郑商所交割库汽车入库费 25 元/吨（含卸车+库内运输+倒垛+装车）可作为装卸成本的已核实锚点。",
+    "anchor_note": "已核实锚点：郑商所纯碱交割库入库费 汽车 25 元/吨、火车 30 元/吨；仓储 0.5 元/吨·天；沙河『交割库出库价 vs 送到价』价差 50—100 元/吨（2025-06-04 同日）。"
+  },
+  "routes": [
+    {
+      "id": "SD-HB", "from": "SD", "to": "HB", "flow": "山东 → 河北",
+      "distance_km": 620, "distance_km_range": [600, 650], "distance_status": "估算",
+      "lanes": [
+        {"mode": "公路汽运", "via": "潍坊—淄博—沧州—唐山（G18/G25）", "distance_km": 620, "available": true, "transit_days": 1},
+        {"mode": "公路汽运（至沙河）", "via": "潍坊—济南—邢台—沙河（G20/G4）", "distance_km": 620, "available": true, "transit_days": 1},
+        {"mode": "铁路（集装箱/敞车）", "via": "潍坊—济南—石家庄—唐山（胶济/京广/京唐）", "distance_km": 720, "available": true, "transit_days": 2, "note": ">300 km 按行业惯例优先比价铁运"},
+        {"mode": "海运（潍坊港—天津/唐山）", "via": "潍坊港—天津港—唐山", "distance_km": 380, "available": false, "transit_days": 3, "note": "需港口集港+短驳+两段装卸，叠加倒运后通常高于直达汽运，量小时不经济"}
+      ],
+      "freight": [
+        {"mode": "公路汽运", "value": 96.0, "basis": "default_ref", "source": "0.20 元/吨·公里（已核实反推值）× 620 km − 整车批量折让", "date": "2025-12", "note": "行业参考值，非真实报价；区间 600—650 km 对应 90—105 元/吨"},
+        {"mode": "铁路", "value": 88.0, "basis": "default_ref", "source": "铁路整车约 0.10 元/吨·公里 + 两段短驳装卸", "date": "2025-12", "note": "行业参考值"},
+        {"mode": "海运", "value": null, "basis": "not_available", "source": "—", "date": "", "note": "需港口班期与集港报价"}
+      ],
+      "notes": "山东净调出、河北为消费集散地，此方向为『向西补给沙河/唐山』。沙河月用纯碱约 9 万吨，其中阿拉善货源占比『不到 10%』（2024-05 交割库口径），河南与西北为主要外来来源。"
+    },
+    {
+      "id": "HB-SD", "from": "HB", "to": "SD", "flow": "河北 → 山东",
+      "distance_km": 620, "distance_km_range": [600, 650], "distance_status": "估算",
+      "lanes": [
+        {"mode": "公路汽运", "via": "唐山—沧州—淄博—潍坊（G25/G18）", "distance_km": 620, "available": true, "transit_days": 1},
+        {"mode": "铁路", "via": "唐山—济南—潍坊", "distance_km": 720, "available": true, "transit_days": 2}
+      ],
+      "freight": [
+        {"mode": "公路汽运", "value": 100.0, "basis": "default_ref", "source": "0.20 元/吨·公里 × 620 km，回程车偏少无显著折让", "date": "2025-12", "note": "行业参考值，非真实报价"},
+        {"mode": "铁路", "value": 90.0, "basis": "default_ref", "source": "铁路整车 + 两段短驳装卸", "date": "2025-12", "note": "行业参考值"}
+      ],
+      "notes": "山东是净调出省且本地有海化/海天两座厂库，此方向基本逆流，实际成交量小；仅作『反向经济性』对照。"
+    },
+    {
+      "id": "SD-JS", "from": "SD", "to": "JS", "flow": "山东 → 江苏",
+      "distance_km": 325, "distance_km_range": [300, 350], "distance_status": "估算",
+      "lanes": [
+        {"mode": "公路汽运", "via": "潍坊—日照—连云港（G15 沈海高速）", "distance_km": 325, "available": true, "transit_days": 1, "note": "约 300—350 km，处于汽运/铁运行业分界（300 km）附近，两种方式需同时比价"},
+        {"mode": "内河（京杭运河）", "via": "山东南部—徐州港—运河船运", "distance_km": 400, "available": true, "transit_days": 3, "note": "内河运价最低（约 0.10 元/吨·公里），但受运河水位与船期影响"},
+        {"mode": "海运", "via": "潍坊港—连云港（沿海支线）", "distance_km": 300, "available": true, "transit_days": 3, "note": "内贸沿海支线班次少，需集港"}
+      ],
+      "freight": [
+        {"mode": "公路汽运", "value": 65.0, "basis": "default_ref", "source": "0.20 元/吨·公里 × 325 km", "date": "2025-12", "note": "行业参考值，非真实报价；参考『送到价−出库价 = 50—100 元/吨』的短途综合溢价锚"},
+        {"mode": "内河", "value": 40.0, "basis": "default_ref", "source": "内河 0.10 元/吨·公里 × 400 km（水运区间 30—120 元/吨内）", "date": "2025-12", "note": "行业参考值；船期与水位是主要不确定项"},
+        {"mode": "海运", "value": 45.0, "basis": "default_ref", "source": "沿海支线 + 港口装卸", "date": "2025-12", "note": "行业参考值；班次不稳定"}
+      ],
+      "notes": "山东净调出、江苏净调入，这是三地间最活跃的物流方向，也是江苏送到价相对山东出厂价的主要构成。"
+    },
+    {
+      "id": "JS-SD", "from": "JS", "to": "SD", "flow": "江苏 → 山东",
+      "distance_km": 325, "distance_km_range": [300, 350], "distance_status": "估算",
+      "lanes": [
+        {"mode": "公路汽运", "via": "连云港—日照—潍坊（G15）", "distance_km": 325, "available": true, "transit_days": 1},
+        {"mode": "内河", "via": "运河—徐州—济南方向", "distance_km": 420, "available": true, "transit_days": 3}
+      ],
+      "freight": [
+        {"mode": "公路汽运", "value": 68.0, "basis": "default_ref", "source": "0.20 元/吨·公里 × 325 km，回程车折让有限", "date": "2025-12", "note": "行业参考值，非真实报价"},
+        {"mode": "内河", "value": 42.0, "basis": "default_ref", "source": "内河 0.10 元/吨·公里 × 420 km", "date": "2025-12", "note": "行业参考值"}
+      ],
+      "notes": "江苏是净调入省，此方向逆流，成交量小；扣费后若为负，说明『江苏货北运山东』不经济。"
+    },
+    {
+      "id": "HB-JS", "from": "HB", "to": "JS", "flow": "河北 → 江苏",
+      "distance_km": 825, "distance_km_range": [800, 850], "distance_status": "估算",
+      "lanes": [
+        {"mode": "公路汽运", "via": "唐山—天津—德州—徐州—连云港（G25/G3/G15）", "distance_km": 825, "available": true, "transit_days": 2},
+        {"mode": "铁路 + 公路短驳", "via": "唐山—徐州（京沪/陇海），徐州港转运河", "distance_km": 840, "available": true, "transit_days": 3, "note": ">300 km 按行业惯例优先铁运"},
+        {"mode": "海运", "via": "曹妃甸/京唐港—连云港（沿海内贸）", "distance_km": 700, "available": true, "transit_days": 3}
+      ],
+      "freight": [
+        {"mode": "公路汽运", "value": 150.0, "basis": "default_ref", "source": "0.20 元/吨·公里 × 825 km − 整车批量折让", "date": "2025-12", "note": "行业参考值，非真实报价"},
+        {"mode": "铁路+短驳", "value": 112.0, "basis": "default_ref", "source": "铁路整车 0.10 元/吨·公里 + 两段短驳 + 装卸", "date": "2025-12", "note": "行业参考值；需拼车"},
+        {"mode": "海运", "value": 95.0, "basis": "default_ref", "source": "沿海内贸船 + 港口装卸 + 短驳（水运 30—120 元/吨区间内）", "date": "2025-12", "note": "行业参考值；大吨位更经济，周期 3 天以上"}
+      ],
+      "notes": "三地间最长陆运路径，运费对价差的『吃掉』效应最明显；海运在 800 km 量级时才具备成本优势。"
+    },
+    {
+      "id": "JS-HB", "from": "JS", "to": "HB", "flow": "江苏 → 河北",
+      "distance_km": 825, "distance_km_range": [800, 850], "distance_status": "估算",
+      "lanes": [
+        {"mode": "公路汽运", "via": "连云港—徐州—德州—天津—唐山", "distance_km": 825, "available": true, "transit_days": 2},
+        {"mode": "铁路 + 公路短驳", "via": "徐州—天津—唐山，转沙河", "distance_km": 840, "available": true, "transit_days": 3}
+      ],
+      "freight": [
+        {"mode": "公路汽运", "value": 158.0, "basis": "default_ref", "source": "0.20 元/吨·公里 × 825 km，回程车少", "date": "2025-12", "note": "行业参考值，非真实报价"},
+        {"mode": "铁路+短驳", "value": 118.0, "basis": "default_ref", "source": "铁路整车 + 两段短驳 + 装卸", "date": "2025-12", "note": "行业参考值"}
+      ],
+      "notes": "江苏净调入、河北自给偏紧且是集散地，此方向逆流，基本无实际成交，仅作反向经济性对照。"
+    }
+  ],
+  "distance_matrix": {
+    "_note": "三地代表市场之间的公路典型里程（km）。status 标注数据可信度。",
+    "fields": ["from", "to", "km", "km_range", "status", "main_route"],
+    "rows": [
+      ["SD", "HB", 620, [600, 650], "估算", "潍坊—淄博—沧州—唐山（G18/G25）；至沙河约 620 km"],
+      ["SD", "JS", 325, [300, 350], "估算", "潍坊—日照—连云港（G15 沈海高速）"],
+      ["HB", "JS", 825, [800, 850], "估算", "唐山—天津—德州—徐州—连云港（G25/G3/G15）"]
+    ],
+    "reference_points": [
+      ["阿拉善", "石家庄", 1500, "已核实", "汽运 300 元/吨（34 吨/车，约 10200 元/车）；火车约 270 元/吨"],
+      ["沙河", "石家庄", 130, "已核实", "—"],
+      ["潍坊港", "广东/广西", null, "已核实（运价）", "海运 140—150 元/吨，最贵 200 元/吨"]
+    ]
+  }
+}

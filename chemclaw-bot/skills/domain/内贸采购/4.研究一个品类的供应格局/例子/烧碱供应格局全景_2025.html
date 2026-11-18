@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="烧碱（氢氧化钠，NaOH）供应格局研究（中国大陆）：产能、区域、工艺、项目、价格与采购关注。数据截止 2026-10-19；缺口明确标注，不做估算。">
+<title>烧碱 · 中国大陆供应市场全景 | 采购视角 2025</title>
+<meta name="generator" content="chemical-supply-market-map v1.0.0">
+<style>:root{
+  --navy:#0b1f33;
+  --navy-2:#12324a;
+  --ink:#15283d;
+  --body:#40536a;
+  --muted:#718096;
+  --faint:#9aa8b8;
+  --bg:#f3f6f9;
+  --card:#ffffff;
+  --line:#e2e9f1;
+  --line-2:#edf2f7;
+  --teal:#0f766e;
+  --teal-bright:#14b8a6;
+  --blue:#1d4ed8;
+  --amber:#b45309;
+  --red:#b91c1c;
+  --sand:#f59e0b;
+  --radius:18px;
+  --shadow:0 12px 34px rgba(15,35,55,.075);
+  --shadow-sm:0 4px 14px rgba(15,35,55,.055);
+  --mono:"Bahnschrift","DIN Alternate","Segoe UI",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--body);line-height:1.65;
+  font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC","Noto Sans SC",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+::selection{background:rgba(15,118,110,.18)}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.wrap{max-width:1360px;margin:0 auto;padding:0 28px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.tiny{font-size:12px;line-height:1.6}
+.center{text-align:center}
+.nowrap{white-space:nowrap}
+.hr{height:1px;background:var(--line);border:0;margin:22px 0}
+
+/* ------------------------------------------------------------------ header */
+.masthead{
+  position:relative;overflow:hidden;color:#fff;padding:34px 0 0;
+  background:
+    radial-gradient(1200px 520px at 82% -18%,rgba(20,184,166,.26),transparent 62%),
+    radial-gradient(900px 420px at 4% 108%,rgba(29,78,216,.20),transparent 60%),
+    linear-gradient(135deg,#071522 0%,#0b1f33 46%,#12324a 100%);
+}
+.masthead:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.72),transparent 88%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.72),transparent 88%);
+}
+.masthead:after{
+  content:"";position:absolute;right:-160px;top:-180px;width:560px;height:560px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.10);box-shadow:0 0 0 70px rgba(255,255,255,.025),0 0 0 140px rgba(255,255,255,.018);
+  pointer-events:none;
+}
+.mast-inner{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:28px}
+.brand{display:flex;gap:18px;align-items:flex-start;min-width:0}
+.brand-mark{
+  flex:0 0 62px;width:62px;height:62px;border-radius:14px;
+  display:grid;place-items:center;border:1px solid rgba(255,255,255,.28);
+  background:linear-gradient(145deg,rgba(20,184,166,.28),rgba(255,255,255,.04));
+  font-family:var(--mono);font-size:15px;letter-spacing:.4px;color:#c9fff7;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 24px rgba(0,0,0,.22);
+}
+.eyebrow{
+  font-size:10.5px;letter-spacing:2.6px;text-transform:uppercase;color:#8fd8cf;font-weight:700;margin-bottom:6px;
+}
+.masthead h1{font-size:38px;line-height:1.16;margin:0 0 8px;letter-spacing:.6px;font-weight:800}
+.masthead .sub{max-width:780px;margin:0;color:#c5d2de;font-size:14.5px;line-height:1.75}
+.mast-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding-top:6px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 16px;
+  font-size:13px;font-weight:700;border:1px solid transparent;transition:.18s ease;text-decoration:none!important;white-space:nowrap;
+}
+.btn svg{width:15px;height:15px}
+.btn.ghost{color:#d9e7f2;border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.05)}
+.btn.ghost:hover{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.4)}
+.btn.solid{color:#062a26;background:linear-gradient(135deg,#5eead4,#14b8a6);box-shadow:0 8px 22px rgba(20,184,166,.22)}
+.btn.solid:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn.small{padding:7px 12px;font-size:12px;border-radius:8px}
+
+.kpi-grid{
+  position:relative;z-index:1;display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:30px;padding-bottom:22px;
+}
+.kpi{
+  position:relative;background:rgba(255,255,255,.96);color:var(--ink);border-radius:14px;padding:16px 15px 14px;
+  border:1px solid rgba(255,255,255,.55);box-shadow:0 12px 28px rgba(0,0,0,.16);overflow:hidden;
+}
+.kpi:before{content:"";position:absolute;left:0;top:0;height:3px;width:100%;background:linear-gradient(90deg,var(--teal),#5eead4)}
+.kpi:nth-child(2):before{background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
+.kpi:nth-child(3):before{background:linear-gradient(90deg,#b45309,#f59e0b)}
+.kpi:nth-child(4):before{background:linear-gradient(90deg,#0f766e,#84cc16)}
+.kpi:nth-child(5):before{background:linear-gradient(90deg,#b91c1c,#f97316)}
+.kpi:nth-child(6):before{background:linear-gradient(90deg,#475569,#94a3b8)}
+.kpi .k-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.3px}
+.kpi .k-val{font-family:var(--mono);font-size:28px;line-height:1.15;color:var(--navy);font-weight:700;margin-top:4px;letter-spacing:-.4px}
+.kpi .k-val small{font-size:12px;color:var(--muted);font-weight:600;margin-left:3px;letter-spacing:0}
+.kpi .k-sub{font-size:10.8px;color:var(--faint);margin-top:5px;line-height:1.45;min-height:30px}
+.kpi .k-delta{display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-size:10.5px;font-weight:700;color:var(--teal);background:#ecfdf5;border:1px solid #d1fae5;border-radius:999px;padding:2px 7px}
+.kpi .k-delta.warn{color:var(--amber);background:#fffbeb;border-color:#fde68a}
+.kpi .k-delta.red{color:var(--red);background:#fef2f2;border-color:#fecaca}
+.mast-note{
+  position:relative;z-index:1;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  border-top:1px solid rgba(255,255,255,.12);padding:11px 0 13px;font-size:11.5px;color:#9fb3c6;
+}
+.mast-note b{color:#d9e7f2;font-weight:600}
+
+/* ------------------------------------------------------------------ tabs */
+.tabs-wrap{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);box-shadow:0 4px 18px rgba(15,35,55,.04)}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  appearance:none;border:0;background:transparent;color:#607086;padding:15px 16px 13px;font-size:13.5px;font-weight:700;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:.16s ease;display:inline-flex;align-items:center;gap:7px;
+}
+.tab-btn:hover{color:var(--navy);background:#f8fafc}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--teal)}
+.tab-btn .n{font-family:var(--mono);font-size:10px;background:#eef2f6;color:#64748b;border-radius:999px;padding:1px 6px;font-weight:700}
+.tab-btn.active .n{background:#ccfbf1;color:#0f766e}
+
+main{padding:30px 0 76px}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeUp .38s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.section{margin-bottom:30px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 12px}
+.section-head h2{font-size:22px;line-height:1.3;margin:0;color:var(--navy);letter-spacing:.2px}
+.section-head .kicker{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-weight:800;margin-bottom:3px}
+.section-head p{margin:4px 0 0;font-size:12.5px;color:var(--muted);max-width:820px}
+.section-head .side{font-size:11.5px;color:var(--faint);white-space:nowrap}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.card-pad{padding:22px 24px}
+.card-pad-lg{padding:26px 28px}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.card-head h3{margin:0;font-size:15px;color:var(--navy);letter-spacing:.2px}
+.card-head .hint{font-size:11px;color:var(--faint)}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.split{display:grid;grid-template-columns:1.42fr .88fr;gap:16px;align-items:start}
+.split-wide{display:grid;grid-template-columns:1.75fr .85fr;gap:16px;align-items:start}
+
+/* ------------------------------------------------------------------ badges */
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 8px;font-size:10.5px;font-weight:700;line-height:1.4;border:1px solid transparent;white-space:nowrap}
+.badge.teal{color:#0f766e;background:#ecfdf5;border-color:#ccfbf1}
+.badge.blue{color:#1d4ed8;background:#eff6ff;border-color:#dbeafe}
+.badge.amber{color:#b45309;background:#fffbeb;border-color:#fde68a}
+.badge.red{color:#b91c1c;background:#fef2f2;border-color:#fecaca}
+.badge.slate{color:#475569;background:#f1f5f9;border-color:#e2e8f0}
+.badge.purple{color:#6d28d9;background:#f5f3ff;border-color:#ddd6fe}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:currentColor}
+.legend{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;font-size:11.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+/* ------------------------------------------------------------------ overview */
+.route-wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.route-donut{flex:0 0 210px;width:210px;height:210px;position:relative}
+.route-donut svg{width:100%;height:100%;display:block;transform:rotate(-90deg)}
+.route-donut .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.route-donut .center b{font-family:var(--mono);font-size:27px;color:var(--navy);line-height:1.1}
+.route-donut .center span{font-size:10.5px;color:var(--muted);margin-top:3px}
+.route-list{flex:1;min-width:190px;display:flex;flex-direction:column;gap:9px}
+.route-row{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;font-size:12px}
+.route-row i{width:9px;height:9px;border-radius:3px}
+.route-row .nm{font-weight:700;color:var(--ink)}
+.route-row .vv{font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:right;line-height:1.35}
+.route-row .vv b{color:var(--navy);font-size:12.5px}
+.insight-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+.insight-strip > div{padding:0 16px;border-left:1px solid var(--line)}
+.insight-strip > div:first-child{padding-left:0;border-left:0}
+.insight-strip b{display:block;font-size:12px;color:var(--navy);margin-bottom:3px}
+.insight-strip span{font-size:11.5px;color:var(--muted);line-height:1.55}
+
+.region-bars{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.rbar{display:grid;grid-template-columns:66px 1fr 52px;gap:9px;align-items:center;font-size:11.5px}
+.rbar .nm{color:var(--ink);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rbar .track{height:9px;border-radius:999px;background:#f1f5f9;overflow:hidden;position:relative}
+.rbar .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#0f766e,#5eead4)}
+.rbar .fill.blue{background:linear-gradient(90deg,#1d4ed8,#93c5fd)}
+.rbar .vv{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right}
+.rbar .vv b{color:var(--navy)}
+
+.cost-band{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.cost-row{display:grid;grid-template-columns:74px 1fr 96px;gap:10px;align-items:center;font-size:11.5px}
+.cost-row .nm{font-weight:700;color:var(--ink)}
+.cost-row .bar{height:15px;border-radius:5px;position:relative;background:#f1f5f9;overflow:hidden}
+.cost-row .bar i{position:absolute;top:0;bottom:0;border-radius:5px;opacity:.9}
+.cost-row .val{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-align:right;line-height:1.25}
+.cost-row .val b{color:var(--navy);font-size:11.5px}
+.cost-note{margin-top:14px;padding:11px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--line);font-size:11.5px;color:var(--muted);line-height:1.6}
+.cost-note b{color:var(--ink)}
+
+.conclusion-card{position:relative;padding:20px 20px 18px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm);overflow:hidden}
+.conclusion-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal)}
+.conclusion-card:nth-child(2):before{background:var(--blue)}
+.conclusion-card:nth-child(3):before{background:var(--amber)}
+.conclusion-card .num{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:1px;font-weight:700}
+.conclusion-card h3{font-size:14.5px;margin:5px 0 7px;color:var(--navy);line-height:1.45}
+.conclusion-card p{margin:0;font-size:12px;color:var(--body);line-height:1.7}
+.conclusion-card .tag{margin-top:10px;font-size:10.5px;color:var(--teal);font-weight:700}
+
+.demand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.demand-card{padding:15px 16px;border-radius:12px;background:#f8fafc;border:1px solid var(--line)}
+.demand-card .lab{font-size:10.5px;color:var(--faint);font-weight:700;letter-spacing:.5px}
+.demand-card h4{margin:4px 0 5px;font-size:13px;color:var(--navy)}
+.demand-card p{margin:0;font-size:11.3px;color:var(--muted);line-height:1.6}
+.trade-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.trade-box{padding:12px 13px;border-radius:11px;border:1px solid var(--line);background:#fff}
+.trade-box b{display:block;font-family:var(--mono);font-size:18px;color:var(--navy);line-height:1.2}
+.trade-box span{font-size:10.5px;color:var(--muted);line-height:1.4;display:block;margin-top:2px}
+
+/* ------------------------------------------------------------------ charts */
+.chart-box{width:100%;overflow:hidden}
+.chart-box svg{width:100%;height:auto;display:block;overflow:visible}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:6px}
+.chart-legend span{display:inline-flex;align-items:center;gap:5px}
+.chart-legend i{width:10px;height:10px;border-radius:2px}
+.axis text{font-size:10px;fill:#94a3b8}
+.axis line{stroke:#e8eef5;stroke-width:1}
+.grid-line{stroke:#eef3f8;stroke-width:1}
+.bar-label{font-size:10px;fill:#64748b}
+.bar-value{font-size:10px;fill:#15283d;font-weight:700}
+.hoverable{cursor:pointer;transition:opacity .15s ease}
+.hoverable:hover{opacity:.82}
+
+/* ------------------------------------------------------------------ map */
+.map-layout{display:grid;grid-template-columns:1.62fr .88fr;gap:16px;align-items:start}
+.map-card{overflow:hidden}
+.map-shell{position:relative;background:linear-gradient(180deg,#fbfdff,#f3f9fc);border-radius:14px;overflow:hidden;border:1px solid var(--line-2)}
+#chinaMap{display:block;width:100%;height:auto}
+#chinaMap .province{stroke:#fff;stroke-width:1.1;vector-effect:non-scaling-stroke;transition:fill .25s ease,filter .18s ease;cursor:pointer}
+#chinaMap .province:hover{filter:brightness(1.06);stroke:#0b1f33;stroke-width:1.5}
+#chinaMap .province.selected{stroke:#0b1f33;stroke-width:2.2;filter:brightness(1.03)}
+#chinaMap .plant{cursor:pointer;transition:opacity .18s ease}
+#chinaMap .plant:hover circle:first-child{stroke:#0b1f33;stroke-width:2.4}
+#chinaMap .plant.dim{opacity:.14;pointer-events:none}
+#chinaMap .plant-label{pointer-events:none}
+#chinaMap .province-tag{pointer-events:none}
+#chinaMap #flows.flows-hidden{display:none}
+.map-controls{position:absolute;right:12px;top:12px;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:10px;padding:4px;box-shadow:var(--shadow-sm);backdrop-filter:blur(8px)}
+.map-controls button{border:0;background:transparent;color:#475569;border-radius:7px;padding:5px 9px;font-size:11px;font-weight:700}
+.map-controls button:hover{background:#f1f5f9;color:var(--navy)}
+.map-controls button.active{background:var(--navy);color:#fff}
+.map-legend{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.93);border:1px solid var(--line);border-radius:10px;padding:9px 11px;box-shadow:var(--shadow-sm);font-size:10.5px;color:var(--muted);max-width:340px;backdrop-filter:blur(8px)}
+.map-legend .row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.map-legend .key{display:inline-flex;align-items:center;gap:5px}
+.map-legend .key i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.map-legend .scale{display:flex;align-items:center;gap:3px;margin-top:6px}
+.map-legend .scale i{width:22px;height:6px;display:inline-block;border-radius:2px}
+.map-legend .scale span{font-size:9px;margin-left:2px}
+.map-note{padding:10px 14px 2px;font-size:10.5px;color:var(--faint);line-height:1.55}
+.map-side{display:flex;flex-direction:column;gap:14px}
+.side-card{padding:18px 18px 16px}
+.side-card h3{margin:0 0 3px;font-size:14px;color:var(--navy)}
+.side-card .sub{font-size:10.5px;color:var(--faint);margin-bottom:10px}
+.rank-list{display:flex;flex-direction:column;gap:8px}
+.rank-row{display:grid;grid-template-columns:18px 48px 1fr 44px;gap:7px;align-items:center;font-size:11px}
+.rank-row .no{font-family:var(--mono);font-size:9.5px;color:#94a3b8;text-align:right}
+.rank-row .nm{font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-row .track{height:7px;border-radius:999px;background:#f1f5f9;overflow:hidden}
+.rank-row .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#0f766e,#5eead4)}
+.rank-row .vv{font-family:var(--mono);font-size:10px;color:#64748b;text-align:right}
+.rank-row .vv b{color:var(--navy)}
+.province-detail{border-top:1px solid var(--line);margin-top:10px;padding-top:10px;font-size:11px;color:var(--muted);line-height:1.6;display:none}
+.province-detail.show{display:block}
+.province-detail b{color:var(--ink)}
+.mini-kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mini-kv div{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:8px 9px}
+.mini-kv b{display:block;font-family:var(--mono);font-size:16px;color:var(--navy);line-height:1.2}
+.mini-kv span{font-size:9.5px;color:var(--faint);display:block;margin-top:1px}
+.tier-list{display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.tier-row{display:grid;grid-template-columns:24px 1fr;gap:7px;align-items:start;font-size:10.8px}
+.tier-row .t{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-size:9.5px;font-weight:700;color:#fff;background:#0f766e}
+.tier-row:nth-child(2) .t{background:#1d4ed8}
+.tier-row:nth-child(3) .t{background:#94a3b8}
+.tier-row span{color:var(--muted);line-height:1.45}
+.tier-row b{color:var(--ink)}
+.map-table{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:560px}
+.map-table table{min-width:860px}
+
+/* ------------------------------------------------------------------ table */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.search{position:relative;flex:1;min-width:220px;max-width:360px}
+.search input{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px 10px 34px;font-size:12.5px;color:var(--ink);outline:none;transition:.15s}
+.search input:focus{border-color:#99f6e4;box-shadow:0 0 0 3px rgba(20,184,166,.12)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:#94a3b8}
+.select{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 30px 9px 11px;font-size:12px;color:var(--ink);outline:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 9px center;cursor:pointer}
+.select:focus{border-color:#99f6e4;box-shadow:0 0 0 3px rgba(20,184,166,.12)}
+.check{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);user-select:none;cursor:pointer;padding:8px 2px}
+.check input{accent-color:var(--teal);width:14px;height:14px}
+.count{font-size:11.5px;color:var(--faint);margin-left:auto}
+.table-wrap{border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:740px;background:#fff}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}
+thead th{position:sticky;top:0;z-index:2;background:#f7f9fc;color:#5b6b7f;font-weight:700;text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:11px;letter-spacing:.2px}
+thead th.sortable{cursor:pointer;user-select:none}
+thead th.sortable:hover{color:var(--navy);background:#eef4f9}
+thead th .arrow{font-size:9px;color:#94a3b8;margin-left:2px}
+tbody td{padding:10px;border-bottom:1px solid var(--line-2);vertical-align:middle;color:var(--body)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#fbfdfe}
+tbody tr.row-click{cursor:pointer}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.name{font-weight:700;color:var(--navy);white-space:nowrap}
+td .sub{display:block;font-size:10px;color:var(--faint);font-weight:400;margin-top:1px}
+td .chg{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--teal)}
+td .chg.neg{color:var(--red)}
+td .chg.zero{color:#94a3b8}
+td .src{font-size:9.5px;color:#94a3b8;max-width:150px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+.link-btn{border:0;background:#f1f5f9;color:#0f766e;border-radius:7px;padding:5px 9px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.link-btn:hover{background:#ccfbf1}
+
+/* ------------------------------------------------------------------ timeline */
+.timeline-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:#fff;color:#5b6b7f;border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:700;transition:.15s}
+.chip:hover{border-color:#99f6e4;color:var(--teal)}
+.chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.timeline{position:relative;padding-left:26px}
+.timeline:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(to bottom,#0f766e,#93c5fd,#e2e8f0)}
+.tl-year{position:relative;margin:18px 0 10px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--navy);letter-spacing:1px}
+.tl-year:before{content:"";position:absolute;left:-26px;top:5px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--teal);box-sizing:border-box}
+.tl-item{position:relative;margin:0 0 10px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(15,35,55,.035);transition:.15s;cursor:pointer}
+.tl-item:hover{border-color:#b9e6df;box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+.tl-item:before{content:"";position:absolute;left:-22px;top:20px;width:8px;height:8px;border-radius:50%;background:#cbd5e1;border:2px solid #fff;box-shadow:0 0 0 1px #cbd5e1}
+.tl-item.done:before{background:var(--teal);box-shadow:0 0 0 1px var(--teal)}
+.tl-item.building:before{background:var(--amber);box-shadow:0 0 0 1px var(--amber)}
+.tl-item.planned:before{background:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.tl-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.tl-item h4{margin:0;font-size:13.5px;color:var(--navy);line-height:1.4}
+.tl-item .co{font-size:10.5px;color:var(--faint);margin-top:2px}
+.tl-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:8px 0 6px}
+.tl-item p{margin:0;font-size:11.3px;color:var(--muted);line-height:1.6}
+.tl-foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px;font-size:10px;color:#94a3b8}
+.tl-cap{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--navy);white-space:nowrap}
+.tl-cap small{font-size:9.5px;color:var(--faint);font-weight:400}
+.net-table{overflow:auto;border:1px solid var(--line);border-radius:12px}
+.net-table table{min-width:720px}
+.net-table td,.net-table th{font-size:11px}
+
+/* ------------------------------------------------------------------ price */
+.price-hero{display:grid;grid-template-columns:1.45fr .55fr;gap:16px;align-items:stretch}
+.price-big{font-family:var(--mono);font-size:44px;line-height:1;color:var(--navy);font-weight:700;letter-spacing:-1px}
+.price-big small{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:0}
+.price-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.price-kpi{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:10px 11px}
+.price-kpi b{display:block;font-family:var(--mono);font-size:15px;color:var(--navy);line-height:1.2}
+.price-kpi span{font-size:10px;color:var(--faint);display:block;margin-top:1px;line-height:1.35}
+.price-note{padding:12px 13px;border-radius:11px;background:#fffbeb;border:1px solid #fde68a;font-size:11.3px;color:#7c4a03;line-height:1.6;margin-top:12px}
+.price-note b{color:#78350f}
+.period-table{overflow:auto;border:1px solid var(--line);border-radius:12px}
+.period-table table{min-width:980px}
+.period-table td{font-size:11px}
+.period-table td:first-child{font-weight:700;color:var(--navy);white-space:nowrap}
+.regional-price-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.reg-price{padding:13px 13px 11px;border:1px solid var(--line);border-radius:12px;background:#fff;position:relative;overflow:hidden}
+.reg-price:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#0f766e}
+.reg-price:nth-child(2):before{background:#1d4ed8}
+.reg-price:nth-child(3):before{background:#b45309}
+.reg-price:nth-child(4):before{background:#7c3aed}
+.reg-price:nth-child(5):before{background:#0891b2}
+.reg-price .r{font-size:11px;color:var(--faint);font-weight:700}
+.reg-price b{display:block;font-family:var(--mono);font-size:20px;color:var(--navy);line-height:1.25;margin-top:2px}
+.reg-price span{display:block;font-size:10px;color:var(--muted);line-height:1.4;margin-top:2px}
+.reg-price em{display:block;font-style:normal;font-size:9.5px;color:var(--faint);margin-top:5px;line-height:1.35}
+
+/* ------------------------------------------------------------------ risk */
+.risk-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.risk-matrix{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:34px 14px 30px 42px;min-height:420px}
+.risk-matrix:before{content:"影响 →";position:absolute;right:14px;top:10px;font-size:10px;color:#94a3b8;letter-spacing:.5px}
+.risk-matrix:after{content:"可能性 →";position:absolute;left:10px;top:50%;transform:rotate(-90deg) translateX(-50%);transform-origin:left top;font-size:10px;color:#94a3b8;letter-spacing:.5px;white-space:nowrap}
+.risk-quad{border:1px dashed #dbe4ee;border-radius:10px;padding:12px 10px;position:relative;min-height:160px;background:#fbfdff}
+.risk-quad.q1{background:#fff7ed;border-color:#fed7aa}
+.risk-quad.q2{background:#fef2f2;border-color:#fecaca}
+.risk-quad.q3{background:#f0fdf4;border-color:#bbf7d0}
+.risk-quad.q4{background:#eff6ff;border-color:#bfdbfe}
+.risk-quad .ql{position:absolute;right:8px;bottom:6px;font-size:9px;color:#94a3b8;font-weight:700;letter-spacing:.5px}
+.risk-chip{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid #e2e8f0;border-radius:999px;padding:5px 9px;margin:3px;font-size:10.5px;font-weight:700;color:#334155;box-shadow:0 1px 4px rgba(15,35,55,.05);line-height:1.3}
+.risk-chip i{width:6px;height:6px;border-radius:50%;display:inline-block}
+.risk-chip.high i{background:#dc2626}.risk-chip.mid i{background:#f59e0b}.risk-chip.low i{background:#16a34a}
+.risk-list{display:flex;flex-direction:column;gap:9px}
+.risk-item{padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.risk-item .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.risk-item h4{margin:0;font-size:12px;color:var(--navy)}
+.risk-item p{margin:5px 0 0;font-size:10.8px;color:var(--muted);line-height:1.55}
+.risk-item .act{margin-top:5px;font-size:10.5px;color:#0f766e;line-height:1.5}
+
+.strategy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.strategy{padding:16px 15px;border-radius:13px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.strategy .no{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:1px}
+.strategy h4{margin:4px 0 5px;font-size:13px;color:var(--navy)}
+.strategy p{margin:0;font-size:11.2px;color:var(--muted);line-height:1.6}
+.strategy .k{display:inline-block;margin-top:8px;font-size:10px;font-weight:700;color:var(--teal);background:#ecfdf5;border:1px solid #ccfbf1;border-radius:6px;padding:2px 6px}
+
+.sim-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:start}
+.sim-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field label{display:block;font-size:10.5px;color:var(--faint);font-weight:700;margin-bottom:4px}
+.field input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 10px;font-family:var(--mono);font-size:13px;color:var(--navy);outline:none}
+.field input:focus{border-color:#99f6e4;box-shadow:0 0 0 3px rgba(20,184,166,.12)}
+.sim-out{background:linear-gradient(145deg,#0b1f33,#12324a);color:#fff;border-radius:14px;padding:18px 18px 14px;position:relative;overflow:hidden}
+.sim-out:after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(20,184,166,.16)}
+.sim-out .l{font-size:10px;color:#9fb3c6;letter-spacing:.5px}
+.sim-out .big{font-family:var(--mono);font-size:34px;line-height:1.1;color:#5eead4;margin:3px 0 2px}
+.sim-out .big small{font-size:12px;color:#c5d2de;font-weight:400}
+.sim-out .row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.09);font-size:11px;color:#c5d2de}
+.sim-out .row:last-child{border-bottom:0}
+.sim-out .row b{color:#fff;font-family:var(--mono)}
+.sim-out .note{font-size:9.5px;color:#8fa6ba;margin-top:7px;line-height:1.45}
+.mix-bar{display:flex;height:34px;border-radius:9px;overflow:hidden;border:1px solid var(--line);margin:8px 0 7px}
+.mix-bar div{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff;white-space:nowrap}
+.mix-legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:10.5px;color:var(--muted)}
+.mix-legend span{display:inline-flex;align-items:center;gap:5px}
+.mix-legend i{width:8px;height:8px;border-radius:2px}
+
+.acc{border:1px solid var(--line);border-radius:11px;background:#fff;margin-bottom:8px;overflow:hidden}
+.acc-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer;font-size:12px;font-weight:700;color:var(--navy)}
+.acc-h:hover{background:#f8fafc}
+.acc-h .n{font-family:var(--mono);font-size:10px;color:#94a3b8;margin-right:7px}
+.acc-h .ar{transition:.2s;color:#94a3b8;font-size:11px}
+.acc.open .acc-h .ar{transform:rotate(180deg)}
+.acc-b{display:none;padding:0 14px 12px 38px}
+.acc.open .acc-b{display:block}
+.acc-b ol{margin:0;padding-left:16px}
+.acc-b li{font-size:11px;color:var(--muted);line-height:1.65;margin:4px 0}
+
+.gap-table{overflow:auto;border:1px solid var(--line);border-radius:12px}
+.gap-table table{min-width:760px}
+.gap-table td{font-size:11px}
+
+/* ------------------------------------------------------------------ sources */
+.source-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.source-item{padding:12px 13px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:11px;line-height:1.5}
+.source-item .sid{font-family:var(--mono);font-size:9.5px;color:#0f766e;font-weight:700}
+.source-item a{font-weight:700;color:var(--navy)}
+.source-item a:hover{color:var(--teal)}
+.source-item .meta{font-size:9.5px;color:#94a3b8;margin-top:3px}
+.source-item .used{color:var(--muted);margin-top:4px}
+.method{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.method-col{padding:16px 16px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.method-col h4{margin:0 0 6px;font-size:12px;color:var(--navy)}
+.method-col p{margin:0;font-size:10.8px;color:var(--muted);line-height:1.65}
+.method-col ul{margin:4px 0 0;padding-left:15px;font-size:10.8px;color:var(--muted);line-height:1.65}
+
+/* ------------------------------------------------------------------ drawer */
+.drawer-overlay{position:fixed;inset:0;background:rgba(6,18,32,.46);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:90;backdrop-filter:blur(2px)}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(570px,94vw);background:#fff;z-index:100;transform:translateX(105%);transition:transform .32s cubic-bezier(.22,.8,.28,1);box-shadow:-24px 0 60px rgba(6,18,32,.24);overflow-y:auto;overscroll-behavior:contain}
+.drawer.open{transform:none}
+.drawer-head{position:sticky;top:0;z-index:2;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:18px 22px 15px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.drawer-head .eyebrow{color:#0f766e;font-size:9.5px;letter-spacing:2px;margin-bottom:3px}
+.drawer-head h2{margin:0;font-size:22px;color:var(--navy);line-height:1.2}
+.drawer-head .sub{font-size:11px;color:var(--muted);margin-top:3px}
+.drawer-close{border:1px solid var(--line);background:#fff;color:#64748b;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:0 0 32px}
+.drawer-close:hover{background:#f1f5f9;color:var(--navy)}
+.drawer-body{padding:18px 22px 40px}
+.drawer-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.drawer-kpi{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.drawer-kpi b{display:block;font-family:var(--mono);font-size:17px;color:var(--navy);line-height:1.2}
+.drawer-kpi span{display:block;font-size:9.5px;color:var(--faint);margin-top:1px}
+.drawer h3{font-size:13px;color:var(--navy);margin:18px 0 7px;display:flex;align-items:center;gap:7px}
+.drawer h3:before{content:"";width:4px;height:13px;border-radius:2px;background:var(--teal);display:inline-block}
+.drawer p{font-size:11.5px;color:var(--body);line-height:1.7;margin:0}
+.drawer .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.drawer .box{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff}
+.drawer .box.good{background:#f0fdf4;border-color:#bbf7d0}
+.drawer .box.bad{background:#fff7ed;border-color:#fed7aa}
+.drawer .box h4{margin:0 0 5px;font-size:10.5px;color:var(--navy);letter-spacing:.3px}
+.drawer .box ul{margin:0;padding-left:15px}
+.drawer .box li{font-size:10.8px;color:var(--muted);line-height:1.6;margin:3px 0}
+.drawer .advice{background:linear-gradient(145deg,#0b1f33,#12324a);color:#d9e7f2;border-radius:12px;padding:14px 15px;font-size:11.5px;line-height:1.7;margin-top:8px}
+.drawer .advice b{color:#5eead4}
+.drawer .dd-list{margin:0;padding-left:16px}
+.drawer .dd-list li{font-size:11px;color:var(--muted);line-height:1.65;margin:4px 0}
+.drawer .src-list{display:flex;flex-direction:column;gap:5px;font-size:10.5px}
+.drawer .src-list a{color:#0f766e}
+.drawer .base-list{display:flex;flex-direction:column;gap:6px}
+.drawer .base-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:10.8px}
+.drawer .base-row:last-child{border-bottom:0}
+.drawer .base-row b{color:var(--navy)}
+.drawer .base-row span{color:var(--muted);text-align:right}
+.drawer .proj-impact{background:#fffbeb;border:1px solid #fde68a;border-radius:11px;padding:12px 13px;font-size:11.5px;color:#7c4a03;line-height:1.65}
+.drawer .proj-impact b{color:#78350f}
+
+/* ------------------------------------------------------------------ footer */
+footer{background:#081726;color:#8fa6ba;padding:34px 0 28px;margin-top:10px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+footer b{color:#d9e7f2}
+footer .fleft{max-width:760px}
+footer .fright{text-align:right;font-size:11px}
+footer .tiny{color:#71879b}
+footer a{color:#8fd8cf}
+
+/* ------------------------------------------------------------------ misc */
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);background:#0b1f33;color:#fff;padding:9px 14px;border-radius:10px;font-size:11.5px;opacity:0;pointer-events:none;transition:.22s;z-index:200;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.tooltip{position:fixed;z-index:150;background:#0b1f33;color:#fff;border-radius:8px;padding:8px 10px;font-size:11px;line-height:1.5;pointer-events:none;opacity:0;transition:opacity .12s;max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.tooltip.show{opacity:1}
+.tooltip b{color:#5eead4}
+.noscript{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:12px 14px;border-radius:10px;margin:16px 0;font-size:12px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ------------------------------------------------------------------ responsive */
+@media(max-width:1180px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr)}
+  .masthead h1{font-size:33px}
+  .map-layout{grid-template-columns:1fr}
+  .map-side{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .price-hero{grid-template-columns:1fr}
+  .risk-layout{grid-template-columns:1fr}
+  .strategy-grid{grid-template-columns:repeat(2,1fr)}
+  .regional-price-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:900px){
+  .wrap{padding:0 18px}
+  .mast-inner{flex-direction:column}
+  .mast-actions{justify-content:flex-start}
+  .masthead h1{font-size:29px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .split,.split-wide{grid-template-columns:1fr}
+  .grid-3,.grid-4,.demand-grid,.insight-strip{grid-template-columns:1fr}
+  .insight-strip > div{border-left:0;padding:10px 0;border-top:1px solid var(--line)}
+  .insight-strip > div:first-child{border-top:0;padding-top:0}
+  .trade-strip{grid-template-columns:repeat(2,1fr)}
+  .method{grid-template-columns:1fr}
+  .source-grid{grid-template-columns:1fr}
+  .sim-grid{grid-template-columns:1fr}
+  .map-side{grid-template-columns:1fr}
+  .price-kpis{grid-template-columns:repeat(2,1fr)}
+  .regional-price-grid{grid-template-columns:repeat(2,1fr)}
+  .section-head{flex-direction:column;align-items:flex-start}
+  .section-head .side{white-space:normal}
+  .drawer .two{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi .k-val{font-size:22px}
+  .kpi .k-sub{min-height:auto}
+  .masthead h1{font-size:25px}
+  .brand-mark{flex-basis:50px;width:50px;height:50px;font-size:12px}
+  .masthead .sub{font-size:13px}
+  .card-pad,.card-pad-lg{padding:17px}
+  .toolbar{gap:7px}
+  .search{max-width:none}
+  .price-big{font-size:36px}
+  .strategy-grid{grid-template-columns:1fr}
+  .regional-price-grid{grid-template-columns:1fr 1fr}
+  .sim-inputs{grid-template-columns:1fr 1fr}
+  .drawer-kpis{grid-template-columns:repeat(2,1fr)}
+  .risk-matrix{padding-left:34px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+@media print{
+  body{background:#fff}
+  .tabs-wrap,.mast-actions,.drawer,.drawer-overlay,.toast,.tooltip,.map-controls{display:none!important}
+  .masthead{background:#0b1f33!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tab-panel{display:block!important;page-break-before:always}
+  .tab-panel:first-of-type{page-break-before:auto}
+  .card{box-shadow:none;break-inside:avoid}
+  main{padding:10px 0}
+  .wrap{max-width:none;padding:0 10mm}
+}
+
+/* ============================================================ generic components
+ * 以下样式服务于产物结构（全景/企业表/项目/价格/采购/方法与抽屉），与具体产品无关。
+ * ============================================================ */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:999px;
+  font-size:11px;font-weight:700;line-height:1.6;letter-spacing:.2px;white-space:nowrap}
+.chip-good{background:#ecfdf5;color:#0f766e;border:1px solid #cbfbf1}
+.chip-warn{background:#fffbeb;color:#b45309;border:1px solid #fde9c0}
+.chip-risk{background:#fef2f2;color:#b91c1c;border:1px solid #fee2e2}
+.chip-neutral{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+
+/* ---- 条形列表（区域 / 头部集团） */
+.hb-list{display:flex;flex-direction:column;gap:7px}
+.hb-row{display:grid;grid-template-columns:76px 1fr 62px;align-items:center;gap:9px;
+  padding:3px 6px;border-radius:9px;transition:background .16s}
+.hb-row .nm{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb-row .bar{height:9px;background:#eef3f8;border-radius:999px;overflow:hidden}
+.hb-row .bar i{display:block;height:100%;border-radius:999px;
+  background:linear-gradient(90deg,#0f766e,#2dd4bf)}
+.hb-row .v{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink);text-align:right}
+.hb-list.wide .hb-row{grid-template-columns:130px 1fr 84px;padding:5px 8px}
+.hb-list.wide .hb-row .bar{height:12px}
+.hb-row.co-row{cursor:pointer}
+.hb-row.co-row:hover,.hb-row.co-row:focus-visible{background:#ecfdf5;outline:none}
+.hb-row.co-row .bar i{background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
+
+/* ---- 环形图（工艺结构） */
+.route-wrap{position:relative;display:flex;justify-content:center;padding:6px 0 10px}
+.donut{width:186px;height:186px}
+.donut-seg{transition:stroke-width .2s,opacity .2s;cursor:pointer}
+.donut-seg:hover{stroke-width:27}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;pointer-events:none;text-align:center}
+.donut-center b{font-family:var(--mono);font-size:24px;color:var(--ink);line-height:1.1}
+.donut-center span{font-size:11px;color:var(--muted)}
+.legend-list{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.lg-row{display:grid;grid-template-columns:10px 1fr auto;align-items:center;gap:8px;font-size:12px}
+.lg-row i{width:10px;height:10px;border-radius:3px;display:block}
+.lg-row .nm{color:var(--ink);font-weight:600}
+.lg-row .v{font-family:var(--mono);color:var(--muted);font-size:11.5px}
+
+/* ---- 成本带 */
+.cost-list{display:flex;flex-direction:column;gap:9px}
+.cost-row{display:grid;grid-template-columns:74px 1fr 92px;align-items:center;gap:10px}
+.cost-row .nm{font-size:12px;font-weight:700;color:var(--ink)}
+.cost-row .bar{position:relative;height:12px;background:#f1f5f9;border-radius:6px;overflow:hidden}
+.cost-row .bar i{position:absolute;top:0;bottom:0;border-radius:6px;opacity:.92}
+.cost-row .val{font-size:11px;color:var(--muted);text-align:right;line-height:1.35}
+.cost-row .val b{font-family:var(--mono);font-size:12px;color:var(--ink)}
+.cost-note{margin-top:10px;font-size:11.5px;line-height:1.65;color:var(--muted);
+  background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:9px 11px}
+.cost-note b{color:var(--ink)}
+
+/* ---- 结论卡 */
+.conclusion-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(332px,1fr));gap:15px}
+.conclusion-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:19px 20px;box-shadow:var(--shadow-sm);opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease,transform .4s ease,box-shadow .2s}
+.conclusion-card.in{opacity:1;transform:none}
+.conclusion-card:hover{box-shadow:var(--shadow)}
+.conclusion-card .num{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.9px;
+  color:var(--teal);margin-bottom:6px}
+.conclusion-card h3{font-size:15.5px;color:var(--ink);margin:0 0 8px;line-height:1.45}
+.conclusion-card p{margin:0 0 12px;font-size:12.5px;line-height:1.72;color:var(--body)}
+.conclusion-card .tag{display:inline-block;font-size:12px;font-weight:600;color:var(--teal);
+  background:#ecfdf5;border-radius:9px;padding:5px 10px;line-height:1.55}
+
+/* ---- 表格 */
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl thead th{position:sticky;top:0;background:#12324a;color:#fff;font-weight:700;font-size:11.5px;
+  text-align:left;padding:9px 10px;white-space:nowrap;z-index:2}
+.tbl thead th.n{text-align:right}
+.tbl tbody td{padding:9px 10px;border-bottom:1px solid var(--line-2);color:var(--body);vertical-align:middle}
+.tbl tbody tr:hover td{background:#f7fbfd}
+.tbl tbody tr.co-row{cursor:pointer}
+.tbl tbody tr.co-row:focus-visible{outline:2px solid var(--teal-bright);outline-offset:-2px}
+.tbl td.n,.tbl th.n{text-align:right}
+.tbl td.co{font-weight:700;color:var(--ink);white-space:nowrap}
+.tbl.sm{font-size:11.5px}
+.tbl.sm tbody td{padding:6px 8px}
+.tbl .empty,.empty{padding:26px;text-align:center;color:var(--faint);font-size:12.5px}
+.table-wrap{max-height:640px;overflow:auto;border:1px solid var(--line);border-radius:13px}
+.table-tools{display:flex;gap:10px;align-items:center;margin:0 0 12px;flex-wrap:wrap}
+.inp,.sel{padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;
+  font-size:12.5px;color:var(--ink);font-family:inherit}
+.inp{min-width:230px;flex:0 1 320px}
+.inp:focus,.sel:focus{outline:2px solid rgba(20,184,166,.35);outline-offset:1px}
+
+/* ---- 项目时间线 */
+.timeline{display:flex;flex-direction:column;gap:14px}
+.prj-year{display:grid;grid-template-columns:74px 1fr;gap:14px;align-items:start}
+.prj-year-h{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--teal);
+  padding-top:9px;border-right:2px dashed var(--line);text-align:right;padding-right:12px}
+.prj-year-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:11px}
+.prj{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 13px;
+  box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .16s,box-shadow .18s,border-color .18s}
+.prj:hover,.prj:focus-visible{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#b9e6df;outline:none}
+.prj-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:7px}
+.prj-h b{font-size:13px;color:var(--ink);line-height:1.4}
+.prj-h .mono{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--teal);white-space:nowrap}
+.prj-bar{height:6px;background:#eef3f8;border-radius:999px;overflow:hidden;margin-bottom:8px}
+.prj-bar i{display:block;height:100%;background:linear-gradient(90deg,#1d4ed8,#60a5fa);border-radius:999px}
+.prj-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:var(--muted)}
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:16px}
+.kpi-strip>div{background:#fff;padding:14px 16px}
+.kpi-strip b{display:block;font-family:var(--mono);font-size:19px;color:var(--ink);line-height:1.2}
+.kpi-strip span{font-size:11.5px;color:var(--muted)}
+
+/* ---- 价格 */
+.chart{width:100%;height:auto;max-height:280px}
+.chart .pt{font-size:11px;fill:#0b1f33;font-weight:700;text-anchor:middle}
+.chart .px{font-size:10.5px;fill:#718096;text-anchor:middle}
+.mk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(122px,1fr));gap:9px}
+.mk{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.mk b{display:block;font-family:var(--mono);font-size:17px;color:var(--ink);line-height:1.25}
+.mk span{font-size:10.8px;color:var(--muted);line-height:1.5}
+.oc{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow-sm)}
+.oc-h{font-size:11.5px;font-weight:700;color:var(--teal);letter-spacing:.4px;margin-bottom:5px}
+.oc p{margin:0;font-size:12.5px;line-height:1.72;color:var(--body)}
+
+/* ---- 采购关注 */
+.risk{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;box-shadow:var(--shadow-sm)}
+.risk[data-level="高"]{border-left:4px solid #b91c1c}
+.risk[data-level="中高"]{border-left:4px solid #f59e0b}
+.risk[data-level="中"]{border-left:4px solid #94a3b8}
+.risk-h{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.risk-h b{font-size:14px;color:var(--ink);line-height:1.45}
+.risk-body p{margin:2px 0 9px;font-size:12.4px;line-height:1.72;color:var(--body)}
+.rl{font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--teal);text-transform:uppercase;margin:8px 0 3px}
+.stcard{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:10px}
+.stcard h4{margin:0 0 6px;font-size:13.5px;color:var(--ink)}
+.stcard p{margin:0 0 6px;font-size:12.2px;line-height:1.7;color:var(--body)}
+.mix-list{display:flex;flex-direction:column;gap:8px}
+.mix-row{display:grid;grid-template-columns:118px 1fr 48px;align-items:center;gap:10px}
+.mix-row .nm{font-size:12px;font-weight:700;color:var(--ink)}
+.mix-row .bar{height:11px;background:#eef3f8;border-radius:999px;overflow:hidden}
+.mix-row .bar i{display:block;height:100%;border-radius:999px}
+.mix-row .v{font-size:12px;font-weight:700;color:var(--ink);text-align:right}
+.sim{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+.sim td{padding:7px 10px;border-bottom:1px solid var(--line-2);color:var(--body)}
+.sim td.n{text-align:right;font-weight:700;color:var(--ink)}
+.sim tr.hl td{background:#ecfdf5;color:var(--ink);font-weight:700}
+
+/* ---- 键值表 / 口径 / 限制 */
+.kv,.basis{width:100%;border-collapse:collapse;font-size:12.4px}
+.kv td{padding:8px 10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+.kv td:first-child{width:132px;color:var(--muted);font-weight:600}
+.kv td:last-child{color:var(--ink)}
+.kv tr.hl td{background:#ecfdf5;font-weight:700}
+.basis td{padding:8px 10px;border-bottom:1px solid var(--line-2);color:var(--body);line-height:1.7}
+.limits{margin:0;padding-left:18px;font-size:12.4px;line-height:1.85;color:var(--body)}
+.risk-text{color:var(--red);font-weight:700}
+
+/* ---- 抽屉内的企业/项目卡 */
+.drawer-inner{display:block}
+.drawer-card{display:block}
+.dc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+  padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.dc-head h3{margin:2px 0 4px;font-size:18px;color:var(--ink)}
+.dc-kpi{text-align:right;white-space:nowrap}
+.dc-kpi b{display:block;font-family:var(--mono);font-size:22px;color:var(--teal);line-height:1.1}
+.dc-kpi span{font-size:10.5px;color:var(--muted)}
+.dc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+.dc-grid>div{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:9px 11px}
+.dc-grid p{margin:0;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink)}
+.dc-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0}
+.dc-cols ul,.dd{margin:0;padding-left:17px;font-size:12.2px;line-height:1.75;color:var(--body)}
+.dc-cols li,.dd li{margin-bottom:4px}
+.tl-note{margin-top:10px;font-size:11.5px;line-height:1.6;color:var(--muted);
+  background:#fffbeb;border:1px solid #fde9c0;border-radius:10px;padding:9px 11px}
+.drawer-empty{padding:40px 22px;text-align:center;color:var(--faint);font-size:13px;line-height:1.8}
+
+@media (max-width:820px){
+  .hb-list.wide .hb-row{grid-template-columns:92px 1fr 64px}
+  .prj-year{grid-template-columns:1fr}
+  .prj-year-h{border-right:0;text-align:left;padding:0 0 4px}
+  .dc-grid{grid-template-columns:1fr}
+  .dc-cols{grid-template-columns:1fr}
+  .hb-row{grid-template-columns:64px 1fr 54px}
+}
+@media print{
+  .tabs-wrap,.drawer,.drawer-overlay,.toast,.table-tools{display:none!important}
+  .tab-panel{display:block!important;page-break-before:always}
+  .conclusion-card{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+<div class="masthead">
+  <div class="wrap mast-inner">
+    <div class="brand">
+      <div class="brand-mark">1310-73-2</div>
+      <div>
+        <div class="eyebrow">PROCUREMENT MARKET INTELLIGENCE · 2025</div>
+        <h1>烧碱 · 中国大陆供应市场全景</h1>
+        <p class="sub">从「哪里产、谁能供、什么成本、未来怎么变」四个问题出发，把公开产能、区域结构、工艺路线、项目投产与价格周期放在同一张采购地图上。所有产能均标注口径；缺失数据明确标记，不做估算。</p>
+      </div>
+    </div>
+    <div class="mast-actions">
+      <a class="btn ghost" href="#tab-method"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l4-5 3 3 5-7"/></svg>数据口径</a>
+      <a class="btn solid" href="烧碱供应格局数据包_2025.xlsx" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>下载 Excel 数据包</a>
+    </div>
+  </div>
+  <div class="wrap kpi-grid">
+    <div class="kpi">
+      <div class="k-label">全国产能</div>
+      <div class="k-val">5,200<small>万吨/年</small></div>
+      <div class="k-sub">2025 年全国烧碱产能（折百，估算区间中值，公开报道口径）<br>公开报道 5,000–5,300 万吨区间，本示例取 5,200 仅作量级参考，请以最新协会数据替换</div>
+      <div class="k-delta ">2026E 名义产能 5,400</div>
+    </div>
+    <div class="kpi">
+      <div class="k-label">产量</div>
+      <div class="k-val">4,300<small>万吨/年</small></div>
+      <div class="k-sub">开工率 82.7%<br>企业口径待核 数据缺口</div>
+      
+    </div>
+    <div class="kpi">
+      <div class="k-label">离子膜法占比</div>
+      <div class="k-val">94.0<small>%</small></div>
+      <div class="k-sub">产能 4,900 万吨/年<br>主要路线</div>
+      <div class="k-delta ">2 条工艺路线</div>
+    </div>
+    <div class="kpi">
+      <div class="k-label">当前价格</div>
+      <div class="k-val">2,900<small>元/吨（折百，含税）</small></div>
+      <div class="k-sub">32% 液碱折百主流价（示例）<br>片碱（华东） 3,200 / 西北出厂（折百） 2,350</div>
+      
+    </div>
+    <div class="kpi">
+      <div class="k-label">样本覆盖</div>
+      <div class="k-val">13.1<small>%</small></div>
+      <div class="k-sub">7 集团 / 8 基地<br>合计 682 万吨/年</div>
+      <div class="k-delta warn">未披露企业为数据缺口</div>
+    </div>
+  </div>
+  <div class="wrap mast-note">
+    <div>数据截止 <b>2026-10-19</b> · 产能单位 <b>万吨/年</b> · 价格单位 <b>元/吨（折百，含税）</b> · 覆盖 <b>中国大陆</b></div>
+    <div>口径提示：名义产能 / 有效产能 / 样本合计 / 集团合并口径分别标注，详见「数据与来源」</div>
+  </div>
+</div>
+
+<nav class="tabs-wrap" aria-label="报告导航">
+  <div class="wrap tabs" role="tablist">
+    <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true">全景 <span class="n">01</span></button>
+    <button class="tab-btn" data-tab="table" role="tab" aria-selected="false">企业表 <span class="n">02</span></button>
+    <button class="tab-btn" data-tab="projects" role="tab" aria-selected="false">项目时间线 <span class="n">03</span></button>
+    <button class="tab-btn" data-tab="price" role="tab" aria-selected="false">价格 <span class="n">04</span></button>
+    <button class="tab-btn" data-tab="procurement" role="tab" aria-selected="false">采购关注 <span class="n">05</span></button>
+    <button class="tab-btn" data-tab="method" role="tab" aria-selected="false">数据与来源 <span class="n">06</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <noscript><div class="noscript">本页的筛选与下钻依赖 JavaScript。请在浏览器中启用 JavaScript 后查看；Excel 数据包不受影响。</div></noscript>
+
+  <!-- ============================================================ 01 全景 -->
+  <section id="tab-overview" class="tab-panel active" role="tabpanel">
+    <div class="section">
+      <div class="section-head">
+        <div>
+          <div class="kicker">ONE-PAGE VIEW</div>
+          <h2>一页看懂：供给、区域与成本</h2>
+          <p>烧碱的核心矛盾：烧碱的供给弹性由「碱氯平衡」决定，不由产能决定。评估供应商时除了烧碱产能，必须问清氯产品的消化渠道（PVC、环氧丙烷、氯化石蜡、盐酸等）与液氯外销量。</p>
+        </div>
+        <div class="side">2025 基准年 · 2026E 前瞻</div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card card-pad">
+          <div class="card-head"><h3>工艺结构</h3><span class="hint">2025 · 万吨/年</span></div>
+          <div class="route-wrap">
+            <svg class="donut" viewBox="0 0 140 140" role="img" aria-label="工艺结构">
+              <circle r="54" cx="70" cy="70" fill="none" stroke="#eef3f8" stroke-width="22"></circle>
+              <g transform="rotate(-90 70 70)"><circle class="donut-seg" data-route="离子膜法" r="54" cx="70" cy="70" fill="none" stroke="#1d4ed8" stroke-width="22" stroke-dasharray="94.00 6.00" stroke-dashoffset="0.00" pathLength="100"><title>离子膜法 94.0%</title></circle><circle class="donut-seg" data-route="隔膜法" r="54" cx="70" cy="70" fill="none" stroke="#b45309" stroke-width="22" stroke-dasharray="6.00 94.00" stroke-dashoffset="-94.00" pathLength="100"><title>隔膜法 6.0%</title></circle></g>
+            </svg>
+            <div class="donut-center"><b>5,200</b><span>万吨/年</span></div>
+          </div>
+          <div class="legend-list"><div class="lg-row"><i style="background:#1d4ed8"></i><span class="nm">离子膜法</span><span class="v">4,900 · 94.0%</span></div><div class="lg-row"><i style="background:#b45309"></i><span class="nm">隔膜法</span><span class="v">300 · 6.0%</span></div></div>
+          <div class="tiny muted" style="margin:-2px 0 8px;font-size:9.5px">注：产能占比为公开报道的量级（离子膜约 94%），本示例仅用于演示；请以最新协会数据替换。</div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="card-head"><h3>区域结构</h3><span class="hint">样本口径 · 2025</span></div>
+          <div class="hb-list"><div class="hb-row" data-province="新疆"><div class="nm">新疆</div><div class="bar"><i style="width:100.0%"></i></div><div class="v">360</div></div><div class="hb-row" data-province="陕西"><div class="nm">陕西</div><div class="bar"><i style="width:30.6%"></i></div><div class="v">110</div></div><div class="hb-row" data-province="上海"><div class="nm">上海</div><div class="bar"><i style="width:20.0%"></i></div><div class="v">72</div></div><div class="hb-row" data-province="四川"><div class="nm">四川</div><div class="bar"><i style="width:15.3%"></i></div><div class="v">55</div></div><div class="hb-row" data-province="辽宁"><div class="nm">辽宁</div><div class="bar"><i style="width:12.5%"></i></div><div class="v">45</div></div><div class="hb-row" data-province="山东"><div class="nm">山东</div><div class="bar"><i style="width:11.1%"></i></div><div class="v">40</div></div></div>
+          <div class="cost-note">样本 7 集团 / 8 基地合计
+            <b>682 万吨/年</b>，占全国 <b>13.1%</b>。
+            前 4 省合计 87.5%、前 5 省 94.1%，
+            区域 HHI 3300.9。</div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="card-head"><h3>成本曲线</h3><span class="hint">元/吨（折百，含税） · 行业经验值</span></div>
+          <div class="cost-list"><div class="cost-row"><div class="nm">离子膜法</div><div class="bar"><i style="left:0.0%;width:66.7%;background:linear-gradient(90deg,#1d4ed8,#fbbf24)"></i></div><div class="val"><b>1,800–2,600</b><br>高于区间</div></div><div class="cost-row"><div class="nm">隔膜法</div><div class="bar"><i style="left:33.3%;width:66.7%;background:linear-gradient(90deg,#b45309,#fbbf24)"></i></div><div class="val"><b>2,200–3,000</b><br>区间内</div></div></div>
+          <div class="cost-note">当前价 <b>2,900 元/吨（折百，含税）</b>；成本区间为公开报道/行业研究的行业经验值，不同基地差异很大，不能直接用于结算或成本审计。</div>
+        </div>
+      </div>
+
+      <div class="card card-pad" style="margin-top:18px">
+        <div class="card-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+          <div><h3>头部集团：2025 vs 2026E</h3>
+            <div class="hint" style="margin-top:2px">按 2025 产能排序；点击条形查看企业尽调卡</div></div>
+          <div class="legend"><span><i style="background:#0f766e"></i>2025</span><span><i style="background:#93c5fd"></i>2026E</span></div>
+        </div>
+        <div class="hb-list wide"><div class="hb-row co-row" data-company="中泰化学" role="button" tabindex="0"><div class="nm">中泰化学</div><div class="bar"><i style="width:100.0%"></i></div><div class="v">240</div></div><div class="hb-row co-row" data-company="新疆天业" role="button" tabindex="0"><div class="nm">新疆天业</div><div class="bar"><i style="width:50.0%"></i></div><div class="v">120</div></div><div class="hb-row co-row" data-company="陕西北元" role="button" tabindex="0"><div class="nm">陕西北元化工</div><div class="bar"><i style="width:45.8%"></i></div><div class="v">110</div></div><div class="hb-row co-row" data-company="氯碱化工" role="button" tabindex="0"><div class="nm">氯碱化工</div><div class="bar"><i style="width:30.0%"></i></div><div class="v">72</div></div><div class="hb-row co-row" data-company="宜宾天原" role="button" tabindex="0"><div class="nm">宜宾天原集团</div><div class="bar"><i style="width:22.9%"></i></div><div class="v">55</div></div><div class="hb-row co-row" data-company="沈阳化工" role="button" tabindex="0"><div class="nm">沈阳化工</div><div class="bar"><i style="width:18.8%"></i></div><div class="v">45</div></div><div class="hb-row co-row" data-company="山东海化" role="button" tabindex="0"><div class="nm">山东海化</div><div class="bar"><i style="width:16.7%"></i></div><div class="v">40</div></div></div>
+        <div class="tiny muted" style="margin-top:6px">注：2026E 为集团口径毛产能，含搬迁/置换项目的名义产能；毛产能不等于净新增，详见「项目时间线」的净增还原。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div><div class="kicker">KEY JUDGMENTS</div><h2>核心结论</h2>
+          <p>每条判断都带证据、采购含义与置信度；置信度「高」= 有年报/公告直接支撑。</p></div>
+        <div class="side">3 条</div>
+      </div>
+      <div class="conclusion-grid"><div class="conclusion-card"><div class="num">01 / 高</div>
+          <h3>烧碱的供给弹性由「碱氯平衡」决定，不由产能决定</h3><p>氯碱装置每产 1 吨烧碱（折百）联产约 0.88 吨液氯；液氯储运半径短、难储存，氯产品滞销时企业必须降负荷，即使烧碱有利润。</p>
+          <div class="tag">→ 评估供应商时除了烧碱产能，必须问清氯产品的消化渠道（PVC、环氧丙烷、氯化石蜡、盐酸等）与液氯外销量。</div></div><div class="conclusion-card"><div class="num">02 / 中高</div>
+          <h3>液碱看半径、片碱看全国</h3><p>32%/50% 液碱含大量水，运费占比高，经济运输半径通常 300–500 km；片碱（固碱）可长途、可仓储，成为跨区域调剂的品种。</p>
+          <div class="tag">→ 液碱按区域寻源、按到厂价结算；片碱可作为应急与远程备份，但需注意溶解成本与结块。</div></div><div class="conclusion-card"><div class="num">03 / 中</div>
+          <h3>电解铝/氧化铝与化工是两大需求支柱，价格随氯碱利润切换</h3><p>氧化铝焙烧、粘胶短纤、造纸、水处理、锂电材料是主要下游；当烧碱涨价而液氯贴钱时，企业会优先保烧碱负荷。</p>
+          <div class="tag">→ 不要把烧碱和液氯分开看：供应商的报价能力取决于其氯产品结构，采购谈判要问清氯碱综合利润。</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 02 企业表 -->
+  <section id="tab-table" class="tab-panel" role="tabpanel">
+    <div class="section">
+      <div class="section-head">
+        <div><div class="kicker">PRODUCERS</div><h2>企业表：7 集团</h2>
+          <p>点击任意一行查看企业画像与尽调卡。产能为集团合并口径；产量/开工率未披露的标「数据缺口」。</p></div>
+        <div class="side">样本 682 万吨/年</div>
+      </div>
+      <div class="table-tools">
+        <input id="coSearch" class="inp" type="search" placeholder="搜索企业 / 省份 / 工艺…" aria-label="搜索企业">
+        <select id="coSort" class="sel" aria-label="排序">
+          <option value="cap">按基准年产能</option>
+          <option value="share">按份额</option>
+          <option value="name">按名称</option>
+        </select>
+        <span class="tiny muted" id="coCount"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl" id="companyTable">
+          <thead><tr>
+            <th>集团</th><th>代码</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年产能</th><th class="n">预测年产能</th><th class="n">份额</th>
+            <th class="n">产量</th><th class="n">开工率 %</th>
+          </tr></thead>
+          <tbody><tr data-company="中泰化学" class="co-row" tabindex="0">
+          <td class="co">中泰化学</td>
+          <td class="mono">002092</td>
+          <td>新疆</td>
+          <td>离子膜法</td>
+          <td class="mono n">240</td>
+          <td class="mono n">240</td>
+          <td class="mono n">35.2%</td>
+          <td class="mono n">未披露</td>
+          <td class="mono n">数据缺口</td>
+        </tr><tr data-company="新疆天业" class="co-row" tabindex="0">
+          <td class="co">新疆天业</td>
+          <td class="mono">600075</td>
+          <td>新疆</td>
+          <td>离子膜法</td>
+          <td class="mono n">120</td>
+          <td class="mono n">120</td>
+          <td class="mono n">17.6%</td>
+          <td class="mono n">未披露</td>
+          <td class="mono n">数据缺口</td>
+        </tr><tr data-company="陕西北元" class="co-row" tabindex="0">
+          <td class="co">陕西北元化工</td>
+          <td class="mono">002082</td>
+          <td>陕西</td>
+          <td>离子膜法</td>
+          <td class="mono n">110</td>
+          <td class="mono n">110</td>
+          <td class="mono n">16.1%</td>
+          <td class="mono n">未披露</td>
+          <td class="mono n">数据缺口</td>
+        </tr><tr data-company="氯碱化工" class="co-row" tabindex="0">
+          <td class="co">氯碱化工</td>
+          <td class="mono">600618</td>
+          <td>上海</td>
+          <td>离子膜法</td>
+          <td class="mono n">72</td>
+          <td class="mono n">72</td>
+          <td class="mono n">10.6%</td>
+          <td class="mono n">未披露</td>
+          <td class="mono n">数据缺口</td>
+        </tr><tr data-company="宜宾天原" class="co-row" tabindex="0">
+          <td class="co">宜宾天原集团</td>
+          <td class="mono">002386</td>
+          <td>四川</td>
+          <td>离子膜法</td>
+          <td class="mono n">55</td>
+          <td class="mono n">55</td>
+          <td class="mono n">8.1%</td>
+          <td class="mono n">未披露</td>
+          <td class="mono n">数据缺口</td>
+        </tr><tr data-company="沈阳化工" class="co-row" tabindex="0">
+          <td class="co">沈阳化工</td>
+          <td class="mono">000698</td>
+          <td>辽宁</td>
+          <td>离子膜法</td>
+          <td class="mono n">45</td>
+          <td class="mono n">45</td>
+          <td class="mono n">6.6%</td>
+          <td class="mono n">未披露</td>
+          <td class="mono n">数据缺口</td>
+        </tr><tr data-company="山东海化" class="co-row" tabindex="0">
+          <td class="co">山东海化</td>
+          <td class="mono">000822</td>
+          <td>山东</td>
+          <td>离子膜法</td>
+          <td class="mono n">40</td>
+          <td class="mono n">40</td>
+          <td class="mono n">5.9%</td>
+          <td class="mono n">未披露</td>
+          <td class="mono n">数据缺口</td>
+        </tr></tbody>
+        </table>
+      </div>
+      <div class="tiny muted" style="margin-top:10px">份额 = 集团产能 / 样本合计产能（非全国份额）。CR5 与 HHI 用同一口径计算，见「数据与来源」。</div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 03 项目 -->
+  <section id="tab-projects" class="tab-panel" role="tabpanel">
+    <div class="section">
+      <div class="section-head">
+        <div><div class="kicker">PIPELINE</div><h2>项目时间线：5 个项目</h2>
+          <p>点击项目查看净增还原。毛产能 ≠ 净新增：置换、搬迁、待确认的项目都不按名义产能计入供应规划。</p></div>
+        <div class="side">毛 105 · 净 +30</div>
+      </div>
+      <div class="timeline"><div class="prj-year"><div class="prj-year-h">2026</div><div class="prj-year-body"><div class="prj" data-project="CJ01" role="button" tabindex="0">
+              <div class="prj-h"><b>华东离子膜烧碱扩建（示例）</b><span class="mono">20</span></div>
+              <div class="prj-bar"><i style="width:50%"></i></div>
+              <div class="prj-meta"><span>氯碱化工</span>
+                <span class="chip chip-neutral">在建</span> <span class="chip chip-good">净 +20</span></div>
+            </div><div class="prj" data-project="CJ02" role="button" tabindex="0">
+              <div class="prj-h"><b>西北氯碱一体化二期（示例）</b><span class="mono">40</span></div>
+              <div class="prj-bar"><i style="width:100%"></i></div>
+              <div class="prj-meta"><span>新疆天业</span>
+                <span class="chip chip-neutral">在建</span> <span class="chip chip-good">净 +40</span></div>
+            </div></div></div><div class="prj-year"><div class="prj-year-h">2027</div><div class="prj-year-body"><div class="prj" data-project="CJ04" role="button" tabindex="0">
+              <div class="prj-h"><b>老隔膜装置退出（示例）</b><span class="mono">0</span></div>
+              <div class="prj-bar"><i style="width:12%"></i></div>
+              <div class="prj-meta"><span>其他</span>
+                <span class="chip chip-neutral">拟建</span> <span class="chip chip-risk">净 -30</span></div>
+            </div><div class="prj" data-project="CJ03" role="button" tabindex="0">
+              <div class="prj-h"><b>西南氯碱技改扩能（示例）</b><span class="mono">15</span></div>
+              <div class="prj-bar"><i style="width:38%"></i></div>
+              <div class="prj-meta"><span>宜宾天原</span>
+                <span class="chip chip-neutral">拟建</span> <span class="chip chip-warn">净 待确认</span></div>
+            </div><div class="prj" data-project="CJ05" role="button" tabindex="0">
+              <div class="prj-h"><b>华北离子膜置换隔膜（示例）</b><span class="mono">30</span></div>
+              <div class="prj-bar"><i style="width:75%"></i></div>
+              <div class="prj-meta"><span>其他</span>
+                <span class="chip chip-neutral">在建</span> <span class="chip chip-good">净 +0</span></div>
+            </div></div></div></div>
+      <div class="kpi-strip">
+        <div><b>105</b><span>毛产能合计</span></div>
+        <div><b>+30</b><span>净影响（可确认项）</span></div>
+        <div><b>1</b><span>净增待确认</span></div>
+        <div><b>2</b><span>时间分组</span></div>
+      </div>
+      <div class="tiny muted" style="margin-top:8px">待确认项目：西南氯碱技改扩能（示例）。这些项目只在上行情景中体现，不进入基准预测。</div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 04 价格 -->
+  <section id="tab-price" class="tab-panel" role="tabpanel">
+    <div class="section">
+      <div class="section-head">
+        <div><div class="kicker">PRICE</div><h2>价格：历史区间与当前位置</h2>
+          <p>价格为公开报价（元/吨（折百，含税）），年度均值用于判断周期位置，不作为结算依据。</p></div>
+        <div class="side">周期位置 · 区域价差 · 情景</div>
+      </div>
+      <div class="grid-2">
+        <div class="card card-pad">
+          <div class="card-head"><h3>年度价格</h3><span class="hint">元/吨（折百，含税）</span></div>
+          <svg class="chart" viewBox="0 0 640 240" role="img" aria-label="年度价格"><polyline points="36.0,36.0 225.3,68.7 414.7,78.0 604.0,73.3" fill="none" stroke="#0f766e" stroke-width="2.5"></polyline><circle cx="36.0" cy="36.0" r="4" fill="#0f766e"></circle><text x="36.0" y="26.0" class="pt">3,600</text><text x="36.0" y="228" class="px">2022</text><circle cx="225.3" cy="68.7" r="4" fill="#0f766e"></circle><text x="225.3" y="58.7" class="pt">2,900</text><text x="225.3" y="228" class="px">2023</text><circle cx="414.7" cy="78.0" r="4" fill="#0f766e"></circle><text x="414.7" y="68.0" class="pt">2,700</text><text x="414.7" y="228" class="px">2024</text><circle cx="604.0" cy="73.3" r="4" fill="#0f766e"></circle><text x="604.0" y="63.3" class="pt">2,800</text><text x="604.0" y="228" class="px">2025</text></svg>
+        </div>
+        <div class="card card-pad">
+          <div class="card-head"><h3>当前价位</h3><span class="hint">现货</span></div>
+          <div class="mk-grid"><div class="mk"><b>2,900</b><span>32% 液碱折百（华东）<br>2026-10-19</span></div><div class="mk"><b>3,200</b><span>片碱（华东）<br>2026-10-19</span></div><div class="mk"><b>2,350</b><span>西北出厂（折百）<br>2026-10-19</span></div></div>
+          <div class="card-head" style="margin-top:14px"><h3>区域价格</h3><span class="hint">主流报价</span></div><div class="mk-grid"><div class="mk"><b>2,900</b><span>华东<br>江苏/浙江/山东南部；氯碱集中，液碱半径内竞争充分</span></div><div class="mk"><b>2,350</b><span>西北<br>新疆/内蒙古/宁夏；煤电一体化成本低，但外运半径远</span></div><div class="mk"><b>2,750</b><span>华北<br>山东/河北/天津；氧化铝与化工需求集中</span></div><div class="mk"><b>3,150</b><span>华南<br>广东/福建；本地产能不足，靠外埠与进口补充</span></div><div class="mk"><b>3,050</b><span>西南<br>四川/重庆/云南；氧化铝与磷化工需求</span></div></div>
+        </div>
+      </div>
+      <div class="card card-pad" style="margin-top:18px">
+        <div class="card-head"><h3>阶段复盘</h3><span class="hint">3 个阶段</span></div>
+        <div class="table-wrap"><table class="tbl">
+          <thead><tr><th>阶段</th><th>时间</th><th>主规格</th><th>副规格</th><th>涨跌</th><th>驱动</th><th>来源</th></tr></thead>
+          <tbody><tr><td class="co">2022 高位</td><td class="mono">2022 全年</td><td>32% 液碱 4,500–5,200</td><td>片碱 4,800–5,500</td><td class="mono">上半年 +40% 后回落</td><td>能耗双控、氧化铝高开工、液氯贴钱</td><td class="mono tiny">S3</td></tr><tr><td class="co">2023–2024 回落</td><td class="mono">2023-01 ~ 2024-12</td><td>2,100–3,800</td><td>2,600–4,200</td><td class="mono">中枢下移约 25%</td><td>氯碱新增产能、需求走弱、出口分流</td><td class="mono tiny">S3</td></tr><tr><td class="co">2025 震荡</td><td class="mono">2025 全年</td><td>2,300–3,600</td><td>2,800–4,000</td><td class="mono">区间震荡</td><td>氧化铝开工、液氯价格、区域价差</td><td class="mono tiny">S3</td></tr></tbody></table></div>
+      </div>
+      <div class="grid-2" style="margin-top:18px"><div class="oc"><div class="oc-h">基准情景</div><p>2,600–3,100 元/吨区间震荡：成本端由电价与液氯价格共同决定，需求端看氧化铝与化工开工。</p></div><div class="oc"><div class="oc-h">上行条件</div><p>氧化铝集中备货、氯产品滞销导致降负荷、区域检修叠加。</p></div><div class="oc"><div class="oc-h">下行风险</div><p>氯碱新增产能释放、液氯价格高企（企业愿意多产碱）、下游需求走弱。</p></div><div class="oc"><div class="oc-h">采购含义</div><p>液碱按区域锁量；片碱作为备份；价格条款与电价/液氯挂钩更贴近成本实际。</p></div></div>
+      <div class="tiny muted" style="margin-top:12px">本示例价格为演示用的量级数字，不是当日真实报价；实际使用必须替换为当日 100ppi/隆众/卓创等公开报价并标注日期、浓度与折百口径。</div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 05 采购关注 -->
+  <section id="tab-procurement" class="tab-panel" role="tabpanel">
+    <div class="section">
+      <div class="section-head">
+        <div><div class="kicker">PROCUREMENT</div><h2>采购关注：6 项风险与应对</h2>
+          <p>按风险等级排序。每项都给出可验证证据与可执行动作；不可执行的动作不写。</p></div>
+        <div class="side">高 / 中高 / 中</div>
+      </div>
+      <div class="grid-2"><div class="risk" data-level="高">
+          <div class="risk-h"><span class="chip chip-good">高</span>
+            <b>碱氯平衡导致降负荷</b></div>
+          <div class="risk-body"><div class="rl">证据</div><p>每吨烧碱联产约 0.88 吨液氯；液氯难储运，滞销时企业必须降负荷。</p>
+            <div class="rl">动作</div><p>尽调必问氯产品结构（PVC/环氧丙烷/盐酸/氯化石蜡）与液氯外销量；合同中写入降负荷通知期。</p></div>
+        </div><div class="risk" data-level="高">
+          <div class="risk-h"><span class="chip chip-good">高</span>
+            <b>液碱运输半径限制</b></div>
+          <div class="risk-body"><div class="rl">证据</div><p>液碱含大量水，运费占比高，经济半径通常 300–500 km。</p>
+            <div class="rl">动作</div><p>按半径寻源；长距离量改用片碱或提高储罐容量。</p></div>
+        </div><div class="risk" data-level="中高">
+          <div class="risk-h"><span class="chip chip-good">中高</span>
+            <b>电价与能耗政策</b></div>
+          <div class="risk-body"><div class="rl">证据</div><p>电解是主要成本项；能耗双控、阶梯电价直接抬升现金成本。</p>
+            <div class="rl">动作</div><p>优先煤电一体化/绿电比例高的供应商；把电价条款写入价格公式。</p></div>
+        </div><div class="risk" data-level="中高">
+          <div class="risk-h"><span class="chip chip-good">中高</span>
+            <b>折百口径混淆</b></div>
+          <div class="risk-body"><div class="rl">证据</div><p>32% 液碱实物量 × 0.32 = 折百量；片碱约 99%。合同若只写「吨」极易产生纠纷。</p>
+            <div class="rl">动作</div><p>合同与结算统一写「折百吨」并注明浓度检测方法。</p></div>
+        </div><div class="risk" data-level="中">
+          <div class="risk-h"><span class="chip chip-warn">中</span>
+            <b>区域供给集中</b></div>
+          <div class="risk-body"><div class="rl">证据</div><p>氯碱产能集中在西北与华东，华南/西南需外埠补充。</p>
+            <div class="rl">动作</div><p>华南/西南买家提高安全库存与片碱备份比例。</p></div>
+        </div><div class="risk" data-level="中">
+          <div class="risk-h"><span class="chip chip-warn">中</span>
+            <b>质量与浓度波动</b></div>
+          <div class="risk-body"><div class="rl">证据</div><p>液碱浓度、碳酸钠、氯化钠、铁含量影响下游工艺。</p>
+            <div class="rl">动作</div><p>封样 + 首批全检 + 每批 COA；浓度低于约定值按折百量补差。</p></div>
+        </div></div>
+
+      <div class="grid-2" style="margin-top:22px">
+        <div class="card card-pad">
+          <div class="card-head"><h3>采购策略</h3><span class="hint">4 条</span></div>
+          <div class="stcard"><h4>液碱半径内双源</h4><p>主供选 300 km 内离子膜法装置，第二源选 500 km 内或具备水运/铁路的装置。</p>
+          <div class="tiny"><b>条款</b> 折百口径、浓度（32%/50%）、到厂价、月度量、断供赔付。</div>
+          <div class="tiny"><b>KPI</b> 半径内双源覆盖 100%；断供天数 0</div></div><div class="stcard"><h4>片碱做备份而非主力</h4><p>保留 10%–20% 片碱额度用于液碱紧张期；配套溶解设施需提前确认。</p>
+          <div class="tiny"><b>条款</b> 片碱纯度、结块率、包装（25 kg/吨包）、溶解成本。</div>
+          <div class="tiny"><b>KPI</b> 切换时间 ≤7 天</div></div><div class="stcard"><h4>碱氯联动定价</h4><p>价格公式挂钩电价与液氯价格，避免单边锁价。</p>
+          <div class="tiny"><b>条款</b> 调价周期、上下限、异常波动重谈。</div>
+          <div class="tiny"><b>KPI</b> 价格偏离市场 ≤5%</div></div><div class="stcard"><h4>20 天安全库存</h4><p>液碱储罐容量决定库存上限；片碱仓储备份 7–10 天。</p>
+          <div class="tiny"><b>条款</b> 储罐归属、损耗率（液碱约 0.5%–1%/月）、盘点。</div>
+          <div class="tiny"><b>KPI</b> 库存周转 12–18 次/年</div></div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-head"><h3>建议供应商组合</h3><span class="hint">示例比例</span></div>
+          <div class="mix-list"><div class="mix-row"><div class="nm">半径内液碱主供</div><div class="bar"><i style="width:60%;background:#0f766e"></i></div><div class="v mono">60%</div></div><div class="mix-row"><div class="nm">半径内第二源</div><div class="bar"><i style="width:20%;background:#1d4ed8"></i></div><div class="v mono">20%</div></div><div class="mix-row"><div class="nm">片碱备份</div><div class="bar"><i style="width:12%;background:#b45309"></i></div><div class="v mono">12%</div></div><div class="mix-row"><div class="nm">贸易商现货</div><div class="bar"><i style="width:8%;background:#94a3b8"></i></div><div class="v mono">8%</div></div></div>
+          <hr class="hr">
+          <div class="card-head"><h3>采购量测算</h3><span class="hint">默认 5 万吨/年</span></div>
+          <table class="sim">
+            <tr><td>年采购量</td><td class="mono n">5 万吨</td></tr>
+            <tr><td>到厂价</td><td class="mono n">2,900 元/吨（折百，含税）</td></tr>
+            <tr><td>运费</td><td class="mono n">120 元/吨（折百，含税）</td></tr>
+            <tr><td>安全库存天数</td><td class="mono n">20 天</td></tr>
+            <tr class="hl"><td>年度采购金额（含运费）</td><td class="mono n">15,100 万元</td></tr>
+            <tr><td>月度提货量</td><td class="mono n">4,167 吨</td></tr>
+            <tr><td>安全库存量</td><td class="mono n">2,740 吨</td></tr>
+            <tr><td>价格每涨 100</td><td class="mono n">500 万元/年</td></tr>
+          </table>
+          <div class="tiny muted" style="margin-top:8px">模拟为量级测算，未含增值税、资金占用、仓储、损耗与账期成本。Excel 里的「07A_采购策略」可直接改输入，自动重算。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 06 数据与来源 -->
+  <section id="tab-method" class="tab-panel" role="tabpanel">
+    <div class="section">
+      <div class="section-head">
+        <div><div class="kicker">METHOD & SOURCES</div><h2>数据与来源</h2>
+          <p>口径、缺口与来源全部公开：任何数字都能回溯到一条公开披露；任何缺失都明确标注，不做估算。</p></div>
+        <div class="side">3 条来源 · 6 项缺口</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-pad">
+          <div class="card-head"><h3>口径说明</h3><span class="hint">32% / 50% 液碱、99% 片碱</span></div>
+          <table class="kv">
+            <tr><td>覆盖范围</td><td>中国大陆</td></tr>
+            <tr><td>统计边界</td><td>离子膜法/隔膜法烧碱产能（折 100% NaOH），含液碱与片碱；不含纯碱（碳酸钠）</td></tr>
+            <tr><td>基准年 / 预测年</td><td>2025 / 2026、2027</td></tr>
+            <tr><td>全国产能</td><td class="mono">5,200 万吨/年</td></tr>
+            <tr><td>样本覆盖</td><td class="mono">7 集团 / 8 基地 / 682 → 13.1%</td></tr>
+            <tr><td>集中度</td><td class="mono">集团 HHI ≈ 2062.5；区域 HHI ≈ 3300.9；CR5（样本口径）≈ 87.5%。</td></tr>
+            <tr><td>数据截止</td><td class="mono">2026-10-19</td></tr>
+            <tr><td>生成方式</td><td>chemical-supply-market-map v1.0.0 · 生成于 2026-10-19 15:30</td></tr>
+          </table>
+        </div>
+        <div class="card card-pad">
+          <div class="card-head"><h3>口径提示</h3><span class="hint">3 条</span></div>
+          <table class="basis"><tbody><tr><td>烧碱产能一律按 100% NaOH 折百计，液碱/片碱的实物量与折百量不可直接比较。</td></tr><tr><td>烧碱是氯碱装置的联产品：实际开工由「碱氯平衡」决定，液氯/氯产品滞销会倒逼降负荷，产能不等于可售量。</td></tr><tr><td>本示例只收录公开披露的代表性企业样本，样本外产能未分摊，故区域合计低于全国。</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <div class="card card-pad" style="margin-top:18px">
+        <div class="card-head"><h3>数据缺口</h3><span class="hint">不估算 · 不插值</span></div>
+        <div class="table-wrap"><table class="tbl">
+          <thead><tr><th>缺口</th><th>影响</th><th>当前状态</th><th>补齐方式</th><th class="n">优先级</th></tr></thead>
+          <tbody><tr><td>全国产能与产量（协会口径）</td><td>集中度与开工率判断</td><td>本示例用公开报道量级</td><td>中国氯碱工业协会年报、石化联合会统计</td><td class="mono n">高</td></tr><tr><td>企业级折百产能明细</td><td>区域与集中度被低估</td><td>仅收录代表性企业</td><td>上市公司年报、环评公示、能耗核查文件</td><td class="mono n">高</td></tr><tr><td>企业液氯消化结构</td><td>实际开工与保供能力</td><td>非公开</td><td>年报分产品收入 + 现场审核</td><td class="mono n">高</td></tr><tr><td>按省贸易商数量</td><td>渠道与议价判断</td><td>公开统计缺失</td><td>企查查/天眼查检索 + 协会名录</td><td class="mono n">中高</td></tr><tr><td>分企业现金成本与电价</td><td>成本曲线与议价</td><td>非公开</td><td>能耗核查公示、年报、供应商成本问卷</td><td class="mono n">中高</td></tr><tr><td>区域库存与港口数据</td><td>区域价差与紧缺判断</td><td>部分公开</td><td>隆众/卓创周度库存</td><td class="mono n">中</td></tr></tbody></table></div>
+      </div>
+
+      <div class="card card-pad" style="margin-top:18px">
+        <div class="card-head"><h3>来源列表</h3><span class="hint">3 条</span></div>
+        <div class="table-wrap"><table class="tbl">
+          <thead><tr><th>ID</th><th>名称</th><th>发布方</th><th>日期</th><th>用于</th><th>链接</th><th class="n">置信度</th></tr></thead>
+          <tbody><tr><td class="mono">S1</td><td>中国氯碱工业协会统计（示例引用位）</td><td>中国氯碱工业协会</td><td class="mono">2025-12-31</td><td>全国烧碱产能/产量量级（示例；正式使用请换成协会/机构原文链接）</td><td><a href="https://www.chyxx.com/industry/" target="_blank" rel="noopener">链接</a></td><td class="mono n">中</td></tr><tr><td class="mono">S2</td><td>氯碱工艺与碱氯平衡（示例引用位）</td><td>行业公开资料</td><td class="mono">2025-06-30</td><td>离子膜/隔膜占比、单耗、液氯联产比例（示例）</td><td><a href="https://www.100ppi.com/" target="_blank" rel="noopener">链接</a></td><td class="mono n">中</td></tr><tr><td class="mono">S3</td><td>烧碱价格与区域价差（示例引用位）</td><td>生意社 / 隆众资讯</td><td class="mono">2026-10-19</td><td>液碱/片碱价格、区域价差（演示用数字）</td><td><a href="https://www.100ppi.com/" target="_blank" rel="noopener">链接</a></td><td class="mono n">中</td></tr></tbody></table></div>
+      </div>
+
+      <div class="card card-pad" style="margin-top:18px">
+        <div class="card-head"><h3>使用限制</h3><span class="hint">必读</span></div>
+        <ul class="limits">
+          <li>公开信息研究，不含任何企业的非公开成本、合同价、库存与客户数据。</li>
+          <li>产能为名义/设计能力，实际可用量受检修、环保、能耗、原料与订单影响。</li>
+          <li>项目投产存在延期；净增以企业公告/产能置换文件为准，「待确认」项不进入基准预测。</li>
+          <li>价格为公开报价，实际成交受批量、账期、运费与质量影响。</li>
+          <li>本报告不构成投资建议；引用请注明数据截止日期与来源。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fleft">
+<div class="foot-wrap">
+    <div>
+      <div style="font-size:13px;color:#d9e7f2;font-weight:700;margin-bottom:4px">烧碱 · 中国大陆供应市场全景（采购视角）</div>
+      <div class="tiny">数据截止 2026-10-19 · 基准年 2025 · 覆盖 中国大陆 · 产能单位万吨/年 · 价格单位元/吨（折百，含税）</div>
+    </div>
+    <div class="foot-r">
+      <div><b>7</b> 集团 · <b>8</b> 基地 · <b>3</b> 来源</div>
+      <div class="tiny" style="margin-top:4px">生成日期 2026-10-19 · chemical-supply-market-map v1.0.0</div>
+    </div>
+  </div>
+      <div class="tiny" style="margin-top:8px">本报告基于公开年报、协会/机构数据与公开报道整理；产能与价格存在多口径差异，正文已逐项标注。报告不构成投资建议，采购决策请结合现场审核、样品检测与合同条款。</div>
+    </div>
+  </div>
+</footer>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="详情">
+  <div class="drawer-head">
+    <div><div class="eyebrow" id="drawerEyebrow">COMPANY DUE DILIGENCE</div><h2 id="drawerTitle">—</h2><div class="sub" id="drawerSub">—</div></div>
+    <button class="drawer-close" id="drawerClose" aria-label="关闭">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody">
+<div class="drawer-inner" id="drawerCo"><div class="drawer-card" data-company="中泰化学">
+          <div class="dc-head"><div><div class="kicker">DUE DILIGENCE</div>
+            <h3>中泰化学</h3>
+            <div class="tiny muted">002092 · 新疆 · 离子膜法</div></div>
+            <div class="dc-kpi"><b>240</b><span>万吨/年</span></div></div>
+          <div class="dc-grid">
+            <div><div class="rl">产量</div><p>未披露</p></div>
+            <div><div class="rl">开工率</div><p>数据缺口</p></div>
+            <div><div class="rl">样本份额</div><p>35.2%</p></div>
+          </div>
+          <div class="rl">基地明细</div>
+          <div class="table-wrap"><table class="tbl sm"><thead><tr><th>基地</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年</th><th class="n">预测年</th><th>状态</th></tr></thead><tbody><tr><td>阜康能源</td><td>新疆</td><td>离子膜法</td><td class="mono n">180</td><td class="mono n">180</td><td>在产</td></tr><tr><td>托克逊能化</td><td>新疆</td><td>离子膜法</td><td class="mono n">60</td><td class="mono n">60</td><td>在产</td></tr></tbody></table></div>
+          <div class="dc-cols">
+            <div><div class="rl">优势</div><ul><li>煤电一体化，电力成本低</li><li>规模大、外运能力强（铁路专用线）</li></ul></div>
+            <div><div class="rl">风险</div><ul><li>距华东/华南消费地远，运费高</li><li>PVC 与烧碱联动，氯产品价格影响开工</li></ul></div>
+          </div>
+          <div class="rl">采购判断</div><p>适合作为西北低成本主供，但需评估到厂运费与冬季发运；不适合作为半径内唯一来源。</p>
+          <div class="rl">尽调问题</div><ul class="dd"><li>请提供最新折百产能与开工率</li><li>液氯/PVC 外销与自用比例？</li><li>铁路请车满足率与冬季发运限制？</li></ul>
+          <div class="tiny muted">来源：S4</div>
+        </div><div class="drawer-card" data-company="新疆天业">
+          <div class="dc-head"><div><div class="kicker">DUE DILIGENCE</div>
+            <h3>新疆天业</h3>
+            <div class="tiny muted">600075 · 新疆 · 离子膜法</div></div>
+            <div class="dc-kpi"><b>120</b><span>万吨/年</span></div></div>
+          <div class="dc-grid">
+            <div><div class="rl">产量</div><p>未披露</p></div>
+            <div><div class="rl">开工率</div><p>数据缺口</p></div>
+            <div><div class="rl">样本份额</div><p>17.6%</p></div>
+          </div>
+          <div class="rl">基地明细</div>
+          <div class="table-wrap"><table class="tbl sm"><thead><tr><th>基地</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年</th><th class="n">预测年</th><th>状态</th></tr></thead><tbody><tr><td>石河子基地</td><td>新疆</td><td>离子膜法</td><td class="mono n">120</td><td class="mono n">120</td><td>在产</td></tr></tbody></table></div>
+          <div class="dc-cols">
+            <div><div class="rl">优势</div><ul><li>煤电一体化</li><li>滴灌/化工多业务协同</li></ul></div>
+            <div><div class="rl">风险</div><ul><li>外运距离长</li><li>氯产品结构与 PVC 行情相关</li></ul></div>
+          </div>
+          <div class="rl">采购判断</div><p>低成本备选；建议以片碱或铁路整车方式补充。</p>
+          <div class="rl">尽调问题</div><ul class="dd"><li>请提供折百产能与出口占比</li></ul>
+          <div class="tiny muted">来源：S4</div>
+        </div><div class="drawer-card" data-company="陕西北元">
+          <div class="dc-head"><div><div class="kicker">DUE DILIGENCE</div>
+            <h3>陕西北元化工</h3>
+            <div class="tiny muted">002082 · 陕西 · 离子膜法</div></div>
+            <div class="dc-kpi"><b>110</b><span>万吨/年</span></div></div>
+          <div class="dc-grid">
+            <div><div class="rl">产量</div><p>未披露</p></div>
+            <div><div class="rl">开工率</div><p>数据缺口</p></div>
+            <div><div class="rl">样本份额</div><p>16.1%</p></div>
+          </div>
+          <div class="rl">基地明细</div>
+          <div class="table-wrap"><table class="tbl sm"><thead><tr><th>基地</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年</th><th class="n">预测年</th><th>状态</th></tr></thead><tbody><tr><td>神木锦界</td><td>陕西</td><td>离子膜法</td><td class="mono n">110</td><td class="mono n">110</td><td>在产</td></tr></tbody></table></div>
+          <div class="dc-cols">
+            <div><div class="rl">优势</div><ul><li>煤电资源近，成本有优势</li><li>片碱产能配套</li></ul></div>
+            <div><div class="rl">风险</div><ul><li>氯产品消化依赖 PVC</li><li>区域物流以铁路为主</li></ul></div>
+          </div>
+          <div class="rl">采购判断</div><p>可作为华中/华北的第二源；片碱可作为应急备份。</p>
+          <div class="rl">尽调问题</div><ul class="dd"><li>片碱产能与结块率？</li><li>铁路发运与到厂运费？</li></ul>
+          <div class="tiny muted">来源：S4</div>
+        </div><div class="drawer-card" data-company="氯碱化工">
+          <div class="dc-head"><div><div class="kicker">DUE DILIGENCE</div>
+            <h3>氯碱化工</h3>
+            <div class="tiny muted">600618 · 上海 · 离子膜法</div></div>
+            <div class="dc-kpi"><b>72</b><span>万吨/年</span></div></div>
+          <div class="dc-grid">
+            <div><div class="rl">产量</div><p>未披露</p></div>
+            <div><div class="rl">开工率</div><p>数据缺口</p></div>
+            <div><div class="rl">样本份额</div><p>10.6%</p></div>
+          </div>
+          <div class="rl">基地明细</div>
+          <div class="table-wrap"><table class="tbl sm"><thead><tr><th>基地</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年</th><th class="n">预测年</th><th>状态</th></tr></thead><tbody><tr><td>漕泾基地</td><td>上海</td><td>离子膜法</td><td class="mono n">72</td><td class="mono n">72</td><td>在产</td></tr></tbody></table></div>
+          <div class="dc-cols">
+            <div><div class="rl">优势</div><ul><li>华东核心市场，半径短</li><li>产品质量稳定，配套完善</li></ul></div>
+            <div><div class="rl">风险</div><ul><li>上海电价与环保成本高</li><li>装置规模有限，旺季可提量受限</li></ul></div>
+          </div>
+          <div class="rl">采购判断</div><p>华东用户的天然主供候选；价格通常高于西北，但到厂综合成本可能更低。</p>
+          <div class="rl">尽调问题</div><ul class="dd"><li>可签年度折百量与月度弹性？</li><li>上海地区环保/能耗约束与限产记录？</li></ul>
+          <div class="tiny muted">来源：S4</div>
+        </div><div class="drawer-card" data-company="宜宾天原">
+          <div class="dc-head"><div><div class="kicker">DUE DILIGENCE</div>
+            <h3>宜宾天原集团</h3>
+            <div class="tiny muted">002386 · 四川 · 离子膜法</div></div>
+            <div class="dc-kpi"><b>55</b><span>万吨/年</span></div></div>
+          <div class="dc-grid">
+            <div><div class="rl">产量</div><p>未披露</p></div>
+            <div><div class="rl">开工率</div><p>数据缺口</p></div>
+            <div><div class="rl">样本份额</div><p>8.1%</p></div>
+          </div>
+          <div class="rl">基地明细</div>
+          <div class="table-wrap"><table class="tbl sm"><thead><tr><th>基地</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年</th><th class="n">预测年</th><th>状态</th></tr></thead><tbody><tr><td>宜宾基地</td><td>四川</td><td>离子膜法</td><td class="mono n">55</td><td class="mono n">55</td><td>在产</td></tr></tbody></table></div>
+          <div class="dc-cols">
+            <div><div class="rl">优势</div><ul><li>西南本地供给</li><li>氯碱+磷化工+锂电材料协同</li></ul></div>
+            <div><div class="rl">风险</div><ul><li>规模有限</li><li>西南水电季节性影响电价</li></ul></div>
+          </div>
+          <div class="rl">采购判断</div><p>西南用户的区域主供候选；关注枯水期电价与开工变化。</p>
+          <div class="rl">尽调问题</div><ul class="dd"><li>枯水期电价与开工率变化？</li></ul>
+          <div class="tiny muted">来源：S4</div>
+        </div><div class="drawer-card" data-company="沈阳化工">
+          <div class="dc-head"><div><div class="kicker">DUE DILIGENCE</div>
+            <h3>沈阳化工</h3>
+            <div class="tiny muted">000698 · 辽宁 · 离子膜法</div></div>
+            <div class="dc-kpi"><b>45</b><span>万吨/年</span></div></div>
+          <div class="dc-grid">
+            <div><div class="rl">产量</div><p>未披露</p></div>
+            <div><div class="rl">开工率</div><p>数据缺口</p></div>
+            <div><div class="rl">样本份额</div><p>6.6%</p></div>
+          </div>
+          <div class="rl">基地明细</div>
+          <div class="table-wrap"><table class="tbl sm"><thead><tr><th>基地</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年</th><th class="n">预测年</th><th>状态</th></tr></thead><tbody><tr><td>沈阳基地</td><td>辽宁</td><td>离子膜法</td><td class="mono n">45</td><td class="mono n">45</td><td>在产</td></tr></tbody></table></div>
+          <div class="dc-cols">
+            <div><div class="rl">优势</div><ul><li>东北区域供给</li><li>配套氯产品</li></ul></div>
+            <div><div class="rl">风险</div><ul><li>区域需求偏弱、外运成本高</li><li>装置规模较小</li></ul></div>
+          </div>
+          <div class="rl">采购判断</div><p>东北用户就近备选；不建议跨区大量采购。</p>
+          <div class="rl">尽调问题</div><ul class="dd"><li>东北区域外销量与运费？</li></ul>
+          <div class="tiny muted">来源：S4</div>
+        </div><div class="drawer-card" data-company="山东海化">
+          <div class="dc-head"><div><div class="kicker">DUE DILIGENCE</div>
+            <h3>山东海化</h3>
+            <div class="tiny muted">000822 · 山东 · 离子膜法</div></div>
+            <div class="dc-kpi"><b>40</b><span>万吨/年</span></div></div>
+          <div class="dc-grid">
+            <div><div class="rl">产量</div><p>未披露</p></div>
+            <div><div class="rl">开工率</div><p>数据缺口</p></div>
+            <div><div class="rl">样本份额</div><p>5.9%</p></div>
+          </div>
+          <div class="rl">基地明细</div>
+          <div class="table-wrap"><table class="tbl sm"><thead><tr><th>基地</th><th>省份</th><th>工艺</th>
+            <th class="n">基准年</th><th class="n">预测年</th><th>状态</th></tr></thead><tbody><tr><td>潍坊碱厂配套氯碱</td><td>山东</td><td>离子膜法</td><td class="mono n">40</td><td class="mono n">40</td><td>在产</td></tr></tbody></table></div>
+          <div class="dc-cols">
+            <div><div class="rl">优势</div><ul><li>原盐资源自给（与纯碱共享）</li><li>潍坊化工集群配套</li></ul></div>
+            <div><div class="rl">风险</div><ul><li>氯碱非主营，产能调整灵活度低</li><li>与纯碱装置共用公用工程</li></ul></div>
+          </div>
+          <div class="rl">采购判断</div><p>山东用户的补充源；可与纯碱打包谈判。</p>
+          <div class="rl">尽调问题</div><ul class="dd"><li>氯碱与纯碱装置的公用工程分配？</li></ul>
+          <div class="tiny muted">来源：S4</div>
+        </div><div class="drawer-empty" id="drawerCoEmpty">点击企业表/头部集团条形/地图气泡查看企业画像与尽调卡。</div></div><div class="drawer-inner" id="drawerPrj" hidden><div class="drawer-card" data-project="CJ01">
+          <div class="dc-head"><div><div class="kicker">PROJECT</div><h3>华东离子膜烧碱扩建（示例）</h3>
+            <div class="tiny muted">氯碱化工 · 上海 · 离子膜法 · 2026-09</div></div>
+            <div class="dc-kpi"><b>20</b><span>毛产能</span></div></div>
+          <table class="kv"><tr><td>项目类型</td><td>扩建</td></tr>
+            <tr><td>状态</td><td>在建</td></tr>
+            <tr><td>置换 / 退出</td><td class="mono">0</td></tr>
+            <tr class="hl"><td>净影响</td><td class="mono">+20</td></tr>
+            <tr><td>进度</td><td>土建/设备招标</td></tr>
+            <tr><td>来源</td><td>S5</td></tr></table>
+          <div class="rl">对供给的影响</div><p>净新增 20 万吨折百，主要覆盖华东液碱市场。</p>
+          <div class="tl-note">读法：毛产能不等于净新增。「待确认」的项目不纳入基准预测，只在上行情景中体现。</div>
+        </div><div class="drawer-card" data-project="CJ02">
+          <div class="dc-head"><div><div class="kicker">PROJECT</div><h3>西北氯碱一体化二期（示例）</h3>
+            <div class="tiny muted">新疆天业 · 新疆 · 离子膜法 · 2026-12</div></div>
+            <div class="dc-kpi"><b>40</b><span>毛产能</span></div></div>
+          <table class="kv"><tr><td>项目类型</td><td>新建</td></tr>
+            <tr><td>状态</td><td>在建</td></tr>
+            <tr><td>置换 / 退出</td><td class="mono">0</td></tr>
+            <tr class="hl"><td>净影响</td><td class="mono">+40</td></tr>
+            <tr><td>进度</td><td>设备安装</td></tr>
+            <tr><td>来源</td><td>S5</td></tr></table>
+          <div class="rl">对供给的影响</div><p>低成本产能继续向西北集中，外运压力增加。</p>
+          <div class="tl-note">读法：毛产能不等于净新增。「待确认」的项目不纳入基准预测，只在上行情景中体现。</div>
+        </div><div class="drawer-card" data-project="CJ04">
+          <div class="dc-head"><div><div class="kicker">PROJECT</div><h3>老隔膜装置退出（示例）</h3>
+            <div class="tiny muted">其他 · 河北 · 隔膜法 · 2027-03</div></div>
+            <div class="dc-kpi"><b>0</b><span>毛产能</span></div></div>
+          <table class="kv"><tr><td>项目类型</td><td>退出</td></tr>
+            <tr><td>状态</td><td>拟建</td></tr>
+            <tr><td>置换 / 退出</td><td class="mono">30</td></tr>
+            <tr class="hl"><td>净影响</td><td class="mono">-30</td></tr>
+            <tr><td>进度</td><td>淘汰计划</td></tr>
+            <tr><td>来源</td><td>S5</td></tr></table>
+          <div class="rl">对供给的影响</div><p>隔膜法退出，净减 30 万吨；如无新增对冲，区域供给收紧。</p>
+          <div class="tl-note">读法：毛产能不等于净新增。「待确认」的项目不纳入基准预测，只在上行情景中体现。</div>
+        </div><div class="drawer-card" data-project="CJ03">
+          <div class="dc-head"><div><div class="kicker">PROJECT</div><h3>西南氯碱技改扩能（示例）</h3>
+            <div class="tiny muted">宜宾天原 · 四川 · 离子膜法 · 2027-06</div></div>
+            <div class="dc-kpi"><b>15</b><span>毛产能</span></div></div>
+          <table class="kv"><tr><td>项目类型</td><td>技改</td></tr>
+            <tr><td>状态</td><td>拟建</td></tr>
+            <tr><td>置换 / 退出</td><td class="mono">0</td></tr>
+            <tr class="hl"><td>净影响</td><td class="mono">待确认</td></tr>
+            <tr><td>进度</td><td>环评公示</td></tr>
+            <tr><td>来源</td><td>S5</td></tr></table>
+          <div class="rl">对供给的影响</div><p>净增待确认（技改可能以置换老装置方式实施）。</p>
+          <div class="tl-note">读法：毛产能不等于净新增。「待确认」的项目不纳入基准预测，只在上行情景中体现。</div>
+        </div><div class="drawer-card" data-project="CJ05">
+          <div class="dc-head"><div><div class="kicker">PROJECT</div><h3>华北离子膜置换隔膜（示例）</h3>
+            <div class="tiny muted">其他 · 河北 · 离子膜法 · 2027-09</div></div>
+            <div class="dc-kpi"><b>30</b><span>毛产能</span></div></div>
+          <table class="kv"><tr><td>项目类型</td><td>置换</td></tr>
+            <tr><td>状态</td><td>在建</td></tr>
+            <tr><td>置换 / 退出</td><td class="mono">30</td></tr>
+            <tr class="hl"><td>净影响</td><td class="mono">+0</td></tr>
+            <tr><td>进度</td><td>施工</td></tr>
+            <tr><td>来源</td><td>S5</td></tr></table>
+          <div class="rl">对供给的影响</div><p>置换，净增为 0；但能效提升会降低现金成本。</p>
+          <div class="tl-note">读法：毛产能不等于净新增。「待确认」的项目不纳入基准预测，只在上行情景中体现。</div>
+        </div><div class="drawer-empty" id="drawerPrjEmpty">点击项目时间线中的项目查看净增还原。</div></div>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+window.DATA = {"meta":{"product":{"name":"烧碱（氢氧化钠，NaOH）","short":"烧碱","aliases":["氢氧化钠","苛性钠","caustic soda","液碱","片碱"],"grades":"32% / 50% 液碱、99% 片碱","cas":"1310-73-2","unit":"万吨/年","price_unit":"元/吨（折百，含税）","hs_code":"28151100"},"scope":{"geography":"中国大陆","boundary":"离子膜法/隔膜法烧碱产能（折 100% NaOH），含液碱与片碱；不含纯碱（碳酸钠）","base_year":2025,"forward_years":[2026,2027],"report_date":"2026-10-19","data_cutoff":"2026-10-19","basis_notes":["烧碱产能一律按 100% NaOH 折百计，液碱/片碱的实物量与折百量不可直接比较。","烧碱是氯碱装置的联产品：实际开工由「碱氯平衡」决定，液氯/氯产品滞销会倒逼降负荷，产能不等于可售量。","本示例只收录公开披露的代表性企业样本，样本外产能未分摊，故区域合计低于全国。"]},"buyer":{"applies":true,"volume_10kt":5,"landed_price":2900,"freight":120,"stock_days":20,"grade":"32% 液碱（折百）","delivery":"到厂价，含税","note":"默认模拟值；液碱按折百折算，实际可用实物量 = 折百量 / 浓度"},"metrics":{"capacity_total":5200,"capacity_total_label":"2025 年全国烧碱产能（折百，估算区间中值，公开报道口径）","capacity_total_source":"S1","capacity_total_note":"公开报道 5,000–5,300 万吨区间，本示例取 5,200 仅作量级参考，请以最新协会数据替换","capacity_forward":5400,"capacity_forward_label":"2026E 名义产能","output":4300,"output_alt":[{"value":null,"label":"企业口径待核","source":""}],"utilization":82.7,"producers":null,"cr5":null,"cr5_forward":{},"sample_capacity":682,"sample_coverage":13.1,"price_now":2900,"price_now_label":"32% 液碱折百主流价（示例）","drawdown":null,"export":null,"inventory":null,"sample_groups":7,"sample_sites":8,"hhi_industry":2062.5,"cr5_computed":87.5,"hhi_region":3300.9,"top4_region_share":87.5,"top5_region_share":94.1},"routes_note":"产能占比为公开报道的量级（离子膜约 94%），本示例仅用于演示；请以最新协会数据替换。","activity_legend":{"A":"交易活跃 / 贸易商密集","B":"中等活跃","C":"低活跃 / 直供为主"},"generated_at":"2026-10-19 15:30","schema_version":3,"skill_version":"1.0.0"},"verdicts":[{"id":"V1","title":"烧碱的供给弹性由「碱氯平衡」决定，不由产能决定","evidence":"氯碱装置每产 1 吨烧碱（折百）联产约 0.88 吨液氯；液氯储运半径短、难储存，氯产品滞销时企业必须降负荷，即使烧碱有利润。","implication":"评估供应商时除了烧碱产能，必须问清氯产品的消化渠道（PVC、环氧丙烷、氯化石蜡、盐酸等）与液氯外销量。","confidence":"高","sources":["S2"],"memo":"简化示例：仅保留结构性判断"},{"id":"V2","title":"液碱看半径、片碱看全国","evidence":"32%/50% 液碱含大量水，运费占比高，经济运输半径通常 300–500 km；片碱（固碱）可长途、可仓储，成为跨区域调剂的品种。","implication":"液碱按区域寻源、按到厂价结算；片碱可作为应急与远程备份，但需注意溶解成本与结块。","confidence":"中高","sources":["S3"],"memo":"半径数值为行业经验区间"},{"id":"V3","title":"电解铝/氧化铝与化工是两大需求支柱，价格随氯碱利润切换","evidence":"氧化铝焙烧、粘胶短纤、造纸、水处理、锂电材料是主要下游；当烧碱涨价而液氯贴钱时，企业会优先保烧碱负荷。","implication":"不要把烧碱和液氯分开看：供应商的报价能力取决于其氯产品结构，采购谈判要问清氯碱综合利润。","confidence":"中","sources":["S3"],"memo":"简化示例"}],"routes":[{"id":"IEM","name":"离子膜法","cap":4900,"share":94.0,"color":"#1d4ed8","producers":"国内主流装置（示例：中泰化学、氯碱化工、新疆天业、陕西北元等）","raw":"原盐 + 电力 + 离子膜","unit":"原盐约 1.5–1.6 t/t；直流电约 2,100–2,400 kWh/t（折百）","energy":"高；电解为主，电价是核心成本","byproduct":"液氯约 0.88 t/t、氢气约 0.025 t/t","cost_low":1800,"cost_high":2600,"advantage":"能耗低、纯度好、无汞石棉污染、主流路线","risk":"电价与离子膜；副产液氯消化决定开工率","source":"S2"},{"id":"DM","name":"隔膜法","cap":300,"share":6.0,"color":"#b45309","producers":"少量在产装置（示例：部分氯碱企业老装置）","raw":"原盐 + 电力 + 石棉/改性隔膜","unit":"原盐约 1.6–1.7 t/t；直流电约 2,500–2,700 kWh/t","energy":"更高；蒸汽与电解双高","byproduct":"液氯、氢气；碱液含盐需蒸发","cost_low":2200,"cost_high":3000,"advantage":"老装置改造投入低、对原料盐质量要求低","risk":"能耗与环保约束、石棉限制、逐步淘汰","source":"S2"}],"regions":[{"province":"新疆","capacity_base":360.0,"capacity_forward":360.0,"companies":["中泰化学","新疆天业"],"sites":3,"routes":["离子膜法"],"group_count":2,"share_base":0.5278592375366569,"share_forward":0.5278592375366569},{"province":"陕西","capacity_base":110.0,"capacity_forward":110.0,"companies":["陕西北元"],"sites":1,"routes":["离子膜法"],"group_count":1,"share_base":0.16129032258064516,"share_forward":0.16129032258064516},{"province":"上海","capacity_base":72.0,"capacity_forward":72.0,"companies":["氯碱化工"],"sites":1,"routes":["离子膜法"],"group_count":1,"share_base":0.10557184750733138,"share_forward":0.10557184750733138},{"province":"四川","capacity_base":55.0,"capacity_forward":55.0,"companies":["宜宾天原"],"sites":1,"routes":["离子膜法"],"group_count":1,"share_base":0.08064516129032258,"share_forward":0.08064516129032258},{"province":"辽宁","capacity_base":45.0,"capacity_forward":45.0,"companies":["沈阳化工"],"sites":1,"routes":["离子膜法"],"group_count":1,"share_base":0.06598240469208211,"share_forward":0.06598240469208211},{"province":"山东","capacity_base":40.0,"capacity_forward":40.0,"companies":["山东海化"],"sites":1,"routes":["离子膜法"],"group_count":1,"share_base":0.05865102639296188,"share_forward":0.05865102639296188}],"region_meta":{"新疆":{"activity":"C","downstream":"本地氯碱/PVC 一体化，烧碱以外运为主","hub":"乌鲁木齐、昌吉"},"内蒙古":{"activity":"C","downstream":"煤电氯碱一体化，PVC 与烧碱联动","hub":"乌海、鄂尔多斯"},"山东":{"activity":"A","downstream":"氧化铝/化工/PVC，全国最大氯碱集群","hub":"潍坊、东营、淄博"},"江苏":{"activity":"A","downstream":"化工/造纸/水处理，液碱半径内交易活跃","hub":"南京、连云港"},"浙江":{"activity":"A","downstream":"化工/纺织/水处理，贸易商密集","hub":"宁波、嘉兴"},"宁夏":{"activity":"C","downstream":"煤电氯碱/PVC，外运为主","hub":"银川"},"河北":{"activity":"B","downstream":"化工/氧化铝/造纸","hub":"沧州、唐山"},"广东":{"activity":"A","downstream":"化工/造纸/电子，需外埠补充","hub":"广州、惠州"},"四川":{"activity":"B","downstream":"磷化工/氧化铝/锂电","hub":"乐山、宜宾"},"河南":{"activity":"B","downstream":"氧化铝/化工","hub":"焦作、三门峡"},"陕西":{"activity":"C","downstream":"煤化工/PVC 一体化","hub":"榆林"},"青海":{"activity":"C","downstream":"盐湖化工/锂电","hub":"格尔木"}},"companies":[{"id":"中泰化学","name":"中泰化学","code":"002092","hq":"新疆","nature":"地方国企","route":"离子膜法","capacity_base":240.0,"capacity_forward":240.0,"output_base":"未披露","utilization":"数据缺口","strengths":["煤电一体化，电力成本低","规模大、外运能力强（铁路专用线）"],"risks":["距华东/华南消费地远，运费高","PVC 与烧碱联动，氯产品价格影响开工"],"procurement":"适合作为西北低成本主供，但需评估到厂运费与冬季发运；不适合作为半径内唯一来源。","sources":["S4"],"dd":["请提供最新折百产能与开工率","液氯/PVC 外销与自用比例？","铁路请车满足率与冬季发运限制？"],"sites":2,"share_base":0.3519061583577713,"share_forward":0.3519061583577713,"provinces":["新疆"],"routes":["离子膜法"],"has_profile":true},{"id":"新疆天业","name":"新疆天业","code":"600075","hq":"新疆","nature":"地方国企","route":"离子膜法","capacity_base":120.0,"capacity_forward":120.0,"output_base":"未披露","utilization":"数据缺口","strengths":["煤电一体化","滴灌/化工多业务协同"],"risks":["外运距离长","氯产品结构与 PVC 行情相关"],"procurement":"低成本备选；建议以片碱或铁路整车方式补充。","sources":["S4"],"dd":["请提供折百产能与出口占比"],"sites":1,"share_base":0.17595307917888564,"share_forward":0.17595307917888564,"provinces":["新疆"],"routes":["离子膜法"],"has_profile":true},{"id":"陕西北元","name":"陕西北元化工","code":"002082","hq":"陕西","nature":"民营/股份制","route":"离子膜法","capacity_base":110.0,"capacity_forward":110.0,"output_base":"未披露","utilization":"数据缺口","strengths":["煤电资源近，成本有优势","片碱产能配套"],"risks":["氯产品消化依赖 PVC","区域物流以铁路为主"],"procurement":"可作为华中/华北的第二源；片碱可作为应急备份。","sources":["S4"],"dd":["片碱产能与结块率？","铁路发运与到厂运费？"],"sites":1,"share_base":0.16129032258064516,"share_forward":0.16129032258064516,"provinces":["陕西"],"routes":["离子膜法"],"has_profile":true},{"id":"氯碱化工","name":"氯碱化工","code":"600618","hq":"上海","nature":"地方国企","route":"离子膜法","capacity_base":72.0,"capacity_forward":72.0,"output_base":"未披露","utilization":"数据缺口","strengths":["华东核心市场，半径短","产品质量稳定，配套完善"],"risks":["上海电价与环保成本高","装置规模有限，旺季可提量受限"],"procurement":"华东用户的天然主供候选；价格通常高于西北，但到厂综合成本可能更低。","sources":["S4"],"dd":["可签年度折百量与月度弹性？","上海地区环保/能耗约束与限产记录？"],"sites":1,"share_base":0.10557184750733138,"share_forward":0.10557184750733138,"provinces":["上海"],"routes":["离子膜法"],"has_profile":true},{"id":"宜宾天原","name":"宜宾天原集团","code":"002386","hq":"四川","nature":"地方国企","route":"离子膜法","capacity_base":55.0,"capacity_forward":55.0,"output_base":"未披露","utilization":"数据缺口","strengths":["西南本地供给","氯碱+磷化工+锂电材料协同"],"risks":["规模有限","西南水电季节性影响电价"],"procurement":"西南用户的区域主供候选；关注枯水期电价与开工变化。","sources":["S4"],"dd":["枯水期电价与开工率变化？"],"sites":1,"share_base":0.08064516129032258,"share_forward":0.08064516129032258,"provinces":["四川"],"routes":["离子膜法"],"has_profile":true},{"id":"沈阳化工","name":"沈阳化工","code":"000698","hq":"辽宁","nature":"地方国企","route":"离子膜法","capacity_base":45.0,"capacity_forward":45.0,"output_base":"未披露","utilization":"数据缺口","strengths":["东北区域供给","配套氯产品"],"risks":["区域需求偏弱、外运成本高","装置规模较小"],"procurement":"东北用户就近备选；不建议跨区大量采购。","sources":["S4"],"dd":["东北区域外销量与运费？"],"sites":1,"share_base":0.06598240469208211,"share_forward":0.06598240469208211,"provinces":["辽宁"],"routes":["离子膜法"],"has_profile":true},{"id":"山东海化","name":"山东海化","code":"000822","hq":"山东","nature":"地方国企","route":"离子膜法","capacity_base":40.0,"capacity_forward":40.0,"output_base":"未披露","utilization":"数据缺口","strengths":["原盐资源自给（与纯碱共享）","潍坊化工集群配套"],"risks":["氯碱非主营，产能调整灵活度低","与纯碱装置共用公用工程"],"procurement":"山东用户的补充源；可与纯碱打包谈判。","sources":["S4"],"dd":["氯碱与纯碱装置的公用工程分配？"],"sites":1,"share_base":0.05865102639296188,"share_forward":0.05865102639296188,"provinces":["山东"],"routes":["离子膜法"],"has_profile":true}],"plants":[{"id":"CS01","company_id":"中泰化学","site":"阜康能源","province":"新疆","city":"昌吉","lat":44.15,"lon":87.98,"route":"离子膜法","capacity_base":180.0,"capacity_forward":180.0,"product":"液碱/片碱/PVC","raw":"原盐+煤电","status":"在产","listed":"002092","source":"S4","note":"示例量级：新疆煤电一体化氯碱"},{"id":"CS02","company_id":"中泰化学","site":"托克逊能化","province":"新疆","city":"吐鲁番","lat":42.79,"lon":88.65,"route":"离子膜法","capacity_base":60.0,"capacity_forward":60.0,"product":"液碱/PVC","raw":"原盐+煤电","status":"在产","listed":"002092","source":"S4","note":"示例量级"},{"id":"CS03","company_id":"氯碱化工","site":"漕泾基地","province":"上海","city":"上海","lat":30.78,"lon":121.42,"route":"离子膜法","capacity_base":72.0,"capacity_forward":72.0,"product":"液碱/片碱","raw":"原盐+网电","status":"在产","listed":"600618","source":"S4","note":"示例量级：华东高价位市场"},{"id":"CS04","company_id":"新疆天业","site":"石河子基地","province":"新疆","city":"石河子","lat":44.31,"lon":86.08,"route":"离子膜法","capacity_base":120.0,"capacity_forward":120.0,"product":"液碱/PVC","raw":"原盐+煤电","status":"在产","listed":"600075","source":"S4","note":"示例量级"},{"id":"CS05","company_id":"陕西北元","site":"神木锦界","province":"陕西","city":"榆林","lat":38.83,"lon":110.49,"route":"离子膜法","capacity_base":110.0,"capacity_forward":110.0,"product":"液碱/片碱/PVC","raw":"原盐+煤电","status":"在产","listed":"002082","source":"S4","note":"示例量级"},{"id":"CS06","company_id":"宜宾天原","site":"宜宾基地","province":"四川","city":"宜宾","lat":28.77,"lon":104.62,"route":"离子膜法","capacity_base":55.0,"capacity_forward":55.0,"product":"液碱/片碱/PVC","raw":"原盐+电力","status":"在产","listed":"002386","source":"S4","note":"示例量级：西南市场"},{"id":"CS07","company_id":"沈阳化工","site":"沈阳基地","province":"辽宁","city":"沈阳","lat":41.8,"lon":123.43,"route":"离子膜法","capacity_base":45.0,"capacity_forward":45.0,"product":"液碱/PVC","raw":"原盐+网电","status":"在产","listed":"000698","source":"S4","note":"示例量级"},{"id":"CS08","company_id":"山东海化","site":"潍坊碱厂配套氯碱","province":"山东","city":"潍坊","lat":37.02,"lon":119.13,"route":"离子膜法","capacity_base":40.0,"capacity_forward":40.0,"product":"液碱/氯产品","raw":"原盐+自备电","status":"在产","listed":"000822","source":"S4","note":"示例量级：与纯碱共享原盐资源"}],"projects":[{"id":"CJ01","name":"华东离子膜烧碱扩建（示例）","company_id":"氯碱化工","province":"上海","route":"离子膜法","capacity":20.0,"capacity_retired":0.0,"type":"扩建","status":"在建","date":"2026-09","year":2026,"step":"土建/设备招标","net":20.0,"net_label":"+20","impact":"净新增 20 万吨折百，主要覆盖华东液碱市场。","source":"S5"},{"id":"CJ02","name":"西北氯碱一体化二期（示例）","company_id":"新疆天业","province":"新疆","route":"离子膜法","capacity":40.0,"capacity_retired":0.0,"type":"新建","status":"在建","date":"2026-12","year":2026,"step":"设备安装","net":40.0,"net_label":"+40","impact":"低成本产能继续向西北集中，外运压力增加。","source":"S5"},{"id":"CJ04","name":"老隔膜装置退出（示例）","company_id":"其他","province":"河北","route":"隔膜法","capacity":0.0,"capacity_retired":30.0,"type":"退出","status":"拟建","date":"2027-03","year":2027,"step":"淘汰计划","net":-30.0,"net_label":"-30","impact":"隔膜法退出，净减 30 万吨；如无新增对冲，区域供给收紧。","source":"S5"},{"id":"CJ03","name":"西南氯碱技改扩能（示例）","company_id":"宜宾天原","province":"四川","route":"离子膜法","capacity":15.0,"capacity_retired":0.0,"type":"技改","status":"拟建","date":"2027-06","year":2027,"step":"环评公示","net":null,"net_label":"待确认","impact":"净增待确认（技改可能以置换老装置方式实施）。","source":"S5"},{"id":"CJ05","name":"华北离子膜置换隔膜（示例）","company_id":"其他","province":"河北","route":"离子膜法","capacity":30.0,"capacity_retired":30.0,"type":"置换","status":"在建","date":"2027-09","year":2027,"step":"施工","net":0.0,"net_label":"+0","impact":"置换，净增为 0；但能效提升会降低现金成本。","source":"S5"}],"markets":[{"region":"华东","price":2900,"note":"江苏/浙江/山东南部；氯碱集中，液碱半径内竞争充分","source":"S3"},{"region":"西北","price":2350,"note":"新疆/内蒙古/宁夏；煤电一体化成本低，但外运半径远","source":"S3"},{"region":"华北","price":2750,"note":"山东/河北/天津；氧化铝与化工需求集中","source":"S3"},{"region":"华南","price":3150,"note":"广东/福建；本地产能不足，靠外埠与进口补充","source":"S3"},{"region":"西南","price":3050,"note":"四川/重庆/云南；氧化铝与磷化工需求","source":"S3"}],"prices":{"lines":[{"name":"32% 液碱（折百）","color":"#0f766e"}],"annual":[{"year":2022,"avg":3600,"low":2800,"high":5200,"note":"能耗双控 + 氧化铝高开工，价格冲高（示例量级）","source":"S3"},{"year":2023,"avg":2900,"low":2200,"high":3800,"note":"氯碱利润修复，价格回落（示例量级）","source":"S3"},{"year":2024,"avg":2700,"low":2100,"high":3400,"note":"需求偏弱、新增产能释放（示例量级）","source":"S3"},{"year":2025,"avg":2800,"low":2300,"high":3600,"note":"氧化铝阶段性高开工支撑（示例量级）","source":"S3"}],"periods":[{"period":"2022 高位","time":"2022 全年","light":"32% 液碱 4,500–5,200","heavy":"片碱 4,800–5,500","avg":"约 3,600","change":"上半年 +40% 后回落","driver":"能耗双控、氧化铝高开工、液氯贴钱","source":"S3"},{"period":"2023–2024 回落","time":"2023-01 ~ 2024-12","light":"2,100–3,800","heavy":"2,600–4,200","avg":"约 2,700–2,900","change":"中枢下移约 25%","driver":"氯碱新增产能、需求走弱、出口分流","source":"S3"},{"period":"2025 震荡","time":"2025 全年","light":"2,300–3,600","heavy":"2,800–4,000","avg":"约 2,800","change":"区间震荡","driver":"氧化铝开工、液氯价格、区域价差","source":"S3"}],"current":[{"label":"32% 液碱折百（华东）","value":2900,"date":"2026-10-19","source":"S3"},{"label":"片碱（华东）","value":3200,"date":"2026-10-19","source":"S3"},{"label":"西北出厂（折百）","value":2350,"date":"2026-10-19","source":"S3"}],"outlook":{"base":"2,600–3,100 元/吨区间震荡：成本端由电价与液氯价格共同决定，需求端看氧化铝与化工开工。","up":"氧化铝集中备货、氯产品滞销导致降负荷、区域检修叠加。","down":"氯碱新增产能释放、液氯价格高企（企业愿意多产碱）、下游需求走弱。","procurement":"液碱按区域锁量；片碱作为备份；价格条款与电价/液氯挂钩更贴近成本实际。"},"caveat":"本示例价格为演示用的量级数字，不是当日真实报价；实际使用必须替换为当日 100ppi/隆众/卓创等公开报价并标注日期、浓度与折百口径。"},"strategies":[{"title":"液碱半径内双源","how":"主供选 300 km 内离子膜法装置，第二源选 500 km 内或具备水运/铁路的装置。","terms":"折百口径、浓度（32%/50%）、到厂价、月度量、断供赔付。","kpi":"半径内双源覆盖 100%；断供天数 0"},{"title":"片碱做备份而非主力","how":"保留 10%–20% 片碱额度用于液碱紧张期；配套溶解设施需提前确认。","terms":"片碱纯度、结块率、包装（25 kg/吨包）、溶解成本。","kpi":"切换时间 ≤7 天"},{"title":"碱氯联动定价","how":"价格公式挂钩电价与液氯价格，避免单边锁价。","terms":"调价周期、上下限、异常波动重谈。","kpi":"价格偏离市场 ≤5%"},{"title":"20 天安全库存","how":"液碱储罐容量决定库存上限；片碱仓储备份 7–10 天。","terms":"储罐归属、损耗率（液碱约 0.5%–1%/月）、盘点。","kpi":"库存周转 12–18 次/年"}],"supplier_mix":[{"type":"半径内液碱主供","share":0.6,"candidates":"区域内离子膜法装置","role":"成本与交付主力","color":"#0f766e"},{"type":"半径内第二源","share":0.2,"candidates":"500 km 内或水运可达装置","role":"断供保险","color":"#1d4ed8"},{"type":"片碱备份","share":0.12,"candidates":"西北/华北片碱厂","role":"紧缺期调剂","color":"#b45309"},{"type":"贸易商现货","share":0.08,"candidates":"区域贸易商","role":"弹性与小额补单","color":"#94a3b8"}],"risks":[{"risk":"碱氯平衡导致降负荷","likelihood":"高","impact":"高","level":"高","evidence":"每吨烧碱联产约 0.88 吨液氯；液氯难储运，滞销时企业必须降负荷。","action":"尽调必问氯产品结构（PVC/环氧丙烷/盐酸/氯化石蜡）与液氯外销量；合同中写入降负荷通知期。"},{"risk":"液碱运输半径限制","likelihood":"高","impact":"高","level":"高","evidence":"液碱含大量水，运费占比高，经济半径通常 300–500 km。","action":"按半径寻源；长距离量改用片碱或提高储罐容量。"},{"risk":"电价与能耗政策","likelihood":"中高","impact":"高","level":"中高","evidence":"电解是主要成本项；能耗双控、阶梯电价直接抬升现金成本。","action":"优先煤电一体化/绿电比例高的供应商；把电价条款写入价格公式。"},{"risk":"折百口径混淆","likelihood":"中高","impact":"中","level":"中高","evidence":"32% 液碱实物量 × 0.32 = 折百量；片碱约 99%。合同若只写「吨」极易产生纠纷。","action":"合同与结算统一写「折百吨」并注明浓度检测方法。"},{"risk":"区域供给集中","likelihood":"中","impact":"中","level":"中","evidence":"氯碱产能集中在西北与华东，华南/西南需外埠补充。","action":"华南/西南买家提高安全库存与片碱备份比例。"},{"risk":"质量与浓度波动","likelihood":"中","impact":"中","level":"中","evidence":"液碱浓度、碳酸钠、氯化钠、铁含量影响下游工艺。","action":"封样 + 首批全检 + 每批 COA；浓度低于约定值按折百量补差。"}],"gaps":[{"gap":"全国产能与产量（协会口径）","impact":"集中度与开工率判断","status":"本示例用公开报道量级","fill":"中国氯碱工业协会年报、石化联合会统计","priority":"高"},{"gap":"企业级折百产能明细","impact":"区域与集中度被低估","status":"仅收录代表性企业","fill":"上市公司年报、环评公示、能耗核查文件","priority":"高"},{"gap":"按省贸易商数量","impact":"渠道与议价判断","status":"公开统计缺失","fill":"企查查/天眼查检索 + 协会名录","priority":"中高"},{"gap":"企业液氯消化结构","impact":"实际开工与保供能力","status":"非公开","fill":"年报分产品收入 + 现场审核","priority":"高"},{"gap":"分企业现金成本与电价","impact":"成本曲线与议价","status":"非公开","fill":"能耗核查公示、年报、供应商成本问卷","priority":"中高"},{"gap":"区域库存与港口数据","impact":"区域价差与紧缺判断","status":"部分公开","fill":"隆众/卓创周度库存","priority":"中"}],"dd":[["供应能力","折百产能、产线数量、实际开工率与 2025 年产量？"],["供应能力","氯产品结构（PVC/环氧丙烷/盐酸/氯化石蜡）与液氯外销量？"],["供应能力","未来 12 个月检修计划与最长停车天数？"],["供应能力","可签年度折百量、月均可提量、最小批量？"],["质量","浓度（32%/50%/99%）、碳酸钠、氯化钠、铁含量典型值与波动？"],["质量","是否接受封样、首批全检、第三方检测？"],["成本","电价结构（自备电厂/绿电/网电）与用电成本？"],["成本","原盐自给率与采购结构？"],["成本","现金成本与综合氯碱利润？"],["物流","液碱槽车/船运能力、半径、运费与时效？"],["物流","片碱包装与溶解配套？"],["商务","折百口径、调价周期、上下限？"],["商务","账期、承兑、履约保函？"],["合规","排污许可、能耗指标、安全许可？"],["合规","近三年环保/安全处罚记录？"],["财务","近三年营收/利润/现金流/负债率？"]],"scorecard":[["供应能力",22,"折百产能、开工稳定性、氯产品消化、检修保障"],["质量与一致性",18,"浓度、杂质、批次波动、COA"],["成本竞争力",18,"电价、原盐自给率、氯碱综合利润"],["物流与交付",17,"半径、槽车/船运、时效、片碱备份"],["商务条件",10,"折百口径、价格公式、账期、赔付"],["财务与信用",8,"现金流、负债、授信"],["合规与ESG",7,"排污/能耗/安全、处罚"]],"sources":[{"id":"S1","name":"中国氯碱工业协会统计（示例引用位）","publisher":"中国氯碱工业协会","date":"2025-12-31","url":"https://www.chyxx.com/industry/","used":"全国烧碱产能/产量量级（示例；正式使用请换成协会/机构原文链接）","confidence":"中"},{"id":"S2","name":"氯碱工艺与碱氯平衡（示例引用位）","publisher":"行业公开资料","date":"2025-06-30","url":"https://www.100ppi.com/","used":"离子膜/隔膜占比、单耗、液氯联产比例（示例）","confidence":"中"},{"id":"S3","name":"烧碱价格与区域价差（示例引用位）","publisher":"生意社 / 隆众资讯","date":"2026-10-19","url":"https://www.100ppi.com/","used":"液碱/片碱价格、区域价差（演示用数字）","confidence":"中"}]};
+</script>
+<script>
+/* ================================================================== app.js
+ * 通用化工品供应格局报告 · 交互脚本（产品无关）
+ * 所有产品差异来自 DATA（由 build_all.py 注入），本文件不出现任何产品名。
+ * 功能：标签页、企业抽屉、项目抽屉、企业表筛选排序。
+ * ================================================================== */
+(function () {
+  "use strict";
+  const DATA = window.DATA || {};
+  const META = DATA.meta || {};
+  const PRODUCT = META.product || {};
+  const YEAR = (META.scope && META.scope.base_year) || "";
+  const MISSING = "数据缺口";
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const nz = (v) => (v == null ? 0 : Number(String(v).replace(/[^\d.\-]/g, "")) || 0);
+
+  /* ---------------------------------------------------------------- 提示条 */
+  let toastTimer = null;
+  function toast(msg) {
+    const t = $("#toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  /* ---------------------------------------------------------------- 标签页 */
+  function activateTab(id) {
+    $$(".tab-btn").forEach((b) => {
+      const on = b.dataset.tab === id;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    $$(".tab-panel").forEach((p) => p.classList.toggle("active", p.id === "tab-" + id));
+    if (history.replaceState) history.replaceState(null, "", "#tab-" + id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $$(".tab-btn").forEach((b) => b.addEventListener("click", () => activateTab(b.dataset.tab)));
+  if (location.hash && location.hash.indexOf("#tab-") === 0) {
+    const id = location.hash.slice(5);
+    if ($("#tab-" + id)) activateTab(id);
+  }
+
+  /* ---------------------------------------------------------------- 抽屉 */
+  const overlay = $("#drawerOverlay");
+  const drawer = $("#drawer");
+  function openDrawer(kind, id) {
+    if (!drawer) return;
+    const wrap = kind === "project" ? $("#drawerPrj") : $("#drawerCo");
+    if (!wrap) return;
+    if ($("#drawerCo")) $("#drawerCo").hidden = kind === "project";
+    if ($("#drawerPrj")) $("#drawerPrj").hidden = kind !== "project";
+    const attr = kind === "project" ? "project" : "company";
+    let found = false;
+    $$(".drawer-card", wrap).forEach((c) => {
+      const hit = c.dataset[attr] === String(id);
+      c.style.display = hit ? "" : "none";
+      if (hit) found = true;
+    });
+    const eyebrow = $("#drawerEyebrow");
+    const title = $("#drawerTitle");
+    const sub = $("#drawerSub");
+    if (kind === "project") {
+      const p = (DATA.projects || []).find((x) => String(x.id) === String(id));
+      if (eyebrow) eyebrow.textContent = "PROJECT SUPPLY CHANGE";
+      if (title) title.textContent = p ? p.name : "项目";
+      if (sub) sub.textContent = p ? [p.company_id, p.province, p.date].filter(Boolean).join(" · ") : "";
+    } else {
+      const c = (DATA.companies || []).find((x) => String(x.id) === String(id));
+      if (eyebrow) eyebrow.textContent = "COMPANY DUE DILIGENCE";
+      if (title) title.textContent = c ? c.name : "企业";
+      if (sub) sub.textContent = c
+        ? [(c.code || "未上市/未披露"), (c.provinces || []).join("、")].filter(Boolean).join(" · ") : "";
+    }
+    if (!found) toast("该条目缺少明细数据");
+    drawer.classList.add("open");
+    if (overlay) overlay.classList.add("show");
+    drawer.setAttribute("aria-hidden", "false");
+    drawer.scrollTop = 0;
+  }
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove("open");
+    if (overlay) overlay.classList.remove("show");
+    drawer.setAttribute("aria-hidden", "true");
+  }
+  const closeBtn = $("#drawerClose");
+  if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+  if (overlay) overlay.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+  function bindCards() {
+    $$("[data-company]").forEach((el) => {
+      if (el.dataset.bound) return;
+      el.dataset.bound = "1";
+      const go = (e) => {
+        if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
+        if (e.type === "keydown") e.preventDefault();
+        openDrawer("company", el.dataset.company);
+      };
+      el.addEventListener("click", go);
+      el.addEventListener("keydown", go);
+    });
+    $$("[data-project]").forEach((el) => {
+      if (el.dataset.bound) return;
+      el.dataset.bound = "1";
+      const go = (e) => {
+        if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
+        if (e.type === "keydown") e.preventDefault();
+        openDrawer("project", el.dataset.project);
+      };
+      el.addEventListener("click", go);
+      el.addEventListener("keydown", go);
+    });
+  }
+  bindCards();
+
+  /* ---------------------------------------------------------------- 企业表 */
+  function sortRows(mode) {
+    const tbody = $("#companyTable tbody");
+    if (!tbody) return;
+    const rows = $$("tr[data-company]", tbody);
+    const key = (tr) => {
+      const tds = tr.children;
+      if (mode === "name") return tds[0].textContent.trim();
+      if (mode === "share") return -nz(tds[6] ? tds[6].textContent : 0);
+      return -nz(tds[4] ? tds[4].textContent : 0);
+    };
+    rows.sort((a, b) => {
+      const ka = key(a), kb = key(b);
+      return (typeof ka === "string") ? ka.localeCompare(kb, "zh-CN") : ka - kb;
+    });
+    rows.forEach((r) => tbody.appendChild(r));
+  }
+  const search = $("#coSearch");
+  const sortSel = $("#coSort");
+  function filterRows() {
+    const q = ((search && search.value) || "").trim().toLowerCase();
+    const tbody = $("#companyTable tbody");
+    if (!tbody) return;
+    let shown = 0;
+    $$("tr[data-company]", tbody).forEach((tr) => {
+      const hit = !q || tr.textContent.toLowerCase().indexOf(q) >= 0;
+      tr.style.display = hit ? "" : "none";
+      if (hit) shown += 1;
+    });
+    const cnt = $("#coCount");
+    if (cnt) cnt.textContent = "显示 " + shown + " / " + (DATA.companies || []).length + " 家";
+  }
+  if (search) search.addEventListener("input", filterRows);
+  if (sortSel) sortSel.addEventListener("change", () => { sortRows(sortSel.value); filterRows(); });
+  filterRows();
+
+  document.documentElement.classList.add("js-ready");
+  console.log("[chem-supply-map] ready ·", (PRODUCT.short || PRODUCT.name || ""), YEAR,
+    "· companies", (DATA.companies || []).length, "· projects", (DATA.projects || []).length);
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "title": "示例化工品客户多维判断卡",
+    "product": "待填写：产品+规格（如 98% 硫酸 / 重质纯碱）",
+    "seller": "待填写：发货地 · 角色 · 月可供量",
+    "as_of": "2026-10",
+    "thresholds": {"high": 75, "mid": 55},
+    "method_line": "事实优先，评级只做锚点",
+    "lede": "把每个维度的「事实」写满，评级自然就出来了。",
+    "estimate_note": "需求 ≈ 客户产量/熔量 × 单耗 × 年运行天数（单耗见 references/scoring-rubric.md）；成交前以客户确认数为准。",
+    "estimate_bullets": [
+      "年需求量 ≈ 客户产能 × 单耗 × 年运行天数（单耗取行业参考区间中值）；",
+      "年采购额按现价估算；运费按 0.35–0.5 元/吨·公里；",
+      "产线/开工数据以最近一期财报、环评、行业产线动态为准。"
+    ],
+    "footer": "<b>口径：</b>需求与运费为估算；<b>来源：</b>公开信息，链接见各卡依据。"
+  },
+  "dimensions": [
+    {"key": "match", "name": "产品匹配", "hint": "用途是否对口、采购体系是否开放、能否投标进入", "rubric": "高：直接用户且采购公开；中：对口但门槛不明；低：规格不符"},
+    {"key": "demand", "name": "需求规模", "hint": "年采购量与采购额", "rubric": "高：年需求≥20 万吨；中：5–20 万吨；低：<5 万吨"},
+    {"key": "capacity", "name": "真实产能", "hint": "是否在产、开工率、改造/冷修", "rubric": "高：满开盈利；中：部分冷修；低：大面积停产"},
+    {"key": "scale", "name": "企业规模", "hint": "营收/资产规模与信用", "rubric": "高：龙头盈利；中：中型亏损；低：小微/不透明"},
+    {"key": "region", "name": "距离/区域", "hint": "运距与运费占比", "rubric": "高：≤600km；中：600–1200km；低：>1200km"},
+    {"key": "chance", "name": "近期机会", "hint": "投产/招标/扩建窗口", "rubric": "高：6 个月内有节点；中：12 个月；低：无节点"},
+    {"key": "risk", "name": "不确定性", "hint": "资信、账期、锁价风险（越低越好）", "rubric": "高：连亏+长账期；中：不透明；低：盈利+付款好（分数低=风险大）"}
+  ],
+  "market": [
+    {"metric": "待填写：本品现货价", "value": "≈X 元/吨", "when": "2026-10", "source": "待填写", "url": "https://example.com/price"}
+  ],
+  "presets": [
+    {"key": "even", "name": "均衡", "weights": {"match": 1, "demand": 1, "capacity": 1, "scale": 1, "region": 1, "chance": 1, "risk": 1}},
+    {"key": "region", "name": "距离更重要", "weights": {"match": 0.5, "demand": 0.5, "capacity": 0.5, "scale": 0.5, "region": 2.5, "chance": 0.5, "risk": 0.5}}
+  ],
+  "customers": [
+    {
+      "id": "cust1",
+      "name": "示例客户（请替换）",
+      "code": "待填写：证券代码或 非上市·城市",
+      "location": "待填写：所在地/基地",
+      "distance": "待填写：≈X km（公路，估）",
+      "demand": "待填写：≈X 万吨/年（估）",
+      "spend": "待填写：≈X 亿元/年",
+      "tags": "待填写：业务标签",
+      "priority": "P2",
+      "priority_note": "示例",
+      "action": "待填写：跟进打法（先做什么、卡什么节点、谈什么条件）",
+      "best": "待填写：最强积极信号（一句话，必须能被证据支撑）",
+      "doubts": ["待填写：主要疑点（至少 1 条）"],
+      "asks": [
+        {"q": "待填写：要确认的第一件事", "dim": "影响哪个维度", "why": "为什么重要", "who": "找谁问"},
+        {"q": "待填写：要确认的第二件事", "dim": "影响哪个维度", "why": "为什么重要", "who": "找谁问"},
+        {"q": "待填写：要确认的第三件事", "dim": "影响哪个维度", "why": "为什么重要", "who": "找谁问"}
+      ],
+      "dims": {
+        "match": {"level": "中", "score": 60, "basis": "估算", "fact": "待填写：是否用该原料、规格能否满足、是否有公开招标。", "evidence": [{"label": "示例来源：请替换为真实链接", "url": "https://example.com/src1", "date": "2026-10"}]},
+        "demand": {"level": "中", "score": 60, "basis": "估算", "fact": "待填写：产能/熔量 × 单耗 → 年需求量与采购额。", "evidence": [{"label": "示例来源：请替换为真实链接", "url": "https://example.com/src2", "date": "2026-10"}]},
+        "capacity": {"level": "中", "score": 60, "basis": "核实", "fact": "待填写：是否在产、是否有冷修/改造计划。", "evidence": [{"label": "示例来源：请替换为真实链接", "url": "https://example.com/src3", "date": "2026-10"}]},
+        "scale": {"level": "中", "score": 60, "basis": "核实", "fact": "待填写：最近一期营收、利润、信用状况。", "evidence": [{"label": "示例来源：请替换为真实链接", "url": "https://example.com/src4", "date": "2026-10"}]},
+        "region": {"level": "中", "score": 60, "basis": "估算", "fact": "待填写：运距、运费占货值比例、是否在竞争半径。", "evidence": [{"label": "示例来源：请替换为真实链接", "url": "https://example.com/src5", "date": "2026-10"}]},
+        "chance": {"level": "中", "score": 60, "basis": "核实", "fact": "待填写：6–12 个月内的投产/招标/扩建节点。", "evidence": [{"label": "示例来源：请替换为真实链接", "url": "https://example.com/src6", "date": "2026-10"}]},
+        "risk": {"level": "中", "score": 55, "basis": "研判", "fact": "待填写：连亏/账期/承兑/锁价风险（分数低=风险大）。", "evidence": [{"label": "示例来源：请替换为真实链接", "url": "https://example.com/src7", "date": "2026-10"}]}
+      },
+      "sources": [
+        {"type": "年报", "label": "示例：最近一期年报", "url": "https://example.com/report", "date": "2026-04"},
+        {"type": "公告", "label": "示例：扩产/招标公告", "url": "https://example.com/notice", "date": "2026-06"},
+        {"type": "行业资讯", "label": "示例：产线动态", "url": "https://example.com/news", "date": "2026-08"},
+        {"type": "报价", "label": "示例：行情报价", "url": "https://example.com/price", "date": "2026-10"}
+      ]
+    }
+  ]
+}

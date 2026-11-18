@@ -1,0 +1,22 @@
+[
+ {
+  "id": "1072022",
+  "title": "9月15日 甲醇最新价格",
+  "error": "fetch failed https://www.chemicalbook.com/PriceInfo_1072022.htm (blocked)"
+ },
+ {
+  "id": "1012823",
+  "title": "7月14日 甲醇最新价格",
+  "error": "fetch failed https://www.chemicalbook.com/PriceInfo_1012823.htm (blocked)"
+ },
+ {
+  "id": "145504",
+  "title": "8月22日甲醇最新价格",
+  "error": "fetch failed https://www.chemicalbook.com/PriceInfo_145504.htm (blocked)"
+ },
+ {
+  "id": "123547",
+  "title": "4月17日甲醇价格为2831.25元/吨",
+  "error": "fetch failed https://www.chemicalbook.com/PriceInfo_123547.htm (blocked)"
+ }
+]

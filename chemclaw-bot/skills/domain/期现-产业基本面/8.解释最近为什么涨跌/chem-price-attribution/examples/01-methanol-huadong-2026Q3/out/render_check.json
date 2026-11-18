@@ -1,0 +1,114 @@
+{
+ "url": "file:///./attrib-skill/examples/01-methanol-huadong-2026Q3/out/华东甲醇_归因报告.html",
+ "errors": [],
+ "consoleCount": 0,
+ "console": [],
+ "page": {
+  "title": "华东甲醇 2026-06-30 → 2026-10-19 多因素行情归因",
+  "echarts": "object",
+  "kpi": [
+   "k-spot=+41.00%",
+   "k-fut=+29.45%",
+   "k-basis=385 → 824",
+   "k-ev=48 / 12"
+  ],
+  "treeCards": 8,
+  "treeChips": 8,
+  "eventRows": 12,
+  "eventChips": 5,
+  "hypotheses": 6,
+  "periods": 5,
+  "matrixRows": 9,
+  "matrixCols": 6,
+  "sensRows": 6,
+  "clusterRows": 4,
+  "gapRows": 7,
+  "legendRows": 5,
+  "rehabParas": 4,
+  "oneLiner": "一句话：这是一轮“外生地缘冲击打穿进口端 + 国内低库存放大 + 下游利润被击穿后负反馈”的三段式行情，不是单一煤炭成本推动；价格在 10/9 见顶后回落，回落的第一顺序证据是 MTO 降负停车的需求负反馈，而不是成本回落。",
+  "charts": [
+   {
+    "id": "chart-main",
+    "w": 667,
+    "h": 340,
+    "canvas": 1,
+    "px": "667x340"
+   },
+   {
+    "id": "chart-levels",
+    "w": 667,
+    "h": 340,
+    "canvas": 1,
+    "px": "667x340"
+   },
+   {
+    "id": "chart-ret",
+    "w": 667,
+    "h": 340,
+    "canvas": 1,
+    "px": "667x340"
+   },
+   {
+    "id": "chart-vol",
+    "w": 667,
+    "h": 340,
+    "canvas": 1,
+    "px": "667x340"
+   },
+   {
+    "id": "chart-local",
+    "w": 1350,
+    "h": 300,
+    "canvas": 1,
+    "px": "1350x300"
+   },
+   {
+    "id": "chart-events",
+    "w": 699,
+    "h": 440,
+    "canvas": 1,
+    "px": "699x440"
+   }
+  ],
+  "docHeight": 12279,
+  "badges": "bE1:15 bE2:32 bE3:34 bE4:6"
+ },
+ "drawer": {
+  "open": true,
+  "title": "E1 基差·月差·期现结构",
+  "bodyLen": 480,
+  "canvases": 1,
+  "tables": 0,
+  "links": 1
+ },
+ "filterTree": 2,
+ "filterEvents": 2,
+ "hypOpen": 1,
+ "localDefault": {
+  "rows": 32,
+  "chips": 6,
+  "sels": 2,
+  "events": 4,
+  "counterShown": true,
+  "canvas": 1,
+  "head": "区间 2026-10-09 → 2026-10-19（7 个交易日）｜现货 4733.33 → 3966.67｜-16.20%｜期货 3338 → 3143\n等级\t因子\t指标\t区间变化\t判断\nE1\t期现结构 基差·月差·期现结构\t月差 MA2611-MA2612\t-58.82%\t区间内 -58.82%（z=-2.04），方向与现货一致且显著\nE3\t期现结构 基差·月差·期现结构\t基差（现货−MA2611）\t-29.68%\t区间内 -29"
+ },
+ "localChip": {
+  "rows": 32,
+  "chips": 6,
+  "sels": 2,
+  "events": 1,
+  "counterShown": true,
+  "canvas": 1,
+  "head": "区间 2026-08-26 → 2026-09-10（12 个交易日）｜现货 2990.00 → 3706.67｜+23.97%｜期货 2769 → 3430\n等级\t因子\t指标\t区间变化\t判断\nE1\t期现结构 基差·月差·期现结构\t月差 MA2611-MA2612\t+121.15%\t区间内 +121.15%（z=1.19），方向与现货一致且显著\nE1\t需求 下游需求（MTO 与聚烯烃）\t大商所聚丙烯主连（PP0）\t+15.06%\t区间内"
+ },
+ "localSelect": {
+  "rows": 32,
+  "chips": 6,
+  "sels": 2,
+  "events": 2,
+  "counterShown": true,
+  "canvas": 1,
+  "head": "区间 2026-10-12 → 2026-10-19（6 个交易日）｜现货 4643.33 → 3966.67｜-14.57%｜期货 3229 → 3143\n等级\t因子\t指标\t区间变化\t判断\nE1\t期现结构 基差·月差·期现结构\t月差 MA2611-MA2612\t-35.33%\t区间内 -35.33%（z=-1.27），方向与现货一致且显著\nE3\t期现结构 基差·月差·期现结构\t基差（现货−MA2611）\t-42.96%\t区间内 -42"
+ }
+}

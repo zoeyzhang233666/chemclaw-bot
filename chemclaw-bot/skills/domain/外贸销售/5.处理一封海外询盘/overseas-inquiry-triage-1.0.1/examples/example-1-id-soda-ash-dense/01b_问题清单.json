@@ -1,0 +1,95 @@
+{
+  "client_questions": [
+    {
+      "field": "grade",
+      "label_cn": "等级 / 牌号",
+      "label_en": "Grade",
+      "priority": 1,
+      "status": "ambiguous",
+      "question_en": "We will execute your value specifications: Na2CO3 ≥ 99.2% min; Fe ≤ 0.003%; +80 mesh ≥ 75% min. Could you confirm these are the values you will verify on arrival?",
+      "reason_cn": "客户未给等级/牌号，但已给数值规格（Na2CO3 ≥ 99.2% min；Fe ≤ 0.003%；+80 mesh ≥ 75% min）→ 按数值规格执行，只需客户核对数值。",
+      "anchor": "Quality : Na2CO3 99.2% min; Fe 0.003% max; particle size +80 mesh 75% min",
+      "internal": "客户所称等级是否对应我方现有产品线？"
+    },
+    {
+      "field": "currency",
+      "label_cn": "币种",
+      "label_en": "Currency",
+      "priority": 1,
+      "status": "missing",
+      "question_en": "Could you confirm the quotation currency (USD / EUR)?",
+      "reason_cn": "我方报价币种确认。",
+      "anchor": "",
+      "internal": "我方报价币种确认。"
+    },
+    {
+      "field": "price_basis",
+      "label_cn": "价格基础",
+      "label_en": "Price basis",
+      "priority": 1,
+      "status": "ambiguous",
+      "question_en": "May we confirm that a quotation per MT, CFR Semarang, Incoterms 2020, in USD is the basis you require?",
+      "reason_cn": "价格基础已可拼出，但**单价**属销售/报价环节，本技能不产生任何价格。",
+      "anchor": "CFR Semarang, Indonesia",
+      "internal": ""
+    },
+    {
+      "field": "payment",
+      "label_cn": "付款方式",
+      "label_en": "Payment terms",
+      "priority": 1,
+      "status": "ambiguous",
+      "question_en": "We note that you require payment by L/C. To prepare the offer correctly, could you confirm the L/C type (at sight or usance) and the validity period?",
+      "reason_cn": "客户只说 L/C，未给类型（即期/远期）、有效期、开证行、是否保兑 → 不构成可执行付款条件。",
+      "anchor": "Payment: L/C.",
+      "internal": "我方能否接受客户付款方式，并给出我方条件。"
+    }
+  ],
+  "internal_confirm": [
+    {
+      "field": "pack_std",
+      "label_cn": "包装",
+      "desc": "我方标准出口包装方案（袋型 / 袋重 / 内衬 / 托盘）"
+    },
+    {
+      "field": "delivery_time",
+      "label_cn": "交期 / 装运期",
+      "desc": "排产可承诺的装运期"
+    },
+    {
+      "field": "quote_validity",
+      "label_cn": "报价有效期",
+      "desc": "报价有效天数"
+    },
+    {
+      "field": "sample_req",
+      "label_cn": "样品要求",
+      "desc": "样品政策（数量 / 样品费 / 运费承担）"
+    },
+    {
+      "field": "doc_form_e",
+      "label_cn": "FORM E 等优惠原产地证",
+      "desc": "能否出具 FORM E"
+    },
+    {
+      "field": "doc_coo",
+      "label_cn": "原产地证 CO",
+      "desc": "能否出具原产地证"
+    },
+    {
+      "field": "doc_inspection",
+      "label_cn": "第三方检验",
+      "desc": "能否配合第三方检验及费用"
+    },
+    {
+      "field": "payment",
+      "label_cn": "付款方式",
+      "desc": "我方可接受付款条件"
+    },
+    {
+      "field": "lc_terms",
+      "label_cn": "信用证条件",
+      "desc": "信用证可接受范围"
+    }
+  ]
+}

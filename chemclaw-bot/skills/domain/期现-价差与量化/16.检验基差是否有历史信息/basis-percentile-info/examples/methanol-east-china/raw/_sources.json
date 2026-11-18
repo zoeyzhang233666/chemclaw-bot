@@ -1,0 +1,22 @@
+{
+  "spot": {
+    "file": "spot_methanol_100ppi_benchmark.csv",
+    "rows": 1083,
+    "first": "2022-08-17",
+    "last": "2026-10-20",
+    "source": "https://me.100ppi.com/news/list--1217-1..60.html",
+    "caliber": "生意社甲醇基准价（全国交易指导价，含税，元/吨）"
+  },
+  "futures": {
+    "dir": "./basis16\\raw",
+    "api": "https://stock.finance.sina.com.cn/futures/api/jsonp.php/.../getDailyKLine",
+    "fields": "d,o,h,l,c,v,p(持仓量),s(结算价)"
+  },
+  "basis_rate_verify": {
+    "file": "verify_100ppi_basis_rate.csv",
+    "rows": 4505,
+    "source": "https://www.100ppi.com/graph/future.php?f=futures_date&ppid=817",
+    "note": "主力基差率 = (现货-主力期货)/现货；只用于核验重建口径"
+  },
+  "fetched_at": "2026-10-20 18:33:41"
+}

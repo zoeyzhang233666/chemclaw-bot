@@ -1,0 +1,312 @@
+{
+  "schema_version": "1.0",
+  "_README": [
+    "这是最小可跑骨架。复制本文件为 examples/<你的案例>/data.json 后逐项填写。",
+    "校验命令：python scripts/validate.py <你的 data.json>",
+    "一键构建：python scripts/build_all.py <你的 data.json>",
+    "所有 xxx / XXXX / 待填写 都是占位符，必须替换；不要保留任何占位符提交。",
+    "字段语义见 references/data-contract.md。"
+  ],
+  "title": "【来源国】·【产品名 + 浓度】→ 中国【目的港】· 进口资料准备与合规核验底稿",
+  "as_of": "YYYY-MM-DD",
+  "meta": {
+    "record_id": "ID-XXX-YYYYMMDD",
+    "prepared_by": "外贸采购 / 关务合规",
+    "prepared_at": "YYYY-MM-DD",
+    "generated_at": "YYYY-MM-DD",
+    "scene": "外贸采购 / 查进口资料要求",
+    "data_classification": "内部",
+    "product_scope_note": "本底稿结论仅对以下要素组合成立：<浓度 / 形态 / 等级 / 用途 / 包装 / 运输方式 / 来源国>。任一要素改变须重跑 P1–P3。",
+    "methodology_version": "1.0",
+    "demo_notice": ""
+  },
+  "inputs": {
+    "origin_country": "待填写",
+    "origin_note": "是否 WTO 成员 / 是否有自贸协定 / 是否受制裁",
+    "supplier": "待填写",
+    "importer": "待填写",
+    "product_name_cn": "待填写",
+    "product_name_en": "待填写",
+    "cas": "待填写",
+    "un_no": "",
+    "concentration": "待填写（必须写明质量分数或体积分数）",
+    "composition": [
+      { "name": "主成分", "ename": "", "cas": "", "pct_min": 0, "pct_max": 0, "role": "主成分" },
+      { "name": "稳定剂/添加剂", "ename": "", "cas": "", "pct_min": 0, "pct_max": 0, "role": "稳定剂" },
+      { "name": "水", "ename": "Water", "cas": "7732-18-5", "pct_min": 0, "pct_max": 0, "role": "溶剂" }
+    ],
+    "physical_form": "待填写（是否水溶液）",
+    "grade": "工业级",
+    "exec_standard": "待填写",
+    "usage": "待填写（越具体越好）",
+    "usage_sensitivity": "是否食品 / 药品 / 消毒 / 涉军",
+    "packing": "待填写",
+    "package_type": "待填写（容器材质与规格）",
+    "gross_weight": "待填写",
+    "hs_packing_spec": "待填写（申报用『包装规格』表述）",
+    "qty": "待填写",
+    "transport_mode": "待填写（海运/空运/陆运，是否散装）",
+    "incoterm": "待填写",
+    "pol_pod": "待填写",
+    "eta": "",
+    "price_terms": "待填写"
+  },
+  "product_identity": {
+    "identity_verdict": "partial",
+    "one_liner": "一句话说清：这东西是什么、已证实到什么程度、还差什么。",
+    "confirmed": ["已证实的事实，注明来自哪份文件"],
+    "unconfirmed": ["仍缺的要素"],
+    "risk_points": [
+      { "item": "风险点", "why": "为什么是风险", "action": "怎么补" }
+    ]
+  },
+  "hs_candidates": [
+    {
+      "code": "XXXX.XX.XXXX",
+      "desc": "品目描述",
+      "rank": 1,
+      "confidence": "高",
+      "basis": "章注/子目注释 + 品目条文的推理链",
+      "tests": "成立条件（可被第三方验证）",
+      "alternatives": "不成立时去哪",
+      "source": "S01"
+    },
+    {
+      "code": "XXXX.XX.XXXX",
+      "desc": "备选或兜底",
+      "rank": 2,
+      "confidence": "低",
+      "basis": "为什么考虑它，为什么最终不优先",
+      "tests": "什么情况下才会用到",
+      "alternatives": "—",
+      "source": "S01"
+    }
+  ],
+  "hs_verdict": {
+    "recommended": "XXXX.XX.XXXX",
+    "uncertainty": "不确定点（必填）",
+    "need_classification_ruling": "否（高置信，建议报关行复核后申报）",
+    "declaration_elements": ["品牌类型", "出口享惠情况", "成分含量", "包装规格", "GTIN", "CAS"],
+    "declaration_example": "0|2|…|…||…",
+    "ciq_codes": ["按当年税则填写"],
+    "ciq_note": "CIQ 码段说明"
+  },
+  "tax_rates": {
+    "tariff_year": "当前年度",
+    "hs": "待填写",
+    "mfn": { "rate": "待填写", "note": "来源与口径" },
+    "provisional": { "rate": "无", "note": "有无暂定税率" },
+    "general": { "rate": "待填写", "note": "适用情形" },
+    "vat": { "rate": "13%", "note": "进口环节由海关代征" },
+    "consumption_tax": { "rate": "0", "note": "是否应税消费品" },
+    "fta": [
+      {
+        "scheme": "某自贸协定",
+        "rate_hint": "待核实",
+        "status": "pending",
+        "condition": "原产地规则 + 直接运输 + 原产地证书",
+        "source": "S01"
+      }
+    ],
+    "fta_note": "为什么这些税率不能直接用",
+    "calc_note": "关税 = CIF × 税率；增值税 = (CIF + 关税 + 消费税) × 13%"
+  },
+  "regulation_checklist": [
+    {
+      "id": "R01", "layer": "危险化学品管理", "item": "是否列入《危险化学品目录》",
+      "verdict": "pending", "conclusion": "结论", "basis": "条文依据（到条/项）",
+      "condition": "适用条件", "impact": "触发哪些义务", "owner": "进口商",
+      "source": "S01", "confidence": "medium"
+    },
+    {
+      "id": "R02", "layer": "易制爆管理", "item": "是否列入《易制爆危险化学品名录》",
+      "verdict": "pending", "conclusion": "结论", "basis": "条文依据",
+      "condition": "适用条件", "impact": "触发哪些义务", "owner": "进口商",
+      "source": "S01", "confidence": "medium"
+    },
+    {
+      "id": "R03", "layer": "运输", "item": "是否属危险货物（运输分类）",
+      "verdict": "pending", "conclusion": "结论", "basis": "UN/GB 依据",
+      "condition": "按含量分档", "impact": "包装/标志/申报", "owner": "承运人 / 报关代理",
+      "source": "S01", "confidence": "medium"
+    },
+    {
+      "id": "R04", "layer": "检验检疫", "item": "是否在海关检验范围",
+      "verdict": "pending", "conclusion": "结论", "basis": "公告依据",
+      "condition": "以是否列入目录为门槛", "impact": "报关材料", "owner": "进口商 / 报关代理",
+      "source": "S01", "confidence": "medium"
+    },
+    {
+      "id": "R05", "layer": "两用物项", "item": "是否需两用物项许可",
+      "verdict": "pending", "conclusion": "结论", "basis": "当年目录",
+      "condition": "逐条比对", "impact": "无法通关风险", "owner": "报关代理",
+      "source": "S01", "confidence": "low"
+    },
+    {
+      "id": "R06", "layer": "用途专项", "item": "食品/消毒/药品路径是否适用",
+      "verdict": "pending", "conclusion": "结论", "basis": "条文依据",
+      "condition": "以用途为准", "impact": "另需资质", "owner": "进口商",
+      "source": "S01", "confidence": "medium"
+    }
+  ],
+  "danger_distinction": {
+    "lead": "危险化学品（中国安全生产监管）与危险货物（运输环节）是两套独立分类体系，阈值与分档不同，必须分别判定。",
+    "chemical": {
+      "regime": "危险化学品",
+      "applicable": "pending",
+      "entry": "目录条目",
+      "threshold": "含量/形态条件",
+      "consequence": "触发哪些义务"
+    },
+    "goods": {
+      "regime": "危险货物",
+      "applicable": "pending",
+      "cls": "待填写",
+      "subsidiary": "",
+      "un": "待填写",
+      "pg": "待填写",
+      "proper_shipping_name": "UN 条目原文英文",
+      "threshold": "按含量的分档",
+      "consequence": "包装/标志/申报/积载"
+    },
+    "matrix": [
+      { "case": "低于阈值", "chem": "…", "goods": "…", "note": "…" },
+      { "case": "本单所处区间", "chem": "…", "goods": "…", "note": "…" },
+      { "case": "高于阈值", "chem": "…", "goods": "…", "note": "…" }
+    ],
+    "common_errors": ["把 GHS 类别当包装类别", "只凭商品名判断", "把未列入目录理解为不危险"]
+  },
+  "transport": {
+    "mode": "待填写",
+    "regime_standard": "IMDG / IATA / ADR 等",
+    "domestic_standard": "GB 6944 / GB 12268（注明版本）",
+    "un": "待填写",
+    "proper_shipping_name_en": "待填写",
+    "class": "待填写",
+    "subsidiary_risk": "",
+    "packing_group": "待填写",
+    "labels": ["主危险标志", "次要危险标志（如有）"],
+    "packing_instruction": "待填写",
+    "segregation": ["隔离要求"],
+    "stowage": ["积载要求"],
+    "emS": "待填写",
+    "notes": ["运输方式变更须重判"]
+  },
+  "labels_packaging": {
+    "ghs_label": {
+      "required": "视监管判定",
+      "lang": "简体中文",
+      "std": "GB 15258 + GB 30000.1",
+      "pictograms": ["待填写"],
+      "signal_word": "待填写",
+      "h_statements": ["待填写"],
+      "p_statements": ["待填写"],
+      "elements": ["化学品中文名称", "成分及含量", "象形图", "信号词", "H/P 说明", "供应商信息", "24 小时中文应急电话"],
+      "note": "H/P 码为建议口径，须由供应商按 GB 30000 分项确认。"
+    },
+    "transport_marks": ["UN 编号与正确运输名称", "类项标志", "包装 UN 标记"],
+    "package": { "type": "待填写", "cert": "待填写", "domestic_note": "", "compat": "待填写" },
+    "issues": [{ "item": "问题", "level": "高", "fix": "整改动作" }]
+  },
+  "documents": [
+    {
+      "id": "D01", "group": "海外供应商资料", "name_cn": "英文安全技术说明书（SDS）",
+      "name_en": "Safety Data Sheet (English)", "required": "必须",
+      "basis": "GB/T 16483", "content_check": "16 节齐全；版本号；第3节组分 CAS 与百分比；第14节运输信息",
+      "uploaded_id": "", "status": "missing", "issue": "尚未提供",
+      "owner": "海外供应商", "source": "S01"
+    },
+    {
+      "id": "D02", "group": "中文合规文件", "name_cn": "中文化学品安全技术说明书",
+      "name_en": "Safety Data Sheet (Chinese)", "required": "必须",
+      "basis": "《危险化学品安全法》第31条", "content_check": "整册中文；与英文 SDS 逐节对应",
+      "uploaded_id": "", "status": "missing", "issue": "尚未制作",
+      "owner": "进口商", "source": "S01"
+    },
+    {
+      "id": "D03", "group": "中文合规文件", "name_cn": "中文危险公示标签",
+      "name_en": "Chinese GHS Hazard Label", "required": "必须",
+      "basis": "GB 15258", "content_check": "品名/成分含量/象形图/信号词/H-P 说明/24h 中文应急电话",
+      "uploaded_id": "", "status": "missing", "issue": "尚未制作",
+      "owner": "进口商 / 海外供应商", "source": "S01"
+    },
+    {
+      "id": "D04", "group": "进口报关资料", "name_cn": "商业发票",
+      "name_en": "Commercial Invoice", "required": "必须",
+      "basis": "海关申报", "content_check": "品名规格/数量单价/贸易术语/原产国",
+      "uploaded_id": "", "status": "missing", "issue": "",
+      "owner": "海外供应商", "source": ""
+    }
+  ],
+  "uploaded": [],
+  "gaps": [
+    {
+      "id": "G01", "priority": "P0", "missing": "缺失资料名称",
+      "why": "为什么必须", "ask": "怎么要（具体动作）",
+      "related_doc": "D01", "owner": "海外供应商", "blocking": "是"
+    }
+  ],
+  "responsibilities": [
+    { "actor": "海外供应商", "items": ["提供 SDS/COA/PI/包装证明"], "notes": "技术事实的源头" },
+    { "actor": "进口商", "items": ["中文 SDS 与标签", "符合性声明", "危化品登记"], "notes": "第一责任人" },
+    { "actor": "承运人", "items": ["危险货物订舱与申报", "积载隔离"], "notes": "" },
+    { "actor": "报关代理", "items": ["规范申报要素", "监管条件核对", "税率选择"], "notes": "" }
+  ],
+  "to_confirm": [
+    {
+      "id": "Q01", "topic": "待确认事项", "why": "为什么不能自判",
+      "who": "报关行 / 合规顾问", "how": "怎么核实",
+      "impact_if_wrong": "判断错的代价", "severity": "高"
+    }
+  ],
+  "timeline": [
+    { "t": "T-45", "action": "签约前锁定浓度公差与文件责任", "owner": "进口商" },
+    { "t": "T-30", "action": "取得供应商全套资料", "owner": "海外供应商" },
+    { "t": "T-15", "action": "中文文件定稿", "owner": "进口商" }
+  ],
+  "supplier_request_en": {
+    "title": "Documentation Request — <product> Import into P.R. China — Ref. <PO>",
+    "intro": "Dear Sir or Madam,\n\nWe are preparing customs clearance for the import of <product>. The following documents are required.",
+    "items": [
+      { "no": "1", "doc": "Safety Data Sheet (English), with version number and revision date", "detail": "Sections 1-16; Section 3 must give CAS and exact percentage of every component; Section 14 must state UN number, class, packing group.", "due": "URGENT — within 3 working days" }
+    ],
+    "closing": "Please send all items to <email> referencing <PO>."
+  },
+  "sources": [
+    {
+      "id": "S01", "kind": "法律", "tier": "A",
+      "title": "来源标题", "publisher": "发布机关",
+      "date": "发布/实施日期", "effective": "现行有效",
+      "url": "https://…", "supports": "支撑了哪条结论",
+      "accessed": "YYYY-MM-DD"
+    }
+  ],
+  "assessment": {
+    "grade": "auto",
+    "grade_text": "由闸门自动推导",
+    "one_liner": "总体结论一段话：能锁定什么、卡在哪、下一步做什么。",
+    "verdict": {
+      "产品身份": "…", "HS归类": "…", "监管属性": "…",
+      "税费": "…", "运输与包装": "…", "单证完备度": "…"
+    },
+    "statements": [
+      ["可以写：…", "不能写：…"]
+    ],
+    "next_steps": [
+      ["T+0（今天）", "…"]
+    ]
+  },
+  "calculation": {
+    "cif_usd": 0,
+    "fx": 0,
+    "cif_cny": 0,
+    "duty_rate": "5.5%",
+    "duty_cny": 0,
+    "vat_base_cny": 0,
+    "vat_rate": "13%",
+    "vat_cny": 0,
+    "total_tax_cny": 0,
+    "fta_scenario": [],
+    "note": "汇率取示例值，实际以海关计征日为准。"
+  }
+}

@@ -1,0 +1,232 @@
+<div class="wrap">
+
+<!-- ============ 头部 ============ -->
+<header class="top">
+  <div class="wrap">
+    <div class="kicker">期现及产业基本面研究 · 多因素归因</div>
+    <h1>__TITLE__</h1>
+    <div class="sub">__SUBTITLE__</div>
+    <div class="meta">
+      <span><i class="dot"></i>品种：__PRODUCT__ · __SPEC__</span>
+      <span><i class="dot"></i>市场：__MARKET__</span>
+      <span><i class="dot"></i>窗口：__D0__ → __D1__</span>
+      <span><i class="dot"></i>截至：__ASOF__</span>
+      <span><i class="dot"></i>生成：__GENERATED__</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 0 速览 ============ -->
+<section id="sec-summary">
+  <div class="card">
+    <h2><span class="num">0</span>结论速览</h2>
+    <p class="desc">先给数字，再给判断。所有数值均可由本报告附带的原始数据文件与脚本复算。</p>
+
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="kpi hl">
+        <div class="lbl">华东甲醇现货（指数口径）</div>
+        <div class="val pos" id="k-spot">—</div>
+        <div class="sub" id="k-spot-sub">—</div>
+      </div>
+      <div class="kpi hl">
+        <div class="lbl">甲醇期货主连 MA0</div>
+        <div class="val pos" id="k-fut">—</div>
+        <div class="sub" id="k-fut-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">基差（现货 − 主力合约）</div>
+        <div class="val" id="k-basis">—</div>
+        <div class="sub" id="k-basis-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">证据条目 · 事件</div>
+        <div class="val" id="k-ev">—</div>
+        <div class="sub" id="k-ev-sub">—</div>
+      </div>
+    </div>
+
+    <div class="note info" id="one-liner"></div>
+
+    <div class="grid g2">
+      <div>
+        <h3>价格与基差（逐日）</h3>
+        <div id="chart-main" class="chart"></div>
+      </div>
+      <div>
+        <h3>证据分级分布</h3>
+        <div id="chart-levels" class="chart"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1 涨跌复核 ============ -->
+<section id="sec-rehab">
+  <div class="card">
+    <h2><span class="num">1</span>第一步：先复核到底涨跌了多少</h2>
+    <p class="desc">同一波行情，起点不同能差出十几个百分点。所以在讨论“为什么”之前，必须先把“涨了多少”钉死。</p>
+    <div class="prose" id="rehab-body"></div>
+    <h3>不同起点下的同一波行情（敏感性复核）</h3>
+    <div class="heat"><table id="tbl-sens"></table></div>
+    <div class="note" id="rehab-caveat"></div>
+  </div>
+</section>
+
+<!-- ============ 2 异动识别 ============ -->
+<section id="sec-anom">
+  <div class="card">
+    <h2><span class="num">2</span>价格异动识别与阶段切分</h2>
+    <p class="desc">
+      异动判定不靠肉眼：日收益 <b>|z| ≥ 2.0</b>（相对前 60 个交易日）<b>且</b> 当日成交量 z ≥ 1.5，两条同时满足才记为异动日；
+      异动日按间隔 ≤3 个交易日合并为异动簇。阶段切分用摆动高低点法（最小反转幅度 3%）。
+      <span class="hl">脱离成交量的极端单日涨跌多为切换价或错价，不计入异动。</span>
+    </p>
+    <div class="grid g2">
+      <div><h3>期货日收益与 ±2σ 带</h3><div id="chart-ret" class="chart"></div></div>
+      <div><h3>成交量与持仓量</h3><div id="chart-vol" class="chart"></div></div>
+    </div>
+    <h3>识别出的异动簇</h3>
+    <div class="heat"><table id="tbl-clusters"></table></div>
+    <h3>价格阶段</h3>
+    <div class="heat"><table id="tbl-phases"></table></div>
+  </div>
+</section>
+
+<!-- ============ 3 归因树 ============ -->
+<section id="sec-tree">
+  <div class="card">
+    <h2><span class="num">3</span>多维驱动分析树</h2>
+    <p class="desc">
+      按你的要求逐项检查十类因素。每个节点都标注了证据等级；<b>点击任意节点</b>可打开同期数据图、变动幅度、原始来源与证据判断。
+      筛选器可按 成本／供给／需求／库存／政策／期现结构 过滤。
+    </p>
+    <div class="filters" id="tree-filters"></div>
+    <div class="grid g2" style="grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)">
+      <div id="tree-list"></div>
+      <div>
+        <h3 style="margin-top:0">分期对齐 · 同期涨跌幅矩阵</h3>
+        <div class="heat"><table id="tbl-matrix" class="heat-tbl"></table></div>
+        <div class="note info" style="margin-top:10px">
+          横向比较每一段行情里各指标的表现。<b>灰色 = 该期无可用数据</b>，不是 0。
+          注意：矩阵只说明“同期各自变了多少”，不说明谁因谁果。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3+ 局部归因 ============ -->
+<section id="sec-local">
+  <div class="card">
+    <h2><span class="num">3+</span>框选区间做局部归因</h2>
+    <p class="desc">
+      在下方图上<b>拖动鼠标框选任意一段</b>（或在筛选条里直接改起止日期），即可对该区间重跑一次全因子归因。
+      区间越小，能被证据支持的因子越少——<span class="hl">本工具不会因为区间小就放宽证据标准</span>，
+      反而会明确列出“在本区间方向相反、因此不能解释本区间”的因子。
+    </p>
+    <div class="filters" id="local-controls"></div>
+    <div id="chart-local" class="chart" style="height:300px"></div>
+    <div class="grid g2" style="margin-top:14px">
+      <div>
+        <h3 style="margin-top:0">区间内各因子表现</h3>
+        <div class="heat"><table id="tbl-local"></table></div>
+      </div>
+      <div>
+        <h3 style="margin-top:0">区间内／临近事件</h3>
+        <div id="local-events" style="max-height:400px;overflow-y:auto"></div>
+        <div class="note danger" id="local-counter" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 事件时间线 ============ -->
+<section id="sec-events">
+  <div class="card">
+    <h2><span class="num">4</span>事件时间线：事件与价格异动是否对得上</h2>
+    <p class="desc">
+      每条事件都计算了相对价格阶段的<b>交易日领先数</b>：正数＝事件早于阶段起点，负数＝事件晚于起点（即滞后反应）。
+      领先 1—3 个交易日的 E2 级事件，才具备“可作为驱动”的时间条件。
+    </p>
+    <div class="filters" id="event-filters"></div>
+    <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)">
+      <div class="tl" id="event-list"></div>
+      <div><div id="chart-events" class="chart lg"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 候选解释排序 ============ -->
+<section id="sec-hyp">
+  <div class="card">
+    <h2><span class="num">5</span>按证据强弱排列的候选解释</h2>
+    <p class="desc">排序只反映“证据强度与时间吻合度”，<b>不代表解释了百分之多少</b>。展开每条可看它被什么支持、又缺什么。</p>
+    <div id="hyp-list"></div>
+    <div class="note danger">
+      <b>关于“各因素贡献多少百分比”：本报告明确不做。</b>
+      除非建立了可验证的量化模型（例如有可信的供需平衡表与价格弹性估计），
+      否则任何“煤炭贡献 25%、进口贡献 40%”式的拆分都是伪精确。本报告只做证据分级与时间对齐。
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 分期归因 ============ -->
+<section id="sec-periods">
+  <div class="card">
+    <h2><span class="num">6</span>分段归因：不同阶段的主因不一样</h2>
+    <p class="desc">不能拿一两个看起来合理的因素强行解释全部行情。逐段看，各段的候选解释与证据是不同的。</p>
+    <div id="period-cards"></div>
+  </div>
+</section>
+
+<!-- ============ 7 无法解释 ============ -->
+<section id="sec-gap">
+  <div class="card">
+    <h2><span class="num">7</span>解释不了的部分与数据缺口</h2>
+    <p class="desc">把“查不到”和“查到了但不是这么回事”分开写，是这份报告和营销稿的区别。</p>
+    <div class="grid g2">
+      <div><h3>价格变动中未能解释的片段</h3><div id="unexplained"></div></div>
+      <div><h3>数据缺口清单（明确标注缺什么）</h3><div class="heat"><table id="tbl-gaps"></table></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8 方法与免责 ============ -->
+<section id="sec-method">
+  <div class="card">
+    <h2><span class="num">8</span>方法、口径与免责声明</h2>
+    <div class="grid g2">
+      <div>
+        <h3>证据分级标准</h3>
+        <div class="heat"><table id="tbl-legend"></table></div>
+        <h3>使用限制</h3>
+        <div id="limitations"></div>
+      </div>
+      <div>
+        <h3>数据来源与口径</h3>
+        <div id="sources"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center;color:var(--tx3);font-size:11.5px;padding:26px 0 10px;border-top:1px solid var(--line);margin-top:22px">
+  期现及产业基本面研究 · 多因素归因 —— 单文件离线报告，无外部依赖。<br>
+  本报告只陈述已发生事实与证据强度，<b style="color:var(--tx2)">不预测未来涨跌，不构成任何交易、采购或投资建议</b>。
+</footer>
+
+</div><!-- /wrap inner -->
+
+<!-- ============ 抽屉 ============ -->
+<div class="drawer-mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hd">
+    <h3 id="drawer-title">—</h3>
+    <div class="x" id="drawer-close">×</div>
+  </div>
+  <div class="drawer-bd" id="drawer-body"></div>
+</div>
+
+</div><!-- /wrap -->

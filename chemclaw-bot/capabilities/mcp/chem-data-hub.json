@@ -1,0 +1,10 @@
+{
+  "name": "chem-data-hub",
+  "kind": "mcp",
+  "description": "芯化数据中台：化合物/企业/价格/产业链（需密钥 CHEM_DATA_HUB）",
+  "transport": "streamable-http",
+  "url": "https://datahub.chem-cloud.cn/mcp",
+  "headers": {
+    "Authorization": "Bearer $DSH_SECRET_CHEM_DATA_HUB"
+  }
+}

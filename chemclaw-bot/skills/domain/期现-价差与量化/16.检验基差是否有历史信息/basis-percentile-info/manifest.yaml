@@ -1,0 +1,92 @@
+name: basis-percentile-info
+version: 1.0.0
+title: 基差分位信息检验
+title_en: Basis Percentile Information Test
+category: 期现-价差与量化
+folder: 16.检验基差是否有历史信息
+author: chemclaw
+created: 2026-10-20
+language: zh-CN
+
+summary: >
+  检验基差（期现价差）的历史分位是否含有信息。把基差按严格滞后的滚动分位分成
+  低/中/高分位，统计之后 1/2/4 周（可扩到 3/6 月）的现货、期货与基差各自如何变化，
+  并明确区分基差变化来自现货端还是期货端。
+
+when_to_use:
+  - 用户问「基差在历史 X 分位，历史上这种时候之后怎么走」
+  - 用户要「检验基差有没有历史信息 / 预测力」
+  - 用户要「期现价差的历史统计」
+  - 用户要比较不同分位阈值或观察窗口
+  - 用户要区分基差变化是现货还是期货造成的
+  - 用户要检查基差分析的偏差（换月、交割、口径、重叠）
+
+when_not_to_use:
+  - 只要当天的基差数值（用 chem-market-brief）
+  - 只要基差的季节性形态（用基差季节性 skill）
+  - 要交易建议/信号/仓位（本 skill 明确不做）
+  - 没有任何现货序列（无法构造基差）
+
+inputs:
+  required:
+    - 现货日频价格序列（date, price）
+    - 期货逐合约日线（date, close, oi, contract）
+  optional:
+    - 公开的主力基差率序列（用于口径核验）
+    - 合约规则表（最后交易日、交割品级）
+
+outputs:
+  - 单文件交互 HTML 报告（可调口径/阈值/窗口/观察期，改动即重算）
+  - 13 表 Excel 工作簿（含真公式可复核）
+  - research_data.json / report_data.json / basis_daily.csv（中间数据）
+  - 测试报告（47 项断言）
+
+scripts:
+  fetch_data.py: 抓取原始数据（甲醇示例：100ppi 现货 + 新浪逐合约日线）
+  basis_core.py: 计算引擎（映射、滚动分位、分组统计、自助、稳定性、偏差）
+  report_data.py: 把引擎输出压缩成报告数据
+  build_html.py: 生成自包含 HTML 报告
+  build_xlsx.py: 生成含公式的 Excel 工作簿
+  run_all.py: 一键跑完整流程 + 自检
+
+references:
+  - 01_口径定义与合约规则.md
+  - 02_滚动分位与无未来函数.md
+  - 03_统计口径与推断.md
+  - 04_偏差清单.md
+  - 05_数据源与字段规范.md
+  - 06_常见错误与QA.md
+
+templates:
+  - report_template.html: 报告模板（含 __DATA_JSON__ / __TITLE__ 占位符）
+
+tests:
+  - test_statistics.py: 47 项断言，13 组，必须全过
+
+example:
+  path: examples/methanol-east-china
+  product: MA 甲醇
+  spot_caliber: 生意社 100ppi 甲醇基准价（降级：全国基准价，非华东实盘）
+  futures_mapping: 主力连续（当日持仓量最大且未到期）
+  period: 2022-08-17 ~ 2026-10-20
+  aligned_days: 1004
+  contracts: 101
+
+key_findings:
+  - 5/10/20 日：低分位基差变动均值 +1.56%/+1.72%/+2.93%，高分位 -1.33%/-2.05%/-3.54%
+  - 低−高差值：5日 +2.89%(p=0.0007)、10日 +3.77%(p=0.0001)、20日 +6.47%(p<0.0001)
+  - 拆解：20日现货端贡献 +7.72%(p=0.0001)、期货端仅 +1.25%(p=0.44) → 信号几乎全在现货端
+  - 稳健性：4 种合约映射（主力/近月/01/05/09）方向全部一致
+  - 非重叠复核：5/10/20 日差值 +2.72%/+4.30%/+7.19%，方向量级一致
+  - 口径平移检验：低−高从 +6.47% 收窄到 +3.00%，方向不变、幅度腰斩
+  - 3月/6月：块长≥样本半数，自助退化，不给 p 值
+
+constraints:
+  - 只输出历史统计，不生成交易建议
+  - 必须区分基差变化来自现货还是期货
+  - 不得用全样本分位（未来函数）
+  - 末端回填点必须标记并在稳定性检验中剔除
+  - 缺数据不插值
+  - 现货口径降级必须明写
+
+license: internal

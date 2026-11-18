@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="1200" viewBox="0 0 860 1200">
+<defs>
+<pattern id="wm" width="300" height="160" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)"><text x="0" y="80" font-family="Microsoft YaHei,SimHei" font-size="26" fill="#b3402a" fill-opacity="0.16" letter-spacing="4">模拟演示件 · 非真实证照</text></pattern>
+<linearGradient id="hd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#12312a"/><stop offset="1" stop-color="#1b4239"/></linearGradient>
+</defs>
+<rect width="860" height="1200" fill="#fdfcf7"/>
+<rect width="860" height="1200" fill="url(#wm)"/>
+<rect x="26" y="26" width="808" height="1148" fill="none" stroke="#a8843c" stroke-width="2"/>
+<rect x="0" y="0" width="860" height="46" fill="#b3402a"/>
+<text x="30" y="30" font-family="Microsoft YaHei,SimHei" font-size="19" font-weight="bold" fill="#ffffff" letter-spacing="2">⚠ 模拟演示件 SAMPLE — 仅供技能模板演示，不得作为真实证照使用</text>
+<text x="30" y="86" font-family="Microsoft YaHei,SimHei" font-size="15" fill="#8b1e1e">MOCK DOCUMENT · NOT A VALID CERTIFICATE · FOR TEMPLATE DEMONSTRATION ONLY</text>
+<text x="430" y="150" text-anchor="middle" font-family="SimSun,Microsoft YaHei" font-size="34" font-weight="bold" fill="#12312a" letter-spacing="6">全国工业产品生产许可证（样例）</text>
+<line x1="150" y1="168" x2="710" y2="168" stroke="#a8843c" stroke-width="1.5"/>
+<text x="430" y="196" text-anchor="middle" font-family="Microsoft YaHei,SimHei" font-size="13" fill="#6d7a74">此页为结构示意，字段值均为样例，不代表任何真实企业</text>
+<text x="92" y="240" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#6d7a74">许可证编号</text>
+<text x="250" y="240" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#18231f">［样例］MOCK-(X)-X-0000000</text>
+<line x1="92" y1="258" x2="768" y2="258" stroke="#e2ded2" stroke-width="0.8"/>
+<text x="92" y="274" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#6d7a74">企业名称</text>
+<text x="250" y="274" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#18231f">［样例］XX化工有限公司</text>
+<line x1="92" y1="292" x2="768" y2="292" stroke="#e2ded2" stroke-width="0.8"/>
+<text x="92" y="308" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#6d7a74">产品名称</text>
+<text x="250" y="308" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#18231f">［样例］危险化学品有机产品 \\ 无机产品</text>
+<line x1="92" y1="326" x2="768" y2="326" stroke="#e2ded2" stroke-width="0.8"/>
+<text x="92" y="342" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#6d7a74">有效期</text>
+<text x="250" y="342" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#18231f">20XX 年 XX 月 XX 日 至 20XX 年 </text>
+<text x="250" y="364" font-family="Microsoft YaHei,SimHei" font-size="14.5" fill="#18231f">XX 月 XX 日（样例）</text>
+<line x1="92" y1="382" x2="768" y2="382" stroke="#e2ded2" stroke-width="0.8"/>
+<text x="750" y="870" text-anchor="end" font-family="Microsoft YaHei,SimHei" font-size="15" fill="#18231f">发证机关：［样例占位］样例省市场监督管理局</text>
+<text x="750" y="898" text-anchor="end" font-family="Microsoft YaHei,SimHei" font-size="15" fill="#18231f">发证日期：20XX 年 XX 月 XX 日（样例）</text>
+<circle cx="660" cy="1000" r="82" fill="none" stroke="#b3402a" stroke-opacity="0.55" stroke-width="4" stroke-dasharray="7 6"/>
+<text x="660" y="996" text-anchor="middle" font-family="Microsoft YaHei,SimHei" font-size="16" fill="#b3402a" fill-opacity="0.7" font-weight="bold">模拟印章</text>
+<text x="660" y="1018" text-anchor="middle" font-family="Microsoft YaHei,SimHei" font-size="11" fill="#b3402a" fill-opacity="0.7">SAMPLE SEAL</text>
+<rect x="0" y="1130" width="860" height="60" fill="#f1ede1"/>
+<text x="430" y="1158" text-anchor="middle" font-family="Microsoft YaHei,SimHei" font-size="11.5" fill="#6d7a74">由 chem-supplier-qualification 技能 generate_mock_scans.py 生成 · 仅用于演示"上传扫描件→OCR 字段提取→与公示比对"流程</text>
+<text x="430" y="1178" text-anchor="middle" font-family="Microsoft YaHei,SimHei" font-size="11.5" fill="#b3402a">任何情况下不得将该文件提交备案、作为凭证或对外宣称其为真实证照</text>
+</svg>

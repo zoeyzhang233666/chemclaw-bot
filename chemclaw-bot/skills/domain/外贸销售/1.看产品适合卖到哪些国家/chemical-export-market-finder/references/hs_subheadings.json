@@ -1,0 +1,1759 @@
+{
+ "_meta": {
+  "name": "HS 28/29/38 chemical subheading reference",
+  "purpose": "Candidate HS-6 codes for chemical products, used by hs_match.py to propose codes for user confirmation.",
+  "scope": "HS chapter 28 (inorganic chemicals), 29 (organic chemicals), 38 (misc chemical products). Subset, not exhaustive.",
+  "discipline": "These are CANDIDATES ONLY. The user must confirm the final code. Never assert a code as settled fact without checking a national tariff (US HTS / EU TARIC) for that code.",
+  "rate_source_policy": "Duty rates are NOT stored here. Always retrieve them live from USITC HTS or EU TARIC at analysis time, because rates change and differ by origin."
+ },
+ "subheadings": [
+  {
+   "hs6": "280110",
+   "name_en": "Chlorine",
+   "name_zh": "氯气",
+   "keywords": [
+    "chlorine",
+    "液氯",
+    "氯气"
+   ]
+  },
+  {
+   "hs6": "280300",
+   "name_en": "Carbon (carbon blacks and other forms of carbon)",
+   "name_zh": "炭黑及其他碳",
+   "keywords": [
+    "carbon black",
+    "炭黑"
+   ]
+  },
+  {
+   "hs6": "280470",
+   "name_en": "Phosphorus",
+   "name_zh": "磷",
+   "keywords": [
+    "phosphorus",
+    "黄磷",
+    "磷"
+   ]
+  },
+  {
+   "hs6": "280700",
+   "name_en": "Sulfuric acid; oleum",
+   "name_zh": "硫酸；发烟硫酸",
+   "keywords": [
+    "sulfuric acid",
+    "sulphuric acid",
+    "硫酸",
+    "oleum",
+    "发烟硫酸"
+   ]
+  },
+  {
+   "hs6": "280800",
+   "name_en": "Nitric acid; sulphonitric acids",
+   "name_zh": "硝酸；磺硝酸",
+   "keywords": [
+    "nitric acid",
+    "硝酸"
+   ]
+  },
+  {
+   "hs6": "281119",
+   "name_en": "Other inorganic acids",
+   "name_zh": "其他无机酸",
+   "keywords": [
+    "inorganic acid",
+    "无机酸"
+   ]
+  },
+  {
+   "hs6": "281121",
+   "name_en": "Carbon dioxide",
+   "name_zh": "二氧化碳",
+   "keywords": [
+    "carbon dioxide",
+    "二氧化碳"
+   ]
+  },
+  {
+   "hs6": "281410",
+   "name_en": "Anhydrous ammonia",
+   "name_zh": "无水氨",
+   "keywords": [
+    "ammonia",
+    "anhydrous ammonia",
+    "液氨",
+    "合成氨",
+    "氨"
+   ]
+  },
+  {
+   "hs6": "281511",
+   "name_en": "Sodium hydroxide (caustic soda), solid",
+   "name_zh": "氢氧化钠（烧碱），固体",
+   "keywords": [
+    "caustic soda",
+    "sodium hydroxide solid",
+    "烧碱",
+    "片碱",
+    "固碱",
+    "氢氧化钠"
+   ]
+  },
+  {
+   "hs6": "281512",
+   "name_en": "Sodium hydroxide in aqueous solution",
+   "name_zh": "氢氧化钠水溶液（液碱）",
+   "keywords": [
+    "caustic soda solution",
+    "液碱",
+    "sodium hydroxide solution"
+   ]
+  },
+  {
+   "hs6": "281520",
+   "name_en": "Potassium hydroxide (caustic potash)",
+   "name_zh": "氢氧化钾",
+   "keywords": [
+    "potassium hydroxide",
+    "caustic potash",
+    "氢氧化钾",
+    "苛性钾"
+   ]
+  },
+  {
+   "hs6": "281530",
+   "name_en": "Peroxides of sodium or potassium",
+   "name_zh": "钠或钾的过氧化物",
+   "keywords": [
+    "sodium peroxide",
+    "过氧化钠"
+   ]
+  },
+  {
+   "hs6": "281700",
+   "name_en": "Zinc oxide; zinc peroxide",
+   "name_zh": "氧化锌；过氧化锌",
+   "keywords": [
+    "zinc oxide",
+    "氧化锌"
+   ]
+  },
+  {
+   "hs6": "281810",
+   "name_en": "Artificial corundum",
+   "name_zh": "人造刚玉",
+   "keywords": [
+    "corundum",
+    "刚玉"
+   ]
+  },
+  {
+   "hs6": "281820",
+   "name_en": "Aluminium oxide, other than artificial corundum",
+   "name_zh": "氧化铝（非人造刚玉）",
+   "keywords": [
+    "alumina",
+    "aluminium oxide",
+    "aluminum oxide",
+    "氧化铝"
+   ]
+  },
+  {
+   "hs6": "282110",
+   "name_en": "Iron oxides and hydroxides",
+   "name_zh": "铁的氧化物及氢氧化物",
+   "keywords": [
+    "iron oxide",
+    "氧化铁"
+   ]
+  },
+  {
+   "hs6": "282300",
+   "name_en": "Titanium oxides",
+   "name_zh": "钛的氧化物",
+   "keywords": [
+    "titanium dioxide",
+    "titanium oxide",
+    "钛白粉",
+    "二氧化钛"
+   ]
+  },
+  {
+   "hs6": "282410",
+   "name_en": "Lead monoxide (litharge, massicot)",
+   "name_zh": "一氧化铅",
+   "keywords": [
+    "lead monoxide",
+    "litharge",
+    "黄丹"
+   ]
+  },
+  {
+   "hs6": "282580",
+   "name_en": "Antimony oxides",
+   "name_zh": "锑的氧化物",
+   "keywords": [
+    "antimony oxide",
+    "三氧化二锑",
+    "锑白"
+   ]
+  },
+  {
+   "hs6": "282590",
+   "name_en": "Other oxides, hydroxides and peroxides",
+   "name_zh": "其他氧化物、氢氧化物及过氧化物",
+   "keywords": [
+    "other oxides"
+   ]
+  },
+  {
+   "hs6": "282710",
+   "name_en": "Ammonium chloride",
+   "name_zh": "氯化铵",
+   "keywords": [
+    "ammonium chloride",
+    "氯化铵"
+   ]
+  },
+  {
+   "hs6": "282720",
+   "name_en": "Calcium chloride",
+   "name_zh": "氯化钙",
+   "keywords": [
+    "calcium chloride",
+    "氯化钙"
+   ]
+  },
+  {
+   "hs6": "282731",
+   "name_en": "Magnesium chloride",
+   "name_zh": "氯化镁",
+   "keywords": [
+    "magnesium chloride",
+    "氯化镁"
+   ]
+  },
+  {
+   "hs6": "282732",
+   "name_en": "Aluminium chloride",
+   "name_zh": "氯化铝",
+   "keywords": [
+    "aluminium chloride",
+    "氯化铝"
+   ]
+  },
+  {
+   "hs6": "282739",
+   "name_en": "Other chlorides",
+   "name_zh": "其他氯化物",
+   "keywords": [
+    "chlorides",
+    "氯化物"
+   ]
+  },
+  {
+   "hs6": "282741",
+   "name_en": "Chloride oxides and chloride hydroxides of copper",
+   "name_zh": "铜的氯氧化物",
+   "keywords": [
+    "copper oxychloride",
+    "氯氧化铜"
+   ]
+  },
+  {
+   "hs6": "282749",
+   "name_en": "Other chloride oxides and chloride hydroxides",
+   "name_zh": "其他氯氧化物",
+   "keywords": [
+    "chloride oxide"
+   ]
+  },
+  {
+   "hs6": "282751",
+   "name_en": "Bromides of sodium or potassium",
+   "name_zh": "溴化钠或溴化钾",
+   "keywords": [
+    "sodium bromide",
+    "potassium bromide",
+    "溴化钠"
+   ]
+  },
+  {
+   "hs6": "282759",
+   "name_en": "Other bromides and bromide oxides",
+   "name_zh": "其他溴化物",
+   "keywords": [
+    "bromides",
+    "溴化物"
+   ]
+  },
+  {
+   "hs6": "282760",
+   "name_en": "Iodides and iodide oxides",
+   "name_zh": "碘化物",
+   "keywords": [
+    "iodides",
+    "碘化物"
+   ]
+  },
+  {
+   "hs6": "282810",
+   "name_en": "Commercial calcium hypochlorite",
+   "name_zh": "商品次氯酸钙",
+   "keywords": [
+    "calcium hypochlorite",
+    "次氯酸钙",
+    "漂粉精"
+   ]
+  },
+  {
+   "hs6": "282890",
+   "name_en": "Other hypochlorites; chlorites; hypobromites",
+   "name_zh": "其他次氯酸盐；亚氯酸盐",
+   "keywords": [
+    "hypochlorite",
+    "sodium hypochlorite",
+    "次氯酸钠"
+   ]
+  },
+  {
+   "hs6": "282911",
+   "name_en": "Sodium chlorate",
+   "name_zh": "氯酸钠",
+   "keywords": [
+    "sodium chlorate",
+    "氯酸钠"
+   ]
+  },
+  {
+   "hs6": "283010",
+   "name_en": "Sodium sulphides",
+   "name_zh": "硫化钠",
+   "keywords": [
+    "sodium sulphide",
+    "硫化钠",
+    "硫化碱"
+   ]
+  },
+  {
+   "hs6": "283090",
+   "name_en": "Other sulphides; polysulphides",
+   "name_zh": "其他硫化物；多硫化物",
+   "keywords": [
+    "polysulphide"
+   ]
+  },
+  {
+   "hs6": "283110",
+   "name_en": "Dithionites and sulphoxylates of sodium",
+   "name_zh": "连二亚硫酸钠（保险粉）",
+   "keywords": [
+    "sodium dithionite",
+    "sodium hydrosulfite",
+    "保险粉",
+    "连二亚硫酸钠"
+   ]
+  },
+  {
+   "hs6": "283210",
+   "name_en": "Sodium sulphites",
+   "name_zh": "亚硫酸钠",
+   "keywords": [
+    "sodium sulphite",
+    "亚硫酸钠"
+   ]
+  },
+  {
+   "hs6": "283220",
+   "name_en": "Other sulphites",
+   "name_zh": "其他亚硫酸盐",
+   "keywords": [
+    "sulphites"
+   ]
+  },
+  {
+   "hs6": "283230",
+   "name_en": "Thiosulphates",
+   "name_zh": "硫代硫酸盐",
+   "keywords": [
+    "thiosulphate",
+    "硫代硫酸钠",
+    "大苏打"
+   ]
+  },
+  {
+   "hs6": "283311",
+   "name_en": "Disodium sulphate",
+   "name_zh": "硫酸钠（元明粉）",
+   "keywords": [
+    "sodium sulphate",
+    "sodium sulfate",
+    "元明粉",
+    "硫酸钠",
+    "芒硝"
+   ]
+  },
+  {
+   "hs6": "283319",
+   "name_en": "Other sulphates of sodium",
+   "name_zh": "其他钠的硫酸盐",
+   "keywords": [
+    "sodium sulphates"
+   ]
+  },
+  {
+   "hs6": "283321",
+   "name_en": "Sulphate of magnesium",
+   "name_zh": "硫酸镁",
+   "keywords": [
+    "magnesium sulphate",
+    "硫酸镁"
+   ]
+  },
+  {
+   "hs6": "283322",
+   "name_en": "Sulphate of aluminium",
+   "name_zh": "硫酸铝",
+   "keywords": [
+    "aluminium sulphate",
+    "硫酸铝"
+   ]
+  },
+  {
+   "hs6": "283329",
+   "name_en": "Other sulphates",
+   "name_zh": "其他硫酸盐",
+   "keywords": [
+    "sulphates"
+   ]
+  },
+  {
+   "hs6": "283330",
+   "name_en": "Alums",
+   "name_zh": "明矾",
+   "keywords": [
+    "alum",
+    "明矾"
+   ]
+  },
+  {
+   "hs6": "283340",
+   "name_en": "Peroxosulphates (persulphates)",
+   "name_zh": "过硫酸盐",
+   "keywords": [
+    "persulphate",
+    "过硫酸钠",
+    "过硫酸铵"
+   ]
+  },
+  {
+   "hs6": "283410",
+   "name_en": "Nitrites",
+   "name_zh": "亚硝酸盐",
+   "keywords": [
+    "nitrite",
+    "亚硝酸钠"
+   ]
+  },
+  {
+   "hs6": "283421",
+   "name_en": "Nitrate of potassium",
+   "name_zh": "硝酸钾",
+   "keywords": [
+    "potassium nitrate",
+    "硝酸钾"
+   ]
+  },
+  {
+   "hs6": "283429",
+   "name_en": "Other nitrates",
+   "name_zh": "其他硝酸盐",
+   "keywords": [
+    "nitrates",
+    "硝酸盐",
+    "硝酸钠"
+   ]
+  },
+  {
+   "hs6": "283510",
+   "name_en": "Phosphinates and phosphonates",
+   "name_zh": "次膦酸盐及膦酸盐",
+   "keywords": [
+    "phosphonate",
+    "膦酸盐"
+   ]
+  },
+  {
+   "hs6": "283522",
+   "name_en": "Phosphates of mono- or disodium",
+   "name_zh": "磷酸一钠或二钠",
+   "keywords": [
+    "sodium phosphate",
+    "磷酸二氢钠",
+    "磷酸氢二钠"
+   ]
+  },
+  {
+   "hs6": "283524",
+   "name_en": "Phosphates of potassium",
+   "name_zh": "磷酸钾",
+   "keywords": [
+    "potassium phosphate",
+    "磷酸二氢钾"
+   ]
+  },
+  {
+   "hs6": "283525",
+   "name_en": "Calcium hydrogenorthophosphate (dicalcium phosphate)",
+   "name_zh": "磷酸氢钙",
+   "keywords": [
+    "dicalcium phosphate",
+    "磷酸氢钙"
+   ]
+  },
+  {
+   "hs6": "283526",
+   "name_en": "Other phosphates of calcium",
+   "name_zh": "其他钙的磷酸盐",
+   "keywords": [
+    "calcium phosphate",
+    "磷酸钙",
+    "磷酸三钙"
+   ]
+  },
+  {
+   "hs6": "283529",
+   "name_en": "Other phosphates",
+   "name_zh": "其他磷酸盐",
+   "keywords": [
+    "phosphates",
+    "三聚磷酸钠"
+   ]
+  },
+  {
+   "hs6": "283531",
+   "name_en": "Sodium triphosphate (sodium tripolyphosphate)",
+   "name_zh": "三磷酸钠（三聚磷酸钠）",
+   "keywords": [
+    "sodium tripolyphosphate",
+    "STPP",
+    "三聚磷酸钠"
+   ]
+  },
+  {
+   "hs6": "283539",
+   "name_en": "Other polyphosphates",
+   "name_zh": "其他多磷酸盐",
+   "keywords": [
+    "polyphosphate",
+    "六偏磷酸钠"
+   ]
+  },
+  {
+   "hs6": "283620",
+   "name_en": "Disodium carbonate (soda ash)",
+   "name_zh": "碳酸钠（纯碱）",
+   "keywords": [
+    "sodium carbonate",
+    "soda ash",
+    "disodium carbonate",
+    "纯碱",
+    "碳酸钠",
+    "重质纯碱",
+    "轻质纯碱",
+    "苏打"
+   ]
+  },
+  {
+   "hs6": "283630",
+   "name_en": "Sodium hydrogencarbonate (sodium bicarbonate)",
+   "name_zh": "碳酸氢钠（小苏打）",
+   "keywords": [
+    "sodium bicarbonate",
+    "sodium hydrogencarbonate",
+    "碳酸氢钠",
+    "小苏打",
+    "重曹"
+   ]
+  },
+  {
+   "hs6": "283640",
+   "name_en": "Potassium carbonates",
+   "name_zh": "碳酸钾",
+   "keywords": [
+    "potassium carbonate",
+    "碳酸钾"
+   ]
+  },
+  {
+   "hs6": "283650",
+   "name_en": "Calcium carbonate",
+   "name_zh": "碳酸钙",
+   "keywords": [
+    "calcium carbonate",
+    "碳酸钙",
+    "重钙",
+    "轻钙"
+   ]
+  },
+  {
+   "hs6": "283660",
+   "name_en": "Barium carbonate",
+   "name_zh": "碳酸钡",
+   "keywords": [
+    "barium carbonate",
+    "碳酸钡"
+   ]
+  },
+  {
+   "hs6": "283691",
+   "name_en": "Lithium carbonates",
+   "name_zh": "碳酸锂",
+   "keywords": [
+    "lithium carbonate",
+    "碳酸锂"
+   ]
+  },
+  {
+   "hs6": "283692",
+   "name_en": "Strontium carbonate",
+   "name_zh": "碳酸锶",
+   "keywords": [
+    "strontium carbonate",
+    "碳酸锶"
+   ]
+  },
+  {
+   "hs6": "283699",
+   "name_en": "Other carbonates; peroxocarbonates",
+   "name_zh": "其他碳酸盐；过碳酸盐",
+   "keywords": [
+    "sodium percarbonate",
+    "过碳酸钠",
+    "percarbonate",
+    "ammonium carbonate",
+    "碳酸铵"
+   ]
+  },
+  {
+   "hs6": "283911",
+   "name_en": "Sodium metasilicates",
+   "name_zh": "偏硅酸钠",
+   "keywords": [
+    "sodium metasilicate",
+    "偏硅酸钠"
+   ]
+  },
+  {
+   "hs6": "283919",
+   "name_en": "Other silicates of sodium",
+   "name_zh": "其他钠的硅酸盐",
+   "keywords": [
+    "sodium silicate",
+    "硅酸钠",
+    "水玻璃",
+    "泡花碱"
+   ]
+  },
+  {
+   "hs6": "283990",
+   "name_en": "Other silicates; commercial alkali metal silicates",
+   "name_zh": "其他硅酸盐",
+   "keywords": [
+    "silicates",
+    "硅酸锆"
+   ]
+  },
+  {
+   "hs6": "284011",
+   "name_en": "Anhydrous disodium tetraborate (refined borax)",
+   "name_zh": "无水四硼酸二钠（精制硼砂）",
+   "keywords": [
+    "borax",
+    "硼砂"
+   ]
+  },
+  {
+   "hs6": "284019",
+   "name_en": "Other disodium tetraborate",
+   "name_zh": "其他四硼酸二钠",
+   "keywords": [
+    "disodium tetraborate"
+   ]
+  },
+  {
+   "hs6": "284020",
+   "name_en": "Other borates",
+   "name_zh": "其他硼酸盐",
+   "keywords": [
+    "borates",
+    "硼酸锌"
+   ]
+  },
+  {
+   "hs6": "284210",
+   "name_en": "Double or complex silicates",
+   "name_zh": "复硅酸盐",
+   "keywords": [
+    "zeolite",
+    "分子筛",
+    "沸石"
+   ]
+  },
+  {
+   "hs6": "284321",
+   "name_en": "Silver nitrate",
+   "name_zh": "硝酸银",
+   "keywords": [
+    "silver nitrate",
+    "硝酸银"
+   ]
+  },
+  {
+   "hs6": "284610",
+   "name_en": "Cerium compounds",
+   "name_zh": "铈的化合物",
+   "keywords": [
+    "cerium",
+    "氧化铈"
+   ]
+  },
+  {
+   "hs6": "284700",
+   "name_en": "Hydrogen peroxide",
+   "name_zh": "过氧化氢（双氧水）",
+   "keywords": [
+    "hydrogen peroxide",
+    "过氧化氢",
+    "双氧水"
+   ]
+  },
+  {
+   "hs6": "284920",
+   "name_en": "Silicon carbide",
+   "name_zh": "碳化硅",
+   "keywords": [
+    "silicon carbide",
+    "碳化硅",
+    "金刚砂"
+   ]
+  },
+  {
+   "hs6": "284990",
+   "name_en": "Other carbides",
+   "name_zh": "其他碳化物",
+   "keywords": [
+    "carbides",
+    "碳化钨"
+   ]
+  },
+  {
+   "hs6": "285000",
+   "name_en": "Hydrides, nitrides, azides, silicides and borides",
+   "name_zh": "氢化物、氮化物、叠氮化物等",
+   "keywords": [
+    "hydride",
+    "nitride",
+    "氮化硅",
+    "氮化硼"
+   ]
+  },
+  {
+   "hs6": "290110",
+   "name_en": "Saturated acyclic hydrocarbons",
+   "name_zh": "饱和无环烃",
+   "keywords": [
+    "hexane",
+    "己烷"
+   ]
+  },
+  {
+   "hs6": "290121",
+   "name_en": "Ethylene",
+   "name_zh": "乙烯",
+   "keywords": [
+    "ethylene",
+    "乙烯"
+   ]
+  },
+  {
+   "hs6": "290122",
+   "name_en": "Propene (propylene)",
+   "name_zh": "丙烯",
+   "keywords": [
+    "propylene",
+    "丙烯"
+   ]
+  },
+  {
+   "hs6": "290220",
+   "name_en": "Benzene",
+   "name_zh": "纯苯",
+   "keywords": [
+    "benzene",
+    "纯苯",
+    "苯"
+   ]
+  },
+  {
+   "hs6": "290230",
+   "name_en": "Toluene",
+   "name_zh": "甲苯",
+   "keywords": [
+    "toluene",
+    "甲苯"
+   ]
+  },
+  {
+   "hs6": "290243",
+   "name_en": "p-Xylene",
+   "name_zh": "对二甲苯",
+   "keywords": [
+    "p-xylene",
+    "paraxylene",
+    "PX",
+    "对二甲苯"
+   ]
+  },
+  {
+   "hs6": "290250",
+   "name_en": "Styrene",
+   "name_zh": "苯乙烯",
+   "keywords": [
+    "styrene",
+    "苯乙烯"
+   ]
+  },
+  {
+   "hs6": "290511",
+   "name_en": "Methanol (methyl alcohol)",
+   "name_zh": "甲醇",
+   "keywords": [
+    "methanol",
+    "methyl alcohol",
+    "甲醇",
+    "木精"
+   ]
+  },
+  {
+   "hs6": "290512",
+   "name_en": "Propan-1-ol and propan-2-ol",
+   "name_zh": "正丙醇和异丙醇",
+   "keywords": [
+    "isopropanol",
+    "IPA",
+    "isopropyl alcohol",
+    "异丙醇"
+   ]
+  },
+  {
+   "hs6": "290513",
+   "name_en": "Butan-1-ol (n-butyl alcohol)",
+   "name_zh": "正丁醇",
+   "keywords": [
+    "n-butanol",
+    "butanol",
+    "正丁醇"
+   ]
+  },
+  {
+   "hs6": "290514",
+   "name_en": "Other butanols",
+   "name_zh": "其他丁醇",
+   "keywords": [
+    "isobutanol",
+    "异丁醇"
+   ]
+  },
+  {
+   "hs6": "290516",
+   "name_en": "Octanol and isomers",
+   "name_zh": "辛醇及其异构体",
+   "keywords": [
+    "octanol",
+    "2-ethylhexanol",
+    "辛醇",
+    "异辛醇"
+   ]
+  },
+  {
+   "hs6": "290519",
+   "name_en": "Other saturated monohydric alcohols",
+   "name_zh": "其他饱和一元醇",
+   "keywords": [
+    "alcohols"
+   ]
+  },
+  {
+   "hs6": "290531",
+   "name_en": "Ethylene glycol (ethanediol)",
+   "name_zh": "乙二醇",
+   "keywords": [
+    "ethylene glycol",
+    "MEG",
+    "乙二醇"
+   ]
+  },
+  {
+   "hs6": "290532",
+   "name_en": "Propylene glycol (propane-1,2-diol)",
+   "name_zh": "丙二醇",
+   "keywords": [
+    "propylene glycol",
+    "PG",
+    "丙二醇"
+   ]
+  },
+  {
+   "hs6": "290539",
+   "name_en": "Other diols",
+   "name_zh": "其他二醇",
+   "keywords": [
+    "butanediol",
+    "BDO",
+    "1,4-丁二醇"
+   ]
+  },
+  {
+   "hs6": "290545",
+   "name_en": "Glycerol",
+   "name_zh": "甘油",
+   "keywords": [
+    "glycerol",
+    "glycerine",
+    "甘油",
+    "丙三醇"
+   ]
+  },
+  {
+   "hs6": "290711",
+   "name_en": "Phenol (hydroxybenzene)",
+   "name_zh": "苯酚",
+   "keywords": [
+    "phenol",
+    "苯酚"
+   ]
+  },
+  {
+   "hs6": "290712",
+   "name_en": "Cresols and their salts",
+   "name_zh": "甲酚",
+   "keywords": [
+    "cresol",
+    "甲酚"
+   ]
+  },
+  {
+   "hs6": "290723",
+   "name_en": "Bisphenol A",
+   "name_zh": "双酚A",
+   "keywords": [
+    "bisphenol A",
+    "BPA",
+    "双酚A"
+   ]
+  },
+  {
+   "hs6": "290911",
+   "name_en": "Diethyl ether",
+   "name_zh": "乙醚",
+   "keywords": [
+    "diethyl ether",
+    "乙醚"
+   ]
+  },
+  {
+   "hs6": "291211",
+   "name_en": "Methanal (formaldehyde)",
+   "name_zh": "甲醛",
+   "keywords": [
+    "formaldehyde",
+    "formalin",
+    "甲醛"
+   ]
+  },
+  {
+   "hs6": "291212",
+   "name_en": "Ethanal (acetaldehyde)",
+   "name_zh": "乙醛",
+   "keywords": [
+    "acetaldehyde",
+    "乙醛"
+   ]
+  },
+  {
+   "hs6": "291413",
+   "name_en": "4-Methylpentan-2-one (MIBK)",
+   "name_zh": "甲基异丁基酮",
+   "keywords": [
+    "MIBK",
+    "甲基异丁基酮"
+   ]
+  },
+  {
+   "hs6": "291521",
+   "name_en": "Acetic acid",
+   "name_zh": "乙酸（醋酸）",
+   "keywords": [
+    "acetic acid",
+    "glacial acetic acid",
+    "醋酸",
+    "乙酸",
+    "冰醋酸"
+   ]
+  },
+  {
+   "hs6": "291524",
+   "name_en": "Acetic anhydride",
+   "name_zh": "乙酸酐（醋酐）",
+   "keywords": [
+    "acetic anhydride",
+    "醋酐"
+   ]
+  },
+  {
+   "hs6": "291531",
+   "name_en": "Ethyl acetate",
+   "name_zh": "乙酸乙酯",
+   "keywords": [
+    "ethyl acetate",
+    "乙酸乙酯"
+   ]
+  },
+  {
+   "hs6": "291532",
+   "name_en": "Vinyl acetate",
+   "name_zh": "乙酸乙烯酯",
+   "keywords": [
+    "vinyl acetate",
+    "VAM",
+    "醋酸乙烯"
+   ]
+  },
+  {
+   "hs6": "291533",
+   "name_en": "n-Butyl acetate",
+   "name_zh": "乙酸正丁酯",
+   "keywords": [
+    "butyl acetate",
+    "乙酸丁酯"
+   ]
+  },
+  {
+   "hs6": "291539",
+   "name_en": "Other esters of acetic acid",
+   "name_zh": "其他乙酸酯",
+   "keywords": [
+    "acetate esters"
+   ]
+  },
+  {
+   "hs6": "291590",
+   "name_en": "Other saturated acyclic monocarboxylic acids and derivatives",
+   "name_zh": "其他饱和一元羧酸及其衍生物",
+   "keywords": [
+    "monocarboxylic acid"
+   ]
+  },
+  {
+   "hs6": "291611",
+   "name_en": "Acrylic acid and its salts",
+   "name_zh": "丙烯酸及其盐",
+   "keywords": [
+    "acrylic acid",
+    "丙烯酸"
+   ]
+  },
+  {
+   "hs6": "291612",
+   "name_en": "Esters of acrylic acid",
+   "name_zh": "丙烯酸酯",
+   "keywords": [
+    "butyl acrylate",
+    "丙烯酸丁酯",
+    "acrylate"
+   ]
+  },
+  {
+   "hs6": "291614",
+   "name_en": "Esters of methacrylic acid",
+   "name_zh": "甲基丙烯酸酯",
+   "keywords": [
+    "methyl methacrylate",
+    "MMA",
+    "甲基丙烯酸甲酯"
+   ]
+  },
+  {
+   "hs6": "291736",
+   "name_en": "Terephthalic acid and its salts",
+   "name_zh": "对苯二甲酸（PTA）",
+   "keywords": [
+    "terephthalic acid",
+    "PTA",
+    "精对苯二甲酸",
+    "purified terephthalic acid"
+   ]
+  },
+  {
+   "hs6": "291814",
+   "name_en": "Citric acid",
+   "name_zh": "柠檬酸",
+   "keywords": [
+    "citric acid",
+    "柠檬酸"
+   ]
+  },
+  {
+   "hs6": "291815",
+   "name_en": "Salts and esters of citric acid",
+   "name_zh": "柠檬酸盐及酯",
+   "keywords": [
+    "sodium citrate",
+    "柠檬酸钠",
+    "citrate"
+   ]
+  },
+  {
+   "hs6": "291811",
+   "name_en": "Lactic acid, its salts and esters",
+   "name_zh": "乳酸及其盐和酯",
+   "keywords": [
+    "lactic acid",
+    "乳酸"
+   ]
+  },
+  {
+   "hs6": "292121",
+   "name_en": "Ethylenediamine and its salts",
+   "name_zh": "乙二胺及其盐",
+   "keywords": [
+    "ethylenediamine",
+    "EDA",
+    "乙二胺"
+   ]
+  },
+  {
+   "hs6": "292129",
+   "name_en": "Other acyclic polyamines",
+   "name_zh": "其他无环多胺",
+   "keywords": [
+    "polyamine",
+    "二乙烯三胺",
+    "多乙烯多胺"
+   ]
+  },
+  {
+   "hs6": "292211",
+   "name_en": "Monoethanolamine and its salts",
+   "name_zh": "一乙醇胺",
+   "keywords": [
+    "monoethanolamine",
+    "MEA",
+    "一乙醇胺"
+   ]
+  },
+  {
+   "hs6": "292219",
+   "name_en": "Other amino-alcohols",
+   "name_zh": "其他氨基醇",
+   "keywords": [
+    "triethanolamine",
+    "TEA",
+    "三乙醇胺",
+    "二乙醇胺"
+   ]
+  },
+  {
+   "hs6": "292241",
+   "name_en": "Lysine and its esters",
+   "name_zh": "赖氨酸",
+   "keywords": [
+    "lysine",
+    "赖氨酸"
+   ]
+  },
+  {
+   "hs6": "292242",
+   "name_en": "Glutamic acid and its salts",
+   "name_zh": "谷氨酸及其盐",
+   "keywords": [
+    "glutamic acid",
+    "monosodium glutamate",
+    "味精",
+    "谷氨酸钠"
+   ]
+  },
+  {
+   "hs6": "292250",
+   "name_en": "Amino-alcohol-phenols, amino-acid-phenols",
+   "name_zh": "氨基醇酚等",
+   "keywords": [
+    "amino acid"
+   ]
+  },
+  {
+   "hs6": "292320",
+   "name_en": "Lecithins and other phosphoaminolipids",
+   "name_zh": "卵磷脂",
+   "keywords": [
+    "lecithin",
+    "卵磷脂"
+   ]
+  },
+  {
+   "hs6": "292610",
+   "name_en": "Acrylonitrile",
+   "name_zh": "丙烯腈",
+   "keywords": [
+    "acrylonitrile",
+    "丙烯腈"
+   ]
+  },
+  {
+   "hs6": "292690",
+   "name_en": "Other nitrile-function compounds",
+   "name_zh": "其他腈基化合物",
+   "keywords": [
+    "adiponitrile",
+    "己二腈",
+    "nitrile"
+   ]
+  },
+  {
+   "hs6": "292910",
+   "name_en": "Isocyanates",
+   "name_zh": "异氰酸酯",
+   "keywords": [
+    "MDI",
+    "TDI",
+    "isocyanate",
+    "异氰酸酯",
+    "聚合MDI"
+   ]
+  },
+  {
+   "hs6": "293090",
+   "name_en": "Other organo-sulphur compounds",
+   "name_zh": "其他有机硫化合物",
+   "keywords": [
+    "thio",
+    "巯基"
+   ]
+  },
+  {
+   "hs6": "293190",
+   "name_en": "Other organo-inorganic compounds",
+   "name_zh": "其他有机-无机化合物",
+   "keywords": [
+    "silane",
+    "siloxane",
+    "硅烷"
+   ]
+  },
+  {
+   "hs6": "293211",
+   "name_en": "Tetrahydrofuran",
+   "name_zh": "四氢呋喃",
+   "keywords": [
+    "tetrahydrofuran",
+    "THF",
+    "四氢呋喃"
+   ]
+  },
+  {
+   "hs6": "293213",
+   "name_en": "Furfuryl alcohol and tetrahydrofurfuryl alcohol",
+   "name_zh": "糠醇",
+   "keywords": [
+    "furfuryl alcohol",
+    "糠醇"
+   ]
+  },
+  {
+   "hs6": "320611",
+   "name_en": "Pigments based on titanium dioxide (>=80%)",
+   "name_zh": "以二氧化钛为主的颜料",
+   "keywords": [
+    "titanium dioxide pigment",
+    "TiO2"
+   ]
+  },
+  {
+   "hs6": "320417",
+   "name_en": "Pigments and preparations based thereon",
+   "name_zh": "颜料及其制品",
+   "keywords": [
+    "pigment",
+    "颜料",
+    "色粉"
+   ]
+  },
+  {
+   "hs6": "321290",
+   "name_en": "Pigments dispersed in non-aqueous media",
+   "name_zh": "分散于非水介质的颜料",
+   "keywords": [
+    "pigment dispersion"
+   ]
+  },
+  {
+   "hs6": "330290",
+   "name_en": "Mixtures of odoriferous substances",
+   "name_zh": "芳香物质混合物",
+   "keywords": [
+    "fragrance mixture",
+    "香精"
+   ]
+  },
+  {
+   "hs6": "340211",
+   "name_en": "Anionic organic surface-active agents",
+   "name_zh": "阴离子有机表面活性剂",
+   "keywords": [
+    "anionic surfactant",
+    "LAS",
+    "十二烷基苯磺酸钠"
+   ]
+  },
+  {
+   "hs6": "340213",
+   "name_en": "Non-ionic organic surface-active agents",
+   "name_zh": "非离子有机表面活性剂",
+   "keywords": [
+    "nonionic surfactant",
+    "AEO",
+    "脂肪醇聚氧乙烯醚"
+   ]
+  },
+  {
+   "hs6": "340219",
+   "name_en": "Other organic surface-active agents",
+   "name_zh": "其他有机表面活性剂",
+   "keywords": [
+    "surfactant",
+    "表面活性剂"
+   ]
+  },
+  {
+   "hs6": "340231",
+   "name_en": "Linear alkylbenzene sulphonic acids",
+   "name_zh": "直链烷基苯磺酸",
+   "keywords": [
+    "LABSA",
+    "sulphonic acid",
+    "磺酸"
+   ]
+  },
+  {
+   "hs6": "340290",
+   "name_en": "Surface-active preparations, washing preparations",
+   "name_zh": "表面活性剂制品、洗涤剂",
+   "keywords": [
+    "cleaning preparation"
+   ]
+  },
+  {
+   "hs6": "380110",
+   "name_en": "Artificial graphite",
+   "name_zh": "人造石墨",
+   "keywords": [
+    "graphite",
+    "石墨"
+   ]
+  },
+  {
+   "hs6": "380210",
+   "name_en": "Activated carbon",
+   "name_zh": "活性炭",
+   "keywords": [
+    "activated carbon",
+    "活性炭"
+   ]
+  },
+  {
+   "hs6": "380610",
+   "name_en": "Rosin and resin acids",
+   "name_zh": "松香及树脂酸",
+   "keywords": [
+    "rosin",
+    "松香"
+   ]
+  },
+  {
+   "hs6": "380810",
+   "name_en": "Insecticides",
+   "name_zh": "杀虫剂",
+   "keywords": [
+    "insecticide",
+    "杀虫剂"
+   ]
+  },
+  {
+   "hs6": "380891",
+   "name_en": "Insecticides",
+   "name_zh": "杀虫剂（现行）",
+   "keywords": [
+    "insecticides"
+   ]
+  },
+  {
+   "hs6": "380893",
+   "name_en": "Herbicides, anti-sprouting products",
+   "name_zh": "除草剂",
+   "keywords": [
+    "herbicide",
+    "除草剂",
+    "草甘膦"
+   ]
+  },
+  {
+   "hs6": "380894",
+   "name_en": "Disinfectants",
+   "name_zh": "消毒剂",
+   "keywords": [
+    "disinfectant",
+    "消毒剂"
+   ]
+  },
+  {
+   "hs6": "381010",
+   "name_en": "Pickling preparations for metal surfaces; soldering fluxes",
+   "name_zh": "金属表面酸洗剂；焊接助剂",
+   "keywords": [
+    "pickling",
+    "flux",
+    "助焊剂"
+   ]
+  },
+  {
+   "hs6": "381090",
+   "name_en": "Other fluxes and preparations",
+   "name_zh": "其他助熔剂",
+   "keywords": [
+    "fluxes"
+   ]
+  },
+  {
+   "hs6": "381121",
+   "name_en": "Additives for lubricating oils containing petroleum oils",
+   "name_zh": "含石油的润滑油添加剂",
+   "keywords": [
+    "lubricating oil additive"
+   ]
+  },
+  {
+   "hs6": "381129",
+   "name_en": "Other additives for lubricating oils",
+   "name_zh": "其他润滑油添加剂",
+   "keywords": [
+    "lube additive"
+   ]
+  },
+  {
+   "hs6": "381190",
+   "name_en": "Other prepared additives, anti-freezing preparations",
+   "name_zh": "其他配制止剂、防冻液",
+   "keywords": [
+    "antifreeze",
+    "防冻液"
+   ]
+  },
+  {
+   "hs6": "381210",
+   "name_en": "Prepared rubber accelerators",
+   "name_zh": "橡胶促进剂",
+   "keywords": [
+    "rubber accelerator",
+    "促进剂"
+   ]
+  },
+  {
+   "hs6": "381239",
+   "name_en": "Other anti-oxidising preparations and stabilisers for rubber",
+   "name_zh": "其他橡胶防老剂及稳定剂",
+   "keywords": [
+    "antioxidant rubber",
+    "防老剂"
+   ]
+  },
+  {
+   "hs6": "381400",
+   "name_en": "Organic composite solvents and thinners",
+   "name_zh": "有机复合溶剂及稀释剂",
+   "keywords": [
+    "thinner",
+    "稀释剂",
+    "天那水"
+   ]
+  },
+  {
+   "hs6": "381511",
+   "name_en": "Supported catalysts with nickel or nickel compounds",
+   "name_zh": "含镍催化剂",
+   "keywords": [
+    "nickel catalyst"
+   ]
+  },
+  {
+   "hs6": "381519",
+   "name_en": "Other supported catalysts",
+   "name_zh": "其他载体催化剂",
+   "keywords": [
+    "catalyst",
+    "催化剂"
+   ]
+  },
+  {
+   "hs6": "381590",
+   "name_en": "Other reaction initiators and catalysts",
+   "name_zh": "其他反应引发剂与催化剂",
+   "keywords": [
+    "initiator",
+    "引发剂"
+   ]
+  },
+  {
+   "hs6": "381600",
+   "name_en": "Refractory cements, mortars, concretes",
+   "name_zh": "耐火水泥、砂浆、混凝土",
+   "keywords": [
+    "refractory",
+    "耐火材料"
+   ]
+  },
+  {
+   "hs6": "381700",
+   "name_en": "Mixed alkylbenzenes and mixed alkylnaphthalenes",
+   "name_zh": "混合烷基苯及混合烷基萘",
+   "keywords": [
+    "alkylbenzene",
+    "烷基苯"
+   ]
+  },
+  {
+   "hs6": "382311",
+   "name_en": "Stearic acid",
+   "name_zh": "硬脂酸",
+   "keywords": [
+    "stearic acid",
+    "硬脂酸"
+   ]
+  },
+  {
+   "hs6": "382312",
+   "name_en": "Oleic acid",
+   "name_zh": "油酸",
+   "keywords": [
+    "oleic acid",
+    "油酸"
+   ]
+  },
+  {
+   "hs6": "382370",
+   "name_en": "Industrial fatty alcohols",
+   "name_zh": "工业脂肪醇",
+   "keywords": [
+    "fatty alcohol",
+    "脂肪醇"
+   ]
+  },
+  {
+   "hs6": "382410",
+   "name_en": "Prepared binders for foundry moulds or cores",
+   "name_zh": "铸造用黏结剂",
+   "keywords": [
+    "foundry binder",
+    "铸造黏结剂"
+   ]
+  },
+  {
+   "hs6": "382440",
+   "name_en": "Prepared additives for cements, mortars or concretes",
+   "name_zh": "水泥混凝土用外加剂",
+   "keywords": [
+    "concrete admixture",
+    "减水剂"
+   ]
+  },
+  {
+   "hs6": "382460",
+   "name_en": "Sorbitol (other than 2905.44)",
+   "name_zh": "山梨醇",
+   "keywords": [
+    "sorbitol",
+    "山梨醇"
+   ]
+  },
+  {
+   "hs6": "382499",
+   "name_en": "Other chemical products and preparations",
+   "name_zh": "其他化学品及配制品",
+   "keywords": [
+    "chemical preparations",
+    "preparation",
+    "混合物"
+   ]
+  },
+  {
+   "hs6": "382600",
+   "name_en": "Biodiesel and mixtures thereof",
+   "name_zh": "生物柴油",
+   "keywords": [
+    "biodiesel",
+    "生物柴油"
+   ]
+  },
+  {
+   "hs6": "390110",
+   "name_en": "Polyethylene having a specific gravity < 0.94",
+   "name_zh": "初级形状聚乙烯（LDPE）",
+   "keywords": [
+    "LDPE",
+    "polyethylene low"
+   ]
+  },
+  {
+   "hs6": "390120",
+   "name_en": "Polyethylene having a specific gravity >= 0.94",
+   "name_zh": "初级形状聚乙烯（HDPE）",
+   "keywords": [
+    "HDPE",
+    "高密度聚乙烯"
+   ]
+  },
+  {
+   "hs6": "390140",
+   "name_en": "Ethylene-alpha-olefin copolymers",
+   "name_zh": "乙烯-α-烯烃共聚物",
+   "keywords": [
+    "LLDPE",
+    "线性低密度聚乙烯"
+   ]
+  },
+  {
+   "hs6": "390210",
+   "name_en": "Polypropylene",
+   "name_zh": "初级形状聚丙烯",
+   "keywords": [
+    "polypropylene",
+    "PP",
+    "聚丙烯"
+   ]
+  },
+  {
+   "hs6": "390311",
+   "name_en": "Expansible polystyrene",
+   "name_zh": "可发性聚苯乙烯",
+   "keywords": [
+    "EPS",
+    "可发性聚苯乙烯"
+   ]
+  },
+  {
+   "hs6": "390319",
+   "name_en": "Other polystyrene",
+   "name_zh": "其他聚苯乙烯",
+   "keywords": [
+    "polystyrene",
+    "GPPS",
+    "聚苯乙烯"
+   ]
+  },
+  {
+   "hs6": "390410",
+   "name_en": "Poly(vinyl chloride), not mixed",
+   "name_zh": "未混合的聚氯乙烯",
+   "keywords": [
+    "PVC",
+    "polyvinyl chloride",
+    "聚氯乙烯"
+   ]
+  },
+  {
+   "hs6": "390740",
+   "name_en": "Polycarbonates",
+   "name_zh": "聚碳酸酯",
+   "keywords": [
+    "polycarbonate",
+    "PC",
+    "聚碳酸酯"
+   ]
+  },
+  {
+   "hs6": "390760",
+   "name_en": "Poly(ethylene terephthalate)",
+   "name_zh": "聚对苯二甲酸乙二酯",
+   "keywords": [
+    "PET",
+    "polyester chip",
+    "瓶级切片"
+   ]
+  },
+  {
+   "hs6": "390810",
+   "name_en": "Polyamides -6, -11, -12, -6,6, -6,9, -6,10, -6,12",
+   "name_zh": "聚酰胺",
+   "keywords": [
+    "nylon",
+    "polyamide",
+    "PA6",
+    "尼龙"
+   ]
+  },
+  {
+   "hs6": "390910",
+   "name_en": "Urea resins; thiourea resins",
+   "name_zh": "脲醛树脂",
+   "keywords": [
+    "urea resin",
+    "脲醛树脂"
+   ]
+  },
+  {
+   "hs6": "390920",
+   "name_en": "Melamine resins",
+   "name_zh": "三聚氰胺树脂",
+   "keywords": [
+    "melamine resin",
+    "密胺"
+   ]
+  },
+  {
+   "hs6": "390940",
+   "name_en": "Phenolic resins",
+   "name_zh": "酚醛树脂",
+   "keywords": [
+    "phenolic resin",
+    "酚醛树脂"
+   ]
+  },
+  {
+   "hs6": "391000",
+   "name_en": "Silicones in primary forms",
+   "name_zh": "初级形状聚硅氧烷",
+   "keywords": [
+    "silicone",
+    "硅胶",
+    "硅油"
+   ]
+  },
+  {
+   "hs6": "391190",
+   "name_en": "Other polyurethanes in primary forms",
+   "name_zh": "其他初级形状聚合物",
+   "keywords": [
+    "polyurethane primary"
+   ]
+  },
+  {
+   "hs6": "391212",
+   "name_en": "Polymers of ethylene in primary forms (waste)",
+   "name_zh": "乙烯聚合物废碎料",
+   "keywords": [
+    "plastic waste"
+   ]
+  }
+ ]
+}

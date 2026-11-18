@@ -1,0 +1,1607 @@
+{
+ "generated_at": "2026-10-20 19:05:27",
+ "source_csv": "./inv-skill\\inventory-price-relationship\\examples\\methanol-port-inventory\\data\\inventory_weekly.csv",
+ "n": 228,
+ "tally": {
+  "verified": 228
+ },
+ "verified_ratio": 1.0,
+ "records": [
+  {
+   "asof": "2022-04-06",
+   "value": 74.36,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/314F9A7C057B609C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-04-13",
+   "value": 74.18,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/2DA0FF597EA56FA9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-04-20",
+   "value": 71.77,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/7BE4792785AE0289_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-04-27",
+   "value": 77.66,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/45E37964EB246261_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-05-05",
+   "value": 83.06,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/4CD94DF91863030F_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-05-11",
+   "value": 78.73,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/BBB2138F9A892B9B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-05-18",
+   "value": 88.67,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/D2451F32FDC1119F_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-05-25",
+   "value": 89.23,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/890F84E5F123D839_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-06-01",
+   "value": 87.61,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/AE94FC33468A27F1_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-06-08",
+   "value": 96.21,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/374B285C12E1E5BF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-06-15",
+   "value": 102.35,
+   "url": "https://nenghua.m.mysteel.com/a/24072813/E84239BB87BA2669_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-06-22",
+   "value": 104.15,
+   "url": "https://nenghua.m.mysteel.com/a/24072812/CB3BFFED7FF0736F_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-06-29",
+   "value": 103.22,
+   "url": "https://nenghua.m.mysteel.com/a/24072812/752258B9A0543356_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-07-06",
+   "value": 94.24,
+   "url": "https://nenghua.m.mysteel.com/a/24072812/FAB8248EB443D707_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-07-13",
+   "value": 94.94,
+   "url": "https://nenghua.m.mysteel.com/a/24072812/824EAC24F11EF628_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-07-20",
+   "value": 96.25,
+   "url": "https://nenghua.m.mysteel.com/a/24072812/C57B025C4C2CCF59_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-07-27",
+   "value": 103.45,
+   "url": "https://nenghua.m.mysteel.com/a/24072812/15CD51531E7C6D2E_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-08-03",
+   "value": 99.47,
+   "url": "https://nenghua.m.mysteel.com/a/24072812/65A78C3ACB576889_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-08-10",
+   "value": 103.19,
+   "url": "https://nenghua.m.mysteel.com/a/24072811/2027A5E83B47B272_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-08-17",
+   "value": 104.93,
+   "url": "https://nenghua.m.mysteel.com/a/24072810/D547CF1E3C2C77B2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-08-24",
+   "value": 96.2,
+   "url": "https://nenghua.m.mysteel.com/a/24072810/2289CC24785C5189_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-08-31",
+   "value": 92.08,
+   "url": "https://nenghua.m.mysteel.com/a/24072810/E0169463D33D7DCB_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-09-07",
+   "value": 88.42,
+   "url": "https://nenghua.m.mysteel.com/a/24072810/F7EC8B32FBCA96F2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-09-14",
+   "value": 83.76,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/CF411DF01B29642B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-09-21",
+   "value": 73.85,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/56E564D77FA599E8_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-09-28",
+   "value": 64.61,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/1DB1F26007321A9A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-10-12",
+   "value": 58.83,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/8CB2146AEB8EA2A5_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-10-19",
+   "value": 47.32,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/84456C282799B957_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-10-26",
+   "value": 45.22,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/BA0C66D79F18C5A0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-11-02",
+   "value": 49.9,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/01A0C8D8F0AF4577_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-11-09",
+   "value": 55.95,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/B146B6EB9C2B0157_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-11-16",
+   "value": 54.97,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/96D4F0A0E7EC355C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-11-23",
+   "value": 54.28,
+   "url": "https://nenghua.m.mysteel.com/a/24072809/81C14B48543376C2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-11-30",
+   "value": 58.64,
+   "url": "https://nenghua.m.mysteel.com/a/24072808/99B7D2112CC9BA11_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-12-07",
+   "value": 56.42,
+   "url": "https://nenghua.m.mysteel.com/a/24072808/993344EF2828CA50_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-12-14",
+   "value": 64.41,
+   "url": "https://nenghua.m.mysteel.com/a/24072808/578619828327422A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-12-21",
+   "value": 64.48,
+   "url": "https://nenghua.m.mysteel.com/a/24072808/3A754501B35EE583_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2022-12-28",
+   "value": 62.06,
+   "url": "https://nenghua.m.mysteel.com/a/24072808/EC128E3CB5C627FF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-01-04",
+   "value": 71.66,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/3804E72EC9E121A5_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-01-11",
+   "value": 79.74,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/7713E959E86657E0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-01-18",
+   "value": 76.14,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/4971797A1E6DF69D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-02-01",
+   "value": 69.82,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/DFE67237BE11B187_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-02-08",
+   "value": 71.51,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/C683DD1289EA630C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-02-15",
+   "value": 75.52,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/8E6BCC3D2B9CE6A0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-02-22",
+   "value": 72.09,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/2071E1497DFEE28C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-03-01",
+   "value": 68.52,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/F36D27905D7020A8_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-03-08",
+   "value": 68.96,
+   "url": "https://nenghua.m.mysteel.com/a/24072719/27611AAC70EBBBF9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-03-15",
+   "value": 67.85,
+   "url": "https://nenghua.m.mysteel.com/a/24072718/B1E451E2276A4D0E_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-03-22",
+   "value": 71.67,
+   "url": "https://nenghua.m.mysteel.com/a/24072718/C8323EC861A06D96_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-03-29",
+   "value": 79.3,
+   "url": "https://nenghua.m.mysteel.com/a/24072718/640C562023407FCB_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-04-12",
+   "value": 67.69,
+   "url": "https://nenghua.m.mysteel.com/a/24072718/5BF0207AB95260CA_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-04-19",
+   "value": 67.18,
+   "url": "https://nenghua.m.mysteel.com/a/24072718/C0F44446EF5635BE_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-04-26",
+   "value": 65.55,
+   "url": "https://nenghua.m.mysteel.com/a/24072717/56BE7AB838D3C9E3_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-05-04",
+   "value": 72.54,
+   "url": "https://nenghua.m.mysteel.com/a/24072717/02066DDB63C03B2D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-05-10",
+   "value": 77.03,
+   "url": "https://nenghua.m.mysteel.com/a/24072717/A30D4A83E3146206_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-05-17",
+   "value": 77.33,
+   "url": "https://nenghua.m.mysteel.com/a/24072717/E373DB854D794831_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-05-24",
+   "value": 78.44,
+   "url": "https://nenghua.m.mysteel.com/a/24072716/F26FFF13A6F94349_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-05-31",
+   "value": 71.18,
+   "url": "https://nenghua.m.mysteel.com/a/24072716/F4D39E24257CF5A9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-06-07",
+   "value": 75.0,
+   "url": "https://nenghua.m.mysteel.com/a/24072715/B37F422E9FD0E90A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-06-14",
+   "value": 74.28,
+   "url": "https://nenghua.m.mysteel.com/a/24072715/DDAEEF498737BAF7_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-06-21",
+   "value": 81.26,
+   "url": "https://nenghua.m.mysteel.com/a/24072714/0D58D55A1EABEDAD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-07-05",
+   "value": 86.18,
+   "url": "https://nenghua.m.mysteel.com/a/24072714/2ED3B212B75D73AD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-07-12",
+   "value": 85.81,
+   "url": "https://nenghua.m.mysteel.com/a/24072713/6CE78946E0521D09_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-07-19",
+   "value": 86.76,
+   "url": "https://nenghua.m.mysteel.com/a/24072713/88D25AC8C3414157_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-07-26",
+   "value": 95.27,
+   "url": "https://nenghua.m.mysteel.com/a/24072713/71B65126E2835E57_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-08-02",
+   "value": 87.43,
+   "url": "https://nenghua.m.mysteel.com/a/24072712/4DE51E9B4C40B736_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-08-09",
+   "value": 90.25,
+   "url": "https://nenghua.m.mysteel.com/a/24072712/E70277DA08FF35D8_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-08-16",
+   "value": 96.46,
+   "url": "https://nenghua.m.mysteel.com/a/24072712/F8DC372B9633B4BC_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-08-23",
+   "value": 99.81,
+   "url": "https://nenghua.m.mysteel.com/a/24072711/3B1DC92A20D277AD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-08-30",
+   "value": 102.03,
+   "url": "https://nenghua.m.mysteel.com/a/24072711/F1C7B12D02F69E0A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-09-06",
+   "value": 103.85,
+   "url": "https://nenghua.m.mysteel.com/a/24072711/003CFF1241EFCBD0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-09-13",
+   "value": 113.21,
+   "url": "https://nenghua.m.mysteel.com/a/24072711/7228AA1CEBAD6FB7_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-09-20",
+   "value": 114.56,
+   "url": "https://nenghua.m.mysteel.com/a/24072711/C6D5161A9145E2E0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-09-27",
+   "value": 110.29,
+   "url": "https://nenghua.m.mysteel.com/a/24072710/C4A8F9262755E3D2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-10-08",
+   "value": 94.74,
+   "url": "https://nenghua.m.mysteel.com/a/24072710/6E45755E422AD35F_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-10-11",
+   "value": 88.1,
+   "url": "https://nenghua.m.mysteel.com/a/24072710/3B3E04271597FAB8_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-10-18",
+   "value": 87.4,
+   "url": "https://nenghua.m.mysteel.com/a/24072710/BB75D4860F7EE1E2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-10-25",
+   "value": 89.82,
+   "url": "https://nenghua.m.mysteel.com/a/24072710/47338E991350BAE4_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-11-01",
+   "value": 87.68,
+   "url": "https://nenghua.m.mysteel.com/a/24072710/A3912871A8E35B7F_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-11-08",
+   "value": 93.83,
+   "url": "https://nenghua.m.mysteel.com/a/24072709/69D8F665481CFD81_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-11-15",
+   "value": 98.4,
+   "url": "https://nenghua.m.mysteel.com/a/24072709/685267E487522507_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-11-22",
+   "value": 92.55,
+   "url": "https://nenghua.m.mysteel.com/a/24072709/6DCD6D70A2D6BA5F_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-11-29",
+   "value": 86.15,
+   "url": "https://nenghua.m.mysteel.com/a/24072709/6CE66E03773E3FEC_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-12-06",
+   "value": 87.44,
+   "url": "https://nenghua.m.mysteel.com/a/24072709/75AED98D595AE9A2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-12-13",
+   "value": 95.1,
+   "url": "https://nenghua.m.mysteel.com/a/24072709/B0F942B07B013471_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-12-20",
+   "value": 96.76,
+   "url": "https://nenghua.m.mysteel.com/a/24072708/7C47094A40B4D9B3_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2023-12-27",
+   "value": 90.54,
+   "url": "https://nenghua.m.mysteel.com/a/24072708/0210565D0F34E69A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-01-03",
+   "value": 82.49,
+   "url": "https://nenghua.m.mysteel.com/a/24072717/A11C9DA76B2CC374_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-01-10",
+   "value": 73.04,
+   "url": "https://nenghua.m.mysteel.com/a/24072716/C38132C4695FBD76_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-01-17",
+   "value": 78.14,
+   "url": "https://nenghua.m.mysteel.com/a/24072716/AB0CF0FADC126C57_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-01-24",
+   "value": 78.67,
+   "url": "https://nenghua.m.mysteel.com/a/24072715/EC11F627679FD35A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-01-31",
+   "value": 80.06,
+   "url": "https://nenghua.m.mysteel.com/a/24072715/28101951DBDAE608_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-02-07",
+   "value": 79.0,
+   "url": "https://nenghua.m.mysteel.com/a/24072715/C96695273879DB0B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-02-18",
+   "value": 84.54,
+   "url": "https://nenghua.m.mysteel.com/a/24072714/BC84FA52C2430259_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-02-21",
+   "value": 81.48,
+   "url": "https://nenghua.m.mysteel.com/a/24072714/485F5D2DC5F81E55_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-02-28",
+   "value": 76.05,
+   "url": "https://nenghua.m.mysteel.com/a/24072714/91108C2921F5E58A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-03-06",
+   "value": 71.78,
+   "url": "https://nenghua.m.mysteel.com/a/24072714/BBE088C4ADC469AD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-03-13",
+   "value": 73.5,
+   "url": "https://nenghua.m.mysteel.com/a/24072713/9F6F52BFC80A9E4A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-03-20",
+   "value": 67.61,
+   "url": "https://nenghua.m.mysteel.com/a/24072713/F7DF73042A6C782D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-03-27",
+   "value": 52.82,
+   "url": "https://nenghua.m.mysteel.com/a/24072713/8282B196040B1EE3_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-04-03",
+   "value": 62.44,
+   "url": "https://nenghua.m.mysteel.com/a/24072712/76E7A42C608C5EFE_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-04-10",
+   "value": 63.71,
+   "url": "https://nenghua.m.mysteel.com/a/24072712/1F47994264946AEF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-04-17",
+   "value": 67.79,
+   "url": "https://nenghua.m.mysteel.com/a/24072712/EDB4891765A006E8_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-04-24",
+   "value": 64.74,
+   "url": "https://nenghua.m.mysteel.com/a/24072711/593DD00A6CF0C7DD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-05-08",
+   "value": 64.23,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/27E7AE784D4DA8BD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-05-15",
+   "value": 55.87,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/02AAF84843656A09_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-05-22",
+   "value": 58.82,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/4860D6435C1E68C3_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-05-29",
+   "value": 61.44,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/4DD6C1AFAE0C99D0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-06-05",
+   "value": 61.8,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/5F42D69A318E0ECB_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-06-12",
+   "value": 67.74,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/E3ACE4F2B23445CF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-06-19",
+   "value": 68.96,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/07D4323510609586_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-06-26",
+   "value": 79.03,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/75395D0233800565_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-07-03",
+   "value": 88.75,
+   "url": "https://nenghua.m.mysteel.com/a/24070420/6F6FE2B9C404BE9E_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-07-10",
+   "value": 92.34,
+   "url": "https://nenghua.m.mysteel.com/a/24071014/8B56048916A41C6B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-07-17",
+   "value": 98.09,
+   "url": "https://nenghua.m.mysteel.com/a/24071717/BCA775A321DAAC0D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-07-24",
+   "value": 103.44,
+   "url": "https://nenghua.m.mysteel.com/a/24072414/11A9767949A17F06_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-07-31",
+   "value": 101.37,
+   "url": "https://nenghua.m.mysteel.com/a/24073114/5983B5AA9C2B8F7D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-08-07",
+   "value": 94.05,
+   "url": "https://nenghua.m.mysteel.com/a/24080714/BA85ABCA41B2BC94_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-08-14",
+   "value": 98.53,
+   "url": "https://nenghua.m.mysteel.com/a/24081414/C42D7B4BD6F65788_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-08-21",
+   "value": 103.3,
+   "url": "https://nenghua.m.mysteel.com/a/24082114/7EB3D2AFA9B08573_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-08-28",
+   "value": 112.43,
+   "url": "https://nenghua.m.mysteel.com/a/24082814/B26884A91F9BFB15_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-09-04",
+   "value": 117.44,
+   "url": "https://nenghua.m.mysteel.com/a/24090414/1AEA08F2ACAA9E10_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-09-11",
+   "value": 116.83,
+   "url": "https://nenghua.m.mysteel.com/a/24091114/B78D6101F7AAD6A2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-09-18",
+   "value": 99.82,
+   "url": "https://nenghua.m.mysteel.com/a/24091814/732D7165C2912DCB_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-09-25",
+   "value": 95.2,
+   "url": "https://nenghua.m.mysteel.com/a/24092514/DEE30CDA05EAD6D3_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-10-09",
+   "value": 102.05,
+   "url": "https://nenghua.m.mysteel.com/a/24100914/263CC2BFDBE56F47_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-10-16",
+   "value": 110.24,
+   "url": "https://nenghua.m.mysteel.com/a/24101614/F72551EA3816C902_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-10-23",
+   "value": 110.87,
+   "url": "https://nenghua.m.mysteel.com/a/24102314/B1EC372D0FC47C8C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-10-30",
+   "value": 118.78,
+   "url": "https://nenghua.m.mysteel.com/a/24103014/1E6B89CCFC92E4F9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-11-06",
+   "value": 120.64,
+   "url": "https://nenghua.m.mysteel.com/a/24110614/D16D93B9ACB3E807_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-11-13",
+   "value": 125.28,
+   "url": "https://nenghua.m.mysteel.com/a/24111314/146DEB0BA555484A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-11-20",
+   "value": 127.57,
+   "url": "https://nenghua.m.mysteel.com/a/24112014/42C62EDC834154E0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-11-27",
+   "value": 117.7,
+   "url": "https://nenghua.m.mysteel.com/a/24112714/5E6724EC739E0156_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-12-04",
+   "value": 122.13,
+   "url": "https://nenghua.m.mysteel.com/a/24120414/8EBB51BAB06FC967_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-12-11",
+   "value": 108.5,
+   "url": "https://nenghua.m.mysteel.com/a/24121114/81ECB461D5A18D47_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-12-18",
+   "value": 107.03,
+   "url": "https://nenghua.m.mysteel.com/a/24121814/EB3D26E72FAE7BAD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2024-12-25",
+   "value": 95.83,
+   "url": "https://nenghua.m.mysteel.com/a/24122514/84E57F30C0DBE8ED_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-01-02",
+   "value": 93.36,
+   "url": "https://nenghua.m.mysteel.com/a/25010214/DC91E166360C7DD1_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-01-08",
+   "value": 84.77,
+   "url": "https://nenghua.m.mysteel.com/a/25010814/9BF7B686E1BEBE2A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-01-15",
+   "value": 91.47,
+   "url": "https://nenghua.m.mysteel.com/a/25011514/C7F12E12B3431B2C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-01-22",
+   "value": 92.97,
+   "url": "https://nenghua.m.mysteel.com/a/25012214/34C0D105C00C64C5_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-02-05",
+   "value": 95.51,
+   "url": "https://nenghua.m.mysteel.com/a/25020514/6031624C7DD21CDF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-02-12",
+   "value": 96.95,
+   "url": "https://nenghua.m.mysteel.com/a/25021214/13F7AD8E33DCC9B2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-02-19",
+   "value": 100.12,
+   "url": "https://nenghua.m.mysteel.com/a/25021914/BFD737CD91C6C455_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-02-26",
+   "value": 106.92,
+   "url": "https://nenghua.m.mysteel.com/a/25022614/8A1F652566884357_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-03-05",
+   "value": 100.61,
+   "url": "https://nenghua.m.mysteel.com/a/25030514/2933A3C8C6EF862D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-03-12",
+   "value": 91.1,
+   "url": "https://nenghua.m.mysteel.com/a/25031214/3D0A2D314981138C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-03-19",
+   "value": 80.01,
+   "url": "https://nenghua.m.mysteel.com/a/25031914/0CAC0884FBDC0B96_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-03-26",
+   "value": 77.38,
+   "url": "https://nenghua.m.mysteel.com/a/25032614/883B189285270B87_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-04-02",
+   "value": 61.61,
+   "url": "https://nenghua.m.mysteel.com/a/25040214/0D0560CC7E39D6D9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-04-09",
+   "value": 56.98,
+   "url": "https://nenghua.m.mysteel.com/a/25040914/A734541E90C05BCE_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-04-16",
+   "value": 58.56,
+   "url": "https://nenghua.m.mysteel.com/a/25041614/2711879CAF92DFF5_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-04-23",
+   "value": 46.32,
+   "url": "https://nenghua.m.mysteel.com/a/25042314/1459D83691A0ECAD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-04-30",
+   "value": 53.74,
+   "url": "https://nenghua.m.mysteel.com/a/25043014/07A0A18714F610C2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-05-07",
+   "value": 56.19,
+   "url": "https://nenghua.m.mysteel.com/a/25050714/3427A41950949D16_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-05-14",
+   "value": 48.39,
+   "url": "https://nenghua.m.mysteel.com/a/25051414/7139B8A8355E80AB_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-05-21",
+   "value": 49.04,
+   "url": "https://nenghua.m.mysteel.com/a/25052114/DF00EE47C1C05CD7_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-05-28",
+   "value": 52.3,
+   "url": "https://nenghua.m.mysteel.com/a/25052814/35BBCBDE38397E0D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-06-04",
+   "value": 58.12,
+   "url": "https://nenghua.m.mysteel.com/a/25060414/A6121695D0430474_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-06-11",
+   "value": 65.22,
+   "url": "https://nenghua.m.mysteel.com/a/25061114/62D7D85685911BAB_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-06-18",
+   "value": 58.64,
+   "url": "https://nenghua.m.mysteel.com/a/25061814/361A8DAF33C49A43_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-06-25",
+   "value": 67.05,
+   "url": "https://nenghua.m.mysteel.com/a/25062514/4BD4D4CAF78D057E_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-07-02",
+   "value": 67.37,
+   "url": "https://nenghua.m.mysteel.com/a/25070214/AC44104C5E68B639_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-07-09",
+   "value": 71.89,
+   "url": "https://nenghua.m.mysteel.com/a/25070914/E4824C6583883AC9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-07-16",
+   "value": 79.02,
+   "url": "https://nenghua.m.mysteel.com/a/25071614/8DDC4BCB51739ECA_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-07-23",
+   "value": 72.58,
+   "url": "https://nenghua.m.mysteel.com/a/25072314/D96A98003715515B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-07-30",
+   "value": 80.84,
+   "url": "https://nenghua.m.mysteel.com/a/25073014/9195C4AB5D69E6AC_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-08-06",
+   "value": 92.55,
+   "url": "https://nenghua.m.mysteel.com/a/25080614/DE0B99B2F8B94944_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-08-13",
+   "value": 102.18,
+   "url": "https://nenghua.m.mysteel.com/a/25081314/A4AF4C3174649F2C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-08-20",
+   "value": 107.6,
+   "url": "https://nenghua.m.mysteel.com/a/25082014/B880B76158B3361C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-08-27",
+   "value": 129.93,
+   "url": "https://nenghua.m.mysteel.com/a/25082714/8E1A33B5D4AD94CA_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-09-03",
+   "value": 142.77,
+   "url": "https://nenghua.m.mysteel.com/a/25090314/809AC765CD873B4D_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-09-10",
+   "value": 155.03,
+   "url": "https://nenghua.m.mysteel.com/a/25091014/014A7A7C053322CE_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-09-17",
+   "value": 155.78,
+   "url": "https://nenghua.m.mysteel.com/a/25091714/655A1C2BFB40933C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-09-24",
+   "value": 149.22,
+   "url": "https://nenghua.m.mysteel.com/a/25092414/34715E9E45493C11_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-10-09",
+   "value": 154.32,
+   "url": "https://nenghua.m.mysteel.com/a/25100914/EED5297109AAC6EE_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-10-15",
+   "value": 149.14,
+   "url": "https://nenghua.m.mysteel.com/a/25101514/B272DD307DA87F22_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-10-22",
+   "value": 151.22,
+   "url": "https://nenghua.m.mysteel.com/a/25102214/64684507B0055537_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-10-29",
+   "value": 150.65,
+   "url": "https://nenghua.m.mysteel.com/a/25102914/859A56349263AF74_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-11-05",
+   "value": 151.71,
+   "url": "https://nenghua.m.mysteel.com/a/25110514/CDF762E201028B87_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-11-12",
+   "value": 154.36,
+   "url": "https://nenghua.m.mysteel.com/a/25111214/5A8D3259653F1904_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-11-19",
+   "value": 147.93,
+   "url": "https://nenghua.m.mysteel.com/a/25111914/0B3582A146B92C01_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-11-26",
+   "value": 136.35,
+   "url": "https://nenghua.m.mysteel.com/a/25112614/63632903D303C240_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-12-03",
+   "value": 134.94,
+   "url": "https://nenghua.m.mysteel.com/a/25120314/CBE77E131B0AA88B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-12-10",
+   "value": 123.44,
+   "url": "https://nenghua.m.mysteel.com/a/25121014/EBA876CE6FDF1BB8_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-12-17",
+   "value": 121.88,
+   "url": "https://nenghua.m.mysteel.com/a/25121714/651B1CA765C390F1_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-12-24",
+   "value": 141.25,
+   "url": "https://nenghua.m.mysteel.com/a/25122414/7AAA184D1F3B27A0_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2025-12-31",
+   "value": 147.74,
+   "url": "https://nenghua.m.mysteel.com/a/25123114/5F88ECD18915A877_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-01-07",
+   "value": 153.72,
+   "url": "https://nenghua.m.mysteel.com/a/26010714/F74FBFB9F8C5E8F9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-01-14",
+   "value": 143.53,
+   "url": "https://nenghua.m.mysteel.com/a/26011414/7346A0ADC0F209DE_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-01-21",
+   "value": 145.75,
+   "url": "https://nenghua.m.mysteel.com/a/26012114/5F10AD31E22704CB_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-01-28",
+   "value": 147.21,
+   "url": "https://nenghua.m.mysteel.com/a/26012814/BB95EFF4E44AC1F7_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-02-04",
+   "value": 141.1,
+   "url": "https://nenghua.m.mysteel.com/a/26020414/6258F7CFFA49BD19_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-02-11",
+   "value": 143.22,
+   "url": "https://nenghua.m.mysteel.com/a/26021114/F3B60BAF0E09DD79_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-02-25",
+   "value": 144.67,
+   "url": "https://nenghua.m.mysteel.com/a/26022514/1D15DDB6F94E38EF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-03-04",
+   "value": 144.35,
+   "url": "https://nenghua.m.mysteel.com/a/26030414/C82528F3C35933AC_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-03-11",
+   "value": 131.28,
+   "url": "https://nenghua.m.mysteel.com/a/26031114/1D4E8B8AE332C013_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-03-18",
+   "value": 126.17,
+   "url": "https://nenghua.m.mysteel.com/a/26031814/C3E9BAB1AC1A0D59_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-03-25",
+   "value": 115.55,
+   "url": "https://nenghua.m.mysteel.com/a/26032514/B00B13AD19BB8148_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-04-01",
+   "value": 103.4,
+   "url": "https://nenghua.m.mysteel.com/a/26040114/F2ABCAB2224D997F_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-04-08",
+   "value": 102.55,
+   "url": "https://nenghua.m.mysteel.com/a/26040814/5F0EA27EB5083C9A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-04-15",
+   "value": 95.36,
+   "url": "https://nenghua.m.mysteel.com/a/26041514/6947C9D7CB3776A1_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-04-22",
+   "value": 97.57,
+   "url": "https://nenghua.m.mysteel.com/a/26042214/06044C5E2445D2B2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-04-29",
+   "value": 91.49,
+   "url": "https://nenghua.m.mysteel.com/a/26042914/46A0FBE55BD8ECB2_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-05-06",
+   "value": 92.2,
+   "url": "https://nenghua.m.mysteel.com/a/26050614/82F009D7359B763B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-05-13",
+   "value": 79.68,
+   "url": "https://nenghua.m.mysteel.com/a/26051314/6F9E74FA0755ABEC_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-05-20",
+   "value": 71.55,
+   "url": "https://nenghua.m.mysteel.com/a/26052014/E893EF73F8C3CB7A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-05-27",
+   "value": 66.2,
+   "url": "https://nenghua.m.mysteel.com/a/26052714/873ACEEBA7050295_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-06-03",
+   "value": 63.35,
+   "url": "https://nenghua.m.mysteel.com/a/26060314/429E9952F1333C5C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-06-10",
+   "value": 56.61,
+   "url": "https://nenghua.m.mysteel.com/a/26061014/AD1169A93F6BD1AF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-06-17",
+   "value": 63.24,
+   "url": "https://nenghua.m.mysteel.com/a/26061714/5527EC54A9F1BD06_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-06-24",
+   "value": 56.03,
+   "url": "https://nenghua.m.mysteel.com/a/26062414/FD95A1DDEF4733AD_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-07-01",
+   "value": 49.32,
+   "url": "https://nenghua.m.mysteel.com/a/26070114/1C98462FDD7C80AF_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-07-08",
+   "value": 44.67,
+   "url": "https://nenghua.m.mysteel.com/a/26070814/4D387D1BEA508F24_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-07-15",
+   "value": 40.15,
+   "url": "https://nenghua.m.mysteel.com/a/26071514/AA201399BBBC4D05_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-07-22",
+   "value": 54.87,
+   "url": "https://nenghua.m.mysteel.com/a/26072214/9CFA7277B2B1585E_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-07-29",
+   "value": 68.68,
+   "url": "https://nenghua.m.mysteel.com/a/26072914/2BB60DED0688EAD9_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-08-05",
+   "value": 69.26,
+   "url": "https://nenghua.m.mysteel.com/a/26080514/0297C4DF0486BEE1_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-08-12",
+   "value": 60.0,
+   "url": "https://nenghua.m.mysteel.com/a/26081214/B0610FC4223A4F59_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-08-19",
+   "value": 66.7,
+   "url": "https://nenghua.m.mysteel.com/a/26081913/B1F2BE84B8EBE22A_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-08-26",
+   "value": 68.56,
+   "url": "https://nenghua.m.mysteel.com/a/26082614/219854B66D01D811_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-09-02",
+   "value": 64.15,
+   "url": "https://nenghua.m.mysteel.com/a/26090214/AF0D6D08EE328F1C_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-09-09",
+   "value": 55.15,
+   "url": "https://nenghua.m.mysteel.com/a/26090914/03659B1A6AFDA3EE_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-09-16",
+   "value": 42.39,
+   "url": "https://nenghua.m.mysteel.com/a/26091614/BC4B2C554986CC54_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-09-23",
+   "value": 41.2,
+   "url": "https://nenghua.m.mysteel.com/a/26092314/39174CC8F100278B_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-09-30",
+   "value": 39.35,
+   "url": "https://nenghua.m.mysteel.com/a/26093014/68445D28F9E2F736_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-10-08",
+   "value": 30.51,
+   "url": "https://nenghua.m.mysteel.com/a/26100814/9582A44A60D9C42E_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  },
+  {
+   "asof": "2026-10-14",
+   "value": 36.72,
+   "url": "https://nenghua.m.mysteel.com/a/26101414/42917F27FC58AFB4_abc.html",
+   "status": "verified",
+   "detail": "date+value match"
+  }
+ ]
+}

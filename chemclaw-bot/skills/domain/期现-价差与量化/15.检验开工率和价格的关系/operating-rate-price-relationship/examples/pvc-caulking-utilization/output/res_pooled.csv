@@ -1,0 +1,10 @@
+﻿horizon,factor,factor_code,n,ic,ic_p,beta_pct_per_sd,hac_se,hac_t,hac_p,n_eff,beta,q_bh,sig_ic_5pct,sig_bh_5pct
+1w,F1 绝对开工率（%）,util,6,0.2571428571428572,0.6227871720116619,0.13895194431869082,0.48567971887280953,0.2860978931571976,0.7890086622150722,6.0,,0.6227871720116619,False,False
+1w,F2 周度变化（百分点）,chg_pp,5,,,,,,,5.0,,,False,False
+1w,F3 历史分位（expanding）,level_pct,0,,,,,,,0.0,,,False,False
+2w,F1 绝对开工率（%）,util,4,,,,,,,2.0,,,False,False
+2w,F2 周度变化（百分点）,chg_pp,3,,,,,,,1.5,,,False,False
+2w,F3 历史分位（expanding）,level_pct,0,,,,,,,0.0,,,False,False
+4w,F1 绝对开工率（%）,util,2,,,,,,,0.5,,,False,False
+4w,F2 周度变化（百分点）,chg_pp,1,,,,,,,0.25,,,False,False
+4w,F3 历史分位（expanding）,level_pct,0,,,,,,,0.0,,,False,False

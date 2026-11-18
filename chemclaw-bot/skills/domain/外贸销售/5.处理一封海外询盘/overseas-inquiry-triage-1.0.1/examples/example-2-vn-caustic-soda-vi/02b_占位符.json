@@ -1,0 +1,74 @@
+[
+  {
+    "key": "PRICE_PER_MT_TERMS_TBC",
+    "label_cn": "单价（含贸易术语与港口）",
+    "owner": "销售 / 报价系统",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "PACKING_PROPOSAL",
+    "label_cn": "我方标准出口包装建议",
+    "owner": "销售 / 技术",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "LEAD_TIME_FOR_OFFER",
+    "label_cn": "我方出具正式报价所需时间",
+    "owner": "销售",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "SIGNER_NAME",
+    "label_cn": "签字人姓名",
+    "owner": "销售",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "SIGNER_TITLE",
+    "label_cn": "签字人职位",
+    "owner": "销售",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "OURCOMPANY_NAME",
+    "label_cn": "我方公司全称",
+    "owner": "销售 / 市场",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "OURCOMPANY_PHONE",
+    "label_cn": "我方电话",
+    "owner": "销售 / 市场",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "OURCOMPANY_WEBSITE",
+    "label_cn": "我方网站",
+    "owner": "销售 / 市场",
+    "status": "open",
+    "used": true,
+    "where": ""
+  },
+  {
+    "key": "TERMS_TO_CONFIRM",
+    "label_cn": "模板中出现的其他占位符",
+    "owner": "待定",
+    "status": "open",
+    "used": true,
+    "where": ""
+  }
+]

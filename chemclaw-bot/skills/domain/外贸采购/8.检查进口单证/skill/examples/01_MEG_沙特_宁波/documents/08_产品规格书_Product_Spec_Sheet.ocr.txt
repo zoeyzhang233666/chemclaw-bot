@@ -1,0 +1,17 @@
+【模拟单证 · SIMULATED DOCUMENT · 仅供流程测试】
+AL-NOOR PETROCHEMICAL COMPANY — PRODUCT SPECIFICATION SHEET / 产品规格书  PS-MEG-IND-24 Rev.4
+Product 产品: ETHYLENE GLYCOL (MEG) INDUSTRIAL GRADE / 乙二醇（工业级）
+CAS No.: 107-21-1   HS Code: 2905310000
+Characteristic 性状: Clear, colourless, odourless liquid free of suspended matter
+Standard Grade 标准等级: Industrial Grade; Purity (wt) ≥ 99.9%
+Key specification 主要指标: Purity ≥99.9%; Water ≤0.10%; Colour (Pt-Co) ≤5; Acidity ≤0.005%; Iron ≤0.10 ppm
+Typical analysis 典型值: Purity 99.94%; Water 0.03%; Colour 3; Acidity 0.002%
+UN / Hazard: UN 3082, Class 9, PG III, Marine Pollutant
+TRANSPORT & PACKING (REFERENCE SHIPMENT BASIS) / 运输与包装（参考装运基准）
+Packing 包装形式: BULK IN ISO TANK CONTAINERS (ISOTANK) / 散装 ISO 罐
+Reference shipment 参考装运基准: 8 × 20 MT ISO tanks = 160 MT
+Reference packages 参考件数: 8 ISO TANKS
+Reference net / gross weight: 160,000 KGS / 160,160 KGS
+Note 说明: above packing data describe the standard reference shipment for this product;
+actual shipment quantity, package count and weights are per the Commercial Invoice, Packing List and B/L.
+Issued by: Quality Assurance Department, Al Jubail Complex     Issue date: 2024-02-15

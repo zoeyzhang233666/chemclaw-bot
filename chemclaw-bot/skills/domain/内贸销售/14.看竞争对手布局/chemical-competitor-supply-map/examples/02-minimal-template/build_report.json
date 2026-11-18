@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-10-19T13:57:47",
+  "data": "data.json",
+  "product": "示例化工品",
+  "region": "示例省 · 示例市",
+  "asof": "2026-01-01",
+  "companies": 3,
+  "plants": 3,
+  "sample_capacity": 340.0,
+  "sample_output": 285.0,
+  "sources": 4,
+  "conflicts": 1,
+  "gaps": 2,
+  "boundaries": 2,
+  "projects": 2,
+  "prospects": 3,
+  "warnings": [],
+  "html": {
+    "path": "示例品_示例省示例市_竞争供给地图.html",
+    "bytes": 1730126,
+    "sha256": "d6aa5e6d0e61958ea8e9a63e617164e099a1ecbc910ec4014540f649e396af8f"
+  },
+  "xlsx": {
+    "path": "示例品_示例省示例市_竞争供给地图.xlsx",
+    "bytes": 29777,
+    "sha256": "454a8839498ce3e4a69fda23c87e28014630edc931ec76caffadbb8a8e9cc462"
+  }
+}

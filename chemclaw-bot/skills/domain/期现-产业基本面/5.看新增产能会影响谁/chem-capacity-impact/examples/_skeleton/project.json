@@ -1,0 +1,185 @@
+{
+  "_README": "填空骨架：把 <尖括号> 全部替换成你的数据。value_t 一律存吨；查不到的数值填 null 或 0，不要编造。填完跑 python scripts/build_all.py .",
+
+  "meta": {
+    "title": "<产品> 新增 <产能> 万吨/年 产能影响研究",
+    "product": "<中文品名，如 聚丙烯>",
+    "product_en": "<英文缩写，如 PP>",
+    "process": "<工艺路线一句话，如 丙烷脱氢 → 气相聚合>",
+    "asof": "<YYYY-MM-DD 数据截止日>",
+    "analyst": "<研究者>",
+    "version": "v1.0",
+    "simulated": false,
+    "simulated_note": "",
+    "disclaimer": "本报告不构成价格预测。所有影响均以机制与量级表达，不输出涨跌方向。缺失数据标为缺口，不做插值。"
+  },
+
+  "project": {
+    "name": "<项目全称>",
+    "owner": "<业主全称（工商登记名称）>",
+    "owner_short": "<业主简称>",
+    "owner_note": "<工商主体核验结论：是否集团新设项目公司、与上市公司关系>",
+    "location": {
+      "province": "<省>",
+      "city": "<市>",
+      "district": "<区县>",
+      "park": "<园区>",
+      "lat": 0.0,
+      "lon": 0.0
+    },
+    "product_spec": "<牌号/规格，如 拉丝级、注塑级、薄膜级>",
+    "design_capacity_t": 0,
+    "capacity_scope": "<产能口径：一期/单套/公称能力；含不含配套装置>",
+    "stage": "拟建",
+    "stage_note": "<阶段依据：已备案/环评受理/在建/试车>",
+    "startup_plan": {
+      "year": 0,
+      "month": 0,
+      "text": "<原文表述>",
+      "announce_date": "<YYYY-MM-DD>"
+    },
+    "process_route": "<详细工艺路线>",
+    "capacity_source": "<设计产能的来源>",
+    "capacity_url": "<来源 URL>",
+    "capacity_date": "<YYYY-MM-DD>",
+    "detail": [],
+    "supplement": {},
+    "verdict": [
+      "【事实层】……",
+      "【计算层】……",
+      "【情景层】……",
+      "【待确认 → 补齐路径】……"
+    ],
+    "phase_confidence": {
+      "design_capacity": "E5",
+      "process": "E5",
+      "stage": "E5",
+      "startup": "E5",
+      "owner": "E5",
+      "location": "E5",
+      "product": "E5"
+    }
+  },
+
+  "chain": {
+    "_comment": "type 取值：upstream / process / intermediate / product / byproduct / downstream。product 节点必须恰好一个。reverse:true 表示副产物分叉，structural:true 表示仅用于画图的下游边。",
+    "nodes": [
+      {"id": "raw1", "name": "<上游原料>", "type": "upstream", "sub": "<补充说明>"},
+      {"id": "unit1", "name": "<生产装置>", "type": "process", "sub": "<工艺>"},
+      {"id": "inter1", "name": "<中间体>", "type": "intermediate", "sub": "<说明>"},
+      {"id": "prod", "name": "<产品>", "type": "product", "sub": "<本项目产品>"},
+      {"id": "by1", "name": "<副产物>", "type": "byproduct", "sub": "<说明>"},
+      {"id": "down1", "name": "<下游方向>", "type": "downstream", "sub": "<说明>"}
+    ],
+    "edges": [
+      {"from": "raw1", "to": "unit1", "unit_key": "raw1_to_inter1", "label": "<单耗>"},
+      {"from": "unit1", "to": "inter1", "label": "<转化>"},
+      {"from": "inter1", "to": "prod", "unit_key": "inter1_to_prod", "label": "<单耗>"},
+      {"from": "unit1", "to": "by1", "label": "副产", "reverse": true},
+      {"from": "prod", "to": "down1", "label": "下游", "structural": true}
+    ]
+  },
+
+  "capacity_bases": [
+    {"key": "national", "label": "全国<产品>产能", "value_t": 0, "year": 0,
+     "scope": "<含不含在建、含不含某工艺>", "level": "E5", "source": "<来源>", "url": "", "note": ""},
+    {"key": "regional", "label": "目标区域产能", "value_t": 0, "value_t_alt": null,
+     "alt_label": "<替代口径说明>", "year": 0, "scope": "<区域边界>", "level": "E5",
+     "source": "", "url": "", "note": ""},
+    {"key": "radius", "label": "竞争半径内同行产能", "value_t": 0, "year": 0,
+     "scope": "<半径多少 km、含哪些省>", "level": "E5", "source": "", "url": "", "note": ""},
+    {"key": "grade", "label": "目标牌号产能", "value_t": 0, "year": 0,
+     "scope": "<牌号口径>", "level": "E5", "source": "", "url": "", "note": ""},
+    {"key": "consumption", "label": "全国<产品>表观消费量", "value_t": 0, "year": 0,
+     "scope": "产量 + 进口 − 出口", "level": "E5", "source": "", "url": "", "note": ""},
+    {"key": "pipeline", "label": "目标区域内同期在建产能", "value_t": 0, "year": 0,
+     "scope": "<是否含本项目>", "level": "E5", "source": "", "url": "", "note": ""}
+  ],
+
+  "unit_consumption": [
+    {
+      "key": "raw1_to_inter1",
+      "from": "<原料>",
+      "to": "<中间体>",
+      "value": 0.0,
+      "unit": "t/t",
+      "basis": "<C1 工程值|C2 区间中值|C3 化学计量下限|C4 情景假设>",
+      "range": [0.0, 0.0],
+      "purity": 1.0,
+      "on_site": true,
+      "evidence": {"level": "E5", "source": "<来源，最优为环评原辅料消耗表>", "url": "", "date": ""},
+      "note": ""
+    }
+  ],
+
+  "assumptions": {
+    "steady_lf": 0.9,
+    "steady_lf_basis": "<依据或说明为假设>",
+    "ramp_model": "s_curve",
+    "ramp_months": 12,
+    "ramp_basis": "<依据或说明为假设>",
+    "commissioning_months": 2,
+    "commissioning_ratio": 0.5,
+    "commissioning_basis": "<依据>",
+    "excluded": ["<未考虑的因素>"]
+  },
+
+  "scenarios": [
+    {"id": "S1", "label": "保守", "kind": "保守", "start_year": 0, "start_month": 12,
+     "ramp_model": "s_curve", "ramp_months": 18, "steady_lf": 0.85, "note": ""},
+    {"id": "S2", "label": "中性", "kind": "基准", "start_year": 0, "start_month": 6,
+     "ramp_model": "s_curve", "ramp_months": 12, "steady_lf": 0.9, "note": ""},
+    {"id": "S3", "label": "乐观", "kind": "乐观", "start_year": 0, "start_month": 3,
+     "ramp_model": "linear", "ramp_months": 9, "steady_lf": 0.95, "note": ""},
+    {"id": "S4", "label": "上限（仅校验）", "kind": "上限", "start_year": 0, "start_month": 1,
+     "ramp_model": "none", "ramp_months": 0, "steady_lf": 1.0, "note": "把设计产能直接当首年产量，现实中不出现"},
+    {"id": "S5", "label": "延期", "kind": "延期", "start_year": 0, "start_month": 6,
+     "ramp_model": "s_curve", "ramp_months": 12, "steady_lf": 0.9, "note": ""}
+  ],
+
+  "regional": {
+    "name": "<区域名>",
+    "provinces": ["<省1>", "<省2>"],
+    "demand_t": 0,
+    "demand_scope": "<区域需求口径>",
+    "demand_level": "E5",
+    "pipeline_t": 0,
+    "pipeline_includes_project": true,
+    "pipeline_note": "",
+    "freight_cny_t": null,
+    "price_spread": {"label": "<A 区 − B 区 价差>", "value": 0, "range": [0, 0], "date": "", "source": "", "url": "", "note": ""},
+    "neighbors": [
+      {"name": "<同区域企业>", "province": "<省>", "capacity_t": 0, "lat": 0.0, "lon": 0.0,
+       "level": "E5", "source": "<来源>", "url": ""}
+    ]
+  },
+
+  "stakeholders": [
+    {
+      "id": "<唯一 id>",
+      "name": "<企业或主体名>",
+      "type": "<upstream|competitor|downstream|logistics|byproduct>",
+      "region": "<所在地>",
+      "capacity_t": 0,
+      "note": "<影响机制，只写量与机制，不写价格方向>",
+      "evidence": {"level": "E5", "source": "", "url": "", "date": ""},
+      "impact_basis": {"transmission": 0.8, "lag": 0.8, "volume_basis_t": 0, "market_t": 0}
+    }
+  ],
+
+  "facts": [
+    {"text": "<已确认事实，含数字与年份>", "category": "事实", "level": "E5",
+     "source": "<来源名>", "url": "", "date": "<YYYY-MM-DD>"}
+  ],
+
+  "gaps": [
+    {"category": "<业主|投产进度|实际产能|开工条件|分母口径|竞争参照|下游|物流|同期在建|原料>",
+     "item": "<待核实事项>", "impact": "<影响哪一步计算>", "plan": "<补齐路径>",
+     "owner": "<责任人>", "priority": "<高|中|低>", "status": "未核实"}
+  ],
+
+  "sources": [
+    {"name": "<来源名>", "type": "<官方|官方统计|数据商|行业组织|研究机构|交易所|媒体>",
+     "url": "", "date": "<YYYY-MM-DD>", "used_for": "<用于哪个分母/单耗/事实>"}
+  ]
+}

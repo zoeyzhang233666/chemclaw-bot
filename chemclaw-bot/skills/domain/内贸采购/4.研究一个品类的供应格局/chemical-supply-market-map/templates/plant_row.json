@@ -1,0 +1,25 @@
+{
+  "_comment": "plants.json 单行模板：一条 = 一个基地（工厂），不是集团。单位见 project.json product.unit。",
+  "plants": [
+    {
+      "id": "P01",
+      "company_id": "集团ID（与 companies.json 的 id 对应）",
+      "site": "基地/工厂名",
+      "province": "标准省名（内蒙古/黑龙江/北京/…）",
+      "city": "地级市",
+      "lat": null,
+      "lon": null,
+      "route": "工艺（与 project.json routes.name 对应，允许缩写）",
+      "capacity_base": 0,
+      "capacity_forward": 0,
+      "product": "该基地产品/规格",
+      "raw": "主要原料",
+      "status": "在产",
+      "listed": "股票代码或空",
+      "source": "S1",
+      "note": "口径备注",
+      "dx": 8,
+      "dy": 8
+    }
+  ]
+}

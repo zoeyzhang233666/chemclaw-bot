@@ -1,0 +1,1222 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "case_id": "EC-2026-001",
+    "title": "工业级过氧化氢溶液 50% 出口越南（海运）合规准备",
+    "query": "我们计划将过氧化氢溶液（CAS 7722-84-1，含量 50%）从中国出口到越南，用途为工业级（污水处理/纸浆漂白），包装方式为 1000 L 吨桶（IBC），计划采用海运。",
+    "prepared_on": "2026-10-19",
+    "prepared_by": "外贸销售合规准备（Skill: export-compliance-check v1.0）",
+    "assumption_notice": "本案例中的企业名称、数量、包装规格为演示用假设值；法规事实均按 2026-10-19 可访问的官方来源核验，来源与核验日期见 regs 字段。",
+    "scope_limits": [
+      "本页为合规准备清单，不构成法律意见，不替代报关行、货运代理、DG 安全顾问、进口方或专业律师的正式判定。",
+      "危险化学品管理属性与危险货物运输分类是两套体系，本页分开判定、分开留痕，不互相推导。",
+      "凡无官方原文支撑或需专业判断的结论，均以「待确认」标注，未作猜测。"
+    ]
+  },
+  "inputs": {
+    "product": {
+      "name_cn": "过氧化氢溶液（双氧水）",
+      "name_en": "Hydrogen peroxide, aqueous solution (stabilized as necessary)",
+      "cas": "7722-84-1",
+      "ec": "231-765-0",
+      "un_cas_index": "008-003-00-9",
+      "formula": "H2O2",
+      "grade": "工业级",
+      "concentration": "50% (w/w)",
+      "composition": "过氧化氢 50%，水，稳定剂（焦磷酸盐类，实际名称与含量以 COA 为准）",
+      "stabilizer_note": "应急管理部明确：含量>8% 的过氧化氢水溶液中若添加稳定剂之外的其他化学品，不再属于「过氧化氢的水溶液」，需另行鉴定其危险特性。本案例稳定剂属允许范围，但须在 SDS 与报关申报中如实列明。",
+      "use": "工业级：污水处理氧化脱色、纸浆漂白（非食品、非医药、非食品添加剂用途）",
+      "packaging": "1000 L HDPE 吨桶（IBC），非零售包装",
+      "quantity": "1 × 20' GP，按 18 个 IBC（约 18 吨净重）演示",
+      "origin": "中国（境内生产企业）",
+      "destination": "越南（胡志明市 Cat Lai 港）",
+      "transport_mode": "海运（集装箱整箱 FCL）",
+      "incoterm": "CIF 胡志明市（演示）"
+    },
+    "provided_documents": [
+      {
+        "doc": "产品组成表（含 CAS 与浓度）",
+        "status": "已提供（演示）"
+      },
+      {
+        "doc": "COA（批次检验报告）",
+        "status": "已提供（演示），稳定剂名称需核对"
+      },
+      {
+        "doc": "SDS（中文，GHS 第 4 修订版）",
+        "status": "已提供（演示），缺越南语版"
+      }
+    ],
+    "missing_documents": [
+      "危险特性分类鉴别报告",
+      "出境货物运输包装性能检验结果单",
+      "出境危险货物运输包装使用鉴定结果单",
+      "越南语危险公示标签样张",
+      "越南语 SDS",
+      "原产地证书（如拟享惠）"
+    ]
+  },
+  "identity": {
+    "verdict": "已核实：过氧化氢（CAS 7722-84-1），含量 50%（w/w）水溶液，无机过氧化物，非有机过氧化物。",
+    "checks": [
+      {
+        "item": "CAS 号",
+        "value": "7722-84-1",
+        "source": "危险化学品目录（2015版）条目 903；BAM DGG-Info UN2014 条目",
+        "status": "已核实"
+      },
+      {
+        "item": "EC 号",
+        "value": "231-765-0",
+        "source": "BAM DGG-Info UN2014 条目",
+        "status": "已核实"
+      },
+      {
+        "item": "UN-CAS 索引号",
+        "value": "008-003-00-9",
+        "source": "BAM DGG-Info UN2014 条目",
+        "status": "已核实"
+      },
+      {
+        "item": "分子式",
+        "value": "H2O2",
+        "source": "BAM DGG-Info",
+        "status": "已核实"
+      },
+      {
+        "item": "是否有机过氧化物",
+        "value": "否（无机过氧化物）—— 不适用有机过氧化物（UN 3101–3120）条目",
+        "source": "IMDG/ADR 分类体系；BAM 条目分类为 5.1",
+        "status": "已核实"
+      },
+      {
+        "item": "浓度口径",
+        "value": "50% w/w（质量分数）；若客户口径为体积浓度（w/v）须换算，差异会改变分类",
+        "source": "专业要求；分类阈值均按质量分数",
+        "status": "需确认（以 COA 口径为准）"
+      },
+      {
+        "item": "稳定剂",
+        "value": "仅允许稳定剂/惰性化学品；其他添加剂将改变属性判定",
+        "source": "应急管理部 2021-07-26 公众留言回复",
+        "status": "已核实"
+      }
+    ]
+  },
+  "hs_candidates": [
+    {
+      "rank": 1,
+      "code_cn": "2847000000",
+      "code_vn": "2847.00.10（液态 - In liquid form）",
+      "code_vn_alt": "2847.00.90（其他 - Other）",
+      "name_cn": "过氧化氢（不论是否用尿素固化）",
+      "basis": "第 28 章章注一：本章包括「上述产品的（二）水溶液」「（四）为保存或运输加入稳定剂的产品」，故 50% 水溶液仍归 2847；非零售包装不改变归类。",
+      "confidence": "高",
+      "status": "候选（需报关行/归类专业确认后采用）",
+      "notes": "中国观察到的监管条件 A/B/G 配置在 2847000000 上（见 gacc_rows）；CIQ 编码按含量分档，本案例应对应「2847000000301 危险化学品，不用作食品添加剂」。"
+    },
+    {
+      "rank": 2,
+      "code_cn": "3824.99（含过氧化氢的混合物）",
+      "name_cn": "其他税号未列名的化学产品及化学工业相关产品",
+      "basis": "若加入稳定剂以外的其他化学品，使产品不再构成第 28 章章注一所述「水溶液+稳定剂」，则可能改归 3824。",
+      "confidence": "低（仅在同一产品加了非稳定剂成分时才考虑）",
+      "status": "不适用本案例，仅作为配方变化时的备选",
+      "notes": "归类一旦变化，监管条件、CIQ 编码、越南 HS 与关税同步变化。"
+    },
+    {
+      "rank": 3,
+      "code_cn": "2847.00 交叉核对：用尿素固化的过氧化氢",
+      "name_cn": "过氧化氢（用尿素固化）",
+      "basis": "2847 品目原文含「不论是否用尿素固化」。",
+      "confidence": "不适用（本产品为纯水溶液，不使用尿素固化）",
+      "status": "排除理由已记录",
+      "notes": "若客户要求尿素稳定化配方，HS 仍在 2847，但成分申报与 SDS 组分须同步更新。"
+    }
+  ],
+  "cn_export": [
+    {
+      "id": "CN-01",
+      "topic": "中国出口",
+      "item": "危险化学品身份（《危险化学品目录（2015版）》）",
+      "finding": "列入。目录条目 903「过氧化氢溶液[含量>8%]」，CAS 7722-84-1。本产品含量 50%，属危险化学品。",
+      "condition": "含量>8%（质量分数，水溶液口径）；≤8% 不在目录内。",
+      "reg": "《危险化学品目录（2015版）》（安监总局等 10 部门 2015年第5号公告）；《危险化学品安全管理条例》（国务院令第591号）",
+      "effective": "2015-05-01 施行（现行）",
+      "status": "已核实",
+      "evidence": "https://www.mem.gov.cn/gk/gwgg/xgxywj/wxhxp_228/201503/t20150309_232632.shtml",
+      "action": "作为危险化学品申报与管理；SDS、标签、包装按危化品口径准备。",
+      "reg_ids": [
+        "R01"
+      ]
+    },
+    {
+      "id": "CN-02",
+      "topic": "中国出口",
+      "item": "易制爆危险化学品",
+      "finding": "列入《易制爆危险化学品名录》（2017年版）第 6.1 项：过氧化氢溶液（含量>8%），别名双氧水，CAS 7722-84-1；按含量分档：≥60% 氧化性液体类别1；20%≤含量<60% 类别2；8%<含量<20% 类别3。",
+      "condition": "含量>8%；本产品 50% 对应「氧化性液体，类别2」档。",
+      "reg": "《易制爆危险化学品名录》（2017年版）（公安部 2017年5月11日公布）；《危险化学品安全管理条例》第23条",
+      "effective": "2017年公布并施行（现行）",
+      "status": "已核实",
+      "evidence": "https://mech.pku.edu.cn/docs/2025-07/8ee416b403ac49248024b5190315117e.pdf",
+      "action": "生产、经营、储存环节涉及公安备案与销售流向登记；本次为出口，需由工厂与属地公安确认出口环节的登记义务。",
+      "reg_ids": [
+        "R02"
+      ]
+    },
+    {
+      "id": "CN-03",
+      "topic": "中国出口",
+      "item": "两用物项和技术出口许可证（定向，监管代码 G）",
+      "finding": "双氧水（HS 2847000000）被列入《向特定国家（地区）出口易制毒化学品管理目录》附件1第二部分第 28 项；该部分仅适用于向缅甸、老挝、阿富汗出口。公告正文明确：向其他国家（地区）出口无需申请许可。",
+      "condition": "仅目的地为缅甸、老挝、阿富汗（附件1第二部分）；美国/墨西哥/加拿大仅适用附件1第一部分（18 项哌啶类，不含双氧水）。越南不在其列。",
+      "reg": "商务部公告 2026年第40号《商务部等5部门关于调整〈向特定国家（地区）出口易制毒化学品管理目录〉的公告》；《向特定国家（地区）出口易制毒化学品暂行管理规定》",
+      "effective": "2026-09-22 发布之日起（本案例适用版本）",
+      "status": "已核实（本案例不触发）",
+      "evidence": "https://www.mofcom.gov.cn/zcfb/blgg/gg/2026/art/2026/art_ca63a120abaf45a7b94c1beb8c182773.html",
+      "action": "越南目的地无需该证；但报关时该商品编号仍显示监管代码 G，须在申报中说明目的地不属于定向清单国家，并保留公告原文备查。",
+      "risk_note": "常见误区：看到监管条件 G 就认为必须办证。实际 G 是「定向」许可证，目的地是核心适用条件。",
+      "reg_ids": [
+        "R03",
+        "R05"
+      ]
+    },
+    {
+      "id": "CN-04",
+      "topic": "中国出口",
+      "item": "两用物项出口管制清单（CCL）是否列名",
+      "finding": "未检索到过氧化氢列于《中华人民共和国两用物项出口管制清单》的公开证据；但 2026 年度许可证管理目录另行规定定向易制毒化学品（见 CN-03）。",
+      "condition": "以是否列名 + 最终用途/最终用户风险判断；清单每年调整。",
+      "reg": "《中华人民共和国出口管制法》；《中华人民共和国两用物项出口管制清单》（商务部等 2024年第51号公告，2024-12-01 实施）；2026年度《两用物项和技术进出口许可证管理目录》（商务部、海关总署 2025年第91号公告，2026-01-01 实施）",
+      "effective": "CCL：2024-12-01；2026 目录：2026-01-01",
+      "status": "待确认（需合规人员对现行目录逐条核对）",
+      "evidence": "https://www.mofcom.gov.cn/zcfb/dwmygl/art/2024/art_e56833e346534981b250bae772d0cbce.html",
+      "action": "出货前由合规人员对 CCL 现行版本复核，并做最终用户/最终用途筛查。",
+      "reg_ids": [
+        "R04",
+        "R05",
+        "R17"
+      ]
+    },
+    {
+      "id": "CN-05",
+      "topic": "中国出口",
+      "item": "出口检验（法检）与电子底账",
+      "finding": "海关对列入《危险化学品目录》的进出口危险化学品实施检验。出口方须向属地海关申请出口检验并取得电子底账，再向口岸海关申请通关。",
+      "condition": "产品列入危化品目录即适用；本产品适用。",
+      "reg": "海关总署公告 2020年第129号（2021-01-10 实施，废止原质检总局 2012年第30号）；危化品目录 2023 年版第 5 号公告（公告 2020年第129号仍为现行检验依据，进出口危化品及包装检验监管按此执行）",
+      "effective": "2021-01-10 实施",
+      "status": "已核实",
+      "evidence": "https://www.mofcom.gov.cn/zcfb/zgdwjjmywg/art/2021/art_eff2c81ac9a04d0b98be093e4a53e492.html",
+      "action": "提前 7–10 个工作日启动属地报检；出口危化品生产企业符合性声明须与 SDS 内容一致。",
+      "reg_ids": [
+        "R06"
+      ]
+    },
+    {
+      "id": "CN-06",
+      "topic": "中国出口",
+      "item": "出口报检所需材料（货物检验）",
+      "finding": "①《出口危险化学品生产企业符合性声明》；②《出境货物运输包装性能检验结果单》（散装及国际规章豁免除外）；③危险特性分类鉴别报告；④危险公示标签、安全数据单样本（外文须附中文翻译）；⑤需添加抑制剂或稳定剂的产品，说明名称与数量。",
+      "condition": "适用于出口危险化学品；包装性能单在「使用国际规章豁免包装」时可不提供，本案例不豁免。",
+      "reg": "海关总署公告 2020年第129号 第三条",
+      "effective": "2021-01-10 实施",
+      "status": "已核实",
+      "evidence": "https://www.cirs-group.com/Uploads/file/20201223/1608686438_68031.pdf",
+      "action": "五项材料按清单逐项归档；稳定剂说明须与本产品配方一致（案例中含焦磷酸盐稳定剂）。",
+      "reg_ids": [
+        "R06"
+      ]
+    },
+    {
+      "id": "CN-07",
+      "topic": "中国出口",
+      "item": "出口危险货物包装容器性能检验 + 使用鉴定",
+      "finding": "出口危化品包装须按海运等运输方式的规定实施性能检验与使用鉴定，分别出具《出境货物运输包装性能检验结果单》《出境危险货物运输包装使用鉴定结果单》。",
+      "condition": "本案例使用 IBC（31H1/31HA1 等）为危险货物包装，需同时具备性能单与使用鉴定单。",
+      "reg": "海关总署公告 2020年第129号 第七条；《中华人民共和国进出口商品检验法》",
+      "effective": "2021-01-10 实施",
+      "status": "已核实（材料待取得）",
+      "evidence": "https://www.cirs-group.com/Uploads/file/20201223/1608686438_68031.pdf",
+      "action": "IBC 需有 UN 包装标记并在有效期内；使用鉴定在货物灌装后、出运前完成。",
+      "reg_ids": [
+        "R06"
+      ]
+    },
+    {
+      "id": "CN-08",
+      "topic": "中国出口",
+      "item": "出口报关监管条件（代码 A / B / G）与 CIQ 编码",
+      "finding": "2847000000 观测到的监管条件为 A（入境货物通关单）、B（出境货物电子底账）、G（两用物项和技术出口许可证-定向）；CIQ 编码按含量分为 301/302/303/304 等，本案例应对应 2847000000301「危险化学品，不用作食品添加剂」。",
+      "condition": "按 10 位商品编号与 CIQ 分档确定；不同查询工具对监管条件字母含义表述不一（A 或为检验检疫、B 或为电子底账），须以单一窗口为准。",
+      "reg": "中国国际贸易单一窗口（2026 年数据）；2026 年《中华人民共和国进出口税则》",
+      "effective": "2026 年度",
+      "status": "参考信息（以单一窗口为准）",
+      "evidence": "https://guanjin.app/hs-code/28470000/",
+      "action": "报关行在单一窗口复核监管条件字母含义与 CIQ 选择，并据此准备随附证件。",
+      "reg_ids": [
+        "R05",
+        "R18"
+      ]
+    },
+    {
+      "id": "CN-09",
+      "topic": "中国出口",
+      "item": "出口退税率",
+      "finding": "2847000000 出口退税率 0%（查询口径：国家税务总局出口退税率文库，2026-10-16）。",
+      "condition": "以报关商品编号与退税率文库当年版本为准。",
+      "reg": "国家税务总局出口退税率文库（2026 年）",
+      "effective": "2026 年度",
+      "status": "参考信息（需出口方财务复核）",
+      "evidence": "https://guanjin.app/hs-code/28470000/",
+      "action": "报价测算时不得计入退税收益；财务在开票前复核。",
+      "reg_ids": [
+        "R06",
+        "R18"
+      ]
+    }
+  ],
+  "import_vn": [
+    {
+      "id": "VN-01",
+      "topic": "目的国进口",
+      "item": "越南化学品管理法规体系已于 2026 年整体换版（时效性核心）",
+      "finding": "越南《化学品法》69/2025/QH15 自 2026-01-01 施行；配套 24/2026/NĐ-CP（化学品名录）、25/2026/NĐ-CP（化工产业与安全安保）、26/2026/NĐ-CP（化学品活动与产品中危险化学品）、01/2026/TT-BCT 与 02/2026/TT-BCT 自 2026-01-17 施行。旧的《化学品法》06/2007/QH12、Decree 113/2017/ND-CP、Circular 32/2017/TT-BCT 体系被替代。",
+      "condition": "凡引用于 2026-01-01 之前的越南化学品法规结论，必须重新核验。",
+      "reg": "Luật Hóa chất 69/2025/QH15；Nghị định 24/2026/NĐ-CP、25/2026/NĐ-CP、26/2026/NĐ-CP；Thông tư 01/2026/TT-BCT、02/2026/TT-BCT",
+      "effective": "法律 2026-01-01；决议与通告 2026-01-17",
+      "status": "已核实",
+      "evidence": "https://cuchoachat.gov.vn/tin-tuc/thong-bao-ve-viec-trien-khai-thuc-hien-quy-dinh-cua-luat-hoa-chat-so-69-2025-qh15-va-cac-van-ban-huong-dan-luat.html",
+      "action": "所有越南准入结论以 2026 年版法规为准；不要沿用 113/2017 时代的清单编号。",
+      "reg_ids": [
+        "R08",
+        "R09"
+      ]
+    },
+    {
+      "id": "VN-02",
+      "topic": "目的国进口",
+      "item": "化学品进口清关前申报（第 28、29 章）",
+      "finding": "进口方须在清关前通过越南国家单一窗口（VN Single Window）申报。随附：商业发票原件、外文发票须经认证的越南语译本；安全数据表（SDS）。申报反馈具清关法律效力。",
+      "condition": "适用于海关税则第 28、29 章商品；本产品按 HS 2847 属第 28 章，适用。豁免：<10 kg、新化学物质 <1 kg 等。",
+      "reg": "Nghị định 26/2026/NĐ-CP 第 6 条；Thông tư 01/2026/TT-BCT 第 12 项（申报信息与反馈表单）",
+      "effective": "2026-01-17",
+      "status": "已核实",
+      "evidence": "https://english.luatvietnam.vn/decree-no-26-2026-nd-cp-dated-january-17-2026-of-the-government-detailing-and-guiding-the-implementation-of-a-number-of-articles-of-the-law-on-che-424117-doc1.html",
+      "action": "出口方须提前提供越南语配方/成分确认与越南语 SDS，配合进口方在 VN SW 完成申报；本案例 18 吨远超 10 kg 豁免线。",
+      "reg_ids": [
+        "R10"
+      ]
+    },
+    {
+      "id": "VN-03",
+      "topic": "目的国进口",
+      "item": "过氧化氢在 24/2026/NĐ-CP 各附录中的归属",
+      "finding": "尚未取得可解析的官方附录明细（Nghị định 24/2026/NĐ-CP 官方 PDF 为扫描件，本环境无 OCR 与图像识读能力），因此无法确认过氧化氢属于「有条件化学品」「限制化学品」「需申报」或「需事故预防与响应预案」中的哪一类。",
+      "condition": "取决于含量与是否成为产品成分；旧体系曾将过氧化氢溶液列入有条件类别（Decree 113 附件），但新体系清单编号不能直接沿用。",
+      "reg": "Nghị định 24/2026/NĐ-CP（2026-01-17）附件 I–V；Nghị định 26/2026/NĐ-CP 第 7–10 条",
+      "effective": "2026-01-17",
+      "status": "待确认（不得猜测）",
+      "evidence": "https://cuchoachat.gov.vn/Content/Uploads/files/2_%20Nghi%20dinh%2024_2026_ND-CP.pdf",
+      "action": "由越南进口方或化学品合规顾问在官方 PDF 附录中逐条核对，并把结论（附录编号+条目号）写入本页后再发货。",
+      "reg_ids": [
+        "R09"
+      ]
+    },
+    {
+      "id": "VN-04",
+      "topic": "目的国进口",
+      "item": "进口方资质（有条件化学品）",
+      "finding": "有条件化学品仅可由持有「有条件化学品生产资格证」或「有条件化学品经营资格证」的组织进出口。",
+      "condition": "若过氧化氢属于有条件化学品（待 VN-03 确认），则越南进口方必须持证。",
+      "reg": "Nghị định 26/2026/NĐ-CP 第 10 条",
+      "effective": "2026-01-17",
+      "status": "待确认（取决于 VN-03 结论）",
+      "evidence": "https://thuvienphapluat.vn/van-ban/EN/Linh-vuc-khac/Decree-26-2026-ND-CP-elaborating-the-Law-on-Chemicals-pertaining-to-management-of-chemical-activities/692996/tieng-anh.aspx",
+      "action": "下单前要求进口方提供资格证扫描件与编号，留存于客户档案。",
+      "reg_ids": [
+        "R10"
+      ]
+    },
+    {
+      "id": "VN-05",
+      "topic": "目的国进口",
+      "item": "越南语危险公示标签",
+      "finding": "01/2026/TT-BCT 要求生产、进口化学品一方依法进行化学品分类与标注；SDS 与 GHS 标签要素（象形图、信号词、危险说明、防范说明）按现行 GHS 规则执行，进口产品须符合越南语标签要求。",
+      "condition": "进口方承担分类与标注的法定义务并对结果负责；出口方须提供全套要素与越南语翻译支持。",
+      "reg": "Thông tư 01/2026/TT-BCT 第 5 条（SDS 内容）、附录 I（SDS 16 项）、化学品分类与标注条款；Nghị định 26/2026/NĐ-CP",
+      "effective": "2026-01-17",
+      "status": "已核实（标签样张待制作）",
+      "evidence": "https://atld.vn/law/4227/content",
+      "action": "按 5.1（氧化性）+ 8（腐蚀性）危害要素准备越南语标签，并在装运前经进口方确认。",
+      "reg_ids": [
+        "R10",
+        "R11"
+      ]
+    },
+    {
+      "id": "VN-06",
+      "topic": "目的国进口",
+      "item": "越南语安全数据单（SDS）",
+      "finding": "越南 SDS 须包含 01/2026/TT-BCT 附录 I 规定的 16 项基本内容（化学品与供应商识别、危害识别、成分信息、急救、消防、事故处置、使用与储存、暴露控制与个体防护、理化特性、稳定性与反应性、毒理学、生态学、废弃处置、运输、法规信息、其他信息），进口申报需随附 SDS。",
+      "condition": "化学品（含混合物成分识别，超过阈值须列明浓度范围）；商业机密（CBI）规则优先。",
+      "reg": "Thông tư 01/2026/TT-BCT 第 5 条与附录 I；Nghị định 26/2026/NĐ-CP 第 6 条第 2 款 c",
+      "effective": "2026-01-17",
+      "status": "已核实（需制作越南语版）",
+      "evidence": "https://congbao.chinhphu.vn/van-ban/thong-tu-so-01-2026-tt-bct-468814/62084.htm",
+      "action": "由第三方翻译/合规机构出具越南语 SDS，第 14 项运输信息必须与本文运输结论一致（UN2014、5.1(8)、PG II）。",
+      "reg_ids": [
+        "R11"
+      ]
+    },
+    {
+      "id": "VN-07",
+      "topic": "目的国进口",
+      "item": "进口关税（MFN / 优惠）",
+      "finding": "越南税则 HS 2847.00.10（液态）：MFN 4.5%，有优惠税率记录为 3%；VAT 8%/10%；22 个自贸协定优惠税率记录为 0%，含 ATIGA（126/2022/NĐ-CP）、ACFTA（118/2022/NĐ-CP）、RCEP（129/2022/NĐ-CP）。",
+      "condition": "优惠税率以符合相应协定原产地规则并提交有效原产地证明为条件；数据来自商业数据库聚合，须以越南海关现行税则与最新议定为准。",
+      "reg": "Nghị định 26/2023/NĐ-CP 及修订议定；Nghị định 126/2022/NĐ-CP（ATIGA）、118/2022/NĐ-CP（ACFTA）、129/2022/NĐ-CP（RCEP）",
+      "effective": "各议定实施日起；以现行版本为准",
+      "status": "参考信息（需报关行/进口方复核）",
+      "evidence": "https://treayo.cn/en/hs/vietnam/28470010",
+      "action": "报价前请进口方确认适用税率；本案例从中国出口，可评估 ACFTA / RCEP 优惠路径。",
+      "reg_ids": [
+        "R12"
+      ]
+    },
+    {
+      "id": "VN-08",
+      "topic": "目的国进口",
+      "item": "进口许可/自动许可等贸易措施",
+      "finding": "数据库对 2847.00.10 标注 3 项进口管制与许可要求，其中可识别者包括「有条件化学品」「需申报化学品」「作为药品原料的进出口」等旧体系条目；旧体系文件已被 2026 年新规替代。",
+      "condition": "须按新规复核，不能沿用 113/2017 附件编号。",
+      "reg": "Nghị định 24/2026/NĐ-CP、26/2026/NĐ-CP；越南海关 ECUS 现行税则",
+      "effective": "2026-01-17 起新规",
+      "status": "待确认",
+      "evidence": "https://treayo.cn/en/hs/vietnam/28470010",
+      "action": "由进口方在 VN SW 与 Cục Hóa chất 数据库复核 2847.00.10 的现行管制条目。",
+      "reg_ids": [
+        "R09"
+      ]
+    },
+    {
+      "id": "VN-09",
+      "topic": "目的国进口",
+      "item": "食品安全与用途限制",
+      "finding": "本案例声明非食品、非食品添加剂用途。若越南客户将产品用于食品加工或作为食品添加剂，将触发越南食品安全法与食品添加剂准入要求。",
+      "condition": "用途一经改变即改变准入路径；HS 2847 另存在「用作食品添加剂」的 CIQ 分档。",
+      "reg": "越南食品安全法；Nghị định 26/2026/NĐ-CP；海关总署公告 2020年第129号 第八条",
+      "effective": "现行",
+      "status": "需确认（用途声明）",
+      "evidence": "",
+      "action": "在合同与发票中明确「For industrial use only – not for food/food additive use」，并要求客户书面确认最终用途。",
+      "reg_ids": [
+        "R10"
+      ]
+    }
+  ],
+  "transport": [
+    {
+      "id": "TR-01",
+      "topic": "运输",
+      "item": "危险货物分类（50% 水溶液）",
+      "finding": "UN 2014，正确运输名称 HYDROGEN PEROXIDE, AQUEOUS SOLUTION with not less than 20% but not more than 60% hydrogen peroxide (stabilized as necessary)；类别 5.1（氧化性物质），次要危险性 8（腐蚀性）；包装类别 II。",
+      "condition": "20% ≤ 浓度 ≤ 60%（含 50%）。浓度落在其他区间则 UN 号与包装类别改变（见 TR-02）。",
+      "reg": "UN 规章范本；IMDG Code 42-24（2024 版，2026-01-01 强制）；ADR 2025；IATA DGR 第 67 版（2026）",
+      "effective": "IMDG 42-24：2026-01-01；IATA DGR 67：2026-01-01；ADR：2025",
+      "status": "已核实",
+      "evidence": "https://www.dgg.bam.de/dgginfo/detailinfo/imdg/jgpgwpfclkam?lang=en",
+      "action": "以本结论作为运输单证（DGD/多式联运危险货物申报）、标签与包装选择的统一口径。",
+      "reg_ids": [
+        "R13",
+        "R14",
+        "R15"
+      ]
+    },
+    {
+      "id": "TR-02",
+      "topic": "运输",
+      "item": "浓度分档对照（易混淆，必须核对 COA）",
+      "finding": "浓度决定 UN 号与包装类别：<8% 一般不按危险货物运输；8%–<20% 且稳定化 → UN 2984，5.1，PG III；20%–60% → UN 2014，5.1(8)，PG II；>60% → UN 2014，5.1(8)，PG I（含 >60% 且含锡或硅等抑制剂的特殊条目）。",
+      "condition": "按质量分数；必须使用 COA 实测值，不得用名义浓度或体积浓度。",
+      "reg": "UN 规章范本/IMDG 危险货物一览表；IATA DGR UN2014/UN2984 条目",
+      "effective": "同 TR-01",
+      "status": "已核实",
+      "evidence": "https://www.evonik.com/en/company/businesslines/ao/products-and-services/hydrogen-peroxide/general-information/transport.html",
+      "action": "出货批次 COA 与订舱申报的浓度必须一致；批次浓度若边界值（如 60%+）须重新判定。",
+      "caution": "本案例的 >60% 档具体 UN 号与附属条目（是否含抑制剂）需 DG 顾问在现行危险货物一览表中逐条确认，本页不作推定。",
+      "reg_ids": [
+        "R16"
+      ]
+    },
+    {
+      "id": "TR-03",
+      "topic": "运输",
+      "item": "海运（IMDG Code 42-24）",
+      "finding": "UN2014，PG II，标签 5.1 + 8；海洋污染物：否（按 CLP 判断）；EmS F-H / S-Q；包装需 P504（组合包装）；IBC 适用 IBC02；大包装（LP）禁止；积载类别与隔离要求需按危险货物一览表执行。",
+      "condition": "IMDG 42-24 为 2026 年强制版本（43-26 计划 2027 年起适用）。集装箱内 IBC 运输须核对 IBC02 与相关特殊条款 PP10/B5/MP15。",
+      "reg": "IMO IMDG Code 42-24；Resolution MSC.556(108)",
+      "effective": "2026-01-01 强制",
+      "status": "已核实（积载/隔离码需按表格逐条落实）",
+      "evidence": "https://www.dgg.bam.de/dgginfo/detailinfo/imdg/jgpgwpfclkam?lang=en",
+      "action": "向船公司订舱时提交 DGD；承运人将按 IMDG 审核包装、标签、隔离；我方可提供 P504/IBC02 符合性说明。",
+      "reg_ids": [
+        "R13"
+      ]
+    },
+    {
+      "id": "TR-04",
+      "topic": "运输",
+      "item": "空运（IATA DGR 第 67 版）",
+      "finding": "UN2014 20%–40% 条目：客机 PI 550、货机 PI 554；UN2014 >40%–60%（本案例 50% 适用）客机与货机运输在多家承运人表中列为禁止（Forbidden）。",
+      "condition": "本案例 50% 若走空运，需按 IATA DGR 第 67 版危险货物一览表逐条确认；承运人可能拒运。",
+      "reg": "IATA Dangerous Goods Regulations, 67th Edition (2026)",
+      "effective": "2026-01-01",
+      "status": "待确认（以 IATA DGR 现行版本与承运人政策为准）",
+      "evidence": "https://www.iata.org/en/publications/dgr/",
+      "action": "本案例建议排除空运；若客户坚持空运，先取得承运人书面接受意见与 DGR 条目截图。",
+      "reg_ids": [
+        "R14"
+      ]
+    },
+    {
+      "id": "TR-05",
+      "topic": "运输",
+      "item": "陆运（中越跨境）",
+      "finding": "中国境内公路/铁路按 GB 6944、JT/T 617 及 ADR 体系执行；越南境内适用越南危险货物运输国家标准 QCVN。跨境运输须同时满足两国规定。",
+      "condition": "若改走中越公路（如友谊关/浦寨），需办理中国道路危险货物运输资质与越南境内接驳。",
+      "reg": "GB 6944《危险货物分类和品名编号》；JT/T 617《危险货物道路运输规则》；ADR 2025（对照）；越南 QCVN 危险化学品安全技术规范",
+      "effective": "现行",
+      "status": "待确认（需货代与两国承运人确认）",
+      "evidence": "https://adr-tool.com/1362/un-2014",
+      "action": "本案例为海运；如改陆运，须重新评估包装、车辆、押运与口岸查验。",
+      "reg_ids": [
+        "R15",
+        "R19"
+      ]
+    },
+    {
+      "id": "TR-06",
+      "topic": "运输",
+      "item": "限量与例外数量",
+      "finding": "ADR 2025：限量（LQ）1 L；例外数量 E2（内包装 30 mL / 外包装 500 mL）。IMDG 对应限量/例外数量需按 42-24 条文确认。",
+      "condition": "仅适用于小包装；本案例 IBC 1000 L 属全量危险货物运输，不适用 LQ/EQ 豁免。",
+      "reg": "ADR 2025 表 A；IMDG 42-24 第 3.4/3.5 章",
+      "effective": "2025 / 2026-01-01",
+      "status": "已核实（ADR 口径）；IMDG 口径待 DG 顾问复核",
+      "evidence": "https://adr-tool.com/1362/un-2014",
+      "action": "销售小规格（如 500 mL/1 L 样品）时可在 LQ/EQ 下安排，但需另做包装与标签确认。",
+      "reg_ids": [
+        "R15"
+      ]
+    },
+    {
+      "id": "TR-07",
+      "topic": "运输",
+      "item": "危险货物包装（IBC）",
+      "finding": "1000 L IBC 须为经 UN 认证的 IBC（如 31H1/31HA1），具备 UN 包装标记、性能合格证与有效期；IBC 须符合 IBC02 包装指令（含 PP10 等特殊条款）。",
+      "condition": "IBC 性能检验（包装性能单）+ 使用鉴定（使用鉴定单）双单齐全；包装标记须与申报一致。",
+      "reg": "IMDG 42-24 第 4、6 章（IBC02）；海关总署公告 2020年第129号 第七条",
+      "effective": "2026-01-01 / 2021-01-10",
+      "status": "已核实（单据待取得）",
+      "evidence": "https://www.dgg.bam.de/dgginfo/detailinfo/imdg/jgpgwpfclkam?lang=en",
+      "action": "向 IBC 供应商索取性能合格证与 UN 标记照片；灌装后办使用鉴定。",
+      "reg_ids": [
+        "R13"
+      ]
+    }
+  ],
+  "label_pkg": [
+    {
+      "id": "LB-01",
+      "topic": "标签与包装",
+      "item": "GHS 危险性分类（50%）",
+      "finding": "按中国 GB 30000.14（与 GHS 第 4 修订版一致）：过氧化氢 50% 属「氧化性液体，类别 2」；并具皮肤腐蚀/刺激与严重眼损伤危害；具体完整分类（含急性毒性、靶器官毒性、水生环境危害）以 SDS 与危险特性鉴定报告为准。",
+      "condition": "分类阈值按试验 O.2（UN 试验和标准手册）判定；浓度 20%–<60% 对应类别 2（易制爆名录 2017 版 6.1 项同样按此分档）。",
+      "reg": "GB 30000.14-2013（2014-11-01 实施）；易制爆危险化学品名录（2017年版）6.1 项",
+      "effective": "2014-11-01 / 2017",
+      "status": "已核实（类别2）；其他危害类别待 SDS 确认",
+      "evidence": "https://www.gb-gbt.com/PDF/Chinese.aspx/GB30000.14-2013",
+      "action": "SDS 第 2 节分类须与危险特性分类鉴别报告一致；标签象形图按类别 2 设置。",
+      "reg_ids": [
+        "R02",
+        "R07"
+      ]
+    },
+    {
+      "id": "LB-02",
+      "topic": "标签与包装",
+      "item": "危险货物运输标签（包装/IBC）",
+      "finding": "包装与 IBC 均须张贴 5.1（氧化性物质）与 8（腐蚀性）两个标签；大包装禁止；需按 IMDG 5.2 设置包装方向标记（Package orientation）。",
+      "condition": "适用于海运；空运/陆运标签体系一致但依据不同规则文件。",
+      "reg": "IMDG 42-24 第 5.2 章",
+      "effective": "2026-01-01",
+      "status": "已核实",
+      "evidence": "https://www.dgg.bam.de/dgginfo/detailinfo/imdg/jgpgwpfclkam?lang=en",
+      "action": "IBC 上同时粘贴 5.1、8 标签与方向标记；托盘与集装箱外贴相应标牌。",
+      "reg_ids": [
+        "R13"
+      ]
+    },
+    {
+      "id": "LB-03",
+      "topic": "标签与包装",
+      "item": "中文危险公示标签 + 越南语标签",
+      "finding": "出口危化品随附危险公示标签与 SDS（外文须附中文翻译）；越南进口端须有越南语 GHS 标签。实务上 IBC 同时粘贴中文与越南语标签可减少口岸争议。",
+      "condition": "两端语言要求并存，不能只做一端。",
+      "reg": "海关总署公告 2020年第129号 第三条；Thông tư 01/2026/TT-BCT（分类与标注）",
+      "effective": "2021-01-10 / 2026-01-17",
+      "status": "已核实（样张待制作）",
+      "evidence": "https://www.cirs-group.com/Uploads/file/20201223/1608686438_68031.pdf",
+      "action": "设计双语气泡标签（中文+越南语），经进口方确认后随批印刷。",
+      "reg_ids": [
+        "R06",
+        "R11"
+      ]
+    },
+    {
+      "id": "LB-04",
+      "topic": "标签与包装",
+      "item": "包装合规与内容物相容性",
+      "finding": "IBC 须为经认证的危险货物 IBC；过氧化氢与材料相容性需注意：金属（除铝）会加速分解，须选用 HDPE/专用容器并设置排气装置。",
+      "condition": "BAM 条目提示：溶液遇多数金属分解加速（铝除外）；IBC 需按 IBC02 及 PP10 要求。",
+      "reg": "IMDG 42-24 IBC02/PP10；BAM DGG-Info 属性说明",
+      "effective": "2026-01-01",
+      "status": "已核实（具体 IBC 型号待供应商确认）",
+      "evidence": "https://www.dgg.bam.de/dgginfo/detailinfo/imdg/jgpgwpfclkam?lang=en",
+      "action": "与 IBC 供应商确认型号与排气设计；检查 IBC 是否在性能合格证有效期内。",
+      "reg_ids": [
+        "R13"
+      ]
+    },
+    {
+      "id": "LB-05",
+      "topic": "标签与包装",
+      "item": "产品认证/质量技术规格",
+      "finding": "本案例未识别到中国对工业级过氧化氢出口的强制产品认证；越南对部分无机化工品（如 NaOH、PAC、氨）有国家质量标准（QCVN），过氧化氢不在已列示例中，但需以现行越南标准清单复核。",
+      "condition": "以客户合同规格、COA 与越南现行 QCVN/TCVN 为准。",
+      "reg": "越南 QCVN 技术规范体系；GB/T 1616-2014《工业过氧化氢》",
+      "effective": "现行",
+      "status": "待确认（需进口方复核越南产品标准）",
+      "evidence": "",
+      "action": "合同中写明执行标准与关键指标（H2O2 含量、稳定性、不挥发物），作为验收依据。",
+      "reg_ids": [
+        "R19"
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "id": "DOC-01",
+      "category": "出口合同",
+      "name": "销售合同（含危险品与法规遵从条款）",
+      "owner": "出口方/进口方",
+      "timing": "签约阶段",
+      "status": "待准备",
+      "note": "须写明用途限制（工业用，非食品）、包装、运输方式、SDS/标签语言、责任划分（Incoterms 2020 CIF）。"
+    },
+    {
+      "id": "DOC-02",
+      "category": "商业发票",
+      "name": "商业发票（Commercial Invoice）",
+      "owner": "出口方",
+      "timing": "出运前",
+      "status": "待准备",
+      "note": "须体现 HS 2847.00、CAS 7722-84-1、含量 50%、UN 2014、用途声明。"
+    },
+    {
+      "id": "DOC-03",
+      "category": "装箱单",
+      "name": "装箱单（Packing List）",
+      "owner": "出口方",
+      "timing": "出运前",
+      "status": "待准备",
+      "note": "IBC 数量、净重/毛重、UN 包装标记、危险货物信息。"
+    },
+    {
+      "id": "DOC-04",
+      "category": "运输单证",
+      "name": "危险货物申报/托运单（DG Declaration / Multi-modal DG Form）",
+      "owner": "出口方（或委托货代）",
+      "timing": "订舱前",
+      "status": "待准备",
+      "note": "UN 2014、5.1(8)、PG II、EmS F-H/S-Q、24 小时应急电话。"
+    },
+    {
+      "id": "DOC-05",
+      "category": "运输单证",
+      "name": "提单（B/L）",
+      "owner": "承运人",
+      "timing": "装船后",
+      "status": "待取得",
+      "note": "收货人、目的港、危险货物条款；CIF 下由出口方安排。"
+    },
+    {
+      "id": "DOC-06",
+      "category": "运输单证",
+      "name": "出境货物运输包装性能检验结果单",
+      "owner": "出口方/IBC 供应商",
+      "timing": "报检前",
+      "status": "待取得",
+      "note": "IBC 性能合格证；须在有效期内。"
+    },
+    {
+      "id": "DOC-07",
+      "category": "运输单证",
+      "name": "出境危险货物运输包装使用鉴定结果单",
+      "owner": "出口方",
+      "timing": "灌装后、出运前",
+      "status": "待取得",
+      "note": "海关总署 2020年第129号 第七条。"
+    },
+    {
+      "id": "DOC-08",
+      "category": "检验检测",
+      "name": "危险特性分类鉴别报告",
+      "owner": "出口方（第三方实验室）",
+      "timing": "报检前",
+      "status": "待取得",
+      "note": "海关总署 2020年第129号 第三条第（三）项。"
+    },
+    {
+      "id": "DOC-09",
+      "category": "合格声明",
+      "name": "出口危险化学品生产企业符合性声明",
+      "owner": "出口方",
+      "timing": "报检",
+      "status": "待准备",
+      "note": "按 2020年第129号 附件 2 样式；须与 SDS 内容一致。"
+    },
+    {
+      "id": "DOC-10",
+      "category": "SDS/标签",
+      "name": "中文 SDS + 越南语 SDS",
+      "owner": "出口方",
+      "timing": "签约与报检前",
+      "status": "待准备",
+      "note": "越南版须含 16 项内容且运输信息与 UN2014 一致。"
+    },
+    {
+      "id": "DOC-11",
+      "category": "SDS/标签",
+      "name": "中文危险公示标签 + 越南语标签样张",
+      "owner": "出口方",
+      "timing": "生产前",
+      "status": "待准备",
+      "note": "经进口方书面确认。"
+    },
+    {
+      "id": "DOC-12",
+      "category": "产地证",
+      "name": "原产地证书（如享惠）",
+      "owner": "出口方",
+      "timing": "出运前后",
+      "status": "待确认是否办理",
+      "note": "ACFTA（Form E）或 RCEP（Form RCEP）取决于进口方申报；须满足原产地规则。"
+    },
+    {
+      "id": "DOC-13",
+      "category": "许可/申报",
+      "name": "越南化学品进口申报回执（VN Single Window）",
+      "owner": "进口方",
+      "timing": "清关前",
+      "status": "待取得",
+      "note": "Nghị định 26/2026/NĐ-CP 第 6 条；出口方需提供越南语资料支持。"
+    },
+    {
+      "id": "DOC-14",
+      "category": "许可/申报",
+      "name": "越南语发票译文（经认证）",
+      "owner": "进口方/出口方配合",
+      "timing": "清关前",
+      "status": "待准备",
+      "note": "Nghị định 26/2026/NĐ-CP 第 6 条第 2 款 b。"
+    },
+    {
+      "id": "DOC-15",
+      "category": "许可/申报",
+      "name": "定向两用物项出口许可证（G 证）",
+      "owner": "出口方",
+      "timing": "—",
+      "status": "不适用",
+      "note": "越南目的地不触发（商务部 2026年第40号）；保留公告原文备查。"
+    },
+    {
+      "id": "DOC-16",
+      "category": "合规留档",
+      "name": "最终用户与最终用途筛查记录 / 客户资格证",
+      "owner": "出口方",
+      "timing": "下单前",
+      "status": "待准备",
+      "note": "CCL 复核、进口方资格证（如适用）、书面用途声明。"
+    }
+  ],
+  "roles": [
+    {
+      "role": "出口方（我方）",
+      "items": [
+        "建立产品档案：CAS、浓度（w/w）、稳定剂、用途、包装规格、COA 与 SDS",
+        "完成危险特性分类鉴别报告，锁定 UN2014 / 5.1(8) / PG II",
+        "取得 IBC 性能合格证、办理使用鉴定、电子底账申报",
+        "准备中文与越南语 SDS、双语标签样张，报检前归档五类材料",
+        "报关：2847000000 / CIQ 2847000000301，说明目的地非易制毒定向国家",
+        "订舱时提交 DGD，核实承运人是否接受 50% 过氧化氢 IBC",
+        "给进口方提供越南语配方信息、SDS、标签以支持 VN SW 申报",
+        "留存：商务部 2026年第40号公告、危化品目录条目、易制爆名录、2020年第129号公告原文"
+      ]
+    },
+    {
+      "role": "进口方（越南客户）",
+      "items": [
+        "确认是否为最终用户，书面声明「工业用、非食品」",
+        "如属有条件化学品，提供《有条件化学品经营资格证》",
+        "在 VN Single Window 完成清关前化学品申报（发票+越南语译本+SDS）",
+        "按 Thông tư 01/2026/TT-BCT 完成分类与越南语标签落地",
+        "确认能否申请 ACFTA / RCEP 来料原产地证书，据以申报优惠税率",
+        "确认过氧化氢在 24/2026/NĐ-CP 附录中的分类，判断是否需要进口许可"
+      ]
+    },
+    {
+      "role": "承运方/货代",
+      "items": [
+        "按 IMDG 42-24 判断 UN2014 / PG II / IBC 可否在普通柜装载，落实隔离要求",
+        "确认船公司危险货物订舱政策与目的港危险品接收条件",
+        "排期：DG 提前申报（一般舱位预留 1–2 周），提供 DGD 模板",
+        "核实越南目的港的危险货物卸货与堆存要求",
+        "提供 B/L 危险货物标注与应急联系方式"
+      ]
+    },
+    {
+      "role": "报关行",
+      "items": [
+        "复核 2847000000 监管条件 A/B/G 含义与 CIQ 编码选择",
+        "确认目的地越南不触发定向许可证，保留公告依据",
+        "核对出口退税率为 0 的申报口径",
+        "办理出境报检与电子底账，协调属地查检与口岸放行"
+      ]
+    },
+    {
+      "role": "第三方合规/翻译",
+      "items": [
+        "出具危险特性分类鉴别报告",
+        "出具越南语 SDS 与标签翻译/本地化",
+        "协助核对越南 24/2026/NĐ-CP 附录归属（建议由越南本地合规顾问或进口方确认）"
+      ]
+    }
+  ],
+  "regs": [
+    {
+      "id": "R01",
+      "jurisdiction": "中国",
+      "name": "《危险化学品目录（2015版）》",
+      "issuer": "原安监总局等 10 部门",
+      "ref": "2015年第5号公告",
+      "effective": "2015-05-01",
+      "status": "现行",
+      "relevance": "CN-01",
+      "url": "https://www.mem.gov.cn/gk/gwgg/xgxywj/wxhxp_228/201503/t20150309_232632.shtml",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R02",
+      "jurisdiction": "中国",
+      "name": "《易制爆危险化学品名录》（2017年版）",
+      "issuer": "公安部",
+      "ref": "公安部公告",
+      "effective": "2017-05-11",
+      "status": "现行",
+      "relevance": "CN-02 / LB-01",
+      "url": "https://mech.pku.edu.cn/docs/2025-07/8ee416b403ac49248024b5190315117e.pdf",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R03",
+      "jurisdiction": "中国",
+      "name": "《向特定国家（地区）出口易制毒化学品管理目录》",
+      "issuer": "商务部等5部门",
+      "ref": "商务部公告2026年第40号",
+      "effective": "2026-09-22",
+      "status": "现行",
+      "relevance": "CN-03 / DOC-15",
+      "url": "https://www.mofcom.gov.cn/zcfb/blgg/gg/2026/art/2026/art_ca63a120abaf45a7b94c1beb8c182773.html",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R04",
+      "jurisdiction": "中国",
+      "name": "《中华人民共和国两用物项出口管制清单》",
+      "issuer": "商务部等4部门",
+      "ref": "2024年第51号公告",
+      "effective": "2024-12-01",
+      "status": "现行",
+      "relevance": "CN-04",
+      "url": "https://www.mofcom.gov.cn/zcfb/dwmygl/art/2024/art_e56833e346534981b250bae772d0cbce.html",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R05",
+      "jurisdiction": "中国",
+      "name": "《两用物项和技术进出口许可证管理目录》（2026年度）",
+      "issuer": "商务部、海关总署",
+      "ref": "2025年第91号公告",
+      "effective": "2026-01-01",
+      "status": "现行",
+      "relevance": "CN-03 / CN-04",
+      "url": "https://www.mofcom.gov.cn/zcfb/zc/art/2025/art_1581bc90caa74fb097052505eb4dd040.html",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R06",
+      "jurisdiction": "中国",
+      "name": "进出口危险化学品及其包装检验监管有关问题的公告",
+      "issuer": "海关总署",
+      "ref": "2020年第129号",
+      "effective": "2021-01-10",
+      "status": "现行",
+      "relevance": "CN-05 / CN-06 / CN-07 / LB-03",
+      "url": "https://www.mofcom.gov.cn/zcfb/zgdwjjmywg/art/2021/art_eff2c81ac9a04d0b98be093e4a53e492.html",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R07",
+      "jurisdiction": "中国",
+      "name": "GB 30000.14-2013 化学品分类和标签规范 第14部分：氧化性液体",
+      "issuer": "质检总局/国标委",
+      "ref": "GB 30000.14",
+      "effective": "2014-11-01",
+      "status": "现行",
+      "relevance": "LB-01",
+      "url": "https://www.gb-gbt.com/PDF/Chinese.aspx/GB30000.14-2013",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R08",
+      "jurisdiction": "越南",
+      "name": "Luật Hóa chất（化学品法）",
+      "issuer": "国会",
+      "ref": "69/2025/QH15",
+      "effective": "2026-01-01",
+      "status": "现行（替代 06/2007/QH12）",
+      "relevance": "VN-01",
+      "url": "https://cuchoachat.gov.vn/tin-tuc/thong-bao-ve-viec-trien-khai-thuc-hien-quy-dinh-cua-luat-hoa-chat-so-69-2025-qh15-va-cac-van-ban-huong-dan-luat.html",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R09",
+      "jurisdiction": "越南",
+      "name": "Nghị định 24/2026/NĐ-CP 化学品名录（附件 I–V）",
+      "issuer": "政府",
+      "ref": "24/2026/NĐ-CP",
+      "effective": "2026-01-17",
+      "status": "现行",
+      "relevance": "VN-03",
+      "url": "https://cuchoachat.gov.vn/Content/Uploads/files/2_%20Nghi%20dinh%2024_2026_ND-CP.pdf",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R10",
+      "jurisdiction": "越南",
+      "name": "Nghị định 26/2026/NĐ-CP 化学品活动与产品中危险化学品管理",
+      "issuer": "政府",
+      "ref": "26/2026/NĐ-CP",
+      "effective": "2026-01-17",
+      "status": "现行（替代 113/2017/NĐ-CP）",
+      "relevance": "VN-02/VN-04/VN-05",
+      "url": "https://english.luatvietnam.vn/decree-no-26-2026-nd-cp-dated-january-17-2026-of-the-government-detailing-and-guiding-the-implementation-of-a-number-of-articles-of-the-law-on-che-424117-doc1.html",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R11",
+      "jurisdiction": "越南",
+      "name": "Thông tư 01/2026/TT-BCT（SDS 内容/附录 I、分类与标注）",
+      "issuer": "工商部",
+      "ref": "01/2026/TT-BCT",
+      "effective": "2026-01-17",
+      "status": "现行（替代 32/2017/TT-BCT）",
+      "relevance": "VN-05/VN-06",
+      "url": "https://congbao.chinhphu.vn/van-ban/thong-tu-so-01-2026-tt-bct-468814/62084.htm",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R12",
+      "jurisdiction": "越南",
+      "name": "进出口税则与优惠税率（Nghị định 26/2023/NĐ-CP 及其修订；ATIGA/ACFTA/RCEP 议定）",
+      "issuer": "政府",
+      "ref": "26/2023/NĐ-CP; 126/2022; 118/2022; 129/2022/NĐ-CP",
+      "effective": "各议定实施日",
+      "status": "现行（需复核最新修订）",
+      "relevance": "VN-07",
+      "url": "https://treayo.cn/en/hs/vietnam/28470010",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R13",
+      "jurisdiction": "国际",
+      "name": "IMDG Code Amendment 42-24",
+      "issuer": "IMO（MSC.556(108)）",
+      "ref": "IMDG 2024 Edition",
+      "effective": "2026-01-01 强制",
+      "status": "现行",
+      "relevance": "TR-01 / TR-03 / TR-07 / LB-02 / LB-04",
+      "url": "https://www.imo.org/en/publications/pages/imdg%20code.aspx",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R14",
+      "jurisdiction": "国际",
+      "name": "IATA Dangerous Goods Regulations 67th Edition",
+      "issuer": "IATA",
+      "ref": "DGR 2026",
+      "effective": "2026-01-01",
+      "status": "现行",
+      "relevance": "TR-04",
+      "url": "https://www.iata.org/en/publications/dgr/",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R15",
+      "jurisdiction": "国际",
+      "name": "ADR 2025（UN2014 条目、P504/IBC02、LQ/EQ）",
+      "issuer": "UNECE",
+      "ref": "ADR 2025",
+      "effective": "2025-01-01",
+      "status": "现行",
+      "relevance": "TR-05/TR-06",
+      "url": "https://adr-tool.com/1362/un-2014",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R16",
+      "jurisdiction": "国际",
+      "name": "UN 危险货物规章范本（UN Model Regulations）",
+      "issuer": "UNECE",
+      "ref": "23rd revised edition",
+      "effective": "2025",
+      "status": "现行（以各运输方式采用版本为准）",
+      "relevance": "TR-01 / TR-02",
+      "url": "https://unece.org/transport/dangerous-goods",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R17",
+      "jurisdiction": "国际",
+      "name": "鹿特丹公约附件 III（PIC 程序）",
+      "issuer": "Rotterdam Convention Secretariat",
+      "ref": "Annex III",
+      "effective": "2019 年增列生效",
+      "status": "现行（经核实不含过氧化氢）",
+      "relevance": "（负向核对：确认过氧化氢不在 PIC 附件 III）",
+      "url": "https://www.pic.int/TheConvention/Chemicals/AnnexIIIChemicals/tabid/1132/language/en-US/Default.aspx",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R18",
+      "jurisdiction": "中国",
+      "name": "《中华人民共和国进出口税则（2026）》及海关规范申报要素（2847）",
+      "issuer": "国务院关税税则委员会/海关总署",
+      "ref": "2026 税则；规范申报目录",
+      "effective": "2026-01-01",
+      "status": "现行",
+      "relevance": "CN-08 / CN-09",
+      "url": "https://guanjin.app/hs-code/28470000/",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "id": "R19",
+      "jurisdiction": "越南",
+      "name": "越南 QCVN 国家技术规范体系（危险化学品安全）",
+      "issuer": "越南科学技术部/工商部",
+      "ref": "QCVN 系列",
+      "effective": "现行",
+      "status": "现行（须按最新版复核）",
+      "relevance": "LB-05 / TR-05",
+      "url": "https://cuchoachat.gov.vn/van-ban",
+      "verified_on": "2026-10-19"
+    }
+  ],
+  "timeliness": [
+    {
+      "item": "越南《化学品法》换版",
+      "what_changed": "69/2025/QH15 自 2026-01-01 生效，06/2007/QH12 被替代",
+      "impact": "所有 2026 年前引用的越南化学品法规结论失效",
+      "checked": "是",
+      "date": "2026-10-19"
+    },
+    {
+      "item": "Decree 113/2017 → 24/25/26/2026",
+      "what_changed": "三份新决议与两份通告自 2026-01-17 同步生效",
+      "impact": "不能沿用 113/2017 附件编号与清单",
+      "checked": "是",
+      "date": "2026-10-19"
+    },
+    {
+      "item": "Circular 32/2017/TT-BCT 失效",
+      "what_changed": "失效日 2026-01-17",
+      "impact": "SDS/标签/分类依据须改为 01/2026/TT-BCT",
+      "checked": "是",
+      "date": "2026-10-19"
+    },
+    {
+      "item": "IMDG Code 版本",
+      "what_changed": "42-24 自 2026-01-01 强制；43-26 预计 2027 起适用",
+      "impact": "包装/标签/积载依据须为 42-24",
+      "checked": "是",
+      "date": "2026-10-19"
+    },
+    {
+      "item": "IATA DGR 版本",
+      "what_changed": "第 67 版自 2026-01-01 生效",
+      "impact": "空运条目（如禁止/包装指令）须按 67 版",
+      "checked": "是",
+      "date": "2026-10-19"
+    },
+    {
+      "item": "易制毒定向目录",
+      "what_changed": "2026年第40号公告调整了附件1第一部分（新增2项）",
+      "impact": "双氧水位于附件1第二部分，目的地限于缅/老/阿",
+      "checked": "是",
+      "date": "2026-10-19"
+    },
+    {
+      "item": "两用物项目录",
+      "what_changed": "2025年第91号公告（2026-01-01 实施）替代 2024年第67号",
+      "impact": "须用 2026 年度目录复核",
+      "checked": "是",
+      "date": "2026-10-19"
+    },
+    {
+      "item": "关税税率",
+      "what_changed": "越南 2847.00.10 MFN 4.5%，VAT 8%/10%，优惠税率需协定原产地证明",
+      "impact": "报价与利润测算",
+      "checked": "部分（商业数据库，未取越南海关原文）",
+      "date": "2026-10-19"
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "Q01",
+      "question": "过氧化氢在 Nghị định 24/2026/NĐ-CP 附录 I–V 中的具体归属与条目号？",
+      "why": "决定进口许可、资质与申报义务；官方 PDF 为扫描件，本环境无法识读原文，不得推定。",
+      "owner": "进口方 / 越南本地合规顾问",
+      "blocks": [
+        "DOC-13",
+        "VN-03",
+        "VN-04",
+        "VN-09"
+      ]
+    },
+    {
+      "id": "Q02",
+      "question": "2847.00.10 在越南现行税则下的准确 MFN 与优惠税率，以及能否适用 ACFTA/RCEP？",
+      "why": "税率数据来自商业聚合，需以越南海关原文与协定原产地规则为准。",
+      "owner": "进口方 / 报关行",
+      "blocks": [
+        "DOC-12",
+        "VN-07",
+        "VN-08"
+      ]
+    },
+    {
+      "id": "Q03",
+      "question": "50% 过氧化氢（UN2014）在 IATA DGR 第 67 版下客机/货机是否一律禁止？",
+      "why": "商业承运人表显示 Forbidden，需 DGR 原文与承运人书面意见。",
+      "owner": "货代 / DG 顾问",
+      "blocks": [
+        "TR-04",
+        "TR-05"
+      ]
+    },
+    {
+      "id": "Q04",
+      "question": "本产品所用的具体 IBC 型号（31H1/31HA1 等）是否满足 IBC02 与 PP10，并具备有效性能合格证？",
+      "why": "包装不符将导致装船被拒或口岸查扣。",
+      "owner": "IBC 供应商 / 出口方",
+      "blocks": [
+        "CN-09",
+        "DOC-06",
+        "TR-07"
+      ]
+    },
+    {
+      "id": "Q05",
+      "question": "浓度 50% 的批次实测值是否稳定落在 20–60% 区间？边界批次（接近 60%）如何处理？",
+      "why": "接近 60% 时可能触发更高档分类（>60% 对应 PG I 与不同条目）。",
+      "owner": "出口方质检",
+      "blocks": [
+        "TR-02"
+      ]
+    },
+    {
+      "id": "Q06",
+      "question": "稳定剂（焦磷酸盐类）的名称、含量与作用是否属于目录口径下的「稳定剂」？",
+      "why": "若含稳定剂之外的其他化学品，须按有关规定鉴定危险特性，且 HS 可能改归 3824。",
+      "owner": "出口方技术部 / 第三方实验室",
+      "blocks": [
+        "CN-01",
+        "HS-1"
+      ]
+    },
+    {
+      "id": "Q07",
+      "question": "出口监管条件 G 证在目的地非定向国家时，报关时如何处理才能避免单证不一致？",
+      "why": "单一窗口仍显示 G，需报关行给出实操口径与备查材料。",
+      "owner": "报关行",
+      "blocks": [
+        "CN-03",
+        "CN-08",
+        "DOC-15"
+      ]
+    },
+    {
+      "id": "Q08",
+      "question": "越南目的港（胡志明市）对 UN2014 危险货物的卸货、堆存、当日提离要求？",
+      "why": "目的港拒收将导致滞箱费与退货。",
+      "owner": "货代 / 进口方",
+      "blocks": [
+        "TR-03"
+      ]
+    },
+    {
+      "id": "Q09",
+      "question": "越南是否有适用于工业过氧化氢的国家质量标准（QCVN/TCVN）？",
+      "why": "可能成为检验检疫或合同验收依据。",
+      "owner": "进口方 / 越南质量标准机构",
+      "blocks": [
+        "LB-05"
+      ]
+    },
+    {
+      "id": "Q10",
+      "question": "越南语 SDS 由谁出具、如何认证？",
+      "why": "Nghị định 26/2026/NĐ-CP 第 6 条要求随附 SDS，进口方对准确性负责。",
+      "owner": "第三方合规机构 / 进口方",
+      "blocks": [
+        "DOC-10",
+        "VN-06"
+      ]
+    },
+    {
+      "id": "Q11",
+      "question": "出口退税率 0% 与报关口径（2847000000 / CIQ 2847000000301）是否需财务与报关行再次确认？",
+      "why": "退税率影响报价测算；CIQ 分档需与含量 50% 匹配。",
+      "owner": "出口方财务 / 报关行",
+      "blocks": [
+        "CN-09",
+        "CN-08"
+      ]
+    },
+    {
+      "id": "Q12",
+      "question": "双氧水是否列于现行《两用物项出口管制清单》（2026 年度许可目录）？",
+      "why": "本页仅基于公开检索未见列名，未逐条核对清单原文；未列名≠不受管制，仍需做最终用途/最终用户筛查。",
+      "owner": "出口方合规人员",
+      "blocks": [
+        "CN-04"
+      ]
+    }
+  ],
+  "stats": {
+    "note": "数字由脚本按主题重算，此字段仅作参考。"
+  }
+}

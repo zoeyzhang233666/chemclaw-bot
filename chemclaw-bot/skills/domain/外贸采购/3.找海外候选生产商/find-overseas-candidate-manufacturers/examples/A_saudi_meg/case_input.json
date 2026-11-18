@@ -1,0 +1,30 @@
+{
+  "case_id": "OSM-MEG-SA-20261020",
+  "template_version": "1.0",
+  "country": {
+    "zh": "沙特阿拉伯",
+    "en": "Saudi Arabia",
+    "iso2": "SA"
+  },
+  "destination": { "zh": "中国", "en": "China" },
+  "product": {
+    "name_zh": "乙二醇（单乙二醇 / MEG）",
+    "name_en": "Monoethylene glycol (MEG)",
+    "abbr": "MEG",
+    "cas": "107-21-1",
+    "hs_cn": "2905.31.00.00",
+    "spec_summary": "纤维级（聚酯级）/PET瓶级/工业级；典型纯度 ≥99.5%，水分 ≤0.1%，色度 APHA ≤5，铁 ≤0.1 ppm，酸度（以乙酸计）≤0.005%",
+    "process_route": "乙烯 →（银催化剂气相氧化）环氧乙烷（EO）→（EO 水合或 OMEGA 碳酸乙烯酯水解）单乙二醇，并联产 DEG/TEG",
+    "packaging": "散装（ISO tank / 化学品船 / 液袋）/ 230 kg 桶 / 1000 kg IBC",
+    "related_products_excluded": ["DEG", "TEG", "丙二醇（PG）", "丁基乙二醇醚", "聚醚多元醇"]
+  },
+  "buyer_context": {
+    "quantity": null,
+    "only_actual_manufacturers": true,
+    "certifications_needed": null,
+    "packaging_needed": null,
+    "destination_port": null
+  },
+  "research_date": "2026-10-20",
+  "notes": "用户要求：优先核验沙特大型石化集团及其实际生产子公司，识别具体生产基地与产品能力，并区分集团销售主体与工厂主体；不得虚构产能、认证或企业联系方式。"
+}

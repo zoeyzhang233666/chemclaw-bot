@@ -1,0 +1,20 @@
+{
+ "_note": "精简示例：项目数据为结构演示，数值与时点必须以环评/公告核实后替换。",
+ "projects": [
+  {"id": "CJ01", "name": "华东离子膜烧碱扩建（示例）", "company_id": "氯碱化工", "province": "上海", "route": "离子膜法",
+   "capacity": 20, "capacity_retired": 0, "type": "扩建", "status": "在建", "date": "2026-09", "year": 2026,
+   "step": "土建/设备招标", "net": 20, "impact": "净新增 20 万吨折百，主要覆盖华东液碱市场。", "source": "S5"},
+  {"id": "CJ02", "name": "西北氯碱一体化二期（示例）", "company_id": "新疆天业", "province": "新疆", "route": "离子膜法",
+   "capacity": 40, "capacity_retired": 0, "type": "新建", "status": "在建", "date": "2026-12", "year": 2026,
+   "step": "设备安装", "net": 40, "impact": "低成本产能继续向西北集中，外运压力增加。", "source": "S5"},
+  {"id": "CJ03", "name": "西南氯碱技改扩能（示例）", "company_id": "宜宾天原", "province": "四川", "route": "离子膜法",
+   "capacity": 15, "capacity_retired": 0, "type": "技改", "status": "拟建", "date": "2027-06", "year": 2027,
+   "step": "环评公示", "net": null, "impact": "净增待确认（技改可能以置换老装置方式实施）。", "source": "S5"},
+  {"id": "CJ04", "name": "老隔膜装置退出（示例）", "company_id": "其他", "province": "河北", "route": "隔膜法",
+   "capacity": 0, "capacity_retired": 30, "type": "退出", "status": "拟建", "date": "2027-03", "year": 2027,
+   "step": "淘汰计划", "net": -30, "impact": "隔膜法退出，净减 30 万吨；如无新增对冲，区域供给收紧。", "source": "S5"},
+  {"id": "CJ05", "name": "华北离子膜置换隔膜（示例）", "company_id": "其他", "province": "河北", "route": "离子膜法",
+   "capacity": 30, "capacity_retired": 30, "type": "置换", "status": "在建", "date": "2027-09", "year": 2027,
+   "step": "施工", "net": 0, "impact": "置换，净增为 0；但能效提升会降低现金成本。", "source": "S5"}
+ ]
+}

@@ -1,0 +1,2876 @@
+{
+ "meta": {
+  "product": "轻质纯碱（碳酸钠，Na₂CO₃，CAS 497-19-8）",
+  "product_short": "纯碱",
+  "product_cas": "497-19-8",
+  "product_formula": "Na2CO3",
+  "buyer": "氨碱法纯碱厂 · 采购部",
+  "region": "华东（原盐/石灰石按厂区就近采购，价格列为缺口）",
+  "as_of": "2026-10-20",
+  "target_tax_basis": "tax_included",
+  "target_unit": "CNY/t",
+  "vat_rate_note": "增值税 13% 为默认值，须按企业实际纳税身份核定",
+  "process_id": "SOLVAY",
+  "process_name": "氨碱法（索尔维法）",
+  "process_desc": "化盐→盐水精制→吸氨→碳化→过滤→煅烧→蒸氨再生；副产氯化钙废液",
+  "reaction": "NaCl + NH3 + CO2 + H2O -> NaHCO3 + NH4Cl; 2 NaHCO3 -> Na2CO3 + CO2 + H2O",
+  "caveats": [
+   "本模型只含\"有价格且可核验\"的原料（动力煤、液氨），原盐与石灰石价格缺可核验日序列，按缺口列示、不按 0 计入。",
+   "因此\"合计\"仅为部分覆盖口径，不是氨碱法纯碱的完整原料成本。",
+   "氨碱法真正的成本大头是原盐+石灰石（行业口径约占原料成本 55%）与燃料煤，本示例正是为了演示\"缺口要显式暴露\"而不掩盖。"
+  ]
+ },
+ "params": {
+  "basis": "net",
+  "basis_label": "净单耗（已扣回收、含转化/收率/副反应损失）",
+  "yield_basis": "以主要原料计的成品收率",
+  "yield_pct": null,
+  "conversion_pct": null,
+  "recycle_pct": null,
+  "notes": "单耗取公开行业口径（多源交叉）：原盐 1.5-1.6 t/t、石灰石 1.3 t/t、动力煤 0.58 t/t、液氨 ~4 kg/t。本示例取保守值：原盐 1.5、石灰石 1.3、动力煤 0.58、液氨 0.004。收率定义未取得，未参与计算。"
+ },
+ "materials": [
+  {
+   "id": "salt",
+   "name": "原盐（工业盐，NaCl）",
+   "cas": "7647-14-5",
+   "role": "main",
+   "spec": "工业盐 ≥96%",
+   "region": "华东",
+   "delivery": "送到",
+   "tax_included": true,
+   "errors": [],
+   "warns": [
+    "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）"
+   ],
+   "price_steps": [],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "1.5 t/t → t/t",
+     "value": 1.5
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "assoc",
+   "dosage_source_label": "行业协会/机构",
+   "dosage_ref": "山东化工网《氨碱法纯碱：在变局中探寻可持续发展之路》(2025-02-27)：每吨纯碱消耗原盐1.5吨；光期研究《走进纯碱原料——原盐》：氨碱法原盐吨耗1.6吨左右。取1.5（保守偏低）",
+   "dosage_scope": "氨碱法（索尔维法）连续装置",
+   "dosage_unit_in": "t/t",
+   "dosage_raw": 1.5,
+   "dosage": 1.5,
+   "price": null,
+   "price_blocked": true,
+   "cost": null
+  },
+  {
+   "id": "lime",
+   "name": "石灰石（CaCO₃）",
+   "cas": "471-34-1",
+   "role": "main",
+   "spec": "CaCO₃ ≥95%，30-60mm",
+   "region": "华东",
+   "delivery": "矿山直送",
+   "tax_included": true,
+   "errors": [],
+   "warns": [
+    "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）"
+   ],
+   "price_steps": [],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "1.3 t/t → t/t",
+     "value": 1.3
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "assoc",
+   "dosage_source_label": "行业协会/机构",
+   "dosage_ref": "山东化工网（2025-02-27）：每吨纯碱消耗石灰石1.3吨",
+   "dosage_scope": "氨碱法（索尔维法）连续装置",
+   "dosage_unit_in": "t/t",
+   "dosage_raw": 1.3,
+   "dosage": 1.3,
+   "price": null,
+   "price_blocked": true,
+   "cost": null
+  },
+  {
+   "id": "coal",
+   "name": "动力煤（燃料）",
+   "cas": "—",
+   "role": "aux",
+   "spec": "Q5500 动力煤",
+   "region": "全国综合",
+   "delivery": "送到",
+   "tax_included": true,
+   "errors": [],
+   "warns": [],
+   "price_steps": [
+    {
+     "label": "原始价格",
+     "calc": "",
+     "value": 1041.0,
+     "unit": "CNY/t"
+    },
+    {
+     "label": "换算到每千克",
+     "calc": "1041 ÷ 1000",
+     "value": 1.041,
+     "unit": "元/kg"
+    },
+    {
+     "label": "换算到每吨",
+     "calc": "1.041 × 1000",
+     "value": 1041.0,
+     "unit": "CNY/t"
+    }
+   ],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "0.58 t/t → t/t",
+     "value": 0.58
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "research",
+   "dosage_source_label": "券商/研究机构",
+   "dosage_ref": "七禾网《纯碱生产成本核算》(2025-04-24)：氨碱法1吨纯碱成本=原盐*1.6+动力煤*0.58+烟煤*0.1+550；雪球远兴能源成本拆解：动力煤0.6吨",
+   "dosage_scope": "氨碱法（索尔维法）连续装置",
+   "dosage_unit_in": "t/t",
+   "dosage_raw": 0.58,
+   "dosage": 0.58,
+   "price": 1041.0,
+   "price_spec": "Q5500",
+   "price_region": "全国综合",
+   "price_delivery": "市场价",
+   "price_unit_in": "CNY/t",
+   "price_date": "2026-10-20",
+   "price_source": "生意社（100ppi.com）动力煤基准价",
+   "price_raw": 1041.0,
+   "price_tax_in": "含税",
+   "price_orig_tax": "含税",
+   "cost": 603.78,
+   "share": 98.25122645610766
+  },
+  {
+   "id": "amm",
+   "name": "液氨（补充氨耗）",
+   "cas": "7664-41-7",
+   "role": "aux",
+   "spec": "≥99.6%",
+   "region": "全国综合",
+   "delivery": "送到",
+   "tax_included": true,
+   "errors": [],
+   "warns": [],
+   "price_steps": [
+    {
+     "label": "原始价格",
+     "calc": "",
+     "value": 2686.67,
+     "unit": "CNY/t"
+    },
+    {
+     "label": "换算到每千克",
+     "calc": "2686.67 ÷ 1000",
+     "value": 2.68667,
+     "unit": "元/kg"
+    },
+    {
+     "label": "换算到每吨",
+     "calc": "2.68667 × 1000",
+     "value": 2686.67,
+     "unit": "CNY/t"
+    }
+   ],
+   "dosage_steps": [
+    {
+     "label": "单耗单位统一",
+     "calc": "0.004 t/t → t/t",
+     "value": 0.004
+    }
+   ],
+   "tax_label": "含税",
+   "dosage_source": "research",
+   "dosage_source_label": "券商/研究机构",
+   "dosage_ref": "行业通识：氨在蒸氨工序循环使用，正常仅补充损失，吨碱补充量约 2-5 kg；本模型取 4 kg/t（0.004 t/t）并标记为研究口径典型值",
+   "dosage_scope": "氨碱法（索尔维法）连续装置",
+   "dosage_unit_in": "t/t",
+   "dosage_raw": 0.004,
+   "dosage": 0.004,
+   "price": 2686.67,
+   "price_spec": "≥99.6%",
+   "price_region": "全国综合",
+   "price_delivery": "市场价",
+   "price_unit_in": "CNY/t",
+   "price_date": "2026-10-21",
+   "price_source": "生意社（100ppi.com）液氨基准价",
+   "price_raw": 2686.67,
+   "price_tax_in": "含税",
+   "price_orig_tax": "含税",
+   "cost": 10.746680000000001,
+   "share": 1.7487735438923502
+  }
+ ],
+ "main_count": 2,
+ "aux_count": 2,
+ "total_main": 0,
+ "total_aux": 614.5266799999999,
+ "total": 614.5266799999999,
+ "coverage": {
+  "n_all": 4,
+  "n_computable": 2,
+  "n_blocked": 2,
+  "complete": false
+ },
+ "sensitivity": [
+  {
+   "material_id": "coal",
+   "name": "动力煤（燃料）",
+   "q": 0.58,
+   "p": 1041.0,
+   "cost": 603.78,
+   "share": 98.25122645610766,
+   "cells": [
+    {
+     "label": "-10%",
+     "ratio": -0.1,
+     "price_delta": -104.10000000000001,
+     "cost_delta": -60.378,
+     "new_cost": 543.4019999999999,
+     "new_total": 554.1486799999999,
+     "new_total_pct": -9.825122645610767
+    },
+    {
+     "label": "-5%",
+     "ratio": -0.05,
+     "price_delta": -52.050000000000004,
+     "cost_delta": -30.189,
+     "new_cost": 573.591,
+     "new_total": 584.33768,
+     "new_total_pct": -4.9125613228053835
+    },
+    {
+     "label": "0%",
+     "ratio": 0.0,
+     "price_delta": 0.0,
+     "cost_delta": 0.0,
+     "new_cost": 603.78,
+     "new_total": 614.5266799999999,
+     "new_total_pct": 0.0
+    },
+    {
+     "label": "+5%",
+     "ratio": 0.05,
+     "price_delta": 52.050000000000004,
+     "cost_delta": 30.189,
+     "new_cost": 633.9689999999999,
+     "new_total": 644.7156799999999,
+     "new_total_pct": 4.9125613228053835
+    },
+    {
+     "label": "+10%",
+     "ratio": 0.1,
+     "price_delta": 104.10000000000001,
+     "cost_delta": 60.378,
+     "new_cost": 664.158,
+     "new_total": 674.90468,
+     "new_total_pct": 9.825122645610767
+    }
+   ]
+  },
+  {
+   "material_id": "amm",
+   "name": "液氨（补充氨耗）",
+   "q": 0.004,
+   "p": 2686.67,
+   "cost": 10.746680000000001,
+   "share": 1.7487735438923502,
+   "cells": [
+    {
+     "label": "-10%",
+     "ratio": -0.1,
+     "price_delta": -268.66700000000003,
+     "cost_delta": -1.0746680000000002,
+     "new_cost": 9.672012,
+     "new_total": 613.452012,
+     "new_total_pct": -0.17487735438923505
+    },
+    {
+     "label": "-5%",
+     "ratio": -0.05,
+     "price_delta": -134.33350000000002,
+     "cost_delta": -0.5373340000000001,
+     "new_cost": 10.209346000000002,
+     "new_total": 613.989346,
+     "new_total_pct": -0.08743867719461752
+    },
+    {
+     "label": "0%",
+     "ratio": 0.0,
+     "price_delta": 0.0,
+     "cost_delta": 0.0,
+     "new_cost": 10.746680000000001,
+     "new_total": 614.5266799999999,
+     "new_total_pct": 0.0
+    },
+    {
+     "label": "+5%",
+     "ratio": 0.05,
+     "price_delta": 134.33350000000002,
+     "cost_delta": 0.5373340000000001,
+     "new_cost": 11.284014,
+     "new_total": 615.0640139999999,
+     "new_total_pct": 0.08743867719461752
+    },
+    {
+     "label": "+10%",
+     "ratio": 0.1,
+     "price_delta": 268.66700000000003,
+     "cost_delta": 1.0746680000000002,
+     "new_cost": 11.821348000000002,
+     "new_total": 615.6013479999999,
+     "new_total_pct": 0.17487735438923505
+    }
+   ]
+  }
+ ],
+ "rates": [
+  {
+   "label": "-10%",
+   "ratio": -0.1
+  },
+  {
+   "label": "-5%",
+   "ratio": -0.05
+  },
+  {
+   "label": "0%",
+   "ratio": 0.0
+  },
+  {
+   "label": "+5%",
+   "ratio": 0.05
+  },
+  {
+   "label": "+10%",
+   "ratio": 0.1
+  }
+ ],
+ "combos": [
+  {
+   "id": "fuel_up",
+   "name": "燃料煤 +10%",
+   "changes": {
+    "coal": 10
+   },
+   "old_total": 614.5266799999999,
+   "new_total": 674.90468,
+   "delta": 60.37800000000004,
+   "delta_pct": 9.825122645610772,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "coal",
+     "name": "动力煤（燃料）",
+     "ratio_pct": 10.0,
+     "old": 603.78,
+     "new": 664.158,
+     "delta": 60.378
+    },
+    {
+     "material_id": "amm",
+     "name": "液氨（补充氨耗）",
+     "ratio_pct": 0.0,
+     "old": 10.746680000000001,
+     "new": 10.746680000000001,
+     "delta": 0.0
+    }
+   ]
+  },
+  {
+   "id": "fuel_up_amm_up",
+   "name": "煤 +10% / 液氨 +10%",
+   "changes": {
+    "coal": 10,
+    "amm": 10
+   },
+   "old_total": 614.5266799999999,
+   "new_total": 675.9793480000001,
+   "delta": 61.45266800000013,
+   "delta_pct": 10.000000000000023,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "coal",
+     "name": "动力煤（燃料）",
+     "ratio_pct": 10.0,
+     "old": 603.78,
+     "new": 664.158,
+     "delta": 60.378
+    },
+    {
+     "material_id": "amm",
+     "name": "液氨（补充氨耗）",
+     "ratio_pct": 10.0,
+     "old": 10.746680000000001,
+     "new": 11.821348000000002,
+     "delta": 1.0746680000000002
+    }
+   ]
+  },
+  {
+   "id": "strong",
+   "name": "煤 +20%",
+   "changes": {
+    "coal": 20
+   },
+   "old_total": 614.5266799999999,
+   "new_total": 735.2826799999999,
+   "delta": 120.75599999999997,
+   "delta_pct": 19.650245291221527,
+   "complete": true,
+   "notes": [],
+   "by_material": [
+    {
+     "material_id": "coal",
+     "name": "动力煤（燃料）",
+     "ratio_pct": 20.0,
+     "old": 603.78,
+     "new": 724.536,
+     "delta": 120.756
+    },
+    {
+     "material_id": "amm",
+     "name": "液氨（补充氨耗）",
+     "ratio_pct": 0.0,
+     "old": 10.746680000000001,
+     "new": 10.746680000000001,
+     "delta": 0.0
+    }
+   ]
+  }
+ ],
+ "auto_combos": [
+  {
+   "label": "全部原料同步 -10%",
+   "ratio": -0.1,
+   "delta": -61.4526679999999,
+   "new_total": 553.074012,
+   "delta_pct": -9.999999999999986,
+   "desc": "动力煤（燃料）、液氨（补充氨耗） 同步变动"
+  },
+  {
+   "label": "全部原料同步 -5%",
+   "ratio": -0.05,
+   "delta": -30.726334000000065,
+   "new_total": 583.8003459999999,
+   "delta_pct": -5.0000000000000115,
+   "desc": "动力煤（燃料）、液氨（补充氨耗） 同步变动"
+  },
+  {
+   "label": "全部原料同步 0%",
+   "ratio": 0.0,
+   "delta": 0.0,
+   "new_total": 614.5266799999999,
+   "delta_pct": 0.0,
+   "desc": "动力煤（燃料）、液氨（补充氨耗） 同步变动"
+  },
+  {
+   "label": "全部原料同步 +5%",
+   "ratio": 0.05,
+   "delta": 30.726334000000065,
+   "new_total": 645.253014,
+   "delta_pct": 5.0000000000000115,
+   "desc": "动力煤（燃料）、液氨（补充氨耗） 同步变动"
+  },
+  {
+   "label": "全部原料同步 +10%",
+   "ratio": 0.1,
+   "delta": 61.45266800000013,
+   "new_total": 675.9793480000001,
+   "delta_pct": 10.000000000000023,
+   "desc": "动力煤（燃料）、液氨（补充氨耗） 同步变动"
+  }
+ ],
+ "dosage_sens": [
+  {
+   "material_id": "coal",
+   "name": "动力煤（燃料）",
+   "delta_1pct": 6.0378,
+   "delta_pct_of_total": 0.9825122645610764
+  },
+  {
+   "material_id": "amm",
+   "name": "液氨（补充氨耗）",
+   "delta_1pct": 0.10746680000000002,
+   "delta_pct_of_total": 0.017487735438923502
+  }
+ ],
+ "history": {
+  "rows": [
+   {
+    "date": "2026-07-21",
+    "cost": 496.19667999999996,
+    "items": {
+     "coal": 487.48999999999995,
+     "amm": 8.70668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-22",
+    "cost": 496.19667999999996,
+    "items": {
+     "coal": 487.48999999999995,
+     "amm": 8.70668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-23",
+    "cost": 496.73668,
+    "items": {
+     "coal": 488.07,
+     "amm": 8.666680000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-24",
+    "cost": 496.67,
+    "items": {
+     "coal": 488.07,
+     "amm": 8.6
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-25",
+    "cost": 496.67,
+    "items": {
+     "coal": 488.07,
+     "amm": 8.6
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-26",
+    "cost": 496.67,
+    "items": {
+     "coal": 488.07,
+     "amm": 8.6
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-27",
+    "cost": 497.04332,
+    "items": {
+     "coal": 488.07,
+     "amm": 8.97332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-28",
+    "cost": 497.07,
+    "items": {
+     "coal": 488.07,
+     "amm": 9.0
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-29",
+    "cost": 497.07,
+    "items": {
+     "coal": 488.07,
+     "amm": 9.0
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-30",
+    "cost": 497.07,
+    "items": {
+     "coal": 488.07,
+     "amm": 9.0
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-07-31",
+    "cost": 498.47999999999996,
+    "items": {
+     "coal": 489.52,
+     "amm": 8.96
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-01",
+    "cost": 498.47999999999996,
+    "items": {
+     "coal": 489.52,
+     "amm": 8.96
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-02",
+    "cost": 498.47999999999996,
+    "items": {
+     "coal": 489.52,
+     "amm": 8.96
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-03",
+    "cost": 498.34668,
+    "items": {
+     "coal": 489.52,
+     "amm": 8.82668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-04",
+    "cost": 498.24,
+    "items": {
+     "coal": 489.52,
+     "amm": 8.72
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-05",
+    "cost": 502.61668,
+    "items": {
+     "coal": 493.86999999999995,
+     "amm": 8.746680000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-06",
+    "cost": 505.0033199999999,
+    "items": {
+     "coal": 496.18999999999994,
+     "amm": 8.81332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-07",
+    "cost": 506.45331999999996,
+    "items": {
+     "coal": 497.64,
+     "amm": 8.81332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-08",
+    "cost": 506.45331999999996,
+    "items": {
+     "coal": 497.64,
+     "amm": 8.81332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-09",
+    "cost": 506.45331999999996,
+    "items": {
+     "coal": 497.64,
+     "amm": 8.81332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-10",
+    "cost": 509.58,
+    "items": {
+     "coal": 500.53999999999996,
+     "amm": 9.040000000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-11",
+    "cost": 509.71331999999995,
+    "items": {
+     "coal": 500.53999999999996,
+     "amm": 9.17332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-12",
+    "cost": 512.69332,
+    "items": {
+     "coal": 503.43999999999994,
+     "amm": 9.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-13",
+    "cost": 512.9833199999999,
+    "items": {
+     "coal": 503.72999999999996,
+     "amm": 9.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-14",
+    "cost": 513.27332,
+    "items": {
+     "coal": 504.02,
+     "amm": 9.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-15",
+    "cost": 513.27332,
+    "items": {
+     "coal": 504.02,
+     "amm": 9.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-16",
+    "cost": 513.27332,
+    "items": {
+     "coal": 504.02,
+     "amm": 9.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-17",
+    "cost": 513.27332,
+    "items": {
+     "coal": 504.02,
+     "amm": 9.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-18",
+    "cost": 513.27332,
+    "items": {
+     "coal": 504.02,
+     "amm": 9.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-19",
+    "cost": 513.4066799999999,
+    "items": {
+     "coal": 504.02,
+     "amm": 9.38668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-20",
+    "cost": 512.62,
+    "items": {
+     "coal": 502.85999999999996,
+     "amm": 9.76
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-21",
+    "cost": 511.50332,
+    "items": {
+     "coal": 501.40999999999997,
+     "amm": 10.09332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-22",
+    "cost": 511.50332,
+    "items": {
+     "coal": 501.40999999999997,
+     "amm": 10.09332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-23",
+    "cost": 511.50332,
+    "items": {
+     "coal": 501.40999999999997,
+     "amm": 10.09332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-24",
+    "cost": 511.63667999999996,
+    "items": {
+     "coal": 501.40999999999997,
+     "amm": 10.22668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-25",
+    "cost": 511.05668,
+    "items": {
+     "coal": 500.83,
+     "amm": 10.22668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-26",
+    "cost": 511.32331999999997,
+    "items": {
+     "coal": 500.83,
+     "amm": 10.49332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-27",
+    "cost": 518.45668,
+    "items": {
+     "coal": 507.78999999999996,
+     "amm": 10.666680000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-28",
+    "cost": 518.5899999999999,
+    "items": {
+     "coal": 507.78999999999996,
+     "amm": 10.8
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-29",
+    "cost": 518.5899999999999,
+    "items": {
+     "coal": 507.78999999999996,
+     "amm": 10.8
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-30",
+    "cost": 518.5899999999999,
+    "items": {
+     "coal": 507.78999999999996,
+     "amm": 10.8
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-08-31",
+    "cost": 518.8833199999999,
+    "items": {
+     "coal": 507.78999999999996,
+     "amm": 11.09332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-01",
+    "cost": 530.55,
+    "items": {
+     "coal": 519.39,
+     "amm": 11.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-02",
+    "cost": 534.7549999999999,
+    "items": {
+     "coal": 523.5949999999999,
+     "amm": 11.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-03",
+    "cost": 534.7549999999999,
+    "items": {
+     "coal": 523.5949999999999,
+     "amm": 11.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-04",
+    "cost": 552.04832,
+    "items": {
+     "coal": 540.995,
+     "amm": 11.05332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-05",
+    "cost": 552.04832,
+    "items": {
+     "coal": 540.995,
+     "amm": 11.05332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-06",
+    "cost": 552.04832,
+    "items": {
+     "coal": 540.995,
+     "amm": 11.05332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-07",
+    "cost": 563.4216799999999,
+    "items": {
+     "coal": 552.5949999999999,
+     "amm": 10.82668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-08",
+    "cost": 575.02168,
+    "items": {
+     "coal": 564.1949999999999,
+     "amm": 10.82668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-09",
+    "cost": 584.38168,
+    "items": {
+     "coal": 573.4749999999999,
+     "amm": 10.90668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-10",
+    "cost": 584.38168,
+    "items": {
+     "coal": 573.4749999999999,
+     "amm": 10.90668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-11",
+    "cost": 585.3199999999999,
+    "items": {
+     "coal": 574.1999999999999,
+     "amm": 11.120000000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-12",
+    "cost": 585.3199999999999,
+    "items": {
+     "coal": 574.1999999999999,
+     "amm": 11.120000000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-13",
+    "cost": 585.3199999999999,
+    "items": {
+     "coal": 574.1999999999999,
+     "amm": 11.120000000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-14",
+    "cost": 585.1016799999999,
+    "items": {
+     "coal": 573.4749999999999,
+     "amm": 11.62668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-15",
+    "cost": 583.9699999999999,
+    "items": {
+     "coal": 572.17,
+     "amm": 11.8
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-16",
+    "cost": 584.1033199999999,
+    "items": {
+     "coal": 572.17,
+     "amm": 11.93332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-17",
+    "cost": 582.14,
+    "items": {
+     "coal": 570.14,
+     "amm": 12.0
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-18",
+    "cost": 582.27332,
+    "items": {
+     "coal": 570.14,
+     "amm": 12.13332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-19",
+    "cost": 582.27332,
+    "items": {
+     "coal": 570.14,
+     "amm": 12.13332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-20",
+    "cost": 582.8133199999999,
+    "items": {
+     "coal": 570.7199999999999,
+     "amm": 12.09332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-21",
+    "cost": 583.3933199999999,
+    "items": {
+     "coal": 571.3,
+     "amm": 12.09332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-22",
+    "cost": 584.53668,
+    "items": {
+     "coal": 572.75,
+     "amm": 11.78668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-23",
+    "cost": 585.52332,
+    "items": {
+     "coal": 573.91,
+     "amm": 11.61332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-24",
+    "cost": 587.98832,
+    "items": {
+     "coal": 576.375,
+     "amm": 11.61332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-25",
+    "cost": 587.62832,
+    "items": {
+     "coal": 576.375,
+     "amm": 11.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-26",
+    "cost": 587.62832,
+    "items": {
+     "coal": 576.375,
+     "amm": 11.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-27",
+    "cost": 587.62832,
+    "items": {
+     "coal": 576.375,
+     "amm": 11.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-28",
+    "cost": 587.06332,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.25332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-29",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-09-30",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-01",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-02",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-03",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-04",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-05",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-06",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-07",
+    "cost": 586.9699999999999,
+    "items": {
+     "coal": 576.81,
+     "amm": 10.16
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-08",
+    "cost": 587.93,
+    "items": {
+     "coal": 576.81,
+     "amm": 11.120000000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-09",
+    "cost": 588.83,
+    "items": {
+     "coal": 577.39,
+     "amm": 11.44
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-10",
+    "cost": 591.15668,
+    "items": {
+     "coal": 579.13,
+     "amm": 12.02668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-11",
+    "cost": 591.15668,
+    "items": {
+     "coal": 579.13,
+     "amm": 12.02668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-12",
+    "cost": 593.47668,
+    "items": {
+     "coal": 581.4499999999999,
+     "amm": 12.02668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-13",
+    "cost": 600.00168,
+    "items": {
+     "coal": 587.9749999999999,
+     "amm": 12.02668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-14",
+    "cost": 602.54168,
+    "items": {
+     "coal": 590.875,
+     "amm": 11.666680000000001
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-15",
+    "cost": 606.1583199999999,
+    "items": {
+     "coal": 595.2249999999999,
+     "amm": 10.93332
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-16",
+    "cost": 605.6916799999999,
+    "items": {
+     "coal": 595.2249999999999,
+     "amm": 10.46668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-17",
+    "cost": 605.6916799999999,
+    "items": {
+     "coal": 595.2249999999999,
+     "amm": 10.46668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-18",
+    "cost": 605.6916799999999,
+    "items": {
+     "coal": 595.2249999999999,
+     "amm": 10.46668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-19",
+    "cost": 606.3366799999999,
+    "items": {
+     "coal": 595.9499999999999,
+     "amm": 10.38668
+    },
+    "incomplete": false,
+    "carried": []
+   },
+   {
+    "date": "2026-10-20",
+    "cost": 614.5266799999999,
+    "items": {
+     "coal": 603.78,
+     "amm": 10.746680000000001
+    },
+    "incomplete": false,
+    "carried": []
+   }
+  ],
+  "gaps": [],
+  "materials": [
+   {
+    "material_id": "coal",
+    "name": "动力煤",
+    "source": "生意社（100ppi.com）基准价 · 动力煤",
+    "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=369",
+    "spec": "Q5500",
+    "region": "全国综合",
+    "tax_included": true,
+    "freq": "日",
+    "unit": "CNY/t",
+    "rows": [
+     {
+      "date": "2026-07-21",
+      "value": 840.5
+     },
+     {
+      "date": "2026-07-22",
+      "value": 840.5
+     },
+     {
+      "date": "2026-07-23",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-24",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-25",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-26",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-27",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-28",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-29",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-30",
+      "value": 841.5
+     },
+     {
+      "date": "2026-07-31",
+      "value": 844.0
+     },
+     {
+      "date": "2026-08-01",
+      "value": 844.0
+     },
+     {
+      "date": "2026-08-02",
+      "value": 844.0
+     },
+     {
+      "date": "2026-08-03",
+      "value": 844.0
+     },
+     {
+      "date": "2026-08-04",
+      "value": 844.0
+     },
+     {
+      "date": "2026-08-05",
+      "value": 851.5
+     },
+     {
+      "date": "2026-08-06",
+      "value": 855.5
+     },
+     {
+      "date": "2026-08-07",
+      "value": 858.0
+     },
+     {
+      "date": "2026-08-08",
+      "value": 858.0
+     },
+     {
+      "date": "2026-08-09",
+      "value": 858.0
+     },
+     {
+      "date": "2026-08-10",
+      "value": 863.0
+     },
+     {
+      "date": "2026-08-11",
+      "value": 863.0
+     },
+     {
+      "date": "2026-08-12",
+      "value": 868.0
+     },
+     {
+      "date": "2026-08-13",
+      "value": 868.5
+     },
+     {
+      "date": "2026-08-14",
+      "value": 869.0
+     },
+     {
+      "date": "2026-08-15",
+      "value": 869.0
+     },
+     {
+      "date": "2026-08-16",
+      "value": 869.0
+     },
+     {
+      "date": "2026-08-17",
+      "value": 869.0
+     },
+     {
+      "date": "2026-08-18",
+      "value": 869.0
+     },
+     {
+      "date": "2026-08-19",
+      "value": 869.0
+     },
+     {
+      "date": "2026-08-20",
+      "value": 867.0
+     },
+     {
+      "date": "2026-08-21",
+      "value": 864.5
+     },
+     {
+      "date": "2026-08-22",
+      "value": 864.5
+     },
+     {
+      "date": "2026-08-23",
+      "value": 864.5
+     },
+     {
+      "date": "2026-08-24",
+      "value": 864.5
+     },
+     {
+      "date": "2026-08-25",
+      "value": 863.5
+     },
+     {
+      "date": "2026-08-26",
+      "value": 863.5
+     },
+     {
+      "date": "2026-08-27",
+      "value": 875.5
+     },
+     {
+      "date": "2026-08-28",
+      "value": 875.5
+     },
+     {
+      "date": "2026-08-29",
+      "value": 875.5
+     },
+     {
+      "date": "2026-08-30",
+      "value": 875.5
+     },
+     {
+      "date": "2026-08-31",
+      "value": 875.5
+     },
+     {
+      "date": "2026-09-01",
+      "value": 895.5
+     },
+     {
+      "date": "2026-09-02",
+      "value": 902.75
+     },
+     {
+      "date": "2026-09-03",
+      "value": 902.75
+     },
+     {
+      "date": "2026-09-04",
+      "value": 932.75
+     },
+     {
+      "date": "2026-09-05",
+      "value": 932.75
+     },
+     {
+      "date": "2026-09-06",
+      "value": 932.75
+     },
+     {
+      "date": "2026-09-07",
+      "value": 952.75
+     },
+     {
+      "date": "2026-09-08",
+      "value": 972.75
+     },
+     {
+      "date": "2026-09-09",
+      "value": 988.75
+     },
+     {
+      "date": "2026-09-10",
+      "value": 988.75
+     },
+     {
+      "date": "2026-09-11",
+      "value": 990.0
+     },
+     {
+      "date": "2026-09-12",
+      "value": 990.0
+     },
+     {
+      "date": "2026-09-13",
+      "value": 990.0
+     },
+     {
+      "date": "2026-09-14",
+      "value": 988.75
+     },
+     {
+      "date": "2026-09-15",
+      "value": 986.5
+     },
+     {
+      "date": "2026-09-16",
+      "value": 986.5
+     },
+     {
+      "date": "2026-09-17",
+      "value": 983.0
+     },
+     {
+      "date": "2026-09-18",
+      "value": 983.0
+     },
+     {
+      "date": "2026-09-19",
+      "value": 983.0
+     },
+     {
+      "date": "2026-09-20",
+      "value": 984.0
+     },
+     {
+      "date": "2026-09-21",
+      "value": 985.0
+     },
+     {
+      "date": "2026-09-22",
+      "value": 987.5
+     },
+     {
+      "date": "2026-09-23",
+      "value": 989.5
+     },
+     {
+      "date": "2026-09-24",
+      "value": 993.75
+     },
+     {
+      "date": "2026-09-25",
+      "value": 993.75
+     },
+     {
+      "date": "2026-09-26",
+      "value": 993.75
+     },
+     {
+      "date": "2026-09-27",
+      "value": 993.75
+     },
+     {
+      "date": "2026-09-28",
+      "value": 994.5
+     },
+     {
+      "date": "2026-09-29",
+      "value": 994.5
+     },
+     {
+      "date": "2026-09-30",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-01",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-02",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-03",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-04",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-05",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-06",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-07",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-08",
+      "value": 994.5
+     },
+     {
+      "date": "2026-10-09",
+      "value": 995.5
+     },
+     {
+      "date": "2026-10-10",
+      "value": 998.5
+     },
+     {
+      "date": "2026-10-11",
+      "value": 998.5
+     },
+     {
+      "date": "2026-10-12",
+      "value": 1002.5
+     },
+     {
+      "date": "2026-10-13",
+      "value": 1013.75
+     },
+     {
+      "date": "2026-10-14",
+      "value": 1018.75
+     },
+     {
+      "date": "2026-10-15",
+      "value": 1026.25
+     },
+     {
+      "date": "2026-10-16",
+      "value": 1026.25
+     },
+     {
+      "date": "2026-10-17",
+      "value": 1026.25
+     },
+     {
+      "date": "2026-10-18",
+      "value": 1026.25
+     },
+     {
+      "date": "2026-10-19",
+      "value": 1027.5
+     },
+     {
+      "date": "2026-10-20",
+      "value": 1041.0
+     }
+    ]
+   },
+   {
+    "material_id": "amm",
+    "name": "液氨",
+    "source": "生意社（100ppi.com）基准价 · 液氨",
+    "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=965",
+    "spec": "≥99.6%",
+    "region": "全国综合",
+    "tax_included": true,
+    "freq": "日",
+    "unit": "CNY/t",
+    "rows": [
+     {
+      "date": "2026-07-21",
+      "value": 2176.67
+     },
+     {
+      "date": "2026-07-22",
+      "value": 2176.67
+     },
+     {
+      "date": "2026-07-23",
+      "value": 2166.67
+     },
+     {
+      "date": "2026-07-24",
+      "value": 2150.0
+     },
+     {
+      "date": "2026-07-25",
+      "value": 2150.0
+     },
+     {
+      "date": "2026-07-26",
+      "value": 2150.0
+     },
+     {
+      "date": "2026-07-27",
+      "value": 2243.33
+     },
+     {
+      "date": "2026-07-28",
+      "value": 2250.0
+     },
+     {
+      "date": "2026-07-29",
+      "value": 2250.0
+     },
+     {
+      "date": "2026-07-30",
+      "value": 2250.0
+     },
+     {
+      "date": "2026-07-31",
+      "value": 2240.0
+     },
+     {
+      "date": "2026-08-01",
+      "value": 2240.0
+     },
+     {
+      "date": "2026-08-02",
+      "value": 2240.0
+     },
+     {
+      "date": "2026-08-03",
+      "value": 2206.67
+     },
+     {
+      "date": "2026-08-04",
+      "value": 2180.0
+     },
+     {
+      "date": "2026-08-05",
+      "value": 2186.67
+     },
+     {
+      "date": "2026-08-06",
+      "value": 2203.33
+     },
+     {
+      "date": "2026-08-07",
+      "value": 2203.33
+     },
+     {
+      "date": "2026-08-08",
+      "value": 2203.33
+     },
+     {
+      "date": "2026-08-09",
+      "value": 2203.33
+     },
+     {
+      "date": "2026-08-10",
+      "value": 2260.0
+     },
+     {
+      "date": "2026-08-11",
+      "value": 2293.33
+     },
+     {
+      "date": "2026-08-12",
+      "value": 2313.33
+     },
+     {
+      "date": "2026-08-13",
+      "value": 2313.33
+     },
+     {
+      "date": "2026-08-14",
+      "value": 2313.33
+     },
+     {
+      "date": "2026-08-15",
+      "value": 2313.33
+     },
+     {
+      "date": "2026-08-16",
+      "value": 2313.33
+     },
+     {
+      "date": "2026-08-17",
+      "value": 2313.33
+     },
+     {
+      "date": "2026-08-18",
+      "value": 2313.33
+     },
+     {
+      "date": "2026-08-19",
+      "value": 2346.67
+     },
+     {
+      "date": "2026-08-20",
+      "value": 2440.0
+     },
+     {
+      "date": "2026-08-21",
+      "value": 2523.33
+     },
+     {
+      "date": "2026-08-22",
+      "value": 2523.33
+     },
+     {
+      "date": "2026-08-23",
+      "value": 2523.33
+     },
+     {
+      "date": "2026-08-24",
+      "value": 2556.67
+     },
+     {
+      "date": "2026-08-25",
+      "value": 2556.67
+     },
+     {
+      "date": "2026-08-26",
+      "value": 2623.33
+     },
+     {
+      "date": "2026-08-27",
+      "value": 2666.67
+     },
+     {
+      "date": "2026-08-28",
+      "value": 2700.0
+     },
+     {
+      "date": "2026-08-29",
+      "value": 2700.0
+     },
+     {
+      "date": "2026-08-30",
+      "value": 2700.0
+     },
+     {
+      "date": "2026-08-31",
+      "value": 2773.33
+     },
+     {
+      "date": "2026-09-01",
+      "value": 2790.0
+     },
+     {
+      "date": "2026-09-02",
+      "value": 2790.0
+     },
+     {
+      "date": "2026-09-03",
+      "value": 2790.0
+     },
+     {
+      "date": "2026-09-04",
+      "value": 2763.33
+     },
+     {
+      "date": "2026-09-05",
+      "value": 2763.33
+     },
+     {
+      "date": "2026-09-06",
+      "value": 2763.33
+     },
+     {
+      "date": "2026-09-07",
+      "value": 2706.67
+     },
+     {
+      "date": "2026-09-08",
+      "value": 2706.67
+     },
+     {
+      "date": "2026-09-09",
+      "value": 2726.67
+     },
+     {
+      "date": "2026-09-10",
+      "value": 2726.67
+     },
+     {
+      "date": "2026-09-11",
+      "value": 2780.0
+     },
+     {
+      "date": "2026-09-12",
+      "value": 2780.0
+     },
+     {
+      "date": "2026-09-13",
+      "value": 2780.0
+     },
+     {
+      "date": "2026-09-14",
+      "value": 2906.67
+     },
+     {
+      "date": "2026-09-15",
+      "value": 2950.0
+     },
+     {
+      "date": "2026-09-16",
+      "value": 2983.33
+     },
+     {
+      "date": "2026-09-17",
+      "value": 3000.0
+     },
+     {
+      "date": "2026-09-18",
+      "value": 3033.33
+     },
+     {
+      "date": "2026-09-19",
+      "value": 3033.33
+     },
+     {
+      "date": "2026-09-20",
+      "value": 3023.33
+     },
+     {
+      "date": "2026-09-21",
+      "value": 3023.33
+     },
+     {
+      "date": "2026-09-22",
+      "value": 2946.67
+     },
+     {
+      "date": "2026-09-23",
+      "value": 2903.33
+     },
+     {
+      "date": "2026-09-24",
+      "value": 2903.33
+     },
+     {
+      "date": "2026-09-25",
+      "value": 2813.33
+     },
+     {
+      "date": "2026-09-26",
+      "value": 2813.33
+     },
+     {
+      "date": "2026-09-27",
+      "value": 2813.33
+     },
+     {
+      "date": "2026-09-28",
+      "value": 2563.33
+     },
+     {
+      "date": "2026-09-29",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-09-30",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-01",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-02",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-03",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-04",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-05",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-06",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-07",
+      "value": 2540.0
+     },
+     {
+      "date": "2026-10-08",
+      "value": 2780.0
+     },
+     {
+      "date": "2026-10-09",
+      "value": 2860.0
+     },
+     {
+      "date": "2026-10-10",
+      "value": 3006.67
+     },
+     {
+      "date": "2026-10-11",
+      "value": 3006.67
+     },
+     {
+      "date": "2026-10-12",
+      "value": 3006.67
+     },
+     {
+      "date": "2026-10-13",
+      "value": 3006.67
+     },
+     {
+      "date": "2026-10-14",
+      "value": 2916.67
+     },
+     {
+      "date": "2026-10-15",
+      "value": 2733.33
+     },
+     {
+      "date": "2026-10-16",
+      "value": 2616.67
+     },
+     {
+      "date": "2026-10-17",
+      "value": 2616.67
+     },
+     {
+      "date": "2026-10-18",
+      "value": 2616.67
+     },
+     {
+      "date": "2026-10-19",
+      "value": 2596.67
+     },
+     {
+      "date": "2026-10-20",
+      "value": 2686.67
+     },
+     {
+      "date": "2026-10-21",
+      "value": 2686.67
+     }
+    ]
+   }
+  ],
+  "reference_series": [
+   {
+    "name": "重质纯碱（产品，参照）",
+    "source": "生意社（100ppi.com）基准价 · 重质纯碱",
+    "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=737",
+    "spec": "重质纯碱",
+    "region": "全国综合",
+    "tax_included": true,
+    "unit": "CNY/t",
+    "note": "仅用于与理论原料成本并列展示加工价差，不是成本的一部分",
+    "rows": [
+     {
+      "date": "2026-07-21",
+      "value": 1152.86
+     },
+     {
+      "date": "2026-07-22",
+      "value": 1152.86
+     },
+     {
+      "date": "2026-07-23",
+      "value": 1152.86
+     },
+     {
+      "date": "2026-07-24",
+      "value": 1152.86
+     },
+     {
+      "date": "2026-07-25",
+      "value": 1152.86
+     },
+     {
+      "date": "2026-07-26",
+      "value": 1152.86
+     },
+     {
+      "date": "2026-07-27",
+      "value": 1144.29
+     },
+     {
+      "date": "2026-07-28",
+      "value": 1144.29
+     },
+     {
+      "date": "2026-07-29",
+      "value": 1144.29
+     },
+     {
+      "date": "2026-07-30",
+      "value": 1140.0
+     },
+     {
+      "date": "2026-07-31",
+      "value": 1104.29
+     },
+     {
+      "date": "2026-08-01",
+      "value": 1104.29
+     },
+     {
+      "date": "2026-08-02",
+      "value": 1104.29
+     },
+     {
+      "date": "2026-08-03",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-04",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-05",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-06",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-07",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-08",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-09",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-10",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-11",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-12",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-13",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-14",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-15",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-16",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-17",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-18",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-19",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-20",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-21",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-22",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-23",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-24",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-25",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-08-26",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-08-27",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-08-28",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-08-29",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-08-30",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-08-31",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-01",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-02",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-03",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-04",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-05",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-06",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-07",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-08",
+      "value": 1087.14
+     },
+     {
+      "date": "2026-09-09",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-09-10",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-09-11",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-09-12",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-09-13",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-09-14",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-09-15",
+      "value": 1090.0
+     },
+     {
+      "date": "2026-09-16",
+      "value": 1080.0
+     },
+     {
+      "date": "2026-09-17",
+      "value": 1077.14
+     },
+     {
+      "date": "2026-09-18",
+      "value": 1077.14
+     },
+     {
+      "date": "2026-09-19",
+      "value": 1077.14
+     },
+     {
+      "date": "2026-09-20",
+      "value": 1077.14
+     },
+     {
+      "date": "2026-09-21",
+      "value": 1077.14
+     },
+     {
+      "date": "2026-09-22",
+      "value": 1077.14
+     },
+     {
+      "date": "2026-09-23",
+      "value": 1077.14
+     },
+     {
+      "date": "2026-09-24",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-09-25",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-09-26",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-09-27",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-09-28",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-09-29",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-09-30",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-01",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-02",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-03",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-04",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-05",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-06",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-07",
+      "value": 1075.71
+     },
+     {
+      "date": "2026-10-08",
+      "value": 1074.29
+     },
+     {
+      "date": "2026-10-09",
+      "value": 1074.29
+     },
+     {
+      "date": "2026-10-10",
+      "value": 1074.29
+     },
+     {
+      "date": "2026-10-11",
+      "value": 1074.29
+     },
+     {
+      "date": "2026-10-12",
+      "value": 1071.43
+     },
+     {
+      "date": "2026-10-13",
+      "value": 1064.29
+     },
+     {
+      "date": "2026-10-14",
+      "value": 1062.86
+     },
+     {
+      "date": "2026-10-15",
+      "value": 1062.86
+     },
+     {
+      "date": "2026-10-16",
+      "value": 1062.86
+     },
+     {
+      "date": "2026-10-17",
+      "value": 1062.86
+     },
+     {
+      "date": "2026-10-18",
+      "value": 1062.86
+     },
+     {
+      "date": "2026-10-19",
+      "value": 1062.86
+     },
+     {
+      "date": "2026-10-20",
+      "value": 1062.86
+     }
+    ]
+   }
+  ],
+  "offsets_pct": {
+   "coal": 0,
+   "amm": 0
+  },
+  "coverage": {
+   "series": [
+    {
+     "material_id": "coal",
+     "name": "动力煤",
+     "source": "生意社（100ppi.com）基准价 · 动力煤",
+     "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=369",
+     "spec": "Q5500",
+     "region": "全国综合",
+     "tax_included": true,
+     "freq": "日",
+     "unit": "CNY/t",
+     "covered_from": "2026-07-21",
+     "covered_to": "2026-10-20",
+     "n_points": 92,
+     "n_gap": 0
+    },
+    {
+     "material_id": "amm",
+     "name": "液氨",
+     "source": "生意社（100ppi.com）基准价 · 液氨",
+     "source_url": "https://www.100ppi.com/graph/cindex.php?f=graph_ppid_ave&ppid=965",
+     "spec": "≥99.6%",
+     "region": "全国综合",
+     "tax_included": true,
+     "freq": "日",
+     "unit": "CNY/t",
+     "covered_from": "2026-07-21",
+     "covered_to": "2026-10-21",
+     "n_points": 93,
+     "n_gap": 0
+    }
+   ],
+   "from": "2026-07-21",
+   "to": "2026-10-21",
+   "n_days": 93
+  }
+ },
+ "periods": [
+  {
+   "label": "30天",
+   "days": 30,
+   "status": "ok",
+   "start_date": "2026-09-20",
+   "start": 582.8133199999999,
+   "end_date": "2026-10-20",
+   "end": 614.5266799999999,
+   "delta": 31.71336000000008,
+   "pct": 5.441426767665517
+  },
+  {
+   "label": "3个月",
+   "days": 91,
+   "status": "ok",
+   "start_date": "2026-07-21",
+   "start": 496.19667999999996,
+   "end_date": "2026-10-20",
+   "end": 614.5266799999999,
+   "delta": 118.32999999999998,
+   "pct": 23.84739857590341
+  },
+  {
+   "label": "1年",
+   "days": 365,
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-21 起），无法计算，未做插值/补数",
+   "start_date": null,
+   "start": null,
+   "end_date": "2026-10-20",
+   "end": 614.5266799999999,
+   "delta": null,
+   "pct": null
+  },
+  {
+   "label": "3年",
+   "days": 1095,
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-21 起），无法计算，未做插值/补数",
+   "start_date": null,
+   "start": null,
+   "end_date": "2026-10-20",
+   "end": 614.5266799999999,
+   "delta": null,
+   "pct": null
+  }
+ ],
+ "contribution": [
+  {
+   "period": "30天",
+   "status": "ok",
+   "start_date": "2026-09-20",
+   "end_date": "2026-10-20",
+   "total_delta": 31.71336000000008,
+   "items": [
+    {
+     "material_id": "coal",
+     "name": "动力煤（燃料）",
+     "start": 570.7199999999999,
+     "end": 603.78,
+     "delta": 33.06000000000006,
+     "share_of_change": 104.24628610781063
+    },
+    {
+     "material_id": "amm",
+     "name": "液氨（补充氨耗）",
+     "start": 12.09332,
+     "end": 10.746680000000001,
+     "delta": -1.346639999999999,
+     "share_of_change": -4.2462861078107
+    }
+   ]
+  },
+  {
+   "period": "3个月",
+   "status": "ok",
+   "start_date": "2026-07-21",
+   "end_date": "2026-10-20",
+   "total_delta": 118.32999999999998,
+   "items": [
+    {
+     "material_id": "coal",
+     "name": "动力煤（燃料）",
+     "start": 487.48999999999995,
+     "end": 603.78,
+     "delta": 116.29000000000002,
+     "share_of_change": 98.27600777486693
+    },
+    {
+     "material_id": "amm",
+     "name": "液氨（补充氨耗）",
+     "start": 8.70668,
+     "end": 10.746680000000001,
+     "delta": 2.040000000000001,
+     "share_of_change": 1.7239922251331035
+    }
+   ]
+  },
+  {
+   "period": "1年",
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-21 起），无法计算，未做插值/补数",
+   "items": []
+  },
+  {
+   "period": "3年",
+   "status": "gap",
+   "why": "该窗口起点早于可得数据（2026-07-21 起），无法计算，未做插值/补数",
+   "items": []
+  }
+ ],
+ "averages": [
+  {
+   "label": "近30天",
+   "status": "ok",
+   "n": 31,
+   "avg": 592.1330116129031,
+   "min": 582.8133199999999,
+   "max": 614.5266799999999,
+   "from": "2026-09-20",
+   "to": "2026-10-20"
+  },
+  {
+   "label": "近3个月",
+   "status": "ok",
+   "n": 92,
+   "avg": 548.486484347826,
+   "min": 496.19667999999996,
+   "max": 614.5266799999999,
+   "from": "2026-07-21",
+   "to": "2026-10-20"
+  }
+ ],
+ "gaps": [
+  {
+   "type": "price",
+   "item": "原盐（工业盐，NaCl）",
+   "detail": "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）",
+   "impact": "该原料未计入理论原料成本；总成本仅覆盖已计价原料，口径为\"部分覆盖\"",
+   "fix": "补充同规格/同区域/同税口径的现货价（含数据日期与来源）"
+  },
+  {
+   "type": "price",
+   "item": "石灰石（CaCO₃）",
+   "detail": "价格缺失：该原料成本无法计入（不按 0 处理，单列为缺口）",
+   "impact": "该原料未计入理论原料成本；总成本仅覆盖已计价原料，口径为\"部分覆盖\"",
+   "fix": "补充同规格/同区域/同税口径的现货价（含数据日期与来源）"
+  },
+  {
+   "type": "history",
+   "item": "原盐价格",
+   "detail": "生意社未收录可公开核验的原盐日度基准价序列",
+   "impact": "原盐占氨碱法原料成本的大头（1.5 t/t），缺价会使合计严重低估",
+   "fix": "用本厂采购合同价或当地盐业公司挂牌价，按六项口径填入 materials[salt].price"
+  },
+  {
+   "type": "history",
+   "item": "石灰石价格",
+   "detail": "矿山直供价，随运距剧烈变化，无公开日序列",
+   "impact": "石灰石 1.3 t/t 未计入",
+   "fix": "用本厂到厂价（含运费）填入 materials[lime].price"
+  },
+  {
+   "type": "history",
+   "item": "历史长度",
+   "detail": "100ppi 端点只返回 93 天",
+   "impact": "1年/3年窗口无法计算",
+   "fix": "卓创/隆众付费终端或自建日采集"
+  },
+  {
+   "type": "history_window",
+   "item": "1年",
+   "detail": "该窗口起点早于可得数据（2026-07-21 起），无法计算，未做插值/补数",
+   "impact": "该时间窗的理论成本变化不展示为数字",
+   "fix": "接入更长历史价格源（付费终端/自采积累）"
+  },
+  {
+   "type": "history_window",
+   "item": "3年",
+   "detail": "该窗口起点早于可得数据（2026-07-21 起），无法计算，未做插值/补数",
+   "impact": "该时间窗的理论成本变化不展示为数字",
+   "fix": "接入更长历史价格源（付费终端/自采积累）"
+  }
+ ],
+ "not_included": [
+  {
+   "item": "原盐",
+   "reason": "缺可核验日度价格，按缺口列示（未按 0 计入）——本示例的核心缺口"
+  },
+  {
+   "item": "石灰石",
+   "reason": "矿山直供价随运距变化，缺可核验价格，按缺口列示"
+  },
+  {
+   "item": "烟煤（煅烧用）",
+   "reason": "行业拆解常单列烟煤 0.1 t/t，本次未采集到可核验价格"
+  },
+  {
+   "item": "能源（电、蒸汽）",
+   "reason": "占氨碱法成本显著比例，需企业能耗台账"
+  },
+  {
+   "item": "人工与制造费用",
+   "reason": "不属\"原料\""
+  },
+  {
+   "item": "折旧、维护、环保（废液处理）",
+   "reason": "资本性与环保支出，氨碱法废液处理成本高"
+  },
+  {
+   "item": "运输、包装、仓储、资金占用",
+   "reason": "与提货方式、账期相关"
+  },
+  {
+   "item": "税费（增值税以外的附加、环保税、碳排放成本）",
+   "reason": "不进入原料成本"
+  }
+ ],
+ "unquantified": [
+  {
+   "item": "氯化铵联产（联碱法才有）",
+   "why": "本示例为氨碱法，不产氯化铵",
+   "impact": "不影响本模型"
+  },
+  {
+   "item": "碳排放成本",
+   "why": "吨碱碳排放核算口径与配额价格未定",
+   "impact": "可能显著推高完全成本，但不属原料成本"
+  }
+ ],
+ "byproducts": [
+  {
+   "id": "cacl2",
+   "name": "蒸氨废液（氯化钙溶液）",
+   "per_tonne": 10,
+   "price_cny_per_t": null,
+   "note": "氨碱法主要固废/废液，历史上直接排海或堆存，无商业价值，不分摊、不抵扣"
+  }
+ ],
+ "price_basis": {
+  "target": "tax_included",
+  "label": "含税",
+  "fx_usd_cny": null
+ }
+}

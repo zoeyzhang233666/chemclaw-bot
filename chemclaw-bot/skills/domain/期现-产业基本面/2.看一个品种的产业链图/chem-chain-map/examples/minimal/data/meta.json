@@ -1,0 +1,29 @@
+{
+  "chain_id": "DEMO",
+  "product_name": "示例产品 B",
+  "product_full_name": "示例产品 B（Demo Product B）",
+  "focus_question": "这是一个最小可运行示例，用于验证工具链对任意品种通用（非 SBS 专用）。它演示：分路线、配方比与化学计量混用、终端应用不设单耗、缺口不估算。",
+  "built_at": "2026-10-20",
+  "as_of": "2026-10-20",
+  "user_params": {
+    "up_depth": 2,
+    "down_depth": 2,
+    "region": "演示",
+    "price_window": "2026-10-12 ~ 2026-10-20"
+  },
+  "market_snapshot": [
+    {
+      "metric": "示例产能",
+      "value": "100",
+      "unit": "万吨/年",
+      "as_of": "2026",
+      "source": "S01",
+      "note": "虚构的演示数字"
+    }
+  ],
+  "scenario_boundary": {
+    "covered": "演示用：2 层上游 + 2 层下游 + 1 个替代品。",
+    "not_covered": "真实产业数据（本示例为工具链验证用，数值均为演示值，不可用于研究）。",
+    "disclaimer": "本示例仅用于验证工具链，不代表任何真实产业链。"
+  }
+}

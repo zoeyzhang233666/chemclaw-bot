@@ -1,0 +1,39 @@
+{
+  "_说明": "【测试输入】本文件仅用于演示报价核验流程，不是真实供应商报价。原始报价单的 12 项口径在此逐项留档，未确认项写入 unknowns。",
+  "is_test_input": true,
+  "test_badge": "测试输入（非真实供应商报价）",
+  "quote_id": "DEMO-Q-0001",
+  "received_at": "2026-10-19 10:20",
+  "channel": "邮件（示例）",
+  "supplier": {
+    "name": "测试供应商A",
+    "type": "生产厂（自述）",
+    "origin": "江苏·连云港（苏北）",
+    "contact_note": "虚构主体，仅用于演示"
+  },
+  "product": "乙二醇",
+  "aliases": ["MEG", "EG", "甘醇"],
+  "spec_claimed": "工业级",
+  "purity_claimed": null,
+  "process_claimed": null,
+  "brand_origin": null,
+  "price": {"value": 5900, "currency": "CNY", "unit": "元/吨"},
+  "tax": {"included": true, "rate": 0.13, "text": "含13%增值税"},
+  "delivery": {"basis": "ex_works", "text": "工厂车板交付（出厂）", "freight_included": false},
+  "destination": "江苏·苏州工业园区",
+  "quantity": {"value": 60, "unit": "吨/次", "tier_note": "未提供阶梯价"},
+  "payment": {"terms": "电汇 30% 预付，余款月结（30 天）", "acceptance_accepted": "未说明"},
+  "packing": "散水（槽车）",
+  "validity": "未注明",
+  "pricing_formula": "固定价",
+  "raw_text": "测试供应商A报价：乙二醇 工业级 5900元/吨，含税，出厂（江苏连云港车板），交货至苏州工业园区，数量60吨，电汇30%预付余款月结。",
+  "unknowns": [
+    "含量（是否 ≥99.9%）",
+    "UV 透过率 / 醛含量 / 水分等关键指标",
+    "工艺路线（乙烯法 / 煤制）",
+    "品牌与产地",
+    "报价有效期",
+    "承兑是否接受及加价幅度",
+    "最小起订量与阶梯价"
+  ]
+}

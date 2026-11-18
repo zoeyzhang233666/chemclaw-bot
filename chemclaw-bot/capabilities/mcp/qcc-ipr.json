@@ -1,0 +1,10 @@
+{
+  "name": "qcc-ipr",
+  "kind": "mcp",
+  "description": "企查查知产（需密钥 QCC）",
+  "transport": "streamable-http",
+  "url": "https://agent.qcc.com/mcp/ipr/stream",
+  "headers": {
+    "Authorization": "Bearer $DSH_SECRET_QCC"
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "skillVersion": "1.0.0",
+    "dataClass": "SIMULATED — DEMO DATA / 模拟演示数据",
+    "dataClassNote": "All names, contacts, prices and terms are SIMULATED for skill demonstration. Replace with user-confirmed commercial data before any real use. Bank details are placeholders only.",
+    "caseId": "EX-006-EXW-BRA",
+    "product": "Titanium Dioxide (Rutile)",
+    "destination": "Brazil",
+    "preparedAt": "2026-10-19",
+    "preparedBy": "export-quotation-pi skill example generator",
+    "scenario": "EXW Shenzhen warehouse quote, buyer's forwarder handles all transport. Demonstrates a 'no price yet' draft: only a placeholder quote may be produced."
+  },
+  "docType": "QUOTATION",
+  "state": {
+    "stage": "READY_FOR_REVIEW",
+    "reviewConfirmed": false
+  },
+  "reference": {
+    "text": "QT-SIM-2610-006",
+    "quoteNo": "QT-SIM-2610-006",
+    "quotationRef": "QT-SIM-2610-006 Rev.0",
+    "buyerInquiryRef": "INQ-SIM-BR-0031",
+    "supplierQuoteRef": "",
+    "exporterReference": "TO BE ALLOCATED BEFORE SHIPMENT",
+    "buyerPoNo": ""
+  },
+  "issueDate": "2026-10-19",
+  "seller": {
+    "name": "Hua Bin Chemical Trading Co., Ltd. (SIMULATED DEMO)",
+    "shortName": "SIMULATED CO., LTD.",
+    "logoText": "SIMULATED",
+    "address": "Unit 2108, 21/F, Harbor Commerce Tower, Nanshan District, Shenzhen, Guangdong 518000, China",
+    "country": "China",
+    "contact": "[Simulated Contact Person]",
+    "phone": "+86 000 0000 0000 (Simulated)",
+    "email": "export@example-demo.invalid",
+    "taxId": "USCI SIMULATED-0000000000"
+  },
+  "buyer": {
+    "name": "Comercio de Insumos Demo Ltda. (SIMULATED DEMO)",
+    "address": "Rua Exemplo 100, Galpao 3, Distrito Industrial, Guarulhos, SP 07220-000, Brasil",
+    "country": "Brazil",
+    "contact": "[Simulated Buyer Contact]",
+    "email": "compras@example-demo.invalid",
+    "phone": "+55 00 0000-0000 (Simulated)"
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "decimals": 2,
+    "exchangeRate": {
+      "base": "",
+      "rate": "",
+      "asOf": "",
+      "state": "reference",
+      "display": "none"
+    }
+  },
+  "tradeTerm": {
+    "code": "EXW",
+    "version": "2020",
+    "namedPlace": "Seller's warehouse, Nanshan District, Shenzhen, China",
+    "namedPlaceKind": "address",
+    "transportMode": "MULTIMODAL",
+    "costAllocation": {
+      "exportPacking": "Buyer",
+      "loadingCharges": "Buyer",
+      "exportCustoms": "Buyer",
+      "originCharges": "Buyer",
+      "mainFreight": "Buyer",
+      "insurance": "Buyer",
+      "destinationCharges": "Buyer",
+      "importCustoms": "Buyer",
+      "unloading": "Buyer"
+    }
+  },
+  "items": [
+    {
+      "id": "L1",
+      "name": "Titanium Dioxide, Rutile grade (chloride process)",
+      "cas": "13463-67-7",
+      "spec": "TiO2 93.0% min.; rutile content 97% min.; TiO2 in hydrochloric bath < 1.8% (typical); surface treated Al2O3/SiO2",
+      "hsCode": "320611",
+      "origin": "China",
+      "unit": "MT",
+      "quantity": 50,
+      "unitPrice": "",
+      "discountPct": 0,
+      "amountState": "draft",
+      "amountConfirmedValue": 0,
+      "dangerousGoods": {
+        "status": "NOT_REGULATED",
+        "basis": "Supplier SDS: not classified as dangerous goods for transport (re-verify against current SDS)",
+        "ghsSummary": ""
+      },
+      "packageCount": 2000,
+      "packageWeight": {
+        "value": 25.2,
+        "unit": "KG",
+        "net": 25,
+        "basis": "simulated declaration"
+      }
+    }
+  ],
+  "amountState": "confirmed",
+  "amountConfirmedValue": 0,
+  "charges": [],
+  "packing": {
+    "summary": "2,000 bags x 25 kg net in paper sacks; buyer's forwarder collects from the named place",
+    "terms": "Export packing can be upgraded at cost if the buyer requires unmarked cargo",
+    "bagNetKg": 25,
+    "shippingUnits": "buyer's forwarder"
+  },
+  "totalPackageCount": "2000",
+  "totalGrossWeight": "50,400 kg (50.40 MT)",
+  "totalVolume": "",
+  "freight": {
+    "estimatedPol": "(buyer's choice)",
+    "estimatedPod": "Santos, Brazil"
+  },
+  "delivery": {
+    "leadTime": "Based on stock availability — to be confirmed by the seller in writing",
+    "basis": "TO BE CONFIRMED",
+    "readyDateMode": "relative",
+    "daysAfterReceipt": 10,
+    "partialShipment": "Not specified",
+    "transhipment": "Not specified"
+  },
+  "payment": {
+    "code": "",
+    "terms": "",
+    "amountPct": null,
+    "beneficiary": "",
+    "beneficiaryNote": "[PAYMENT TERMS TO BE CONFIRMED]"
+  },
+  "validity": {
+    "type": "date",
+    "validUntil": ""
+  },
+  "documents": [
+    {
+      "name": "Bill of Lading (3 originals + 3 copies)"
+    },
+    {
+      "name": "Commercial Invoice (1 original + 5 copies)"
+    },
+    {
+      "name": "Packing List (1 original + 3 copies)"
+    },
+    {
+      "name": "Certificate of Origin"
+    },
+    {
+      "name": "Certificate of Analysis (per shipment)"
+    },
+    {
+      "name": "Manufacturer's SDS (current revision)"
+    }
+  ],
+  "bank": {
+    "display": false,
+    "sanitized": true,
+    "detailsConfirmed": false,
+    "bankName": "",
+    "accountName": "",
+    "accountNumber": "",
+    "swift": "",
+    "note": "placeholders only"
+  },
+  "view": {
+    "logo": true,
+    "signature": true,
+    "watermark": true,
+    "accentColor": "#1B3A5B"
+  },
+  "preparation": {
+    "issuedBy": "export-quotation-pi skill v1.0.0",
+    "notice": "SIMULATED DEMO DATA — NOT FOR TRADE USE. PLACEHOLDER EXAMPLES: unit price and payment terms are missing (draft only). EXW: buyer bears practically all costs and risk."
+  },
+  "review": {}
+}

@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国纯碱行业新增产能对未来供应格局的影响｜研发版专题研究</title>
+<style>
+:root{
+  --bg:#070b14;--bg2:#0b1120;--panel:rgba(255,255,255,.040);--panel2:rgba(255,255,255,.066);
+  --line:rgba(255,255,255,.088);--line2:rgba(255,255,255,.17);
+  --txt:#e9eefb;--txt2:#a8b6d1;--txt3:#73829e;
+  --blue:#4da3ff;--cyan:#38d6e0;--violet:#9b8cff;--amber:#f6b73c;--red:#ff6b7a;--green:#22c98a;--pink:#f472b6;
+  --k-fact:#4da3ff;--k-calc:#22c98a;--k-expl:#9b8cff;--k-judge:#f6b73c;--k-gap:#ff6b7a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--txt);font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100%}
+body{padding:0 0 100px;background:
+ radial-gradient(1200px 620px at 6% -8%,rgba(77,163,255,.16),transparent 60%),
+ radial-gradient(1000px 560px at 94% -6%,rgba(155,140,255,.12),transparent 62%),
+ radial-gradient(900px 700px at 50% 110%,rgba(34,201,138,.06),transparent 60%),
+ linear-gradient(180deg,#070b14,#080d18 55%,#060a12)}
+.wrap{max-width:1520px;margin:0 auto;padding:0 26px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-family:"JetBrains Mono",Consolas,"SF Mono",monospace;font-variant-numeric:tabular-nums}
+header{padding:28px 0 14px}
+.topline{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--txt3);flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--txt2)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,201,138,.14)}
+h1{font-size:33px;letter-spacing:-.4px;margin:14px 0 8px;font-weight:800;line-height:1.28}
+h1 .thin{font-weight:300;color:var(--txt2)}
+.sub{color:var(--txt2);font-size:14.5px;line-height:1.75;max-width:1180px}
+.warnbar{margin-top:14px;display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-radius:12px;border:1px solid rgba(246,183,60,.26);background:linear-gradient(90deg,rgba(246,183,60,.10),rgba(246,183,60,.02));font-size:13px;color:#ecd9ab;line-height:1.65}
+.warnbar .ic{color:var(--amber);font-weight:800;flex:none}
+.ctrl{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(7,11,20,.90);border-bottom:1px solid var(--line);padding:10px 0;margin-top:16px}
+.ctrlrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ctrlrow .sp{flex:1}
+.ghost{border:1px solid var(--line2);background:transparent;color:var(--txt2);font-size:12.5px;padding:7px 12px;border-radius:8px;cursor:pointer;font-family:inherit;transition:.16s}
+.ghost:hover{color:#fff;border-color:#4a5f86;background:rgba(255,255,255,.05)}
+.ghost.on{background:#243452;color:#fff;border-color:#3b5480}
+.keystatus{font-size:12px;color:var(--txt3)}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px;margin:20px 0 6px}
+.kpi{background:linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.020));border:1px solid var(--line);border-radius:14px;padding:14px 15px;position:relative;overflow:hidden;cursor:pointer;transition:.18s}
+.kpi:hover{border-color:var(--line2);transform:translateY(-2px)}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--k)}
+.kpi .lab{font-size:11.5px;color:var(--txt3);letter-spacing:.3px}
+.kpi .big{font-size:23px;font-weight:800;margin:7px 0 4px;letter-spacing:-.4px}
+.kpi .big small{font-size:12px;font-weight:500;color:var(--txt3);margin-left:3px}
+.kpi .small{font-size:11.5px;color:var(--txt2);line-height:1.5}
+.kpi.tone-blue{--k:var(--blue)}.kpi.tone-red{--k:var(--red)}.kpi.tone-green{--k:var(--green)}
+.kpi.tone-amber{--k:var(--amber)}.kpi.tone-violet{--k:var(--violet)}
+.grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin:18px 0}
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.card h3{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3 .tip{font-size:11.5px;color:var(--txt3);font-weight:400}
+.concl{cursor:pointer;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:13px 15px;margin-bottom:10px;transition:.16s;position:relative}
+.concl:hover{border-color:#3b5480;background:rgba(255,255,255,.055)}
+.concl .head{display:flex;gap:9px;align-items:center;margin-bottom:7px;flex-wrap:wrap}
+.concl .rank{width:22px;height:22px;border-radius:6px;background:#243452;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#cfe0ff}
+.concl .txt{font-size:13.5px;line-height:1.7;color:#dbe4f5}
+.concl .more{margin-top:9px;font-size:11.5px;color:var(--txt3)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid transparent;white-space:nowrap}
+.b-fact{color:#9ccaff;background:rgba(77,163,255,.13);border-color:rgba(77,163,255,.3)}
+.b-calc{color:#7ff0c2;background:rgba(34,201,138,.13);border-color:rgba(34,201,138,.3)}
+.b-expl{color:#c7bcff;background:rgba(155,140,255,.13);border-color:rgba(155,140,255,.3)}
+.b-judge{color:#ffd992;background:rgba(246,183,60,.13);border-color:rgba(246,183,60,.3)}
+.b-gap{color:#ffaeb6;background:rgba(255,107,122,.13);border-color:rgba(255,107,122,.3)}
+.b-conf{color:var(--txt2);background:rgba(255,255,255,.05);border-color:var(--line2)}
+section.sec{margin:34px 0 0;scroll-margin-top:70px}
+.sec .stitle{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sec .sno{font-size:12px;color:var(--blue);letter-spacing:1px;font-weight:700}
+.sec h2{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.sec .pack{font-size:11px;color:var(--txt3);border:1px solid var(--line);padding:2px 8px;border-radius:999px}
+.lede{margin:12px 0 6px;color:#c3cfe6;font-size:14px;line-height:1.85;max-width:1200px}
+.para{margin:12px 0;font-size:13.5px;line-height:1.95;color:#c8d3e8}
+.chartbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px 10px;margin:16px 0}
+.chartbox .ch{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.chartbox .ch h4{font-size:14px;font-weight:700}
+.chartbox .ch .src{font-size:11px;color:var(--txt3)}
+.chartbox .cnv{width:100%;height:300px}
+.chartbox .cnv.tall{height:380px}
+.chartbox .foot{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:var(--txt3);border-top:1px dashed var(--line);margin-top:6px;padding-top:8px;flex-wrap:wrap}
+.chartbox .note{line-height:1.6;max-width:78%}
+.mini{font-size:11.5px;color:var(--txt3);border:1px solid var(--line);border-radius:8px;padding:3px 9px;cursor:pointer;background:transparent;font-family:inherit}
+.mini:hover{color:#fff;border-color:#4a5f86}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+table.tb{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:12px 0}
+.tb th{background:rgba(255,255,255,.05);color:#b9c8e6;text-align:left;padding:9px 11px;font-weight:600;font-size:12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tb td{padding:8px 11px;border-bottom:1px solid rgba(255,255,255,.05);color:#ccd7ec;vertical-align:top;line-height:1.65}
+.tb tr:hover td{background:rgba(255,255,255,.035)}
+.tb-conf td{border-bottom:1px solid rgba(255,255,255,.03)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.callout{border-radius:12px;padding:13px 16px;margin:14px 0;border:1px solid var(--line);font-size:13px;line-height:1.8;background:rgba(255,255,255,.03)}
+.callout .ct{font-weight:700;margin-bottom:5px;display:flex;gap:8px;align-items:center}
+.callout.info{border-color:rgba(77,163,255,.25);background:rgba(77,163,255,.06)}
+.callout.warn{border-color:rgba(246,183,60,.28);background:rgba(246,183,60,.06)}
+.callout.gap{border-color:rgba(255,107,122,.28);background:rgba(255,107,122,.06)}
+.calcbox{border:1px solid rgba(34,201,138,.24);background:rgba(34,201,138,.05);border-radius:14px;padding:15px 17px;margin:16px 0}
+.calcbox .ctop{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.calcbox .ctop h4{font-size:14px}
+.calcbox .formula{margin-top:10px;font-family:"JetBrains Mono",Consolas,monospace;font-size:12.5px;line-height:1.85;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:#bfe9d6;white-space:pre-wrap;word-break:break-word}
+.calcbox .kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin-top:10px;font-size:12.5px;color:#c8d3e8}
+.calcbox .kv .k{color:var(--txt3)}
+.chainwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+@media(max-width:1000px){.chainwrap{grid-template-columns:1fr}}
+.chaincol h4{font-size:12.5px;color:var(--txt3);margin-bottom:8px;letter-spacing:.4px}
+.chaincol .node{background:rgba(255,255,255,.04);border:1px solid var(--line);border-left:3px solid var(--c,var(--blue));border-radius:10px;padding:9px 12px;margin-bottom:8px}
+.chaincol .node b{font-size:13px}
+.chaincol .node p{font-size:11.5px;color:var(--txt3);margin-top:3px;line-height:1.55}
+.qual-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.qual{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:rgba(255,255,255,.03)}
+.qual .t{font-size:11.5px;color:var(--txt3);margin-bottom:7px}
+.qual .v{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--txt3);line-height:1.9}
+/* 证据面板 */
+.scrim{position:fixed;inset:0;background:rgba(3,6,12,.55);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;height:100vh;width:min(560px,96vw);background:#0a0f1c;border-left:1px solid var(--line2);transform:translateX(102%);transition:transform .26s cubic-bezier(.3,.8,.3,1);z-index:90;display:flex;flex-direction:column}
+.panel.on{transform:none}
+.panel .ph{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.panel .ph b{font-size:14px}
+.panel .pb{overflow:auto;padding:16px 18px 40px;font-size:13px;line-height:1.8}
+.ev{border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:10px;background:rgba(255,255,255,.03)}
+.ev .et{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.ev p{color:var(--txt2);font-size:12.5px}
+.ev .url{font-size:11px;word-break:break-all;color:var(--blue)}
+.modal{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;background:rgba(3,6,12,.7);padding:24px}
+.modal.on{display:flex}
+.modal .mx{background:#0a0f1c;border:1px solid var(--line2);border-radius:16px;max-width:1100px;width:100%;max-height:86vh;display:flex;flex-direction:column}
+.modal .mh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.modal .mh b{font-size:14px}
+.modal .mb{overflow:auto;padding:12px 18px 26px}
+.mb table.tb{font-size:11.8px}
+.mb .rawhint{font-size:11.5px;color:var(--txt3);margin:6px 0 10px}
+.paste{display:none}
+.paste.on{display:block}
+.reorderbar{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:60;background:rgba(10,15,28,.94);border:1px solid var(--line2);border-radius:999px;padding:8px 14px;font-size:12.5px;color:var(--txt2);display:none;gap:10px;align-items:center}
+.reorderbar.on{display:flex}
+.sec .sh{position:relative}
+.sec.ordering{border:1px dashed rgba(77,163,255,.4);border-radius:14px;padding:10px 12px;background:rgba(77,163,255,.03)}
+.sec.ordering .sno:before{content:"≡ ";color:var(--amber)}
+.chartbox .cnv[data-empty="1"]{display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:12.5px;border:1px dashed var(--line);border-radius:10px}
+.hidden{display:none!important}
+@media print{
+  body{background:#fff;color:#111;padding:0}
+  .ctrl,.scrim,.panel,.modal,.reorderbar,.print-hide{display:none!important}
+  .card,.chartbox,.calcbox,.tb,.callout{border-color:#ccc!important;background:#fff!important}
+  .sec{page-break-inside:avoid}
+  @page{margin:14mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topline">
+      <span class="dot"></span>
+      <span id="h-aud">受众</span>
+      <span class="pill" id="h-cut">数据截止</span>
+      <span class="pill" id="h-ver">版本</span>
+      <span class="pill" id="h-gap">缺口数</span>
+      <span class="pill" id="h-src">来源数</span>
+    </div>
+    <h1 id="h-title">加载中…</h1>
+    <p class="sub" id="h-sub"></p>
+    <div class="warnbar"><span class="ic">!</span><span id="h-warn"></span></div>
+  </header>
+
+  <div class="ctrl print-hide">
+    <div class="ctrlrow">
+      <button class="ghost on" data-view="report">研究报告</button>
+      <button class="ghost" data-view="framework">研究框架</button>
+      <button class="ghost" data-view="evidence">证据总表</button>
+      <span class="sp"></span>
+      <span class="keystatus" id="keystatus">快捷键：/ 搜索 · 1/2/3 切换视图 · Esc 关闭</span>
+      <button class="ghost" id="btn-order">调整章节顺序</button>
+      <button class="ghost" id="btn-reset" style="display:none">还原顺序</button>
+      <button class="ghost" id="btn-print">打印 / 导出 PDF</button>
+      <button class="ghost" id="btn-export">导出完整材料 .md</button>
+    </div>
+  </div>
+
+  <!-- 视图 1：报告 -->
+  <div id="view-report">
+    <div class="kgrid" id="kpis"></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>核心结论 <span class="tip">点击任意结论查看证据与计算过程</span></h3>
+        <div id="concls"></div>
+      </div>
+      <div class="card">
+        <h3>阅读方式 <span class="tip">本文的结论分级</span></h3>
+        <div class="qual-grid" id="qual"></div>
+        <div style="margin-top:14px">
+          <h3 style="font-size:13px;margin-bottom:8px">研究问题与回答状态</h3>
+          <div id="qlist"></div>
+        </div>
+      </div>
+    </div>
+    <div id="sections"></div>
+  </div>
+
+  <!-- 视图 2：框架 -->
+  <div id="view-framework" class="paste">
+    <div class="card" style="margin-top:18px">
+      <h3>本报告采用的研究框架（可编辑）</h3>
+      <p class="lede" id="fw-pos"></p>
+      <table class="tb"><thead><tr><th>#</th><th>章节</th><th>要回答的问题</th><th>为什么需要</th><th>验伪点</th><th>依赖数据</th><th>方法</th></tr></thead><tbody id="fw-body"></tbody></table>
+      <p class="note" style="font-size:12px;color:var(--txt3);margin-top:10px">说明：框架来自 <span class="mono">case.json › audience_frameworks.&lt;受众&gt;</span>；改章节只需修改数据文件，不改模板。</p>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>其他受众的框架对照</h3>
+      <div id="fw-compare"></div>
+    </div>
+  </div>
+
+  <!-- 视图 3：证据总表 -->
+  <div id="view-evidence" class="paste">
+    <div class="card" style="margin-top:18px">
+      <h3>证据索引（来源 / 缺口 → 被谁引用）</h3>
+      <div class="rawhint" style="font-size:11.5px;color:var(--txt3);margin-bottom:10px">每一条来源与缺口都在此登记；未出现在引用列表中的数据一律视为未经核验。</div>
+      <table class="tb"><thead><tr><th>ID</th><th>类型</th><th>内容</th><th>层级</th><th>被引用处</th><th>链接</th></tr></thead><tbody id="ev-body"></tbody></table>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>资料缺口</h3>
+      <table class="tb"><thead><tr><th>ID</th><th>主题</th><th>缺什么</th><th>为什么缺</th><th>影响</th><th>严重度</th><th>下一步</th></tr></thead><tbody id="gap-body"></tbody></table>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>计算过程</h3>
+      <table class="tb"><thead><tr><th>ID</th><th>计算</th><th>公式</th><th>输入</th><th>结果</th><th>说明</th></tr></thead><tbody id="calc-body"></tbody></table>
+    </div>
+  </div>
+
+  <footer>
+    <div id="foot-meta"></div>
+    <div style="margin-top:6px" id="foot-disc"></div>
+    <div style="margin-top:6px">生成器：chem-topic-research v1.0 · 单文件自包含（无外部依赖） · 本页数据与证据全部来自 case.json</div>
+  </footer>
+</div>
+
+<div class="reorderbar print-hide" id="reorderbar">
+  <span>顺序调整模式：拖动章节标题上下移动</span>
+  <button class="ghost" id="btn-order-done">完成</button>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel">
+  <div class="ph"><b id="panel-t">证据</b><button class="ghost" onclick="closePanel()">关闭</button></div>
+  <div class="pb" id="panel-b"></div>
+</aside>
+<div class="modal" id="modal">
+  <div class="mx">
+    <div class="mh"><b id="modal-t">原始数据</b><button class="ghost" onclick="closeModal()">关闭</button></div>
+    <div class="mb" id="modal-b"></div>
+  </div>
+</div>
+
+<script id="payload" type="application/json">{"meta": {"slug": "soda-ash-2026-supply", "title": "中国纯碱行业新增产能对未来供应格局的影响", "subtitle": "自下而上核验 2024–2026 年新增装置投产状态、工艺结构与区域迁移，并测算未来 12–18 个月有效供给增量与供需缺口", "product_cn": "纯碱", "product_shape": "轻质碱 / 重质碱（Na2CO3，重质化率约 50%–55%）", "topic_type": "supply-pattern", "audience": "industry-researcher", "audience_label": "产业研究员", "region": "中国", "horizon": "2026Q4 – 2027Q4", "report_date": "2026-10-20", "data_cutoff": "2026-09-25", "author": "期现-产业基本面研究组（示例）", "version": "v1.0", "disclaimer": "本报告为方法论示例与决策参考材料；所有数字均标注来源与口径，不构成投资建议、价格承诺或生产计划保证。", "example_name": "soda-ash-2026", "refPrice": 1062.86}, "profile": {"audience_key": "rnd", "label": "研发", "positioning": "面向研发的专题研究框架：回答“工艺路线会不会被替代、新项目的技术选择意味着什么、我们要不要跟进某条路线”。重点是工艺成本、原料可得性与替代边界，不做价格预测。", "focus": "工艺路线图谱、工艺成本与能耗、原料可得性与地域约束、替代关系与技术边界、在建项目的技术含义", "answer_style": "技术判断 + 工程可行性与经济可行性的区分", "suppressed_topic_packs": ["region", "price_history"], "evidence_policy": "工艺参数需给来源；技术判断要标注是工程可行性还是经济可行性", "length_target": "6 章；核心图 2–3 张", "chart_preferences": ["工艺成本对比", "产能工艺结构", "原料单耗"], "chapters": [{"no": "01", "title": "工艺路线图谱", "question": "这个产品有几条主流工艺路线？各自的原理与适用边界是什么？", "why": "研发要判断替代，先要有完整的路线地图", "verify": "路线是否完整、是否有新兴路线被遗漏", "data": ["工艺定义", "原料与产品", "副产物"], "method": "路线分类 + 边界条件"}, {"no": "02", "title": "各路线成本与能耗对比", "question": "不同工艺的完全成本差多大？差距来自哪里？", "why": "决定替代是否会真实发生", "verify": "成本差是否稳定、是否依赖单一原料价格", "data": ["工艺成本", "原料单耗", "能耗"], "method": "成本分解", "must_show": true}, {"no": "03", "title": "原料可得性与地域约束", "question": "新工艺依赖的原料在哪些区域可得？能否支撑大规模扩产？", "why": "技术可行不等于资源可行", "verify": "资源储量、开采资质、运输半径", "data": ["原料资源分布", "产能区域分布", "运输成本"], "method": "资源-产能匹配"}, {"no": "04", "title": "替代关系与技术边界", "question": "低成本工艺能替代多少高成本产能？边界在哪？", "why": "替代速度决定企业技术选择的紧迫性", "verify": "成本差能否覆盖改造与搬迁成本", "data": ["成本曲线", "产能结构", "改造投资"], "method": "替代边界测算"}, {"no": "05", "title": "在建项目的技术选择意味着什么", "question": "行业头部在投什么工艺？这暗示了什么技术方向？", "why": "同行的技术选择是最便宜的研发情报", "verify": "新项目的工艺占比变化是否有趋势性", "data": ["项目工艺分布", "工艺占比变化"], "method": "趋势比对"}, {"no": "06", "title": "判断与不确定性", "question": "我们要不要跟进？前提是什么？", "why": "研究要支撑技术决策", "verify": "建议是否给出前提条件与观察指标", "data": ["成本与替代边界", "技术风险"], "method": "决策矩阵 + 观察指标", "must_show": true}], "requested_audience": "rnd", "has_framework": true, "max_kpi": 8, "narrative_depth": "research"}, "kpis": [{"id": "K1", "label": "2026E 总产能", "value": "4750", "unit": "万吨/年", "delta": "+250 万吨计划（2026H2）", "tone": "blue", "evidence": ["S07", "S01"], "calc": "C-CAP-02"}, {"id": "K2", "label": "2026 有效开工率", "value": "~69", "unit": "%", "delta": "9 月 72%，10 月 64.59%", "tone": "amber", "evidence": ["S03", "S16"], "calc": "C-EFF-01"}, {"id": "K3", "label": "2027 年有效新增供给（净）", "value": "285", "unit": "万吨/年", "delta": "基准情景；区间 225–345", "tone": "green", "evidence": ["S01", "S07", "S08"], "calc": "C-SUP-01"}, {"id": "K4", "label": "天然碱产能占比", "value": "4.7→21.3", "unit": "%（2021→2026E）", "delta": "成本曲线整体下移", "tone": "violet", "evidence": ["S06", "S01"], "calc": "C-CAP-01"}, {"id": "K5", "label": "重碱毛利（氨碱法）", "value": "-195", "unit": "元/吨", "delta": "9-25，亏损未触发减产", "tone": "red", "evidence": ["S03"], "calc": ""}, {"id": "K6", "label": "样本企业总库存", "value": "162.9", "unit": "万吨", "delta": "10-15，同比仍处高位", "tone": "amber", "evidence": ["S16", "S03"], "calc": ""}, {"id": "K7", "label": "重碱现货价", "value": "1062.86", "unit": "元/吨", "delta": "2026-10-19 基准价；1–4 月均价 1172", "tone": "red", "evidence": ["S19", "S02"], "calc": ""}, {"id": "K8", "label": "2025 出口", "value": "219.38", "unit": "万吨", "delta": "近十年新高，同比 +79.7%", "tone": "green", "evidence": ["S02"], "calc": ""}], "conclusions": [{"id": "CC-01", "rank": 1, "type": "计算", "confidence": "中", "text": "2024–2026 年纯碱名义新增产能约 1300 万吨/年，但扣减退出与搬迁置换后净新增约 790 万吨/年，其中已真实放量部分约 620 万吨/年——供应压力真实存在，净新增较名义值低约 39%。", "evidence": ["S06", "S07", "S01", "S10"], "calcs": ["C-ADD-01", "C-CAP-02"], "falsify": "若获得装置级数据后，退出产能远小于 110 万吨/年，或搬迁类项目实际保留旧产能，则净新增被低估，本结论需上修。", "audience_note": "管理层：不必按名义新增规划量级判断供给压力，应按净新增 790 万吨。"}, {"id": "CC-02", "rank": 2, "type": "计算", "confidence": "中", "text": "2027 年净有效新增供给基准约 285 万吨/年，其中主要来自 2025 年底已投产装置的产能爬坡（远兴二期与新都合计约 298 万吨），而 2026 年内新点火装置真正贡献的增量仅约 48 万吨——预计投产不等于新增供给。", "evidence": ["S01", "S07", "S05"], "calcs": ["C-SUP-01", "C-SUP-02"], "falsify": "若金陵/雪天在 2026Q4 集中点火并且 2 个月内达产，或中盐奈曼项目提前至 2027 年投产，则有效新增将超过 230 万吨。", "audience_note": "研究员：转化率与时间权重是本结论的核心假设，需按季度复核。"}, {"id": "CC-03", "rank": 3, "type": "事实", "confidence": "高", "text": "结构上，天然碱产能占比由 2021 年的 4.7% 升至 2026E 的约 21.3%，成本曲线左移，现价（1063 元/吨）已低于氨碱完全成本下沿但高于天然碱成本 260 元以上。", "evidence": ["S06", "S04", "S19", "S07"], "calcs": ["C-CAP-01", "C-EXIT-01"], "falsify": "若动力煤价格大幅回落使氨碱成本降至 1000 元/吨以下，则成本支撑判断失效。", "audience_note": "管理层：成本档位是分配市场份额的唯一变量。"}, {"id": "CC-04", "rank": 4, "type": "解释", "confidence": "中低", "text": "新增产能并未导致高成本产能大规模退出：2025 年退出仅 110 万吨（全为联碱），而行业仍保持 72% 左右开工与满负荷对冲固定成本的策略——过剩的消化方式是“价格下行 + 高开工”，而非“关停”。", "evidence": ["S03", "S04", "S06"], "calcs": ["C-EXIT-01", "C-EFF-01"], "falsify": "若 2026Q4–2027Q1 出现单季超 300 万吨/年规模主动停车，则该解释被削弱。", "audience_note": "管理层：不要把“亏损”自动等同于“减产”。"}, {"id": "CC-05", "rank": 5, "type": "判断", "confidence": "中", "text": "需求端无法吸收新增供给：重碱受地产竣工（1–8 月 −23.7%）与光伏装机放缓双重拖累，2026 年重碱需求预计 −40 万吨；轻碱由碳酸锂与小苏打支撑小幅增长，无法对冲。", "evidence": ["S03", "S01", "S09"], "calcs": ["C-DEM-01", "C-BAL-01"], "falsify": "若 2027 年地产竣工同比转正或光伏装机超预期，重碱需求可能止跌。", "audience_note": "研究员：重碱需求是核心变量，轻碱是扰动项。"}, {"id": "CC-06", "rank": 6, "type": "判断", "confidence": "中", "text": "2027 年及以后，供应格局的边际变化将由“新增投产”转向“天然碱与联碱的份额竞争”：中盐奈曼 500 万吨天然碱若按公告节奏于 2028 年前建成，将把天然碱占比进一步推高至 30% 以上，氨碱在整个周期中被持续挤出。", "evidence": ["S05", "S04"], "calcs": ["C-CAP-01"], "falsify": "若奈曼项目因资金或审批原因推迟，则 2028 年结构判断不成立。", "audience_note": "管理层：扩产决策必须绑定天然碱资源，而非合成法。"}, {"id": "CC-07", "rank": 7, "type": "事实", "confidence": "高", "text": "出口成为过剩的主要泄压阀：2025 年出口 219.38 万吨创近十年新高（+79.7%），2026 年 1–4 月出口 92.64 万吨（+41.7%），若按此节奏全年或超 260 万吨。", "evidence": ["S02", "S18"], "calcs": [], "falsify": "若东南亚/非洲玻璃产能扩张放缓或针对中国纯碱的反倾销措施落地，出口吸纳能力下降。", "audience_note": "销售：海外客户与东南亚玻璃厂应为关注重点。"}, {"id": "CC-08", "rank": 8, "type": "判断", "confidence": "低", "text": "供需再平衡的时点最早在 2027H2 之后，前提是高成本氨碱装置出现确定性退出（需 ≥200 万吨/年），而目前公开信息尚不支持这一规模。", "evidence": ["S03", "S04", "S01"], "calcs": ["C-EXIT-01", "C-SUP-01"], "falsify": "若 2027 年上半年出现氨碱企业集中停产公告累计超 200 万吨/年，时点将提前。", "audience_note": "研究员：这是最不确定的一条，应作为待验证假设而非结论。"}], "calculations": {"C-CAP-01": {"id": "C-CAP-01", "title": "2026E 三工艺产能结构", "formula": "产能_i × 份额_i；2026E 份额 = 2024 份额 + 2024→2026 新增按 280 天然碱 / 250 联碱 / 0 氨碱 的增量占比修正", "inputs": "2024 总产能 3838 万吨；2026E 总产能 4750 万吨（生意社预测）；2025 新增 550 万吨（天然碱 280 + 联碱 270）", "output": "天然碱 21.3% / 联碱 43.4% / 氨碱 35.3%", "result_note": "算术结果；份额为按新增结构外推的估算，非官方统计（中置信度）", "statement_type": "计算", "evidence": ["S06", "S07", "S01"]}, "C-CAP-02": {"id": "C-CAP-02", "title": "2026E 产能增量拆解", "formula": "2025 新增 550 + 2026 计划 250 = 800；减 2024 退出 110 → 净增 690", "inputs": "2025：远兴二期 280、连云港碱业 110、德邦 60、双环 30、新都 70 = 550；2026：金山潜江 150、雪天 100 = 250", "output": "名义新增 800 万吨/年；净新增约 690 万吨/年", "result_note": "金山潜江为老厂搬迁，名义 150 万吨中仅约 80 万吨为净新增，故净新增更接近 620 万吨", "statement_type": "计算", "evidence": ["S07", "S01", "S06"]}, "C-ADD-01": {"id": "C-ADD-01", "title": "2024–2026 名义新增 vs 净新增", "formula": "Σ 已投产项目产能 − Σ 退出项目产能（含搬迁置换扣减）", "inputs": "已投产：280+70+110+60+30 = 550；在建：150+100 = 250；规划：500；退出：-40-70 = -110", "output": "名义 1300 万吨 / 有效期净新增约 790 万吨 / 已投产量近净新增约 620 万吨", "result_note": "净新增口径决定供应压力大小，名义值会系统性高估", "statement_type": "计算", "evidence": ["S06", "S07", "S01", "S05"]}, "C-EFF-01": {"id": "C-EFF-01", "title": "有效开工率与年化产量", "formula": "年化产量 = 周产量 × 52；有效开工率 = 年化产量 / 总产能", "inputs": "2026-09-24 周产 70.32 万吨；2026E 产能 4750 万吨", "output": "年化 3657 万吨；有效开工率 77%（以 9 月为基准）；若以 10-15 开工率 64.59% 计则更低", "result_note": "说明检修季开工率波动大，年化口径需同时给出区间", "statement_type": "计算", "evidence": ["S03", "S16"]}, "C-SUP-01": {"id": "C-SUP-01", "title": "未来 12–18 个月有效新增供给（核心）", "formula": "有效新增 = Σ(项目净新增产能 × 转化率 × 时间权重)", "inputs": "金山潜江：净增 80 × 0.60 × 0.50 = 24；雪天盐碱：100 × 0.60 × 0.40 = 24；远兴二期：280 × 0.85 × 1.00 = 238（2025-12 已投产，2027 年释放满一年）；应城新都：70 × 0.85 × 1.00 = 59.5", "output": "基准合计 345.5 万吨/年；扣减 2027 年可能退出的高成本装置（情景参数 60 万吨）后，净有效新增约 285 万吨/年；若仅计 2026Q4–2027 年内新点火装置（不含已投产的远兴二期、新都），则约 48 万吨（低 40 / 高 70）", "result_note": "两个口径必须分开读：『存量新产能的释放』（285 万吨，主因）与『未来新点火』（48 万吨，有限）。转化率来自“投产→达产 3–12 个月 + 检修季削减”的行业经验，非公开统计（中低置信度，见 C-SUP-02）", "statement_type": "计算", "evidence": ["S01", "S07", "S08"]}, "C-SUP-02": {"id": "C-SUP-02", "title": "转化率敏感性", "formula": "对转化率 0.5–0.9、时间权重 0.3–1.0 做网格，取基准 ±20% 区间", "inputs": "同上；在基准情景下做单因素扰动", "output": "转化率 ±0.1 → 有效新增 ±19 万吨；时间权重 ±0.1 → ±13 万吨", "result_note": "区间宽度 80 万吨，小于供需缺口量级，结论方向稳健；但绝对量不应精确引用", "statement_type": "计算", "evidence": []}, "C-BAL-01": {"id": "C-BAL-01", "title": "2026 供需平衡缺口", "formula": "库存变化 = 产量 − 需求 − 出口 + 进口", "inputs": "产量 3874（期货日报预测）、需求 3576（期货日报预测）、出口 260（1–4 月节奏年化）、进口 2", "output": "库存变化 = 3874 − 3576 − 260 + 2 = +40 万吨", "result_note": "与库存实际从 140.83 升至 190+ 的方向一致，但量级偏小，提示需求口径可能低估或产量口径偏高（G03），平衡表仅作方向使用", "statement_type": "计算", "evidence": ["S01", "S02", "S22"]}, "C-DEM-01": {"id": "C-DEM-01", "title": "重碱需求下行幅度", "formula": "重碱需求 = Σ 玻璃产量 × 单耗；浮法单耗约 0.13–0.15 吨/吨玻璃，光伏约 0.20–0.25", "inputs": "2026 浮法产量预计 5064 万吨（同比 −120）；光伏 2565 万吨（同比 −50）；重碱需求 −40 万吨", "output": "2026 重碱需求约 1747 万吨（1787−40）", "result_note": "单耗取值范围较大，仅作方向判断", "statement_type": "计算", "evidence": ["S01", "S09"]}, "C-EXIT-01": {"id": "C-EXIT-01", "title": "出清阈值测算", "formula": "退出条件 = 毛利 < 0 持续且现金流无法覆盖固定成本；氨碱完全成本 1200–1300 vs 现价 1063 → 亏损 137–237", "inputs": "重碱现货 1062.86（10-19）；氨碱成本 1200–1300；联碱成本 1050–1200；天然碱 700–800", "output": "现价低于氨碱完全成本下沿 137 元/吨、低于联碱成本上限 87 元/吨；天然碱仍盈利 263–363 元/吨", "result_note": "价格已进入高成本产能现金流承压区，但尚未到集中退出临界点（因现金流仍可覆盖变动成本）", "statement_type": "计算", "evidence": ["S04", "S07", "S19", "S03"]}, "C-PRICE-01": {"id": "C-PRICE-01", "title": "价格跌幅与产能扩张时的相关性", "formula": "2021 高点 2787 → 2026 现价 1063，累计跌幅 = (1063−2787)/2787", "inputs": "沙河重碱年均价 2022 年 2787 元/吨；2026-10 现货 1062.86", "output": "自高点累计下跌 61.9%；较 2025 年均价 1275 再跌 16.6%", "result_note": "跌幅与产能扩张（2022→2026E +46.5%）在时间上同步，但相关不等于因果，需结合库存与需求（解释）", "statement_type": "计算", "evidence": ["S02", "S19"]}}, "sources": {"S01": {"id": "S01", "org": "期货日报 / 新华财经", "title": "2026年纯碱基本面或延续供强需弱格局 价格中枢或小幅下移", "date": "2025-12-31", "url": "https://m.cnfin.com/dz-lb//zixun/20251231/4358688_1.html", "kind": "media", "tier": "B", "note": "2026 产能投放计划、需求测算、进出口"}, "S02": {"id": "S02", "org": "建信期货（期货日报转载）", "title": "纯碱价格持续下跌的原因是？", "date": "2026-06-01", "url": "https://www.ccbfutures.com/main/a/20260601/78061.shtml", "kind": "media", "tier": "B", "note": "2019–2026 年度出口与沙河均价、库存、利润三级分化"}, "S03": {"id": "S03", "org": "期货日报 / 新华财经", "title": "供应过剩格局难改 纯碱价格低位震荡", "date": "2026-10-09", "url": "https://www.cnfin.com/dz-lb/detail/20261009/4478393_1.html", "kind": "media", "tier": "B", "note": "开工率、周产、库存、三工艺毛利、竣工面积"}, "S04": {"id": "S04", "org": "国家发改委价格监测中心（浙江省经济信息中心转载）", "title": "近年纯碱价格持续走低 谨防产业陷入“内卷式”竞争", "date": "2026-06-03", "url": "https://zjic.zj.gov.cn/ywdh/jjyx/202606/t20260603_24105020.shtml", "kind": "official", "tier": "A", "note": "三工艺完全成本、下游结构 51%/23%、青海区位约束"}, "S05": {"id": "S05", "org": "中国基金报", "title": "中盐化工拟投建500万吨/年天然碱矿产资源综合开发项目", "date": "2026-05-14", "url": "https://www.chnfund.com/article/ARf2a39a54-d492-1a49-6c51-3a213935cffb", "kind": "media", "tier": "B", "note": "项目投资 252.83 亿元、建设期 24 个月、2026-06-03 开工"}, "S06": {"id": "S06", "org": "观研报告网（卓创/百川盈孚数据整理）", "title": "我国纯碱行业发展现状：天然碱法产能占比提升", "date": "2025-02-08", "url": "https://m.chinabaogao.com/detail/741959.html", "kind": "mr", "tier": "C", "note": "2024 工艺产能占比、年度产能变动、CR5"}, "S07": {"id": "S07", "org": "生意社", "title": "2025年纯碱震荡下行 2026年格局仍难改善", "date": "2026-01-05", "url": "https://www.100ppi.com/forecast/detail-20260105-201890.html", "kind": "media", "tier": "B", "note": "2025 新增 550 万吨明细、2026 计划、三工艺成本区间"}, "S08": {"id": "S08", "org": "证券时报（远兴能源公告）", "title": "远兴能源启动阿拉善塔木素天然碱项目二期", "date": "2023-12-28", "url": "https://www.stcn.com/article/detail/1077670.html", "kind": "company", "tier": "A", "note": "二期 280 万吨、总规划 780 万吨、投资 55 亿元、原计划 2025-12 建成"}, "S09": {"id": "S09", "org": "期货日报 / 新华财经", "title": "库存仍处历史高位 玻璃反弹高度受限", "date": "2026-01-21", "url": "https://m.cnfin.com/dz-lb//zixun/20260121/4368828_1.html", "kind": "media", "tier": "B", "note": "浮法日熔 14.95 万吨、光伏日熔 8.72 万吨、湖北燃料改造"}, "S10": {"id": "S10", "org": "财联社", "title": "纯碱反内卷另类样本：低成本天然碱持续扩张 高成本产能或有序退出", "date": "2025-08-10", "url": "https://www.cls.cn/detail/2111137", "kind": "media", "tier": "B", "note": "2024 产能退出 110 万吨、新增 230 万吨"}, "S11": {"id": "S11", "org": "河南金山化工集团", "title": "走进金山（集团产能口径）", "date": "2025-06-30", "url": "http://www.jshgjt.com/a/zoujinjinshan/", "kind": "company", "tier": "B", "note": "纯碱 330 万吨、联产氯化铵 360 万吨"}, "S12": {"id": "S12", "org": "新浪财经（远兴能源投资者关系）", "title": "阿拉善天然碱项目一二期全部建成后纯碱设计年产能780万吨", "date": "2024-06-12", "url": "https://finance.sina.com.cn/stock/bxjj/2024-06-12/doc-inaynphy3002723.shtml", "kind": "company", "tier": "A", "note": "一期 500 万吨、轻重碱结构"}, "S13": {"id": "S13", "org": "隆众资讯（引用）", "title": "成本提振，纯碱价格重心上移", "date": "2026-09-04", "url": "https://www.hicend.com/ftpfile/static/file/upload/file/202609/04/jQZlaeVii5rFtEwk.pdf", "kind": "thirdparty", "tier": "B", "note": "截至 9 月 3 日纯碱产量约 71.88 万吨（轻碱 34.02、重碱 37.86）"}, "S14": {"id": "S14", "org": "期货日报 / 新华财经", "title": "纯碱：往期阿拉善产能投产对比", "date": "2026-01-06", "url": "https://www.wkqh.cn/ueditor/jsp/upload/file/20260106/1767660004954010828.pdf", "kind": "media", "tier": "C", "note": "2026 阿拉善二期 280 万吨 + 联碱 350 万吨计划"}, "S15": {"id": "S15", "org": "同花顺（行业资讯）", "title": "【纯碱、玻璃】高库存与低利润下的博弈", "date": "2026-10-13", "url": "https://m.10jqka.com.cn/20261013/c680614714.shtml", "kind": "media", "tier": "C", "note": "高库存下玻璃与纯碱博弈"}, "S16": {"id": "S16", "org": "生意社-纯碱产业网", "title": "纯碱周度库存与装置开工率", "date": "2026-10-15", "url": "https://soda.100ppi.com/", "kind": "thirdparty", "tier": "B", "note": "10-15 当周库存 162.89 万吨、开工率 64.59%"}, "S17": {"id": "S17", "org": "国家统计局（经期货日报引用）", "title": "2025 年 1–11 月纯碱产量", "date": "2025-12-31", "url": "https://m.cnfin.com/dz-lb//zixun/20251231/4358688_1.html", "kind": "official", "tier": "A", "note": "1–11 月 3625 万吨，同比 +139 万吨/+4.0%"}, "S18": {"id": "S18", "org": "海关总署（经建信期货引用）", "title": "纯碱进出口月度数据", "date": "2026-06-01", "url": "https://www.ccbfutures.com/main/a/20260601/78061.shtml", "kind": "official", "tier": "A", "note": "2026 年 1–4 月出口 92.64 万吨；4 月单月 27.03 万吨"}, "S19": {"id": "S19", "org": "生意社商品行情分析系统", "title": "重质/轻质纯碱基准价（日度）", "date": "2026-10-20", "url": "https://www.100ppi.com/forecast/detail-20260105-201890.html", "kind": "thirdparty", "tier": "B", "note": "10-19 重碱基准价 1062.86；10-20 轻碱基准价 1050.00（取自生意社商品动态列表）"}, "S20": {"id": "S20", "org": "行业日评（化工资讯）", "title": "9月18日纯碱日评：现货价格偏稳，期货震荡调整", "date": "2026-09-18", "url": "https://zx.hm-w.com/viewpoint/detail/17611", "kind": "thirdparty", "tier": "C", "note": "综合产能利用率 70.26%，环比 -1.43%"}, "S21": {"id": "S21", "org": "凤凰财经", "title": "玻璃在产产能历史新低 行业拐点逐步显现", "date": "2026-04-15", "url": "https://finance.ifeng.com/c/8sTLjmZZz4L", "kind": "media", "tier": "C", "note": "2026 年 3 月底浮法在产日熔降至 14.5 万吨"}, "S22": {"id": "S22", "org": "建信期货（期货日报）", "title": "供给收缩弹性偏弱 纯碱现货价格已跌破生产成本线", "date": "2026-09-02", "url": "https://www.ccbfutures.com/main/a/20260902/79034.shtml", "kind": "media", "tier": "B", "note": "8-28 当周厂内库存 187.27 万吨（重碱 85.57 / 轻碱 101.70），年内区间 140.83–194.72"}}, "gaps": {"G01": {"id": "G01", "topic": "装置级产能清单", "missing": "2026 年 10 月口径的全量装置级产能（含投产/停产日期）", "why": "百川/卓创/隆众需授权，公开渠道只能拼合", "impact": "企业集团产能汇总偏差约 ±5%，CR5 精确值受影响", "workaround": "企业公告+资讯拼合，标注年份口径", "severity": "high", "next_step": "采购一份百川盈孚年度产能明细"}, "G02": {"id": "G02", "topic": "周度产量口径", "missing": "同一口径的连续周度产量序列", "why": "机构样本不同：71.88 万吨（隆众 9-03）vs 70.32 万吨（9-24）", "impact": "绝对水平需标口径，趋势可用", "workaround": "保留原口径并标注来源", "severity": "medium", "next_step": "固定一家机构作为基准"}, "G03": {"id": "G03", "topic": "2026 年全年产量", "missing": "统计局 2026 年 1–9 月纯碱累计产量", "why": "截至数据截止日未获取", "impact": "2026 年平衡表产量为周产外推估算值（中置信度）", "workaround": "以周产×周数近似并标注", "severity": "high", "next_step": "补取统计局 10 月月报"}, "G04": {"id": "G04", "topic": "玻璃日熔量最新值", "missing": "2026 年 9 月浮法/光伏在产日熔量", "why": "仅取到 2026-01-15 与 2026-03 的卓创/资讯口径", "impact": "重碱需求测算依赖年初数据外推", "workaround": "结合消费结构 51%/23% 交叉校验", "severity": "medium", "next_step": "补取卓创 9 月玻璃月报"}, "G05": {"id": "G05", "topic": "计划退出装置", "missing": "2027 年确定停产/退出的装置名录", "why": "多为市场传闻，无公开公告", "impact": "出清速度假设存在较大不确定性", "workaround": "作为情景变量，不计入基准", "severity": "medium", "next_step": "跟踪协会与地方工信部门公告"}, "G06": {"id": "G06", "topic": "价格日频序列", "missing": "日频现货价格原始序列", "why": "生意社详情页有反爬校验，仅能取年度/阶段均价与基准价", "impact": "价格分析限于年度均价与阶段均价", "workaround": "使用已公开的年均/阶段均价", "severity": "medium", "next_step": "接入付费数据源或手工录入"}}, "sections": [{"id": "s02", "pack": "structure", "audience_weight": ["industry-researcher", "management", "sales", "procurement", "rnd"], "title": "现有产能结构、工艺与企业集中度", "lede": "中国纯碱产能约 4500 万吨/年（2025 年口径），三种工艺并存，而三者成本相差最高可达 500 元/吨——这决定了新增产能不是简单的“数量增加”，而是“成本档位替换”。", "blocks": [{"type": "chart", "id": "ch-cap", "title": "三工艺产能占比：天然碱从 4.7% 升至 21.3%", "chart_type": "stacked_bar", "data_key": "capacity_structure.shares", "note": "2021 年天然碱 4.7% 有来源；联碱/氨碱按余额拆分。2026E 为按新增结构外推的估算（C-CAP-01）。", "conclusion_ids": ["CC-03"], "source": ["S06", "S07", "S01"]}, {"type": "chart", "id": "ch-total", "title": "总产能与年度净增", "chart_type": "bar_line", "data_key": "capacity_structure.rows", "bands": ["total"], "keys": [{"k": "total", "name": "总产能"}], "note": "2025 年跃升至 4500 万吨，对应新增 550 万吨；2026E 4750 万吨为预测值。", "conclusion_ids": ["CC-01"], "source": ["S06", "S07"]}, {"type": "table", "title": "主要企业集团产能（2025–2026 口径）", "cols": ["集团", "主体", "区域", "工艺", "产能(万吨/年)", "上市", "成本档位", "来源"], "rows_key": "companies"}, {"type": "chart", "id": "ch-cr5", "title": "CR5 集中度变化", "chart_type": "line", "data_key": "cr5", "keys": [{"k": "value", "name": "CR5 集中度(%)"}], "note": "CR5 由 2020 年 50% 升至 2023 年 60%，集中度提升主要来自远兴天然碱的放量。", "conclusion_ids": ["CC-03"], "source": ["S06"]}, {"type": "callout", "tone": "info", "title": "结构判断", "text": "集中度提升并不等于议价能力提升：CR5 中三家为联碱/氨碱（金山、中盐、三友），其成本高于远兴，行业“价格锚”由最低成本产能决定，因此 CR5 上升反而加速了价格中枢下移。"}], "data_tables": ["companies", "cr5"]}, {"id": "s05", "pack": "cost", "audience_weight": ["industry-researcher", "management", "procurement", "rnd"], "title": "成本曲线与产能出清阈值", "lede": "现价 1063 元/吨（重碱，2026-10-19）已低于氨碱法完全成本下沿 1200 元/吨约 137 元，但仍高于天然碱成本 263 元以上。这意味着：氨碱亏损但未必减产，天然碱仍能盈利并继续扩产。", "blocks": [{"type": "chart", "id": "ch-cost", "title": "三工艺完全成本区间与当前现货价", "chart_type": "range_bar", "data_key": "cost_curve", "note": "天然碱 700–800；联碱 1050–1200（纯碱端）；氨碱 1200–1300。横线为现价 1062.86。", "conclusion_ids": ["CC-03", "CC-04"], "source": ["S04", "S07", "S19"]}, {"type": "chart", "id": "ch-profit", "title": "三工艺毛利（2026-09-25 与 2026-05-22）", "chart_type": "bar", "data_key": "profit", "keys": [{"k": "profit", "name": "利润(元/吨)"}], "note": "天然碱 +115；联碱双吨 −177.25；氨碱 −195。", "conclusion_ids": ["CC-04"], "source": ["S03", "S02"]}, {"type": "calc", "calc_id": "C-EXIT-01"}, {"type": "para", "text": "出清的真正约束不是“亏不亏”，而是“现金流能不能覆盖变动成本”。氨碱装置的亏损 195 元/吨若仍高于其变动成本与固定费用的差额，企业宁可满负荷生产摊薄固定成本——这与国家发改委价格监测中心的调研结论一致（青海主要生产企业保持满负荷生产）。因此，产能退出是“慢性”的，退出速度取决于资产负债表，而非利润表。"}, {"type": "callout", "tone": "warn", "title": "为什么没有发生大规模退出", "text": "①过去两年行业利润足以积累现金；②地方保供与就业因素；③氨碱装置重启成本高，企业倾向于坚持产能。结论：只要天然碱产能仍在扩张，成本曲线左移会持续压低价格中枢，而退出是滞后变量。"}], "data_tables": ["cost_curve", "profit", "calculations"]}, {"id": "s11", "no": "11", "pack": "process", "audience_weight": ["rnd", "industry-researcher"], "title": "工艺路线与替代边界：技术选择意味着什么", "question": "天然碱路线能替代多少高成本产能？技术边界在哪里？", "lede": "研发关心的不是价格明天多少，而是“这条工艺路线会不会被替代、我们要不要跟”。这一章从产能结构、成本差与在建项目的工艺选择三个角度给判断。", "blocks": [{"type": "chart", "id": "ch-struct-rnd", "title": "三工艺产能占比变化（%）", "chart_type": "stacked_bar", "data_key": "capacity_structure.shares", "source": ["S06", "S10"], "note": "天然碱占比由 2021 年 4.7% 升至 2026E 约 21.3%，氨碱由 47.3% 降至 35.3%。", "conclusion_ids": ["CC-03", "CC-06"]}, {"type": "chart", "id": "ch-cost-rnd", "title": "工艺成本差：替代的经济边界", "chart_type": "range_bar", "data_key": "cost_curve", "ref": 1062.86, "source": ["S04"], "note": "天然碱与氨碱完全成本差约 400–500 元/吨，这一差额是替代的驱动力，也是技改投资回收期的关键参数。", "conclusion_ids": ["CC-03"]}, {"type": "chart", "id": "ch-proj-rnd", "title": "在建项目的工艺选择（万吨/年）", "chart_type": "bar", "data_key": "projects_by_status", "source": ["S07", "S01", "S05", "S06"], "note": "在建与规划项目中天然碱占比明显高于存量，说明行业技术选择正在向天然碱倾斜。", "conclusion_ids": ["CC-06"]}, {"type": "callout", "tone": "info", "title": "工程可行性 vs 经济可行性", "text": "天然碱路线的工程可行性已被远兴一期、二期证明；其约束在经济与资源侧——天然碱矿的储量与开采权集中在少数主体，其他企业难以复制。因此“要不要跟进”的答案不是技术性的，而是资源可得性的。"}]}, {"id": "s08", "pack": "conclusion", "audience_weight": ["industry-researcher", "management", "sales", "procurement", "rnd"], "title": "结论、反证条件与后续核验", "lede": "每条结论都标注了类型（事实/计算/解释/判断）、置信度、支撑证据、可复现计算与反证条件。建议先读反证条件，再读结论。", "blocks": [{"type": "conclusions_full"}, {"type": "table", "title": "关键变量与预警阈值", "cols": ["变量", "类型", "观察点", "阈值/触发", "频率", "影响"], "rows_key": "key_variables"}, {"type": "table", "title": "后续需要继续核验的问题", "cols": ["编号", "问题", "缺口", "下一步"], "rows": [["Q-A", "金山潜江与雪天盐碱是否按期点火？", "2026 年内无投产公告", "跟踪项目点火新闻与公司公告"], ["Q-B", "2027 年氨碱退出规模是否超过 200 万吨？", "无公开退出计划", "协会产能变动统计、地方工信公告"], ["Q-C", "浮法与光伏日熔量最新值？", "9 月数据缺失", "卓创月报"], ["Q-D", "中盐奈曼 500 万吨是否按期 2028 年建成？", "仅开工公告", "半年报项目进度"], ["Q-E", "出口能否维持 23 万吨/月以上？", "仅 1–4 月数据", "海关月度数据"], ["Q-F", "轻碱需求（碳酸锂、小苏打）增速是否延续？", "2026 年数据未获取", "碳酸锂产量、小苏打产量月报"]]}], "data_tables": ["conclusions", "key_variables"]}], "datasets": {"projects_by_status": [{"status": "已投产", "capacity": 550, "count": 5, "note": "2025 年内投产"}, {"status": "在建", "capacity": 250, "count": 2, "note": "金山潜江 150（净增 80）、雪天 100"}, {"status": "规划", "capacity": 500, "count": 1, "note": "中盐奈曼天然碱，2028 年前后建成"}, {"status": "退出", "capacity": -110, "count": 2, "note": "福州耀隆 40、金山获嘉/孟州 70"}], "add_waterfall": [{"step": "名义新增", "value": 1300, "note": "已投产 550 + 在建 250 + 规划 500"}, {"step": "搬迁置换扣减", "value": -70, "note": "金山潜江老厂搬迁"}, {"step": "退出产能", "value": -110, "note": "福州耀隆 40 + 金山获嘉/孟州 70"}, {"step": "净新增（含规划）", "value": 1120, "note": "其中规划 500 尚未开工至投产"}, {"step": "已投放在建净新增", "value": 620, "note": "550 + 180 − 110"}], "supply_scenarios": [{"scenario": "低情景", "value": 225, "assumption": "金山/雪天延迟至 2028 年，转化率 0.5，无额外退出"}, {"scenario": "基准情景", "value": 285, "assumption": "金山 2026Q4 点火、雪天 2027H1 投产；退出 60 万吨"}, {"scenario": "高情景", "value": 345, "assumption": "两套装置年内点火快速达产，转化率 0.9，无退出"}], "capacity_structure": {"unit": "万吨/年", "bands": ["天然碱法", "联碱法", "氨碱法"], "rows": [{"year": 2022, "label": "2022", "total": 3243}, {"year": 2023, "label": "2023", "total": 3658}, {"year": 2024, "label": "2024", "total": 3838}, {"year": 2025, "label": "2025", "total": 4500}, {"year": 2026, "label": "2026E", "total": 4750}], "shares": [{"year": 2021, "天然碱法": 4.7, "联碱法": 48.0, "氨碱法": 47.3}, {"year": 2024, "天然碱法": 16.9, "联碱法": 45.2, "氨碱法": 37.9}, {"year": 2026, "天然碱法": 21.3, "联碱法": 43.4, "氨碱法": 35.3}], "source": "S06,S07,S01", "calc": "C-CAP-01"}, "capacity_structure.rows": [{"year": 2022, "label": "2022", "total": 3243}, {"year": 2023, "label": "2023", "total": 3658}, {"year": 2024, "label": "2024", "total": 3838}, {"year": 2025, "label": "2025", "total": 4500}, {"year": 2026, "label": "2026E", "total": 4750}], "capacity_structure.shares": [{"year": 2021, "天然碱法": 4.7, "联碱法": 48.0, "氨碱法": 47.3}, {"year": 2024, "天然碱法": 16.9, "联碱法": 45.2, "氨碱法": 37.9}, {"year": 2026, "天然碱法": 21.3, "联碱法": 43.4, "氨碱法": 35.3}], "cr5": [{"year": 2020, "value": 50.0, "note": "观研口径"}, {"year": 2023, "value": 60.0, "note": "观研口径"}, {"year": 2024, "value": 62.0, "note": "按前五企业产能/总产能估算"}, {"year": 2026, "value": 63.5, "note": "含远兴二期放量，估算"}], "cost_curve": [{"process": "天然碱法", "low": 700, "high": 800, "mid": 750, "share": 21.3, "source": "S04"}, {"process": "联碱法", "low": 1050, "high": 1200, "mid": 1125, "share": 43.4, "source": "S07"}, {"process": "氨碱法", "low": 1200, "high": 1300, "mid": 1250, "share": 35.3, "source": "S04,S07"}], "profit": [{"route": "天然碱法", "profit": 115, "date": "2026-09-25", "basis": "毛利", "source": "S03"}, {"route": "联碱法（双吨）", "profit": -177.25, "date": "2026-09-25", "basis": "纯碱+氯化铵双吨毛利", "source": "S03"}, {"route": "联碱法（重碱）", "profit": 79, "date": "2026-05-22", "basis": "重碱利润", "source": "S02"}, {"route": "氨碱法", "profit": -195, "date": "2026-09-25", "basis": "毛利", "source": "S03"}, {"route": "氨碱法（重碱）", "profit": -90, "date": "2026-05-22", "basis": "重碱利润", "source": "S02"}], "supply_demand": [{"year": 2019, "supply": 2880, "demand": 2820, "export": 143.52, "import": 15.0, "quality": "估算", "note": "供需基本平衡"}, {"year": 2020, "supply": 2900, "demand": 2790, "export": 137.83, "import": 18.0, "quality": "估算", "note": "疫情冲击"}, {"year": 2021, "supply": 2950, "demand": 3160, "export": 75.86, "import": 34.0, "quality": "估算", "note": "光伏爆发"}, {"year": 2022, "supply": 3050, "demand": 3100, "export": 205.58, "import": 11.0, "quality": "估算", "note": "出口新高"}, {"year": 2023, "supply": 3260, "demand": 3380, "export": 148.89, "import": 68.32, "quality": "估算", "note": "前紧后松"}, {"year": 2024, "supply": 3818.6, "demand": 3793.9, "export": 122.06, "import": 97.37, "quality": "官方", "note": "产量为统计局口径"}, {"year": 2025, "supply": 3862, "demand": 3536, "export": 219.38, "import": 2.17, "quality": "半官方", "note": "产量按 1–11 月外推；需求为测算"}, {"year": 2026, "supply": 3874, "demand": 3576, "export": 260, "import": 2.0, "quality": "预测", "note": "期货日报预测 + 出口年化"}], "price_history": [{"year": 2019, "shahe": 1537}, {"year": 2020, "shahe": 1442}, {"year": 2021, "shahe": 2343}, {"year": 2022, "shahe": 2787}, {"year": 2023, "shahe": 2646}, {"year": 2024, "shahe": 1893}, {"year": 2025, "shahe": 1275}, {"year": 2026, "shahe": 1172}], "price_points": [{"date": "2025-01-02", "label": "2025 年初", "item": "生意社纯碱市场均价", "value": 1528, "source": "S07"}, {"date": "2025-12-31", "label": "2025 年末", "item": "生意社纯碱市场均价", "value": 1250, "source": "S07"}, {"date": "2026-04-30", "label": "2026 1–4 月", "item": "沙河重碱均价", "value": 1172, "source": "S02"}, {"date": "2026-05-05", "label": "2026-05-05", "item": "中价·柴达木 全国重碱价格指数", "value": 1145, "source": "S04"}, {"date": "2026-05-05", "label": "2026-05-05", "item": "中价·柴达木 全国轻碱价格指数", "value": 1142, "source": "S04"}, {"date": "2026-10-19", "label": "2026-10-19", "item": "生意社重质纯碱基准价", "value": 1062.86, "source": "S19"}, {"date": "2026-10-20", "label": "2026-10-20", "item": "生意社轻质纯碱基准价", "value": 1050.0, "source": "S19"}], "inventory": [{"date": "2026-01-02", "label": "1月2日", "total": 140.83, "heavy": null, "light": null, "source": "S22", "note": "年内低点（厂内）"}, {"date": "2026-05-22", "label": "5月22日", "total": 219.39, "heavy": null, "light": null, "source": "S02", "note": "厂内+社会，近 6 年同期最高"}, {"date": "2026-08-28", "label": "8月28日", "total": 187.27, "heavy": 85.57, "light": 101.7, "source": "S22", "note": "厂内总库存"}, {"date": "2026-09-25", "label": "9月25日", "total": 180.58, "heavy": null, "light": null, "source": "S03", "note": "样本企业总库存，同比 +9.34%"}, {"date": "2026-10-15", "label": "10月15日", "total": 162.89, "heavy": 77.51, "light": 85.38, "source": "S16", "note": "较上周 -8.42%"}], "output_weekly": [{"date": "2026-08-28", "label": "8月下旬", "output": 77.24, "util": null, "source": "S03", "note": "由 9-24 周产 70.32 与降幅 8.96% 反推"}, {"date": "2026-09-03", "label": "9月3日", "output": 71.88, "util": null, "source": "S13", "note": "轻碱 34.02 + 重碱 37.86；隆众口径"}, {"date": "2026-09-18", "label": "9月18日", "output": null, "util": 70.26, "source": "S20", "note": "综合产能利用率"}, {"date": "2026-09-24", "label": "9月24日", "output": 70.32, "util": 72.0, "source": "S03", "note": "国庆约 220 万吨/年装置检修"}, {"date": "2026-10-15", "label": "10月15日", "output": null, "util": 64.59, "source": "S16", "note": "环比 -11.56%"}], "demand_structure": [{"name": "浮法玻璃", "share": 51, "source": "S04"}, {"name": "光伏玻璃", "share": 23, "source": "S04"}, {"name": "日用玻璃及其他玻璃", "share": 13.3, "source": "S06"}, {"name": "碳酸锂/新能源", "share": 4.5, "source": "S01"}, {"name": "小苏打", "share": 4.0, "source": "S01"}, {"name": "洗涤剂/氧化铝/味精等", "share": 4.2, "source": "S01"}], "glass_runrate": [{"date": "2026-01-15", "label": "2026-01-15", "float_tpd": 149500, "pv_tpd": 87200, "source": "S09", "note": "浮法同比 -4.55%，创近 5 年新低；光伏同比 +7.52%"}, {"date": "2026-03-31", "label": "2026-03", "float_tpd": 145000, "pv_tpd": null, "source": "S21", "note": "浮法在产日熔创历史新低"}, {"date": "2026-09-30", "label": "2026-09", "float_tpd": null, "pv_tpd": null, "source": "G04", "note": "缺口：未取得 9 月日熔量"}], "macro": [{"name": "房屋竣工面积同比（2026 1–8 月）", "value": -23.7, "unit": "%", "source": "S03", "date": "2026-08"}, {"name": "玻璃深加工订单天数均值", "value": 10.0, "unit": "天", "source": "S03", "date": "2026-09", "note": "同比 -9.20%"}, {"name": "碳酸锂产量（2025）", "value": 94, "unit": "万吨", "source": "S01", "date": "2025-12", "note": "同比 +25 万吨，用碱 +50 万吨"}, {"name": "小苏打产量（2025）", "value": 354, "unit": "万吨", "source": "S01", "date": "2025-12", "note": "同比 +115 万吨，用碱 +70 万吨"}, {"name": "纯碱出口（2025）", "value": 219.38, "unit": "万吨", "source": "S02", "date": "2025-12", "note": "近十年新高，同比 +79.7%"}, {"name": "纯碱出口（2026 1–4 月）", "value": 92.64, "unit": "万吨", "source": "S18", "date": "2026-04", "note": "同比 +41.7%，月均 23.16 万吨"}], "chain": [{"id": "U1", "name": "原盐", "side": "upstream", "note": "氨碱/联碱主要原料，氨碱单耗约 1.5 吨/吨", "cost_share": "30%+（氨碱）", "source": "S04"}, {"id": "U2", "name": "石灰石", "side": "upstream", "note": "氨碱法必需", "cost_share": "—", "source": "S06"}, {"id": "U3", "name": "合成氨", "side": "upstream", "note": "联碱法核心原料", "cost_share": "—", "source": "S06"}, {"id": "U4", "name": "天然碱矿", "side": "upstream", "note": "阿拉善、奈曼、柴达木；资源稀缺", "cost_share": "—", "source": "S04,S08"}, {"id": "U5", "name": "动力煤/电力", "side": "upstream", "note": "占合成法成本 30–35%", "cost_share": "30–35%", "source": "S03"}, {"id": "M1", "name": "纯碱（轻碱）", "side": "mid", "note": "约 49% 消费", "cost_share": "", "source": "S01"}, {"id": "M2", "name": "纯碱（重碱）", "side": "mid", "note": "约 51% 消费，浮法玻璃必须用重碱", "cost_share": "", "source": "S01"}, {"id": "M3", "name": "焦亚硫酸钠/硅酸钠等", "side": "mid", "note": "轻碱下游", "cost_share": "", "source": "S06"}, {"id": "D1", "name": "浮法玻璃", "side": "downstream", "note": "消费占比 51%", "cost_share": "", "source": "S04"}, {"id": "D2", "name": "光伏玻璃", "side": "downstream", "note": "消费占比 23%", "cost_share": "", "source": "S04"}, {"id": "D3", "name": "日用玻璃", "side": "downstream", "note": "约 13.3%（含于玻璃合计）", "cost_share": "", "source": "S06"}, {"id": "D4", "name": "碳酸锂", "side": "downstream", "note": "2025 用碱 +50 万吨", "cost_share": "", "source": "S01"}, {"id": "D5", "name": "小苏打", "side": "downstream", "note": "2025 用碱 +70 万吨", "cost_share": "", "source": "S01"}, {"id": "D6", "name": "洗涤剂/氧化铝/味精", "side": "downstream", "note": "合计约 4%", "cost_share": "", "source": "S01"}]}, "projects": [{"id": "P01", "name": "远兴能源 阿拉善塔木素天然碱二期", "company": "内蒙古博源银根矿业", "region": "西北", "province": "内蒙古", "process": "天然碱法", "capacity": 280, "start": "2023-12", "plan_date": "2025-12", "actual_date": "2025-12", "status": "已投产", "status_basis": "行业统计显示 2025 年 12 月投产；企业公告原计划 2025 年 12 月建成", "evidence": "S07,S01,S08", "strength": "A", "net_add": true, "for_exit": "氨碱/联碱", "note": "规划总产能 780 万吨（一期 500+二期 280）"}, {"id": "P02", "name": "应城新都化工 联碱装置", "company": "应城新都化工", "region": "华中", "province": "湖北", "process": "联碱法", "capacity": 70, "start": "2024", "plan_date": "2025-12", "actual_date": "2025-12", "status": "已投产", "status_basis": "生意社 2025 年度回顾列明 2025 年底投产", "evidence": "S07,S01", "strength": "B", "net_add": true, "for_exit": "氨碱", "note": "配套合成氨 70 万吨"}, {"id": "P03", "name": "连云港碱业 联碱装置", "company": "连云港碱业", "region": "华东", "province": "江苏", "process": "联碱法", "capacity": 110, "start": "2023", "plan_date": "2025-05", "actual_date": "2025-05", "status": "已投产", "status_basis": "生意社 2025 年度回顾列明 2025 年 5 月投产", "evidence": "S07", "strength": "B", "net_add": true, "for_exit": "氨碱", "note": "老厂搬迁扩建，部分为置换"}, {"id": "P04", "name": "江苏德邦兴华 联碱装置", "company": "江苏德邦兴华", "region": "华东", "province": "江苏", "process": "联碱法", "capacity": 60, "start": "2023", "plan_date": "2025-03", "actual_date": "2025-03", "status": "已投产", "status_basis": "生意社 2025 年度回顾", "evidence": "S07", "strength": "B", "net_add": true, "for_exit": "氨碱", "note": ""}, {"id": "P05", "name": "湖北双环 扩产", "company": "湖北双环科技", "region": "华中", "province": "湖北", "process": "联碱法", "capacity": 30, "start": "2024", "plan_date": "2025-05", "actual_date": "2025-05", "status": "已投产", "status_basis": "生意社 2025 年度回顾", "evidence": "S07", "strength": "B", "net_add": true, "for_exit": "氨碱", "note": "扩产"}, {"id": "P06", "name": "金山 湖北潜江 联碱装置", "company": "金山化工", "region": "华中", "province": "湖北", "process": "联碱法", "capacity": 150, "start": "2024-04", "plan_date": "2026H2", "actual_date": "", "status": "在建", "status_basis": "2026 年度报告列为计划下半年投产；老厂搬迁性质，净新增约 80 万吨", "evidence": "S01,S07", "strength": "B", "net_add": false, "for_exit": "老厂搬迁", "note": "含液氨 70 万吨、氯化铵 210 万吨；净新增按 80 万吨计"}, {"id": "P07", "name": "湖南雪天盐碱新材料 联碱装置", "company": "雪天盐业", "region": "华中", "province": "湖南", "process": "联碱法", "capacity": 100, "start": "2024", "plan_date": "2026H2", "actual_date": "", "status": "在建", "status_basis": "2026 年产能投放计划列明下半年投产；百川口径或延至年底", "evidence": "S01,S07", "strength": "B", "net_add": true, "for_exit": "氨碱", "note": ""}, {"id": "P08", "name": "中盐化工 奈曼 500 万吨/年天然碱综合开发", "company": "中盐（内蒙古）碱业有限公司", "region": "华北", "province": "内蒙古", "process": "天然碱法", "capacity": 500, "start": "2026-06-03", "plan_date": "2028", "actual_date": "", "status": "规划", "status_basis": "2026-05 公告：投资 252.83 亿元、建设期 24 个月、预计 2026-06-03 开工", "evidence": "S05", "strength": "A", "net_add": true, "for_exit": "氨碱+联碱", "note": "投产后公司纯碱产能由约 390 万吨升至约 890 万吨"}, {"id": "P09", "name": "福州耀隆 退出", "company": "福州耀隆化工", "region": "东南", "province": "福建", "process": "联碱法", "capacity": -40, "start": "", "plan_date": "2024", "actual_date": "2024", "status": "退出", "status_basis": "2024 年产能变动统计", "evidence": "S06", "strength": "B", "net_add": false, "for_exit": "", "note": "退出"}, {"id": "P10", "name": "金山 获嘉/孟州厂区 退出", "company": "金山化工", "region": "华中", "province": "河南", "process": "联碱法", "capacity": -70, "start": "", "plan_date": "2024", "actual_date": "2024", "status": "退出", "status_basis": "2024 年产能变动统计（获嘉 40 + 孟州 30）", "evidence": "S06", "strength": "B", "net_add": false, "for_exit": "", "note": "退出，为潜江新装置腾挪"}], "companies": [{"group": "远兴能源 / 博源集团（银根矿业）", "company": "内蒙古博源银根矿业有限责任公司", "region": "西北", "province": "内蒙古", "city": "阿拉善盟", "process": "天然碱法", "capacity": 780, "capacity_year": 2026, "cap_note": "一期 500 万吨（4 条线）+ 二期 280 万吨；二期 2025-12 投产", "listed": "000683.SZ", "cost_level": "低", "source": "S12,S08"}, {"group": "河南金山化工集团", "company": "河南金山化工有限责任公司", "region": "华中", "province": "河南", "city": "漯河/舞阳", "process": "联碱法", "capacity": 330, "capacity_year": 2025, "cap_note": "含舞阳 50 万吨扩产；获嘉、孟州厂区 2024 年退出 70 万吨", "listed": "未上市", "cost_level": "中", "source": "S11,S06"}, {"group": "中盐集团", "company": "中盐内蒙古化工股份有限公司", "region": "西北", "province": "内蒙古", "city": "阿拉善/吉兰泰", "process": "氨碱法+联碱法", "capacity": 390, "capacity_year": 2026, "cap_note": "国内前三；奈曼 500 万吨天然碱项目 2026-06 开工", "listed": "600328.SH", "cost_level": "中高", "source": "S05,S04"}, {"group": "唐山三友集团", "company": "唐山三友化工股份有限公司", "region": "华北", "province": "河北", "city": "唐山", "process": "氨碱法", "capacity": 340, "capacity_year": 2025, "cap_note": "氨碱为主，配套氯碱一体化", "listed": "600409.SH", "cost_level": "高", "source": "S06"}, {"group": "山东海化集团", "company": "山东海化股份有限公司", "region": "华东", "province": "山东", "city": "潍坊", "process": "氨碱法", "capacity": 280, "capacity_year": 2025, "cap_note": "渤海湾氨碱基地；参股天然碱资源", "listed": "000822.SZ", "cost_level": "高", "source": "S06,S04"}, {"group": "连云港德邦", "company": "江苏德邦兴华化工科技有限公司", "region": "华东", "province": "江苏", "city": "连云港", "process": "联碱法", "capacity": 60, "capacity_year": 2025, "cap_note": "2025-03 投产", "listed": "未上市", "cost_level": "中", "source": "S07"}, {"group": "连云港碱业", "company": "连云港碱业有限公司", "region": "华东", "province": "江苏", "city": "连云港", "process": "联碱法", "capacity": 110, "capacity_year": 2025, "cap_note": "2025-05 投产", "listed": "未上市", "cost_level": "中", "source": "S07"}, {"group": "湖北双环", "company": "湖北双环科技股份有限公司", "region": "华中", "province": "湖北", "city": "应城", "process": "联碱法", "capacity": 30, "capacity_year": 2025, "cap_note": "2025-05 投产；另有智能化改造", "listed": "000707.SZ", "cost_level": "中", "source": "S07"}, {"group": "应城新都化工", "company": "应城新都化工有限责任公司", "region": "华中", "province": "湖北", "city": "应城", "process": "联碱法", "capacity": 70, "capacity_year": 2025, "cap_note": "2025 年底投产", "listed": "云图控股系", "cost_level": "中", "source": "S07,S01"}, {"group": "青海盐湖系", "company": "青海省纯碱集群（察尔汗/大柴旦）", "region": "西北", "province": "青海", "city": "格尔木/海西", "process": "氨碱法为主", "capacity": 400, "capacity_year": 2025, "cap_note": "外运 70% 依赖铁路、平均运距约 2500 公里", "listed": "—", "cost_level": "高（物流劣势）", "source": "S04"}, {"group": "福州耀隆", "company": "福州耀隆化工集团", "region": "东南", "province": "福建", "city": "福州", "process": "联碱法", "capacity": 0, "capacity_year": 2024, "cap_note": "2024 年退出 40 万吨", "listed": "未上市", "cost_level": "—", "source": "S06"}, {"group": "阜丰集团", "company": "阜丰（配套纯碱）", "region": "西北", "province": "内蒙古", "city": "呼伦贝尔", "process": "联碱法", "capacity": 30, "capacity_year": 2024, "cap_note": "2024 年新增（味精配套）", "listed": "—", "cost_level": "中", "source": "S06"}], "key_variables": [{"id": "V1", "name": "在建装置实际投产节点", "type": "供给", "watch": "金山潜江、雪天盐碱两套联碱装置的点火/投产公告", "threshold": "2026 年内任一套点火即上修有效新增 +40 万吨", "frequency": "周", "source": "S01,S07", "impact": "高"}, {"id": "V2", "name": "高成本装置停产/退出", "type": "供给", "watch": "氨碱企业检修转长期停车公告、协会产能变动统计", "threshold": "累计 ≥200 万吨/年退出 → 再平衡时点提前", "frequency": "月", "source": "S04,S06", "impact": "高"}, {"id": "V3", "name": "纯碱周度开工率与产量", "type": "供给", "watch": "隆众/卓创周度开工率、周产量", "threshold": "连续 4 周 <65% → 供应收缩信号", "frequency": "周", "source": "S03,S16,S13", "impact": "中"}, {"id": "V4", "name": "企业库存与重碱库存", "type": "库存", "watch": "样本企业总库存、重碱/轻碱库存结构", "threshold": "总库存 <150 万吨持续 3 周 → 去化确立", "frequency": "周", "source": "S03,S16,S22", "impact": "高"}, {"id": "V5", "name": "浮法与光伏日熔量", "type": "需求", "watch": "卓创浮法/光伏在产日熔、冷修与复产", "threshold": "浮法日熔 <14 万吨或光伏 <8 万吨 → 重碱需求进一步下修", "frequency": "周", "source": "S09,S21", "impact": "高"}, {"id": "V6", "name": "纯碱出口月度", "type": "需求", "watch": "海关出口量、出口均价", "threshold": "月均 <20 万吨 → 出口吸纳减弱，国内库存压力上升", "frequency": "月", "source": "S02,S18", "impact": "中"}, {"id": "V7", "name": "中盐奈曼 500 万吨项目进度", "type": "供给", "watch": "中盐化工项目进展公告", "threshold": "提前至 2027 年投产 → 2027 年供给判断上修", "frequency": "季", "source": "S05", "impact": "高"}, {"id": "V8", "name": "动力煤价格", "type": "成本", "watch": "秦皇岛 5500 大卡动力煤价格", "threshold": "上行 10% → 氨碱/联碱成本抬升 80–120 元/吨，出清加速", "frequency": "周", "source": "S03,S04", "impact": "中"}], "glossary": [{"term": "氨碱法", "def": "原盐+石灰石+氨循环，副产大量氯化钙废液，能耗高", "unit": ""}, {"term": "联碱法", "def": "侯氏联合制碱，1 吨纯碱副产约 1 吨氯化铵，副产品可对冲成本", "unit": ""}, {"term": "天然碱法", "def": "直接开采加工天然碱矿，成本与能耗显著低于合成法", "unit": ""}, {"term": "重质化率", "def": "重碱产量/总产量；浮法玻璃必须用重碱", "unit": "%"}, {"term": "有效产能", "def": "扣除长期停车、检修、合规限制后可实际释放的设计产能", "unit": "万吨/年"}, {"term": "名义新增", "def": "项目设计新增产能，不区分净新增、搬迁、置换、试车", "unit": "万吨/年"}], "brief": {"objective": "判断 2024–2026 年集中投产的纯碱新增产能，在未来 12–18 个月会把供应格局推向何种状态，以及结构上谁被替代。", "questions": [{"id": "Q1", "question": "现有产能的工艺结构、企业集中度与区域分布如何？", "answered": "partly", "note": "工艺占比与集中度有第三方数据；装置级全量清单需拼合"}, {"id": "Q2", "question": "2024–2026 年新增产能有多少已真实投产放量？", "answered": "yes", "note": "远兴二期、应城新都、连云港碱业、双环、德邦可逐一核验"}, {"id": "Q3", "question": "2027 年以后新增供给的确定性如何？", "answered": "partly", "note": "中盐奈曼 500 万吨已有公告，投产节点在 2027 年以后"}, {"id": "Q4", "question": "新增产能是净新增还是替代？替代发生在哪个成本档位？", "answered": "yes", "note": "成本曲线与亏损状态支持天然碱替代氨碱/联碱"}, {"id": "Q5", "question": "需求端能否吸收新增供给？", "answered": "partly", "note": "重碱受地产与光伏拖累，轻碱受碳酸锂支撑；部分下游产量缺失"}, {"id": "Q6", "question": "价格与库存对供应格局的反映程度如何？", "answered": "yes", "note": "价格已降至 1050–1150 元/吨，库存 180 万吨高位"}, {"id": "Q7", "question": "未来 12 个月哪些信号会推翻当前判断？", "answered": "yes", "note": "见结论反证条件与关键变量监测表"}], "scope_in": ["中国境内纯碱（含天然碱）产能、产量、库存、价格", "2022–2027E 产能与项目", "浮法/光伏/日用玻璃与碳酸锂等下游", "主要生产企业集团"], "scope_out": ["海外产能细分布局（仅作为出口吸纳能力提及）", "纯碱期货合约规则与套利策略", "小苏打、氯化铵的独立供需"], "assumptions": ["产能口径：以行业第三方（百川/卓创/隆众）设计产能为准，企业公告冲突时并列", "产量口径：国家统计局规上企业产量 + 周度机构口径", "需求口径：主要下游产量 × 单耗反算，单耗取行业通用值"]}, "questions": [{"id": "Q1", "question": "现有产能的工艺结构、企业集中度与区域分布如何？", "answered": "partly", "note": "工艺占比与集中度有第三方数据；装置级全量清单需拼合"}, {"id": "Q2", "question": "2024–2026 年新增产能有多少已真实投产放量？", "answered": "yes", "note": "远兴二期、应城新都、连云港碱业、双环、德邦可逐一核验"}, {"id": "Q3", "question": "2027 年以后新增供给的确定性如何？", "answered": "partly", "note": "中盐奈曼 500 万吨已有公告，投产节点在 2027 年以后"}, {"id": "Q4", "question": "新增产能是净新增还是替代？替代发生在哪个成本档位？", "answered": "yes", "note": "成本曲线与亏损状态支持天然碱替代氨碱/联碱"}, {"id": "Q5", "question": "需求端能否吸收新增供给？", "answered": "partly", "note": "重碱受地产与光伏拖累，轻碱受碳酸锂支撑；部分下游产量缺失"}, {"id": "Q6", "question": "价格与库存对供应格局的反映程度如何？", "answered": "yes", "note": "价格已降至 1050–1150 元/吨，库存 180 万吨高位"}, {"id": "Q7", "question": "未来 12 个月哪些信号会推翻当前判断？", "answered": "yes", "note": "见结论反证条件与关键变量监测表"}], "frameworks": {"management": {"audience_key": "management", "label": "管理层", "positioning": "面向管理层的专题研究框架：回答“格局变成什么样、我们在其中处于什么位置、未来 12 个月要做什么决定”。不展示推导过程，但每个判断都能一键展开到证据与计算。", "focus": "行业结构、关键变化、竞争位置、风险暴露、决策含义", "answer_style": "先给结论与决策含义，一个结论配 1–3 条最强证据；计算过程折叠", "chapters": [{"no": "01", "title": "一页看懂：供给格局的三个变化", "question": "把纯碱供应格局压缩成一页，最需要管理层记住什么？", "why": "管理层信息带宽有限，必须先把判断和决策含义放到第一屏", "verify": "新增产能是否已真实转化为产量；过剩是否见底；公司所处成本档位", "data": ["有效供给情景测算", "工艺成本阶梯", "库存与利润状态"], "method": "情景分层 + 结论-证据映射", "must_show": true}, {"no": "02", "title": "结构替代：低成本产能正在改写成本曲线", "question": "新增产能是“多出来”的，还是“替换掉”的？", "why": "决定价格中枢是下移还是短期反弹，决定自身产线是否需要调整", "verify": "天然碱占比变化、成本曲线位置、CR5 变化", "data": ["2022–2026E 工艺产能结构", "三工艺成本", "CR5"], "method": "结构对比 + 成本分位", "must_show": true}, {"no": "03", "title": "未来 12 个月的关键不确定性", "question": "哪些变量会决定供给是否真正宽松？", "why": "管理决策需要知道盯什么，而不是知道一切", "verify": "在建装置节点、高成本装置退出速度、出口吸纳", "data": ["在建/规划项目台账", "出口量", "检修计划"], "method": "关键变量排序与触发条件", "must_show": true}, {"no": "04", "title": "对本公司的影响与决策建议", "question": "我们会被替代吗？应该扩产、改造还是收缩？", "why": "这是管理层唯一真正要拍板的问题", "verify": "本公司成本分位、区域、客户结构", "data": ["成本分位", "区域供需", "下游结构"], "method": "暴露度打分表", "must_show": true}, {"no": "05", "title": "风险清单与预警信号", "question": "出现什么信号时，需要重新评估本结论？", "why": "避免把短期数据波动当作趋势反转", "data": ["月度指标阈值"], "method": "触发式预警清单", "must_show": true}], "suppressed_topic_packs": ["industry_chain", "process", "price_history"], "evidence_policy": "每个结论 1–3 条最强证据；计算折叠；不罗列行业常识", "length_target": "8–12 屏；核心图 3–4 张；KPI ≤ 6", "chart_preferences": ["有效供给情景", "工艺成本阶梯", "产能工艺堆叠"]}, "industry-researcher": {"audience_key": "industry-researcher", "label": "产业研究员", "positioning": "面向产业研究员的专题研究框架：完整展示数据口径、计算式、参数取值与敏感性，严格区分事实/计算/解释/判断，并给出可证伪条件。", "focus": "数据、计算、供需平衡、关键变量、可证伪假设", "answer_style": "结论 + 计算式 + 参数取值 + 敏感性 + 反证条件", "chapters": [{"no": "01", "title": "研究问题、范围与数据口径", "question": "要回答什么、不回答什么、用什么口径？", "why": "口径冲突是本类判断最大的误差来源，必须先声明", "verify": "问题边界清晰、口径冲突已列明", "data": ["数据源清单", "口径对照表"], "method": "研究设计", "must_show": true}, {"no": "02", "title": "现有产能结构、工艺与企业集中度", "question": "产能由谁、用什么工艺、在哪里构成？", "why": "所有后续判断都基于这张底表", "verify": "工艺占比、企业集团产能、装置清单", "data": ["企业/装置产能清单", "工艺产能占比", "成本曲线"], "method": "自下而上加总 + 交叉核对", "must_show": true}, {"no": "03", "title": "在建与新投产项目核验", "question": "2024–2026 年每个项目现在到底处于什么状态？", "why": "“预计投产”常被误当作“已新增供给”", "verify": "投产日期、状态依据、是否净新增", "data": ["项目台账", "公告", "行业资讯"], "method": "三级状态分级 + 证据强度评级", "must_show": true}, {"no": "04", "title": "预计投产 ≠ 新增供给：有效供给转化测算", "question": "名义新增产能中有多少能在 12–18 个月内变成有效供给？", "why": "这是本报告的核心计算", "verify": "转化率假设是否有依据、敏感性如何", "data": ["转化参数", "年度平衡", "情景表"], "method": "产能×转化率×时间权重，三情景", "must_show": true}, {"no": "05", "title": "成本曲线与产能出清阈值", "question": "哪些产能会被替代？退出速度受什么约束？", "why": "决定“过剩”会持续多久", "verify": "工艺成本、毛利、退出约束", "data": ["工艺成本", "毛利", "退出记录"], "method": "成本分位 + 退出条件判定", "must_show": true}, {"no": "06", "title": "需求侧约束：玻璃与轻碱需求", "question": "需求端能否吸收新增供给？重碱和轻碱分别怎么走？", "why": "供给格局的最终表达在平衡表", "verify": "浮法/光伏日熔、竣工面积、轻碱下游产量", "data": ["玻璃日熔", "地产竣工", "碳酸锂/小苏打"], "method": "下游单耗反算需求", "must_show": true}, {"no": "07", "title": "价格、库存与利润的历史校验", "question": "价格与库存是否已经反映供给宽松？", "why": "价格是市场对供需的定价，缺了它结论只停留在产能层面", "verify": "现货/期货价格、库存、毛利关系", "data": ["价格序列", "库存序列", "毛利序列"], "method": "描述统计 + 分位 + 阶段对比", "must_show": false}, {"no": "08", "title": "结论、反证条件与后续核验", "question": "结论成立的边界是什么，什么会推翻它？", "why": "研究员交付的是可被验证的判断，不是结论本身", "verify": "每条结论可追溯、可证伪", "data": ["结论-证据-计算映射"], "method": "结论分级（事实/计算/解释/判断）", "must_show": true}], "suppressed_topic_packs": [], "evidence_policy": "每条结论≥2 条独立证据；计算必须给公式与参数来源；不确定判断必须写置信度与反证条件", "length_target": "20–30 屏；图表 10+；数据表全量可展开", "chart_preferences": ["产能工艺堆叠", "年度供需平衡", "价格-库存双轴", "成本曲线"]}, "sales": {"audience_key": "sales", "label": "销售", "positioning": "面向销售的专题研究框架：回答“供给变多会不会让客户压价、哪个区域/客户先松动、我该怎么报价与备货”。重点是价格弹性与区域差异，不展开成本推导。", "focus": "现货价格与历史分位、新增供给到货时点与区域、客户所在下游景气度、压价理由与回应依据、报价与备货建议", "answer_style": "一句话结论 + 可对客户直说的依据 + 价格区间；避免公式", "suppressed_topic_packs": ["process", "policy", "company"], "evidence_policy": "价格类证据必须带日期、规格、区域、含税口径；客户压价类判断需给 1 条可引用依据", "length_target": "6 章；核心图 2–3 张", "chart_preferences": ["价格走势与分位", "区域价差", "下游景气"], "chapters": [{"no": "01", "title": "现在什么价、在历史上什么位置", "question": "当前重碱/轻碱价格处于近 5 年什么水平？还会跌多少？", "why": "销售的每一句报价都要有价格坐标，否则无法回应客户“还会不会再降”", "verify": "现价相对年均价与历史低点的距离", "data": ["价格点位（日频）", "年度均价", "历史低点"], "method": "分位定位 + 年均价对比", "must_show": true}, {"no": "02", "title": "供给端：新增产能什么时候到、到哪个区域", "question": "未来 6–12 个月有哪些装置要投产？落在我的销售区域吗？", "why": "客户会拿“你们那边又要上新装置”压价，必须能说清真实到货节奏", "verify": "在建项目的时间节点与区域归属", "data": ["项目台账（状态与时间）", "区域产能分布"], "method": "项目三态核验 + 区域映射"}, {"no": "03", "title": "需求端：我的客户在下游过得好不好", "question": "浮法玻璃、光伏玻璃、碳酸锂客户的景气度如何变化？", "why": "决定客户还能不能接货、能接受什么价", "verify": "下游日熔量、开工、产量是否同步走弱", "data": ["玻璃日熔量", "地产竣工", "消费结构"], "method": "下游景气分解"}, {"no": "04", "title": "哪些区域与客户会先松动", "question": "过剩压力最早出现在哪个区域、哪类客户？", "why": "决定销售资源的投放顺序与降价的先后", "verify": "区域价差、库存分布、客户账期", "data": ["区域价差", "库存", "出口分流"], "method": "区域平衡表 + 价差信号"}, {"no": "05", "title": "客户会怎么压价，我怎么回应", "question": "客户最可能用哪三个理由压价？每个理由的事实依据是什么？", "why": "把研究结论转成可直说的话术，是销售版的核心价值", "verify": "压价理由是否被数据支持", "data": ["供给节奏", "成本曲线", "库存与开工"], "method": "理由-证据对照 + 反驳边界"}, {"no": "06", "title": "报价与备货建议", "question": "未来一个季度怎么报、要不要压货或降库存？", "why": "研究的落点是动作", "verify": "建议是否有明确的价格区间与触发条件", "data": ["价格区间", "库容与周转", "检修计划"], "method": "情景建议 + 触发条件", "must_show": true}]}, "procurement": {"audience_key": "procurement", "label": "采购", "positioning": "面向采购的专题研究框架：回答“什么时候买、买多少、要不要锁价、供应商的涨价理由是否站得住”。重点是成本支撑位与议价窗口，不写宏观叙事。", "focus": "现价相对完全成本与现金成本的位置、供给节奏、库存与开工、进口与替代、采购窗口与风险", "answer_style": "结论 + 成本支撑位 + 可验证的采购触发信号", "suppressed_topic_packs": ["region", "policy"], "evidence_policy": "成本数据需注明是完全成本还是现金成本；价格必须带日期与规格", "length_target": "6 章；核心图 2–3 张", "chart_preferences": ["成本阶梯", "价格与成本差", "库存与开工"], "chapters": [{"no": "01", "title": "当前价与成本支撑位", "question": "现价跌到哪条成本线？还有多少下行空间？", "why": "采购的第一问是“还会不会更便宜”，答案在成本曲线里", "verify": "现价相对天然碱/联碱/氨碱完全成本与现金成本的位置", "data": ["现货价格", "三工艺成本", "利润"], "method": "成本阶梯定位", "must_show": true}, {"no": "02", "title": "谁在亏、亏多久会停", "question": "哪些装置在亏损？亏损到什么程度才会减产或退出？", "why": "决定供给收缩的临界点，也就是价格的底", "verify": "现金流成本是否被击穿；历史上减产与亏损的关系", "data": ["分工艺利润", "现金成本", "开工率"], "method": "亏损-减产阈值分析"}, {"no": "03", "title": "供给节奏：检修与新增", "question": "未来两个季度供给是增还是减？", "why": "短期采购时点由供给节奏决定", "verify": "检修与复产、新增投产的真实时间", "data": ["周产量与开工", "项目台账", "检修计划"], "method": "供给节奏表"}, {"no": "04", "title": "库存与议价窗口", "question": "库存高低决定我能不能压价，现在处于什么位置？", "why": "库存是供应商议价能力的直接体现", "verify": "库存同比、季节性、厂内与社会库存差异", "data": ["库存序列", "季节性", "厂内/社会口径"], "method": "季节性对比 + 口径并列"}, {"no": "05", "title": "进口与替代方案", "question": "有没有更便宜或更稳的替代来源？", "why": "议价能力来自选项", "verify": "进口量、内外价差、替代品价差", "data": ["进口量与价", "替代品价格", "运费"], "method": "替代经济性对比"}, {"no": "06", "title": "采购窗口与风险", "question": "什么时候下单、锁多久、风险是什么？", "why": "研究要落到动作", "verify": "建议是否给出价格区间与失效条件", "data": ["价格区间", "供给节奏", "库存"], "method": "情景 + 触发条件", "must_show": true}]}, "rnd": {"audience_key": "rnd", "label": "研发", "positioning": "面向研发的专题研究框架：回答“工艺路线会不会被替代、新项目的技术选择意味着什么、我们要不要跟进某条路线”。重点是工艺成本、原料可得性与替代边界，不做价格预测。", "focus": "工艺路线图谱、工艺成本与能耗、原料可得性与地域约束、替代关系与技术边界、在建项目的技术含义", "answer_style": "技术判断 + 工程可行性与经济可行性的区分", "suppressed_topic_packs": ["region", "price_history"], "evidence_policy": "工艺参数需给来源；技术判断要标注是工程可行性还是经济可行性", "length_target": "6 章；核心图 2–3 张", "chart_preferences": ["工艺成本对比", "产能工艺结构", "原料单耗"], "chapters": [{"no": "01", "title": "工艺路线图谱", "question": "这个产品有几条主流工艺路线？各自的原理与适用边界是什么？", "why": "研发要判断替代，先要有完整的路线地图", "verify": "路线是否完整、是否有新兴路线被遗漏", "data": ["工艺定义", "原料与产品", "副产物"], "method": "路线分类 + 边界条件"}, {"no": "02", "title": "各路线成本与能耗对比", "question": "不同工艺的完全成本差多大？差距来自哪里？", "why": "决定替代是否会真实发生", "verify": "成本差是否稳定、是否依赖单一原料价格", "data": ["工艺成本", "原料单耗", "能耗"], "method": "成本分解", "must_show": true}, {"no": "03", "title": "原料可得性与地域约束", "question": "新工艺依赖的原料在哪些区域可得？能否支撑大规模扩产？", "why": "技术可行不等于资源可行", "verify": "资源储量、开采资质、运输半径", "data": ["原料资源分布", "产能区域分布", "运输成本"], "method": "资源-产能匹配"}, {"no": "04", "title": "替代关系与技术边界", "question": "低成本工艺能替代多少高成本产能？边界在哪？", "why": "替代速度决定企业技术选择的紧迫性", "verify": "成本差能否覆盖改造与搬迁成本", "data": ["成本曲线", "产能结构", "改造投资"], "method": "替代边界测算"}, {"no": "05", "title": "在建项目的技术选择意味着什么", "question": "行业头部在投什么工艺？这暗示了什么技术方向？", "why": "同行的技术选择是最便宜的研发情报", "verify": "新项目的工艺占比变化是否有趋势性", "data": ["项目工艺分布", "工艺占比变化"], "method": "趋势比对"}, {"no": "06", "title": "判断与不确定性", "question": "我们要不要跟进？前提是什么？", "why": "研究要支撑技术决策", "verify": "建议是否给出前提条件与观察指标", "data": ["成本与替代边界", "技术风险"], "method": "决策矩阵 + 观察指标", "must_show": true}]}}, "confs": ["CC-01", "CC-02", "CC-03", "CC-04", "CC-05", "CC-06", "CC-07", "CC-08"]}</script>
+<script>
+/* =========================================================================
+   1. 数据层：模板只读取 PAYLOAD，不写死任何业务内容
+   ========================================================================= */
+const PAYLOAD = JSON.parse(document.getElementById('payload').textContent);
+const META = PAYLOAD.meta, PROF = PAYLOAD.profile, DS = PAYLOAD.datasets;
+const SRC = PAYLOAD.sources, GAPS = PAYLOAD.gaps, CALCS = PAYLOAD.calculations;
+const CONC = PAYLOAD.conclusions;
+const CHARTS = [];            // 已渲染的图表实例
+const LS_KEY = 'ctr-order-' + (META.slug || 'default');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmtSmart(v, key){
+  const n = Number(v);
+  if (isNaN(n)) return '—';
+  if (key === 'year' || key === 'date') return String(v);                 // 年份不加千分位
+  if (Number.isInteger(n) && Math.abs(n) >= 1900 && Math.abs(n) <= 2100 && key !== 'value' && key !== 'share') return String(n);
+  return n.toLocaleString('zh-CN', {maximumFractionDigits: 2});
+}
+const fmt = (v, d) => (v == null || v === '' || isNaN(v)) ? '—' : Number(v).toLocaleString('zh-CN', {maximumFractionDigits: d == null ? 2 : d});
+const $ = s => document.querySelector(s);
+const $id = s => document.getElementById(s);
+
+/* =========================================================================
+   2. 证据与计算面板
+   ========================================================================= */
+function srcBadge(sid){
+  if (SRC[sid]) { const s = SRC[sid]; return `<span class="badge b-fact" data-src="${sid}">${esc(sid)}·${esc(s.tier||'')}</span>`; }
+  if (GAPS[sid]) return `<span class="badge b-gap" data-gap="${sid}">${esc(sid)}·缺口</span>`;
+  return `<span class="badge b-conf">${esc(sid)}</span>`;
+}
+function evCard(sid){
+  const s = SRC[sid];
+  if (s) return `<div class="ev"><div class="et"><span class="badge b-fact">${esc(sid)}</span>
+    <span class="badge b-conf">${esc(s.kind||'')}</span><span class="badge b-conf">证据${esc(s.tier||'')}</span>
+    <span style="font-size:11.5px;color:var(--txt3)">${esc(s.date||'')}</span></div>
+    <p><b>${esc(s.org)}</b>｜${esc(s.title)}</p>
+    ${s.note?`<p style="margin-top:5px">口径：${esc(s.note)}</p>`:''}
+    ${s.url?`<a class="url" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url)}</a>`:''}</div>`;
+  const g = GAPS[sid];
+  if (g) return `<div class="ev"><div class="et"><span class="badge b-gap">${esc(sid)}</span><span class="badge b-conf">数据缺口·${esc(g.severity)}</span></div>
+    <p><b>${esc(g.topic)}</b>：缺 ${esc(g.missing)}</p>
+    <p style="margin-top:5px">原因：${esc(g.why||'')}</p>
+    <p style="margin-top:5px">影响：${esc(g.impact||'')}</p>
+    <p style="margin-top:5px">下一步：${esc(g.next_step||'')}</p></div>`;
+  return `<div class="ev"><p>未登记的引用 ${esc(sid)}</p></div>`;
+}
+function calcBlock(cid, compact){
+  const c = CALCS[cid]; if (!c) return '';
+  return `<div class="calcbox"><div class="ctop"><h4>${esc(c.id)} · ${esc(c.title)}</h4>
+    <span class="badge ${TYPE_CLASS[c.statement_type]||'b-conf'}">${esc(c.statement_type||'计算')}</span></div>
+    <div class="formula">${esc(c.formula)}</div>
+    <div class="kv"><span class="k">输入参数</span><span>${esc(c.inputs)}</span>
+      <span class="k">计算结果</span><span><b>${esc(c.output)}</b></span>
+      <span class="k">口径说明</span><span>${esc(c.result_note||'—')}</span></div>
+    ${compact?'':`<div class="et" style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">${(c.evidence||[]).map(srcBadge).join('')}</div>`}
+  </div>`;
+}
+function openPanel(html, title){
+  $id('panel-t').innerHTML = title || '证据';
+  $id('panel-b').innerHTML = html;
+  $id('panel').classList.add('on'); $id('scrim').classList.add('on');
+}
+function closePanel(){ $id('panel').classList.remove('on'); $id('scrim').classList.remove('on'); }
+function closeModal(){ $id('modal').classList.remove('on'); }
+const TYPE_CLASS = {'事实':'b-fact','计算':'b-calc','解释':'b-expl','判断':'b-judge'};
+const CONF_CLASS = {'高':'b-conf','中':'b-conf','中低':'b-judge','低':'b-gap'};
+
+function showConclusion(cid){
+  const c = CONC.find(x => x.id === cid); if (!c) return;
+  const html = `<div class="ev" style="border-color:rgba(77,163,255,.3)">
+      <div class="et"><span class="badge ${TYPE_CLASS[c.type]}">${esc(c.type)}</span>
+      <span class="badge ${CONF_CLASS[c.confidence]||'b-conf'}">置信度 ${esc(c.confidence)}</span></div>
+      <p style="font-size:13.5px;color:#dbe4f5">${esc(c.text)}</p></div>
+    <h4 style="margin:14px 0 8px;font-size:13px">支撑证据（${(c.evidence||[]).length}）</h4>
+    ${(c.evidence||[]).map(evCard).join('')}
+    <h4 style="margin:16px 0 8px;font-size:13px">计算过程（${(c.calcs||[]).length}）</h4>
+    ${(c.calcs||[]).map(x => calcBlock(x)).join('') || '<p style="color:var(--txt3);font-size:12.5px">本结论不含独立计算，直接引用来源。</p>'}
+    <h4 style="margin:16px 0 8px;font-size:13px">反证条件</h4>
+    <div class="callout gap">${esc(c.falsify || '未登记——该结论缺少可证伪条件，应视为待验证。')}</div>`;
+  openPanel(html, '结论 ' + c.id);
+}
+
+/* =========================================================================
+   3. 图表：内联 SVG，无外部依赖
+   ========================================================================= */
+const PALETTE = ['#4da3ff','#22c98a','#f6b73c','#9b8cff','#38d6e0','#ff6b7a','#f472b6','#8aa0c8'];
+function mk(tag, attrs, text){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  if (text != null) el.textContent = text;
+  return el;
+}
+function niceMax(v){ if (v <= 0) return 10; const p = Math.pow(10, Math.floor(Math.log10(v))); const n = v / p; const m = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10; return m * p; }
+
+const RENDERERS = {
+  /* 分组柱状：数据 [{label, [band]: value}] with bands 列表 */
+  stacked_bar(data){
+    const rows = data.rows || [];
+    const bands = (data.bands && data.bands.length) ? data.bands
+      : (data.keys || []).map(x => (typeof x === 'string' ? x : x.k));
+    const max = niceMax(Math.max(100, ...rows.map(r => bands.reduce((s,b)=>s+(+r[b]||0),0))));
+    const bw = 70/rows.length;
+    let out = '';
+    rows.forEach((r,i)=>{
+      const x = 15 + i*bw; let y = 92;
+      bands.forEach((b,j)=>{
+        const v = +r[b]||0; if (!v) return;
+        const h = Math.max(0, 80*v/max);
+        out += `<rect x="${x}" y="${y-h}" width="${bw*0.62}" height="${h}" fill="${PALETTE[j%PALETTE.length]}" opacity="0.88" rx="0.6"><title>${esc(r.label||r.year)} ${esc(b)}：${fmt(v,1)}</title></rect>`;
+        y -= h;
+      });
+      out += `<text x="${x+bw*0.31}" y="${96}" font-size="2.6" fill="#73829e" text-anchor="middle">${esc(r.label||r.year)}</text>`;
+    });
+    out += `<line x1="13" y1="92" x2="98" y2="92" stroke="rgba(255,255,255,.18)" stroke-width="0.25"/>`;
+    out += `<text x="13" y="6" font-size="2.4" fill="#73829e">最大值 ${fmt(max,0)}</text>`;
+    return {inner: out, viewBox: '0 0 100 100', legend: bands.map(b => (COL_NAMES[b] && COL_NAMES[b] !== '') ? COL_NAMES[b] : String(b))};
+  },
+  /* 柱状（支持正负值）：rows = [{label, value}] */
+  bar_chart(data){
+    const rows = data.rows || [], all = rows.map(r => +r.value).filter(v=>!isNaN(v));
+    const maxP = Math.max(0, ...all), minN = Math.min(0, ...all);
+    const span = (maxP - minN) || 1;
+    const bw = 88 / Math.max(rows.length, 1);
+    const zeroY = 12 + 78 * (maxP / span);
+    let out = `<line x1="4" y1="${zeroY}" x2="98" y2="${zeroY}" stroke="rgba(255,255,255,.2)" stroke-width="0.25"/>`;
+    rows.forEach((r, i) => {
+      const v = +r.value; if (isNaN(v)) return;
+      const x = 6 + i * bw + bw * 0.22;
+      const h = Math.abs(78 * v / span);
+      const y = v >= 0 ? zeroY - h : zeroY;
+      out += `<rect x="${x}" y="${y}" width="${bw * 0.56}" height="${Math.max(0.5, h)}" rx="0.8" fill="${v < 0 ? '#ff6b7a' : '#22c98a'}" opacity="0.85"><title>${esc(r.label)}：${fmt(v)}</title></rect>`;
+      out += `<text x="${x + bw * 0.28}" y="${v >= 0 ? y - 1 : y + h + 3.2}" font-size="2.3" fill="#e9eefb" text-anchor="middle">${fmt(v)}</text>`;
+      const lab = String(r.label || '');
+      const short = lab.length > 9 ? lab.slice(0, 8) + '…' : lab;
+      out += `<text x="${x + bw * 0.28}" y="96" font-size="2.1" fill="#73829e" text-anchor="middle">${esc(short)}<title>${esc(lab)}</title></text>`;
+    });
+    return {inner: out, viewBox: '0 0 100 100', legend: []};
+  },
+  /* 线型：{points:[{label, v1, v2...}], keys:[{k,name}]} —— 空值断开，不插值 */
+  line(data){
+    data = data || {};
+    // 兼容三种输入：{points,keys}、{rows,keys}、直接数组 [{label, v1, v2}]
+    const pts = data.points || (Array.isArray(data) ? data : (data.rows || []));
+    const raw = Array.isArray(data.keys) ? data.keys
+              : (Array.isArray(data.bands) ? data.bands
+              : (typeof data.keys === 'string' ? data.keys.split(',') : []));
+    const keys = raw.map(x => (typeof x === 'string' ? { k: x, name: COL_NAMES[x] || x } : x));
+    if (!keys.length) keys.push(...lineKeys({}, pts));
+    const all = pts.flatMap(p => keys.map(k => +p[k.k])).filter(v=>!isNaN(v));
+    const max = niceMax(Math.max(...all, 1)), min = Math.min(0, ...all);
+    const span = max - min || 1;
+    let out = '', legend = [];
+    keys.forEach((k,ki)=>{
+      const col = PALETTE[ki%PALETTE.length];
+      let d = '', started = false;
+      pts.forEach((p,i)=>{
+        const v = +p[k.k]; if (isNaN(v)) { started = false; return; }
+        const x = 8 + 88*(pts.length>1 ? i/(pts.length-1) : 0.5);
+        const y = 90 - 78*(v-min)/span;
+        d += (started?' L':' M') + x.toFixed(2) + ' ' + y.toFixed(2); started = true;
+      });
+      out += `<path d="${d}" fill="none" stroke="${col}" stroke-width="0.8"/>`;
+      pts.forEach((p,i)=>{
+        const v = +p[k.k]; if (isNaN(v)) return;
+        const x = 8 + 88*(pts.length>1 ? i/(pts.length-1) : 0.5);
+        const y = 90 - 78*(v-min)/span;
+        out += `<circle cx="${x}" cy="${y}" r="1.1" fill="${col}"><title>${esc(p.label||p.date)} ${esc(k.name||k.k)}：${fmt(v)}</title></circle>`;
+      });
+      legend.push(k.name || k.k);
+    });
+    pts.forEach((p,i)=>{
+      const x = 8 + 88*(pts.length>1 ? i/(pts.length-1) : 0.5);
+      const lab = String(p.label || p.date || '');
+      out += `<text x="${x}" y="96" font-size="2.2" fill="#73829e" text-anchor="middle">${esc(lab.length>7?lab.slice(0,7)+'…':lab)}<title>${esc(lab)}</title></text>`;
+    });
+    out += `<line x1="6" y1="90" x2="97" y2="90" stroke="rgba(255,255,255,.18)" stroke-width="0.25"/>`;
+    out += `<text x="6" y="6" font-size="2.4" fill="#73829e">最大值 ${fmt(max,0)}</text>`;
+    return {inner: out, viewBox:'0 0 100 100', legend};
+  },
+  bar(data){
+    return RENDERERS.bar_chart({rows: data.items || data.rows || []});
+  },
+  dual_axis(data){ return RENDERERS.line({points: data.points, keys: data.keys}); },
+  donut(data){
+    const items = data.items; const total = items.reduce((s,d)=>s+(+d.value||0),0) || 1;
+    let acc = 0, out = '', cx = 34, cy = 50, r = 26, ir = 15;
+    items.forEach((d,i)=>{
+      const frac = (+d.value||0)/total; const a0 = acc*2*Math.PI - Math.PI/2; acc += frac; const a1 = acc*2*Math.PI - Math.PI/2;
+      const large = frac > .5 ? 1 : 0;
+      const p = (ang, rr) => [cx + rr*Math.cos(ang), cy + rr*Math.sin(ang)];
+      const [x0,y0] = p(a0,r), [x1,y1]=p(a1,r), [x2,y2]=p(a1,ir), [x3,y3]=p(a0,ir);
+      out += `<path d="M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1} L${x2} ${y2} A${ir} ${ir} 0 ${large} 0 ${x3} ${y3} Z" fill="${PALETTE[i%PALETTE.length]}" opacity="0.9"><title>${esc(d.label)}：${fmt(d.value,1)}%</title></path>`;
+      out += `<text x="${78+4}" y="${20+i*4.4}" font-size="2.7" fill="#a8b6d1">${esc(d.label)} ${fmt(d.value,1)}%</text>`;
+      out += `<rect x="${76}" y="${17.6+i*4.4}" width="1.6" height="1.6" fill="${PALETTE[i%PALETTE.length]}"/>`;
+    });
+    out += `<text x="${cx}" y="${cy-1}" font-size="3" fill="#73829e" text-anchor="middle">结构</text>`;
+    return {inner: out, viewBox:'0 0 100 100', legend: items.map(d=>d.label)};
+  },
+  range_bar(data){
+    const rows = data.rows, max = niceMax(Math.max(...rows.map(r=>r.high||r.max||0), data.ref||0));
+    let out = ''; const rowH = 70/rows.length;
+    rows.forEach((r,i)=>{
+      const y = 12 + i*rowH + rowH*0.25, h = rowH*0.5;
+      const x1 = 26 + 68*(r.low||r.min)/max, x2 = 26 + 68*(r.high||r.max)/max;
+      out += `<rect x="${x1}" y="${y}" width="${Math.max(0.4,x2-x1)}" height="${h}" rx="1.2" fill="${PALETTE[i%PALETTE.length]}" opacity="0.75"><title>${esc(r.label)}：${fmt(r.low)}–${fmt(r.high)}</title></rect>`;
+      out += `<text x="24" y="${y+h*0.75}" font-size="2.6" fill="#a8b6d1" text-anchor="end">${esc(r.label)}</text>`;
+      out += `<text x="${x2+1}" y="${y+h*0.75}" font-size="2.3" fill="#73829e">${fmt(r.low,0)}–${fmt(r.high,0)}</text>`;
+    });
+    if (data.ref) { const xr = 26 + 68*data.ref/max;
+      out += `<line x1="${xr}" y1="8" x2="${xr}" y2="88" stroke="#ff6b7a" stroke-width="0.4" stroke-dasharray="1.2 1"/>`;
+      out += `<text x="${xr+1}" y="11" font-size="2.3" fill="#ff6b7a">现价 ${fmt(data.ref,0)}</text>`; }
+    return {inner: out, viewBox:'0 0 100 100', legend: []};
+  },
+  waterfall(data){
+    const steps = data.steps, max = niceMax(Math.max(...steps.map(s=>Math.abs(s.value))));
+    let out = '', acc = 0; const bw = 84/steps.length;
+    steps.forEach((s,i)=>{
+      const x = 8 + i*bw, v = +s.value;
+      const isTotal = s.total != null ? true : /净新增|合计/.test(s.step);
+      const start = isTotal ? 0 : acc;
+      const end = isTotal ? v : acc + v;
+      const y1 = 92 - 70*Math.min(start,end)/max, y2 = 92 - 70*Math.max(start,end)/max;
+      out += `<rect x="${x+bw*0.2}" y="${y2}" width="${bw*0.6}" height="${Math.max(0.6,y1-y2)}" fill="${isTotal?'#4da3ff':(v<0?'#ff6b7a':'#22c98a')}" opacity="0.85" rx="0.6"><title>${esc(s.step)}：${fmt(v,0)}</title></rect>`;
+      out += `<text x="${x+bw*0.5}" y="${95}" font-size="1.9" fill="#73829e" text-anchor="middle">${esc(s.step).slice(0,7)}</text>`;
+      out += `<text x="${x+bw*0.5}" y="${y2-1}" font-size="2.1" fill="#e9eefb" text-anchor="middle">${fmt(v,0)}</text>`;
+      if (!isTotal) acc = end;
+    });
+    return {inner: out, viewBox:'0 0 100 100', legend: []};
+  }
+};
+
+function renderChart(box, spec){
+  const host = box.querySelector('.cnv');
+  try { renderChartInner(host, box, spec); }
+  catch (e) {
+    host.dataset.empty = '1';
+    host.textContent = '图表渲染失败：' + (e && e.message) + '（数据键 ' + (spec && spec.data_key) + '）';
+    console.error('[chart]', spec && spec.data_key, e);
+  }
+}
+function renderChartInner(host, box, spec){
+  const raw = DS[spec.data_key];
+  if (!raw || (Array.isArray(raw) && !raw.length)) { host.dataset.empty = '1'; host.textContent = '该数据集为空或缺失——请检查 case.json'; return; }
+  let norm = raw;
+  switch (spec.chart_type){
+    case 'stacked_bar': norm = Array.isArray(raw) ? {rows: raw, bands: spec.bands || Object.keys(raw[0]||{}).filter(k=>k!=='year'&&k!=='label'&&k!=='note')} : raw; break;
+    case 'bar': norm = Array.isArray(raw) ? {items: raw.map(r=>({label:r.label||r.name||r.scenario||r.route, value:+(r.value!=null?r.value:r.capacity!=null?r.capacity:r.profit!=null?r.profit:r.count), note:r.note||r.assumption||r.basis||''}))} : raw; break;
+    case 'line': norm = Array.isArray(raw) ? {points: raw, keys: lineKeys(spec, raw)} : raw; break;
+    case 'dual_axis': norm = Array.isArray(raw) ? {points: raw, keys: lineKeys(spec, raw)} : raw; break;
+    case 'donut': norm = Array.isArray(raw) ? {items: raw.map(r=>({label:r.name, value:+r.share}))} : raw; break;
+    case 'range_bar': norm = Array.isArray(raw) ? {rows: raw.map(r=>({label:r.label||r.process, low:r.low, high:r.high})) , ref: spec.ref} : raw;
+                         if (spec.ref != null) norm.ref = spec.ref; break;
+    case 'waterfall': norm = Array.isArray(raw) ? {steps: raw.map(s=>({step:s.step||s.label, value:+s.value}))} : raw; break;
+  }
+  if (spec.chart_type === 'range_bar' && spec.ref == null && norm.ref == null) norm.ref = META.refPrice;
+  const r = (RENDERERS[spec.chart_type] || RENDERERS.line)(norm);
+  const vb = r.viewBox || '0 0 100 100';
+  // 关键修复：SVG 直接注入，保留内部元素
+  host.innerHTML = '<svg viewBox="' + vb + '" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible">' + r.inner + '</svg>';
+  const lg = box.querySelector('.legend');
+  if (lg) lg.innerHTML = (r.legend||[]).map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:5px;margin-right:12px;font-size:11.5px;color:#a8b6d1"><i style="width:9px;height:9px;border-radius:2px;background:${PALETTE[i%PALETTE.length]};display:inline-block"></i>${esc(t)}</span>`).join('');
+  CHARTS.push({box, spec});
+}
+function inferKeys(row){
+  if (!row) return [];
+  const skip = new Set(['label','date','year','note','source','value','shahe']);
+  const ks = Object.keys(row).filter(k=>!skip.has(k) && typeof row[k] === 'number');
+  if (!ks.length) return [{k: 'value', name: '数值'}];      // 兜底：保证至少有一条序列
+  return ks.map(k=>({k, name: COL_NAMES[k] || k}));
+}
+/* 推断折线图的数值序列；某个字段在一半以上行有数值时才纳入 */
+function lineKeys(spec, rows){
+  if (spec && Array.isArray(spec.keys) && spec.keys.length) return spec.keys;
+  const keys = [];
+  const first = (rows && rows[0]) || {};
+  Object.keys(first).forEach(k=>{
+    if (['label','date','year','note','source'].includes(k)) return;
+    const ok = rows.filter(r => typeof r[k] === 'number').length;
+    if (ok >= Math.max(1, Math.ceil(rows.length * 0.5))) keys.push({k, name: COL_NAMES[k] || k});
+  });
+  return keys.length ? keys : inferKeys(first);
+}
+function showRawData(dataKey, title, spec){
+  const raw = DS[dataKey];
+  const rows = flatten(raw);
+  const cols = rows.length ? Object.keys(rows[0]) : [];
+  let html = `<div class="rawhint">数据集：<span class="mono">${esc(dataKey)}</span> · ${rows.length} 行 · ${cols.length} 列 · 可复制为制表符文本粘贴到 Excel</div>`;
+  if (!rows.length) {
+    html += `<div class="callout gap">该数据集为空或不存在（data_key = ${esc(dataKey)}）。这不是“没有变化”，而是“没有数据”，请按资料缺口处理。</div>`;
+  } else {
+    html += `<div style="margin-bottom:8px"><button class="ghost" onclick="copyTable()">复制为 TSV</button></div>`;
+    html += `<table class="tb" id="rawtb"><thead><tr>${cols.map(c=>`<th>${esc(COL_NAMES[c]||c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td class="${typeof r[c]==='number'?'num':''}">${esc(r[c]==null?'':(typeof r[c]==='number'?fmtSmart(r[c],c):r[c]))}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    html += `<div class="rawhint" style="margin-top:8px">列名：${cols.map(c=>esc(c)+(COL_NAMES[c]?'（'+esc(COL_NAMES[c])+'）':'')).join(' · ')}</div>`;
+  }
+  if (spec && spec.source && spec.source.length) {
+    html += `<div class="rawhint" style="margin-top:12px">数据来源：</div>${spec.source.map(evCard).join('')}`;
+  }
+  if (spec && spec.conclusion_ids && spec.conclusion_ids.length){
+    html += `<div class="rawhint" style="margin-top:12px">该图支撑的结论：</div>` +
+      spec.conclusion_ids.map(cid=>{ const c=CONC.find(x=>x.id===cid); return c?`<div class="concl" onclick="closeModal();showConclusion('${cid}')"><div class="txt">${esc(c.text)}</div></div>`:''; }).join('');
+  }
+  $id('modal-t').textContent = '原始数据 · ' + (title || dataKey);
+  $id('modal-b').innerHTML = html;
+  $id('modal').classList.add('on');
+}
+const COL_NAMES = {
+  label:'标签', date:'日期', year:'年份', value:'数值', note:'备注', source:'来源ID',
+  total:'合计', heavy:'重碱', light:'轻碱', output:'周产量(万吨)', util:'开工率(%)',
+  shahе:'沙河重碱均价', shahe:'沙河重碱均价', float_tpd:'浮法日熔(吨/日)', pv_tpd:'光伏日熔(吨/日)',
+  low:'下限', high:'上限', mid:'中值', share:'占比(%)', process:'工艺', route:'工艺路线',
+  profit:'利润(元/吨)', basis:'口径', scenario:'情景', assumption:'假设', step:'环节',
+  status:'状态', capacity:'产能(万吨/年)', count:'数量', float_tpd_note:'',
+  supply:'供给(万吨)', demand:'需求(万吨)', export:'出口(万吨)', import:'进口(万吨)', quality:'数据质量'
+};
+function flatten(raw){
+  if (raw == null) return [];
+  if (Array.isArray(raw)) return raw.map(r=> (typeof r==='object'? r : {value:r}));
+  if (typeof raw === 'object'){
+    let out = [];
+    for (const k in raw){
+      const v = raw[k];
+      if (Array.isArray(v)) out = out.concat(v.map(r=>(typeof r==='object'? Object.assign({_group:k}, r) : {_group:k, value:r})));
+      else if (v && typeof v === 'object') out.push(Object.assign({_group:k}, v));
+      else out.push({_group:k, value:v});
+    }
+    return out;
+  }
+  return [{value: raw}];
+}
+function copyTable(){
+  const tb = $id('rawtb'); if (!tb) return;
+  const txt = [...tb.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>td.textContent).join('\t')).join('\n');
+  navigator.clipboard && navigator.clipboard.writeText(txt).then(()=>{ toast('已复制，可直接粘贴到 Excel'); });
+}
+
+/* =========================================================================
+   4. 渲染：首屏 / 结论 / 章节
+   ========================================================================= */
+function renderHeader(){
+  $id('h-title').innerHTML = esc(META.title) + (META.audience_label?` <span class="thin">｜${esc(META.audience_label)}版</span>`:'');
+  $id('h-sub').textContent = META.subtitle || '';
+  $id('h-aud').textContent = '受众：' + (META.audience_label || META.audience);
+  $id('h-cut').textContent = '数据截止 ' + (META.data_cutoff||'');
+  $id('h-ver').textContent = (META.version||'') + ' · 报告日 ' + (META.report_date||'');
+  $id('h-gap').textContent = '资料缺口 ' + Object.keys(GAPS).length;
+  $id('h-src').textContent = '来源 ' + Object.keys(SRC).length;
+  $id('h-warn').textContent = (META.title.includes('示例')?'':'') +
+    '本材料中的事实均标注来源（S 编号），计算结果标注计算编号与输入参数，解释与判断标注置信度与反证条件；标为“缺口”的数据未获取，不以估算替代。' + (META.disclaimer||'');
+  $id('foot-meta').textContent = [META.org, META.author, '报告日 ' + META.report_date, '数据截止 ' + META.data_cutoff, '范围 ' + (META.horizon||'')].filter(Boolean).join(' · ');
+  $id('foot-disc').textContent = META.disclaimer || '';
+  document.title = META.title;
+}
+function renderKpis(){
+  $id('kpis').innerHTML = (PAYLOAD.kpis||[]).map(k=>`
+    <div class="kpi tone-${esc(k.tone||'blue')}" data-kpi="${esc(k.id)}" title="点击查看证据">
+      <div class="lab">${esc(k.label)}</div>
+      <div class="big">${esc(k.value)}<small>${esc(k.unit||'')}</small></div>
+      <div class="small">${esc(k.delta||'')}</div>
+    </div>`).join('');
+  document.querySelectorAll('[data-kpi]').forEach(el=>{
+    el.onclick = ()=>{ const k = PAYLOAD.kpis.find(x=>x.id===el.dataset.kpi);
+      openPanel(`<div class="ev"><p><b>${esc(k.label)}：${esc(k.value)} ${esc(k.unit||'')}</b></p><p>${esc(k.delta||'')}</p></div>
+        ${k.calc?calcBlock(k.calc):''}<h4 style="margin:12px 0 8px;font-size:13px">证据</h4>${(k.evidence||[]).map(evCard).join('')}`, '指标 ' + k.id); };
+  });
+}
+function renderConclusions(){
+  $id('concls').innerHTML = CONC.map(c=>`
+    <div class="concl" data-concl="${esc(c.id)}">
+      <div class="head"><span class="rank">${c.rank}</span>
+        <span class="badge ${TYPE_CLASS[c.type]}">${esc(c.type)}</span>
+        <span class="badge ${CONF_CLASS[c.confidence]||'b-conf'}">置信度 ${esc(c.confidence)}</span>
+        <span style="font-size:11px;color:var(--txt3)">${esc(c.id)} · 证据 ${(c.evidence||[]).length} · 计算 ${(c.calcs||[]).length}</span>
+      </div>
+      <div class="txt">${esc(c.text)}</div>
+      <div class="more">点击展开：支撑证据 → 计算过程 → 反证条件</div>
+    </div>`).join('');
+  document.querySelectorAll('[data-concl]').forEach(el=> el.onclick = ()=> showConclusion(el.dataset.concl));
+}
+function renderQuality(){
+  const counts = Object.fromEntries(['事实','计算','解释','判断'].map(t=>[t, CONC.filter(c=>c.type===t).length]));
+  const hi = Object.values(SRC).filter(s=>s.tier==='A').length;
+  const items = [
+    ['事实', counts['事实'] + ' 条', 'b-fact'],
+    ['计算', counts['计算'] + ' 条', 'b-calc'],
+    ['解释', counts['解释'] + ' 条', 'b-expl'],
+    ['判断', counts['判断'] + ' 条', 'b-judge'],
+    ['A 级证据', hi + ' 条', 'b-fact'],
+    ['资料缺口', Object.keys(GAPS).length + ' 项', 'b-gap']
+  ];
+  $id('qual').innerHTML = items.map(([t,v,c])=>`<div class="qual"><div class="t">${esc(t)}</div><div class="v"><span class="badge ${c}">${esc(v)}</span></div></div>`).join('');
+  $id('qlist').innerHTML = (PAYLOAD.questions||[]).map(q=>{
+    const st = q.answered === 'yes' ? ['已回答','b-calc'] : q.answered === 'partly' ? ['部分回答','b-judge'] : ['未回答','b-gap'];
+    return `<div style="font-size:12.5px;color:#c8d3e8;padding:6px 0;border-bottom:1px dashed var(--line);display:flex;gap:8px;align-items:flex-start">
+      <span class="badge ${st[1]}" style="flex:none">${esc(q.id)} ${st[0]}</span><span>${esc(q.question)}<span style="color:var(--txt3)"> ${esc(q.note||'')}</span></span></div>`;
+  }).join('');
+}
+
+function renderSections(){
+  const host = $id('sections');
+  host.innerHTML = '';
+  const secs = (PAYLOAD.sections||[]).slice();
+  const saved = loadOrder();
+  if (saved) secs.sort((a,b)=>{ const ia = saved.indexOf(a.id), ib = saved.indexOf(b.id); return (ia<0?99:ia) - (ib<0?99:ib); });
+  secs.forEach(s => host.appendChild(buildSection(s)));
+  // 图表：HTML 里只放占位容器，渲染延后到 bindDynamic 之后统一执行
+  document.querySelectorAll('#sections .chartbox').forEach(box=>{
+    const spec = { data_key: box.dataset.key, chart_type: box.dataset.type };
+    const s = (PAYLOAD.sections||[]).find(sec => sec.id === box.closest('.sec').dataset.sid);
+    const blk = s && (s.blocks||[]).find(b => b.type === 'chart' && b.data_key === box.dataset.key);
+    if (blk) Object.assign(spec, blk);
+    CHARTS.push({box, spec});
+  });
+}
+function buildSection(s){
+  // 注意：区块中的交互元素统一在 bindDynamic() 里绑定，避免在这里重复绑定
+  const el = document.createElement('section');
+  el.className = 'sec'; el.id = 'sec-' + s.id; el.dataset.sid = s.id;
+  const blocks = (s.blocks||[]).map(b => buildBlock(b)).join('');
+  el.innerHTML = `<div class="sh">
+      <div class="stitle"><span class="sno">${esc(s.no||'')}</span><h2>${esc(s.title)}</h2>
+      <span class="pack">${esc(s.pack||'')}</span>
+      ${s.question?`<span style="font-size:12px;color:var(--txt3)">要回答：${esc(s.question)}</span>`:''}</div>
+    </div>
+    ${s.lede?`<p class="lede">${esc(s.lede)}</p>`:''}
+    ${blocks}`;
+  return el;
+}
+function buildBlock(b){
+  switch(b.type){
+    case 'para': return `<p class="para">${esc(b.text)}</p>`;
+    case 'callout': return `<div class="callout ${esc(b.tone||'info')}"><div class="ct">${b.tone==='warn'?'⚠':b.tone==='gap'?'缺口':'◆'} ${esc(b.title||'')}</div>${esc(b.text)}</div>`;
+    case 'table': return tableHTML(b);
+    case 'chart': return chartHTML(b);
+    case 'calc': return calcBlock(b.calc_id);
+    case 'conclusions_full': return CONC.map(c=>`
+        <div class="concl" data-concl="${esc(c.id)}"><div class="head"><span class="rank">${c.rank}</span>
+        <span class="badge ${TYPE_CLASS[c.type]}">${esc(c.type)}</span>
+        <span class="badge ${CONF_CLASS[c.confidence]||'b-conf'}">置信度 ${esc(c.confidence)}</span>
+        <span style="font-size:11px;color:var(--txt3)">${esc(c.id)}</span></div>
+        <div class="txt">${esc(c.text)}</div>
+        <div class="more">反证条件：${esc(c.falsify||'未登记')}</div></div>`).join('');
+    default: return `<p class="para">[未知区块类型 ${esc(b.type)}]</p>`;
+  }
+}
+function tableHTML(b){
+  let rows = b.rows || (b.rows_key ? DS[b.rows_key] || (PAYLOAD[b.rows_key]) || [] : []);
+  const cols = b.cols || [];
+  if (!Array.isArray(rows)) rows = [];
+  const head = cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const dataCols = cols.slice(1);
+  const body = rows.map(r=>{
+    if (Array.isArray(r)) return `<tr>${r.map((c,i)=>`<td class="${(i>0&&!isNaN(parseFloat(c))&&/^[-+]?[\d,.]+%?$/.test(String(c).trim()))?'num':''}">${esc(c)}</td>`).join('')}</tr>`;
+    const keys = Object.keys(r);
+    return `<tr>${keys.map(k=>{
+      let v = r[k];
+      if (k === 'evidence' || k === 'source') v = (Array.isArray(v)?v:String(v).split(',')).map(x=>x.trim()).filter(Boolean).join(', ');
+      const num = typeof v === 'number';
+      return `<td class="${num?'num':''}">${num?fmtSmart(v,k):esc(v==null?'':v)}</td>`;
+    }).join('')}</tr>`;
+  }).join('');
+  const mapping = Array.isArray(Object.values(rows)[0]) ? '' : `<div style="font-size:11px;color:var(--txt3);margin:-6px 0 8px">字段：${Object.keys(rows[0]||{}).map(esc).join(' · ')}</div>`;
+  return `<div>${b.title?`<h4 style="font-size:13.5px;margin:16px 0 6px">${esc(b.title)}</h4>`:''}${mapping}
+    <table class="tb"><thead><tr>${head}</tr></thead><tbody>${body||`<tr><td colspan="${cols.length}">无数据</td></tr>`}</tbody></table></div>`;
+}
+function chartHTML(b){
+  const srcLine = (b.source||[]).join(' · ');
+  return `<div class="chartbox" data-chart="${esc(b.id||b.data_key)}" data-key="${esc(b.data_key)}" data-type="${esc(b.chart_type)}">
+    <div class="ch"><h4>${esc(b.title||'')}</h4><span class="src">来源：${esc(srcLine||'—')}</span></div>
+    <div class="legend" style="margin-bottom:6px"></div>
+    <div class="cnv ${b.chart_type==='donut'?'tall':''}" data-key="${esc(b.data_key)}" data-type="${esc(b.chart_type)}"></div>
+    <div class="foot"><div class="note">${esc(b.note||'')}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${(b.conclusion_ids||[]).map(cid=>`<button class="mini" data-jump="${esc(cid)}">关联结论 ${esc(cid)}</button>`).join('')}
+        <button class="mini" data-raw="${esc(b.data_key)}" data-title="${esc(b.title||'')}">查看原始数据</button>
+      </div></div></div>`;
+}
+function bindDynamic(){
+  document.querySelectorAll('[data-raw]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const spec = CHARTS.map(c=>c.spec).find(s=>s.data_key===btn.dataset.raw) || {};
+      showRawData(btn.dataset.raw, btn.dataset.title, btn.dataset.type ? {source:spanSources(btn.dataset.raw), conclusion_ids: spec.conclusion_ids} : spec);
+    };
+  });
+  document.querySelectorAll('[data-jump]').forEach(btn=> btn.onclick = ()=> showConclusion(btn.dataset.jump));
+  document.querySelectorAll('.concl[data-concl]').forEach(el=> el.onclick = ()=> showConclusion(el.dataset.concl));
+  document.querySelectorAll('[data-src]').forEach(el=> el.onclick = ()=> openPanel(evCard(el.dataset.src), '来源 ' + el.dataset.src));
+  document.querySelectorAll('[data-gap]').forEach(el=> el.onclick = ()=> openPanel(evCard(el.dataset.gap), '缺口 ' + el.dataset.gap));
+}
+function spanSources(dataKey){
+  if (!dataKey || DS[dataKey] === undefined) return [];
+  const raw = DS[dataKey]; const out = [];
+  flatten(raw).forEach(r=>{ (r.source||'').toString().split(',').forEach(x=>{ x=x.trim(); if(x && !out.includes(x)) out.push(x); }); });
+  if (raw && typeof raw === 'object' && !Array.isArray(raw) && raw.source){
+    raw.source.toString().split(',').forEach(x=>{ x=x.trim(); if (x && !out.includes(x)) out.push(x); });
+  }
+  return out;
+}
+
+/* =========================================================================
+   5. 框架视图 / 证据总表
+   ========================================================================= */
+function renderFramework(){
+  const fw = (PAYLOAD.frameworks||{})[PROF.audience_key] || {};
+  $id('fw-pos').textContent = fw.positioning || '';
+  $id('fw-body').innerHTML = (fw.chapters||[]).map(c=>`<tr>
+    <td class="num">${esc(c.no)}</td><td><b>${esc(c.title)}</b></td><td>${esc(c.question||'')}</td>
+    <td>${esc(c.why||'')}</td><td>${esc(c.verify||'')}</td><td>${esc((c.data||[]).join('、'))}</td><td>${esc(c.method||'')}</td></tr>`).join('');
+  $id('fw-compare').innerHTML = Object.entries(PAYLOAD.frameworks||{}).map(([k,f])=>`
+    <div style="margin-bottom:14px"><b style="font-size:13px">${esc(f.label||k)}</b>
+    <span class="badge b-conf" style="margin-left:8px">${esc(f.length_target||'')}</span>
+    <p style="font-size:12.5px;color:var(--txt3);margin:6px 0">${esc(f.focus||'')}</p>
+    <div style="font-size:12.5px;color:#c8d3e8;line-height:1.9">${(f.chapters||[]).map(c=>`<div>${esc(c.no)} ${esc(c.title)} —— ${esc(c.question||'')}</div>`).join('')}</div>
+    ${(f.suppressed_topic_packs||[]).length?`<p style="font-size:11.5px;color:var(--txt3);margin-top:6px">屏蔽章节包：${esc(f.suppressed_topic_packs.join('、'))}</p>`:''}
+    </div>`).join('');
+}
+function renderEvidenceView(){
+  const srcRows = Object.values(SRC).map(s=>`<tr><td class="mono">${esc(s.id)}</td><td>来源</td><td><b>${esc(s.org)}</b>｜${esc(s.title)}<div style="color:var(--txt3);font-size:11.5px">${esc(s.note||'')}</div></td>
+    <td>${esc(s.tier||'')}</td><td id="ref-${esc(s.id)}" style="font-size:11.5px;color:var(--txt3)">统计中…</td>
+    <td>${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">打开</a>`:''}</td></tr>`).join('');
+  $id('ev-body').innerHTML = srcRows;
+  const used = {};
+  const use = (sid, where)=>{ (used[sid] = used[sid]||[]); if(!used[sid].includes(where)) used[sid].push(where); };
+  (PAYLOAD.sections||[]).forEach(s=>{
+    (s.blocks||[]).forEach(b=>{ (b.source||[]).forEach(x=>use(x, s.title)); (spanSources(b.data_key)||[]).forEach(x=>use(x, s.title + '·图表')); });
+  });
+  CONC.forEach(c=> (c.evidence||[]).forEach(x=>use(x, '结论 ' + c.id)));
+  Object.keys(SRC).forEach(sid=>{ const cell = $id('ref-'+sid); if(cell) cell.textContent = (used[sid]||['未引用']).join('；'); });
+  $id('gap-body').innerHTML = Object.values(GAPS).map(g=>`<tr><td class="mono">${esc(g.id)}</td><td>${esc(g.topic)}</td><td>${esc(g.missing)}</td>
+    <td>${esc(g.why||'')}</td><td>${esc(g.impact||'')}</td><td><span class="badge ${g.severity==='high'?'b-gap':g.severity==='medium'?'b-judge':'b-conf'}">${esc(g.severity)}</span></td><td>${esc(g.next_step||'')}</td></tr>`).join('');
+  $id('calc-body').innerHTML = Object.values(CALCS).map(c=>`<tr><td class="mono">${esc(c.id)}</td><td>${esc(c.title)}</td>
+    <td style="font-family:Consolas,monospace;font-size:11.5px">${esc(c.formula)}</td><td>${esc(c.inputs)}</td><td><b>${esc(c.output)}</b></td><td>${esc(c.result_note||'')}</td></tr>`).join('');
+}
+
+/* =========================================================================
+   6. 交互：视图切换、章节排序、导出
+   ========================================================================= */
+function switchView(v){
+  ['report','framework','evidence'].forEach(k=>{
+    $id('view-'+k).classList.toggle('paste', k !== v);
+    document.querySelector(`[data-view="${k}"]`).classList.toggle('on', k === v);
+  });
+}
+function loadOrder(){ try { const v = JSON.parse(localStorage.getItem(LS_KEY)||'null'); return Array.isArray(v)?v:null; } catch(e){ return null; } }
+function saveOrder(ids){ try { localStorage.setItem(LS_KEY, JSON.stringify(ids)); } catch(e){} }
+let ordering = false, dragEl = null;
+function toggleOrder(on){
+  ordering = on;
+  $id('reorderbar').classList.toggle('on', on);
+  $id('btn-reset').style.display = on ? '' : 'none';
+  document.querySelectorAll('#sections .sec').forEach(sec=>{
+    sec.classList.toggle('ordering', on);
+    sec.draggable = on;
+    if (on){
+      sec.ondragstart = e=>{ dragEl = sec; e.dataTransfer.effectAllowed='move'; };
+      sec.ondragover = e=>{ e.preventDefault(); if (!dragEl || dragEl===sec) return;
+        const r = sec.getBoundingClientRect(); const after = (e.clientY - r.top) > r.height/2;
+        sec.parentNode.insertBefore(dragEl, after ? sec.nextSibling : sec); };
+      sec.ondragend = ()=>{ dragEl = null; saveOrder([...document.querySelectorAll('#sections .sec')].map(s=>s.dataset.sid)); };
+    } else { sec.ondragstart = sec.ondragover = sec.ondragend = null; sec.draggable=false; }
+  });
+}
+function exportMarkdown(){
+  const L = [];
+  L.push('# ' + META.title);
+  L.push('');
+  L.push('> ' + (META.subtitle||''));
+  L.push('> 受众：' + (META.audience_label||META.audience) + '｜报告日：' + META.report_date + '｜数据截止：' + META.data_cutoff);
+  L.push('');
+  L.push('## 核心指标');
+  (PAYLOAD.kpis||[]).forEach(k=>L.push(`- **${k.label}**：${k.value} ${k.unit||''}（${k.delta||''}）[${(k.evidence||[]).join(',')}]`));
+  L.push('');
+  L.push('## 核心结论');
+  CONC.forEach(c=>{
+    L.push(`### ${c.rank}. ${c.text}`);
+    L.push(`- 类型：${c.type}｜置信度：${c.confidence}`);
+    L.push(`- 证据：${(c.evidence||[]).join('、')}`);
+    if((c.calcs||[]).length) L.push(`- 计算：${(c.calcs||[]).join('、')}`);
+    L.push(`- 反证条件：${c.falsify||'未登记'}`);
+    L.push('');
+  });
+  L.push('## 章节');
+  document.querySelectorAll('#sections .sec').forEach(sec=>{
+    const h = sec.querySelector('h2'); const lede = sec.querySelector('.lede');
+    L.push('### ' + (h?h.textContent:''));
+    if (lede) L.push('', lede.textContent);
+    sec.querySelectorAll('.chartbox').forEach(cb=>{
+      const t = cb.querySelector('h4'); const note = cb.querySelector('.note');
+      L.push('', `- 图表：${t?t.textContent:''}${note?'（'+note.textContent+'）':''}`);
+    });
+    sec.querySelectorAll('table.tb').forEach(tb=>{
+      const rows = [...tb.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>td.textContent.trim()).join(' | '));
+      if (rows.length){ L.push('', '| ' + rows[0] + ' |'); L.push('|' + rows[0].split('|').map(()=>' --- ').join('|') + '|'); rows.slice(1).forEach(r=>L.push('| ' + r + ' |')); }
+    });
+    sec.querySelectorAll('.callout').forEach(c=>{ L.push('', '> ' + c.textContent.trim()); });
+    L.push('');
+  });
+  L.push('## 计算过程');
+  Object.values(CALCS).forEach(c=>L.push(`- **${c.id} ${c.title}**：${c.formula} → ${c.output}（${c.result_note||''}）`));
+  L.push('', '## 证据索引');
+  Object.values(SRC).forEach(s=>L.push(`- [${s.id}] ${s.org}｜${s.title}｜${s.date}｜${s.url||''}`));
+  L.push('', '## 资料缺口');
+  Object.values(GAPS).forEach(g=>L.push(`- [${g.id}] ${g.topic}：缺 ${g.missing}；影响 ${g.impact}；下一步 ${g.next_step}`));
+  L.push('', '---', META.disclaimer||'');
+  const blob = new Blob([L.join('\n')], {type:'text/markdown;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (META.slug||'topic-report') + '_' + (META.audience_label||META.audience) + '.md';
+  a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+  toast('已导出 Markdown 完整材料');
+}
+function toast(msg){
+  const d = document.createElement('div');
+  d.textContent = msg;
+  d.style.cssText = 'position:fixed;left:50%;bottom:70px;transform:translateX(-50%);background:#123; border:1px solid #2b4; color:#cfe; padding:9px 16px;border-radius:999px;font-size:12.5px;z-index:120;box-shadow:0 6px 24px rgba(0,0,0,.4)';
+  document.body.appendChild(d); setTimeout(()=>d.remove(), 1800);
+}
+function bindUI(){
+  document.querySelectorAll('[data-view]').forEach(b=> b.onclick = ()=> switchView(b.dataset.view));
+  $id('btn-print').onclick = ()=> window.print();
+  $id('btn-export').onclick = exportMarkdown;
+  $id('btn-order').onclick = ()=> toggleOrder(!ordering);
+  $id('btn-order-done').onclick = ()=> toggleOrder(false);
+  $id('btn-reset').onclick = ()=>{ try{ localStorage.removeItem(LS_KEY); }catch(e){} location.reload(); };
+  $id('scrim').onclick = closePanel;
+  $id('modal').onclick = e=>{ if (e.target === $id('modal')) closeModal(); };
+  document.addEventListener('keydown', e=>{
+    if (e.key === 'Escape'){ closePanel(); closeModal(); }
+    if (e.key === '1') switchView('report');
+    if (e.key === '2') switchView('framework');
+    if (e.key === '3') switchView('evidence');
+  });
+}
+
+/* =========================================================================
+   7. 启动
+   ========================================================================= */
+(function boot(){
+  const stack = [];
+  const step = (name, fn) => { try { fn(); } catch (e) { stack.push(name + ': ' + (e && e.message)); console.error('[boot]', name, e); } };
+  step('header', renderHeader); step('kpis', renderKpis); step('conclusions', renderConclusions);
+  step('quality', renderQuality); step('sections', renderSections); step('charts', ()=>CHARTS.forEach(c => renderChart(c.box, c.spec)));
+  step('bind', bindDynamic); step('ui', bindUI); step('framework', renderFramework); step('evidence', renderEvidenceView);
+  step('view', ()=> switchView('report'));
+  window.__BOOT_ERRORS = stack;
+  if (stack.length) {
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;background:#4a1420;color:#ffd9de;font-size:12px;padding:8px 14px;z-index:200';
+    bar.textContent = '渲染警告：' + stack.join(' | ');
+    document.body.appendChild(bar);
+  }
+})();
+</script>
+</body>
+</html>

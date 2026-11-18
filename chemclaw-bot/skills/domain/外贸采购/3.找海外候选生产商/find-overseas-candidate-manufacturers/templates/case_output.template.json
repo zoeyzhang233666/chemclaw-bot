@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "report_id": "OSM-<ABBR>-<ISO2>-<YYYYMMDD>",
+    "title": "【国家】 【产品】实际生产企业核验调查报告",
+    "subtitle": "海外候选生产商调查 · 制造证据分级 · 集团/生产/销售主体分离",
+    "product": {
+      "name_cn": "【产品中文名】",
+      "name_en": "【产品英文名】",
+      "abbr": "【缩写】",
+      "cas": "【CAS】",
+      "hs_cn": "【HS，中国口径】",
+      "hs_un": "【HS，国际口径，可选】",
+      "spec_summary": "【关键指标】",
+      "packaging": "【包装】",
+      "process_route": "【工艺路线】"
+    },
+    "buyer_context": {
+      "origin": "【来源国】",
+      "destination": "中国",
+      "intent": "寻找公开资料显示可能实际生产【产品】的【来源国】企业",
+      "quantity": "【未提供 — 需采购方补充 / 或具体数量】",
+      "only_actual_manufacturers": "是",
+      "certifications_needed": "【未指定 — 建议至少 ISO 9001/14001/45001、SDS、COA】",
+      "packaging_needed": "【未指定】",
+      "destination_port": "【到岸港，可空】"
+    },
+    "research_date": "YYYY-MM-DD",
+    "evidence_grade_legend": [
+      { "grade": "A", "label": "有直接公开制造证据", "def": "官网产品页/产能表、年报、EPC 合同、官方投产公告、装置级公开产能数据，直接指向该企业拥有该产品装置" },
+      { "grade": "B", "label": "有产品业务关联但制造身份待核验", "def": "存在产品级公开记载但缺装置级证据，或证据链存在矛盾/缺口" },
+      { "grade": "C", "label": "仅存在行业相关性", "def": "属石化/化工集团或附属，但无该产品制造证据，或明确生产的是近似品" },
+      { "grade": "D", "label": "贸易/代理/身份不明", "def": "贸易商、代理、经销、平台卖家或无法确认经营实体" }
+    ],
+    "funnel": { "step1": 0, "step2": 0 },
+    "funnel_note": {
+      "step1": "【候选池口径说明】",
+      "step2": "【产品级线索口径说明】"
+    },
+    "market_interpretation": "【用 2–3 句解释：为什么必须找到工厂本身，而不是只找贸易商】",
+    "disclaimer": "本报告仅基于公开可获得资料。公开设计产能不等于当前实际可供货能力；产能、装置运行状态、认证与联系方式均以企业书面确认为准。未核验字段一律标注为『待核验』，不虚构。"
+  },
+
+  "groups": [
+    {
+      "id": "G-1",
+      "name": "【集团名】",
+      "name_en": "【英文名】",
+      "type": "【综合石化集团 / 国家石油公司 / 私人工业集团 …】",
+      "note": "【集团与工厂的关系：控股、营销、合资方等】"
+    }
+  ],
+
+  "companies": [
+    {
+      "id": "C-1",
+      "rank": 1,
+      "legal_name": "【法定英文名（照抄官网）】",
+      "legal_name_ar": "【当地语名，可空】",
+      "cn_name": "【中文名，可空】",
+      "entity_type": "MANUFACTURER",
+      "entity_type_label": "制造企业（工厂主体）",
+      "grade": "A",
+      "grade_reason": "【必须写清：依据哪几条证据、指向什么、还缺什么】",
+      "group": "G-1",
+      "ownership": "【持股结构】",
+      "established": "【成立/投产时间】",
+      "hq": "【注册地址】",
+      "country": "【国家】",
+      "site": "【实际工厂所在地，用于筛选】",
+      "product_page": "【产品页 URL，可空】",
+      "website": "【官网】",
+      "official_channels": [
+        { "channel": "【官网联系页/总机/传真/邮箱】", "value": "【照抄官网内容，不得推测】", "status": "已核验 / 待核验" }
+      ],
+      "products_specs": [
+        { "product": "【产品】", "grade": "【牌号/等级】", "spec": "【公开指标原文；未取得写“待核验”】", "source": "S1 / 待核验" }
+      ],
+      "capacity": {
+        "expr": "【产能主值，如 0.70 Mt/a；通用字段】",
+        "unit": "【单位】",
+        "detail": "【口径明细：设计/名义/实际、单线、年份；多来源冲突在此并列】",
+        "caveat": "【当前可供货能力判断：停车/检修/负荷/外售中间体等】"
+      },
+      "process": "【工艺与许可方、原料来源】",
+      "evidence": [
+        { "id": "E1", "type": "【官网产能表 / 官网产品页 / EPC 项目页 / 装置级 / 官方新闻稿 / 年报 / 第三方转述 / 平台挂牌】", "grade": "直接/间接", "src": "S1", "text": "【原文摘要，不要写结论】", "conf": "高/中/低" }
+      ],
+      "certifications": [
+        { "cert": "ISO 9001", "status": "【已取得编号 / 待核验】" }
+      ],
+      "export_info": "【出口业务、营销安排、相关贸易救济】",
+      "risks": ["【风险1】"],
+      "open_questions": ["QS-01"]
+    }
+  ],
+
+  "trade_notes": [
+    { "type": "平台挂牌/贸易商", "desc": "【说明为何不作制造证据】", "grade": "D" }
+  ],
+
+  "market_context": [
+    { "claim": "【带数字的市场事实】", "source": "S2", "conf": "中高" }
+  ],
+
+  "questions": [
+    { "id": "QS-00", "company": "通用", "q": "本次采购的产品、规格、数量、到岸港、结算方式与认证要求，请先确认，以便统一询盘口径。" },
+    { "id": "QS-01", "company": "C-1", "q": "【一个待核验字段 = 一条问题】" }
+  ],
+
+  "sources": [
+    {
+      "id": "S1",
+      "title": "【来源标题（含关键数字）】",
+      "url": "https://【真实可访问的 URL】",
+      "date": "【发布日期】",
+      "access": "YYYY-MM-DD",
+      "status": "已核验 | 检索索引命中 | 直连失败 | 待下载",
+      "note": "【状态细节，如“直连 403，索引原文命中”】"
+    }
+  ]
+}

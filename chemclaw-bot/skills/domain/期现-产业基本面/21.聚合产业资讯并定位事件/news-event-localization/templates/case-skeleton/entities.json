@@ -1,0 +1,37 @@
+{
+ "meta": {
+  "plant_status_vocab": ["运行稳定", "停车", "停车-重启时间待定", "长期停车", "长期停车-部分拆除", "降负", "负荷偏低", "不报价", "投产在途", "备案阶段", "未知"]
+ },
+ "companies": [
+  {
+   "ent_id": "ENT-C001",
+   "name": "【示例】某企业全称",
+   "short": "某企业",
+   "group": "【示例】所属集团（无则留空）",
+   "province": "某省",
+   "city": "某市",
+   "region": "华东",
+   "route": "【示例】煤制 / 天然气制 / 外采MTO",
+   "own_methanol": "【示例】有（自供）/ 无（外采为主）",
+   "role": "【示例】甲醇下游-MTO",
+   "listed": "【示例】000000.SZ（无则留空）",
+   "profile": "【示例】企业档案：主业、装置组合、产业链位置"
+  }
+ ],
+ "plants": [
+  {
+   "plant_id": "PLT-C001-A",
+   "ent_id": "ENT-C001",
+   "name": "【示例】某企业一期XX装置",
+   "capacity": null,
+   "unit": "万吨/年",
+   "route": "【示例】MTO（外采甲醇）",
+   "region": "华东-某省-某市",
+   "status": "停车",
+   "status_since": null,
+   "status_source": "【示例】某机构（N02）",
+   "capacity_source": "【必填：capacity 非 null 时】产能出处",
+   "note": "【示例】capacity 为 null 表示未取得，不是 0"
+  }
+ ]
+}

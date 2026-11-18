@@ -1,0 +1,15 @@
+﻿成本段,代码,成本项,英文,金额(元/吨),状态,来源,依据,承担方
+S1,EXW,出厂价（不含包装）,Ex-works price excl. packaging,1450.0,filled,user,用户输入，元/吨；不含包装、不含出口环节费用,seller
+S2,PKG,包装成本,Packaging cost,60.0,filled,user,用户输入，元/吨（袋装/吨袋/托盘等折算吨价）,seller
+S3,INLAND,内陆运输（工厂→起运港）,Inland haulage to port of shipment,110.0,filled,user,货代报价或用户输入，元/吨,seller（FCA 卖方场所交货除外）
+S4,PORT,港口及报关费用,Export port charges & customs clearance,95.0,filled,user,货代报价或用户输入，元/吨（THC、报关、单证、码头作业等）,seller
+S5,FREIGHT,海运费（起运港→目的港）,Ocean freight to port of destination,355.0,filled,forwarder_quote,"1,250.00 USD/柜 × 7.1000 ÷ 25 吨/柜 = 355.00 元/吨",seller（CFR/CIF/CPT/CIP/D 组）
+S6,INSURANCE,海运保险费,Marine cargo insurance premium,6.9364,filled,user,CIF×110%×0.3000% 自洽解 = 6.9364 元/吨,seller（CIF/CIP 必投；其他术语由买方投保）
+S7,EXPORT_TAX,出口关税及其他出口税费,Export duty & other export taxes,0.0,filled,user,用户输入，元/吨；增值税出口退税不在此列,seller
+S8,OTHER,其他出口费用,Other export costs,25.0,filled,user,用户输入，元/吨（结汇费、检验、认证、配额等）,seller
+S9,DEST_PORT,目的港费用 / 目的地交货费用,Destination port & delivery charges,,not_required,not_required,DAP/DPU/DDP 卖方承担；F/C 组由买方承担、不计入卖方成本,seller（D 组）/ buyer（F/C 组）
+
+术语,成本(元/吨),报价(元/吨),外币/吨,毛利率,加成率,总价(CNY),总价(外币)
+FOB,1740.0,1891.3,266.38,7.9998%,8.6954%,945650.0,133190.14
+CFR,2095.0,2277.17,320.73,7.9998%,8.6955%,1138585.0,160364.08
+CIF,2101.9364,2284.71,321.79,7.9999%,8.6955%,1142355.0,160895.07

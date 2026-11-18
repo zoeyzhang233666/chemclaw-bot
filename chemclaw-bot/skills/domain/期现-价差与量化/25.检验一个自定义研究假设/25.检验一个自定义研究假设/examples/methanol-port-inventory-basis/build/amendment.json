@@ -1,0 +1,1283 @@
+﻿{
+ "generated_at": "2026-10-20 19:10:34",
+ "variants": [
+  {
+   "tag": "MAIN",
+   "note": "主口径（v2.2）：状态转变去重 + 剔除窗口内换月",
+   "verdict": "INSUFFICIENT_SAMPLE",
+   "n_signal": 10,
+   "n_control": 44,
+   "evaluable": 54,
+   "skipped": {
+    "parse_fail": 0,
+    "gap": 24,
+    "no_price": 0,
+    "dup_state": 106,
+    "incomplete": 1,
+    "roll_in_window": 41,
+    "pre15_bar_missing": 82
+   },
+   "tests": [
+    {
+     "id": "RULE_1",
+     "family": "diagnostic",
+     "label": "最小样本规则检查（先于数据设定）",
+     "estimate": 10.0,
+     "ci95": null,
+     "p": null,
+     "n": 54,
+     "extra": {
+      "required_signal": 12
+     },
+     "data_status": "REAL",
+     "q_bh": null
+    }
+   ],
+   "stability": {},
+   "diagnostics": {},
+   "message": "信号周 10 个、对照周 44 个，低于预登记最小样本规则（信号≥12、对照≥10）。按设计约定：结论只能写『样本不足，无法判断』，不报告任何显著性。"
+  },
+  {
+   "tag": "AM-1",
+   "note": "修订 AM-1：weekly 去重（每周都算一个观测）",
+   "verdict": "NOT_SIGNIFICANT",
+   "n_signal": 24,
+   "n_control": 83,
+   "evaluable": 107,
+   "skipped": {
+    "parse_fail": 0,
+    "gap": 24,
+    "no_price": 0,
+    "dup_state": 0,
+    "incomplete": 3,
+    "roll_in_window": 92,
+    "pre15_bar_missing": 167
+   },
+   "tests": [
+    {
+     "id": "P1_mean",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 均值差（信号−对照）",
+     "estimate": -0.9482981927710847,
+     "ci95": [
+      -41.7177029024957,
+      39.821106516953535
+     ],
+     "p": 0.962517437462995,
+     "n": 24,
+     "extra": {
+      "p_normal_approx": 0.9622294517344976,
+      "control_mean": -2.0379518072289153,
+      "control_n": 83,
+      "se": 20.02485569796979,
+      "t": -0.04735605624699844,
+      "df": 32.71
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "P1_mw",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.0768072289156626,
+     "ci95": null,
+     "p": 0.5677522824618759,
+     "n": 107,
+     "extra": {
+      "auc": 0.4615963855421687
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "P2_dir",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 方向一致率 P(Δ>0 | 信号) vs 对照",
+     "estimate": -0.13202811244979923,
+     "ci95": [
+      0.27891333613001446,
+      0.6492513477492627
+     ],
+     "p": 0.2510378282572663,
+     "n": 24,
+     "extra": {
+      "signal_rate": 0.4583,
+      "control_rate": 0.5904,
+      "n_control": 83
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9600430341614683
+    },
+    {
+     "id": "P3",
+     "family": "primary",
+     "label": "信号组均值 移动块自助 95%CI（全序列顺序）",
+     "estimate": -2.98625,
+     "ci95": [
+      -16.201567757009347,
+      11.494207943925236
+     ],
+     "p": null,
+     "n": 24,
+     "extra": {},
+     "data_status": "REAL",
+     "q_bh": null
+    },
+    {
+     "id": "P4_mean",
+     "family": "primary",
+     "label": "期货 ΔP_10 均值差（信号−对照）",
+     "estimate": 60.59387550200803,
+     "ci95": [
+      -15.206179311271413,
+      136.3939303152875
+     ],
+     "p": 0.11337228000374644,
+     "n": 24,
+     "extra": {
+      "p_normal_approx": 0.10471177600181747,
+      "control_mean": -7.385542168674699,
+      "control_n": 83,
+      "se": 37.347655580602606,
+      "t": 1.6224278220418982,
+      "df": 36.27
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9069782400299715
+    },
+    {
+     "id": "P4_mw",
+     "family": "primary",
+     "label": "期货 ΔP_10 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.2635542168674698,
+     "ci95": null,
+     "p": 0.04993023161456911,
+     "n": 107,
+     "extra": {
+      "auc": 0.6317771084337349
+     },
+     "data_status": "REAL",
+     "q_bh": 0.7988837058331058
+    },
+    {
+     "id": "S1_mean",
+     "family": "sensitivity",
+     "label": "敏感性 S1：窗口缩短为 5 日 均值差（信号−对照）",
+     "estimate": 13.506380522088353,
+     "ci95": [
+      -12.712059860170744,
+      39.72482090434745
+     ],
+     "p": 0.30001344817545883,
+     "n": 24,
+     "extra": {
+      "p_normal_approx": 0.2911367206890718,
+      "control_mean": -2.200963855421687,
+      "control_n": 83,
+      "se": 12.794600953678593,
+      "t": 1.0556312440682345,
+      "df": 28.47
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9600430341614683
+    },
+    {
+     "id": "S1_mw",
+     "family": "sensitivity",
+     "label": "敏感性 S1：窗口缩短为 5 日 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.02208835341365467,
+     "ci95": null,
+     "p": 0.869464550040215,
+     "n": 107,
+     "extra": {
+      "auc": 0.5110441767068273
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "S2_mean",
+     "family": "sensitivity",
+     "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 均值差（信号−对照）",
+     "estimate": -14.51183908045977,
+     "ci95": [
+      -58.947218732020715,
+      29.92354057110117
+     ],
+     "p": 0.5072653196439993,
+     "n": 20,
+     "extra": {
+      "p_normal_approx": 0.5012032877846739,
+      "control_mean": 0.4618390804597702,
+      "control_n": 87,
+      "se": 21.575809493353216,
+      "t": -0.6725976647564663,
+      "df": 25.45
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "S2_mw",
+     "family": "sensitivity",
+     "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.18505747126436778,
+     "ci95": null,
+     "p": 0.198229061013937,
+     "n": 107,
+     "extra": {
+      "auc": 0.4074712643678161
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9600430341614683
+    },
+    {
+     "id": "R1",
+     "family": "robustness",
+     "label": "OLS + Newey-West HAC：Δ 基差 ~ 信号 + Δ库存 + 库存分位",
+     "estimate": -14.235917809707823,
+     "ci95": null,
+     "p": 0.4752096099510593,
+     "n": 107,
+     "extra": {
+      "betas": {
+       "b0": -31.6895,
+       "b1": -14.2359,
+       "b2": -2.471,
+       "b3": 61.7936
+      },
+      "se_hac": [
+       15.6933,
+       19.8644,
+       1.2832,
+       20.3709
+      ],
+      "r2": 0.0951,
+      "hac_lags": 4,
+      "hac_inflation": 0.966
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "R2",
+     "family": "robustness",
+     "label": "移动块置换检验（保持块内自相关）",
+     "estimate": -0.9482981927710847,
+     "ci95": null,
+     "p": 1.0,
+     "n": 107,
+     "extra": {
+      "blocks": 27,
+      "n_perm": 3000
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "R3_mean",
+     "family": "robustness",
+     "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） 均值差（信号−对照）",
+     "estimate": 3.434795918367347,
+     "ci95": [
+      -48.05689034151491,
+      54.92648217824961
+     ],
+     "p": 0.8892222457510868,
+     "n": 14,
+     "extra": {
+      "p_normal_approx": 0.8874187742143378,
+      "control_mean": 0.37448979591836723,
+      "control_n": 49,
+      "se": 24.26198040817702,
+      "t": 0.14157112735981425,
+      "df": 15.68
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "R3_mw",
+     "family": "robustness",
+     "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.06268221574344024,
+     "ci95": null,
+     "p": 0.7222374270503102,
+     "n": 63,
+     "extra": {
+      "auc": 0.4686588921282799
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "R4_mean",
+     "family": "robustness",
+     "label": "鲁棒性 R4：月度样本（每月至多 1 个） 均值差（信号−对照）",
+     "estimate": 17.214499999999997,
+     "ci95": [
+      -39.602397480028415,
+      74.03139748002842
+     ],
+     "p": 0.5237992412539456,
+     "n": 12,
+     "extra": {
+      "p_normal_approx": 0.5122423253195398,
+      "control_mean": -2.9370000000000003,
+      "control_n": 40,
+      "se": 26.267636375417666,
+      "t": 0.655350171365629,
+      "df": 12.85
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "R4_mw",
+     "family": "robustness",
+     "label": "鲁棒性 R4：月度样本（每月至多 1 个） Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.05833333333333335,
+     "ci95": null,
+     "p": 0.7610619668287417,
+     "n": 52,
+     "extra": {
+      "auc": 0.5291666666666667
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "PLAC_1",
+     "family": "placebo",
+     "label": "标签洗牌安慰剂（信号随机化后 |差|≥观测差异 的比例）",
+     "estimate": -0.948,
+     "ci95": null,
+     "p": 1.0,
+     "n": 107,
+     "extra": {
+      "n_shuffle": 3
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    }
+   ],
+   "stability": {
+    "by_year": [
+     {
+      "group": "2022",
+      "n_signal": 6,
+      "n_control": 12,
+      "diff": 18.180833333333332,
+      "p": 0.7429938795189068
+     },
+     {
+      "group": "2023",
+      "n_signal": 2,
+      "n_control": 21,
+      "diff": -1.4457142857142866,
+      "p": null
+     },
+     {
+      "group": "2024",
+      "n_signal": 5,
+      "n_control": 19,
+      "diff": -13.12821052631579,
+      "p": 0.7180213606925183
+     },
+     {
+      "group": "2025",
+      "n_signal": 4,
+      "n_control": 21,
+      "diff": -14.273809523809524,
+      "p": 0.6546460140236174
+     },
+     {
+      "group": "2026",
+      "n_signal": 7,
+      "n_control": 10,
+      "diff": 6.875857142857139,
+      "p": 0.8986348360410812
+     }
+    ],
+    "by_band": [
+     {
+      "group": "LOW",
+      "n_signal": 12,
+      "n_control": 25,
+      "diff": -2.5665333333333322,
+      "p": 0.932143124530072
+     },
+     {
+      "group": "MID",
+      "n_signal": 7,
+      "n_control": 19,
+      "diff": 13.423233082706766,
+      "p": 0.7260084372183542
+     },
+     {
+      "group": "HIGH",
+      "n_signal": 4,
+      "n_control": 37,
+      "diff": -9.90831081081081,
+      "p": 0.807486125689399
+     }
+    ],
+    "by_baseline_sign": [
+     {
+      "group": "basis>=0",
+      "n_signal": 21,
+      "n_control": 74,
+      "diff": -9.865328185328185,
+      "p": 0.645327316916211
+     },
+     {
+      "group": "basis<0",
+      "n_signal": 3,
+      "n_control": 9,
+      "diff": 59.60666666666667,
+      "p": 0.30268962649836073
+     }
+    ]
+   },
+   "diagnostics": {
+    "autocorr_y": -0.1614647686249196,
+    "effective_n": 107.0,
+    "overlap_ratio": 2.0,
+    "nonoverlap_n": 63,
+    "monthly_n": 52,
+    "look_ahead": "entry = 报告发布后可得价格；库存使用 T0 前已公布两期（通过）",
+    "mult_testing_registered": 17
+   },
+   "message": "主检验 p=0.9625，均值差=-0.948，N=24"
+  },
+  {
+   "tag": "AM-2",
+   "note": "修订 AM-2：允许窗口内含近月换月（仅标记）",
+   "verdict": "NOT_SIGNIFICANT",
+   "n_signal": 19,
+   "n_control": 76,
+   "evaluable": 95,
+   "skipped": {
+    "parse_fail": 0,
+    "gap": 24,
+    "no_price": 0,
+    "dup_state": 106,
+    "incomplete": 1,
+    "roll_in_window": 41,
+    "pre15_bar_missing": 82
+   },
+   "tests": [
+    {
+     "id": "P1_mean",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 均值差（信号−对照）",
+     "estimate": 8.196973684210525,
+     "ci95": [
+      -67.32524712097923,
+      83.71919448940027
+     ],
+     "p": 0.8235125539709225,
+     "n": 19,
+     "extra": {
+      "p_normal_approx": 0.8213309651933511,
+      "control_mean": 6.057236842105263,
+      "control_n": 76,
+      "se": 36.29654481914247,
+      "t": 0.22583344296417754,
+      "df": 21.02
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9591211894180175
+    },
+    {
+     "id": "P1_mw",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.14335180055401664,
+     "ci95": null,
+     "p": 0.33549095717590394,
+     "n": 95,
+     "extra": {
+      "auc": 0.4283240997229917
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9507070434388686
+    },
+    {
+     "id": "P2_dir",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 方向一致率 P(Δ>0 | 信号) vs 对照",
+     "estimate": -0.18421052631578955,
+     "ci95": [
+      0.19149512641954003,
+      0.5896046699645555
+     ],
+     "p": 0.15069343812840175,
+     "n": 19,
+     "extra": {
+      "signal_rate": 0.3684,
+      "control_rate": 0.5526,
+      "n_control": 76
+     },
+     "data_status": "REAL",
+     "q_bh": 0.8094214502778504
+    },
+    {
+     "id": "P3",
+     "family": "primary",
+     "label": "信号组均值 移动块自助 95%CI（全序列顺序）",
+     "estimate": 14.254210526315788,
+     "ci95": [
+      -9.98083947368421,
+      28.330342105263156
+     ],
+     "p": null,
+     "n": 19,
+     "extra": {},
+     "data_status": "REAL",
+     "q_bh": null
+    },
+    {
+     "id": "P4_mean",
+     "family": "primary",
+     "label": "期货 ΔP_10 均值差（信号−对照）",
+     "estimate": 26.47368421052632,
+     "ci95": [
+      -72.7369074037229,
+      125.68427582477553
+     ],
+     "p": 0.5875930855644036,
+     "n": 19,
+     "extra": {
+      "p_normal_approx": 0.5826185735977096,
+      "control_mean": -0.6842105263157895,
+      "control_n": 76,
+      "se": 48.17217364129605,
+      "t": 0.5495638292690929,
+      "df": 24.5
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9591211894180175
+    },
+    {
+     "id": "P4_mw",
+     "family": "primary",
+     "label": "期货 ΔP_10 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.07548476454293618,
+     "ci95": null,
+     "p": 0.6120808050003488,
+     "n": 95,
+     "extra": {
+      "auc": 0.5377423822714681
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9591211894180175
+    },
+    {
+     "id": "S1_mean",
+     "family": "sensitivity",
+     "label": "敏感性 S1：窗口缩短为 5 日 均值差（信号−对照）",
+     "estimate": 19.929473684210524,
+     "ci95": [
+      -30.10262840772958,
+      69.96157577615062
+     ],
+     "p": 0.415934331504505,
+     "n": 19,
+     "extra": {
+      "p_normal_approx": 0.4060164775813031,
+      "control_mean": -0.3684210526315789,
+      "control_n": 76,
+      "se": 23.984708577152496,
+      "t": 0.8309241540335023,
+      "df": 19.78
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9507070434388686
+    },
+    {
+     "id": "S1_mw",
+     "family": "sensitivity",
+     "label": "敏感性 S1：窗口缩短为 5 日 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.13434903047091407,
+     "ci95": null,
+     "p": 0.3667387850023973,
+     "n": 95,
+     "extra": {
+      "auc": 0.567174515235457
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9507070434388686
+    },
+    {
+     "id": "S2_mean",
+     "family": "sensitivity",
+     "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 均值差（信号−对照）",
+     "estimate": 10.288142589118198,
+     "ci95": [
+      -97.21563431898305,
+      117.79191949721944
+     ],
+     "p": 0.8392310407407653,
+     "n": 13,
+     "extra": {
+      "p_normal_approx": 0.8360100720759787,
+      "control_mean": 6.288780487804879,
+      "control_n": 82,
+      "se": 49.70123759043053,
+      "t": 0.20699972652389395,
+      "df": 12.94
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9591211894180175
+    },
+    {
+     "id": "S2_mw",
+     "family": "sensitivity",
+     "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.20919324577861165,
+     "ci95": null,
+     "p": 0.2272080848830238,
+     "n": 95,
+     "extra": {
+      "auc": 0.3954033771106942
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9088323395320952
+    },
+    {
+     "id": "R1",
+     "family": "robustness",
+     "label": "OLS + Newey-West HAC：Δ 基差 ~ 信号 + Δ库存 + 库存分位",
+     "estimate": -5.958815062247072,
+     "ci95": null,
+     "p": 0.8315239449866082,
+     "n": 95,
+     "extra": {
+      "betas": {
+       "b0": 5.6432,
+       "b1": -5.9588,
+       "b2": -1.7278,
+       "b3": 4.2081
+      },
+      "se_hac": [
+       30.4366,
+       27.9285,
+       1.7032,
+       45.7113
+      ],
+      "r2": 0.011,
+      "hac_lags": 4,
+      "hac_inflation": 1.122
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9591211894180175
+    },
+    {
+     "id": "R2",
+     "family": "robustness",
+     "label": "移动块置换检验（保持块内自相关）",
+     "estimate": 8.196973684210525,
+     "ci95": null,
+     "p": 1.0,
+     "n": 95,
+     "extra": {
+      "blocks": 37,
+      "n_perm": 3000
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "R3_mean",
+     "family": "robustness",
+     "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） 均值差（信号−对照）",
+     "estimate": 30.372585034013603,
+     "ci95": [
+      -86.66000119914253,
+      147.40517126716972
+     ],
+     "p": 0.5823884470621576,
+     "n": 12,
+     "extra": {
+      "p_normal_approx": 0.5717693950891369,
+      "control_mean": 2.5440816326530613,
+      "control_n": 49,
+      "se": 53.714240055606815,
+      "t": 0.5654475424500257,
+      "df": 11.77
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9591211894180175
+    },
+    {
+     "id": "R3_mw",
+     "family": "robustness",
+     "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.05782312925170063,
+     "ci95": null,
+     "p": 0.7577218766943707,
+     "n": 61,
+     "extra": {
+      "auc": 0.4710884353741497
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9591211894180175
+    },
+    {
+     "id": "R4_mean",
+     "family": "robustness",
+     "label": "鲁棒性 R4：月度样本（每月至多 1 个） 均值差（信号−对照）",
+     "estimate": -41.316338383838385,
+     "ci95": [
+      -99.22824953107379,
+      16.595572763397016
+     ],
+     "p": 0.15176652192709694,
+     "n": 11,
+     "extra": {
+      "p_normal_approx": 0.13499230060746825,
+      "control_mean": 18.51361111111111,
+      "control_n": 36,
+      "se": 27.641861478910307,
+      "t": -1.494701737629399,
+      "df": 18.6
+     },
+     "data_status": "REAL",
+     "q_bh": 0.8094214502778504
+    },
+    {
+     "id": "R4_mw",
+     "family": "robustness",
+     "label": "鲁棒性 R4：月度样本（每月至多 1 个） Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.3535353535353535,
+     "ci95": null,
+     "p": 0.0784186880669937,
+     "n": 47,
+     "extra": {
+      "auc": 0.32323232323232326
+     },
+     "data_status": "REAL",
+     "q_bh": 0.8094214502778504
+    },
+    {
+     "id": "PLAC_1",
+     "family": "placebo",
+     "label": "标签洗牌安慰剂（信号随机化后 |差|≥观测差异 的比例）",
+     "estimate": 8.197,
+     "ci95": null,
+     "p": 1.0,
+     "n": 95,
+     "extra": {
+      "n_shuffle": 3
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    }
+   ],
+   "stability": {
+    "by_year": [
+     {
+      "group": "2022",
+      "n_signal": 4,
+      "n_control": 18,
+      "diff": 8.694444444444443,
+      "p": 0.883493501508501
+     },
+     {
+      "group": "2023",
+      "n_signal": 3,
+      "n_control": 18,
+      "diff": 1.5449999999999982,
+      "p": 0.9474378371339154
+     },
+     {
+      "group": "2024",
+      "n_signal": 6,
+      "n_control": 14,
+      "diff": -19.13047619047619,
+      "p": 0.5275947551607618
+     },
+     {
+      "group": "2025",
+      "n_signal": 2,
+      "n_control": 16,
+      "diff": 48.04,
+      "p": null
+     },
+     {
+      "group": "2026",
+      "n_signal": 4,
+      "n_control": 10,
+      "diff": 17.65,
+      "p": 0.925745458341177
+     }
+    ],
+    "by_band": [
+     {
+      "group": "LOW",
+      "n_signal": 8,
+      "n_control": 24,
+      "diff": 24.79875,
+      "p": 0.769165179186516
+     },
+     {
+      "group": "MID",
+      "n_signal": 6,
+      "n_control": 20,
+      "diff": -32.50483333333334,
+      "p": 0.31595284872841845
+     },
+     {
+      "group": "HIGH",
+      "n_signal": 4,
+      "n_control": 27,
+      "diff": -0.4857407407407415,
+      "p": 0.9869077410884932
+     }
+    ],
+    "by_baseline_sign": [
+     {
+      "group": "basis>=0",
+      "n_signal": 15,
+      "n_control": 67,
+      "diff": -3.5447363184079603,
+      "p": 0.93767875191366
+     },
+     {
+      "group": "basis<0",
+      "n_signal": 4,
+      "n_control": 9,
+      "diff": 44.95833333333333,
+      "p": 0.2452329594108822
+     }
+    ]
+   },
+   "diagnostics": {
+    "autocorr_y": 0.15089346361130526,
+    "effective_n": 95.0,
+    "overlap_ratio": 2.0,
+    "nonoverlap_n": 61,
+    "monthly_n": 47,
+    "look_ahead": "entry = 报告发布后可得价格；库存使用 T0 前已公布两期（通过）",
+    "mult_testing_registered": 17
+   },
+   "message": "主检验 p=0.8235，均值差=8.197，N=19"
+  },
+  {
+   "tag": "AM-3",
+   "note": "修订 AM-3：weekly + 允许换月",
+   "verdict": "NOT_SIGNIFICANT",
+   "n_signal": 48,
+   "n_control": 151,
+   "evaluable": 199,
+   "skipped": {
+    "parse_fail": 0,
+    "gap": 24,
+    "no_price": 0,
+    "dup_state": 0,
+    "incomplete": 3,
+    "roll_in_window": 92,
+    "pre15_bar_missing": 167
+   },
+   "tests": [
+    {
+     "id": "P1_mean",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 均值差（信号−对照）",
+     "estimate": 7.167181291390728,
+     "ci95": [
+      -28.55498188733474,
+      42.88934447011619
+     ],
+     "p": 0.6894619389868148,
+     "n": 48,
+     "extra": {
+      "p_normal_approx": 0.6880207563774559,
+      "control_mean": 2.1834437086092713,
+      "control_n": 151,
+      "se": 17.84912267716903,
+      "t": 0.4015424971311521,
+      "df": 59.39
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "P1_mw",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.008830022075055233,
+     "ci95": null,
+     "p": 0.9266399415255755,
+     "n": 199,
+     "extra": {
+      "auc": 0.5044150110375276
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9884159376272805
+    },
+    {
+     "id": "P2_dir",
+     "family": "primary",
+     "label": "主口径 Δbasis_10 方向一致率 P(Δ>0 | 信号) vs 对照",
+     "estimate": -0.023178807947019875,
+     "ci95": [
+      0.36389330403275494,
+      0.636106695967245
+     ],
+     "p": 0.7795198089232367,
+     "n": 48,
+     "extra": {
+      "signal_rate": 0.5,
+      "control_rate": 0.5232,
+      "n_control": 151
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "P3",
+     "family": "primary",
+     "label": "信号组均值 移动块自助 95%CI（全序列顺序）",
+     "estimate": 9.350624999999999,
+     "ci95": [
+      -6.27077135678392,
+      15.888528894472364
+     ],
+     "p": null,
+     "n": 48,
+     "extra": {},
+     "data_status": "REAL",
+     "q_bh": null
+    },
+    {
+     "id": "P4_mean",
+     "family": "primary",
+     "label": "期货 ΔP_10 均值差（信号−对照）",
+     "estimate": 25.35430463576159,
+     "ci95": [
+      -37.76255675700649,
+      88.47116602852968
+     ],
+     "p": 0.42487678161213704,
+     "n": 48,
+     "extra": {
+      "p_normal_approx": 0.42182699429834836,
+      "control_mean": -0.8543046357615894,
+      "control_n": 151,
+      "se": 31.5644279376922,
+      "t": 0.803255635926958,
+      "df": 62.39
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "P4_mw",
+     "family": "primary",
+     "label": "期货 ΔP_10 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.1505242825607065,
+     "ci95": null,
+     "p": 0.11652385532645093,
+     "n": 199,
+     "extra": {
+      "auc": 0.5752621412803532
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "S1_mean",
+     "family": "sensitivity",
+     "label": "敏感性 S1：窗口缩短为 5 日 均值差（信号−对照）",
+     "estimate": 14.517568984547461,
+     "ci95": [
+      -10.849603187249711,
+      39.88474115634463
+     ],
+     "p": 0.25633372046857494,
+     "n": 48,
+     "extra": {
+      "p_normal_approx": 0.25156672534990854,
+      "control_mean": -1.0871523178807947,
+      "control_n": 151,
+      "se": 12.66193417845343,
+      "t": 1.146552239171463,
+      "df": 57.28
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "S1_mw",
+     "family": "sensitivity",
+     "label": "敏感性 S1：窗口缩短为 5 日 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.08333333333333326,
+     "ci95": null,
+     "p": 0.38486088818985786,
+     "n": 199,
+     "extra": {
+      "auc": 0.5416666666666666
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "S2_mean",
+     "family": "sensitivity",
+     "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 均值差（信号−对照）",
+     "estimate": 9.887783018867925,
+     "ci95": [
+      -30.68041773503524,
+      50.45598377277109
+     ],
+     "p": 0.6258519116005039,
+     "n": 40,
+     "extra": {
+      "p_normal_approx": 0.6235445064293947,
+      "control_mean": 1.9247169811320757,
+      "control_n": 159,
+      "se": 20.14489912400471,
+      "t": 0.49083308672842246,
+      "df": 46.52
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "S2_mw",
+     "family": "sensitivity",
+     "label": "敏感性 S2：连续两周降幅均 ≥1.0 万吨 Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.018710691823899284,
+     "ci95": null,
+     "p": 0.8549865822220928,
+     "n": 199,
+     "extra": {
+      "auc": 0.5093553459119496
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "R1",
+     "family": "robustness",
+     "label": "OLS + Newey-West HAC：Δ 基差 ~ 信号 + Δ库存 + 库存分位",
+     "estimate": -10.136911683114667,
+     "ci95": null,
+     "p": 0.4781686757846062,
+     "n": 199,
+     "extra": {
+      "betas": {
+       "b0": 7.9509,
+       "b1": -10.1369,
+       "b2": -1.8612,
+       "b3": -2.8382
+      },
+      "se_hac": [
+       16.7059,
+       14.2649,
+       1.0801,
+       21.3183
+      ],
+      "r2": 0.0163,
+      "hac_lags": 5,
+      "hac_inflation": 1.034
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "R2",
+     "family": "robustness",
+     "label": "移动块置换检验（保持块内自相关）",
+     "estimate": 7.167181291390728,
+     "ci95": null,
+     "p": 1.0,
+     "n": 199,
+     "extra": {
+      "blocks": 37,
+      "n_perm": 3000
+     },
+     "data_status": "REAL",
+     "q_bh": 1.0
+    },
+    {
+     "id": "R3_mean",
+     "family": "robustness",
+     "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） 均值差（信号−对照）",
+     "estimate": -5.8056702898550725,
+     "ci95": [
+      -46.87503392189531,
+      35.263693342185164
+     ],
+     "p": 0.775312985736029,
+     "n": 24,
+     "extra": {
+      "p_normal_approx": 0.7734954847191007,
+      "control_mean": 6.229420289855073,
+      "control_n": 69,
+      "se": 20.172187604762534,
+      "t": -0.28780568590807615,
+      "df": 32.68
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "R3_mw",
+     "family": "robustness",
+     "label": "鲁棒性 R3：非重叠样本（间隔≥10交易日） Mann-Whitney U（Cliff's δ）",
+     "estimate": -0.02657004830917875,
+     "ci95": null,
+     "p": 0.8468256266662373,
+     "n": 93,
+     "extra": {
+      "auc": 0.4867149758454106
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "R4_mean",
+     "family": "robustness",
+     "label": "鲁棒性 R4：月度样本（每月至多 1 个） 均值差（信号−对照）",
+     "estimate": -12.97766447368421,
+     "ci95": [
+      -64.75835039277227,
+      38.80302144540384
+     ],
+     "p": 0.610694407632584,
+     "n": 16,
+     "extra": {
+      "p_normal_approx": 0.6063397644079054,
+      "control_mean": 10.17578947368421,
+      "control_n": 38,
+      "se": 25.18442356696208,
+      "t": -0.5153052020102148,
+      "df": 26.0
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "R4_mw",
+     "family": "robustness",
+     "label": "鲁棒性 R4：月度样本（每月至多 1 个） Mann-Whitney U（Cliff's δ）",
+     "estimate": 0.02960526315789469,
+     "ci95": null,
+     "p": 0.8646091288889446,
+     "n": 54,
+     "extra": {
+      "auc": 0.5148026315789473
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    },
+    {
+     "id": "PLAC_1",
+     "family": "placebo",
+     "label": "标签洗牌安慰剂（信号随机化后 |差|≥观测差异 的比例）",
+     "estimate": 7.167,
+     "ci95": null,
+     "p": 0.5,
+     "n": 199,
+     "extra": {
+      "n_shuffle": 3
+     },
+     "data_status": "REAL",
+     "q_bh": 0.9881247187302223
+    }
+   ],
+   "stability": {
+    "by_year": [
+     {
+      "group": "2022",
+      "n_signal": 9,
+      "n_control": 25,
+      "diff": 7.862222222222222,
+      "p": 0.8184521828739888
+     },
+     {
+      "group": "2023",
+      "n_signal": 3,
+      "n_control": 37,
+      "diff": 12.517117117117117,
+      "p": 0.5262532917681684
+     },
+     {
+      "group": "2024",
+      "n_signal": 9,
+      "n_control": 34,
+      "diff": -7.547287581699346,
+      "p": 0.7468363759522068
+     },
+     {
+      "group": "2025",
+      "n_signal": 11,
+      "n_control": 36,
+      "diff": 6.150277777777777,
+      "p": 0.7528403366620753
+     },
+     {
+      "group": "2026",
+      "n_signal": 16,
+      "n_control": 19,
+      "diff": 0.7730263157894726,
+      "p": 0.9881478260422738
+     }
+    ],
+    "by_band": [
+     {
+      "group": "LOW",
+      "n_signal": 23,
+      "n_control": 44,
+      "diff": 7.849802371541503,
+      "p": 0.8203237811389927
+     },
+     {
+      "group": "MID",
+      "n_signal": 17,
+      "n_control": 35,
+      "diff": 2.293344537815126,
+      "p": 0.91745491529884
+     },
+     {
+      "group": "HIGH",
+      "n_signal": 7,
+      "n_control": 65,
+      "diff": -13.456461538461538,
+      "p": 0.5638982991265955
+     }
+    ],
+    "by_baseline_sign": [
+     {
+      "group": "basis>=0",
+      "n_signal": 42,
+      "n_control": 129,
+      "diff": 4.111256921373201,
+      "p": 0.8366646263053834
+     },
+     {
+      "group": "basis<0",
+      "n_signal": 6,
+      "n_control": 22,
+      "diff": 34.76015151515151,
+      "p": 0.16135844522635545
+     }
+    ]
+   },
+   "diagnostics": {
+    "autocorr_y": 0.26620116686244566,
+    "effective_n": 199.0,
+    "overlap_ratio": 2.0,
+    "nonoverlap_n": 93,
+    "monthly_n": 54,
+    "look_ahead": "entry = 报告发布后可得价格；库存使用 T0 前已公布两期（通过）",
+    "mult_testing_registered": 17
+   },
+   "message": "主检验 p=0.6895，均值差=7.167，N=48"
+  }
+ ]
+}

@@ -1,0 +1,166 @@
+{
+ "_README": "复制本文件为 examples/<你的案例>/research.json 后逐项填写。字段说明见 references/data-contract.md。删除所有以 _ 开头的注释键不会影响运行，但保留有助于审阅。",
+ "meta": {
+  "product": "【填】品种中文名",
+  "product_code": "【填】简称",
+  "spec": "【填】等级/纯度/形态/包装，必须可判定",
+  "title": "【填】报告标题，如：XX CFR 中国 vs 华东现货",
+  "quote_basis": "【填】报价口径文字说明（含运保与否）",
+  "quote_region": "【填】海外市场/港口",
+  "quote_term": "CIF",
+  "dom_region": "【填】国内基准地",
+  "dom_basis": "【填】国内价口径（含税/送到/现汇）",
+  "hs_code": "【填】10 位海关编码",
+  "hs_desc": "【填】编码描述",
+  "currency": "USD",
+  "unit": "元/吨",
+  "base_date": "YYYY-MM-DD",
+  "window": "YYYY-MM-DD ~ YYYY-MM-DD（N 个可对齐观测点）",
+  "window_start": "YYYY-MM-DD",
+  "compare_date": "YYYY-MM-DD",
+  "generated_at": "YYYY-MM-DD",
+  "author": "windows-spread-calc",
+  "must_read": [
+   "本报告只做三件事：把海外报价折成四层可比成本、把国内价折算到同一口径、把两者的差及其变动说清楚。它不给出任何采购或销售的操作指令，也不把价差称作可实现的利润。",
+   "基准时点选取报价、国内价、汇率三者同日齐全的最后一个时点。",
+   "四层成本必须分开看：CIF 折人民币、含税到岸、可抵扣进口增值税、可比经济成本。"
+  ],
+  "focus": [
+   "【填】本次分析要盯住的第一个点",
+   "【填】本次分析要盯住的第二个点"
+  ]
+ },
+ "overseas": {
+  "price": 0.0,
+  "_price_range_note": "若有区间，改用 price_range 字段写 \"680-690\"，代码取中值",
+  "price_range": "",
+  "spec": "【填】",
+  "region": "【填】",
+  "currency": "USD",
+  "tax": "不含中国进口税",
+  "term": "CIF",
+  "date": "YYYY-MM-DD",
+  "conf": "中",
+  "source": "【填】媒体 + 文章标题 + 关键原文",
+  "source_url": "https://"
+ },
+ "domestic": {
+  "price": 0.0,
+  "spec": "【填】",
+  "region": "【填】",
+  "tax": "含税",
+  "term": "送到主港",
+  "term_incl_freight": true,
+  "freight_to_bench": 0.0,
+  "scale_adj": 0.0,
+  "date": "YYYY-MM-DD",
+  "conf": "中",
+  "source": "【填】",
+  "source_url": "https://"
+ },
+ "compare_quote": {
+  "price": 0.0,
+  "spec": "【填】",
+  "region": "【填】",
+  "currency": "USD",
+  "tax": "不含中国进口税",
+  "term": "CIF",
+  "date": "YYYY-MM-DD",
+  "conf": "中",
+  "source": "【填】",
+  "source_url": "https://"
+ },
+ "compare_dom": {
+  "price": 0.0,
+  "spec": "【填】",
+  "region": "【填】",
+  "tax": "含税",
+  "term": "送到主港",
+  "date": "YYYY-MM-DD",
+  "conf": "中",
+  "source": "【填】",
+  "source_url": "https://"
+ },
+ "cost_params": {
+  "fx_usdcny": 0.0,
+  "purity": 1.0,
+  "gross_weight_factor": 1.0,
+  "inland_origin": 0.0,
+  "export_clear": 0.0,
+  "ocean_freight": 0.0,
+  "insurance_rate": 1.1,
+  "insurance_rate_pct": 0.0,
+  "discharge_fee": 0.0,
+  "inland_dest": 0.0,
+  "unload_fee": 0.0,
+  "duty_rate": 0.0,
+  "other_tax_rate": 0.0,
+  "vat_rate": 0.13,
+  "vat_credit_ratio": 1.0,
+  "_src": {
+   "ocean_freight": "【填】为什么是 0 或这个值",
+   "duty_rate": "【填】用的是哪一档税率"
+  }
+ },
+ "fx_meta": { "note": "【填】汇率来源与偏差说明" },
+ "series_sources": {
+  "fx_name": "【填】",
+  "fx_max_stale_days": 7,
+  "ov_default": "【填】",
+  "dom_default": "【填】"
+ },
+ "fx_history": { "YYYY-MM-DD": 0.0 },
+ "freight_history": {
+  "monthly": { "YYYY-MM": 0.0 },
+  "source": "【填】",
+  "note": "【填】"
+ },
+ "sensitivity": {
+  "price": [0],
+  "freight": [0],
+  "fx": [0],
+  "duty": [0, 0.02, 0.055],
+  "vat": [0.09, 0.13],
+  "insurance_pct": [0, 0.0015],
+  "credit": [0, 0.5, 1.0],
+  "discharge": [0, 10, 20],
+  "term": ["EXW", "FOB", "CFR", "CIF", "DAP"],
+  "matrix": { "fx": [0], "freight": [0] }
+ },
+ "scenarios": {
+  "rounds": [
+   { "name": "口径 A：报价原样", "desc": "不追加任何费用", "override": {} }
+  ]
+ },
+ "market_implied": { "rows": [], "meta": {} },
+ "history": [
+  {
+   "date": "YYYY-MM-DD",
+   "ov_usd": 0.0,
+   "dom_cny": 0.0,
+   "fx": 0.0,
+   "frt_usd": 0.0,
+   "frt_source": "actual",
+   "fx_source": "actual",
+   "note": "【frt_source=assumed_base 时必填】",
+   "ov_source": "https://",
+   "dom_source": "https://"
+  }
+ ],
+ "sources": [
+  { "role": "overseas", "name": "【填】", "conf": "中", "date": "【填】", "urls": ["https://"], "note": "【填】" },
+  { "role": "domestic", "name": "【填】", "conf": "中", "date": "【填】", "urls": ["https://"], "note": "【填】" },
+  { "role": "fx", "name": "【填】", "conf": "高", "date": "【填】", "urls": ["https://"], "note": "【填】" },
+  { "role": "tax", "name": "【填】", "conf": "中", "date": "【填】", "urls": ["https://"], "note": "【填】" }
+ ],
+ "gaps": [
+  { "item": "【填】缺什么（具体到字段或数值）", "impact": "【填】影响方向与量级", "fix": "【填】怎么补齐", "severity": "高", "scope": "cost" }
+ ],
+ "disclaimers": [
+  "本报告是成本与价差的对照测算，不是交易建议。G1~G4 只是两个口径的价格之差，不等于可实现的利润，也不构成任何采购、销售或进口交易的操作指令。",
+  "海外报价为二手引用，未取得原始报盘单、船期确认与供货商名称；商业决策前应索取原始报价单。",
+  "历史曲线上每一行都标注了报价、汇率、运费的取得方式；凡标注假设的行，其成本侧数字只能作为条件性结果，不能当作历史实际发生成本。",
+  "本报告不含任何价格预测。所有外生参数均在交互面板显式给出。",
+  "所有数据缺口均逐条列出并标明对结论的影响方向；未列出的缺口不代表不存在。"
+ ]
+}

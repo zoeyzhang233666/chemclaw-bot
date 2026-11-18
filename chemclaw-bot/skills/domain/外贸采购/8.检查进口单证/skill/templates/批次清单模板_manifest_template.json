@@ -1,0 +1,42 @@
+{
+ "batch": {
+  "case_no": "批次号（内部编号，如 合同号-年月）",
+  "label": "【模拟】或实际业务说明",
+  "product_en": "",
+  "product_cn": "",
+  "cas": "",
+  "hs": "",
+  "quantity_mt": 0.0,
+  "unit_price_usd": 0.0,
+  "amount_usd": 0.0,
+  "incoterm": "",
+  "port_load": "",
+  "port_disch": "",
+  "vessel_voyage": "",
+  "etd": "",
+  "eta": "",
+  "buyer": "",
+  "seller": "",
+  "consignee_of_record": "",
+  "uscc": "",
+  "letter_date": ""
+ },
+ "expected_documents": [
+  {
+   "type": "COO",
+   "name": "原产地证 Certificate of Origin",
+   "severity": "高",
+   "why": "依据写清楚：合同第 X 条 / 信用证第 Y 条 / 中国海关对该 HS 的监管要求",
+   "impacts": ["进口报关（原产地要素）", "关税税率适用", "单证相符"],
+   "action": "向发货人索取正本，核对出口商、收货人、HS、原产国与本批一致"
+  },
+  {
+   "type": "INSURANCE",
+   "name": "保险单 Insurance Policy",
+   "severity": "提示",
+   "why": "CIF/CIP 下由卖方投保；FOB/CFR 下买方自保，无需向卖方索取",
+   "impacts": ["单证相符（视信用证条款）"],
+   "action": "确认成交术语；买方自行投保时保留保单备查即可"
+  }
+ ]
+}

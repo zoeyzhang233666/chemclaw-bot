@@ -1,0 +1,95 @@
+{
+  "client_questions": [
+    {
+      "field": "grade",
+      "label_cn": "等级 / 牌号",
+      "label_en": "Grade",
+      "priority": 1,
+      "status": "missing",
+      "question_en": "Could you advise which grade you require (industrial / glass / technical)?",
+      "reason_cn": "客户所称等级是否对应我方现有产品线？",
+      "anchor": "",
+      "internal": "客户所称等级是否对应我方现有产品线？"
+    },
+    {
+      "field": "currency",
+      "label_cn": "币种",
+      "label_en": "Currency",
+      "priority": 1,
+      "status": "missing",
+      "question_en": "Could you confirm the quotation currency (USD / EUR)?",
+      "reason_cn": "我方报价币种确认。",
+      "anchor": "",
+      "internal": "我方报价币种确认。"
+    },
+    {
+      "field": "price_basis",
+      "label_cn": "价格基础",
+      "label_en": "Price basis",
+      "priority": 1,
+      "status": "ambiguous",
+      "question_en": "Could you confirm the price basis you require (per MT, which term and port)?",
+      "reason_cn": "贸易术语与港口不一致（FOB 后面写的是买方港口），价格基础不成立，须先与客户澄清再报价。",
+      "anchor": "FOB Hải Phòng.",
+      "internal": ""
+    },
+    {
+      "field": "payment",
+      "label_cn": "付款方式",
+      "label_en": "Payment terms",
+      "priority": 1,
+      "status": "ambiguous",
+      "question_en": "We note that you require payment by L/C. To prepare the offer correctly, could you confirm the L/C type (at sight or usance) and the validity period?",
+      "reason_cn": "客户只说 L/C，未给类型（即期/远期）、有效期、开证行、是否保兑 → 不构成可执行付款条件。",
+      "anchor": "Thanh toán: L/C.",
+      "internal": "我方能否接受客户付款方式，并给出我方条件。"
+    }
+  ],
+  "internal_confirm": [
+    {
+      "field": "pack_std",
+      "label_cn": "包装",
+      "desc": "我方标准出口包装方案（袋型 / 袋重 / 内衬 / 托盘）"
+    },
+    {
+      "field": "delivery_time",
+      "label_cn": "交期 / 装运期",
+      "desc": "排产可承诺的装运期"
+    },
+    {
+      "field": "quote_validity",
+      "label_cn": "报价有效期",
+      "desc": "报价有效天数"
+    },
+    {
+      "field": "sample_req",
+      "label_cn": "样品要求",
+      "desc": "样品政策（数量 / 样品费 / 运费承担）"
+    },
+    {
+      "field": "doc_form_e",
+      "label_cn": "FORM E 等优惠原产地证",
+      "desc": "能否出具 FORM E"
+    },
+    {
+      "field": "doc_coo",
+      "label_cn": "原产地证 CO",
+      "desc": "能否出具原产地证"
+    },
+    {
+      "field": "doc_inspection",
+      "label_cn": "第三方检验",
+      "desc": "能否配合第三方检验及费用"
+    },
+    {
+      "field": "payment",
+      "label_cn": "付款方式",
+      "desc": "我方可接受付款条件"
+    },
+    {
+      "field": "lc_terms",
+      "label_cn": "信用证条件",
+      "desc": "信用证可接受范围"
+    }
+  ]
+}

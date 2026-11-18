@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>沙特阿拉伯 乙二醇（MEG）供应市场研究</title>
+<style>
+:root{
+  --bg:#0b1220; --bg2:#111a2e; --card:#141f36; --card2:#1a2745; --line:#233355;
+  --txt:#e8eefc; --txt2:#a8b8d8; --txt3:#6f82a8;
+  --acc:#3ea6ff; --acc2:#26d0a8; --warn:#ffb020; --bad:#ff5c72; --ok:#2ecc8f;
+  --grad:linear-gradient(135deg,#3ea6ff,#7c5cff 45%,#26d0a8);
+  --shadow:0 8px 32px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(1200px 600px at 12% -8%,#1b2c52 0,rgba(11,18,32,0) 62%),var(--bg);
+  color:var(--txt);font:14px/1.65 "Segoe UI","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--acc);text-decoration:none}
+.wrap{max-width:1400px;margin:0 auto;padding:0 26px}
+
+/* ---------- 顶部 ---------- */
+header.hero{position:relative;padding:46px 0 28px;border-bottom:1px solid var(--line);overflow:hidden}
+header.hero:before{content:"";position:absolute;inset:0;
+  background:radial-gradient(700px 220px at 78% 0,rgba(124,92,255,.28),transparent 70%),
+             radial-gradient(520px 200px at 8% 20%,rgba(62,166,255,.20),transparent 70%);pointer-events:none}
+.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;position:relative}
+.tag{font-size:11.5px;letter-spacing:.4px;padding:4px 11px;border-radius:20px;border:1px solid var(--line);
+  background:rgba(62,166,255,.09);color:#bcd6ff}
+.tag.hot{border-color:rgba(255,92,114,.5);background:rgba(255,92,114,.12);color:#ff9aa9}
+h1.title{font-size:34px;line-height:1.25;font-weight:700;letter-spacing:-.5px;position:relative}
+h1.title em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+p.sub{color:var(--txt2);margin-top:10px;max-width:1000px;position:relative}
+.meta-line{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;color:var(--txt3);font-size:12.5px;position:relative}
+.meta-line b{color:var(--txt2);font-weight:600}
+
+/* ---------- 导航 ---------- */
+nav.tabs{position:sticky;top:0;z-index:60;background:rgba(11,18,32,.86);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav.tabs .wrap::-webkit-scrollbar{display:none}
+nav.tabs button{background:none;border:0;color:var(--txt3);font:inherit;font-size:13.5px;padding:15px 16px;
+  cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.18s}
+nav.tabs button:hover{color:var(--txt)}
+nav.tabs button.on{color:#fff;border-bottom-color:var(--acc)}
+nav.tabs input.search{margin-left:auto;align-self:center;background:var(--card2);border:1px solid var(--line);
+  color:var(--txt);border-radius:8px;padding:7px 12px;font:inherit;font-size:12.5px;width:210px}
+nav.tabs input.search::placeholder{color:var(--txt3)}
+
+/* ---------- 区块 ---------- */
+section.panel{display:none;padding:30px 0 70px;animation:fade .3s ease}
+section.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+h2.sec{font-size:21px;font-weight:700;margin:0 0 5px;display:flex;align-items:center;gap:10px}
+h2.sec .bar{width:4px;height:20px;border-radius:2px;background:var(--grad)}
+p.lead{color:var(--txt2);margin-bottom:22px;max-width:1150px}
+h3.sub{font-size:15px;font-weight:600;margin:26px 0 12px;color:#dbe7ff;display:flex;gap:8px;align-items:center}
+h3.sub:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--acc)}
+
+/* ---------- 卡片 ---------- */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(268px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(206px,1fr))}
+.card{background:linear-gradient(160deg,var(--card),var(--bg2));border:1px solid var(--line);
+  border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.card:after{content:"";position:absolute;inset:0;border-radius:14px;pointer-events:none;
+  background:linear-gradient(160deg,rgba(255,255,255,.055),transparent 42%)}
+
+/* KPI */
+.kpi{padding:17px 18px}
+.kpi .k{font-size:11.5px;color:var(--txt3);letter-spacing:.5px;text-transform:uppercase}
+.kpi .v{font-size:27px;font-weight:700;letter-spacing:-.6px;margin:5px 0 2px;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:13px;font-weight:500;color:var(--txt2);margin-left:3px}
+.kpi .n{font-size:11.5px;color:var(--txt3);line-height:1.5}
+.kpi.acc .v{color:#7cc4ff}.kpi.a2 .v{color:#4fe0b8}.kpi.warn .v{color:#ffc255}.kpi.bad .v{color:#ff8194}
+
+/* 徽标 */
+.badge{display:inline-flex;align-items:center;font-size:10.5px;padding:2px 8px;border-radius:20px;
+  font-weight:600;letter-spacing:.2px;white-space:nowrap;line-height:1.7}
+.bA{background:rgba(46,204,143,.17);color:#5ee0ab;border:1px solid rgba(46,204,143,.33)}
+.bB{background:rgba(62,166,255,.16);color:#7cc4ff;border:1px solid rgba(62,166,255,.32)}
+.bC{background:rgba(255,176,32,.15);color:#ffc255;border:1px solid rgba(255,176,32,.32)}
+.bD{background:rgba(255,92,114,.15);color:#ff8f9f;border:1px solid rgba(255,92,114,.34)}
+.bN{background:rgba(168,184,216,.11);color:#a8b8d8;border:1px solid rgba(168,184,216,.22)}
+
+/* 表格 */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+thead th{background:var(--card2);color:#c6d6f5;font-weight:600;text-align:left;padding:11px 12px;
+  position:sticky;top:0;white-space:nowrap;border-bottom:1px solid var(--line);font-size:12px}
+tbody td{padding:10px 12px;border-bottom:1px solid rgba(35,51,85,.62);vertical-align:top;color:var(--txt2)}
+tbody tr:hover td{background:rgba(62,166,255,.055)}
+tbody td b,tbody td strong{color:var(--txt);font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.click{cursor:pointer}
+tr.click:hover td{background:rgba(62,166,255,.1)}
+.tag-mini{font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.07);color:var(--txt3)}
+
+/* 图 */
+.chart{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.chart .cap{font-size:12px;color:var(--txt3);margin-bottom:12px}
+.chart svg{width:100%;display:block;overflow:visible}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--txt2);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+
+/* 筛选按钮 */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:var(--card2);border:1px solid var(--line);color:var(--txt2);border-radius:20px;
+  padding:5px 13px;font:inherit;font-size:12px;cursor:pointer;transition:.16s}
+.chip:hover{color:#fff;border-color:#365594}
+.chip.on{background:linear-gradient(135deg,rgba(62,166,255,.25),rgba(38,208,168,.18));color:#fff;border-color:rgba(62,166,255,.6)}
+
+/* 地图 */
+#map{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:
+  radial-gradient(900px 480px at 50% 40%,#132646,#0a1526 78%)}
+#map .sea{position:absolute;inset:0;pointer-events:none;
+  background:
+   repeating-linear-gradient(90deg,rgba(62,166,255,.055) 0 1px,transparent 1px 46px),
+   repeating-linear-gradient(0deg,rgba(62,166,255,.055) 0 1px,transparent 1px 46px)}
+.mk{position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:3}
+.mk .dot{width:14px;height:14px;border-radius:50%;border:2px solid #fff;
+  box-shadow:0 0 0 4px rgba(62,166,255,.22),0 0 18px rgba(62,166,255,.75);transition:.2s}
+.mk:hover .dot{transform:scale(1.35)}
+.mk .lbl{position:absolute;left:19px;top:-4px;white-space:nowrap;font-size:11.5px;color:#cfe0ff;
+  background:rgba(10,18,32,.78);padding:2px 8px;border-radius:5px;border:1px solid var(--line)}
+.mk.port .dot{background:var(--ok);box-shadow:0 0 0 4px rgba(46,204,143,.2),0 0 16px rgba(46,204,143,.7)}
+.mk.site .dot{background:var(--acc);width:11px;height:11px}
+.mk.site .lbl{color:#9fc4ff}
+.mk .ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(62,166,255,.32);
+  animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.7);opacity:.9}100%{transform:scale(1.8);opacity:0}}
+#map .hint{position:absolute;left:14px;bottom:12px;font-size:11px;color:var(--txt3);z-index:4}
+#mapTooltip{position:absolute;z-index:9;display:none;background:rgba(12,20,36,.97);border:1px solid #34548f;
+  border-radius:9px;padding:9px 12px;font-size:11.8px;color:var(--txt2);pointer-events:none;max-width:250px;
+  box-shadow:var(--shadow);line-height:1.6}
+
+/* 时间线 */
+.timeline{position:relative;padding-left:26px;margin-top:8px}
+.timeline:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--acc),var(--acc2),rgba(255,92,114,.7))}
+.tl{position:relative;margin-bottom:16px}
+.tl:before{content:"";position:absolute;left:-24px;top:6px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--acc)}
+.tl.hi:before{border-color:var(--bad);box-shadow:0 0 12px rgba(255,92,114,.8)}
+.tl.pos:before{border-color:var(--ok);box-shadow:0 0 12px rgba(46,204,143,.6)}
+.tl .d{font-size:11.5px;color:var(--txt3);font-variant-numeric:tabular-nums}
+.tl .t{font-size:13.5px;font-weight:600;color:var(--txt);margin:1px 0 3px}
+.tl .x{font-size:12.4px;color:var(--txt2)}
+.tl .meta{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+
+/* 抽屉 */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,94vw);background:var(--bg2);
+  border-left:1px solid var(--line);box-shadow:-24px 0 60px rgba(0,0,0,.55);z-index:120;
+  transform:translateX(102%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:24px}
+.drawer.on{transform:none}
+.drawer .close{position:absolute;top:16px;right:18px;background:var(--card2);border:1px solid var(--line);
+  color:var(--txt2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px}
+.drawer h3{font-size:19px;margin-bottom:4px;padding-right:40px}
+.drawer .kv{display:grid;grid-template-columns:104px 1fr;gap:6px 12px;margin:16px 0;font-size:12.8px}
+.drawer .kv .k{color:var(--txt3)}
+.drawer .kv .v{color:var(--txt2)}
+.drawer .sec-t{font-size:12px;color:var(--txt3);letter-spacing:.5px;text-transform:uppercase;
+  margin:20px 0 8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.mask{position:fixed;inset:0;background:rgba(4,8,16,.62);z-index:110;display:none;backdrop-filter:blur(2px)}
+.mask.on{display:block}
+
+/* 提示 */
+.note{border-left:3px solid var(--warn);background:rgba(255,176,32,.075);padding:12px 16px;border-radius:0 10px 10px 0;
+  font-size:12.8px;color:#e6d3a8;margin:14px 0}
+.note.bad{border-color:var(--bad);background:rgba(255,92,114,.075);color:#ffc2cb}
+.note.ok{border-color:var(--ok);background:rgba(46,204,143,.07);color:#b5ecd8}
+.note.info{border-color:var(--acc);background:rgba(62,166,255,.07);color:#c3dcff}
+.note b{color:#fff}
+
+/* 定义列表 */
+.def{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:10px}
+.def .it{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.def .it .k{font-size:11px;color:var(--txt3)}
+.def .it .v{font-size:14px;font-weight:600;color:var(--txt);margin-top:2px}
+.def .it .n{font-size:11.5px;color:var(--txt3);margin-top:3px;line-height:1.5}
+
+/* 层级条 */
+.bars .row{display:grid;grid-template-columns:150px 1fr 74px;gap:12px;align-items:center;margin-bottom:9px;font-size:12.5px}
+.bars .row .l{color:var(--txt2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars .row .b{height:22px;border-radius:5px;background:rgba(255,255,255,.045);position:relative;overflow:hidden}
+.bars .row .b i{position:absolute;inset:0;border-radius:5px;transition:width .8s cubic-bezier(.2,.8,.2,1);
+  background:linear-gradient(90deg,#3ea6ff,#26d0a8)}
+.bars .row .v{color:var(--txt);font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+
+/* 流程 */
+.flow{display:flex;gap:0;flex-wrap:wrap;align-items:stretch;margin:14px 0}
+.flow .st{flex:1;min-width:150px;background:var(--card2);border:1px solid var(--line);border-radius:10px;
+  padding:12px;position:relative;margin-right:14px}
+.flow .st:after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--acc);font-size:15px}
+.flow .st:last-child{margin-right:0}.flow .st:last-child:after{display:none}
+.flow .st .n{font-size:10.5px;color:var(--acc);font-weight:700;letter-spacing:.5px}
+.flow .st .t{font-size:13px;font-weight:600;margin:3px 0}
+.flow .st .x{font-size:11.5px;color:var(--txt3);line-height:1.5}
+
+/* 来源 */
+.srcid{font-size:10.5px;color:#7ea6e6;background:rgba(62,166,255,.1);border:1px solid rgba(62,166,255,.25);
+  padding:0 5px;border-radius:4px;cursor:pointer;font-variant-numeric:tabular-nums}
+.srcid:hover{background:rgba(62,166,255,.24)}
+footer{border-top:1px solid var(--line);padding:26px 0 60px;color:var(--txt3);font-size:12px}
+.hidden{display:none!important}
+@media(max-width:720px){
+  h1.title{font-size:24px} .wrap{padding:0 14px}
+  nav.tabs input.search{width:130px}
+  .bars .row{grid-template-columns:100px 1fr 60px}
+}
+@media print{
+  nav.tabs,.mask,.drawer{display:none!important}
+  section.panel{display:block!important;page-break-before:always}
+  body{background:#fff;color:#111}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="tagrow">
+      <span class="tag">沙特阿拉伯 · Saudi Arabia</span>
+      <span class="tag">乙二醇（单乙二醇）</span>
+      <span class="tag">HS 2905.31</span>
+      <span class="tag hot" id="hotTag">数据截止 2026-10-20</span>
+    </div>
+    <h1 class="title" id="pageTitle">沙特阿拉伯 乙二醇（MEG）供应市场研究</h1>
+    <p class="sub" id="pageSub">对外采购视角：生产能力、出口流向、物流条件与供应风险</p>
+    <div class="meta-line">
+      <span>口径：<b>产能单位统一为 kt/a（千吨/年，名义设计能力-姓名牌），贸易量单位 kt（千吨），金额单位百万美元。</b></span>
+      <span>编制用途：<b>外贸采购（进口中国）初步可行性研判 —— 非报价文件</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap" id="navBar"></div>
+</nav>
+
+<main class="wrap" id="main"></main>
+
+<footer><div class="wrap" id="footerNote"></div></footer>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer"></aside>
+
+<script>window.MARKET_DATA = {"meta":{"title":"沙特阿拉伯 乙二醇（MEG）供应市场研究","subtitle":"对外采购视角：生产能力、出口流向、物流条件与供应风险","country":"Saudi Arabia","country_cn":"沙特阿拉伯","product":"Monoethylene Glycol (MEG)","product_cn":"乙二醇（单乙二醇）","hs_code":"2905.31","hs_note":"HS 2905.31 同时涵盖 MEG 与其它乙二醇（乙二醇类），不含 DEG/TEG（HS 2905.31 之外的二醇同列或另列税目），贸易量口径以 UN Comtrade 报告国申报为准；中国企业进口 MEG 常套用 2905.31.0000。","research_date":"2026-10-20","as_of_note":"本报告数据截止 2026-10-20。2026 年 2 月末起的中东冲突与霍尔木兹海峡有效封闭对沙特 MEG 的产量、出口与物流产生结构性影响，涉及 2026 年的数据须与 2025 年及以前年份分开解读。","scale_note":"产能单位统一为 kt/a（千吨/年，名义设计能力-姓名牌），贸易量单位 kt（千吨），金额单位百万美元。","prepared_for":"外贸采购（进口中国）初步可行性研判 —— 非报价文件"},"sources":[{"id":"S01","title":"WITS / UN Comtrade: Saudi Arabia exports of HS 2905.31, 2021-2025","publisher":"World Bank WITS (UN Comtrade)","url":"https://wits.worldbank.org/trade/comtrade/en/country/SAU/year/2024/tradeflow/Exports/partner/ALL/product/290531","date":"2025 年数据于 2026 年发布；页面刷新 2026-10-19","type":"官方统计数据库","reliability":"高","note":"报告国自行申报的口径，货值按 USD 计、数量按 kg 计；2021-2025 年逐年抓取（2021-2025 共 178 个伙伴-年记录）。"},{"id":"S02","title":"Saudi Kayan Petrochemical Company Annual Report 2022 - Operating divisions / 产品年产能表","publisher":"Saudi Kayan (saudikayan.com)","url":"https://www.saudikayan.com/en/Images/Annual%20Report%202022%20En_tcm1043-42458.pdf","date":"2023 年发布（2022 财年）","type":"上市公司年报（一手）","reliability":"高","note":"官方产品口径：Ethylene Glycol 1,065 千公吨/年；Ethylene 1,485；EOX 770；SABIC 持股 35%。"},{"id":"S03","title":"SABIC 2022 Annual Report - Petrochemicals（United EG-3 投产）","publisher":"SABIC","url":"https://www.sabic.com/en/reports/annual-2022/our-businesses/petrochemicals","date":"2023 年发布","type":"上市公司年报（一手）","reliability":"高","note":"2022 年 10 月 United 第三套乙二醇装置商业化运营，年产能 700,000 公吨 MEG。"},{"id":"S04","title":"SABIC press release: United begins startup activities at its new ethylene glycol plant","publisher":"SABIC","url":"https://www.sabic.com/en/news/31184-sabic-affiliate-united-begins-startup-activities-at-its-new-ethylene-glycol-plant","date":"2021-11-17","type":"企业公告（一手）","reliability":"高","note":"United EG-3 估计年产能 700,000 公吨 MEG；初始开车 2021 年 11 月。"},{"id":"S05","title":"MEES: Sabic: Jubail MEG Start-Up","publisher":"Middle East Economic Survey","url":"https://www.mees.com/2022/10/21/refining-petrochemicals/sabic-jubail-meg-start-up/9026f600-5130-11ed-9c64-736c27d572dc","date":"2022-10-21","type":"行业媒体","reliability":"高","note":"JUPC(United) 第三套 MEG 装置 700,000 t/y 于 2022-10-17 宣布投产；股东结构 SABIC 75% / 公共养老基金 15% / 社保机构 10%；Samsung Engineering 2017 年 12 月签约，投资 7 亿美元。"},{"id":"S06","title":"ChemAnalyst: SHARQ Announces Intent to Restart MEG Line 4 Production in Jubail","publisher":"ChemAnalyst","url":"https://www.chemanalyst.com/NewsAndDeals/NewsDetails/sharq-announces-intent-to-restart-meg-line-4-production-in-jubail-24497","date":"2024-01-12","type":"行业媒体","reliability":"中高","note":"SHARQ 在朱拜勒的 MEG 4 号线年产能 700 千吨（2023 年 11 月起停车检修，2024 年 1 月下半月重启）；3 号线年产能 500 千吨（2023-11-04 起检修）。"},{"id":"S07","title":"ICIS (via Vinachem 转载): Saudi Arabia's SABIC plans heavy MEG shutdown in 2011","publisher":"ICIS / Vinachem","url":"https://www.vinachem.com.vn/articles/news-vnc/saudi_arabias_sabic_plans_heavy_meg_shutdown_in_2011.html","date":"2010-12（转载）；原文 ICIS 2011-01","type":"行业专业媒体（装置级）","reliability":"中高","note":"逐一列出 2011 年 SABIC 体系 8 套 MEG 装置检修，并给出姓名牌产能：JUPC No.1 700kt、JUPC No.2 640kt、Yansab 770kt、Yanpet No.1 380kt、Yanpet No.2 520kt、Sharq No.2 450kt、Sharq No.3 450kt（2011 年该文登记为 450kt）、Saudi Kayan 650kt；同时给出 SABIC 在沙特 MEG 总产能 5.71 Mt/y。该文写于 Sharq 4 号线(700kt)与 United EG-3(700kt)之前。"},{"id":"S08","title":"ICIS: Saudi's Yanpet to shut 520,000 tonne/year MEG unit in mid-May","publisher":"ICIS","url":"https://www.icis.com/explore/resources/news/2011/05/04/9456607/saudi-s-yanpet-to-shut-520-000-tonne-year-meg-unit-in-mid-may/","date":"2011-05-04","type":"行业专业媒体","reliability":"中高","note":"Yanpet 520 千吨/年 MEG 装置 2011 年 5 月中旬起 35 天检修。交叉验证 S07 的 Yanpet No.2 产能。"},{"id":"S09","title":"Argaam (Platts 引用): Saudi Sharq Petrochemical said to resume MEG facility operations early April","publisher":"Argaam","url":"https://www.argaam.com/en/article/articledetail/id/372959","date":"2015-03-15","type":"财经媒体","reliability":"中高","note":"SHARQ No.4 MEG 年产能 700,000 吨，2015 年 2 月末因更换反应器停车，4 月初复产；其余三套装置正常。"},{"id":"S10","title":"Plastemart: Saudi Kayan starts 537,000 tpa ethylene glycol line at Jubail Industrial City complex","publisher":"Plastemart (Platts 引用)","url":"https://www.plastemart.com/news-plastics-information/saudi-kayan-starts-537-000-tpa-ethylene-glycol-line-at-jubail-industrial-city-complex/18256","date":"2010-08-16","type":"行业媒体","reliability":"中","note":"Kayan MEG 生产线单系列 537 千吨/年（2010 年 8 月开车试运行）；与其年报合计 1,065 千吨/年（约 2 条 537kt 线）相互印证。"},{"id":"S11","title":"Toyo Engineering: Largest Scale Yansab Ethylene Glycol Plant for SABIC/Saudi Arabia awarded to TOYO","publisher":"Toyo Engineering","url":"https://www.toyo-eng.com/jp/en/company/news/?n=1397","date":"2005-07-19","type":"工程专利商公告（一手）","reliability":"高","note":"Yansab EG 装置 700,000 MTPA，Scientific Design 技术，LSTK 总包；同期在建 JUPC(United) 630,000 MTPA 装置；1999-2000 年为 YANPET 建成 420,000 MTPA EG 装置。"},{"id":"S12","title":"Oil & Gas Journal: Looming Mideast olefin production may or may not spell oversupply","publisher":"Oil & Gas Journal","url":"https://www.ogj.com/home/article/17221497/looming-mideast-olefin-production-mayor-may-notspell-oversupply","date":"2009-03-23","type":"行业专业期刊","reliability":"高","note":"Yansab 2008 年末建成，含 MEG 700kt；Sharq III 700kt EG 2009 年初投产；PetroRabigh 600kt MEG（Rabigh 为红海沿岸）；Aramco 曾以 0.75 美元/MMBtu 固定价供应石化原料气。"},{"id":"S13","title":"Hydrocarbon Engineering (AIChE 会议论文摘要): High catalyst selectivity at Petro Rabigh MEG plant","publisher":"Hydrocarbon Engineering / AIChE","url":"https://www.hydrocarbonengineering.com/petrochemicals/17022021/high-catalyst-selectivity-prompts-cycle-length-extension-at-petro-rabigh-monoethylene-glycol-plant/","date":"2021-02-17；论文出处 AIChE 2023 春季会议","type":"专业会议/期刊","reliability":"高","note":"Petro Rabigh MEG 装置 600,000 t/y，采用 Shell OMEGA 工艺，催化剂选择性 92%。"},{"id":"S14","title":"MEES: Saudi Petchems Firm Hit By Propane Shortfall","publisher":"Middle East Economic Survey","url":"https://www.mees.com/2026/7/17/refining-petrochemicals/saudi-petchems-firm-hit-by-propane-shortfall/cccd19d0-81eb-11f1-b733-e97c1c399b47","date":"2026-07-17","type":"行业媒体","reliability":"高","note":"2026 年 4-5 月 Advanced Petrochemical 丙烷供应减少（伊朗打击沙特关键 NGL 装置），其后恢复；沙特石化部门当季受冲突显著扰动。"},{"id":"S15","title":"MEES: Saudi Oil Sector Recovering From Conflict Outages","publisher":"MEES","url":"https://www.mees.com/2026/8/21/refining-petrochemicals/saudi-oil-sector-recovering-from-conflict-outages/6715fbf0-9d7c-11f1-928b-0d544f0ff1e0","date":"2026-08-21","type":"行业媒体","reliability":"高","note":"区域冲突自 2026-02-28 开始，头几天霍尔木兹海峡有效关闭；伴生气产量骤降、油品自用烧油激增。"},{"id":"S16","title":"CCFGroup Insight: MEG 2026 - how geopolitical supply shocks erased the global surplus","publisher":"CCFGroup（华瑞信息）","url":"https://cnc.ccfgroup.com/newscenter/newsview.php?Class_ID=D00000&Info_ID=2026041630125","date":"2026-04-16","type":"行业研究机构","reliability":"中高（估算）","note":"给出区域产能与开工：沙特东海岸 MEG 产能 5,040 kt/y（被列'全部装置停车'）、沙特当周 MEG 开工率 24.7%；波斯湾冲突区开工率 19.1%；2026 年 3-5 月全球供应损失 1.8-1.9 Mt。"},{"id":"S17","title":"CCFGroup: MEG imports may rise as chemical tankers clear Hormuz","publisher":"CCFGroup","url":"https://cnc.ccfgroup.com/newscenter/newsview.php?Class_ID=D00000&Info_ID=2026062430087","date":"2026-06-24","type":"行业研究机构","reliability":"中高","note":"2026 年 6 月下旬 MEG 相关化学品船逐步恢复通行霍尔木兹海峡；约 4-5 艘 MEG 船滞留湾内，其中 3 艘确认发往中国大陆（合计约 7 万吨）；沙特西海岸有装货活动。"},{"id":"S18","title":"CCFGroup: Red Sea attack raises cost of Saudi MEG cargoes to China","publisher":"CCFGroup","url":"https://cnc.ccfgroup.com/newscenter/newsview.php?Class_ID=D00000&Info_ID=2026081330067","date":"2026-08-13","type":"行业研究机构","reliability":"中高","note":"沙特西海岸 MEG 产能约 2.1 Mt/y；自 2026 年二季度起对华发运 40-50 千吨/月；2026-08-11 曼德海峡袭击使战争险保费由 0.3% 升至约 3%，单船 2.5-2.6 万载重吨增加约 135 万美元/航次约合 55 美元/吨，综合增加数十至 100 美元/吨。"},{"id":"S19","title":"SunSirs: Uncertainty Surrounded Ethylene Glycol Imports from Saudi Arabia, and Its Price Rose","publisher":"SunSirs（生意社）","url":"https://www.sunsirs.com/commodity-news/petail-35975.html","date":"2026-09-09","type":"商品资讯机构","reliability":"中","note":"2025 年中国 MEG 进口 772 万吨、对外依存度约 27-28%；沙特占中国进口 54-55%（约 422 万吨/年）；沙特 MEG 总产能 7.75 Mt；2026-09-07 华东主港 MEG 库存 12 万吨（年初高值 92.64 万吨）。"},{"id":"S20","title":"Argaam: Yansab plans 25-day ethylene glycol plant shutdown","publisher":"Argaam（援引 Tadawul 公告）","url":"https://www.argaam.com/en/article/articledetail/id/1874631","date":"2026-01-22","type":"交易所公告转述","reliability":"高","note":"Yansab EG 装置自 2026-01-25 起停车 25 天做预防性检修，为装置投运以来最长连续运行周期后的检修；影响将体现在 2026 年一季度业绩。"},{"id":"S21","title":"Argaam: Saudi Arabia files complaint to WTO about levying anti-dumping duties on MEG imports","publisher":"Argaam","url":"https://www.argaam.com/en/article/articledetail/id/1490717","date":"2021-08-20","type":"财经媒体","reliability":"高","note":"欧盟自 2021-06-12 起对原产沙特的 MEG 征收为期 6 个月的反倾销税，税率 11.1%，涉及所有沙特企业，点名 Yansab、Saudi Kayan、SHARQ、YANPET、Petrokemya 等；沙特随后向 WTO 提起磋商。"},{"id":"S22","title":"Bloomberg: Saudi Arabia Chemical Plant Shuts Down as War Disrupts Supply Chains","publisher":"Bloomberg","url":"https://www.bloomberg.com/news/articles/2026-03-31/saudi-chemical-plant-shuts-down-as-war-disrupts-supply-chains","date":"2026-03-31","type":"财经媒体","reliability":"高","note":"Sadara 位于朱拜勒的装置临时全面停车（Sadara 不产 MEG，为产业链关联信号：朱拜勒一体化园区供电/供料中断）。"},{"id":"S23","title":"Argus Media: Saudi Sadara petchem site shuts down on US-Iran war","publisher":"Argus Media","url":"https://www.argusmedia.com/en/news-and-insights/latest-market-news/2808400-saudi-sadara-petchem-site-shuts-down-on-us-iran-war","date":"2026-03-31","type":"行业专业媒体","reliability":"高","note":"Sadara 以'持续供应中断'为由临时停车；Sadara 为 Aramco-Dow 合资，位于朱拜勒。"},{"id":"S24","title":"Reuters: Iran has attacked Saudi Arabia's Jubail petrochemical complex","publisher":"Reuters","url":"https://www.reuters.com/world/middle-east/iran-has-attacked-saudi-petrochemical-complex-jubail-fars-news-agency-says-2026-04-07/","date":"2026-04-07","type":"国际通讯社","reliability":"高","note":"伊朗方面称 2026-04-07 袭击了朱拜勒石化综合体（沙特石化下游核心）。"},{"id":"S25","title":"OPIS: Sabic Petchem Complex Hit as Gulf Strikes Escalate","publisher":"OPIS (Dow Jones)","url":"https://www.opis.com/resources/energy-market-news-from-opis/sabic-petchem-complex-hit-as-gulf-strikes-escalate-adding-to-supply-side-risks/","date":"2026-04-07","type":"行业专业媒体","reliability":"高","note":"朱拜勒受袭引发 SABIC 运营装置火灾；夜间发生爆炸。"},{"id":"S26","title":"Mysteel: Blast in Jubail Industrial City pushes up MEG prices to five-year high","publisher":"Mysteel Global","url":"https://www.mysteel.net/news/5118932-blast-in-jubail-industrial-city-pushes-up-meg-prices-to-five-year-high","date":"2026-04-08","type":"行业专业媒体","reliability":"中高","note":"2026-04-07 对朱拜勒关键石化基础设施的重大袭击导致核心装置停车、MEG 短期可供应量骤减，中国 MEG 价格升至五年高位。"},{"id":"S27","title":"ICIS: INSIGHT - Saudi SABIC force majeure aggravates global chemicals shortage","publisher":"ICIS","url":"https://www.icis.com/explore/resources/news/2026/03/30/11193220/insight-saudi-sabic-force-majeure-aggravates-global-chemicals-shortage/","date":"2026-03-30","type":"行业专业媒体","reliability":"高","note":"SABIC 于 2026-03-26 对多个产品宣布不可抗力，出口因霍尔木兹海峡有效关闭受阻；SM、EG、乙醇胺对亚洲供应受影响。"},{"id":"S28","title":"ChemAnalyst / SABIC 系（转载）: Sabic starts-up operations at Jubail MEG plant","publisher":"eog-asia / SABIC","url":"http://www.eog-asia.com/sabic-starts-up-operations-at-jubail-meg-plant/","date":"2022-10-18","type":"行业媒体","reliability":"中","note":"United EG-3 700,000 t/y 装置试车后正式商业化。"},{"id":"S29","title":"GASTAT: Maritime Transport Statistics Publication 2024","publisher":"General Authority for Statistics (Kingdom of Saudi Arabia)","url":"https://www.stats.gov.sa/documents/20117/2435281/Maritime+Transport+Statistics+Publication+2024+-+EN.pdf/3ff86956-7844-2137-44ad-32338b01c4fe?t=1758090474814","date":"2025-09 发布（2024 年数据）","type":"国家统计机构（一手）","reliability":"高","note":"2024 年沙特各港出港货量约 2.224 亿吨；延布法赫德国王工业港出口占比 51.1%（约 1.14 亿吨）；液体散货 1.77 亿吨以上。"},{"id":"S30","title":"Zawya: Saudi ports handle over 331mln tons of cargo in 2024 - GASTAT","publisher":"Zawya","url":"https://www.zawya.com/en/business/transport-and-logistics/saudi-ports-handle-over-331mln-tons-of-cargo-in-2024-gastat-qg3h4lh4","date":"2025-09-19","type":"财经媒体（转述官方数据）","reliability":"中高","note":"转述 GASTAT：延布法赫德国王工业港为该王国第一大出口港；达曼阿卜杜勒阿齐兹港集装箱第一。"},{"id":"S31","title":"Royal Vopak: Vopak and SABIC to invest in new storage terminal in Jubail (King Fahd Industrial Port)","publisher":"Royal Vopak","url":"https://www.vopak.com/newsroom/news/vopak-and-sabic-invest-new-storage-terminal-jubail-saudi-arabia","date":"2014-12-29","type":"企业公告（一手）","reliability":"高","note":"与 SABIC 合资在朱拜勒法赫德国王工业港建罐区，初期容量约 25 万立方米，2015 年初建成，服务石化及下游出口扩建。"},{"id":"S32","title":"Trade Arabia: Mawani, Arabian Chemical Terminals in deal to set up storage tanks at Jubail port","publisher":"Trade Arabia","url":"https://www.tradearabia.com/News/331866/Mawani-Arabian-Chemical-Terminals-in-deal-to-set-up-storage-tanks-at-Jubail-port","date":"2018-03-09","type":"行业媒体","reliability":"中","note":"沙特港务局(Mawani)与 ACT 就朱拜勒商港化工/石化品罐区签约，投资超 5 亿里亚尔、占地 4.9 万平方米。"},{"id":"S33","title":"Arabian Chemical Terminals: Ongoing Development of ACT's Facilities","publisher":"ACT (act-ksa.com)","url":"https://act-ksa.com/ongoing-development-of-acts-facilities/","date":"持续更新","type":"终端运营商（一手）","reliability":"高","note":"ACT 在朱拜勒商港继续新建 13 座储罐，面向海湾地区化学品储存与出口。"},{"id":"S34","title":"S&P Global: Saudi feedstock hikes seen as a bet on US LNG exports surge","publisher":"S&P Global Commodity Insights","url":"https://www.spglobal.com/energy/en/news-research/latest-news/crude-oil/012825-saudi-feedstock-hikes-seen-as-a-bet-on-us-lng-exports-surge","date":"2025-01-28","type":"行业专业媒体","reliability":"高","note":"Aramco 连续第二年提高化工原料气价格，自 2025-01-01 生效；背景是美国 LNG 出口增长与乙烷竞争。"},{"id":"S35","title":"Zawya: Saudi Arabia allocates feedstock for new petchem complexes in Jubail","publisher":"Zawya","url":"https://www.zawya.com/en/projects/industry/saudi-arabia-allocates-feedstock-for-new-petchem-complexes-in-jubail-y8nt9zf3","date":"2025-02-27","type":"财经媒体","reliability":"中高","note":"2025 年 2 月沙特能源部向 Tasnee 与 Sipchem 批复朱拜勒新建工业综合体的原料配额。"},{"id":"S36","title":"Yansab Annual Report 2024（董事会报告）","publisher":"Yanbu National Petrochemical Company","url":"https://www.yansab.com.sa/en/Images/Yansab%20Annual%20Report%202024%20-EN_tcm1047-46828.pdf","date":"2025 年发布（2024 财年）","type":"上市公司年报（一手）","reliability":"高","note":"Yansab 成立于 2006 年 2 月，SABIC 持股 51%；延布工业城；2024 年产量 3,625 千吨（同比 +22%），销量 2,136 千吨；销售区域：亚洲 32%、欧洲 29%、中东 14%、美洲 19%、非洲 6%；产品全部通过 SABIC 统一销售；2018 年 EG 检修(EG DBN 2)、2023 年全厂大修。年报未单列 EG 装置的产能数字。"},{"id":"S37","title":"SABIC Integrated Annual Report 2025（合资公司列表节选）","publisher":"SABIC","url":"https://www.sabic.com/en/Images/SABIC-Integrated-Annual-Report-2025-EN_tcm1010-49452.pdf","date":"2026 年发布（2025 财年）","type":"上市公司年报（一手）","reliability":"高","note":"列出 SHARQ（持股 50%）、YANPET（50%）、Al-Jubail Petrochemical Company (Kemya) 等合资方与账面价值，用于核对企业法人主体与集团关系。"},{"id":"S38","title":"S&P Global: Middle East powers ahead with new petrochemicals investments","publisher":"S&P Global","url":"https://www.spglobal.com/energy/en/news-research/latest-news/chemicals/031025-middle-east-powers-ahead-with-new-petrochemicals-investments-as-europe-consolidates","date":"2025-03-10","type":"行业专业媒体","reliability":"高","note":"Tasnee 计划朱拜勒新综合体（含乙烯裂解及 PE/MTBE 等）规模至多 330 万吨/年；Sipchem 获批原料。"},{"id":"S39","title":"SunSirs: MEG - A Turning Point in the Tight Supply-Demand Balance","publisher":"SunSirs","url":"https://www.sunsirs.com/commodity-news/petail-36772.html","date":"2026-10-14","type":"商品资讯机构","reliability":"中","note":"2026 年 10 月 MEG 供需与价格最新跟踪（用于确认截至报告日的市场状态）。"},{"id":"S40","title":"U Capital: Yansab 1Q26 Result Review","publisher":"Ubhar Capital","url":"https://u-capital.net/research-report/u-capital-yanbu-national-petrochemical-company-yansab-ab-1q26-result-review/","date":"2026-04-28","type":"券商研究","reliability":"中高","note":"Yansab 1Q26 收入 13.20 亿里亚尔（同比 -13%），并公告 EG 装置计划检修。"},{"id":"S41","title":"Saudi Exchange: Sipchem 获得能源部原料配额公告","publisher":"Tadawul / saudiexchange.sa","url":"https://www.saudiexchange.sa/wps/portal/saudiexchange/newsandreports/issuer-news/issuer-announcements/issuer-announcements-details/?anCat=1&anId=85467&cs=2310&locale=en","date":"2025-02-27","type":"交易所披露（一手）","reliability":"高","note":"Sipchem 公告获得能源部原料配额拟建石化综合体——注意：Sipchem 现有产品链不含 MEG，属未来可能新增供给。"},{"id":"S42","title":"WITS: Saudi Arabia exports of HS 2905.31 to China, 2024","publisher":"World Bank WITS","url":"https://wits.worldbank.org/trade/comtrade/en/country/All/year/2024/tradeflow/Exports/partner/CHN/product/290531","date":"2026 年页面刷新","type":"官方统计数据库","reliability":"高","note":"对华 MEG 出口的报告方口径，可与 S01 交叉核对。"},{"id":"S43","title":"SABIC Q1 2026 Earnings Transcript","publisher":"SABIC","url":"https://www.sabic.com/en/Images/SABIC-Earnings-Transcript-Q1-2026_tcm1010-51326.pdf","date":"2026 年发布","type":"上市公司业绩会议记录（一手）","reliability":"高","note":"中东在 MEG/甲醇等关键产品全球进口中占比约一半，是重要出口枢纽（用于判断沙特在全球 MEG 贸易中的地位）。"},{"id":"S44","title":"MEES: Crude Exports From Saudi Arabia's Yanbu Go Dark","publisher":"MEES","url":"https://www.mees.com/2026/8/14/oil-gas/crude-exports-from-saudi-arabias-yanbu-go-dark/e7221380-97dc-11f1-9d82-add89800e9b0","date":"2026-08-14","type":"行业媒体","reliability":"高","note":"2026 年 8 月延布出口一度中断——红海通道同时承压，影响西海岸 MEG 出运能力。"},{"id":"S45","title":"Industrial Info: Saudi Kayan Moves Forward with Construction of Ethylene Glycol Plant at Jubail","publisher":"Industrial Info Resources","url":"https://www.industrialinfo.com/news/article/saudi-kayan-moves-forward-with-construction-of-ethylene-glycol-plant-at-jubail-industrial-city--140258","date":"2008-10-21","type":"行业数据库媒体","reliability":"中","note":"Kayan 拟建 EO/EG 装置设计产能：EO 至多 550 kt/y，MEG 700 kt/y（早期规划值，与最终 1,065 kt 合计口径不同，仅作历史对照）。"},{"id":"S46","title":"Gulf Industry (SABIC 声明转载): Yanbu expansion comes on stream","publisher":"Gulf Industry / SABIC","url":"https://gulfindustryonline.com/news/1046_Yanbu-expansion-comes-on-stream.html","date":"2001-06-27","type":"行业媒体（转述官方声明）","reliability":"中","note":"Yanpet 26 亿美元扩能项目投产，新增乙二醇 420,000 吨/年（TOYO 建于 2000 年），PE 535,000 吨/年。"},{"id":"S47","title":"Reuters / Argus (Sadara 停产后续)","publisher":"bne IntelliNews","url":"https://www.intellinews.com/saudi-sadara-petrochemical-giant-closed-down-creating-a-new-plastics-chokepoint-435543/","date":"2026-04-03","type":"媒体分析","reliability":"中","note":"Sadara 因原料输入被切断而被迫全面停车；反映朱拜勒园区公用工程与原料链的系统性风险。"}],"data_grades":{"A":"官方年报/交易所公告/国家统计: 可直接引用为事实","B":"国际专业行业媒体(ICIS/Argus/MEES/OGJ/S&P/Reuters/CCFGroup): 装置级事实，可引用但需标注报道方","C":"行业数据库/第三方估算(GlobalData/ChemAnalyst/SunSirs/IndexBox): 仅作交叉参照，不作为唯一依据","D":"推算/推断/待核实: 必须标注并给出核实路径"},"sites":{"jubail":{"name":"朱拜勒工业城 Jubail Industrial City","region":"东部省 Eastern Province","lat":27.0046,"lng":49.6607,"coast":"波斯湾 Arabian Gulf"},"yanbu":{"name":"延布工业城 Yanbu Industrial City","region":"麦地那省 Madinah Region","lat":24.0895,"lng":38.0617,"coast":"红海 Red Sea"},"rabigh":{"name":"拉比格 Rabigh","region":"麦加省 Makkah Region","lat":22.7986,"lng":39.0347,"coast":"红海 Red Sea"}},"companies":[{"id":"CO1","name":"SABIC（沙特基础工业公司）","name_en":"Saudi Basic Industries Corporation","type":"集团/控股平台","listed":"TADAWUL: 2010","ownership":"Aramco 70% / 公众 30%","note":"全球最大 MEG 生产体系之一；其本身不直接拥有 MEG 装置，产能由下属合资/子公司实行（SHARQ、YANPET、JUPCO/United、Yansab、Saudi Kayan）。对采购而言，前端销售与合同通常经由 SABIC 统一平台。","contact_hint":"采购洽谈应先经 SABIC 全球销售（Petrochemicals BG），再进入具体生产公司。"},{"id":"CO2","name":"Jubail United Petrochemical Company (United / JUPC)","name_en":"Jubail United Petrochemical Co.","type":"生产法人（SABIC 子公司）","listed":"非上市","ownership":"SABIC 75% / 公共养老基金 15% / 社保机构 GOSI 10%","note":"拥有 EG-1/EG-2/EG-3 三套 MEG 装置，全部在朱拜勒。","contact_hint":"MEG 主力供应商，三套合计约 1,970 kt/a（按姓名牌口径）。"},{"id":"CO3","name":"Eastern Petrochemical Company (SHARQ)","name_en":"Saudi Eastern Petrochemical Co.","type":"合资生产法人","listed":"非上市","ownership":"SABIC 50% / 日本 SPIC 联合体 50%（三菱商事牵头）","note":"MEG 1-4 号线，全部在朱拜勒；产能为 SHARQ I/II/III 三期累计。","contact_hint":"MEG 第三大主体，4 条线合计约 2,300 kt/a（按 S06/S09 姓名牌）。"},{"id":"CO4","name":"Saudi Yanbu Petrochemical Company (YANPET)","name_en":"Saudi Yanbu Petrochemical Co.","type":"合资生产法人","listed":"非上市","ownership":"SABIC 50% / ExxonMobil 50%","note":"MEG 1 号线与 2 号线，位于延布（红海）；1999-2001 扩能新增 420 kt 已计入 2 号线。","contact_hint":"西海岸最大单一 MEG 主体，约 900 kt/a。"},{"id":"CO5","name":"Yanbu National Petrochemical Company (Yansab)","name_en":"Yanbu National Petrochemical Co.","type":"上市生产法人","listed":"TADAWUL: 2290","ownership":"SABIC 51% / 私人及个人 49%","note":"延布工业城单一 MEG 装置 700 kt/a（Toyo/Scientific Design）；产品经 SABIC 统一销售。","contact_hint":"上市公司，公告可追踪检修与经营；MEG 为其销售结构的重要品类。"},{"id":"CO6","name":"Saudi Kayan Petrochemical Company","name_en":"Saudi Kayan Petrochemical Co.","type":"上市生产法人","listed":"TADAWUL: 2350","ownership":"SABIC 35% / 私人及个人 65%","note":"朱拜勒；年报口径 EG 产能 1,065 kt/a（EOX 770 kt、配套乙醇胺 100 kt 等）。","contact_hint":"单一 MEG 主体中最大的之一；附带 EO/EG 衍生物组合。"},{"id":"CO7","name":"Rabigh Refining & Petrochemical Company (Petro Rabigh)","name_en":"Petro Rabigh (PRC)","type":"上市合资生产法人","listed":"TADAWUL: 2380","ownership":"Saudi Aramco 约 37.5% / Sumitomo Chemical 约 37.5% / 公众 25%（以最新年报为准）","note":"拉比格（红海）；MEG 装置 600 kt/a，Shell OMEGA 工艺；2026 年 7 月实现创纪录利润（MEES 报道）。","contact_hint":"唯一掌握 OMEGA 催化法制 MEG 的沙特主体，西海岸出运。"},{"id":"CO8","name":"Sahara International Petrochemical Company (Sipchem)","name_en":"Sipchem","type":"上市企业（现不产 MEG）","listed":"TADAWUL: 2310","ownership":"公众持股（Al Zamil 系）","note":"当前产品链为甲醇、醋酸、VAM、BDO、EVA 等，不含 MEG；2025-02 获能源部原料配额用于新建综合体。","contact_hint":"潜在新增供给侧，尚不能作为现有 MEG 供货来源。"},{"id":"CO9","name":"National Industrialization Company (Tasnee)","name_en":"Tasnee","type":"上市企业（现不产 MEG）","listed":"TADAWUL: 2060","ownership":"公众持股","note":"2025-02 获能源部原料配额，规划朱拜勒新综合体（至多 330 万吨/年，含裂解与下游）。是否包含 MEG 装置未披露。","contact_hint":"仅作中期产能观察对象。"}],"plants":[{"id":"P01","company_id":"CO2","company":"Jubail United Petrochemical Co. (United / JUPC)","plant":"United EG-1","site":"jubail","product":"MEG","capacity_kt":700,"cap_basis":"姓名牌设计产能（S07 ICIS 2011 停机名录）","startup":"2004（JUPC 一期）","evidence_level":"B","notes":"700 kt/y；经 TOYO 建成（S11 中'630,000 MTPA'为合约口径，投产后按 700kt 登记）。","source_ids":["S07","S11"]},{"id":"P02","company_id":"CO2","company":"Jubail United Petrochemical Co. (United / JUPC)","plant":"United EG-2","site":"jubail","product":"MEG","capacity_kt":640,"cap_basis":"姓名牌设计产能（S07）","startup":"2008-2009","evidence_level":"B","notes":"640 kt/y；2011 年 4 月中至 5 月底例行停车 35 天。","source_ids":["S07"]},{"id":"P03","company_id":"CO2","company":"Jubail United Petrochemical Co. (United / JUPC)","plant":"United EG-3","site":"jubail","product":"MEG","capacity_kt":700,"cap_basis":"企业公告与年报（估计年产能 700 kt）","startup":"2021-11 试车 / 2022-10-17 商业化","evidence_level":"A","notes":"Scientific Design 技术；Samsung Engineering 2017-12 签约，投资约 7 亿美元；初期计划 2020 年完成、后延期。","source_ids":["S03","S04","S05","S28"]},{"id":"P04","company_id":"CO3","company":"Eastern Petrochemical Co. (SHARQ)","plant":"SHARQ MEG-1","site":"jubail","product":"MEG","capacity_kt":450,"cap_basis":"第三方登记（SHARQ I/II/III 累计分布；S07 名录仅列 No.2 450kt）","startup":"1984-1985（SHARQ I）","evidence_level":"D","notes":"S07 仅逐一登记 No.2(450kt)/No.3(450kt)；No.1 的独立姓名牌未能直接从公开来源核实，此处按 SHARQ II 扩能前规模暂列，需以 SHARQ 年报或 ICIS 装置库核实。","source_ids":["S06","S07"],"unverified":true},{"id":"P05","company_id":"CO3","company":"Eastern Petrochemical Co. (SHARQ)","plant":"SHARQ MEG-2","site":"jubail","product":"MEG","capacity_kt":450,"cap_basis":"姓名牌设计产能（S07）","startup":"1980 年代中期（SHARQ II 扩能）","evidence_level":"B","notes":"450 kt/y；2011 年 12 月停车 10 天。","source_ids":["S07"]},{"id":"P06","company_id":"CO3","company":"Eastern Petrochemical Co. (SHARQ)","plant":"SHARQ MEG-3","site":"jubail","product":"MEG","capacity_kt":500,"cap_basis":"行业媒体（S06: 500kt）与 S07（2011 年登记 450kt）口径差异","startup":"2009 年初（SHARQ III 配套）","evidence_level":"B","notes":"S06 载 500 kt/y；S07 在 2011 年检修名录中登记为 450 kt/y；SHARQ III 的 EG 合约规模为 700 kt（S12，可能对应合计口径）。采纳 500 kt，并在数据表中保留 450 kt 备选值。","source_ids":["S06","S07","S12"],"conflict":"500 vs 450 kt"},{"id":"P07","company_id":"CO3","company":"Eastern Petrochemical Co. (SHARQ)","plant":"SHARQ MEG-4","site":"jubail","product":"MEG","capacity_kt":700,"cap_basis":"姓名牌设计产能（S06/S09 两源一致）","startup":"2009 年初（SHARQ III）","evidence_level":"B","notes":"700 kt/y；2015-02 因更换反应器停车，4 月初复产；2023-11 起检修，2024-01 下半月重启。","source_ids":["S06","S09","S12"]},{"id":"P08","company_id":"CO6","company":"Saudi Kayan Petrochemical Co.","plant":"Saudi Kayan EG（多系列，合计）","site":"jubail","product":"MEG","capacity_kt":1065,"cap_basis":"公司年报产品年产能表（Ethylene Glycol 1,065 千公吨/年）","startup":"2010-08 试车（537 kt 线）/ 2011-10 商业化","evidence_level":"A","notes":"年报口径 1,065 kt；S10 单系列 537 kt（约两条）；S07 登记其中一套 650 kt（可能为早期设计值）。采用年报口径。","source_ids":["S02","S07","S10"]},{"id":"P09","company_id":"CO4","company":"Saudi Yanbu Petrochemical Co. (YANPET)","plant":"YANPET MEG-1","site":"yanbu","product":"MEG","capacity_kt":380,"cap_basis":"姓名牌设计产能（S07）","startup":"1984（Yanpet 一期）","evidence_level":"B","notes":"380 kt/y；2011 年 2 月起停车两周检修。","source_ids":["S07"]},{"id":"P10","company_id":"CO4","company":"Saudi Yanbu Petrochemical Co. (YANPET)","plant":"YANPET MEG-2","site":"yanbu","product":"MEG","capacity_kt":520,"cap_basis":"姓名牌设计产能（S07、S08 两源一致）","startup":"2000-2001（Yanpet II 扩能）","evidence_level":"B","notes":"520 kt/y；Yanpet II 于 2001 年 3 月投产，新增 EG 420 kt（S46/S11 TOYO 420,000 MTPA），合计达 520 kt 口径。","source_ids":["S07","S08","S11","S46"]},{"id":"P11","company_id":"CO5","company":"Yanbu National Petrochemical Co. (Yansab)","plant":"Yansab EG","site":"yanbu","product":"MEG","capacity_kt":700,"cap_basis":"工程总包公告 700,000 MTPA（S11）与公司整体产能 4 Mt 年报口径（S36）","startup":"2010（商业化 2010；装置 2008 年末建成）","evidence_level":"A/B","notes":"Scientific Design 工艺、Toyo LSTK；S07 登记 770 kt（可能为设计/铭牌两种口径差异）。采纳 700 kt，保留 770 kt 为备选。2026-01-25 起停车 25 天检修。","source_ids":["S11","S12","S20","S36","S40"],"conflict":"700 vs 770 kt"},{"id":"P12","company_id":"CO7","company":"Rabigh Refining & Petrochemical Co. (Petro Rabigh)","plant":"Petro Rabigh MEG","site":"rabigh","product":"MEG","capacity_kt":600,"cap_basis":"专业会议论文与行业媒体一致（600,000 t/y）","startup":"2009 年（2009-06 乙烷裂解开车 / 最早计划 2009-02）","evidence_level":"A/B","notes":"Shell OMEGA 催化工艺；催化剂选择性 92%；原料约 95 MMscfd 乙烷 + 约 1.5 万桶/日 LPG（Aramco 供应）。","source_ids":["S12","S13"]}],"capacity_summary":{"unit":"kt/a","east_coast":{"label":"东海岸（朱拜勒）","plants":["P01","P02","P03","P04","P05","P06","P07","P08"],"cross_check":"CCFGroup 2026-04 口径：沙特东海岸 5,040 kt/y"},"west_coast":{"label":"西海岸（延布/拉比格）","plants":["P09","P10","P11","P12"],"cross_check":"CCFGroup 2026-08 口径：沙特西海岸约 2,100 kt/y"},"country_cross_check":"SunSirs 2026-09 口径：沙特 MEG 总产能约 7.75 Mt/y"},"ownership_groups":[{"group":"SABIC 体系（含持股 35%-75% 的关联生产法人）","companies":["CO1","CO2","CO3","CO4","CO5","CO6"],"mechanism":"股权链+统一销售（SABIC 作为多数 SABIC 系出口主体的统一营销方）"},{"group":"Aramco / Sumitomo（Petro Rabigh）","companies":["CO7"],"mechanism":"独立合资+自有裂解原料"},{"group":"Sipchem / Tasnee（未产 MEG）","companies":["CO8","CO9"],"mechanism":"仅持原料配额，尚未形成 MEG 产能"}],"feedstock":[{"item":"乙烯（Ethylene）","role":"直接原料","detail":"沙特 MEG 全部走'乙烷裂解→乙烯→EO→水解/催化水合→MEG'路线；主要裂解装置：JUPC、SHARQ III、Petrokemya、Yansab(1.3 Mt 乙烯)、Kayan(1,485 kt 乙烯)、Yanpet(2 套，800 kt 级)、Petro Rabigh(1.3 Mt)","source_ids":["S02","S11","S12","S36"]},{"item":"乙烷/伴生气","role":"上游能源与原料","detail":"乙烷主要来自沙特 Aramco 的伴生气处理(NGL)体系；2026 年 2 月末冲突后霍尔木兹关闭导致原油减产与伴生气骤降","source_ids":["S15","S14"]},{"item":"原料气价格机制","role":"成本与政策","detail":"Aramco 长期以远低于国际价格的固定价供气（2009 年约 0.75 美元/MMBtu，后逐步上调）；自 2025-01-01 起连续第二年提价","source_ids":["S12","S34"]},{"item":"催化剂与工艺许可","role":"技术壁垒","detail":"Scientific Design（JUPC、Yansab 等）与 Shell OMEGA（Petro Rabigh）；沙特主要专利工艺均来自外资授权","source_ids":["S11","S13"]},{"item":"公用工程（电、蒸汽、海水冷却）","role":"园区基础设施","detail":"朱拜勒/延布为皇家委员会(RCJY)规划的工业城，统一供水电气；冲突期园区级中断会影响全园企业","source_ids":["S22","S23","S47"]},{"item":"下游配套","role":"副产物结构","detail":"Kayan 同时产 EO 770 kt、乙醇胺 100 kt；JUPC 产 α-烯烃；MEG 与 EO 衍生物共用 EO 单元，EO 利润结构会影响 MEG 排产","source_ids":["S02","S07"]}],"trade":{"unit_volume":"kt","unit_value":"百万美元","hs":"290531","flow":"沙特出口（报告方口径）","by_year":[{"year":2021,"world_kt":2359,"world_musd":1456,"china_kt":1648,"china_musd":999,"partners":[{"p":"China","kt":1648},{"p":"India","kt":93},{"p":"Belgium","kt":112},{"p":"Turkey","kt":72},{"p":"Egypt","kt":65},{"p":"Spain","kt":36},{"p":"Indonesia","kt":28}]},{"year":2022,"world_kt":2417,"world_musd":1360,"china_kt":1799,"china_musd":1028,"partners":[{"p":"China","kt":1799},{"p":"Turkey","kt":111},{"p":"Belgium","kt":99},{"p":"Egypt","kt":70},{"p":"Korea","kt":60},{"p":"Singapore","kt":57},{"p":"Spain","kt":53},{"p":"United Arab Emirates","kt":50}]},{"year":2023,"world_kt":3924,"world_musd":2700,"china_kt":2336,"china_musd":1600,"partners":[{"p":"China","kt":2336},{"p":"India","kt":211},{"p":"Turkey","kt":196},{"p":"Indonesia","kt":175},{"p":"Belgium","kt":152},{"p":"Egypt","kt":158},{"p":"Vietnam","kt":94},{"p":"Singapore","kt":79}]},{"year":2024,"world_kt":6021,"world_musd":2784,"china_kt":3356,"china_musd":1559,"partners":[{"p":"China","kt":3356},{"p":"India","kt":406},{"p":"Indonesia","kt":357},{"p":"Egypt","kt":247},{"p":"Belgium","kt":240},{"p":"Korea","kt":183},{"p":"Pakistan","kt":169},{"p":"Spain","kt":162},{"p":"Turkey","kt":160},{"p":"Vietnam","kt":157}]},{"year":2025,"world_kt":6372,"world_musd":2987,"china_kt":4042,"china_musd":1900,"partners":[{"p":"China","kt":4042},{"p":"India","kt":368},{"p":"Egypt","kt":273},{"p":"Indonesia","kt":232},{"p":"Turkey","kt":186},{"p":"Vietnam","kt":187},{"p":"Korea","kt":182},{"p":"Italy","kt":170},{"p":"Pakistan","kt":153},{"p":"Spain","kt":150}]}],"partners_2025_full":[{"p":"China","kt":4042,"musd":1900},{"p":"India","kt":368,"musd":172},{"p":"Egypt","kt":273,"musd":137},{"p":"Indonesia","kt":232,"musd":105},{"p":"Vietnam","kt":187,"musd":81},{"p":"Turkey","kt":186,"musd":89},{"p":"Korea","kt":182,"musd":79},{"p":"Italy","kt":170,"musd":82},{"p":"Pakistan","kt":153,"musd":70},{"p":"Spain","kt":150,"musd":69},{"p":"Thailand","kt":93,"musd":41},{"p":"Oman","kt":86,"musd":30},{"p":"Belgium","kt":82,"musd":47},{"p":"South Africa","kt":63,"musd":29},{"p":"United Arab Emirates","kt":34,"musd":17},{"p":"Bangladesh","kt":30,"musd":13},{"p":"Other","kt":36,"musd":8}],"unit_prices_usd_t":[{"year":2021,"world":617,"china":606},{"year":2022,"world":563,"china":571},{"year":2023,"world":688,"china":685},{"year":2024,"world":462,"china":465},{"year":2025,"world":469,"china":470}],"china_import_total_kt":7720,"china_import_year":2025,"saudi_share_of_china_imports":"54%–55%（SunSirs 计约 4.22 Mt/年；沙特自身申报对华 4.04 Mt）"},"concentration":{"by_company_2025_kt":[{"company":"SHARQ","id":"CO3","cap_kt":2100,"note":"MEG1-4 合计（P04 待核）"},{"company":"United (JUPC)","id":"CO2","cap_kt":2040,"note":"EG-1/2/3"},{"company":"Saudi Kayan","id":"CO6","cap_kt":1065,"note":"年报口径"},{"company":"YANPET","id":"CO4","cap_kt":900,"note":"MEG-1/2"},{"company":"Yansab","id":"CO5","cap_kt":700,"note":"单装置"},{"company":"Petro Rabigh","id":"CO7","cap_kt":600,"note":"OMEGA"}]},"logistics":{"ports":[{"id":"PT1","name":"King Fahd Industrial Port, Jubail（法赫德国王工业港-朱拜勒）","site":"jubail","coast":"波斯湾","role":"东部石化基地的工业散液与液体化工主出运港","lat":27.03,"lng":49.68,"detail":"与朱拜勒商业港(Jubail Commercial Port)分工：工业港服务园区散货与液体化学品；Vopak-SABIC 合资罐区初期容量约 25 万 m³（2015 年初建成）。朱拜勒商业港由 ACT 运营化学品罐区并持续扩建（新增 13 罐）。","source_ids":["S31","S32","S33"]},{"id":"PT2","name":"Jubail Commercial Port（朱拜勒商业港）","site":"jubail","coast":"波斯湾","role":"化学品/石化品罐区与集装箱/杂货","lat":27.02,"lng":49.63,"detail":"Mawani 与 ACT 合作建设化工罐区（投资>5 亿里亚尔，4.9 万 m²）。","source_ids":["S32","S33"]},{"id":"PT3","name":"King Fahad Industrial Port, Yanbu（法赫德国王工业港-延布）","site":"yanbu","coast":"红海","role":"红海侧最大石油与石化出口港","lat":23.95,"lng":38.2,"detail":"总岸线约 25 km、面积约 50 km²、约 34 个泊位；2024 年出港货量约占沙特全部港口出口的 51.1%（约 1.14 亿吨），为王国第一大出口港。2026 年 8 月延布出口一度中断。","source_ids":["S29","S30","S44"]},{"id":"PT4","name":"Rabigh（拉比格港/泊位）","site":"rabigh","coast":"红海","role":"Petro Rabigh 出口通道","lat":22.81,"lng":39.02,"detail":"Petro Rabigh 以自有码头/泊位出运液体化工品；公开资料未给出独立液体化工泊位的明确吨位数据（待核实）。","source_ids":["S12","S13"]}],"routes_to_china":[{"from":"Jubail（波斯湾）","to":"中国华东主港（宁波/舟山、太仓、张家港、南通、江阴）","via":"霍尔木兹海峡 → 马六甲 → 南海","normal_days":"20–28 天（含等泊）","status_2026":"2026 年 3 月-6 月中霍尔木兹有效关闭，东海岸 MEG 基本停发；6 月下旬起化学品船逐步恢复通行","source_ids":["S17","S27"]},{"from":"Yanbu/Rabigh（红海）","to":"中国华东主港","via":"Bab el-Mandeb → 亚丁湾 → 印度洋 → 马六甲","normal_days":"18–25 天","status_2026":"自 2026 年二季度起对华 40–50 kt/月；2026-08-11 曼德海峡袭击后战争险升至约 3%，部分改经苏伊士或转售东南亚","source_ids":["S18"]},{"from":"Yanbu/Rabigh（红海）","to":"中国华东主港","via":"苏伊士运河 → 地中海 → 绕行好望角/直布罗陀（替代路径）","normal_days":"35–45 天","status_2026":"2026 年 7-8 月部分西海岸货改道苏伊士","source_ids":["S18"]}],"vessel":{"typical_dwt":"25,000–26,000 DWT 不锈钢化学品船","cargo_per_voyage":"约 22,000–25,000 吨","note":"单船货量决定整柜/整船谈判的起订量；散水船为主要形态，槽罐/ISO 罐为小批量补充形态"},"freight_2019_2025_ref":"未取得可公开核验的分航线散水运价序列（缺口）","freight_2026_evidence":"战争险保费 0.3%→约 3%；单船每航次 +135 万美元 ≈ +55 美元/吨；综合增加数十至 100 美元/吨","china_ports":[{"port":"宁波/舟山","note":"华东最大 MEG 接卸与库存地之一"},{"port":"太仓/张家港/南通/江阴（长江口）","note":"长江流域聚酯企业主要接卸点"},{"port":"天津/青岛","note":"北方聚酯与防冻液用户"}]},"policy":[{"id":"PL1","title":"出口无配额、无出口许可（石化品）","detail":"沙特对 HS 2905.31 出口未设配额或出口许可制度；出口由企业自行报关，主要约束在港口与航运条件，而非行政审批。","type":"沙特出口监管","level":"D（监管事实，需在签约前以沙特海关/工贸部最新公告复核）","source_ids":[]},{"id":"PL2","title":"原料配额与原料气价格由能源部/Aramco 定价","detail":"新建或扩产的石化项目须获能源部原料(feedstock)配额；Aramco 原料气价格连续上调（2025-01-01 生效），直接改变 MEG 现金成本。","type":"沙特产业政策","level":"A/B","source_ids":["S34","S35","S38","S41"]},{"id":"PL3","title":"外资与本地化：Vision 2030 与本地化(iktva)政策","detail":"沙特鼓励本地下游延伸与本地化采购；Aramco/SABIC 系企业的销售存在长期合约优先与本地化偏好，现货比例有限。","type":"沙特产业政策","level":"C","source_ids":[]},{"id":"PL4","title":"欧盟对沙特 MEG 反倾销税","detail":"欧盟自 2021-06-12 起对原产沙特 MEG 征收 11.1% 反倾销税（为期 6 个月，后经复审调整）；沙特就此向 WTO 提出磋商。影响沙特对欧流向，间接改变对华可供量。","type":"贸易救济","level":"A","source_ids":["S21"]},{"id":"PL5","title":"中国进口端：MEG 关税与检验","detail":"中国对 MEG 的最惠国/协定税率与检验检疫要求需以海关总署税则与《危险化学品目录（2015 版）》最新公告为准；MEG 属易燃液体、危险货物，进口须符合 GB 30000 系列与危化品登记要求。","type":"中国进口监管","level":"D（须在签约前核定税则号列与监管条件）","source_ids":[]},{"id":"PL6","title":"运输与保险：战争险与制裁合规","detail":"2026 年海湾冲突使战争险承保条件成为签约前提；另须核查交易对手是否被 OFAC/EU/UN 列入制裁名单，以及港口/船舶AIS与制裁合规。","type":"合规","level":"A","source_ids":["S18","S27"]},{"id":"PL7","title":"朱拜勒/延布工业城管制（RCJY）","detail":"两座工业城由皇家委员会(RCJY)管理，厂区与港区准入受管制，实地考察须提前申请；出口提单抬头与发货人须与生产法人一致。","type":"园区管理","level":"D","source_ids":[]}],"events":[{"id":"EV1","date":"2011-01","title":"SABIC 2011 年 8 套 MEG 装置集中检修","type":"计划检修","impact":"中","detail":"6 套在上半年、2 套在四季度；为避免夏季高温。反映沙特 MEG 存在共同的检修季节性（夏季限产/检修）。","source_ids":["S07"]},{"id":"EV2","date":"2013-2015","title":"SHARQ 4 号线反应器更换与停车","type":"装置故障","impact":"中","detail":"2015-02 末 SHARQ No.4（700kt）因更换反应器停车，4 月初复产。","source_ids":["S09"]},{"id":"EV3","date":"2021-06-12","title":"欧盟对沙特 MEG 征 11.1% 反倾销税","type":"贸易政策","impact":"中","detail":"多国沙特 MEG 出口商被点名；沙特向 WTO 提起磋商。导致对欧流向阶段性受阻。","source_ids":["S21"]},{"id":"EV4","date":"2022-10-17","title":"United EG-3（700kt）投产","type":"新增产能","impact":"正向","detail":"沙特 MEG 名义产能一次性增加 700 kt，是 2023-2025 年出口量跃升的主要供给侧解释之一（与出口增长方向一致，但不可直接等同）。","source_ids":["S03","S05"]},{"id":"EV5","date":"2023-11","title":"SHARQ 3/4 号线计划检修","type":"计划检修","impact":"中","detail":"3 号线(500kt)11-04 起检修，4 号线(700kt)11 月起检修，2024-01 下半月重启，合计 1,200 kt 名义产能短期离线。","source_ids":["S06"]},{"id":"EV6","date":"2026-01-25","title":"Yansab EG 装置 25 天预防性检修","type":"计划检修","impact":"中","detail":"公司公告；为装置投运以来最长连续运行周期后的检修，影响体现在 2026 年一季度业绩。","source_ids":["S20","S40"]},{"id":"EV7","date":"2026-02-28","title":"区域冲突爆发，霍尔木兹海峡有效关闭","type":"地缘政治","impact":"极高","detail":"冲突头几天海峡有效关闭；沙特原油减产、伴生气骤降、炼厂降负荷；沙特 MEG 东海岸装置全部停车，西海岸成为区域内唯一稳定来源。","source_ids":["S15","S16"]},{"id":"EV8","date":"2026-03-26","title":"SABIC 宣布多产品不可抗力","type":"不可抗力","impact":"极高","detail":"SABIC 对多个产品（含 MEG/EG、SM、乙醇胺）宣布不可抗力，出口因海峡关闭受阻。","source_ids":["S27"]},{"id":"EV9","date":"2026-03-31","title":"Sadara 朱拜勒园区全面停车","type":"园区级中断","impact":"高（产业链间接）","detail":"Sadara 以'持续供应中断'为由临时全面停车（Sadara 不产 MEG），显示朱拜勒园区级公用工程/原料中断的传导。","source_ids":["S22","S23","S47"]},{"id":"EV10","date":"2026-04-07","title":"朱拜勒石化综合体遭袭，SABIC 装置火灾","type":"物理损毁","impact":"极高","detail":"伊朗宣布袭击朱拜勒石化综合体；SABIC 运营装置起火；Mysteel 记录核心装置停车、全球 MEG 短期可供应骤减、中国 MEG 价格创五年新高；CCFGroup 记录 4 月中旬沙特 MEG 开工率仅 24.7%。","source_ids":["S24","S25","S26","S16"]},{"id":"EV11","date":"2026-04-05","title":"Advanced Petrochemical 丙烷短缺","type":"原料短缺","impact":"中（非 MEG 但同园区）","detail":"2026 年 4-5 月 Advanced 丙烷供应减少（伊朗打击沙特 NGL 装置），其后恢复。","source_ids":["S14"]},{"id":"EV12","date":"2026-06-下旬","title":"化学品船恢复通行霍尔木兹","type":"通道恢复","impact":"正向","detail":"约 4-5 艘 MEG 船滞留湾内，其中 3 艘确认发往中国大陆（合计约 7 万吨）；预计 7-8 月中国 MEG 进口回升。","source_ids":["S17"]},{"id":"EV13","date":"2026-07-下旬","title":"胡塞对沙特海上封锁威胁升级","type":"地缘政治","impact":"高","detail":"胡塞方面宣布对沙特的海上封锁/并公开将沙特能源与工业设施列为目标；两海通道同时承压。","source_ids":["S18","S19"]},{"id":"EV14","date":"2026-08-11","title":"曼德海峡导弹袭击 'Tahama'","type":"航运中断","impact":"高","detail":"6 死 10 伤；沙特相关船舶战争险由 0.3% 升至约 3%；单船每航次增约 135 万美元（约 55 美元/吨）；西海岸部分 MEG 改经苏伊士或转售东南亚。","source_ids":["S18"]},{"id":"EV15","date":"2026-08","title":"延布出口一度中断","type":"港口中断","impact":"高","detail":"MEES 报道 2026-08-14 前后延布原油出口一度中断，反映红海侧港口运行受扰。","source_ids":["S44"]},{"id":"EV16","date":"2026-09","title":"华东 MEG 港存降至 12 万吨，价格创四年新高","type":"市场后果","impact":"高","detail":"2026-09-07 华东主港库存 12 万吨（较 3 月高点 92.64 万吨下降 80.6 万吨）；国内油制 MEG 均价 6,458 元/吨，年内 +67%。","source_ids":["S19"]}],"risks":[{"level":"极高","title":"霍尔木兹海峡通行","desc":"东海岸（朱拜勒）约占沙特 MEG 名义产能的 2/3，全部依赖霍尔木兹出运；海峡关闭期间东海岸基本无法对华供货。","mitigation":"优先洽谈西海岸（延布/拉比格）主体，并对东海岸合同加入'通道不可用'条款。"},{"level":"极高","title":"设施物理损毁与复产时间不确定","desc":"2026-04-07 朱拜勒受袭后，SABIC 无法估计朱拜勒装置复产时间，报称对 2026 年财务结果有实质性影响。","mitigation":"要求供应商提供装置复产公告（Tadawul/公司声明），不接受口头复产承诺。"},{"level":"高","title":"红海/曼德海峡通道风险","desc":"2026-08-11 袭击使战争险翻约 10 倍；战争险、绕行苏伊士/好望角都会吞噬价差。","mitigation":"合同采用 CIF/CFR 时明确战争险由谁承担；预留 50-100 美元/吨的物流风险带。"},{"level":"高","title":"沙特在全球 MEG 贸易中的绝对地位导致'议价权反向'","desc":"沙特是中国最大 MEG 来源（约 54-55%），供应中断时沙特卖方更倾向优先满足欧洲/印度/东南亚（中国价格常为全球洼地）。","mitigation":"签约价格应与全球区域价差挂钩，避免以中国价作为唯一基准。"},{"level":"中","title":"检修季节性集中","desc":"历史多次出现装置在夏季前后集中检修；2026 年 1 月 Yansab 检修叠加冲突。","mitigation":"要求提供年度检修窗口表（TAR schedule）。"},{"level":"中","title":"原料气价格上涨","desc":"Aramco 连续两年上调原料气价格，侵蚀沙特乙烷路线成本优势。","mitigation":"监测沙特原料气定价公告；用乙烷价差跟踪成本传导。"},{"level":"中","title":"欧盟反倾销税与贸易分流","desc":"2021 年起对欧 11.1% 反倾销（后经复审），可能改变沙特对欧/对亚分配。","mitigation":"关注欧盟复审结论与沙特流向的季节性切换。"},{"level":"低","title":"企业主体混淆风险","desc":"SABIC 体系多为合资法人，签约主体（SHARQ/YANPET/Yansab/Kayan/JUPC）与实际生产装置须一一对应。","mitigation":"以营业执照/商业登记(CR)号与装置清单交叉核对。"}],"unverified":[{"item":"SHARQ MEG-1 的独立姓名牌产能","why":"S07 只逐一登记了 No.2/No.3；No.1 未找到一手公开值，暂列 450 kt。","how":"向 SHARQ/SABIC 索取 EG 装置清单；或订阅 GlobalData/ICIS 装置库。","impact":"影响 SHARQ 合计产能 ±200 kt"},{"item":"SHARQ MEG-3 为 500 还是 450 kt","why":"S06(500) 与 S07(450) 冲突","how":"同上","impact":"合计产能 ±50 kt"},{"item":"Yansab EG 为 700 还是 770 kt","why":"S11 总包 700 kt vs S07 检修名录 770 kt","how":"Yansab 年报/招股书装置表、Tadawul 公告","impact":"合计产能 ±70 kt"},{"item":"各企业实际产量与实际可出口量","why":"沙特未见逐企业 MEG 实际产量的公开统计；S36 只给 Yansab 全部产品合计产量","how":"企业访谈/合同询价/中国海关收货记录","impact":"决定'可供采购量'，不能用产能替代"},{"item":"2026 年沙特 MEG 月度出口与对华量","why":"UN Comtrade 2026 年数据尚未发布","how":"中国海关月度进口分国别数据、CCFGroup/Mysteel 到船预报","impact":"决定当前实际可获量"},{"item":"朱拜勒 MEG 装置复产时间表","why":"SABIC 公开称无法估计","how":"Tadawul 公告、公司书面确认","impact":"决定 2026-2027 年供应可用性"},{"item":"散水化学品船分航线运价与战争险报价","why":"未取得公开可核验序列","how":"货代/船东询价、Lloyd's List 战争险费率","impact":"到岸成本测算"}],"next_steps":[{"priority":1,"action":"锁定西海岸（Yanbu/Rabigh）两家主体：按 YANPET→Yansab→Petro Rabigh 的顺序询盘","why":"红海通道是当前唯一稳定对华通道","who":"Yansab(上市/公告透明)、YANPET(ExxonMobil 合资)、Petro Rabigh(上市)"},{"priority":2,"action":"向 SABIC 全球销售平台提交 MEG 纤维级标准询盘（含船型、包装、付款、检修窗口）","why":"SABIC 是 SABIC 系主体的统一销售方","who":"SABIC Petrochemicals 全球销售/中国区"},{"priority":3,"action":"索取装置清单与检修计划（TAR）","why":"核实 SHARQ M1/M3、Yansab 700/770 的口径差异","who":"SHARQ、Yansab"},{"priority":4,"action":"核实朱拜勒复产与对华发运计划","why":"东海岸占沙特 MEG 供给约 2/3","who":"SABIC、JUPC、SHARQ、Saudi Kayan"},{"priority":5,"action":"用中国海关分国别/分月进口数据交叉校验沙特出口申报","why":"识别转口、报关差异与真实到货","who":"中国海关 HS 290531 月度数据"},{"priority":6,"action":"研究替代来源（美国、科威特、加拿大）作对冲","why":"单一来源集中度极高","who":"采购团队"}]};</script>
+<script>
+/* =========================================================
+   海外供应市场研究 · 通用看板模板 v1.0
+   数据源：同目录 data.js（window.MARKET_DATA）
+   区块：概览 / 生产能力 / 产业链 / 出口贸易 / 物流 / 政策与事件 / 来源
+   ========================================================= */
+const D = window.MARKET_DATA;
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const fmt = (n,d=0)=> n==null?"—":Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = (a,b)=> b?(a/b*100).toFixed(1):"—";
+
+/* ---------- 工具 ---------- */
+function srcLink(id){
+  const s = D.sources.find(x=>x.id===id);
+  if(!s) return `<span class="srcid">${id}</span>`;
+  return `<a class="srcid" href="${s.url}" target="_blank" rel="noopener" title="${esc(s.title)}｜${esc(s.publisher)}">${id}</a>`;
+}
+function srcLinks(ids){ return (ids||[]).map(srcLink).join(' '); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function gradeBadge(g){
+  const map={A:'bA',B:'bB',C:'bC',D:'bD'};
+  return `<span class="badge ${map[g]||'bN'}">${g}级</span>`;
+}
+function impactBadge(v){
+  const m={'极高':'bD','高':'bD','中':'bC','低':'bN','正向':'bA'};
+  return `<span class="badge ${m[v]||'bN'}">${esc(v)}</span>`;
+}
+
+/* ---------- 派生指标 ---------- */
+const plantTotal = D.plants.reduce((a,p)=>a+p.capacity_kt,0);
+const east = D.plants.filter(p=>D.sites[p.site] && D.sites[p.site].coast.indexOf('波斯湾')>=0);
+const west = D.plants.filter(p=>D.sites[p.site] && D.sites[p.site].coast.indexOf('红海')>=0);
+const eastCap = east.reduce((a,p)=>a+p.capacity_kt,0);
+const westCap = west.reduce((a,p)=>a+p.capacity_kt,0);
+const latest = D.trade.by_year[D.trade.by_year.length-1];
+const firstY = D.trade.by_year[0];
+/* 企业级集中度（按姓名牌产能；SABIC 系合并口径另算） */
+const byCompany = D.concentration.by_company_2025_kt.slice().sort((a,b)=>b.cap_kt-a.cap_kt);
+const hhi = byCompany.reduce((a,c)=>a+Math.pow(c.cap_kt/plantTotal*100,2),0);
+const cr1 = byCompany[0].cap_kt/plantTotal*100;
+const cr3 = byCompany.slice(0,3).reduce((a,c)=>a+c.cap_kt,0)/plantTotal*100;
+const sabicSystem = byCompany.filter(c=>['CO2','CO3','CO4','CO5','CO6'].includes(c.id)).reduce((a,c)=>a+c.cap_kt,0);
+
+/* ---------- 导航 ---------- */
+const TABS = [
+  {id:'overview', label:'① 供应市场概览'},
+  {id:'capacity', label:'② 生产企业与装置'},
+  {id:'chain',    label:'③ 原料与产业基础'},
+  {id:'trade',    label:'④ 出口贸易'},
+  {id:'logistics',label:'⑤ 物流与港口'},
+  {id:'policy',   label:'⑥ 政策与供应事件'},
+  {id:'sources',  label:'⑦ 来源与核验'}
+];
+$('#navBar').innerHTML = TABS.map((t,i)=>`<button data-tab="${t.id}" class="${i===0?'on':''}">${t.label}</button>`).join('')
+  + `<input class="search" id="globalSearch" placeholder="搜索企业/装置/来源...">`;
+$$('#navBar button').forEach(b=>b.onclick=()=>go(b.dataset.tab));
+/* 含图表的区块：切到这些 tab 时必须重绘（隐藏时尺寸为 0） */
+const CHARTS_TABS=['overview','trade','policy'];
+function go(id){
+  $$('#navBar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));
+  $$('section.panel').forEach(s=>s.classList.toggle('on',s.id==='tab-'+id));
+  /* 隐藏面板内元素 clientWidth=0：切到含图表/地图的 tab 后必须重新绘制 */
+  requestAnimationFrame(()=>{
+    if(id==='logistics'){
+      const m=$('#map'); if(m && m.dataset.drawn!=='1') drawMap();
+    }
+    if(CHARTS_TABS.includes(id)) renderCharts();
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('#globalSearch').oninput = e=>{
+  const q=e.target.value.trim().toLowerCase();
+  if(!q){$$('#capacity tbody tr').forEach(r=>r.classList.remove('hidden'));return;}
+  go('capacity');
+  $$('#capacity tbody tr').forEach(r=>r.classList.toggle('hidden', !r.dataset.search.includes(q)));
+};
+
+/* ---------- 图表：柱线组合 ---------- */
+function barChart(el, series, labels, opts={}){
+  const W=el.clientWidth||880, H=opts.height||280;
+  const P={l:56,r:opts.rAxis?52:14,t:16,b:38};
+  const iw=W-P.l-P.r, ih=H-P.t-P.b;
+  const maxB = Math.max(...series.flatMap(s=>s.type==='bar'?s.data:[0]))*1.16 || 1;
+  const n=labels.length, slot=iw/n, bw=Math.min((slot*0.62)/Math.max(1,series.filter(s=>s.type==='bar').length), 46);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" height="${H}">`;
+  for(let i=0;i<=4;i++){
+    const y=P.t+ih*i/4;
+    svg+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="rgba(255,255,255,.07)"/>`;
+    svg+=`<text x="${P.l-9}" y="${y+4}" fill="#6f82a8" font-size="10.5" text-anchor="end">${fmt(maxB*(1-i/4))}</text>`;
+    if(opts.rAxis){
+      svg+=`<text x="${W-P.r+8}" y="${y+4}" fill="#6f82a8" font-size="10.5">${fmt(opts.rMax*(1-i/4))}</text>`;
+    }
+  }
+  let bi=0;
+  series.forEach(s=>{
+    if(s.type!=='bar')return;
+    const off=(bi-(series.filter(x=>x.type==='bar').length-1)/2)*(bw+4);
+    s.data.forEach((v,i)=>{
+      const h=ih*(v/maxB), x=P.l+slot*i+slot/2+off-bw/2, y=P.t+ih-h;
+      svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(h,1)}" rx="4" fill="${s.color}" opacity=".92">
+        <title>${labels[i]} ${s.name}: ${fmt(v)}${s.unit||''}</title></rect>`;
+    });
+    bi++;
+  });
+  series.filter(s=>s.type==='line').forEach(s=>{
+    const pts=s.data.map((v,i)=>[P.l+slot*i+slot/2, P.t+ih*(1-v/(opts.rMax||maxB))]);
+    svg+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${s.color}" stroke-width="2.4"
+      stroke-linejoin="round" stroke-linecap="round"/>`;
+    if(opts.area){
+      const grad=`grad_${Math.random().toString(36).slice(2,8)}`;
+      svg+=`<defs><linearGradient id="${grad}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${s.color}" stop-opacity=".34"/><stop offset="100%" stop-color="${s.color}" stop-opacity="0"/></linearGradient></defs>
+        <polygon points="${P.l},${P.t+ih} ${pts.map(p=>p.join(',')).join(' ')} ${P.l+slot*(n-1)+slot/2},${P.t+ih}" fill="url(#${grad})"/>`;
+    }
+    pts.forEach((p,i)=>{
+      svg+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#0b1220" stroke="${s.color}" stroke-width="2.4">
+        <title>${labels[i]} ${s.name}: ${fmt(s.data[i])}${s.unit||''}</title></circle>`;
+    });
+  });
+  labels.forEach((l,i)=>{
+    svg+=`<text x="${P.l+slot*i+slot/2}" y="${H-14}" fill="#8fa3c8" font-size="11" text-anchor="middle">${l}</text>`;
+  });
+  svg+=`</svg>`;
+  el.innerHTML=svg;
+}
+function hBars(el, rows){
+  const max=Math.max(...rows.map(r=>r.v));
+  el.innerHTML=`<div class="bars">`+rows.map(r=>`
+    <div class="row"><div class="l" title="${esc(r.l)}">${esc(r.l)}</div>
+      <div class="b"><i style="width:${(r.v/max*100).toFixed(1)}%;background:${r.c||'linear-gradient(90deg,#3ea6ff,#26d0a8)'}"></i></div>
+      <div class="v">${fmt(r.v*100)}%</div></div>`).join('')+`</div>`;
+}
+function donut(el, parts){
+  const size=el.clientWidth||300, R=size/2-6, CX=size/2, CY=size/2, r=R*0.62;
+  let a0=-Math.PI/2, total=parts.reduce((a,p)=>a+p.v,0);
+  let paths='';
+  parts.forEach(p=>{
+    const a1=a0+p.v/total*Math.PI*2;
+    const large=(a1-a0)>Math.PI?1:0;
+    const x0=CX+R*Math.cos(a0), y0=CY+R*Math.sin(a0), x1=CX+R*Math.cos(a1), y1=CY+R*Math.sin(a1);
+    const xi0=CX+r*Math.cos(a1), yi0=CY+r*Math.sin(a1), xi1=CX+r*Math.cos(a0), yi1=CY+r*Math.sin(a0);
+    paths+=`<path d="M${x0},${y0} A${R},${R} 0 ${large} 1 ${x1},${y1} L${xi0},${yi0} A${r},${r} 0 ${large} 0 ${xi1},${yi1} Z"
+      fill="${p.c}" opacity=".92"><title>${esc(p.l)}: ${fmt(p.v)}${p.u||''} (${pct(p.v,total)}%)</title></path>`;
+    a0=a1;
+  });
+  el.innerHTML=`<svg viewBox="0 0 ${size} ${size}" height="${size}">${paths}
+    <text x="${CX}" y="${CY-2}" text-anchor="middle" fill="#e8eefc" font-size="19" font-weight="700">${fmt(total)}</text>
+    <text x="${CX}" y="${CY+16}" text-anchor="middle" fill="#6f82a8" font-size="10.5">${parts.u||''}</text></svg>`;
+}
+
+/* ================= ① 概览 ================= */
+function renderOverview(){
+  const yoy = (latest.world_kt/firstY.world_kt-1)*100;
+  const chinaShare = latest.china_kt/latest.world_kt*100;
+  const bal = latest.world_kt-plantTotal;
+  return `
+<h2 class="sec"><span class="bar"></span>供应市场概览</h2>
+<p class="lead">${D.meta.country_cn}是全球乙二醇（MEG）最具规模的一体化生产基地之一：以乙烷为原料、依托国家能源体系在朱拜勒与延布/拉比格两大工业城形成集中产能，出口高度指向亚洲。
+本报告先回答"这个国家有没有生产与出口基础"，再回答"主要供货主体是谁、货实际流向哪里"，最后区分名义设计产能、实际产量、出口量与可供采购量四类口径。</p>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <div class="card kpi acc"><div class="k">口径 1 · 名义设计产能</div><div class="v">${fmt(plantTotal)}<small>kt/a</small></div>
+    <div class="n">12 套已公开装置姓名牌合计；官方侧参照 ${D.capacity_summary.country_cross_check.split('：')[1]}</div></div>
+  <div class="card kpi a2"><div class="k">口径 3 · 出口量（${latest.year}）</div><div class="v">${fmt(latest.world_kt)}<small>kt</small></div>
+    <div class="n">UN Comtrade 沙特申报口径，占名义产能 ${pct(latest.world_kt,plantTotal)}%</div></div>
+  <div class="card kpi warn"><div class="k">对华出口（${latest.year}）</div><div class="v">${fmt(latest.china_kt)}<small>kt</small></div>
+    <div class="n">占沙特 MEG 出口 ${chinaShare.toFixed(1)}%；五年增长 ${fmt((latest.china_kt/firstY.china_kt-1)*100,0)}%</div></div>
+  <div class="card kpi bad"><div class="k">企业集中度 HHI</div><div class="v">${fmt(hhi,0)}</div>
+    <div class="n">CR1 = ${cr1.toFixed(1)}%；CR3 = ${cr3.toFixed(1)}%；SABIC 体系合计 ${fmt(sabicSystem)} kt/a</div></div>
+</div>
+
+<div class="note bad"><b>阅读本报告前必读：</b>${D.meta.as_of_note}</div>
+
+<div class="grid g2" style="margin-top:16px">
+  <div class="chart"><div class="cap">图 1 出口量与对华出口量（kt，UN Comtrade 沙特申报口径）与历年出口均价（右轴，美元/吨）</div><div id="c-exports"></div>
+    <div class="legend"><span><i style="background:#3ea6ff"></i>出口总量</span><span><i style="background:#26d0a8"></i>对华出口</span><span><i style="background:#ffb020"></i>出口均价</span></div>
+  </div>
+  <div class="chart"><div class="cap">图 2 产能按海岸分布（姓名牌口径，kt/a）</div>
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div id="c-coast" style="width:220px"></div>
+      <div style="flex:1;min-width:170px">
+        <div class="def" style="grid-template-columns:1fr">
+          <div class="it"><div class="k">东海岸 · 波斯湾（朱拜勒）</div><div class="v">${fmt(eastCap)} kt/a</div>
+            <div class="n">占 ${pct(eastCap,plantTotal)}%；出运须经霍尔木兹海峡</div></div>
+          <div class="it"><div class="k">西海岸 · 红海（延布/拉比格）</div><div class="v">${fmt(westCap)} kt/a</div>
+            <div class="n">占 ${pct(westCap,plantTotal)}%；经曼德海峡或苏伊士</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="sub">四类口径的分层与不可替代性</h3>
+<div class="chart" style="padding:20px">
+  <div class="bars">${[
+    {l:'① 名义设计产能',v:plantTotal,n:'12 套装置姓名牌合计；不等于产量'},
+    {l:'② 实际产量',v:null,n:'沙特无逐企业 MEG 产量公开统计 → 缺口'},
+    {l:'③ 出口量 2025',v:latest.world_kt,n:'UN Comtrade 沙特申报口径'},
+    {l:'④ 对华出口 2025',v:latest.china_kt,n:'占总出口 '+chinaShare.toFixed(1)+'%'},
+    {l:'⑤ 可供采购量',v:null,n:'取决于合约结构、内部自用与流向偏好 → 缺口'}
+  ].map(r=>`
+    <div class="row" style="grid-template-columns:132px 1fr 150px">
+      <div class="l">${r.l}</div>
+      <div class="b" style="height:26px">${r.v==null?`<i style="width:100%;background:repeating-linear-gradient(45deg,rgba(255,92,114,.28) 0 7px,rgba(255,92,114,.07) 7px 14px)"></i>`:`<i style="width:${Math.min(100,r.v/plantTotal*100).toFixed(1)}%"></i>`}</div>
+      <div class="v" style="font-size:12px;color:${r.v==null?'#ff8f9f':'#e8eefc'}">${r.v==null?'数据缺口':fmt(r.v)+' kt'}</div>
+    </div>`).join('')}
+  </div>
+  <div class="note info" style="margin-bottom:0"><b>纪律：</b>不得用①×某系数（如 85% 开工率）反推②，也不得把③直接当成⑤。②③⑤的核实路径见"⑦ 来源与核验"。出口量 ${fmt(latest.world_kt)} kt 已高于名义产能的 ${pct(latest.world_kt,plantTotal)}%，
+  这说明该口径可能含转口/库存去化/统计差异，或产能数字口径偏保守——<b>这一点本身就是需要向企业核实的问题，而不是可以直接采信的量。</b></div>
+</div>
+
+<h3 class="sub">核心结论（采购视角）</h3>
+<div class="grid g3">
+  <div class="card"><div class="badge bA" style="margin-bottom:8px">结论 1 · 有基础</div>
+    <div style="font-size:13.2px;color:var(--txt2)">具备完整的乙烷—乙烯—EO—MEG 一体化基础，装置规模全球级（单套 450–1,065 kt/a），原料成本长期由国家对石化原料气定价支撑；${latest.year} 年 MEG 出口 ${fmt(latest.world_kt)} kt，是全球最大 MEG 出口国之一，对华 ${fmt(latest.china_kt)} kt。</div></div>
+  <div class="card"><div class="badge bB" style="margin-bottom:8px">结论 2 · 主体高度集中</div>
+    <div style="font-size:13.2px;color:var(--txt2)">实质上是 6 家生产法人、SABIC 持股体系合计约 ${(sabicSystem/plantTotal*100).toFixed(0)}%。谈判不是"找工厂"，而是"SABIC 统一销售平台 + 具体生产法人的合约结构"；现货资源有限。</div></div>
+  <div class="card"><div class="badge bC" style="margin-bottom:8px">结论 3 · 通道即供应</div>
+    <div style="font-size:13.2px;color:var(--txt2)">东海岸（占 ${pct(eastCap,plantTotal)}%）全部依赖霍尔木兹，2026 年 3–6 月实际断供；西海岸（占 ${pct(westCap,plantTotal)}%）经红海，是当前唯一可稳定对华供货的通道，但受曼德海峡战争险影响。</div></div>
+</div>
+
+<div class="grid g2" style="margin-top:16px">
+  <div class="card"><h3 class="sub" style="margin-top:0">企业 × 海岸 × 产能（点击进入企业详情）</h3>
+    <div class="tbl-wrap"><table id="ov-company"><thead><tr><th>生产法人</th><th>装置数</th><th>所在</th><th class="num">名义产能 kt/a</th><th class="num">占比</th></tr></thead>
+    <tbody>${D.companies.filter(c=>D.plants.some(p=>p.company_id===c.id)).map(c=>{
+      const ps=D.plants.filter(p=>p.company_id===c.id);
+      const cap=ps.reduce((a,p)=>a+p.capacity_kt,0);
+      return `<tr class="click" data-co="${c.id}"><td><b>${esc(c.name.split('（')[0])}</b></td><td>${ps.length}</td>
+        <td>${[...new Set(ps.map(p=>D.sites[p.site].name.split(' ')[0]))].join('/')}</td>
+        <td class="num">${fmt(cap)}</td><td class="num">${pct(cap,plantTotal)}%</td></tr>`;
+    }).join('')}</tbody></table></div>
+  </div>
+  <div class="card" id="c-rateWrap">
+    <h3 class="sub" style="margin-top:0">"产能≠供应"的经验证据（2026 年冲突期）</h3>
+    <div class="def" style="grid-template-columns:1fr 1fr">
+      <div class="it"><div class="k">沙特 MEG 名义产能</div><div class="v">${fmt(plantTotal)} kt/a</div><div class="n">姓名牌合计</div></div>
+      <div class="it"><div class="k">2026-04-15 沙特 MEG 开工率</div><div class="v" style="color:#ff8f9f">24.7%</div><div class="n">CCFGroup 估算 ${srcLink('S16')}</div></div>
+      <div class="it"><div class="k">同期波斯湾冲突区开工率</div><div class="v" style="color:#ff8f9f">19.1%</div><div class="n">CCFGroup ${srcLink('S16')}</div></div>
+      <div class="it"><div class="k">西海岸对华发运（2026 Q2–Q3）</div><div class="v">40–50 kt/月</div><div class="n">CCFGroup ${srcLink('S18')}</div></div>
+    </div>
+    <div class="note" style="margin-bottom:0">若以 24.7% 开工率×名义产能外推月度产量，会得到约 ${fmt(plantTotal*0.247/12,0)} kt/月——这恰好说明<b>开工率是时点估算，不是年度产量</b>，且同一时期西海岸仍在正常发运，不能把"全国开工率"套到某个企业上。</div>
+  </div>
+</div>`;
+}
+
+/* ================= ② 生产企业与装置 ================= */
+function renderCapacity(){
+  return `
+<h2 class="sec"><span class="bar"></span>生产企业与装置</h2>
+<p class="lead">企业层：区分"集团/控股平台"与"实际生产法人"；装置层：每套 MEG 装置单独记录所在地、姓名牌产能、投产时间与证据来源。
+证据等级：${gradeBadge('A')} 官方年报/交易所公告　${gradeBadge('B')} 国际专业行业媒体　${gradeBadge('C')} 第三方数据库/估算　${gradeBadge('D')} 推算或待核实</p>
+
+<div class="grid g4" style="margin-bottom:8px">
+  <div class="card kpi acc"><div class="k">涉及 MEG 的生产法人</div><div class="v">${D.companies.filter(c=>D.plants.some(p=>p.company_id===c.id)).length}<small>家</small></div><div class="n">另有 ${D.companies.filter(c=>!D.plants.some(p=>p.company_id===c.id)).length} 家"尚未产 MEG"的相关企业（见下）</div></div>
+  <div class="card kpi a2"><div class="k">已公开装置</div><div class="v">${D.plants.length}<small>套</small></div><div class="n">其中 ${D.plants.filter(p=>p.evidence_level.indexOf('A')>=0).length} 套有 A 级证据，${D.plants.filter(p=>p.unverified).length} 套标记待核实</div></div>
+  <div class="card kpi warn"><div class="k">朱拜勒</div><div class="v">${fmt(eastCap)}<small>kt/a</small></div><div class="n">${east.length} 套装置，占 ${pct(eastCap,plantTotal)}%</div></div>
+  <div class="card kpi acc"><div class="k">延布 / 拉比格</div><div class="v">${fmt(westCap)}<small>kt/a</small></div><div class="n">${west.length} 套装置，占 ${pct(westCap,plantTotal)}%</div></div>
+</div>
+
+<div class="filters" style="margin-top:16px">
+  <button class="chip on" data-f="all">全部装置</button>
+  <button class="chip" data-f="jubail">朱拜勒（东）</button>
+  <button class="chip" data-f="yanbu">延布（西）</button>
+  <button class="chip" data-f="rabigh">拉比格（西）</button>
+  <button class="chip" data-f="A">仅 A 级证据</button>
+  <button class="chip" data-f="unverified">待核实项</button>
+</div>
+
+<div class="tbl-wrap">
+<table id="plantTable"><thead><tr>
+  <th>#</th><th>生产法人</th><th>装置</th><th>所在地</th><th class="num">名义产能 kt/a</th><th class="num">占全国</th>
+  <th>投产/商业化</th><th>证据</th><th>口径与备注</th><th>来源</th>
+</tr></thead><tbody>
+${D.plants.slice().sort((a,b)=>b.capacity_kt-a.capacity_kt).map((p,i)=>`
+  <tr class="click" data-plant="${p.id}" data-search="${esc([p.company,p.plant,p.notes,D.sites[p.site].name,p.capacity_kt].join(' ').toLowerCase())}">
+    <td>${String(i+1).padStart(2,'0')}</td>
+    <td><b>${esc(p.company)}</b></td>
+    <td>${esc(p.plant)} ${p.unverified?'<span class="tag-mini" style="color:#ffc255">待核</span>':''}</td>
+    <td>${esc(D.sites[p.site].name.split(' ')[0])}</td>
+    <td class="num"><b>${fmt(p.capacity_kt)}</b></td>
+    <td class="num">${pct(p.capacity_kt,plantTotal)}%</td>
+    <td>${esc(p.startup)}</td>
+    <td>${gradeBadge(p.evidence_level.includes('/')?p.evidence_level.split('/')[0]:p.evidence_level)}</td>
+    <td style="max-width:340px">${esc(p.cap_basis)}${p.conflict?` <span class="tag-mini" style="color:#ffc255">口径冲突 ${esc(p.conflict)}</span>`:''}</td>
+    <td>${srcLinks(p.source_ids)}</td>
+  </tr>`).join('')}
+  <tr style="background:rgba(62,166,255,.07)"><td></td><td colspan="3"><b>合计（姓名牌口径）</b></td>
+    <td class="num"><b>${fmt(plantTotal)}</b></td><td class="num">100%</td><td colspan="4"></td></tr>
+</tbody></table>
+</div>
+
+<div class="note info" style="margin-top:14px"><b>统计口径说明：</b>本表"名义产能"是各装置的姓名牌设计能力（nameplate），来源分三档：① 公司年报产品产能表（Kayan 1,065 kt）；② 工程总包/技术许可公告（Yansab 700 kt、United EG-3 700 kt、Petro Rabigh 600 kt）；③ 行业媒体在停机检修报道中逐一列出的装置产能（SHARQ、YANPET、JUPC EG-1/EG-2）。
+三者是不同年份、不同披露场景下的数字，直接加总存在 ±5% 的误差带，<b>不可作为合同产能依据</b>。</div>
+
+<h3 class="sub">企业层：集团平台 vs 生产法人（避免"把集团总产能当产品产能"）</h3>
+<div class="grid g2">
+${D.companies.map(c=>{
+  const ps=D.plants.filter(p=>p.company_id===c.id);
+  const cap=ps.reduce((a,p)=>a+p.capacity_kt,0);
+  return `<div class="card click" data-co="${c.id}" style="cursor:pointer">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+      <div><div style="font-size:14.5px;font-weight:600">${esc(c.name)}</div>
+        <div style="font-size:11.5px;color:var(--txt3);margin-top:2px">${esc(c.name_en)}</div></div>
+      <div style="text-align:right;flex:none"><div style="font-size:19px;font-weight:700;color:${cap?'#7cc4ff':'#6f82a8'}">${cap?fmt(cap)+' kt/a':'—'}</div>
+        <div style="font-size:10.5px;color:var(--txt3)">MEG 名义产能</div></div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:9px 0">
+      <span class="badge bN">${esc(c.type)}</span>${c.listed!=='非上市'?`<span class="badge bB">${esc(c.listed)}</span>`:''}
+      ${ps.length?`<span class="badge bA">${ps.length} 套装置</span>`:`<span class="badge bC">现无 MEG 装置</span>`}
+    </div>
+    <div style="font-size:12.3px;color:var(--txt2)">${esc(c.note)}</div>
+  </div>`;
+}).join('')}
+</div>
+
+<h3 class="sub">扩产与"计划中"的产能（不进名义产能表）</h3>
+<div class="tbl-wrap"><table><thead><tr><th>时间</th><th>事项</th><th>性质</th><th>是否计入本期产能</th><th>来源</th></tr></thead><tbody>
+<tr><td>2025-02</td><td>Sipchem 获能源部原料配额，拟建朱拜勒石化综合体</td><td>原料配额批复</td><td>不计入（未披露是否含 MEG 装置）</td><td>${srcLinks(['S41','S35'])}</td></tr>
+<tr><td>2025-02</td><td>Tasnee 获能源部原料配额，规划朱拜勒新综合体（至多 330 万吨/年）</td><td>原料配额批复/规划</td><td>不计入（未披露 MEG 装置）</td><td>${srcLinks(['S35','S38'])}</td></tr>
+<tr><td>2022-10</td><td>United EG-3 700 kt/a 商业化投产</td><td>已投产</td><td><b>已计入</b>（P03）</td><td>${srcLinks(['S03','S05'])}</td></tr>
+</tbody></table></div>
+
+<h3 class="sub">检修与装置状态事件（用于判断可供应量波动）</h3>
+<div class="tbl-wrap"><table><thead><tr><th>日期</th><th>企业/装置</th><th>内容</th><th>影响性质</th><th>来源</th></tr></thead><tbody>
+${D.events.filter(e=>['计划检修','装置故障','新增产能','园区级中断','物理损毁'].includes(e.type)).map(e=>`
+<tr><td>${e.date}</td><td><b>${esc(e.title)}</b></td><td>${esc(e.detail)}</td><td>${impactBadge(e.impact)}</td><td>${srcLinks(e.source_ids)}</td></tr>`).join('')}
+</tbody></table></div>`;
+}
+
+/* ================= ③ 原料与产业基础 ================= */
+function renderChain(){
+  return `
+<h2 class="sec"><span class="bar"></span>原料与产业基础</h2>
+<p class="lead">本产品的工艺路线决定了研究重点：MEG 全部来自乙烯→环氧乙烷(EO)→乙二醇(EG) 的合成路线，因此"乙烷/伴生气—集成裂解（乙烯）—EO/EG 共用单元—下游聚酯"这条链上的任何一环变化都会直接改变可供出口量。
+若换成其他产品（如甲醇、PVC、纯碱），本区块的重点应按工艺路线重新配置（见 Skill 的工艺适配矩阵）。</p>
+
+<h3 class="sub">工艺路线与关键节点</h3>
+<div class="flow">
+  <div class="st"><div class="n">UPSTREAM</div><div class="t">乙烷 / 伴生气</div><div class="x">Aramco NGL 体系供气；原料气价格由国家定价机制决定</div></div>
+  <div class="st"><div class="n">OLEFINS</div><div class="t">乙烯（蒸汽裂解）</div><div class="x">各家自有裂解装置，乙烷裂解为主；装置规模与原料灵活度决定可用乙烯</div></div>
+  <div class="st"><div class="n">EO/EG</div><div class="t">环氧乙烷 + 乙二醇</div><div class="x">MEG 与 EO 衍生物（乙二醇醚、乙醇胺、表面活性剂）共用 EO 单元</div></div>
+  <div class="st"><div class="n">EXPORT</div><div class="t">散装液体化学品出运</div><div class="x">储罐+化学品船；朱拜勒走霍尔木兹，延布/拉比格走红海</div></div>
+</div>
+<div class="grid g3">
+${D.feedstock.map(f=>`<div class="card"><div style="font-size:13.5px;font-weight:600;margin-bottom:5px">${esc(f.item)} <span class="tag-mini">${esc(f.role)}</span></div>
+  <div style="font-size:12.4px;color:var(--txt2)">${esc(f.detail)}</div>
+  <div style="margin-top:8px">${srcLinks(f.source_ids)}</div></div>`).join('')}
+</div>
+
+<h3 class="sub">产业基础的整体判断</h3>
+<div class="grid g2">
+  <div class="card"><div class="badge bA" style="margin-bottom:8px">强项</div>
+    <ul style="font-size:12.6px;color:var(--txt2);padding-left:18px;line-height:1.85">
+      <li>原料自给：乙烷由本国伴生气体系供应，长期成本优于石脑油路线${srcLinks(['S12','S34'])}</li>
+      <li>一体化程度高：裂解—EO—EG—聚酯/乙醇胺在同一园区，物流与公用工程共享</li>
+      <li>工业城规划：朱拜勒/延布为皇家委员会统一规划的产业集群，港口—罐区—装置相邻</li>
+      <li>技术与工程：Scientific Design / Shell OMEGA 等成熟许可，装置单系列规模大</li>
+    </ul></div>
+  <div class="card"><div class="badge bD" style="margin-bottom:8px">结构性约束</div>
+    <ul style="font-size:12.6px;color:var(--txt2);padding-left:18px;line-height:1.85">
+      <li>原料气价格机制由 Aramco 单方面调整，成本优势并非永久（2025 年起连续上调）${srcLinks(['S34'])}</li>
+      <li>MEG 与 EO 衍生物共用 EO 单元，EO 利润更优时 MEG 排产会下降 → 可用出口量波动</li>
+      <li>两座工业城的安全与海运通道同时暴露于地缘风险（2026 年两者的中断已同时发生）${srcLinks(['S15','S18'])}</li>
+      <li>园区级公用工程中断会让全园企业同时停产（Sadara 案例）${srcLinks(['S22','S23'])}</li>
+    </ul></div>
+</div>
+
+<div class="note"><b>不要把"产业规模"直接当成"可供货源"：</b>沙特石化产业总量约 1.18 亿吨/年的级别，但 MEG 只是其中一环；且相当比例产出通过长期合约定向欧洲/印度/东南亚。
+任何"按行业规模×出口比例"推算可采购量的做法都会高估可获量。</div>`;
+}
+
+/* ================= ④ 出口贸易 ================= */
+function renderTrade(){
+  const yrs = D.trade.by_year.map(y=>String(y.year));
+  return `
+<h2 class="sec"><span class="bar"></span>出口贸易</h2>
+<p class="lead">口径：HS ${D.trade.hs}，沙特申报出口（UN Comtrade / World Bank WITS），货值按 USD、数量按 kg 计。注意该税号包含其他乙二醇，且沙特申报的对华数量与中国海关的进口口径可能不一致。</p>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <div class="card kpi acc"><div class="k">2025 年出口总量</div><div class="v">${fmt(latest.world_kt)}<small>kt</small></div><div class="n">${fmt(latest.world_musd)} 百万美元；较 ${firstY.year} 年 +${fmt((latest.world_kt/firstY.world_kt-1)*100,0)}%</div></div>
+  <div class="card kpi a2"><div class="k">2025 年对华出口</div><div class="v">${fmt(latest.china_kt)}<small>kt</small></div><div class="n">占 ${pct(latest.china_kt,latest.world_kt)}%；${fmt(latest.china_musd)} 百万美元</div></div>
+  <div class="card kpi warn"><div class="k">2025 年出口均价</div><div class="v">${fmt(latest.world_musd*1e6/(latest.world_kt*1e3),0)}<small>美元/吨</small></div><div class="n">对华 ${fmt(latest.china_musd*1e6/(latest.china_kt*1e3),0)} 美元/吨（离岸价口径，不含运费保险）</div></div>
+  <div class="card kpi bad"><div class="k">对华集中度</div><div class="v">${pct(latest.china_kt,latest.world_kt)}<small>%</small></div><div class="n">即约六成货物流向中国；沙特占中国 MEG 进口约 54–55%</div></div>
+</div>
+
+<div class="grid g2">
+  <div class="chart"><div class="cap">图 3 出口总量 vs 对华出口（kt）</div><div id="c-t1"></div>
+    <div class="legend"><span><i style="background:#3ea6ff"></i>出口总量</span><span><i style="background:#26d0a8"></i>对华出口</span></div></div>
+  <div class="chart"><div class="cap">图 4 对华出口占比（%）</div><div id="c-t2"></div></div>
+</div>
+
+<h3 class="sub">年度数据（可排序/可核对）</h3>
+<div class="tbl-wrap"><table><thead><tr>
+<th>年份</th><th class="num">出口总量 kt</th><th class="num">同比</th><th class="num">出口额 百万美元</th><th class="num">均价 美元/吨</th>
+<th class="num">对华 kt</th><th class="num">占总量</th><th class="num">对华额 百万美元</th><th class="num">对华均价</th></tr></thead><tbody>
+${D.trade.by_year.map((y,i)=>{
+  const pv = i?D.trade.by_year[i-1].world_kt:null;
+  const g = pv?(y.world_kt/pv-1)*100:null;
+  return `<tr><td><b>${y.year}</b></td><td class="num">${fmt(y.world_kt)}</td>
+  <td class="num" style="color:${g==null?'#6f82a8':g>0?'#5ee0ab':'#ff8f9f'}">${g==null?'—':(g>0?'+':'')+g.toFixed(1)+'%'}</td>
+  <td class="num">${fmt(y.world_musd)}</td><td class="num">${fmt(y.world_musd*1e6/(y.world_kt*1e3),0)}</td>
+  <td class="num"><b>${fmt(y.china_kt)}</b></td><td class="num">${pct(y.china_kt,y.world_kt)}%</td>
+  <td class="num">${fmt(y.china_musd)}</td><td class="num">${fmt(y.china_musd*1e6/(y.china_kt*1e3),0)}</td></tr>`;
+}).join('')}
+</tbody></table></div>
+<div class="note info" style="margin-top:12px">来源：${srcLinks(['S01','S42'])}。逐年记录已保存于 Excel 的"出口贸易"表（含全部伙伴国）。2021 年起的跃升与 2023–2025 年翻倍，主要对应 2022 年 United EG-3 投产与检修周期错位（供给侧解释），以及中国聚酯需求恢复；<b>但各年出口量与"名义产能×开工率"的推算值并不吻合</b>，需以企业确认的实际产量替代。</div>
+
+<h3 class="sub">${latest.year} 年出口目的地结构（前 10 + 其他）</h3>
+<div class="grid g2">
+  <div class="chart"><div class="cap">图 5 目的地结构（kt）</div><div id="c-dest"></div></div>
+  <div class="chart"><div class="cap">图 6 目的地份额条形图</div><div id="c-destbar"></div></div>
+</div>
+<div class="tbl-wrap" style="margin-top:14px"><table><thead><tr><th>排名</th><th>目的地</th><th class="num">数量 kt</th><th class="num">金额 百万美元</th><th class="num">均价 美元/吨</th><th class="num">份额</th></tr></thead><tbody>
+${D.trade.partners_2025_full.map((p,i)=>`<tr><td>${i+1}</td><td>${p.p==='China'?'<b>中国 China</b>':esc(p.p)}</td>
+  <td class="num">${fmt(p.kt)}</td><td class="num">${fmt(p.musd)}</td><td class="num">${fmt(p.musd*1e6/(p.kt*1e3),0)}</td>
+  <td class="num">${(p.kt/latest.world_kt*100).toFixed(1)}%</td></tr>`).join('')}
+</tbody></table></div>
+<div class="note"><b>结构解读：</b>从 2021 年到 ${latest.year} 年，对华占比由 ${pct(firstY.china_kt,firstY.world_kt)}% 升至 ${pct(latest.china_kt,latest.world_kt)}%，其余近 40% 分散在印度、埃及、印尼、土耳其、越南、韩国、意大利、巴基斯坦、西班牙等。
+这种"集中＋分散"结构意味着：沙特卖方在任何时候都有替代市场可切换，中国市场在价格低时会被排在后面（2026 年 8 月已实际发生，见"政策与供应事件"）。</div>
+
+<h3 class="sub">历年对华出口轨迹</h3>
+<div class="chart"><div class="cap">图 7 对华出口量（kt，柱）与对华出口额（百万美元，线）</div><div id="c-china"></div>
+  <div class="legend"><span><i style="background:#26d0a8"></i>对华出口量</span><span><i style="background:#ffb020"></i>对华出口额</span></div></div>`;
+}
+
+/* ================= ⑤ 物流与港口 ================= */
+function renderLogistics(){
+  const toChina = D.logistics.routes_to_china;
+  return `
+<h2 class="sec"><span class="bar"></span>物流与港口</h2>
+<p class="lead">液体化工品（MEG）以整船散装为主、储罐中转为核心。港口选择被"装置在哪一海岸"锁死：朱拜勒只能走霍尔木兹；延布/拉比格只能经红海（曼德海峡或苏伊士）。
+下面先给出港口与装置的空间关系，再给出到中国主要港口的路线与时间条件。</p>
+
+<div class="grid g2">
+  <div>
+    <div id="map" style="height:430px">
+      <div class="sea"></div>
+      <div class="hint">示意地图（非等比例经纬投影）：圆点=生产装置所在工业城，绿点=出口港。点击查看详情。</div>
+      <div id="mapTooltip"></div>
+    </div>
+  </div>
+  <div>
+    <h3 class="sub" style="margin-top:0">出口港口</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>港口</th><th>海岸</th><th>服务对象</th></tr></thead><tbody>
+    ${D.logistics.ports.map(p=>`<tr class="click" data-port="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(p.coast)}</td><td>${esc(p.role)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="def" style="grid-template-columns:1fr 1fr">
+      <div class="it"><div class="k">典型船型</div><div class="v">${esc(D.logistics.vessel.typical_dwt)}</div><div class="n">单航次约 ${esc(D.logistics.vessel.cargo_per_voyage)}</div></div>
+      <div class="it"><div class="k">2026 年战争险</div><div class="v" style="color:#ff8f9f">0.3% → 约 3%</div><div class="n">曼德海峡袭击后；单船每航次 +约 135 万美元 ≈ +55 美元/吨</div></div>
+    </div>
+  </div>
+</div>
+
+<h3 class="sub">到中国主要港口的路线条件</h3>
+<div class="tbl-wrap"><table><thead><tr><th>装货地</th><th>航线</th><th>航程（天）</th><th>2026 年状态</th><th>来源</th></tr></thead><tbody>
+${toChina.map(r=>`<tr><td><b>${esc(r.from)}</b></td><td>${esc(r.via)}</td><td>${esc(r.normal_days)}</td>
+  <td style="color:${r.status_2026.indexOf('关闭')>=0?'#ff8f9f':'#a8b8d8'}">${esc(r.status_2026)}</td><td>${srcLinks(r.source_ids)}</td></tr>`).join('')}
+</tbody></table></div>
+
+<h3 class="sub">港口吞吐与基础设施证据</h3>
+<div class="grid g3">
+  <div class="card"><div class="k" style="font-size:11px;color:var(--txt3)">沙特港口 2024 年出港货量</div>
+    <div style="font-size:22px;font-weight:700;color:#7cc4ff;margin:4px 0">≈ 2.224 亿吨</div>
+    <div style="font-size:12px;color:var(--txt2)">其中液体散货 >1.77 亿吨；延布法赫德国王工业港占出口 51.1% ${srcLinks(['S29','S30'])}</div></div>
+  <div class="card"><div class="k" style="font-size:11px;color:var(--txt3)">朱拜勒罐区</div>
+    <div style="font-size:22px;font-weight:700;color:#4fe0b8;margin:4px 0">25 万 m³</div>
+    <div style="font-size:12px;color:var(--txt2)">Vopak 与 SABIC 合资罐区（朱拜勒法赫德国王工业港）初期容量 ${srcLinks(['S31'])}</div></div>
+  <div class="card"><div class="k" style="font-size:11px;color:var(--txt3)">朱拜勒商业港化工罐区</div>
+    <div style="font-size:22px;font-weight:700;color:#ffc255;margin:4px 0">ACT 扩建</div>
+    <div style="font-size:12px;color:var(--txt2)">Mawani 与 ACT 签约，投资 >5 亿里亚尔、4.9 万 m²；另建 13 座储罐 ${srcLinks(['S32','S33'])}</div></div>
+</div>
+
+<div class="note bad"><b>物流即风险（2026 年实证）：</b>东海岸装出的 MEG 必须经霍尔木兹；2026 年 3 月至 6 月中，MEG 相关化学品船基本无法通行（6 月下旬起逐步恢复）${srcLinks(['S17'])}。
+西海岸在 8 月 11 日曼德海峡袭击后，战争险由 0.3% 升至约 3%，部分货物改经苏伊士或转售东南亚，并且当时中国价格低于欧洲/东南亚，卖方优先其他市场 ${srcLinks(['S18'])}。
+另有延布出口一度中断的记录 ${srcLinks(['S44'])}。</div>
+
+<h3 class="sub">对中国买方的物流配置建议</h3>
+<div class="grid g2">
+  <div class="card"><div class="badge bA" style="margin-bottom:6px">优先</div>
+    <div style="font-size:12.6px;color:var(--txt2)">西海岸（延布/拉比格）→ 曼德海峡 → 马六甲 → 华东主港：当前唯一可稳定运行的通道；要求供应商书面确认战争险责任与装运港，并把"战争险/绕行附加费"写入价格调整条款。</div></div>
+  <div class="card"><div class="badge bC" style="margin-bottom:6px">备选</div>
+    <div style="font-size:12.6px;color:var(--txt2)">西海岸 → 苏伊士 → 地中海（航程显著拉长）：成本高但避开了曼德海峡；仅在曼德海峡无法通行时启用。</div></div>
+</div>`;
+}
+
+/* ================= ⑥ 政策与供应事件 ================= */
+function renderPolicy(){
+  return `
+<h2 class="sec"><span class="bar"></span>政策与供应事件</h2>
+<p class="lead">本区块同时回答"制度条件是否允许做"与"物理条件是否允许按时到货"。前者看出口国监管、原料政策与贸易救济；后者看装置检修、通道中断与设施损毁。</p>
+
+<h3 class="sub">政策与监管要求</h3>
+<div class="tbl-wrap"><table><thead><tr><th>类别</th><th>事项</th><th>内容与对采购的影响</th><th>可核验度</th><th>来源</th></tr></thead><tbody>
+${D.policy.map(p=>`<tr><td><span class="badge bN">${esc(p.type)}</span></td><td><b>${esc(p.title)}</b></td><td>${esc(p.detail)}</td>
+  <td>${p.level.startsWith('A')?gradeBadge('A'):p.level.startsWith('B')?'<span class="badge bB">A/B</span>':p.level.startsWith('C')?gradeBadge('C'):gradeBadge('D')}</td>
+  <td>${srcLinks(p.source_ids)||'<span class="tag-mini">需官网复核</span>'}</td></tr>`).join('')}
+</tbody></table></div>
+
+<h3 class="sub">供应事件时间线（2011–2026）</h3>
+<div class="grid g2">
+  <div class="card"><div class="timeline">
+  ${D.events.map(e=>{
+    const cls = (e.impact==='极高'||e.impact==='高')?'hi':(e.impact==='正向'?'pos':'');
+    return `<div class="tl ${cls}"><div class="d">${esc(e.date)}</div><div class="t">${esc(e.title)}</div>
+      <div class="x">${esc(e.detail)}</div>
+      <div class="meta"><span class="badge bN">${esc(e.type)}</span>${impactBadge(e.impact)} ${srcLinks(e.source_ids)}</div></div>`;
+  }).join('')}
+  </div></div>
+  <div>
+    <div class="chart"><div class="cap">图 8 事件对"可供应量"的影响强度分布（按事件计数）</div><div id="c-ev"></div></div>
+    <div class="card" style="margin-top:16px"><div class="badge bD" style="margin-bottom:8px">当前状态（截至 2026-10-20）</div>
+      <ul style="font-size:12.6px;color:var(--txt2);padding-left:18px;line-height:1.9">
+        <li>东海岸：2026 年 4 月 7 日遭袭后装置停车与复产时间尚未公开证实，SABIC 曾表示无法估计复产时间</li>
+        <li>西海岸：成为区域内唯一能持续供应的来源，但受红海战险与延布中断事件影响</li>
+        <li>中国端：华东港存 9 月初降至 12 万吨（年初高点 92.64 万吨），现货价年内 +67%${srcLinks(['S19'])}</li>
+        <li>谈判环境：卖方在全球缺货期议价权极强，中国价格是全球洼地</li>
+      </ul></div>
+  </div>
+</div>
+
+<h3 class="sub">风险矩阵</h3>
+<div class="grid g2">
+${D.risks.map(r=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+  <b style="font-size:13.4px">${esc(r.title)}</b>${impactBadge(r.level)}</div>
+  <div style="font-size:12.4px;color:var(--txt2)">${esc(r.desc)}</div>
+  <div style="font-size:12px;color:#8ec9ff;margin-top:7px">▸ 缓释：${esc(r.mitigation)}</div></div>`).join('')}
+</div>`;
+}
+
+/* ================= ⑦ 来源与核验 ================= */
+function renderSources(){
+  const A=D.sources.filter(s=>s.reliability==='高').length;
+  return `
+<h2 class="sec"><span class="bar"></span>来源、口径与可核验性</h2>
+<p class="lead">本报告所有关键数据均标注来源编号（可点击跳转原文）。证据分为 A/B/C/D 四级；凡无法核实的内容，一律列为"数据缺口"，不做填补式估算。</p>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <div class="card kpi acc"><div class="k">引用来源</div><div class="v">${D.sources.length}<small>条</small></div><div class="n">其中高可靠度 ${A} 条（官方/交易所/国际专业媒体）</div></div>
+  <div class="card kpi warn"><div class="k">数据缺口</div><div class="v">${D.unverified.length}<small>项</small></div><div class="n">均给出核实路径，不接受"先填数再找依据"</div></div>
+  <div class="card kpi a2"><div class="k">证据冲突</div><div class="v">${D.plants.filter(p=>p.conflict).length + D.plants.filter(p=>p.unverified).length}<small>项</small></div><div class="n">已在装置表中并列展示两套口径</div></div>
+  <div class="card kpi bad"><div class="k">待核实装置</div><div class="v">${D.plants.filter(p=>p.unverified).length}<small>套</small></div><div class="n">SHARQ MEG-1 仅按行业惯例暂列</div></div>
+</div>
+
+<h3 class="sub">数据缺口与核实路径</h3>
+<div class="tbl-wrap"><table><thead><tr><th>缺口项</th><th>为什么无法确认</th><th>核实路径</th><th>影响</th></tr></thead><tbody>
+${D.unverified.map(u=>`<tr><td><b>${esc(u.item)}</b></td><td>${esc(u.why)}</td><td>${esc(u.how)}</td><td>${esc(u.impact)}</td></tr>`).join('')}
+</tbody></table></div>
+
+<h3 class="sub">下一步接洽优先级</h3>
+<div class="tbl-wrap"><table><thead><tr><th>优先级</th><th>动作</th><th>原因</th><th>对象</th></tr></thead><tbody>
+${D.next_steps.map(s=>`<tr><td><span class="badge ${s.priority<=2?'bD':s.priority<=4?'bC':'bN'}">P${s.priority}</span></td>
+  <td><b>${esc(s.action)}</b></td><td>${esc(s.why)}</td><td>${esc(s.who)}</td></tr>`).join('')}
+</tbody></table></div>
+
+<h3 class="sub">来源清单</h3>
+<div class="tbl-wrap"><table><thead><tr><th>编号</th><th>标题</th><th>发布方</th><th>日期</th><th>类型</th><th>可靠度</th></tr></thead><tbody id="srcBody">
+${D.sources.map(s=>`<tr data-search="${esc((s.title+s.publisher+s.type).toLowerCase())}">
+  <td><b>${s.id}</b></td>
+  <td><a href="${s.url}" target="_blank" rel="noopener">${esc(s.title)}</a>
+    <div style="font-size:11.3px;color:var(--txt3);margin-top:2px">${esc(s.note)}</div></td>
+  <td>${esc(s.publisher)}</td><td>${esc(s.date)}</td><td><span class="tag-mini">${esc(s.type)}</span></td>
+  <td>${s.reliability==='高'?gradeBadge('A'):s.reliability.indexOf('中')>=0?gradeBadge('B'):gradeBadge('C')}</td></tr>`).join('')}
+</tbody></table></div>`;
+}
+
+/* ================= 地图 ================= */
+/* 注意：本区块初始为 display:none，clientWidth 为 0。
+   因此必须在"物流 tab 可见之后"才计算坐标，否则所有标记会错位。
+   这里用 [data-drawn] 标记避免重复渲染，并在窗口变化时重绘。 */
+function drawMap(){
+  const map=$('#map'); if(!map) return;
+  const W=map.clientWidth, H=map.clientHeight;
+  /* 容器不可见（尺寸为 0）时不绘制，等切到该 tab 再画 */
+  if(W<50 || H<50){ map.dataset.drawn='0'; return; }
+  /* 尺寸变化时清空上一次的标记与线条，避免重复叠加 */
+  map.querySelectorAll('.mk').forEach(n=>n.remove());
+  map.querySelectorAll('svg').forEach(n=>n.remove());
+  map.dataset.drawn='1';
+
+  /* 经度线性投影；纬度上下翻转（北在上）
+     注：港口与工业城在实际地理上紧邻（朱拜勒港距城约 3–4 km），
+     因此靠"标签摆放方向"错开文字，而不是改动真实坐标。 */
+  const lngMin=37.2, lngMax=50.8, latMin=21.9, latMax=28.0;
+  const padX=52, padY=40;
+  const px = lng => padX + (lng-lngMin)/(lngMax-lngMin)*(W-padX*2);
+  const py = lat => H-padY - (lat-latMin)/(latMax-latMin)*(H-padY*2);
+  let html='';
+  /* ===== 标签布局：按"同城"分组统一分层，彻底避免互压 =====
+     由于 .mk 有 transform:translate(-50%,-50%)，子元素百分比相对已偏移的盒子，
+     统一用 left:100% / right:100% 贴住圆点；标签高约 25px，层距 30px。
+     东海岸（靠右）标签向左展开，西海岸（靠左）标签向右展开。 */
+  const nearRight = x => x > W*0.55;
+  const LH = 30;   // 标签层高
+
+  /* 把站点与其同城港口归为一组，按纬度从高到低排层 */
+  const groups = {};
+  const addToGroup = (siteKey, item) => { (groups[siteKey] = groups[siteKey] || []).push(item); };
+  Object.entries(D.sites).forEach(([k,s])=>addToGroup(k, {kind:'site', key:k, s}));
+  D.logistics.ports.forEach(p=>{
+    const siteKey = p.site && D.sites[p.site] ? p.site : null;
+    if(siteKey) addToGroup(siteKey, {kind:'port', key:p.id, p});
+  });
+
+  Object.entries(groups).forEach(([siteKey, items])=>{
+    const s0 = D.sites[siteKey];
+    const x = px(s0.lng);
+    const right = nearRight(x);   // 靠右 → 标签向左展开
+    /* 工业城排最外层（离点最远），港口依次靠近 */
+    items.sort((a,b)=> (a.kind==='site'? -1:1) - (b.kind==='site'? -1:1));
+    const n = items.length;
+    items.forEach((it, i)=>{
+      /* 纵向：以工业城点为基准，向上依次排布 */
+      const top = -14 - (n-1-i)*LH;
+      const pos = right
+        ? `right:100%;left:auto;top:${top}px;margin-right:12px;text-align:right`
+        : `left:100%;right:auto;top:${top}px;margin-left:12px;text-align:left`;
+      if(it.kind==='site'){
+        const cap = D.plants.filter(p=>p.site===siteKey).reduce((a,p)=>a+p.capacity_kt,0);
+        html+=`<div class="mk site" style="left:${px(s0.lng).toFixed(1)}px;top:${py(s0.lat).toFixed(1)}px" data-info="site:${siteKey}">
+          <div class="ring"></div><div class="dot"></div>
+          <div class="lbl" style="${pos}">${esc(s0.name.split(' ')[0])} · ${fmt(cap)} kt/a</div></div>`;
+      }else{
+        const p = it.p;
+        html+=`<div class="mk port" style="left:${px(p.lng).toFixed(1)}px;top:${py(p.lat).toFixed(1)}px" data-info="port:${p.id}">
+          <div class="dot"></div>
+          <div class="lbl" style="${pos}">⚓ ${esc(p.name.split(',')[0].replace('King Fahd Industrial Port','法赫德国王工业港'))}</div></div>`;
+      }
+    });
+  });
+  /* 通道示意（超出地图范围的线段会被 overflow:hidden 裁掉，属正常） */
+  html+=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="position:absolute;inset:0;pointer-events:none">
+    <path d="M${px(49.68)},${py(27.03)} C ${px(50.2)},${py(26.4)} ${px(50.9)},${py(25.9)} ${px(50.6)},${py(25.4)}"
+      stroke="#26d0a8" stroke-width="1.6" stroke-dasharray="5 5" fill="none" opacity=".8"/>
+    <text x="${px(50.0)}" y="${py(26.2)}" fill="#26d0a8" font-size="10.5">→ 霍尔木兹</text>
+    <path d="M${px(38.20)},${py(23.95)} C ${px(39.4)},${py(21.6)} ${px(41.6)},${py(19.2)} ${px(43.5)},${py(15.6)}"
+      stroke="#ffb020" stroke-width="1.6" stroke-dasharray="5 5" fill="none" opacity=".85"/>
+    <text x="${px(38.7)}" y="${py(21.6)}" fill="#ffb020" font-size="10.5">→ 曼德海峡</text>
+    <text x="${px(38.6)}" y="${py(26.4)}" fill="#6f82a8" font-size="11">红海</text>
+    <text x="${px(45.6)}" y="${py(22.6)}" fill="#6f82a8" font-size="11">阿拉伯半岛</text>
+    <text x="${px(48.6)}" y="${py(27.7)}" fill="#4a86c8" font-size="11">波斯湾</text>
+  </svg>`;
+  map.insertAdjacentHTML('afterbegin', html);
+  const tip=$('#mapTooltip');
+  $$('#map .mk', map).forEach(m=>{
+    m.addEventListener('mousemove',e=>{
+      const [t,k]=m.dataset.info.split(':');
+      let txt='';
+      if(t==='site'){
+        const s=D.sites[k]; const ps=D.plants.filter(p=>p.site===k);
+        txt=`<b>${esc(s.name)}</b><br>${esc(s.region)} · ${esc(s.coast)}<br>装置 ${ps.length} 套 · 名义 ${fmt(ps.reduce((a,p)=>a+p.capacity_kt,0))} kt/a<br>`+ps.map(p=>`· ${esc(p.company.split('(')[0])} ${fmt(p.capacity_kt)}kt`).join('<br>');
+      }else{
+        const p=D.logistics.ports.find(x=>x.id===k);
+        txt=`<b>${esc(p.name)}</b><br>${esc(p.coast)} · ${esc(p.role)}`;
+      }
+      tip.innerHTML=txt; tip.style.display='block';
+      const r=map.getBoundingClientRect();
+      tip.style.left=Math.max(8,Math.min(e.clientX-r.left+14, r.width-250))+'px';
+      tip.style.top=Math.max(8,Math.min(e.clientY-r.top+14, r.height-80))+'px';
+    });
+    m.addEventListener('mouseleave',()=>tip.style.display='none');
+    m.addEventListener('click',()=>{
+      const [t,k]=m.dataset.info.split(':');
+      if(t==='port') openPort(k);
+    });
+  });
+}
+/* 窗口尺寸变化时重绘（仅在可见状态下） */
+let _mapResizeTimer=null;
+window.addEventListener('resize',()=>{
+  const map=$('#map'); if(!map || map.clientWidth<50) return;
+  clearTimeout(_mapResizeTimer);
+  _mapResizeTimer=setTimeout(drawMap,220);
+});
+
+/* ================= 抽屉 ================= */
+function openDrawer(html){ $('#drawer').innerHTML=`<button class="close" onclick="closeDrawer()">×</button>`+html;
+  $('#drawer').classList.add('on'); $('#mask').classList.add('on'); }
+function closeDrawer(){ $('#drawer').classList.remove('on'); $('#mask').classList.remove('on'); }
+window.closeDrawer=closeDrawer;
+$('#mask').onclick=closeDrawer;
+
+function openCompany(id){
+  const c=D.companies.find(x=>x.id===id); if(!c) return;
+  const ps=D.plants.filter(p=>p.company_id===c.id);
+  const cap=ps.reduce((a,p)=>a+p.capacity_kt,0);
+  const evs=D.events.filter(e=>ps.some(p=>e.title.indexOf(p.company.split('(')[0].slice(0,4))>=0));
+  openDrawer(`
+    <h3>${esc(c.name)}</h3><div style="color:var(--txt3);font-size:12.5px">${esc(c.name_en)}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+      <span class="badge bN">${esc(c.type)}</span>${c.listed!=='非上市'?`<span class="badge bB">${esc(c.listed)}</span>`:''}
+      ${cap?`<span class="badge bA">MEG ${fmt(cap)} kt/a</span>`:`<span class="badge bC">无 MEG 装置</span>`}
+    </div>
+    <div class="sec-t">股权与定位</div>
+    <div class="kv"><div class="k">股权结构</div><div class="v">${esc(c.ownership)}</div>
+      <div class="k">说明</div><div class="v">${esc(c.note)}</div>
+      <div class="k">接洽提示</div><div class="v" style="color:#8ec9ff">${esc(c.contact_hint)}</div></div>
+    ${ps.length?`<div class="sec-t">MEG 装置（${ps.length} 套）</div>
+    <div class="tbl-wrap"><table><thead><tr><th>装置</th><th>所在地</th><th class="num">kt/a</th><th>投产</th></tr></thead><tbody>
+    ${ps.map(p=>`<tr><td>${esc(p.plant)}</td><td>${esc(D.sites[p.site].name.split(' ')[0])}</td><td class="num">${fmt(p.capacity_kt)}</td><td>${esc(p.startup)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div style="font-size:12px;color:var(--txt3);margin-top:8px">口径：${ps.map(p=>esc(p.cap_basis)).join('；')}</div>`:''}
+    <div class="sec-t">关联供应事件</div>
+    ${D.events.filter(e=>ps.some(p=>e.title.toLowerCase().indexOf(p.plant.toLowerCase().split(' ')[0])>=0)||
+       e.title.indexOf(c.name.split(' ')[0].slice(0,6))>=0)
+      .map(e=>`<div style="font-size:12.3px;color:var(--txt2);margin-bottom:7px"><b style="color:#cfdcff">${esc(e.date)}</b> ${esc(e.title)} ${impactBadge(e.impact)}</div>`).join('')||'<div style="font-size:12.3px;color:var(--txt3)">无公开的该企业单独事件记录（冲突期的园区级事件见"政策与供应事件"）</div>'}
+    <div class="note info" style="margin-top:18px">进入"海外生产商核验"时需要准备：营业执照/商业登记(CR)、装置清单、近 12 个月发货记录、检修计划、出口资质与提单样本。</div>`);
+}
+function openPlant(id){
+  const p=D.plants.find(x=>x.id===id); if(!p) return;
+  const c=D.companies.find(x=>x.id===p.company_id);
+  openDrawer(`<h3>${esc(p.plant)}</h3><div style="color:var(--txt3);font-size:12.5px">${esc(p.company)}</div>
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+      <span class="badge bA">${fmt(p.capacity_kt)} kt/a 名义</span>${gradeBadge(p.evidence_level.split('/')[0])}
+      ${p.unverified?'<span class="badge bC">待核实</span>':''}</div>
+    <div class="sec-t">装置信息</div>
+    <div class="kv">
+      <div class="k">所在地</div><div class="v">${esc(D.sites[p.site].name)}（${esc(D.sites[p.site].coast)}）</div>
+      <div class="k">产品</div><div class="v">${esc(p.product)}</div>
+      <div class="k">投产/商业化</div><div class="v">${esc(p.startup)}</div>
+      <div class="k">产能口径</div><div class="v">${esc(p.cap_basis)}</div>
+      ${p.conflict?`<div class="k">口径冲突</div><div class="v" style="color:#ffc255">${esc(p.conflict)}</div>`:''}
+    </div>
+    <div class="sec-t">备注</div><div style="font-size:12.5px;color:var(--txt2)">${esc(p.notes)}</div>
+    <div class="sec-t">证据来源</div>
+    ${(p.source_ids||[]).map(id=>{const s=D.sources.find(x=>x.id===id);return s?`
+      <div style="margin-bottom:9px;font-size:12.3px"><a href="${s.url}" target="_blank" rel="noopener"><b>${s.id}</b> ${esc(s.title)}</a>
+      <div style="color:var(--txt3);font-size:11.4px">${esc(s.publisher)} · ${esc(s.date)} · 可靠度 ${esc(s.reliability)}</div></div>`:''}).join('')}
+    <div class="note ${p.unverified?'':'ok'}" style="margin-top:12px">${p.unverified?'该装置产能尚未取得一手公开来源，已在装置表中标注"待核"，不得用于对外报价或合同。':'该装置产能有公开一手或专业媒体来源，可在询盘中作为参考基数，但仍需以卖方装置表确认。'}</div>`);
+}
+function openPort(id){
+  const p=D.logistics.ports.find(x=>x.id===id); if(!p) return;
+  openDrawer(`<h3>${esc(p.name)}</h3><div style="color:var(--txt3);font-size:12.5px">${esc(p.coast)} · ${esc(p.role)}</div>
+    <div class="sec-t">港口定位</div><div style="font-size:12.7px;color:var(--txt2)">${esc(p.detail)}</div>
+    <div class="sec-t">到中国路线</div>
+    <div class="tbl-wrap"><table><thead><tr><th>经</th><th>航程</th><th>状态</th></tr></thead><tbody>
+    ${D.logistics.routes_to_china.filter(r=>r.from.indexOf(p.coast.indexOf('波斯湾')>=0?'Jubail':'Yanbu')>=0).map(r=>
+      `<tr><td>${esc(r.via)}</td><td>${esc(r.normal_days)}</td><td style="font-size:11.8px">${esc(r.status_2026)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="sec-t">来源</div>${srcLinks(p.source_ids)}`);
+}
+
+/* ================= 渲染与交互 ================= */
+function renderAll(){
+  $('#main').innerHTML = TABS.map(t=>{
+    let html='';
+    if(t.id==='overview') html=renderOverview();
+    if(t.id==='capacity') html=renderCapacity();
+    if(t.id==='chain')    html=renderChain();
+    if(t.id==='trade')    html=renderTrade();
+    if(t.id==='logistics')html=renderLogistics();
+    if(t.id==='policy')   html=renderPolicy();
+    if(t.id==='sources')  html=renderSources();
+    return `<section class="panel ${t.id==='overview'?'on':''}" id="tab-${t.id}">${html}</section>`;
+  }).join('');
+  $('#footerNote').innerHTML = `本报告为采购研究用途，非报价文件。数据截止 ${D.meta.research_date}；所有关键数字均标注口径与来源，未经验证的内容已列为数据缺口。<br>
+    生成工具：海外供应市场研究 Skill v1.0（模板 + data.js 数据驱动）。`;
+  bindTableClicks();
+  /* 初次渲染时只有概览 tab 可见，故只画概览的图表；
+     其它区块（贸易/政策/物流地图）在切换到对应 tab 时按需绘制。 */
+  renderCharts();
+}
+function bindTableClicks(){
+  $$('[data-co]').forEach(el=>el.onclick=()=>openCompany(el.dataset.co));
+  $$('[data-plant]').forEach(el=>el.onclick=()=>openPlant(el.dataset.plant));
+  $$('[data-port]').forEach(el=>el.onclick=()=>openPort(el.dataset.port));
+  $$('#capacity .filters .chip').forEach(ch=>{
+    ch.onclick=()=>{
+      $$('#capacity .filters .chip').forEach(c=>c.classList.remove('on')); ch.classList.add('on');
+      const f=ch.dataset.f;
+      $$('#plantTable tbody tr').forEach(tr=>{
+        if(!tr.dataset.plant) { tr.classList.remove('hidden'); return; }
+        const p=D.plants.find(x=>x.id===tr.dataset.plant);
+        let show=true;
+        if(f==='A') show=p.evidence_level.indexOf('A')>=0;
+        else if(f==='unverified') show=!!p.unverified;
+        else if(f!=='all') show=p.site===f;
+        tr.classList.toggle('hidden',!show);
+      });
+    };
+  });
+}
+/* 图表：隐藏面板内 clientWidth=0，需在面板可见后重绘 */
+function renderCharts(){
+  const yrs=D.trade.by_year.map(y=>String(y.year));
+  const visible = el => el && el.offsetParent !== null;
+  if(visible($('#c-exports'))) {
+    barChart($('#c-exports'),[
+      {type:'bar',name:'出口总量',data:D.trade.by_year.map(y=>y.world_kt),color:'#3ea6ff',unit:'kt'},
+      {type:'bar',name:'对华出口',data:D.trade.by_year.map(y=>y.china_kt),color:'#26d0a8',unit:'kt'},
+      {type:'line',name:'出口均价',data:D.trade.unit_prices_usd_t.map(p=>p.world),color:'#ffb020',unit:' 美元/吨'}
+    ],yrs,{height:290,rAxis:true,rMax:800});
+  }
+  if(visible($('#c-coast'))) donut($('#c-coast'),[
+    {l:'东海岸·朱拜勒',v:eastCap,c:'#3ea6ff',u:' kt/a'},
+    {l:'西海岸·延布+拉比格',v:westCap,c:'#26d0a8',u:' kt/a'}
+  ]);
+  if(visible($('#c-t1'))) barChart($('#c-t1'),[
+    {type:'bar',name:'出口总量',data:D.trade.by_year.map(y=>y.world_kt),color:'#3ea6ff',unit:'kt'},
+    {type:'bar',name:'对华',data:D.trade.by_year.map(y=>y.china_kt),color:'#26d0a8',unit:'kt'}
+  ],yrs,{height:260});
+  if(visible($('#c-t2'))) barChart($('#c-t2'),[
+    {type:'bar',name:'对华占比',data:D.trade.by_year.map(y=>+(y.china_kt/y.world_kt*100).toFixed(1)),color:'#ffb020',unit:'%'}
+  ],yrs,{height:260});
+  if(visible($('#c-china'))) barChart($('#c-china'),[
+    {type:'bar',name:'对华量',data:D.trade.by_year.map(y=>y.china_kt),color:'#26d0a8',unit:'kt'},
+    {type:'line',name:'对华额',data:D.trade.by_year.map(y=>y.china_musd),color:'#ffb020',unit:' 百万美元'}
+  ],yrs,{height:270,rAxis:true,rMax:2100});
+  if(visible($('#c-dest'))){
+    const parts=D.trade.partners_2025_full.slice(0,8).map((p,i)=>({l:p.p,v:p.kt,c:['#3ea6ff','#26d0a8','#7c5cff','#ffb020','#ff7085','#4fe0b8','#8ab4ff','#c792ff'][i]}));
+    parts.push({l:'其他',v:latest.world_kt-parts.reduce((a,p)=>a+p.v,0),c:'#54648c'});
+    donut($('#c-dest'),parts.map(p=>({...p,u:' kt'})));
+    $('#c-dest').querySelector('svg')?.setAttribute('height','280');
+  }
+  if(visible($('#c-destbar'))) hBars($('#c-destbar'),D.trade.partners_2025_full.slice(0,10).map(p=>({l:p.p,v:p.kt/latest.world_kt})));
+  if(visible($('#c-ev'))){
+    const m={}; D.events.forEach(e=>m[e.impact]=(m[e.impact]||0)+1);
+    const order=['极高','高','中','低','正向'];
+    const tot=D.events.length;
+    hBars($('#c-ev'),order.filter(k=>m[k]).map(k=>({l:k,v:m[k]/tot,c:k==='极高'||k==='高'?'linear-gradient(90deg,#ff5c72,#ff9a7a)':k==='正向'?'linear-gradient(90deg,#2ecc8f,#26d0a8)':'linear-gradient(90deg,#ffb020,#ffd166)'})));
+    $('#c-ev').insertAdjacentHTML('beforeend',`<div style="font-size:11.5px;color:var(--txt3);margin-top:8px">共 ${tot} 个事件；其中"极高/高"影响 ${(m['极高']||0)+(m['高']||0)} 个，且集中在 2026 年。</div>`);
+  }
+}
+
+renderAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "demo": {
+    "status": "DEMO_SIMULATED",
+    "product": "甲醇（工业级，江苏太仓港口出罐）",
+    "inventory": {
+      "name": "中国甲醇样本港口库存（总）",
+      "unit": "万吨",
+      "freq": "周度（调查日=周三）",
+      "region": "华东（江苏/浙江各港口）+ 华南",
+      "source": "DEMO：按隆众资讯周度口径拟真，非真实市场数据",
+      "release_lag_days": 0
+    },
+    "price": {
+      "name": "江苏太仓甲醇出罐现货价（现汇）",
+      "unit": "元/吨",
+      "freq": "周度（取当周价格锚日收盘）",
+      "region": "江苏太仓",
+      "source": "DEMO：按隆众/我的钢铁日报口径拟真，非真实市场数据",
+      "release_lag_days": 0
+    },
+    "weeks": 156,
+    "first": "2023-10-11",
+    "last": "2026-09-30",
+    "seed": 20261020,
+    "caveat": "本文件所有数值为教学/演示用拟真数据（机制见 scripts/make_data.py），不得作为真实行情或研究结论引用。"
+  },
+  "real": {
+    "MA0": {
+      "name": "郑商所甲醇期货主力连续（收盘价/结算价）",
+      "unit": "元/吨",
+      "freq": "日度交易日",
+      "source": "新浪财经公开 K 线接口 InnerFuturesNewService.getDailyKLine，symbol=MA0",
+      "coverage": [
+        "2014-12-24",
+        "2026-10-19"
+      ],
+      "rows": 2862
+    }
+  }
+}

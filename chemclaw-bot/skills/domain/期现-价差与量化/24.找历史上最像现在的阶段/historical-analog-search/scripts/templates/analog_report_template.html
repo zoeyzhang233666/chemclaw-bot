@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>甲醇 · 当前市场状态与历史相似阶段研究</title>
+<script src="echarts.min.js"></script>
+<style>
+:root{
+  --bg:#0b1220; --bg2:#111b2e; --card:#16223a; --card2:#1b2a45; --line:#243754;
+  --ink:#e8eefb; --ink2:#9fb0cc; --ink3:#6b7d99;
+  --acc:#4cc9f0; --acc2:#7b61ff; --up:#ff5c7a; --down:#25c78b; --warn:#ffb020;
+  --gold:#f4c95d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,#1a2a4d 0%,var(--bg) 55%) fixed;
+  color:var(--ink);font:14px/1.65 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif;}
+a{color:var(--acc);text-decoration:none}
+.wrap{max-width:1500px;margin:0 auto;padding:26px 22px 80px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;
+  padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:22px}
+h1{margin:0;font-size:26px;letter-spacing:.5px}
+h1 small{display:block;font-size:13px;font-weight:400;color:var(--ink2);margin-top:6px;letter-spacing:.3px}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink2);margin-left:8px}
+.badge.live{border-color:#2a5a4a;background:#0f2a22;color:var(--down)}
+.badge.warn{border-color:#5a4a20;background:#2a2210;color:var(--warn)}
+.grid{display:grid;gap:16px}
+.card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:14px;padding:16px 16px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.card h2{margin:0 0 12px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.muted{color:var(--ink2);font-size:12.5px}
+.tiny{color:var(--ink3);font-size:11.5px;line-height:1.5}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:#0f1a2d;border:1px solid var(--line);border-radius:11px;padding:11px 12px}
+.kpi .l{font-size:12px;color:var(--ink2)}
+.kpi .v{font-size:20px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:11px;color:var(--ink3);margin-top:2px}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--ink2)}
+/* controls */
+.ctrl{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px 18px}
+.ctrl label{display:block;font-size:12px;color:var(--ink2);margin-bottom:4px}
+select,input[type=number],input[type=date]{width:100%;background:#0d1728;color:var(--ink);border:1px solid var(--line);
+  border-radius:8px;padding:7px 9px;font-size:13px}
+input[type=range]{width:100%}
+.indrow{display:grid;grid-template-columns:26px 1fr 130px 56px;gap:10px;align-items:center;
+  padding:7px 6px;border-bottom:1px dashed #1e2f4a}
+.indrow:hover{background:#132038}
+.indrow .nm{font-size:13px}
+.indrow .nm em{font-style:normal;color:var(--ink3);font-size:11px;margin-left:6px}
+.wv{font-variant-numeric:tabular-nums;text-align:right;color:var(--acc);font-size:12.5px}
+button{cursor:pointer;border-radius:9px;border:1px solid var(--line);background:#1a2942;color:var(--ink);
+  padding:8px 15px;font-size:13px;transition:.15s}
+button:hover{background:#22385a;border-color:#35507a}
+button.primary{background:linear-gradient(135deg,#2a6ff0,#7b61ff);border:none}
+button.primary:hover{filter:brightness(1.12)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tab{padding:6px 13px;border-radius:999px;background:#132038;border:1px solid var(--line);font-size:12.5px;
+  color:var(--ink2);cursor:pointer}
+.tab.on{background:linear-gradient(135deg,#2a6ff0,#7b61ff);color:#fff;border-color:transparent}
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid #1c2c46;font-variant-numeric:tabular-nums}
+th{color:var(--ink2);font-weight:500;font-size:11.8px;text-align:right;position:sticky;top:0;background:#152239;z-index:2}
+th:first-child,td:first-child{text-align:left}
+tbody tr{cursor:pointer;transition:.1s}
+tbody tr:hover{background:#16243c}
+tbody tr.sel{background:#1d3355;box-shadow:inset 3px 0 0 var(--acc)}
+.rank{display:inline-flex;width:22px;height:22px;border-radius:6px;align-items:center;justify-content:center;
+  font-weight:700;font-size:12px;background:#1d3355;color:var(--acc)}
+.rank.r1{background:linear-gradient(135deg,#f4c95d,#e0a020);color:#2a1d00}
+.rank.r2{background:linear-gradient(135deg,#cfd8e3,#8e9bb0);color:#1a2230}
+.rank.r3{background:linear-gradient(135deg,#d19461,#a55c2b);color:#2a1600}
+.bar{height:6px;border-radius:3px;background:#1c2c46;overflow:hidden;min-width:60px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#2a6ff0,#4cc9f0)}
+.chart{width:100%;height:340px}
+.chart.sm{height:250px}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+@media(max-width:1100px){.split{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;border:1px solid var(--line);
+  background:#0f1a2d;color:var(--ink2);margin-right:4px}
+.pill.same{color:var(--down);border-color:#20573f;background:#0d2419}
+.pill.diff{color:var(--up);border-color:#5a2633;background:#2a1017}
+.pill.na{color:var(--ink3)}
+.note{border-left:3px solid var(--warn);background:#221a0c;padding:10px 13px;border-radius:8px;
+  font-size:12.5px;color:#f0d9a8}
+.note b{color:var(--warn)}
+ul.clean{margin:6px 0 6px 18px;padding:0}
+ul.clean li{margin:4px 0;font-size:12.8px;color:var(--ink2)}
+ul.clean li b{color:var(--ink)}
+.ev{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed #1e2f4a}
+.ev .d{color:var(--ink3);font-size:11.5px;min-width:78px;font-variant-numeric:tabular-nums}
+.ev .t{font-size:12.6px}
+.ev .tag{font-size:10.5px;padding:0 6px;border-radius:5px;background:#20304c;color:var(--acc);margin-left:6px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--ink3);font-size:12px}
+.err{color:var(--warn);font-size:13px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div>
+    <h1>甲醇 · 当前市场状态与历史相似阶段研究
+      <small>用价格 / 基差 / 库存 / 开工 / 月差 刻画当前状态，在过去样本中检索最相似的历史窗口，并观察它们之后的实际演化</small>
+    </h1>
+  </div>
+  <div>
+    <span class="badge live" id="tag-asof">观察日 —</span>
+    <span class="badge" id="tag-sample">样本 —</span>
+    <span class="badge warn">历史相似 ≠ 未来预测</span>
+  </div>
+</header>
+
+<div class="note" style="margin-bottom:18px">
+  <b>使用前必读：</b>本页所有数字均来自公开可得的真实数据（生意社现货与主力基差、新浪期货合约日线、隆众周度库存/开工/到港）。
+  「相似」只说明过去出现过结构相近的状态，<b>不构成对未来的预测</b>；后续表现是历史既成事实，样本少、结构会变。
+  标准化参数、分位与均值全部按「当时可得」计算（无未来函数）。缺失指标显示为「—」，不做插补。
+</div>
+
+<!-- ============ 1. 参数面板 ============ -->
+<section class="grid" style="grid-template-columns:1fr;margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>研究参数 <span class="tiny" style="margin-left:auto">改任一参数即整页重算（本地 JS，无需联网）</span></h2>
+    <div class="ctrl" style="margin-bottom:14px">
+      <div><label>品种</label><select id="p-product"></select></div>
+      <div><label>当前观察日</label><input type="date" id="p-asof"></div>
+      <div><label>历史样本区间</label><select id="p-range">
+        <option value="1095">近 3 年</option><option value="1825" selected>近 5 年</option><option value="3650">近 10 年</option>
+      </select></div>
+      <div><label>状态窗口长度（周）</label><select id="p-win">
+        <option value="1">1 周（只看点位）</option><option value="4" selected>4 周</option>
+        <option value="8">8 周</option><option value="13">13 周</option></select></div>
+      <div><label>相似度方法</label><select id="p-method"></select></div>
+      <div><label>返回结果数</label><select id="p-top">
+        <option>3</option><option selected>5</option><option>8</option><option>10</option></select></div>
+      <div><label>去重最小间隔（周）</label><select id="p-gap">
+        <option value="4">4 周</option><option value="8" selected>8 周</option><option value="12">12 周</option>
+        <option value="16">16 周</option></select></div>
+      <div><label>历史时点数据要求</label><select id="p-strict">
+        <option value="1" selected>严格：指标覆盖≥90%</option>
+        <option value="0">宽松：按可得指标重归一</option></select></div>
+      <div><label>同向指标占比下限</label><select id="p-sign">
+        <option value="0.5">≥50%</option><option value="0.65">≥65%</option>
+        <option value="0.75" selected>≥75%</option><option value="1">全部同向</option></select></div>
+      <div style="display:flex;align-items:flex-end;gap:8px">
+        <button class="primary" id="btn-run" style="flex:1">重新检索</button>
+        <button id="btn-reset" title="恢复默认权重">重置</button>
+      </div>
+    </div>
+    <div class="split">
+      <div>
+        <div class="muted" style="margin-bottom:6px">指标权重（勾选纳入，滑杆调权；<b>0 = 纳入但不影响相似度</b>）</div>
+        <div id="ind-list"></div>
+      </div>
+      <div>
+        <div class="muted" style="margin-bottom:6px">权重分布（仅计入权重大于 0 的指标）</div>
+        <div id="wchart" class="chart sm"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 当前状态 ============ -->
+<section class="grid" style="margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>1) 当前市场状态 <span class="tiny" id="now-meta" style="margin-left:auto"></span></h2>
+    <div class="kpis" id="now-kpis"></div>
+    <div id="now-chart" class="chart" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<!-- ============ 3. 排行榜 ============ -->
+<section class="grid split" style="margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>2) 历史相似窗口排行榜 <span class="tiny" style="margin-left:auto">点击行查看详情</span></h2>
+    <div style="max-height:430px;overflow:auto" id="rankbox"></div>
+    <div class="tiny" id="dedup-note" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <h2><span class="dot"></span>相似度分布与命中位置</h2>
+    <div id="rank-chart" class="chart"></div>
+  </div>
+</section>
+
+<!-- ============ 4. 逐指标对比 ============ -->
+<section class="grid" style="margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>6) 当前 vs 各历史窗口：逐指标相同与不同</h2>
+    <div class="muted" style="margin-bottom:8px">颜色：<span class="pill same">同向</span> 历史与当前的标准化偏离方向一致；<span class="pill diff">反向</span> 方向相反；
+      <span class="pill na">无数据</span> 该历史时点尚无此指标。</div>
+    <div style="overflow:auto" id="cmpbox"></div>
+  </div>
+</section>
+
+<!-- ============ 4b. 分层对照 ============ -->
+<section class="grid" style="margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>分层对照：不同数据覆盖口径下的结论有多稳</h2>
+    <div class="muted" style="margin-bottom:10px">同一观察日、同一权重，只改变「哪些指标可用」与「样本多长」，看结论漂移多少。这是本工具最重要的一张表。</div>
+    <div style="overflow:auto" id="tier-box"></div>
+  </div>
+</section>
+
+<!-- ============ 5. 后续演化 ============ -->
+<section class="grid" style="margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>7) 这 5 个历史阶段随后 1 个月 / 3 个月的实际演化</h2>
+    <div class="grid split" style="gap:16px">
+      <div id="fwd-price" class="chart"></div>
+      <div id="fwd-struct" class="chart"></div>
+    </div>
+    <div style="overflow:auto;margin-top:12px" id="fwd-table"></div>
+    <div class="tiny" style="margin-top:8px">价格=主力合约；结构=基差率与月差；库存=隆众港口样本库存（周度）。「—」表示该时点数据不可得或落在样本末端尚无足够后续观测。</div>
+  </div>
+</section>
+
+<!-- ============ 6. 详情 ============ -->
+<section class="grid" style="margin-bottom:16px" id="detail-sec">
+  <div class="card">
+    <h2><span class="dot"></span>历史窗口详情 <span class="tiny" id="detail-title" style="margin-left:auto"></span></h2>
+    <div class="split">
+      <div id="detail-chart" class="chart"></div>
+      <div>
+        <div class="muted" style="margin-bottom:6px">该窗口前后的产业事件（来自已抓取资讯，按发布日期）</div>
+        <div id="detail-events" style="max-height:330px;overflow:auto"></div>
+      </div>
+    </div>
+    <div id="detail-fwd" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<!-- ============ 7. 稳健性 ============ -->
+<section class="grid split" style="margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>8) 相似窗口是否重叠/集中在同一轮行情</h2>
+    <div id="overlap-box"></div>
+  </div>
+  <div class="card">
+    <h2><span class="dot"></span>参数敏感性：换方法/换区间后还一样吗</h2>
+    <div id="sens-box"></div>
+  </div>
+</section>
+
+<!-- ============ 8. 局限 ============ -->
+<section class="grid" style="margin-bottom:16px">
+  <div class="card">
+    <h2><span class="dot"></span>9) 结构变化、样本范围与方法局限</h2>
+    <div id="limits-box"></div>
+  </div>
+</section>
+
+<footer>
+  数据来源：生意社（100ppi）主力基差表与甲醇基准价；新浪财经期货合约日线（MA 各交割月）；
+  我的钢铁网/隆众资讯 周度库存、产量与产能利用率、到港量文章。<br>
+  本页由「找历史上最像现在的阶段」Skill 生成 · 所有计算在浏览器本地完成 · 历史相似不构成预测或交易建议。
+</footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+const RES = DATA.result, APP = DATA.app;
+const IND = APP.indicators;   // [{key,name,unit,std,family,default_weight,source}]
+const BYKEY = Object.fromEntries(IND.map(x=>[x.key,x]));
+const WEEKS = APP.weeks;      // [{date, raw:{...}}]
+const DATES = WEEKS.map(w=>w.date);
+const SERIES = APP.series;    // 月差等未进主面板但可展示的序列 (可选)
+
+const state = {
+  weights: {...APP.default_weights},
+  enabled: new Set(IND.filter(x=>APP.default_weights[x.key]>0).map(x=>x.key)),
+  asof: RES.asof,
+  range: 1825,
+  win: 4,
+  method: 'mae',
+  top: 5,
+  gap: 8,
+  lag: 21,          // 历史观察日至少早于当前观察日 21 天
+  strict: true,     // 严格要求历史时点指标覆盖 ≥90%
+  signMin: 0.75,    // 同向指标占比下限
+  selected: 1,
+  result: null
+};
+
+/* ---------------- 工具 ---------------- */
+const fmt = (v,d=2)=> v===null||v===undefined||Number.isNaN(v) ? '—' : Number(v).toFixed(d);
+const cls = v => v>0?'up':(v<0?'down':'flat');
+const sgn = v => v>0?'+':'';
+function stat(arr){const a=arr.filter(x=>x!==null&&!Number.isNaN(x));if(!a.length)return null;
+  const m=a.reduce((s,x)=>s+x,0)/a.length;const sd=Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length>1?a.length-1:1));
+  return {mean:m,sd,n:a.length,a};}
+function quantile(arr,q){const a=[...arr].sort((x,y)=>x-y);if(!a.length)return null;
+  const p=(a.length-1)*q,lo=Math.floor(p),hi=Math.ceil(p);return a[lo]+(a[hi]-a[lo])*(p-lo);}
+function clip(v,c=3){return Math.max(-c,Math.min(c,v));}
+
+/* ---------------- 标准化（与 Python 完全同口径） ---------------- */
+// rolling_z: 只用 [i-lb, i] 的均值/标准差；rank: 同窗口分位数
+function stdSeries(key, method, lb=104, minObs=52){
+  const raw = WEEKS.map(w=> (w.raw[key]===undefined?null:w.raw[key]));
+  const out = new Array(raw.length).fill(null);
+  for(let i=0;i<raw.length;i++){
+    if(raw[i]===null) continue;
+    const a=[]; for(let j=Math.max(0,i-lb+1);j<=i;j++) if(raw[j]!==null) a.push(raw[j]);
+    if(a.length<minObs) continue;
+    if(method==='rank'){
+      const less=a.filter(x=>x<raw[i]).length/Math.max(a.length-1,1);
+      out[i]=(less-0.5)*2;
+    } else if(method==='expanding_z' || method==='rolling_z'){
+      const m=a.reduce((s,x)=>s+x,0)/a.length;
+      const sd=Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length>1?a.length-1:1));
+      if(!sd) continue;
+      out[i]=clip((raw[i]-m)/sd);
+    }
+  }
+  return out;
+}
+
+/* ---------------- 相似度 ---------------- */
+function dist(a,b,w,method){
+  let we=0, sw=0, num=0, den1=0, den2=0;
+  for(let i=0;i<a.length;i++){
+    const wi=w[i]; if(wi<=0) continue;
+    if(a[i]===null||b[i]===null) continue;
+    we+=wi;
+  }
+  if(we<=0) return null;
+  let sAbs=0, sSq=0;
+  for(let i=0;i<a.length;i++){
+    const wi=w[i]; if(wi<=0||a[i]===null||b[i]===null) continue;
+    const wn=wi/we, d=a[i]-b[i];
+    sAbs+=wn*Math.abs(d); sSq+=wn*d*d;
+    num+=wn*a[i]*b[i]; den1+=wn*a[i]*a[i]; den2+=wn*b[i]*b[i];
+  }
+  let d,sim;
+  if(method==='cosine'){
+    const dd=Math.sqrt(den1)*Math.sqrt(den2);
+    sim=dd>0?num/dd:0; sim=(sim+1)/2; d=1-sim;
+  } else if(method==='rmse'){
+    d=Math.sqrt(sSq); sim=clipNum(1-d/3,0,1);
+  } else {
+    d=sAbs; sim=clipNum(1-d/3,0,1);
+  }
+  return {d,sim,we};
+}
+function clipNum(v,a,b){return Math.max(a,Math.min(b,v));}
+
+/* ---------------- 主检索 ---------------- */
+function runSearch(){
+  const keys=[...state.enabled].filter(k=>BYKEY[k]);
+  const w=keys.map(k=>Math.max(0,state.weights[k]||0));
+  if(!keys.length){renderRankError('请至少勾选一个指标');return;}
+  if(w.reduce((s,x)=>s+x,0)<=0){renderRankError('请至少给一个指标设置大于 0 的权重');return;}
+
+  const amap={}; keys.forEach((k)=>{amap[k]=stdSeries(k,BYKEY[k].std_method==='rank'?'rank':'rolling_z');});
+
+  const asofIdx = DATES.indexOf(state.asof)>=0 ? DATES.indexOf(state.asof)
+      : (function(){let j=-1;DATES.forEach((d,i)=>{if(d<=state.asof)j=i;});return j;})();
+  if(asofIdx<0){renderRankError('观察日无数据');return;}
+  const asof=DATES[asofIdx];
+  const startIdx=Math.max(0,DATES.findIndex(d=>new Date(d)>=new Date(new Date(asof).getTime()-state.range*864e5)));
+
+  // 观察日实际可用的指标（某指标在当前时点都没有标准化值 → 不进入状态向量）
+  const availNow={}; keys.forEach(k=>{availNow[k]=amap[k][asofIdx]!==null&&amap[k][asofIdx]!==undefined;});
+  const keysNow=keys.filter(k=>availNow[k]);
+  const droppedNow=keys.filter(k=>!availNow[k]);
+  if(!keysNow.length){renderRankError('观察日没有任何可用指标');return;}
+  const cur=keysNow.map(k=>amap[k][asofIdx]);
+  const wNow=keysNow.map(k=>Math.max(0,state.weights[k]||0));
+  const wTotal=wNow.reduce((s,x)=>s+x,0);
+
+  const winDays=state.win*5;
+  const cands=[];
+  for(let i=startIdx;i<asofIdx;i++){
+    if(i-winDays+1<startIdx) continue;
+    if((new Date(asof)-new Date(DATES[i]))/864e5 < state.lag) continue;
+    // 历史时点覆盖率：当前状态向量里的指标，在该历史周有多少有标准化值
+    let covW=0, signW=0, signOk=0;
+    keysNow.forEach((k,j)=>{
+      const z=amap[k][i];
+      if(z===null||z===undefined) return;
+      covW+=wNow[j]; signW+=wNow[j];
+      if((z>=0)===(cur[j]>=0)) signOk+=wNow[j];
+    });
+    const histCover=wTotal>0?covW/wTotal:0;
+    if(state.strict && histCover<0.9) continue;
+    if(!state.strict && histCover<0.5) continue;
+    const signMatch=signW>0?signOk/signW:null;
+    if(signMatch!==null && signMatch<state.signMin) continue;
+    const z=keysNow.map(k=>amap[k][i]);
+    const r=dist(z,cur,wNow,state.method);
+    if(!r) continue;
+    let sim=r.sim;
+    if(state.strict) sim=Math.max(0,Math.min(1,sim-(1-histCover)));
+    // 路径相似
+    let pathSim=null;
+    if(winDays>1){
+      let acc=0,nw=0;
+      keysNow.forEach((k,kk)=>{
+        if(wNow[kk]<=0) return;
+        const s=amap[k];
+        let cnt=0,sum=0;
+        for(let t=winDays-1;t>=0;t--){
+          const a=s[i-t],b=s[asofIdx-t];
+          if(a===null||a===undefined||b===null||b===undefined) continue;
+          cnt++;sum+=Math.abs(a-b);
+        }
+        if(cnt>=winDays*0.8){acc+=wNow[kk]*(sum/cnt);nw+=wNow[kk];}
+      });
+      if(nw>0) pathSim=Math.max(0,Math.min(1,1-(acc/nw)/3));
+    }
+    const score= pathSim===null? sim : 0.7*sim+0.3*pathSim;
+    cands.push({i,date:DATES[i],sim,pathSim,score,histCover,signMatch});
+  }
+  cands.sort((a,b)=>b.score-a.score);
+  // 去重
+  const gap=state.gap*7;
+  const sel=[];
+  for(const c of cands){
+    if(sel.length>=state.top) break;
+    if(sel.every(s=>Math.abs((new Date(c.date)-new Date(s.date))/864e5)>=gap)) sel.push(c);
+  }
+  let regime=1;
+  const sorted=[...sel].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  sorted.forEach((s,idx)=>{
+    if(idx>0){
+      const prev=sorted[idx-1];
+      if((new Date(s.date)-new Date(prev.date))/864e5>=gap*3) regime++;
+    }
+    s.regime=regime;
+  });
+  sel.forEach((s,r)=>{s.rank=r+1;});
+
+  state.result={asof,asofIdx,keys:keysNow,droppedNow,w:wNow,cur,amap,sel,cands,startIdx,
+    winDays,histCoverCache:{}};
+  renderAll();
+}
+function renderRankError(msg){
+  document.getElementById('rankbox').innerHTML='<div class="err">'+msg+'</div>';
+}
+
+/* ---------------- 渲染：当前状态 ---------------- */
+function rawAt(date){
+  const w=WEEKS.find(x=>x.date===date); return w?w.raw:{};
+}
+function renderNow(){
+  const R=state.result, raw=rawAt(R.asof);
+  document.getElementById('tag-asof').textContent='观察日 '+R.asof;
+  const d0=DATES[R.startIdx];
+  document.getElementById('tag-sample').textContent=`样本 ${d0} ~ ${R.asof}`;
+  document.getElementById('now-meta').textContent=`状态向量 = ${R.keys.length} 个指标，最近 ${state.win} 周路径；`+
+      `样本内可比交易日 ${R.cands.length} 个`;
+  // KPI 卡
+  const kpi=document.getElementById('now-kpis');
+  const show=[['basis_pct','基差率','%'],['fut_close','主力价格','元/吨'],['ret_4w','近4周涨跌','%'],
+    ['port_inv','港口库存','万吨'],['operating_rate','产能利用率','%'],['spread_1_5','近月-次月月差','%/月'],
+    ['arrivals','周度到港','万吨'],['vol_20d','20日波动率','%']];
+  kpi.innerHTML=show.map(([k,label,unit])=>{
+    const v=raw[k]; if(v===null||v===undefined) return `<div class="kpi"><div class="l">${label}</div><div class="v">—</div><div class="s">该时点无数据</div></div>`;
+    const z=stdSeries(k,'rolling_z')[R.asofIdx];
+    const c=k==='ret_4w'?cls(v):'';
+    return `<div class="kpi"><div class="l">${label}${unit?' · '+unit:''}</div>
+      <div class="v ${c}">${k==='fut_close'?fmt(v,0):fmt(v,2)}</div>
+      <div class="s">${z===null?'标准化 —':'标准化偏离 '+(z>0?'+':'')+fmt(z,2)+'σ'}</div></div>`;
+  }).join('');
+}
+
+function renderNowChart(){
+  const R=state.result;
+  const idxFrom=Math.max(0,R.asofIdx-260);
+  const xs=DATES.slice(idxFrom,R.asofIdx+1);
+  const g=(key,scale=1,dig=2)=>xs.map((d,i)=>{const w=WEEKS[idxFrom+i].raw[key]; return w===null||w===undefined?null:+(w*scale).toFixed(dig+2);});
+  const opt={
+    backgroundColor:'transparent',
+    animationDuration:400,
+    tooltip:{trigger:'axis',backgroundColor:'#0f1a2d',borderColor:'#243754',textStyle:{color:'#e8eefb',fontSize:12}},
+    legend:{textStyle:{color:'#9fb0cc',fontSize:11},top:0,type:'scroll'},
+    grid:{left:52,right:56,top:38,bottom:46},
+    xAxis:{type:'category',data:xs,axisLine:{lineStyle:{color:'#243754'}},axisLabel:{color:'#6b7d99',fontSize:10}},
+    yAxis:[{type:'value',scale:true,name:'价格/基差',nameTextStyle:{color:'#6b7d99',fontSize:10},
+      splitLine:{lineStyle:{color:'#1a2942'}},axisLabel:{color:'#6b7d99',fontSize:10}},
+      {type:'value',scale:true,name:'库存/开工%',nameTextStyle:{color:'#6b7d99',fontSize:10},
+       splitLine:{show:false},axisLabel:{color:'#6b7d99',fontSize:10}}],
+    dataZoom:[{type:'inside'},{type:'slider',height:14,bottom:6,borderColor:'#243754',
+      fillerColor:'rgba(76,201,240,.12)',handleStyle:{color:'#4cc9f0'},textStyle:{color:'#6b7d99',fontSize:10}}],
+    series:[
+      {name:'主力价格',type:'line',data:g('fut_close'),smooth:true,symbol:'none',lineStyle:{width:2,color:'#4cc9f0'}},
+      {name:'现货价',type:'line',data:g('spot'),smooth:true,symbol:'none',lineStyle:{width:1.4,color:'#7b61ff'}},
+      {name:'基差率%',type:'line',yAxisIndex:0,data:g('basis_pct'),smooth:true,symbol:'none',
+        lineStyle:{width:1.6,color:'#f4c95d',type:'dashed'}},
+      {name:'港口库存(万吨)',type:'line',yAxisIndex:1,data:g('port_inv'),smooth:true,symbol:'circle',symbolSize:3,
+        lineStyle:{width:1.6,color:'#25c78b'}},
+      {name:'开工率%',type:'line',yAxisIndex:1,data:g('operating_rate'),smooth:true,symbol:'circle',symbolSize:3,
+        lineStyle:{width:1.4,color:'#ff5c7a'}}
+    ]
+  };
+  echarts.init(document.getElementById('now-chart')).setOption(opt,true);
+}
+
+/* ---------------- 渲染：排行榜 ---------------- */
+function renderRank(){
+  const R=state.result;
+  let html=`<table><thead><tr><th>#</th><th>历史窗口</th><th>相似度</th><th>路径</th><th>综合</th><th>覆盖</th><th>1M价格</th><th>3M价格</th></tr></thead><tbody>`;
+  R.sel.forEach(s=>{
+    const f1=forwardOf(s.date,1), f3=forwardOf(s.date,3);
+    const p1=f1&&f1.fut_close_pct!=null?f1.fut_close_pct:null;
+    const p3=f3&&f3.fut_close_pct!=null?f3.fut_close_pct:null;
+    html+=`<tr data-date="${s.date}" class="${s.rank===state.selected?'sel':''}">
+      <td><span class="rank r${s.rank<=3?s.rank:''}">${s.rank}</span></td>
+      <td>${s.date}<span class="tiny" style="margin-left:6px">第${s.regime}轮</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;justify-content:flex-end">
+        <div class="bar" style="width:70px"><i style="width:${(s.sim*100).toFixed(0)}%"></i></div>${fmt(s.sim,3)}</div></td>
+      <td>${s.pathSim==null?'—':fmt(s.pathSim,3)}</td>
+      <td style="color:#4cc9f0;font-weight:600">${fmt(s.score,3)}</td>
+      <td class="${s.histCover>=0.99?'':'warnc'}" style="${s.histCover>=0.99?'':'color:#ffb020'}">${(s.histCover*100).toFixed(0)}%</td>
+      <td class="${cls(p1)}">${p1==null?'—':sgn(p1)+fmt(p1,1)+'%'}</td>
+      <td class="${cls(p3)}">${p3==null?'—':sgn(p3)+fmt(p3,1)+'%'}</td></tr>`;
+  });
+  html+='</tbody></table>';
+  document.getElementById('rankbox').innerHTML=html;
+  document.querySelectorAll('#rankbox tbody tr').forEach(tr=>{
+    tr.onclick=()=>{state.selected=+tr.querySelector('.rank').textContent;renderAll();};
+  });
+
+  const capped=R.cands.slice(0,state.top).map(x=>x.date), after=R.sel.map(x=>x.date);
+  const dropped=capped.filter(d=>!after.includes(d));
+  let note=`候选 ${R.cands.length} 个历史周（已按 ≥${state.lag} 天间隔、覆盖率≥${state.strict?'90%':'50%'}、同向≥${(state.signMin*100).toFixed(0)}% 过滤）。`;
+  if(dropped.length) note+=` 其中 ${dropped.join('、')} 因与已选窗口相距不足 ${state.gap} 周被去重替换。`;
+  if(!dropped.length && after.length<state.top) note+=` 满足条件的独立窗口只有 ${after.length} 个——这正是本次研究最重要的限制。`;
+  document.getElementById('dedup-note').innerHTML=note;
+
+  const cur=R.droppedNow.length
+    ? `<div class="tiny" style="margin-top:8px;color:#ffb020">当前时点无标准化值、未进入状态向量的指标：${
+        R.droppedNow.map(k=>(BYKEY[k]||{}).name||k).join('、')}（覆盖率不足，不参与本次比较）</div>`
+    : '';
+  document.getElementById('rankbox').insertAdjacentHTML('beforeend',cur);
+}
+
+/* ---------------- 图表：分布 / 权重 ---------------- */
+function renderRankChart(){
+  const R=state.result;
+  const sc=R.cands.map(c=>c.score);
+  const q90=quantile(sc,0.9), q50=quantile(sc,0.5);
+  const top=R.cands.slice(0,60).reverse();
+  const opt={
+    backgroundColor:'transparent',
+    tooltip:{trigger:'axis',backgroundColor:'#0f1a2d',borderColor:'#243754',textStyle:{color:'#e8eefb',fontSize:11}},
+    title:{text:`候选 ${R.cands.length} 个可比周的相似度（金色=最终入选）`,left:'center',top:0,
+      textStyle:{color:'#6b7d99',fontSize:11,fontWeight:400}},
+    grid:{left:64,right:20,top:34,bottom:40},
+    xAxis:{type:'value',min:0,max:1,splitLine:{lineStyle:{color:'#1a2942'}},axisLabel:{color:'#6b7d99',fontSize:10}},
+    yAxis:{type:'category',data:top.map(c=>c.date),axisLabel:{color:'#6b7d99',fontSize:9},
+      axisLine:{lineStyle:{color:'#243754'}}},
+    series:[{type:'bar',data:top.map(c=>({value:+c.score.toFixed(3),
+      itemStyle:{color:R.sel.some(s=>s.date===c.date)?'#f4c95d':
+        (c.score>=q90?'#4cc9f0':(c.score>=q50?'#3a5a8a':'#23324a'))}})),
+      barWidth:'70%',label:{show:false}}]
+  };
+  echarts.init(document.getElementById('rank-chart')).setOption(opt,true);
+}
+function renderWChart(){
+  const R=state.result;
+  const wk=R.keys.filter(k=>state.weights[k]>0);
+  echarts.init(document.getElementById('wchart')).setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'item',backgroundColor:'#0f1a2d',borderColor:'#243754',textStyle:{color:'#e8eefb',fontSize:11}},
+    series:[{type:'pie',radius:['42%','72%'],center:['50%','54%'],
+      itemStyle:{borderColor:'#16223a',borderWidth:1.5},
+      label:{color:'#9fb0cc',fontSize:10,formatter:'{b}\n{c}'},
+      data:wk.map(k=>({name:BYKEY[k]?BYKEY[k].name:k,value:+(state.weights[k]).toFixed(2)}))}],
+    color:['#4cc9f0','#7b61ff','#f4c95d','#25c78b','#ff5c7a','#ffb020','#6fa8ff','#b48cff','#4ad6c0']
+  },true);
+}
+
+/* ---------------- 后续表现 ---------------- */
+function forwardOf(date,m){
+  const f=(RES.forward||[]).find(x=>x.date===date);
+  if(!f) return null;
+  return f.forward && f.forward[m+'m'] ? f.forward[m+'m'] : null;
+}
+
+/* ---------------- 逐指标对比 ---------------- */
+function renderCompare(){
+  const R=state.result, baseRaw=rawAt(R.asof);
+  let head=`<table><thead><tr><th>指标（权重）</th><th>当前</th><th>z</th>`;
+  R.sel.forEach(s=>head+=`<th>#${s.rank} ${s.date.slice(5)}</th>`);
+  head+=`</tr></thead><tbody>`;
+  let body='';
+  R.keys.forEach((k,j)=>{
+    const m=BYKEY[k]||{name:k,unit:''};
+    const cur=baseRaw[k];
+    body+=`<tr><td>${m.name}<span class="tiny"> ${m.unit} · w=${fmt(state.weights[k],1)}</span></td>
+      <td>${cur==null?'—':fmt(cur,2)}</td>
+      <td>${(()=>{const z=R.amap[k][R.asofIdx];return z==null?'—':(z>0?'+':'')+fmt(z,2);})()}</td>`;
+    R.sel.forEach(s=>{
+      const v=rawAt(s.date)[k], z=R.amap[k][s.i];
+      const zn=R.amap[k][R.asofIdx];
+      let pill='<span class="pill na">无</span>';
+      if(z!=null&&zn!=null) pill=(Math.sign(z)===Math.sign(zn)||(z===0&&zn===0))
+        ?'<span class="pill same">同向</span>':'<span class="pill diff">反向</span>';
+      body+=`<td>${v==null?'—':fmt(v,2)} ${pill}<br><span class="tiny">z=${z==null?'—':(z>0?'+':'')+fmt(z,2)}</span></td>`;
+    });
+    body+='</tr>';
+  });
+  // 没有被任何命中窗口覆盖的指标（在该历史时点无数据）
+  R.droppedNow.forEach(k=>{
+    const m=BYKEY[k]||{name:k,unit:''};
+    body+=`<tr style="opacity:.55"><td>${m.name}<span class="tiny"> ${m.unit} · 当前无值</span></td>
+      <td>—</td><td>—</td>${R.sel.map(()=>'<td><span class="pill na">无</span></td>').join('')}</tr>`;
+  });
+  document.getElementById('cmpbox').innerHTML=head+body+'</tbody></table>';
+}
+
+/* ---------------- 后续演化 ---------------- */
+function renderForward(){
+  const R=state.result;
+  let h=`<table><thead><tr><th>窗口</th><th>1M价格</th><th>1M基差率</th><th>1M库存</th><th>1M月差</th>
+    <th>3M价格</th><th>3M基差率</th><th>3M库存</th><th>3M月差</th><th>实际区间(3M)</th></tr></thead><tbody>`;
+  R.sel.forEach(s=>{
+    const f1=forwardOf(s.date,1),f3=forwardOf(s.date,3);
+    const cell=(f,k,d=1,unit='')=>{ if(!f||f[k]==null) return '—';
+      const v=f[k]; return fmt(v,d)+unit; };
+    const pc=(f)=>f&&f.fut_close_pct!=null?`<span class="${cls(f.fut_close_pct)}">${sgn(f.fut_close_pct)}${fmt(f.fut_close_pct,1)}%</span>`:'—';
+    h+=`<tr><td>#${s.rank} ${s.date}</td>
+      <td>${pc(f1)}</td><td>${cell(f1,'basis_pct',2)}</td><td>${cell(f1,'port_inv',1)}</td><td>${cell(f1,'spread_1_5',2)}</td>
+      <td>${pc(f3)}</td><td>${cell(f3,'basis_pct',2)}</td><td>${cell(f3,'port_inv',1)}</td><td>${cell(f3,'spread_1_5',2)}</td>
+      <td class="tiny">${f3?f3.start+'→'+f3.end:'—'}</td></tr>`;
+  });
+  document.getElementById('fwd-table').innerHTML=h+'</tbody></table>';
+  requestAnimationFrame(()=>{try{renderFwdCharts();}catch(e){console.warn(e);}});
+}
+
+function renderFwdCharts(){
+  if(typeof echarts==='undefined') return;
+  const R=state.result;
+  if(!R.sel.length) return;
+  const prices=R.sel.map(s=>{const f1=forwardOf(s.date,1),f3=forwardOf(s.date,3);
+    return [f1?f1.fut_close_pct:null,f3?f3.fut_close_pct:null];});
+  const labels=R.sel.map(s=>`#${s.rank} ${s.date.slice(2)}`);
+  echarts.init(document.getElementById('fwd-price')).setOption({
+    backgroundColor:'transparent',
+    title:{text:'主力价格：观察日后 1M / 3M 涨跌幅',left:'center',top:0,textStyle:{color:'#9fb0cc',fontSize:12}},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:v=>v==null?'—':v.toFixed(1)+'%',
+      backgroundColor:'#0f1a2d',borderColor:'#243754',textStyle:{color:'#e8eefb',fontSize:11}},
+    legend:{data:['1个月后','3个月后'],top:26,textStyle:{color:'#9fb0cc',fontSize:11}},
+    grid:{left:48,right:16,top:64,bottom:34},
+    xAxis:{type:'category',data:labels,axisLabel:{color:'#9fb0cc',fontSize:10},axisLine:{lineStyle:{color:'#243754'}}},
+    yAxis:{type:'value',axisLabel:{color:'#6b7d99',fontSize:10,formatter:'{value}%'},
+      splitLine:{lineStyle:{color:'#1a2942'}}},
+    series:[
+      {name:'1个月后',type:'bar',data:prices.map(p=>p[0]==null?null:+p[0].toFixed(1)),
+       itemStyle:{color:'#4cc9f0',borderRadius:[3,3,0,0]},barGap:'10%'},
+      {name:'3个月后',type:'bar',data:prices.map(p=>p[1]==null?null:+p[1].toFixed(1)),
+       itemStyle:{color:'#7b61ff',borderRadius:[3,3,0,0]}}
+    ]
+  },true);
+
+  const basis3=R.sel.map(s=>{const f=forwardOf(s.date,3);return f&&f.basis_pct!=null?+f.basis_pct.toFixed(2):null;});
+  const inv3=R.sel.map(s=>{const f=forwardOf(s.date,3);return f&&f.port_inv!=null?+f.port_inv.toFixed(1):null;});
+  const curB=rawAt(R.asof).basis_pct, curI=rawAt(R.asof).port_inv;
+  echarts.init(document.getElementById('fwd-struct')).setOption({
+    backgroundColor:'transparent',
+    title:{text:'期现结构与库存：当前 vs 3个月后',left:'center',top:0,textStyle:{color:'#9fb0cc',fontSize:12}},
+    tooltip:{trigger:'axis',backgroundColor:'#0f1a2d',borderColor:'#243754',textStyle:{color:'#e8eefb',fontSize:11}},
+    legend:{data:['基差率%(3M)','港口库存万吨(3M)'],top:26,textStyle:{color:'#9fb0cc',fontSize:11}},
+    grid:{left:48,right:56,top:64,bottom:34},
+    xAxis:{type:'category',data:['当前'].concat(labels),axisLabel:{color:'#9fb0cc',fontSize:10},
+      axisLine:{lineStyle:{color:'#243754'}}},
+    yAxis:[{type:'value',axisLabel:{color:'#6b7d99',fontSize:10,formatter:'{value}%'},splitLine:{lineStyle:{color:'#1a2942'}}},
+           {type:'value',axisLabel:{color:'#6b7d99',fontSize:10},splitLine:{show:false}}],
+    series:[
+      {name:'基差率%(3M)',type:'line',data:[curB==null?null:+curB.toFixed(2)].concat(basis3),
+       symbolSize:7,lineStyle:{width:2,color:'#f4c95d'},itemStyle:{color:'#f4c95d'}},
+      {name:'港口库存万吨(3M)',type:'line',yAxisIndex:1,
+       data:[curI==null?null:+curI.toFixed(1)].concat(inv3),
+       symbolSize:7,lineStyle:{width:2,color:'#25c78b'},itemStyle:{color:'#25c78b'}}
+    ]
+  },true);
+}
+
+/* ---------------- 详情 ---------------- */
+function renderDetail(){
+  const R=state.result, s=R.sel.find(x=>x.rank===state.selected)||R.sel[0];
+  if(!s) return;
+  document.getElementById('detail-title').textContent=`#${s.rank} ${s.date}（相似度 ${fmt(s.sim,3)}）`;
+
+  // 事件
+  const evs=(APP.events||[]).filter(e=>{
+    const d=(new Date(e.date)-new Date(s.date))/864e5; return d>=-30&&d<=95;}).slice(0,26);
+  document.getElementById('detail-events').innerHTML= evs.length? evs.map(e=>
+    `<div class="ev"><div class="d">${e.date}</div><div class="t"><a href="${e.url||'#'}" target="_blank">${e.title}</a>
+      ${(e.tags||'').split('|').filter(Boolean).map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`).join('')
+    : '<div class="tiny">该窗口附近暂无抓取到的产业资讯（样本范围限制，见「局限」）。</div>';
+
+  const f1=forwardOf(s.date,1),f3=forwardOf(s.date,3);
+  const line=(lbl,f)=> (f? `<tr><td>${lbl}</td><td>${f.start} → ${f.end}</td>
+    <td class="${cls(f.fut_close_pct)}">${f.fut_close_pct==null?'—':sgn(f.fut_close_pct)+fmt(f.fut_close_pct,1)+'%'}</td>
+    <td>${f.basis_pct==null?'—':fmt(f.basis_pct,2)+'%'}</td><td>${f.port_inv==null?'—':fmt(f.port_inv,1)+' 万吨'}</td>
+    <td>${f.spread_1_5==null?'—':fmt(f.spread_1_5,2)+'%/月'}</td></tr>`:'');
+  document.getElementById('detail-fwd').innerHTML=`<table><thead><tr><th>后续期</th><th>区间</th><th>价格涨跌</th>
+    <th>期末基差率</th><th>期末港口库存</th><th>期末月差</th></tr></thead><tbody>
+    ${line('1 个月后',f1)}${line('3 个月后',f3)}</tbody></table>`;
+  requestAnimationFrame(()=>{try{renderDetailChart();}catch(e){console.warn(e);}});
+}
+
+function renderDetailChart(){
+  if(typeof echarts==='undefined') return;
+  const R=state.result, s=R.sel.find(x=>x.rank===state.selected)||R.sel[0];
+  if(!s) return;
+  const i=s.i, from=Math.max(0,i-90), to=Math.min(DATES.length-1,i+66);
+  const xs=DATES.slice(from,to+1);
+  const ser=(k)=>xs.map((d,ii)=>{const v=WEEKS[from+ii].raw[k];return v==null?null:+v.toFixed(2);});
+  echarts.init(document.getElementById('detail-chart')).setOption({
+    backgroundColor:'transparent',
+    title:{text:'窗口前后 90/66 个交易日：价格、基差率、库存',left:'center',top:0,textStyle:{color:'#9fb0cc',fontSize:12}},
+    tooltip:{trigger:'axis',backgroundColor:'#0f1a2d',borderColor:'#243754',textStyle:{color:'#e8eefb',fontSize:11}},
+    legend:{top:24,textStyle:{color:'#9fb0cc',fontSize:10}},
+    grid:{left:48,right:52,top:56,bottom:30},
+    xAxis:{type:'category',data:xs,axisLabel:{color:'#6b7d99',fontSize:9},axisLine:{lineStyle:{color:'#243754'}}},
+    yAxis:[{type:'value',scale:true,splitLine:{lineStyle:{color:'#1a2942'}},axisLabel:{color:'#6b7d99',fontSize:9}},
+           {type:'value',scale:true,splitLine:{show:false},axisLabel:{color:'#6b7d99',fontSize:9}}],
+    series:[
+      {name:'主力价格',type:'line',data:ser('fut_close'),symbol:'none',smooth:true,lineStyle:{width:2,color:'#4cc9f0'}},
+      {name:'基差率%',type:'line',data:ser('basis_pct'),symbol:'none',lineStyle:{width:1.5,color:'#f4c95d'}},
+      {name:'港口库存',type:'line',yAxisIndex:1,data:ser('port_inv'),symbol:'none',lineStyle:{width:1.5,color:'#25c78b'}},
+      {name:'开工率%',type:'line',yAxisIndex:1,data:ser('operating_rate'),symbol:'none',lineStyle:{width:1.2,color:'#ff5c7a',type:'dashed'}},
+      {name:'观察日',type:'line',data:[],markLine:{silent:true,symbol:'none',
+        data:[{xAxis:DATES[i]}],lineStyle:{color:'#7b61ff',width:1.5,type:'dashed'},
+        label:{formatter:'窗口',color:'#7b61ff',fontSize:10}}}
+    ]
+  },true);
+}
+
+/* ---------------- 重叠 & 敏感性 ---------------- */
+function renderOverlap(){
+  const R=state.result, ds=R.sel.map(s=>s.date).sort();
+  const pairs=[];
+  for(let i=0;i<ds.length;i++)for(let j=i+1;j<ds.length;j++){
+    const g=Math.abs((new Date(ds[j])-new Date(ds[i]))/864e5/7);
+    pairs.push({a:ds[i],b:ds[j],g});
+  }
+  const minGap=pairs.length?Math.min(...pairs.map(p=>p.g)):null;
+  const regimes=new Set(R.sel.map(s=>s.regime)).size;
+  const byMonth={};
+  R.sel.forEach(s=>{const ym=s.date.slice(0,7);byMonth[ym]=(byMonth[ym]||0)+1;});
+  const topMonth=Object.entries(byMonth).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('overlap-box').innerHTML=`
+    <ul class="clean">
+      <li>命中窗口之间的最短间隔：<b>${minGap==null?'—':fmt(minGap,1)+' 周'}</b>（去重阈值 ${state.gap} 周）</li>
+      <li>按「同一轮行情」聚类后：<b>${regimes} 轮</b> / ${R.sel.length} 个窗口${regimes<R.sel.length?'（<span style="color:#ffb020">存在集中</span>）':'（彼此独立）'}</li>
+      <li>命中日期分布：${Object.entries(byMonth).map(([k,v])=>`${k}×${v}`).join('，')}
+        ${topMonth&&topMonth[1]>1?`；<b style="color:#ffb020">${topMonth[0]} 出现 ${topMonth[1]} 次</b>`:''}</li>
+      <li>命中区间跨度：${ds[0]} ~ ${ds[ds.length-1]}，
+        ${(()=>{const years=new Set(ds.map(d=>d.slice(0,4))).size;return `覆盖 <b>${years} 个自然年</b>${years<=2?'（<span style="color:#ffb020">时间上偏集中，样本代表性受限</span>）':''}`;})()}</li>
+    </ul>
+    <div class="tiny" style="margin-top:6px">去重规则：按综合相似度从高到低取，若候选观察日与已选窗口相距不足 ${state.gap} 周，视为同一段行情并跳过；聚类阈值取其 3 倍。</div>`;
+}
+function renderSens(){
+  const S=RES.sensitivity||{}; const D=RES.drop_one||{};
+  let h='<table><thead><tr><th>设置（方法_样本天数）</th><th style="text-align:left">Top窗口</th><th>与基准重合</th></tr></thead><tbody>';
+  Object.entries(S).forEach(([k,v])=>{
+    if(typeof v==='string'){h+=`<tr><td>${k}</td><td colspan="2" class="tiny">${v}</td></tr>`;return;}
+    const ov=v.filter(d=>RES.selected.some(s=>s.date===d)).length;
+    h+=`<tr><td>${k}</td><td class="tiny" style="text-align:left">${v.join('、')}</td><td>${ov}/${v.length}</td></tr>`;
+  });
+  h+='</tbody></table><div class="muted" style="margin:12px 0 6px">逐一剔除某指标后，Top 窗口还剩多少（越稳越可信）</div>';
+  h+='<table><thead><tr><th>去掉的指标</th><th>重合窗口</th><th>重合率</th></tr></thead><tbody>';
+  Object.entries(D).forEach(([k,v])=>{
+    h+=`<tr><td>${(BYKEY[k]||{}).name||k}</td><td>${v.overlap_with_base==null?'—':v.overlap_with_base+'/5'}</td>
+      <td>${v.overlap_pct==null?'—':v.overlap_pct+'%'}</td></tr>`;
+  });
+  h+='</tbody></table>';
+  h+=`<div class="tiny" style="margin-top:8px">基准口径：${RES.method} / ${RES.history_days} 天 / 窗口 ${RES.window_weeks} 周 / 去重 ${RES.min_gap_weeks} 周。
+    注：敏感性表由服务端按「默认权重 + 全部指标」预先计算，改动本页权重后此表不自动重算。</div>`;
+  document.getElementById('sens-box').innerHTML=h;
+}
+
+/* ---------------- 局限 ---------------- */
+function renderLimits(){
+  const L=APP.limits||[];
+  document.getElementById('limits-box').innerHTML=`<ul class="clean">${L.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="note" style="margin-top:10px"><b>最重要的一条：</b>历史相似只说明「过去也出现过类似结构」，
+    后续演化是历史既成事实的统计描述，样本通常只有几个窗口且高度自相关。<b>不要把它当作当前情形未来必然重演的证据。</b></div>`;
+  renderSens();
+  renderCharts();
+}
+
+/* ---------------- 分层对照 ---------------- */
+function renderTiers(){
+  const T=RES.tiers||{};
+  const rows=[];
+  const push=(code,label,keys,n,selList,fwdList)=>{
+    rows.push({code,label,keys,n,selList,fwdList: fwdList|| []});
+  };
+  if(T.A) push('A','全部可得指标（含覆盖不足的开工率）',T.A.keys,T.A.n_candidates,
+               RES.selected.map(s=>({date:s.date,score:s.score,cover:s.hist_z_cover})),
+               (RES.forward||[]).map(x=>({date:x.date,forward:x.forward})));
+  if(T.B && !T.B.error) push('B','自动剔除样本内覆盖不足的指标',T.B.keys,T.B.n_candidates,T.B.selected,T.B.forward);
+  if(T.C && !T.C.error) push('C','近10年 · 仅价格/基差/月差',T.C.keys,T.C.n_candidates,T.C.selected,
+                             T.C.selected.map(s=>({date:s.date,forward:s.forward})));
+  let h=`<table><thead><tr><th>口径</th><th>参与指标</th><th>候选数</th>
+    <th style="min-width:320px">命中窗口（综合得分 / 1M / 3M）</th></tr></thead><tbody>`;
+  rows.forEach(r=>{
+    const fm={}; (r.fwdList||[]).forEach(x=>{fm[x.date]=x.forward;});
+    h+=`<tr style="cursor:default"><td style="text-align:left"><b>${r.code} 口径</b><br>
+      <span class="tiny">${r.label}</span></td>
+      <td class="tiny" style="text-align:left">${r.keys.map(k=>(BYKEY[k]||{}).name||k).join('、')}</td>
+      <td>${r.n}</td><td style="text-align:left">
+      ${r.selList.length? r.selList.map(s=>{
+        const f=fm[s.date]||{}; const f1=(f['1m']||{}).fut_close_pct; const f3=(f['3m']||{}).fut_close_pct;
+        return `<span class="pill" style="margin-bottom:3px">${s.date} · ${fmt(s.score,2)} · <span class="${cls(f1)}">${f1==null?'—':sgn(f1)+fmt(f1,1)+'%'}</span> / <span class="${cls(f3)}">${f3==null?'—':sgn(f3)+fmt(f3,1)+'%'}</span></span>`;
+      }).join(' ') : '<span class="tiny">无满足条件的窗口</span>'}
+      </td></tr>`;
+  });
+  h+='</tbody></table>';
+  const aDates=(rows[0]?rows[0].selList.map(s=>s.date):[]).join();
+  const sameHits=rows.map(r=>`${r.code}:${r.selList.map(s=>s.date).filter(d=>aDates.includes(d)).length}/${r.selList.length}`).join('　');
+  h+=`<div class="tiny" style="margin-top:8px">与 A 口径的重合度：${sameHits}。
+    若 A 只剩 1 个窗口（因为开工率历史太短），说明「基本面齐全 + 时点无未来函数」这一要求下，
+    样本内几乎没有真正的可比对象——此时任何「历史相似」结论都应降级为参考，而不是判断依据。</div>`;
+  document.getElementById('tier-box').innerHTML=h;
+  requestAnimationFrame(()=>{try{renderCharts();}catch(e){console.warn(e);}});
+}
+
+/* ---------------- 图表（含无 ECharts 时的降级） ---------------- */
+function renderCharts(){
+  if(typeof echarts==='undefined'){renderFallbackCharts();return;}
+  renderNowChart(); renderWChart(); renderRankChart(); renderFwdCharts(); renderDetailChart();
+}
+
+function renderFallbackCharts(){
+  const msg='<div class="tiny" style="padding:16px;color:#ffb020">图表库未加载（echarts.min.js 缺失），' +
+    '下方以文字表格替代；把 echarts.min.js 放在本文件同目录即可恢复图表。</div>';
+  ['now-chart','wchart','rank-chart','fwd-price','fwd-struct','detail-chart'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    if(id==='now-chart' && state.result){
+      const R=state.result, raw=rawAt(R.asof);
+      const rows=[['基差率%','basis_pct'],['主力价格','fut_close'],['近4周涨跌%','ret_4w'],
+        ['港口库存万吨','port_inv'],['开工率%','operating_rate'],['月差%/月','spread_1_5'],
+        ['到港万吨','arrivals'],['20日波动率%','vol_20d']]
+        .map(([lbl,k])=>{const v=raw[k]; return `<tr><td>${lbl}</td><td>${v==null?'—':fmt(v,2)}</td></tr>`;}).join('');
+      el.innerHTML=`<table><thead><tr><th>指标</th><th>观察日 ${R.asof}</th></tr></thead><tbody>${rows}</tbody></table>`;
+    } else { el.innerHTML=msg; }
+  });
+}
+
+/* ---------------- 主渲染 ---------------- */
+function renderAll(){ renderNow(); renderTiers(); renderRank(); renderCompare(); renderForward();
+  renderDetail(); renderOverlap(); renderLimits(); }
+
+/* ---------------- 初始化控件 ---------------- */
+function initUI(){
+  const sel=document.getElementById('p-product');
+  sel.innerHTML=`<option value="MA">甲醇 MA（郑商所）</option>`;
+  const ms=document.getElementById('p-method');
+  (APP.methods||[{key:'mae',name:'加权平均绝对差(MAE)'},{key:'rmse',name:'加权RMSE'},{key:'cosine',name:'加权余弦'}])
+    .forEach(m=>{ if(m.key==='mahalanobis')return;
+      const o=document.createElement('option');o.value=m.key;o.textContent=m.name;ms.appendChild(o);});
+  ms.value=state.method;
+  const asof=document.getElementById('p-asof');
+  asof.value=state.asof; asof.min=DATES[0]; asof.max=DATES[DATES.length-1];
+  asof.onchange=()=>{state.asof=asof.value;runSearch();};
+  document.getElementById('p-range').onchange=e=>{state.range=+e.target.value;runSearch();};
+  document.getElementById('p-win').onchange=e=>{state.win=+e.target.value;runSearch();};
+  document.getElementById('p-method').onchange=e=>{state.method=e.target.value;runSearch();};
+  document.getElementById('p-top').onchange=e=>{state.top=+e.target.value;runSearch();};
+  document.getElementById('p-gap').onchange=e=>{state.gap=+e.target.value;runSearch();};
+  document.getElementById('p-strict').onchange=e=>{state.strict=e.target.value==='1';runSearch();};
+  document.getElementById('p-sign').onchange=e=>{state.signMin=+e.target.value;runSearch();};
+  document.getElementById('btn-run').onclick=()=>runSearch();
+  document.getElementById('btn-reset').onclick=()=>{
+    state.weights={...APP.default_weights};
+    state.enabled=new Set(Object.entries(APP.default_weights).filter(([,v])=>v>0).map(([k])=>k));
+    renderIndList(); runSearch();};
+
+  const fam={price:'价格',basis:'基差',inventory:'库存',supply:'供应/开工',structure:'期现结构'};
+  document.getElementById('ind-list').innerHTML=IND.map(x=>`
+    <div class="indrow" data-k="${x.key}">
+      <input type="checkbox" ${state.weights[x.key]>0?'checked':''}>
+      <div class="nm">${x.name}<em>${fam[x.family]||''} · ${x.unit} · ${x.std||''}</em></div>
+      <input type="range" min="0" max="3" step="0.1" value="${state.weights[x.key]}">
+      <div class="wv">${fmt(state.weights[x.key],1)}</div>
+    </div>`).join('');
+  document.querySelectorAll('.indrow').forEach(row=>{
+    const k=row.dataset.k;
+    row.querySelector('input[type=checkbox]').onchange=e=>{
+      if(e.target.checked){ if(state.weights[k]===0) state.weights[k]=0.5; }
+      else { state.weights[k]=0; }
+      row.querySelector('input[type=range]').value=state.weights[k];
+      row.querySelector('.wv').textContent=fmt(state.weights[k],1);
+      runSearch();
+    };
+    row.querySelector('input[type=range]').oninput=e=>{
+      state.weights[k]=+e.target.value;
+      row.querySelector('.wv').textContent=fmt(state.weights[k],1);
+      row.querySelector('input[type=checkbox]').checked=state.weights[k]>0;
+    };
+    row.querySelector('input[type=range]').onchange=()=>runSearch();
+  });
+}
+function renderIndList(){location.reload();}
+initUI();
+if(RES && RES.selected && RES.selected.length){ runSearch(); }
+else { document.getElementById('rankbox').innerHTML='<div class="err">无检索结果，请调整参数后点击「重新检索」</div>'; }
+window.addEventListener('resize',()=>{document.querySelectorAll('div[_echarts_instance_]').forEach(el=>{
+  const ins=echarts.getInstanceByDom(el); if(ins) ins.resize();});});
+</script>
+</body>
+</html>

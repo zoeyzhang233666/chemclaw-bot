@@ -1,0 +1,193 @@
+{
+  "asof": "2026-10-20",
+  "spot_now": 3980.0,
+  "main_contract": "MA2701",
+  "main_close": 3157.0,
+  "basis_now": 823.0,
+  "basis_rate_now": 20.68,
+  "windows": {
+    "1Y": {
+      "label": "1年",
+      "cutoff": "2025-10-21",
+      "n": 13,
+      "note": "可用真实样本仅覆盖 2026-09-21 至 2026-10-20",
+      "current": 823.0,
+      "pct": 15.38,
+      "mean": 1157.2308,
+      "median": 1091.0,
+      "stdev": 328.2213,
+      "min": 710.0,
+      "max": 1672.0,
+      "p05": 777.8,
+      "p25": 885.0,
+      "p75": 1508.0,
+      "p95": 1591.0,
+      "z": -1.018,
+      "usable_as_percentile": false,
+      "reason": "有效样本仅 13 个（< 20），不足以给出历史分位结论",
+      "coverage": {
+        "have": 13,
+        "expected": 243,
+        "ratio": 0.053,
+        "sufficient": false
+      }
+    },
+    "3Y": {
+      "label": "3年",
+      "cutoff": "2023-10-21",
+      "n": 13,
+      "note": "可用真实样本仅覆盖 2026-09-21 至 2026-10-20",
+      "current": 823.0,
+      "pct": 15.38,
+      "mean": 1157.2308,
+      "median": 1091.0,
+      "stdev": 328.2213,
+      "min": 710.0,
+      "max": 1672.0,
+      "p05": 777.8,
+      "p25": 885.0,
+      "p75": 1508.0,
+      "p95": 1591.0,
+      "z": -1.018,
+      "usable_as_percentile": false,
+      "reason": "有效样本仅 13 个（< 20），不足以给出历史分位结论",
+      "coverage": {
+        "have": 13,
+        "expected": 732,
+        "ratio": 0.018,
+        "sufficient": false
+      }
+    },
+    "5Y": {
+      "label": "5年",
+      "cutoff": "2021-10-21",
+      "n": 13,
+      "note": "可用真实样本仅覆盖 2026-09-21 至 2026-10-20",
+      "current": 823.0,
+      "pct": 15.38,
+      "mean": 1157.2308,
+      "median": 1091.0,
+      "stdev": 328.2213,
+      "min": 710.0,
+      "max": 1672.0,
+      "p05": 777.8,
+      "p25": 885.0,
+      "p75": 1508.0,
+      "p95": 1591.0,
+      "z": -1.018,
+      "usable_as_percentile": false,
+      "reason": "有效样本仅 13 个（< 20），不足以给出历史分位结论",
+      "coverage": {
+        "have": 13,
+        "expected": 1220,
+        "ratio": 0.011,
+        "sufficient": false
+      }
+    }
+  },
+  "decompose_30d": {
+    "delta_spot": 45.0,
+    "delta_fut": 215.0,
+    "delta_basis": -170.0,
+    "share_spot": -26.4706,
+    "share_fut": 126.4706,
+    "direction": "基差走弱",
+    "from_date": "2026-09-21",
+    "to_date": "2026-10-20",
+    "span_trading_days": 12
+  },
+  "decompose_peak": {
+    "delta_spot": -895.0,
+    "delta_fut": -181.0,
+    "delta_basis": -714.0,
+    "share_spot": 125.3501,
+    "share_fut": -25.3501,
+    "direction": "基差走弱",
+    "from_date": "2026-10-09",
+    "to_date": "2026-10-20"
+  },
+  "contracts": {
+    "MA2611": {
+      "close": 3384.0,
+      "basis": 596.0,
+      "basis_rate": 14.97
+    },
+    "MA2612": {
+      "close": 3231.0,
+      "basis": 749.0,
+      "basis_rate": 18.82
+    },
+    "MA2701": {
+      "close": 3157.0,
+      "basis": 823.0,
+      "basis_rate": 20.68
+    }
+  },
+  "series": [
+    {
+      "date": "2026-09-21",
+      "basis": 993.0
+    },
+    {
+      "date": "2026-09-22",
+      "basis": 1091.0
+    },
+    {
+      "date": "2026-09-23",
+      "basis": 1372.0
+    },
+    {
+      "date": "2026-09-24",
+      "basis": 1180.0
+    },
+    {
+      "date": "2026-09-29",
+      "basis": 1672.0
+    },
+    {
+      "date": "2026-09-30",
+      "basis": 1508.0
+    },
+    {
+      "date": "2026-10-08",
+      "basis": 1525.0
+    },
+    {
+      "date": "2026-10-09",
+      "basis": 1537.0
+    },
+    {
+      "date": "2026-10-12",
+      "basis": 896.0
+    },
+    {
+      "date": "2026-10-13",
+      "basis": 710.0
+    },
+    {
+      "date": "2026-10-15",
+      "basis": 885.0
+    },
+    {
+      "date": "2026-10-19",
+      "basis": 852.0
+    },
+    {
+      "date": "2026-10-20",
+      "basis": 823.0
+    }
+  ],
+  "peak_basis": [
+    "2026-09-29",
+    1672.0
+  ],
+  "skeleton_days": {
+    "n": 665,
+    "first": "2024-01-16",
+    "last": "2026-10-20"
+  },
+  "limits": {
+    "percentile_status": "INSUFFICIENT_HISTORY",
+    "reason": "现货日度序列仅有 13 个真实有价日，且均集中在 2026 年 9-10 月的一次价格异常拉升行情内，无法代表 1/3/5 年的基差分布。本报告以“可用样本分位”形式给出参考值，不将其作为历史分位结论。"
+  }
+}

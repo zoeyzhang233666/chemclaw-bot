@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ · 价格季节性（历史已实现）</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1b2230; --line:#283040; --line2:#374151;
+  --tx:#e6edf3; --tx2:#9aa7b8; --tx3:#6b7686;
+  --cur:#ff8a3d; --mean:#5aa9ff; --med:#22d3a6; --band:#2b6cb0;
+  --warn:#f0b429; --bad:#f47067; --ok:#3fb950; --purple:#a78bfa;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);
+  font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;}
+.wrap{max-width:1320px;margin:0 auto;padding:22px 20px 80px}
+h1{font-size:23px;margin:0 0 4px;letter-spacing:.2px}
+h2{font-size:17px;margin:30px 0 10px;padding-left:10px;border-left:3px solid var(--cur)}
+h3{font-size:14px;margin:18px 0 8px;color:var(--tx)}
+.sub{color:var(--tx2);font-size:13px}
+.mono{font-family:var(--mono)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:3px 0;font-size:13px;border-bottom:1px dotted var(--line)}
+.kv:last-child{border-bottom:0}
+.kv .k{color:var(--tx2)}
+.kv .v{font-family:var(--mono);text-align:right}
+.up{color:var(--bad)} .down{color:var(--ok)}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;border:1px solid var(--line2);color:var(--tx2);margin-right:4px}
+.tag.warn{color:var(--warn);border-color:#5c4a12;background:#2c2410}
+.tag.bad{color:var(--bad);border-color:#5c1f1a;background:#2a1210}
+.tag.ok{color:var(--ok);border-color:#1c3d24;background:#0f2416}
+.tag.info{color:var(--cur);border-color:#5c3a12;background:#2a1a0c}
+.tag.p{color:var(--purple);border-color:#3d3266;background:#1d1830}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{color:var(--tx2);font-weight:600;background:var(--panel2);position:sticky;top:0;z-index:2;cursor:default;
+  box-shadow:inset 0 -1px 0 var(--line)}
+td.l,th.l{text-align:left}
+tbody tr:hover{background:#1d2431}
+.scroll{max-height:430px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.chart{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 10px 6px;margin:10px 0}
+.chart svg{display:block;width:100%;height:auto}
+.banner{background:#2a1a0c;border:1px solid #5c3a12;color:#ffd9b3;border-radius:8px;padding:10px 14px;font-size:13px;margin:10px 0}
+.banner.bad{background:#2a1210;border-color:#5c1f1a;color:#ffc9c4}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button{background:var(--panel2);color:var(--tx);border:1px solid var(--line2);border-radius:7px;
+  padding:5px 11px;font-size:12.5px;cursor:pointer;transition:.12s}
+.ctrl button:hover{border-color:var(--cur);color:var(--cur)}
+.ctrl button.on{background:#2a1a0c;border-color:var(--cur);color:var(--cur);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--line2);
+  border-radius:999px;font-size:12px;cursor:pointer;user-select:none;font-family:var(--mono)}
+.chip .dot{width:9px;height:9px;border-radius:2px;background:var(--c,#888)}
+.chip.off{opacity:.32;text-decoration:line-through}
+.hint{color:var(--tx3);font-size:12px;margin:4px 0 0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--tx2);margin:2px 0 6px 4px}
+.legend i{display:inline-block;width:16px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.tip{position:fixed;pointer-events:none;background:#0b1017f2;border:1px solid var(--line2);
+  border-radius:8px;padding:8px 11px;font-size:12px;line-height:1.55;box-shadow:0 8px 24px #0009;
+  z-index:99;opacity:0;transition:opacity .08s;max-width:330px}
+.tip b{color:var(--cur)}
+.tip .mono{color:var(--tx)}
+.note{font-size:12px;color:var(--tx2)}
+details{margin:8px 0}
+summary{cursor:pointer;color:var(--tx2);font-size:13px}
+summary:hover{color:var(--cur)}
+code{font-family:var(--mono);background:#0b1017;padding:1px 5px;border-radius:4px;font-size:12px;color:#9ecbff}
+.foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--tx3);font-size:12px}
+.big{font-size:26px;font-family:var(--mono);font-weight:700;line-height:1.2}
+.lbl{font-size:12px;color:var(--tx2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>__TITLE__</h1>
+<div class="sub">__SUBTITLE__</div>
+<div class="banner" id="scopeBanner">__BANNER__</div>
+<div class="banner bad">
+  <b>使用边界</b>：本页展示的是<u>历史已实现</u>的价格季节性，<b>不是对未来价格的预测</b>。
+  季节性只描述"过去这些年份在同一周/月通常落在什么区间"，任何年份都可能显著偏离历史形态。
+  各位置有效样本仅 <span id="nYrTxt" class="mono">—</span> 年，经验分位不应被当作交易阈值或估值依据。
+</div>
+
+<!-- ============ 概览 ============ -->
+<h2>0 · 数据与口径（先看这一节）</h2>
+<div class="grid g4">
+  <div class="card"><div class="lbl">实际取得口径</div><div class="big" style="font-size:16px" id="ovCaliber">—</div>
+    <div class="note" id="ovCaliberNote"></div></div>
+  <div class="card"><div class="lbl">样本区间 / 报价点数</div><div class="big" id="ovSpan">—</div>
+    <div class="note" id="ovSpanNote"></div></div>
+  <div class="card"><div class="lbl">要求样本 vs 实际覆盖</div><div class="big" id="ovYears">—</div>
+    <div class="note" id="ovYearsNote"></div></div>
+  <div class="card"><div class="lbl">季节性强度（R²）</div><div class="big" id="ovR2">—</div>
+    <div class="note" id="ovR2Note"></div></div>
+</div>
+<div class="card">
+  <h3>逐年样本覆盖（不补造：缺哪段就是哪段）</h3>
+  <div class="scroll" style="max-height:none"><table id="tblCover"><thead></thead><tbody></tbody></table></div>
+  <div class="hint">"日缺口"= 工作日但当日无报价；仍属停市日的已在假期表内扣除。缺口不做插值、不做前值填充。</div>
+</div>
+<details class="card">
+  <summary>口径与来源核实（点击展开）</summary>
+  <div id="auditBox" style="margin-top:10px"></div>
+</details>
+
+<!-- ============ 交互图 ============ -->
+<h2>1 · 历史季节性分位带 + 各年份真实轨迹</h2>
+<div class="ctrl">
+  <button id="freqW" class="on">周度</button>
+  <button id="freqM">月度</button>
+  <span style="width:14px"></span>
+  <button id="modeAbs" class="on">绝对价格</button>
+  <button id="modeNorm">年初归一化(=100)</button>
+  <span style="width:14px"></span>
+  <button id="tglBand" class="on">分位带</button>
+  <button id="tglLines" class="on">逐年曲线</button>
+  <button id="tglMean" class="on">均值/中位数</button>
+  <button id="tglCur" class="on">当前年高亮</button>
+</div>
+<div class="ctrl" id="yearChips"></div>
+<div class="ctrl" style="margin-top:-2px">
+  <button id="btnAll">全选</button><button id="btnNone">仅当前年</button>
+  <button id="btnLast3">最近3年+当前年</button>
+  <span class="hint" style="margin-left:8px">点年份可开关；悬停曲线上任意点可看具体年份与数值。</span>
+</div>
+<div class="legend" id="legendMain">
+  <span><i style="background:var(--cur)"></i>当前年 __CURYEAR__</span>
+  <span><i style="background:var(--mean)"></i>历史同期均值</span>
+  <span><i style="background:var(--med)"></i>历史同期中位数</span>
+  <span><i style="background:var(--band);opacity:.55"></i>历史分位带 p10–p90（深）/ p25–p75（深）</span>
+  <span id="legendYears" style="color:var(--tx)"></span>
+</div>
+<div class="chart" id="chartMain"></div>
+<div class="hint" id="chartMainHint"></div>
+
+<h2>2 · 当前年份处在历史同期的什么位置</h2>
+<div class="grid g3" id="curCards"></div>
+<div class="card">
+  <h3>逐期位置明细（当前年 vs 历史同期，历史样本<b>不含当前年</b>）</h3>
+  <div class="scroll"><table id="tblCur"><thead></thead><tbody></tbody></table></div>
+  <div class="hint">"历史分位"= 历史同期样本中小于当前值的比例（0.5 计并列）；"排名"= 1 表示高于全部历史年份。
+    样本仅数年时，100% 与 z&gt;3 属于"弱样本强读数"，不等于统计显著。</div>
+</div>
+
+<h2>3 · 同期统计：均值 / 中位数 / 分位（含样本量）</h2>
+<div class="card">
+  <h3>逐年同期统计全表</h3>
+  <div class="scroll" style="max-height:520px"><table id="tblStats"><thead></thead><tbody></tbody></table></div>
+  <div class="hint">分位为经验分位（线性插值，等价 Excel <code>PERCENTILE.INC</code>）。
+    均值与中位数并列，是因为单一年份就能把均值拉走 —— 差额见"均值−中位数"列。</div>
+  <div class="hint">⚠ <b>本表"样本年份"包含当前年</b>（用于展示完整分布，并让读者看出当前年在分布中的位置）；
+    而第 2 节"逐期位置明细"的分位与排名<b>不含当前年</b>（避免用当前年自己抬高自己的基准）。
+    两者口径不同是有意为之，已在两处分别标注。
+    <br>另一个正常现象：小样本右偏时，<b>均值可以落在 [p25, p75] 之外</b>，这不是计算错误。</div>
+</div>
+
+<h2>4 · 异常年份检查及其对均值的影响</h2>
+<div class="card">
+  <h3>逐年份异常判级与证据强度</h3>
+  <div class="scroll" style="max-height:none"><table id="tblAnom"><thead></thead><tbody></tbody></table></div>
+  <div class="hint">判定规则：<b>决定性</b>=其余年份在该同期位置高度一致（MAD≈0）而该年偏离&gt;2%；
+    <b>稳健</b>=去掉该年后的 MAD 距 ≥3σ。最高/最低年若为独占极值不产生证据（样本小时天然是极值，无信息量）。
+    所有年份<b>均未被自动删除</b>，只在报告中标注。</div>
+</div>
+<div class="card">
+  <h3>均值 vs 中位数：单一年份的杠杆有多大</h3>
+  <div class="scroll"><table id="tblLev"><thead></thead><tbody></tbody></table></div>
+  <div class="hint">"剔除当年最高年后均值变化"= 把该位置样本内最高价那年拿掉后，同一个均值会移动多少。</div>
+</div>
+
+<h2>5 · 稳定性与可比性说明</h2>
+<div class="grid g2">
+  <div class="card"><h3>形态是否稳定</h3><div id="stabBox"></div></div>
+  <div class="card"><h3>必须知道的四个可比性坑</h3><div id="caveatBox" class="note"></div></div>
+</div>
+
+<div class="foot">
+  <div>生成：__GENERATED__ · 引擎：查价格季节性 v1.0.0（seasonality_core）</div>
+  <div>数据：__SOURCE_LINE__</div>
+  <div style="margin-top:6px">自包含单文件：无需联网，数据已内嵌；可直接归档或邮件发送。</div>
+</div>
+</div>
+
+<div class="tip" id="tip"></div>
+<script>
+const DATA = __DATA__;
+/* ======================= 工具 ======================= */
+const $ = s => document.querySelector(s);
+const fmt = (v, d=2) => (v===null||v===undefined||Number.isNaN(v)) ? '—'
+  : v.toLocaleString('zh-CN',{minimumFractionDigits:d, maximumFractionDigits:d});
+const fmt0 = v => fmt(v,0);
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const tipEl = $('#tip');
+function showTip(evt, html){
+  tipEl.innerHTML = html; tipEl.style.opacity = 1;
+  const pad = 14; let x = evt.clientX + pad, y = evt.clientY + pad;
+  const r = tipEl.getBoundingClientRect();
+  if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - pad;
+  tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px';
+}
+function hideTip(){ tipEl.style.opacity = 0; }
+
+/* ======================= 状态 ======================= */
+const state = {
+  freq: 'weekly',
+  mode: 'abs',
+  showBand: true, showLines: true, showMean: true, showCur: true,
+  yearsOn: {},
+};
+const YEAR_COLORS = {};   // 逐年配色：当前年固定橙色，其余按次序取色
+/* 当前年独占橙色 #ff8a3d；其余年份全部取冷色/紫粉色系且互不相同，
+   保证任意两条线可区分、且不与当前年撞色 */
+const PALETTE = ['#5aa9ff','#22d3a6','#a78bfa','#f778ba','#79c0ff','#56d364',
+                 '#d2a8ff','#7ee787','#4dd0e1','#9fa8ff','#b39ddb','#26c6da'];
+
+function cur(){ return DATA.meta.current_year; }
+function view(){ return DATA[state.freq]; }
+function posList(){ return view().stats.map(s => s.position); }
+function label(p){
+  const s = view().stats.find(x => x.position === p);
+  return s ? s.label : String(p);
+}
+function initYears(){
+  const ys = view().years.map(y => y.year);
+  ys.forEach((y,i)=>{ YEAR_COLORS[y] = (y===cur()) ? '#ff8a3d' : PALETTE[i % PALETTE.length]; });
+  ys.forEach(y => { if (state.yearsOn[y] === undefined) state.yearsOn[y] = (y === cur()) || i3(y); });
+  function i3(y){ const s = ys.filter(x=>x!==cur()).sort((a,b)=>b-a); return s.slice(0,2).includes(y); }
+}
+function seriesFor(freq, mode, year){
+  const v = view();
+  const src = (mode === 'norm') ? v.norm_series : v.raw_series;
+  const pos = (mode === 'norm') ? v.reb_stats.map(s=>s.position) : v.stats.map(s=>s.position);
+  const m = src[String(year)] || {};
+  return pos.map(p => {
+    const val = m[String(p)];
+    return (val === undefined || val === null) ? null : +val;
+  });
+}
+function bandFor(freq, mode){
+  const v = view();
+  const st = (mode === 'norm') ? v.reb_stats : v.stats;
+  return st.map(s => ({p:s.position, label:s.label, n:s.n_years, mean:s.mean, median:s.median,
+    p10:s.p10, p25:s.p25, p75:s.p75, p90:s.p90}));
+}
+
+/* ======================= 主图（自绘 SVG，无外部依赖） ======================= */
+const M = {l:62, r:16, t:14, b:34};
+function drawChart(){
+  const host = $('#chartMain');
+  const labels = posList();
+  const band = bandFor(state.freq, state.mode);
+  const years = view().years.map(y=>y.year);
+  const series = {};
+  years.forEach(y => series[y] = seriesFor(state.freq, state.mode, y));
+
+  const W = Math.max(host.clientWidth - 22, 620), H = 430;
+  const IW = W - M.l - M.r, IH = H - M.t - M.b;
+  let lo = Infinity, hi = -Infinity;
+  band.forEach(b=>{ [b.p10,b.p90,b.mean,b.median].forEach(x=>{ if(x!=null){lo=Math.min(lo,x);hi=Math.max(hi,x);} }); });
+  years.forEach(y=>{ if(!state.yearsOn[y]) return; series[y].forEach(x=>{ if(x!=null){lo=Math.min(lo,x);hi=Math.max(hi,x);} }); });
+  if(!isFinite(lo)){ host.innerHTML = '<div class="note" style="padding:20px">无可用数据</div>'; return; }
+  const padY = (hi-lo)*0.08 || 1; lo -= padY; hi += padY;
+  const x = i => M.l + (labels.length===1 ? IW/2 : i*IW/(labels.length-1));
+  const y = v => M.t + IH - (v-lo)/(hi-lo)*IH;
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H);
+  const el = (tag, at, txt) => { const e = document.createElementNS(ns,tag);
+    for(const k in at) e.setAttribute(k, at[k]); if(txt!=null) e.textContent = txt; svg.appendChild(e); return e; };
+
+  // y 轴网格：1/2/5×10^k 取整刻度，避免出现 2,840 / 3,368 这类"怪数"
+  const rawStep = (hi - lo) / 6;
+  const mag = Math.pow(10, Math.floor(Math.log10(Math.max(rawStep, 1e-9))));
+  const norm = rawStep / mag;
+  const niceStep = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 2.5 ? 2.5 : norm <= 5 ? 5 : 10) * mag;
+  const tickStart = Math.ceil(lo / niceStep) * niceStep;
+  const tickVals = [];
+  for (let v = tickStart; v <= hi + 1e-9; v += niceStep) tickVals.push(v);
+  tickVals.forEach(v => {
+    const yy = y(v);
+    el('line',{x1:M.l,x2:M.l+IW,y1:yy,y2:yy,stroke:'#232b39','stroke-width':1});
+    el('text',{x:M.l-8,y:yy+4,'text-anchor':'end',fill:'#6b7686','font-size':11,'font-family':'ui-monospace'},
+       fmt(v, state.mode==='norm' ? (niceStep<1?1:0) : 0));
+  });
+  // x 轴
+  const step = Math.ceil(labels.length/ (labels.length>20? 13 : labels.length));
+  labels.forEach((p,i)=>{
+    if(i % step && i !== labels.length-1) return;
+    el('text',{x:x(i),y:M.t+IH+20,'text-anchor':'middle',fill:'#6b7686','font-size':11}, label(p));
+  });
+  el('line',{x1:M.l,x2:M.l+IW,y1:M.t+IH,y2:M.t+IH,stroke:'#374151'});
+
+  // 分位带
+  if(state.showBand){
+    const path = (arr, rev) => {
+      const pts = arr.filter(d=>d.v!=null).map((d,i)=>[x(d.i), y(d.v)]);
+      if(!pts.length) return '';
+      return pts.map((p,k)=>(k?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+    };
+    const a90 = band.map((b,i)=>({i,v:b.p90})), a10 = band.map((b,i)=>({i,v:b.p10}));
+    const a75 = band.map((b,i)=>({i,v:b.p75})), a25 = band.map((b,i)=>({i,v:b.p25}));
+    const poly = (up, dn, fill, op) => {
+      const pts = up.filter(d=>d.v!=null).map(d=>[x(d.i),y(d.v)])
+        .concat(dn.filter(d=>d.v!=null).reverse().map(d=>[x(d.i),y(d.v)]));
+      if(pts.length<3) return;
+      el('polygon',{points:pts.map(p=>p.join(',')).join(' '),fill,opacity:op,stroke:'none'});
+    };
+    poly(a90,a10,'#2b6cb0',0.18);
+    poly(a75,a25,'#2b6cb0',0.24);
+  }
+  // 均值 / 中位数
+  if(state.showMean){
+    const line = (key, color, dash) => {
+      const pts = band.map((b,i)=>({i,v:b[key]})).filter(d=>d.v!=null);
+      if(pts.length<2) return;
+      el('path',{d:pts.map((p,k)=>(k?'L':'M')+x(p.i).toFixed(1)+','+y(p.v).toFixed(1)).join(' '),
+        fill:'none',stroke:color,'stroke-width':1.8,'stroke-dasharray':dash||'none',opacity:.95});
+    };
+    line('mean','#5aa9ff','6 3'); line('median','#22d3a6');
+  }
+  // 逐年曲线
+  if(state.showLines){
+    years.forEach(yr=>{
+      if(!state.yearsOn[yr]) return;
+      const isCur = (yr === cur());
+      const pts = series[yr].map((v,i)=>({i,v})).filter(d=>d.v!=null);
+      if(!pts.length) return;
+      const d = pts.map((p,k)=>(k?'L':'M')+x(p.i).toFixed(1)+','+y(p.v).toFixed(1)).join(' ');
+      el('path',{d, fill:'none', stroke:YEAR_COLORS[yr],
+        'stroke-width': isCur?3.2:1.5, opacity: isCur?1:(state.showCur?0.72:0.9),
+        'stroke-linejoin':'round','stroke-linecap':'round'});
+      if(isCur && pts.length <= 20){   // 数据点过多会叠成"毛毛虫"，只在线较稀时点出
+        pts.forEach(p=>el('circle',{cx:x(p.i),cy:y(p.v),r:2.6,fill:'#ff8a3d',stroke:'#0d1117','stroke-width':1}));
+      }
+    });
+  }
+  // 当前年最后一点标注
+  const cy = series[cur()] || [];
+  let lastIdx = -1; for(let i=cy.length-1;i>=0;i--){ if(cy[i]!=null){ lastIdx=i; break; } }
+  if(lastIdx>=0 && state.showCur){
+    el('circle',{cx:x(lastIdx),cy:y(cy[lastIdx]),r:5,fill:'none',stroke:'#ff8a3d','stroke-width':2});
+    el('text',{x:x(lastIdx),y:y(cy[lastIdx])-12,'text-anchor':'end',fill:'#ff8a3d','font-size':12,
+      'font-family':'ui-monospace'}, (state.mode==='norm'?'':fmt0(cy[lastIdx])));
+  }
+  // 悬停热区
+  const hov = el('g',{class:'hover'});
+  labels.forEach((p,i)=>{
+    const prevX = i===0 ? M.l : (x(i-1)+x(i))/2;
+    const nextX = i===labels.length-1 ? M.l+IW : (x(i)+x(i+1))/2;
+    const r = document.createElementNS(ns,'rect');
+    r.setAttribute('x',prevX); r.setAttribute('y',M.t);
+    r.setAttribute('width',Math.max(nextX-prevX,1)); r.setAttribute('height',IH);
+    r.setAttribute('fill','transparent');
+    r.addEventListener('mousemove', ev => {
+      const rows = years.filter(y=>state.yearsOn[y]).map(y=>{
+        const v = series[y][i];
+        return v==null ? null : `<div class="mono" style="display:flex;justify-content:space-between;gap:12px">
+          <span style="color:${YEAR_COLORS[y]}">${y}${y===cur()?' ●':''}</span>
+          <span>${state.mode==='norm'?fmt(v,1):fmt(v,2)}</span></div>`;
+      }).filter(Boolean).join('');
+      const b = band[i];
+      showTip(ev, `<b>${label(p)}</b> <span class="note">(${view().window.unit==='weekly'?'ISO 周':'自然月'})</span>
+        <div class="note" style="margin:4px 0 6px">历史同期 n=${b.n} 年 ·
+         均值 <span class="mono">${fmt(b.mean,0)}</span> ·
+         中位 <span class="mono">${fmt(b.median,0)}</span><br>
+         p10–p90 <span class="mono">${fmt(b.p10,0)}–${fmt(b.p90,0)}</span></div>${rows||'<span class="note">（当前无选中年份）</span>'}`);
+    });
+    r.addEventListener('mouseleave', hideTip);
+    hov.appendChild(r);
+  });
+  host.innerHTML = '';
+  host.appendChild(svg);
+  $('#chartMainHint').textContent =
+    (state.mode==='norm'
+      ? '归一化口径：每年以该年窗口内第一个有效报价为 100，其后为相对指数。这样能把"价格水平逐年抬升"从形态中剥离，只看年内节奏。'
+      : '绝对价格口径：直接比较各年份同一周/月的价格。注意不同年份价格水平不同，曲线间的整体高低差主要来自年份水平，而非季节性。')
+    + ' 分位带基于' + (state.mode==='norm'?'归一化指数':'绝对价格') + '的跨年同期样本。';
+}
+
+/* ======================= 表格与卡片 ======================= */
+function renderCover(){
+  const v = view(); const t = $('#tblCover');
+  t.querySelector('thead').innerHTML = `<tr><th class="l">年份</th><th>首个位置</th><th>末个位置</th>
+    <th class="l">首日</th><th class="l">末日</th><th>有效位置数</th><th>报价天数</th>
+    <th>内部缺口位置</th><th class="l">覆盖说明</th></tr>`;
+  t.querySelector('tbody').innerHTML = v.coverage.map(c=>{
+    const isCur = c.year === cur();
+    return `<tr ${isCur?'style="background:#22160b"':''}>
+      <td class="l mono">${c.year}${isCur?' <span class="tag info">当前年</span>':''}</td>
+      <td class="mono">${label(c.first_pos)}</td><td class="mono">${label(c.last_pos)}</td>
+      <td class="l mono">${c.first_date||'—'}</td><td class="l mono">${c.last_date||'—'}</td>
+      <td class="mono">${c.n_positions}</td><td class="mono">${c.n_days}</td>
+      <td class="mono">${c.n_interior_gaps}</td>
+      <td class="l">${c.is_partial?'<span class="tag warn">部分覆盖</span>':'<span class="tag ok">完整</span>'} ${esc(c.note||'')}</td></tr>`;
+  }).join('');
+}
+
+function renderCur(){
+  const v = view();
+  const items = v.current.filter(c=>c.current!=null);
+  const last = items[items.length-1];
+  const cards = [];
+  if(last){
+    const pct = last.pctile_of_current!=null ? (last.pctile_of_current*100) : null;
+    cards.push(`<div class="card"><div class="lbl">最近一期（${last.label}）当前值</div>
+      <div class="big">${fmt(last.current,2)}</div>
+      <div class="note">${view().caliber.unit}${view().caliber.downgraded?' · 全国基准价口径':''}</div></div>`);
+    cards.push(`<div class="card"><div class="lbl">历史同期位置（n=${last.n_hist} 年，不含当前年）</div>
+      <div class="big">${pct!=null?pct.toFixed(0)+'%':'—'}</div>
+      <div class="note">${pct!=null? (pct>=100?'高于全部历史同期':(pct<=0?'低于全部历史同期':`高于历史上 ${pct.toFixed(0)}% 的年份`)) : '—'}
+        · 排名 ${last.rank}/${last.n_hist}</div></div>`);
+    cards.push(`<div class="card"><div class="lbl">相对历史同期</div>
+      <div class="big">${last.hist_mean!=null?((last.current-last.hist_mean)/last.hist_mean*100).toFixed(1)+'%':'—'}</div>
+      <div class="note">均值 ${fmt(last.hist_mean,0)} · 中位 ${fmt(last.hist_median,0)} ·
+        z ${last.z!=null?fmt(last.z,2):'—'}</div></div>`);
+  }
+  $('#curCards').innerHTML = cards.join('');
+  const t = $('#tblCur');
+  t.querySelector('thead').innerHTML = `<tr><th class="l">位置</th><th class="l">截止日</th><th>当前值</th>
+    <th>历史均值</th><th>历史中位</th><th>历史分位</th><th>排名</th><th>z</th>
+    <th>距均值</th><th>n</th><th class="l">历史年份</th></tr>`;
+  t.querySelector('tbody').innerHTML = v.current.map(c=>{
+    if(c.current==null) return '';
+    const pct = c.pctile_of_current!=null?(c.pctile_of_current*100).toFixed(0)+'%':'—';
+    const dd = (c.hist_mean!=null && c.hist_mean!==0) ? ((c.current-c.hist_mean)/c.hist_mean*100) : null;
+    const cls = dd==null?'':(dd>0?'up':'down');
+    const hot = (c.pctile_of_current>=0.99||c.pctile_of_current<=0.01) ? 'style="color:#ff8a3d;font-weight:600"':'';
+    return `<tr><td class="l mono">${c.label}</td><td class="l mono">${c.current_date||'—'}</td>
+      <td class="mono" ${hot}>${fmt(c.current,2)}</td><td class="mono">${fmt(c.hist_mean,0)}</td>
+      <td class="mono">${fmt(c.hist_median,0)}</td><td class="mono">${pct}</td>
+      <td class="mono">${c.rank}/${c.n_hist}</td><td class="mono">${c.z!=null?fmt(c.z,2):'—'}</td>
+      <td class="mono ${cls}">${dd!=null?(dd>0?'+':'')+dd.toFixed(1)+'%':'—'}</td>
+      <td class="mono">${c.n_hist}</td><td class="l mono" style="color:#6b7686">${c.hist_years.join(',')}</td></tr>`;
+  }).join('');
+}
+
+function renderStats(){
+  const v = view(); const st = state.mode==='norm' ? v.reb_stats : v.stats;
+  const t = $('#tblStats');
+  const isNorm = state.mode==='norm';
+  t.querySelector('thead').innerHTML = `<tr><th class="l">位置</th><th>n 年</th><th>均值</th><th>中位数</th>
+    <th>均值−中位</th><th>标准差</th><th>CV</th><th>最小</th><th>p10</th><th>p25</th><th>p50</th><th>p75</th><th>p90</th><th>最大</th><th class="l">样本年份</th></tr>`;
+  t.querySelector('tbody').innerHTML = st.map(s=>{
+    const gap = (s.mean!=null && s.median!=null) ? (s.mean-s.median) : null;
+    const gapCls = (gap!=null && Math.abs(gap) > Math.abs(s.median)*0.15) ? 'up' : '';
+    const full = isNorm ? {std:'—',cv:'—',min:'—',max:'—',years:'—'} : s;
+    if(isNorm && s.n_years!=null && !s.years){
+      // 归一化口径：补 n
+    }
+    return `<tr><td class="l mono">${s.label}</td><td class="mono">${s.n_years}</td>
+      <td class="mono">${fmt(s.mean, isNorm?1:0)}</td><td class="mono">${fmt(s.median, isNorm?1:0)}</td>
+      <td class="mono ${gapCls}">${fmt(gap, isNorm?1:0)}</td>
+      <td class="mono">${isNorm?'—':fmt(s.std,0)}</td><td class="mono">${isNorm?'—':(s.cv!=null?s.cv.toFixed(3):'—')}</td>
+      <td class="mono">${isNorm?'—':fmt(s.min,0)}</td>
+      <td class="mono">${fmt(s.p10, isNorm?1:0)}</td><td class="mono">${fmt(s.p25, isNorm?1:0)}</td>
+      <td class="mono">${fmt(s.p50!=null?s.p50:s.median, isNorm?1:0)}</td><td class="mono">${fmt(s.p75, isNorm?1:0)}</td>
+      <td class="mono">${fmt(s.p90, isNorm?1:0)}</td>
+      <td class="mono">${isNorm?'—':fmt(s.max,0)}</td>
+      <td class="l mono" style="color:#6b7686">${isNorm?'—':(s.years||[]).join(',')}</td></tr>`;
+  }).join('');
+}
+
+function renderAnom(){
+  const v = view(); const t = $('#tblAnom');
+  const gname = {anomaly:['异常','bad'], relevant:['关注','warn'], watch:['提示','warn'],
+                 normal:['正常','ok'], insufficient:['样本不足','']};
+  t.querySelector('thead').innerHTML = `<tr><th class="l">年份</th><th>判级</th><th>参与位置</th>
+    <th>决定性证据</th><th>稳健证据</th><th>最大剔除后均值变化</th><th>整体水平偏移</th><th class="l">说明</th></tr>`;
+  t.querySelector('tbody').innerHTML = v.anomaly.yearly.map(a=>{
+    const [nm,cls] = gname[a.grade] || ['—',''];
+    if(a.grade==='insufficient') return `<tr><td class="l mono">${a.year}</td>
+      <td><span class="tag">样本不足</span></td><td class="mono">0</td><td></td><td></td>
+      <td></td><td></td><td class="l note">${esc((a.flags||[]).join('；'))}</td></tr>`;
+    return `<tr><td class="l mono">${a.year}${a.year===cur()?' <span class="tag info">当前年</span>':''}</td>
+      <td><span class="tag ${cls}">${nm}</span></td>
+      <td class="mono">${a.n_pos}</td><td class="mono">${a.n_coherent||0}</td><td class="mono">${a.n_robust||0}</td>
+      <td class="mono">${a.max_abs_shift!=null?(a.max_abs_shift*100).toFixed(1)+'%':'—'}</td>
+      <td class="mono">${a.mean_abs_shift!=null?(a.mean_abs_shift*100).toFixed(1)+'%':'—'}</td>
+      <td class="l note">${esc((a.flags||[]).join('；'))}</td></tr>`;
+  }).join('');
+}
+
+function renderLev(){
+  const v = view(); const t = $('#tblLev');
+  const st = v.stats.filter(s=>s.leverage_hi!=null);
+  t.querySelector('thead').innerHTML = `<tr><th class="l">位置</th><th>均值</th><th>中位数</th>
+    <th>均值/中位</th><th>剔除最高年后均值</th><th>均值变化</th><th>剔除最低年后均值</th><th>均值变化</th></tr>`;
+  t.querySelector('tbody').innerHTML = st.map(s=>{
+    const ratio = s.median ? (s.mean/s.median) : null;
+    const big = ratio!=null && Math.abs(ratio-1)>0.15;
+    return `<tr><td class="l mono">${s.label}</td><td class="mono">${fmt(s.mean,0)}</td>
+      <td class="mono">${fmt(s.median,0)}</td>
+      <td class="mono" ${big?'style="color:#f47067;font-weight:600"':''}>${ratio!=null?ratio.toFixed(2):'—'}</td>
+      <td class="mono">${fmt(s.mean_ex_hi,0)}</td>
+      <td class="mono ${s.leverage_hi<0?'down':'up'}">${(s.leverage_hi*100).toFixed(1)}%</td>
+      <td class="mono">${fmt(s.mean_ex_lo,0)}</td>
+      <td class="mono ${s.leverage_lo>0?'up':'down'}">+${(s.leverage_lo*100).toFixed(1)}%</td></tr>`;
+  }).join('');
+}
+
+function renderStab(){
+  const v = view(); const s = v.stability;
+  const r2 = s.seasonal_ss_share;
+  const bar = (val, color) => `<div style="height:8px;background:#232b39;border-radius:4px;overflow:hidden;margin:6px 0">
+    <div style="width:${Math.max(0,Math.min(1,val))*100}%;height:100%;background:${color}"></div></div>`;
+  $('#stabBox').innerHTML = `
+    <div class="kv"><span class="k">季节形态解释力 R²（1 − 位置内方差/总方差）</span>
+      <span class="v">${r2!=null?(r2*100).toFixed(1)+'%':'—'}</span></div>
+    ${bar(r2||0, '#5aa9ff')}
+    <div class="note" style="margin-bottom:8px">${esc(s.interpretation||'')}</div>
+    <div class="kv"><span class="k">各同期位置跨年变异系数 CV 均值</span><span class="v">${s.mean_cv!=null?s.mean_cv.toFixed(3):'—'}</span></div>
+    <div class="kv"><span class="k">可用位置 / 全部位置</span><span class="v">${s.n_positions_usable}/${s.n_positions}</span></div>
+    <div class="kv"><span class="k">参与计算的观测数</span><span class="v">${s.n_obs||'—'}</span></div>
+    <div class="note" style="margin-top:8px">R² 越接近 0，说明"看位置（第几周/几月）"越解释不了价格差异，
+      价格主要由<b>年份水平</b>决定。此时季节性只能作为"形态参考"，不能当作价位判断依据。</div>`;
+  const c = view().caliber;
+  $('#caveatBox').innerHTML = `
+    <ol style="margin:0;padding-left:18px">
+      <li><b>口径</b>：${esc(c.obtained)}。<span class="tag ${c.downgraded?'warn':'ok'}">${c.downgraded?'已降级并声明':'与需求一致'}</span><br>
+        <span style="color:#9aa7b8">${esc(c.note||'')}</span></li>
+      <li><b>日历周次</b>：周度用 ISO 周（周一为首日），ISO 第 53 周折叠进第 52 周；
+        春节/国庆所在的周可能只有 1–3 个报价日，该周数值取"周内最后一个有报价日"，并在覆盖表中标注。</li>
+      <li><b>长期价格水平</b>：绝对价格口径下曲线高低差主要来自年份水平漂移。
+        如要比较"年内涨跌节奏"，请切到<b>年初归一化</b>视图。</li>
+      <li><b>样本量</b>：每个同期位置只有 <span class="mono">${view().stats[0]?view().stats[0].n_years:'—'}</span> 年左右的样本，
+        分位与 z 值的不确定性很大；本页不提供置信区间的地方，均因样本不足以支撑。</li>
+    </ol>`;
+}
+
+function renderAudit(){
+  const a = view().audit || {}; const m = DATA.meta;
+  const rows = [
+    ['需求口径', m.caliber.requested],
+    ['实际口径', m.caliber.obtained],
+    ['单位 / 税基', `${m.caliber.unit} / ${m.caliber.tax}`],
+    ['数据源', a.source || '—'],
+    ['逐行可追溯', a.per_row_source ? '是（每行附原文链接）' : '否'],
+    ['交叉校验', a.cross_check || '—'],
+    ['跳变核实', a.payload_jumps_verified || '—'],
+    ['抓取/生成时间', a.fetched_at || '—'],
+    ['自然日报价点数', m.n_days],
+    ['重复日期', (m.duplicates||[]).length ? m.duplicates.join(', ') : '无'],
+  ];
+  $('#auditBox').innerHTML = rows.map(([k,v])=>{
+    const val = (typeof v === 'number') ? v.toLocaleString() : esc(v);
+    return `<div class="kv"><span class="k">${esc(k)}</span><span class="v" style="max-width:70%;white-space:normal">${val}</span></div>`;
+  }).join('');
+}
+
+/* ======================= 控件 ======================= */
+function renderChips(){
+  const ys = view().years.map(y=>y.year);
+  $('#yearChips').innerHTML = ys.map(y=>`
+    <span class="chip ${state.yearsOn[y]?'':'off'}" data-y="${y}" style="--c:${YEAR_COLORS[y]}">
+      <span class="dot"></span>${y}${y===cur()?' ●':''}</span>`).join('');
+  document.querySelectorAll('#yearChips .chip').forEach(c=>{
+    c.onclick = () => { const y = +c.dataset.y; state.yearsOn[y] = !state.yearsOn[y]; renderChips(); drawChart(); };
+  });
+  // 图内逐年曲线必须有图例，否则读者不知道颜色对应哪一年
+  const onYears = ys.filter(y => state.yearsOn[y]);
+  $('#legendYears').innerHTML = onYears.length
+    ? '<span style="color:var(--tx2)">| 已显示年份：</span>' + onYears.map(y =>
+        `<span style="margin-left:10px"><i style="background:${YEAR_COLORS[y]};height:${y===cur()?4:3}px;width:18px"></i>${y}</span>`).join('')
+    : '<span style="color:var(--tx2)">| 已关闭全部逐年曲线</span>';
+}
+function bind(){
+  $('#freqW').onclick = ()=>{ state.freq='weekly'; $('#freqW').classList.add('on'); $('#freqM').classList.remove('on'); renderAll(); };
+  $('#freqM').onclick = ()=>{ state.freq='monthly'; $('#freqM').classList.add('on'); $('#freqW').classList.remove('on'); renderAll(); };
+  $('#modeAbs').onclick = ()=>{ state.mode='abs'; $('#modeAbs').classList.add('on'); $('#modeNorm').classList.remove('on'); drawChart(); renderStats(); };
+  $('#modeNorm').onclick = ()=>{ state.mode='norm'; $('#modeNorm').classList.add('on'); $('#modeAbs').classList.remove('on'); drawChart(); renderStats(); };
+  const tg = (id, key) => { $(id).onclick = ()=>{ state[key]=!state[key]; $(id).classList.toggle('on', state[key]); drawChart(); }; };
+  tg('#tglBand','showBand'); tg('#tglLines','showLines'); tg('#tglMean','showMean'); tg('#tglCur','showCur');
+  $('#btnAll').onclick = ()=>{ view().years.forEach(y=>state.yearsOn[y.year]=true); renderChips(); drawChart(); };
+  $('#btnNone').onclick = ()=>{ view().years.forEach(y=>state.yearsOn[y.year]=(y.year===cur())); renderChips(); drawChart(); };
+  $('#btnLast3').onclick = ()=>{
+    const ys = view().years.map(y=>y.year).filter(y=>y!==cur()).sort((a,b)=>b-a).slice(0,3);
+    view().years.forEach(y=>state.yearsOn[y.year]=(y.year===cur()||ys.includes(y.year)));
+    renderChips(); drawChart(); };
+  addEventListener('resize', ()=>drawChart());
+}
+function renderAll(){
+  renderChips(); renderCover(); drawChart(); renderCur(); renderStats(); renderAnom(); renderLev(); renderStab();
+}
+/* ======================= 启动 ======================= */
+(function(){
+  const m = DATA.meta;
+  $('#ovCaliber').textContent = m.caliber.downgraded ? '全国基准价（已降级）' : '与需求一致';
+  $('#ovCaliber').style.fontSize = '16px';
+  $('#ovCaliberNote').textContent = m.caliber.obtained;
+  $('#ovSpan').textContent = `${m.first} → ${m.last}`;
+  $('#ovSpan').style.fontSize = '17px';
+  $('#ovSpanNote').textContent = `共 ${m.n_days.toLocaleString()} 个自然日报价点`;
+  const ys = DATA.weekly.years.map(y=>y.year);
+  const okYears = DATA.monthly.coverage.filter(c=>c.n_positions>=10).map(c=>c.year);
+  $('#ovYears').textContent = `${ys.length} 年（覆盖 ${(ys[0])}–${ys[ys.length-1]}）`;
+  $('#ovYears').style.fontSize = '17px';
+  $('#ovYearsNote').textContent = `要求 ${m.requested_years||'—'} 年；其中 1–7 月/全月完整的仅 ${okYears.length} 年`;
+  const r2 = DATA.weekly.stability.seasonal_ss_share;
+  $('#ovR2').textContent = r2!=null?(r2*100).toFixed(1)+'%':'—';
+  $('#ovR2Note').textContent = DATA.weekly.stability.interpretation||'';
+  $('#nYrTxt').textContent = DATA.monthly.stats[0] ? DATA.monthly.stats[0].n_years : '—';
+  initYears();
+  bind();
+  renderAll();
+  renderAudit();
+})();
+</script>
+</body>
+</html>

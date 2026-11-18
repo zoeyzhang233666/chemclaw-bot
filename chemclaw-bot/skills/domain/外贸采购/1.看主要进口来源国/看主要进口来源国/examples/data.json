@@ -1,0 +1,6668 @@
+{
+ "meta": {
+  "title": "工业级乙二醇（MEG）进口来源国比较",
+  "product": "乙二醇（monoethylene glycol, MEG）",
+  "cas": "107-21-1",
+  "grade": "工业级 / 纤维级（fiber grade），纯度 ≥99.8%",
+  "hs": "290531（Ethylene glycol / ethanediol，HS2022 六位）",
+  "hs8_cn": "2905310000（中国海关 8 位，待以税则核对）",
+  "importer": "中国",
+  "years": [
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "years5": [
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "unit_note": "金额单位：百万美元（USD m）；数量单位：千吨（kt）；单位价值：美元/吨（USD/t，金额÷净重，非合同价）",
+  "built": "2026-10-20 12:33",
+  "sources": [
+   {
+    "id": "uncomtrade",
+    "name": "UN Comtrade Database（HS 2022, 290531, annual）",
+    "url": "https://comtradeapi.un.org",
+    "accessed": "2026-10"
+   },
+   {
+    "id": "uncomtrade_meta",
+    "name": "UN Comtrade commodity & country code lists",
+    "url": "https://comtradeplus.un.org",
+    "accessed": "2026-10"
+   },
+   {
+    "id": "fx",
+    "name": "Frankfurter API（ECB 参考汇率，USD/CNY）",
+    "url": "https://api.frankfurter.app",
+    "accessed": "2026-10"
+   }
+  ]
+ },
+ "product_input": {
+  "name": "工业级乙二醇（MEG）",
+  "cas": "107-21-1",
+  "grade": "工业级，符合 GB/T 4649-2018",
+  "qty": "未提供（按 1–5 万吨/年区间试算比价）",
+  "destination": "中国（长江下游/华东为主）",
+  "target_price": "未提供",
+  "existing_suppliers": "未提供"
+ },
+ "partners": [
+  {
+   "iso": "SAU",
+   "label": "沙特阿拉伯",
+   "value_m": 2202.52,
+   "qty_kt": 4225.706,
+   "unit_value": 521.2,
+   "share": 0.547,
+   "share5_avg": 0.5119,
+   "growth_qty_yoy": 0.2496,
+   "cagr5_qty": 0.0379,
+   "exp_world_kt": 6372.31,
+   "exp_world_m": 2986.716,
+   "exp_cn_kt": 4041.884,
+   "exp_cn_share": 0.636,
+   "capacity_kt": 3242,
+   "capacity_sites": 4,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.8,
+   "capacity_latest_year": 2025,
+   "group_total_kt": 7850,
+   "tariff": {
+    "country": "SAU",
+    "agreement": "无（中海自贸区尚未签署）",
+    "agreement_status": "not_in_force",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "GCC 自贸区若生效将改变此结论",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "SAU",
+     "port": "Jubail",
+     "cn": "张家港 / 太仓",
+     "chokepoint": "霍尔木兹",
+     "nm": 6050,
+     "days": "约 22–26",
+     "status": "不可执行",
+     "basis": "大圆×1.634",
+     "risk": "霍尔木兹封闭；无替代出海口"
+    },
+    {
+     "iso": "SAU",
+     "port": "Ras Tanura",
+     "cn": "张家港 / 太仓",
+     "chokepoint": "霍尔木兹",
+     "nm": 6030,
+     "days": "约 22–26",
+     "status": "不可执行",
+     "basis": "大圆×1.634",
+     "risk": "同上"
+    },
+    {
+     "iso": "SAU",
+     "port": "Yanbu（红海）",
+     "cn": "张家港 / 太仓",
+     "chokepoint": "红海",
+     "nm": 5000,
+     "days": "约 19–23",
+     "status": "理论上唯一绕行",
+     "basis": "大圆×1.634",
+     "risk": "不依赖霍尔木兹，但红海袭击风险；延布是否装运出口 MEG 未核实"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "CAN",
+   "label": "加拿大",
+   "value_m": 534.933,
+   "qty_kt": 1033.099,
+   "unit_value": 517.8,
+   "share": 0.1328,
+   "share5_avg": 0.1364,
+   "growth_qty_yoy": 0.0847,
+   "cagr5_qty": 0.0283,
+   "exp_world_kt": 922.817,
+   "exp_world_m": 634.774,
+   "exp_cn_kt": 557.901,
+   "exp_cn_share": 0.6879,
+   "capacity_kt": 860,
+   "capacity_sites": 2,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.67,
+   "capacity_latest_year": 2024,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "CAN",
+    "agreement": "无（中加无自贸协定）",
+    "agreement_status": "none",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "CAN",
+     "port": "Montreal / Sarnia（铁路至港）",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "巴拿马",
+     "nm": 6740,
+     "days": "约 24–30",
+     "status": "可执行但受限",
+     "basis": "大圆×1.488",
+     "risk": "原产地证明；经美中转会被按美国原产征税"
+    },
+    {
+     "iso": "CAN",
+     "port": "Vancouver（西岸）",
+     "cn": "宁波 / 张家港",
+     "chokepoint": "无",
+     "nm": 5584,
+     "days": "约 14–18",
+     "status": "陆路可执行但非 MEG 传统出口港",
+     "basis": "官方口径 5,584 nm",
+     "risk": "加拿大 MEG 产地在阿尔伯塔，经温哥华出口需铁路接驳，历史上主流路径是经美湾/蒙特利尔"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "USA",
+   "label": "美国",
+   "value_m": 300.972,
+   "qty_kt": 559.673,
+   "unit_value": 537.8,
+   "share": 0.0747,
+   "share5_avg": 0.0991,
+   "growth_qty_yoy": -0.3185,
+   "cagr5_qty": 0.0096,
+   "exp_world_kt": 3210.267,
+   "exp_world_m": 1582.316,
+   "exp_cn_kt": 214.72,
+   "exp_cn_share": 0.0696,
+   "capacity_kt": 4419,
+   "capacity_sites": 9,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.9,
+   "capacity_latest_year": 2024,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "USA",
+    "agreement": "无；MFN + 保留加征 10%",
+    "agreement_status": "not_in_force",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 15.5,
+    "note": "24% 暂停至约 2026-11-10，到期需复核",
+    "tile": "MFN+加征"
+   },
+   "ports": [
+    {
+     "iso": "USA",
+     "port": "Houston / Texas City / Freeport",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "巴拿马",
+     "nm": 9800,
+     "days": "约 28–36",
+     "status": "可执行但受限",
+     "basis": "大圆×1.488；12–16 节件杂化船",
+     "risk": "巴拿马限航（32 艘/日、吃水 14.63 m）；飓风季；关税 15.5%"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "S19",
+   "label": "其他亚洲（含中国台湾）",
+   "value_m": 283.359,
+   "qty_kt": 545.228,
+   "unit_value": 519.7,
+   "share": 0.0704,
+   "share5_avg": 0.0559,
+   "growth_qty_yoy": 4.9418,
+   "cagr5_qty": -0.1534,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 2080,
+   "capacity_sites": 2,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 1.0,
+   "capacity_latest_year": 2026,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "S19",
+    "agreement": "ECFA 早收清单未包含 290531",
+    "agreement_status": "none",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "以 MFN 口径",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "S19",
+     "port": "Mailiao / Kaohsiung",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "无",
+     "nm": 598,
+     "days": "约 1.5–3",
+     "status": "可执行",
+     "basis": "大圆×1.082",
+     "risk": "近洋航线；受两岸政策与航线安排影响"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "KWT",
+   "label": "科威特",
+   "value_m": 206.786,
+   "qty_kt": 401.531,
+   "unit_value": 515.0,
+   "share": 0.0514,
+   "share5_avg": 0.0421,
+   "growth_qty_yoy": 0.2394,
+   "cagr5_qty": 0.0285,
+   "exp_world_kt": 1494.449,
+   "exp_world_m": 852.659,
+   "exp_cn_kt": 617.107,
+   "exp_cn_share": 0.4341,
+   "capacity_kt": 1150,
+   "capacity_sites": 1,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 1.0,
+   "capacity_latest_year": 2023,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "KWT",
+    "agreement": "无（GCC 未生效）",
+    "agreement_status": "not_in_force",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "KWT",
+     "port": "Shuaiba",
+     "cn": "张家港 / 太仓",
+     "chokepoint": "霍尔木兹",
+     "nm": 6105,
+     "days": "约 22–26",
+     "status": "不可执行",
+     "basis": "大圆×1.634",
+     "risk": "霍尔木兹封闭"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "OMN",
+   "label": "阿曼",
+   "value_m": 195.284,
+   "qty_kt": 381.072,
+   "unit_value": 512.5,
+   "share": 0.0485,
+   "share5_avg": 0.0336,
+   "growth_qty_yoy": 0.1935,
+   "cagr5_qty": 0.3109,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "OMN",
+    "agreement": "无（GCC 未生效）",
+    "agreement_status": "not_in_force",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [],
+   "has_exporter": false
+  },
+  {
+   "iso": "KOR",
+   "label": "韩国",
+   "value_m": 115.407,
+   "qty_kt": 219.594,
+   "unit_value": 525.5,
+   "share": 0.0287,
+   "share5_avg": 0.0265,
+   "growth_qty_yoy": 0.017,
+   "cagr5_qty": 0.0394,
+   "exp_world_kt": 0.0,
+   "exp_world_m": 107.338,
+   "exp_cn_kt": 214.086,
+   "exp_cn_share": 0.9659,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "KOR",
+    "agreement": "RCEP + 中韩 FTA",
+    "agreement_status": "in_force",
+    "mfn": 5.5,
+    "pref": 5.0,
+    "effective": 5.0,
+    "note": "中韩 FTA 项下具体税率未核实；0.5 个百分点差约 2.5 美元/吨",
+    "tile": "RCEP 5%"
+   },
+   "ports": [
+    {
+     "iso": "KOR",
+     "port": "Ulsan / Yeosu / Daesan",
+     "cn": "宁波 / 连云港",
+     "chokepoint": "无",
+     "nm": 566,
+     "days": "约 1.5–2.5",
+     "status": "可执行",
+     "basis": "大圆×1.082",
+     "risk": "近洋航线；韩国裂解装置减产周期"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "MYS",
+   "label": "马来西亚",
+   "value_m": 63.844,
+   "qty_kt": 121.261,
+   "unit_value": 526.5,
+   "share": 0.0159,
+   "share5_avg": 0.0116,
+   "growth_qty_yoy": 0.1935,
+   "cagr5_qty": 0.1946,
+   "exp_world_kt": 316.246,
+   "exp_world_m": 148.016,
+   "exp_cn_kt": 109.811,
+   "exp_cn_share": 0.3358,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "MYS",
+    "agreement": "RCEP + 中国—东盟自贸区",
+    "agreement_status": "in_force",
+    "mfn": 5.5,
+    "pref": 5.0,
+    "effective": 5.0,
+    "note": "",
+    "tile": "RCEP 5%"
+   },
+   "ports": [
+    {
+     "iso": "MYS",
+     "port": "Kertih / Pasir Gudang",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "无",
+     "nm": 2090,
+     "days": "约 6–9",
+     "status": "可执行",
+     "basis": "大圆×1.082",
+     "risk": "RCEP 原产地文件"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "SGP",
+   "label": "新加坡",
+   "value_m": 42.897,
+   "qty_kt": 79.434,
+   "unit_value": 540.0,
+   "share": 0.0107,
+   "share5_avg": 0.0229,
+   "growth_qty_yoy": 1.2773,
+   "cagr5_qty": -0.4175,
+   "exp_world_kt": 295.526,
+   "exp_world_m": 158.979,
+   "exp_cn_kt": 67.978,
+   "exp_cn_share": 0.2145,
+   "capacity_kt": 750,
+   "capacity_sites": 1,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 1.0,
+   "capacity_latest_year": 2010,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "SGP",
+    "agreement": "RCEP + 中国—东盟自贸区",
+    "agreement_status": "in_force",
+    "mfn": 5.5,
+    "pref": 5.0,
+    "effective": 5.0,
+    "note": "转口海湾货无法取得新加坡原产资格，须按海湾原产地 5.5% 申报",
+    "tile": "RCEP 5%"
+   },
+   "ports": [
+    {
+     "iso": "SGP",
+     "port": "新加坡",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "无",
+     "nm": 2226,
+     "days": "约 6–9",
+     "status": "可执行",
+     "basis": "官方口径 2,226 nm",
+     "risk": "转口枢纽：出口统计含中转货，不代表本地产能"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "IRN",
+   "label": "伊朗",
+   "value_m": 36.194,
+   "qty_kt": 69.906,
+   "unit_value": 517.8,
+   "share": 0.009,
+   "share5_avg": 0.0496,
+   "growth_qty_yoy": -0.7534,
+   "cagr5_qty": -0.4156,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 900,
+   "capacity_sites": 2,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 1.0,
+   "capacity_latest_year": 2024,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "IRN",
+    "agreement": "无（中国对伊朗实际按 MFN 计征）",
+    "agreement_status": "none",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "制裁合规风险高于关税风险",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "IRN",
+     "port": "Bandar Imam / Asaluyeh",
+     "cn": "张家港",
+     "chokepoint": "霍尔木兹",
+     "nm": 5890,
+     "days": "约 21–25",
+     "status": "不可执行",
+     "basis": "大圆×1.634",
+     "risk": "海峡封闭方本身；叠加制裁与保险"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "JPN",
+   "label": "日本",
+   "value_m": 23.076,
+   "qty_kt": 44.549,
+   "unit_value": 518.0,
+   "share": 0.0057,
+   "share5_avg": 0.007,
+   "growth_qty_yoy": 3.7388,
+   "cagr5_qty": -0.2952,
+   "exp_world_kt": 46.377,
+   "exp_world_m": 21.613,
+   "exp_cn_kt": 46.221,
+   "exp_cn_share": 0.9828,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "JPN",
+    "agreement": "RCEP（无双边自贸协定）",
+    "agreement_status": "in_force",
+    "mfn": 5.5,
+    "pref": 5.0,
+    "effective": 5.0,
+    "note": "缺原产地证书则按 5.5%",
+    "tile": "RCEP 5%"
+   },
+   "ports": [
+    {
+     "iso": "JPN",
+     "port": "Mizushima / Yokkaichi / Kobe",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "无",
+     "nm": 900,
+     "days": "约 2–4",
+     "status": "可执行",
+     "basis": "大圆×1.082",
+     "risk": "日本本土需求优先，出口量有限"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "ARE",
+   "label": "阿联酋",
+   "value_m": 19.236,
+   "qty_kt": 38.111,
+   "unit_value": 504.7,
+   "share": 0.0048,
+   "share5_avg": 0.0026,
+   "growth_qty_yoy": 1.1814,
+   "cagr5_qty": 0.1473,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "ARE",
+    "agreement": "无（GCC 未生效）",
+    "agreement_status": "not_in_force",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "ARE",
+     "port": "Jebel Ali / Ruwais",
+     "cn": "张家港",
+     "chokepoint": "霍尔木兹",
+     "nm": 5696,
+     "days": "约 21–25",
+     "status": "不可执行",
+     "basis": "官方口径 5,696 nm（唯一直接引用值）",
+     "risk": "霍尔木兹封闭；阿联酋本身是转口枢纽"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "IND",
+   "label": "印度",
+   "value_m": 1.82,
+   "qty_kt": 1.155,
+   "unit_value": 1575.7,
+   "share": 0.0005,
+   "share5_avg": 0.0008,
+   "growth_qty_yoy": 0.099,
+   "cagr5_qty": -0.5439,
+   "exp_world_kt": 24.197,
+   "exp_world_m": 31.303,
+   "exp_cn_kt": 1.177,
+   "exp_cn_share": 0.0584,
+   "capacity_kt": 1090,
+   "capacity_sites": 2,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 1.0,
+   "capacity_latest_year": 2024,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "IND",
+    "agreement": "无自贸协定（仅 APTA 有限减让，MEG 是否在列未核）",
+    "agreement_status": "none",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "IND",
+     "port": "Hazira / Dahej",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "无",
+     "nm": 3933,
+     "days": "约 9–12",
+     "status": "可执行",
+     "basis": "大圆×1.082",
+     "risk": "印度本国已对科威特/沙特/新加坡提请反倾销，自身也是净进口方"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "DEU",
+   "label": "德国",
+   "value_m": 0.293,
+   "qty_kt": 0.08,
+   "unit_value": 3654.2,
+   "share": 0.0001,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": 4.0,
+   "cagr5_qty": 0.1819,
+   "exp_world_kt": 16.978,
+   "exp_world_m": 14.376,
+   "exp_cn_kt": 0.017,
+   "exp_cn_share": 0.0059,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "DEU",
+    "agreement": "无（中欧无自贸协定）",
+    "agreement_status": "none",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "DEU",
+     "port": "Hamburg / Ludwigshafen（莱茵河）",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "苏伊士",
+     "nm": 10540,
+     "days": "约 34–40",
+     "status": "可执行",
+     "basis": "大圆×2.199",
+     "risk": "内河转运；欧洲产能退出，货源不稳定"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "FRA",
+   "label": "法国",
+   "value_m": 0.077,
+   "qty_kt": 0.007,
+   "unit_value": 11619.5,
+   "share": 0.0,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": 0.4,
+   "cagr5_qty": 0.6266,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "mfn": null,
+    "pref": null,
+    "effective": null,
+    "agreement": "未覆盖",
+    "note": "",
+    "tile": "未覆盖"
+   },
+   "ports": [],
+   "has_exporter": false
+  },
+  {
+   "iso": "GBR",
+   "label": "英国",
+   "value_m": 0.039,
+   "qty_kt": 0.004,
+   "unit_value": 10199.9,
+   "share": 0.0,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": 3.0,
+   "cagr5_qty": 0.0746,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "mfn": null,
+    "pref": null,
+    "effective": null,
+    "agreement": "未覆盖",
+    "note": "",
+    "tile": "未覆盖"
+   },
+   "ports": [],
+   "has_exporter": false
+  },
+  {
+   "iso": "THA",
+   "label": "泰国",
+   "value_m": 0.018,
+   "qty_kt": 0.015,
+   "unit_value": 1200.1,
+   "share": 0.0,
+   "share5_avg": 0.0001,
+   "growth_qty_yoy": 14.0,
+   "cagr5_qty": -0.688,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 423,
+   "capacity_sites": 1,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 1.0,
+   "capacity_latest_year": 2023,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "THA",
+    "agreement": "RCEP + 中国—东盟自贸区",
+    "agreement_status": "in_force",
+    "mfn": 5.5,
+    "pref": 5.0,
+    "effective": 5.0,
+    "note": "",
+    "tile": "RCEP 5%"
+   },
+   "ports": [
+    {
+     "iso": "THA",
+     "port": "Map Ta Phut",
+     "cn": "宁波 / 张家港",
+     "chokepoint": "无",
+     "nm": 2337,
+     "days": "约 7–9",
+     "status": "可执行",
+     "basis": "大圆×1.082",
+     "risk": "泰国本地需求（PTTGC 95% 内销）挤压出口量"
+    }
+   ],
+   "has_exporter": false
+  },
+  {
+   "iso": "NLD",
+   "label": "荷兰",
+   "value_m": 0.015,
+   "qty_kt": 0.007,
+   "unit_value": 2218.4,
+   "share": 0.0,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": -0.3,
+   "cagr5_qty": null,
+   "exp_world_kt": 148.646,
+   "exp_world_m": 97.972,
+   "exp_cn_kt": 0.006,
+   "exp_cn_share": 0.0003,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "NLD",
+    "agreement": "无（中欧无自贸协定）",
+    "agreement_status": "none",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "NLD",
+     "port": "Rotterdam",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "苏伊士",
+     "nm": 10666,
+     "days": "约 34–40",
+     "status": "可执行",
+     "basis": "官方口径 10,666 nm",
+     "risk": "欧洲自身为净进口区，对华出口多为转口或区域平衡货；绕好望角仅多约 5–7 天"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "ITA",
+   "label": "意大利",
+   "value_m": 0.014,
+   "qty_kt": 0.002,
+   "unit_value": 7939.8,
+   "share": 0.0,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": 0.0,
+   "cagr5_qty": -0.1591,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "mfn": null,
+    "pref": null,
+    "effective": null,
+    "agreement": "未覆盖",
+    "note": "",
+    "tile": "未覆盖"
+   },
+   "ports": [],
+   "has_exporter": false
+  },
+  {
+   "iso": "BEL",
+   "label": "比利时",
+   "value_m": 0.009,
+   "qty_kt": 0.001,
+   "unit_value": 13883.9,
+   "share": 0.0,
+   "share5_avg": 0.0003,
+   "growth_qty_yoy": 0.0,
+   "cagr5_qty": -0.3611,
+   "exp_world_kt": 346.35,
+   "exp_world_m": 234.194,
+   "exp_cn_kt": 0.0,
+   "exp_cn_share": 0.0,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 1,
+   "capacity_coverage": 0.0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "country": "BEL",
+    "agreement": "无（中欧无自贸协定）",
+    "agreement_status": "none",
+    "mfn": 5.5,
+    "pref": null,
+    "effective": 5.5,
+    "note": "",
+    "tile": "MFN"
+   },
+   "ports": [
+    {
+     "iso": "BEL",
+     "port": "Antwerp",
+     "cn": "张家港 / 宁波",
+     "chokepoint": "苏伊士",
+     "nm": 10662,
+     "days": "约 34–40",
+     "status": "可执行",
+     "basis": "官方口径 10,662 nm",
+     "risk": "同上"
+    }
+   ],
+   "has_exporter": true
+  },
+  {
+   "iso": "ISR",
+   "label": "以色列",
+   "value_m": 0.007,
+   "qty_kt": 0.0,
+   "unit_value": 38050.8,
+   "share": 0.0,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": null,
+   "cagr5_qty": null,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "mfn": null,
+    "pref": null,
+    "effective": null,
+    "agreement": "未覆盖",
+    "note": "",
+    "tile": "未覆盖"
+   },
+   "ports": [],
+   "has_exporter": false
+  },
+  {
+   "iso": "CHN",
+   "label": "//CHN",
+   "value_m": 0.005,
+   "qty_kt": 0.001,
+   "unit_value": 4782.3,
+   "share": 0.0,
+   "share5_avg": 0.0001,
+   "growth_qty_yoy": null,
+   "cagr5_qty": -0.8797,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "mfn": null,
+    "pref": null,
+    "effective": null,
+    "agreement": "未覆盖",
+    "note": "",
+    "tile": "未覆盖"
+   },
+   "ports": [],
+   "has_exporter": false
+  },
+  {
+   "iso": "CHE",
+   "label": "瑞士",
+   "value_m": 0.005,
+   "qty_kt": 0.0,
+   "unit_value": 119400.0,
+   "share": 0.0,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": -1.0,
+   "cagr5_qty": null,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "mfn": null,
+    "pref": null,
+    "effective": null,
+    "agreement": "未覆盖",
+    "note": "",
+    "tile": "未覆盖"
+   },
+   "ports": [],
+   "has_exporter": false
+  },
+  {
+   "iso": "SWE",
+   "label": "瑞典",
+   "value_m": 0.0,
+   "qty_kt": 0.0,
+   "unit_value": 17523.8,
+   "share": 0.0,
+   "share5_avg": 0.0,
+   "growth_qty_yoy": null,
+   "cagr5_qty": null,
+   "exp_world_kt": null,
+   "exp_world_m": null,
+   "exp_cn_kt": null,
+   "exp_cn_share": null,
+   "capacity_kt": 0,
+   "capacity_sites": 0,
+   "capacity_gap_sites": 0,
+   "capacity_coverage": 0,
+   "capacity_latest_year": null,
+   "group_total_kt": null,
+   "tariff": {
+    "mfn": null,
+    "pref": null,
+    "effective": null,
+    "agreement": "未覆盖",
+    "note": "",
+    "tile": "未覆盖"
+   },
+   "ports": [],
+   "has_exporter": false
+  }
+ ],
+ "totals": [
+  {
+   "year": 2016,
+   "value_m": 4850.774,
+   "qty_kt": 6369.685,
+   "unit_value": 761.5
+  },
+  {
+   "year": 2017,
+   "value_m": 7356.368,
+   "qty_kt": null,
+   "unit_value": null
+  },
+  {
+   "year": 2018,
+   "value_m": 9005.704,
+   "qty_kt": 9799.926,
+   "unit_value": 919.0
+  },
+  {
+   "year": 2019,
+   "value_m": 5813.607,
+   "qty_kt": 9947.042,
+   "unit_value": 584.5
+  },
+  {
+   "year": 2020,
+   "value_m": 4890.935,
+   "qty_kt": 10547.934,
+   "unit_value": 463.7
+  },
+  {
+   "year": 2021,
+   "value_m": 5635.029,
+   "qty_kt": 8426.405,
+   "unit_value": 668.7
+  },
+  {
+   "year": 2022,
+   "value_m": 4502.242,
+   "qty_kt": 7510.692,
+   "unit_value": 599.4
+  },
+  {
+   "year": 2023,
+   "value_m": 3466.199,
+   "qty_kt": 7148.205,
+   "unit_value": 484.9
+  },
+  {
+   "year": 2024,
+   "value_m": 3489.722,
+   "qty_kt": 6554.133,
+   "unit_value": 532.4
+  },
+  {
+   "year": 2025,
+   "value_m": 4026.811,
+   "qty_kt": 7720.437,
+   "unit_value": 521.6
+  }
+ ],
+ "years": [
+  2016,
+  2017,
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025
+ ],
+ "share_series": {
+  "SAU": [
+   0.4582,
+   null,
+   0.4191,
+   0.4565,
+   0.3835,
+   0.4322,
+   0.5617,
+   0.5025,
+   0.516,
+   0.5473
+  ],
+  "CAN": [
+   0.1195,
+   null,
+   0.0927,
+   0.0969,
+   0.108,
+   0.1096,
+   0.1391,
+   0.1542,
+   0.1453,
+   0.1338
+  ],
+  "USA": [
+   0.0073,
+   null,
+   0.0151,
+   0.0085,
+   0.0699,
+   0.0639,
+   0.0999,
+   0.134,
+   0.1253,
+   0.0725
+  ],
+  "S19": [
+   0.1677,
+   null,
+   0.13,
+   0.1332,
+   0.119,
+   0.126,
+   0.0644,
+   0.0045,
+   0.014,
+   0.0706
+  ],
+  "KWT": [
+   0.0414,
+   null,
+   0.0604,
+   0.0529,
+   0.0581,
+   0.0426,
+   0.0314,
+   0.0352,
+   0.0494,
+   0.052
+  ],
+  "OMN": [
+   0.0009,
+   null,
+   0.0016,
+   0.0137,
+   0.004,
+   0.0153,
+   0.0102,
+   0.0443,
+   0.0487,
+   0.0494
+  ],
+  "KOR": [
+   0.0657,
+   null,
+   0.0526,
+   0.0544,
+   0.0317,
+   0.0223,
+   0.0192,
+   0.0297,
+   0.0329,
+   0.0284
+  ],
+  "MYS": [
+   0.0058,
+   null,
+   0.007,
+   0.0077,
+   0.0132,
+   0.0071,
+   0.0074,
+   0.0121,
+   0.0155,
+   0.0157
+  ],
+  "SGP": [
+   0.0423,
+   null,
+   0.0764,
+   0.0593,
+   0.0763,
+   0.0819,
+   0.0132,
+   0.004,
+   0.0053,
+   0.0103
+  ],
+  "IRN": [
+   0.0447,
+   null,
+   0.0301,
+   0.0346,
+   0.0786,
+   0.0711,
+   0.0473,
+   0.0774,
+   0.0432,
+   0.0091
+  ]
+ },
+ "qty_series": {
+  "SAU": [
+   2918.579,
+   3878.842,
+   4107.245,
+   4540.809,
+   4045.604,
+   3641.847,
+   4218.924,
+   3592.09,
+   3381.655,
+   4225.706
+  ],
+  "CAN": [
+   761.121,
+   937.54,
+   908.0,
+   963.636,
+   1139.055,
+   923.898,
+   1044.53,
+   1102.334,
+   952.459,
+   1033.099
+  ],
+  "USA": [
+   46.185,
+   null,
+   147.89,
+   84.61,
+   737.637,
+   538.713,
+   750.001,
+   957.542,
+   821.182,
+   559.673
+  ],
+  "S19": [
+   1068.216,
+   1359.907,
+   1273.764,
+   1324.699,
+   1254.779,
+   1061.366,
+   483.41,
+   32.455,
+   91.761,
+   545.228
+  ],
+  "KWT": [
+   263.554,
+   282.159,
+   591.844,
+   526.041,
+   612.395,
+   358.854,
+   235.73,
+   251.497,
+   323.965,
+   401.531
+  ],
+  "OMN": [
+   5.64,
+   null,
+   16.014,
+   136.072,
+   42.182,
+   129.061,
+   76.81,
+   316.769,
+   319.287,
+   381.072
+  ],
+  "KOR": [
+   418.624,
+   444.764,
+   515.497,
+   541.328,
+   334.874,
+   188.126,
+   143.923,
+   212.339,
+   215.928,
+   219.594
+  ],
+  "MYS": [
+   37.181,
+   16.917,
+   68.313,
+   76.5,
+   139.553,
+   59.548,
+   55.765,
+   86.491,
+   101.6,
+   121.261
+  ],
+  "SGP": [
+   269.683,
+   520.078,
+   748.258,
+   590.317,
+   805.042,
+   689.883,
+   98.772,
+   28.241,
+   34.881,
+   79.434
+  ],
+  "IRN": [
+   284.786,
+   217.001,
+   294.582,
+   344.033,
+   829.245,
+   599.51,
+   355.532,
+   552.936,
+   283.447,
+   69.906
+  ]
+ },
+ "exp_series": {
+  "SAU": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    1853.037,
+    1443.225,
+    1174.738,
+    1924.121,
+    2252.934,
+    2358.636,
+    2416.821,
+    3923.611,
+    6020.914,
+    6372.31
+   ],
+   "cn_kt": [
+    1323.633,
+    981.542,
+    759.194,
+    1410.42,
+    1582.849,
+    1647.954,
+    1799.075,
+    2336.421,
+    3355.518,
+    4041.884
+   ],
+   "world_m": [
+    978.956,
+    885.304,
+    1244.899,
+    1355.257,
+    946.988,
+    1456.309,
+    1359.572,
+    2700.206,
+    2783.952,
+    2986.716
+   ],
+   "cn_m": [
+    699.08,
+    602.635,
+    804.537,
+    993.431,
+    665.768,
+    1038.915,
+    1028.01,
+    1607.911,
+    1558.696,
+    1899.612
+   ]
+  },
+  "USA": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    554.331,
+    625.575,
+    570.583,
+    1297.234,
+    2218.242,
+    2051.322,
+    2710.797,
+    0.0,
+    3335.179,
+    3210.267
+   ],
+   "cn_kt": [
+    112.257,
+    150.086,
+    79.069,
+    142.706,
+    722.075,
+    600.396,
+    647.355,
+    976.041,
+    1043.165,
+    214.72
+   ],
+   "world_m": [
+    350.995,
+    477.157,
+    486.619,
+    712.274,
+    932.462,
+    1316.125,
+    1672.072,
+    1601.563,
+    1752.734,
+    1582.316
+   ],
+   "cn_m": [
+    69.74,
+    118.482,
+    68.378,
+    72.897,
+    301.448,
+    362.759,
+    426.727,
+    509.821,
+    513.955,
+    110.151
+   ]
+  },
+  "CAN": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    1575.324,
+    1580.361,
+    1487.5,
+    1513.217,
+    1576.224,
+    1087.718,
+    943.09,
+    979.453,
+    870.448,
+    922.817
+   ],
+   "cn_kt": [
+    857.971,
+    949.798,
+    864.545,
+    897.558,
+    1011.682,
+    734.265,
+    611.049,
+    646.808,
+    563.961,
+    557.901
+   ],
+   "world_m": [
+    903.463,
+    1103.433,
+    1095.221,
+    759.149,
+    638.273,
+    574.636,
+    957.51,
+    918.242,
+    782.148,
+    634.774
+   ],
+   "cn_m": [
+    470.34,
+    612.845,
+    579.314,
+    401.144,
+    367.876,
+    345.192,
+    560.578,
+    535.77,
+    493.662,
+    436.655
+   ]
+  },
+  "KWT": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    592.0,
+    1062.969,
+    1312.761,
+    1350.148,
+    944.296,
+    1021.625,
+    1033.684,
+    1356.992,
+    1284.647,
+    1494.449
+   ],
+   "cn_kt": [
+    70.0,
+    200.1,
+    319.534,
+    360.0,
+    219.0,
+    79.0,
+    166.912,
+    318.0,
+    301.143,
+    617.107
+   ],
+   "world_m": [
+    343.205,
+    754.161,
+    1156.102,
+    767.023,
+    454.718,
+    642.704,
+    932.978,
+    713.01,
+    873.899,
+    852.659
+   ],
+   "cn_m": [
+    38.983,
+    138.375,
+    291.282,
+    199.939,
+    112.66,
+    51.636,
+    150.651,
+    163.391,
+    204.857,
+    370.133
+   ]
+  },
+  "ARE": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "world_kt": [
+    15.962,
+    4.379,
+    3.089,
+    3.087,
+    14.135,
+    5.889,
+    10.973,
+    14.823
+   ],
+   "cn_kt": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.002,
+    0.001
+   ],
+   "world_m": [
+    10.999,
+    4.055,
+    2.87,
+    2.64,
+    5.718,
+    4.649,
+    5.133,
+    7.605
+   ],
+   "cn_m": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.005,
+    0.002
+   ]
+  },
+  "IRN": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "world_kt": [
+    740.036,
+    914.675,
+    1020.942,
+    983.329,
+    932.623,
+    933.656,
+    559.423,
+    1039.617
+   ],
+   "cn_kt": [
+    596.44,
+    706.989,
+    985.886,
+    930.329,
+    800.923,
+    779.188,
+    408.107,
+    882.327
+   ],
+   "world_m": [
+    481.679,
+    752.507,
+    835.817,
+    460.885,
+    359.171,
+    571.162,
+    295.642,
+    452.722
+   ],
+   "cn_m": [
+    374.559,
+    600.733,
+    809.012,
+    434.178,
+    300.678,
+    474.541,
+    222.057,
+    383.428
+   ]
+  },
+  "SGP": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    556.968,
+    0.0,
+    1074.887,
+    0.0,
+    1203.051,
+    0.0,
+    676.595,
+    0.0,
+    0.0,
+    295.526
+   ],
+   "cn_kt": [
+    343.65,
+    539.709,
+    735.204,
+    563.57,
+    791.481,
+    667.607,
+    96.513,
+    26.093,
+    45.351,
+    67.978
+   ],
+   "world_m": [
+    367.558,
+    754.968,
+    999.822,
+    579.179,
+    567.822,
+    750.873,
+    418.622,
+    285.446,
+    275.757,
+    158.979
+   ],
+   "cn_m": [
+    213.929,
+    450.558,
+    672.341,
+    335.27,
+    361.347,
+    440.522,
+    59.869,
+    11.927,
+    23.285,
+    34.101
+   ]
+  },
+  "KOR": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    480.809,
+    454.532,
+    504.276,
+    569.929,
+    309.234,
+    342.728,
+    0.0,
+    0.0,
+    229.243,
+    0.0
+   ],
+   "cn_kt": [
+    471.419,
+    447.953,
+    498.081,
+    562.562,
+    306.417,
+    206.065,
+    123.0,
+    223.285,
+    221.887,
+    214.086
+   ],
+   "world_m": [
+    306.856,
+    379.392,
+    448.753,
+    318.692,
+    142.841,
+    229.793,
+    109.842,
+    103.924,
+    117.673,
+    107.338
+   ],
+   "cn_m": [
+    300.06,
+    373.605,
+    442.517,
+    313.139,
+    140.82,
+    135.63,
+    72.194,
+    100.197,
+    113.548,
+    103.675
+   ]
+  },
+  "S19": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+   ],
+   "world_kt": [
+    1336.634,
+    1491.671,
+    1402.945,
+    1448.609,
+    1406.374,
+    1337.638,
+    0.0,
+    34.871,
+    82.92
+   ],
+   "cn_kt": [
+    1242.54,
+    1373.472,
+    1281.133,
+    1335.771,
+    1238.424,
+    1108.561,
+    0.0,
+    32.743,
+    79.311
+   ],
+   "world_m": [
+    854.759,
+    1236.246,
+    1251.27,
+    832.062,
+    647.062,
+    889.735,
+    359.338,
+    26.485,
+    56.367
+   ],
+   "cn_m": [
+    795.082,
+    1134.048,
+    1138.701,
+    766.635,
+    569.667,
+    736.451,
+    265.032,
+    24.817,
+    53.913
+   ]
+  },
+  "JPN": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    266.321,
+    318.786,
+    269.02,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.61,
+    15.993,
+    46.377
+   ],
+   "cn_kt": [
+    234.463,
+    299.581,
+    247.754,
+    301.933,
+    256.63,
+    181.176,
+    36.548,
+    1.323,
+    15.74,
+    46.221
+   ],
+   "world_m": [
+    160.032,
+    253.081,
+    230.466,
+    175.975,
+    115.274,
+    117.056,
+    20.442,
+    1.459,
+    8.512,
+    21.613
+   ],
+   "cn_m": [
+    140.854,
+    236.569,
+    212.063,
+    164.275,
+    113.107,
+    114.126,
+    19.694,
+    0.549,
+    7.985,
+    21.241
+   ]
+  },
+  "NLD": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    318.98,
+    355.372,
+    289.61,
+    196.143,
+    144.355,
+    127.049,
+    97.514,
+    107.448,
+    124.05,
+    148.646
+   ],
+   "cn_kt": [
+    0.005,
+    0.002,
+    0.002,
+    0.003,
+    0.011,
+    0.033,
+    0.004,
+    0.003,
+    0.004,
+    0.006
+   ],
+   "world_m": [
+    253.834,
+    348.618,
+    311.257,
+    142.769,
+    103.805,
+    124.719,
+    86.417,
+    70.736,
+    83.486,
+    97.972
+   ],
+   "cn_m": [
+    0.014,
+    0.011,
+    0.013,
+    0.019,
+    0.039,
+    0.13,
+    0.018,
+    0.016,
+    0.016,
+    0.025
+   ]
+  },
+  "BEL": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    411.741,
+    0.0,
+    364.653,
+    358.597,
+    361.473,
+    0.0,
+    444.879,
+    482.98,
+    458.354,
+    346.35
+   ],
+   "cn_kt": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    2.965,
+    0.0,
+    0.0,
+    0.0,
+    0.001,
+    0.0
+   ],
+   "world_m": [
+    277.84,
+    304.346,
+    355.582,
+    227.397,
+    185.219,
+    339.117,
+    401.011,
+    347.911,
+    328.507,
+    234.194
+   ],
+   "cn_m": [
+    0.002,
+    0.001,
+    0.002,
+    0.003,
+    1.0,
+    0.001,
+    0.001,
+    0.001,
+    0.002,
+    0.001
+   ]
+  },
+  "DEU": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    175.065,
+    0.0,
+    154.551,
+    109.834,
+    97.502,
+    161.308,
+    116.376,
+    53.635,
+    19.063,
+    16.978
+   ],
+   "cn_kt": [
+    0.029,
+    0.026,
+    0.024,
+    0.038,
+    0.03,
+    0.022,
+    0.071,
+    0.013,
+    0.021,
+    0.017
+   ],
+   "world_m": [
+    121.104,
+    142.458,
+    144.557,
+    75.36,
+    55.741,
+    143.997,
+    114.02,
+    38.638,
+    15.456,
+    14.376
+   ],
+   "cn_m": [
+    0.055,
+    0.063,
+    0.055,
+    0.089,
+    0.072,
+    0.118,
+    0.18,
+    0.027,
+    0.053,
+    0.085
+   ]
+  },
+  "ESP": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    18.257,
+    13.728,
+    0.0,
+    0.0,
+    14.442,
+    27.902,
+    10.485,
+    11.979,
+    0.0,
+    0.0
+   ],
+   "cn_kt": [
+    0.0,
+    0.062,
+    0.0,
+    0.0,
+    0.0,
+    0.122,
+    0.051,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "world_m": [
+    13.525,
+    13.963,
+    14.319,
+    14.432,
+    8.635,
+    26.256,
+    10.124,
+    8.896,
+    6.333,
+    6.468
+   ],
+   "cn_m": [
+    0.0,
+    0.227,
+    0.0,
+    0.0,
+    0.001,
+    0.556,
+    0.232,
+    0.001,
+    0.0,
+    0.0
+   ]
+  },
+  "IND": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    68.506,
+    52.645,
+    320.038,
+    149.387,
+    262.919,
+    46.663,
+    45.02,
+    0.0,
+    29.135,
+    24.197
+   ],
+   "cn_kt": [
+    10.917,
+    1.923,
+    248.429,
+    99.876,
+    224.298,
+    0.683,
+    1.212,
+    1.674,
+    1.071,
+    1.177
+   ],
+   "world_m": [
+    73.887,
+    61.141,
+    290.271,
+    115.357,
+    154.897,
+    63.625,
+    49.936,
+    35.507,
+    38.2,
+    31.303
+   ],
+   "cn_m": [
+    9.932,
+    2.311,
+    212.706,
+    64.841,
+    114.287,
+    16.107,
+    1.922,
+    2.524,
+    1.571,
+    1.827
+   ]
+  },
+  "MYS": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    216.851,
+    118.983,
+    206.148,
+    186.444,
+    207.142,
+    190.853,
+    189.768,
+    240.477,
+    301.006,
+    316.246
+   ],
+   "cn_kt": [
+    51.136,
+    8.977,
+    77.745,
+    83.957,
+    125.253,
+    61.645,
+    48.683,
+    73.773,
+    111.15,
+    109.811
+   ],
+   "world_m": [
+    129.943,
+    99.32,
+    182.881,
+    100.848,
+    87.898,
+    120.413,
+    100.099,
+    115.078,
+    145.873,
+    148.016
+   ],
+   "cn_m": [
+    31.701,
+    7.719,
+    68.117,
+    42.992,
+    50.952,
+    37.263,
+    22.778,
+    32.821,
+    49.154,
+    49.704
+   ]
+  },
+  "IDN": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    18.431,
+    51.792,
+    76.79,
+    43.468,
+    29.671,
+    4.355,
+    9.125,
+    13.478,
+    6.998,
+    8.527
+   ],
+   "cn_kt": [
+    15.269,
+    46.38,
+    67.232,
+    38.312,
+    22.614,
+    0.0,
+    3.0,
+    0.0,
+    0.001,
+    0.0
+   ],
+   "world_m": [
+    12.267,
+    43.174,
+    68.317,
+    23.877,
+    13.718,
+    3.078,
+    4.38,
+    6.468,
+    3.496,
+    4.482
+   ],
+   "cn_m": [
+    9.867,
+    38.417,
+    58.673,
+    20.221,
+    9.864,
+    0.0,
+    1.065,
+    0.0,
+    0.005,
+    0.0
+   ]
+  },
+  "BRA": {
+   "years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "world_kt": [
+    6.373,
+    2.43,
+    0.0,
+    0.436,
+    0.898,
+    7.193,
+    0.273,
+    0.364,
+    0.527,
+    0.464
+   ],
+   "cn_kt": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "world_m": [
+    4.095,
+    2.379,
+    1.39,
+    0.541,
+    0.692,
+    5.793,
+    0.394,
+    0.463,
+    0.618,
+    0.218
+   ],
+   "cn_m": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "exporters": [
+  "SAU",
+  "USA",
+  "CAN",
+  "KWT",
+  "ARE",
+  "IRN",
+  "SGP",
+  "KOR",
+  "S19",
+  "JPN",
+  "NLD",
+  "BEL",
+  "DEU",
+  "ESP",
+  "IND",
+  "MYS",
+  "IDN",
+  "BRA"
+ ],
+ "producer_rows": [
+  {
+   "country": "SAU",
+   "company": "SABIC / Jubail United Petrochemical（United）EG-3",
+   "site": "Al-Jubail（波斯湾沿岸）",
+   "capacity_kt": 700,
+   "year": 2022,
+   "route": "乙烷裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.sabic.com/en/news/31184-sabic-affiliate-united-begins-startup-activities-at-its-new-ethylene-glycol-plant",
+   "quote": "Ethylene Glycol Plant - 3 ... estimated annual production capacity of 700,000 metric tons of monoethylene glycol"
+  },
+  {
+   "country": "SAU",
+   "company": "SABIC / Jubail United（United）EG-2",
+   "site": "Al-Jubail",
+   "capacity_kt": 625,
+   "year": 2003,
+   "route": "乙烷 → EO/EG（Scientific Design 技术）",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://www.khaleejtimes.com/business/sabic-to-set-up-ethyle-glycol-plant-in-jubail",
+   "quote": "This, Sabic's seventh EG plant, will have an annual capacity of 625,000 tonnes"
+  },
+  {
+   "country": "SAU",
+   "company": "Eastern Petrochemical（SHARQ）· SABIC 50% / SPDC 50%",
+   "site": "Al-Jubail",
+   "capacity_kt": 1380,
+   "year": 2025,
+   "route": "乙烷裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.spdc.co.jp/english/company/sharq_summary/index.html",
+   "quote": "Mono Ethylene glycol 1.38 million tons"
+  },
+  {
+   "country": "SAU",
+   "company": "Saudi Kayan Petrochemical（SABIC 关联）",
+   "site": "Al-Jubail",
+   "capacity_kt": 537,
+   "year": 2010,
+   "route": "乙烷/丁烷裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://www.plastemart.com/news-plastics-information/saudi-kayan-starts-537-000-tpa-ethylene-glycol-line-at-jubail-industrial-city-complex/18256",
+   "quote": "started the 537,000 tpa ethylene glycol line at its new complex at Jubail Industrial City"
+  },
+  {
+   "country": "SAU",
+   "company": "SABIC 集团合计（含 Rabigh / Yanbu / 境外合资）",
+   "site": "多基地",
+   "capacity_kt": 7850,
+   "year": 2023,
+   "route": "乙烷/石脑油混合",
+   "coastal": "n/a",
+   "conf": "high",
+   "group_total": true,
+   "source_url": "https://www.sabic.com/en/Images/BRO_Chemicals_Brochure_A4_tcm1010-42200.pdf",
+   "quote": "MEG 7.85 MMt/A  DEG & TEG 650 Kt/A"
+  },
+  {
+   "country": "SAU",
+   "company": "Petro Rabigh / YANSAB / YANPET（Yanbu 红海沿岸）",
+   "site": "Rabigh / Yanbu",
+   "capacity_kt": null,
+   "year": null,
+   "route": "乙烷+石脑油 → EO/EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "",
+   "quote": "not found（仅包含在 SABIC 集团合计内）"
+  },
+  {
+   "country": "KWT",
+   "company": "EQUATE Petrochemical（Dow 42.5% / PIC 42.5% / Boubyan 9% / KIPCO 6%）",
+   "site": "Shuaiba（沿海）",
+   "capacity_kt": 1150,
+   "year": 2023,
+   "route": "乙烷/石脑油混合裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.argusmedia.com/en/news-and-insights/latest-market-news/2798349-equate-halts-eg-2-unit-in-kuwait",
+   "quote": "Equate operates two ethylene glycol units with capacities of 600,000 t/yr and 550,000 t/yr in Shuaiba, Kuwait"
+  },
+  {
+   "country": "CAN",
+   "company": "MEGlobal Canada ULC（EQUATE 全资）· Fort Saskatchewan FS1",
+   "site": "Fort Saskatchewan, Alberta（内陆）",
+   "capacity_kt": 460,
+   "year": 2024,
+   "route": "乙烷 → EO/EG",
+   "coastal": "N",
+   "conf": "high",
+   "source_url": "https://www.meglobal.biz/meglobal-locations/fort-saskatchewan/",
+   "quote": "FS1 EO/EG plant ... producing more than 450,000 MT of glycol per annum"
+  },
+  {
+   "country": "CAN",
+   "company": "MEGlobal Canada ULC · Prentiss (Red Deer)",
+   "site": "Prentiss, Alberta（内陆）",
+   "capacity_kt": null,
+   "year": null,
+   "route": "乙烷 → EO/EG",
+   "coastal": "N",
+   "conf": "gap",
+   "source_url": "https://www.meglobal.biz/meglobal-locations/prentiss/",
+   "quote": "MEGlobal operates two plants at the Prentiss site; Prentiss + Fort Saskatchewan = 2.3 MMt combined（未拆到装置）"
+  },
+  {
+   "country": "CAN",
+   "company": "Shell Chemicals Canada · Scotford",
+   "site": "Fort Saskatchewan / Scotford, Alberta（内陆）",
+   "capacity_kt": 400,
+   "year": 1997,
+   "route": "乙烷 → EO/EG",
+   "coastal": "N",
+   "conf": "medium",
+   "source_url": "https://www.ogj.com/home/article/17242640/petrochemical-capacity-expansions-abound",
+   "quote": "400,000-metric ton/year ethylene glycol plant at its Scotford plant near Fort Saskatchewan"
+  },
+  {
+   "country": "USA",
+   "company": "MEGlobal Americas（EQUATE 全资）· Oyster Creek",
+   "site": "Freeport, Texas（墨西哥湾）",
+   "capacity_kt": 1025,
+   "year": 2024,
+   "route": "乙烷（页岩气）→ EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.meglobal.biz/about-meglobal/",
+   "quote": "Oyster Creek: Nameplate capacity 1,025,000 MTA"
+  },
+  {
+   "country": "USA",
+   "company": "Nan Ya Plastics Corp. America（台塑集团）",
+   "site": "Point Comfort, Texas（墨西哥湾）",
+   "capacity_kt": 800,
+   "year": 2021,
+   "route": "乙烷 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.spglobal.com/commodity-insights/en/news-research/latest-news/chemicals/061121-lotte-restarts-louisiana-meg-plant-sources",
+   "quote": "Nan Ya Plastics' 800,000 mt/year MEG unit in Point Comfort, Texas"
+  },
+  {
+   "country": "USA",
+   "company": "Nan Ya Plastics Corp. America（小装置）",
+   "site": "Point Comfort, Texas",
+   "capacity_kt": 370,
+   "year": 2021,
+   "route": "乙烷 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.spglobal.com/commodity-insights/en/news-research/latest-news/chemicals/061121-lotte-restarts-louisiana-meg-plant-sources",
+   "quote": "Nan Ya's smaller 370,000 mt/year MEG unit at Point Comfort"
+  },
+  {
+   "country": "USA",
+   "company": "INEOS Oxide（2024-05 自 LyondellBasell 收购）",
+   "site": "Bayport, Texas（休斯敦航道）",
+   "capacity_kt": 375,
+   "year": 2024,
+   "route": "EO/EG（原 LYB）",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.ineos.com/businesses/ineos-oxide",
+   "quote": "The deal includes the 420 kt Ethylene Oxide plant, the 375 kt Ethylene Glycol plant"
+  },
+  {
+   "country": "USA",
+   "company": "Dow Inc. · Seadrift",
+   "site": "Seadrift, Texas",
+   "capacity_kt": 261,
+   "year": 2021,
+   "route": "乙烷 → EO/EG",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://www.industrialinfo.com/news/article/todays-chemical-processing-hotline-headlines--305102",
+   "quote": "575 million-pound-per-year ethylene glycol units in Seadrift, Texas（≈261 kt）"
+  },
+  {
+   "country": "USA",
+   "company": "Dow Inc. · Taft",
+   "site": "Taft, Louisiana（密西西比河）",
+   "capacity_kt": 701,
+   "year": 2008,
+   "route": "乙烷/轻石脑油 → EO/EG",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://www.atsdr.cdc.gov/toxprofiles/tp96-c5.pdf",
+   "quote": "Taft, Louisiana 1,545 701,000（EO / EG t/y，2008 年 ATSDR/SRI 表）"
+  },
+  {
+   "country": "USA",
+   "company": "Dow Inc. · Plaquemine",
+   "site": "Plaquemine, Louisiana",
+   "capacity_kt": 211,
+   "year": 2008,
+   "route": "乙烷/石脑油 → EO/EG",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://www.atsdr.cdc.gov/toxprofiles/tp96-c5.pdf",
+   "quote": "Plaquemine, Louisiana 465 211,000"
+  },
+  {
+   "country": "USA",
+   "company": "Shell Chemical LP · Geismar",
+   "site": "Geismar, Louisiana",
+   "capacity_kt": 377,
+   "year": 2008,
+   "route": "乙烷 → EO/EG",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://www.atsdr.cdc.gov/toxprofiles/tp96-c5.pdf",
+   "quote": "Shell Chemical Company Geismar Louisiana 830 376,600"
+  },
+  {
+   "country": "USA",
+   "company": "Formosa Plastics Corp. USA（Ethylene Glycol）",
+   "site": "Point Comfort, Texas",
+   "capacity_kt": 299,
+   "year": 2008,
+   "route": "乙烷 → EO/EG",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://www.atsdr.cdc.gov/toxprofiles/tp96-c5.pdf",
+   "quote": "Formosa Plastics Corporation, USA Point Comfort, Texas 660 299,400"
+  },
+  {
+   "country": "USA",
+   "company": "Huntsman（Port Neches）/ PD Glycol（Beaumont）",
+   "site": "Texas Gulf",
+   "capacity_kt": null,
+   "year": null,
+   "route": "EO/EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "",
+   "quote": "2008 年 ATSDR 列有 365.2/358.4 kt，2020–2025 状态未核实，可能停车"
+  },
+  {
+   "country": "S19",
+   "company": "Nan Ya Plastics · Mailiao（六轻）EG-1~EG-4",
+   "site": "Mailiao 麦寮（填海工业区）",
+   "capacity_kt": 1780,
+   "year": 2026,
+   "route": "石脑油裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://news.chemnet.com/news-9728.html",
+   "quote": "4 sets of MEG plants with a total annual capacity of 1.8 million tons ... No.1 ... 360,000 tons"
+  },
+  {
+   "country": "S19",
+   "company": "Oriental Union Chemical（OUCC，远东集团）",
+   "site": "Kaohsiung 高雄前镇",
+   "capacity_kt": 300,
+   "year": 2024,
+   "route": "乙烯 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.oucc.com.tw/en/eg-products",
+   "quote": "annual output of ethylene glycol plant has reached more than 300,000 tons ... exported to Asian markets"
+  },
+  {
+   "country": "SGP",
+   "company": "Shell Eastern Petroleum · Pulau Bukom / Jurong Island",
+   "site": "Pulau Bukom（离岛）",
+   "capacity_kt": 750,
+   "year": 2010,
+   "route": "石脑油裂解 → EO/EG（OMEGA 路线）",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://offshore-technology.com/projects/shellpetrochemicals",
+   "quote": "Mono-ethylene glycol – 750,000tpa"
+  },
+  {
+   "country": "MYS",
+   "company": "PRefChem（PETRONAS 50% / Saudi Aramco 50%）",
+   "site": "Pengerang（柔佛）",
+   "capacity_kt": null,
+   "year": null,
+   "route": "石脑油裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "https://prefchem.com/prefchem-at-a-glance",
+   "quote": "MEG kt：not found（未公开披露）"
+  },
+  {
+   "country": "THA",
+   "company": "TOC Glycol（PTTGC 100%）",
+   "site": "Map Ta Phut",
+   "capacity_kt": 423,
+   "year": 2023,
+   "route": "乙烷/石脑油 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://www.pttgcgroup.com/storage/document/annual-report/2023/en/49/",
+   "quote": "GC Mono Ethylene Glycol (MEG) 423（产能千吨/年）；约 95% 在泰国国内销售"
+  },
+  {
+   "country": "KOR",
+   "company": "Lotte Chemical / LG Chem / Hanwha Solutions / SK Geo Centric",
+   "site": "Daesan / Yeosu",
+   "capacity_kt": null,
+   "year": null,
+   "route": "石脑油裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "",
+   "quote": "MEG 装置级产能：not found（未公开披露）"
+  },
+  {
+   "country": "JPN",
+   "company": "三菱化学（Kashima）等",
+   "site": "Kashima 等",
+   "capacity_kt": null,
+   "year": null,
+   "route": "石脑油裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "https://www.jpca.or.jp/trends/products.html",
+   "quote": "日本全国 EO 产能 806 kt/y（2024 年末），未披露 MEG 装置产能"
+  },
+  {
+   "country": "QAT",
+   "company": "QAPCO / Q-Chem / Qatofin",
+   "site": "Mesaieed",
+   "capacity_kt": null,
+   "year": null,
+   "route": "乙烷（北方气田）→ EO/EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "https://qapco.com/about/",
+   "quote": "EG 产能 not found（QAPCO 官网仅披露乙烯 840 ktpa）"
+  },
+  {
+   "country": "ARE",
+   "company": "Borouge（ADNOC 54% / Borealis 36%）",
+   "site": "Al Ruwais",
+   "capacity_kt": null,
+   "year": null,
+   "route": "乙烷 → EO/EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "https://www.borouge.com/",
+   "quote": "MEG 产能 not found（年报仅列 PE/PP/boron）"
+  },
+  {
+   "country": "IRN",
+   "company": "Pars Glycol Petrochemical（Bakhtar 集团）",
+   "site": "Assaluyeh",
+   "capacity_kt": 500,
+   "year": 2024,
+   "route": "乙烯（Bushehr）→ EO/EG（Shell 许可）",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://polymerplast.ir/pars-glycol-petrochemical-complex/",
+   "quote": "total of 553,500 tons of ethylene glycol, of which 500,000 tons of monoethylene glycol"
+  },
+  {
+   "country": "IRN",
+   "company": "Marun Petrochemical",
+   "site": "Bandar Imam / Mahshahr",
+   "capacity_kt": 400,
+   "year": 2000,
+   "route": "石脑油/乙烷 → EO/EG",
+   "coastal": "Y",
+   "conf": "medium",
+   "source_url": "https://archives.mees.com/issues/607/articles/24897",
+   "quote": "a 400,000 tons/year capacity ethylene glycol plant ... at Bandar Imam"
+  },
+  {
+   "country": "NLD",
+   "company": "Shell Nederland Chemie · Moerdijk",
+   "site": "Moerdijk",
+   "capacity_kt": null,
+   "year": null,
+   "route": "石脑油 → EO → EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "",
+   "quote": "JRC BAT 仅披露 EO 305 kt（2014），MEG kt：not found"
+  },
+  {
+   "country": "BEL",
+   "company": "BASF Antwerpen / INEOS Oxide Antwerp",
+   "site": "Antwerp",
+   "capacity_kt": null,
+   "year": null,
+   "route": "石脑油 → EO → EG",
+   "coastal": "Y",
+   "conf": "gap",
+   "source_url": "",
+   "quote": "JRC BAT 仅披露 EO 500 / 420 kt（2014），MEG kt：not found"
+  },
+  {
+   "country": "DEU",
+   "company": "BASF Ludwigshafen / INEOS Dormagen / Clariant Gendorf / Sasol Marl",
+   "site": "Rhine",
+   "capacity_kt": null,
+   "year": null,
+   "route": "石脑油 → EO → EG",
+   "coastal": "N",
+   "conf": "gap",
+   "source_url": "",
+   "quote": "JRC BAT 仅披露 EO 345/290/240/216 kt（2014），MEG kt：not found"
+  },
+  {
+   "country": "IND",
+   "company": "Reliance Industries · Hazira",
+   "site": "Hazira, Gujarat",
+   "capacity_kt": 733,
+   "year": 2023,
+   "route": "乙烷/丙烷+石脑油 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "http://5.imimg.com/data5/SELLER/Doc/2023/2/VU/IV/LQ/3812325/monoethylene-glycol.pdf",
+   "quote": "With 733 KTA of installed capacity, RIL is the 8th largest producer of MEG in the world"
+  },
+  {
+   "country": "IND",
+   "company": "Indian Oil Corporation · Paradip",
+   "site": "Paradip, Odisha",
+   "capacity_kt": 357,
+   "year": 2024,
+   "route": "炼厂轻烃裂解 → EO/EG",
+   "coastal": "Y",
+   "conf": "high",
+   "source_url": "https://iocl.com/uploads/Investor_Presentation_2024.pdf",
+   "quote": "Ethylene Glycol - Paradip Refinery 0.357（MMTPA）"
+  }
+ ],
+ "process": [
+  {
+   "route": "乙烯氧化水合（EO/EG，常规）",
+   "share": "中国以外绝大多数装置",
+   "note": "环氧乙烷与大量水反应，MEG 选择性约 88–90%，副产 DEG/TEG；经济性取决于乙烯与乙二醇价差"
+  },
+  {
+   "route": "MCC OMEGA（碳酸乙烯酯催化）",
+   "share": "Shell Bukom 等装置采用",
+   "note": "MEG 选择性 >99%，可显著减少 DEG；Mitsubishi Chemical 许可"
+  },
+  {
+   "route": "煤制乙二醇（CTM，合成气草酸酯/加氢）",
+   "share": "中国为主",
+   "note": "2024H1 中国产量约 930 万吨中合成气路线约 320 万吨（约 34%）；海外基本无此路线"
+  },
+  {
+   "route": "乙烷裂解 + EO/EG（北美/中东）",
+   "share": "出口型装置主导路线",
+   "note": "乙烷成本优势是可出口的根源；价格周期与北美乙烷/天然气挂钩"
+  }
+ ],
+ "tariff_detail": [
+  {
+   "country": "SAU",
+   "agreement": "无（中海自贸区尚未签署）",
+   "agreement_status": "not_in_force",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "GCC 自贸区若生效将改变此结论",
+   "tile": "MFN"
+  },
+  {
+   "country": "USA",
+   "agreement": "无；MFN + 保留加征 10%",
+   "agreement_status": "not_in_force",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 15.5,
+   "note": "24% 暂停至约 2026-11-10，到期需复核",
+   "tile": "MFN+加征"
+  },
+  {
+   "country": "CAN",
+   "agreement": "无（中加无自贸协定）",
+   "agreement_status": "none",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "KWT",
+   "agreement": "无（GCC 未生效）",
+   "agreement_status": "not_in_force",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "OMN",
+   "agreement": "无（GCC 未生效）",
+   "agreement_status": "not_in_force",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "QAT",
+   "agreement": "无（GCC 未生效）",
+   "agreement_status": "not_in_force",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "ARE",
+   "agreement": "无（GCC 未生效）",
+   "agreement_status": "not_in_force",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "IRN",
+   "agreement": "无（中国对伊朗实际按 MFN 计征）",
+   "agreement_status": "none",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "制裁合规风险高于关税风险",
+   "tile": "MFN"
+  },
+  {
+   "country": "S19",
+   "agreement": "ECFA 早收清单未包含 290531",
+   "agreement_status": "none",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "以 MFN 口径",
+   "tile": "MFN"
+  },
+  {
+   "country": "KOR",
+   "agreement": "RCEP + 中韩 FTA",
+   "agreement_status": "in_force",
+   "mfn": 5.5,
+   "pref": 5.0,
+   "effective": 5.0,
+   "note": "中韩 FTA 项下具体税率未核实；0.5 个百分点差约 2.5 美元/吨",
+   "tile": "RCEP 5%"
+  },
+  {
+   "country": "JPN",
+   "agreement": "RCEP（无双边自贸协定）",
+   "agreement_status": "in_force",
+   "mfn": 5.5,
+   "pref": 5.0,
+   "effective": 5.0,
+   "note": "缺原产地证书则按 5.5%",
+   "tile": "RCEP 5%"
+  },
+  {
+   "country": "SGP",
+   "agreement": "RCEP + 中国—东盟自贸区",
+   "agreement_status": "in_force",
+   "mfn": 5.5,
+   "pref": 5.0,
+   "effective": 5.0,
+   "note": "转口海湾货无法取得新加坡原产资格，须按海湾原产地 5.5% 申报",
+   "tile": "RCEP 5%"
+  },
+  {
+   "country": "MYS",
+   "agreement": "RCEP + 中国—东盟自贸区",
+   "agreement_status": "in_force",
+   "mfn": 5.5,
+   "pref": 5.0,
+   "effective": 5.0,
+   "note": "",
+   "tile": "RCEP 5%"
+  },
+  {
+   "country": "THA",
+   "agreement": "RCEP + 中国—东盟自贸区",
+   "agreement_status": "in_force",
+   "mfn": 5.5,
+   "pref": 5.0,
+   "effective": 5.0,
+   "note": "",
+   "tile": "RCEP 5%"
+  },
+  {
+   "country": "IDN",
+   "agreement": "RCEP（2023-01-02 对印尼生效）+ 中国—东盟",
+   "agreement_status": "in_force",
+   "mfn": 5.5,
+   "pref": 5.0,
+   "effective": 5.0,
+   "note": "",
+   "tile": "RCEP 5%"
+  },
+  {
+   "country": "IND",
+   "agreement": "无自贸协定（仅 APTA 有限减让，MEG 是否在列未核）",
+   "agreement_status": "none",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "NLD",
+   "agreement": "无（中欧无自贸协定）",
+   "agreement_status": "none",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "BEL",
+   "agreement": "无（中欧无自贸协定）",
+   "agreement_status": "none",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  },
+  {
+   "country": "DEU",
+   "agreement": "无（中欧无自贸协定）",
+   "agreement_status": "none",
+   "mfn": 5.5,
+   "pref": null,
+   "effective": 5.5,
+   "note": "",
+   "tile": "MFN"
+  }
+ ],
+ "doc": {
+  "cn_tariff_2026": {
+   "title": "《2026 年关税调整方案》（税委会公告 2025 年第 11 号，2025-12-31 公布，2026-01-01 实施）",
+   "url": "https://www.gov.cn/zhengce/zhengceku/202512/content_7053062.htm",
+   "status": "secondary",
+   "note": "原文件在本环境不可直连，经新华网转载与税则数据库交叉；结论：2905310000 2026 年无暂定税率"
+  },
+  "cn_us_surcharge": {
+   "title": "国务院关税税则委员会公告 2025 年第 10 号（对美加征关税暂停/保留安排，2025-11-10 起）",
+   "url": "http://gss.mof.gov.cn/gzdt/zhengcefabu/202511/t20251105_3975756.htm",
+   "status": "secondary",
+   "note": "对美保留 10% 加征；24% 暂停一年（至约 2026-11-10），到期后需重新核实"
+  },
+  "gbt4649": {
+   "title": "GB/T 4649-2018《工业用乙二醇》（2018-12-01 实施，2025-03-27 复审：继续有效）",
+   "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D82BE2D3A7E05397BE0A0AB82A",
+   "status": "verified",
+   "note": "分聚酯级（≥99.9%）与工业级（≥99.0%）两档，无 99.5% 标准档"
+  },
+  "rcep_psr": {
+   "title": "RCEP 原产地规则 附件 3-A 产品特定规则（2905 行）",
+   "url": "https://rcepsec.org/",
+   "status": "unverified",
+   "note": "附件 PDF 不可解析；同章 2903.73 采用 'CTH or RVC40'，本报告按同族推断为 CTH/RVC40，需以海关总署公告 2022 年第 129 号 附件 1 核对"
+  },
+  "cn_ad_glycol_ether": {
+   "title": "商务部公告 2022 年第 3 号/第 4 号：对原产于美国的乙二醇/丙二醇单烷基醚反倾销、反补贴（税号 29094400 / 29094990）",
+   "url": "https://dcj.mofcom.gov.cn/",
+   "status": "secondary",
+   "note": "对象是乙二醇醚，不是 MEG；报关行常见误用，本报告明确区分"
+  },
+  "gcc_fta": {
+   "title": "中国—海湾合作委员会自贸协定：谈判中，尚未签署（王毅 2025-12-14 称'条件基本具备，到了最后决断的时候'）",
+   "url": "https://news.cgtn.com/news/2025-12-19/Are-China-GCC-closer-to-free-trade-deal-after-Wang-Yi-s-visit--1JecKxQ8E00/p.html",
+   "status": "secondary"
+  },
+  "eu_ad_2021_1976": {
+   "title": "欧盟 (EU) 2021/1976（2025/2149 修订）：对沙特（7.7%）、美国（3.0%–60.1%）MEG 征收反倾销税",
+   "url": "https://eur-lex.europa.eu/eli/reg_impl/2021/1976/oj/eng",
+   "status": "verified",
+   "note": "与中国进口无关，但会把沙特/美国货源挤向亚洲，是中国买方的议价筹码"
+  },
+  "india_ad_meg": {
+   "title": "印度 DGTR 对原产于科威特/沙特/新加坡的 MEG 反倾销终裁建议（2025-09-23）",
+   "url": "https://antidumping.lkslaw.com/cases/anti-dumping-investigation-concerning-imports-of-mono-ethylene-glycol-originating-in-or-exported-from-the-state-of-kuwait-the-kingdom-of-saudi-arabia-and-the-republic-of-singapore",
+   "status": "secondary"
+  },
+  "export_controls": {
+   "title": "出口管制：MEG 不在美国 CCL（EAR99）、不在加拿大 ECL（SOR/89-202）、不在欧盟两用物项清单；伊朗为 OFAC 次级制裁重点关注对象",
+   "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-774",
+   "status": "secondary"
+  }
+ },
+ "vat": {
+  "rate_pct": 13,
+  "note": "进口环节增值税 13%（2026-01-01 起《增值税法》实施，税率不变），一般纳税人可抵扣；消费税 0；出口退税 0",
+  "status": "secondary"
+ },
+ "ntm": [
+  {
+   "scope": "中国进口",
+   "item": "反倾销/反补贴/保障措施",
+   "finding": "对 2905310000 本身：未查到任何在施措施",
+   "caveat": "对 29094400/29094990（乙二醇醚）的在施措施常被误用，属不同产品",
+   "status": "secondary"
+  },
+  {
+   "scope": "中国进口",
+   "item": "关税配额/自动进口许可证",
+   "finding": "无配额；MEG 不在 2026 年自动进口许可证目录",
+   "caveat": "目录原文未取得，需以海关总署公告核对",
+   "status": "unverified"
+  },
+  {
+   "scope": "中国进口",
+   "item": "危险化学品管理与 GHS",
+   "finding": "乙二醇列于《危险化学品目录（2015 版）》，进口需符合标签与 SDS 要求",
+   "caveat": "报关要素含 CAS、含量、用途、包装；统一编号 2905310000999（待核）",
+   "status": "secondary"
+  },
+  {
+   "scope": "美国出口",
+   "item": "出口管制（EAR）",
+   "finding": "MEG 属 EAR99，不在 CCL，无需对华许可",
+   "caveat": "若掺入受控化学品形成混合物，可能触发 1C995",
+   "status": "secondary"
+  },
+  {
+   "scope": "加拿大出口",
+   "item": "出口许可（EIPA/ECL）",
+   "finding": "不在 ECL 清单，对华出口无需许可",
+   "status": "secondary",
+   "caveat": ""
+  },
+  {
+   "scope": "伊朗出口",
+   "item": "制裁与支付",
+   "finding": "MEG 本身未被制裁，但伊朗石化是 OFAC 重点目标；2025-10-09 有对中国买家采取行动的记录",
+   "caveat": "购前需法务与银行合规双重确认",
+   "status": "secondary"
+  },
+  {
+   "scope": "欧/印市场",
+   "item": "贸易救济外溢",
+   "finding": "欧盟对沙特（7.7%）、美国（3.0–60.1%）MEG 征反倾销税；印度对科威特/沙特/新加坡提请反倾销",
+   "caveat": "使相关货源更多流向亚洲，谈判时可用作议价格外筹码",
+   "status": "verified"
+  }
+ ],
+ "ports": [
+  {
+   "iso": "SAU",
+   "port": "Jubail",
+   "cn": "张家港 / 太仓",
+   "chokepoint": "霍尔木兹",
+   "nm": 6050,
+   "days": "约 22–26",
+   "status": "不可执行",
+   "basis": "大圆×1.634",
+   "risk": "霍尔木兹封闭；无替代出海口"
+  },
+  {
+   "iso": "SAU",
+   "port": "Ras Tanura",
+   "cn": "张家港 / 太仓",
+   "chokepoint": "霍尔木兹",
+   "nm": 6030,
+   "days": "约 22–26",
+   "status": "不可执行",
+   "basis": "大圆×1.634",
+   "risk": "同上"
+  },
+  {
+   "iso": "SAU",
+   "port": "Yanbu（红海）",
+   "cn": "张家港 / 太仓",
+   "chokepoint": "红海",
+   "nm": 5000,
+   "days": "约 19–23",
+   "status": "理论上唯一绕行",
+   "basis": "大圆×1.634",
+   "risk": "不依赖霍尔木兹，但红海袭击风险；延布是否装运出口 MEG 未核实"
+  },
+  {
+   "iso": "KWT",
+   "port": "Shuaiba",
+   "cn": "张家港 / 太仓",
+   "chokepoint": "霍尔木兹",
+   "nm": 6105,
+   "days": "约 22–26",
+   "status": "不可执行",
+   "basis": "大圆×1.634",
+   "risk": "霍尔木兹封闭"
+  },
+  {
+   "iso": "QAT",
+   "port": "Ras Laffan / Mesaieed",
+   "cn": "张家港",
+   "chokepoint": "霍尔木兹",
+   "nm": 5960,
+   "days": "约 22–26",
+   "status": "不可执行",
+   "basis": "大圆×1.634",
+   "risk": "霍尔木兹封闭；陆上无替代通道"
+  },
+  {
+   "iso": "ARE",
+   "port": "Jebel Ali / Ruwais",
+   "cn": "张家港",
+   "chokepoint": "霍尔木兹",
+   "nm": 5696,
+   "days": "约 21–25",
+   "status": "不可执行",
+   "basis": "官方口径 5,696 nm（唯一直接引用值）",
+   "risk": "霍尔木兹封闭；阿联酋本身是转口枢纽"
+  },
+  {
+   "iso": "IRN",
+   "port": "Bandar Imam / Asaluyeh",
+   "cn": "张家港",
+   "chokepoint": "霍尔木兹",
+   "nm": 5890,
+   "days": "约 21–25",
+   "status": "不可执行",
+   "basis": "大圆×1.634",
+   "risk": "海峡封闭方本身；叠加制裁与保险"
+  },
+  {
+   "iso": "USA",
+   "port": "Houston / Texas City / Freeport",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "巴拿马",
+   "nm": 9800,
+   "days": "约 28–36",
+   "status": "可执行但受限",
+   "basis": "大圆×1.488；12–16 节件杂化船",
+   "risk": "巴拿马限航（32 艘/日、吃水 14.63 m）；飓风季；关税 15.5%"
+  },
+  {
+   "iso": "CAN",
+   "port": "Montreal / Sarnia（铁路至港）",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "巴拿马",
+   "nm": 6740,
+   "days": "约 24–30",
+   "status": "可执行但受限",
+   "basis": "大圆×1.488",
+   "risk": "原产地证明；经美中转会被按美国原产征税"
+  },
+  {
+   "iso": "CAN",
+   "port": "Vancouver（西岸）",
+   "cn": "宁波 / 张家港",
+   "chokepoint": "无",
+   "nm": 5584,
+   "days": "约 14–18",
+   "status": "陆路可执行但非 MEG 传统出口港",
+   "basis": "官方口径 5,584 nm",
+   "risk": "加拿大 MEG 产地在阿尔伯塔，经温哥华出口需铁路接驳，历史上主流路径是经美湾/蒙特利尔"
+  },
+  {
+   "iso": "NLD",
+   "port": "Rotterdam",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "苏伊士",
+   "nm": 10666,
+   "days": "约 34–40",
+   "status": "可执行",
+   "basis": "官方口径 10,666 nm",
+   "risk": "欧洲自身为净进口区，对华出口多为转口或区域平衡货；绕好望角仅多约 5–7 天"
+  },
+  {
+   "iso": "BEL",
+   "port": "Antwerp",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "苏伊士",
+   "nm": 10662,
+   "days": "约 34–40",
+   "status": "可执行",
+   "basis": "官方口径 10,662 nm",
+   "risk": "同上"
+  },
+  {
+   "iso": "DEU",
+   "port": "Hamburg / Ludwigshafen（莱茵河）",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "苏伊士",
+   "nm": 10540,
+   "days": "约 34–40",
+   "status": "可执行",
+   "basis": "大圆×2.199",
+   "risk": "内河转运；欧洲产能退出，货源不稳定"
+  },
+  {
+   "iso": "S19",
+   "port": "Mailiao / Kaohsiung",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "无",
+   "nm": 598,
+   "days": "约 1.5–3",
+   "status": "可执行",
+   "basis": "大圆×1.082",
+   "risk": "近洋航线；受两岸政策与航线安排影响"
+  },
+  {
+   "iso": "KOR",
+   "port": "Ulsan / Yeosu / Daesan",
+   "cn": "宁波 / 连云港",
+   "chokepoint": "无",
+   "nm": 566,
+   "days": "约 1.5–2.5",
+   "status": "可执行",
+   "basis": "大圆×1.082",
+   "risk": "近洋航线；韩国裂解装置减产周期"
+  },
+  {
+   "iso": "JPN",
+   "port": "Mizushima / Yokkaichi / Kobe",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "无",
+   "nm": 900,
+   "days": "约 2–4",
+   "status": "可执行",
+   "basis": "大圆×1.082",
+   "risk": "日本本土需求优先，出口量有限"
+  },
+  {
+   "iso": "SGP",
+   "port": "新加坡",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "无",
+   "nm": 2226,
+   "days": "约 6–9",
+   "status": "可执行",
+   "basis": "官方口径 2,226 nm",
+   "risk": "转口枢纽：出口统计含中转货，不代表本地产能"
+  },
+  {
+   "iso": "MYS",
+   "port": "Kertih / Pasir Gudang",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "无",
+   "nm": 2090,
+   "days": "约 6–9",
+   "status": "可执行",
+   "basis": "大圆×1.082",
+   "risk": "RCEP 原产地文件"
+  },
+  {
+   "iso": "THA",
+   "port": "Map Ta Phut",
+   "cn": "宁波 / 张家港",
+   "chokepoint": "无",
+   "nm": 2337,
+   "days": "约 7–9",
+   "status": "可执行",
+   "basis": "大圆×1.082",
+   "risk": "泰国本地需求（PTTGC 95% 内销）挤压出口量"
+  },
+  {
+   "iso": "IND",
+   "port": "Hazira / Dahej",
+   "cn": "张家港 / 宁波",
+   "chokepoint": "无",
+   "nm": 3933,
+   "days": "约 9–12",
+   "status": "可执行",
+   "basis": "大圆×1.082",
+   "risk": "印度本国已对科威特/沙特/新加坡提请反倾销，自身也是净进口方"
+  }
+ ],
+ "cn_ports": [
+  {
+   "port": "张家港",
+   "role": "华东 MEG 库存第一大港：2025-10-20 华东样本 51.3 万吨中占 17.5 万吨（34%），日出库约 5,000 吨/日",
+   "status": "secondary"
+  },
+  {
+   "port": "太仓",
+   "role": "库存 13.5 万吨（26%），日出库约 4,200 吨/日",
+   "status": "secondary"
+  },
+  {
+   "port": "江阴 + 常州",
+   "role": "合计 9.3 万吨（18%）",
+   "status": "secondary"
+  },
+  {
+   "port": "宁波",
+   "role": "库存 8.7 万吨（17%），但日出库仅约 2,000 吨/日——以仓储与分拨为主，不是主要卸货口",
+   "status": "secondary"
+  },
+  {
+   "port": "上海 + 常熟",
+   "role": "合计 2.3 万吨（4%）",
+   "status": "secondary"
+  }
+ ],
+ "cn_ports_note": "以上为 2025-10-20 华东 MEG 库存篮子（合计 51.3 万吨）的分布，不是全国进口量份额——没有任何来源公布按港口划分的进口量占比。若把库存份额当作进口份额使用，会得出错误结论。",
+ "logistics": {
+  "asof": "2026-10",
+  "headline": "霍尔木兹海峡自 2026-02-28 起被封锁，至 2026-10 仍未恢复。经该海峡的 9 个中东装货港（Jubail、Ras Tanura、Shuaiba、Ras Laffan、Mesaieed、Jebel Ali、Ruwais、Bandar Imam、Asaluyeh）当前不属于可执行航线。中东来源约占中国 MEG 进口的 65%，这决定了本次采购的物流前提。",
+  "headline_src": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis",
+  "method_note": "距离 = 大圆距离 × 校准绕行系数（波斯湾 1.634 以 Jebel Ali→上海 5,696 nm 校准；西北欧经苏伊士 2.199；温哥华 1.146；美湾 1.488；新加坡 1.082）。航时为 18–20 节（美湾/大西洋—加拿大件杂化船按 12–16 节），未计拥堵与等泊。ports.com 与 searates.com 在本环境无法访问，表内距离无一条来自港口距离表。",
+  "chokepoints": [
+   {
+    "name": "霍尔木兹海峡",
+    "status": "封闭",
+    "since": "2026-02-28",
+    "detail": "油轮通行接近归零；IMO 记录至 2026-04-21 约 2,000 艘船滞留；4-17、6-17 曾阶段性开放，6-20 再度关闭；8-25 美方完成清雷但未恢复常态化通行",
+    "impact": "沙特（除延布）、科威特、卡塔尔、阿联酋、伊朗、巴林 全部不可直达",
+    "src": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis"
+   },
+   {
+    "name": "红海 / 曼德海峡",
+    "status": "高风险",
+    "since": "2026-03-28",
+    "detail": "胡塞袭船 2026-03-28 恢复；沙特港口自 2026-07-13 起被列为目标",
+    "impact": "沙特唯一绕开霍尔木兹的出口口延布位于此区域，可靠性同样存疑",
+    "src": ""
+   },
+   {
+    "name": "巴拿马运河",
+    "status": "限航",
+    "since": "2026-09-15",
+    "detail": "日通行 32 艘（9 新巴拿马型 + 23 巴拿马型）；新巴拿马型吃水由 15.24 m 降至 14.63 m；2026-05 至 08 降雨较常年少约 34%，厄尔尼诺预期延续至 2027；2026-10-15 起部分放宽至 33 艘 / 14.94 m",
+    "impact": "美湾航线（当前唯一不经霍尔木兹的主力气源）受直接约束",
+    "src": "https://www.maritimenews.com/panama-canal/panama-canal-tightens-transit-el-nino-drought"
+   },
+   {
+    "name": "苏伊士运河",
+    "status": "部分恢复",
+    "since": "2026-10-12",
+    "detail": "班轮公司自 2026-10-12 当周起选择性恢复苏伊士航线，袭击事件仍在发生",
+    "impact": "西北欧航线可考虑，但绕好望角的替代方案仅多约 2,000–2,500 nm（约 5–7 天）",
+    "src": ""
+   }
+  ]
+ },
+ "checks": [
+  {
+   "iso": "SAU",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "3,356 ≤ 6,021 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "SAU",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "4,042 ≤ 6,372 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "USA",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "1,043 ≤ 3,335 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "USA",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "215 ≤ 3,210 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "CAN",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "564 ≤ 870 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "CAN",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "558 ≤ 923 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "KWT",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "301 ≤ 1,285 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "KWT",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "617 ≤ 1,494 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "SGP",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": false,
+   "detail": "45 ≤ 0 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "SGP",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "68 ≤ 296 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "KOR",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "222 ≤ 229 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "KOR",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": false,
+   "detail": "214 ≤ 0 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "S19",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "79 ≤ 83 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "JPN",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "16 ≤ 16 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "JPN",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "46 ≤ 46 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "NLD",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 124 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "NLD",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 149 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "BEL",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 458 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "BEL",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 346 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "DEU",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 19 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "DEU",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 17 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "ESP",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": false,
+   "detail": "0 ≤ 0 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "ESP",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": false,
+   "detail": "0 ≤ 0 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "IND",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "1 ≤ 29 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "IND",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "1 ≤ 24 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "MYS",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "111 ≤ 301 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "MYS",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "110 ≤ 316 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "IDN",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 7 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "IDN",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 9 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "BRA",
+   "year": 2024,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 1 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "BRA",
+   "year": 2025,
+   "metric": "exports_to_CN ≤ exports_world",
+   "pass_": true,
+   "detail": "0 ≤ 0 kt",
+   "kind": "trade"
+  },
+  {
+   "iso": "CAN",
+   "year": 2025,
+   "metric": "加拿大对华出口 vs 在运产能（方向性）",
+   "pass_": true,
+   "kind": "capacity",
+   "detail": "对华 558 kt ≈ 站点级产能 860 kt（460 MEGlobal + 400 Shell）；但加拿大自华进口极少，出口主要流向美国并再转口，方向成立"
+  },
+  {
+   "iso": "USA",
+   "year": 2025,
+   "metric": "美国自报对华出口 vs 中国自报自美进口",
+   "pass_": false,
+   "kind": "mirror",
+   "detail": "美国报 214.7 kt / 中国报 559.7 kt，偏差 +160%；加拿大→美国转运后可能被中国按原产地记入美国"
+  }
+ ],
+ "fx": {
+  "source": "Frankfurter API (ECB reference rates)",
+  "url": "https://api.frankfurter.app",
+  "base": "USD",
+  "quote": "CNY",
+  "annual": {
+   "2016": {
+    "avg": 6.6444,
+    "last": {
+     "date": "2016-12-30",
+     "rate": 6.9445
+    },
+    "n": 257
+   },
+   "2017": {
+    "avg": 6.7587,
+    "last": {
+     "date": "2017-12-29",
+     "rate": 6.5075
+    },
+    "n": 255
+   },
+   "2018": {
+    "avg": 6.6187,
+    "last": {
+     "date": "2018-12-31",
+     "rate": 6.8778
+    },
+    "n": 255
+   },
+   "2019": {
+    "avg": 6.9114,
+    "last": {
+     "date": "2019-12-31",
+     "rate": 6.9615
+    },
+    "n": 255
+   },
+   "2020": {
+    "avg": 6.9003,
+    "last": {
+     "date": "2020-12-31",
+     "rate": 6.5378
+    },
+    "n": 257
+   },
+   "2021": {
+    "avg": 6.4491,
+    "last": {
+     "date": "2021-12-31",
+     "rate": 6.3524
+    },
+    "n": 258
+   },
+   "2022": {
+    "avg": 6.7347,
+    "last": {
+     "date": "2022-12-30",
+     "rate": 6.8987
+    },
+    "n": 257
+   },
+   "2023": {
+    "avg": 7.0846,
+    "last": {
+     "date": "2023-12-29",
+     "rate": 7.1049
+    },
+    "n": 255
+   },
+   "2024": {
+    "avg": 7.1956,
+    "last": {
+     "date": "2024-12-31",
+     "rate": 7.2994
+    },
+    "n": 256
+   },
+   "2025": {
+    "avg": 7.1874,
+    "last": {
+     "date": "2025-12-31",
+     "rate": 7.001
+    },
+    "n": 255
+   }
+  }
+ },
+ "china_import_partners": {
+  "2016": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 2222.617,
+    "qty_kt": 2918.579,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.4582,
+    "share_qty": 0.4582
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 813.49,
+    "qty_kt": 1068.216,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.1677,
+    "share_qty": 0.1677
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 579.624,
+    "qty_kt": 761.121,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.1195,
+    "share_qty": 0.1195
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 318.799,
+    "qty_kt": 418.624,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0657,
+    "share_qty": 0.0657
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 216.876,
+    "qty_kt": 284.786,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0447,
+    "share_qty": 0.0447
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 205.375,
+    "qty_kt": 269.683,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0423,
+    "share_qty": 0.0423
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 200.707,
+    "qty_kt": 263.554,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0414,
+    "share_qty": 0.0414
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 147.743,
+    "qty_kt": 194.005,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0305,
+    "share_qty": 0.0305
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 65.324,
+    "qty_kt": 85.778,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0135,
+    "share_qty": 0.0135
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 35.172,
+    "qty_kt": 46.185,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0073,
+    "share_qty": 0.0073
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 28.315,
+    "qty_kt": 37.181,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0058,
+    "share_qty": 0.0058
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 6.778,
+    "qty_kt": 8.9,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0014,
+    "share_qty": 0.0014
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 4.295,
+    "qty_kt": 5.64,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0009,
+    "share_qty": 0.0009
+   },
+   {
+    "code": 360,
+    "iso": "IDN",
+    "value_m": 3.577,
+    "qty_kt": 4.696,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0007,
+    "share_qty": 0.0007
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 1.103,
+    "qty_kt": 1.449,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0002,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.767,
+    "qty_kt": 1.008,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0002,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 344,
+    "iso": "HKG",
+    "value_m": 0.038,
+    "qty_kt": 0.05,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 36,
+    "iso": "AUS",
+    "value_m": 0.035,
+    "qty_kt": 0.046,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.035,
+    "qty_kt": 0.046,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.031,
+    "qty_kt": 0.04,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.024,
+    "qty_kt": 0.031,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.017,
+    "qty_kt": 0.022,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.013,
+    "qty_kt": 0.017,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.01,
+    "qty_kt": 0.013,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.006,
+    "qty_kt": 0.008,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.004,
+    "qty_kt": 0.005,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 724,
+    "iso": "ESP",
+    "value_m": 0.001,
+    "qty_kt": 0.001,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 752,
+    "iso": "SWE",
+    "value_m": 0.001,
+    "qty_kt": 0.001,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 899,
+    "iso": "OTHER",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 761.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2017": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 3270.672,
+    "qty_kt": 3878.842,
+    "unit_value": 843.2,
+    "qty_estimated": false,
+    "share": 0.4446,
+    "share_qty": null
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 1155.314,
+    "qty_kt": 1359.907,
+    "unit_value": 849.6,
+    "qty_estimated": false,
+    "share": 0.157,
+    "share_qty": null
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 786.696,
+    "qty_kt": 937.54,
+    "unit_value": 839.1,
+    "qty_estimated": true,
+    "share": 0.1069,
+    "share_qty": null
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 446.59,
+    "qty_kt": 520.078,
+    "unit_value": 858.7,
+    "qty_estimated": false,
+    "share": 0.0607,
+    "share_qty": null
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 379.586,
+    "qty_kt": 444.764,
+    "unit_value": 853.5,
+    "qty_estimated": false,
+    "share": 0.0516,
+    "share_qty": null
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 363.161,
+    "qty_kt": 427.836,
+    "unit_value": 848.8,
+    "qty_estimated": false,
+    "share": 0.0494,
+    "share_qty": null
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 254.786,
+    "qty_kt": 302.345,
+    "unit_value": 842.7,
+    "qty_estimated": false,
+    "share": 0.0346,
+    "share_qty": null
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 238.165,
+    "qty_kt": 282.159,
+    "unit_value": 844.1,
+    "qty_estimated": false,
+    "share": 0.0324,
+    "share_qty": null
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 191.052,
+    "qty_kt": 217.001,
+    "unit_value": 880.4,
+    "qty_estimated": false,
+    "share": 0.026,
+    "share_qty": null
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 152.62,
+    "qty_kt": null,
+    "unit_value": null,
+    "qty_estimated": true,
+    "share": 0.0207,
+    "share_qty": null
+   },
+   {
+    "code": 360,
+    "iso": "IDN",
+    "value_m": 49.566,
+    "qty_kt": 58.239,
+    "unit_value": 851.1,
+    "qty_estimated": false,
+    "share": 0.0067,
+    "share_qty": null
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 26.012,
+    "qty_kt": 28.845,
+    "unit_value": 901.8,
+    "qty_estimated": false,
+    "share": 0.0035,
+    "share_qty": null
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 14.78,
+    "qty_kt": 16.917,
+    "unit_value": 873.7,
+    "qty_estimated": false,
+    "share": 0.002,
+    "share_qty": null
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 9.184,
+    "qty_kt": 10.027,
+    "unit_value": 915.9,
+    "qty_estimated": false,
+    "share": 0.0012,
+    "share_qty": null
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 7.666,
+    "qty_kt": 9.135,
+    "unit_value": 839.2,
+    "qty_estimated": false,
+    "share": 0.001,
+    "share_qty": null
+   },
+   {
+    "code": 792,
+    "iso": "TUR",
+    "value_m": 6.461,
+    "qty_kt": 7.2,
+    "unit_value": 897.4,
+    "qty_estimated": false,
+    "share": 0.0009,
+    "share_qty": null
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 2.161,
+    "qty_kt": null,
+    "unit_value": null,
+    "qty_estimated": true,
+    "share": 0.0003,
+    "share_qty": null
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.922,
+    "qty_kt": 1.001,
+    "unit_value": 921.2,
+    "qty_estimated": false,
+    "share": 0.0001,
+    "share_qty": null
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.861,
+    "qty_kt": 0.122,
+    "unit_value": 7055.2,
+    "qty_estimated": false,
+    "share": 0.0001,
+    "share_qty": null
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.073,
+    "qty_kt": null,
+    "unit_value": null,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.012,
+    "qty_kt": 0.001,
+    "unit_value": 14276.5,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.008,
+    "qty_kt": 0.001,
+    "unit_value": 5037.4,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.008,
+    "qty_kt": 0.0,
+    "unit_value": 55883.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.008,
+    "qty_kt": 0.003,
+    "unit_value": 2766.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 899,
+    "iso": "OTHER",
+    "value_m": 0.003,
+    "qty_kt": 0.0,
+    "unit_value": 10108.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 40,
+    "iso": "AUT",
+    "value_m": 0.002,
+    "qty_kt": 0.0,
+    "unit_value": 8826.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 440,
+    "iso": "LTU",
+    "value_m": 0.001,
+    "qty_kt": 0.001,
+    "unit_value": 850.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 344,
+    "iso": "HKG",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 500.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2018": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 3773.683,
+    "qty_kt": 4107.245,
+    "unit_value": 918.8,
+    "qty_estimated": false,
+    "share": 0.419,
+    "share_qty": 0.4191
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 1179.519,
+    "qty_kt": 1273.764,
+    "unit_value": 926.0,
+    "qty_estimated": false,
+    "share": 0.131,
+    "share_qty": 0.13
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 827.407,
+    "qty_kt": 908.0,
+    "unit_value": 911.2,
+    "qty_estimated": false,
+    "share": 0.0919,
+    "share_qty": 0.0927
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 686.351,
+    "qty_kt": 748.258,
+    "unit_value": 917.3,
+    "qty_estimated": false,
+    "share": 0.0762,
+    "share_qty": 0.0764
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 581.025,
+    "qty_kt": 624.923,
+    "unit_value": 929.8,
+    "qty_estimated": false,
+    "share": 0.0645,
+    "share_qty": 0.0638
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 544.691,
+    "qty_kt": 591.844,
+    "unit_value": 920.3,
+    "qty_estimated": false,
+    "share": 0.0605,
+    "share_qty": 0.0604
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 471.445,
+    "qty_kt": 515.497,
+    "unit_value": 914.5,
+    "qty_estimated": false,
+    "share": 0.0523,
+    "share_qty": 0.0526
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 263.241,
+    "qty_kt": 294.582,
+    "unit_value": 893.6,
+    "qty_estimated": false,
+    "share": 0.0292,
+    "share_qty": 0.0301
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 222.534,
+    "qty_kt": 244.232,
+    "unit_value": 911.2,
+    "qty_estimated": false,
+    "share": 0.0247,
+    "share_qty": 0.0249
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 178.546,
+    "qty_kt": 198.239,
+    "unit_value": 900.7,
+    "qty_estimated": false,
+    "share": 0.0198,
+    "share_qty": 0.0202
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 142.674,
+    "qty_kt": 147.89,
+    "unit_value": 964.7,
+    "qty_estimated": false,
+    "share": 0.0158,
+    "share_qty": 0.0151
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 64.709,
+    "qty_kt": 68.313,
+    "unit_value": 947.2,
+    "qty_estimated": false,
+    "share": 0.0072,
+    "share_qty": 0.007
+   },
+   {
+    "code": 360,
+    "iso": "IDN",
+    "value_m": 56.561,
+    "qty_kt": 59.717,
+    "unit_value": 947.2,
+    "qty_estimated": false,
+    "share": 0.0063,
+    "share_qty": 0.0061
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 11.005,
+    "qty_kt": 16.014,
+    "unit_value": 687.2,
+    "qty_estimated": false,
+    "share": 0.0012,
+    "share_qty": 0.0016
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 1.391,
+    "qty_kt": 1.198,
+    "unit_value": 1160.8,
+    "qty_estimated": false,
+    "share": 0.0002,
+    "share_qty": 0.0001
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.668,
+    "qty_kt": 0.121,
+    "unit_value": 5543.8,
+    "qty_estimated": false,
+    "share": 0.0001,
+    "share_qty": 0.0
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.155,
+    "qty_kt": 0.033,
+    "unit_value": 4656.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.032,
+    "qty_kt": 0.012,
+    "unit_value": 2713.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.029,
+    "qty_kt": 0.024,
+    "unit_value": 1193.0,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.012,
+    "qty_kt": 0.005,
+    "unit_value": 2400.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.007,
+    "qty_kt": 0.008,
+    "unit_value": 919.0,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.006,
+    "qty_kt": 0.0,
+    "unit_value": 13701.1,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 724,
+    "iso": "ESP",
+    "value_m": 0.006,
+    "qty_kt": 0.002,
+    "unit_value": 2637.8,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.004,
+    "qty_kt": 0.0,
+    "unit_value": 57736.8,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 440,
+    "iso": "LTU",
+    "value_m": 0.003,
+    "qty_kt": 0.003,
+    "unit_value": 1008.9,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 3850.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2019": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 2652.567,
+    "qty_kt": 4540.809,
+    "unit_value": 584.2,
+    "qty_estimated": false,
+    "share": 0.4563,
+    "share_qty": 0.4565
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 780.023,
+    "qty_kt": 1324.699,
+    "unit_value": 588.8,
+    "qty_estimated": false,
+    "share": 0.1342,
+    "share_qty": 0.1332
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 557.427,
+    "qty_kt": 963.636,
+    "unit_value": 578.5,
+    "qty_estimated": false,
+    "share": 0.0959,
+    "share_qty": 0.0969
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 344.839,
+    "qty_kt": 590.317,
+    "unit_value": 584.2,
+    "qty_estimated": false,
+    "share": 0.0593,
+    "share_qty": 0.0593
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 315.829,
+    "qty_kt": 541.328,
+    "unit_value": 583.4,
+    "qty_estimated": false,
+    "share": 0.0543,
+    "share_qty": 0.0544
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 302.625,
+    "qty_kt": 526.041,
+    "unit_value": 575.3,
+    "qty_estimated": false,
+    "share": 0.0521,
+    "share_qty": 0.0529
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 224.463,
+    "qty_kt": 380.906,
+    "unit_value": 589.3,
+    "qty_estimated": false,
+    "share": 0.0386,
+    "share_qty": 0.0383
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 197.646,
+    "qty_kt": 344.033,
+    "unit_value": 574.5,
+    "qty_estimated": false,
+    "share": 0.034,
+    "share_qty": 0.0346
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 182.209,
+    "qty_kt": 309.062,
+    "unit_value": 589.6,
+    "qty_estimated": false,
+    "share": 0.0313,
+    "share_qty": 0.0311
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 80.057,
+    "qty_kt": 136.072,
+    "unit_value": 588.3,
+    "qty_estimated": false,
+    "share": 0.0138,
+    "share_qty": 0.0137
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 53.386,
+    "qty_kt": 83.905,
+    "unit_value": 636.3,
+    "qty_estimated": false,
+    "share": 0.0092,
+    "share_qty": 0.0084
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 50.392,
+    "qty_kt": 84.61,
+    "unit_value": 595.6,
+    "qty_estimated": false,
+    "share": 0.0087,
+    "share_qty": 0.0085
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 43.677,
+    "qty_kt": 76.5,
+    "unit_value": 570.9,
+    "qty_estimated": false,
+    "share": 0.0075,
+    "share_qty": 0.0077
+   },
+   {
+    "code": 360,
+    "iso": "IDN",
+    "value_m": 25.676,
+    "qty_kt": 42.303,
+    "unit_value": 607.0,
+    "qty_estimated": false,
+    "share": 0.0044,
+    "share_qty": 0.0043
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 2.076,
+    "qty_kt": 2.592,
+    "unit_value": 801.0,
+    "qty_estimated": false,
+    "share": 0.0004,
+    "share_qty": 0.0003
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.245,
+    "qty_kt": 0.162,
+    "unit_value": 1511.9,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.231,
+    "qty_kt": 0.032,
+    "unit_value": 7154.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.175,
+    "qty_kt": 0.008,
+    "unit_value": 22702.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.034,
+    "qty_kt": 0.007,
+    "unit_value": 4973.4,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.011,
+    "qty_kt": 0.0,
+    "unit_value": 58543.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.01,
+    "qty_kt": 0.014,
+    "unit_value": 699.8,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.003,
+    "qty_kt": 0.006,
+    "unit_value": 584.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.002,
+    "qty_kt": 0.0,
+    "unit_value": 37479.2,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 2483.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 752,
+    "iso": "SWE",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 147000.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2020": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 1904.493,
+    "qty_kt": 4045.604,
+    "unit_value": 470.8,
+    "qty_estimated": false,
+    "share": 0.3894,
+    "share_qty": 0.3835
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 590.662,
+    "qty_kt": 1254.779,
+    "unit_value": 470.7,
+    "qty_estimated": false,
+    "share": 0.1208,
+    "share_qty": 0.119
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 522.513,
+    "qty_kt": 1139.055,
+    "unit_value": 458.7,
+    "qty_estimated": false,
+    "share": 0.1068,
+    "share_qty": 0.108
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 382.961,
+    "qty_kt": 829.245,
+    "unit_value": 461.8,
+    "qty_estimated": false,
+    "share": 0.0783,
+    "share_qty": 0.0786
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 369.261,
+    "qty_kt": 805.042,
+    "unit_value": 458.7,
+    "qty_estimated": false,
+    "share": 0.0755,
+    "share_qty": 0.0763
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 324.017,
+    "qty_kt": 737.637,
+    "unit_value": 439.3,
+    "qty_estimated": false,
+    "share": 0.0662,
+    "share_qty": 0.0699
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 274.636,
+    "qty_kt": 612.395,
+    "unit_value": 448.5,
+    "qty_estimated": false,
+    "share": 0.0562,
+    "share_qty": 0.0581
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 165.669,
+    "qty_kt": 334.874,
+    "unit_value": 494.7,
+    "qty_estimated": false,
+    "share": 0.0339,
+    "share_qty": 0.0317
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 118.848,
+    "qty_kt": 285.624,
+    "unit_value": 416.1,
+    "qty_estimated": false,
+    "share": 0.0243,
+    "share_qty": 0.0271
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 117.861,
+    "qty_kt": 250.49,
+    "unit_value": 470.5,
+    "qty_estimated": false,
+    "share": 0.0241,
+    "share_qty": 0.0237
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 65.293,
+    "qty_kt": 139.553,
+    "unit_value": 467.9,
+    "qty_estimated": false,
+    "share": 0.0133,
+    "share_qty": 0.0132
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 20.25,
+    "qty_kt": 42.182,
+    "unit_value": 480.1,
+    "qty_estimated": false,
+    "share": 0.0041,
+    "share_qty": 0.004
+   },
+   {
+    "code": 360,
+    "iso": "IDN",
+    "value_m": 15.552,
+    "qty_kt": 30.615,
+    "unit_value": 508.0,
+    "qty_estimated": false,
+    "share": 0.0032,
+    "share_qty": 0.0029
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 12.61,
+    "qty_kt": 28.238,
+    "unit_value": 446.5,
+    "qty_estimated": false,
+    "share": 0.0026,
+    "share_qty": 0.0027
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 2.8,
+    "qty_kt": 5.279,
+    "unit_value": 530.4,
+    "qty_estimated": false,
+    "share": 0.0006,
+    "share_qty": 0.0005
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 2.175,
+    "qty_kt": 5.011,
+    "unit_value": 434.0,
+    "qty_estimated": false,
+    "share": 0.0004,
+    "share_qty": 0.0005
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.881,
+    "qty_kt": 2.032,
+    "unit_value": 433.6,
+    "qty_estimated": false,
+    "share": 0.0002,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.207,
+    "qty_kt": 0.216,
+    "unit_value": 957.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.174,
+    "qty_kt": 0.047,
+    "unit_value": 3726.4,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.033,
+    "qty_kt": 0.008,
+    "unit_value": 3963.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.015,
+    "qty_kt": 0.0,
+    "unit_value": 50741.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.01,
+    "qty_kt": 0.002,
+    "unit_value": 4202.5,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.009,
+    "qty_kt": 0.002,
+    "unit_value": 4112.8,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.003,
+    "qty_kt": 0.002,
+    "unit_value": 1707.3,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 40,
+    "iso": "AUT",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 15970.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 724,
+    "iso": "ESP",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 8975.2,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 899,
+    "iso": "OTHER",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 11046.9,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2021": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 2457.178,
+    "qty_kt": 3641.847,
+    "unit_value": 674.7,
+    "qty_estimated": false,
+    "share": 0.4361,
+    "share_qty": 0.4322
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 718.046,
+    "qty_kt": 1061.366,
+    "unit_value": 676.5,
+    "qty_estimated": false,
+    "share": 0.1274,
+    "share_qty": 0.126
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 595.316,
+    "qty_kt": 923.898,
+    "unit_value": 644.4,
+    "qty_estimated": false,
+    "share": 0.1056,
+    "share_qty": 0.1096
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 459.605,
+    "qty_kt": 689.883,
+    "unit_value": 666.2,
+    "qty_estimated": false,
+    "share": 0.0816,
+    "share_qty": 0.0819
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 400.176,
+    "qty_kt": 599.51,
+    "unit_value": 667.5,
+    "qty_estimated": false,
+    "share": 0.071,
+    "share_qty": 0.0711
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 347.635,
+    "qty_kt": 538.713,
+    "unit_value": 645.3,
+    "qty_estimated": false,
+    "share": 0.0617,
+    "share_qty": 0.0639
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 247.486,
+    "qty_kt": 358.854,
+    "unit_value": 689.7,
+    "qty_estimated": false,
+    "share": 0.0439,
+    "share_qty": 0.0426
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 129.085,
+    "qty_kt": 188.126,
+    "unit_value": 686.2,
+    "qty_estimated": false,
+    "share": 0.0229,
+    "share_qty": 0.0223
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 119.137,
+    "qty_kt": 180.495,
+    "unit_value": 660.1,
+    "qty_estimated": false,
+    "share": 0.0211,
+    "share_qty": 0.0214
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 85.287,
+    "qty_kt": 129.061,
+    "unit_value": 660.8,
+    "qty_estimated": false,
+    "share": 0.0151,
+    "share_qty": 0.0153
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 38.721,
+    "qty_kt": 59.548,
+    "unit_value": 650.3,
+    "qty_estimated": false,
+    "share": 0.0069,
+    "share_qty": 0.0071
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 17.434,
+    "qty_kt": 26.691,
+    "unit_value": 653.2,
+    "qty_estimated": false,
+    "share": 0.0031,
+    "share_qty": 0.0032
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 15.71,
+    "qty_kt": 21.997,
+    "unit_value": 714.2,
+    "qty_estimated": false,
+    "share": 0.0028,
+    "share_qty": 0.0026
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 2.428,
+    "qty_kt": 4.772,
+    "unit_value": 508.8,
+    "qty_estimated": false,
+    "share": 0.0004,
+    "share_qty": 0.0006
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 1.491,
+    "qty_kt": 1.583,
+    "unit_value": 942.0,
+    "qty_estimated": false,
+    "share": 0.0003,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.187,
+    "qty_kt": 0.041,
+    "unit_value": 4554.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.03,
+    "qty_kt": 0.003,
+    "unit_value": 10468.4,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.029,
+    "qty_kt": 0.001,
+    "unit_value": 49190.2,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.025,
+    "qty_kt": 0.004,
+    "unit_value": 7242.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.01,
+    "qty_kt": 0.006,
+    "unit_value": 1756.0,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.007,
+    "qty_kt": 0.001,
+    "unit_value": 5804.5,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.003,
+    "qty_kt": 0.005,
+    "unit_value": 668.7,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 15864.9,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 792,
+    "iso": "TUR",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 2833.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2022": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 2505.41,
+    "qty_kt": 4218.924,
+    "unit_value": 593.9,
+    "qty_estimated": false,
+    "share": 0.5565,
+    "share_qty": 0.5617
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 608.987,
+    "qty_kt": 1044.53,
+    "unit_value": 583.0,
+    "qty_estimated": false,
+    "share": 0.1353,
+    "share_qty": 0.1391
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 443.938,
+    "qty_kt": 750.001,
+    "unit_value": 591.9,
+    "qty_estimated": false,
+    "share": 0.0986,
+    "share_qty": 0.0999
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 318.074,
+    "qty_kt": 483.41,
+    "unit_value": 658.0,
+    "qty_estimated": false,
+    "share": 0.0706,
+    "share_qty": 0.0644
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 214.178,
+    "qty_kt": 355.532,
+    "unit_value": 602.4,
+    "qty_estimated": false,
+    "share": 0.0476,
+    "share_qty": 0.0473
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 144.665,
+    "qty_kt": 235.73,
+    "unit_value": 613.7,
+    "qty_estimated": false,
+    "share": 0.0321,
+    "share_qty": 0.0314
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 89.9,
+    "qty_kt": 143.923,
+    "unit_value": 624.6,
+    "qty_estimated": false,
+    "share": 0.02,
+    "share_qty": 0.0192
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 65.68,
+    "qty_kt": 98.772,
+    "unit_value": 665.0,
+    "qty_estimated": false,
+    "share": 0.0146,
+    "share_qty": 0.0132
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 48.071,
+    "qty_kt": 76.81,
+    "unit_value": 625.8,
+    "qty_estimated": false,
+    "share": 0.0107,
+    "share_qty": 0.0102
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 30.351,
+    "qty_kt": 45.505,
+    "unit_value": 667.0,
+    "qty_estimated": false,
+    "share": 0.0067,
+    "share_qty": 0.0061
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 30.221,
+    "qty_kt": 55.765,
+    "unit_value": 541.9,
+    "qty_estimated": false,
+    "share": 0.0067,
+    "share_qty": 0.0074
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 2.037,
+    "qty_kt": 1.234,
+    "unit_value": 1650.7,
+    "qty_estimated": false,
+    "share": 0.0005,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 0.54,
+    "qty_kt": 0.49,
+    "unit_value": 1102.2,
+    "qty_estimated": false,
+    "share": 0.0001,
+    "share_qty": 0.0001
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.125,
+    "qty_kt": 0.034,
+    "unit_value": 3684.5,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.022,
+    "qty_kt": 0.005,
+    "unit_value": 4533.3,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.014,
+    "qty_kt": 0.005,
+    "unit_value": 2857.5,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.012,
+    "qty_kt": 0.02,
+    "unit_value": 599.4,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.007,
+    "qty_kt": 0.001,
+    "unit_value": 5922.9,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.003,
+    "qty_kt": 0.001,
+    "unit_value": 4962.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 17421.1,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 20714.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 792,
+    "iso": "TUR",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 1557.5,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 17666.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 724,
+    "iso": "ESP",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 6500.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2023": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 1750.568,
+    "qty_kt": 3592.09,
+    "unit_value": 487.3,
+    "qty_estimated": false,
+    "share": 0.505,
+    "share_qty": 0.5025
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 535.127,
+    "qty_kt": 1102.334,
+    "unit_value": 485.4,
+    "qty_estimated": false,
+    "share": 0.1544,
+    "share_qty": 0.1542
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 459.051,
+    "qty_kt": 957.542,
+    "unit_value": 479.4,
+    "qty_estimated": true,
+    "share": 0.1324,
+    "share_qty": 0.134
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 265.546,
+    "qty_kt": 552.936,
+    "unit_value": 480.2,
+    "qty_estimated": false,
+    "share": 0.0766,
+    "share_qty": 0.0774
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 148.66,
+    "qty_kt": 316.769,
+    "unit_value": 469.3,
+    "qty_estimated": false,
+    "share": 0.0429,
+    "share_qty": 0.0443
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 124.882,
+    "qty_kt": 251.497,
+    "unit_value": 496.6,
+    "qty_estimated": false,
+    "share": 0.036,
+    "share_qty": 0.0352
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 101.385,
+    "qty_kt": 212.339,
+    "unit_value": 477.5,
+    "qty_estimated": false,
+    "share": 0.0292,
+    "share_qty": 0.0297
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 39.666,
+    "qty_kt": 86.491,
+    "unit_value": 458.6,
+    "qty_estimated": false,
+    "share": 0.0114,
+    "share_qty": 0.0121
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 17.341,
+    "qty_kt": 32.455,
+    "unit_value": 534.3,
+    "qty_estimated": false,
+    "share": 0.005,
+    "share_qty": 0.0045
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 14.229,
+    "qty_kt": 28.241,
+    "unit_value": 503.8,
+    "qty_estimated": false,
+    "share": 0.0041,
+    "share_qty": 0.004
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 5.146,
+    "qty_kt": 9.551,
+    "unit_value": 538.8,
+    "qty_estimated": true,
+    "share": 0.0015,
+    "share_qty": 0.0013
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 2.437,
+    "qty_kt": 1.563,
+    "unit_value": 1559.0,
+    "qty_estimated": false,
+    "share": 0.0007,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 360,
+    "iso": "IDN",
+    "value_m": 1.41,
+    "qty_kt": 3.0,
+    "unit_value": 470.0,
+    "qty_estimated": false,
+    "share": 0.0004,
+    "share_qty": 0.0004
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 0.591,
+    "qty_kt": 1.301,
+    "unit_value": 454.0,
+    "qty_estimated": false,
+    "share": 0.0002,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.074,
+    "qty_kt": 0.019,
+    "unit_value": 3864.8,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.034,
+    "qty_kt": 0.009,
+    "unit_value": 3733.1,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 0.018,
+    "qty_kt": 0.044,
+    "unit_value": 401.2,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.011,
+    "qty_kt": 0.003,
+    "unit_value": 3950.8,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 704,
+    "iso": "VNM",
+    "value_m": 0.009,
+    "qty_kt": 0.017,
+    "unit_value": 501.5,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.006,
+    "qty_kt": 0.001,
+    "unit_value": 5030.4,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.004,
+    "qty_kt": 0.0,
+    "unit_value": 17802.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.003,
+    "qty_kt": 0.001,
+    "unit_value": 2263.9,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 800.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 440,
+    "iso": "LTU",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 62333.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 752,
+    "iso": "SWE",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 484.9,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 49000.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ],
+  "2024": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 1797.232,
+    "qty_kt": 3381.655,
+    "unit_value": 531.5,
+    "qty_estimated": false,
+    "share": 0.515,
+    "share_qty": 0.516
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 505.115,
+    "qty_kt": 952.459,
+    "unit_value": 530.3,
+    "qty_estimated": false,
+    "share": 0.1447,
+    "share_qty": 0.1453
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 434.619,
+    "qty_kt": 821.182,
+    "unit_value": 529.3,
+    "qty_estimated": false,
+    "share": 0.1245,
+    "share_qty": 0.1253
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 174.72,
+    "qty_kt": 323.965,
+    "unit_value": 539.3,
+    "qty_estimated": false,
+    "share": 0.0501,
+    "share_qty": 0.0494
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 169.109,
+    "qty_kt": 319.287,
+    "unit_value": 529.6,
+    "qty_estimated": false,
+    "share": 0.0485,
+    "share_qty": 0.0487
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 150.783,
+    "qty_kt": 283.447,
+    "unit_value": 532.0,
+    "qty_estimated": false,
+    "share": 0.0432,
+    "share_qty": 0.0432
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 116.454,
+    "qty_kt": 215.928,
+    "unit_value": 539.3,
+    "qty_estimated": false,
+    "share": 0.0334,
+    "share_qty": 0.0329
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 54.757,
+    "qty_kt": 101.6,
+    "unit_value": 538.9,
+    "qty_estimated": false,
+    "share": 0.0157,
+    "share_qty": 0.0155
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 51.411,
+    "qty_kt": 91.761,
+    "unit_value": 560.3,
+    "qty_estimated": false,
+    "share": 0.0147,
+    "share_qty": 0.014
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 19.447,
+    "qty_kt": 34.881,
+    "unit_value": 557.5,
+    "qty_estimated": false,
+    "share": 0.0056,
+    "share_qty": 0.0053
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 9.05,
+    "qty_kt": 17.471,
+    "unit_value": 518.0,
+    "qty_estimated": false,
+    "share": 0.0026,
+    "share_qty": 0.0027
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 5.185,
+    "qty_kt": 9.401,
+    "unit_value": 551.6,
+    "qty_estimated": false,
+    "share": 0.0015,
+    "share_qty": 0.0014
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 1.608,
+    "qty_kt": 1.051,
+    "unit_value": 1529.2,
+    "qty_estimated": true,
+    "share": 0.0005,
+    "share_qty": 0.0002
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.094,
+    "qty_kt": 0.016,
+    "unit_value": 5961.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.066,
+    "qty_kt": 0.01,
+    "unit_value": 6679.6,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.034,
+    "qty_kt": 0.005,
+    "unit_value": 6946.1,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.012,
+    "qty_kt": 0.001,
+    "unit_value": 9264.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.008,
+    "qty_kt": 0.002,
+    "unit_value": 3344.1,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.005,
+    "qty_kt": 0.001,
+    "unit_value": 4356.1,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.004,
+    "qty_kt": 0.0,
+    "unit_value": 17007.7,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.004,
+    "qty_kt": 0.007,
+    "unit_value": 532.4,
+    "qty_estimated": true,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 579,
+    "iso": "NOR",
+    "value_m": 0.003,
+    "qty_kt": 0.0,
+    "unit_value": 12420.1,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 620,
+    "iso": "PRT",
+    "value_m": 0.001,
+    "qty_kt": 0.0,
+    "unit_value": 8733.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 40,
+    "iso": "AUT",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 4800.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 531.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 208,
+    "iso": "DNK",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 34400.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 643,
+    "iso": "RUS",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 3000.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 752,
+    "iso": "SWE",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 13000.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 0.0,
+    "qty_kt": 0.001,
+    "unit_value": 600.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   }
+  ],
+  "2025": [
+   {
+    "code": 682,
+    "iso": "SAU",
+    "value_m": 2202.52,
+    "qty_kt": 4225.706,
+    "unit_value": 521.2,
+    "qty_estimated": false,
+    "share": 0.547,
+    "share_qty": 0.5473
+   },
+   {
+    "code": 124,
+    "iso": "CAN",
+    "value_m": 534.933,
+    "qty_kt": 1033.099,
+    "unit_value": 517.8,
+    "qty_estimated": false,
+    "share": 0.1328,
+    "share_qty": 0.1338
+   },
+   {
+    "code": 842,
+    "iso": "USA",
+    "value_m": 300.972,
+    "qty_kt": 559.673,
+    "unit_value": 537.8,
+    "qty_estimated": false,
+    "share": 0.0747,
+    "share_qty": 0.0725
+   },
+   {
+    "code": 490,
+    "iso": "S19",
+    "value_m": 283.359,
+    "qty_kt": 545.228,
+    "unit_value": 519.7,
+    "qty_estimated": false,
+    "share": 0.0704,
+    "share_qty": 0.0706
+   },
+   {
+    "code": 414,
+    "iso": "KWT",
+    "value_m": 206.786,
+    "qty_kt": 401.531,
+    "unit_value": 515.0,
+    "qty_estimated": false,
+    "share": 0.0514,
+    "share_qty": 0.052
+   },
+   {
+    "code": 512,
+    "iso": "OMN",
+    "value_m": 195.284,
+    "qty_kt": 381.072,
+    "unit_value": 512.5,
+    "qty_estimated": false,
+    "share": 0.0485,
+    "share_qty": 0.0494
+   },
+   {
+    "code": 410,
+    "iso": "KOR",
+    "value_m": 115.407,
+    "qty_kt": 219.594,
+    "unit_value": 525.5,
+    "qty_estimated": false,
+    "share": 0.0287,
+    "share_qty": 0.0284
+   },
+   {
+    "code": 458,
+    "iso": "MYS",
+    "value_m": 63.844,
+    "qty_kt": 121.261,
+    "unit_value": 526.5,
+    "qty_estimated": false,
+    "share": 0.0159,
+    "share_qty": 0.0157
+   },
+   {
+    "code": 702,
+    "iso": "SGP",
+    "value_m": 42.897,
+    "qty_kt": 79.434,
+    "unit_value": 540.0,
+    "qty_estimated": false,
+    "share": 0.0107,
+    "share_qty": 0.0103
+   },
+   {
+    "code": 364,
+    "iso": "IRN",
+    "value_m": 36.194,
+    "qty_kt": 69.906,
+    "unit_value": 517.8,
+    "qty_estimated": false,
+    "share": 0.009,
+    "share_qty": 0.0091
+   },
+   {
+    "code": 392,
+    "iso": "JPN",
+    "value_m": 23.076,
+    "qty_kt": 44.549,
+    "unit_value": 518.0,
+    "qty_estimated": false,
+    "share": 0.0057,
+    "share_qty": 0.0058
+   },
+   {
+    "code": 784,
+    "iso": "ARE",
+    "value_m": 19.236,
+    "qty_kt": 38.111,
+    "unit_value": 504.7,
+    "qty_estimated": false,
+    "share": 0.0048,
+    "share_qty": 0.0049
+   },
+   {
+    "code": 699,
+    "iso": "IND",
+    "value_m": 1.82,
+    "qty_kt": 1.155,
+    "unit_value": 1575.7,
+    "qty_estimated": false,
+    "share": 0.0005,
+    "share_qty": 0.0001
+   },
+   {
+    "code": 276,
+    "iso": "DEU",
+    "value_m": 0.293,
+    "qty_kt": 0.08,
+    "unit_value": 3654.2,
+    "qty_estimated": false,
+    "share": 0.0001,
+    "share_qty": 0.0
+   },
+   {
+    "code": 251,
+    "iso": "FRA",
+    "value_m": 0.077,
+    "qty_kt": 0.007,
+    "unit_value": 11619.5,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 826,
+    "iso": "GBR",
+    "value_m": 0.039,
+    "qty_kt": 0.004,
+    "unit_value": 10199.9,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 764,
+    "iso": "THA",
+    "value_m": 0.018,
+    "qty_kt": 0.015,
+    "unit_value": 1200.1,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 528,
+    "iso": "NLD",
+    "value_m": 0.015,
+    "qty_kt": 0.007,
+    "unit_value": 2218.4,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 380,
+    "iso": "ITA",
+    "value_m": 0.014,
+    "qty_kt": 0.002,
+    "unit_value": 7939.8,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 56,
+    "iso": "BEL",
+    "value_m": 0.009,
+    "qty_kt": 0.001,
+    "unit_value": 13883.9,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 376,
+    "iso": "ISR",
+    "value_m": 0.007,
+    "qty_kt": 0.0,
+    "unit_value": 38050.8,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 156,
+    "iso": "CHN",
+    "value_m": 0.005,
+    "qty_kt": 0.001,
+    "unit_value": 4782.3,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": 0.0
+   },
+   {
+    "code": 757,
+    "iso": "CHE",
+    "value_m": 0.005,
+    "qty_kt": 0.0,
+    "unit_value": 119400.0,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   },
+   {
+    "code": 752,
+    "iso": "SWE",
+    "value_m": 0.0,
+    "qty_kt": 0.0,
+    "unit_value": 17523.8,
+    "qty_estimated": false,
+    "share": 0.0,
+    "share_qty": null
+   }
+  ]
+ },
+ "data_notes": [
+  {
+   "k": "口径",
+   "v": "HS 290531（Ethylene glycol / ethanediol），HS2022 六位；中国海关 8/10 位为 2905310000。"
+  },
+  {
+   "k": "金额",
+   "v": "UN Comtrade 以美元计（报告国以本币换算），进口为 CIF 口径，出口为 FOB 口径。"
+  },
+  {
+   "k": "数量",
+   "v": "千吨（kt），按 UN Comtrade 净重 netWgt 汇总；中国 2017 年净重缺失（源数据未报告）。"
+  },
+  {
+   "k": "单位价值",
+   "v": "USD/t = 金额 ÷ 净重，是报关加权平均，不是成交价，不可用于报价。"
+  },
+  {
+   "k": "年份",
+   "v": "日历年度 2016–2025；2025 年为初步数，后续可能修订。"
+  },
+  {
+   "k": "来源",
+   "v": "UN Comtrade 公开预览 API，抓取于 2026-10，原始 JSON 已随包保存（raw/）。"
+  },
+  {
+   "k": "交叉核验",
+   "v": "2025 年中国进口 772 万吨 / 40.3 亿美元 / 518 美元·吨⁻¹（华经产业研究院引海关数据）与 Comtrade 772.0 万吨 / 40.27 亿美元 / 521.5 美元·吨⁻¹ 吻合并口径一致。"
+  }
+ ],
+ "gaps": [
+  {
+   "item": "装置级产能未公开披露的装置（11 处）",
+   "why": "Petro Rabigh / YANSAB / YANPET（延布红海沿岸）、MEGlobal Prentiss（Red Deer）、Huntsman Port Neches、PD Glycol Beaumont、PRefChem、韩国四家、Shell Moerdijk 等装置，企业均未公开单装置 MEG 产能",
+   "fix": "向供应商索取装置年产量与第三方检验报告；或购买 S&P Global / ICIS 装置数据库"
+  },
+  {
+   "item": "韩国、马来西亚、日本、德国、法国、英国、荷兰、比利时、意大利、以色列等国装置级产能",
+   "why": "公开渠道只找到企业名称与地点，未找到 MEG 产能数字（无法用估计值替代）",
+   "fix": "逐家查年报与可持续发展报告；或直接询价时要求提供产能证明"
+  },
+  {
+   "item": "沙特公开产能合计低于其对华出口量",
+   "why": "已披露的 3,242 kt 只覆盖 80% 的装置（延布三家未披露），对华出口 4,226 kt，二者不能直接相减",
+   "fix": "需补齐延布装置产能后才能判断沙特可利用余量"
+  },
+  {
+   "item": "加拿大公开产能合计低于其对华出口量",
+   "why": "已披露 860 kt（MEGlobal FS1 460 + Shell Scotford 400），对华出口 1,033 kt，覆盖率 67%",
+   "fix": "补齐 Prentiss 装置产能；并核对是否存在经美转运被计入加拿大的部分"
+  },
+  {
+   "item": "瑞典、瑞士等极小金额来源的单位价值异常",
+   "why": "进口额仅数万美元，除法后单位价值达 10 万美元/吨量级，属样本过小的伪信号",
+   "fix": "不作为来源国考虑；如需要，查原始报关单"
+  },
+  {
+   "item": "2017 年中国进口数量",
+   "why": "UN Comtrade 该年 netWgt 为 null，华为/海关口径数量未取到",
+   "fix": "以海关统计月报补齐"
+  },
+  {
+   "item": "中国进口按 8/10 位细分",
+   "why": "海关仅对 2905310000 单一税号统计，无聚酯级/工业级拆分",
+   "fix": "需海关统计数据在线查询或采购商自有报关数据"
+  },
+  {
+   "item": "美国对华出口差额 160%",
+   "why": "美方自报 214.7 kt vs 中方自报 559.7 kt（2025）",
+   "fix": "差异来自加拿大/墨西哥转运与美国出口统计口径，需美国 Census 明细核对"
+  },
+  {
+   "item": "泰国/印尼/巴西/阿曼 出口报告国数据",
+   "why": "Comtrade 公开配额耗尽（403 Quota Exceeded），已抓取 17 国",
+   "fix": "配额恢复后补抓，脚本 fetch_comtrade.py 已就绪"
+  },
+  {
+   "item": "卡塔尔/阿联酋/科威特/南亚等装置级产能",
+   "why": "企业未公开披露 MEG 产能，仅披露乙烯",
+   "fix": "采购询价时直接索取装置与年产量"
+  },
+  {
+   "item": "新加坡/阿联酋转口量拆分",
+   "why": "出口统计含中转货；转口贸易无法从贸易数据中剥离",
+   "fix": "需船期与提单数据（如 Kpler/Comtrade mirror）"
+  },
+  {
+   "item": "中国主要卸货港 MEG 份额",
+   "why": "港口吞吐分品类数据未公开",
+   "fix": "港口集团年报或第三方船舶数据"
+  },
+  {
+   "item": "对美加征关税 2026-11-10 后状态",
+   "why": "政策暂停到期",
+   "fix": "跟踪税委会公告"
+  },
+  {
+   "item": "RCEP 2905 产品特定规则原文",
+   "why": "附件 PDF 不可解析",
+   "fix": "海关总署公告 2022 年第 129 号 附件 1"
+  },
+  {
+   "item": "霍尔木兹当前实际通行状态",
+   "why": "冲突仍在演变，2026-04 至 09 有多次开放/再关闭；本报告数据截至 2026-10",
+   "fix": "订舱前必须以船公司/船代当日报价与航线公告为准，不能引用本表"
+  },
+  {
+   "item": "DCE 指定/保税交割仓库名单",
+   "why": "dce.com.cn 在本环境多次超时，未取得原文",
+   "fix": "查大商所乙二醇指定交割仓库公告与 2023 年保税交割仓库公告"
+  },
+  {
+   "item": "张家港/太仓/宁波保税罐的法律状态与罐容",
+   "why": "只找到贸易商活动证据，未找到罐区容量与保税资质文件",
+   "fix": "直接向罐区运营方索取保税仓储资质与罐容证明"
+  },
+  {
+   "item": "各港口距离的权威口径",
+   "why": "ports.com / searates.com 无法访问，表内距离均为大圆×系数推算",
+   "fix": "用港口距离表重算本表；这是本报告最值得升级的一项"
+  },
+  {
+   "item": "直航服务是否存在",
+   "why": "无法访问 Alphaliner / Lloyd's List / Xeneta / 船公司班期",
+   "fix": "向货代索取近 4 周实际挂靠记录后再定fixture"
+  }
+ ]
+}

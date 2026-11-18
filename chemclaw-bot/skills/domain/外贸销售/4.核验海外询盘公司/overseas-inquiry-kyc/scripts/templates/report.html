@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<meta name="description" content="海外询盘企业核验报告 · 身份核验 / 业务相关性 / 网站域名与联系方式 / 公开风险 / 待补充资料">
+<style>
+__STYLE__
+</style>
+</head>
+<body>
+
+<div class="mock-bar" id="mockBar" hidden>
+  <b>模拟样例</b> · 本报告中的询盘企业、域名、邮箱、地址与联系人均为虚构，不代表任何真实注册企业。
+  <span class="noprint">真实询盘请把 <code>meta.synthetic</code> 设为 false 并替换数据重新生成。</span>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><span class="dot">KY</span><span id="navBrand">海外询盘核验</span></div>
+    <div class="nav-links" id="navLinks"></div>
+    <div class="nav-right">
+      <span class="nav-meta" id="navMeta"></span>
+      <button class="btn sm" onclick="window.print()" title="打印 / 导出 PDF">打印</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap" id="app"></main>
+
+<div class="drawer-mask" id="mask" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-h">
+    <div><div class="t" id="drawerT">来源</div><div class="s" id="drawerS"></div></div>
+    <button class="x" onclick="closeDrawer()" aria-label="关闭">✕</button>
+  </div>
+  <div class="drawer-b" id="drawerB"></div>
+</aside>
+
+<footer class="foot wrap" id="foot"></footer>
+
+<script>
+const DATA = __DATA__;
+const XLSX_NAME = "__XLSX_NAME__";
+</script>
+<script>
+__APP__
+</script>
+</body>
+</html>

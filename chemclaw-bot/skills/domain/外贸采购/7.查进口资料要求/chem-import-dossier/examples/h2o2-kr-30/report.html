@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>韩国 · 工业级 30% 过氧化氢溶液（UN2014）→ 中国上海 · 进口资料准备与合规核验底稿</title>
+<meta name="description" content="进口资料准备与合规核验底稿：产品身份、HS 归类、监管属性、危险货物、单证与缺口。">
+<style>/* =====================================================================
+   chem-import-dossier · assets/report.css
+   设计语言：「关务化验单 / 化学品合规档案」
+   底色 纸白 + 深石墨墨色 + 铜锈橙（监管） + 靛蓝（运输） + 危险橙
+   全部颜色集中在 :root，换皮只改这里。
+   ===================================================================== */
+:root{
+  /* 纸与墨 */
+  --paper:#f4f2ec; --paper-2:#eeebe2; --card:#fffefb; --card-2:#fbf9f3;
+  --ink:#161a1d; --ink-2:#2f363b; --ink-3:#4e565c; --muted:#5d6664;
+  --line:#dfdbd0; --line-2:#c9c4b6; --line-3:#ebe7dc;
+  /* 主色 */
+  --graphite:#1c2327; --graphite-2:#2b343a;
+  --copper:#a4552a; --copper-2:#c47a45; --copper-bg:#f6e8dd;
+  --indigo:#2f4b6e; --indigo-2:#41678f; --indigo-bg:#e6edf5;
+  /* 状态 */
+  --ok:#1e6b47; --ok-bg:#e4f1e9; --ok-line:#b8d8c6;
+  --warn:#8f6212; --warn-bg:#f9efd7; --warn-line:#e6cf9c;
+  --bad:#a3311f; --bad-bg:#f9e4df; --bad-line:#e5b7ac;
+  --info:#2c5a86; --info-bg:#e5eef7; --info-line:#bdd4e9;
+  --gray:#5f676b; --gray-bg:#eceeec;
+  --dg:#c2410c; --dg-bg:#fdece3;      /* 危险货物橙 */
+  --haz:#9a3412;                       /* 危险化学品深橙 */
+  /* 几何 */
+  --r:10px; --r-sm:6px; --r-lg:16px;
+  --shadow-1:0 1px 1px rgba(22,26,29,.04),0 2px 6px -2px rgba(22,26,29,.08);
+  --shadow-2:0 2px 4px rgba(22,26,29,.05),0 14px 34px -18px rgba(22,26,29,.32);
+  --shadow-3:0 24px 70px -20px rgba(22,26,29,.42);
+  /* 字体 */
+  --mono:"Cascadia Mono","JetBrains Mono","SF Mono",Consolas,"Liberation Mono",monospace;
+  --sans:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei","Noto Sans CJK SC",-apple-system,"Segoe UI",sans-serif;
+  --serif:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --num:"Bahnschrift","DIN Alternate","Oswald","Arial Narrow",var(--sans);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:14px;line-height:1.68;
+  background-image:
+    radial-gradient(rgba(28,35,39,.032) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(164,85,42,.035),transparent 340px);
+  background-size:22px 22px,100% 100%;
+}
+a{color:var(--indigo);text-decoration:none;border-bottom:1px solid rgba(47,75,110,.22);word-break:break-all}
+a:hover{border-bottom-color:var(--copper);color:var(--copper)}
+b,strong{font-weight:600;color:var(--ink)}
+code,.mono{font-family:var(--mono);font-size:12.4px;letter-spacing:.01em}
+:focus-visible{outline:2px solid var(--copper);outline-offset:2px;border-radius:3px}
+::selection{background:rgba(196,122,69,.28)}
+
+/* ---------------- 图标 ---------------- */
+.ic{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;
+    stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-2px}
+body{overflow-x:hidden}
+
+/* ---------------- 顶栏 ---------------- */
+.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:16px;
+  padding:9px 20px;background:linear-gradient(180deg,#1c2327,#232b30);
+  color:#e8ece9;border-bottom:2px solid var(--copper);box-shadow:0 2px 14px -6px rgba(0,0,0,.5)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:.05em;white-space:nowrap}
+.brand .logo{width:24px;height:24px;border-radius:5px;display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--copper),#7d3d1c);color:#fff}
+.brand em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:#93a2a0;
+  border:1px solid rgba(147,162,160,.34);border-radius:3px;padding:0 6px;margin-left:3px;letter-spacing:.04em}
+.tmeta{flex:1;display:flex;gap:8px 16px;flex-wrap:wrap;font-size:12px;color:#a9b6b3;min-width:0}
+.tmeta b{color:#fff;font-weight:500;font-family:var(--mono);font-size:11.5px}
+.tmeta .sep{color:#4a585c}
+.tactions{display:flex;gap:7px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.055);color:#eef2ef;
+  font:inherit;font-size:12.2px;padding:5px 10px;cursor:pointer;transition:.16s ease;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4)}
+.btn:active{transform:translateY(1px)}
+.btn.accent{background:var(--copper);border-color:var(--copper);color:#fff}
+.btn.accent:hover{background:var(--copper-2);border-color:var(--copper-2)}
+.main .btn{border-color:var(--line-2);background:var(--card);color:var(--ink-2)}
+.main .btn:hover{border-color:var(--copper);color:var(--copper);background:#fff}
+.main .btn.accent{background:var(--graphite);border-color:var(--graphite);color:#fff}
+.main .btn.accent:hover{background:var(--graphite-2)}
+
+/* 顶部进度条 */
+.scrollbar{position:fixed;top:0;left:0;height:2px;background:var(--copper-2);z-index:70;width:0;transition:width .1s linear}
+
+/* ---------------- 布局 ---------------- */
+.layout{display:grid;grid-template-columns:252px minmax(0,1fr);align-items:start}
+.side{position:sticky;top:50px;height:calc(100vh - 50px);overflow:auto;padding:16px 12px 60px;
+  border-right:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.5),transparent 220px)}
+.side::-webkit-scrollbar{width:8px}
+.side::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+.side .grp{font-size:10px;letter-spacing:.2em;color:var(--muted);margin:16px 9px 6px;font-weight:600;text-transform:uppercase}
+.side .grp:first-child{margin-top:2px}
+.side a{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:6px;border:0;
+  color:var(--ink-2);font-size:13px;line-height:1.35;transition:.14s}
+.side a .n{font-family:var(--mono);font-size:10.5px;color:var(--copper);width:18px;flex:none;opacity:.9}
+.side a .cnt{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--muted);
+  background:var(--card-2);border:1px solid var(--line);border-radius:9px;padding:0 6px}
+.side a:hover{background:rgba(255,255,255,.85)}
+.side a.on{background:var(--card);color:var(--ink);font-weight:600;
+  box-shadow:var(--shadow-1);border-left:2px solid var(--copper);padding-left:7px}
+.side a.on .cnt{background:var(--copper-bg);border-color:#e7cdb9;color:var(--copper)}
+.side .foot{margin:18px 8px 0;padding-top:12px;border-top:1px dashed var(--line-2);
+  font-size:11px;color:var(--muted);line-height:1.6}
+.main{padding:22px clamp(14px,2.4vw,40px) 110px;min-width:0;max-width:1320px}
+
+/* ---------------- 报头 ---------------- */
+.hero{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:26px 26px 22px;box-shadow:var(--shadow-2);overflow:hidden;margin-bottom:22px}
+.hero::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;
+  background:linear-gradient(90deg,var(--copper),var(--copper-2) 38%,var(--indigo) 39%,var(--indigo-2) 62%,var(--dg) 63%,#e06d3c)}
+.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,122,69,.10),transparent 68%);pointer-events:none}
+.hero .eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.16em;
+  color:var(--copper);font-weight:600;text-transform:uppercase;margin-bottom:6px}
+.hero .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--copper)}
+.hero h1{margin:2px 0 4px;font-family:var(--serif);font-size:clamp(21px,2.5vw,29px);
+  line-height:1.3;font-weight:700;letter-spacing:-.01em;position:relative}
+.hero h1 .flow{color:var(--indigo);font-style:normal}
+.hero h1 .arrow{color:var(--copper-2);font-weight:400;margin:0 4px}
+.hero .sub{color:var(--ink-3);font-size:13.4px;margin:6px 0 16px;max-width:88ch}
+.hero .chips{display:flex;gap:7px;flex-wrap:wrap;position:relative}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:20px;
+  background:var(--card-2);border:1px solid var(--line-2);color:var(--ink-2)}
+.chip b{font-family:var(--mono);font-size:11.5px}
+.chip.k{background:var(--indigo-bg);border-color:var(--info-line);color:var(--indigo)}
+.chip.dg{background:var(--dg-bg);border-color:#f3c8b2;color:var(--dg);font-weight:600}
+.chip.hz{background:var(--copper-bg);border-color:#e7cdb9;color:var(--haz);font-weight:600}
+.chip.tax{background:#f2f0e6;border-color:var(--line-2)}
+
+/* 评级徽章 */
+.grade-row{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;
+  margin-top:18px;padding-top:18px;border-top:1px dashed var(--line-2);position:relative}
+.grade-badge{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--warn) var(--ring,72%),var(--line-3) 0);}
+.grade-badge::before{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--card)}
+.grade-badge .g{position:relative;font-family:var(--num);font-size:34px;font-weight:700;line-height:1;
+  color:var(--warn);letter-spacing:-.02em}
+.grade-badge .gl{position:absolute;bottom:16px;font-size:9.5px;letter-spacing:.14em;color:var(--muted)}
+.grade-badge.gA{background:conic-gradient(var(--ok) 96%,var(--line-3) 0)} .grade-badge.gA .g{color:var(--ok)}
+.grade-badge.gB{background:conic-gradient(var(--warn) 72%,var(--line-3) 0)} .grade-badge.gB .g{color:var(--warn)}
+.grade-badge.gC{background:conic-gradient(#c05a2a 46%,var(--line-3) 0)} .grade-badge.gC .g{color:#b4521f}
+.grade-badge.gD{background:conic-gradient(var(--bad) 24%,var(--line-3) 0)} .grade-badge.gD .g{color:var(--bad)}
+.grade-text .gt{font-size:15px;font-weight:600;margin-bottom:3px}
+.grade-text .gd{color:var(--ink-3);font-size:13px;max-width:80ch}
+
+/* 指标条 */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-top:18px;position:relative}
+.kpi{background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.kpi .kv{font-family:var(--num);font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.kpi .kv small{font-size:12px;font-weight:500;color:var(--muted);margin-left:2px}
+.kpi .kl{font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:1px}
+.kpi.ok .kv{color:var(--ok)} .kpi.warn .kv{color:var(--warn)} .kpi.bad .kv{color:var(--bad)}
+.kpi.ink .kv{color:var(--ink)} .kpi.ind .kv{color:var(--indigo)}
+
+/* ---------------- 区块 ---------------- */
+section{scroll-margin-top:62px;margin-bottom:30px}
+.sec-head{display:flex;align-items:flex-end;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sec-head .no{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.1em;
+  border:1px solid #e7cdb9;background:var(--copper-bg);border-radius:5px;padding:1px 7px;margin-bottom:3px}
+.sec-head h2{margin:0;font-family:var(--serif);font-size:19.5px;font-weight:700;letter-spacing:-.005em}
+.sec-head .lead{color:var(--ink-3);font-size:12.8px;flex:1 1 320px;min-width:200px}
+.sec-head .tools{margin-left:auto;display:flex;gap:6px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;box-shadow:var(--shadow-1)}
+.card+.card{margin-top:12px}
+.card h3{margin:0 0 10px;font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card h3 .tag-n{margin-left:auto}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:12px}
+
+/* 定义列表 */
+.dl{display:grid;grid-template-columns:132px 1fr;gap:0;font-size:13px}
+.dl dt{color:var(--muted);padding:5px 0;border-bottom:1px dashed var(--line-3);font-size:12.3px}
+.dl dd{margin:0;padding:5px 0;border-bottom:1px dashed var(--line-3);color:var(--ink-2);min-width:0}
+.dl dt:last-of-type,.dl dd:last-of-type{border-bottom:0}
+
+/* 徽章 / 标签 */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.2px;font-weight:600;
+  padding:1px 8px;border-radius:20px;border:1px solid transparent;white-space:nowrap;line-height:1.7}
+.badge.ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-line)}
+.badge.warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-line)}
+.badge.bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}
+.badge.info{background:var(--info-bg);color:var(--info);border-color:var(--info-line)}
+.badge.gray{background:var(--gray-bg);color:var(--gray);border-color:#d6d9d6}
+.badge.hz{background:var(--copper-bg);color:var(--haz);border-color:#e7cdb9}
+.badge.dg{background:var(--dg-bg);color:var(--dg);border-color:#f3c8b2}
+.badge.solid{background:var(--graphite);color:#fff;border-color:var(--graphite)}
+.badge.lg{font-size:12.3px;padding:2px 10px}
+.tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:4px;background:#f3f1e9;
+  color:var(--ink-3);border:1px solid var(--line);font-family:var(--mono)}
+.tag.src{background:#fff;border-color:var(--line-2);color:var(--copper);cursor:pointer;transition:.14s}
+.tag.src:hover{background:var(--copper-bg);border-color:#e0bfa6}
+.tag.src.tC{border-style:dashed;color:#8a5a2a}
+
+/* ---------------- 表格 ---------------- */
+.tw{overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card);
+  box-shadow:var(--shadow-1)}
+.tw::-webkit-scrollbar{height:9px;width:9px}
+.tw::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:5px}
+table.t{border-collapse:separate;border-spacing:0;width:100%;font-size:12.6px;min-width:640px}
+table.t thead th{position:sticky;top:0;z-index:3;background:linear-gradient(180deg,#f6f4ec,#f1eee4);
+  color:var(--ink-2);font-weight:600;text-align:left;padding:8px 10px;
+  border-bottom:1px solid var(--line-2);font-size:11.6px;letter-spacing:.03em;white-space:nowrap}
+table.t thead th.s{cursor:pointer;user-select:none}
+table.t thead th.s:hover{color:var(--copper)}
+table.t thead th.s::after{content:"⇅";font-size:9.5px;opacity:.4;margin-left:4px}
+table.t thead th.s.asc::after{content:"↑";opacity:1;color:var(--copper)}
+table.t thead th.s.desc::after{content:"↓";opacity:1;color:var(--copper)}
+table.t td{padding:8px 10px;border-bottom:1px solid var(--line-3);vertical-align:top;color:var(--ink-2)}
+table.t tbody tr:last-child td{border-bottom:0}
+table.t tbody tr:hover td{background:#fdfbf4}
+table.t td.c{text-align:center} table.t td.r{text-align:right}
+table.t td.m{font-family:var(--mono);font-size:11.8px}
+table.t tr.rowfail td{background:rgba(163,49,31,.032)}
+table.t tr.rowwarn td{background:rgba(143,98,18,.03)}
+table.t td.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+table.t .sml{font-size:11.4px;color:var(--ink-3);line-height:1.55}
+
+/* ---------------- 筛选条 ---------------- */
+.filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:9px}
+.fchip{font-size:12px;padding:3px 10px;border-radius:20px;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ink-3);cursor:pointer;transition:.14s;font-family:inherit}
+.fchip:hover{border-color:var(--copper);color:var(--copper)}
+.fchip.on{background:var(--graphite);border-color:var(--graphite);color:#fff}
+.fchip .c{font-family:var(--mono);font-size:10.5px;opacity:.75;margin-left:3px}
+.search{flex:1 1 200px;min-width:150px;max-width:320px;position:relative}
+.search input{width:100%;font:inherit;font-size:12.6px;padding:5px 10px 5px 28px;border-radius:20px;
+  border:1px solid var(--line-2);background:var(--card);color:var(--ink)}
+.search input:focus{outline:none;border-color:var(--copper);box-shadow:0 0 0 3px rgba(196,122,69,.14)}
+.search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted)}
+
+/* ---------------- 进度 ---------------- */
+.pbar{height:7px;border-radius:5px;background:var(--line-3);overflow:hidden;position:relative}
+.pbar>i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--copper),var(--copper-2));
+  transition:width .45s cubic-bezier(.2,.7,.3,1)}
+.pbar.ok>i{background:linear-gradient(90deg,#1e6b47,#3d9a6c)}
+.pbar.warn>i{background:linear-gradient(90deg,#8f6212,#c99a3e)}
+.pbar.bad>i{background:linear-gradient(90deg,#a3311f,#c55b42)}
+.progress-list{display:grid;gap:9px}
+.pl-row{display:grid;grid-template-columns:150px 1fr 62px;gap:12px;align-items:center;font-size:12.6px}
+.pl-row .pl-n{color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.pl-row .pl-v{font-family:var(--num);font-size:13px;text-align:right;color:var(--ink-3)}
+
+/* ---------------- 危险属性双卡 ---------------- */
+.vs{display:grid;grid-template-columns:1fr 62px 1fr;gap:0;align-items:stretch;margin:4px 0 14px}
+@media(max-width:900px){.vs{grid-template-columns:1fr;gap:12px}}
+.vs .box{border-radius:var(--r);padding:16px 18px;border:1px solid var(--line);position:relative;overflow:hidden}
+.vs .box.hz{background:linear-gradient(160deg,#fdf3ec,#fffefb 60%);border-color:#ecd2c0}
+.vs .box.dg{background:linear-gradient(160deg,#fdf0e8,#fffefb 60%);border-color:#f0cfbb}
+.vs .box .vt{font-size:10.6px;letter-spacing:.16em;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:7px}
+.vs .box.hz .vt{color:var(--haz)} .vs .box.dg .vt{color:var(--dg)}
+.vs .box h4{margin:0 0 2px;font-family:var(--serif);font-size:17px;font-weight:700}
+.vs .box .en{font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:10px}
+.vs .box .dl{grid-template-columns:76px 1fr;font-size:12.4px}
+.vs .mid{display:grid;place-items:center;position:relative}
+.vs .mid .ln{position:absolute;top:0;bottom:0;left:50%;width:1px;
+  background:repeating-linear-gradient(180deg,var(--line-2) 0 5px,transparent 5px 10px)}
+.vs .mid .neq{position:relative;background:var(--card);border:1px solid var(--line-2);border-radius:50%;
+  width:38px;height:38px;display:grid;place-items:center;font-size:11px;color:var(--copper);font-weight:700;
+  box-shadow:var(--shadow-1)}
+@media(max-width:900px){.vs .mid .ln{display:none}}
+
+/* 阈值轨道 */
+.track{margin:14px 0 4px;position:relative;height:52px}
+.track .rail{position:absolute;left:0;right:0;top:22px;height:9px;border-radius:5px;overflow:hidden;display:flex}
+.track .rail i{flex:1;position:relative}
+.track .rail i:nth-child(1){background:#dfe7df}
+.track .rail i:nth-child(2){background:#e8dfbf}
+.track .rail i:nth-child(3){background:#ecd0ba}
+.track .rail i:nth-child(4){background:#e2b39c}
+.track .tick{position:absolute;top:16px;width:1px;height:21px;background:var(--ink-3)}
+.track .lbl{position:absolute;top:0;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.track .mk{position:absolute;top:9px;transform:translateX(-50%);display:grid;justify-items:center}
+.track .mk .pin{width:2px;height:35px;background:var(--graphite)}
+.track .mk .cap{background:var(--graphite);color:#fff;font-size:10.5px;font-family:var(--mono);
+  padding:1px 6px;border-radius:4px;white-space:nowrap;margin-top:-40px;box-shadow:var(--shadow-1)}
+.track .seg-note{position:absolute;top:36px;transform:translateX(-50%);font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+
+/* ---------------- 上传件卡 ---------------- */
+.doc-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.up{border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden;
+  box-shadow:var(--shadow-1);display:flex;flex-direction:column}
+.up .uh{display:flex;align-items:center;gap:9px;padding:10px 13px;border-bottom:1px solid var(--line-3);
+  background:var(--card-2)}
+.up .uh .fi{width:30px;height:30px;border-radius:6px;display:grid;place-items:center;flex:none;
+  background:var(--indigo-bg);color:var(--indigo);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.02em}
+.up .uh .fn{font-size:12.6px;font-weight:600;line-height:1.3;min-width:0;word-break:break-all}
+.up .uh .fs{font-size:10.8px;color:var(--muted);font-family:var(--mono)}
+.up .uh .badge{margin-left:auto;flex:none}
+.up .mock{display:flex;align-items:center;gap:6px;padding:5px 13px;font-size:11.2px;
+  background:repeating-linear-gradient(135deg,#fbf3d9,#fbf3d9 8px,#f8efd0 8px,#f8efd0 16px);
+  color:#7a5a10;border-bottom:1px solid #eedfb0}
+.up .ub{padding:11px 13px;display:grid;gap:9px;flex:1}
+.up .kv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:6px 10px;font-size:12px}
+.up .kv-grid div{min-width:0}
+.up .kv-grid .k{color:var(--muted);font-size:10.8px;letter-spacing:.02em}
+.up .kv-grid .v{color:var(--ink-2);font-family:var(--mono);font-size:11.6px;word-break:break-word}
+.up .chk{display:grid;gap:3px;font-size:12px}
+.up .chk .ci{display:grid;grid-template-columns:15px 1fr;gap:7px;align-items:start;padding:2px 0}
+.up .chk .ci .mk{font-family:var(--mono);font-size:11px;font-weight:700;line-height:1.45}
+.up .chk .ci.pass .mk{color:var(--ok)} .up .chk .ci.fail .mk{color:var(--bad)}
+.up .chk .ci.warn .mk{color:var(--warn)} .up .chk .ci.na .mk{color:var(--muted)}
+.up .chk .ci .ct{color:var(--ink-2)}
+.up .chk .ci .cn{display:block;color:var(--ink-3);font-size:11.3px}
+.up .uf{padding:8px 13px;border-top:1px solid var(--line-3);background:var(--card-2);font-size:11.8px;
+  display:flex;gap:8px;align-items:flex-start}
+
+/* ---------------- 缺口清单 ---------------- */
+.gap{border:1px solid var(--line);border-left:3px solid var(--line-2);border-radius:var(--r-sm);
+  background:var(--card);padding:11px 14px;margin-bottom:8px;box-shadow:var(--shadow-1)}
+.gap.p0{border-left-color:var(--bad)} .gap.p1{border-left-color:var(--warn)} .gap.p2{border-left-color:var(--info)}
+.gap .gh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.gap .gh .gid{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.gap .gh .gt{font-weight:600;font-size:13.4px;flex:1 1 auto}
+.gap .gb{font-size:12.5px;color:var(--ink-3);display:grid;gap:3px}
+.gap .gb .q{display:grid;grid-template-columns:58px 1fr;gap:8px}
+.gap .gb .q .k{color:var(--muted);font-size:11.5px}
+.gap.done{opacity:.62;border-left-color:var(--ok)}
+.gap.done .gt{text-decoration:line-through;text-decoration-color:var(--ok);text-decoration-thickness:1px}
+.gap input[type=checkbox]{width:15px;height:15px;accent-color:var(--ok);cursor:pointer;margin:0}
+
+/* ---------------- 时间线 ---------------- */
+.tl{position:relative;padding-left:22px;margin:6px 0 0}
+.tl::before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:1px;
+  background:repeating-linear-gradient(180deg,var(--line-2) 0 6px,transparent 6px 11px)}
+.tl .it{position:relative;padding:0 0 13px}
+.tl .it::before{content:"";position:absolute;left:-20px;top:6px;width:9px;height:9px;border-radius:50%;
+  background:var(--card);border:2px solid var(--copper)}
+.tl .it.done::before{background:var(--ok);border-color:var(--ok)}
+.tl .it .tt{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.03em}
+.tl .it .ta{font-size:13px;color:var(--ink-2)}
+.tl .it .to{font-size:11.5px;color:var(--muted)}
+
+/* ---------------- 责任矩阵 ---------------- */
+.actors{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:12px}
+.actor{border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:var(--shadow-1)}
+.actor .ah{display:flex;align-items:center;gap:8px;padding:10px 13px;border-bottom:1px solid var(--line-3)}
+.actor .ah .ai{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;flex:none;
+  background:var(--graphite);color:#fff}
+.actor .ah .an{font-weight:600;font-size:13.4px}
+.actor .ah .ac{margin-left:auto;font-family:var(--num);font-size:12px;color:var(--muted)}
+.actor ul{margin:0;padding:10px 13px 10px 27px;display:grid;gap:5px;font-size:12.5px;color:var(--ink-2);flex:1}
+.actor ul li::marker{color:var(--copper-2)}
+.actor .an2{padding:8px 13px;border-top:1px solid var(--line-3);background:var(--card-2);
+  font-size:11.6px;color:var(--ink-3)}
+.actors .a-supplier .ai{background:var(--indigo)} .actors .a-importer .ai{background:var(--copper)}
+.actors .a-carrier .ai{background:#3a6b5c} .actors .a-agent .ai{background:#5a4a72}
+.actors .a-lab .ai{background:#7a6a24} .actors .a-gov .ai{background:var(--graphite)}
+
+/* ---------------- 待确认 ---------------- */
+.qc{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:12px 14px;
+  margin-bottom:8px;box-shadow:var(--shadow-1);display:grid;gap:5px}
+.qc .qh{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.qc .qh .qid{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.qc .qh .qt{font-weight:600;font-size:13.5px;flex:1 1 auto}
+.qc .qb{display:grid;grid-template-columns:70px 1fr;gap:10px 8px;font-size:12.4px;color:var(--ink-3)}
+.qc .qb .k{color:var(--muted);font-size:11.5px}
+
+/* ---------------- 英文清单 ---------------- */
+.letter{background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);
+  box-shadow:var(--shadow-2);overflow:hidden}
+.letter .lh{display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--graphite);color:#e9eeeb}
+.letter .lh b{font-size:13px;color:#fff;font-weight:600}
+.letter .lh .sp{flex:1}
+.letter .lb{padding:20px 22px;font-size:13px;color:var(--ink-2);white-space:pre-wrap;line-height:1.75}
+.letter table.t{min-width:0}
+.letter .ls{padding:0 22px 18px}
+.letter .lf{padding:12px 22px;border-top:1px dashed var(--line-2);background:var(--card-2);
+  font-size:11.6px;color:var(--muted)}
+
+/* ---------------- 来源 ---------------- */
+.src-item{padding:10px 0;border-bottom:1px dashed var(--line-3);font-size:12.6px}
+.src-item:last-child{border-bottom:0}
+.src-item .sh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.src-item .sid{font-family:var(--mono);font-size:11.5px;color:var(--copper);font-weight:700}
+.src-item .st{font-weight:600;flex:1 1 auto;min-width:200px}
+.src-item .meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11.5px;margin-top:2px}
+.src-item .sup{color:var(--ink-3);margin-top:3px;font-size:12px}
+.tier{font-family:var(--mono);font-size:10px;padding:0 5px;border-radius:3px;font-weight:700}
+.tier.A{background:var(--bad-bg);color:var(--bad)} .tier.B{background:var(--warn-bg);color:var(--warn)}
+.tier.C{background:var(--gray-bg);color:var(--gray)}
+
+/* ---------------- 抽屉 ---------------- */
+.drawer-bg{position:fixed;inset:0;background:rgba(22,26,29,.42);backdrop-filter:blur(2px);z-index:80;
+  opacity:0;pointer-events:none;transition:.2s}
+.drawer-bg.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,94vw);background:var(--card);z-index:81;
+  transform:translateX(102%);transition:transform .26s cubic-bezier(.2,.7,.3,1);display:flex;flex-direction:column;
+  box-shadow:var(--shadow-3);border-left:1px solid var(--line-2)}
+.drawer.on{transform:none}
+.drawer .dh{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);
+  background:var(--card-2)}
+.drawer .dh .dt{font-weight:600;font-size:14.5px;flex:1}
+.drawer .db{padding:16px 18px;overflow:auto;font-size:13px;color:var(--ink-2)}
+.drawer .db h4{margin:14px 0 6px;font-size:12px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.drawer .db h4:first-child{margin-top:0}
+.drawer .db .kv{display:grid;grid-template-columns:96px 1fr;gap:6px 10px;font-size:12.6px}
+.drawer .db .kv .k{color:var(--muted);font-size:11.8px}
+.x-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--line-2);background:var(--card);
+  cursor:pointer;display:grid;place-items:center;color:var(--ink-3)}
+.x-btn:hover{border-color:var(--copper);color:var(--copper)}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);background:var(--graphite);color:#fff;
+  font-size:12.8px;padding:9px 16px;border-radius:22px;box-shadow:var(--shadow-3);opacity:0;pointer-events:none;
+  transition:.24s;z-index:90}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* 打印 */
+@media print{
+  .topbar,.side,.drawer,.drawer-bg,.toast,.scrollbar,.filters .search,.sec-head .tools{display:none!important}
+  .layout{grid-template-columns:1fr}
+  .main{max-width:none;padding:0}
+  body{background:#fff;font-size:11.5px}
+  .card,.tw,.hero,.up,.actor,.gap,.qc,.letter{box-shadow:none;break-inside:avoid}
+  section{break-inside:auto}
+  table.t thead th{position:static}
+  a{color:var(--ink)}
+}
+@media(max-width:1000px){
+  body{overflow-x:hidden}
+  .layout{grid-template-columns:1fr;min-width:0}
+  .main{min-width:0}
+  .side{position:sticky;top:44px;z-index:50;height:auto;border-right:0;border-bottom:1px solid var(--line);
+    display:flex;gap:4px;overflow-x:auto;overflow-y:hidden;padding:7px 10px;
+    background:var(--paper);box-shadow:0 2px 8px -6px rgba(0,0,0,.4);max-width:100vw}
+  .side .grp,.side .foot{display:none}
+  .side a{flex:none;white-space:nowrap;padding:5px 10px;font-size:12.5px}
+  .side a .cnt{display:none}
+  .side a.on{border-left:0;border-bottom:2px solid var(--copper);padding-left:10px}
+  .topbar{padding:8px 12px;gap:8px}
+  .tmeta{font-size:11px;gap:4px 10px}
+  .topbar .brand em{display:none}
+  .hero{padding:18px 16px 16px}
+  .grade-row{grid-template-columns:1fr;gap:10px;justify-items:start}
+  .vs{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="scrollbar" id="sb"></div>
+<header class="topbar">
+  <div class="brand"><span class="logo"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L4 20a1 1 0 0 0 .9 1.5h14.2A1 1 0 0 0 20 20l-6-11V3"/></svg></span>进口资料准备底稿<em>v1.0</em></div>
+  <div class="tmeta">
+    <span>ID-H2O2-KR-20261020</span><span class="sep">|</span>
+    <span>基准日 <b>2026-10-20</b></span><span class="sep">|</span>
+    <span>分级 <b>D · 不可放行（存在硬缺口）</b></span><span class="sep">|</span>
+    <span>单证完备度 <b>18.8%</b></span>
+  </div>
+  <div class="tactions">
+    <button class="btn" onclick="window.__print&&window.__print()"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>打印 / 存 PDF</button>
+    <button class="btn" onclick="window.__resetProgress&&window.__resetProgress()">重置进度</button>
+    <button class="btn accent" onclick="window.__exportRequest&&window.__exportRequest()"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>导出英文清单</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="side">
+    <div class="grp">概览</div><a href="#s0"><span class="n">01</span>报头与结论</a><a href="#s1"><span class="n">02</span>放行闸门<span class="cnt">6</span></a><div class="grp">识别</div><a href="#s2"><span class="n">01</span>产品与归类</a><a href="#s3"><span class="n">02</span>HS 编码候选<span class="cnt">3</span></a><a href="#s4"><span class="n">03</span>税费与优惠</a><div class="grp">监管</div><a href="#s5"><span class="n">01</span>监管与许可<span class="cnt">15</span></a><a href="#s6"><span class="n">02</span>危险属性双轨</a><div class="grp">文件</div><a href="#s7"><span class="n">01</span>包装与标签</a><a href="#s8"><span class="n">02</span>单证清单<span class="cnt">26</span></a><a href="#s9"><span class="n">03</span>已上传检查<span class="cnt">4</span></a><div class="grp">行动</div><a href="#s10"><span class="n">01</span>缺失资料<span class="cnt">15</span></a><a href="#s11"><span class="n">02</span>责任划分</a><a href="#s12"><span class="n">03</span>待确认事项<span class="cnt">10</span></a><a href="#s13"><span class="n">04</span>时间线</a><a href="#s14"><span class="n">05</span>英文索取清单</a><div class="grp">证据</div><a href="#s15"><span class="n">01</span>法规来源<span class="cnt">21</span></a>
+    <div class="foot">
+      <b>使用提示</b><br>
+      点击表格中的 <span class="tag src">S01</span> 可查看法规原文与查询日期；<br>
+      勾选缺失项进度会保存在本机；<br>
+      模拟上传件均以斜纹底纹标注。
+    </div>
+  </aside>
+  <main class="main">
+    
+<section id="s0" class="hero-wrap">
+<div class="hero">
+  <div class="eyebrow"><span class="dot"></span>进口资料准备与合规核验底稿 · IMPORT DOCUMENTATION DOSSIER
+    <span style="margin-left:auto;font-family:var(--mono);letter-spacing:0;color:var(--muted)">
+      ID-H2O2-KR-20261020 · 基准日 2026-10-20</span></div>
+  <h1>过氧化氢溶液（双氧水） <span style="font-size:.6em;color:var(--muted);font-weight:400">30.0%（质量分数，H₂O₂）</span>
+     <span class="arrow">/</span> <span class="flow">韩国（大韩民国） → 中国</span></h1>
+  <p class="sub">产品身份已基本锁定为『H₂O₂ 约 30% 的水溶液 + 少量磷/锡酸盐类稳定剂』，但稳定剂具体品种与限量、以及是否构成『过氧化氢的水溶液』这一监管前提，仍缺供应商书面确认，因此危化品与易制爆的适用性只能做到『高度可能适用』而非『已证实适用』。</p>
+  <div class="chips"><span class="chip k"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg> 来源国 <b>韩国（大韩民国）</b></span><span class="chip">CAS <b>7722-84-1</b></span><span class="chip">浓度 <b>30.0%（质量分数，H₂O₂）</b></span><span class="chip dg">危险货物 <b>UN 2014</b> · 5.1 / PG II（包装类别 II）</span><span class="chip hz">危险化学品 <b>目录第903项（视条件）</b></span><span class="chip k">HS <b>2847.00.0000</b></span><span class="chip tax">最惠国 <b>5.5%</b> · 增值税 <b>13%</b></span><span class="chip"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><b>海运（整柜，非散装）</b></span><span class="chip"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg><b>HDPE 开顶桶（中型包装物/桶类，带排气盖）</b></span></div>
+
+  <div class="grade-row">
+    <div class="grade-badge gD" style="--ring:24%">
+      <span class="g">D</span><span class="gl">不可放行</span>
+    </div>
+    <div class="grade-text">
+      <div class="gt">不可放行（存在硬缺口）</div>
+      <div class="gd">产品身份、HS 归类与危险货物运输分类三条主线已可锁定（2847.00.0000 / UN2014 / 危化品目录第903项高度可能适用）；阻断点集中在**中文合规文件（SDS、标签）、稳定剂披露、符合性声明与包装UN标记**四项，补齐后可进入报关准备。</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi bad"><div class="kv">6<small>项</small></div><div class="kl">P0 阻断性缺口</div></div>
+    <div class="kpi warn"><div class="kv">3<small>项</small></div><div class="kl">高优先级待确认</div></div>
+    <div class="kpi bad"><div class="kv">18.8<small>%</small></div><div class="kl">单证完备度</div></div>
+    <div class="kpi ink"><div class="kv">1<small>/18</small></div><div class="kl">必须件已齐备</div></div>
+    <div class="kpi ind"><div class="kv">15<small>项</small></div><div class="kl">已核监管事项</div></div>
+    <div class="kpi ink"><div class="kv">21<small>条</small></div><div class="kl">可回溯证据</div></div>
+  </div>
+</div>
+</section>
+
+<section id="s1">
+<div class="sec-head"><span class="no">00</span><h2>放行闸门</h2>
+  <div class="lead">六道闸门决定这批货能否进入报关准备。任一项「未通过」即不可放行；「待确认」需在 T-30 前闭环。</div></div>
+<div class="tw"><table class="t">
+<thead><tr><th style="width:110px">闸门</th><th style="width:34%">判定规则</th><th style="width:78px">状态</th><th>本单说明</th></tr></thead>
+<tbody><tr>
+<td class="m"><b>GATE-1</b><div class="sml">身份闸门</div></td>
+<td>CAS/浓度/组成/稳定剂/用途/包装/运输方式全部有证据支撑，且与 PI、SDS、合同一致</td>
+<td class="c"><span class="badge warn">待确认</span></td>
+<td class="sml">产品身份为『部分确认』，尚缺 5 项要素；这些要素直接决定危化品与易制爆是否适用。</td></tr><tr>
+<td class="m"><b>GATE-2</b><div class="sml">归类闸门</div></td>
+<td>HS 首选编码可回溯到税则条文与归类决定要素；不确定点已书面移交（报关行/预归类/预裁定）</td>
+<td class="c"><span class="badge ok">通过</span></td>
+<td class="sml">归类置信度高（2847.00.0000），有章注与品目条文支撑；仍需报关行复核后申报。</td></tr><tr>
+<td class="m"><b>GATE-3</b><div class="sml">监管闸门</div></td>
+<td>《危险化学品目录》、易制爆/易制毒、两用物项、用途专项（食品/消毒/药品）逐项比对，无 pending</td>
+<td class="c"><span class="badge warn">待确认</span></td>
+<td class="sml">4 项监管事项为『待核验/视条件适用』，须取得书面结论（见第 10 节）。</td></tr><tr>
+<td class="m"><b>GATE-4</b><div class="sml">运输闸门</div></td>
+<td>UN 编号/类项/包装类别/正确运输名称与 IMDG（或 IATA）一致，包装与积载满足要求</td>
+<td class="c"><span class="badge ok">通过</span></td>
+<td class="sml">运输分类明确：UN 2014 / 5.1（氧化性物质） / PG II（包装类别 II）；仍需供应商提供 UN 包装证书后方可报关填报。</td></tr><tr>
+<td class="m"><b>GATE-5</b><div class="sml">文件闸门</div></td>
+<td>中文化学品安全技术说明书、中文危险公示标签、符合性声明、UN 包装标记信息齐备</td>
+<td class="c"><span class="badge bad">未通过</span></td>
+<td class="sml">必须件缺失 13 项（D02、D04、D11、D13、D14、D15…），不补齐无法报关。</td></tr><tr>
+<td class="m"><b>GATE-6</b><div class="sml">税费与原产地闸门</div></td>
+<td>适用税率（最惠国/协定/暂定）与优惠资格已确认；原产地证书与直接运输条件满足</td>
+<td class="c"><span class="badge warn">待确认</span></td>
+<td class="sml">2 项协定税率存在数据冲突，须以单一窗口实查结果为准后再锁定成本。</td></tr></tbody></table></div>
+</section>
+
+<section id="s2">
+<div class="sec-head"><span class="no">01</span><h2>产品与归类</h2>
+  <div class="lead">先锁身份，再谈监管。名称、浓度、组成、形态、用途、包装、运输方式七项任一变化，都可能导致监管结论改变。</div></div>
+
+<div class="grid2">
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L4 20a1 1 0 0 0 .9 1.5h14.2A1 1 0 0 0 20 20l-6-11V3"/></svg> 产品身份要素 <span class="badge warn">部分确认</span></h3>
+    <dl class="dl "><dt>中文品名</dt><dd>过氧化氢溶液（双氧水）</dd><dt>英文品名</dt><dd><span class='mono'>HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%</span></dd><dt>CAS</dt><dd><span class='mono'>7722-84-1</span></dd><dt>UN 编号</dt><dd><span class='mono'>2014</span></dd><dt>浓度/含量</dt><dd><b>30.0%（质量分数，H₂O₂）</b></dd><dt>形态</dt><dd>液体（均相水溶液）</dd><dt>等级</dt><dd>工业级</dd><dt>执行标准</dt><dd>供应商企标 + 参照 GB/T 1616《工业过氧化氢》（国内对标口径）</dd><dt>进口用途</dt><dd>用于电子行业 PCB 蚀刻后微蚀工序的单槽漂洗，浓度按工艺稀释至 3%~5% 使用</dd><dt>用途敏感性</dt><dd>民用工业用途；非食品添加剂、非药品、非消毒剂产品（不作为消毒产品销售）、非涉军用途</dd><dt>包装方式</dt><dd>30 kg UN 认证高密度聚乙烯（HDPE）桶装，每托 20 桶（含托盘与缠绕膜），共约 34 托</dd><dt>包装容器</dt><dd>HDPE 开顶桶（中型包装物/桶类，带排气盖）</dd><dt>单件毛重</dt><dd>30 kg 净重 / 31.2 kg 毛重（单桶）</dd><dt>申报『包装规格』</dt><dd>30 公斤/桶（HDPE 桶），每托 20 桶</dd><dt>数量</dt><dd>20 000 kg（20 吨）</dd><dt>运输方式</dt><dd>海运（整柜，非散装）</dd><dt>贸易术语</dt><dd>FOB Busan</dd><dt>起运/目的</dt><dd>Busan（韩国釜山）→ Shanghai（中国上海洋山港）</dd><dt>海外供应商</dt><dd>HANWOO CHEMICAL CO., LTD.（示例名称，非真实供应商）</dd><dt>进口企业</dt><dd>华东某精细化工有限公司（脱敏示例）</dd></dl>
+  </div>
+
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg> 组成（成分表）</h3>
+    <div class="tw"><table class="t" style="min-width:0">
+      <thead><tr><th>组分</th><th>英文</th><th>CAS</th><th class="r">含量</th><th>角色</th></tr></thead>
+      <tbody><tr><td>过氧化氢</td><td class='sml'>Hydrogen peroxide</td><td class='m'>7722-84-1</td><td class='r num'>30–31%</td><td class='sml'>主成分（氧化剂）</td></tr><tr><td>稳定剂（磷酸盐类）</td><td class='sml'>Stabiliser (phosphate based)</td><td class='m'>—</td><td class='r num'>0.02–0.08%</td><td class='sml'>稳定剂（运输安全所必需）</td></tr><tr><td>硝酸盐稳定剂</td><td class='sml'>Nitrate stabiliser</td><td class='m'>13377-33-8</td><td class='r num'>0.01–0.05%</td><td class='sml'>稳定剂</td></tr><tr><td>锡酸盐稳定剂</td><td class='sml'>Sodium stannate</td><td class='m'>12058-66-1</td><td class='r num'>0.005–0.02%</td><td class='sml'>稳定剂</td></tr><tr><td>水</td><td class='sml'>Water</td><td class='m'>7732-18-5</td><td class='r num'>68.85–69.965%</td><td class='sml'>溶剂</td></tr></tbody></table></div>
+    <p class="sml" style="margin-top:8px;color:var(--ink-3)">
+      <b>为什么组成要写到稳定剂：</b>《危险化学品目录》第903项只覆盖「过氧化氢的水溶液」。应急管理部答复明确：浓度&gt;8% 的过氧化氢溶液中若添加了<b>稳定剂、惰性化学品以外</b>的其他化学品，即不属该水溶液条目，须另行开展危险特性鉴定。</p>
+  </div>
+</div>
+
+<div class="grid2" style="margin-top:12px">
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 已取得的身份证据</h3>
+    <ul class="sml" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>CAS 7722-84-1（过氧化氢）——SDS（模拟件 U01）第1、3节与 PI（U03）一致</li><li>主成分浓度 30%~31%（质量分数）——SDS 第3节、COA（U02）实测 30.4%、PI（U03）三处一致</li><li>物态：均相水溶液，不含有机溶剂</li><li>原产国：韩国；出口港：Busan</li><li>包装：30 kg HDPE 桶，非散装</li><li>运输方式：海运整柜 FCL</li></ul>
+    <h3 style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> 仍未确认的要素</h3>
+    <ul class="sml" style="margin:0;padding-left:18px;display:grid;gap:4px;color:var(--bad)"><li>稳定剂的确切化学名称与加入量（SDS 第3节仅写『磷酸盐类稳定剂』，未给 CAS 与精确百分比）</li><li>是否含《危险化学品目录》实施指南所称『稳定剂、惰性化学品以外』的其他功能性添加剂</li><li>是否同一批次对应同一 SDS 版本号（SDS 未印版本号与修订日期）</li><li>工业级是否满足国内下游对铁/总有机碳（TOC）的限值（TDS 未提供）</li><li>生产厂是否即 PI 抬头主体（需生产商声明或工厂地址一致）</li></ul>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> 身份风险点与处置</h3>
+    <div class="gap p1" style="margin-bottom:6px">
+        <div class="gh"><span class="gt">稳定剂未披露到品种与用量</span></div>
+        <div class="gb">
+          <div class="q"><span class="k">为什么</span><span>《危险化学品目录》第903项只覆盖『过氧化氢的水溶液』；应急管理部答复（S03）明确『添加其他化学品（稳定剂、惰性化学品除外）』即不再自动落入该条。稳定剂本身在豁免范围内，但若含功能性添加剂（如缓蚀剂、润湿剂）则可能需重新鉴定危化品属性。</span></div>
+          <div class="q"><span class="k">怎么办</span><span>要求供应商出具稳定剂清单（名称+CAS+精确%) 与『仅含稳定剂、无其他功能性添加剂』的书面声明（见 R-D03 / G03）</span></div>
+        </div></div><div class="gap p1" style="margin-bottom:6px">
+        <div class="gh"><span class="gt">浓度口径只写在 SDS 正文，未写入标签</span></div>
+        <div class="gb">
+          <div class="q"><span class="k">为什么</span><span>浓度跨越 8%/20%/60% 三个阈值时会同时改变危化品目录适用、易制爆分类（氧化性液体类别1/2/3）与 UN 编号（2984/2014/2015）。若实际交货为 27.5% 或 50%，监管口径完全不同。</span></div>
+          <div class="q"><span class="k">怎么办</span><span>合同、PI、COA、标签四处浓度必须锁死为『30.0%（质量分数）』并附加允许偏差（±0.5 个百分点以内且不得跨阈值）</span></div>
+        </div></div><div class="gap p1" style="margin-bottom:6px">
+        <div class="gh"><span class="gt">SDS 无版本号与修订日期</span></div>
+        <div class="gb">
+          <div class="q"><span class="k">为什么</span><span>GB/T 16483（S10）要求 SDS 载明修订日期；海关 129 号公告（S05）要对中文 SDS 样本做内容审核，无版本号无法证明其为当前版本。</span></div>
+          <div class="q"><span class="k">怎么办</span><span>索取带版本号与修订日期的 SDS（中英对照），并要求供应商承诺变更时主动更新</span></div>
+        </div></div><div class="gap p1" style="margin-bottom:6px">
+        <div class="gh"><span class="gt">用途如切换为食品添加剂或消毒产品，监管路径完全不同</span></div>
+        <div class="gb">
+          <div class="q"><span class="k">为什么</span><span>海关 129 号公告第八条（S05）：用作食品、食品添加剂的进出口危险化学品还须符合食品安全相关规定；消毒产品另有卫生许可与备案路径。</span></div>
+          <div class="q"><span class="k">怎么办</span><span>用途变更前必须重跑 P1–P3；本底稿仅对『PCB 微蚀用工业级』成立</span></div>
+        </div></div>
+  </div>
+</div>
+</section>
+
+<section id="s3">
+<div class="sec-head"><span class="no">01</span><h2>HS 编码候选与归类依据</h2>
+  <div class="lead">归类不是一个编码，而是一条可复核的推理链：章注/子目注释 → 品目条文 → 构成条件 → 不确定点。</div>
+  <div class="tools"><span class="badge solid lg">首选 2847.00.0000</span></div></div>
+
+<div class="tw" data-tw="hs"><div class="filters">
+  <span class="sml" id="count-hs" style="color:var(--muted)"></span></div>
+<table class="t">
+<thead><tr><th style="width:42px">排名</th><th style="width:112px">税则号列</th><th style="width:15%">品目描述</th>
+<th style="width:64px">置信</th><th style="width:26%">归类依据</th><th>成立条件</th><th style="width:18%">不成立时去向</th></tr></thead>
+<tbody><tr class="">
+<td class="c">★</td>
+<td class="m"><b style="font-size:13.4px">2847.00.0000</b></td>
+<td>过氧化氢（不论是否用尿素固化） <span class="badge solid">首选</span></td>
+<td class="c"><span class="badge gray">高</span></td>
+<td class="sml">第28章章注一（二）：本章税目适用于『上述（一）款产品的水溶液』；章注一（四）：为保存或运输需要加入稳定剂的仍归本章；品目 28.47 条文『过氧化氢，无论是否用尿素固化』。本产品为 H₂O₂ 水溶液 + 运输所必需的稳定剂，未改变一般用途。<div style="margin-top:4px"><span class="tag src" data-src="S06">S06</span> <span class="tag src" data-src="S18">S18</span></div></td>
+<td class="sml">成立条件：①主成分为过氧化氢；②溶剂仅为水；③添加剂限于稳定剂/防尘剂/着色剂且不改变一般用途；④未与其他有效成分构成具有专门功能的制剂。</td>
+<td class="sml">若加入改变用途的功能性添加剂（如作为杀菌制剂配方出售、含表面活性剂的复配消毒液），可能落入 3808；若按重量计浓度极低且用于特定行业配方，需按具体商品判别。</td></tr><tr class="rowwarn">
+<td class="c">2</td>
+<td class="m"><b style="font-size:13.4px">2850.00.0090 / 2853</b></td>
+<td>其他无机化合物（兜底品目）</td>
+<td class="c"><span class="badge gray">低</span></td>
+<td class="sml">仅在无法满足 28 章章注一时作为兜底讨论；本产品明显满足章注一，兜底品目不应优先。<div style="margin-top:4px"><span class="tag src" data-src="S06">S06</span></div></td>
+<td class="sml">不成立：本章有明确列名品目 28.47 时不使用兜底品目。</td>
+<td class="sml">—</td></tr><tr class="rowwarn">
+<td class="c">3</td>
+<td class="m"><b style="font-size:13.4px">3808.94 / 3808.99</b></td>
+<td>消毒剂、杀虫剂等零售或制剂形态产品</td>
+<td class="c"><span class="badge gray">低</span></td>
+<td class="sml">仅当产品以『消毒剂成药』形态申报、具备专门配方与标签宣称时讨论。本单为工业级原料，标签不宣称消毒，故不适用。<div style="margin-top:4px"><span class="tag src" data-src="S06">S06</span></div></td>
+<td class="sml">不成立：工业级 30% 过氧化氢为基本化工原料，非零售消毒制剂。</td>
+<td class="sml">若用途改为医疗消毒并取得相应注册，则需重判。</td></tr></tbody></table></div>
+
+<div class="grid2" style="margin-top:12px">
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> 规范申报要素（按顺序填写）</h3>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"><span class='tag'>1. 品牌类型</span> <span class='tag'>2. 出口享惠情况</span> <span class='tag'>3. 成分含量</span> <span class='tag'>4. 包装规格</span> <span class='tag'>5. GTIN（非必填）</span> <span class='tag'>6. CAS</span> </div>
+    <div style="background:var(--card-2);border:1px dashed var(--line-2);border-radius:6px;padding:9px 11px">
+      <div class="sml" style="color:var(--muted);margin-bottom:3px">填报示例（『规格型号』栏，用 | 分隔）</div>
+      <div class="mono" style="font-size:11.8px;word-break:break-all">0|2|过氧化氢30%，水约69.9%，稳定剂&lt;0.1%|30公斤/桶(HDPE桶)，每托20桶||7722-84-1</div>
+    </div>
+    <h3 style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14"/><path d="m5 7-3 7h6zM19 7l-3 7h6z"/></svg> 归类不确定性</h3>
+    <p class="sml" style="margin:0">本单归类置信度高（唯一列名品目 + 章注明确涵盖水溶液与稳定剂），但仍有两处不确定：①若供应商稳定剂清单中出现改变用途的功能性添加剂，需复核是否仍在 28 章；②同名商品在实务中存在按『含量』申报差异（海关 CIQ 扩展码对 ≥60%、20%~60%、8%~20% 分列），申报时应与 HS 一并准确填报含量水平。</p>
+    <p class="sml" style="margin-top:8px">是否需要预裁定：<b>否（高置信，建议报关行复核后申报）</b></p>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> CIQ 扩展码（法定检验检疫）</h3>
+    <ul style="margin:0;padding-left:18px;display:grid;gap:3px"><li class='sml'><span class='mono'>2847000000.101 过氧化氢（含量＞60%，特许的）</span></li><li class='sml'><span class='mono'>2847000000.102 过氧化氢（20%≤含量≤60%）← 本单应落在此段</span></li><li class='sml'><span class='mono'>2847000000.103 过氧化氢（8%≤含量＜20%）</span></li><li class='sml'><span class='mono'>2847000000.104 过氧化氢尿素</span></li><li class='sml'><span class='mono'>2847000000.105 非工业用无检疫要求食品添加剂</span></li></ul>
+    <p class="sml" style="margin-top:10px;color:var(--ink-3)">CIQ 扩展码由报关代理按海关现行参数选取；本单含量 30% 对应 20%~60% 段，与 UN2014 分级一致，可互相印证。</p>
+  </div>
+</div>
+</section>
+
+<section id="s4">
+<div class="sec-head"><span class="no">02</span><h2>进口税费与优惠</h2>
+  <div class="lead">税率以 2026 年税则为口径；优惠税率必须以「原产地规则 + 直接运输 + 原产地证书」三者同时成立为前提。</div></div>
+
+<div class="grid3">
+  <div class="card"><div class="sml" style="color:var(--muted)">最惠国税率</div>
+    <div style="font-family:var(--num);font-size:30px;font-weight:700;color:var(--ink)">5.5%</div>
+    <div class="sml">原产于最惠国待遇地区货物适用；韩国为 WTO 成员，适用最惠国税率。来源 S06/S18，以海关现场核定为准。</div></div>
+  <div class="card"><div class="sml" style="color:var(--muted)">暂定税率</div>
+    <div style="font-family:var(--num);font-size:24px;font-weight:700;color:var(--ink-3)">无（未见暂定税率）</div>
+    <div class="sml">暂定税率如设置则优先于最惠国税率适用；需在报关前以单一窗口/税则原文复核。</div></div>
+  <div class="card"><div class="sml" style="color:var(--muted)">进口环节增值税</div>
+    <div style="font-family:var(--num);font-size:30px;font-weight:700;color:var(--ink)">13%</div>
+    <div class="sml">进口环节增值税由海关代征，计税价格=关税完税价格+关税+消费税。</div></div>
+  <div class="card"><div class="sml" style="color:var(--muted)">普通税率</div>
+    <div style="font-family:var(--num);font-size:24px;font-weight:700;color:var(--ink-3)">30%</div>
+    <div class="sml">仅适用于原产地不适用最惠国待遇或原产地不明的货物。</div></div>
+  <div class="card"><div class="sml" style="color:var(--muted)">消费税</div>
+    <div style="font-family:var(--num);font-size:24px;font-weight:700;color:var(--ink-3)">0</div>
+    <div class="sml">过氧化氢不属消费税应税消费品。</div></div>
+  <div class="card" style="background:linear-gradient(160deg,var(--warn-bg),var(--card) 70%)">
+    <div class="sml" style="color:var(--warn)">优惠税率状态</div>
+    <div style="font-family:var(--serif);font-size:16px;font-weight:700;color:var(--warn)">存在数据冲突，不可直接采用</div>
+    <div class="sml">详见下方说明与待确认 Q03</div></div>
+</div>
+
+<div class="tw" style="margin-top:12px"><table class="t">
+<thead><tr><th style="width:26%">优惠安排</th><th style="width:150px">页面显示税率</th><th style="width:120px">状态</th><th>适用条件</th></tr></thead>
+<tbody><tr class="rowwarn">
+<td>中国—韩国自由贸易协定（中韩 FTA）</td><td class="c m">页面显示 1.1%，但年度与降税阶段未标注</td>
+<td class="c"><span class="badge bad">数据冲突·待核实</span></td>
+<td class="sml">需①产品在韩方生产并符合原产地规则；②符合直接运输（Busan→Shanghai 直航或满足转运规则）；③取得中韩 FTA 原产地证书（CO）。</td></tr><tr class="rowwarn">
+<td>RCEP（区域全面经济伙伴关系协定，韩国为成员）</td><td class="c m">页面显示 RCEP·韩国 2.8%</td>
+<td class="c"><span class="badge bad">数据冲突·待核实</span></td>
+<td class="sml">需①满足 RCEP 原产地规则；②取得 RCEP 原产地证书或经核准出口商的原产地声明；③注意 RCEP 与中韩 FTA 择低适用。</td></tr><tr class="">
+<td>最惠国税率（不申请优惠）</td><td class="c m">5.5%</td>
+<td class="c"><span class="badge ok">已核实</span></td>
+<td class="sml">无条件适用，但税负最高；可作为原产地证书办理延迟时的兜底方案。</td></tr></tbody></table></div>
+
+<div class="card" style="margin-top:12px;border-left:3px solid var(--warn)">
+  <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> 为什么不能直接写「协定税率 1.1%」</h3>
+  <p class="sml" style="margin:0">同一页面另提示『部分化工产品 2016 年起零关税（含过氧化氢）』，与 1.1%/2.8% 的栏位相互矛盾，且均未给出协定年度与降税阶段编号，因此**两个第三方税率都不能直接用于成本测算**。必须由报关行在『中国国际贸易单一窗口—关税优惠税率查询』按 2847000000 + 韩国 + 2026 年度实查，或由供应商/货代书面确认出证能力后再锁定。
+  <span class="tag src tC" data-src="S19">S19</span></p>
+</div>
+
+<div class="grid2" style="margin-top:12px">
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14"/><path d="m5 7-3 7h6zM19 7l-3 7h6z"/></svg> 税额试算（示例口径）</h3>
+    <dl class="dl "><dt>CIF（USD）</dt><dd><span class='num'>$24,200.00</span></dd><dt>汇率</dt><dd><span class='mono'>7.118</span>（示例值，以海关计征日为准）</dd><dt>CIF（CNY）</dt><dd><span class='num'>¥172,255.60</span></dd><dt>关税 5.5%</dt><dd><span class='num'>¥9,474.06</span></dd><dt>增值税计税价</dt><dd><span class='num'>¥181,729.66</span></dd><dt>增值税 13%</dt><dd><span class='num'>¥23,624.86</span></dd><dt>税费合计</dt><dd><b class='num' style='font-size:15px'>¥33,098.92</b></dd></dl>
+    <p class="sml" style="margin:10px 0 0;color:var(--ink-3)">按 20 吨 × USD 1.18/kg + 运保费 USD 600 估算 CIF；汇率取示例值 7.1180，实际以海关计征日汇率为准。增值税进项可抵扣，此处仅计现金流。</p>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg> 若享惠，税额如何变化</h3>
+    <div class="tw" style="margin-top:0"><table class="t" style="min-width:0">
+      <thead><tr><th>假定税率</th><th class="r">关税（CNY）</th><th>说明</th></tr></thead>
+      <tbody><tr><td class='sml'>1.1%（待核实）</td><td class='r num'>¥1,894.81</td><td class='sml'>若中韩FTA适用，关税显著下降；增值税为抵减项但影响现金流</td></tr><tr><td class='sml'>0%（若已零关税）</td><td class='r num'>¥0.00</td><td class='sml'>若第三方所称零关税成立，关税为 0；须以证书与单一窗口查询为准</td></tr><tr><td class="sml">5.5%</td><td class="r num">¥9,474.06</td><td class="sml">最惠国税率（无证书时的兜底）</td></tr></tbody></table></div>
+    <p class="sml" style="margin-top:8px;color:var(--ink-3)">上表按 CIF = ¥172,255.60 计算；增值税为可抵扣进项，此处仅计现金流影响。</p>
+  </div>
+</div>
+</section>
+
+<section id="s5">
+<div class="sec-head"><span class="no">03</span><h2>监管与许可</h2>
+  <div class="lead">逐项比对、逐条留据。「待核验」不等于「不适用」；「不适用」必须能指回条文。</div>
+  <div class="tools"><span class="sml" id="count-reg" style="color:var(--muted)"></span></div></div>
+
+<div class="tw" data-tw="reg"><div class="filters">
+  <button class="fchip on" data-filter="all">全部 <span class="c">15</span></button><button class="fchip" data-filter="applies">适用 <span class="c">8</span></button><button class="fchip" data-filter="conditional">视条件 <span class="c">3</span></button><button class="fchip" data-filter="pending">待核验 <span class="c">1</span></button><button class="fchip" data-filter="not_applies">不适用 <span class="c">3</span></button>
+  <div class="search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" placeholder="搜索监管项 / 结论 / 法规" aria-label="搜索监管项"></div>
+</div>
+<table class="t">
+<thead><tr><th>#</th><th>管理层</th><th style="width:15%">监管事项</th><th>判定</th>
+<th style="width:22%">结论</th><th style="width:24%">依据（含来源）</th><th style="width:16%">适用条件</th><th style="width:14%">对本单的影响</th><th>责任方</th></tr></thead>
+<tbody><tr class="rowwarn"
+    data-rowkey="conditional" data-search="是否列入《危险化学品目录》高度可能适用第 903 项『过氧化氢溶液[含量＞8%]』；因稳定剂品种未完全披露，结论定级为『视条件适用』。危险化学品管理">
+<td class="m" style="white-space:nowrap">R01</td>
+<td class="sml" style="white-space:nowrap">危险化学品管理</td>
+<td><b>是否列入《危险化学品目录》</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge warn">视条件适用</span></td>
+<td class="sml">高度可能适用第 903 项『过氧化氢溶液[含量＞8%]』；因稳定剂品种未完全披露，结论定级为『视条件适用』。</td>
+<td class="sml">《危险化学品目录（2015版）》第903项（S02）；目录说明第四条（无含量说明条目指工业产品或纯度高于工业产品的化学品）；应急管理部答复（S03）。<div style="margin-top:4px"><span class="tag src" data-src="S02">S02</span> <span class="tag src" data-src="S03">S03</span></div></td>
+<td class="sml">①含量 &gt; 8%（本单 30% 满足）；②为过氧化氢水溶液；③除稳定剂、惰性化学品外不得含其他功能性添加剂。</td>
+<td class="sml">决定是否触发海关检验（129号公告）、中文SDS与标签、危化品登记、境内储存与经营许可等一整条链路。</td>
+<td class="sml" style="white-space:nowrap">进口商 / 报关代理</td></tr><tr class=""
+    data-rowkey="applies" data-search="进口企业危险化学品登记适用。进口企业须向应急管理部门危化品登记机构办理登记（同一品种不重复登记，信息变更须及时变更）。危险化学品管理">
+<td class="m" style="white-space:nowrap">R02</td>
+<td class="sml" style="white-space:nowrap">危险化学品管理</td>
+<td><b>进口企业危险化学品登记</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">适用。进口企业须向应急管理部门危化品登记机构办理登记（同一品种不重复登记，信息变更须及时变更）。</td>
+<td class="sml">《危险化学品安全法》第85–86条（S01）；原《危险化学品安全管理条例》第67条（S16）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S16">S16</span></div></td>
+<td class="sml">企业实际进口该危化品即触发；登记内容包括分类标签、理化性质、用途、危险特性、储运安全要求与应急处置。</td>
+<td class="sml">首次进口前完成登记；后续信息变更（如换供、改标）须变更登记。</td>
+<td class="sml" style="white-space:nowrap">进口商</td></tr><tr class=""
+    data-rowkey="applies" data-search="中文化学品安全技术说明书（sds）适用。生产企业、进口企业应提供与其进口危险化学品相符的中文化学品安全技术说明书。危险化学品管理">
+<td class="m" style="white-space:nowrap">R03</td>
+<td class="sml" style="white-space:nowrap">危险化学品管理</td>
+<td><b>中文化学品安全技术说明书（SDS）</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">适用。生产企业、进口企业应提供与其进口危险化学品相符的中文化学品安全技术说明书。</td>
+<td class="sml">《危险化学品安全法》第31条（S01）；海关总署2020年第129号公告第二条第（三）项（S05）；GB/T 16483（S10）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S05">S05</span> <span class="tag src" data-src="S10">S10</span></div></td>
+<td class="sml">进口危险化学品必须随附中文SDS；内容须符合国家标准要求；与货物不符或不符合国标属违法行为（第31条、法律责任章）。</td>
+<td class="sml">上传件 U01 为韩文/英文 SDS，需整册翻译并核对第14节运输信息与 UN2014 一致。</td>
+<td class="sml" style="white-space:nowrap">进口商（可委托翻译/合规机构）</td></tr><tr class=""
+    data-rowkey="applies" data-search="中文危险公示标签适用。进口化学品包装上须粘贴、印刷或拴挂与包装内化学品相符的中文化学品安全标签。危险化学品管理">
+<td class="m" style="white-space:nowrap">R04</td>
+<td class="sml" style="white-space:nowrap">危险化学品管理</td>
+<td><b>中文危险公示标签</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">适用。进口化学品包装上须粘贴、印刷或拴挂与包装内化学品相符的中文化学品安全标签。</td>
+<td class="sml">《危险化学品安全法》第31条（S01）；海关129号公告第二条第（三）项、第五条（S05）；GB 15258（S12）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S05">S05</span> <span class="tag src" data-src="S12">S12</span></div></td>
+<td class="sml">散装产品除外；本单为桶装，不免除。标签须含中文品名、成分及含量、象形图、信号词、危险性说明、防范说明、供应商与应急电话。</td>
+<td class="sml">上传件 U04 标签仅为英文（且缺少中文应急电话），不能直接使用。</td>
+<td class="sml" style="white-space:nowrap">进口商 / 海外供应商</td></tr><tr class=""
+    data-rowkey="not_applies" data-search="危险化学品经营许可本单不适用：进口企业为自用（自有工厂 pcb 工序使用），非对外销售危化品。危险化学品管理">
+<td class="m" style="white-space:nowrap">R05</td>
+<td class="sml" style="white-space:nowrap">危险化学品管理</td>
+<td><b>危险化学品经营许可</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge ok">不适用</span></td>
+<td class="sml">本单不适用：进口企业为自用（自有工厂 PCB 工序使用），非对外销售危化品。</td>
+<td class="sml">《危险化学品安全法》第53条：国家对危险化学品经营实行许可制度；未取得许可任何单位和个人不得经营（S01）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span></div></td>
+<td class="sml">以转售为目的的进口（贸易商进口后销售）必须持危化品经营许可证；生产企业厂区内销售自产产品、港口经营人在港区内仓储经营属例外。</td>
+<td class="sml">如本批货物最终转售给第三方，进口主体必须先取得经营许可，否则属无证经营。</td>
+<td class="sml" style="white-space:nowrap">进口商</td></tr><tr class=""
+    data-rowkey="applies" data-search="是否列入《易制爆危险化学品名录》适用。第6.1项『过氧化氢溶液（含量＞8%）』；30% 对应『20%≤含量＜60%：氧化性液体，类别2』。易制爆管理">
+<td class="m" style="white-space:nowrap">R06</td>
+<td class="sml" style="white-space:nowrap">易制爆管理</td>
+<td><b>是否列入《易制爆危险化学品名录》</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">适用。第6.1项『过氧化氢溶液（含量＞8%）』；30% 对应『20%≤含量＜60%：氧化性液体，类别2』。</td>
+<td class="sml">《易制爆危险化学品名录（2017年版）》第6.1项（S04）；《危险化学品安全法》第58条、第60–62条（S01）。<div style="margin-top:4px"><span class="tag src" data-src="S04">S04</span> <span class="tag src" data-src="S01">S01</span></div></td>
+<td class="sml">门槛同样是含量 &gt; 8%。注意名录对含量的三档划分与运输 UN 编号的分档并不完全一致（见危险属性对照）。</td>
+<td class="sml">购买、销售、储存须纳入治安管理：销售方须查验购买方凭证、如实记录、三日内报送流向信息。</td>
+<td class="sml" style="white-space:nowrap">进口商 / 境内销售方</td></tr><tr class="rowwarn"
+    data-rowkey="conditional" data-search="易制爆购买凭证与流向报备进口环节本身不直接对应『购买』行为；但货物入境后若由境内单位购入并转储/使用，则按境内规则办理。易制爆管理">
+<td class="m" style="white-space:nowrap">R07</td>
+<td class="sml" style="white-space:nowrap">易制爆管理</td>
+<td><b>易制爆购买凭证与流向报备</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge warn">视条件适用</span></td>
+<td class="sml">进口环节本身不直接对应『购买』行为；但货物入境后若由境内单位购入并转储/使用，则按境内规则办理。</td>
+<td class="sml">《危险化学品安全法》第58条（凭危化品安全生产/使用/经营许可证购买易制爆；其他单位购买须持单位出具的合法用途说明）、第60–62条（查验、记录、3日内报公安机关）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span></div></td>
+<td class="sml">取决于进口后的处置路径：直接投料生产（自有危化品使用/生产许可）、还是进入仓储再销售。</td>
+<td class="sml">实务中多数属地要求进口易制爆品在入境后 3 个工作日内完成流向报备，须在首批到港前落实属地口径。</td>
+<td class="sml" style="white-space:nowrap">进口商 / 属地公安机关</td></tr><tr class=""
+    data-rowkey="applies" data-search="是否属危险货物（运输分类）适用。un 2014，第 5.1 类（氧化性物质），次要危险 8（腐蚀性），包装类别 ii。运输">
+<td class="m" style="white-space:nowrap">R08</td>
+<td class="sml" style="white-space:nowrap">运输</td>
+<td><b>是否属危险货物（运输分类）</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">适用。UN 2014，第 5.1 类（氧化性物质），次要危险 8（腐蚀性），包装类别 II。</td>
+<td class="sml">UN Model Regulations / IMDG Code（S14）；GB 6944-2025（S08）；GB 12268-2025（S09）；GB 6944/12268 自 2025-10-01 起为现行版本。<div style="margin-top:4px"><span class="tag src" data-src="S08">S08</span> <span class="tag src" data-src="S09">S09</span> <span class="tag src" data-src="S14">S14</span></div></td>
+<td class="sml">按 H₂O₂ 含量分档：8%–&lt;20% → UN2984/PG III；20%–60% → UN2014/PG II；&gt;60% → UN2015/PG I；&lt;8% 通常不作为危险货物。</td>
+<td class="sml">决定包装规格、标志、申报、积载隔离与运费附加。</td>
+<td class="sml" style="white-space:nowrap">承运人 / 报关代理 / 进口商</td></tr><tr class=""
+    data-rowkey="applies" data-search="海关进出口危险化学品检验适用。海关对列入《危险化学品目录》的进出口危险化学品及其包装实施检验；报关须填报危险类别、包装类别、un编号、包装un标记。检验检疫">
+<td class="m" style="white-space:nowrap">R09</td>
+<td class="sml" style="white-space:nowrap">检验检疫</td>
+<td><b>海关进出口危险化学品检验</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">适用。海关对列入《危险化学品目录》的进出口危险化学品及其包装实施检验；报关须填报危险类别、包装类别、UN编号、包装UN标记。</td>
+<td class="sml">《危险化学品安全法》第7条(九)（S01）；海关总署公告2020年第129号第一条、第二条、第六条（S05）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S05">S05</span></div></td>
+<td class="sml">以『是否列入目录』为门槛；本单因属目录第903项而纳入检验范围。不属于危险化学品的危险货物不在此公告检验范围内（但仍受运输规则约束）。</td>
+<td class="sml">报关时须提交《进口危险化学品企业符合性声明》、稳定剂说明、中文危险公示标签与中文SDS样本；包装须检验型式、标记、类别、规格、单件重量与使用状况。</td>
+<td class="sml" style="white-space:nowrap">进口商 / 报关代理</td></tr><tr class=""
+    data-rowkey="applies" data-search="海关监管条件代码适用2847000000 监管条件为 a（入境货物通关单）、b（出境货物通关单）、g（两用物项和技术出口许可证·定向）。进口环节相关的是 a 与 g 的判定。检验检疫">
+<td class="m" style="white-space:nowrap">R10</td>
+<td class="sml" style="white-space:nowrap">检验检疫</td>
+<td><b>海关监管条件代码适用</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">2847000000 监管条件为 A（入境货物通关单）、B（出境货物通关单）、G（两用物项和技术出口许可证·定向）。进口环节相关的是 A 与 G 的判定。</td>
+<td class="sml">中国国际贸易单一窗口 2026 申报参数（S07）；365外贸网整理（S18）。<div style="margin-top:4px"><span class="tag src" data-src="S07">S07</span> <span class="tag src" data-src="S18">S18</span></div></td>
+<td class="sml">A：进口属法检商品，须取得入境货物通关单；B：出口方向；G：出口管制许可（定向），不针对进口。</td>
+<td class="sml">报关代理须按参数填选；若产品同时被列入当年《两用物项和技术进出口许可证管理目录》，则按目录要求另行办证（见 R11）。</td>
+<td class="sml" style="white-space:nowrap">报关代理</td></tr><tr class="rowwarn"
+    data-rowkey="pending" data-search="是否需两用物项和技术进口许可证未见进口方向办证证据；但必须以 2026 年度目录逐条核对，不能仅凭监管条件 g（定向出口许可）推断。两用物项">
+<td class="m" style="white-space:nowrap">R11</td>
+<td class="sml" style="white-space:nowrap">两用物项</td>
+<td><b>是否需两用物项和技术进口许可证</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge info">待核验</span></td>
+<td class="sml">未见进口方向办证证据；但必须以 2026 年度目录逐条核对，不能仅凭监管条件 G（定向出口许可）推断。</td>
+<td class="sml">《两用物项出口管制条例》（S20）；商务部、海关总署 2026 年度《两用物项和技术进出口许可证管理目录》（S21）。<div style="margin-top:4px"><span class="tag src" data-src="S20">S20</span> <span class="tag src" data-src="S21">S21</span></div></td>
+<td class="sml">需核对：产品浓度/形态是否落入目录中『过氧化氢』条目的限定条件（例如浓度区间）；目录条目可能对进口方向另有要求。</td>
+<td class="sml">如落入目录，未办证将导致无法通关；此项须由报关代理书面查询结论或合规顾问出具意见。</td>
+<td class="sml" style="white-space:nowrap">报关代理 / 合规顾问</td></tr><tr class=""
+    data-rowkey="not_applies" data-search="食品添加剂 / 消毒产品 / 药品路径本单为 pcb 微蚀工业用途，不涉及食品安全、消毒产品卫生许可或药品注册路径。用途专项">
+<td class="m" style="white-space:nowrap">R12</td>
+<td class="sml" style="white-space:nowrap">用途专项</td>
+<td><b>食品添加剂 / 消毒产品 / 药品路径</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge ok">不适用</span></td>
+<td class="sml">本单为 PCB 微蚀工业用途，不涉及食品安全、消毒产品卫生许可或药品注册路径。</td>
+<td class="sml">海关129号公告第八条（S05）：用作食品、食品添加剂的进出口危险化学品还应符合食品安全相关规定。<div style="margin-top:4px"><span class="tag src" data-src="S05">S05</span></div></td>
+<td class="sml">若用途改成食品加工助剂、消毒剂成品或药品原料，须另加食品生产/消毒产品/药品相应资质与检验。</td>
+<td class="sml">用途变更必须重跑产品定性；不得用本底稿结论覆盖新用途。</td>
+<td class="sml" style="white-space:nowrap">进口商</td></tr><tr class=""
+    data-rowkey="applies" data-search="危险货物包装性能与使用要求适用。海运须使用经 un 认证的包装（本单 hdpe 桶类包装），并按包装指令使用；报关填报包装un标记。包装容器">
+<td class="m" style="white-space:nowrap">R13</td>
+<td class="sml" style="white-space:nowrap">包装容器</td>
+<td><b>危险货物包装性能与使用要求</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge bad">适用</span></td>
+<td class="sml">适用。海运须使用经 UN 认证的包装（本单 HDPE 桶类包装），并按包装指令使用；报关填报包装UN标记。</td>
+<td class="sml">《危险化学品安全法》第32–33条（S01）；海关129号公告第六条（S05）；IMDG Code 包装指令（S14）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S05">S05</span> <span class="tag src" data-src="S14">S14</span></div></td>
+<td class="sml">包装须与货物性质相适应（耐腐蚀、带排气），单件净重与包装规格符合包装指令；重复使用的容器使用前须检查并留记录（不少于3年）。</td>
+<td class="sml">须取得供应商的 UN 包装性能检验证书（或等效证明）与包装标记照片，否则无法完成报关填报。</td>
+<td class="sml" style="white-space:nowrap">海外供应商 / 进口商</td></tr><tr class=""
+    data-rowkey="not_applies" data-search="新化学物质环境管理登记不适用：过氧化氢（7722-84-1）为现有化学物质，稳定剂亦属常见现有物质（待稳定剂清单确认后复核）。新化学物质">
+<td class="m" style="white-space:nowrap">R14</td>
+<td class="sml" style="white-space:nowrap">新化学物质</td>
+<td><b>新化学物质环境管理登记</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge ok">不适用</span></td>
+<td class="sml">不适用：过氧化氢（7722-84-1）为现有化学物质，稳定剂亦属常见现有物质（待稳定剂清单确认后复核）。</td>
+<td class="sml">《危险化学品安全法》第89条：新化学物质环境管理登记依照生态环境保护法律法规执行（S01）。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span></div></td>
+<td class="sml">若成品中加入目录外新化学物质（非现有物质名录内），须办理新化学物质环境管理登记。</td>
+<td class="sml">收到稳定剂完整清单后须复核一次，避免遗漏。</td>
+<td class="sml" style="white-space:nowrap">进口商</td></tr><tr class="rowwarn"
+    data-rowkey="conditional" data-search="重大危险源辨识（gb 18218）视进口后的储存方式：20 吨单批次通常未达过氧化氢临界量，但须与现有库存合并计算单元总量。储存安全">
+<td class="m" style="white-space:nowrap">R15</td>
+<td class="sml" style="white-space:nowrap">储存安全</td>
+<td><b>重大危险源辨识（GB 18218）</b></td>
+<td class="c" style="white-space:nowrap"><span class="badge warn">视条件适用</span></td>
+<td class="sml">视进口后的储存方式：20 吨单批次通常未达过氧化氢临界量，但须与现有库存合并计算单元总量。</td>
+<td class="sml">《危险化学品安全法》第13条（重大危险源登记建档、备案）（S01）；GB 18218-2018。<div style="margin-top:4px"><span class="tag src" data-src="S01">S01</span></div></td>
+<td class="sml">按『单元』合并计算，不能只看单批次。</td>
+<td class="sml">若构成重大危险源，须登记建档、定期检测评估、制定应急预案并报县级应急管理部门备案。</td>
+<td class="sml" style="white-space:nowrap">进口商 EHS</td></tr></tbody></table></div>
+</section>
+
+<section id="s6">
+<div class="sec-head"><span class="no">04</span><h2>危险属性：两套分类必须分开判</h2>
+  <div class="lead">危险化学品（中国安全生产监管，依《危险化学品目录（2015版）》）与危险货物（运输环节，依 UN Model Regulations / GB 6944-2025 / GB 12268-2025）是两套独立的分类体系：一套成立不必然推出另一套成立，阈值与分档也不相同。</div></div>
+
+<div class="vs">
+  <div class="box hz">
+    <div class="vt"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> 中国安全生产监管</div>
+    <h4>危险化学品</h4>
+    <div class="en">Hazardous Chemicals（China Catalogue）</div>
+    <span class="badge warn lg">视条件适用</span>
+    <dl class="dl "><dt>监管体系</dt><dd>危险化学品（生产/经营/储存/使用/登记监管）</dd><dt>目录条目</dt><dd><b>《危险化学品目录（2015版）》第 903 项『过氧化氢溶液[含量＞8%]』</b></dd><dt>阈值</dt><dd>含量 &gt; 8%（质量分数）；本单 30%，远超阈值。且须为『过氧化氢的水溶液』，添加剂仅限稳定剂/惰性化学品。</dd><dt>后果</dt><dd>进口企业须办理危险化学品登记（法律第86条）、提供中文 SDS 与中文危险公示标签（第31条）、包装符合要求（第32条）；境内储存/使用/经营另受相应许可与安全条件约束。</dd></dl>
+  </div>
+  <div class="mid"><span class="ln"></span><span class="neq">≠</span></div>
+  <div class="box dg">
+    <div class="vt"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> 运输环节国际/国标</div>
+    <h4>危险货物</h4>
+    <div class="en">Dangerous Goods（UN / GB 12268）</div>
+    <span class="badge bad lg">适用</span>
+    <dl class="dl "><dt>监管体系</dt><dd>危险货物（运输）</dd><dt>分类</dt><dd><b>5.1（氧化性物质）</b> · 次要危险 8（腐蚀性）</dd><dt>UN / 包装类别</dt><dd><span class='mono'><b>UN 2014</b> · PG II（包装类别 II）</span></dd><dt>正确运输名称</dt><dd><span class='mono' style='font-size:11px'>HYDROGEN PEROXIDE, AQUEOUS SOLUTION, with not less than 20% but not more than 60% hydrogen peroxide (stabilized as necessary)</span></dd><dt>阈值</dt><dd>H₂O₂ 含量 20%~60% 对应 UN2014 / 5.1 / PG II；本单 30% 正落在该区间。</dd><dt>后果</dt><dd>须按 IMDG Code 使用 UN 规格包装、张贴 5.1 与 8 类危险标志、提交危险货物申报、按积载与隔离要求装船；报关需填报危险类别、包装类别、UN 编号、包装UN标记（S05 第二条）。</dd></dl>
+  </div>
+</div>
+
+<div class="card">
+  <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14"/><path d="m5 7-3 7h6zM19 7l-3 7h6z"/></svg> 浓度阈值轨道 —— 为什么必须写死 30%</h3>
+  <div class="track">
+    <span class="lbl" style="left:0;transform:none">0%</span>
+    <span class="lbl" style="left:12.5%">8%</span>
+    <span class="lbl" style="left:40%">20%</span>
+    <span class="lbl" style="left:80%">60%</span>
+    <span class="lbl" style="left:100%;transform:translateX(-100%)">100%</span>
+    <div class="rail"><i></i><i></i><i></i><i></i></div>
+    <span class="tick" style="left:12.5%"></span><span class="tick" style="left:40%"></span><span class="tick" style="left:80%"></span>
+    <span class="seg-note" style="left:6.2%">&lt;8%：通常不受此两条约束</span>
+    <span class="seg-note" style="left:26%">UN2984 · PG III · 氧化性液体类3</span>
+    <span class="seg-note" style="left:60%">UN2014 · PG II · 氧化性液体类2</span>
+    <span class="seg-note" style="left:90%">UN2015 · PG I · 类别1</span>
+    <div class="mk" style="left:31%"><span class="cap">本单 30%</span><span class="pin"></span></div>
+  </div>
+  <p class="sml" style="margin:2px 0 0;color:var(--ink-3)">
+    浓度同时决定三件事：是否落入危化品目录第903项（&gt;8%）、易制爆名录的分档（≥60% / 20%–60% / 8%–20%）、运输 UN 编号（2984 / 2014 / 2015）。
+    因此合同与标签必须写死「30.0%（质量分数）」，并约定<b>不得跨阈值</b>的交货偏差。</p>
+</div>
+
+<div class="tw" style="margin-top:12px"><table class="t">
+<thead><tr><th style="width:24%">浓度 / 形态</th><th style="width:24%">危险化学品（目录）</th><th style="width:26%">危险货物（运输）</th><th>要点</th></tr></thead>
+<tbody><tr><td><b class="sml">H₂O₂ &lt; 8%（如 3%~5% 医用稀释液）</b></td>
+<td class="sml">通常不落入第903项（含量阈值）</td><td class="sml">通常不作为危险货物（&lt;8% 一般非危险货物）</td><td class="sml">两套体系同时『不适用』，但仍属化学品，需提供一般 SDS。</td></tr><tr><td><b class="sml">8% &lt; H₂O₂ &lt; 20%</b></td>
+<td class="sml">适用第903项；易制爆列为『8%＜含量＜20%：氧化性液体类别3』</td><td class="sml">UN 2984 / 5.1 / 包装类别 III</td><td class="sml">危化品与危险货物同时成立，但运输分档与 GHS 类别不同，容易把『类别3』误写成 UN2014。</td></tr><tr><td><b class="sml">20% ≤ H₂O₂ ≤ 60%（本单 30%）</b></td>
+<td class="sml">适用第903项；易制爆列为『20%≤含量＜60%：氧化性液体类别2』</td><td class="sml">UN 2014 / 5.1（次要 8）/ 包装类别 II</td><td class="sml">本单所处区间。注意易制爆名录写『＜60%』而 IMDG 写『≤60%』，60% 边界处两套文件口径不同，需以原文核对。</td></tr><tr><td><b class="sml">H₂O₂ &gt; 60%</b></td>
+<td class="sml">适用第903项；易制爆列为『含量≥60%：氧化性液体类别1』</td><td class="sml">UN 2015 / 5.1（次要 8）/ 包装类别 I</td><td class="sml">高浓度受更多运输与储存限制。</td></tr><tr><td><b class="sml">含功能性添加剂的过氧化氢复配液（如清洗剂、消毒液）</b></td>
+<td class="sml">不再自动落入第903项，须按危险特性鉴定后判定（S03）</td><td class="sml">仍按实际危险特性判定 UN 编号，可能改变类别与包装类别</td><td class="sml">这是最容易出错的一类：『溶液』二字不等于豁免。</td></tr></tbody></table></div>
+
+<div class="grid2" style="margin-top:12px">
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> 运输分类与积载（海运（整柜 FCL，非散装））</h3>
+    <dl class="dl "><dt>适用规则</dt><dd>IMDG Code（国际海运危险货物规则）</dd><dt>国内国标</dt><dd>GB 6944-2025 + GB 12268-2025（自 2025-10-01 实施）</dd><dt>UN 编号</dt><dd><span class='mono'>UN 2014</span></dd><dt>正确运输名称</dt><dd><span class='mono' style='font-size:11px'>HYDROGEN PEROXIDE, AQUEOUS SOLUTION, with not less than 20% but not more than 60% hydrogen peroxide (stabilized as necessary)</span></dd><dt>类别</dt><dd>5.1（氧化性物质）</dd><dt>次要危险</dt><dd>8（腐蚀性）</dd><dt>包装类别</dt><dd><b>II</b></dd><dt>包装指令</dt><dd>按 IMDG 对应包装指令执行；本单采用 HDPE 桶（包装类别 II 适用的中型/桶类包装）</dd><dt>EmS</dt><dd>F-H（火灾：使用大量水雾冷却/稀释，避免直接射流冲击液面）、S-Q（泄漏：穿戴防护，使用惰性吸收材料收集，用水大量稀释）</dd><dt>类项标志</dt><dd>5.1 氧化性物质（橙底黑火焰圆）、8 腐蚀性（黑白双斜线）</dd></dl>
+    <h3 style="margin-top:12px">隔离与积载</h3>
+    <ul class="sml" style="margin:0;padding-left:18px;display:grid;gap:3px"><li>与易燃液体、易燃固体、还原剂、有机过氧化物、酸类、粉末金属、食品等严禁同柜混装</li><li>不得与爆炸品、气体同舱积载</li><li>与腐蚀性物质分立积载，避免泄漏叠加</li><li>远离热源与阳光直射；保持通风，避免高温导致分解产气（桶体须可排气）</li><li>舱内积载优先，避免舱面高温段</li><li>夏季高温航线要求船舶告知并控制舱温；超温时按应急程序处置</li></ul>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> 常见混淆（务必避免）</h3>
+    <ul class="sml" style="margin:0;padding-left:18px;display:grid;gap:5px"><li>把 GHS 的『氧化性液体类别2』直接当作运输的『包装类别 II』——两者分档依据不同，只是本单恰好都是 2 级。</li><li>认为『八类危险货物』等俗语能替代分类编号——运输必须落到 UN 编号、类项、包装类别、正确运输名称四项。</li><li>只凭商品名『双氧水』判断——必须看浓度与组成；同一商品名在不同浓度下监管结论完全不同。</li><li>把『危化品目录未列入』理解为『不危险』——目录以分类为基础筛选，未列入不等于无危险特性。</li></ul>
+    <h3 style="margin-top:12px">运输口径补充</h3>
+    <ul class="sml" style="margin:0;padding-left:18px;display:grid;gap:3px"><li>本单为 30 kg 桶装，需确认是否满足 IMDG 的限量/例外数量豁免——即便可豁免运输包装，仍不能豁免危险货物申报与标志。</li><li>空运（IATA DGR）对应 UN2014 有额外的客/货机限制；若改空运须重新核对，不得沿用海运结论。</li><li>国内段（上海港→工厂）按道路危险货物运输规则，须具备资质的危货运输车辆与押运人员。</li></ul>
+  </div>
+</div>
+</section>
+
+<section id="s7">
+<div class="sec-head"><span class="no">05</span><h2>包装与标签</h2>
+  <div class="lead">中文化学品安全标签（GB 15258）与危险货物运输标志（UN 标记 + 类项标志）是两套并行要求，缺一不可。</div></div>
+
+<div class="grid2">
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg> 中文危险公示标签（GHS）</h3>
+    <dl class="dl "><dt>是否强制</dt><dd><b>是（强制，且须为简体中文）</b></dd><dt>语言</dt><dd>简体中文（可中英双语并列）</dd><dt>依据标准</dt><dd>GB 15258-2009 + GB 30000.1-2024 及分项标准（S12、S13）</dd><dt>信号词</dt><dd><b style='color:var(--bad)'>危险</b></dd></dl>
+    <div style="margin:8px 0 4px"><span class='badge dg'>GHS03 氧化剂（圆上火焰）</span> <span class='badge dg'>GHS05 腐蚀性（皮肤腐蚀示意）</span> </div>
+    <div class="sml" style="color:var(--muted);margin-top:8px">危险性说明</div><div><span class='tag' style='margin:2px 0'>H272 可能加剧燃烧；氧化剂</span> <span class='tag' style='margin:2px 0'>H302 吞咽有害</span> <span class='tag' style='margin:2px 0'>H315 造成皮肤刺激</span> <span class='tag' style='margin:2px 0'>H318 造成严重眼损伤</span> <span class='tag' style='margin:2px 0'>H335 可能引起呼吸道刺激</span> </div>
+    <div class="sml" style="color:var(--muted);margin-top:8px">防范说明</div><div><span class='tag' style='margin:2px 0'>P210 远离热源、热表面、火花、明火及其他点火源。禁止吸烟</span> <span class='tag' style='margin:2px 0'>P220 远离可燃物</span> <span class='tag' style='margin:2px 0'>P280 戴防护手套、防护眼镜、防护面罩</span> <span class='tag' style='margin:2px 0'>P305+P351+P338 如进入眼睛：用水小心冲洗几分钟；如戴隐形眼镜并可方便地取出，取出隐形眼镜，继续冲洗</span> <span class='tag' style='margin:2px 0'>P310 立即呼叫解毒中心或就医</span> </div>
+    <div class="sml" style="color:var(--warn);margin-top:10px;border-left:2px solid var(--warn-line);padding-left:8px">上述 H/P 码为按本单浓度与用途的**建议口径**，须由供应商按 GB 30000 分项标准完成分类后确认；不得直接照抄他国标签。</div>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> 标签必备要素</h3>
+    <ul style="margin:0;padding-left:18px;display:grid;gap:3px"><li class='sml'>化学品中文名称 + 英文名称</li><li class='sml'>成分及含量（过氧化氢 30.0%，稳定剂类）</li><li class='sml'>象形图（GHS03、GHS05）</li><li class='sml'>信号词（危险）</li><li class='sml'>危险性说明（H 码）与防范说明（P 码）</li><li class='sml'>供应商名称、地址、联系电话</li><li class='sml'>24 小时中文应急咨询电话</li><li class='sml'>进口商/境内联系人信息（进口产品适用）</li></ul>
+    <h3 style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg> 运输标志与包装</h3>
+    <ul style="margin:0;padding-left:18px;display:grid;gap:3px"><li class='sml'>UN 2014 与正确运输名称（HYDROGEN PEROXIDE, AQUEOUS SOLUTION, 20%–60%）</li><li class='sml'>5.1 类与 8 类危险货物标签各一</li><li class='sml'>包装上的 UN 包装标记（含 UN 符号、包装代码如 1H1/31H1、包装类别 X/Y/Z、生产年份、制造厂代号）</li><li class='sml'>方向箭头/唛头（含批号、净重、生产日期）</li></ul>
+    <dl class="dl "><dt>包装型式</dt><dd>HDPE 桶（30 kg 净重），带排气盖</dd><dt>包装证明</dt><dd>需提供 UN 包装性能检验合格证明（或制造商 UN 认证证书）与桶体标记照片</dd><dt>相容性要求</dt><dd>HDPE 与 30% 过氧化氢相容；必须有排气设计以防分解产气鼓桶；不得使用金属桶（催化分解风险）</dd></dl>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> 上传标签存在的问题（4 项）</h3>
+  <div class="gap p0" style="margin-bottom:6px">
+        <div class="gh"><span class="gh"><span class="badge bad">高</span></span>
+        <span class="gt" style="font-size:12.8px">上传标签仅为英文，无中文品名、中文危险性说明与中文应急电话</span></div>
+        <div class="gb"><div class="q"><span class="k">整改</span><span>按 GB 15258 重制中文标签，与中文 SDS 一一对应；标签稿在发货前提交进口商与报关行预审</span></div></div></div><div class="gap p0" style="margin-bottom:6px">
+        <div class="gh"><span class="gh"><span class="badge bad">高</span></span>
+        <span class="gt" style="font-size:12.8px">标签未标注浓度（仅写 30% 字样于商品名，未见成分及含量栏）</span></div>
+        <div class="gb"><div class="q"><span class="k">整改</span><span>标签须明示『过氧化氢 30.0%』；浓度是危化品/易制爆/UN 分级的核心判断项</span></div></div></div><div class="gap p0" style="margin-bottom:6px">
+        <div class="gh"><span class="gh"><span class="badge bad">高</span></span>
+        <span class="gt" style="font-size:12.8px">未见 UN 包装标记照片与包装性能证明</span></div>
+        <div class="gb"><div class="q"><span class="k">整改</span><span>向供应商索取桶体 UN 标记照片（生产年份、包装类别标识）与包装性能检验证书</span></div></div></div><div class="gap p1" style="margin-bottom:6px">
+        <div class="gh"><span class="gh"><span class="badge warn">中</span></span>
+        <span class="gt" style="font-size:12.8px">标签未见象形图分辨率要求（GB 15258 要求清晰可辨、不小于规定尺寸）</span></div>
+        <div class="gb"><div class="q"><span class="k">整改</span><span>按 GB 15258 规定的尺寸与对比度制作，避免缩印后不可辨</span></div></div></div>
+</div>
+</section>
+
+<section id="s8">
+<div class="sec-head"><span class="no">06</span><h2>单证清单</h2>
+  <div class="lead">按「海外供应商资料 / 中文合规文件 / 进口报关资料 / 运输资料」分组，每项标注依据、必备字段、责任主体与当前状态。</div>
+  <div class="tools"><span class="sml" id="count-doc" style="color:var(--muted)"></span></div></div>
+
+<div class="card" style="margin-bottom:12px">
+  <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> 分组完备度
+    <span class="tag-n"><b style="font-family:var(--num);font-size:20px;color:var(--bad)">18.8%</b>
+    <span class="sml" style="color:var(--muted)">（按『必须=3/视情形=1/建议=0.5』加权）</span></span></h3>
+  <div class="progress-list"><div class="pl-row">
+  <div class="pl-n">海外供应商资料 <span class="tag">1/9</span></div>
+  <div class="pbar bad"><i style="width:38%"></i></div>
+  <div class="pl-v">38%</div></div><div class="pl-row">
+  <div class="pl-n">中文合规文件 <span class="tag">0/4</span></div>
+  <div class="pbar bad"><i style="width:28%"></i></div>
+  <div class="pl-v">28%</div></div><div class="pl-row">
+  <div class="pl-n">进口报关资料 <span class="tag">0/8</span></div>
+  <div class="pbar bad"><i style="width:4%"></i></div>
+  <div class="pl-v">4%</div></div><div class="pl-row">
+  <div class="pl-n">运输资料 <span class="tag">0/3</span></div>
+  <div class="pbar bad"><i style="width:0%"></i></div>
+  <div class="pl-v">0%</div></div><div class="pl-row">
+  <div class="pl-n">海关/税费 <span class="tag">0/2</span></div>
+  <div class="pbar bad"><i style="width:33%"></i></div>
+  <div class="pl-v">33%</div></div></div>
+</div>
+
+<div class="tw" data-tw="doc"><div class="filters">
+  <button class="fchip on" data-filter="all">全部 <span class="c">26</span></button><button class="fchip" data-filter="missing">缺失 <span class="c">17</span></button><button class="fchip" data-filter="partial">不完整 <span class="c">5</span></button><button class="fchip" data-filter="pending">待定 <span class="c">1</span></button><button class="fchip" data-filter="ok">齐备 <span class="c">1</span></button>
+  <div class="search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" placeholder="搜索单证 / 责任方" aria-label="搜索单证"></div>
+</div>
+<table class="t">
+<thead><tr><th>#</th><th>分组</th><th style="width:18%">文件</th><th>要求</th><th>状态</th>
+<th style="width:20%">必备关键字段</th><th style="width:20%">当前问题</th><th>责任主体</th><th>依据</th></tr></thead>
+<tbody><tr class="rowwarn"
+  data-rowkey="partial" data-search="英文安全技术说明书（sds） safety data sheet (english, 16 sections per ghs) 海外供应商资料 海外供应商">
+<td class="m" style="white-space:nowrap">D01</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>英文安全技术说明书（SDS）</b><div class="sml" style="color:var(--muted)">Safety Data Sheet (English, 16 sections per GHS)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge warn">有但不完整</span></td>
+<td class="sml">16 节齐全；第14节载 UN编号/类项/包装类别/海洋污染物</td>
+<td class="sml">已提供但无版本号与修订日期，第3节稳定剂未给 CAS 与精确百分比，第14节信息需与 UN2014 复核</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S10">S10</span> <span class="tag src" data-src="S05">S05</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="中文化学品安全技术说明书（中文sds） safety data sheet (chinese) 中文合规文件 进口商（可委托翻译）">
+<td class="m" style="white-space:nowrap">D02</td>
+<td class="sml" style="white-space:nowrap">中文合规文件</td>
+<td><b>中文化学品安全技术说明书（中文SDS）</b><div class="sml" style="color:var(--muted)">Safety Data Sheet (Chinese)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">整册中文；与英文 SDS 逐节对应；符合 GB/T 16483</td>
+<td class="sml">尚未制作。进口危化品未随附中文 SDS 属违法，且无法通过海关检验</td>
+<td class="sml" style="white-space:nowrap">进口商（可委托翻译）</td>
+<td class="sml"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S05">S05</span></td></tr><tr class="rowwarn"
+  data-rowkey="partial" data-search="稳定剂/抑制剂添加情况说明 statement of stabilisers/inhibitors added (name, quantity) 中文合规文件 海外供应商">
+<td class="m" style="white-space:nowrap">D03</td>
+<td class="sml" style="white-space:nowrap">中文合规文件</td>
+<td><b>稳定剂/抑制剂添加情况说明</b><div class="sml" style="color:var(--muted)">Statement of stabilisers/inhibitors added (name, quantity)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge warn">有但不完整</span></td>
+<td class="sml">稳定剂名称、CAS、精确添加量；声明仅为稳定剂/惰性化学品</td>
+<td class="sml">SDS 仅写『磷酸盐类稳定剂』；PI 与 COA 无稳定剂明细</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S05">S05</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="进口危险化学品企业符合性声明 importer&#x27;s declaration of conformity (attachment 1 of gacc announcement 129) 中文合规文件 进口商">
+<td class="m" style="white-space:nowrap">D04</td>
+<td class="sml" style="white-space:nowrap">中文合规文件</td>
+<td><b>进口危险化学品企业符合性声明</b><div class="sml" style="color:var(--muted)">Importer&#x27;s Declaration of Conformity (Attachment 1 of GACC Announcement 129)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">按附件1格式；企业盖章；声明符合我国强制性技术规范</td>
+<td class="sml">进口商尚未签署</td>
+<td class="sml" style="white-space:nowrap">进口商</td>
+<td class="sml"><span class="tag src" data-src="S05">S05</span></td></tr><tr class="rowwarn"
+  data-rowkey="partial" data-search="中文危险公示标签（样张） chinese ghs hazard label (artwork) 中文合规文件 进口商 / 海外供应商">
+<td class="m" style="white-space:nowrap">D05</td>
+<td class="sml" style="white-space:nowrap">中文合规文件</td>
+<td><b>中文危险公示标签（样张）</b><div class="sml" style="color:var(--muted)">Chinese GHS Hazard Label (artwork)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge warn">有但不完整</span></td>
+<td class="sml">品名、成分含量、象形图、信号词、H/P 说明、供应商信息、24h 中文应急电话</td>
+<td class="sml">上传件为英文标签，缺中文要素与应急电话；须重制</td>
+<td class="sml" style="white-space:nowrap">进口商 / 海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S12">S12</span></td></tr><tr class=""
+  data-rowkey="ok" data-search="质量分析证书（coa） certificate of analysis (coa) 海外供应商资料 海外供应商">
+<td class="m" style="white-space:nowrap">D06</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>质量分析证书（COA）</b><div class="sml" style="color:var(--muted)">Certificate of Analysis (COA)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge ok">齐备</span></td>
+<td class="sml">批号、检测项目（浓度、稳定剂、色度、铁等）、方法、结论、签发人、日期</td>
+<td class="sml">已提供，实测 30.4%；建议补充铁/TOC 等下游关键项</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S10">S10</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="产品技术数据表（tds/规格书） technical data sheet (tds/specification) 海外供应商资料 海外供应商">
+<td class="m" style="white-space:nowrap">D07</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>产品技术数据表（TDS/规格书）</b><div class="sml" style="color:var(--muted)">Technical Data Sheet (TDS/Specification)</div></td>
+<td class="c"><span class="badge gray">建议</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">规格指标表、储存建议、安全操作、包装说明</td>
+<td class="sml">未提供；下游需据此确认工业级指标是否满足 PCB 微蚀要求</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"></td></tr><tr class="rowwarn"
+  data-rowkey="partial" data-search="形式发票（pi） proforma invoice (pi) 海外供应商资料 海外供应商">
+<td class="m" style="white-space:nowrap">D08</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>形式发票（PI）</b><div class="sml" style="color:var(--muted)">Proforma Invoice (PI)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge warn">有但不完整</span></td>
+<td class="sml">品名、规格、数量、单价、总价、贸易术语、装运港、付款方式、HS 编码</td>
+<td class="sml">已提供；未列 HS 编码与目的地；FOB 条件需明确装运港附加费承担</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="原产地证书（中韩fta co / rcep co） certificate of origin (china-korea fta / rcep) 海外供应商资料 海外供应商 / 出口商">
+<td class="m" style="white-space:nowrap">D09</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>原产地证书（中韩FTA CO / RCEP CO）</b><div class="sml" style="color:var(--muted)">Certificate of Origin (China-Korea FTA / RCEP)</div></td>
+<td class="c"><span class="badge info">视情形</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">与发票一致；HS 6 位一致；直接运输证明</td>
+<td class="sml">若要享受协定税率必须取得；且须与报关时的 HS、发票一致</td>
+<td class="sml" style="white-space:nowrap">海外供应商 / 出口商</td>
+<td class="sml"><span class="tag src" data-src="S19">S19</span></td></tr><tr class=""
+  data-rowkey="na" data-search="非危声明/包装声明（如适用） non-regulated / packaging statement (if applicable) 海外供应商资料 海外供应商">
+<td class="m" style="white-space:nowrap">D10</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>非危声明/包装声明（如适用）</b><div class="sml" style="color:var(--muted)">Non-regulated / packaging statement (if applicable)</div></td>
+<td class="c"><span class="badge gray">建议</span></td>
+<td class="c"><span class="badge gray">不适用</span></td>
+<td class="sml">若可适用限量豁免，需载明豁免依据与单件限量</td>
+<td class="sml">本单 30 kg 桶装，按 IMDG 常规申报，不依赖豁免声明</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S14">S14</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="un 包装性能检验证书与包装标记照片 un packaging performance certificate &amp; un mark photo 海外供应商资料 海外供应商">
+<td class="m" style="white-space:nowrap">D11</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>UN 包装性能检验证书与包装标记照片</b><div class="sml" style="color:var(--muted)">UN packaging performance certificate &amp; UN mark photo</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">包装代号、包装类别、生产年份、制造厂、性能试验报告</td>
+<td class="sml">报关需填报包装UN标记；无证书无法核实包装是否经认证</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S01">S01</span> <span class="tag src" data-src="S05">S05</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="生产商声明（制造商与供货主体关系） manufacturer&#x27;s letter / producer attestation 海外供应商资料 海外供应商">
+<td class="m" style="white-space:nowrap">D12</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>生产商声明（制造商与供货主体关系）</b><div class="sml" style="color:var(--muted)">Manufacturer&#x27;s letter / producer attestation</div></td>
+<td class="c"><span class="badge info">视情形</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">声明确认生产厂名称地址与 PI 抬头关系</td>
+<td class="sml">PI 抬头为贸易公司，需确认生产厂与批次来源</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="危险货物运输申报单（dgd 或海运申报资料） dangerous goods declaration (imdg) / shipping documents 海外供应商资料 承运人 / 海外供应商">
+<td class="m" style="white-space:nowrap">D13</td>
+<td class="sml" style="white-space:nowrap">海外供应商资料</td>
+<td><b>危险货物运输申报单（DGD 或海运申报资料）</b><div class="sml" style="color:var(--muted)">Dangerous Goods Declaration (IMDG) / shipping documents</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">UN、类项、包装组、件数、毛净重、应急联系</td>
+<td class="sml">订舱时提交；须与 SDS 第14节一致</td>
+<td class="sml" style="white-space:nowrap">承运人 / 海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S14">S14</span> <span class="tag src" data-src="S01">S01</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="商业发票（commercial invoice） commercial invoice 进口报关资料 海外供应商">
+<td class="m" style="white-space:nowrap">D14</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>商业发票（Commercial Invoice）</b><div class="sml" style="color:var(--muted)">Commercial Invoice</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">品名、规格、数量、单价、总价、贸易术语、收发货人、原产国</td>
+<td class="sml">需与 PI 一致并补充 HS 编码、原产国、用途</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="装箱单（packing list） packing list 进口报关资料 海外供应商">
+<td class="m" style="white-space:nowrap">D15</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>装箱单（Packing List）</b><div class="sml" style="color:var(--muted)">Packing List</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">件数、毛净重、体积、包装规格、唛头</td>
+<td class="sml">需与 600 桶 / 20 吨口径一致</td>
+<td class="sml" style="white-space:nowrap">海外供应商</td>
+<td class="sml"></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="采购合同（sales contract） sales contract 进口报关资料 进口商">
+<td class="m" style="white-space:nowrap">D16</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>采购合同（Sales Contract）</b><div class="sml" style="color:var(--muted)">Sales Contract</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">品名规格、浓度公差（不得跨阈值）、包装、SDS 版本、标签责任、检验条款、责任划分</td>
+<td class="sml">建议把『浓度不得跨 20%/60% 阈值』『中文标签与SDS由供应商配合』写入合同</td>
+<td class="sml" style="white-space:nowrap">进口商</td>
+<td class="sml"></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="提单/海运单（b/l） bill of lading (b/l) 进口报关资料 承运人">
+<td class="m" style="white-space:nowrap">D17</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>提单/海运单（B/L）</b><div class="sml" style="color:var(--muted)">Bill of Lading (B/L)</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">发货人、收货人、通知方、品名（须含危险货物信息）、唛头、件数、毛重</td>
+<td class="sml">危险货物提单须载明 UN 编号与正确运输名称</td>
+<td class="sml" style="white-space:nowrap">承运人</td>
+<td class="sml"><span class="tag src" data-src="S14">S14</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="报关委托书与报关单 customs declaration &amp; power of attorney 进口报关资料 报关代理">
+<td class="m" style="white-space:nowrap">D18</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>报关委托书与报关单</b><div class="sml" style="color:var(--muted)">Customs Declaration &amp; Power of Attorney</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">委托关系、申报要素（品牌类型|出口享惠情况|成分含量|包装规格|GTIN|CAS）、危险类别/包装类别/UN编号/包装标记</td>
+<td class="sml">由报关代理制作；要素须按 S07 顺序填报</td>
+<td class="sml" style="white-space:nowrap">报关代理</td>
+<td class="sml"><span class="tag src" data-src="S07">S07</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="入境货物通关单（监管条件 a） inspection certificate for import goods 进口报关资料 报关代理 / 进口商">
+<td class="m" style="white-space:nowrap">D19</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>入境货物通关单（监管条件 A）</b><div class="sml" style="color:var(--muted)">Inspection Certificate for Import Goods</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">由海关出具；对应法检商品</td>
+<td class="sml">进口法检商品须先报检，与报关联动</td>
+<td class="sml" style="white-space:nowrap">报关代理 / 进口商</td>
+<td class="sml"><span class="tag src" data-src="S07">S07</span></td></tr><tr class="rowwarn"
+  data-rowkey="partial" data-search="危险特性分类鉴别报告（如需） hazard classification report (if required) 进口报关资料 第三方检测机构">
+<td class="m" style="white-space:nowrap">D20</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>危险特性分类鉴别报告（如需）</b><div class="sml" style="color:var(--muted)">Hazard classification report (if required)</div></td>
+<td class="c"><span class="badge info">视情形</span></td>
+<td class="c"><span class="badge warn">有但不完整</span></td>
+<td class="sml">CNAS 资质机构出具；用于混合物或分类存疑时</td>
+<td class="sml">本单为单一水溶液，通常可依据 SDS；若稳定剂含功能性添加剂则可能需要</td>
+<td class="sml" style="white-space:nowrap">第三方检测机构</td>
+<td class="sml"><span class="tag src" data-src="S05">S05</span></td></tr><tr class="rowwarn"
+  data-rowkey="pending" data-search="进口许可证/两用物项许可（如适用） import licence (dual-use, if applicable) 进口报关资料 报关代理">
+<td class="m" style="white-space:nowrap">D21</td>
+<td class="sml" style="white-space:nowrap">进口报关资料</td>
+<td><b>进口许可证/两用物项许可（如适用）</b><div class="sml" style="color:var(--muted)">Import licence (dual-use, if applicable)</div></td>
+<td class="c"><span class="badge info">视情形</span></td>
+<td class="c"><span class="badge info">待定（需外部确认）</span></td>
+<td class="sml">2026 年度目录逐条核对结论；如落入需办证</td>
+<td class="sml">须由报关代理/合规顾问书面查询确认（见 Q02）</td>
+<td class="sml" style="white-space:nowrap">报关代理</td>
+<td class="sml"><span class="tag src" data-src="S21">S21</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="原产地证明与享惠声明 origin certificate &amp; preference claim 海关/税费 进口商 / 海外供应商">
+<td class="m" style="white-space:nowrap">D22</td>
+<td class="sml" style="white-space:nowrap">海关/税费</td>
+<td><b>原产地证明与享惠声明</b><div class="sml" style="color:var(--muted)">Origin certificate &amp; preference claim</div></td>
+<td class="c"><span class="badge info">视情形</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">原产地证书、直接运输证明、报关时享惠申报（出口享惠情况栏）</td>
+<td class="sml">决定能否按协定税率征税</td>
+<td class="sml" style="white-space:nowrap">进口商 / 海外供应商</td>
+<td class="sml"><span class="tag src" data-src="S19">S19</span></td></tr><tr class=""
+  data-rowkey="na" data-search="税则归类意见（可选） tariff classification opinion (optional) 海关/税费 进口商 / 报关代理">
+<td class="m" style="white-space:nowrap">D23</td>
+<td class="sml" style="white-space:nowrap">海关/税费</td>
+<td><b>税则归类意见（可选）</b><div class="sml" style="color:var(--muted)">Tariff classification opinion (optional)</div></td>
+<td class="c"><span class="badge gray">建议</span></td>
+<td class="c"><span class="badge gray">不适用</span></td>
+<td class="sml">如归类存疑可申请预裁定</td>
+<td class="sml">本单置信度高，可不申请；如报关行提出不同意见则建议申请</td>
+<td class="sml" style="white-space:nowrap">进口商 / 报关代理</td>
+<td class="sml"></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="订舱单与危险货物订舱确认 booking &amp; dg booking confirmation 运输资料 承运人 / 进口商">
+<td class="m" style="white-space:nowrap">D24</td>
+<td class="sml" style="white-space:nowrap">运输资料</td>
+<td><b>订舱单与危险货物订舱确认</b><div class="sml" style="color:var(--muted)">Booking &amp; DG booking confirmation</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">船公司 DG 订舱；注明 UN/类项/PG/包装</td>
+<td class="sml"><span style="color:var(--ok)">—</span></td>
+<td class="sml" style="white-space:nowrap">承运人 / 进口商</td>
+<td class="sml"><span class="tag src" data-src="S14">S14</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="危险货物申报（船代/海事） dg manifest / to carrier declaration 运输资料 海外供应商 / 承运人">
+<td class="m" style="white-space:nowrap">D25</td>
+<td class="sml" style="white-space:nowrap">运输资料</td>
+<td><b>危险货物申报（船代/海事）</b><div class="sml" style="color:var(--muted)">DG manifest / to carrier declaration</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">装船前申报；危险货物舱单</td>
+<td class="sml"><span style="color:var(--ok)">—</span></td>
+<td class="sml" style="white-space:nowrap">海外供应商 / 承运人</td>
+<td class="sml"><span class="tag src" data-src="S14">S14</span></td></tr><tr class="rowfail"
+  data-rowkey="missing" data-search="国内段危货运输资质与运输单据 domestic dg road transport permits &amp; documents 运输资料 进口商 / 承运人">
+<td class="m" style="white-space:nowrap">D26</td>
+<td class="sml" style="white-space:nowrap">运输资料</td>
+<td><b>国内段危货运输资质与运输单据</b><div class="sml" style="color:var(--muted)">Domestic DG road transport permits &amp; documents</div></td>
+<td class="c"><span class="badge solid">必须</span></td>
+<td class="c"><span class="badge bad">缺失</span></td>
+<td class="sml">承运企业许可、车辆营运证、驾驶员/押运员资格</td>
+<td class="sml">到港后由仓库/工厂联系有资质危货车队</td>
+<td class="sml" style="white-space:nowrap">进口商 / 承运人</td>
+<td class="sml"><span class="tag src" data-src="S01">S01</span></td></tr></tbody></table></div>
+</section>
+
+<section id="s9">
+<div class="sec-head"><span class="no">07</span><h2>已上传文件检查</h2>
+  <div class="lead">对每份上传件做「字段提取 + 要件核对 + 交叉一致性」三件事。标有 <b>模拟文件</b> 的件仅用于演示流程，不代表任何真实供应商。</div></div>
+
+<div class="doc-cards"><div class="up">
+  <div class="uh"><span class="fi">SDS</span>
+    <div style="min-width:0"><div class="fn">SDS_HANWOO_H2O2_30_EN.pdf（模拟）</div>
+    <div class="fs">U01 · SDS · en · 2026-10-12</div></div>
+    <span class="badge warn">需修订后使用</span></div>
+  <div class="mock"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> <b>模拟文件</b> · 本文件为演示用模拟件，供应商名称、电话、批号均为虚构，不构成任何真实供应商的资料。</div>
+  <div class="ub">
+    <div class="sml" style="color:var(--muted)">已提取字段</div>
+    <div class="kv-grid"><div><div class='k'>产品名称（英）</div><div class='v'>HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%</div></div><div><div class='k'>CAS</div><div class='v'>7722-84-1</div></div><div><div class='k'>浓度/含量</div><div class='v'>30.0 % (w/w)</div></div><div><div class='k'>稳定剂</div><div class='v'>phosphate based stabiliser（未给 CAS 与精确%）</div></div><div><div class='k'>物理形态</div><div class='v'>Liquid, colourless, clear</div></div><div><div class='k'>GHS 分类</div><div class='v'>Oxid. Liq. 2; Acute Tox. 4; Skin Irrit. 2; Eye Dam. 1; STOT SE 3</div></div><div><div class='k'>UN 编号</div><div class='v'>UN 2014</div></div><div><div class='k'>运输类别/包装组</div><div class='v'>Class 5.1 (subsidiary 8), PG II</div></div><div><div class='k'>海洋污染物</div><div class='v'>No</div></div><div><div class='k'>版本号/修订日期</div><div class='v'>（未标注）</div></div><div><div class='k'>语言</div><div class='v'>English only</div></div></div>
+    <div class="sml" style="color:var(--muted);margin-top:2px">检查项（8 项，失败 3）</div>
+    <div class="chk"><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">是否 16 节齐全<span class="cn">第1–16节齐全</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否载有版本号与修订日期<span class="cn">全册未见版本号/修订日期，无法证明为现行版本（GB/T 16483 要求）</span></span></div><div class="ci warn"><span class="mk">!</span>
+<span class="ct">第3节是否给出各组分 CAS 与精确浓度<span class="cn">主成分完整；稳定剂仅有类别表述，未给 CAS 与精确%</span></span></div><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">第14节是否载 UN 编号、类项、包装类别、海洋污染物<span class="cn">UN2014 / 5.1(8) / PG II / 海洋污染物 No，齐全</span></span></div><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">第14节与产品浓度是否匹配<span class="cn">30% 落在 20%–60% 区间，对应 UN2014，逻辑一致</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否为中文版本<span class="cn">仅英文，不满足中文SDS要求</span></span></div><div class="ci warn"><span class="mk">!</span>
+<span class="ct">是否与上传标签、COA 一致<span class="cn">与 COA 浓度一致；与标签（英文、无含量）不一致</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否声明仅为稳定剂（无功能性添加剂）<span class="cn">未见声明，无法据此锁定危化品目录第903项适用性</span></span></div></div>
+  </div>
+  <div class="uf"><span class="badge info">结论</span><span style="color:var(--ink-2)">作为技术底稿可用，但必须补齐版本号、稳定剂明细，并制作中文版后方可随货使用。</span></div>
+</div><div class="up">
+  <div class="uh"><span class="fi">COA</span>
+    <div style="min-width:0"><div class="fn">COA_HANWOO_H2O2_30_L2609A.pdf（模拟）</div>
+    <div class="fs">U02 · COA · en · 2026-10-12</div></div>
+    <span class="badge ok">可直接使用</span></div>
+  <div class="mock"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> <b>模拟文件</b> · 演示用模拟件：批号 L2609A 与检测数据为虚构。</div>
+  <div class="ub">
+    <div class="sml" style="color:var(--muted)">已提取字段</div>
+    <div class="kv-grid"><div><div class='k'>批号</div><div class='v'>L2609A</div></div><div><div class='k'>检测项目：H₂O₂ 含量</div><div class='v'>30.4 % (m/m)，规格 30.0–31.0</div></div><div><div class='k'>检测项目：稳定度</div><div class='v'>99.2 %（≥97）</div></div><div><div class='k'>检测项目：色度</div><div class='v'>≤10 Pt-Co</div></div><div><div class='k'>检测项目：铁</div><div class='v'>（未检测）</div></div><div><div class='k'>执行标准</div><div class='v'>Company Standard（企标）</div></div><div><div class='k'>签发人/日期</div><div class='v'>QA Manager / 2026-10-10</div></div></div>
+    <div class="sml" style="color:var(--muted);margin-top:2px">检查项（6 项，失败 0）</div>
+    <div class="chk"><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">批号可追溯<span class="cn">批号 L2609A，可与装箱单核对</span></span></div><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">浓度是否在规格范围内<span class="cn">30.4% 在 30.0–31.0 内，且不跨阈值</span></span></div><div class="ci warn"><span class="mk">!</span>
+<span class="ct">是否载明检测方法与依据标准<span class="cn">未列检测方法编号；企标对国内下游参考价值有限</span></span></div><div class="ci warn"><span class="mk">!</span>
+<span class="ct">是否覆盖下游关键项（铁、TOC、氯化物）<span class="cn">电子行业用途常用铁与 TOC 控制项，未检测</span></span></div><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">签发人、日期、签章是否完整<span class="cn">齐全</span></span></div><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">是否与 SDS 浓度一致<span class="cn">一致（30.4% vs 30%）</span></span></div></div>
+  </div>
+  <div class="uf"><span class="badge info">结论</span><span style="color:var(--ink-2)">可作为批次质量证明使用；建议补充铁与 TOC 检测项以匹配下游要求。</span></div>
+</div><div class="up">
+  <div class="uh"><span class="fi">PI</span>
+    <div style="min-width:0"><div class="fn">PI_HANWOO_2026-0918.pdf（模拟）</div>
+    <div class="fs">U03 · PI · en · 2026-10-12</div></div>
+    <span class="badge warn">需修订后使用</span></div>
+  <div class="mock"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> <b>模拟文件</b> · 演示用模拟件：发票号、金额为虚构。</div>
+  <div class="ub">
+    <div class="sml" style="color:var(--muted)">已提取字段</div>
+    <div class="kv-grid"><div><div class='k'>PI 号</div><div class='v'>HW-PI-2609-118</div></div><div><div class='k'>卖方抬头</div><div class='v'>HANWOO CHEMICAL CO., LTD.（贸易/生产不明）</div></div><div><div class='k'>品名</div><div class='v'>HYDROGEN PEROXIDE AQUEOUS SOLUTION 30%</div></div><div><div class='k'>数量/单价</div><div class='v'>20000 kg @ USD 1.18 CIF Busan</div></div><div><div class='k'>贸易术语</div><div class='v'>FOB Busan</div></div><div><div class='k'>包装</div><div class='v'>In 30 kg HDPE drums</div></div><div><div class='k'>装运/目的</div><div class='v'>（未列）</div></div><div><div class='k'>HS 编码</div><div class='v'>（未列）</div></div><div><div class='k'>付款方式</div><div class='v'>T/T 30% deposit, 70% via CIF Busan</div></div></div>
+    <div class="sml" style="color:var(--muted);margin-top:2px">检查项（6 项，失败 3）</div>
+    <div class="chk"><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">品名规格完整<span class="cn">含浓度 30%</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">贸易术语是否统一<span class="cn">货物栏写 CIF Busan，条款写 FOB Busan，付款条款又出现 CIF——三处不一致，直接影响完税价格与风险划分</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否列 HS 编码<span class="cn">未列；报关时须由进口方确认</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否列装运港与目的港<span class="cn">未列</span></span></div><div class="ci warn"><span class="mk">!</span>
+<span class="ct">是否列原产国<span class="cn">隐含韩国，但未明写原产国</span></span></div><div class="ci warn"><span class="mk">!</span>
+<span class="ct">卖方是否为制造商<span class="cn">抬头与 SDS 一致，但未声明生产厂</span></span></div></div>
+  </div>
+  <div class="uf"><span class="badge info">结论</span><span style="color:var(--ink-2)">金额与规格可用；贸易术语冲突必须更正后重出 PI。</span></div>
+</div><div class="up">
+  <div class="uh"><span class="fi">LABEL</span>
+    <div style="min-width:0"><div class="fn">Label_HANWOO_H2O2_30_EN.jpg（模拟）</div>
+    <div class="fs">U04 · 标签 · en · 2026-10-12</div></div>
+    <span class="badge bad">不可用</span></div>
+  <div class="mock"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> <b>模拟文件</b> · 演示用模拟标签：按常见英文出口标签样式构造，非任何真实供应商标签。</div>
+  <div class="ub">
+    <div class="sml" style="color:var(--muted)">已提取字段</div>
+    <div class="kv-grid"><div><div class='k'>品名</div><div class='v'>HYDROGEN PEROXIDE 30%</div></div><div><div class='k'>象形图</div><div class='v'>GHS03、GHS05（图示）</div></div><div><div class='k'>信号词</div><div class='v'>DANGER</div></div><div><div class='k'>危险性说明</div><div class='v'>H272, H302, H315, H318, H335（英文）</div></div><div><div class='k'>供应商信息</div><div class='v'>HANWOO CHEMICAL CO., LTD. +82-51-XXX-XXXX（韩国）</div></div><div><div class='k'>中文应急电话</div><div class='v'>（无）</div></div><div><div class='k'>成分及含量</div><div class='v'>（无单独含量栏）</div></div><div><div class='k'>语言</div><div class='v'>English only</div></div></div>
+    <div class="sml" style="color:var(--muted);margin-top:2px">检查项（6 项，失败 5）</div>
+    <div class="chk"><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否有中文品名<span class="cn">仅英文</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否有中文危险性说明与防范说明<span class="cn">H/P 码为英文</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否有中文 24 小时应急咨询电话<span class="cn">仅韩国电话</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否标出成分及含量<span class="cn">未单列含量栏，浓度仅在品名中出现</span></span></div><div class="ci pass"><span class="mk">✓</span>
+<span class="ct">象形图是否齐备<span class="cn">GHS03、GHS05 均在</span></span></div><div class="ci fail"><span class="mk">✕</span>
+<span class="ct">是否含进口商/境内联系人<span class="cn">进口产品标签通常需可追溯的境内联系人</span></span></div></div>
+  </div>
+  <div class="uf"><span class="badge info">结论</span><span style="color:var(--ink-2)">不可直接用于中国进口；须按 GB 15258 重制中文标签。</span></div>
+</div></div>
+
+<div class="card" style="margin-top:14px">
+  <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> 交叉一致性检查（2 项）</h3>
+  <div class="tw" style="margin-top:0"><table class="t" style="min-width:0">
+    <thead><tr><th style="width:64px">等级</th><th style="width:22%">问题</th><th>明细</th><th style="width:36%">处置</th></tr></thead>
+    <tbody><tr><td class='c'><span class="badge warn">中</span></td><td><b>SDS 无中文版本</b></td><td class='sml'>SDS_HANWOO_H2O2_30_EN.pdf（模拟） 为 en 版本</td><td class='sml'>进口危化品须随货提供中文化学品安全技术说明书与中文危险公示标签</td></tr><tr><td class='c'><span class="badge warn">中</span></td><td><b>标签 无中文版本</b></td><td class='sml'>Label_HANWOO_H2O2_30_EN.jpg（模拟） 为 en 版本</td><td class='sml'>进口危化品须随货提供中文化学品安全技术说明书与中文危险公示标签</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section id="s10" data-box="box-gaps">
+<div class="sec-head"><span class="no">08</span><h2>缺失资料清单</h2>
+  <div class="lead">P0 = 不取得不得报关/不得使用；P1 = 影响税费、时效或质量；P2 = 档案完善。勾选状态保存在本机浏览器。</div>
+  <div class="tools">
+    <span class="sml" style="color:var(--muted)">完成进度 <b id="gappct">0%</b> · <span id="gapdone">0/0</span></span>
+    <button class="btn" data-markall="box-gaps"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>全部标记</button>
+    <button class="btn" onclick="window.__resetProgress&&window.__resetProgress()"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>清空</button>
+  </div></div>
+
+<div class="card" style="margin-bottom:12px;padding:12px 16px">
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <div class="pbar" id="gapbar-wrap" style="flex:1 1 260px;min-width:180px;height:8px">
+      <i id="gapbar" style="width:0"></i></div>
+    <span class="badge bad">P0 6 项</span><span class="badge warn">P1 7 项</span><span class="badge info">P2 2 项</span>
+  </div>
+</div>
+<div class="gap p0">
+  <div class="gh">
+    <input type="checkbox" data-gap="G01" data-pri="P0" id="gl-G01" aria-label="标记 中文化学品安全技术说明书（中文SDS） 已完成">
+    <span class="gid">G01</span>
+    <span class="badge bad">P0</span>
+    <span class="badge solid">阻断</span>
+    <span class="gt">中文化学品安全技术说明书（中文SDS）</span>
+    <span class="badge gray">进口商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>《危险化学品安全法》第31条与海关129号公告第二条要求进口危化品随附中文SDS；无中文版无法通过海关检验，且不能合法交付使用。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>进口商按英文SDS整册翻译，逐节与GB/T 16483对照；第14节须与UN2014一致；完成后请报关行预审。</span></div>
+  </div>
+</div><div class="gap p0">
+  <div class="gh">
+    <input type="checkbox" data-gap="G02" data-pri="P0" id="gl-G02" aria-label="标记 中文危险公示标签（含24小时中文应急电话） 已完成">
+    <span class="gid">G02</span>
+    <span class="badge bad">P0</span>
+    <span class="badge solid">阻断</span>
+    <span class="gt">中文危险公示标签（含24小时中文应急电话）</span>
+    <span class="badge gray">进口商/海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>现行标签仅英文，缺中文品名、成分含量、中文H/P说明与中文应急电话，不符合GB 15258。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>按GB 15258重制样张；确认应急电话为国内可接通号码；标签稿经供应商与进口商双签确认后印刷。</span></div>
+  </div>
+</div><div class="gap p0">
+  <div class="gh">
+    <input type="checkbox" data-gap="G03" data-pri="P0" id="gl-G03" aria-label="标记 稳定剂的名称、CAS 与精确添加量，及『无其他功能性添加剂』声明 已完成">
+    <span class="gid">G03</span>
+    <span class="badge bad">P0</span>
+    <span class="badge solid">阻断</span>
+    <span class="gt">稳定剂的名称、CAS 与精确添加量，及『无其他功能性添加剂』声明</span>
+    <span class="badge gray">海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>这是判定是否落入《危险化学品目录》第903项『过氧化氢的水溶液』的关键前提；缺此声明只能给出『视条件适用』。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>要求供应商出具组分清单与书面声明；如含功能性添加剂，需委托第三方做危险特性鉴定后再申报。</span></div>
+  </div>
+</div><div class="gap p0">
+  <div class="gh">
+    <input type="checkbox" data-gap="G04" data-pri="P0" id="gl-G04" aria-label="标记 《进口危险化学品企业符合性声明》 已完成">
+    <span class="gid">G04</span>
+    <span class="badge bad">P0</span>
+    <span class="badge solid">阻断</span>
+    <span class="gt">《进口危险化学品企业符合性声明》</span>
+    <span class="badge gray">进口商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>129号公告第二条第（一）项的强制材料，缺失无法报关。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>进口商用海关附件1格式签署盖章。</span></div>
+  </div>
+</div><div class="gap p0">
+  <div class="gh">
+    <input type="checkbox" data-gap="G05" data-pri="P0" id="gl-G05" aria-label="标记 UN 包装性能检验证书与包装标记照片 已完成">
+    <span class="gid">G05</span>
+    <span class="badge bad">P0</span>
+    <span class="badge solid">阻断</span>
+    <span class="gt">UN 包装性能检验证书与包装标记照片</span>
+    <span class="badge gray">海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>报关需填报包装UN标记；且须核实包装是否经认证并适配PG II。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>索取桶体UN标记清晰照片（含包装代码、类别字母、生产年份）与性能检验证书。</span></div>
+  </div>
+</div><div class="gap p0">
+  <div class="gh">
+    <input type="checkbox" data-gap="G06" data-pri="P0" id="gl-G06" aria-label="标记 PI 贸易术语更正（CIF/FOB 冲突） 已完成">
+    <span class="gid">G06</span>
+    <span class="badge bad">P0</span>
+    <span class="badge solid">阻断</span>
+    <span class="gt">PI 贸易术语更正（CIF/FOB 冲突）</span>
+    <span class="badge gray">海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>同一份PI出现三种术语表述，将直接影响完税价格、运费承担与保险责任。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>要求重出PI，统一为 FOB Busan（或改为 CIF Shanghai 并给出运保费拆分）。</span></div>
+  </div>
+</div><div class="gap p1">
+  <div class="gh">
+    <input type="checkbox" data-gap="G07" data-pri="P1" id="gl-G07" aria-label="标记 SDS 版本号与修订日期 已完成">
+    <span class="gid">G07</span>
+    <span class="badge warn">P1</span>
+    
+    <span class="gt">SDS 版本号与修订日期</span>
+    <span class="badge gray">海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>无版本号无法证明为现行版本，海关审核中文SDS时可能要求补正。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>要求供应商补印版本号/修订日期并签字确认，承诺变更时主动更新。</span></div>
+  </div>
+</div><div class="gap p1">
+  <div class="gh">
+    <input type="checkbox" data-gap="G08" data-pri="P1" id="gl-G08" aria-label="标记 TDS / 产品规格书 已完成">
+    <span class="gid">G08</span>
+    <span class="badge warn">P1</span>
+    
+    <span class="gt">TDS / 产品规格书</span>
+    <span class="badge gray">海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>下游PCB工序需确认工业级的铁、氯化物、TOC 限值是否满足微蚀工艺。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>索取TDS；若供方无TDS，要求提供关键指标清单并写入合同附件。</span></div>
+  </div>
+</div><div class="gap p1">
+  <div class="gh">
+    <input type="checkbox" data-gap="G09" data-pri="P1" id="gl-G09" aria-label="标记 商业发票、装箱单、采购合同 已完成">
+    <span class="gid">G09</span>
+    <span class="badge warn">P1</span>
+    
+    <span class="gt">商业发票、装箱单、采购合同</span>
+    <span class="badge gray">进口商/海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>尚无发票与装箱单，报关单证链未闭环；合同尚未签订，责任划分未落纸。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>签约时同步确认浓度公差（不得跨阈值）、SDS版本、中文标签责任、检验与索赔条款。</span></div>
+  </div>
+</div><div class="gap p1">
+  <div class="gh">
+    <input type="checkbox" data-gap="G10" data-pri="P1" id="gl-G10" aria-label="标记 原产地证书（中韩FTA / RCEP）与直接运输证明 已完成">
+    <span class="gid">G10</span>
+    <span class="badge warn">P1</span>
+    
+    <span class="gt">原产地证书（中韩FTA / RCEP）与直接运输证明</span>
+    <span class="badge gray">海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>若不能用协定税率，税负相差数个百分点；若无法出证则只能按最惠国税率。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>确认供应商能否出中韩FTA原产地证书（或RCEP），并核对是否直航/满足转运规则。</span></div>
+  </div>
+</div><div class="gap p1">
+  <div class="gh">
+    <input type="checkbox" data-gap="G11" data-pri="P1" id="gl-G11" aria-label="标记 危险货物订舱确认与海运申报 已完成">
+    <span class="gid">G11</span>
+    <span class="badge warn">P1</span>
+    
+    <span class="gt">危险货物订舱确认与海运申报</span>
+    <span class="badge gray">承运人</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>危险货物须提前向船公司申请DG舱位，时限通常早于普通货物；未申报将导致拒载。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>由货代/供应商提交DGD并取得DG booking confirmation；核对UN2014与积载要求。</span></div>
+  </div>
+</div><div class="gap p1">
+  <div class="gh">
+    <input type="checkbox" data-gap="G12" data-pri="P1" id="gl-G12" aria-label="标记 进口危险化学品登记（首进口/信息变更） 已完成">
+    <span class="gid">G12</span>
+    <span class="badge warn">P1</span>
+    
+    <span class="gt">进口危险化学品登记（首进口/信息变更）</span>
+    <span class="badge gray">进口商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>法律第86条要求进口企业办理危化品登记；首进口未登记属合规缺口。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>确认企业是否已有该品种登记；无则提前办理（登记信息须含分类标签与应急措施）。</span></div>
+  </div>
+</div><div class="gap p1">
+  <div class="gh">
+    <input type="checkbox" data-gap="G13" data-pri="P1" id="gl-G13" aria-label="标记 2026年度《两用物项和技术进出口许可证管理目录》比对结论 已完成">
+    <span class="gid">G13</span>
+    <span class="badge warn">P1</span>
+    
+    <span class="gt">2026年度《两用物项和技术进出口许可证管理目录》比对结论</span>
+    <span class="badge gray">报关代理</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>监管条件含G（定向出口许可），但进口方向是否需证必须看当年目录，不能想当然。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>请报关代理书面出具查询结论；如落入目录，提前办证并预留时间。</span></div>
+  </div>
+</div><div class="gap p2">
+  <div class="gh">
+    <input type="checkbox" data-gap="G14" data-pri="P2" id="gl-G14" aria-label="标记 生产商声明（制造厂与PI抬头关系） 已完成">
+    <span class="gid">G14</span>
+    <span class="badge info">P2</span>
+    
+    <span class="gt">生产商声明（制造厂与PI抬头关系）</span>
+    <span class="badge gray">海外供应商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>影响原产地判定与SDS责任主体认定。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>索取生产厂抬头声明与工厂地址。</span></div>
+  </div>
+</div><div class="gap p2">
+  <div class="gh">
+    <input type="checkbox" data-gap="G15" data-pri="P2" id="gl-G15" aria-label="标记 国内段危货运输资质与车辆 已完成">
+    <span class="gid">G15</span>
+    <span class="badge info">P2</span>
+    
+    <span class="gt">国内段危货运输资质与车辆</span>
+    <span class="badge gray">进口商</span>
+  </div>
+  <div class="gb">
+    <div class="q"><span class="k">为什么</span><span>到港后须使用有资质的危货车辆与押运人员。</span></div>
+    <div class="q"><span class="k">怎么要</span><span>与危货运输公司签约，留存许可与人员资格复印件。</span></div>
+  </div>
+</div>
+</section>
+
+<section id="s11">
+<div class="sec-head"><span class="no">09</span><h2>责任划分：谁提供、谁办理</h2>
+  <div class="lead">同一份资料由谁出、谁核对、谁留存，必须在合同签约前说清楚，否则一旦被查验就会互相推诿。</div></div>
+<div class="actors"><div class="actor a-supplier">
+  <div class="ah"><span class="ai"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M14 9h1M14 13h1"/></svg></span><span class="an">海外供应商</span>
+    <span class="ac">7</span></div>
+  <ul><li>提供现行版英文 SDS（含版本号、稳定剂明细）与 TDS</li><li>提供 COA（按批）、PI、商业发票、装箱单</li><li>出具稳定剂/抑制剂添加情况说明与『无功能性添加剂』声明</li><li>提供 UN 包装性能检验证书与包装标记照片</li><li>按 GB 15258 配合提供中文标签所需信息（成分含量、H/P 码、应急电话）</li><li>办理危险货物订舱与海运申报，提供 DGD</li><li>如可出证，办理中韩FTA / RCEP 原产地证书并保证直接运输</li></ul>
+  <div class="an2">供应商的核心义务是『把危险货物的技术事实说清楚』；中文合规文件的翻译与制作可由进口商完成，但技术信息必须由供应商确认。</div></div><div class="actor ">
+  <div class="ah"><span class="ai"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><span class="an">进口商（收货人）</span>
+    <span class="ac">9</span></div>
+  <ul><li>审核并采用中文 SDS，确保与货物一致（法律第31条）</li><li>在包装上粘贴/印刷中文危险公示标签（法律第31条）</li><li>签署《进口危险化学品企业符合性声明》</li><li>办理危险化学品登记（法律第86条）</li><li>确认是否有权储存/使用该危化品（储存条件、安全使用许可适用性）</li><li>如转售，须持危险化学品经营许可证（法律第53条）</li><li>落实易制爆流入后的流向报备与购买凭证管理</li><li>核算重大危险源单元总量（GB 18218）</li><li>支付进口关税与进口环节增值税，申报时选择享惠并保存原产地证书</li></ul>
+  <div class="an2">进口企业是危险化学品合规的第一责任人；海关检验的对象是『货物 + 包装 + 中文SDS + 中文标签』。</div></div><div class="actor ">
+  <div class="ah"><span class="ai"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><span class="an">承运人 / 船公司</span>
+    <span class="ac">4</span></div>
+  <ul><li>审核 DG 订舱与危险货物申报单（UN2014 / 5.1 / PG II）</li><li>按 IMDG 积载与隔离要求安排舱位</li><li>出具危险货物提单（载明UN编号与正确运输名称）</li><li>国内段安排有资质的危货道路运输企业与车辆</li></ul>
+  <div class="an2">海运与陆运均属危险货物运输，承运人负有审核与拒载权。</div></div><div class="actor a-agent">
+  <div class="ah"><span class="ai"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span><span class="an">报关代理</span>
+    <span class="ac">6</span></div>
+  <ul><li>按 2847000000 规范申报要素填报（品牌类型|出口享惠情况|成分含量|包装规格|GTIN|CAS）</li><li>填报危险类别、包装类别、UN编号、包装UN标记</li><li>校核监管条件 A（法检）与 G（定向出口）适用性</li><li>书面确认 2026 年度两用物项目录比对结论</li><li>核查原产地证书与享惠资格，选用正确税率</li><li>如归类存在分歧，建议申请预裁定</li></ul>
+  <div class="an2">报关代理不替代进口商的实体责任；建议以书面形式确认关键口径（归类、监管、税率）并留档。</div></div><div class="actor ">
+  <div class="ah"><span class="ai"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><span class="an">第三方检测机构 / 合规顾问</span>
+    <span class="ac">3</span></div>
+  <ul><li>如需，开展危险特性分类鉴别（混合物或添加剂存疑时）</li><li>如海关对 SDS 分类提出异议，出具鉴定报告</li><li>协助核对两用物项目录与用途管控</li></ul>
+  <div class="an2">仅在前述场景触发；本单在稳定剂声明闭环前不必然需要。</div></div><div class="actor a-gov">
+  <div class="ah"><span class="ai"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="an">监管机构</span>
+    <span class="ac">4</span></div>
+  <ul><li>海关：对进出口危险化学品及包装实施检验；出具入境货物通关单；征收关税与增值税</li><li>应急管理部门：危化品登记、经营许可、使用许可、重大危险源备案</li><li>公安机关：易制爆流向报备</li><li>海事管理机构：危险货物船舶运输安全条件</li></ul>
+  <div class="an2">各部门职责见《危险化学品安全法》第7条。</div></div></div>
+</section>
+
+<section id="s12">
+<div class="sec-head"><span class="no">10</span><h2>待确认事项（须报关行 / 合规顾问 / 属地部门确认）</h2>
+  <div class="lead">下列问题<b>不能</b>由公开资料可靠回答。请以书面形式取得答复并归档，口头沟通不构成依据。</div></div>
+<div class="qc">
+  <div class="qh"><span class="qid">Q01</span><span class="badge bad">高优先</span>
+    <span class="qt">第903项『过氧化氢的水溶液』是否成立（稳定剂是否仅为稳定剂）</span><span class="badge info">合规顾问 / 第三方检测机构</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>应急管理部答复（S03）明确：添加稳定剂/惰性化学品之外的其他化学品即不属该水溶液。供应商未披露稳定剂明细。</span>
+    <span class="k">怎么核实</span><span>取得稳定剂清单与声明；如含功能性添加剂，委托做危险特性鉴定并出具结论。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">若最终不落入第903项，则海关129号公告检验、中文SDS/标签、危化品登记等义务的判定基础会改变，需重新评估。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q02</span><span class="badge bad">高优先</span>
+    <span class="qt">2026 年度《两用物项和技术进出口许可证管理目录》中是否含本产品（进口方向）</span><span class="badge info">报关行 / 合规顾问</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>监管条件含 G（两用物项和技术出口许可证·定向），但该代码为出口管制；进口方向是否需证必须查当年目录。</span>
+    <span class="k">怎么核实</span><span>请报关行以单一窗口或商务部公告原文核对并书面答复；必要时请省商务厅确认。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">如应办证未办，货物无法清关，可能被退运并处罚。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q03</span><span class="badge bad">高优先</span>
+    <span class="qt">中韩 FTA 与 RCEP 项下 2847000000 的 2026 年度协定税率</span><span class="badge info">报关行</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>两处第三方数据分别给出 1.1% 与 2.8%，且另一处称该类产品已零关税，口径冲突且缺年度。</span>
+    <span class="k">怎么核实</span><span>在单一窗口『关税优惠税率查询』按 2847000000 + 韩国 + 2026 年度实查；或请货代出具书面截图。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">税率用错会导致少缴/多缴税款，少缴将被追征并加收滞纳金。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q04</span><span class="badge warn">中优先</span>
+    <span class="qt">能否取得原产地证书及是否满足直接运输</span><span class="badge info">海外供应商 / 货代</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>协定税率以原产地证书 + 原产地规则 + 直接运输为条件。Busan→Shanghai 通常直航，但需确认。</span>
+    <span class="k">怎么核实</span><span>要求供应商确认出证能力；核对提单是否直航。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">无法享惠则按 5.5% 最惠国税率计税，到厂成本上升。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q05</span><span class="badge warn">中优先</span>
+    <span class="qt">易制爆流入后的属地报备口径（时限、系统、购买凭证）</span><span class="badge info">进口商 EHS + 属地公安机关</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>法律第58–62条规定查验与三日内报备，但地方执行口径与系统（如易制爆流向管理系统）不同。</span>
+    <span class="k">怎么核实</span><span>首批到港前与属地派出所/县级公安机关书面确认报送方式与时限。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">逾期未报可能被处罚，并影响后续购买。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q06</span><span class="badge warn">中优先</span>
+    <span class="qt">进口企业是否已有该品种危险化学品登记</span><span class="badge info">进口商 EHS</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>法律第86条要求进口企业办理登记，同一品种不重复登记；企业实际登记状态只有企业自己掌握。</span>
+    <span class="k">怎么核实</span><span>查企业危化品登记证书/系统记录；无则办理新增登记。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">未登记属合规缺口，检查中会被要求整改。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q07</span><span class="badge warn">中优先</span>
+    <span class="qt">本批到货的储存与使用条件是否满足危化品要求</span><span class="badge info">进口商 EHS</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>20 吨过氧化氢需阴凉通风、避光、与还原剂/酸碱隔离；是否与现有库存合并构成重大危险源需计算。</span>
+    <span class="k">怎么核实</span><span>按 GB 18218 计算单元总量；核查仓库通风、温控、泄漏收集设施。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">若构成重大危险源而未备案，属重大合规风险。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q08</span><span class="badge info">低优先</span>
+    <span class="qt">30 kg 桶装是否可适用 IMDG 限量/例外或其他豁免</span><span class="badge info">货代 / 船公司 DG 部门</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>若适用豁免可简化部分运输要求，但不得免除危险货物申报与标志；豁免条件须按 IMDG 具体条款核对。</span>
+    <span class="k">怎么核实</span><span>由船公司 DG 部门按 IMDG 现行版本确认并书面答复。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">误用豁免会导致拒载或事故责任。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q09</span><span class="badge info">低优先</span>
+    <span class="qt">是否需要向海关申请归类预裁定</span><span class="badge info">进口商 / 报关代理</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>本单归类置信度高，但若报关行对包装规格/成分含量表述有异议，预裁定可锁定口径。</span>
+    <span class="k">怎么核实</span><span>评估是否存在争议点；存在则按海关总署令第236号申请预裁定。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">不申请则存在被质疑后改归并补税的风险。</span>
+  </div>
+</div><div class="qc">
+  <div class="qh"><span class="qid">Q10</span><span class="badge warn">中优先</span>
+    <span class="qt">SDS 第2节的 GHS 分类是否与 GB 30000 分项标准一致</span><span class="badge info">合规顾问 / SDS 编制机构</span></div>
+  <div class="qb">
+    <span class="k">为何不能自判</span><span>SDS 给出 Oxid. Liq. 2 / Eye Dam. 1 等，需与 GB 30000.14（氧化性液体）等分项对应并确认中国大陆口径。</span>
+    <span class="k">怎么核实</span><span>按 GB 30000.1-2024 与分项标准复核分类，必要时修订 H 码。</span>
+    <span class="k">判断错的代价</span><span style="color:var(--bad)">标签与 SDS 分类不一致会被海关退单。</span>
+  </div>
+</div>
+</section>
+
+<section id="s13">
+<div class="sec-head"><span class="no">11</span><h2>时间线与结论口径</h2>
+  <div class="lead">从签约前到到港后的关键动作；以及本底稿允许/不允许出现的表述。</div></div>
+
+<div class="grid2">
+  <div class="card"><h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 关键路径</h3><div class="tl"><div class="it"><div class="tt">T-45</div>
+      <div class="ta">签订合同前：锁定浓度公差、SDS版本、中文标签责任、检验与索赔条款</div><div class="to">进口商</div></div><div class="it"><div class="tt">T-40</div>
+      <div class="ta">取得供应商稳定剂声明与完整SDS（含版本号）；发起中文SDS翻译</div><div class="to">进口商 / 海外供应商</div></div><div class="it"><div class="tt">T-35</div>
+      <div class="ta">报关行书面确认：归类、监管条件、两用物项目录比对、协定税率</div><div class="to">报关代理</div></div><div class="it"><div class="tt">T-30</div>
+      <div class="ta">确认/办理危险化学品登记；确认易制爆属地报备口径</div><div class="to">进口商 EHS</div></div><div class="it"><div class="tt">T-25</div>
+      <div class="ta">供应商提交 DG 订舱与 DGD；取得包装UN标记与性能证书</div><div class="to">海外供应商</div></div><div class="it"><div class="tt">T-20</div>
+      <div class="ta">中文标签样张定稿并印刷备货；符合性声明签署</div><div class="to">进口商</div></div><div class="it"><div class="tt">T-15</div>
+      <div class="ta">原产地证书申请（如享惠）；发票、装箱单、合同定稿</div><div class="to">海外供应商 / 进口商</div></div><div class="it"><div class="tt">T-0</div>
+      <div class="ta">装船（Busan）；取得提单与危险货物舱单</div><div class="to">承运人</div></div><div class="it"><div class="tt">T+到港</div>
+      <div class="ta">报检+报关（含危险类别/包装类别/UN/包装标记填报）</div><div class="to">报关代理</div></div><div class="it"><div class="tt">T+到港+3</div>
+      <div class="ta">海关查验与放行；缴纳关税与增值税</div><div class="to">进口商 / 报关代理</div></div><div class="it"><div class="tt">T+到港+5</div>
+      <div class="ta">国内危货运输至工厂；入库核查中文标签与SDS随货</div><div class="to">进口商</div></div><div class="it"><div class="tt">T+到港+7</div>
+      <div class="ta">易制爆流向报备（按属地要求）；档案归档</div><div class="to">进口商 EHS</div></div></div></div>
+  <div>
+    <div class="card"><h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14"/><path d="m5 7-3 7h6zM19 7l-3 7h6z"/></svg> 结论口径（可以写 / 不能写）</h3>
+      <div class="tw" style="margin-top:0"><table class="t" style="min-width:0">
+        <thead><tr><th style="width:52%">可以写</th><th>不能写</th></tr></thead>
+        <tbody><tr><td class="sml" style="color:var(--ok)">可以写：产品高度可能适用《危险化学品目录（2015版）》第903项，需按危险化学品办理中文SDS、中文标签与登记</td>
+      <td class="sml" style="color:var(--bad)">不能写：产品一定属于危险化学品（未取得稳定剂声明前）</td></tr><tr><td class="sml" style="color:var(--ok)">可以写：2847.00.0000 归类置信度高，依据第28章章注一（二）（四）</td>
+      <td class="sml" style="color:var(--bad)">不能写：归类已获海关认可</td></tr><tr><td class="sml" style="color:var(--ok)">可以写：危险货物按 UN2014 / 5.1 / PG II 运输</td>
+      <td class="sml" style="color:var(--bad)">不能写：包装类别 II 等同于 GHS 氧化性液体类别2</td></tr><tr><td class="sml" style="color:var(--ok)">可以写：最惠国税率 5.5%，增值税 13%</td>
+      <td class="sml" style="color:var(--bad)">不能写：协定税率已确定为 1.1%</td></tr><tr><td class="sml" style="color:var(--ok)">可以写：如需转售，进口主体须持危化品经营许可证</td>
+      <td class="sml" style="color:var(--bad)">不能写：进口自用无需任何危化品资质</td></tr></tbody></table></div></div>
+    <div class="card" style="margin-top:12px"><h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 下一步动作</h3>
+      <div class="tw" style="margin-top:0"><table class="t" style="min-width:0">
+        <thead><tr><th style="width:120px">时间</th><th>动作</th></tr></thead>
+        <tbody><tr><td class='m' style='white-space:nowrap'>T+0（今天）</td><td class='sml'>发出英文索取清单（见第9节），锁定 P0 六项</td></tr><tr><td class='m' style='white-space:nowrap'>T+3 工作日</td><td class='sml'>取得稳定剂声明与更正后的 PI；同步启动中文 SDS 翻译</td></tr><tr><td class='m' style='white-space:nowrap'>T+5 工作日</td><td class='sml'>报关行书面答复两用物项目录比对与 2026 协定税率</td></tr><tr><td class='m' style='white-space:nowrap'>T+10 工作日</td><td class='sml'>中文标签定稿；符合性声明签署；确认危化品登记状态</td></tr><tr><td class='m' style='white-space:nowrap'>T+15 工作日</td><td class='sml'>原产地证书与 DG 订舱完成，进入发货准备</td></tr></tbody></table></div></div>
+  </div>
+</div>
+</section>
+
+<section id="s14">
+<div class="sec-head"><span class="no">12</span><h2>英文索取清单（可直接发给海外供应商）</h2>
+  <div class="lead">按 P0/P1 缺口自动生成，含每项必须包含的具体内容与时限。</div>
+  <div class="tools">
+    <button class="btn" onclick="window.__exportRequest&&window.__exportRequest()"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>导出 .txt</button>
+    <button class="btn" onclick="window.__copyRequest&&window.__copyRequest()"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>复制全文</button>
+  </div></div>
+
+<div class="letter">
+  <div class="lh"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><b>Documentation Request — Hydrogen Peroxide 30% (UN 2014) Import into P.R. China — Ref. HW-PO-2026-1018</b><span class="sp"></span>
+    <span class="sml" style="color:#9fb0ac;font-family:var(--mono)">ID-H2O2-KR-20261020</span></div>
+  <div class="lb">Dear Sir or Madam,
+
+We are preparing the customs clearance and regulatory filing for our import of HYDROGEN PEROXIDE AQUEOUS SOLUTION 30% (CAS 7722-84-1) from Busan to Shanghai. Under Chinese law (《危险化学品安全法》, in force 1 May 2026) and GACC Announcement No. 129 of 2020, the importer must provide a Chinese Safety Data Sheet and a Chinese hazard label, and customs must be given the hazard class, packing group, UN number and UN packaging mark. The following documents are therefore required from you. Items marked URGENT are on the critical path for booking and clearance.</div>
+  <div class="ls"><div class="tw"><table class="t">
+    <thead><tr><th style="width:38px">#</th><th style="width:26%">Document required</th><th>What it must contain</th><th>Timing</th></tr></thead>
+    <tbody><tr><td class="c m">1</td><td><b>Safety Data Sheet (English), 16 sections, WITH version number and revision date</b></td>
+      <td class="sml">Sections 1–16 per GHS; Section 3 must give the exact name, CAS number and percentage of every stabiliser; Section 14 must state UN number, class, subsidiary risk, packing group and marine pollutant.</td><td class="sml" style="white-space:nowrap">URGENT — within 3 working days</td></tr><tr><td class="c m">2</td><td><b>Statement on Stabilisers / Inhibitors Added</b></td>
+      <td class="sml">Legal name, CAS and precise addition rate of each stabiliser; a signed statement that the product contains no functional additives other than stabilisers/inert substances (this determines whether the product falls under the Chinese Hazardous Chemicals Catalogue).</td><td class="sml" style="white-space:nowrap">URGENT — within 3 working days</td></tr><tr><td class="c m">3</td><td><b>UN Packaging Certificate and UN Mark Photograph</b></td>
+      <td class="sml">Performance Test Certificate for the 30 kg HDPE drum and a clear photograph of the embossed UN mark on the drum (UN symbol, packaging code, packing group letter, year of manufacture, manufacturer code).</td><td class="sml" style="white-space:nowrap">URGENT — within 5 working days</td></tr><tr><td class="c m">4</td><td><b>Technical Data Sheet (TDS) / Product Specification</b></td>
+      <td class="sml">Full specification table including Fe, chloride, TOC and colour, storage conditions and shelf life.</td><td class="sml" style="white-space:nowrap">within 5 working days</td></tr><tr><td class="c m">5</td><td><b>Corrected Proforma Invoice</b></td>
+      <td class="sml">Please reconcile the trade term (the current PI shows CIF Busan, FOB Busan and CIF Busan again). State trade term, port of loading, port of discharge, HS code and country of origin explicitly.</td><td class="sml" style="white-space:nowrap">URGENT — within 3 working days</td></tr><tr><td class="c m">6</td><td><b>Commercial Invoice and Packing List</b></td>
+      <td class="sml">Consistent product name, concentration, quantity, unit price, gross/net weight, package count and shipping marks; packing list shall show 30 kg per drum and drums per pallet.</td><td class="sml" style="white-space:nowrap">prior to shipment</td></tr><tr><td class="c m">7</td><td><b>Certificate of Analysis (COA) for the actual production batch</b></td>
+      <td class="sml">Batch number, test items (H2O2 %, stability, Fe, TOC, colour), test methods, specification limits, result and QA signature.</td><td class="sml" style="white-space:nowrap">with shipment</td></tr><tr><td class="c m">8</td><td><b>Certificate of Origin (China–Korea FTA and/or RCEP) and direct-transport evidence</b></td>
+      <td class="sml">Only needed if the goods qualify; please confirm whether you can issue an FTA certificate of origin and whether the cargo is shipped direct from Busan.</td><td class="sml" style="white-space:nowrap">10 working days before shipment</td></tr><tr><td class="c m">9</td><td><b>Dangerous Goods Declaration (IMDG) and DG booking confirmation</b></td>
+      <td class="sml">UN 2014, Class 5.1 (subsidiary 8), PG II, correct shipping name, number of packages, gross and net weight, 24-hour emergency contact.</td><td class="sml" style="white-space:nowrap">at booking</td></tr><tr><td class="c m">10</td><td><b>Information required for the Chinese GHS label</b></td>
+      <td class="sml">Confirmed Chinese-style hazard statements (H codes), precautionary statements (P codes), signal word, and a 24-hour emergency contact number reachable within China; or your ready-to-print bilingual label artwork for our review.</td><td class="sml" style="white-space:nowrap">10 working days before shipment</td></tr><tr><td class="c m">11</td><td><b>Manufacturer attestation</b></td>
+      <td class="sml">Letter on company letterhead confirming the manufacturing site and its relationship with the invoicing entity.</td><td class="sml" style="white-space:nowrap">with shipment</td></tr></tbody></table></div></div>
+  <div class="lb" style="padding-top:0">Please send all items to [purchasing@example.com] referencing the PO number above. We will arrange translation of the SDS into Chinese; however, the technical content, stabiliser disclosure and transport information must be confirmed by you, as the party responsible for the original classification.
+
+Thank you for your cooperation.</div>
+  <div class="lf">本文件由进口资料准备底稿自动生成。清单内容随缺口变化，发给供应商前请复核收件人与 PO 号。</div>
+</div>
+</section>
+
+<section id="s15">
+<div class="sec-head"><span class="no">13</span><h2>法规来源与查询日期</h2>
+  <div class="lead">每条结论都可回溯到下列来源。A 级为官方一手；B 级为官方转载/政务数据库；C 级仅供交叉参考。</div>
+  <div class="tools">
+    <span class="badge bad">A 级 16</span><span class="badge warn">B 级 3</span>
+    <span class="badge gray">C 级 2</span></div></div>
+<div class="card"><div class="src-item" id="src-S01">
+  <div class="sh"><span class="sid">S01</span><span class="tier A">A</span>
+    <span class="badge gray">法律</span><span class="st">中华人民共和国危险化学品安全法（主席令第六十四号）</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>全国人民代表大会常务委员会</span><span>日期：2025-12-27 通过 / 2026-05-01 施行</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="http://paper.people.com.cn/rmrb/pc/content/202602/25/content_30141885.html" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：第7条(九)海关检验；第31条中文SDS与标签；第32条包装；第53条经营许可；第58条易制爆购买凭证；第82条托运；第86条进口企业危化品登记；第122条进出口管理</div>
+</div><div class="src-item" id="src-S02">
+  <div class="sh"><span class="sid">S02</span><span class="tier A">A</span>
+    <span class="badge gray">公告</span><span class="st">危险化学品目录（2015版）——十部门公告 2015年第5号（含应急管理部 2022年第8号柴油调整、2026年第3号新增5种）</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>应急管理部等十部门</span><span>日期：2015-05-01 施行 / 2022、2026 两次调整</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.ehscity.com/law/201505/ehslaw671.html" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：说明第四条：无含量说明条目指工业产品或纯度高于工业产品；序号2828为类属条目；第903项过氧化氢溶液（含量＞8%）</div>
+</div><div class="src-item" id="src-S03">
+  <div class="sh"><span class="sid">S03</span><span class="tier A">A</span>
+    <span class="badge gray">官方答复</span><span class="st">应急管理部互动留言答复：关于《危险化学品名录》中溶液的定义（第903项）</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>应急管理部 危险化学品安全监督管理二司</span><span>日期：2021-07-26</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.mem.gov.cn/hd/gzly/lyhf/202108/t20210812_395783.shtml" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：目录中如无特殊说明，溶液指水溶液；&gt;8% 过氧化氢水溶液适用第903项；添加化学品（稳定剂、惰性化学品除外）即不再属于该水溶液条目，需另行鉴定</div>
+</div><div class="src-item" id="src-S04">
+  <div class="sh"><span class="sid">S04</span><span class="tier A">A</span>
+    <span class="badge gray">部门公告</span><span class="st">易制爆危险化学品名录（2017年版）（公安部，2017年5月11日）</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>公安部</span><span>日期：2017-05-11</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://csrcare.com/master%20law/" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：第6.1项 过氧化氢溶液（含量＞8%）：含量≥60% 氧化性液体类别1；20%≤含量＜60% 氧化性液体类别2；8%＜含量＜20% 氧化性液体类别3</div>
+</div><div class="src-item" id="src-S05">
+  <div class="sh"><span class="sid">S05</span><span class="tier A">A</span>
+    <span class="badge gray">部门公告</span><span class="st">海关总署公告2020年第129号《关于进出口危险化学品及其包装检验监管有关问题的公告》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>海关总署</span><span>日期：2020-12-18 发布 / 2021-01-10 实施</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.anywayshipping.com/zh/shuangqingDetail/1c53f202-187f-4618-cfe8-a160a888f8b1" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：第一条检验范围；第二条报关填报（危险类别、包装类别、UN编号、包装UN标记）与三项材料（符合性声明、抑制剂/稳定剂说明、中文危险公示标签与中文SDS样本）；第六条包装检验内容</div>
+</div><div class="src-item" id="src-S06">
+  <div class="sh"><span class="sid">S06</span><span class="tier A">A</span>
+    <span class="badge gray">公告</span><span class="st">国务院关税税则委员会公告2025年第12号《中华人民共和国进出口税则（2026）》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>国务院关税税则委员会</span><span>日期：2025-12-31 发布 / 2026-01-01 施行</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://gss.mof.gov.cn/gzdt/zhengcefabu/202512/t20251231_3981044.htm" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：税目 28.47『过氧化氢，不论是否用尿素固化』及税率、备注列口径</div>
+</div><div class="src-item" id="src-S07">
+  <div class="sh"><span class="sid">S07</span><span class="tier B">B</span>
+    <span class="badge gray">政务数据库</span><span class="st">中国国际贸易单一窗口·商品编号 2847000000 申报参数（监管条件 ABG、法定第一单位 千克、规范申报要素、CIQ扩展码）</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>中国电子口岸数据中心 / 海关总署业务参数</span><span>日期：2026 税则参数</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.singlewindow.cn/access/ui/1654414908097/Param002" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：监管条件 A（入境货物通关单）、B（出境货物通关单）、G（两用物项和技术出口许可证·定向）；申报要素 品牌类型|出口享惠情况|成分含量|包装规格|GTIN|CAS</div>
+</div><div class="src-item" id="src-S08">
+  <div class="sh"><span class="sid">S08</span><span class="tier A">A</span>
+    <span class="badge gray">国家标准</span><span class="st">GB 6944-2025《危险货物分类和品名编号》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>国家市场监督管理总局、国家标准化管理委员会</span><span>日期：2025-03-28 发布 / 2025-10-01 实施</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://chinesestandard.net/PDF-EN/GB6944-2025EN-P13P-H10896H-658331.pdf" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：危险货物九类分类与类项划分（第5类氧化性物质含5.1项）</div>
+</div><div class="src-item" id="src-S09">
+  <div class="sh"><span class="sid">S09</span><span class="tier A">A</span>
+    <span class="badge gray">国家标准</span><span class="st">GB 12268-2025《危险货物品名表》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>国家市场监督管理总局、国家标准化管理委员会</span><span>日期：2025-03-28 发布 / 2025-10-01 实施</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://codeofchina.com/standard/GB12268-2025.html" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：UN编号对应的类项、包装类别、正确运输名称</div>
+</div><div class="src-item" id="src-S10">
+  <div class="sh"><span class="sid">S10</span><span class="tier A">A</span>
+    <span class="badge gray">国家标准</span><span class="st">GB/T 16483—2008《化学品安全技术说明书 内容和项目顺序》（现行有效，2009-02-01 实施）</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>国家质量监督检验检疫总局、国家标准委</span><span>日期：2008-06-18 发布 / 2009-02-01 实施</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=67992CA972A4CF9222095CA06064724A" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：SDS 16 节的顺序与必备要素；第14节应载运输分类、UN编号、包装类别、海洋污染物</div>
+</div><div class="src-item" id="src-S11">
+  <div class="sh"><span class="sid">S11</span><span class="tier A">A</span>
+    <span class="badge gray">国家标准</span><span class="st">GB/T 17519—2013《化学品安全技术说明书编写指南》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>国家质量监督检验检疫总局、国家标准委</span><span>日期：2013-09-06 发布 / 2014-01-31 实施</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://codeofchina.com/standard/GBT17519-2013.html" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：SDS 各节的编写方法、数据来源与标注要求</div>
+</div><div class="src-item" id="src-S12">
+  <div class="sh"><span class="sid">S12</span><span class="tier A">A</span>
+    <span class="badge gray">国家标准</span><span class="st">GB 15258—2009《化学品安全标签编写规定》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>国家质量监督检验检疫总局、国家标准委</span><span>日期：2009</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://openstd.samr.gov.cn/" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：中文化学品安全标签必备内容：品名、成分与含量、象形图、信号词、危险性说明、防范说明、供应商标识、应急咨询电话</div>
+</div><div class="src-item" id="src-S13">
+  <div class="sh"><span class="sid">S13</span><span class="tier A">A</span>
+    <span class="badge gray">国家标准</span><span class="st">GB 30000.1—2024《化学品分类和标签规范 第1部分：通则》（替代 GB 13690—2009，技术上与 UN GHS 第八修订版一致）</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>国家市场监督管理总局、国家标准委</span><span>日期：2024-07-24 发布</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://chemradar.com/en/news/detail/dw9w0iew5edc" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：GHS 分类与标签通则；GB 30000.2–29 分项仍沿用 GHS 第四修订版框架</div>
+</div><div class="src-item" id="src-S14">
+  <div class="sh"><span class="sid">S14</span><span class="tier A">A</span>
+    <span class="badge gray">国际规则</span><span class="st">UN Model Regulations / IMDG Code：HYDROGEN PEROXIDE, AQUEOUS SOLUTION, UN 2014（20%–60%），类别 5.1，次要危险 8，包装类别 II</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>联合国危险货物运输专家委员会</span><span>日期：现行版本</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://adr-calculator.com/un/2014" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：20%~60% 水溶液按 UN2014 运输；8%~&lt;20% 为 UN2984 包装类别III；&gt;60% 为 UN2015 包装类别I</div>
+</div><div class="src-item" id="src-S15">
+  <div class="sh"><span class="sid">S15</span><span class="tier C">C</span>
+    <span class="badge gray">国际规则</span><span class="st">Hydrogen Peroxide Europe / Evonik 运输法规对照表（浓度—UN 编号对照）</span><span class="badge gray">行业参考</span></div>
+  <div class="meta"><span>Hydrogen Peroxide Europe（A.I.S.E.）</span><span>日期：2024 年更新</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://active-oxygens.evonik.com/en/products-and-services/hydrogen-peroxide/general-information/transport" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：交叉核对浓度与 UN 编号对应关系（与 S14 一致）</div>
+</div><div class="src-item" id="src-S16">
+  <div class="sh"><span class="sid">S16</span><span class="tier A">A</span>
+    <span class="badge gray">行政法规</span><span class="st">《危险化学品安全管理条例》（国务院令第591号）</span><span class="badge warn">部分替代</span></div>
+  <div class="meta"><span>国务院</span><span>日期：2011-12-01 施行（部分条款已被《危险化学品安全法》覆盖）</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_7f7163c7940b4c4f8639c6f6c3312ede.html" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：危化品经营许可、登记、包装、购买易制爆凭证等制度的来源；2026-05-01 起以《危险化学品安全法》为准</div>
+</div><div class="src-item" id="src-S17">
+  <div class="sh"><span class="sid">S17</span><span class="tier B">B</span>
+    <span class="badge gray">政务数据库</span><span class="st">中国危险化学品目录（2026版）名录库：现收录 2833 种，最近更新 2026-04-16</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>化规通/瑞旭集团（收录应急管理部发布文本）</span><span>日期：2026-04-16</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://hgt.cirs-group.com/tools/cis/inv/62aaaae4bc9325535f815f2e" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：确认 2026 年第3号公告已并入目录；第903项未被删除</div>
+</div><div class="src-item" id="src-S18">
+  <div class="sh"><span class="sid">S18</span><span class="tier B">B</span>
+    <span class="badge gray">政务数据库</span><span class="st">海关商品编码 2847000000 税率表（2026 税则）：最惠国 5.5%、普通 30%、增值税 13%、监管条件 ABG、CIQ 扩展码</span><span class="badge gray">供交叉核对</span></div>
+  <div class="meta"><span>365外贸网（整理 2026 年海关税则与参数）</span><span>日期：2026</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.365area.com/hscode/detail/2847000000" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：最惠国税率 5.5%、普通税率 30%、增值税 13%、监管条件 ABG、CIQ 码段 2847000000.101–.105</div>
+</div><div class="src-item" id="src-S19">
+  <div class="sh"><span class="sid">S19</span><span class="tier C">C</span>
+    <span class="badge gray">政务数据库</span><span class="st">中国-韩国自贸协定等项目协定税率查询（页面显示韩国协定税率 1.1%，但未给出年度与降税阶段）</span><span class="badge gray">未核实</span></div>
+  <div class="meta"><span>关津 guanjin.app（整理单一窗口数据）</span><span>日期：2026</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://guanjin.app/hs-code/28470000/" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：提示中韩 FTA / RCEP 项下可能适用低于最惠国的协定税率，但栏位口径与年度不明确，不能直接采用</div>
+</div><div class="src-item" id="src-S20">
+  <div class="sh"><span class="sid">S20</span><span class="tier A">A</span>
+    <span class="badge gray">法律</span><span class="st">《中华人民共和国出口管制法》与《两用物项出口管制条例》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>全国人大常委会 / 国务院</span><span>日期：2020-12-01 / 2024-12-01 施行</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.gov.cn/zhengce/zhengceku/202410/content_6981400.htm" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：管制物项出口需许可证；海关监管条件 G 为两用物项和技术出口许可证（定向），适用于出口环节</div>
+</div><div class="src-item" id="src-S21">
+  <div class="sh"><span class="sid">S21</span><span class="tier A">A</span>
+    <span class="badge gray">部门规章</span><span class="st">商务部、海关总署公布 2026 年度《两用物项和技术进出口许可证管理目录》</span><span class="badge ok">现行有效</span></div>
+  <div class="meta"><span>商务部、海关总署</span><span>日期：2025-12-31</span>
+    <span>查询日期：2026-10-20</span>
+    <a href="https://www.mofcom.gov.cn/zfxxgk/gkml/art/2025/art_14af6ed6ec0f43c8800f391a97b3f324.html" target="_blank" rel="noopener" style="max-width:520px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">原文</a></div>
+  <div class="sup">支撑：需按当年目录逐条核对产品是否列入；列入则进出口均需许可证</div>
+</div></div>
+
+<div class="card" style="margin-top:12px;background:var(--card-2)">
+  <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> 使用边界</h3>
+  <p class="sml" style="margin:0;color:var(--ink-3)">
+  本底稿是基于公开资料的<b>准备性核验</b>，不构成法律意见，也不替代海关、应急管理、公安等部门的实际认定。
+  凡标注「待核验 / 数据冲突 / 未核实」的条目，须由报关行、合规顾问或主管部门书面确认后方可用于申报与结算。
+  上传文件中的<b>模拟件</b>仅用于演示流程，其供应商名称、批号与金额均为虚构。</p>
+</div>
+</section>
+
+    <footer style="margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+      font-size:11.6px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap">
+      <span>ID-H2O2-KR-20261020 · 生成于 2026-10-20</span>
+      <span>整理：外贸采购 / 关务合规（演示）</span>
+      <span style="margin-left:auto">演示案例：供应商名称、批号、金额与上传文件均为模拟；法规条文、税则编码与运输分类为可回溯的公开资料。</span>
+    </footer>
+  </main>
+</div>
+
+<div class="drawer-bg" id="drawer-bg"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="来源详情">
+  <div class="dh"><span class="dt" id="drawer-title">来源</span>
+    <button class="x-btn" id="drawer-close" aria-label="关闭"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div class="db" id="drawer-body"></div>
+</aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>window.DOSSIER = {"meta": {"record_id": "ID-H2O2-KR-20261020", "prepared_by": "外贸采购 / 关务合规（演示）", "prepared_at": "2026-10-20", "generated_at": "2026-10-20", "scene": "外贸采购 / 查进口资料要求", "data_classification": "内部（含模拟件）", "product_scope_note": "本底稿每一条结论都绑定产品身份（30% 水溶液 / 稳定剂型 / 工业级 / PCB微蚀用途 / 30kg桶装 / 海运整柜 / 韩国）。任一要素改变须重跑 P1–P3。", "methodology_version": "1.0", "demo_notice": "演示案例：供应商名称、批号、金额与上传文件均为模拟；法规条文、税则编码与运输分类为可回溯的公开资料。"}, "as_of": "2026-10-20", "sources": [{"id": "S01", "kind": "法律", "tier": "A", "title": "中华人民共和国危险化学品安全法（主席令第六十四号）", "publisher": "全国人民代表大会常务委员会", "date": "2025-12-27 通过 / 2026-05-01 施行", "effective": "现行有效", "url": "http://paper.people.com.cn/rmrb/pc/content/202602/25/content_30141885.html", "supports": "第7条(九)海关检验；第31条中文SDS与标签；第32条包装；第53条经营许可；第58条易制爆购买凭证；第82条托运；第86条进口企业危化品登记；第122条进出口管理", "accessed": "2026-10-20"}, {"id": "S02", "kind": "公告", "tier": "A", "title": "危险化学品目录（2015版）——十部门公告 2015年第5号（含应急管理部 2022年第8号柴油调整、2026年第3号新增5种）", "publisher": "应急管理部等十部门", "date": "2015-05-01 施行 / 2022、2026 两次调整", "effective": "现行有效", "url": "https://www.ehscity.com/law/201505/ehslaw671.html", "supports": "说明第四条：无含量说明条目指工业产品或纯度高于工业产品；序号2828为类属条目；第903项过氧化氢溶液（含量＞8%）", "accessed": "2026-10-20"}, {"id": "S03", "kind": "官方答复", "tier": "A", "title": "应急管理部互动留言答复：关于《危险化学品名录》中溶液的定义（第903项）", "publisher": "应急管理部 危险化学品安全监督管理二司", "date": "2021-07-26", "effective": "现行有效", "url": "https://www.mem.gov.cn/hd/gzly/lyhf/202108/t20210812_395783.shtml", "supports": "目录中如无特殊说明，溶液指水溶液；>8% 过氧化氢水溶液适用第903项；添加化学品（稳定剂、惰性化学品除外）即不再属于该水溶液条目，需另行鉴定", "accessed": "2026-10-20"}, {"id": "S04", "kind": "部门公告", "tier": "A", "title": "易制爆危险化学品名录（2017年版）（公安部，2017年5月11日）", "publisher": "公安部", "date": "2017-05-11", "effective": "现行有效", "url": "https://csrcare.com/master%20law/", "supports": "第6.1项 过氧化氢溶液（含量＞8%）：含量≥60% 氧化性液体类别1；20%≤含量＜60% 氧化性液体类别2；8%＜含量＜20% 氧化性液体类别3", "accessed": "2026-10-20"}, {"id": "S05", "kind": "部门公告", "tier": "A", "title": "海关总署公告2020年第129号《关于进出口危险化学品及其包装检验监管有关问题的公告》", "publisher": "海关总署", "date": "2020-12-18 发布 / 2021-01-10 实施", "effective": "现行有效", "url": "https://www.anywayshipping.com/zh/shuangqingDetail/1c53f202-187f-4618-cfe8-a160a888f8b1", "supports": "第一条检验范围；第二条报关填报（危险类别、包装类别、UN编号、包装UN标记）与三项材料（符合性声明、抑制剂/稳定剂说明、中文危险公示标签与中文SDS样本）；第六条包装检验内容", "accessed": "2026-10-20"}, {"id": "S06", "kind": "公告", "tier": "A", "title": "国务院关税税则委员会公告2025年第12号《中华人民共和国进出口税则（2026）》", "publisher": "国务院关税税则委员会", "date": "2025-12-31 发布 / 2026-01-01 施行", "effective": "现行有效", "url": "https://gss.mof.gov.cn/gzdt/zhengcefabu/202512/t20251231_3981044.htm", "supports": "税目 28.47『过氧化氢，不论是否用尿素固化』及税率、备注列口径", "accessed": "2026-10-20"}, {"id": "S07", "kind": "政务数据库", "tier": "B", "title": "中国国际贸易单一窗口·商品编号 2847000000 申报参数（监管条件 ABG、法定第一单位 千克、规范申报要素、CIQ扩展码）", "publisher": "中国电子口岸数据中心 / 海关总署业务参数", "date": "2026 税则参数", "effective": "现行有效", "url": "https://www.singlewindow.cn/access/ui/1654414908097/Param002", "supports": "监管条件 A（入境货物通关单）、B（出境货物通关单）、G（两用物项和技术出口许可证·定向）；申报要素 品牌类型|出口享惠情况|成分含量|包装规格|GTIN|CAS", "accessed": "2026-10-20"}, {"id": "S08", "kind": "国家标准", "tier": "A", "title": "GB 6944-2025《危险货物分类和品名编号》", "publisher": "国家市场监督管理总局、国家标准化管理委员会", "date": "2025-03-28 发布 / 2025-10-01 实施", "effective": "现行有效", "url": "https://chinesestandard.net/PDF-EN/GB6944-2025EN-P13P-H10896H-658331.pdf", "supports": "危险货物九类分类与类项划分（第5类氧化性物质含5.1项）", "accessed": "2026-10-20"}, {"id": "S09", "kind": "国家标准", "tier": "A", "title": "GB 12268-2025《危险货物品名表》", "publisher": "国家市场监督管理总局、国家标准化管理委员会", "date": "2025-03-28 发布 / 2025-10-01 实施", "effective": "现行有效", "url": "https://codeofchina.com/standard/GB12268-2025.html", "supports": "UN编号对应的类项、包装类别、正确运输名称", "accessed": "2026-10-20"}, {"id": "S10", "kind": "国家标准", "tier": "A", "title": "GB/T 16483—2008《化学品安全技术说明书 内容和项目顺序》（现行有效，2009-02-01 实施）", "publisher": "国家质量监督检验检疫总局、国家标准委", "date": "2008-06-18 发布 / 2009-02-01 实施", "effective": "现行有效", "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=67992CA972A4CF9222095CA06064724A", "supports": "SDS 16 节的顺序与必备要素；第14节应载运输分类、UN编号、包装类别、海洋污染物", "accessed": "2026-10-20"}, {"id": "S11", "kind": "国家标准", "tier": "A", "title": "GB/T 17519—2013《化学品安全技术说明书编写指南》", "publisher": "国家质量监督检验检疫总局、国家标准委", "date": "2013-09-06 发布 / 2014-01-31 实施", "effective": "现行有效", "url": "https://codeofchina.com/standard/GBT17519-2013.html", "supports": "SDS 各节的编写方法、数据来源与标注要求", "accessed": "2026-10-20"}, {"id": "S12", "kind": "国家标准", "tier": "A", "title": "GB 15258—2009《化学品安全标签编写规定》", "publisher": "国家质量监督检验检疫总局、国家标准委", "date": "2009", "effective": "现行有效", "url": "https://openstd.samr.gov.cn/", "supports": "中文化学品安全标签必备内容：品名、成分与含量、象形图、信号词、危险性说明、防范说明、供应商标识、应急咨询电话", "accessed": "2026-10-20"}, {"id": "S13", "kind": "国家标准", "tier": "A", "title": "GB 30000.1—2024《化学品分类和标签规范 第1部分：通则》（替代 GB 13690—2009，技术上与 UN GHS 第八修订版一致）", "publisher": "国家市场监督管理总局、国家标准委", "date": "2024-07-24 发布", "effective": "现行有效", "url": "https://chemradar.com/en/news/detail/dw9w0iew5edc", "supports": "GHS 分类与标签通则；GB 30000.2–29 分项仍沿用 GHS 第四修订版框架", "accessed": "2026-10-20"}, {"id": "S14", "kind": "国际规则", "tier": "A", "title": "UN Model Regulations / IMDG Code：HYDROGEN PEROXIDE, AQUEOUS SOLUTION, UN 2014（20%–60%），类别 5.1，次要危险 8，包装类别 II", "publisher": "联合国危险货物运输专家委员会", "date": "现行版本", "effective": "现行有效", "url": "https://adr-calculator.com/un/2014", "supports": "20%~60% 水溶液按 UN2014 运输；8%~<20% 为 UN2984 包装类别III；>60% 为 UN2015 包装类别I", "accessed": "2026-10-20"}, {"id": "S15", "kind": "国际规则", "tier": "C", "title": "Hydrogen Peroxide Europe / Evonik 运输法规对照表（浓度—UN 编号对照）", "publisher": "Hydrogen Peroxide Europe（A.I.S.E.）", "date": "2024 年更新", "effective": "行业参考", "url": "https://active-oxygens.evonik.com/en/products-and-services/hydrogen-peroxide/general-information/transport", "supports": "交叉核对浓度与 UN 编号对应关系（与 S14 一致）", "accessed": "2026-10-20"}, {"id": "S16", "kind": "行政法规", "tier": "A", "title": "《危险化学品安全管理条例》（国务院令第591号）", "publisher": "国务院", "date": "2011-12-01 施行（部分条款已被《危险化学品安全法》覆盖）", "effective": "部分替代", "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_7f7163c7940b4c4f8639c6f6c3312ede.html", "supports": "危化品经营许可、登记、包装、购买易制爆凭证等制度的来源；2026-05-01 起以《危险化学品安全法》为准", "accessed": "2026-10-20"}, {"id": "S17", "kind": "政务数据库", "tier": "B", "title": "中国危险化学品目录（2026版）名录库：现收录 2833 种，最近更新 2026-04-16", "publisher": "化规通/瑞旭集团（收录应急管理部发布文本）", "date": "2026-04-16", "effective": "现行有效", "url": "https://hgt.cirs-group.com/tools/cis/inv/62aaaae4bc9325535f815f2e", "supports": "确认 2026 年第3号公告已并入目录；第903项未被删除", "accessed": "2026-10-20"}, {"id": "S18", "kind": "政务数据库", "tier": "B", "title": "海关商品编码 2847000000 税率表（2026 税则）：最惠国 5.5%、普通 30%、增值税 13%、监管条件 ABG、CIQ 扩展码", "publisher": "365外贸网（整理 2026 年海关税则与参数）", "date": "2026", "effective": "供交叉核对", "url": "https://www.365area.com/hscode/detail/2847000000", "supports": "最惠国税率 5.5%、普通税率 30%、增值税 13%、监管条件 ABG、CIQ 码段 2847000000.101–.105", "accessed": "2026-10-20"}, {"id": "S19", "kind": "政务数据库", "tier": "C", "title": "中国-韩国自贸协定等项目协定税率查询（页面显示韩国协定税率 1.1%，但未给出年度与降税阶段）", "publisher": "关津 guanjin.app（整理单一窗口数据）", "date": "2026", "effective": "未核实", "url": "https://guanjin.app/hs-code/28470000/", "supports": "提示中韩 FTA / RCEP 项下可能适用低于最惠国的协定税率，但栏位口径与年度不明确，不能直接采用", "accessed": "2026-10-20"}, {"id": "S20", "kind": "法律", "tier": "A", "title": "《中华人民共和国出口管制法》与《两用物项出口管制条例》", "publisher": "全国人大常委会 / 国务院", "date": "2020-12-01 / 2024-12-01 施行", "effective": "现行有效", "url": "https://www.gov.cn/zhengce/zhengceku/202410/content_6981400.htm", "supports": "管制物项出口需许可证；海关监管条件 G 为两用物项和技术出口许可证（定向），适用于出口环节", "accessed": "2026-10-20"}, {"id": "S21", "kind": "部门规章", "tier": "A", "title": "商务部、海关总署公布 2026 年度《两用物项和技术进出口许可证管理目录》", "publisher": "商务部、海关总署", "date": "2025-12-31", "effective": "现行有效", "url": "https://www.mofcom.gov.cn/zfxxgk/gkml/art/2025/art_14af6ed6ec0f43c8800f391a97b3f324.html", "supports": "需按当年目录逐条核对产品是否列入；列入则进出口均需许可证", "accessed": "2026-10-20"}], "supplier_request_en": {"title": "Documentation Request — Hydrogen Peroxide 30% (UN 2014) Import into P.R. China — Ref. HW-PO-2026-1018", "intro": "Dear Sir or Madam,\n\nWe are preparing the customs clearance and regulatory filing for our import of HYDROGEN PEROXIDE AQUEOUS SOLUTION 30% (CAS 7722-84-1) from Busan to Shanghai. Under Chinese law (《危险化学品安全法》, in force 1 May 2026) and GACC Announcement No. 129 of 2020, the importer must provide a Chinese Safety Data Sheet and a Chinese hazard label, and customs must be given the hazard class, packing group, UN number and UN packaging mark. The following documents are therefore required from you. Items marked URGENT are on the critical path for booking and clearance.", "items": [{"no": "1", "doc": "Safety Data Sheet (English), 16 sections, WITH version number and revision date", "detail": "Sections 1–16 per GHS; Section 3 must give the exact name, CAS number and percentage of every stabiliser; Section 14 must state UN number, class, subsidiary risk, packing group and marine pollutant.", "due": "URGENT — within 3 working days"}, {"no": "2", "doc": "Statement on Stabilisers / Inhibitors Added", "detail": "Legal name, CAS and precise addition rate of each stabiliser; a signed statement that the product contains no functional additives other than stabilisers/inert substances (this determines whether the product falls under the Chinese Hazardous Chemicals Catalogue).", "due": "URGENT — within 3 working days"}, {"no": "3", "doc": "UN Packaging Certificate and UN Mark Photograph", "detail": "Performance Test Certificate for the 30 kg HDPE drum and a clear photograph of the embossed UN mark on the drum (UN symbol, packaging code, packing group letter, year of manufacture, manufacturer code).", "due": "URGENT — within 5 working days"}, {"no": "4", "doc": "Technical Data Sheet (TDS) / Product Specification", "detail": "Full specification table including Fe, chloride, TOC and colour, storage conditions and shelf life.", "due": "within 5 working days"}, {"no": "5", "doc": "Corrected Proforma Invoice", "detail": "Please reconcile the trade term (the current PI shows CIF Busan, FOB Busan and CIF Busan again). State trade term, port of loading, port of discharge, HS code and country of origin explicitly.", "due": "URGENT — within 3 working days"}, {"no": "6", "doc": "Commercial Invoice and Packing List", "detail": "Consistent product name, concentration, quantity, unit price, gross/net weight, package count and shipping marks; packing list shall show 30 kg per drum and drums per pallet.", "due": "prior to shipment"}, {"no": "7", "doc": "Certificate of Analysis (COA) for the actual production batch", "detail": "Batch number, test items (H2O2 %, stability, Fe, TOC, colour), test methods, specification limits, result and QA signature.", "due": "with shipment"}, {"no": "8", "doc": "Certificate of Origin (China–Korea FTA and/or RCEP) and direct-transport evidence", "detail": "Only needed if the goods qualify; please confirm whether you can issue an FTA certificate of origin and whether the cargo is shipped direct from Busan.", "due": "10 working days before shipment"}, {"no": "9", "doc": "Dangerous Goods Declaration (IMDG) and DG booking confirmation", "detail": "UN 2014, Class 5.1 (subsidiary 8), PG II, correct shipping name, number of packages, gross and net weight, 24-hour emergency contact.", "due": "at booking"}, {"no": "10", "doc": "Information required for the Chinese GHS label", "detail": "Confirmed Chinese-style hazard statements (H codes), precautionary statements (P codes), signal word, and a 24-hour emergency contact number reachable within China; or your ready-to-print bilingual label artwork for our review.", "due": "10 working days before shipment"}, {"no": "11", "doc": "Manufacturer attestation", "detail": "Letter on company letterhead confirming the manufacturing site and its relationship with the invoicing entity.", "due": "with shipment"}], "closing": "Please send all items to [purchasing@example.com] referencing the PO number above. We will arrange translation of the SDS into Chinese; however, the technical content, stabiliser disclosure and transport information must be confirmed by you, as the party responsible for the original classification.\n\nThank you for your cooperation."}};</script>
+<script>/* =====================================================================
+   chem-import-dossier · assets/report.js
+   纯原生 JS，无依赖。数据由 render_html.py 注入 window.DOSSIER。
+   功能：侧栏定位 / 表格筛选排序 / 缺口勾选与进度 / 来源抽屉 /
+        导出清单 / 保存本地进度 / 打印
+   ===================================================================== */
+(function () {
+  "use strict";
+  var D = window.DOSSIER || {};
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var LS_KEY = "dossier:" + (D.meta && D.meta.record_id || "x");
+
+  /* ---------------- 顶部滚动进度 ---------------- */
+  var sb = $(".scrollbar");
+  function onScroll() {
+    var h = document.documentElement;
+    var p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
+    if (sb) sb.style.width = (p * 100).toFixed(2) + "%";
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------------- 侧栏高亮 ---------------- */
+  var links = $$(".side a[href^='#']");
+  var secs = links.map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); }).filter(Boolean);
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) {
+          a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id);
+        });
+      });
+    }, { rootMargin: "-64px 0px -72% 0px", threshold: 0 });
+    secs.forEach(function (s) { io.observe(s); });
+  }
+
+  /* ---------------- 通用筛选 + 排序 ---------------- */
+  function initTable(tw) {
+    var table = $("table.t", tw);
+    if (!table) return;
+    var tbody = $("tbody", table);
+    var chips = $$(".fchip", tw);
+    var input = $(".search input", tw);
+    var state = { filter: "all", q: "" };
+
+    function rows() { return $$("tr", tbody); }
+    function apply() {
+      var n = 0;
+      rows().forEach(function (tr) {
+        var okF = state.filter === "all" || (tr.dataset.rowkey || "").split(" ").indexOf(state.filter) >= 0;
+        var okQ = !state.q || (tr.dataset.search || "").indexOf(state.q) >= 0;
+        var show = okF && okQ;
+        tr.style.display = show ? "" : "none";
+        if (show) n++;
+      });
+      rows().forEach(function (tr) {
+        if (tr.dataset.search === undefined) tr.dataset.search = tr.textContent.toLowerCase().replace(/\s+/g, " ");
+      });
+      var cnt = $("#count-" + tw.dataset.tw);
+      if (cnt) cnt.textContent = n + " / " + rows().length;
+      tw.dispatchEvent(new CustomEvent("rows", { detail: n }));
+    }
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.classList.remove("on"); });
+        c.classList.add("on");
+        state.filter = c.dataset.filter || "all";
+        apply();
+      });
+    });
+    if (input) {
+      input.addEventListener("input", function () {
+        state.q = input.value.trim().toLowerCase();
+        apply();
+      });
+    }
+    // 排序
+    $$("th.s", table).forEach(function (th, i) {
+      th.addEventListener("click", function () {
+        var asc = !th.classList.contains("asc");
+        $$("th.s", table).forEach(function (x) { x.classList.remove("asc", "desc"); });
+        th.classList.add(asc ? "asc" : "desc");
+        var idx = Array.prototype.indexOf.call(th.parentNode.children, th);
+        rows().sort(function (a, b) {
+          var av = (a.children[idx] || {}).textContent || "";
+          var bv = (b.children[idx] || {}).textContent || "";
+          // 数字优先
+          var an = parseFloat(av.replace(/[^\d.\-]/g, "")), bn = parseFloat(bv.replace(/[^\d.\-]/g, ""));
+          var cmp = (!isNaN(an) && !isNaN(bn) && /^\s*[\d.,%+-]+/.test(av)) ? an - bn : av.localeCompare(bv, "zh");
+          return asc ? cmp : -cmp;
+        }).forEach(function (r) { tbody.appendChild(r); });
+      });
+    });
+    apply();
+  }
+  $$("[data-tw]").forEach(initTable);
+
+  /* ---------------- 缺口勾选 ---------------- */
+  var checks = $$("input[type=checkbox][data-gap]");
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch (e) { saved = {}; }
+
+  function updGaps() {
+    var done = 0, total = 0, p0done = 0, p0total = 0;
+    checks.forEach(function (c) {
+      total++;
+      if (c.checked) done++;
+      if (c.dataset.pri === "P0") { p0total++; if (c.checked) p0done++; }
+      c.closest(".gap").classList.toggle("done", c.checked);
+    });
+    var pc = total ? Math.round(done / total * 100) : 0;
+    var el = $("#gappct"); if (el) el.textContent = pc + "%";
+    var bar = $("#gapbar"); if (bar) { bar.style.width = pc + "%"; }
+    var dn = $("#gapdone"); if (dn) dn.textContent = done + "/" + total;
+    var p0 = $("#p0done"); if (p0) {
+      p0.textContent = p0done + "/" + p0total;
+      p0.className = p0done === p0total ? "kv" : "kv";
+    }
+    try {
+      var o = {}; checks.forEach(function (c) { o[c.dataset.gap] = c.checked; });
+      localStorage.setItem(LS_KEY, JSON.stringify(o));
+    } catch (e) { /* 隐私模式忽略 */ }
+  }
+  checks.forEach(function (c) {
+    if (saved[c.dataset.gap]) c.checked = true;
+    c.addEventListener("change", updGaps);
+  });
+  if (checks.length) updGaps();
+
+  /* 每个分区的"标记完成" */
+  $$("[data-markall]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var box = document.getElementById(b.dataset.markall);
+      var all = $$("input[type=checkbox]", box);
+      var to = !all.every(function (c) { return c.checked; });
+      all.forEach(function (c) { c.checked = to; });
+      updGaps();
+      toast(to ? "已标记为已完成" : "已取消完成标记");
+    });
+  });
+
+  /* ---------------- 来源抽屉 ---------------- */
+  var dg = $("#drawer"), bg = $("#drawer-bg");
+  var SRC = {};
+  (D.sources || []).forEach(function (s) { SRC[s.id] = s; });
+
+  function openSrc(id) {
+    var s = SRC[id];
+    if (!s) return;
+    var tier = s.tier || "C";
+    var html = "";
+    html += '<div class="kv">';
+    html += '<div class="k">来源编号</div><div><b class="mono">' + esc(s.id) + '</b> <span class="tier ' + tier + '">' + tier + '级</span></div>';
+    html += '<div class="k">文件类型</div><div>' + esc(s.kind || "") + '</div>';
+    html += '<div class="k">发布机关</div><div>' + esc(s.publisher || "") + '</div>';
+    html += '<div class="k">日期</div><div>' + esc(s.date || "") + '</div>';
+    html += '<div class="k">效力状态</div><div>' + badgeEff(s.effective) + '</div>';
+    html += '<div class="k">查询日期</div><div class="mono">' + esc(s.accessed || "") + '</div>';
+    html += '</div>';
+    html += '<h4>标题</h4><div>' + esc(s.title || "") + '</div>';
+    html += '<h4>原文链接</h4><div><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.url) + '</a></div>';
+    html += '<h4>支撑了哪条结论</h4><div>' + esc(s.supports || "—") + '</div>';
+    if (tier === "C") {
+      html += '<h4>使用提示</h4><div style="color:#8a5a2a">C 级来源为行业数据库/商业平台，仅作交叉参考；不可作为唯一依据。' +
+        (s.effective === "未核实" ? " 本来源标注为" + esc(s.effective) + "，须由官方渠道复核。" : "") + '</div>';
+    }
+    if (s.effective === "部分替代") {
+      html += '<h4>时效提示</h4><div style="color:#a3311f">该文件部分条款已被更新法规覆盖，引用时须以新法为准。</div>';
+    }
+    $("#drawer-title").textContent = s.id + " · " + (s.kind || "来源");
+    $("#drawer-body").innerHTML = html;
+    dg.classList.add("on"); bg.classList.add("on");
+    dg.setAttribute("aria-hidden", "false");
+  }
+  function closeDrawer() {
+    dg.classList.remove("on"); bg.classList.remove("on");
+    dg.setAttribute("aria-hidden", "true");
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-src]");
+    if (t) { e.preventDefault(); openSrc(t.dataset.src); }
+  });
+  if (bg) bg.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
+  if ($("#drawer-close")) $("#drawer-close").addEventListener("click", closeDrawer);
+
+  /* ---------------- Toast ---------------- */
+  var toastEl = $("#toast");
+  var toastT;
+  function toast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add("on");
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove("on"); }, 2200);
+  }
+  window.__toast = toast;
+
+  /* ---------------- 导出英文索取清单 ---------------- */
+  function buildRequestText() {
+    var R = D.supplier_request_en || {};
+    var L = [];
+    L.push(R.title || "Documentation Request");
+    L.push("");
+    L.push(R.intro || "");
+    L.push("");
+    L.push("----------------------------------------------------------------");
+    (R.items || []).forEach(function (it) {
+      L.push(it.no + ". " + it.doc);
+      L.push("   Detail : " + it.detail);
+      L.push("   Timing : " + it.due);
+      L.push("");
+    });
+    L.push("----------------------------------------------------------------");
+    L.push(R.closing || "");
+    L.push("");
+    L.push("[Reference] Dossier " + (D.meta && D.meta.record_id || "") + " / as of " + (D.as_of || ""));
+    L.push("[Sources in this dossier]");
+    (D.sources || []).forEach(function (s) { L.push("  " + s.id + " | " + s.title + " | " + s.publisher + " | " + (s.effective || "")); });
+    return L.join("\n");
+  }
+  function download(name, text, mime) {
+    var blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+  }
+  window.__exportRequest = function () {
+    var n = (D.meta && D.meta.record_id || "dossier") + "_Supplier_Document_Request.txt";
+    download(n, buildRequestText());
+    toast("已导出英文索取清单");
+  };
+  window.__copyRequest = function () {
+    var t = buildRequestText();
+    var done = function () { toast("英文索取清单已复制到剪贴板"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done, function () { fallbackCopy(t, done); });
+    } else { fallbackCopy(t, done); }
+  };
+  function fallbackCopy(t, cb) {
+    var ta = document.createElement("textarea");
+    ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); cb(); } catch (e) { toast("复制失败，请手动选择文本"); }
+    ta.remove();
+  }
+  window.__print = function () { window.print(); };
+  window.__resetProgress = function () {
+    try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    checks.forEach(function (c) { c.checked = false; });
+    updGaps();
+    toast("已清空本地完成标记");
+  };
+
+  /* ---------------- 小工具 ---------------- */
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function badgeEff(v) {
+    var map = { "现行有效": "ok", "部分替代": "warn", "已废止": "bad", "未核实": "gray", "供交叉核对": "info", "行业参考": "gray" };
+    return '<span class="badge ' + (map[v] || "gray") + '">' + esc(v || "未标注") + '</span>';
+  }
+
+  /* 关键指标 hover 提示 */
+  $$("[data-tip]").forEach(function (el) {
+    el.addEventListener("mouseenter", function () { el.title = el.dataset.tip; });
+  });
+})();
+</script>
+</body>
+</html>

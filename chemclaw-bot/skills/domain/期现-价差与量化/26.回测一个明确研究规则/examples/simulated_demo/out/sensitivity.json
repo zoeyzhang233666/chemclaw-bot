@@ -1,0 +1,408 @@
+{
+  "grid": [
+    {
+      "variant": "base",
+      "overrides": {},
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": true
+    },
+    {
+      "variant": "basis_quantile=0.7",
+      "overrides": {
+        "price_filter.threshold": 0.7
+      },
+      "return": 0.008909999999999973,
+      "cagr": 0.0015583437497614927,
+      "max_dd": -0.005222383620391513,
+      "sharpe": 0.5068383362472652,
+      "trades": 3,
+      "win_rate": 0.6666666666666666,
+      "profit_factor": 5.423423423423388,
+      "exposure": 0.7776978417266187,
+      "max_margin_util": 0.023926261416007517,
+      "is_base": false
+    },
+    {
+      "variant": "basis_quantile=0.75",
+      "overrides": {
+        "price_filter.threshold": 0.75
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "basis_quantile=0.85",
+      "overrides": {
+        "price_filter.threshold": 0.85
+      },
+      "return": 0.010320000000000107,
+      "cagr": 0.0018039095618889167,
+      "max_dd": -0.006768005612010519,
+      "sharpe": 0.45380676527894,
+      "trades": 6,
+      "win_rate": 0.16666666666666666,
+      "profit_factor": 0.6353340883352168,
+      "exposure": 0.034532374100719423,
+      "max_margin_util": 0.026203598517732154,
+      "is_base": false
+    },
+    {
+      "variant": "change_run_weeks=2",
+      "overrides": {
+        "signal.ops.0.weeks": 2
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "change_run_weeks=3",
+      "overrides": {
+        "signal.ops.0.weeks": 3
+      },
+      "return": -0.0028399999999999537,
+      "cagr": -0.0004991170328860761,
+      "max_dd": -0.004904822493326355,
+      "sharpe": -0.19936166694362,
+      "trades": 2,
+      "win_rate": 0.5,
+      "profit_factor": 0.1673469387755201,
+      "exposure": 0.011510791366906475,
+      "max_margin_util": 0.026995983334580743,
+      "is_base": false
+    },
+    {
+      "variant": "channel_n=2",
+      "overrides": {
+        "signal.ops.1.n": 2
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "channel_n=3",
+      "overrides": {
+        "signal.ops.1.n": 3
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "channel_n=4",
+      "overrides": {
+        "signal.ops.1.n": 4
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "channel_threshold=0.0",
+      "overrides": {
+        "signal.ops.1.threshold": 0.0
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "channel_threshold=0.5",
+      "overrides": {
+        "signal.ops.1.threshold": 0.5
+      },
+      "return": 0.0,
+      "cagr": 0.0,
+      "max_dd": 0.0,
+      "sharpe": NaN,
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "exposure": 0.0,
+      "max_margin_util": 0.0,
+      "is_base": false
+    },
+    {
+      "variant": "hold_sessions=12",
+      "overrides": {
+        "exit.max_hold_sessions": 12
+      },
+      "return": 0.010950000000000015,
+      "cagr": 0.001913539139062559,
+      "max_dd": -0.007697162749874309,
+      "sharpe": 0.4698550199718291,
+      "trades": 2,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "exposure": 0.7848920863309352,
+      "max_margin_util": 0.024134945957309986,
+      "is_base": false
+    },
+    {
+      "variant": "hold_sessions=5",
+      "overrides": {
+        "exit.max_hold_sessions": 5
+      },
+      "return": 0.006699999999999928,
+      "cagr": 0.0011728799192449735,
+      "max_dd": -0.006886276776504996,
+      "sharpe": 0.32934711067143563,
+      "trades": 8,
+      "win_rate": 0.5,
+      "profit_factor": 0.8098802395209577,
+      "exposure": 0.02877697841726619,
+      "max_margin_util": 0.026614718700770774,
+      "is_base": false
+    },
+    {
+      "variant": "hold_sessions=8",
+      "overrides": {
+        "exit.max_hold_sessions": 8
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "run=2&quant=0.7",
+      "overrides": {
+        "signal.ops.0.weeks": 2,
+        "price_filter.threshold": 0.7
+      },
+      "return": 0.008909999999999973,
+      "cagr": 0.0015583437497614927,
+      "max_dd": -0.005222383620391513,
+      "sharpe": 0.5068383362472652,
+      "trades": 3,
+      "win_rate": 0.6666666666666666,
+      "profit_factor": 5.423423423423388,
+      "exposure": 0.7776978417266187,
+      "max_margin_util": 0.023926261416007517,
+      "is_base": false
+    },
+    {
+      "variant": "run=2&quant=0.75",
+      "overrides": {
+        "signal.ops.0.weeks": 2,
+        "price_filter.threshold": 0.75
+      },
+      "return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "win_rate": 0.25,
+      "profit_factor": 0.53368794326241,
+      "exposure": 0.0460431654676259,
+      "max_margin_util": 0.026720795736841843,
+      "is_base": false
+    },
+    {
+      "variant": "run=2&quant=0.85",
+      "overrides": {
+        "signal.ops.0.weeks": 2,
+        "price_filter.threshold": 0.85
+      },
+      "return": 0.010320000000000107,
+      "cagr": 0.0018039095618889167,
+      "max_dd": -0.006768005612010519,
+      "sharpe": 0.45380676527894,
+      "trades": 6,
+      "win_rate": 0.16666666666666666,
+      "profit_factor": 0.6353340883352168,
+      "exposure": 0.034532374100719423,
+      "max_margin_util": 0.026203598517732154,
+      "is_base": false
+    },
+    {
+      "variant": "run=3&quant=0.7",
+      "overrides": {
+        "signal.ops.0.weeks": 3,
+        "price_filter.threshold": 0.7
+      },
+      "return": 0.00990000000000002,
+      "cagr": 0.0017307918613131967,
+      "max_dd": -0.004978244872358428,
+      "sharpe": 0.4872542042424902,
+      "trades": 4,
+      "win_rate": 0.75,
+      "profit_factor": 1.7918367346938866,
+      "exposure": 0.02302158273381295,
+      "max_margin_util": 0.026720531802983984,
+      "is_base": false
+    },
+    {
+      "variant": "run=3&quant=0.75",
+      "overrides": {
+        "signal.ops.0.weeks": 3,
+        "price_filter.threshold": 0.75
+      },
+      "return": -0.0028399999999999537,
+      "cagr": -0.0004991170328860761,
+      "max_dd": -0.004904822493326355,
+      "sharpe": -0.19936166694362,
+      "trades": 2,
+      "win_rate": 0.5,
+      "profit_factor": 0.1673469387755201,
+      "exposure": 0.011510791366906475,
+      "max_margin_util": 0.026995983334580743,
+      "is_base": false
+    },
+    {
+      "variant": "run=3&quant=0.85",
+      "overrides": {
+        "signal.ops.0.weeks": 3,
+        "price_filter.threshold": 0.85
+      },
+      "return": 0.0,
+      "cagr": 0.0,
+      "max_dd": 0.0,
+      "sharpe": NaN,
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "exposure": 0.0,
+      "max_margin_util": 0.0,
+      "is_base": false
+    }
+  ],
+  "summary": {
+    "n_variants": 20,
+    "median_return": 0.007479999999999931,
+    "median_cagr": 0.0013090055692892566,
+    "median_sharpe": 0.2809593609071199,
+    "median_max_dd": -0.008683115313019574,
+    "share_positive_return": 0.8888888888888888,
+    "best_return": 0.010950000000000015,
+    "worst_return": -0.0028399999999999537,
+    "spread_return": 0.013789999999999969,
+    "base_return_rank": 8
+  },
+  "base": {
+    "variant": "base",
+    "overrides": {},
+    "return": 0.007479999999999931,
+    "cagr": 0.0013090055692892566,
+    "max_dd": -0.009669067876164839,
+    "sharpe": 0.2809593609071199,
+    "trades": 8,
+    "win_rate": 0.25,
+    "profit_factor": 0.53368794326241,
+    "exposure": 0.0460431654676259,
+    "max_margin_util": 0.026720795736841843,
+    "is_base": true
+  },
+  "cost_sensitivity": [
+    {
+      "fee_multiple": 1,
+      "fee_value": 2.0,
+      "slippage_ticks": 0.5,
+      "total_return": 0.007479999999999931,
+      "cagr": 0.0013090055692892566,
+      "max_dd": -0.009669067876164839,
+      "sharpe": 0.2809593609071199,
+      "trades": 8,
+      "net_pnl": -526.0000000000036,
+      "fees": 140.0,
+      "slippage": 350.0
+    },
+    {
+      "fee_multiple": 1,
+      "fee_value": 2.0,
+      "slippage_ticks": 2.0,
+      "total_return": 0.0022299999999999542,
+      "cagr": 0.00039109387212743485,
+      "max_dd": -0.010651461606232537,
+      "sharpe": 0.08564511292543663,
+      "trades": 8,
+      "net_pnl": -1696.0000000000036,
+      "fees": 140.0,
+      "slippage": 1400.0
+    },
+    {
+      "fee_multiple": 2,
+      "fee_value": 4.0,
+      "slippage_ticks": 0.5,
+      "total_return": 0.00662000000000007,
+      "cagr": 0.001158913397922623,
+      "max_dd": -0.009849660475828026,
+      "sharpe": 0.24902044867907414,
+      "trades": 8,
+      "net_pnl": -666.0000000000036,
+      "fees": 280.0,
+      "slippage": 350.0
+    },
+    {
+      "fee_multiple": 2,
+      "fee_value": 4.0,
+      "slippage_ticks": 2.0,
+      "total_return": 0.0013700000000000934,
+      "cagr": 0.00024035350410467338,
+      "max_dd": -0.010832648453822591,
+      "sharpe": 0.053500858641263506,
+      "trades": 8,
+      "net_pnl": -1836.0000000000036,
+      "fees": 280.0,
+      "slippage": 1400.0
+    }
+  ]
+}

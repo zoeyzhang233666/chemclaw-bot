@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>纯碱供应商真伪核验 · 纯碱（碳酸钠 Na₂CO₃）</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#EEF1F5;color:#16283C;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+ font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:#0F5C8C;text-decoration:none}
+a:hover{text-decoration:underline}
+:root{
+ --ink:#0B1F33;--ink2:#123A5A;--muted:#64748B;--line:#E3E9EF;--paper:#F1F4F7;--card:#fff;
+ --gold:#B8892B;--gold2:#D9B768;--green:#0F7B5F;--amber:#B7791F;--red:#B23A2E;--gray:#64748B;
+}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+/* ---------- topbar ---------- */
+.topbar{position:sticky;top:0;z-index:80;background:rgba(11,31,51,.97);color:#fff;border-bottom:1px solid rgba(216,178,92,.28)}
+.topbar .inner{max-width:1280px;margin:0 auto;height:62px;padding:0 24px;display:flex;align-items:center;gap:14px}
+.mark{width:30px;height:30px;border:1px solid var(--gold2);display:grid;place-items:center;
+ font-family:Consolas,monospace;font-size:11px;letter-spacing:.08em;color:var(--gold2)}
+.brand{font-size:14px;letter-spacing:.14em;font-weight:600}
+.brand small{display:block;font-size:10px;letter-spacing:.22em;color:#8FA6BC;font-weight:400}
+.tb-spacer{flex:1}
+.tb-meta{font-family:Consolas,monospace;font-size:11px;color:#9FB3C6;letter-spacing:.04em}
+.tb-btn{border:1px solid rgba(255,255,255,.22);background:transparent;color:#DCE6EF;border-radius:8px;
+ padding:7px 13px;font-size:12px;cursor:pointer;transition:.2s}
+.tb-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(216,178,92,.5)}
+/* ---------- intro ---------- */
+.intro{padding:44px 0 26px}
+.eyebrow{font-family:Consolas,monospace;font-size:11px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+h1{font-size:38px;line-height:1.25;margin:12px 0 12px;letter-spacing:-.01em;font-weight:700;color:var(--ink)}
+.lead{font-size:15px;color:#4A5C6E;max-width:760px;margin:0}
+.searchbar{display:grid;grid-template-columns:1.2fr 1.2fr 1.1fr auto;gap:10px;margin-top:26px;
+ background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 10px 30px -22px rgba(11,31,51,.5)}
+.searchbar label{display:block;padding:6px 12px;border-right:1px solid var(--line)}
+.searchbar label:last-of-type{border-right:none}
+.searchbar span{display:block;font-size:10.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.searchbar input{border:none;outline:none;width:100%;font-size:14px;font-family:inherit;color:var(--ink);background:transparent;padding:3px 0}
+.searchbar input::placeholder{color:#A9B6C4}
+.btn-run{background:var(--ink);color:#fff;border:none;border-radius:10px;padding:0 26px;font-size:13.5px;
+ letter-spacing:.06em;cursor:pointer;transition:.2s;font-family:inherit}
+.btn-run:hover{background:#17395C}
+.hint{margin-top:9px;font-size:12px;color:var(--muted)}
+.hint b{color:#41566B}
+/* ---------- case nav ---------- */
+.casenav{position:sticky;top:62px;z-index:70;background:rgba(238,241,245,.93);backdrop-filter:blur(10px);
+ border-bottom:1px solid #DDE4EB;margin-bottom:22px}
+.casenav .inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;gap:8px;overflow-x:auto}
+.casebtn{display:flex;align-items:center;gap:8px;border:1px solid #D8E0E8;background:#fff;border-radius:999px;
+ padding:8px 15px;font-size:12.5px;color:#33475B;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.18s}
+.casebtn .d{width:7px;height:7px;border-radius:50%;background:#B9C4CF}
+.casebtn:hover{border-color:#B7C4D2;transform:translateY(-1px)}
+.casebtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.casebtn.on .d{background:var(--gold2)}
+.casebtn .v{font-size:10.5px;opacity:.65;font-family:Consolas,monospace}
+/* ---------- case ---------- */
+.case{display:none;animation:fade .35s ease}
+.case.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hero{display:grid;grid-template-columns:1fr 330px;background:#fff;border:1px solid var(--line);
+ border-radius:18px;overflow:hidden;box-shadow:0 18px 40px -34px rgba(11,31,51,.7)}
+.hero-main{padding:30px 34px 28px;position:relative}
+.hero-main:after{content:"";position:absolute;left:0;top:0;width:4px;height:100%;
+ background:linear-gradient(180deg,var(--gold2),var(--gold),transparent)}
+.hero-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.vbadge{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:5px 13px;
+ font-size:12.5px;font-weight:600;letter-spacing:.04em;border:1px solid}
+.vbadge.green{color:var(--green);background:#EAF6F1;border-color:#BFE3D6}
+.vbadge.amber{color:var(--amber);background:#FDF4E3;border-color:#EFD6A8}
+.vbadge.red{color:var(--red);background:#FBEDEA;border-color:#EBC3BB}
+.vbadge.gray{color:var(--gray);background:#F2F5F8;border-color:#D8E0E7}
+.conf{font-size:11.5px;color:#5B6B7C;background:#F4F7FA;border:1px solid #E2E9EF;border-radius:6px;padding:3px 9px}
+.repoid{margin-left:auto;font-family:Consolas,monospace;font-size:10.5px;color:#93A3B3;letter-spacing:.06em}
+.hero h2{font-size:27px;line-height:1.3;margin:0;color:var(--ink);letter-spacing:-.01em}
+.hero h2 small{display:block;font-size:13px;font-weight:400;color:#6B7C8E;margin-top:6px;letter-spacing:.02em}
+.subline{margin-top:10px;font-size:13.5px;color:#3C536A}
+.headline{margin:16px 0 0;font-size:15.5px;line-height:1.7;color:#1E3A55;font-weight:600;
+ padding-left:14px;border-left:2px solid var(--gold)}
+.meta-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.meta-row span{font-size:11.5px;color:#4F6377;background:#F3F6F9;border:1px solid #E4EAF0;border-radius:6px;padding:4px 10px}
+.hero-side{background:linear-gradient(155deg,#0B1F33 0%,#123A5A 70%,#16456A 100%);color:#fff;
+ padding:26px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-side:before{content:"";position:absolute;inset:0;
+ background-image:radial-gradient(rgba(216,178,92,.16) 1px,transparent 1px);background-size:16px 16px;opacity:.5}
+.ring{width:150px;height:150px;position:relative;z-index:1}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.13);stroke-width:7}
+.ring-fg{fill:none;stroke:var(--gold2);stroke-width:7;stroke-linecap:round;transform:rotate(-90deg);transform-origin:70px 70px;transition:stroke-dasharray .8s}
+.ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
+.ring-num b{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.ring-num span{font-size:10px;letter-spacing:.18em;color:#9FB6CB;margin-top:6px}
+.side-label{margin-top:14px;font-size:11px;letter-spacing:.18em;color:#B7CADC;z-index:1}
+.side-counts{margin-top:8px;font-family:Consolas,monospace;font-size:11px;color:#8FA9BF;z-index:1}
+.synthetic{margin:12px 0 0;background:#FFF8E8;border:1px solid #EFD9A8;color:#7A5A15;border-radius:10px;
+ padding:10px 14px;font-size:12.5px}
+/* ---------- verdict box ---------- */
+.vbox{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 24px;
+ display:grid;grid-template-columns:120px 1fr;gap:18px}
+.vbox .lab{font-size:11px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;padding-top:3px}
+.vbox p{margin:0;font-size:13.8px;line-height:1.85;color:#31465A}
+.vbox .next{margin-top:10px;font-size:12.5px;color:#5B6B7C;border-top:1px dashed #E2E9EF;padding-top:10px}
+.vbox .next b{color:var(--ink)}
+/* ---------- facts ---------- */
+.facts{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:0 0 8px}
+.fact{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;position:relative;overflow:hidden}
+.fact:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:#E8EEF3}
+.fact.g:before{background:linear-gradient(90deg,var(--gold2),transparent)}
+.fact .k{font-size:10.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.fact .v{font-size:15px;font-weight:600;color:var(--ink);margin-top:5px;line-height:1.4}
+.fact .n{font-size:11px;color:#7B8B9B;margin-top:4px;line-height:1.5}
+/* ---------- section ---------- */
+.sec{margin:34px 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px;flex-wrap:wrap}
+.sec-head h3{font-size:19px;margin:0;color:var(--ink);letter-spacing:-.01em}
+.sec-head p{margin:5px 0 0;font-size:12.5px;color:var(--muted);max-width:720px}
+.sec-head .idx{font-family:Consolas,monospace;font-size:11px;color:var(--gold);letter-spacing:.16em;margin-right:9px}
+/* ---------- filters ---------- */
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filters button{border:1px solid #DCE3EA;background:#fff;color:#4A5D70;font-size:12px;border-radius:8px;
+ padding:6px 12px;cursor:pointer;font-family:inherit;transition:.16s}
+.filters button:hover{border-color:#B9C7D5}
+.filters button.on{background:#EAF0F6;border-color:#9FB4C8;color:var(--ink);font-weight:600}
+/* ---------- evidence groups ---------- */
+.group{margin-top:18px}
+.group-head{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #DCE3EA;margin-bottom:12px}
+.g-idx{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:11px;font-family:Consolas,monospace}
+.g-a .g-idx{background:#E7F2EC;color:var(--green)}
+.g-b .g-idx{background:#EDF2F8;color:#2F5F8A}
+.g-c .g-idx{background:#F1F3F5;color:#7B8B9B}
+.group-head h4{margin:0;font-size:14.5px;color:var(--ink)}
+.group-head .note{font-size:11.5px;color:#8494A5}
+.group-head .count{margin-left:auto;font-family:Consolas,monospace;font-size:11px;color:#7B8B9B}
+.ev-list{display:grid;gap:11px}
+.ev{background:#fff;border:1px solid var(--line);border-left:3px solid #CBD6E1;border-radius:11px;
+ padding:16px 19px;transition:.18s;scroll-margin-top:130px}
+.ev:hover{border-color:#C3D0DC;box-shadow:0 10px 26px -20px rgba(11,31,51,.55);transform:translateY(-1px)}
+.ev.s3{border-left-color:var(--green)}
+.ev.s2{border-left-color:var(--amber)}
+.ev.s1{border-left-color:#8FA3B6}
+.ev-top{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.ev-top .code{font-family:Consolas,monospace;font-size:11px;color:#fff;background:#2B4763;border-radius:5px;
+ padding:2px 7px;letter-spacing:.05em;margin-top:2px}
+.ev-top h5{margin:0;font-size:15px;color:var(--ink);flex:1;min-width:220px;line-height:1.5;font-weight:600}
+.pill{font-size:10.5px;border-radius:999px;padding:2px 9px;border:1px solid;letter-spacing:.04em;white-space:nowrap}
+.pill.strong{color:var(--green);background:#EDF8F3;border-color:#C6E4D8}
+.pill.mid{color:var(--amber);background:#FDF5E6;border-color:#EDD8AC}
+.pill.weak{color:#63768A;background:#F2F5F8;border-color:#DCE4EB}
+.pill.na{color:#7B8B9B;background:#F1F3F5;border-color:#DDE3E9}
+.ev-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:9px 0 10px;font-size:11.5px;color:#7B8B9B}
+.ev-meta .dot{width:3px;height:3px;border-radius:50%;background:#C3CED9}
+.ev-meta .cat{background:#F4F7FA;border:1px solid #E5EBF1;border-radius:5px;padding:1px 7px;color:#5D7084}
+blockquote{margin:0;background:#F8FAFC;border-left:2px solid #DDE6EE;border-radius:0 7px 7px 0;
+ padding:10px 14px;font-size:12.8px;color:#3B5169;line-height:1.8;overflow-wrap:anywhere}
+.why{margin-top:10px;font-size:12.8px;color:#3F5568;line-height:1.8;overflow-wrap:anywhere}
+.why b{color:var(--gold);font-weight:600;margin-right:6px;letter-spacing:.02em}
+.ev-foot{display:flex;align-items:center;gap:14px;margin-top:11px;padding-top:10px;border-top:1px dashed #E6ECF2}
+.ev-foot a{font-size:12px;color:#0F5C8C;display:inline-flex;align-items:center;gap:4px}
+.ev-foot .finger{margin-left:auto;font-family:Consolas,monospace;font-size:10px;color:#A6B3C0}
+.ev.x{border-left-color:#C9D2DB;background:#FBFCFD}
+.ev.x .ev-top h5{color:#5E6E7E;font-weight:500}
+.ev.x blockquote{background:#F5F7F9;color:#6B7B8B}
+.ev.x .why b{color:#8A98A6}
+.empty{background:#FBFCFD;border:1px dashed #CDD8E2;border-radius:11px;padding:18px 20px;font-size:13px;color:#5B6B7C}
+.empty b{color:var(--red)}
+/* ---------- timeline ---------- */
+.tl{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;background:#fff;border:1px solid var(--line);
+ border-radius:14px;padding:22px 8px 18px;overflow-x:auto}
+.tl-item{padding:0 16px;position:relative}
+.tl-item:before{content:"";position:absolute;left:0;right:0;top:5px;height:1px;background:#E1E8EE}
+.tl-item:first-child:before{left:16px}
+.tl-item:last-child:before{right:calc(100% - 16px)}
+.tl-dot{width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--gold);position:relative;z-index:1;margin-bottom:12px}
+.tl-year{font-family:Consolas,monospace;font-size:12px;color:var(--gold);letter-spacing:.06em}
+.tl-item b{display:block;font-size:13px;color:var(--ink);margin-top:3px}
+.tl-item p{margin:3px 0 0;font-size:11.5px;color:#7B8B9B;line-height:1.6}
+/* ---------- score ---------- */
+.score{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 26px;display:grid;
+ grid-template-columns:190px 1fr;gap:30px}
+.score-total{text-align:center;border-right:1px solid #E8EEF3;padding-right:20px}
+.score-total b{display:block;font-size:52px;line-height:1;color:var(--ink);letter-spacing:-.03em;font-weight:600}
+.score-total small{font-size:11px;color:var(--muted);letter-spacing:.1em}
+.score-total .tag{margin-top:10px;font-size:11px;color:#5B6B7C}
+.bar-row{display:grid;grid-template-columns:170px 1fr 54px;align-items:center;gap:12px;margin-bottom:11px}
+.bar-row .l{font-size:12.5px;color:#3F5568}
+.bar-row .l em{display:block;font-style:normal;font-size:10.5px;color:#93A3B3}
+.bar{height:7px;background:#EDF1F5;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2C5A82,#4E86B4)}
+.bar-row .v{font-family:Consolas,monospace;font-size:12px;color:#5B6B7C;text-align:right}
+.score-note{grid-column:1/-1;font-size:11.5px;color:#7B8B9B;border-top:1px dashed #E6ECF2;padding-top:12px}
+/* ---------- gaps ---------- */
+.gaps{background:linear-gradient(160deg,#0B1F33,#153E60);color:#fff;border-radius:14px;padding:24px 26px}
+.gaps h4{margin:0 0 4px;font-size:15px;letter-spacing:.02em}
+.gaps .gp{font-size:11.5px;color:#9FB6CB;margin-bottom:12px}
+.gaps ul{margin:0;padding-left:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.gaps li{font-size:12.5px;color:#D6E2EC;padding-left:18px;position:relative;line-height:1.7}
+.gaps li:before{content:"□";position:absolute;left:0;color:var(--gold2)}
+.gaps .act{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);
+ font-size:12.5px;color:#C9D8E5;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.gaps .act b{color:#fff}
+.gaps .act a{color:#F0D79B;font-weight:600;border-bottom:1px solid rgba(240,215,155,.5);padding-bottom:2px;white-space:nowrap}
+.gaps .act a:hover{text-decoration:none;color:#fff;border-color:#fff}
+/* ---------- method ---------- */
+.method{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px 30px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.tri-card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#FBFCFD}
+.tri-card .n{font-family:Consolas,monospace;font-size:10.5px;color:var(--gold);letter-spacing:.14em}
+.tri-card h5{margin:6px 0 6px;font-size:14.5px;color:var(--ink)}
+.tri-card p{margin:0;font-size:12.3px;color:#5E7083;line-height:1.75}
+.tri-card.c1{border-top:3px solid var(--green)}
+.tri-card.c2{border-top:3px solid #2F5F8A}
+.tri-card.c3{border-top:3px solid #A9B6C3}
+.tree{margin-top:26px;border-top:1px dashed #E6ECF2;padding-top:22px}
+.tree h4{font-size:14px;margin:0 0 12px;color:var(--ink)}
+.tree-row{display:grid;grid-template-columns:64px 1fr 230px;gap:14px;align-items:start;
+ border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin-bottom:8px;background:#fff}
+.tree-row .q{font-family:Consolas,monospace;font-size:11px;color:var(--gold);letter-spacing:.1em;padding-top:3px}
+.tree-row b{font-size:13px;color:var(--ink);display:block}
+.tree-row p{margin:2px 0 0;font-size:11.8px;color:#7B8B9B;line-height:1.65}
+.tree-row .ans{font-size:11.5px;color:#3F5568;background:#F6F8FA;border:1px solid #E6ECF2;border-radius:8px;padding:7px 10px;line-height:1.6}
+.tree-row .ans i{font-style:normal;color:var(--green);font-weight:600}
+/* ---------- materials ---------- */
+.mats{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.mat-bar{display:flex;align-items:center;gap:16px;padding:16px 22px;border-bottom:1px solid var(--line);background:#FBFCFD}
+.mat-bar .prog{flex:1;height:6px;background:#EDF1F5;border-radius:99px;overflow:hidden}
+.mat-bar .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .3s}
+.mat-bar .cnt{font-family:Consolas,monospace;font-size:12px;color:#5B6B7C;white-space:nowrap}
+table.mat{width:100%;border-collapse:collapse}
+table.mat th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7B8B9B;font-weight:600;
+ text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0}
+table.mat td{padding:13px 14px;border-bottom:1px solid #EEF2F6;font-size:12.6px;vertical-align:top;color:#3F5568}
+table.mat tr:hover td{background:#FAFCFE}
+table.mat td.name{font-weight:600;color:var(--ink);min-width:200px}
+table.mat .chk{width:38px}
+input[type=checkbox]{width:15px;height:15px;accent-color:#0F7B5F;cursor:pointer}
+.pri{font-family:Consolas,monospace;font-size:10px;border-radius:4px;padding:2px 6px;border:1px solid}
+.pri.P0{color:#B23A2E;background:#FBEDEA;border-color:#EBC3BB}
+.pri.P1{color:#B7791F;background:#FDF5E6;border-color:#EDD8AC}
+.pri.P2{color:#63768A;background:#F2F5F8;border-color:#DCE4EB}
+.copy{border:1px solid #DCE3EA;background:#fff;border-radius:6px;font-size:10.5px;padding:3px 8px;
+ cursor:pointer;color:#5B6B7C;font-family:inherit;white-space:nowrap}
+.copy:hover{background:#F2F6FA;color:var(--ink)}
+.script{font-size:11.6px;color:#6B7B8B;line-height:1.65;margin-top:3px}
+/* ---------- onsite ---------- */
+.onsite{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.os{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px 16px}
+.os .n{font-family:Consolas,monospace;font-size:10px;color:var(--gold);letter-spacing:.1em}
+.os b{display:block;font-size:13.2px;color:var(--ink);margin:5px 0 5px}
+.os p{margin:0;font-size:11.7px;color:#6B7B8B;line-height:1.65}
+.os .fake{color:#B23A2E;margin-top:6px;font-size:11.4px}
+/* ---------- compare ---------- */
+.cmp{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table.cmp-t{width:100%;border-collapse:collapse}
+table.cmp-t th{background:var(--ink);color:#fff;font-size:11px;letter-spacing:.08em;font-weight:500;
+ padding:11px 13px;text-align:left;white-space:nowrap}
+table.cmp-t td{padding:12px 13px;border-bottom:1px solid #EEF2F6;font-size:12.4px;color:#3F5568;vertical-align:top}
+table.cmp-t tr:last-child td{border-bottom:none}
+.vchip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:11px;border:1px solid;white-space:nowrap}
+.vchip.green{color:var(--green);background:#EDF8F3;border-color:#C6E4D8}
+.vchip.amber{color:var(--amber);background:#FDF5E6;border-color:#EDD8AC}
+.vchip.red{color:var(--red);background:#FBEDEA;border-color:#EBC3BB}
+.vchip.gray{color:var(--gray);background:#F2F5F8;border-color:#D8E0E7}
+/* ---------- footer ---------- */
+footer{margin:48px 0 40px;padding-top:22px;border-top:1px solid #DCE3EA;font-size:11.5px;color:#8494A5;line-height:1.9}
+footer b{color:#5B6B7C}
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);background:#0B1F33;color:#fff;
+ border:1px solid rgba(216,178,92,.4);border-radius:10px;padding:11px 18px;font-size:12.5px;opacity:0;
+ pointer-events:none;transition:.25s;z-index:200;box-shadow:0 18px 40px -20px rgba(0,0,0,.6)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+ .hero{grid-template-columns:1fr}
+ .hero-side{flex-direction:row;gap:24px;padding:18px}
+ .facts{grid-template-columns:repeat(3,1fr)}
+ .score{grid-template-columns:1fr}
+ .score-total{border-right:none;border-bottom:1px solid #E8EEF3;padding:0 0 16px}
+ .onsite{grid-template-columns:repeat(2,1fr)}
+ .tri{grid-template-columns:1fr}
+ .tree-row{grid-template-columns:52px 1fr}
+ .tree-row .ans{grid-column:1/-1}
+ .searchbar{grid-template-columns:1fr 1fr}
+ .searchbar label{border-right:none;border-bottom:1px solid var(--line)}
+ .btn-run{grid-column:1/-1;padding:12px}
+}
+@media (max-width:700px){
+ .wrap{padding:0 14px}
+ h1{font-size:27px}
+ .hero-main{padding:22px 18px}
+ .hero h2{font-size:21px}
+ .facts{grid-template-columns:1fr 1fr}
+ .tl{grid-auto-flow:row;grid-auto-columns:auto}
+ .tl-item:before{display:none}
+ .gaps ul{grid-template-columns:1fr}
+ .onsite{grid-template-columns:1fr}
+ .vbox{grid-template-columns:1fr;gap:6px}
+ .searchbar{grid-template-columns:1fr}
+ .tb-meta{display:none}
+}
+@media print{
+ body{background:#fff}
+ .topbar,.casenav,.searchbar,.hint,.filters,.copy,#toast,.btn-run,.tb-btn{display:none!important}
+ .case{display:none}.case.on{display:block}
+ .hero,.ev,.score,.mats,.method,.cmp{box-shadow:none;break-inside:avoid}
+ a{color:#0B1F33}
+ .gaps{background:#fff;color:#16283C;border:1px solid #ccc}
+ .gaps li,.gaps .act,.gaps .gp{color:#444}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="inner">
+  <div class="mark">SV</div>
+  <div class="brand">供应商真伪核验台<small>SUPPLIER AUTHENTICATION DESK</small></div>
+  <div class="tb-spacer"></div>
+  <div class="tb-meta">SV-2026-CN-NA2CO3-001 · 2026-10-19</div>
+  <button class="tb-btn" onclick="window.print()">打印 / 存 PDF</button>
+</div></div>
+
+<div class="wrap">
+  <section class="intro">
+    <div class="eyebrow">IS IT A REAL FACTORY? · 内贸采购尽调</div>
+    <h1>查供应商是不是真厂家</h1>
+    <p class="lead">输入企业与产品，自动检索“许可—装置—产量—业务”四类证据，按直接生产证据 / 间接业务证据 / 不构成证据分组呈现。结论只给四种：生产厂家、分装或复配、贸易经销、证据不足暂无法确认。证据不够，就明确说不够。</p>
+    <div class="searchbar">
+      <label><span>企业名称</span><input id="q-company" value="山东海化股份有限公司" placeholder="输入企业全名"></label>
+      <label><span>产品 / 规格</span><input id="q-product" value="轻质 / 重质；GB/T 210 Ⅱ类优等品；重碱执行郑商所纯碱期货交割标准" placeholder="产品 + 规格"></label>
+      <label><span>辅助材料</span><input id="q-file" value="营业执照 / 许可证 / 工厂照片" placeholder="可上传：执照、许可证、照片"></label>
+      <button class="btn-run" id="run">开始核验</button>
+    </div>
+    <div class="hint">演示模式内置 5 个案例：<b>山东海化</b>（生产厂家）、<b>博源银根</b>（生产厂家）、<b>杭实善成</b>（贸易经销）、<b>分装样例</b>（分装或复配）、<b>证据不足样例</b>（证据不足暂无法确认）。输入其中任一名称即可切换。</div>
+  </section>
+</div>
+
+<div class="casenav"><div class="inner"><button class="casebtn on" data-target="haihua"><span class="d"></span>山东海化<span class="v">生产厂家</span></button><button class="casebtn" data-target="boyuan"><span class="d"></span>博源银根<span class="v">生产厂家</span></button><button class="casebtn" data-target="hangshi"><span class="d"></span>杭实善成<span class="v">贸易经销</span></button><button class="casebtn" data-target="repack"><span class="d"></span>分装样例<span class="v">分装或复配</span></button><button class="casebtn" data-target="unknown"><span class="d"></span>证据不足样例<span class="v">证据不足暂无法确认</span></button></div></div>
+
+<div class="wrap">
+<section class="case on" id="case-haihua" data-case="haihua">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-top">
+        <span class="vbadge green">◆ 生产厂家</span>
+        <span class="conf">置信度 高</span>
+        <span class="repoid">REPORT SV-2026-CN-NA2CO3-001</span>
+      </div>
+      <h2>山东海化股份有限公司<small>纯碱厂（主体分公司）</small></h2>
+      <div class="subline">纯碱（碳酸钠）· 轻质 / 重质 · 工业级 · GB/T 210 Ⅱ类优等品；重碱适用于浮法玻璃、光伏玻璃</div>
+      <p class="headline">有证、有厂、有产量、有置换：四条独立证据链指向同一套氨碱装置。</p>
+      <div class="meta-row">
+        <span>深交所 000822</span><span>山东省潍坊市滨海经济技术开发区沂河大街14201号</span><span>氨碱法（索尔维法）</span>
+        <span>在产；2026 年起 120 万吨氨碱老线实施减量置换技改</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div style="position:relative">
+        <svg class="ring" viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="58"></circle>
+          <circle class="ring-fg" cx="70" cy="70" r="58" style="stroke-dasharray:306.1 364.4"></circle>
+        </svg>
+        <div class="ring-num"><b>84</b><span>/ 100</span></div>
+      </div>
+      <div class="side-label">证 据 充 分 度</div>
+      <div class="side-counts">直接 6 · 间接 5 · 排除 5</div>
+    </div>
+  </div>
+  
+  <div class="vbox">
+    <div class="lab">核验结论</div>
+    <div>
+      <p>排污许可证以“山东海化股份有限公司纯碱厂”为主体、行业类别为“无机碱制造”，证载地址与官网厂址完全一致；上市公司年报披露 2023 年实际生产纯碱 319.31 万吨，高于官网 280 万吨设计能力，属于装置满负荷运行的数量级；2026 年公告的 120 万吨氨碱改 100 万吨联碱项目，须经省级产能置换公示与重新环评，反向证明老装置真实存在。三者构成“许可—装置—产量”闭环，可判定为生产厂家。</p>
+      <div class="next"><b>下一步：</b>先做视频验厂（碳化塔—煅烧—包装线—地磅），再签“生产商=发票销售方=发货地”三合一条款；技改期约定供应保障。</div>
+    </div>
+  </div>
+  <div class="facts"><div class="fact g"><div class="k">生产地址</div><div class="v">潍坊滨海 · 沂河大街14201号</div><div class="n">与排污许可证载明地址一致</div></div>
+<div class="fact "><div class="k">公开产能</div><div class="v">280 万吨/年</div><div class="n">老线 120 + 新线 160（官网口径：约占全国 1/10）</div></div>
+<div class="fact "><div class="k">实际产量</div><div class="v">319.31 万吨</div><div class="n">2023 年年报披露（生产量口径）</div></div>
+<div class="fact "><div class="k">工艺路线</div><div class="v">氨碱法</div><div class="n">自有羊口盐场供原盐，副产氯化钙</div></div>
+<div class="fact "><div class="k">合规主体</div><div class="v">无机碱制造</div><div class="n">排污许可发证机关：潍坊市生态环境局</div></div>
+<div class="fact "><div class="k">在建变化</div><div class="v">48.37 亿元技改</div><div class="n">120 万吨氨碱 → 100 万吨联碱，减量置换</div></div></div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <div><h3><span class="idx">02</span>证据清单 · 三分法</h3>
+      <p>同一份材料，放在哪一组决定它能不能被采信。绿色为“能指向装置”的硬证据，蓝色为业务旁证，灰色为常见误判材料。</p></div>
+      <div class="filters" data-case="haihua"><button class="on" data-cat="all">全部 11</button><button data-cat="许可与环保">许可与环保 2</button><button data-cat="产能与装置">产能与装置 4</button><button data-cat="产品与市场">产品与市场 3</button><button data-cat="运营痕迹">运营痕迹 2</button><button data-cat="excluded">不构成证据</button></div>
+    </div>
+    <div class="group g-a" data-group="direct">
+  <div class="group-head">
+    <span class="g-idx">A</span>
+    <h4>直接生产证据</h4><span class="note">指向“装置、许可、产量”的硬证据</span>
+    <span class="count">6 条</span>
+  </div>
+  <div class="ev-list"><article class="ev s3" data-cat="许可与环保">
+  <div class="ev-top">
+    <span class="code">D1</span>
+    <h5>排污许可证：行业类别“无机碱制造”</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">全国排污许可证管理信息平台</span><span class="dot"></span><span>2026-08 复核（有效期内）</span><span class="cat">许可与环保</span></div>
+  <blockquote>山东海化股份有限公司纯碱厂　生产经营场所地址：山东省潍坊市滨海经济技术开发区沂河大街014201号　行业类别：无机碱制造　所在地区：山东省-潍坊市-滨海区　发证机关：潍坊市生态环境局</blockquote>
+  <div class="why"><b>判读</b>排污许可按“行业类别 + 主要生产设施 + 排放口”核发，无机碱制造类别对应纯碱/烧碱生产装置；证载厂址与官网门牌一致，可排除“注册在 A 地、生产挂靠 B 厂”的常见套牌。这是本案例最硬的一条证据。</div>
+  <div class="ev-foot"><a href="https://permit.mee.gov.cn/perxxgkinfo/xkgkAction!xkgk.action?xkgk=getxxgkContent&amp;dataid=0dc1d33753c74827836b97bf901ac9d8" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D2</span>
+    <h5>官网工厂页：两条线、280 万吨、15 个车间</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">山东海化集团官网 · 成员企业</span><span class="dot"></span><span>2026-10 访问</span><span class="cat">产能与装置</span></div>
+  <blockquote>建成新、老两条生产线，其中老线120万吨，新线160万吨，年生产能力达280万吨，占全国总产能的十分之一……设有1个生产运行中心、7个部室、15个车间。在岗员工1886人……主导产品为纯碱（Na2CO3），分为轻质纯碱、重质纯碱，生产工艺为氨碱法。</blockquote>
+  <div class="why"><b>判读</b>官网属于企业自述，单独看只能算“弱证据”；但该页同时给出装置条线、车间编制、在岗人数、工艺路线与门牌地址，可与 D1 的许可地址、D3 的年报产量三角互证，因此升级采信为直接证据的辅证。</div>
+  <div class="ev-foot"><a href="https://www.haihua.com.cn/About_11/1664471386467147776.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s3" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D3</span>
+    <h5>上市公司年报：2023 年实际生产 319.31 万吨</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">山东海化 2023 年年度报告（PDF）</span><span class="dot"></span><span>2024-03 披露</span><span class="cat">产能与装置</span></div>
+  <blockquote>全年生产纯碱319.31万吨、烧碱（折百）27.70万吨。公司采用的氨碱法纯碱生产工艺虽在生产成本方面承压较大，但在产品品质……</blockquote>
+  <div class="why"><b>判读</b>上市公司年报披露的“生产量”口径为自产而非采购转售；319 万吨高于 280 万吨设计产能，符合氨碱装置长周期满负荷、技改挖潜的运行特征，数量级上无法由贸易量伪造。</div>
+  <div class="ev-foot"><a href="https://stockn.xueqiu.com/SZ000822/20240321181962.pdf" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D3 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s3" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D4</span>
+    <h5>产能置换技改：120 万吨氨碱改 100 万吨联碱</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">公司公告 / 新浪财经 / 齐鲁网</span><span class="dot"></span><span>2026-03 至 2026-10</span><span class="cat">产能与装置</span></div>
+  <blockquote>以100万吨/年联碱法纯碱装置产能，置换替代公司已运行超过30年的120万吨/年氨碱法纯碱老生产线……产能置换比例为1.2:1，属于减量置换。项目总投资为48.37亿元。</blockquote>
+  <div class="why"><b>判读</b>纯碱技改须履行产能置换程序：经省级主管部门公示、重新环评并变更排污许可。一份“减量置换”公告等于官方间接确认：该企业名下确有 120 万吨在产氨碱装置。同时提示 2026—2028 年老线停产改造，供货稳定性要写进合同。</div>
+  <div class="ev-foot"><a href="https://finance.sina.com.cn/wm/2026-03-02/doc-inhpqvan8207030.shtml" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D4 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="许可与环保">
+  <div class="ev-top">
+    <span class="code">D5</span>
+    <h5>同址小苏打装置单独持证（证书编号可核）</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">全国排污许可证管理信息平台</span><span class="dot"></span><span>2026-08 复核</span><span class="cat">许可与环保</span></div>
+  <blockquote>排污许可证　证书编号：91370700MA3WQ80C30002V　单位名称：山东海化股份有限公司小苏打厂-小苏打二车间　生产经营场所地址：山东省潍坊市滨海经济开发区沂河大街014201号山东海化股份有限公司纯碱厂内　行业类别：无机碱制造</blockquote>
+  <div class="why"><b>判读</b>小苏打（碳酸氢钠）装置建在纯碱厂内并单独持证，说明这里是“装置群”而非单一包装车间；纯碱—小苏打联产正是氨碱/联碱企业的典型厂区结构，贸易商不可能具备。</div>
+  <div class="ev-foot"><a href="https://permit.mee.gov.cn/perxxgkinfo/syssb/xkgg/xkgg!downloadFile.action?method=download&amp;fileType=fbfile&amp;datafileid=83c3cc72f1254301a1a704d07865d270&amp;dataid=3b5cdc9a379841209f6d3c32e4038047" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D5 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D6</span>
+    <h5>自有原盐基地：羊口盐场为股份公司成员企业</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">山东海化集团官网 · 成员企业导航</span><span class="dot"></span><span>2026-10 访问</span><span class="cat">产能与装置</span></div>
+  <blockquote>山东海化股份有限公司 → 山东海化股份有限公司纯碱厂 / 山东海化股份公司羊口盐场 / 山东海化股份有限公司小苏打厂 / 山东海化股份有限公司氯化钙厂</blockquote>
+  <div class="why"><b>判读</b>氨碱法每吨纯碱约耗原盐 1.5 吨，原盐成本占比高。自有盐场 + 纯碱厂 + 氯化钙厂（消化废液）构成典型氨碱一体化布局，是“真工厂”的结构性特征；纯贸易商没有这种资产组合。</div>
+  <div class="ev-foot"><a href="https://www.haihua.com.cn/About_11/1664470890664321024.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D6 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+    <div class="group g-b" data-group="indirect">
+  <div class="group-head">
+    <span class="g-idx">B</span>
+    <h4>间接业务证据</h4><span class="note">业务侧旁证，需与直接证据联读</span>
+    <span class="count">5 条</span>
+  </div>
+  <div class="ev-list"><article class="ev s2" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I1</span>
+    <h5>海化商城：自建 B2B 在售纯碱</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">海化商城（e-sale.haihua.com.cn）</span><span class="dot"></span><span>2026-10 访问</span><span class="cat">产品与市场</span></div>
+  <blockquote>海化商城为山东海化自营电子交易平台，挂牌销售纯碱、小苏打、氯化钙、溴素等自产品。</blockquote>
+  <div class="why"><b>判读</b>自营平台说明“销售主体 = 生产主体”，可作为交付与结算路径的佐证；但平台本身不证明产能，需与 D1/D3 联合使用。</div>
+  <div class="ev-foot"><a href="https://e-sale.haihua.com.cn" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I2</span>
+    <h5>官网产品名录：轻质/重质纯碱规格齐全</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">山东海化集团官网 · 产品营销</span><span class="dot"></span><span>2026-10 访问</span><span class="cat">产品与市场</span></div>
+  <blockquote>产品名录按纯碱（轻质、重质）、小苏打、氯化钙、溴素等分类，标注牌号“鸢都”及应用领域。</blockquote>
+  <div class="why"><b>判读</b>产品页能证明“公开资料中存在目标产品”，是判断供应商是否经营该品类的必要但不充分条件；需注意贸易商官网同样可以挂产品页。</div>
+  <div class="ev-foot"><a href="https://www.haihua.com.cn/About_6/990945257334263808.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="运营痕迹">
+  <div class="ev-top">
+    <span class="code">I3</span>
+    <h5>物流配置：铁运分公司 + 汽运公司 + 供应链公司</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">山东海化集团官网 · 成员企业</span><span class="dot"></span><span>2026-10 访问</span><span class="cat">运营痕迹</span></div>
+  <blockquote>成员企业含：山东海化能源有限公司铁运分公司、山东海化集团潍坊永安汽车运输有限公司、潍坊长运供应链管理有限公司。</blockquote>
+  <div class="why"><b>判读</b>大宗纯碱依赖铁路专用线与汽运车队。自有铁运/汽运主体说明其具备整列发运与出厂交付能力，与“厂门口提货”的贸易商模式不同。</div>
+  <div class="ev-foot"><a href="https://www.haihua.com.cn/About_11/1664470890664321024.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I3 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s1" data-cat="运营痕迹">
+  <div class="ev-top">
+    <span class="code">I4</span>
+    <h5>人才招聘入口：长期招录化工操作与设备岗位</h5>
+    <span class="pill weak">●○○ 弱</span>
+  </div>
+  <div class="ev-meta"><span class="src">山东海化集团官网 · 人才招聘</span><span class="dot"></span><span>2026-10 访问</span><span class="cat">运营痕迹</span></div>
+  <blockquote>官网设“社会招聘 / 校园招聘”栏目，岗位以化工操作、设备维护、分析化验为主。</blockquote>
+  <div class="why"><b>判读</b>连续招聘一线操作岗是“装置在运行”的软信号；但需抓到具体岗位 JD（含工作地点、班制、装置名称）才能升级为中等强度证据。</div>
+  <div class="ev-foot"><a href="https://www.haihua.com.cn/About_14.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I4 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s1" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I5</span>
+    <h5>行业媒体：48 亿元绿色技改的持续报道</h5>
+    <span class="pill weak">●○○ 弱</span>
+  </div>
+  <div class="ev-meta"><span class="src">新浪财经 / 齐鲁网 / 中证网</span><span class="dot"></span><span>2026-03 至 2026-10</span><span class="cat">产品与市场</span></div>
+  <blockquote>4.83亿元政策性借款落地，将用于山东海化纯碱改造项目；项目以100万吨/年联碱法装置置换原有120万吨/年氨碱法装置。</blockquote>
+  <div class="why"><b>判读</b>多家媒体与政策性银行同时披露同一项目，说明项目已进入资金落地阶段；媒体本身是二手信息，只作旁证，不替代 D4 的公告原文。</div>
+  <div class="ev-foot"><a href="https://news.iqilu.com/shandong/shandonggedi/20261013/5951923.shtml" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I5 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+    <div class="group g-c" data-group="excluded">
+  <div class="group-head">
+    <span class="g-idx">C</span>
+    <h4>不构成证据</h4><span class="note">容易被当作证据、但采信会出错的材料</span>
+    <span class="count">5 条</span>
+  </div>
+  <div class="ev-list"><article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X1</span>
+    <h5>营业执照经营范围含“纯碱生产、销售”</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>经营范围：纯碱、小苏打、氯化钙、溴素的生产与销售……</blockquote>
+  <div class="why"><b>为什么不算</b>经营范围是登记承诺，不是产能许可。大量贸易商、代理商同样登记“生产”字样；市场监管部门不核验是否真有装置。只能证明“允许做”，不能证明“在做”。</div>
+  <div class="ev-foot"><span class="finger">ID X1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X2</span>
+    <h5>官网/销售话术“厂家直销、源头工厂”</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>厂家直销，一手货源，支持验厂。</blockquote>
+  <div class="why"><b>为什么不算</b>属于企业自述营销语，无第三方可核对象。真正可核的是“哪套装置、哪个地址、哪张排污证”，而不是“厂家”两个字。</div>
+  <div class="ev-foot"><span class="finger">ID X2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X3</span>
+    <h5>注册资本、成立年限、集团排名</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>注册资本 12 亿元，成立于 1998 年，中国化工 500 强。</blockquote>
+  <div class="why"><b>为什么不算</b>资金实力与是否自产无因果关系。贸易商同样可以注册资本过亿；老企业也可能早已停产、只留贸易主体。</div>
+  <div class="ev-foot"><span class="finger">ID X3 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X4</span>
+    <h5>“月供万吨、价格低于市场 50 元/吨”</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>每月可稳定供应 1 万吨，价格比出厂价低 50 元。</blockquote>
+  <div class="why"><b>为什么不算</b>供货能力与价格优势只能说明资金和渠道，反而更像是贸易商在调货。低于出厂价长期供货，需警惕品牌串货或转手货源。</div>
+  <div class="ev-foot"><span class="finger">ID X4 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X5</span>
+    <h5>一张工厂照片 / 一段车间视频</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>（对方微信发送的厂区照片，无水印、无定位、无门牌）</blockquote>
+  <div class="why"><b>为什么不算</b>照片可盗用、可购买、可在他人厂区拍摄。必须与排污证地址、卫星图、装置特征（碳化塔高度、煅烧炉、凉碱炉、包装线）比对后才可采信。</div>
+  <div class="ev-foot"><span class="finger">ID X5 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">03</span>时间线</h3>
+    <p>把公开事件按时间排列，可以看出一家企业是“有连续生产史”还是“只有一段宣传期”。</p></div></div>
+    <div class="tl"><div class="tl-item"><div class="tl-dot"></div><div class="tl-year">1983</div><b>纯碱厂始建</b><p>前身为山东潍坊纯碱厂，设计能力 60 万吨/年</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">1989</div><b>建成投产</b><p>国家“七五”重点建设项目</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2024</div><b>产量披露</b><p>2023 年报：纯碱产量 319.31 万吨</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2026</div><b>技改置换</b><p>120 万吨氨碱 → 100 万吨联碱，投资 48.37 亿元</p></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">04</span>证据充分度拆解</h3>
+    <p>分数不是“真假概率”，而是“证据链完整度”。同一套权重，五个案例横向可比。</p></div></div>
+    <div class="score">
+      <div class="score-total"><b>84</b><small>证据充分度 / 100</small>
+        <div class="tag">高置信 · 生产厂家</div></div>
+      <div><div class="bar-row"><div class="l">生产许可与环保手续<em>权重 30 分</em></div><div class="bar"><i style="width:93%"></i></div><div class="v">28/30</div></div><div class="bar-row"><div class="l">产能与装置实据<em>权重 30 分</em></div><div class="bar"><i style="width:100%"></i></div><div class="v">30/30</div></div><div class="bar-row"><div class="l">产品与市场证据<em>权重 20 分</em></div><div class="bar"><i style="width:90%"></i></div><div class="v">18/20</div></div><div class="bar-row"><div class="l">运营侧痕迹<em>权重 10 分</em></div><div class="bar"><i style="width:80%"></i></div><div class="v">8/10</div></div><div class="bar-row"><div class="l">现场与第三方核验<em>权重 10 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/10</div></div></div>
+      <div class="score-note">关键硬证据齐备（排污许可 + 年报产量 + 产能置换公示），现场核验尚未完成，故留 16 分待补</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="gaps">
+      <h4>还需要向对方索取（山东海化）</h4>
+      <div class="gp">以下材料按“能否独立证明装置存在”排序，建议一次性发出，避免来回拉扯。</div>
+      <ul><li>排污许可证副本中“主要生产设施”与“排放口”页（确认碳化塔、煅烧炉、蒸氨塔在证）</li><li>120 万吨氨碱装置的环评批复与竣工验收报告（产品方案与产能页）</li><li>2026 年产能置换的省级公示文件与技改项目备案证</li><li>近 3 个月出厂磅单 3—5 车（车牌、日期、品名、净重、发货地）</li></ul>
+      <div class="act"><span>拿到材料后，用同一套三分法重新归档，再决定是否现场验厂。</span>
+      <a href="#materials">进入完整尽调清单 →</a></div>
+    </div>
+  </div>
+</section>
+<section class="case" id="case-boyuan" data-case="boyuan">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-top">
+        <span class="vbadge green">◆ 生产厂家</span>
+        <span class="conf">置信度 高</span>
+        <span class="repoid">REPORT SV-2026-CN-NA2CO3-001</span>
+      </div>
+      <h2>内蒙古博源银根化工有限公司<small>阿拉善塔木素天然碱项目</small></h2>
+      <div class="subline">纯碱（碳酸钠）· 重质为主 · 天然碱法 · 天然碱法重碱，适用于玻璃、光伏玻璃</div>
+      <p class="headline">有矿、有公告、有非计划停产：资源端与装置端同时被公开记录。</p>
+      <div class="meta-row">
+        <span>控股股东 博源化工（原远兴能源）000683</span><span>内蒙古自治区阿拉善盟阿拉善右旗塔木素苏木恩格日乌苏嘎查</span><span>天然碱法（一水碱/倍半碱加工）</span>
+        <span>在产；2025 年曾因设备故障降负荷约 3,000 吨/天</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div style="position:relative">
+        <svg class="ring" viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="58"></circle>
+          <circle class="ring-fg" cx="70" cy="70" r="58" style="stroke-dasharray:277.0 364.4"></circle>
+        </svg>
+        <div class="ring-num"><b>76</b><span>/ 100</span></div>
+      </div>
+      <div class="side-label">证 据 充 分 度</div>
+      <div class="side-counts">直接 5 · 间接 3 · 排除 3</div>
+    </div>
+  </div>
+  
+  <div class="vbox">
+    <div class="lab">核验结论</div>
+    <div>
+      <p>项目总规划纯碱 780 万吨/年、小苏打 80 万吨/年，一期 500 万吨纯碱 + 40 万吨小苏打已公告达产；塔木素天然碱矿探明矿石量 10.78 亿吨构成资源底座；2025 年“设备故障降负荷、影响产量约 3,000 吨/天”的公告，是装置真实运行的最强侧证——只有真在产的生产线才需要披露停产影响。判定为生产厂家（天然碱法）。</p>
+      <div class="next"><b>下一步：</b>天然碱法重碱粒度与堆积密度需与玻璃窑炉匹配，先索取样检测；确认二期投产节奏对 2027 年供应量的影响。</div>
+    </div>
+  </div>
+  <div class="facts"><div class="fact g"><div class="k">生产地址</div><div class="v">阿拉善右旗 · 塔木素</div><div class="n">矿区与厂区同一区域</div></div>
+<div class="fact "><div class="k">一期产能</div><div class="v">500 万吨纯碱 + 40 万吨小苏打</div><div class="n">上市公司公告：已达产</div></div>
+<div class="fact "><div class="k">规划产能</div><div class="v">780 万吨纯碱 + 80 万吨小苏打</div><div class="n">分两期建设，二期在建</div></div>
+<div class="fact "><div class="k">资源储量</div><div class="v">10.78 亿吨矿石量</div><div class="n">塔木素天然碱矿，自有采矿权</div></div>
+<div class="fact "><div class="k">工艺路线</div><div class="v">天然碱法</div><div class="n">无氨碱废液，成本曲线左侧</div></div>
+<div class="fact "><div class="k">在产侧证</div><div class="v">降负荷 3,000 吨/天</div><div class="n">2025 年设备故障公告</div></div></div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <div><h3><span class="idx">02</span>证据清单 · 三分法</h3>
+      <p>同一份材料，放在哪一组决定它能不能被采信。绿色为“能指向装置”的硬证据，蓝色为业务旁证，灰色为常见误判材料。</p></div>
+      <div class="filters" data-case="boyuan"><button class="on" data-cat="all">全部 8</button><button data-cat="产能与装置">产能与装置 5</button><button data-cat="产品与市场">产品与市场 2</button><button data-cat="运营痕迹">运营痕迹 1</button><button data-cat="excluded">不构成证据</button></div>
+    </div>
+    <div class="group g-a" data-group="direct">
+  <div class="group-head">
+    <span class="g-idx">A</span>
+    <h4>直接生产证据</h4><span class="note">指向“装置、许可、产量”的硬证据</span>
+    <span class="count">5 条</span>
+  </div>
+  <div class="ev-list"><article class="ev s3" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D1</span>
+    <h5>上市公司公告：一期 500 万吨纯碱达产</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">博源化工（000683）公告 · 巨潮资讯 / 新浪财经</span><span class="dot"></span><span>2026-05-20</span><span class="cat">产能与装置</span></div>
+  <blockquote>银根矿业阿拉善塔木素天然碱开发利用项目规划总产能为纯碱780万吨/年、小苏打80万吨/年……目前一期已达产，已形成年产500万吨纯碱和40万吨小苏打的生产能力。</blockquote>
+  <div class="why"><b>判读</b>上市公司公告对“达产”表述承担披露责任，且产能数字与项目备案、后续碳回收项目规模互相印证，属于强证据。</div>
+  <div class="ev-foot"><a href="https://static.cninfo.com.cn/finalpage/2026-05-20/1225316281.PDF" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s3" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D2</span>
+    <h5>二期启动公告：分期建设、总投资与进度</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">远兴能源公告（PDF）</span><span class="dot"></span><span>2023-12-28</span><span class="cat">产能与装置</span></div>
+  <blockquote>项目总体规划纯碱780万吨/年、小苏打80万吨/年，分两期建设，其中一期规划建设纯碱500万吨/年……本次启动阿拉善塔木素天然碱开发利用项目二期。</blockquote>
+  <div class="why"><b>判读</b>分期建设的产能规划与 D1 的“一期达产”形成时间序列，说明不是一次性宣传口径，而是持续投入的实体项目。</div>
+  <div class="ev-foot"><a href="https://pdf.dfcfw.com/pdf/H2_AN202312281615153969_1.pdf" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D3</span>
+    <h5>资源底座：塔木素天然碱矿 10.78 亿吨</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">内蒙古博源银根矿业官网</span><span class="dot"></span><span>2026-10 访问</span><span class="cat">产能与装置</span></div>
+  <blockquote>公司位于内蒙古阿拉善盟阿拉善右旗塔木素苏木恩格日乌苏嘎查境内……所持有并开采的塔木素天然碱矿资源储量丰富，已探明天然碱矿石量10.78亿吨。</blockquote>
+  <div class="why"><b>判读</b>天然碱法企业必须绑定矿山资源与采矿权。有矿权、有选矿与加工装置，才可能稳定产出重碱；纯贸易商无法复制这一结构。</div>
+  <div class="ev-foot"><a href="https://boyuanyingen.com/" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D3 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s3" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D4</span>
+    <h5>非计划停产公告：降负荷 3,000 吨/天</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">财联社</span><span class="dot"></span><span>2025-04</span><span class="cat">产能与装置</span></div>
+  <blockquote>远兴能源：控股子公司阿拉善塔木素天然碱开发利用项目生产线因设备故障降负荷运行，预计影响纯碱产量约3,000吨/天。</blockquote>
+  <div class="why"><b>判读</b>“停产/降负荷”公告是判断真实在产的最好侧证：只有拥有运行装置的企业，才需要向市场披露产量损失。造假者通常只宣传产能，不会公告故障。</div>
+  <div class="ev-foot"><a href="https://www.cls.cn/detail/1790345" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D4 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">D5</span>
+    <h5>项目列入自治区与盟级重点项目</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">券商研报 / 证券时报</span><span class="dot"></span><span>2023-12</span><span class="cat">产能与装置</span></div>
+  <blockquote>银根矿业阿拉善塔木素天然碱项目已被列为阿拉善盟和内蒙古自治区重点项目。</blockquote>
+  <div class="why"><b>判读</b>重点项目身份意味着备案、用地、环评、能耗指标均已落地；属间接证据，需与 D1/D2 联读。</div>
+  <div class="ev-foot"><a href="https://www.stcn.com/article/detail/1077670.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID D5 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+    <div class="group g-b" data-group="indirect">
+  <div class="group-head">
+    <span class="g-idx">B</span>
+    <h4>间接业务证据</h4><span class="note">业务侧旁证，需与直接证据联读</span>
+    <span class="count">3 条</span>
+  </div>
+  <div class="ev-list"><article class="ev s2" data-cat="运营痕迹">
+  <div class="ev-top">
+    <span class="code">I1</span>
+    <h5>碳回收综合利用项目：装置群在扩张</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">公司公告（PDF）</span><span class="dot"></span><span>2025-04-25</span><span class="cat">运营痕迹</span></div>
+  <blockquote>利用天然碱开发利用项目生产过程中产生的二氧化碳气体及含碱母液，结合风电、光伏发电……投资建设碳回收综合利用项目。</blockquote>
+  <div class="why"><b>判读</b>碳回收项目依附于纯碱装置的二氧化碳与含碱母液，说明主装置已稳定运行并产生可计量的尾气/母液。</div>
+  <div class="ev-foot"><a href="https://file.finance.qq.com/finance/hs/pdf/2025/04/25/1223283096.PDF" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I2</span>
+    <h5>纯碱期货交割品牌与厂库体系</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">郑州商品交易所</span><span class="dot"></span><span>2026-07 公告</span><span class="cat">产品与市场</span></div>
+  <blockquote>生产企业符合纯碱期货交割标准的重碱年产量30万吨以上；贸易企业符合纯碱期货交割标准的重碱年贸易量15万吨以上。</blockquote>
+  <div class="why"><b>判读</b>郑商所对生产型厂库设有 30 万吨/年重碱产量门槛并需现场考察，进入交割体系可作为产能与品质的第三方背书；具体名单应以郑商所最新公告为准。</div>
+  <div class="ev-foot"><a href="https://finance.sina.com.cn/wm/2026-07-06/doc-inifwmvv1799146.shtml" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s1" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I3</span>
+    <h5>行业报道：天然碱法成本优势</h5>
+    <span class="pill weak">●○○ 弱</span>
+  </div>
+  <div class="ev-meta"><span class="src">证券时报 / 券商研报</span><span class="dot"></span><span>2024—2025</span><span class="cat">产品与市场</span></div>
+  <blockquote>天然碱法单吨成本显著低于氨碱法，项目投产后改变国内纯碱供给格局。</blockquote>
+  <div class="why"><b>判读</b>媒体分析属二手信息，仅用于理解其成本位置与扩产动机，不单独作为产能证据。</div>
+  <div class="ev-foot"><a href="https://www.stcn.com/article/detail/1077670.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I3 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+    <div class="group g-c" data-group="excluded">
+  <div class="group-head">
+    <span class="g-idx">C</span>
+    <h4>不构成证据</h4><span class="note">容易被当作证据、但采信会出错的材料</span>
+    <span class="count">3 条</span>
+  </div>
+  <div class="ev-list"><article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X1</span>
+    <h5>工商经营范围含“纯碱生产”</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>经营范围：纯碱、小苏打的生产与销售。</blockquote>
+  <div class="why"><b>为什么不算</b>同前：登记承诺不等于装置存在，尤其对项目公司而言，经营范围往往在项目立项时即写入。</div>
+  <div class="ev-foot"><span class="finger">ID X1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X2</span>
+    <h5>“国内最大天然碱基地”宣传语</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>打造国内最大天然碱生产基地。</blockquote>
+  <div class="why"><b>为什么不算</b>宣传语无法核验，需落到具体公告的产能数字与达产时间。</div>
+  <div class="ev-foot"><span class="finger">ID X2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X3</span>
+    <h5>一期达产的新闻通稿（转载）</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>多家媒体转载“一期达产”消息。</blockquote>
+  <div class="why"><b>为什么不算</b>转载不等于独立信源，且通稿常由企业提供。以 D1 的公告原文为准，通稿只作传播痕迹。</div>
+  <div class="ev-foot"><span class="finger">ID X3 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">03</span>时间线</h3>
+    <p>把公开事件按时间排列，可以看出一家企业是“有连续生产史”还是“只有一段宣传期”。</p></div></div>
+    <div class="tl"><div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2021</div><b>收购银根矿业</b><p>远兴能源取得塔木素天然碱项目控制权</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2023</div><b>一期投产</b><p>500 万吨纯碱 + 40 万吨小苏打</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2023-12</div><b>二期启动</b><p>规划总投资约 55 亿元</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2025</div><b>降负荷公告</b><p>设备故障影响产量约 3,000 吨/天</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2026-05</div><b>达产确认</b><p>公告一期已达产，总规划 780 万吨</p></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">04</span>证据充分度拆解</h3>
+    <p>分数不是“真假概率”，而是“证据链完整度”。同一套权重，五个案例横向可比。</p></div></div>
+    <div class="score">
+      <div class="score-total"><b>76</b><small>证据充分度 / 100</small>
+        <div class="tag">高置信 · 生产厂家</div></div>
+      <div><div class="bar-row"><div class="l">生产许可与环保手续<em>权重 30 分</em></div><div class="bar"><i style="width:80%"></i></div><div class="v">24/30</div></div><div class="bar-row"><div class="l">产能与装置实据<em>权重 30 分</em></div><div class="bar"><i style="width:93%"></i></div><div class="v">28/30</div></div><div class="bar-row"><div class="l">产品与市场证据<em>权重 20 分</em></div><div class="bar"><i style="width:80%"></i></div><div class="v">16/20</div></div><div class="bar-row"><div class="l">运营侧痕迹<em>权重 10 分</em></div><div class="bar"><i style="width:80%"></i></div><div class="v">8/10</div></div><div class="bar-row"><div class="l">现场与第三方核验<em>权重 10 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/10</div></div></div>
+      <div class="score-note">产量与项目备案证据强，排污许可与环评原文未取得，现场核验未做</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="gaps">
+      <h4>还需要向对方索取（博源银根）</h4>
+      <div class="gp">以下材料按“能否独立证明装置存在”排序，建议一次性发出，避免来回拉扯。</div>
+      <ul><li>排污许可证（行业类别、主要生产设施、排放口）</li><li>项目环评批复与竣工验收报告中的产品方案与产能页</li><li>采矿许可证与安全生产许可证（天然碱矿开采）</li><li>近 3 个月出厂磅单与批次质检报告（重碱粒度、氯化物）</li></ul>
+      <div class="act"><span>拿到材料后，用同一套三分法重新归档，再决定是否现场验厂。</span>
+      <a href="#materials">进入完整尽调清单 →</a></div>
+    </div>
+  </div>
+</section>
+<section class="case" id="case-hangshi" data-case="hangshi">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-top">
+        <span class="vbadge red">◇ 贸易经销</span>
+        <span class="conf">置信度 高</span>
+        <span class="repoid">REPORT SV-2026-CN-NA2CO3-001</span>
+      </div>
+      <h2>浙江杭实善成实业有限公司<small>大宗商品贸易 / 纯碱贸易商厂库</small></h2>
+      <div class="subline">纯碱（碳酸钠）· 贸易分销 · 多品牌调货，覆盖重碱/轻碱，供玻璃与日化客户</div>
+      <p class="headline">有交割厂库资格，但没有一套纯碱装置：这是“贸易经销”的典型样本。</p>
+      <div class="meta-row">
+        <span>非上市（杭实集团体系）</span><span>浙江省杭州市（杭实集团体系）</span><span>—（不涉及合成）</span>
+        <span>在营；以仓储、交割、分销为主</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div style="position:relative">
+        <svg class="ring" viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="58"></circle>
+          <circle class="ring-fg" cx="70" cy="70" r="58" style="stroke-dasharray:65.6 364.4"></circle>
+        </svg>
+        <div class="ring-num"><b>18</b><span>/ 100</span></div>
+      </div>
+      <div class="side-label">证 据 充 分 度</div>
+      <div class="side-counts">直接 0 · 间接 4 · 排除 4</div>
+    </div>
+  </div>
+  
+  <div class="vbox">
+    <div class="lab">核验结论</div>
+    <div>
+      <p>该公司被郑商所增设为纯碱指定交割厂库，并被行业媒体明确列入“纯碱贸易商厂库”；公开资料显示其以化工事业部开展纯碱期现与分销业务，未见纯碱合成装置、排污许可或环评批复。交割厂库资格是“仓储 + 资金 + 交割能力”的背书，不是生产资质——这正是采购中最容易被误读的一点。</p>
+      <div class="next"><b>下一步：</b>可与其做分销/代采，但合同须写明“实际生产商”并附授权链；要求发票由碱厂直开或提供完整背靠背链条。</div>
+    </div>
+  </div>
+  <div class="facts"><div class="fact g"><div class="k">企业性质</div><div class="v">大宗商品贸易</div><div class="n">杭实集团体系</div></div>
+<div class="fact "><div class="k">交易所身份</div><div class="v">纯碱指定交割厂库</div><div class="n">2020-08-25 郑商所公告增设</div></div>
+<div class="fact "><div class="k">行业表述</div><div class="v">“纯碱贸易商厂库”</div><div class="n">期货日报实地走访报道</div></div>
+<div class="fact "><div class="k">业务组织</div><div class="v">化工事业部</div><div class="n">期现结合、分销、交割</div></div>
+<div class="fact "><div class="k">生产装置</div><div class="v">未见</div><div class="n">无排污许可/环评/产能备案</div></div>
+<div class="fact "><div class="k">仓配布局</div><div class="v">沙河等集散地</div><div class="n">贴近玻璃产业集群</div></div></div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <div><h3><span class="idx">02</span>证据清单 · 三分法</h3>
+      <p>同一份材料，放在哪一组决定它能不能被采信。绿色为“能指向装置”的硬证据，蓝色为业务旁证，灰色为常见误判材料。</p></div>
+      <div class="filters" data-case="hangshi"><button class="on" data-cat="all">全部 4</button><button data-cat="产品与市场">产品与市场 3</button><button data-cat="运营痕迹">运营痕迹 1</button><button data-cat="excluded">不构成证据</button></div>
+    </div>
+    <div class="group g-a" data-group="direct">
+  <div class="group-head">
+    <span class="g-idx">A</span>
+    <h4>直接生产证据</h4><span class="note">指向“装置、许可、产量”的硬证据</span>
+    <span class="count">0 条</span>
+  </div>
+  <div class="ev-list"><div class="empty"><b>0 条。</b>本次检索未发现任何可指向“纯碱（碳酸钠 Na₂CO₃）生产装置”的硬证据——既无对应行业类别的排污许可，也无环评批复、项目备案或可核产量。这本身就是一个强信号：不能用“没查到”代替“确认”，应当降级处理。</div></div>
+</div>
+    <div class="group g-b" data-group="indirect">
+  <div class="group-head">
+    <span class="g-idx">B</span>
+    <h4>间接业务证据</h4><span class="note">业务侧旁证，需与直接证据联读</span>
+    <span class="count">4 条</span>
+  </div>
+  <div class="ev-list"><article class="ev s3" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I1</span>
+    <h5>郑商所公告：增设为纯碱指定交割厂库</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">郑州商品交易所公告（2020-08-25）</span><span class="dot"></span><span>2020-08-26</span><span class="cat">产品与市场</span></div>
+  <blockquote>郑商所8月25日——关于增设指定纯碱交割厂库的公告：增设……浙江杭实善成实业有限公司、河北正大玻璃有限公司为指定纯碱交割厂库。</blockquote>
+  <div class="why"><b>判读</b>这是“正向的贸易证据”：能成为交割厂库说明其具备仓储、质检、资金与交割能力，但郑商所规则同时允许生产企业和贸易企业申请，因此该资格不能推出“自产”。</div>
+  <div class="ev-foot"><a href="https://www.xinhu.cn/article/zhengshangsuo8yue25ri-guanyuzengshezhidingchunjianjiaogechangkudegonggao-91311-1.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s3" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I2</span>
+    <h5>行业媒体明确称其为“纯碱贸易商厂库”</h5>
+    <span class="pill strong">●●● 强</span>
+  </div>
+  <div class="ev-meta"><span class="src">期货日报（走访沙河）</span><span class="dot"></span><span>2024—2025</span><span class="cat">产品与市场</span></div>
+  <blockquote>浙江杭实善成实业有限公司、浙江景诚实业有限公司、杭州冀正贸易有限公司等多家纯碱贸易商厂库也都落地于此，为当地纯碱市场营造了较好的期现氛围。</blockquote>
+  <div class="why"><b>判读</b>媒体将其与另两家贸易企业并列称为“贸易商厂库”，性质表述明确；这比“没有找到生产证据”更强，属于对“贸易经销”的正向认定。</div>
+  <div class="ev-foot"><a href="https://edu.dzqh.com.cn:33443/14393.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="运营痕迹">
+  <div class="ev-top">
+    <span class="code">I3</span>
+    <h5>公司化工事业部负责人谈纯碱期现与贸易</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">证券时报 / 上海证券报</span><span class="dot"></span><span>2019-12 至 2025-01</span><span class="cat">运营痕迹</span></div>
+  <blockquote>浙江杭实善成实业有限公司玻璃纯碱负责人刘哲表示，2024年上半年，重碱需求端光伏玻璃及浮法玻璃产量增加对纯碱现货价格有一定支撑……</blockquote>
+  <div class="why"><b>判读</b>以“玻璃纯碱负责人”身份对现货价格与需求发表判断，符合贸易商/期现商的业务角色；生产企业通常由销售或生产负责人出面谈产能与成本。</div>
+  <div class="ev-foot"><a href="https://stcn.com/article/detail/1510460.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I3 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I4</span>
+    <h5>沙河布局：贴近玻璃集群的贸易商厂库</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">期货日报</span><span class="dot"></span><span>2024—2025</span><span class="cat">产品与市场</span></div>
+  <blockquote>沙河是纯碱和玻璃产品的集散地……多家纯碱贸易商厂库落地于此。</blockquote>
+  <div class="why"><b>判读</b>在消费地设厂库、做期现套利，是贸易商的典型动作；生产企业会在资源地建装置，不会只在集散地建库。</div>
+  <div class="ev-foot"><a href="https://edu.dzqh.com.cn:33443/14393.html" target="_blank" rel="noopener">查看原始记录 ↗</a><span class="finger">ID I4 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+    <div class="group g-c" data-group="excluded">
+  <div class="group-head">
+    <span class="g-idx">C</span>
+    <h4>不构成证据</h4><span class="note">容易被当作证据、但采信会出错的材料</span>
+    <span class="count">4 条</span>
+  </div>
+  <div class="ev-list"><article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X1</span>
+    <h5>公司名称含“实业”二字</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>浙江杭实善成实业有限公司</blockquote>
+  <div class="why"><b>为什么不算</b>“实业”只是字号用词，工商登记不核验是否有工厂。大量贸易、供应链、投资公司都以“实业”命名。</div>
+  <div class="ev-foot"><span class="finger">ID X1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X2</span>
+    <h5>纯碱指定交割厂库资格</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>我们是郑商所纯碱交割厂库。</blockquote>
+  <div class="why"><b>为什么不算</b>最容易误读的一条。郑商所规则允许生产企业和贸易企业申请厂库，贸易企业只需重碱年贸易量 15 万吨以上（生产企业为产量 30 万吨以上）。厂库资格证明“能交割”，不证明“能生产”。</div>
+  <div class="ev-foot"><span class="finger">ID X2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X3</span>
+    <h5>注册资本、集团背景、仓储面积</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>注册资本 1 亿元，背靠杭实集团，自有仓库 2 万平米。</blockquote>
+  <div class="why"><b>为什么不算</b>资金与仓储是贸易能力，不是生产能力。仓库可以存放别家生产的纯碱。</div>
+  <div class="ev-foot"><span class="finger">ID X3 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X4</span>
+    <h5>“一手货源、与各大碱厂长期合作”</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>我们和山东海化、三友、金山都是长期合作，一手货源。</blockquote>
+  <div class="why"><b>为什么不算</b>恰恰说明其货源来自多家碱厂，是典型的分销商话术。应要求提供生产厂授权书与发票流向，而不是听“合作”表述。</div>
+  <div class="ev-foot"><span class="finger">ID X4 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">03</span>时间线</h3>
+    <p>把公开事件按时间排列，可以看出一家企业是“有连续生产史”还是“只有一段宣传期”。</p></div></div>
+    <div class="tl"><div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2019</div><b>参与纯碱期货上市</b><p>化工事业部负责人公开发声</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2020-08</div><b>成为交割厂库</b><p>郑商所公告增设</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2024</div><b>沙河布局</b><p>贸易商厂库落地玻璃集散地</p></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">04</span>证据充分度拆解</h3>
+    <p>分数不是“真假概率”，而是“证据链完整度”。同一套权重，五个案例横向可比。</p></div></div>
+    <div class="score">
+      <div class="score-total"><b>18</b><small>证据充分度 / 100</small>
+        <div class="tag">高置信 · 贸易经销</div></div>
+      <div><div class="bar-row"><div class="l">生产许可与环保手续<em>权重 30 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/30</div></div><div class="bar-row"><div class="l">产能与装置实据<em>权重 30 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/30</div></div><div class="bar-row"><div class="l">产品与市场证据<em>权重 20 分</em></div><div class="bar"><i style="width:60%"></i></div><div class="v">12/20</div></div><div class="bar-row"><div class="l">运营侧痕迹<em>权重 10 分</em></div><div class="bar"><i style="width:60%"></i></div><div class="v">6/10</div></div><div class="bar-row"><div class="l">现场与第三方核验<em>权重 10 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/10</div></div></div>
+      <div class="score-note">生产侧得分为 0；但“贸易商厂库”有公开、正向的证据，因此可明确判定为贸易经销，而非“证据不足”</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="gaps">
+      <h4>还需要向对方索取（杭实善成）</h4>
+      <div class="gp">以下材料按“能否独立证明装置存在”排序，建议一次性发出，避免来回拉扯。</div>
+      <ul><li>生产厂（山东海化/三友/金山等）出具的经销授权书</li><li>最近 3 笔纯碱采购发票（销售方应为碱厂，购买方为该贸易商）</li><li>拟供货批次的出厂质检单与生产厂批号</li><li>仓储合同与出入库记录（证明货权与库位）</li></ul>
+      <div class="act"><span>拿到材料后，用同一套三分法重新归档，再决定是否现场验厂。</span>
+      <a href="#materials">进入完整尽调清单 →</a></div>
+    </div>
+  </div>
+</section>
+<section class="case" id="case-repack" data-case="repack">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-top">
+        <span class="vbadge amber">◈ 分装或复配</span>
+        <span class="conf">置信度 中高</span>
+        <span class="repoid">REPORT SV-2026-CN-NA2CO3-001</span>
+      </div>
+      <h2>某食品配料有限公司（脱敏样例）<small>食品添加剂碳酸钠分装</small></h2>
+      <div class="subline">食品添加剂碳酸钠（食用纯碱）· 小包装分装 · 1kg/25kg 食品级小包装，执行 GB 1886.1</div>
+      <p class="headline">证是真的，但证上写的是“分装”：有 SC，没有一套纯碱装置。</p>
+      <div class="meta-row">
+        <span>—</span><span>华东某食品产业园（脱敏）</span><span>物理后处理（无碳化、无蒸氨、无煅烧）</span>
+        <span>在营；典型“小包装 + 复配”模式</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div style="position:relative">
+        <svg class="ring" viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="58"></circle>
+          <circle class="ring-fg" cx="70" cy="70" r="58" style="stroke-dasharray:120.3 364.4"></circle>
+        </svg>
+        <div class="ring-num"><b>33</b><span>/ 100</span></div>
+      </div>
+      <div class="side-label">证 据 充 分 度</div>
+      <div class="side-counts">直接 0 · 间接 4 · 排除 3</div>
+    </div>
+  </div>
+  <div class="synthetic">⚠ 脱敏合成样例：用于演示判定路径与撰写口径，不指向任何真实企业；真实项目请替换为企业实际材料。</div>
+  <div class="vbox">
+    <div class="lab">核验结论</div>
+    <div>
+      <p>该企业能提供食品生产许可证（SC），许可明细为“食品添加剂碳酸钠（分装）”；车间设备为粉碎机、筛分机、混合机、自动包装线；排污许可行业类别不属于“无机碱制造”，也无纯碱项目环评与产能备案；原料为其向碱厂采购的重碱/轻碱。因此不是生产厂家，而是分装（物理后处理），复配类同。此类供应商在食品、日化小包装场景很常见，本身合规，但不能按“厂家”议价。</p>
+      <div class="next"><b>下一步：</b>按“分装商”而非“厂家”议价；要求其标注实际生产厂与批号，食品级需提供 GB 1886.1 全项检测。</div>
+    </div>
+  </div>
+  <div class="facts"><div class="fact g"><div class="k">资质</div><div class="v">食品生产许可证 SC</div><div class="n">许可明细：分装</div></div>
+<div class="fact "><div class="k">装置</div><div class="v">破碎/筛分/混合/包装</div><div class="n">无碳化塔、蒸氨塔、煅烧炉</div></div>
+<div class="fact "><div class="k">原料</div><div class="v">外购重碱/轻碱</div><div class="n">采购发票显示来自碱厂</div></div>
+<div class="fact "><div class="k">排污许可</div><div class="v">非“无机碱制造”</div><div class="n">行业类别为食品制造/其他</div></div>
+<div class="fact "><div class="k">产能</div><div class="v">分装产能</div><div class="n">无纯碱合成产能备案</div></div>
+<div class="fact "><div class="k">产品</div><div class="v">1kg/25kg 小包装</div><div class="n">GB 1886.1 食品添加剂标准</div></div></div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <div><h3><span class="idx">02</span>证据清单 · 三分法</h3>
+      <p>同一份材料，放在哪一组决定它能不能被采信。绿色为“能指向装置”的硬证据，蓝色为业务旁证，灰色为常见误判材料。</p></div>
+      <div class="filters" data-case="repack"><button class="on" data-cat="all">全部 4</button><button data-cat="许可与环保">许可与环保 1</button><button data-cat="产能与装置">产能与装置 1</button><button data-cat="产品与市场">产品与市场 1</button><button data-cat="运营痕迹">运营痕迹 1</button><button data-cat="excluded">不构成证据</button></div>
+    </div>
+    <div class="group g-a" data-group="direct">
+  <div class="group-head">
+    <span class="g-idx">A</span>
+    <h4>直接生产证据</h4><span class="note">指向“装置、许可、产量”的硬证据</span>
+    <span class="count">0 条</span>
+  </div>
+  <div class="ev-list"><div class="empty"><b>0 条。</b>本次检索未发现任何可指向“纯碱（碳酸钠 Na₂CO₃）生产装置”的硬证据——既无对应行业类别的排污许可，也无环评批复、项目备案或可核产量。这本身就是一个强信号：不能用“没查到”代替“确认”，应当降级处理。</div></div>
+</div>
+    <div class="group g-b" data-group="indirect">
+  <div class="group-head">
+    <span class="g-idx">B</span>
+    <h4>间接业务证据</h4><span class="note">业务侧旁证，需与直接证据联读</span>
+    <span class="count">4 条</span>
+  </div>
+  <div class="ev-list"><article class="ev s2" data-cat="许可与环保">
+  <div class="ev-top">
+    <span class="code">I1</span>
+    <h5>食品生产许可证：许可明细为“分装”</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">国家企业信用信息公示系统 / 对方提供</span><span class="dot"></span><span>2026-09</span><span class="cat">许可与环保</span></div>
+  <blockquote>许可类别：食品添加剂；品种明细：碳酸钠（分装）；生产地址：XX 食品产业园 3 号厂房。</blockquote>
+  <div class="why"><b>判读</b>SC 证能证明“有食品级生产/分装资质”，但“分装”二字同时说明其不合成纯碱。这是典型的“真证、非厂家”。</div>
+  <div class="ev-foot"><span class="finger">ID I1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="产能与装置">
+  <div class="ev-top">
+    <span class="code">I2</span>
+    <h5>车间设备清单：只有后处理设备</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供的设备清单与车间照片</span><span class="dot"></span><span>2026-09</span><span class="cat">产能与装置</span></div>
+  <blockquote>主要设备：气流粉碎机、旋振筛、V 型混合机、螺杆计量包装机、喷码机。</blockquote>
+  <div class="why"><b>判读</b>纯碱合成需要碳化塔、蒸氨塔、煅烧炉、凉碱炉等大型装置。仅有粉碎—筛分—混合—包装，属于物理后处理，不具备合成能力。</div>
+  <div class="ev-foot"><span class="finger">ID I2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s2" data-cat="运营痕迹">
+  <div class="ev-top">
+    <span class="code">I3</span>
+    <h5>原料采购发票：向碱厂购买重碱</h5>
+    <span class="pill mid">●●○ 中</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供的采购发票（脱敏）</span><span class="dot"></span><span>2026-08</span><span class="cat">运营痕迹</span></div>
+  <blockquote>购买方：某食品配料有限公司；销售方：XX 碱业有限公司；品名：重质纯碱；数量：300 吨。</blockquote>
+  <div class="why"><b>判读</b>原料端外购是分装/复配的定性证据。结合 I2 的设备清单，可确认其业务是“买碱—加工—卖小包装”。</div>
+  <div class="ev-foot"><span class="finger">ID I3 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev s1" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I4</span>
+    <h5>客户结构：食品与日化小包装定制</h5>
+    <span class="pill weak">●○○ 弱</span>
+  </div>
+  <div class="ev-meta"><span class="src">官网/客户案例</span><span class="dot"></span><span>2026-09</span><span class="cat">产品与市场</span></div>
+  <blockquote>为食品厂、日化企业提供 1kg/25kg 定制小包装与复配助剂。</blockquote>
+  <div class="why"><b>判读</b>小批量、多规格、定制包装是分装商的典型客户结构，与碱厂“整车、散装、长协”的销售模式明显不同。</div>
+  <div class="ev-foot"><span class="finger">ID I4 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+    <div class="group g-c" data-group="excluded">
+  <div class="group-head">
+    <span class="g-idx">C</span>
+    <h4>不构成证据</h4><span class="note">容易被当作证据、但采信会出错的材料</span>
+    <span class="count">3 条</span>
+  </div>
+  <div class="ev-list"><article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X1</span>
+    <h5>“食品级纯碱生产厂家”宣传</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>自有工厂生产食品级纯碱，厂家直供。</blockquote>
+  <div class="why"><b>为什么不算</b>把“分装”包装成“生产”是行业常见话术。判定要看许可明细中的“分装”字样与是否有合成装置。</div>
+  <div class="ev-foot"><span class="finger">ID X1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X2</span>
+    <h5>SC 证本身</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>我们有食品生产许可证，所以是生产厂家。</blockquote>
+  <div class="why"><b>为什么不算</b>SC 证按品种与工艺单元发证，分装也是许可类别之一。证是真的，但不能推出“合成纯碱”。</div>
+  <div class="ev-foot"><span class="finger">ID X2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X3</span>
+    <h5>洁净车间照片</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>十万级洁净车间、全自动包装线。</blockquote>
+  <div class="why"><b>为什么不算</b>洁净与自动化只说明包装环境，与是否合成无关；反而提示其核心能力在包装而非化工合成。</div>
+  <div class="ev-foot"><span class="finger">ID X3 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">03</span>时间线</h3>
+    <p>把公开事件按时间排列，可以看出一家企业是“有连续生产史”还是“只有一段宣传期”。</p></div></div>
+    <div class="tl"><div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2018</div><b>取得 SC</b><p>食品添加剂碳酸钠（分装）</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2024</div><b>扩产</b><p>新增自动包装线</p></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2026</div><b>客户结构</b><p>食品/日化小包装定制为主</p></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">04</span>证据充分度拆解</h3>
+    <p>分数不是“真假概率”，而是“证据链完整度”。同一套权重，五个案例横向可比。</p></div></div>
+    <div class="score">
+      <div class="score-total"><b>33</b><small>证据充分度 / 100</small>
+        <div class="tag">中高置信 · 分装或复配</div></div>
+      <div><div class="bar-row"><div class="l">生产许可与环保手续<em>权重 30 分</em></div><div class="bar"><i style="width:27%"></i></div><div class="v">8/30</div></div><div class="bar-row"><div class="l">产能与装置实据<em>权重 30 分</em></div><div class="bar"><i style="width:27%"></i></div><div class="v">8/30</div></div><div class="bar-row"><div class="l">产品与市场证据<em>权重 20 分</em></div><div class="bar"><i style="width:60%"></i></div><div class="v">12/20</div></div><div class="bar-row"><div class="l">运营侧痕迹<em>权重 10 分</em></div><div class="bar"><i style="width:50%"></i></div><div class="v">5/10</div></div><div class="bar-row"><div class="l">现场与第三方核验<em>权重 10 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/10</div></div></div>
+      <div class="score-note">有食品生产许可（分装单元），但无纯碱合成装置、无无机碱制造排污许可、无产能备案</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="gaps">
+      <h4>还需要向对方索取（分装样例）</h4>
+      <div class="gp">以下材料按“能否独立证明装置存在”排序，建议一次性发出，避免来回拉扯。</div>
+      <ul><li>SC 证明细页（确认“分装”单元与品种）</li><li>原料采购合同与发票（追溯至碱厂）</li><li>分装批次记录与留样（可追溯性）</li><li>若声称“生产”，要求提供纯碱项目环评与排污许可</li></ul>
+      <div class="act"><span>拿到材料后，用同一套三分法重新归档，再决定是否现场验厂。</span>
+      <a href="#materials">进入完整尽调清单 →</a></div>
+    </div>
+  </div>
+</section>
+<section class="case" id="case-unknown" data-case="unknown">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-top">
+        <span class="vbadge gray">○ 证据不足暂无法确认</span>
+        <span class="conf">置信度 低</span>
+        <span class="repoid">REPORT SV-2026-CN-NA2CO3-001</span>
+      </div>
+      <h2>某询价供应商（脱敏样例）<small>仅提供营业执照与报价单</small></h2>
+      <div class="subline">纯碱（碳酸钠）· 重质 · 报价单标注“国标 99.2%，出厂价”</div>
+      <p class="headline">执照、报价、照片都有，但没有一条能落到“装置”上：只能判“暂无法确认”。</p>
+      <div class="meta-row">
+        <span>—</span><span>未披露（执照地址为某写字楼）</span><span>未披露</span>
+        <span>无法判断</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div style="position:relative">
+        <svg class="ring" viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="58"></circle>
+          <circle class="ring-fg" cx="70" cy="70" r="58" style="stroke-dasharray:29.2 364.4"></circle>
+        </svg>
+        <div class="ring-num"><b>8</b><span>/ 100</span></div>
+      </div>
+      <div class="side-label">证 据 充 分 度</div>
+      <div class="side-counts">直接 0 · 间接 1 · 排除 3</div>
+    </div>
+  </div>
+  <div class="synthetic">⚠ 脱敏合成样例：用于演示判定路径与撰写口径，不指向任何真实企业；真实项目请替换为企业实际材料。</div>
+  <div class="vbox">
+    <div class="lab">核验结论</div>
+    <div>
+      <p>对方仅提供营业执照（经营范围含化工产品销售）、一页报价单和一张车间照片；执照地址为写字楼，报价单未注明生产厂与执行标准，照片无水印、无定位、无门牌与装置铭牌。既没有生产硬证据，也没有足以认定其为贸易商的积极证据，因此不做推断，明确标注“证据不足，暂无法确认”，并给出补证清单。</p>
+      <div class="next"><b>下一步：</b>先按“未认证供应商”处理：不预付、不做长协；补齐 P0 材料后再复核，或直接转向已核验的碱厂/授权经销商。</div>
+    </div>
+  </div>
+  <div class="facts"><div class="fact g"><div class="k">已提供</div><div class="v">营业执照</div><div class="n">经营范围含“化工产品销售”</div></div>
+<div class="fact "><div class="k">已提供</div><div class="v">报价单</div><div class="n">未注明生产厂 / 执行标准 / 交货地</div></div>
+<div class="fact "><div class="k">已提供</div><div class="v">车间照片 1 张</div><div class="n">无水印、无定位、无铭牌</div></div>
+<div class="fact "><div class="k">未提供</div><div class="v">排污许可 / 环评</div><div class="n">—</div></div>
+<div class="fact "><div class="k">未提供</div><div class="v">磅单 / 质检单 / 发票</div><div class="n">—</div></div>
+<div class="fact "><div class="k">注册地址</div><div class="v">某写字楼</div><div class="n">非工业用地</div></div></div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <div><h3><span class="idx">02</span>证据清单 · 三分法</h3>
+      <p>同一份材料，放在哪一组决定它能不能被采信。绿色为“能指向装置”的硬证据，蓝色为业务旁证，灰色为常见误判材料。</p></div>
+      <div class="filters" data-case="unknown"><button class="on" data-cat="all">全部 1</button><button data-cat="产品与市场">产品与市场 1</button><button data-cat="excluded">不构成证据</button></div>
+    </div>
+    <div class="group g-a" data-group="direct">
+  <div class="group-head">
+    <span class="g-idx">A</span>
+    <h4>直接生产证据</h4><span class="note">指向“装置、许可、产量”的硬证据</span>
+    <span class="count">0 条</span>
+  </div>
+  <div class="ev-list"><div class="empty"><b>0 条。</b>本次检索未发现任何可指向“纯碱（碳酸钠 Na₂CO₃）生产装置”的硬证据——既无对应行业类别的排污许可，也无环评批复、项目备案或可核产量。这本身就是一个强信号：不能用“没查到”代替“确认”，应当降级处理。</div></div>
+</div>
+    <div class="group g-b" data-group="indirect">
+  <div class="group-head">
+    <span class="g-idx">B</span>
+    <h4>间接业务证据</h4><span class="note">业务侧旁证，需与直接证据联读</span>
+    <span class="count">1 条</span>
+  </div>
+  <div class="ev-list"><article class="ev s1" data-cat="产品与市场">
+  <div class="ev-top">
+    <span class="code">I1</span>
+    <h5>报价单：品名与价格，但缺少生产厂</h5>
+    <span class="pill weak">●○○ 弱</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供（脱敏）</span><span class="dot"></span><span>2026-10</span><span class="cat">产品与市场</span></div>
+  <blockquote>纯碱 99.2% 重质，出厂价 XXXX 元/吨，交货地：待定，生产厂：未注明。</blockquote>
+  <div class="why"><b>判读</b>报价单只能证明“愿意卖”，不能证明“谁来生产”。缺少生产厂、执行标准、交货地与结算方式，无法与任何装置对应。</div>
+  <div class="ev-foot"><span class="finger">ID I1 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+    <div class="group g-c" data-group="excluded">
+  <div class="group-head">
+    <span class="g-idx">C</span>
+    <h4>不构成证据</h4><span class="note">容易被当作证据、但采信会出错的材料</span>
+    <span class="count">3 条</span>
+  </div>
+  <div class="ev-list"><article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X1</span>
+    <h5>营业执照经营范围</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>经营范围：化工产品销售（不含许可类化工产品）。</blockquote>
+  <div class="why"><b>为什么不算</b>注意此处写的是“销售”，不是“生产”。即便如此，经营范围本身也不能证明其在卖纯碱，只是允许。</div>
+  <div class="ev-foot"><span class="finger">ID X1 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X2</span>
+    <h5>车间照片一张</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>（微信发送，画面为包装线局部，无水印/定位）</blockquote>
+  <div class="why"><b>为什么不算</b>无法定位、无法比对装置特征，可能是仓库、代工厂或网图。不能作为生产证据。</div>
+  <div class="ev-foot"><span class="finger">ID X2 / SV-2026-CN-NA2CO3-001</span></div>
+</article>
+<article class="ev x" data-cat="">
+  <div class="ev-top">
+    <span class="code">X3</span>
+    <h5>“我们有自己的厂，欢迎来看”</h5>
+    <span class="pill na">不计分</span>
+  </div>
+  <div class="ev-meta"><span class="src">对方提供</span><span class="dot"></span></div>
+  <blockquote>厂在XX，随时可以来看。</blockquote>
+  <div class="why"><b>为什么不算</b>口头邀约不是证据；在未提供地址、许可与装置信息前，不改变“证据不足”的结论。</div>
+  <div class="ev-foot"><span class="finger">ID X3 / SV-2026-CN-NA2CO3-001</span></div>
+</article></div>
+</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">03</span>时间线</h3>
+    <p>把公开事件按时间排列，可以看出一家企业是“有连续生产史”还是“只有一段宣传期”。</p></div></div>
+    <div class="tl"><div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2026-10</div><b>首次询价</b><p>提供执照、报价单、照片</p></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><h3><span class="idx">04</span>证据充分度拆解</h3>
+    <p>分数不是“真假概率”，而是“证据链完整度”。同一套权重，五个案例横向可比。</p></div></div>
+    <div class="score">
+      <div class="score-total"><b>8</b><small>证据充分度 / 100</small>
+        <div class="tag">低置信 · 证据不足暂无法确认</div></div>
+      <div><div class="bar-row"><div class="l">生产许可与环保手续<em>权重 30 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/30</div></div><div class="bar-row"><div class="l">产能与装置实据<em>权重 30 分</em></div><div class="bar"><i style="width:7%"></i></div><div class="v">2/30</div></div><div class="bar-row"><div class="l">产品与市场证据<em>权重 20 分</em></div><div class="bar"><i style="width:20%"></i></div><div class="v">4/20</div></div><div class="bar-row"><div class="l">运营侧痕迹<em>权重 10 分</em></div><div class="bar"><i style="width:20%"></i></div><div class="v">2/10</div></div><div class="bar-row"><div class="l">现场与第三方核验<em>权重 10 分</em></div><div class="bar"><i style="width:0%"></i></div><div class="v">0/10</div></div></div>
+      <div class="score-note">仅有营业执照、报价单与一张无定位车间照片；无任何可核的生产硬证据，也不足以认定其为贸易商</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="gaps">
+      <h4>还需要向对方索取（证据不足样例）</h4>
+      <div class="gp">以下材料按“能否独立证明装置存在”排序，建议一次性发出，避免来回拉扯。</div>
+      <ul><li>排污许可证或环评批复（任一即可打破僵局）</li><li>生产厂名称、地址与授权关系</li><li>近 3 个月磅单与批次质检单</li><li>增值税发票样本（销售方名称）</li><li>可视频验厂的厂址与联系人</li></ul>
+      <div class="act"><span>拿到材料后，用同一套三分法重新归档，再决定是否现场验厂。</span>
+      <a href="#materials">进入完整尽调清单 →</a></div>
+    </div>
+  </div>
+</section>
+
+  <section class="sec" id="method">
+    <div class="sec-head"><div><h3><span class="idx">05</span>判定方法：三分法与四类结论</h3>
+    <p>先分类，再判定。分类错了，结论一定错——把“经营范围”当生产证据，是内贸采购最常见的翻车点。</p></div></div>
+    <div class="method">
+      
+    <div class="tri">
+      <div class="tri-card c1"><div class="n">A / DIRECT</div><h5>直接生产证据</h5>
+        <p>能独立指向“这套装置存在且在运行”的材料：排污许可证（行业类别：无机碱制造 C2612）；项目环评批复 + 竣工环保验收（载明纯碱产品与产能）；产能置换公示 / 技改项目备案（联碱、氨碱、天然碱）；食品生产许可证 SC（仅食品级碳酸钠，注意“分装”字样）；以及上市公司披露的产量、非计划停产公告、厂址与装置卫星/视频。判定只看这一组。</p></div>
+      <div class="tri-card c2"><div class="n">B / INDIRECT</div><h5>间接业务证据</h5>
+        <p>能说明“确实在做这门生意”，但不能单独证明自产：官网产品页、自营商城、交易所交割厂库、协会名录、原料采购、生产岗位招聘、专利、行业报道。需与 A 组交叉。</p></div>
+      <div class="tri-card c3"><div class="n">C / EXCLUDED</div><h5>不构成证据</h5>
+        <p>最容易被误采信的材料：营业执照经营范围、“厂家直销”话术、注册资本、可大量供货、单张无定位照片。它们只能证明“允许做/想做/能垫资”，不能证明“在做”。</p></div>
+    </div>
+      <div class="tree">
+        <h4>判定顺序（必须按 Q1→Q4 走，不能跳步）</h4>
+        <div class="tree-row"><div class="q">Q1</div>
+        <div><b>是否存在以该企业为主体的目标产品生产硬证据？</b><p>排污许可证（对应行业类别）；或环评批复/验收载明该产品与产能；或项目备案/产能置换公示载明该企业为主体；危化品/食品/农药等另有法定许可</p></div>
+        <div class="ans">是 → <i>进入 Q2</i><br>否 → 进入 Q3</div></div><div class="tree-row"><div class="q">Q2</div>
+        <div><b>公开产能、产量、厂址与许可是否自洽？</b><p>产能与产量量级匹配、厂址与许可地址一致、工艺路线能解释原料与副产品、产品规格对得上</p></div>
+        <div class="ans">是 → <i>判定：生产厂家</i><br>否 → 判定：生产厂家（待现场核验）</div></div><div class="tree-row"><div class="q">Q3</div>
+        <div><b>是否存在分装/复配特征？</b><p>仅持有分装类许可；无合成/反应/精馏/结晶主装置；设备为粉碎、筛分、混合、稀释、包装；外购成品或半成品</p></div>
+        <div class="ans">是 → <i>判定：分装或复配</i><br>否 → 进入 Q4</div></div><div class="tree-row"><div class="q">Q4</div>
+        <div><b>是否存在贸易经销特征？</b><p>交易所贸易商厂库、生产厂代理授权、无生产装置与排污许可、注册地为写字楼、以调货为主</p></div>
+        <div class="ans">是 → <i>判定：贸易经销</i><br>否 → 判定：证据不足，暂无法确认</div></div>
+        <p style="font-size:11.8px;color:#8494A5;margin:10px 0 0">说明：Q1 的硬证据只需命中一条即可进入 Q2；“分装或复配”优先于“贸易经销”，
+        因为分装商也有资质、也有车间，只有看许可明细与设备清单才能区分。四类都不成立时，输出“证据不足暂无法确认”，不做倾向性推断。</p>
+      </div>
+      <div class="tree" style="margin-top:20px">
+        <h4>证据充分度模型（100 分制）</h4>
+        <table class="mat" style="border:1px solid #E6ECF2;border-radius:10px;overflow:hidden">
+          <thead><tr><th style="width:200px">维度</th><th style="width:70px">权重</th><th>评分要点</th></tr></thead>
+          <tbody><tr><td class="name">生产许可与环保手续</td><td>30</td><td>排污许可（无机碱制造）、环评批复/验收中的产品与产能、项目备案/节能审查、产能置换公示</td></tr><tr><td class="name">产能与装置实据</td><td>30</td><td>公开产能与产量、装置条线与车间编制、厂址与门牌、原料一体化配置、同址关联装置</td></tr><tr><td class="name">产品与市场证据</td><td>20</td><td>官网产品页与牌号规格、自营销售渠道、交易所交割厂库/协会名录、客户与中标记录、品牌</td></tr><tr><td class="name">运营侧痕迹</td><td>10</td><td>原盐/石灰石/煤采购、生产岗位招聘、专利与技术论文、物流与铁路专用线</td></tr><tr><td class="name">现场与第三方核验</td><td>10</td><td>视频验厂、磅单、批次质检、第三方验厂报告、发票与发货地一致性</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="materials">
+    <div class="sec-head"><div><h3><span class="idx">06</span>完整尽调清单 · 12 项材料</h3>
+    <p>按优先级发问；P0 拿不到，就不要进入打款与长协。话术可直接复制给业务员。</p></div></div>
+    <div class="mats">
+      <div class="mat-bar">
+        <span style="font-size:12px;color:#5B6B7C">已获取</span>
+        <div class="prog"><i id="prog"></i></div>
+        <span class="cnt" id="matcnt">0 / 12</span>
+      </div>
+      <table class="mat">
+        <thead><tr><th class="chk"></th><th style="width:230px">材料</th><th style="width:60px">优先级</th>
+        <th style="width:250px">核验目的</th><th>索取话术</th></tr></thead>
+        <tbody><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">排污许可证正本 + 副本（含主要生产设施页）<div class="script">所有供应商</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>确认“行业类别=无机碱制造”及装置在证<div class="script">看点：行业类别、主要生产设施、排放口、有效期、厂址</div></td>
+      <td>麻烦提供贵司纯碱装置的排污许可证正副本扫描件，重点要有“主要生产设施”和“排放口”那几页，我们核对行业类别和证载厂址。<div style="margin-top:6px"><button class="copy" data-copy="麻烦提供贵司纯碱装置的排污许可证正副本扫描件，重点要有“主要生产设施”和“排放口”那几页，我们核对行业类别和证载厂址。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">纯碱项目环评批复 + 竣工验收报告<div class="script">声称自产的供应商</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>确认产品方案、产能与工艺路线<div class="script">看点：产品为碳酸钠、产能万吨/年、工艺（氨碱/联碱/天然碱）</div></td>
+      <td>请提供纯碱项目的环评批复和竣工环保验收报告，产品方案和产能那两页即可。<div style="margin-top:6px"><button class="copy" data-copy="请提供纯碱项目的环评批复和竣工环保验收报告，产品方案和产能那两页即可。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">项目备案 / 产能置换公示 / 节能审查<div class="script">有技改/在建项目的企业</div></td>
+      <td><span class="pri P1">P1</span></td>
+      <td>确认项目主体与合规产能<div class="script">看点：备案主体是否为目标企业、产能数字、置换比例</div></td>
+      <td>技改或在建项目，请提供备案证或省级产能置换公示链接。<div style="margin-top:6px"><button class="copy" data-copy="技改或在建项目，请提供备案证或省级产能置换公示链接。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">近 3 个月出厂磅单 3—5 车<div class="script">所有供应商</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>验证真实发货与发货地<div class="script">看点：车牌、日期、品名、净重、发货单位与地址</div></td>
+      <td>随机给 3 车最近发货的磅单，能看清车牌、日期、净重和发货地就行。<div style="margin-top:6px"><button class="copy" data-copy="随机给 3 车最近发货的磅单，能看清车牌、日期、净重和发货地就行。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">批次质检报告（COA）<div class="script">所有供应商</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>确认产品规格与批次可追溯<div class="script">看点：执行标准 GB/T 210、批次号、Na₂CO₃ 含量、氯化物、粒度</div></td>
+      <td>请提供拟供货批次的 COA，注明执行标准与批号，我们做第三方复检。<div style="margin-top:6px"><button class="copy" data-copy="请提供拟供货批次的 COA，注明执行标准与批号，我们做第三方复检。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">包装袋 / 合格证 / 喷码照片<div class="script">所有供应商</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>核对生产商名称与地址<div class="script">看点：包装上“生产商”是否为目标企业、地址是否与许可一致</div></td>
+      <td>拍一张完整包装袋正面和喷码位置，要能看清生产商名称、地址、执行标准和批号。<div style="margin-top:6px"><button class="copy" data-copy="拍一张完整包装袋正面和喷码位置，要能看清生产商名称、地址、执行标准和批号。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">增值税发票样本<div class="script">所有供应商</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>确认销售主体=生产主体<div class="script">看点：销售方名称、纳税人识别号、品名“纯碱”、税率</div></td>
+      <td>提供一张近期纯碱发票的票样（可遮挡金额），我们核对销售方与生产商是否一致。<div style="margin-top:6px"><button class="copy" data-copy="提供一张近期纯碱发票的票样（可遮挡金额），我们核对销售方与生产商是否一致。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">食品生产许可证（SC）及明细<div class="script">食品级采购</div></td>
+      <td><span class="pri P1">P1</span></td>
+      <td>食品级碳酸钠的资质与工艺单元<div class="script">看点：品种明细是否含“分装”、生产地址、有效期</div></td>
+      <td>食品级的话，请提供 SC 证及品种明细页，注意看是不是“分装”。<div style="margin-top:6px"><button class="copy" data-copy="食品级的话，请提供 SC 证及品种明细页，注意看是不是“分装”。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">危化品相关许可（液氨/氨水）<div class="script">氨碱法企业</div></td>
+      <td><span class="pri P2">P2</span></td>
+      <td>安全合规核查（非纯碱生产证据）<div class="script">看点：许可范围是液氨而非纯碱；储存与运输资质</div></td>
+      <td>氨碱法涉及液氨，请提供液氨相关的安全许可与储运资质。<div style="margin-top:6px"><button class="copy" data-copy="氨碱法涉及液氨，请提供液氨相关的安全许可与储运资质。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">视频验厂或第三方验厂报告<div class="script">所有声称自产的企业</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>确认装置真实运行<div class="script">看点：碳化塔、煅烧炉、凉碱炉、包装线、地磅、成品库</div></td>
+      <td>安排一次 20 分钟视频验厂，按碳化—煅烧—包装—地磅顺序走，不要剪辑。<div style="margin-top:6px"><button class="copy" data-copy="安排一次 20 分钟视频验厂，按碳化—煅烧—包装—地磅顺序走，不要剪辑。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">生产厂授权书 / 经销协议<div class="script">贸易商/经销商</div></td>
+      <td><span class="pri P0">P0</span></td>
+      <td>贸易商场景下追溯生产厂<div class="script">看点：授权主体、授权品类、授权区域、有效期</div></td>
+      <td>如果是代理，请提供碱厂盖章的授权书，以及你们从碱厂采购的发票。<div style="margin-top:6px"><button class="copy" data-copy="如果是代理，请提供碱厂盖章的授权书，以及你们从碱厂采购的发票。">复制话术</button></div></td>
+    </tr><tr>
+      <td class="chk"><input type="checkbox" class="mat-chk" aria-label="已获取"></td>
+      <td class="name">运输合同与承运人信息<div class="script">所有供应商</div></td>
+      <td><span class="pri P1">P1</span></td>
+      <td>验证发货地与厂址一致<div class="script">看点：起运地、承运人、运单号与磅单匹配</div></td>
+      <td>提供本次发货的运输合同或运单，起运地要与排污证地址一致。<div style="margin-top:6px"><button class="copy" data-copy="提供本次发货的运输合同或运单，起运地要与排污证地址一致。">复制话术</button></div></td>
+    </tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec" id="onsite">
+    <div class="sec-head"><div><h3><span class="idx">07</span>现场 / 视频验厂脚本</h3>
+    <p>不预约、不剪辑、按顺序走。真正的工厂不怕看装置，怕看的是门牌和地磅。</p></div></div>
+    <div class="onsite"><div class="os"><div class="n">CHECK 01</div><b>厂区门牌与地址</b>
+      <p>视频从大门门牌开始，连续走到装置区</p><p style="color:#3F5568;margin-top:4px">合格：门牌与排污证地址一致，园区有化工定位</p>
+      <p class="fake">造假信号：只拍车间内部、拒绝拍门牌、地址含糊</p></div><div class="os"><div class="n">CHECK 02</div><b>碳化塔 / 蒸氨塔</b>
+      <p>要求拍设备铭牌与塔体全貌</p><p style="color:#3F5568;margin-top:4px">合格：塔体高耸、有管线与操作平台，铭牌厂家/年份可读</p>
+      <p class="fake">造假信号：只有储罐与包装机，无塔器</p></div><div class="os"><div class="n">CHECK 03</div><b>煅烧炉 / 凉碱炉</b>
+      <p>拍运行中的炉体、传动与温度表</p><p style="color:#3F5568;margin-top:4px">合格：设备运行、有蒸汽/燃气管道、DCS 有对应画面</p>
+      <p class="fake">造假信号：设备停用积灰、无管线连接</p></div><div class="os"><div class="n">CHECK 04</div><b>原料堆场</b>
+      <p>原盐/石灰石堆场与输送皮带</p><p style="color:#3F5568;margin-top:4px">合格：大宗原料库存与上料系统</p>
+      <p class="fake">造假信号：只有成品垛，无原料</p></div><div class="os"><div class="n">CHECK 05</div><b>包装线与喷码</b>
+      <p>现场打印一张合格证并拍喷码</p><p style="color:#3F5568;margin-top:4px">合格：喷码含生产商、批号、日期，与 COA 对应</p>
+      <p class="fake">造假信号：预先印好的包装袋、无喷码机</p></div><div class="os"><div class="n">CHECK 06</div><b>成品库与地磅</b>
+      <p>随机抽一垛货，核对磅单与库位</p><p style="color:#3F5568;margin-top:4px">合格：库存与发货记录可对应，地磅有近期记录</p>
+      <p class="fake">造假信号：仓库是第三方仓储，货权不清</p></div><div class="os"><div class="n">CHECK 07</div><b>中控室 DCS</b>
+      <p>要求看纯碱工段画面与趋势曲线</p><p style="color:#3F5568;margin-top:4px">合格：有碳化、蒸氨、煅烧工段实时数据</p>
+      <p class="fake">造假信号：只有视频监控，无工艺画面</p></div><div class="os"><div class="n">CHECK 08</div><b>三废与排污口</b>
+      <p>废液/碱渣处理与在线监测</p><p style="color:#3F5568;margin-top:4px">合格：与排污许可证载明的排放口一致</p>
+      <p class="fake">造假信号：无处理设施、排放口与证不符</p></div></div>
+  </section>
+
+  <section class="sec" id="compare">
+    <div class="sec-head"><div><h3><span class="idx">08</span>5 个案例横向对照</h3>
+    <p>同一套方法，不同证据结构，落点自然不同：有的能定“厂家”，有的只能定“贸易”，有的必须留白。</p></div></div>
+    <div class="cmp"><table class="cmp-t">
+      <thead><tr><th style="width:210px">企业</th><th>结论</th><th>充分度</th><th>直接/间接/排除</th><th>关键硬证据</th><th>置信度</th></tr></thead>
+      <tbody><tr><td><b>山东海化</b><div class="script">山东海化股份有限公司</div></td>
+      <td><span class="vchip green">◆ 生产厂家</span></td>
+      <td style="font-family:Consolas,monospace">84</td>
+      <td>6 / 5 / 5</td>
+      <td>排污许可证、官网工厂页、上市公司年报</td><td>高</td></tr><tr><td><b>博源银根</b><div class="script">内蒙古博源银根化工有限公司</div></td>
+      <td><span class="vchip green">◆ 生产厂家</span></td>
+      <td style="font-family:Consolas,monospace">76</td>
+      <td>5 / 3 / 3</td>
+      <td>上市公司公告、二期启动公告、资源底座</td><td>高</td></tr><tr><td><b>杭实善成</b><div class="script">浙江杭实善成实业有限公司</div></td>
+      <td><span class="vchip red">◇ 贸易经销</span></td>
+      <td style="font-family:Consolas,monospace">18</td>
+      <td>0 / 4 / 4</td>
+      <td>无</td><td>高</td></tr><tr><td><b>分装样例</b><div class="script">某食品配料有限公司（脱敏样例）</div></td>
+      <td><span class="vchip amber">◈ 分装或复配</span></td>
+      <td style="font-family:Consolas,monospace">33</td>
+      <td>0 / 4 / 3</td>
+      <td>无</td><td>中高</td></tr><tr><td><b>证据不足样例</b><div class="script">某询价供应商（脱敏样例）</div></td>
+      <td><span class="vchip gray">○ 证据不足暂无法确认</span></td>
+      <td style="font-family:Consolas,monospace">8</td>
+      <td>0 / 1 / 3</td>
+      <td>无</td><td>低</td></tr></tbody>
+    </table></div>
+  </section>
+
+  <footer>
+    <b>方法与口径</b>：本报告只采信可公开复核的来源；企业官网信息标注为“自述”，须与许可/公告/交易所文件交叉。
+    “证据充分度”衡量证据链完整度，不代表企业信用或产品质量；分数与结论均随新证据更新。<br>
+    <b>数据截止</b>：2026-10-19。许可、交割厂库名单、产能置换公示均可能变动，正式签约前应重新核验一次。<br>
+    <b>免责</b>：本报告为采购尽调辅助材料，不构成法律意见；涉及真实交易的，以合同、发票、第三方检测与现场验厂为准。脱敏样例不对应任何真实企业。
+  </footer>
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const CASES = ["haihua", "boyuan", "hangshi", "repack", "unknown"];
+const ALIAS = [["山东海化", "haihua"], ["山东海化股份有限公司", "haihua"], ["海化", "haihua"], ["000822", "haihua"], ["鸢都", "haihua"], ["博源银根", "boyuan"], ["内蒙古博源银根化工有限公司", "boyuan"], ["银根化工", "boyuan"], ["博源化工", "boyuan"], ["远兴能源", "boyuan"], ["000683", "boyuan"], ["塔木素", "boyuan"], ["杭实善成", "hangshi"], ["浙江杭实善成实业有限公司", "hangshi"], ["浙江杭实善成", "hangshi"], ["杭实", "hangshi"], ["分装样例", "repack"], ["某食品配料有限公司（脱敏样例）", "repack"], ["分装", "repack"], ["食品配料", "repack"], ["小包装纯碱", "repack"], ["食用纯碱", "repack"], ["证据不足样例", "unknown"], ["某询价供应商（脱敏样例）", "unknown"], ["证据不足", "unknown"], ["询价", "unknown"], ["暂无法确认", "unknown"]];
+
+function activate(id, scroll){
+  document.querySelectorAll('.case').forEach(function(s){ s.classList.toggle('on', s.dataset.case===id); });
+  document.querySelectorAll('.casebtn').forEach(function(b){ b.classList.toggle('on', b.dataset.target===id); });
+  var c = document.getElementById('case-'+id);
+  if(scroll && c){ c.scrollIntoView({behavior:'smooth', block:'start'}); }
+  if(history.replaceState){ history.replaceState(null, '', '#'+id); }
+}
+document.querySelectorAll('.casebtn').forEach(function(b){
+  b.addEventListener('click', function(){ activate(b.dataset.target, false); });
+});
+
+var toastEl = document.getElementById('toast');
+var toastTimer;
+function toast(msg){
+  toastEl.textContent = msg; toastEl.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('on'); }, 2600);
+}
+
+document.getElementById('run').addEventListener('click', function(){
+  var v = (document.getElementById('q-company').value || '').trim();
+  if(!v){ toast('请输入企业名称'); return; }
+  var hit = ALIAS.find(function(p){ return v.indexOf(p[0])>=0 || p[0].indexOf(v)>=0; });
+  if(hit){ activate(hit[1], true); toast('已切换至：' + hit[0] + ' 案例'); }
+  else { toast('演示模式仅内置 5 个案例；接入检索后可按企业全名自动取证'); }
+});
+document.getElementById('q-company').addEventListener('keydown', function(ev){
+  if(ev.key==='Enter'){ document.getElementById('run').click(); }
+});
+
+document.querySelectorAll('.filters').forEach(function(f){
+  f.addEventListener('click', function(ev){
+    var btn = ev.target.closest('button'); if(!btn) return;
+    f.querySelectorAll('button').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    var cat = btn.dataset.cat;
+    var sec = f.closest('.case');
+    sec.querySelectorAll('.ev').forEach(function(card){
+      var show = true;
+      if(cat==='excluded'){ show = card.classList.contains('x'); }
+      else if(cat!=='all'){ show = card.dataset.cat === cat; }
+      card.style.display = show ? '' : 'none';
+    });
+    sec.querySelectorAll('.group').forEach(function(g){
+      var n = [].slice.call(g.querySelectorAll('.ev')).filter(function(c){ return c.style.display!=='none'; }).length;
+      g.style.display = n ? '' : 'none';
+      var cnt = g.querySelector('.count');
+      if(cnt){ cnt.textContent = n + ' 条'; }
+    });
+  });
+});
+
+var chks = [].slice.call(document.querySelectorAll('.mat-chk'));
+function refresh(){
+  var n = chks.filter(function(c){ return c.checked; }).length;
+  document.getElementById('matcnt').textContent = n + ' / ' + chks.length;
+  document.getElementById('prog').style.width = (n/chks.length*100) + '%';
+}
+chks.forEach(function(c){ c.addEventListener('change', refresh); });
+refresh();
+
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click', function(){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(b.dataset.copy).then(function(){ b.textContent='已复制'; })
+        .catch(function(){ toast('复制失败，请手动选择文本'); });
+    } else { toast('当前环境不支持一键复制'); }
+    setTimeout(function(){ b.textContent='复制话术'; }, 1400);
+  });
+});
+
+if(location.hash && CASES.indexOf(location.hash.slice(1))>=0){ activate(location.hash.slice(1), false); }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--
+  品种周报 HTML 模板 v1（chem-product-weekly）
+  ================================================================
+  槽位（全部由生成器替换，模板本体不含任何品种专有数据）：
+    {{PRODUCT}}    品种名            {{W0}} {{W1}}  报告周首末交易日
+    {{WINDOW_NOTE}} 首屏口径说明串     {{PREAMBLE}}   报告原则声明
+    {{CONTENT_HTML}} 图表之前的内容（首屏核心变化、价格指标、重点事件）
+    {{NOTE_C1}}~{{NOTE_C4}} 四个图表脚注
+    {{CONTENT_AFTER_CHARTS}} 图表之后的内容（期现/供需/成本/事件/同期/下周/缺口/底稿）
+    {{DATA_JSON}}  唯一数据源（契约见 assets/data_schema.json）
+  约定：
+    - 图表 id 固定 c1/c2/c3/c4，脚本按 D.meta.chart 绑定序列
+    - 事件必须带 url，点击可溯原文
+    - 单文件离线可用，禁止引用 CDN / 外部字体
+  ================================================================
+-->
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{PRODUCT}}品种周报｜{{W0}} ~ {{W1}}</title>
+<style>
+:root{--bg:#0f1420;--card:#171e2e;--card2:#1d2536;--line:#2a3346;--txt:#e6ebf5;--dim:#9aa8bf;
+--up:#ef5350;--down:#26a69a;--acc:#4c9aff;--warn:#f0b429;--ok:#35d07f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.65 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:22px 20px 80px}
+h1{font-size:25px;margin:0 0 6px}
+h2{font-size:18px;margin:34px 0 12px;padding-left:10px;border-left:4px solid var(--acc)}
+h3{font-size:15px;margin:20px 0 8px;color:#cfe0ff}
+.sub{color:var(--dim);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:960px){.g4,.g3,.g2{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.g4,.g3,.g2{grid-template-columns:1fr}}
+.kpi{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.kpi .lb{font-size:12px;color:var(--dim)}
+.kpi .vl{font-size:22px;font-weight:600;margin:3px 0}
+.kpi .dt{font-size:11px;color:var(--dim);line-height:1.45}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--dim)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:#b9c8e2;font-weight:600;background:#141b29;position:sticky;top:0}
+tr:hover td{background:#1b2334}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;border:1px solid var(--line);color:var(--dim)}
+.tag.ev{color:#ffd479;border-color:#6b5320}
+.tag.bg{color:#8fa0bb}
+a{color:var(--acc);text-decoration:none;border-bottom:1px dotted #4c9aff66}
+a:hover{color:#8cc4ff}
+.chartbox{position:relative;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 8px 4px}
+.chartbox svg{display:block;width:100%;height:auto}
+.ctrl{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px;align-items:center}
+.ctrl button{background:#212b3f;color:#c8d6ee;border:1px solid var(--line);border-radius:7px;padding:5px 11px;font-size:12px;cursor:pointer}
+.ctrl button.on{background:var(--acc);color:#08111f;border-color:var(--acc);font-weight:600}
+.ctrl .hint{font-size:11px;color:var(--dim);margin-left:auto}
+#tip{position:fixed;pointer-events:none;background:#0b111c;border:1px solid #33405a;border-radius:8px;padding:8px 11px;
+font-size:12px;line-height:1.55;box-shadow:0 8px 22px #0008;opacity:0;transition:opacity .08s;z-index:99;max-width:320px}
+.tl{position:relative;margin-left:8px;padding-left:20px;border-left:1px solid var(--line)}
+.tl .it{position:relative;padding:8px 0 12px}
+.tl .it::before{content:'';position:absolute;left:-26px;top:14px;width:9px;height:9px;border-radius:50%;background:var(--acc)}
+.tl .it.bug::before{background:#8fa0bb}
+.tl .d{font-size:12px;color:var(--acc);font-weight:600}
+.tl .w{font-size:13.5px}
+.tl .m{font-size:12px;color:var(--dim)}
+details{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 14px;margin:10px 0}
+summary{cursor:pointer;color:#bcd2f5;font-size:13px;font-weight:600}
+.note{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.6}
+.big{font-size:15px;font-weight:600}
+.hero{background:linear-gradient(135deg,#17233a,#141b2b);border:1px solid #2c3855}
+ul{margin:6px 0 6px 18px;padding:0} li{margin:3px 0}
+.scroll{max-height:430px;overflow:auto}
+.chip{display:inline-block;background:#1e2940;border:1px solid var(--line);border-radius:6px;padding:2px 8px;margin:2px 4px 2px 0;font-size:12px}
+</style></head><body><div class="wrap"><div class="card hero"><h1>{{PRODUCT}}品种周报｜{{W0}}（一）～ {{W1}}（五）</h1><div class="sub">{{WINDOW_NOTE}}</div><div class="note">{{PREAMBLE}}</div></div>
+{{CONTENT_HTML}}
+<h2>价格与期现结构</h2><div class="ctrl" id="ranges"><span class="sub">历史区间：</span><button data-days="10">近10日</button><button data-days="20" class="on">近20日</button><button data-days="45">近45日</button><button data-days="0">全部</button><span class="hint">鼠标悬停查看逐日数值与变动；窗口内交易日已高亮</span></div><div class="grid g2"><div class="chartbox"><h3 style="margin:2px 0 6px">① 期货收盘价</h3><svg id="c1" viewBox="0 0 600 260" preserveAspectRatio="xMidYMin meet"></svg><div class="note" id="n1">{{NOTE_C1}}</div></div><div class="chartbox"><h3 style="margin:2px 0 6px">② 现货基准价 vs 主力合约</h3><svg id="c2" viewBox="0 0 600 260" preserveAspectRatio="xMidYMin meet"></svg><div class="note" id="n2">{{NOTE_C2}}</div></div><div class="chartbox"><h3 style="margin:2px 0 6px">③ 基差（现货 − 合约收盘）</h3><svg id="c3" viewBox="0 0 600 240" preserveAspectRatio="xMidYMin meet"></svg><div class="note" id="n3">{{NOTE_C3}}</div></div><div class="chartbox"><h3 style="margin:2px 0 6px">④ 月差（近月 − 远月）</h3><svg id="c4" viewBox="0 0 600 240" preserveAspectRatio="xMidYMin meet"></svg><div class="note" id="n4">{{NOTE_C4}}</div></div></div>
+{{CONTENT_AFTER_CHARTS}}
+<div class="note" style="margin-top:34px">生成时间：<span id="gen"></span> ｜ 本文件为离线单文件，不依赖外部 CDN。所有数值均可沿"来源记录"回溯到原文。</div>
+<script type="application/json" id="__data">{{DATA_JSON}}</script>
+<div id="tip"></div><script>const D = JSON.parse(document.getElementById('__data').textContent);
+document.getElementById('gen').textContent = new Date().toLocaleString('zh-CN');
+const tip = document.getElementById('tip');
+function showTip(ev, html){ tip.innerHTML = html; tip.style.opacity = 1;
+  const x = Math.min(ev.clientX + 14, window.innerWidth - 330), y = Math.min(ev.clientY + 14, window.innerHeight - 130);
+  tip.style.left = x + 'px'; tip.style.top = y + 'px'; }
+function hideTip(){ tip.style.opacity = 0; }
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(n, a, p){ const e = document.createElementNS(SVGNS, n); for (const k in (a||{})) e.setAttribute(k, a[k]);
+  if (p) p.appendChild(e); return e; }
+const WIN = (D.meta && D.meta.window) ? D.meta.window : [];
+const WIN0 = WIN[0] || '0000-00-00', WIN1 = WIN[1] || '9999-99-99';
+function inWin(d){ return !!WIN.length && d >= WIN0 && d <= WIN1; }
+
+function sliceDays(rows, n){ if (!n) return rows; return rows.slice(Math.max(0, rows.length - n)); }
+
+function lineChart(id, config){
+  const svg = document.getElementById(id); if (!svg) return;
+  const W = 600, H = +svg.getAttribute('viewBox').split(' ')[3], P = {l: 52, r: 14, t: 14, b: 30};
+  function draw(nDays){
+    svg.innerHTML = '';
+    const series = config.series.map(function(s){ return {name: s.name, color: s.color, pts: sliceDays(s.points, nDays)}; })
+      .filter(function(s){ return s.pts.length; });
+    if (!series.length) return;
+    let xs = [], ys = [];
+    series.forEach(function(s){ s.pts.forEach(function(p){ xs.push(p[0]); if (p[1] != null) ys.push(p[1]); }); });
+    xs = Array.from(new Set(xs)).sort(); ys = ys.filter(function(v){ return v != null; });
+    let mn = Math.min.apply(null, ys), mx = Math.max.apply(null, ys);
+    if (config.zero) { mn = Math.min(mn, 0); mx = Math.max(mx, 0); }
+    const pad = (mx - mn) * 0.12 || 10; mn -= pad; mx += pad;
+    const x = function(d){ const i = xs.indexOf(d); return P.l + (xs.length === 1 ? 0 : i * (W - P.l - P.r) / (xs.length - 1)); };
+    const y = function(v){ return P.t + (mx - v) * (H - P.t - P.b) / (mx - mn); };
+    // 网格
+    for (let i = 0; i <= 4; i++){
+      const v = mn + (mx - mn) * i / 4, yy = y(v);
+      el('line', {x1: P.l, x2: W - P.r, y1: yy, y2: yy, stroke: '#28324a', 'stroke-width': 1}, svg);
+      const t = el('text', {x: P.l - 7, y: yy + 4, fill: '#7f8ea8', 'font-size': 10, 'text-anchor': 'end'}, svg);
+      t.textContent = Math.round(v).toLocaleString();
+    }
+    if (config.zero){ el('line', {x1: P.l, x2: W - P.r, y1: y(0), y2: y(0), stroke: '#4a5875', 'stroke-dasharray': '4 3'}, svg); }
+    // 窗口高亮
+    const w0 = inWin(WIN0) ? xs.indexOf(WIN0) : -1, w1 = inWin(WIN1) ? xs.indexOf(WIN1) : -1;
+    if (w0 >= 0 && w1 >= 0){
+      el('rect', {x: x(xs[w0]) - 6, y: P.t, width: Math.max(12, x(xs[w1]) - x(xs[w0]) + 12), height: H - P.t - P.b,
+        fill: '#4c9aff', opacity: 0.08}, svg);
+      const lb = el('text', {x: (x(xs[w0]) + x(xs[w1])) / 2, y: P.t - 3, fill: '#4c9aff', 'font-size': 9,
+        'text-anchor': 'middle'}, svg); lb.textContent = '本周';
+    }
+    // x 轴标签
+    const step = Math.ceil(xs.length / 7);
+    xs.forEach(function(d, i){ if (i % step === 0 || i === xs.length - 1){
+      const t = el('text', {x: x(d), y: H - 10, fill: '#7f8ea8', 'font-size': 9.5, 'text-anchor': 'middle'}, svg);
+      t.textContent = d.slice(5); } });
+    // 线
+    series.forEach(function(s){
+      let dstr = '', started = false;
+      s.pts.forEach(function(p){ if (p[1] == null) { started = false; return; }
+        dstr += (started ? 'L' : 'M') + x(p[0]).toFixed(1) + ' ' + y(p[1]).toFixed(1) + ' '; started = true; });
+      el('path', {d: dstr, fill: 'none', stroke: s.color, 'stroke-width': 2.1, 'stroke-linejoin': 'round'}, svg);
+    });
+    // 悬停层
+    const cross = el('line', {x1: 0, x2: 0, y1: P.t, y2: H - P.b, stroke: '#9aa8bf', 'stroke-dasharray': '3 3', opacity: 0}, svg);
+    const hit = el('rect', {x: P.l, y: P.t, width: W - P.l - P.r, height: H - P.t - P.b, fill: 'transparent'}, svg);
+    hit.addEventListener('mousemove', function(ev){
+      const r = svg.getBoundingClientRect();
+      const px = (ev.clientX - r.left) * (W / r.width);
+      let best = 0, bd = 1e9;
+      xs.forEach(function(d, i){ const dd = Math.abs(x(d) - px); if (dd < bd){ bd = dd; best = i; } });
+      const d = xs[best];
+      cross.setAttribute('x1', x(d)); cross.setAttribute('x2', x(d)); cross.setAttribute('opacity', 0.7);
+      let html = '<b>' + d + '</b>' + (inWin(d) ? ' <span style="color:#4c9aff">本周</span>' : '') + '<br>';
+      series.forEach(function(s){
+        const p = s.pts.find(function(q){ return q[0] === d; });
+        const i = s.pts.findIndex(function(q){ return q[0] === d; });
+        const prev = i > 0 ? s.pts[i - 1][1] : null;
+        let chg = (prev != null && p && p[1] != null) ? (p[1] - prev) : null;
+        html += '<span style="color:' + s.color + '">■</span> ' + s.name + '：' +
+          (p && p[1] != null ? p[1].toLocaleString(undefined,{maximumFractionDigits:1}) : '—') +
+          (chg != null ? ' <span style="color:' + (chg > 0 ? '#ef5350' : chg < 0 ? '#26a69a' : '#9aa8bf') + '">(' +
+            (chg > 0 ? '+' : '') + chg.toFixed(1) + ')</span>' : '') + '<br>';
+      });
+      showTip(ev, html);
+    });
+    hit.addEventListener('mouseleave', function(){ cross.setAttribute('opacity', 0); hideTip(); });
+  }
+  drawChart[id] = draw;
+  draw(currentRange);
+}
+const drawChart = {};
+let currentRange = 20;
+
+// ---- 图表绑定：全部由 __DATA__ 驱动 ----
+const PALETTE = ['#4c9aff', '#f0b429', '#35d07f', '#b388ff', '#ff8a65'];
+function chartKeys(name, fallbackKeys){
+  const m = (D.meta && D.meta.chart) || {};
+  return (m[name] && m[name].length) ? m[name] : fallbackKeys;
+}
+const S1 = chartKeys('c1', Object.keys(D.series || {}).slice(0, 3));
+lineChart('c1', {series: S1.map(function(k, i){
+  return {name: k, color: PALETTE[i % PALETTE.length], points: (D.series || {})[k] || []}; })});
+const KM = (D.meta && D.meta.main_contract) || S1[1] || S1[0];
+lineChart('c2', {series: [
+  {name: (D.meta && D.meta.spot_label) || '现货基准价', color: '#ff8a65', points: D.spot || []},
+  {name: KM, color: '#f0b429', points: (D.series || {})[KM] || []}
+]});
+const BL = (D.meta && D.meta.basis_labels) || ['基差A', '基差B'];
+lineChart('c3', {zero: true, series: [
+  {name: BL[0], color: '#4c9aff', points: D.basis11 || []},
+  {name: BL[1], color: '#b388ff', points: D.basis01 || []}
+]});
+const S4 = chartKeys('c4', Object.keys(D.spread || {}).slice(0, 3));
+lineChart('c4', {zero: true, series: S4.map(function(k, i){
+  return {name: k, color: PALETTE[i % PALETTE.length], points: (D.spread || {})[k] || []}; })});
+function draw(n){ currentRange = n; document.querySelectorAll('#ranges button').forEach(function(b){
+  b.classList.toggle('on', +b.dataset.days === n); }); Object.keys(drawChart).forEach(function(k){ drawChart[k](n); }); }
+document.querySelectorAll('#ranges button').forEach(function(b){ b.addEventListener('click', function(){
+  draw(+b.dataset.days); }); });
+document.querySelectorAll('a[href^="http"]').forEach(function(a){ a.title = a.href; });
+</script></body></html>

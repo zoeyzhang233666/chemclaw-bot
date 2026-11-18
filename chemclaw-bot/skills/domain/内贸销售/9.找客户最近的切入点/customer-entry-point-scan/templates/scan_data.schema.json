@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "customer-entry-point-scan 数据文件",
+  "description": "客户切入点扫描的唯一数据源；Excel 与 HTML 均由它渲染生成。字段名不可改，可选字段可省略。",
+  "type": "object",
+  "required": ["meta", "snapshot", "cards", "evidence", "market", "inferences", "roles"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["title", "task_line", "customer", "window", "generated", "kpis", "file_base"],
+      "properties": {
+        "title": {"type": "string", "description": "报告大标题"},
+        "task_line": {"type": "string", "description": "任务句：我要开发「客户」，销售「产品」"},
+        "product": {"type": "string"},
+        "customer": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "name": {"type": "string"},
+            "codes": {"type": "string", "description": "股票代码，如 601865.SH / 06865.HK"},
+            "profile": {"type": "string", "description": "一句话画像"}
+          }
+        },
+        "window": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+            "end": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+            "label": {"type": "string", "description": "如：最近6个月"}
+          }
+        },
+        "generated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "scope": {"type": "string", "description": "扫描范围一句话"},
+        "sources": {"type": "string", "description": "信息源一句话"},
+        "badges": {"type": "array", "items": {"type": "string"}, "description": "HTML页头横幅小字"},
+        "kpis": {
+          "type": "array", "minItems": 1, "maxItems": 6,
+          "items": {"type": "object", "required": ["num", "label"], "properties": {"num": {"type": "string"}, "label": {"type": "string"}, "accent": {"type": "boolean"}}}
+        },
+        "file_base": {"type": "string", "description": "附件文件名前缀，如：纯碱客户切入点扫描_福莱特_2026-10-15"}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "required": ["rows"],
+      "properties": {
+        "rows": {"type": "array", "items": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 2}, "minItems": 3},
+        "note": {"type": "string", "description": "信息边界警示"}
+      }
+    },
+    "cards": {
+      "type": "array", "minItems": 1, "maxItems": 7,
+      "description": "3–5 张为宜，按优先级排序",
+      "items": {
+        "type": "object",
+        "required": ["no", "prio", "stars", "type", "typeTag", "dates", "title", "event", "relation", "whyNow", "roles", "evidence", "inference", "next_action", "visit", "message"],
+        "properties": {
+          "no": {"type": "string", "description": "P1..P7"},
+          "prio": {"type": "integer", "minimum": 1, "maximum": 7},
+          "stars": {"type": "string", "description": "如 ★★★"},
+          "type": {"type": "string", "description": "客户事件 | 行业与市场 | 辅助信号（可自定义，HTML按其筛选）"},
+          "typeTag": {"enum": ["cust", "mkt", "aux"]},
+          "dates": {"type": "string"},
+          "sortDate": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "按时间排序用；省略则按优先级"},
+          "title": {"type": "string"},
+          "event": {"type": "string", "description": "发生了什么；可含<b>强调；引用证据写编号如（E1、E5）"},
+          "relation": {"type": "string", "description": "与产品的关系"},
+          "whyNow": {"type": "string", "description": "为什么现在值得联系"},
+          "roles": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["r", "d"], "properties": {"r": {"type": "string"}, "d": {"type": "string"}}}},
+          "evidence": {"type": "array", "minItems": 1, "items": {"type": "string"}, "description": "必须指向 evidence[].id"},
+          "inference": {"type": "array", "minItems": 1, "items": {"type": "string"}, "description": "哪些内容只是推断；确无推断写[\"无\"]"},
+          "next_action": {"type": "string"},
+          "visit": {
+            "type": "object",
+            "required": ["goal", "ask", "bring", "risk"],
+            "properties": {
+              "goal": {"type": "array", "items": {"type": "string"}},
+              "ask": {"type": "array", "items": {"type": "string"}},
+              "bring": {"type": "array", "items": {"type": "string"}},
+              "risk": {"type": "string"}
+            }
+          },
+          "message": {
+            "type": "object",
+            "required": ["to", "body"],
+            "properties": {"to": {"type": "string", "description": "建议对象与渠道"}, "body": {"type": "string", "description": "可直接发送的消息草稿"}}
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "date", "source", "kind", "tag", "title", "cards", "url"],
+        "properties": {
+          "id": {"type": "string", "description": "E1..En"},
+          "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "source": {"type": "string"},
+          "kind": {"type": "string", "description": "一手公告|评级报告|券商研报|媒体|期货周报|行业深度|说明会纪要"},
+          "tag": {"enum": ["src1", "src2"], "description": "src1=一手(绿) src2=二手(蓝)"},
+          "title": {"type": "string"},
+          "cards": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https?://"}
+        }
+      }
+    },
+    "market": {
+      "type": "object",
+      "required": ["rows"],
+      "properties": {
+        "rows": {"type": "array", "items": {"type": "array", "minItems": 4, "maxItems": 5, "items": {"type": "string"}}, "description": "每行4–5列：指标/数值变化/时点/证据[/备注]"},
+        "chart": {
+          "type": "object",
+          "required": ["title", "points"],
+          "properties": {
+            "title": {"type": "string"},
+            "unit": {"type": "string"},
+            "caption": {"type": "string"},
+            "points": {
+              "type": "array", "minItems": 2,
+              "items": {"type": "object", "required": ["label", "value", "display"], "properties": {"label": {"type": "string"}, "value": {"type": "number"}, "display": {"type": "string"}, "tone": {"enum": ["brand", "alert", "accent", "muted"], "description": "默认accent"}}}
+            }
+          }
+        }
+      }
+    },
+    "inferences": {
+      "type": "array",
+      "items": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string"}, "description": "编号/推断内容/依据类型/验证方式"}
+    },
+    "roles": {
+      "type": "array",
+      "items": {"type": "array", "minItems": 5, "maxItems": 6, "items": {"type": "string"}, "description": "编号/角色部门/层级/对应卡片/沟通目标[/开场话题]"}
+    },
+    "footer": {
+      "type": "object",
+      "properties": {
+        "methodology": {"type": "string"},
+        "disclaimer": {"type": "string"},
+        "prompt_template": {"type": "string"}
+      }
+    }
+  }
+}

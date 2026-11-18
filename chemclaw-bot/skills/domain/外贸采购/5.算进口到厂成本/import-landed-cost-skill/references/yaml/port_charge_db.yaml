@@ -1,0 +1,49 @@
+# 口岸费用结构参考库（机器可读）
+# 作用：给"港杂费"字段列出应核对的子项清单；金额仅为公示区间参考，绝不作为本次报价。
+# source: 中国（浙江）国际贸易单一窗口 口岸收费公示（宁波港水运口岸），2026-10-20 访问
+#         https://zj.singlewindow.cn/pen-portal/guide/announce/hz/logistics.jspa
+#         宁波电子口岸 宁波口岸收费目录清单 https://www.nbsinglewindow.cn/sfgs/sfgs!index.do
+#         （公示注明"数据滞后，具体以经营服务单位自行公示为准"）
+version: "1.0"
+accessed_on: 2026-10-20
+ports:
+  - code: CNNBO
+    name: 宁波港
+    items:
+      - name: 报关报检代理费
+        low: 100
+        high: 500
+        unit: 元/票
+      - name: 码头操作费THC
+        low: 660
+        high: 1225
+        unit: 元/箱（20'-40'）
+      - name: 港口作业包干费
+        low: 100
+        high: 200
+        unit: 元/40尺
+      - name: 港区操作费
+        low: 200
+        high: 300
+        unit: 元/票
+      - name: 换单费
+        low: 100
+        high: 500
+        unit: 元/票
+      - name: 查验服务费
+        low: 200
+        high: 350
+        unit: 元/次
+      - name: 放行作业费
+        low: 30
+        high: 30
+        unit: 元/票
+      - name: 证书签发费
+        low: 120
+        high: 120
+        unit: 元/份
+      - name: 保税仓储
+        low: 0.3
+        high: 0.3
+        unit: 元/kg·天（每票最低100元）
+usage: "仅用于核对'港杂费'是否漏项；实际金额必须由用户录入港区/货代报价。"

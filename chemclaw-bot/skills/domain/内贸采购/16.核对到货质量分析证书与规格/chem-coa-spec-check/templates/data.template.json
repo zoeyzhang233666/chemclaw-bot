@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "title": "【产品名】到货 COA 与采购质量规格书核对",
+    "slug": "coa-check",
+    "as_of": "2026-01-01",
+    "buyer_name": "采购部 某某",
+    "buyer_contact": "采购部 / name@example.com",
+    "spec_ref": "规格书编号 Rev.X / 合同附件编号",
+    "target_coa_batch": "BATCH-0001",
+    "tone": "formal",
+    "simulated": false,
+    "sim_note": "",
+    "export_base": "产品名到货COA核对报告_20260101"
+  },
+  "product": {
+    "name": "【产品名】",
+    "grade": "",
+    "cas": "",
+    "un": "",
+    "use": "【下游用途，影响严重度判断：原料直用 / 中间体 / 溶剂等】",
+    "indicator_aliases": [
+      { "canonical": "纯度", "aliases": ["含量", "主含量", "乙二醇纯度（质量分数）", "Assay"] },
+      { "canonical": "水分", "aliases": ["水份", "Water", "H2O", "水分(质量分数)"] },
+      { "canonical": "色度", "aliases": ["色度（铂钴）", "铂钴色度", "Color", "Hazen", "Pt-Co"] }
+    ],
+    "equivalent_methods": [
+      ["GB/T 6283-2008", "ISO 760"]
+    ]
+  },
+  "contract": {
+    "no": "【合同号】",
+    "annex": "【技术附件名】",
+    "quality_clause": "【到货检验/复检/不合格处理条款原文要点】",
+    "loc": "【合同 P.x §x】"
+  },
+  "specs": [
+    {
+      "title": "【采购质量规格书标题】",
+      "spec_no": "【规格书编号】",
+      "rev": "Rev.X",
+      "type": "customer_spec",
+      "priority": 2,
+      "loc": "【规格书 P.x §x 质量指标表】",
+      "items": [
+        { "name": "纯度", "unit": "%", "limit": "≥99.5", "method": "【方法编号或空】", "basis": "as_received", "category": "purity", "loc": "§4 表1 第1行" },
+        { "name": "水分", "unit": "%", "limit": "≤0.08", "method": "", "basis": "as_received", "category": "physical", "loc": "§4 表1 第2行" },
+        { "name": "色度", "unit": "Hazen", "limit": "≤10", "method": "", "basis": "as_received", "category": "appearance", "loc": "§4 表1 第3行" }
+      ]
+    },
+    {
+      "title": "【合同技术附件标题】",
+      "spec_no": "【附件编号】",
+      "rev": "",
+      "type": "contract_annex",
+      "priority": 1,
+      "loc": "【附件 §x】",
+      "items": [
+        { "name": "纯度", "unit": "%", "limit": "≥99.5", "method": "", "basis": "as_received", "category": "purity", "loc": "附件 §2.1" }
+      ]
+    }
+  ],
+  "standards": [
+    {
+      "title": "【适用标准名称】",
+      "code": "【标准号】",
+      "type": "standard",
+      "loc": "【表x】",
+      "items": [
+        { "name": "纯度", "unit": "%", "limit": "≥99.6", "method": "", "basis": "as_received", "category": "purity" }
+      ]
+    }
+  ],
+  "coas": [
+    {
+      "file": "【COA 文件名】",
+      "batch_no": "BATCH-0001",
+      "header": {
+        "product_name": "【产品名】",
+        "grade": null,
+        "producer": "【生产企业】",
+        "batch_no": "BATCH-0001",
+        "report_no": "【证书编号】",
+        "mfg_date": "2026-01-01",
+        "test_date": "2026-01-02",
+        "retest_date": null,
+        "test_standard": "【检测依据】",
+        "conclusion": "【检验结论原文】",
+        "packing": "【包装/数量】"
+      },
+      "signoff": { "cert_code": null, "inspector": null, "reviewer": null, "issuer": null },
+      "items": [
+        { "name": "纯度", "name_key": "纯度", "value": "99.7", "unit": "%", "method": "", "lod": "", "basis": "as_received", "loc": "指标表 第1行" },
+        { "name": "水分", "name_key": "水分", "value": "0.06", "unit": "%", "method": "", "lod": "", "basis": "as_received", "loc": "指标表 第2行" },
+        { "name": "色度", "name_key": "色度", "value": "6", "unit": "Hazen", "method": "", "lod": "", "basis": "as_received", "loc": "指标表 第3行" }
+      ]
+    }
+  ],
+  "history": [],
+  "review_log": []
+}

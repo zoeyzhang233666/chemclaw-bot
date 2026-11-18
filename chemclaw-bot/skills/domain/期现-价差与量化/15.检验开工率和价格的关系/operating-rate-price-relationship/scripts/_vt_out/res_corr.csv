@@ -1,0 +1,9 @@
+﻿relation,side,factor,horizon,ic,n
+开工率水平 util vs 前1w收益（过去）,past,开工率水平 util,1w,-0.04012881818236127,520
+开工率水平 util vs 前4w收益（过去）,past,开工率水平 util,4w,0.00274921328855025,517
+开工率变化 chg_pp vs 前1w收益（过去）,past,开工率变化 chg_pp,1w,-0.02914894822409274,519
+开工率变化 chg_pp vs 前4w收益（过去）,past,开工率变化 chg_pp,4w,0.008351411617121662,517
+开工率水平 util vs 未来1w收益,forward,开工率水平 util,1w,-0.0034512246432408847,520
+开工率水平 util vs 未来4w收益,forward,开工率水平 util,4w,-0.022955051893398554,520
+开工率变化 chg_pp vs 未来1w收益,forward,开工率变化 chg_pp,1w,0.02641568710932873,519
+开工率变化 chg_pp vs 未来4w收益,forward,开工率变化 chg_pp,4w,0.01349617418981581,519

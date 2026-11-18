@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "contract_no": "ZJSA-2026-0417-SIM",
+    "contract_date": "2026-04-17",
+    "title": "International Sales Contract — Heavy Soda Ash",
+    "review_title": "外贸销售合同审阅报告 / Foreign Trade Sales Contract Review",
+    "our_role": "seller",
+    "our_role_cn": "卖方（中国出口方）",
+    "counterparty_role": "buyer",
+    "counterparty_country": "Indonesia",
+    "product": "Heavy Soda Ash (Dense Sodium Carbonate)",
+    "product_cn": "重质纯碱（重灰）",
+    "hs_code": "2836.20.00",
+    "trade_term": "CIF Jakarta (Incoterms 2020)",
+    "incoterms_version": "2020",
+    "amount": "USD 268,000.00",
+    "quantity": "1,000 MT ±10%",
+    "review_date": "2026-04-20",
+    "reviewer": "（待填写）",
+    "review_scope": "Contract text, all Annexes, and the commercial logic of the transaction. No independent legal opinion, no site inspection, no verification of counterparty identity, credit standing or Indonesian regulatory status.",
+    "disclaimer": "本报告为业务风险提醒，不构成法律意见。所有法律适用结论均需由具备中国法与印度尼西亚法执业资格的法律顾问复核后使用。The report is a commercial risk flag list, not legal advice. Every legal characterisation must be confirmed by qualified PRC and Indonesian counsel before it is relied upon in negotiation or dispute.",
+    "version": "1.0"
+  },
+  "categories": [
+    {"key": "payment", "label": "付款", "label_en": "Payment", "color": "#2563eb", "icon": "credit-card"},
+    {"key": "delivery", "label": "交付与运输", "label_en": "Delivery & Transport", "color": "#0891b2", "icon": "ship"},
+    {"key": "quality", "label": "质量与检验", "label_en": "Quality & Inspection", "color": "#7c3aed", "icon": "flask"},
+    {"key": "claim", "label": "索赔与责任", "label_en": "Claims & Liability", "color": "#c2410c", "icon": "shield-alert"},
+    {"key": "compliance", "label": "合规与单证", "label_en": "Compliance & Documents", "color": "#b45309", "icon": "file-check"},
+    {"key": "dispute", "label": "争议解决与效力", "label_en": "Dispute & Validity", "color": "#be123c", "icon": "gavel"},
+    {"key": "missing", "label": "条款缺失", "label_en": "Missing Clause", "color": "#475569", "icon": "file-minus"}
+  ],
+  "severities": [
+    {"key": "high", "label": "高风险", "label_en": "High", "color": "#dc2626", "note": "可能导致货款无法收回、货物被扣、责任无法追索或争议解决失败"},
+    {"key": "medium", "label": "中风险", "label_en": "Medium", "color": "#d97706", "note": "可能导致成本增加、退货拒收、举证失败或议价能力下降"},
+    {"key": "low", "label": "低风险", "label_en": "Low", "color": "#059669", "note": "文本瑕疵或需澄清事项，短期不必然造成损失"}
+  ],
+  "issue_types": [
+    {"key": "ambiguous", "label": "表述不清", "label_en": "Ambiguous"},
+    {"key": "unilateral", "label": "单方有利", "label_en": "One-sided"},
+    {"key": "conflict", "label": "内部冲突", "label_en": "Internal conflict"},
+    {"key": "missing", "label": "条款缺失", "label_en": "Missing"},
+    {"key": "unbalanced", "label": "权利义务失衡", "label_en": "Unbalanced"},
+    {"key": "unenforceable", "label": "可能不可执行", "label_en": "Possibly unenforceable"},
+    {"key": "commercial", "label": "商业不合理", "label_en": "Commercially unreasonable"}
+  ]
+}

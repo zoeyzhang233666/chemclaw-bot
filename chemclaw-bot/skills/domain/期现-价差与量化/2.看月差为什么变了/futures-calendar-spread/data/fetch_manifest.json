@@ -1,0 +1,146 @@
+{
+  "product": "SA",
+  "fetched_at": "2026-10-20 17:38:07",
+  "source": "新浪财经 InnerFuturesNewService.getDailyKLine（公开 JSONP 接口）",
+  "contracts": {
+    "SA1901": {
+      "status": "missing"
+    },
+    "SA1903": {
+      "status": "missing"
+    },
+    "SA1905": {
+      "status": "missing"
+    },
+    "SA1909": {
+      "status": "missing"
+    },
+    "SA1912": {
+      "status": "missing"
+    },
+    "SA2001": {
+      "status": "missing"
+    },
+    "SA2003": {
+      "status": "missing"
+    },
+    "SA2005": {
+      "status": "ok",
+      "rows": 106,
+      "first_date": "2019-12-06",
+      "last_date": "2020-05-18",
+      "last_settle": 0.0,
+      "last_oi": 1717.0,
+      "file": "data\\raw\\SA2005.csv"
+    },
+    "SA2009": {
+      "status": "ok",
+      "rows": 188,
+      "first_date": "2019-12-06",
+      "last_date": "2020-09-11",
+      "last_settle": 1794.0,
+      "last_oi": 1406.0,
+      "file": "data\\raw\\SA2009.csv"
+    },
+    "SA2012": {
+      "status": "ok",
+      "rows": 156,
+      "first_date": "2019-12-25",
+      "last_date": "2020-12-07",
+      "last_settle": 1395.0,
+      "last_oi": 2000.0,
+      "file": "data\\raw\\SA2012.csv"
+    },
+    "SA2101": {
+      "status": "ok",
+      "rows": 223,
+      "first_date": "2020-02-12",
+      "last_date": "2021-01-15",
+      "last_settle": 1330.0,
+      "last_oi": 885.0,
+      "file": "data\\raw\\SA2101.csv"
+    },
+    "SA2103": {
+      "status": "ok",
+      "rows": 148,
+      "first_date": "2020-03-24",
+      "last_date": "2021-03-12",
+      "last_settle": 1710.0,
+      "last_oi": 2213.0,
+      "file": "data\\raw\\SA2103.csv"
+    },
+    "SA2105": {
+      "status": "ok",
+      "rows": 243,
+      "first_date": "2020-05-20",
+      "last_date": "2021-05-19",
+      "last_settle": 1807.0,
+      "last_oi": 2817.0,
+      "file": "data\\raw\\SA2105.csv"
+    },
+    "SA2109": {
+      "status": "ok",
+      "rows": 244,
+      "first_date": "2020-09-15",
+      "last_date": "2021-09-14",
+      "last_settle": 2711.0,
+      "last_oi": 3983.0,
+      "file": "data\\raw\\SA2109.csv"
+    },
+    "SA2112": {
+      "status": "ok",
+      "rows": 230,
+      "first_date": "2020-12-17",
+      "last_date": "2021-12-14",
+      "last_settle": 2496.0,
+      "last_oi": 1342.0,
+      "file": "data\\raw\\SA2112.csv"
+    },
+    "SA2201": {
+      "status": "ok",
+      "rows": 243,
+      "first_date": "2021-01-18",
+      "last_date": "2022-01-17",
+      "last_settle": 2349.0,
+      "last_oi": 973.0,
+      "file": "data\\raw\\SA2201.csv"
+    },
+    "SA2203": {
+      "status": "ok",
+      "rows": 242,
+      "first_date": "2021-03-16",
+      "last_date": "2022-03-14",
+      "last_settle": 2598.0,
+      "last_oi": 697.0,
+      "file": "data\\raw\\SA2203.csv"
+    },
+    "SA2205": {
+      "status": "ok",
+      "rows": 241,
+      "first_date": "2021-05-20",
+      "last_date": "2022-05-18",
+      "last_settle": 2834.0,
+      "last_oi": 1763.0,
+      "file": "data\\raw\\SA2205.csv"
+    },
+    "SA2209": {
+      "status": "ok",
+      "rows": 242,
+      "first_date": "2021-09-15",
+      "last_date": "2022-09-15",
+      "last_settle": 2627.0,
+      "last_oi": 1509.0,
+      "file": "data\\raw\\SA2209.csv"
+    },
+    "SA2212": {
+      "status": "ok",
+      "rows": 236,
+      "first_date": "2021-12-20",
+      "last_date": "2022-12-14",
+      "last_settle": 2807.0,
+      "last_oi": 815.0,
+      "file": "data\\raw\\SA2212.csv"
+    }
+  },
+  "live_quotes": {}
+}

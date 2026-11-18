@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "rule_id": "SIM-demo-drawdown-basis",
+    "title": "【模拟数据演示】库存回落且基差偏高 → 做多持有 8 日（非真实收益）",
+    "nl_rule": "演示用规则：模拟库存两周回落且模拟基差高于滚动 75% 分位时，次日开盘做多，持有 8 个交易日。",
+    "declared_before_running": true,
+    "data_is_simulated": true,
+    "simulation_note": "本示例全部数据由随机过程生成，仅用于验证回测引擎与报告管线，任何数字都不是真实策略收益。"
+  },
+  "provenance": {
+    "contract_spec": {
+      "basis": "simulated",
+      "note": "合成合约：乘数 10、最小变动 1"
+    },
+    "margin_rate": {
+      "basis": "assumed",
+      "value": 0.1,
+      "note": "演示假设"
+    },
+    "fee_per_lot": {
+      "basis": "assumed",
+      "value": 2.0,
+      "note": "演示假设"
+    },
+    "slippage_ticks": {
+      "basis": "assumed",
+      "value": 0.5,
+      "note": "演示假设"
+    },
+    "tick_size": {
+      "basis": "simulated",
+      "value": 1
+    },
+    "multiplier": {
+      "basis": "simulated",
+      "value": 10
+    },
+    "indicator_publication": {
+      "basis": "simulated",
+      "note": "合成发布时刻；前 60 周故意留空以演示缺口处理"
+    },
+    "spot_price": {
+      "basis": "simulated",
+      "note": "合成分现货价"
+    }
+  },
+  "universe": {
+    "exchange": "SIM",
+    "product_code": "XX",
+    "direction_mode": "long"
+  },
+  "contract": {
+    "selection": "kth_by_open_interest",
+    "k": 1,
+    "roll_rule": "open_interest_kth",
+    "no_trade_window_days_before_delivery": 10,
+    "roll_lead_days": 2
+  },
+  "timing": {
+    "signal_cutoff_same_day": "15:00",
+    "indicator_lag_sessions_min": 1,
+    "entry_lag_sessions": 1,
+    "prices": "open",
+    "same_day_release_price": null,
+    "spot_availability": "next_session"
+  },
+  "signal": {
+    "indicator": "sim_inventory_wan_ton",
+    "combine": "and",
+    "min_history": 6,
+    "ops": [
+      {
+        "type": "change_run",
+        "weeks": 2,
+        "direction": "down",
+        "label": "连续两周回落"
+      },
+      {
+        "type": "channel_change",
+        "n": 3,
+        "threshold": 0.0,
+        "channel_mode": "low",
+        "label": "处于近3期通道下沿"
+      }
+    ]
+  },
+  "price_filter": {
+    "enabled": true,
+    "type": "pct_quantile",
+    "side": "above",
+    "threshold": 0.75,
+    "lookback_points": 400,
+    "basis_mapping": "spot_minus_fut",
+    "warmup_min_points": 60
+  },
+  "entry": {
+    "order_type": "market_next_open",
+    "reentry_while_holding": "ignore"
+  },
+  "exit": {
+    "max_hold_sessions": 8,
+    "take_profit_pct": null,
+    "stop_loss_pct": null,
+    "exit_on_roll_when_contract_changes": false
+  },
+  "position": {
+    "sizing": "fixed_lots",
+    "lots": 1,
+    "capital": 100000,
+    "max_lots": 1,
+    "max_margin_utilisation": 0.5
+  },
+  "costs": {
+    "fee_mode": "per_lot",
+    "fee_value": 2.0,
+    "commission_min_per_lot": 0.0,
+    "slippage_ticks": 0.5,
+    "tick_size": 1,
+    "multiplier": 10,
+    "margin_rate": 0.1,
+    "cost_sensitivity": {
+      "fee_multiple": [
+        1,
+        2
+      ],
+      "slippage_ticks": [
+        0.5,
+        2.0
+      ]
+    }
+  },
+  "data": {
+    "indicator_file": "data/indicator_weekly.csv",
+    "contracts_file": "data/contracts_daily.csv",
+    "calendar_file": "data/calendar.csv",
+    "spot_file": "data/spot_daily.csv",
+    "publication_mode": "backfill_assumed",
+    "assumed_publish_time": "14:00"
+  },
+  "window": {},
+  "analysis": {
+    "metrics": {
+      "rf_annual": 0.0,
+      "sessions_per_year": 244
+    },
+    "sensitivity": {
+      "drawdown_n": [
+        2,
+        3,
+        4
+      ],
+      "change_run_weeks": [
+        2,
+        3
+      ],
+      "channel_threshold_units": [
+        0.0,
+        0.5
+      ],
+      "hold_sessions": [
+        5,
+        8,
+        12
+      ],
+      "basis_quantile": [
+        0.7,
+        0.75,
+        0.85
+      ]
+    },
+    "oos": {
+      "split_date": "2023-06-01"
+    }
+  }
+}

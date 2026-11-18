@@ -1,0 +1,62 @@
+{
+ "meta": {
+  "case_id": "PENDING",
+  "product": "PENDING",
+  "scope": "PENDING",
+  "window_start": "PENDING",
+  "window_end": "PENDING",
+  "window_label": "PENDING",
+  "collect_time": "PENDING",
+  "window_selection_rationale": "【待填】三个前置条件：①窗口内是否有可读官方原文 ②关键事件能否被≥2家独立机构记录 ③核心报道正文是否可读"
+ },
+ "sources": [
+  {
+   "src_id": "S01",
+   "name": "【示例】生态环境部（政策原文）",
+   "type": "政府公示",
+   "tier": "T0",
+   "site": "https://www.mee.gov.cn",
+   "list_url": "",
+   "access": "可读",
+   "access_note": "全文可读；Python urllib 常报 SSL 错误，改用 curl",
+   "rss": "无",
+   "value": "C1 级政策原文来源",
+   "in_window_items": 1,
+   "reliability": "A 官方原文",
+   "note": "列表页可能是 iframe"
+  },
+  {
+   "src_id": "S02",
+   "name": "【示例】隆众资讯",
+   "type": "行业资讯",
+   "tier": "T1",
+   "site": "https://www.oilchem.net",
+   "list_url": "https://www.oilchem.net/",
+   "access": "受限",
+   "access_note": "正文对非会员拦截，仅返回约122字符后提示注册；连续请求返回 HTTP 451/429",
+   "rss": "无",
+   "value": "时间线与装置动态最全，但多数只能取到标题级",
+   "in_window_items": 30,
+   "reliability": "A 一手资讯机构（正文受限）",
+   "note": "响应强制 Brotli；meta publishTime 是抓取时间不可用作发布时间"
+  },
+  {
+   "src_id": "S03",
+   "name": "【示例】新浪财经（转载通道）",
+   "type": "综合财经媒体",
+   "tier": "T2",
+   "site": "https://finance.sina.com.cn",
+   "list_url": "",
+   "access": "可读",
+   "access_note": "全文可读",
+   "rss": "无",
+   "value": "常全文转载一手资讯机构稿件，是拿到可读正文的主要通道",
+   "in_window_items": 6,
+   "reliability": "B 转载媒体",
+   "note": "文首“来源：XXX”是追溯首发方的关键；转载不增加确认度"
+  }
+ ],
+ "limitations": [
+  "【待填】全局访问限制，逐条列出：哪些站点不可访问、哪些需登录、哪些只能取标题"
+ ]
+}

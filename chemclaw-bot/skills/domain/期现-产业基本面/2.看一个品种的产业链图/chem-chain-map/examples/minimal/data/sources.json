@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {
+      "id": "S01",
+      "title": "演示用来源（虚构）",
+      "publisher": "本 Skill 示例",
+      "date": "2026-10-20",
+      "url": "https://example.com/demo",
+      "tier": "B",
+      "verified": "opened",
+      "key_quotes": [
+        "本示例为工具链验证用，所有数值均为演示值，不可用于任何真实研究。"
+      ]
+    }
+  ]
+}
