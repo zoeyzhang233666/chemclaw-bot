@@ -45,6 +45,40 @@ test('pair #1358 writes a full attempt before a delivery can be confirmed', asyn
   assert.deepEqual(await writer.delivered({ a: 'a', b: 'b', id: 'x-1', sessionId: 'b-chat' }), { reused: true })
 })
 
+test('pair #1358 merged replacement preserves old confirmed text until its own DSH receipt', async t => {
+  const home = setup(t)
+  const writer = createPairDeliveryJournal({ home, assertWriter: async () => true })
+  await writer.seed('a', 'b')
+  await writer.begin(message('merged-1'))
+  await writer.delivered({ a: 'a', b: 'b', id: 'merged-1', sessionId: 'b-chat' })
+  const changed = { ...message('merged-1'), text: 'Supplier check with revised date', merged: true }
+  assert.equal((await writer.begin(changed)).seq, 3)
+  const pending = await writer.inspect('a', 'b')
+  assert.deepEqual(pending.delivered.map(row => row.text), ['Check supplier records'],
+    'the earlier delivered version remains visible until the replacement is confirmed')
+  assert.deepEqual(pending.uncertain.map(row => row.text), [changed.text])
+  const resumed = createPairDeliveryJournal({ home, assertWriter: async () => true })
+  await assert.rejects(resumed.begin(changed), /cannot merge an unknown or uncertain/)
+  await resumed.delivered({ a: 'b', b: 'a', id: 'merged-1', sessionId: 'b-chat' })
+  const confirmed = await resumed.inspect('a', 'b')
+  assert.deepEqual(confirmed.delivered.map(row => row.text), [changed.text])
+  assert.deepEqual(confirmed.uncertain, [])
+  assert.deepEqual((await readLedger(home, 'pair-a-b')).records.map(row => [row.seq, row.event ?? 'message']),
+    [[1, 'message'], [2, 'delivered'], [3, 'message'], [4, 'delivered']])
+})
+
+test('pair #1358 refuses merge spoofing and keeps an uncertain prior attempt untouched', async t => {
+  const home = setup(t)
+  const writer = createPairDeliveryJournal({ home, assertWriter: async () => true })
+  await writer.seed('a', 'b')
+  await writer.begin(message('same-1'))
+  await assert.rejects(writer.begin({ ...message('same-1'), text: 'new text', merged: true }), /cannot merge/)
+  await writer.delivered({ a: 'a', b: 'b', id: 'same-1', sessionId: 'b' })
+  await assert.rejects(writer.begin({ ...message('same-1'), from: 'b', to: 'a', text: 'spoof', merged: true }), /cannot merge/)
+  await assert.rejects(writer.begin({ ...message('same-1'), text: 'Check supplier records', merged: true }), /no changed/)
+  assert.deepEqual((await writer.inspect('a', 'b')).delivered.map(row => row.text), ['Check supplier records'])
+})
+
 test('pair #1358 never resends an attempt whose DSH outcome is uncertain', async t => {
   const home = setup(t)
   const initial = createPairDeliveryJournal({ home, assertWriter: async () => true })

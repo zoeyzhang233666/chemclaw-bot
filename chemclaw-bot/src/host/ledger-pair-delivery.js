@@ -24,6 +24,7 @@ function verified(book) {
   }
   const messages = new Map()
   const acknowledged = new Map()
+  const shown = new Map()
   for (const [index, row] of book.records.entries()) {
     if (row?.seq !== index + 1) throw new Error('Pair Ledger sequence is inconsistent')
     valid(row.id, SAFE_MESSAGE, 'exchange id')
@@ -32,8 +33,17 @@ function verified(book) {
           typeof row.from !== 'string' || typeof row.to !== 'string') {
         throw new Error('Pair Ledger has an invalid message record')
       }
+      const previous = messages.get(row.id)
+      if (previous !== undefined && (row.merged !== true ||
+          acknowledged.get(row.id) !== previous.seq ||
+          previous.from !== row.from || previous.to !== row.to || previous.role !== row.role)) {
+        throw new Error('Pair Ledger contains an unsafe repeated exchange')
+      }
       messages.set(row.id, row)
-      if (row.delivered === true) acknowledged.set(row.id, row.seq)
+      if (row.delivered === true) {
+        acknowledged.set(row.id, row.seq)
+        shown.set(row.id, row)
+      }
     } else if (row.event === 'delivered') {
       const latest = messages.get(row.id)
       if (latest === undefined || row.attemptSeq !== latest.seq ||
@@ -41,9 +51,12 @@ function verified(book) {
         throw new Error('Pair Ledger has a mismatched delivery receipt')
       }
       acknowledged.set(row.id, row.attemptSeq)
+      shown.set(row.id, latest)
     } else throw new Error('Pair Ledger has an unknown event')
   }
-  const delivered = [...messages.values()].filter(row => acknowledged.get(row.id) === row.seq)
+  // #1358: a replacement not yet delivered never hides the earlier delivered
+  // text. An uncertain replacement remains pending and is not automatically resent.
+  const delivered = [...shown.values()]
   const uncertain = [...messages.values()].filter(row => acknowledged.get(row.id) !== row.seq)
   return { rows: book.records, messages, delivered, uncertain }
 }
@@ -86,12 +99,24 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
     if (pairBook(from, to) !== pairBook(a, b)) throw new Error('Pair Ledger has the wrong sender or receiver')
     const book = pairBook(a, b)
     const current = verified(await readLedger(home, book))
-    if (current.messages.has(id)) throw new Error('Pair Ledger exchange was attempted already; cannot replay an uncertain delivery')
+    const existing = current.messages.get(id)
+    if (optional.merged === true) {
+      if (existing === undefined || existing.from !== from || existing.to !== to ||
+          existing.role !== role || current.uncertain.some(row => row.id === id)) {
+        throw new Error('Pair Ledger cannot merge an unknown or uncertain exchange')
+      }
+      if (existing.text === text) throw new Error('Pair Ledger merge has no changed message')
+    } else if (existing !== undefined) {
+      throw new Error('Pair Ledger exchange was attempted already; cannot replay an uncertain delivery')
+    }
     const seq = current.rows.length + 1
     const record = { seq, id, from, to, role, text, time: Date.now(),
       ...(typeof optional.replyTo === 'string' ? { replyTo: optional.replyTo } : {}),
       ...(optional.audience === 'user' ? { audience: 'user' } : {}),
       ...(typeof optional.roomId === 'string' ? { roomId: optional.roomId } : {}),
+      ...(optional.merged === true ? { merged: true } : {}),
+      ...(Number.isSafeInteger(optional.length) ? { length: optional.length } : {}),
+      ...(Array.isArray(optional.files) ? { files: optional.files } : {}),
     }
     await ledger.append(book, record)
     return { book, seq, id }
@@ -103,7 +128,7 @@ export function createPairDeliveryJournal({ home, assertWriter } = {}) {
     const current = verified(await readLedger(home, book))
     const attempt = current.messages.get(id)
     if (attempt === undefined) throw new Error('No recorded pair delivery attempt')
-    if (current.delivered.some(row => row.id === id)) return { reused: true }
+    if (current.delivered.some(row => row.id === id && row.seq === attempt.seq)) return { reused: true }
     await ledger.append(book, { seq: current.rows.length + 1, event: 'delivered',
       id, attemptSeq: attempt.seq, sessionId, time: Date.now() })
     return { reused: false }

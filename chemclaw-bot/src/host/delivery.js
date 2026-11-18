@@ -104,8 +104,8 @@ export function install(rt) {
     }
     const targetSessionId = sessionId ?? rt.chatOf(toId)
     const pairRole = fromId !== undefined && from !== undefined && recordExchange && EXCHANGE_ROLES.has(role)
-    if (pairJournal !== undefined && pairRole && (merged || resent)) {
-      throw new Error('Pair Ledger merged/resend delivery requires explicit recovery review; no automatic replay')
+    if (pairJournal !== undefined && pairRole && resent) {
+      throw new Error('Pair Ledger resent delivery requires explicit recovery review; no automatic replay')
     }
     const pairWrite = pairJournal !== undefined && pairRole && !deferred && !resumed && !retried
     if (!pairWrite && recordExchange && EXCHANGE_ROLES.has(role) && !deferred && !resumed && !retried && !resent) {
@@ -126,7 +126,7 @@ export function install(rt) {
       // The whole message and id are fsynced before any DSH steer/followup.
       // A repeated id with an uncertain attempt is refused, not replayed.
       await pairJournal.begin({ a: fromId, b: toId, id: exchangeId,
-        from: fromId, to: toId, role, text, replyTo, roomId, audience })
+        from: fromId, to: toId, role, text, replyTo, roomId, audience, merged, length, files })
     }
     // A steered message cuts into a running turn at its next step; a follow-up
     // queues for the next turn (see turns.js for how each is routed).
