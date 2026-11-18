@@ -5072,9 +5072,9 @@ function AppAccessCall({ sessionId, callId, roster, actions, heldCards, hooks })
   if (heldCards?.[heldCardKey("computer-app", ask.id)] > 0) return (0, import_react7.createElement)(CellEmpty);
   return (0, import_react7.createElement)(PendingAppAccess, { key: ask.id, ask: { ...ask, botName: bot.name }, actions, inline: true });
 }
-function AppAccessDock({ sessionId, useRoster, useCards, useHeldCards, useComputer: useComputer2, actions }) {
+function AppAccessDock({ sessionId, useRoster, useCards, useHeldCards, useComputer, actions }) {
   const bot = useRoster((value2) => value2.byId[sessionId]);
-  const ask = useComputer2?.((map) => bot ? Object.values(map.asks ?? {}).find((item) => item.botId === bot.id) : void 0);
+  const ask = useComputer?.((map) => bot ? Object.values(map.asks ?? {}).find((item) => item.botId === bot.id) : void 0);
   const drawn = useCards?.((state) => ask?.callId !== void 0 && state[sessionId]?.[ask.callId] > 0) === true;
   const held = useHeldCards?.((state) => state[sessionId]?.[heldCardKey("computer-app", ask?.id)] > 0) === true;
   if (!bot || ask === void 0 || !actions.computerAppAnswer || drawn && !held) return null;
@@ -5155,9 +5155,9 @@ function ComputerHandoffCall({ sessionId, callId, roster, actions, heldCards, ho
   if (heldCards?.[heldCardKey("handoff", callId)] > 0) return (0, import_react7.createElement)(CellEmpty);
   return (0, import_react7.createElement)(PendingComputerHandoff, { key: callId, sessionId, bot, hold, actions, inline: true });
 }
-function ComputerHandoffDock({ sessionId, useRoster, useCards, useHeldCards, useComputer: useComputer2, actions }) {
+function ComputerHandoffDock({ sessionId, useRoster, useCards, useHeldCards, useComputer, actions }) {
   const bot = useRoster((value2) => value2.byId[sessionId]);
-  const hold = useComputer2?.((map) => bot ? map.holds?.[bot.id] : void 0);
+  const hold = useComputer?.((map) => bot ? map.holds?.[bot.id] : void 0);
   const holdKey = hold?.callId ?? hold?.id;
   const drawn = useCards?.((state) => state[sessionId]?.[holdKey] > 0) === true;
   const held = useHeldCards?.((state) => state[sessionId]?.[heldCardKey("handoff", holdKey)] > 0) === true;
@@ -5183,8 +5183,8 @@ function SettledComputerHandoff({ handoff }) {
     )
   );
 }
-function ComputerIndicator({ useComputer: useComputer2, useRoster, actions }) {
-  const live = useComputer2?.((map) => map) ?? {};
+function ComputerIndicator({ useComputer, useRoster, actions }) {
+  const live = useComputer?.((map) => map) ?? {};
   const roster = useRoster((value2) => value2);
   if (typeof globalThis.dsBotApp?.computer === "function") return null;
   const leases = live.leases ?? [];
@@ -12349,7 +12349,7 @@ function renderCall(call2, { sessionId, eventSeq, roster, actions, useUi, useWor
       return isComputerToolName(tool) ? (0, import_react25.createElement)(ComputerCallRow, { sessionId, call: call2, roster, actions, hooks }) : null;
   }
 }
-function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, useBrowserHolds, useBrowserTabs, useBrowserPages, useComputer: useComputer2, actions, openFile }) {
+function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, useBrowserHolds, useBrowserTabs, useBrowserPages, useComputer, actions, openFile }) {
   const roster = useRoster((value2) => value2);
   const heldCards = useHeldCards?.((state) => state[sessionId]);
   const root = node.data.root;
@@ -12367,7 +12367,7 @@ function ToolCell({ node, sessionId, useRoster, useUi, useWork, useHeldCards, us
   useLiveNote(actions, sessionId, `tool:${root.callId ?? node.key}`, note);
   useShownCards(actions, sessionId, drawn.filter((call2) => CARDS.has(toolName(call2)) && call2.callId).map((call2) => call2.callId));
   if (drawn.length === 0) return null;
-  const env = { sessionId, eventSeq: root.seq, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages, useComputer: useComputer2 } };
+  const env = { sessionId, eventSeq: root.seq, roster, actions, useUi, useWork, findBot, heldCards, openFile, hooks: { useBrowserHolds, useBrowserTabs, useBrowserPages, useComputer } };
   return (0, import_react25.createElement)(import_react25.Fragment, null, drawn.map((call2, index) => (0, import_react25.createElement)(import_react25.Fragment, { key: call2.callId ?? index }, renderCall(call2, env))));
 }
 
@@ -21665,7 +21665,7 @@ function RunStats({ bot, part, running, actions }) {
     ))
   );
 }
-function BrowserCards({ bot, sessionId, roster, actions, useBrowserTabs, useBrowserPages, useComputer: useComputer2 }) {
+function BrowserCards({ bot, sessionId, roster, actions, useBrowserTabs, useBrowserPages }) {
   const state = useBrowserTabs((map) => map[bot.id] ?? EMPTY_TABS);
   const pages = useBrowserPages((map) => map);
   (0, import_react57.useEffect)(() => {
@@ -21822,7 +21822,7 @@ function GroupOverview({ room: room2, roster, actions, usage, useWork, openSetti
     ) : null
   ];
 }
-function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages }) {
+function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useComputer }) {
   const owner = roster.byId[sessionId];
   const part = owner ? currentPart(owner) : sessionId;
   const isMainBot = isMainOf(roster, owner?.id);
@@ -22858,7 +22858,7 @@ function ImportCard({ flow, page, busy, onApply, onCancel, onCloseAndImport, onD
     )
   ));
 }
-function BotPanel({ pane, leaving, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useBrowserHolds, useComputer: useComputer2 }) {
+function BotPanel({ pane, leaving, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useBrowserHolds, useComputer }) {
   const bot = roster.byId[pane.id];
   const canBrowse = Boolean(bot && roster.browser === true && actions.browserShow);
   const sideChats = bot ? sideChatsOf(roster, bot.id) : [];
@@ -23116,7 +23116,7 @@ function BotPanel({ pane, leaving, roster, actions, useSessions, useSessionStatu
         useWork,
         useBrowserTabs,
         useBrowserPages,
-        useComputer: useComputer2
+        useComputer
       })
     )
   );
@@ -23257,7 +23257,7 @@ function SettingsOverlay({ useRoster, useUi, useSurface, useRegistry, useUpdate,
   const [settings, leaving] = useLinger(open, DIALOG_EXIT_MS);
   return settings ? (0, import_react_dom12.createPortal)((0, import_react60.createElement)(SettingsDialog, { page: settings.page, id: settings.id, roster, mode, actions, useUpdate, leaving }), document.body) : null;
 }
-function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity, useWork, useRegistry, useBrowserPages, useBrowserTabs, useBrowserHolds, useComputer: useComputer2, actions }) {
+function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity, useWork, useRegistry, useBrowserPages, useBrowserTabs, useBrowserHolds, useComputer, actions }) {
   const roster = useRoster((value2) => value2);
   const ui2 = useUi((value2) => value2);
   useRegistry((value2) => value2);
@@ -23291,7 +23291,7 @@ function Overlays({ useRoster, useUi, useSessions, useSessionStatus, useActivity
   return (0, import_react60.createElement)(
     import_react60.Fragment,
     null,
-    pane ? (0, import_react_dom12.createPortal)((0, import_react60.createElement)(BotPanel, { pane, leaving: open === null, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useBrowserHolds, useComputer: useComputer2 }), document.body) : null,
+    pane ? (0, import_react_dom12.createPortal)((0, import_react60.createElement)(BotPanel, { pane, leaving: open === null, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useBrowserHolds, useComputer }), document.body) : null,
     ui2.newChat ? (0, import_react_dom12.createPortal)((0, import_react60.createElement)(NewChat, { key: ui2.newChat, mode: ui2.newChat, roster, actions }), document.body) : null,
     ui2.palette ? (0, import_react_dom12.createPortal)((0, import_react60.createElement)(CommandPalette, { key: ui2.palette.token, start: ui2.palette.query, token: ui2.palette.token, roster, actions, useSessions }), document.body) : null,
     ui2.exchange ? (0, import_react_dom12.createPortal)((0, import_react60.createElement)(ExchangeDialog, { pair: ui2.exchange, roster, actions }), document.body) : null,

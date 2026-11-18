@@ -70,7 +70,7 @@ function RunStats({ bot, part, running, actions }) {
 
 // The Bot's browser inside the details page: its tabs as small window cards on
 // Desktop, a pointer there on web.
-function BrowserCards({ bot, sessionId, roster, actions, useBrowserTabs, useBrowserPages, useComputer }) {
+function BrowserCards({ bot, sessionId, roster, actions, useBrowserTabs, useBrowserPages }) {
   const state = useBrowserTabs(map => map[bot.id] ?? EMPTY_TABS)
   const pages = useBrowserPages(map => map)
   useEffect(() => { actions.browserEnsure?.(bot.id) }, [bot.id])
@@ -175,7 +175,7 @@ function GroupOverview({ room, roster, actions, usage, useWork, openSettings }) 
   ]
 }
 
-export function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages }) {
+export function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, roster, actions, useSessions, useSessionStatus, useActivity, useWork, useBrowserTabs, useBrowserPages, useComputer }) {
   const owner = roster.byId[sessionId]
   const part = owner ? currentPart(owner) : sessionId
   const isMainBot = isMainOf(roster, owner?.id)
