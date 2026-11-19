@@ -10,10 +10,16 @@ export function classicNativeViewState(phase, block) {
   if (block?.isError === true || block?.error) return { status: 'failed' }
   const reply = resultText(block)
   if (!/^The view is on screen\.$/u.test(reply.trim())) return { status: 'rejected', reply }
-  const args = block?.args
-  const raw = typeof block?.argsRaw === 'string' ? (() => { try { return JSON.parse(block.argsRaw) } catch { return {} } })() : {}
-  const title = typeof args?.value === 'function' ? args.value('title') : raw.title
-  const view = typeof args?.value === 'function' ? args.value('view') : raw.view
+  // Upstream DSH ToolResultNode wraps the dispatched Tool call in `call`.
+  // A settled result has its arguments at block.call.argsRaw, not block.argsRaw.
+  const call = block?.call ?? block
+  let raw = {}
+  if (typeof call?.argsRaw === 'string') {
+    try { raw = JSON.parse(call.argsRaw) } catch { /* validation below rejects it */ }
+  }
+  const args = call?.args
+  const title = raw?.title ?? (typeof args?.value === 'function' ? args.value('title') : undefined)
+  const view = raw?.view ?? (typeof args?.value === 'function' ? args.value('view') : undefined)
   const checked = checkShownView(title, view)
   if (checked.error !== undefined || checked.interactive) return { status: 'invalid', error: checked.error ?? 'This view needs a submit action.' }
   return { status: 'ready', title: checked.title, view: checked.view }
