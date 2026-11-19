@@ -24810,16 +24810,17 @@ function classicNativeViewState(phase, block) {
   if (block?.isError === true || block?.error) return { status: "failed" };
   const reply = resultText(block);
   if (!/^The view is on screen\.$/u.test(reply.trim())) return { status: "rejected", reply };
-  const args = block?.args;
-  const raw = typeof block?.argsRaw === "string" ? (() => {
+  const call2 = block?.call ?? block;
+  let raw = {};
+  if (typeof call2?.argsRaw === "string") {
     try {
-      return JSON.parse(block.argsRaw);
+      raw = JSON.parse(call2.argsRaw);
     } catch {
-      return {};
     }
-  })() : {};
-  const title = typeof args?.value === "function" ? args.value("title") : raw.title;
-  const view = typeof args?.value === "function" ? args.value("view") : raw.view;
+  }
+  const args = call2?.args;
+  const title = raw?.title ?? (typeof args?.value === "function" ? args.value("title") : void 0);
+  const view = raw?.view ?? (typeof args?.value === "function" ? args.value("view") : void 0);
   const checked = checkShownView(title, view);
   if (checked.error !== void 0 || checked.interactive) return { status: "invalid", error: checked.error ?? "This view needs a submit action." };
   return { status: "ready", title: checked.title, view: checked.view };
@@ -24829,11 +24830,12 @@ function classicNativeViewState(phase, block) {
 var import_react62 = require("react");
 function ClassicShowView({ phase, block, callId, inspect }) {
   const state = classicNativeViewState(phase, block);
+  const call2 = block?.call ?? block;
   const details = (0, import_react62.createElement)(
     "details",
     { className: "bt-classic-view-details" },
     (0, import_react62.createElement)("summary", null, "show_view · ", callId),
-    (0, import_react62.createElement)("pre", null, typeof block?.argsRaw === "string" ? block.argsRaw : JSON.stringify(block?.args?.value?.("view") ?? {}, null, 2)),
+    (0, import_react62.createElement)("pre", null, typeof call2?.argsRaw === "string" ? call2.argsRaw : JSON.stringify(call2?.args?.value?.("view") ?? {}, null, 2)),
     state.status !== "ready" && state.reply ? (0, import_react62.createElement)("p", null, state.reply) : null,
     inspect ? (0, import_react62.createElement)("button", { type: "button", onClick: inspect }, "Inspect") : null
   );
