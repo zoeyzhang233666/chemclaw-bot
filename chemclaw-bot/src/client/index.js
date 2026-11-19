@@ -543,10 +543,19 @@ export function apply(ctx) {
       }
       const home = () => {
         const snapshot = roster.getSnapshot()
-        if (stillHere() && snapshot.mainBotId && from !== undefined
-          && snapshot.byId[from] === undefined && snapshot.roomsById[from] === undefined) {
+        if (!stillHere() || !snapshot.mainBotId || from === undefined
+          || snapshot.byId[from] !== undefined || snapshot.roomsById[from] !== undefined) return
+        const target = partFor(snapshot.mainBotId)
+        if (ctx.sessions.list.getSnapshot().byId[target] === undefined) {
           actions.openSession(snapshot.mainBotId)
+          return
         }
+        // A quick follow-up click should not mount a sidebar for an intermediate Session.
+        void ctx.sessions.using(target, { source: 'chemclawHome', signal: navigation }, () => {
+          if (stillHere()) actions.openSession(snapshot.mainBotId)
+        }).catch(error => {
+          if (stillHere()) actions.reportError(error, 'expert-team-home')
+        })
       }
       if (roster.getSnapshot().ready) home()
       else {

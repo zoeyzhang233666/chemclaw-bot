@@ -25314,9 +25314,17 @@ function apply(ctx) {
       }
       const home = () => {
         const snapshot = roster.getSnapshot();
-        if (stillHere() && snapshot.mainBotId && from !== void 0 && snapshot.byId[from] === void 0 && snapshot.roomsById[from] === void 0) {
+        if (!stillHere() || !snapshot.mainBotId || from === void 0 || snapshot.byId[from] !== void 0 || snapshot.roomsById[from] !== void 0) return;
+        const target = partFor(snapshot.mainBotId);
+        if (ctx.sessions.list.getSnapshot().byId[target] === void 0) {
           actions.openSession(snapshot.mainBotId);
+          return;
         }
+        void ctx.sessions.using(target, { source: "chemclawHome", signal: navigation }, () => {
+          if (stillHere()) actions.openSession(snapshot.mainBotId);
+        }).catch((error) => {
+          if (stillHere()) actions.reportError(error, "expert-team-home");
+        });
       };
       if (roster.getSnapshot().ready) home();
       else {
