@@ -53,6 +53,7 @@ import { noticeApprovals } from './approval-notices.js'
 import { listedOpener } from './open-listed.js'
 import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, rightColumnOpen } from './right-panel.js'
 import { createGenuiSurfaces } from './genui-surfaces.js'
+import { ClassicShowView } from './classic-native-view.js'
 
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'slots', 'theme', 'layout']
 
@@ -856,6 +857,14 @@ export function apply(ctx) {
     name, ...options, ...(options.priority === undefined ? {} : { priority: freePriority(ctx.slots.entries(name), options) }),
   }, component))
   const installHeader = () => ctx.slots.inject('conversation.session.header', () => installHeaderNavigation(ctx.slots, face, HeaderPill, BOT_PRIORITY))
+
+  // DSH owns the native Tool-call tree, its execution details and all ordinary
+  // call rows. Only show_view gets the original ChemClaw card renderer.
+  // This registration lives outside the Bot conversation shadows so Classic
+  // keeps native tool inspection, reasoning and full Markdown transcripts.
+  ctx.slots.inject('tool.call.toolview', () => ctx.slots.register({
+    name: 'tool.call.toolview', key: 'show_view',
+  }, ClassicShowView))
 
   // Brand slots and theme tokens belong to both surfaces; their lifetime is the
   // plugin's, independently of which session or native control is on screen.
