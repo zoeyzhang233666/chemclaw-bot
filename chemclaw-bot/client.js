@@ -24834,27 +24834,25 @@ function classicNativeViewState(phase, block) {
 
 // src/client/classic-native-view.js
 var import_react62 = require("react");
-function ClassicShowView({ phase, block, callId, inspect }) {
+function ClassicShowView({ phase, block }) {
   const state = classicNativeViewState(phase, block);
-  const call2 = block?.call ?? block;
-  const details = (0, import_react62.createElement)(
-    "details",
-    { className: "bt-classic-view-details" },
-    (0, import_react62.createElement)("summary", null, "show_view · ", callId),
-    (0, import_react62.createElement)("pre", null, typeof call2?.argsRaw === "string" ? call2.argsRaw : JSON.stringify(call2?.args?.value?.("view") ?? {}, null, 2)),
-    state.status !== "ready" && state.reply ? (0, import_react62.createElement)("p", null, state.reply) : null,
-    inspect ? (0, import_react62.createElement)("button", { type: "button", onClick: inspect }, "Inspect") : null
-  );
-  return (0, import_react62.createElement)(
-    "div",
-    { className: "bt-classic-native-view", "data-classic-native-view": state.status },
-    state.status === "ready" ? (0, import_react62.createElement)("div", { className: "bt-q-inline" }, (0, import_react62.createElement)(DeliveredView, { title: state.title, view: state.view })) : (0, import_react62.createElement)(
+  if (state.status === "pending") return null;
+  if (state.status === "ready") {
+    return (0, import_react62.createElement)(
       "div",
-      { className: "bt-classic-view-feedback", role: "status" },
-      state.status === "pending" ? "Preparing view…" : "View was not displayed. The text answer is preserved."
-    ),
-    details
-  );
+      { className: "bt-classic-native-view", "data-classic-native-view": "ready" },
+      (0, import_react62.createElement)(
+        "div",
+        { className: "bt-q-inline" },
+        (0, import_react62.createElement)(DeliveredView, { title: state.title, view: state.view })
+      )
+    );
+  }
+  return (0, import_react62.createElement)("div", {
+    className: "bt-classic-native-view bt-classic-view-feedback",
+    "data-classic-native-view": state.status,
+    role: "status"
+  }, "交互式内容暂时无法展示，文字回答仍然保留。");
 }
 
 // src/client/index.js
