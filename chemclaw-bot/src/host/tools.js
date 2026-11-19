@@ -690,7 +690,7 @@ export function install(rt) {
       const classic = !group && !rt.chatOwners.has(id) && id !== undefined
         && rt.roomOf(id) === undefined && exec.agent?.session?.id === id
         && exec.agent.session.header?.parentSession === undefined
-      if (!group && !rt.chatOwners.has(id) && !classic) return `Only root user conversations and team Bots can use show_view.`
+      if (!group && !rt.chatOwners.has(id) && !classic) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
       if (!nativeChartPayloadsUsable(checked.view)) return refuse('The chart contains no drawable numeric observations. Do not submit the same empty chart again; show a sourced table or explain that data is missing, without filling gaps with zero.')
