@@ -330,6 +330,16 @@ function decide(body) {
   const userText = textOf(last?.content).trim()
   const isolation = /^(?:User: )?isolation-158-slow-(expert|room)\b/m.exec(userText)
   if (isolation) return [{ ...text(`isolation-158-${isolation[1]}-output ${'still streaming. '.repeat(10)}`), slow: true }]
+  // Regression: an ordinary Classic root conversation must give a readable
+  // answer alongside the fast native card. Never route this to a group relay.
+  if (userText.startsWith('classic-native-ui-check')) {
+    if (!tools.has('show_view')) return [text('CLASSIC_NATIVE_MISSING_TOOL')]
+    return [text('CLASSIC_NATIVE_PROSE_VISIBLE: This normal answer must remain readable.'),
+      tool('show_view', {
+        title: 'Classic native acceptance', await_reply: false,
+        view: { type: 'metric', label: 'Native fixture metric', value: 42 },
+      })]
+  }
   if (userText.startsWith('[chemclaw-visual-delivery turn=')) return [text('```dsh-ui\n' + JSON.stringify({ title: 'Inline answer', items: [{ type: 'text', text: 'Synthetic compact answer card.' }] }) + '\n```')]
   // DSH prepends context to the first real user turn of a blank session.
   // Recognize the test command on its own first line, not only the entire payload.
