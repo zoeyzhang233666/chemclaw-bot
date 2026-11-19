@@ -88,6 +88,16 @@ export function apply(ctx) {
   }
   // A navigation this plugin started: the surface effect trusts the id it lands on.
   let expected = null
+  let surfaceNavigation
+  let classicSession
+  try { classicSession = localStorage.getItem(STORAGE.classicSession) ?? undefined } catch { /* storage unavailable */ }
+  const rememberClassic = (snapshot, id) => {
+    if (!snapshot.ready || id === undefined || id === classicSession || isTeamSession(snapshot, id)) return
+    classicSession = id
+    try { localStorage.setItem(STORAGE.classicSession, id) } catch { /* storage unavailable */ }
+  }
+  const isTeamSession = (snapshot, id) => snapshot.byId[id] !== undefined || snapshot.roomsById[id] !== undefined
+    || snapshot.rooms.some(room => room.parts?.includes(id)) || isAgentSessionId(id)
   const setPlain = (plain) => surface.set(state => (state.plain === plain ? state : { ...state, plain }))
   // A DSH Agent Session shows the plain conversation: the Bot details and browser
   // panels would follow it and report it is not on the team, so they close.
@@ -474,8 +484,14 @@ export function apply(ctx) {
     },
     // `last` is the Bot conversation the view held before it cleared: when that part
     // was archived for a fresh one, the view goes on in the fresh one.
-    landOn: async (id, last) => {
+    landOn: async (id, last, from, blank) => {
+      const transition = surfaceNavigation
+      const stillHere = () => surfaceNavigation === transition && surface.getSnapshot().mode === 'bot'
+        && (transition?.mode !== 'agent' || transition.signal.aborted)
+        && mainView() === from && (!blank || ctx.sessions.list.getSnapshot().byId[from]?.blank === true)
+      if (!stillHere()) return
       if (last) await pull().catch(() => {})
+      if (!stillHere()) return
       const bot = last ? roster.getSnapshot().byId[last.botId] : undefined
       setPlain(false)
       const target = bot && currentPart(bot) !== last.sessionId ? currentPart(bot) : partFor(id)
@@ -485,23 +501,50 @@ export function apply(ctx) {
     toggleSidebar: () => { ctx.layout.toggleSidebar() },
     // Agent mode hands the surface back to the shell; everything open on the Bot
     // surface closes first so nothing stale reopens on the way back.
-    setSurface: (mode) => {
+    setSurface: async (mode) => {
       if (mode !== 'bot' && mode !== 'agent') return
       if (surface.getSnapshot().mode === mode) return
+      const navigation = ctx.layout.beginNavigation()
+      surfaceNavigation = { mode, signal: navigation }
+      show.cancel()
+      expected = null
+      const from = mainView()
+      const stillHere = () => !navigation.aborted && mainView() === from
       if (mode === 'agent') {
+        const snapshot = roster.getSnapshot()
+        if (from !== undefined && (isTeamSession(snapshot, from) || (!snapshot.ready && from !== classicSession))) {
+          try {
+            const saved = ctx.sessions.list.getSnapshot().byId[classicSession]
+            const archived = workspaces?.list?.getSnapshot()?.archivedSessionIds ?? []
+            const target = saved && !archived.includes(classicSession) && !isTeamSession(snapshot, classicSession)
+              ? classicSession
+              : await ctx.sessions.create({ workspaceId: workspaceOf(from) ?? snapshot.workspaceId ?? undefined })
+            if (!stillHere()) return
+            // Open the native history before exposing its New Session control.
+            const opened = await ctx.sessions.using(target, { source: 'chemclawClassicSwitch', signal: navigation }, () => {
+              if (!stillHere()) return false
+              show(target)
+              return true
+            })
+            if (!opened) return
+          } catch (error) {
+            if (surfaceNavigation?.signal === navigation) surfaceNavigation = undefined
+            if (stillHere()) actions.reportError(error, 'classic-session')
+            return
+          }
+        }
         ui.set(state => ({ ...state, details: null, view: 'details', settings: null, palette: null, newChat: null, menu: null, voice: null, exchange: null, memory: null, toast: null }))
       }
       writeMode(mode)
       surface.set(state => ({ ...state, mode }))
-      if (mode !== 'bot') return
-      // Back in Bot mode the view must hold a team conversation; an outside
-      // Session left over from Agent mode would wear the Bot skin without one.
+      if (mode === 'agent') {
+        rememberClassic(roster.getSnapshot(), mainView())
+        return
+      }
       const home = () => {
         const snapshot = roster.getSnapshot()
-        if (!snapshot.ready || !snapshot.mainBotId) return
-        const list = ctx.sessions.list.getSnapshot()
-        const main = Object.values(list.byId ?? {}).find(session => (session?.retainedBy?.mainView ?? 0) > 0)?.id
-        if (main !== undefined && snapshot.byId[main] === undefined && snapshot.roomsById[main] === undefined) {
+        if (stillHere() && snapshot.mainBotId && from !== undefined
+          && snapshot.byId[from] === undefined && snapshot.roomsById[from] === undefined) {
           actions.openSession(snapshot.mainBotId)
         }
       }
@@ -983,7 +1026,9 @@ export function apply(ctx) {
     let previous
     const sync = () => {
       const list = ctx.sessions.list.getSnapshot()
-      const main = Object.values(list.byId ?? {}).find(session => (session?.retainedBy?.mainView ?? 0) > 0)?.id
+      const main = mainView()
+      const snapshot = roster.getSnapshot()
+      if (surface.getSnapshot().mode === 'agent') rememberClassic(snapshot, main)
       const plain = isAgentSessionId(main)
       setPlain(plain)
       if (plain) dropPanels()
@@ -998,8 +1043,7 @@ export function apply(ctx) {
       if (surface.getSnapshot().mode !== 'bot') return
       const agentId = before !== undefined ? agentOfSession(before) : undefined
       if (agentId === undefined) return
-      const snapshot = roster.getSnapshot()
-      if (snapshot.byId[main] !== undefined || snapshot.roomsById[main] !== undefined || agentOfSession(main) !== undefined) return
+      if (isTeamSession(snapshot, main)) return
       // Only a Session this jump created joins the Agent: a blank one from the
       // workspace picker, or a fork of a Session the same Agent owns. An existing
       // Session the user opened from the sidebar keeps its team tools and stays out.

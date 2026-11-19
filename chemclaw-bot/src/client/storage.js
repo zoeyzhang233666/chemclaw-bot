@@ -7,6 +7,7 @@ export const STORAGE = {
   seen: 'chemclaw-bot:seen',
   prefs: 'chemclaw-bot:prefs',
   surface: 'chemclaw-bot:surface',
+  classicSession: 'chemclaw-bot:classic-session',
   agentSessions: 'chemclaw-bot:agent-sessions',
   browserWidth: 'chemclaw-bot:browser-width',
   browsers: 'chemclaw-bot.browser.v2',

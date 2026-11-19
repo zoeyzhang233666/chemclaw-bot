@@ -73,3 +73,13 @@ test('a navigation elsewhere drops the wait', () => {
   list.set('a')
   assert.deepEqual(opened, [])
 })
+
+test('switching surfaces cancels a delayed expert open even before the selection changes', () => {
+  const list = store(['classic'])
+  list.setMain('classic')
+  const { show, opened } = rig(list)
+  show('expert')
+  show.cancel()
+  list.set('expert')
+  assert.deepEqual(opened, [])
+})

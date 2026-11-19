@@ -13323,7 +13323,7 @@ function useLandOnMainBot(roster, useSessions, actions) {
     const bot = id === "" ? void 0 : roster.byId[id];
     if (bot !== void 0) {
       lastBot.current = { botId: bot.id, sessionId: id };
-      if (currentPart(bot) !== id) actions.landOn(bot.id);
+      if (currentPart(bot) !== id) actions.landOn(bot.id, void 0, id);
       return void 0;
     }
     if (id !== "" && (roster.roomsById[id] || (actions.isAgentSession?.(id) ?? roster.agentOf[id] !== void 0) || blank2 !== "1")) {
@@ -13331,7 +13331,7 @@ function useLandOnMainBot(roster, useSessions, actions) {
       return void 0;
     }
     const last = lastBot.current;
-    const timer = setTimeout(() => actions.landOn(roster.mainBotId, last), last ? 0 : 400);
+    const timer = setTimeout(() => actions.landOn(roster.mainBotId, last, id || void 0, blank2 === "1"), last ? 0 : 400);
     return () => clearTimeout(timer);
   }, [mainView, roster]);
 }
@@ -14512,6 +14512,7 @@ var STORAGE = {
   seen: "chemclaw-bot:seen",
   prefs: "chemclaw-bot:prefs",
   surface: "chemclaw-bot:surface",
+  classicSession: "chemclaw-bot:classic-session",
   agentSessions: "chemclaw-bot:agent-sessions",
   browserWidth: "chemclaw-bot:browser-width",
   browsers: "chemclaw-bot.browser.v2"
@@ -24746,10 +24747,13 @@ function noticeApprovals({ work, roster, shownSession, openSession, since = Date
 function listedOpener({ list, open, refresh, current }) {
   let drop = () => {
   };
-  return (target) => {
+  const cancel = () => {
     drop();
     drop = () => {
     };
+  };
+  const show2 = (target) => {
+    cancel();
     const listed = () => list.getSnapshot().byId?.[target] !== void 0;
     if (listed()) {
       open(target);
@@ -24772,6 +24776,8 @@ function listedOpener({ list, open, refresh, current }) {
     drop = off;
     refresh?.();
   };
+  show2.cancel = cancel;
+  return show2;
 }
 
 // src/client/right-panel.js
@@ -24830,6 +24836,21 @@ function apply(ctx) {
     return items.find((item) => item.sessionIds?.includes(sessionId))?.workspaceId;
   };
   let expected2 = null;
+  let surfaceNavigation;
+  let classicSession;
+  try {
+    classicSession = localStorage.getItem(STORAGE.classicSession) ?? void 0;
+  } catch {
+  }
+  const rememberClassic = (snapshot, id) => {
+    if (!snapshot.ready || id === void 0 || id === classicSession || isTeamSession(snapshot, id)) return;
+    classicSession = id;
+    try {
+      localStorage.setItem(STORAGE.classicSession, id);
+    } catch {
+    }
+  };
+  const isTeamSession = (snapshot, id) => snapshot.byId[id] !== void 0 || snapshot.roomsById[id] !== void 0 || snapshot.rooms.some((room2) => room2.parts?.includes(id)) || isAgentSessionId(id);
   const setPlain = (plain) => surface.set((state) => state.plain === plain ? state : { ...state, plain });
   const dropPanels = () => ui2.set((state) => state.details || state.renaming ? { ...state, details: null, view: "details", renaming: false, tab: null } : state);
   const seenKey = (id) => roster.getSnapshot().byId?.[id]?.id ?? id;
@@ -25234,9 +25255,13 @@ function apply(ctx) {
     },
     // `last` is the Bot conversation the view held before it cleared: when that part
     // was archived for a fresh one, the view goes on in the fresh one.
-    landOn: async (id, last) => {
+    landOn: async (id, last, from, blank2) => {
+      const transition = surfaceNavigation;
+      const stillHere = () => surfaceNavigation === transition && surface.getSnapshot().mode === "bot" && (transition?.mode !== "agent" || transition.signal.aborted) && mainView() === from && (!blank2 || ctx.sessions.list.getSnapshot().byId[from]?.blank === true);
+      if (!stillHere()) return;
       if (last) await pull().catch(() => {
       });
+      if (!stillHere()) return;
       const bot = last ? roster.getSnapshot().byId[last.botId] : void 0;
       setPlain(false);
       const target = bot && currentPart(bot) !== last.sessionId ? currentPart(bot) : partFor(id);
@@ -25250,21 +25275,46 @@ function apply(ctx) {
     },
     // Agent mode hands the surface back to the shell; everything open on the Bot
     // surface closes first so nothing stale reopens on the way back.
-    setSurface: (mode) => {
+    setSurface: async (mode) => {
       if (mode !== "bot" && mode !== "agent") return;
       if (surface.getSnapshot().mode === mode) return;
+      const navigation = ctx.layout.beginNavigation();
+      surfaceNavigation = { mode, signal: navigation };
+      show2.cancel();
+      expected2 = null;
+      const from = mainView();
+      const stillHere = () => !navigation.aborted && mainView() === from;
       if (mode === "agent") {
+        const snapshot = roster.getSnapshot();
+        if (from !== void 0 && (isTeamSession(snapshot, from) || !snapshot.ready && from !== classicSession)) {
+          try {
+            const saved = ctx.sessions.list.getSnapshot().byId[classicSession];
+            const archived = workspaces?.list?.getSnapshot()?.archivedSessionIds ?? [];
+            const target = saved && !archived.includes(classicSession) && !isTeamSession(snapshot, classicSession) ? classicSession : await ctx.sessions.create({ workspaceId: workspaceOf(from) ?? snapshot.workspaceId ?? void 0 });
+            if (!stillHere()) return;
+            const opened = await ctx.sessions.using(target, { source: "chemclawClassicSwitch", signal: navigation }, () => {
+              if (!stillHere()) return false;
+              show2(target);
+              return true;
+            });
+            if (!opened) return;
+          } catch (error) {
+            if (surfaceNavigation?.signal === navigation) surfaceNavigation = void 0;
+            if (stillHere()) actions.reportError(error, "classic-session");
+            return;
+          }
+        }
         ui2.set((state) => ({ ...state, details: null, view: "details", settings: null, palette: null, newChat: null, menu: null, voice: null, exchange: null, memory: null, toast: null }));
       }
       writeMode(mode);
       surface.set((state) => ({ ...state, mode }));
-      if (mode !== "bot") return;
+      if (mode === "agent") {
+        rememberClassic(roster.getSnapshot(), mainView());
+        return;
+      }
       const home = () => {
         const snapshot = roster.getSnapshot();
-        if (!snapshot.ready || !snapshot.mainBotId) return;
-        const list = ctx.sessions.list.getSnapshot();
-        const main = Object.values(list.byId ?? {}).find((session) => (session?.retainedBy?.mainView ?? 0) > 0)?.id;
-        if (main !== void 0 && snapshot.byId[main] === void 0 && snapshot.roomsById[main] === void 0) {
+        if (stillHere() && snapshot.mainBotId && from !== void 0 && snapshot.byId[from] === void 0 && snapshot.roomsById[from] === void 0) {
           actions.openSession(snapshot.mainBotId);
         }
       };
@@ -25746,7 +25796,9 @@ function apply(ctx) {
     let previous;
     const sync = () => {
       const list = ctx.sessions.list.getSnapshot();
-      const main = Object.values(list.byId ?? {}).find((session) => (session?.retainedBy?.mainView ?? 0) > 0)?.id;
+      const main = mainView();
+      const snapshot = roster.getSnapshot();
+      if (surface.getSnapshot().mode === "agent") rememberClassic(snapshot, main);
       const plain = isAgentSessionId(main);
       setPlain(plain);
       if (plain) dropPanels();
@@ -25759,8 +25811,7 @@ function apply(ctx) {
       if (surface.getSnapshot().mode !== "bot") return;
       const agentId = before !== void 0 ? agentOfSession(before) : void 0;
       if (agentId === void 0) return;
-      const snapshot = roster.getSnapshot();
-      if (snapshot.byId[main] !== void 0 || snapshot.roomsById[main] !== void 0 || agentOfSession(main) !== void 0) return;
+      if (isTeamSession(snapshot, main)) return;
       const row = list.byId[main];
       const parent = row?.parentId ?? row?.parentSessionId;
       const forkedFromAgent = parent !== void 0 && agentOfSession(parent) === agentId;

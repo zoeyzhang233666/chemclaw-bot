@@ -13,6 +13,7 @@ import { createRequire } from 'node:module'
 import { createServer } from 'node:http'
 import { nativeOpenFixture } from './native-open-fixture.mjs'
 import { checkOfficeFiles } from './check-office-e2e.mjs'
+import { checkClassicRestart, checkClassicSessions } from './check-classic-sessions.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2).filter(arg => !arg.startsWith('--') || arg === '--source')
@@ -235,11 +236,17 @@ async function appPage(port, deadline) {
 function devtools(url, problems) {
   const socket = new WebSocket(url)
   const pending = new Map()
+  const observers = new Map()
   const requests = []
+  const creating = new Set()
+  const sessionCreates = []
   let next = 1
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(String(event.data))
+    observers.get(message.method)?.(message.params)
     if (message.method === 'Network.requestWillBeSent') requests.push(message.params.request.url)
+    if (message.method === 'Network.responseReceived' && message.params.response.url.endsWith('/api/session/create')) creating.add(message.params.requestId)
+    if (message.method === 'Network.loadingFinished' && creating.delete(message.params.requestId)) sessionCreates.push(message.params.requestId)
     if (message.method === 'Runtime.exceptionThrown') problems.push(`exception: ${message.params.exceptionDetails.exception?.description ?? message.params.exceptionDetails.text}`)
     if (message.method === 'Runtime.consoleAPICalled' && message.params.type === 'error') problems.push(`console.error: ${message.params.args.map(arg => arg.value ?? arg.description).join(' ')}`)
     if (message.method === 'Log.entryAdded' && message.params.entry.level === 'error') {
@@ -269,7 +276,11 @@ function devtools(url, problems) {
     pending.set(id, { resolve: settle(done), reject: settle(reject) })
     socket.send(JSON.stringify({ id, method, params }))
   })
-  return { opened, call, requests, close: () => new Promise(resolve => { socket.addEventListener('close', resolve, { once: true }); socket.close() }) }
+  const observe = (event, listener) => {
+    observers.set(event, listener)
+    return () => observers.delete(event)
+  }
+  return { opened, call, observe, requests, sessionCreates, close: () => new Promise(resolve => { socket.addEventListener('close', resolve, { once: true }); socket.close() }) }
 }
 
 // mica.css styles DSH's own page, which can change with a DSH upgrade; every rule must still
@@ -462,6 +473,7 @@ async function chat(cdp) {
   if (await evaluate("Boolean(document.querySelector('.bt-msg'))")) throw new Error('A preset sent an unsolicited first chat message')
   console.log('check-packed: preset welcome visible with no synthetic chat message')
   await captureMac('welcome')
+  if (source && flags.has('--classic-only')) return checkClassicSessions(cdp)
   if (process.argv.includes('--office-preview-only') || process.argv.includes('--xlsx-preview-only')) {
     const wantXlsx = process.argv.includes('--xlsx-preview-only')
     // Use only interpreters and libraries SHIPPED with the app. Importing the
@@ -796,6 +808,7 @@ deck.save(sys.argv[1])`
   console.log('check-packed: present file card and HTML preview passed')
   await sleep(1000)
   console.log(`check-packed: chat ${JSON.stringify(await evaluate('document.body.innerText.slice(-200)'))}`)
+  if (source) return checkClassicSessions(cdp)
 }
 
 let failed = false
@@ -820,36 +833,46 @@ try {
   // Intel macOS runners may have no working EGL display. Exercise the same
   // renderer with software compositing rather than repeatedly crashing its GPU.
   const graphics = process.env.CI && process.platform === 'darwin' ? ['--disable-gpu'] : []
-  const app = spawn(packedApp, [...(source ? [root] : []), ...graphics, `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
-  children.push(app)
-  const exited = new Promise((done) => { app.once('exit', (code, signal) => { done({ code, signal }) }) })
-  const cdp = devtools((await appPage(port, Date.now() + 120_000)).webSocketDebuggerUrl, problems)
-  await cdp.opened
-  const chatError = await chat(cdp).then(() => undefined, error => error)
+  const launch = async () => {
+    const app = spawn(packedApp, [...(source ? [root] : []), ...graphics, `--remote-debugging-port=${String(port)}`], { stdio: 'inherit', env, windowsHide: true })
+    children.push(app)
+    const exited = new Promise(done => { app.once('exit', (code, signal) => { done({ code, signal }) }) })
+    const cdp = devtools((await appPage(port, Date.now() + 120_000)).webSocketDebuggerUrl, problems)
+    await cdp.opened
+    return { cdp, exited }
+  }
+  const quit = async ({ cdp, exited }) => {
+    await cdp.close()
+    const browserTarget = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json()
+    const quitSocket = new WebSocket(browserTarget.webSocketDebuggerUrl)
+    await new Promise((resolve, reject) => { quitSocket.addEventListener('open', resolve, { once: true }); quitSocket.addEventListener('error', reject, { once: true }) })
+    quitSocket.send(JSON.stringify({ id: 1, method: 'Browser.close' }))
+    quitSocket.close()
+    const outcome = await Promise.race([exited, sleep(40_000, undefined, { ref: false })])
+    if (outcome === undefined) throw new Error('the app did not exit after explicit quit')
+    console.log(`check-packed: app exited (code ${String(outcome.code)}, signal ${String(outcome.signal)})`)
+    if (outcome.code !== 0) throw new Error(`the app exited with code ${String(outcome.code)}`)
+  }
+  const app = await launch()
+  const result = await chat(app.cdp).then(classicSession => ({ classicSession }), error => ({ error }))
   if (shotFile) {
-    const { data } = await cdp.call('Page.captureScreenshot', { format: 'png' })
+    const { data } = await app.cdp.call('Page.captureScreenshot', { format: 'png' })
     writeFileSync(resolve(shotFile), Buffer.from(data, 'base64'))
     console.log(`check-packed: saved ${resolve(shotFile)}`)
   }
-  // Closed like a user closes it, also after a failure, so that the app stops its Host. The page
-  // goes away with the window, so this call gets no answer.
+  await quit(app)
+  if (result.error) throw result.error
   if (problems.length > 0) throw new Error(`page problems:\n  ${problems.join('\n  ')}`)
-  await cdp.close()
-  const browserTarget = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json()
-  const quitSocket = new WebSocket(browserTarget.webSocketDebuggerUrl)
-  await new Promise((resolve, reject) => { quitSocket.addEventListener('open', resolve, { once: true }); quitSocket.addEventListener('error', reject, { once: true }) })
-  quitSocket.send(JSON.stringify({ id: 1, method: 'Browser.close' }))
-  quitSocket.close()
-  const outcome = await Promise.race([exited, sleep(40_000).then(() => undefined)])
-  if (chatError) throw chatError
-  if (outcome === undefined) throw new Error('the app did not exit after explicit quit')
-  console.log(`check-packed: app exited (code ${String(outcome.code)}, signal ${String(outcome.signal)})`)
-  if (outcome.code !== 0) throw new Error(`the app exited with code ${String(outcome.code)}`)
+  if (result.classicSession) {
+    const restarted = await launch()
+    await restarted.cdp.call('Runtime.enable')
+    try { await checkClassicRestart(restarted.cdp, result.classicSession) } finally { await quit(restarted) }
+  }
   if (problems.length > 0) throw new Error(`page problems:\n  ${problems.join('\n  ')}`)
   console.log('check-packed: passed')
 } catch (error) {
   failed = true
-  console.error(`check-packed: FAILED: ${error instanceof Error ? error.message : String(error)}`)
+  console.error(`check-packed: FAILED: ${error instanceof Error ? error.stack : String(error)}`)
   if (problems.length) console.error(`check-packed: captured page problems:\n  ${problems.join('\n  ')}`)
 }
 stopChildren()

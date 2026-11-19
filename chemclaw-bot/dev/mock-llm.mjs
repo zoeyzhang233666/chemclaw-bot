@@ -328,6 +328,8 @@ function decide(body) {
   }
 
   const userText = textOf(last?.content).trim()
+  const isolation = /^(?:User: )?isolation-158-slow-(expert|room)\b/m.exec(userText)
+  if (isolation) return [{ ...text(`isolation-158-${isolation[1]}-output ${'still streaming. '.repeat(10)}`), slow: true }]
   if (userText.startsWith('[chemclaw-visual-delivery turn=')) return [text('```dsh-ui\n' + JSON.stringify({ title: 'Inline answer', items: [{ type: 'text', text: 'Synthetic compact answer card.' }] }) + '\n```')]
   // DSH prepends context to the first real user turn of a blank session.
   // Recognize the test command on its own first line, not only the entire payload.
