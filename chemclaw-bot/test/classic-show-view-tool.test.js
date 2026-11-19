@@ -38,7 +38,7 @@ test('non-root DSH Agents do not acquire the native display privilege', async ()
   const child = root('child')
   child.agent.session.header.parentSession = 'parent'
   const result = await tool.execute(display, child)
-  assert.match(result, /Only root user conversations/)
+  assert.match(result, /Only Bots/)
   assert.equal(shown.length, 0)
 })
 
