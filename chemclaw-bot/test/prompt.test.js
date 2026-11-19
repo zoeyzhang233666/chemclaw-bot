@@ -49,6 +49,7 @@ test('the group relay and non-Bot sessions do not get progress instructions', (t
 test('all user-facing Bot and native sessions receive one global visual policy independently of skills', () => {
   const { ctx } = start()
   const section = ctx.sections.get('chemclaw-visual-delivery')
+  assert.ok(section.order > 9900, 'ChemClaw diagram selection follows generic GenUI instructions')
   for (const id of ['main', 'worker', 'group-worker', 'outside']) {
     const policy = section.text({ agent: { id } })
     assert.match(policy, /EVERY user-facing final answer/)
@@ -68,7 +69,7 @@ test('advanced-chart setting influences model selection, without disabling GenUI
   state.prefs.advancedCharts = false
   const disabled = section.text(context)
   assert.match(disabled, /Advanced charts are disabled in ChemClaw Settings/)
-  assert.match(disabled, /GenUI nonchart components such as timeline and Mermaid remain available/)
+  assert.match(disabled, /dated timelines/)
   assert.match(disabled, /seven advanced ECharts|advanced ECharts/i)
   state.prefs.advancedCharts = true
   assert.doesNotMatch(section.text(context), /Advanced charts are disabled in ChemClaw Settings/)

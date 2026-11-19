@@ -38,12 +38,13 @@ or limits on analytical ability.
   `heatmap`; quantified flows → `sankey`; normalized dimensions with explicit
   maxima → `radar`; conversion stages → `funnel`; hierarchy → `treemap`;
   a value against a stated maximum → `gauge`.
-- Prefer the native `show_view` component `flow` for concise stages, branches,
-  dependencies and evidence chains. Supply nodes and directed edges and let
-  ChemClaw lay out the SVG. Use an `uncertain` edge when evidence is incomplete.
+- Include one native `show_view` `flow` by default for explanations, decisions,
+  stages, branches, supply chains, dependencies and evidence chains. Supply
+  concise nodes and directed edges for automatic SVG layout. Use `uncertain`
+  for unconfirmed links and `feedback: true` for return arrows. Use GenUI `svg`
+  if `show_view` is unavailable. Use Mermaid only on explicit format requests.
 - The complete bundled GenUI plugin also supplies `timeline` for dated events
-  and milestones, `steps` for ordered steps, `mermaid`/`diagram` for loops,
-  detailed diagrams and Gantt schedules, `plot` for functions, `scene3d` for spatial
+  and milestones, `diagram` for specialized schedules, `plot` for functions, `scene3d` for spatial
   explanation, searchable/sortable/expandable `table`, layouts/cards, tabs,
   accordion, forms/controls, quizzes and images/media. Read the current `genui`
   skill for their exact syntax; no need for the user to know component names.

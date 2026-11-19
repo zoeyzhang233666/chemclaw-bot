@@ -73,9 +73,10 @@ test('original text block indices survive empty, image and reasoning blocks', ()
 test('current policy and delivery skill teach automatic GenUI selection and protocol separation', () => {
   const skill = readFileSync(new URL('../skills/builtin/delivery/SKILL.md', import.meta.url), 'utf8')
   for (const text of [skill, VIEW_POLICY]) {
-    for (const component of ['timeline', 'steps', 'mermaid', 'diagram', 'plot', 'scene3d']) assert.ok(text.includes(component), component)
+    for (const component of ['timeline', 'flow', 'diagram', 'plot', 'scene3d']) assert.ok(text.includes(component), component)
+    assert.match(text, /Use Mermaid only/)
     assert.ok(text.includes('panel:true'))
-    assert.match(text, /same data/)
+    assert.match(text, /same (?:data|relationship)/)
   }
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)))
   assert.equal(pkg.dependencies['@changfenhuang/dsh-genui'], '0.15.0')

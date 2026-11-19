@@ -5701,7 +5701,7 @@ function checkLinks(node, path) {
 
 // src/shared/flow-view.js
 var NODE_KEYS = ["id", "label", "detail", "tone"];
-var EDGE_KEYS = ["from", "to", "label", "uncertain"];
+var EDGE_KEYS = ["from", "to", "label", "uncertain", "feedback"];
 var TONES = ["info", "good", "warn", "bad"];
 var idPattern = /^[a-zA-Z][a-zA-Z0-9_-]{0,23}$/u;
 var fieldsAllowed = (item, keys) => item !== null && typeof item === "object" && !Array.isArray(item) && Object.keys(item).every((key) => keys.includes(key));
@@ -5710,7 +5710,8 @@ function flowLevels(nodes, edges) {
   const waiting = new Map(nodes.map((node) => [node.id, 0]));
   const next = new Map(nodes.map((node) => [node.id, []]));
   const ranks = new Map(nodes.map((node) => [node.id, 0]));
-  for (const { from, to } of edges) {
+  for (const { from, to, feedback } of edges) {
+    if (feedback) continue;
     waiting.set(to, waiting.get(to) + 1);
     next.get(from).push(to);
   }
@@ -5744,18 +5745,22 @@ function checkFlow({ nodes, edges, caption }, path) {
   const connected = /* @__PURE__ */ new Set();
   for (const [i, edge] of edges.entries()) {
     const at = `${path}.edges[${i}]`;
-    if (!fieldsAllowed(edge, EDGE_KEYS)) return `${at}: use from, to, label and uncertain only`;
+    if (!fieldsAllowed(edge, EDGE_KEYS)) return `${at}: use from, to, label, uncertain and feedback only`;
     if (!ids.has(edge.from) || !ids.has(edge.to) || edge.from === edge.to) return `${at}: connect two different existing node IDs`;
     const relation = `${edge.from}:${edge.to}`;
     if (relations.has(relation)) return `${at}: duplicate connection`;
     if (edge.label !== void 0 && !shortText(edge.label, 26)) return `${at}.label: expected 1 to 26 characters`;
     if (edge.uncertain !== void 0 && typeof edge.uncertain !== "boolean") return `${at}.uncertain: expected a boolean`;
+    if (edge.feedback !== void 0 && typeof edge.feedback !== "boolean") return `${at}.feedback: expected a boolean`;
     connected.add(edge.from).add(edge.to);
     relations.add(relation);
   }
   if (connected.size !== ids.size) return `${path}.edges: every step needs a connection`;
   if (caption !== void 0 && !shortText(caption, 180)) return `${path}.caption: expected 1 to 180 characters`;
-  if (flowLevels(nodes, edges) === null) return `${path}.edges: use an acyclic flow, or use GenUI Mermaid for a loop`;
+  const levels = flowLevels(nodes, edges);
+  if (!levels) return `${path}.edges: mark loop return arrows as feedback:true`;
+  const ranks = new Map(levels.flatMap((level, rank) => level.map((node) => [node.id, rank])));
+  if (edges.some((edge) => edge.feedback && ranks.get(edge.from) <= ranks.get(edge.to))) return `${path}.edges: feedback arrows must return to an earlier step`;
   return void 0;
 }
 
@@ -7624,6 +7629,10 @@ function layout(nodes, edges) {
     const start = from.rowBottom + 8;
     const end = to.rowTop - 8;
     const middle = (start + end) / 2;
+    if (edge.feedback) {
+      width += 22;
+      return { ...edge, d: `M${x1} ${y1} V${start + 12} H${width} V${end - 5} H${x2} V${y2}`, x: (x1 + width) / 2, y: start + 5 };
+    }
     if (to.rank - from.rank === 1) {
       return { ...edge, d: `M${x1} ${y1} V${start} C${x1} ${middle} ${x2} ${middle} ${x2} ${end} V${y2}`, x: (x1 + x2) / 2, y: middle - 7 };
     }
@@ -7656,7 +7665,7 @@ function FlowView({ node }) {
         ))),
         connections.map((edge, index) => (0, import_react11.createElement)(
           "g",
-          { key: index, className: "bt-flow-connection", "data-uncertain": edge.uncertain || void 0 },
+          { key: index, className: "bt-flow-connection", "data-uncertain": edge.uncertain || void 0, "data-feedback": edge.feedback || void 0 },
           (0, import_react11.createElement)("path", { d: edge.d, markerEnd: `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` }),
           edge.label && (0, import_react11.createElement)("text", { x: edge.x, y: edge.y, textAnchor: "middle" }, edge.label)
         )),

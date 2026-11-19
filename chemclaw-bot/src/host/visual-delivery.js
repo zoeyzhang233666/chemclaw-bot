@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
+import { needsFlowDiagram } from './flow-intent.js'
 import { marketQuoteIntent, mixedOverlayRequested } from './market-quote-intent.js'
 import { nativeViewAvailable } from './native-view-session.js'
 
@@ -203,6 +204,9 @@ export function hasInlineGenui(text, native = false) {
 // Only explicit drawing instructions are enforceable. Discussions of a chart
 // problem should not force another rendering attempt.
 const MERMAID = /\bmermaid\b/iu
+const MERMAID_FENCE = /^ {0,3}\x60{3}[ \t]*mermaid[ \t]*\r?$/imu
+const SVG_FENCE = /^ {0,3}\x60{3}[ \t]*svg[ \t]*\r?\n([\s\S]*?)^ {0,3}\x60{3}[ \t]*\r?$/gimu
+const isSvg = code => typeof code === 'string' && code.length <= 12000 && /^\s*<svg\b[\s\S]*<\/svg>\s*$/iu.test(code)
 const REQUEST_FAMILIES = [
   ['candlestick', /K[\s-]*线(?:图)?|蜡烛图|candlestick|ohlc/iu],
   ['heatmap', /热力图|heat[\s-]*map/iu],
@@ -239,7 +243,7 @@ export function deliveredViewKinds(view) {
     const kind = String(node.kind ?? node.chartType ?? '').toLowerCase()
     if (accepted.has(type)) found.add(type)
     if ((type === 'chart' || type === 'echart') && accepted.has(kind)) found.add(kind)
-    if (type === 'diagram' || type === 'mermaid') found.add('mermaid')
+    if (type === 'svg' && isSvg(node.code)) found.add('flow')
     for (const child of Object.values(node)) if (child && typeof child === 'object') walk(child, depth + 1)
   }
   walk(view)
@@ -248,31 +252,39 @@ export function deliveredViewKinds(view) {
 
 function genuiKinds(text, native = false) {
   const kinds = new Set()
+  if (MERMAID_FENCE.test(text)) kinds.add('mermaid')
+  if (Array.from(text.matchAll(SVG_FENCE)).some(match => isSvg(match[1]))) kinds.add('flow')
   for (const match of text.matchAll(/^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}```[ \t]*\r?$/gimu)) {
     try {
       const spec = JSON.parse(match[1])
       if (!Array.isArray(spec?.items) || spec.items.length === 0 || (!native && spec.panel === true)) continue
-      for (const kind of deliveredViewKinds(spec.items)) kinds.add(kind)
+      for (const kind of deliveredViewKinds(spec.items)) if (spec.panel !== true || kind !== 'flow') kinds.add(kind)
     } catch { /* Malformed fences belong to the upstream GenUI repair. */ }
   }
   return kinds
 }
 
 export function missingRequestedKinds(requested, delivered) {
-  return [...requested].filter(kind => !delivered.has(kind) && !(kind === 'flow' && delivered.has('mermaid')))
+  return [...requested].filter(kind => !delivered.has(kind))
 }
 
-export function requestedViewReminder(turn, native, kinds) {
+const flowInstruction = native => native
+  ? 'Use show_view type=flow with concise nodes and directed edges for the SVG logic diagram. Use feedback:true for return arrows.'
+  : 'Use an inline dsh-ui SVG component (type=svg, code as a complete SVG) for the logic diagram.'
+
+export function requestedViewReminder(turn, native, kinds, explicitFlow = true) {
+  const explicit = kinds.filter(kind => kind !== 'flow' || explicitFlow)
   return VISUAL_NOTICE + ' turn=' + turn + ']\n'
-    + 'The user explicitly requested ' + kinds.join(', ') + ', but the successfully delivered views do not include those kinds. '
+    + (explicit.length ? `The user explicitly requested ${explicit.join(', ')}. ` : '')
+    + `The answer is still missing these inline views: ${kinds.join(', ')}. `
     + (kinds.includes('candlestick')
       ? (native
         ? 'For a candlestick use native show_view chart kind candlestick with 2-50 actual dated OHLC bars, no categories/series. Do not add a second line chart or HTML. '
         : 'For a candlestick use a single GenUI dsh-ui ECharts candlestick full-option view. ')
         + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
-    + (kinds.includes('flow') && native ? 'Use show_view type=flow with labelled nodes and directed edges for the SVG flow diagram. Use GenUI Mermaid if the flow has loops. ' : '')
-    + (native ? 'Use show_view for supported visuals, and an inline dsh-ui fence without panel:true for GenUI timelines or Mermaid. '
+    + (kinds.includes('flow') ? `${flowInstruction(native)} Do not use Mermaid, steps or tabs as a substitute. ` : '')
+    + (native ? 'Use show_view for supported visuals and an inline dsh-ui fence without panel:true for other GenUI components. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
 }
@@ -288,7 +300,7 @@ export function visualReminder(turn, native) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', visual: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', question: '', visual: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -338,6 +350,7 @@ export function install(rt) {
       if (source?.form === 'notice' && text.startsWith(VISUAL_NOTICE)) { entry.reminded = true; return }
       if (source?.kind === 'user') {
         entry.human = true
+        entry.question = text
         entry.textOnly = textOnlyRequested(text)
         entry.quoteIntent = marketQuoteIntent(text)
         entry.mixedOverlayRequired = mixedOverlayRequested(text)
@@ -353,16 +366,26 @@ export function install(rt) {
         entry.requested = new Set(requestedChartKinds(text))
       }
       else if (source?.kind === 'schedule' || source?.audience === 'user') entry.human = true
-      else if (source?.kind === 'bot' && source.role === 'room' && !source.askedBy) {
+      else if (source?.kind === 'bot' && source.role === 'room' && (!source.askedBy || source.askedBy === 'user')) {
         const current = text.split(/This round so far[^\n]*:\n/u)[1]?.split('\n\n')[0] ?? ''
         const user = [...current.matchAll(/^User: (.*)$/gmu)].at(-1)?.[1]
-        if (user !== undefined) { entry.textOnly = textOnlyRequested(user); entry.quoteIntent = marketQuoteIntent(user); entry.mixedOverlayRequired = mixedOverlayRequested(user); entry.marketHistory = marketHistoryRequest(user); entry.multiAssetMarket = multiAssetMarketRequest(user); entry.requested = new Set(requestedChartKinds(user)) }
+        if (user !== undefined) {
+          entry.question = user
+          entry.textOnly = textOnlyRequested(user)
+          entry.quoteIntent = marketQuoteIntent(user)
+          entry.mixedOverlayRequired = mixedOverlayRequested(user)
+          entry.marketHistory = marketHistoryRequest(user)
+          entry.multiAssetMarket = multiAssetMarketRequest(user)
+          entry.requested = new Set(requestedChartKinds(user))
+        }
       }
     } else if (event.type === 'assistant/message') {
       const text = textOf(event.data?.message?.content)
       if (text.trim()) entry.text = text
       entry.visual ||= hasInlineGenui(text, !rt.isBotSession?.(id))
-      for (const kind of genuiKinds(text, !rt.isBotSession?.(id))) entry.kinds.add(kind)
+      const kinds = genuiKinds(text, !rt.isBotSession?.(id))
+      for (const kind of kinds) entry.kinds.add(kind)
+      entry.visual ||= kinds.has('flow') || kinds.has('mermaid')
       // Leave malformed fences to GenUI's own validation/repair budget. A valid
       // panel-only reply in a Bot surface still needs an inline equivalent.
       if (genuiFence.test(text)) {
@@ -384,6 +407,21 @@ export function install(rt) {
   }
   ctx.on('session/event', (session, event) => { restore(session); observe(session, event) })
   ctx.on('session/disposed', session => turns.delete(String(session.id)))
+  ctx.on('tools/pre-execute', async (exec, next) => {
+    const agent = exec.agent
+    if (exec.name !== 'validate_dsh_ui' || !agent?.session || agent.session.header?.parentSession !== undefined) return next()
+    const decision = await next()
+    if (decision.kind !== 'allow') return decision
+    restore(agent.session)
+    const entry = turns.get(String(agent.session.id))
+    if (!(entry?.human || entry?.question) || entry.requested.has('mermaid')) return decision
+    let spec = exec.arguments?.spec
+    if (typeof spec === 'string') {
+      try { spec = JSON.parse(spec) } catch { return decision }
+    }
+    if (!deliveredViewKinds(spec?.items).has('mermaid')) return decision
+    return { kind: 'deny', reason: `${flowInstruction(nativeViewAvailable(ctx, agent, exec.toolSet))} Keep the other GenUI components if useful and deliver the regular text answer.` }
+  })
   rt.noteVisualDelivery = (id, view) => {
     const entry = stateOf(id)
     entry.visual = true
@@ -416,8 +454,8 @@ export function install(rt) {
     const entry = turns.get(id)
     if (!entry || entry.turn !== turn || entry.reminded || entry.repairing || entry.textOnly || !entry.text.trim()) return
     const native = nativeViewAvailable(ctx, agent)
-    const enabledRequests = [...entry.requested].filter(kind => (kind !== 'flow' || native)
-      && (rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind)))
+    const enabledRequests = new Set([...entry.requested].filter(kind => rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind)))
+    if (!entry.requested.has('mermaid') && (entry.kinds.has('mermaid') || needsFlowDiagram(entry.question, entry.text))) enabledRequests.add('flow')
     const missing = missingRequestedKinds(enabledRequests, entry.kinds)
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
     const missingFlow = missing.includes('flow')
@@ -437,7 +475,7 @@ export function install(rt) {
     try {
       const reminder = mixedIncomplete
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
-        : knownMismatch || missingFlow ? requestedViewReminder(turn, native, missing)
+        : knownMismatch || missingFlow ? requestedViewReminder(turn, native, missing, entry.requested.has('flow'))
       : entry.invalidGenuiChart && native
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart lacks drawable data. Use one native show_view chart with the verified observations in this answer, or a factual table when data is missing. Do not repeat research or invent data.`
         : visualReminder(turn, native)

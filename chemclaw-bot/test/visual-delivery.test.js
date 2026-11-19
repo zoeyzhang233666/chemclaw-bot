@@ -60,13 +60,53 @@ test('an explicitly requested SVG flow receives one native correction when missi
   f.start(); f.user('请生成一张 SVG 流程图'); f.answer('这里是工作流程。'); f.stop(); f.stop()
   assert.equal(f.notices.length, 1)
   assert.match(f.notices[0].content[0].text, /show_view type=flow/)
-  for (const type of ['flow', 'mermaid']) {
-    const ready = setup({ native: true })
-    ready.start(); ready.user('请生成流程图'); ready.answer('这里是工作流程。')
-    ready.rt.noteVisualDelivery('s', { type })
-    ready.stop()
-    assert.equal(ready.notices.length, 0)
+  const ready = setup({ native: true })
+  ready.start(); ready.user('请生成流程图'); ready.answer('这里是工作流程。')
+  ready.rt.noteVisualDelivery('s', { type: 'flow' })
+  ready.stop()
+  assert.equal(ready.notices.length, 0)
+})
+
+test('the automatic SVG check covers real-world logic questions even when some other visual was delivered', () => {
+  const mermaid = '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'mermaid', code: 'graph TD\nA-->B' }] }) + '\n```'
+  for (const [question, answer] of [
+    ['为什么会是这样分布的？', fence()],
+    ['我想知道产业链结构', mermaid],
+    ['解释一下这份材料', '原料 → 加工 → 销售\n\n' + fence()],
+    ['说说你的看法', '三项约束改变了销售路径。\n- 原料\n- 生产\n- 通路\n\n' + fence()],
+  ]) for (const native of [false, true]) {
+    const f = setup({ native })
+    f.start(); f.user(question); f.answer(answer); f.stop(); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /show_view type=flow/)
+    assert.match(f.notices[0].content[0].text, /Do not use Mermaid/)
   }
+  for (const question of ['你好！', '全球低硫燃料油产量分布', '请生成 Mermaid 流程图', '为什么这样分布？只用文字']) {
+    const f = setup({ native: true })
+    f.start(); f.user(question); f.answer(`影响路径：A → B → C\n\n${question.includes('Mermaid') ? mermaid : fence()}`); f.stop()
+    assert.deepEqual(f.notices, [])
+  }
+  const fallback = setup({ native: true }); fallback.ctx.tools.get = () => undefined
+  fallback.start(); fallback.user('为什么有这样的分布'); fallback.answer(fence()); fallback.stop()
+  assert.match(fallback.notices[0].content[0].text, /inline dsh-ui SVG component/)
+  const delivered = setup({ native: true }); delivered.ctx.tools.get = () => undefined
+  delivered.start(); delivered.user('为什么有这样的分布')
+  delivered.answer('```svg\n<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L2 2"/></svg>\n```'); delivered.stop()
+  assert.deepEqual(delivered.notices, [])
+})
+
+test('Mermaid validation redirects an ordinary human diagram before the fence is published', async () => {
+  const f = setup({ native: true })
+  const policy = f.ctx.listeners.get('tools/pre-execute')[0]
+  const exec = { name: 'validate_dsh_ui', agent: f.agent, arguments: { spec: { items: [{ type: 'row', items: [{ type: 'mermaid', code: 'graph TD\nA-->B' }] }] } } }
+  const next = async () => ({ kind: 'allow' })
+  f.start(); f.user('我想知道产业链结构')
+  const redirect = await policy(exec, next)
+  assert.equal(redirect.kind, 'deny')
+  assert.match(redirect.reason, /show_view type=flow/)
+  assert.deepEqual(await policy({ ...exec, arguments: { spec: { items: [{ type: 'text', text: 'Mermaid' }] } } }, next), { kind: 'allow' })
+  f.start(2); f.user('请生成 Mermaid 流程图')
+  assert.deepEqual(await policy(exec, next), { kind: 'allow' })
 })
 
 test('failed show_view and unrelated successful tools are not delivery', () => {
@@ -130,6 +170,11 @@ test('direct user group replies get the same global check', () => {
   f.emit('user/message', { source: { kind: 'bot', role: 'room' }, content: content('User: Explain') })
   f.answer('Explanation'); f.stop()
   assert.equal(f.notices.length, 1)
+  f.start(2); f.rt.live.get('s').info = { role: 'room' }
+  f.emit('user/message', { source: { kind: 'bot', role: 'room' }, content: content('This round so far (oldest first):\nUser: 我想知道产业链结构\n\nPlease reply.') })
+  f.answer(fence()); f.stop(2)
+  assert.equal(f.notices.length, 2)
+  assert.match(f.notices[1].content[0].text, /show_view type=flow/)
 })
 
 test('hot reload restores current-turn preferences, delivery and correction budget before the first live event', () => {

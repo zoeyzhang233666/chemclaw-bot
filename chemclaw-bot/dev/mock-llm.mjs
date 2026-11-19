@@ -93,7 +93,7 @@ const flowFixture = {
     { id: 'sales', label: '下游销售', detail: '已确认订单', tone: 'good' },
     { id: 'stock', label: '库存变化', detail: '暂缺库存数据', tone: 'warn' },
   ],
-  edges: [{ from: 'feed', to: 'plant' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', uncertain: true }],
+  edges: [{ from: 'feed', to: 'plant' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', uncertain: true }, { from: 'sales', to: 'feed', label: '订单反馈', feedback: true }],
 }
 // ask_user takes options as { label } objects; the scenarios below list plain labels.
 const tool = (name, input) => ({
@@ -207,10 +207,26 @@ function decide(body) {
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
   const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
   const flowMessage = /^(?:User: )?展示合成流程图\s*$/mu.test(activity)
-    || (/^(?:User: )?梳理合成供应链\s*$/mu.test(activity) && system.includes('automatically prefer its native SVG flow view'))
+    || (/^(?:User: )?梳理合成供应链\s*$/mu.test(activity) && system.includes('include one SVG logic diagram by default'))
   if (flowMessage && tools.has('show_view')) {
     if (result) return [text('流程图正文：库存环节仍待核验。')]
     return [tool('show_view', { title: '合成供应链流程', view: flowFixture })]
+  }
+  const repairFlow = /\[chemclaw-visual-delivery[^\n]*\][\s\S]*show_view type=flow/u.test(activity)
+  const flowQuestion = repairFlow
+    ? messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message) && /为什么合成分布会是这样/u.test(textOf(message.content)))
+    : messages[activityAt]
+  const flowTopic = /^(为什么合成分布会是这样|我想知道合成产业链结构)(?:\?|？|\s|$)/mu.exec(textOf(flowQuestion?.content))?.[1]
+  if (flowTopic && tools.has('show_view')) {
+    const title = flowTopic === '为什么合成分布会是这样' ? '合成分布成因 SVG' : '合成产业链结构 SVG'
+    const receipt = textOf(result?.content)
+    if (/The view is (?:on screen|staged)/u.test(receipt)) return [text('合成分析正文：订单会反馈给上游。')]
+    if (repairFlow || /Use show_view type=flow/u.test(receipt)) return [tool('show_view', { title, view: flowFixture })]
+    if (flowTopic === '我想知道合成产业链结构' && !result && tools.has('validate_dsh_ui')) {
+      return [tool('validate_dsh_ui', { spec: { items: [{ type: 'mermaid', code: 'graph TD\nA-->B' }] } })]
+    }
+    const spec = { items: [{ type: 'tabs', tabs: [{ label: '供应端', items: [{ type: 'text', text: '合成原因正文' }] }] }] }
+    return [text('合成原因正文：原料影响生产，订单回传上游。\n\n```dsh-ui\n' + JSON.stringify(spec) + '\n```')]
   }
   const classicView = activityAt >= 0 ? /^classic-native-(ready|invalid)(?:\n|$)/u.exec(textOf(messages[activityAt].content).trim())?.[1] : undefined
   if (classicView && tools.has('show_view')) {

@@ -1,5 +1,5 @@
 const NODE_KEYS = ['id', 'label', 'detail', 'tone']
-const EDGE_KEYS = ['from', 'to', 'label', 'uncertain']
+const EDGE_KEYS = ['from', 'to', 'label', 'uncertain', 'feedback']
 const TONES = ['info', 'good', 'warn', 'bad']
 const idPattern = /^[a-zA-Z][a-zA-Z0-9_-]{0,23}$/u
 const fieldsAllowed = (item, keys) => item !== null && typeof item === 'object'
@@ -11,7 +11,8 @@ export function flowLevels(nodes, edges) {
   const waiting = new Map(nodes.map(node => [node.id, 0]))
   const next = new Map(nodes.map(node => [node.id, []]))
   const ranks = new Map(nodes.map(node => [node.id, 0]))
-  for (const { from, to } of edges) {
+  for (const { from, to, feedback } of edges) {
+    if (feedback) continue
     waiting.set(to, waiting.get(to) + 1)
     next.get(from).push(to)
   }
@@ -46,17 +47,21 @@ export function checkFlow({ nodes, edges, caption }, path) {
   const connected = new Set()
   for (const [i, edge] of edges.entries()) {
     const at = `${path}.edges[${i}]`
-    if (!fieldsAllowed(edge, EDGE_KEYS)) return `${at}: use from, to, label and uncertain only`
+    if (!fieldsAllowed(edge, EDGE_KEYS)) return `${at}: use from, to, label, uncertain and feedback only`
     if (!ids.has(edge.from) || !ids.has(edge.to) || edge.from === edge.to) return `${at}: connect two different existing node IDs`
     const relation = `${edge.from}:${edge.to}`
     if (relations.has(relation)) return `${at}: duplicate connection`
     if (edge.label !== undefined && !shortText(edge.label, 26)) return `${at}.label: expected 1 to 26 characters`
     if (edge.uncertain !== undefined && typeof edge.uncertain !== 'boolean') return `${at}.uncertain: expected a boolean`
+    if (edge.feedback !== undefined && typeof edge.feedback !== 'boolean') return `${at}.feedback: expected a boolean`
     connected.add(edge.from).add(edge.to)
     relations.add(relation)
   }
   if (connected.size !== ids.size) return `${path}.edges: every step needs a connection`
   if (caption !== undefined && !shortText(caption, 180)) return `${path}.caption: expected 1 to 180 characters`
-  if (flowLevels(nodes, edges) === null) return `${path}.edges: use an acyclic flow, or use GenUI Mermaid for a loop`
+  const levels = flowLevels(nodes, edges)
+  if (!levels) return `${path}.edges: mark loop return arrows as feedback:true`
+  const ranks = new Map(levels.flatMap((level, rank) => level.map(node => [node.id, rank])))
+  if (edges.some(edge => edge.feedback && ranks.get(edge.from) <= ranks.get(edge.to))) return `${path}.edges: feedback arrows must return to an earlier step`
   return undefined
 }

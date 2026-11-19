@@ -83,13 +83,13 @@ export function install(rt) {
     text: context => promptFor(context?.agent?.id),
   }), 'chemclaw-bot: identity section')
   ctx.effect(() => ctx.systemPrompt.section({
-    name: 'chemclaw-visual-delivery', order: 646, interpolate: false,
+    name: 'chemclaw-visual-delivery', order: (ctx.systemPrompt.getSectionOrder?.('STRUCTURED_OUTPUT') ?? 9900) + 1, interpolate: false,
     text: context => {
       if (rt.roomOf(context?.agent?.id) || context?.agent?.session?.header?.parentSession !== undefined) return ''
       const router = nativeViewAvailable(ctx, context?.agent, context?.toolSet) ? NATIVE_VIEW_POLICY : GENUI_VIEW_POLICY
       const policy = VIEW_POLICY + '\n' + router
       return rt.state?.prefs?.advancedCharts === false
-        ? policy + '\nAdvanced charts are disabled in ChemClaw Settings. Use an SVG chart or table instead of the seven advanced ECharts types. Explain the setting if the user requests one. GenUI nonchart components such as timeline and Mermaid remain available.'
+        ? policy + '\nAdvanced charts are disabled in ChemClaw Settings. Use an SVG chart or table in place of the seven advanced ECharts types. Explain the setting if the user requests one.'
         : policy
     },
   }), 'chemclaw-bot: visual delivery policy')

@@ -215,7 +215,9 @@ test('native flow views accept bounded declarative branches and reject invalid e
     edges: [{ from: 'a', to: 'b' }, { from: 'a', to: 'c', uncertain: true }],
   }
   assert.deepEqual(validateView(flow), { ok: true, interactive: false })
-  assert.match(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'a' }] }).error, /acyclic/)
+  assert.match(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'a' }] }).error, /feedback:true/)
+  assert.equal(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'a', feedback: true }] }).ok, true)
+  assert.match(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'c', feedback: true }] }).error, /earlier step/)
   assert.match(validateView({ ...flow, edges: [{ from: 'a', to: 'missing' }] }).error, /existing node IDs/)
   assert.match(validateView({ ...flow, nodes: [{ ...flow.nodes[0], html: '<svg/>' }, ...flow.nodes.slice(1)] }).error, /use id, label, detail and tone only/)
 })

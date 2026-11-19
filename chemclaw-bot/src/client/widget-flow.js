@@ -55,6 +55,10 @@ function layout(nodes, edges) {
     const start = from.rowBottom + 8
     const end = to.rowTop - 8
     const middle = (start + end) / 2
+    if (edge.feedback) {
+      width += 22
+      return { ...edge, d: `M${x1} ${y1} V${start + 12} H${width} V${end - 5} H${x2} V${y2}`, x: (x1 + width) / 2, y: start + 5 }
+    }
     if (to.rank - from.rank === 1) {
       return { ...edge, d: `M${x1} ${y1} V${start} C${x1} ${middle} ${x2} ${middle} ${x2} ${end} V${y2}`, x: (x1 + x2) / 2, y: middle - 7 }
     }
@@ -77,7 +81,7 @@ export function FlowView({ node }) {
         h('desc', { id: `${id}-desc` }, `${description}${hasUncertain ? `. ${uncertain}` : ''}`),
         h('defs', null, [false, true].map(dashed => h('marker', { key: Number(dashed), id: `${id}-arrow-${Number(dashed)}`, markerWidth: 8, markerHeight: 8, refX: 7, refY: 4, orient: 'auto' },
           h('path', { d: 'M0 0 L8 4 L0 8 Z', className: dashed ? 'bt-flow-arrow-uncertain' : 'bt-flow-arrow' })))),
-        connections.map((edge, index) => h('g', { key: index, className: 'bt-flow-connection', 'data-uncertain': edge.uncertain || undefined },
+        connections.map((edge, index) => h('g', { key: index, className: 'bt-flow-connection', 'data-uncertain': edge.uncertain || undefined, 'data-feedback': edge.feedback || undefined },
           h('path', { d: edge.d, markerEnd: `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` }),
           edge.label && h('text', { x: edge.x, y: edge.y, textAnchor: 'middle' }, edge.label))),
         boxes.map(step => h('g', { key: step.id, className: 'bt-flow-step', 'data-tone': step.tone ?? 'info' },
