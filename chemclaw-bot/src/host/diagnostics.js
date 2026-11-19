@@ -231,7 +231,7 @@ export function install(rt) {
     const clientEntries = sanitizeClientEntries(body.clientErrors)
     const hostFacts = facts()
     const responseTimings = rt.responseTimings?.() ?? []
-    const timingNote = responseTimings.length ? `\n\nResponse timings (milliseconds from turn start; request dispatch, first model chunk, first text, end):\n\n\`\`\`json\n${JSON.stringify(responseTimings, null, 2)}\n\`\`\`` : ''
+    const timingNote = responseTimings.length ? `\n\nResponse timings (milliseconds from turn start; request dispatch, first model chunk, reasoning, tools, first visible text, end):\n\n\`\`\`json\n${JSON.stringify(responseTimings, null, 2)}\n\`\`\`` : ''
     return {
       facts: hostFacts,
       entries: list.slice(-50).reverse(),

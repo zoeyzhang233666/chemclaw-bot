@@ -1,5 +1,11 @@
 // Synthetic fixtures for protocol/renderer validation, never business evidence.
 export const GENUI_EXAMPLES = {
+  marketstats: { title: 'Synthetic market metrics', items: [{ type: 'row', items: [
+    { type: 'stat', label: '最新收盘', value: '4,837 元/吨' },
+    { type: 'stat', label: '日涨跌', value: '-63 元/吨', delta: '-1.29%' },
+    { type: 'stat', label: '持仓量', value: '345,883 手' },
+    { type: 'stat', label: '31 日区间', value: '4,682 – 5,578' },
+  ] }] },
   timeline: { title: 'Synthetic project milestones', items: [{ type: 'timeline', items: [
     { title: 'Requirements', time: '2026-10-01', desc: 'Scope agreed' },
     { title: 'Pilot', time: '2026-10-15', desc: 'Pilot complete' },

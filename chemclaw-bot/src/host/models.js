@@ -3,6 +3,8 @@
 // user picks one in its chat. The Session keeps the selection durably.
 import { assembleAuxiliaryLlm } from './auxiliary-llm.js'
 import { normalize, splitRef } from './text.js'
+import { APIHUB } from '../shared/model-providers.js'
+import { isNativeViewSession } from './native-view-session.js'
 
 const CATALOG_TTL_MS = 10_000
 const ROUTE_WAIT_MS = 30_000
@@ -106,6 +108,37 @@ export function install(rt) {
   }
   const defaultModel = async () => pickDefault(await catalog())
 
+  const nativeHasSelection = agent => agent.session.snapshotEvents?.().some(event => event.type === 'model/selection'
+    || event.type === 'assistant/message' || event.type === 'step/start') === true
+
+  async function apiHubDefault(entries) {
+    const models = entries.filter(entry => entry.provider === APIHUB.id && !entry.needsKey)
+    const flash = APIHUB.preferredModels.map(id => models.find(model => model.id === id)).find(Boolean)
+    const ref = (flash ?? models[0])?.ref
+    if (ref === undefined) return undefined
+    const route = splitRef(ref)
+    const reasoning = flash && await reasoningOf(ref)
+    return reasoning?.efforts?.some(effort => effort.id === 'off') ? { ...route, reasoningEffort: 'off' } : route
+  }
+
+  async function initializeApiHubDefault() {
+    const defaults = ctx.get?.('agentDefaultModel')
+    if (!defaults?.saveSelection) return
+    const entries = await catalog()
+    const before = defaults.currentSelection()
+    const ref = defaultRef()
+    if (entries.some(entry => !entry.needsKey && entry.ref === ref)) return
+    const route = await apiHubDefault(entries)
+    if (!route || !sameSelection(defaults.currentSelection(), before)) return
+    const agents = (ctx.get?.('agents')?.list?.() ?? []).filter(agent => isNativeViewSession(rt, agent) && !nativeHasSelection(agent)
+      && (agent.model?.current() === undefined || sameSelection(agent.model.current(), before)))
+    await defaults.saveSelection(route)
+    for (const agent of agents) {
+      const current = agent.model?.current()
+      if (!nativeHasSelection(agent) && (current === undefined || sameSelection(current, before))) agent.model?.select(route)
+    }
+  }
+
   // A full `provider/model` ref, or a model id or name that only one provider serves.
   async function resolveModel(text) {
     const entries = await catalog({ fresh: true })
@@ -133,6 +166,17 @@ export function install(rt) {
 
   async function selectAgentModel(agent, signal) {
     if (signal?.aborted || !agent.model?.select || rt.readOnly?.()) return
+    if (isNativeViewSession(rt, agent)) {
+      const current = agent.model.current()
+      if (current?.provider === APIHUB.id || nativeHasSelection(agent)) return
+      if (current && !sameSelection(current, ctx.get?.('agentDefaultModel')?.currentSelection?.())) return
+      if (!ctx.llm.listProviders().some(provider => provider.id === APIHUB.id)) return
+      const entries = await catalog()
+      if (current && entries.some(entry => !entry.needsKey && entry.ref === `${current.provider}/${current.model}`)) return
+      const route = await apiHubDefault(entries)
+      if (route && !signal?.aborted && sameSelection(agent.model.current(), current)) agent.model.select(route)
+      return
+    }
     const bot = rt.botOf?.(rt.selfOf?.(agent.id))
     if (bot ? rt.isBotSession?.(agent.id) === false : rt.roomOf?.(agent.id) === undefined) return
     const ref = bot ? await desiredModel(bot) : await defaultModel()
@@ -226,7 +270,7 @@ export function install(rt) {
     return run
   }
 
-  const sameSelection = (a, b) => a?.provider === b.provider && a.model === b.model && a.reasoningEffort === b.reasoningEffort
+  const sameSelection = (a, b) => a?.provider === b?.provider && a?.model === b?.model && a?.reasoningEffort === b?.reasoningEffort
 
   // `force` re-selects even when the record says it is applied: the composer's own
   // model picker can move the Session without telling this plugin.
@@ -293,6 +337,6 @@ export function install(rt) {
     catalog, cachedCatalog: () => catalogCache.value, cachedDefault: () => pickDefault(catalogCache.value),
     defaultRef, defaultModel, defaultEffort, resolveModel, desiredModel, reasoningOf, resolveEffort, desiredEffort,
     selectSessionModel, applyModel, waitForModel, syncModels, selectAgentModel, syncLiveModels,
-    dropCatalog,
+    dropCatalog, initializeApiHubDefault,
   })
 }

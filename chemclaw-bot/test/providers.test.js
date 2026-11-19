@@ -17,7 +17,7 @@ function dsh({ keys = {}, readOnly = [], user = {}, base = {}, catalog = { anthr
   const routes = () => Object.keys(piValue().providers)
   const metadata = model => typeof model === 'string' ? { id: model } : model
   const services = {
-    agentDefaultModel: { currentSelection: () => defaultSelection },
+    agentDefaultModel: { currentSelection: () => defaultSelection, saveSelection: async route => { defaultSelection = route } },
     settings: {
       describe: () => [
         { ns: 'llm-deepseek', revision: 0, value: { apiKeyEnv: 'DEEPSEEK_API_KEY' }, user: {}, base: { apiKeyEnv: 'DEEPSEEK_API_KEY' } },
@@ -92,6 +92,33 @@ function liveAgent(id) {
 const visionIds = ['minimax-m3.1-flash', 'kimi-k2.6', 'minimax-m3', 'qwen3.8-max']
 const visionCatalog = { native: visionIds.map(id => ({ id, inputModalities: ['text', 'image'] })) }
 const apiHubRoute = models => ({ displayName: APIHUB.name, api: APIHUB.api, baseURL: APIHUB.baseURL, apiKeyEnv: 'APIHUB_API_KEY', models })
+
+test('saving APIHub selects Flash for the profile and an unconfigured Classic Session', async () => {
+  const { rt } = dsh()
+  rt.isBotSession = id => id === 'expert'
+  rt.roomOf = () => undefined
+  const blank = liveAgent('blank')
+  blank.session = { id: blank.id, snapshotEvents: () => [] }
+  blank.model.select({ provider: 'deepseek-official', model: 'deepseek-flash' })
+  const selected = liveAgent('existing')
+  selected.session = { id: selected.id, snapshotEvents: () => [{ type: 'model/selection' }] }
+  const before = selected.model.current()
+  const get = rt.ctx.get
+  rt.ctx.get = name => name === 'agents' ? { list: () => [blank, selected] } : get(name)
+  rt.ctx.llm.resolveModelInfo = async () => ({ reasoning: { efforts: [{ id: 'off' }, { id: 'high' }] } })
+  await rt.addProvider({ preset: 'apihub', key: 'synthetic-only', models: ['other', 'deepseek-v4.1-flash'] })
+  const expected = { provider: 'apihub', model: 'deepseek-v4.1-flash', reasoningEffort: 'off' }
+  assert.deepEqual(rt.ctx.get('agentDefaultModel').currentSelection(), expected)
+  assert.deepEqual(blank.model.current(), expected)
+  assert.deepEqual(selected.model.current(), before)
+})
+
+test('APIHub fills a missing default but preserves a configured profile model', async () => {
+  const { rt } = dsh({ keys: { DEEPSEEK_API_KEY: 'synthetic-only' } })
+  const before = rt.ctx.get('agentDefaultModel').currentSelection()
+  await rt.addProvider({ preset: 'apihub', key: 'synthetic-only', models: ['other', 'deepseek-v4.1-flash'] })
+  assert.deepEqual(rt.ctx.get('agentDefaultModel').currentSelection(), before)
+})
 
 test('APIHub setup fills exact catalog IDs while preserving explicit inputs and unknown IDs', async () => {
   const { rt, writes } = dsh({ catalog: visionCatalog })

@@ -237,6 +237,27 @@ export async function checkClassicSessions(cdp) {
   await until(`${visible('Synthetic renderer verification.')} && ${visible('Pilot complete')}`, 'GenUI timeline and ordinary Markdown together')
   await waitRunning(b, false)
   assert.equal(await current(), b)
+  await send('GenUI check marketstats')
+  const metrics = "[...document.querySelectorAll('[data-genui]')].find(node => node.innerText.includes('Synthetic market metrics'))"
+  await until(`${metrics}?.querySelectorAll('[class$="_statValue"]').length === 4`, 'GenUI market metrics in Classic')
+  const metricsFit = `(() => {
+    const metrics = ${metrics};
+    return [...metrics.querySelectorAll('[class$="_statValue"]')].every(node =>
+      getComputedStyle(node).whiteSpace === 'nowrap' && node.scrollWidth <= node.clientWidth + 1);
+  })()`
+  await until(metricsFit, 'four intact market figures in Classic')
+  await cdp.call('Emulation.setDeviceMetricsOverride', { width: 780, height: 860, deviceScaleFactor: 1, mobile: false })
+  try { await until(metricsFit, 'market figures stay intact in a narrow window') }
+  finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
+  await waitRunning(b, false)
+  await click('.bt-return')
+  await show(expertSession, `[data-bot-id="${expert.id}"]`)
+  await send('GenUI check marketstats')
+  await until(`${metrics}?.closest('.bt-rich-reply')`, 'expert GenUI outside the speech bubble')
+  assert.equal(await evaluate(`Boolean(${metrics}.closest('.bt-bubble'))`), false)
+  await waitRunning(expertSession, false)
+  await enterClassic()
+  assert.equal(await current(), b)
   console.log('check-packed: Classic Session isolation, background streams, and explicit team history passed')
   return { id: b, marker: bText, other: aText }
 }

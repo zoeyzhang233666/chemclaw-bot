@@ -5,6 +5,7 @@ export const APIHUB = Object.freeze({
   tokenUrl: 'https://apihub.chem-cloud.cn/keys',
   portalUrl: 'https://apihub.chem-cloud.cn/',
   api: 'openai-completions',
+  preferredModels: ['deepseek-v4.1-flash', 'deepseek-v4-flash', 'deepseek-flash'],
 })
 
 // OpenCode Zen Go: same key as Zen (`OPENCODE_API_KEY`), different base from `opencode`.

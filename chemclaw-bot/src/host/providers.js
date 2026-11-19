@@ -242,8 +242,9 @@ export function install(rt) {
     return ref
   }
 
-  async function providersChanged() {
+  async function providersChanged(provider) {
     rt.dropCatalog()
+    if (provider === APIHUB.id) await rt.initializeApiHubDefault?.()
     await rt.syncLiveModels?.()
   }
 
@@ -251,7 +252,7 @@ export function install(rt) {
   async function setProviderKey(provider, value) {
     const key = checkKey(value)
     await usable().credentials.set(await writableRef(provider), key)
-    await providersChanged()
+    await providersChanged(provider)
   }
 
   async function clearProviderKey(provider) {
@@ -310,7 +311,7 @@ export function install(rt) {
     if (key && info.writable === false) throw invalid('This APIHub key is configured outside ChemClaw')
     await settings.mutate(PI_AI, [{ op: 'set', path: entry?.settingsPath ?? ['providers', APIHUB.id], value: { ...profile, displayName: APIHUB.name, api: APIHUB.api, baseURL: APIHUB.baseURL, apiKeyEnv: ref, models } }], map.get(PI_AI)?.revision)
     if (key) await credentials.set(ref, key)
-    await providersChanged()
+    await providersChanged(APIHUB.id)
     return providersView()
   }
 

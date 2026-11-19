@@ -607,11 +607,18 @@ const SHARED_END_CSS = `
    sender's avatar) line up with the bubble alone. */
 .bt-msg-line{position:relative;display:flex;align-items:flex-end;gap:8px;max-width:100%}
 .bt-msg-line>.bt-bubble{max-width:none;min-width:0}
-.bt-msg:has([data-genui-explicit-fence]),.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line{width:100%}
-.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line>.bt-bubble{flex:1}
+.bt-msg:has(.bt-rich-reply),.bt-msg:has(.bt-rich-reply)>.bt-msg-line{width:100%}
+.bt-rich-reply{flex:1;min-width:0;color:var(--bt-ink);font-size:var(--dsh-content-font-size,14px)}
 [data-genui-surface^="chemclaw-bot/"] [data-genui=true]{--dsl-g-font-h1:max(18px,calc(var(--dsh-content-font-size,14px) * 1.2));--dsl-g-gap-xl:16px}
 [data-genui-surface^="chemclaw-bot/"] input[type=range]{min-width:0;max-width:100%}
-@media(max-width:600px){.bt-msg:has([data-genui-explicit-fence]),.bt-astack[data-lead]>.bt-msg:has([data-genui-explicit-fence]){max-width:calc(100% - 8px)}}
+@media(max-width:600px){.bt-msg:has(.bt-rich-reply),.bt-astack[data-lead]>.bt-msg:has(.bt-rich-reply){max-width:calc(100% - 8px)}}
+
+/* GenUI's pinned renderer gives stat and row classes stable CSS-module suffixes. */
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] :is([class$="_stat"],[class*="_stat "]){container-type:inline-size}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] [class$="_statValue"]{font-family:inherit;font-size:clamp(16px,14cqi,24px);white-space:nowrap;overflow-wrap:normal;flex-wrap:wrap;overflow-x:auto;scrollbar-width:thin}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] [class$="_statUnit"]{white-space:nowrap;font-size:.66em}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] :is([class$="_row"],[class*="_row "]):has(>[class$="_stat"]):not(:has(>:not([class$="_stat"]))){display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));align-items:start;gap:12px 16px}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] :is([class$="_row"],[class*="_row "]):has(>[class$="_stat"]):not(:has(>:not([class$="_stat"])))>[class$="_stat"]{padding:0;border:0;background:none;box-shadow:none}
 /* The same bubble width as beside an avatar column: the share of (100% - 30px), plus the 30px. */
 .bt-astack[data-lead]>.bt-msg{max-width:min(calc(var(--bt-msg-w) * (100% - 30px) + 30px),calc(100% - 52px))}
 .bt-tools{position:absolute;top:50%;left:100%;margin-left:6px;transform:translateY(-50%);display:flex;gap:2px;opacity:0;visibility:hidden;transition:opacity .12s ease,visibility .12s}

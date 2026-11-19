@@ -1,5 +1,7 @@
 const integer = value => Number.isSafeInteger(value) && value >= 0
 
+export const hasGenuiFence = text => /^ {0,3}(?:`{3,}|~{3,})[ \t]*dsh-ui(?:[>"'.,;:)\]】」』]+)?[ \t]*\r?$/imu.test(text)
+
 // GenUI owns recognition and rendering. This service owns only ChemClaw's
 // durable message identities and the lifetime of their prompt routes.
 export function createGenuiSurfaces(report = () => {}) {

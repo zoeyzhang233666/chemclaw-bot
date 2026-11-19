@@ -24,7 +24,7 @@ import { BtwCardView } from './btw.js'
 import { partIndexOf, withBtwRows } from './btw-model.js'
 import { layoutOf, thinkingShown } from './themes.js'
 import { toolActivityDetail, liveActivitySummary } from '../shared/tool-activity.js'
-import { assistantTextBlocks } from './genui-surfaces.js'
+import { assistantTextBlocks, hasGenuiFence } from './genui-surfaces.js'
 
 export { clockLabel }
 
@@ -60,6 +60,7 @@ export function Bubbles({ texts, genui, roster, selfId, actions, streaming, sess
 }
 
 function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+  const rich = hasGenuiFence(text)
   const { shown, folded, control } = useFold(text, { limit: fold, whole, live })
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live })
   const key = msgKey ? `${msgKey}:${index}` : undefined
@@ -68,13 +69,13 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
   const markdown = useRef(null)
   const source = genui?.source ?? 'chemclaw-bot/assistant'
   useLayoutEffect(() => {
-    if (live || folded || !genui || !/dsh-ui/i.test(text) || !actions.genuiSurfaces) return undefined
+    if (live || folded || !genui || !rich || !actions.genuiSurfaces) return undefined
     return actions.genuiSurfaces.add({
       root: markdown.current, source, threadId: genui.threadId,
       eventSeq: genui.eventSeq, contentBlockIndex: genui.contentBlockIndex, text,
       sendPrompt: prompt => actions.sendGenui(genui.threadId, prompt),
     })
-  }, [actions, live, folded, text, source, genui?.threadId, genui?.eventSeq, genui?.contentBlockIndex])
+  }, [actions, live, folded, rich, text, source, genui?.threadId, genui?.eventSeq, genui?.contentBlockIndex])
   // Touch has no hover: a tap on the bubble opens its tools, a tap elsewhere
   // closes them. Interactive targets keep their own meaning.
   const [toolsOpen, setToolsOpen] = useState(false)
@@ -86,7 +87,7 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
   return h('div', { ref: row, className: 'bt-msg', onClick: tapTools },
     h('div', { className: 'bt-msg-line' },
       lead,
-      h('div', { className: 'bt-bubble', 'data-folded': folded || undefined },
+      h('div', { className: rich ? 'bt-rich-reply' : 'bt-bubble', 'data-folded': folded || undefined },
         h('div', { ref: markdown, className: control ? 'bt-fold-body' : undefined, 'data-genui-surface': source }, body),
         control),
       live ? null : h(MessageTools, { text: folded ? text : shown, name: roster.byId[selfId]?.name ?? t('Bot'), sessionId, react: key ? emoji => actions.toggleReaction(msgKey, index, emoji) : undefined, actions, open: toolsOpen })),

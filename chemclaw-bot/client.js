@@ -3601,11 +3601,18 @@ var SHARED_END_CSS = `
    sender's avatar) line up with the bubble alone. */
 .bt-msg-line{position:relative;display:flex;align-items:flex-end;gap:8px;max-width:100%}
 .bt-msg-line>.bt-bubble{max-width:none;min-width:0}
-.bt-msg:has([data-genui-explicit-fence]),.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line{width:100%}
-.bt-msg:has([data-genui-explicit-fence])>.bt-msg-line>.bt-bubble{flex:1}
+.bt-msg:has(.bt-rich-reply),.bt-msg:has(.bt-rich-reply)>.bt-msg-line{width:100%}
+.bt-rich-reply{flex:1;min-width:0;color:var(--bt-ink);font-size:var(--dsh-content-font-size,14px)}
 [data-genui-surface^="chemclaw-bot/"] [data-genui=true]{--dsl-g-font-h1:max(18px,calc(var(--dsh-content-font-size,14px) * 1.2));--dsl-g-gap-xl:16px}
 [data-genui-surface^="chemclaw-bot/"] input[type=range]{min-width:0;max-width:100%}
-@media(max-width:600px){.bt-msg:has([data-genui-explicit-fence]),.bt-astack[data-lead]>.bt-msg:has([data-genui-explicit-fence]){max-width:calc(100% - 8px)}}
+@media(max-width:600px){.bt-msg:has(.bt-rich-reply),.bt-astack[data-lead]>.bt-msg:has(.bt-rich-reply){max-width:calc(100% - 8px)}}
+
+/* GenUI's pinned renderer gives stat and row classes stable CSS-module suffixes. */
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] :is([class$="_stat"],[class*="_stat "]){container-type:inline-size}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] [class$="_statValue"]{font-family:inherit;font-size:clamp(16px,14cqi,24px);white-space:nowrap;overflow-wrap:normal;flex-wrap:wrap;overflow-x:auto;scrollbar-width:thin}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] [class$="_statUnit"]{white-space:nowrap;font-size:.66em}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] :is([class$="_row"],[class*="_row "]):has(>[class$="_stat"]):not(:has(>:not([class$="_stat"]))){display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));align-items:start;gap:12px 16px}
+:is([data-conversation-scroll],[data-genui-surface]) [data-genui] :is([class$="_row"],[class*="_row "]):has(>[class$="_stat"]):not(:has(>:not([class$="_stat"])))>[class$="_stat"]{padding:0;border:0;background:none;box-shadow:none}
 /* The same bubble width as beside an avatar column: the share of (100% - 30px), plus the 30px. */
 .bt-astack[data-lead]>.bt-msg{max-width:min(calc(var(--bt-msg-w) * (100% - 30px) + 30px),calc(100% - 52px))}
 .bt-tools{position:absolute;top:50%;left:100%;margin-left:6px;transform:translateY(-50%);display:flex;gap:2px;opacity:0;visibility:hidden;transition:opacity .12s ease,visibility .12s}
@@ -8210,6 +8217,7 @@ var WIDGET_CSS = `
 .bt-q-raised .bt-view-body{padding:0 16px 14px 20px}
 .bt-q-raised .bt-view-body .bt-q-list{padding:0;margin:0 -8px}
 .bt-q-inline .bt-view{margin:0;width:100%;max-width:min(100%,max(calc(var(--bt-msg-w,.8) * 100%),560px));order:0}
+.bt-q-inline[data-classic-native-view] .bt-view{max-width:100%}
 body[data-bt-layout=flat] .bt-q-inline .bt-view{max-width:calc(var(--bt-flat-w,1) * 100%)}
 .bt-q-inline:has(>.bt-view-bare){margin:8px 0 12px}
 @media (prefers-reduced-motion:reduce){.bt-widget-progress-fill,.bt-view-radio-dot,.bt-view-tools,.bt-view-more{transition:none}.bt-view-bare{animation:none}}
@@ -9166,7 +9174,8 @@ var APIHUB = Object.freeze({
   baseURL: "https://apihub.chem-cloud.cn/v1",
   tokenUrl: "https://apihub.chem-cloud.cn/keys",
   portalUrl: "https://apihub.chem-cloud.cn/",
-  api: "openai-completions"
+  api: "openai-completions",
+  preferredModels: ["deepseek-v4.1-flash", "deepseek-v4-flash", "deepseek-flash"]
 });
 var OPENCODE_GO = Object.freeze({
   id: "opencode-go",
@@ -10717,6 +10726,7 @@ function liveActivitySummary(name, arg) {
 
 // src/client/genui-surfaces.js
 var integer = (value2) => Number.isSafeInteger(value2) && value2 >= 0;
+var hasGenuiFence = (text) => /^ {0,3}(?:`{3,}|~{3,})[ \t]*dsh-ui(?:[>"'.,;:)\]】」』]+)?[ \t]*\r?$/imu.test(text);
 function createGenuiSurfaces(report = () => {
 }) {
   const surfaces = /* @__PURE__ */ new Set();
@@ -10824,6 +10834,7 @@ function Bubbles({ texts: texts2, genui, roster, selfId, actions, streaming, ses
   );
 }
 function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+  const rich = hasGenuiFence(text);
   const { shown, folded, control } = useFold(text, { limit: fold, whole, live });
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live });
   const key = msgKey ? `${msgKey}:${index}` : void 0;
@@ -10832,7 +10843,7 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
   const markdown = (0, import_react23.useRef)(null);
   const source = genui?.source ?? "chemclaw-bot/assistant";
   (0, import_react23.useLayoutEffect)(() => {
-    if (live || folded || !genui || !/dsh-ui/i.test(text) || !actions.genuiSurfaces) return void 0;
+    if (live || folded || !genui || !rich || !actions.genuiSurfaces) return void 0;
     return actions.genuiSurfaces.add({
       root: markdown.current,
       source,
@@ -10842,7 +10853,7 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
       text,
       sendPrompt: (prompt) => actions.sendGenui(genui.threadId, prompt)
     });
-  }, [actions, live, folded, text, source, genui?.threadId, genui?.eventSeq, genui?.contentBlockIndex]);
+  }, [actions, live, folded, rich, text, source, genui?.threadId, genui?.eventSeq, genui?.contentBlockIndex]);
   const [toolsOpen, setToolsOpen] = (0, import_react23.useState)(false);
   useDismiss(toolsOpen, () => setToolsOpen(false), [row]);
   const tapTools = (event) => {
@@ -10858,7 +10869,7 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
       lead,
       (0, import_react23.createElement)(
         "div",
-        { className: "bt-bubble", "data-folded": folded || void 0 },
+        { className: rich ? "bt-rich-reply" : "bt-bubble", "data-folded": folded || void 0 },
         (0, import_react23.createElement)("div", { ref: markdown, className: control ? "bt-fold-body" : void 0, "data-genui-surface": source }, body),
         control
       ),
