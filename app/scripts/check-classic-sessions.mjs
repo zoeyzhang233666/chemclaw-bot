@@ -125,8 +125,15 @@ export async function checkClassicSessions(cdp) {
   assert.equal(await current(), a, 'Native show_view navigated into an unrelated expert group')
   assert.equal(await evaluate(visible('CLASSIC_NATIVE_PROSE_VISIBLE')), true, 'Native view hid the normal answer')
   assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready] .bt-view')?.textContent.includes('Native fixture metric')"), true)
-  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready] details.bt-classic-view-details') !== null"), true,
-    'The native show_view call lost its inspectable Tool arguments')
+  // Native cards belong in the conversation, but call IDs, raw JSON and
+  // developer Inspect controls belong in DSH's separate 轨迹/trajectory view.
+  // Regresses the visibly ugly block found in macOS #160 field testing.
+  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready] details, [data-classic-native-view=ready] pre, [data-classic-native-view=ready] button') !== null"), false,
+    'Native card exposed raw Tool call details inside the answer')
+  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready]')?.innerText.includes('show_view · call_')"), false,
+    'Native answer leaked the tool call ID')
+  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready]')?.innerText.includes('argsRaw')"), false,
+    'Native answer leaked raw tool JSON')
   await waitRunning(expertSession, false)
   assert.equal(await current(), a)
   assert.ok((await history(expertSession)).includes(expertReply))
