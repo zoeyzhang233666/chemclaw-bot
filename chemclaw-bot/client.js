@@ -2042,8 +2042,8 @@ function bodyOf(def, paint, flat = false) {
     return "";
   }
 }
-var eyeMarkup = ([cx, cy, w, h59, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><rect class="bt-eye" x="${-w / 2}" y="${-h59 / 2}" width="${w}" height="${h59}" rx="${w / 2}"/></g>`;
-var happyEyeMarkup = ([cx, cy, w, h59, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><path class="bt-eye-happy" opacity="0" d="M${-w * 0.62} ${h59 * 0.14}Q0 ${-h59 * 0.42} ${w * 0.62} ${h59 * 0.14}" fill="none" stroke="#000" stroke-width="${w * 0.5}" stroke-linecap="round"/></g>`;
+var eyeMarkup = ([cx, cy, w, h60, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><rect class="bt-eye" x="${-w / 2}" y="${-h60 / 2}" width="${w}" height="${h60}" rx="${w / 2}"/></g>`;
+var happyEyeMarkup = ([cx, cy, w, h60, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><path class="bt-eye-happy" opacity="0" d="M${-w * 0.62} ${h60 * 0.14}Q0 ${-h60 * 0.42} ${w * 0.62} ${h60 * 0.14}" fill="none" stroke="#000" stroke-width="${w * 0.5}" stroke-linecap="round"/></g>`;
 var maskBox = (size) => `maskUnits="userSpaceOnUse" x="${-size}" y="${-size}" width="${size * 3}" height="${size * 3}"`;
 var holes = (def, eyes) => `<rect x="${-def.size}" y="${-def.size}" width="${def.size * 3}" height="${def.size * 3}" fill="#fff"/>${eyes}`;
 var MASK_ID = "%MASK%";
@@ -2832,12 +2832,12 @@ function liveSprings(apply2) {
     const dt = Math.min(0.5, Math.max(1e-3, (now - last) / 1e3));
     last = now;
     const steps = Math.ceil(dt * 240);
-    const h59 = dt / steps;
+    const h60 = dt / steps;
     let moving = false;
     for (const value2 of values.values()) {
       for (let index = 0; index < steps; index += 1) {
-        value2.v += (-value2.k * (value2.x - value2.to) - value2.c * value2.v) * h59;
-        value2.x += value2.v * h59;
+        value2.v += (-value2.k * (value2.x - value2.to) - value2.c * value2.v) * h60;
+        value2.x += value2.v * h60;
       }
       if (Math.abs(value2.x - value2.to) < 0.05 && Math.abs(value2.v) < 1) {
         value2.x = value2.to;
@@ -24803,6 +24803,52 @@ function createSwitchWindow(settle) {
   };
 }
 
+// src/client/classic-view-protocol.js
+var resultText = (block) => (Array.isArray(block?.content) ? block.content : []).filter((part) => part?.type === "text").map((part) => part.text ?? "").join("\n");
+function classicNativeViewState(phase, block) {
+  if (phase !== "result") return { status: "pending" };
+  if (block?.isError === true || block?.error) return { status: "failed" };
+  const reply = resultText(block);
+  if (!/^The view is on screen\.$/u.test(reply.trim())) return { status: "rejected", reply };
+  const args = block?.args;
+  const raw = typeof block?.argsRaw === "string" ? (() => {
+    try {
+      return JSON.parse(block.argsRaw);
+    } catch {
+      return {};
+    }
+  })() : {};
+  const title = typeof args?.value === "function" ? args.value("title") : raw.title;
+  const view = typeof args?.value === "function" ? args.value("view") : raw.view;
+  const checked = checkShownView(title, view);
+  if (checked.error !== void 0 || checked.interactive) return { status: "invalid", error: checked.error ?? "This view needs a submit action." };
+  return { status: "ready", title: checked.title, view: checked.view };
+}
+
+// src/client/classic-native-view.js
+var import_react62 = require("react");
+function ClassicShowView({ phase, block, callId, inspect }) {
+  const state = classicNativeViewState(phase, block);
+  const details = (0, import_react62.createElement)(
+    "details",
+    { className: "bt-classic-view-details" },
+    (0, import_react62.createElement)("summary", null, "show_view · ", callId),
+    (0, import_react62.createElement)("pre", null, typeof block?.argsRaw === "string" ? block.argsRaw : JSON.stringify(block?.args?.value?.("view") ?? {}, null, 2)),
+    state.status !== "ready" && state.reply ? (0, import_react62.createElement)("p", null, state.reply) : null,
+    inspect ? (0, import_react62.createElement)("button", { type: "button", onClick: inspect }, "Inspect") : null
+  );
+  return (0, import_react62.createElement)(
+    "div",
+    { className: "bt-classic-native-view", "data-classic-native-view": state.status },
+    state.status === "ready" ? (0, import_react62.createElement)("div", { className: "bt-q-inline" }, (0, import_react62.createElement)(DeliveredView, { title: state.title, view: state.view })) : (0, import_react62.createElement)(
+      "div",
+      { className: "bt-classic-view-feedback", role: "status" },
+      state.status === "pending" ? "Preparing view…" : "View was not displayed. The text answer is preserved."
+    ),
+    details
+  );
+}
+
 // src/client/index.js
 var inject = ["sessions", "uiWorkspace", "uiConversation", "slots", "theme", "layout"];
 function apply(ctx) {
@@ -25625,6 +25671,10 @@ function apply(ctx) {
     ...options.priority === void 0 ? {} : { priority: freePriority(ctx.slots.entries(name), options) }
   }, component));
   const installHeader = () => ctx.slots.inject("conversation.session.header", () => installHeaderNavigation(ctx.slots, face, HeaderPill, BOT_PRIORITY));
+  ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+    name: "tool.call.toolview",
+    key: "show_view"
+  }, ClassicShowView));
   ctx.effect(installTheme, "chemclaw-bot: shared theme");
   ctx.effect(() => installCompiledStyles(BRAND_CSS, "brand"), "chemclaw-bot: brand styles");
   shadow("sidebar.brand.mark", { priority: BOT_PRIORITY }, BrandMark);
