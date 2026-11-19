@@ -22,3 +22,13 @@ test('classic native renderer draws only a Host-accepted display view', () => {
 test('classic view result cannot fake an accepted UI on a failed tool', () => {
   assert.equal(classicNativeViewState('result', { isError: true, content: [{ type: 'text', text: 'The view is on screen.' }] }).status, 'failed')
 })
+
+// DSH's settled ToolResultNode stores the original call under `call`. Ensure
+// native cards survive a real tool-result transition and persisted reload.
+test('accepted DSH ToolResultNode reads its call.argsRaw for an inline native card', () => {
+  const args = { title: 'Daily prices', view: { type: 'chart', kind: 'line', categories: ['Mon', 'Tue'], series: [{ name: 'Price', values: [1, 2] }] } }
+  const block = { kind: 'tool-result', call: { name: 'show_view', argsRaw: JSON.stringify(args) }, content: [{ type: 'text', text: 'The view is on screen.' }] }
+  assert.deepEqual(classicNativeViewState('result', block), { status: 'ready', ...args })
+  assert.equal(classicNativeViewState('result', { ...block, isError: true }).status, 'failed')
+  assert.equal(classicNativeViewState('result', { ...block, call: { ...block.call, argsRaw: '{broken' } }).status, 'invalid')
+})
