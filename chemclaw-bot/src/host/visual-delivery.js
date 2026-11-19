@@ -263,18 +263,18 @@ export function requestedViewReminder(turn, bot, kinds) {
     + (kinds.includes('candlestick')
       ? (bot
         ? 'For a candlestick use native show_view chart kind candlestick with 2-50 actual dated OHLC bars, no categories/series. Do not add a second line chart or HTML. '
-        : 'For a candlestick use a single GenUI dsh-ui ECharts candlestick full-option view. ')
+        : 'For a candlestick use native show_view chart kind candlestick with 2-50 actual dated OHLC bars, no categories/series. ')
         + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
     + (bot ? 'Use show_view for supported ECharts chart kinds, and an inline dsh-ui fence without panel:true for GenUI timelines/diagrams. '
-      : 'Use the installed GenUI components in an inline dsh-ui fence. ')
+      : 'Prefer the original native show_view for cards/charts and use GenUI dsh-ui only for rich components not supported by show_view. ')
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
 }
 
 const botMixedNeeded = (entry, isBot) => entry.mixedOverlayRequired && isBot && !entry.mixedVisualCommitted
 
 export function visualReminder(turn, bot) {
-  return `${VISUAL_NOTICE} turn=${turn}]\nThe user-facing answer has no inline visual delivery. Add only the missing view now, using the evidence already obtained; do not repeat the prose, research or external actions. ${bot ? 'Prefer show_view for the existing charts and cards; use an inline dsh-ui fence for richer GenUI components (omit panel:true).' : 'Use an inline dsh-ui fence with the installed GenUI components.'} Choose from the information: numbers → metrics/chart, comparison → chart/table, events → timeline, process → steps/diagram, explanation or a short answer → a compact card. Include units and sources where available. Never invent missing values to draw a chart. An HTML/file link does not replace the inline view. Follow the conversation language.`
+  return `${VISUAL_NOTICE} turn=${turn}]\nThe user-facing answer has no inline visual delivery. Add only the missing view now, using the evidence already obtained; do not repeat the prose, research or external actions. ${bot ? 'Prefer show_view for the existing charts and cards; use an inline dsh-ui fence for richer GenUI components (omit panel:true).' : 'Prefer the original native show_view card/chart; use an inline dsh-ui fence only if the requested component is not supported by show_view.'} Choose from the information: numbers → metrics/chart, comparison → chart/table, events → timeline, process → steps/diagram, explanation or a short answer → a compact card. Include units and sources where available. Never invent missing values to draw a chart. An HTML/file link does not replace the inline view. Follow the conversation language.`
 }
 
 // One check at the documented stop boundary; successful visual answers add no
