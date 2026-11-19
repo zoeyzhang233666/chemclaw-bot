@@ -116,6 +116,17 @@ export async function checkClassicSessions(cdp) {
   await enterClassic()
   const a = await create()
   await sendClassic(a, aText)
+  // In the same native root Session, render the original ChemClaw show_view
+  // WITHOUT hiding the assistant's ordinary text or adopting an expert group.
+  await send('classic-native-ui-check')
+  await until(visible('CLASSIC_NATIVE_PROSE_VISIBLE'), 'Classic prose with native view')
+  await until("document.querySelector('[data-classic-native-view=ready] .bt-view')", 'fast ChemClaw native view inside DSH')
+  await waitRunning(a, false)
+  assert.equal(await current(), a, 'Native show_view navigated into an unrelated expert group')
+  assert.equal(await evaluate(visible('CLASSIC_NATIVE_PROSE_VISIBLE')), true, 'Native view hid the normal answer')
+  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready] .bt-view')?.textContent.includes('Native fixture metric')"), true)
+  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready] details.bt-classic-view-details') !== null"), true,
+    'The native show_view call lost its inspectable Tool arguments')
   await waitRunning(expertSession, false)
   assert.equal(await current(), a)
   assert.ok((await history(expertSession)).includes(expertReply))
