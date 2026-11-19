@@ -18,6 +18,7 @@ import { AboutPage } from './about.js'
 import { ProvidersPage } from './providers-page.js'
 import { FolderMenu } from './folder-menu.js'
 import { BrowserPage } from './browser-settings.js'
+import { ComputerPage } from './computer.js'
 import { KeyIcon, SecretsPage } from './secret-card.js'
 import { language, t } from './i18n.js'
 
@@ -26,8 +27,8 @@ const capitalize = word => word[0].toUpperCase() + word.slice(1)
 // Settings dialog: a 198px page list beside the page. Bots and group chats each list
 // their members, and one opens on its own settings form. Usage widens the dialog.
 // Models is there only in a window without DSH's own settings, which carry the providers.
-const SETTINGS_PAGES = [['general', 'General'], ['models', 'Models'], ['bots', 'Experts'], ['groups', 'Group chats'], ['connectors', 'Connectors'], ['capabilities', 'Skill library'], ['browser', 'Browser'], ['schedules', 'Scheduled tasks'], ['usage', 'Usage'], ['secrets', 'Secrets'], ['feedback', 'Feedback'], ['about', 'About ChemClaw']]
-const PAGE_ICONS = { ...SETTINGS_ICONS, scenarios: PlugIcon, models: SlidersIcon, connectors: ConnectorIcon, capabilities: PlugIcon, browser: ConnectorIcon, schedules: ClockIcon, secrets: KeyIcon, feedback: FeedbackIcon, about: InfoIcon }
+const SETTINGS_PAGES = [['general', 'General'], ['models', 'Models'], ['bots', 'Experts'], ['groups', 'Group chats'], ['connectors', 'Connectors'], ['capabilities', 'Skill library'], ['browser', 'Browser'], ['computer', 'Computer use'], ['schedules', 'Scheduled tasks'], ['usage', 'Usage'], ['secrets', 'Secrets'], ['feedback', 'Feedback'], ['about', 'About ChemClaw']]
+const PAGE_ICONS = { ...SETTINGS_ICONS, scenarios: PlugIcon, models: SlidersIcon, connectors: ConnectorIcon, capabilities: PlugIcon, browser: ConnectorIcon, computer: ConnectorIcon, schedules: ClockIcon, secrets: KeyIcon, feedback: FeedbackIcon, about: InfoIcon }
 
 function SetSection({ title, className = '', children }) {
   return h('section', { className: `bt-set-section ${className}`.trim() }, h('h3', null, title), h('div', { className: 'bt-set-card' }, children))
@@ -262,6 +263,7 @@ export function SettingsDialog({ page, id, roster, mode = 'bot', actions, useUpd
           shown === 'connectors' ? h(ConnectorsPage, { roster, actions, focusId: id }) : null,
         shown === 'capabilities' ? h(CapabilitiesPage, { roster, actions, run, selectedId: id }) : null,
           shown === 'browser' ? h(BrowserPage, { roster, actions, run, Section: SetSection, Row: SetRow }) : null,
+    shown === 'computer' ? h('div', { className: 'bt-computer-page' }, h(ComputerPage, { roster, actions, run, Section: SetSection, Row: SetRow, Switch })) : null,
           shown === 'schedules' ? h(SchedulesPage, { roster, actions, start: id ?? undefined }) : null,
           shown === 'secrets' ? h(SecretsPage, { roster, actions, run, Section: SetSection }) : null,
           shown === 'feedback' ? h(FeedbackPage, { actions, run, Section: SetSection, Row: SetRow }) : null,

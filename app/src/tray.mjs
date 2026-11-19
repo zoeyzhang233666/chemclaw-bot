@@ -13,12 +13,15 @@
  * }} options the mark, the tooltip and the two entries of the menu
  * @returns {{ tray: object, relabel: () => void, dispose: () => void }}
  */
-export function createTray({ Tray, Menu, platform, image, tooltip, open, quit, log = console }) {
+export function createTray({ Tray, Menu, platform, image, tooltip, open, quit, computer, log = console }) {
   const tray = new Tray(image)
   let disposed = false
+  let computerRows = []
   const relabel = () => {
     tray.setToolTip(tooltip)
     tray.setContextMenu(Menu.buildFromTemplate([
+      ...computerRows.map(entry => ({ label: String(entry.label ?? ''), click: () => { computer?.onAction?.('stop', entry.botId ?? null) } })),
+      ...(computerRows.length ? [{ label: computer?.stopAll?.() ?? 'Stop all', click: () => { computer?.onAction?.('stopall', null) } }, { type: 'separator' }] : []),
       { label: open.label, click: () => { open.run() } },
       { type: 'separator' },
       { label: quit.label, click: () => { quit.run() } },
@@ -31,6 +34,7 @@ export function createTray({ Tray, Menu, platform, image, tooltip, open, quit, l
   return {
     tray,
     relabel,
+    setComputer(entries) { computerRows = Array.isArray(entries) ? entries : []; relabel() },
     /** Take the icon away; the app leaves no dead icon behind. */
     dispose() {
       if (disposed) return

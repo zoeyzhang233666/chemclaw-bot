@@ -1,7 +1,7 @@
 // Electron main process: one window for the Bot team, served by the app's own DSH Host.
 // The window loads the Host's loopback address as DSH Web does: DSH's sign-in sends the page's
 // origin as the address the browser comes back to, and accepts only a loopback one.
-import { app, BrowserWindow, WebContentsView, dialog, ipcMain, Menu, nativeImage, nativeTheme, powerMonitor, session, shell as electronShell, Tray } from 'electron'
+import { app, BrowserWindow, WebContentsView, dialog, ipcMain, Menu, nativeImage, nativeTheme, powerMonitor, screen, session, shell as electronShell, Tray } from 'electron'
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { readFile, rm } from 'node:fs/promises'
 import { release } from 'node:os'
@@ -30,6 +30,8 @@ import { copyData, moveProblem } from './move-data.mjs'
 import { editLocations } from './locations-dialog.mjs'
 import { CHECK_PROFILE, PROFILE } from './profile.mjs'
 import { createShell, SHELL_TEXT } from './shell.mjs'
+import { createComputerIndicator, indicatorHtml } from './computer-indicator.mjs'
+import { createComputerCursor } from './computer-cursor.mjs'
 import { preparePreviewSandboxAcl } from './preview-sandbox-acl.mjs'
 import { ensureOfficePreviewRuntime } from './office-preview-runtime.mjs'
 import { createDeferredPrompt } from './update-prompt.mjs'
@@ -47,6 +49,7 @@ const IPC = {
   browserViewClose: 'chemclaw:browser-view-close', browserViewHold: 'chemclaw:browser-view-hold',
   browserImportSources: 'chemclaw:browser-import-sources', browserImportPick: 'chemclaw:browser-import-pick',
   browserImportLive: 'chemclaw:browser-import-live', browserImportApply: 'chemclaw:browser-import-apply', browserImportCancel: 'chemclaw:browser-import-cancel',
+  idleSeconds: 'chemclaw:idle-seconds', computer: 'chemclaw:computer', computerAction: 'chemclaw:computer-action', computerCursor: 'chemclaw:computer-cursor',
   updateStatus: 'chemclaw:update-status', updateCheck: 'chemclaw:update-check', updateInstall: 'chemclaw:update-install',
 }
 const MOVE_PROBLEMS = { drive: 'moveDrive', nested: 'moveNested', workspace: 'moveWorkspace', program: 'inProgram', notEmpty: 'moveNotEmpty' }
@@ -117,6 +120,7 @@ const shell = createShell({
     void rendererRecovery.get(target)?.recover()
   },
   quit: () => { app.quit() },
+  computer: (kind, botId) => { mainWindow?.webContents.send(IPC.computerAction, { kind, botId }) },
   busy: () => choosing !== undefined || copying !== undefined,
   // Before the first run has chosen its places there is no window to show, and before the
   // first load of the Host there is no address to load.
@@ -126,7 +130,25 @@ const shell = createShell({
   fallback: { show: (options) => dialog.showMessageBox(options) },
 })
 // The tray icon goes away with the app, and a late answer to the close notice hides nothing.
-app.once('will-quit', () => { appPath?.dispose(); shell.dispose(); botViews?.dispose(); updates?.stop() })
+const computerIndicator = createComputerIndicator({
+  BrowserWindow, screen, html: indicatorHtml, ipcMain,
+  preload: join(here, 'computer-indicator-preload.cjs'),
+  onAction: (kind, botId) => { mainWindow?.webContents.send(IPC.computerAction, { kind, botId }) },
+})
+const computerCursor = createComputerCursor({ BrowserWindow, screen, platform: process.platform })
+ipcMain.on(IPC.computer, (event, entries) => {
+  if (event.sender !== mainWindow?.webContents) return
+  const rows = Array.isArray(entries?.rows) ? entries.rows : []
+  const labels = entries?.labels ?? {}
+  computerIndicator.update({ rows, labels })
+  shell.setComputer(rows)
+})
+ipcMain.handle(IPC.idleSeconds, event => event.sender === mainWindow?.webContents ? powerMonitor.getSystemIdleTime() : 0)
+ipcMain.on(IPC.computerCursor, (event, cursor) => {
+  if (event.sender !== mainWindow?.webContents) return
+  void computerCursor.update(cursor)
+})
+app.once('will-quit', () => { computerIndicator.dispose(); computerCursor.dispose(); appPath?.dispose(); shell.dispose(); botViews?.dispose(); updates?.stop() })
 
 
 if (!app.isPackaged && process.send) process.on('message', message => {
@@ -260,11 +282,19 @@ async function start() {
   mkdirSync(profileDir, { recursive: true })
   const newHost = () => {
     appPath?.assertAvailable()
+    const runtimeDir = app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime')
     return new HostProcess({
       entry: join(here, 'host.mjs'),
       cwd: profileDir,
-      env: { ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1',
-        CHEMCLAW_BROWSER_SAFE_MODE: browserSafeMode() ? '1' : '0', DS_BOT_USER_DSH_HOME: userDshHome(), CHEMCLAW_OFFICE_RUNTIME_DIR: app.isPackaged ? process.resourcesPath : join(here, '..', 'build', 'runtime'), ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}) },
+      env: {
+        ...process.env, DSH_HOME: where.dataDir, DS_BOT_PORT: String(port), DS_BOT_APP: '1',
+        CHEMCLAW_BROWSER_SAFE_MODE: browserSafeMode() ? '1' : '0', DS_BOT_USER_DSH_HOME: userDshHome(),
+        DS_BOT_RUNTIME_DIR: runtimeDir, CHEMCLAW_OFFICE_RUNTIME_DIR: runtimeDir,
+        ...(app.isPackaged && process.platform === 'darwin'
+          ? { DS_BOT_COMPUTER_HELPER_HOME: join(app.getPath('userData'), 'computer-use') }
+          : {}),
+        ...(where.workspace ? { DS_BOT_WORKSPACE: where.workspace } : {}),
+      },
       pnpm,
       onFailure: handleHostFailure,
     })

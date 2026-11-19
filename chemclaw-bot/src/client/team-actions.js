@@ -109,6 +109,22 @@ export function teamActions({ call, after, partFor, roster, ui, live, cards, hel
     answerView: (sessionId, viewId, action, values) => after(call('view-reply', { sessionId: partFor(sessionId), viewId, action, values })),
     dismissView: sessionId => after(call('dismiss-view', { sessionId: partFor(sessionId) })),
     answerApproval: (id, choice) => after(call('approval-answer', { id, choice })),
+    // Upstream DS-Bot Computer Use: only the user can authorize app control.
+    computerSetEnabled: enabled => after(call('computer-set-enabled', { enabled })),
+    computerSetLevel: (botId, level) => after(call('computer-set-level', { botId, level })),
+    computerRevokeApp: (botId, appKey) => after(call('computer-revoke-app', { botId, appKey })),
+    computerProviderRetry: () => after(call('computer-provider-retry', {})),
+    computerSystemStatus: () => call('computer-system-status', {}),
+    computerPermission: permission => call('computer-permission', { permission }),
+    computerStop: (botId, all = false) => after(call('computer-stop', all ? { all: true } : { botId })),
+    computerTakeover: botId => after(call('computer-takeover', { botId })),
+    computerHandback: botId => after(call('computer-handback', { botId })),
+    computerAllowForeground: botId => call('computer-allow-foreground', { botId }),
+    computerAppAnswer: (id, answer) => call('computer-app-answer', { id, answer }),
+    computerHoldAnswer: (botId, { callId, outcome } = {}) => after(call('computer-hold-answer', { botId, ...(callId !== undefined ? { callId } : {}), outcome })),
+    computerShot: attachmentId => call('computer-shot', { attachmentId }),
+    computerUserActive: idleSeconds => call('computer-user-active', { idleSeconds }),
+
     stopMemberWork: (roomId, botId) => after(call('stop-member-work', { roomId, botId })),
     stopRoomWork: roomId => after(call('stop-room-work', { roomId })),
     // Values go out in these requests and never come back in a response.

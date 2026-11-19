@@ -25,6 +25,9 @@ asarUnpack:
   - node_modules/chemclaw-bot/office.js
   # Keep versioned libvips libraries beside the native sharp module.
   - node_modules/@img/sharp*/**
+  # The CUA native driver and signed macOS helper must remain executable outside asar.
+  - node_modules/@deepseek-ai/dsh-experimental-cua-macos/**
+  - node_modules/@trycua/cua-driver*/**
 # Office standalone Node/Python runtime and DSH Office SKILL.md assets.
 extraResources:
   - from: build/runtime/primary-runtime
@@ -41,6 +44,15 @@ npmRebuild: false
 # So the binaries come from npm as it installed them; a build for another architecture stops.
 beforePack: ./scripts/before-pack.mjs
 win:
+  # Native CUA SDK/UBJS DLLs cannot be loaded from app.asar.
+  files:
+    - '!node_modules/@trycua{,/**/*}'
+    - '!node_modules/@ubjs{,/**/*}'
+  extraResources:
+    - from: node_modules/@trycua
+      to: node_modules/@trycua
+    - from: node_modules/@ubjs
+      to: node_modules/@ubjs
   target:
     - target: nsis
       arch: [x64]
@@ -59,6 +71,9 @@ mac:
   target: zip
   # Ad-hoc signing seals the bundle; no Developer ID or notarization.
   identity: '-'
+  # Preserve DeepSeek's notarized helper signature while ad-hoc signing ChemClaw.
+  signIgnore:
+    - 'DSH Computer Use\.app'
   hardenedRuntime: false
   # Generate from the untouched original Scheme A PNG with 10% transparent padding.
   # This matches standard macOS Launchpad visual sizing without redrawing the icon.

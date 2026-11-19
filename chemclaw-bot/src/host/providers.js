@@ -242,16 +242,21 @@ export function install(rt) {
     return ref
   }
 
+  async function providersChanged() {
+    rt.dropCatalog()
+    await rt.syncLiveModels?.()
+  }
+
   // A key is only ever written; nothing here reads one back.
   async function setProviderKey(provider, value) {
     const key = checkKey(value)
     await usable().credentials.set(await writableRef(provider), key)
-    rt.dropCatalog()
+    await providersChanged()
   }
 
   async function clearProviderKey(provider) {
     await usable().credentials.unset(await writableRef(provider))
-    rt.dropCatalog()
+    await providersChanged()
   }
 
   // `provider` from DSH's directory, ChemClaw's OpenCode Go preset, or a route the user
@@ -280,7 +285,7 @@ export function install(rt) {
     if (keyed) profile.apiKeyEnv = ref
     await settings.mutate(PI_AI, [{ op: 'set', path: entry?.settingsPath ?? ['providers', provider], value: profile }], map.get(PI_AI)?.revision)
     if (key !== undefined) await credentials.set(ref, key)
-    rt.dropCatalog()
+    await providersChanged()
     return providersView()
   }
 
@@ -305,7 +310,7 @@ export function install(rt) {
     if (key && info.writable === false) throw invalid('This APIHub key is configured outside ChemClaw')
     await settings.mutate(PI_AI, [{ op: 'set', path: entry?.settingsPath ?? ['providers', APIHUB.id], value: { ...profile, displayName: APIHUB.name, api: APIHUB.api, baseURL: APIHUB.baseURL, apiKeyEnv: ref, models } }], map.get(PI_AI)?.revision)
     if (key) await credentials.set(ref, key)
-    rt.dropCatalog()
+    await providersChanged()
     return providersView()
   }
 
@@ -326,7 +331,7 @@ export function install(rt) {
       displayName: OPENCODE_GO.name, apiKeyEnv: ref,
     } }], map.get(PI_AI)?.revision)
     if (key) await credentials.set(ref, key)
-    rt.dropCatalog()
+    await providersChanged()
     return providersView()
   }
 
@@ -393,7 +398,7 @@ export function install(rt) {
       const info = await credentials.describe(ref)
       if (info.configured && info.writable) await credentials.unset(ref)
     }
-    rt.dropCatalog()
+    await providersChanged()
     return providersView()
   }
 

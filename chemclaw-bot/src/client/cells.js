@@ -787,6 +787,8 @@ const TOOL_PHRASES = [
 ]
 const GROUP_PHRASES = { create_group: 'Creating a group', update_group: 'Updating the group', delete_group: 'Deleting the group', post_to_group: 'Posting in the group' }
 function toolActivity(name, arg, findBot, self) {
+  if (name === 'computer_handoff') return null
+  if (name === 'cua' || name?.startsWith('cua_driver_native__')) return { label: t('Operating'), state: 'working' }
   switch (name) {
     case 'ask_user': return null
     case 'request_secret': return null

@@ -17,6 +17,7 @@ import { sameVersion } from './dsh-offer.js'
 import { QuestionCard, QuestionDock } from './questions.js'
 import { AnsweredReply, WidgetDock, WIDGET_CSS } from './widget-cell.js'
 import { HandoffDock, HANDOFF_CSS } from './handoff-card.js'
+import { ComputerApprovalDock, ComputerIndicator, COMPUTER_CSS } from './computer.js'
 import { installHeaderNavigation } from './header-navigation.js'
 import { AssistantCell, TriggerCell, TurnProcessCell, Nothing, TurnTailCell, ToolCell } from './cells.js'
 import { Overlays, SettingsOverlay } from './overlays.js'
@@ -116,6 +117,9 @@ export function apply(ctx) {
   const activity = createSource({})
   // Per Bot, the turn it runs and its tool; and the approvals waiting for the user.
   const work = createSource({ bots: {}, approvals: [] })
+  // Volatile Computer Use leases and approval cards refresh without a team revision.
+  const computer = createSource({})
+  let computerKey = ''
   let workKey = ''
   // Per Session, what its transcript has in flight (running tools, a streaming reply).
   const live = createSource({})
@@ -162,6 +166,8 @@ export function apply(ctx) {
     const nextWork = JSON.stringify(value.work ?? null)
     if (nextWork !== workKey) { workKey = nextWork; work.set(value.work ?? { bots: {}, approvals: [] }) }
     noteMemoryNews(value.memoryNews ?? {})
+    const nextComputer = JSON.stringify(value.computerLive ?? {})
+    if (nextComputer !== computerKey) { computerKey = nextComputer; computer.set(value.computerLive ?? {}) }
     const current = roster.getSnapshot()
     // Connector and capability states change without a new revision.
     const live = {}
@@ -720,7 +726,81 @@ export function apply(ctx) {
   const browserPages = browsers?.pages ?? createSource({})
   const browserTabs = browsers?.tabs ?? createSource({})
   const browserHolds = browsers?.holds ?? createSource({})
-  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, browserHolds, surface, update } })
+
+  // Desktop bridge: the always-visible native indicator, mouse cursor and OS idle gate.
+  // All actions still go through ChemClaw's user-controlled Computer Use endpoint.
+  const appComputer = globalThis.dsBotApp
+  if (typeof appComputer?.computer === 'function') {
+    ctx.effect(() => {
+      const sync = () => {
+        const live = computer.getSnapshot()
+        const people = roster.getSnapshot().byId
+        const name = id => people[id]?.name ?? t('a Bot')
+        const look = id => lookOf(people[id])
+        const rows = (live.leases ?? []).map(entry => ({
+          botId: entry.botId, name: name(entry.botId), color: look(entry.botId).color, avatar: look(entry.botId).image,
+          app: entry.kind === 'foreground' ? t('In the foreground') : entry.appName,
+          label: `${name(entry.botId)} · ${entry.kind === 'foreground' ? t('In the foreground') : entry.appName}`,
+        }))
+        for (const [botId, entry] of Object.entries(live.bots ?? {})) {
+          if (entry.waitingFor === 'user-idle') rows.push({
+            botId, waiting: true, name: name(botId), color: look(botId).color, avatar: look(botId).image,
+            app: t('waits for the computer'), label: t('{name} waits for the computer', { name: name(botId) }),
+          })
+        }
+        appComputer.computer({ rows, labels: { stop: t('Stop'), stopAll: t('Stop all'), letGo: t('Let it continue') } })
+      }
+      sync()
+      const offLive = computer.subscribe(sync)
+      const offRoster = roster.subscribe(sync)
+      return () => { offLive(); offRoster(); appComputer.computer({ rows: [] }) }
+    }, 'chemclaw-bot: native computer indicator')
+  }
+  if (typeof appComputer?.computerCursor === 'function') {
+    ctx.effect(() => {
+      let stopped = false
+      const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
+      const run = async () => {
+        let after = 0
+        while (!stopped) {
+          if (roster.getSnapshot().computer?.enabled !== true) { await pause(1500); continue }
+          try {
+            const reply = await call('computer-cursor-wait', { after })
+            for (const event of reply?.events ?? []) {
+              if (Number.isFinite(event.seq) && event.seq > after) after = event.seq
+              if (Number.isFinite(event.t) && Number.isFinite(reply?.now) && reply.now - event.t > 3000) continue
+              const look = lookOf(roster.getSnapshot().byId[event.botId])
+              appComputer.computerCursor({ ...event, color: look.color, avatar: look.image })
+            }
+          } catch { await pause(1500) }
+        }
+      }
+      void run()
+      return () => { stopped = true }
+    }, 'chemclaw-bot: native computer cursor')
+  }
+  if (typeof appComputer?.idleSeconds === 'function') {
+    ctx.effect(() => {
+      const push = () => {
+        if (roster.getSnapshot().computer?.enabled !== true) return
+        void Promise.resolve(appComputer.idleSeconds()).then(idle => {
+          if (Number.isFinite(idle)) return call('computer-user-active', { idleSeconds: idle }).catch(() => {})
+        }).catch(() => {})
+      }
+      const timer = setInterval(push, 2000)
+      push()
+      return () => clearInterval(timer)
+    }, 'chemclaw-bot: computer OS idle gate')
+  }
+  if (typeof appComputer?.onComputerAction === 'function') {
+    appComputer.onComputerAction(({ kind, botId }) => {
+      if (kind === 'stop') void actions.computerStop(botId)
+      else if (kind === 'stopall') void actions.computerStop(null, true)
+      else if (kind === 'letgo') void actions.computerAllowForeground(botId)
+    })
+  }
+
+  const face = () => ({ actions, hooks: { roster, ui, activity, work, memoryNews, registry, turnClock, live, cards, heldCards, browserPages, browserTabs, browserHolds, computer, surface, update } })
   ctx.effect(() => noticeApprovals({
     work,
     roster,
@@ -793,7 +873,7 @@ export function apply(ctx) {
     ['models', MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS + AVATAR_LIBRARY_CSS],
     ['usage', USAGE_CSS], ['schedules', SCHEDULE_CSS], ['feedback', FEEDBACK_CSS],
     ['about', ABOUT_CSS], ['members', MEMBER_CSS], ['user-messages', USER_MESSAGE_CSS],
-    ['widgets', WIDGET_CSS], ['handoff', HANDOFF_CSS], ['browser', BROWSER_CSS + SIDE_CSS],
+    ['widgets', WIDGET_CSS], ['handoff', HANDOFF_CSS], ['browser', BROWSER_CSS + SIDE_CSS], ['computer', COMPUTER_CSS],
   ]) ctx.effect(() => installCompiledStyles(css, tag), `chemclaw-bot: shared ${tag} styles`)
 
   // The "@" menu's Bot group and the chats "+" references. The composer's controller
@@ -836,6 +916,7 @@ export function apply(ctx) {
     () => shadow('sidebar.footer.action', { id: 'bot-connect', order: -100, inject: face }, ConnectPlugins),
     () => shadow('settings.trigger', { priority: BOT_PRIORITY }, YouAvatar),
     () => shadow('shell.overlay', { id: 'bot', order: 50, inject: face }, Overlays),
+    () => shadow('shell.overlay', { id: 'bot-computer-indicator', order: 51, inject: face }, ComputerIndicator),
     () => shadow('shell.overlay', { id: 'bot-signin', order: 55, inject: face }, ApihubGetStarted),
     () => shadow('shell.overlay', { id: 'bot-toast', order: 60, inject: face }, ErrorToast),
   ]
@@ -888,6 +969,7 @@ export function apply(ctx) {
     () => shadow('conversation.input.dock', { id: 'bot-view', order: -95, inject: face }, WidgetDock),
     () => shadow('conversation.input.dock', { id: 'bot-secret', order: -90, inject: face }, SecretDock),
     () => shadow('conversation.input.dock', { id: 'bot-handoff', order: -85, inject: face }, HandoffDock),
+    () => shadow('conversation.input.dock', { id: 'bot-computer-approvals', order: 60, inject: face }, ComputerApprovalDock),
   ]
   // The return button belongs to neither group: it renders only in Agent mode.
   ctx.effect(() => installCompiledStyles(RETURN_CSS, 'return'), 'chemclaw-bot: return styles')
