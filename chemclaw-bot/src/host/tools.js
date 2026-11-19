@@ -688,7 +688,8 @@ export function install(rt) {
       // Classic DSH Sessions are independent roots. show_view is display-only
       // there and creates no Bot/room ownership, session record or reply route.
       const classic = !group && !rt.chatOwners.has(id) && id !== undefined
-        && rt.roomOf(id) === undefined && exec.agent?.session?.header?.parentSession === undefined
+        && rt.roomOf(id) === undefined && exec.agent?.session?.id === id
+        && exec.agent.session.header?.parentSession === undefined
       if (!group && !rt.chatOwners.has(id) && !classic) return `Only root user conversations and team Bots can use show_view.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
