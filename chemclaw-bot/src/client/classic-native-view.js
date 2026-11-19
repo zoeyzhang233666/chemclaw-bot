@@ -7,9 +7,10 @@ import { classicNativeViewState } from './classic-view-protocol.js'
 // All other tool names retain DSH's complete, expandable tool rows.
 export function ClassicShowView({ phase, block, callId, inspect }) {
   const state = classicNativeViewState(phase, block)
+  const call = block?.call ?? block
   const details = h('details', { className: 'bt-classic-view-details' },
     h('summary', null, 'show_view · ', callId),
-    h('pre', null, typeof block?.argsRaw === 'string' ? block.argsRaw : JSON.stringify(block?.args?.value?.('view') ?? {}, null, 2)),
+    h('pre', null, typeof call?.argsRaw === 'string' ? call.argsRaw : JSON.stringify(call?.args?.value?.('view') ?? {}, null, 2)),
     state.status !== 'ready' && state.reply ? h('p', null, state.reply) : null,
     inspect ? h('button', { type: 'button', onClick: inspect }, 'Inspect') : null)
   return h('div', { className: 'bt-classic-native-view', 'data-classic-native-view': state.status },
