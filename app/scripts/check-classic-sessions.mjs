@@ -128,8 +128,10 @@ export async function checkClassicSessions(cdp) {
   // Native cards belong in the conversation, but call IDs, raw JSON and
   // developer Inspect controls belong in DSH's separate 轨迹/trajectory view.
   // Regresses the visibly ugly block found in macOS #160 field testing.
-  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready] details, [data-classic-native-view=ready] pre, [data-classic-native-view=ready] button') !== null"), false,
+  assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready] details, [data-classic-native-view=ready] pre') !== null"), false,
     'Native card exposed raw Tool call details inside the answer')
+  assert.equal(await evaluate("[...document.querySelectorAll('[data-classic-native-view=ready] button')].some(button => button.textContent.trim() === 'Inspect')"), false,
+    'Native answer leaked developer Inspect control')
   assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready]')?.innerText.includes('show_view · call_')"), false,
     'Native answer leaked the tool call ID')
   assert.equal(await evaluate("document.querySelector('[data-classic-native-view=ready]')?.innerText.includes('argsRaw')"), false,
