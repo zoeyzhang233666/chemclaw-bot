@@ -939,7 +939,7 @@ export function install(rt) {
       exec.concludeTurn?.()
       return JSON.stringify({ replies: round.replies, passed: round.passed, ...(round.failed.length > 0 ? { failed: round.failed } : {}) })
     },
-  }))
+  }), { when: ({ agent }) => rt.roomOf(agent?.id) !== undefined })
 
   // Private context enters a group only through this tool, and the group sees each use.
   ctx.tools.register(defineTool({

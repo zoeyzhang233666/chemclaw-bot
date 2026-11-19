@@ -12,6 +12,7 @@ import { mentionSpans } from '../shared/mentions.js'
 import { checkShownView } from '../shared/views.js'
 import { redundantMarketSourceQuestion, nativeChartPayloadsUsable, mixedMarketVisualStatus, marketPriceVisual } from './visual-delivery.js'
 import { mismatchedSpotPriceView } from './market-quote-intent.js'
+import { isNativeViewSession } from './native-view-session.js'
 
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
 export const GROUP_REF = { type: 'string', required: true, description: 'Exact group chat name from list_bots' }
@@ -34,6 +35,10 @@ const WORKING_DIRECTORY_TOOL = 'working_directory'
 
 export function install(rt) {
   const { ctx, state } = rt
+  const registerBotTool = definition => ctx.tools.register(defineTool(definition), {
+    when: ({ agent }) => rt.isBotSession(agent?.id),
+  })
+
 
   const callerBot = (exec) => rt.botOf(rt.selfOf(exec.agent?.id))
   const callerRoom = (exec) => {
@@ -140,7 +145,7 @@ export function install(rt) {
   const calledInPosts = new Map()
   const turnOf = exec => rt.live.get(exec.agent?.id)?.turn
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'message_bot',
     description: 'Send a message to another Bot on the team. If that Bot is working, it reads your message at its next step and can change course, then answers once that work is done; if it is idle, it starts on it right away. Its reply arrives later as a new message to you; with reply_to "user" it answers the user in its own chat instead. In a group chat it reaches only members of that group, as writing "@Name" there does. With request_id you name the request yourself: a repeat of that name with the same message is not sent again, but gives the receipt of the first call back.',
     parameters: {
@@ -264,9 +269,9 @@ export function install(rt) {
       }
       return request === undefined ? await send() : answer(await rt.admitRequest(request, send))
     },
-  }))
+  })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'stop_bot',
     description: 'Main Bot only. Stop another Bot\'s running turn immediately — when it must not finish a dangerous action and a message_bot warning is not enough. Its queued messages are dropped with the turn. It is then told why in a new turn, whose reply comes back to you.',
     parameters: {
@@ -291,9 +296,9 @@ export function install(rt) {
       await rt.deliver({ fromId: sender.id, toId: target.id, text: why, role: 'stopped', ...callerRoom(exec) })
       return `Stopped ${target.name} in ${running.map(whereOf).join(' and ')}. It is told why in a new turn, whose reply comes back to you.`
     },
-  }))
+  })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'create_bot',
     description: 'Main Bot only. Create a new Bot on the user\'s team. It appears in the sidebar and greets the user.',
     parameters: {
@@ -326,9 +331,9 @@ export function install(rt) {
         return `Could not create the Bot: ${error.message}`
       }
     },
-  }))
+  })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'update_bot',
     description: 'Change a Bot\'s name, role, color, profile picture, model, thinking level, working folder, or instructions. Every Bot may change itself; only a Main Bot may change another Bot.',
     parameters: {
@@ -373,7 +378,7 @@ export function install(rt) {
         return `Could not update the Bot: ${error.message}`
       }
     },
-  }))
+  })
 
   // DSH's working_directory changes a Session's folder in place, and the next part starts in
   // the Bot's working folder again. A Bot that changes to a folder outside its working folder
@@ -445,7 +450,7 @@ export function install(rt) {
     return { error: `No group chat called "${unquote(ref)}" that you can see. Groups: ${groupNames(self)}.` }
   }
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'create_group',
     description: 'Main Bot only. Create a group chat with the user and some Bots. You join it as its admin unless you name another member.',
     parameters: {
@@ -472,9 +477,9 @@ export function install(rt) {
         return `Could not create the group: ${error.message}`
       }
     },
-  }))
+  })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'update_group',
     description: 'Change a group chat: rename it, set its notice, add or remove members, change its admin or reply mode. Main Bots may change any group; a group\'s admin may change its own group.',
     parameters: {
@@ -533,9 +538,9 @@ export function install(rt) {
         return `Could not update "${room.name}": ${failure.message}`
       }
     },
-  }))
+  })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'delete_group',
     description: 'Main Bot only. Delete a group chat; its history is archived. Only when the user asks.',
     parameters: { group: GROUP_REF },
@@ -550,9 +555,9 @@ export function install(rt) {
       await rt.deleteRoom(room.id)
       return `Deleted "${room.name}". Its history is archived.`
     },
-  }))
+  })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'post_to_group',
     description: 'Post a message into a group chat as yourself. A Main Bot may post into any group, any other Bot into a group it is in. A Main Bot\'s or the group admin\'s post starts a round: members reply in the group, where the user reads them. Another member\'s post calls only the members it names with "@Name"; without one it is only written into the group.',
     parameters: {
@@ -604,9 +609,9 @@ export function install(rt) {
       const waits = asker ? ` End your turn when you have handed on everything: the replies bring you back to this work, and your answer goes to ${asker} once all of it is back.` : ''
       return `Posted in "${room.name}". Members reply there, where the user reads them${reportBack ? '; their replies also come back to you as a new message when the round ends' : ', and nothing comes back to you'}.${waits}`
     },
-  }))
+  })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'ask_user',
     description: 'Show the user a short multiple-choice question card in the chat (the user can also type their own answer). Calling it ends your turn; the chosen answer arrives later as the user\'s next message.',
     parameters: {
@@ -663,11 +668,11 @@ export function install(rt) {
       exec.concludeTurn?.()
       return 'The card is on screen; the user\'s answer arrives as their next message.'
     },
-  }))
+  })
 
   ctx.tools.register(defineTool({
     name: 'show_view',
-    description: `Draw a view as part of your answer to the human user in your own chat or a group. Text you write before and after the call shows around it. Follow the global visual delivery contract. In groups, display-only views default to the group reader when audience is omitted; audience: user is also accepted, while explicit audience: team means internal and is not shown. Cards are released when that answer turn completes, not at group completion. Never draw views for peer discussion, delegation or progress. A view with options, confirm, form or submit ends your turn, and the answer arrives as the user's next message; group cards cannot submit answers. Never collect a key, token or password. Keep each view under 8 KB.`,
+    description: 'Add a native inline view alongside your ordinary text reply. In Classic and in groups, use display cards, charts or local calculators only. For Classic questions use ask_user_question or GenUI forms. In a private Bot chat, options, confirm, form and submit end the turn and deliver the response as the next user message. In groups, display views appear with the completed reply unless audience is team. Never use this for internal updates or secrets. Limit: 8 KB per view.',
     parameters: {
       title: { type: 'string', description: 'Optional short heading shown above the view' },
       view: {
@@ -684,10 +689,12 @@ export function install(rt) {
       await rt.load()
       const id = exec.agent?.id
       const group = rt.groupOwners.has(id)
+      const native = isNativeViewSession(rt, exec.agent)
       if (group && args.audience === 'team') return 'This view is explicitly marked team-only, so it will not be shown in the group. To deliver a readout or chart with the group reply, omit audience or use audience: user.'
-      if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
+      if (!native && !group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
+      if (native && (args.audience === 'team' || checked.interactive)) return 'Classic show_view supports user-facing display cards and local calculators. For a question or a form use ask_user_question or an inline dsh-ui component.'
       if (!nativeChartPayloadsUsable(checked.view)) return refuse('The chart contains no drawable numeric observations. Do not submit the same empty chart again; show a sourced table or explain that data is missing, without filling gaps with zero.')
       // Mixed spot/futures comparisons are a single coherent deliverable. Never
       // stage an isolated futures line or regional spot bar as a substitute.
@@ -873,7 +880,7 @@ export function install(rt) {
     setTimeout(() => void blockGoal(id), 0)
   })
 
-  ctx.tools.register(defineTool({
+  registerBotTool({
     name: 'list_capabilities',
     description: 'List shared MCP servers, skills, and packs, plus the capabilities attached to you.',
     parameters: {},
@@ -896,8 +903,8 @@ export function install(rt) {
       })
       return ['Shared capabilities:', ...lines].join('\n')
     },
-  }))
-  ctx.tools.register(defineTool({
+  })
+  registerBotTool({
     name: 'save_capability',
     description: 'Create or update a shared MCP server, skill, or pack. Changes apply from your next message.',
     parameters: {
@@ -926,8 +933,8 @@ export function install(rt) {
         return `Saved ${item.name}. Bots with it attached use the change from their next message.${approval}`
       } catch (error) { return error.message }
     },
-  }))
-  ctx.tools.register(defineTool({
+  })
+  registerBotTool({
     name: 'delete_capability',
     description: 'Remove a shared capability and detach it from every Bot and pack.',
     parameters: { name: { type: 'string', required: true } },
@@ -941,9 +948,9 @@ export function install(rt) {
         return `Deleted ${args.name}; it was removed from every Bot and pack. The change applies from their next message.`
       } catch (error) { return error.message }
     },
-  }))
+  })
   for (const [name, endpoint, verb] of [['attach_capability', 'attach', 'Attached'], ['detach_capability', 'detach', 'Detached']]) {
-    ctx.tools.register(defineTool({
+    registerBotTool({
       name,
       description: `${verb} a shared capability to yourself, or to another Bot if you are a Main Bot.`,
       parameters: {
@@ -968,7 +975,7 @@ export function install(rt) {
           return `${verb} ${args.name} ${args.bot ? `to ${result.bot}` : 'to yourself'}. Changes apply from ${result.bot}'s next message.${endpoint === 'attach' ? approvals : ''}`
         } catch (error) { return error.message }
       },
-    }))
+    })
   }
 
   Object.assign(rt, { pickRoom, hideBotUnusedTools })

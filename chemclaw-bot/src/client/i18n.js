@@ -1076,6 +1076,7 @@ const ZH = {
   Series: '系列',
   Value: '数值',
   'Chart options': '图表选项',
+  'The native card could not be displayed.': '原生图卡未能显示。',
   'View as table': '以表格查看',
   'View as chart': '以图表查看',
   'Copy data': '复制数据',

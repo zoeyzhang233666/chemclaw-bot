@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
 import { marketQuoteIntent, mixedOverlayRequested } from './market-quote-intent.js'
+import { nativeViewAvailable } from './native-view-session.js'
 
 export const VISUAL_NOTICE = '[chemclaw-visual-delivery'
 const textOf = content => Array.isArray(content) ? content.filter(block => block?.type === 'text').map(block => block.text ?? '').join('\n') : ''
@@ -257,24 +258,24 @@ export function missingRequestedKinds(requested, delivered) {
   return [...requested].filter(kind => !delivered.has(kind))
 }
 
-export function requestedViewReminder(turn, bot, kinds) {
+export function requestedViewReminder(turn, native, kinds) {
   return VISUAL_NOTICE + ' turn=' + turn + ']\n'
     + 'The user explicitly requested ' + kinds.join(', ') + ', but the successfully delivered views do not include those kinds. '
     + (kinds.includes('candlestick')
-      ? (bot
+      ? (native
         ? 'For a candlestick use native show_view chart kind candlestick with 2-50 actual dated OHLC bars, no categories/series. Do not add a second line chart or HTML. '
         : 'For a candlestick use a single GenUI dsh-ui ECharts candlestick full-option view. ')
         + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
-    + (bot ? 'Use show_view for supported ECharts chart kinds, and an inline dsh-ui fence without panel:true for GenUI timelines/diagrams. '
+    + (native ? 'Use show_view for supported chart kinds, and an inline dsh-ui fence without panel:true for GenUI timelines/diagrams. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
 }
 
 const botMixedNeeded = (entry, isBot) => entry.mixedOverlayRequired && isBot && !entry.mixedVisualCommitted
 
-export function visualReminder(turn, bot) {
-  return `${VISUAL_NOTICE} turn=${turn}]\nThe user-facing answer has no inline visual delivery. Add only the missing view now, using the evidence already obtained; do not repeat the prose, research or external actions. ${bot ? 'Prefer show_view for the existing charts and cards; use an inline dsh-ui fence for richer GenUI components (omit panel:true).' : 'Use an inline dsh-ui fence with the installed GenUI components.'} Choose from the information: numbers → metrics/chart, comparison → chart/table, events → timeline, process → steps/diagram, explanation or a short answer → a compact card. Include units and sources where available. Never invent missing values to draw a chart. An HTML/file link does not replace the inline view. Follow the conversation language.`
+export function visualReminder(turn, native) {
+  return `${VISUAL_NOTICE} turn=${turn}]\nAdd only the missing inline visual using the existing answer and evidence. ${native ? 'Prefer show_view for cards and charts; use inline dsh-ui for richer components.' : 'Use inline dsh-ui with an installed GenUI component.'} Omit panel:true. Use a compact text card for short answers. Keep the original prose and do not repeat research or external actions. Never invent data. Follow the conversation language.`
 }
 
 // One check at the documented stop boundary; successful visual answers add no
@@ -419,7 +420,7 @@ export function install(rt) {
     if (info?.handoff && !info.resume || info?.role === 'request' && info.audience !== 'user') return
     const group = rt.groupOwners?.has(id)
     if (group && info?.askedBy && info.askedBy !== 'user') return
-    const bot = rt.isBotSession?.(id) === true
+    const native = nativeViewAvailable(ctx, agent)
     if (!entry.human && !rt.chatOwners?.has(id) && !(group && info?.role === 'room')) return
     if (rt.state?.questions?.[id] || rt.state?.views?.[id]) return
     entry.reminded = true
@@ -429,10 +430,10 @@ export function install(rt) {
     try {
       const reminder = mixedIncomplete
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
-        : knownMismatch ? requestedViewReminder(turn, bot, missing)
-      : entry.invalidGenuiChart && bot
-        ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart has an empty or misnamed ECharts data series. Do not repeat that blank chart or fetch data again. Use ONE native show_view line chart with already verified dated spot prices, or a factual table if observations are unavailable. Never substitute futures for spot. This is the only correction.`
-        : visualReminder(turn, bot)
+        : knownMismatch ? requestedViewReminder(turn, native, missing)
+      : entry.invalidGenuiChart && native
+        ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart lacks drawable data. Use one native show_view chart with the verified observations in this answer, or a factual table when data is missing. Do not repeat research or invent data.`
+        : visualReminder(turn, native)
       agent.steer({ id: randomUUID(), role: 'user', source, content: [{ type: 'text', text: reminder }] })
     } catch (error) { rt.warn?.('chemclaw-bot: visual delivery reminder failed: %s', error) }
   })

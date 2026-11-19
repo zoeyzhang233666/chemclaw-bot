@@ -98,6 +98,24 @@ test('advanced charts use the existing private ownership and display-only turn r
   assert.equal((await call('set-prefs', { advancedCharts: 'false' })).ok, false)
 })
 
+test('an independent root can display a native view without creating pending team state', async t => {
+  const { ctx, team, stop } = start()
+  t.after(stop)
+  const show = ctx.registeredTools.get('show_view').execute
+  const root = { id: 'classic', session: { id: 'classic', header: {} } }
+  const call = agent => ({ agent, callId: 'classic-call', concludeTurn: () => assert.fail('Display-only call ended the turn') })
+  assert.equal(await show({ view: METER }, call(root)), 'The view is on screen.')
+  assert.match(await show({ view: CHOICES }, call(root)), /ask_user_question/)
+  assert.match(await show({ view: METER, audience: 'team' }, call(root)), /user-facing/)
+  const child = { ...root, session: { ...root.session, header: { parentSession: 'parent' } } }
+  const relay = { id: 'r1', session: { id: 'r1', header: {} } }
+  assert.match(await show({ view: METER }, call(child)), /Only Bots/)
+  assert.match(await show({ view: METER }, call(relay)), /Only Bots/)
+  const state = await team()
+  assert.equal(state.views.classic, undefined)
+  assert.equal(state.agents.some(agent => agent.sessions.includes('classic')), false)
+})
+
 test('show_view registers an interactive card, refuses a group and a display-only wait, and leaves a display-only card unregistered', async (t) => {
   const { ctx, emit, show, team, stop } = start()
   t.after(stop)

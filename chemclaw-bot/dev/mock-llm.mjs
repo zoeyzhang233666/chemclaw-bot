@@ -195,6 +195,17 @@ function decide(body) {
   const fresh = textBlocks(last?.content).some(value => value.trimStart().startsWith('[Group chat'))
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
+  const classicView = activityAt >= 0 ? /^classic-native-(ready|invalid)(?:\n|$)/u.exec(textOf(messages[activityAt].content).trim())?.[1] : undefined
+  if (classicView && tools.has('show_view')) {
+    if (result) return [text('经典正文结论：测试回答结束。')]
+    const view = classicView === 'ready'
+      ? { type: 'stack', children: [
+        { type: 'slider', id: 'quantity', label: '测试数量', min: 1, max: 10, value: 2 },
+        { type: 'metric', label: '测试合计', value: { '=': 'quantity * 3' } },
+      ] }
+      : { type: 'chart', kind: 'line', categories: ['A'], series: [{ values: [null] }] }
+    return [text('经典正文开头：以下是测试结果。'), tool('list_bots', {}), tool('show_view', { title: '经典原生测试卡片', view })]
+  }
   if (activityAt >= 0 && /(?:^|\n)(?:User: )?执行过程验收(?:\r?\n|$)/.test(textOf(messages[activityAt].content))) {
     const shell = ['pwsh', 'bash'].find(name => tools.has(name))
     if (shell) {

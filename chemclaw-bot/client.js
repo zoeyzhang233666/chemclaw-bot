@@ -1322,6 +1322,7 @@ var ZH = {
   Series: "系列",
   Value: "数值",
   "Chart options": "图表选项",
+  "The native card could not be displayed.": "原生图卡未能显示。",
   "View as table": "以表格查看",
   "View as chart": "以图表查看",
   "Copy data": "复制数据",
@@ -2042,8 +2043,8 @@ function bodyOf(def, paint, flat = false) {
     return "";
   }
 }
-var eyeMarkup = ([cx, cy, w, h59, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><rect class="bt-eye" x="${-w / 2}" y="${-h59 / 2}" width="${w}" height="${h59}" rx="${w / 2}"/></g>`;
-var happyEyeMarkup = ([cx, cy, w, h59, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><path class="bt-eye-happy" opacity="0" d="M${-w * 0.62} ${h59 * 0.14}Q0 ${-h59 * 0.42} ${w * 0.62} ${h59 * 0.14}" fill="none" stroke="#000" stroke-width="${w * 0.5}" stroke-linecap="round"/></g>`;
+var eyeMarkup = ([cx, cy, w, h60, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><rect class="bt-eye" x="${-w / 2}" y="${-h60 / 2}" width="${w}" height="${h60}" rx="${w / 2}"/></g>`;
+var happyEyeMarkup = ([cx, cy, w, h60, tilt]) => `<g transform="translate(${cx} ${cy}) rotate(${tilt})"><path class="bt-eye-happy" opacity="0" d="M${-w * 0.62} ${h60 * 0.14}Q0 ${-h60 * 0.42} ${w * 0.62} ${h60 * 0.14}" fill="none" stroke="#000" stroke-width="${w * 0.5}" stroke-linecap="round"/></g>`;
 var maskBox = (size) => `maskUnits="userSpaceOnUse" x="${-size}" y="${-size}" width="${size * 3}" height="${size * 3}"`;
 var holes = (def, eyes) => `<rect x="${-def.size}" y="${-def.size}" width="${def.size * 3}" height="${def.size * 3}" fill="#fff"/>${eyes}`;
 var MASK_ID = "%MASK%";
@@ -2832,12 +2833,12 @@ function liveSprings(apply2) {
     const dt = Math.min(0.5, Math.max(1e-3, (now - last) / 1e3));
     last = now;
     const steps = Math.ceil(dt * 240);
-    const h59 = dt / steps;
+    const h60 = dt / steps;
     let moving = false;
     for (const value2 of values.values()) {
       for (let index = 0; index < steps; index += 1) {
-        value2.v += (-value2.k * (value2.x - value2.to) - value2.c * value2.v) * h59;
-        value2.x += value2.v * h59;
+        value2.v += (-value2.k * (value2.x - value2.to) - value2.c * value2.v) * h60;
+        value2.x += value2.v * h60;
       }
       if (Math.abs(value2.x - value2.to) < 0.05 && Math.abs(value2.v) < 1) {
         value2.x = value2.to;
@@ -24809,6 +24810,30 @@ function createSwitchWindow(settle) {
   };
 }
 
+// src/client/classic-native-view.js
+var import_react62 = require("react");
+function acceptedClassicView(block) {
+  if (block.isError || block.error || block.meta?.stopped) return null;
+  const result = block.content.filter((part) => part.type === "text").map((part) => part.text).join("\n").trim();
+  if (result !== "The view is on screen.") return null;
+  const view = checkShownView(block.args.text("title"), block.args.value("view"));
+  return view.error === void 0 && !view.interactive ? view : null;
+}
+function collectViews(block, cards) {
+  if (block.kind === "tool-result" && block.name === "show_view") cards.set(block.callId, acceptedClassicView(block));
+  for (const child of block.subCalls ?? []) collectViews(child, cards);
+}
+function ClassicNativeViews({ sessionId, turn, useClassicViewCalls, useRoster }) {
+  const tools = useClassicViewCalls(String(turn.turn));
+  const teamOwned = useRoster((state) => state.byId[sessionId] !== void 0 || state.roomsById[sessionId] !== void 0);
+  if (teamOwned) return null;
+  const cards = /* @__PURE__ */ new Map();
+  for (const { root } of tools) collectViews(root, cards);
+  const views = [...cards].filter(([, view]) => view !== null);
+  if (views.length > 0) return views.map(([id, view]) => (0, import_react62.createElement)("div", { key: id, className: "bt-q-inline", "data-classic-native-view": "" }, (0, import_react62.createElement)(DeliveredView, view)));
+  return cards.size > 0 ? (0, import_react62.createElement)("p", { role: "status", className: "bt-view-muted" }, t("The native card could not be displayed.")) : null;
+}
+
 // src/client/index.js
 var inject = ["sessions", "uiWorkspace", "uiConversation", "slots", "theme", "layout"];
 function apply(ctx) {
@@ -25683,6 +25708,21 @@ function apply(ctx) {
     ...options.priority === void 0 ? {} : { priority: freePriority(ctx.slots.entries(name), options) }
   }, component));
   const installHeader = () => ctx.slots.inject("conversation.session.header", () => installHeaderNavigation(ctx.slots, face, HeaderPill, BOT_PRIORITY));
+  ctx.slots.inject("conversation.chat.turnTail", () => ctx.slots.register({
+    name: "conversation.chat.turnTail",
+    id: "chemclaw-native-views",
+    order: 10,
+    inject: (sessionId) => {
+      const chat = ctx.uiConversation.binding(sessionId).target("chat");
+      return { hooks: { roster }, keyedHooks: {
+        classicViewCalls: (turn) => chat.getSnapshot().nodes.turnDataSource(Number(turn), "tool-call")
+      } };
+    }
+  }, ClassicNativeViews));
+  ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+    name: "tool.call.toolview",
+    key: "show_view"
+  }, Nothing));
   ctx.effect(installTheme, "chemclaw-bot: shared theme");
   ctx.effect(() => installCompiledStyles(BRAND_CSS, "brand"), "chemclaw-bot: brand styles");
   shadow("sidebar.brand.mark", { priority: BOT_PRIORITY }, BrandMark);

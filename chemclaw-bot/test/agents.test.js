@@ -264,7 +264,7 @@ test('team tools are restricted on DSH Agent Sessions but not on Bot Sessions', 
   const agent = (await call('add-agent')).value
   assert.equal(restricted.length, 1)
   assert.equal(restricted[0].sessionId, agent.sessions[0])
-  assert.deepEqual([...restricted[0].filter.deny].sort(), [...TEAM_TOOLS].sort())
+  assert.deepEqual([...restricted[0].filter.deny].sort(), TEAM_TOOLS.filter(name => name !== 'show_view').sort())
   // A later agent/created for that session does not restrict a second time.
   const listener = {
     session: { id: agent.sessions[0] },

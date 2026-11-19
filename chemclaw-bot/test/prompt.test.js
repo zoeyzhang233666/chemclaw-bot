@@ -75,3 +75,19 @@ test('advanced-chart setting influences model selection, without disabling GenUI
   assert.equal(section.text({ agent: { id: 'room' } }), '')
   ctx.dispose()
 })
+
+test('the visual contract follows the selected tool set and preserves ordinary Markdown', async () => {
+  const { ctx } = start()
+  const section = ctx.sections.get('chemclaw-visual-delivery')
+  const agent = { id: 'classic' }
+  const showView = { name: 'show_view' }
+  ctx.tools.get = (name, scope, toolSet) => name === 'show_view' && scope === agent && toolSet.has(name) ? showView : undefined
+  const allowed = section.text({ agent, toolSet: new Set(['show_view']) })
+  assert.match(allowed, /Prefer show_view/)
+  assert.match(allowed, /ordinary final answer in Markdown/)
+  const restricted = section.text({ agent, toolSet: new Set() })
+  assert.match(restricted, /Use inline dsh-ui for visual delivery/)
+  assert.match(restricted, /EVERY user-facing final answer/)
+  assert.doesNotMatch(restricted, /Prefer show_view/)
+  await ctx.dispose()
+})

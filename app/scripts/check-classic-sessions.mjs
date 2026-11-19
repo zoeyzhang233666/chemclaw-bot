@@ -202,6 +202,41 @@ export async function checkClassicSessions(cdp) {
   await sleep(650)
   assert.equal(await current(), b)
   assert.equal(await evaluate(visible(bText)), true)
+  const card = "document.querySelector('[data-classic-native-view]')"
+  await send('classic-native-ready')
+  await until(`${card}?.innerText.includes('测试合计') && ${visible('经典正文结论：测试回答结束。')}`, 'native card and final Markdown together')
+  await waitRunning(b, false)
+  assert.equal(await current(), b)
+  assert.equal(await evaluate(visible('经典正文开头：以下是测试结果。')), true)
+  assert.ok((await history(b)).includes('list_bots'), 'missing the ordinary DSH tool call')
+  assert.equal(await evaluate(`${card}.querySelector('pre, details') !== null`), false)
+  assert.equal(await evaluate(`${card}.innerText.includes('show_view · call_')`), false)
+  assert.equal(await evaluate(`${card}.innerText.includes('Inspect')`), false)
+  const process = "[...document.querySelectorAll('button[data-turn-process]')].at(-1)"
+  const turn = await evaluate(`${process}.dataset.turnProcess`)
+  await evaluate(`${process}.click()`)
+  const toolGroups = `[data-chat-turn="${turn}"] button[data-process-activity][aria-expanded=false]`
+  await until(`${visible('list_bots')} || document.querySelector(${JSON.stringify(toolGroups)})`, 'tool groups available')
+  await evaluate(`document.querySelectorAll(${JSON.stringify(toolGroups)}).forEach(button => button.click())`)
+  await until(visible('list_bots'), 'ordinary DSH tool row expands in work details')
+  assert.equal(await evaluate("document.querySelectorAll('[data-classic-native-view]').length"), 1)
+  await evaluate(`${process}.click()`)
+  const slider = `${card}.querySelector('input[type=range]')`
+  await evaluate(`(() => {
+    const input = ${slider}
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, '4')
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+  })()`)
+  await until(`${card}.innerText.includes('12')`, 'local calculator recalculation')
+  await send('classic-native-invalid')
+  await until(`${visible('原生图卡未能显示。')} || ${visible('The native card could not be displayed.')}`, 'a rejected card has a readable status')
+  await waitRunning(b, false)
+  assert.equal(await evaluate("document.querySelectorAll('[data-classic-native-view]').length"), 1)
+  assert.equal(await current(), b)
+  await send('GenUI check timeline')
+  await until(`${visible('Synthetic renderer verification.')} && ${visible('Pilot complete')}`, 'GenUI timeline and ordinary Markdown together')
+  await waitRunning(b, false)
+  assert.equal(await current(), b)
   console.log('check-packed: Classic Session isolation, background streams, and explicit team history passed')
   return { id: b, marker: bText, other: aText }
 }
@@ -210,6 +245,7 @@ export async function checkClassicRestart(cdp, { id, marker, other }) {
   const { evaluate, until, history } = windowChecks(cdp)
   await until(classic, 'restored Classic mode')
   await until(`${selection} === ${JSON.stringify(id)} && ${visible(`收到：${marker}`)}`, 'restored native selection and reply')
+  await until("document.querySelector('[data-classic-native-view]')?.innerText.includes('测试合计')", 'restored native card')
   assert.equal(await evaluate(visible(other)), false)
   assert.ok((await history(id)).includes(marker))
   console.log('check-packed: Classic mode restored its native Session after app restart')
