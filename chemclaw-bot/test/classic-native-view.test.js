@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { classicNativeViewState } from '../src/client/classic-view-protocol.js'
 
-const state = (phase, result, args = { title: 'Prices', view: { type: 'metric', label: 'Price', value: '100' } }) =>
+const state = (phase, result, args = { title: 'Prices', view: { type: 'metric', label: 'Price', value: 100 } }) =>
   classicNativeViewState(phase, {
     content: [{ type: 'text', text: result }],
     args: { value: field => args[field] },
@@ -12,7 +12,7 @@ const state = (phase, result, args = { title: 'Prices', view: { type: 'metric', 
 test('classic native renderer draws only a Host-accepted display view', () => {
   assert.equal(state('start', '').status, 'pending')
   assert.deepEqual(state('result', 'The view is on screen.'), {
-    status: 'ready', title: 'Prices', view: { type: 'metric', label: 'Price', value: '100' },
+    status: 'ready', title: 'Prices', view: { type: 'metric', label: 'Price', value: 100 },
   })
   assert.equal(state('result', 'Only Bots on the team can use show_view.').status, 'rejected')
   assert.equal(state('result', 'The chart contains no drawable numeric observations.').status, 'rejected')
