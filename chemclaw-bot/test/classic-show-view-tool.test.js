@@ -15,7 +15,7 @@ function harness() {
   install(rt)
   return { tool: ctx.registeredTools.get('show_view'), rt, shown }
 }
-const display = { title: 'Price', view: { type: 'metric', label: 'Price', value: '100' } }
+const display = { title: 'Price', view: { type: 'metric', label: 'Price', value: 100 } }
 const root = (id = 'classic') => ({ agent: { id, session: { id, header: {} } }, callId: 'call1' })
 
 test('native independent root accepts the original display card without adopting a Bot session', async () => {
