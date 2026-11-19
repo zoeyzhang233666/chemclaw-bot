@@ -54,7 +54,9 @@ export function install(rt) {
     // Unknown names make restrict() throw, so only deny what this profile serves.
     const known = new Set(ctx.tools.schemas(agent).map(schema => schema.name))
     const already = restricted.get(agent) ?? new Set()
-    const deny = TEAM_TOOLS.filter(name => known.has(name) && !already.has(name))
+    // show_view is a safe presentation-only tool in independent DSH Sessions.
+    // Every team management, delivery and group tool remains denied.
+    const deny = TEAM_TOOLS.filter(name => name !== 'show_view' && known.has(name) && !already.has(name))
     // An empty list can mean the schemas are not up yet, and a missing restrict
     // hook means the Agent is still being put together; both retry.
     if (deny.length === 0 && already.size > 0) {
