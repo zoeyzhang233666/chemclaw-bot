@@ -667,7 +667,7 @@ export function install(rt) {
 
   ctx.tools.register(defineTool({
     name: 'show_view',
-    description: `Draw a view as part of your answer to the human user in your own chat or a group. Text you write before and after the call shows around it. Follow the global visual delivery contract. In groups, display-only views default to the group reader when audience is omitted; audience: user is also accepted, while explicit audience: team means internal and is not shown. Cards are released when that answer turn completes, not at group completion. Never draw views for peer discussion, delegation or progress. A view with options, confirm, form or submit ends your turn, and the answer arrives as the user's next message; group cards cannot submit answers. Never collect a key, token or password. Keep each view under 8 KB.`,
+    description: `Draw an original ChemClaw native view in your reply (Bot/group or classic DSH conversation). Keep the full normal text answer visible before and/or after this tool call: a view supplements prose, never replaces or collapses it. In classic DSH conversations, use display-only components and local input calculators; for submitting forms/choices use the DSH question tool or GenUI. Text you write before and after the call shows around it. Follow the global visual delivery contract. In groups, display-only views default to the group reader when audience is omitted; audience: user is also accepted, while explicit audience: team means internal and is not shown. Cards are released when that answer turn completes, not at group completion. Never draw views for peer discussion, delegation or progress. A view with options, confirm, form or submit ends your turn, and the answer arrives as the user's next message; group cards cannot submit answers. Never collect a key, token or password. Keep each view under 8 KB.`,
     parameters: {
       title: { type: 'string', description: 'Optional short heading shown above the view' },
       view: {
@@ -685,7 +685,11 @@ export function install(rt) {
       const id = exec.agent?.id
       const group = rt.groupOwners.has(id)
       if (group && args.audience === 'team') return 'This view is explicitly marked team-only, so it will not be shown in the group. To deliver a readout or chart with the group reply, omit audience or use audience: user.'
-      if (!group && !rt.chatOwners.has(id)) return `Only Bots on the team can use show_view. Use ${BLOCKING_QUESTION_TOOL} if it is available in this session, or ask the user in your reply.`
+      // Classic DSH Sessions are independent roots. show_view is display-only
+      // there and creates no Bot/room ownership, session record or reply route.
+      const classic = !group && !rt.chatOwners.has(id) && id !== undefined
+        && rt.roomOf(id) === undefined && exec.agent?.session?.header?.parentSession === undefined
+      if (!group && !rt.chatOwners.has(id) && !classic) return `Only root user conversations and team Bots can use show_view.`
       const checked = checkShownView(args.title, args.view)
       if (checked.error !== undefined) return checked.error
       if (!nativeChartPayloadsUsable(checked.view)) return refuse('The chart contains no drawable numeric observations. Do not submit the same empty chart again; show a sourced table or explain that data is missing, without filling gaps with zero.')
@@ -720,6 +724,7 @@ export function install(rt) {
       }
       const title = checked.title
       const view = checked.view
+      if (classic && checked.interactive) return 'Classic native show_view cannot submit responses. For a question or form, use the DSH question tool or GenUI. Local-input calculators without a submit action remain supported.'
       if (!checked.interactive && args.await_reply === true) return 'This view has nothing to submit; call show_view with await_reply: false.'
       if (checked.interactive && args.await_reply === false) return 'This view has controls to submit, so it waits for the user\'s answer; call show_view without await_reply: false.'
       if (group) {
@@ -729,7 +734,9 @@ export function install(rt) {
         return result
       }
       const awaitReply = args.await_reply ?? checked.interactive
-      if (!awaitReply) { rt.noteVisualDelivery?.(id, view); return 'The view is on screen.' }
+      // Classic display cards render directly from the accepted Tool result,
+      // using DSH's keyed atomic Tool view. Nothing is added to state.views.
+      if (classic || !awaitReply) { rt.noteVisualDelivery?.(id, view); return 'The view is on screen.' }
       // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
       // composer dock, which takes a card without a call.
       const turn = rt.live.get(id)?.turn
