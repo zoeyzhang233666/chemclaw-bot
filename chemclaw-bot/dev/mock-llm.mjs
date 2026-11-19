@@ -85,6 +85,16 @@ const systemText = system => typeof system === 'string' ? system
   : Array.isArray(system) ? system.map(block => block.text ?? '').join('\n') : ''
 
 const text = value => ({ type: 'text', text: value })
+const flowFixture = {
+  type: 'flow', caption: '合成数据，仅用于显示验收。',
+  nodes: [
+    { id: 'feed', label: '上游原料', detail: '供应与成本' },
+    { id: 'plant', label: '生产与开工', detail: '跟踪产能和开工率' },
+    { id: 'sales', label: '下游销售', detail: '已确认订单', tone: 'good' },
+    { id: 'stock', label: '库存变化', detail: '暂缺库存数据', tone: 'warn' },
+  ],
+  edges: [{ from: 'feed', to: 'plant' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', uncertain: true }],
+}
 // ask_user takes options as { label } objects; the scenarios below list plain labels.
 const tool = (name, input) => ({
   type: 'tool_use',
@@ -195,6 +205,13 @@ function decide(body) {
   const fresh = textBlocks(last?.content).some(value => value.trimStart().startsWith('[Group chat'))
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
+  const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
+  const flowMessage = /^(?:User: )?展示合成流程图\s*$/mu.test(activity)
+    || (/^(?:User: )?梳理合成供应链\s*$/mu.test(activity) && system.includes('automatically prefer its native SVG flow view'))
+  if (flowMessage && tools.has('show_view')) {
+    if (result) return [text('流程图正文：库存环节仍待核验。')]
+    return [tool('show_view', { title: '合成供应链流程', view: flowFixture })]
+  }
   const classicView = activityAt >= 0 ? /^classic-native-(ready|invalid)(?:\n|$)/u.exec(textOf(messages[activityAt].content).trim())?.[1] : undefined
   if (classicView && tools.has('show_view')) {
     if (result) return [text('经典正文结论：测试回答结束。')]
@@ -627,6 +644,11 @@ function decide(body) {
       title: 'Custom board', await_reply: false,
       view: { type: 'html', html: '<p style="margin:0;color:var(--bt-ink)">Sandboxed sample</p>', summary: 'A sandboxed sample' },
     })]
+  }
+  if (/^\s*视图旧SVG/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', { title: '旧版 SVG', view: {
+      type: 'html', summary: '旧版 SVG 样例', html: '<svg viewBox="0 0 280 65" xmlns="http://www.w3.org/2000/svg"><text x="12" y="35" fill="currentColor">旧版 SVG 样例</text></svg>',
+    } })]
   }
   // Streams slowly, then checks the team: exercises the activity row stepping aside
   // for a streaming reply and coming back for the tool.

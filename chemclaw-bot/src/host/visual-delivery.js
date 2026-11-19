@@ -202,6 +202,7 @@ export function hasInlineGenui(text, native = false) {
 
 // Only explicit drawing instructions are enforceable. Discussions of a chart
 // problem should not force another rendering attempt.
+const MERMAID = /\bmermaid\b/iu
 const REQUEST_FAMILIES = [
   ['candlestick', /K[\s-]*线(?:图)?|蜡烛图|candlestick|ohlc/iu],
   ['heatmap', /热力图|heat[\s-]*map/iu],
@@ -212,7 +213,8 @@ const REQUEST_FAMILIES = [
   ['treemap', /树图|矩形树图|treemap/iu],
   ['gauge', /仪表图|仪表盘图|gauge[\s-]*chart/iu],
   ['timeline', /时间轴|时间线|timeline/iu],
-  ['mermaid', /mermaid|流程关系图/iu],
+  ['mermaid', MERMAID],
+  ['flow', /流程(?:关系)?图|逻辑关系图|\bflow[ -]?(?:chart|diagram)\b/iu],
 ]
 
 export function requestedChartKinds(text) {
@@ -220,7 +222,9 @@ export function requestedChartKinds(text) {
   for (const clause of String(text ?? '').split(/[，,。！？!?；;\n]/u)) {
     if (/为什么|怎么|如何|是否|能不能|能否|有没有|没有|无法|失败|报错|修复|原因|排查|不显示|不工作|不支持|\b(?:why|error|broken|failed|fail)\b/iu.test(clause)) continue
     if (!/(?:给我|给出|绘制|生成|画|制作|用|使用|采用|展示|输出|添加|加上|补充|提供|想看|我要|想要|看一下|\b(?:show|draw|render|plot|create|generate|include|add|use|make)\b)/iu.test(clause)) continue
-    for (const [kind, pattern] of REQUEST_FAMILIES) if (pattern.test(clause)) requested.add(kind)
+    for (const [kind, pattern] of REQUEST_FAMILIES) {
+      if (pattern.test(clause) && !(kind === 'flow' && MERMAID.test(clause))) requested.add(kind)
+    }
   }
   return [...requested]
 }
@@ -255,7 +259,7 @@ function genuiKinds(text, native = false) {
 }
 
 export function missingRequestedKinds(requested, delivered) {
-  return [...requested].filter(kind => !delivered.has(kind))
+  return [...requested].filter(kind => !delivered.has(kind) && !(kind === 'flow' && delivered.has('mermaid')))
 }
 
 export function requestedViewReminder(turn, native, kinds) {
@@ -267,7 +271,8 @@ export function requestedViewReminder(turn, native, kinds) {
         : 'For a candlestick use a single GenUI dsh-ui ECharts candlestick full-option view. ')
         + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
-    + (native ? 'Use show_view for supported chart kinds, and an inline dsh-ui fence without panel:true for GenUI timelines/diagrams. '
+    + (kinds.includes('flow') && native ? 'Use show_view type=flow with labelled nodes and directed edges for the SVG flow diagram. Use GenUI Mermaid if the flow has loops. ' : '')
+    + (native ? 'Use show_view for supported visuals, and an inline dsh-ui fence without panel:true for GenUI timelines or Mermaid. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
 }
@@ -275,7 +280,7 @@ export function requestedViewReminder(turn, native, kinds) {
 const botMixedNeeded = (entry, isBot) => entry.mixedOverlayRequired && isBot && !entry.mixedVisualCommitted
 
 export function visualReminder(turn, native) {
-  return `${VISUAL_NOTICE} turn=${turn}]\nAdd only the missing inline visual using the existing answer and evidence. ${native ? 'Prefer show_view for cards and charts; use inline dsh-ui for richer components.' : 'Use inline dsh-ui with an installed GenUI component.'} Omit panel:true. Use a compact text card for short answers. Keep the original prose and do not repeat research or external actions. Never invent data. Follow the conversation language.`
+  return `${VISUAL_NOTICE} turn=${turn}]\nAdd only the missing inline visual using the existing answer and evidence. ${native ? 'Prefer show_view for cards, numeric charts and SVG flows (type=flow for meaningful steps, branches or dependencies). Use inline dsh-ui for richer components.' : 'Use inline dsh-ui with an installed GenUI component.'} Omit panel:true. Use a compact text card for short answers. Keep the original prose and do not repeat research or external actions. Never invent data. Follow the conversation language.`
 }
 
 // One check at the documented stop boundary; successful visual answers add no
@@ -410,17 +415,19 @@ export function install(rt) {
     restore(session)
     const entry = turns.get(id)
     if (!entry || entry.turn !== turn || entry.reminded || entry.repairing || entry.textOnly || !entry.text.trim()) return
-    const enabledRequests = [...entry.requested].filter(kind => rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind))
+    const native = nativeViewAvailable(ctx, agent)
+    const enabledRequests = [...entry.requested].filter(kind => (kind !== 'flow' || native)
+      && (rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind)))
     const missing = missingRequestedKinds(enabledRequests, entry.kinds)
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
+    const missingFlow = missing.includes('flow')
     const mixedIncomplete = botMixedNeeded(entry, rt.isBotSession?.(id) === true)
-    if (entry.visual && !knownMismatch && !mixedIncomplete) return
+    if (entry.visual && !knownMismatch && !mixedIncomplete && !missingFlow) return
     if ((rt.state?.exchangeTurns?.[id] ?? []).includes(turn)) return
     const info = rt.live?.get(id)?.info
     if (info?.handoff && !info.resume || info?.role === 'request' && info.audience !== 'user') return
     const group = rt.groupOwners?.has(id)
     if (group && info?.askedBy && info.askedBy !== 'user') return
-    const native = nativeViewAvailable(ctx, agent)
     if (!entry.human && !rt.chatOwners?.has(id) && !(group && info?.role === 'room')) return
     if (rt.state?.questions?.[id] || rt.state?.views?.[id]) return
     entry.reminded = true
@@ -430,7 +437,7 @@ export function install(rt) {
     try {
       const reminder = mixedIncomplete
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
-        : knownMismatch ? requestedViewReminder(turn, native, missing)
+        : knownMismatch || missingFlow ? requestedViewReminder(turn, native, missing)
       : entry.invalidGenuiChart && native
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart lacks drawable data. Use one native show_view chart with the verified observations in this answer, or a factual table when data is missing. Do not repeat research or invent data.`
         : visualReminder(turn, native)

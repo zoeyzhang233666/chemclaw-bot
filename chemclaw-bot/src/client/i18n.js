@@ -1077,6 +1077,8 @@ const ZH = {
   Value: '数值',
   'Chart options': '图表选项',
   'The native card could not be displayed.': '原生图卡未能显示。',
+  'Flow diagram': '流程图',
+  'Dashed connections are uncertain': '虚线表示尚待验证的关系',
   'View as table': '以表格查看',
   'View as chart': '以图表查看',
   'Copy data': '复制数据',

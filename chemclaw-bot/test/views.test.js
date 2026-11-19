@@ -49,7 +49,7 @@ test('normalizeView unwraps XML-style arrays and coerces numeric strings', () =>
 
 test('validateView rejects an unknown component with the path and the catalog', () => {
   const view = stack(text(), metric(), { type: 'gauge', data: [1] })
-  assert.equal(validateView(view).error, 'view.children[2].type: unknown component "gauge"; allowed: stack, row, text, metric, table, chart, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
+  assert.equal(validateView(view).error, 'view.children[2].type: unknown component "gauge"; allowed: stack, row, text, metric, table, chart, flow, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
   assert.equal(validateView(null).error, 'view: expected a component object')
   assert.equal(validateView([]).error, 'view: expected a component object')
   assert.match(validateView({ type: 'text' }).error, /view\.text: expected a string/)
@@ -128,7 +128,7 @@ test('checkShownView runs the call\'s own checks and names the card and its kind
   assert.deepEqual(checkShownView(' ', text()), { title: '', view: text(), interactive: false })
   assert.deepEqual(checkShownView(undefined, text()), { title: '', view: text(), interactive: false })
   assert.equal(checkShownView(3, text()).error, 'title: expected a string')
-  assert.equal(checkShownView('Card', { type: 'nope' }).error, 'view.type: unknown component "nope"; allowed: stack, row, text, metric, table, chart, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
+  assert.equal(checkShownView('Card', { type: 'nope' }).error, 'view.type: unknown component "nope"; allowed: stack, row, text, metric, table, chart, flow, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
   assert.equal(checkShownView('Card', undefined).error, 'view: expected a component object')
   const room = VIEW_BYTE_LIMIT - viewBytes('', text())
   assert.equal(checkShownView('x'.repeat(room + 1), text()).error, `The view is ${VIEW_BYTE_LIMIT + 1} bytes; the limit is ${VIEW_BYTE_LIMIT}.`)
@@ -206,4 +206,16 @@ test('display-only view remains hidden until tool call successfully settles', ()
   assert.equal(displayViewReady(true, true), false)
   assert.equal(displayViewReady(true, false), true)
   assert.equal(displayViewReady(true, undefined), true)
+})
+
+test('native flow views accept bounded declarative branches and reject invalid edges and arbitrary SVG', () => {
+  const flow = {
+    type: 'flow',
+    nodes: [{ id: 'a', label: '开始' }, { id: 'b', label: '已验证', tone: 'good' }, { id: 'c', label: '待核验' }],
+    edges: [{ from: 'a', to: 'b' }, { from: 'a', to: 'c', uncertain: true }],
+  }
+  assert.deepEqual(validateView(flow), { ok: true, interactive: false })
+  assert.match(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'a' }] }).error, /acyclic/)
+  assert.match(validateView({ ...flow, edges: [{ from: 'a', to: 'missing' }] }).error, /existing node IDs/)
+  assert.match(validateView({ ...flow, nodes: [{ ...flow.nodes[0], html: '<svg/>' }, ...flow.nodes.slice(1)] }).error, /use id, label, detail and tone only/)
 })

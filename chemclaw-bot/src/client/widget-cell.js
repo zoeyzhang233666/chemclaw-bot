@@ -11,6 +11,7 @@ import { CHART_CSS, TableIcon, WidgetChart } from './widget-chart.js'
 import { ADVANCED_CHART_CSS, AdvancedChart } from './widget-advanced-chart.js'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
 import { HTML_CSS, HtmlFrame } from './widget-html.js'
+import { FLOW_CSS, FlowView } from './widget-flow.js'
 import { asText, checkShownView, choiceValue, displayViewReady, inputDefault, resolve, viewInputs, viewScope } from '../shared/views.js'
 
 // -------------------------------------------------------------------------
@@ -307,6 +308,7 @@ function WidgetNode({ node, ctx }) {
     case 'callout': return h(WidgetCallout, { node, lookup })
     case 'sources': return h(WidgetSources, { node })
     case 'html': return h(HtmlFrame, { node })
+    case 'flow': return h(FlowView, { node })
     case 'slider': return h(SliderInput, { node, ctx })
     case 'number': return h(NumberInput, { node, ctx })
     case 'choice': return h(ChoiceInput, { node, ctx })
@@ -607,5 +609,6 @@ body[data-bt-layout=flat] .bt-q-inline .bt-view{max-width:calc(var(--bt-flat-w,1
 ${CHART_CSS}
 ${ADVANCED_CHART_CSS}
 ${HTML_CSS}
+${FLOW_CSS}
 `
 

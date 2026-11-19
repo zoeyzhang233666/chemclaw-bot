@@ -42,8 +42,12 @@ function windowChecks(cdp) {
     await evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`)
   }
   const show = async (id, selector = sessionRow(id)) => {
-    if (selector === sessionRow(id) && !await evaluate(`Boolean(document.querySelector(${JSON.stringify(selector)}))`)) {
-      await evaluate(`document.querySelectorAll('[data-row-key^="overflow:"][aria-expanded=false]').forEach(button => button.click())`)
+    if (selector === sessionRow(id)) {
+      await until(`(() => {
+        if (document.querySelector(${JSON.stringify(selector)})) return true;
+        document.querySelectorAll('[data-row-key^="workspace:"][aria-expanded=false], button[data-row-key^="overflow:"][aria-expanded=false]').forEach(row => row.click());
+        return false;
+      })()`, `reveal Classic history for ${id}`)
     }
     await click(selector)
     await until(`${selection} === ${JSON.stringify(id)}`, `selection of ${id}`)
@@ -250,14 +254,39 @@ export async function checkClassicSessions(cdp) {
   try { await until(metricsFit, 'market figures stay intact in a narrow window') }
   finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   await waitRunning(b, false)
+  const flow = "document.querySelector('svg[data-chemclaw-flow]')"
+  await send('梳理合成供应链')
+  await until(`${flow}?.textContent.includes('库存变化') && ${visible('流程图正文：库存环节仍待核验。')}`, 'automatic native SVG and Markdown in a standalone Classic Session')
+  assert.equal(await evaluate(`Boolean(${flow}.querySelector('[data-uncertain]'))`), true)
+  await waitRunning(b, false)
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
   await send('GenUI check marketstats')
   await until(`${metrics}?.closest('.bt-rich-reply')`, 'expert GenUI outside the speech bubble')
   assert.equal(await evaluate(`Boolean(${metrics}.closest('.bt-bubble'))`), false)
   await waitRunning(expertSession, false)
+  await send('梳理合成供应链')
+  await until(`${flow}?.textContent.includes('库存变化')`, 'native SVG in the expert reply')
+  assert.equal(await evaluate("document.querySelectorAll('svg[data-chemclaw-flow]').length"), 1)
+  await waitRunning(expertSession, false)
+  const legacy = "document.querySelector('iframe[title=\"旧版 SVG 样例\"]')"
+  await send('视图旧SVG')
+  await until(`${legacy}?.srcdoc.includes('<svg')`, 'legacy sandboxed SVG in the expert reply')
+  await waitRunning(expertSession, false)
   await enterClassic()
   assert.equal(await current(), b)
+  await show(expertSession)
+  await until(`${flow}?.textContent.includes('库存变化') && ${legacy}?.srcdoc.includes('<svg')`, 'both saved SVG views replay in Classic expert history')
+  assert.equal(await evaluate(visible('流程图正文：库存环节仍待核验。')), true)
+  await click('.bt-return')
+  await show(room.id, `[data-room-id="${room.id}"]`)
+  await send('展示合成流程图')
+  await until(`${flow}?.textContent.includes('库存变化')`, 'committed SVG in the expert group reply')
+  await waitRunning(room.id, false)
+  await enterClassic()
+  await show(room.id)
+  await until(`${flow}?.textContent.includes('库存变化')`, 'committed group SVG replays in Classic')
+  await show(b)
   console.log('check-packed: Classic Session isolation, background streams, and explicit team history passed')
   return { id: b, marker: bText, other: aText }
 }
@@ -267,6 +296,7 @@ export async function checkClassicRestart(cdp, { id, marker, other }) {
   await until(classic, 'restored Classic mode')
   await until(`${selection} === ${JSON.stringify(id)} && ${visible(`收到：${marker}`)}`, 'restored native selection and reply')
   await until("document.querySelector('[data-classic-native-view]')?.innerText.includes('测试合计')", 'restored native card')
+  await until("document.querySelector('svg[data-chemclaw-flow]')?.textContent.includes('库存变化')", 'restored SVG flow')
   assert.equal(await evaluate(visible(other)), false)
   assert.ok((await history(id)).includes(marker))
   console.log('check-packed: Classic mode restored its native Session after app restart')

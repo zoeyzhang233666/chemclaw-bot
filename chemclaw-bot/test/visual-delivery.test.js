@@ -53,6 +53,22 @@ test('first-pass GenUI or a successfully delivered show_view adds no correction'
   }
 })
 
+test('an explicitly requested SVG flow receives one native correction when missing', () => {
+  assert.deepEqual(requestedChartKinds('请生成一张 SVG 流程图'), ['flow'])
+  assert.deepEqual(requestedChartKinds('请生成 Mermaid 流程图'), ['mermaid'])
+  const f = setup({ native: true })
+  f.start(); f.user('请生成一张 SVG 流程图'); f.answer('这里是工作流程。'); f.stop(); f.stop()
+  assert.equal(f.notices.length, 1)
+  assert.match(f.notices[0].content[0].text, /show_view type=flow/)
+  for (const type of ['flow', 'mermaid']) {
+    const ready = setup({ native: true })
+    ready.start(); ready.user('请生成流程图'); ready.answer('这里是工作流程。')
+    ready.rt.noteVisualDelivery('s', { type })
+    ready.stop()
+    assert.equal(ready.notices.length, 0)
+  }
+})
+
 test('failed show_view and unrelated successful tools are not delivery', () => {
   for (const result of ['Invalid view', 'Saved report']) {
     const f = setup(); f.start(); f.user('Answer'); f.answer('Conclusion')

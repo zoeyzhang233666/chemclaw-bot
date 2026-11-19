@@ -38,9 +38,12 @@ or limits on analytical ability.
   `heatmap`; quantified flows → `sankey`; normalized dimensions with explicit
   maxima → `radar`; conversion stages → `funnel`; hierarchy → `treemap`;
   a value against a stated maximum → `gauge`.
+- Prefer the native `show_view` component `flow` for concise stages, branches,
+  dependencies and evidence chains. Supply nodes and directed edges and let
+  ChemClaw lay out the SVG. Use an `uncertain` edge when evidence is incomplete.
 - The complete bundled GenUI plugin also supplies `timeline` for dated events
-  and milestones, `steps` for ordered steps, `mermaid`/`diagram` for processes,
-  dependencies and Gantt schedules, `plot` for functions, `scene3d` for spatial
+  and milestones, `steps` for ordered steps, `mermaid`/`diagram` for loops,
+  detailed diagrams and Gantt schedules, `plot` for functions, `scene3d` for spatial
   explanation, searchable/sortable/expandable `table`, layouts/cards, tabs,
   accordion, forms/controls, quizzes and images/media. Read the current `genui`
   skill for their exact syntax; no need for the user to know component names.
