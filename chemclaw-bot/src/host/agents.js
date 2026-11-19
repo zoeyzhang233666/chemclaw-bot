@@ -101,7 +101,7 @@ export function install(rt) {
     const target = typeof workspaceId === 'string' && ctx.workspaceRegistry.get(workspaceId)
       ? workspaceId
       : await rt.ensureWorkspace()
-    const { sessionId } = await ctx.sessionController.create({ workspaceId: target })
+    const { sessionId } = await rt.createOwnedSession({ workspaceId: target })
     agent.sessions.push(sessionId)
     await rt.save()
     // agent/created fired before the session joined the index, so restrict again now.
