@@ -42,6 +42,9 @@ function windowChecks(cdp) {
     await evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`)
   }
   const show = async (id, selector = sessionRow(id)) => {
+    if (selector === sessionRow(id) && !await evaluate(`Boolean(document.querySelector(${JSON.stringify(selector)}))`)) {
+      await evaluate(`document.querySelectorAll('[data-row-key^="overflow:"][aria-expanded=false]').forEach(button => button.click())`)
+    }
     await click(selector)
     await until(`${selection} === ${JSON.stringify(id)}`, `selection of ${id}`)
   }
@@ -148,6 +151,9 @@ export async function checkClassicSessions(cdp) {
   assert.notEqual(fromRoom, b)
   await sendClassic(fromRoom, 'isolation-158-from-room')
   assert.ok(!(await history(fromRoom)).includes(roomReply))
+  await send(`上下文里有 ${bText}`)
+  await until(visible(`上下文里没有「${bText}」。`), 'the model cannot see the other native Session’s context')
+  await waitRunning(fromRoom, false)
 
   // Explicit history navigation and submission keep their original destinations.
   await show(expertSession)
@@ -176,11 +182,16 @@ export async function checkClassicSessions(cdp) {
   })
   await cdp.call('Fetch.enable', { patterns: [{ urlPattern: '*/api/bot' }] })
   try {
+    await evaluate('window.beforeClassicReload = true')
     await cdp.call('Page.reload')
-    await until(`${classic} && ${visible(bText)}`, 'Classic Session B with delayed roster')
+    await until(`!window.beforeClassicReload && ${classic} && ${visible(bText)}`, 'Classic Session B with delayed roster')
+    const deadline = Date.now() + 5000
+    while (paused.size === 0 && Date.now() < deadline) await sleep(100)
     assert.ok(paused.size > 0, 'Expected a roster request to be held during reload')
     await click('.bt-return')
-    await enterClassic()
+    await click('button.bt-connect-foot')
+    await until(classic, 'Classic mode before the roster responds')
+    assert.equal(await current(), b)
     await evaluate("localStorage.removeItem('chemclaw-bot:agent-sessions')")
   } finally {
     unobserve()
