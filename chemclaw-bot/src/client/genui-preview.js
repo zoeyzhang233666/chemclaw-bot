@@ -1,8 +1,9 @@
 import { t } from './i18n.js'
 import { installStyles } from './styles.js'
 import { fallbackOverlappingDiagram, layoutGenuiDiagram } from './genui-diagram-layout.js'
+import { FLOW_CSS } from './widget-flow.js'
 
-const FIGURE = '[data-genui-diagram], [data-genui-svg]'
+const FIGURE = '[data-genui-diagram], [data-genui-svg], [data-chemclaw-flow-figure]'
 const ARTIFACT = '[data-genui-artifact]'
 const EXPORT = '[data-genui-export]'
 const BUTTON = '.bt-genui-enlarge'
@@ -124,7 +125,7 @@ function openPreview(graphic, opener, onClose) {
   const { width, height } = isImage ? { width: graphic.naturalWidth, height: graphic.naturalHeight } : graphic.viewBox.baseVal
   const dialog = document.createElement('dialog')
   dialog.className = 'bt-genui-preview'
-  const title = isImage ? graphic.alt : graphic.querySelector('title')?.textContent
+  const title = isImage ? graphic.alt : graphic.querySelector(':scope > title')?.textContent
   const label = title || t('Enlarge graphic')
   dialog.setAttribute('aria-label', label)
   const header = document.createElement('div')
@@ -140,10 +141,11 @@ function openPreview(graphic, opener, onClose) {
   stage.className = 'bt-genui-preview-stage'
   const canvas = document.createElement('div')
   const style = getComputedStyle(graphic)
+  const nativeFlow = graphic.hasAttribute('data-chemclaw-flow')
   canvas.style.fontFamily = style.fontFamily
   for (let index = 0; index < style.length; index += 1) {
     const name = style.item(index)
-    if (name.startsWith('--dsl-g-') || name.startsWith('--dsw-')) canvas.style.setProperty(name, style.getPropertyValue(name))
+    if (name.startsWith('--dsl-g-') || name.startsWith('--dsw-') || nativeFlow && name.startsWith('--bt-')) canvas.style.setProperty(name, style.getPropertyValue(name))
   }
   // Isolate the diagram's marker IDs. Model-provided SVG stays an image.
   const copy = graphic.cloneNode(!isImage)
@@ -156,7 +158,13 @@ function openPreview(graphic, opener, onClose) {
     for (const name of ['role', 'tabindex', 'aria-pressed']) node.removeAttribute(name)
   }
   Object.assign(copy.style, { display: 'block', width: '100%', height: 'auto', maxWidth: 'none', maxHeight: 'none', boxSizing: 'border-box' })
-  canvas.attachShadow({ mode: 'open' }).append(copy)
+  const shadow = canvas.attachShadow({ mode: 'open' })
+  shadow.append(copy)
+  if (nativeFlow) {
+    const rules = document.createElement('style')
+    rules.textContent = FLOW_CSS
+    shadow.append(rules)
+  }
   stage.append(canvas)
   viewport.append(stage)
 
@@ -231,9 +239,10 @@ export function installGenuiPreview() {
         return
       }
       const restoreStyle = styleBusinessDiagram(figure, graphic)
-      const restoreLayout = graphic.localName === 'svg' ? layoutGenuiDiagram(graphic) : undefined
-      const restoreSize = sizeInlineGraphic(graphic)
-      const restore = () => { restoreSize(); restoreLayout?.(); restoreStyle?.() }
+      const nativeFlow = graphic.hasAttribute('data-chemclaw-flow')
+      const restoreLayout = graphic.localName === 'svg' && !nativeFlow ? layoutGenuiDiagram(graphic) : undefined
+      const restoreSize = nativeFlow ? undefined : sizeInlineGraphic(graphic)
+      const restore = () => { restoreSize?.(); restoreLayout?.(); restoreStyle?.() }
       entry = { control, graphic, strip: entry?.strip, restore }
       controls.set(figure, entry)
       figure.classList.add('bt-genui-previewable')

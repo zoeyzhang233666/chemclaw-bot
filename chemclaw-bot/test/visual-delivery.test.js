@@ -118,6 +118,32 @@ const spotQuestion = '纯碱最近一个月现货价格'
 const spotMetric = { type: 'metric', label: '纯碱现货', value: '1123 元/吨' }
 const spotLine = { type: 'chart', kind: 'line', categories: ['2026-10-23', '2026-11-19'], series: [{ name: '轻质纯碱现货', values: [1118, 1123] }] }
 
+test('a view of price movement does not satisfy a mechanism question', () => {
+  for (const native of [false, true]) for (const question of [
+    '解释伊美关系如何影响原油价格', '通关规则怎样改变跨境零售价格', 'How will freight delays influence WTI futures prices?',
+  ]) {
+    const f = setup({ native })
+    f.start(); f.user(question)
+    f.rt.noteVisualDelivery('s', spotLine)
+    f.answer('海运时间改变已交付供应和风险定价。')
+    f.stop(); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /Use show_view with type=flow/)
+    assert.doesNotMatch(f.notices[0].content[0].text, /headline metric cards|daily OHLC/)
+    assert.equal(f.rt.marketHistoryOf('s'), false)
+  }
+})
+
+test('a bare inventory lookup can recover a native data chart from comparable table rows', () => {
+  const f = setup()
+  f.start(); f.user('沥青库存')
+  f.rt.noteVisualDelivery('s', { type: 'table', rows: [['前一周', 95], ['本周', 100]] })
+  f.answer('这是同口径的两周数据。')
+  f.stop()
+  assert.match(f.notices[0].content[0].text, /headline metric cards and the data chart/)
+  assert.doesNotMatch(f.notices[0].content[0].text, /dsh-ui type=diagram/)
+})
+
 test('a bare methanol quote still requires cards alongside the chart, and a single quote can use a card alone', () => {
   for (const native of [false, true]) {
     const f = setup({ native })
@@ -344,7 +370,7 @@ test('the automatic SVG check covers real-world logic questions even when some o
   }
   const fallback = setup({ native: true }); fallback.ctx.tools.get = name => name === 'show_view' ? {} : undefined
   fallback.start(); fallback.user('为什么有这样的分布'); fallback.answer(fence()); fallback.stop()
-  assert.match(fallback.notices[0].content[0].text, /show_view type=flow/)
+  assert.match(fallback.notices[0].content[0].text, /show_view with type=flow/)
   const delivered = setup({ native: true })
   delivered.start(); delivered.user('请画 SVG 图')
   delivered.answer('```svg\n' + svgCode + '\n```'); delivered.stop()

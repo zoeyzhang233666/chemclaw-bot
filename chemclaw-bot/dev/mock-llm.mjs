@@ -229,6 +229,44 @@ function decide(body) {
   const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
   const previousQuestion = () => messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message)
     && !textOf(message.content).startsWith('[chemclaw-visual-delivery'))
+  const isCorrection = activity.startsWith('[chemclaw-visual-delivery')
+  const visualQuestion = isCorrection ? textOf(previousQuestion()?.content) : activity
+  const mechanism = /^解释伊美关系如何影响原油价格$/mu.test(visualQuestion)
+  const industry = /^沥青产业链$/mu.test(visualQuestion)
+  const inventory = /^沥青库存$/mu.test(visualQuestion)
+  if (tools.has('show_view') && (mechanism || industry)) {
+    if (result) return [text(isCorrection ? '合成逻辑图已就绪。' : '冲突可经航运和供应风险传导到油价。')]
+    if (isCorrection && activity.includes('Use show_view with type=flow')) {
+      const nodes = [
+        { id: 'inputA', label: mechanism ? '航运阻断风险' : '原料 A', stage: mechanism ? '地缘风险' : '上游' },
+        { id: 'inputB', label: mechanism ? '制裁供应风险' : '原料 B', stage: mechanism ? '地缘风险' : '上游' },
+        { id: 'middle', label: mechanism ? '预期可供数量下降' : '装置加工', stage: mechanism ? '供给传导' : '中游' },
+        { id: 'outA', label: mechanism ? '风险溢价上升' : '应用 A', tone: 'warn' },
+        { id: 'outB', label: mechanism ? '运费及保险成本上升' : '应用 B', tone: 'bad' },
+      ]
+      const edges = [{ from: 'inputA', to: 'middle' }, { from: 'inputB', to: 'middle' },
+        { from: 'middle', to: 'outA' }, { from: 'middle', to: 'outB' }]
+      return [tool('show_view', { title: mechanism ? '合成原油传导图' : '合成沥青链条图', view: { type: 'flow', nodes, edges } })]
+    }
+    if (industry) return [text('原料经装置处理后分到不同应用。')]
+    if (!isCorrection) {
+      const metric = (label, value) => ({ type: 'metric', label, value })
+      const chart = { type: 'chart', kind: 'line', categories: ['11-01', '11-02'], series: [{ values: [70, 72] }] }
+      return [tool('show_view', { title: '合成纵排指标', view: { type: 'stack', children: [
+        metric('示例价格', '72 美元/桶'), metric('示例价差', '2 美元/桶'), metric('示例运费', '12 美元/吨'), chart,
+      ] } })]
+    }
+  }
+  if (tools.has('show_view') && inventory) {
+    if (result) return [text('合成库存图表已就绪。')]
+    if (isCorrection && activity.includes('headline metric cards and the data chart')) {
+      return [tool('show_view', { title: '合成库存走势', view: { type: 'stack', children: [
+        { type: 'metric', label: '合成最新库存', value: '100 万吨' },
+        { type: 'chart', kind: 'line', unit: '万吨', categories: ['11-01', '11-08'], series: [{ values: [95, 100] }] },
+      ] } })]
+    }
+    if (!isCorrection) return [text('合成同口径库存。\n\n| 周 | 库存（万吨） |\n| --- | --- |\n| 11-01 | 95 |\n| 11-08 | 100 |')]
+  }
   if (/^GenUI check streamed SVG$/mu.test(activity)) {
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20"/></svg>'
     return [{ ...text('先显示行情成因。\n\n```js\nconst readableExample = 2\n```\n\n```dsh-ui\n'

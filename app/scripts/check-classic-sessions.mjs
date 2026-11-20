@@ -170,6 +170,29 @@ export async function checkClassicSessions(cdp) {
     await until(`[...document.querySelectorAll('[data-genui-diagram] svg')].filter(svg => svg.querySelector('title')?.textContent === '合成沥青传导修复图').some(svg => !svg.closest('figure').querySelector('.bt-genui-diagram-fallback') && new Set([...svg.querySelectorAll('g[role=button]')].map(node => { const box = node.getBBox(); return box.x + ',' + box.y })).size === 4)`, 'overlapping source coordinates render as four separately placed nodes')
     await waitRunning(id, false)
   }
+  const checkSemanticVisuals = async id => {
+    const graph = label => `[...document.querySelectorAll('svg[data-chemclaw-flow]')].find(node => node.textContent.includes(${JSON.stringify(label)}))`
+    await send('解释伊美关系如何影响原油价格')
+    const mechanism = graph('预期可供数量下降')
+    await until(`${mechanism}?.querySelectorAll('[data-shared]').length === 2`, 'a price chart does not satisfy an explicit mechanism question')
+    await waitRunning(id, false)
+    assert.ok(await evaluate(`(() => {
+      const row = [...document.querySelectorAll('.bt-metric-row')].find(node => node.textContent.includes('示例运费'));
+      const top = row?.firstElementChild.getBoundingClientRect().top;
+      return row?.children.length === 3 && [...row.children].every(node => Math.abs(node.getBoundingClientRect().top - top) < 2);
+    })()`), 'consecutive metric cards occupy a single wide row')
+    const zoom = `(${mechanism}).closest('figure').querySelector('.bt-genui-enlarge')`
+    await until(zoom, 'the native relationship diagram exposes vector preview')
+    await evaluate(`${zoom}.click()`)
+    await until("document.querySelector('.bt-genui-preview[open] .bt-genui-preview-stage > div')?.shadowRoot?.querySelector('svg[data-chemclaw-flow] [data-shared]')", 'native shared routes remain vectors in the preview')
+    await evaluate("document.querySelector('.bt-genui-preview[open]').close()")
+    await send('沥青库存')
+    await until(`${visible('合成最新库存')} && [...document.querySelectorAll('.bt-view')].some(node => node.textContent.includes('合成最新库存') && node.querySelector('.bt-chart-line'))`, 'a table-only inventory response recovers a metric and a native trend')
+    await waitRunning(id, false)
+    await send('沥青产业链')
+    await until(`${graph('装置加工')}?.querySelectorAll('[data-shared]').length === 2`, 'the text-only chain recovers a connected SVG with shared routes')
+    await waitRunning(id, false)
+  }
   const roster = await evaluate(bot('state'))
   const expert = roster.bots.find(item => item.id === roster.mainBotId)
   const expertSession = expert.sessionId
@@ -385,13 +408,16 @@ export async function checkClassicSessions(cdp) {
   try {
     await until(`${fits(supply)} && ${fits(svgImage)}`, 'both original GenUI components fit a narrow Classic reply')
   } finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
-  await checkMarketFollowup(await create())
+  const marketSession = await create()
+  await checkMarketFollowup(marketSession)
+  await checkSemanticVisuals(marketSession)
   await show(b)
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
   await checkCapacity(expertSession)
   await checkSpotHistory(expertSession)
   await checkMarketFollowup(expertSession)
+  await checkSemanticVisuals(expertSession)
   await checkFencePresentation(expertSession)
   await send('GenUI check marketstats')
   await until(`${metrics}?.closest('.bt-rich-reply')`, 'expert GenUI outside the speech bubble')

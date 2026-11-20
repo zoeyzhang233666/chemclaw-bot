@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkShownView, normalizeView, validateView, validateViewAnswer, VIEW_BYTE_LIMIT, viewBytes, viewSummary, displayViewReady } from '../src/shared/views.js'
+import { flowLayout } from '../src/client/widget-flow.js'
 
 const text = (value = 'hello') => ({ type: 'text', text: value })
 const metric = (label = '进度', value = '70%') => ({ type: 'metric', label, value })
@@ -9,6 +10,22 @@ const confirm = (id = 'go') => ({ type: 'confirm', id, confirmLabel: 'Ship', can
 const form = (id = 'ask') => ({ type: 'form', id, submitLabel: 'Send', fields: [{ id: 'name', label: 'Name', placeholder: 'Ada' }, { id: 'note', label: 'Note' }] })
 const progress = () => ({ type: 'progress', label: 'Load', percent: 40 })
 const table = () => ({ type: 'table', columns: [{ key: 'name', label: 'Name' }, { key: 'n', label: 'N' }], rows: [['Ada', 2], ['Bea', true]] })
+
+test('relationship layouts use distinct shared trunks and preserve flow direction', () => {
+  const nodes = [
+    { id: 'c', label: 'C' }, { id: 'b', label: 'B' }, { id: 'mix', label: 'Blend', stage: 'Processing' },
+    { id: 'a', label: 'A' }, { id: 'x', label: 'X' }, { id: 'y', label: 'Y' },
+  ]
+  const edges = ['a', 'b', 'c'].map(from => ({ from, to: 'mix' })).concat(['x', 'y'].map(to => ({ from: 'mix', to })))
+  assert.equal(validateView({ type: 'flow', nodes, edges }).ok, true)
+  const wide = flowLayout(nodes, edges, 720)
+  assert.equal(wide.connections.filter(link => link.shared).length, 2)
+  assert.equal(wide.connections.filter(link => link.arrow).length, 3)
+  const byId = new Map(wide.boxes.map(box => [box.id, box]))
+  assert.ok(edges.every(edge => byId.get(edge.from).y < byId.get(edge.to).y))
+  assert.deepEqual(byId.get('mix').stage, ['Processing'])
+  assert.ok(flowLayout(nodes, edges, 325).width <= 325)
+})
 
 test('a native evidence table may carry a caption and start collapsed', () => {
   assert.equal(checkShownView('Evidence', { ...table(), caption: 'By region', collapsed: true }).view.collapsed, true)
@@ -225,5 +242,5 @@ test('native flow views accept bounded declarative branches and reject invalid e
   assert.equal(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'a', feedback: true }] }).ok, true)
   assert.match(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'c', feedback: true }] }).error, /earlier step/)
   assert.match(validateView({ ...flow, edges: [{ from: 'a', to: 'missing' }] }).error, /existing node IDs/)
-  assert.match(validateView({ ...flow, nodes: [{ ...flow.nodes[0], html: '<svg/>' }, ...flow.nodes.slice(1)] }).error, /use id, label, detail and tone only/)
+  assert.match(validateView({ ...flow, nodes: [{ ...flow.nodes[0], html: '<svg/>' }, ...flow.nodes.slice(1)] }).error, /use id, label, detail, stage and tone only/)
 })

@@ -17,6 +17,7 @@ export function marketHistoryRequest(text) {
   // The OHLC-first guard is for a standalone traded market, never for an
   // explicitly requested physical spot / futures overlay or basis comparison.
   if (['spot', 'mixed'].includes(marketQuoteIntent(query))) return false
+  if (asksForRelationships(query) && !isQuantitativeLookup(query) && !/K\s*线|蜡烛图|\bohlc\b/iu.test(query)) return false
   if (!/(?:股票|股价|A股|港股|美股|ETF|期货|股指|WTI|布伦特|Brent|原油期货|期指|\b(?:stock|share|futures|equity|etf)\b)/iu.test(query)) return false
   if (/(?:为什么无法|怎么修复|为什么不|如何实现|能不能实现|是否支持|接口开发|技术方案|代码审查)/iu.test(query)) return false
   const historical = /(?:最近|近(?:一个|一|两|三|\d+)(?:月|周|天|日|年)|过去|一个月|上月|本月|月内|日线|日K|月线|周线|走势|趋势|历史|区间|(?:\d+|一|两|三)(?:天|日|周|月|年)|(?:20\d{2}[-年]\d{1,2}))/iu.test(query)
@@ -285,13 +286,14 @@ export function missingRequestedKinds(requested, delivered, genui = true) {
 const diagramInstruction = 'Emit an inline dsh-ui type=diagram with short nodes {id,label,sub?} and edges {from,to,label?,kind?}. Use kind=flowchart for a short sequence or kind=architecture with x,y,w,h for a branching graph. Use dashed edges for unverified relationships.'
 const svgInstruction = 'Emit inline dsh-ui type=svg using {"items":[{"type":"svg","title":"…","code":"<svg …>…</svg>"}]}. The SVG string belongs in code, never svg. Include xmlns and a padded viewBox.'
 const relationshipInstruction = `Choose one view for the missing relationship. ${diagramInstruction} For a visual explanation that needs semantic colors, labelled lanes or shared branch lines, use SVG instead. ${svgInstruction}`
+const nativeRelationshipInstruction = 'Use show_view with type=flow to draw the answer’s own relationships as an SVG. Supply short nodes {id,label,detail?,stage?,tone?} and directed edges {from,to,label?,uncertain?,feedback?}. Show actual connections, separated pathways and the outcome. Group only where the evidence supports it. Add no unrelated market series or decorative nodes.'
 const capacityInstruction = 'Use one native show_view stack with a row of metric cards for the verified capacity, output, utilization or quota figures. Include the unit in each metric value string and the period in its caption. If a chart is also missing and there are at least two comparable verified observations, include a native hbar for entities or line for time in that stack.'
 const relationshipKinds = new Set(['flow', 'diagram', 'svg', 'mermaid'])
 const wantsGraph = entry => [...entry.requested].some(kind => relationshipKinds.has(kind)) || needsSvgIllustration(entry.question)
 const specializedTable = question => /复杂(?:数据)?表|多级表头|合并单元格|表格热力底色|\b(?:merged cells|multi[- ]level headers)\b/iu.test(question)
 const nativeDataRequest = question => /(?:原生|native).{0,22}(?:标签卡|指标卡|数据图|图表|折线图|\b(?:metrics?|cards?|charts?)\b)|(?:标签卡|指标卡).{0,12}(?:数据图|图表|折线图)/iu.test(question)
-const dataPriority = entry => entry.nativeDataRequest || entry.spotReadout || entry.marketHistory || entry.mixedOverlayRequired
-  || isQuantitativeLookup(entry.question)
+const dataPriority = entry => entry.nativeDataRequest || entry.marketHistory || entry.mixedOverlayRequired
+  || isQuantitativeLookup(entry.question) || (entry.spotReadout && !asksForRelationships(entry.question))
 const dataOnly = entry => dataPriority(entry) && !wantsGraph(entry) && (entry.nativeDataRequest || !asksForRelationships(entry.question))
 const nativePairDelivered = entry => entry.nativeMetric && (entry.spotReadout === 'history' ? entry.spotLine : entry.nativeChart)
 const unsuitableDataGraphic = (kind, question) => relationshipKinds.has(kind) && !(kind === 'svg' && specializedTable(question))
@@ -312,7 +314,7 @@ function numericReminder(turn, entry, missing, breakdown) {
     ? 'For two or more comparable dated physical spot observations, use kind=line with distinct dates and numeric spot prices on the same grade, region and price basis.'
     : breakdown ? 'Use separate bars for the verified producer-group and regional breakdowns, showing only the charts still missing. Exclude total rows and keep detailed evidence below the charts.'
     : 'Use a dated line for a time series or bars for a comparable snapshot when two or more verified observations support the chart.'
-  return `${VISUAL_NOTICE} turn=${turn}]\nUse ONE native show_view stack to deliver ${missing.join(' and ')} from verified evidence already in this conversation. ${chart} Tables, SVG and diagrams cannot fulfill the metric or chart requirement. If historical coverage is insufficient, show only verified snapshots as metric cards and explain the gap. Use a source table as supporting detail. Do not fetch again, invent data, duplicate any native view already shown, or quote this notice. Follow the conversation language.`
+  return `${VISUAL_NOTICE} turn=${turn}]\nUse ONE native show_view stack to deliver ${missing.join(' and ')} from verified evidence already in this conversation. ${chart} Tables, SVG and diagrams cannot fulfill the metric or chart requirement. If a full time series is unavailable, use bars for a comparable snapshot when that answers the question. For a single verified observation use a metric card and state the relevant coverage. Do not fetch again, invent data, duplicate any native view already shown, or quote this notice. Follow the conversation language.`
 }
 
 function removeQuantitativeDiagrams(text, question) {
@@ -359,10 +361,10 @@ export function requestedViewReminder(turn, native, kinds, requested, genui) {
         + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
     + (kinds.includes('diagram') ? `${diagramInstruction} ` : '')
-    + (kinds.includes('flow') && genui ? `${relationshipInstruction} ` : '')
+    + (kinds.includes('flow') && native ? `${nativeRelationshipInstruction} ` : '')
+    + (kinds.includes('flow') && genui ? `When clickable detail or another layout is needed, ${relationshipInstruction} ` : '')
     + (kinds.includes('svg') ? `${svgInstruction} ` : '')
     + (kinds.includes('metric') ? `${capacityInstruction} ` : '')
-    + (kinds.includes('flow') && !genui ? 'Use the available show_view type=flow with concise nodes and edges. ' : '')
     + (native ? 'Use show_view for supported visuals and an inline dsh-ui fence without panel:true for other GenUI components. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
     + 'If data or a renderer is unavailable, explain the limitation without fabricating measurements. Follow the conversation language.'
@@ -653,7 +655,8 @@ export function install(rt) {
     try {
       const reminder = missingPublicEvidence ? sourceReminder(turn, native, entry.textOnly) : mixedIncomplete
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
-        : missingData.length && (!missingCapacity || breakdown) ? numericReminder(turn, entry, missingData, breakdown)
+        : missingData.length && (!missingCapacity || breakdown)
+          ? numericReminder(turn, entry, missingData, breakdown) + (missingGraphic ? ` ${nativeRelationshipInstruction}` : '')
         : entry.rejectedFence && (!entry.visual || missingGraphic)
           ? `${VISUAL_NOTICE} turn=${turn}]\nThe generated visual did not pass validation. Recover it once in this turn using the existing answer and evidence. ${native ? 'Use native show_view for data, or show_view type=flow with nodes and edges for the relationship.' : 'Use a short GenUI diagram with kind=flowchart, nodes and edges.'} If no valid visual can be built, give a brief structured explanation in Markdown. Do not resend the failed markup, add a demo tag, or ask the user to retry.`
         : knownMismatch || missingGraphic || missingCapacity ? requestedViewReminder(turn, native, missing, entry.requested, genui)

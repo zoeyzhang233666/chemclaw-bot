@@ -1,3 +1,5 @@
+import { flowLevels } from './flow-view.js'
+
 const UI_LANGUAGE = /^dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*$/iu
 const OPEN = /^ {0,3}(`{3,}|~{3,})([^\r\n]*)(?:\r?\n|$)/gmu
 const SVG = /^\s*<svg\b[\s\S]*<\/svg>\s*$/iu
@@ -16,10 +18,15 @@ function repairDiagramLayout(node) {
   // Keep IDs, order, labels and all original edges. Invalid coordinates and
   // zone rectangles cannot be reused together with these boxes.
   const width = gridSize(Math.min(360, Math.max(144, ...nodes.map(item => Math.max(item.label.length * 11, (item.sub?.length ?? 0) * 9) + 24))))
-  const columns = Math.min(3, Math.ceil(Math.sqrt(nodes.length)))
-  node.nodes = nodes.map((item, index) => ({
-    ...item, x: 32 + index % columns * (width + 56), y: 32 + Math.floor(index / columns) * 112, w: width, h: 64,
-  }))
+  const ids = new Set(nodes.map(item => item.id))
+  const links = (Array.isArray(node.edges) ? node.edges : []).filter(edge => ids.has(edge?.from) && ids.has(edge?.to))
+  const levels = ids.size === nodes.length && links.length ? flowLevels(nodes, links) : null
+  const gridColumns = Math.min(3, Math.ceil(Math.sqrt(nodes.length)))
+  const rows = levels ?? Array.from({ length: Math.ceil(nodes.length / gridColumns) }, (_, i) => nodes.slice(i * gridColumns, (i + 1) * gridColumns))
+  const columns = Math.max(...rows.map(row => row.length))
+  const boxes = new Map(rows.flatMap((row, rank) => row.map((item, i) => [item,
+    { x: gridSize(32 + (i + (columns - row.length) / 2) * (width + 56)), y: 32 + rank * 112, w: width, h: 64 }])))
+  node.nodes = nodes.map(item => ({ ...item, ...boxes.get(item) }))
   delete node.zones
   return true
 }

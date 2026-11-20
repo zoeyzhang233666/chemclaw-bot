@@ -5706,7 +5706,7 @@ function checkLinks(node, path) {
 }
 
 // src/shared/flow-view.js
-var NODE_KEYS = ["id", "label", "detail", "tone"];
+var NODE_KEYS = ["id", "label", "detail", "stage", "tone"];
 var EDGE_KEYS = ["from", "to", "label", "uncertain", "feedback"];
 var TONES = ["info", "good", "warn", "bad"];
 var idPattern = /^[a-zA-Z][a-zA-Z0-9_-]{0,23}$/u;
@@ -5740,10 +5740,11 @@ function checkFlow({ nodes, edges, caption }, path) {
   const ids = /* @__PURE__ */ new Set();
   for (const [i, node] of nodes.entries()) {
     const at = `${path}.nodes[${i}]`;
-    if (!fieldsAllowed(node, NODE_KEYS)) return `${at}: use id, label, detail and tone only`;
+    if (!fieldsAllowed(node, NODE_KEYS)) return `${at}: use id, label, detail, stage and tone only`;
     if (typeof node.id !== "string" || !idPattern.test(node.id) || ids.has(node.id)) return `${at}.id: expected a unique short ASCII identifier`;
     if (!shortText(node.label, 48)) return `${at}.label: expected 1 to 48 characters`;
     if (node.detail !== void 0 && !shortText(node.detail, 96)) return `${at}.detail: expected 1 to 96 characters`;
+    if (node.stage !== void 0 && !shortText(node.stage, 16)) return `${at}.stage: expected 1 to 16 characters`;
     if (node.tone !== void 0 && !TONES.includes(node.tone)) return `${at}.tone: expected info, good, warn or bad`;
     ids.add(node.id);
   }
@@ -7618,8 +7619,69 @@ function wrap(text, limit) {
   if (row.trim()) lines.push(row.trim());
   return lines;
 }
-function layout(nodes, edges, available) {
-  const levels = flowLevels(nodes, edges);
+function orderLevels(levels, edges) {
+  const incoming = /* @__PURE__ */ new Map();
+  for (const edge of edges) {
+    if (edge.feedback) continue;
+    const sources2 = incoming.get(edge.to) ?? [];
+    sources2.push(edge.from);
+    incoming.set(edge.to, sources2);
+  }
+  const positions = /* @__PURE__ */ new Map();
+  for (const level of levels) {
+    const score = (node) => {
+      const sources2 = incoming.get(node.id);
+      return sources2 ? sources2.reduce((sum, id) => sum + positions.get(id), 0) / sources2.length : 0.5;
+    };
+    level.sort((a, b) => score(a) - score(b));
+    for (const [index, node] of level.entries()) positions.set(node.id, (index + 0.5) / level.length);
+  }
+  return levels;
+}
+function joinAdjacentConnections(connections) {
+  const consumed = /* @__PURE__ */ new Set();
+  const shared2 = [];
+  const intervals = /* @__PURE__ */ new Map();
+  for (const side of ["from", "to"]) {
+    const lists = /* @__PURE__ */ new Map();
+    for (const edge of connections) {
+      if (edge.lane || edge.label.length || consumed.has(edge)) continue;
+      const key = [edge[side], Boolean(edge.uncertain)].join(":");
+      const group = lists.get(key) ?? [];
+      group.push(edge);
+      lists.set(key, group);
+    }
+    for (const group of lists.values()) {
+      if (group.length < 2) continue;
+      const first = group[0];
+      const split = side === "from";
+      const gap = first.start;
+      const used = intervals.get(gap) ?? [];
+      const xs = group.map((edge) => split ? edge.x2 : edge.x1).concat(split ? first.x1 : first.centerX);
+      const left = Math.min(...xs);
+      const right = Math.max(...xs);
+      const band = 0.5 * (first.start + first.end);
+      const y = [0, -10, 10, -20, 20].map((offset) => band + offset).find((candidate) => candidate > first.start && candidate < first.end && !used.some((bus) => bus.y === candidate && bus.right >= left && right >= bus.left));
+      if (y === void 0) continue;
+      used.push({ y, left, right });
+      intervals.set(gap, used);
+      const feed = split ? `M${first.x1} ${first.y1} V${y}` : "";
+      const end = split ? "" : `M${first.centerX} ${y} V${first.y2}`;
+      shared2.push({ ...first, shared: true, arrow: !split, label: [], d: `${feed} M${left} ${y} H${right} ${end}` });
+      for (const edge of group) {
+        consumed.add(edge);
+        shared2.push({
+          ...edge,
+          arrow: split,
+          d: split ? `M${edge.x2} ${y} V${edge.y2}` : `M${edge.x1} ${edge.y1} V${y}`
+        });
+      }
+    }
+  }
+  return connections.filter((edge) => !consumed.has(edge)).concat(shared2);
+}
+function flowLayout(nodes, edges, available) {
+  const levels = orderLevels(flowLevels(nodes, edges), edges);
   const maxColumns = Math.max(...levels.map((level) => level.length));
   const columnsAt = (width2) => Math.max(1, Math.min(maxColumns, Math.floor((width2 + COLUMN_GAP) / (MIN_COLUMN_WIDTH + COLUMN_GAP))));
   const inner = Math.max(1, available - PADDING * 2);
@@ -7656,12 +7718,13 @@ function layout(nodes, edges, available) {
     const row = level.map((node) => {
       const label = wrap(node.label, (cardWidth - 24) / 15);
       const detail = node.detail ? wrap(node.detail, (cardWidth - 24) / 13) : [];
-      return { ...node, label, detail, height: Math.max(58, 22 + label.length * 20 + detail.length * 18) };
+      const stage = node.stage ? wrap(node.stage, (cardWidth - 24) / 11) : [];
+      return { ...node, label, detail, stage, height: Math.max(58, 22 + stage.length * 16 + label.length * 20 + detail.length * 18) };
     });
     const height = Math.max(...row.map((node) => node.height));
     const left = PADDING + (rowWidth - (row.length * (cardWidth + COLUMN_GAP) - COLUMN_GAP)) / 2;
     for (const [i, node] of row.entries()) {
-      boxes.set(node.id, { ...node, x: left + i * (cardWidth + COLUMN_GAP), y: y + (height - node.height) / 2, rowTop: y, rowBottom: y + height });
+      boxes.set(node.id, { ...node, rank: ranks.get(node.id), x: left + i * (cardWidth + COLUMN_GAP), y: y + (height - node.height) / 2, rowTop: y, rowBottom: y + height });
     }
     y += height + (rank + 1 === rows2.length ? 0 : Math.max(ROW_GAP, exits[rank] + entries2[rank + 1] + 12));
   }
@@ -7695,25 +7758,26 @@ function layout(nodes, edges, available) {
     }
     const half = Math.max(0, ...label.map((line) => [...line].reduce((sum, character) => sum + glyphWidth(character), 0))) * EDGE_FONT / 2;
     const x = Math.max(PADDING + half, Math.min(width - PADDING - half, anchorX));
-    return { ...edge, d, x, y: labelTop, label };
+    return { ...edge, d, x, y: labelTop, label, lane, start, end, x1, x2, y1, y2, centerX: to.x + cardWidth / 2, arrow: true };
   });
-  return { width, height: bottom + PADDING, cardWidth, boxes: [...boxes.values()], connections };
+  return { width, height: bottom + PADDING, cardWidth, boxes: [...boxes.values()], connections: joinAdjacentConnections(connections) };
 }
 function FlowView({ node }) {
   const id = (0, import_react11.useId)();
   const figure = (0, import_react11.useRef)(null);
   const available = useWidth(figure, 320);
-  const { width, height, cardWidth, boxes, connections } = layout(node.nodes, node.edges, available);
+  const { width, height, cardWidth, boxes, connections } = flowLayout(node.nodes, node.edges, available);
   const names = new Map(node.nodes.map((step) => [step.id, step.label]));
   const uncertain = t("Dashed connections are uncertain");
   const hasUncertain = connections.some((edge) => edge.uncertain);
   const description = node.edges.map((edge) => `${names.get(edge.from)} → ${names.get(edge.to)}${edge.label ? ` (${edge.label})` : ""}`).join(". ");
   return (0, import_react11.createElement)(
     "figure",
-    { ref: figure, className: "bt-flow" },
+    { ref: figure, className: "bt-flow", "data-chemclaw-flow-figure": "" },
     (0, import_react11.createElement)(
       "svg",
       { "data-chemclaw-flow": "", width, height, viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": t("Flow diagram"), "aria-describedby": `${id}-desc` },
+      (0, import_react11.createElement)("title", null, node.caption || t("Flow diagram")),
       (0, import_react11.createElement)("desc", { id: `${id}-desc` }, `${description}${hasUncertain ? `. ${uncertain}` : ""}`),
       (0, import_react11.createElement)("defs", null, [false, true].map((dashed) => (0, import_react11.createElement)(
         "marker",
@@ -7722,8 +7786,8 @@ function FlowView({ node }) {
       ))),
       connections.map((edge, index) => (0, import_react11.createElement)(
         "g",
-        { key: index, className: "bt-flow-connection", "data-uncertain": edge.uncertain || void 0, "data-feedback": edge.feedback || void 0 },
-        (0, import_react11.createElement)("path", { d: edge.d, markerEnd: `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` }),
+        { key: index, className: "bt-flow-connection", "data-uncertain": edge.uncertain || void 0, "data-feedback": edge.feedback || void 0, "data-shared": edge.shared || void 0 },
+        (0, import_react11.createElement)("path", { d: edge.d, markerEnd: edge.arrow ? `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` : void 0 }),
         edge.label.length > 0 && (0, import_react11.createElement)(
           "text",
           { x: edge.x, y: edge.y, textAnchor: "middle" },
@@ -7732,17 +7796,17 @@ function FlowView({ node }) {
       )),
       boxes.map((step) => (0, import_react11.createElement)(
         "g",
-        { key: step.id, className: "bt-flow-step", "data-tone": step.tone ?? "info" },
+        { key: step.id, className: "bt-flow-step", "data-tone": step.tone, "data-input": step.rank === 0 || void 0 },
         (0, import_react11.createElement)("title", null, [names.get(step.id), step.detail.join(" ")].filter(Boolean).join("\n")),
         (0, import_react11.createElement)("rect", { x: step.x, y: step.y, width: cardWidth, height: step.height, rx: 12 }),
         (0, import_react11.createElement)(
           "text",
           { x: step.x + cardWidth / 2, y: step.y + 24, textAnchor: "middle" },
-          [...step.label, ...step.detail].map((line, i) => (0, import_react11.createElement)("tspan", {
+          [...step.stage, ...step.label, ...step.detail].map((line, i) => (0, import_react11.createElement)("tspan", {
             key: i,
             x: step.x + cardWidth / 2,
-            dy: i === 0 ? 0 : i < step.label.length ? 20 : 18,
-            className: i < step.label.length ? "bt-flow-label" : "bt-flow-detail"
+            dy: i === 0 ? 0 : i <= step.stage.length ? 16 : i < step.stage.length + step.label.length ? 20 : 18,
+            className: i < step.stage.length ? "bt-flow-stage" : i < step.stage.length + step.label.length ? "bt-flow-label" : "bt-flow-detail"
           }, line))
         )
       ))
@@ -7754,19 +7818,21 @@ var FLOW_CSS = `
 .bt-flow{width:100%;min-width:0;margin:4px 0 8px}
 .bt-flow svg{display:block;max-width:100%;height:auto;margin-inline:auto;color:var(--bt-ink)}
 .bt-flow figcaption{text-align:center;font-size:12px;line-height:1.5;color:var(--bt-ink-2);margin-top:6px;overflow-wrap:anywhere}
-.bt-flow-step{--bt-flow-tone:var(--bt-accent)}
+.bt-flow-step{--bt-flow-tone:var(--bt-ink-blue)}
+.bt-flow-step[data-input],.bt-flow-step[data-tone=info]{--bt-flow-tone:var(--bt-accent)}
 .bt-flow-step[data-tone=good]{--bt-flow-tone:var(--bt-green)}
 .bt-flow-step[data-tone=warn]{--bt-flow-tone:var(--bt-star)}
 .bt-flow-step[data-tone=bad]{--bt-flow-tone:var(--bt-danger)}
-.bt-flow-step rect{fill:color-mix(in srgb,var(--bt-flow-tone) 10%,var(--bt-main));stroke:var(--bt-flow-tone);stroke-width:1.2}
+.bt-flow-step rect{fill:color-mix(in srgb,var(--bt-flow-tone) 8%,var(--bt-main));stroke:color-mix(in srgb,var(--bt-flow-tone) 56%,var(--bt-line));stroke-width:1.1}
 .bt-flow-step text{fill:var(--bt-ink);font-family:inherit}
 .bt-flow-label{font-size:15px;font-weight:650}
+.bt-flow-stage{font-size:11px;fill:var(--bt-flow-tone);font-weight:600}
 .bt-flow-detail{font-size:13px;fill:var(--bt-ink-2)}
 .bt-flow-connection{--bt-flow-edge:var(--bt-ink-3)}
 .bt-flow-connection[data-uncertain]{--bt-flow-edge:var(--bt-danger)}
 .bt-flow-arrow{fill:var(--bt-ink-3)}
 .bt-flow-arrow-uncertain{fill:var(--bt-danger)}
-.bt-flow-connection path{fill:none;stroke:var(--bt-flow-edge);stroke-width:1.25}
+.bt-flow-connection path{fill:none;stroke:var(--bt-flow-edge);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
 .bt-flow-connection[data-uncertain] path{stroke-dasharray:5 4}
 .bt-flow-connection text{font-size:${EDGE_FONT}px;fill:var(--bt-ink-2);stroke:var(--bt-main);stroke-width:3;paint-order:stroke;stroke-linejoin:round}
 .bt-flow-connection[data-uncertain] text{fill:var(--bt-danger)}
@@ -8149,6 +8215,25 @@ function ToggleInput({ node, ctx }) {
     )
   );
 }
+function renderStack(children, ctx) {
+  const blocks = [];
+  let metrics = [];
+  const flush = () => {
+    if (!metrics.length) return;
+    blocks.push(metrics.length === 1 ? metrics[0] : (0, import_react12.createElement)("div", { key: metrics[0].key, className: "bt-metric-row" }, metrics));
+    metrics = [];
+  };
+  for (const [index, node] of children.entries()) {
+    const block = (0, import_react12.createElement)(WidgetNode, { key: node?.id ?? index, node, ctx });
+    if (node?.type === "metric") metrics.push(block);
+    else {
+      flush();
+      blocks.push(block);
+    }
+  }
+  flush();
+  return blocks;
+}
 function WidgetNode({ node, ctx }) {
   if (node === null || typeof node !== "object") return null;
   const { lookup } = ctx;
@@ -8159,7 +8244,7 @@ function WidgetNode({ node, ctx }) {
       return (0, import_react12.createElement)(
         "div",
         { className: node.type === "row" ? "bt-view-row" : "bt-widget-stack" },
-        children.map((child, index) => (0, import_react12.createElement)(WidgetNode, { key: child?.id ?? index, node: child, ctx }))
+        node.type === "stack" ? renderStack(children, ctx) : children.map((child, index) => (0, import_react12.createElement)(WidgetNode, { key: child?.id ?? index, node: child, ctx }))
       );
     }
     case "text": {
@@ -8418,6 +8503,7 @@ var WIDGET_CSS = `
 .bt-widget-stack{display:flex;flex-direction:column;gap:12px;min-width:0}
 .bt-view-row{display:flex;flex-wrap:wrap;gap:12px 24px;min-width:0}
 .bt-view-row>*{flex:1 1 160px;min-width:0}
+.bt-metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,138px),1fr));gap:14px 16px;min-width:0}
 .bt-widget-metric{display:flex;flex-direction:column;gap:1px;min-width:0}
 .bt-widget-metric-label{font-size:12px;line-height:16px;color:var(--bt-ink-2)}
 .bt-widget-metric-value{font-size:22px;line-height:28px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--bt-ink);overflow-wrap:anywhere}
@@ -11013,14 +11099,17 @@ function repairDiagramLayout(node) {
   const collide = (a, b) => a.x < b.x + b.w + 8 && b.x < a.x + a.w + 8 && a.y < b.y + b.h + 8 && b.y < a.y + a.h + 8;
   if (nodes.every((box, index) => validBox(box) && !nodes.slice(0, index).some((peer) => collide(box, peer)))) return false;
   const width = gridSize(Math.min(360, Math.max(144, ...nodes.map((item) => Math.max(item.label.length * 11, (item.sub?.length ?? 0) * 9) + 24))));
-  const columns2 = Math.min(3, Math.ceil(Math.sqrt(nodes.length)));
-  node.nodes = nodes.map((item, index) => ({
-    ...item,
-    x: 32 + index % columns2 * (width + 56),
-    y: 32 + Math.floor(index / columns2) * 112,
-    w: width,
-    h: 64
-  }));
+  const ids = new Set(nodes.map((item) => item.id));
+  const links = (Array.isArray(node.edges) ? node.edges : []).filter((edge) => ids.has(edge?.from) && ids.has(edge?.to));
+  const levels = ids.size === nodes.length && links.length ? flowLevels(nodes, links) : null;
+  const gridColumns = Math.min(3, Math.ceil(Math.sqrt(nodes.length)));
+  const rows2 = levels ?? Array.from({ length: Math.ceil(nodes.length / gridColumns) }, (_, i) => nodes.slice(i * gridColumns, (i + 1) * gridColumns));
+  const columns2 = Math.max(...rows2.map((row) => row.length));
+  const boxes = new Map(rows2.flatMap((row, rank) => row.map((item, i) => [
+    item,
+    { x: gridSize(32 + (i + (columns2 - row.length) / 2) * (width + 56)), y: 32 + rank * 112, w: width, h: 64 }
+  ])));
+  node.nodes = nodes.map((item) => ({ ...item, ...boxes.get(item) }));
   delete node.zones;
   return true;
 }
@@ -13186,13 +13275,13 @@ function AgentRow({ agent, actions, useSessions, useSessionStatus, useUi, wide, 
   );
 }
 var GLIDE = springEasing(1e3, 63);
-function useListGlide(listRef, layout2, key) {
-  const tops = (0, import_react28.useRef)({ layout: layout2, map: /* @__PURE__ */ new Map() });
+function useListGlide(listRef, layout, key) {
+  const tops = (0, import_react28.useRef)({ layout, map: /* @__PURE__ */ new Map() });
   (0, import_react28.useLayoutEffect)(() => {
     const list = listRef.current;
     if (!list) return;
     const next = /* @__PURE__ */ new Map();
-    const still = reducedMotion() || tops.current.layout !== layout2;
+    const still = reducedMotion() || tops.current.layout !== layout;
     for (const row of list.querySelectorAll("[data-bot-id],[data-room-id],[data-agent-id]")) {
       const id = row.dataset.botId ?? row.dataset.roomId ?? row.dataset.agentId;
       const top = row.offsetTop;
@@ -13202,8 +13291,8 @@ function useListGlide(listRef, layout2, key) {
         row.animate([{ transform: `translateY(${before - top}px)` }, { transform: "none" }], GLIDE);
       }
     }
-    tops.current = { layout: layout2, map: next };
-  }, [layout2, key]);
+    tops.current = { layout, map: next };
+  }, [layout, key]);
 }
 function TeamSidebar(props) {
   const { wide, expandSidebar, useRoster, useUi, useSessions, actions } = props;
@@ -16425,7 +16514,7 @@ function SchedulesPage({ roster, actions, start }) {
   const view = useSchedules(actions);
   const [adding, setAdding] = (0, import_react36.useState)(start ? { start } : null);
   const [tab, setTab] = (0, import_react36.useState)("mine");
-  const [layout2, setLayout] = (0, import_react36.useState)("calendar");
+  const [layout, setLayout] = (0, import_react36.useState)("calendar");
   const [day, setDay] = (0, import_react36.useState)(() => /* @__PURE__ */ new Date());
   const [month, setMonth] = (0, import_react36.useState)(() => new Date((/* @__PURE__ */ new Date()).getFullYear(), (/* @__PURE__ */ new Date()).getMonth(), 1));
   const [detail, setDetail] = (0, import_react36.useState)(null);
@@ -16461,13 +16550,13 @@ function SchedulesPage({ roster, actions, start }) {
         { className: "bt-agenda-tools" },
         tab === "mine" ? (0, import_react36.createElement)(
           Segmented,
-          { label: t("Schedule view"), value: layout2 },
-          [["calendar", "Calendar"], ["list", "List"]].map(([id, label]) => (0, import_react36.createElement)("button", { key: id, type: "button", "aria-pressed": layout2 === id, onClick: () => setLayout(id) }, t(label)))
+          { label: t("Schedule view"), value: layout },
+          [["calendar", "Calendar"], ["list", "List"]].map(([id, label]) => (0, import_react36.createElement)("button", { key: id, type: "button", "aria-pressed": layout === id, onClick: () => setLayout(id) }, t(label)))
         ) : null,
         (0, import_react36.createElement)("button", { type: "button", className: "bt-agenda-primary bt-with-icon", onClick: () => add() }, (0, import_react36.createElement)(PlusIcon), t("New task"))
       )
     ),
-    tab === "recommended" ? (0, import_react36.createElement)(TaskRecommendations, { onPick: (template) => add({ template, start: roster.bots.find((bot) => bot.templateId === template.role)?.id }) }) : layout2 === "calendar" ? (0, import_react36.createElement)(AgendaCalendar, { tasks: view.tasks, roster, day, month, setDay, setMonth, onAdd: () => add({ day }), onOpen: setDetail }) : (0, import_react36.createElement)("div", { className: "bt-agenda-list" }, byChat.length === 0 ? (0, import_react36.createElement)("div", { className: "bt-set-card" }, (0, import_react36.createElement)("div", { className: "bt-set-row" }, (0, import_react36.createElement)("span", { className: "bt-set-hint" }, t("No scheduled tasks yet.")))) : byChat.map(([id, avatar, name, tasks]) => (0, import_react36.createElement)(
+    tab === "recommended" ? (0, import_react36.createElement)(TaskRecommendations, { onPick: (template) => add({ template, start: roster.bots.find((bot) => bot.templateId === template.role)?.id }) }) : layout === "calendar" ? (0, import_react36.createElement)(AgendaCalendar, { tasks: view.tasks, roster, day, month, setDay, setMonth, onAdd: () => add({ day }), onOpen: setDetail }) : (0, import_react36.createElement)("div", { className: "bt-agenda-list" }, byChat.length === 0 ? (0, import_react36.createElement)("div", { className: "bt-set-card" }, (0, import_react36.createElement)("div", { className: "bt-set-row" }, (0, import_react36.createElement)("span", { className: "bt-set-hint" }, t("No scheduled tasks yet.")))) : byChat.map(([id, avatar, name, tasks]) => (0, import_react36.createElement)(
       "section",
       { key: id, className: "bt-set-section" },
       (0, import_react36.createElement)("h3", { className: "bt-task-head" }, avatar, name),
@@ -25513,7 +25602,7 @@ function layoutGenuiDiagram(svg) {
 }
 
 // src/client/genui-preview.js
-var FIGURE = "[data-genui-diagram], [data-genui-svg]";
+var FIGURE = "[data-genui-diagram], [data-genui-svg], [data-chemclaw-flow-figure]";
 var ARTIFACT = "[data-genui-artifact]";
 var EXPORT = "[data-genui-export]";
 var BUTTON = ".bt-genui-enlarge";
@@ -25625,7 +25714,7 @@ function openPreview(graphic, opener, onClose) {
   const { width, height } = isImage ? { width: graphic.naturalWidth, height: graphic.naturalHeight } : graphic.viewBox.baseVal;
   const dialog = document.createElement("dialog");
   dialog.className = "bt-genui-preview";
-  const title = isImage ? graphic.alt : graphic.querySelector("title")?.textContent;
+  const title = isImage ? graphic.alt : graphic.querySelector(":scope > title")?.textContent;
   const label = title || t("Enlarge graphic");
   dialog.setAttribute("aria-label", label);
   const header = document.createElement("div");
@@ -25641,10 +25730,11 @@ function openPreview(graphic, opener, onClose) {
   stage.className = "bt-genui-preview-stage";
   const canvas = document.createElement("div");
   const style = getComputedStyle(graphic);
+  const nativeFlow = graphic.hasAttribute("data-chemclaw-flow");
   canvas.style.fontFamily = style.fontFamily;
   for (let index = 0; index < style.length; index += 1) {
     const name = style.item(index);
-    if (name.startsWith("--dsl-g-") || name.startsWith("--dsw-")) canvas.style.setProperty(name, style.getPropertyValue(name));
+    if (name.startsWith("--dsl-g-") || name.startsWith("--dsw-") || nativeFlow && name.startsWith("--bt-")) canvas.style.setProperty(name, style.getPropertyValue(name));
   }
   const copy2 = graphic.cloneNode(!isImage);
   const tinted = [...graphic.querySelectorAll("[data-bt-diagram-node]")];
@@ -25656,7 +25746,13 @@ function openPreview(graphic, opener, onClose) {
     for (const name of ["role", "tabindex", "aria-pressed"]) node.removeAttribute(name);
   }
   Object.assign(copy2.style, { display: "block", width: "100%", height: "auto", maxWidth: "none", maxHeight: "none", boxSizing: "border-box" });
-  canvas.attachShadow({ mode: "open" }).append(copy2);
+  const shadow = canvas.attachShadow({ mode: "open" });
+  shadow.append(copy2);
+  if (nativeFlow) {
+    const rules = document.createElement("style");
+    rules.textContent = FLOW_CSS;
+    shadow.append(rules);
+  }
   stage.append(canvas);
   viewport.append(stage);
   let level = 0;
@@ -25731,10 +25827,11 @@ function installGenuiPreview() {
         return;
       }
       const restoreStyle = styleBusinessDiagram(figure, graphic);
-      const restoreLayout = graphic.localName === "svg" ? layoutGenuiDiagram(graphic) : void 0;
-      const restoreSize = sizeInlineGraphic(graphic);
+      const nativeFlow = graphic.hasAttribute("data-chemclaw-flow");
+      const restoreLayout = graphic.localName === "svg" && !nativeFlow ? layoutGenuiDiagram(graphic) : void 0;
+      const restoreSize = nativeFlow ? void 0 : sizeInlineGraphic(graphic);
       const restore = () => {
-        restoreSize();
+        restoreSize?.();
         restoreLayout?.();
         restoreStyle?.();
       };
@@ -26125,15 +26222,15 @@ function apply(ctx) {
       const id = themes[prefs.theme] ? prefs.theme : "paper";
       const accent = isHex(prefs.accent) ? prefs.accent : void 0;
       const motion = prefs.motion === "quiet" || prefs.motion === "lively" ? prefs.motion : "normal";
-      const layout2 = layoutOf(prefs);
+      const layout = layoutOf(prefs);
       const width = widthOf(prefs);
       const flatWidth = flatWidthOf(prefs);
       document.body.dataset.btMotion = motion;
       document.body.dataset.btAdvancedCharts = prefs.advancedCharts === false ? "off" : "on";
-      document.body.dataset.btLayout = layout2;
+      document.body.dataset.btLayout = layout;
       document.body.style.setProperty("--bt-msg-w", String(width / 100));
       document.body.style.setProperty("--bt-flat-w", String(flatWidth / 100));
-      const next = `${id}|${accent ?? ""}|${motion}|${layout2}|${width}|${flatWidth}|${prefs.thinking === true}|${prefs.advancedCharts !== false}|${registry.getSnapshot()}`;
+      const next = `${id}|${accent ?? ""}|${motion}|${layout}|${width}|${flatWidth}|${prefs.thinking === true}|${prefs.advancedCharts !== false}|${registry.getSnapshot()}`;
       if (next === key) return;
       key = next;
       style.textContent = themeCss(themes[id], accent);

@@ -1,4 +1,4 @@
-const NODE_KEYS = ['id', 'label', 'detail', 'tone']
+const NODE_KEYS = ['id', 'label', 'detail', 'stage', 'tone']
 const EDGE_KEYS = ['from', 'to', 'label', 'uncertain', 'feedback']
 const TONES = ['info', 'good', 'warn', 'bad']
 const idPattern = /^[a-zA-Z][a-zA-Z0-9_-]{0,23}$/u
@@ -36,10 +36,11 @@ export function checkFlow({ nodes, edges, caption }, path) {
   const ids = new Set()
   for (const [i, node] of nodes.entries()) {
     const at = `${path}.nodes[${i}]`
-    if (!fieldsAllowed(node, NODE_KEYS)) return `${at}: use id, label, detail and tone only`
+    if (!fieldsAllowed(node, NODE_KEYS)) return `${at}: use id, label, detail, stage and tone only`
     if (typeof node.id !== 'string' || !idPattern.test(node.id) || ids.has(node.id)) return `${at}.id: expected a unique short ASCII identifier`
     if (!shortText(node.label, 48)) return `${at}.label: expected 1 to 48 characters`
     if (node.detail !== undefined && !shortText(node.detail, 96)) return `${at}.detail: expected 1 to 96 characters`
+    if (node.stage !== undefined && !shortText(node.stage, 16)) return `${at}.stage: expected 1 to 16 characters`
     if (node.tone !== undefined && !TONES.includes(node.tone)) return `${at}.tone: expected info, good, warn or bad`
     ids.add(node.id)
   }

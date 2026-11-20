@@ -291,6 +291,26 @@ function ToggleInput({ node, ctx }) {
 
 // One blueprint node. Unknown types render nothing: the host validates the
 // blueprint, so what arrives here is known or safely ignored.
+function renderStack(children, ctx) {
+  const blocks = []
+  let metrics = []
+  const flush = () => {
+    if (!metrics.length) return
+    blocks.push(metrics.length === 1 ? metrics[0] : h('div', { key: metrics[0].key, className: 'bt-metric-row' }, metrics))
+    metrics = []
+  }
+  for (const [index, node] of children.entries()) {
+    const block = h(WidgetNode, { key: node?.id ?? index, node, ctx })
+    if (node?.type === 'metric') metrics.push(block)
+    else {
+      flush()
+      blocks.push(block)
+    }
+  }
+  flush()
+  return blocks
+}
+
 function WidgetNode({ node, ctx }) {
   if (node === null || typeof node !== 'object') return null
   const { lookup } = ctx
@@ -299,7 +319,8 @@ function WidgetNode({ node, ctx }) {
     case 'row': {
       const children = Array.isArray(node.children) ? node.children : []
       return h('div', { className: node.type === 'row' ? 'bt-view-row' : 'bt-widget-stack' },
-        children.map((child, index) => h(WidgetNode, { key: child?.id ?? index, node: child, ctx })))
+        node.type === 'stack' ? renderStack(children, ctx)
+          : children.map((child, index) => h(WidgetNode, { key: child?.id ?? index, node: child, ctx })))
     }
     case 'text': {
       const text = h(MarkdownText, { text: asText(resolve(node.text, lookup, '')), labels: mdLabels(), variant: 'compact' })
@@ -535,6 +556,7 @@ export const WIDGET_CSS = `
 .bt-widget-stack{display:flex;flex-direction:column;gap:12px;min-width:0}
 .bt-view-row{display:flex;flex-wrap:wrap;gap:12px 24px;min-width:0}
 .bt-view-row>*{flex:1 1 160px;min-width:0}
+.bt-metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,138px),1fr));gap:14px 16px;min-width:0}
 .bt-widget-metric{display:flex;flex-direction:column;gap:1px;min-width:0}
 .bt-widget-metric-label{font-size:12px;line-height:16px;color:var(--bt-ink-2)}
 .bt-widget-metric-value{font-size:22px;line-height:28px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--bt-ink);overflow-wrap:anywhere}
