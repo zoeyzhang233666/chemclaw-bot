@@ -6651,13 +6651,13 @@ function useWidth(box, initial) {
   (0, import_react8.useLayoutEffect)(() => {
     const node = box.current;
     if (!node) return void 0;
-    const measure = () => {
+    const measure2 = () => {
       const next = Math.round(node.clientWidth);
       if (next > 0) setWidth(next);
     };
-    measure();
+    measure2();
     if (typeof ResizeObserver !== "function") return void 0;
-    const observer = new ResizeObserver(measure);
+    const observer = new ResizeObserver(measure2);
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
@@ -7588,12 +7588,170 @@ var HTML_CSS = `
 .bt-view-frame-stopped{margin:0;font-size:13px;line-height:18px;color:var(--bt-ink-2)}
 `;
 
+// src/client/genui-diagram-layout.js
+var SVG_NS = "http://www.w3.org/2000/svg";
+var PATH_NUMBER = "-?(?:\\d+(?:\\.\\d+)?|\\.\\d+)";
+var PATH_START = new RegExp(`^M\\s+(${PATH_NUMBER})\\s+(${PATH_NUMBER})`, "u");
+var PATH_BEND = new RegExp(`Q\\s+(${PATH_NUMBER})\\s+(${PATH_NUMBER})\\s+${PATH_NUMBER}\\s+${PATH_NUMBER}`, "gu");
+var PATH_END = new RegExp(`(?:H\\s+(${PATH_NUMBER})|V\\s+(${PATH_NUMBER}))$`, "u");
+var connectorPoint = (x, y) => ({ x: Number(x), y: Number(y) });
+var svgCoordinates = ({ x, y }) => `${x} ${y}`;
+var orthogonalLength = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+var alongConnector = (from, to, length) => ({
+  x: from.x + Math.sign(to.x - from.x) * length,
+  y: from.y + Math.sign(to.y - from.y) * length
+});
+function roundDiagramConnector(path) {
+  const start = PATH_START.exec(path);
+  const end = PATH_END.exec(path);
+  const corners = [...path.matchAll(PATH_BEND)].map((match) => connectorPoint(match[1], match[2]));
+  if (!start || !end || corners.length !== 2) return path;
+  const first = connectorPoint(start[1], start[2]);
+  const last = connectorPoint(end[1] ?? corners[1].x, end[2] ?? corners[1].y);
+  const points = [first, ...corners, last];
+  if (points.some((value2, index) => index && value2.x !== points[index - 1].x && value2.y !== points[index - 1].y)) return path;
+  return roundedOrthogonalPath(points);
+}
+function roundedOrthogonalPath(vertices) {
+  const points = vertices.filter((value2, index) => index === 0 || orthogonalLength(value2, vertices[index - 1]) > 0);
+  let path = `M ${svgCoordinates(points[0])}`;
+  for (let index = 1; index < points.length - 1; index += 1) {
+    const before = points[index - 1];
+    const corner = points[index];
+    const after = points[index + 1];
+    if (before.x === corner.x === (corner.x === after.x)) continue;
+    const radius = Math.min(8, orthogonalLength(before, corner) / 2, orthogonalLength(corner, after) / 2);
+    path += ` L ${svgCoordinates(alongConnector(corner, before, radius))} Q ${svgCoordinates(corner)} ${svgCoordinates(alongConnector(corner, after, radius))}`;
+  }
+  return `${path} L ${svgCoordinates(points.at(-1))}`;
+}
+var boxesIntersect = (a, b, gap = 0) => a.x < b.x + b.width + gap && a.x + a.width + gap > b.x && a.y < b.y + b.height + gap && a.y + a.height + gap > b.y;
+var insideCanvas = (box, bounds) => box.x >= bounds.x + 4 && box.y >= bounds.y + 4 && box.x + box.width <= bounds.x + bounds.width - 4 && box.y + box.height <= bounds.y + bounds.height - 4;
+var centeredBox = (x, y, width, height) => ({ x: x - width / 2, y: y - height / 2, width, height });
+function diagramNodes(svg) {
+  return [...svg.querySelectorAll('g[role="button"]')].map((element) => {
+    const rect = element.firstElementChild?.firstElementChild;
+    return { element, name: element.getAttribute("aria-label"), box: rect?.getBBox?.() ?? element.getBBox() };
+  });
+}
+function fallbackOverlappingDiagram(svg) {
+  const nodes = diagramNodes(svg);
+  if (!nodes.some(({ box }, index) => box.width > 0 && box.height > 0 && nodes.slice(0, index).some((peer) => boxesIntersect(box, peer.box)))) return void 0;
+  const list = document.createElement("ul");
+  list.className = "bt-genui-diagram-fallback";
+  for (const { name, element } of nodes) {
+    const item = document.createElement("li");
+    const button2 = document.createElement("button");
+    button2.type = "button";
+    button2.textContent = name;
+    button2.addEventListener("click", () => element.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    item.append(button2);
+    list.append(item);
+  }
+  const display = svg.style.display;
+  svg.style.display = "none";
+  svg.after(list);
+  return () => {
+    list.remove();
+    svg.style.display = display;
+  };
+}
+function lineSamples(path) {
+  const length = path.getTotalLength();
+  const count = Math.max(1, Math.min(200, Math.ceil(length / 5)));
+  return Array.from({ length: count + 1 }, (_, index) => path.getPointAtLength(index * length / count));
+}
+function labelPosition(samples, width, height, blocked, bounds) {
+  const order = [...samples.keys()].sort((a, b) => Math.abs(a - samples.length / 2) - Math.abs(b - samples.length / 2));
+  for (const index of order) {
+    const { x, y } = samples[index];
+    const candidates2 = [
+      centeredBox(x, y - height / 2 - 5, width, height),
+      centeredBox(x, y + height / 2 + 5, width, height),
+      centeredBox(x + width / 2 + 5, y, width, height),
+      centeredBox(x - width / 2 - 5, y, width, height)
+    ];
+    const clear = candidates2.find((box) => insideCanvas(box, bounds) && !blocked.some((other) => boxesIntersect(box, other, 2)));
+    if (clear) return clear;
+  }
+}
+function layoutGenuiDiagram(svg) {
+  const paths = [...svg.querySelectorAll("path[marker-end]")];
+  if (!paths.length) return void 0;
+  const originalViewBox = svg.getAttribute("viewBox");
+  const { x, y, width, height } = svg.viewBox.baseVal;
+  const bounds = { x, y, width, height };
+  const nodes = diagramNodes(svg);
+  const restore = [];
+  const overlay = document.createElementNS(SVG_NS, "g");
+  overlay.setAttribute("data-bt-diagram-labels", "");
+  overlay.setAttribute("pointer-events", "none");
+  svg.lastElementChild.before(overlay);
+  const lines = paths.map((path) => {
+    const original = path.getAttribute("d");
+    if (original) path.setAttribute("d", roundDiagramConnector(original));
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+    restore.push(() => {
+      if (original) path.setAttribute("d", original);
+      path.removeAttribute("stroke-linecap");
+      path.removeAttribute("stroke-linejoin");
+    });
+    return lineSamples(path);
+  });
+  const blocked = nodes.map((node) => node.box).concat(lines.flatMap((samples) => samples.map(({ x: x2, y: y2 }) => centeredBox(x2, y2, 4, 4))));
+  let extraHeight = 0;
+  let extraWidth = 0;
+  const nodeAt = (p) => nodes.find(({ box }) => p.x >= box.x - 1 && p.x <= box.x + box.width + 1 && p.y >= box.y - 1 && p.y <= box.y + box.height + 1)?.name;
+  for (const [index, path] of paths.entries()) {
+    const label = path.nextElementSibling;
+    const text = label?.querySelector("text");
+    const surface = label?.querySelector("rect");
+    if (!text || !surface) continue;
+    const measure2 = text.getBBox();
+    if (!measure2.width || !measure2.height) continue;
+    const samples = lines[index];
+    const size = { width: measure2.width + 10, height: measure2.height + 6 };
+    const box = labelPosition(samples, size.width, size.height, blocked, bounds);
+    const copy2 = label.cloneNode(true);
+    const plate = copy2.querySelector("rect");
+    const caption = copy2.querySelector("text");
+    caption.setAttribute("dominant-baseline", "central");
+    caption.setAttribute("text-anchor", "middle");
+    caption.setAttribute("fill", "var(--dsw-alias-label-primary, currentColor)");
+    let position = box;
+    if (!position) {
+      const from = nodeAt(samples[0]);
+      const to = nodeAt(samples.at(-1));
+      if (from && to) caption.textContent = `${from} → ${to} · ${caption.textContent}`;
+      overlay.append(copy2);
+      const rowWidth = Math.max(size.width, caption.getBBox().width + 10);
+      extraWidth = Math.max(extraWidth, rowWidth + 16 - width);
+      position = { x: x + 8, y: y + height + extraHeight + 5, width: rowWidth, height: size.height };
+      extraHeight += size.height + 6;
+    }
+    for (const [attr, value2] of Object.entries(position)) plate.setAttribute(attr, value2);
+    caption.setAttribute("x", position.x + position.width / 2);
+    caption.setAttribute("y", position.y + position.height / 2);
+    overlay.append(copy2);
+    blocked.push(position);
+    label.setAttribute("visibility", "hidden");
+    restore.push(() => label.removeAttribute("visibility"));
+  }
+  if (!overlay.childElementCount) overlay.remove();
+  if (extraHeight) svg.setAttribute("viewBox", `${x} ${y} ${width + extraWidth} ${height + extraHeight + 6}`);
+  return () => {
+    overlay.remove();
+    if (extraHeight) svg.setAttribute("viewBox", originalViewBox);
+    for (const reset of restore) reset();
+  };
+}
+
 // src/client/widget-flow.js
 var import_react11 = require("react");
 var CARD_WIDTH = 256;
 var MIN_COLUMN_WIDTH = 176;
 var COLUMN_GAP = 26;
-var ROW_GAP = 62;
 var PADDING = 16;
 var EDGE_FONT = 12;
 var EDGE_LINE = 15;
@@ -7619,148 +7777,211 @@ function wrap(text, limit) {
   if (row.trim()) lines.push(row.trim());
   return lines;
 }
-function orderLevels(levels, edges) {
-  const incoming = /* @__PURE__ */ new Map();
-  for (const edge of edges) {
-    if (edge.feedback) continue;
-    const sources2 = incoming.get(edge.to) ?? [];
-    sources2.push(edge.from);
-    incoming.set(edge.to, sources2);
-  }
+function orderLevels(levels, edges, ranks) {
+  const nearby = edges.filter((edge) => ranks.get(edge.to) === ranks.get(edge.from) + 1);
   const positions = /* @__PURE__ */ new Map();
-  for (const level of levels) {
-    const score = (node) => {
-      const sources2 = incoming.get(node.id);
-      return sources2 ? sources2.reduce((sum, id) => sum + positions.get(id), 0) / sources2.length : 0.5;
-    };
-    level.sort((a, b) => score(a) - score(b));
-    for (const [index, node] of level.entries()) positions.set(node.id, (index + 0.5) / level.length);
-  }
-  return levels;
-}
-function joinAdjacentConnections(connections) {
-  const consumed = /* @__PURE__ */ new Set();
-  const shared2 = [];
-  const intervals = /* @__PURE__ */ new Map();
-  for (const side of ["from", "to"]) {
-    const lists = /* @__PURE__ */ new Map();
-    for (const edge of connections) {
-      if (edge.lane || edge.label.length || consumed.has(edge)) continue;
-      const key = [edge[side], Boolean(edge.uncertain)].join(":");
-      const group = lists.get(key) ?? [];
-      group.push(edge);
-      lists.set(key, group);
+  const index = (level) => level.forEach((node, i) => positions.set(node.id, (i + 0.5) / level.length));
+  const score = () => {
+    let cost = 0;
+    for (const [i, a] of nearby.entries()) {
+      const from = positions.get(a.from);
+      const to = positions.get(a.to);
+      cost += Math.abs(from - to);
+      for (const b of nearby.slice(i + 1)) {
+        if (ranks.get(a.from) === ranks.get(b.from) && (from - positions.get(b.from)) * (to - positions.get(b.to)) < 0) cost += 4;
+      }
     }
-    for (const group of lists.values()) {
-      if (group.length < 2) continue;
-      const first = group[0];
-      const split = side === "from";
-      const gap = first.start;
-      const used = intervals.get(gap) ?? [];
-      const xs = group.map((edge) => split ? edge.x2 : edge.x1).concat(split ? first.x1 : first.centerX);
-      const left = Math.min(...xs);
-      const right = Math.max(...xs);
-      const band = 0.5 * (first.start + first.end);
-      const y = [0, -10, 10, -20, 20].map((offset) => band + offset).find((candidate) => candidate > first.start && candidate < first.end && !used.some((bus) => bus.y === candidate && bus.right >= left && right >= bus.left));
-      if (y === void 0) continue;
-      used.push({ y, left, right });
-      intervals.set(gap, used);
-      const feed = split ? `M${first.x1} ${first.y1} V${y}` : "";
-      const end = split ? "" : `M${first.centerX} ${y} V${first.y2}`;
-      shared2.push({ ...first, shared: true, arrow: !split, label: [], d: `${feed} M${left} ${y} H${right} ${end}` });
-      for (const edge of group) {
-        consumed.add(edge);
-        shared2.push({
-          ...edge,
-          arrow: split,
-          d: split ? `M${edge.x2} ${y} V${edge.y2}` : `M${edge.x1} ${edge.y1} V${y}`
-        });
+    return cost;
+  };
+  levels.forEach(index);
+  let best = score();
+  for (let pass = 0; pass < 4; pass += 1) {
+    const sweep = pass % 2 === 0 ? levels : [...levels].reverse();
+    for (const level of sweep) for (let i = 1; i < level.length; i += 1) {
+      const left = level[i - 1];
+      const right = level[i];
+      level[i - 1] = right;
+      level[i] = left;
+      index(level);
+      const cost = score();
+      if (cost < best) best = cost;
+      else {
+        level[i - 1] = left;
+        level[i] = right;
+        index(level);
       }
     }
   }
-  return connections.filter((edge) => !consumed.has(edge)).concat(shared2);
 }
-function flowLayout(nodes, edges, available) {
-  const levels = orderLevels(flowLevels(nodes, edges), edges);
-  const maxColumns = Math.max(...levels.map((level) => level.length));
-  const columnsAt = (width2) => Math.max(1, Math.min(maxColumns, Math.floor((width2 + COLUMN_GAP) / (MIN_COLUMN_WIDTH + COLUMN_GAP))));
-  const inner = Math.max(1, available - PADDING * 2);
-  const ranks = new Map(levels.flatMap((level, rank) => level.map((node) => [node.id, rank])));
-  const routed = maxColumns > columnsAt(inner) || edges.some((edge) => edge.feedback || ranks.get(edge.to) - ranks.get(edge.from) > 1);
-  const rail = routed ? Math.min(64, Math.floor(inner / 6)) : 0;
-  const columns2 = columnsAt(inner - rail);
-  const cardWidth = Math.min(CARD_WIDTH, Math.floor((inner - rail - (columns2 - 1) * COLUMN_GAP) / columns2));
-  const rowWidth = columns2 * (cardWidth + COLUMN_GAP) - COLUMN_GAP;
-  const width = rowWidth + PADDING * 2 + rail;
-  const rows2 = levels.flatMap((level) => Array.from({ length: Math.ceil(level.length / columns2) }, (_, i) => level.slice(i * columns2, (i + 1) * columns2)));
-  const rowOf = new Map(rows2.flatMap((row, i) => row.map((node) => [node.id, i])));
-  const exits = rows2.map(() => 8);
-  const entries2 = rows2.map(() => 8);
-  const incoming = /* @__PURE__ */ new Map();
-  let lanes = 0;
-  const paths = edges.map((edge) => {
-    const fromRow = rowOf.get(edge.from);
-    const toRow = rowOf.get(edge.to);
-    const label = edge.label ? wrap(edge.label, Math.min(168, cardWidth - 12) / EDGE_FONT) : [];
-    const port = incoming.get(edge.to) ?? 0;
-    incoming.set(edge.to, port + 1);
-    if (!edge.feedback && toRow - fromRow === 1) return { edge, label, port };
-    const labelRoom = Math.max(10, label.length * EDGE_LINE + 4);
-    const entry = entries2[toRow] + 5;
-    const exit = exits[fromRow] + (edge.feedback ? labelRoom : 10);
-    entries2[toRow] = entry + (edge.feedback ? 4 : labelRoom);
-    exits[fromRow] = exit;
-    return { edge, label, port, entry, exit, lane: ++lanes };
-  });
-  const boxes = /* @__PURE__ */ new Map();
-  let y = Math.max(PADDING, entries2[0] + 4);
-  for (const [rank, level] of rows2.entries()) {
-    const row = level.map((node) => {
-      const label = wrap(node.label, (cardWidth - 24) / 15);
-      const detail = node.detail ? wrap(node.detail, (cardWidth - 24) / 13) : [];
-      const stage = node.stage ? wrap(node.stage, (cardWidth - 24) / 11) : [];
-      return { ...node, label, detail, stage, height: Math.max(58, 22 + stage.length * 16 + label.length * 20 + detail.length * 18) };
-    });
-    const height = Math.max(...row.map((node) => node.height));
-    const left = PADDING + (rowWidth - (row.length * (cardWidth + COLUMN_GAP) - COLUMN_GAP)) / 2;
-    for (const [i, node] of row.entries()) {
-      boxes.set(node.id, { ...node, rank: ranks.get(node.id), x: left + i * (cardWidth + COLUMN_GAP), y: y + (height - node.height) / 2, rowTop: y, rowBottom: y + height });
+function bundles(routes) {
+  const shared2 = [];
+  const remaining = new Set(routes);
+  for (const side of ["from", "to"]) {
+    const groups = /* @__PURE__ */ new Map();
+    for (const route of remaining) {
+      if (route.long || route.edge.label) continue;
+      const key = `${route.edge[side]}:${Boolean(route.edge.uncertain)}`;
+      const group = groups.get(key) ?? [];
+      group.push(route);
+      groups.set(key, group);
     }
-    y += height + (rank + 1 === rows2.length ? 0 : Math.max(ROW_GAP, exits[rank] + entries2[rank + 1] + 12));
+    for (const group of groups.values()) {
+      if (group.length < 2) continue;
+      shared2.push({ group, split: side === "from" });
+      for (const route of group) remaining.delete(route);
+    }
   }
-  let bottom = y;
-  const connections = paths.map(({ edge, label, port, entry, exit, lane }) => {
+  return { shared: shared2, remaining };
+}
+function placeTrack(tracks, left, right, height) {
+  let track = tracks.find((row) => row.uses.every((span) => left >= span.right + 10 || right <= span.left - 10));
+  if (!track) {
+    track = { uses: [], height: 0, y: 0 };
+    tracks.push(track);
+  }
+  track.uses.push({ left, right });
+  track.height = Math.max(track.height, height);
+  return track;
+}
+var connector = (...pairs) => roundedOrthogonalPath(pairs.map(([x, y]) => ({ x, y })));
+var measure = (line) => [...line].reduce((sum, character) => sum + glyphWidth(character), 0) * EDGE_FONT;
+function flowLayout(nodes, edges, available) {
+  const levels = flowLevels(nodes, edges);
+  const ranks = new Map(levels.flatMap((level, rank) => level.map((node) => [node.id, rank])));
+  orderLevels(levels, edges, ranks);
+  const maxColumns = Math.max(...levels.map((level) => level.length));
+  const inner = Math.max(1, available - PADDING * 2);
+  const columnsAt = (width2) => Math.max(1, Math.min(maxColumns, Math.floor((width2 + COLUMN_GAP) / (MIN_COLUMN_WIDTH + COLUMN_GAP))));
+  const needsRails = maxColumns > columnsAt(inner) || edges.some((edge) => edge.feedback || ranks.get(edge.to) - ranks.get(edge.from) > 1);
+  const railWidth = needsRails ? Math.min(52, Math.floor(inner / 8)) : 0;
+  const columns2 = columnsAt(inner - railWidth * 2);
+  const cardWidth = Math.min(CARD_WIDTH, Math.floor((inner - railWidth * 2 - (columns2 - 1) * COLUMN_GAP) / columns2));
+  const rowWidth = columns2 * (cardWidth + COLUMN_GAP) - COLUMN_GAP;
+  const width = rowWidth + (PADDING + railWidth) * 2;
+  const rows2 = levels.flatMap((level) => Array.from({ length: Math.ceil(level.length / columns2) }, (_, i) => level.slice(i * columns2, (i + 1) * columns2)));
+  const boxes = /* @__PURE__ */ new Map();
+  const lanes = Array.from({ length: rows2.length + 1 }, () => []);
+  for (const [row, items] of rows2.entries()) {
+    const left = (width - (items.length * (cardWidth + COLUMN_GAP) - COLUMN_GAP)) / 2;
+    for (const [i, item] of items.entries()) {
+      const label = wrap(item.label, (cardWidth - 24) / 15);
+      const detail = item.detail ? wrap(item.detail, (cardWidth - 24) / 13) : [];
+      const stage = item.stage ? wrap(item.stage, (cardWidth - 24) / 11) : [];
+      const textHeight = stage.length * 16 + label.length * 20 + detail.length * 18;
+      const x = left + i * (cardWidth + COLUMN_GAP);
+      boxes.set(item.id, { ...item, label, detail, stage, textHeight, x, row, rank: ranks.get(item.id), center: x + cardWidth / 2 });
+    }
+  }
+  const routes = edges.map((edge) => {
     const from = boxes.get(edge.from);
     const to = boxes.get(edge.to);
-    const x1 = from.x + cardWidth / 2;
-    const ports = incoming.get(edge.to);
-    const portGap = Math.min(14, (cardWidth - 24) / Math.max(1, ports - 1));
-    const x2 = to.x + cardWidth / 2 + (port - (ports - 1) / 2) * portGap;
-    const y1 = from.y + from.height;
-    const y2 = to.y - 5;
-    const start = from.rowBottom + 8;
-    const end = to.rowTop - 8;
-    const middle = (start + end) / 2;
-    const labelSpan = Math.max(0, label.length - 1) * EDGE_LINE;
-    let d, anchorX, labelTop;
-    if (lane) {
-      const railX = PADDING + rowWidth + rail * (lane / (lanes + 1));
-      const exitY = from.rowBottom + exit;
-      const entryY = to.rowTop - entry;
-      d = `M${x1} ${y1} V${exitY} H${railX} V${entryY} H${x2} V${y2}`;
-      anchorX = edge.feedback ? x1 : x2;
-      labelTop = (edge.feedback ? exitY : entryY) - 4 - labelSpan;
-      bottom = Math.max(bottom, exitY);
-    } else {
-      d = `M${x1} ${y1} V${start} C${x1} ${middle} ${x2} ${middle} ${x2} ${end} V${y2}`;
-      anchorX = (x1 + 3 * x2) / 4;
-      labelTop = middle + 2 - labelSpan / 2;
-    }
-    const half = Math.max(0, ...label.map((line) => [...line].reduce((sum, character) => sum + glyphWidth(character), 0))) * EDGE_FONT / 2;
-    const x = Math.max(PADDING + half, Math.min(width - PADDING - half, anchorX));
-    return { ...edge, d, x, y: labelTop, label, lane, start, end, x1, x2, y1, y2, centerX: to.x + cardWidth / 2, arrow: true };
+    const label = edge.label ? wrap(edge.label, Math.min(174, cardWidth - 12) / EDGE_FONT) : [];
+    return { edge, from, to, label, long: to.row !== from.row + 1 || edge.feedback, x1: from.center, x2: to.center };
   });
-  return { width, height: bottom + PADDING, cardWidth, boxes: [...boxes.values()], connections: joinAdjacentConnections(connections) };
+  const { shared: shared2, remaining } = bundles(routes);
+  for (const [side, other, key] of [["from", "to", "x1"], ["to", "from", "x2"]]) {
+    for (const box of boxes.values()) {
+      const touching = [...remaining].filter((route) => route[side] === box).map((route) => [route]);
+      for (const { group, split } of shared2) {
+        if ((split ? "from" : "to") === side) {
+          if (group[0][side] === box) touching.push(group);
+        } else for (const route of group) if (route[side] === box) touching.push([route]);
+      }
+      const peer = (group) => group.reduce((sum, route) => sum + route[other].center, 0) / group.length;
+      touching.sort((a, b) => peer(a) - peer(b));
+      const gap = Math.min(15, (cardWidth - 28) / Math.max(1, touching.length - 1));
+      for (const [i, group] of touching.entries()) {
+        for (const route of group) route[key] = box.center + (i - (touching.length - 1) / 2) * gap;
+      }
+    }
+  }
+  const sideRails = [[], []];
+  const track = (gap, x1, x2, label) => {
+    const labelWidth = label.length ? Math.ceil(Math.max(...label.map(measure))) + 14 : 0;
+    const labelHeight = label.length ? label.length * EDGE_LINE + 6 : 0;
+    const midpoint = Math.abs(x1 - x2) >= labelWidth + 14 ? (x1 + x2) / 2 : x2 + 8 + labelWidth / 2;
+    const x = Math.max(PADDING + labelWidth / 2, Math.min(width - PADDING - labelWidth / 2, midpoint));
+    const bounds = labelWidth ? [x - labelWidth / 2, x + labelWidth / 2] : [];
+    const lane = placeTrack(lanes[gap], Math.min(x1, x2, ...bounds), Math.max(x1, x2, ...bounds), Math.max(12, labelHeight + 4));
+    return { lane, x, labelWidth, labelHeight };
+  };
+  for (const route of [...remaining].sort((a, b) => Number(a.long) - Number(b.long))) {
+    const { from, to, x1, x2, label } = route;
+    if (!route.long) {
+      route.entry = track(to.row, x1, x2, label);
+      continue;
+    }
+    const first = Math.min(from.row + 1, to.row);
+    const last = Math.max(from.row + 1, to.row);
+    const options = sideRails.map((rail2, side2) => {
+      const reusable = rail2.findIndex((uses2) => uses2.every((span) => last < span.first || first > span.last));
+      const index2 = reusable < 0 ? rail2.length : reusable;
+      return { rail: rail2, side: side2, index: index2, cost: (side2 === 0 ? x1 + x2 : width * 2 - x1 - x2) + index2 * 44 };
+    });
+    const { rail, side, index } = options[0].cost <= options[1].cost ? options[0] : options[1];
+    const uses = rail[index] ??= [];
+    uses.push({ first, last });
+    route.rail = { side, index };
+  }
+  for (const route of remaining) {
+    if (!route.long) continue;
+    const { side, index } = route.rail;
+    const inset = railWidth * (sideRails[side].length - index) / (sideRails[side].length + 1);
+    const railX = side === 0 ? PADDING + inset : width - PADDING - inset;
+    route.railX = railX;
+    route.exit = track(route.from.row + 1, route.x1, railX, []);
+    route.entry = track(route.to.row, railX, route.x2, route.label);
+  }
+  for (const bundle of shared2) {
+    const { group } = bundle;
+    const xs = group.flatMap((route) => [route.x1, route.x2]);
+    bundle.left = Math.min(...xs);
+    bundle.right = Math.max(...xs);
+    bundle.track = track(group[0].to.row, bundle.left, bundle.right, []);
+  }
+  let y = PADDING;
+  for (const [i, tracks] of lanes.entries()) {
+    if (tracks.length) {
+      y += 15;
+      for (const lane of tracks) {
+        lane.y = y + lane.height / 2;
+        y += lane.height;
+      }
+      y += 15;
+    } else if (i > 0 && i < rows2.length) y += 28;
+    if (i === rows2.length) break;
+    const row = rows2[i].map((item) => boxes.get(item.id));
+    const height = Math.max(58, ...row.map((box) => box.textHeight + 24));
+    for (const box of row) Object.assign(box, { y, height });
+    y += height;
+  }
+  const start = (route) => [route.x1, route.from.y + route.from.height];
+  const end = (route) => [route.x2, route.to.y - 4];
+  const connections = [...remaining].map((route) => {
+    const { entry, exit, railX, x1, x2 } = route;
+    const middle = entry.lane.y;
+    const points = exit ? [[x1, exit.lane.y], [railX, exit.lane.y], [railX, middle]] : [[x1, middle]];
+    const d = connector(start(route), ...points, [x2, middle], end(route));
+    return { ...route.edge, d, arrow: true, label: route.label, x: entry.x, y: middle, labelWidth: entry.labelWidth, labelHeight: entry.labelHeight };
+  });
+  for (const { group, split, left, right, track: row } of shared2) {
+    const first = group[0];
+    const edge = first.edge;
+    const middle = row.lane.y;
+    const bus = connector([left, middle], [right, middle]);
+    const trunk = split ? connector(start(first), [first.x1, middle]) : connector([first.x2, middle], end(first));
+    if (split) connections.push({ ...edge, d: `${trunk} ${bus}`, shared: true, label: [] });
+    else {
+      connections.push({ ...edge, d: bus, shared: true, label: [] }, { ...edge, d: trunk, arrow: true, label: [] });
+    }
+    for (const route of group) connections.push({
+      ...route.edge,
+      label: [],
+      arrow: split,
+      d: split ? connector([route.x2, middle], end(route)) : connector(start(route), [route.x1, middle])
+    });
+  }
+  return { width, height: y + PADDING, cardWidth, boxes: [...boxes.values()], connections };
 }
 function FlowView({ node }) {
   const id = (0, import_react11.useId)();
@@ -7782,15 +8003,20 @@ function FlowView({ node }) {
       (0, import_react11.createElement)("defs", null, [false, true].map((dashed) => (0, import_react11.createElement)(
         "marker",
         { key: Number(dashed), id: `${id}-arrow-${Number(dashed)}`, markerWidth: 8, markerHeight: 8, refX: 7, refY: 4, orient: "auto" },
-        (0, import_react11.createElement)("path", { d: "M0 0 L8 4 L0 8 Z", className: dashed ? "bt-flow-arrow-uncertain" : "bt-flow-arrow" })
+        (0, import_react11.createElement)("path", { d: "M1 1 L7 4 L1 7", className: dashed ? "bt-flow-arrow-uncertain" : "bt-flow-arrow" })
       ))),
       connections.map((edge, index) => (0, import_react11.createElement)(
         "g",
         { key: index, className: "bt-flow-connection", "data-uncertain": edge.uncertain || void 0, "data-feedback": edge.feedback || void 0, "data-shared": edge.shared || void 0 },
-        (0, import_react11.createElement)("path", { d: edge.d, markerEnd: edge.arrow ? `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` : void 0 }),
-        edge.label.length > 0 && (0, import_react11.createElement)(
+        (0, import_react11.createElement)("path", { d: edge.d, markerEnd: edge.arrow ? `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` : void 0 })
+      )),
+      connections.filter((edge) => edge.label.length).map((edge, index) => (0, import_react11.createElement)(
+        "g",
+        { key: index, className: "bt-flow-edge-label", "data-uncertain": edge.uncertain || void 0 },
+        (0, import_react11.createElement)("rect", { x: edge.x - edge.labelWidth / 2, y: edge.y - edge.labelHeight / 2, width: edge.labelWidth, height: edge.labelHeight, rx: 6 }),
+        (0, import_react11.createElement)(
           "text",
-          { x: edge.x, y: edge.y, textAnchor: "middle" },
+          { x: edge.x, y: edge.y - (edge.label.length - 1) * EDGE_LINE / 2, textAnchor: "middle", dominantBaseline: "central" },
           edge.label.map((line, i) => (0, import_react11.createElement)("tspan", { key: i, x: edge.x, dy: i === 0 ? 0 : EDGE_LINE }, line))
         )
       )),
@@ -7801,7 +8027,7 @@ function FlowView({ node }) {
         (0, import_react11.createElement)("rect", { x: step.x, y: step.y, width: cardWidth, height: step.height, rx: 12 }),
         (0, import_react11.createElement)(
           "text",
-          { x: step.x + cardWidth / 2, y: step.y + 24, textAnchor: "middle" },
+          { x: step.x + cardWidth / 2, y: step.y + (step.height - step.textHeight) / 2 + (step.stage.length ? 11 : 15), textAnchor: "middle" },
           [...step.stage, ...step.label, ...step.detail].map((line, i) => (0, import_react11.createElement)("tspan", {
             key: i,
             x: step.x + cardWidth / 2,
@@ -7816,7 +8042,7 @@ function FlowView({ node }) {
 }
 var FLOW_CSS = `
 .bt-flow{width:100%;min-width:0;margin:4px 0 8px}
-.bt-flow svg{display:block;max-width:100%;height:auto;margin-inline:auto;color:var(--bt-ink)}
+.bt-flow svg{display:block;max-width:100%;height:auto;margin-inline:auto;color:var(--bt-ink);background:color-mix(in srgb,var(--bt-main) 96%,var(--bt-ink));border-radius:12px;box-shadow:inset 0 0 0 1px var(--bt-line)}
 .bt-flow figcaption{text-align:center;font-size:12px;line-height:1.5;color:var(--bt-ink-2);margin-top:6px;overflow-wrap:anywhere}
 .bt-flow-step{--bt-flow-tone:var(--bt-ink-blue)}
 .bt-flow-step[data-input],.bt-flow-step[data-tone=info]{--bt-flow-tone:var(--bt-accent)}
@@ -7828,14 +8054,13 @@ var FLOW_CSS = `
 .bt-flow-label{font-size:15px;font-weight:650}
 .bt-flow-stage{font-size:11px;fill:var(--bt-flow-tone);font-weight:600}
 .bt-flow-detail{font-size:13px;fill:var(--bt-ink-2)}
-.bt-flow-connection{--bt-flow-edge:var(--bt-ink-3)}
-.bt-flow-connection[data-uncertain]{--bt-flow-edge:var(--bt-danger)}
-.bt-flow-arrow{fill:var(--bt-ink-3)}
-.bt-flow-arrow-uncertain{fill:var(--bt-danger)}
-.bt-flow-connection path{fill:none;stroke:var(--bt-flow-edge);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.bt-flow-connection,.bt-flow-arrow{--bt-flow-edge:color-mix(in srgb,var(--bt-ink) 61%,var(--bt-main))}
+.bt-flow-connection[data-uncertain],.bt-flow-arrow-uncertain{--bt-flow-edge:var(--bt-danger)}
+.bt-flow-arrow,.bt-flow-arrow-uncertain,.bt-flow-connection path{fill:none;stroke:var(--bt-flow-edge);stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
 .bt-flow-connection[data-uncertain] path{stroke-dasharray:5 4}
-.bt-flow-connection text{font-size:${EDGE_FONT}px;fill:var(--bt-ink-2);stroke:var(--bt-main);stroke-width:3;paint-order:stroke;stroke-linejoin:round}
-.bt-flow-connection[data-uncertain] text{fill:var(--bt-danger)}
+.bt-flow-edge-label rect{fill:var(--bt-main);stroke:var(--bt-line);stroke-width:.75}
+.bt-flow-edge-label text{font-size:${EDGE_FONT}px;font-weight:540;fill:var(--bt-ink)}
+.bt-flow-edge-label[data-uncertain] text{fill:var(--bt-danger)}
 `;
 
 // src/client/widget-cell.js
@@ -11137,6 +11362,11 @@ function* genuiFences(text) {
     if (UI_LANGUAGE.test(language2)) yield fence;
   }
 }
+function* bareMermaidFences(text) {
+  for (const { language: language2, ...fence } of markdownFences(text)) {
+    if (/^mermaid\s*$/iu.test(language2) || /^(?:text|plaintext)?\s*$/iu.test(language2) && /^(?:flowchart|graph)[ \t]+(?:TB|TD|BT|LR|RL)(?:[\s;]|$)/iu.test(fence.body.trimStart())) yield fence;
+  }
+}
 function stripGraphicControlLines(text) {
   if (!text.includes("chatml_chart_demo")) return text;
   const clean = (value2) => value2.replace(/^[ \t]*<\/?chatml_chart_demo>[ \t]*(?:\r?\n|$)/gmu, "");
@@ -11622,7 +11852,7 @@ function ThinkingRow({ text, live, at, ms, viewKey }) {
   const remember = (patch) => {
     if (viewKey !== void 0) rowViews.set(viewKey, { ...rowViews.get(viewKey), ...patch });
   };
-  const measure = () => {
+  const measure2 = () => {
     const el = box.current;
     atEnd.current = el.scrollHeight - el.scrollTop - el.clientHeight < 2;
     remember({ atEnd: atEnd.current, top: el.scrollTop });
@@ -11642,7 +11872,7 @@ function ThinkingRow({ text, live, at, ms, viewKey }) {
     view.current = void 0;
     if (atEnd.current) el.scrollTop = el.scrollHeight;
     else if (restore?.top !== void 0) el.scrollTop = restore.top;
-    measure();
+    measure2();
   }, [text, open]);
   const title = live ? t("Thinking") : t("Thought it through");
   return (0, import_react24.createElement)(
@@ -11655,7 +11885,7 @@ function ThinkingRow({ text, live, at, ms, viewKey }) {
       live && at !== void 0 ? (0, import_react24.createElement)(Elapsed, { at, className: "bt-think-time" }) : null,
       !live && ms !== void 0 ? (0, import_react24.createElement)("span", { className: "bt-think-time" }, `· ${elapsedLabel(Math.max(1e3, ms))}`) : null
     ),
-    (0, import_react24.createElement)("div", { ref: box, className: "bt-think-text", role: "region", "aria-label": title, tabIndex: 0, "data-fade": fade, onScroll: measure }, text)
+    (0, import_react24.createElement)("div", { ref: box, className: "bt-think-text", role: "region", "aria-label": title, tabIndex: 0, "data-fade": fade, onScroll: measure2 }, text)
   );
 }
 function useFileMentions({ node, openFile, fileMentions, useTurnData }) {
@@ -12976,7 +13206,7 @@ function SidebarFilters({ items, children }) {
   const key = items.map((item) => `${item.id}:${item.label}:${item.pressed}`).join("|");
   (0, import_react27.useLayoutEffect)(() => {
     const node = row.current;
-    const measure = () => {
+    const measure2 = () => {
       const trigger = node?.querySelector(":scope > .bt-side-filter");
       if (!trigger || !probe.current) return;
       const widths = [...probe.current.children].map((button3) => button3.getBoundingClientRect().width);
@@ -12984,8 +13214,8 @@ function SidebarFilters({ items, children }) {
       node.style.setProperty("--bt-shortcut-max", `${Math.max(32, available - widths[0] - 6)}px`);
       setCount(fitShortcuts(widths, available));
     };
-    measure();
-    const observer = typeof ResizeObserver === "function" ? new ResizeObserver(measure) : null;
+    measure2();
+    const observer = typeof ResizeObserver === "function" ? new ResizeObserver(measure2) : null;
     if (node) observer?.observe(node);
     if (probe.current) observer?.observe(probe.current);
     return () => observer?.disconnect();
@@ -14206,7 +14436,7 @@ function useTranscriptView() {
     let frame = 0;
     let watched = null;
     const observer = new MutationObserver(() => schedule());
-    const measure = () => {
+    const measure2 = () => {
       frame = 0;
       const scroller = document.querySelector("[data-conversation-scroll]");
       if (scroller !== watched) {
@@ -14237,7 +14467,7 @@ function useTranscriptView() {
       setView((prev) => prev && Object.keys(next).every((key) => prev[key] === next[key]) ? prev : next);
     };
     const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(measure);
+      if (!frame) frame = requestAnimationFrame(measure2);
     };
     document.addEventListener("scroll", schedule, true);
     window.addEventListener("resize", schedule);
@@ -20124,13 +20354,13 @@ var GitHubMark = () => (0, import_react48.createElement)(
 );
 var MARKS = { github: GitHubMark, "chem-data-hub": ApiHubMark, huagongshe: ChemistryMark };
 var ABOUT = { github: () => t("Repositories, issues, and pull requests") };
-function statusText2(connector) {
-  if (connector.state === "connecting") return t("Connecting…");
-  if (connector.state === "error") return t("Could not connect: {error}", { error: connector.error ?? "" });
-  if (connector.state === "ready") return connector.account ? t("Connected as {account}", { account: connector.account }) : t("Connected");
-  return connector.description ? t(connector.description) : ABOUT[connector.id]?.() ?? "";
+function statusText2(connector2) {
+  if (connector2.state === "connecting") return t("Connecting…");
+  if (connector2.state === "error") return t("Could not connect: {error}", { error: connector2.error ?? "" });
+  if (connector2.state === "ready") return connector2.account ? t("Connected as {account}", { account: connector2.account }) : t("Connected");
+  return connector2.description ? t(connector2.description) : ABOUT[connector2.id]?.() ?? "";
 }
-function useConnectorForm(connector, actions) {
+function useConnectorForm(connector2, actions) {
   const [form, setForm] = (0, import_react48.useState)(false);
   const [token, setToken] = (0, import_react48.useState)("");
   const [busy, setBusy] = (0, import_react48.useState)(false);
@@ -20144,7 +20374,7 @@ function useConnectorForm(connector, actions) {
   };
   const connect = () => {
     if (busy || token.trim() === "") return;
-    void run2(actions.connectorConnect(connector.id, token), () => {
+    void run2(actions.connectorConnect(connector2.id, token), () => {
       setToken("");
       setForm(false);
     });
@@ -20154,41 +20384,41 @@ function useConnectorForm(connector, actions) {
     setToken("");
     setError(null);
   };
-  return { form, setForm, token, setToken, busy, error, run: run2, connect, cancel, on: connector.state !== "off", tokenUrl: connector.tokenUrl ?? TOKEN_URL };
+  return { form, setForm, token, setToken, busy, error, run: run2, connect, cancel, on: connector2.state !== "off", tokenUrl: connector2.tokenUrl ?? TOKEN_URL };
 }
-function ConnectorActions({ connector, actions, form, setForm, busy, run: run2, on }) {
+function ConnectorActions({ connector: connector2, actions, form, setForm, busy, run: run2, on }) {
   return (0, import_react48.createElement)(
     "span",
     { className: "bt-connector-actions" },
-    !connector.generic && (connector.anonymous || connector.authenticated || connector.state === "error") ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => setForm(!form) }, t("Change key")) : null,
-    connector.state === "error" ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorRetry(connector.id)) }, t("Try again")) : null,
-    on ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorDisconnect(connector.id)) }, t("Disconnect")) : form ? null : (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => connector.anonymous ? void run2(actions.connectorConnect(connector.id, "")) : setForm(true) }, t("Connect"))
+    !connector2.generic && (connector2.anonymous || connector2.authenticated || connector2.state === "error") ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => setForm(!form) }, t("Change key")) : null,
+    connector2.state === "error" ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorRetry(connector2.id)) }, t("Try again")) : null,
+    on ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorDisconnect(connector2.id)) }, t("Disconnect")) : form ? null : (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => connector2.anonymous ? void run2(actions.connectorConnect(connector2.id, "")) : setForm(true) }, t("Connect"))
   );
 }
-function ConnectorKeyForm({ connector, form, token, setToken, busy, connect, cancel, tokenUrl }) {
+function ConnectorKeyForm({ connector: connector2, form, token, setToken, busy, connect, cancel, tokenUrl }) {
   if (!form) return null;
   return (0, import_react48.createElement)(
     "div",
     { className: "bt-connector-form" },
-    connector.url ? (0, import_react48.createElement)("span", { className: "bt-set-hint" }, connector.url) : null,
+    connector2.url ? (0, import_react48.createElement)("span", { className: "bt-set-hint" }, connector2.url) : null,
     (0, import_react48.createElement)("label", { className: "bt-q-field bt-secret-field" }, (0, import_react48.createElement)(MaskedInput, { value: token, onChange: setToken, onEnter: connect, label: t("Paste or enter a key"), autoFocus: true })),
     (0, import_react48.createElement)(
       "div",
       { className: "bt-connector-form-row" },
-      (0, import_react48.createElement)("a", { className: "bt-connector-link", href: tokenUrl, target: "_blank", rel: "noopener noreferrer" }, t(connector.id === "github" ? "Create a token on GitHub" : "Get an API key")),
+      (0, import_react48.createElement)("a", { className: "bt-connector-link", href: tokenUrl, target: "_blank", rel: "noopener noreferrer" }, t(connector2.id === "github" ? "Create a token on GitHub" : "Get an API key")),
       (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: cancel }, t("Cancel")),
       (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy || token.trim() === "", onClick: connect }, busy ? t("Connecting…") : t("Connect"))
     )
   );
 }
-function ConnectorRow({ connector, actions }) {
-  const state = useConnectorForm(connector, actions);
-  const Mark = MARKS[connector.id];
+function ConnectorRow({ connector: connector2, actions }) {
+  const state = useConnectorForm(connector2, actions);
+  const Mark = MARKS[connector2.id];
   const row = (0, import_react48.useRef)(null);
-  useMorph(row, `${state.form}:${state.error !== null}:${connector.state}`);
+  useMorph(row, `${state.form}:${state.error !== null}:${connector2.state}`);
   return (0, import_react48.createElement)(
     "div",
-    { ref: row, className: "bt-connector", "data-state": connector.state },
+    { ref: row, className: "bt-connector", "data-state": connector2.state },
     (0, import_react48.createElement)(
       "div",
       { className: "bt-connector-head" },
@@ -20196,20 +20426,20 @@ function ConnectorRow({ connector, actions }) {
       (0, import_react48.createElement)(
         "span",
         { className: "bt-connector-text" },
-        (0, import_react48.createElement)("span", { className: "bt-connector-name" }, t(connector.name)),
-        (0, import_react48.createElement)("span", { className: "bt-connector-status" }, statusText2(connector))
+        (0, import_react48.createElement)("span", { className: "bt-connector-name" }, t(connector2.name)),
+        (0, import_react48.createElement)("span", { className: "bt-connector-status" }, statusText2(connector2))
       ),
-      (0, import_react48.createElement)(ConnectorActions, { connector, actions, ...state })
+      (0, import_react48.createElement)(ConnectorActions, { connector: connector2, actions, ...state })
     ),
-    (0, import_react48.createElement)(ConnectorKeyForm, { connector, ...state }),
+    (0, import_react48.createElement)(ConnectorKeyForm, { connector: connector2, ...state }),
     state.error ? (0, import_react48.createElement)("div", { className: "bt-connector-error", role: "alert" }, state.error) : null
   );
 }
-function ChemcloudCard({ connector, actions, focusKey = false }) {
-  const { token, setToken, busy, error, run: run2, connect, on, tokenUrl } = useConnectorForm(connector, actions);
+function ChemcloudCard({ connector: connector2, actions, focusKey = false }) {
+  const { token, setToken, busy, error, run: run2, connect, on, tokenUrl } = useConnectorForm(connector2, actions);
   const card = (0, import_react48.useRef)(null);
   const keyRef = (0, import_react48.useRef)(null);
-  useMorph(card, `${error !== null}:${connector.state}`);
+  useMorph(card, `${error !== null}:${connector2.state}`);
   (0, import_react48.useEffect)(() => {
     if (!focusKey) return void 0;
     card.current?.scrollIntoView?.({ block: "nearest" });
@@ -20220,7 +20450,7 @@ function ChemcloudCard({ connector, actions, focusKey = false }) {
   }, [focusKey]);
   return (0, import_react48.createElement)(
     "article",
-    { ref: card, className: "bt-chemcloud", "data-state": connector.state, "aria-label": t("Chemcloud Data Hub") },
+    { ref: card, className: "bt-chemcloud", "data-state": connector2.state, "aria-label": t("Chemcloud Data Hub") },
     (0, import_react48.createElement)(
       "header",
       null,
@@ -20234,13 +20464,13 @@ function ChemcloudCard({ connector, actions, focusKey = false }) {
       (0, import_react48.createElement)(
         "span",
         { className: "bt-connector-actions" },
-        connector.state === "error" ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorRetry(connector.id)) }, t("Try again")) : null,
-        on ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorDisconnect(connector.id)) }, t("Disconnect")) : null
+        connector2.state === "error" ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorRetry(connector2.id)) }, t("Try again")) : null,
+        on ? (0, import_react48.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", disabled: busy, onClick: () => void run2(actions.connectorDisconnect(connector2.id)) }, t("Disconnect")) : null
       )
     ),
     (0, import_react48.createElement)("p", { className: "bt-chemcloud-intro" }, t("Query chemical industry data in your AI client: compounds, company profiles, trade records and market prices.")),
     (0, import_react48.createElement)("div", { className: "bt-chemcloud-chips" }, CHEMCLOUD_CHIPS.map((label) => (0, import_react48.createElement)("span", { key: label, className: "bt-chemcloud-chip" }, t(label)))),
-    (0, import_react48.createElement)("p", { className: "bt-chemcloud-status", "data-state": connector.state }, statusText2(connector)),
+    (0, import_react48.createElement)("p", { className: "bt-chemcloud-status", "data-state": connector2.state }, statusText2(connector2)),
     (0, import_react48.createElement)(
       "div",
       { className: "bt-chemcloud-key", ref: keyRef },
@@ -20289,7 +20519,7 @@ function ConnectorsPage({ roster, actions, focusId = null }) {
     adding ? (0, import_react48.createElement)(ServiceInstaller, { actions, onClose: () => setAdding(false) }) : null,
     error ? (0, import_react48.createElement)("div", { className: "bt-error", role: "alert" }, error) : null,
     chemcloud ? (0, import_react48.createElement)(ChemcloudCard, { connector: chemcloud, actions, focusKey: focusId === "chem-data-hub" }) : null,
-    !chemcloud && others.length === 0 ? (0, import_react48.createElement)("div", { className: "bt-set-card bt-connectors-card" }, (0, import_react48.createElement)("div", { className: "bt-set-row" }, (0, import_react48.createElement)("span", { className: "bt-set-hint" }, t("No connectors")))) : others.length ? (0, import_react48.createElement)("div", { className: "bt-set-card bt-connectors-card" }, others.map((connector) => (0, import_react48.createElement)(ConnectorRow, { key: connector.id, connector, actions }))) : null,
+    !chemcloud && others.length === 0 ? (0, import_react48.createElement)("div", { className: "bt-set-card bt-connectors-card" }, (0, import_react48.createElement)("div", { className: "bt-set-row" }, (0, import_react48.createElement)("span", { className: "bt-set-hint" }, t("No connectors")))) : others.length ? (0, import_react48.createElement)("div", { className: "bt-set-card bt-connectors-card" }, others.map((connector2) => (0, import_react48.createElement)(ConnectorRow, { key: connector2.id, connector: connector2, actions }))) : null,
     (0, import_react48.createElement)("p", { className: "bt-set-hint" }, t("Huagongshe public queries need no key. Company credentials are optional for public research.")),
     (0, import_react48.createElement)("h3", null, t("Public research data")),
     (0, import_react48.createElement)("div", { className: "bt-data-grid" }, data?.sources.map((source) => (0, import_react48.createElement)(
@@ -23085,17 +23315,17 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
       return void 0;
     }
     let raf = 0;
-    const measure = () => {
+    const measure2 = () => {
       cancelAnimationFrame(raf);
       raf = 0;
       const box = element.getBoundingClientRect();
       void actions.browserShow(tabId, showGuest ? { left: box.left, top: box.top, width: box.width, height: box.height } : null);
     };
     const schedule = () => {
-      if (!raf) raf = requestAnimationFrame(measure);
+      if (!raf) raf = requestAnimationFrame(measure2);
     };
-    measure();
-    const observer = new ResizeObserver(measure);
+    measure2();
+    const observer = new ResizeObserver(measure2);
     observer.observe(element);
     window.addEventListener("resize", schedule);
     return () => {
@@ -25443,161 +25673,6 @@ function createSwitchWindow(settle) {
     get pending() {
       return token !== null;
     }
-  };
-}
-
-// src/client/genui-diagram-layout.js
-var SVG_NS = "http://www.w3.org/2000/svg";
-var PATH_NUMBER = "-?(?:\\d+(?:\\.\\d+)?|\\.\\d+)";
-var PATH_START = new RegExp(`^M\\s+(${PATH_NUMBER})\\s+(${PATH_NUMBER})`, "u");
-var PATH_BEND = new RegExp(`Q\\s+(${PATH_NUMBER})\\s+(${PATH_NUMBER})\\s+${PATH_NUMBER}\\s+${PATH_NUMBER}`, "gu");
-var PATH_END = new RegExp(`(?:H\\s+(${PATH_NUMBER})|V\\s+(${PATH_NUMBER}))$`, "u");
-var connectorPoint = (x, y) => ({ x: Number(x), y: Number(y) });
-var svgCoordinates = ({ x, y }) => `${x} ${y}`;
-var orthogonalLength = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-var alongConnector = (from, to, length) => ({
-  x: from.x + Math.sign(to.x - from.x) * length,
-  y: from.y + Math.sign(to.y - from.y) * length
-});
-function roundDiagramConnector(path) {
-  const start = PATH_START.exec(path);
-  const end = PATH_END.exec(path);
-  const corners = [...path.matchAll(PATH_BEND)].map((match) => connectorPoint(match[1], match[2]));
-  if (!start || !end || corners.length !== 2) return path;
-  const first = connectorPoint(start[1], start[2]);
-  const last = connectorPoint(end[1] ?? corners[1].x, end[2] ?? corners[1].y);
-  const points = [first, ...corners, last].filter((value2, index, all) => index === 0 || orthogonalLength(value2, all[index - 1]) > 0);
-  if (points.some((value2, index) => index && value2.x !== points[index - 1].x && value2.y !== points[index - 1].y)) return path;
-  let next = `M ${svgCoordinates(first)}`;
-  for (let index = 1; index < points.length - 1; index += 1) {
-    const before = points[index - 1];
-    const corner = points[index];
-    const after = points[index + 1];
-    if (before.x === corner.x === (corner.x === after.x)) continue;
-    const radius = Math.min(8, orthogonalLength(before, corner) / 2, orthogonalLength(corner, after) / 2);
-    next += ` L ${svgCoordinates(alongConnector(corner, before, radius))} Q ${svgCoordinates(corner)} ${svgCoordinates(alongConnector(corner, after, radius))}`;
-  }
-  return `${next} L ${svgCoordinates(last)}`;
-}
-var boxesIntersect = (a, b, gap = 0) => a.x < b.x + b.width + gap && a.x + a.width + gap > b.x && a.y < b.y + b.height + gap && a.y + a.height + gap > b.y;
-var insideCanvas = (box, bounds) => box.x >= bounds.x + 4 && box.y >= bounds.y + 4 && box.x + box.width <= bounds.x + bounds.width - 4 && box.y + box.height <= bounds.y + bounds.height - 4;
-var centeredBox = (x, y, width, height) => ({ x: x - width / 2, y: y - height / 2, width, height });
-function diagramNodes(svg) {
-  return [...svg.querySelectorAll('g[role="button"]')].map((element) => {
-    const rect = element.firstElementChild?.firstElementChild;
-    return { element, name: element.getAttribute("aria-label"), box: rect?.getBBox?.() ?? element.getBBox() };
-  });
-}
-function fallbackOverlappingDiagram(svg) {
-  const nodes = diagramNodes(svg);
-  if (!nodes.some(({ box }, index) => box.width > 0 && box.height > 0 && nodes.slice(0, index).some((peer) => boxesIntersect(box, peer.box)))) return void 0;
-  const list = document.createElement("ul");
-  list.className = "bt-genui-diagram-fallback";
-  for (const { name, element } of nodes) {
-    const item = document.createElement("li");
-    const button2 = document.createElement("button");
-    button2.type = "button";
-    button2.textContent = name;
-    button2.addEventListener("click", () => element.dispatchEvent(new MouseEvent("click", { bubbles: true })));
-    item.append(button2);
-    list.append(item);
-  }
-  const display = svg.style.display;
-  svg.style.display = "none";
-  svg.after(list);
-  return () => {
-    list.remove();
-    svg.style.display = display;
-  };
-}
-function lineSamples(path) {
-  const length = path.getTotalLength();
-  const count = Math.max(1, Math.min(200, Math.ceil(length / 5)));
-  return Array.from({ length: count + 1 }, (_, index) => path.getPointAtLength(index * length / count));
-}
-function labelPosition(samples, width, height, blocked, bounds) {
-  const order = [...samples.keys()].sort((a, b) => Math.abs(a - samples.length / 2) - Math.abs(b - samples.length / 2));
-  for (const index of order) {
-    const { x, y } = samples[index];
-    const candidates2 = [
-      centeredBox(x, y - height / 2 - 5, width, height),
-      centeredBox(x, y + height / 2 + 5, width, height),
-      centeredBox(x + width / 2 + 5, y, width, height),
-      centeredBox(x - width / 2 - 5, y, width, height)
-    ];
-    const clear = candidates2.find((box) => insideCanvas(box, bounds) && !blocked.some((other) => boxesIntersect(box, other, 2)));
-    if (clear) return clear;
-  }
-}
-function layoutGenuiDiagram(svg) {
-  const paths = [...svg.querySelectorAll("path[marker-end]")];
-  if (!paths.length) return void 0;
-  const originalViewBox = svg.getAttribute("viewBox");
-  const { x, y, width, height } = svg.viewBox.baseVal;
-  const bounds = { x, y, width, height };
-  const nodes = diagramNodes(svg);
-  const restore = [];
-  const overlay = document.createElementNS(SVG_NS, "g");
-  overlay.setAttribute("data-bt-diagram-labels", "");
-  overlay.setAttribute("pointer-events", "none");
-  svg.lastElementChild.before(overlay);
-  const lines = paths.map((path) => {
-    const original = path.getAttribute("d");
-    if (original) path.setAttribute("d", roundDiagramConnector(original));
-    path.setAttribute("stroke-linecap", "round");
-    path.setAttribute("stroke-linejoin", "round");
-    restore.push(() => {
-      if (original) path.setAttribute("d", original);
-      path.removeAttribute("stroke-linecap");
-      path.removeAttribute("stroke-linejoin");
-    });
-    return lineSamples(path);
-  });
-  const blocked = nodes.map((node) => node.box).concat(lines.flatMap((samples) => samples.map(({ x: x2, y: y2 }) => centeredBox(x2, y2, 4, 4))));
-  let extraHeight = 0;
-  let extraWidth = 0;
-  const nodeAt = (p) => nodes.find(({ box }) => p.x >= box.x - 1 && p.x <= box.x + box.width + 1 && p.y >= box.y - 1 && p.y <= box.y + box.height + 1)?.name;
-  for (const [index, path] of paths.entries()) {
-    const label = path.nextElementSibling;
-    const text = label?.querySelector("text");
-    const surface = label?.querySelector("rect");
-    if (!text || !surface) continue;
-    const measure = text.getBBox();
-    if (!measure.width || !measure.height) continue;
-    const samples = lines[index];
-    const size = { width: measure.width + 10, height: measure.height + 6 };
-    const box = labelPosition(samples, size.width, size.height, blocked, bounds);
-    const copy2 = label.cloneNode(true);
-    const plate = copy2.querySelector("rect");
-    const caption = copy2.querySelector("text");
-    caption.setAttribute("dominant-baseline", "central");
-    caption.setAttribute("text-anchor", "middle");
-    caption.setAttribute("fill", "var(--dsw-alias-label-primary, currentColor)");
-    let position = box;
-    if (!position) {
-      const from = nodeAt(samples[0]);
-      const to = nodeAt(samples.at(-1));
-      if (from && to) caption.textContent = `${from} → ${to} · ${caption.textContent}`;
-      overlay.append(copy2);
-      const rowWidth = Math.max(size.width, caption.getBBox().width + 10);
-      extraWidth = Math.max(extraWidth, rowWidth + 16 - width);
-      position = { x: x + 8, y: y + height + extraHeight + 5, width: rowWidth, height: size.height };
-      extraHeight += size.height + 6;
-    }
-    for (const [attr, value2] of Object.entries(position)) plate.setAttribute(attr, value2);
-    caption.setAttribute("x", position.x + position.width / 2);
-    caption.setAttribute("y", position.y + position.height / 2);
-    overlay.append(copy2);
-    blocked.push(position);
-    label.setAttribute("visibility", "hidden");
-    restore.push(() => label.removeAttribute("visibility"));
-  }
-  if (!overlay.childElementCount) overlay.remove();
-  if (extraHeight) svg.setAttribute("viewBox", `${x} ${y} ${width + extraWidth} ${height + extraHeight + 6}`);
-  return () => {
-    overlay.remove();
-    if (extraHeight) svg.setAttribute("viewBox", originalViewBox);
-    for (const reset of restore) reset();
   };
 }
 

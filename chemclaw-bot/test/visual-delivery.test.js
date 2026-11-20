@@ -397,10 +397,50 @@ test('Mermaid validation redirects an ordinary human diagram before the fence is
   f.start(); f.user('我想知道产业链结构')
   const redirect = await policy(exec, next)
   assert.equal(redirect.kind, 'deny')
-  assert.match(redirect.reason, /dsh-ui type=diagram/)
+  assert.match(redirect.reason, /show_view with type=flow/)
   assert.deepEqual(await policy({ ...exec, arguments: { spec: { items: [{ type: 'text', text: 'Mermaid' }] } } }, next), { kind: 'allow' })
   f.start(2); f.user('请生成 Mermaid 流程图')
   assert.deepEqual(await policy(exec, next), { kind: 'allow' })
+})
+
+test('unsolicited Mermaid is removed from final messages and recovered once with a rendered flow', async () => {
+  const ordinaryCode = '```js\nconst flow = "graph LR"\n```'
+  const bare = '```\nflowchart LR\nsubgraph UP[原料]\nA[原料甲]\nend\nA --> B[制品]\n```'
+  const typed = genuiMarkdown(JSON.stringify({ items: [{ type: 'row', items: [
+    { type: 'text', text: 'Keep this' }, { type: 'mermaid', code: 'graph TD\nA-->B' },
+  ] }] }))
+  for (const native of [false, true]) {
+    const f = setup({ native })
+    f.start(); f.user('产业链结构')
+    const text = await settleModelText(f.ctx, '正文\n\n' + bare + '\n\n' + typed + '\n\n' + ordinaryCode)
+    assert.doesNotMatch(text, /subgraph|mermaid/u)
+    assert.ok(text.includes(ordinaryCode) && text.includes('Keep this'))
+    f.answer(text); f.stop(); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /Use show_view with type=flow/)
+  }
+  const f = setup({ native: true })
+  f.start(); f.user('请用 Mermaid 画流程图')
+  const converted = await settleModelText(f.ctx, bare.replace('```\n', '```mermaid\n'))
+  assert.equal(JSON.parse([...genuiFences(converted)][0].body).items[0].type, 'mermaid')
+  f.answer(converted); f.stop()
+  assert.equal(f.notices.length, 0)
+  f.start(2); f.user('请给出 Mermaid 源代码')
+  assert.equal(await settleModelText(f.ctx, bare), bare)
+})
+
+test('an annotated SVG can follow native data cards and chart without triggering another chart', async () => {
+  const f = setup({ native: true })
+  installFixtureValidator(f.ctx)
+  f.start(); f.user('纯碱最近一个月现货价格')
+  f.rt.noteVisualDelivery('s', { type: 'stack', children: [spotMetric, spotLine] })
+  const svgDetail = '\n\n' + genuiMarkdown(JSON.stringify({ items: [
+    { type: 'svg', title: '报价切换窗口', code: svgCode },
+  ] }))
+  const text = await settleModelText(f.ctx, '正文' + svgDetail)
+  assert.equal(text, '正文' + svgDetail)
+  f.answer(text); f.stop()
+  assert.deepEqual(f.notices, [])
 })
 
 test('failed show_view and unrelated successful tools are not delivery', () => {

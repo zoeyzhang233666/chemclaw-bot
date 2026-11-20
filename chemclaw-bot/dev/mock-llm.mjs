@@ -248,7 +248,7 @@ function decide(body) {
         { from: 'middle', to: 'outA' }, { from: 'middle', to: 'outB' }]
       return [tool('show_view', { title: mechanism ? '合成原油传导图' : '合成沥青链条图', view: { type: 'flow', nodes, edges } })]
     }
-    if (industry) return [text('原料经装置处理后分到不同应用。')]
+    if (industry) return [text('原料经装置处理后分到不同应用。\n\n```\nflowchart LR\nsubgraph UP[原料]\nA[原料 A]\nend\nA --> B[加工] --> C[应用]\n```')]
     if (!isCorrection) {
       const metric = (label, value) => ({ type: 'metric', label, value })
       const chart = { type: 'chart', kind: 'line', categories: ['11-01', '11-02'], series: [{ values: [70, 72] }] }
@@ -266,6 +266,30 @@ function decide(body) {
       ] } })]
     }
     if (!isCorrection) return [text('合成同口径库存。\n\n| 周 | 库存（万吨） |\n| --- | --- |\n| 11-01 | 95 |\n| 11-08 | 100 |')]
+  }
+  if (tools.has('show_view') && /^合成价格走势及事件窗口$/mu.test(activity)) {
+    if (result) return [text('下图放大事件窗口里的报价差异。' + inlineView({ type: 'svg', title: '合成报价事件窗口',
+      code: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160"><title>事件窗口报价差异</title><rect width="480" height="160" rx="10" fill="#faf8f4"/><rect x="176" y="38" width="106" height="85" fill="#e7ecf5"/><path d="M40 123H448M40 42V123" stroke="#818481" fill="none"/><path d="M44 104L154 99L266 75L382 58" stroke="#3b6999" stroke-width="3" fill="none"/><circle cx="266" cy="75" r="5" fill="#3b6999"/><text x="189" y="29" font-size="14" fill="#263955">合成事件窗口</text><text x="30" y="145" font-size="12" fill="#263955">11-05</text><text x="365" y="145" font-size="12" fill="#263955">11-07</text></svg>',
+    }))]
+    const metric = { type: 'metric', label: '合成窗口最新价', value: '108 元/吨' }
+    const chart = { type: 'chart', kind: 'line', unit: '元/吨', categories: ['11-01', '11-05', '11-07', '11-15'], series: [{ values: [93, 95, 105, 108] }] }
+    return [tool('show_view', { title: '合成窗口行情总览', view: { type: 'stack', children: [metric, chart] } })]
+  }
+  if (tools.has('show_view') && /^合成多路径关系图$/mu.test(activity)) {
+    if (result) return [text('分别查看原料、反应和用途的连接。')]
+    const nodes = [
+      { id: 'raw1', label: '原料甲', stage: '上游', tone: 'warn' }, { id: 'raw2', label: '原料乙', stage: '上游', tone: 'warn' },
+      { id: 'proc1', label: '预处理', stage: '工艺' }, { id: 'proc2', label: '替代反应', stage: '工艺' },
+      { id: 'main', label: '主要产品', detail: '交付前进行质量确认', tone: 'good' }, { id: 'side', label: '可复用副产品' },
+      { id: 'use', label: '终端应用', tone: 'good' },
+    ]
+    const edges = [
+      { from: 'raw1', to: 'proc1', label: '筛选后投入' }, { from: 'raw1', to: 'proc2', label: '保留同口径工况' },
+      { from: 'raw2', to: 'proc2', label: '需先确认用量' }, { from: 'proc1', to: 'main', label: '主反应后直接生成' },
+      { from: 'proc2', to: 'main', label: '替代制备路线' }, { from: 'proc2', to: 'side', label: '联产回收' },
+      { from: 'raw2', to: 'use', label: '待验证旁路', uncertain: true }, { from: 'main', to: 'use' }, { from: 'side', to: 'use' },
+    ]
+    return [tool('show_view', { title: '合成多路径关系图', view: { type: 'flow', nodes, edges } })]
   }
   if (/^GenUI check streamed SVG$/mu.test(activity)) {
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20"/></svg>'
@@ -353,6 +377,10 @@ function decide(body) {
   if (flowTopic) {
     const title = flowTopic === '为什么合成分布会是这样' ? '合成分布成因图' : '合成产业链结构图'
     const receipt = textOf(result?.content)
+    if (flowTopic === '我想知道合成产业链结构' && tools.has('show_view')) {
+      if (/Use show_view with type=flow/u.test(receipt)) return [tool('show_view', { title, view: { ...flowFixture, caption: title } })]
+      if (/The view is (?:on screen|staged)/u.test(receipt)) return [text('合成产业链分析正文。')]
+    }
     if (repairFlow || /dsh-ui type=diagram/u.test(receipt)) return [text('合成分析正文：库存仍待核验。' + inlineView(diagramFixture(title)))]
     if (flowTopic === '我想知道合成产业链结构' && !result && tools.has('validate_dsh_ui')) {
       return [tool('validate_dsh_ui', { spec: { items: [{ type: 'mermaid', code: 'graph TD\nA-->B' }] } })]

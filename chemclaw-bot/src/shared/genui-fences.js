@@ -54,6 +54,13 @@ export function* genuiFences(text) {
   }
 }
 
+export function* bareMermaidFences(text) {
+  for (const { language, ...fence } of markdownFences(text)) {
+    if (/^mermaid\s*$/iu.test(language) || (/^(?:text|plaintext)?\s*$/iu.test(language)
+      && /^(?:flowchart|graph)[ \t]+(?:TB|TD|BT|LR|RL)(?:[\s;]|$)/iu.test(fence.body.trimStart()))) yield fence
+  }
+}
+
 export function stripGraphicControlLines(text) {
   if (!text.includes('chatml_chart_demo')) return text
   const clean = value => value.replace(/^[ \t]*<\/?chatml_chart_demo>[ \t]*(?:\r?\n|$)/gmu, '')

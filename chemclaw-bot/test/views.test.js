@@ -27,6 +27,30 @@ test('relationship layouts use distinct shared trunks and preserve flow directio
   assert.ok(flowLayout(nodes, edges, 325).width <= 325)
 })
 
+test('dense relationships reserve separate readable labels and rounded routes on wide and narrow layouts', () => {
+  const nodes = ['feed1', 'feed2', 'mix', 'react', 'main', 'side', 'use'].map(id => ({ id, label: id }))
+  const edges = [
+    { from: 'feed1', to: 'react', label: '保留工况和口径说明' }, { from: 'feed1', to: 'mix', label: '先处理' },
+    { from: 'feed2', to: 'mix', label: '直接投入' }, { from: 'mix', to: 'main', label: '固相水合转入成品' },
+    { from: 'mix', to: 'side', label: '联产可复用的副产品' }, { from: 'react', to: 'main', label: '替代反应' },
+    { from: 'react', to: 'use', label: '跨阶段用途', uncertain: true }, { from: 'main', to: 'use' },
+    { from: 'use', to: 'feed2', label: '反馈信号', feedback: true },
+  ]
+  assert.equal(validateView({ type: 'flow', nodes, edges }).ok, true)
+  for (const available of [720, 325]) {
+    const { connections, boxes, width, height, cardWidth } = flowLayout(nodes, edges, available)
+    assert.ok(connections.some(edge => edge.d.includes(' Q ')))
+    assert.equal(connections.filter(edge => edge.arrow).length, edges.length)
+    const overlap = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height
+    const labels = connections.filter(edge => edge.label.length).map(edge => ({ x: edge.x - edge.labelWidth / 2,
+      y: edge.y - edge.labelHeight / 2, width: edge.labelWidth, height: edge.labelHeight }))
+    assert.equal(labels.length, edges.filter(edge => edge.label).length)
+    assert.ok(labels.every((box, i) => box.x > 0 && box.x + box.width < width && box.y > 0 && box.y + box.height < height
+      && labels.slice(0, i).every(peer => !overlap(box, peer))
+      && boxes.every(peer => !overlap(box, { ...peer, width: cardWidth }))))
+  }
+})
+
 test('a native evidence table may carry a caption and start collapsed', () => {
   assert.equal(checkShownView('Evidence', { ...table(), caption: 'By region', collapsed: true }).view.collapsed, true)
   assert.match(validateView({ ...table(), collapsed: 'true' }).error, /expected a boolean/)

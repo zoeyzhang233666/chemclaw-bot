@@ -190,7 +190,23 @@ export async function checkClassicSessions(cdp) {
     await until(`${visible('合成最新库存')} && [...document.querySelectorAll('.bt-view')].some(node => node.textContent.includes('合成最新库存') && node.querySelector('.bt-chart-line'))`, 'a table-only inventory response recovers a metric and a native trend')
     await waitRunning(id, false)
     await send('沥青产业链')
-    await until(`${graph('装置加工')}?.querySelectorAll('[data-shared]').length === 2`, 'the text-only chain recovers a connected SVG with shared routes')
+    await until(`${graph('装置加工')}?.querySelectorAll('[data-shared]').length === 2`, 'unsolicited Mermaid is replaced with a connected SVG')
+    await waitRunning(id, false)
+    assert.equal(await evaluate(visible('subgraph UP')), false)
+    await send('合成多路径关系图')
+    const dense = graph('待验证旁路')
+    await until(`${dense}?.querySelectorAll('.bt-flow-edge-label').length === 7`, 'dense diagram shows all seven edge labels')
+    assert.ok(await evaluate(`(() => {
+      const svg = ${dense};
+      const labels = [...svg.querySelectorAll('.bt-flow-edge-label rect')].map(node => node.getBoundingClientRect());
+      const cards = [...svg.querySelectorAll('.bt-flow-step rect')].map(node => node.getBoundingClientRect());
+      const overlaps = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+      return labels.every((box, i) => [...labels.slice(0, i), ...cards].every(peer => !overlaps(box, peer)))
+        && Boolean([...svg.querySelectorAll('.bt-flow-connection path')].find(node => node.getAttribute('d').includes(' Q ')));
+    })()`), 'native labels avoid one another and card boxes, and elbows are rounded')
+    await waitRunning(id, false)
+    await send('合成价格走势及事件窗口')
+    await until(`${visible('合成窗口最新价')} && ${visible('合成报价事件窗口')} && [...document.querySelectorAll('.bt-view')].some(node => node.textContent.includes('合成窗口最新价') && node.querySelector('.bt-chart-line'))`, 'event-window SVG accompanies the native metric and overview line')
     await waitRunning(id, false)
   }
   const roster = await evaluate(bot('state'))
@@ -398,7 +414,7 @@ export async function checkClassicSessions(cdp) {
   await until(`${diagram('合成分布成因图')} && ${visible('合成原因正文')}`, 'semantic follow-up adds a GenUI diagram after an unrelated tab')
   await waitRunning(b, false)
   await send('我想知道合成产业链结构')
-  await until(diagram('合成产业链结构图'), 'Mermaid validation redirects to GenUI diagram')
+  await until("[...document.querySelectorAll('svg[data-chemclaw-flow] title')].some(node => node.textContent === '合成产业链结构图')", 'Mermaid validation redirects to native SVG')
   assert.equal(await evaluate("Boolean(document.querySelector('[data-genui] svg[id^=mermaid]'))"), false)
   await waitRunning(b, false)
   await send('旧版流程调用验收')

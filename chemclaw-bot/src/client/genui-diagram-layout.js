@@ -20,18 +20,23 @@ export function roundDiagramConnector(path) {
   if (!start || !end || corners.length !== 2) return path
   const first = connectorPoint(start[1], start[2])
   const last = connectorPoint(end[1] ?? corners[1].x, end[2] ?? corners[1].y)
-  const points = [first, ...corners, last].filter((value, index, all) => index === 0 || orthogonalLength(value, all[index - 1]) > 0)
+  const points = [first, ...corners, last]
   if (points.some((value, index) => index && value.x !== points[index - 1].x && value.y !== points[index - 1].y)) return path
-  let next = `M ${svgCoordinates(first)}`
+  return roundedOrthogonalPath(points)
+}
+
+export function roundedOrthogonalPath(vertices) {
+  const points = vertices.filter((value, index) => index === 0 || orthogonalLength(value, vertices[index - 1]) > 0)
+  let path = `M ${svgCoordinates(points[0])}`
   for (let index = 1; index < points.length - 1; index += 1) {
     const before = points[index - 1]
     const corner = points[index]
     const after = points[index + 1]
     if ((before.x === corner.x) === (corner.x === after.x)) continue
     const radius = Math.min(8, orthogonalLength(before, corner) / 2, orthogonalLength(corner, after) / 2)
-    next += ` L ${svgCoordinates(alongConnector(corner, before, radius))} Q ${svgCoordinates(corner)} ${svgCoordinates(alongConnector(corner, after, radius))}`
+    path += ` L ${svgCoordinates(alongConnector(corner, before, radius))} Q ${svgCoordinates(corner)} ${svgCoordinates(alongConnector(corner, after, radius))}`
   }
-  return `${next} L ${svgCoordinates(last)}`
+  return `${path} L ${svgCoordinates(points.at(-1))}`
 }
 
 const boxesIntersect = (a, b, gap = 0) => a.x < b.x + b.width + gap && a.x + a.width + gap > b.x

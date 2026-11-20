@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
-import { genuiFences, genuiMarkdown, repairGenuiGraphicFences, stripGraphicControlLines } from '../shared/genui-fences.js'
+import { bareMermaidFences, genuiFences, genuiMarkdown, repairGenuiGraphicFences, stripGraphicControlLines } from '../shared/genui-fences.js'
 import { checkedGenuiText } from './genui-delivery.js'
 import { asksForRelationships, capacityDataRequest, capacityMeasurementsInAnswer, isQuantitativeLookup, needsFlowDiagram, needsSvgIllustration } from './flow-intent.js'
 import { marketQuoteIntent, mixedOverlayRequested, spotPriceRequest } from './market-quote-intent.js'
@@ -209,7 +209,6 @@ export function hasInlineGenui(text, native = false) {
 const MERMAID = /\bmermaid\b/iu
 const SVG = /\bsvg\b/iu
 const DIAGRAM = /\bdiagram\b/iu
-const MERMAID_FENCE = /^ {0,3}\x60{3}[ \t]*mermaid[ \t]*\r?$/imu
 const SVG_FENCE = /^ {0,3}\x60{3}[ \t]*svg[ \t]*\r?\n([\s\S]*?)^ {0,3}\x60{3}[ \t]*\r?$/gimu
 const isSvg = code => typeof code === 'string' && code.length <= 12000 && /^\s*<svg\b[\s\S]*<\/svg>\s*$/iu.test(code)
 const REQUEST_FAMILIES = [
@@ -265,7 +264,7 @@ export function deliveredViewKinds(view) {
 
 function genuiKinds(text, native = false) {
   const kinds = new Set()
-  if (MERMAID_FENCE.test(text)) kinds.add('mermaid')
+  if (!bareMermaidFences(text).next().done) kinds.add('mermaid')
   if (native && Array.from(text.matchAll(SVG_FENCE)).some(match => isSvg(match[1]))) kinds.add('svg')
   for (const match of text.matchAll(/^ {0,3}```[ \t]*dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*\r?\n([\s\S]*?)^ {0,3}```[ \t]*\r?$/gimu)) {
     try {
@@ -317,10 +316,10 @@ function numericReminder(turn, entry, missing, breakdown) {
   return `${VISUAL_NOTICE} turn=${turn}]\nUse ONE native show_view stack to deliver ${missing.join(' and ')} from verified evidence already in this conversation. ${chart} Tables, SVG and diagrams cannot fulfill the metric or chart requirement. If a full time series is unavailable, use bars for a comparable snapshot when that answers the question. For a single verified observation use a metric card and state the relevant coverage. Do not fetch again, invent data, duplicate any native view already shown, or quote this notice. Follow the conversation language.`
 }
 
-function removeQuantitativeDiagrams(text, question) {
+function filterGenuiItems(text, exclude) {
   const withoutGraphs = items => items.flatMap(item => {
     if (!record(item)) return [item]
-    if (unsuitableDataGraphic(item.type, question)) return []
+    if (exclude(item.type)) return []
     if (item.type === 'tabs' && Array.isArray(item.tabs)) {
       const tabs = item.tabs.flatMap(tab => {
         if (!Array.isArray(tab?.items) || !tab.items.length) return [tab]
@@ -349,6 +348,27 @@ function removeQuantitativeDiagrams(text, question) {
   return offset ? (out + text.slice(offset)).trimEnd() : text
 }
 
+const requestsMermaidSource = question => /(?:mermaid.{0,16}(?:代码|源码|语法)|(?:代码|源码|语法).{0,16}mermaid|\bmermaid (?:source|syntax|code)\b)/iu.test(question)
+
+function settleMermaid(text, entry) {
+  const explicit = entry.requested.has('mermaid')
+  if (explicit && requestsMermaidSource(entry.question)) return text
+  let out = ''
+  let offset = 0
+  for (const fence of bareMermaidFences(text)) {
+    out += text.slice(offset, fence.start)
+    if (explicit && fence.closed && fence.body.trim()) {
+      out += genuiMarkdown(JSON.stringify({ items: [{ type: 'mermaid', code: fence.body }] }))
+    }
+    offset = fence.end
+  }
+  const rewritten = offset ? (out + text.slice(offset)).trimEnd() : text
+  if (explicit) return rewritten
+  const filtered = filterGenuiItems(rewritten, type => type === 'mermaid')
+  entry.rejectedMermaid ||= filtered !== text
+  return filtered
+}
+
 export function requestedViewReminder(turn, native, kinds, requested, genui) {
   const explicit = kinds.filter(kind => requested.has(kind))
   return VISUAL_NOTICE + ' turn=' + turn + ']\n'
@@ -364,6 +384,7 @@ export function requestedViewReminder(turn, native, kinds, requested, genui) {
     + (kinds.includes('flow') && native ? `${nativeRelationshipInstruction} ` : '')
     + (kinds.includes('flow') && genui ? `When clickable detail or another layout is needed, ${relationshipInstruction} ` : '')
     + (kinds.includes('svg') ? `${svgInstruction} ` : '')
+    + (kinds.includes('mermaid') && genui ? 'For the requested Mermaid visual, use dsh-ui with {type:mermaid,code}; keep a bare Mermaid fence only when source code was requested. ' : '')
     + (kinds.includes('metric') ? `${capacityInstruction} ` : '')
     + (native ? 'Use show_view for supported visuals and an inline dsh-ui fence without panel:true for other GenUI components. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
@@ -389,14 +410,15 @@ export function install(rt) {
         if (chunk.type === 'block-end' && chunk.block.type === 'text') {
           const entry = turns.get(String(options.sessionId))
           let text = repairGenuiGraphicFences(stripGraphicControlLines(chunk.block.text))
+          if (entry?.question) text = settleMermaid(text, entry)
           if (entry && dataOnly(entry) && !nativePairDelivered(entry) && options.tools?.some(tool => tool.name === 'show_view')) {
-            const filtered = removeQuantitativeDiagrams(text, entry.question)
+            const filtered = filterGenuiItems(text, kind => unsuitableDataGraphic(kind, entry.question))
             entry.withheldDiagram ||= filtered !== text
             text = filtered
           }
           const checked = await checkedGenuiText(ctx, text, options.signal)
           if (entry && checked.failed) entry.rejectedFence = true
-          text = checked.text
+          text = entry?.question && checked.text !== text ? settleMermaid(checked.text, entry) : checked.text
           if (text !== chunk.block.text) {
             yield { ...chunk, block: { ...chunk.block, text } }
             continue
@@ -406,7 +428,7 @@ export function install(rt) {
       }
     })()
   })
-  const fresh = turn => ({ turn, text: '', question: '', visual: false, publicSearchTried: false, nativeMetric: false, nativeChart: false, nativeComparisons: new Set(), nativeDataRequest: false, spotReadout: undefined, spotLine: false, withheldDiagram: false, rejectedFence: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', question: '', visual: false, publicSearchTried: false, nativeMetric: false, nativeChart: false, nativeComparisons: new Set(), nativeDataRequest: false, spotReadout: undefined, spotLine: false, withheldDiagram: false, rejectedFence: false, rejectedMermaid: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -500,6 +522,7 @@ export function install(rt) {
         entry.spotLine = false
         entry.withheldDiagram = false
         entry.rejectedFence = false
+        entry.rejectedMermaid = false
         entry.invalidGenuiChart = false
         entry.kinds = new Set()
         entry.requested = new Set(requestedChartKinds(text))
@@ -574,7 +597,8 @@ export function install(rt) {
     }
     if (!kinds.has('mermaid') || entry.requested.has('mermaid')) return decision
     const instruction = entry.requested.has('svg') || needsSvgIllustration(entry.question) ? svgInstruction
-      : entry.requested.has('diagram') ? diagramInstruction : relationshipInstruction
+      : entry.requested.has('diagram') ? diagramInstruction
+        : nativeViewAvailable(ctx, agent, exec.toolSet) ? nativeRelationshipInstruction : relationshipInstruction
     return { kind: 'deny', reason: `${instruction} Keep the other GenUI components if useful and deliver the regular text answer.` }
   })
   rt.noteVisualDelivery = (id, view) => recordNativeView(stateOf(id), view)
@@ -601,7 +625,7 @@ export function install(rt) {
     if (signal.aborted || session.header?.parentSession !== undefined || rt.roomOf?.(id)) return
     restore(session)
     const entry = turns.get(id)
-    if (!entry || entry.turn !== turn || entry.reminded || !(entry.text.trim() || entry.withheldDiagram || entry.rejectedFence)) return
+    if (!entry || entry.turn !== turn || entry.reminded || !(entry.text.trim() || entry.withheldDiagram || entry.rejectedFence || entry.rejectedMermaid)) return
     const native = nativeViewAvailable(ctx, agent)
     const genui = genuiViewAvailable(ctx, agent)
     const prose = entry.text.replace(SPEC_FENCES, '')
@@ -614,7 +638,7 @@ export function install(rt) {
     const specified = ['mermaid', 'svg', 'diagram'].some(kind => enabledRequests.has(kind))
     if (!specified && genui && needsSvgIllustration(entry.question) && !entry.rejectedFence) enabledRequests.add('svg')
     else if (!specified && !dataOnly(entry) && (native || genui)
-      && (entry.kinds.has('mermaid') || needsFlowDiagram(entry.question, entry.text, entry.nativeMetric || entry.nativeChart))) enabledRequests.add('flow')
+      && (entry.rejectedMermaid || entry.kinds.has('mermaid') || needsFlowDiagram(entry.question, entry.text, entry.nativeMetric || entry.nativeChart))) enabledRequests.add('flow')
     const missing = missingRequestedKinds(enabledRequests, entry.kinds, genui)
     const missingCapacity = native && !entry.nativeMetric && !specified && !entry.requested.has('flow')
       && capacityDataRequest(entry.question) && capacityMeasurementsInAnswer(entry.text)
