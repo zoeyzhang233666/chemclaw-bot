@@ -27,7 +27,7 @@ const PROPS = {
   row: ['children', 'let'],
   text: ['text', 'tone'],
   metric: ['label', 'value', 'tone', 'caption'],
-  table: ['columns', 'rows'],
+  table: ['columns', 'rows', 'caption', 'collapsed'],
   chart: ['kind', 'categories', 'series', 'unit', 'caption', ...ADVANCED_CHART_PROPS],
   flow: ['nodes', 'edges', 'caption'],
   progress: ['label', 'percent', 'value', 'max', 'valueLabel', 'tone'],
@@ -212,6 +212,10 @@ function checkMetric(node, path, ctx) {
 }
 
 function checkTable(node, path, ctx) {
+  if (node.caption !== undefined && (typeof node.caption !== 'string' || node.caption.length > MAX_CELL)) {
+    return `${path}.caption: expected a string of at most ${MAX_CELL} characters`
+  }
+  if (node.collapsed !== undefined && typeof node.collapsed !== 'boolean') return `${path}.collapsed: expected a boolean`
   if (!Array.isArray(node.columns)) return `${path}.columns: expected an array of at most ${MAX_COLUMNS} columns`
   if (node.columns.length > MAX_COLUMNS) return `${path}.columns: ${node.columns.length} columns exceeds the limit of ${MAX_COLUMNS}`
   for (let index = 0; index < node.columns.length; index += 1) {

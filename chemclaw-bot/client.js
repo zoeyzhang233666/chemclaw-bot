@@ -5788,7 +5788,7 @@ var PROPS = {
   row: ["children", "let"],
   text: ["text", "tone"],
   metric: ["label", "value", "tone", "caption"],
-  table: ["columns", "rows"],
+  table: ["columns", "rows", "caption", "collapsed"],
   chart: ["kind", "categories", "series", "unit", "caption", ...ADVANCED_CHART_PROPS],
   flow: ["nodes", "edges", "caption"],
   progress: ["label", "percent", "value", "max", "valueLabel", "tone"],
@@ -5962,6 +5962,10 @@ function checkMetric(node, path, ctx) {
   return checkValue(node, "value", path, ctx, "scalar") ?? checkValue(node, "tone", path, ctx, TONES2) ?? checkValue(node, "caption", path, ctx, "string");
 }
 function checkTable(node, path, ctx) {
+  if (node.caption !== void 0 && (typeof node.caption !== "string" || node.caption.length > MAX_CELL)) {
+    return `${path}.caption: expected a string of at most ${MAX_CELL} characters`;
+  }
+  if (node.collapsed !== void 0 && typeof node.collapsed !== "boolean") return `${path}.collapsed: expected a boolean`;
   if (!Array.isArray(node.columns)) return `${path}.columns: expected an array of at most ${MAX_COLUMNS} columns`;
   if (node.columns.length > MAX_COLUMNS) return `${path}.columns: ${node.columns.length} columns exceeds the limit of ${MAX_COLUMNS}`;
   for (let index = 0; index < node.columns.length; index += 1) {
@@ -7957,12 +7961,13 @@ function WidgetTable({ node, lookup }) {
     const cells = rows2.map((row) => row[index]).filter((cell) => cell !== void 0 && cell !== "");
     return cells.length > 0 && cells.every((cell) => typeof cell === "number" || typeof cell === "string" && NUMERIC_CELL.test(cell.trim()));
   });
-  return (0, import_react12.createElement)(
+  const table = (0, import_react12.createElement)(
     "div",
     { className: "bt-widget-table" },
     (0, import_react12.createElement)(
       "table",
       null,
+      node.caption && !node.collapsed ? (0, import_react12.createElement)("caption", null, node.caption) : null,
       (0, import_react12.createElement)("thead", null, (0, import_react12.createElement)("tr", null, columns2.map((column, index) => (0, import_react12.createElement)("th", { key: column.key ?? index, scope: "col", className: numeric2[index] ? "bt-num" : void 0 }, column.label)))),
       (0, import_react12.createElement)("tbody", null, rows2.map((row, rowIndex) => (0, import_react12.createElement)(
         "tr",
@@ -7971,6 +7976,7 @@ function WidgetTable({ node, lookup }) {
       )))
     )
   );
+  return node.collapsed ? (0, import_react12.createElement)("details", { className: "bt-widget-table-details" }, (0, import_react12.createElement)("summary", null, node.caption || t("Details")), table) : table;
 }
 function WidgetProgress({ node, lookup }) {
   let percent3;
@@ -8423,6 +8429,9 @@ var WIDGET_CSS = `
 .bt-view-muted *{font-size:inherit!important;line-height:inherit!important;color:inherit!important}
 .bt-widget-table{max-width:100%;overflow-x:auto;border:.5px solid var(--bt-line-2);border-radius:10px}
 .bt-widget-table table{border-collapse:collapse;min-width:100%;font-size:13px;line-height:18px}
+.bt-widget-table caption{text-align:start;padding:8px 10px;color:var(--bt-ink-2)}
+.bt-widget-table-details>summary{cursor:pointer;color:var(--bt-ink-2);padding:4px 0}
+.bt-widget-table-details[open]>summary{margin-bottom:6px}
 .bt-widget-table th{padding:6px 10px;font-weight:500;text-align:start;white-space:nowrap;color:var(--bt-ink-2);border-bottom:.5px solid var(--bt-line-2)}
 .bt-widget-table td{padding:6px 10px;max-width:280px;color:var(--bt-ink);overflow-wrap:anywhere}
 .bt-widget-table tbody tr+tr>*{border-top:.5px solid var(--bt-line)}
@@ -10991,6 +11000,84 @@ function liveActivitySummary(name, arg) {
   return safe.includes("[hidden]") ? "" : safe;
 }
 
+// src/shared/genui-fences.js
+var UI_LANGUAGE = /^dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*$/iu;
+var OPEN = /^ {0,3}(`{3,}|~{3,})([^\r\n]*)(?:\r?\n|$)/gmu;
+var SVG = /^\s*<svg\b[\s\S]*<\/svg>\s*$/iu;
+var COORDINATE_DIAGRAMS = /* @__PURE__ */ new Set(["architecture", "it-state", "high-level", "process", "medallion", "data-flow", "dp-integration"]);
+var gridSize = (value2) => Math.ceil(value2 / 4) * 4;
+function repairDiagramLayout(node) {
+  if (node.type !== "diagram" || !COORDINATE_DIAGRAMS.has(node.kind) || !Array.isArray(node.nodes) || node.nodes.length < 2 || !node.nodes.every((item) => item && typeof item.label === "string")) return false;
+  const nodes = node.nodes;
+  const validBox = (box) => ["x", "y", "w", "h"].every((key) => Number.isFinite(box[key]) && box[key] % 4 === 0) && box.x >= 8 && box.y >= 8 && box.w >= 64 && box.h >= 40;
+  const collide = (a, b) => a.x < b.x + b.w + 8 && b.x < a.x + a.w + 8 && a.y < b.y + b.h + 8 && b.y < a.y + a.h + 8;
+  if (nodes.every((box, index) => validBox(box) && !nodes.slice(0, index).some((peer) => collide(box, peer)))) return false;
+  const width = gridSize(Math.min(360, Math.max(144, ...nodes.map((item) => Math.max(item.label.length * 11, (item.sub?.length ?? 0) * 9) + 24))));
+  const columns2 = Math.min(3, Math.ceil(Math.sqrt(nodes.length)));
+  node.nodes = nodes.map((item, index) => ({
+    ...item,
+    x: 32 + index % columns2 * (width + 56),
+    y: 32 + Math.floor(index / columns2) * 112,
+    w: width,
+    h: 64
+  }));
+  delete node.zones;
+  return true;
+}
+function* genuiFences(text) {
+  const openings = new RegExp(OPEN);
+  for (let opening; opening = openings.exec(text); ) {
+    const ticks = opening[1];
+    const closing = new RegExp(`^ {0,3}${ticks[0]}{${ticks.length},}[ \\t]*(?:\\r?$)`, "gmu");
+    const start = openings.lastIndex;
+    closing.lastIndex = start;
+    const match = closing.exec(text);
+    const end = match?.index ?? text.length;
+    if (UI_LANGUAGE.test(opening[2].trimStart())) yield { start: opening.index, body: text.slice(start, end).trimEnd(), end: match ? closing.lastIndex : end, closed: Boolean(match) };
+    openings.lastIndex = match ? closing.lastIndex + 1 : text.length + 1;
+  }
+}
+var isSvg = (code) => typeof code === "string" && code.length <= 12e3 && SVG.test(code);
+function repairGenuiGraphic(body) {
+  if (!body.includes('"svg"') && !body.includes('"diagram"')) return void 0;
+  let spec;
+  try {
+    spec = JSON.parse(body);
+  } catch {
+    return void 0;
+  }
+  let changed = false;
+  const repair = (node, depth = 0) => {
+    if (node === null || typeof node !== "object" || depth > 12) return;
+    if (node.type === "svg" && isSvg(node.svg) && (node.code === void 0 || isSvg(node.code))) {
+      node.code ??= node.svg;
+      delete node.svg;
+      changed = true;
+    }
+    if (repairDiagramLayout(node)) changed = true;
+    for (const key of ["items", "children", "tabs"]) {
+      if (Array.isArray(node[key])) for (const child of node[key]) repair(child, depth + 1);
+    }
+  };
+  repair(spec);
+  if (!changed) return void 0;
+  return JSON.stringify(["svg", "diagram"].includes(spec.type) && !Array.isArray(spec.items) ? { items: [spec] } : spec);
+}
+var genuiMarkdown = (body) => "```dsh-ui\n" + body + "\n```";
+function repairGenuiGraphicFences(text) {
+  if (!text.includes('"svg"') && !text.includes('"diagram"')) return text;
+  let out = "";
+  let offset = 0;
+  for (const fence of genuiFences(text)) {
+    if (!fence.closed) continue;
+    const repaired = repairGenuiGraphic(fence.body);
+    if (repaired === void 0) continue;
+    out += text.slice(offset, fence.start) + genuiMarkdown(repaired);
+    offset = fence.end;
+  }
+  return offset === 0 ? text : out + text.slice(offset);
+}
+
 // src/client/genui-surfaces.js
 var integer = (value2) => Number.isSafeInteger(value2) && value2 >= 0;
 var hasGenuiFence = (text) => /^ {0,3}(?:`{3,}|~{3,})[ \t]*dsh-ui(?:[>"'.,;:)\]】」』]+)?[ \t]*\r?$/imu.test(text);
@@ -11046,7 +11133,7 @@ function createGenuiSurfaces(report = () => {
     add(surface) {
       if (!active || !integer(surface.eventSeq) || !integer(surface.contentBlockIndex) || typeof surface.threadId !== "string" || !surface.threadId || !surface.root || surface.root.getAttribute("data-genui-surface") !== surface.source || typeof surface.text !== "string" || typeof surface.sendPrompt !== "function") return () => {
       };
-      const entry = { ...surface, mounts: /* @__PURE__ */ new Map() };
+      const entry = { ...surface, text: repairGenuiGraphicFences(surface.text), mounts: /* @__PURE__ */ new Map() };
       surfaces.add(entry);
       for (const { adapter } of adapters.values()) mount(entry, adapter);
       return () => drop(entry);
@@ -11060,63 +11147,6 @@ function createGenuiSurfaces(report = () => {
 }
 function assistantTextBlocks(blocks = []) {
   return blocks.flatMap((block, contentBlockIndex) => block.kind === "text" && block.text.trim() ? [{ text: block.text, contentBlockIndex }] : []);
-}
-
-// src/shared/genui-fences.js
-var UI_LANGUAGE = /^dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*$/iu;
-var OPEN = /^ {0,3}(`{3,}|~{3,})([^\r\n]*)(?:\r?\n|$)/gmu;
-var SVG = /^\s*<svg\b[\s\S]*<\/svg>\s*$/iu;
-function* genuiFences(text) {
-  const openings = new RegExp(OPEN);
-  for (let opening; opening = openings.exec(text); ) {
-    const ticks = opening[1];
-    const closing = new RegExp(`^ {0,3}${ticks[0]}{${ticks.length},}[ \\t]*(?:\\r?$)`, "gmu");
-    const start = openings.lastIndex;
-    closing.lastIndex = start;
-    const match = closing.exec(text);
-    const end = match?.index ?? text.length;
-    if (UI_LANGUAGE.test(opening[2].trimStart())) yield { start: opening.index, body: text.slice(start, end).trimEnd(), end: match ? closing.lastIndex : end, closed: Boolean(match) };
-    openings.lastIndex = match ? closing.lastIndex + 1 : text.length + 1;
-  }
-}
-var isSvg = (code) => typeof code === "string" && code.length <= 12e3 && SVG.test(code);
-function repairGenuiSvg(body) {
-  if (!body.includes('"svg"')) return void 0;
-  let spec;
-  try {
-    spec = JSON.parse(body);
-  } catch {
-    return void 0;
-  }
-  let changed = false;
-  const repair = (node, depth = 0) => {
-    if (node === null || typeof node !== "object" || depth > 12) return;
-    if (node.type === "svg" && isSvg(node.svg) && (node.code === void 0 || isSvg(node.code))) {
-      node.code ??= node.svg;
-      delete node.svg;
-      changed = true;
-    }
-    for (const key of ["items", "children", "tabs"]) {
-      if (Array.isArray(node[key])) for (const child of node[key]) repair(child, depth + 1);
-    }
-  };
-  repair(spec);
-  if (!changed) return void 0;
-  return JSON.stringify(spec.type === "svg" && !Array.isArray(spec.items) ? { items: [spec] } : spec);
-}
-var genuiMarkdown = (body) => "```dsh-ui\n" + body + "\n```";
-function repairGenuiSvgFences(text) {
-  if (!text.includes('"svg"')) return text;
-  let out = "";
-  let offset = 0;
-  for (const fence of genuiFences(text)) {
-    if (!fence.closed) continue;
-    const repaired = repairGenuiSvg(fence.body);
-    if (repaired === void 0) continue;
-    out += text.slice(offset, fence.start) + genuiMarkdown(repaired);
-    offset = fence.end;
-  }
-  return offset === 0 ? text : out + text.slice(offset);
 }
 
 // src/client/genui-presentation.js
@@ -25298,6 +25328,34 @@ function roundDiagramConnector(path) {
 var boxesIntersect = (a, b, gap = 0) => a.x < b.x + b.width + gap && a.x + a.width + gap > b.x && a.y < b.y + b.height + gap && a.y + a.height + gap > b.y;
 var insideCanvas = (box, bounds) => box.x >= bounds.x + 4 && box.y >= bounds.y + 4 && box.x + box.width <= bounds.x + bounds.width - 4 && box.y + box.height <= bounds.y + bounds.height - 4;
 var centeredBox = (x, y, width, height) => ({ x: x - width / 2, y: y - height / 2, width, height });
+function diagramNodes(svg) {
+  return [...svg.querySelectorAll('g[role="button"]')].map((element) => {
+    const rect = element.firstElementChild?.firstElementChild;
+    return { element, name: element.getAttribute("aria-label"), box: rect?.getBBox?.() ?? element.getBBox() };
+  });
+}
+function fallbackOverlappingDiagram(svg) {
+  const nodes = diagramNodes(svg);
+  if (!nodes.some(({ box }, index) => box.width > 0 && box.height > 0 && nodes.slice(0, index).some((peer) => boxesIntersect(box, peer.box)))) return void 0;
+  const list = document.createElement("ul");
+  list.className = "bt-genui-diagram-fallback";
+  for (const { name, element } of nodes) {
+    const item = document.createElement("li");
+    const button2 = document.createElement("button");
+    button2.type = "button";
+    button2.textContent = name;
+    button2.addEventListener("click", () => element.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    item.append(button2);
+    list.append(item);
+  }
+  const display = svg.style.display;
+  svg.style.display = "none";
+  svg.after(list);
+  return () => {
+    list.remove();
+    svg.style.display = display;
+  };
+}
 function lineSamples(path) {
   const length = path.getTotalLength();
   const count = Math.max(1, Math.min(200, Math.ceil(length / 5)));
@@ -25323,10 +25381,7 @@ function layoutGenuiDiagram(svg) {
   const originalViewBox = svg.getAttribute("viewBox");
   const { x, y, width, height } = svg.viewBox.baseVal;
   const bounds = { x, y, width, height };
-  const nodes = [...svg.querySelectorAll('g[role="button"]')].map((node) => {
-    const rect = node.firstElementChild?.firstElementChild;
-    return { name: node.getAttribute("aria-label"), box: rect?.getBBox?.() ?? node.getBBox() };
-  });
+  const nodes = diagramNodes(svg);
   const restore = [];
   const overlay = document.createElementNS(SVG_NS, "g");
   overlay.setAttribute("data-bt-diagram-labels", "");
@@ -25403,6 +25458,8 @@ var CSS3 = `
 .bt-genui-enlarge{box-sizing:border-box;display:inline-grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--bt-ink-3);cursor:pointer}
 .bt-genui-enlarge:is(:hover,:focus-visible){background:var(--bt-hover);color:var(--bt-ink)}
 .bt-genui-figure-actions{display:flex;justify-content:flex-end;margin:8px 0 6px}
+.bt-genui-diagram-fallback{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:8px 0}
+.bt-genui-diagram-fallback button{font:inherit;color:var(--bt-ink);background:var(--bt-card);border:1px solid var(--bt-line);border-radius:8px;padding:4px 10px;cursor:pointer}
 .bt-business-diagram{--dsw-alias-label-tertiary:var(--bt-ink-2)}
 .bt-business-diagram [data-bt-diagram-node]{fill:color-mix(in srgb,var(--bt-ink-blue) 8%,var(--bt-main))}
 .bt-business-diagram [data-bt-diagram-node][stroke-width="1"]{stroke:color-mix(in srgb,var(--bt-ink-blue) 60%,var(--bt-ink))}
@@ -25601,6 +25658,13 @@ function installGenuiPreview() {
         control.setAttribute("aria-haspopup", "dialog");
         control.append(enlargeGlyph());
       }
+      const fallback = graphic.localName === "svg" ? fallbackOverlappingDiagram(graphic) : void 0;
+      if (fallback) {
+        control.remove();
+        entry?.strip?.remove();
+        controls.set(figure, { control, graphic, restore: fallback, fallback: true });
+        return;
+      }
       const restoreStyle = styleBusinessDiagram(figure, graphic);
       const restoreLayout = graphic.localName === "svg" ? layoutGenuiDiagram(graphic) : void 0;
       const restoreSize = sizeInlineGraphic(graphic);
@@ -25613,6 +25677,7 @@ function installGenuiPreview() {
       controls.set(figure, entry);
       figure.classList.add("bt-genui-previewable");
     }
+    if (entry.fallback) return;
     const download2 = figure.closest(ARTIFACT)?.querySelector(`:scope > ${EXPORT} > button[aria-haspopup="menu"]`);
     if (download2) {
       if (entry.control.parentElement !== download2.parentElement) download2.before(entry.control);

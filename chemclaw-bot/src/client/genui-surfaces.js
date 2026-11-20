@@ -1,3 +1,5 @@
+import { repairGenuiGraphicFences } from '../shared/genui-fences.js'
+
 const integer = value => Number.isSafeInteger(value) && value >= 0
 
 export const hasGenuiFence = text => /^ {0,3}(?:`{3,}|~{3,})[ \t]*dsh-ui(?:[>"'.,;:)\]】」』]+)?[ \t]*\r?$/imu.test(text)
@@ -42,7 +44,7 @@ export function createGenuiSurfaces(report = () => {}) {
         || typeof surface.threadId !== 'string' || !surface.threadId || !surface.root
         || surface.root.getAttribute('data-genui-surface') !== surface.source
         || typeof surface.text !== 'string' || typeof surface.sendPrompt !== 'function') return () => {}
-      const entry = { ...surface, mounts: new Map() }
+      const entry = { ...surface, text: repairGenuiGraphicFences(surface.text), mounts: new Map() }
       surfaces.add(entry)
       for (const { adapter } of adapters.values()) mount(entry, adapter)
       return () => drop(entry)

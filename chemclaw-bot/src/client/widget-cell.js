@@ -161,11 +161,15 @@ function WidgetTable({ node, lookup }) {
     const cells = rows.map(row => row[index]).filter(cell => cell !== undefined && cell !== '')
     return cells.length > 0 && cells.every(cell => typeof cell === 'number' || (typeof cell === 'string' && NUMERIC_CELL.test(cell.trim())))
   })
-  return h('div', { className: 'bt-widget-table' },
+  const table = h('div', { className: 'bt-widget-table' },
     h('table', null,
+      node.caption && !node.collapsed ? h('caption', null, node.caption) : null,
       h('thead', null, h('tr', null, columns.map((column, index) => h('th', { key: column.key ?? index, scope: 'col', className: numeric[index] ? 'bt-num' : undefined }, column.label)))),
       h('tbody', null, rows.map((row, rowIndex) => h('tr', { key: rowIndex },
         columns.map((column, columnIndex) => h('td', { key: column.key ?? columnIndex, className: numeric[columnIndex] ? 'bt-num' : undefined }, cellText(row[columnIndex]))))))))
+  return node.collapsed
+    ? h('details', { className: 'bt-widget-table-details' }, h('summary', null, node.caption || t('Details')), table)
+    : table
 }
 
 function WidgetProgress({ node, lookup }) {
@@ -542,6 +546,9 @@ export const WIDGET_CSS = `
 .bt-view-muted *{font-size:inherit!important;line-height:inherit!important;color:inherit!important}
 .bt-widget-table{max-width:100%;overflow-x:auto;border:.5px solid var(--bt-line-2);border-radius:10px}
 .bt-widget-table table{border-collapse:collapse;min-width:100%;font-size:13px;line-height:18px}
+.bt-widget-table caption{text-align:start;padding:8px 10px;color:var(--bt-ink-2)}
+.bt-widget-table-details>summary{cursor:pointer;color:var(--bt-ink-2);padding:4px 0}
+.bt-widget-table-details[open]>summary{margin-bottom:6px}
 .bt-widget-table th{padding:6px 10px;font-weight:500;text-align:start;white-space:nowrap;color:var(--bt-ink-2);border-bottom:.5px solid var(--bt-line-2)}
 .bt-widget-table td{padding:6px 10px;max-width:280px;color:var(--bt-ink);overflow-wrap:anywhere}
 .bt-widget-table tbody tr+tr>*{border-top:.5px solid var(--bt-line)}

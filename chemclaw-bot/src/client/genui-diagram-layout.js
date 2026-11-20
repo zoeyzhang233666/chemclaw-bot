@@ -40,6 +40,34 @@ const insideCanvas = (box, bounds) => box.x >= bounds.x + 4 && box.y >= bounds.y
   && box.x + box.width <= bounds.x + bounds.width - 4 && box.y + box.height <= bounds.y + bounds.height - 4
 const centeredBox = (x, y, width, height) => ({ x: x - width / 2, y: y - height / 2, width, height })
 
+function diagramNodes(svg) {
+  return [...svg.querySelectorAll('g[role="button"]')].map(element => {
+    const rect = element.firstElementChild?.firstElementChild
+    return { element, name: element.getAttribute('aria-label'), box: rect?.getBBox?.() ?? element.getBBox() }
+  })
+}
+
+export function fallbackOverlappingDiagram(svg) {
+  const nodes = diagramNodes(svg)
+  if (!nodes.some(({ box }, index) => box.width > 0 && box.height > 0
+    && nodes.slice(0, index).some(peer => boxesIntersect(box, peer.box)))) return undefined
+  const list = document.createElement('ul')
+  list.className = 'bt-genui-diagram-fallback'
+  for (const { name, element } of nodes) {
+    const item = document.createElement('li')
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.textContent = name
+    button.addEventListener('click', () => element.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+    item.append(button)
+    list.append(item)
+  }
+  const display = svg.style.display
+  svg.style.display = 'none'
+  svg.after(list)
+  return () => { list.remove(); svg.style.display = display }
+}
+
 function lineSamples(path) {
   const length = path.getTotalLength()
   const count = Math.max(1, Math.min(200, Math.ceil(length / 5)))
@@ -65,10 +93,7 @@ export function layoutGenuiDiagram(svg) {
   const originalViewBox = svg.getAttribute('viewBox')
   const { x, y, width, height } = svg.viewBox.baseVal
   const bounds = { x, y, width, height }
-  const nodes = [...svg.querySelectorAll('g[role="button"]')].map(node => {
-    const rect = node.firstElementChild?.firstElementChild
-    return { name: node.getAttribute('aria-label'), box: rect?.getBBox?.() ?? node.getBBox() }
-  })
+  const nodes = diagramNodes(svg)
   const restore = []
   const overlay = document.createElementNS(SVG_NS, 'g')
   overlay.setAttribute('data-bt-diagram-labels', '')

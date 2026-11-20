@@ -254,6 +254,39 @@ function decide(body) {
       series: [{ name: '合成轻质纯碱现货', values: [1118, 1134, 1123] }] }
     return [tool('show_view', { audience: 'user', await_reply: false, title: '合成现货走势', view: { type: 'stack', children: [metric, chart] } })]
   }
+  const methanol = /^甲醇价格$/mu
+  const previousQuestion = () => messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message)
+    && !textOf(message.content).startsWith('[chemclaw-visual-delivery'))
+  const methanolRepair = activity.includes('from verified evidence')
+    && methanol.test(textOf(previousQuestion()?.content))
+  if (tools.has('show_view') && (methanol.test(activity) || methanolRepair)) {
+    const chart = { type: 'chart', kind: 'line', caption: '合成甲醇均价走势', unit: '元/吨',
+      categories: ['2026-11-18', '2026-11-19', '2026-11-20'], series: [{ name: '甲醇现货', values: [2180, 2200, 2250] }] }
+    const metric = { type: 'metric', label: '合成甲醇最新均价', value: '2250 元/吨', caption: '2026-11-20' }
+    const reply = '合成甲醇正文：同口径均价由 2180 元/吨上升到 2250 元/吨。'
+    if (result) return [text(reply)]
+    if (!methanolRepair && !system.includes('# Your identity')) {
+      return [text(reply + inlineView({ ...svgFixture, title: '仅有的甲醇物流图' }))]
+    }
+    const view = !methanolRepair ? chart : activity.includes('the data chart') ? { type: 'stack', children: [metric, chart] } : metric
+    return [tool('show_view', { audience: 'user', title: '合成甲醇价格', view })]
+  }
+  if (/^沥青产量$/mu.test(activity) && tools.has('show_view')) {
+    if (result) return [text('合成沥青正文。')]
+    const metric = { type: 'metric', label: '合成沥青当月总产量', value: '240 万吨' }
+    const chart = (caption, categories, values) => ({ type: 'chart', kind: 'hbar', unit: '万吨', caption, categories, series: [{ values }] })
+    const details = (caption, subject, rows) => ({ type: 'table', caption, collapsed: true,
+      columns: [{ key: 'name', label: subject }, { key: 'value', label: '产量（万吨）' }], rows })
+    const view = { type: 'stack', children: [metric, chart('合成集团产量', ['集团 A', '集团 B'], [100, 140]),
+      chart('合成地区产量', ['华东', '华北'], [123, 117]), details('分集团明细', '集团', [['集团 A', 100], ['集团 B', 140]]),
+      details('分地区明细', '地区', [['华东', 123], ['华北', 117]])] }
+    return [text('同口径全国总产量及两种拆分。'), tool('show_view', { audience: 'user', title: '合成沥青产量概览', view })]
+  }
+  if (/^解释合成沥青传导机制$/mu.test(activity)) {
+    const diagram = diagramFixture('合成沥青传导修复图')
+    diagram.nodes = diagram.nodes.map(node => ({ ...node, x: 0.4, y: 0.3, w: 60, h: 28 }))
+    return [text('合成沥青传导解释。' + inlineView(diagram))]
+  }
   if (/^(?:User: )?查询合成产能分布\s*$/mu.test(activity) && tools.has('show_view')
     && system.includes('a metric row and horizontal bars')) {
     if (result) return [text('合成产能正文：同一口径下，沿海为 120 万吨/年，内陆为 90 万吨/年。')]

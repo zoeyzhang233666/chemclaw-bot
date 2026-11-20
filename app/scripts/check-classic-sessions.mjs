@@ -149,6 +149,25 @@ export async function checkClassicSessions(cdp) {
     await waitRunning(id, false)
     assert.equal(await evaluate(visible('错误的报价关系图')), false)
   }
+  const checkMarketFollowup = async id => {
+    await send('甲醇价格')
+    await until(`${visible('合成甲醇正文')} && [...document.querySelectorAll('.bt-widget-metric')].some(node => node.textContent.includes('合成甲醇最新均价')) && ${visible('合成甲醇均价走势')}`, 'bare methanol lookup has both the native metric and native line')
+    await waitRunning(id, false)
+    await send('沥青产量')
+    await until(`${visible('合成沥青当月总产量')} && ${visible('合成集团产量')} && ${visible('合成地区产量')} && ${visible('分集团明细')}`, 'production metric and separate comparison charts alongside detail')
+    await waitRunning(id, false)
+    const detail = "Array.from(document.querySelectorAll('.bt-widget-table-details')).find(node => node.querySelector('summary').textContent === '分集团明细')"
+    assert.ok(await evaluate(`(() => {
+      const metric = [...document.querySelectorAll('.bt-widget-metric')].find(node => node.textContent.includes('合成沥青当月总产量'));
+      const detail = ${detail};
+      return Boolean(metric && detail && !detail.open && (metric.compareDocumentPosition(detail) & Node.DOCUMENT_POSITION_FOLLOWING));
+    })()`), 'the native production overview precedes detailed rows')
+    await evaluate(`${detail}.querySelector('summary').click()`)
+    await until(`${detail}.open && ${detail}.querySelector('tbody').textContent.includes('100')`, 'production evidence rows can be opened')
+    await send('解释合成沥青传导机制')
+    await until(`[...document.querySelectorAll('[data-genui-diagram] svg')].filter(svg => svg.querySelector('title')?.textContent === '合成沥青传导修复图').some(svg => !svg.closest('figure').querySelector('.bt-genui-diagram-fallback') && new Set([...svg.querySelectorAll('g[role=button]')].map(node => { const box = node.getBBox(); return box.x + ',' + box.y })).size === 4)`, 'overlapping source coordinates render as four separately placed nodes')
+    await waitRunning(id, false)
+  }
   const roster = await evaluate(bot('state'))
   const expert = roster.bots.find(item => item.id === roster.mainBotId)
   const expertSession = expert.sessionId
@@ -326,6 +345,7 @@ export async function checkClassicSessions(cdp) {
   await waitRunning(b, false)
   await checkCapacity(b)
   await checkSpotHistory(b)
+  await checkMarketFollowup(b)
   await checkFencePresentation(b)
   await send('GenUI check marketstats')
   const metrics = "[...document.querySelectorAll('[data-genui]')].find(node => node.innerText.includes('Synthetic market metrics'))"
@@ -369,6 +389,7 @@ export async function checkClassicSessions(cdp) {
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
   await checkCapacity(expertSession)
   await checkSpotHistory(expertSession)
+  await checkMarketFollowup(expertSession)
   await checkFencePresentation(expertSession)
   await send('GenUI check marketstats')
   await until(`${metrics}?.closest('.bt-rich-reply')`, 'expert GenUI outside the speech bubble')

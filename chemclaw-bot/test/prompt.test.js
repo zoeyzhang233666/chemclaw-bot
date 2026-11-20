@@ -84,8 +84,8 @@ test('the visual contract follows the selected tool set and preserves ordinary M
   const showView = { name: 'show_view' }
   ctx.tools.get = (name, scope, toolSet) => name === 'show_view' && scope === agent && toolSet.has(name) ? showView : undefined
   const allowed = section.text({ agent, toolSet: new Set(['show_view']) })
-  assert.match(allowed, /Prefer show_view/)
-  assert.match(allowed, /ordinary final answer in Markdown/)
+  assert.match(allowed, /must include both a native metric card and a native data chart/)
+  assert.match(allowed, /ordinary answer in Markdown/)
   assert.match(allowed, /When GenUI is unavailable/)
   ctx.tools.get = (name, scope, toolSet) => scope === agent && toolSet.has(name) ? { name } : undefined
   const withGenui = section.text({ agent, toolSet: new Set(['show_view', 'validate_dsh_ui']) })
@@ -95,6 +95,6 @@ test('the visual contract follows the selected tool set and preserves ordinary M
   const restricted = section.text({ agent, toolSet: new Set() })
   assert.match(restricted, /Use inline dsh-ui for visual delivery/)
   assert.match(restricted, /EVERY user-facing final answer/)
-  assert.doesNotMatch(restricted, /Prefer show_view/)
+  assert.doesNotMatch(restricted, /must include both a native metric card and a native data chart/)
   await ctx.dispose()
 })

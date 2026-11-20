@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
-import { genuiFences, genuiMarkdown, repairGenuiSvgFences } from '../shared/genui-fences.js'
+import { genuiFences, genuiMarkdown, repairGenuiGraphicFences } from '../shared/genui-fences.js'
 import { asksForRelationships, capacityDataRequest, capacityMeasurementsInAnswer, isQuantitativeLookup, needsFlowDiagram, needsSvgIllustration } from './flow-intent.js'
 import { marketQuoteIntent, mixedOverlayRequested, spotPriceRequest } from './market-quote-intent.js'
 import { genuiViewAvailable, nativeViewAvailable } from './native-view-session.js'
@@ -292,13 +292,24 @@ const nativeDataRequest = question => /(?:原生|native).{0,22}(?:标签卡|指�
 const dataPriority = entry => entry.nativeDataRequest || entry.spotReadout || entry.marketHistory || entry.mixedOverlayRequired
   || isQuantitativeLookup(entry.question)
 const dataOnly = entry => dataPriority(entry) && !wantsGraph(entry) && (entry.nativeDataRequest || !asksForRelationships(entry.question))
+const nativePairDelivered = entry => entry.nativeMetric && (entry.spotReadout === 'history' ? entry.spotLine : entry.nativeChart)
 const unsuitableDataGraphic = (kind, question) => relationshipKinds.has(kind) && !(kind === 'svg' && specializedTable(question))
 const quantityPattern = /[+-]?\d[\d,.]*\s*(?:元|美元|吨|桶|%|％|万吨|亿|万台|\b(?:usd|cny|tonnes?|bpd)\b)/giu
 const datePattern = /(?:20\d{2}[-/.年])?\b\d{1,2}[-/.月]\d{1,2}(?:日)?\b|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}\b/iu
+const publicSearchTools = ['web_search', 'advanced_search', 'domain_search', 'platform_search', 'web_fetch', 'browser_open']
+const sourceRestricted = /(?:不要|禁止|不(?:要)?许|不得|无需|不必|不用)(?:再)?(?:联网|上网|网络搜索|外部(?:来源|搜索))|(?:仅限|仅用|仅使用|只用|只使用|只看)(?:本地|库内|内部|已有|附件|给的|提供的)|\b(?:offline|no web|do not (?:browse|search online))\b/iu
+const connectorGap = /(?:数据中台|平台|数据源|数据库|库里|工具|MCP|Data Hub).{0,28}(?:没有|不覆盖|未覆盖|暂缺|无数据|未收录|缺少|查不到|未查到|未找到|不可用|no (?:data|coverage)|not available)|(?:没有|未查到|缺乏|未能核实).{0,24}(?:数据|产量|行情|报价|价格|证据)/iu
+const sourcePermissionQuestion = /(?:要不要|是否需要|需(?:要)?你确认|需要确认|请.{0,10}(?:授权|确认)|允许|\b(?:shall I|would you like me to|permission to)\b).{0,22}(?:联网|网搜|上网|外部检索|公开搜索|search (?:the )?web|browse)|(?:联网|网搜|上网|公开检索|外部检索).{0,22}(?:请确认|你确认|先确认|需.{0,6}(?:确认|授权))/iu
+const canSeekPublicEvidence = entry => isQuantitativeLookup(entry.question) && !sourceRestricted.test(entry.question)
 
-function numericReminder(turn, entry, missing) {
+function sourceReminder(turn, native, textOnly) {
+  return `${VISUAL_NOTICE} turn=${turn}]\nContinue the same public data lookup now. Search for the missing figure using available public search tools and open the original material to verify the date, geography and measurement. Do not ask for permission to search, repeat the same data-hub query, quote this notice, or discuss connector coverage. If sources still do not verify the figure, state only the specific evidence gap. ${native && !textOnly ? 'Deliver verified figures with a native metric row and comparable charts before detailed rows.' : 'Give the supported findings.'} Cite the original source links and follow the conversation language.`
+}
+
+function numericReminder(turn, entry, missing, breakdown) {
   const chart = entry.spotReadout === 'history'
     ? 'For two or more comparable dated physical spot observations, use kind=line with distinct dates and numeric spot prices on the same grade, region and price basis.'
+    : breakdown ? 'Use separate bars for the verified producer-group and regional breakdowns, showing only the charts still missing. Exclude total rows and keep detailed evidence below the charts.'
     : 'Use a dated line for a time series or bars for a comparable snapshot when two or more verified observations support the chart.'
   return `${VISUAL_NOTICE} turn=${turn}]\nUse ONE native show_view stack to deliver ${missing.join(' and ')} from verified evidence already in this conversation. ${chart} Tables, SVG and diagrams cannot fulfill the metric or chart requirement. If historical coverage is insufficient, show only verified snapshots as metric cards and explain the gap. Use a source table as supporting detail. Do not fetch again, invent data, duplicate any native view already shown, or quote this notice. Follow the conversation language.`
 }
@@ -375,8 +386,8 @@ export function install(rt) {
       for await (const chunk of next()) {
         if (chunk.type === 'block-end' && chunk.block.type === 'text') {
           const entry = turns.get(String(options.sessionId))
-          let text = repairGenuiSvgFences(chunk.block.text)
-          if (entry && dataOnly(entry) && options.tools?.some(tool => tool.name === 'show_view')) {
+          let text = repairGenuiGraphicFences(chunk.block.text)
+          if (entry && dataOnly(entry) && !nativePairDelivered(entry) && options.tools?.some(tool => tool.name === 'show_view')) {
             const filtered = removeQuantitativeDiagrams(text, entry.question)
             entry.withheldDiagram ||= filtered !== text
             text = filtered
@@ -390,7 +401,7 @@ export function install(rt) {
       }
     })()
   })
-  const fresh = turn => ({ turn, text: '', question: '', visual: false, nativeMetric: false, nativeChart: false, nativeDataRequest: false, spotReadout: undefined, spotLine: false, withheldDiagram: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', question: '', visual: false, publicSearchTried: false, nativeMetric: false, nativeChart: false, nativeComparisons: new Set(), nativeDataRequest: false, spotReadout: undefined, spotLine: false, withheldDiagram: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -403,6 +414,11 @@ export function install(rt) {
     entry.nativeMetric ||= kinds.has('metric')
     const charts = chartNodes(view)
     entry.nativeChart ||= charts.length > 0
+    for (const chart of charts) {
+      if (['bar', 'hbar', 'donut'].includes(chart.kind ?? 'bar') && chart.categories?.length >= 2) {
+        entry.nativeComparisons.add(JSON.stringify(chart.categories.toSorted()))
+      }
+    }
     entry.spotLine ||= entry.spotReadout === 'history' && charts.some(chart => chart.kind === 'line' && chart.series?.some(series =>
       new Set((chart.categories ?? []).filter((date, index) => datePattern.test(date) && usableNumber(series.values?.[index]))).size >= 2))
     for (const kind of kinds) entry.kinds.add(kind)
@@ -426,8 +442,10 @@ export function install(rt) {
         next.marketOhlcStatus = previous.marketOhlcStatus
         next.textOnly = previous.textOnly
         next.visual = previous.visual
+        next.publicSearchTried = previous.publicSearchTried
         next.nativeMetric = previous.nativeMetric
         next.nativeChart = previous.nativeChart
+        next.nativeComparisons = previous.nativeComparisons
         next.nativeDataRequest = previous.nativeDataRequest
         next.spotReadout = previous.spotReadout
         next.spotLine = previous.spotLine
@@ -439,6 +457,7 @@ export function install(rt) {
       return
     }
     const entry = stateOf(id)
+    if (event.type === 'tool/call' && publicSearchTools.includes(event.data?.name)) entry.publicSearchTried = true
     if (event.type === 'tool/call' && event.data?.name === 'show_view') entry.calls.set(event.data.callId, event.data.args?.view ?? event.data.input?.view)
     if (event.type === 'tool/result') {
       const message = event.data?.message
@@ -469,8 +488,10 @@ export function install(rt) {
         entry.mixedVisualCommitted = false
         entry.marketOhlcStatus = 'untried'
         entry.visual = false
+        entry.publicSearchTried = false
         entry.nativeMetric = false
         entry.nativeChart = false
+        entry.nativeComparisons.clear()
         entry.spotLine = false
         entry.withheldDiagram = false
         entry.invalidGenuiChart = false
@@ -523,18 +544,26 @@ export function install(rt) {
   ctx.on('session/disposed', session => turns.delete(String(session.id)))
   ctx.on('tools/pre-execute', async (exec, next) => {
     const agent = exec.agent
-    if (exec.name !== 'validate_dsh_ui' || !agent?.session || agent.session.header?.parentSession !== undefined) return next()
+    if (!['validate_dsh_ui', 'ask_user', 'ask_user_question'].includes(exec.name) || !agent?.session || agent.session.header?.parentSession !== undefined) return next()
     const decision = await next()
     if (decision.kind !== 'allow') return decision
     restore(agent.session)
     const entry = turns.get(String(agent.session.id))
     if (!(entry?.human || entry?.question)) return decision
+    if (exec.name !== 'validate_dsh_ui') {
+      if (!entry.publicSearchTried && canSeekPublicEvidence(entry) && sourcePermissionQuestion.test(JSON.stringify(exec.arguments ?? {}))
+        && publicSearchTools.some(name => ctx.tools.get?.(name, agent, exec.toolSet))) {
+        return { kind: 'deny', reason: 'Search available public sources for the missing requested data now. No user choice about the source is needed.' }
+      }
+      return decision
+    }
     let spec = exec.arguments?.spec
     if (typeof spec === 'string') {
       try { spec = JSON.parse(spec) } catch { return decision }
     }
     const kinds = deliveredViewKinds(spec?.items ?? spec)
-    if (dataOnly(entry) && nativeViewAvailable(ctx, agent, exec.toolSet) && [...kinds].some(kind => unsuitableDataGraphic(kind, entry.question))) {
+    if (dataOnly(entry) && !nativePairDelivered(entry) && nativeViewAvailable(ctx, agent, exec.toolSet)
+      && [...kinds].some(kind => unsuitableDataGraphic(kind, entry.question))) {
       return { kind: 'deny', reason: 'Use native show_view metric cards and an appropriate data chart for the requested numbers. For spot history use a line on verified comparable dates, or metric snapshots if history is unavailable.' }
     }
     if (!kinds.has('mermaid') || entry.requested.has('mermaid')) return decision
@@ -566,9 +595,14 @@ export function install(rt) {
     if (signal.aborted || session.header?.parentSession !== undefined || rt.roomOf?.(id)) return
     restore(session)
     const entry = turns.get(id)
-    if (!entry || entry.turn !== turn || entry.reminded || entry.repairing || entry.textOnly || !(entry.text.trim() || entry.withheldDiagram)) return
+    if (!entry || entry.turn !== turn || entry.reminded || !(entry.text.trim() || entry.withheldDiagram)) return
     const native = nativeViewAvailable(ctx, agent)
     const genui = genuiViewAvailable(ctx, agent)
+    const prose = entry.text.replace(SPEC_FENCES, '')
+    const missingPublicEvidence = !entry.publicSearchTried && canSeekPublicEvidence(entry)
+      && (connectorGap.test(prose) || sourcePermissionQuestion.test(prose))
+      && publicSearchTools.some(name => ctx.tools.get?.(name, agent))
+    if (!missingPublicEvidence && (entry.textOnly || entry.repairing)) return
     const enabledRequests = new Set([...entry.requested].filter(kind => rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind)))
     if (!genui) { enabledRequests.delete('svg'); enabledRequests.delete('diagram') }
     const specified = ['mermaid', 'svg', 'diagram'].some(kind => enabledRequests.has(kind))
@@ -579,9 +613,11 @@ export function install(rt) {
     const missingCapacity = native && !entry.nativeMetric && !specified && !entry.requested.has('flow')
       && capacityDataRequest(entry.question) && capacityMeasurementsInAnswer(entry.text)
     if (missingCapacity) missing.push('metric')
-    const prose = entry.text.replace(SPEC_FENCES, '')
     const quantities = [...prose.matchAll(quantityPattern)].length
     const tableDelivered = entry.kinds.has('table') || /^\s*\|?(?:[ \t]*:?-{3,}:?[ \t]*\|)+[ \t]*:?-{3,}:?[ \t]*\|?[ \t]*$/mu.test(prose)
+    const breakdown = tableDelivered && capacityDataRequest(entry.question)
+      && /^(?:#+|\s*[一二三四五12345][、.])[^\n]*(?:分集团|按集团|分企业|按企业)/mu.test(prose)
+      && /^(?:#+|\s*[一二三四五12345][、.])[^\n]*(?:分地区|按地区|分区域|按区域)/mu.test(prose)
     const partialHistory = /(?:仅|只)(?:查到|找到|有|能确认|能核实|取得).{0,14}(?:当日|今日|单日|最新|一[次个条]|快照)|(?:没有|缺少|未找到|未取得|不足).{0,14}(?:历史|同口径|连续|可比|序列)|\b(?:only one verified|no comparable|insufficient history)\b/iu.test(prose)
     const missingData = []
     if (native && dataPriority(entry)) {
@@ -591,13 +627,14 @@ export function install(rt) {
         missingData.push('headline metric cards')
       }
       if (spotHistory && !entry.spotLine && !partialHistory) missingData.push('the dated spot chart')
-      else if (!spotHistory && entry.spotReadout !== 'quote' && !entry.nativeChart && !entry.marketHistory
-        && (entry.nativeDataRequest || quantities > 1 || tableDelivered)) missingData.push('the data chart')
+      else if (breakdown && entry.nativeComparisons.size < 2) missingData.push('the missing production comparisons')
+      else if (!spotHistory && !entry.nativeChart && !entry.marketHistory
+        && (entry.nativeDataRequest || quantities > 1 || tableDelivered || entry.withheldDiagram)) missingData.push('the data chart')
     }
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
     const missingGraphic = missing.some(kind => ['flow', 'svg', 'diagram'].includes(kind))
     const mixedIncomplete = botMixedNeeded(entry, rt.isBotSession?.(id) === true)
-    if (entry.visual && !knownMismatch && !mixedIncomplete && !missingGraphic && !missingCapacity && !missingData.length) return
+    if (!missingPublicEvidence && entry.visual && !knownMismatch && !mixedIncomplete && !missingGraphic && !missingCapacity && !missingData.length) return
     if ((rt.state?.exchangeTurns?.[id] ?? []).includes(turn)) return
     const info = rt.live?.get(id)?.info
     if (info?.handoff && !info.resume || info?.role === 'request' && info.audience !== 'user') return
@@ -607,12 +644,12 @@ export function install(rt) {
     if (rt.state?.questions?.[id] || rt.state?.views?.[id]) return
     entry.reminded = true
     const source = session.header?.version >= 4
-      ? { kind: 'plugin:chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
-      : { kind: 'plugin', plugin: 'chemclaw-bot', form: 'notice', summary: 'Inline visual delivery required' }
+      ? { kind: 'plugin:chemclaw-bot', form: 'notice', summary: missingPublicEvidence ? 'Verify public data' : 'Inline visual delivery required' }
+      : { kind: 'plugin', plugin: 'chemclaw-bot', form: 'notice', summary: missingPublicEvidence ? 'Verify public data' : 'Inline visual delivery required' }
     try {
-      const reminder = mixedIncomplete
+      const reminder = missingPublicEvidence ? sourceReminder(turn, native, entry.textOnly) : mixedIncomplete
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
-        : missingData.length && !missingCapacity ? numericReminder(turn, entry, missingData)
+        : missingData.length && (!missingCapacity || breakdown) ? numericReminder(turn, entry, missingData, breakdown)
         : knownMismatch || missingGraphic || missingCapacity ? requestedViewReminder(turn, native, missing, entry.requested, genui)
       : entry.invalidGenuiChart && native
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart lacks drawable data. Use one native show_view chart with the verified observations in this answer, or a factual table when data is missing. Do not repeat research or invent data.`

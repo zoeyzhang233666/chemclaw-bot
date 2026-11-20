@@ -7,10 +7,12 @@ const FENCE = /^ {0,3}\x60{3}[^\n]*\n[\s\S]*?^ {0,3}\x60{3}[ \t]*\r?$/gmu
 const CAPACITY_METRIC = /产能|产量|开工率|装置利用率|配额|\b(?:production (?:capacity|volume)|installed capacity|operating rate|capacity utili[sz]ation|(?:export|production) quota)\b/iu
 const QUANTITATIVE_CUE = /多少|几成|数值|数据|对比|比较|排名|排行|规模|走势|趋势|各地|各省|各国|各地区|\b(?:how (?:much|many)|data|compare|ranking|trend|by (?:region|country|company))\b/iu
 const CAPACITY_UNIT = /\d+(?:[.,]\d+)*\s*(?:%|％|(?:亿|万|千)?(?:吨|桶|立方米|方|加仑)|(?:million\s+|thousand\s+)?(?:metric\s+)?(?:tonnes?|tons?|barrels?|bpd|mtpa|ktpa)\b)/iu
+const TERM_QUESTION = /什么(?:是|叫|意思)|有何区别|如何定义|怎么计算|如何计算|\b(?:definition|what (?:does .+ mean|is meant by)|how (?:to|do .*?) calculate)\b/iu
+const PRICE_LOOKUP = /(?:价格|报价|行情|多少钱|什么价)(?:\s*(?:多少|怎么样|如何|呢|是多少))?[\s？?。！!]*$|\b(?:prices?|quotes?)\s*[?.!]*$/iu
 
 export function capacityDataRequest(question) {
   if (!CAPACITY_METRIC.test(question)) return false
-  if (/什么意思|什么叫|怎么(?:计算|定义)|如何(?:计算|定义)|有何区别|\b(?:definition|what (?:does .+ mean|is meant by)|how (?:to|do .*?) calculate)\b/iu.test(question)) return false
+  if (TERM_QUESTION.test(question)) return false
   return QUANTITATIVE_CUE.test(question) || !RELATIONSHIP_QUESTION.test(question)
 }
 
@@ -21,7 +23,8 @@ export function capacityMeasurementsInAnswer(answer) {
 
 export const needsSvgIllustration = question => /剖面(?:图|结构|示意)|截面(?:结构|示意)|空间(?:位置|结构|排布)|形态(?:对比|示意)|零件(?:位置|分布)|矢量(?:图|插图)|\b(?:cross[- ]section|cutaway|vector illustration|spatial arrangement)\b/iu.test(question)
 export const asksForRelationships = question => RELATIONSHIP_QUESTION.test(question)
-export const isQuantitativeLookup = question => capacityDataRequest(question) || DATA_LOOKUP.test(question)
+export const isQuantitativeLookup = question => !TERM_QUESTION.test(question)
+  && (capacityDataRequest(question) || DATA_LOOKUP.test(question) || (!asksForRelationships(question) && PRICE_LOOKUP.test(question)))
 
 export function needsFlowDiagram(question, answer = '', dataDelivered = false) {
   if (GREETING.test(question)) return false

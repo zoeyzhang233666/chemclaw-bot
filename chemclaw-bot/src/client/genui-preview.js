@@ -1,6 +1,6 @@
 import { t } from './i18n.js'
 import { installStyles } from './styles.js'
-import { layoutGenuiDiagram } from './genui-diagram-layout.js'
+import { fallbackOverlappingDiagram, layoutGenuiDiagram } from './genui-diagram-layout.js'
 
 const FIGURE = '[data-genui-diagram], [data-genui-svg]'
 const ARTIFACT = '[data-genui-artifact]'
@@ -13,6 +13,8 @@ const CSS = `
 .bt-genui-enlarge{box-sizing:border-box;display:inline-grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--bt-ink-3);cursor:pointer}
 .bt-genui-enlarge:is(:hover,:focus-visible){background:var(--bt-hover);color:var(--bt-ink)}
 .bt-genui-figure-actions{display:flex;justify-content:flex-end;margin:8px 0 6px}
+.bt-genui-diagram-fallback{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:8px 0}
+.bt-genui-diagram-fallback button{font:inherit;color:var(--bt-ink);background:var(--bt-card);border:1px solid var(--bt-line);border-radius:8px;padding:4px 10px;cursor:pointer}
 .bt-business-diagram{--dsw-alias-label-tertiary:var(--bt-ink-2)}
 .bt-business-diagram [data-bt-diagram-node]{fill:color-mix(in srgb,var(--bt-ink-blue) 8%,var(--bt-main))}
 .bt-business-diagram [data-bt-diagram-node][stroke-width="1"]{stroke:color-mix(in srgb,var(--bt-ink-blue) 60%,var(--bt-ink))}
@@ -221,6 +223,13 @@ export function installGenuiPreview() {
         control.setAttribute('aria-haspopup', 'dialog')
         control.append(enlargeGlyph())
       }
+      const fallback = graphic.localName === 'svg' ? fallbackOverlappingDiagram(graphic) : undefined
+      if (fallback) {
+        control.remove()
+        entry?.strip?.remove()
+        controls.set(figure, { control, graphic, restore: fallback, fallback: true })
+        return
+      }
       const restoreStyle = styleBusinessDiagram(figure, graphic)
       const restoreLayout = graphic.localName === 'svg' ? layoutGenuiDiagram(graphic) : undefined
       const restoreSize = sizeInlineGraphic(graphic)
@@ -229,6 +238,7 @@ export function installGenuiPreview() {
       controls.set(figure, entry)
       figure.classList.add('bt-genui-previewable')
     }
+    if (entry.fallback) return
     const download = figure.closest(ARTIFACT)?.querySelector(`:scope > ${EXPORT} > button[aria-haspopup="menu"]`)
     if (download) {
       if (entry.control.parentElement !== download.parentElement) download.before(entry.control)

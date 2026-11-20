@@ -9,6 +9,12 @@ const confirm = (id = 'go') => ({ type: 'confirm', id, confirmLabel: 'Ship', can
 const form = (id = 'ask') => ({ type: 'form', id, submitLabel: 'Send', fields: [{ id: 'name', label: 'Name', placeholder: 'Ada' }, { id: 'note', label: 'Note' }] })
 const progress = () => ({ type: 'progress', label: 'Load', percent: 40 })
 const table = () => ({ type: 'table', columns: [{ key: 'name', label: 'Name' }, { key: 'n', label: 'N' }], rows: [['Ada', 2], ['Bea', true]] })
+
+test('a native evidence table may carry a caption and start collapsed', () => {
+  assert.equal(checkShownView('Evidence', { ...table(), caption: 'By region', collapsed: true }).view.collapsed, true)
+  assert.match(validateView({ ...table(), collapsed: 'true' }).error, /expected a boolean/)
+  assert.match(validateView({ ...table(), caption: 1 }).error, /expected a string/)
+})
 const stack = (...children) => ({ type: 'stack', children })
 
 test('validateView accepts every component and reports whether the card can be submitted', () => {

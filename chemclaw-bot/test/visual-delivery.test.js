@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest, genuiChartPayloadsUsable, nativeChartPayloadsUsable, mixedMarketVisualStatus, stripUnrenderedMixedViewText } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
-import { genuiFences, genuiMarkdown, repairGenuiSvgFences } from '../src/shared/genui-fences.js'
+import { genuiFences, genuiMarkdown, repairGenuiGraphicFences } from '../src/shared/genui-fences.js'
 
 const content = text => [{ type: 'text', text }]
 const fence = (panel = false) => '```dsh-ui\n' + JSON.stringify({ panel, items: [{ type: 'text', text: 'Result' }] }) + '\n```'
@@ -59,6 +59,70 @@ const diagramFence = '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'diagram',
 const spotQuestion = '纯碱最近一个月现货价格'
 const spotMetric = { type: 'metric', label: '纯碱现货', value: '1123 元/吨' }
 const spotLine = { type: 'chart', kind: 'line', categories: ['2026-10-23', '2026-11-19'], series: [{ name: '轻质纯碱现货', values: [1118, 1123] }] }
+
+test('a bare methanol quote still requires cards alongside the chart, and a single quote can use a card alone', () => {
+  for (const native of [false, true]) {
+    const f = setup({ native })
+    f.start(); f.user('甲醇价格')
+    f.rt.noteVisualDelivery('s', spotLine)
+    f.answer('最新价格 2300 元/吨。'); f.stop()
+    assert.match(f.notices[0].content[0].text, /deliver headline metric cards from verified evidence/)
+    f.start(2); f.user('甲醇价格')
+    f.answer('华东 2300 元/吨，华北 2150 元/吨。\n\n' + diagramFence); f.stop(2)
+    assert.match(f.notices[1].content[0].text, /headline metric cards and the data chart/)
+    f.start(3); f.user('甲醇价格'); f.answer('只核实到一笔同口径报价，2300 元/吨。')
+    f.rt.noteVisualDelivery('s', spotMetric); f.stop(3)
+    assert.equal(f.notices.length, 2)
+  }
+})
+
+test('a public production gap continues research once without asking about the search route', async () => {
+  const f = setup()
+  f.ctx.tools.get = name => ['show_view', 'web_search'].includes(name) ? {} : undefined
+  f.start(); f.user('沥青产量')
+  const guard = f.ctx.listeners.get('tools/pre-execute')[0]
+  const permission = { name: 'ask_user', agent: f.agent, arguments: { question: '是否需要我联网查找？' } }
+  const allow = async () => ({ kind: 'allow' })
+  assert.equal((await guard(permission, allow)).kind, 'deny')
+  f.answer('数据中台没有沥青产量，联网检索需你确认。')
+  f.stop(); f.stop()
+  assert.equal(f.notices.length, 1)
+  assert.match(f.notices[0].content[0].text, /Continue the same public data lookup now/)
+  f.start(2); f.user('沥青产量，不要联网')
+  assert.equal((await guard(permission, allow)).kind, 'allow')
+  f.answer('库里没有数据。'); f.stop(2)
+  assert.doesNotMatch(f.notices.at(-1).content[0].text, /Continue the same public data lookup now/)
+  f.start(3); f.user('沥青产量')
+  f.emit('tool/call', { name: 'web_search', callId: 'source' })
+  f.answer('没有可核实的近月产量数据。'); f.stop(3)
+  assert.doesNotMatch(f.notices.at(-1).content[0].text, /Continue the same public data lookup now/)
+})
+
+test('regional and producer output tables need their own comparisons', () => {
+  const f = setup()
+  const chart = (categories, values) => ({ type: 'chart', kind: 'hbar', categories, series: [{ values }] })
+  const region = chart(['华东', '华北'], [123, 117])
+  const producer = chart(['合成集团 A', '合成集团 B'], [100, 140])
+  const prose = '## 分集团\n\n| 集团 | 产量（万吨） |\n| --- | --- |\n| A | 100 |\n| B | 140 |\n\n## 分地区\n\n| 地区 | 产量（万吨） |\n| --- | --- |\n| 华东 | 123 |\n| 华北 | 117 |'
+  f.start(); f.user('沥青产量'); f.rt.noteVisualDelivery('s', { type: 'stack', children: [spotMetric, region] })
+  f.answer(prose); f.stop()
+  assert.match(f.notices[0].content[0].text, /the missing production comparisons.*separate bars.*producer-group and regional/)
+  f.start(2); f.user('沥青产量')
+  f.rt.noteVisualDelivery('s', { type: 'stack', children: [spotMetric, region, producer] })
+  f.answer(prose); f.stop(2)
+  assert.equal(f.notices.length, 1)
+})
+
+test('colliding GenUI boxes are placed on the grid without changing the model’s edges', () => {
+  const nodes = ['上游', '跨区物流', '下游'].map((label, id) => ({ id: String(id), label, x: 0.4, y: 0.3, w: 48, h: 28 }))
+  const edges = [{ from: '0', to: '1', label: '供给' }, { from: '1', to: '2', label: '运抵' }]
+  const markdown = genuiMarkdown(JSON.stringify({ type: 'diagram', kind: 'architecture', nodes, edges }))
+  const repaired = JSON.parse([...genuiFences(repairGenuiGraphicFences(markdown))][0].body).items[0]
+  assert.deepEqual(repaired.edges, edges)
+  assert.deepEqual(repaired.nodes.map(node => node.label), nodes.map(node => node.label))
+  assert.equal(new Set(repaired.nodes.map(node => `${node.x},${node.y}`)).size, nodes.length)
+  assert.match(repairGenuiGraphicFences(markdown), /"h":64/)
+})
 
 test('spot history requires native metrics and a dated line even after a table or a relationship view', () => {
   const prose = '价格先涨后跌。1120 元/吨 → 1134 元/吨 → 1123 元/吨。'
@@ -118,6 +182,8 @@ test('a data-only turn withdraws completed decorative GenUI diagrams and preserv
   const end = async () => (await Array.fromAsync(hook({ sessionId: 's', tools: [{ name: 'show_view' }] }, model)))[0].block.text
   f.start(); f.user(spotQuestion)
   assert.equal((await end()).replace(/\n{3,}/gu, '\n\n'), '已核实价格。\n\n' + genuiMarkdown(JSON.stringify({ items: [table] })).trimEnd())
+  f.rt.noteVisualDelivery('s', { type: 'stack', children: [spotMetric, spotLine] })
+  assert.match(await end(), /"type":"diagram"/)
   f.start(2); f.user('纯碱最近一个月现货价格，为什么价格会变化？请用 SVG 解释原因')
   assert.match(await end(), /错误的报价关系图/)
   f.start(3); f.user('纯碱最近一个月现货价格，需要多级表头的复杂数据表')
@@ -132,13 +198,13 @@ test('a generated SVG alias is normalized while ordinary Markdown examples are p
   const ordinary = '````markdown\n' + raw + '\n````'
   const answer = ordinary + '\n\n正文\n\n' + raw
   const expected = ordinary + '\n\n正文\n\n' + genuiMarkdown(JSON.stringify({ items: [{ type: 'svg', title: '合成因果图', code: svgCode }] }))
-  assert.equal(repairGenuiSvgFences(answer), expected)
+  assert.equal(repairGenuiGraphicFences(answer), expected)
   assert.equal([...genuiFences(ordinary)].length, 0)
   const partial = '\n~~~dsh-ui\n{"items":'
   assert.deepEqual([...genuiFences(partial)].map(fence => [fence.body, fence.closed]), [['{"items":', false]])
-  assert.equal(repairGenuiSvgFences(partial), partial)
+  assert.equal(repairGenuiGraphicFences(partial), partial)
   const wrong = genuiMarkdown(JSON.stringify({ items: [{ type: 'svg', svg: '<svg>' }] }))
-  assert.equal(repairGenuiSvgFences(wrong), wrong)
+  assert.equal(repairGenuiGraphicFences(wrong), wrong)
   const f = setup()
   const hook = f.ctx.listeners.get('llm/stream')[0]
   const model = async function* () {
