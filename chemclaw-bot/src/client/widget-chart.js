@@ -261,13 +261,14 @@ function donut({ categories, series }, width, active, hover) {
 
 // -------------------------------------------------------------------------
 
-function useWidth(box, initial) {
+export function useWidth(box, initial) {
   const [width, setWidth] = useState(initial)
   useLayoutEffect(() => {
     const node = box.current
-    if (!node || typeof ResizeObserver !== 'function') return undefined
+    if (!node) return undefined
     const measure = () => { const next = Math.round(node.clientWidth); if (next > 0) setWidth(next) }
     measure()
+    if (typeof ResizeObserver !== 'function') return undefined
     const observer = new ResizeObserver(measure)
     observer.observe(node)
     return () => observer.disconnect()

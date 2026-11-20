@@ -95,6 +95,21 @@ const flowFixture = {
   ],
   edges: [{ from: 'feed', to: 'plant' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', uncertain: true }, { from: 'sales', to: 'feed', label: '订单反馈', feedback: true }],
 }
+const wideFlowFixture = {
+  ...flowFixture,
+  nodes: [...flowFixture.nodes,
+    { id: 'ship', label: '运输与交付', detail: '核对仓储、物流、到货和签收条件' },
+    { id: 'quality', label: '质量复核', detail: '确认规格与批次记录是否一致' },
+    { id: 'recycle', label: '回收与再利用', detail: '确认回收责任与返工安排', tone: 'good' },
+  ],
+  edges: [...flowFixture.edges,
+    { from: 'plant', to: 'ship', label: '发运' },
+    { from: 'plant', to: 'quality', label: '来料与产成品质检', uncertain: true },
+    { from: 'plant', to: 'recycle' },
+    { from: 'feed', to: 'quality', label: '原料批次直接进入质量核验' },
+    { from: 'recycle', to: 'plant', label: '根据回收和返工情况更新生产与进度安排', feedback: true },
+  ],
+}
 // ask_user takes options as { label } objects; the scenarios below list plain labels.
 const tool = (name, input) => ({
   type: 'tool_use',
@@ -221,7 +236,8 @@ function decide(body) {
     const title = flowTopic === '为什么合成分布会是这样' ? '合成分布成因 SVG' : '合成产业链结构 SVG'
     const receipt = textOf(result?.content)
     if (/The view is (?:on screen|staged)/u.test(receipt)) return [text('合成分析正文：订单会反馈给上游。')]
-    if (repairFlow || /Use show_view type=flow/u.test(receipt)) return [tool('show_view', { title, view: flowFixture })]
+    const view = flowTopic === '我想知道合成产业链结构' ? wideFlowFixture : flowFixture
+    if (repairFlow || /Use show_view type=flow/u.test(receipt)) return [tool('show_view', { title, view })]
     if (flowTopic === '我想知道合成产业链结构' && !result && tools.has('validate_dsh_ui')) {
       return [tool('validate_dsh_ui', { spec: { items: [{ type: 'mermaid', code: 'graph TD\nA-->B' }] } })]
     }

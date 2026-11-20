@@ -7,6 +7,26 @@ const transcript = "document.querySelector('[data-conversation-scroll]')?.innerT
 const editor = "[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1)"
 const visible = marker => `(${transcript}).includes(${JSON.stringify(marker)})`
 const sessionRow = id => `[data-row-key="session:${id}"]`
+const titledFlowSvg = title => `([...document.querySelectorAll('svg[data-chemclaw-flow]')].find(svg => svg.closest('.bt-view')?.querySelector('.bt-view-title')?.textContent === ${JSON.stringify(title)}))`
+
+const svgFits = (selector, nodes, edges) => `(() => {
+  const svg = ${selector};
+  if (!svg || svg.querySelectorAll('.bt-flow-step').length !== ${nodes} || svg.querySelectorAll('.bt-flow-connection').length !== ${edges}) return false;
+  const figure = svg.closest('figure');
+  const visible = svg.getBoundingClientRect();
+  const frame = figure.getBoundingClientRect();
+  const canvas = svg.viewBox.baseVal;
+  const labels = [...svg.querySelectorAll('.bt-flow-connection text')].map(element => element.getBBox());
+  return visible.width >= 140 && visible.left >= frame.left - 1 && visible.right <= frame.right + 1
+    && figure.scrollWidth <= figure.clientWidth + 1 && Math.abs(visible.width - canvas.width) <= 1
+    && Math.abs(visible.height - canvas.height) <= 1
+    && labels.every((a, i) => labels.slice(i + 1).every(b =>
+      a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y))
+    && [...svg.querySelectorAll('.bt-flow-step, .bt-flow-connection')].every(element => {
+      const { x, y, width, height } = element.getBBox();
+      return x >= 1 && y >= 1 && x + width <= canvas.width - 1 && y + height <= canvas.height - 1;
+    });
+})()`
 
 function windowChecks(cdp) {
   const evaluate = async expression => {
@@ -259,6 +279,7 @@ export async function checkClassicSessions(cdp) {
   await until(`${flow}?.textContent.includes('库存变化') && ${visible('流程图正文：库存环节仍待核验。')}`, 'automatic native SVG and Markdown in a standalone Classic Session')
   assert.equal(await evaluate(`Boolean(${flow}.querySelector('[data-uncertain]'))`), true)
   assert.equal(await evaluate(`Boolean(${flow}.querySelector('[data-feedback]'))`), true)
+  await until(svgFits(flow, 4, 4), 'compact Classic SVG includes the entire bottom feedback route')
   await waitRunning(b, false)
   const titledFlow = title => `[...document.querySelectorAll('[data-classic-native-view]')].some(view => view.innerText.includes(${JSON.stringify(title)}) && view.querySelector('svg[data-chemclaw-flow]'))`
   await send('为什么合成分布会是这样？')
@@ -268,6 +289,13 @@ export async function checkClassicSessions(cdp) {
   await until(titledFlow('合成产业链结构 SVG'), 'Mermaid validation redirects to native SVG before publishing')
   assert.equal(await evaluate("Boolean(document.querySelector('[data-genui] svg[id^=mermaid]'))"), false)
   await waitRunning(b, false)
+  const wideFlow = titledFlowSvg('合成产业链结构 SVG')
+  await until(svgFits(wideFlow, 7, 9), 'wide Classic SVG contains all nodes, edges and labels')
+  const wideHeight = await evaluate(`${wideFlow}.viewBox.baseVal.height`)
+  await cdp.call('Emulation.setDeviceMetricsOverride', { width: 560, height: 860, deviceScaleFactor: 1, mobile: false })
+  try {
+    await until(`${svgFits(wideFlow, 7, 9)} && ${wideFlow}.viewBox.baseVal.height > ${wideHeight}`, 'Classic SVG reflows at readable size in a narrow reply')
+  } finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
   await send('GenUI check marketstats')
@@ -281,6 +309,10 @@ export async function checkClassicSessions(cdp) {
   await send('我想知道合成产业链结构')
   await until(`${visible('合成产业链结构 SVG')} && document.querySelectorAll('svg[data-chemclaw-flow]').length === 2`, 'expert Mermaid validation redirects to native SVG before publishing')
   await waitRunning(expertSession, false)
+  await until(svgFits(wideFlow, 7, 9), 'expert SVG displays all branches and return routes')
+  await cdp.call('Emulation.setDeviceMetricsOverride', { width: 560, height: 860, deviceScaleFactor: 1, mobile: false })
+  try { await until(svgFits(wideFlow, 7, 9), 'expert SVG also fits a narrow reply') }
+  finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   const legacy = "document.querySelector('iframe[title=\"旧版 SVG 样例\"]')"
   await send('视图旧SVG')
   await until(`${legacy}?.srcdoc.includes('<svg')`, 'legacy sandboxed SVG in the expert reply')

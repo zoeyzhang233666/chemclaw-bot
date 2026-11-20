@@ -6639,12 +6639,13 @@ function useWidth(box, initial) {
   const [width, setWidth] = (0, import_react8.useState)(initial);
   (0, import_react8.useLayoutEffect)(() => {
     const node = box.current;
-    if (!node || typeof ResizeObserver !== "function") return void 0;
+    if (!node) return void 0;
     const measure = () => {
       const next = Math.round(node.clientWidth);
       if (next > 0) setWidth(next);
     };
     measure();
+    if (typeof ResizeObserver !== "function") return void 0;
     const observer = new ResizeObserver(measure);
     observer.observe(node);
     return () => observer.disconnect();
@@ -7579,15 +7580,23 @@ var HTML_CSS = `
 // src/client/widget-flow.js
 var import_react11 = require("react");
 var CARD_WIDTH = 256;
-var COLUMN_GAP = 36;
-var ROW_GAP = 66;
+var MIN_COLUMN_WIDTH = 176;
+var COLUMN_GAP = 26;
+var ROW_GAP = 62;
 var PADDING = 16;
+var EDGE_FONT = 12;
+var EDGE_LINE = 15;
+function glyphWidth(character) {
+  if (character === " ") return 0.35;
+  if (/^[MWmw@%&QG]$/u.test(character)) return 0.98;
+  return /^[\x20-\x7E]$/u.test(character) ? 0.72 : 1.08;
+}
 function wrap(text, limit) {
   const lines = [];
   let row = "";
   let width = 0;
   for (const character of text.trim().replace(/\s+/gu, " ")) {
-    const size = /^[\x20-\x7E]$/u.test(character) ? 0.55 : 1;
+    const size = glyphWidth(character);
     if (width + size > limit) {
       lines.push(row.trim());
       row = "";
@@ -7599,102 +7608,142 @@ function wrap(text, limit) {
   if (row.trim()) lines.push(row.trim());
   return lines;
 }
-function layout(nodes, edges) {
+function layout(nodes, edges, available) {
   const levels = flowLevels(nodes, edges);
-  const rowWidth = Math.max(...levels.map((level) => level.length)) * (CARD_WIDTH + COLUMN_GAP) - COLUMN_GAP;
+  const maxColumns = Math.max(...levels.map((level) => level.length));
+  const columnsAt = (width2) => Math.max(1, Math.min(maxColumns, Math.floor((width2 + COLUMN_GAP) / (MIN_COLUMN_WIDTH + COLUMN_GAP))));
+  const inner = Math.max(1, available - PADDING * 2);
+  const ranks = new Map(levels.flatMap((level, rank) => level.map((node) => [node.id, rank])));
+  const routed = maxColumns > columnsAt(inner) || edges.some((edge) => edge.feedback || ranks.get(edge.to) - ranks.get(edge.from) > 1);
+  const rail = routed ? Math.min(64, Math.floor(inner / 6)) : 0;
+  const columns2 = columnsAt(inner - rail);
+  const cardWidth = Math.min(CARD_WIDTH, Math.floor((inner - rail - (columns2 - 1) * COLUMN_GAP) / columns2));
+  const rowWidth = columns2 * (cardWidth + COLUMN_GAP) - COLUMN_GAP;
+  const width = rowWidth + PADDING * 2 + rail;
+  const rows2 = levels.flatMap((level) => Array.from({ length: Math.ceil(level.length / columns2) }, (_, i) => level.slice(i * columns2, (i + 1) * columns2)));
+  const rowOf = new Map(rows2.flatMap((row, i) => row.map((node) => [node.id, i])));
+  const exits = rows2.map(() => 8);
+  const entries2 = rows2.map(() => 8);
+  const incoming = /* @__PURE__ */ new Map();
+  let lanes = 0;
+  const paths = edges.map((edge) => {
+    const fromRow = rowOf.get(edge.from);
+    const toRow = rowOf.get(edge.to);
+    const label = edge.label ? wrap(edge.label, Math.min(168, cardWidth - 12) / EDGE_FONT) : [];
+    const port = incoming.get(edge.to) ?? 0;
+    incoming.set(edge.to, port + 1);
+    if (!edge.feedback && toRow - fromRow === 1) return { edge, label, port };
+    const labelRoom = Math.max(10, label.length * EDGE_LINE + 4);
+    const entry = entries2[toRow] + 5;
+    const exit = exits[fromRow] + (edge.feedback ? labelRoom : 10);
+    entries2[toRow] = entry + (edge.feedback ? 4 : labelRoom);
+    exits[fromRow] = exit;
+    return { edge, label, port, entry, exit, lane: ++lanes };
+  });
   const boxes = /* @__PURE__ */ new Map();
-  let y = PADDING;
-  for (const [rank, level] of levels.entries()) {
+  let y = Math.max(PADDING, entries2[0] + 4);
+  for (const [rank, level] of rows2.entries()) {
     const row = level.map((node) => {
-      const label = wrap(node.label, 15);
-      const detail = node.detail ? wrap(node.detail, 16) : [];
-      return { ...node, rank, label, detail, height: Math.max(58, 22 + label.length * 20 + detail.length * 18) };
+      const label = wrap(node.label, (cardWidth - 24) / 15);
+      const detail = node.detail ? wrap(node.detail, (cardWidth - 24) / 13) : [];
+      return { ...node, label, detail, height: Math.max(58, 22 + label.length * 20 + detail.length * 18) };
     });
     const height = Math.max(...row.map((node) => node.height));
-    const left = PADDING + (rowWidth - (row.length * (CARD_WIDTH + COLUMN_GAP) - COLUMN_GAP)) / 2;
+    const left = PADDING + (rowWidth - (row.length * (cardWidth + COLUMN_GAP) - COLUMN_GAP)) / 2;
     for (const [i, node] of row.entries()) {
-      boxes.set(node.id, { ...node, x: left + i * (CARD_WIDTH + COLUMN_GAP), y: y + (height - node.height) / 2, rowTop: y, rowBottom: y + height });
+      boxes.set(node.id, { ...node, x: left + i * (cardWidth + COLUMN_GAP), y: y + (height - node.height) / 2, rowTop: y, rowBottom: y + height });
     }
-    y += height + ROW_GAP;
+    y += height + (rank + 1 === rows2.length ? 0 : Math.max(ROW_GAP, exits[rank] + entries2[rank + 1] + 12));
   }
-  const baseWidth = rowWidth + PADDING * 2;
-  let width = baseWidth;
-  const connections = edges.map((edge) => {
+  let bottom = y;
+  const connections = paths.map(({ edge, label, port, entry, exit, lane }) => {
     const from = boxes.get(edge.from);
     const to = boxes.get(edge.to);
-    const x1 = from.x + CARD_WIDTH / 2;
-    const x2 = to.x + CARD_WIDTH / 2;
+    const x1 = from.x + cardWidth / 2;
+    const ports = incoming.get(edge.to);
+    const portGap = Math.min(14, (cardWidth - 24) / Math.max(1, ports - 1));
+    const x2 = to.x + cardWidth / 2 + (port - (ports - 1) / 2) * portGap;
     const y1 = from.y + from.height;
     const y2 = to.y - 5;
     const start = from.rowBottom + 8;
     const end = to.rowTop - 8;
     const middle = (start + end) / 2;
-    if (edge.feedback) {
-      width += 22;
-      return { ...edge, d: `M${x1} ${y1} V${start + 12} H${width} V${end - 5} H${x2} V${y2}`, x: (x1 + width) / 2, y: start + 5 };
+    const labelSpan = Math.max(0, label.length - 1) * EDGE_LINE;
+    let d, anchorX, labelTop;
+    if (lane) {
+      const railX = PADDING + rowWidth + rail * (lane / (lanes + 1));
+      const exitY = from.rowBottom + exit;
+      const entryY = to.rowTop - entry;
+      d = `M${x1} ${y1} V${exitY} H${railX} V${entryY} H${x2} V${y2}`;
+      anchorX = edge.feedback ? x1 : x2;
+      labelTop = (edge.feedback ? exitY : entryY) - 4 - labelSpan;
+      bottom = Math.max(bottom, exitY);
+    } else {
+      d = `M${x1} ${y1} V${start} C${x1} ${middle} ${x2} ${middle} ${x2} ${end} V${y2}`;
+      anchorX = (x1 + 3 * x2) / 4;
+      labelTop = middle + 2 - labelSpan / 2;
     }
-    if (to.rank - from.rank === 1) {
-      return { ...edge, d: `M${x1} ${y1} V${start} C${x1} ${middle} ${x2} ${middle} ${x2} ${end} V${y2}`, x: (x1 + x2) / 2, y: middle - 7 };
-    }
-    width += 14;
-    return { ...edge, d: `M${x1} ${y1} V${start + 12} H${width} V${end - 12} H${x2} V${y2}`, x: x1, y: start + 6 };
+    const half = Math.max(0, ...label.map((line) => [...line].reduce((sum, character) => sum + glyphWidth(character), 0))) * EDGE_FONT / 2;
+    const x = Math.max(PADDING + half, Math.min(width - PADDING - half, anchorX));
+    return { ...edge, d, x, y: labelTop, label };
   });
-  return { width: width === baseWidth ? width : width + PADDING, height: y - ROW_GAP + PADDING, boxes: [...boxes.values()], connections };
+  return { width, height: bottom + PADDING, cardWidth, boxes: [...boxes.values()], connections };
 }
 function FlowView({ node }) {
   const id = (0, import_react11.useId)();
-  const { width, height, boxes, connections } = layout(node.nodes, node.edges);
+  const figure = (0, import_react11.useRef)(null);
+  const available = useWidth(figure, 320);
+  const { width, height, cardWidth, boxes, connections } = layout(node.nodes, node.edges, available);
   const names = new Map(node.nodes.map((step) => [step.id, step.label]));
   const uncertain = t("Dashed connections are uncertain");
   const hasUncertain = connections.some((edge) => edge.uncertain);
   const description = node.edges.map((edge) => `${names.get(edge.from)} → ${names.get(edge.to)}${edge.label ? ` (${edge.label})` : ""}`).join(". ");
   return (0, import_react11.createElement)(
     "figure",
-    { className: "bt-flow" },
+    { ref: figure, className: "bt-flow" },
     (0, import_react11.createElement)(
-      "div",
-      { className: "bt-flow-scroll", tabIndex: width > 310 ? 0 : void 0 },
-      (0, import_react11.createElement)(
-        "svg",
-        { "data-chemclaw-flow": "", width, height, viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": t("Flow diagram"), "aria-describedby": `${id}-desc` },
-        (0, import_react11.createElement)("desc", { id: `${id}-desc` }, `${description}${hasUncertain ? `. ${uncertain}` : ""}`),
-        (0, import_react11.createElement)("defs", null, [false, true].map((dashed) => (0, import_react11.createElement)(
-          "marker",
-          { key: Number(dashed), id: `${id}-arrow-${Number(dashed)}`, markerWidth: 8, markerHeight: 8, refX: 7, refY: 4, orient: "auto" },
-          (0, import_react11.createElement)("path", { d: "M0 0 L8 4 L0 8 Z", className: dashed ? "bt-flow-arrow-uncertain" : "bt-flow-arrow" })
-        ))),
-        connections.map((edge, index) => (0, import_react11.createElement)(
-          "g",
-          { key: index, className: "bt-flow-connection", "data-uncertain": edge.uncertain || void 0, "data-feedback": edge.feedback || void 0 },
-          (0, import_react11.createElement)("path", { d: edge.d, markerEnd: `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` }),
-          edge.label && (0, import_react11.createElement)("text", { x: edge.x, y: edge.y, textAnchor: "middle" }, edge.label)
-        )),
-        boxes.map((step) => (0, import_react11.createElement)(
-          "g",
-          { key: step.id, className: "bt-flow-step", "data-tone": step.tone ?? "info" },
-          (0, import_react11.createElement)("title", null, [names.get(step.id), step.detail.join(" ")].filter(Boolean).join("\n")),
-          (0, import_react11.createElement)("rect", { x: step.x, y: step.y, width: CARD_WIDTH, height: step.height, rx: 12 }),
-          (0, import_react11.createElement)(
-            "text",
-            { x: step.x + CARD_WIDTH / 2, y: step.y + 24, textAnchor: "middle" },
-            [...step.label, ...step.detail].map((line, i) => (0, import_react11.createElement)("tspan", {
-              key: i,
-              x: step.x + CARD_WIDTH / 2,
-              dy: i === 0 ? 0 : i < step.label.length ? 20 : 18,
-              className: i < step.label.length ? "bt-flow-label" : "bt-flow-detail"
-            }, line))
-          )
-        ))
-      )
+      "svg",
+      { "data-chemclaw-flow": "", width, height, viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": t("Flow diagram"), "aria-describedby": `${id}-desc` },
+      (0, import_react11.createElement)("desc", { id: `${id}-desc` }, `${description}${hasUncertain ? `. ${uncertain}` : ""}`),
+      (0, import_react11.createElement)("defs", null, [false, true].map((dashed) => (0, import_react11.createElement)(
+        "marker",
+        { key: Number(dashed), id: `${id}-arrow-${Number(dashed)}`, markerWidth: 8, markerHeight: 8, refX: 7, refY: 4, orient: "auto" },
+        (0, import_react11.createElement)("path", { d: "M0 0 L8 4 L0 8 Z", className: dashed ? "bt-flow-arrow-uncertain" : "bt-flow-arrow" })
+      ))),
+      connections.map((edge, index) => (0, import_react11.createElement)(
+        "g",
+        { key: index, className: "bt-flow-connection", "data-uncertain": edge.uncertain || void 0, "data-feedback": edge.feedback || void 0 },
+        (0, import_react11.createElement)("path", { d: edge.d, markerEnd: `url(#${id}-arrow-${Number(Boolean(edge.uncertain))})` }),
+        edge.label.length > 0 && (0, import_react11.createElement)(
+          "text",
+          { x: edge.x, y: edge.y, textAnchor: "middle" },
+          edge.label.map((line, i) => (0, import_react11.createElement)("tspan", { key: i, x: edge.x, dy: i === 0 ? 0 : EDGE_LINE }, line))
+        )
+      )),
+      boxes.map((step) => (0, import_react11.createElement)(
+        "g",
+        { key: step.id, className: "bt-flow-step", "data-tone": step.tone ?? "info" },
+        (0, import_react11.createElement)("title", null, [names.get(step.id), step.detail.join(" ")].filter(Boolean).join("\n")),
+        (0, import_react11.createElement)("rect", { x: step.x, y: step.y, width: cardWidth, height: step.height, rx: 12 }),
+        (0, import_react11.createElement)(
+          "text",
+          { x: step.x + cardWidth / 2, y: step.y + 24, textAnchor: "middle" },
+          [...step.label, ...step.detail].map((line, i) => (0, import_react11.createElement)("tspan", {
+            key: i,
+            x: step.x + cardWidth / 2,
+            dy: i === 0 ? 0 : i < step.label.length ? 20 : 18,
+            className: i < step.label.length ? "bt-flow-label" : "bt-flow-detail"
+          }, line))
+        )
+      ))
     ),
     (node.caption || hasUncertain) && (0, import_react11.createElement)("figcaption", null, [node.caption, hasUncertain && uncertain].filter(Boolean).join(" · "))
   );
 }
 var FLOW_CSS = `
-.bt-flow{min-width:0;margin:4px 0 8px}
-.bt-flow-scroll{overflow-x:auto}
-.bt-flow-scroll svg{display:block;margin-inline:auto;max-width:none;color:var(--bt-ink)}
-.bt-flow figcaption{text-align:center;font-size:12px;line-height:1.5;color:var(--bt-ink-2);margin-top:6px}
+.bt-flow{width:100%;min-width:0;margin:4px 0 8px}
+.bt-flow svg{display:block;max-width:100%;height:auto;margin-inline:auto;color:var(--bt-ink)}
+.bt-flow figcaption{text-align:center;font-size:12px;line-height:1.5;color:var(--bt-ink-2);margin-top:6px;overflow-wrap:anywhere}
 .bt-flow-step{--bt-flow-tone:var(--bt-accent)}
 .bt-flow-step[data-tone=good]{--bt-flow-tone:var(--bt-green)}
 .bt-flow-step[data-tone=warn]{--bt-flow-tone:var(--bt-star)}
@@ -7709,7 +7758,8 @@ var FLOW_CSS = `
 .bt-flow-arrow-uncertain{fill:var(--bt-danger)}
 .bt-flow-connection path{fill:none;stroke:var(--bt-flow-edge);stroke-width:1.25}
 .bt-flow-connection[data-uncertain] path{stroke-dasharray:5 4}
-.bt-flow-connection text{font-size:11px;fill:var(--bt-flow-edge);stroke:var(--bt-main);stroke-width:3;paint-order:stroke;stroke-linejoin:round}
+.bt-flow-connection text{font-size:${EDGE_FONT}px;fill:var(--bt-ink-2);stroke:var(--bt-main);stroke-width:3;paint-order:stroke;stroke-linejoin:round}
+.bt-flow-connection[data-uncertain] text{fill:var(--bt-danger)}
 `;
 
 // src/client/widget-cell.js
