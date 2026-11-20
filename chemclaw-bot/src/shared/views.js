@@ -9,9 +9,10 @@ export const displayViewReady = (done, isError) => done === true && isError !== 
 
 import { compileFormula, createScope, evaluate, isName, show } from './formula.js'
 import { ADVANCED_CHART_KINDS, ADVANCED_CHART_PROPS, checkAdvancedChart } from './advanced-charts.js'
+import { checkFlow } from './flow-view.js'
 
 const LAYOUT = ['stack', 'row']
-const DISPLAY = ['text', 'metric', 'table', 'chart', 'progress', 'callout', 'sources', 'html']
+const DISPLAY = ['text', 'metric', 'table', 'chart', 'flow', 'progress', 'callout', 'sources', 'html']
 const INPUT_TYPES = ['slider', 'choice', 'toggle', 'number']
 const ANSWERS = ['options', 'confirm', 'form', 'submit']
 const COMPONENTS = [...LAYOUT, ...DISPLAY, ...INPUT_TYPES, ...ANSWERS]
@@ -26,8 +27,9 @@ const PROPS = {
   row: ['children', 'let'],
   text: ['text', 'tone'],
   metric: ['label', 'value', 'tone', 'caption'],
-  table: ['columns', 'rows'],
+  table: ['columns', 'rows', 'caption', 'collapsed'],
   chart: ['kind', 'categories', 'series', 'unit', 'caption', ...ADVANCED_CHART_PROPS],
+  flow: ['nodes', 'edges', 'caption'],
   progress: ['label', 'percent', 'value', 'max', 'valueLabel', 'tone'],
   callout: ['text', 'tone'],
   sources: ['items'],
@@ -140,6 +142,7 @@ function checkNode(node, path, depth, ctx) {
     case 'metric': return checkMetric(node, path, ctx)
     case 'table': return checkTable(node, path, ctx)
     case 'chart': return checkChart(node, path, ctx)
+    case 'flow': return checkFlow(node, path)
     case 'progress': return checkProgress(node, path, ctx)
     case 'callout': return checkCallout(node, path, ctx)
     case 'sources': return checkSources(node, path)
@@ -209,6 +212,10 @@ function checkMetric(node, path, ctx) {
 }
 
 function checkTable(node, path, ctx) {
+  if (node.caption !== undefined && (typeof node.caption !== 'string' || node.caption.length > MAX_CELL)) {
+    return `${path}.caption: expected a string of at most ${MAX_CELL} characters`
+  }
+  if (node.collapsed !== undefined && typeof node.collapsed !== 'boolean') return `${path}.collapsed: expected a boolean`
   if (!Array.isArray(node.columns)) return `${path}.columns: expected an array of at most ${MAX_COLUMNS} columns`
   if (node.columns.length > MAX_COLUMNS) return `${path}.columns: ${node.columns.length} columns exceeds the limit of ${MAX_COLUMNS}`
   for (let index = 0; index < node.columns.length; index += 1) {
@@ -585,6 +592,7 @@ function componentSummary(node, lookup) {
       return `chart: ${(Array.isArray(node.categories) ? node.categories : []).map((label, index) => `${label}=${value(values[index])}${unit}`).join(', ')}`
     }
     case 'progress': return `progress: ${node.label ? `${node.label} ` : ''}${Math.round(progressPercent(node, lookup))}%`
+    case 'flow': return `flow: ${(node.nodes ?? []).map(step => step.label).join(' / ')}`
     case 'callout': return `callout: ${value(node.text)}`
     case 'sources': return `sources: ${(Array.isArray(node.items) ? node.items : []).map(item => item?.label).filter(Boolean).join('/')}`
     case 'html': return `html: ${node.summary ?? ''}`

@@ -24,7 +24,9 @@ import { BtwCardView } from './btw.js'
 import { partIndexOf, withBtwRows } from './btw-model.js'
 import { layoutOf, thinkingShown } from './themes.js'
 import { toolActivityDetail, liveActivitySummary } from '../shared/tool-activity.js'
-import { assistantTextBlocks } from './genui-surfaces.js'
+import { assistantTextBlocks, hasGenuiFence } from './genui-surfaces.js'
+import { setGenuiMarkdownSource } from './genui-presentation.js'
+import { stripGraphicControlLines } from '../shared/genui-fences.js'
 
 export { clockLabel }
 
@@ -59,22 +61,28 @@ export function Bubbles({ texts, genui, roster, selfId, actions, streaming, sess
     }))
 }
 
-function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
-  const { shown, folded, control } = useFold(text, { limit: fold, whole, live })
+function Bubble({ text: sourceText, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+  const text = stripGraphicControlLines(sourceText)
+  const rich = hasGenuiFence(text)
+  // The encoded graphic is not visible prose. Keep complete GenUI blocks mounted
+  // in group replies, where the ordinary text preview has a much lower limit.
+  const { shown, folded, control } = useFold(text, { limit: rich ? FOLD_HUGE : fold, whole, live })
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live })
   const key = msgKey ? `${msgKey}:${index}` : undefined
-  const body = h(MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
+  const markdownText = linkMentions(linked, roster.bots, selfId)
+  const body = h(MarkdownText, { text: markdownText, streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
   const row = useRef(null)
   const markdown = useRef(null)
   const source = genui?.source ?? 'chemclaw-bot/assistant'
+  useLayoutEffect(() => { setGenuiMarkdownSource(markdown.current, markdownText, live) }, [markdownText, live])
   useLayoutEffect(() => {
-    if (live || folded || !genui || !/dsh-ui/i.test(text) || !actions.genuiSurfaces) return undefined
+    if (live || folded || !genui || !rich || !actions.genuiSurfaces) return undefined
     return actions.genuiSurfaces.add({
       root: markdown.current, source, threadId: genui.threadId,
       eventSeq: genui.eventSeq, contentBlockIndex: genui.contentBlockIndex, text,
       sendPrompt: prompt => actions.sendGenui(genui.threadId, prompt),
     })
-  }, [actions, live, folded, text, source, genui?.threadId, genui?.eventSeq, genui?.contentBlockIndex])
+  }, [actions, live, folded, rich, text, source, genui?.threadId, genui?.eventSeq, genui?.contentBlockIndex])
   // Touch has no hover: a tap on the bubble opens its tools, a tap elsewhere
   // closes them. Interactive targets keep their own meaning.
   const [toolsOpen, setToolsOpen] = useState(false)
@@ -86,8 +94,8 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
   return h('div', { ref: row, className: 'bt-msg', onClick: tapTools },
     h('div', { className: 'bt-msg-line' },
       lead,
-      h('div', { className: 'bt-bubble', 'data-folded': folded || undefined },
-        h('div', { ref: markdown, className: control ? 'bt-fold-body' : undefined, 'data-genui-surface': source }, body),
+      h('div', { className: rich ? 'bt-rich-reply' : 'bt-bubble', 'data-folded': folded || undefined },
+        h('div', { ref: markdown, className: control ? 'bt-fold-body' : undefined, 'data-genui-surface': source, 'data-bt-genui-live': live || undefined }, body),
         control),
       live ? null : h(MessageTools, { text: folded ? text : shown, name: roster.byId[selfId]?.name ?? t('Bot'), sessionId, react: key ? emoji => actions.toggleReaction(msgKey, index, emoji) : undefined, actions, open: toolsOpen })),
     picked.length ? h('div', { className: 'bt-reacts' }, picked.map(emoji => h('button', {
@@ -314,7 +322,7 @@ function SpeakerHead({ bot, time }) {
 // One Bot message inside a group chat: avatar, name (with its group role), when it ran
 // and how long it took, bubble. The flat layout moves the avatar from beside the last
 // bubble to the head of the name row, so the text below runs the whole width.
-function GroupMessage({ bot, text, texts = [text], genui, room, roster, actions, msgKey, useUi, whole, time, duration, streaming }) {
+export function GroupMessage({ bot, text, texts = [text], genui, room, roster, actions, msgKey, useUi, whole, time, duration, streaming }) {
   const lead = h('button', { type: 'button', className: 'bt-lead', 'aria-label': t("Open {name}'s chat", { name: bot.name }), onClick: () => actions.openSession(bot.id) },
     h(BotMark, { bot, size: 22 }))
   const flat = layoutOf(roster.prefs) === 'flat'

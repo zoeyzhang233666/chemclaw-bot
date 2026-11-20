@@ -1,6 +1,6 @@
 ﻿// The DSH Agent: a team's one plain dsh entry, listed beside the Bots but not one of
 // them. Its Sessions are ordinary root Sessions in the ChemClaw workspace, so they get
-// the whole dsh conversation surface and none of the team tools.
+// the whole dsh conversation surface and the shared display tool.
 import { randomUUID } from 'node:crypto'
 import { AGENT_NAME, AGENT_SESSION_TITLE_MAX, TEAM_TOOLS } from './constants.js'
 
@@ -54,7 +54,7 @@ export function install(rt) {
     // Unknown names make restrict() throw, so only deny what this profile serves.
     const known = new Set(ctx.tools.schemas(agent).map(schema => schema.name))
     const already = restricted.get(agent) ?? new Set()
-    const deny = TEAM_TOOLS.filter(name => known.has(name) && !already.has(name))
+    const deny = TEAM_TOOLS.filter(name => name !== 'show_view' && known.has(name) && !already.has(name))
     // An empty list can mean the schemas are not up yet, and a missing restrict
     // hook means the Agent is still being put together; both retry.
     if (deny.length === 0 && already.size > 0) {

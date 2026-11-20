@@ -36,6 +36,7 @@ describe('the app profile', () => {
     assert.equal(genui?.name, '@changfenhuang/dsh-genui')
     assert.equal(genui?.disabled, undefined)
     assert.equal(genui?.config?.renderUiTool, false)
+    assert.equal(genui?.config?.fenceFeedback, false)
     assert.equal(rows(entries).some(entry => entry.id === 'chemclaw'), true)
   })
 

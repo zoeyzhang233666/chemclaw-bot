@@ -22,7 +22,7 @@
     "runtime": "node scripts/prepare-runtime.mjs"
   },
   "dependencies": {
-    "@changfenhuang/dsh-genui": "0.15.0",
+    "@changfenhuang/dsh-genui": "0.16.0",
     "@img/sharp-wasm32": "0.35.5",
     "@deepseek-ai/cordis-plugin-group": "1.1.0",
     "@deepseek-ai/dsh": "0.2.2-rc.1",

@@ -20,6 +20,14 @@ export function marketQuoteIntent(text) {
 }
 
 const FUTURES_LABEL = /(?:期货|期指|主力连续|连续合约|交割月|futures?|continuous|NYMEX\s*CL|\b(?:PG0|RB0|MA0|SA0|SC0)\b)/iu
+const PRICE_HISTORY = /最近|过去|近(?:[一二两三四五六七八九十]+|\d+)\s*个?(?:月|周|天|日|年)|(?:一个月|一周)|上月|本月|月内|日线|日K|月线|周线|走势|趋势|历史|\b(?:history|historical|trend|(?:last|past)\s+(?:\w+\s+)?(?:days?|weeks?|months?|years?))\b/iu
+
+export function spotPriceRequest(text, intent = marketQuoteIntent(text)) {
+  if (intent !== 'spot' || /什么(?:是|叫)|什么意思|定义|怎么计算|\b(?:definition|what is meant by|what (?:does|do) .+ mean)\b/iu.test(text)) return undefined
+  if (PRICE_HISTORY.test(text)) return 'history'
+  if (/(?:区域|地区|各地|不同|比较|对比|排名|排行)|\b(?:compare|ranking|by region)\b/iu.test(text)) return 'comparison'
+  if (/价格|现货价|现价|报价|出厂价|到厂价|行情|多少钱|\b(?:price|quote)\b/iu.test(text)) return 'quote'
+}
 
 // A spot quote must never be pictured using a futures candle or a clearly
 // futures-labeled chart/metric. Text-only answers still require model policy.

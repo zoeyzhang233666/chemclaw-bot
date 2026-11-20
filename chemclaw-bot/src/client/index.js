@@ -53,6 +53,9 @@ import { noticeApprovals } from './approval-notices.js'
 import { listedOpener } from './open-listed.js'
 import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, rightColumnOpen } from './right-panel.js'
 import { createGenuiSurfaces } from './genui-surfaces.js'
+import { installGenuiPreview } from './genui-preview.js'
+import { installGenuiPresentation } from './genui-presentation.js'
+import { ClassicNativeViews } from './classic-native-view.js'
 
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'slots', 'theme', 'layout']
 
@@ -612,6 +615,8 @@ export function apply(ctx) {
     const release = ctx.provide('genuiSidechat', actions.genuiSurfaces)
     return () => { actions.genuiSurfaces.dispose(); release?.() }
   }, 'chemclaw-bot: GenUI surfaces')
+  ctx.effect(installGenuiPreview, 'chemclaw-bot: GenUI graphic preview')
+  ctx.effect(() => installGenuiPresentation(ctx), 'chemclaw-bot: GenUI fence presentation')
   // Without the Desktop bridge these stay undefined, and no browser control renders.
   if (browsers) {
     Object.assign(actions, {
@@ -908,6 +913,19 @@ export function apply(ctx) {
     name, ...options, ...(options.priority === undefined ? {} : { priority: freePriority(ctx.slots.entries(name), options) }),
   }, component))
   const installHeader = () => ctx.slots.inject('conversation.session.header', () => installHeaderNavigation(ctx.slots, face, HeaderPill, BOT_PRIORITY))
+  // The native tool tree folds completed work. Put accepted visuals with the reply instead.
+  ctx.slots.inject('conversation.chat.turnTail', () => ctx.slots.register({
+    name: 'conversation.chat.turnTail', id: 'chemclaw-native-views', order: 10,
+    inject: sessionId => {
+      const chat = ctx.uiConversation.binding(sessionId).target('chat')
+      return { actions, hooks: { roster, surface }, keyedHooks: {
+        classicViewCalls: turn => chat.getSnapshot().nodes.turnDataSource(Number(turn), 'tool-call'),
+      } }
+    },
+  }, ClassicNativeViews))
+  ctx.slots.inject('tool.call.toolview', () => ctx.slots.register({
+    name: 'tool.call.toolview', key: 'show_view',
+  }, Nothing))
 
   // Brand slots and theme tokens belong to both surfaces; their lifetime is the
   // plugin's, independently of which session or native control is on screen.

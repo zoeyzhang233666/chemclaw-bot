@@ -11,6 +11,7 @@ import { CHART_CSS, TableIcon, WidgetChart } from './widget-chart.js'
 import { ADVANCED_CHART_CSS, AdvancedChart } from './widget-advanced-chart.js'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
 import { HTML_CSS, HtmlFrame } from './widget-html.js'
+import { FLOW_CSS, FlowView } from './widget-flow.js'
 import { asText, checkShownView, choiceValue, displayViewReady, inputDefault, resolve, viewInputs, viewScope } from '../shared/views.js'
 
 // -------------------------------------------------------------------------
@@ -160,11 +161,15 @@ function WidgetTable({ node, lookup }) {
     const cells = rows.map(row => row[index]).filter(cell => cell !== undefined && cell !== '')
     return cells.length > 0 && cells.every(cell => typeof cell === 'number' || (typeof cell === 'string' && NUMERIC_CELL.test(cell.trim())))
   })
-  return h('div', { className: 'bt-widget-table' },
+  const table = h('div', { className: 'bt-widget-table' },
     h('table', null,
+      node.caption && !node.collapsed ? h('caption', null, node.caption) : null,
       h('thead', null, h('tr', null, columns.map((column, index) => h('th', { key: column.key ?? index, scope: 'col', className: numeric[index] ? 'bt-num' : undefined }, column.label)))),
       h('tbody', null, rows.map((row, rowIndex) => h('tr', { key: rowIndex },
         columns.map((column, columnIndex) => h('td', { key: column.key ?? columnIndex, className: numeric[columnIndex] ? 'bt-num' : undefined }, cellText(row[columnIndex]))))))))
+  return node.collapsed
+    ? h('details', { className: 'bt-widget-table-details' }, h('summary', null, node.caption || t('Details')), table)
+    : table
 }
 
 function WidgetProgress({ node, lookup }) {
@@ -286,6 +291,26 @@ function ToggleInput({ node, ctx }) {
 
 // One blueprint node. Unknown types render nothing: the host validates the
 // blueprint, so what arrives here is known or safely ignored.
+function renderStack(children, ctx) {
+  const blocks = []
+  let metrics = []
+  const flush = () => {
+    if (!metrics.length) return
+    blocks.push(metrics.length === 1 ? metrics[0] : h('div', { key: metrics[0].key, className: 'bt-metric-row' }, metrics))
+    metrics = []
+  }
+  for (const [index, node] of children.entries()) {
+    const block = h(WidgetNode, { key: node?.id ?? index, node, ctx })
+    if (node?.type === 'metric') metrics.push(block)
+    else {
+      flush()
+      blocks.push(block)
+    }
+  }
+  flush()
+  return blocks
+}
+
 function WidgetNode({ node, ctx }) {
   if (node === null || typeof node !== 'object') return null
   const { lookup } = ctx
@@ -294,7 +319,8 @@ function WidgetNode({ node, ctx }) {
     case 'row': {
       const children = Array.isArray(node.children) ? node.children : []
       return h('div', { className: node.type === 'row' ? 'bt-view-row' : 'bt-widget-stack' },
-        children.map((child, index) => h(WidgetNode, { key: child?.id ?? index, node: child, ctx })))
+        node.type === 'stack' ? renderStack(children, ctx)
+          : children.map((child, index) => h(WidgetNode, { key: child?.id ?? index, node: child, ctx })))
     }
     case 'text': {
       const text = h(MarkdownText, { text: asText(resolve(node.text, lookup, '')), labels: mdLabels(), variant: 'compact' })
@@ -307,6 +333,7 @@ function WidgetNode({ node, ctx }) {
     case 'callout': return h(WidgetCallout, { node, lookup })
     case 'sources': return h(WidgetSources, { node })
     case 'html': return h(HtmlFrame, { node })
+    case 'flow': return h(FlowView, { node })
     case 'slider': return h(SliderInput, { node, ctx })
     case 'number': return h(NumberInput, { node, ctx })
     case 'choice': return h(ChoiceInput, { node, ctx })
@@ -529,6 +556,7 @@ export const WIDGET_CSS = `
 .bt-widget-stack{display:flex;flex-direction:column;gap:12px;min-width:0}
 .bt-view-row{display:flex;flex-wrap:wrap;gap:12px 24px;min-width:0}
 .bt-view-row>*{flex:1 1 160px;min-width:0}
+.bt-metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,138px),1fr));gap:14px 16px;min-width:0}
 .bt-widget-metric{display:flex;flex-direction:column;gap:1px;min-width:0}
 .bt-widget-metric-label{font-size:12px;line-height:16px;color:var(--bt-ink-2)}
 .bt-widget-metric-value{font-size:22px;line-height:28px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--bt-ink);overflow-wrap:anywhere}
@@ -540,6 +568,9 @@ export const WIDGET_CSS = `
 .bt-view-muted *{font-size:inherit!important;line-height:inherit!important;color:inherit!important}
 .bt-widget-table{max-width:100%;overflow-x:auto;border:.5px solid var(--bt-line-2);border-radius:10px}
 .bt-widget-table table{border-collapse:collapse;min-width:100%;font-size:13px;line-height:18px}
+.bt-widget-table caption{text-align:start;padding:8px 10px;color:var(--bt-ink-2)}
+.bt-widget-table-details>summary{cursor:pointer;color:var(--bt-ink-2);padding:4px 0}
+.bt-widget-table-details[open]>summary{margin-bottom:6px}
 .bt-widget-table th{padding:6px 10px;font-weight:500;text-align:start;white-space:nowrap;color:var(--bt-ink-2);border-bottom:.5px solid var(--bt-line-2)}
 .bt-widget-table td{padding:6px 10px;max-width:280px;color:var(--bt-ink);overflow-wrap:anywhere}
 .bt-widget-table tbody tr+tr>*{border-top:.5px solid var(--bt-line)}
@@ -600,11 +631,13 @@ export const WIDGET_CSS = `
 .bt-q-raised .bt-view-body{padding:0 16px 14px 20px}
 .bt-q-raised .bt-view-body .bt-q-list{padding:0;margin:0 -8px}
 .bt-q-inline .bt-view{margin:0;width:100%;max-width:min(100%,max(calc(var(--bt-msg-w,.8) * 100%),560px));order:0}
+.bt-q-inline[data-classic-native-view] .bt-view{max-width:100%}
 body[data-bt-layout=flat] .bt-q-inline .bt-view{max-width:calc(var(--bt-flat-w,1) * 100%)}
 .bt-q-inline:has(>.bt-view-bare){margin:8px 0 12px}
 @media (prefers-reduced-motion:reduce){.bt-widget-progress-fill,.bt-view-radio-dot,.bt-view-tools,.bt-view-more{transition:none}.bt-view-bare{animation:none}}
 ${CHART_CSS}
 ${ADVANCED_CHART_CSS}
 ${HTML_CSS}
+${FLOW_CSS}
 `
 

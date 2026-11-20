@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkShownView, normalizeView, validateView, validateViewAnswer, VIEW_BYTE_LIMIT, viewBytes, viewSummary, displayViewReady } from '../src/shared/views.js'
+import { flowLayout } from '../src/client/widget-flow.js'
 
 const text = (value = 'hello') => ({ type: 'text', text: value })
 const metric = (label = '进度', value = '70%') => ({ type: 'metric', label, value })
@@ -9,6 +10,52 @@ const confirm = (id = 'go') => ({ type: 'confirm', id, confirmLabel: 'Ship', can
 const form = (id = 'ask') => ({ type: 'form', id, submitLabel: 'Send', fields: [{ id: 'name', label: 'Name', placeholder: 'Ada' }, { id: 'note', label: 'Note' }] })
 const progress = () => ({ type: 'progress', label: 'Load', percent: 40 })
 const table = () => ({ type: 'table', columns: [{ key: 'name', label: 'Name' }, { key: 'n', label: 'N' }], rows: [['Ada', 2], ['Bea', true]] })
+
+test('relationship layouts use distinct shared trunks and preserve flow direction', () => {
+  const nodes = [
+    { id: 'c', label: 'C' }, { id: 'b', label: 'B' }, { id: 'mix', label: 'Blend', stage: 'Processing' },
+    { id: 'a', label: 'A' }, { id: 'x', label: 'X' }, { id: 'y', label: 'Y' },
+  ]
+  const edges = ['a', 'b', 'c'].map(from => ({ from, to: 'mix' })).concat(['x', 'y'].map(to => ({ from: 'mix', to })))
+  assert.equal(validateView({ type: 'flow', nodes, edges }).ok, true)
+  const wide = flowLayout(nodes, edges, 720)
+  assert.equal(wide.connections.filter(link => link.shared).length, 2)
+  assert.equal(wide.connections.filter(link => link.arrow).length, 3)
+  const byId = new Map(wide.boxes.map(box => [box.id, box]))
+  assert.ok(edges.every(edge => byId.get(edge.from).y < byId.get(edge.to).y))
+  assert.deepEqual(byId.get('mix').stage, ['Processing'])
+  assert.ok(flowLayout(nodes, edges, 325).width <= 325)
+})
+
+test('dense relationships reserve separate readable labels and rounded routes on wide and narrow layouts', () => {
+  const nodes = ['feed1', 'feed2', 'mix', 'react', 'main', 'side', 'use'].map(id => ({ id, label: id }))
+  const edges = [
+    { from: 'feed1', to: 'react', label: '保留工况和口径说明' }, { from: 'feed1', to: 'mix', label: '先处理' },
+    { from: 'feed2', to: 'mix', label: '直接投入' }, { from: 'mix', to: 'main', label: '固相水合转入成品' },
+    { from: 'mix', to: 'side', label: '联产可复用的副产品' }, { from: 'react', to: 'main', label: '替代反应' },
+    { from: 'react', to: 'use', label: '跨阶段用途', uncertain: true }, { from: 'main', to: 'use' },
+    { from: 'use', to: 'feed2', label: '反馈信号', feedback: true },
+  ]
+  assert.equal(validateView({ type: 'flow', nodes, edges }).ok, true)
+  for (const available of [720, 325]) {
+    const { connections, boxes, width, height, cardWidth } = flowLayout(nodes, edges, available)
+    assert.ok(connections.some(edge => edge.d.includes(' Q ')))
+    assert.equal(connections.filter(edge => edge.arrow).length, edges.length)
+    const overlap = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height
+    const labels = connections.filter(edge => edge.label.length).map(edge => ({ x: edge.x - edge.labelWidth / 2,
+      y: edge.y - edge.labelHeight / 2, width: edge.labelWidth, height: edge.labelHeight }))
+    assert.equal(labels.length, edges.filter(edge => edge.label).length)
+    assert.ok(labels.every((box, i) => box.x > 0 && box.x + box.width < width && box.y > 0 && box.y + box.height < height
+      && labels.slice(0, i).every(peer => !overlap(box, peer))
+      && boxes.every(peer => !overlap(box, { ...peer, width: cardWidth }))))
+  }
+})
+
+test('a native evidence table may carry a caption and start collapsed', () => {
+  assert.equal(checkShownView('Evidence', { ...table(), caption: 'By region', collapsed: true }).view.collapsed, true)
+  assert.match(validateView({ ...table(), collapsed: 'true' }).error, /expected a boolean/)
+  assert.match(validateView({ ...table(), caption: 1 }).error, /expected a string/)
+})
 const stack = (...children) => ({ type: 'stack', children })
 
 test('validateView accepts every component and reports whether the card can be submitted', () => {
@@ -49,7 +96,7 @@ test('normalizeView unwraps XML-style arrays and coerces numeric strings', () =>
 
 test('validateView rejects an unknown component with the path and the catalog', () => {
   const view = stack(text(), metric(), { type: 'gauge', data: [1] })
-  assert.equal(validateView(view).error, 'view.children[2].type: unknown component "gauge"; allowed: stack, row, text, metric, table, chart, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
+  assert.equal(validateView(view).error, 'view.children[2].type: unknown component "gauge"; allowed: stack, row, text, metric, table, chart, flow, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
   assert.equal(validateView(null).error, 'view: expected a component object')
   assert.equal(validateView([]).error, 'view: expected a component object')
   assert.match(validateView({ type: 'text' }).error, /view\.text: expected a string/)
@@ -128,7 +175,7 @@ test('checkShownView runs the call\'s own checks and names the card and its kind
   assert.deepEqual(checkShownView(' ', text()), { title: '', view: text(), interactive: false })
   assert.deepEqual(checkShownView(undefined, text()), { title: '', view: text(), interactive: false })
   assert.equal(checkShownView(3, text()).error, 'title: expected a string')
-  assert.equal(checkShownView('Card', { type: 'nope' }).error, 'view.type: unknown component "nope"; allowed: stack, row, text, metric, table, chart, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
+  assert.equal(checkShownView('Card', { type: 'nope' }).error, 'view.type: unknown component "nope"; allowed: stack, row, text, metric, table, chart, flow, progress, callout, sources, html, slider, choice, toggle, number, options, confirm, form, submit')
   assert.equal(checkShownView('Card', undefined).error, 'view: expected a component object')
   const room = VIEW_BYTE_LIMIT - viewBytes('', text())
   assert.equal(checkShownView('x'.repeat(room + 1), text()).error, `The view is ${VIEW_BYTE_LIMIT + 1} bytes; the limit is ${VIEW_BYTE_LIMIT}.`)
@@ -206,4 +253,18 @@ test('display-only view remains hidden until tool call successfully settles', ()
   assert.equal(displayViewReady(true, true), false)
   assert.equal(displayViewReady(true, false), true)
   assert.equal(displayViewReady(true, undefined), true)
+})
+
+test('native flow views accept bounded declarative branches and reject invalid edges and arbitrary SVG', () => {
+  const flow = {
+    type: 'flow',
+    nodes: [{ id: 'a', label: '开始' }, { id: 'b', label: '已验证', tone: 'good' }, { id: 'c', label: '待核验' }],
+    edges: [{ from: 'a', to: 'b' }, { from: 'a', to: 'c', uncertain: true }],
+  }
+  assert.deepEqual(validateView(flow), { ok: true, interactive: false })
+  assert.match(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'a' }] }).error, /feedback:true/)
+  assert.equal(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'a', feedback: true }] }).ok, true)
+  assert.match(validateView({ ...flow, edges: [...flow.edges, { from: 'b', to: 'c', feedback: true }] }).error, /earlier step/)
+  assert.match(validateView({ ...flow, edges: [{ from: 'a', to: 'missing' }] }).error, /existing node IDs/)
+  assert.match(validateView({ ...flow, nodes: [{ ...flow.nodes[0], html: '<svg/>' }, ...flow.nodes.slice(1)] }).error, /use id, label, detail, stage and tone only/)
 })

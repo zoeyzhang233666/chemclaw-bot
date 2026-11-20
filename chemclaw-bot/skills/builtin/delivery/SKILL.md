@@ -13,9 +13,9 @@ or limits on analytical ability.
   answer, including conceptual explanations and short answers, across all
   installed or newly imported skills. Use an appropriate inline component
   with a brief conclusion; a file link or HTML report alone is insufficient.
-  The following table selects components, not which answers qualify. Keep
-  existing well-adapted charts/cards as the first choice, and use GenUI for
-  relationships they do not cover. Never create observations just to draw.
+  Deliver applicable native `show_view` metric cards and data charts first,
+  even if the answer already contains a table or a GenUI component. Keep
+  tables for evidence and detailed rows. Never create observations just to draw.
 - Business answers must include the corresponding inline view whenever one of
   these answer shapes applies; do not wait for an explicit chart request.
   Honor the user's explicit request for text only or no charts.
@@ -23,10 +23,10 @@ or limits on analytical ability.
   | Answer shape | Required view |
   | --- | --- |
   | At least two numeric indicators answering current level, affordability or acceptability | `metric`, normally two to four cards |
-  | One object with at least three time observations | `line`; `area` for cumulative quantity |
+  | One object with at least two comparable time observations | `line`; `area` for cumulative quantity |
   | At least two objects compared or ranked at one time | `bar`; `hbar` for labels over six characters or more than eight categories |
   | One whole split into three to six parts, with structure/share as the question | `donut` |
-  | At least three rows and three columns of multi-field results | `table` |
+  | Detailed multi-field results that need to be inspected row by row | Supporting `table` |
   | Completeness, progress or quota consumption is part of the conclusion | `progress` |
   | Risks, anomalies, conflicting measurement definitions or missing data | `callout` |
   | Repeated conversion, cost, price comparison or break-even calculation | Inputs and formulas for a local calculator |
@@ -38,9 +38,21 @@ or limits on analytical ability.
   `heatmap`; quantified flows → `sankey`; normalized dimensions with explicit
   maxima → `radar`; conversion stages → `funnel`; hierarchy → `treemap`;
   a value against a stated maximum → `gauge`.
+- For capacity, output, utilization or quota figures, use one native `show_view`
+  stack with a row of key metric cards. Add a horizontal bar chart for a
+  same-period region/company comparison or a line chart for a time series when
+  there are at least two comparable verified observations. Keep capacity,
+  actual output, quotas and forecasts explicitly labeled. Use a diagram for
+  explaining causes or how the industry works.
+- After delivering any applicable metrics and charts, choose GenUI `diagram` for relationships, decisions or supply chains that
+  benefit from clickable details and straightforward node layout. Use business
+  terms on the nodes and in group labels. Prefer GenUI `svg` when causal paths,
+  semantic colors, lanes, shared branches, or spatial details need custom
+  visual treatment. Use the SVG `code` field inside `items` in an inline
+  `dsh-ui` fence. Reserve SVG table layouts for specialized presentations
+  beyond the native UI. Use Mermaid only on explicit format requests.
 - The complete bundled GenUI plugin also supplies `timeline` for dated events
-  and milestones, `steps` for ordered steps, `mermaid`/`diagram` for processes,
-  dependencies and Gantt schedules, `plot` for functions, `scene3d` for spatial
+  and milestones, `diagram` for specialized schedules, `plot` for functions, `scene3d` for spatial
   explanation, searchable/sortable/expandable `table`, layouts/cards, tabs,
   accordion, forms/controls, quizzes and images/media. Read the current `genui`
   skill for their exact syntax; no need for the user to know component names.

@@ -5,7 +5,7 @@
 
 ## 组合
 
-固定依赖 MIT 的 @changfenhuang/dsh-genui 0.15.0，使用公开 DSH bundle patch
+固定依赖 MIT 的 @changfenhuang/dsh-genui 0.16.0，使用公开 DSH bundle patch
 加载其正式 host/client、校验、技能、组件、资源与原生会话 dock。
 不复制或删减上游组件，不修改 DSH，不通过用户私有 profile 安装或测试。
 
@@ -31,6 +31,10 @@ assistant Markdown surface。source/thread/event/block/fence 稳定身份隔离�
 
 将公开 --dsw-* 颜色、状态、边框、字体映射到 --bt-*，限定于 ChemClaw
 surface 与其原生 dock。重型引擎由上游按需加载，本地筛选/排序/滑块不调用模型。
+
+`diagram` 和 `svg` 的正文视图提供独立的放大预览。预览保留上游矢量和主题，
+按窗口适配，并支持继续放大和滚动查看。正文图解的节点联动仍由上游组件处理。
+产能、产量、开工率和配额优先用原生指标卡，多个同口径观测才使用对比或趋势图。
 
 ## 每个回答的全局交付
 

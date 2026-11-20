@@ -49,6 +49,7 @@ test('the group relay and non-Bot sessions do not get progress instructions', (t
 test('all user-facing Bot and native sessions receive one global visual policy independently of skills', () => {
   const { ctx } = start()
   const section = ctx.sections.get('chemclaw-visual-delivery')
+  assert.ok(section.order > 9900, 'ChemClaw diagram selection follows generic GenUI instructions')
   for (const id of ['main', 'worker', 'group-worker', 'outside']) {
     const policy = section.text({ agent: { id } })
     assert.match(policy, /EVERY user-facing final answer/)
@@ -68,10 +69,32 @@ test('advanced-chart setting influences model selection, without disabling GenUI
   state.prefs.advancedCharts = false
   const disabled = section.text(context)
   assert.match(disabled, /Advanced charts are disabled in ChemClaw Settings/)
-  assert.match(disabled, /GenUI nonchart components such as timeline and Mermaid remain available/)
+  assert.match(disabled, /inline timelines/)
   assert.match(disabled, /seven advanced ECharts|advanced ECharts/i)
   state.prefs.advancedCharts = true
   assert.doesNotMatch(section.text(context), /Advanced charts are disabled in ChemClaw Settings/)
   assert.equal(section.text({ agent: { id: 'room' } }), '')
   ctx.dispose()
+})
+
+test('the visual contract follows the selected tool set and preserves ordinary Markdown', async () => {
+  const { ctx } = start()
+  const section = ctx.sections.get('chemclaw-visual-delivery')
+  const agent = { id: 'classic' }
+  const showView = { name: 'show_view' }
+  ctx.tools.get = (name, scope, toolSet) => name === 'show_view' && scope === agent && toolSet.has(name) ? showView : undefined
+  const allowed = section.text({ agent, toolSet: new Set(['show_view']) })
+  assert.match(allowed, /must include both a native metric card and a native data chart/)
+  assert.match(allowed, /ordinary answer in Markdown/)
+  assert.match(allowed, /When GenUI is unavailable/)
+  ctx.tools.get = (name, scope, toolSet) => scope === agent && toolSet.has(name) ? { name } : undefined
+  const withGenui = section.text({ agent, toolSet: new Set(['show_view', 'validate_dsh_ui']) })
+  assert.match(withGenui, /automatically choose dsh-ui type=diagram/)
+  assert.match(withGenui, /automatically choose dsh-ui type=svg/)
+  assert.doesNotMatch(withGenui, /show_view flow/)
+  const restricted = section.text({ agent, toolSet: new Set() })
+  assert.match(restricted, /Use inline dsh-ui for visual delivery/)
+  assert.match(restricted, /EVERY user-facing final answer/)
+  assert.doesNotMatch(restricted, /must include both a native metric card and a native data chart/)
+  await ctx.dispose()
 })

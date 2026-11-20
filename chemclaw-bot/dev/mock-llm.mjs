@@ -85,6 +85,37 @@ const systemText = system => typeof system === 'string' ? system
   : Array.isArray(system) ? system.map(block => block.text ?? '').join('\n') : ''
 
 const text = value => ({ type: 'text', text: value })
+const flowFixture = {
+  type: 'flow', caption: '合成数据，仅用于显示验收。',
+  nodes: [
+    { id: 'feed', label: '上游原料', detail: '供应与成本' },
+    { id: 'plant', label: '生产与开工', detail: '跟踪产能和开工率' },
+    { id: 'sales', label: '下游销售', detail: '已确认订单', tone: 'good' },
+    { id: 'stock', label: '库存变化', detail: '暂缺库存数据', tone: 'warn' },
+  ],
+  edges: [{ from: 'feed', to: 'plant' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', uncertain: true }, { from: 'sales', to: 'feed', label: '订单反馈', feedback: true }],
+}
+const diagramFixture = title => ({ type: 'diagram', kind: 'architecture', title,
+  nodes: [
+    { id: 'feed', label: '上游原料', sub: '供应与成本', x: 24, y: 112, w: 140, h: 52 },
+    { id: 'plant', label: '生产与开工', sub: '核对产能与开工率', description: '节点详情验收：区分设计产能和实际开工。', type: 'focal', x: 228, y: 112, w: 148, h: 52 },
+    { id: 'sales', label: '下游销售', sub: '确认订单', x: 452, y: 52, w: 140, h: 52 },
+    { id: 'stock', label: '库存变化', sub: '库存环节待核验', x: 452, y: 172, w: 140, h: 52 },
+  ],
+  edges: [{ from: 'feed', to: 'plant', kind: 'accent' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', kind: 'dashed', label: '待核验' }],
+})
+const svgFixture = {
+  type: 'svg', title: '合成设备剖面',
+  code: ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 200">',
+    '<rect x="24" y="24" width="392" height="152" rx="18" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>',
+    '<path d="M24 106H416" stroke="#6366f1" stroke-width="2"/>',
+    // Keep the fixture above the ordinary group message folding threshold.
+    ...Array.from({ length: 20 }, (_, i) => `<path d="M40 ${44 + i * 6}h10M390 ${44 + i * 6}h10" stroke="#a9aee9" stroke-width="1"/>`),
+    '<text x="220" y="74" text-anchor="middle" font-size="23" fill="#243456">上部空间</text>',
+    '<text x="220" y="150" text-anchor="middle" font-size="23" fill="#243456">下部空间</text></svg>',
+  ].join(''),
+}
+const inlineView = item => '\n\n```dsh-ui\n' + JSON.stringify({ items: [item] }) + '\n```'
 // ask_user takes options as { label } objects; the scenarios below list plain labels.
 const tool = (name, input) => ({
   type: 'tool_use',
@@ -195,6 +226,183 @@ function decide(body) {
   const fresh = textBlocks(last?.content).some(value => value.trimStart().startsWith('[Group chat'))
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
+  const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
+  const previousQuestion = () => messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message)
+    && !textOf(message.content).startsWith('[chemclaw-visual-delivery'))
+  const isCorrection = activity.startsWith('[chemclaw-visual-delivery')
+  const visualQuestion = isCorrection ? textOf(previousQuestion()?.content) : activity
+  const mechanism = /^解释伊美关系如何影响原油价格$/mu.test(visualQuestion)
+  const industry = /^沥青产业链$/mu.test(visualQuestion)
+  const inventory = /^沥青库存$/mu.test(visualQuestion)
+  if (tools.has('show_view') && (mechanism || industry)) {
+    if (result) return [text(isCorrection ? '合成逻辑图已就绪。' : '冲突可经航运和供应风险传导到油价。')]
+    if (isCorrection && activity.includes('Use show_view with type=flow')) {
+      const nodes = [
+        { id: 'inputA', label: mechanism ? '航运阻断风险' : '原料 A', stage: mechanism ? '地缘风险' : '上游' },
+        { id: 'inputB', label: mechanism ? '制裁供应风险' : '原料 B', stage: mechanism ? '地缘风险' : '上游' },
+        { id: 'middle', label: mechanism ? '预期可供数量下降' : '装置加工', stage: mechanism ? '供给传导' : '中游' },
+        { id: 'outA', label: mechanism ? '风险溢价上升' : '应用 A', tone: 'warn' },
+        { id: 'outB', label: mechanism ? '运费及保险成本上升' : '应用 B', tone: 'bad' },
+      ]
+      const edges = [{ from: 'inputA', to: 'middle' }, { from: 'inputB', to: 'middle' },
+        { from: 'middle', to: 'outA' }, { from: 'middle', to: 'outB' }]
+      return [tool('show_view', { title: mechanism ? '合成原油传导图' : '合成沥青链条图', view: { type: 'flow', nodes, edges } })]
+    }
+    if (industry) return [text('原料经装置处理后分到不同应用。\n\n```\nflowchart LR\nsubgraph UP[原料]\nA[原料 A]\nend\nA --> B[加工] --> C[应用]\n```')]
+    if (!isCorrection) {
+      const metric = (label, value) => ({ type: 'metric', label, value })
+      const chart = { type: 'chart', kind: 'line', categories: ['11-01', '11-02'], series: [{ values: [70, 72] }] }
+      return [tool('show_view', { title: '合成纵排指标', view: { type: 'stack', children: [
+        metric('示例价格', '72 美元/桶'), metric('示例价差', '2 美元/桶'), metric('示例运费', '12 美元/吨'), chart,
+      ] } })]
+    }
+  }
+  if (tools.has('show_view') && inventory) {
+    if (result) return [text('合成库存图表已就绪。')]
+    if (isCorrection && activity.includes('headline metric cards and the data chart')) {
+      return [tool('show_view', { title: '合成库存走势', view: { type: 'stack', children: [
+        { type: 'metric', label: '合成最新库存', value: '100 万吨' },
+        { type: 'chart', kind: 'line', unit: '万吨', categories: ['11-01', '11-08'], series: [{ values: [95, 100] }] },
+      ] } })]
+    }
+    if (!isCorrection) return [text('合成同口径库存。\n\n| 周 | 库存（万吨） |\n| --- | --- |\n| 11-01 | 95 |\n| 11-08 | 100 |')]
+  }
+  if (tools.has('show_view') && /^合成价格走势及事件窗口$/mu.test(activity)) {
+    if (result) return [text('下图放大事件窗口里的报价差异。' + inlineView({ type: 'svg', title: '合成报价事件窗口',
+      code: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160"><title>事件窗口报价差异</title><rect width="480" height="160" rx="10" fill="#faf8f4"/><rect x="176" y="38" width="106" height="85" fill="#e7ecf5"/><path d="M40 123H448M40 42V123" stroke="#818481" fill="none"/><path d="M44 104L154 99L266 75L382 58" stroke="#3b6999" stroke-width="3" fill="none"/><circle cx="266" cy="75" r="5" fill="#3b6999"/><text x="189" y="29" font-size="14" fill="#263955">合成事件窗口</text><text x="30" y="145" font-size="12" fill="#263955">11-05</text><text x="365" y="145" font-size="12" fill="#263955">11-07</text></svg>',
+    }))]
+    const metric = { type: 'metric', label: '合成窗口最新价', value: '108 元/吨' }
+    const chart = { type: 'chart', kind: 'line', unit: '元/吨', categories: ['11-01', '11-05', '11-07', '11-15'], series: [{ values: [93, 95, 105, 108] }] }
+    return [tool('show_view', { title: '合成窗口行情总览', view: { type: 'stack', children: [metric, chart] } })]
+  }
+  if (tools.has('show_view') && /^合成多路径关系图$/mu.test(activity)) {
+    if (result) return [text('分别查看原料、反应和用途的连接。')]
+    const nodes = [
+      { id: 'raw1', label: '原料甲', stage: '上游', tone: 'warn' }, { id: 'raw2', label: '原料乙', stage: '上游', tone: 'warn' },
+      { id: 'proc1', label: '预处理', stage: '工艺' }, { id: 'proc2', label: '替代反应', stage: '工艺' },
+      { id: 'main', label: '主要产品', detail: '交付前进行质量确认', tone: 'good' }, { id: 'side', label: '可复用副产品' },
+      { id: 'use', label: '终端应用', tone: 'good' },
+    ]
+    const edges = [
+      { from: 'raw1', to: 'proc1', label: '筛选后投入' }, { from: 'raw1', to: 'proc2', label: '保留同口径工况' },
+      { from: 'raw2', to: 'proc2', label: '需先确认用量' }, { from: 'proc1', to: 'main', label: '主反应后直接生成' },
+      { from: 'proc2', to: 'main', label: '替代制备路线' }, { from: 'proc2', to: 'side', label: '联产回收' },
+      { from: 'raw2', to: 'use', label: '待验证旁路', uncertain: true }, { from: 'main', to: 'use' }, { from: 'side', to: 'use' },
+    ]
+    return [tool('show_view', { title: '合成多路径关系图', view: { type: 'flow', nodes, edges } })]
+  }
+  if (/^GenUI check streamed SVG$/mu.test(activity)) {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20"/></svg>'
+    return [{ ...text('先显示行情成因。\n\n```js\nconst readableExample = 2\n```\n\n```dsh-ui\n'
+      + JSON.stringify({ type: 'svg', title: '合成成因矢量图', svg }) + '\n```'), slow: true }]
+  }
+  if (/^GenUI check broken SVG$/mu.test(activity)) {
+    return [text('图形失败时保留正文。' + inlineView({ type: 'svg', title: '合成损坏图' })
+      + inlineView({ type: 'svg', title: '再次损坏的图', code: '<svg xmlns="http://www.w3.org/2000/svg"><text>失效的 XML</svg>' })
+      + '\n\n<chatml_chart_demo>')]
+  }
+  if (activity.includes('The generated visual did not pass validation') && /^GenUI check broken SVG$/mu.test(textOf(previousQuestion()?.content))) {
+    return [text('合成损坏图自动恢复。' + inlineView({ ...flowFixture, title: '合成恢复流程' }))]
+  }
+  if (/^GenUI check bundled skill\s*$/mu.test(activity) && tools.has('skill')) {
+    if (!result) return [tool('skill', { name: 'genui' })]
+    if (!textOf(result.content).includes('# GenUI')) return [text('Bundled GenUI skill could not be loaded.')]
+    return [text('Bundled GenUI skill loaded.' + inlineView({ type: 'text', text: 'Skill instructions verified.' }))]
+  }
+  if (tools.has('show_view') && /^纯碱最近一个月现货价格$/mu.test(activity)) {
+    return [text('合成现货正文：轻质均价从 1118 元/吨 → 1134 元/吨 → 1123 元/吨。' + inlineView(diagramFixture('错误的报价关系图')))]
+  }
+  if (tools.has('show_view') && activity.includes('the dated spot chart from verified evidence')
+    && messages.slice(0, activityAt).some(message => /^纯碱最近一个月现货价格$/mu.test(textOf(message.content)))) {
+    if (result) return [text('合成现货价格已补齐。')]
+    const metric = { type: 'metric', label: '合成轻质现货均价', value: '1123 元/吨', caption: '2026-11-19' }
+    const chart = { type: 'chart', kind: 'line', unit: '元/吨', categories: ['2026-10-23', '2026-11-04', '2026-11-19'],
+      series: [{ name: '合成轻质纯碱现货', values: [1118, 1134, 1123] }] }
+    return [tool('show_view', { audience: 'user', await_reply: false, title: '合成现货走势', view: { type: 'stack', children: [metric, chart] } })]
+  }
+  const methanol = /^甲醇价格$/mu
+  const methanolRepair = activity.includes('from verified evidence')
+    && methanol.test(textOf(previousQuestion()?.content))
+  if (tools.has('show_view') && (methanol.test(activity) || methanolRepair)) {
+    const chart = { type: 'chart', kind: 'line', caption: '合成甲醇均价走势', unit: '元/吨',
+      categories: ['2026-11-18', '2026-11-19', '2026-11-20'], series: [{ name: '甲醇现货', values: [2180, 2200, 2250] }] }
+    const metric = { type: 'metric', label: '合成甲醇最新均价', value: '2250 元/吨', caption: '2026-11-20' }
+    const reply = '合成甲醇正文：同口径均价由 2180 元/吨上升到 2250 元/吨。'
+    if (result) return [text(reply)]
+    if (!methanolRepair && !system.includes('# Your identity')) {
+      return [text(reply + inlineView({ ...svgFixture, title: '仅有的甲醇物流图' }))]
+    }
+    const view = !methanolRepair ? chart : activity.includes('the data chart') ? { type: 'stack', children: [metric, chart] } : metric
+    return [tool('show_view', { audience: 'user', title: '合成甲醇价格', view })]
+  }
+  if (/^沥青产量$/mu.test(activity) && tools.has('show_view')) {
+    if (result) return [text('合成沥青正文。')]
+    const metric = { type: 'metric', label: '合成沥青当月总产量', value: '240 万吨' }
+    const chart = (caption, categories, values) => ({ type: 'chart', kind: 'hbar', unit: '万吨', caption, categories, series: [{ values }] })
+    const details = (caption, subject, rows) => ({ type: 'table', caption, collapsed: true,
+      columns: [{ key: 'name', label: subject }, { key: 'value', label: '产量（万吨）' }], rows })
+    const view = { type: 'stack', children: [metric, chart('合成集团产量', ['集团 A', '集团 B'], [100, 140]),
+      chart('合成地区产量', ['华东', '华北'], [123, 117]), details('分集团明细', '集团', [['集团 A', 100], ['集团 B', 140]]),
+      details('分地区明细', '地区', [['华东', 123], ['华北', 117]])] }
+    return [text('同口径全国总产量及两种拆分。'), tool('show_view', { audience: 'user', title: '合成沥青产量概览', view })]
+  }
+  if (/^解释合成沥青传导机制$/mu.test(activity)) {
+    const diagram = diagramFixture('合成沥青传导修复图')
+    diagram.nodes = diagram.nodes.map(node => ({ ...node, x: 0.4, y: 0.3, w: 60, h: 28 }))
+    return [text('合成沥青传导解释。' + inlineView(diagram))]
+  }
+  if (/^(?:User: )?查询合成产能分布\s*$/mu.test(activity) && tools.has('show_view')
+    && system.includes('a metric row and horizontal bars')) {
+    if (result) return [text('合成产能正文：同一口径下，沿海为 120 万吨/年，内陆为 90 万吨/年。')]
+    const metrics = [
+      { type: 'metric', label: '沿海产能', value: '120 万吨/年', caption: '同年合成数据' },
+      { type: 'metric', label: '内陆产能', value: '90 万吨/年', caption: '同年合成数据' },
+    ]
+    const chart = { type: 'chart', kind: 'hbar', unit: '万吨/年', categories: ['沿海', '内陆'], series: [{ name: '同年产能', values: [120, 90] }] }
+    return [text('沿海产能较高。'), tool('show_view', { audience: 'user', await_reply: false, title: '合成产能分布', view: { type: 'stack', children: [
+      { type: 'row', children: metrics }, chart,
+    ] } })]
+  }
+  const flowMessage = /^(?:User: )?展示合成流程图\s*$/mu.test(activity)
+    || (/^(?:User: )?梳理合成供应链\s*$/mu.test(activity) && system.includes('automatically choose dsh-ui type=diagram'))
+  if (flowMessage) return [text('流程图正文：库存环节仍待核验。' + inlineView(diagramFixture('合成供应链流程')))]
+  if (/^(?:User: )?解释合成设备剖面结构\s*$/mu.test(activity) && system.includes('automatically choose dsh-ui type=svg')) {
+    return [text('剖面正文：设备分为上部和下部空间。' + inlineView(svgFixture))]
+  }
+  const repairFlow = /\[chemclaw-visual-delivery[^\n]*\][\s\S]*dsh-ui type=diagram/u.test(activity)
+  const flowQuestion = repairFlow
+    ? messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message) && /为什么合成分布会是这样/u.test(textOf(message.content)))
+    : messages[activityAt]
+  const flowTopic = /^(为什么合成分布会是这样|我想知道合成产业链结构)(?:\?|？|\s|$)/mu.exec(textOf(flowQuestion?.content))?.[1]
+  if (flowTopic) {
+    const title = flowTopic === '为什么合成分布会是这样' ? '合成分布成因图' : '合成产业链结构图'
+    const receipt = textOf(result?.content)
+    if (flowTopic === '我想知道合成产业链结构' && tools.has('show_view')) {
+      if (/Use show_view with type=flow/u.test(receipt)) return [tool('show_view', { title, view: { ...flowFixture, caption: title } })]
+      if (/The view is (?:on screen|staged)/u.test(receipt)) return [text('合成产业链分析正文。')]
+    }
+    if (repairFlow || /dsh-ui type=diagram/u.test(receipt)) return [text('合成分析正文：库存仍待核验。' + inlineView(diagramFixture(title)))]
+    if (flowTopic === '我想知道合成产业链结构' && !result && tools.has('validate_dsh_ui')) {
+      return [tool('validate_dsh_ui', { spec: { items: [{ type: 'mermaid', code: 'graph TD\nA-->B' }] } })]
+    }
+    const spec = { items: [{ type: 'tabs', tabs: [{ label: '供应端', items: [{ type: 'text', text: '合成原因正文' }] }] }] }
+    return [text('合成原因正文：原料影响生产，订单回传上游。\n\n```dsh-ui\n' + JSON.stringify(spec) + '\n```')]
+  }
+  if (/^旧版流程调用验收\s*$/mu.test(activity) && tools.has('show_view')) {
+    if (!result) return [tool('show_view', { title: '旧版试画', view: flowFixture })]
+    if (/The view is on screen/u.test(textOf(result.content))) return [text('原生流程备用渲染已交付。')]
+  }
+  const classicView = activityAt >= 0 ? /^classic-native-(ready|invalid)(?:\n|$)/u.exec(textOf(messages[activityAt].content).trim())?.[1] : undefined
+  if (classicView && tools.has('show_view')) {
+    if (result) return [text('经典正文结论：测试回答结束。')]
+    const view = classicView === 'ready'
+      ? { type: 'stack', children: [
+        { type: 'slider', id: 'quantity', label: '测试数量', min: 1, max: 10, value: 2 },
+        { type: 'metric', label: '测试合计', value: { '=': 'quantity * 3' } },
+      ] }
+      : { type: 'chart', kind: 'line', categories: ['A'], series: [{ values: [null] }] }
+    return [text('经典正文开头：以下是测试结果。'), tool('list_bots', {}), tool('show_view', { title: '经典原生测试卡片', view })]
+  }
   if (activityAt >= 0 && /(?:^|\n)(?:User: )?执行过程验收(?:\r?\n|$)/.test(textOf(messages[activityAt].content))) {
     const shell = ['pwsh', 'bash'].find(name => tools.has(name))
     if (shell) {
@@ -616,6 +824,11 @@ function decide(body) {
       title: 'Custom board', await_reply: false,
       view: { type: 'html', html: '<p style="margin:0;color:var(--bt-ink)">Sandboxed sample</p>', summary: 'A sandboxed sample' },
     })]
+  }
+  if (/^\s*视图旧SVG/.test(userText) && tools.has('show_view')) {
+    return [tool('show_view', { title: '旧版 SVG', view: {
+      type: 'html', summary: '旧版 SVG 样例', html: '<svg viewBox="0 0 280 65" xmlns="http://www.w3.org/2000/svg"><text x="12" y="35" fill="currentColor">旧版 SVG 样例</text></svg>',
+    } })]
   }
   // Streams slowly, then checks the team: exercises the activity row stepping aside
   // for a streaming reply and coming back for the tool.
