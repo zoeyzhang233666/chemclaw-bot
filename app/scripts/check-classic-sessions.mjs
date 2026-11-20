@@ -4,7 +4,9 @@ import { setTimeout as sleep } from 'node:timers/promises'
 const selection = "JSON.parse(localStorage.getItem('dsh.sessions.current'))?.sessionId"
 const classic = "document.querySelector('.bt-classic-settings')"
 const transcript = "document.querySelector('[data-conversation-scroll]')?.innerText ?? ''"
-const editor = "[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1)"
+const editor = "[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side') && node.getClientRects().length).at(-1)"
+const draft = `(() => { const input = ${editor}; return (input?.value ?? input?.textContent ?? '').trim() })()`
+const sendButton = `([...document.querySelectorAll('button[aria-label="Send message"],button[aria-label="发送消息"]')].find(button => !button.disabled && button.getClientRects().length))`
 const visible = marker => `(${transcript}).includes(${JSON.stringify(marker)})`
 const sessionRow = id => `[data-row-key="session:${id}"]`
 const diagram = title => `([...document.querySelectorAll('[data-genui-diagram]')].find(figure => figure.textContent.includes(${JSON.stringify(title)}))?.querySelector('svg'))`
@@ -66,10 +68,9 @@ function windowChecks(cdp) {
     await until(editor, 'the active composer')
     await evaluate(`${editor}.focus()`)
     await cdp.call('Input.insertText', { text: message })
-    await sleep(100)
-    for (const type of ['keyDown', 'keyUp']) {
-      await cdp.call('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 })
-    }
+    await until(`${draft} === ${JSON.stringify(message)} && ${sendButton}`, `the composer can submit ${message}`)
+    await evaluate(`${sendButton}.click()`)
+    await until(`${draft} === '' && ${visible(message)}`, `the submitted message appears in the conversation: ${message}`)
   }
   const running = id => `${session('state', { sessionId: id })}.then(value => value.running)`
   const waitRunning = (id, active) => until(`await (${running(id)}) === ${active}`, `${id} running=${active}`)
@@ -174,7 +175,9 @@ export async function checkClassicSessions(cdp) {
     const graph = label => `[...document.querySelectorAll('svg[data-chemclaw-flow]')].find(node => node.textContent.includes(${JSON.stringify(label)}))`
     await send('解释伊美关系如何影响原油价格')
     const mechanism = graph('预期可供数量下降')
-    await until(`${mechanism}?.querySelectorAll('[data-shared]').length === 2`, 'a price chart does not satisfy an explicit mechanism question')
+    await until(visible('示例运费'), 'the initial price response is displayed')
+    await until(mechanism, 'the mechanism question also receives a native relationship diagram')
+    await until(`${mechanism}?.querySelectorAll('[data-shared]').length === 2`, 'the mechanism diagram has separate shared trunks')
     await waitRunning(id, false)
     assert.ok(await evaluate(`(() => {
       const row = [...document.querySelectorAll('.bt-metric-row')].find(node => node.textContent.includes('示例运费'));
@@ -185,7 +188,10 @@ export async function checkClassicSessions(cdp) {
     await until(zoom, 'the native relationship diagram exposes vector preview')
     await evaluate(`${zoom}.click()`)
     await until("document.querySelector('.bt-genui-preview[open] .bt-genui-preview-stage > div')?.shadowRoot?.querySelector('svg[data-chemclaw-flow] [data-shared]')", 'native shared routes remain vectors in the preview')
-    await evaluate("document.querySelector('.bt-genui-preview[open]').close()")
+    for (const type of ['keyDown', 'keyUp']) {
+      await cdp.call('Input.dispatchKeyEvent', { type, key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
+    }
+    await until(`!document.querySelector('.bt-genui-preview[open]') && document.activeElement === ${zoom}`, 'Escape restores focus after the native preview')
     await send('沥青库存')
     await until(`${visible('合成最新库存')} && [...document.querySelectorAll('.bt-view')].some(node => node.textContent.includes('合成最新库存') && node.querySelector('.bt-chart-line'))`, 'a table-only inventory response recovers a metric and a native trend')
     await waitRunning(id, false)
